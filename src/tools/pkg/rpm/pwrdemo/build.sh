@@ -13,7 +13,7 @@ if [ -e $pwr_inc/pwr_version.h ]; then
   ver=${ver:2:2}
 fi
 
-proot=/usr/local/pwrp/pwrdemo$ver
+proot=/data1/pwrp/pwrdemo$ver
 pkgroot=$pwre_broot/$pwre_target/bld/pkg/pwrdemo$ver
 pkgsrc=$pwre_sroot/tools/pkg/rpm/pwrdemo
 

@@ -10,10 +10,9 @@
 
 Name: pwrrt
 Summary: Proview/R runtime environment
-Version: 4.4.2
-Release: 2
-Copyright: (c) 2007 SSAB Oxelösund AB, Sweden
-#License: GPL
+Version: 4.4.4
+Release: 5
+License: GPL
 BuildArch: i386
 Packager: claes.sjofors@proview.se
 Group: Applications/System
@@ -109,12 +108,12 @@ if ! grep -q "\bpwrp:" /etc/passwd; then
   fi
   /bin/cp /usr/pwrrt/cnf/user/.bashrc /home/pwrp
   /bin/cp /usr/pwrrt/cnf/user/.bash_profile /home/pwrp
-  /bin/cp /usr/pwrrt/cnf/user/.mwmrc /home/pwrp
+#  /bin/cp /usr/pwrrt/cnf/user/.mwmrc /home/pwrp
   /bin/cp /usr/pwrrt/cnf/user/.rtt_start /home/pwrp
   chmod a+x /home/pwrp/.rtt_start
   /bin/cp /usr/pwrrt/cnf/user/.xtt_start /home/pwrp
   chmod a+x /home/pwrp/.xtt_start
-  /bin/cp /usr/pwrrt/cnf/user/.xsession /home/pwrp
+#  /bin/cp /usr/pwrrt/cnf/user/.xsession /home/pwrp
 
   chown -R pwrp /home/pwrp
   chgrp -R pwrp /home/pwrp
@@ -129,12 +128,12 @@ if ! grep -q "\bskiftel:" /etc/passwd; then
   fi
   /bin/cp /usr/pwrrt/cnf/user/.bashrc /home/skiftel
   /bin/cp /usr/pwrrt/cnf/user/.bash_profile /home/skiftel
-  /bin/cp /usr/pwrrt/cnf/user/.mwmrc /home/skiftel
+#  /bin/cp /usr/pwrrt/cnf/user/.mwmrc /home/skiftel
   /bin/cp /usr/pwrrt/cnf/user/.rtt_start /home/skiftel
   chmod a+x /home/skiftel/.rtt_start
   /bin/cp /usr/pwrrt/cnf/user/.xtt_start /home/skiftel
   chmod a+x /home/skiftel/.xtt_start
-  /bin/cp /usr/pwrrt/cnf/user/.xsession /home/skiftel
+#  /bin/cp /usr/pwrrt/cnf/user/.xsession /home/skiftel
 
   chown -R pwrp /home/skiftel
   chgrp -R pwrp /home/skiftel
@@ -156,12 +155,12 @@ if ! grep -q "\bb55:" /etc/passwd; then
   fi
   /bin/cp /usr/pwrrt/cnf/op/.bashrc /home/b55
   /bin/cp /usr/pwrrt/cnf/op/.bash_profile /home/b55
-  /bin/cp /usr/pwrrt/cnf/op/.mwmrc /home/b55
+#  /bin/cp /usr/pwrrt/cnf/op/.mwmrc /home/b55
   /bin/cp /usr/pwrrt/cnf/op/.rtt_start /home/b55
   chmod a+x /home/b55/.rtt_start
   /bin/cp /usr/pwrrt/cnf/op/.xtt_start /home/b55
   chmod a+x /home/b55/.xtt_start
-  /bin/cp /usr/pwrrt/cnf/op/.xsession /home/b55
+#  /bin/cp /usr/pwrrt/cnf/op/.xsession /home/b55
 
   chown -R b55 /home/b55
   chgrp -R pwrp /home/b55
@@ -174,7 +173,7 @@ chgrp -R pwrp /usr/pwrrt
 
 chmod u+s /usr/pwrrt/exe/rt_ini
 chmod u+s /usr/pwrrt/exe/rt_rtt
-chmod u+s /usr/pwrrt/exe/rt_xtt
+#chmod u+s /usr/pwrrt/exe/rt_xtt
 chmod u+s /usr/pwrrt/exe/rt_bck
 chown root /usr/pwrrt/exe/rs_remote_alcm
 chmod u+s /usr/pwrrt/exe/rs_remote_alcm
@@ -458,12 +457,28 @@ fi
 #%postun
 
 %changelog
-* Fri Jul 06 2007 Claes Sjofors <claes.sjofors@ssabox.com> 4.4.2-2
- - Proview restart improved. Works with profibus.
- - Ge: New fonts, Times, NC Schoolbook and Courier.
- - Proview profibus restart improved.
- - Statusmonitor to view status of remote nodes implemented.
- - Runtime monitor to start and stop runtime in development environment implemented.
- - Subgraphs for ventilation and circuitdiagrams added.
- - Baseobjects for threewayvalves, filters and dampers added.
- - Bugfix in update classes, all attribute references wasn't updated.
+* Fri Nov 23 2007 Claes Sjofors <claes.sjofors@ssabox.com> 4.4.4-5
+  - Proview restart improved. Works with profibus.
+  - Ge: New fonts, Times, NC Schoolbook and Courier.
+  - Proview profibus restart improved.
+  - Statusmonitor to view status of remote nodes implemented.
+  - Runtime monitor to start and stop runtime in development environment implemented.
+  - Env variables allowed in filenames for remotelogg and nmpsbackup.
+  - Problems with national characters in opc_server fixed.
+  - Problems with memory leakage in opc_server fixed.
+  - Subgraphs for ventilation and circuit diagrams added.
+  - Baseobjects for threewayvalves, filters and dampers added.
+  - Ge: Gray backgroundcolor could be undefined.
+  - remote_mq present.
+  - XY_Curve class and Ge dynamic added.
+  - Changed qcom synchronization mechanism.
+  - Function to suppress alarms in basecomponents added.
+  - Classes IpDistribute, IpCollect, Demux, IDemux, GetDpPtr, StoDpPtr,
+    Eurotherm_TC3001, Eurotherm_TC3001Aggr and more added.
+  - Bugfix in gtk operatorwindow, long alarmtext could cause segfault
+  - Bugfix in trend, disabled trend object was handled.
+  - Bugfix in object graph for CompModePID and CompPID.
+  - Bugfix in Eurotherm 3001 profibus slave and module.
+  - Doublebuffering in graphs with window objects could be lost.
+  - Fixed several bugs in rs_remote_tcpip when acting as a server.
+  - Bugfix in rt_neth_acp. Subscriptions were not refreshed after a remote node restarted.
