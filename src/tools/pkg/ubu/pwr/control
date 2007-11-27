@@ -1,5 +1,5 @@
 Package: pwr44
-Version: 4.4.4-2
+Version: 4.4.4-5
 Section: base
 Priority: optional
 Architecture: i386
@@ -19,4 +19,26 @@ Description: Proview development and runtime environment package
  4.4.2-1
   - Subgraphs for ventilation and circuitdiagrams added.
   - Baseobjects for threewayvalves, filters and dampers added.
-
+ 4.4.2-2
+  - Ge: Gray backgroundcolor could be undefined.
+ 4.4.2-3
+  - remote_mq present.
+ 4.4.2-4
+  - XY_Curve class and Ge dynamic added.
+ 4.4.3-1
+  - Changed qcom synchronization mechanism.
+ 4.4.4-1
+  - Function to suppress alarms in basecomponents added.
+  - Classes IpDistribute, IpCollect, Demux, IDemux, GetDpPtr, StoDpPtr,
+    Eurotherm_TC3001, Eurotherm_TC3001Aggr and more added.
+ 4.4.4-2
+  - Bugfix in gtk operatorwindow, long alarmtext could cause segfault
+ 4.4.4-3
+  - Bugfix in trend, disabled trend object was handled.
+  - Bugfix in object graph for CompModePID and CompPID.
+ 4.4.4-4
+  - Bugfix in Eurotherm 3001 profibus slave and module.
+  - Doublebuffering in graphs with window objects could be lost.
+ 4.4.4-5
+  - Fixed several bugs in rs_remote_tcpip when acting as a server.
+  - Bugfix in rt_neth_acp. Subscriptions were not refreshed after a remote node restarted.
