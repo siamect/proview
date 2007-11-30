@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_menu.cpp,v 1.14 2007-10-31 11:54:48 claes Exp $
+ * Proview   $Id: xtt_menu.cpp,v 1.15 2007-11-30 08:19:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -286,14 +286,14 @@ int XNav::GetObjectMenu( xmenu_sMenuCall	*ip,
   pwr_tCid		supercid;
 
 
-  if ( !cdh_tidIsCid( classid))
-    return XNAV__SUCCESS;
-
   if ( cdh_ObjidIsNotNull( CurrentObject->Objid))
     currentar = *CurrentObject;
 
     if ( ip->ItemType == xmenu_eItemType_Object) {
       // Popup-menu for an object
+      if ( !cdh_tidIsCid( classid))
+	return XNAV__SUCCESS;
+
 
       // Get the RtXtt common menu-objects
       strcpy( menu, "pwrs:Class-$Object-RtXtt");
@@ -346,6 +346,9 @@ int XNav::GetObjectMenu( xmenu_sMenuCall	*ip,
     }
     else if ( ip->ItemType == xmenu_eItemType_AttrObject) {   
       // Find attribute object methods...
+      if ( !cdh_tidIsCid( classid))
+	return XNAV__SUCCESS;
+
       // Get the RtXtt common menu-objects
       strcpy( menu, "pwrs:Class-$Object-RtXttAttrObject");
       sts = gdh_NameToObjid( menu, &menu_objid);
