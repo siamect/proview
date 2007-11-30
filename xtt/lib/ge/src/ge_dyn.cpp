@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.57 2007-11-01 08:46:27 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.58 2007-11-30 08:20:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -8689,8 +8689,8 @@ int GePopupMenu::action( grow_tObject object, glow_tEvent event)
       strcpy( filter, "$Object-OpenObjectFilter");
       break;
     case 7:
-      strcpy( method, "$Object-OpenClassGraph");
-      strcpy( filter, "$Object-OpenClassGraphFilter");
+      strcpy( method, "$Object-OpenObjectGraph");
+      strcpy( filter, "$Object-OpenObjectGraphFilter");
       break;
     case 18:
       strcpy( method, "$Object-OpenCrossref");

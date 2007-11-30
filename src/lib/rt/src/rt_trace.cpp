@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trace.cpp,v 1.3 2007-11-22 08:50:11 claes Exp $
+ * Proview   $Id: rt_trace.cpp,v 1.4 2007-11-30 08:21:48 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -477,8 +477,8 @@ void RtTrace::activate_open_classgraph()
     pwr_sAttrRef attrref = cdh_ObjidToAref( objid);
 
     (call_method_cb)( parent_ctx,
-		      "$Object-OpenClassGraph",
-		      "$Object-OpenClassGraphFilter",
+		      "$Object-OpenObjectGraph",
+		      "$Object-OpenObjectGraphFilter",
 		      attrref, 
 		      xmenu_eItemType_Object,
 		      xmenu_mUtility_Trace, NULL);
