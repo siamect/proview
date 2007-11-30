@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_object.cpp,v 1.17 2007-09-12 08:56:36 claes Exp $
+ * Proview   $Id: ge_graph_object.cpp,v 1.18 2007-11-30 08:18:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -44,6 +44,7 @@ typedef struct {
 
 static int graph_attr_float32( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_attr_int32( Graph *graph, pwr_sAttrRef *attrref);
+static int graph_attr_uint32( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_attr_boolean( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_object_ix( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_object_ax( Graph *graph, pwr_sAttrRef *attrref);
@@ -226,6 +227,10 @@ int Graph::init_object_graph( int mode)
       sts = graph_attr_int32( this, &attrref);
       return sts;
     }
+    if ( strcmp( classname, "uint32") == 0) {
+      sts = graph_attr_uint32( this, &attrref);
+      return sts;
+    }
     else if ( strcmp( classname, "boolean") == 0) {
       sts = graph_attr_boolean( this, &attrref);
       return sts;
@@ -318,6 +323,41 @@ static int graph_attr_int32( Graph *graph, pwr_sAttrRef *attrref)
   graph->graph_object_data = (void *) od;
   graph->graph_object_close = graph_attr_int32_close;
   graph->graph_object_scan = graph_attr_int32_scan;
+
+  sts = graph->trend_init( &od->td, 0);
+
+  return 1;
+}
+
+//
+// Attribute graph for UInt32
+// 
+
+typedef struct {
+	graph_sObjectTrend 	td;
+	} graph_sAttrUInt32;
+
+static void graph_attr_uint32_scan( Graph *graph)
+{
+  graph_sAttrUInt32 *od = (graph_sAttrUInt32 *)graph->graph_object_data;
+
+  graph->trend_scan( &od->td);
+}
+
+static void graph_attr_uint32_close( Graph *graph)
+{
+  free( graph->graph_object_data);
+}
+
+static int graph_attr_uint32( Graph *graph, pwr_sAttrRef *attrref)
+{
+  int sts;
+  graph_sAttrUInt32 *od;
+
+  od = (graph_sAttrUInt32 *) calloc( 1, sizeof(graph_sAttrUInt32));
+  graph->graph_object_data = (void *) od;
+  graph->graph_object_close = graph_attr_uint32_close;
+  graph->graph_object_scan = graph_attr_uint32_scan;
 
   sts = graph->trend_init( &od->td, 0);
 

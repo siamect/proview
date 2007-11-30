@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_main.cpp,v 1.4 2007-05-16 12:37:39 claes Exp $
+ * Proview   $Id: xtt_main.cpp,v 1.5 2007-11-30 08:18:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -352,6 +352,9 @@ void Xtt::activate_opengraph()
       break;
     case pwr_eType_Int32:
       sprintf( filename, "pwr_exe:pwr_t_int32.pwg");
+      break;
+    case pwr_eType_UInt32:
+      sprintf( filename, "pwr_exe:pwr_t_uint32.pwg");
       break;
     case pwr_eType_Boolean:
       sprintf( filename, "pwr_exe:pwr_t_boolean.pwg");

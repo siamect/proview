@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_c_object.cpp,v 1.16 2007-01-04 08:22:46 claes Exp $
+ * Proview   $Id: xtt_c_object.cpp,v 1.17 2007-11-30 08:18:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1413,6 +1413,12 @@ static pwr_tStatus OpenTypeGraph( xmenu_sMenuCall *ip)
     case pwr_eType_Boolean:
       sprintf( filename, "pwr_exe:pwr_t_boolean.pwg");
       break;
+    case pwr_eType_Int32:
+      sprintf( filename, "pwr_exe:pwr_t_int32.pwg");
+      break;
+    case pwr_eType_UInt32:
+      sprintf( filename, "pwr_exe:pwr_t_uint32.pwg");
+      break;
     default:
       return XNAV__SUCCESS;
   }
@@ -1451,6 +1457,8 @@ static pwr_tStatus OpenTypeGraphFilter( xmenu_sMenuCall *ip)
   switch ( attr_type) {
     case pwr_eType_Float32:
     case pwr_eType_Boolean:
+    case pwr_eType_Int32:
+    case pwr_eType_UInt32:
       return XNAV__SUCCESS;
       break;
     default:
