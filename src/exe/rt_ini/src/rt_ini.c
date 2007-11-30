@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_ini.c,v 1.13 2006-01-13 16:31:29 claes Exp $
+ * Proview   $Id: rt_ini.c,v 1.14 2007-11-30 08:22:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -851,6 +851,7 @@ load_backup ()
   pwr_tStatus			sts;
   int				i;
   pwr_sClass_IOHandler		*iop;
+  pwr_sAttrRef			aref;
  
   sts = io_get_iohandler_object(&iop, NULL);  
   if (EVEN(sts)) {
@@ -945,11 +946,280 @@ load_backup ()
     ivp->Value[i] = *iip;
   }
 
+  typedef struct {
+    union {
+      pwr_tFloat32 *f;
+      pwr_tInt32   *i;
+      pwr_tBoolean *b;
+    } actval_p;
+    pwr_tUInt32  validx;
+    union {
+      pwr_sClass_Av *av;
+      pwr_sClass_Iv *iv;
+      pwr_sClass_Dv *dv;
+      pwr_sClass_Ai *ai;
+      pwr_sClass_Ao *ao;
+      pwr_sClass_Ii *ii;
+      pwr_sClass_Io *io;
+      pwr_sClass_Di *di;
+      pwr_sClass_Do *dox;
+      pwr_sClass_Co *co;
+    } op;
+  } ini_sRestoreSig;
+
+  // Store ActualValue pointers
+  ini_sRestoreSig *rsav = calloc( sizeof(ini_sRestoreSig), iop->AvCount);
+  i = 0;
+  for ( sts = gdh_GetClassListAttrRef(pwr_cClass_Av, &aref);
+	ODD(sts);
+	sts = gdh_GetNextAttrRef(pwr_cClass_Av, &aref, &aref)) {
+    if ( i >= iop->AvCount) break;
+
+    sts = gdh_AttrRefToPointer( &aref, (pwr_tAddress *)&rsav[i].op.av);
+    if ( EVEN(sts)) {
+      errh_Error("gdh_AttrRefToPointer Iv, %m", sts);
+      return;
+    }
+
+    rsav[i].actval_p.f = rsav[i].op.av->ActualValue;
+    rsav[i].validx = rsav[i].op.av->ValueIndex;
+    i++;
+  }
+  
+  ini_sRestoreSig *rsdv = calloc( sizeof(ini_sRestoreSig), iop->DvCount);
+  i = 0;
+  for ( sts = gdh_GetClassListAttrRef(pwr_cClass_Dv, &aref);
+	ODD(sts);
+	sts = gdh_GetNextAttrRef(pwr_cClass_Dv, &aref, &aref)) {
+    if ( i >= iop->DvCount) break;
+
+    sts = gdh_AttrRefToPointer( &aref, (pwr_tAddress *)&rsdv[i].op.dv);
+    if ( EVEN(sts)) {
+      errh_Error("gdh_AttrRefToPointer Iv, %m", sts);
+      return;
+    }
+
+    rsdv[i].actval_p.b = rsdv[i].op.dv->ActualValue;
+    rsdv[i].validx = rsdv[i].op.dv->ValueIndex;
+    i++;
+  }
+  
+  ini_sRestoreSig *rsiv = calloc( sizeof(ini_sRestoreSig), iop->IvCount);
+  i = 0;
+  for ( sts = gdh_GetClassListAttrRef(pwr_cClass_Iv, &aref);
+	ODD(sts);
+	sts = gdh_GetNextAttrRef(pwr_cClass_Iv, &aref, &aref)) {
+    if ( i >= iop->IvCount) break;
+
+    sts = gdh_AttrRefToPointer( &aref, (pwr_tAddress *)&rsiv[i].op.iv);
+    if ( EVEN(sts)) {
+      errh_Error("gdh_AttrRefToPointer Iv, %m", sts);
+      return;
+    }
+
+    rsiv[i].actval_p.i = rsiv[i].op.iv->ActualValue;
+    rsiv[i].validx = rsiv[i].op.iv->ValueIndex;
+    i++;
+  }
+  
+  ini_sRestoreSig *rsai = calloc( sizeof(ini_sRestoreSig), iop->AiCount);
+  i = 0;
+  for ( sts = gdh_GetClassListAttrRef(pwr_cClass_Ai, &aref);
+	ODD(sts);
+	sts = gdh_GetNextAttrRef(pwr_cClass_Ai, &aref, &aref)) {
+    if ( i >= iop->AiCount) break;
+
+    sts = gdh_AttrRefToPointer( &aref, (pwr_tAddress *)&rsai[i].op.ai);
+    if ( EVEN(sts)) {
+      errh_Error("gdh_AttrRefToPointer Iv, %m", sts);
+      return;
+    }
+
+    rsai[i].actval_p.f = rsai[i].op.ai->ActualValue;
+    rsai[i].validx = rsai[i].op.ai->ValueIndex;
+    i++;
+  }
+  
+  ini_sRestoreSig *rsao = calloc( sizeof(ini_sRestoreSig), iop->AoCount);
+  i = 0;
+  for ( sts = gdh_GetClassListAttrRef(pwr_cClass_Ao, &aref);
+	ODD(sts);
+	sts = gdh_GetNextAttrRef(pwr_cClass_Ao, &aref, &aref)) {
+    if ( i >= iop->AoCount) break;
+
+    sts = gdh_AttrRefToPointer( &aref, (pwr_tAddress *)&rsao[i].op.ao);
+    if ( EVEN(sts)) {
+      errh_Error("gdh_AttrRefToPointer Iv, %m", sts);
+      return;
+    }
+
+    rsao[i].actval_p.f = rsao[i].op.ao->ActualValue;
+    rsao[i].validx = rsao[i].op.ao->ValueIndex;
+    i++;
+  }
+  
+  ini_sRestoreSig *rsii = calloc( sizeof(ini_sRestoreSig), iop->IiCount);
+  i = 0;
+  for ( sts = gdh_GetClassListAttrRef(pwr_cClass_Ii, &aref);
+	ODD(sts);
+	sts = gdh_GetNextAttrRef(pwr_cClass_Ii, &aref, &aref)) {
+    if ( i >= iop->IiCount) break;
+
+    sts = gdh_AttrRefToPointer( &aref, (pwr_tAddress *)&rsii[i].op.ii);
+    if ( EVEN(sts)) {
+      errh_Error("gdh_AttrRefToPointer Iv, %m", sts);
+      return;
+    }
+
+    rsii[i].actval_p.i = rsii[i].op.ii->ActualValue;
+    rsii[i].validx = rsii[i].op.ii->ValueIndex;
+    i++;
+  }
+  
+  ini_sRestoreSig *rsio = calloc( sizeof(ini_sRestoreSig), iop->IoCount);
+  i = 0;
+  for ( sts = gdh_GetClassListAttrRef(pwr_cClass_Io, &aref);
+	ODD(sts);
+	sts = gdh_GetNextAttrRef(pwr_cClass_Io, &aref, &aref)) {
+    if ( i >= iop->IoCount) break;
+
+    sts = gdh_AttrRefToPointer( &aref, (pwr_tAddress *)&rsio[i].op.io);
+    if ( EVEN(sts)) {
+      errh_Error("gdh_AttrRefToPointer Iv, %m", sts);
+      return;
+    }
+
+    rsio[i].actval_p.i = rsio[i].op.io->ActualValue;
+    rsio[i].validx = rsio[i].op.io->ValueIndex;
+    i++;
+  }
+  
+  ini_sRestoreSig *rsdi = calloc( sizeof(ini_sRestoreSig), iop->DiCount);
+  i = 0;
+  for ( sts = gdh_GetClassListAttrRef(pwr_cClass_Di, &aref);
+	ODD(sts);
+	sts = gdh_GetNextAttrRef(pwr_cClass_Di, &aref, &aref)) {
+    if ( i >= iop->DiCount) break;
+
+    sts = gdh_AttrRefToPointer( &aref, (pwr_tAddress *)&rsdi[i].op.di);
+    if ( EVEN(sts)) {
+      errh_Error("gdh_AttrRefToPointer Iv, %m", sts);
+      return;
+    }
+
+    rsdi[i].actval_p.b = rsdi[i].op.di->ActualValue;
+    rsdi[i].validx = rsdi[i].op.di->ValueIndex;
+    i++;
+  }
+  
+  ini_sRestoreSig *rsdo = calloc( sizeof(ini_sRestoreSig), iop->DoCount);
+  i = 0;
+  for ( sts = gdh_GetClassListAttrRef(pwr_cClass_Do, &aref);
+	ODD(sts);
+	sts = gdh_GetNextAttrRef(pwr_cClass_Do, &aref, &aref)) {
+    if ( i >= iop->DoCount) break;
+
+    sts = gdh_AttrRefToPointer( &aref, (pwr_tAddress *)&rsdo[i].op.dox);
+    if ( EVEN(sts)) {
+      errh_Error("gdh_AttrRefToPointer Iv, %m", sts);
+      return;
+    }
+
+    rsdo[i].actval_p.b = rsdo[i].op.dox->ActualValue;
+    rsdo[i].validx = rsdo[i].op.dox->ValueIndex;
+    i++;
+  }
+  
+  ini_sRestoreSig *rsco = calloc( sizeof(ini_sRestoreSig), iop->CoCount);
+  pwr_tInt32 **rscoa = calloc( sizeof(pwr_tInt32*), iop->CoCount);
+  i = 0;
+  for ( sts = gdh_GetClassListAttrRef(pwr_cClass_Co, &aref);
+	ODD(sts);
+	sts = gdh_GetNextAttrRef(pwr_cClass_Co, &aref, &aref)) {
+    if ( i >= iop->CoCount) break;
+
+    sts = gdh_AttrRefToPointer( &aref, (pwr_tAddress *)&rsco[i].op.co);
+    if ( EVEN(sts)) {
+      errh_Error("gdh_AttrRefToPointer Iv, %m", sts);
+      return;
+    }
+
+    rsco[i].actval_p.i = rsco[i].op.co->RawValue;
+    rsco[i].validx = rsco[i].op.co->ValueIndex;
+    rscoa[i] = rsco[i].op.co->AbsValue;
+    i++;
+  }
+  
+
   sts = bck_LoadBackup();
   if (EVEN(sts)) {
     errh_Error("bck_LoadBackup, %m", sts);
     return;
   }
+
+  // Set stored ActualValue pointers
+  for ( i = 0; i < iop->AvCount; i++) {
+    rsav[i].op.av->ActualValue = rsav[i].actval_p.f;
+    rsav[i].op.av->ValueIndex = rsav[i].validx;
+  }
+  free( rsav);
+
+  for ( i = 0; i < iop->DvCount; i++) {
+    rsdv[i].op.dv->ActualValue = rsdv[i].actval_p.b;
+    rsdv[i].op.dv->ValueIndex = rsdv[i].validx;
+  }
+  free( rsdv);
+
+  for ( i = 0; i < iop->IvCount; i++) {
+    rsiv[i].op.iv->ActualValue = rsiv[i].actval_p.i;
+    rsiv[i].op.iv->ValueIndex = rsiv[i].validx;
+  }
+  free( rsiv);
+
+  for ( i = 0; i < iop->AiCount; i++) {
+    rsai[i].op.ai->ActualValue = rsai[i].actval_p.f;
+    rsai[i].op.ai->ValueIndex = rsai[i].validx;
+  }
+  free( rsai);
+
+  for ( i = 0; i < iop->AoCount; i++) {
+    rsao[i].op.ao->ActualValue = rsao[i].actval_p.f;
+    rsao[i].op.ao->ValueIndex = rsao[i].validx;
+  }
+  free( rsao);
+
+  for ( i = 0; i < iop->IiCount; i++) {
+    rsii[i].op.ii->ActualValue = rsii[i].actval_p.i;
+    rsii[i].op.ii->ValueIndex = rsii[i].validx;
+  }
+  free( rsii);
+
+  for ( i = 0; i < iop->IoCount; i++) {
+    rsio[i].op.io->ActualValue = rsio[i].actval_p.i;
+    rsio[i].op.io->ValueIndex = rsio[i].validx;
+  }
+  free( rsio);
+
+  for ( i = 0; i < iop->DiCount; i++) {
+    rsdi[i].op.di->ActualValue = rsdi[i].actval_p.b;
+    rsdi[i].op.di->ValueIndex = rsdi[i].validx;
+  }
+  free( rsdi);
+
+  for ( i = 0; i < iop->DoCount; i++) {
+    rsdo[i].op.dox->ActualValue = rsdo[i].actval_p.b;
+    rsdo[i].op.dox->ValueIndex = rsdo[i].validx;
+  }
+  free( rsdo);
+
+  for ( i = 0; i < iop->CoCount; i++) {
+    rsco[i].op.co->RawValue = rsco[i].actval_p.i;
+    rsco[i].op.co->AbsValue = rscoa[i];
+    rsco[i].op.co->ValueIndex = rsco[i].validx;
+  }
+  free( rsco);
+  free( rscoa);
+
 
   for (i = 0; i < iop->AvCount; i++) {
     pwr_tFloat32 *ifp = gdh_TranslateRtdbPointer(iavp->Value[i]);
