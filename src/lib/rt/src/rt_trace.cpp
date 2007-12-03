@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trace.cpp,v 1.4 2007-11-30 08:21:48 claes Exp $
+ * Proview   $Id: rt_trace.cpp,v 1.5 2007-12-03 14:51:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -436,6 +436,49 @@ void RtTrace::activate_open_object()
 		      xmenu_mUtility_Trace, NULL);
   }
 }
+
+void RtTrace::activate_open_subwindow()
+{
+  flow_tObject 		node;
+  pwr_tObjid		objid;
+  pwr_tStatus          	sts;
+  RtTrace	      	*new_tractx;
+  trace_tNode 		*nnode;
+
+  sts = get_selected_node( &node);
+  if (EVEN(sts)) return;
+
+  sts = get_objid( node, &objid);
+  if (EVEN(sts)) return;
+
+  /* Should check for ordercond or orderact window... */
+  sts = gdh_GetChild( objid, &objid);
+  if ( EVEN(sts)) return;
+
+  if ( subwindow_cb) {
+    // The parent context will start the subwindow
+    (subwindow_cb)( parent_ctx, objid);
+  }
+  else {
+    new_tractx = subwindow_new( this, objid, &sts);
+    if ( ODD(sts)) {
+      new_tractx->close_cb = trace_close_cb;
+      new_tractx->help_cb = help_cb;
+      new_tractx->display_object_cb = display_object_cb;
+      new_tractx->collect_insert_cb = collect_insert_cb;
+      new_tractx->is_authorized_cb = is_authorized_cb;
+
+      nnode = trace_list;
+      trace_list = (trace_tNode *) malloc(sizeof(trace_tNode));
+      trace_list->Next = nnode;
+      trace_list->tractx = new_tractx;     
+    }
+    else
+      delete new_tractx;
+  }
+}
+
+
 
 void RtTrace::activate_show_cross()
 {

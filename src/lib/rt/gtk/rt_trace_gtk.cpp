@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trace_gtk.cpp,v 1.4 2007-06-29 12:51:42 claes Exp $
+ * Proview   $Id: rt_trace_gtk.cpp,v 1.5 2007-12-03 14:51:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -103,6 +103,13 @@ void RtTraceGtk::activate_open_object(GtkWidget *w, gpointer data)
   RtTrace *tractx = (RtTrace *)data;
 
   tractx->activate_open_object();
+}
+
+void RtTraceGtk::activate_open_subwindow(GtkWidget *w, gpointer data)
+{
+  RtTrace *tractx = (RtTrace *)data;
+
+  tractx->activate_open_subwindow();
 }
 
 void RtTraceGtk::activate_show_cross(GtkWidget *w, gpointer data)
@@ -403,6 +410,13 @@ RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObji
   			      'a', GdkModifierType(GDK_CONTROL_MASK), 
   			      GTK_ACCEL_VISIBLE);
 
+  GtkWidget *functions_open_subwindow = gtk_menu_item_new_with_mnemonic( "Open S_ubwindow");
+  g_signal_connect( functions_open_subwindow, "activate", 
+		    G_CALLBACK(activate_open_subwindow), this);
+  gtk_widget_add_accelerator( functions_open_subwindow, "activate", accel_g,
+  			      'l', GdkModifierType(GDK_CONTROL_MASK), 
+  			      GTK_ACCEL_VISIBLE);
+
   GtkWidget *functions_display_object = gtk_menu_item_new_with_mnemonic( "_Display object in Navigator");
   g_signal_connect( functions_display_object, "activate", 
 		    G_CALLBACK(activate_display_object), this);
@@ -433,6 +447,7 @@ RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObji
 
   GtkMenu *functions_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_open_object);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_open_subwindow);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_display_object);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_show_cross);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_open_classgraph);

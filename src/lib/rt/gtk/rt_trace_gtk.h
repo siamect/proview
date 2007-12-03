@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trace_gtk.h,v 1.1 2007-01-04 07:52:30 claes Exp $
+ * Proview   $Id: rt_trace_gtk.h,v 1.2 2007-12-03 14:51:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -52,6 +52,7 @@ class RtTraceGtk : public RtTrace {
   static void activate_display_object(GtkWidget *w, gpointer data);
   static void activate_collect_insert(GtkWidget *w, gpointer data);
   static void activate_open_object(GtkWidget *w, gpointer data);
+  static void activate_open_subwindow(GtkWidget *w, gpointer data);
   static void activate_show_cross(GtkWidget *w, gpointer data);
   static void activate_open_classgraph(GtkWidget *w, gpointer data);
   static void activate_trace(GtkWidget *w, gpointer data);

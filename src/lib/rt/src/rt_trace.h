@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trace.h,v 1.9 2007-01-04 07:52:31 claes Exp $
+ * Proview   $Id: rt_trace.h,v 1.10 2007-12-03 14:51:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -99,6 +99,7 @@ class RtTrace {
   void activate_display_object();
   void activate_collect_insert();
   void activate_open_object();
+  void activate_open_subwindow();
   void activate_show_cross();
   void activate_open_classgraph();
   void activate_trace();
