@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.cpp,v 1.20 2007-06-01 12:52:40 claes Exp $
+ * Proview   $Id: opc_utl.cpp,v 1.21 2007-12-03 13:32:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -279,7 +279,7 @@ xsd__anyType* opc_opctype_to_value( struct soap *soap, void *bufp, int size,
   switch (opc_type) {
   case opc_eDataType_string: {
     xsd__string *val = soap_new_xsd__string( soap, -1);
-    val->__item = std::string( (char *)bufp);
+    val->__item.assign( (char *)bufp);
     return val;
     break;
   }
@@ -361,7 +361,7 @@ xsd__anyType* opc_opctype_to_value( struct soap *soap, void *bufp, int size,
     char timstr[40];
 
     time_AtoOPCAscii( (pwr_tTime *)bufp, timstr, sizeof(timstr));
-    val->__item = std::string( timstr);
+    val->__item.assign( timstr);
     return val;
     break;
   }
