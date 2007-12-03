@@ -1,6 +1,6 @@
 /* 
- * Proview   $Id: opc_server.cpp,v 1.21 2007-06-01 12:52:40 claes Exp $
- * Proview   $Id: opc_server.cpp,v 1.21 2007-06-01 12:52:40 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.22 2007-12-03 13:31:35 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.22 2007-12-03 13:31:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1001,7 +1001,8 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap* soap,
 
 	ritem->Value = opc_opctype_to_value( soap, it->second[j].p, it->second[j].size, 
 					     it->second[j].opc_type);
-	memcpy( &it->second[j].old_value, it->second[j].p, it->second[j].size);
+	if ( it->second[j].size <= (int)sizeof(it->second[j].old_value))
+	  memcpy( &it->second[j].old_value, it->second[j].p, it->second[j].size);
        	ritem->Timestamp = soap_new_std__string( soap, -1);
 	ritem->Timestamp->assign( opc_datetime(0));
 	if ( !it->second[j].client_handle.empty()) {
