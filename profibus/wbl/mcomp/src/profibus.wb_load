@@ -672,6 +672,7 @@ Volume Profibus $ClassVolume 0.0.250.7
       EndObject
     EndObject
     !/**
+    !  @Author Robert Karlsson
     !  @Version 1.0
     !  @Group IO,IO_Profibus
     !  Object that configure one Profibus DP slave.
@@ -687,30 +688,53 @@ Volume Profibus $ClassVolume 0.0.250.7
           Attr StructName = "Pb_DP_Slave"
           Attr NextAix = "_X44"
         EndBody
+        !/**
+        ! Description of slave
+        !*/
         Object Description $Attribute 1 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! Slave specification.
+        !*/
         Object Specification $Attribute 38 14-MAR-2006 07:48:52.18
           Body SysBody 14-MAR-2006 07:48:52.18
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this object.
+        !  A URL to the data sheet for the equipment of this object.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 39 14-MAR-2006 07:49:15.48
           Body SysBody 14-MAR-2006 07:49:15.48
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        ! Link to a proper gsd-file for your slave.
+        !*/
         Object GSDfile $Attribute 2 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "GSDfile"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! Indicates the current state of the bus in runtime. Updated by the I/O-handler.
+        ! PB__NORMAL : Slave is in normal operating state.
+        ! PB__NOCONN : There is no connection to the slave.
+        ! PB__CONFIGERR : The slave configuration does not match the slaves physical config.
+        ! PB__MASTERLOC : The slave has been configured from an other master.
+        ! PB__NOTREADY : The slave is in an undefined state.
+        ! PB__DISABLED : Slave is disabled, no i/o-handling will be performed.
+        !*/
         Object Status $Attribute 3 16-JAN-2006 09:46:40.50
           Body SysBody 23-MAR-2006 09:47:41.08
             Attr PgmName = "Status"
@@ -718,48 +742,85 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
         EndObject
+        !/**
+        ! @Summary Process that handles the slave. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the slave. All slaves belonging to the same Profiboard must be handled
+	! by the same process.
+        ! 
+        ! 1: The slave is handled by the plc process, and by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The slave is handled by the rt_io_comm process.
+        ! 4: The slave is handled by an application program.
+        !*/
         Object Process $Attribute 4 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "Process"
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! @Summary Plc thread that handles the slave.
+        ! The PlcThread object of the plc thread that handles the slave.
+        ! The slave is handled with the scantime of the thread.
+	! All slaves 
+        !*/
         Object ThreadObject $Attribute 5 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "ThreadObject"
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
+        !/**
+	! Address of the slave (1 - 127).
+        !*/
         Object SlaveAddress $Attribute 6 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "SlaveAddress"
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+	! Byte ordering of the slave.
+	! Little or Big Endian (from which side do this slave eat it's egg, the little or big end ?).
+        !*/
         Object ByteOrdering $Attribute 7 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "ByteOrdering"
             Attr TypeRef = "pwrb:Type-ByteOrderingEnum"
           EndBody
         EndObject
+        !/**
+	! Float representation of the slave..
+	! Intel or IEEE.
+        !*/
         Object FloatRepresentation $Attribute 8 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "FloatRepresentation"
             Attr TypeRef = "pwrb:Type-FloatRepEnum"
           EndBody
         EndObject
+        !/**
+	! Stall action.
+	! No action, reset inputs or set emergency break.
+        !*/
         Object StallAction $Attribute 9 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "StallAction"
             Attr TypeRef = "Profibus:Type-PbStallActionEnum"
           EndBody
         EndObject
+        !/**
+        ! Flag that disables the initialization of the slave, if initialized turns off i/o-handling.
+        !*/
         Object DisableSlave $Attribute 10 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "DisableSlave"
             Attr TypeRef = "pwrs:Type-$UInt8"
           EndBody
         EndObject
+        !/**
+        ! ErrorCount will increase every cycle if status is not PB__NORMAL.
+        !*/
         Object ErrorCount $Attribute 11 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "ErrorCount"
@@ -767,78 +828,117 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! If stall action is reset inputs, all inputs will be set to zero when this limit is reached.
+        !*/
         Object ErrorSoftLimit $Attribute 12 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "ErrorSoftLimit"
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! If stall action is emergency break, this action will be invoked when limit is reached.
+        !*/
         Object ErrorHardLimit $Attribute 13 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "ErrorHardLimit"
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! This info is collected from the gsd-file.
+        !*/
         Object VendorName $Attribute 14 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "VendorName"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! This info is collected from the gsd-file.
+        !*/
         Object ModelName $Attribute 15 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "ModelName"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! This info is collected from the gsd-file.
+        !*/
         Object Revision $Attribute 16 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "Revision"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! This info is collected from the gsd-file.
+        !*/
         Object HardwareRelease $Attribute 17 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "HardwareRelease"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! This info is collected from the gsd-file.
+        !*/
         Object SoftwareRelease $Attribute 18 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "SoftwareRelease"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! This info is collected from the gsd-file.
+        !*/
         Object PNOIdent $Attribute 19 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "PNOIdent"
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! This info is collected from the gsd-file.
+        !*/
         Object GroupIdent $Attribute 20 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "GroupIdent"
             Attr TypeRef = "pwrs:Type-$UInt8"
           EndBody
         EndObject
+        !/**
+        ! This info is collected from the gsd-file.
+        !*/
         Object WdFact1 $Attribute 21 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "WdFact1"
             Attr TypeRef = "pwrs:Type-$UInt8"
           EndBody
         EndObject
+        !/**
+        ! This info is collected from the gsd-file.
+        !*/
         Object WdFact2 $Attribute 22 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "WdFact2"
             Attr TypeRef = "pwrs:Type-$UInt8"
           EndBody
         EndObject
+        !/**
+        ! Length of the parameter data to be sent to the slave during initialization.
+        !*/
         Object PrmUserDataLen $Attribute 23 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "PrmUserDataLen"
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! Parameter data to be sent to the slave during initialization.
+        !*/
         Object PrmUserData $Attribute 24 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "PrmUserData"
@@ -847,18 +947,27 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt8"
           EndBody
         EndObject
+        !/**
+        ! Not implemented.
+        !*/
         Object AutoConfigure $Attribute 25 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "AutoConfigure"
             Attr TypeRef = "pwrs:Type-$UInt8"
           EndBody
         EndObject
+        !/**
+        ! Length of the config data to be sent to the slave during initialization.
+        !*/
         Object ConfigDataLen $Attribute 26 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "ConfigDataLen"
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! Config data to be sent to the slave during initialization.
+        !*/
         Object ConfigData $Attribute 27 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "ConfigData"
@@ -867,12 +976,18 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt8"
           EndBody
         EndObject
+        !/**
+        ! Not implemented.
+        !*/
         Object SlaveUserDataLen $Attribute 28 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "SlaveUserDataLen"
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! Not implemented.
+        !*/
         Object SlaveUserData $Attribute 29 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "SlaveUserData"
@@ -881,6 +996,9 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt8"
           EndBody
         EndObject
+        !/**
+        ! Bytes of input from slave.
+        !*/
         Object BytesOfInput $Attribute 30 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "BytesOfInput"
@@ -888,6 +1006,9 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! Bytes of output to slave.
+        !*/
         Object BytesOfOutput $Attribute 31 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "BytesOfOutput"
@@ -895,6 +1016,9 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! Bytes of available extended diagnostic information from slave.
+        !*/
         Object BytesOfDiag $Attribute 40 07-FEB-2007 13:46:11.30
           Body SysBody 07-FEB-2007 13:46:13.12
             Attr PgmName = "BytesOfDiag"
@@ -902,6 +1026,9 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! Offset in Profiboard DPRAM.
+        !*/
         Object OffsetInputs $Attribute 32 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "OffsetInputs"
@@ -909,6 +1036,9 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! Offset in Profiboard DPRAM.
+        !*/
         Object OffsetOutputs $Attribute 33 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "OffsetOutputs"
@@ -916,6 +1046,9 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! Number of modules on slave.
+        !*/
         Object NumberModules $Attribute 34 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "NumberModules"
@@ -923,6 +1056,9 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! Input data area.
+        !*/
         Object Inputs $Attribute 35 16-JAN-2006 09:46:40.50
           Body SysBody 07-FEB-2007 13:48:15.10
             Attr PgmName = "Inputs"
@@ -931,6 +1067,9 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt8"
           EndBody
         EndObject
+        !/**
+        ! Output data area.
+        !*/
         Object Outputs $Attribute 36 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "Outputs"
@@ -939,6 +1078,9 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt8"
           EndBody
         EndObject
+        !/**
+        ! Extended diagnostics data area.
+        !*/
         Object Diag $Attribute 37 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "Diag"
@@ -947,6 +1089,9 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt8"
           EndBody
         EndObject
+        !/**
+        ! Default profibus diagnostic information.
+        !*/
         Object StationStatus1 $Attribute 41 07-FEB-2007 13:48:02.19
           Body SysBody 07-FEB-2007 13:49:30.74
             Attr PgmName = "StationStatus1"
@@ -954,6 +1099,9 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "Profibus:Type-PbStationStatus1Mask"
           EndBody
         EndObject
+        !/**
+        ! Default profibus diagnostic information.
+        !*/
         Object StationStatus2 $Attribute 42 07-FEB-2007 13:50:01.39
           Body SysBody 07-FEB-2007 13:50:09.37
             Attr PgmName = "StationStatus2"
@@ -961,6 +1109,9 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "Profibus:Type-PbStationStatus2Mask"
           EndBody
         EndObject
+        !/**
+        ! Default profibus diagnostic information.
+        !*/
         Object StationStatus3 $Attribute 43 07-FEB-2007 13:50:21.92
           Body SysBody 07-FEB-2007 13:50:33.63
             Attr PgmName = "StationStatus3"
@@ -1479,10 +1630,12 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndObject
         !/**
         ! Indicates the current state of the bus in runtime. Updated by the I/O-handler.
-        ! 0 : Bus is not initialized.
-        ! 1 : Bus is in stopped mode.
-        ! 2 : Bus is in cleared mode.
-        ! 3 : Bus is in operating mode (this should be the normal state when running).
+        ! PB__NOTINIT : Bus is not initialized.
+        ! PB__INITFAIL : Bus failed to be initialized.
+        ! PB__DISABLED : Bus is disabled, no i/o-handling will be performed.
+        ! PB__STOPPED : Bus is in stopped mode.
+        ! PB__CLEARED : Bus is in cleared mode.
+        ! PB__NORMAL : Bus is in operating mode (this should be the normal state when running).
         !*/
         Object Status $Attribute 4 16-JAN-2006 09:46:40.51
           Body SysBody 23-MAR-2006 09:47:54.90
@@ -1492,7 +1645,7 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         !/**
-        ! Flag that disables the initialization of the bus. Can´t be set dynamically.
+        ! Flag that disables the initialization of the bus, if initialized turns off i/o-handling.
         !*/
         Object DisableBus $Attribute 5 16-JAN-2006 09:46:40.51
           Body SysBody 16-JAN-2006 09:46:40.51
@@ -1522,6 +1675,8 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndObject
         !/**
         ! Maximum number of slaves allowed on the bus. Range 0..127.
+	! Observe that maximum size of the DPRAM is 16 kB.
+	! This means that: MaxNumberSlaves * (MaxSlaveOutputLen + MaxSlaveInputLen) < 16384
         !*/
         Object MaxNumberSlaves $Attribute 8 16-JAN-2006 09:46:40.51
           Body SysBody 16-JAN-2006 09:46:40.51
