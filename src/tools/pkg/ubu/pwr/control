@@ -3,7 +3,7 @@ Version: 4.4.4-5
 Section: base
 Priority: optional
 Architecture: i386
-Depends: libc6 (>= 2.5-0ubuntu14), libgtk2.0-0 (>= 2.10.11-0ubuntu3), libasound2 (>= 1.0.13-1ubuntu5), libdb4.4 (>=4.4.20-8ubuntu2)
+Depends: libc6 (>= 2.5-0ubuntu14), libgtk2.0-0 (>= 2.10.11-0ubuntu3), libasound2 (>= 1.0.13-1ubuntu5), libdb4.4 (>=4.4.20-8ubuntu2), libdb4.4++ (>=4.4.20-8ubuntu2)
 Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44
 Maintainer: Proview <postmaster@proview.se>
 Description: Proview development and runtime environment package
