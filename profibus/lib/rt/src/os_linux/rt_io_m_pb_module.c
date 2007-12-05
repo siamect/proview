@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_module.c,v 1.8 2007-10-08 13:43:10 claes Exp $
+ * Proview   $Id: rt_io_m_pb_module.c,v 1.9 2007-12-05 09:57:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -189,17 +189,20 @@ static pwr_tStatus IoCardRead (
 
               case pwr_eDataRepEnum_Bit8:
 	        udata8p = local->input_area + cp->offset + chanp->offset;
-		* (pwr_tUInt16 *) (chanp->vbp) = ((*udata8p & chanp->mask) != 0);
+		* (pwr_tUInt16 *) (chanp->vbp) = chan_di->InvertOn ? ((*udata8p & chanp->mask) == 0) :
+		                                                     ((*udata8p & chanp->mask) != 0);
 	        break;
 
               case pwr_eDataRepEnum_Bit16:
 	        udata16p = local->input_area + cp->offset + chanp->offset;
-		* (pwr_tUInt16 *) (chanp->vbp) = ((*udata16p & chanp->mask) != 0);
+		* (pwr_tUInt16 *) (chanp->vbp) = chan_di->InvertOn ? ((*udata16p & chanp->mask) == 0) :
+		                                                     ((*udata16p & chanp->mask) != 0);
 	        break;
 
               case pwr_eDataRepEnum_Bit32:
 	        udata32p = local->input_area + cp->offset + chanp->offset;
-		* (pwr_tUInt16 *) (chanp->vbp) = ((*udata32p & chanp->mask) != 0);
+		* (pwr_tUInt16 *) (chanp->vbp) = chan_di->InvertOn ? ((*udata32p & chanp->mask) == 0) :
+		                                                     ((*udata32p & chanp->mask) != 0);
 	        break;
 
 	    }
@@ -506,7 +509,7 @@ static pwr_tStatus IoCardWrite (
 
               case pwr_eDataRepEnum_Bit8:
 	        udata8p = local->output_area + cp->offset + chanp->offset;
-		if (do_actval != 0)
+		if (do_actval ^ chan_do->InvertOn)
 		  *udata8p |= chanp->mask;
 		else
 		  *udata8p &= ~chanp->mask;
@@ -514,7 +517,7 @@ static pwr_tStatus IoCardWrite (
 
               case pwr_eDataRepEnum_Bit16:
 	        udata16p = local->output_area + cp->offset + chanp->offset;
-		if (do_actval != 0)
+		if (do_actval ^ chan_do->InvertOn)
 		  *udata16p |= chanp->mask;
 		else
 		  *udata16p &= ~chanp->mask;
@@ -522,7 +525,7 @@ static pwr_tStatus IoCardWrite (
 
               case pwr_eDataRepEnum_Bit32:
 	        udata32p = local->output_area + cp->offset + chanp->offset;
-		if (do_actval != 0)
+		if (do_actval ^ chan_do->InvertOn)
 		  *udata32p |= chanp->mask;
 		else
 		  *udata32p &= ~chanp->mask;
