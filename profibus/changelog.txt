@@ -16,3 +16,4 @@
 071008 cs -           ChanIi with name starting with Diag_ fetches value from diagnostic area.
 071116 cs -           Bugfix in Profibus configurator, ExtUserPrmData for slave, default values where not set.
 071116 cs -           Bugfix in Profibus configurator, additional ExtUserPrmDataConst was not handled correctly.
+071205 rk -           ChanDi and ChanDo inverts value if InvertOn set on channel.
