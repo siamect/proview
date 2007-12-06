@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_print_wbl.cpp,v 1.20 2007-09-19 15:13:02 claes Exp $
+ * Proview   $Id: wb_print_wbl.cpp,v 1.21 2007-12-06 10:53:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -655,7 +655,12 @@ bool wb_print_wbl::printValue (wb_volume& v,
     sprintf(sval, "%d", *(pwr_tBoolean *) val);
     break;
   case pwr_eType_Float32:
-    sprintf(sval, "%.*e", FLT_DIG, *(pwr_tFloat32 *) val);
+    if ( *(pwr_tFloat32 *)val == FLT_MIN)
+      strcpy( sval, "FLT_MIN");
+    else if ( *(pwr_tFloat32 *)val == FLT_MAX)
+      strcpy( sval, "FLT_MAX");
+    else
+      sprintf(sval, "%.*e", FLT_DIG, *(pwr_tFloat32 *) val);
     break;
   case pwr_eType_Float64:
     sprintf(sval, "%.*e", DBL_DIG, *(pwr_tFloat64 *) val);
@@ -673,7 +678,12 @@ bool wb_print_wbl::printValue (wb_volume& v,
     sprintf(sval, "%d", *(pwr_tInt16 *) val);
     break;
   case pwr_eType_Int32:
-    sprintf(sval, "%d", *(pwr_tInt32 *) val);
+    if ( *(pwr_tInt32 *)val == INT_MIN)
+      strcpy( sval, "INT_MIN");
+    else if ( *(pwr_tInt32 *)val == INT_MAX)
+      strcpy( sval, "INT_MAX");
+    else
+      sprintf(sval, "%d", *(pwr_tInt32 *) val);
     break;
   case pwr_eType_Int64:
     sprintf(sval, "%lld", *(pwr_tInt64 *) val);

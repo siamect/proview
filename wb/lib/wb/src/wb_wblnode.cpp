@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wblnode.cpp,v 1.59 2007-10-23 08:54:16 claes Exp $
+ * Proview   $Id: wb_wblnode.cpp,v 1.60 2007-12-06 10:53:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,6 +17,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  **/
 
+#include <float.h>
+#include <limits.h>
 #include "pwr_class.h"
 #include "co_cdh.h"
 #include "co_time.h"
@@ -2015,7 +2017,13 @@ int wb_wblnode::attrStringToValue( int type_id, char *value_str,
     }
     case pwr_eType_Float32:
     {
-      if ( sscanf( value_str, "%f", (float *)buffer_ptr) != 1)
+      if ( strcmp( value_str, "FLT_MIN") == 0) {
+	*(float *)buffer_ptr = FLT_MIN;
+      }
+      else if ( strcmp( value_str, "FLT_MAX") == 0) {
+	*(float *)buffer_ptr = FLT_MAX;
+      }
+      else if ( sscanf( value_str, "%f", (float *)buffer_ptr) != 1)
         return 0;
       break;
     }
@@ -2056,7 +2064,13 @@ int wb_wblnode::attrStringToValue( int type_id, char *value_str,
     case pwr_eType_Status:
     case pwr_eType_NetStatus:
     {
-      if ( sscanf( value_str, "%d", (int *)buffer_ptr) != 1)
+      if ( strcmp( value_str, "INT_MIN") == 0) {
+	*(int *)buffer_ptr = INT_MIN;
+      }
+      else if ( strcmp( value_str, "INT_MAX") == 0) {
+	*(int *)buffer_ptr = INT_MAX;
+      }
+      else if ( sscanf( value_str, "%d", (int *)buffer_ptr) != 1)
         return 0;
       break;
     }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.cpp,v 1.34 2007-05-21 14:28:32 claes Exp $
+ * Proview   $Id: xtt_xnav.cpp,v 1.35 2007-12-06 10:56:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <float.h>
 
 #include "co_nav_help.h"
 #include "pwr_privilege.h"
@@ -235,7 +236,11 @@ int XNav::attr_string_to_value( int type_id, char *value_str,
     break;
   }
   case pwr_eType_Float32: {
-    if ( sscanf( value_str, "%f", (float *)buffer_ptr) != 1)
+    if ( strcmp( value_str, "FLT_MIN") == 0)
+      *(float *)buffer_ptr = FLT_MIN;
+    else if ( strcmp( value_str, "FLT_MAX") == 0)
+      *(float *)buffer_ptr = FLT_MAX;
+    else if ( sscanf( value_str, "%f", (float *)buffer_ptr) != 1)
       return XNAV__INPUT_SYNTAX;
     break;
   }
@@ -271,7 +276,11 @@ int XNav::attr_string_to_value( int type_id, char *value_str,
   case pwr_eType_Int32:
   case pwr_eType_Status:
   case pwr_eType_NetStatus: {
-    if ( sscanf( value_str, "%d", (int *)buffer_ptr) != 1)
+    if ( strcmp( value_str, "INT_MIN") == 0)
+      *(int *)buffer_ptr = INT_MIN;
+    else if ( strcmp( value_str, "INT_MAX") == 0)
+      *(int *)buffer_ptr = INT_MAX;
+    else if ( sscanf( value_str, "%d", (int *)buffer_ptr) != 1)
       return XNAV__INPUT_SYNTAX;
     break;
   }
@@ -436,10 +445,20 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     break;
   }
   case pwr_eType_Float32: {
-    if ( !format)
-      *len = sprintf( str, "%f", *(float *)value_ptr);
-    else
-      *len = sprintf( str, format, *(float *)value_ptr);
+    if ( *(float *)value_ptr == FLT_MIN) {
+      strcpy( str, "FLT_MIN");
+      *len = strlen(str);
+    }
+    else if ( *(float *)value_ptr == FLT_MAX) {
+      strcpy( str, "FLT_MAX");
+      *len = strlen(str);
+    }
+    else {
+      if ( !format)
+	*len = sprintf( str, "%f", *(float *)value_ptr);
+      else
+	*len = sprintf( str, format, *(float *)value_ptr);
+    }
     break;
   }
   case pwr_eType_Float64: {
@@ -471,10 +490,20 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     break;
   }
   case pwr_eType_Int32: {
-    if ( !format)
-      *len = sprintf( str, "%d", *(int *)value_ptr);
-    else
-      *len = sprintf( str, format, *(int *)value_ptr);
+    if ( *(int *)value_ptr == INT_MIN) {
+      strcpy( str, "INT_MIN");
+      *len = strlen(str);
+    }
+    else if ( *(int *)value_ptr == INT_MAX) {
+      strcpy( str, "INT_MAX");
+      *len = strlen(str);
+    }
+    else {
+      if ( !format)
+	*len = sprintf( str, "%d", *(int *)value_ptr);
+      else
+	*len = sprintf( str, format, *(int *)value_ptr);
+    }
     break;
   }
   case pwr_eType_Int64: {
