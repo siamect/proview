@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_readwbl.cpp,v 1.9 2005-11-14 16:11:23 claes Exp $
+ * Proview   $Id: cnv_readwbl.cpp,v 1.10 2007-12-06 08:09:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -961,6 +961,12 @@ void CnvReadWbl::template_init()
 
 int CnvReadWbl::template_attr( char *name, char *value)
 {
+  int doc_size = (int) sizeof(doc_text) / sizeof(doc_text[0]);
+  if ( doc_cnt >= doc_size) {
+    strcpy( doc_text[doc_size - 2], "Template buffer size exceeded");
+    strcpy( doc_text[doc_size - 1], "");
+    return 1;
+  }
   strcpy( doc_text[doc_cnt++], name);
   strcpy( doc_text[doc_cnt++], value);
   return 1;
