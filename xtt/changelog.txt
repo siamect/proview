@@ -65,3 +65,4 @@
 071016 cs  ge        Time format in dynamic Value added: %4t date only and %5t compressed date.
 071017 cs  flow      Problems with poor scrolling performance in gtk version fixed.
 071018 cs  xtt       Sensitivity setting of method buttons in xtt toolbar delayed to speed up selection with arrow keys.
+071130 cs  ge        Type graph for UInt32 added.
