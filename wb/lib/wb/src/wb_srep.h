@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_srep.h,v 1.7 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_srep.h,v 1.8 2007-12-06 10:55:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,11 +23,11 @@
 #include "pwr.h"
 #include "wb_vrep.h"
 #include "wb_ldh.h"
-//#include "wb_ldhi.h"
 
 
 class wb_vrep;
 class wb_object;
+class wb_recix;
 
 class wb_srep
 {
@@ -45,6 +45,7 @@ protected:
   ldh_tSessionCb m_thisSessionCb;
   ldh_tSessionCb m_otherSessionCb;
   ldh_sEvent *m_events;
+  wb_recix   *m_recix;
     
 public:
 
@@ -83,6 +84,10 @@ public:
   void eventSendSession( ldh_eEvent event);
   ldh_sEvent *eventStart( pwr_tOid Object, ldh_eEvent event);
   void update() { m_nUpdate++;}
+  void recix_add( wb_object o);
+  void recix_clear();
+  void recix_set_destination( char *d);
+  wb_recix *recix() { return m_recix;}
 };
 #endif
 

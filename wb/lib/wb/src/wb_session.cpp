@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_session.cpp,v 1.23 2007-11-16 10:10:11 claes Exp $
+ * Proview   $Id: wb_session.cpp,v 1.24 2007-12-06 10:55:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,6 +24,7 @@
 #include "wb_merep.h"
 #include "wb_ldh.h"
 #include "wb_vrepmem.h"
+#include "wb_recix.h"
 #include "pwr_baseclasses.h"
 
 static ldh_sMenuItem ldh_lMenuItem[100];
@@ -296,7 +297,7 @@ bool wb_session::deleteObject(wb_object o)
   return rsts;
 }
 
-bool wb_session::deleteFamily(wb_object o)
+bool wb_session::deleteFamily(wb_object o, bool storeix)
 {
   if (isReadonly())
     throw wb_error_str("ReadOnlySession");
@@ -315,6 +316,8 @@ bool wb_session::deleteFamily(wb_object o)
 
   sts = triggPostUnadopt( parent, o);
 
+  if ( storeix)
+    m_srep->recix_add( o);
   bool rsts = m_vrep->deleteFamily(&m_sts, (wb_orep*)o);
   m_srep->update();
   m_srep->eventSend( ep);
@@ -441,7 +444,7 @@ bool wb_session::cutOset( pwr_sAttrRef *arp, bool keepref)
 
     ldh_sEvent *ep = m_srep->eventStart(o.oid(), ldh_eEvent_ObjectDeleted);
     m_srep->eventOldFamily(ep, o);
-    deleteFamily(o);
+    deleteFamily(o, 0);
     m_srep->eventSend(ep);
 
     ap++;
@@ -453,7 +456,7 @@ bool wb_session::cutOset( pwr_sAttrRef *arp, bool keepref)
 }
 
 bool wb_session::pasteOset( pwr_tOid doid, ldh_eDest dest, 
-				   bool keepoid, char *buffer)
+			    bool keepoid, bool recycleix, char *buffer)
 {
   if (isReadonly())
     throw wb_error_str("ReadOnlySession");
@@ -524,9 +527,14 @@ bool wb_session::pasteOset( pwr_tOid doid, ldh_eDest dest,
     }
   }
 
+  wb_recix *recix = 0;
+  if ( recycleix)
+    recix = m_srep->recix();
   pwr_tOid *olist;
-  mem->exportPaste( *m_vrep, doid, dest, keepoid, &olist);
+  mem->exportPaste( *m_vrep, doid, dest, keepoid, recix, &olist);
   m_srep->update();
+  if ( recycleix)
+    m_srep->recix_clear();
 
   if ( parent) {
     for ( pwr_tOid *oidp = olist; cdh_ObjidIsNotNull(*oidp); oidp++) {

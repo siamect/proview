@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_srep.cpp,v 1.6 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_srep.cpp,v 1.7 2007-12-06 10:55:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,11 +22,12 @@
 #include "wb_error.h"
 #include "wb_ldh_msg.h"
 #include "wb_object.h"
+#include "wb_recix.h"
 
 wb_srep::wb_srep(wb_vrep *vrep) : m_access(ldh_eAccess_ReadOnly), m_utility(ldh_eUtility__),
                                   m_nUpdate(0), m_refcount(0),
                                   m_editorContext(0), m_thisSessionCb(0), m_otherSessionCb(0),
-				  m_events(0)
+				  m_events(0), m_recix(0)
 {
   m_vrep = vrep->ref();
   m_vrep->addSrep( this);
@@ -313,6 +314,22 @@ ldh_sEvent *wb_srep::eventStart( pwr_tOid oid, ldh_eEvent event)
   return ep;
 }
 
+void wb_srep::recix_add( wb_object o)
+{
+  m_recix = new wb_recix();
+  m_recix->add_object_tree( o);
+}
+
+void wb_srep::recix_clear()
+{
+  delete m_recix;
+  m_recix = 0;
+}
+
+void wb_srep::recix_set_destination( char *d) 
+{ 
+  m_recix->set_destination( d);
+}
 
 
 

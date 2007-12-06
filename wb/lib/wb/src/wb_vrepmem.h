@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.h,v 1.22 2007-11-23 14:25:09 claes Exp $
+ * Proview   $Id: wb_vrepmem.h,v 1.23 2007-12-06 10:55:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,6 +28,7 @@
 #include "wb_treeimport.h"
 #include "co_dbs.h"
 #include "wb_import.h"
+#include "wb_recix.h"
 
 class wb_vrepmem;
 
@@ -58,6 +59,18 @@ class mem_object
     if ( docblock_size) free( docblock);
   }    
   char *name() { return m_name; }
+  char *longName() {
+    static pwr_tOName n;
+    pwr_tOName tmp;
+    strcpy( n, m_name);
+    for ( mem_object *f = fth; f; f = f->fth) {
+      strcpy( tmp, n);
+      strcpy( n, f->m_name);
+      strcat( n, "-");
+      strcat( n, tmp);
+    }
+    return n;
+  }
   mem_object *get_lch() { 
     mem_object *c = fch;
     if ( c)
@@ -86,21 +99,32 @@ class mem_object
     return true;
   }
   bool exportPaste( wb_treeimport &i, pwr_tOid destination, bool isRoot, 
-			ldh_eDest destcode, bool keepoid, pwr_tOid *rootlist) {
+		    ldh_eDest destcode, bool keepoid, wb_recix *recix, pwr_tOid *rootlist) {
     pwr_tOid fthoid = (fth && !isRoot) ? fth->m_oid : pwr_cNOid;
     pwr_tOid bwsoid = (bws && !isRoot) ? bws->m_oid : pwr_cNOid;
     pwr_tOid oid;
+    pwr_tOid woid;    
 
+    if ( recix) {
+      pwr_tOix ix;
+
+      if ( recix->get( longName(), &ix)) {
+	woid.oix = ix;
+	woid.vid = m_oid.vid;
+      }
+      else
+	woid = pwr_cNOid;
+    }
     i.importPasteObject( destination, destcode, keepoid, m_oid, m_cid, fthoid, bwsoid, 
-			 name(), m_flags, rbody_size, dbody_size, rbody, dbody, &oid);
+			 name(), m_flags, rbody_size, dbody_size, rbody, dbody, woid, &oid);
     if ( rootlist)
       *rootlist++ = oid;
   
     if ( fch)
-      fch->exportPaste( i, destination, false, destcode, keepoid, 0);
+      fch->exportPaste( i, destination, false, destcode, keepoid, recix, 0);
 
     if ( fws)
-      fws->exportPaste( i, destination, false, destcode, keepoid, rootlist);
+      fws->exportPaste( i, destination, false, destcode, keepoid, recix, rootlist);
 
     return true;
   }
@@ -338,7 +362,7 @@ public:
   virtual bool exportMeta(wb_import &i);
   virtual bool exportTree(wb_treeimport &i, pwr_tOid oid);
   bool exportPaste(wb_treeimport &i, pwr_tOid destination, ldh_eDest destcode, bool keepoid,
-		   pwr_tOid **rootlist);
+		   wb_recix *recix, pwr_tOid **rootlist);
   virtual bool importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
 				pwr_tOid boid, const char *name, pwr_mClassDef flags,
 				size_t rbSize, size_t dbSize, void *rbody, void *dbody);
@@ -348,7 +372,7 @@ public:
 				 pwr_tCid cid, pwr_tOid poid,
 				 pwr_tOid boid, const char *name, pwr_mClassDef flags,
 				 size_t rbSize, size_t dbSize, void *rbody, void *dbody,
-				 pwr_tOid *roid);
+				 pwr_tOid woid, pwr_tOid *roid);
   virtual bool importPaste();
   virtual void importIgnoreErrors() { m_ignore = true;}
   bool updateObject( wb_orep *o, bool keepref);

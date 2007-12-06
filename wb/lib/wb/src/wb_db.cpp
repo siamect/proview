@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_db.cpp,v 1.40 2007-11-23 14:25:09 claes Exp $
+ * Proview   $Id: wb_db.cpp,v 1.41 2007-12-06 10:55:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1221,9 +1221,15 @@ bool wb_db::commit(pwr_tStatus *sts)
 bool wb_db::abort(pwr_tStatus *sts)
 {
   printstat(m_env, "before abort");
-  *sts = m_txn->abort();
+  int rc;
+
+  rc = m_txn->abort();
   m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
   printstat(m_env, "after abort");
+  if ( rc)
+    *sts = LDH__DB;
+  else
+    *sts = LDH__SUCCESS;
   return true;
 }
 

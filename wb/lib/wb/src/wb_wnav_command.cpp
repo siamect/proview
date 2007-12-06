@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.46 2007-10-25 11:07:12 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.47 2007-12-06 10:55:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3287,7 +3287,7 @@ static int	wnav_paste_func(	void		*client_data,
     destoid.oix = 0;
     destoid.vid = info.Vid;
       
-    sts = ldh_Paste( wnav->ldhses, destoid, dest, keepoid, buffer_ptr);
+    sts = ldh_Paste( wnav->ldhses, destoid, dest, keepoid, 0, buffer_ptr);
     if ( EVEN(sts)) {
       wnav->message(' ', wnav_get_message(sts));
       return sts;
@@ -3310,7 +3310,7 @@ static int	wnav_paste_func(	void		*client_data,
   else
     dest = ldh_eDest_After;
 
-  sts = ldh_Paste( wnav->ldhses, sel_list->Objid, dest, keepoid, buffer_ptr);
+  sts = ldh_Paste( wnav->ldhses, sel_list->Objid, dest, keepoid, 0, buffer_ptr);
   if ( sel_cnt > 0) {
     free( sel_list);
     free( sel_is_attr);

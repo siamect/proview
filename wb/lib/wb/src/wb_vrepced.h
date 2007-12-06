@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepced.h,v 1.1 2007-11-23 14:25:09 claes Exp $
+ * Proview   $Id: wb_vrepced.h,v 1.2 2007-12-06 10:55:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -167,9 +167,9 @@ public:
 				 pwr_tCid cid, pwr_tOid poid,
 				 pwr_tOid boid, const char *name, pwr_mClassDef flags,
 				 size_t rbSize, size_t dbSize, void *rbody, void *dbody,
-				 pwr_tOid *roid) {
+				 pwr_tOid woid, pwr_tOid *roid) {
     return m_vrep->importPasteObject( destination, destcode, keepoid, oid, cid, poid, boid, name, flags,
-			       rbSize, dbSize, rbody, dbody, roid);}
+			       rbSize, dbSize, rbody, dbody, woid, roid);}
   virtual bool importPaste() { return m_vrep->importPaste();}
   virtual void importIgnoreErrors() { return m_vrep->importIgnoreErrors();}
   virtual bool accessSupported( ldh_eAccess access) { return m_vrep->accessSupported( access);}

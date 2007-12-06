@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_session.h,v 1.12 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: wb_session.h,v 1.13 2007-12-06 10:55:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,6 +39,7 @@ class wb_bdef;
 class wb_cdef;
 class wb_destination;
 class wb_volume;
+class wb_recix;
 
 
 class wb_session : public wb_volume
@@ -77,7 +78,7 @@ public:
   bool moveObject(wb_object o, wb_destination d);
   bool renameObject(wb_object o, wb_name name);
   bool deleteObject(wb_object o);
-  bool deleteFamily(wb_object o);
+  bool deleteFamily(wb_object o, bool storeix);
 
   bool writeAttribute(wb_attribute &a, void *p, size_t size);
   bool writeAttribute(wb_attribute &a, void *p);
@@ -86,7 +87,7 @@ public:
   bool copyOset( pwr_sAttrRef *arp, bool keepref, bool ignore_errors);
   bool cutOset( pwr_sAttrRef *arp, bool keepref);
   bool pasteOset( pwr_tOid doid, ldh_eDest dest, 
-		  bool keepoid, char *buffer);
+		  bool keepoid, bool recycleix, char *buffer);
 
 
   void getAllMenuItems( ldh_sMenuCall	*ip, ldh_sMenuItem **Item, wb_cdrep *cdrep,
@@ -103,6 +104,7 @@ public:
   bool validateDestination( wb_destination d, pwr_tCid cid);
   bool castAttribute( pwr_sAttrRef *arp, pwr_tCid cid);
   bool disableAttribute( pwr_sAttrRef *arp, pwr_tDisableAttr disable);
+  void recix_set_destination( char *d) { m_srep->recix_set_destination( d);}
 };
 
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_object.cpp,v 1.2 2007-09-21 10:49:39 claes Exp $
+ * Proview   $Id: wb_c_object.cpp,v 1.3 2007-12-06 10:55:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -170,7 +170,7 @@ static pwr_tStatus CopyObjectTree (
   }
 
   sts = ldh_CopyObjectTrees(ip->PointedSession, ip->Selected,
-    ip->Pointed.Objid, Dest, Self, 0); 
+    ip->Pointed.Objid, Dest, Self, 0, 0); 
   return sts;
 }
 
@@ -285,7 +285,7 @@ static void DeleteObjectYesCb (
 ) {
   ldh_sMenuCall *mc = (ldh_sMenuCall *)CallbackData;
 
-  ldh_DeleteObjectTree(mc->PointedSession, mc->Pointed.Objid);
+  ldh_DeleteObjectTree(mc->PointedSession, mc->Pointed.Objid, 0);
 
   free ((char *) mc);
 }
@@ -340,7 +340,7 @@ static void DeleteObjectsYesCb (
   for (i = 0; mc->SelectCount; i++) {	/* count number of selected objects */
     if (cdh_ObjidIsNull(mc->Selected[i].Objid))
       break;
-    ldh_DeleteObjectTree(mc->PointedSession, mc->Selected[i].Objid);
+    ldh_DeleteObjectTree(mc->PointedSession, mc->Selected[i].Objid, 0);
   }
   free((char *) mc->Selected);
   free((char *) mc);

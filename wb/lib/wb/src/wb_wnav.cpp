@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.cpp,v 1.39 2007-09-19 15:19:56 claes Exp $
+ * Proview   $Id: wb_wnav.cpp,v 1.40 2007-12-06 10:55:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <float.h>
 
 #include "pwr_privilege.h"
 #include "co_cdh.h"
@@ -66,7 +67,11 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
     break;
   }
   case pwr_eType_Float32: {
-    if ( sscanf( value_str, "%f", (float *)buffer_ptr) != 1)
+    if ( strcmp( value_str, "FLT_MIN") == 0)
+      *(float *)buffer_ptr = FLT_MIN;
+    else if ( strcmp( value_str, "FLT_MAX") == 0)
+      *(float *)buffer_ptr = FLT_MAX;
+    else if ( sscanf( value_str, "%f", (float *)buffer_ptr) != 1)
       return WNAV__INPUT_SYNTAX;
     break;
   }
@@ -105,7 +110,11 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
     break;
   }
   case pwr_eType_Int32: {
-    if ( sscanf( value_str, "%d", (int *)buffer_ptr) != 1)
+    if ( strcmp( value_str, "INT_MIN") == 0)
+      *(int *)buffer_ptr = INT_MIN;
+    else if ( strcmp( value_str, "INT_MAX") == 0)
+      *(int *)buffer_ptr = INT_MAX;
+    else if ( sscanf( value_str, "%d", (int *)buffer_ptr) != 1)
       return WNAV__INPUT_SYNTAX;
     break;
   }
@@ -280,7 +289,16 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id, void *value
     break;
   }
   case pwr_eType_Float32: {
-    *len = sprintf( str, "%f", *(float *)value_ptr);
+    if ( *(float *)value_ptr == FLT_MIN) {
+      strcpy( str, "FLT_MIN");
+      *len = strlen( str);
+    }
+    else if ( *(float *)value_ptr == FLT_MAX) {
+      strcpy( str, "FLT_MAX");
+      *len = strlen( str);
+    }
+    else
+      *len = sprintf( str, "%f", *(float *)value_ptr);
     *buff = str;
     break;
   }
@@ -305,6 +323,15 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id, void *value
     break;
   }
   case pwr_eType_Int32: {
+    if ( *(int *)value_ptr == INT_MIN) {
+      strcpy( str, "INT_MIN");
+      *len = strlen( str);
+    }
+    else if ( *(int *)value_ptr == INT_MAX) {
+      strcpy( str, "INT_MAX");
+      *len = strlen( str);
+    }
+    else
     *len = sprintf( str, "%d", *(int *)value_ptr);
     *buff = str;
     break;

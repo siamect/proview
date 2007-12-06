@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_treeimport.h,v 1.8 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_treeimport.h,v 1.9 2007-12-06 10:55:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -55,7 +55,7 @@ public:
 				 pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
 				 pwr_tOid boid, const char *name, pwr_mClassDef flags,
 				 size_t rbSize, size_t dbSize, void *rbody, void *dbody,
-				 pwr_tOid *roid) = 0;
+				 pwr_tOid woid, pwr_tOid *roid) = 0;
   virtual void importIgnoreErrors() = 0;
   bool importTranslationTableInsert( pwr_tOix from, pwr_tOix to);
   void importTranslationTableClear();

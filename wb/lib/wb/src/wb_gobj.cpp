@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gobj.cpp,v 1.2 2007-01-24 12:38:31 claes Exp $
+ * Proview   $Id: wb_gobj.cpp,v 1.3 2007-12-06 10:55:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -810,7 +810,7 @@ int	gobj_get_object_m10( WFoe *foe, vldh_t_node node, unsigned long index)
     if ( EVEN(sts)) return sts;
 
     if ( cid == pwr_cClass_windowplc) {
-      sts = ldh_DeleteObjectTree( ldhses, woid);
+      sts = ldh_DeleteObjectTree( ldhses, woid, 0);
       if ( EVEN(sts)) return sts;
     }
   }
@@ -2272,7 +2272,7 @@ int	gobj_get_object_m26( WFoe *foe, vldh_t_node node, unsigned long index)
     if ( EVEN(sts)) return sts;
 
     if ( cid == pwr_cClass_windowplc) {
-      sts = ldh_DeleteObjectTree( ldhses, woid);
+      sts = ldh_DeleteObjectTree( ldhses, woid, 0);
       if ( EVEN(sts)) return sts;
     }
   }

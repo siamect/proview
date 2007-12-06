@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.h,v 1.41 2007-11-07 18:08:18 claes Exp $
+ * Proview   $Id: wb_ldh.h,v 1.42 2007-12-06 10:55:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -533,7 +533,8 @@ pwr_tStatus ldh_CopyObjectTrees (
   pwr_tObjid	    destobject,
   ldh_eDest	    dest,
   pwr_tBoolean	    Self,
-  int		    keepref
+  int		    keepref,
+  int		    recycleix
 );
 
 pwr_tStatus ldh_CreateObject (
@@ -585,7 +586,8 @@ pwr_tStatus ldh_DeleteObject (
 );
 pwr_tStatus ldh_DeleteObjectTree (
   ldh_tSession Session,
-  pwr_tObjid object
+  pwr_tObjid object,
+  int storeix
 );
 
 pwr_tStatus
@@ -973,6 +975,7 @@ pwr_tStatus ldh_Paste (
   pwr_tObjid	    	dstoid,
   ldh_eDest	    	dest,
   int			keepoid,
+  int			recycleix,
   char			*buffer
 );
 
@@ -1241,6 +1244,12 @@ ldh_OpenMntSession(
   ldh_tSession session,
   pwr_tOid oid,
   ldh_tSession *mntses
+);
+
+void
+ldh_RecixSetDestination(
+  ldh_tSession session,
+  char *destination
 );
 
 

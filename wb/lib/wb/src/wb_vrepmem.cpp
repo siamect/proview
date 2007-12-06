@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.cpp,v 1.30 2007-11-23 14:25:09 claes Exp $
+ * Proview   $Id: wb_vrepmem.cpp,v 1.31 2007-12-06 10:55:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,6 +37,7 @@
 #include "wb_print_wbl.h"
 #include "wb_volume.h"
 #include "wb_palfile.h"
+#include "wb_recix.h"
 #include "pwr_baseclasses.h"
 #include "co_msgwindow.h"
 
@@ -1498,7 +1499,7 @@ bool wb_vrepmem::importPasteObject(pwr_tOid destination, ldh_eDest destcode,
 				   pwr_tCid cid, pwr_tOid poid,
 				   pwr_tOid boid, const char *name, pwr_mClassDef flags,
 				   size_t rbSize, size_t dbSize, void *rbody, void *dbody,
-				   pwr_tOid *roid)
+				   pwr_tOid woid, pwr_tOid *roid)
 {
   pwr_tStatus sts;
   pwr_tTime time;
@@ -1693,7 +1694,7 @@ bool wb_vrepmem::exportTree(wb_treeimport &i, pwr_tOid oid)
 }
 
 bool wb_vrepmem::exportPaste(wb_treeimport &i, pwr_tOid destination, ldh_eDest destcode,
-			     bool keepoid, pwr_tOid **rootlist)
+			     bool keepoid, wb_recix *recix, pwr_tOid **rootlist)
 {
   // Count number of topobjects
   int top_cnt = 0;
@@ -1703,7 +1704,7 @@ bool wb_vrepmem::exportPaste(wb_treeimport &i, pwr_tOid destination, ldh_eDest d
   *rootlist = (pwr_tOid *) calloc( top_cnt + 1, sizeof(pwr_tOid));
 
   if ( root_object) {
-    root_object->exportPaste( i, destination, true, destcode, keepoid, *rootlist);
+    root_object->exportPaste( i, destination, true, destcode, keepoid, recix, *rootlist);
     i.importPaste();
   }
   return true;

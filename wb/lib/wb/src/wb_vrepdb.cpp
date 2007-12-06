@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.cpp,v 1.60 2007-11-23 14:25:09 claes Exp $
+ * Proview   $Id: wb_vrepdb.cpp,v 1.61 2007-12-06 10:55:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1466,7 +1466,7 @@ bool wb_vrepdb::importPasteObject(pwr_tOid doid, ldh_eDest destcode,
            pwr_tCid cid, pwr_tOid poid,
            pwr_tOid boid, const char *name, pwr_mClassDef flags,
            size_t rbSize, size_t dbSize, void *rbody, void *dbody,
-           pwr_tOid *roid)
+           pwr_tOid woid, pwr_tOid *roid)
 {
   pwr_tStatus sts;
   static pwr_tTime oTime;
@@ -1532,7 +1532,12 @@ bool wb_vrepdb::importPasteObject(pwr_tOid doid, ldh_eDest destcode,
     poep->first = poep->last = oep;
   }
 
-  if (keepoid) {
+  if (cdh_ObjidIsNotNull( woid)) {
+    oep->n_oid = m_db->new_oid(m_db->m_txn, woid);
+    if ( !oep->n_oid.oix)
+      oep->n_oid = m_db->new_oid(m_db->m_txn);
+  }
+  else if (keepoid) {
     oep->n_oid = m_db->new_oid(m_db->m_txn, oid);
     if ( !oep->n_oid.oix)
       oep->n_oid = m_db->new_oid(m_db->m_txn);

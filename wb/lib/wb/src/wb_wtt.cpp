@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.cpp,v 1.34 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_wtt.cpp,v 1.35 2007-12-06 10:55:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1015,7 +1015,7 @@ void Wtt::activate_paste()
 
   // I window is empty, paste on root level
   if ( wnav->is_empty() && wnavnode->is_empty()) {
-    sts = ldh_Paste( ldhses, pwr_cNObjid, ldh_eDest_After, 0, 0);
+    sts = ldh_Paste( ldhses, pwr_cNObjid, ldh_eDest_After, 0, 0, 0);
     if (EVEN(sts)) {
       message( 'E', wnav_get_message( sts));
       return;
@@ -1045,9 +1045,9 @@ void Wtt::activate_paste()
 
   set_clock_cursor();
   if ( sel_cnt1)
-    sts = ldh_Paste( ldhses, sel_list1->Objid, ldh_eDest_After, 0, 0);
+    sts = ldh_Paste( ldhses, sel_list1->Objid, ldh_eDest_After, 0, 0, 0);
   else
-    sts = ldh_Paste( ldhses, sel_list2->Objid, ldh_eDest_After, 0, 0);
+    sts = ldh_Paste( ldhses, sel_list2->Objid, ldh_eDest_After, 0, 0, 0);
   reset_cursor();
   if ( sel_cnt1 > 0)
     free( (char *)sel_list1);
@@ -1068,7 +1068,7 @@ void Wtt::activate_pasteinto()
 
   // I window is empty, paste on root level
   if ( wnav->is_empty() && wnavnode->is_empty()) {
-    sts = ldh_Paste( ldhses, pwr_cNObjid, ldh_eDest_After, 0, 0);
+    sts = ldh_Paste( ldhses, pwr_cNObjid, ldh_eDest_After, 0, 0, 0);
     if (EVEN(sts))
       message( 'E', wnav_get_message( sts));
     return;
@@ -1096,9 +1096,9 @@ void Wtt::activate_pasteinto()
 
   set_clock_cursor();
   if ( sel_cnt1)
-    sts = ldh_Paste( ldhses, sel_list1->Objid, ldh_eDest_IntoFirst, 0, 0);
+    sts = ldh_Paste( ldhses, sel_list1->Objid, ldh_eDest_IntoFirst, 0, 0, 0);
   else
-    sts = ldh_Paste( ldhses, sel_list2->Objid, ldh_eDest_IntoFirst, 0, 0);
+    sts = ldh_Paste( ldhses, sel_list2->Objid, ldh_eDest_IntoFirst, 0, 0, 0);
   reset_cursor();
   if ( sel_cnt1 > 0)
     free( (char *)sel_list1);

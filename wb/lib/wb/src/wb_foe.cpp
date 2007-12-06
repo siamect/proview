@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe.cpp,v 1.5 2007-09-25 13:36:32 claes Exp $
+ * Proview   $Id: wb_foe.cpp,v 1.6 2007-12-06 10:55:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -573,7 +573,7 @@ void WFoe::delete_subwindow_ok_cb( void *ctx, void *data)
 	child = nextchild) {
     sts = ldh_GetNextSibling( wind->hw.ldhses, child, &nextchild);
 
-    rsts = ldh_DeleteObjectTree( wind->hw.ldhses, child);
+    rsts = ldh_DeleteObjectTree( wind->hw.ldhses, child, 0);
     if ( EVEN(rsts)) { foe->error_msg( rsts); return; }
   }
   node->ln.subwindow = 0;

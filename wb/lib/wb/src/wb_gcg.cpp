@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.cpp,v 1.6 2007-10-15 12:17:23 claes Exp $
+ * Proview   $Id: wb_gcg.cpp,v 1.7 2007-12-06 10:55:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -13414,7 +13414,7 @@ int	gcg_comp_m53( gcg_ctx gcgctx, vldh_t_node node)
 	  if ( found )
 	  {
 	    /* Delete the window */
-	    sts = ldh_DeleteObjectTree( ldhses, window_objid);
+	    sts = ldh_DeleteObjectTree( ldhses, window_objid, 0);
 	    if ( EVEN(sts)) return sts;
 	  }
 
@@ -13456,7 +13456,7 @@ int	gcg_comp_m53( gcg_ctx gcgctx, vldh_t_node node)
 	  free((char *) function_objid);
 
 	  sts = ldh_CopyObjectTrees( ldhses, attrref, node->ln.oid,
-		ldh_eDest_IntoFirst,  0, 0);
+		ldh_eDest_IntoFirst,  0, 0, 0);
 	  if ( EVEN(sts))
 	  {
 	    /* Function not found */
@@ -14356,15 +14356,18 @@ int	gcg_comp_m58( gcg_ctx gcgctx, vldh_t_node node)
 	  // Replace the code
 	  if ( found) {
 	    /* Delete the window */
-	    sts = ldh_DeleteObjectTree( ldhses, window_objid);
+	    sts = ldh_DeleteObjectTree( ldhses, window_objid, 1);
 	    if ( EVEN(sts)) return sts;
 	  }
 
 	  attrref[0].Objid = template_plc;
 	  attrref[1].Objid = pwr_cNObjid;
 
+	  // Set destination to recycle oix
+	  ldh_RecixSetDestination( ldhses, "Code");
+
 	  sts = ldh_CopyObjectTrees( ldhses, attrref, node->ln.oid,
-		ldh_eDest_IntoFirst, 0, 1);
+		ldh_eDest_IntoFirst, 0, 0, 1);
 	  if ( EVEN(sts)) {
 	    /* Function not found */
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, node);  

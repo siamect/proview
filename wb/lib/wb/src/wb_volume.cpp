@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_volume.cpp,v 1.39 2007-09-20 11:04:12 claes Exp $
+ * Proview   $Id: wb_volume.cpp,v 1.40 2007-12-06 10:55:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -367,7 +367,10 @@ wb_attribute wb_volume::attribute(const pwr_sAttrRef* arp) const
   cdrep = new wb_cdrep(*orep);
   if (EVEN(cdrep->sts())) { orep->unref(); return wb_attribute();}
       
-  bdrep = cdrep->bdrep(&sts, pwr_eBix_rt);
+  pwr_eBix bix = pwr_eBix_rt;
+  if ( arp->Body)
+    bix = (pwr_eBix)(arp->Body & 7);
+  bdrep = cdrep->bdrep(&sts, bix);
   delete cdrep;
   if (EVEN(sts)) {
     orep->unref();

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepref.h,v 1.8 2007-11-23 14:25:09 claes Exp $
+ * Proview   $Id: wb_vrepref.h,v 1.9 2007-12-06 10:55:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -151,7 +151,7 @@ public:
 				 pwr_tCid cid, pwr_tOid poid,
 				 pwr_tOid boid, const char *name, pwr_mClassDef flags,
 				 size_t rbSize, size_t dbSize, void *rbody, void *dbody,
-				 pwr_tOid *roid) {return false;}
+				 pwr_tOid woid, pwr_tOid *roid) {return false;}
   virtual bool importPaste() {return false;}
   virtual void importIgnoreErrors() {}
   bool updateObject( wb_orep *o, bool keepref) {return false;}

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.63 2007-11-23 14:25:09 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.64 2007-12-06 10:55:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -457,7 +457,7 @@ ldh_DeleteObject(ldh_tSession session, pwr_tOid oid)
 }
 
 pwr_tStatus
-ldh_DeleteObjectTree(ldh_tSession session, pwr_tOid oid)
+ldh_DeleteObjectTree(ldh_tSession session, pwr_tOid oid, int storeix)
 {
   wb_session *sp = (wb_session *)session;
 
@@ -465,7 +465,7 @@ ldh_DeleteObjectTree(ldh_tSession session, pwr_tOid oid)
   if (!o) return o.sts();
     
   try {
-  return sp->deleteFamily(o);
+    return sp->deleteFamily(o, storeix != 0);
   }
   catch ( wb_error& e) {
     return e.sts();
@@ -1798,14 +1798,14 @@ ldh_SyntaxCheck(ldh_tSession session, int *errorcount, int *warningcount)
 }
 
 pwr_tStatus
-ldh_CopyObjectTrees(ldh_tSession session, pwr_sAttrRef *arp, pwr_tOid doid, ldh_eDest dest, pwr_tBoolean self, int keepref)
+ldh_CopyObjectTrees(ldh_tSession session, pwr_sAttrRef *arp, pwr_tOid doid, ldh_eDest dest, pwr_tBoolean self, int keepref, int recycleix)
 {
   pwr_tStatus sts;
 
   sts = ldh_Copy( session, arp, keepref, false);
   if (EVEN(sts)) return sts;
 
-  sts = ldh_Paste( session, doid, dest, 0, 0);  
+  sts = ldh_Paste( session, doid, dest, 0, recycleix, 0);  
   return sts;
 }
 
@@ -1849,12 +1849,13 @@ ldh_Cut(ldh_tSession session, pwr_sAttrRef *arp, int keepref)
 }
 
 pwr_tStatus
-ldh_Paste(ldh_tSession session, pwr_tOid doid, ldh_eDest dest, int keepoid, char *buffer)
+ldh_Paste(ldh_tSession session, pwr_tOid doid, ldh_eDest dest, int keepoid, 
+	  int recycleix, char *buffer)
 {
   wb_session *sp = (wb_session*)session;
 
   try {
-    sp->pasteOset( doid, dest, (keepoid != 0), buffer);
+    sp->pasteOset( doid, dest, keepoid != 0, recycleix != 0, buffer);
   }
   catch (wb_error& e) {
     return e.sts();
@@ -2192,6 +2193,15 @@ ldh_OpenMntSession(ldh_tSession session, pwr_tOid oid, ldh_tSession *mntses)
   *mntses = (ldh_tSession) s;
   return LDH__SUCCESS;
 }
+
+void
+ldh_RecixSetDestination(ldh_tSession session, char *destination)
+{
+  wb_session *sp = (wb_session*)session;
+
+  sp->recix_set_destination( destination);
+}
+
 #endif
 
 
