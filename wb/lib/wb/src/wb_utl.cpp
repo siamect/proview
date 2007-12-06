@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.cpp,v 1.6 2007-11-07 18:05:42 claes Exp $
+ * Proview   $Id: wb_utl.cpp,v 1.7 2007-12-06 10:51:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -5852,6 +5852,16 @@ static int utl_set_parameter (
 	        printf( "%%FOE-W-LONG_STRING, parameter size is exceeded\n");
 	      break;
 	    }
+	    case pwr_eType_Time:
+	    {
+	      sts = time_AsciiToA( valuestr, (pwr_tTime *)object_element);
+	      if ( EVEN(sts)) {
+	        printf("Time format syntax error\n");
+	        return FOE__SUCCESS;
+	      }
+	      sprintf( logstrptr + strlen(logstr), "%s", valuestr);
+	      break;
+	    }
 	    case pwr_eType_ObjDId:
 	    {
 	      pwr_tOName  	objdid_name;
@@ -9951,7 +9961,7 @@ int utl_copy_objects (
 	  attrref[1].Objid = pwr_cNObjid;
 
 	  sts = ldh_CopyObjectTrees( ldhses, &attrref, destination,
-		code,  0, 0);
+		code,  0, 0, 0);
 	  if ( EVEN(sts)) return sts;
 
 	  /* Fetch the created root object, and change the name */
@@ -10296,7 +10306,7 @@ static int utl_tree_delete (
 	}
 
 	/* Delete the object tree */
-	sts = ldh_DeleteObjectTree( ldhses, Objdid);
+	sts = ldh_DeleteObjectTree( ldhses, Objdid, 0);
 	if ( ODD(sts))
 	{
 	  if ( utlctx->log )	
