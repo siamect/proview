@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.cpp,v 1.7 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_gcg.cpp,v 1.8 2007-12-12 10:21:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -14358,16 +14358,17 @@ int	gcg_comp_m58( gcg_ctx gcgctx, vldh_t_node node)
 	    /* Delete the window */
 	    sts = ldh_DeleteObjectTree( ldhses, window_objid, 1);
 	    if ( EVEN(sts)) return sts;
+
+	    // Set destination to recycle oix
+	    ldh_RecixSetDestination( ldhses, "Code");
 	  }
 
 	  attrref[0].Objid = template_plc;
 	  attrref[1].Objid = pwr_cNObjid;
 
-	  // Set destination to recycle oix
-	  ldh_RecixSetDestination( ldhses, "Code");
 
 	  sts = ldh_CopyObjectTrees( ldhses, attrref, node->ln.oid,
-		ldh_eDest_IntoFirst, 0, 0, 1);
+		ldh_eDest_IntoFirst, 0, 0, found);
 	  if ( EVEN(sts)) {
 	    /* Function not found */
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
