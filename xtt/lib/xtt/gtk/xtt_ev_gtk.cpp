@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ev_gtk.cpp,v 1.1 2007-01-04 08:29:32 claes Exp $
+ * Proview   $Id: xtt_ev_gtk.cpp,v 1.2 2007-12-21 11:48:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -116,11 +116,14 @@ EvGtk::EvGtk( void *ev_parent_ctx,
   // Gtk
   // Eve Window
   {
+    char *titleutf8 = g_convert( eve_name, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+
     parent_wid_eve = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 						 "default-height", eve_height,
 						 "default-width", eve_width,
-						 "title", eve_name,
+						 "title", titleutf8,
 						 NULL);
+    g_free( titleutf8);
 
     g_signal_connect( parent_wid_eve, "delete_event", G_CALLBACK(eve_delete_event), this);
     g_signal_connect( parent_wid_eve, "destroy", G_CALLBACK(eve_destroy_event), this);
@@ -284,11 +287,14 @@ EvGtk::EvGtk( void *ev_parent_ctx,
 
   // Ala Window
   {
+    char *titleutf8 = g_convert( ala_name, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+
     parent_wid_ala = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 						 "default-height", ala_height,
 						 "default-width", ala_width,
-						 "title", ala_name,
+						 "title", titleutf8,
 						 NULL);
+    g_free( titleutf8);
 
     g_signal_connect( parent_wid_ala, "delete_event", G_CALLBACK(ala_delete_event), this);
     g_signal_connect( parent_wid_ala, "destroy", G_CALLBACK(ala_destroy_event), this);
@@ -454,11 +460,14 @@ EvGtk::EvGtk( void *ev_parent_ctx,
 
   // Blk Window
   {
+    char *titleutf8 = g_convert( ala_name, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+
     parent_wid_blk = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 						 "default-height", blk_height,
 						 "default-width", blk_width,
-						 "title", blk_name,
+						 "title", titleutf8,
 						 NULL);
+    g_free( titleutf8);
 
     g_signal_connect( parent_wid_blk, "delete_event", G_CALLBACK(blk_delete_event), this);
     g_signal_connect( parent_wid_blk, "destroy", G_CALLBACK(blk_destroy_event), this);
