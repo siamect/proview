@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_min.wb_load,v 1.2 2005-09-01 14:58:02 claes Exp $
+!  Proview   $Id: pwrb_c_min.wb_load,v 1.3 2007-12-21 13:28:48 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -166,14 +166,14 @@ SObject pwrb:Class
     EndObject
     Object Template Min
       Body RtBody
-	Attr In1 = 1.0E37
-	Attr In2 = 1.0E37
-	Attr In3 = 1.0E37
-	Attr In4 = 1.0E37
-	Attr In5 = 1.0E37
-	Attr In6 = 1.0E37
-	Attr In7 = 1.0E37
-	Attr In8 = 1.0E37
+	Attr In1 = FLT_MAX
+	Attr In2 = FLT_MAX
+	Attr In3 = FLT_MAX
+	Attr In4 = FLT_MAX
+	Attr In5 = FLT_MAX
+	Attr In6 = FLT_MAX
+	Attr In7 = FLT_MAX
+	Attr In8 = FLT_MAX
       EndBody
     EndObject
   EndObject
