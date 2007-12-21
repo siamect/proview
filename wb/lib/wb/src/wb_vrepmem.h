@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.h,v 1.23 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_vrepmem.h,v 1.24 2007-12-21 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -117,6 +117,7 @@ class mem_object
     }
     i.importPasteObject( destination, destcode, keepoid, m_oid, m_cid, fthoid, bwsoid, 
 			 name(), m_flags, rbody_size, dbody_size, rbody, dbody, woid, &oid);
+
     if ( rootlist)
       *rootlist++ = oid;
   
@@ -250,6 +251,7 @@ public:
   wb_vrep *next();
 
   virtual bool createSnapshot(const char *fileName, const pwr_tTime *time);
+  virtual pwr_tStatus updateMeta() {return 0;}
 
   char volume_class[32];
   char volume_name[32];
@@ -306,7 +308,8 @@ public:
   wb_orep *createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination &d, wb_name &name,
 			pwr_tOix oix = 0);
 
-  wb_orep *copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, wb_name &name);
+  wb_orep *copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, wb_name &name,
+		      pwr_tOix oix = 0);
   bool copyOset(pwr_tStatus *sts, wb_oset *oset, wb_destination &d) {return false;}
 
   bool moveObject(pwr_tStatus *sts, wb_orep *orep, wb_destination &d);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.cpp,v 1.35 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_wtt.cpp,v 1.36 2007-12-21 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1437,6 +1437,8 @@ void Wtt::activate_openclasseditor()
   char		name[80];
   char		fname[200];
   int		size;
+  pwr_eClassVolumeDatabaseEnum  *dbenum;
+  pwr_tCmd	cmd;
 
   if ( !ldhses) {
     message( 'E', "No volume is attached");
@@ -1459,19 +1461,54 @@ void Wtt::activate_openclasseditor()
 					   name, sizeof(name), &size); 
     if ( EVEN(sts)) return;
 
-    cdh_ToLower( name, name);
-    sprintf( fname, "$pwrp_db/%s.wb_load", name);
-    dcli_translate_filename( fname, fname);
+    sts = ldh_GetObjectPar( ldhses, attrref.Objid, "RtBody",
+			    "Database", (char **) &dbenum, &size);
+    if ( EVEN(sts)) return;
+
+
+    switch ( *dbenum) {
+    case pwr_eClassVolumeDatabaseEnum_WbLoad:
+      cdh_ToLower( name, name);
+      sprintf( fname, "$pwrp_db/%s.wb_load", name);
+      dcli_translate_filename( fname, fname);
+
+      sprintf( cmd, "open classeditor /file=\"%s\"/database=wbload", fname);
+
+      if ( !focused_wnav)
+	set_focus_default();
+      set_clock_cursor();
+      focused_wnav->command( cmd); 
+      reset_cursor();
+      break;
+    case pwr_eClassVolumeDatabaseEnum_BerkeleyDb:
+    case pwr_eClassVolumeDatabaseEnum_MySql: {
+      pwr_tFileName filename;
+
+      cdh_ToLower( name, name);
+      dcli_translate_filename( filename, "$pwr_exe/wb_open_db.sh");
+      sprintf( cmd,
+	       "%s \"%s\" \"%s\" \"%s\" \"%s\" &",
+	       filename, login_prv.username, login_prv.password, name, name);
+      
+      set_clock_cursor();
+      sts = system( cmd);
+      reset_cursor();
+      if ( sts == -1 || sts == 127) {
+	printf("-- Error when creating process.\n");
+	return;
+      }
+      break;
+    }
+    default:
+      return;
+    }
+
+    free( dbenum);
   }
   else {
     message('E', "Select a ClassVolumeConfig object");
     return;
   }
-
-  set_clock_cursor();
-  if ( open_volume_cb)
-    (open_volume_cb) ( this, wb_eType_ClassEditor, fname, wow_eFileSelType_WblClass);
-  reset_cursor();
 }
 
 void Wtt::activate_buildvolume()
@@ -1582,7 +1619,9 @@ void Wtt::activate_updateclasses()
   char cmd[80] = "update classes";
   if ( !focused_wnav)
     set_focus_default();
+  set_clock_cursor();
   focused_wnav->command( cmd);
+  reset_cursor();
 }
 
 void Wtt::activate_zoom_in()

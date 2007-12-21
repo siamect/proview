@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdbs.cpp,v 1.50 2007-11-23 14:25:09 claes Exp $
+ * Proview   $Id: wb_vrepdbs.cpp,v 1.51 2007-12-21 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -241,7 +241,8 @@ wb_orep *wb_vrepdbs::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination
 }
 
 
-wb_orep *wb_vrepdbs::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, wb_name &name)
+wb_orep *wb_vrepdbs::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, 
+				wb_name &name, pwr_tOix oix)
 {
   *sts = LDH__NYI;
   return 0;

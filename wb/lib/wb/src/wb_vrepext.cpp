@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepext.cpp,v 1.9 2007-11-23 14:25:09 claes Exp $
+ * Proview   $Id: wb_vrepext.cpp,v 1.10 2007-12-21 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -455,7 +455,8 @@ bool wb_vrepext::createVolumeObject( char *name)
 }
 
 
-wb_orep *wb_vrepext::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, wb_name &name)
+wb_orep *wb_vrepext::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, 
+				wb_name &name, pwr_tOix oix)
 {
   if ( d.oid().vid != m_vid || orep->oid().vid != m_vid) {
     *sts = LDH__BADOBJID;

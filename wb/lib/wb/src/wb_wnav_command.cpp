@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.47 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.48 2007-12-21 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -4690,7 +4690,7 @@ static int	wnav_update_func(	void		*client_data,
     }
 
     wb_volume *v = (wb_volume *) ldh_SessionToVol( wnav->ldhses);
-    wb_vrepdb *vrep = (wb_vrepdb *)((wb_vrep *) *v);
+    wb_vrep *vrep = (wb_vrep *) *v;
     vrep->updateMeta();
     wnav->message('E', "Classvolumes updated");
   }

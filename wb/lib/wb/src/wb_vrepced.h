@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepced.h,v 1.2 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_vrepced.h,v 1.3 2007-12-21 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,6 +45,7 @@ class wb_vrepced : public wb_vrep
 public:
   wb_vrepced( wb_erep *erep, wb_vrep *vrep) : 
     m_erep(erep), m_merep(erep->merep()), m_nRef(0), m_vrep(vrep) { 
+    m_vrep->ref();
     m_vid = m_vrep->vid();
     m_cid = m_vrep->cid();
   }
@@ -58,6 +59,7 @@ public:
   wb_vrep *next() { return m_vrep->next();}
 
   virtual bool createSnapshot(const char *fileName, const pwr_tTime *time);
+  virtual pwr_tStatus updateMeta() { return m_vrep->updateMeta();}
 
   virtual void unref();
   virtual wb_vrep *ref();
@@ -102,7 +104,8 @@ public:
   wb_orep *createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination &d, wb_name &name,
 			pwr_tOix oix = 0);
 
-  wb_orep *copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, wb_name &name);
+  wb_orep *copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, wb_name &name,
+		      pwr_tOix oix = 0);
   bool copyOset(pwr_tStatus *sts, wb_oset *oset, wb_destination &d) { return m_vrep->copyOset( sts, oset, d);}
 
   bool moveObject(pwr_tStatus *sts, wb_orep *orep, wb_destination &d);
@@ -167,9 +170,7 @@ public:
 				 pwr_tCid cid, pwr_tOid poid,
 				 pwr_tOid boid, const char *name, pwr_mClassDef flags,
 				 size_t rbSize, size_t dbSize, void *rbody, void *dbody,
-				 pwr_tOid woid, pwr_tOid *roid) {
-    return m_vrep->importPasteObject( destination, destcode, keepoid, oid, cid, poid, boid, name, flags,
-			       rbSize, dbSize, rbody, dbody, woid, roid);}
+				 pwr_tOid woid, pwr_tOid *roid);
   virtual bool importPaste() { return m_vrep->importPaste();}
   virtual void importIgnoreErrors() { return m_vrep->importIgnoreErrors();}
   virtual bool accessSupported( ldh_eAccess access) { return m_vrep->accessSupported( access);}
@@ -181,11 +182,23 @@ public:
   bool nextAix( pwr_tStatus *sts, wb_orep *co, pwr_tOix *aix);
   bool buildType( pwr_tStatus *sts, wb_orep *to);
   bool buildClass( pwr_tStatus *sts, wb_orep *co);
+  bool buildTemplate( pwr_tStatus *sts, wb_orep *co);
+  void updateTemplateRef( wb_adrep *subattr, char *body, pwr_tAttrRef aref,
+			  pwr_tOid toid);
   void error( char *msg, wb_orep *o);
   bool classeditorCheck( ldh_eDest dest_code, wb_orep *dest, pwr_tCid cid,
 			 pwr_tOix *oix, char *name, pwr_tStatus *sts, 
 			 bool import_paste);
+  bool classeditorCheckMove( wb_orep *o, ldh_eDest dest_code, 
+			     wb_orep *dest, pwr_tStatus *sts);
   void printPaletteFile();
+  void printStructFile( bool hpp);
+  char *typeRefToName( pwr_tStatus *sts, pwr_tTid typeref, bool hpp);
+  bool setFlagsNewAttribute( pwr_tStatus *sts, wb_orep *o);
+  bool resetFlagsNewAttribute( pwr_tStatus *sts, wb_orep *o, pwr_tUInt32 flags);
+  bool setPgmName( pwr_tStatus *sts, wb_orep *o);
+
+  static char *fill(  ofstream &fp, int len);
 
 };
 

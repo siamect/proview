@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_tdrep.cpp,v 1.10 2007-09-20 15:09:18 claes Exp $
+ * Proview   $Id: wb_tdrep.cpp,v 1.11 2007-12-21 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -112,6 +112,16 @@ void wb_tdrep::init()
     m_type = body.Type;
     m_elements = body.Elements;
     m_typeref = body.TypeRef;
+    if ( strcmp( body.PgmName, "") == 0) {
+      strcpy( m_pgmname, name());
+      if ( m_pgmname[0] == '$') {
+	pwr_tObjName tmp;
+	strcpy( tmp, &m_pgmname[1]);
+	strcpy( m_pgmname, tmp);
+      }
+    }
+    else
+      strcpy( m_pgmname, body.PgmName);
     break;
   }
   case pwr_eClass_Type:
@@ -125,6 +135,12 @@ void wb_tdrep::init()
     m_type = body.Type;
     m_elements = 1;
     m_typeref = (pwr_tTid) body.Type;
+    strcpy( m_pgmname, name());
+    if ( m_pgmname[0] == '$') {
+      pwr_tObjName tmp;
+      strcpy( tmp, &m_pgmname[1]);
+      strcpy( m_pgmname, tmp);
+    }
     break;
   }
   default:
@@ -145,4 +161,9 @@ wb_name wb_tdrep::longName()
 bool wb_tdrep::renameType( pwr_tStatus *sts, wb_name &name)
 {
   return m_orep->vrep()->renameObject( sts, m_orep, name);
+}
+
+const char *wb_tdrep::pgmName()
+{
+  return m_pgmname;
 }

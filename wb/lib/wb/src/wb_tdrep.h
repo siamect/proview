@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_tdrep.h,v 1.9 2007-09-20 15:09:18 claes Exp $
+ * Proview   $Id: wb_tdrep.h,v 1.10 2007-12-21 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,6 +39,7 @@ class wb_tdrep
   size_t m_size;
   int m_elements;
   pwr_tTid m_typeref;
+  pwr_tObjName m_pgmname;
     
 public:
   wb_tdrep();
@@ -55,6 +56,7 @@ public:
   pwr_tTid typeRef() {return m_typeref;}
   pwr_eType type() { return m_type;}
   int nElement() { return m_elements;}
+  const char *pgmName();
 
   const char *name() const;
   wb_name longName();

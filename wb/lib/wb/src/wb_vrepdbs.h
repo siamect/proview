@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdbs.h,v 1.39 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_vrepdbs.h,v 1.40 2007-12-21 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -92,7 +92,8 @@ public:
   virtual wb_orep *createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination &d, 
 				wb_name &name, pwr_tOix oix = 0);
 
-  virtual wb_orep *copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, wb_name &name);
+  virtual wb_orep *copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, wb_name &name,
+			      pwr_tOix oix = 0);
   virtual bool copyOset(pwr_tStatus *sts, wb_oset *oset, wb_destination &d);
 
   virtual bool moveObject(pwr_tStatus *sts, wb_orep *orep, wb_destination &d);
@@ -148,6 +149,7 @@ public:
   virtual pwr_tCid cid () const;
   virtual wb_merep *merep () const;
   virtual bool createSnapshot (const char *, const pwr_tTime *);
+  virtual pwr_tStatus updateMeta() {return 0;}
 
   virtual bool isCommonMeta() const { return false;}
   virtual bool isMeta() const { return (cid() == pwr_eClass_ClassVolume);}

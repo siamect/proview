@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.cpp,v 1.61 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_vrepdb.cpp,v 1.62 2007-12-21 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -341,7 +341,8 @@ wb_orep* wb_vrepdb::object(pwr_tStatus *sts, const wb_orep *parent, wb_name &nam
   }
 }
 
-wb_orep *wb_vrepdb::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, wb_name &name)
+wb_orep *wb_vrepdb::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, 
+			       wb_name &name, pwr_tOix oix)
 {
   *sts = LDH__SUCCESS;
   wb_db_txn *txn = m_db->begin(m_db->m_txn);
@@ -350,7 +351,21 @@ wb_orep *wb_vrepdb::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destina
   try {
     int rs = 0;
     pwr_tTime time;
-    pwr_tOid oid = m_db->new_oid(txn);
+    pwr_tOid oid;
+
+    if ( oix) {
+      pwr_tOid woid;
+      woid.oix = oix;
+      woid.vid = m_vid;
+      oid = m_db->new_oid(txn, woid);
+      if ( !oid.oix) {
+	*sts = LDH__BADOBJID;
+	return 0;
+      }
+    }
+    else
+      oid = m_db->new_oid(txn);
+
     wb_db_ohead o(m_db, txn, orep->oid());
     clock_gettime(CLOCK_REALTIME, &time);
 
@@ -1126,9 +1141,13 @@ wb_orep *wb_vrepdb::child(pwr_tStatus *sts, const wb_orep *orp, wb_name &name)
     m_ohead.get(m_db->m_txn, n.oid());
     return new (this) wb_orepdb(&m_ohead.m_o);
   }
-  catch (DbException &e) {
+  catch (DbException &e) { 
     *sts = LDH__NOSUCHOBJ;
     printf("vrepdb: %s\n", e.what());
+    return 0;
+  }
+  catch (wb_error &e) {
+    *sts = e.sts();
     return 0;
   }
 }
@@ -1149,6 +1168,10 @@ wb_orep *wb_vrepdb::last(pwr_tStatus *sts, const wb_orep *orp)
   catch (DbException &e) {
     *sts = LDH__NOSUCHOBJ;
     printf("vrepdb: %s\n", e.what());
+    return 0;
+  }
+  catch (wb_error &e) {
+    *sts = e.sts();
     return 0;
   }
 }
@@ -1176,6 +1199,10 @@ wb_orep *wb_vrepdb::object(pwr_tStatus *sts, pwr_tCid cid)
     printf("vrepdb: %s\n", e.what());
     return 0;
   }
+  catch (wb_error &e) {
+    *sts = e.sts();
+    return 0;
+  }
 }
 
 wb_orep *wb_vrepdb::next(pwr_tStatus *sts, const wb_orep *orp)
@@ -1196,6 +1223,10 @@ wb_orep *wb_vrepdb::next(pwr_tStatus *sts, const wb_orep *orp)
   catch (DbException &e) {
     *sts = LDH__NOSUCHOBJ;
     printf("vrepdb: %s\n", e.what());
+    return 0;
+  }
+  catch (wb_error &e) {
+    *sts = e.sts();
     return 0;
   }
 }
@@ -2507,4 +2538,14 @@ void wb_vrepdb::checkSubClass(pwr_tCid cid, pwr_tCid subcid, unsigned int o_offs
   }
   if (o_cdrep) delete o_cdrep;
   if (n_cdrep) delete n_cdrep;
+}
+
+bool wb_vrepdb::ohTime(pwr_tStatus *sts, const wb_orep *o, pwr_tTime t)
+{
+  m_ohead.get(m_db->m_txn, o->oid());
+  m_ohead.ohTime(t);
+  m_ohead.put(m_db->m_txn);
+
+  *sts = LDH__SUCCESS;
+  return true;
 }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.cpp,v 1.8 2007-12-12 10:21:31 claes Exp $
+ * Proview   $Id: wb_gcg.cpp,v 1.9 2007-12-21 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -15716,6 +15716,10 @@ static pwr_tStatus gcg_replace_ref( gcg_ctx gcgctx, pwr_sAttrRef *attrref,
 
     attrref->Objid = connect_arp->Objid;
     attrref->Offset += connect_arp->Offset;
+    if ( attrref->Flags.b.Object && (attrref->Offset || attrref->Size < connect_arp->Size)) {
+      attrref->Flags.b.Object = 0;
+      attrref->Flags.b.ObjectAttr = 1;
+    }
     free( (char *)connect_arp);
     return GSX__REPLACED;
   }

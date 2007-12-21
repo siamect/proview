@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_bdrep.h,v 1.15 2006-12-10 14:34:13 lw Exp $
+ * Proview   $Id: wb_bdrep.h,v 1.16 2007-12-21 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -32,6 +32,7 @@ class wb_bdrep
   int m_nRef;
   wb_orep *m_orep;
   pwr_tStatus m_sts;
+  pwr_tObjName m_structname;
     
 public:
   wb_bdrep();
@@ -60,6 +61,7 @@ public:
 
   pwr_tStatus sts() { return m_sts;}
   pwr_tTime modTime();
+  char *structName();
             
 };
 

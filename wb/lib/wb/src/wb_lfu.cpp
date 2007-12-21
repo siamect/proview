@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.cpp,v 1.8 2007-11-23 14:25:09 claes Exp $
+ * Proview   $Id: wb_lfu.cpp,v 1.9 2007-12-21 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -831,12 +831,34 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    case pwr_cClass_RootVolumeConfig :
 	    case pwr_cClass_SubVolumeConfig :
 	    case pwr_cClass_ClassVolumeConfig :
-	    case pwr_cClass_SharedVolumeConfig :
-	      fprintf( file, "%s %s %s cnf\n",
+	    case pwr_cClass_SharedVolumeConfig : {
+	      int *dbenum = 0;
+	      char *server = 0;
+
+	      sts = ldh_GetObjectPar( ldhses, envobjid, "RtBody",
+				"Database", (char **) &dbenum, &size);
+	      if ( EVEN(sts)) return sts;
+
+	      if (( cid == pwr_cClass_ClassVolumeConfig && *dbenum == 2) ||
+		  ( cid != pwr_cClass_ClassVolumeConfig && *dbenum == 1)) {
+		sts = ldh_GetObjectPar( ldhses, envobjid, "RtBody",
+					"Server", (char **) &server, &size);
+		if ( EVEN(sts)) return sts;
+	      }
+									 
+	      fprintf( file, "%s %s %s cnf %d",
 		       volume_name,
 		       cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0),
-		       classname);
+		       classname, *dbenum);
+	      if ( server) {
+		fprintf( file, " %s\n", server);
+		free( server);
+	      }
+	      else
+		fprintf( file, "\n");
+	      free( dbenum);
 	      break;
+	    }
 	    case pwr_cClass_ExternVolumeConfig : {
 	      char *devprovider;
 	      char *rtprovider;
@@ -917,8 +939,13 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    break;
 	  }
 	  case pwr_cClass_ClassVolumeConfig : {
-	    // Ced Test !!!!!!!!!!! TODO
-	    if ( strcmp( volume_name, "ClaesClassVolume") == 0) {
+	    int *dbenum = 0;
+
+	    sts = ldh_GetObjectPar( ldhses, envobjid, "RtBody",
+				"Database", (char **) &dbenum, &size);
+	    if ( EVEN(sts)) return sts;
+
+	    if ( *dbenum == 1) {
 	      /* Check if the databas is created */
 	      sprintf( filename, "$pwrp_db/%s.db/info", volume_name);
 	      cdh_ToLower( filename, filename);
@@ -942,12 +969,9 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 				     lfu_creadb_qb_yes, NULL, (void *)data);
 		}
 	      }
-	      else {
-		char msg[200];
-		sprintf( msg, "Error, Volume '%s' is not yet created.", 
-			 volume_name);
-		MsgWindow::message( 'E', msg, msgw_ePop_Default);
-	      }
+	    }
+	    else if ( *dbenum == 2) {
+	      // MySql...
 	    }
 	    else {
 	      // Check wbload-file...
@@ -971,6 +995,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		fclose( wblfile);
 	      }
 	    }
+	    free( dbenum);
 	    break;
 	  }
 	  }

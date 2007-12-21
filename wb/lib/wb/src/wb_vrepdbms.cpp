@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdbms.cpp,v 1.4 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_vrepdbms.cpp,v 1.5 2007-12-21 13:18:01 claes Exp $
  * Copyright (C) 2007 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -350,7 +350,21 @@ wb_orep *wb_vrepdbms::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_desti
   try {
     int rs = 0;
     pwr_tTime time;
-    pwr_tOid oid = m_db->new_oid(txn);
+    pwr_tOid oid;
+
+    if ( oix) {
+      pwr_tOid woid;
+      woid.oix = oix;
+      woid.vid = m_vid;
+      oid = m_db->new_oid(txn, woid);
+      if ( !oid.oix) {
+	*sts = LDH__BADOBJID;
+	return 0;
+      }
+    }
+    else
+      oid = m_db->new_oid(txn);
+
     wb_dbms_ohead o(m_db, txn, orep->oid());
     clock_gettime(CLOCK_REALTIME, &time);
 
@@ -440,8 +454,9 @@ wb_orep* wb_vrepdbms::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destinatio
 
   try {
     int rs = 0;
-    pwr_tTime time;
-    
+    pwr_tTime time;    
+    pwr_tOid oid;
+
     if ( oix) {
       pwr_tOid woid;
       woid.oix = oix;
@@ -453,7 +468,7 @@ wb_orep* wb_vrepdbms::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destinatio
       }
     }
     else
-      pwr_tOid oid = m_db->new_oid(txn);
+      oid = m_db->new_oid(txn);
 
     wb_dbms_ohead o(m_db, oid);
 
@@ -2385,6 +2400,16 @@ void wb_vrepdbms::checkSubClass(pwr_tCid cid, pwr_tCid subcid, unsigned int o_of
   }
   if (o_cdrep) delete o_cdrep;
   if (n_cdrep) delete n_cdrep;
+}
+
+bool wb_vrepdbms::ohTime(pwr_tStatus *sts, const wb_orep *o, pwr_tTime t)
+{
+  m_ohead.get(m_db->m_txn, o->oid());
+  m_ohead.ohTime(t);
+  m_ohead.upd(m_db->m_txn);
+
+  *sts = LDH__SUCCESS;
+  return true;
 }
 
 #endif

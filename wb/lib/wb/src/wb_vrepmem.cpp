@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.cpp,v 1.31 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_vrepmem.cpp,v 1.32 2007-12-21 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -849,7 +849,8 @@ bool wb_vrepmem::createVolumeObject( char *name)
 }
 
 
-wb_orep *wb_vrepmem::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, wb_name &name)
+wb_orep *wb_vrepmem::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, 
+				wb_name &name, pwr_tOix ix)
 {
   mem_object *dest;
   ldh_eDest code = d.code();
@@ -2103,6 +2104,7 @@ bool wb_vrepmem::classeditorCheck( ldh_eDest dest_code, mem_object *dest, pwr_tC
       case pwr_eClass_RtMethod:
       case pwr_eClass_Method:
       case pwr_eClass_DbCallBack:
+      case pwr_eClass_Object:
       case pwr_cClass_PlcTemplate:
 	break;
       default:
@@ -2209,7 +2211,7 @@ bool wb_vrepmem::classeditorCheck( ldh_eDest dest_code, mem_object *dest, pwr_tC
       if ( ((pwr_sClassVolume *)volume_object->rbody)->NextTix[0] == 0)
 	((pwr_sClassVolume *)volume_object->rbody)->NextTix[0]++; 
       while ( 1) {
-	*oix = cdh_tixToOix( 0, ((pwr_sClassVolume *)volume_object->rbody)->NextTix[0]++);
+	*oix = cdh_tixToOix( 1, ((pwr_sClassVolume *)volume_object->rbody)->NextTix[0]++);
 	if ( !findObject( *oix))
 	  break;
       }

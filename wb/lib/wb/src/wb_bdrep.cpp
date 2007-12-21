@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_bdrep.cpp,v 1.18 2006-12-10 14:34:13 lw Exp $
+ * Proview   $Id: wb_bdrep.cpp,v 1.19 2007-12-21 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -321,4 +321,16 @@ wb_name wb_bdrep::longName() const
 pwr_tTime wb_bdrep::modTime()
 {
   return m_orep->treeModTime();
+}
+
+char *wb_bdrep::structName()
+{
+  pwr_sObjBodyDef body;
+  pwr_tStatus sts;
+
+  m_orep->vrep()->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &body);
+  if ( EVEN(sts)) throw wb_error(sts);
+
+  strcpy( m_structname, body.StructName);
+  return m_structname;
 }

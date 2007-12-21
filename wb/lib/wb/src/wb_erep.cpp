@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_erep.cpp,v 1.52 2007-11-23 14:25:09 claes Exp $
+ * Proview   $Id: wb_erep.cpp,v 1.53 2007-12-21 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB OxelÃ¶sund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -147,6 +147,13 @@ wb_vrep *wb_erep::volume(pwr_tStatus *sts, const char *name)
     if ( cdh_NoCaseStrcmp( it->second->name(), name) == 0) {
       *sts = LDH__SUCCESS;
       return it->second;
+    }
+  }
+
+  for ( buffer_iterator itb = m_vrepbuffer.begin(); itb != m_vrepbuffer.end(); itb++) {
+    if ( cdh_NoCaseStrcmp( (*itb)->name(), name) == 0) {
+      *sts = LDH__SUCCESS;
+      return *itb;
     }
   }
   *sts = LDH__NOSUCHVOL;
@@ -579,10 +586,9 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
 	MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
       }
     }
-    else if ( (cdh_NoCaseStrcmp( vol_array[2], "ClassVolume") == 0 && 
-	       strcmp( vol_array[0], "ClaesClassVolume") != 0) ||
-	      (strcmp( vol_array[3], "load") == 0)) {
-      if ( nr != 4)
+    else if ( cdh_NoCaseStrcmp( vol_array[2], "ClassVolume") == 0 ||
+	      strcmp( vol_array[3], "load") == 0) {
+      if ( nr < 4)
 	cout << "Syntax error in file: " << fname << endl;
 
       // Load dbs for this volume
@@ -609,6 +615,21 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
 	  else
           MsgWindow::message( 'E', "Unable to open volume snapshot file", vname, e.what().c_str());
         }
+	if ( nr >= 5 && vol_array[4][0] == '1') {
+	  // BerkelyDb class volume
+	  strcpy( vname, "$pwrp_db/");
+	  strcat( vname, vol_array[0]);
+	  strcat( vname, ".db");
+	  dcli_translate_filename( vname, vname);
+
+	  wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
+	  
+	  wb_vrepced *vrepced = new wb_vrepced( this, vrepdb);
+	  vrepced->name(vol_array[0]);
+	  addDb( &sts, vrepced);
+	  MsgWindow::message( 'I', "Classvolume Database opened", vname);
+	  vol_cnt++;
+	}
       }
       else {
         // Imported loadfile
@@ -646,7 +667,7 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
       // Load db for this volume
       char uname[80];
 
-      if ( nr != 4)
+      if ( nr < 4)
 	cout << "Syntax error in file: " << fname << endl;
 
       if ( db) {
@@ -671,7 +692,7 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
 	      if ( m_options & ldh_mWbOption_IgnoreDLoadError)
 	        MsgWindow::message( 'I', "Unable to open volume snapshot file", vname);
 	      else
-              MsgWindow::message( 'E', "Unable to open volume snapshot file", vname, e.what().c_str());
+		MsgWindow::message( 'E', "Unable to open volume snapshot file", vname, e.what().c_str());
             }
           }
           continue;
@@ -743,27 +764,13 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
 	  }
 	}
 	else {
-	  // Ced Test !!!
-	  if ( strcmp( vol_array[0], "ClaesClassVolume") == 0) {
-	    wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
-
-	    wb_vrepced *vrepced = new wb_vrepced( this, vrepdb);
-	    vrepced->name(vol_array[0]);
-	    addDb( &sts, vrepced);
-	    MsgWindow::message( 'I', "Classvolume Database opened", vname);
-	    vol_cnt++;
-	  }
-	  else {
-	  // End Ced Test !!!
-
 	  // Open db
 	  wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
 	  vrepdb->name(vol_array[0]);
 	  addDb( &sts, vrepdb);
 	  MsgWindow::message( 'I', "Database opened", vname);
 	  vol_cnt++;
-	  }
-	}
+        }
       }
     }
   }

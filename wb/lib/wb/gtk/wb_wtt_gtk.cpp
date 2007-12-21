@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.21 2007-11-23 14:37:22 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.22 2007-12-21 13:19:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -277,7 +277,10 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
       gtk_widget_set_sensitive( tools_edit_w, TRUE);
       gtk_widget_set_sensitive( menu_classeditor_w, FALSE);
-      gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
+      if ( ldh_VolRepType( ldhses) == ldh_eVolRep_Ced)
+	gtk_widget_set_sensitive( menu_updateclasses_w, TRUE);
+      else
+	gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
     }
     else {
       gtk_widget_set_sensitive( menu_save_w, FALSE);

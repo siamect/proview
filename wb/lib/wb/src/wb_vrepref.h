@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepref.h,v 1.9 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_vrepref.h,v 1.10 2007-12-21 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -77,6 +77,7 @@ public:
   wb_erep *erep() {return m_erep;}
   wb_merep *merep() const { return m_merep;}
   virtual bool createSnapshot(const char *fileName, const pwr_tTime *time) { return false;}
+  virtual pwr_tStatus updateMeta() {return 0;}
   virtual pwr_tOid oid(pwr_tStatus *sts, const wb_orep *o) { return pwr_cNOid;}    
   virtual pwr_tVid vid(pwr_tStatus *sts, const wb_orep *o) { return pwr_cNVid;}    
   virtual pwr_tOix oix(pwr_tStatus *sts, const wb_orep *o) { return pwr_cNOix;}
@@ -103,7 +104,8 @@ public:
   wb_orep *object(pwr_tStatus *sts, const wb_orep *parent, wb_name &name) { *sts = LDH__NOSUCHOBJ; return 0;}
   wb_orep *createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination &d, wb_name &name,
 			pwr_tOix oix = 0) {return 0;}
-  wb_orep *copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, wb_name &name) {return 0;}
+  wb_orep *copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, wb_name &name,
+		      pwr_tOix oix = 0) {return 0;}
   bool copyOset(pwr_tStatus *sts, wb_oset *oset, wb_destination &d) {return false;}
   bool moveObject(pwr_tStatus *sts, wb_orep *orep, wb_destination &d) {return false;}
 

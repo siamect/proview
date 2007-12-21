@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_merep.cpp,v 1.38 2007-07-13 12:09:50 claes Exp $
+ * Proview   $Id: wb_merep.cpp,v 1.39 2007-12-21 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -524,7 +524,10 @@ void wb_merep::classVersion( pwr_tStatus *sts, pwr_tCid cid, pwr_tTime *time)
 
   if ( cd->vtype() == ldh_eVolRep_Dbs) {
     // ohTime contains class version for a class in vrepdbs
-    *time = cd->ohTime();
+    pwr_tTime ohtime = cd->ohTime();
+    if ( time_Acomp( &ohtime, time) == 1)
+      *time = ohtime;
+
     *sts = LDH__SUCCESS;
     return;
   }

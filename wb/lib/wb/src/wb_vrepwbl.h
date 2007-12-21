@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepwbl.h,v 1.40 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_vrepwbl.h,v 1.41 2007-12-21 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -68,6 +68,7 @@ public:
   wb_vrep *next();
 
   virtual bool createSnapshot(const char *fileName, const pwr_tTime *time);
+  virtual pwr_tStatus updateMeta() {return 0;}
 
   int load( const char *fname);
   int load_files( const char *file_spec);
@@ -157,7 +158,8 @@ public:
   wb_orep *createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination &d, wb_name &name,
 			pwr_tOix oix = 0) {return 0;}
 
-  wb_orep *copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, wb_name &name) {return 0;}
+  wb_orep *copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, wb_name &name,
+		      pwr_tOix oix = 0) {return 0;}
   bool copyOset(pwr_tStatus *sts, wb_oset *oset, wb_destination &d) {return false;}
 
   bool moveObject(pwr_tStatus *sts, wb_orep *orep, wb_destination &d) {return false;}

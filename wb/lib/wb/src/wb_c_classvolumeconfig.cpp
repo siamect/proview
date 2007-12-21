@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_classvolumeconfig.cpp,v 1.1 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_c_classvolumeconfig.cpp,v 1.2 2007-12-21 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,6 +35,7 @@
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "wb_wnav.h"
+#include "pwr_baseclasses.h"
 
 
 /*----------------------------------------------------------------------------*\
@@ -50,17 +51,49 @@ static pwr_tStatus EditClassVolume (
   char name[120];
   char fname[200];
   char	cmd[200];
+  pwr_eClassVolumeDatabaseEnum  *dbenum;
 
   sts = ldh_ObjidToName ( ip->PointedSession, ip->Pointed.Objid,
 		ldh_eName_Object, name, sizeof(name), &size);
   if ( EVEN(sts)) return sts;
 
-  cdh_ToLower( name, name);
-  sprintf( fname, "$pwrp_db/%s.wb_load", name);
-  dcli_translate_filename( fname, fname);
-  sprintf( cmd, "open classeditor /file=\"%s\"", fname);
+  sts = ldh_GetObjectPar( ip->PointedSession, ip->Pointed.Objid, "RtBody",
+			  "Database", (char **) &dbenum, &size);
+  if ( EVEN(sts)) return sts;
 
-  ip->wnav->command( cmd);
+
+  switch ( *dbenum) {
+  case pwr_eClassVolumeDatabaseEnum_WbLoad:
+    cdh_ToLower( name, name);
+    sprintf( fname, "$pwrp_db/%s.wb_load", name);
+    dcli_translate_filename( fname, fname);
+
+    sprintf( cmd, "open classeditor /file=\"%s\"/database=wbload", fname);
+    ip->wnav->command( cmd);
+    break;
+  case pwr_eClassVolumeDatabaseEnum_BerkeleyDb:
+  case pwr_eClassVolumeDatabaseEnum_MySql: {
+    pwr_tFileName filename;
+
+    cdh_ToLower( name, name);
+    dcli_translate_filename( filename, "$pwr_exe/wb_open_db.sh");
+    sprintf( cmd,
+	     "%s \"%s\" \"%s\" \"%s\" \"%s\" &",
+	     filename, login_prv.username, login_prv.password, name, name);
+
+    sts = system( cmd);
+    if ( sts == -1 || sts == 127) {
+      printf("-- Error when creating process.\n");
+      return sts;
+    }
+    break;
+  }
+  default:
+    return 1;
+  }
+
+
+  free( dbenum);
   return 1;
 }
 

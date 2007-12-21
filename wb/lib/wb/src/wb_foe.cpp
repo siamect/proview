@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe.cpp,v 1.6 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_foe.cpp,v 1.7 2007-12-21 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2433,7 +2433,10 @@ WFoe *WFoe::get( pwr_tOid oid)
   sts = vldh_get_plc_objdid( oid, &plc);
   if ( EVEN(sts)) return 0;
 
-  return (WFoe *)(plc->hp.wind)->hw.foe;
+  if ( !plc->hp.wind)
+    return 0;
+  else
+    return (WFoe *)(plc->hp.wind)->hw.foe;
 }
 
 //
