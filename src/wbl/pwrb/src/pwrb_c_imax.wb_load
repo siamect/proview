@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_imax.wb_load,v 1.2 2005-09-01 14:58:02 claes Exp $
+!  Proview   $Id: pwrb_c_imax.wb_load,v 1.3 2007-12-21 13:29:12 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -166,14 +166,14 @@ SObject pwrb:Class
     EndObject
     Object Template IMax
       Body RtBody
-	Attr In1 = -2147483647
-	Attr In2 = -2147483647
-	Attr In3 = -2147483647
-	Attr In4 = -2147483647
-	Attr In5 = -2147483647
-	Attr In6 = -2147483647
-	Attr In7 = -2147483647
-	Attr In8 = -2147483647
+	Attr In1 = INT_MIN
+	Attr In2 = INT_MIN
+	Attr In3 = INT_MIN
+	Attr In4 = INT_MIN
+	Attr In5 = INT_MIN
+	Attr In6 = INT_MIN
+	Attr In7 = INT_MIN
+	Attr In8 = INT_MIN
       EndBody
     EndObject
   EndObject
