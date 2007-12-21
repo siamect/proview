@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_exportjbean.cpp,v 1.17 2007-09-19 15:07:11 claes Exp $
+ * Proview   $Id: glow_exportjbean.cpp,v 1.18 2007-12-21 13:20:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -791,69 +791,72 @@ void GlowExportJBean::rectrounded( double x0, double y0, double width, double he
       else
         ((GrowCtx *)ctx)->measure_javabean( &dim_x1, &dim_x0, &dim_y1, &dim_y0);
 
-      fp << 
-"    new RoundRectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
-	y0 - dim_y0 + glow_cJBean_Offset << "F, " << 
-	width << "F, " << height << "F, " << 2*roundamount << "F, " << 2*roundamount << "F)," << endl;
-      if ( shadow_width != 0) {
-	// Light shadow
+      if ( fill) {
 	fp << 
-"    new Rectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + roundamount << "F, " << 
+"    new RoundRectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
 	  y0 - dim_y0 + glow_cJBean_Offset << "F, " << 
-	  width - 2*roundamount<< "F, " << shadow_width << "F)," << endl <<
-"    new Rectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
-	  y0 - dim_y0 + glow_cJBean_Offset + roundamount << "F, " << 
-	  shadow_width << "F, " << height - 2*roundamount << "F)," << endl <<
-"    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
-	y0  - dim_y0 + glow_cJBean_Offset << "F, " << 
-	2*roundamount << "F, " << 2*roundamount << "F, " << 
-	  90 << "F, " << 90 << "F, Arc2D.PIE)," << endl <<
-"    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + width - 2*roundamount << "F, " << 
-	y0  - dim_y0 + glow_cJBean_Offset << "F, " << 
-	2*roundamount << "F, " << 2*roundamount << "F, " << 
-	  45 << "F, " << 45<< "F, Arc2D.PIE)," << endl <<
-"    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
-	y0  - dim_y0 + glow_cJBean_Offset + height - 2*roundamount << "F, " << 
-	2*roundamount << "F, " << 2*roundamount << "F, " << 
-	  180 << "F, " << 45<< "F, Arc2D.PIE)," << endl;
-	// Dark shadow
-	fp << 
+	  width << "F, " << height << "F, " << 2*roundamount << "F, " << 2*roundamount << "F)," << endl;
+	if ( shadow_width != 0) {
+	  // Light shadow
+	  fp << 
 "    new Rectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + roundamount << "F, " << 
-	  y0 - dim_y0 + glow_cJBean_Offset + height - shadow_width << "F, " << 
-	  width - 2*roundamount<< "F, " << shadow_width << "F)," << endl <<
-"    new Rectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + width - shadow_width << "F, " << 
-	  y0 - dim_y0 + glow_cJBean_Offset + roundamount << "F, " << 
-	  shadow_width << "F, " << height - 2*roundamount << "F)," << endl <<
-"    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + width - 2*roundamount << "F, " << 
-	  y0  - dim_y0 + glow_cJBean_Offset + height - 2*roundamount << "F, " << 
-	2*roundamount << "F, " << 2*roundamount << "F, " << 
-	  270 << "F, " << 90 << "F, Arc2D.PIE)," << endl <<
-"    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + width - 2*roundamount << "F, " << 
-	y0  - dim_y0 + glow_cJBean_Offset << "F, " << 
-	2*roundamount << "F, " << 2*roundamount << "F, " << 
-	  0 << "F, " << 45<< "F, Arc2D.PIE)," << endl <<
+	    y0 - dim_y0 + glow_cJBean_Offset << "F, " << 
+	    width - 2*roundamount<< "F, " << shadow_width << "F)," << endl <<
+"    new Rectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
+	    y0 - dim_y0 + glow_cJBean_Offset + roundamount << "F, " << 
+	    shadow_width << "F, " << height - 2*roundamount << "F)," << endl <<
 "    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
-	y0  - dim_y0 + glow_cJBean_Offset + height - 2*roundamount << "F, " << 
-	2*roundamount << "F, " << 2*roundamount << "F, " << 
-	  225 << "F, " << 45<< "F, Arc2D.PIE)," << endl;
-	if ( roundamount > shadow_width) {
+	    y0  - dim_y0 + glow_cJBean_Offset << "F, " << 
+	    2*roundamount << "F, " << 2*roundamount << "F, " << 
+	    90 << "F, " << 90 << "F, Arc2D.PIE)," << endl <<
+"    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + width - 2*roundamount << "F, " << 
+	    y0  - dim_y0 + glow_cJBean_Offset << "F, " << 
+	    2*roundamount << "F, " << 2*roundamount << "F, " << 
+	    45 << "F, " << 45<< "F, Arc2D.PIE)," << endl <<
+"    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
+	    y0  - dim_y0 + glow_cJBean_Offset + height - 2*roundamount << "F, " << 
+	    2*roundamount << "F, " << 2*roundamount << "F, " << 
+	    180 << "F, " << 45<< "F, Arc2D.PIE)," << endl;
+	  // Dark shadow
 	  fp << 
+"    new Rectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + roundamount << "F, " << 
+	    y0 - dim_y0 + glow_cJBean_Offset + height - shadow_width << "F, " << 
+	    width - 2*roundamount<< "F, " << shadow_width << "F)," << endl <<
+"    new Rectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + width - shadow_width << "F, " << 
+	    y0 - dim_y0 + glow_cJBean_Offset + roundamount << "F, " << 
+	    shadow_width << "F, " << height - 2*roundamount << "F)," << endl <<
+"    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + width - 2*roundamount << "F, " << 
+	    y0  - dim_y0 + glow_cJBean_Offset + height - 2*roundamount << "F, " << 
+	    2*roundamount << "F, " << 2*roundamount << "F, " << 
+	    270 << "F, " << 90 << "F, Arc2D.PIE)," << endl <<
+"    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + width - 2*roundamount << "F, " << 
+	    y0  - dim_y0 + glow_cJBean_Offset << "F, " << 
+	    2*roundamount << "F, " << 2*roundamount << "F, " << 
+	    0 << "F, " << 45<< "F, Arc2D.PIE)," << endl <<
+"    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
+	    y0  - dim_y0 + glow_cJBean_Offset + height - 2*roundamount << "F, " << 
+	    2*roundamount << "F, " << 2*roundamount << "F, " << 
+	    225 << "F, " << 45<< "F, Arc2D.PIE)," << endl;
+	  if ( roundamount > shadow_width) {
+	    fp << 
 "    new RoundRectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + shadow_width << "F, " << 
-	y0 - dim_y0 + glow_cJBean_Offset + shadow_width << "F, " << 
-	width - 2*shadow_width << "F, " << height - 2*shadow_width << "F, " << 2*roundamount - 2*shadow_width << "F, " << 2*roundamount - 2*shadow_width << "F)," << endl;
-	}
-	else {
-	  fp <<
+	      y0 - dim_y0 + glow_cJBean_Offset + shadow_width << "F, " << 
+	      width - 2*shadow_width << "F, " << height - 2*shadow_width << "F, " << 2*roundamount - 2*shadow_width << "F, " << 2*roundamount - 2*shadow_width << "F)," << endl;
+	  }
+	  else {
+	    fp <<
 "    new Rectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + shadow_width << "F, " << 
-	y0 - dim_y0 + glow_cJBean_Offset + shadow_width << "F, " << 
-	width - 2*shadow_width << "F, " << height - 2*shadow_width << "F)," << endl;
+	      y0 - dim_y0 + glow_cJBean_Offset + shadow_width << "F, " << 
+	      width - 2*shadow_width << "F, " << height - 2*shadow_width << "F)," << endl;
+	  }
 	}
-	if ( border)
-	  fp << 
-"    new RoundRectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
-	y0 - dim_y0 + glow_cJBean_Offset << "F, " << 
-	width << "F, " << height << "F, " << 2*roundamount << "F, " << 2*roundamount << "F)," << endl;
       }
+      if ( border)
+	fp << 
+"    new RoundRectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
+	  y0 - dim_y0 + glow_cJBean_Offset << "F, " << 
+	  width << "F, " << height << "F, " << 2*roundamount << "F, " << 2*roundamount << "F)," << endl;
+      
       break;
     }
     case glow_eExportPass_Init:
@@ -948,7 +951,7 @@ void GlowExportJBean::rectrounded( double x0, double y0, double width, double he
 	fp <<
 "    }" << endl;
       }
-      if (border)
+      if ( border)
       {
 	if ( shadow_width == 0)
 	  (*shape_cnt)--;
