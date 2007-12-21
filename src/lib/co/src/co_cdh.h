@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_cdh.h,v 1.26 2007-11-23 14:34:00 claes Exp $
+ * Proview   $Id: co_cdh.h,v 1.27 2007-12-21 13:31:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -97,6 +97,10 @@ typedef enum {
 #define cdh_oixToCix( Oix) (((Oix) >> 18) & 0xfff)
 //! Get attribute index for object index.
 #define cdh_oixToAix( Oix) ((Oix) & 0xfff)
+//! Get bodyid from classid.
+#define cdh_cidToBid( Cid, Bix) ((Cid) & (Bix))
+//! Get bix from bodyid.
+#define cdh_bidToBix( Bid) ((Bid) & 7)
 //! Check if type id is a class id
 #define cdh_tidIsCid( Tid) (((Tid) & (1 << 15)) == 0)
 
