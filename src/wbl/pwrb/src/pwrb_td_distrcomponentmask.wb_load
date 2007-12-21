@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_td_distrcomponentmask.wb_load,v 1.2 2005-09-01 14:58:02 claes Exp $
+!  Proview   $Id: pwrb_td_distrcomponentmask.wb_load,v 1.3 2007-12-21 13:25:33 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -27,7 +27,7 @@ SObject pwrb:Type
   Object DistrComponentMask $TypeDef 13
     Body SysBody
       Attr TypeRef = "pwrs:Type-$Mask"
-      Attr PgmName = "DistrComponent"
+      Attr PgmName = "DistrComponentMask"
     EndBody
     !/**
     !  The Proview user database $pwra_db/pwr_user.dat is included.

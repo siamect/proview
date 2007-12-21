@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_td_byteordering.wb_load,v 1.2 2005-09-01 14:58:02 claes Exp $
+!  Proview   $Id: pwrb_td_byteordering.wb_load,v 1.3 2007-12-21 13:25:33 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -27,7 +27,7 @@ SObject pwrb:Type
   Object ByteOrderingEnum $TypeDef 27
     Body SysBody
       Attr TypeRef = "pwrs:Type-$Enum"
-      Attr PgmName = "ByteOrdering"
+      Attr PgmName = "ByteOrderingEnum"
     EndBody
     !/**
     !  Little Endian.

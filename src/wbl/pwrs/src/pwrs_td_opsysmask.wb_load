@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_td_opsysmask.wb_load,v 1.2 2005-09-01 14:58:03 claes Exp $
+!  Proview   $Id: pwrs_td_opsysmask.wb_load,v 1.3 2007-12-21 13:26:40 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -31,7 +31,7 @@ SObject pwrs:Type
   Object $OpSysMask $TypeDef 14
     Body SysBody
       Attr TypeRef = "pwrs:Type-$Mask"
-      Attr PgmName = "OpSys"
+      Attr PgmName = "OpSysMask"
     EndBody
     !/**
     !  Operating system is VAXELN on VAX

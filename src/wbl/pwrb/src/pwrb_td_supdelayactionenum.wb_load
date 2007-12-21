@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_td_supdelayactionenum.wb_load,v 1.2 2005-09-01 14:58:03 claes Exp $
+!  Proview   $Id: pwrb_td_supdelayactionenum.wb_load,v 1.3 2007-12-21 13:25:33 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -27,7 +27,7 @@ SObject pwrb:Type
   Object SupDelayActionEnum $TypeDef 17
     Body SysBody
       Attr TypeRef = "pwrs:Type-$Enum"
-      Attr PgmName = "SupDelayAction"
+      Attr PgmName = "SupDelayActionEnum"
     EndBody
     !/**
     !  No action.
