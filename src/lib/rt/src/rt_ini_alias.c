@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_ini_alias.c,v 1.5 2007-11-22 15:10:23 claes Exp $
+ * Proview   $Id: rt_ini_alias.c,v 1.6 2007-12-21 13:31:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -216,7 +216,7 @@ ini_SetAttribute (
 	  value_ptr = data_ptr;
 	  value_ptr++;
 
-	  if ( strcmp( (char *)attribute_ptr, "PLCSCAN") == 0)
+	  if ( cdh_NoCaseStrcmp( (char *)attribute_ptr, "PLCSCAN") == 0)
 	  {
 	    sts = ini_set_plcscan((char *)value_ptr);
 	    if ( EVEN(sts)) 
@@ -230,9 +230,9 @@ ini_SetAttribute (
 	      else
 	        errh_Info("attribute '%s' set to '%s'", (char *)attribute_ptr, (char *)value_ptr);
 	  }
-	  else if ( 	strcmp( (char *)attribute_ptr, "PLCSIM") == 0 ||
-	  		strcmp( (char *)attribute_ptr, "ERRLOGFILE") == 0 ||
-	  		strcmp( (char *)attribute_ptr, "ERRLOGTERM") == 0)
+	  else if ( 	cdh_NoCaseStrcmp( (char *)attribute_ptr, "PLCSIM") == 0 ||
+	  		cdh_NoCaseStrcmp( (char *)attribute_ptr, "ERRLOGFILE") == 0 ||
+	  		cdh_NoCaseStrcmp( (char *)attribute_ptr, "ERRLOGTERM") == 0)
 
 	  {
 	    sts = ini_set_nodeattribute( (char *)attribute_ptr, (char *)value_ptr);
@@ -334,8 +334,8 @@ static int	ini_datafile_get_next( char *parameter, char **data,
 
         cdh_ToUpper( param, parameter);
 	found = 0;
-	while ( 1)
-	{
+	while ( 1) {
+
 	  /* Read one line */
 	  sts = ini_read_line( line, sizeof( line), ini_datafile);
 	  if ( EVEN(sts)) 
@@ -345,15 +345,13 @@ static int	ini_datafile_get_next( char *parameter, char **data,
 	  
 	  /* Parse the line */
 
-          cdh_ToUpper ( line , line ) ; 
 	  nr = ini_parse( line, "=, 	", "", (char *)data_array, 
 		sizeof( data_array) / sizeof( data_array[0]), 
 		sizeof( data_array[0]));
 	  if (nr == 0) 
 	    continue;
 
-	  if ( strcmp( data_array[0], param) == 0)
-	  {
+	  if ( cdh_NoCaseStrcmp( data_array[0], param) == 0) {
 	     found = 1;
 	     break;
 	  }
@@ -553,124 +551,53 @@ static int ini_set_attribute (
   char	*value_str
 )
 {
-	/* Get type of the parameter from info in the class object */
+  /* Get type of the parameter from info in the class object */
 
-	int		sts;
-	pwr_tOName     	hiername;
-	pwr_tOName     	parname;
-	pwr_tClassId    class;
-	pwr_tObjid	classObject;
-	pwr_sParInfo	parinfo;
-	pwr_tOName     	objname;
-	pwr_tOName     	name_array[2];
-	int		nr;
-	pwr_tObjid	objid;
-	pwr_tObjid	value_objid;
-	pwr_tUInt32	parameter_type;
-	unsigned long	parameter_size;
-	char		buffer[80];
-	char		*s;
-	pwr_sAttrRef	attrref;
+  int		sts;
+  char		buffer[256];
+  pwr_sAttrRef	attrref;
+
+  unsigned int asize, aoffs, aelem;
+  pwr_tTid atid;
 	
-	/* Parse the parameter name into a object and a parameter name */
-	nr = ini_parse( name_str, ".", "",
-		name_array[0], 
-		sizeof( name_array)/sizeof( name_array[0]), 
-		sizeof( name_array[0]));
-	if ( nr != 2)
-	{
-/*	  rtt_message( "Syntax error in name");
-	  return RTT__HOLDCOMMAND;
-*/
-	  return 0;
-	}
-	strcpy( objname, name_array[0]);
-	strcpy( parname, name_array[1]);
+  sts = gdh_NameToAttrref( pwr_cNOid, name_str, &attrref);
+  if ( EVEN(sts)) return sts;
 
-	/* Get objid */
-	sts = gdh_NameToObjid ( objname, &objid);
-	if ( EVEN(sts)) return sts;
+  sts = gdh_GetAttributeCharAttrref( &attrref, &atid, &asize, &aoffs, &aelem);
+  if ( EVEN(sts)) return sts;
 
-	/* Remove index if element in an array */
-	if ( (s = strrchr( parname, '[')))
-	  *s = 0;
-
-	/* Get objid of rtbody */
-	sts = gdh_GetObjectClass ( objid, &class);
-	if ( EVEN(sts)) return sts;
-	
-	classObject = cdh_ClassIdToObjid(class);
-
-	sts = gdh_ObjidToName ( classObject, hiername, sizeof(hiername), cdh_mName_volumeStrict);
-	if ( EVEN(sts)) return sts;
-	strcat( hiername, "-RtBody-");
-	strcat( hiername, parname);
-	
-	sts = gdh_GetObjectInfo ( hiername, &parinfo, sizeof(parinfo)); 
-	if ( EVEN(sts)) 
-	{
-	  /* Try with sysbody */
-	  sts = gdh_ObjidToName ( classObject, hiername, sizeof(hiername), cdh_mName_volumeStrict);
-	  if ( EVEN(sts)) return sts;
-	  strcat( hiername, "-SysBody-");
-	  strcat( hiername, parname);
-	  sts = gdh_GetObjectInfo ( hiername, &parinfo, sizeof(parinfo)); 
-	  if ( EVEN(sts)) 
-	  {
-/*
-	    rtt_message("Parameter does not exist");
-	    return RTT__HOLDCOMMAND;
-*/
-	    return 0;
-	  }
-	}
-	
-	parameter_type = parinfo.Type;
-	parameter_size = parinfo.Size;
-	if ( parinfo.Elements > 1)
-	{
-	  /* Check that attribute name includes index */
-	  if ( !strrchr( name_str, '['))
-	  {
-/*
-	    rtt_message( "Attribute is an array, index is missing");
-*/
-	    return 0;
-	  }
-	  parameter_size = parinfo.Size / parinfo.Elements;
-	}	   
-
-	switch ( parameter_type )
-	{
-	  case pwr_eType_Objid:
-	  {
-	    sts = gdh_NameToObjid ( (char *)value_str, &value_objid);
-	    if (EVEN(sts)) 
-	      return sts; 
-		
-	    memcpy( buffer, &value_objid, sizeof( value_objid));
-	    break;
-	  }
-	  case pwr_eType_AttrRef:
-	  {
-	    sts = gdh_NameToAttrref ( pwr_cNObjid, value_str, &attrref);
-	    if (EVEN(sts)) 
-	      return sts;
-
-	    memcpy( buffer, &attrref, sizeof(attrref));
-	    break;
-	  }
-
-          default:
-	    sts = cdh_StringToAttrValue(parameter_type, value_str, (void *)buffer); 
-	    break;
-	}
-	if (EVEN(sts)) return sts;
-
-	sts = gdh_SetObjectInfo ( name_str, (void *)buffer, parameter_size);
-	if ( EVEN(sts)) return sts;
-
-	return INI__SUCCESS;
+  switch ( atid ) {
+  case pwr_eType_Objid: {
+    pwr_tOid oid;
+    
+    sts = gdh_NameToObjid ( (char *)value_str, &oid);
+    if (EVEN(sts)) 
+      return sts; 
+    
+    memcpy( buffer, &oid, sizeof( oid));
+    break;
+  }
+  case pwr_eType_AttrRef: {
+    pwr_tAttrRef aref;
+    
+    sts = gdh_NameToAttrref( pwr_cNOid, value_str, &aref);
+    if (EVEN(sts)) 
+      return sts;
+    
+    memcpy( buffer, &aref, sizeof(aref));
+    break;
+  }
+    
+  default:
+    sts = cdh_StringToAttrValue( atid, value_str, (void *)buffer); 
+    break;
+  }
+  if (EVEN(sts)) return sts;
+  
+  sts = gdh_SetObjectInfo ( name_str, (void *)buffer, asize/aelem);
+  if ( EVEN(sts)) return sts;
+  
+  return INI__SUCCESS;
 }
 
 
@@ -715,7 +642,7 @@ static int ini_set_nodeattribute (
 	sts = gdh_ObjidToPointer (nodeobjid, (pwr_tAddress *)&nodeobjp);    
 	if ( EVEN(sts)) return sts;
 
-	if ( strcmp( attribute_str, "PLCSIM") == 0)
+	if ( cdh_NoCaseStrcmp( attribute_str, "PLCSIM") == 0)
 	{
 	  /* Moved to IOHandler object */
 	  sts = gdh_GetClassList ( pwr_cClass_IOHandler, &objid);
@@ -723,7 +650,7 @@ static int ini_set_nodeattribute (
 	  sts = gdh_ObjidToName ( objid, nodename, sizeof(nodename), cdh_mNName);
 	  if ( EVEN(sts)) return sts;
 
-	  if ( strcmp( value_str, "YES") == 0)
+	  if ( cdh_NoCaseStrcmp( value_str, "YES") == 0)
 	  {
 	    strcpy( attributename, nodename);
 	    strcat( attributename, ".IOReadWriteFlag");
@@ -736,7 +663,7 @@ static int ini_set_nodeattribute (
 	    sts = gdh_SetObjectInfo ( attributename, &value, sizeof( value));
 	    if ( EVEN(sts)) return sts;
 	  }
-	  else if ( strcmp( value_str, "NO") == 0)
+	  else if ( cdh_NoCaseStrcmp( value_str, "NO") == 0)
 	  {
 	    strcpy( attributename, nodename);
 	    strcat( attributename, ".IOReadWriteFlag");
@@ -752,7 +679,7 @@ static int ini_set_nodeattribute (
 	  else
 	    return 0;
 	}	
-	else if ( strcmp( attribute_str, "ERRLOGFILE") == 0)
+	else if ( cdh_NoCaseStrcmp( attribute_str, "ERRLOGFILE") == 0)
 	{
 	  strcpy( attributename, nodename);
 	  strcat( attributename, ".ErrLogFile");
@@ -760,7 +687,7 @@ static int ini_set_nodeattribute (
 			sizeof( nodeobjp->ErrLogFile));
 	  if ( EVEN(sts)) return sts;
 	}
-	else if ( strcmp( attribute_str, "ERRLOGTERM") == 0)
+	else if ( cdh_NoCaseStrcmp( attribute_str, "ERRLOGTERM") == 0)
 	{
 	  strcpy( attributename, nodename);
 	  strcat( attributename, ".ErrLogTerm");
@@ -803,7 +730,7 @@ static int ini_set_plcscan (char *value_str)
 	int		sts;
 	pwr_tBoolean	value;
 
-	if ( strcmp( value_str, "OFF") != 0)
+	if ( cdh_NoCaseStrcmp( value_str, "OFF") != 0)
 	  return 0;
 
 	/* Get all window classes */
