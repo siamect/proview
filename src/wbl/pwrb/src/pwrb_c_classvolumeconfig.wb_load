@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_classvolumeconfig.wb_load,v 1.4 2005-09-01 14:58:01 claes Exp $
+!  Proview   $Id: pwrb_c_classvolumeconfig.wb_load,v 1.5 2007-12-21 13:29:51 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -35,9 +35,23 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
-    EndObject
-    Object DevBody $ObjBodyDef 2 
-      Object CommonClass $Attribute 1 
+      !/**
+      !  Database used to store the class volume.
+      !*/
+      Object Database $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-ClassVolumeDatabaseEnum"
+        EndBody
+      EndObject
+      !/**
+      !  Database server. Used for MySql databases.
+      !*/
+      Object Server $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object CommonClass $Attribute 4 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
