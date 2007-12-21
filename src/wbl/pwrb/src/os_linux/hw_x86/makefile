@@ -56,7 +56,7 @@ $(inc_dir)/pwr_baseclasses.h :
 
 $(inc_dir)/pwr_baseclasses.hpp :
 	@ echo "Generating hpp files for pwrb classes..."
-	@ co_convert -po -d $(inc_dir) "$(pwre_sroot)/wbl/pwrb/src/pwrb_c_*.wb_load"
+	@ co_convert -po -d $(inc_dir) "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
 
 $(doc_dir)/en_us/orm/pwrb_allclasses.html :
 	@ echo "Generating html files for pwrb classes en_us..."
