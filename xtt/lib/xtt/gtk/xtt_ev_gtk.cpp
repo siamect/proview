@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ev_gtk.cpp,v 1.2 2007-12-21 11:48:13 claes Exp $
+ * Proview   $Id: xtt_ev_gtk.cpp,v 1.3 2008-01-08 14:25:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -450,6 +450,7 @@ EvGtk::EvGtk( void *ev_parent_ctx,
     ala->display_in_xnav_cb = &ala_display_in_xnav_cb;
     ala->name_to_alias_cb = &ev_name_to_alias_cb;
     ala->popup_menu_cb = &ev_popup_menu_cb;
+    ala->sound_cb = &ev_sound_cb;
 
     gtk_box_pack_start( GTK_BOX(ala_vbox), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
     gtk_box_pack_end( GTK_BOX(ala_vbox), GTK_WIDGET(ala_widget), TRUE, TRUE, 0);
