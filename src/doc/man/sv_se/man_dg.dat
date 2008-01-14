@@ -31,15 +31,15 @@
 
 
 <hr>
-2006-09-07
-Version 4.2.0	
+2008-01-14
+Version 4.4.0	
 <hr>
 </topic>
 
 <topic> __DocumentInfoPage
 
 
-Copyright 2006 SSAB Oxelösund AB
+Copyright 2008 SSAB Oxelösund AB
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2
@@ -110,6 +110,7 @@ Konfiguratören <link> configurator_refman
 Objektseditorn Referensmanual<link> objecteditor_refman
 Spreadsheeteditorn Referensmanual<link> spreadsheeteditor_refman
 Plceditorn Referensmanual <link> plceditor_refman
+Klasseditorn Referensmanual <link> classeditor
 Commands <link> help command
 Script <link> script
 </topic>
@@ -2595,274 +2596,6 @@ Drag MB2 <t><t>Zooma arbetsarean.
 </topic>
 </chapter>
 
-<chapter>
-<topic> classeditor
-Klasseditor
-
-<option> printdisable
-Dokumentation av klasser <link> class docblock
-<option> printenable
-</topic>
-
-<headerlevel>
-<topic>class docblock
-Dokumentation av klasser
-
-För $ClassDef och $Attribute objekt finns ett dokumentationsblock, som fylls i från 
-objektseditorn. Från dokumentationsblocken och klassbeskrivningen genereras dokumentation
-för klasserna på xtthjälp och html format.
-
-Dokumentationsblocket för $ClassDef objektet bör innehålla en beskrivning
-av klassens funktion och användningsområde, documentationsblocket för $Attribut en beskrivning
-av det aktuella attributets funktion.
-
-<option> printdisable
-Genererering av Xtt hjälpfiler <link> class generate xtthelp
-Generering av html dokumentation <link> class generate html
-ClassDef <link> docblock classdef
-Attribute <link> docblock attribute
-c- och h-filer <link> docblock ccode
-<option> printenable
-</topic>
-
-<headerlevel>
-
-<topic> class generate xtthelp
-Generering av Xtt hjälpfiler
-
-Hjälpfiler för xtt genereras med kommandot
-
-<c>co_convert -xv -d $pwrp_exe/ $pwrp_db/userclasses.wb_load
-
-Kommandot genererar en hjälpfil $pwrp_exe/'volymsnamn'_xtthelp.dat som man lämpligt-vis 
-lägger en länk till i projektets xtt-hjälpfil $pwrp_exe/xtt_help.dat:
-
-Exempel för klassvolymen cvolvhxn2r:
-
-<i><topic> index
-
-<i>...
-
-<i>Användar klasser<link>cvolssabtest,"",$pwrp_exe/cvolvhxn2r_xtthelp.dat
-
-<i></topic>
-
-...
-
-<i><include> $pwrp_exe/cvolssabtest_xtthelp.dat
-</topic>
-
-<topic> class generate html
-Generering av html dokumentation
-
-html-filer genereras med kommandot
-
-<c>co_convert -wv -d $pwrp_web/ $pwrp_db/userclasses.wb_load
-
-Kommandot genererar bl a filen $pwrp_web/'volymsnamn'_index.html som innehåller startsidan 
-för klass-dokumentationen. Denna tillsammans med övriga filer ($pwrp_web/'volymsnamn'_*.html) 
-kopieras till lämplig filkatalog på web-servern.
-
-En länk till dokumentationen skapar man lämpligen med ett WebLink-objekt med URL'en 
-'volymsnamn'_index.html
-
-Vill man kunna visa c-structarna för klasserna, konverterar man h-filen med co_convert
-
-<c>co_convert -cv $pwrp_web/ $pwrp_inc/'volymsnamn'classes.h
-
-Vill man dessutom visa koden för plc-objekt ska man lägga in aref-taggar i c eller h-filen 
-för koden och konvertera den med
-
-<c>co_convert -sv -d $pwrp_web/ 'filnamn'
-</topic>
-
-<topic> docblock classdef
-ClassDef
-
-<h2>Exempel
-
-<c>@Author Homer Simpson
-<c>@Version 1.0
-<c>@Code ra_plc_user.c
-<c>@Summary Brief description of this class
-<c>Description of
-<c>this class.
-<c>
-<c>See also 
-<c>@link Example plat.html
-<c>@classlink AnotherPlate cvolvhxn2r_anotherplate.html
-
-<h2>Taggar
-Author  <t>Redaktör <link> docblock author
-Version <t>Version av klassen <link> docblock version
-Code    <t>Fil som innehåller kod för klassen <link> docblock code
-Summary <t>Sammanfattning <link> docblock summary
-Link    <t>Godtycklig länk <link> docblock link
-Classlink <t>Länk till annan klass <link> docblock classlink
-wb_load syntax <link> docblock wb_load classdef
-</topic>
-
-<headerlevel>
-<topic> docblock author
-@Author
-
-Författare. Kan utelämnas.
-
-<b>Syntax
-<c>@Author 'name of author'
-</topic>
-
-<topic> docblock version
-@Version
-
-Version. Kan utelämnas.
-
-<b>Syntax
-<c>@Version 'version number'
-</topic>
-
-<topic> docblock code
-@Code
-
-För klasser med plc-kod kan man ange namnet på c-filen. Kan utelämnas.
-Även c-filen måste konverteras med: co_convert -c -d $pwrp_web/ 'filnamn'
-
-<b>Syntax
-<c>@Code 'filename'
-</topic>
-
-<topic> docblock summary
-@Summary
-
-Kort beskrivning på en rad. 
-Denna visas i indexfilen i xtt-hjälpfilen. Används ej i html.
-Kan utelämnas.
-
-<b>Syntax
-<c>@Summary 'text'
-</topic>
-
-<topic> docblock link
-@Link
-
-Här kan läggas in en länk till godtycklig URL. Kommer enbart att visas i 
-html-dokumentationen, ej i xtt. Länken måste ligga efter beskrivningen av klassen.
-
-<b>Syntax
-<c>@Link 'URL'
-</topic>
-
-<topic> docblock classlink
-@Classlink
-
-Här kan läggas in en länk till en annan klass. Denna länk fungerar både i html och xtt.
-Länken måste ligga efter beskrivningen av klassen.
-
-<b>Syntax
-<c>@Classlink 'html-filename'
-</topic>
-
-<topic> docblock wb_load classdef
-wb_load syntax
-
-Info om en klass skrivs före $ClassDef raden.
-
-<c>!
-<c>!/**
-<c>!  @Author Homer Simpson
-<c>!  @Version 1.0
-<c>!  @Code ra_plc_user.c
-<c>!  @Summary Brief description of this class
-<c>!  Description of
-<c>!  this class.
-<c>!
-<c>!  See also 
-<c>!  @link Example plat.html
-<c>!  @classlink AnotherPlate cvolvhxn2r_anotherplate.html
-<c>!*/
-<c>!
-<c>Object        Plat    $ClassDef 1
-
-<h2>!/**
-Start av ett dokumentations block.
-All text mellan !/** och !*/ kommer att skrivas ut i oförvanskad form som beskrivning för 
-klassen.
-
-<h2>!*/
-Avslutning av ett dokumentations block
-</topic>
-</headerlevel>
-
-<topic> docblock attribute
-Attribute
-
-<h2>Exempel
-<c>@Summary Plåtens längd
-<c>En grundligare beskrivning
-<c>av attributet Langd...
-
-
-<h2>@Summary
-Kort beskrivning på en rad. Om det finns en @Summary läggs denna text in i html-filens tabell
-över attribut. Om den inte finns läggs beskrivningen hela beskrivningen in.
-Används ej i xtt.
-
-wb_load syntax <link>docblock wb_load attribute
-</topic>
-
-<headerlevel>
-<topic> docblock wb_load attribute
-wb_load syntax
-
-Info om ett attribute skrivs före $Attribute, $Input, $Output eller $Inter raden.
-
-<c>      !/**
-<c>      !  @Summary Plåtens längd
-<c>      !  En grundligare beskrivning
-<c>      !  av attributet Langd...
-<c>      !*/
-<c>      Object    Langd $Attribute 3
-<c>        Body             SysBody
-<c>          Attr           TypeRef = "pwrs:Type-$Float32"
-<c>        EndBody
-<c>      EndObject
-
-<h2>!/**
-Start av ett dokumentations block.
-All text mellan !/** och !*/ kommer att skrivas ut i oförvanskad form som beskrivning för 
-attributet, förutom nedanstående taggar.
-
-<h2>!*/
-Avslutning av ett dokumentations block
-</topic>
-</headerlevel>
-
-<topic> docblock ccode
-Syntax för c- och h-filer
-Om man vill lägga in länkar till c- och h-filer måste även dessa konverteras till html. Det 
-finns även en funktion att lägga in bokmärken. ¨
-
-Struct-filen för klasserna genereras automatiskt med bokmärken.
-
-<c>/**
-<c>   MyPlcClass
-<c>
-<c>   Description for the class that is not displayed anywhere but in the code.
-<c>
-<c>   @aref MyPlcClass MyPlcClass
-<c>*/
-<c>void MyPlcClass_exec(...)
-
-<h2>@aref
-@aref måste ligga inom ett /*_* ... */ block. Inom blocket kan även finnas kommentarer som 
-inte hanteras vid konverteringen.
-
-<b>Syntax
-<c>@aref 'bookmark' 'text' 
-</topic>
-</headerlevel>
-</headerlevel>
-</chapter>
 
 <chapter>
 <TOPIC> helpfile
@@ -3561,6 +3294,1377 @@ su kräver password.
 </headerlevel>
 </headerlevel>
 </chapter>
+
+<chapter>
+<topic> classeditor
+Klasseditor
+
+Det här avsnittet beskriver hur man skapar nya klasser i Proview. 
+Det finns ett antal olika fall när det kan vara idé att skapa en ny klass.
+
+<h2>Data objekt
+Man vill lagra en mängd data i en datastruktur, t ex för att smidigare kunna få tillgång till
+datamängden från applikationer. Man kan även skapa dataobjekt som beskriver material som
+passerar genom en anläggning, där ett dataobjekt innehåller egenskaper för ett material, t ex
+längd, bredd, vikt etc. Material objekt kan flyttas runt i NMps celler för att beskriva läget
+av ett material i anläggningen, och låta detta styra processen.
+
+<h2>Plc funktionsobjekt
+Funktionsobjekt som används i plc programmeringen består av en klass som definierar in- och
+utgångs pinnar på funktionsobjektet samt eventuella interna attribut. Det här typen av objekt
+består även av kod, som exekveras av plcprogrammet. Man kan välja att skapa koden i
+form av plc-kod eller c-kod.
+
+<h2>Komponenter
+Ett komponent-objekt speglar en komponent i anläggningen och är ofta uppdelad i två eller tre
+olika klasser, ett huvudobjekt, ett funktionsobjekt och ett busobjekt, ibland även ett 
+simuleringsobjekt. Huvudobjektet läggs i anläggningshierarkin och innehåller de signaler som
+är kopplade till komponenten, jämte andra konfigureringsdata. I ett plcprogram läggs ett 
+funktionsobjekt som kopplas till huvudobjektet och som arbetar dels med data från sina egna 
+ingångar, och dels med signaler och andra parametrar som finns i huvudobjektet. Om 
+signalutbytet med komponenten sker via Profibus, kan man även skapa ett speciellt Profibus
+modulobjekt som innehåller kanalobjekt för de data som transporteras på Profbus. Här räcker
+det med att göra en koppling mellan huvudobjekt och modulobjekt, för att koppla ihop alla
+kanaler och signaler. Simuleringsobjektet är ett funktionsobjekt som kopplas till 
+huvudobjektet och som simulerar komponenten när systemet körs i simuleringsmod.
+
+<h2>Subklasser av komponenter
+Proview innehåller ett antal baskomponent-klasser för ventiler, motorer mm. Dessa är byggda
+mycket generalla för att täcka in ett stort antal komponenter. Ofta gör man en subklass som
+är anpassad till en specifik komponent, och som t ex innehåller länk till datablad, 
+hjälptext mm. för just denna komponent. Genom att göra en subklass av en baskomponent ärver
+man alla metoder och attribut från denna, men har även möjligheten att utöka funktionaliteten
+med fler attribut och mer plc-kod.
+
+<h2>Aggregat
+Ett aggregat speglar ett anläggningsdel som består av ett antal komponenter. Här kan man göra
+en aggregats-klass som innehåller de olika komponenterna i form av attributobjekt. 
+Till aggregatet finns även ett funktionsobjekt som anropar funktionsobjekten för ingående 
+komponenter. Aggregat kan även inehålla andra aggregat och ge upphov till ganska omfattande
+objektsstrukturer. I princip skulle man kunna bygga en anläggning i form att ett enda
+aggregatsobjekt, men praktiken är det lämpligt att hålla objektsstrukturen på en ganska låg
+nivå. Det är framför allt när man har flera identiska aggregat som man har nytta av att göra
+ett aggregatsobjekt av anläggningsdelen.
+
+<option> printdisable
+<b>Databasstruktur <link> ced_databasestructure
+<b>Klassbeskrivning <link> ced_classdescription
+<b>Typbeskrivning <link> ced_typedescription
+<b>Skapa klasser <link> ced_createclasses
+<b>Bygga klassvolym <link> ced_build
+<b>Dokumentation av klasser <link> class docblock
+<option> printenable
+
+
+</topic>
+
+<headerlevel>
+<topic>ced_databasestructure
+Databasstruktur
+<h1>Objekt
+I avsnittet Databas struktur ges en beskrivning av hur objekt är uppbyggda. Här finns 
+anledning att gå lite djupare i det ämnet.
+
+Ett objekt består av ett objektshuvud och en objektskropp. Objekshuvudet innehåller 
+information om objektets namn, klass och relation till andra objekt. Objektskroppen innehåller
+objektets datamängd.
+
+<h2>Objektshuvud
+Ett objekt har ett namn på maximalt 31 tecken som finns lagrat i objekthuvudet. 
+
+I objektshuvudet finns även en länk till objekts klassbeskrivning. I klassbeskrivningen finns 
+information som gör att man kan tolka objektets datamängd, hur den är uppdela i olika 
+attribut och vilken typ de olika attributen har. Vidare finns här även de olika metoder som
+kan verka på objektet.
+
+Ett objekt ligger i en trädstruktur och i objektshuvudet finns pekare till närmsta anhöriga:
+förälder, föregående syskon, nästa syskon och första barn.
+
+Strukturen på ett objekthuvud är gemensamt för alla olika typer av objekt.
+
+<h2>Objektskropp
+Ett objekt kan ha två olika kroppar, en kropp som innehåller den datamänd som behövs i 
+runtime, dessutom kan ett objekt ha ytterligare en kropp med en datamängd som enbart finns
+i utvecklingsmiljön.
+
+En kropp är uppdelad i attribut som innehåller data av en viss typ, det kan t ex vara en 
+Boolean, Float32 eller Int32. Men ett attribut kan även vara en mer komplex datatyp, som en
+vektor eller en klass.
+
+<b>RtBody
+RtBody är den kropp som finns i runtimedatabasen. Kroppen finns även i utvecklingsmiljön så
+att man där kan datasätta olika attribut i kroppen.
+
+<b>DevBody
+Vissa objekt har även en DevBody, en kropp som enbart finns i utvecklingsdatabas, och som 
+inte laddas in i runtimedatabasen. Detta används främst av plcobjekt, där devbody t ex 
+innehåller grafisk data för plceditorn.
+
+</topic>
+
+<topic>ced_classdescription
+Klassbeskrivning
+
+Hur ett objekts kropp ser ut finns beskrivet i objektets klassbeskrivning. Här finns även
+de metoder som kan verka på ett objekt beskrivna och alla övriga egenskaper hos instanser
+av klassen. Klassbeskrivningen byggs upp av speciella klassdefinitionsobjekt som ligger i
+en klassvolym. Klassvolymen har en strikt syntax över hur klassbeskrivningarna ska var 
+uppbyggda. Här följer en presentation av de olika objekt som ingår in en klassbeskrivning.
+
+<h2>Klassvolym
+Klassbeskrivningar ligger i en speciell typ av volym, ClassVolume. Dessa kan innehålla två
+olika hierarkier, en hieraki med klassbeskrivningar och en med typbeskrivningar.
+
+<h2>$ClassHier
+Klassbeskrivningar ligger under rotobjektet 'Class' av  klassen $ClassHier. Under $ClassHier
+objektet ligger objekt som beskriver olika klasser i form av $ClassDef objekt.
+
+<h2>$ClassDef
+Ett $ClassDef objekt med underliggande objekt beskriver en klass. Namnet på objeketet ger
+namnet på klassen. Under $ClassDef objektet kan det finnas
+
+- ett $ObjBodyDef objekt, 'RtBody', som beskriver runtimekroppen.
+- ett $ObjBodyDef objekt, 'DevBody', som beskriver kroppen i utvecklingsmiljön.
+- ett Template objekt, dvs ett objekt av den aktuella klassen som innehåller defaultvärden
+  för instanser av klassen.
+- ett eller flera body objekt som innehåller data för specifika funktioner.
+- ett PlcTemplate objekt, som kan öppnas av plceditorn, och som innehåller plc-kod för 
+  klassen.
+- menyobjekt som beskriver popupmenyn i navigatören, konfiguratören och xtt.
+- metodobjekt som knyter till metoder som anropas t ex när objekt skapas eller flyttas i
+  utvecklingsmiljön.
+
+<h2>$ObjBodyDef
+Ett $ObjBodyDef kan ha antingen namnet 'RtBody' och beskriver då runtimekroppen, eller 
+namnet 'DevBody' som bekriver utvecklingsmiljö kroppen. I attributet 'StructName' ligger
+namnet på c-structen för klassen i den include-fil som genereras för volymen. Under 
+$ObjBodyDef objektet ligger ett objekt för varje attribut som finns i objektskroppen. För 
+dataobjekt använder man $Attribute objekt, för funktionsobjekt $Input, $Output och $Intern.
+
+<h2>$Attribute
+Ett $Attribute objekt beskriver ett attribut i en kropp. Attributet kan vara av följande
+typ:
+- en bastyp, t ex Boolean, Float32, Time, Int16.
+- en härledd typ, t ex String80, Text1024, URL.
+- en vektor av bastyp eller härledd typ.
+- en annan klass.
+- en vektor av en klass.
+- en rtdb pekare, dvs en pekare som kan tolkas av alla processer.
+- en privat pekare, dvs en pekare som endast kan tolkas av en process.
+
+Typen anges i attributet 'TypeRef'. I attributet 'Flags' anges om objektet beskriver en
+vektor, pekare, klass mm. Om objektet beskriver en vektor anges antalet element i 'Elements'.
+
+<h2>$Input
+$Input beskriver en ingång till ett funktionsobjekt i plcprogrammet. Ingången kan vara av
+typen Boolean, Float32, Int32, String80, Time, DeltaTime eller av datatyp (pekare till 
+Float32). $Input ger upphov till ett attribut med två element, ett element av den angivna
+typen, och ett element med en pekare till den angivna typen. Om ingången är kopplad pekar
+pekaren på det kopplade utgångsattributet, om ingången ej är kopplad pekare den på sitt
+första element, där man kan då kan datasätta ett värde på ingången.
+
+Attributet 'PgmName' anger namnet i c-structen för attributet, och 'GraphName' den textsträng
+som skrivs i funktionsobjektet vi ingången.
+
+<h2>$Intern
+Ger uphov till ett internt attribut i ett funktionsobjekt, dvs ett attribut som varken är en
+ingång eller utgång.
+
+<h2>$Output
+$Output beskriver en utgång i ett funktionsobjekt. Samma datatyper gäller för $Output som för
+$Input.
+
+<h2>$Buffer
+$Buffer skapar ett attribut som innehåller en datamängd av en viss storlek som endast någon 
+enstaka funktion behöver kunna tolka. Datamängden beskrivs av en klass, men går ej att
+öppna i t ex xtt. PlcNode som återfinns i alla plc objekt är ett exempel på $Buffer. Där
+återfinns grafiska information som enbart är av intresse för plc-editorn.
+
+<h2>Klass kropp
+Ett klass kan innehålla ett klass kropp objekt. Klass kroppobjektet innehåller data som är
+gemensam för alla instanser av klassen. Exempel på klass kropp objekt är $GraphPlcNode som
+återfinns i all plc-klasser. $GraphPlcNode innehåller data för kodgenerering och grafisk 
+layout av funktionsobjektet.
+
+<h1>Menyer
+Menyobjekt används för att definiera popup-menyer för objekt i utvecklingsmiljön och i 
+operatörsmiljön. $Menu definierar en popupmeny i utvecklingsmiljön, och $RtMenu in 
+operatörsmiljön. Under menuobjektet definieras menyalternativ med $MenuButton objekt, och
+undermenyer med $MenuCascade objekt. Meny-objekten läggs under $ClassDef objektet.
+
+Menyobjekten anropar metoder, dvs c-funktioner som byggs med utvecklingsmiljön resp
+operatörsmiljön. Det finns fn inte någon möjliget att göra detta från ett projekt, utan
+bygget måste ske från källkodsträdet.
+
+<h2>$Menu
+$Menu objekt beskriver popupmenyer i utvecklingsmiljön. Objektsnamnet specificerar funktionen,
+första delen anger verktyget (Navigator/Configurator). De fem sista bokstäverna bestämmer
+under vilka vilkor menyn är närvarande, beroende på vilka objekt som är utvale eller utpekade.
+
+1. P står för pointed, dvs det objekt som markören pekar på.
+2. anger vad pointed är: 'o' ett objekt, 'a' ett attribut, 'c' en klass i paletten.
+3. s står för selected, dvs det objekt som är utvalt.
+4. anger vad selected är: 'o' ett objekt, 'a' ett attribute, 'c' en klass i paletten,
+   'm' flera objekt utvalda, 'n' inget objekt utvalt.
+5. anger om selected och pointed är samma objekt: 's' samma objekt, 'n' olika objekt.
+
+Exempel ConfiguratorPosos: 'Po' markören pekar på ett objekt, 'so' ett objekt är utvalt,
+'s' det objekt markören pekar på och det utvalda är samma objekt.
+
+<h2>$RtMenu
+Menyobjekt som beskriver popupmenyer i operatörsmiljön.
+
+<h2>$MenuButton
+Definerar ett menyalternativ i en popupmeny.
+</topic>
+
+<topic>ced_typedescription
+Typbeskrivning
+
+Typbeskrivningar ligger liksom klassbeskrivningar i en klassvolym. De är placerade i en egen
+hierarki under ett $TypeHier objekt. Typer är uppdelade i två kategorier, bastyper och
+härledda typer.
+
+<h2>Bastyper
+Bastyperna ligger definierade i systemvolymen pwrs. Exempel på bastyper är Boolean, Float32
+Int32, String, Enum och Mask.
+
+<h2>Härledda typer
+Härledda typer kan definieras i vilken klassvolym som helst. De utgörs av 
+- vektorer av bastyper, t ex String80.
+- uppräkningstyper, Enum, med definerade texter för olika värden.
+- bitmasker, Mask, med definerade texter för olika bitar.
+
+<b>$TypeHier
+Typbeskrivningar ligger under rotobjektet 'Type' av klassen $TypeHier. $TypeHier objektet har
+$Type och $TypeDef objekt som barn.
+
+<b>$Type
+Beskrivning av en bastyp. Detta objekt är reserverat för systemvolymen pwrs.
+
+<b>$TypeDef
+Beskrivning av en härledd typ. Attributet 'TypeRef' innehåller bastypen. Den vanligaste 
+användningen är strängar och texter med specifika längder, och uppräkningstyper och bitmaskar.
+
+För en uppräkningstyp ska bastypen vara $Enum. Under $TypeDef objektet definerar man texter
+för olika värden med $Value objekt. När ett värdet av attribut av typen ska visas, visas den 
+text som motsvara aktuellt värde. När attributet ska datasättas visas de olika de olika 
+texterna med checkboxar och man väljer ut ett alternativ.
+
+För bitmaskar används bastypen $Mask. Under $TypeDef objektet defineras texter för olika
+bitar med $Bit objekt. Vid datasättning väljer man liksom för uppräkningstyper, alternativ 
+med checkboxar. För bitmaskar kan man välja flera alternativ.
+
+<b>$Value
+Används för att definiera ett värde i en uppräkningstyp. Värdet kopplas till ett text som 
+visas i konfiguratören och xtt när ett attribut av typen öppnas. I include-filen för volymen
+skapas en enum deklaration som kan användas i eventuell c-kod.
+
+<b>$Bit
+Används för att definiera en bit i en bitmask. Biten kopplas till ett text som visas i 
+konfiguratören och xtt när ett attribut av typen öppnas. I include-filen för volymen skapas 
+en enum deklaration som kan användas i eventuell c-kod.
+</topic>
+
+<topic>ced_createclasses
+Skapa klasser
+
+<option> printdisable
+<b>Skapa en klassvolym <link> ced_createclassvolume
+<b>Dataklasser <link> ced_dataclasses
+<b>Funktionsobject <link>ced_foclasses
+<b>Komponenter <link>ced_components
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic>ced_createclassvolume
+Skapa en klassvolym
+
+Klassdefinition objekten ligger i en klassvolym, och först måste klassvolymen registreras
+och skapas.
+
+Registreringen sker i globala volymslistan som öppnas från File/Open/GlobalVolumeList i 
+navigatorns meny. Här skapar man ett VolumeReg objekt med lämpligt volymsnamn och 
+volymsidentitet. Volymsidentiteten för användar-klassvolymer ska ligga i intervallet
+0.0.2-249.1-254. Använd gärna prefixet CVol i namnet för att makera att det är en klassvolym.
+Ange även aktuellt projekt.
+
+<image>ced_fig11.gif
+<b>Registrering av klassvolymen i GlobalVolumeList
+
+Därefter ska klassvolymen konfigureras i projektets directory volym med ett ClassVolumeConfig
+objekt. Öppna Directory volymen med
+
+<c>$ pwrs
+
+och lägg ett ClassVolumeConfig objekt i det högra fönstret. Objektet ska ha samma namn
+som klassvolymen. När man har sparat och lämnat edit mod, kan man öppna klassvolymen
+genom att högerklicka på ClassVolumeConfig objektet och aktivera 'Open ClassEditor...'.
+
+<image>ced_fig10.gif
+<b>Konfiguration av klassvolymen i Directory volymen
+
+Nu öppnas klasseditorn, där man kan skapa klassdefinitions objekt. Genom att gå in i 
+editerings mod visas en palett, med de klass och typ definitions klasser som används för att
+bygga en klass eller typ.
+
+Börja med att skapa ett objekt av typen $ClassHier på rotnivå. Det får automatiska namnet
+'Class'. Under $ClassHier objektet lägger man sedan ett $ClassDef objekt för varje klass som 
+ska defineras.
+</topic>
+
+<topic>ced_dataclasses
+Data klasser
+
+Data klasser är den enklaste typen av klasser, och används normalt för att lagra data i.
+Klasserna består av en RtBody med attribut.
+
+För att skapa en klass lägger man ett $ClassDef objekt under 'Class' objektet.
+Namnet på $ClassDef objektet kommer att bli klassens namn.
+
+Under $ClassDef objektet skapar man ett $ObjBodyDef object som automatiskt får namnet RtBody.
+
+Under RtBody objektet skapas ett $Attribute objekt som definierar ett attribut i klassen.
+Namnet på $Attribut-objektet ger attribut-namnet. I objektet måste anges följande:
+
+- attributets typ anges i TypeRef. Ett 32-bitars heltal anges t ex med pwrs:Type-$Int32,
+     ett 32-bitars flyttal med pwrs:Type-$Float32 och en boolean med pwrs:Type-$Boolean.
+     Det som läggs in är egentligen namnet på ett typdefinitions-objekt. Se i objekts
+     handboken pwrs/Types, vilka typer som finns definierade. 
+- om attributnamnet innehåller nationella tecken måste man ange ett namn utan nationella
+     tecken som godkänns av c-kompilatorn. Detta anges i PgmName.
+
+<image> ced_fig1.gif
+<b>Definition av ett attribut
+
+När man sparar, skapas en instans av den aktuella klassen med namnet Template under 
+$ClassDef objektet. Här kan man se hur ett objekt av klassen ser ut. I Template objektet kan
+man också lägga in default-värden på attributen. När instanser av klassen skapas, tas en 
+kopia av Template objektet.
+
+<image> ced_fig2.gif
+<b>Template objekt med defaultvärden
+
+<b>Vektorer
+Ett vektor-attribut definieras med ett $Attribute objekt på samma som övriga attribut. Här 
+sätter man Flags biten Array, och anger antalet element i vektorn i Elements.
+
+<image> ced_fig3.gif
+<b>Definition av vektor attribut med 50 element
+
+
+<b>Attributobjekt
+Med attributobjekt avses attribut som beskrivs av en datastruktur. Orsaken kan vara att man 
+vill samla ett antal data i objektet under en mapp, eller att datastrukturen upprepas, i det 
+här fallet gör man ett attribut objekt i form av en vektor.
+
+Datastrukturen för attributet måste defineras av en egen klass. Klassen ska enbart innehålla
+en runtime body, och får inte ha en development body. 
+
+Attributobjektet definieras med ett $Attribute objekt. Som TypeRef anges den klass som 
+beskriver datastrukturen, och i Flags sätts biten Class.
+
+Man kan även göra en array av attributet genom att sätta Array biten i Flags, och ange
+antalet element i Elements.
+
+Attributobjekt kan i sin tur ha attribut som är attribut objekt. Antalet nivåer är dock 
+begränsat till 20, och längden på det sammanlagda attribut-namnet får maximalt vara 255 tecken.
+
+Ett attribut i ett attributobjekt refereras med punkt som avgränsare, dvs attributet
+Description i attributobjektet Pump i objektet o, refereras med namnet 'o.Pump.Description'.
+Om pump dessutom är en vektor av pumpobjekt blir namet på Description attributet i det
+första pumpobjektet 'o.Pump[0].Description'.
+
+<image> ced_fig4.gif
+<b>Definition av ett attributobjekt av klassen Table.
+
+
+<b>Subklass
+Man kan även definiera en klass som en subklass till en annan klass. Subklassen kommer att
+ärva attribut och metoder av den andra klassen, som kallas för superklass.
+
+En subklass definieras genom att det första $Attribute objektet i klassen har namnet 'Super',
+och bitarna Class och SuperClass satta i Flags ordet. Superklassen anges i TypeRef.
+
+Alla attribut som finns i superklassen kommer även att finnas i subklassen. Subklassen kan
+byggas ut med fler attribut som defineras på normalt sätt med $Attribute objekt.
+
+En superklass får enbart innehålla en runtime body, ej någon dev body.
+
+<image> ced_fig5.gif
+<b>Super attributet gör MyDataClass till en subklass till MySuperDataClass
+
+</topic>
+
+<topic>ced_foclasses
+Funktionsobjekts klasser
+
+Funktionsobjekt används i plc editorn för att programmera plc-program. Även ett 
+funktionsobjekt beskrivs av en klass, vanligvis lite med komplex än en data-klass, eftersom 
+den, förutom en datastruktur, även ska definera ett grafiskt utseende med in och utgångar, 
+och den kod som ska exekveras av plc-programmet.
+
+Koden kan defineras antingen med c-kod, eller med grafiskt programmering i plc-editorn.
+
+<option> printdisable
+<b>Funktions-object med c-kod <link> ced_ccodefo
+<b>Funktions-object med plc-kod <link> ced_plccodefo
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic>ced_ccodefo
+Funktionsobjekt med c-kod
+
+Funktionsobjekts-klassen defineras med ett $ClassDef objekt under 'Class' objektet. Namnge
+objektet och aktivera 'Configure-CCodeFo' från popup-menyn för objektet. Nu skapas 
+
+- ett RtBody objekt. 
+- ett DevBody objekt med ett PlcNode objekt som definierar en buffer för grafisk information 
+  i instanserna.
+- ett GraphPlcNode objekt som innehåller diverse information om grafik och kodgenerering 
+  för klassen.
+
+Nästa steg är att definiera attribut för klassen. Attributen indelas i ingångar, interna 
+attribut och utgångar.
+
+<b>Ingångar
+Ingångsattributen definierar ingångarna på funktions-objektet, dvs värden som hämtas från 
+utgångar på andra funktionsobjekt. Ingångarna definieras med $Input objekt som läggs under
+RtBody objektet. 
+
+I TypeRef anges datatypen för ingången, de datatyper man kan välja är pwrs:Type-$Boolean, 
+pwrs:Type-$Float32, pwrs:Type-Int32 eller pwrs:Type-String80.
+
+I GraphName anges texten på ingången i funktionsobjektet, normalt brukar man använda 2 - 4
+bokstäver. Man brukar använda stora bokstäver för analoga signaler, små för digitala och
+stor första bokstav för övriga signaltyper.
+
+Ett ingångsattribut i en instans innehåller både en pekare till den utgång den är kopplad
+till, och ett värde som kan datasättas. Det gör att man kan välja om en ingång ska kopplas, 
+eller datasättas. Det här valet görs med en checkbox (Used), och om man väljer att inte
+markera Used, visas inte ingångs pinnen på funktionsobjektet. I Template objektet kan man
+sätta defaultvärde på ingången, i det fall ingången inte kopplas.
+
+<b>Interna attribut
+Interna attribut är attribut som ej är ut eller ingångar. Det kan vara beräknade värden som
+behöver lagras i objektet, eller värden som används för att konfigurera objektet.
+
+Alla vanliga datatyper är tillgängliga för interna attribut.
+
+<b>Utgångar
+Utgångsattributen definierar utgångarna på funktions-objektet, dvs värden som lagras i
+objeketet, och som därifrån kan hämtas till ingångar på andra funktionsobjekt. Utgångarna
+definieras med $Output objekt som läggs under RtBody objektet.
+
+I TypeRef anges datatypen för utgången, liksom för $Input objekt kan Boolean, Float32, Int32
+och String80 anges, och i GraphName anges texten vid utgångspinnen i funktionsobjektet.
+
+<b>OBS !
+$Input, $Intern och $Output måste ligga i följande ordning under RtBody: $Input först, sedan 
+$Intern och därefter $Output.
+
+<b>Default värden
+Defaultvärden på attribut kan anges i Template objektet.
+
+Om man vill ange vilka in och utgångar som ska visas som default, finns det en mask i
+GraphPlcNode objektet, default_mask. default_mask[0] anger ingångar och default_mask[1]
+utgångar. Om biten som motsvarar en in eller utgång sätts visas denna som default.
+
+<image> ced_fig6.gif
+<b>Funktionsobjekt med två ingångar, ett internt attribut, och en utgång
+
+<image> ced_fig7.gif
+<b>Funktionsobjektet för klassen
+
+<b>Kod
+När klassvolymen byggs genereras en h-fil med en c-struct för klassen. Namnet på structen 
+blir 
+
+<c>pwr_sClass_'StructName' 
+
+där StructName hämtas från StructName attributet i RtBody. Default är det samma som 
+klassnamnet, men t ex om klassnamnet innehåller nationella tecken, kan ett annat namn anges.
+
+Här visas ett exempel på structen för klassen MyFo som innehåller två ingångar In1 och In2,
+ett internt attribut Factor, och en utgång Out, alla av typen Float32.
+
+<c>typedef struct {
+<c>  pwr_tFloat32           *In1P;
+<c>  pwr_tFloat32           In1;
+<c>  pwr_tFloat32           *In2P;
+<c>  pwr_tFloat32           In2;
+<c>  pwr_tFloat32           Factor;
+<c>  pwr_tFloat32           Out;
+<c>} pwr_sClass_MyFo;
+
+Notera att varje ingång består av två element, en pekare med suffixet 'P', och ett element 
+som kan datasättas om ingången inte kopplas. Om ingången är kopplad kommer pekar-elementet 
+att peka på den utgång den är kopplad till, annars pekar den på datasättnings-elementet. I 
+koden ska man därför använda pekar-elementet för att hämta upp värde på ingången.
+
+Koden för klassen ska vara en funktion med följande utseende
+
+<c>void 'StructName'_exec( plc_sThread *tp,
+<c>                        pwr_sClass_'StructName' *o) {
+<c>}
+
+I koden hämtas data från ingångarna, och beräknade värden läggs ut på utgångarna. Även 
+interna attribut kan användas för att lagra information till nästa scan, eller för att hämta 
+upp konfigureringsdata.
+
+I kod exemplet nedan är In1 och In2 ingångar, Factor ett internt attribut och Out en utgång.
+
+<c>  o->Out = o->Factor * (*o->In1P + *o->In2P);
+
+Observera att pekar-elementet för ingångarna In1 och In2 används i koden.
+
+Modulen för c-koden kompileras och länkas ihop med plc-programmet genom att en länk-fil 
+skapas på katalogen $pwrp_exe. Filen ska namnges plc_'nodenamn'_'busnr'.opt, t ex 
+plc_mynode_0999.opt. Innehållet i filen skickas med som indata till länkaren, ld, och man 
+lägger även in modulerna för plc-koden. I exemplet nedan antas att dessa moduler ligger i 
+arkivet $pwrp_lib/libpwrp.a.
+
+<c>$pwr_obj/rt_io_user.o -lpwrp
+
+</topic>
+
+<topic>ced_plccodefo
+Funktions-objekt med plc-kod
+
+Ett funktions-objekt där koden skrivs in form av plc-kod i plc-editor, definieras på liknande
+sätt som funktions-objeketet med c-kod ovan.
+
+Funktionsobjekt klassen defineras med ett $ClassDef objekt under 'Class' objektet. Namnge
+objektet och aktivera Configure-Fo från popup-menyn för objektet. Nu skapas, förutom de 
+objekt som även skapas för c-kods funktionsobjektet, ett Code objekt av klassen PlcTemplate.
+Det här objektet kan öppnas med plc-editorn, och här defineras koden för klassen.
+
+Ingångar, interna attribute och utgångar i funktionsobjektet definieras, på samma sätt som
+för funktionsobjektet med c-kod, med $Input, $Intern och $Output attribut.
+
+<image> ced_fig8.gif
+<b>Definition av funktionsobject med plc-kod.
+
+<b>Kod
+Genom att aktivera 'Open Program...' i popupmeny för Code objektet öppas plc-editorn. Här kan
+man nu skriva koden med funktions-objekts programmering. Koden skapas på samma sätt som ett 
+vanligt program. Det som tillkommer är att hämta upp värden från ingångar och interna 
+attribut, och att tilldela värden på utgångar.
+
+Värden på ingångar, interna attribut, och även utgångar, hämtas upp i koden med GetDp, GetIp,
+GetAp eller GetSp objekt. Objekten knyts till attribut i objektet genom att attributet väljs 
+ut i Template objektet för klassen, och 'Connect' aktiveras för  Get-objektet. En symbolisk 
+referens $PlcFo läggs nu in i Get objektet. Den kommer sedan att bytas ut mot en referens 
+till respektive instans, när koden för instansen kompileras.
+
+Beräknade värden lagras i utgångar eller interna attribut med StoDp, StoIp etc. Dessa
+kopplas till attribut på samma sätt ingångarna, genom att välja ut attributen i 
+Template objektet och aktivera 'Connect'.
+
+<image> ced_fig9.gif
+<b>Exempel på plc-kod för ett funktionsobjekt
+
+Template koden i Code objektet behöver inte kompileras eller byggas. När en instans
+kompileras första gången, kopieras koden från template programmet till instansen.
+
+Om template-koden ändras kommer instansernas kod att uppdateras nästa gång de kompileras
+(volymen med instanserna måste uppdateras med UpdateClasses först).
+</topic>
+</headerlevel>
+
+<topic>ced_ioclasses
+I/O klasser
+
+I/O object är de objekt som hanteras av I/O hanteringen i Proview. De kan indelas i Agent, 
+Rack, Card och Channel objekt. Vid knytning av nya I/O system till Proview måste man oftast 
+skapa  ny klasser av typerna Agent, Rack och Card. I/O objekt skapas med ett $ClassDef objekt
+där man i Flags sätter biten IoAgent, IoRack eller IoCard.
+
+En närmare beskrivning av hur man skapar I/O objekt finns i Guide to I/O System.
+</topic>
+
+<topic>ced_components
+Komponenter
+
+En komponent är ett objekt, eller ett antal objekt som hanterar en komponent i anläggningen,
+det kan vara en ventil, en motor, en frekvensomformare etc. Tanken bakom komponent-begreppet
+är att man genom att skapa ett objekt (eller ett antal objekt) får med allt som behövs för
+att styra komponenten: ett objekt som innehåller data och signaler, ett funktionsobjekt med 
+kod för att styra komponenten, objektsbild för HMI, simulerings objekt, I/O objekt för att 
+knyta mot bus-kommunikation mm.
+
+En komponent kan bestå av följande delar
+- ett huvudobjekt.
+- ett funktionsobjekt.
+- ett simuleringsobjekt.
+- ett eller flera I/O bus objekt.
+- objektsbild för huvudobjektet.
+- objektsbild för simulerings objektet.
+- grafisk symbol för huvudobjektet.
+
+<option> printdisable
+<b>Huvudobjekt <link> ced_compmain
+<b>Funktionsobjekt <link> ced_compfo
+<b>Simuleringsobjekt <link> ced_compsim
+<b>I/O bus objekt <link> ced_compio
+<b>Objektsbild <link> ced_compog
+<b>Grafisk symbol <link> ced_compgs
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic> ced_compmain
+Huvudobjekt
+
+Huvudobjektet innehåller alla data som behövs för att konfigurera och göra beräkningar.
+Objektet läggs i planthierarkin, som ett individuellt objekt eller som en del av ett 
+aggregat.
+
+Ofta använder man BaseComponent:Component som superklass till komponentobjekt och för då med 
+ett antal attribut, som Description, Specification, DataSheet etc.
+
+Alla in- och utgångsignaler som finns på komponenten ska finnas i huvudobjektet. Di, Ii, Ai, 
+Do, Io, Ao eller Co objekt läggs som attributobjekt. När man skapar instanser av komponenten
+måste signalerna kopplas till kanalobjekt. För t ex Profibus, kan man skapa ett modulobjekt 
+som innehåller kanalerna, och, i klasseditorn, förkoppla signalerna i huvudobjektet till dessa
+kanaler. För varje instans behöver man då inte koppla varje signal för sig, utan kan göra en 
+koppling mellan huvudobjekt och modulobjekt.
+
+<h2>Speciella attribut
+<b>PlcConnect
+Om det finns någon kod för objektet som ska exekveras av plc-programmet, skapar man ett 
+funktionsobjekt för klassen. Detta måste kopplas till huvudobjektet, och denna koppling ska 
+ligga i ett attribut med namnet 'PlcConnect' av typen pwrs:Type-$AttrRef. 
+
+<b>SimConnect
+Om det finns ett simulerings objekt så kopplas det till huvudobjektet med 'SimConnect' 
+attribute av typen pwrs:Type-AttrRef.
+
+<b>IoConnect
+Om det finns ett I/O-modul objekt kopplas detta med ett attribut, 'IoConnect' av typen
+pwrs:Type-AttrRef. Attributet hanteras av IoConnect metoden.
+
+<b>IoStatus
+Om man vill hämta upp status från I/O-modul objektet skapar man attributet 'IoStatus' av 
+typen pwrs:Type-$Status, och sätter Pointer biten i Flags.
+
+Attributet kommer att tilldelas en pekare till I/O modulens Status attribut i runtime vid
+initieringen av I/O hanteringen. Status-attributet är av typen Status och kan t ex visas i en
+objektsbild med dynamiktypen StatusColor. Om man vill använda IoStatus i plc-koden för 
+objektet, måste man tänka på att attributet är en pekare och hämta upp värdet upp med 
+GetIpPtr.
+
+<b>GraphConfiguration
+GraphConfiguration är av typ Enum och används för att bestämma vilken objektsbild som ska
+öppnas för den aktuella instansen. Används av 'ConfigureComponent' metoden (se nedan).
+
+<h2>DisableAttr
+DisableAttr funktionen gör att möjligt att göra Disable på ett attribut i en instans. Om man
+har gjort Disable på ett attribut, visas attributet inte i navigatorn eller objekts editorn.
+Är attributet en signal, kommer den att ignoreras av I/O-hanteringen.
+
+Funktionen används för komponenter som kan förekomma i olika varianter och konfigurationer.
+En magnetventil, till exempel, kan ha ett gränsläge som indikerar att ventilen är öppen, och 
+ett som indikerar att ventilen är stängd. Totalt blir det fyra varianter av magnetventilen:
+
+- inga gränslägen.
+- gränsläge öppen.
+- gränsläge stängd.
+- både gränsläge öppen och gränsläge stängd.
+
+Man skulle kunna göra fyra olika magnetventilsklasser, man problemen uppstår när man bygger
+aggregat av ventil objekten. Ett aggregat som innehåller ett ventilobjekt måste även det 
+finnas i fyra olika varianter, och skulle aggregatet innehålla två ventilobjekt måste det
+finnas i 16 varianter. Genom att använda DisableAttr funktionen på gränslägesattributen kan
+man göra en magnetventilklass som täcker in alla fyra varianterna, och som även kan användas
+i aggregat-klasser.
+
+DisableAttr för ett attribut läggs in på följande sätt.
+- DisableAttr biten i Flags sätts för attributet.
+- före attributet läggs ett attribut av typen pwrs:Type-$DisableAttr, med samma namn som 
+  attributet men med prefixet 'Disable'. Invisible biten i Flags ska sättas för DisableAttr
+  attributet.
+
+<b>Exempel
+I Magnetventilsklassen ovan representeras gränsläge stängd av attributet SwitchClosed som är
+en digital signal av type pwrb:Class-Di. Omedelbart före attributet läggs ett attribut med 
+namnet 'DisableSwitchClosed' av typen pwrs:Type-$DisableAttr. För detta attribut sätts 
+Invisible biten i Flags, och för SwitchClosed attributet sätts DisableAttr biten i Flags.
+
+<image> ced_fig12.gif
+<b>Attribut med disable funktion
+
+<h2>Cast
+Komponent-klasser byggs ofta relativt flexibla för att minimera antalet varianter. Ofta gör
+man en basklass som använder sig av DisableAttr funktionen för att kunna användas i ett
+antal olika konfigurationer. I exemplet ovan kan en klass för en magnetventil täcka in fyra
+olika konfigurationer av gränslägen genom att sätta DisableAttr på gränslägessignalerna. Man
+skapar även subklasser som är anpassade till en speciell ventil. En Durholt 100.103 till 
+exempel har inga gränslägen, och man skapar då en subklass till magnetventilklassen, sätter
+Disable på båda gränslägena i template-objektet för subklassen, och lägger även in en länk 
+till datablad och gör en del andra anpassingar. Resultatet blir en subklass som man kan 
+använda för Durholt 100.103 ventiler utan att behöva konfigurera varje enskild instans.
+
+Om vi nu bygger ett generellt aggregat som innehåller  en magnetventil, och vill kunna 
+utnyttja de subklasser som finns för magnetventilen, använder man Cast funktionen. 
+Cast-funktionen innebär att ett attributobjekt kan castas som en subklass av dess ursprungliga
+klass, om subklassen har samma storlek. När ett attributobjekt castas hämtas defaultvärden, 
+och därmed konfigureringar från subklassen. Även klassnamn och metoder hämtas från subklassen.
+
+Cast funktionen för ett attribut läggs in på följande sätt:
+- CastAttr biten sätt i Flags för attributet.
+- Före attributet läggs ett attribut av typen pwrs:Type-$CastId med samma namn som attributet
+  men med prefixet 'Cast'. Invisible biten i Flags ska sättas för cast attributet.
+
+<image> ced_fig22.gif
+<b>Kontaktor med cast attribut
+
+Castningen av en instans utförs genom att aktivera 'Cast' metoden i popupmenyn för attributet. 
+En lista med basklassen och samtliga subklasser visas, där man kan välja den klass 
+attributobjektet ska castas som.
+
+Om ett attribut har både cast och disable attribut ska castattributet placeras före disable
+attributet.
+
+<image> ced_fig23.gif
+<b>Castning av en instans
+
+
+
+
+<h2>Metoder
+<h2>Metoden ConfigureComponent
+Ofta finns det många varianter på en komponent. I exemplet med magnetventilen ovan, hittade
+vi fyra olika varianter beroende på konfigurationen av gränslägen. För att förenkla 
+konfigureringen av komponenten för användaren, kan man definiera metoden 'ConfigureComponent'.
+
+ConfigureComponent metoden gör det möjligt att utifrån ett menyalternativ i popupmenyn sätta
+Disable på ett eller ett antal attribut, samt att välja en objektbild som är anpassad för den
+aktuella konfigurationen.
+
+<b>Meny
+Menyalternativen för ConfigureComponent defineras med meny-objekt. Under $ClassDef objektet
+läggs ett $Menu objekt med namnet 'ConfiguratorPosos', vilket medför att menyn är synlig i
+editeringsmod när objektet är utpekat och utvalt. Under detta läggs ytterligare ett $Menu 
+objekt med namnet 'Pointed', och under detta ett $MenuCascade objekt med namnet 
+'ConfigureComponent'. Attributet ButtonName sätts till 'ConfigureComponent' för detta objekt.
+Under detta läggs slutligen ett $MenuButton objekt för varje konfigureringsalternativ.
+Namnet sätt lämpligen till namnet på konfigureringsalternativet, och läggs också in i
+attributet ButtonName. I attributet MethodName anges '$Object-ConfigureComponent' och i
+attributet FilterName '$Object-ConfigureComponentFilter'. Man ska även fylla i argument till
+metoden i MethodArguments. MethodArguments[0] innehåller en bitmask som avgör vilka attribut
+som ska göras Disable på i det aktuella menualternativet. Varje attribut som det är möjligt
+att göra Disable på representeras av en bit, och bitordningen motsvarar attributens ordning i
+objektet. MethodArguments[1] innehåller den grafiska representationen, se nedan.
+
+Om vi tittar på magnetventilen, har den två attribut som kan göras Disable på, SwitchClosed
+och SwitchOpen. I bitmasken i MethodArguments[0] motsvarar SwitchClosed första biten, och
+SwichOpen andra biten, dvs om första biten är satt, görs Disable på SwitchClosed, och om 
+andra biten är satt görs Disable på SwitchOpen. De fyra konfigureringsalternativen TwoSwitches,
+SwitchClosed, SwichOpen och NoSwitches motsvaras av följande masker
+
+<c>TwoSwitches   0   (både SwitchOpen och SwitchClosed är närvarande)
+<c>SwitchClosed  2   (Disable på SwitchOpen)
+<c>SwitchOpen    1   (Disable på SwitchClosed)
+<c>NoSwitches    3   (Disable på både SwitchOpen och SwitchClosed)
+
+<image> ced_fig14.gif
+
+<b>Konfigurering av komponent-attribut
+Om man gör disable på ett attribut som är en komponent som i sin tur innehåller signaler, måste
+man göra disable även på signalerna i komponenten. I/O hanteringen tittar enbart på om den
+individuella signalen är satt Disable, och letar inte uppåt i attribut-nivåerna. För att göra
+Disable på en signal i ett komponent-attribut adderar man ett kommatecken samt namnet på 
+komponenten följt av den Disable mask som gäller för komponenten i MethodArguments[0]. I ett
+objekt där man till exempel har gjort Disable på komponenterna Contactor och CircuitBreaker kan
+MethodArguments[0] se ut på följande sätt
+
+<c>3, Contactor 1, CircuitBreaker 1
+
+där '3' är objektets Disable mask (som gör Disable på attributen Contactor och CircuitBreaker),
+och 'Contactor 1' medför att Disable sätts på ett signalattribut i Contactor, och
+'CircuitBreaker 1' gör Disable på en signal i CircuitBreaker.
+
+<b>Komponent-attribut med individuell konfigurering
+När ConfigureComponent metoden aktiveras tas Disable bort i alla komponentattribut för att
+återställa den tidigare konfigureringen. Ibland har man komponenter-attribut som inte ingår
+i objektets konfigurering, utan som ska konfigureras individuellt. Dessa komponenter ska inte
+återställas av ConfigureComponent metoden, och måste anges i MethodArguments[2], separerade
+med komma-tecken. I följande exempel ska komponent-attributen Motor och Contactor konfigureras
+med sina egna ConfigureComponent metoder och inte påverkas av objektets ConfigureComponent
+metod. I MethodArguments[2] skrivs
+
+<c>Motor, Contactor
+
+
+<h2>Objektbild
+När man ritar objektsbilden för komponenten måste man ta hänsyn till vilken konfigurering som
+gäller. Om skillnaderna är små kan man använda Invisible dynamiken. Om skillnaden är större
+kan det vara smidigare att rita separata bilder för olika konfigurationer. Man lägger då in
+ett attribut i objektet med namnet GraphConfiguration av typen Enum. Lämpligen skapar man en 
+speciell enum-typ med aktuella alternativ. Om GraphConfiguration är 0 används standard grafen,
+annars sätts de numeriska värdet i GraphConfiguration som suffix på graf-namnet.
+
+För exemplet med magnetventilen, MValve, gör vi en enum-typ, MValveGCEnum, och definerar
+värdena
+
+<c>TwoSwitches  0
+<c>SwitchClosed 1
+<c>SwitchOpen   2
+<c>NoSwitches   3
+
+För konfigurationen TwoSwitches, med värdet 0, ritar vi en objektsgraf med namnet mvalve.pwg.
+För SwitchClosed, med värdet 1, namnger vi grafen mvalve1.pwg, för SwitchOpen mvalve2.pwg och
+för NoSwitches mvalve3.pwg.
+
+Vi lägger även in enum-värdet i MethodArguments[1] i $MenuButton objektet för den aktuella 
+konfigurationen. Det kommer att medföra att GraphConfiguration sätts till detta värde när detta
+menyalternativ aktiveras.
+
+<image> ced_fig13.gif
+<b>Enumeration typ för GraphConfiguration
+</topic>
+
+<topic> ced_compfo
+Funktionsobjekt
+
+Funktionsobjektet är gränssnittet i plc-programmet. Det definierar in och utgångar som kan 
+kopplas till andra funktionsobjekt i plc-editorn. Till skillnad från ett vanligt 
+funktionsobjekt jobbar koden i funktionsobjektet för en komponent även mot data i 
+huvudobjektet.
+
+Man kan skriva koden i plc-kod eller i c-kod.
+
+<h2>plc-kod
+Om man vill att koden i funktionsobjektet ska vara synlig, och det finns behov av att kunna gå
+in och köra PlcTrace i koden, är det lämpligt att använda ett funktionsobjekt med plc-kod.
+
+Skapa ett $ClassDef objekt och sätt namn på objektet. Lämpligen tar man samma namn som 
+huvudklassen föjt av suffixet 'Fo', t ex MyComponentFo. Aktivera därefter Configure-ConnectedFo
+i popupmenyn.
+
+Under RtBody har det skapats ett PlcConnect attribut av typen AttrRef, som kommer att innehålla
+länken till huvudobjektet när man har gjort connect i plc-editorn.
+
+Konfigurera in och utgångar med $Input och $Output objekt under RtBody objektet. Man kan även
+lägga in $Intern objekt, men vanligtvis lagrar man denna typ av data i huvudobjektet. Observera
+att ordningen bland attributobjekten ska var $Input, $Intern, $Output.
+
+Koden skapas genom att öppna plceditorn för Code objektet. I koden hämtar man upp värden från
+ingångar genom att välja ut ingångsattributen i template objekete för funktionsobjektet i 
+navigatören  och aktivera connect funktionen. Utgångar sätts på motsvarande sätt. När data ska 
+hämtas eller sättas i huvud-objektet, väljar man ut attribut i huvudobjektets template-objekt. 
+Referenser till funktionsobjektet visas i plc-koden med symbolen $PlcFo och referenser till 
+huvudobjektet med symbolen $PlcMain.
+
+Om objektet innehåller komponenter läggs funktionsobjekten för dessa komponenter in i 
+plc-koden.
+
+Har man DisableAttr på signaler eller andra attribut måste man hantera detta med villkorlig
+exekvering i koden. En signal som är satt Disable för inte sättas eller läsas i koden. Man
+använder objektet Disabled under mappen Other, för att hämta upp om ett attribut är satt Disable
+eller inte. Detta kan sedan kopplas till ett CArea som står för den villkorliga exekveringen.
+
+<image> ced_fig18.gif
+<b> Villkorlig exekvering med Disabled och CArea
+
+<h2>c-kod
+Ett funktionsobjekt med c-kod konfigureras med ett $ClassDef objekt. Sätt namn på objektet
+och aktivera därefter Configure-ConnectedCCodeFo i popupmenyn.
+
+Under RtBody har det skapats två attribut, PlcConnect av typen AttrRef och PlcConnectP som
+är en pekare. I PlcConnect läggs referensen till huvudobjektet in, när man gör connect på en 
+instans i plc-editorn. Vid initieringen av plc-programmet i runtime hämtar man, med hjälp av
+referensen, en pekare till huvudobjektet. Pekaren läggs i PlcConnectP. Detta görs i c-koden
+som är uppdelad i en init funktion som exekveras vid initieringen av plc-programmet, och en
+exec function som exekveras varje scan. För funktionsobjektet MyComponentFo med ingångarna
+In1 och In2 och utgången Out2 kan koden se ut på följande sätt.
+
+<c>void MyComponentFo_init( pwr_sClass_MyComponentFo  *o)
+<c>{
+<c>  pwr_tDlid dlid;
+<c>  pwr_tStatus sts;
+
+<c>  sts = gdh_DLRefObjectInfoAttrref( &o->PlcConnect, (void **)&o->PlcConnectP, &dlid);
+<c>  if ( EVEN(sts)) 
+<c>    o->PlcConnectP = 0;
+<c>}
+
+<c>void MyComponentFo_exec( plc_sThread      *tp,
+<c>                         pwr_sClass_MyComponentFo *o)
+<c>{
+<c>  pwr_sClass_MyComponent *co = (pwr_sClass_MyComponent *) o->PlcConnectP;
+
+<c>  if ( !co)
+<c>    return;
+
+<c>  o->Out = co->Value = co->Factor * (*o->In1P + *o->In2P);
+<c>}
+
+</topic>
+
+<topic> ced_compsim
+Simuleringsobjekt
+
+Ett simulerings objekt används för att simulera processen, både vid normala förhållanden  och 
+när olika felfall uppträder. Simuleringsobjektet läser av utgångs-signaler (Do, Ao, Io) i 
+huvudobjektet och sätter värden på ingångs-signaler (Di, Ai, Ii, Co). Objektet är ett 
+funktionsobjekt som kan innehålla  in och utgångs attribut, men det vanliga är att dessa saknas 
+och att objektet jobbar mot data i huvudobjektet och mot interna attribut som konfigurerar 
+simuleringen och utlöser olika felfall. Simuleringsobjektet har ofta en objektsgraf som i 
+runtime kan öppnas med huvudobjektets Simulate metod.
+
+Ett simuleringsobjekt kopplas till huvudobjektet med en connectmetod på samma sätt som ett
+vanligt funktionsobjekt. Men simuleringsklassen har en annan connect-metod än Fo klassen. 
+Huvudobjektet ska innehålla ett attribut 'SimConnect' av typen pwrs:Type-$AttrRef, i vilket 
+connectmetoden lägger in objektsidentiteten för simuleringsobjektet när huvudobjekt och 
+simulerings kopplas ihop.
+
+En simulerings klass skapas på samma sätt som en funktionsobjekts klass, och kan skrivas
+antingen i c- eller plc-kod. Klassen brukar namnges med samma namn som huvudklassen, följt av
+suffixet 'Sim'.
+
+Skapa ett $ClassDef objekt och sätt namn på objektet. Aktivera Configure-ConnectedFo eller
+Configure-ConnectedCCodeFo. Lägg in eventuella $Input, $Intern och $Output attribut, och skriv
+koden som plc eller c-kod. Ändra connectmethod i GraphPlcNode till 26.
+
+Objektsbilden för simulerings objekt ritas ofta med mörkblå bakgrundsfärg och vit text för att
+enkelt kunna skiljas från andra objektsbilder. Notera att attribut i huvudobjektet kan
+refereras från bilden med referensnotationen '&', t ex &($object.PlcConnect).IndError##Boolean.
+
+<image> ced_fig15.gif
+<b>Objektsbild för ett simuleringsobjekt
+
+</topic>
+
+<topic> ced_compio
+I/O-modul objekt
+
+Ett huvudobjekt för en komponent kan innehålla signalobjekt av typen Ai, Di, Ii, Ao, Do, Io och
+Co. Signalerna i en instans måste kopplas till kanalobjekt i nodehierarkin. I t ex profibus
+kan man skapa modulobjekt, där kanalerna är anpassade till den dataarea som tas emot resp
+skickas på bussen. I det fall signalerna i en komponent, omfattas av ett modulobjekt, kan man
+lägga in symboliska referenser till kanalobjekten i signalobjekten, vilket medför att man
+endast behöver koppla komponenten med modulobjektet, inte varje enskild signal för sig. De 
+symboliska referenserna läggs in i komponentens template-objekt genom att man gör connect 
+mellan signalerna i template-objektet och kanalerna i I/O modulklassens template objekt. De 
+symboliska referenserna är av typen $IoConnect konverteras till verkliga referenser vid
+initieringen av I/O hanteringen i runtime.
+
+<image> ced_fig16.gif
+<b> Signal kopplas med kanal i I/O modul
+
+<image> ced_fig17.gif
+<b> Symbolisk referens till kanalobjekt
+</topic>
+
+<topic>ced_compog
+Objektsbild
+
+Objektsbilder har samma namn som komponenten, men med små bokstäver. För klasser som tillhör
+Proviews bassystemet adderar man prefixed 'pwr_c_'. Bilderna editeras på vanligt sätt i Ge. I 
+dynamiken ersätts objektsnamnet med '$object'. Objektsbilder för bassystemet ritas med följande 
+riktlinjer.
+
+<b> Meny
+Det ska finnas en meny med pulldown menyerna File, Methods, Signals och Help.
+
+File ska ha meny följande entryn
+
+<c>Print   Command     print graph/class/inst=$object
+<c>Close   CloseGraph
+
+Methods ska ha följande entryn
+
+<c>Help             Invisible   $cmd(check method/method="Help"/object=$object)
+<c>                 Command     call method/method="Help"/object=$object
+<c>Note             Invisible   $cmd(check method/method="Note"/object=$object)
+<c>                 Command     call method/method="Note"/object=$object
+<c>Trend            Invisible   $cmd(check method/method="Trend"/object=$object)
+<c>                 Command     call method/method="Trend"/object=$object
+<c>Fast             Invisible   $cmd(check method/method="Fast"/object=$object)
+<c>                 Command     call method/method="Fast"/object=$object
+<c>Help             Invisible   $cmd(check method/method="Photo"/object=$object)
+<c>                 Command     call method/method="Photo"/object=$object
+<c>DataSheet        Invisible   $cmd(check method/method="DataSheet"/object=$object)
+<c>                 Command     call method/method="DataSheet"/object=$object
+<c>Hist Event...    Invisible   $cmd(check method/method="Hist Event..."/object=$object)
+<c>                 Command     call method/method="Hist Event..."/object=$object
+<c>Block Events...  Invisible   $cmd(check method/method="Block Events..."/object=$object)
+<c>                 Command     call method/method="Block Events..."/object=$object
+<c>RtNavigator      Invisible   $cmd(check method/method="RtNavigator"/object=$object)
+<c>                 Command     call method/method="RtNavigator"/object=$object
+<c>Open Object      Invisible   $cmd(check method/method="Open Object"/object=$object)
+<c>                 Command     call method/method="Open Object"/object=$object
+<c>Open Plc         Invisible   $cmd(check method/method="Open Plc"/object=$object)
+<c>                 Command     call method/method="Open Plc"/object=$object
+<c>Circuit Diagram  Invisible   $cmd(check method/method="Circuit Diagram"/object=$object)
+<c>                 Command     call method/method="Circuit Diagram"/object=$object
+<c>HelpClass        Invisible   $cmd(check method/method="HelpClass"/object=$object)
+<c>                 Command     call method/method="HelpClass"/object=$object
+
+Signals ska innehålla alla signaler i komponenten och öppna objektsbilden för respektive signal.
+Exempel
+
+<c>SwitchOpen Di    Command     open graph/class /inst=$object.SwitchOpen
+<c>SwitchClosed Di  Command     open graph/class /inst=$object.SwitchClosed
+<c>Order Do         Command     open graph/class /inst=$object.Order
+
+Help menyn ska innehålla Help och HelpClass
+
+<c>Help             Command     call method/method="Help"/object=$object
+<c>HelpClass        Command     call method/method="HelpClass"/object=$object
+
+<b> Verkygspanel
+Vertygspanelen innehåller knappar för olika metoder. Dynamiken är densamma som i Method menyn 
+ovan. Längst till höger finns även en knapp för simuleringsobjektets objektsbild. Denna har
+dynamiken
+
+<c>Invisible   $cmd(check method/method="Simulate"/object=$object)
+<c>Command     call method/method="Simulate"/object=$object
+
+Under metodknapparena ligger två textfält som visar Descripton och Specification attributen i
+komponenten med följande dynamik
+
+<c>Description     Value.Attribute $object.Description##String80
+<c>                Value.Format    %s
+<c>Specification   Value.Attribute $object.Specification##String80
+<c>                Value.Format    %s
+
+Längst ner i bilden visas eventuellt Notes meddelande med en knapp för att ändra eller ta bort
+meddelandet.
+
+<c>Notes knapp     Invisible       $object.Note##String80
+<c>                Command         call method/method="Note"/object=$object
+<c>Notes text      Value.Attribute $object.Note##String80
+<c>                Value.Format    %s
+
+<image> ced_fig21.gif
+<b>Objektbild
+
+</topic>
+
+<topic>ced_compgs
+Grafisk symbol
+
+Den grafiska symbolen ritas i Ge och ges dynamiken HostObject. För dynamiken i host objekt 
+kopplas olika typer av dynamik till attribute i objektet. Objektsnamnet ersätts med
+'$hostobject' i dynamiken. Ofta skapar man attributen IndWarning och IndError i huvudobjektet
+och färgar symbolen gul resp röd, eller blinkande röd, om dessa är satta. 
+
+<image> ced_fig20.gif
+<b>Grafisk symbolen ritas i Ge med HostObject dynamik
+
+
+
+</topic>
+
+</headerlevel>
+</headerlevel>
+
+<topic> ced_build
+Bygga klassvolym
+
+När man bygger klassvolymen skapas en laddatafil och två struct-filer.
+
+<b>Laddatafil
+Laddatafilen läggs på $pwrp_load och har samma namn som volymen, men med små bokstäver. 
+Filtypen är .dbs, dvs laddatafilen för volymen CVolMerk1 blir $pwrp_load/cvolmerk1.dbs.
+
+Tiden när man skapar laddatafilen lagras i filen. Dessutom lagras versionen av andra 
+klassvolymer som laddatafilen är beroende av. Vid uppstart av runtime, kontrolleras att 
+de versioner som finns i systemet överensstämmer med de versioner som finns registrerade i 
+laddatafilen. Om någon version inte stämmer, får man 'Version mismatch' och uppstarten avbryts.
+
+Man kan se versionen av en laddatafil och versionen av andra volymer den är beroende av med
+wb_ldlist. 
+
+<c>$ wb_ldlist $pwrp_load/cvolmerk1.dbs
+<c>Volume     CVolMerk1       21-DEC-2007 13:52:05.22 (1198241525,227130443) 25364
+<c>VolRef     CVolMerk1       21-DEC-2007 13:52:05.22 (1198241525,227130443) 25364
+<c>VolRef     pwrs            12-DEC-2007 08:35:06.98 (1197444906,983976467) 1
+<c>VolRef     pwrb            12-DEC-2007 08:35:09.93 (1197444909,930182284) 2
+<c>VolRef     BaseComponent   12-DEC-2007 08:35:26.92 (1197444926,926679004) 10
+
+<b>Structfiler
+Vid byggandet av en klassvolym skapas två include-filer, en .h, och en .hpp.
+
+Om klassvolymen innehåller funktionsobjekt, eller klasser som används i CArithm eller
+DataArithm objekt, måste man inkludera .h filen i $pwrp_inc/ra_plc_user.h.
+
+<b>Uppdatera klasser
+När man byggt klassvolymen, måste man uppdatera klasserna i rot- eller subvolymer i projektet.
+Uppdateringen aktiveras i konfiguratören för respektive rot eller subvolym, från menyn med
+'Functions/Update Classes'. Om en klass är ändrad, kommer instanser av klassen att anpassas 
+till den förändrade klassen. Vidare kommer alla referenser till instanser av klassen att 
+uppdateras.
+
+</topic>
+
+
+</headerlevel>
+
+
+<topic>class docblock
+Dokumentation av klasser
+
+För $ClassDef och $Attribute objekt finns ett dokumentationsblock, som fylls i från 
+objektseditorn. Från dokumentationsblocken och klassbeskrivningen genereras dokumentation
+för klasserna på xtthjälp och html format.
+
+Dokumentationsblocket för $ClassDef objektet bör innehålla en beskrivning
+av klassens funktion och användningsområde, documentationsblocket för $Attribut en beskrivning
+av det aktuella attributets funktion.
+
+<option> printdisable
+Genererering av Xtt hjälpfiler <link> class generate xtthelp
+Generering av html dokumentation <link> class generate html
+ClassDef <link> docblock classdef
+Attribute <link> docblock attribute
+c- och h-filer <link> docblock ccode
+<option> printenable
+</topic>
+
+<headerlevel>
+
+<topic> class generate xtthelp
+Generering av Xtt hjälpfiler
+
+Hjälpfiler för xtt genereras med kommandot
+
+<c>co_convert -xv -d $pwrp_exe/ $pwrp_db/userclasses.wb_load
+
+Kommandot genererar en hjälpfil $pwrp_exe/'volymsnamn'_xtthelp.dat som man lämpligt-vis 
+lägger en länk till i projektets xtt-hjälpfil $pwrp_exe/xtt_help.dat:
+
+Exempel för klassvolymen cvolvhxn2r:
+
+<i><topic> index
+
+<i>...
+
+<i>Användar klasser<link>cvolssabtest,"",$pwrp_exe/cvolvhxn2r_xtthelp.dat
+
+<i></topic>
+
+...
+
+<i><include> $pwrp_exe/cvolssabtest_xtthelp.dat
+</topic>
+
+<topic> class generate html
+Generering av html dokumentation
+
+html-filer genereras med kommandot
+
+<c>co_convert -wv -d $pwrp_web/ $pwrp_db/userclasses.wb_load
+
+Kommandot genererar bl a filen $pwrp_web/'volymsnamn'_index.html som innehåller startsidan 
+för klass-dokumentationen. Denna tillsammans med övriga filer ($pwrp_web/'volymsnamn'_*.html) 
+kopieras till lämplig filkatalog på web-servern.
+
+En länk till dokumentationen skapar man lämpligen med ett WebLink-objekt med URL'en 
+'volymsnamn'_index.html
+
+Vill man kunna visa c-structarna för klasserna, konverterar man h-filen med co_convert
+
+<c>co_convert -cv $pwrp_web/ $pwrp_inc/'volymsnamn'classes.h
+
+Vill man dessutom visa koden för plc-objekt ska man lägga in aref-taggar i c eller h-filen 
+för koden och konvertera den med
+
+<c>co_convert -sv -d $pwrp_web/ 'filnamn'
+</topic>
+
+<topic> docblock classdef
+ClassDef
+
+<h2>Exempel
+
+<c>@Author Homer Simpson
+<c>@Version 1.0
+<c>@Code ra_plc_user.c
+<c>@Summary Brief description of this class
+<c>Description of
+<c>this class.
+<c>
+<c>See also 
+<c>@link Example plat.html
+<c>@classlink AnotherPlate cvolvhxn2r_anotherplate.html
+
+<h2>Taggar
+Author  <t>Redaktör <link> docblock author
+Version <t>Version av klassen <link> docblock version
+Code    <t>Fil som innehåller kod för klassen <link> docblock code
+Summary <t>Sammanfattning <link> docblock summary
+Link    <t>Godtycklig länk <link> docblock link
+Classlink <t>Länk till annan klass <link> docblock classlink
+wb_load syntax <link> docblock wb_load classdef
+</topic>
+
+<headerlevel>
+<topic> docblock author
+@Author
+
+Författare. Kan utelämnas.
+
+<b>Syntax
+<c>@Author 'name of author'
+</topic>
+
+<topic> docblock version
+@Version
+
+Version. Kan utelämnas.
+
+<b>Syntax
+<c>@Version 'version number'
+</topic>
+
+<topic> docblock code
+@Code
+
+För klasser med plc-kod kan man ange namnet på c-filen. Kan utelämnas.
+Även c-filen måste konverteras med: co_convert -c -d $pwrp_web/ 'filnamn'
+
+<b>Syntax
+<c>@Code 'filename'
+</topic>
+
+<topic> docblock summary
+@Summary
+
+Kort beskrivning på en rad. 
+Denna visas i indexfilen i xtt-hjälpfilen. Används ej i html.
+Kan utelämnas.
+
+<b>Syntax
+<c>@Summary 'text'
+</topic>
+
+<topic> docblock link
+@Link
+
+Här kan läggas in en länk till godtycklig URL. Kommer enbart att visas i 
+html-dokumentationen, ej i xtt. Länken måste ligga efter beskrivningen av klassen.
+
+<b>Syntax
+<c>@Link 'URL'
+</topic>
+
+<topic> docblock classlink
+@Classlink
+
+Här kan läggas in en länk till en annan klass. Denna länk fungerar både i html och xtt.
+Länken måste ligga efter beskrivningen av klassen.
+
+<b>Syntax
+<c>@Classlink 'html-filename'
+</topic>
+
+<topic> docblock wb_load classdef
+wb_load syntax
+
+Info om en klass skrivs före $ClassDef raden.
+
+<c>!
+<c>!/**
+<c>!  @Author Homer Simpson
+<c>!  @Version 1.0
+<c>!  @Code ra_plc_user.c
+<c>!  @Summary Brief description of this class
+<c>!  Description of
+<c>!  this class.
+<c>!
+<c>!  See also 
+<c>!  @link Example plat.html
+<c>!  @classlink AnotherPlate cvolvhxn2r_anotherplate.html
+<c>!*/
+<c>!
+<c>Object        Plat    $ClassDef 1
+
+<h2>!/**
+Start av ett dokumentations block.
+All text mellan !/** och !*/ kommer att skrivas ut i oförvanskad form som beskrivning för 
+klassen.
+
+<h2>!*/
+Avslutning av ett dokumentations block
+</topic>
+</headerlevel>
+
+<topic> docblock attribute
+Attribute
+
+<h2>Exempel
+<c>@Summary Plåtens längd
+<c>En grundligare beskrivning
+<c>av attributet Langd...
+
+
+<h2>@Summary
+Kort beskrivning på en rad. Om det finns en @Summary läggs denna text in i html-filens tabell
+över attribut. Om den inte finns läggs beskrivningen hela beskrivningen in.
+Används ej i xtt.
+
+wb_load syntax <link>docblock wb_load attribute
+</topic>
+
+<headerlevel>
+<topic> docblock wb_load attribute
+wb_load syntax
+
+Info om ett attribute skrivs före $Attribute, $Input, $Output eller $Inter raden.
+
+<c>      !/**
+<c>      !  @Summary Plåtens längd
+<c>      !  En grundligare beskrivning
+<c>      !  av attributet Langd...
+<c>      !*/
+<c>      Object    Langd $Attribute 3
+<c>        Body             SysBody
+<c>          Attr           TypeRef = "pwrs:Type-$Float32"
+<c>        EndBody
+<c>      EndObject
+
+<h2>!/**
+Start av ett dokumentations block.
+All text mellan !/** och !*/ kommer att skrivas ut i oförvanskad form som beskrivning för 
+attributet, förutom nedanstående taggar.
+
+<h2>!*/
+Avslutning av ett dokumentations block
+</topic>
+</headerlevel>
+
+<topic> docblock ccode
+Syntax för c- och h-filer
+Om man vill lägga in länkar till c- och h-filer måste även dessa konverteras till html. Det 
+finns även en funktion att lägga in bokmärken. ¨
+
+Struct-filen för klasserna genereras automatiskt med bokmärken.
+
+<c>/**
+<c>   MyPlcClass
+<c>
+<c>   Description for the class that is not displayed anywhere but in the code.
+<c>
+<c>   @aref MyPlcClass MyPlcClass
+<c>*/
+<c>void MyPlcClass_exec(...)
+
+<h2>@aref
+@aref måste ligga inom ett /*_* ... */ block. Inom blocket kan även finnas kommentarer som 
+inte hanteras vid konverteringen.
+
+<b>Syntax
+<c>@aref 'bookmark' 'text' 
+</topic>
+
+</chapter>
+
 
 <chapter>
 <TOPIC> help command
