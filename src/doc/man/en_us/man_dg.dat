@@ -4762,8 +4762,8 @@ that are not handled by the converter.
 <TOPIC> help command
 Wtt commands
 
-<b>exit        <t>close wtt			<LINK> exit
-<b>edit        <t>set edit mode			<LINK> edit
+<b>build      <t>Build node, volume or object	<LINK> build
+<b>check classes <t>Check if any classes needs update <LINK> check classes
 <b>close graph <t>Close a Ge graph		<LINK> close graph
 <b>compile    <t>Compile plcpgm			<LINK> compile
 <b>configure card<t>Configure a card object	<LINK> configure card
@@ -4783,6 +4783,8 @@ Wtt commands
 <b>delete volume<t>Delete a volume		<LINK> delete volume
 <b>disconnect 	<t>Disconnect signal and channel <LINK> disconnect
 <b>display     <t>Display a window		<LINK> display
+<b>edit        <t>set edit mode			<LINK> edit
+<b>exit        <t>close wtt			<LINK> exit
 <b>help        <t>Display help			<LINK> help help
 <b>generate web <t>Generate webpages		<LINK> generate web
 <b>list channels<t>List channels		<LINK> list channels
@@ -4833,9 +4835,8 @@ Wtt commands
 <b>show volumes<t>Show all volumes in the database <LINK> show volumes
 <b>sort       <t>Sort the children of an object <LINK> sort
 <b>two         <t>Two windows			<LINK> two
+<b>update classes <t>Update classes		<LINK> update classes
 <b>wb dump    <t>Dump objects to textfile	<LINK> wb dump
-<b>wb export  <t>Write objects to textfile	<LINK> wb export
-<b>wb import  <t>Load exported objects from textfile <LINK> wb import
 <b>wb load    <t>Load objects from textfile	<LINK> wb load
 
 <b>Symbols <link> symbol
@@ -4844,328 +4845,40 @@ Wtt commands
 script <LINK> script
 </TOPIC>	
 
+<TOPIC> build <style> function
+Command   build
 
-<TOPIC> exit <style> function
-Command   exit
+Call the build method for a node, a volume or an object.
 
-Close wtt.
+<B>wtt> build node /name= [/force][/debug][/manual][/crossreference]
+<B>wtt> build volume /name= [/force][/debug][/manual][/crossreference]
+<B>wtt> build object /name= [/force][/debug][/manual][/crossreference]
 
-<B>wtt> exit
-</TOPIC>
-
-<TOPIC> edit <style> function
-Command   edit
-
-Enter or leave edit mode.
-
-<B>wtt> edit
-<B>wtt> noedit
-</TOPIC>
-
-<TOPIC> define <style> function
-Command define
-
-Define a symbol.
-
-<B>wtt> define 'symbolname' 'text'
-
-<h2>related subjects
-symbol <LINK> symbol
-show symbol <LINK> show symbol
-symbolfile <LINK> symbolfile
-</TOPIC>	
-
-<TOPIC> help help <style> function
-Command   help
-
-Display help information for a subject.
-The help information will be searched for in a help file. The file can be the base helpfile, 
-the project helpfile or another help file.
-
-If no helpfile is supplied the subject will be searched for in the base and project helpfiles.
-
-<B>wtt> help 'subject'
-<B>wtt> help 'subject' /file=
-
-/file<t>A help file that contains information of the help subject.
-
-<H2>related subjects
-helpfile <LINK> helpfile
-</TOPIC>
-
-<TOPIC> login <style> function
-Command   login
-
-Login with username an password. The privileges of the user will be
-fetched from the user database, and affect the access to the system.
-
-<B>wtt> login 'username' 'password'
-
-If you want to create or modify a project, user or register a volume,
-you login as administrator with the qualifier /administrator. You must
-specify a user in the systemgroup 'administrator'. If this systemgroup
-doesn't exist, usename and password is not required.
-
-<B>wtt> login /administrator 'username' 'password'
-
-<H2>related subjects
-logout <LINK> logout
-show user <LINK> show user
-</TOPIC>
-
-<TOPIC> logout <style> function
-Command   logout
-
-Logout a user, and return to the original user.
-
-<B>wtt> logout
-
-<H2>related subjects
-login <LINK> login
-</TOPIC>
-
-<TOPIC> set advanceduser <style> function
-Command   set advanceduser
-
-Set or reset advanced user.
-
-<B>wtt> set advanceduser
-<B>wtt> set noadvanceduser
-
-<H2>related subjects
-advanced user <LINK> advanced user
-</TOPIC>
-
-<TOPIC> set alltoplevel <style> function
-Command   set alltoplevel
-
-Show all the root objects in the database, not only the
-root objects defined for the plant hierarchy or the
-node hierarchy.
-
-<B>wtt> set alltoplevel
-<B>wtt> set noalltoplevel
+/name	<t>Node name, volume name or object name.
+/force  <t>Don't check any dependencies, build everything.
+/debug  <t>Build with debug, i.e. compile and link with debug.
+/manual <t>Just build the specified item.
+/crossreferences <t>Create crossreferencefiles. Valid for building volumes.
 
 </TOPIC>
 
-<TOPIC> set showclass <style> function
-Command   set showclass
+<TOPIC> check classes <style> function
+Command   check classes
 
-Display the class of the object in the plant and node hierarchy.
+Check if any classes needs update.
 
-<B>wtt> set showclass
-<B>wtt> set noshowclass
+<B>wtt> check classes
+
 </TOPIC>
 
-<TOPIC> set showalias <style> function
-Command   set showalias
+<TOPIC> close graph <style> function
+Command   close graph
 
-Display the aliasname of the objects in the plant and node hierarchy.
+Close a Ge graph.
 
-<B>wtt> set showalias
-<B>wtt> set noshowalias
-</TOPIC>
+<B>wtt> close graph /file=
 
-<TOPIC> set showdescription <style> function
-Command   set showdescription
-
-Display the description of the objects in the plant and node hierarchy.
-
-<B>wtt> set showdescription
-<B>wtt> set noshowdescription
-</TOPIC>
-
-<TOPIC> set showobjref <style> function
-Command   set showobjref
-
-Display the number of connected object references of the objects in the 
-plant and node hierarchy.
-
-<B>wtt> set showobjref
-<B>wtt> set noshowobjref
-</TOPIC>
-
-<TOPIC> set showobjxref <style> function
-Command   set showobjxref
-
-Display the number of connected object x-references of the objects in the 
-plant and node hierarchy.
-
-<B>wtt> set showobjxref
-<B>wtt> set noshowobjxref
-</TOPIC>
-
-<TOPIC> set showattrref <style> function
-Command   set showattrref
-
-Display the number of connected attribute references
-of the objects in the plant and node hierarchy.
-
-<B>wtt> set showattrref
-<B>wtt> set noshowattrref
-</TOPIC>
-
-<TOPIC> set showattrxref <style> function
-Command   set showattrxref
-
-Display the number of connected attribute x-references of 
-the objects in the plant and node hierarchy.
-
-<B>wtt> set showattrxref
-<B>wtt> set noshowattrxref
-</TOPIC>
-
-<TOPIC> set verify <style> function
-Command   set verify
-
-Display all executed lines when running a script.
-
-<B>wtt> set verify
-<B>wtt> set noverify
-</TOPIC>
-
-<TOPIC> set inputfocus <style> function
-Command   set inputfocus
-
-Set input focus to the plant or the node hierarchy window (w1 or w2).
-
-<B>wtt> set inputfocus w1
-<B>wtt> set inputfocus w2
-</TOPIC>
-
-<TOPIC> set window <style> function
-Command   set window
-
-Set window width and height.
-
-<B>wtt> set window /width= /height=
-
-/width	<t>width in pixels.
-/height <t>height in pixels.
-</TOPIC>
-
-<TOPIC> two <style> function
-Command   two
-
-Display two windows. Both the plant and the node hierarchy window are
-displayed.
-
-<B>wtt> two
-</TOPIC>
-
-<TOPIC> one <style> function
-Command   one
-
-Display one window. The window which currently owns the input
-focus is kept.
-
-<B>wtt> one
-</TOPIC>
-
-<TOPIC> setup <style> function
-Wtt setup
-Setup of wtt properies
-
-DefaultDirectory<t><t>Default directory for commandfiles.
-SymbolFilename	<t><t>Symbolfile.		<LINK> symbolfile
-Verify		<t><t>Verify commandfile execution.
-AdvancedUser	<t><t>User is advanced. <LINK> advanced user
-AllToplevel	<t><t>Display all toplevel objects.
-Bypass		<t><t>Bypass some edit restrictions.
-</TOPIC>
-
-<TOPIC> show version <style> function
-Command   show version
-
-Show the wtt version
-
-<B>wtt> show version
-</TOPIC>
-
-<TOPIC> show license <style> function
-Command   show license
-
-Show license terms.
-
-<B>wtt> show license
-</TOPIC>
-
-<TOPIC> show symbol <style> function
-Command   show symbol
-
-Show one symbol, or all symbols
-
-<B>wtt> show symbol 'symbol'<t>Show symbol 'symbol'
-<B>wtt> show symbol<t>              Show all symbols
-
-<h2>related subjects
-define <LINK> define
-symbol <LINK> symbol
-</TOPIC>
-
-<TOPIC> show volumes <style> function
-Command   show volumes
-
-Show all volumes in the database.
-
-<B>wtt> show volumes
-</TOPIC>
-
-<TOPIC> show children <style> function
-Command   show children
-
-Display en object and it's children
-
-<B>wtt> show children /name=
-
-/name	<t>Name of the parent object.
-</TOPIC>
-
-<TOPIC> show objid <style> function
-Command   show objid
-
-Show the objid of an object.
-If name is ommitted, the objid of the current selected
-object is shown.
-
-<B>wtt> show objid [/name=]
-
-/name	<t>Object name.
-</TOPIC>
-
-<TOPIC> save <style> function
-Command   save
-
-Save session.
-
-<B>wtt> save
-</TOPIC>
-
-<TOPIC> revert <style> function
-Command   revert
-
-Revert session.
-
-<B>wtt> revert
-</TOPIC>
-
-<TOPIC> display <style> function
-Command   display
-
-Display plant or node hierarchy window (w1 or w2).
-
-<B>wtt> display w1
-<B>wtt> display w2
-</TOPIC>
-
-<TOPIC> search <style> function
-Command   search
-
-Search for an objectname or a string.
-
-<B>wtt> search 'object'
-<B>wtt> search /regularexpression 'expression'
-<B>wtt> search /next
+/file	<t>Name of the Ge graph.
 </TOPIC>
 
 <TOPIC> compile <style> function
@@ -5231,68 +4944,16 @@ Connect a signal and a channel.
 		<t>it will first be disconnected.
 </TOPIC>
 
-<TOPIC> disconnect <style> function
-Command   disconnect
-
-Disconnect a signal or a channel.
-
-<B>wtt> disconnect /source=
-
-/source		<t>A signal or channel object.
-</TOPIC>
-
 <TOPIC> copy <style> function
 Command   copy
 
 Copy selected object trees to paste buffer.
 
-<B>wtt> copy [/keepreferences]
+<B>wtt> copy [/keepreferences] [/ignore_errors]
 
 /keepreferences	<t>Keep references to objects outside the copied trees. By default
                 <t>these references will be zeroed.
-</TOPIC>
-
-<TOPIC> cut <style> function
-Command   cut
-
-Copy selected object trees to paste buffer, and remove the objects
-in the current volume.
-
-<B>wtt> cut [/keepreferences]
-
-/keepreferences	<t>Keep references to objects outside the copied trees. By default
-                <t>these references will be zeroed.
-</TOPIC>
-
-<TOPIC> paste <style> function
-Command   paste
-
-Paste object from the last copy or cut operation into the current volume.
-With the buffer option, an older paste buffer can be pasted.
-
-<B>wtt> paste [/keepoid] [/buffer=]
-
-/keepoid	<t>Keep the object identities if possible.
-/buffer		<t>Name of the buffer that should be pasted. By default
-		<t>the last buffer is used.
-</TOPIC>
-
-<TOPIC> new buffer <style> function
-Command   new buffer
-
-Create a new empty buffer.
-
-<B>wtt> new buffer /name=
-
-/name		<t>Name of the buffer
-</TOPIC>
-
-<TOPIC> open buffer <style> function
-Command   open buffer
-
-Open the buffer selection window.
-
-<B>wtt> open buffer
+/ignore_errors  <t>Try to complete the copy despite detected errors.
 </TOPIC>
 
 <TOPIC> copy object <style> function
@@ -5400,14 +5061,30 @@ the current volume.
 <B>wtt> create rttfiles
 </TOPIC>
 
-<TOPIC> generate web <style> function
-Command   generate web
+<TOPIC> cut <style> function
+Command   cut
 
-Generate html-files for webpages configured by Web-objects in the
-node hierarchy of the current volume.
+Copy selected object trees to paste buffer, and remove the objects
+in the current volume.
 
-<B>wtt> generate web
+<B>wtt> cut [/keepreferences]
+
+/keepreferences	<t>Keep references to objects outside the copied trees. By default
+                <t>these references will be zeroed.
 </TOPIC>
+
+<TOPIC> define <style> function
+Command define
+
+Define a symbol.
+
+<B>wtt> define 'symbolname' 'text'
+
+<h2>related subjects
+symbol <LINK> symbol
+show symbol <LINK> show symbol
+symbolfile <LINK> symbolfile
+</TOPIC>	
 
 <TOPIC> delete object <style> function
 Command   delete object
@@ -5433,6 +5110,69 @@ Delete an object tree.
 /nolog		<t>The operation will not be logged on the output device.
 </TOPIC>
 
+<TOPIC> disconnect <style> function
+Command   disconnect
+
+Disconnect a signal or a channel.
+
+<B>wtt> disconnect /source=
+
+/source		<t>A signal or channel object.
+</TOPIC>
+
+<TOPIC> display <style> function
+Command   display
+
+Display plant or node hierarchy window (w1 or w2).
+
+<B>wtt> display w1
+<B>wtt> display w2
+</TOPIC>
+
+<TOPIC> edit <style> function
+Command   edit
+
+Enter or leave edit mode.
+
+<B>wtt> edit
+<B>wtt> noedit
+</TOPIC>
+
+<TOPIC> exit <style> function
+Command   exit
+
+Close wtt.
+
+<B>wtt> exit
+</TOPIC>
+
+<TOPIC> help help <style> function
+Command   help
+
+Display help information for a subject.
+The help information will be searched for in a help file. The file can be the base helpfile, 
+the project helpfile or another help file.
+
+If no helpfile is supplied the subject will be searched for in the base and project helpfiles.
+
+<B>wtt> help 'subject'
+<B>wtt> help 'subject' /file=
+
+/file<t>A help file that contains information of the help subject.
+
+<H2>related subjects
+helpfile <LINK> helpfile
+</TOPIC>
+
+<TOPIC> generate web <style> function
+Command   generate web
+
+Generate html-files for webpages configured by Web-objects in the
+node hierarchy of the current volume.
+
+<B>wtt> generate web
+</TOPIC>
+
 <TOPIC> list <style> function
 Command   list
 
@@ -5446,16 +5186,6 @@ symbol PWR_FOE_PRINT.
 <B>wtt> list signals [/hierarchy=]		<link> list signals
 <B>wtt> list plcpgm [/plcpgm=] [/hierarchy=]	<link> list plcpgm
 <B>wtt> list hierarchy [/hierarchy=]		<link> list hierarchy
-</TOPIC>
-
-<TOPIC> list descriptor <style> function
-Command   list descriptor
-
-Print a list described by a ListDescriptor object.
-
-<B>wtt> list descriptor /descriptor=		<link> list descriptor
-
-/descriptor	<t>ListDescriptor object.
 </TOPIC>
 
 <TOPIC> list channels <style> function
@@ -5472,18 +5202,14 @@ List cards and channels.
 		<t>will not be sent to the printer.
 </TOPIC>
 
-<TOPIC> list signals <style> function
-Command   list signals
+<TOPIC> list descriptor <style> function
+Command   list descriptor
 
-List of signals and crossreferences to the signals.
+Print a list described by a ListDescriptor object.
 
-<B>wtt> list signals [/hierarchy=] [/volume=] [/allvolumes] [output=]
+<B>wtt> list descriptor /descriptor=		<link> list descriptor
 
-/hierarchy	<t>Hierarchy object.
-/volume		<t>List objects in this volume.
-/allvolume	<t>List objects in all volumes.
-/output		<t>Output file. If output file is supplied, the list
-		<t>will not be sent to the printer.
+/descriptor	<t>ListDescriptor object.
 </TOPIC>
 
 <TOPIC> list hierarchy <style> function
@@ -5515,6 +5241,51 @@ List of PlcPgm objects.
 		<t>will not be sent to the printer.
 </TOPIC>
 
+<TOPIC> list signals <style> function
+Command   list signals
+
+List of signals and crossreferences to the signals.
+
+<B>wtt> list signals [/hierarchy=] [/volume=] [/allvolumes] [output=]
+
+/hierarchy	<t>Hierarchy object.
+/volume		<t>List objects in this volume.
+/allvolume	<t>List objects in all volumes.
+/output		<t>Output file. If output file is supplied, the list
+		<t>will not be sent to the printer.
+</TOPIC>
+
+<TOPIC> login <style> function
+Command   login
+
+Login with username an password. The privileges of the user will be
+fetched from the user database, and affect the access to the system.
+
+<B>wtt> login 'username' 'password'
+
+If you want to create or modify a project, user or register a volume,
+you login as administrator with the qualifier /administrator. You must
+specify a user in the systemgroup 'administrator'. If this systemgroup
+doesn't exist, usename and password is not required.
+
+<B>wtt> login /administrator 'username' 'password'
+
+<H2>related subjects
+logout <LINK> logout
+show user <LINK> show user
+</TOPIC>
+
+<TOPIC> logout <style> function
+Command   logout
+
+Logout a user, and return to the original user.
+
+<B>wtt> logout
+
+<H2>related subjects
+login <LINK> login
+</TOPIC>
+
 <TOPIC> move object <style> function
 Command   move object
 
@@ -5538,6 +5309,63 @@ Move an object.
 		<t>the destination object.
 </TOPIC>
 
+<TOPIC> new buffer <style> function
+Command   new buffer
+
+Create a new empty buffer.
+
+<B>wtt> new buffer /name=
+
+/name		<t>Name of the buffer
+</TOPIC>
+
+<TOPIC> one <style> function
+Command   one
+
+Display one window. The window which currently owns the input
+focus is kept.
+
+<B>wtt> one
+</TOPIC>
+
+<TOPIC> open buffer <style> function
+Command   open buffer
+
+Open the buffer selection window.
+
+<B>wtt> open buffer
+</TOPIC>
+
+<TOPIC> open graph <style> function
+Command   open graph
+
+Open a Ge graph.
+If modal is selected, the execution av the script is continued
+when the graph is closed.
+
+<B>wtt> open graph /file= /modal
+
+/file	<t>Name of the Ge graph.
+/modal  <t>Modal.
+</TOPIC>
+
+<TOPIC> paste <style> function
+Command   paste
+
+Paste object from the last copy or cut operation into the current volume.
+With the buffer option, an older paste buffer can be pasted.
+
+<B>wtt> paste [/keepoid] [/buffer=]
+
+/keepoid	<t>Keep the object identities if possible.
+/buffer		<t>Name of the buffer that should be pasted. By default
+		<t>the last buffer is used.
+/into		<t>Copy the root objects of the paste buffer as child to
+                <t>the selected object.
+/toplevel       <t>Copy the root objects of the paste buffer to the toplevel.
+                <t>Has to be used when copying to an empty volume.
+</TOPIC>
+
 <TOPIC> print <style> function
 Command   print
 
@@ -5551,6 +5379,71 @@ Print plc documents.
 		<t>be printed.
 /nodocument	<t>The plc-documents will not be printed.
 /nooverview	<t>The overview of the plc-window will not be printed.
+</TOPIC>
+
+<TOPIC> release subwindow <style> function
+Command   release subwindow
+
+Continue the execution of a script that has opened a graph
+in a window object by the command 'set subwindow' or the 
+function 'SetSubwindow' with modal selected.
+The release command should be executed from a pushbutton
+in the graph with actiontype command.
+
+<B>wtt> release subwindow 'graph'
+
+graph	<t>Name of the main graph.
+</TOPIC>
+
+<TOPIC> revert <style> function
+Command   revert
+
+Revert session.
+
+<B>wtt> revert
+</TOPIC>
+
+<TOPIC> save <style> function
+Command   save
+
+Save session.
+
+<B>wtt> save
+</TOPIC>
+
+
+<TOPIC> search <style> function
+Command   search
+
+Search for an objectname or a string.
+
+<B>wtt> search 'object'
+<B>wtt> search /regularexpression 'expression'
+<B>wtt> search /next
+</TOPIC>
+
+<TOPIC> set advanceduser <style> function
+Command   set advanceduser
+
+Set or reset advanced user.
+
+<B>wtt> set advanceduser
+<B>wtt> set noadvanceduser
+
+<H2>related subjects
+advanced user <LINK> advanced user
+</TOPIC>
+
+<TOPIC> set alltoplevel <style> function
+Command   set alltoplevel
+
+Show all the root objects in the database, not only the
+root objects defined for the plant hierarchy or the
+node hierarchy.
+
+<B>wtt> set alltoplevel
+<B>wtt> set noalltoplevel
+
 </TOPIC>
 
 <TOPIC> set attribute <style> function
@@ -5573,16 +5466,6 @@ Objects are selected by the name, class and hierarchy qualifiers.
 /noterminal	<t>Operations will not be logged in terminal.
 </TOPIC>
 
-<TOPIC> search <style> function
-Command   search
-
-Search for an objectname or a string.
-
-<B>wtt> search 'object'
-<B>wtt> search /regularexpression 'expression'
-<B>wtt> search /next
-</TOPIC>
-
 <TOPIC> set db <style> function
 Command   set db
 
@@ -5594,15 +5477,91 @@ This has no affect if a database already is open.
 /dbid	<t>Database identity.
 </TOPIC>
 
-<TOPIC> set volume <style> function
-Command   set volume
+<TOPIC> set inputfocus <style> function
+Command   set inputfocus
 
-Attach a volume.
+Set input focus to the plant or the node hierarchy window (w1 or w2).
 
-<B>wtt> set volume 'volumename'
-<B>wtt> set volume /volumename=
+<B>wtt> set inputfocus w1
+<B>wtt> set inputfocus w2
+</TOPIC>
 
-/volumename		<t>Volume name.
+<TOPIC> set showalias <style> function
+Command   set showalias
+
+Display the aliasname of the objects in the plant and node hierarchy.
+
+<B>wtt> set showalias
+<B>wtt> set noshowalias
+</TOPIC>
+
+<TOPIC> set showattrref <style> function
+Command   set showattrref
+
+Display the number of connected attribute references
+of the objects in the plant and node hierarchy.
+
+<B>wtt> set showattrref
+<B>wtt> set noshowattrref
+</TOPIC>
+
+<TOPIC> set showattrxref <style> function
+Command   set showattrxref
+
+Display the number of connected attribute x-references of 
+the objects in the plant and node hierarchy.
+
+<B>wtt> set showattrxref
+<B>wtt> set noshowattrxref
+</TOPIC>
+
+<TOPIC> set showclass <style> function
+Command   set showclass
+
+Display the class of the object in the plant and node hierarchy.
+
+<B>wtt> set showclass
+<B>wtt> set noshowclass
+</TOPIC>
+
+<TOPIC> set showdescription <style> function
+Command   set showdescription
+
+Display the description of the objects in the plant and node hierarchy.
+
+<B>wtt> set showdescription
+<B>wtt> set noshowdescription
+</TOPIC>
+
+<TOPIC> set showobjref <style> function
+Command   set showobjref
+
+Display the number of connected object references of the objects in the 
+plant and node hierarchy.
+
+<B>wtt> set showobjref
+<B>wtt> set noshowobjref
+</TOPIC>
+
+<TOPIC> set showobjxref <style> function
+Command   set showobjxref
+
+Display the number of connected object x-references of the objects in the 
+plant and node hierarchy.
+
+<B>wtt> set showobjxref
+<B>wtt> set noshowobjxref
+</TOPIC>
+
+<TOPIC> set subwindow <style> function
+Command   set subwindow
+
+Open a graph in a window object in a previously opened graph.
+
+<B>wtt> set subwindow 'graph' /name= /source=
+
+/name	<t>Name of the window object.
+/source	<t>Name of graph that is to be opened in the window object.
 </TOPIC>
 
 <TOPIC> set template <style> function
@@ -5624,6 +5583,67 @@ in the plceditor.
 			<t>objects in the plc-editor.
 /shodetecttext		<t>Display the detect text in ASup and DSup 
 			<t>objects in the plc-editor.
+</TOPIC>
+
+<TOPIC> set verify <style> function
+Command   set verify
+
+Display all executed lines when running a script.
+
+<B>wtt> set verify
+<B>wtt> set noverify
+</TOPIC>
+
+<TOPIC> set window <style> function
+Command   set window
+
+Set window width and height.
+
+<B>wtt> set window /width= /height=
+
+/width	<t>width in pixels.
+/height <t>height in pixels.
+</TOPIC>
+
+<TOPIC> set volume <style> function
+Command   set volume
+
+Attach a volume.
+
+<B>wtt> set volume 'volumename'
+<B>wtt> set volume /volumename=
+
+/volumename		<t>Volume name.
+</TOPIC>
+
+<TOPIC> setup <style> function
+Wtt setup
+Setup of wtt properies
+
+DefaultDirectory<t><t>Default directory for commandfiles.
+SymbolFilename	<t><t>Symbolfile.		<LINK> symbolfile
+Verify		<t><t>Verify commandfile execution.
+AdvancedUser	<t><t>User is advanced. <LINK> advanced user
+AllToplevel	<t><t>Display all toplevel objects.
+Bypass		<t><t>Bypass some edit restrictions.
+</TOPIC>
+
+<TOPIC> show children <style> function
+Command   show children
+
+Display en object and it's children
+
+<B>wtt> show children /name=
+
+/name	<t>Name of the parent object.
+</TOPIC>
+
+<TOPIC> show license <style> function
+Command   show license
+
+Show license terms.
+
+<B>wtt> show license
 </TOPIC>
 
 <TOPIC> show object <style> function
@@ -5649,6 +5669,18 @@ List objects.
 /objid		<t>Display object for a specified objid.
 </TOPIC>
 
+<TOPIC> show objid <style> function
+Command   show objid
+
+Show the objid of an object.
+If name is ommitted, the objid of the current selected
+object is shown.
+
+<B>wtt> show objid [/name=]
+
+/name	<t>Object name.
+</TOPIC>
+
 <TOPIC> show script <style> function
 Command   show script
 
@@ -5659,6 +5691,34 @@ Wildcard with asterisk (*) can be used to look up files.
 
 </TOPIC>
 
+<TOPIC> show symbol <style> function
+Command   show symbol
+
+Show one symbol, or all symbols
+
+<B>wtt> show symbol 'symbol'<t>Show symbol 'symbol'
+<B>wtt> show symbol<t>              Show all symbols
+
+<h2>related subjects
+define <LINK> define
+symbol <LINK> symbol
+</TOPIC>
+
+<TOPIC> show version <style> function
+Command   show version
+
+Show the wtt version
+
+<B>wtt> show version
+</TOPIC>
+
+<TOPIC> show volumes <style> function
+Command   show volumes
+
+Show all volumes in the database.
+
+<B>wtt> show volumes
+</TOPIC>
 
 <TOPIC> sort <style> function
 Command   sort
@@ -5674,6 +5734,24 @@ If no parent is given, the children of the selected objects will be sorted.
 		<t>and other objects in alpabetical order.
 </TOPIC>
 
+<TOPIC> two <style> function
+Command   two
+
+Display two windows. Both the plant and the node hierarchy window are
+displayed.
+
+<B>wtt> two
+</TOPIC>
+
+<TOPIC> update classes <style> function
+Command   update classes
+
+Update classes in the attached volume.
+
+<B>wtt> update classes
+
+</TOPIC>
+
 <TOPIC> wb dump <style> function
 Command   wb dump
 
@@ -5684,6 +5762,11 @@ Dump the volume or a part of the volume to text file.
 /hierarchy	<t>Hierarchy object. The object and its child tree will
 		<t>be written to text file.
 /output		<t>Output file.
+/nofocode       <t>Don't write plc code for functionobjects with template
+                <t>code. This will reduce the size of the dumpfile. New
+                <t>code will be copied when the plc is compiled.
+/keepname       <t>Write extern references by name instead of indentity string.
+/noindex        <t>Don't write object index in the dumpfile.
 </TOPIC>
 
 <TOPIC> wb load <style> function
@@ -5695,54 +5778,6 @@ Load the database or from wb_load-file or dbs-file.
 
 /loadfile	<t>Name of file. Can be of type .wb_load, .wb_dmp or .dbs.
 
-</TOPIC>
-
-<TOPIC> open graph <style> function
-Command   open graph
-
-Open a Ge graph.
-If modal is selected, the execution av the script is continued
-when the graph is closed.
-
-<B>wtt> open graph /file= /modal
-
-/file	<t>Name of the Ge graph.
-/modal  <t>Modal.
-</TOPIC>
-
-<TOPIC> close graph <style> function
-Command   close graph
-
-Close a Ge graph.
-
-<B>wtt> close graph /file=
-
-/file	<t>Name of the Ge graph.
-</TOPIC>
-
-<TOPIC> set subwindow <style> function
-Command   set subwindow
-
-Open a graph in a window object in a previously opened graph.
-
-<B>wtt> set subwindow 'graph' /name= /source=
-
-/name	<t>Name of the window object.
-/source	<t>Name of graph that is to be opened in the window object.
-</TOPIC>
-
-<TOPIC> release subwindow <style> function
-Command   release subwindow
-
-Continue the execution of a script that has opened a graph
-in a window object by the command 'set subwindow' or the 
-function 'SetSubwindow' with modal selected.
-The release command should be executed from a pushbutton
-in the graph with actiontype command.
-
-<B>wtt> release subwindow 'graph'
-
-graph	<t>Name of the main graph.
 </TOPIC>
 
 <TOPIC> symbol

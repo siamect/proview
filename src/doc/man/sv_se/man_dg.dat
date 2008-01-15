@@ -4670,8 +4670,8 @@ inte hanteras vid konverteringen.
 <TOPIC> help command
 Wtt kommandon
 
-<b>exit        <t>Stäng wtt			<LINK> exit
-<b>edit        <t>Sätt edit mod			<LINK> edit
+<b>build      <t>Bygg nod, volym eller objekt	<LINK> build
+<b>check classes <t>Kontrollera om några klasser behöver updateras <LINK> check classes
 <b>close graph <t>Stäng en Ge graf		<LINK> close graph
 <b>compile    <t>Kompilera plcpgm		<LINK> compile
 <b>configure card<t>Konfigurera ett kort objekt	<LINK> configure card
@@ -4691,6 +4691,8 @@ Wtt kommandon
 <b>delete volume<t>Ta bort en volym		<LINK> delete volume
 <b>disconnect 	<t>Koppla ifrån signal och kanal <LINK> disconnect
 <b>display     <t>Visa ett fönster		<LINK> display
+<b>edit        <t>Sätt edit mod			<LINK> edit
+<b>exit        <t>Stäng wtt			<LINK> exit
 <b>help        <t>Visa hjälp			<LINK> help help
 <b>generate web <t>Generera websidor		<LINK> generate web
 <b>list channels<t>Lista kanaler		<LINK> list channels
@@ -4708,7 +4710,7 @@ Wtt kommandon
 <b>paste       <t>Klistra buffer		<LINK> paste
 <b>print      <t>Skriv ut plcpgm		<LINK> print
 <b>redraw     <t>Rita om plcpgm			<LINK> redraw
-<b>release subwindow <t>Forsätt exekveringen med graf i window objekt. <LINK>release subwindow
+<b>release subwindow <t>Forsätt exekveringen med graf i window objekt <LINK>release subwindow
 <b>revert      <t>Backa sessionen		<LINK> revert
 <b>save        <t>Spara sessionen		<LINK> save
 <b>search      <t>Sök	 			<LINK> search
@@ -4731,8 +4733,8 @@ Wtt kommandon
 <b>set volume  <t>Sätt volym			<LINK> set volume
 <b>setup       <t>Wtt setup			<LINK> setup
 <b>show children<t>Visa ett objekts barn	<LINK> show children
-<b>show object  <t>Visa ett objekt		<LINK> show object
 <b>show license  <t>Visa licensvillkor		<LINK> show license
+<b>show object  <t>Visa ett objekt		<LINK> show object
 <b>show objid  <t>Visa objektidentiteten	<LINK> show objid
 <b>show script <t>Visa script filer		<LINK> show script
 <b>show symbol <t>Visa en symbol		<LINK> show symbol
@@ -4741,9 +4743,8 @@ Wtt kommandon
 <b>show volumes<t>Visa alla volymer i arbetsbänken <LINK> show volumes
 <b>sort       <t>Sortera barnen till ett objekt <LINK> sort
 <b>two         <t>Två fönster			<LINK> two
+<b>update classes <t>Uppdatera klasser		<LINK> update classes
 <b>wb dump    <t>Dumpa objekt i en textfil	<LINK> wb dump
-<b>wb export  <t>Skriv objekt till en textfil	<LINK> wb export
-<b>wb import  <t>Ladda exporterade objekt från textfil <LINK> wb import
 <b>wb load    <t>Ladda objekt från textfil	<LINK> wb load
 
 <b>Symboler <link> symbol
@@ -4752,328 +4753,40 @@ Wtt kommandon
 script <LINK> script
 </TOPIC>	
 
+<TOPIC> build <style> function
+Kommando   build
 
-<TOPIC> exit <style> function
-Kommando   exit
+Anropa byggmetoden för en node, en volym eller ett objekt.
 
-Close wtt.
+<B>wtt> build node /name= [/force][/debug][/manual][/crossreference]
+<B>wtt> build volume /name= [/force][/debug][/manual][/crossreference]
+<B>wtt> build object /name= [/force][/debug][/manual][/crossreference]
 
-<B>wtt> exit
-</TOPIC>
-
-<TOPIC> edit <style> function
-Kommando   edit
-
-Starta eller lämna editerings mod.
-
-<B>wtt> edit
-<B>wtt> noedit
-</TOPIC>
-
-<TOPIC> define <style> function
-Kommando define
-
-Definiera en symbol.
-
-<B>wtt> define 'symbolname' 'text'
-
-<h2>närliggand ämnen
-symbol <LINK> symbol
-show symbol <LINK> show symbol
-symbolfile <LINK> symbolfile
-</TOPIC>	
-
-<TOPIC> help help <style> function
-Kommando   help
-
-Visa hjälp information för ämnet.
-Hjälp informationen söks efter i en hjälpfil. Filen kan vara
-bas-hjälpfilen, projekt-hjälpfilen eller en annan hjälpfil.
-
-Om ingen hjälpfil anges kommer ämnet att eftersökas i
-bas och projekt hjälpfilerna.
-
-<B>wtt> help 'subject'
-<B>wtt> help 'subject' /file=
-
-/file<t>En hjälpfil som innehåller information om ämnet.
-
-<H2>närliggande ämnen
-helpfile <LINK> helpfile
-</TOPIC>
-
-<TOPIC> login <style> function
-Kommando   login
-
-Logga in med användarnamn och passerord. Användarens privilegier kommer
-att hämtas ur användardatabasen, och påverka tillgången till systemet.
-
-<B>wtt> login 'username' 'password'
-
-Om man vill skapa eller modifiera projekt, användare eller registrera
-volymer loggar man in som administratör med kvalifieraren /administrator.
-Här måste man ange en användare i systemgruppen 'administrator'. Om denna
-systemgrupp ej finns, kan användarnamn och passerord utelämnas.
-
-<B>wtt> login /administrator 'username' 'password'
-
-
-<H2>närliggande ämnen
-logout <LINK> logout
-show user <LINK> show user
-</TOPIC>
-
-<TOPIC> logout <style> function
-Kommando   logout
-
-Logga ut en användare, och återgå till den ursprungliga användaren.
-
-<B>wtt> logout
-
-<H2>närliggande ämnen
-login <LINK> login
-</TOPIC>
-
-<TOPIC> set advanceduser <style> function
-Kommando   set advanceduser
-
-Sätta eller återställa 'advanced user'.
-
-<B>wtt> set advanceduser
-<B>wtt> set noadvanceduser
-
-<H2>närliggande ämnen
-advanced user <LINK> advanced user
-</TOPIC>
-
-<TOPIC> set alltoplevel <style> function
-Kommando   set alltoplevel
-
-Visa alla rotobjekt i databasen, inte enbart de som är
-definierade för anläggnings resp node hierarkin.
-
-<B>wtt> set alltoplevel
-<B>wtt> set noalltoplevel
+/name	<t>Nodnamn, volymsnamn eller objektsnamn.
+/force  <t>Kontrollera inga beroenden, bygg allt.
+/debug  <t>Bygg med debug, dvs kompilera och länka med debug.
+/manual <t>Bygg endast specificerad enhet.
+/crossreferences <t>Skapa korsreferensfiler. Giltig för byggande av volymer.
 
 </TOPIC>
 
-<TOPIC> set showclass <style> function
-Kommando   set showclass
+<TOPIC> check classes <style> function
+Kommando   check classes
 
-Visa klasstillhörighet för objekt i anläggnings och nod hierarkin.
+Kontrollera om några klasser behöver updateras.
 
-<B>wtt> set showclass
-<B>wtt> set noshowclass
+<B>wtt> check classes
+
 </TOPIC>
 
-<TOPIC> set showalias <style> function
-Kommando   set showalias
+<TOPIC> close graph <style> function
+Kommando   close graph
 
-Visa aliasnamnet för objekt i anläggnings och nod hierakin.
+Stäng en Ge graf.
 
-<B>wtt> set showalias
-<B>wtt> set noshowalias
-</TOPIC>
+<B>wtt> close graph /file=
 
-<TOPIC> set showdescription <style> function
-Kommando   set showdescription
-
-Visa beskrivning för objekt i anläggnings och nod hierarkin.
-
-<B>wtt> set showdescription
-<B>wtt> set noshowdescription
-</TOPIC>
-
-<TOPIC> set showobjref <style> function
-Kommando   set showobjref
-
-Visa antalet kopplade objektreferenser för objekt i anläggnings och
-nod hierarkin.
-
-<B>wtt> set showobjref
-<B>wtt> set noshowobjref
-</TOPIC>
-
-<TOPIC> set showobjxref <style> function
-Kommando   set showobjxref
-
-Visa antalet kopplade objekt x-referenser för objekt i anläggnings och
-nod hierarkin.
-
-<B>wtt> set showobjxref
-<B>wtt> set noshowobjxref
-</TOPIC>
-
-<TOPIC> set showattrref <style> function
-Kommando   set showattrref
-
-Visa antal kopplade attribut referenser för objekt
-i anläggnings och nod hierarkin.
-
-<B>wtt> set showattrref
-<B>wtt> set noshowattrref
-</TOPIC>
-
-<TOPIC> set showattrxref <style> function
-Kommando   set showattrxref
-
-Vissa antalet kopplade attribut x-referenser för objekt
-in anläggnings och nod hierarkin.
-
-<B>wtt> set showattrxref
-<B>wtt> set noshowattrxref
-</TOPIC>
-
-<TOPIC> set verify <style> function
-Kommando   set verify
-
-Visa alla exekverade rader när ett script körs.
-
-<B>wtt> set verify
-<B>wtt> set noverify
-</TOPIC>
-
-<TOPIC> set inputfocus <style> function
-Kommando   set inputfocus
-
-Sätt inmatnings fokus till anläggnings eller nod hierarki fönstret 
-(w1 eller w2).
-
-<B>wtt> set inputfocus w1
-<B>wtt> set inputfocus w2
-</TOPIC>
-
-<TOPIC> set window <style> function
-Kommando   set window
-
-Set fönsterbredd och höjd.
-
-<B>wtt> set window /width= /height=
-
-/width	<t>bredd i pixel.
-/height <t>höjd i pixel.
-</TOPIC>
-
-<TOPIC> two <style> function
-Kommando   two
-
-Visa två fönster. Både anläggnings och nod hierarki fönsterna visas.
-
-<B>wtt> two
-</TOPIC>
-
-<TOPIC> one <style> function
-Kommando   one
-
-Visa ett fönster. Fönstret som för närvarande har inmatnings 
-fokus behålls.
-
-<B>wtt> one
-</TOPIC>
-
-<TOPIC> setup <style> function
-Wtt setup
-Setup av wtt egenskaper
-
-DefaultDirectory<t><t>Default filkatalog för script filer.
-SymbolFilename	<t><t>Symbolfil.		<LINK> symbolfile
-Verify		<t><t>Verifiera exekvering av script.
-AdvancedUser	<t><t>Användaren är avancerad. <LINK> advanced user
-AllToplevel	<t><t>Visa samtliga topnivå objekt.
-Bypass		<t><t>Förbigå vissa editerings restriktioner.
-</TOPIC>
-
-<TOPIC> show version <style> function
-Kommando   show version
-
-Visa wtt version.
-
-<B>wtt> show version
-</TOPIC>
-
-<TOPIC> show license <style> function
-Kommando   show license
-
-Visa licensvillkor.
-
-<B>wtt> show license
-</TOPIC>
-
-<TOPIC> show symbol <style> function
-Kommando   show symbol
-
-Visa en symbol, eller alla symboler.
-
-<B>wtt> show symbol 'symbol'<t>Visa symbol 'symbol'
-<B>wtt> show symbol         <t>Visa alla symboler
-
-<h2>närliggande ämnen
-define <LINK> define
-symbol <LINK> symbol
-</TOPIC>
-
-<TOPIC> show volumes <style> function
-Kommando   show volumes
-
-Visa alla volymer i arbetsbänken.
-
-<B>wtt> show volumes
-</TOPIC>
-
-<TOPIC> show children <style> function
-Kommando   show children
-
-Visa ett objekt och dess barn.
-
-<B>wtt> show children /name=
-
-/name	<t>Förälder objektets namn.
-</TOPIC>
-
-<TOPIC> show objid <style> function
-Kommando   show objid
-
-Visa objektsidentitet för ett objekt.
-Om /name utelämnas, visas identiteten för det utvalda objektet.
-
-<B>wtt> show objid [/name=]
-
-/name	<t>Objektsnamn.
-</TOPIC>
-
-<TOPIC> save <style> function
-Kommando   save
-
-Spara sessionen.
-
-<B>wtt> save
-</TOPIC>
-
-<TOPIC> revert <style> function
-Kommando   revert
-
-Revertera sessionen.
-
-<B>wtt> revert
-</TOPIC>
-
-<TOPIC> display <style> function
-Kommando   display
-
-Visa anläggnings eller nod hierarkin i fönster (w1 eller w2).
-
-<B>wtt> display w1
-<B>wtt> display w2
-</TOPIC>
-
-<TOPIC> search <style> function
-Kommando   search
-
-Leta efter ett objektsnamn eller en sträng.
-
-<B>wtt> search 'object'
-<B>wtt> search /regularexpression 'expression'
-<B>wtt> search /next
+/file	<t>Namn på Ge grafen.
 </TOPIC>
 
 <TOPIC> compile <style> function
@@ -5138,16 +4851,6 @@ Kopplar ihop en signal med en kanal.
 		<t>kommer de först att ta ner kopplingen.
 </TOPIC>
 
-<TOPIC> disconnect <style> function
-Kommando   disconnect
-
-Ta ner kopplingen för en signal eller kanal.
-
-<B>wtt> disconnect /source=
-
-/source		<t>Ett singal eller kanal objekt.
-</TOPIC>
-
 <TOPIC> copy <style> function
 Kommando   copy
 
@@ -5157,50 +4860,7 @@ Kopiera utvalda objektträd till en paste buffer.
 
 /keepreferences	<t>Behåll objektsreferenser till objekt utanför det
                 <t>kopierade trädet. Som default kommer dessa att nollställas.
-</TOPIC>
-
-<TOPIC> cut <style> function
-Kommando   cut
-
-Kopiera utvalda objektträd till en paste buffer, och ta bort objekten
-ur aktuell volym.
-
-<B>wtt> cut [/keepreferences]
-
-/keepreferences	<t>Behåll objektsreferenser till objekt utanför det
-                <t>kopierade trädet. Som default kommer dessa att nollställas.
-</TOPIC>
-
-<TOPIC> paste <style> function
-Kommando   paste
-
-Klistra in objekt från den senaste copy or cut operationen, i den
-nuvarande volymen. Med buffer möjligheten kan en äldre buffer klistras
-in.
-
-<B>wtt> paste [/keepoid] [/buffer=]
-
-/keepoid	<t>Behåll objektsidentiteter om det är möjligt.
-/buffer		<t>Namn på den buffer som ska klistras in. Som default
-		<t>används den senaste bufferten.
-</TOPIC>
-
-<TOPIC> new buffer <style> function
-Kommando   new buffer
-
-Skapa en ny tom buffer.
-
-<B>wtt> new buffer /name=
-
-/name		<t>Namn på bufferten.
-</TOPIC>
-
-<TOPIC> open buffer <style> function
-Kommando   open buffer
-
-Öppna fönstret för att välja buffer.
-
-<B>wtt> open buffer
+/ignore_errors  <t>Slutför kopieringen trots upptäckta fel.
 </TOPIC>
 
 <TOPIC> copy object <style> function
@@ -5306,14 +4966,30 @@ i den aktuella volymen.
 <B>wtt> create rttfiles
 </TOPIC>
 
-<TOPIC> generate web <style> function
-Kommando   generate web
+<TOPIC> cut <style> function
+Kommando   cut
 
-Generera html-filer för websidor konfiguerarde med Web-objekt i
-nodhierarkin för aktuell volym.
+Kopiera utvalda objektträd till en paste buffer, och ta bort objekten
+ur aktuell volym.
 
-<B>wtt> generate web
+<B>wtt> cut [/keepreferences]
+
+/keepreferences	<t>Behåll objektsreferenser till objekt utanför det
+                <t>kopierade trädet. Som default kommer dessa att nollställas.
 </TOPIC>
+
+<TOPIC> define <style> function
+Kommando define
+
+Definiera en symbol.
+
+<B>wtt> define 'symbolname' 'text'
+
+<h2>närliggand ämnen
+symbol <LINK> symbol
+show symbol <LINK> show symbol
+symbolfile <LINK> symbolfile
+</TOPIC>	
 
 <TOPIC> delete object <style> function
 Kommando   delete object
@@ -5339,6 +5015,70 @@ Ta bort ett objektsträd.
 /nolog		<t>Operationen kommer inte att loggas.
 </TOPIC>
 
+<TOPIC> disconnect <style> function
+Kommando   disconnect
+
+Ta ner kopplingen för en signal eller kanal.
+
+<B>wtt> disconnect /source=
+
+/source		<t>Ett singal eller kanal objekt.
+</TOPIC>
+
+<TOPIC> display <style> function
+Kommando   display
+
+Visa anläggnings eller nod hierarkin i fönster (w1 eller w2).
+
+<B>wtt> display w1
+<B>wtt> display w2
+</TOPIC>
+
+<TOPIC> edit <style> function
+Kommando   edit
+
+Starta eller lämna editerings mod.
+
+<B>wtt> edit
+<B>wtt> noedit
+</TOPIC>
+
+<TOPIC> exit <style> function
+Kommando   exit
+
+Close wtt.
+
+<B>wtt> exit
+</TOPIC>
+
+<TOPIC> help help <style> function
+Kommando   help
+
+Visa hjälp information för ämnet.
+Hjälp informationen söks efter i en hjälpfil. Filen kan vara
+bas-hjälpfilen, projekt-hjälpfilen eller en annan hjälpfil.
+
+Om ingen hjälpfil anges kommer ämnet att eftersökas i
+bas och projekt hjälpfilerna.
+
+<B>wtt> help 'subject'
+<B>wtt> help 'subject' /file=
+
+/file<t>En hjälpfil som innehåller information om ämnet.
+
+<H2>närliggande ämnen
+helpfile <LINK> helpfile
+</TOPIC>
+
+<TOPIC> generate web <style> function
+Kommando   generate web
+
+Generera html-filer för websidor konfiguerarde med Web-objekt i
+nodhierarkin för aktuell volym.
+
+<B>wtt> generate web
+</TOPIC>
+
 <TOPIC> list <style> function
 Kommando   list
 
@@ -5352,16 +5092,6 @@ symbolen PWR_FOE_PRINT.
 <B>wtt> list signals [/hierarchy=]		<link> list signals
 <B>wtt> list plcpgm [/plcpgm=] [/hierarchy=]	<link> list plcpgm
 <B>wtt> list hierarchy [/hierarchy=]		<link> list hierarchy
-</TOPIC>
-
-<TOPIC> list descriptor <style> function
-Kommando   list descriptor
-
-Skriver ut en lista beskriven av ett ListDescriptor objekt.
-
-<B>wtt> list descriptor /descriptor=		<link> list descriptor
-
-/descriptor	<t>ListDescriptor object.
 </TOPIC>
 
 <TOPIC> list channels <style> function
@@ -5378,18 +5108,14 @@ Lista kort och kanaler.
 		<t>inte att skickas till en printer.
 </TOPIC>
 
-<TOPIC> list signals <style> function
-Kommando   list signals
+<TOPIC> list descriptor <style> function
+Kommando   list descriptor
 
-Lista signaler och korsreferenser för signalerna.
+Skriver ut en lista beskriven av ett ListDescriptor objekt.
 
-<B>wtt> list signals [/hierarchy=] [/volume=] [/allvolumes] [output=]
+<B>wtt> list descriptor /descriptor=		<link> list descriptor
 
-/hierarchy	<t>Hierarki objekt.
-/volume		<t>Lista objekt i angiven volym.
-/allvolume	<t>List objekt i alla volymer.
-/output		<t>Filnamn för utskrift på fil. Om ett filnamn anges kommer listan 
-		<t>inte att skickas till en printer.
+/descriptor	<t>ListDescriptor object.
 </TOPIC>
 
 <TOPIC> list hierarchy <style> function
@@ -5421,6 +5147,52 @@ Lista PlcPgm objekt.
 		<t>inte att skickas till en printer.
 </TOPIC>
 
+<TOPIC> list signals <style> function
+Kommando   list signals
+
+Lista signaler och korsreferenser för signalerna.
+
+<B>wtt> list signals [/hierarchy=] [/volume=] [/allvolumes] [output=]
+
+/hierarchy	<t>Hierarki objekt.
+/volume		<t>Lista objekt i angiven volym.
+/allvolume	<t>List objekt i alla volymer.
+/output		<t>Filnamn för utskrift på fil. Om ett filnamn anges kommer listan 
+		<t>inte att skickas till en printer.
+</TOPIC>
+
+<TOPIC> login <style> function
+Kommando   login
+
+Logga in med användarnamn och passerord. Användarens privilegier kommer
+att hämtas ur användardatabasen, och påverka tillgången till systemet.
+
+<B>wtt> login 'username' 'password'
+
+Om man vill skapa eller modifiera projekt, användare eller registrera
+volymer loggar man in som administratör med kvalifieraren /administrator.
+Här måste man ange en användare i systemgruppen 'administrator'. Om denna
+systemgrupp ej finns, kan användarnamn och passerord utelämnas.
+
+<B>wtt> login /administrator 'username' 'password'
+
+
+<H2>närliggande ämnen
+logout <LINK> logout
+show user <LINK> show user
+</TOPIC>
+
+<TOPIC> logout <style> function
+Kommando   logout
+
+Logga ut en användare, och återgå till den ursprungliga användaren.
+
+<B>wtt> logout
+
+<H2>närliggande ämnen
+login <LINK> login
+</TOPIC>
+
 <TOPIC> move object <style> function
 Kommando   move object
 
@@ -5444,6 +5216,64 @@ Flytta eller byt namn på ett objekt.
 		<t>destinations objektet.
 </TOPIC>
 
+<TOPIC> new buffer <style> function
+Kommando   new buffer
+
+Skapa en ny tom buffer.
+
+<B>wtt> new buffer /name=
+
+/name		<t>Namn på bufferten.
+</TOPIC>
+
+<TOPIC> one <style> function
+Kommando   one
+
+Visa ett fönster. Fönstret som för närvarande har inmatnings 
+fokus behålls.
+
+<B>wtt> one
+</TOPIC>
+
+<TOPIC> open buffer <style> function
+Kommando   open buffer
+
+Öppna fönstret för att välja buffer.
+
+<B>wtt> open buffer
+</TOPIC>
+
+<TOPIC> open graph <style> function
+Kommando   open graph
+
+Öppna en Ge graf.
+I modal mod, fortsätter inte exekveringen av skriptet förrän
+grafen stängs.
+
+<B>wtt> open graph /file= /modal
+
+/file	<t>Namn Ge grafen.
+/modal  <t>Modal mod.
+</TOPIC>
+
+<TOPIC> paste <style> function
+Kommando   paste
+
+Klistra in objekt från den senaste copy or cut operationen, i den
+nuvarande volymen. Med buffer möjligheten kan en äldre buffer klistras
+in.
+
+<B>wtt> paste [/keepoid] [/buffer=]
+
+/keepoid	<t>Behåll objektsidentiteter om det är möjligt.
+/buffer		<t>Namn på den buffer som ska klistras in. Som default
+		<t>används den senaste bufferten.
+/into		<t>Lägg rotobjekten i pastebufferten som barn till
+                <t>utvalt objekt.
+/toplevel       <t>Lägg rotobjekten i pastebufferten på topnivån. Måste
+                <t>användas för att kopiera till en tom volym.
+</TOPIC>
+
 <TOPIC> print <style> function
 Kommando   print
 
@@ -5457,6 +5287,69 @@ Skriv ut plc dokument.
 		<t>att skrivas ut.
 /nodocument	<t>Plc dokumentet skrivs ej ut.
 /nooverview	<t>Översikten över plc-fönstret skrivs ej ut.
+</TOPIC>
+
+<TOPIC> release subwindow <style> function
+Kommando   release subwindow
+
+Släpp loss exekveringen av ett skript som öppnat en graf
+i ett window objekt med kommandot 'set subwindow' eller
+funktionen 'SetSubwindow' i modal mod.
+Release kommandot exekveras från en trycknapp i bilden med
+actiontyp command.
+
+<B>wtt> release subwindow 'graph'
+
+graph	<t>Namnet på huvud grafen.
+</TOPIC>
+
+<TOPIC> revert <style> function
+Kommando   revert
+
+Revertera sessionen.
+
+<B>wtt> revert
+</TOPIC>
+
+<TOPIC> save <style> function
+Kommando   save
+
+Spara sessionen.
+
+<B>wtt> save
+</TOPIC>
+
+<TOPIC> search <style> function
+Kommando   search
+
+Leta efter ett objektsnamn eller en sträng.
+
+<B>wtt> search 'object'
+<B>wtt> search /regularexpression 'expression'
+<B>wtt> search /next
+</TOPIC>
+
+<TOPIC> set advanceduser <style> function
+Kommando   set advanceduser
+
+Sätta eller återställa 'advanced user'.
+
+<B>wtt> set advanceduser
+<B>wtt> set noadvanceduser
+
+<H2>närliggande ämnen
+advanced user <LINK> advanced user
+</TOPIC>
+
+<TOPIC> set alltoplevel <style> function
+Kommando   set alltoplevel
+
+Visa alla rotobjekt i databasen, inte enbart de som är
+definierade för anläggnings resp node hierarkin.
+
+<B>wtt> set alltoplevel
+<B>wtt> set noalltoplevel
+
 </TOPIC>
 
 <TOPIC> set attribute <style> function
@@ -5479,16 +5372,6 @@ Objekt väljs med name, class och hierarchy kvalifierarna.
 /noterminal	<t>Operationen loggas inte i terminal fönster.
 </TOPIC>
 
-<TOPIC> search <style> function
-Kommando   search
-
-Sök efter objektsnamn eller sträng.
-
-<B>wtt> search 'object'
-<B>wtt> search /regularexpression 'expression'
-<B>wtt> search /next
-</TOPIC>
-
 <TOPIC> set db <style> function
 Kommando   set db
 
@@ -5498,6 +5381,120 @@ Detta har ingen effekt om man redan har öppnat en databas.
 <B>wtt> set db /dbid=
 
 /dbid	<t>Databas identitet.
+</TOPIC>
+
+<TOPIC> set inputfocus <style> function
+Kommando   set inputfocus
+
+Sätt inmatnings fokus till anläggnings eller nod hierarki fönstret 
+(w1 eller w2).
+
+<B>wtt> set inputfocus w1
+<B>wtt> set inputfocus w2
+</TOPIC>
+
+<TOPIC> set showalias <style> function
+Kommando   set showalias
+
+Visa aliasnamnet för objekt i anläggnings och nod hierakin.
+
+<B>wtt> set showalias
+<B>wtt> set noshowalias
+</TOPIC>
+
+<TOPIC> set showattrref <style> function
+Kommando   set showattrref
+
+Visa antal kopplade attribut referenser för objekt
+i anläggnings och nod hierarkin.
+
+<B>wtt> set showattrref
+<B>wtt> set noshowattrref
+</TOPIC>
+
+<TOPIC> set showattrxref <style> function
+Kommando   set showattrxref
+
+Vissa antalet kopplade attribut x-referenser för objekt
+in anläggnings och nod hierarkin.
+
+<B>wtt> set showattrxref
+<B>wtt> set noshowattrxref
+</TOPIC>
+
+<TOPIC> set showclass <style> function
+Kommando   set showclass
+
+Visa klasstillhörighet för objekt i anläggnings och nod hierarkin.
+
+<B>wtt> set showclass
+<B>wtt> set noshowclass
+</TOPIC>
+
+<TOPIC> set showdescription <style> function
+Kommando   set showdescription
+
+Visa beskrivning för objekt i anläggnings och nod hierarkin.
+
+<B>wtt> set showdescription
+<B>wtt> set noshowdescription
+</TOPIC>
+
+<TOPIC> set showobjref <style> function
+Kommando   set showobjref
+
+Visa antalet kopplade objektreferenser för objekt i anläggnings och
+nod hierarkin.
+
+<B>wtt> set showobjref
+<B>wtt> set noshowobjref
+</TOPIC>
+
+<TOPIC> set showobjxref <style> function
+Kommando   set showobjxref
+
+Visa antalet kopplade objekt x-referenser för objekt i anläggnings och
+nod hierarkin.
+
+<B>wtt> set showobjxref
+<B>wtt> set noshowobjxref
+</TOPIC>
+
+<TOPIC> set subwindow <style> function
+Kommando   set subwindow
+
+Öppna en graf i ett window objekt i en tidigare öppnad graf.
+
+<B>wtt> set subwindow 'graph' /name= /source=
+
+/name	<t>Namn på window objektet.
+/source	<t>Namn på grafen som ska öppnas i window objektet.
+</TOPIC>
+
+<TOPIC> set template <style> function
+Kommando   set template
+
+Föråldrad sen V4.0.
+</TOPIC>
+
+<TOPIC> set verify <style> function
+Kommando   set verify
+
+Visa alla exekverade rader när ett script körs.
+
+<B>wtt> set verify
+<B>wtt> set noverify
+</TOPIC>
+
+<TOPIC> set window <style> function
+Kommando   set window
+
+Set fönsterbredd och höjd.
+
+<B>wtt> set window /width= /height=
+
+/width	<t>bredd i pixel.
+/height <t>höjd i pixel.
 </TOPIC>
 
 <TOPIC> set volume <style> function
@@ -5511,10 +5508,34 @@ Kommando   set volume
 /volumename		<t>Volymsnamn.
 </TOPIC>
 
-<TOPIC> set template <style> function
-Kommando   set template
+<TOPIC> setup <style> function
+Wtt setup
+Setup av wtt egenskaper
 
-Föråldrad sen V4.0.
+DefaultDirectory<t><t>Default filkatalog för script filer.
+SymbolFilename	<t><t>Symbolfil.		<LINK> symbolfile
+Verify		<t><t>Verifiera exekvering av script.
+AdvancedUser	<t><t>Användaren är avancerad. <LINK> advanced user
+AllToplevel	<t><t>Visa samtliga topnivå objekt.
+Bypass		<t><t>Förbigå vissa editerings restriktioner.
+</TOPIC>
+
+<TOPIC> show children <style> function
+Kommando   show children
+
+Visa ett objekt och dess barn.
+
+<B>wtt> show children /name=
+
+/name	<t>Förälder objektets namn.
+</TOPIC>
+
+<TOPIC> show license <style> function
+Kommando   show license
+
+Visa licensvillkor.
+
+<B>wtt> show license
 </TOPIC>
 
 <TOPIC> show object <style> function
@@ -5540,6 +5561,17 @@ Lista objekt.
 /objid		<t>Visa objekt med specificerad objektsidentitet.
 </TOPIC>
 
+<TOPIC> show objid <style> function
+Kommando   show objid
+
+Visa objektsidentitet för ett objekt.
+Om /name utelämnas, visas identiteten för det utvalda objektet.
+
+<B>wtt> show objid [/name=]
+
+/name	<t>Objektsnamn.
+</TOPIC>
+
 <TOPIC> show script <style> function
 Kommando   show script
 
@@ -5550,6 +5582,34 @@ Wildcard med asterisk (*) kan användas för att ange filer.
 
 </TOPIC>
 
+<TOPIC> show symbol <style> function
+Kommando   show symbol
+
+Visa en symbol, eller alla symboler.
+
+<B>wtt> show symbol 'symbol'<t>Visa symbol 'symbol'
+<B>wtt> show symbol         <t>Visa alla symboler
+
+<h2>närliggande ämnen
+define <LINK> define
+symbol <LINK> symbol
+</TOPIC>
+
+<TOPIC> show version <style> function
+Kommando   show version
+
+Visa wtt version.
+
+<B>wtt> show version
+</TOPIC>
+
+<TOPIC> show volumes <style> function
+Kommando   show volumes
+
+Visa alla volymer i arbetsbänken.
+
+<B>wtt> show volumes
+</TOPIC>
 
 <TOPIC> sort <style> function
 Kommando   sort
@@ -5565,6 +5625,23 @@ Om ingen 'parent' anges kommer barnen till utvalt objekt att sorteras.
 		<t>andra objekt i alfabetisk ordning.
 </TOPIC>
 
+<TOPIC> two <style> function
+Kommando   two
+
+Visa två fönster. Både anläggnings och nod hierarki fönsterna visas.
+
+<B>wtt> two
+</TOPIC>
+
+<TOPIC> update classes <style> function
+Kommando   update classes
+
+Updatera klasserna i aktuell volym.
+
+<B>wtt> update classes
+
+</TOPIC>
+
 <TOPIC> wb dump <style> function
 Kommando   wb dump
 
@@ -5572,9 +5649,14 @@ Dumpa volymen, eller en del av volymen på textfil.
 
 <B>wtt> wb dump /output= [/hierarchy=]
 
-/hierarchy	<t>Hieraki objekt. Objektet och dess barnträd kommer
+/hierarchy	<t>Hierarki objekt. Objektet och dess barnträd kommer
 		<t>att dumpas på textfil.
 /output		<t>Utfil.
+/nofocode       <t>Skriv inte plc kod för funktionsobjekt med template
+                <t>kod. Reducerar storleken på dumpfilen. Ny kod kommer
+                <t>att kopieras när plc't kompileras.
+/keepname       <t>Skriv externa referenser med namn istället för identitet.
+/noindex        <t>Skriv inte objektindex i dumpfilen.
 </TOPIC>
 
 <TOPIC> wb load <style> function
@@ -5586,54 +5668,6 @@ Ladda databasen från wb_load-fil eller dbs-fil.
 
 /loadfile	<t>Filnamn. Kan vara av typ .wb_load, .wb_dmp eller .dbs.
 
-</TOPIC>
-
-<TOPIC> open graph <style> function
-Command   open graph
-
-Öppna en Ge graf.
-I modal mod, fortsätter inte exekveringen av skriptet förrän
-grafen stängs.
-
-<B>wtt> open graph /file= /modal
-
-/file	<t>Namn Ge grafen.
-/modal  <t>Modal mod.
-</TOPIC>
-
-<TOPIC> close graph <style> function
-Command   close graph
-
-Stäng en Ge graf.
-
-<B>wtt> close graph /file=
-
-/file	<t>Namn på Ge grafen.
-</TOPIC>
-
-<TOPIC> set subwindow <style> function
-Command   set subwindow
-
-Öppna en graf i ett window objekt i en tidigare öppnad graf.
-
-<B>wtt> set subwindow 'graph' /name= /source=
-
-/name	<t>Namn på window objektet.
-/source	<t>Namn på grafen som ska öppnas i window objektet.
-</TOPIC>
-
-<TOPIC> release subwindow <style> function
-Command   release subwindow
-
-Släpp loss exekveringen av ett skript som öppnat en graf
-i ett window objekt med kommandot 'set subwindow' eller
-funktionen 'SetSubwindow' i modal mod.
-Release kommandot exekveras från en trycknapp i bilden med
-actiontyp command.
-
-<B>wtt> release subwindow 'graph'
-
-graph	<t>Namnet på huvud grafen.
 </TOPIC>
 
 <TOPIC> symbol
