@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.h,v 1.29 2007-09-19 15:07:11 claes Exp $
+ * Proview   $Id: glow_growapi.h,v 1.30 2008-01-17 14:17:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2906,6 +2906,7 @@ extern "C" {
   int grow_GetNextObject( grow_tCtx ctx, grow_tObject object, glow_eDirection dir,
 			   grow_tObject *next);
   int grow_IsVisible( grow_tCtx ctx, grow_tObject object, glow_eVisible type);
+  int grow_ExportFlow( grow_tCtx ctx, char *filename);
 
 /*@}*/
 #if defined __cplusplus

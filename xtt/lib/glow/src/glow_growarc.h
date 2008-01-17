@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growarc.h,v 1.5 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_growarc.h,v 1.6 2008-01-17 14:17:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,6 +23,7 @@
 #include "glow_arc.h"
 #include "glow_transform.h"
 
+class GlowExportFlow;
 
 /*! \file glow_growarc.h
     \brief Contains the GrowArc class. */
@@ -500,6 +501,8 @@ class GrowArc : public GlowArc {
     \param version	Version to convert to.
   */
   void convert( glow_eConvert version);
+
+  void export_flow( GlowExportFlow *ef);
   
   //! Destructor
   ~GrowArc();

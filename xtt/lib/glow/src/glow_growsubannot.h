@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growsubannot.h,v 1.6 2007-06-15 11:34:43 claes Exp $
+ * Proview   $Id: glow_growsubannot.h,v 1.7 2008-01-17 14:17:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -98,6 +98,7 @@ class GrowSubAnnot : public GlowAnnot {
 	{ color_drawtype = drawtype; text.color_drawtype = drawtype; draw();};
     void draw();
     void set_textbold( int bold);
+    void export_flow( GlowExportFlow *ef);
 };
 
 #endif

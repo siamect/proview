@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growarc.cpp,v 1.4 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_growarc.cpp,v 1.5 2008-01-17 14:17:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,6 +28,7 @@
 #include "glow_grownode.h"
 #include "glow_draw.h"
 #include "glow_growctx.h"
+#include "glow_exportflow.h"
 
 GrowArc::GrowArc( GrowCtx *glow_ctx, char *name, double x1, double y1, 
 		  double x2, double y2, int ang1, int ang2,
@@ -985,4 +986,9 @@ void GrowArc::convert( glow_eConvert version)
     break;
   }
   }  
+}
+
+void GrowArc::export_flow( GlowExportFlow *ef) 
+{
+  ef->arc( this);
 }

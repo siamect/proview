@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.h,v 1.14 2007-11-22 15:10:23 claes Exp $
+ * Proview   $Id: glow_growctx.h,v 1.15 2008-01-17 14:17:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -170,6 +170,12 @@ class GrowCtx : public GlowCtx {
     \param mode		Save mode, should be glow_eSaveMode_Subgraph.
   */
   int save_subgraph( char *filename, glow_eSaveMode mode);
+
+  //! Save as a flow nodeclass to file.
+  /*!
+    \param filename	Name of file to save in.
+  */
+  int export_flow( char *filename);
 
   //! Open and load a subgraph from file.
   /*!

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtext.cpp,v 1.7 2007-08-22 06:43:18 claes Exp $
+ * Proview   $Id: glow_growtext.cpp,v 1.8 2008-01-17 14:17:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,6 +28,7 @@
 #include "glow_grownode.h"
 #include "glow_draw.h"
 #include "glow_growctx.h"
+#include "glow_exportflow.h"
 
 GrowText::GrowText( GrowCtx *glow_ctx, char *name, char *text1, double x, double y, 
 		glow_eDrawType d_type, glow_eDrawType color_d_type, int t_size, 
@@ -960,4 +961,9 @@ void GrowText::convert( glow_eConvert version)
     break;
   }
   }  
+}
+
+void GrowText::export_flow( GlowExportFlow *ef) 
+{
+  ef->text( this);
 }

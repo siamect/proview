@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growline.h,v 1.4 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_growline.h,v 1.5 2008-01-17 14:17:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,6 +22,8 @@
 
 #include "glow_line.h"
 #include "glow_transform.h"
+
+class GlowExportFlow;
 
 /*! \file glow_growline.h
     \brief Contains the GrowLine class. */
@@ -451,6 +453,8 @@ class GrowLine : public GlowLine {
   */
   void set_linetype( glow_eLineType type) 
       { line_type = type; draw();}
+
+  void export_flow( GlowExportFlow *ef);
 };
 
 /*@}*/

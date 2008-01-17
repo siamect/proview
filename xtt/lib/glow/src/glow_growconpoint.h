@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growconpoint.h,v 1.4 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_growconpoint.h,v 1.5 2008-01-17 14:17:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,6 +22,8 @@
 
 #include "glow_conpoint.h"
 #include "glow_arc.h"
+
+class GlowExportFlow;
 
 /*! \file glow_growconpoint.h
     \brief Contains the GrowConPoint class. */
@@ -325,6 +327,8 @@ class GrowConPoint : public GlowConPoint {
     \param direction Type of alignment.
   */
   void align( double x, double y, glow_eAlignDirection direction);
+
+  void export_flow( GlowExportFlow *ef);
 
 };
 

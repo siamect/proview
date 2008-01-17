@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtext.h,v 1.6 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: glow_growtext.h,v 1.7 2008-01-17 14:17:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,6 +22,8 @@
 
 #include "glow_rect.h"
 #include "glow_text.h"
+
+class GlowExportFlow;
 
 /*! \file glow_growtext.h
     \brief Contains the GrowText class. */
@@ -478,6 +480,8 @@ class GrowText : public GlowText {
     \param version	Version to convert to.
   */
   void convert( glow_eConvert version);
+
+  void export_flow( GlowExportFlow *ef);
 };
 
 /*@}*/

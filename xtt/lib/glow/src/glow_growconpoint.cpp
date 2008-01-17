@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growconpoint.cpp,v 1.5 2007-06-29 09:31:24 claes Exp $
+ * Proview   $Id: glow_growconpoint.cpp,v 1.6 2008-01-17 14:17:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,6 +27,7 @@
 #include "glow_growconpoint.h"
 #include "glow_draw.h"
 #include "glow_growctx.h"
+#include "glow_exportflow.h"
 
 GrowConPoint::GrowConPoint( GrowCtx *glow_ctx, char *name, double x, double y, 
 		int cp_num, glow_eDirection d, int nodraw) :
@@ -515,4 +516,9 @@ void GrowConPoint::get_borders( GlowTransform *t, double *x_right,
     *y_low = y1;
   if ( y1 > *y_high)
     *y_high = y1;
+}
+
+void GrowConPoint::export_flow( GlowExportFlow *ef) 
+{
+  ef->conpoint( this);
 }

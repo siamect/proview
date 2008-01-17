@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growrect.cpp,v 1.10 2007-09-04 07:23:06 claes Exp $
+ * Proview   $Id: glow_growrect.cpp,v 1.11 2008-01-17 14:17:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,6 +28,7 @@
 #include "glow_grownode.h"
 #include "glow_draw.h"
 #include "glow_growctx.h"
+#include "glow_exportflow.h"
 
 GrowRect::GrowRect( GrowCtx *glow_ctx, char *name, double x, double y, 
 		    double w, double h, glow_eDrawType border_d_type, int line_w, 
@@ -1085,4 +1086,9 @@ void GrowRect::convert( glow_eConvert version)
     break;
   }
   }  
+}
+
+void GrowRect::export_flow( GlowExportFlow *ef) 
+{
+  ef->rect( this);
 }

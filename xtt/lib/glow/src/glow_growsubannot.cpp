@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growsubannot.cpp,v 1.8 2007-06-29 09:31:24 claes Exp $
+ * Proview   $Id: glow_growsubannot.cpp,v 1.9 2008-01-17 14:17:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,6 +27,7 @@
 #include "glow_growsubannot.h"
 #include "glow_draw.h"
 #include "glow_growctx.h"
+#include "glow_exportflow.h"
 
 GrowSubAnnot::GrowSubAnnot( GrowCtx *glow_ctx, char *name, double x, double y,
 	int annot_num, glow_eDrawType d_type, glow_eDrawType color_d_type,
@@ -583,3 +584,7 @@ void GrowSubAnnot::set_textbold( int bold)
   draw();
 }
 
+void GrowSubAnnot::export_flow( GlowExportFlow *ef) 
+{
+  ef->annot( this);
+}

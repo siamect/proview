@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_array.cpp,v 1.11 2007-09-19 15:07:11 claes Exp $
+ * Proview   $Id: glow_array.cpp,v 1.12 2008-01-17 14:17:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -62,6 +62,7 @@
 #include "glow_growfolder.h"
 #include "glow_growtable.h"
 #include "glow_growxycurve.h"
+#include "glow_exportflow.h"
 #include "glow_msg.h"
 #include "co_cdh.h"
 
@@ -1787,6 +1788,11 @@ void GlowArray::set_linetype( glow_eLineType type)
 {
   for ( int i = 0; i < a_size; i++)
     a[i]->set_linetype( type);
+}
+
+void GlowArray::export_flow( GlowExportFlow *ef) 
+{
+  ef->array( this);
 }
 
 

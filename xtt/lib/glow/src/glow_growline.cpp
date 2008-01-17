@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growline.cpp,v 1.6 2007-07-04 13:30:35 claes Exp $
+ * Proview   $Id: glow_growline.cpp,v 1.7 2008-01-17 14:17:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,6 +28,7 @@
 #include "glow_draw.h"
 #include "glow_growctx.h"
 #include "glow_grownode.h"
+#include "glow_exportflow.h"
 
 GrowLine::GrowLine( GrowCtx *glow_ctx, char *name, double x1, double y1, 
 		double x2, double y2, glow_eDrawType d_type, int line_w, 
@@ -868,4 +869,9 @@ void GrowLine::convert( glow_eConvert version)
     break;
   }
   }  
+}
+
+void GrowLine::export_flow( GlowExportFlow *ef) 
+{
+  ef->line( this);
 }

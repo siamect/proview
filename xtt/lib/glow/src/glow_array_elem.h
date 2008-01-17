@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_array_elem.h,v 1.9 2007-09-19 15:07:11 claes Exp $
+ * Proview   $Id: glow_array_elem.h,v 1.10 2008-01-17 14:17:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -32,6 +32,7 @@
 /*@{*/
 
 class GlowWind;
+class GlowExportFlow;
 
 //! Virtual base class for all drawing objects and components.
 /*! A GlowArrayElem object can be inserted in a GlowArray vector, which contains all the
@@ -191,6 +192,7 @@ class GlowArrayElem {
     virtual void set_linetype( glow_eLineType type) {};
     virtual void set_input_focus( int focus) {};
     virtual int get_java_name( char *name) { return 0;}
+    virtual void export_flow( GlowExportFlow *ef) {};
 
     virtual ~GlowArrayElem() {};
 };

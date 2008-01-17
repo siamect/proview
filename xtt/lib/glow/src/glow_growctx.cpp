@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.cpp,v 1.29 2007-11-02 08:35:48 claes Exp $
+ * Proview   $Id: glow_growctx.cpp,v 1.30 2008-01-17 14:17:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -52,6 +52,7 @@
 #include "glow_growmenu.h"
 #include "glow_growfolder.h"
 #include "glow_growtable.h"
+#include "glow_exportflow.h"
 #include "glow_draw.h"
 
 #include "glow_msg.h"
@@ -2139,6 +2140,13 @@ int GrowCtx::save_subgraph( char *filename, glow_eSaveMode mode)
 
   fp.close();
   return 1;
+}
+
+int GrowCtx::export_flow( char *filename)
+{
+  GlowExportFlow ef( this);
+
+  return ef.export_flow( filename);
 }
 
 int GrowCtx::open_subgraph_from_name( char *name, glow_eSaveMode mode)

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_array.h,v 1.4 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_array.h,v 1.5 2008-01-17 14:17:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,6 +39,7 @@
 */
 
 class GrowCtx;
+class GlowExportFlow;
 
 class GlowArray {
  public:
@@ -224,6 +225,7 @@ class GlowArray {
   void convert( glow_eConvert version);
   void set_rootnode( void *node);
   void set_linetype( glow_eLineType type);
+  void export_flow( GlowExportFlow *ef);
 
   friend class GlowNodeClass;
   friend class GlowCtx;

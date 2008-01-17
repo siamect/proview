@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growrect.h,v 1.8 2007-09-04 07:23:06 claes Exp $
+ * Proview   $Id: glow_growrect.h,v 1.9 2008-01-17 14:17:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,6 +21,8 @@
 #define glow_growrect_h
 
 #include "glow_rect.h"
+
+class GlowExportFlow;
 
 /*! \file glow_growrect.h
     \brief Contains the GrowRect class. */
@@ -143,6 +145,7 @@ class GrowRect : public GlowRect {
     \param mode	Not used.
   */
   void save( ofstream& fp, glow_eSaveMode mode);
+  void save_flow( ofstream& fp, glow_eSaveMode mode);
 
   //! Read the content of the object from file.
   /*!
@@ -533,6 +536,8 @@ class GrowRect : public GlowRect {
     \param version	Version to convert to.
   */
   void convert( glow_eConvert version);
+
+  void export_flow( GlowExportFlow *ef);
 
   //! Destructor
   ~GrowRect();
