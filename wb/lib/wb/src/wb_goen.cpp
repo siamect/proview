@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goen.cpp,v 1.1 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_goen.cpp,v 1.2 2008-01-17 14:22:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,6 +47,7 @@
 #include "wb_goenm9.h"
 #include "wb_goenm10.h"
 #include "wb_goenm11.h"
+#include "wb_goenm12.h"
 #include "wb_goenm14.h"
 #include "wb_goenm15.h"
 #include "wb_goenm16.h"
@@ -78,7 +79,7 @@ goen_tGetParamFunc goen_get_parameter_m[20] = {
 	goen_get_parameter_m9,
 	goen_get_parameter_m10,
 	goen_get_parameter_m11,
-	goen_get_parameter_m0,
+	goen_get_parameter_m12,
 	goen_get_parameter_m0,
 	goen_get_parameter_m14,
 	goen_get_parameter_m15,
@@ -98,7 +99,7 @@ goen_tCreateNodeTypeFunc goen_create_nodetype_m[20] = {
 	goen_create_nodetype_m9,
 	goen_create_nodetype_m10,
 	goen_create_nodetype_m11,
-	goen_create_nodetype_m0,
+	goen_create_nodetype_m12,
 	goen_create_nodetype_m0,
 	goen_create_nodetype_m14,
 	goen_create_nodetype_m15,
@@ -118,7 +119,7 @@ goen_tGetPointInfoFunc goen_get_point_info_m[20] = {
 	goen_get_point_info_m9,
 	goen_get_point_info_m10,
 	goen_get_point_info_m11,
-	goen_get_point_info_m0,
+	goen_get_point_info_m12,
 	goen_get_point_info_m0,
 	goen_get_point_info_m14,
 	goen_get_point_info_m15,
@@ -138,7 +139,7 @@ goen_tGetLocationPointFunc goen_get_location_point_m[20] = {
 	goen_get_location_point_m9,
 	goen_get_location_point_m10,
 	goen_get_location_point_m11,
-	goen_get_location_point_m0,
+	goen_get_location_point_m12,
 	goen_get_location_point_m0,
 	goen_get_location_point_m14,
 	goen_get_location_point_m15,
