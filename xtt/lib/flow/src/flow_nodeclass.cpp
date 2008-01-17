@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_nodeclass.cpp,v 1.6 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: flow_nodeclass.cpp,v 1.7 2008-01-17 14:18:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -325,4 +325,16 @@ void FlowNodeClass::get_object_name( char *name)
   strcpy( name, nc_name);
 }
 
+int FlowNodeClass::load( char *filename)
+{
+  ifstream fp;
 
+  fp.open( filename);
+  if ( !fp)
+    return FLOW__FILEOPEN;
+
+  open( fp);
+
+  fp.close();
+  return FLOW__SUCCESS;
+}

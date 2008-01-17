@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_nodeclass.h,v 1.5 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: flow_nodeclass.h,v 1.6 2008-01-17 14:18:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -46,6 +46,7 @@ class FlowNodeClass : public FlowArrayElem {
     void print( FlowPoint *pos, void *node, int highlight);
     void save( ofstream& fp, flow_eSaveMode mode);
     void open( ifstream& fp);
+    int load( char *filename);
     void draw( FlowPoint *pos, int highlight, int hot, void *node);
     void nav_draw( FlowPoint *pos, int highlight, void *node);
     void draw_inverse( FlowPoint *pos, int hot, void *node);

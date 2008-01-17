@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_api.cpp,v 1.12 2007-11-22 08:51:50 claes Exp $
+ * Proview   $Id: flow_api.cpp,v 1.13 2008-01-17 14:18:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -713,3 +713,13 @@ int flow_IsVisible( flow_tCtx ctx, flow_tObject object, flow_eVisible type)
 {
   return ctx->is_visible( (FlowArrayElem *)object, type);
 }
+
+int flow_LoadNodeClass( flow_tCtx ctx, char *fname, flow_tNodeClass *nodeclass)
+{
+  *nodeclass = (flow_tNodeClass) new FlowNodeClass( ctx, "tmp", flow_eNodeGroup_Common);
+  int sts = (*(FlowNodeClass **)nodeclass)->load( fname);
+  if ( ODD(sts))
+    ctx->nodeclass_insert( (FlowArrayElem *) *nodeclass);
+  return sts;
+}
+
