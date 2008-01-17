@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_dstrend.cpp,v 1.1 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_c_dstrend.cpp,v 1.2 2008-01-17 14:20:48 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -81,7 +81,7 @@ static pwr_tStatus PostMove (
   pwr_sAttrRef Attribute;
   
   /*
-    If father of ASup has an "ActualValue" attribute, then make this ASup
+    If father of DsTrend has an "ActualValue" attribute, then make this ASup
     refer to this attribute.
   */
 
@@ -92,9 +92,7 @@ static pwr_tStatus PostMove (
   strcat(Name, ".ActualValue");
 
   sts = ldh_NameToAttrRef(Session, Name, &Attribute);
-  if (EVEN(sts)) {
-    memset(&Attribute, 0, sizeof(Attribute));
-  }
+  if (EVEN(sts)) return PWRB__SUCCESS;
 
   sts = ldh_SetObjectPar(Session, Object, "RtBody", "DataName", (char *)&Attribute,
     sizeof(Attribute));

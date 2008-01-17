@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_dsfast.cpp,v 1.1 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_c_dsfast.cpp,v 1.2 2008-01-17 14:20:48 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -92,9 +92,7 @@ static pwr_tStatus PostMove (
   strcat(Name, ".ActualValue");
 
   sts = ldh_NameToAttrRef(Session, Name, &Attribute);
-  if (EVEN(sts)) {
-    memset(&Attribute, 0, sizeof(Attribute));
-  }
+  if (EVEN(sts)) return PWRB__SUCCESS;
 
   sts = ldh_SetObjectPar(Session, Object, "RtBody", "DataName", (char *)&Attribute,
     sizeof(Attribute));
