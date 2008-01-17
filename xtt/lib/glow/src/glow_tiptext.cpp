@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_tiptext.cpp,v 1.4 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: glow_tiptext.cpp,v 1.5 2008-01-17 14:16:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -64,12 +64,12 @@ void GlowTipText::draw_text( GlowArrayElem *e, char *text, int x, int y)
   strncpy( tiptext, text, sizeof(tiptext));
   text_object = e;
 
-  if ( text_x + text_width > ctx->mw.window_width)
-    text_x = ctx->mw.window_width - text_width;
+  if ( text_x + text_width > ctx->mw.window_width + ctx->mw.subwindow_x)
+    text_x = ctx->mw.window_width + ctx->mw.subwindow_x - text_width;
   if ( text_x < 0)
     text_x = 0;
-  if ( text_y + text_height > ctx->mw.window_height)
-    text_y = ctx->mw.window_height - text_height;
+  if ( text_y + text_height > ctx->mw.window_height + ctx->mw.subwindow_y)
+    text_y = ctx->mw.window_height + ctx->mw.subwindow_y - text_height;
   if ( text_y < 0)
     text_y = 0;
 
