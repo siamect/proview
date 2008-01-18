@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_api.cpp,v 1.13 2008-01-17 14:18:55 claes Exp $
+ * Proview   $Id: flow_api.cpp,v 1.14 2008-01-18 13:55:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,6 +40,7 @@
 #include "flow_conpoint.h"
 #include "flow_annot.h"
 #include "flow_draw.h"
+#include "flow_tiptext.h"
 #include "flow_api.h"
 
 int flow_Save( flow_tCtx ctx, char *filename)
@@ -722,4 +723,10 @@ int flow_LoadNodeClass( flow_tCtx ctx, char *fname, flow_tNodeClass *nodeclass)
     ctx->nodeclass_insert( (FlowArrayElem *) *nodeclass);
   return sts;
 }
+
+void flow_SetTipText( flow_tCtx ctx, flow_tObject object, char *text, int x, int y)
+{
+  ctx->tiptext->draw_text( (FlowArrayElem *)object, text, x, y);
+}
+
 

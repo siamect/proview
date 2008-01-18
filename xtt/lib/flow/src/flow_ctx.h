@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_ctx.h,v 1.8 2007-09-25 13:11:00 claes Exp $
+ * Proview   $Id: flow_ctx.h,v 1.9 2008-01-18 13:55:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,6 +28,7 @@
 #include "flow_array.h"
 
 class FlowDraw;
+class FlowTipText;
 
 typedef struct {
 	void	*scroll_data;
@@ -41,39 +42,8 @@ typedef struct {
 
 class FlowCtx {
   public:
-    FlowCtx( char *ctx_name, double zoom_fact = 100, int offs_x = 0, int offs_y = 0) 
-	: ctx_type(flow_eCtxType_Flow), zoom_factor(zoom_fact), base_zoom_factor(zoom_fact), 
-	offset_x(offs_x), offset_y(offs_y), nav_zoom_factor(zoom_fact), 
-	print_zoom_factor(100), 
-	x_right(0), x_left(0), y_high(0), y_low(0), 
-	window_width(0), window_height(0), 
-	nav_window_width(0), nav_window_height(0),
-	nav_rect_ll_x(0), nav_rect_ll_y(0), nav_rect_ur_x(0), nav_rect_ur_y(0), 
-	node_movement_active(0),
-	node_movement_paste_active(0), node_movement_paste_pending(0),
-	nav_rect_movement_active(0), nav_rect_zoom_active(0), 
-	select_rect_active(0), 
-	con_create_active(0), auto_scrolling_active(0), defered_redraw_active(0),
-	a(50,50), a_sel(20,20), a_paste(20,20),
-	a_move(20,20), a_nc(20,20), a_cc(20,20),
-	event_region_select(flow_eEvent_Null),
-	event_region_add_select(flow_eEvent_Null),
-	event_create_con(flow_eEvent_Null), event_create_node(flow_eEvent_Null),
- 	event_move_node(flow_eEvent_Null), 
-	callback_object(0), callback_object_type(flow_eObjectType_NoObject),
-	cursor_present(0), cursor_x(0), cursor_y(0), user_highlight(0),
-        application_paste(0),
-	grid_size_x(2), grid_size_y(1), grid_on(1),
-	draw_delta(0.3),
-	grafcet_con_delta(2), refcon_cnt(0), refcon_width(1.5), 
-	refcon_height(0.8), refcon_textsize(3), refcon_linewidth(2),
-        trace_connect_func(0), trace_scan_func(0), trace_started(0), 
-	unobscured(1), nodraw(0), no_nav(1), widget_cnt(0),
-	select_policy(flow_eSelectPolicy_Partial), 
-	display_level(flow_mDisplayLevel_1), scroll_size(0), 
-	scroll_callback(0), scroll_data(NULL)
-	{ strcpy(name, ctx_name);
-	  memset( event_callback, 0, sizeof(event_callback));};
+    FlowCtx( char *ctx_name, double zoom_fact = 100, int offs_x = 0, int offs_y = 0);
+
     flow_eCtxType ctx_type;
     double 	zoom_factor;
     double 	base_zoom_factor;
@@ -209,6 +179,7 @@ class FlowCtx {
 		  int (*event_cb)( FlowCtx *ctx, flow_tEvent event));
     void	disable_event( flow_eEvent event);
     void 	disable_event_all();
+    void 	tiptext_event( FlowArrayElem *object, int x, int y);
     void	redraw_node_cons( void *node);
     void	delete_node_cons( void *node);
     void	set_defered_redraw();
@@ -300,6 +271,8 @@ class FlowCtx {
     int no_nav;
     int widget_cnt;
     flow_eSelectPolicy select_policy;
+    FlowTipText *tiptext;
+
     void set_nodraw() { nodraw++; };
     void reset_nodraw() { if ( nodraw) nodraw--; };
     void reconfigure();

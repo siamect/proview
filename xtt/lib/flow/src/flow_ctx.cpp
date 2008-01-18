@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_ctx.cpp,v 1.12 2007-09-25 13:11:00 claes Exp $
+ * Proview   $Id: flow_ctx.cpp,v 1.13 2008-01-18 13:55:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,6 +41,7 @@
 #include "flow_pushbutton.h"
 #include "flow_draw.h"
 #include "flow_browctx.h"
+#include "flow_tiptext.h"
 #include "flow_msg.h"
 
 class NextElem {
@@ -51,8 +52,46 @@ class NextElem {
   double rank;
 };
 
+FlowCtx::FlowCtx( char *ctx_name, double zoom_fact, int offs_x, int offs_y) 
+  : ctx_type(flow_eCtxType_Flow), zoom_factor(zoom_fact), base_zoom_factor(zoom_fact), 
+    offset_x(offs_x), offset_y(offs_y), nav_zoom_factor(zoom_fact), 
+    print_zoom_factor(100), 
+    x_right(0), x_left(0), y_high(0), y_low(0), 
+    window_width(0), window_height(0), 
+    nav_window_width(0), nav_window_height(0),
+    nav_rect_ll_x(0), nav_rect_ll_y(0), nav_rect_ur_x(0), nav_rect_ur_y(0), 
+    node_movement_active(0),
+    node_movement_paste_active(0), node_movement_paste_pending(0),
+    nav_rect_movement_active(0), nav_rect_zoom_active(0), 
+    select_rect_active(0), 
+    con_create_active(0), auto_scrolling_active(0), defered_redraw_active(0),
+    a(50,50), a_sel(20,20), a_paste(20,20),
+    a_move(20,20), a_nc(20,20), a_cc(20,20),
+    event_region_select(flow_eEvent_Null),
+    event_region_add_select(flow_eEvent_Null),
+    event_create_con(flow_eEvent_Null), event_create_node(flow_eEvent_Null),
+    event_move_node(flow_eEvent_Null), 
+    callback_object(0), callback_object_type(flow_eObjectType_NoObject),
+    cursor_present(0), cursor_x(0), cursor_y(0), user_highlight(0),
+    application_paste(0),
+    grid_size_x(2), grid_size_y(1), grid_on(1),
+    draw_delta(0.3),
+    grafcet_con_delta(2), refcon_cnt(0), refcon_width(1.5), 
+    refcon_height(0.8), refcon_textsize(3), refcon_linewidth(2),
+    trace_connect_func(0), trace_scan_func(0), trace_started(0), 
+    unobscured(1), nodraw(0), no_nav(1), widget_cnt(0),
+    select_policy(flow_eSelectPolicy_Partial), tiptext(0),
+    display_level(flow_mDisplayLevel_1), scroll_size(0), 
+    scroll_callback(0), scroll_data(NULL)
+{ 
+  strcpy(name, ctx_name);
+  memset( event_callback, 0, sizeof(event_callback));
+  tiptext = new FlowTipText( this);
+}
+
 FlowCtx::~FlowCtx()
 {
+  delete tiptext;
   set_nodraw();
   a_sel.clear();
   move_clear();
@@ -444,6 +483,7 @@ void FlowCtx::draw( int ll_x, int ll_y, int ur_x, int ur_y)
 	  select_rect_ur_x - select_rect_ll_x,
 	  select_rect_ur_y - select_rect_ll_y, flow_eDrawType_Line, 0, 0);
   }
+  tiptext->draw();
 }
 
 void FlowCtx::clear()
@@ -799,6 +839,7 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
   switch ( event)
   {
     case flow_eEvent_MB1Click:
+      tiptext->remove();
       if ( node_movement_paste_active)
       {
         if ( auto_scrolling_active)
@@ -849,6 +890,7 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
     case flow_eEvent_MB2DoubleClickShiftCtrl:
     case flow_eEvent_MB3Click:
     case flow_eEvent_MB3Press:
+      tiptext->remove();
       sts = 0;
       for ( i = 0; i < a.a_size; i++)
       {
@@ -904,6 +946,7 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
       }
       break;
     case flow_eEvent_ButtonMotion:
+      tiptext->remove();
       if ( node_movement_active)
       {
         set_defered_redraw();
@@ -1093,6 +1136,7 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
       }
       else if ( x < 0 || x > ctx->window_width || y < 0 || y > window_height)
         a.set_hot( 0);
+      tiptext->remove();
       break;
     case flow_eEvent_VisibilityUnobscured:
       unobscured = 1;
@@ -1341,6 +1385,26 @@ void FlowCtx::disable_event_all()
 
   for ( int i = 0; i < flow_eEvent__; i++)
     event_callback[i] = 0;
+}
+
+void FlowCtx::tiptext_event( FlowArrayElem *object, int x, int y)
+{
+  
+  if ( event_callback[flow_eEvent_TipText] )
+  {
+    /* Send an tiptext callback */
+    static flow_sEvent e;
+
+    e.event = flow_eEvent_TipText;
+    e.any.type = flow_eEventType_Object;
+    e.any.x_pixel = x;
+    e.any.y_pixel = y;
+    e.any.x = 0;
+    e.any.y = 0;
+    e.object.object_type = object->type();
+    e.object.object = object;
+    event_callback[flow_eEvent_TipText]( this, &e);
+  }
 }
 
 FlowArrayElem *FlowCtx::get_node_from_name( char *name)

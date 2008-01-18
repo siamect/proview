@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_node.cpp,v 1.9 2007-05-11 15:07:21 claes Exp $
+ * Proview   $Id: flow_node.cpp,v 1.10 2008-01-18 13:55:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,6 +28,7 @@
 #include "flow_draw.h"
 #include "flow_conpoint.h"
 #include "flow_browctx.h"
+#include "flow_tiptext.h"
 #include "flow_msg.h"
 
 FlowNode::FlowNode( FlowCtx *flow_ctx, char *name, FlowNodeClass *node_class,
@@ -810,6 +811,7 @@ int FlowNode::event_handler( flow_eEvent event, int x, int y)
         ctx->fdraw->set_cursor( ctx, draw_eCursor_CrossHair);
         hot = 1;
         redraw = 1;
+	ctx->tiptext_event( this, x, y);
       }
       if ( !sts && hot)
       {
@@ -817,6 +819,7 @@ int FlowNode::event_handler( flow_eEvent event, int x, int y)
         erase();
         hot = 0;
         redraw = 1;
+	ctx->tiptext->remove_text( this);
       }
       if ( redraw)
       {

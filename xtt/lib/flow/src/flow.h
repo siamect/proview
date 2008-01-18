@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow.h,v 1.13 2007-07-18 09:26:43 claes Exp $
+ * Proview   $Id: flow.h,v 1.14 2008-01-18 13:55:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -260,6 +260,7 @@ typedef enum {
 	flow_eEvent_Resized,
 	flow_eEvent_ScrollUp,
 	flow_eEvent_ScrollDown,
+	flow_eEvent_TipText,
 	flow_eEvent__
 	} flow_eEvent;
 
