@@ -43,6 +43,9 @@ foldersTree = gFld("<b>Object Reference Manual</b>", "../orm_intro.html")
   aux1 = insFld(foldersTree, gFld("<b>OtherManufacturer</b>", "othermanufacturer_index.html"))
   OtherManufacturer(aux1)
 
+  aux1 = insFld(foldersTree, gFld("<b>OtherIO</b>", "otherio_index.html"))
+  OtherIO(aux1)
+
   aux1 = insFld(foldersTree, gFld("<b>ABB</b>", "abb_index.html"))
   ABB(aux1)
 
