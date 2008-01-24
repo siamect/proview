@@ -1,6 +1,6 @@
 #ifdef RPC_HDR
 %/* 
-% * Proview   $Id: rt_mh_net.x,v 1.4 2006-06-29 10:58:02 claes Exp $
+% * Proview   $Id: rt_mh_net.x,v 1.5 2008-01-24 09:58:41 claes Exp $
 % * Copyright (C) 2005 SSAB Oxelösund AB.
 % *
 % * This program is free software; you can redistribute it and/or 
@@ -365,6 +365,7 @@ struct mh_sMessage {
   mh_mEventStatus	Status;
   mh_uSupInfo		SupInfo;
   pwr_sAttrRef		EventSound;
+  pwr_tString256	EventMoreText;
 };
 
 struct mh_sReturn {

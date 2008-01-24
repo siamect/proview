@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_emon.c,v 1.12 2007-05-24 14:50:13 claes Exp $
+ * Proview   $Id: rt_emon.c,v 1.13 2008-01-24 09:56:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -141,6 +141,7 @@ struct s_Active {
   mh_uEventInfo		status;
   mh_eEvent		event;
   pwr_tAttrRef		eventSound;
+  pwr_tString256	eventMoreText;
   pwr_tBoolean		local;
   sEventTab		*detect_etp;
   sEventTab		*return_etp;
@@ -239,6 +240,7 @@ struct s_Sup {
   mh_eEventPrio   EventPriority;
   mh_mEventFlags  EventFlags;
   pwr_tAttrRef	  Sound;
+  pwr_tText256	  MoreText;
   /* Internal attributes */
   pwr_sAttrRef    Attribute;
   mh_uEventInfo   AlarmStatus;
@@ -910,6 +912,7 @@ applMessage (
   strncpy(aap->link.eventName, ip->EventName, sizeof(aap->link.eventName));
   aap->link.eventFlags = ip->EventFlags;
   aap->link.eventSound = ip->EventSound;
+  strncpy(aap->link.eventMoreText, ip->EventMoreText, sizeof(aap->link.eventMoreText));
   aap->link.event = ip->EventType;
 
   aap->message = *ip;
@@ -1498,6 +1501,7 @@ formatApplEvent (
     mp->SupInfo.SupType = aap->message.SupInfo.SupType;
     memcpy(&mp->SupInfo, &aap->message.SupInfo, sizeof(mh_uSupInfo));
     mp->EventSound = aap->link.eventSound;
+    strncpy(mp->EventMoreText, aap->message.EventMoreText, sizeof(mp->EventMoreText));
     *size = sizeof(mh_sMessage);
     break;
   case mh_eEvent_Ack:
@@ -1592,6 +1596,7 @@ formatSupEvent (
     }
 #endif
     mp->EventSound = sp->link.eventSound;
+    strncpy(mp->EventMoreText, sup->MoreText, sizeof(mp->EventMoreText));
     memcpy(&mp->SupInfo.mh_uSupInfo_u, sp->supInfoP, sp->supInfoSize);
     *size = sizeof(mh_sMessage);
     break;
