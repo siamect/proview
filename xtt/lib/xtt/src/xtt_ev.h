@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ev.h,v 1.8 2007-01-04 08:22:46 claes Exp $
+ * Proview   $Id: xtt_ev.h,v 1.9 2008-01-24 09:36:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -64,6 +64,7 @@ class Ev {
     void 		(*popup_menu_cb)( void *, pwr_tAttrRef, unsigned long,
 					  unsigned long, char *, int x, int y);
     int			(*sound_cb)( void *, pwr_tAttrRef *);
+    void       		(*pop_cb)( void *);
     EvList		*eve;
     EvList		*ala;
     EvList		*blk;

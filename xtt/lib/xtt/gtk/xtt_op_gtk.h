@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_op_gtk.h,v 1.2 2007-05-16 12:37:39 claes Exp $
+ * Proview   $Id: xtt_op_gtk.h,v 1.3 2008-01-24 09:35:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,6 +26,9 @@
 # include "xtt_op.h"
 #endif
 
+#ifndef co_wow_gtk_h
+# include "co_wow_gtk.h"
+#endif
 
 class OpGtk : public Op {
  public:
@@ -56,6 +59,7 @@ class OpGtk : public Op {
   int			a_exist[5];
   int			a_active[5];
   int			text_size;
+  CoWowFocusTimerGtk 	poptimer;
 
   void	map();
   int 	configure( char *opplace_str);

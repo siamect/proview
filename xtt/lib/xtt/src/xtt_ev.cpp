@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ev.cpp,v 1.9 2007-01-04 08:22:46 claes Exp $
+ * Proview   $Id: xtt_ev.cpp,v 1.10 2008-01-24 09:36:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -389,6 +389,9 @@ pwr_tStatus Ev::mh_alarm_bc( mh_sMessage *MsgP)
   ev->ala->event_alarm( MsgP);
   if ( ev->update_info_cb)
     ev->update_info_cb( ev->parent_ctx);
+  if ( ev->pop_cb)
+    ev->pop_cb( ev->parent_ctx);
+
   return 1;
 }
 

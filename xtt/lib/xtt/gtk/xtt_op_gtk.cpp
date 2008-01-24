@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_op_gtk.cpp,v 1.7 2007-10-30 07:45:55 claes Exp $
+ * Proview   $Id: xtt_op_gtk.cpp,v 1.8 2008-01-24 09:35:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -371,7 +371,12 @@ OpGtk::~OpGtk()
 
 void OpGtk::map()
 {
+  if ( poptimer.disabled())
+    return;
+
   gtk_window_present( GTK_WINDOW(toplevel));
+
+  poptimer.disable( 1000);
 }
 
 void OpGtk::add_close_button()
