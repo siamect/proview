@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_chandi.wb_load,v 1.10 2005-09-01 14:58:01 claes Exp $
+!  Proview   $Id: pwrb_c_chandi.wb_load,v 1.11 2008-01-24 10:02:49 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -154,6 +154,11 @@ SObject pwrb:Class
           Attr TypeRef = "pwrb:Type-DataRepEnum"
         EndBody
       EndObject
+    EndObject
+    Object Template ChanDi
+      Body RtBody
+        Attr ConversionOn = 1
+      EndBody
     EndObject
     Object Defaults $Object
       Body SysBody
