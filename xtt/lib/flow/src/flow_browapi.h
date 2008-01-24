@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_browapi.h,v 1.10 2007-05-11 15:07:21 claes Exp $
+ * Proview   $Id: flow_browapi.h,v 1.11 2008-01-24 09:33:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -236,6 +236,7 @@ void brow_SetInputFocus( brow_tCtx ctx);
 void brow_SetClickSensitivity( brow_tCtx ctx, int value);
 void brow_SetWhiteBackground( brow_tCtx ctx);
 void brow_SetFillColor( brow_tNode node, flow_eDrawType color);
+void brow_SetTipText( brow_tCtx ctx, brow_tObject object, char *text, int x, int y);
 
 #if defined __cplusplus
 }

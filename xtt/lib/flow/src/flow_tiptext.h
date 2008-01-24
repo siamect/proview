@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_tiptext.h,v 1.1 2008-01-18 13:55:06 claes Exp $
+ * Proview   $Id: flow_tiptext.h,v 1.2 2008-01-24 09:33:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,22 +17,20 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  **/
 
-#ifndef flow_tiptext_h
-#define flow_tiptext_h
+#ifndef glow_tiptext_h
+#define glow_tiptext_h
 
 #include <iostream.h>
 #include <fstream.h>
 
-#include "flow.h"
+#include "glow.h"
 
-#define TIPTEXT_ROWS 3
+class GrowCtx;
+class GlowArrayElem;
 
-class FlowCtx;
-class FlowArrayElem;
-
-/*! \file flow_tiptext.h
-    \brief Contains the FlowTipText class. */
-/*! \addtogroup Flow */
+/*! \file glow_tiptext.h
+    \brief Contains the GlowTipText class. */
+/*! \addtogroup Glow */
 /*@{*/
 
 
@@ -43,29 +41,28 @@ class FlowArrayElem;
   The text is visible until the remove_text() or remove() function are called.
 */
 
-class FlowTipText {
+class GlowTipText {
  public:
   
   //! Constructor
   /*!
-    \param gctx		Flow context.
+    \param gctx		Glow context.
   */
-  FlowTipText( FlowCtx *gctx) : ctx(gctx), tiptext_rows(0), active(false), timer_id(0) {}
+  GlowTipText( GrowCtx *gctx) : ctx(gctx), active(false), timer_id(0) {}
 
   //! Destructor
   /*! Removes the timer if it is set.
    */
-  ~FlowTipText();
+  ~GlowTipText();
 
-  FlowCtx *ctx;		//!< Flow context.
+  GrowCtx *ctx;		//!< Glow context.
   int text_x;		//!< x coordinate in pixels for text.
   int text_y;		//!< y coordinate in pixels for text.
   int text_width;	//!< Text width in pixels.
   int text_height;	//!< Text height in pixels.
   int text_descent;	//!< Text descent in pixels.
-  FlowArrayElem *text_object;  //!< Object that activated the current tip text.
-  int tiptext_rows;     //!< Number of rows in current tiptext.
-  char tiptext[TIPTEXT_ROWS][512]; //!< Current tip text.
+  GlowArrayElem *text_object;  //!< Object that activated the current tip text.
+  char tiptext[200];	//!< Current tip text.
   bool active;		//!< Tip text is active, i.e. timer is running or text is displayed.
   void *timer_id;	//!< Timer id.
 
@@ -80,13 +77,13 @@ class FlowTipText {
     no remove function is called, the text will be displayed within 1 second, and remain until
     a remove function is called.
   */
-  void draw_text( FlowArrayElem *e, char *text, int x, int y);
+  void draw_text( GlowArrayElem *e, char *text, int x, int y);
 
   //! Remove or inactivate the text for the specified object.
   /*!
     \param e	Object which the text should be removed for.
   */
-  void remove_text( FlowArrayElem *e);
+  void remove_text( GlowArrayElem *e);
 
   //! Remove or inactivate texts for any object.
   /*! If the timer is running, it is stopped. If the text is diplayed, it is erased.

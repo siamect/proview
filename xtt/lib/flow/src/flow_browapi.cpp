@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_browapi.cpp,v 1.10 2007-05-11 15:07:21 claes Exp $
+ * Proview   $Id: flow_browapi.cpp,v 1.11 2008-01-24 09:33:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -44,6 +44,7 @@
 #include "flow_conpoint.h"
 #include "flow_annot.h"
 #include "flow_radiobutton.h"
+#include "flow_tiptext.h"
 #include "flow_draw.h"
 #include "flow_browapi.h"
 
@@ -754,4 +755,9 @@ void brow_SetWhiteBackground( brow_tCtx ctx)
 void brow_SetFillColor( brow_tNode node, flow_eDrawType color)
 {
   ((FlowNode *)node)->set_fillcolor( color);  
+}
+
+void brow_SetTipText( brow_tCtx ctx, brow_tObject object, char *text, int x, int y)
+{
+  ctx->tiptext->draw_text( (FlowArrayElem *)object, text, x, y);
 }
