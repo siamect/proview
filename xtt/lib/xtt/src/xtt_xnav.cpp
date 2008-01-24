@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.cpp,v 1.35 2007-12-06 10:56:28 claes Exp $
+ * Proview   $Id: xtt_xnav.cpp,v 1.36 2008-01-24 09:37:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -316,7 +316,8 @@ int XNav::attr_string_to_value( int type_id, char *value_str,
       return XNAV__INPUT_SYNTAX;
     break;
   }
-  case pwr_eType_String: {
+  case pwr_eType_String:
+  case pwr_eType_Text: {
     if ( (int) strlen( value_str) >= attr_size)
       return XNAV__STRINGTOLONG;
     strncpy( (char *)buffer_ptr, value_str, min(attr_size, buff_size));
@@ -573,6 +574,18 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
   case pwr_eType_String: {
     strncpy( str, (char *)value_ptr, size);
     str[size-1] = 0;
+    *len = strlen(str);
+    break;
+  }
+  case pwr_eType_Text: {
+    char *s, *t;
+
+    for ( s = (char *)value_ptr, t = str; *s != 10 && *s != 0; s++, t++) {
+      if ( t - str >= size - 1)
+	break;
+      *t = *s;
+    }
+    *t = 0;
     *len = strlen(str);
     break;
   }
