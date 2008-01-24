@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_ctx.cpp,v 1.18 2007-08-20 08:23:16 claes Exp $
+ * Proview   $Id: glow_ctx.cpp,v 1.19 2008-01-24 09:29:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1658,6 +1658,9 @@ int GlowCtx::trace_init( int (*connect_func)( void *, GlowTraceData *),
   trace_scan_func = scan_func;
 
   sts = a.trace_init();
+
+  sts = trace_connect_func( this, 0);
+
   trace_started = 1;
   return sts;
 }
