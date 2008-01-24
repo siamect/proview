@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_attribute.cpp,v 1.36 2006-02-23 14:38:28 claes Exp $
+ * Proview   $Id: wb_attribute.cpp,v 1.37 2008-01-24 09:47:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -556,7 +556,10 @@ void *wb_attribute::value( void *p)
   check();
 
   if (!p) {
-    if (!m_body && m_orep->vrep()->type() == ldh_eVolRep_Db) {
+    if (!m_body && 
+	(m_orep->vrep()->type() == ldh_eVolRep_Db ||
+	 m_orep->vrep()->type() == ldh_eVolRep_Dbms ||
+	 m_orep->vrep()->type() == ldh_eVolRep_Ced)) {
       m_body = (void *)calloc(1, m_size);
       //printf("a: %8.8x alloc %d\n", m_body, m_size);
     }
