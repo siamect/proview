@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vldh.cpp,v 1.1 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_vldh.cpp,v 1.2 2008-01-24 09:49:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -426,6 +426,8 @@ int vldh_node_con_delete (
 )
 {
   int	i;
+
+  if ( con_point >= VLDH_MAX_CONPOINTS ) return VLDH__BADCONPOINT;
 
   /* Find the conobject in conlist and insert 0 */
   for ( i = 0; i < (int)node->hn.con_count[con_point]; i++) {
