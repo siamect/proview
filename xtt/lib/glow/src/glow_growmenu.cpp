@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growmenu.cpp,v 1.12 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: glow_growmenu.cpp,v 1.13 2008-01-24 09:30:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -425,6 +425,10 @@ int GrowMenu::event_handler( GlowWind *w, glow_eEvent event, int x, int y, doubl
       break;
     }
     case glow_eEvent_MB1Down:
+      sts = local_event_handler( w, event, rx, ry);
+      if ( sts)
+      // Remove any previous hit
+	ctx->register_callback_object( glow_eObjectType_NoObject, 0);
       ctx->gdraw->set_click_sensitivity( w, glow_mSensitivity_MB1Click);
       break;
     case glow_eEvent_MB1Click: {
