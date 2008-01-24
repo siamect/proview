@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.46 2007-11-08 09:13:52 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.47 2008-01-24 09:28:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2952,6 +2952,7 @@ int Graph::init_trace()
     // Look for object graph
     if ( strcmp( object_name, "") != 0)
       init_object_graph(1);
+
     trace_started = 1;
     current_mb1_down = 0;
 
@@ -3026,6 +3027,13 @@ static int graph_trace_connect_bc( grow_tObject object,
   GrowCtx *ctx;
   Graph	*graph;
   int ctx_popped = 0;
+
+  if ( !trace_data) {
+    // Everything is connected
+    grow_GetCtxUserData( (GrowCtx *)object, (void **) &graph);
+    graph->ref_object_info_all();
+    return 1;
+  }
 
   // Check if new ctx
   ctx = grow_GetCtx( object);
@@ -3633,6 +3641,7 @@ int Graph::set_subwindow_source( char *name, char *source)
     return 0;
 
   sts =  grow_SetWindowSource( object, source);
+
   if ( ctx != grow->ctx)
     grow->pop(ctx);
   return sts;
@@ -3643,6 +3652,11 @@ int Graph::sound( pwr_tAttrRef *aref)
   if ( sound_cb)
     (sound_cb)( parent_ctx, aref);
   return 1;
+}
+
+int Graph::export_plcfo( char *filename)
+{
+  return grow_ExportFlow( grow->ctx, filename);
 }
 
 static void graph_remove_space( char *out_str, char *in_str)
@@ -4147,9 +4161,8 @@ int Graph::get_reference_name( char *name, char *tname)
 }
 
 int Graph::ref_object_info( glow_eCycle cycle, char *name, void **data,
-			    pwr_tSubid *subid, unsigned int size)
+			    pwr_tSubid *subid, unsigned int size, bool now)
 {
-  int dt;
   pwr_tAName aname;
   pwr_tStatus sts;
 
@@ -4161,14 +4174,79 @@ int Graph::ref_object_info( glow_eCycle cycle, char *name, void **data,
   else
     strcpy( aname, name);
 
-  if ( cycle == glow_eCycle_Fast)
-    dt = int( fast_scan_time * 1000);
-  else
-    dt = int( scan_time * 1000);
-  int tmo = int( MAX(2 * dt / 100, 25));
-  gdh_SetSubscriptionDefaults( dt, tmo);
 
-  return gdh_RefObjectInfo( aname, data, subid, size);
+  if ( !now) {
+    GraphRef gr( name, subid, size, cycle, data);
+    reflist.push_back(gr);
+  }
+  else {
+    int dt;
+
+    if ( cycle == glow_eCycle_Fast)
+      dt = int( fast_scan_time * 1000);
+    else
+      dt = int( scan_time * 1000);
+    int tmo = int( MAX(2 * dt / 100, 25));
+    gdh_SetSubscriptionDefaults( dt, tmo);
+
+    return gdh_RefObjectInfo( aname, data, subid, size);
+  }
+  return GE__SUCCESS;
+}
+
+int Graph::ref_object_info_all()
+{
+  pwr_tStatus sts;
+  int dt;
+  int refcount[2] = {0, 0};
+  glow_eCycle cycle[2] = {glow_eCycle_Slow, glow_eCycle_Fast};
+
+  for ( unsigned int i = 0; i < reflist.size(); i++) {
+    if ( reflist[i].m_cycle == cycle[0])
+      refcount[0]++;
+    else 
+      refcount[1]++;
+  }
+
+  for ( int j = 0; j < 2; j++) {
+    if ( !refcount[j])
+      continue;
+
+    gdh_sObjRef *oref = (gdh_sObjRef *) calloc( refcount[j], sizeof(gdh_sObjRef));
+    pwr_tRefId *refid = (pwr_tRefId *) calloc( refcount[j], sizeof(pwr_tRefId));
+
+    int refcnt = 0;
+    for ( unsigned int i = 0; i < reflist.size(); i++) {
+      if ( reflist[i].m_cycle == cycle[j]) {
+	strcpy( oref[refcnt].fullname, reflist[i].m_name);
+	oref[refcnt].bufsize = reflist[i].m_size;
+	refcnt++;
+      }
+    }
+    if ( cycle[j] == glow_eCycle_Fast)
+      dt = int( fast_scan_time * 1000);
+    else
+      dt = int( scan_time * 1000);
+    int tmo = int( MAX(2 * dt / 100, 25));
+    gdh_SetSubscriptionDefaults( dt, tmo);
+
+    sts = gdh_RefObjectInfoList( refcnt, oref, refid);
+    if ( EVEN(sts)) return sts;
+
+    refcnt = 0;
+    for ( unsigned int i = 0; i < reflist.size(); i++) {
+      if ( reflist[i].m_cycle == cycle[j]) {
+	*reflist[i].m_data = oref[refcnt].adrs;
+	*reflist[i].m_id = refid[refcnt];
+	refcnt++;
+      }
+    }
+    free( oref);
+    free( refid);
+  }
+  reflist.clear();
+
+  return GE__SUCCESS;
 }
 
 void Graph::create_trend( grow_tObject *object, double x, double y,

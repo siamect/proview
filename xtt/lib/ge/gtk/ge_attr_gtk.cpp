@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attr_gtk.cpp,v 1.5 2007-09-07 06:26:21 claes Exp $
+ * Proview   $Id: ge_attr_gtk.cpp,v 1.6 2008-01-24 09:28:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -18,6 +18,8 @@
  **/
 
 /* ge_attr.cpp -- Display object attributes */
+
+#include <vector.h>
 
 #include "glow_std.h"
 

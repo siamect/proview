@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.cpp,v 1.28 2007-07-17 12:40:50 claes Exp $
+ * Proview   $Id: ge.cpp,v 1.29 2008-01-24 09:28:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,6 +20,7 @@
 /* ge.cpp -- Graphical editor window */
 
 
+#include <vector.h>
 #include "glow_std.h"
 
 #if defined OS_VMS || defined OS_LINUX
@@ -1029,11 +1030,9 @@ void Ge::activate_export_javabean()
   char name[80];
   char default_name[80];
 
-  if ( ! graph->get_java_name( name))
-  {
+  if ( ! graph->get_java_name( name)) {
     graph->get_name( name);
-    if ( strcmp( name, "") != 0)
-    {
+    if ( strcmp( name, "") != 0) {
       if ( strncmp( name, "pwr_", 4) == 0) {
         strcpy( default_name, "Jop");
         strcat( default_name, &name[4]);
@@ -1063,11 +1062,9 @@ void Ge::activate_export_javabean_as()
     return;
   }
 
-  if ( !graph->get_java_name( name))
-  {
+  if ( !graph->get_java_name( name)) {
     graph->get_name( name);
-    if ( strcmp( name, "") != 0)
-    {
+    if ( strcmp( name, "") != 0) {
       if ( strncmp( name, "pwr_", 4) == 0) {
         strcpy( default_name, "Jop");
         strcat( default_name, &name[4]);
@@ -1097,24 +1094,20 @@ void Ge::activate_export_gejava()
     return;
   }
 
-  if ( !graph->get_java_name( name))
-  {
+  if ( !graph->get_java_name( name)) {
     graph->get_name( name);
-    if ( strcmp( name, "") != 0)
-    {
+    if ( strcmp( name, "") != 0) {
       if ( strncmp( name, "pwr_c_", 6) == 0) {
         strcpy( default_name, "Jopc");
         strcat( default_name, &name[6]);
         default_name[4] = _toupper( default_name[4]);
       }
-      else if ( strncmp( name, "pwr_", 4) == 0)
-      {
+      else if ( strncmp( name, "pwr_", 4) == 0) {
         strcpy( default_name, "Jop");
         strcat( default_name, &name[4]);
         default_name[3] = _toupper( default_name[3]);
       }
-      else
-      {
+      else {
         strcpy( default_name, name);
         default_name[0] = _toupper( default_name[0]);
       }
@@ -1133,24 +1126,20 @@ void Ge::activate_export_gejava_as()
   char name[80];
   char default_name[80];
 
-  if ( !graph->get_java_name( name))
-  {
+  if ( !graph->get_java_name( name)) {
     graph->get_name( name);
-    if ( strcmp( name, "") != 0)
-    {
+    if ( strcmp( name, "") != 0) {
       if ( strncmp( name, "pwr_c_", 6) == 0) {
         strcpy( default_name, "Jopc");
         strcat( default_name, &name[6]);
         default_name[4] = _toupper( default_name[4]);
       }
-      else if ( strncmp( name, "pwr_", 4) == 0)
-      {
+      else if ( strncmp( name, "pwr_", 4) == 0) {
         strcpy( default_name, "Jop");
         strcat( default_name, &name[4]);
         default_name[3] = _toupper( default_name[3]);
       }
-      else
-      {
+      else {
         strcpy( default_name, name);
         default_name[0] = _toupper( default_name[0]);
       }
@@ -1178,6 +1167,42 @@ void Ge::activate_export_java_as()
     activate_export_javabean_as();
   else
     activate_export_gejava_as();
+}
+
+void Ge::activate_export_plcfo()
+{
+  char name[80];
+
+  graph->get_name( name);
+
+  if ( strcmp( name, "") != 0)
+    export_plcfo( this, name);
+  else
+    open_input_dialog( "PlcFo name", "Export PlcFo",
+		       "", Ge::export_plcfo);
+}
+
+void Ge::activate_export_plcfo_as()
+{
+  char name[80];
+
+  graph->get_name( name);
+
+  open_input_dialog( "PlcFo name", "Export PlcFo", 
+	name, Ge::export_plcfo);
+}
+
+void Ge::export_plcfo( Ge *gectx, char *filename)
+{
+  int sts;
+  pwr_tFileName fname;
+
+  sprintf( fname, "$pwrp_exe/%s.flwn", filename);
+  dcli_translate_filename( fname, fname);
+
+  sts = gectx->graph->export_plcfo( fname);
+  if ( EVEN(sts))
+    gectx->message( sts);
 }
 
 void Ge::activate_generate_web()

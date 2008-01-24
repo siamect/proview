@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attrnav.cpp,v 1.18 2007-09-12 08:56:36 claes Exp $
+ * Proview   $Id: ge_attrnav.cpp,v 1.19 2008-01-24 09:28:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector.h>
 
 #include "co_cdh.h"
 #include "co_time.h"

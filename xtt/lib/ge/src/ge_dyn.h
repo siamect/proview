@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.h,v 1.34 2007-09-19 15:07:22 claes Exp $
+ * Proview   $Id: ge_dyn.h,v 1.35 2008-01-24 09:28:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1215,14 +1215,15 @@ class GeAnalogColor : public GeDynElem {
   graph_eDatabase db;
   bool first_scan;
   pwr_tFloat32 old_value;
+  GeAnalogColor *e;
 
   GeAnalogColor( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
     GeDynElem(e_dyn, ge_mDynType_AnalogColor, (ge_mActionType) 0, ge_eDynPrio_AnalogColor),
-    limit(0), limit_type(ge_eLimitType_Gt), color(glow_eDrawType_Inherit), p(0)
+    limit(0), limit_type(ge_eLimitType_Gt), color(glow_eDrawType_Inherit), p(0), e(0)
     { strcpy( attribute, ""); instance = e_instance;}
   GeAnalogColor( const GeAnalogColor& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), limit(x.limit), 
-    limit_type(x.limit_type), color(x.color), p(0)
+    limit_type(x.limit_type), color(x.color), p(0), e(0)
     { strcpy( attribute, x.attribute);
     instance = x.instance; instance_mask = x.instance_mask;}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
@@ -1969,6 +1970,7 @@ class GeSlider : public GeDynElem {
   int inverted;
   bool first_scan;
   pwr_tFloat32 old_value;
+  pwr_tInt32 old_ivalue;
   int attr_type;
   pwr_tFloat32 *min_value_p;
   pwr_tFloat32 *max_value_p;

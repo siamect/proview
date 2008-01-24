@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.h,v 1.31 2007-11-01 08:46:27 claes Exp $
+ * Proview   $Id: ge_graph.h,v 1.32 2008-01-24 09:28:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,6 +21,8 @@
 #define ge_graph_h
 
 /* ge_graph.h -- Simple graphic editor */
+
+#include <vector.h>
 
 #ifndef pwr_h
 # include "pwr.h"
@@ -313,6 +315,19 @@ class GraphGbl {
     int			load_config( void *graph);
 };
 
+class GraphRef {
+ public:
+  GraphRef( pwr_tAName name, pwr_tRefId *id, int size, glow_eCycle cycle, void **data) :
+    m_id(id), m_size(size), m_cycle(cycle), m_data(data) {
+    strcpy( m_name, name);
+  }
+  pwr_tAName m_name;
+  pwr_tRefId *m_id;
+  int m_size;
+  glow_eCycle m_cycle;
+  void **m_data;
+};
+
 //! Handling of a grow context.
 /*! This class is originally made to handle multiple grow contexts in a stack,
   but for the moment graph only handles one context. 
@@ -483,7 +498,8 @@ class Graph {
   int			was_subgraph;		//!< Parameter to detect graph<->subgraph change.
   char			java_path[80];		//!< Path for generated java code for baseclasses
   char			java_package[80];      	//!< Package for generated java code for baseclasses
-  
+  vector<GraphRef>      reflist;		//!< List with stored references
+
   //! Print to postscript file.
   /*! \param filename	Name of postscript file. */
   void print( char *filename);
@@ -1152,7 +1168,10 @@ class Graph {
     \param size		Size of the attribute.
   */
   int ref_object_info( glow_eCycle cycle, char *name, void **data,
-		       pwr_tSubid *subid, unsigned int size);
+		       pwr_tSubid *subid, unsigned int size, bool now = false);
+
+  //! Subscribe all stored subscriptions.
+  int ref_object_info_all();
 
   //! Flip the selected objects.
   /*! \param dir	Flip direction, vertical or horizontal. */
@@ -1235,6 +1254,13 @@ class Graph {
     \param aref		Pointer to sound object aref.
   */
   int sound( pwr_tAttrRef *aref);
+
+  //! Export as plc functionobject.
+  /*!
+    \param filename    	Filename.
+  */
+  int export_plcfo( char *filename);
+
 
   //
   // Command module

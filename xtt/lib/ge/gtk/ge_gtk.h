@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.h,v 1.7 2007-07-17 12:40:50 claes Exp $
+ * Proview   $Id: ge_gtk.h,v 1.8 2008-01-24 09:28:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -161,6 +161,8 @@ class GeGtk : public Ge {
   static void activate_export_gejava_as( GtkWidget *w, gpointer gectx);
   static void activate_export_java( GtkWidget *w, gpointer gectx);
   static void activate_export_java_as( GtkWidget *w, gpointer gectx);
+  static void activate_export_plcfo( GtkWidget *w, gpointer gectx);
+  static void activate_export_plcfo_as( GtkWidget *w, gpointer gectx);
   static void activate_import_graph( GtkWidget *w, gpointer gectx);
   static void activate_import_image( GtkWidget *w, gpointer gectx);
   static void activate_generate_web( GtkWidget *w, gpointer gectx);

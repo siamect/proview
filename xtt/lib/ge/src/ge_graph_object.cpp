@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_object.cpp,v 1.18 2007-11-30 08:18:27 claes Exp $
+ * Proview   $Id: ge_graph_object.cpp,v 1.19 2008-01-24 09:28:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,7 +51,6 @@ static int graph_object_ax( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_object_dx( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_object_chanxx( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_object_PID( Graph *graph, pwr_sAttrRef *attrref);
-static int graph_object_Mode( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_object_PlcThread( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_object_collect( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_object_collect_build( Graph *graph, pwr_sAttrRef *attrref);
@@ -74,8 +73,7 @@ static graph_sObjectFunction graph_object_functions[] = {
 	{ pwr_cClass_ChanDo, &graph_object_chanxx},
 	{ pwr_cClass_pid, &graph_object_PID},
 	{ /* pwr_cClass_CompPID */ 656576UL, &graph_object_PID},
-	{ pwr_cClass_mode, &graph_object_Mode},
-	{ /* pwr_cClass_CompModePID */ 656560UL, &graph_object_Mode},
+	{ pwr_cClass_PlcThread, &graph_object_PlcThread},
 	{ pwr_cClass_PlcThread, &graph_object_PlcThread},
 	{ 0, 0}};
 
@@ -403,15 +401,33 @@ static int graph_attr_boolean( Graph *graph, pwr_sAttrRef *attrref)
 // 
 
 typedef struct {
-	char			object_name[120];
-	graph_sObjectTrend 	td;
+	grow_tObject 	trend_object;
+	grow_tObject 	hold_button_object;
+	float		*scan_time_p;
+	float		old_scan_time;
+	double		*data_scan_time_p;
+	int		*hold_button_p;
+	int		*hold_p;
 	} graph_sObjectAx;
 
 static void graph_object_ax_scan( Graph *graph)
 {
   graph_sObjectAx *od = (graph_sObjectAx *)graph->graph_object_data;
 
-  graph->trend_scan( &od->td);
+  // Reconfigure new scantime
+  if ( od->scan_time_p && 
+       *od->scan_time_p != od->old_scan_time) {
+    if ( graph->scan_time > *od->scan_time_p/200) {
+      graph->scan_time = *od->scan_time_p/200;
+      graph->animation_scan_time = *od->scan_time_p/200;
+    }
+    grow_SetTrendScanTime( od->trend_object, double( *od->scan_time_p/200));
+    od->old_scan_time = *od->scan_time_p;
+    *od->data_scan_time_p = double(*od->scan_time_p)/200;
+  }
+
+  if ( od->hold_button_p && od->hold_p)
+    *od->hold_p = *od->hold_button_p;
 }
 
 static void graph_object_ax_close( Graph *graph)
@@ -421,67 +437,40 @@ static void graph_object_ax_close( Graph *graph)
 
 static int graph_object_ax( Graph *graph, pwr_sAttrRef *arp)
 {
-  pwr_sAttrRef attrref;
   int sts;
-  grow_tObject object;
   graph_sObjectAx *od;
-  pwr_tClassId	classid;
-  pwr_sAttrRef	sigchancon;
-  pwr_tClassId	chan_classid;
-  char		classname[40];
-  char		chan_name[120];
-  char		cmd[200];
+  double 	scan_time;
+  GeDyn *dyn;
 
   od = (graph_sObjectAx *) calloc( 1, sizeof(graph_sObjectAx));
   graph->graph_object_data = (void *) od;
   graph->graph_object_close = graph_object_ax_close;
 
-  sts = gdh_GetAttrRefTid( arp, &classid);
+  // Configure trend
+  sts = grow_FindObjectByName( graph->grow->ctx, "ActualValueTrend", 
+		&od->trend_object);
   if ( EVEN(sts)) return sts;
 
-  // Display object name in item "ObjectName"
-  sts = gdh_AttrrefToName( arp, od->object_name, 
-		sizeof(od->object_name), cdh_mNName);
-  if ( EVEN(sts)) return sts;
+  // Set scantime variable in local database
+  grow_GetTrendScanTime( od->trend_object, &scan_time);
+  od->scan_time_p = (float *) graph->localdb_ref_or_create( "ScanTime", 
+		pwr_eType_Float32);
+  od->old_scan_time = float( scan_time*200);
+  *od->scan_time_p = od->old_scan_time;
 
-  // Find field for object name
-  sts = grow_FindObjectByName( graph->grow->ctx, "ObjectName", &object);
+  // Get Hold button
+  sts = grow_FindObjectByName( graph->grow->ctx, "TrendHold", 
+		&od->hold_button_object);
   if ( ODD(sts))
-  {
-    GeDyn *dyn;
-    grow_GetUserData( object, (void **)&dyn);
-    dyn->set_p( object, (void *) od->object_name);
-  }
+    od->hold_button_p = (int *) graph->localdb_ref_or_create( "TrendHold", 
+		pwr_eType_Boolean);
 
-  sts = graph->trend_init( &od->td, arp);
+  grow_GetUserData( od->trend_object, (void **)&dyn);
+  od->data_scan_time_p = dyn->ref_trend_scantime();
+  od->hold_p = dyn->ref_trend_hold();
 
   // Register scan function
   graph->graph_object_scan = graph_object_ax_scan;
-
-  // Add command to open channel graph
-
-  sts = gdh_ArefANameToAref( arp, "SigChanCon", &attrref);
-  if ( ODD(sts)) {
-    sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&sigchancon, sizeof(sigchancon));
-    if ( EVEN(sts)) return sts;
-
-    sts = gdh_AttrrefToName( &sigchancon, chan_name, sizeof(chan_name), 
-		cdh_mNName);
-    if ( ODD(sts))
-    {
-      sts = gdh_GetAttrRefTid( &sigchancon, &chan_classid);
-      if ( EVEN(sts)) return sts;
-      sts = gdh_ObjidToName( cdh_ClassIdToObjid( chan_classid),
-		  classname, sizeof(classname), cdh_mName_object);
-      if ( EVEN(sts)) return sts;
-      cdh_ToLower( classname, classname);
-
-      sprintf( cmd, "ope gr pwr_c_%s/ins=%s/nam=\"%s\"", 
-		classname, chan_name, chan_name);
-
-      sts = graph->set_button_command( "OpenChannel", cmd);
-    }
-  }
 
   return 1;
 }
@@ -491,15 +480,33 @@ static int graph_object_ax( Graph *graph, pwr_sAttrRef *arp)
 // 
 
 typedef struct {
-	char			object_name[120];
-	graph_sObjectTrend 	td;
+	grow_tObject 	trend_object;
+	grow_tObject 	hold_button_object;
+	float		*scan_time_p;
+	float		old_scan_time;
+	double		*data_scan_time_p;
+	int		*hold_button_p;
+	int		*hold_p;
 	} graph_sObjectIx;
 
 static void graph_object_ix_scan( Graph *graph)
 {
   graph_sObjectIx *od = (graph_sObjectIx *)graph->graph_object_data;
 
-  graph->trend_scan( &od->td);
+  // Reconfigure new scantime
+  if ( od->scan_time_p && 
+       *od->scan_time_p != od->old_scan_time) {
+    if ( graph->scan_time > *od->scan_time_p/200) {
+      graph->scan_time = *od->scan_time_p/200;
+      graph->animation_scan_time = *od->scan_time_p/200;
+    }
+    grow_SetTrendScanTime( od->trend_object, double( *od->scan_time_p/200));
+    od->old_scan_time = *od->scan_time_p;
+    *od->data_scan_time_p = double(*od->scan_time_p)/200;
+  }
+
+  if ( od->hold_button_p && od->hold_p)
+    *od->hold_p = *od->hold_button_p;
 }
 
 static void graph_object_ix_close( Graph *graph)
@@ -509,67 +516,40 @@ static void graph_object_ix_close( Graph *graph)
 
 static int graph_object_ix( Graph *graph, pwr_sAttrRef *arp)
 {
-  pwr_sAttrRef attrref;
   int sts;
-  grow_tObject object;
   graph_sObjectIx *od;
-  pwr_tClassId	classid;
-  pwr_sAttrRef	sigchancon;
-  pwr_tClassId	chan_classid;
-  char		classname[40];
-  char		chan_name[120];
-  char		cmd[200];
+  double 	scan_time;
+  GeDyn *dyn;
 
   od = (graph_sObjectIx *) calloc( 1, sizeof(graph_sObjectIx));
   graph->graph_object_data = (void *) od;
   graph->graph_object_close = graph_object_ix_close;
 
-  sts = gdh_GetAttrRefTid( arp, &classid);
+  // Configure trend
+  sts = grow_FindObjectByName( graph->grow->ctx, "ActualValueTrend", 
+		&od->trend_object);
   if ( EVEN(sts)) return sts;
 
-  // Display object name in item "ObjectName"
-  sts = gdh_AttrrefToName( arp, od->object_name, 
-		sizeof(od->object_name), cdh_mNName);
-  if ( EVEN(sts)) return sts;
+  // Set scantime variable in local database
+  grow_GetTrendScanTime( od->trend_object, &scan_time);
+  od->scan_time_p = (float *) graph->localdb_ref_or_create( "ScanTime", 
+		pwr_eType_Float32);
+  od->old_scan_time = float( scan_time*200);
+  *od->scan_time_p = od->old_scan_time;
 
-  // Find field for object name
-  sts = grow_FindObjectByName( graph->grow->ctx, "ObjectName", &object);
+  // Get Hold button
+  sts = grow_FindObjectByName( graph->grow->ctx, "TrendHold", 
+		&od->hold_button_object);
   if ( ODD(sts))
-  {
-    GeDyn *dyn;
-    grow_GetUserData( object, (void **)&dyn);
-    dyn->set_p( object, (void *) od->object_name);
-  }
+    od->hold_button_p = (int *) graph->localdb_ref_or_create( "TrendHold", 
+		pwr_eType_Boolean);
 
-  sts = graph->trend_init( &od->td, arp);
+  grow_GetUserData( od->trend_object, (void **)&dyn);
+  od->data_scan_time_p = dyn->ref_trend_scantime();
+  od->hold_p = dyn->ref_trend_hold();
 
   // Register scan function
   graph->graph_object_scan = graph_object_ix_scan;
-
-  // Add command to open channel graph
-
-  sts = gdh_ArefANameToAref( arp, "SigChanCon", &attrref);
-  if ( ODD(sts)) {
-    sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&sigchancon, sizeof(sigchancon));
-    if ( EVEN(sts)) return sts;
-
-    sts = gdh_AttrrefToName( &sigchancon, chan_name, sizeof(chan_name), 
-		cdh_mNName);
-    if ( ODD(sts))
-    {
-      sts = gdh_GetAttrRefTid( &sigchancon, &chan_classid);
-      if ( EVEN(sts)) return sts;
-      sts = gdh_ObjidToName( cdh_ClassIdToObjid( chan_classid),
-		  classname, sizeof(classname), cdh_mName_object);
-      if ( EVEN(sts)) return sts;
-      cdh_ToLower( classname, classname);
-
-      sprintf( cmd, "ope gr pwr_c_%s/ins=%s/nam=\"%s\"", 
-		classname, chan_name, chan_name);
-
-      sts = graph->set_button_command( "OpenChannel", cmd);
-    }
-  }
 
   return 1;
 }
@@ -578,15 +558,33 @@ static int graph_object_ix( Graph *graph, pwr_sAttrRef *arp)
 // 
 
 typedef struct {
-	char		object_name[120];
-	graph_sObjectTrend 	td;
+	grow_tObject 	trend_object;
+	grow_tObject 	hold_button_object;
+	float		*scan_time_p;
+	float		old_scan_time;
+	double		*data_scan_time_p;
+	int		*hold_button_p;
+	int		*hold_p;
 	} graph_sObjectDx;
 
 static void graph_object_dx_scan( Graph *graph)
 {
   graph_sObjectDx *od = (graph_sObjectDx *)graph->graph_object_data;
 
-  graph->trend_scan( &od->td);
+  // Reconfigure new scantime
+  if ( od->scan_time_p && 
+       *od->scan_time_p != od->old_scan_time) {
+    if ( graph->scan_time > *od->scan_time_p/200) {
+      graph->scan_time = *od->scan_time_p/200;
+      graph->animation_scan_time = *od->scan_time_p/200;
+    }
+    grow_SetTrendScanTime( od->trend_object, double( *od->scan_time_p/200));
+    od->old_scan_time = *od->scan_time_p;
+    *od->data_scan_time_p = double(*od->scan_time_p)/200;
+  }
+
+  if ( od->hold_button_p && od->hold_p)
+    *od->hold_p = *od->hold_button_p;
 }
 
 
@@ -598,64 +596,39 @@ static void graph_object_dx_close( Graph *graph)
 static int graph_object_dx( Graph *graph, pwr_sAttrRef *arp)
 {
   int sts;
-  grow_tObject object;
   graph_sObjectDx *od;
-  pwr_tClassId classid;
-  pwr_sAttrRef attrref;
-  pwr_sAttrRef sigchancon;
-  pwr_tClassId	chan_classid;
-  char		classname[40];
-  char		chan_name[120];
-  char		cmd[200];
+  double 	scan_time;
+  GeDyn *dyn;
 
   od = (graph_sObjectDx *) calloc( 1, sizeof(graph_sObjectDx));
   graph->graph_object_data = (void *) od;
   graph->graph_object_close = graph_object_dx_close;
 
-  // Display object name in item "ObjectName"
-  sts = gdh_AttrrefToName( arp, od->object_name, 
-		sizeof(od->object_name), cdh_mNName);
+  // Configure trend
+  sts = grow_FindObjectByName( graph->grow->ctx, "ActualValueTrend", 
+		&od->trend_object);
   if ( EVEN(sts)) return sts;
 
-  sts = gdh_GetAttrRefTid( arp, &classid);
-  if ( EVEN(sts)) return sts;
+  // Set scantime variable in local database
+  grow_GetTrendScanTime( od->trend_object, &scan_time);
+  od->scan_time_p = (float *) graph->localdb_ref_or_create( "ScanTime", 
+		pwr_eType_Float32);
+  od->old_scan_time = float( scan_time*200);
+  *od->scan_time_p = od->old_scan_time;
 
-  sts = grow_FindObjectByName( graph->grow->ctx, "ObjectName", &object);
+  // Get Hold button
+  sts = grow_FindObjectByName( graph->grow->ctx, "TrendHold", 
+		&od->hold_button_object);
   if ( ODD(sts))
-  {
-    GeDyn *dyn;
-    grow_GetUserData( object, (void **)&dyn);
-    dyn->set_p( object, (void *) od->object_name);
-  }
+    od->hold_button_p = (int *) graph->localdb_ref_or_create( "TrendHold", 
+		pwr_eType_Boolean);
 
-  sts = graph->trend_init( &od->td, arp);
+  grow_GetUserData( od->trend_object, (void **)&dyn);
+  od->data_scan_time_p = dyn->ref_trend_scantime();
+  od->hold_p = dyn->ref_trend_hold();
 
   // Register scan function
   graph->graph_object_scan = graph_object_dx_scan;
-
-  // Add command to open channel graph
-
-  sts = gdh_ArefANameToAref( arp, "SigChanCon", &attrref);
-  if ( ODD(sts)) {
-    sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&sigchancon, sizeof(sigchancon));
-    if ( EVEN(sts)) return sts;
-
-    sts = gdh_AttrrefToName( &sigchancon, chan_name, sizeof(chan_name), 
-		cdh_mNName);
-    if ( ODD(sts)) {
-      sts = gdh_GetAttrRefTid( &sigchancon, &chan_classid);
-      if ( EVEN(sts)) return sts;
-      sts = gdh_ObjidToName( cdh_ClassIdToObjid( chan_classid),
-		  classname, sizeof(classname), cdh_mName_object);
-      if ( EVEN(sts)) return sts;
-      cdh_ToLower( classname, classname);
-
-      sprintf( cmd, "ope gr pwr_c_%s/ins=%s/nam=\"%s\"", 
-		classname, chan_name, chan_name);
-
-      sts = graph->set_button_command( "OpenChannel", cmd);
-    }
-  }
   return 1;
 }
 
@@ -710,17 +683,6 @@ static int graph_object_chanxx( Graph *graph, pwr_sAttrRef *arp)
 //
 
 typedef struct {
-	pwr_tFloat32	*set_max_show_p;
-	pwr_tFloat32	*set_min_show_p;
-	pwr_tFloat32	set_max_show_old;
-	pwr_tFloat32	set_min_show_old;
-	pwr_tFloat32	*out_max_show_p;
-	pwr_tFloat32	*out_min_show_p;
-	pwr_tFloat32	out_max_show_old;
-	pwr_tFloat32	out_min_show_old;
-	grow_tObject 	set_bar_object;
-	grow_tObject 	proc_bar_object;
-	grow_tObject 	out_bar_object;
 	grow_tObject 	set_trend_object;
 	grow_tObject 	out_trend_object;
 	grow_tObject 	hold_button_object;
@@ -731,54 +693,16 @@ typedef struct {
 	int		*hold_button_p;
 	int		*hold_set_p;
 	int		*hold_out_p;
-	char		pid_alg_str[40];
 	} graph_sObjectPID;
 
 static void graph_object_PID_scan( Graph *graph)
 {
   graph_sObjectPID *od = (graph_sObjectPID *)graph->graph_object_data;
 
-  // Reconfigure bar and trend if limits are changed
-  if ( od->set_max_show_p && od->set_min_show_p && 
-       ( *od->set_max_show_p != od->set_max_show_old ||
-	 *od->set_min_show_p != od->set_min_show_old))
-  {
-    if ( *od->set_max_show_p != *od->set_min_show_p)
-    {
-      grow_SetBarRange( od->set_bar_object, double(*od->set_min_show_p), 
-		double(*od->set_max_show_p));
-      grow_SetBarRange( od->proc_bar_object, double(*od->set_min_show_p), 
-		double(*od->set_max_show_p));
-      grow_SetTrendRangeY( od->set_trend_object, 0, double(*od->set_min_show_p), 
-		double(*od->set_max_show_p));
-      grow_SetTrendRangeY( od->set_trend_object, 1, double(*od->set_min_show_p), 
-		double(*od->set_max_show_p));
-    }
-    od->set_min_show_old = *od->set_min_show_p;
-    od->set_max_show_old = *od->set_max_show_p;
-  }      
-
-  if ( od->out_max_show_p && od->out_min_show_p && 
-       ( *od->out_max_show_p != od->out_max_show_old ||
-	 *od->out_min_show_p != od->out_min_show_old))
-  {
-    if ( *od->out_max_show_p != *od->out_min_show_p)
-    {
-      grow_SetBarRange( od->out_bar_object, double(*od->out_min_show_p), 
-		double(*od->out_max_show_p));
-      grow_SetTrendRangeY( od->out_trend_object, 0, double(*od->out_min_show_p), 
-		double(*od->out_max_show_p));
-    }
-    od->out_min_show_old = *od->out_min_show_p;
-    od->out_max_show_old = *od->out_max_show_p;
-  }      
-
   // Reconfigure new scantime
   if ( od->scan_time_p && 
-       *od->scan_time_p != od->old_scan_time)
-  {
-    if ( graph->scan_time > *od->scan_time_p/200)
-    {
+       *od->scan_time_p != od->old_scan_time) {
+    if ( graph->scan_time > *od->scan_time_p/200) {
       graph->scan_time = *od->scan_time_p/200;
       graph->animation_scan_time = *od->scan_time_p/200;
     }
@@ -789,8 +713,7 @@ static void graph_object_PID_scan( Graph *graph)
     *od->data_out_scan_time_p = double(*od->scan_time_p)/200;
   }
 
-  if ( od->hold_button_p && *od->hold_button_p)
-  {
+  if ( od->hold_button_p && *od->hold_button_p) {
     *od->hold_set_p = !*od->hold_set_p;
     *od->hold_out_p = !*od->hold_out_p;
     *od->hold_button_p = 0;
@@ -809,18 +732,9 @@ static void graph_object_PID_close( Graph *graph)
 
 static int graph_object_PID( Graph *graph, pwr_sAttrRef *arp)
 {
-  pwr_sAttrRef attrref;
   int sts;
-  grow_tObject object;
   graph_sObjectPID *od;
   pwr_tClassId	classid;
-  pwr_tObjid	mode_objid;
-  pwr_tClassId	mode_classid;
-  char		classname[40];
-  char		mode_name[120];
-  char		cmd[200];
-  pwr_tFloat32 	max_limit = 100;
-  pwr_tFloat32 	min_limit = 0;
   double 	scan_time;
   pwr_tObjid    objid = arp->Objid;
 
@@ -828,113 +742,18 @@ static int graph_object_PID( Graph *graph, pwr_sAttrRef *arp)
   graph->graph_object_data = (void *) od;
   graph->graph_object_close = graph_object_PID_close;
 
-  sts = gdh_GetObjectClass( objid, &classid);
-  if ( EVEN(sts)) return sts;
-
-  // Get values for SetMinShow and SetMaxShow
-  sts = gdh_ClassAttrToAttrref( classid, ".SetMaxShow", &attrref);
-  if ( EVEN(sts)) return sts;
-
-  attrref.Objid = objid;
-  sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&max_limit, sizeof(max_limit));
-  if ( EVEN(sts)) return sts;
-
-  sts = gdh_ClassAttrToAttrref( classid, ".SetMinShow", &attrref);
-  if ( EVEN(sts)) return sts;
-
-  attrref.Objid = objid;
-  sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&min_limit, sizeof(min_limit));
-  if ( EVEN(sts)) return sts;
-
-  od->set_max_show_old = max_limit;
-  od->set_min_show_old = min_limit;
-
-  // Configure ProcVal and SetVal bar
-  sts = grow_FindObjectByName( graph->grow->ctx, "SetValBar", 
-		&od->set_bar_object);
-  if ( EVEN(sts)) return sts;
-
-  if ( min_limit != max_limit)
-    grow_SetBarRange( od->set_bar_object, double(min_limit), double(max_limit));
-
-  sts = grow_FindObjectByName( graph->grow->ctx, "ProcValBar", 
-		&od->proc_bar_object);
-  if ( EVEN(sts)) return sts;
-
-  if ( min_limit != max_limit)
-    grow_SetBarRange( od->proc_bar_object, double(min_limit), double(max_limit));
-
-  // Get pointers to max and min value
-  sts = grow_FindObjectByName( graph->grow->ctx, "SetMaxShow", &object);
+  sts = gdh_GetAttrRefTid( arp, &classid);
   if ( EVEN(sts)) return sts;
 
   GeDyn *dyn;
-  grow_GetUserData( object, (void **)&dyn);
-  od->set_max_show_p = (pwr_tFloat32 *) dyn->get_p();
-
-  sts = grow_FindObjectByName( graph->grow->ctx, "SetMinShow", &object);
-  if ( EVEN(sts)) return sts;
-
-  grow_GetUserData( object, (void **)&dyn);
-  od->set_min_show_p = (pwr_tFloat32 *) dyn->get_p();
-
-  // Configure SetVal and ProcVal trend
+  // Configure SetVal and OutVal trend
   sts = grow_FindObjectByName( graph->grow->ctx, "SetValTrend", 
 		&od->set_trend_object);
   if ( EVEN(sts)) return sts;
 
-  if ( min_limit != max_limit)
-  {
-    grow_SetTrendRangeY( od->set_trend_object, 0, double(min_limit), double(max_limit));
-    grow_SetTrendRangeY( od->set_trend_object, 1, double(min_limit), double(max_limit));
-  }
-
-  // Get values for OutMinShow and OutMaxShow
-  sts = gdh_ClassAttrToAttrref( classid, ".OutMaxShow", &attrref);
-  if ( EVEN(sts)) return sts;
-
-  attrref.Objid = objid;
-  sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&max_limit, sizeof(max_limit));
-  if ( EVEN(sts)) return sts;
-
-  sts = gdh_ClassAttrToAttrref( classid, ".OutMinShow", &attrref);
-  if ( EVEN(sts)) return sts;
-
-  attrref.Objid = objid;
-  sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&min_limit, sizeof(min_limit));
-  if ( EVEN(sts)) return sts;
-
-  od->out_max_show_old = max_limit;
-  od->out_min_show_old = min_limit;
-
-  // Configure OutVal bar
-  sts = grow_FindObjectByName( graph->grow->ctx, "OutValBar", 
-		&od->out_bar_object);
-  if ( EVEN(sts)) return sts;
-
-  if ( min_limit != max_limit)
-    grow_SetBarRange( od->out_bar_object, double(min_limit), double(max_limit));
-
-  // Get pointers to max and min value
-  sts = grow_FindObjectByName( graph->grow->ctx, "OutMaxShow", &object);
-  if ( EVEN(sts)) return sts;
-
-  grow_GetUserData( object, (void **)&dyn);
-  od->out_max_show_p = (pwr_tFloat32 *) dyn->get_p();
-
-  sts = grow_FindObjectByName( graph->grow->ctx, "OutMinShow", &object);
-  if ( EVEN(sts)) return sts;
-
-  grow_GetUserData( object, (void **)&dyn);
-  od->out_min_show_p = (pwr_tFloat32 *) dyn->get_p();
-
-  // Configure OutVal trend
   sts = grow_FindObjectByName( graph->grow->ctx, "OutValTrend", 
 		&od->out_trend_object);
   if ( EVEN(sts)) return sts;
-
-  if ( min_limit != max_limit)
-    grow_SetTrendRangeY( od->out_trend_object, 0, double(min_limit), double(max_limit));
 
   // Set scantime variable in local database
   grow_GetTrendScanTime( od->set_trend_object, &scan_time);
@@ -961,409 +780,9 @@ static int graph_object_PID( Graph *graph, pwr_sAttrRef *arp)
   // Register scan function
   graph->graph_object_scan = graph_object_PID_scan;
 
-  // Add command to open mode graph
-
-  sts = gdh_ClassAttrToAttrref( classid, ".ModeObjDid", &attrref);
-  if ( ODD(sts))
-  {
-    attrref.Objid = objid;
-    sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&mode_objid, sizeof(mode_objid));
-    if ( EVEN(sts)) return sts;
-
-    sts = gdh_ObjidToName( mode_objid, mode_name, sizeof(mode_name), 
-		cdh_mNName);
-    if ( ODD(sts))
-    {
-      sts = gdh_GetObjectClass( mode_objid, &mode_classid);
-      if ( EVEN(sts)) return sts;
-      sts = gdh_ObjidToName( cdh_ClassIdToObjid( mode_classid),
-		  classname, sizeof(classname), cdh_mName_object);
-      if ( EVEN(sts)) return sts;
-      cdh_ToLower( classname, classname);
-
-      sprintf( cmd, "ope gr pwr_c_%s/ins=%s/nam=\"%s\"", 
-		classname, mode_name, mode_name);
-
-      sts = graph->set_button_command( "OpenMode", cmd);
-    }
-  }
-
   return 1;
 }
 
-//
-// Object graph for PID
-//
-
-typedef struct {
-	char		object_name[120];
-	pwr_tFloat32	*set_max_show_p;
-	pwr_tFloat32	*set_min_show_p;
-	pwr_tFloat32	set_max_show_old;
-	pwr_tFloat32	set_min_show_old;
-	pwr_tFloat32	*out_max_show_p;
-	pwr_tFloat32	*out_min_show_p;
-	pwr_tFloat32	out_max_show_old;
-	pwr_tFloat32	out_min_show_old;
-	grow_tObject 	set_bar_object;
-	grow_tObject 	proc_bar_object;
-	grow_tObject 	out_bar_object;
-	grow_tObject 	set_slider_object;
-	grow_tObject 	out_slider_object;
-	grow_tObject 	set_slider_button_object;
-	grow_tObject 	out_slider_button_object;
-	int		*set_slider_button_p;
-	int		*set_slider_disable_p;
-	int		*out_slider_button_p;
-	int		*out_slider_disable_p;
-	int		*man_mode_button_p;
-	int		*auto_mode_button_p;
-	int		*cascade_mode_button_p;
-	int		man_mode_old;
-	int		auto_mode_old;
-	int		cascade_mode_old;
-	pwr_tUInt32	*auto_mode_p;
-	pwr_tUInt32	*cascade_mode_p;
-	int		man_mode;
-        pwr_tInt32      acc_mod;
-	} graph_sObjectMode;
-
-	
-static void graph_object_Mode_scan( Graph *graph)
-{
-  graph_sObjectMode *od = (graph_sObjectMode *)graph->graph_object_data;
-  int value;
-  int sts;
-  char attr[120];
-
-  // Calulate value for man mode indicator
-  od->man_mode = !( *od->auto_mode_p || *od->cascade_mode_p); 
-
-  // Reconfigure bar and trend if limits are changed
-  if ( od->set_max_show_p && od->set_min_show_p && 
-       ( *od->set_max_show_p != od->set_max_show_old ||
-	 *od->set_min_show_p != od->set_min_show_old))
-  {
-    if ( *od->set_max_show_p != *od->set_min_show_p)
-    {
-      grow_SetBarRange( od->set_bar_object, double(*od->set_min_show_p), 
-		double(*od->set_max_show_p));
-      grow_SetBarRange( od->proc_bar_object, double(*od->set_min_show_p), 
-		double(*od->set_max_show_p));
-      if ( od->set_slider_object)
-      {
-        GeDyn *dyn;
-        grow_SetSliderRange( od->set_slider_object, double(*od->set_min_show_p), 
-		double(*od->set_max_show_p));
-        grow_GetUserData( od->set_slider_object, (void **)&dyn);
-        dyn->update();
-      }
-    }
-    od->set_min_show_old = *od->set_min_show_p;
-    od->set_max_show_old = *od->set_max_show_p;
-  }      
-
-  if ( od->out_max_show_p && od->out_min_show_p && 
-       ( *od->out_max_show_p != od->out_max_show_old ||
-	 *od->out_min_show_p != od->out_min_show_old))
-  {
-    if ( *od->out_max_show_p != *od->out_min_show_p)
-    {
-      grow_SetBarRange( od->out_bar_object, double(*od->out_min_show_p), 
-		double(*od->out_max_show_p));
-      if ( od->out_slider_object)
-      {
-        GeDyn *dyn;
-        grow_SetSliderRange( od->out_slider_object, double(*od->out_min_show_p), 
-		double(*od->out_max_show_p));
-        grow_GetUserData( od->out_slider_object, (void **)&dyn);
-        dyn->update();
-      }
-    }
-    od->out_min_show_old = *od->out_min_show_p;
-    od->out_max_show_old = *od->out_max_show_p;
-  }      
-
-  if ( od->set_slider_button_p && *od->set_slider_button_p)
-  {
-    *od->set_slider_disable_p = !*od->set_slider_disable_p;
-    *od->set_slider_button_p = 0;
-    if ( !*od->set_slider_disable_p && od->set_slider_button_object)
-      grow_SetObjectColorTone( od->set_slider_button_object, glow_eDrawTone_Yellow);
-    else
-      grow_ResetObjectColorTone( od->set_slider_button_object);
-  }
-  if ( od->out_slider_button_p && *od->out_slider_button_p)
-  {
-    *od->out_slider_disable_p = !*od->out_slider_disable_p;
-    *od->out_slider_button_p = 0;
-    if ( !*od->out_slider_disable_p && od->out_slider_button_object)
-      grow_SetObjectColorTone( od->out_slider_button_object, glow_eDrawTone_Yellow);
-    else
-      grow_ResetObjectColorTone( od->out_slider_button_object);
-  }
-
-  if ( od->man_mode_button_p && *od->man_mode_button_p)
-  {
-    *od->man_mode_button_p = 0;
-
-    if ( od->acc_mod & 1) {
-      strcpy( attr, od->object_name);
-      strcat( attr, ".OpMod");
-      value = 1;
-      sts = gdh_SetObjectInfo( attr, &value, sizeof( value));
-      if ( EVEN(sts)) printf( "Set Mode error\n");
-    }
-  }
-  else if ( od->auto_mode_button_p && *od->auto_mode_button_p)
-  {
-    *od->auto_mode_button_p = 0;
-    if ( od->acc_mod & 2) {
-      strcpy( attr, od->object_name);
-      strcat( attr, ".OpMod");
-      value = 2;
-      sts = gdh_SetObjectInfo( attr, &value, sizeof( value));
-      if ( EVEN(sts)) printf( "Set Mode error\n");
-    }
-  }
-  else if ( od->cascade_mode_button_p && *od->cascade_mode_button_p)
-  {
-    *od->cascade_mode_button_p = 0;
-    if ( od->acc_mod & 4) {
-      strcpy( attr, od->object_name);
-      strcat( attr, ".OpMod");
-      value = 4;
-      sts = gdh_SetObjectInfo( attr, &value, sizeof( value));
-      if ( EVEN(sts)) printf( "Set Mode error\n");
-    }
-  }
-}
-
-static void graph_object_Mode_close( Graph *graph)
-{
-  free( graph->graph_object_data);
-}
-
-static int graph_object_Mode( Graph *graph, pwr_sAttrRef *arp)
-{
-  pwr_sAttrRef attrref;
-  int sts;
-  grow_tObject object;
-  graph_sObjectMode *od;
-  pwr_tClassId	classid;
-  pwr_tObjid	pid_objid;
-  pwr_tClassId	pid_classid;
-  char		classname[40];
-  char		pid_name[120];
-  char		cmd[200];
-  pwr_tFloat32 max_limit = 100;
-  pwr_tFloat32 min_limit = 0;
-  pwr_tObjid    objid = arp->Objid;
-
-  od = (graph_sObjectMode *) calloc( 1, sizeof(graph_sObjectMode));
-  graph->graph_object_data = (void *) od;
-  graph->graph_object_close = graph_object_Mode_close;
-
-  sts = gdh_ObjidToName( objid, od->object_name, sizeof(od->object_name), 
-		cdh_mNName);
-  if ( EVEN(sts)) return sts;
-
-  sts = gdh_GetObjectClass( objid, &classid);
-  if ( EVEN(sts)) return sts;
-
-  // Get values for AccMod
-  sts = gdh_ClassAttrToAttrref( classid, ".AccMod", &attrref);
-  if ( EVEN(sts)) return sts;
-
-  attrref.Objid = objid;
-  sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&od->acc_mod, sizeof(od->acc_mod));
-  if ( EVEN(sts)) return sts;
-
-  // Get values for SetMinShow and SetMaxShow
-  sts = gdh_ClassAttrToAttrref( classid, ".SetMaxShow", &attrref);
-  if ( EVEN(sts)) return sts;
-
-  attrref.Objid = objid;
-  sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&max_limit, sizeof(max_limit));
-  if ( EVEN(sts)) return sts;
-
-  sts = gdh_ClassAttrToAttrref( classid, ".SetMinShow", &attrref);
-  if ( EVEN(sts)) return sts;
-
-  attrref.Objid = objid;
-  sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&min_limit, sizeof(min_limit));
-  if ( EVEN(sts)) return sts;
-
-  od->set_max_show_old = max_limit;
-  od->set_min_show_old = min_limit;
-
-  // Configure ProcVal and SetVal bar
-  sts = grow_FindObjectByName( graph->grow->ctx, "SetValBar", 
-		&od->set_bar_object);
-  if ( EVEN(sts)) return sts;
-
-  if ( min_limit != max_limit)
-    grow_SetBarRange( od->set_bar_object, double(min_limit), double(max_limit));
-
-  sts = grow_FindObjectByName( graph->grow->ctx, "ProcValBar", 
-		&od->proc_bar_object);
-  if ( EVEN(sts)) return sts;
-
-  if ( min_limit != max_limit)
-    grow_SetBarRange( od->proc_bar_object, double(min_limit), double(max_limit));
-
-  // Configure set slider
-  sts = grow_FindObjectByName( graph->grow->ctx, "SetValSlider", 
-		&od->set_slider_object);
-  if ( EVEN(sts)) return sts;
-
-  if ( min_limit != max_limit)
-    grow_SetSliderRange( od->set_slider_object, double(min_limit), double(max_limit));
-
-  GeDyn *dyn;
-  grow_GetUserData( od->set_slider_object, (void **)&dyn);
-  od->set_slider_disable_p = dyn->ref_slider_disabled();
-  if ( od->set_slider_disable_p)
-    *od->set_slider_disable_p = 1;
-
-  // Get pointers to max and min value
-  sts = grow_FindObjectByName( graph->grow->ctx, "SetMaxShow", &object);
-  if ( EVEN(sts)) return sts;
-
-  grow_GetUserData( object, (void **)&dyn);
-  od->set_max_show_p = (pwr_tFloat32 *) dyn->get_p();
-
-  sts = grow_FindObjectByName( graph->grow->ctx, "SetMinShow", &object);
-  if ( EVEN(sts)) return sts;
-
-  grow_GetUserData( object, (void **)&dyn);
-  od->set_min_show_p = (pwr_tFloat32 *) dyn->get_p();
-
-  // Get values for OutMinShow and OutMaxShow
-  sts = gdh_ClassAttrToAttrref( classid, ".OutMaxShow", &attrref);
-  if ( EVEN(sts)) return sts;
-
-  attrref.Objid = objid;
-  sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&max_limit, sizeof(max_limit));
-  if ( EVEN(sts)) return sts;
-
-  sts = gdh_ClassAttrToAttrref( classid, ".OutMinShow", &attrref);
-  if ( EVEN(sts)) return sts;
-
-  attrref.Objid = objid;
-  sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&min_limit, sizeof(min_limit));
-  if ( EVEN(sts)) return sts;
-
-  od->out_max_show_old = max_limit;
-  od->out_min_show_old = min_limit;
-
-  // Configure OutVal bar
-  sts = grow_FindObjectByName( graph->grow->ctx, "OutValBar", 
-		&od->out_bar_object);
-  if ( EVEN(sts)) return sts;
-
-  if ( min_limit != max_limit)
-    grow_SetBarRange( od->out_bar_object, double(min_limit), double(max_limit));
-
-  // Get pointers to max and min value
-  sts = grow_FindObjectByName( graph->grow->ctx, "OutMaxShow", &object);
-  if ( EVEN(sts)) return sts;
-
-  grow_GetUserData( object, (void **)&dyn);
-  od->out_max_show_p = (pwr_tFloat32 *) dyn->get_p();
-
-  sts = grow_FindObjectByName( graph->grow->ctx, "OutMinShow", &object);
-  if ( EVEN(sts)) return sts;
-
-  grow_GetUserData( object, (void **)&dyn);
-  od->out_min_show_p = (pwr_tFloat32 *) dyn->get_p();
-
-  // Configure out slider
-  sts = grow_FindObjectByName( graph->grow->ctx, "OutValSlider", 
-		&od->out_slider_object);
-  if ( EVEN(sts)) return sts;
-
-  if ( min_limit != max_limit)
-    grow_SetSliderRange( od->out_slider_object, double(min_limit), double(max_limit));
-
-  grow_GetUserData( od->out_slider_object, (void **)&dyn);
-  od->out_slider_disable_p = dyn->ref_slider_disabled();
-  if ( od->out_slider_disable_p)
-    *od->out_slider_disable_p = 1;
-
-  // Slider disable buttons  
-  sts = grow_FindObjectByName( graph->grow->ctx, "SetSliderDisable", 
-		&od->set_slider_button_object);
-  if ( EVEN(sts)) return sts;
-  
-  od->set_slider_button_p = (int *) graph->localdb_ref_or_create( "SetSliderDisable", 
-		pwr_eType_Boolean);
-
-  sts = grow_FindObjectByName( graph->grow->ctx, "OutSliderDisable", 
-		&od->out_slider_button_object);
-  if ( EVEN(sts)) return sts;
-  
-  od->out_slider_button_p = (int *) graph->localdb_ref_or_create( "OutSliderDisable", 
-		pwr_eType_Boolean);
-
-  // Find values for Mode buttons
-  od->man_mode_button_p = (int *) graph->localdb_ref_or_create( "ManMode", 
-		pwr_eType_Boolean);
-  od->auto_mode_button_p = (int *) graph->localdb_ref_or_create( "AutoMode", 
-		pwr_eType_Boolean);
-  od->cascade_mode_button_p = (int *) graph->localdb_ref_or_create( "CascadeMode", 
-		pwr_eType_Boolean);
-
-  // Get pointers to AutMode and CascMod for ManMode calculation
-  sts = grow_FindObjectByName( graph->grow->ctx, "AutoInd", &object);
-  if ( EVEN(sts)) return sts;
-
-  grow_GetUserData( object, (void **)&dyn);
-  od->auto_mode_p = (pwr_tUInt32 *) dyn->get_p();
-
-  sts = grow_FindObjectByName( graph->grow->ctx, "CascadeInd", &object);
-  if ( EVEN(sts)) return sts;
-
-  grow_GetUserData( object, (void **)&dyn);
-  od->cascade_mode_p = (pwr_tUInt32 *) dyn->get_p();
-
-  sts = grow_FindObjectByName( graph->grow->ctx, "ManInd", &object);
-  if ( EVEN(sts)) return sts;
-
-  grow_GetUserData( object, (void **)&dyn);
-  dyn->set_p( object, (void *) &od->man_mode);
-
-  // Register scan function
-  graph->graph_object_scan = graph_object_Mode_scan;
-
-  // Add command to open PID graph
-  sts = gdh_ClassAttrToAttrref( classid, ".PidObjDid", &attrref);
-  if ( ODD(sts))
-  {
-    attrref.Objid = objid;
-    sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&pid_objid, sizeof(pid_objid));
-    if ( EVEN(sts)) return sts;
-
-    sts = gdh_ObjidToName( pid_objid, pid_name, sizeof(pid_name), 
-		cdh_mNName);
-    if ( ODD(sts))
-    {
-      sts = gdh_GetObjectClass( pid_objid, &pid_classid);
-      if ( EVEN(sts)) return sts;
-      sts = gdh_ObjidToName( cdh_ClassIdToObjid( pid_classid),
-		  classname, sizeof(classname), cdh_mName_object);
-      if ( EVEN(sts)) return sts;
-      cdh_ToLower( classname, classname);
-
-      sprintf( cmd, "ope gr pwr_c_%s/ins=%s/nam=\"%s\"", 
-		classname, pid_name, pid_name);
-
-      sts = graph->set_button_command( "OpenPID", cmd);
-    }
-  }
-
-  return 1;
-}
 
 int Graph::set_button_command( char *button_name, char *cmd)
 {

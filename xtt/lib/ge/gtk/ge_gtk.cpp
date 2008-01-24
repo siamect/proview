@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.cpp,v 1.12 2007-07-17 12:40:50 claes Exp $
+ * Proview   $Id: ge_gtk.cpp,v 1.13 2008-01-24 09:28:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,6 +28,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector.h>
 #include <ctype.h>
 #include <float.h>
 #include <math.h>
@@ -677,6 +678,16 @@ void GeGtk::activate_export_java(GtkWidget *w, gpointer gectx)
 void GeGtk::activate_export_java_as(GtkWidget *w, gpointer gectx)
 {
   ((Ge *)gectx)->activate_export_java_as();
+}
+
+void GeGtk::activate_export_plcfo(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_export_plcfo();
+}
+
+void GeGtk::activate_export_plcfo_as(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_export_plcfo_as();
 }
 
 void GeGtk::graph_file_selected_cb( void *ctx, char *filename, wow_eFileSelType file_type)
@@ -1440,13 +1451,32 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   g_signal_connect( file_subgraphs, "activate", 
 		    G_CALLBACK(activate_subgraphs), this);
 
-  GtkWidget *file_export_java = gtk_menu_item_new_with_mnemonic( "_Export Java");
+  // Submenu export
+  GtkWidget *file_export_java = gtk_menu_item_new_with_mnemonic( "_Java");
   g_signal_connect( file_export_java, "activate", 
 		    G_CALLBACK(activate_export_java), this);
 
-  GtkWidget *file_export_java_as = gtk_menu_item_new_with_mnemonic( "E_xport Java as...");
+  GtkWidget *file_export_java_as = gtk_menu_item_new_with_mnemonic( "J_ava as...");
   g_signal_connect( file_export_java_as, "activate", 
 		    G_CALLBACK(activate_export_java_as), this);
+
+  GtkWidget *file_export_plcfo = gtk_menu_item_new_with_mnemonic( "_PlcFo");
+  g_signal_connect( file_export_plcfo, "activate", 
+		    G_CALLBACK(activate_export_plcfo ), this);
+
+  GtkWidget *file_export_plcfo_as = gtk_menu_item_new_with_mnemonic( "P_lcFo as...");
+  g_signal_connect( file_export_plcfo_as, "activate", 
+		    G_CALLBACK(activate_export_plcfo_as), this);
+
+  GtkWidget *file_export = gtk_menu_item_new_with_mnemonic( "Export");
+  GtkMenu *file_export_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_export_menu), file_export_java);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_export_menu), file_export_java_as);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_export_menu), file_export_plcfo);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_export_menu), file_export_plcfo_as);
+
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(file_export),
+			    GTK_WIDGET(file_export_menu));
 
   GtkWidget *file_import_graph = gtk_menu_item_new_with_mnemonic( "_Import Graph...");
   g_signal_connect( file_import_graph, "activate", 
@@ -1488,8 +1518,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_save_as);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_graph_attr);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_subgraphs);
-  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_export_java);
-  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_export_java_as);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_export);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_import_graph);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_import_image);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_nextpage);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.h,v 1.10 2007-07-17 12:40:50 claes Exp $
+ * Proview   $Id: ge.h,v 1.11 2008-01-24 09:28:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -182,6 +182,8 @@ class Ge {
   void activate_export_gejava_as();
   void activate_export_java();
   void activate_export_java_as();
+  void activate_export_plcfo();
+  void activate_export_plcfo_as();
   void activate_generate_web();
   void activate_creanextpage();
   void activate_nextpage();
@@ -262,6 +264,7 @@ class Ge {
   static void exit_nosave_cb( Ge *gectx);
   static void export_javabean( Ge *gectx, char *name);
   static void export_gejava( Ge *gectx, char *name);
+  static void export_plcfo( Ge *gectx, char *filename);
   static void rotate( Ge *gectx, char *value_str);
   static int subpalette_get_select( void *gectx, char *text, char *filename);
   static void colorpalette_get_current( void *gectx, glow_eDrawType *fill_color,
