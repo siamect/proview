@@ -99,7 +99,7 @@ find $pkgroot -type d | xargs chmod 755
 
 # control
 cp $pkgsrc/control $pkgroot/DEBIAN
-echo "#!/bin/sh" > $pkgroot/DEBIAN/postinst
+echo "#!/bin/bash" > $pkgroot/DEBIAN/postinst
 echo "ver=\"$ver\"" >> $pkgroot/DEBIAN/postinst
 echo "pwre_target=\"$pwre_target\"" >> $pkgroot/DEBIAN/postinst
 cat $pkgsrc/postinst >> $pkgroot/DEBIAN/postinst
