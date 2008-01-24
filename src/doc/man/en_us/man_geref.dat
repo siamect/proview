@@ -1690,6 +1690,7 @@ DigWarning <t>Boolean   <t>Set yellow fillcolor when the signal is high. <link>G
 DigFlash  <t>Boolean    <t>Flash with specified color when the signal is high. <link>GeDynDigFlash
 AnalogColor <t>Float32 Int32 <t>Set specified fillcolor when the signal <link>GeDynAnalogColor
           <t>            <t>goes beyond or below the specified limit.
+StatusColor <t>Status   <t>Set fillcolor dependent on a status signal severity. <link>GeDynStatusColor
 FillLevel <t>Float32    <t>Changes partly the fillcolor of the component. The level <link>GeDynFillLevel
           <t>           <t>for the borderline of the colored part is determined by
           <t>           <t>the value of the signal.
@@ -1831,6 +1832,25 @@ AnalogColor2.Color    <t><t>Fillcolor for instance number 2.
 AnalogColor2.Limit    <t><t>Limit for instance number 2.
 AnalogColor2.LimitType <t><t>Type of limit for instance number 2.
 AnalogColor3.Color    <t><t>Fillcolor for instance number 3.
+</topic>
+
+<topic>GeDynStatusColor <style>function
+StatusColor
+
+StatusColor is connected to an attribute of type Status. A status is defined by
+a text and a severity, where the severity is one of the categories Success, Info
+Warning, Error and Fatal. The status value can also be 0, NoStatus. StatusColor
+set fillcolor from the status severity.
+
+Success, Info   <t>Original color.
+Warning         <t>Yellow.
+Error           <t>Red.
+Fatal           <t>Flashing red.
+
+<b>Attribute <t><t>Description
+StatusColor.Attribute <t><t>Signal in rtdb of type Status. The color of the component
+                      <t><t>is set from the severity of the status value.
+StatusColor.NoStatusColor <t><t>Color when the status value is 0.
 </topic>
 
 <topic>GeDynDigWarning <style>function
@@ -1996,8 +2016,8 @@ For the following attributes types, some additional format strings are defined.
 %5t<t>Compressed date. Ex 07-05-24
 
 <b>pwr_tDeltaTime
-%t<t>Time with hundredth. Ex 1:23:45
-%1t<t>Time without hundredth. Ex 1:23:45.43
+%t<t>Time with hundredth. Ex 1:23:45.43
+%1t<t>Time without hundredth. Ex 1:23:45
 
 <b>pwr_tEnum
 %d<t>The enumeration value is displayed as in UInt32.
