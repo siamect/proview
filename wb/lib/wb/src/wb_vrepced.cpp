@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepced.cpp,v 1.2 2007-12-21 13:18:01 claes Exp $
+ * Proview   $Id: wb_vrepced.cpp,v 1.3 2008-01-24 09:49:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1121,6 +1121,7 @@ bool wb_vrepced::classeditorCheckMove( wb_orep *o, ldh_eDest dest_code,
       *sts = LDH__CLASSMISPLACED;
       return false;
     }
+    break;
   }
   case pwr_eClass_ClassDef:
   case pwr_eClass_TypeDef:

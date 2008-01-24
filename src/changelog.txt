@@ -56,3 +56,11 @@
 071029 cs  gdh       gdh_ArefDisabled checks if there is a disable attribute.
 071029 cs  trend     DsTrend object attributes with disabled parent wasn't ignored.
 071123 rk  rt        Bugfix in subc_ActivateList. Subscriptions where not refreshed when remote node restarted. Affects rt_neth_acp.
+071129 cs  init      ActualValue pointer and ValueIndex in signals restored after load of backup, i.e. backup of whole signal object is possible.
+071203 cs  trace     Open Subwindow (Ctrl/L) added to menu in trace.
+071205 cs  wbl       Symbols INT_MAX, INT_MIN, FLT_MAX and FLT_MIN added.
+071221 cs  ini       Pwrp_alias-file: conversion to upper case removed, and adapted to multiple attribute segments in object name.
+080114 cs  doc       New chapter Class Editor in Designer's Guide.
+080118 cs  trace     Object description viewed as tooltip in trace. Also $PlcMain and $PlcFo translated and viewed in tooltip.
+080121 cs  pwrb      MoreText added to DSup, ASup and CycleSup, and to mh protocol.
+080122 cs  pwrb      Attributes PresMinLimit and PresMaxLimit added to Ii and Io.

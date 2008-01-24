@@ -88,3 +88,7 @@
 071105 cs  wb        Plc plant navigator, objects without children and object attributes can be opened with Shift/Right key.
 071105 cs  wb        Symbolic references are not cleared by copy.
 071105 cs  wb        Copy with the ingnore switch, replaces unknown classes with $ClassLost.
+071206 cs  wb        Objid stored at compilation of Template Fo windows.
+071221 cs  wb        Opening of buffers from menu in gtk version didn't work.
+070115 cs  wb        DataName not reset when ASup, DsTrend or DsFast object moved.
+070117 cs  wb        Graphmethod 12 added, to read functionobjects drawn in Ge.

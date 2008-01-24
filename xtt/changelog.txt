@@ -66,3 +66,12 @@
 071017 cs  flow      Problems with poor scrolling performance in gtk version fixed.
 071018 cs  xtt       Sensitivity setting of method buttons in xtt toolbar delayed to speed up selection with arrow keys.
 071130 cs  ge        Type graph for UInt32 added.
+071220 cs  glow      Bugfix in java generator for rounded rectangles without fill, which caused exception in java vm.
+080115 cs  glow      Bugfix in tooltip position in window objects.
+080115 cs  xtt       Graphs and other files listed in alphabetical order.
+080116 cs  xtt       Input of national characters in Ge graph didn't work in gtk version.
+080117 cs  ge        Export PlcFo added, drawing of plc function objects in Ge.
+080118 cs  flow      Tooltip added to flow.
+080118 cs  xtt       PlcConnect item in popupmenu for connected functionobject wasn't displayed in gtk version.
+080121 cs  op        Operator window is popped when new alarm is received.
+080123 cs  ge        Subscription initiation optimized in ge graph.
