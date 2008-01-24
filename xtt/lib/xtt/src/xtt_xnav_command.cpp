@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_command.cpp,v 1.32 2007-11-02 07:10:54 claes Exp $
+ * Proview   $Id: xtt_xnav_command.cpp,v 1.33 2008-01-24 09:38:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -73,6 +73,22 @@
 #include "xtt_clog.h"
 #include "xtt_hist.h"
 
+class xnav_file {
+public:
+  xnav_file( char *text, char *file, item_eFileType file_type) : m_file_type(file_type) {
+    strcpy( m_text, text);
+    strcpy( m_file, file);
+  }
+  bool operator<( const xnav_file& x) {
+    return (strcmp( m_text, x.m_text) < 0);
+  }
+
+  char 		m_text[80];
+  pwr_tFileName m_file;
+  item_eFileType m_file_type;
+};
+
+
 #define IF_NOGDH_RETURN \
 if ( !xnav->gbl.gdh_started)\
 {\
@@ -93,6 +109,7 @@ static pwr_tStatus command_sts = 1;
 static void xnav_ev_help_cb( void *xnav, char *key);
 static void xnav_ev_display_in_xnav_cb( void *xnav, pwr_sAttrRef *arp);
 static int xnav_ev_sound_cb( void *xnav, pwr_sAttrRef *arp);
+static void xnav_ev_pop_cb( void *xnav);
 static void xnav_ev_update_info_cb( void *xnav);
 static int xnav_ge_sound_cb( void *xnav, pwr_sAttrRef *arp);
 static void xnav_ge_display_in_xnav_cb( void *xnav, pwr_sAttrRef *arp);
@@ -1599,6 +1616,7 @@ static int	xnav_show_func(	void		*client_data,
       xnav->ev->update_info_cb = xnav_ev_update_info_cb;
       xnav->ev->popup_menu_cb = xnav_popup_menu_cb;
       xnav->ev->sound_cb = xnav_ev_sound_cb;
+      xnav->ev->pop_cb = xnav_ev_pop_cb;
     }
     else
       xnav->ev->map_eve();
@@ -1665,6 +1683,7 @@ static int	xnav_show_func(	void		*client_data,
       xnav->ev->update_info_cb = xnav_ev_update_info_cb;
       xnav->ev->popup_menu_cb = xnav_popup_menu_cb;
       xnav->ev->sound_cb = xnav_ev_sound_cb;
+      xnav->ev->pop_cb = xnav_ev_pop_cb;
     }
     else
       xnav->ev->map_ala();
@@ -1695,6 +1714,7 @@ static int	xnav_show_func(	void		*client_data,
       xnav->ev->update_info_cb = xnav_ev_update_info_cb;
       xnav->ev->popup_menu_cb = xnav_popup_menu_cb;
       xnav->ev->sound_cb = xnav_ev_sound_cb;
+      xnav->ev->pop_cb = xnav_ev_pop_cb;
     }
     else
       xnav->ev->map_blk();
@@ -1884,6 +1904,7 @@ static int	xnav_eventlist_func(	void		*client_data,
       xnav->ev->update_info_cb = xnav_ev_update_info_cb;
       xnav->ev->popup_menu_cb = xnav_popup_menu_cb;
       xnav->ev->sound_cb = xnav_ev_sound_cb;
+      xnav->ev->pop_cb = xnav_ev_pop_cb;
     }
     else
     {
@@ -2250,8 +2271,16 @@ static int	xnav_open_func(	void		*client_data,
 	pwr_tStatus sts;
 	pwr_tTid tid;
 	pwr_tUInt32 size, offs, elem;
-	
-	sts = gdh_GetAttributeCharacteristics( &instance_str[1], &tid, &size,
+	char *instp;
+
+	if ( instance_str[1] == '(' && instance_str[strlen(instance_str)-1] == ')') {
+	  instp = &instance_str[2];
+	  instance_str[strlen(instance_str)-1] = 0;
+	}
+	else
+	  instp = &instance_str[1];
+
+	sts = gdh_GetAttributeCharacteristics( instp, &tid, &size,
 					       &offs, &elem);
 	if ( EVEN(sts)) {
 	  xnav->message('E', "Instance object not found");
@@ -2263,7 +2292,7 @@ static int	xnav_open_func(	void		*client_data,
 	  pwr_tOid oid;
 
 	  // Objid attribute the contains the instance
-	  sts = gdh_GetObjectInfo( &instance_str[1], &oid, sizeof(oid));
+	  sts = gdh_GetObjectInfo( instp, &oid, sizeof(oid));
 	  if ( ODD(sts))
 	    sts = gdh_ObjidToName( oid, instance_str, sizeof(instance_str),
 			       cdh_mName_volumeStrict);
@@ -2277,7 +2306,7 @@ static int	xnav_open_func(	void		*client_data,
 	  pwr_tAttrRef aref;
 
 	  // Objid attribute the contains the instance
-	  sts = gdh_GetObjectInfo( &instance_str[1], &aref, sizeof(aref));
+	  sts = gdh_GetObjectInfo( instp, &aref, sizeof(aref));
 	  if ( ODD(sts))
 	    sts = gdh_AttrrefToName( &aref, instance_str, sizeof(instance_str),
 				     cdh_mName_volumeStrict);
@@ -5571,6 +5600,7 @@ int	XNav::show_file(
   pwr_tFileName	file_spec;
   char		text[80];
   item_eFileType file_type;
+  vector<xnav_file> filelist;
 
   if ( intitle)
     strcpy( title, intitle);
@@ -5602,7 +5632,9 @@ int	XNav::show_file(
   brow_pop();
   brow_SetNodraw( brow->ctx);
   new ItemHeader( brow, "Title", title, NULL, flow_eDest_IntoLast);
-  new ItemFile( brow, "", text, found_file, file_type, NULL, flow_eDest_IntoLast);
+  //new ItemFile( brow, "", text, found_file, file_type, NULL, flow_eDest_IntoLast);
+  xnav_file fi( text, found_file, file_type);
+  filelist.push_back( fi);
 
   while ( ODD(sts))
   {
@@ -5627,10 +5659,29 @@ int	XNav::show_file(
         file_type = item_eFileType_RttLog;
       else
         file_type = item_eFileType_Unknown;
-      new ItemFile( brow, "", text, found_file, file_type, NULL, flow_eDest_IntoLast);
+      // new ItemFile( brow, "", text, found_file, file_type, NULL, flow_eDest_IntoLast);
+
+      xnav_file fi( text, found_file, file_type);
+      filelist.push_back( fi);
     }
   }
   dcli_search_file( filename, found_file, DCLI_DIR_SEARCH_END);
+
+  // Sort
+  for ( unsigned int i = filelist.size() - 1; i > 0; i--) {
+    for ( unsigned int j = 0; j < i; j++) {
+      if ( !(filelist[j] < filelist[j+1])) {
+	xnav_file fi = filelist[j+1];
+	filelist[j+1] = filelist[j];
+	filelist[j] = fi;
+      }
+    }
+  }
+
+  for ( unsigned int i = 0; i < filelist.size(); i++)
+    new ItemFile( brow, "", filelist[i].m_text, filelist[i].m_file, filelist[i].m_file_type, 
+		  NULL, flow_eDest_IntoLast);
+
   brow_ResetNodraw( brow->ctx);
   brow_Redraw( brow->ctx, 0);
 
@@ -6038,6 +6089,12 @@ static int xnav_ev_sound_cb( void *xnav, pwr_sAttrRef *arp)
 static int xnav_ge_sound_cb( void *xnav, pwr_sAttrRef *arp)
 {
   return ((XNav *)xnav)->sound( arp);
+}
+
+static void xnav_ev_pop_cb( void *xnav)
+{
+  if (((XNav *)xnav)->op)
+    ((XNav *)xnav)->op->map();
 }
 
 static void xnav_ev_update_info_cb( void *xnav)
