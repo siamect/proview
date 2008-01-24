@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtable.cpp,v 1.13 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: glow_growtable.cpp,v 1.14 2008-01-24 09:31:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -48,7 +48,7 @@ GrowTable::GrowTable( GrowCtx *glow_ctx, char *name, double x, double y,
 		header_text_drawtype(glow_eDrawType_TextHelvetica), header_text_color(glow_eDrawType_Line),
 		header_row_height(0.8), row_height(0.6), value_size(0), cell_value(0), selected_cell_row(-1),
 		selected_cell_column(-1), select_drawtype( glow_eDrawType_Inherit), 
-		input_focus(0), options(glow_mTableOptions_No)
+		input_focus(0), options(glow_mTableOptions_No), font(glow_eFont_Helvetica)
 {
   for ( int i = 0; i < TABLE_MAX_COL; i++) {
     strcpy( header_text[i], "");
