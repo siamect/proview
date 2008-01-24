@@ -1,6 +1,6 @@
 #! /bin/bash
 #
-# Proview   $Id: pwrp_env.sh,v 1.11 2007-06-01 11:30:01 claes Exp $
+# Proview   $Id: pwrp_env.sh,v 1.12 2008-01-24 09:57:33 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -549,6 +549,7 @@ pwrc_create_func()
     mkdir $proot/common/tmp
     mkdir $proot/common/web
     mkdir $proot/common/log
+    mkdir $proot/common/doc
     mkdir $proot/$platform
     mkdir $proot/$platform/exe
     mkdir $proot/$platform/lib
@@ -858,6 +859,7 @@ pwrc_set_func()
     export pwrp_tmp=$pwrp_root/common/tmp
     export pwrp_web=$pwrp_root/common/web
     export pwrp_log=$pwrp_root/common/log
+    export pwrp_doc=$pwrp_root/common/doc
     export pwrp_exe=$pwrp_root/$platform/exe
     export pwrp_lib=$pwrp_root/$platform/lib
     export pwrp_obj=$pwrp_root/$platform/obj
