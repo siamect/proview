@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_gtk.cpp,v 1.2 2007-05-21 14:28:56 claes Exp $
+ * Proview   $Id: xtt_xnav_gtk.cpp,v 1.3 2008-01-24 09:39:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -319,11 +319,15 @@ GtkWidget *XNavGtk::build_menu( GtkWidget *Parent,
       } 
       else {
         i = *idx;
+	GtkWidget *sub = gtk_menu_item_new_with_label( CoWowGtk::translate_utf8(Items[*idx].Name));
         (*idx)++;	
-        build_menu(Menu, MENU_PULLDOWN, 
-		   Lng::translate( Items[i].Name), MenuUserData, 
-		   Callback, CallbackData, Items, idx);
+        W = build_menu(Menu, MENU_PULLDOWN, 
+		       Lng::translate( Items[i].Name), MenuUserData, 
+		       Callback, CallbackData, Items, idx);
         (*idx)--;
+	gtk_menu_item_set_submenu(GTK_MENU_ITEM(sub), GTK_WIDGET(W));
+	gtk_menu_shell_append(GTK_MENU_SHELL(Menu), sub);
+	gtk_widget_show(sub);
       }
     }
     else {
