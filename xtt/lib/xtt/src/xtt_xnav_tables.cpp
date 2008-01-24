@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_tables.cpp,v 1.15 2007-01-24 12:45:23 claes Exp $
+ * Proview   $Id: xtt_xnav_tables.cpp,v 1.16 2008-01-24 09:40:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -778,7 +778,7 @@ int XNav::show_device()
   strcpy( th.title[th.table_cnt++], "ErrorCount");
   strcpy( th.title[th.table_cnt++], "Process");
   strcpy( th.title[th.table_cnt++], "PlcThread");
-  strcpy( th.title[th.table_cnt++], "Address (oct)");
+  strcpy( th.title[th.table_cnt++], "Address");
   new ItemTableHeader( brow, this, "Title", &th,  NULL, flow_eDest_IntoLast);
 
   // Get the rack objects
@@ -874,7 +874,7 @@ int XNav::show_device()
         sts = gdh_GetObjectInfo( attr_name,
 		(void *) &address, sizeof(address));
         if ( ODD(sts))
-          sprintf( t.elem[t.elem_cnt].fix_str, "%o", address);
+          sprintf( t.elem[t.elem_cnt].fix_str, "%d", address);
         else
           strcpy( t.elem[t.elem_cnt].fix_str, "-");
         t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
