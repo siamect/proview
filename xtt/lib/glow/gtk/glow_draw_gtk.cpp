@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_gtk.cpp,v 1.8 2007-08-20 08:32:54 claes Exp $
+ * Proview   $Id: glow_draw_gtk.cpp,v 1.9 2008-01-24 09:32:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -567,12 +567,13 @@ int GlowDrawGtk::event_handler( GdkEvent event)
       keysym = event.key.keyval;
       if ( (keysym >= 0x020 && keysym <= 0x20ac) ||
 	   (keysym >= 0xFF80 && keysym <= 0xFFB9 && keysym != GDK_KP_Enter && keysym != 0xFF44)) {
-	char buff;
-	gint unival = gdk_keyval_to_unicode( keysym);
-        gchar utfval[6];
-	g_unichar_to_utf8( unival, utfval);
-	// s = g_convert( utfval, 1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
-	buff = utfval[0];
+	unsigned char buff;
+	//gint unival = gdk_keyval_to_unicode( keysym);
+        //gchar utfval[6];
+	//g_unichar_to_utf8( unival, utfval);
+	// char *isoval = g_convert( utfval, 1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+	//buff = utfval[0];
+	buff = event.key.string[0];
 
 	if ( buff >= 0x020)
 	  ctx->event_handler( glow_eEvent_Key_Ascii, 0, 0, (int)buff, 0);
@@ -2509,7 +2510,7 @@ int GlowDrawGtk::print( char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.8 2007-08-20 08:32:54 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.9 2008-01-24 09:32:58 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else
