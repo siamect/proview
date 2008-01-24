@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.h,v 1.42 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_ldh.h,v 1.43 2008-01-24 09:48:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -397,7 +397,7 @@ struct ldh_s_BitDef {
 
 struct ldh_s_ValueDef {
   pwr_tObjName		Name;
-  pwr_sValue		*Value;
+  pwr_sValue		Value;
 };
 
 struct ldh_s_LCB {

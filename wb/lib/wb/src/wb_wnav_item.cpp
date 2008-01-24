@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_item.cpp,v 1.24 2007-08-28 07:30:36 claes Exp $
+ * Proview   $Id: wb_wnav_item.cpp,v 1.25 2008-01-24 09:50:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1259,9 +1259,9 @@ int WItemAttr::open_children( double x, double y)
       brow_SetNodraw( brow->ctx);
 
       for ( int i = 0; i < rows; i++) {
-        new WItemEnum( brow, ldhses, objid, vd[i].Value->Text, attr, 
+        new WItemEnum( brow, ldhses, objid, vd[i].Value.Text, attr, 
 	        type_id, tid,
-		size, flags, body, vd[i].Value->Value, 0, 0,
+		size, flags, body, vd[i].Value.Value, 0, 0,
 		node, flow_eDest_IntoLast);
       }
       free( (char *)vd);
@@ -1350,8 +1350,8 @@ int WItemAttr::update()
       sts = ldh_GetEnumValueDef( ldhses, tid, &vd, &rows);
       if ( ODD(sts)) {
 	for ( int i = 0; i < rows; i++) {
-	  if ( vd[i].Value->Value == *(pwr_tInt32 *)value) {
-	    strcpy( buf, vd[i].Value->Text);
+	  if ( vd[i].Value.Value == *(pwr_tInt32 *)value) {
+	    strcpy( buf, vd[i].Value.Text);
 	    buff = buf;        
 	    len = strlen(buf);
 	    found = true;
@@ -2731,9 +2731,9 @@ int WItemAttrArrayElem::open_children( double x, double y)
       brow_SetNodraw( brow->ctx);
 
       for ( int i = 0; i < rows; i++) {
-        new WItemEnum( brow, ldhses, objid, vd[i].Value->Text, attr, 
+        new WItemEnum( brow, ldhses, objid, vd[i].Value.Text, attr, 
 	        type_id, tid,
-		size, flags, body, vd[i].Value->Value, 1, element,
+		size, flags, body, vd[i].Value.Value, 1, element,
 		node, flow_eDest_IntoLast);
       }
       free( (char *)vd);
@@ -2822,9 +2822,9 @@ int WItemAttrArrayElem::update()
       sts = ldh_GetEnumValueDef( ldhses, tid, &vd, &rows);
       if ( ODD(sts)) {
 	for ( int i = 0; i < rows; i++) {
-	  if ( vd[i].Value->Value == 
+	  if ( vd[i].Value.Value == 
 	       * (pwr_tInt32 *)((char *) value + size * element)) {
-	    strcpy( buf, vd[i].Value->Text);
+	    strcpy( buf, vd[i].Value.Text);
 	    buff = buf;        
 	    len = strlen(buf);
 	    found = true;

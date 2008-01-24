@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.64 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.65 2008-01-24 09:47:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2113,7 +2113,7 @@ ldh_GetEnumValueDef( ldh_tSession session, pwr_tTid tid, ldh_sValueDef **valuede
       if ( !a) return a.sts();
 
       strcpy( (*valuedef)[*rows].Name, valo.name());
-      (*valuedef)[*rows].Value = (pwr_sValue *) a.value();
+      memcpy( &(*valuedef)[*rows].Value, a.value(), sizeof(pwr_sValue));
       (*rows)++;
     }
   }
