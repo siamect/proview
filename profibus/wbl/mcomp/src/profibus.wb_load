@@ -910,7 +910,12 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         !/**
-        ! This info is collected from the gsd-file.
+        ! @Summary Watch dog factor 1.
+        ! The parameters WdFact1 and WdFact2 represent factors for setting
+        ! the watchdog control. The watchdog control in a DP-Slave takes care
+        ! that, if the master fails, the outputs fall in the safe state after
+        ! the expiration of this time.  
+	! t[ms] = 10*WdFact1*WdFact2
         !*/
         Object WdFact1 $Attribute 21 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
@@ -919,7 +924,12 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         !/**
-        ! This info is collected from the gsd-file.
+        ! @Summary Watch dog factor 2.
+        ! The parameters WdFact1 and WdFact2 represent factors for setting
+        ! the watchdog control. The watchdog control in a DP-Slave takes care
+        ! that, if the master fails, the outputs fall in the safe state after
+        ! the expiration of this time.  
+	! t[ms] = 10*WdFact1*WdFact2
         !*/
         Object WdFact2 $Attribute 22 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
@@ -1255,7 +1265,7 @@ Volume Profibus $ClassVolume 0.0.250.7
           Attr StallAction = 1
           Attr ErrorSoftLimit = 15
           Attr ErrorHardLimit = 50
-          Attr WdFact1 = 100
+          Attr WdFact1 = 10
           Attr WdFact2 = 10
         EndBody
       EndObject
