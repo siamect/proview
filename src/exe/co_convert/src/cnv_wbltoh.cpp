@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltoh.cpp,v 1.10 2007-08-24 13:59:54 claes Exp $
+ * Proview   $Id: cnv_wbltoh.cpp,v 1.11 2008-01-24 09:56:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -984,6 +984,7 @@ int CnvWblToH::check_typename( char *type_volume, char *type_name)
 	"pwr_tString16",
 	"pwr_tString8",
 	"pwr_tString1",
+	"pwr_tText256",
 	"pwr_tText1024",
 	"pwr_tURL",
 	"pwr_tOpSysEnum",
