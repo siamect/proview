@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ge_gtk.cpp,v 1.5 2007-06-29 12:52:27 claes Exp $
+ * Proview   $Id: xtt_ge_gtk.cpp,v 1.6 2008-01-24 09:34:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -113,7 +113,11 @@ void XttGeGtk::confirm_cb( void *ge_ctx, void *confirm_object, char *text)
 
   ge->message( ' ', "");
 
-  gtk_label_set_text( GTK_LABEL(((XttGeGtk *)ge)->confirm_label), text);
+  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+
+  gtk_label_set_text( GTK_LABEL(((XttGeGtk *)ge)->confirm_label), textutf8);
+  g_free( textutf8);
+
   ge->confirm_open = 1;
   ge->current_confirm_object = confirm_object;
 }
