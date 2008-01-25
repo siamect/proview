@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: nmps_plc.c,v 1.2 2006-01-26 08:15:11 claes Exp $
+ * Proview   $Id: nmps_plc.c,v 1.3 2008-01-25 14:35:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,6 +34,7 @@
 #include "pwr_nmpsclasses.h"
 #include "rt_gdh.h"
 #include "rt_plc.h"
+#include "rt_nmps_lock.h"
 #include "nmps.h"
 
 #define ODD(a)	(((int)(a) & 1) != 0)
@@ -59,8 +60,7 @@
 
 /*      NMpsCell
 */
-void NMpsCell_init_time(object)
-pwr_sClass_NMpsCell  *object;
+void NMpsCell_init_time( pwr_sClass_NMpsCell  *object)
 {
 	pwr_sAttrRef 	attrref;
 	plc_t_DataInfo	*data_index;
@@ -89,11 +89,13 @@ pwr_sClass_NMpsCell  *object;
 	object->ReloadDone |= NMPS_CELL_INITIALIZED;
 }
 
-void NMpsCell_init(object)
-pwr_sClass_NMpsCell  *object;
+void NMpsCell_init( pwr_sClass_NMpsCell  *object)
 {
 	plc_t_DataInfo	*data_index;
 	int		i;
+	pwr_tStatus	sts;
+
+	nmps_create_lock( &sts);
 
 	if ( !(object->Function & NMPS_CELLFUNC_BACKUP))
 	  NMpsCell_init_time( object);
@@ -137,16 +139,18 @@ void NMpsCell_exec(
 	plc_t_DataInfo	cpy_buf[NMPS_CELL_SIZE];
 #endif
 
-	if ( object->InitTime)
-	{
+	if ( object->InitTime) {
 	  if ( !(object->ReloadDone & NMPS_CELL_RELOADDONE))
 	    return;
-	  else
-	  {
+	  else {
+	    nmps_Lock;
 	    NMpsCell_init_time( object);
 	    object->ReloadDone &= ~NMPS_CELL_RELOADDONE;
 	  }
 	}
+	else
+	  nmps_Lock;
+
 
 	if ( object->FrontNew) object->FrontNew = 0;
 	if ( object->RearNew) object->RearNew = 0;
@@ -417,8 +421,10 @@ void NMpsCell_exec(
 	  {
 	    case NMPS_OPTYPE_FORWARD_FRONT:
 	      /* Insert at front of object front of data */
-	      if ( object->CellFull) return;
-
+	      if ( object->CellFull) {
+		nmps_Unlock;
+		return;
+	      }
 	      if ( object->LastIndex > 0)
 	      {
 #if defined OS_LINUX
@@ -452,6 +458,7 @@ void NMpsCell_exec(
 	      {
 	        /* This it not the correct object */
 	        object->InFlag = 0;
+		nmps_Unlock;
 	        return;
 	      }
 	      object->Data1_Back = 1;
@@ -463,8 +470,10 @@ void NMpsCell_exec(
 	      object->InFlag = 0;
 	      break;
 	    case NMPS_OPTYPE_FORWARD_UNIT:
-	      if ( object->CellFull) return;
-
+	      if ( object->CellFull) {
+		nmps_Unlock;
+		return;
+	      }
 	      if ( object->LastIndex > 0)
 	      {
 #if defined OS_LINUX
@@ -494,8 +503,10 @@ void NMpsCell_exec(
 	      break;
 	    case NMPS_OPTYPE_REVERSE_BACK:
 	      /* Insert at rear of object back of data */
-	      if ( object->CellFull) return;
-
+	      if ( object->CellFull) {
+		nmps_Unlock;
+		return;
+	      }
 	      data_last = (plc_t_DataInfo *) &object->Data1P;
 	      data_last += object->LastIndex;
 	      data_last->DataP = object->InPointer;
@@ -513,8 +524,10 @@ void NMpsCell_exec(
 	      break;
 	    case NMPS_OPTYPE_REVERSE_UNIT:
 	      /* Insert at rear of object all of data */
-	      if ( object->CellFull) return;
-
+	      if ( object->CellFull) {
+		nmps_Unlock;
+		return;
+	      }
 	      data_last = (plc_t_DataInfo *) &object->Data1P;
 	      data_last += object->LastIndex;
 	      data_last->DataP = object->InPointer;
@@ -538,6 +551,7 @@ void NMpsCell_exec(
 	      {
 	        /* This it not the correct object */
 	        object->InFlag = 0;
+		nmps_Unlock;
 	        return;
 	      }
 	      data_last->Data_Front = 1;
@@ -561,6 +575,7 @@ void NMpsCell_exec(
 	      if ( object->LastIndex == 0)
 	      {
 	        object->OutRearFlag = 0;
+		nmps_Unlock;
 		return;
 	      }
 
@@ -606,6 +621,7 @@ void NMpsCell_exec(
 	      if ( object->LastIndex == 0)
 	      {
 	        object->OutFrontFlag = 0;
+		nmps_Unlock;
 		return;
 	      }
 #if defined OS_LINUX
@@ -648,15 +664,20 @@ void NMpsCell_exec(
 	  if (object->Function & NMPS_CELLFUNC_BACKUP) object->BackupNow = 1;
 	}
 	object->NumberOfData = object->LastIndex;
+
+	nmps_Unlock;
 }
+
 
 /*      NMpsStoreCell
 */
-void NMpsStoreCell_init(object)
-pwr_sClass_NMpsStoreCell  *object;
+void NMpsStoreCell_init( pwr_sClass_NMpsStoreCell  *object)
 {
 	plc_t_DataInfo	*data_index;
 	int		i;
+	pwr_tStatus 	sts;
+
+	nmps_create_lock( &sts);
 
 	if ( !(object->Function & NMPS_CELLFUNC_BACKUP))
 	  NMpsCell_init_time( (pwr_sClass_NMpsCell *) object);
@@ -707,10 +728,13 @@ void NMpsStoreCell_exec(
 	    return;
 	  else
 	  {
-	    NMpsCell_init_time( object);
+	    nmps_Lock;
+	    NMpsCell_init_time( (pwr_sClass_NMpsCell *)object);
 	    object->ReloadDone &= ~NMPS_CELL_RELOADDONE;
 	  }
 	}
+	else
+	  nmps_Lock;
 
 	if ( object->FrontNew) object->FrontNew = 0;
 	if ( object->RearNew) object->RearNew = 0;
@@ -1144,8 +1168,10 @@ void NMpsStoreCell_exec(
 	  {
 	    case NMPS_OPTYPE_FORWARD_FRONT:
 	      /* Insert at front of object front of data */
-	      if ( object->CellFull) return;
-
+	      if ( object->CellFull) {
+		nmps_Unlock;
+		return;
+	      }
 	      if ( object->LastIndex > 0)
 	      {
 #if defined OS_LINUX
@@ -1178,6 +1204,7 @@ void NMpsStoreCell_exec(
 	      {
 	        /* This it not the correct object */
 	        object->InFlag = 0;
+		nmps_Unlock;
 	        return;
 	      }
 	      object->Data1_Back = 1;
@@ -1189,8 +1216,10 @@ void NMpsStoreCell_exec(
 	      object->InFlag = 0;
 	      break;
 	    case NMPS_OPTYPE_FORWARD_UNIT:
-	      if ( object->CellFull) return;
-
+	      if ( object->CellFull) {
+		nmps_Unlock;
+		return;
+	      }
 	      if ( object->LastIndex > 0)
 	      {
 #if defined OS_LINUX
@@ -1219,8 +1248,10 @@ void NMpsStoreCell_exec(
 	      break;
 	    case NMPS_OPTYPE_REVERSE_BACK:
 	      /* Insert at rear of object back of data */
-	      if ( object->CellFull) return;
-
+	      if ( object->CellFull) {
+		nmps_Unlock;
+		return;
+	      }
 	      data_last = (plc_t_DataInfo *) &object->Data1P;
 	      data_last += object->LastIndex;
 	      data_last->DataP = object->InPointer;
@@ -1235,8 +1266,10 @@ void NMpsStoreCell_exec(
 	      break;
 	    case NMPS_OPTYPE_REVERSE_UNIT:
 	      /* Insert at rear of object all of data */
-	      if ( object->CellFull) return;
-
+	      if ( object->CellFull) {
+		nmps_Unlock;
+		return;
+	      }
 	      data_last = (plc_t_DataInfo *) &object->Data1P;
 	      data_last += object->LastIndex;
 	      data_last->DataP = object->InPointer;
@@ -1257,6 +1290,7 @@ void NMpsStoreCell_exec(
 	      {
 	        /* This it not the correct object */
 	        object->InFlag = 0;
+		nmps_Unlock;
 	        return;
 	      }
 	      data_last->Data_Front = 1;
@@ -1277,6 +1311,7 @@ void NMpsStoreCell_exec(
 	      if ( object->LastIndex == 0)
 	      {
 	        object->OutRearFlag = 0;
+		nmps_Unlock;
 		return;
 	      }
 
@@ -1344,6 +1379,7 @@ void NMpsStoreCell_exec(
 	      if ( object->LastIndex == 0)
 	      {
 	        object->OutFrontFlag = 0;
+		nmps_Unlock;
 		return;
 	      }
 
@@ -1410,6 +1446,8 @@ void NMpsStoreCell_exec(
 	  if (object->Function & NMPS_CELLFUNC_BACKUP) object->BackupNow = 1;
 	}
 	object->NumberOfData = object->DataSelected;
+
+	nmps_Unlock;
 }
 
 /*_*

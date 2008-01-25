@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: nmps_appl.c,v 1.2 2006-06-08 04:28:12 claes Exp $
+ * Proview   $Id: nmps_appl.c,v 1.3 2008-01-25 14:35:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -57,6 +57,7 @@
 #include "co_cdh.h"
 #include "rt_gdh.h"
 #include "rt_errh.h"
+#include "rt_nmps_lock.h"
 #include "rt_gdh_msg.h"
 #include "rt_hash_msg.h"
 #include "rs_nmps_msg.h"
@@ -112,6 +113,7 @@ typedef struct nmpsappl_s_basectx {
 /*_Globala variabler______________________________________________________*/
 
 static nmpsappl_t_basectx nmpsappl_basectx = 0;
+
 
 /*_Local functions________________________________________________________*/
 
@@ -411,6 +413,9 @@ nmpsappl_MirrorInit(
 		(nmpsappl_t_datainfo *) calloc( applctx->total_cellsize, 
 		sizeof(nmpsappl_t_datainfo));
 
+	nmps_create_lock( &sts);
+	if ( EVEN(sts)) return sts;
+
 	applctx->options = options;
 	
 	return NMPS__SUCCESS;
@@ -509,8 +514,10 @@ nmpsappl_Mirror(
 	for ( i = 0; i < applctx->cellist_count; i++)
 	{
 	  cellist_ptr = applctx->cellist[i];
+	  nmps_Lock;
 	  memcpy( cellist_ptr->tmp_cell, cellist_ptr->object_ptr,
 			cellist_ptr->tmp_size);
+	  nmps_Unlock;
 	}
 
 	applctx->data_count = 0;
