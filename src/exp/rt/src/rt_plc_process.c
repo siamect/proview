@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_process.c,v 1.11 2007-05-16 12:33:55 claes Exp $
+ * Proview   $Id: rt_plc_process.c,v 1.12 2008-01-25 14:31:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -57,6 +57,7 @@
 #include "rt_que.h"
 #include "rt_csup.h"
 #include "rt_ini_event.h"
+#include "rt_nmps_lock.h"
 #include "rt_aproc.h"
 #include "rt_pwr_msg.h"
 
@@ -142,6 +143,7 @@ int main (
 )
 {
   pwr_tStatus	sts;
+  int		event;
   plc_sProcess	*pp;
   uid_t         ruid;
   struct passwd *pwd;
@@ -198,21 +200,33 @@ int main (
 
   errh_SetStatus( PWR__SRUN);
 
-  qcom_WaitAnd(&sts, &pp->eventQ, &qcom_cQini, ini_mEvent_oldPlcStop, qcom_cTmoEternal);
+  qcom_WaitOr(&sts, &pp->eventQ, &qcom_cQini, ini_mEvent_terminate | ini_mEvent_oldPlcStop, qcom_cTmoEternal, &event);
 
-  errh_SetStatus( PWR__SRVTERM);
+  switch ( event) {
+  case ini_mEvent_terminate:
+    errh_SetStatus( PWR__SRVTERM);
 
-  time_Uptime(&sts, &pp->PlcProcess->StopTime, NULL);
-  stop_threads(pp);
-  save_values(pp);
+    stop_threads(pp);
+    clean_all(pp);
+    nmps_delete_lock( &sts);
+    break;
+  case ini_mEvent_oldPlcStop:
+    errh_SetStatus( PWR__SRVTERM);
 
-  qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_oldPlcStopDone);
+    time_Uptime(&sts, &pp->PlcProcess->StopTime, NULL);
+    stop_threads(pp);
+    save_values(pp);
+
+    qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_oldPlcStopDone);
 
 #if defined OS_ELN
-  sts = proc_SetPriority(31);
+    sts = proc_SetPriority(31);
 #endif
 
-  clean_all(pp);
+    clean_all(pp);
+    break;
+  default: ;
+  }
 
   exit(0);
 }
