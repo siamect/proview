@@ -1,3 +1,4 @@
 #060227 cs  -          Changelog created.
 070528 cs  bck       Env variable allowed in backup filename.
 070720 cs  celldisp  Int16 attributes in CellDisp with suffix ##Int16 in attributename.
+080124 cs  applmir   Lock added for NMps cells to avoid inconsistency in application mirror.
