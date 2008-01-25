@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qcom.c,v 1.8 2006-03-20 07:08:05 claes Exp $
+ * Proview   $Id: rt_qcom.c,v 1.9 2008-01-25 14:34:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1142,7 +1142,8 @@ qcom_WaitOr (
   const qcom_sQid	*qid,
   const qcom_sQid	*eid,
   int			mask,
-  int			tmo
+  int			tmo,
+  int		       	*event
 )
 {
   int			result = 0;
@@ -1166,7 +1167,7 @@ qcom_WaitOr (
     qp->or_event = 1;
     qp->mask = mask;
     result = qdb_Wait(sts, qp, ep, tmo);
-
+    *event = ep->mask & mask;
   } qdb_ScopeUnlock;
 
   return result != 0;

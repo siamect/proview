@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qcom.h,v 1.9 2006-03-20 07:08:05 claes Exp $
+ * Proview   $Id: rt_qcom.h,v 1.10 2008-01-25 14:34:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -323,7 +323,8 @@ pwr_tBoolean		qcom_WaitOr (
   const qcom_sQid	*qid,
   const qcom_sQid	*eid,
   int			mask,
-  int			tmo
+  int			tmo,
+  int		       	*event
 );
 
 pwr_tBitMask		qcom_EventMask (
