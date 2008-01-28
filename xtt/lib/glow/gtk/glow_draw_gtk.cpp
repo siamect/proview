@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_gtk.cpp,v 1.9 2008-01-24 09:32:58 claes Exp $
+ * Proview   $Id: glow_draw_gtk.cpp,v 1.10 2008-01-28 07:32:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1891,8 +1891,11 @@ int GlowDrawGtk::get_text_extent( char *text, int len,
   gdk_text_extents( font[font_idx][font_type][idx], text, len,
 	&text_lbearing, &text_rbearing, &text_width, &text_ascent, 
 		    &text_descent);
-  *height = text_ascent + text_descent;
-  *descent = text_descent;
+  //  *height = text_ascent + text_descent;  // text_descent is allways zero...
+  //  *descent = text_descent;
+  text_ascent = int(1.2 * text_ascent);
+  *height = int( 1.3 * text_ascent);
+  *descent = int( 0.3 * text_ascent);
   *width = text_width;
   return 1;
 }
@@ -2510,7 +2513,7 @@ int GlowDrawGtk::print( char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.9 2008-01-24 09:32:58 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.10 2008-01-28 07:32:50 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else
