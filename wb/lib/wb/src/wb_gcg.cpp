@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.cpp,v 1.9 2007-12-21 13:18:01 claes Exp $
+ * Proview   $Id: wb_gcg.cpp,v 1.10 2008-02-04 13:34:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3442,18 +3442,31 @@ static int	gcg_get_outputstring_spec(
 
   switch ( output_node->ln.cid) {
 
-  case pwr_cClass_GetDp: {
+  case pwr_cClass_GetDp:
+  case pwr_cClass_GetAp: {
       
     /**********************************************************
-     *  GETDP
+     *  GetDp, GetAp
      ***********************************************************/	
     
+    pwr_tObjName pname;
+
+    switch ( output_node->ln.cid) {
+    case pwr_cClass_GetDp:
+      strcpy( pname, "DpObject");
+      break;
+    case pwr_cClass_GetAp:
+      strcpy( pname, "ApObject");
+      break;
+    default: ;
+    }
+
     /* Get the objdid stored in the parameter */
     sts = ldh_GetObjectPar( 
 			ldhses,  
 			output_node->ln.oid, 
 			"DevBody",
-			"DpObject",
+			pname,
 			(char **)&attrref, &size); 
     if ( EVEN(sts)) return sts;
 
@@ -3497,67 +3510,6 @@ static int	gcg_get_outputstring_spec(
     sts = gcg_parname_to_pgmname( ldhses, cid, s+1, parstring);
     if ( EVEN(sts)) return sts;
       
-    *parprefix = GCG_PREFIX_REF;
-    *partype = GCG_OTYPE_AREF;
-    return GSX__SPECFOUND;
-  }
-
-  case pwr_cClass_GetAp: {
-    /**********************************************************
-     *  GETAP
-     ***********************************************************/	
-
-    /* Get the objdid stored in the parameter */
-    sts = ldh_GetObjectPar( ldhses,  
-			output_node->ln.oid, 
-			"DevBody",
-			"ApObject",
-			(char **)&attrref, &size); 
-    if ( EVEN(sts)) return sts;
-
-    sts = gcg_replace_ref( gcgctx, attrref, output_node);
-    if ( EVEN(sts)) return sts;
-
-    /* Check that this is objdid of an existing object */
-    sts = ldh_GetAttrRefOrigTid( ldhses, attrref, &cid);
-    if ( EVEN(sts)) {
-      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-      free((char *) attrref);
-      return GSX__NEXTPAR;
-    }
-
-    /* Get the attribute name of last segment */
-    sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_ArefVol, 
-			     &name_p, &size);
-    if ( EVEN(sts)) {
-      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-      free((char *) attrref);
-      return GSX__NEXTPAR;
-    }
-    free((char *) attrref);
-
-    strcpy( aname, name_p);
-    if ( (s = strrchr( aname, '.')) == 0) { 
-      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-      return GSX__NEXTPAR;
-    }
-
-    *s = 0;
-    sts = ldh_NameToAttrRef( ldhses, aname, parattrref);
-    if ( EVEN(sts)) {
-      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-      return GSX__NEXTPAR;
-    }
-
-    sts = ldh_GetAttrRefOrigTid( ldhses, parattrref, &cid);
-    if ( EVEN(sts)) {
-      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-      return GSX__NEXTPAR;
-    }
-
-    sts = gcg_parname_to_pgmname( ldhses, cid, s+1, parstring);
-    if ( EVEN(sts)) return sts;
-
     *parprefix = GCG_PREFIX_REF;
     *partype = GCG_OTYPE_AREF;
     return GSX__SPECFOUND;
@@ -5057,16 +5009,16 @@ static pwr_tStatus gcg_read_volume_plclist(
 	pwr_tFileName	fullfilename;
 	char		type[20];
 	int		line_count = 0;
-	char		line[160];
-	char		objid_str[20];
-	char		thread_str[20];
+	char		line[256];
+	char		objid_str[40];
+	char		thread_str[40];
 	float		scantime;
 	int		executeorder;
 	int		prio;
 	int		sts;
 	gcg_t_plclist 	*plclist_pointer;
 	gcg_t_threadlist *threadlist_pointer;
-	char		name[120];
+	pwr_tOName     	name;
 
 	sprintf( filenames, "%s%s", gcgmv_filenames[0], 
 		vldh_VolumeIdToStr( volid));
@@ -11135,6 +11087,7 @@ int	gcg_comp_m37( gcg_ctx gcgctx, vldh_t_node node)
 	unsigned long		point = 0;
 	char			*wholeobject;
 	pwr_sAttrRef		pararef;
+	pwr_tCid		conn_cid;
 
 	ldhses = (node->hn.wind)->hw.ldhses;  
 
@@ -11146,15 +11099,14 @@ int	gcg_comp_m37( gcg_ctx gcgctx, vldh_t_node node)
 	/* Get the connected object and parameter */
 	sts = gcg_get_connected_par_close( node, point, &conn_node, conn_obj,
 		conn_par);
-	if ( sts == GSX__NOTCON)
-	{
+	if ( sts == GSX__NOTCON) {
 	  /* Point visible but not connected, errormessage */
 	  gcg_error_msg( gcgctx, GSX__NOTCON, node);  
 	  strcpy( parname, "");
 	}
-	else if ((sts == GSX__NEXTPAR) || ( sts == GSX__SWINDERR)
-		|| (sts == GSX__REFPAR))
-	{
+	else if (sts == GSX__NEXTPAR || 
+		 sts == GSX__SWINDERR ||
+		 sts == GSX__REFPAR) {
 	  /* No backup on this parameter */
 	  gcg_error_msg( gcgctx, GSX__NOBACKUP, node);  
 	  strcpy( parname, "");
@@ -11164,15 +11116,58 @@ int	gcg_comp_m37( gcg_ctx gcgctx, vldh_t_node node)
 	  gcg_error_msg( gcgctx, GSX__CONBACKUP, node);  
 	  strcpy( parname, "");
 	}
-	else
-	{
+	else {
 	  strcpy( parname, conn_obj);
-	  if ( !(*wholeobject))
-	  {
+	  if ( !(*wholeobject)) {
 	    strcat( parname, ".");
 	    strcat( parname, conn_par);
 	  }
 	}	
+
+	sts = ldh_GetObjectClass( ldhses, conn_node->ln.oid, &conn_cid);
+	if ( EVEN(sts)) {
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);
+	  return GSX__NEXTPAR;
+	}
+
+	switch( conn_cid) {
+	case pwr_cClass_GetIp: {
+	  // Get the referenced object
+	  pwr_tAttrRef *attrref;
+	  pwr_tAttrRef aref;
+	  char *name_p, *s;
+
+	  sts = ldh_GetObjectPar( ldhses, conn_node->ln.oid, 
+				  "DevBody", "IpObject",
+				  (char **)&attrref, &size); 
+	  if ( EVEN(sts)) return sts;
+
+	  aref = *attrref;
+	  free((char *) attrref);
+
+	  sts = gcg_replace_ref( gcgctx, &aref, conn_node);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = ldh_AttrRefToName( ldhses, &aref, ldh_eName_ArefVol, 
+				   &name_p, &size);
+	  if ( EVEN(sts)) {
+	    gcg_error_msg( gcgctx, GSX__REFOBJ, conn_node);
+	    return GSX__NEXTPAR;
+	  }
+
+	  strcpy( parname, name_p);
+	  if ( *wholeobject) {
+	    if ( (s = strrchr( parname, '.')) == 0) { 
+	      gcg_error_msg( gcgctx, GSX__REFOBJ, conn_node);  
+	      return GSX__NEXTPAR;
+	    }
+	    *s = 0;
+	  }
+	  break;
+	}
+	default: ;
+	}
+
 	free((char *) wholeobject);
 
 	sts = ldh_NameToAttrRef( ldhses, parname, &pararef);
