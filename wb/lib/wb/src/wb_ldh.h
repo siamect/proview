@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.h,v 1.43 2008-01-24 09:48:28 claes Exp $
+ * Proview   $Id: wb_ldh.h,v 1.44 2008-02-04 13:34:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -548,11 +548,13 @@ pwr_tStatus ldh_CreateObject (
 
 pwr_tStatus
 ldh_CreateVolume (
-  ldh_tWorkbench    Workbench,
-  ldh_tSession   *Session,
-  pwr_tVolumeId	    Volume,
-  char		    *Name,
-  pwr_tClassId	    Class
+  ldh_tWorkbench    workbench,
+  ldh_tSession      *session,
+  pwr_tVid	    vid,
+  char		    *name,
+  pwr_tClassId	    cid,
+  ldh_eVolRep	    volrep,
+  char		    *server
 );
 
 pwr_tStatus ldh_Cut (

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.cpp,v 1.9 2007-12-21 13:18:01 claes Exp $
+ * Proview   $Id: wb_lfu.cpp,v 1.10 2008-02-04 13:34:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -52,9 +52,10 @@
 #include "wb.h"
 #include "wb_gcg.h"
 #include "wb_trv.h"
+#include "wb_lfu.h"
 #include "co_dbs.h"
 #include "co_msgwindow.h"
-#include "wb_lfu.h"
+#include "co_cnf.h"
 
 #include "wb_env.h"
 #include "wb_erep.h"
@@ -85,6 +86,8 @@ typedef struct {
   char name[32];
   pwr_tVid vid;
   pwr_tCid cid;
+  ldh_eVolRep volrep;
+  char server[80];
   ldh_tSesContext ldhses;
 } lfu_sCreaDb;
 
@@ -897,55 +900,136 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  case pwr_cClass_SubVolumeConfig :
 	  case pwr_cClass_SharedVolumeConfig : {
 	    /* Check if the databas is created */
-	    sprintf( filename, "$pwrp_db/%s.db/info", volume_name);
-	    cdh_ToLower( filename, filename);
-	    dcli_translate_filename( filename, filename);
-	    sts = dcli_search_file( filename, found_file, DCLI_DIR_SEARCH_INIT);
-	    dcli_search_file( filename, found_file, DCLI_DIR_SEARCH_END);
-	    if (EVEN(sts)) {
-	      if ( wow) {
-		lfu_sCreaDb *data;
-		data = (lfu_sCreaDb *) calloc( 1, sizeof(*data));
-		strcpy( data->name, volumelist_ptr->volume_name);
-		data->vid = volumelist_ptr->volume_id;
-		switch ( cid) {
-	      	case pwr_cClass_RootVolumeConfig:
-		  data->cid = pwr_eClass_RootVolume;
-		  break;
-	      	case pwr_cClass_SubVolumeConfig:
-		  data->cid = pwr_eClass_SubVolume;
-		  break;
-	      	case pwr_cClass_SharedVolumeConfig:
-		  data->cid = pwr_eClass_SharedVolume;
-		  break;
-		default: ;
-		}
-		data->ldhses = ldhses;
-		
-		sprintf( text, "   Volume '%s' is not yet created.\n \n\
+	    int *dbenum_p = 0;
+	    char *server_p = 0;
+	    ldh_eVolRep volrep;
+	    pwr_tCid vcid;
+	    pwr_tString40 server = "";
+	    
+	    switch ( cid) {
+	    case pwr_cClass_RootVolumeConfig:
+	      vcid = pwr_eClass_RootVolume;
+	      break;
+	    case pwr_cClass_SubVolumeConfig:
+	      vcid = pwr_eClass_SubVolume;
+	      break;
+	    case pwr_cClass_SharedVolumeConfig:
+	      vcid = pwr_eClass_SharedVolume;
+	      break;
+	    default: ;
+	    }
+
+	    sts = ldh_GetObjectPar( ldhses, envobjid, "RtBody",
+				    "Database", (char **) &dbenum_p, &size);
+	    if ( EVEN(sts)) return sts;
+
+	    if ( *dbenum_p == pwr_eVolumeDatabaseEnum_BerkeleyDb)
+	      volrep = ldh_eVolRep_Db;
+	    else if ( *dbenum_p == pwr_eVolumeDatabaseEnum_MySql)
+	      volrep = ldh_eVolRep_Dbms;
+	    else {
+	      free( dbenum_p);
+	      break;
+	    }
+
+	    free( dbenum_p);
+
+	    if ( volrep == ldh_eVolRep_Db) {
+	      sprintf( filename, "$pwrp_db/%s.db/info", volume_name);
+	      cdh_ToLower( filename, filename);
+	      dcli_translate_filename( filename, filename);
+	      sts = dcli_search_file( filename, found_file, DCLI_DIR_SEARCH_INIT);
+	      dcli_search_file( filename, found_file, DCLI_DIR_SEARCH_END);
+	      if (EVEN(sts)) {
+		if ( wow) {
+		  lfu_sCreaDb *data;
+		  data = (lfu_sCreaDb *) calloc( 1, sizeof(*data));
+		  strcpy( data->name, volumelist_ptr->volume_name);
+		  data->vid = volumelist_ptr->volume_id;
+		  data->cid = vcid;
+		  data->ldhses = ldhses;
+		  data->volrep = volrep;
+		  strcpy( data->server, "");
+
+		  sprintf( text, "   Volume '%s' is not yet created.\n \n\
    Do you want to create this volume.\n",
-			 volume_name);
-		wow->DisplayQuestion( NULL,
-				     "Create volume", text,
-				     lfu_creadb_qb_yes, NULL, (void *)data);
+			   volume_name);
+		  wow->DisplayQuestion( NULL,
+					"Create volume", text,
+					lfu_creadb_qb_yes, NULL, (void *)data);
+		}
+		else {
+		  char msg[200];
+		  sprintf( msg, "Error, Volume '%s' is not yet created.", 
+			   volume_name);
+		  MsgWindow::message( 'E', msg, msgw_ePop_Default);
+		}
 	      }
-	      else {
-		char msg[200];
-		sprintf( msg, "Error, Volume '%s' is not yet created.", 
-			 volume_name);
-		MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	    }
+	    if ( volrep == ldh_eVolRep_Dbms) {
+	      sts = ldh_GetObjectPar( ldhses, envobjid, "RtBody",
+				      "Server", (char **) &server_p, &size);
+	      if ( EVEN(sts)) return sts;
+
+	      strcpy( server, server_p);
+	      free( server_p);
+
+	      sprintf( filename, "$pwrp_db/%s.dbms/connection.dmsql", volume_name);
+	      cdh_ToLower( filename, filename);
+	      dcli_translate_filename( filename, filename);
+	      sts = dcli_search_file( filename, found_file, DCLI_DIR_SEARCH_INIT);
+	      dcli_search_file( filename, found_file, DCLI_DIR_SEARCH_END);
+	      if (EVEN(sts)) {
+		if ( wow) {
+		  lfu_sCreaDb *data;
+		  data = (lfu_sCreaDb *) calloc( 1, sizeof(*data));
+		  strcpy( data->name, volumelist_ptr->volume_name);
+		  data->vid = volumelist_ptr->volume_id;
+		  data->cid = vcid;
+		  data->ldhses = ldhses;
+		  data->volrep = volrep;
+		  strcpy( data->server, server);
+		  
+		  sprintf( text, "   Volume '%s' is not yet created.\n \n\
+   Do you want to create this volume.\n",
+			   volume_name);
+		  wow->DisplayQuestion( NULL,
+					"Create volume", text,
+					lfu_creadb_qb_yes, NULL, (void *)data);
+		}
+		else {
+		  char msg[200];
+		  sprintf( msg, "Error, Volume '%s' is not yet created.", 
+			   volume_name);
+		  MsgWindow::message( 'E', msg, msgw_ePop_Default);
+		}
 	      }
 	    }
 	    break;
 	  }
 	  case pwr_cClass_ClassVolumeConfig : {
-	    int *dbenum = 0;
-
+	    int *dbenum_p = 0;
+	    char *server_p = 0;
+	    ldh_eVolRep volrep;
+	    pwr_tString40 server = "";
+	    
 	    sts = ldh_GetObjectPar( ldhses, envobjid, "RtBody",
-				"Database", (char **) &dbenum, &size);
+				"Database", (char **) &dbenum_p, &size);
 	    if ( EVEN(sts)) return sts;
 
-	    if ( *dbenum == 1) {
+	    if ( *dbenum_p == pwr_eClassVolumeDatabaseEnum_WbLoad)
+	      volrep = ldh_eVolRep_Wbl;
+	    if ( *dbenum_p == pwr_eClassVolumeDatabaseEnum_BerkeleyDb)
+	      volrep = ldh_eVolRep_Db;
+	    else if ( *dbenum_p == pwr_eClassVolumeDatabaseEnum_MySql)
+	      volrep = ldh_eVolRep_Dbms;
+	    else {
+	      free( dbenum_p);
+	      break;
+	    }
+	    free( dbenum_p);
+
+	    if ( volrep == ldh_eVolRep_Db) {
 	      /* Check if the databas is created */
 	      sprintf( filename, "$pwrp_db/%s.db/info", volume_name);
 	      cdh_ToLower( filename, filename);
@@ -960,6 +1044,8 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		  data->vid = volumelist_ptr->volume_id;
 		  data->cid = pwr_eClass_ClassVolume;
 		  data->ldhses = ldhses;
+		  data->volrep = volrep;
+		  strcpy( data->server, "");
 		
 		  sprintf( text, "   ClassVolume '%s' is not yet created.\n \n\
    Do you want to create this volume.\n",
@@ -970,10 +1056,41 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		}
 	      }
 	    }
-	    else if ( *dbenum == 2) {
+	    else if ( volrep == ldh_eVolRep_Dbms) {
 	      // MySql...
+	      sts = ldh_GetObjectPar( ldhses, envobjid, "RtBody",
+				      "Server", (char **) &server_p, &size);
+	      if ( EVEN(sts)) return sts;
+
+	      strcpy( server, server_p);
+	      free( server_p);
+
+	      sprintf( filename, "$pwrp_db/%s.dbms/connection.dmsql", volume_name);
+	      cdh_ToLower( filename, filename);
+	      dcli_translate_filename( filename, filename);
+	      sts = dcli_search_file( filename, found_file, DCLI_DIR_SEARCH_INIT);
+	      dcli_search_file( filename, found_file, DCLI_DIR_SEARCH_END);
+	      if (EVEN(sts)) {
+		if ( wow) {
+		  lfu_sCreaDb *data;
+		  data = (lfu_sCreaDb *) calloc( 1, sizeof(*data));
+		  strcpy( data->name, volumelist_ptr->volume_name);
+		  data->vid = volumelist_ptr->volume_id;
+		  data->cid = pwr_eClass_ClassVolume;
+		  data->ldhses = ldhses;
+		  data->volrep = volrep;
+		  strcpy( data->server, server);
+		
+		  sprintf( text, "   ClassVolume '%s' is not yet created.\n \n\
+   Do you want to create this volume.\n",
+			   volume_name);
+		  wow->DisplayQuestion( NULL,
+				     "Create Classvolume", text,
+				     lfu_creadb_qb_yes, NULL, (void *)data);
+		}
+	      }
 	    }
-	    else {
+	    else if ( volrep == ldh_eVolRep_Wbl) {
 	      // Check wbload-file...
 	      FILE *wblfile;
 	    
@@ -995,7 +1112,6 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		fclose( wblfile);
 	      }
 	    }
-	    free( dbenum);
 	    break;
 	  }
 	  }
@@ -2054,7 +2170,8 @@ static void lfu_creadb_qb_yes( void *ctx, void *d)
     
   try {
     wb_env env = sp->env();
-    wb_volume vdb = env.createVolume( data->vid, data->cid, data->name, false);
+    wb_volume vdb = env.createVolume( data->vid, data->cid, data->name, data->volrep,
+				      data->server, false);
   }
   catch ( wb_error &e) {
     MsgWindow::message( 'E', "Unable to create volume", msgw_ePop_Default);
@@ -2323,9 +2440,132 @@ pwr_tStatus lfu_GetVolume(     	char *filename,
   return 	LFU__SUCCESS;
 }
 
+pwr_tStatus lfu_GetVolumeCnf( char *name, pwr_tVid *vid, pwr_tCid *cid, ldh_eVolRep *volrep,
+			      char *server)
+{
+  pwr_tStatus sts;
+  pwr_tFileName fname;
+  char line[200];
+  char vol_array[7][80];
 
+  strcpy( fname, load_cNameVolumeList);
+  dcli_translate_filename( fname, fname);
+      
+  *volrep = ldh_eVolRep_Db;
 
+  ifstream fpm( fname, ios::in);
+  if ( fpm) {
+  
+    while ( fpm.getline( line, sizeof(line))) {
+      int nr;
+      
+      if ( line[0] == '#')
+	continue;
+      
+      nr = dcli_parse( line, " ", "", (char *)vol_array,
+		       sizeof(vol_array)/sizeof(vol_array[0]),
+		       sizeof(vol_array[0]), 0);
+      
+      sts =  cdh_StringToVolumeId( vol_array[1], vid);
+      if ( EVEN(sts)) return sts;
 
+      if ( cdh_NoCaseStrcmp( vol_array[2], "RootVolume") == 0)
+	*cid = pwr_eClass_RootVolume;
+      else if ( cdh_NoCaseStrcmp( vol_array[2], "SubVolume") == 0)
+	*cid = pwr_eClass_SubVolume;
+      else if ( cdh_NoCaseStrcmp( vol_array[2], "SharedVolume") == 0)
+	*cid = pwr_eClass_SharedVolume;
+      else if ( cdh_NoCaseStrcmp( vol_array[2], "ClassVolume") == 0)
+	*cid = pwr_eClass_ClassVolume;
+
+      switch ( *cid) {
+      case pwr_eClass_RootVolume:
+      case pwr_eClass_SubVolume:
+      case pwr_eClass_SharedVolume:
+ 	*volrep = ldh_eVolRep_Db;
+	if ( cdh_NoCaseStrcmp( vol_array[0], name) == 0) {
+	  if ( nr > 4 && strcmp( vol_array[4], "1") == 0) {
+	    *volrep = ldh_eVolRep_Dbms;
+	    if ( nr > 5)
+	      strcpy( server, vol_array[5]);
+	  }
+	  break;
+	}
+      case pwr_eClass_ClassVolume:
+ 	*volrep = ldh_eVolRep_Wbl;
+	if ( cdh_NoCaseStrcmp( vol_array[0], name) == 0) {
+	  if ( nr > 4 && strcmp( vol_array[4], "1") == 0)
+	    *volrep = ldh_eVolRep_Db;
+	  else if ( nr > 4 && strcmp( vol_array[4], "2") == 0) {
+	    *volrep = ldh_eVolRep_Dbms;
+	    if ( nr > 5)
+	      strcpy( server, vol_array[5]);
+	  }
+	  break;
+	}
+      default: ;
+      }
+    }
+    fpm.close();
+  }
+  return LFU__SUCCESS;
+}
+
+pwr_tStatus lfu_ParseDbmsServer( char *server, char *user, char *password, 
+				 unsigned int *port, char *host)
+{
+  if ( strcmp( server, "") == 0) {
+    if ( !cnf_get_value( "mysqlServer", host)) {
+      printf( "** mysql Server not defined\n");
+      return LDH__NOSERVER;
+    }
+  }
+
+  // Parse server string: username:password@port:host
+  char lhost[80];
+  char luser[80] = "pwrp";
+  char lpassword[80] = "";
+  char str1[2][80];
+  char str2[2][80];
+  int nr;
+      
+  nr = dcli_parse( server, "@", "", (char *)str1, 
+		   sizeof( str1) / sizeof( str1[0]), sizeof( str1[0]), 0);
+
+  if ( nr == 1)
+    strncpy( lhost, server, sizeof(lhost));
+  else if ( nr >= 2) {
+    strncpy( lhost, str1[1], sizeof(lhost));
+    
+    nr = dcli_parse( str1[0], ":", "", (char *)str2, 
+		     sizeof( str2) / sizeof( str2[0]), sizeof( str2[0]), 0);
+	
+    if ( nr == 1)
+      strncpy( luser, str1[0], sizeof(luser));
+    else if ( nr >= 2) {
+      strncpy( luser, str2[0], sizeof(luser));
+      strncpy( lpassword, str2[1], sizeof(lpassword));
+    }
+  }
+  nr = dcli_parse( host, ":", "", (char *)str1, 
+		   sizeof( str1) / sizeof( str1[0]), sizeof( str1[0]), 0);
+  if ( nr >= 2) {
+    nr = sscanf( str1[0], "%u", port);
+    if ( nr != 1) {
+      printf("** Syntax error in mysql Server port\n");
+      return LDH__NOSERVER;
+    }
+    strncpy( lhost, str1[1], sizeof(lhost));
+  }
+
+  if ( strcmp( host, "localhost") == 0)
+    strcpy( lhost, "");
+
+  strcpy( host, lhost);
+  strcpy( user, luser);
+  strcpy( password, lpassword);
+  return LFU__SUCCESS;
+}
 
 
 

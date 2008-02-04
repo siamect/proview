@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_erep.cpp,v 1.53 2007-12-21 13:18:01 claes Exp $
+ * Proview   $Id: wb_erep.cpp,v 1.54 2008-02-04 13:34:49 claes Exp $
  * Copyright (C) 2005 SSAB OxelÃ¶sund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,7 +26,7 @@
 #include "wb_vrepwbl.h"
 #include "wb_vrepdbs.h"
 #include "wb_vrepdb.h"
-//#include "wb_vrepdbms.h"
+#include "wb_vrepdbms.h"
 #include "wb_vrepced.h"
 #include "wb_vrepref.h"
 #include "wb_vrepext.h"
@@ -36,9 +36,13 @@
 #include "wb_adrep.h"
 #include "wb_name.h"
 #include "wb_dblock.h"
+#include "wb_dbms.h"
+#include "wb_utl_api.h"
+#include "wb_lfu.h"
 #include "wb_ldh_msg.h"
 #include "co_msgwindow.h"
 #include "co_wow.h"
+#include "co_cnf.h"
 
 extern "C" {
 #include "co_dcli.h"
@@ -701,7 +705,10 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
       strcpy( vname, "$pwrp_db/");
       strcat( vname, vol_array[0]);
       cdh_ToLower( vname, vname);
-      strcat( vname, ".db");
+      if ( nr >= 5 && vol_array[4][0] == '1')
+	strcat( vname, ".dbms");
+      else
+	strcat( vname, ".db");
       dcli_translate_filename( vname, vname);
 
       sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
@@ -765,12 +772,21 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
 	}
 	else {
 	  // Open db
-	  wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
-	  vrepdb->name(vol_array[0]);
-	  addDb( &sts, vrepdb);
-	  MsgWindow::message( 'I', "Database opened", vname);
-	  vol_cnt++;
-        }
+	  if ( nr >= 5 && vol_array[4][0] == '1') {
+	    wb_vrepdbms *vrepdbms = new wb_vrepdbms( this, vname);
+	    vrepdbms->name(vol_array[0]);
+	    addDb( &sts, vrepdbms);
+	    MsgWindow::message( 'I', "Database opened", vname);
+	    vol_cnt++;
+	  }
+	  else {
+	    wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
+	    vrepdb->name(vol_array[0]);
+	    addDb( &sts, vrepdb);
+	    MsgWindow::message( 'I', "Database opened", vname);
+	    vol_cnt++;
+	  }
+	}
       }
     }
   }
@@ -807,19 +823,24 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
       MsgWindow::message( 'E', msg, msgw_ePop_No);
 
       CoWow *wow = MsgWindow::get_wow();
-      int res = wow->CreateModalDialog( "Database Locked", msg, "Exit", 0, "Remove lock", "$pwr_exe/wtt_padlock.png");
-      switch( res) {
-      case wow_eModalDialogReturn_NYI:
-      case wow_eModalDialogReturn_Button2:
-      case wow_eModalDialogReturn_Button1:
-      case wow_eModalDialogReturn_Deleted:
+      if ( wow) {
+	int res = wow->CreateModalDialog( "Database Locked", msg, "Exit", 0, "Remove lock", "$pwr_exe/wtt_padlock.png");
+	switch( res) {
+	case wow_eModalDialogReturn_NYI:
+	case wow_eModalDialogReturn_Button2:
+	case wow_eModalDialogReturn_Button1:
+	case wow_eModalDialogReturn_Deleted:
+	  exit(0);
+	case wow_eModalDialogReturn_Button3:
+	  // Remove lock
+	  wb_dblock::dbunlock(vname);
+	  break;
+	}    
+      }
+      else
 	exit(0);
-      case wow_eModalDialogReturn_Button3:
-	// Remove lock
-	wb_dblock::dbunlock(vname);
-	break;
-      }    
     }
+      
 
     wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
     vrepdb->name("directory");
@@ -1018,26 +1039,67 @@ int wb_erep::nextVolatileVid( pwr_tStatus *sts, char *name)
 }
 
 wb_vrep *wb_erep::createVolume(pwr_tStatus *sts, pwr_tVid vid, pwr_tCid cid,
-			      const char *name, bool add)
+			       const char *name, ldh_eVolRep type, 
+			       char *server, bool add)
 {
-  char vname[200];
+  pwr_tFileName vname;
 
-  sprintf( vname, "$pwrp_db/%s.db", cdh_Low(name));
-  dcli_translate_filename( vname, vname);
+  if ( type == ldh_eVolRep_Db) {
+    sprintf( vname, "$pwrp_db/%s.db", cdh_Low(name));
+    dcli_translate_filename( vname, vname);
+    
+    vrep_iterator it = m_vrepdb.find( vid);
+    if ( it != m_vrepdb.end()) {
+      *sts = LDH__VOLIDALREXI;
+      return 0;
+    }
 
-  vrep_iterator it = m_vrepdb.find( vid);
-  if ( it != m_vrepdb.end()) {
-    *sts = LDH__VOLIDALREXI;
-    return 0;
+    wb_vrepdb *vrepdb = new wb_vrepdb( this, vid, cid, name, vname);
+    if ( add)
+      addDb( sts, vrepdb);
+    MsgWindow::message( 'I', "Database created", vname);
+
+    return vrepdb;
   }
+  else if ( type == ldh_eVolRep_Dbms) {
+    char host[40] = "pwr42";
+    char user[40] = "pwrp";
+    char password[40] = "";
+    unsigned int port = 0;
+    char socket[80];
 
-  wb_vrepdb *vrepdb = new wb_vrepdb( this, vid, cid, name, vname);
-  if ( add)
-  addDb( sts, vrepdb);
-  MsgWindow::message( 'I', "Database created", vname);
+    cnf_get_value( "mysqlSocket", socket);
+      
+    *sts = lfu_ParseDbmsServer( server, user, password, &port, host);
+    if ( EVEN(*sts)) return 0;
 
-  return vrepdb;
+    printf( "Host: \"%s\"\nUser: \"%s\"\nPass: \"%s\"\nPort: %d\n", host, user, password, port);
+
+    sprintf( vname, "$pwrp_db/%s.dbms", cdh_Low(name));
+    dcli_translate_filename( vname, vname);
+    
+    vrep_iterator it = m_vrepdb.find( vid);
+    if ( it != m_vrepdb.end()) {
+      *sts = LDH__VOLIDALREXI;
+      return 0;
+    }
+
+    wb_dbms_env *env = new wb_dbms_env();
+    env->create( vname, host, user, password, cdh_Low(name), port, socket);
+
+    // wb_dbms *dbms = new wb_dbms();
+    // dbms->create( vid, cid, dbname, vname);
+
+    wb_vrepdbms *vrepdbms = new wb_vrepdbms( this, vid, cid, name, vname);
+    if ( add)
+      addDb( sts, vrepdbms);
+    MsgWindow::message( 'I', "Database created", vname);
+
+    return vrepdbms;
+  }
+  return 0;
 }
+
 
 void wb_erep::volumeNameToFilename( pwr_tStatus *sts, char *name, char *filename)
 {

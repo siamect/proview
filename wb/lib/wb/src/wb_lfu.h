@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.h,v 1.7 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_lfu.h,v 1.8 2008-02-04 13:34:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -76,80 +76,63 @@ typedef struct {
         char		name[80];
 	} lfu_t_volref;
 
-pwr_tStatus lfu_volumelist_load( 
-	char *filename,
-	lfu_t_volumelist **vollist,
-	int *volcount
-);
+pwr_tStatus lfu_volumelist_load( char *filename, 
+				 lfu_t_volumelist **vollist,
+				 int *volcount);
 
-pwr_tStatus lfu_create_loadfile(
-  ldh_tSesContext	ldhses
-);
+pwr_tStatus lfu_create_loadfile( ldh_tSesContext ldhses);
 
-pwr_tStatus lfu_create_bootfile(
-	char		*nodeconfigname,
-	lfu_t_volumelist *volumelist,
-	int		volumecount,
-	int		debug
-);
+pwr_tStatus lfu_create_bootfile( char *nodeconfigname,
+				 lfu_t_volumelist *volumelist,
+				 int volumecount,
+				 int debug);
 
-pwr_tStatus lfu_GetFileVersion( 
-  char *pattern, 
-  int number_of_digits,
-  int *version, 
-  pwr_tTime *date
-);
+pwr_tStatus lfu_GetFileVersion( char *pattern, 
+				int number_of_digits,
+				int *version, 
+				pwr_tTime *date);
 
-pwr_tStatus lfu_GetPlcFileVersion(
-  pwr_tVolumeId volumeid, 
-  int *version, 
-  pwr_tTime *date
-);
+pwr_tStatus lfu_GetPlcFileVersion( pwr_tVolumeId volumeid, 
+				   int *version, 
+				   pwr_tTime *date);
 
-pwr_tStatus lfu_IncrementAndGetVersion(
-  char	*filename,
-  unsigned long	*current_version
-);
+pwr_tStatus lfu_IncrementAndGetVersion( char *filename,
+					unsigned long *current_version);
 
-pwr_tStatus lfu_SaveDirectoryVolume(
-  ldh_tSesContext 	ldhses,
-  CoWow			*wow
-);
+pwr_tStatus lfu_SaveDirectoryVolume( ldh_tSesContext ldhses,
+				     CoWow *wow);
 
-int lfu_create_bootfiles (
-  char		*nodestr,
-  int		debug,
-  int		allnodes
-);
+int lfu_create_bootfiles( char *nodestr,
+			  int debug,
+			  int allnodes);
 
-pwr_tStatus lfu_ReadBootFile(
-  char		*filename,
-  pwr_tTime	*date,
-  char		*systemname,
-  char		*systemgroup,
-  pwr_tVolumeId **vollist,
-  pwr_tString40	**volnamelist,
-  int		*volcount,
-  char		*plc_name
-);
+pwr_tStatus lfu_ReadBootFile( char *filename,
+			      pwr_tTime	*date,
+			      char *systemname,
+			      char *systemgroup,
+			      pwr_tVolumeId **vollist,
+			      pwr_tString40 **volnamelist,
+			      int *volcount,
+			      char *plc_name);
 
-pwr_tStatus lfu_ReadSysObjectFile(
-	char	*SystemName,
-	char	*SystemGroup
-);
+pwr_tStatus lfu_ReadSysObjectFile( char	*SystemName,
+				   char	*SystemGroup);
 
-pwr_tStatus lfu_WriteSysObjectFile(
-	ldh_tSesContext	ldhses
-);
+pwr_tStatus lfu_WriteSysObjectFile( ldh_tSesContext	ldhses);
 
-pwr_tStatus	lfu_GetVolRef( 	char *filename,
-			       	lfu_t_volref **volref,
-	       			int *volref_count);
-pwr_tStatus 	lfu_GetVolume(  char *filename,
-			       	char *name,
-				pwr_tVid *vid,
-				pwr_tCid *cid,
-				pwr_tTime *time);
+pwr_tStatus lfu_GetVolRef( char *filename,
+			   lfu_t_volref **volref,
+			   int *volref_count);
+pwr_tStatus lfu_GetVolume( char *filename,
+			   char *name,
+			   pwr_tVid *vid,
+			   pwr_tCid *cid,
+			   pwr_tTime *time);
+pwr_tStatus lfu_GetVolumeCnf( char *name, pwr_tVid *vid, pwr_tCid *cid, ldh_eVolRep *volrep,
+			      char *server);
+
+pwr_tStatus lfu_ParseDbmsServer( char *server, char *user, char *passw, 
+				 unsigned int *port, char *host);
 
 #ifdef __cplusplus
 }

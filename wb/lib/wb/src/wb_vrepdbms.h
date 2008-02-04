@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdbms.h,v 1.5 2007-12-21 13:18:01 claes Exp $
+ * Proview   $Id: wb_vrepdbms.h,v 1.6 2008-02-04 13:34:49 claes Exp $
  * Copyright (C) 2007 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -198,7 +198,8 @@ public:
   int         updateArefs(pwr_tOid oid, pwr_tCid cid);
   int         checkClass(pwr_tCid cid);
   void        checkAttributes(pwr_tCid cid);
-  void        checkSubClass(pwr_tCid cid, unsigned int o_offset, unsigned int n_offset);
+  void 	      checkSubClass(pwr_tCid cid, pwr_tCid subcid, unsigned int o_offset, 
+			    unsigned int n_offset, pwr_tCid body);
   //bool        classIsChanged(pwr_tCid cid);
 
 

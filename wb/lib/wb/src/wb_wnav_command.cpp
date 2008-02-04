@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.48 2007-12-21 13:18:01 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.49 2008-02-04 13:34:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -268,7 +268,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"/LASTCHILD", "/VOLUME", "/ALL", 
 			"/CLASS", "/DEBUG", "/NODECONFIG",
 			"/NAME", "/IDENTITY", "/FILES", "/OUT", "/IGNORE",
-			"/DIRECTORY", "/BUILDVERSION", ""}
+			"/DIRECTORY", "/BUILDVERSION", "/DATABASE", "/SERVER", ""}
 		},
 		{
 			"NEW",
@@ -3752,12 +3752,36 @@ static int	wnav_create_func( void		*client_data,
   {
     pwr_tObjName namestr;
     pwr_tObjName classtr;
+    pwr_tString40 serverstr;
+    char        databasestr[80];
     char	identitystr[80];
     pwr_tStatus	sts;
     pwr_tCid	cid;
     pwr_tVid	vid;
+    ldh_eVolRep volrep;
 
     // Command is "CREATE VOLUME"
+
+    if ( ODD( dcli_get_qualifier( "/DATABASE", databasestr, sizeof(databasestr)))) {
+      if ( strcmp( databasestr, "BERKELEYDB") == 0)
+	volrep = ldh_eVolRep_Db;
+      else if ( strcmp( databasestr, "MYSQL") == 0)
+	volrep = ldh_eVolRep_Dbms;
+      else {
+	wnav->message('E', "Syntax error in database");
+	return WNAV__QUAL;
+      }
+    }
+    else
+      sts = 0;
+    
+    if ( volrep == ldh_eVolRep_Dbms) {
+      if ( EVEN( dcli_get_qualifier( "/SERVER", serverstr, sizeof(serverstr))))
+	strcpy( serverstr, "");
+    }
+    else
+      strcpy( serverstr, "");
+	
 
     if ( ODD( dcli_get_qualifier( "/DIRECTORY", 0, 0))) {
       strcpy( namestr, "directory");
@@ -3802,7 +3826,7 @@ static int	wnav_create_func( void		*client_data,
 
     try {
       wb_erep *erep = *(wb_env *)wnav->wbctx;
-      erep->createVolume( &sts, vid, cid, namestr);
+      erep->createVolume( &sts, vid, cid, namestr, volrep, serverstr);
     }
     catch ( wb_error &e) {
       sts = e.sts();

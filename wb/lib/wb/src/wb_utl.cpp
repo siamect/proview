@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.cpp,v 1.7 2007-12-06 10:51:57 claes Exp $
+ * Proview   $Id: wb_utl.cpp,v 1.8 2008-02-04 13:34:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3656,6 +3656,7 @@ int utl_show_obj_hier_class_name (
 	return FOE__SUCCESS;
 }
 
+#if 0
 
 /*************************************************************************
 *
@@ -3725,6 +3726,7 @@ pwr_tStatus utl_create_volume(
 
 	return FOE__SUCCESS;
 }
+#endif
 
 /*************************************************************************
 *

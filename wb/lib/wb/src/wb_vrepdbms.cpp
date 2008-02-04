@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdbms.cpp,v 1.5 2007-12-21 13:18:01 claes Exp $
+ * Proview   $Id: wb_vrepdbms.cpp,v 1.6 2008-02-04 13:34:49 claes Exp $
  * Copyright (C) 2007 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,6 +38,7 @@
 #include "wb_dblock.h"
 #include "co_msgwindow.h"
 #include "wb_vrepwbl.h"
+#include "wb_volume.h"
 
 typedef struct sArefKey
 {
@@ -79,6 +80,8 @@ typedef struct sClass
   pwr_tObjName name;
   pwr_tTime    o_time;
   pwr_tTime    n_time;
+  size_t       o_rbsize;
+  size_t       n_rbsize;
   pwr_tUInt32  count;
 } sClass;
 
@@ -341,7 +344,7 @@ wb_orep* wb_vrepdbms::object(pwr_tStatus *sts, const wb_orep *parent, wb_name &n
   }
 }
 
-wb_orep *wb_vrepdbms::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, wb_name &name)
+wb_orep *wb_vrepdbms::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, wb_name &name, pwr_tOix oix)
 {
   *sts = LDH__SUCCESS;
   wb_dbms_txn *txn = m_db->subBegin(m_db->m_txn);
@@ -1837,6 +1840,7 @@ int wb_vrepdbms::updateArefs(pwr_tOid oid, pwr_tCid cid)
 {
   pwr_tStatus sts;
   sArefKey ak;
+
   int nAref[2] = {0, 0};
   int rbSize = 0;
   int dbSize = 0;
@@ -1891,56 +1895,64 @@ int wb_vrepdbms::updateArefs(pwr_tOid oid, pwr_tCid cid)
       try {
           
         pwr_sAttrRef *arp = (pwr_sAttrRef *)(p + ap->key.offset);        
-        wb_db_ohead aohead(m_db, m_db->m_txn, arp->Objid);
-        wb_cdrep *n_cdrep = m_erep->merep()->cdrep(&sts, aohead.cid());
-	wb_bdrep *n_bdrep;
-        if (EVEN(sts))
-	  printf("cdrep sts %d", sts);
+	pwr_tCid arp_cid;
+
+	if ( cdh_ObjidIsEqual( arp->Objid, pwr_cNObjid)) {
+	  ap = (sAref *)tree_FindSuccessor(&sts, m_aref_th, &ap->key);
+	  continue;
+	}
+	if ( arp->Objid.vid == m_vid) {
+	  wb_dbms_ohead aohead(m_db, m_db->m_txn, arp->Objid);
+	  arp_cid = aohead.cid();
+	}
+	else if ( ldh_isSymbolicVid( arp->Objid.vid))
+	  arp_cid = arp->Objid.oix;
 	else
-	  n_bdrep = n_cdrep->bdrep(&sts, ap->key.bix);
+	  arp_cid = arp->Body & ~7;
+
+        wb_cdrep *n_cdrep = m_erep->merep()->cdrep(&sts, arp_cid);
+	wb_bdrep *n_bdrep;
+	pwr_eBix bix = pwr_eBix_rt;
+        if (EVEN(sts)) {
+	  pwr_tAttrRef a;
+	  a.Objid = oid;
+	  a.Offset = ap->key.offset;
+	  a.Size = sizeof(pwr_tAttrRef);
+	  a.Body = cid | bix;
+	  
+	  wb_volume v(this);
+	  wb_attribute attr = v.attribute( &a);
+	  if ( attr)
+	    printf("** Corrupt reference in %s\n", attr.longName().c_str());
+	}
+	else {
+	  bix = (pwr_eBix)(arp->Body & 7);
+	  if ( bix != pwr_eBix_dev)
+	    bix = pwr_eBix_rt;
+	  n_bdrep = n_cdrep->bdrep(&sts, bix);
+	}
         if (EVEN(sts)) {
 	  ap = (sAref *)tree_FindSuccessor(&sts, m_aref_th, &ap->key);
 	  continue;
 	}
 
-	if ( arp->Flags.b.Object) {
-	  // Check if rbody size of changed
-	  pwr_tCid cid = aohead.cid();
-	  sClass *cp = (sClass *)tree_Find(&sts, m_class_th, &cid);
-
-	  if ( cp && cp->n_rbsize != cp->o_rbsize) {
-	    arp->Size = cp->n_rbsize;
-	    nAref[ap->key.bix - 1]++;
-	  }
-	}
-	else {
-	  sAttributeKey k;
-	  k.cid = aohead.cid();
-	  k.bix = ap->key.bix;
-	  k.oStart = arp->Offset;
-	  k.oEnd = arp->Offset + arp->Size - 1;
+	sAttributeKey k;
+	k.cid = arp_cid;
+	k.bix = bix;
+	k.oStart = arp->Offset;
+	k.oEnd = arp->Offset + arp->Size - 1;
         
-	  sAttribute *cap = (sAttribute *)tree_Find(&sts, m_attribute_th, &k);
-	  if (cap != 0) {
-	    nAref[ap->key.bix - 1]++;
-	    if (arp->Size > cap->o.aref.Size) {
-	      arp->Offset = 0;
-	      arp->Size = n_bdrep->size();
-	    } else if (arp->Offset == cap->o.aref.Offset && arp->Size == cap->o.aref.Size) {  
-	      arp->Offset = cap->n.aref.Offset;
-	      arp->Size = cap->n.aref.Size;
-	    } else if (cap->o.aref.Flags.b.Array) {
-	      pwr_tUInt32 oElementSize = cap->o.aref.Size / cap->o.nElement;
-	      pwr_tUInt32 oOffset = arp->Offset - cap->o.aref.Offset;
-	      pwr_tUInt32 index = oOffset / oElementSize;
-	      pwr_tUInt32 nElementSize = cap->n.aref.Size / cap->n.nElement;
-	      
-	      if (index >= cap->n.nElement) {
-		index = cap->n.nElement - 1;
-	      }
-	      arp->Offset = cap->n.aref.Offset + (index * nElementSize);
-	      arp->Size = nElementSize;
-	    }          
+	sAttribute *cap = (sAttribute *)tree_Find(&sts, m_attribute_th, &k);
+
+	if (cap != 0) {
+	  nAref[ap->key.bix - 1]++;
+	  if (arp->Size > cap->o.aref.Size) {
+	    arp->Offset = 0;
+	    arp->Size = n_bdrep->size();
+	  }
+	  else if (arp->Offset == cap->o.aref.Offset && arp->Size == cap->o.aref.Size) {  
+	    arp->Offset = cap->n.aref.Offset;
+	    arp->Size = cap->n.aref.Size;
 	  }
 	}        
       } catch (wb_dbms_error &e) {
@@ -2260,17 +2272,47 @@ void wb_vrepdbms::checkAttributes(pwr_tCid cid)
     if (ODD(sts)) {
       wb_bdrep *o_bdrep = o_cdrep->bdrep(&sts, bix);
       if (ODD(sts)) {
+	pwr_tCid body = o_cdrep->cid() | o_bdrep->bix();
+
+	if ( o_bdrep->size() != n_bdrep->size()) {
+	  sAttributeKey ak;
+	  sAttribute *ap;
+                  
+	  ak.cid = cid;
+	  ak.bix = bix;
+	  ak.oStart = 0;
+	  ak.oEnd = o_bdrep->size() - 1;
+	  ap = (sAttribute *) tree_Insert(&sts, m_attribute_th, &ak);
+	  ap->o.aref.Size = o_bdrep->size();
+	  ap->o.aref.Offset = 0;
+	  ap->o.aref.Body = bix;
+	  ap->o.aref.Flags.b.Object = 1;
+	  ap->n.aref.Size = n_bdrep->size();
+	  ap->n.aref.Offset = 0;
+	  ap->n.aref.Body = bix;
+	  ap->n.aref.Flags.b.Object = 1;
+	}
         wb_adrep *o_adrep = o_bdrep->adrep(&sts);
 
         while (ODD(sts)) {
 
           if (o_adrep->type() == pwr_eType_AttrRef) {
-            sArefKey a;
+	    sArefKey a;
 
-            a.cid = cid;
-            a.bix = bix;
-            a.offset = o_adrep->offset();
-            tree_Insert(&sts, m_aref_th, &a); 
+	    if ( o_adrep->isArray()) {
+	      for ( int j = 0; j < o_adrep->nElement(); j++) {
+		a.cid = cid;
+		a.bix = bix;
+		a.offset = o_adrep->offset() + j * o_adrep->size() / o_adrep->nElement();
+		tree_Insert(&sts, m_aref_th, &a);        
+	      }
+	    }
+	    else {
+	      a.cid = cid;
+	      a.bix = bix;
+	      a.offset = o_adrep->offset();
+	      tree_Insert(&sts, m_aref_th, &a);        
+	    }
           }
 
           // Indentify attribute with the same aix
@@ -2286,32 +2328,67 @@ void wb_vrepdbms::checkAttributes(pwr_tCid cid)
             delete prev;
           }
           if (found) {
-            if (
-              (o_adrep->offset()   != n_adrep->offset())   ||
-              (o_adrep->size()     != n_adrep->size())     ||
-              (o_adrep->type()     != n_adrep->type())     ||
-              //(o_adrep->tid()      != n_adrep->tid())      ||
-              (o_adrep->nElement() != n_adrep->nElement()) ||
-              (o_adrep->index()    != n_adrep->index())
-              )
-              {
-                sAttributeKey ak;
-                sAttribute *ap;
+            if ( (o_adrep->offset()   != n_adrep->offset())   ||
+		 (o_adrep->size()     != n_adrep->size())     ||
+		 (o_adrep->type()     != n_adrep->type())     ||
+		 //(o_adrep->tid()      != n_adrep->tid())      ||
+		 (o_adrep->nElement() != n_adrep->nElement()) ||
+		 (o_adrep->index()    != n_adrep->index())) {
+	      sAttributeKey ak;
+	      sAttribute *ap;
                   
-                ak.cid = cid;
-                ak.bix = bix;
-                ak.oStart = o_adrep->offset();
-                ak.oEnd = o_adrep->offset() + o_adrep->size() - 1;                
-                ap = (sAttribute *) tree_Insert(&sts, m_attribute_th, &ak);
-                ap->o.aref = o_adrep->aref();
-                ap->n.aref = n_adrep->aref();
-                ap->o.aix = o_adrep->aix();
-                ap->n.aix = n_adrep->aix();
-                ap->o.nElement = o_adrep->nElement();
-                ap->n.nElement = n_adrep->nElement();
-              }
+	      ak.cid = cid;
+	      ak.bix = bix;
+	      ak.oStart = o_adrep->offset();
+	      ak.oEnd = ak.oStart + o_adrep->size() - 1;
+	      ap = (sAttribute *) tree_Insert(&sts, m_attribute_th, &ak);
+	      ap->o.aref = o_adrep->aref();
+	      ap->n.aref = n_adrep->aref();
+	      ap->o.aix = o_adrep->aix();
+	      ap->n.aix = n_adrep->aix();
+	      ap->o.nElement = o_adrep->nElement();
+	      ap->n.nElement = n_adrep->nElement();
+
+	      if ( o_adrep->isArray()) {
+		// Insert each element
+		for ( int j = 0; j < MIN(o_adrep->nElement(),n_adrep->nElement()); j++) {
+		  sAttributeKey ak;
+		  sAttribute *ap;
+		  int esize = o_adrep->size() / o_adrep->nElement();
+                  
+		  ak.cid = cid;
+		  ak.bix = bix;
+		  ak.oStart = o_adrep->offset() + j * esize;
+		  ak.oEnd = ak.oStart + esize - 1;
+		  ap = (sAttribute *) tree_Insert(&sts, m_attribute_th, &ak);
+		  ap->o.aref = o_adrep->aref();
+		  ap->n.aref = n_adrep->aref();
+		  ap->o.aref.Size = o_adrep->size() / o_adrep->nElement();
+		  ap->n.aref.Size = n_adrep->size() / n_adrep->nElement();
+		  ap->o.aref.Offset += j * ap->o.aref.Size;
+		  ap->n.aref.Offset += j * ap->n.aref.Size;
+		  ap->n.aref.Flags.b.Array = 0;
+		  ap->o.aref.Flags.b.Array = 0;
+		  ap->o.aix = o_adrep->aix();
+		  ap->n.aix = n_adrep->aix();
+		  ap->o.nElement = o_adrep->nElement();
+		  ap->n.nElement = n_adrep->nElement();
+		}
+	      }
+	    }
             if (o_adrep->isClass() && n_adrep->subClass() == o_adrep->subClass()) {
-              checkSubClass( cid, o_adrep->subClass(), o_adrep->offset(), n_adrep->offset());
+	      if ( o_adrep->isArray()) {
+		for ( int j = 0; j < MIN(o_adrep->nElement(),n_adrep->nElement()); j++) {
+
+		  checkSubClass( cid, o_adrep->subClass(), 
+				 o_adrep->offset() + j * o_adrep->size() / o_adrep->nElement(), 
+				 n_adrep->offset() + j * n_adrep->size() / n_adrep->nElement(),
+				 body);
+		}
+	      }
+	      else
+		checkSubClass( cid, o_adrep->subClass(), o_adrep->offset(), 
+			       n_adrep->offset(), body);
             }
             delete n_adrep;
           }
@@ -2327,7 +2404,8 @@ void wb_vrepdbms::checkAttributes(pwr_tCid cid)
   }
 }
 
-void wb_vrepdbms::checkSubClass(pwr_tCid cid, pwr_tCid subcid, unsigned int o_offset, unsigned int n_offset)
+void wb_vrepdbms::checkSubClass(pwr_tCid cid, pwr_tCid subcid, unsigned int o_offset, 
+				unsigned int n_offset, pwr_tCid body)
 {
   pwr_tStatus sts;
   wb_cdrep *o_cdrep = m_merep->cdrep(&sts, subcid);
@@ -2346,52 +2424,105 @@ void wb_vrepdbms::checkSubClass(pwr_tCid cid, pwr_tCid subcid, unsigned int o_of
 
   while (ODD(sts)) {
     bool found = false;
+
     wb_adrep *n_adrep = n_bdrep->adrep(&sts);
     while (ODD(sts)) {
       if (o_adrep->aix() == n_adrep->aix()) {
-        found = true;
-        break;
+	found = true;
+	break;
       }
       wb_adrep *prev = n_adrep;
       n_adrep = n_adrep->next(&sts);
       delete prev;
     }
     if (found) {
-      if (
-        (o_adrep->offset()   != n_adrep->offset())   ||
-        (o_adrep->size()     != n_adrep->size())     ||
-        (o_adrep->type()     != n_adrep->type())     ||
-        //(o_adrep->tid()      != n_adrep->tid())      ||
-        (o_adrep->nElement() != n_adrep->nElement()) ||
-        (o_adrep->index()    != n_adrep->index())) {
-
-        sAttributeKey ak;
-        sAttribute *ap;
+      if ( ((o_adrep->offset() + o_offset) != (n_adrep->offset() + n_offset))   ||
+	   (o_adrep->size()     != n_adrep->size())     ||
+	   (o_adrep->type()     != n_adrep->type())     ||
+	   //(o_adrep->tid()    != n_adrep->tid())      ||
+	   (o_adrep->nElement() != n_adrep->nElement()) ||
+	   (o_adrep->index()    != n_adrep->index())) {
+	sAttributeKey ak;
+	sAttribute *ap;
                   
-        ak.cid = cid;
-        ak.bix = bix;
-        ak.oStart = o_adrep->offset() + o_offset;
-        ak.oEnd = ak.oStart + o_adrep->size() - 1;                 
-        ap = (sAttribute *) tree_Insert(&sts, m_attribute_th, &ak);
-        
-        ap->o.aref = o_adrep->aref();
-        ap->n.aref = n_adrep->aref();
-        ap->o.aix = o_adrep->aix();
-        ap->n.aix = n_adrep->aix();
-        ap->o.nElement = o_adrep->nElement();
-        ap->n.nElement = n_adrep->nElement();
+	ak.cid = cid;
+	ak.bix = bix;
+	ak.oStart = o_adrep->offset() + o_offset;
+	ak.oEnd = ak.oStart + o_adrep->size() - 1;                 
+	ap = (sAttribute *) tree_Insert(&sts, m_attribute_th, &ak);
+	
+	ap->o.aref = o_adrep->aref();
+	ap->n.aref = n_adrep->aref();
+	ap->o.aref.Offset += o_offset;
+	ap->n.aref.Offset += n_offset;
+	ap->o.aref.Body = body;
+	ap->n.aref.Body = body;
+	ap->o.aix = o_adrep->aix();
+	ap->n.aix = n_adrep->aix();
+	ap->o.nElement = o_adrep->nElement();
+	ap->n.nElement = n_adrep->nElement();
+	
+	if ( o_adrep->isArray()) {
+	  for ( int j = 0; j < MIN( o_adrep->nElement(), n_adrep->nElement()); j++) {
+	    int esize = o_adrep->size() / o_adrep->nElement();
+	
+	    sAttributeKey ak;
+	    sAttribute *ap;
+                  
+	    ak.cid = cid;
+	    ak.bix = bix;
+	    ak.oStart = o_adrep->offset() + o_offset + j * esize;
+	    ak.oEnd = ak.oStart + esize - 1;                 
+	    ap = (sAttribute *) tree_Insert(&sts, m_attribute_th, &ak);
+	
+	    ap->o.aref = o_adrep->aref();
+	    ap->n.aref = n_adrep->aref();
+	    ap->o.aref.Size = o_adrep->size() / o_adrep->nElement();
+	    ap->n.aref.Size = n_adrep->size() / n_adrep->nElement();
+	    ap->o.aref.Offset += o_offset + j * ap->o.aref.Size;
+	    ap->n.aref.Offset += n_offset + j * ap->n.aref.Size;
+	    ap->n.aref.Flags.b.Array = 0;
+	    ap->o.aref.Flags.b.Array = 0;
+	    ap->o.aref.Body = body;
+	    ap->n.aref.Body = body;
+	    ap->o.aix = o_adrep->aix();
+	    ap->n.aix = n_adrep->aix();
+	    ap->o.nElement = o_adrep->nElement();
+	    ap->n.nElement = n_adrep->nElement();
+	  }
+	}
       }
       if (o_adrep->isClass() && o_adrep->subClass() == n_adrep->subClass()) {
-        checkSubClass( cid, n_adrep->subClass(), o_adrep->offset(), n_adrep->offset());
-      } else if (o_adrep->type() == pwr_eType_AttrRef) {
-        sArefKey a;
-
-        a.cid = subcid;
-        a.bix = bix;
-        a.offset = o_adrep->offset();
-        tree_Insert(&sts, m_aref_th, &a);        
+	if ( o_adrep->isArray()) {
+	  for ( int j = 0; j < MIN(o_adrep->nElement(),n_adrep->nElement()); j++) {
+	    checkSubClass( cid, n_adrep->subClass(), 
+			   o_adrep->offset() + o_offset + j * o_adrep->size() / o_adrep->nElement(),
+			   n_adrep->offset() + n_offset + j * n_adrep->size() / n_adrep->nElement(),
+			   body);
+	  }
+	}
+	else
+	  checkSubClass( cid, n_adrep->subClass(), o_adrep->offset() + o_offset,
+			 n_adrep->offset() + n_offset, body);	  
       }
-      
+      else if (o_adrep->type() == pwr_eType_AttrRef) {
+	sArefKey a;
+	
+	if ( o_adrep->isArray()) {
+	  for ( int j = 0; j < o_adrep->nElement(); j++) {
+	    a.cid = cid;
+	    a.bix = bix;
+	    a.offset = o_adrep->offset() + o_offset + j * o_adrep->size() / o_adrep->nElement();
+	    tree_Insert(&sts, m_aref_th, &a);        
+	  }
+	}
+	else {
+	  a.cid = cid;
+	  a.bix = bix;
+	  a.offset = o_adrep->offset() + o_offset;
+	  tree_Insert(&sts, m_aref_th, &a);        
+	}
+      }
       if (n_adrep) delete n_adrep;
     }
     wb_adrep *prev = o_adrep;

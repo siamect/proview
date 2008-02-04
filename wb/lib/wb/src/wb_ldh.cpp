@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.65 2008-01-24 09:47:46 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.66 2008-02-04 13:34:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,6 +41,7 @@
 #include "wb_ldh_msg.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_cnf.h"
 #include "pwr_vararg.h"
 #include "co_ver.h"
 #include "rt_gdh.h"
@@ -58,8 +59,11 @@
 #include "wb_vrepdbs.h"
 #include "wb_merep.h"
 #include "wb_db.h"
+#include "wb_dbms.h"
 #include "wb_print_wbl.h"
+#include "wb_lfu.h"
 #include "pwr_baseclasses.h"
+#include "rt_load.h"
 
 pwr_dImport pwr_BindClasses(System);
 pwr_dImport pwr_BindClasses(Base);
@@ -423,13 +427,13 @@ ldh_CreateObject(ldh_tSession session, pwr_tOid *oid, char *name, pwr_tCid cid, 
 }
 
 pwr_tStatus
-ldh_CreateVolume(ldh_tWorkbench workbench, ldh_tSession *session, pwr_tVid vid, char *name, pwr_tCid cid)
+ldh_CreateVolume(ldh_tWorkbench workbench, ldh_tSession *session, pwr_tVid vid, char *name, pwr_tCid cid, ldh_eVolRep volrep, char *server)
 {
   wb_env *ep = (wb_env *)workbench;
 
   wb_name n(name);
     
-  wb_volume v = ep->createVolume(vid, cid, name);
+  wb_volume v = ep->createVolume(vid, cid, name, volrep, server);
   if (!v) return v.sts();
     
   // wb_srep *srep = new wb_srep(v);
@@ -1959,20 +1963,57 @@ ldh_WbLoad( ldh_tSession session, char *loadfile, int ignore_oix)
 	vwbl->ignoreOix();
       vwbl->load( fname);
 
-      cdh_ToLower( vname, vwbl->name());
-      strcpy( db_name, "$pwrp_db/");
-      strcat( db_name, vname);
-      strcat( db_name, ".db");
-      dcli_translate_filename( db_name, db_name);
+      // Get database type
+      pwr_tVid vid;
+      pwr_tCid cid;
+      ldh_eVolRep volrep;
+      char server[80];
+      pwr_tStatus sts;
+      	
+      sts = lfu_GetVolumeCnf( (char *)vwbl->name(), &vid, &cid, &volrep, server);
+      if ( EVEN(sts)) return sts;
+      
+      if ( volrep == ldh_eVolRep_Db) {
+	cdh_ToLower( vname, vwbl->name());
+	strcpy( db_name, "$pwrp_db/");
+	strcat( db_name, vname);
+	strcat( db_name, ".db");
+	dcli_translate_filename( db_name, db_name);
 	  
-      // wb_db db( vwbl->vid());
-      // db.create( vwbl->vid(), vwbl->cid(), vwbl->name(), db_name);
-      // db.importVolume( *vwbl);
-      wb_db db( pwr_cNVid);
-      db.copy( *vwbl, db_name);
-      db.close();
-      erep->merep()->copyFiles( db_name);
+	// wb_db db( vwbl->vid());
+	// db.create( vwbl->vid(), vwbl->cid(), vwbl->name(), db_name);
+	// db.importVolume( *vwbl);
+	wb_db db( pwr_cNVid);
+	db.copy( *vwbl, db_name);
+	db.close();
+	erep->merep()->copyFiles( db_name);
+      }
+      else {
+	char socket[80];
+	char user[80];
+	char password[80];
+	char host[80];
+	unsigned int port;
 
+	cdh_ToLower( vname, vwbl->name());
+	strcpy( db_name, "$pwrp_db/");
+	strcat( db_name, vname);
+	strcat( db_name, ".dbms");
+	dcli_translate_filename( db_name, db_name);
+	  
+	sts = lfu_ParseDbmsServer( server, user, password, &port, host);
+	if ( EVEN(sts)) return sts;
+
+	cnf_get_value( "mysqlSocket", socket);
+
+	wb_dbms_env *env = new wb_dbms_env();
+	env->create( db_name, host, user, password, cdh_Low(vname), port, socket);
+
+	wb_dbms dbms( pwr_cNVid);
+	dbms.copy( *vwbl, db_name);
+	dbms.close();
+	erep->merep()->copyFiles( db_name);
+      }
       delete vwbl;      
     }
     catch ( wb_error& e) {

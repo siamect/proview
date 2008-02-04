@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dbms.cpp,v 1.5 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_dbms.cpp,v 1.6 2008-02-04 13:34:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -33,6 +33,8 @@
 #include "wb_name.h"
 #include "wb_export.h"
 #include "wb_convert_volume.h"
+#include "wb_utl_api.h"
+#include "co_cdh.h"
 #include <iostream>
 
 wb_dbms::wb_dbms() :
@@ -198,6 +200,13 @@ void wb_dbms::create(pwr_tVid vid, pwr_tCid cid, const char *volumeName, const c
     m_env->txn_begin(0, (wb_dbms_txn **)&m_txn);
 
     importHead(oid, cid, pwr_cNOid, pwr_cNOid, pwr_cNOid, pwr_cNOid, pwr_cNOid, n.name(), n.normName(), flags, time, time, time, rbSize, 0);
+
+    if ( rbSize) {
+      void *body = calloc( 1, rbSize);
+
+      importRbody(oid, rbSize, body);
+      free( body);
+    }
 
     wb_dbms_info i(this);
     i.get(m_txn);
@@ -696,6 +705,27 @@ void wb_dbms_env::fileName(const char *fileName)
   strcpy(m_fileName, fileName);
 }
 
+char *wb_dbms_env::dbName(void) 
+{ 
+  char pname[80];
+  pwr_tStatus sts;
+  static char dbname[80];
+
+  sts = utl_get_projectname( pname);
+  if ( EVEN(sts)) {
+    printf( "** Project is not configured\n");
+    return m_dbName;
+  }
+
+  strcpy( dbname, "pwrp_");
+  strcat( dbname, pname);
+  strcat( dbname, "__");
+  strcat( dbname, m_dbName);
+  cdh_ToLower( dbname, dbname);
+
+  return dbname;
+}
+
 void wb_dbms_env::port(const unsigned int port)
 {
   m_port = port;
@@ -828,8 +858,8 @@ int wb_dbms_env::create()
 
   printf("wb_dbms_env::create: %s\n", m_fileName);
   /* Create the directory, read/write/access owner and group. */
-  if (stat(name, &sb) != 0) {
-    if (mkdir(name, S_IRWXU | S_IRWXG) != 0) {
+  if (stat(m_fileName, &sb) != 0) {
+    if (mkdir(m_fileName, S_IRWXU | S_IRWXG) != 0) {
       fprintf(stderr, "wb_dbms_env::create: mkdir: %s, %s\n", m_fileName, strerror(errno));
       return errno;
     }
@@ -848,8 +878,11 @@ int wb_dbms_env::create()
 
     fprintf(fp, "HOST...: %s\n", host());
     fprintf(fp, "USER...: %s\n", user());
-    fprintf(fp, "PASSWD.: %s\n", passwd());
-    fprintf(fp, "DB_NAME: %s\n", dbName());
+    if ( !passwd() || strcmp( passwd(), "") == 0)
+      fprintf(fp, "PASSWD.: (null)\n");
+    else
+      fprintf(fp, "PASSWD.: %s\n", passwd());
+    fprintf(fp, "DB_NAME: %s\n", m_dbName);
     fprintf(fp, "PORT...: %d\n", port());
     fprintf(fp, "SOCKET.: %s\n", socket());
 
@@ -877,7 +910,7 @@ int wb_dbms_env::open(void)
   
   cdh_ToLower(m_fileName, m_fileName);
 
-  sprintf(buf, "%s/%s", m_fileName, "connection.dbms");
+  sprintf(buf, "%s/%s", m_fileName, "connection.dmsql");
 
   FILE *fp = fopen(buf, "r");
   if (fp == NULL) {
@@ -927,8 +960,10 @@ int wb_dbms_env::open(void)
     }
   }
   
-	printf("ready!!!\n");
+  printf("ready!!!\n");
   fclose(fp);
+
+  m_exists = true;
   
   return 0;
 }

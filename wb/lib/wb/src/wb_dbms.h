@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dbms.h,v 1.1 2007-10-18 09:11:01 claes Exp $
+ * Proview   $Id: wb_dbms.h,v 1.2 2008-02-04 13:34:49 claes Exp $
  * Copyright (C) 2007 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -163,9 +163,8 @@ public:
   MYSQL *openDb(void);
 
   bool exists() { return m_exists;}
-  
-  
-	int close(void);
+    
+  int close(void);
 
   void fileName(const char *fileName);
   void host(const char *host);
@@ -175,11 +174,11 @@ public:
   void port(unsigned int port);  
   void socket(const char *socket);
   
+  char *dbName(void);
   inline char *fileName(void) { return m_fileName;}
   inline char *host(void) { return m_host;}
   inline char *user(void) { return m_user;}
   inline char *passwd(void) { return m_passwd;}
-  inline char *dbName(void) { return m_dbName;}
   inline unsigned int port(void) { return m_port;}
   inline char *socket(void) { return m_socket;}  
   
