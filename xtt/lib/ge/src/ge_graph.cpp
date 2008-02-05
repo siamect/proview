@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.47 2008-01-24 09:28:01 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.48 2008-02-05 14:52:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2528,8 +2528,12 @@ void graph_userdata_save_cb( void *f, void *object, glow_eUserdataCbType utype)
 
     grow_GetCtxUserData( (GrowCtx *)object, (void **) &graph);
 
-    if ( graph->subgraph_dyn && graph->is_subgraph())
-      graph->subgraph_dyn->save( *fp);
+    if ( graph->is_subgraph()) {
+      if ( graph->subgraph_dyn)
+	graph->subgraph_dyn->save( *fp);
+      else
+	*fp << int(ge_eSave_End) << endl;
+    }
     break;
   }
   }
