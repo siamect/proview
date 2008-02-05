@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd.cpp,v 1.11 2007-11-16 07:52:54 claes Exp $
+ * Proview   $Id: rt_pb_gsd.cpp,v 1.12 2008-02-05 08:14:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1254,7 +1254,7 @@ int pb_gsd::prm_items_to_data( gsd_sPrmDataItem *item, int item_size,
 
       unsigned short v = (unsigned short) item[i].value;
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-      if ( byte_order == pwr_eByteOrdering_LittleEndian)
+      if ( byte_order == pwr_eByteOrderingEnum_LittleEndian)
 	memcpy( &data[item[i].ref->Reference_Offset], &v, sizeof(v));
       else {
 	unsigned char b[2];
@@ -1263,7 +1263,7 @@ int pb_gsd::prm_items_to_data( gsd_sPrmDataItem *item, int item_size,
 	data[item[i].ref->Reference_Offset+1] = b[0];
       }
 #elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-      if ( byte_order == pwr_eByteOrdering_BigEndian)
+      if ( byte_order == pwr_eByteOrderingEnum_BigEndian)
 	memcpy( &data[item[i].ref->Reference_Offset], &v, sizeof(v));
       else {
 	unsigned char b[2];
@@ -1282,7 +1282,7 @@ int pb_gsd::prm_items_to_data( gsd_sPrmDataItem *item, int item_size,
 
       short v = (short) item[i].value;
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-      if ( byte_order == pwr_eByteOrdering_LittleEndian)
+      if ( byte_order == pwr_eByteOrderingEnum_LittleEndian)
 	memcpy( &data[item[i].ref->Reference_Offset], &v, sizeof(v));
       else {
 	unsigned char b[2];
@@ -1291,7 +1291,7 @@ int pb_gsd::prm_items_to_data( gsd_sPrmDataItem *item, int item_size,
 	data[item[i].ref->Reference_Offset+1] = b[0];
       }
 #elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-      if ( byte_order == pwr_eByteOrdering_BigEndian)
+      if ( byte_order == pwr_eByteOrderingEnum_BigEndian)
 	memcpy( &data[item[i].ref->Reference_Offset], &v, sizeof(v));
       else {
 	unsigned char b[2];
@@ -1310,7 +1310,7 @@ int pb_gsd::prm_items_to_data( gsd_sPrmDataItem *item, int item_size,
 
       unsigned int v = (unsigned int) item[i].value;
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-      if ( byte_order == pwr_eByteOrdering_LittleEndian) 
+      if ( byte_order == pwr_eByteOrderingEnum_LittleEndian) 
 	memcpy( &data[item[i].ref->Reference_Offset], &v, sizeof(v));
       else {
 	unsigned char b[4];
@@ -1321,7 +1321,7 @@ int pb_gsd::prm_items_to_data( gsd_sPrmDataItem *item, int item_size,
 	data[item[i].ref->Reference_Offset+3] = b[0];
       }
 #elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-      if ( byte_order == pwr_eByteOrdering_BigEndian) 
+      if ( byte_order == pwr_eByteOrderingEnum_BigEndian) 
 	memcpy( &data[item[i].ref->Reference_Offset], &v, sizeof(v));
       else {
 	unsigned char b[4];
@@ -1342,7 +1342,7 @@ int pb_gsd::prm_items_to_data( gsd_sPrmDataItem *item, int item_size,
 
       int v = (int) item[i].value;
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-      if ( byte_order == pwr_eByteOrdering_LittleEndian) 
+      if ( byte_order == pwr_eByteOrderingEnum_LittleEndian) 
 	memcpy( &data[item[i].ref->Reference_Offset], &v, sizeof(v));
       else {
 	unsigned char b[4];
@@ -1353,7 +1353,7 @@ int pb_gsd::prm_items_to_data( gsd_sPrmDataItem *item, int item_size,
 	data[item[i].ref->Reference_Offset+3] = b[0];
       }
 #elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-      if ( byte_order == pwr_eByteOrdering_BigEndian) 
+      if ( byte_order == pwr_eByteOrderingEnum_BigEndian) 
 	memcpy( &data[item[i].ref->Reference_Offset], &v, sizeof(v));
       else {
 	unsigned char b[4];
@@ -1422,7 +1422,7 @@ int pb_gsd::prm_data_to_items( gsd_sPrmDataItem *item, int item_size,
     case gsd_Unsigned16: {
       unsigned short v;
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-      if ( byte_order == pwr_eByteOrdering_LittleEndian)
+      if ( byte_order == pwr_eByteOrderingEnum_LittleEndian)
 	memcpy( &v, &data[item[i].ref->Reference_Offset], sizeof(v));
       else {
 	unsigned char b[2];
@@ -1431,7 +1431,7 @@ int pb_gsd::prm_data_to_items( gsd_sPrmDataItem *item, int item_size,
 	memcpy( &v, b, sizeof(v));
       }
 #elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-      if ( byte_order == pwr_eByteOrdering_BigEndian)
+      if ( byte_order == pwr_eByteOrderingEnum_BigEndian)
 	memcpy( &v, &data[item[i].ref->Reference_Offset], sizeof(v));
       else {
 	unsigned char b[2];
@@ -1446,7 +1446,7 @@ int pb_gsd::prm_data_to_items( gsd_sPrmDataItem *item, int item_size,
     case gsd_Signed16: {
       short v;
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-      if ( byte_order == pwr_eByteOrdering_LittleEndian)
+      if ( byte_order == pwr_eByteOrderingEnum_LittleEndian)
 	memcpy( &v, &data[item[i].ref->Reference_Offset], sizeof(v));
       else {
 	unsigned char b[2];
@@ -1455,7 +1455,7 @@ int pb_gsd::prm_data_to_items( gsd_sPrmDataItem *item, int item_size,
 	memcpy( &v, b, sizeof(v));
       }
 #elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-      if ( byte_order == pwr_eByteOrdering_BigEndian)
+      if ( byte_order == pwr_eByteOrderingEnum_BigEndian)
 	memcpy( &v, &data[item[i].ref->Reference_Offset], sizeof(v));
       else {
 	unsigned char b[2];
@@ -1470,7 +1470,7 @@ int pb_gsd::prm_data_to_items( gsd_sPrmDataItem *item, int item_size,
     case gsd_Unsigned32: {
       unsigned int v;
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-      if ( byte_order == pwr_eByteOrdering_LittleEndian)
+      if ( byte_order == pwr_eByteOrderingEnum_LittleEndian)
 	memcpy( &v, &data[item[i].ref->Reference_Offset], sizeof(v));
       else {
 	unsigned char b[4];
@@ -1481,7 +1481,7 @@ int pb_gsd::prm_data_to_items( gsd_sPrmDataItem *item, int item_size,
 	memcpy( &v, b, sizeof(v));
       }
 #elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-      if ( byte_order == pwr_eByteOrdering_BigEndian)
+      if ( byte_order == pwr_eByteOrderingEnum_BigEndian)
 	memcpy( &v, &data[item[i].ref->Reference_Offset], sizeof(v));
       else {
 	unsigned char b[4];
@@ -1498,7 +1498,7 @@ int pb_gsd::prm_data_to_items( gsd_sPrmDataItem *item, int item_size,
     case gsd_Signed32: {
       int v;
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-      if ( byte_order == pwr_eByteOrdering_LittleEndian)
+      if ( byte_order == pwr_eByteOrderingEnum_LittleEndian)
 	memcpy( &v, &data[item[i].ref->Reference_Offset], sizeof(v));
       else {
 	unsigned char b[4];
@@ -1509,7 +1509,7 @@ int pb_gsd::prm_data_to_items( gsd_sPrmDataItem *item, int item_size,
 	memcpy( &v, b, sizeof(v));
       }
 #elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-      if ( byte_order == pwr_eByteOrdering_BigEndian)
+      if ( byte_order == pwr_eByteOrderingEnum_BigEndian)
 	memcpy( &v, &data[item[i].ref->Reference_Offset], sizeof(v));
       else {
 	unsigned char b[4];

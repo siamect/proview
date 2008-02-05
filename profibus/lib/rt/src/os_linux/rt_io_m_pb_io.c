@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_io.c,v 1.5 2007-01-12 13:28:31 claes Exp $
+ * Proview   $Id: rt_io_m_pb_io.c,v 1.6 2008-02-05 08:14:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -115,16 +115,16 @@ static pwr_tStatus IoCardWrite (
       data32 = *(pwr_tInt32 *) chanp->vbp;
 
       if (op->BytesPerChannel == 4) {
-        if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) data32 = swap32(data32);
+        if (slave->ByteOrdering == pwr_eByteOrderingEnum_BigEndian) data32 = swap32(data32);
         memcpy(local->output_area + op->OffsetOutputs + 4*i, &data32, 4);
       }
       else if (op->BytesPerChannel == 3) {
-        if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) data32 = swap32(data32);
+        if (slave->ByteOrdering == pwr_eByteOrderingEnum_BigEndian) data32 = swap32(data32);
         memcpy(local->output_area + op->OffsetOutputs + 3*i, &data32, 3);
       }
       else if (op->BytesPerChannel == 2) {
         data16 = (pwr_tInt16) data32;
-        if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) data16 = swap16(data16);
+        if (slave->ByteOrdering == pwr_eByteOrderingEnum_BigEndian) data16 = swap16(data16);
         memcpy(local->output_area + op->OffsetOutputs + 2*i, &data16, 2);
       }
       else if (op->BytesPerChannel == 1) {

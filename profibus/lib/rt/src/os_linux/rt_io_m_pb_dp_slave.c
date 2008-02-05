@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_dp_slave.c,v 1.10 2007-11-23 10:07:10 claes Exp $
+ * Proview   $Id: rt_io_m_pb_dp_slave.c,v 1.11 2008-02-05 08:14:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -264,9 +264,9 @@ static pwr_tStatus IoRackInit (
 	      }
               chanp->offset = input_counter;
 	      chanp->mask = 1<<chan_di->Number;
-	      if (chan_di->Representation == pwr_eDataRepEnum_Bit16 && op->ByteOrdering == pwr_eByteOrdering_BigEndian) 
+	      if (chan_di->Representation == pwr_eDataRepEnum_Bit16 && op->ByteOrdering == pwr_eByteOrderingEnum_BigEndian) 
 	        chanp->mask = swap16(chanp->mask);
-	      if (chan_di->Representation == pwr_eDataRepEnum_Bit32 && op->ByteOrdering == pwr_eByteOrdering_BigEndian)
+	      if (chan_di->Representation == pwr_eDataRepEnum_Bit32 && op->ByteOrdering == pwr_eByteOrderingEnum_BigEndian)
 	        chanp->mask = swap32((unsigned short) chanp->mask);
 	      if (chan_di->Number == 0) latent_input_count = GetChanSize(chan_di->Representation);
 //	      printf("Di channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_di->Number, chanp->offset);
@@ -312,9 +312,9 @@ static pwr_tStatus IoRackInit (
               chanp->offset = output_counter;
 	      chan_size = GetChanSize(chan_do->Representation);
 	      chanp->mask = 1<<chan_do->Number;
-	      if (chan_do->Representation == pwr_eDataRepEnum_Bit16 && op->ByteOrdering == pwr_eByteOrdering_BigEndian) 
+	      if (chan_do->Representation == pwr_eDataRepEnum_Bit16 && op->ByteOrdering == pwr_eByteOrderingEnum_BigEndian) 
 	        chanp->mask = swap16(chanp->mask);
-	      if (chan_do->Representation == pwr_eDataRepEnum_Bit32 && op->ByteOrdering == pwr_eByteOrdering_BigEndian)
+	      if (chan_do->Representation == pwr_eDataRepEnum_Bit32 && op->ByteOrdering == pwr_eByteOrderingEnum_BigEndian)
 	        chanp->mask = swap32((unsigned short) chanp->mask);
 	      if (chan_do->Number == 0) latent_output_count = GetChanSize(chan_do->Representation);
 //	      printf("Do channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_do->Number, chanp->offset);

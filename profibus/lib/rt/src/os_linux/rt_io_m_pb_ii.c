@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_ii.c,v 1.5 2007-01-12 13:28:31 claes Exp $
+ * Proview   $Id: rt_io_m_pb_ii.c,v 1.6 2008-02-05 08:14:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -119,12 +119,12 @@ static pwr_tStatus IoCardRead (
         if (op->BytesPerChannel == 4) {
 	  if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT) {
 	    memcpy(&udata32, local->input_area + op->OffsetInputs + 4*i, 4);
-	    if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) udata32 = swap32(udata32);
+	    if (slave->ByteOrdering == pwr_eByteOrderingEnum_BigEndian) udata32 = swap32(udata32);
             *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata32;
 	  }
 	  else if (op->NumberRepresentation == PB_NUMREP_SIGNEDINT) {
 	    memcpy(&data32, local->input_area + op->OffsetInputs + 4*i, 4);
-	    if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) data32 = swap32(data32);
+	    if (slave->ByteOrdering == pwr_eByteOrderingEnum_BigEndian) data32 = swap32(data32);
             *(pwr_tInt32 *) chanp->vbp = data32;
 	  }
         }
@@ -132,7 +132,7 @@ static pwr_tStatus IoCardRead (
 	  if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT) {
 	    udata32 = 0;
 	    memcpy(&udata32, local->input_area + op->OffsetInputs + 3*i, 3);
-	    if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) {
+	    if (slave->ByteOrdering == pwr_eByteOrderingEnum_BigEndian) {
 	      udata32 = swap32(udata32);
       	      udata32 = udata32 >> 8;
 	    }
@@ -141,7 +141,7 @@ static pwr_tStatus IoCardRead (
 	  else if (op->NumberRepresentation == PB_NUMREP_SIGNEDINT) {
 	    data32 = 0;
 	    memcpy(&data32, local->input_area + op->OffsetInputs + 3*i, 3);
-	    if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) {
+	    if (slave->ByteOrdering == pwr_eByteOrderingEnum_BigEndian) {
 	      data32 = swap32(data32);
 	      data32 = data32 >> 8;
 	    }
@@ -151,12 +151,12 @@ static pwr_tStatus IoCardRead (
         else if (op->BytesPerChannel == 2) {
 	  if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT) {
  	    memcpy(&udata16, local->input_area + op->OffsetInputs + 2*i, 2);
-	    if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) udata16 = swap16(udata16);
+	    if (slave->ByteOrdering == pwr_eByteOrderingEnum_BigEndian) udata16 = swap16(udata16);
             *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata16;
 	  }
 	  else if (op->NumberRepresentation == PB_NUMREP_SIGNEDINT) {
 	    memcpy(&data16, local->input_area + op->OffsetInputs + 2*i, 2);
-	    if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) data16 = swap16(data16);
+	    if (slave->ByteOrdering == pwr_eByteOrderingEnum_BigEndian) data16 = swap16(data16);
             *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) data16;
 	  }
         }
