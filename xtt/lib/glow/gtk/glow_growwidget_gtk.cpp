@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growwidget_gtk.cpp,v 1.6 2007-11-22 09:02:10 claes Exp $
+ * Proview   $Id: glow_growwidget_gtk.cpp,v 1.7 2008-02-05 14:59:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -339,7 +339,7 @@ static void growwidgetgtk_realize( GtkWidget *widget)
     GDK_BUTTON_PRESS_MASK | 
     GDK_BUTTON_RELEASE_MASK | 
     GDK_KEY_PRESS_MASK |
-    GDK_POINTER_MOTION_MASK |
+    GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK |
     GDK_BUTTON_MOTION_MASK |
     GDK_ENTER_NOTIFY_MASK |
     GDK_LEAVE_NOTIFY_MASK;

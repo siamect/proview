@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_gtk.cpp,v 1.10 2008-01-28 07:32:50 claes Exp $
+ * Proview   $Id: glow_draw_gtk.cpp,v 1.11 2008-02-05 14:59:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -971,6 +971,14 @@ int GlowDrawGtk::event_handler( GdkEvent event)
     case GDK_MOTION_NOTIFY:
 //            printf( "-- Button1 motion event: (%d,%d)\n", event.button.x, 
 //		event.button.y);
+      if ( event.motion.is_hint) {
+	int x, y;
+
+	gdk_window_get_pointer( event.any.window, &x, &y, NULL);
+	event.button.x = x;
+	event.button.y = y;
+      }
+
       if ( button3_pressed) {
 	button3_pressed = 0;
 	button_pressed = 0;
@@ -1097,6 +1105,14 @@ int GlowDrawGtk::event_handler( GdkEvent event)
     case GDK_MOTION_NOTIFY:
 //            printf( "-- Button1 motion event nav: (%d,%d)\n", event.button.x, 
 //		event.button.y);
+
+      if ( event.motion.is_hint) {
+	int x, y;
+
+	gdk_window_get_pointer( event.any.window, &x, &y, NULL);
+	event.button.x = x;
+	event.button.y = y;
+      }
       if ( button1_pressed || button2_pressed || button3_pressed)
 	ctx->event_handler_nav( glow_eEvent_ButtonMotion, (int)event.button.x, (int)event.button.y);
       else
@@ -2513,7 +2529,7 @@ int GlowDrawGtk::print( char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.10 2008-01-28 07:32:50 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.11 2008-02-05 14:59:43 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else

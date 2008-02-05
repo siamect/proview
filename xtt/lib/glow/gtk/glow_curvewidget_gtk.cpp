@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_curvewidget_gtk.cpp,v 1.4 2007-11-22 09:02:10 claes Exp $
+ * Proview   $Id: glow_curvewidget_gtk.cpp,v 1.5 2008-02-05 14:59:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -307,7 +307,7 @@ static void curvewidgetgtk_realize( GtkWidget *widget)
     GDK_BUTTON_RELEASE_MASK | 
     GDK_KEY_PRESS_MASK |
     GDK_POINTER_MOTION_MASK |
-    GDK_BUTTON_MOTION_MASK |
+    GDK_BUTTON_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK |
     GDK_ENTER_NOTIFY_MASK |
     GDK_LEAVE_NOTIFY_MASK;
   attr.visual = gtk_widget_get_visual( widget);

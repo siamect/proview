@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_gtk.cpp,v 1.9 2007-05-11 15:07:21 claes Exp $
+ * Proview   $Id: flow_draw_gtk.cpp,v 1.10 2008-02-05 14:59:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -781,6 +781,14 @@ int FlowDrawGtk::event_handler( FlowCtx *ctx, GdkEvent event)
       }
       break;        
     case GDK_MOTION_NOTIFY:
+      if ( event.motion.is_hint) {
+	int x, y;
+
+	gdk_window_get_pointer( event.any.window, &x, &y, NULL);
+	event.button.x = x;
+	event.button.y = y;
+      }
+
       if ( button3_pressed) {
 	button3_pressed = 0;
 	button_pressed = 0;
@@ -898,6 +906,14 @@ int FlowDrawGtk::event_handler( FlowCtx *ctx, GdkEvent event)
       sts = ctx->event_handler_nav( flow_eEvent_Exposure, 0, 0);
       break; 
     case GDK_MOTION_NOTIFY:
+      if ( event.motion.is_hint) {
+	int x, y;
+
+	gdk_window_get_pointer( event.any.window, &x, &y, NULL);
+	event.button.x = x;
+	event.button.y = y;
+      }
+
       if ( button1_pressed || button2_pressed || button3_pressed)
 	sts = ctx->event_handler_nav( flow_eEvent_ButtonMotion, (int)event.button.x, (int)event.button.y);
       else
