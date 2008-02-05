@@ -1,6 +1,6 @@
 Volume ABB $ClassVolume 0.0.250.2 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X3726"
+    Attr NextOix = "_X3734"
     Attr NextCix = "_X36"
     Attr NextTix[0] = "_X3"
   EndBody
@@ -24896,7 +24896,7 @@ ABB ACC800"
       Object Code PlcTemplate 212 12-OCT-2005 12:58:20.00
         Body RtBody 01-JAN-1970 01:00:00.00
         EndBody
-        Body DevBody 01-OCT-2007 15:37:29.18
+        Body DevBody 15-JAN-2008 14:06:56.17
           Buffer PlcProgram
             Attr oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -24910,7 +24910,7 @@ ABB ACC800"
             Attr defnamecount[98] = 1
             Attr defnamecount[99] = 3
             Attr defnamecount[102] = 1
-            Attr defnamecount[119] = 1
+            Attr defnamecount[119] = 3
             Attr defnamecount[125] = 3
             Attr defnamecount[136] = 3
             Attr defnamecount[137] = 29
@@ -24920,21 +24920,22 @@ ABB ACC800"
             Attr defnamecount[143] = 4
             Attr defnamecount[147] = 1
             Attr defnamecount[250] = 1
-            Attr defnamecount[252] = 4
+            Attr defnamecount[252] = 5
             Attr defnamecount[253] = 5
             Attr defnamecount[255] = 27
             Attr defnamecount[256] = 43
             Attr defnamecount[258] = 4
             Attr defnamecount[263] = 3
             Attr defnamecount[264] = 3
-            Attr connamecount = 310
+            Attr defnamecount[275] = 2
+            Attr connamecount = 313
           EndBuffer
         EndBody
         Object W WindowPlc 213 12-OCT-2005 12:58:20.00
           Body RtBody 01-JAN-1970 01:00:00.00
           EndBody
-          Body DevBody 01-OCT-2007 15:37:29.18
-            Attr Modified = "01-OCT-2007 15:37:29.18"
+          Body DevBody 15-JAN-2008 14:06:56.17
+            Attr Modified = "15-JAN-2008 14:06:56.17"
             Buffer PlcWindow
               Attr oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -24944,6 +24945,120 @@ ABB ACC800"
               Attr refconcount = 1
             EndBuffer
           EndBody
+          Object cn312 ConAnalog 3734 15-JAN-2008 14:06:09.51
+            Body DevBody 15-JAN-2008 14:06:56.17
+              Buffer PlcConnection
+                Attr oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W-cn312"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W-GetDTp1"
+                Attr dest_oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W-Backup2"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.820000e+00
+                  Attr y = 7.950000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.633445e+00
+                  Attr y = 7.950000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn311 ConAnalog 3733 15-JAN-2008 14:06:07.83
+            Body DevBody 15-JAN-2008 14:06:56.17
+              Buffer PlcConnection
+                Attr oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W-cn311"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W-GetDTp0"
+                Attr dest_oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W-Backup1"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.820000e+00
+                  Attr y = 7.900000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.684556e+00
+                  Attr y = 7.900000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn310 ConAnalog 3732 15-JAN-2008 14:06:05.77
+            Body DevBody 15-JAN-2008 14:06:56.17
+              Buffer PlcConnection
+                Attr oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W-cn310"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W-GetIp4"
+                Attr dest_oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W-Backup0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.820000e+00
+                  Attr y = 7.850000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.689778e+00
+                  Attr y = 7.850000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
           Object cn309 ConDigital 3682 01-OCT-2007 15:36:39.36
             Body DevBody 01-OCT-2007 15:37:29.18
               Buffer PlcConnection
@@ -28900,49 +29015,6 @@ ABB ACC800"
               EndBuffer
             EndBody
           EndObject
-          Object cn113 ConDigital 484 12-OCT-2005 12:58:20.00
-            Body DevBody 20-DEC-2005 10:57:43.48
-              Buffer PlcConnection
-                Attr oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W-cn113"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_point = 2
-                Attr source_oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W-RunningTime"
-                Attr dest_oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W-Backup0"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 2.120000e+00
-                  Attr y = 7.900000e+00
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.802000e+00
-                  Attr y = 7.900000e+00
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 2.333111e+00
-                  Attr y = 1.025000e+01
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 2.420000e+00
-                  Attr y = 1.025000e+01
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
           Object cn112 ConDigital 483 12-OCT-2005 12:58:20.00
             Body DevBody 20-DEC-2005 10:57:43.48
               Buffer PlcConnection
@@ -30618,16 +30690,15 @@ ResTrip = trp"
             EndBody
           EndObject
           Object Backup0 Backup 255 12-OCT-2005 12:58:20.00
-            Body RtBody 01-JAN-1970 01:00:00.00
-              Attr ObjectBackup = 1
+            Body RtBody 15-JAN-2008 14:05:19.84
             EndBody
-            Body DevBody 20-DEC-2005 10:57:43.48
+            Body DevBody 15-JAN-2008 14:06:56.17
               Buffer PlcNode
                 Attr object_type = 119
                 Attr cid = "pwrb:Class-Backup"
                 Attr oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W-Backup0"
-                Attr x = 2.100000e+00
-                Attr y = -6.925000e+00
+                Attr x = 2.800000e+00
+                Attr y = -6.875000e+00
                 Attr width = 3.133333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W"
@@ -31512,18 +31583,17 @@ SW bit:
             Body RtBody 01-JAN-1970 01:00:00.00
               Attr PlcConnect = "$PlcMain:ABB-Class-ABB_ACS800MotorAggr.RunTimeCounter"
             EndBody
-            Body DevBody 20-DEC-2005 10:57:43.48
+            Body DevBody 15-JAN-2008 14:06:56.17
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "BaseComponent:Class-RunTimeCounterFo"
                 Attr oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W-RunningTime"
                 Attr x = 1.450000e+00
                 Attr y = -7.025000e+00
-                Attr width = 3.320000e-01
+                Attr width = 3.020000e-01
                 Attr heigth = 2.000000e-01
                 Attr woid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W"
                 Attr mask[0] = 3
-                Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
@@ -33218,6 +33288,94 @@ SSAB safetyswitch, Contactor"
                 Attr x = 1.450000e+00
                 Attr y = -7.750000e-01
                 Attr width = 4.718889e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetIp4 GetIp 3727 15-JAN-2008 14:05:35.53
+            Body RtBody 15-JAN-2008 14:05:35.53
+            EndBody
+            Body DevBody 15-JAN-2008 14:06:56.17
+              Attr IpObject = "$PlcMain:ABB-Class-ABB_ACS800MotorAggr.RunTimeCounter.TotalNOfStarts"
+              Buffer PlcNode
+                Attr object_type = 252
+                Attr cid = "pwrb:Class-GetIp"
+                Attr oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W-GetIp4"
+                Attr x = 1.950000e+00
+                Attr y = -6.825000e+00
+                Attr width = 6.897777e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDTp0 GetDTp 3728 15-JAN-2008 14:05:53.26
+            Body RtBody 15-JAN-2008 14:05:53.26
+            EndBody
+            Body DevBody 15-JAN-2008 14:06:56.17
+              Attr DTpObject = "$PlcMain:ABB-Class-ABB_ACS800MotorAggr.RunTimeCounter.TotalRunTime"
+              Buffer PlcNode
+                Attr object_type = 275
+                Attr cid = "pwrb:Class-GetDTp"
+                Attr oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W-GetDTp0"
+                Attr x = 1.950000e+00
+                Attr y = -6.875000e+00
+                Attr width = 6.845555e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDTp1 GetDTp 3729 15-JAN-2008 14:05:54.87
+            Body RtBody 15-JAN-2008 14:05:54.87
+            EndBody
+            Body DevBody 15-JAN-2008 14:06:56.17
+              Attr DTpObject = "$PlcMain:ABB-Class-ABB_ACS800MotorAggr.RunTimeCounter.TotalTime"
+              Buffer PlcNode
+                Attr object_type = 275
+                Attr cid = "pwrb:Class-GetDTp"
+                Attr oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W-GetDTp1"
+                Attr x = 1.950000e+00
+                Attr y = -6.925000e+00
+                Attr width = 6.334444e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Backup1 Backup 3730 15-JAN-2008 14:05:58.01
+            Body RtBody 15-JAN-2008 14:05:58.01
+            EndBody
+            Body DevBody 15-JAN-2008 14:06:56.17
+              Buffer PlcNode
+                Attr object_type = 119
+                Attr cid = "pwrb:Class-Backup"
+                Attr oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W-Backup1"
+                Attr x = 2.800000e+00
+                Attr y = -6.925000e+00
+                Attr width = 3.133333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Backup2 Backup 3731 15-JAN-2008 14:05:59.53
+            Body RtBody 15-JAN-2008 14:05:59.53
+            EndBody
+            Body DevBody 15-JAN-2008 14:06:56.17
+              Buffer PlcNode
+                Attr object_type = 119
+                Attr cid = "pwrb:Class-Backup"
+                Attr oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W-Backup2"
+                Attr x = 2.800000e+00
+                Attr y = -6.975000e+00
+                Attr width = 3.133333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W"
                 Attr mask[0] = 1
@@ -35201,8 +35359,11 @@ ABB ACS800 Aggregate
     !  @b Configuration
     !  Use the 'Configure Slave' method in the popup menu of the object
     !  to configure the slave.
+    !
+    !  Select ABB_ACS_PPO5 as module class.
     ! 
     !  @b See also
+    !  @classlink ABB_ACS_PPO5 abb_abb_acs_ppo5.html
     !  @classlink Pb_DP_Slave profibus_pb_dp_slave.html
     !*/
     Object ABB_ACS_Pb_Slave $ClassDef 35 02-MAY-2006 14:30:48.01
@@ -35244,55 +35405,57 @@ ABB ACS800 Aggregate
     !  @Group Process
     !  @Summary Profibus module to ACS800 with protocol PPO5.
     !  Profibus module to ACS800 with protocol PPO5.
-    ! 
-    !  The object is configured under a PbSlave object in the node hierarchy.
+    !
+    !  The object is created by the profibus configurator under a 
+    !  ABB_ACS_Pb_Slave object in the node hierarchy.
+    !
     !  Connect the function object to an object of class or subclass of
     !  ABB_ACS800_1 with the IoConnect method.
     ! 
-    !  För att anpassa denna PPO5 konfigurations uppbyggnad (I/O) i Proview
-    !  krävs inställningar i omriktarens parameterinställningar.
+    !  To adapt the frequency converter to this configuration, some settings
+    !  have to be performed.
     !  
-    !  Parametergrupp/inställning, förklaring
+    ! Parameter  Value       Description
+    ! group  
+    !  10.01     COMM.CW    Ext1 start/stop/direction
+    !  10.03     ?          Rotation of the motor
+    !  11.02     EXT1       Reference select
+    !  11.03     COMM.REF   Source for external reference 1
+    !  11.04     ?          Minimum value for external reference 1
+    !  11.05     ?          Maximum value for external reference 1
+    !  16.04     COMM.CW    Source for the fault reset signal "tripped"
+    !  21.03     RAMP       Motor stop function
+    !  22.01     ACC/DEC 1  Acceleration and deceleration times
+    !  20.02     ?          Acc time 1
+    !  20.03     ?          Dec time 1
+    !  51.06     104        PZD3 IN, Current
+    !  51.08     105        PZD4 IN, Tourque
+    !  51.10     305        PZD5 IN, Fault word 1 
+    !  51.12     306        PZD6 IN, Fault word 2 
+    !  51.14     117        PZD7 IN, DI6_1 
+    !  51.16     318        PZD8 IN, Alarm word 5
+    !  51.18     313        PZD9 IN, Status word 3 
     !  
-    !  10.01 = COMM.CW    Ext1 start/stop/direction
-    !  10.03 = ?          Rotation of the motor
-    !  11.02 = EXT1       Reference select
-    !  11.03 = COMM.REF   Source for external reference 1
-    !  11.04 = ?          Minimum value for external reference 1
-    !  11.05 = ?          Maximum value for external reference 1
-    !  16.04 = COMM.CW    Source for the fault reset signal "tripped"
-    !  21.03 = RAMP       Motor stop function
-    !  22.01 = ACC/DEC 1  Acceleration and deceleration times
-    !  20.02 = ?          Acc time 1
-    !  20.03 = ?          Dec time 1
-    !  51.06 = 104        PZD3 IN, Current
-    !  51.08 = 105        PZD4 IN, Tourque
-    !  51.10 = 305        PZD5 IN, Fault word 1 
-    !  51.12 = 306        PZD6 IN, Fault word 2 
-    !  51.14 = 117        PZD7 IN, DI6_1 
-    !  51.16 = 318        PZD8 IN, Alarm word 5
-    !  51.18 = 313        PZD9 IN, Status word 3 
-    !  
-    !  98.02 = FIELDBUS   Serial communication
-    !  98.07 = ABB Drives Communication profile 
+    !  98.02     FIELDBUS   Serial communication
+    !  98.07     ABB Drives Communication profile 
     ! 
-    !  Se also
-    !  16.01 = ?          Run enable parameter
-    !  20.01 = ?          Limits min speed
-    !  20.02 = ?          Limits max speed
+    !  See also
+    !  16.01     ?          Run enable parameter
+    !  20.01     ?          Limits min speed
+    !  20.02     ?          Limits max speed
     !     
-    !  Exempel attribute PZD4 IN:
+    !  Example parameter PZD4 IN:
     !  
-    !  Parameter PZD4 IN ställs in i parametergrupp 51.08 som ska ställas in på
-    !  105, dvs driftvärdet "01.05" som är ärvärdet momentet i omriktaren. Denna
-    !  signal är i sin tur knuten till signalnamnet "ActTorque" i objektet
-    !  "ABB_ACS800_1".
+    !  Parameter PZD4 IN is set in parametergroup 51.08 and should be set
+    !  105, i.e. the value "01.05" that is the torque value in the converter.
+    !  This signal is connected to the signal ActTorque in the ABB_ACS800_1
+    !  object.
     ! 
-    !  OBS
-    !  Övriga inställningar i omriktaren som måste till för en fungerande
-    !  kommunikation beaktas inte här. 
+    !  Note!
+    !  Other setting of the converter are not discussed here.
     ! 
     !  @b See also
+    !  @classlink ABB_ACS_Pb_Slave abb_abb_acs_pb_slave.html
     !  @classlink ABB_ACS800_1 abb_abb_acs800_1.html
     !*/
     Object ABB_ACS_PPO5 $ClassDef 7 12-OCT-2005 12:58:20.00
