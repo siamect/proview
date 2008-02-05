@@ -4059,6 +4059,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! @Summary Speed measurement, pulses per second.
         ! Speed measurement, pulses per second.
         ! Bit 8 in the configuration word of the counter is set.
+        !
+        ! If both LengthMeasurement and SpeedMeasurement is set, the counter is only
+        ! affected in one direction.
         !*/
         Object SpeedMeasurement $Attribute 18 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00

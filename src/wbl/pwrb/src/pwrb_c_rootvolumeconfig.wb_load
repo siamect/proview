@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_rootvolumeconfig.wb_load,v 1.6 2006-01-23 09:16:44 claes Exp $
+!  Proview   $Id: pwrb_c_rootvolumeconfig.wb_load,v 1.7 2008-02-05 15:01:26 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -49,7 +49,30 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  @Summary Database server. Used for MySql databases.
       !  Database server. Used for MySql databases.
+      !  The Server attribute can contain username, password,
+      !  port and host that is used to access the mysql database.
+      !
+      !  The syntax is 'username:password@port:host'
+      !
+      !  The default username is pwrp without password.
+      !  The port can be left out to use the default mysql port.
+      !
+      !  <b>Examples
+      !  wagon            Host wagon with user pwrp (no password) and 
+      !                   standard port.
+      !  charlie@wagon    User charlie (no password) with host wagon.
+      !  charlie:strawberry@wagon  User charlie with username strawberry
+      !                   with host wagon.
+      !  charlie:strawberry@330:wagon User charlie, password strawberry with
+      !                   host wagon, port 330.
+      !  charlie@localhost User charlie (no password) with server on the current 
+      !                   node. In this case a socket is used for the connection
+      !                   that can be specified in /etc/proview.cnf, parameter mysqlSocket.
+      !
+      !  If the server attribute is empty, the server on the current node is used
+      !                   with user pwrp, no password.
       !*/
       Object Server $Attribute 3 
         Body SysBody
