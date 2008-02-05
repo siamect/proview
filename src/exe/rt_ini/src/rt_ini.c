@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_ini.c,v 1.14 2007-11-30 08:22:38 claes Exp $
+ * Proview   $Id: rt_ini.c,v 1.15 2008-02-05 15:03:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -467,8 +467,8 @@ terminate (
   qcom_SignalAnd(&sts, &qcom_cQini, 0);
   qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_terminate);
 
-  qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_oldPlcStop);
-  qcom_WaitAnd(&sts, &cp->eventQ, &qcom_cQini, ini_mEvent_oldPlcStopDone, qcom_cTmoEternal);
+  //qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_oldPlcStop);
+  //qcom_WaitAnd(&sts, &cp->eventQ, &qcom_cQini, ini_mEvent_oldPlcStopDone, qcom_cTmoEternal);
 
   qcom_Exit(NULL);
 
