@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.66 2008-02-04 13:34:49 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.67 2008-02-05 14:53:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1989,6 +1989,7 @@ ldh_WbLoad( ldh_tSession session, char *loadfile, int ignore_oix)
 	erep->merep()->copyFiles( db_name);
       }
       else {
+#if defined PWRE_CONF_MYSQL
 	char socket[80];
 	char user[80];
 	char password[80];
@@ -2013,6 +2014,7 @@ ldh_WbLoad( ldh_tSession session, char *loadfile, int ignore_oix)
 	dbms.copy( *vwbl, db_name);
 	dbms.close();
 	erep->merep()->copyFiles( db_name);
+#endif
       }
       delete vwbl;      
     }

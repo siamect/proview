@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_erep.cpp,v 1.54 2008-02-04 13:34:49 claes Exp $
+ * Proview   $Id: wb_erep.cpp,v 1.55 2008-02-05 14:53:12 claes Exp $
  * Copyright (C) 2005 SSAB OxelÃ¶sund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -773,11 +773,13 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
 	else {
 	  // Open db
 	  if ( nr >= 5 && vol_array[4][0] == '1') {
+#if defined PWRE_CONF_MYSQL
 	    wb_vrepdbms *vrepdbms = new wb_vrepdbms( this, vname);
 	    vrepdbms->name(vol_array[0]);
 	    addDb( &sts, vrepdbms);
 	    MsgWindow::message( 'I', "Database opened", vname);
 	    vol_cnt++;
+#endif
 	  }
 	  else {
 	    wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
@@ -1084,6 +1086,7 @@ wb_vrep *wb_erep::createVolume(pwr_tStatus *sts, pwr_tVid vid, pwr_tCid cid,
       return 0;
     }
 
+#if defined PWRE_CONF_MYSQL
     wb_dbms_env *env = new wb_dbms_env();
     env->create( vname, host, user, password, cdh_Low(name), port, socket);
 
@@ -1095,7 +1098,9 @@ wb_vrep *wb_erep::createVolume(pwr_tStatus *sts, pwr_tVid vid, pwr_tCid cid,
       addDb( sts, vrepdbms);
     MsgWindow::message( 'I', "Database created", vname);
 
+
     return vrepdbms;
+#endif
   }
   return 0;
 }

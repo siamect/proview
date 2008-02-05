@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dbms.cpp,v 1.6 2008-02-04 13:34:49 claes Exp $
+ * Proview   $Id: wb_dbms.cpp,v 1.7 2008-02-05 14:53:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,6 +26,7 @@
 #include "pwr.h"
 #include "pwr_class.h"
 #include "co_dcli.h"
+#include "co_syi.h"
 #include "wb_ldh.h"
 #include "wb_ldh_msg.h"
 #include "wb_destination.h"
@@ -726,6 +727,21 @@ char *wb_dbms_env::dbName(void)
   return dbname;
 }
 
+char *wb_dbms_env::host(void) 
+{ 
+  char nodename[80];
+  pwr_tStatus sts;
+  static char host[80];
+
+  syi_NodeName( &sts, nodename, sizeof(nodename));
+  if ( ODD(sts) && cdh_NoCaseStrcmp( nodename, m_host) == 0)
+    strcpy( host, "localhost");
+  else
+    strcpy( host, m_host);
+
+  return host;
+}
+
 void wb_dbms_env::port(const unsigned int port)
 {
   m_port = port;
@@ -876,7 +892,7 @@ int wb_dbms_env::create()
       return errno;
     }
 
-    fprintf(fp, "HOST...: %s\n", host());
+    fprintf(fp, "HOST...: %s\n", m_host);
     fprintf(fp, "USER...: %s\n", user());
     if ( !passwd() || strcmp( passwd(), "") == 0)
       fprintf(fp, "PASSWD.: (null)\n");

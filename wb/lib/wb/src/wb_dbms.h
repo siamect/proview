@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dbms.h,v 1.2 2008-02-04 13:34:49 claes Exp $
+ * Proview   $Id: wb_dbms.h,v 1.3 2008-02-05 14:53:12 claes Exp $
  * Copyright (C) 2007 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -176,7 +176,7 @@ public:
   
   char *dbName(void);
   inline char *fileName(void) { return m_fileName;}
-  inline char *host(void) { return m_host;}
+  char *host(void);
   inline char *user(void) { return m_user;}
   inline char *passwd(void) { return m_passwd;}
   inline unsigned int port(void) { return m_port;}
