@@ -18,3 +18,4 @@
 071116 cs -           Bugfix in Profibus configurator, additional ExtUserPrmDataConst was not handled correctly.
 071205 rk -           ChanDi and ChanDo inverts value if InvertOn set on channel.
 071211 rk mmi         Added supgraph mcomp_pb_dp_slave.
+080115 cs -           Reading of Di, Ai and Ii can be disabled by setting ConversionOn in channel object to 0.

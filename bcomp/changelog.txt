@@ -11,3 +11,4 @@
 071001 cs  bcomp      Attribute DisableSup added to most Fo object to suppress alarm messages.
 071030 cs  bcomp      ConfigureComponent method also viewed for pointed but not selected object.
 071031 cs  bcomp      Bugfix in object graphs for CompPID and CompModePID. Linkage to user and local removed.
+080115 cs  bcomp      Bugfix in BaseMotorAggr. Backup on runningtime object didn't work.

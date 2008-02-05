@@ -17,7 +17,7 @@ See specific package information below:
 Dependencies:
 
 GTK+ v2.0 (libgtk2.0)
-Berkeley DB v4.3.29 (libdb4.3)
+Berkeley DB v4.3.29 (libdb4.3, libdb++4.3)
 Alsa v1.0.11 (libasound2)
 
 Install with dpkg
@@ -26,7 +26,7 @@ dpkg doesn't check any dependency, and all the depedencies package has to be ins
 
 Download your selected debian-package and install it as:
 
-> dpkg -i pwr44_4.4.0-x_i386.deb
+> dpkg -i pwr44_4.4.x-x_i386.deb
 
 During installation the files will be unpacked and a user named 'pwrp'
 belonging to a group with the same name 'pwrp' will be created.
@@ -82,7 +82,7 @@ Download:
 
 Download your selected debian-package and install it as:
 
-> dpkg -i pwrrt_4.4.0-x_i386.deb
+> dpkg -i pwrrt_4.4.x-x_i386.deb
 
 Information:
 
@@ -98,13 +98,13 @@ a demo of the dynamics and components of the HMI.
 
 Dependencies:
 
-pwr44 V4.4.0
+pwr44 V4.4.x
 
 Download:
 
 Download your selected debian-package and install with dpkg
 
-> dpkg -i pwrdemo44_4.4.0-x_i386.deb
+> dpkg -i pwrdemo44_4.4.x-x_i386.deb
 
 or install with apt (see section 1)
 

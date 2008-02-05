@@ -1,13 +1,13 @@
 INSTALLATION GUIDE SUSE
 -----------------------
 
-Suse distribution: Suse Linux 10
+Suse distribution: openSuse 10.2
 
 System Requirements:
 
 Platform: x86
 Kernel: >= 2.6.6
-glibc: >= 2.3.4
+glibc: >= 2.5
 
 See specific packacke information below:
 
@@ -16,14 +16,13 @@ See specific packacke information below:
 
 Dependencies:
 
-Berkeley DB v4.3
-Alsa v1.0.6
+Berkeley DB v4.2
 
 Download:
 
 Download your selected rpm-package and install it as:
 
-rpm -Uvh pwr44_4.4.0-x.suse10.i386.rpm
+rpm -Uvh pwr44_4.4.x-x.suse10.i386.rpm
 
 During installation the files will be unpacked and a user named 'pwrp'
 belonging to a group with the same name 'pwrp' will be created.
@@ -43,14 +42,13 @@ will help you taking the first steps.
 
 Dependencies:
 
-Berkeley DB v4.3
-Alsa v1.0.6
+Berkeley DB v4.2
 
 Download:
 
 Download your selected rpm-package and install it as:
 
-rpm -Uvh pwrrt_4.4.0-x.suse10.i386.rpm
+rpm -Uvh pwrrt_4.4.x-x.suse10.i386.rpm
 
 Information:
 
@@ -66,13 +64,13 @@ process control applications.
 
 Dependencies:
 
-pwr44 V4.4.0
+pwr44 V4.4.x
 
 Download:
 
 Download your selected rpm-package and install it as:
 
-rpm -Uvh pwrdemo44_4.4.0-x.suse10.i386.deb
+rpm -Uvh pwrdemo44_4.4.x-x.suse10.i386.deb
 
 Getting started:
 

@@ -63,6 +63,7 @@ menu Process
   subgraph 	ScrewAnim	pwr_exe:pwr_screw.pwsg 			46
   subgraph 	SpeedSwitch	pwr_exe:pwr_speedswitch.pwsg 		24
   subgraph 	Switch		pwr_exe:pwr_switch.pwsg 		16
+  subgraph 	StopWatch	pwr_exe:pwr_stopwatch.pwsg 		47
   subgraph 	Valve	 	pwr_exe:pwr_valve.pwsg 			1
   subgraph 	ValveAnim 	pwr_exe:pwr_valveanim.pwsg		1
   subgraph 	ValveAnim2 	pwr_exe:pwr_valveanim2.pwsg		1

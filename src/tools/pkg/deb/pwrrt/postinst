@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 if [ "$pwrrt_xtrace" != "" ]; then
   set -o xtrace
