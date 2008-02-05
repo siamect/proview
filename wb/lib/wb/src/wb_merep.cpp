@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_merep.cpp,v 1.39 2007-12-21 13:18:01 claes Exp $
+ * Proview   $Id: wb_merep.cpp,v 1.40 2008-02-05 14:54:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -548,7 +548,7 @@ void wb_merep::classVersion( pwr_tStatus *sts, pwr_tCid cid, pwr_tTime *time)
   wb_adrep *ad, *oad;
   for ( ad = bd->adrep( sts); ad;) {
     if ( cdh_tidIsCid( ad->tid())) {
-      pwr_tTime t;
+      pwr_tTime t = pwr_cNTime;
       classVersion( sts, ad->tid(), &t);
       if ( EVEN(*sts)) return;
 
