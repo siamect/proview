@@ -12,7 +12,7 @@ ifeq ($(export_type),exp)
 	-lpwr_flow_gtk -lpwr_flow -lpwr_glow_gtk -lpwr_glow -lpwr_co_gtk -lpwr_co -lpwr_rt -lpwr_statussrv \
 	`pkg-config --libs gtk+-2.0` \
 	-lpwr_msg_dummy -lantlr \
-	-lrpcsvc -lpthread -lm -ldb_cxx -lz
+	-lrpcsvc -lpthread -lm -ldb_cxx -lz $(linkmysql)
 else
   link = $(ldxx) $(elinkflags) $(domap) -o $(pwr_exe)/wb_gtk \
 	$(bld_dir)/wb_gtk.o $(bld_dir)/wb_main.o $(wb_msg_eobjs) $(rt_msg_eobjs) \
@@ -23,6 +23,6 @@ else
 	-lpwr_flow_gtk -lpwr_flow -lpwr_glow_gtk -lpwr_glow -lpwr_co_gtk -lpwr_co -lpwr_statussrv -lpwr_rt\
 	`pkg-config --libs gtk+-2.0` \
 	-lpwr_msg_dummy -lantlr \
-	-lrpcsvc -lpthread -lm -ldb_cxx -lz
+	-lrpcsvc -lpthread -lm -ldb_cxx -lz $(linkmysql)
 endif
 endif

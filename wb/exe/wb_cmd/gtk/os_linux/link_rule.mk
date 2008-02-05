@@ -10,5 +10,5 @@ link_rule_mk := 1
 	-lpwr_flow_gtk -lpwr_flow -lpwr_glow_gtk -lpwr_glow -lpwr_co_gtk -lpwr_co \
 	`pkg-config --libs gtk+-2.0` \
 	-lpwr_msg_dummy -lantlr \
-	-lrpcsvc -lpthread -lm -ldb_cxx -lz
+	-lrpcsvc -lpthread -lm -ldb_cxx -lz $(linkmysql)
 endif
