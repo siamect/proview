@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_pb_dp_slave.cpp,v 1.10 2007-08-21 15:12:40 claes Exp $
+ * Proview   $Id: wb_c_pb_dp_slave.cpp,v 1.11 2008-02-05 14:51:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -299,7 +299,7 @@ int pb_dp_slave_save_cb( void *sctx)
 	}
 	else {
 	  // New class, delete current object
-	  sts = ldh_DeleteObjectTree( ctx->ldhses, m->oid);
+	  sts = ldh_DeleteObjectTree( ctx->ldhses, m->oid, 0);
 	}
       }
     }
@@ -363,7 +363,7 @@ int pb_dp_slave_save_cb( void *sctx)
   }
 
   for ( int i = 0; i < mcnt; i++)
-    sts = ldh_DeleteObjectTree( ctx->ldhses, moid[i]);
+    sts = ldh_DeleteObjectTree( ctx->ldhses, moid[i], 0);
 
   return PWRB__SUCCESS;
 }
