@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_lng.cpp,v 1.14 2007-10-30 07:46:45 claes Exp $
+ * Proview   $Id: co_lng.cpp,v 1.15 2008-02-05 13:15:48 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -221,22 +221,10 @@ void Lng::unload()
 
 bool Lng::read()
 {
-  char fname1[120] = "$pwr_exe/en_us/xtt_lng.dat";
-  char fname2[120] = "$pwr_exe/%s/xtt_lng.dat";
+  char fname1[120];
+  char fname2[120];
   pwr_tFileName filename1, filename2;
   int sts;
-
-  sprintf( filename2, fname2, get_language_str());
-  dcli_translate_filename( filename1, fname1);
-  dcli_translate_filename( filename2, filename2);
-
-  ifstream fp1( filename1);
-  if ( !fp1)
-    return false;
-
-  ifstream fp2( filename2);
-  if ( !fp2)
-    return false;
 
   if ( tree)
     tree_DeleteTable( &sts, tree);
@@ -244,41 +232,63 @@ bool Lng::read()
   tree = tree_CreateTable( &sts, sizeof(lang_sKey), offsetof(lang_sRecord, key),
 			   sizeof(lang_sRecord), 100, compKey);
 
-  Row r1( fp1, fname1);
-  Row r2( fp2, fname2);
-  
-  bool hit = true;
-  for (;;) {
-    if ( hit) {
-      if ( !read_line( r1))
-	break;
-
-      if ( !read_line( r2))
-	break;
-    }
-    else if ( r1.lt( r2)) {
-      if ( !read_line( r1))
-	break;
+  for ( int i = 0; i < 2; i++) {
+    if ( i == 0) {
+      strcpy( fname1, "$pwr_exe/en_us/xtt_lng.dat");
+      strcpy( fname2, "$pwr_exe/%s/xtt_lng.dat");
     }
     else {
-      if ( !read_line( r2))
-	break;
+      strcpy( fname1, "$pwrp_exe/xtt_lng_en_us.dat");
+      strcpy( fname2, "$pwrp_exe/xtt_lng_%s.dat");
     }
+    sprintf( filename2, fname2, get_language_str());
+    dcli_translate_filename( filename1, fname1);
+    dcli_translate_filename( filename2, filename2);
 
-    hit = false;
-    if ( r1.eq( r2))
-      hit = true;
-    if ( hit) {
-      lang_sKey key;
-      lang_sRecord *record;
+    ifstream fp1( filename1);
+    if ( !fp1)
+      return i == 0 ? false : true;
 
-      strcpy( key.text, r1.text);
-      key.type = r1.type;
-      record = (lang_sRecord *) tree_Insert( &sts, tree, &key);
-      strcpy( record->transl, r2.text);
-      // printf ( "%c %d.%d.%d '%s' '%s'\n", r1.type, r1.n1, r1.n2, r1.n3, r1.text,r2.text);
-    }
-  }    
+    ifstream fp2( filename2);
+    if ( !fp2)
+      return i == 0 ? false : true;
+
+    Row r1( fp1, fname1);
+    Row r2( fp2, fname2);
+  
+    bool hit = true;
+    for (;;) {
+      if ( hit) {
+	if ( !read_line( r1))
+	  break;
+
+	if ( !read_line( r2))
+	  break;
+      }
+      else if ( r1.lt( r2)) {
+	if ( !read_line( r1))
+	  break;
+      }
+      else {
+	if ( !read_line( r2))
+	  break;
+      }
+
+      hit = false;
+      if ( r1.eq( r2))
+	hit = true;
+      if ( hit) {
+	lang_sKey key;
+	lang_sRecord *record;
+
+	strcpy( key.text, r1.text);
+	key.type = r1.type;
+	record = (lang_sRecord *) tree_Insert( &sts, tree, &key);
+	strcpy( record->transl, r2.text);
+	// printf ( "%c %d.%d.%d '%s' '%s'\n", r1.type, r1.n1, r1.n2, r1.n3, r1.text,r2.text);
+      }
+    }    
+  }
   return true;
 }
 
