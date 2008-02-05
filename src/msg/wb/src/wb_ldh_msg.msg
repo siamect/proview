@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: wb_ldh_msg.msg,v 1.15 2007-11-23 14:34:15 claes Exp $
+!  Proview   $Id: wb_ldh_msg.msg,v 1.16 2008-02-05 07:41:56 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -129,5 +129,5 @@ msgrcv		<msgrcv failed>						/error
 newfile		<New file>						/info
 confirm		<Confirm required>					/info
 db		<Database error>					/error
-
+noserver	<Server not configured>					/error
 
