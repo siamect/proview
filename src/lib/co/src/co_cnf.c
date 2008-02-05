@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_cnf.c,v 1.3 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_cnf.c,v 1.4 2008-02-05 13:16:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,7 +31,7 @@
 #define cnf_cFile "/etc/proview.cnf"
 
 char default_values[][2][200] = {
-    { "mysqlSocket",  "/tmp/mysql.sock"},
+    { "mysqlSocket",  "/var/run/mysqld/mysqld.sock"},
     { "defaultProjectRoot", "/usr/local/pwrp"},
     { "appletCodebase", "http://java.sun.com/update/1.4.2/jinstall-1_4-windows-i586.cab#Version=1,4,0,0"},
   };
