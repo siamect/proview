@@ -392,15 +392,19 @@ Volume Siemens $ClassVolume 0.0.250.3
         EndObject
       EndObject
       Object Template Siemens_ET200S_Di4 2148761600 06-OCT-2005 14:40:44.00
-        Body RtBody 02-MAY-2006 13:45:24.97
+        Body RtBody 15-JAN-2008 11:31:31.53
           Attr Super.Specification = "Siemens ET200S 4 Di"
           Attr Super.Process = 1
+          Attr Ch[0].ConversionOn = 1
           Attr Ch[0].Representation = 8
           Attr Ch[1].Number = 1
+          Attr Ch[1].ConversionOn = 1
           Attr Ch[1].Representation = 8
           Attr Ch[2].Number = 2
+          Attr Ch[2].ConversionOn = 1
           Attr Ch[2].Representation = 8
           Attr Ch[3].Number = 3
+          Attr Ch[3].ConversionOn = 1
           Attr Ch[3].Representation = 8
         EndBody
       EndObject
@@ -442,11 +446,13 @@ Volume Siemens $ClassVolume 0.0.250.3
         EndObject
       EndObject
       Object Template Siemens_ET200S_Di2 2152955904 01-JAN-1970 01:00:00.00
-        Body RtBody 02-MAY-2006 13:45:42.10
+        Body RtBody 15-JAN-2008 11:31:50.94
           Attr Super.Specification = "Siemens ET200S 2 Di"
           Attr Super.Process = 1
+          Attr Ch[0].ConversionOn = 1
           Attr Ch[0].Representation = 8
           Attr Ch[1].Number = 1
+          Attr Ch[1].ConversionOn = 1
           Attr Ch[1].Representation = 8
         EndBody
       EndObject
@@ -800,68 +806,100 @@ Volume Siemens $ClassVolume 0.0.250.3
         EndObject
       EndObject
       Object Template Siemens_ET200M_Di32 2149810176 01-JAN-1970 01:00:00.00
-        Body RtBody 12-MAY-2006 14:05:10.87
+        Body RtBody 15-JAN-2008 11:33:45.44
           Attr Super.Specification = "Siemens ET200M 32 Di"
           Attr Super.Process = 1
+          Attr Ch00.ConversionOn = 1
           Attr Ch00.Representation = 8
           Attr Ch01.Number = 1
+          Attr Ch01.ConversionOn = 1
           Attr Ch01.Representation = 8
           Attr Ch02.Number = 2
+          Attr Ch02.ConversionOn = 1
           Attr Ch02.Representation = 8
           Attr Ch03.Number = 3
+          Attr Ch03.ConversionOn = 1
           Attr Ch03.Representation = 8
           Attr Ch04.Number = 4
+          Attr Ch04.ConversionOn = 1
           Attr Ch04.Representation = 8
           Attr Ch05.Number = 5
+          Attr Ch05.ConversionOn = 1
           Attr Ch05.Representation = 8
           Attr Ch06.Number = 6
+          Attr Ch06.ConversionOn = 1
           Attr Ch06.Representation = 8
           Attr Ch07.Number = 7
+          Attr Ch07.ConversionOn = 1
           Attr Ch07.Representation = 8
+          Attr Ch10.ConversionOn = 1
           Attr Ch10.Representation = 8
           Attr Ch11.Number = 1
+          Attr Ch11.ConversionOn = 1
           Attr Ch11.Representation = 8
           Attr Ch12.Number = 2
+          Attr Ch12.ConversionOn = 1
           Attr Ch12.Representation = 8
           Attr Ch13.Number = 3
+          Attr Ch13.ConversionOn = 1
           Attr Ch13.Representation = 8
           Attr Ch14.Number = 4
+          Attr Ch14.ConversionOn = 1
           Attr Ch14.Representation = 8
           Attr Ch15.Number = 5
+          Attr Ch15.ConversionOn = 1
           Attr Ch15.Representation = 8
           Attr Ch16.Number = 6
+          Attr Ch16.ConversionOn = 1
           Attr Ch16.Representation = 8
           Attr Ch17.Number = 7
+          Attr Ch17.ConversionOn = 1
           Attr Ch17.Representation = 8
+          Attr Ch20.ConversionOn = 1
           Attr Ch20.Representation = 8
           Attr Ch21.Number = 1
+          Attr Ch21.ConversionOn = 1
           Attr Ch21.Representation = 8
           Attr Ch22.Number = 2
+          Attr Ch22.ConversionOn = 1
           Attr Ch22.Representation = 8
           Attr Ch23.Number = 3
+          Attr Ch23.ConversionOn = 1
           Attr Ch23.Representation = 8
           Attr Ch24.Number = 4
+          Attr Ch24.ConversionOn = 1
           Attr Ch24.Representation = 8
           Attr Ch25.Number = 5
+          Attr Ch25.ConversionOn = 1
           Attr Ch25.Representation = 8
           Attr Ch26.Number = 6
+          Attr Ch26.ConversionOn = 1
           Attr Ch26.Representation = 8
           Attr Ch27.Number = 7
+          Attr Ch27.ConversionOn = 1
           Attr Ch27.Representation = 8
+          Attr Ch30.ConversionOn = 1
           Attr Ch30.Representation = 8
           Attr Ch31.Number = 1
+          Attr Ch31.ConversionOn = 1
           Attr Ch31.Representation = 8
           Attr Ch32.Number = 2
+          Attr Ch32.ConversionOn = 1
           Attr Ch32.Representation = 8
           Attr Ch33.Number = 3
+          Attr Ch33.ConversionOn = 1
           Attr Ch33.Representation = 8
           Attr Ch34.Number = 4
+          Attr Ch34.ConversionOn = 1
           Attr Ch34.Representation = 8
           Attr Ch35.Number = 5
+          Attr Ch35.ConversionOn = 1
           Attr Ch35.Representation = 8
           Attr Ch36.Number = 6
+          Attr Ch36.ConversionOn = 1
           Attr Ch36.Representation = 8
           Attr Ch37.Number = 7
+          Attr Ch37.ConversionOn = 1
           Attr Ch37.Representation = 8
         EndBody
       EndObject
@@ -1007,38 +1045,54 @@ Volume Siemens $ClassVolume 0.0.250.3
         EndObject
       EndObject
       Object Template Siemens_ET200M_Di16 2150334464 01-JAN-1970 01:00:00.00
-        Body RtBody 04-MAY-2006 16:32:49.82
+        Body RtBody 15-JAN-2008 11:34:49.49
           Attr Super.Specification = "Siemens ET200M 16 Di"
           Attr Super.Process = 1
+          Attr Ch00.ConversionOn = 1
           Attr Ch00.Representation = 8
           Attr Ch01.Number = 1
+          Attr Ch01.ConversionOn = 1
           Attr Ch01.Representation = 8
           Attr Ch02.Number = 2
+          Attr Ch02.ConversionOn = 1
           Attr Ch02.Representation = 8
           Attr Ch03.Number = 3
+          Attr Ch03.ConversionOn = 1
           Attr Ch03.Representation = 8
           Attr Ch04.Number = 4
+          Attr Ch04.ConversionOn = 1
           Attr Ch04.Representation = 8
           Attr Ch05.Number = 5
+          Attr Ch05.ConversionOn = 1
           Attr Ch05.Representation = 8
           Attr Ch06.Number = 6
+          Attr Ch06.ConversionOn = 1
           Attr Ch06.Representation = 8
           Attr Ch07.Number = 7
+          Attr Ch07.ConversionOn = 1
           Attr Ch07.Representation = 8
+          Attr Ch10.ConversionOn = 1
           Attr Ch10.Representation = 8
           Attr Ch11.Number = 1
+          Attr Ch11.ConversionOn = 1
           Attr Ch11.Representation = 8
           Attr Ch12.Number = 2
+          Attr Ch12.ConversionOn = 1
           Attr Ch12.Representation = 8
           Attr Ch13.Number = 3
+          Attr Ch13.ConversionOn = 1
           Attr Ch13.Representation = 8
           Attr Ch14.Number = 4
+          Attr Ch14.ConversionOn = 1
           Attr Ch14.Representation = 8
           Attr Ch15.Number = 5
+          Attr Ch15.ConversionOn = 1
           Attr Ch15.Representation = 8
           Attr Ch16.Number = 6
+          Attr Ch16.ConversionOn = 1
           Attr Ch16.Representation = 8
           Attr Ch17.Number = 7
+          Attr Ch17.ConversionOn = 1
           Attr Ch17.Representation = 8
         EndBody
       EndObject
@@ -1296,38 +1350,54 @@ Volume Siemens $ClassVolume 0.0.250.3
         EndObject
       EndObject
       Object Template Siemens_ET200M_Dx16 2154004480 01-JAN-1970 01:00:00.00
-        Body RtBody 19-OCT-2007 09:15:37.34
+        Body RtBody 15-JAN-2008 11:35:47.30
           Attr Super.Specification = "Siemens ET200M 16 Di + 16 Do"
           Attr Super.Process = 1
+          Attr ChDi00.ConversionOn = 1
           Attr ChDi00.Representation = 8
           Attr ChDi01.Number = 1
+          Attr ChDi01.ConversionOn = 1
           Attr ChDi01.Representation = 8
           Attr ChDi02.Number = 2
+          Attr ChDi02.ConversionOn = 1
           Attr ChDi02.Representation = 8
           Attr ChDi03.Number = 3
+          Attr ChDi03.ConversionOn = 1
           Attr ChDi03.Representation = 8
           Attr ChDi04.Number = 4
+          Attr ChDi04.ConversionOn = 1
           Attr ChDi04.Representation = 8
           Attr ChDi05.Number = 5
+          Attr ChDi05.ConversionOn = 1
           Attr ChDi05.Representation = 8
           Attr ChDi06.Number = 6
+          Attr ChDi06.ConversionOn = 1
           Attr ChDi06.Representation = 8
           Attr ChDi07.Number = 7
+          Attr ChDi07.ConversionOn = 1
           Attr ChDi07.Representation = 8
+          Attr ChDi10.ConversionOn = 1
           Attr ChDi10.Representation = 8
           Attr ChDi11.Number = 1
+          Attr ChDi11.ConversionOn = 1
           Attr ChDi11.Representation = 8
           Attr ChDi12.Number = 2
+          Attr ChDi12.ConversionOn = 1
           Attr ChDi12.Representation = 8
           Attr ChDi13.Number = 3
+          Attr ChDi13.ConversionOn = 1
           Attr ChDi13.Representation = 8
           Attr ChDi14.Number = 4
+          Attr ChDi14.ConversionOn = 1
           Attr ChDi14.Representation = 8
           Attr ChDi15.Number = 5
+          Attr ChDi15.ConversionOn = 1
           Attr ChDi15.Representation = 8
           Attr ChDi16.Number = 6
+          Attr ChDi16.ConversionOn = 1
           Attr ChDi16.Representation = 8
           Attr ChDi17.Number = 7
+          Attr ChDi17.ConversionOn = 1
           Attr ChDi17.Representation = 8
           Attr ChDo00.Representation = 8
           Attr ChDo01.Number = 1
@@ -1399,23 +1469,31 @@ Volume Siemens $ClassVolume 0.0.250.3
         EndObject
       EndObject
       Object Template Siemens_ET200M_Di8 2150072320 01-JAN-1970 01:00:00.00
-        Body RtBody 19-OCT-2007 09:10:54.46
+        Body RtBody 15-JAN-2008 11:36:19.38
           Attr Super.Specification = "Siemens ET200M 8 Di"
           Attr Super.Process = 1
+          Attr Ch[0].ConversionOn = 1
           Attr Ch[0].Representation = 8
           Attr Ch[1].Number = 1
+          Attr Ch[1].ConversionOn = 1
           Attr Ch[1].Representation = 8
           Attr Ch[2].Number = 2
+          Attr Ch[2].ConversionOn = 1
           Attr Ch[2].Representation = 8
           Attr Ch[3].Number = 3
+          Attr Ch[3].ConversionOn = 1
           Attr Ch[3].Representation = 8
           Attr Ch[4].Number = 4
+          Attr Ch[4].ConversionOn = 1
           Attr Ch[4].Representation = 8
           Attr Ch[5].Number = 5
+          Attr Ch[5].ConversionOn = 1
           Attr Ch[5].Representation = 8
           Attr Ch[6].Number = 6
+          Attr Ch[6].ConversionOn = 1
           Attr Ch[6].Representation = 8
           Attr Ch[7].Number = 7
+          Attr Ch[7].ConversionOn = 1
           Attr Ch[7].Representation = 8
         EndBody
       EndObject
@@ -2577,8 +2655,22 @@ Volume Siemens $ClassVolume 0.0.250.3
     !  Use the 'Configure Slave' method in the popup menu of the object
     !  to configure the slave.
     ! 
+    !  The following module classes can be configured
+    !  Siemens_ET200S_Ai2
+    !  Siemens_ET200S_Ao2
+    !  Siemens_ET200S_Di4
+    !  Siemens_ET200S_Di2
+    !  Siemens_ET200S_Do4
+    !  Siemens_ET200S_Do2
+    !
     !  See also
     !  @classlink Pb_DP_Slave profibus_pb_dp_slave.html
+    !  @classlink Siemens_ET200S_Ai2 siemens_siemens_et200s_ai2.html
+    !  @classlink Siemens_ET200S_Ao2 siemens_siemens_et200s_ao2.html
+    !  @classlink Siemens_ET200S_Di4 siemens_siemens_et200s_di4.html
+    !  @classlink Siemens_ET200S_Di2 siemens_siemens_et200s_di2.html
+    !  @classlink Siemens_ET200S_Do4 siemens_siemens_et200s_do4.html
+    !  @classlink Siemens_ET200S_Do2 siemens_siemens_et200s_do2.html
     !*/
     Object Siemens_ET200S_IM151 $ClassDef 6 04-APR-2006 14:53:41.44
       Body SysBody 04-APR-2006 15:56:37.14
@@ -2626,8 +2718,36 @@ Volume Siemens $ClassVolume 0.0.250.3
     !  Use the 'Configure Slave' method in the popup menu of the object
     !  to configure the slave.
     ! 
+    !  The following module classes can be configured
+    !  Siemens_ET200M_Di32
+    !  Siemens_ET200M_Di16
+    !  Siemens_ET200M_Dx16
+    !  Siemens_ET200M_Di8
+    !  Siemens_ET200M_Do32
+    !  Siemens_ET200M_Do16
+    !  Siemens_ET200M_Do8
+    !  Siemens_ET200M_Ai8
+    !  Siemens_ET200M_Ai4
+    !  Siemens_ET200M_Ai2
+    !  Siemens_ET200M_Ao8
+    !  Siemens_ET200M_Ao4
+    !  Siemens_ET200M_Ao2
+    !
     !  See also
     !  @classlink Pb_DP_Slave profibus_pb_dp_slave.html
+    !  @classlink Siemens_ET200M_Di32 siemens_siemens_et200m_di32.html
+    !  @classlink Siemens_ET200M_Di16 siemens_siemens_et200m_di16.html
+    !  @classlink Siemens_ET200M_Dx16 siemens_siemens_et200m_dx16.html
+    !  @classlink Siemens_ET200M_Di8 siemens_siemens_et200m_di8.html
+    !  @classlink Siemens_ET200M_Do32 siemens_siemens_et200m_do32.html
+    !  @classlink Siemens_ET200M_Do16 siemens_siemens_et200m_do16.html
+    !  @classlink Siemens_ET200M_Do8 siemens_siemens_et200m_do8.html
+    !  @classlink Siemens_ET200M_Ai8 siemens_siemens_et200m_ai8.html
+    !  @classlink Siemens_ET200M_Ai4 siemens_siemens_et200m_ai4.html
+    !  @classlink Siemens_ET200M_Ai2 siemens_siemens_et200m_ai2.html
+    !  @classlink Siemens_ET200M_Ao8 siemens_siemens_et200m_ao8.html
+    !  @classlink Siemens_ET200M_Ao4 siemens_siemens_et200m_ao4.html
+    !  @classlink Siemens_ET200M_Ao2 siemens_siemens_et200m_ao2.html
     !*/
     Object Siemens_ET200M_IM153 $ClassDef 7 02-MAY-2006 11:50:15.40
       Body SysBody 02-MAY-2006 11:49:53.64
