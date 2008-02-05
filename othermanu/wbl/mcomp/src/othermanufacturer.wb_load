@@ -22843,7 +22843,7 @@ Eurotherm TC3001 Aggregate
         EndObject
       EndObject
       Object Template SEW_Movidrive_6PD 2155053056 01-JAN-1970 01:00:00.00
-        Body RtBody 19-APR-2007 09:09:20.14
+        Body RtBody 15-JAN-2008 12:48:25.58
           Attr Super.Process = 1
           Attr I_SW.ConversionOn = 1
           Attr I_SW.Representation = 2
@@ -22857,6 +22857,7 @@ Eurotherm TC3001 Aggregate
           Attr I_ACTPOS.SensorSigValRangeHigh = 3.276800e+04
           Attr I_ACTPOS.ActValRangeLow = -3.276800e+04
           Attr I_ACTPOS.ActValRangeHigh = 3.276800e+04
+          Attr I_ACTSPEED.ConversionOn = 1
           Attr I_ACTSPEED.RawValRangeLow = -3.276800e+04
           Attr I_ACTSPEED.RawValRangeHigh = 3.276800e+04
           Attr I_ACTSPEED.ChannelSigValRangeLow = -3.276800e+04
@@ -22866,6 +22867,7 @@ Eurotherm TC3001 Aggregate
           Attr I_ACTSPEED.ActValRangeLow = -6.553600e+03
           Attr I_ACTSPEED.ActValRangeHigh = 6.553600e+03
           Attr I_ACTSPEED.Representation = 2
+          Attr I_ACTCURR.ConversionOn = 1
           Attr I_ACTCURR.RawValRangeLow = -3.276800e+04
           Attr I_ACTCURR.RawValRangeHigh = 3.276800e+04
           Attr I_ACTCURR.ChannelSigValRangeLow = -3.276800e+04
@@ -22875,6 +22877,7 @@ Eurotherm TC3001 Aggregate
           Attr I_ACTCURR.ActValRangeLow = -3.276800e+03
           Attr I_ACTCURR.ActValRangeHigh = 3.276800e+03
           Attr I_ACTCURR.Representation = 2
+          Attr I_DEVUTI.ConversionOn = 1
           Attr I_DEVUTI.RawValRangeLow = -3.276800e+04
           Attr I_DEVUTI.RawValRangeHigh = 3.276800e+04
           Attr I_DEVUTI.ChannelSigValRangeLow = -3.276800e+04
