@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_op_gtk.cpp,v 1.8 2008-01-24 09:35:26 claes Exp $
+ * Proview   $Id: xtt_op_gtk.cpp,v 1.9 2008-02-06 09:08:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -301,7 +301,7 @@ OpGtk::OpGtk( void *op_parent_ctx,
   gtk_box_pack_start( GTK_BOX(sysbutton_box), eventlist_button, FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(sysbutton_box), eventlog_button, FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(sysbutton_box), help_button, FALSE, FALSE, 0);
-  gtk_widget_set_size_request( sysbutton_box, 140, -1);
+  gtk_widget_set_size_request( sysbutton_box, 150, -1);
 
   // Main window
   configure( opplace);
