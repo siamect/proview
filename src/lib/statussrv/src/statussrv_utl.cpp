@@ -4,11 +4,27 @@
 #include "statussrv_Stub.h"
 #include "statussrv_utl.h"
 #include "co_time.h"
+#include "co_cdh.h"
+#include "co_syi.h"
 #include "rt_pwr_msg.h"
 
 static struct soap soap;
 static int init_done = 0;
 static int port = 18084;
+
+static char *nname( char *nodename)
+{
+  static char n[80];
+  char name[80];
+  pwr_tStatus sts;
+
+  syi_NodeName( &sts, name, sizeof(name));
+  if ( cdh_NoCaseStrcmp( name, nodename) == 0)
+    strcpy( n, "127.0.0.1");
+  else
+    strcpy( n, nodename);
+  return n;
+}
 
 pwr_tStatus statussrv_GetStatus( char *nodename, statussrv_sGetStatus *result)
 {
@@ -20,7 +36,7 @@ pwr_tStatus statussrv_GetStatus( char *nodename, statussrv_sGetStatus *result)
     init_done = 1;
   }
 
-  sprintf( endpoint, "http://%s:%d", nodename, port);
+  sprintf( endpoint, "http://%s:%d", nname(nodename), port);
 
   _s0__GetStatus get_status;
   _s0__GetStatusResponse get_status_response;
@@ -58,36 +74,31 @@ pwr_tStatus statussrv_GetStatus( char *nodename, statussrv_sGetStatus *result)
     else
       result->Restarts = -1;
 
-    if ( get_status_response.UserStatus1)
-      result->UserStatus[0] = get_status_response.UserStatus1;
+    result->UserStatus[0] = get_status_response.UserStatus1;
     if ( get_status_response.UserStatusStr1)
       strncpy( result->UserStatusStr[0], get_status_response.UserStatusStr1->c_str(), sizeof(result->UserStatusStr[0]));
     else
       strcpy( result->UserStatusStr[0], "");
 
-    if ( get_status_response.UserStatus2)
-      result->UserStatus[1] = get_status_response.UserStatus2;
+    result->UserStatus[1] = get_status_response.UserStatus2;
     if ( get_status_response.UserStatusStr2)
       strncpy( result->UserStatusStr[1], get_status_response.UserStatusStr2->c_str(), sizeof(result->UserStatusStr[0]));
     else
       strcpy( result->UserStatusStr[1], "");
 
-    if ( get_status_response.UserStatus3)
-      result->UserStatus[2] = get_status_response.UserStatus3;
+    result->UserStatus[2] = get_status_response.UserStatus3;
     if ( get_status_response.UserStatusStr3)
       strncpy( result->UserStatusStr[2], get_status_response.UserStatusStr3->c_str(), sizeof(result->UserStatusStr[0]));
     else
       strcpy( result->UserStatusStr[2], "");
 
-    if ( get_status_response.UserStatus4)
-      result->UserStatus[3] = get_status_response.UserStatus4;
+    result->UserStatus[3] = get_status_response.UserStatus4;
     if ( get_status_response.UserStatusStr4)
       strncpy( result->UserStatusStr[3], get_status_response.UserStatusStr4->c_str(), sizeof(result->UserStatusStr[0]));
     else
       strcpy( result->UserStatusStr[3], "");
 
-    if ( get_status_response.UserStatus5)
-      result->UserStatus[4] = get_status_response.UserStatus5;
+    result->UserStatus[4] = get_status_response.UserStatus5;
     if ( get_status_response.UserStatusStr5)
       strncpy( result->UserStatusStr[4], get_status_response.UserStatusStr5->c_str(), sizeof(result->UserStatusStr[0]));
     else
@@ -119,7 +130,7 @@ pwr_tStatus statussrv_GetExtStatus( char *nodename, statussrv_sGetExtStatus *res
     init_done = 1;
   }
 
-  sprintf( endpoint, "http://%s:%d", nodename, port);
+  sprintf( endpoint, "http://%s:%d", nname(nodename), port);
 
   _s0__GetExtStatus get_status;
   _s0__GetExtStatusResponse get_status_response;
@@ -392,7 +403,7 @@ pwr_tStatus statussrv_Restart( char *nodename)
     init_done = 1;
   }
 
-  sprintf( endpoint, "http://%s:%d", nodename, port);
+  sprintf( endpoint, "http://%s:%d", nname(nodename), port);
 
   _s0__Restart restart;
   _s0__RestartResponse restart_response;
@@ -422,7 +433,7 @@ pwr_tStatus statussrv_XttStart( char *nodename, char *opplace, char *lang, char 
     init_done = 1;
   }
 
-  sprintf( endpoint, "http://%s:%d", nodename, port);
+  sprintf( endpoint, "http://%s:%d", nname(nodename), port);
 
   _s0__XttStart xtt_start;
   _s0__XttStartResponse xtt_start_response;
@@ -469,7 +480,7 @@ pwr_tStatus statussrv_RtMonStart( char *nodename, char *lang, char *display, cha
     init_done = 1;
   }
 
-  sprintf( endpoint, "http://%s:%d", nodename, port);
+  sprintf( endpoint, "http://%s:%d", nname(nodename), port);
 
   _s0__RtMonStart rtmon_start;
   _s0__RtMonStartResponse rtmon_start_response;
