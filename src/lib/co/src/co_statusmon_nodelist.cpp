@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelist.cpp,v 1.9 2008-02-06 09:02:02 claes Exp $
+ * Proview   $Id: co_statusmon_nodelist.cpp,v 1.10 2008-02-06 09:32:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -114,12 +114,26 @@ static void get_display( char *disp)
   if ( val)
     strcpy( display, val);
 
-  if ( strcmp( display, "") == 0 ||
-       strcmp( display, ":0") == 0 ||
-       strcmp( display, "0:0") == 0) {
+  if ( strcmp( display, "") == 0) {
     syi_NodeName( &sts, name, sizeof(name));
     strcpy( display, name);
     strcat( display, ":0");
+  }
+  else if ( display[0] == ':') {
+    char tmp[80];
+
+    syi_NodeName( &sts, name, sizeof(name));
+    strcpy( tmp, display);
+    strcpy( display, name);
+    strcat( display, tmp);
+  }
+  else if ( display[0] == '0' && display[1] == ':') {
+    char tmp[80];
+
+    syi_NodeName( &sts, name, sizeof(name));
+    strcpy( tmp, display);
+    strcpy( display, name);
+    strcat( display, &tmp[1]);
   }
   strcpy( disp, display);
 }
