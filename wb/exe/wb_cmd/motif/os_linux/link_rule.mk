@@ -10,5 +10,5 @@ link_rule_mk := 1
 	-lpwr_flow_motif -lpwr_flow -lpwr_glow_motif -lpwr_glow -lpwr_co_motif -lpwr_co \
 	-lpwr_msg_dummy -lantlr -lImlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp\
         -lXmu -lSM -lICE\
-	-lrpcsvc -lpthread -lm -ldb_cxx -lz
+	-lrpcsvc -lpthread -lm -ldb_cxx -lz $(linkmysql)
 endif
