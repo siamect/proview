@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_volume.cpp,v 1.40 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_volume.cpp,v 1.41 2008-02-22 09:22:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -994,7 +994,7 @@ void wb_volume::aref(pwr_tCid cid, pwr_sAttrRef *arp)
 	arp->Flags.b.ObjectAttr = 1;
 	arp->Offset = item->offset[0];
 	arp->Size = bd_size;
-	arp->Body = cid;
+	arp->Body = cdh_cidToBid( cid, pwr_eBix_rt);
 	o->unref();
 	return;
       }      
@@ -1035,7 +1035,7 @@ void wb_volume::nextAref(pwr_tCid cid, pwr_sAttrRef *arp,
       oarp->Objid = ol->oid();
       oarp->Flags.b.Object = 1;
       oarp->Size = bd_size;
-      oarp->Body = cid;
+      oarp->Body = cdh_cidToBid( cid, pwr_eBix_rt);
       ol->unref();
       op->unref();
       return;
@@ -1067,7 +1067,7 @@ void wb_volume::nextAref(pwr_tCid cid, pwr_sAttrRef *arp,
 	  oarp->Flags.b.ObjectAttr = 1;
 	  oarp->Size = bd_size;
 	  oarp->Offset = item->offset[0];
-	  oarp->Body = cid;
+	  oarp->Body = cdh_cidToBid( cid, pwr_eBix_rt);
 	  ol->unref();
 	  op->unref();
 	  return;
@@ -1100,7 +1100,7 @@ void wb_volume::nextAref(pwr_tCid cid, pwr_sAttrRef *arp,
 	oarp->Flags.b.ObjectAttr = 1;
 	oarp->Offset = item->offset[i];
 	oarp->Size = bd_size;
-	oarp->Body = cid;
+	oarp->Body = cdh_cidToBid( cid, pwr_eBix_rt);
 	op->unref();
 	return;
       }
@@ -1116,7 +1116,7 @@ void wb_volume::nextAref(pwr_tCid cid, pwr_sAttrRef *arp,
     oarp->Flags.b.ObjectAttr = 1;
     oarp->Offset = first_offset;
     oarp->Size = bd_size;
-    oarp->Body = cid;
+    oarp->Body = cdh_cidToBid( cid, pwr_eBix_rt);
     ol->unref();
     op->unref();
     return;
@@ -1141,7 +1141,7 @@ void wb_volume::nextAref(pwr_tCid cid, pwr_sAttrRef *arp,
       oarp->Flags.b.ObjectAttr = 1;
       oarp->Offset = item->offset[0];
       oarp->Size = bd_size;
-      oarp->Body = cid;
+      oarp->Body = cdh_cidToBid( cid, pwr_eBix_rt);
       ol->unref();
       op->unref();
       return;
@@ -1185,7 +1185,7 @@ void wb_volume::aref(pwr_tCid cid, wb_object o, pwr_sAttrRef *arp)
   arp->Flags.b.ObjectAttr = 1;
   arp->Offset = item->offset[0];
   arp->Size = bd_size;
-  arp->Body = cid;
+  arp->Body = cdh_cidToBid( cid, pwr_eBix_rt);
 
   if (item->flags[0] & PWR_MASK_DISABLEATTR) {
     wb_attribute a = attribute(arp);
@@ -1239,7 +1239,7 @@ void wb_volume::nextObjectAref(pwr_tCid cid, pwr_sAttrRef *arp,
 	oarp->Flags.b.ObjectAttr = 1;
 	oarp->Offset = item->offset[i];
 	oarp->Size = bd_size;
-	oarp->Body = cid;
+	oarp->Body = cdh_cidToBid( cid, pwr_eBix_rt);
 
 	if (item->flags[i] & PWR_MASK_DISABLEATTR) {
 	  wb_attribute a = attribute(oarp);
