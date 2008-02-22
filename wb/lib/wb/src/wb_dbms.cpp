@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dbms.cpp,v 1.7 2008-02-05 14:53:12 claes Exp $
+ * Proview   $Id: wb_dbms.cpp,v 1.8 2008-02-22 09:26:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -519,8 +519,10 @@ bool wb_dbms::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
   wb_dbms_ohead o(this, oid, cid, poid, boid, aoid, foid, loid, name, normname, flags, ohTime, rbTime, dbTime, rbSize, dbSize);
   o.ins(m_txn);
   wb_dbms_name n(this, oid, poid, normname);
-  int rc = n.ins(m_txn);
-  if (rc) {
+
+  try {
+    n.ins(m_txn);
+  } catch (wb_dbms_error &e) {
     char newName[50];
     sprintf(newName, "O%u_%s", oid.oix, name);
     newName[31] = '\0';
@@ -824,7 +826,7 @@ MYSQL *wb_dbms_env::createDb(void)
   m_con = mysql_init(NULL);
 
   MYSQL *con = mysql_real_connect(m_con, host(), user(), passwd(), 0, port(), socket(), 0);
-  printf("Tried to connect to database, con %x: Status: %s\n", (int)con, mysql_error(m_con));
+  // printf("Tried to connect to database, con %x: Status: %s\n", (int)con, mysql_error(m_con));
   if (con == 0) {
     printf("Failed to connect to database: Error: %s\n", mysql_error(m_con));
     return 0;
@@ -856,7 +858,7 @@ MYSQL *wb_dbms_env::openDb()
   m_con = mysql_init(NULL);
 
   MYSQL *con = mysql_real_connect(m_con, host(), user(), passwd(), dbName(), port(), socket(), 0);
-  printf("Tried to connect to database, con %x: Status: %s\n", (int)con, mysql_error(m_con));
+  // printf("Tried to connect to database, con %x: Status: %s\n", (int)con, mysql_error(m_con));
   if (con == 0) {
     printf("Failed to connect to database: Error: %s\n", mysql_error(m_con));
     return 0;
@@ -946,7 +948,6 @@ int wb_dbms_env::open(void)
     else
       valp = value;
     
-    printf("rc: %d, var: %s, value: %s\n", rc, var, valp);
     if (strcmp(valp, "(null)") == 0)
       valp = 0;
     
@@ -976,7 +977,6 @@ int wb_dbms_env::open(void)
     }
   }
   
-  printf("ready!!!\n");
   fclose(fp);
 
   m_exists = true;
@@ -1016,7 +1016,7 @@ void wb_dbms_info::get(wb_dbms_txn *txn)
 
   try {
     ret = m_db->m_t_info->get(txn, &key, &data);
-    printf("info get: %d\n", ret);
+    // printf("info get: %d\n", ret);
   } catch (wb_dbms_error &e) {
     printf("info get Error, %d\n", ret);
     std::cout << e.what().c_str();
