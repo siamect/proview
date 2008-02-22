@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_statussrv.cpp,v 1.6 2007-06-29 12:50:44 claes Exp $
+ * Proview   $Id: rt_statussrv.cpp,v 1.7 2008-02-22 09:17:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -61,6 +61,7 @@ class status_server {
 
 static status_server *statussrv;
 static void *statussrv_cyclic( void *arg);
+static struct soap *statussrv_soap = 0;
 
 
 int main(  int argc, char *argv[])
@@ -184,6 +185,8 @@ int main(  int argc, char *argv[])
   errh_SetStatus( PWR__SRUN);
 
   soap_init( &soap);
+  statussrv_soap = &soap;
+
   for ( int i = 0; i < restarts + 1; i++) {
     m = soap_bind( &soap, NULL, 18084, 100);
     if ( m < 0) {
@@ -248,6 +251,8 @@ static void *statussrv_cyclic( void *arg)
       } else if (new_event.b.swapDone) {
 	errh_SetStatus( PWR__SRUN);
       } else if (new_event.b.terminate) {
+	// if ( statussrv_soap)
+	//   soap_done( statussrv_soap);
 	exit(0);
       }
     }

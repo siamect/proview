@@ -64,3 +64,4 @@
 080118 cs  trace     Object description viewed as tooltip in trace. Also $PlcMain and $PlcFo translated and viewed in tooltip.
 080121 cs  pwrb      MoreText added to DSup, ASup and CycleSup, and to mh protocol.
 080122 cs  pwrb      Attributes PresMinLimit and PresMaxLimit added to Ii and Io.
+080206 cs  statussrv Loopback address used for local node.
