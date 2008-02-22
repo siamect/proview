@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdbms.cpp,v 1.6 2008-02-04 13:34:49 claes Exp $
+ * Proview   $Id: wb_vrepdbms.cpp,v 1.7 2008-02-22 09:28:36 claes Exp $
  * Copyright (C) 2007 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -266,7 +266,8 @@ wb_orep* wb_vrepdbms::object(pwr_tStatus *sts)
     oid.oix = pwr_cNOix;
 
     m_ohead.get(m_db->m_txn, oid);
-    m_ohead.get(m_db->m_txn, m_ohead.foid());
+    if ( cdh_ObjidIsNotNull( m_ohead.foid()))
+      m_ohead.get(m_db->m_txn, m_ohead.foid());
 
     return new (this) wb_orepdbms(&m_ohead.m_o);
   }
@@ -1616,7 +1617,7 @@ bool wb_vrepdbms::importPaste()
         m_ohead.loid(oep->last->n_oid);
 
       m_ohead.ohTime(oTime);
-      m_ohead.ins(m_db->m_txn);
+      m_ohead.upd(m_db->m_txn);
     }
 
     oep = (sOentry*)tree_Successor(&sts, m_oid_th, oep);
