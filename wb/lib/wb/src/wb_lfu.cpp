@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.cpp,v 1.10 2008-02-04 13:34:49 claes Exp $
+ * Proview   $Id: wb_lfu.cpp,v 1.11 2008-02-22 09:23:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2514,12 +2514,16 @@ pwr_tStatus lfu_GetVolumeCnf( char *name, pwr_tVid *vid, pwr_tCid *cid, ldh_eVol
 pwr_tStatus lfu_ParseDbmsServer( char *server, char *user, char *password, 
 				 unsigned int *port, char *host)
 {
+  char lserver[80];
+
   if ( strcmp( server, "") == 0) {
-    if ( !cnf_get_value( "mysqlServer", host)) {
+    if ( !cnf_get_value( "mysqlServer", lserver)) {
       printf( "** mysql Server not defined\n");
       return LDH__NOSERVER;
     }
   }
+  else
+    strcpy( lserver, server);
 
   // Parse server string: username:password@port:host
   char lhost[80];
@@ -2529,11 +2533,11 @@ pwr_tStatus lfu_ParseDbmsServer( char *server, char *user, char *password,
   char str2[2][80];
   int nr;
       
-  nr = dcli_parse( server, "@", "", (char *)str1, 
+  nr = dcli_parse( lserver, "@", "", (char *)str1, 
 		   sizeof( str1) / sizeof( str1[0]), sizeof( str1[0]), 0);
 
   if ( nr == 1)
-    strncpy( lhost, server, sizeof(lhost));
+    strncpy( lhost, lserver, sizeof(lhost));
   else if ( nr >= 2) {
     strncpy( lhost, str1[1], sizeof(lhost));
     
