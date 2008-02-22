@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.h,v 1.24 2007-12-21 13:18:01 claes Exp $
+ * Proview   $Id: wb_vrepmem.h,v 1.25 2008-02-22 09:31:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -103,7 +103,7 @@ class mem_object
     pwr_tOid fthoid = (fth && !isRoot) ? fth->m_oid : pwr_cNOid;
     pwr_tOid bwsoid = (bws && !isRoot) ? bws->m_oid : pwr_cNOid;
     pwr_tOid oid;
-    pwr_tOid woid;    
+    pwr_tOid woid = pwr_cNOid;
 
     if ( recix) {
       pwr_tOix ix;
@@ -112,8 +112,6 @@ class mem_object
 	woid.oix = ix;
 	woid.vid = m_oid.vid;
       }
-      else
-	woid = pwr_cNOid;
     }
     i.importPasteObject( destination, destcode, keepoid, m_oid, m_cid, fthoid, bwsoid, 
 			 name(), m_flags, rbody_size, dbody_size, rbody, dbody, woid, &oid);
