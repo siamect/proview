@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dbms.h,v 1.3 2008-02-05 14:53:12 claes Exp $
+ * Proview   $Id: wb_dbms.h,v 1.4 2008-02-22 09:27:29 claes Exp $
  * Copyright (C) 2007 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -865,7 +865,7 @@ public:
     rc = mysql_stmt_execute(m_stmt);
     if (rc) error(rc, method, "mysql_stmt_execute");
 
-    if (mysql_stmt_affected_rows(m_stmt) == 1)
+    if (mysql_stmt_affected_rows(m_stmt) <= 1)
       return 0;
   
     return 1;
