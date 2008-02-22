@@ -11,6 +11,6 @@ link = $(ldxx) $(elinkflags) $(domap) -o $(pwr_exe)/wb_ge_gtk \
 	-lpwr_co_gtk -lpwr_co -lpwr_flow_gtk -lpwr_flow \
 	`pkg-config --libs gtk+-2.0` \
 	-lpwr_msg_dummy -lantlr \
-	-lrpcsvc -lpthread -lm -ldb_cxx -lz
+	-lrpcsvc -lpthread -lm -ldb_cxx -lz $(linkmysql)
 
 endif
