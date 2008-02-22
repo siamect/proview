@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dbs.cpp,v 1.28 2007-10-26 06:26:52 claes Exp $
+ * Proview   $Id: wb_dbs.cpp,v 1.29 2008-02-22 09:24:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -161,7 +161,13 @@ wb_dbs::checkObject(sOentry *oep)
   dbs_Qinit(&sts, &oep->o.sib_ll, oep->ref + offsetof(dbs_sObject, sib_ll));
   dbs_Qinit(&sts, &oep->o.o_ll, oep->ref + offsetof(dbs_sObject, o_ll));
 
+  classInsert(oep);
+
   switch (oep->o.cid) {
+  case pwr_eClass_ClassDef:
+    // Version is dependent of attribute objects
+    m_v->merep()->classVersion(&sts, cdh_ClassObjidToId(oep->o.oid), &oep->o.time);
+    break;
   case pwr_eClass_LibHier:
     if (m_volume.cid != pwr_eClass_ClassVolume)
       oep->o.flags.b.devOnly = 1;
@@ -285,7 +291,7 @@ bool wb_dbs::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
     
   oep->o.ohFlags.m = flags.m;
   
-  classInsert(oep);
+  //  classInsert(oep);
 
   oep->o.rbody.time = rbTime;
   oep->o.rbody.size = rbSize;
@@ -304,7 +310,7 @@ bool wb_dbs::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
 
   if ( cid == pwr_eClass_ClassDef) {
     // Version is dependent of attribute objects
-    m_v->merep()->classVersion(&sts, cdh_ClassObjidToId(oid), &oep->o.time);
+    // m_v->merep()->classVersion(&sts, cdh_ClassObjidToId(oid), &oep->o.time);
   }
 
   return true;
