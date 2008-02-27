@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vsel.cpp,v 1.16 2007-11-07 18:05:43 claes Exp $
+ * Proview   $Id: wb_vsel.cpp,v 1.17 2008-02-27 06:32:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -355,8 +355,8 @@ pwr_tStatus WVsel::check_volumelist(
       if ( !volume_found) {
 	if ( !quiet && errlen < (int)(sizeof(errstr)-100)) {
 	  errlen += sprintf( &errstr[errlen], 
-		  "** Error, Volume %s is not configured in the ProjectVolume\n", 
-			     name);
+		  "** Error, Volume %s (%s) is not configured in the ProjectVolume\nCheck volume name and identity\n", 
+			     name, cdh_VolumeIdToString( 0, volume, 1, 0));
 	  MsgWindow::message( 'E', &errstr[errlen_old], msgw_ePop_No);
 	  errlen_old = errlen;
 	  BEEP;
