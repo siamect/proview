@@ -90,5 +90,9 @@
 071105 cs  wb        Copy with the ingnore switch, replaces unknown classes with $ClassLost.
 071206 cs  wb        Objid stored at compilation of Template Fo windows.
 071221 cs  wb        Opening of buffers from menu in gtk version didn't work.
-070115 cs  wb        DataName not reset when ASup, DsTrend or DsFast object moved.
-070117 cs  wb        Graphmethod 12 added, to read functionobjects drawn in Ge.
+080115 cs  wb        DataName not reset when ASup, DsTrend or DsFast object moved.
+080117 cs  wb        Graphmethod 12 added, to read functionobjects drawn in Ge.
+080222 cs  wb        Spreedsheet editorn: previous value inserted in input field.
+080222 cs  wb        Locale set to us_EN to avoid comma in floatvalues in wb_load files.
+080222 cs  wb        Check that volumeid is in valid range added to directory volume save.
+080226 cs  wb        Popupmenu in palette wasn't implemented in gtk version.

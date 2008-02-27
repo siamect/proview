@@ -65,3 +65,4 @@
 080121 cs  pwrb      MoreText added to DSup, ASup and CycleSup, and to mh protocol.
 080122 cs  pwrb      Attributes PresMinLimit and PresMaxLimit added to Ii and Io.
 080206 cs  statussrv Loopback address used for local node.
+080226 cs  help      New functions in Help window: next and previous topic. Toolbar added.
