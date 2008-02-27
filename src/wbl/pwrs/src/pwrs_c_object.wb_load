@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_object.wb_load,v 1.16 2005-10-18 05:15:36 claes Exp $
+!  Proview   $Id: pwrs_c_object.wb_load,v 1.17 2008-02-27 06:25:19 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -40,15 +40,15 @@ SObject pwrs:Class
     EndObject
     Object ConfiguratorPcsnn $Menu
       Object Pointed $Menu
-	Object OpenTemplate $MenuButton
-	  Body SysBody
-	    Attr ButtonName = "Default Values..."
-	    Attr MethodName = "$Object-OpenTemplate"
-	  EndBody
-	EndObject
+!	Object OpenTemplate $MenuButton
+!	  Body SysBody
+!	    Attr ButtonName = "Default Values..."
+!	    Attr MethodName = "$Object-OpenTemplate"
+!	  EndBody
+!	EndObject
 	Object ClassHelp $MenuButton
 	  Body SysBody
-	    Attr ButtonName = "Help"
+	    Attr ButtonName = "Class Help"
 	    Attr MethodName = "$Object-ClassHelp"
 	  EndBody
 	EndObject
@@ -56,15 +56,15 @@ SObject pwrs:Class
     EndObject
     Object ConfiguratorPcscs $Menu
       Object Pointed $Menu
-	Object OpenTemplate $MenuButton
-	  Body SysBody
-	    Attr ButtonName = "Default Values..."
-	    Attr MethodName = "$Object-OpenTemplate"
-	  EndBody
-	EndObject
+!	Object OpenTemplate $MenuButton
+!	  Body SysBody
+!	    Attr ButtonName = "Default Values..."
+!	    Attr MethodName = "$Object-OpenTemplate"
+!	  EndBody
+!	EndObject
 	Object ClassHelp $MenuButton
 	  Body SysBody
-	    Attr ButtonName = "Help"
+	    Attr ButtonName = "Class Help"
 	    Attr MethodName = "$Object-ClassHelp"
 	  EndBody
 	EndObject
@@ -72,15 +72,15 @@ SObject pwrs:Class
     EndObject
     Object ConfiguratorPcscn $Menu
       Object Pointed $Menu
-	Object OpenTemplate $MenuButton
-	  Body SysBody
-	    Attr ButtonName = "Default Values..."
-	    Attr MethodName = "$Object-OpenTemplate"
-	  EndBody
-	EndObject
+!	Object OpenTemplate $MenuButton
+!	  Body SysBody
+!	    Attr ButtonName = "Default Values..."
+!	    Attr MethodName = "$Object-OpenTemplate"
+!	  EndBody
+!	EndObject
 	Object ClassHelp $MenuButton
 	  Body SysBody
-	    Attr ButtonName = "Help"
+	    Attr ButtonName = "Class Help"
 	    Attr MethodName = "$Object-ClassHelp"
 	  EndBody
 	EndObject
@@ -88,15 +88,15 @@ SObject pwrs:Class
     EndObject
     Object ConfiguratorPcson $Menu
       Object Pointed $Menu
-	Object OpenTemplate $MenuButton
-	  Body SysBody
-	    Attr ButtonName = "Default Values..."
-	    Attr MethodName = "$Object-OpenTemplate"
-	  EndBody
-	EndObject
+!	Object OpenTemplate $MenuButton
+!	  Body SysBody
+!	    Attr ButtonName = "Default Values..."
+!	    Attr MethodName = "$Object-OpenTemplate"
+!	  EndBody
+!	EndObject
 	Object ClassHelp $MenuButton
 	  Body SysBody
-	    Attr ButtonName = "Help"
+	    Attr ButtonName = "Class Help"
 	    Attr MethodName = "$Object-ClassHelp"
 	  EndBody
 	EndObject
@@ -104,15 +104,15 @@ SObject pwrs:Class
     EndObject
     Object ConfiguratorPcsms $Menu
       Object Pointed $Menu
-	Object OpenTemplate $MenuButton
-	  Body SysBody
-	    Attr ButtonName = "Default Values..."
-	    Attr MethodName = "$Object-OpenTemplate"
-	  EndBody
-	EndObject
+!	Object OpenTemplate $MenuButton
+!	  Body SysBody
+!	    Attr ButtonName = "Default Values..."
+!	    Attr MethodName = "$Object-OpenTemplate"
+!	  EndBody
+!	EndObject
 	Object ClassHelp $MenuButton
 	  Body SysBody
-	    Attr ButtonName = "Help"
+	    Attr ButtonName = "Class Help"
 	    Attr MethodName = "$Object-ClassHelp"
 	  EndBody
 	EndObject
@@ -120,15 +120,15 @@ SObject pwrs:Class
     EndObject
     Object ConfiguratorPcsmn $Menu
       Object Pointed $Menu
-	Object OpenTemplate $MenuButton
-	  Body SysBody
-	    Attr ButtonName = "Default Values..."
-	    Attr MethodName = "$Object-OpenTemplate"
-	  EndBody
-	EndObject
+!	Object OpenTemplate $MenuButton
+!	  Body SysBody
+!	    Attr ButtonName = "Default Values..."
+!	    Attr MethodName = "$Object-OpenTemplate"
+!	  EndBody
+!	EndObject
 	Object ClassHelp $MenuButton
 	  Body SysBody
-	    Attr ButtonName = "Help"
+	    Attr ButtonName = "Class Help"
 	    Attr MethodName = "$Object-ClassHelp"
 	  EndBody
 	EndObject
