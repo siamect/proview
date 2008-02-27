@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pal_gtk.cpp,v 1.2 2007-06-15 10:53:06 claes Exp $
+ * Proview   $Id: wb_pal_gtk.cpp,v 1.3 2008-02-27 06:27:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -112,6 +112,7 @@ void PalGtk::create_popup_menu( pwr_tCid cid, int x, int y)
   pal_set_avoid_deadlock( this, 2000);
 
 #endif
+  (create_popup_menu_cb)( parent_ctx, cid, x, y);
 }
 
 void PalGtk::set_inputfocus( int focus)
