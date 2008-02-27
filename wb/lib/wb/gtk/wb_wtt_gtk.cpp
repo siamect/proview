@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.22 2007-12-21 13:19:07 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.23 2008-02-27 06:29:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -128,6 +128,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_change_value_w, TRUE);
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
       gtk_widget_set_sensitive( tools_edit_w, TRUE);
+      gtk_widget_set_sensitive( tools_buildnode_w, FALSE);
       gtk_widget_set_sensitive( menu_classeditor_w, FALSE);
       gtk_widget_set_sensitive( menu_updateclasses_w, TRUE);
     }
@@ -150,6 +151,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_change_value_w, FALSE);
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
       gtk_widget_set_sensitive( tools_edit_w, TRUE);
+      gtk_widget_set_sensitive( tools_buildnode_w, TRUE);
       gtk_widget_set_sensitive( menu_classeditor_w, TRUE);
       gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
     }
@@ -174,6 +176,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_change_value_w, TRUE);
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
       gtk_widget_set_sensitive( tools_edit_w, TRUE);
+      gtk_widget_set_sensitive( tools_buildnode_w, FALSE);
       gtk_widget_set_sensitive( menu_classeditor_w, FALSE);
       if ( ldhses && ldh_VolRepType( ldhses) == ldh_eVolRep_Dbs)
 	gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
@@ -202,6 +205,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_change_value_w, FALSE);
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
       gtk_widget_set_sensitive( tools_edit_w, TRUE);
+      gtk_widget_set_sensitive( tools_buildnode_w, TRUE);
       gtk_widget_set_sensitive( menu_classeditor_w, FALSE);
       gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
     }
@@ -226,6 +230,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_change_value_w, TRUE);
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
       gtk_widget_set_sensitive( tools_edit_w, TRUE);
+      gtk_widget_set_sensitive( tools_buildnode_w, FALSE);
       gtk_widget_set_sensitive( menu_classeditor_w, FALSE);
       gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
     }
@@ -248,6 +253,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_change_value_w, FALSE);
       gtk_widget_set_sensitive( menu_edit_w, FALSE);
       gtk_widget_set_sensitive( tools_edit_w, FALSE);
+      gtk_widget_set_sensitive( tools_buildnode_w, FALSE);
       gtk_widget_set_sensitive( menu_classeditor_w, FALSE);
       gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
     }
@@ -276,6 +282,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_change_value_w, TRUE);
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
       gtk_widget_set_sensitive( tools_edit_w, TRUE);
+      gtk_widget_set_sensitive( tools_buildnode_w, FALSE);
       gtk_widget_set_sensitive( menu_classeditor_w, FALSE);
       if ( ldh_VolRepType( ldhses) == ldh_eVolRep_Ced)
 	gtk_widget_set_sensitive( menu_updateclasses_w, TRUE);
@@ -301,6 +308,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_change_value_w, FALSE);
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
       gtk_widget_set_sensitive( tools_edit_w, TRUE);
+      gtk_widget_set_sensitive( tools_buildnode_w, TRUE);
       gtk_widget_set_sensitive( menu_classeditor_w, FALSE);
       gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
     }
@@ -325,6 +333,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_change_value_w, TRUE);
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
       gtk_widget_set_sensitive( tools_edit_w, TRUE);
+      gtk_widget_set_sensitive( tools_buildnode_w, FALSE);
       gtk_widget_set_sensitive( menu_classeditor_w, FALSE);
       gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
     }
@@ -347,6 +356,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_change_value_w, FALSE);
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
       gtk_widget_set_sensitive( tools_edit_w, TRUE);
+      gtk_widget_set_sensitive( tools_buildnode_w, FALSE);
       gtk_widget_set_sensitive( menu_classeditor_w, FALSE);
       gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
     }
@@ -371,6 +381,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_change_value_w, TRUE);
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
       gtk_widget_set_sensitive( tools_edit_w, TRUE);
+      gtk_widget_set_sensitive( tools_buildnode_w, FALSE);
       gtk_widget_set_sensitive( menu_classeditor_w, FALSE);
       gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
     }
@@ -393,6 +404,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_change_value_w, FALSE);
       gtk_widget_set_sensitive( menu_edit_w, TRUE);
       gtk_widget_set_sensitive( tools_edit_w, TRUE);
+      gtk_widget_set_sensitive( tools_buildnode_w, FALSE);
       gtk_widget_set_sensitive( menu_classeditor_w, FALSE);
       gtk_widget_set_sensitive( menu_updateclasses_w, FALSE);
     }
@@ -480,7 +492,7 @@ int WttGtk::create_pal_popup_menu( pwr_tCid cid,
 
   gtk_window_get_position( GTK_WINDOW(toplevel), &wind_x, &wind_y);
   popupmenu_x = x + wind_x + 5;
-  popupmenu_y = y + wind_y + 50;
+  popupmenu_y = y + wind_y + 70;
 
   // Create the menu
   sts = get_popup_menu_items( pwr_cNAttrRef, cid);
@@ -2365,18 +2377,18 @@ WttGtk::WttGtk(
   g_object_set( tools_edit_w, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_edit_w, "Edit", "");
 
-  GtkWidget *tools_buildnode = gtk_button_new();
-  gtk_container_add( GTK_CONTAINER(tools_buildnode), 
+  tools_buildnode_w = gtk_button_new();
+  gtk_container_add( GTK_CONTAINER(tools_buildnode_w), 
 	  gtk_image_new_from_stock( "gtk-execute", GTK_ICON_SIZE_SMALL_TOOLBAR));
   if ( wb_type != wb_eType_ClassEditor) {
-    g_signal_connect(tools_buildnode, "clicked", G_CALLBACK(WttGtk::activate_buildnode), this);
-    gtk_toolbar_append_widget( tools, tools_buildnode, "Build Node", "");
+    g_signal_connect(tools_buildnode_w, "clicked", G_CALLBACK(WttGtk::activate_buildnode), this);
+    gtk_toolbar_append_widget( tools, tools_buildnode_w, "Build Node", "");
   }
   else {
-    g_signal_connect(tools_buildnode, "clicked", G_CALLBACK(WttGtk::activate_buildvolume), this);
-    gtk_toolbar_append_widget( tools, tools_buildnode, "Build Volume", "");
+    g_signal_connect(tools_buildnode_w, "clicked", G_CALLBACK(WttGtk::activate_buildvolume), this);
+    gtk_toolbar_append_widget( tools, tools_buildnode_w, "Build Volume", "");
   }
-  g_object_set( tools_buildnode, "can-focus", FALSE, NULL);
+  g_object_set( tools_buildnode_w, "can-focus", FALSE, NULL);
 
   GtkWidget *tools_distribute = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/wpkg_distribute.png");
