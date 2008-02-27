@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wdanav.cpp,v 1.8 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_wdanav.cpp,v 1.9 2008-02-27 06:34:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -116,60 +116,59 @@ int WdaNav::check_attr( int *multiline, brow_tObject *node,
   brow_GetUserData( node_list[0], (void **)&base_item);
   free( node_list);
 
-  switch( base_item->type)
-  {
-    case wnav_eItemType_Attr:
-    case wnav_eItemType_AttrInput:
-    case wnav_eItemType_AttrInputF:
-    case wnav_eItemType_AttrInputInv:
-    case wnav_eItemType_AttrOutput:
-    case wnav_eItemType_AttrArrayElem:
-    {
-      WItemBaseAttr *item = (WItemBaseAttr *)base_item;
+  switch( base_item->type) {
+  case wnav_eItemType_Attr:
+  case wnav_eItemType_AttrInput:
+  case wnav_eItemType_AttrInputF:
+  case wnav_eItemType_AttrInputInv:
+  case wnav_eItemType_AttrOutput:
+  case wnav_eItemType_AttrArrayElem: {
+    WItemBaseAttr *item = (WItemBaseAttr *)base_item;
 
-      if ( !editmode)
-        return WDA__NOEDIT;
-      if ( item->flags & PWR_MASK_NOEDIT && !bypass)
-        return WDA__FLAGNOEDIT;
-      if ( item->flags & PWR_MASK_STATE && !bypass)
-        return WDA__FLAGSTATE;
-      if ( item->type_id == pwr_eType_Text)
-      {
-        *multiline = 1;
-        *size = item->size;
-        sts = item->get_value( init_value);
-        if ( EVEN(sts)) return sts;
-      }
-      else if ( item->type_id == pwr_eType_String)
-      {
-        *multiline = 0;
-        *size = item->size;
-        sts = item->get_value( init_value);
-        if ( EVEN(sts)) return sts;
-      }
-      else
-      {
-        *multiline = 0;
-        *init_value = NULL;
-        *size = 40;
-      }
-      *node = item->node;
-      strcpy( name, item->attr);
-      break;
+    if ( !editmode)
+      return WDA__NOEDIT;
+    if ( item->flags & PWR_MASK_NOEDIT && !bypass)
+      return WDA__FLAGNOEDIT;
+    if ( item->flags & PWR_MASK_STATE && !bypass)
+      return WDA__FLAGSTATE;
+    if ( item->type_id == pwr_eType_Text) {
+      *multiline = 1;
+      *size = item->size;
+      sts = item->get_value( init_value);
+      if ( EVEN(sts)) return sts;
     }
-    case wnav_eItemType_ObjectName:
-    {
-      if ( !editmode)
-        return WDA__NOEDIT;
-      sts = ((WItemObjectName *)base_item)->get_value( init_value);
-      *node = ((WItemObjectName *)base_item)->node;
+    else if ( item->type_id == pwr_eType_String) {
       *multiline = 0;
-      *size = 32;
-      break;
+      *size = item->size;
+      sts = item->get_value( init_value);
+      if ( EVEN(sts)) return sts;
     }
-    default:
+    else {
+      char *valp;
+      int len;
+
       *multiline = 0;
-      return WDA__ATTRNOEDIT;
+      sts = item->get_value( &valp);
+      wnav_attrvalue_to_string( ldhses, item->type_id, valp, init_value, &len);
+      //*init_value = NULL;
+      *size = 40;
+    }
+    *node = item->node;
+    strcpy( name, item->attr);
+    break;
+  }
+  case wnav_eItemType_ObjectName: {
+    if ( !editmode)
+      return WDA__NOEDIT;
+    sts = ((WItemObjectName *)base_item)->get_value( init_value);
+    *node = ((WItemObjectName *)base_item)->node;
+    *multiline = 0;
+    *size = 32;
+    break;
+  }
+  default:
+    *multiline = 0;
+    return WDA__ATTRNOEDIT;
   }
   return WDA__SUCCESS;
 }
