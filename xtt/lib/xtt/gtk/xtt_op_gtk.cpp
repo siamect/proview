@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_op_gtk.cpp,v 1.9 2008-02-06 09:08:33 claes Exp $
+ * Proview   $Id: xtt_op_gtk.cpp,v 1.10 2008-02-27 07:00:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -590,7 +590,7 @@ int OpGtk::configure( char *opplace_str)
     char *textutf8 = g_convert( button_title[i], -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
     b[i] = gtk_button_new_with_label(textutf8);
     g_free( textutf8);
-    gtk_widget_set_size_request( b[i], -1, 25);
+    gtk_widget_set_size_request( b[i], -1, 28);
     switch ( i) {
     case 0:
       g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl1), this);
