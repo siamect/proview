@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wda_gtk.cpp,v 1.2 2007-02-06 10:06:41 claes Exp $
+ * Proview   $Id: wb_wda_gtk.cpp,v 1.3 2008-02-27 06:28:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -104,6 +104,8 @@ void WdaGtk::change_value( int set_focus)
   message( ' ', "");
 
   if ( value) {
+    char *valueutf8 = g_convert( value, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+
     if ( multiline) {
       GtkTextIter start_iter, end_iter;
       gtk_text_buffer_get_start_iter( cmd_scrolled_buffer, &start_iter);
@@ -111,7 +113,7 @@ void WdaGtk::change_value( int set_focus)
       gtk_text_buffer_delete( cmd_scrolled_buffer, &start_iter, &end_iter);
 
       gtk_text_buffer_get_start_iter( cmd_scrolled_buffer, &start_iter);
-      gtk_text_buffer_insert( cmd_scrolled_buffer, &start_iter, value, -1);
+      gtk_text_buffer_insert( cmd_scrolled_buffer, &start_iter, valueutf8, -1);
 
       // Select the text
       // gtk_text_buffer_get_start_iter( cmd_scrolled_buffer, &start_iter);
@@ -121,12 +123,13 @@ void WdaGtk::change_value( int set_focus)
     else {
       gint pos = 0;
       gtk_editable_delete_text( GTK_EDITABLE(cmd_input), 0, -1);
-      gtk_editable_insert_text( GTK_EDITABLE(text_w), value, strlen(value), &pos);
+      gtk_editable_insert_text( GTK_EDITABLE(text_w), valueutf8, strlen(valueutf8), &pos);
 
       // Select the text
       gtk_editable_set_position( GTK_EDITABLE(cmd_input), -1);
       gtk_editable_select_region( GTK_EDITABLE(cmd_input), 0, -1);
     }
+    g_free( valueutf8);
   }
   else {
     gtk_editable_delete_text( GTK_EDITABLE(cmd_input), 0, -1);
@@ -520,7 +523,7 @@ WdaGtk::WdaGtk(
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 			   "default-height", 700,
 			   "default-width", 700,
-			   "title", "Spreadsheed Editor",
+			   "title", "Spreadsheet Editor",
 			   NULL);
 
   g_signal_connect( toplevel, "delete_event", G_CALLBACK(delete_event), this);
