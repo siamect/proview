@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growwidget_gtk.cpp,v 1.7 2008-02-05 14:59:43 claes Exp $
+ * Proview   $Id: glow_growwidget_gtk.cpp,v 1.8 2008-02-27 15:07:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -65,6 +65,7 @@ struct _GrowWidgetGtk {
   int       	scroll_v_upper;
   gint 		scroll_timerid;
   glow_sScroll  scroll_data;
+  int           scroll_configure;
 };
 
 struct _GrowWidgetGtkClass {
@@ -139,7 +140,8 @@ static gboolean scroll_callback_cb( void *d)
   if ( scroll_data->scroll_h_managed) {
     ((GrowWidgetGtk *)scroll_data->grow)->scroll_h_ignore = 1;
     if ( data->window_width != ((GrowWidgetGtk *)scroll_data->grow)->scroll_h_pagesize ||
-	 data->total_width != ((GrowWidgetGtk *)scroll_data->grow)->scroll_h_upper) {
+	 data->total_width != ((GrowWidgetGtk *)scroll_data->grow)->scroll_h_upper ||
+	 ((GrowWidgetGtk *)scroll_data->grow)->scroll_configure) {
       g_object_set( ((GtkScrollbar *)scroll_data->scroll_h)->range.adjustment,
 		    "upper", (gdouble)data->total_width,
 		    "page-size", (gdouble)data->window_width,
@@ -158,7 +160,8 @@ static gboolean scroll_callback_cb( void *d)
   if ( scroll_data->scroll_v_managed) {
     ((GrowWidgetGtk *)scroll_data->grow)->scroll_v_ignore = 1;
     if ( data->window_height != ((GrowWidgetGtk *)scroll_data->grow)->scroll_v_pagesize ||
-	 data->total_height != ((GrowWidgetGtk *)scroll_data->grow)->scroll_v_upper) {
+	 data->total_height != ((GrowWidgetGtk *)scroll_data->grow)->scroll_v_upper ||
+	 ((GrowWidgetGtk *)scroll_data->grow)->scroll_configure) {
       g_object_set( ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment,
 		    "upper", (gdouble)data->total_height,
 		    "page-size", (gdouble)data->window_height,
@@ -176,32 +179,8 @@ static gboolean scroll_callback_cb( void *d)
     ((GrowWidgetGtk *)scroll_data->grow)->scroll_h_pagesize = data->window_width;
     ((GrowWidgetGtk *)scroll_data->grow)->scroll_h_upper = data->total_width;
   }
+  ((GrowWidgetGtk *)scroll_data->grow)->scroll_configure = 0;
   return FALSE;
-#if 0
-  if ( scroll_data->scroll_h_managed) {
-    ((GrowWidgetGtk *)scroll_data->grow)->scroll_h_ignore = 1;
-    g_object_set( ((GtkScrollbar *)scroll_data->scroll_h)->range.adjustment,
-		 "upper", (gdouble)data->total_width,
-		 "page-size", (gdouble)data->window_width,
-		 "value", (gdouble)data->offset_x,
-		 NULL);
-    gtk_adjustment_changed( 
-        ((GtkScrollbar *)scroll_data->scroll_h)->range.adjustment);
-    ((GrowWidgetGtk *)scroll_data->grow)->scroll_h_value = (gdouble)data->offset_x;
-  }
-
-  if ( scroll_data->scroll_v_managed) {
-    ((GrowWidgetGtk *)scroll_data->grow)->scroll_v_ignore = 1;
-    g_object_set( ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment,
-		 "upper", (gdouble)data->total_height,
-		 "page-size", (gdouble)data->window_height,
-		 "value", (gdouble)data->offset_y,
-		 NULL);
-    gtk_adjustment_changed( 
-        ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment);
-    ((GrowWidgetGtk *)scroll_data->grow)->scroll_v_value = (gdouble)data->offset_y;
-  }
-#endif
 }
 
 static void scroll_h_action( 	GtkWidget      	*w,
@@ -310,6 +289,9 @@ static gboolean growwidgetgtk_event( GtkWidget *glow, GdkEvent *event)
     }
     else if ( next)
       gdk_event_free( next);
+  }
+  else if ( event->type == GDK_CONFIGURE) {
+    ((GrowWidgetGtk *)glow)->scroll_configure = 1;
   }
 
   ((GlowDrawGtk *)((GrowCtx *)((GrowWidgetGtk *)glow)->grow_ctx)->gdraw)->event_handler( *event);
@@ -425,6 +407,9 @@ GtkWidget *scrolledgrowwidgetgtk_new(
   w->scroll_v = GTK_SCROLLED_WINDOW(form)->vscrollbar;
   w->scroll_h_ignore = 0;
   w->scroll_v_ignore = 0;
+  w->scroll_h_value = 0;
+  w->scroll_v_value = 0;
+  w->scroll_configure = 0;
   w->form = form;
   *growwidget = GTK_WIDGET( w);
 
@@ -453,6 +438,9 @@ GtkWidget *grownavwidgetgtk_new( GtkWidget *main_grow)
   w->scroll_v = 0;
   w->scroll_h_ignore = 0;
   w->scroll_v_ignore = 0;
+  w->scroll_h_value = 0;
+  w->scroll_v_value = 0;
+  w->scroll_configure = 0;
   return (GtkWidget *) w;  
 }
 

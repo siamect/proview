@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_ctx.cpp,v 1.13 2008-01-18 13:55:06 claes Exp $
+ * Proview   $Id: flow_ctx.cpp,v 1.14 2008-02-27 15:07:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1219,6 +1219,7 @@ int FlowCtx::event_handler_nav( flow_eEvent event, int x, int y)
     case flow_eEvent_Exposure:
       fdraw->get_nav_window_size( this, &nav_window_width, &nav_window_height);
       nav_zoom();
+      change_scrollbar();
       break;
     case flow_eEvent_ButtonMotion:
       if ( nav_rect_movement_active)

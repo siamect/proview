@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_widget_gtk.cpp,v 1.7 2008-02-05 14:59:43 claes Exp $
+ * Proview   $Id: flow_widget_gtk.cpp,v 1.8 2008-02-27 15:07:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -63,6 +63,7 @@ struct _FlowWidgetGtk {
   int       	scroll_v_upper;
   gint 		scroll_timerid;
   flow_sScroll  scroll_data;
+  int           scroll_configure;
 };
 
 struct _FlowWidgetGtkClass {
@@ -136,7 +137,8 @@ static gboolean scroll_callback_cb( void *d)
   if ( scroll_data->scroll_h_managed) {
     ((FlowWidgetGtk *)scroll_data->flow)->scroll_h_ignore = 1;
     if ( data->window_width != ((FlowWidgetGtk *)scroll_data->flow)->scroll_h_pagesize ||
-	 data->total_width != ((FlowWidgetGtk *)scroll_data->flow)->scroll_h_upper) {
+	 data->total_width != ((FlowWidgetGtk *)scroll_data->flow)->scroll_h_upper ||
+	 ((FlowWidgetGtk *)scroll_data->flow)->scroll_configure) {
       g_object_set( ((GtkScrollbar *)scroll_data->scroll_h)->range.adjustment,
 		    "upper", (gdouble)data->total_width,
 		    "page-size", (gdouble)data->window_width,
@@ -155,7 +157,8 @@ static gboolean scroll_callback_cb( void *d)
   if ( scroll_data->scroll_v_managed) {
     ((FlowWidgetGtk *)scroll_data->flow)->scroll_v_ignore = 1;
     if ( data->window_height != ((FlowWidgetGtk *)scroll_data->flow)->scroll_v_pagesize ||
-	 data->total_height != ((FlowWidgetGtk *)scroll_data->flow)->scroll_v_upper) {
+	 data->total_height != ((FlowWidgetGtk *)scroll_data->flow)->scroll_v_upper ||
+	 ((FlowWidgetGtk *)scroll_data->flow)->scroll_configure) {
       g_object_set( ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment,
 		    "upper", (gdouble)data->total_height,
 		    "page-size", (gdouble)data->window_height,
@@ -173,6 +176,7 @@ static gboolean scroll_callback_cb( void *d)
     ((FlowWidgetGtk *)scroll_data->flow)->scroll_h_pagesize = data->window_width;
     ((FlowWidgetGtk *)scroll_data->flow)->scroll_h_upper = data->total_width;
   }
+  ((FlowWidgetGtk *)scroll_data->flow)->scroll_configure = 0;
   return FALSE;
 }
 
@@ -263,6 +267,9 @@ static gboolean flowwidgetgtk_event( GtkWidget *flow, GdkEvent *event)
     }
     else if ( next)
       gdk_event_free( next);
+  }
+  else if ( event->type == GDK_CONFIGURE) {
+    ((FlowWidgetGtk *)flow)->scroll_configure = 1;
   }
 
   ((FlowDrawGtk *)((FlowCtx *)((FlowWidgetGtk *)flow)->flow_ctx)->fdraw)->event_handler( (FlowCtx *)((FlowWidgetGtk *)flow)->flow_ctx, *event);
@@ -384,6 +391,9 @@ GtkWidget *scrolledflowwidgetgtk_new(
   w->scroll_v = GTK_SCROLLED_WINDOW(form)->vscrollbar;
   w->scroll_h_ignore = 0;
   w->scroll_v_ignore = 0;
+  w->scroll_h_value = 0;
+  w->scroll_v_value = 0;
+  w->scroll_configure = 0;
   w->form = form;
   *flowwidget = GTK_WIDGET( w);
 
@@ -412,6 +422,9 @@ GtkWidget *flownavwidgetgtk_new( GtkWidget *main_flow)
   w->scroll_v = 0;
   w->scroll_h_ignore = 0;
   w->scroll_v_ignore = 0;
+  w->scroll_h_value = 0;
+  w->scroll_v_value = 0;
+  w->scroll_configure = 0;
   return (GtkWidget *) w;  
 }
 

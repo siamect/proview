@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_curvewidget_gtk.cpp,v 1.5 2008-02-05 14:59:43 claes Exp $
+ * Proview   $Id: glow_curvewidget_gtk.cpp,v 1.6 2008-02-27 15:07:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -67,6 +67,7 @@ struct _CurveWidgetGtk {
   int       	scroll_v_upper;
   gint 		scroll_timerid;
   glow_sScroll  scroll_data;
+  int           scroll_configure;
 };
 
 struct _CurveWidgetGtkClass {
@@ -138,7 +139,8 @@ static gboolean scroll_callback_cb( void *d)
   if ( scroll_data->scroll_v_managed) {
     ((CurveWidgetGtk *)scroll_data->curve)->scroll_v_ignore = 1;
     if ( data->window_height != ((CurveWidgetGtk *)scroll_data->curve)->scroll_v_pagesize ||
-	 data->total_height != ((CurveWidgetGtk *)scroll_data->curve)->scroll_v_upper) {
+	 data->total_height != ((CurveWidgetGtk *)scroll_data->curve)->scroll_v_upper ||
+	 ((CurveWidgetGtk *)scroll_data->curve)->scroll_configure) {
       g_object_set( ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment,
 		    "upper", (gdouble)data->total_height,
 		    "page-size", (gdouble)data->window_height,
@@ -156,6 +158,7 @@ static gboolean scroll_callback_cb( void *d)
     ((CurveWidgetGtk *)scroll_data->curve)->scroll_h_pagesize = data->window_width;
     ((CurveWidgetGtk *)scroll_data->curve)->scroll_h_upper = data->total_width;
   }
+  ((CurveWidgetGtk *)scroll_data->curve)->scroll_configure = 0;
   return FALSE;
 #if 0
   if ( scroll_data->scroll_h_managed) {
@@ -277,6 +280,9 @@ static gboolean curvewidgetgtk_event( GtkWidget *glow, GdkEvent *event)
     }
     else if ( next)
       gdk_event_free( next);
+  }
+  else if ( event->type == GDK_CONFIGURE) {
+    ((CurveWidgetGtk *)glow)->scroll_configure = 1;
   }
 
   ((GlowDrawGtk *)((CurveCtx *)((CurveWidgetGtk *)glow)->curve_ctx)->gdraw)->event_handler( *event);
@@ -401,6 +407,9 @@ GtkWidget *scrolledcurvewidgetgtk_new(
   w->scroll_v = GTK_SCROLLED_WINDOW(form)->vscrollbar;
   w->scroll_h_ignore = 0;
   w->scroll_v_ignore = 0;
+  w->scroll_h_value = 0;
+  w->scroll_v_value = 0;
+  w->scroll_configure = 0;
   w->form = form;
   *curvewidget = GTK_WIDGET( w);
 
@@ -429,6 +438,9 @@ GtkWidget *curvenavwidgetgtk_new( GtkWidget *main_curve)
   w->scroll_v = 0;
   w->scroll_h_ignore = 0;
   w->scroll_v_ignore = 0;
+  w->scroll_h_value = 0;
+  w->scroll_v_value = 0;
+  w->scroll_configure = 0;
   return (GtkWidget *) w;  
 }
 
