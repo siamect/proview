@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_xhelpnav.h,v 1.9 2007-01-04 07:51:42 claes Exp $
+ * Proview   $Id: co_xhelpnav.h,v 1.10 2008-02-27 06:24:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -72,6 +72,7 @@ class CoXHelpNavBrow {
     CoXHelpNavBrow( BrowCtx *brow_ctx, void *brow_userdata) : 
       ctx(brow_ctx), userdata(brow_userdata)
       {}
+
 #if 0
     ~CoXHelpNavBrow();
 #endif
@@ -85,6 +86,9 @@ class CoXHelpNavBrow {
     brow_tNodeClass 	nc_line;
     flow_sAnnotPixmap 	*pixmap_morehelp;
     flow_sAnnotPixmap 	*pixmap_closehelp;
+    navh_eHelpFile	current_filetype;
+    char		current_key[200];
+    pwr_tFileName      	current_filename;
 
     void free_pixmaps();
     void allocate_pixmaps();
@@ -131,6 +135,9 @@ class CoXHelpNav {
     void enable_events( CoXHelpNavBrow *brow);
     int help( char *key, char *help_bookmark, navh_eHelpFile file_type,
 	      char *file_name, int pop, bool strict);
+    int back();
+    int next_topic();
+    int previous_topic();
     int	help_index( navh_eHelpFile file_type, char *file_name, int pop);
     pwr_tStatus search( char *str, bool strict);
     pwr_tStatus search_next();

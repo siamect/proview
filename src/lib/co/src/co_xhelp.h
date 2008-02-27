@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_xhelp.h,v 1.7 2007-01-04 07:51:42 claes Exp $
+ * Proview   $Id: co_xhelp.h,v 1.8 2008-02-27 06:24:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,6 +54,9 @@ class CoXHelp {
     int help( char *key, char *help_bookmark, navh_eHelpFile file_type,
 	      char *file_name, bool strict);
     int	help_index( navh_eHelpFile file_type, char *file_name);
+    int back();
+    int next_topic();
+    int previous_topic();
     static void set_default( CoXHelp *xhelp) { default_xhelp = xhelp;}
     static int dhelp( char *key, char *help_bookmark, navh_eHelpFile file_type,
 		      char *file_name, bool strict);

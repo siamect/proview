@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_nav_help.cpp,v 1.10 2006-02-23 14:35:42 claes Exp $
+ * Proview   $Id: co_nav_help.cpp,v 1.11 2008-02-27 06:24:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -152,8 +152,10 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
     dcli_get_defaultfilename( base_file, filestr, NULL);
   else if ( file_type == navh_eHelpFile_Project)
     dcli_get_defaultfilename( project_file, filestr, NULL);
-  else
+  else if ( file_name)
     dcli_get_defaultfilename( file_name, filestr, NULL);
+  else
+    dcli_get_defaultfilename( base_file, filestr, NULL);
 
   // Replace symbol for language
   if ( strncmp( filestr, "$pwr_lang/", 10) == 0) {
@@ -556,6 +558,230 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
 }
 
 
+int	NavHelp::get_next_key( char *help_key, navh_eHelpFile file_type, char *file_name,
+			       bool strict, char *next_key)
+{
+  char	filestr[200];
+  FILE	*file;
+  char	line[200];
+  char	key[80];
+  char	key_part[4][40];
+  char	include_file[80];
+  char	subject[80];
+  char	subject_part[4][40];
+  int	key_nr;
+  int	subject_nr;
+  int	hit = 0;
+  int   next_hit = 0;
+  int 	sts;
+  int	i;  
+  char	*s;
+
+  if ( help_key) {
+    cdh_ToLower( key, help_key);
+  }
+
+  // Open file
+  if ( file_type == navh_eHelpFile_Base)
+    dcli_get_defaultfilename( base_file, filestr, NULL);
+  else if ( file_type == navh_eHelpFile_Project)
+    dcli_get_defaultfilename( project_file, filestr, NULL);
+  else if ( file_name)
+    dcli_get_defaultfilename( file_name, filestr, NULL);
+  else
+    dcli_get_defaultfilename( base_file, filestr, NULL);
+
+  // Replace symbol for language
+  if ( strncmp( filestr, "$pwr_lang/", 10) == 0) {
+    char lng_filestr[200];
+    
+    sprintf( lng_filestr, "$pwr_exe/%s/%s", Lng::get_language_str(),
+	     &filestr[10]);
+    strcpy( filestr, lng_filestr);
+  }
+  dcli_translate_filename( filestr, filestr);
+
+  file = fopen( filestr, "r");
+  if ( file == 0)
+    return NAV__NOFILE;
+	
+  key_nr = dcli_parse( key, " 	", "", (char *)key_part,
+		       sizeof( key_part) / sizeof( key_part[0]), 
+		       sizeof( key_part[0]), 0);
+
+
+  sts = dcli_read_line( line, sizeof( line), file);
+  while ( ODD(sts)) {
+    if ( cdh_NoCaseStrncmp( line, "<include>", 9) == 0) {      
+      help_remove_spaces( &line[9], include_file);
+      // Replace symbol for language
+      if ( strncmp( include_file, "$pwr_lang/", 10) == 0) {
+        char lng_include_file[200];
+
+	sprintf( lng_include_file, "$pwr_exe/%s/%s", Lng::get_language_str(),
+		 &include_file[10]);
+	strcpy( include_file, lng_include_file);
+      }
+
+      if ( !noprop) {
+	sts = get_next_key( help_key, navh_eHelpFile_Other, 
+			    include_file, strict, next_key);
+	if ( ODD(sts)) {
+	  fclose( file);
+	  return sts;
+	}
+      }
+      hit = 0;
+    }
+    if ( cdh_NoCaseStrncmp( line, "<topic>", 7) == 0) {
+      if ( (s = strstr( line, "<style>")) || (s = strstr( line, "<STYLE>"))) {
+	*s = 0;
+      }
+
+      help_remove_spaces( &line[7], subject);
+      if ( hit) {
+	strcpy( next_key, subject);
+	next_hit = 1;
+	break;
+      }
+      cdh_ToLower( subject, subject);
+      subject_nr = dcli_parse( subject, " 	", "", (char *)subject_part,
+                	sizeof( subject_part) / sizeof( subject_part[0]),
+			sizeof( subject_part[0]), 0);
+      if ( key_nr == subject_nr ) {
+	for ( i = 0; i < key_nr; i++) {
+	  if ( (!strict && strncmp( subject_part[i], key_part[i], strlen(key_part[i])) == 0) ||
+	       (strict && strcmp( subject_part[i], key_part[i]) == 0)) {
+	    if ( i == key_nr - 1)
+	      hit = 1;
+	  }
+	  else
+	    break;
+	}
+      }
+    }
+    sts = dcli_read_line( line, sizeof( line), file);
+  }
+  fclose( file);
+
+  if ( !next_hit)
+    return NAV__TOPICNOTFOUND;
+  return NAV__SUCCESS;
+}
+
+int	NavHelp::get_previous_key( char *help_key, navh_eHelpFile file_type, char *file_name,
+				   bool strict, char *prev_key)
+{
+  char	filestr[200];
+  FILE	*file;
+  char	line[200];
+  char	key[80];
+  char	key_part[4][40];
+  char	include_file[80];
+  char	subject[80];
+  char	subject_part[4][40];
+  int	key_nr;
+  int	subject_nr;
+  int	hit = 0;
+  int 	sts;
+  int	i;  
+  char	*s;
+  char  prev[80] = "";
+
+  if ( help_key) {
+    cdh_ToLower( key, help_key);
+  }
+
+  // Open file
+  if ( file_type == navh_eHelpFile_Base)
+    dcli_get_defaultfilename( base_file, filestr, NULL);
+  else if ( file_type == navh_eHelpFile_Project)
+    dcli_get_defaultfilename( project_file, filestr, NULL);
+  else if ( file_name)
+    dcli_get_defaultfilename( file_name, filestr, NULL);
+  else
+    dcli_get_defaultfilename( base_file, filestr, NULL);
+
+  // Replace symbol for language
+  if ( strncmp( filestr, "$pwr_lang/", 10) == 0) {
+    char lng_filestr[200];
+    
+    sprintf( lng_filestr, "$pwr_exe/%s/%s", Lng::get_language_str(),
+	     &filestr[10]);
+    strcpy( filestr, lng_filestr);
+  }
+  dcli_translate_filename( filestr, filestr);
+
+  file = fopen( filestr, "r");
+  if ( file == 0)
+    return NAV__NOFILE;
+	
+  key_nr = dcli_parse( key, " 	", "", (char *)key_part,
+		       sizeof( key_part) / sizeof( key_part[0]), 
+		       sizeof( key_part[0]), 0);
+
+
+  sts = dcli_read_line( line, sizeof( line), file);
+  while ( ODD(sts)) {
+    if ( cdh_NoCaseStrncmp( line, "<include>", 9) == 0) {      
+      help_remove_spaces( &line[9], include_file);
+      // Replace symbol for language
+      if ( strncmp( include_file, "$pwr_lang/", 10) == 0) {
+        char lng_include_file[200];
+
+	sprintf( lng_include_file, "$pwr_exe/%s/%s", Lng::get_language_str(),
+		 &include_file[10]);
+	strcpy( include_file, lng_include_file);
+      }
+
+      if ( !noprop) {
+	sts = get_next_key( help_key, navh_eHelpFile_Other, 
+			    include_file, strict, prev_key);
+	if ( ODD(sts)) {
+	  fclose( file);
+	  return sts;
+	}
+      }
+      hit = 0;
+    }
+    if ( cdh_NoCaseStrncmp( line, "<topic>", 7) == 0) {
+      if ( (s = strstr( line, "<style>")) || (s = strstr( line, "<STYLE>"))) {
+	*s = 0;
+      }
+
+      help_remove_spaces( &line[7], subject);
+      cdh_ToLower( subject, subject);
+      subject_nr = dcli_parse( subject, " 	", "", (char *)subject_part,
+                	sizeof( subject_part) / sizeof( subject_part[0]),
+			sizeof( subject_part[0]), 0);
+      if ( key_nr == subject_nr ) {
+	for ( i = 0; i < key_nr; i++) {
+	  if ( (!strict && strncmp( subject_part[i], key_part[i], strlen(key_part[i])) == 0) ||
+	       (strict && strcmp( subject_part[i], key_part[i]) == 0)) {
+	    if ( i == key_nr - 1) {
+	      hit = 1;
+	      strcpy( prev_key, prev);
+	    }
+	  }
+	  else
+	    break;
+	}
+      }
+      if ( hit) 
+	break;
+
+      strcpy( prev, subject);
+    }
+    sts = dcli_read_line( line, sizeof( line), file);
+  }
+  fclose( file);
+
+  if ( !hit || strcmp( prev, "") == 0)
+    return NAV__TOPICNOTFOUND;
+  return NAV__SUCCESS;
+}
+
+
 int	NavHelp::help_index( navh_eHelpFile file_type, char *file_name)
 {
   char	filestr[80];
@@ -571,8 +797,10 @@ int	NavHelp::help_index( navh_eHelpFile file_type, char *file_name)
     dcli_get_defaultfilename( base_file, filestr, NULL);
   else if ( file_type == navh_eHelpFile_Project)
     dcli_get_defaultfilename( project_file, filestr, NULL);
-  else
+  else if ( file_name)
     dcli_get_defaultfilename( file_name, filestr, NULL);
+  else
+    dcli_get_defaultfilename( base_file, filestr, NULL);
 
   if ( strncmp( filestr, "$pwr_lang/", 10) == 0) {
     char lng_file[200];

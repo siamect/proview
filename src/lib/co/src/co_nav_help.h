@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_nav_help.h,v 1.7 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_nav_help.h,v 1.8 2008-02-27 06:24:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -75,6 +75,10 @@ class NavHelp {
 
     int help( char *key, char *help_bookmark, navh_eHelpFile file_type, 
 	      char *file_name, void **bookmark, bool strict = false);
+    int	get_next_key( char *help_key, navh_eHelpFile file_type, char *file_name,
+		      bool strict, char *next_key);
+    int get_previous_key( char *help_key, navh_eHelpFile file_type, char *file_name,
+			  bool strict, char *prev_key);
     int	help_index( navh_eHelpFile file_type, char *file_name);
     void set_propagate( int prop) { noprop = !prop;}
 };

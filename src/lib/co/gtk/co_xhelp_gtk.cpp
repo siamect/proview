@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_xhelp_gtk.cpp,v 1.2 2007-02-05 09:28:43 claes Exp $
+ * Proview   $Id: co_xhelp_gtk.cpp,v 1.3 2008-02-27 06:24:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -64,6 +64,27 @@ void CoXHelpGtk::activate_close( GtkWidget *w, gpointer data)
     xhelp->displayed = 0;
   }
   //  delete xhelp;
+}
+
+void CoXHelpGtk::activate_back( GtkWidget *w, gpointer data)
+{
+  CoXHelpGtk *xhelp = (CoXHelpGtk *)data;
+
+  xhelp->back();
+}
+
+void CoXHelpGtk::activate_nexttopic( GtkWidget *w, gpointer data)
+{
+  CoXHelpGtk *xhelp = (CoXHelpGtk *)data;
+
+  xhelp->next_topic();
+}
+
+void CoXHelpGtk::activate_previoustopic( GtkWidget *w, gpointer data)
+{
+  CoXHelpGtk *xhelp = (CoXHelpGtk *)data;
+
+  xhelp->previous_topic();
 }
 
 void CoXHelpGtk::activate_zoom_in( GtkWidget *w, gpointer data)
@@ -214,6 +235,7 @@ CoXHelpGtk::CoXHelpGtk(
 {
   int sts;
   char title[80];
+  pwr_tFileName fname;
 
   strcpy( title, Lng::translate("Help"));
 
@@ -235,13 +257,35 @@ CoXHelpGtk::CoXHelpGtk(
   gtk_window_add_accel_group(GTK_WINDOW(toplevel), accel_g);
 
   GtkMenuBar *menu_bar = (GtkMenuBar *) g_object_new(GTK_TYPE_MENU_BAR, NULL);
+  GtkToolbar *tools = (GtkToolbar *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
 
   // File entry
   GtkWidget *file_close = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLOSE, accel_g);
   g_signal_connect(file_close, "activate", G_CALLBACK(CoXHelpGtk::activate_close), this);
 
+  GtkWidget *file_back = gtk_menu_item_new_with_mnemonic( "_Back");
+  g_signal_connect( file_back, "activate", 
+		    G_CALLBACK(activate_back), this);
+  gtk_widget_add_accelerator( file_back, "activate", accel_g,
+			      'b', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+  GtkWidget *file_nexttopic = gtk_menu_item_new_with_mnemonic( "_Next Topic");
+  g_signal_connect( file_nexttopic, "activate", 
+		    G_CALLBACK(activate_nexttopic), this);
+  gtk_widget_add_accelerator( file_nexttopic, "activate", accel_g,
+			      'n', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+  GtkWidget *file_prevtopic = gtk_menu_item_new_with_mnemonic( "_Previous Topic");
+  g_signal_connect( file_prevtopic, "activate", 
+		    G_CALLBACK(activate_previoustopic), this);
+  gtk_widget_add_accelerator( file_prevtopic, "activate", accel_g,
+			      'p', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
   GtkMenu *file_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_back);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_nexttopic);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_prevtopic);
 
   GtkWidget *file = gtk_menu_item_new_with_mnemonic("_File");
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), file);
@@ -306,6 +350,58 @@ CoXHelpGtk::CoXHelpGtk(
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), help);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(help), GTK_WIDGET(help_menu));
 
+
+  // Toolbar
+  GtkWidget *tools_back = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_back.png");
+  gtk_container_add( GTK_CONTAINER(tools_back), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_back, "clicked", G_CALLBACK(activate_back), this);
+  g_object_set( tools_back, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_back,CoWowGtk::translate_utf8("Go back"), "");
+
+  GtkWidget *tools_previous = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_previous.png");
+  gtk_container_add( GTK_CONTAINER(tools_previous), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_previous, "clicked", G_CALLBACK(activate_previoustopic), this);
+  g_object_set( tools_previous, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_previous,CoWowGtk::translate_utf8("Previous topic"), "");
+
+  GtkWidget *tools_next = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_next.png");
+  gtk_container_add( GTK_CONTAINER(tools_next), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_next, "clicked", G_CALLBACK(activate_nexttopic), this);
+  g_object_set( tools_next, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_next,CoWowGtk::translate_utf8("Next topic"), "");
+
+  GtkWidget *tools_zoom_in = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_in.png");
+  gtk_container_add( GTK_CONTAINER(tools_zoom_in), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_zoom_in, "clicked", G_CALLBACK(activate_zoom_in), this);
+  g_object_set( tools_zoom_in, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_zoom_in,CoWowGtk::translate_utf8("Zoom in"), "");
+
+  GtkWidget *tools_zoom_out = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_out.png");
+  gtk_container_add( GTK_CONTAINER(tools_zoom_out), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_zoom_out, "clicked", G_CALLBACK(activate_zoom_out), this);
+  g_object_set( tools_zoom_out, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_zoom_out,CoWowGtk::translate_utf8("Zoom out"), "");
+
+  GtkWidget *tools_zoom_reset = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_reset.png");
+  gtk_container_add( GTK_CONTAINER(tools_zoom_reset), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_zoom_reset, "clicked", G_CALLBACK(activate_zoom_reset), this);
+  g_object_set( tools_zoom_reset, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_zoom_reset,CoWowGtk::translate_utf8("Zoom reset"), "");
+
+
+
   GtkWidget *vbox = gtk_vbox_new( FALSE, 0);
 
   xhelpnav = new CoXHelpNavGtk( (void *)this, vbox, title, utility, &brow_widget, 
@@ -313,6 +409,7 @@ CoXHelpGtk::CoXHelpGtk(
   xhelpnav->open_URL_cb = CoXHelp::open_URL;
 
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(tools), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(brow_widget), TRUE, TRUE, 0);
 
   gtk_container_add( GTK_CONTAINER(toplevel), vbox);

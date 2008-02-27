@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_xhelp.cpp,v 1.9 2007-02-07 15:45:44 claes Exp $
+ * Proview   $Id: co_xhelp.cpp,v 1.10 2008-02-27 06:24:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -72,6 +72,21 @@ int CoXHelp::help( char *key, char *help_bookmark, navh_eHelpFile file_type,
 {
   return xhelpnav->help( key, help_bookmark, file_type,
 				   file_name, 0, strict);
+}
+
+int CoXHelp::back()
+{
+  return xhelpnav->back();
+}
+
+int CoXHelp::next_topic()
+{
+  return xhelpnav->next_topic();
+}
+
+int CoXHelp::previous_topic()
+{
+  return xhelpnav->previous_topic();
 }
 
 //

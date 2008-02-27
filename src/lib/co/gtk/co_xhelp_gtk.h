@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_xhelp_gtk.h,v 1.1 2007-01-04 07:51:41 claes Exp $
+ * Proview   $Id: co_xhelp_gtk.h,v 1.2 2008-02-27 06:24:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,6 +53,9 @@ class CoXHelpGtk : public CoXHelp {
 			    char *init_text,
 			    void (*ok_cb)( CoXHelp *, char *));
     static void activate_close( GtkWidget *w, gpointer data);
+    static void activate_back( GtkWidget *w, gpointer data);
+    static void activate_nexttopic( GtkWidget *w, gpointer data);
+    static void activate_previoustopic( GtkWidget *w, gpointer data);
     static void activate_zoom_in( GtkWidget *w, gpointer data);
     static void activate_zoom_out( GtkWidget *w, gpointer data);
     static void activate_zoom_reset( GtkWidget *w, gpointer data);
