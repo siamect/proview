@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.cpp,v 1.11 2008-02-22 09:23:44 claes Exp $
+ * Proview   $Id: wb_lfu.cpp,v 1.12 2008-02-27 06:30:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -812,24 +812,48 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  if ( !strcmp( name, volname)) {
 	    found = 1;
 	      
+	    bool out_of_range = false;
 	    switch (cid) {
   	    case pwr_cClass_RootVolumeConfig :
 	      strcpy( classname, "RootVolume");
+	      if ( volumelist_ptr->volume_id < cdh_cUserVolMin ||
+		   volumelist_ptr->volume_id > cdh_cUserVolMax)
+		out_of_range = true;
 	      break;
 	    case pwr_cClass_SubVolumeConfig :
 	      strcpy( classname, "SubVolume");
+	      if ( volumelist_ptr->volume_id < cdh_cUserVolMin ||
+		   volumelist_ptr->volume_id > cdh_cUserVolMax)
+		out_of_range = true;
 	      break;
 	    case pwr_cClass_ClassVolumeConfig :
 	      strcpy( classname, "ClassVolume");
+	      if ( volumelist_ptr->volume_id < cdh_cUserClassVolMin ||
+		   volumelist_ptr->volume_id > cdh_cUserClassVolMax)
+		out_of_range = true;
 	      break;
 	    case pwr_cClass_SharedVolumeConfig :
 	      strcpy( classname, "SharedVolume");
+	      if ( volumelist_ptr->volume_id < cdh_cUserVolMin ||
+		   volumelist_ptr->volume_id > cdh_cUserVolMax)
+		out_of_range = true;
 	      break;
 	    case pwr_cClass_ExternVolumeConfig :
 	      strcpy( classname, "ExternVolume");
+	      if ( volumelist_ptr->volume_id < cdh_cUserVolMin ||
+		   volumelist_ptr->volume_id > cdh_cUserVolMax)
+		out_of_range = true;
 	      break;
 	    }
 	    
+	    if ( out_of_range) {
+	      char msg[200];
+	      sprintf( msg, "Error in Volume identity for volume '%s', %s is out of range", name,
+		       cdh_VolumeIdToString( 0, volumelist_ptr->volume_id, 1, 0));
+	      MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	      syntax_error = 1;
+	    }
+
 	    switch (cid) {
 	    case pwr_cClass_RootVolumeConfig :
 	    case pwr_cClass_SubVolumeConfig :
