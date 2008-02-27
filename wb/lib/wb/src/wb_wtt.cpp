@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.cpp,v 1.36 2007-12-21 13:18:01 claes Exp $
+ * Proview   $Id: wb_wtt.cpp,v 1.37 2008-02-27 06:35:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1565,7 +1565,9 @@ void Wtt::activate_buildnode()
     wb_build *build = build_new();
     build->opt = focused_wnav->gbl.build;
 
+    set_clock_cursor();
     build->node( volp->p1, boot_volumelist, boot_volumecount);
+    reset_cursor();
     if ( build->evenSts()) {
       char msg[80];
       sprintf( msg, "Error building node %s", volp->p1);
@@ -1587,9 +1589,9 @@ void Wtt::activate_buildnode()
     }
   }
 
-    set_clock_cursor();
-    open_boot_window();
-    reset_cursor();
+  set_clock_cursor();
+  open_boot_window();
+  reset_cursor();
 }
 
 void Wtt::activate_distribute()
