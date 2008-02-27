@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_gtk.cpp,v 1.11 2007-06-29 09:51:20 claes Exp $
+ * Proview   $Id: rt_xtt_gtk.cpp,v 1.12 2008-02-27 06:59:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -146,7 +146,7 @@ void XttGtk::close( void *ctx, int terminate)
   if ( terminate) {
     strcpy( title, CoWowGtk::translate_utf8("Confirm"));
     xtt->wow->DisplayQuestion( xtt, title, 
-			 CoWowGtk::translate_utf8( "Do you want to close"), close_ok, 0, 0);
+			 Lng::translate( "Do you want to close"), close_ok, 0, 0);
   }
   else {
     xtt->xnav->displayed = 0;
