@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_session.cpp,v 1.24 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_session.cpp,v 1.25 2008-02-27 06:31:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -614,6 +614,31 @@ pwr_tStatus wb_session::getMenu( ldh_sMenuCall *ip)
 	    ldh_lUtility[((wb_session *)ip->PointedSession)->utility()].Name,
 	    'x', 'x', 'x');
     sprintf(Menu, "pwrs:Class-$Object-%s-Pointed", OMenuFolder);
+
+    wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, pwr_eClass_Object);
+    if ( EVEN(sts)) return sts;
+
+    wb_orep *o = m_vrep->erep()->object( &sts, Menu);
+    if ( EVEN(sts)) return sts;
+    o->ref();
+
+    Object = o->oid();
+    void *o_menu_body;
+
+    wb_orep *o_menu = cdrep->menuFirst( &sts, o, &o_menu_body);
+    while ( ODD(sts)) {
+      o_menu->ref();
+      getAllMenuItems( ip, &Item, cdrep, o_menu, o_menu_body, 0, &nItems, 0);
+      wb_orep *prev = o_menu; 
+      o_menu = cdrep->menuAfter( &sts, o_menu, &o_menu_body);
+      prev->unref();
+    }
+    delete cdrep;
+    o->unref();
+    break;
+  }
+  case ldh_eMenuSet_Class: {
+    sprintf(Menu, "pwrs:Class-$Object-%s-Pointed", MenuFolder);
 
     wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, pwr_eClass_Object);
     if ( EVEN(sts)) return sts;
