@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_gtk.cpp,v 1.11 2007-10-30 07:47:33 claes Exp $
+ * Proview   $Id: co_wow_gtk.cpp,v 1.12 2008-02-27 06:23:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -120,12 +120,12 @@ void CoWowGtk::DisplayQuestion( void *ctx, char *title, char *text,
 				NULL);
 
   GtkWidget *question_ok = gtk_button_new_with_label( translate_utf8("Yes"));
-  gtk_widget_set_size_request( question_ok, 70, 25);
+  gtk_widget_set_size_request( question_ok, 70, 28);
   g_signal_connect( question_ok, "clicked", 
   		    G_CALLBACK(question_ok_cb), cbdata);
 
   GtkWidget *question_no = gtk_button_new_with_label( translate_utf8("No"));
-  gtk_widget_set_size_request( question_no, 70, 25);
+  gtk_widget_set_size_request( question_no, 70, 28);
   g_signal_connect( question_no, "clicked", 
   		    G_CALLBACK(question_cancel_cb), cbdata);
 
@@ -318,12 +318,12 @@ void *CoWowGtk::CreateList (
  		    G_CALLBACK(CoWowGtk::list_row_activated_cb), ctx);
 
   GtkWidget *ok_button = gtk_button_new_with_label( translate_utf8("Ok"));
-  gtk_widget_set_size_request( ok_button, 70, 25);
+  gtk_widget_set_size_request( ok_button, 70, 28);
   g_signal_connect( ok_button, "clicked", 
  		    G_CALLBACK(CoWowGtk::list_ok_cb), ctx);
 
   GtkWidget *cancel_button = gtk_button_new_with_label( translate_utf8("Cancel"));
-  gtk_widget_set_size_request( cancel_button, 70, 25);
+  gtk_widget_set_size_request( cancel_button, 70, 28);
   g_signal_connect( cancel_button, "clicked", 
  		    G_CALLBACK(CoWowGtk::list_cancel_cb), ctx);
 
@@ -950,21 +950,21 @@ int CoWowGtk::CreateModalDialog( char *title, char *text, char *button1, char *b
 
   if ( button1) {
     GtkWidget *button1_w = gtk_button_new_with_label( translate_utf8(button1));
-    gtk_widget_set_size_request( button1_w, -1, 25);
+    gtk_widget_set_size_request( button1_w, -1, 28);
     g_signal_connect( button1_w, "clicked", 
 		      G_CALLBACK(modaldia_button1_cb), &status);
     gtk_box_pack_start( GTK_BOX(hboxbuttons), button1_w, FALSE, FALSE, 0);
   }
   if ( button2) {
     GtkWidget *button2_w = gtk_button_new_with_label( translate_utf8(button2));
-    gtk_widget_set_size_request( button2_w, -1, 25);
+    gtk_widget_set_size_request( button2_w, -1, 28);
     g_signal_connect( button2_w, "clicked", 
 		      G_CALLBACK(modaldia_button2_cb), &status);
     gtk_box_pack_start( GTK_BOX(hboxbuttons), button2_w, FALSE, FALSE, 0);
   }
   if ( button3) {
     GtkWidget *button3_w = gtk_button_new_with_label( translate_utf8(button3));
-    gtk_widget_set_size_request( button3_w, -1, 25);
+    gtk_widget_set_size_request( button3_w, -1, 28);
     g_signal_connect( button3_w, "clicked", 
 		      G_CALLBACK(modaldia_button3_cb), &status);
     gtk_box_pack_end( GTK_BOX(hboxbuttons), button3_w, FALSE, FALSE, 0);
