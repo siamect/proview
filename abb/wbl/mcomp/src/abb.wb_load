@@ -1,6 +1,6 @@
 Volume ABB $ClassVolume 0.0.250.2 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X3734"
+    Attr NextOix = "_X3741"
     Attr NextCix = "_X36"
     Attr NextTix[0] = "_X3"
   EndBody
@@ -940,21 +940,10 @@ Volume ABB $ClassVolume 0.0.250.2
           Attr PlotGroup.NumPoints = 478
         EndBody
       EndObject
-      Object ConfiguratorPosos $Menu 525 29-OCT-2007 16:44:51.40
+      Object ConfiguratorPoson $Menu 525 22-FEB-2008 14:53:14.67
         Object Pointed $Menu 526 12-OCT-2005 12:58:20.00
           Object IoConnect $MenuButton 527 12-OCT-2005 12:58:20.00
             Body SysBody 01-JAN-1970 01:00:00.00
-              Attr ButtonName = "Connect IO"
-              Attr MethodName = "$AttrRef-IoConnect"
-              Attr FilterName = "$AttrRef-IoConnectFilter"
-            EndBody
-          EndObject
-        EndObject
-      EndObject
-      Object ConfiguratorPosnn $Menu 3683 29-OCT-2007 16:44:30.37
-        Object Pointed $Menu 3684 29-OCT-2007 16:43:40.10
-          Object IoConnect $MenuButton 3685 29-OCT-2007 16:43:40.10
-            Body SysBody 29-OCT-2007 16:43:40.10
               Attr ButtonName = "Connect IO"
               Attr MethodName = "$AttrRef-IoConnect"
               Attr FilterName = "$AttrRef-IoConnectFilter"
@@ -5893,6 +5882,7 @@ The attribute below must always placed last in this PlcPgm."
             Body RtBody 01-JAN-1970 01:00:00.00
               Attr DetectText = "Local mode..."
               Attr EventPriority = 66
+              Attr MoreText = ""
             EndBody
             Body DevBody 06-DEC-2005 15:47:16.51
               Buffer PlcNode
@@ -6936,6 +6926,7 @@ Yellow = Warning"
           Object DSup1 DSup 696 12-OCT-2005 12:58:20.00
             Body RtBody 01-JAN-1970 01:00:00.00
               Attr DetectText = "Tripped..."
+              Attr MoreText = ""
             EndBody
             Body DevBody 06-DEC-2005 15:47:16.51
               Buffer PlcNode
@@ -7083,6 +7074,7 @@ Yellow = Warning"
             Body RtBody 01-JAN-1970 01:00:00.00
               Attr DetectText = "Replace fan..."
               Attr EventPriority = 66
+              Attr MoreText = ""
             EndBody
             Body DevBody 06-DEC-2005 15:47:16.51
               Buffer PlcNode
@@ -7345,6 +7337,7 @@ Profibus communication."
             Body RtBody 01-JAN-1970 01:00:00.00
               Attr DetectText = "Warning..."
               Attr EventPriority = 66
+              Attr MoreText = ""
             EndBody
             Body DevBody 06-DEC-2005 15:47:16.51
               Buffer PlcNode
@@ -7491,6 +7484,7 @@ Profibus communication."
           Object DSup4 DSup 954 12-OCT-2005 12:58:20.00
             Body RtBody 01-JAN-1970 01:00:00.00
               Attr DetectText = "Error"
+              Attr MoreText = ""
             EndBody
             Body DevBody 06-DEC-2005 15:47:16.51
               Buffer PlcNode
@@ -11946,21 +11940,10 @@ ABB ACS800 Typ 1"
           Attr PlotGroup.NumPoints = 478
         EndBody
       EndObject
-      Object ConfiguratorPosos $Menu 2449 29-OCT-2007 16:45:30.63
+      Object ConfiguratorPoson $Menu 2449 22-FEB-2008 14:53:28.81
         Object Pointed $Menu 2450 13-MAR-2006 09:34:22.38
           Object IoConnect $MenuButton 2451 13-MAR-2006 09:34:22.38
             Body SysBody 13-MAR-2006 09:34:22.38
-              Attr ButtonName = "Connect IO"
-              Attr MethodName = "$AttrRef-IoConnect"
-              Attr FilterName = "$AttrRef-IoConnectFilter"
-            EndBody
-          EndObject
-        EndObject
-      EndObject
-      Object ConfiguratorPosnn $Menu 3690 29-OCT-2007 16:45:37.10
-        Object Pointed $Menu 3692 29-OCT-2007 16:45:23.98
-          Object IoConnect $MenuButton 3693 29-OCT-2007 16:45:23.98
-            Body SysBody 29-OCT-2007 16:45:23.98
               Attr ButtonName = "Connect IO"
               Attr MethodName = "$AttrRef-IoConnect"
               Attr FilterName = "$AttrRef-IoConnectFilter"
@@ -17610,6 +17593,7 @@ The attribute below must always placed last in this PlcPgm."
             Body RtBody 13-MAR-2006 09:34:22.38
               Attr DetectText = "Local mode..."
               Attr EventPriority = 66
+              Attr MoreText = ""
             EndBody
             Body DevBody 14-MAR-2006 16:02:28.50
               Buffer PlcNode
@@ -18563,6 +18547,7 @@ Yellow = Warning"
           Object DSup2 DSup 2653 13-MAR-2006 09:34:22.38
             Body RtBody 14-MAR-2006 15:34:20.87
               Attr DetectText = "Torq fault..."
+              Attr MoreText = ""
             EndBody
             Body DevBody 14-MAR-2006 16:02:28.49
               Buffer PlcNode
@@ -18787,6 +18772,7 @@ Profibus communication."
             Body RtBody 13-MAR-2006 09:34:22.38
               Attr DetectText = "Warning..."
               Attr EventPriority = 66
+              Attr MoreText = ""
             EndBody
             Body DevBody 14-MAR-2006 16:02:28.49
               Buffer PlcNode
@@ -18933,6 +18919,7 @@ Profibus communication."
           Object DSup4 DSup 2675 13-MAR-2006 09:34:22.38
             Body RtBody 13-MAR-2006 09:34:22.38
               Attr DetectText = "Error"
+              Attr MoreText = ""
             EndBody
             Body DevBody 14-MAR-2006 16:02:28.49
               Buffer PlcNode
@@ -20039,6 +20026,7 @@ Profibus communication."
           Object DSup5 DSup 2890 14-MAR-2006 15:37:44.06
             Body RtBody 14-MAR-2006 15:41:43.60
               Attr DetectText = "Brake fault..."
+              Attr MoreText = ""
             EndBody
             Body DevBody 14-MAR-2006 16:02:28.49
               Buffer PlcNode
@@ -20167,6 +20155,7 @@ Profibus communication."
           Object DSup6 DSup 2902 14-MAR-2006 15:37:46.39
             Body RtBody 14-MAR-2006 15:42:19.26
               Attr DetectText = "Torq proving..."
+              Attr MoreText = ""
             EndBody
             Body DevBody 14-MAR-2006 16:02:28.49
               Buffer PlcNode
@@ -31379,6 +31368,7 @@ Fuse, Curcuit breaker, Contactor, Safetyswitch"
             Body RtBody 01-JAN-1970 01:00:00.00
               Attr DetectText = "To often..."
               Attr EventPriority = 66
+              Attr MoreText = ""
             EndBody
             Body DevBody 20-DEC-2005 10:57:43.48
               Buffer PlcNode
@@ -31800,6 +31790,7 @@ signals are connected to converters digitala input."
             Body RtBody 01-JAN-1970 01:00:00.00
               Attr DetectText = "Start not allowed..."
               Attr EventPriority = 66
+              Attr MoreText = ""
             EndBody
             Body DevBody 01-OCT-2007 15:35:32.13
               Buffer PlcNode
@@ -31928,6 +31919,7 @@ signals are connected to converters digitala input."
             Body RtBody 01-JAN-1970 01:00:00.00
               Attr DetectText = "Power not allowed..."
               Attr EventPriority = 66
+              Attr MoreText = ""
             EndBody
             Body DevBody 20-DEC-2005 10:57:43.48
               Buffer PlcNode
@@ -35359,7 +35351,7 @@ ABB ACS800 Aggregate
     !  @b Configuration
     !  Use the 'Configure Slave' method in the popup menu of the object
     !  to configure the slave.
-    !
+    ! 
     !  Select ABB_ACS_PPO5 as module class.
     ! 
     !  @b See also
@@ -35405,10 +35397,10 @@ ABB ACS800 Aggregate
     !  @Group Process
     !  @Summary Profibus module to ACS800 with protocol PPO5.
     !  Profibus module to ACS800 with protocol PPO5.
-    !
+    ! 
     !  The object is created by the profibus configurator under a 
     !  ABB_ACS_Pb_Slave object in the node hierarchy.
-    !
+    ! 
     !  Connect the function object to an object of class or subclass of
     !  ABB_ACS800_1 with the IoConnect method.
     ! 
@@ -35451,7 +35443,7 @@ ABB ACS800 Aggregate
     !  This signal is connected to the signal ActTorque in the ABB_ACS800_1
     !  object.
     ! 
-    !  Note!
+    !  Note
     !  Other setting of the converter are not discussed here.
     ! 
     !  @b See also
@@ -36501,6 +36493,42 @@ ABB ACS800 Aggregate
             EndObject
             Object ThreeSensors $MenuButton 2371 09-MAR-2006 15:23:00.32
               Body SysBody 09-MAR-2006 15:28:55.34
+                Attr ButtonName = "ThreeSensors"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "0"
+                Attr MethodArguments[1] = "2"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosos $Menu 3735 22-FEB-2008 14:55:23.38
+        Object Pointed $Menu 3736 22-FEB-2008 14:55:10.11
+          Object ConfigureComponent $MenuCascade 3738 22-FEB-2008 14:55:10.11
+            Body SysBody 22-FEB-2008 14:55:10.11
+              Attr ButtonName = "ConfigureComponent"
+            EndBody
+            Object OneSensor $MenuButton 3739 22-FEB-2008 14:55:10.11
+              Body SysBody 22-FEB-2008 14:55:10.11
+                Attr ButtonName = "OneSensor"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "15"
+                Attr MethodArguments[1] = "0"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object TwoSensors $MenuButton 3740 22-FEB-2008 14:55:10.11
+              Body SysBody 22-FEB-2008 14:55:10.11
+                Attr ButtonName = "TwoSensors"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "12"
+                Attr MethodArguments[1] = "1"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object ThreeSensors $MenuButton 3741 22-FEB-2008 14:55:10.11
+              Body SysBody 22-FEB-2008 14:55:10.11
                 Attr ButtonName = "ThreeSensors"
                 Attr MethodName = "$Object-ConfigureComponent"
                 Attr MethodArguments[0] = "0"
@@ -44728,6 +44756,7 @@ ABB ACS800 Aggregate
           Object DSup0 DSup 3278 17-MAR-2006 09:06:24.97
             Body RtBody 03-APR-2006 09:14:57.17
               Attr DetectText = "Error..."
+              Attr MoreText = ""
             EndBody
             Body DevBody 14-JUN-2006 13:29:25.16
               Buffer PlcNode
@@ -44746,6 +44775,7 @@ ABB ACS800 Aggregate
           Object DSup1 DSup 3280 17-MAR-2006 09:08:59.44
             Body RtBody 03-APR-2006 09:15:16.08
               Attr DetectText = "Warning..."
+              Attr MoreText = ""
             EndBody
             Body DevBody 14-JUN-2006 13:29:25.16
               Buffer PlcNode
@@ -44764,6 +44794,7 @@ ABB ACS800 Aggregate
           Object DSup2 DSup 3284 17-MAR-2006 09:12:09.93
             Body RtBody 03-APR-2006 09:31:21.21
               Attr DetectText = "Error..."
+              Attr MoreText = ""
             EndBody
             Body DevBody 14-JUN-2006 13:29:25.16
               Buffer PlcNode
@@ -44783,6 +44814,7 @@ ABB ACS800 Aggregate
             Body RtBody 03-APR-2006 09:33:54.99
               Attr DetectText = "Warning..."
               Attr ReturnText = "Warning..."
+              Attr MoreText = ""
             EndBody
             Body DevBody 14-JUN-2006 13:29:25.16
               Buffer PlcNode
@@ -44801,6 +44833,7 @@ ABB ACS800 Aggregate
           Object DSup4 DSup 3288 17-MAR-2006 09:12:30.38
             Body RtBody 03-APR-2006 09:37:01.40
               Attr DetectText = "Error..."
+              Attr MoreText = ""
             EndBody
             Body DevBody 14-JUN-2006 13:29:25.16
               Buffer PlcNode
@@ -44819,6 +44852,7 @@ ABB ACS800 Aggregate
           Object DSup5 DSup 3289 17-MAR-2006 09:12:30.38
             Body RtBody 03-APR-2006 09:37:14.92
               Attr DetectText = "Warning..."
+              Attr MoreText = ""
             EndBody
             Body DevBody 14-JUN-2006 13:29:25.16
               Buffer PlcNode
@@ -46034,6 +46068,7 @@ if (I1 >= 0 && I1 <= 9) {
             Body RtBody 15-JUN-2006 10:39:13.96
               Attr EventType = 32
               Attr EventFlags = 1
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-JUN-2006 11:53:48.85
               Buffer PlcNode
@@ -46204,6 +46239,7 @@ if (I1 >= 0 && I1 <= 9) {
             Body RtBody 15-JUN-2006 11:12:27.61
               Attr EventType = 32
               Attr EventFlags = 1
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-JUN-2006 11:53:48.85
               Buffer PlcNode
@@ -46439,6 +46475,7 @@ if (I1 >= 0 && I1 <= 9) {
             Body RtBody 15-JUN-2006 11:27:29.54
               Attr EventType = 32
               Attr EventFlags = 1
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-JUN-2006 11:53:48.85
               Buffer PlcNode

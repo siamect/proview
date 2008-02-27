@@ -872,21 +872,10 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           EndBody
         EndObject
       EndObject
-      Object ConfiguratorPosos $Menu 1326 29-OCT-2007 16:50:27.49
+      Object ConfiguratorPoson $Menu 1326 22-FEB-2008 14:50:04.94
         Object Pointed $Menu 1327 05-OCT-2007 11:05:31.85
           Object IoConnect $MenuButton 1328 05-OCT-2007 11:05:31.85
             Body SysBody 05-OCT-2007 11:05:31.85
-              Attr ButtonName = "Connect IO"
-              Attr MethodName = "$AttrRef-IoConnect"
-              Attr FilterName = "$AttrRef-IoConnectFilter"
-            EndBody
-          EndObject
-        EndObject
-      EndObject
-      Object ConfiguratorPosnn $Menu 2135 29-OCT-2007 16:50:20.25
-        Object Pointed $Menu 2136 29-OCT-2007 16:50:05.17
-          Object IoConnect $MenuButton 2137 29-OCT-2007 16:50:05.17
-            Body SysBody 29-OCT-2007 16:50:05.17
               Attr ButtonName = "Connect IO"
               Attr MethodName = "$AttrRef-IoConnect"
               Attr FilterName = "$AttrRef-IoConnectFilter"
@@ -9050,6 +9039,7 @@ XS : activa alarms
           Object DSup12 DSup 885 03-OCT-2007 11:01:20.00
             Body RtBody 11-OCT-2007 17:38:32.23
               Attr DetectText = "No contact on Profibus. shut down! ,"
+              Attr MoreText = ""
             EndBody
             Body DevBody 12-OCT-2007 16:38:39.15
               Buffer PlcNode
@@ -11311,6 +11301,7 @@ XS : activa alarms
           Object DSup14 DSup 1977 15-OCT-2007 15:16:46.37
             Body RtBody 15-OCT-2007 16:46:44.04
               Attr DetectText = "Thyristor unit internal inhibited, "
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 16:46:47.88
               Buffer PlcNode
@@ -11382,6 +11373,7 @@ XS : activa alarms
               Attr DetectText = "Partial Load Failure Phase 1, "
               Attr EventPriority = 66
               Attr EventFlags = 1
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 15:49:02.36
               Buffer PlcNode
@@ -11402,6 +11394,7 @@ XS : activa alarms
               Attr DetectText = "Partial Load Failure Phase 2, "
               Attr EventPriority = 66
               Attr EventFlags = 1
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 15:49:02.36
               Buffer PlcNode
@@ -11422,6 +11415,7 @@ XS : activa alarms
               Attr DetectText = "Partial Load Failure Phase 3, "
               Attr EventPriority = 66
               Attr EventFlags = 1
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 15:49:02.36
               Buffer PlcNode
@@ -11442,6 +11436,7 @@ XS : activa alarms
               Attr DetectText = "Overvoltage, "
               Attr EventPriority = 66
               Attr EventFlags = 1
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 15:49:02.36
               Buffer PlcNode
@@ -11460,6 +11455,7 @@ XS : activa alarms
           Object DSup19 DSup 1985 15-OCT-2007 15:16:46.37
             Body RtBody 15-OCT-2007 15:16:46.37
               Attr DetectText = "Overcurrent. Shut down! , "
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 15:49:02.36
               Buffer PlcNode
@@ -11480,6 +11476,7 @@ XS : activa alarms
               Attr DetectText = "Load Unbalance, "
               Attr EventPriority = 66
               Attr EventFlags = 1
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 15:49:02.36
               Buffer PlcNode
@@ -11500,6 +11497,7 @@ XS : activa alarms
               Attr DetectText = "Undervoltage, "
               Attr EventPriority = 66
               Attr EventFlags = 1
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 15:49:02.36
               Buffer PlcNode
@@ -11520,6 +11518,7 @@ XS : activa alarms
               Attr DetectText = "Frequency error, "
               Attr EventPriority = 66
               Attr EventFlags = 1
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 15:49:02.36
               Buffer PlcNode
@@ -11540,6 +11539,7 @@ XS : activa alarms
               Attr DetectText = "Phase 1 gone or Thyristor overheated, "
               Attr EventPriority = 66
               Attr EventFlags = 1
+              Attr MoreText = ""
             EndBody
             Body DevBody 16-OCT-2007 13:54:16.22
               Buffer PlcNode
@@ -11560,6 +11560,7 @@ XS : activa alarms
               Attr DetectText = "Phase 2 gone, "
               Attr EventPriority = 66
               Attr EventFlags = 1
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 15:49:02.36
               Buffer PlcNode
@@ -11580,6 +11581,7 @@ XS : activa alarms
               Attr DetectText = "Phase 3 gone, "
               Attr EventPriority = 66
               Attr EventFlags = 1
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 15:49:02.36
               Buffer PlcNode
@@ -11598,6 +11600,7 @@ XS : activa alarms
           Object DSup26 DSup 1992 15-OCT-2007 15:16:46.37
             Body RtBody 15-OCT-2007 15:16:46.37
               Attr DetectText = "Thyristor Short circuit. Shut down! ,"
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 15:49:02.36
               Buffer PlcNode
@@ -19819,6 +19822,7 @@ NB! start/stop is used as on/off."
             Body RtBody 09-OCT-2007 10:48:51.56
               Attr DetectText = "Start not allowed..."
               Attr EventPriority = 66
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 16:14:38.12
               Buffer PlcNode
@@ -19947,6 +19951,7 @@ NB! start/stop is used as on/off."
             Body RtBody 09-OCT-2007 10:48:51.56
               Attr DetectText = "Power not allowed..."
               Attr EventPriority = 66
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 16:14:38.12
               Buffer PlcNode
@@ -23316,21 +23321,10 @@ Eurotherm TC3001 Aggregate
           Attr PlotGroup.NumPoints = 478
         EndBody
       EndObject
-      Object ConfiguratorPosos $Menu 5 29-OCT-2007 16:51:14.13
+      Object ConfiguratorPoson $Menu 5 22-FEB-2008 14:51:14.59
         Object Pointed $Menu 6 26-MAR-2007 09:09:47.97
           Object IoConnect $MenuButton 7 26-MAR-2007 09:10:14.82
             Body SysBody 26-MAR-2007 09:11:19.15
-              Attr ButtonName = "Connect IO"
-              Attr MethodName = "$AttrRef-IoConnect"
-              Attr FilterName = "$AttrRef-IoConnectFilter"
-            EndBody
-          EndObject
-        EndObject
-      EndObject
-      Object ConfiguratorPosnn $Menu 2145 29-OCT-2007 16:51:08.64
-        Object Pointed $Menu 2146 29-OCT-2007 16:51:00.63
-          Object IoConnect $MenuButton 2147 29-OCT-2007 16:51:00.63
-            Body SysBody 29-OCT-2007 16:51:00.63
               Attr ButtonName = "Connect IO"
               Attr MethodName = "$AttrRef-IoConnect"
               Attr FilterName = "$AttrRef-IoConnectFilter"
@@ -29315,6 +29309,7 @@ SW bit:
           Object DSup0 DSup 181 26-MAR-2007 13:45:04.88
             Body RtBody 26-MAR-2007 14:40:27.07
               Attr DetectText = "See abov.."
+              Attr MoreText = ""
             EndBody
             Body DevBody 13-APR-2007 10:49:07.49
               Buffer PlcNode
@@ -29333,6 +29328,7 @@ SW bit:
           Object DSup1 DSup 183 26-MAR-2007 13:45:09.96
             Body RtBody 26-MAR-2007 14:40:54.35
               Attr DetectText = "See abov.."
+              Attr MoreText = ""
             EndBody
             Body DevBody 13-APR-2007 10:49:07.49
               Buffer PlcNode
@@ -29351,6 +29347,7 @@ SW bit:
           Object DSup2 DSup 184 26-MAR-2007 13:45:12.15
             Body RtBody 26-MAR-2007 14:41:02.36
               Attr DetectText = "See abov.."
+              Attr MoreText = ""
             EndBody
             Body DevBody 13-APR-2007 10:49:07.49
               Buffer PlcNode
@@ -29369,6 +29366,7 @@ SW bit:
           Object DSup3 DSup 185 26-MAR-2007 13:45:13.47
             Body RtBody 26-MAR-2007 14:41:09.95
               Attr DetectText = "See abov.."
+              Attr MoreText = ""
             EndBody
             Body DevBody 13-APR-2007 10:49:07.49
               Buffer PlcNode
@@ -29442,6 +29440,7 @@ SW bit:
           Object DSup4 DSup 196 26-MAR-2007 13:50:49.00
             Body RtBody 26-MAR-2007 13:55:37.65
               Attr DetectText = "Tripped...."
+              Attr MoreText = ""
             EndBody
             Body DevBody 26-MAR-2007 13:57:54.30
               Buffer PlcNode
@@ -29532,6 +29531,7 @@ SW bit:
           Object DSup5 DSup 209 26-MAR-2007 13:55:44.35
             Body RtBody 26-MAR-2007 13:58:21.26
               Attr DetectText = "Warning...."
+              Attr MoreText = ""
             EndBody
             Body DevBody 26-MAR-2007 14:02:23.90
               Buffer PlcNode
@@ -30024,6 +30024,7 @@ SW bit:
           Object DSup6 DSup 637 13-APR-2007 09:32:36.69
             Body RtBody 13-APR-2007 09:32:36.69
               Attr DetectText = "See abov.."
+              Attr MoreText = ""
             EndBody
             Body DevBody 13-APR-2007 10:49:07.49
               Buffer PlcNode
@@ -36497,6 +36498,7 @@ SW bit:
           Object DSup4 DSup 538 30-MAR-2007 14:41:44.43
             Body RtBody 30-MAR-2007 14:41:44.43
               Attr DetectText = "Tripped...."
+              Attr MoreText = ""
             EndBody
             Body DevBody 30-MAR-2007 14:41:44.45
               Buffer PlcNode
@@ -36587,6 +36589,7 @@ SW bit:
           Object DSup5 DSup 543 30-MAR-2007 14:41:44.43
             Body RtBody 30-MAR-2007 14:41:44.43
               Attr DetectText = "Warning...."
+              Attr MoreText = ""
             EndBody
             Body DevBody 30-MAR-2007 14:41:44.45
               Buffer PlcNode
@@ -37174,6 +37177,7 @@ SW bit:
           Object DSup6 DSup 703 13-APR-2007 10:50:40.92
             Body RtBody 13-APR-2007 10:50:40.92
               Attr DetectText = "See abov.."
+              Attr MoreText = ""
             EndBody
             Body DevBody 13-APR-2007 10:52:01.92
               Buffer PlcNode
@@ -37192,6 +37196,7 @@ SW bit:
           Object DSup7 DSup 704 13-APR-2007 10:50:40.92
             Body RtBody 13-APR-2007 10:50:40.92
               Attr DetectText = "See abov.."
+              Attr MoreText = ""
             EndBody
             Body DevBody 13-APR-2007 10:52:01.92
               Buffer PlcNode
@@ -37210,6 +37215,7 @@ SW bit:
           Object DSup8 DSup 705 13-APR-2007 10:50:40.92
             Body RtBody 13-APR-2007 10:50:40.92
               Attr DetectText = "See abov.."
+              Attr MoreText = ""
             EndBody
             Body DevBody 13-APR-2007 10:52:01.92
               Buffer PlcNode
@@ -37228,6 +37234,7 @@ SW bit:
           Object DSup9 DSup 706 13-APR-2007 10:50:40.92
             Body RtBody 13-APR-2007 10:50:40.92
               Attr DetectText = "See abov.."
+              Attr MoreText = ""
             EndBody
             Body DevBody 13-APR-2007 10:52:01.92
               Buffer PlcNode
@@ -37539,6 +37546,7 @@ SW bit:
           Object DSup10 DSup 723 13-APR-2007 10:50:40.93
             Body RtBody 13-APR-2007 10:50:40.93
               Attr DetectText = "See abov.."
+              Attr MoreText = ""
             EndBody
             Body DevBody 13-APR-2007 10:52:01.92
               Buffer PlcNode
