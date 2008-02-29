@@ -66,3 +66,5 @@
 080122 cs  pwrb      Attributes PresMinLimit and PresMaxLimit added to Ii and Io.
 080206 cs  statussrv Loopback address used for local node.
 080226 cs  help      New functions in Help window: next and previous topic. Toolbar added.
+080229 rk  rt        New generalized i/o-routines for reading and writing to card.
+080229 rk  rt        New status-messages added for Modbus-I/O.
