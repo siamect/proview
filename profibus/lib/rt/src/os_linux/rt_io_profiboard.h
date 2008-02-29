@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_profiboard.h,v 1.2 2007-01-12 13:28:32 claes Exp $
+ * Proview   $Id: rt_io_profiboard.h,v 1.3 2008-02-29 13:16:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,12 +26,6 @@
 #define PB_WRITE_ERROR		3
 #define PB_NO_CON_IND_RECEIVED	4
 #define PB_NEG_CONF		5
-
-extern
-unsigned short swap16(unsigned short in);
-
-extern
-unsigned int swap32(unsigned int in); 
 
 #endif
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_io.c,v 1.6 2008-02-05 08:14:59 claes Exp $
+ * Proview   $Id: rt_io_m_pb_io.c,v 1.7 2008-02-29 13:18:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,6 +40,7 @@
 #include "pwr_baseclasses.h"
 #include "pwr_profibusclasses.h"
 #include "rt_io_base.h"
+#include "rt_io_bus.h"
 #include "rt_io_msg.h"
 #include "rt_errh.h"
 #include "rt_io_profiboard.h"

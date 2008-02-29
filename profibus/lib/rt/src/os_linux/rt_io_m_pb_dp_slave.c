@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_dp_slave.c,v 1.11 2008-02-05 08:14:59 claes Exp $
+ * Proview   $Id: rt_io_m_pb_dp_slave.c,v 1.12 2008-02-29 13:15:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -44,6 +44,7 @@
 #include "pwr_profibusclasses.h"
 #include "rt_gdh.h"
 #include "rt_io_base.h"
+#include "rt_io_bus.h"
 #include "rt_io_msg.h"
 #include "rt_errh.h"
 #include "co_cdh.h"
@@ -53,57 +54,6 @@
 /* Check if channel should be fetched from diagnostic area, 
    i.e. channel name starts with "Diag_" */
 
-static int is_diag( pwr_tAttrRef *aref)
-{
-  pwr_tStatus sts;
-  pwr_tOName name;
-  char *s;
-  
-  if ( aref->Objid.oix == 0)
-    return 0;
-
-  sts = gdh_AttrrefToName( aref, name, sizeof(name), 
-			   cdh_mName_object | cdh_mName_attribute);
-  if ( EVEN(sts)) return 0;
-
-  if ( (s = strrchr( name, '.'))) {
-    if ( strncmp( s+1, "Diag_", 5) == 0)
-      return 1;
-  }
-  else if ( strncmp( name, "Diag_", 5) == 0)
-    return 1;
-
-  return 0;
-}
-
-pwr_tInt32 GetChanSize(pwr_eDataRepEnum rep)
-{
-  switch (rep) {
-    case pwr_eDataRepEnum_Int64:
-    case pwr_eDataRepEnum_UInt64:
-    case pwr_eDataRepEnum_Float64:
-      return 8;
-      break;
-    case pwr_eDataRepEnum_Bit32:
-    case pwr_eDataRepEnum_Int32:
-    case pwr_eDataRepEnum_UInt32:
-    case pwr_eDataRepEnum_Float32:
-      return 4;
-      break;
-    case pwr_eDataRepEnum_Int24:
-    case pwr_eDataRepEnum_UInt24:
-      return 3;
-      break;
-    case pwr_eDataRepEnum_Bit16:
-    case pwr_eDataRepEnum_Int16:
-    case pwr_eDataRepEnum_UInt16:
-      return 2;
-      break;
-    default:
-      return 1;
-      break;
-  }
-}
 
 /*----------------------------------------------------------------------------*\
    Init method for the Pb DP slave 

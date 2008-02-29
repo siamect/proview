@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_profiboard.c,v 1.2 2007-01-12 13:28:32 claes Exp $
+ * Proview   $Id: rt_io_profiboard.c,v 1.3 2008-02-29 13:15:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,22 +37,4 @@
 
 #include "pwr.h"
 #include "rt_io_profiboard.h"
-
-unsigned short swap16(unsigned short in) 
-{
-  unsigned short result = 0;
-  result = (in << 8) & 0xFF00;
-  result |= (in >> 8) & 0x00FF;
-  return(result);
-}
-
-unsigned int swap32(unsigned int in) 
-{
-  unsigned int result = 0;;
-  result  = (in << 24) & 0xFF000000;
-  result |= (in <<  8) & 0x00FF0000;
-  result |= (in >>  8) & 0x0000FF00;
-  result |= (in >> 24) & 0x000000FF;
-  return(result);
-}
 
