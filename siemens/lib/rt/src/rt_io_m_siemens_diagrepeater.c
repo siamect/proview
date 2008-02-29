@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_siemens_diagrepeater.c,v 1.3 2007-04-30 09:40:30 claes Exp $
+ * Proview   $Id: rt_io_m_siemens_diagrepeater.c,v 1.4 2008-02-29 14:19:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,6 +35,7 @@
 #include "pwr_siemensclasses.h"
 #include "rt_gdh.h"
 #include "rt_io_base.h"
+#include "rt_io_bus.h"
 #include "rt_io_msg.h"
 #include "rt_errh.h"
 #include "co_cdh.h"
