@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_td_numberrepenum.wb_load,v 1.1 2008-02-28 07:57:20 claes Exp $
+!  Proview   $Id: pwrb_td_numberrepenum.wb_load,v 1.2 2008-02-29 14:21:07 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -24,7 +24,7 @@ SObject pwrb:Type
 !  @Group Types
 !  Enumeration for number representation.
 !*/
-  Object NumberRepEnum $TypeDef 39
+  Object NumberRepEnum $TypeDef 40
     Body SysBody
       Attr TypeRef = "pwrs:Type-$Enum"
       Attr PgmName = "NumberRepEnum"
