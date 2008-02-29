@@ -1,12 +1,12 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X31"
-    Attr NextCix = "_X3"
-    Attr NextTix[0] = "_X2"
+    Attr NextOix = "_X54"
+    Attr NextCix = "_X5"
+    Attr NextTix[0] = "_X4"
   EndBody
   Object Type $TypeHier 1 15-NOV-2007 14:35:37.90
     Object MotionControl_StatusEnum $TypeDef 1 15-NOV-2007 14:36:24.17
-      Body SysBody 15-NOV-2007 14:36:24.17
+      Body SysBody 07-FEB-2008 15:54:27.87
         Attr TypeRef = "pwrs:Type-$Enum"
         Attr Elements = 1
       EndBody
@@ -136,6 +136,101 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
     EndObject
+    Object Modbus_FCEnum $TypeDef 2 07-FEB-2008 16:09:36.40
+      Body SysBody 07-FEB-2008 15:54:31.76
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+      EndBody
+      Object ReadCoils $Value 32 07-FEB-2008 15:55:06.66
+        Body SysBody 07-FEB-2008 15:55:26.18
+          Attr Text = "ReadCoils"
+          Attr PgmName = "ReadCoils"
+          Attr Value = 1
+        EndBody
+      EndObject
+      Object ReadDiscreteInputs $Value 33 07-FEB-2008 15:56:05.69
+        Body SysBody 07-FEB-2008 15:56:14.27
+          Attr Text = "ReadDiscreteInputs"
+          Attr PgmName = "ReadDiscreteInputs"
+          Attr Value = 2
+        EndBody
+      EndObject
+      Object ReadHoldingRegisters $Value 34 07-FEB-2008 15:56:23.59
+        Body SysBody 07-FEB-2008 15:56:30.00
+          Attr Text = "ReadHoldingRegisters"
+          Attr PgmName = "ReadHoldingRegisters"
+          Attr Value = 3
+        EndBody
+      EndObject
+      Object ReadInputRegisters $Value 35 07-FEB-2008 15:57:07.91
+        Body SysBody 07-FEB-2008 15:57:13.83
+          Attr Text = "ReadInputRegisters"
+          Attr PgmName = "ReadInputRegisters"
+          Attr Value = 4
+        EndBody
+      EndObject
+      Object WriteMultipleCoils $Value 36 07-FEB-2008 15:57:24.44
+        Body SysBody 07-FEB-2008 15:57:51.21
+          Attr Text = "WriteMultipleCoils"
+          Attr PgmName = "WriteMultipleCoils"
+          Attr Value = 15
+        EndBody
+      EndObject
+      Object WriteMultipleRegisters $Value 37 20-FEB-2008 15:35:34.05
+        Body SysBody 20-FEB-2008 16:15:32.34
+          Attr Text = "WriteMultipleRegisters"
+          Attr PgmName = "WriteMultipleRegisters"
+          Attr Value = 16
+        EndBody
+      EndObject
+    EndObject
+    Object ModbusModule_StatusEnum $TypeDef 3 08-FEB-2008 11:25:12.96
+      Body SysBody 08-FEB-2008 11:24:46.54
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+      EndBody
+      Object OK $Value 49 08-FEB-2008 11:25:30.56
+        Body SysBody 08-FEB-2008 11:25:33.87
+          Attr Text = "OK"
+          Attr PgmName = "OK"
+        EndBody
+      EndObject
+      Object IllegalFunction $Value 50 08-FEB-2008 11:26:14.38
+        Body SysBody 08-FEB-2008 11:26:17.90
+          Attr Text = "IllegalFunction"
+          Attr PgmName = "IllegalFunction"
+          Attr Value = 1
+        EndBody
+      EndObject
+      Object IllegalDataAddress $Value 51 08-FEB-2008 11:26:30.03
+        Body SysBody 08-FEB-2008 11:26:34.18
+          Attr Text = "IllegalDataAddress"
+          Attr PgmName = "IllegalDataAddress"
+          Attr Value = 2
+        EndBody
+      EndObject
+      Object IllegalDataValue $Value 52 08-FEB-2008 11:26:41.68
+        Body SysBody 08-FEB-2008 11:27:07.31
+          Attr Text = "IllegalDataValue"
+          Attr PgmName = "IllegalDataValue"
+          Attr Value = 3
+        EndBody
+      EndObject
+      Object SlaveServiceFailure $Value 53 08-FEB-2008 11:26:56.15
+        Body SysBody 08-FEB-2008 11:27:02.26
+          Attr Text = "SlaveServiceFailure"
+          Attr PgmName = "SlaveServiceFailure"
+          Attr Value = 4
+        EndBody
+      EndObject
+      Object StatusUnknown $Value 54 08-FEB-2008 11:27:44.77
+        Body SysBody 08-FEB-2008 11:27:49.93
+          Attr Text = "StatusUnknown"
+          Attr PgmName = "StatusUnknown"
+          Attr Value = 5
+        EndBody
+      EndObject
+    EndObject
   EndObject
   Object Class $ClassHier 2 15-NOV-2007 14:35:40.72
     !/**
@@ -197,7 +292,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         ! Status from the USB I/O driver.
         !*/
         Object Status $Attribute 12 15-NOV-2007 14:36:42.44
-          Body SysBody 15-NOV-2007 14:37:27.63
+          Body SysBody 08-FEB-2008 11:23:01.09
             Attr PgmName = "Status"
             Attr Flags = 1040
             Attr TypeRef = "OtherIO:Type-MotionControl_StatusEnum"
@@ -383,6 +478,388 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr Super.ErrorHardLimit = 100
           Attr Super.MaxNoOfChannels = 21
           Attr WatchdogTime = 2.000000e+00
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Slave object for Modbus TCP I/O.
+    !  Slave object for Modbus TCP I/O.
+    ! 	
+    !  @classlink Modbus_Module otherio_modbus_module.html
+    !*/
+    Object Modbus_TCP_Slave $ClassDef 3 07-FEB-2008 16:12:21.21
+      Body SysBody 21-FEB-2008 11:26:38.84
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 8272
+      EndBody
+      Object RtBody $ObjBodyDef 1 08-FEB-2008 10:26:36.84
+        Body SysBody 08-FEB-2008 10:26:36.85
+          Attr StructName = "Modbus_TCP_Slave"
+          Attr NextAix = "_X17"
+        EndBody
+        !/**
+        ! Description of slave
+        !*/
+        Object Description $Attribute 1 08-FEB-2008 10:26:53.62
+          Body SysBody 08-FEB-2008 10:27:28.51
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Datasheet.
+        ! Link to datasheet for the specific slave type.
+        !*/
+        Object DataSheet $Attribute 2 08-FEB-2008 10:29:10.98
+          Body SysBody 08-FEB-2008 10:29:22.41
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Status of the slave.
+        ! Status of the slave. Shows if tcp-link to slave is up or not.
+        !*/
+        Object Status $Attribute 3 08-FEB-2008 10:29:48.44
+          Body SysBody 08-FEB-2008 10:30:23.06
+            Attr PgmName = "Status"
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Process that handles the slave. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the card.
+        ! 
+        ! 1: The slave is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The slave is read by the rt_io_comm process.
+        ! 4: The slave is handled by an application program.
+        !*/
+        Object Process $Attribute 4 08-FEB-2008 10:43:19.48
+          Body SysBody 08-FEB-2008 10:43:35.60
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Plc thread that handles the slave.
+        ! The PlcThread object of the plc thread that handles the slave.
+        ! The slave is read with the scantime of the thread.
+        !*/
+        Object ThreadObject $Attribute 5 08-FEB-2008 10:44:05.30
+          Body SysBody 08-FEB-2008 10:44:16.17
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary IP-address for the remote node..
+        ! IP-address for the remote node. Dynamic change is not possible.
+        !*/
+        Object Address $Attribute 6 08-FEB-2008 10:44:42.47
+          Body SysBody 08-FEB-2008 10:47:01.34
+            Attr PgmName = "Address"
+            Attr TypeRef = "pwrs:Type-$String32"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Flag that disables the slave.
+        ! Flag that disables the initialization of the slave, if initialized turns off i/o-handling.
+        !*/
+        Object DisableSlave $Attribute 16 20-FEB-2008 15:38:59.22
+          Body SysBody 20-FEB-2008 15:46:45.06
+            Attr PgmName = "DisableSlave"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Error count of the slave.
+        ! ErrorCount will increase every cycle if status is not MB__NORMAL.
+	! When ErrorCount reaches the ErrorLimit all inputs are reset to zero.
+        !*/
+        Object ErrorCount $Attribute 7 08-FEB-2008 10:50:15.18
+          Body SysBody 08-FEB-2008 10:55:49.84
+            Attr PgmName = "ErrorCount"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Error limit of the slave.
+        ! ErrorCount will increase every cycle if status is not MB__NORMAL.
+	! When ErrorCount reaches the ErrorLimit all inputs are reset to zero.
+        !*/
+        Object ErrorLimit $Attribute 8 08-FEB-2008 10:55:37.72
+          Body SysBody 08-FEB-2008 10:55:53.80
+            Attr PgmName = "ErrorLimit"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Reconnect count.
+        ! If slave is disconnected Proview will try to reconnect until ReconnectLimit is reached.
+	! Reconnect attempt is performed when ErrorCount reaches ErrorLimit.
+        !*/
+        Object ReconnectCount $Attribute 9 08-FEB-2008 10:56:12.51
+          Body SysBody 08-FEB-2008 10:56:17.20
+            Attr PgmName = "ReconnectCount"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Reconnect limit.
+        ! If slave is disconnected Proview will try to reconnect until ReconnectLimit is reached.
+	! Reconnect attempt is performed when ErrorCount reaches ErrorLimit. When reconnect limit
+	! is reached no more attempts is performed and slave is treated as "dead".
+        !*/
+        Object ReconnectLimit $Attribute 10 08-FEB-2008 10:56:28.05
+          Body SysBody 08-FEB-2008 11:19:48.56
+            Attr PgmName = "ReconnectLimit"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Received number of messages from slave.
+        ! Received number of messages from slave.
+        !*/
+        Object RX_packets $Attribute 11 08-FEB-2008 10:57:16.79
+          Body SysBody 08-FEB-2008 10:57:21.35
+            Attr PgmName = "RX_packets"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Sent number of messages to slave.
+        ! Sent number of messages to slave.
+        !*/
+        Object TX_packets $Attribute 12 08-FEB-2008 10:57:31.03
+          Body SysBody 08-FEB-2008 10:57:34.53
+            Attr PgmName = "TX_packets"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Input area.
+        ! Area where alla input data is stored.
+        !*/
+        Object Inputs $Attribute 14 08-FEB-2008 10:59:26.76
+          Body SysBody 08-FEB-2008 11:00:29.99
+            Attr PgmName = "Inputs"
+            Attr Flags = 3074
+            Attr Elements = 256
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Output area.
+        ! Area where alla output data is stored.
+        !*/
+        Object Outputs $Attribute 15 08-FEB-2008 11:00:48.44
+          Body SysBody 08-FEB-2008 11:00:44.86
+            Attr PgmName = "Outputs"
+            Attr Flags = 3074
+            Attr Elements = 256
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 40 08-FEB-2008 11:01:27.50
+        Object IoRackInit $Method 41 08-FEB-2008 11:01:47.30
+          Body SysBody 21-FEB-2008 11:27:42.84
+            Attr MethodName = "Modbus_TCP_Slave-IoRackInit"
+          EndBody
+        EndObject
+        Object IoRackClose $Method 42 08-FEB-2008 11:02:03.02
+          Body SysBody 21-FEB-2008 11:27:54.23
+            Attr MethodName = "Modbus_TCP_Slave-IoRackClose"
+          EndBody
+        EndObject
+        Object IoRackRead $Method 43 08-FEB-2008 11:02:15.13
+          Body SysBody 21-FEB-2008 11:28:02.46
+            Attr MethodName = "Modbus_TCP_Slave-IoRackRead"
+          EndBody
+        EndObject
+        Object IoRackWrite $Method 44 08-FEB-2008 11:02:30.28
+          Body SysBody 21-FEB-2008 11:28:19.73
+            Attr MethodName = "Modbus_TCP_Slave-IoRackWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Modbus_TCP_Slave 2148499456 01-JAN-1970 01:00:00.00
+        Body RtBody 08-FEB-2008 11:05:14.00
+          Attr ErrorLimit = 50
+          Attr ReconnectLimit = 5
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Module object for Modbus TCP I/O.
+    !  Module object for Modbus TCP I/O.
+    !  Defines the type of Modbus action that is to be performed and at which address on the slave.
+    !  The action is defined by a function code which means either reading or writing data to
+    !  the Modbus slave.
+    !
+    !  The supported function codes are:
+    ! 	
+    !  @b ReadCoils (FC 1)
+    !  This function code is used to read from 1 to 2000 contiguous status of coils in a remote device.
+    !  Typically the input data area is defined by a number of ChanDi's which represent
+    !  the number of coils you want to read. The represenation on the ChanDi should be set to Bit8.
+    !
+    !  @b ReadDiscreteInputs (FC 2)
+    !  This function code is used to read from 1 to 2000 contiguous status of discrete inputs
+    !  in a remote device. Typically the input data area is defined by a number of ChanDi's 
+    !  which represent the number of coils you want to read. 
+    !  The represenation on the ChanDi should be set to Bit8.
+    !
+    !  @b ReadHoldingRegisters (FC 3)
+    !  This function code is used to read the contents of a contiguous block of holding registers
+    !  in a remote device.
+    !  Typically the input data area is defined by a number of ChanIi's which represent
+    !  the number of registers you want to read. The represenation on the ChanIi should 
+    !  be set to UInt16 or Int16. ChanAi and ChanDi is also applicable. In case of ChanDi the
+    !  representation should be set to Bit16.
+    !
+    !  @b ReadInputRegisters (FC 4)
+    !  This function code is used to read from 1 to 125 contiguous input registers
+    !  in a remote device.
+    !  Typically the input data area is defined by a number of ChanIi's which represent
+    !  the number of registers you want to read. The represenation on the ChanIi should 
+    !  be set to UInt16 or Int16. ChanAi and ChanDi is also applicable. In case of ChanDi the
+    !  representation should be set to Bit16.
+    !
+    !  @b WriteMultipleCoils (FC 15)
+    !  This function code is used to force each coil in a sequence of coils to either ON or OFF
+    !  in a remote Device.
+    !  Typically the output data area is defined by a number of ChanDo's which represent
+    !  the number of coils you want to write. The represenation on the ChanDo should 
+    !  be set to Bit8.
+    !
+    !  @b WriteMultipleRegisters (FC 16)
+    !  This function code is used to write a block of contiguous registers (1 to 123 registers)
+    !  in a remote device.
+    !  Typically the output data area is defined by a number of ChanIo's which represent
+    !  the number of registers you want to write. The represenation on the ChanIo should 
+    !  be set to UInt16 or Int16. ChanAo and ChanDo is also applicable. In case of ChanDo the
+    !  representation should be set to Bit16.
+    !
+    !  @classlink Modbus_TPC_Slave otherio_modbus_tcp_slave.html
+    !*/
+    Object Modbus_Module $ClassDef 4 08-FEB-2008 11:05:36.53
+      Body SysBody 21-FEB-2008 11:29:00.89
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 08-FEB-2008 11:15:54.62
+        Body SysBody 08-FEB-2008 11:15:54.63
+          Attr StructName = "Modbus_Module"
+          Attr NextAix = "_X8"
+        EndBody
+        !/**
+        ! Description of module
+        !*/
+        Object Description $Attribute 2 08-FEB-2008 11:18:16.99
+          Body SysBody 08-FEB-2008 11:30:31.46
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Modbus function code.
+        ! The function code defines the action that is to be perfomed with the Modbus slave.
+        ! The module is handled with the scantime of the thread.
+        ! The supported function codes are:
+        ! 	
+	! (FC 1) ReadCoils
+	! (FC 2) ReadDiscreteInputs
+	! (FC 3) ReadHoldingRegisters
+	! (FC 4) ReadInputRegisters
+	! (FC 15) WriteMultipleCoils 
+	! (FC 16) WriteMultipleRegisters
+        !*/
+        Object FunctionCode $Attribute 5 08-FEB-2008 11:19:38.05
+          Body SysBody 08-FEB-2008 11:30:37.32
+            Attr PgmName = "FunctionCode"
+            Attr TypeRef = "OtherIO:Type-Modbus_FCEnum"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Address of data area on Modbus slave.
+	! Address of data area on Modbus slave. 
+        !*/
+        Object Address $Attribute 6 08-FEB-2008 11:20:03.39
+          Body SysBody 08-FEB-2008 11:30:42.64
+            Attr PgmName = "Address"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Status of the slave.
+        ! Status of the module. The status can be any of:
+	! OK
+	! IllegalFunction
+	! IllegalDataAddress
+	! IllegalDataValue
+	! SlaveServiceFailure
+	! Unknown
+        !*/
+        Object Status $Attribute 7 08-FEB-2008 11:20:34.93
+          Body SysBody 08-FEB-2008 11:31:11.41
+            Attr PgmName = "Status"
+            Attr TypeRef = "OtherIO:Type-ModbusModule_StatusEnum"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Process that handles the card. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the card.
+        ! 
+        ! 1: The card is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The card is read by the rt_io_comm process.
+        ! 4: The card is handled by an application program.
+        !*/
+        Object Process $Attribute 3 08-FEB-2008 11:19:22.97
+          Body SysBody 08-FEB-2008 11:31:49.58
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Plc thread that handles the module.
+        ! The PlcThread object of the plc thread that handles the module.
+        ! The module is handled with the scantime of the thread.
+        !*/
+        Object ThreadObject $Attribute 4 08-FEB-2008 11:19:22.97
+          Body SysBody 08-FEB-2008 11:31:53.32
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 45 08-FEB-2008 11:16:05.05
+        Object IoCardInit $Method 46 08-FEB-2008 11:17:19.82
+          Body SysBody 21-FEB-2008 11:29:43.10
+            Attr MethodName = "Modbus_Module-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 47 08-FEB-2008 11:17:46.70
+          Body SysBody 21-FEB-2008 11:29:29.34
+            Attr MethodName = "Modbus_Module-IoCardRead"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 48 08-FEB-2008 11:17:54.76
+          Body SysBody 21-FEB-2008 11:29:35.81
+            Attr MethodName = "Modbus_Module-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Modbus_Module 2148761600 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
         EndBody
       EndObject
     EndObject
