@@ -76,3 +76,4 @@
 080121 cs  op        Operator window is popped when new alarm is received.
 080123 cs  ge        Subscription initiation optimized in ge graph.
 080128 cs  ge        Problems with bad performance when scrolling from navigator window fixed.
+080227 cs  xtt       Problems with initial scrollbar settings fixed.
