@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltohtml.h,v 1.4 2005-11-14 16:11:23 claes Exp $
+ * Proview   $Id: cnv_wbltohtml.h,v 1.5 2008-03-03 11:01:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,6 +24,7 @@
 extern "C" {
 #endif
 
+#include <vector.h>
 #include "pwr.h"
 #include "cnv_readwbl.h"
 #include "cnv_wblto.h"
@@ -32,6 +33,16 @@ extern "C" {
 using namespace std;
 
 class CnvReadWbl;
+
+class cnv_mentry {
+ public:
+  cnv_mentry() {}
+  bool operator<( const cnv_mentry& x) {
+    return (strcmp( name, x.name) < 0);
+  }
+  char name[32];
+  pwr_tFileName file;
+};
   
 class CnvWblToHtml : public CnvWblTo {
  public:
@@ -53,6 +64,8 @@ class CnvWblToHtml : public CnvWblTo {
   bool		js_all_first;
   bool		js_group_first[80];
   bool		cdp_created;
+  vector<cnv_mentry> all_types;
+  vector<cnv_mentry> all_classes;
   
   int init( char *first);
   int close();
@@ -71,6 +84,7 @@ class CnvWblToHtml : public CnvWblTo {
   int class_open() { return html_class_open;}
   int index_open() { return html_index_open;}
   void create_cdp_file( char *volume_name, char *class_name, char *attr_typeref);
+  void print_all_menu();
   
 };
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltohtml.cpp,v 1.14 2007-09-25 11:15:50 claes Exp $
+ * Proview   $Id: cnv_wbltohtml.cpp,v 1.15 2008-03-03 11:01:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,6 +21,7 @@
 
 #include <iostream.h>
 #include <fstream.h>
+#include <vector.h>
 #include <float.h>
 #include <string.h>
 #include <stdlib.h>
@@ -356,6 +357,8 @@ int CnvWblToHtml::close()
 "</HTML>" << endl;
   fp_html_index.close();
 
+  print_all_menu();
+
   fp_js_all << 
 "])" << endl <<
 "}" << endl;
@@ -463,14 +466,11 @@ int CnvWblToHtml::class_exec()
 "<A HREF=\"" << html_file_name << ".html\" TARGET=\"classFrame\">" << ctx->rw->class_name << "</A>" << endl <<
 "<BR>" << endl;
 
-  // Add into AllClasses js file
-  if ( !js_all_first)
-    fp_js_all << ",";
-  else
-    js_all_first = false;
-
-  fp_js_all <<
-    "[\"" << ctx->rw->class_name << "\",\"" << html_file_name << ".html\"]" << endl;
+  cnv_mentry mentry;
+  strcpy( mentry.name, ctx->rw->class_name);
+  strcpy( mentry.file, html_file_name);
+  strcat( mentry.file, ".html");
+  all_classes.push_back( mentry);
 
   // Add into group file
   for ( int i = 0; i < ctx->rw->doc_group_cnt; i++) {
@@ -1106,13 +1106,11 @@ int CnvWblToHtml::typedef_exec()
 "<BR>" << endl;
 
   // Add into AllClasses js file
-  if ( !js_all_first)
-    fp_js_all << ",";
-  else
-    js_all_first = false;
-
-  fp_js_all <<
-    "[\"" << ctx->rw->class_name << "\",\"" << html_file_name << ".html\"]" << endl;
+  cnv_mentry mentry;
+  strcpy( mentry.name, ctx->rw->class_name);
+  strcpy( mentry.file, html_file_name);
+  strcat( mentry.file, ".html");
+  all_types.push_back( mentry);
 
   // Add into group file
   for ( int i = 0; i < ctx->rw->doc_group_cnt; i++) {
@@ -1306,6 +1304,53 @@ int CnvWblToHtml::typedef_close()
 
 
 
+void CnvWblToHtml::print_all_menu()
+{
+  // Sort
+  for ( unsigned int i = all_types.size() - 1; i > 0; i--) {
+    for ( unsigned int j = 0; j < i; j++) {
+      if ( !(all_types[j] < all_types[j+1])) {
+	cnv_mentry mi = all_types[j+1];
+	all_types[j+1] = all_types[j];
+	all_types[j] = mi;
+      }
+    }
+  }
+
+  for ( unsigned int i = all_classes.size() - 1; i > 0; i--) {
+    for ( unsigned int j = 0; j < i; j++) {
+      if ( !(all_classes[j] < all_classes[j+1])) {
+	cnv_mentry mi = all_classes[j+1];
+	all_classes[j+1] = all_classes[j];
+	all_classes[j] = mi;
+      }
+    }
+  }
+
+  for ( unsigned int i = 0; i < all_types.size(); i++) {
+
+    // Add into AllClasses js file
+    if ( !js_all_first)
+      fp_js_all << ",";
+    else
+      js_all_first = false;
+      
+    fp_js_all <<
+      "[\"" << all_types[i].name << "\",\"" << all_types[i].file << "\"]" << endl;
+  }
+
+  for ( unsigned int i = 0; i < all_classes.size(); i++) {
+
+    // Add into AllClasses js file
+    if ( !js_all_first)
+      fp_js_all << ",";
+    else
+      js_all_first = false;
+      
+    fp_js_all <<
+      "[\"" << all_classes[i].name << "\",\"" << all_classes[i].file << "\"]" << endl;
+  }
+}
 
 
 
