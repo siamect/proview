@@ -1143,7 +1143,7 @@ Connection point <link>geref_conpoint
 Bar 		<link>geref_bar
 Trend	 	<link>geref_trend
 Axis 		<link>geref_axis
-Window		<link>geref_window
+Window		<link>geref_windowobject
 TabbedWindow	<link>geref_tabbedwind
 Table		<link>geref_table
 
@@ -1466,7 +1466,7 @@ Format       <t>Format in c syntax of written values.
 Dynamic      <t>Not implemented.
 </topic>
 
-<topic>geref_window <style>function
+<topic>geref_windowobject <style>function
 Window
 
 Window displays a separate graph in a specified area in another graph. The graph is displayed
@@ -3462,7 +3462,7 @@ set 			<link>gecmd_set
   <t>set currentobject colorshift <link>gecmd_set_current_colorshift
   <t>set currentobject attributes <link>gecmd_set_current_attributes
   <t>set currentobject type <link>gecmd_set_current_type
-  <t>set currentobject color <link>gecmd_set_current_color
+  <t>set currentobject color <link>gecmd_set_current_color_
   <t>set currentobject colortone <link>gecmd_set_current_colortone
   <t>set currentobject access <link>gecmd_set_current_access
   <t>set currentobject attr1 <link>gecmd_set_current_attr1
@@ -3911,7 +3911,7 @@ PulldownMenu    <t> 1 << 19
 OptionMenu     	<t> 1 << 20
 </topic>
 
-<topic>gecmd_set_current_color
+<topic>gecmd_set_current_color_
 set currentobject color
 Colors are usually called 'LowColor' or 'LowColor2'. Color is an index in the color palette.
 </topic>

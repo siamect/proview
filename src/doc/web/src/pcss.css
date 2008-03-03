@@ -89,49 +89,49 @@ h2#mainmenu {
 table#mainmenu {
                 font-family: sans-serif;
                 font-size: 10pt;
-                color: #ffffff;
-                background-color: #234167;
+                background-color: #f0f0f0;
+                color: #4b6b95;
                 text-align: left;
                 border: 1;
-                border: 0px solid #aaaaaa;
+                border: 0px solid #0a0a0a;
                   /* border-style: solid ridge; */
                 }
 td#mainmenu {
                     border: 1;
-                  border: 2px solid #dddddd /* #5173a1 */;
+                  border: 2px solid #ffffff /* #5173a1 */;
                   /* border-style: solid ridge; */
                 }
 a#mainmenu:link {
                 font-family:   sans-serif;
                 font-size: 10pt;
-                color: #d8ebf4;
+                color: #5263aa;
                 text-align: left;
                 }
 a#mainmenu:visited {
                 font-family:   sans-serif;
                 font-size: 10pt;
-                color: #d8ebf4;
+                color: #5263aa;
                 text-align: left;
                 }
 a#mainmenu:hover {
-                color: #feffbe;
+                color: #3561ff;
                 }
 a#mainmenulink:link {
                 font-family:  sans-serif;
                 font-size: 8pt;
                 font-weight: normal; 
-                color: #d8ebf4;
+                color: #5263aa;
                 text-align: left;
                 }
 a#mainmenulink:visited {
                 font-family:  sans-serif;
                 font-size: 8pt;
                 font-weight: normal; 
-                color: #d8ebf4;
+                color: #5263aa;
                 text-align: left;
                 }
 a#mainmenulink:hover {
-                color: #feffbe;
+                color: #3561ff;
                 text-decoration: underline;
 
                 }

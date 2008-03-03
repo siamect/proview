@@ -1,7 +1,7 @@
 /*
  * $Log: ua.js,v $
- * Revision 1.1  2004-10-13 13:18:20  claes
- * Java script orm menu
+ * Revision 1.2  2008-03-03 11:00:14  claes
+ * *** empty log message ***
  *
  * Revision 1.9  2002/07/22 14:06:21  bc6ix
  * fix license path, change version reporting to use 2 digits for each level

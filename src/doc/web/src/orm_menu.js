@@ -10,8 +10,10 @@ STARTALLOPEN = 0 //replace 0 with 1 to show the whole tree
 ICONPATH = '../../' //change if the gif's folder is a subfolder, for example: 'images/'
 
 HIGHLIGHT = 1
-HIGHLIGHT_COLOR = '#FF9900'
-HIGHLIGHT_BG = '#000066'
+//HIGHLIGHT_COLOR = '#FF9900'
+//HIGHLIGHT_BG = '#000066'
+HIGHLIGHT_COLOR = '#000000'
+HIGHLIGHT_BG = '#f0f0f0'
 
 
 foldersTree = gFld("<b>Object Reference Manual</b>", "../orm_intro.html")

@@ -97,9 +97,9 @@ function initializeFolder(level, lastNode, leftSide)
 
   if (level>0)
     if (lastNode) //the last child in the children array 
-                leftSide = leftSide + "0"
-        else
-                leftSide = leftSide + "1"
+		leftSide = leftSide + "0"
+	else
+		leftSide = leftSide + "1"
 
   this.isLastNode = lastNode
  
@@ -151,7 +151,7 @@ function drawFolder(insertAtObj)
  
   if (this.level>0) 
     if (this.isLastNode) //the last child in the children array 
-            leftSide = leftSide + "<td valign=top>" + auxEv + "<img name='nodeIcon" + this.id + "' id='nodeIcon" + this.id + "' src='" + nodeName + "' width=16 height=22 border=0></a></td>"
+	    leftSide = leftSide + "<td valign=top>" + auxEv + "<img name='nodeIcon" + this.id + "' id='nodeIcon" + this.id + "' src='" + nodeName + "' width=16 height=22 border=0></a></td>"
     else 
       leftSide = leftSide + "<td valign=top background=" + ICONPATH + "ftv2vertline.gif>" + auxEv + "<img name='nodeIcon" + this.id + "' id='nodeIcon" + this.id + "' src='" + nodeName + "' width=16 height=22 border=0></a></td>"
 
@@ -172,13 +172,13 @@ function drawFolder(insertAtObj)
   }
   else
   {
-          if (this.prependHTML == "")
+	  if (this.prependHTML == "")
         docW = docW + "<img src=" + ICONPATH + "ftv2blank.gif height=2 width=2>"
   }
   if (WRAPTEXT)
-          docW = docW + "</td>"+this.prependHTML+"<td valign=middle width=100%>"
+	  docW = docW + "</td>"+this.prependHTML+"<td valign=middle width=100%>"
   else
-          docW = docW + "</td>"+this.prependHTML+"<td valign=middle nowrap width=100%>"
+	  docW = docW + "</td>"+this.prependHTML+"<td valign=middle nowrap width=100%>"
   if (USETEXTLINKS) 
   { 
     docW = docW + this.linkHTML(true) 
@@ -192,13 +192,13 @@ function drawFolder(insertAtObj)
 
   if (insertAtObj == null)
   {
-          if (supportsDeferral) {
-                  doc.write("<div id=domRoot></div>") //transition between regular flow HTML, and node-insert DOM DHTML
-                  insertAtObj = getElById("domRoot")
-                  insertAtObj.insertAdjacentHTML("beforeEnd", docW)
-          }
-          else
-                  doc.write(docW)
+	  if (supportsDeferral) {
+		  doc.write("<div id=domRoot></div>") //transition between regular flow HTML, and node-insert DOM DHTML
+		  insertAtObj = getElById("domRoot")
+		  insertAtObj.insertAdjacentHTML("beforeEnd", docW)
+	  }
+	  else
+		  doc.write(docW)
   }
   else
   {
@@ -254,11 +254,11 @@ function setStateFolder(isOpen)
          SetCookie("clickedFolder", currentOpen)
      }
   }
-        
+	
   if (!this.isOpen && this.isLastOpenedfolder)
   {
-                lastOpenedFolder = null;
-                this.isLastOpenedfolder = false;
+		lastOpenedFolder = null;
+		this.isLastOpenedfolder = false;
   }
   propagateChangesInState(this) 
 } 
@@ -280,7 +280,7 @@ function propagateChangesInState(folder)
     if (folder.isOpen) 
       folder.children[i].folderMstr(folder.navObj)
     else 
-          folder.children[i].esconde() 
+  	  folder.children[i].esconde() 
   }
 } 
  
@@ -297,10 +297,10 @@ function linkFolderHTML(isTextLink)
 
   if (this.hreference) 
   { 
-        if (USEFRAMES)
-          docW = docW + "<a href='" + this.hreference + "' TARGET=\"basefrm\" "
-        else
-          docW = docW + "<a href='" + this.hreference + "' TARGET=_top "
+	if (USEFRAMES)
+	  docW = docW + "<a href='" + this.hreference + "' TARGET=\"basefrm\" "
+	else
+	  docW = docW + "<a href='" + this.hreference + "' TARGET=_top "
         
     if (isTextLink) {
         docW += "id=\"itemTextLink"+this.id+"\" ";
@@ -457,7 +457,7 @@ function drawItem(insertAtObj)
   if (USEICONS)
       docW = docW + "<a " + fullLink  + " id=\"itemIconLink"+this.id+"\">" + "<img id='itemIcon"+this.id+"' " + "src='"+this.iconSrc+"' border=0>" + "</a>"
   else
-          if (this.prependHTML == "")
+	  if (this.prependHTML == "")
         docW = docW + "<img src=" + ICONPATH + "ftv2blank.gif height=2 width=3>"
 
   if (WRAPTEXT)
@@ -476,7 +476,7 @@ function drawItem(insertAtObj)
  
   if (insertAtObj == null)
   {
-          doc.write(docW)
+	  doc.write(docW)
   }
   else
   {
@@ -589,21 +589,21 @@ function totalHeight() //used with browserVersion == 2
 
 
 function leftSideHTML(leftSideCoded) {
-        var i;
-        var retStr = "";
+	var i;
+	var retStr = "";
 
-        for (i=0; i<leftSideCoded.length; i++)
-        {
-                if (leftSideCoded.charAt(i) == "1")
-                {
-                        retStr = retStr + "<td valign=top background=" + ICONPATH + "ftv2vertline.gif><img src='" + ICONPATH + "ftv2vertline.gif' width=16 height=22></td>"
-                }
-                if (leftSideCoded.charAt(i) == "0")
-                {
-                        retStr = retStr + "<td valign=top><img src='" + ICONPATH + "ftv2blank.gif' width=16 height=22></td>"
-                }
-        }
-        return retStr
+	for (i=0; i<leftSideCoded.length; i++)
+	{
+		if (leftSideCoded.charAt(i) == "1")
+		{
+			retStr = retStr + "<td valign=top background=" + ICONPATH + "ftv2vertline.gif><img src='" + ICONPATH + "ftv2vertline.gif' width=16 height=22></td>"
+		}
+		if (leftSideCoded.charAt(i) == "0")
+		{
+			retStr = retStr + "<td valign=top><img src='" + ICONPATH + "ftv2blank.gif' width=16 height=22></td>"
+		}
+	}
+	return retStr
 }
 
 function getID()
@@ -694,7 +694,7 @@ function clickOnLink(clickedId, target, windowName) {
 
 function ld  ()
 {
-        return document.links.length-1
+	return document.links.length-1
 }
  
 
@@ -838,19 +838,19 @@ function oldGLnk(target, description, linkData)
 }
  
 function preLoadIcons() {
-        var auxImg
-        auxImg = new Image();
-        auxImg.src = ICONPATH + "ftv2vertline.gif";
-        auxImg.src = ICONPATH + "ftv2mlastnode.gif";
-        auxImg.src = ICONPATH + "ftv2mnode.gif";
-        auxImg.src = ICONPATH + "ftv2plastnode.gif";
-        auxImg.src = ICONPATH + "ftv2pnode.gif";
-        auxImg.src = ICONPATH + "ftv2blank.gif";
-        auxImg.src = ICONPATH + "ftv2lastnode.gif";
-        auxImg.src = ICONPATH + "ftv2node.gif";
-        auxImg.src = ICONPATH + "ftv2folderclosed.gif";
-        auxImg.src = ICONPATH + "ftv2folderopen.gif";
-        auxImg.src = ICONPATH + "ftv2doc.gif";
+	var auxImg
+	auxImg = new Image();
+	auxImg.src = ICONPATH + "ftv2vertline.gif";
+	auxImg.src = ICONPATH + "ftv2mlastnode.gif";
+	auxImg.src = ICONPATH + "ftv2mnode.gif";
+	auxImg.src = ICONPATH + "ftv2plastnode.gif";
+	auxImg.src = ICONPATH + "ftv2pnode.gif";
+	auxImg.src = ICONPATH + "ftv2blank.gif";
+	auxImg.src = ICONPATH + "ftv2lastnode.gif";
+	auxImg.src = ICONPATH + "ftv2node.gif";
+	auxImg.src = ICONPATH + "ftv2folderclosed.gif";
+	auxImg.src = ICONPATH + "ftv2folderopen.gif";
+	auxImg.src = ICONPATH + "ftv2doc.gif";
 }
 
 //Open some folders for initial layout, if necessary
@@ -859,7 +859,7 @@ function setInitialLayout() {
     clickOnNodeObj(foldersTree);
   
   if (!STARTALLOPEN && (browserVersion > 0) && PRESERVESTATE)
-                PersistentFolderOpening();
+		PersistentFolderOpening();
 }
 
 //Used with NS4 and STARTALLOPEN
@@ -890,7 +890,7 @@ function hideWholeTree(nodeObj, hideThisOne, nodeObjMove) {
     if (browserVersion == 2) {
       heightContained = heightContained + heightContainedInChild + nodeObj.children[i].navObj.clip.height
       childrenMove = childrenMove + heightContainedInChild
-        }
+	}
   }
 
   return heightContained;
@@ -902,33 +902,33 @@ function hideWholeTree(nodeObj, hideThisOne, nodeObjMove) {
 // ******************************************
 
 if(typeof HTMLElement!="undefined" && !HTMLElement.prototype.insertAdjacentElement){
-        HTMLElement.prototype.insertAdjacentElement = function (where,parsedNode)
-        {
-                switch (where){
-                case 'beforeBegin':
-                        this.parentNode.insertBefore(parsedNode,this)
-                        break;
-                case 'afterBegin':
-                        this.insertBefore(parsedNode,this.firstChild);
-                        break;
-                case 'beforeEnd':
-                        this.appendChild(parsedNode);
-                        break;
-                case 'afterEnd':
-                        if (this.nextSibling) 
-                                this.parentNode.insertBefore(parsedNode,this.nextSibling);
-                        else this.parentNode.appendChild(parsedNode);
-                        break;
-                }
-        }
+	HTMLElement.prototype.insertAdjacentElement = function (where,parsedNode)
+	{
+		switch (where){
+		case 'beforeBegin':
+			this.parentNode.insertBefore(parsedNode,this)
+			break;
+		case 'afterBegin':
+			this.insertBefore(parsedNode,this.firstChild);
+			break;
+		case 'beforeEnd':
+			this.appendChild(parsedNode);
+			break;
+		case 'afterEnd':
+			if (this.nextSibling) 
+				this.parentNode.insertBefore(parsedNode,this.nextSibling);
+			else this.parentNode.appendChild(parsedNode);
+			break;
+		}
+	}
 
-        HTMLElement.prototype.insertAdjacentHTML = function(where,htmlStr)
-        {
-                var r = this.ownerDocument.createRange();
-                r.setStartBefore(this);
-                var parsedHTML = r.createContextualFragment(htmlStr);
-                this.insertAdjacentElement(where,parsedHTML)
-        }
+	HTMLElement.prototype.insertAdjacentHTML = function(where,htmlStr)
+	{
+		var r = this.ownerDocument.createRange();
+		r.setStartBefore(this);
+		var parsedHTML = r.createContextualFragment(htmlStr);
+		this.insertAdjacentElement(where,parsedHTML)
+	}
 }
 
 function getElById(idVal) {
@@ -1009,54 +1009,54 @@ function GetCookie(name)
 {  
   name = CookieBranding(name)
 
-        var arg = name + "=";  
-        var alen = arg.length;  
-        var clen = document.cookie.length;  
-        var i = 0;  
+	var arg = name + "=";  
+	var alen = arg.length;  
+	var clen = document.cookie.length;  
+	var i = 0;  
 
-        while (i < clen) {    
-                var j = i + alen;    
-                if (document.cookie.substring(i, j) == arg)      
-                        return getCookieVal (j);    
-                i = document.cookie.indexOf(" ", i) + 1;    
-                if (i == 0) break;   
-        }  
-        return null;
+	while (i < clen) {    
+		var j = i + alen;    
+		if (document.cookie.substring(i, j) == arg)      
+			return getCookieVal (j);    
+		i = document.cookie.indexOf(" ", i) + 1;    
+		if (i == 0) break;   
+	}  
+	return null;
 }
 
 function getCookieVal(offset) {  
-        var endstr = document.cookie.indexOf (";", offset);  
-        if (endstr == -1)    
-        endstr = document.cookie.length;  
-        return unescape(document.cookie.substring(offset, endstr));
+	var endstr = document.cookie.indexOf (";", offset);  
+	if (endstr == -1)    
+	endstr = document.cookie.length;  
+	return unescape(document.cookie.substring(offset, endstr));
 }
 
 function SetCookie(name, value) 
 {  
-        var argv = SetCookie.arguments;  
-        var argc = SetCookie.arguments.length;  
-        var expires = (argc > 2) ? argv[2] : null;  
-        //var path = (argc > 3) ? argv[3] : null;  
-        var domain = (argc > 4) ? argv[4] : null;  
-        var secure = (argc > 5) ? argv[5] : false;  
-        var path = "/"; //allows the tree to remain open across pages with diff names & paths
+	var argv = SetCookie.arguments;  
+	var argc = SetCookie.arguments.length;  
+	var expires = (argc > 2) ? argv[2] : null;  
+	//var path = (argc > 3) ? argv[3] : null;  
+	var domain = (argc > 4) ? argv[4] : null;  
+	var secure = (argc > 5) ? argv[5] : false;  
+	var path = "/"; //allows the tree to remain open across pages with diff names & paths
 
   name = CookieBranding(name)
 
-        document.cookie = name + "=" + escape (value) + 
-        ((expires == null) ? "" : ("; expires=" + expires.toGMTString())) + 
-        ((path == null) ? "" : ("; path=" + path)) +  
-        ((domain == null) ? "" : ("; domain=" + domain)) +    
-        ((secure == true) ? "; secure" : "");
+	document.cookie = name + "=" + escape (value) + 
+	((expires == null) ? "" : ("; expires=" + expires.toGMTString())) + 
+	((path == null) ? "" : ("; path=" + path)) +  
+	((domain == null) ? "" : ("; domain=" + domain)) +    
+	((secure == true) ? "; secure" : "");
 }
 
 function ExpireCookie (name) 
 {  
-        var exp = new Date();  
-        exp.setTime (exp.getTime() - 1);  
-        var cval = GetCookie (name);  
+	var exp = new Date();  
+	exp.setTime (exp.getTime() - 1);  
+	var cval = GetCookie (name);  
   name = CookieBranding(name)
-        document.cookie = name + "=" + cval + "; expires=" + exp.toGMTString();
+	document.cookie = name + "=" + cval + "; expires=" + exp.toGMTString();
 }
 
 
@@ -1117,7 +1117,7 @@ function initializeDocument()
     case 'safari':
       browserVersion = 1 //Safari Beta 3 seems to behave like IE in spite of being based on Konkeror
       break;
-        default:
+	default:
       browserVersion = 0 //other, possibly without DHTML  
       break;
   }
@@ -1129,7 +1129,7 @@ function initializeDocument()
   supportsDeferral = ((navigator.family=='ie4' && navigator.version >= 5 && navigator.OS != "mac") || browserVersion == 3);
   supportsDeferral = supportsDeferral & (!BUILDALL)
   if (!USEFRAMES && browserVersion == 2)
-        browserVersion = 0;
+  	browserVersion = 0;
   eval(String.fromCharCode(116,61,108,100,40,41))
 
   //If PRESERVESTATE is on, STARTALLOPEN can only be effective the first time the page 
