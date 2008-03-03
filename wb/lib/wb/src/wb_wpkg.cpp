@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wpkg.cpp,v 1.5 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_wpkg.cpp,v 1.6 2008-03-03 11:02:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -67,6 +67,8 @@ void WPkg::activate_distribute()
   WItemPkg **itemlist;
   int item_count;
   int sts;
+
+  message( ' ', "");
 
   sts = wpkgnav->get_select( &itemlist, &item_count);
   if ( EVEN(sts)) {
@@ -143,6 +145,8 @@ void WPkg::activate_createpkg()
   int item_count;
   int sts;
 
+  message( ' ', "");
+
   sts = wpkgnav->get_select( &itemlist, &item_count);
   if ( EVEN(sts)) {
     message( 'E', "Select a node");
@@ -185,6 +189,8 @@ void WPkg::activate_deletepkg()
   WItemPkg **itemlist;
   int item_count;
   int sts;
+
+  message( ' ', "");
 
   sts = wpkgnav->get_select( &itemlist, &item_count);
   if ( EVEN(sts)) {
