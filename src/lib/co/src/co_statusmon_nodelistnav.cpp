@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelistnav.cpp,v 1.6 2007-10-02 15:53:20 claes Exp $
+ * Proview   $Id: co_statusmon_nodelistnav.cpp,v 1.7 2008-03-03 11:02:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1029,6 +1029,9 @@ void NodelistNav::add_node( char *name, char *description, char *opplace)
   ItemNode     	*item;
   int 		idx = 0;
   bool		found;
+
+  if ( strcmp( name, "") == 0)
+    return;
 
   brow_GetSelectedNodes( brow->ctx, &nodelist, &node_count);
 
