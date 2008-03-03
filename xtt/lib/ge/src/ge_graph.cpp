@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.48 2008-02-05 14:52:19 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.49 2008-03-03 14:38:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1660,6 +1660,7 @@ static int graph_get_dyn_info_cb( void *g, GeDyn *dyn,
 {
   static attr_sItem	items[40];
 
+  memset( items, 0, sizeof(items));
   *itemlist = items; 
   *itemlist_cnt = 0;
 
