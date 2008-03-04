@@ -50,8 +50,7 @@ palette NavigatorPalette
     }
     menu DataStorage
     {
-      class DsFast
-      class DsHist
+      class DsFastCurve
       class DsTrend
     }
     menu Supervision
@@ -62,7 +61,6 @@ palette NavigatorPalette
     class PlcPgm
     class Backup
     class $LibHier
-    class $DocHier
     class $Mountobject
     class $Alias
   }
@@ -70,39 +68,27 @@ palette NavigatorPalette
   {
     class $NodeHier
     class $Node
-    class $Mountobject
+    class $MountObject
     class $CreateVolume
     class $MountVolume
     menu Servers
     {
       class Backup_Conf
       class DsFastConf
-      class DsHistServer
       class DsTrendConf
       class IOHandler
       class MessageHandler
+      class Opc_ServerConfig
       class PlcProcess
       class PlcThread
       class RemoteConfig
+      class SysMonConfig
+      class StatusServerConfig
       class WebHandler
-      class IOHandler
+      class WebBrowserConfig
     }
-    menu IO_SSAB
+    menu IO
     {
-      class Rack_SSAB
-      class Ssab_RemoteRack
-      menu Cards
-      {
-        class Di_DIX2
-        class Do_HVDO32
-        class Ai_HVAI32
-        class Ai_AI32uP
-        class Ao_AO8uP
-        class Ao_HVAO4
-        class Co_CO4uP
-        class Co_PI24BO
-        class PID_1uP
-      }
       menu Channels
       {
         class ChanAi
@@ -114,17 +100,53 @@ palette NavigatorPalette
         class ChanIi
         class ChanIo
       }
-      class IOHandler
-    }
-    menu Profibus
-    {
-      menu Masters
+      menu PSS9000
       {
-        class Pb_Profiboard
+        menu Rack 
+        {
+          class Rack_SSAB
+          class Ssab_RemoteRack
+        }
+        menu Cards 
+        {
+          class Ssab_AI32uP
+          class Ssab_AI16uP
+          class Ssab_Ai8uP
+          class Ssab_AO8uP
+          class Ssab_AO8uPL
+          class Ssab_AO16uP_Logger
+          class Ssab_Co4uP
+          class Ssab_DI32D
+          class Ssab_DO32DKS
+          class Ssab_DO23DKS_Stall
+        }
       }
-      menu Slaves
+      menu Profibus
       {
-        class Pb_DP_Slave
+        menu Masters
+        {
+          class Pb_Profiboard
+        }
+        menu Slaves
+        {
+          class Pb_DP_Slave
+          class ABB_ACS_Pb_Slave
+          class Eurotherm_TC3001_PbSlave
+          class SEW_Movidrive_Pb_Slave
+          class Siemens_DiagRepeater
+          class Siemens_ET200S_IM151
+          class Siemens_ET200M_IM153
+        }
+      }
+      menu Modbus_TCP 
+      {
+        class Modbus_TCP_Slave
+        class Modbus_Module
+      }
+      menu MotionControl_USBIO
+      {
+        class MotionControl_USB
+        class MotionControl_USBIO
       }
     }
     menu Remote
@@ -146,36 +168,16 @@ palette NavigatorPalette
 	class Buff32k
 	class BuffStr80
       }
-      menu RemoteIO
-      {
-        class RemAi
-	class RemAo
-	class RemDi
-	class RemDo
-	class RemCo
-	class RemDv
-        class RemChanAi
-	class RemChanAo
-	class RemChanDi
-	class RemChanDo
-	class RemChanCo
-	class RemChanDv	
-      }
     }
     menu Operator
     {
       class OpPlace
       class User
-      class EventPrinter
-      class Form
-      class Graph
       class XttGraph
-      class OpAppl
-      class OpApplMsg
       class RttConfig
       class WebBrowserConfig
     }
-    class $Appl
+    class Application
     class PlotGroup
     class CycleSup
     class NodeLinkSup

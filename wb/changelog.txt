@@ -96,3 +96,4 @@
 080222 cs  wb        Locale set to us_EN to avoid comma in floatvalues in wb_load files.
 080222 cs  wb        Check that volumeid is in valid range added to directory volume save.
 080226 cs  wb        Popupmenu in palette wasn't implemented in gtk version.
+080304 cs  wb        Plc with GetXp or StoXp references to objects in other volumes caused compilation errors.
