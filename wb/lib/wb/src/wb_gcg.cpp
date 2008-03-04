@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.cpp,v 1.10 2008-02-04 13:34:11 claes Exp $
+ * Proview   $Id: wb_gcg.cpp,v 1.11 2008-03-04 15:16:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -6796,7 +6796,7 @@ int	gcg_comp_m10( gcg_ctx gcgctx, vldh_t_node node)
 	}
 
 	/* Get rid of last attribute segment of the referenced object */
-	sts = ldh_AttrRefToName( ldhses, &refattrref, ldh_eName_Aref, 
+	sts = ldh_AttrRefToName( ldhses, &refattrref, ldh_eName_ArefVol, 
 				 &name_p, &size);
 	if ( EVEN(sts)) return sts;
 
@@ -8182,7 +8182,7 @@ int	gcg_comp_m12( gcg_ctx gcgctx, vldh_t_node node)
 	if ( EVEN(sts)) return sts;
 
 	/* Get rid of last attribute segment of the referenced object */
-	sts = ldh_AttrRefToName( ldhses, &refattrref, ldh_eName_Aref, 
+	sts = ldh_AttrRefToName( ldhses, &refattrref, ldh_eName_ArefVol, 
 				 &name_p, &size);
 	if ( EVEN(sts)) return sts;
 
@@ -10963,7 +10963,7 @@ int	gcg_comp_m36( gcg_ctx gcgctx, vldh_t_node node)
 	if ( EVEN(sts)) return sts;
 
 	/* Get rid of last attribute segment of the referenced object */
-	sts = ldh_AttrRefToName( ldhses, &refattrref, ldh_eName_Aref, 
+	sts = ldh_AttrRefToName( ldhses, &refattrref, ldh_eName_ArefVol, 
 				 &name_p, &size);
 	if ( EVEN(sts)) return sts;
 
@@ -14997,7 +14997,7 @@ int	gcg_comp_m62( gcg_ctx gcgctx, vldh_t_node node)
 	}
 
 	/* Get rid of last attribute segment of the referenced object */
-	sts = ldh_AttrRefToName( ldhses, &disaref, ldh_eName_Aref, 
+	sts = ldh_AttrRefToName( ldhses, &disaref, ldh_eName_ArefVol, 
 				 &name_p, &size);
 	if ( EVEN(sts)) return sts;
 
@@ -15111,7 +15111,7 @@ int	gcg_comp_m63( gcg_ctx gcgctx, vldh_t_node node)
 	if ( EVEN(sts)) return sts;
 
 	/* Get rid of last attribute segment of the referenced object */
-	sts = ldh_AttrRefToName( ldhses, &refattrref, ldh_eName_Aref, 
+	sts = ldh_AttrRefToName( ldhses, &refattrref, ldh_eName_ArefVol, 
 				 &name_p, &size);
 	if ( EVEN(sts)) return sts;
 
