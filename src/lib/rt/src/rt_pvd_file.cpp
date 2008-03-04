@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pvd_file.cpp,v 1.2 2007-03-20 12:36:38 claes Exp $
+ * Proview   $Id: rt_pvd_file.cpp,v 1.3 2008-03-04 15:07:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -377,6 +377,7 @@ void rt_pvd_file::copyObject( co_procom *pcom, pwr_tOix oix, pwr_tOix destoix, i
     break;
   default: ;
   }
+  item.flags |= procom_obj_mFlags_Created;
   m_list.push_back(item);
 
   pcom->provideObject( 1, item.oix, item.fthoix, item.bwsoix, item.fwsoix,
@@ -484,7 +485,7 @@ void rt_pvd_file::abort( co_procom *pcom)
 
 void rt_pvd_file::delete_tree( pwr_tOix oix)
 {
-  m_list[oix].flags = procom_obj_mFlags_Deleted;
+  m_list[oix].flags |= procom_obj_mFlags_Deleted;
 
   for ( pwr_tOix ix = m_list[oix].fchoix;
 	ix;
