@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.59 2008-01-24 09:28:01 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.60 2008-03-05 08:35:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3977,6 +3977,13 @@ int GeValueInput::change_value( grow_tObject object, char *text)
     case pwr_eType_UInt8:
       if ( double( *(pwr_tUInt8 *) buf) > max_value) max_exceeded = 1;
       break;
+    case pwr_eType_DeltaTime:
+      if ( double( ((pwr_tDeltaTime *)buf)->tv_sec) == max_value && 
+	   ((pwr_tDeltaTime *)buf)->tv_nsec > 0) 
+	max_exceeded = 1;
+      else if ( double( ((pwr_tDeltaTime *)buf)->tv_sec) > max_value) 
+	max_exceeded = 1;
+      break;
     }
     if ( max_exceeded) {
       if ( dyn->graph->message_dialog_cb)
@@ -4015,6 +4022,9 @@ int GeValueInput::change_value( grow_tObject object, char *text)
       break;
     case pwr_eType_UInt8:
       if ( double( *(pwr_tUInt8 *) buf) < min_value) min_exceeded = 1;
+      break;
+    case pwr_eType_DeltaTime:
+      if ( double( ((pwr_tDeltaTime *)buf)->tv_sec) < min_value) min_exceeded = 1;
       break;
     }
     if ( min_exceeded) {
