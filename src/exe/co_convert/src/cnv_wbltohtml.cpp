@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltohtml.cpp,v 1.15 2008-03-03 11:01:09 claes Exp $
+ * Proview   $Id: cnv_wbltohtml.cpp,v 1.16 2008-03-05 11:47:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1307,22 +1307,25 @@ int CnvWblToHtml::typedef_close()
 void CnvWblToHtml::print_all_menu()
 {
   // Sort
-  for ( unsigned int i = all_types.size() - 1; i > 0; i--) {
-    for ( unsigned int j = 0; j < i; j++) {
-      if ( !(all_types[j] < all_types[j+1])) {
-	cnv_mentry mi = all_types[j+1];
-	all_types[j+1] = all_types[j];
-	all_types[j] = mi;
+  if ( all_types.size()) {
+    for ( unsigned int i = all_types.size() - 1; i > 0; i--) {
+      for ( unsigned int j = 0; j < i; j++) {
+	if ( !(all_types[j] < all_types[j+1])) {
+	  cnv_mentry mi = all_types[j+1];
+	  all_types[j+1] = all_types[j];
+	  all_types[j] = mi;
+	}
       }
     }
   }
-
-  for ( unsigned int i = all_classes.size() - 1; i > 0; i--) {
-    for ( unsigned int j = 0; j < i; j++) {
-      if ( !(all_classes[j] < all_classes[j+1])) {
-	cnv_mentry mi = all_classes[j+1];
-	all_classes[j+1] = all_classes[j];
-	all_classes[j] = mi;
+  if ( all_classes.size()) {
+    for ( unsigned int i = all_classes.size() - 1; i > 0; i--) {
+      for ( unsigned int j = 0; j < i; j++) {
+	if ( !(all_classes[j] < all_classes[j+1])) {
+	  cnv_mentry mi = all_classes[j+1];
+	  all_classes[j+1] = all_classes[j];
+	  all_classes[j] = mi;
+	}
       }
     }
   }
