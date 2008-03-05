@@ -7,6 +7,6 @@ link = $(ldxx) $(elinkflags) $(domap) -o $(export_exe) \
 	-L/usr/local/BerkeleyDB.4.0/lib \
 	-lpwr_wb -lpwr_rt -lpwr_ge -lpwr_flow -lpwr_glow -lpwr_co \
 	-lpwr_msg_dummy -lantlr \
-	-lrpcsvc -lpthread -lm -lrt -ldb_cxx -lz
+	-lrpcsvc -lpthread -lm -lrt -ldb_cxx -lz $(linkmysql)
 
 endif
