@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_module.c,v 1.11 2008-02-29 13:13:44 claes Exp $
+ * Proview   $Id: rt_io_m_pb_module.c,v 1.12 2008-03-06 07:26:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -95,10 +95,13 @@ static pwr_tStatus IoCardRead (
 
   op->Status = slave->Status;  
 
-  if (op->Status == PB__NORMAL) { 
-    io_card_read(ctx, rp, cp, local->input_area, slave->Diag, slave->ByteOrdering,
+  /* I/O-read operations should always be made. This ensures correct values */
+  /* on all inputs. Default StallAction is ResetInputs which means that */
+  /* all inputs will be zeroed */
+
+  io_card_read(ctx, rp, cp, local->input_area, slave->Diag, slave->ByteOrdering,
                  slave->FloatRepresentation);  
-  }
+
 //  printf("Method Pb_Module-IoCardRead\n");
   return IO__SUCCESS;
 }
