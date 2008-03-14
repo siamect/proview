@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: jpwr_rt_gdh.c,v 1.15 2007-09-19 15:08:23 claes Exp $
+ * Proview   $Id: jpwr_rt_gdh.c,v 1.16 2008-03-14 07:38:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1610,7 +1610,7 @@ static void  gdh_TranslateSuffixToClassData (
   *PwrSize = 4;
 
   for (Index = 0, Found = FALSE; Index < XlationTblLen; Index++)
-    if (!strcmp(XlationTbl[Index].TypeStr,SuffixPtr))
+    if (!cdh_NoCaseStrcmp(XlationTbl[Index].TypeStr,SuffixPtr))
     {
       *PwrSize = XlationTbl[Index].Size;
       *PwrType = XlationTbl[Index].Type;
@@ -1618,7 +1618,7 @@ static void  gdh_TranslateSuffixToClassData (
       break;
     }
 
-  if (!Found && !strncmp("STRING", SuffixPtr, 6))
+  if (!Found && !cdh_NoCaseStrncmp("STRING", SuffixPtr, 6))
   {
     *PwrSize = atoi(SuffixPtr + 6);
     *PwrType = pwr_eType_String;
