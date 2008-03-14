@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeCFormat.java,v 1.6 2007-05-24 12:26:07 claes Exp $
+ * Proview   $Id: GeCFormat.java,v 1.7 2008-03-14 08:33:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -126,8 +126,16 @@ public class GeCFormat {
       return format_type;
     }
     public StringBuffer format( float value, StringBuffer buff) {
-      if ( pfo != null)
-        return pfo.sprintf( value, buff);
+      if ( pfo != null) {
+	try {
+          return pfo.sprintf( value, buff);
+        }
+	catch ( IllegalArgumentException e) {
+	  buff.setLength(0);
+	  buff.append("format error");
+	  return buff;
+	}
+      }
       else 
         return buff;
 /*
@@ -166,11 +174,19 @@ public class GeCFormat {
       }
       return buff;
       }
+*/    
     }
-    
     public StringBuffer format( int value, StringBuffer buff) {
-      if ( pfo != null)
-        return pfo.sprintf( value, buff);
+      if ( pfo != null) {
+	try {
+          return pfo.sprintf( value, buff);
+        }
+	catch ( IllegalArgumentException e) {
+	  buff.setLength(0);
+	  buff.append("format error");
+	  return buff;
+	}
+      }
       else 
         return buff;
 /*
@@ -201,8 +217,16 @@ public class GeCFormat {
     public StringBuffer format( String value, StringBuffer buff) {
       switch( format_type) {
       case FRM_S: {
-      if ( pfo != null)
-        return pfo.sprintf( value, buff);
+      if ( pfo != null) {
+	try {
+          return pfo.sprintf( value, buff);
+        }
+	catch ( IllegalArgumentException e) {
+	  buff.setLength(0);
+	  buff.append("format error");
+	  return buff;
+	}
+      }
       else 
         return buff;
 /*
