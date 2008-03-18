@@ -1,0 +1,467 @@
+199
+!/**
+! FcPPO3PumpAggr
+! Group Components/BaseComponent
+!
+! <image> bcomp_pumpaggr_gs.gif
+!
+! <h1>Description
+! Pump aggregate. Graphic symbol for component BaseFcPPO3PumpAggr.
+! Should be connected to an instance of BaseFcPPO3PumpAggr, or a 
+! subclass to this class.
+!
+! Subgraph with two pages, pump off (page 1) and pump on (page 2).
+! <image> bcomp_pumpaggr_ags.gif
+!
+! <h1>Default dynamics
+! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+!
+! Dynamics for the symbol
+! - colored red when an error occurs.
+! - colored yellow when a warning occurs.
+! - colored darkgray when the pump is off.
+! - the mode (manual or local) is displayed with a M or L.
+! - pump on and off is displayed with different pages.
+! - popupmenu with the methods of the connected object.
+!
+! DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+! DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+! DigLowColor <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! Value <t>$hostobject.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+! DigShift <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+!
+! Default Cycle Slow 
+!
+!*/
+1
+100 98.5671
+135 98.5671
+101 20
+102 -175
+103 -218
+104 20.0931
+136 20.0931
+105 100
+106 -35
+107 -44
+108 3.3
+109 0
+110 2
+111 -0.5
+116 0
+117 0
+118 137
+119 126
+120 0
+121 Claes context
+122 0
+126 0.1
+127 0.1
+128 1
+129 0.3
+130 1.5
+131 0.8
+132 3
+133 2
+137 4001
+134
+22
+2200 2
+2201 1
+2202 bcomp_basefcppo3pumpaggr
+2203 300
+2205 0
+2204
+2206 0
+2207
+2208
+2209 0
+2210 0
+2211 0
+2212 0
+2213 4
+2214
+pwrp_pop:
+pwrp_exe:
+ssab_exe:
+pwr_exe:
+2215 67108864
+2236 0
+2216 10
+2221 0
+2237 0
+2238 0
+2239 0
+2240 0
+2241 0
+2242 0
+2217 0
+2218 0
+2219 1
+2220 
+2230 0
+2231 0
+2222 bcomp_basefcppo3pumpaggr__p2
+2223 1
+2224 0.5
+2232 0.5
+2225 0.5
+2226 0
+2227 
+2228 0
+2229 0
+2233 1
+2234 1
+2235 0
+2243 0
+2244
+1
+100 33844
+101 2
+102 65532
+103 1
+7
+700 $hostobject.IndError##Boolean
+99
+8
+800 $hostobject.IndWarning##Boolean
+99
+2
+200 $hostobject.FrequencyConverter.ConvertRun##Boolean
+201 37
+99
+12
+1200 $hostobject.Mode.IndMode##String8
+1201 %s
+1202 1
+1203 1
+1204 0
+99
+18
+1800 $hostobject.FrequencyConverter.ConvertRun##Boolean
+99
+50
+5000 $hostobject
+99
+99
+99
+123
+2
+99
+124
+2
+99
+125
+2
+19
+1904 
+1900 3.3
+1901 2
+1902 0.8
+1903 -0.5
+1908 0
+1909 300
+1910 300
+1911 0
+1915 0
+1913 5
+1916 2
+1914 0
+1918 0
+1919 1
+1920 0
+1917 1
+1907 0
+1906
+1905
+5
+500 0
+501 1
+504 1
+505 1
+502
+7
+700 2
+701 -0.5
+99
+503
+7
+700 3.3
+701 0.8
+99
+99
+1912
+28
+2800 1
+2801 0
+2802 0
+2803 0
+2804 1
+2805 0
+2806 0
+99
+99
+24
+2404 
+2400 2
+2401 0
+2402 2
+2403 0
+2408 0
+2409 74
+2410 74
+2411 1
+2415 0
+2413 8
+2416 2
+2414 0
+2417 0
+2407 0
+2406
+2405
+8
+802 0
+803 1
+800 0
+801 360
+806 1
+804
+7
+700 0
+701 0
+99
+805
+7
+700 2
+701 2
+99
+99
+2412
+28
+2800 1
+2801 0
+2802 0
+2803 0
+2804 1
+2805 0
+2806 0
+99
+99
+26
+2604 
+2600 1.7
+2601 0.290507
+2602 1.8
+2603 0.6
+2605
+25
+2500 0
+2501 1
+2503 1
+2504 0
+2502
+2
+7
+700 0.3
+701 0.6
+99
+7
+700 1.7
+701 0.6
+99
+7
+700 1
+701 1.8
+99
+7
+700 0.290507
+701 0.624053
+99
+99
+99
+2608 0
+2609 28
+2610 28
+2611 0
+2616 0
+2614 5
+2617 2
+2615 0
+2618 1
+2607 0
+2606
+2612
+28
+2800 1
+2801 0
+2802 0
+2803 0
+2804 1
+2805 0
+2806 0
+99
+2613 1
+2619 0
+2620 0
+2621 0
+2622 0
+99
+23
+2304 
+2300 2.34197
+2301 2.04197
+2302 0.697466
+2303 0.397473
+2305
+9
+900 3
+901 304
+904 0
+902 A1
+903
+7
+700 2.02555
+701 0.745334
+99
+99
+2306
+5
+500 2
+501 1
+504 1
+505 0
+502
+7
+700 2.02555
+701 0.445334
+99
+503
+7
+700 2.32555
+701 0.745328
+99
+99
+2307
+13
+1300 1
+1301 304
+1306 0
+1302 3
+1305 1
+1303
+7
+700 0.7
+701 1.2
+99
+1304 0
+1307 0
+99
+2308
+28
+2800 1
+2801 0
+2802 1.32555
+2803 0
+2804 1
+2805 -0.454666
+2806 0
+99
+2309 2
+99
+21
+2104 
+2100 0.3
+2101 -0.3
+2102 1.3
+2103 0.7
+2105
+8
+802 0
+803 2
+800 0
+801 360
+806 0
+804
+7
+700 -0.3
+701 -0.3
+99
+805
+7
+700 0.3
+701 0.3
+99
+99
+2106
+12
+1200 0
+1201 2
+1202
+7
+700 0
+701 0.958836
+99
+1203 
+1204 0
+1205
+28
+2800 1
+2801 0
+2802 4.85723e-17
+2803 0
+2804 1
+2805 0.0411635
+2806 0
+99
+99
+99
+21
+2104 
+2100 2.3
+2101 1.7
+2102 1.3
+2103 0.7
+2105
+8
+802 0
+803 2
+800 0
+801 360
+806 0
+804
+7
+700 -0.3
+701 -0.3
+99
+805
+7
+700 0.3
+701 0.3
+99
+99
+2106
+12
+1200 1
+1201 1
+1202
+7
+700 2
+701 1
+99
+1203 
+1204 0
+1205
+28
+2800 1
+2801 0
+2802 2.41474e-15
+2803 0
+2804 1
+2805 2.77556e-17
+2806 0
+99
+99
+99
+99
+99
