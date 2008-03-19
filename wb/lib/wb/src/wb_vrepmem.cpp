@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.cpp,v 1.32 2007-12-21 13:18:01 claes Exp $
+ * Proview   $Id: wb_vrepmem.cpp,v 1.33 2008-03-19 12:58:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1215,6 +1215,7 @@ bool wb_vrepmem::updateSubClass( wb_adrep *subattr, char *body, bool keepref)
   pwr_tStatus sts;
   pwr_tCid cid = subattr->subClass();
   wb_cdrep *cdrep = m_merep->cdrep( &sts, cid);
+  if ( EVEN(sts)) return false;
   wb_bdrep *bdrep = cdrep->bdrep( &sts, pwr_eBix_rt);
   if ( EVEN(sts)) return false;
 
