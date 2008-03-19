@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.cpp,v 1.13 2008-01-24 09:28:01 claes Exp $
+ * Proview   $Id: ge_gtk.cpp,v 1.14 2008-03-19 07:32:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1450,6 +1450,8 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   GtkWidget *file_subgraphs = gtk_menu_item_new_with_mnemonic( "_Loaded Subgraphs...");
   g_signal_connect( file_subgraphs, "activate", 
 		    G_CALLBACK(activate_subgraphs), this);
+  gtk_widget_add_accelerator( file_subgraphs, "activate", accel_g,
+			      'l', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
   // Submenu export
   GtkWidget *file_export_java = gtk_menu_item_new_with_mnemonic( "_Java");
