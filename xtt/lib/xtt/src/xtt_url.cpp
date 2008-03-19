@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_url.cpp,v 1.5 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_url.cpp,v 1.6 2008-03-19 07:34:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,6 +53,25 @@ int xnav_open_URL( pwr_tURL url)
   if ( ODD(sts)) {
     if ( strcmp( config_p->WebBrowser, "") != 0)
       strcpy( browser, config_p->WebBrowser);
+
+    if ( strncmp( url, "$pwr_lang/", 10) == 0) {
+      // If file in $pwr_lang, check if file exist, else take en_us
+
+      if ( Lng::current() != lng_eLanguage_en_us) {
+	pwr_tURL testurl;
+	pwr_tTime t;
+
+	replace_symbol( url, testurl, config_p);
+	dcli_translate_filename( testurl, testurl);
+	sts = dcli_file_time( testurl, &t);
+	if ( EVEN(sts)) {
+	  // Try en_us
+	  strcpy( testurl, "$pwr_doc/en_us/");
+	  strcat( testurl, &url[10]);
+	  strcpy( url, testurl);
+	}
+      }
+    }
 
     replace_symbol( url, url, config_p);
   }
