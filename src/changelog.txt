@@ -64,6 +64,8 @@
 080118 cs  trace     Object description viewed as tooltip in trace. Also $PlcMain and $PlcFo translated and viewed in tooltip.
 080121 cs  pwrb      MoreText added to DSup, ASup and CycleSup, and to mh protocol.
 080122 cs  pwrb      Attributes PresMinLimit and PresMaxLimit added to Ii and Io.
+080125 cs  qcom      New argument in qcom_WaitOr to return received event.
+080128 cs  co        Project local translationstables for translation of texts in Ge graphs implemented.
 080206 cs  statussrv Loopback address used for local node.
 080226 cs  help      New functions in Help window: next and previous topic. Toolbar added.
 080229 rk  rt        New generalized i/o-routines for reading and writing to card.
