@@ -453,6 +453,12 @@ menu Components
     subgraph    FanAggr 	pwr_exe:bcomp_fanaggr.pwsg 		71
     subgraph    Filter 		pwr_exe:bcomp_filter.pwsg 		15
     subgraph    FlowSensor 	pwr_exe:bcomp_flowsensor.pwsg 		16
+    subgraph    FcPPO3MotorAggr pwr_exe:bcomp_basefcppo3motoraggr.pwsg 	23
+    subgraph	FcPPO3FanAggr   pwr_exe:bcomp_basefcppo3fanaggr.pwsg    71
+    subgraph	FcPPO3umpAggr   pwr_exe:bcomp_basefcppo3pumpaggr.pwsg   72
+    subgraph    FcPPO5MotorAggr pwr_exe:bcomp_basefcppo5motoraggr.pwsg 	23
+    subgraph	FcPPO5FanAggr   pwr_exe:bcomp_basefcppo5fanaggr.pwsg    71
+    subgraph	FcPPO5umpAggr   pwr_exe:bcomp_basefcppo5pumpaggr.pwsg   72
     subgraph    LevelSensor 	pwr_exe:bcomp_levelsensor.pwsg 		16
     subgraph    LevelSwitch 	pwr_exe:bcomp_levelswitch.pwsg 		16
     subgraph    MDamper 	pwr_exe:bcomp_mdamper.pwsg 		98

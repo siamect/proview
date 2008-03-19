@@ -1,3 +1,4 @@
 #060227 cs  -          Changelog created.
-071008 cs  -        Eurotherm TC3001 tyristor unit added.
+071008 cs  -         Eurotherm TC3001 tyristor unit added.
+080318 cs  -         Danfoss FC300 frequency converter with PPO3 or PPO5 profibus protocal added.
 

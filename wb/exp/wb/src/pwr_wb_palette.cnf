@@ -58,6 +58,139 @@ palette NavigatorPalette
       class ASup
       class DSup
     }
+    menu Components	
+    {
+      menu BaseComponent
+      {
+        class BaseC3WayValve
+        class BaseCDamper
+        class BaseCValve
+        class BaseCircuitBreaker
+        class BaseContactor
+        class BaseDirValve
+        class BaseElHeater
+        class BaseFanAggr
+        class BaseFcPPO3
+        class BaseFcPPO3FanAggr
+        class BaseFcPPO3MotorAggr
+        class BaseFcPPO3PumpAggr
+        class BaseFcPPO5
+        class BaseFcPPO5FanAggr
+        class BaseFcPPO5MotorAggr
+        class BaseFcPPO5PumpAggr
+        class BaseFilter
+        class BaseFlowSensor
+        class BaseLevelSensor
+        class BaseLevelSwitch
+        class BaseM3WayValve
+        class BaseMDamper
+        class BaseMValve
+        class BaseManValve
+        class BaseMotorAggr
+        class BaseMotorIncrDecrAggr
+        class BaseOverloadRelay
+        class BasePositSensor
+        class BasePressureSensor
+        class BasePressureSwitch
+        class BasePropValve
+        class BasePumpAggr        
+        class BaseSafetySwitch
+        class BaseSensor
+        class BaseSupSwitch
+        class BaseSwitch
+        class BaseTempSensor
+        class BaseTempSwitch
+        class CompModePID
+        class CompOnOffBurner
+        class CompOnOffZone
+        class CompPID
+        class RunTimeCounter
+      }
+      menu Manufacturer
+      {
+        menu ABB
+        {
+          class ABB_ACC800
+          class ABB_ACS800FanAggr
+          class ABB_ACS800MotorAggr
+          class ABB_ACS800PumpAggr
+          class ABB_ACS800_1
+          class ABB_CircuitBreaker_MS116
+          class ABB_Contactor_A
+          class ABB_Converter_ACS800_PPO3
+          class ABB_Converter_ACS800_PPO5
+          class ABB_DiffPressureSensor_265DS
+          class ABB_FlowSensor_FXE4000
+          class ABB_TempSensor_TF12
+        }
+        menu Cewe
+        {
+          class Cewe_SafetySwitch_BAS
+          class Cewe_SafetySwitch_KSA_LBAS
+        }
+        menu Danfoss
+        {
+          class Danfoss_Converter_FC300_PPO3
+          class Danfoss_Converter_FC300_PPO5
+        }
+        menu Durholdt
+        {
+          class Durholdt_Valve_100_103
+        }
+        menu Eurotherm
+        {
+          class Eurotherm_TC3001
+          class Eurotherm_TC3001Aggr
+        }
+        menu Impac
+        {
+          class Impac_TempSensor_IN300
+        }
+        menu Inor
+        {
+          class Inor_TempSensor_VRS
+        }
+        menu Klay
+        {
+          class Klay_PressureSensor_Series2000
+        }
+        menu KlocknerMoeller
+        {
+          class KM_CircuitBreaker_PKZ
+          class KM_Contactor_PKZ
+        }
+        menu Legrand
+        {
+          class Legrand_CircuitBreaker_DX
+        }
+        menu Mobrey
+        {
+          class Mobrey_LevelSensor_MSP422
+          class Mobrey_LevelSwitch_EC
+        }
+        menu Omron
+        {
+          class Omron_Contactor_J7KN
+        }
+        menu SEW
+        {
+          class SEW_Movidrive_1
+          class SEW_Movidrive_EPB
+        }
+        menu Siemens
+        {
+          class Siemens_Motor_1LA
+        }
+        menu Suco
+        {
+          class Suco_PresSwitch_27AF
+        }
+        menu Ventim
+        {
+          class Ventim_Valve_VM3001
+        }
+      }
+    }
     class PlcPgm
     class Backup
     class $LibHier
@@ -790,6 +923,10 @@ palette PlcEditorPalette
       class BaseCValveFo
       class BaseDirValveFo
       class BaseElHeaterFo
+      class BaseFcPPO3MotorAggrFo
+      class BaseFcPPO3Fo
+      class BaseFcPPO5MotorAggrFo
+      class BaseFcPPO5Fo
       class BaseFilterFo
       class BaseManValveFo
       class BaseMotorFo
@@ -839,6 +976,10 @@ palette PlcEditorPalette
       class BaseCDamperSim
       class BaseCValveSim
       class BaseElHeaterSim
+      class BaseFcPPO3MotorAggrSim
+      class BaseFcPPO3Sim
+      class BaseFcPPO5MotorAggrSim
+      class BaseFcPPO5Sim
       class BaseMValveSim
       class BaseSensorSim
       class BaseMotorAggrSim

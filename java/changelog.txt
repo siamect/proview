@@ -7,3 +7,4 @@
 070720 cs  rt        MhServer didn't terminate at qcom termination message.
 070917 cs  rt        Gdh functions GetObjectInfoFloatArray and GetObjectInfoIntArray added.
 070917 cs  jop       Support for XY-curves.
+080314 cs  jop       Bugfix in integer format conversion.

@@ -1,2 +1,3 @@
 #060227 cs  -          Changelog created.
-060712 cs  -          ABB_ACS800_Slave: IORack bit was missing.
+060712 cs  -         ABB_ACS800_Slave: IORack bit was missing.
+080318 cs  -         ACS800 frequency converter with PPO3 or PPO5 profibus protocol added.
