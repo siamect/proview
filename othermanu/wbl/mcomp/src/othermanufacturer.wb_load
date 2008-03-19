@@ -1,7 +1,7 @@
 Volume OtherManufacturer $ClassVolume 0.0.250.1 
   Body SysBody 01-JAN-1970 01:00:00.00
     Attr NextOix = "_X2176"
-    Attr NextCix = "_X39"
+    Attr NextCix = "_X41"
     Attr NextTix[0] = "_X2"
   EndBody
   Object Type $TypeHier 1758 09-OCT-2007 14:20:45.77
@@ -245,6 +245,205 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.Super.Specification = "Safety switch "
           Attr Super.Super.DataSheet = "$pwr_lang/dsh/cewe_safetyswitch_bas.pdf"
           Attr Super.AlarmText = "Safety switch is not on "
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Converters
+    !  @Summary Danfoss frequency converter FC300 with Profibus PPO3 protocol.
+    !  Danfoss frequency converter FC300 with Profibus PPO3 protocol.
+    ! 
+    !  See superclass BaseFcPPO3 for more information.
+    !  @classlink BaseFcPPO3 basecomponent_basefcppo3.html
+    !  @link Datasheet ../dsh/danfoss_converter_fc300.pdf
+    !*/
+    Object Danfoss_Converter_FC300_PPO3 $ClassDef 40 18-MAR-2008 17:03:02.18
+      Body SysBody 18-MAR-2008 17:02:42.62
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 18-MAR-2008 17:03:07.53
+        Body SysBody 18-MAR-2008 17:03:07.53
+          Attr StructName = "Danfoss_Converter_FC300_PPO3"
+          Attr NextAix = "_X2"
+        EndBody
+        Object Super $Attribute 1 18-MAR-2008 17:03:15.98
+          Body SysBody 18-MAR-2008 17:03:53.69
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-BaseFcPPO3"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Danfoss_Converter_FC300_PPO3 2158198784 01-JAN-1970 01:00:00.00
+        Body RtBody 18-MAR-2008 17:06:08.88
+          Attr Super.Specification = "Danfoss Frequency converter FC300 with Profibus PPO3 protocol"
+          Attr Super.StatusWordSW.Description = "Status Word, from converter"
+          Attr Super.StatusWordSW.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO3PbModule.I_SW"
+          Attr Super.ActSpeed.Description = "Actual Value, from converter"
+          Attr Super.ActSpeed.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO3PbModule.I_ACT"
+          Attr Super.ActSpeed.PresMinLimit = 1.000000e+02
+          Attr Super.ActSpeed.DefTrend = "_O0.0.0.0:0"
+          Attr Super.ControlWordCW.Description = "Control Word, to converter"
+          Attr Super.ControlWordCW.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO3PbModule.O_CW"
+          Attr Super.RefSpeed.Description = "Reference Value, to converter"
+          Attr Super.RefSpeed.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO3PbModule.O_REF"
+          Attr Super.RefSpeed.PresMinLimit = 1.000000e+02
+          Attr Super.RefSpeed.DefTrend = "_O0.0.0.0:0"
+          Attr Super.PowerUpTime = 1.500000e+01
+          Attr Super.AlarmLocalMod = "Frequency converter is in local mode,  "
+          Attr Super.AlarmTripped = "Frequency converter tripped, reset is required, "
+          Attr Super.AlarmWarning = "Frequency converter warning, "
+          Attr Super.AlarmError = "Frequency converter error, "
+          Attr Super.DefTrend = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO3-Template.Super.PlotGroup"
+          Attr Super.DataSheet = "$pwr_lang/dsh/danfoss_converter_fc300.pdf"
+          Attr Super.TrendActSpeed.Multiple = 1
+          Attr Super.TrendActSpeed.DataName = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO3-Template.Super.ActSpeed.ActualValue"
+          Attr Super.TrendActSpeed.StorageTime = 239
+          Attr Super.TrendActSpeed.BufferStatus[0] = 1
+          Attr Super.TrendActSpeed.BufferStatus[1] = 1
+          Attr Super.TrendActSpeed.NoOfBuffers = 2
+          Attr Super.TrendActSpeed.NoOfBufElement = 239
+          Attr Super.TrendRefSpeed.Multiple = 1
+          Attr Super.TrendRefSpeed.DataName = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO3-Template.Super.RefSpeed.ActualValue"
+          Attr Super.TrendRefSpeed.StorageTime = 239
+          Attr Super.TrendRefSpeed.BufferStatus[0] = 1
+          Attr Super.TrendRefSpeed.BufferStatus[1] = 1
+          Attr Super.TrendRefSpeed.NoOfBuffers = 2
+          Attr Super.TrendRefSpeed.NoOfBufElement = 239
+          Attr Super.PlotGroup.YObjectName[0] = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO3-Template.Super.TrendActSpeed"
+          Attr Super.PlotGroup.YObjectName[1] = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO3-Template.Super.TrendRefSpeed"
+          Attr Super.PlotGroup.NumPoints = 478
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Converters
+    !  @Summary Danfoss frequency converter FC300 with Profibus PPO5 protocol.
+    !  Danfoss frequency converter FC300 with Profibus PPO5 protocol.
+    ! 
+    !  See superclass BaseFcPPO5 for more information.
+    !  @classlink BaseFcPPO5 basecomponent_basefcppo5.html
+    !  @link Datasheet ../dsh/danfoss_converter_fc300.pdf
+    !*/
+    Object Danfoss_Converter_FC300_PPO5 $ClassDef 39 17-MAR-2008 16:48:49.75
+      Body SysBody 17-MAR-2008 16:46:48.90
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 17-MAR-2008 16:47:23.25
+        Body SysBody 17-MAR-2008 16:48:57.93
+          Attr StructName = "Danfoss_Converter_FC300_PPO5"
+          Attr NextAix = "_X2"
+        EndBody
+        Object Super $Attribute 1 17-MAR-2008 16:47:32.06
+          Body SysBody 17-MAR-2008 16:49:08.27
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-BaseFcPPO5"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Danfoss_Converter_FC300_PPO5 2157936640 01-JAN-1970 01:00:00.00
+        Body RtBody 18-MAR-2008 17:04:31.24
+          Attr Super.Specification = "Frequency converter Danfoss FC300 with Profibus PPO5 protocol"
+          Attr Super.InIdPar.Description = "Parameter Identification, from converter"
+          Attr Super.InIdPar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_ID"
+          Attr Super.InIndPar.Description = "Array Index, from converter"
+          Attr Super.InIndPar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_IND"
+          Attr Super.InValuePar.Description = "Parameter Value, from converter"
+          Attr Super.InValuePar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_VALUE"
+          Attr Super.StatusWordSW.Description = "Status Word, from converter"
+          Attr Super.StatusWordSW.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_SW"
+          Attr Super.ActSpeed.Description = "Actual Value, from converter"
+          Attr Super.ActSpeed.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_ACT"
+          Attr Super.ActSpeed.PresMaxLimit = 1.000000e+02
+          Attr Super.ActSpeed.DefTrend = "_O0.0.0.0:0"
+          Attr Super.ActTorque.Description = "Torque, Process Data 4 from converter"
+          Attr Super.ActTorque.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_PZD4"
+          Attr Super.ActTorque.PresMaxLimit = 1.000000e+02
+          Attr Super.ActTorque.DefTrend = "_O0.0.0.0:0"
+          Attr Super.ActCurrent.Description = "Current, Process Data 3 from converter"
+          Attr Super.ActCurrent.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_PZD3"
+          Attr Super.ActCurrent.PresMaxLimit = 1.000000e+02
+          Attr Super.ActCurrent.DefTrend = "_O0.0.0.0:0"
+          Attr Super.PZD5.Description = "Process Data 5 from converter"
+          Attr Super.PZD5.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_PZD5"
+          Attr Super.PZD6.Description = "Process Data 6 from converter"
+          Attr Super.PZD6.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_PZD6"
+          Attr Super.PZD7.Description = "Process Data 7 from converter"
+          Attr Super.PZD7.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_PZD7"
+          Attr Super.PZD8.Description = "Process Data 8 from converter"
+          Attr Super.PZD8.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_PZD8"
+          Attr Super.PZD9.Description = "Process Data 9 from converter"
+          Attr Super.PZD9.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_PZD9"
+          Attr Super.OutIdPar.Description = "Parameter Identification, to converter"
+          Attr Super.OutIdPar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_ID"
+          Attr Super.OutIndPar.Description = "Array Index, to converter"
+          Attr Super.OutIndPar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_IND"
+          Attr Super.OutValuePar.Description = "Parmeter Value, to converter"
+          Attr Super.OutValuePar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_VALUE"
+          Attr Super.ControlWordCW.Description = "Control Word, to converter"
+          Attr Super.ControlWordCW.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_CW"
+          Attr Super.RefSpeed.Description = "Reference Value, to converter"
+          Attr Super.RefSpeed.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_REF"
+          Attr Super.RefSpeed.PresMaxLimit = 1.000000e+02
+          Attr Super.RefSpeed.DefTrend = "_O0.0.0.0:0"
+          Attr Super.OPZD3.Description = "Process Data 3 to converter"
+          Attr Super.OPZD3.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_PZD3"
+          Attr Super.OPZD3.PresMaxLimit = 1.000000e+02
+          Attr Super.OPZD4.Description = "Process Data 4 to converter"
+          Attr Super.OPZD4.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_PZD4"
+          Attr Super.OPZD4.PresMaxLimit = 1.000000e+02
+          Attr Super.OPZD5.Description = "Process Data 5 to converter"
+          Attr Super.OPZD5.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_PZD5"
+          Attr Super.OPZD5.PresMaxLimit = 1.000000e+02
+          Attr Super.OPZD6.Description = "Process Data 6 to converter"
+          Attr Super.OPZD6.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_PZD6"
+          Attr Super.PowerUpTime = 1.500000e+01
+          Attr Super.AlarmLocalMod = "Frequency converter is in local mode,  "
+          Attr Super.AlarmTripped = "Frequency converter tripped, reset is required, "
+          Attr Super.AlarmWarning = "Frequency converter warning, "
+          Attr Super.AlarmError = "Frequency converter error, "
+          Attr Super.DefTrend = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO5-Template.Super.PlotGroup"
+          Attr Super.DataSheet = "$pwr_lang/dsh/danfoss_converter_fc300.pdf"
+          Attr Super.TrendActSpeed.Multiple = 1
+          Attr Super.TrendActSpeed.DataName = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO5-Template.Super.ActSpeed.ActualValue"
+          Attr Super.TrendActSpeed.StorageTime = 239
+          Attr Super.TrendActSpeed.BufferStatus[0] = 1
+          Attr Super.TrendActSpeed.BufferStatus[1] = 1
+          Attr Super.TrendActSpeed.NoOfBuffers = 2
+          Attr Super.TrendActSpeed.NoOfBufElement = 239
+          Attr Super.TrendActTorque.Multiple = 1
+          Attr Super.TrendActTorque.DataName = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO5-Template.Super.ActTorque.ActualValue"
+          Attr Super.TrendActTorque.StorageTime = 239
+          Attr Super.TrendActTorque.BufferStatus[0] = 1
+          Attr Super.TrendActTorque.BufferStatus[1] = 1
+          Attr Super.TrendActTorque.NoOfBuffers = 2
+          Attr Super.TrendActTorque.NoOfBufElement = 239
+          Attr Super.TrendActCurrent.Multiple = 1
+          Attr Super.TrendActCurrent.DataName = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO5-Template.Super.ActCurrent.ActualValue"
+          Attr Super.TrendActCurrent.StorageTime = 239
+          Attr Super.TrendActCurrent.BufferStatus[0] = 1
+          Attr Super.TrendActCurrent.BufferStatus[1] = 1
+          Attr Super.TrendActCurrent.NoOfBuffers = 2
+          Attr Super.TrendActCurrent.NoOfBufElement = 239
+          Attr Super.TrendRefSpeed.Multiple = 1
+          Attr Super.TrendRefSpeed.DataName = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO5-Template.Super.RefSpeed.ActualValue"
+          Attr Super.TrendRefSpeed.StorageTime = 239
+          Attr Super.TrendRefSpeed.BufferStatus[0] = 1
+          Attr Super.TrendRefSpeed.BufferStatus[1] = 1
+          Attr Super.TrendRefSpeed.NoOfBuffers = 2
+          Attr Super.TrendRefSpeed.NoOfBufElement = 239
+          Attr Super.PlotGroup.YObjectName[0] = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO5-Template.Super.TrendActSpeed"
+          Attr Super.PlotGroup.YObjectName[1] = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO5-Template.Super.TrendActTorque"
+          Attr Super.PlotGroup.YObjectName[2] = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO5-Template.Super.TrendActCurrent"
+          Attr Super.PlotGroup.YObjectName[3] = "OtherManufacturer:Class-Danfoss_Converter_FC300_PPO5-Template.Super.TrendRefSpeed"
+          Attr Super.PlotGroup.NumPoints = 478
         EndBody
       EndObject
     EndObject
@@ -9254,6 +9453,7 @@ XS : activa alarms
           Object DSup12 DSup 885 03-OCT-2007 11:01:20.00
             Body RtBody 11-OCT-2007 17:38:32.23
               Attr DetectText = "No contact on Profibus. shut down! ,"
+              Attr MoreText = ""
             EndBody
             Body DevBody 22-JAN-2008 12:56:12.19
               Buffer PlcNode
@@ -11515,6 +11715,7 @@ XS : activa alarms
           Object DSup14 DSup 1977 15-OCT-2007 15:16:46.37
             Body RtBody 24-JAN-2008 09:02:24.68
               Attr DetectText = "Thyristor unit internal inhibited, "
+              Attr MoreText = ""
               Attr TimerTime = 6.000000e+00
             EndBody
             Body DevBody 24-JAN-2008 09:02:28.44
@@ -11587,6 +11788,7 @@ XS : activa alarms
               Attr DetectText = "Partial Load Failure Phase 1, "
               Attr EventPriority = 66
               Attr EventFlags = 1
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 15:49:02.36
               Buffer PlcNode
@@ -11607,6 +11809,7 @@ XS : activa alarms
               Attr DetectText = "Partial Load Failure Phase 2, "
               Attr EventPriority = 66
               Attr EventFlags = 1
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 15:49:02.36
               Buffer PlcNode
@@ -11627,6 +11830,7 @@ XS : activa alarms
               Attr DetectText = "Partial Load Failure Phase 3, "
               Attr EventPriority = 66
               Attr EventFlags = 1
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 15:49:02.36
               Buffer PlcNode
@@ -11647,6 +11851,7 @@ XS : activa alarms
               Attr DetectText = "Overvoltage, "
               Attr EventPriority = 66
               Attr EventFlags = 1
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 15:49:02.36
               Buffer PlcNode
@@ -11665,6 +11870,7 @@ XS : activa alarms
           Object DSup19 DSup 1985 15-OCT-2007 15:16:46.37
             Body RtBody 15-OCT-2007 15:16:46.37
               Attr DetectText = "Overcurrent. Shut down! , "
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 15:49:02.36
               Buffer PlcNode
@@ -11685,6 +11891,7 @@ XS : activa alarms
               Attr DetectText = "Load Unbalance, "
               Attr EventPriority = 66
               Attr EventFlags = 1
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 15:49:02.36
               Buffer PlcNode
@@ -11705,6 +11912,7 @@ XS : activa alarms
               Attr DetectText = "Undervoltage, "
               Attr EventPriority = 66
               Attr EventFlags = 1
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 15:49:02.36
               Buffer PlcNode
@@ -11725,6 +11933,7 @@ XS : activa alarms
               Attr DetectText = "Frequency error, "
               Attr EventPriority = 66
               Attr EventFlags = 1
+              Attr MoreText = ""
               Attr TimerTime = 3.000000e+00
             EndBody
             Body DevBody 22-JAN-2008 12:56:12.19
@@ -11746,6 +11955,7 @@ XS : activa alarms
               Attr DetectText = "Phase 1 gone or Thyristor overheated, "
               Attr EventPriority = 66
               Attr EventFlags = 1
+              Attr MoreText = ""
             EndBody
             Body DevBody 16-OCT-2007 13:54:16.22
               Buffer PlcNode
@@ -11766,6 +11976,7 @@ XS : activa alarms
               Attr DetectText = "Phase 2 gone, "
               Attr EventPriority = 66
               Attr EventFlags = 1
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 15:49:02.36
               Buffer PlcNode
@@ -11786,6 +11997,7 @@ XS : activa alarms
               Attr DetectText = "Phase 3 gone, "
               Attr EventPriority = 66
               Attr EventFlags = 1
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 15:49:02.36
               Buffer PlcNode
@@ -11804,6 +12016,7 @@ XS : activa alarms
           Object DSup26 DSup 1992 15-OCT-2007 15:16:46.37
             Body RtBody 15-OCT-2007 15:16:46.37
               Attr DetectText = "Thyristor Short circuit. Shut down! ,"
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 15:49:02.36
               Buffer PlcNode
@@ -20137,6 +20350,7 @@ NB! start/stop is used as on/off."
             Body RtBody 09-OCT-2007 10:48:51.56
               Attr DetectText = "Start not allowed..."
               Attr EventPriority = 66
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 16:14:38.12
               Buffer PlcNode
@@ -20265,6 +20479,7 @@ NB! start/stop is used as on/off."
             Body RtBody 09-OCT-2007 10:48:51.56
               Attr DetectText = "Power not allowed..."
               Attr EventPriority = 66
+              Attr MoreText = ""
             EndBody
             Body DevBody 15-OCT-2007 16:14:38.12
               Buffer PlcNode
@@ -22514,7 +22729,7 @@ Eurotherm TC3001 Aggregate
         EndObject
       EndObject
       Object Template Impac_TempSensor_IN300 2150596608 06-OCT-2005 09:28:20.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 17-MAR-2008 16:51:41.33
           Attr Super.Super.Super.Specification = "Impac compact pyrometer IN300"
           Attr Super.Super.Super.DataSheet = "$pwr_lang/dsh/impac_tempsensor_in300.pdf"
           Attr Super.Super.Value.PresMaxLimit = 1.000000e+02
@@ -29622,6 +29837,7 @@ SW bit:
           Object DSup0 DSup 181 26-MAR-2007 13:45:04.88
             Body RtBody 26-MAR-2007 14:40:27.07
               Attr DetectText = "See abov.."
+              Attr MoreText = ""
             EndBody
             Body DevBody 13-APR-2007 10:49:07.49
               Buffer PlcNode
@@ -29640,6 +29856,7 @@ SW bit:
           Object DSup1 DSup 183 26-MAR-2007 13:45:09.96
             Body RtBody 26-MAR-2007 14:40:54.35
               Attr DetectText = "See abov.."
+              Attr MoreText = ""
             EndBody
             Body DevBody 13-APR-2007 10:49:07.49
               Buffer PlcNode
@@ -29658,6 +29875,7 @@ SW bit:
           Object DSup2 DSup 184 26-MAR-2007 13:45:12.15
             Body RtBody 26-MAR-2007 14:41:02.36
               Attr DetectText = "See abov.."
+              Attr MoreText = ""
             EndBody
             Body DevBody 13-APR-2007 10:49:07.49
               Buffer PlcNode
@@ -29676,6 +29894,7 @@ SW bit:
           Object DSup3 DSup 185 26-MAR-2007 13:45:13.47
             Body RtBody 26-MAR-2007 14:41:09.95
               Attr DetectText = "See abov.."
+              Attr MoreText = ""
             EndBody
             Body DevBody 13-APR-2007 10:49:07.49
               Buffer PlcNode
@@ -29749,6 +29968,7 @@ SW bit:
           Object DSup4 DSup 196 26-MAR-2007 13:50:49.00
             Body RtBody 26-MAR-2007 13:55:37.65
               Attr DetectText = "Tripped...."
+              Attr MoreText = ""
             EndBody
             Body DevBody 26-MAR-2007 13:57:54.30
               Buffer PlcNode
@@ -29839,6 +30059,7 @@ SW bit:
           Object DSup5 DSup 209 26-MAR-2007 13:55:44.35
             Body RtBody 26-MAR-2007 13:58:21.26
               Attr DetectText = "Warning...."
+              Attr MoreText = ""
             EndBody
             Body DevBody 26-MAR-2007 14:02:23.90
               Buffer PlcNode
@@ -30331,6 +30552,7 @@ SW bit:
           Object DSup6 DSup 637 13-APR-2007 09:32:36.69
             Body RtBody 13-APR-2007 09:32:36.69
               Attr DetectText = "See abov.."
+              Attr MoreText = ""
             EndBody
             Body DevBody 13-APR-2007 10:49:07.49
               Buffer PlcNode
@@ -36804,6 +37026,7 @@ SW bit:
           Object DSup4 DSup 538 30-MAR-2007 14:41:44.43
             Body RtBody 30-MAR-2007 14:41:44.43
               Attr DetectText = "Tripped...."
+              Attr MoreText = ""
             EndBody
             Body DevBody 30-MAR-2007 14:41:44.45
               Buffer PlcNode
@@ -36894,6 +37117,7 @@ SW bit:
           Object DSup5 DSup 543 30-MAR-2007 14:41:44.43
             Body RtBody 30-MAR-2007 14:41:44.43
               Attr DetectText = "Warning...."
+              Attr MoreText = ""
             EndBody
             Body DevBody 30-MAR-2007 14:41:44.45
               Buffer PlcNode
@@ -37481,6 +37705,7 @@ SW bit:
           Object DSup6 DSup 703 13-APR-2007 10:50:40.92
             Body RtBody 13-APR-2007 10:50:40.92
               Attr DetectText = "See abov.."
+              Attr MoreText = ""
             EndBody
             Body DevBody 13-APR-2007 10:52:01.92
               Buffer PlcNode
@@ -37499,6 +37724,7 @@ SW bit:
           Object DSup7 DSup 704 13-APR-2007 10:50:40.92
             Body RtBody 13-APR-2007 10:50:40.92
               Attr DetectText = "See abov.."
+              Attr MoreText = ""
             EndBody
             Body DevBody 13-APR-2007 10:52:01.92
               Buffer PlcNode
@@ -37517,6 +37743,7 @@ SW bit:
           Object DSup8 DSup 705 13-APR-2007 10:50:40.92
             Body RtBody 13-APR-2007 10:50:40.92
               Attr DetectText = "See abov.."
+              Attr MoreText = ""
             EndBody
             Body DevBody 13-APR-2007 10:52:01.92
               Buffer PlcNode
@@ -37535,6 +37762,7 @@ SW bit:
           Object DSup9 DSup 706 13-APR-2007 10:50:40.92
             Body RtBody 13-APR-2007 10:50:40.92
               Attr DetectText = "See abov.."
+              Attr MoreText = ""
             EndBody
             Body DevBody 13-APR-2007 10:52:01.92
               Buffer PlcNode
@@ -37846,6 +38074,7 @@ SW bit:
           Object DSup10 DSup 723 13-APR-2007 10:50:40.93
             Body RtBody 13-APR-2007 10:50:40.93
               Attr DetectText = "See abov.."
+              Attr MoreText = ""
             EndBody
             Body DevBody 13-APR-2007 10:52:01.92
               Buffer PlcNode
