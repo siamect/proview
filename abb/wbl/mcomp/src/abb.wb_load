@@ -1,7 +1,7 @@
 Volume ABB $ClassVolume 0.0.250.2 
   Body SysBody 01-JAN-1970 01:00:00.00
     Attr NextOix = "_X3741"
-    Attr NextCix = "_X36"
+    Attr NextCix = "_X38"
     Attr NextTix[0] = "_X3"
   EndBody
   Object Type $TypeHier 1749 12-OCT-2005 13:25:10.29
@@ -872,7 +872,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
       EndObject
       Object Template ABB_ACS800_1 2148237312 12-OCT-2005 12:58:20.00
-        Body RtBody 23-JAN-2006 09:27:06.19
+        Body RtBody 18-MAR-2008 16:46:14.29
           Attr Specification = "ABB ACS800 Frequency converter"
           Attr InIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_ID"
           Attr InIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_IND"
@@ -23813,7 +23813,7 @@ ABB ACC800"
     !  @b See also
     !  @classlink ABB_ACS800MotorAggrFo abb_abb_acs800motoraggrfo.html
     !  @classlink ABB_ACS8_PPO5 abb_abb_acs_ppo5.html
-    !  @classlink ABB_ACS800MotorAggrSimSim abb_abb_acs800motoraggrsim.html
+    !  @classlink ABB_ACS800MotorAggrSim abb_abb_acs800motoraggrsim.html
     !*/
     Object ABB_ACS800MotorAggr $ClassDef 4 12-OCT-2005 12:58:20.00
       Body SysBody 01-JAN-1970 01:00:00.00
@@ -24668,7 +24668,7 @@ ABB ACC800"
     !   @image orm_abb_acs800motoraggrfo_ex.gif
     ! 
     !  @b See also
-    !  @classlink ABB_ACS800MotorAggr abb_abb_acs800pump1.html
+    !  @classlink ABB_ACS800MotorAggr abb_abb_acs800motoraggr.html
     !*/
     Object ABB_ACS800MotorAggrFo $ClassDef 5 12-OCT-2005 12:58:20.00
       Body SysBody 01-JAN-1970 01:00:00.00
@@ -35341,6 +35341,205 @@ ABB ACS800 Aggregate
     EndObject
     !/**
     !  @Version 1.0
+    !  @Group Converters
+    !  @Summary ABB frequency converter ACS800 with Profibus PPO3 protocol.
+    !  ABB frequency converter ACS800 with Profibus PPO3 protocol.
+    ! 
+    !  See superclass BaseFcPPO3 for more information.
+    !  @classlink BaseFcPPO3 basecomponent_basefcppo3.html
+    !  @link Datasheet ../dsh/abb_acs800.html
+    !*/
+    Object ABB_Converter_ACS800_PPO3 $ClassDef 37 18-MAR-2008 16:41:30.24
+      Body SysBody 18-MAR-2008 16:41:17.25
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 18-MAR-2008 16:41:35.89
+        Body SysBody 18-MAR-2008 16:41:35.89
+          Attr StructName = "ABB_Converter_ACS800_PPO3"
+          Attr NextAix = "_X2"
+        EndBody
+        Object Super $Attribute 1 18-MAR-2008 16:41:44.70
+          Body SysBody 18-MAR-2008 16:41:56.66
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-BaseFcPPO3"
+          EndBody
+        EndObject
+      EndObject
+      Object Template ABB_Converter_ACS800_PPO3 2157412352 01-JAN-1970 01:00:00.00
+        Body RtBody 18-MAR-2008 16:47:30.00
+          Attr Super.Specification = "Frequency converter ABB ACS800 with Profibus PPO3 protocol"
+          Attr Super.StatusWordSW.Description = "Status Word, from converter"
+          Attr Super.StatusWordSW.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO3PbModule.I_SW"
+          Attr Super.ActSpeed.Description = "Actual Value, from converter"
+          Attr Super.ActSpeed.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO3PbModule.I_ACT"
+          Attr Super.ActSpeed.PresMinLimit = 1.000000e+02
+          Attr Super.ActSpeed.DefTrend = "_O0.0.0.0:0"
+          Attr Super.ControlWordCW.Description = "Control Word, to converter"
+          Attr Super.ControlWordCW.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO3PbModule.O_CW"
+          Attr Super.RefSpeed.Description = "Reference Value, to converter"
+          Attr Super.RefSpeed.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO3PbModule.O_REF"
+          Attr Super.RefSpeed.PresMinLimit = 1.000000e+02
+          Attr Super.RefSpeed.DefTrend = "_O0.0.0.0:0"
+          Attr Super.PowerUpTime = 1.500000e+01
+          Attr Super.AlarmLocalMod = "Frequency converter is in local mode,  "
+          Attr Super.AlarmTripped = "Frequency converter tripped, reset is required, "
+          Attr Super.AlarmWarning = "Frequency converter warning, "
+          Attr Super.AlarmError = "Frequency converter error, "
+          Attr Super.DefTrend = "ABB:Class-ABB_Converter_ACS800_PPO3-Template.Super.PlotGroup"
+          Attr Super.DataSheet = "$pwr_lang/dsh/abb_acs800.html"
+          Attr Super.TrendActSpeed.Multiple = 1
+          Attr Super.TrendActSpeed.DataName = "ABB:Class-ABB_Converter_ACS800_PPO3-Template.Super.ActSpeed.ActualValue"
+          Attr Super.TrendActSpeed.StorageTime = 239
+          Attr Super.TrendActSpeed.BufferStatus[0] = 1
+          Attr Super.TrendActSpeed.BufferStatus[1] = 1
+          Attr Super.TrendActSpeed.NoOfBuffers = 2
+          Attr Super.TrendActSpeed.NoOfBufElement = 239
+          Attr Super.TrendRefSpeed.Multiple = 1
+          Attr Super.TrendRefSpeed.DataName = "ABB:Class-ABB_Converter_ACS800_PPO3-Template.Super.RefSpeed.ActualValue"
+          Attr Super.TrendRefSpeed.StorageTime = 239
+          Attr Super.TrendRefSpeed.BufferStatus[0] = 1
+          Attr Super.TrendRefSpeed.BufferStatus[1] = 1
+          Attr Super.TrendRefSpeed.NoOfBuffers = 2
+          Attr Super.TrendRefSpeed.NoOfBufElement = 239
+          Attr Super.PlotGroup.YObjectName[0] = "ABB:Class-ABB_Converter_ACS800_PPO3-Template.Super.TrendActSpeed"
+          Attr Super.PlotGroup.YObjectName[1] = "ABB:Class-ABB_Converter_ACS800_PPO3-Template.Super.TrendRefSpeed"
+          Attr Super.PlotGroup.NumPoints = 478
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Converters
+    !  @Summary ABB frequency converter ACS800 with Profibus PPO5 protocol.
+    !  ABB frequency converter ACS800 with Profibus PPO5 protocol.
+    ! 
+    !  See superclass BaseFcPPO5 for more information.
+    !  @classlink BaseFcPPO5 basecomponent_basefcppo5.html
+    !  @link Datasheet ../dsh/abb_acs800.html
+    !*/
+    Object ABB_Converter_ACS800_PPO5 $ClassDef 36 18-MAR-2008 16:39:59.94
+      Body SysBody 18-MAR-2008 16:39:04.46
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 18-MAR-2008 16:40:31.02
+        Body SysBody 18-MAR-2008 16:40:31.02
+          Attr StructName = "ABB_Converter_ACS800_PPO5"
+          Attr NextAix = "_X2"
+        EndBody
+        Object Super $Attribute 1 18-MAR-2008 16:40:41.69
+          Body SysBody 18-MAR-2008 16:41:04.06
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-BaseFcPPO5"
+          EndBody
+        EndObject
+      EndObject
+      Object Template ABB_Converter_ACS800_PPO5 2157150208 01-JAN-1970 01:00:00.00
+        Body RtBody 18-MAR-2008 16:47:17.11
+          Attr Super.Specification = "Frequency converter ABB ACS800 with Profibus PPO5 protocol"
+          Attr Super.InIdPar.Description = "Parameter Identification, from converter"
+          Attr Super.InIdPar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_ID"
+          Attr Super.InIndPar.Description = "Array Index, from converter"
+          Attr Super.InIndPar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_IND"
+          Attr Super.InValuePar.Description = "Parameter Value, from converter"
+          Attr Super.InValuePar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_VALUE"
+          Attr Super.StatusWordSW.Description = "Status Word, from converter"
+          Attr Super.StatusWordSW.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_SW"
+          Attr Super.ActSpeed.Description = "Actual Value, from converter"
+          Attr Super.ActSpeed.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_ACT"
+          Attr Super.ActSpeed.PresMaxLimit = 1.000000e+02
+          Attr Super.ActSpeed.DefTrend = "_O0.0.0.0:0"
+          Attr Super.ActTorque.Description = "Torque, Process Data 4 from converter"
+          Attr Super.ActTorque.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_PZD4"
+          Attr Super.ActTorque.PresMaxLimit = 1.000000e+02
+          Attr Super.ActTorque.DefTrend = "_O0.0.0.0:0"
+          Attr Super.ActCurrent.Description = "Current, Process Data 3 from converter"
+          Attr Super.ActCurrent.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_PZD3"
+          Attr Super.ActCurrent.PresMaxLimit = 1.000000e+02
+          Attr Super.ActCurrent.DefTrend = "_O0.0.0.0:0"
+          Attr Super.PZD5.Description = "Process Data 5 from converter"
+          Attr Super.PZD5.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_PZD5"
+          Attr Super.PZD6.Description = "Process Data 6 from converter"
+          Attr Super.PZD6.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_PZD6"
+          Attr Super.PZD7.Description = "Process Data 7 from converter"
+          Attr Super.PZD7.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_PZD7"
+          Attr Super.PZD8.Description = "Process Data 8 from converter"
+          Attr Super.PZD8.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_PZD8"
+          Attr Super.PZD9.Description = "Process Data 9 from converter"
+          Attr Super.PZD9.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_PZD9"
+          Attr Super.OutIdPar.Description = "Parameter Identification, to converter"
+          Attr Super.OutIdPar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_ID"
+          Attr Super.OutIndPar.Description = "Array Index, to converter"
+          Attr Super.OutIndPar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_IND"
+          Attr Super.OutValuePar.Description = "Parmeter Value, to converter"
+          Attr Super.OutValuePar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_VALUE"
+          Attr Super.ControlWordCW.Description = "Control Word, to converter"
+          Attr Super.ControlWordCW.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_CW"
+          Attr Super.RefSpeed.Description = "Reference Value, to converter"
+          Attr Super.RefSpeed.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_REF"
+          Attr Super.RefSpeed.PresMaxLimit = 1.000000e+02
+          Attr Super.RefSpeed.DefTrend = "_O0.0.0.0:0"
+          Attr Super.OPZD3.Description = "Process Data 3 to converter"
+          Attr Super.OPZD3.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_PZD3"
+          Attr Super.OPZD3.PresMaxLimit = 1.000000e+02
+          Attr Super.OPZD4.Description = "Process Data 4 to converter"
+          Attr Super.OPZD4.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_PZD4"
+          Attr Super.OPZD4.PresMaxLimit = 1.000000e+02
+          Attr Super.OPZD5.Description = "Process Data 5 to converter"
+          Attr Super.OPZD5.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_PZD5"
+          Attr Super.OPZD5.PresMaxLimit = 1.000000e+02
+          Attr Super.OPZD6.Description = "Process Data 6 to converter"
+          Attr Super.OPZD6.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_PZD6"
+          Attr Super.PowerUpTime = 1.500000e+01
+          Attr Super.AlarmLocalMod = "Frequency converter is in local mode,  "
+          Attr Super.AlarmTripped = "Frequency converter tripped, reset is required, "
+          Attr Super.AlarmWarning = "Frequency converter warning, "
+          Attr Super.AlarmError = "Frequency converter error, "
+          Attr Super.DefTrend = "ABB:Class-ABB_Converter_ACS800_PPO5-Template.Super.PlotGroup"
+          Attr Super.DataSheet = "$pwr_lang/dsh/abb_acs800.html"
+          Attr Super.TrendActSpeed.Multiple = 1
+          Attr Super.TrendActSpeed.DataName = "ABB:Class-ABB_Converter_ACS800_PPO5-Template.Super.ActSpeed.ActualValue"
+          Attr Super.TrendActSpeed.StorageTime = 239
+          Attr Super.TrendActSpeed.BufferStatus[0] = 1
+          Attr Super.TrendActSpeed.BufferStatus[1] = 1
+          Attr Super.TrendActSpeed.NoOfBuffers = 2
+          Attr Super.TrendActSpeed.NoOfBufElement = 239
+          Attr Super.TrendActTorque.Multiple = 1
+          Attr Super.TrendActTorque.DataName = "ABB:Class-ABB_Converter_ACS800_PPO5-Template.Super.ActTorque.ActualValue"
+          Attr Super.TrendActTorque.StorageTime = 239
+          Attr Super.TrendActTorque.BufferStatus[0] = 1
+          Attr Super.TrendActTorque.BufferStatus[1] = 1
+          Attr Super.TrendActTorque.NoOfBuffers = 2
+          Attr Super.TrendActTorque.NoOfBufElement = 239
+          Attr Super.TrendActCurrent.Multiple = 1
+          Attr Super.TrendActCurrent.DataName = "ABB:Class-ABB_Converter_ACS800_PPO5-Template.Super.ActCurrent.ActualValue"
+          Attr Super.TrendActCurrent.StorageTime = 239
+          Attr Super.TrendActCurrent.BufferStatus[0] = 1
+          Attr Super.TrendActCurrent.BufferStatus[1] = 1
+          Attr Super.TrendActCurrent.NoOfBuffers = 2
+          Attr Super.TrendActCurrent.NoOfBufElement = 239
+          Attr Super.TrendRefSpeed.Multiple = 1
+          Attr Super.TrendRefSpeed.DataName = "ABB:Class-ABB_Converter_ACS800_PPO5-Template.Super.RefSpeed.ActualValue"
+          Attr Super.TrendRefSpeed.StorageTime = 239
+          Attr Super.TrendRefSpeed.BufferStatus[0] = 1
+          Attr Super.TrendRefSpeed.BufferStatus[1] = 1
+          Attr Super.TrendRefSpeed.NoOfBuffers = 2
+          Attr Super.TrendRefSpeed.NoOfBufElement = 239
+          Attr Super.PlotGroup.YObjectName[0] = "ABB:Class-ABB_Converter_ACS800_PPO5-Template.Super.TrendActSpeed"
+          Attr Super.PlotGroup.YObjectName[1] = "ABB:Class-ABB_Converter_ACS800_PPO5-Template.Super.TrendActTorque"
+          Attr Super.PlotGroup.YObjectName[2] = "ABB:Class-ABB_Converter_ACS800_PPO5-Template.Super.TrendActCurrent"
+          Attr Super.PlotGroup.YObjectName[3] = "ABB:Class-ABB_Converter_ACS800_PPO5-Template.Super.TrendRefSpeed"
+          Attr Super.PlotGroup.NumPoints = 478
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
     !  @Group Profibus
     !  @Summary Profibus slave ABB ACS800
     !  Profibus slave object for frequency converter ABB ACS800. 
@@ -35730,7 +35929,7 @@ ABB ACS800 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS_PPO5 2149548032 12-OCT-2005 12:58:20.00
-        Body RtBody 02-MAY-2006 14:34:37.17
+        Body RtBody 14-MAR-2008 16:42:45.66
           Attr Super.Specification = "ABB ACS, PPO message type 5"
           Attr Super.Process = 1
           Attr Super.DataSheet = "$pwr_lang/dsh/abb_acs800.html"
@@ -35777,15 +35976,15 @@ ABB ACS800 Aggregate
           Attr I_PZD4.Description = "Status word from converter"
           Attr I_PZD4.Identity = "5108"
           Attr I_PZD4.ConversionOn = 1
-          Attr I_PZD4.RawValRangeLow = -3.276700e+04
-          Attr I_PZD4.RawValRangeHigh = 3.276800e+04
-          Attr I_PZD4.ChannelSigValRangeLow = -3.276700e+04
-          Attr I_PZD4.ChannelSigValRangeHigh = 3.276800e+04
+          Attr I_PZD4.RawValRangeLow = -3.276800e+04
+          Attr I_PZD4.RawValRangeHigh = 3.276700e+04
+          Attr I_PZD4.ChannelSigValRangeLow = -3.276800e+04
+          Attr I_PZD4.ChannelSigValRangeHigh = 3.276700e+04
           Attr I_PZD4.SensorPolyType = 1
-          Attr I_PZD4.SensorSigValRangeLow = -3.276700e+04
-          Attr I_PZD4.SensorSigValRangeHigh = 3.276800e+04
-          Attr I_PZD4.ActValRangeLow = -3.276700e+02
-          Attr I_PZD4.ActValRangeHigh = 3.276800e+02
+          Attr I_PZD4.SensorSigValRangeLow = -3.276800e+04
+          Attr I_PZD4.SensorSigValRangeHigh = 3.276700e+04
+          Attr I_PZD4.ActValRangeLow = -3.276800e+02
+          Attr I_PZD4.ActValRangeHigh = 3.276700e+02
           Attr I_PZD4.Representation = 2
           Attr I_PZD5.Description = "Status bits from converter"
           Attr I_PZD5.Identity = "5110"
@@ -35851,14 +36050,14 @@ ABB ACS800 Aggregate
           Attr O_PZD5.Description = "Referencevalue word to converter"
           Attr O_PZD5.Identity = "5109"
           Attr O_PZD5.OutPolyType = 1
-          Attr O_PZD5.ActValRangeLow = -3.276700e+04
-          Attr O_PZD5.ActValRangeHigh = 3.276800e+04
-          Attr O_PZD5.SensorSigValRangeLow = -3.276700e+04
-          Attr O_PZD5.SensorSigValRangeHigh = 3.276800e+04
-          Attr O_PZD5.ChannelSigValRangeLow = -3.276700e+04
-          Attr O_PZD5.ChannelSigValRangeHigh = 3.276800e+04
-          Attr O_PZD5.RawValRangeLow = -3.276700e+04
-          Attr O_PZD5.RawValRangeHigh = 3.276800e+04
+          Attr O_PZD5.ActValRangeLow = -3.276800e+04
+          Attr O_PZD5.ActValRangeHigh = 3.276700e+04
+          Attr O_PZD5.SensorSigValRangeLow = -3.276800e+04
+          Attr O_PZD5.SensorSigValRangeHigh = 3.276700e+04
+          Attr O_PZD5.ChannelSigValRangeLow = -3.276800e+04
+          Attr O_PZD5.ChannelSigValRangeHigh = 3.276700e+04
+          Attr O_PZD5.RawValRangeLow = -3.276800e+04
+          Attr O_PZD5.RawValRangeHigh = 3.276700e+04
           Attr O_PZD5.Representation = 2
           Attr O_PZD6.Description = "Referencevalue word to converter"
           Attr O_PZD6.Identity = "5111"
