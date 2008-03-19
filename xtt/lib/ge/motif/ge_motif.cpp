@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_motif.cpp,v 1.4 2007-05-07 15:45:18 claes Exp $
+ * Proview   $Id: ge_motif.cpp,v 1.5 2008-03-19 12:59:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,6 +31,7 @@
 #include <ctype.h>
 #include <float.h>
 #include <math.h>
+#include <vector.h>
 #include <Xm/Xm.h>
 #include <Xm/XmP.h>
 #include <Xm/Text.h>

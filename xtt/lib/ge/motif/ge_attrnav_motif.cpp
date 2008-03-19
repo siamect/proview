@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attrnav_motif.cpp,v 1.1 2007-01-04 08:22:16 claes Exp $
+ * Proview   $Id: ge_attrnav_motif.cpp,v 1.2 2008-03-19 12:59:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector.h>
 
 extern "C" {
 #include "co_cdh.h"
