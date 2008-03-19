@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_cdef.cpp,v 1.16 2007-09-19 15:12:16 claes Exp $
+ * Proview   $Id: wb_cdef.cpp,v 1.17 2008-03-19 07:31:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,6 +22,7 @@
 #include "wb_cdef.h"
 #include "wb_cdrep.h"
 #include "wb_object.h"
+#include "wb_attribute.h"
 
 wb_cdef::wb_cdef() : wb_status(LDH__NOCLASS), m_cdrep(0)
 {
@@ -165,6 +166,12 @@ void wb_cdef::templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p, pwr_tOid oi
 {
   check();
   m_cdrep->templateBody( sts, bix, p, oid);
+}
+
+void wb_cdef::attrTemplateBody( pwr_tStatus *sts, pwr_eBix bix, void *p, wb_attribute& a)
+{
+  check();
+  m_cdrep->attrTemplateBody( sts, bix, p, a);
 }
 
 size_t wb_cdef::size( pwr_eBix bix)

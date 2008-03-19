@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_session.cpp,v 1.25 2008-02-27 06:31:57 claes Exp $
+ * Proview   $Id: wb_session.cpp,v 1.26 2008-03-19 07:31:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -971,7 +971,7 @@ bool wb_session::castAttribute( pwr_sAttrRef *arp, pwr_tCid cid)
   }  
 
   void *body = calloc( 1, c.size( pwr_eBix_rt));
-  c.templateBody( &m_sts, pwr_eBix_rt, body, arp->Objid);
+  c.attrTemplateBody( &m_sts, pwr_eBix_rt, body, a);
 
   try {
     writeAttribute( a, body);

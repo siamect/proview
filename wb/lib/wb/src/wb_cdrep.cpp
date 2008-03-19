@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_cdrep.cpp,v 1.34 2007-11-06 16:56:23 claes Exp $
+ * Proview   $Id: wb_cdrep.cpp,v 1.35 2008-03-19 07:31:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,6 +27,7 @@
 #include "wb_orepdbs.h"
 #include "wb_bdrep.h"
 #include "wb_adrep.h"
+#include "wb_attribute.h"
 extern "C" {
 #include "rt_conv.h"
 }
@@ -261,6 +262,57 @@ void wb_cdrep::templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p, pwr_tOid o
   m_orep->vrep()->readBody( sts, orep, bix, p);
   if ( cdh_ObjidIsNotNull(oid))
     updateTemplate( bix, p, o, oid);
+
+  // Delete
+  orep->ref();
+  orep->unref();
+}
+
+void wb_cdrep::attrTemplateBody( pwr_tStatus *sts, pwr_eBix bix, void *p, wb_attribute& a)
+{
+  pwr_tStatus status;
+  pwr_tAttrRef aref;
+
+  aref = a.aref();
+  if ( aref.Flags.b.Object) {
+    templateBody( sts, bix, p, a.aoid());
+    return;
+  }
+
+  // Search for template in localWb
+  wb_vrep *localwb = m_orep->vrep()->erep()->volume( &status, ldh_cWBVolLocal);
+  if ( ODD(status)) {
+    char name[120];
+    sprintf( name, "Templates-%s", m_orep->name());
+    wb_name n = wb_name(name);
+    wb_orep *templ = localwb->object( &status, n);
+    if ( ODD(status) && templ->cid() == cid()) {
+      templ->ref();
+      localwb->readBody( &status, templ, bix, p);
+      if ( ODD(status)) {
+	if ( cdh_ObjidIsNotNull(a.aoid()))
+	  updateTemplateSubClass( a.adrep(), (char *)p, a.aoid(), templ->oid(), aref.Offset);
+	*sts = LDH__SUCCESS;
+	templ->unref();
+	return;
+      }
+      templ->unref();
+    }
+  }
+
+  // Get objid for template object
+  pwr_tOid oid;
+  int cix = cdh_oixToCix( m_orep->oid().oix);  
+  oid.vid = m_orep->oid().vid;
+  oid.oix = cdh_cixToOix( cix, pwr_eBix_template, 0);
+
+  wb_orep *orep = m_orep->vrep()->object( sts, oid);
+  if ( EVEN(*sts)) return;
+
+  m_orep->vrep()->readBody( sts, orep, bix, p);
+  if ( cdh_ObjidIsNotNull(oid)) {
+    updateTemplateSubClass( a.adrep(), (char *)p, a.aoid(), oid, aref.Offset);
+  }
 
   // Delete
   orep->ref();
@@ -818,7 +870,7 @@ void wb_cdrep::convertObject( wb_merep *merep, void *rbody, void *dbody,
 
 
 void wb_cdrep::updateTemplateSubClass( wb_adrep *subattr, char *body, pwr_tOid oid,
-				       pwr_tOid toid)
+				       pwr_tOid toid, int aoffs)
 {
   pwr_tStatus sts;
   pwr_tCid cid = subattr->subClass();
@@ -835,7 +887,7 @@ void wb_cdrep::updateTemplateSubClass( wb_adrep *subattr, char *body, pwr_tOid o
       int elements = adrep->isArray() ? adrep->nElement() : 1;
       if ( adrep->isClass()) {
 	updateTemplateSubClass( adrep, body + i * subattr->size() / subattr_elements + adrep->offset(),
-			oid, toid);
+			oid, toid, aoffs);
       }
       else {
 	switch ( adrep->type()) {
@@ -853,8 +905,10 @@ void wb_cdrep::updateTemplateSubClass( wb_adrep *subattr, char *body, pwr_tOid o
 	  pwr_sAttrRef *arp = (pwr_sAttrRef *)(body + i * subattr->size() / subattr_elements + 
 					adrep->offset());
 	  for ( int j = 0; j < elements; j++) {
-	    if ( cdh_ObjidIsEqual( arp->Objid, toid))
+	    if ( cdh_ObjidIsEqual( arp->Objid, toid)) {
 	      arp->Objid = oid;
+	      arp->Offset += aoffs;
+	    }
 	    arp++;
 	  }
 	  break;
@@ -885,7 +939,7 @@ void wb_cdrep::updateTemplate( pwr_eBix bix, void *b, pwr_tOid oid, pwr_tOid toi
   while ( ODD(sts)) {
     int elements = adrep->isArray() ? adrep->nElement() : 1;
     if ( adrep->isClass()) {
-      updateTemplateSubClass( adrep, body + adrep->offset(), oid, toid);
+      updateTemplateSubClass( adrep, body + adrep->offset(), oid, toid, 0);
     }
     else {
       switch ( adrep->type()) {

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_cdef.h,v 1.16 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_cdef.h,v 1.17 2008-03-19 07:31:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,6 +30,7 @@ class wb_cdrep;
 class wb_mvrep;
 class wb_object;
 class wb_orep;
+class wb_attribute;
 
 class wb_cdef : public wb_status
 {
@@ -65,6 +66,7 @@ public:
   wb_bdef bdef(wb_name bname);
 
   void templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p, pwr_tOid oid);
+  void attrTemplateBody( pwr_tStatus *sts, pwr_eBix bix, void *p, wb_attribute& a);
   wb_object classBody( const char *bname);
   wb_cdef super();
 

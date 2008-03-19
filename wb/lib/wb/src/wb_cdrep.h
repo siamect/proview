@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_cdrep.h,v 1.22 2006-05-24 15:00:41 claes Exp $
+ * Proview   $Id: wb_cdrep.h,v 1.23 2008-03-19 07:31:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,6 +31,7 @@ class wb_mvrep;
 class wb_orep;
 class wb_orepdbs;
 class wb_merep;
+class wb_attribute;
 
 class wb_cdrep 
 {
@@ -69,6 +70,7 @@ public:
   wb_cdrep* super( pwr_tStatus *sts);
 
   void templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p, pwr_tOid oid);
+  void attrTemplateBody( pwr_tStatus *sts, pwr_eBix bix, void *p, wb_attribute& a);
   void dbCallBack( pwr_tStatus *sts, ldh_eDbCallBack cb, char **methodName,
 		   pwr_sDbCallBack **o);
   wb_orep *menu( pwr_tStatus *sts, void **o);
@@ -85,7 +87,7 @@ public:
 		      void **cnv_rbody, void **cnv_dbody);
 
   void updateTemplateSubClass( wb_adrep *subattr, char *body, pwr_tOid oid,
-			       pwr_tOid toid);
+			       pwr_tOid toid, int aoffs);
   void updateTemplate( pwr_eBix bix, void *b, pwr_tOid oid, pwr_tOid toid);
   pwr_tStatus sts() { return m_sts;}
   ldh_eVolRep vtype() const;
