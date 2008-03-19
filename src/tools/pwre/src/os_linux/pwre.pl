@@ -237,13 +237,13 @@ sub build_all_modules ()
   _module("remote");
   build_all( $flavour);
   merge();
+  _module("profibus");
+  build_all( $flavour);
+  merge();
   _module("bcomp");
   build_all( $flavour);
   merge();
   _module("java");
-  build_all( $flavour);
-  merge();
-  _module("profibus");
   build_all( $flavour);
   merge();
   _module("opc");
