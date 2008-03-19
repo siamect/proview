@@ -102,6 +102,7 @@ Classes
 <include> $pwr_lang/profibus_xtthelp.dat
 <include> $pwr_lang/opc_xtthelp.dat
 <include> $pwr_lang/ssabox_xtthelp.dat
+<include> $pwr_lang/otherio_xtthelp.dat
 <include> $pwr_lang/othermanufacturer_xtthelp.dat
 <include> $pwr_lang/abb_xtthelp.dat
 <include> $pwr_lang/siemens_xtthelp.dat
