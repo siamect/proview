@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.49 2008-03-03 14:38:05 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.50 2008-03-19 07:33:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -4181,7 +4181,7 @@ int Graph::ref_object_info( glow_eCycle cycle, char *name, void **data,
 
 
   if ( !now) {
-    GraphRef gr( name, subid, size, cycle, data);
+    GraphRef gr( aname, subid, size, cycle, data);
     reflist.push_back(gr);
   }
   else {
