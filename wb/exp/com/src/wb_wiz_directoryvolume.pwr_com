@@ -1,6 +1,6 @@
 !** Description: Initial configuration of directory volume
 # 
-#  Proview   $Id: wb_wiz_directoryvolume.pwr_com,v 1.2 2006-03-31 14:29:23 claes Exp $
+#  Proview   $Id: wb_wiz_directoryvolume.pwr_com,v 1.3 2008-03-20 13:25:55 claes Exp $
 #  Copyright (C) 2005 SSAB Oxelösund AB.
 #
 #  This program is free software; you can redistribute it and/or 
@@ -161,6 +161,9 @@ page_1:
   while( vol != "")
     dv_volumes[volcnt] = vol;
     dv_volume_found[volcnt] = 1;
+    if ( extract(1, 4, vol) == "CVol")
+      dv_vol_class[volcnt] = 4;
+    endif
     volcnt++;
     vol = getnextvol( vol, dv_system_name);
   endwhile
