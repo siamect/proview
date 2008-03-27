@@ -71,3 +71,4 @@
 080229 rk  rt        New generalized i/o-routines for reading and writing to card.
 080229 rk  rt        New status-messages added for Modbus-I/O.
 080327 rk  rt        Changed layout on backup-file.
+080327 rk  rt_bck    Backup always on attribute-level instead of object-level.
