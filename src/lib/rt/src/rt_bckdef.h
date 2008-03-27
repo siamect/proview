@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_bckdef.h,v 1.2 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_bckdef.h,v 1.3 2008-03-27 09:59:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -58,7 +58,7 @@
      header area. The routines bck_falloc and bck_ffree are used
      to allocate and free areas in this section.  */
 
-#define	BCK_FILE_VERSION	4
+#define	BCK_FILE_VERSION	5
 
 typedef struct {
 
@@ -98,6 +98,15 @@ typedef struct {
 	pwr_tBoolean	dynamic;	/* Dynamic object */
 	pwr_tString80	dataname;	/* Name of object[.attribute] */
 } BCK_DATAHEAD_STRUCT;
+
+typedef struct {
+	pwr_sAttrRef	attrref;	/* Objid for the object */
+	pwr_tClassId	class;		/* Class of object */
+	pwr_tBoolean	valid;		/* Validity flag */
+	pwr_tBoolean	dynamic;	/* Dynamic object */
+	pwr_tInt16	namesize;	/* Name of attribute [.attribute] */
+	} bck_t_dataheader;
+
 
 #ifdef OS_ELN
 
