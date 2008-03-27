@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_bck.c,v 1.10 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: rt_bck.c,v 1.11 2008-03-27 09:58:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -120,10 +120,16 @@ pdebug ()
 typedef struct {
   BCK_CYCLEHEAD_STRUCT cyclehead;
   struct {
-    BCK_DATAHEAD_STRUCT datahead;
+    bck_t_dataheader datahead;
     char data [1];
   } segment [1];
 } BCK_WRTBLK_STRUCT;
+
+typedef struct {
+	bck_t_dataheader	head;	/* Objid for the object */
+	char	                *name;        /* Class of object */
+} bck_t_datablk;
+
 
 pthread_mutex_t		wrtblkmtx;	/* One mutex for both queues */
 BCK_WRTBLK_STRUCT	*wrtblkque [2];	/* A queue with only one slot */
@@ -844,7 +850,7 @@ bck_file_process (
 struct BCK_LISTENTRY_STRUCT {
   struct BCK_LISTENTRY_STRUCT *next;  /* Next object in list */
   pwr_sAttrRef bckaref;		/* pwr_sAttrRef for this backup object */
-  BCK_DATAHEAD_STRUCT datahead;	/* Data header for this entry */
+  bck_t_datablk datablk;	/* Data header for this entry */
 };
 typedef struct BCK_LISTENTRY_STRUCT BCK_LISTENTRY;
 
@@ -855,100 +861,199 @@ typedef struct {
 
 
 
-/************************************************************************
-*
-* Name: bck_list_insert
-*
-* Type: pwr_tUInt32
-*
-* Type		Parameter	IOGF	Description
-* pwr_sAttrRef	*dataname	I	Name of data to be backed up
-* pwr_sAttrRef	*arp		I	AttrRef of backup object
-* BCK_LISTHEAD	*blhp		I	List of objects for selected cycle
-*
-* Description:
-*	This routine inserts an entry into the backup list.
-*	If it is a dynamic object this function is called recursively to
-*	insert also the backup object into the list.
-*   
-*************************************************************************/
-
-pwr_tStatus
-bck_list_insert (
-  pwr_sAttrRef	       	*dataname,	/* Name of data to be backed up */
+void
+bck_insert_listentry (
+  pwr_tAName	       	objectname,	/* Name of data to be backed up */
+  pwr_tAttrRef          *attrref,       /* Data to be backed up */
   pwr_sAttrRef		*arp,		/* Objid of backup object */
-  BCK_LISTHEAD		*blhp
+  BCK_LISTHEAD		*blhp, 
+  pwr_tBoolean          dynamic
 )
 {
-  pwr_tStatus		sts;
-  pwr_tStatus		sts1;
   BCK_LISTENTRY		*blep;
-  pwr_tBoolean		tgtdynamic = 0;
-  void			*adrs;
-  pwr_sAttrRef		attrref;
+  char                  *attrname;
+
+  /* All info is collected, create a list entry.  */
+  blep = calloc(1, sizeof(*blep));
+
+  if (dynamic) {
+    blep->datablk.head.dynamic = dynamic;
+    gdh_GetObjectClass(attrref->Objid, &blep->datablk.head.class);
+    blep->datablk.name = calloc(1, strlen(objectname) + 1);
+    strcpy(blep->datablk.name, objectname);
+    blep->datablk.head.namesize = strlen(objectname);
+  }else {
+    attrname = strchr(objectname, '.');
+    if (attrname) {
+      blep->datablk.name = calloc(1, strlen(attrname) + 1);
+      strcpy(blep->datablk.name, attrname);
+      blep->datablk.head.namesize = strlen(attrname);
+    }
+  }
+
+  blep->datablk.head.valid = TRUE;
+
+  
+  blep->datablk.head.attrref = *attrref;
+  blep->bckaref = *arp;
+
+  /* Insert list entry first.  */
+
+  blep->next = blhp->first;
+  blhp->first = blep;
+  blhp->cyclehead.length += sizeof(bck_t_dataheader) + attrref->Size + 
+                            blep->datablk.head.namesize + 1;
+  blhp->cyclehead.segments++;
+
+}
+pwr_tStatus
+bck_list_insert (
+  pwr_tAName	       	objectname,	/* Name of data to be backed up */
+  pwr_sAttrRef		*arp,		/* Objid of backup object */
+  BCK_LISTHEAD		*blhp,
+  pwr_tBoolean          first
+)
+{
+
+  pwr_tAName   	attrname;
+  pwr_sAttrRef  attrref;
+  pwr_tStatus   sts;
+  pwr_tTid      tid;
+  gdh_sAttrDef 	*bd;
+  int 		rows, i, j, elements;
+  char		idx[20];
+  pwr_tUInt32   size, offs, elem;
+  pwr_tBoolean  tgtdynamic = 0;
   pwr_tObjid		volobject;
   pwr_tClassId		volclass;
 
-  /* Build attrref, check location.  */
-  attrref = *dataname;
+  sts = gdh_NameToAttrref(pwr_cNObjid, objectname, &attrref);
+  if ( EVEN(sts)) return sts;
 
-  LOCK;
-  sts = gdh_AttrRefToPointer( &attrref, &adrs);
-  UNLOCK;
-  if (ODD(sts)) {
+  if (first) {
     volobject.vid = attrref.Objid.vid;
     volobject.oix = pwr_cNObjectIx;
-    LOCK;
     if (ODD(gdh_GetObjectClass(volobject, &volclass)))
       tgtdynamic = volclass == pwr_eClass_DynamicVolume;
-    UNLOCK;
-    if (tgtdynamic & attrref.Flags.b.Indirect) 
-      sts = GDH__RTDBNULL;
-    else {
-      /* If dynamic, save whole body.  */
+
+    if (tgtdynamic) {
+      if (attrref.Flags.b.Indirect) 
+	return GDH__RTDBNULL;
+
+      attrref.Offset = 0;
+      attrref.Flags.b.Indirect = 0;
+      attrref.Flags.b.Object = 1;
+
+      sts = gdh_GetObjectSize(attrref.Objid, (pwr_tUInt32 *)&attrref.Size);
+      if ( EVEN(sts)) return sts;
+
+      /* Insert list element */
+
+      bck_insert_listentry (objectname,	&attrref, arp, blhp, 1);
       
-      if (tgtdynamic) {
-	attrref.Offset = 0;
-	attrref.Flags.b.Indirect = 0;
-	attrref.Flags.b.Object = 1;
+      return sts;
+    }
+  }
+  
+  sts = gdh_GetAttrRefTid (&attrref, &tid);
+  if ( EVEN(sts)) return sts;
+  
+  if (cdh_tidIsCid(tid)) {
 
-	LOCK;
-	sts = gdh_GetObjectSize(attrref.Objid, (pwr_tUInt32 *)&attrref.Size);
-	UNLOCK;
+    sts = gdh_GetAttributeCharacteristics( objectname, NULL, &size, &offs, &elem);
+    if ( EVEN(sts)) return sts;
+    
+    if (elem > 1) {
+      for (i = 0; i < elem; i++) {
+          strcpy(attrname, objectname);
+	  sprintf(idx, "[%d]", i);
+	  strcat(attrname, idx);
+
+	  /* call again ... */
+          sts = bck_list_insert (attrname, arp, blhp, 0);
       }
+    
+    } else {
 
-      /* All info is collected, create a list entry.  */
-      blep = malloc(sizeof *blep);
-      memset(blep, 0, sizeof *blep);
+      sts = gdh_GetObjectBodyDef( tid, &bd, &rows, attrref.Objid);
+      if ( EVEN(sts)) return sts;
 
-      blep->datahead.dynamic = tgtdynamic;
-      LOCK;
-      gdh_GetObjectClass(attrref.Objid, &blep->datahead.class);
-      UNLOCK;
-      blep->datahead.valid = TRUE;
+      for ( i = 0; i < rows; i++) {
 
-      /* Assume that name for dynamic object is less than 80 char ! */
-      gdh_AttrrefToName(&attrref, blep->datahead.dataname, 
-			sizeof(blep->datahead.dataname), cdh_mNName);
-      blep->datahead.attrref = attrref;
-      blep->bckaref = *arp;
+	if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
+	     bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE)
+	  continue;
 
-      /* Insert list entry first.  */
+	if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY)
+	  elements = bd[i].attr->Param.Info.Elements;
+	else
+	  elements = 1;
 
-      blep->next = blhp->first;
-      blhp->first = blep;
-      blhp->cyclehead.length += sizeof(BCK_DATAHEAD_STRUCT) + attrref.Size;
-      blhp->cyclehead.segments++;
+	if ( bd[i].attr->Param.Info.Flags & PWR_MASK_CLASS) {
+	  if ( elements == 1) {
+	    strcpy(attrname, objectname);
+	    strcat(attrname, ".");
+	    strcat(attrname, bd[i].attrName);
 
-      /* Insert backup object if object to be backed up is dynamic.  */
+	    /* call again ... */
+            sts = bck_list_insert (attrname, arp, blhp, 0);
+	  }
+	  else {
+	    for ( j = 0; j < elements; j++) {
+	      strcpy(attrname, objectname);
+	      strcat(attrname, ".");
+	      strcat(attrname, bd[i].attrName);
+	      sprintf( idx, "[%d]", j);
+	      strcat(attrname, idx);
 
-      if (cdh_ObjidIsNotEqual(attrref.Objid, pwr_cNObjid) && tgtdynamic) {
-	pwr_sAttrRef anull = pwr_cNAttrRef;
+	      /* call again ... */
+              sts = bck_list_insert (attrname, arp, blhp, 0);
+	    }
+	  }
+	}
+	else {
+          if (elements > 1) {
+	    for ( j = 0; j < elements; j++) {
+	      strcpy(attrname, objectname);
+	      strcat(attrname, ".");
+	      strcat(attrname, bd[i].attrName);
+	      sprintf( idx, "[%d]", j);
+	      strcat(attrname, idx);
 
-	sts1 = bck_list_insert( &attrref, &anull, blhp);
+	      /* call again ... */
+              sts = bck_list_insert (attrname, arp, blhp, 0);
+	    }
+	  } else {
+	    strcpy(attrname, objectname);
+	    strcat(attrname, ".");
+	    strcat(attrname, bd[i].attrName);
+
+	    /* call again ... */
+            sts = bck_list_insert (attrname, arp, blhp, 0);
+	  }
+	}
       }
-    } /* Found all object info */
-  } /* Target object is local to this node */
+    }
+  } else {
+  
+    sts = gdh_GetAttributeCharacteristics( objectname, &tid, &size, &offs, &elem);
+    if ( EVEN(sts)) return sts;
+
+    if (elem > 1) {
+      for (i = 0; i < elem; i++) {
+	strcpy(attrname, objectname);
+	sprintf(idx, "[%d]", i);
+	strcat(attrname, idx);
+
+	/* call again ... */
+        sts = bck_list_insert (attrname, arp, blhp, 0);
+      }
+    } else {
+      /* Insert list element */
+      bck_insert_listentry (objectname, &attrref, arp, blhp, 0);
+    }
+  }
+  
   return sts;
 }
 
@@ -975,7 +1080,8 @@ void bck_list_build (
   pwr_sAttrRef aref;
   BCK_LISTHEAD *blhp;
   pwr_sClass_Backup *backup;
-
+  pwr_tAName attrname;
+  
   /* Allocate and init listhead */
 
   blhp = malloc(sizeof *blhp);
@@ -1011,8 +1117,10 @@ void bck_list_build (
 
       /* Is this the correct cycle time? */
 
-      if (backup->Fast == (cycle == 0))
-        backup->Status = bck_list_insert( &backup->DataName, &aref, blhp);
+      if (backup->Fast == (cycle == 0)) {
+        sts = gdh_AttrrefToName( &backup->DataName, attrname, sizeof(attrname), cdh_mName_volumeStrict);  
+        backup->Status = bck_list_insert( attrname, &aref, blhp, 1);
+      }
     } /* Backup object is local */
     LOCK;
     sts = gdh_GetNextAttrRef( pwr_cClass_Backup, &aref, &aref);
@@ -1043,6 +1151,7 @@ void bck_list_free (
   blep = list->first;
   while (blep != NULL) {
     blep2 = blep->next;
+    free(blep->datablk.name);
     free(blep);
     blep = blep2;
   }
@@ -1070,7 +1179,7 @@ void *bck_coll_process (
   BCK_WRTBLK_STRUCT *wrtblk;
   BCK_LISTHEAD *bcklist;
   BCK_LISTENTRY *blep;
-  BCK_DATAHEAD_STRUCT *dhp;
+  bck_t_dataheader *dhp;
   char *p;					/* data pointer */
   pwr_tUInt32 sts;
   pwr_sClass_Backup *bckp;
@@ -1179,14 +1288,19 @@ void *bck_coll_process (
 
       /* Copy data header */
 
-      dhp = (BCK_DATAHEAD_STRUCT *)p;	/* dhp points to data header */
+      dhp = (bck_t_dataheader *)p;	/* dhp points to data header */
       p += sizeof *dhp;		/* p points to data part */
-      *dhp = blep->datahead;
+      *dhp = blep->datablk.head;
+      
+      /* Write name */
+      
+      strcpy(p, blep->datablk.name);
+      p += blep->datablk.head.namesize + 1;
 
       /* Check object existence, set validity flag, move data */
 
       LOCK;
-      sts = gdh_GetObjectInfoAttrref(&blep->datahead.attrref, p, blep->datahead.attrref.Size);
+      sts = gdh_GetObjectInfoAttrref(&blep->datablk.head.attrref, p, blep->datablk.head.attrref.Size);
       UNLOCK;
       dhp->valid = ODD(sts);
       
