@@ -70,3 +70,4 @@
 080226 cs  help      New functions in Help window: next and previous topic. Toolbar added.
 080229 rk  rt        New generalized i/o-routines for reading and writing to card.
 080229 rk  rt        New status-messages added for Modbus-I/O.
+080327 rk  rt        Changed layout on backup-file.
