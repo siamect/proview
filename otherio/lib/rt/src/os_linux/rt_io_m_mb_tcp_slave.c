@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_mb_tcp_slave.c,v 1.1 2008-02-29 08:01:07 claes Exp $
+ * Proview   $Id: rt_io_m_mb_tcp_slave.c,v 1.2 2008-03-27 09:58:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -436,8 +436,6 @@ static pwr_tStatus IoRackInit (
   
   if (sts < 0) {
     op->Status = MB__INITFAIL;
-    /* Slave error should not cause I/O error */ 
-    return IO__SUCCESS;
   } else {
     op->Status = MB__NORMAL;
   }
@@ -599,8 +597,6 @@ static pwr_tStatus IoRackInit (
 
   local->input_size = input_counter + card_input_counter + latent_input_counter;
   local->output_size = output_counter + card_output_counter + latent_output_counter;
-
-  op->Status = MB__NORMAL;
 
   return IO__SUCCESS;
 }
