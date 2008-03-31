@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_bck_load.c,v 1.5 2008-03-27 09:59:57 claes Exp $
+ * Proview   $Id: rt_bck_load.c,v 1.6 2008-03-31 13:47:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -77,7 +77,7 @@ bck_LoadBackup ()
   BCK_FILEHEAD_STRUCT	fh;		/* File header */
   BCK_CYCLEHEAD_STRUCT	ch;
   BCK_DATAHEAD_STRUCT	dh_old;
-  bck_t_dataheader      dh;
+  bck_t_writeheader     dh;
   pwr_tUInt32		c;
   pwr_tUInt32		d;
   char			*strp;
@@ -194,8 +194,8 @@ bck_LoadBackup ()
 	      csts = fread(namep, dh.namesize + 1, 1, f);
 	    } else 
 	      namep = NULL;
-            datap = malloc(dh.attrref.Size);
-	    csts = fread(datap, dh.attrref.Size, 1, f);
+            datap = malloc(dh.size);
+	    csts = fread(datap, dh.size, 1, f);
 	  }
 	  if (csts == 0) {
 	    SET_ERRNO_STS;
@@ -210,20 +210,20 @@ bck_LoadBackup ()
               strp = strchr(namep, '.');	/* always is a full object! */
               if (strp != NULL) *strp = '\0';	/* Just make sure... */
 
-	      sts = gdh_CreateObject(namep, dh.class, dh.attrref.Size,
-		&objid, dh.attrref.Objid, 0, pwr_cNObjid);
+	      sts = gdh_CreateObject(namep, dh.class, dh.size,
+		&objid, dh.objid, 0, pwr_cNObjid);
 
               if (strp != NULL) *strp = '.';
 
 	      if (ODD (sts))
-		sts = gdh_SetObjectInfo(namep, datap, dh.attrref.Size);
+		sts = gdh_SetObjectInfo(namep, datap, dh.size);
 	    } /* Dynamic object */
 	    else {
-	      sts = gdh_ObjidToName (dh.attrref.Objid, objectname, sizeof(objectname),
+	      sts = gdh_ObjidToName (dh.objid, objectname, sizeof(objectname),
 	                             cdh_mNName);
 	      if (ODD(sts)) {
 	        strcat(objectname, namep);
-	        sts = gdh_SetObjectInfo(objectname, datap, dh.attrref.Size);
+	        sts = gdh_SetObjectInfo(objectname, datap, dh.size);
 	      }
 	    }
 	  } /* valid segment */

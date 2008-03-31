@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_bckdef.h,v 1.3 2008-03-27 09:59:57 claes Exp $
+ * Proview   $Id: rt_bckdef.h,v 1.4 2008-03-31 13:47:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -106,6 +106,15 @@ typedef struct {
 	pwr_tBoolean	dynamic;	/* Dynamic object */
 	pwr_tInt16	namesize;	/* Name of attribute [.attribute] */
 	} bck_t_dataheader;
+
+typedef struct {
+        pwr_tObjid      objid;          /* Objid for the object */
+	pwr_tClassId	class;		/* Class of object */
+	pwr_tBoolean	valid;		/* Validity flag */
+	pwr_tBoolean	dynamic;	/* Dynamic object */
+	pwr_tInt16	namesize;	/* Size of name of attribute [.attribute] */
+	pwr_tUInt32     size;           /* Size of data */
+	} bck_t_writeheader;
 
 
 #ifdef OS_ELN

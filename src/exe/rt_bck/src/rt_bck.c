@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_bck.c,v 1.11 2008-03-27 09:58:21 claes Exp $
+ * Proview   $Id: rt_bck.c,v 1.12 2008-03-31 13:47:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -120,7 +120,7 @@ pdebug ()
 typedef struct {
   BCK_CYCLEHEAD_STRUCT cyclehead;
   struct {
-    bck_t_dataheader datahead;
+    bck_t_writeheader datahead;
     char data [1];
   } segment [1];
 } BCK_WRTBLK_STRUCT;
@@ -901,7 +901,7 @@ bck_insert_listentry (
 
   blep->next = blhp->first;
   blhp->first = blep;
-  blhp->cyclehead.length += sizeof(bck_t_dataheader) + attrref->Size + 
+  blhp->cyclehead.length += sizeof(bck_t_writeheader) + attrref->Size + 
                             blep->datablk.head.namesize + 1;
   blhp->cyclehead.segments++;
 
@@ -1179,7 +1179,7 @@ void *bck_coll_process (
   BCK_WRTBLK_STRUCT *wrtblk;
   BCK_LISTHEAD *bcklist;
   BCK_LISTENTRY *blep;
-  bck_t_dataheader *dhp;
+  bck_t_writeheader *dhp;
   char *p;					/* data pointer */
   pwr_tUInt32 sts;
   pwr_sClass_Backup *bckp;
@@ -1288,9 +1288,13 @@ void *bck_coll_process (
 
       /* Copy data header */
 
-      dhp = (bck_t_dataheader *)p;	/* dhp points to data header */
+      dhp = (bck_t_writeheader *)p;	/* dhp points to data header */
       p += sizeof *dhp;		/* p points to data part */
-      *dhp = blep->datablk.head;
+      dhp->objid    = blep->datablk.head.attrref.Objid;
+      dhp->class    = blep->datablk.head.class;
+      dhp->dynamic  = blep->datablk.head.dynamic;
+      dhp->namesize = blep->datablk.head.namesize;
+      dhp->size     = blep->datablk.head.attrref.Size;
       
       /* Write name */
       
@@ -1312,7 +1316,7 @@ void *bck_coll_process (
       } /* Backup object is still there */
       UNLOCK;
 
-      p += dhp->attrref.Size;
+      p += dhp->size;
       blep = blep->next;
     }
 
