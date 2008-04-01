@@ -8,10 +8,10 @@
 #
 
 
-Name: pwr44
+Name: pwr45
 Summary: Proview/R development and runtime environment
-Version: 4.4.4
-Release: 5
+Version: 4.5.0
+Release: 1
 License: GPL
 BuildArch: i386
 Packager: claes.sjofors@proview.se
@@ -42,7 +42,7 @@ echo "$ver"
   echo "<b>Proview V%{version}"
   echo "Version V%{version}-%{release}"
   echo ""
-  echo "Copyright Â© 2004-${d:0:4} SSAB OxelÃ¶sund AB"
+  echo "Copyright © 2004-${d:0:4} SSAB Oxelösund AB"
   echo ""
   echo "This program is free software; you can redistribute it and/or"
   echo "modify it under the terms of the GNU General Public License as" 
@@ -177,28 +177,5 @@ fi
 #%postun
 
 %changelog
-* Fri Nov 23 2007 Claes Sjofors <claes.sjofors@ssabox.com> 4.4.4-5
-  - Proview restart improved. Works with profibus.
-  - Ge: New fonts, Times, NC Schoolbook and Courier.
-  - Proview profibus restart improved.
-  - Statusmonitor to view status of remote nodes implemented.
-  - Runtime monitor to start and stop runtime in development environment implemented.
-  - Env variables allowed in filenames for remotelogg and nmpsbackup.
-  - Problems with national characters in opc_server fixed.
-  - Problems with memory leakage in opc_server fixed.
-  - Subgraphs for ventilation and circuit diagrams added.
-  - Baseobjects for threewayvalves, filters and dampers added.
-  - Ge: Gray backgroundcolor could be undefined.
-  - remote_mq present.
-  - XY_Curve class and Ge dynamic added.
-  - Changed qcom synchronization mechanism.
-  - Function to suppress alarms in basecomponents added.
-  - Classes IpDistribute, IpCollect, Demux, IDemux, GetDpPtr, StoDpPtr,
-    Eurotherm_TC3001, Eurotherm_TC3001Aggr and more added.
-  - Bugfix in gtk operatorwindow, long alarmtext could cause segfault
-  - Bugfix in trend, disabled trend object was handled.
-  - Bugfix in object graph for CompModePID and CompPID.
-  - Bugfix in Eurotherm 3001 profibus slave and module.
-  - Doublebuffering in graphs with window objects could be lost.
-  - Fixed several bugs in rs_remote_tcpip when acting as a server.
-  - Bugfix in rt_neth_acp. Subscriptions were not refreshed after a remote node restarted.
+* Tue Apr 01 2008 Claes Sjofors <claes.sjofors@ssabox.com> 4.5.0-1
+  - Base release.
