@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_cmd_main.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_cmd_main.cpp,v 1.2 2008-04-01 10:35:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -118,10 +118,9 @@ int Cmd::attach_volume_cb( void *ctx,
   {
     if ( cmd_volume_p != 0) {
       // Attach argument volume
-      ldh_VolumeNameToId( cmd->wbctx, cmd_volume_p, &volid);
-      if ( EVEN(sts)) return sts;
+      sts = ldh_VolumeNameToId( cmd->wbctx, cmd_volume_p, &volid);
     }
-    else {
+    if ( cmd_volume_p == 0 || EVEN(sts)) {
       // Attach first rootvolume, or if no rootvolume exist some other volume
       sts = ldh_GetVolumeList( cmd->wbctx, &vid);
       while ( ODD(sts)) {
