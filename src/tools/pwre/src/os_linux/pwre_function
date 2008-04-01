@@ -145,7 +145,7 @@ set_env()
 	  export pwre_conf_mq=0
         fi
 # Mysql
-	if [ -e /usr/lib/libmysqlclient.so ]; then
+	if [ -e /usr/lib/libmysqlclient.so ] || [ -e /usr/lib/mysql/libmysqlclient.so ]; then
           export pwre_conf_mysql=1
 	else
 	  export pwre_conf_mysql=0
