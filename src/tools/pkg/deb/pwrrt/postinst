@@ -256,7 +256,6 @@ if [ -e /etc/apache2/apache2.conf ]; then
 EOF
   fi
 
-if [ -e /etc/apache2/apache2.conf ]; then
   if ! egrep -q "Alias[ ]+/pwrp_log/" /etc/apache2/apache2.conf; then
     cat >> /etc/apache2/apache2.conf <<-EOF
 
