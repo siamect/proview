@@ -78,3 +78,4 @@
 080227 cs  xtt       Problems with initial scrollbar settings fixed.
 080128 cs  ge        Problems with bad performance when scrolling from navigator window fixed.
 080305 cs  ge        Min and MaxValue in ValueInput for DeltaTimes added.
+080401 cs  xtt       Bugfix in Jop, java process stopped at termination of xtt.
