@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_gtk.cpp,v 1.3 2008-01-24 09:39:31 claes Exp $
+ * Proview   $Id: xtt_xnav_gtk.cpp,v 1.4 2008-04-01 14:19:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -127,10 +127,8 @@ XNavGtk::~XNavGtk()
   collect_brow->free_pixmaps();
   delete collect_brow;
   delete brow;
-#if 0
   if ( op)
     delete op;
-#endif
   gtk_widget_destroy( form_widget);
 }
 

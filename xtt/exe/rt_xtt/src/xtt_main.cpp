@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_main.cpp,v 1.5 2007-11-30 08:18:27 claes Exp $
+ * Proview   $Id: xtt_main.cpp,v 1.6 2008-04-01 14:19:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -194,6 +194,7 @@ void Xtt::qcom_events( void *data)
 	swap = 0;
 	xtt->xnav->swap(1);
       } else if (new_event.b.terminate) {
+	delete xtt->xnav;
 	exit(0);
       }
     }

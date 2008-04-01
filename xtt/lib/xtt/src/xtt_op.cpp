@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_op.cpp,v 1.8 2007-01-04 08:22:47 claes Exp $
+ * Proview   $Id: xtt_op.cpp,v 1.9 2008-04-01 14:19:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -55,6 +55,8 @@ Op::Op( void *op_parent_ctx,
 //
 Op::~Op()
 {
+  if ( jop)
+    jop->close();
 }
 
 int Op::jop_command( char *command) 
