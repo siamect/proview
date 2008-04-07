@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: wb_ldh_msg.msg,v 1.16 2008-02-05 07:41:56 claes Exp $
+!  Proview   $Id: wb_ldh_msg.msg,v 1.17 2008-04-07 14:58:30 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -130,4 +130,4 @@ newfile		<New file>						/info
 confirm		<Confirm required>					/info
 db		<Database error>					/error
 noserver	<Server not configured>					/error
-
+lockstolen	<Database lock is stolen>				/error

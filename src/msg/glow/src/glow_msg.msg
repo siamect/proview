@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: glow_msg.msg,v 1.4 2005-09-01 14:58:00 claes Exp $
+!  Proview   $Id: glow_msg.msg,v 1.5 2008-04-07 14:58:30 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -17,7 +17,7 @@
 !  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 !
 
-        .facility       FLOW,313 /prefix = GLOW__ ! 
+        .facility       GLOW,313 /prefix = GLOW__ ! 
 
 success 	<successful completion>				/succ
 noelem		<No such element> 				/error

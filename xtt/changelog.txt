@@ -80,3 +80,5 @@
 080305 cs  ge        Min and MaxValue in ValueInput for DeltaTimes added.
 080320 cs  ge        Bugfix in position and size of option menu near lower window border.
 080401 cs  xtt       Bugfix in Jop, java process stopped at termination of xtt.
+080403 cs  flow      Bugrix for unbalanced paranthesis in pdf texts.
+

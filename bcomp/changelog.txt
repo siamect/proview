@@ -14,3 +14,4 @@
 080115 cs  bcomp      Bugfix in BaseMotorAggr. Backup on runningtime object didn't work.
 080222 cs  bcomp      CompModePid: Input limit for setvalue in object graph fetched from MinSet and MaxSet.
 080317 cs  bcomp      General Frequencyconverter classes for Profibus PPO5 and PPO3 protocol, with motor, fan and pump aggregates.
+080404 cs  bcomp      Connections replaced with lines in graphs to enable usage in subwindows.
