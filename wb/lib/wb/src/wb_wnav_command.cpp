@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.49 2008-02-04 13:34:49 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.50 2008-04-07 14:52:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -190,7 +190,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"PRINT",
 			&wnav_print_func,
 			{ "/ALL", "/NODOCUMENT", "/NOOVERVIEW", 
-			"/HIERARCHY", "/PLCPGM", "/FROM_PLCPGM",
+			"/HIERARCHY", "/PLCPGM", "/FROM_PLCPGM", "/PDF",
 			""}
 		},
 		{
@@ -2217,8 +2217,10 @@ static int	wnav_print_func(	void		*client_data,
   int		document;
   int		overview;
   int		all;
+  int		pdf;
 
   all = ODD( dcli_get_qualifier( "/ALL", 0, 0));
+  pdf = ODD( dcli_get_qualifier( "/PDF", 0, 0));
   document = EVEN( dcli_get_qualifier( "/NODOCUMENT", 0, 0));
   overview = EVEN( dcli_get_qualifier( "/NOOVERVIEW", 0, 0));
 
@@ -2231,14 +2233,14 @@ static int	wnav_print_func(	void		*client_data,
       utl->create_mainwindow( 0, NULL);
 
     sts = utl->print_plc( wnav->ldhses, ldh_SessionToWB(wnav->ldhses), 
-			  plcpgm_str, document, overview);
+			  plcpgm_str, document, overview, pdf);
     delete utl;
     if ( EVEN(sts)) {
       wnav->message(' ', wnav_get_message(sts));
       return sts;
     }
   }
-  else if ( ODD( dcli_get_qualifier( "/HIERARCHY", hier_str, sizeof(hier_str))))
+  else if ( all || ODD( dcli_get_qualifier( "/HIERARCHY", hier_str, sizeof(hier_str))))
   {
     if ( ODD( dcli_get_qualifier( "/FROM_PLCPGM", from_str, sizeof(from_str))))
       fromstr_ptr = from_str;
@@ -2251,7 +2253,7 @@ static int	wnav_print_func(	void		*client_data,
 
     sts = utl->print_plc_hier( wnav->ldhses, 
 	ldh_SessionToWB(wnav->ldhses), hier_str, fromstr_ptr, document, 
-	overview, all);
+	overview, all, pdf);
     delete utl;
     if ( EVEN(sts))
     {
@@ -2293,7 +2295,7 @@ static int	wnav_print_func(	void		*client_data,
 	  utl->create_mainwindow( 0, NULL);
 
         sts = utl->print_plc( wnav->ldhses,
-		ldh_SessionToWB(wnav->ldhses), plcpgm_str, document, overview);
+		ldh_SessionToWB(wnav->ldhses), plcpgm_str, document, overview, 0);
 	delete utl;
         if ( EVEN(sts)) {
           wnav->message(' ', wnav_get_message(sts));
