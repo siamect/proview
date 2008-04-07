@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_pdf.cpp,v 1.4 2007-10-01 14:38:11 claes Exp $
+ * Proview   $Id: flow_pdf.cpp,v 1.5 2008-04-07 14:55:14 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -126,10 +126,25 @@ int FlowPdf::text( double x, double y, char *text, int len, flow_eDrawType type,
 		   double size)
 {
   char t[500];
-  int tlen = len < int(sizeof(t)-1) ? len : sizeof(t)-1;
 
-  strncpy( t, text, tlen);
-  t[tlen] = 0;
+  // Replace ( with \( and ) with \)
+  char *t1 = text;
+  char *t2 = t;
+  for ( int i = 0; *t1; t1++, i++) {
+    if ( *t1 == ')' || *t1 == '(') {
+      *t2 = '\\';
+      t2++;
+    }
+    *t2 = *t1;
+    t2++;
+
+    if ( t2 - t >= (int) sizeof(t))
+      break;
+    if ( i >= len)
+      break;
+  }
+  *t2 = 0;
+
   int bold = (type == flow_eDrawType_TextHelveticaBold);
 
   topdf->draw_text( x - offset_x , offset_y - y, t, bold, size);
