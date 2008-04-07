@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dblock.h,v 1.3 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_dblock.h,v 1.4 2008-04-07 14:53:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,6 +28,7 @@ class wb_lockfile
   wb_lockfile( char *name) : removed(false)
     { strcpy( fname, name); }
   pwr_tFileName fname;
+  pwr_tTime date;
   bool removed;
 };
 
@@ -37,12 +38,14 @@ class wb_dblock
   static vector<wb_lockfile> m_lockfiles;
 
   static char *lockname( char *name);
+  static char *lockvname( char *fname);
 
  public:
   static bool is_locked( char *name, char *user = 0);
   static void dblock( char *name);
   static void dbunlock( char *name);
   static void dbunlock_all();
+  static bool check( char *name);
 };
 
 #endif

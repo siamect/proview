@@ -98,3 +98,5 @@
 080226 cs  wb        Popupmenu in palette wasn't implemented in gtk version.
 080304 cs  wb        Plc with GetXp or StoXp references to objects in other volumes caused compilation errors.
 080318 cs  wb        Bugfix in cast. Internal references wasn't updated correctly.
+080403 cs  wb        New command 'print/pdf/all' to print all plcpgm's to pdf-files. Also a html file with links to the files is written.
+080407 cs  wb        Stolen database lock detected and save inhibited.

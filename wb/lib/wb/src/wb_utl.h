@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.h,v 1.10 2007-10-15 12:15:04 claes Exp $
+ * Proview   $Id: wb_utl.h,v 1.11 2008-04-07 14:53:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -16,6 +16,8 @@
  * along with the program, if not, write to the Free Software 
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  **/
+
+#include <stdio.h>
 
 #ifndef wb_utl_h
 #define wb_utl_h
@@ -44,10 +46,10 @@ class wb_utl {
 				 int map_window, ldh_eAccess access, 
 				 foe_eFuncAccess function_access) {return 0;}
   int print_plc( ldh_tSesContext ldhses, ldh_tWBContext ldhwb,
-		 char *plcstring, int document, int overview);
+		 char *plcstring, int document, int overview, int pdf);
   int print_plc_hier( ldh_tSesContext ldhses, ldh_tWBContext ldhwb,
 		      char *hiername, char *fromname, int document,
-		      int overview, int all);
+		      int overview, int all, int pdf);
   int redraw_plc( ldh_tSesContext ldhses, ldh_tWBContext ldhwb,
 		  char *plcstring);
   int redraw_plc_hier( ldh_tSesContext ldhses,
@@ -55,7 +57,7 @@ class wb_utl {
 		       char *fromname, int all);
   int print_document( pwr_tOid Objdid, ldh_tSesContext ldhses,
 		      ldh_tWBContext ldhwb, unsigned long document,
-		      unsigned long overview);
+		      unsigned long overview, int pdf, FILE *plclink);
   int redraw_windows( pwr_tObjid Objdid, ldh_tSesContext ldhses,
 			      ldh_tWBContext ldhwb);
 };

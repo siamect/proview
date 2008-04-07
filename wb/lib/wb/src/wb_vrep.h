@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrep.h,v 1.29 2007-12-21 13:18:01 claes Exp $
+ * Proview   $Id: wb_vrep.h,v 1.30 2008-04-07 14:53:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -63,6 +63,7 @@ public:
   virtual wb_vrep *ref() = 0;
 
   virtual ldh_eVolRep type() const = 0;
+  virtual ldh_eVolDb dbtype() { return ldh_eVolDb__;}
   virtual wb_erep *erep() = 0;
 
   virtual wb_vrep *next() = 0;

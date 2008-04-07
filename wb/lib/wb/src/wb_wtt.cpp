@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.cpp,v 1.37 2008-02-27 06:35:43 claes Exp $
+ * Proview   $Id: wb_wtt.cpp,v 1.38 2008-04-07 14:53:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -410,6 +410,11 @@ void Wtt::save_cb( void *ctx)
   sts = ldh_SaveSession( wtt->ldhses);
   if ( EVEN(sts)) {
     wtt->message( 'E', wnav_get_message( sts));
+
+    if ( !wtt->focused_wnav)
+      wtt->set_focus_default();
+
+    wtt->focused_wnav->wow->DisplayError( "Save Error", wnav_get_message(sts));
     return;
   }
 
@@ -549,6 +554,15 @@ void Wtt::close_ok( Wtt *wtt)
 
   // Save and close ldh session
   sts = wtt->set_noedit( wtt_eNoEdit_Save, wtt_eNoEdit_DetachVolume);
+  if ( EVEN(sts)) {
+    wtt->message( 'E', wnav_get_message( sts));
+
+    if ( !wtt->focused_wnav)
+      wtt->set_focus_default();
+
+    wtt->focused_wnav->wow->DisplayError( "Save Error", wnav_get_message(sts));
+    return;
+  }
   delete wtt;
 }
 
@@ -665,14 +679,14 @@ int Wtt::set_noedit( wtt_eNoEditMode save, wtt_eNoEditVolMode detach)
       sts = ldh_RevertSession( ldhses);
     if ( EVEN(sts)) {
       message( 'E', wnav_get_message( sts));
-      return 0;
+      return sts;
     }
   }
   if ( detach == wtt_eNoEdit_KeepVolume) {
     sts = ldh_CloseSession( ldhses);
     if ( EVEN(sts)) {
       message( 'E', wnav_get_message( sts));
-      return 0;
+      return sts;
     }
 
     sts = ldh_OpenSession (

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.cpp,v 1.8 2008-02-04 13:34:49 claes Exp $
+ * Proview   $Id: wb_utl.cpp,v 1.9 2008-04-07 14:53:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -605,6 +605,22 @@ static int	crr_crossref(
 );
 
 
+static bool is_focodeobject( ldh_tSesContext ldhses, 
+			     pwr_tCid cid)
+{
+  pwr_sGraphPlcNode 	*graphbody;
+  pwr_tCid		bodyclass;
+  pwr_tStatus		sts;
+  int			size;
+
+  sts = ldh_GetClassBody( ldhses, cid, "GraphPlcNode", &bodyclass, 
+			  (char **)&graphbody, &size);
+  if ( EVEN(sts)) return false;
+
+  if ( graphbody->compmethod == 58)
+    return true;
+  return false;
+}
 
 
 /*************************************************************************
@@ -629,7 +645,8 @@ int wb_utl::print_plc(
   ldh_tWBContext  ldhwb,
   char		  *plcstring,
   int		  document,
-  int		  overview
+  int		  overview,
+  int		  pdf
 )
 {
   int		sts;
@@ -648,7 +665,7 @@ int wb_utl::print_plc(
   /* Print the plc */
   printf( "Plcpgm  %s\n", plcstring);
 
-  sts = print_document( plc, ldhses, ldhwb, document, overview);
+  sts = print_document( plc, ldhses, ldhwb, document, overview, pdf, 0);
   return sts;
 }
 
@@ -675,7 +692,8 @@ int wb_utl::print_plc_hier (
   char		*fromname,
   int		document,
   int		overview,
-  int		all
+  int		all,
+  int		pdf
 )
 {
   int		sts, size;
@@ -689,6 +707,7 @@ int wb_utl::print_plc_hier (
   pwr_tObjid    fromobjdid;
   int		from;
   int		from_found;
+  FILE 		*plclink;
 
   /* Get class */
   class_vect[0] = pwr_cClass_plc;
@@ -713,6 +732,32 @@ int wb_utl::print_plc_hier (
   }
   else
     from = 0;
+
+  if ( pdf && all && !from) {
+    // Open a html file with links to pdf files
+    pwr_tFileName fname = "$pwrp_tmp/plc.html";
+    ldh_sSessInfo info;
+    pwr_tObjName vname;
+
+    sts = ldh_GetSessionInfo( ldhses, &info);
+    if ( EVEN(sts)) return sts;
+
+    sts = ldh_VolumeIdToName( ldh_SessionToWB(ldhses), info.Vid, vname, sizeof(vname), &size);
+    if ( EVEN(sts)) return sts;
+
+    sprintf( fname, "$pwrp_doc/plcdoc_%s.html", cdh_Low( vname)); 
+    dcli_translate_filename( fname, fname);
+
+    plclink = fopen( fname, "w");
+    fprintf( plclink, "<html>\n  <head>\n    <title>Plc code</title>\n  <style type=\"text/css\">\n\
+h2 {font-family: sans-serif; font-size: 16pt; font-weight: bold; color: #5263aa; text-align: left; text-decoration: none;}\n\
+a:link {font-family: sans-serif; font-size: 11pt; font-weight: bold; color: #5263aa; text-align: left; text-decoration: none;}\n\
+a:visited {font-family: sans-serif; font-size: 11pt; font-weight: bold; color: #5263aa; text-align: left; text-decoration: none;}\n\
+a:hover {font-family: sans-serif; font-size: 11pt; font-weight: bold; color: #3561ff; text-align: left; text-decoration: none;}\n\
+  </style>\n  </head>\n  <body>\n");
+
+    fprintf( plclink, "  <h2>Plc Documentation Volume %s</h2>\n", vname); 
+  }
 
   plcpgmcount = 0;
   plcpgmlist = 0;
@@ -743,13 +788,18 @@ int wb_utl::print_plc_hier (
     printf( "Plcpgm  %s\n", plcname);
 
     sts = print_document( list_ptr->objid, 
-			  ldhses, ldhwb, document, overview);
+			  ldhses, ldhwb, document, overview, pdf, plclink);
     if ( EVEN(sts)) return sts;
 	  
     list_ptr = list_ptr->next;
   }
   utl_objidlist_free( plcpgmlist);
   
+  if ( plclink) {
+    fprintf( plclink, "  </body>\n</html>\n");
+    fclose( plclink);
+  }
+
   return FOE__SUCCESS;
 }
 
@@ -776,7 +826,9 @@ int wb_utl::print_document (
   ldh_tSesContext ldhses,
   ldh_tWBContext  ldhwb,
   unsigned long	document,
-  unsigned long	overview
+  unsigned long	overview,
+  int pdf,
+  FILE *plclink
 )
 {
   int		sts, size;
@@ -817,21 +869,40 @@ int wb_utl::print_document (
 		     &foe, 0, ldh_eAccess_ReadOnly);
   if ( EVEN(sts)) return sts;
 
-  if ( document) {
-    /* Print the documents */
-    sts = foe->print_document();
+  if ( pdf) {
+    sts = foe->print_pdf_overview();
     if ( EVEN(sts)) return sts;
-  }
 
-  if ( overview) {
-    sts = foe->print_overview();
-    if ( EVEN(sts)) return sts;
+    if ( plclink) {
+      pwr_tOName name;
+      pwr_tOid w;
+
+      sts = ldh_ObjidToName( ldhses, plc, ldh_eName_Hierarchy,
+			     name, sizeof( name), &size);
+      if ( ODD(sts))
+	sts = ldh_GetChild( ldhses, plc, &w);
+      if ( ODD(sts))
+	fprintf( plclink, "<a target=\"_blank\" href=\"pssdoc%s.pdf\">%s</a><br>\n", vldh_IdToStr( 0, w), name);
+    }
+  }
+  else {
+    if ( document) {
+      /* Print the documents */
+      sts = foe->print_document();
+      if ( EVEN(sts)) return sts;
+    }
+
+    if ( overview) {
+      sts = foe->print_overview();
+      if ( EVEN(sts)) return sts;
+    }
   }
 
   windlist_ptr = windlist;
   windlist_ptr++;
 
   for ( j = 1; j < (int) wind_count; j++) {
+
     /* Get parent in ldh and find him in vldh */
     sts = ldh_GetParent( ldhses, *windlist_ptr, &nodeobjdid);
     if ( EVEN(sts)) return sts;
@@ -839,6 +910,27 @@ int wb_utl::print_document (
     /* Get the window of the parent */
     sts = ldh_GetParent( ldhses, nodeobjdid, &parwindobjdid);
     if ( EVEN(sts)) return sts;
+
+    /* Don't print FoCode objects */
+    pwr_tCid cid;
+    pwr_tOid p = nodeobjdid;
+    bool next = false;
+    sts = ldh_GetObjectClass( ldhses, p, &cid);
+    while ( cid != pwr_cClass_plc) {
+      if ( is_focodeobject( ldhses, cid)) {
+	next = true;
+	break;
+      }
+      sts = ldh_GetParent( ldhses, p, &p);
+      if ( EVEN(sts)) break;
+
+      sts = ldh_GetObjectClass( ldhses, p, &cid);
+      if ( EVEN(sts)) break;
+    }
+    if ( next) {
+      windlist_ptr++;
+      continue;
+    }
 
     sts = vldh_get_wind_objdid( parwindobjdid, &parentwind);
     if ( EVEN(sts)) return sts;
@@ -865,14 +957,47 @@ int wb_utl::print_document (
 		ldh_eAccess_ReadOnly, foe_eFuncAccess_Edit);
 
     /* Print the documents */
-    if ( document) {	
-      sts = foe->print_document();
+    if ( pdf) {
+      sts = foe->print_pdf_overview();
       if ( EVEN(sts)) return sts;
-    }
+      
+      if ( plclink) {
+	pwr_tOName name;
+	pwr_tOid w, p;
+	int indent;
+	pwr_tCid cid = 0;
 
-    if ( overview) {
-      sts = foe->print_overview();
-      if ( EVEN(sts)) return sts;
+	p = node->ln.oid;
+	for ( indent = 0; cid != pwr_cClass_plc; indent++) {
+	  sts = ldh_GetParent( ldhses, p, &p);
+	  if ( EVEN(sts)) break;
+
+	  sts = ldh_GetObjectClass( ldhses, p, &cid);
+	  if ( EVEN(sts)) break;
+	}
+	indent = indent/2;
+
+	sts = ldh_ObjidToName( ldhses, node->ln.oid, ldh_eName_Object,
+			     name, sizeof( name), &size);
+	if ( ODD(sts))
+	  sts = ldh_GetChild( ldhses, node->ln.oid, &w);
+	if ( ODD(sts)) {
+	  for ( int i = 0; i < indent; i++)
+	    fprintf( plclink, "&nbsp;&nbsp;&nbsp;");
+	  fprintf( plclink, "&nbsp;<a target=\"_blank\" href=\"pssdoc%s.pdf\">%s</a><br>\n", vldh_IdToStr( 0, w), name);
+	}
+      }
+    }
+    else {
+      if ( document) {	
+	sts = foe->print_document();
+	if ( EVEN(sts)) return sts;
+      }
+
+      if ( overview) {
+	sts = foe->print_overview();
+	if ( EVEN(sts)) return sts;
+      }
     }
 
     windlist_ptr++;
@@ -882,7 +1007,7 @@ int wb_utl::print_document (
   for ( j = 0; j < (int)wind_count; j++) {
     windlist_ptr--;
     sts = vldh_get_wind_objdid( *windlist_ptr, &parentwind);
-    if ( EVEN(sts)) return sts;
+    if ( EVEN(sts)) continue;
 
     ((WFoe *)parentwind->hw.foe)->quit();
   }

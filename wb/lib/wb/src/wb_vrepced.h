@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepced.h,v 1.3 2007-12-21 13:18:01 claes Exp $
+ * Proview   $Id: wb_vrepced.h,v 1.4 2008-04-07 14:53:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,6 +53,7 @@ public:
   ~wb_vrepced();
 
   virtual ldh_eVolRep type() const { return ldh_eVolRep_Ced;}
+  virtual ldh_eVolDb dbtype() { return m_vrep->dbtype();}
   pwr_tVid vid() const { return m_vid;}
   pwr_tCid cid() const { return m_cid;}
 

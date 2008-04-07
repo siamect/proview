@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_session.cpp,v 1.26 2008-03-19 07:31:09 claes Exp $
+ * Proview   $Id: wb_session.cpp,v 1.27 2008-04-07 14:53:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1010,6 +1010,12 @@ bool wb_session::disableAttribute( pwr_sAttrRef *arp, pwr_tDisableAttr disable)
 
 bool wb_session::commit()
 {
+  if ( !m_vrep->erep()->check_lock( (char *)m_vrep->name(), m_vrep->dbtype())) {
+    m_sts = LDH__LOCKSTOLEN;
+    return false;
+  }
+
+
   // Store time in volume object
   pwr_tOid oid = pwr_cNOid;
   pwr_tTime time;

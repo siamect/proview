@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.h,v 1.44 2008-02-04 13:34:49 claes Exp $
+ * Proview   $Id: wb_ldh.h,v 1.45 2008-04-07 14:53:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -101,6 +101,12 @@ typedef enum {
   ldh_eVolRep_Dbms,
   ldh_eVolRep_Ced
 } ldh_eVolRep;
+
+typedef enum {
+  ldh_eVolDb__ = 0,
+  ldh_eVolDb_Db,
+  ldh_eVolDb_Dbms
+} ldh_eVolDb;
 
 typedef enum {
   ldh_eAccess__ = 0,

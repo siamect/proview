@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.cpp,v 1.7 2007-11-22 08:50:55 claes Exp $
+ * Proview   $Id: wb_gre.cpp,v 1.8 2008-04-07 14:53:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2196,7 +2196,7 @@ int WGre::print_pdf_rectangle( float ll_x, float ll_y, float ur_x, float ur_y,
     cdh_ToLower( filename, filename);
   }
   else {
-    sprintf( filename, "$pwrp_tmp/pssdoc%s.pdf", file_id);
+    sprintf( filename, "$pwrp_doc/pssdoc%s.pdf", file_id);
   }
   dcli_translate_filename( filename, filename);
   printf( "Export pdf to %s\n", filename);

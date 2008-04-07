@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe.cpp,v 1.7 2007-12-21 13:18:01 claes Exp $
+ * Proview   $Id: wb_foe.cpp,v 1.8 2008-04-07 14:53:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -131,9 +131,12 @@ void WFoe::activate_save()
     message( "Window saved");
   else if ( sts == VLDH__PLCNOTSAVED )
     msgbox( "UNABLE TO SAVE \nSave the plcprogram in the hierarchy editor first.");
-  else if (EVEN(sts)) 
-    message( "ERROR   COULDN'T SAVE WINDOW");
+  else if (EVEN(sts)) {
+    char msg[256];
 
+    msg_GetMsg( sts, msg, sizeof(msg));
+    msgbox( msg);
+  }
 }
 
 //	Callback from the menu.
@@ -1239,8 +1242,11 @@ void WFoe::exit_save( WFoe *foe)
     foe->msgbox( "Save the plcprogram in the hierarchy editor first");
     return;
   }
-  if (EVEN(sts)) { 
-    foe->message( "ERROR   COULDN'T SAVE WINDOW");
+  else if (EVEN(sts)) {
+    char msg[256];
+
+    msg_GetMsg( sts, msg, sizeof(msg));
+    foe->msgbox( msg);
     return;
   }
   foe->foe_exit();
@@ -3604,8 +3610,11 @@ void WFoe::edit_exit_save( WFoe *foe)
     foe->enable_ldh_cb();
     return;
   }
-  if (EVEN(sts)) { 
-    foe->message( "ERROR   COULDN'T SAVE WINDOW");
+  else if (EVEN(sts)) {
+    char msg[256];
+
+    msg_GetMsg( sts, msg, sizeof(msg));
+    foe->msgbox( msg);
     foe->enable_ldh_cb();
     return;
   }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_erep.cpp,v 1.55 2008-02-05 14:53:12 claes Exp $
+ * Proview   $Id: wb_erep.cpp,v 1.56 2008-04-07 14:53:06 claes Exp $
  * Copyright (C) 2005 SSAB OxelÃ¶sund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1186,3 +1186,21 @@ void wb_erep::resetRefMerep()
     vrepref->setMerep( m_merep);
 }
 
+bool wb_erep::check_lock( char *name, ldh_eVolDb type)
+{
+  char vname[200];
+
+  sprintf( vname, "$pwrp_db/%s", cdh_Low(name));
+  switch ( type) {
+  case ldh_eVolDb_Db:
+    strcat( vname, ".db");
+    break;
+  case ldh_eVolDb_Dbms:
+    strcat( vname, ".dbms");
+    break;
+  default:
+    return true;
+  }
+  dcli_translate_filename( vname, vname);
+  return wb_dblock::check(vname);
+}
