@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.cpp,v 1.29 2008-01-24 09:28:01 claes Exp $
+ * Proview   $Id: ge.cpp,v 1.30 2008-04-07 14:57:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -216,7 +216,10 @@ void Ge::save_graph( Ge *gectx, char *name)
       strcat( filename, ".pwg");
 
     sts = gectx->graph->save( filename);
-    if ( EVEN(sts)) return;
+    if ( EVEN(sts)) {
+      gectx->message( sts);
+      return;
+    }
     gectx->message( 'I', "Graph saved");
 
     gectx->set_title();
@@ -238,13 +241,19 @@ void Ge::save_graph( Ge *gectx, char *name)
     if ( ! strrchr( filename, '.'))
       strcat( filename, ".pwsg");
     sts = gectx->graph->save_subgraph( filename);
-    if ( EVEN(sts)) return;
+    if ( EVEN(sts)) {
+      gectx->message( sts);
+      return;
+    }
 
     cdh_ToLower( filename, name);
     if ( ! strrchr( filename, '.'))
       strcat( filename, ".pwg");
     sts = gectx->graph->save( filename);
-    if ( EVEN(sts)) return;
+    if ( EVEN(sts)) {
+      gectx->message( sts);
+      return;
+    }
 
     // Store this to enable previous page later
     gectx->graph->get_next_subgraph( next);
@@ -302,7 +311,10 @@ void Ge::save_graph_and_close( Ge *gectx, char *name)
       strcat( filename, ".pwg");
 
     sts = gectx->graph->save( filename);
-    if ( EVEN(sts)) return;
+    if ( EVEN(sts)) {
+      gectx->message( sts);
+      return;
+    }
     gectx->message( 'I', "Graph saved");
   }
   else
@@ -310,6 +322,7 @@ void Ge::save_graph_and_close( Ge *gectx, char *name)
     char filename[80];
     char graphname[80];
     char *s;
+    int sts;
 
     cdh_ToLower( graphname, name);
     if ( (s = strrchr( graphname, '.')))
@@ -320,12 +333,19 @@ void Ge::save_graph_and_close( Ge *gectx, char *name)
     if ( ! strrchr( filename, '.'))
       strcat( filename, ".pwsg");
     sts = gectx->graph->save_subgraph( filename);
-    if ( EVEN(sts)) return;
+    if ( EVEN(sts)) {
+      gectx->message( sts);
+      return;
+    }
 
     cdh_ToLower( filename, name);
     if ( ! strrchr( filename, '.'))
       strcat( filename, ".pwg");
-    gectx->graph->save( filename);
+    sts = gectx->graph->save( filename);
+    if ( EVEN(sts)) {
+      gectx->message( sts);
+      return;
+    }
     gectx->message( 'I', "SubGraph saved");
   }
 

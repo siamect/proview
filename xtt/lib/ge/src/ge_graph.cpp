@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.50 2008-03-19 07:33:02 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.51 2008-04-07 14:57:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -414,6 +414,7 @@ int Graph::save( char *filename)
 {
   pwr_tFileName fname;
   int grow_version, graph_version;
+  int sts;
 
   grow_GetVersion( grow->ctx, &grow_version, &graph_version);
   if ( graph_version < 4000) {
@@ -423,7 +424,9 @@ int Graph::save( char *filename)
   }
 
   get_filename( filename, fname);
-  grow_Save( grow->ctx, fname);
+  sts = grow_Save( grow->ctx, fname);
+  if ( EVEN(sts))
+    return sts;
   grow_SetModified( grow->ctx, 0);
 
   return 1;
@@ -436,6 +439,7 @@ int Graph::save_subgraph( char *filename)
 {
   pwr_tFileName fname;
   int grow_version, graph_version;
+  int sts;
 
   grow_GetVersion( grow->ctx, &grow_version, &graph_version);
   if ( graph_version < 4000) {
@@ -445,8 +449,8 @@ int Graph::save_subgraph( char *filename)
   }
 
   get_filename( filename, fname);
-  grow_SaveSubGraph( grow->ctx, fname);
-  return 1;
+  sts = grow_SaveSubGraph( grow->ctx, fname);
+  return sts;
 }
 
 //
