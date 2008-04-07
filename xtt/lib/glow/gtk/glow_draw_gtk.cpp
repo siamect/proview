@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_gtk.cpp,v 1.11 2008-02-05 14:59:43 claes Exp $
+ * Proview   $Id: glow_draw_gtk.cpp,v 1.12 2008-04-07 14:56:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1557,6 +1557,9 @@ int GlowDrawGtk::text( GlowWind *wind, int x, int y, char *text, int len,
   if ( ctx->nodraw) return 1;
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
 
+  if ( font_idx >= glow_eFont__ - 1)
+    font_idx = glow_eFont_Helvetica;
+
   if ( w->clip_on)
     set_clip( w, get_gc( this, gc_type, idx));
 
@@ -1644,6 +1647,9 @@ int GlowDrawGtk::text_erase( GlowWind *wind, int x, int y, char *text, int len,
 {
   if ( ctx->nodraw) return 1;
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
+
+  if ( font_idx >= glow_eFont__ - 1)
+    font_idx = glow_eFont_Helvetica;
 
   if ( gc_type == glow_eDrawType_TextHelvetica)
     gc_type = glow_eDrawType_TextHelveticaErase;
@@ -1900,6 +1906,9 @@ int GlowDrawGtk::get_text_extent( char *text, int len,
 				  int *width, int *height, int *descent)
 {
   int	text_width, text_ascent, text_descent, text_lbearing, text_rbearing;
+
+  if ( font_idx >= glow_eFont__ - 1)
+    font_idx = glow_eFont_Helvetica;
 
   int font_type = get_font_type( gc_type);
   load_font( font_idx, font_type, idx);
@@ -2529,7 +2538,7 @@ int GlowDrawGtk::print( char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.11 2008-02-05 14:59:43 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.12 2008-04-07 14:56:21 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else
