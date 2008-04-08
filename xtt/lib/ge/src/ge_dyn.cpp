@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.60 2008-03-05 08:35:40 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.61 2008-04-08 11:21:52 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <float.h>
 #include <math.h>
+#include <ctype.h>
 
 #include "co_cdh.h"
 #include "co_time.h"
@@ -52,6 +53,117 @@
 #define xmenu_eItemType_Object   1
 
 static int pdummy;
+
+static int check_format( char *format, int type)
+{
+  char *s;
+
+  s = strchr( format, '%');
+  if ( s == 0) 
+    return 0;
+  s++;
+
+  while ( *s) {
+    if ( !(isdigit(*s) || *s == '.' || *s == '-' || *s == '+' || *s == '*'))
+      break;
+    s++;
+  }
+  if ( *s == 0)
+    return 0;
+
+  switch ( type) {
+  case pwr_eType_Float32:
+    if ( *s == 'f' || *s == 'F' || *s == 'g' || *s == 'G')
+      return 1;
+    break;
+  case pwr_eType_Float64:
+    if ( *s == 'f' || *s == 'F' || *s == 'g' || *s == 'G' ||
+	 (*s == 'l' && ( *(s+1) == 'f' || *(s+1) == 'F' || *(s+1) == 'g' || *(s+1) == 'G')))
+      return 1;
+    break;
+  case pwr_eType_String:
+    if ( *s == 's')
+      return 1;
+    break;
+  case pwr_eType_Int64:
+    if ( *s == 'd' || *s == 'i' || *s == 'o' || *s == 'x' || *s == 'X'|| 
+	 (*s == 'l' && (*(s+1) == 'd' || *(s+1) == 'i' || *(s+1) == 'o' || 
+			*(s+1) == 'x' || *(s+1) == 'X')) ||
+	 (*s == 'l' && *(s+1) == 'l' && (*(s+2) == 'd' || *(s+2) == 'i' || *(s+2) == 'o' || 
+				      *(s+2) == 'x' || *(s+2) == 'X')))
+      return 1;
+    break;
+  case pwr_eType_Int32:
+    if ( *s == 'd' || *s == 'i' || *s == 'o' || *s == 'x' || *s == 'X'|| 
+	 (*s == 'l' && (*(s+1) == 'd' || *(s+1) == 'i' || *(s+1) == 'o' || 
+			*(s+1) == 'x' || *(s+1) == 'X')))
+      return 1;
+    break;
+  case pwr_eType_Int16:
+    if ( *s == 'd' || *s == 'i' || *s == 'o' || *s == 'x' || *s == 'X'|| 
+	 (*s == 'h' && (*(s+1) == 'd' || *(s+1) == 'i' || *(s+1) == 'o' || 
+			*(s+1) == 'x' || *(s+1) == 'X')))
+      return 1;
+    break;
+  case pwr_eType_Int8: 
+    if ( *s == 'd' || *s == 'i' || *s == 'o' || *s == 'x' || *s == 'X' || *s == 'c') 
+      return 1;
+    break;
+  case pwr_eType_UInt64:
+    if ( *s == 'd' || *s == 'u' || *s == 'o' || *s == 'x' || *s == 'X'|| 
+	 (*s == 'l' && (*(s+1) == 'd' || *(s+1) == 'u' || *(s+1) == 'o' || 
+			*(s+1) == 'x' || *(s+1) == 'X')) ||
+	 (*s == 'l' && *(s+1) == 'l' && (*(s+2) == 'd' || *(s+2) == 'u' || *(s+2) == 'o' || 
+				      *(s+2) == 'x' || *(s+2) == 'X')))
+      return 1;
+    break;
+  case pwr_eType_Boolean:
+  case pwr_eType_UInt32:
+    if ( *s == 'd' || *s == 'u' || *s == 'o' || *s == 'x' || *s == 'X'|| 
+	 (*s == 'l' && (*(s+1) == 'd' || *(s+1) == 'u' || *(s+1) == 'o' || 
+			*(s+1) == 'x' || *(s+1) == 'X')))
+  case pwr_eType_UInt16:
+    if ( *s == 'd' || *s == 'u' || *s == 'o' || *s == 'x' || *s == 'X'|| 
+	 (*s == 'h' && (*(s+1) == 'd' || *(s+1) == 'u' || *(s+1) == 'o' || 
+			*(s+1) == 'x' || *(s+1) == 'X')))
+      return 1;
+    break;
+  case pwr_eType_Char:
+  case pwr_eType_UInt8:
+    if ( *s == 'd' || *s == 'u' || *s == 'o' || *s == 'x' || *s == 'X' || *s == 'c') 
+      return 1;
+    break;
+  case pwr_eType_Time:
+  case pwr_eType_DeltaTime:
+    if ( *s == 't')
+      return 1;
+    break;
+  case pwr_eType_Objid:
+  case pwr_eType_AttrRef:
+    if ( *s == 'o' || *s == 's')
+      return 1;
+    break;
+  case pwr_eType_Status:
+    if ( *s == 'm' || *s == 'd' || *s == 'u' ||
+	 strncmp( s, "hd", 2) == 0 || strncmp( s, "hu", 2) == 0)
+      return 1;
+    break;
+  case pwr_eType_Enum:
+    if ( *s == 's' || *s == 'd' || *s == 'u' || *s == 'o' || *s == 'x' || *s == 'X'|| 
+	 (*s == 'l' && (*(s+1) == 'd' || *(s+1) == 'u' || *(s+1) == 'o' || 
+			*(s+1) == 'x' || *(s+1) == 'X')))
+    break;
+  case pwr_eType_Mask:
+    if ( *s == 'b' || *s == 'd' || *s == 'u' || *s == 'o' || *s == 'x' || *s == 'X'|| 
+	 (*s == 'l' && (*(s+1) == 'd' || *(s+1) == 'u' || *(s+1) == 'o' || 
+			*(s+1) == 'x' || *(s+1) == 'X')))
+    break;
+  default: ; 
+  }
+  return 0;
+}
+
+
 
 static void set_curve_default_color( int instance, 
 				     glow_eDrawType *curve_color, glow_eDrawType *fill_color)
@@ -3365,6 +3477,10 @@ int GeValue::connect( grow_tObject object, glow_sTraceData *trace_data)
       annot_typeid = attr_type;
     else
       annot_typeid = dyn_get_typeid( format);
+
+    if ( !check_format( format, annot_typeid))
+      printf( "** GeValue: Suspicious format \"%s\" (%s)\n", format, attribute);
+
     break;
   case graph_eDatabase_Local:
     p = dyn->graph->localdb_ref_or_create( parsed_name, attr_type);
