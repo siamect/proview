@@ -26,6 +26,9 @@ p               {font-family: Arial, Verdana;
                 color: #000000;
                 margin-top: 0px;
                 margin-bottom: 5px}
+li              {font-family: Arial, Verdana;
+                font-size: 10pt;
+                color: #000000;}
 h1              {font-family: 'Arial Black', Arial, Verdana;
                 color: #003399;
                 font-size: 20pt;
@@ -66,8 +69,6 @@ h6              {font-family: Times New Roman, Times, Sabon;
                 color: #000000;
                 margin-top: 5px;
                 margin-bottom: 0px}
-li              {font-family: Arial, Verdana;
-                font-size: 100%}
 address         {font-family: Arial, Verdana;
                 font-size: 8pt;
                 font-style: normal;

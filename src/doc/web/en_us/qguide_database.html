@@ -12,8 +12,44 @@
        on remote nodes, can be mounted into the object tree, and thus be visible and 
        reachable from the current node.
        For example, operator stations mount the volumes of the process stations they are to 
-       supervise.<p>
+       supervise.</p>
 
+    <h2 id="mainmenu">Classes</h2>
+    <p>Objects are described by classes, and a Proview distributes contains several hundred classes
+       to configure a control system. You can also create your own classes in the
+       Class Editor. The classes can be data classes to store data, function object classes used 
+       in the plc coding, or component or aggregates classes described below.</p>
+
+    <h2 id="mainmenu">Components and Aggregates</h2>
+    <p>A component is an object that controls a component in the plant, e.g. a valve, a contactor,
+       a temperatur sensor or a pump.
+       It can consist of 
+       <ul>
+         <li> a main object with signals of the component.</li>
+         <li> a function object that contains the code.</li>
+         <li> a I/O object that configures the bus communication.</li>
+         <li> an object graph from which the operator handles the component.</li>
+         <li> a graphic symbol that is placed in an overview graph and shows the status of the component.</li>
+         <li> several methods to open trends, datasheet, photographs, circuit diagrams etc. for the component.</li>
+         <li> a simulation object to use for testing and simulation.</li>
+       </ul>
+     </p> 
+     <p>Components can be combined to aggregate objects. One example is a 
+     <a id="mainmenu" href="orm/basecomponent_basefcppo3pumpaggr.html" target="_blank">pump aggregate</a>
+      that contains a FrequencyConverter, a SafetySwitch, a Contactor, a CircuitBreaker, a Motor and 
+      a Pump component.</p>
+     <p>
+     <b>Graphic symbol</b><br>
+     <img src="orm/orm_pumpaggr_gs.gif" alt="Graphic Symbol"><br><br><br>
+     <b>Object Graph</b><br>
+     <img src="orm/orm_basefcppo3pumpaggr_og.gif" alt="Object Graph"><br><br><br>
+     <b>Function Object</b><br>
+     <img src="orm/orm_basefcppo3motoraggrfo_fo.gif" alt="Function Object"><br><br><br>
+     <b>Simulation Object</b><br>
+     <img src="orm/orm_basefcppo3motoraggrsim_og.gif" alt="Simulation Object"><br><br><br>
+     </p>
+     <p>Components and aggregates are highly configurable, and signals and components can be disabled, to match a
+        specific construction.
     </p><br>
     <p></p><br>
   </body>
