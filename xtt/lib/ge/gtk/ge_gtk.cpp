@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.cpp,v 1.14 2008-03-19 07:32:12 claes Exp $
+ * Proview   $Id: ge_gtk.cpp,v 1.15 2008-04-08 11:21:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1938,6 +1938,15 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(cons_type_menu), cons_type_transconv);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(cons_type),GTK_WIDGET(cons_type_menu));
 
+  GtkMenu *cons_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(cons_menu), cons_condir);
+  gtk_menu_shell_append(GTK_MENU_SHELL(cons_menu), cons_corners);
+  gtk_menu_shell_append(GTK_MENU_SHELL(cons_menu), cons_round_amount);
+  gtk_menu_shell_append(GTK_MENU_SHELL(cons_menu), cons_type);
+
+  GtkWidget *cons = gtk_menu_item_new_with_mnemonic("_Connections");
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), cons);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(cons), GTK_WIDGET(cons_menu));
 
   // Menu View
   GtkWidget *view_preview_start = gtk_menu_item_new_with_mnemonic( "_Preview");
