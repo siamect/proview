@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_con.cpp,v 1.9 2007-11-22 09:02:49 claes Exp $
+ * Proview   $Id: glow_con.cpp,v 1.10 2008-04-08 11:20:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1580,16 +1580,20 @@ int GlowCon::con_route_area( double wind_ll_x, double wind_ll_y,
   {  
     if ( ctx->a[i]->in_area(wind_ll_x, wind_ll_y, wind_ur_x, wind_ur_y))
     {
+#if 0
       if ( ctx->a[i]->type() == glow_eObjectType_Node ||
            ctx->a[i]->type() == glow_eObjectType_GrowNode ||
            ctx->a[i]->type() == glow_eObjectType_GrowConGlue ||
            ctx->a[i]->type() == glow_eObjectType_GrowGroup) 
         ctx->a[i]->link_insert( (void **)&nodelist);
+#endif
       if ( ctx->a[i]->type() == glow_eObjectType_Con &&
            ctx->a[i] != (GlowArrayElem *) this) 
         ctx->a[i]->link_insert( (void **)&conlist);
     }
   }
+  dest_node->link_insert( (void **)&nodelist);
+  source_node->link_insert( (void **)&nodelist);
   if ( !nodelist)
     return 0;
 
