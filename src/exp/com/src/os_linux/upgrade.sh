@@ -1,6 +1,6 @@
 #! /bin/bash
 #
-# Proview   $Id: upgrade.sh,v 1.13 2008-04-08 12:18:30 claes Exp $
+# Proview   $Id: upgrade.sh,v 1.14 2008-04-10 10:38:30 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -26,8 +26,8 @@ let reload__loaddb=4
 
 let pass__continue=1
 let pass__execute=2
-#v44_root="/data1/pwr/x4-4-4/rls_dbg"
-v44_root="/usr/pwr44"
+v44_root="/data1/pwr/x4-4-4/rls_dbg"
+#v44_root="/usr/pwr44"
 
 reload_dumpdb()
 {
@@ -221,7 +221,7 @@ reload_loaddb()
      
       dump_file=$pwrp_db/$cdb.wb_dmp
       list_file=$pwrp_db/$cdb.lis
-      if wb_cmd wb load/load=\"$dump_file\"/out=\"$list_file\"
+      if wb_cmd wb load/nofocode/load=\"$dump_file\"/out=\"$list_file\"
       then
         reload_status=$reload__success
       else

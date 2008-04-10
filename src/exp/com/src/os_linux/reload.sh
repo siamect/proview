@@ -1,6 +1,6 @@
 #! /bin/bash
 #
-# Proview   $Id: reload.sh,v 1.10 2006-01-23 09:23:06 claes Exp $
+# Proview   $Id: reload.sh,v 1.11 2008-04-10 10:38:30 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -173,7 +173,7 @@ reload_loaddb()
      
       dump_file=$pwrp_db/$cdb.wb_dmp
       list_file=$pwrp_db/$cdb.lis
-      if wb_cmd wb load/load=\"$dump_file\"/out=\"$list_file\"
+      if wb_cmd wb load/nofocode/load=\"$dump_file\"/out=\"$list_file\"
       then
         reload_status=$reload__success
       else
