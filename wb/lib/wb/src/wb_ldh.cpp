@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.67 2008-02-05 14:53:12 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.68 2008-04-10 10:39:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1970,9 +1970,12 @@ ldh_WbLoad( ldh_tSession session, char *loadfile, int ignore_oix)
       char server[80];
       pwr_tStatus sts;
       	
-      sts = lfu_GetVolumeCnf( (char *)vwbl->name(), &vid, &cid, &volrep, server);
-      if ( EVEN(sts)) return sts;
-      
+      if ( cdh_NoCaseStrcmp( vwbl->name(), "directory") == 0)
+	volrep = ldh_eVolRep_Db;
+      else {
+	sts = lfu_GetVolumeCnf( (char *)vwbl->name(), &vid, &cid, &volrep, server);
+	if ( EVEN(sts)) return sts;
+      }
       if ( volrep == ldh_eVolRep_Db) {
 	cdh_ToLower( vname, vwbl->name());
 	strcpy( db_name, "$pwrp_db/");

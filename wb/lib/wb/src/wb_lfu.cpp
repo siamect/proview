@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.cpp,v 1.12 2008-02-27 06:30:57 claes Exp $
+ * Proview   $Id: wb_lfu.cpp,v 1.13 2008-04-10 10:39:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2471,6 +2471,7 @@ pwr_tStatus lfu_GetVolumeCnf( char *name, pwr_tVid *vid, pwr_tCid *cid, ldh_eVol
   pwr_tFileName fname;
   char line[200];
   char vol_array[7][80];
+  int found = 0;
 
   strcpy( fname, load_cNameVolumeList);
   dcli_translate_filename( fname, fname);
@@ -2478,61 +2479,71 @@ pwr_tStatus lfu_GetVolumeCnf( char *name, pwr_tVid *vid, pwr_tCid *cid, ldh_eVol
   *volrep = ldh_eVolRep_Db;
 
   ifstream fpm( fname, ios::in);
-  if ( fpm) {
+  if ( !fpm)
+    return 0;
   
-    while ( fpm.getline( line, sizeof(line))) {
-      int nr;
+  while ( fpm.getline( line, sizeof(line))) {
+    int nr;
       
-      if ( line[0] == '#')
-	continue;
+    if ( line[0] == '#')
+      continue;
       
-      nr = dcli_parse( line, " ", "", (char *)vol_array,
-		       sizeof(vol_array)/sizeof(vol_array[0]),
-		       sizeof(vol_array[0]), 0);
+    nr = dcli_parse( line, " ", "", (char *)vol_array,
+		     sizeof(vol_array)/sizeof(vol_array[0]),
+		     sizeof(vol_array[0]), 0);
       
-      sts =  cdh_StringToVolumeId( vol_array[1], vid);
-      if ( EVEN(sts)) return sts;
 
-      if ( cdh_NoCaseStrcmp( vol_array[2], "RootVolume") == 0)
-	*cid = pwr_eClass_RootVolume;
-      else if ( cdh_NoCaseStrcmp( vol_array[2], "SubVolume") == 0)
-	*cid = pwr_eClass_SubVolume;
-      else if ( cdh_NoCaseStrcmp( vol_array[2], "SharedVolume") == 0)
-	*cid = pwr_eClass_SharedVolume;
-      else if ( cdh_NoCaseStrcmp( vol_array[2], "ClassVolume") == 0)
-	*cid = pwr_eClass_ClassVolume;
+    if ( cdh_NoCaseStrcmp( vol_array[0], name) != 0)
+      continue;
 
-      switch ( *cid) {
-      case pwr_eClass_RootVolume:
-      case pwr_eClass_SubVolume:
-      case pwr_eClass_SharedVolume:
- 	*volrep = ldh_eVolRep_Db;
-	if ( cdh_NoCaseStrcmp( vol_array[0], name) == 0) {
-	  if ( nr > 4 && strcmp( vol_array[4], "1") == 0) {
-	    *volrep = ldh_eVolRep_Dbms;
-	    if ( nr > 5)
-	      strcpy( server, vol_array[5]);
-	  }
-	  break;
+    found = 1;
+
+    sts =  cdh_StringToVolumeId( vol_array[1], vid);
+    if ( EVEN(sts)) return sts;
+
+    if ( cdh_NoCaseStrcmp( vol_array[2], "RootVolume") == 0)
+      *cid = pwr_eClass_RootVolume;
+    else if ( cdh_NoCaseStrcmp( vol_array[2], "SubVolume") == 0)
+      *cid = pwr_eClass_SubVolume;
+    else if ( cdh_NoCaseStrcmp( vol_array[2], "SharedVolume") == 0)
+      *cid = pwr_eClass_SharedVolume;
+    else if ( cdh_NoCaseStrcmp( vol_array[2], "ClassVolume") == 0)
+      *cid = pwr_eClass_ClassVolume;
+    
+    switch ( *cid) {
+    case pwr_eClass_RootVolume:
+    case pwr_eClass_SubVolume:
+    case pwr_eClass_SharedVolume:
+      *volrep = ldh_eVolRep_Db;
+      if ( cdh_NoCaseStrcmp( vol_array[0], name) == 0) {
+	if ( nr > 4 && strcmp( vol_array[4], "1") == 0) {
+	  *volrep = ldh_eVolRep_Dbms;
+	  if ( nr > 5)
+	    strcpy( server, vol_array[5]);
 	}
-      case pwr_eClass_ClassVolume:
- 	*volrep = ldh_eVolRep_Wbl;
-	if ( cdh_NoCaseStrcmp( vol_array[0], name) == 0) {
-	  if ( nr > 4 && strcmp( vol_array[4], "1") == 0)
-	    *volrep = ldh_eVolRep_Db;
-	  else if ( nr > 4 && strcmp( vol_array[4], "2") == 0) {
-	    *volrep = ldh_eVolRep_Dbms;
-	    if ( nr > 5)
-	      strcpy( server, vol_array[5]);
-	  }
-	  break;
-	}
-      default: ;
       }
+      break;
+    case pwr_eClass_ClassVolume:
+      *volrep = ldh_eVolRep_Wbl;
+      if ( cdh_NoCaseStrcmp( vol_array[0], name) == 0) {
+	if ( nr > 4 && strcmp( vol_array[4], "1") == 0)
+	  *volrep = ldh_eVolRep_Db;
+	else if ( nr > 4 && strcmp( vol_array[4], "2") == 0) {
+	  *volrep = ldh_eVolRep_Dbms;
+	  if ( nr > 5)
+	    strcpy( server, vol_array[5]);
+	}
+      }
+      break;
+    default: ;
     }
-    fpm.close();
+    break;
   }
-  return LFU__SUCCESS;
+  fpm.close();
+
+  if ( found)
+    return LFU__SUCCESS;
+  return 0;
 }
 
 pwr_tStatus lfu_ParseDbmsServer( char *server, char *user, char *password, 
