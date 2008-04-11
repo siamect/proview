@@ -37,7 +37,8 @@ copy : $(inc_dir)/pwr_nmpsclasses.h \
 lib  : $(load_dir)/nmps.dbs
 
 exe : $(doc_dir)/en_us/orm/nmps_allclasses.html \
-      $(exe_dir)/nmps_xtthelp.dat
+      $(exe_dir)/en_us/nmps_xtthelp.dat \
+      $(exe_dir)/sv_se/nmps_xtthelp.dat
 
 clean : 
 
@@ -78,10 +79,13 @@ $(doc_dir)/en_us/orm/nmps_allclasses.html :
 	@ co_convert -q -d $(doc_dir)/en_us "$(pwre_sroot)/wbl/nmps/src/nmps_*.wb_load"
 	@ co_convert -q -l sv_se -d $(doc_dir)/sv_se "$(pwre_sroot)/wbl/nmps/src/nmps_*.wb_load"
 
-$(exe_dir)/nmps_xtthelp.dat :
-	@ echo "Generating xtt help files for nmps classes"
-	@ co_convert -x -d $(exe_dir) "$(pwre_sroot)/wbl/nmps/src/nmps_c_*.wb_load"
-	@ co_convert -x -l sv_se -d $(exe_dir) "$(pwre_sroot)/wbl/nmps/src/nmps_c_*.wb_load"
+$(exe_dir)/en_us/nmps_xtthelp.dat :
+	@ echo "Generating xtt help files for nmps classes en_us"
+	@ co_convert -x -d $(exe_dir)/en_us "$(pwre_sroot)/wbl/nmps/src/nmps_c_*.wb_load"
+
+$(exe_dir)/sv_se/nmps_xtthelp.dat :
+	@ echo "Generating xtt help files for nmps classes sv_se"
+	@ co_convert -x -l sv_se -d $(exe_dir)/sv_se "$(pwre_sroot)/wbl/nmps/src/nmps_c_*.wb_load"
 
 clean_wbl :
 	@ if [ -e $(load_dir)/nmps.dbs ]; then \

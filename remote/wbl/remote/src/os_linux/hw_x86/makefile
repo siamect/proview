@@ -37,7 +37,8 @@ copy : $(inc_dir)/pwr_remoteclasses.h \
 lib  : $(load_dir)/remote.dbs
 
 exe : $(doc_dir)/en_us/orm/remote_allclasses.html \
-      $(exe_dir)/remote_xtthelp.dat
+      $(exe_dir)/en_us/remote_xtthelp.dat \
+      $(exe_dir)/sv_se/remote_xtthelp.dat
 
 clean : 
 
@@ -78,10 +79,13 @@ $(doc_dir)/en_us/orm/remote_allclasses.html :
 	@ co_convert -q -d $(doc_dir)/en_us "$(pwre_sroot)/wbl/remote/src/remote_*.wb_load"
 	@ co_convert -q -l sv_se -d $(doc_dir)/sv_se "$(pwre_sroot)/wbl/remote/src/remote_*.wb_load"
 
-$(exe_dir)/remote_xtthelp.dat :
+$(exe_dir)/en_us/remote_xtthelp.dat :
 	@ echo "Generating xtt help files for remote classes"
-	@ co_convert -x -d $(exe_dir) "$(pwre_sroot)/wbl/remote/src/remote_c_*.wb_load"
-	@ co_convert -x -l sv_se -d $(exe_dir) "$(pwre_sroot)/wbl/remote/src/remote_c_*.wb_load"
+	@ co_convert -x -d $(exe_dir)/en_us "$(pwre_sroot)/wbl/remote/src/remote_c_*.wb_load"
+
+$(exe_dir)/sv_se/remote_xtthelp.dat :
+	@ echo "Generating xtt help files for remote classes"
+	@ co_convert -x -l sv_se -d $(exe_dir)/sv_se "$(pwre_sroot)/wbl/remote/src/remote_c_*.wb_load"
 
 clean_wbl :
 	@ if [ -e $(load_dir)/remote.dbs ]; then \
