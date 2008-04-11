@@ -1,6 +1,6 @@
 #! /bin/bash
 #
-# Proview   $Id: pwrp_env.sh,v 1.13 2008-04-09 06:59:52 claes Exp $
+# Proview   $Id: pwrp_env.sh,v 1.14 2008-04-11 12:20:10 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -866,7 +866,7 @@ pwrc_set_func()
     export pwrp_lis=$pwrp_root/$platform/lis
 
     export PATH=$PATH:$pwrp_exe
-#    export CDPATH=$pwrp_root:$pwrp_root/common:$pwrp_root/x86_linux:$pwrp_src
+    export CDPATH=
 
     export pwrp_projectname=$pname
 
