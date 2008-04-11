@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_subc.c,v 1.7 2007-11-23 12:42:35 claes Exp $
+ * Proview   $Id: rt_subc.c,v 1.8 2008-04-11 08:15:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -616,6 +616,10 @@ subc_ActivateList (
     for (aep = tree_Minimum(&sts, add); aep != NULL; aep = tree_Successor(&sts, add, aep)) { 
       if (aep->msg != NULL) {
 	if (aep->msg->count > 0) {
+
+          np = hash_Search(&sts, gdbroot->nid_ht, &aep->nid);
+          if (np == NULL) errh_Bugcheck(GDH__WEIRD, "");
+
 	  tgt = np->handler;
 	  pwr_Assert(tgt.nid != pwr_cNNodeId);
 	  net_Put(NULL, &tgt, aep->msg, net_eMsg_subAdd, 0, pwr_Offset(aep->msg, spec[aep->msg->count]), 0);
