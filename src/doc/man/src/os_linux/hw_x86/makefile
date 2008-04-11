@@ -206,6 +206,8 @@ copy : $(export_pdf) $(export_pdf_en_us) $(export_pdf_sv_se) \
        $(exe_dir)/man_subgraph.dat \
        $(doc_dir)/en_us/man_subgraph_index.html \
        $(doc_dir)/en_us/man_subgraph.pdf \
+       $(exe_dir)/en_us/man_orm.dat $(exe_dir)/sv_se/man_orm.dat \
+       $(doc_dir)/en_us/man_orm_index.html $(doc_dir)/sv_se/man_orm_index.html \
        $(mediatargets) $(csstargets) \
        $(export_html) $(export_html_en_us) $(export_html_sv_se)
 
@@ -305,6 +307,22 @@ $(doc_dir)/en_us/man_geref.ps : $(pwre_sroot)/doc/man/en_us/man_geref.dat
 $(doc_dir)/sv_se/man_geref.ps : $(pwre_sroot)/doc/man/sv_se/man_geref.dat
 	@ echo "Generating postscript for sv_se/man_geref"
 	@ co_convert -n -d $(doc_dir)/sv_se $(source)
+
+$(exe_dir)/en_us/man_orm.dat : $(pwre_sroot)/doc/man/en_us/man_orm.dat
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
+$(exe_dir)/sv_se/man_orm.dat : $(pwre_sroot)/doc/man/sv_se/man_orm.dat
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
+$(doc_dir)/en_us/man_orm_index.html : $(pwre_sroot)/doc/man/en_us/man_orm.dat
+	@ echo "Generating html for en_us/man_orm"
+	@ co_convert -t -d $(doc_dir)/en_us $(source)
+
+$(doc_dir)/sv_se/man_orm_index.html : $(pwre_sroot)/doc/man/sv_se/man_orm.dat
+	@ echo "Generating html for sv_se/man_orm"
+	@ co_convert -t -l sv_se -d $(doc_dir)/sv_se $(source)
 
 $(doc_dir)/en_us/man_subgraph_index.html : $(pwre_sroot)/doc/man/en_us/man_subgraph.dat
 	@ echo "Generating html for en_us/man_subgraph"

@@ -1,0 +1,901 @@
+
+<topic> __DocumentTitlePage
+
+<image> pwr_logga.gif
+
+
+
+
+
+
+<h1> Object Reference Manual
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<hr>
+2008-04-09
+Version 4.5.0	
+<hr>
+</topic>
+
+<topic> __DocumentInfoPage
+
+
+Copyright (C) 2008 SSAB Oxelösund AB
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+Texts.
+
+
+
+</topic>
+
+<chapter>
+<topic> index
+Introduction
+
+<h1>Object Overview
+
+Proview contains a large number of various classes. The following links  makes an attempt to give 
+an overview of the classes. Note that all classes are not present in the overview.
+
+Project Configuration <t><t>Classes used in the directory volume to configure a project <link>orm_proj_config
+Plant Configuration <t><t>Classes used to configure the plant in the Plant Hierarchy <link>orm_plant_config
+Node Configuration <t><t>Classes used to configure the hardware and servers in the Node Hierarchy <link>orm_node_config
+Plc Programming <t><t>Function objects used to program the plc <link>orm_plc_prog
+Class Definition <t><t>Classes used in the class editor to define classes <link>orm_class_def
+
+
+
+<h1>Introduction to objects and classes
+<h2>Classes
+An object class represents a well-defined function or method. It is characterised in one way 
+in the development environment, for example by a symbol and certain attributes, and in another 
+way in the target environment. From a general point of view a class contains data and code. 
+Executable code exists only in the target environment.
+
+The data of the class is divided into head and body. The object head, which has the same 
+appearance in all object classes, is described in PROVIEW/R Designer's Guide . The attributes 
+of an object class, which are used to describe the current state of a single object, are 
+located in the body. It is not quite sure that the whole body always is stored in rtdb.
+The description of an object starts with the name of the object class and a short description 
+of the function of the class. After that the graphic appearance of the class follows as well 
+as the attributes of the object body.
+
+<b>Graphic appearance
+If an object class has a graphic representation, the description starts with its symbol as it 
+looks like when all in- and outputs are shown. In- and outputs are shown only if they are marked 
+"Used" in the Object Editor. If the user wants to hide not used in-/outputs in the symbol of an 
+individual object, it is done by toggling the Used-flags by means of the Object Editor. Inputs 
+left open result in warnings at compilation, otherwise there is no difference in function 
+compared to inputs marked Unused.
+
+Object classes with graphic representation have the common appearance:
+<image> orm/orm_en1-7.gif
+
+The name of the object class appears from the head of the object symbol. Inputs are on the left 
+hand of the symbol; outputs on the right. In- and outputs designed for logical quantities are 
+denoted by lower-case letters and analog (=continuous) signals by capital letters. 
+
+To the inputs there are signals of corresponding types connected. Analog signals to analog inputs 
+and logical signals to logical inputs.
+
+When an object attribute has to be assigned a constant value, which does not exist as an 
+independent signal, the use of an Av or Dv object, connected to the input by a GetAv or GetDv 
+object, is recommended. This value can then be handled by means of the GetAv respectively GetDv 
+object's object display.
+
+If the input signal is connected to an input, the value of the signal, in the normal case, is 
+stored in the object. But there are a number of exceptions of this rule when the value of the 
+signal is used without any previous storage. This is the case in e.g. And, Or, Xor, Timer, Wait,
+ Waith, Pulse, SR flip flops, ASup, DSup object class. That is the reason why some object 
+classes can not use inputs left open. If an input of this type is left open, the result would 
+be warning indications in both the SYNTAX-control and the COMPILE-operation in the PLC edit session.
+
+The principle in reading the value of an input signal, whose value is not stored in rtdb (the 
+real-time database), is to read the corresponding output of the connection -- not the input itself. 
+The flags, InRtdb respectively NoRtdb, show if an input signal is stored in rtdb or not.
+
+Not connected inputs receive a default value according to the type object of the class. This 
+default value is specified in most attributes and can be changed for some attributes by means 
+of the Object Editor in the development environment and for others in the target environment.
+
+The last segment name of the object appears at the bottom of most object symbols; the default ends 
+with a figure.
+
+<h2>Attributes
+The attributes of the object bodies are described by
+
+- attribute name
+- attribute type <t>Specifies the data type of the attribute.
+- attribute class <t>Specifies the attribute class.
+- attribute flags <t>Bitmask for attribute properties.
+
+<b>Attribute class
+$Attribute <t>Ordinary attribute <classlink>attribute, ,$pwr_lang/pwrs_xtthelp.dat
+$Intern <t>Input attribute in plc function object class<classlink>input, ,$pwr_lang/pwrs_xtthelp.dat
+$Intern <t>Intern attribute in plc function object class<classlink>intern, ,$pwr_lang/pwrs_xtthelp.dat
+$Output <t>Output attribute in plc function object class<classlink>output, ,$pwr_lang/pwrs_xtthelp.dat
+
+<b>Attribute type
+The type entry indicates the expected data type of the data specified of the attribute. The 
+attribute itself does not have any data type.
+
+Below is a list of the traditional standard data types.
+
+Note! Attributes of the type pwr_tFloat32 are precise to 7 digits. It is worth to remember this, 
+especially in the use of objects as Timint, Sum etc. where the output can be very large numbers
+
+<b>Data Types
+Boolean <t>Boolean type with value true or false <classlink>boolean, ,$pwr_lang/pwrs_xtthelp.dat
+Float32 <t>Float type, 32-bit. Standad for analog values <classlink>float32, ,$pwr_lang/pwrs_xtthelp.dat
+Float64 <t>Float type, 64-bit <classlink>float64, ,$pwr_lang/pwrs_xtthelp.dat
+Int64 <t>Signed integer type, 64-bit <classlink>int64, ,$pwr_lang/pwrs_xtthelp.dat
+Int32 <t>Signed integer type, 32-bit <classlink>int32, ,$pwr_lang/pwrs_xtthelp.dat
+Int16 <t>Signed integer type, 16-bit <classlink>int16, ,$pwr_lang/pwrs_xtthelp.dat
+Int8  <t>Signed integer type, 8-bit <classlink>int8, ,$pwr_lang/pwrs_xtthelp.dat
+UInt64 <t>Unsigned integer type, 64-bit <classlink>int64, ,$pwr_lang/pwrs_xtthelp.dat
+UInt32 <t>Unsigned integer type, 32-bit <classlink>int32, ,$pwr_lang/pwrs_xtthelp.dat
+UInt16 <t>Unsigned integer type, 16-bit <classlink>int16, ,$pwr_lang/pwrs_xtthelp.dat
+UInt8  <t>Unsigned integer type, 8-bit <classlink>int8, ,$pwr_lang/pwrs_xtthelp.dat
+Char <t>Character type<classlink>char, ,$pwr_lang/pwrs_xtthelp.dat
+String8 <t>String type, 7 characters <classlink>string8, ,$pwr_lang/pwrs_xtthelp.dat
+String16 <t>String type, 15 characters <classlink>string16, ,$pwr_lang/pwrs_xtthelp.dat
+String32 <t>String type, 31 characters <classlink>string32, ,$pwr_lang/pwrs_xtthelp.dat
+String40 <t>String type, 39 characters <classlink>string40, ,$pwr_lang/pwrs_xtthelp.dat
+String80 <t>String type, 79 characters <classlink>string80, ,$pwr_lang/pwrs_xtthelp.dat
+String132 <t>String type, 131 characters <classlink>string132, ,$pwr_lang/pwrs_xtthelp.dat
+Text1024 <t>Text type, 1023 characters <classlink>text1024, ,$pwr_lang/pwrs_xtthelp.dat
+URL <t>URL type, 159 characters <classlink>url, ,$pwr_lang/pwrs_xtthelp.dat
+Time <t>Absolute time <classlink>time, ,$pwr_lang/pwrs_xtthelp.dat
+DeltaTime <t>Delta time <classlink>deltatime, ,$pwr_lang/pwrs_xtthelp.dat
+Enum <t>Enumeration value <classlink>enum, ,$pwr_lang/pwrs_xtthelp.dat
+Mask <t>Bitmask <classlink>mask, ,$pwr_lang/pwrs_xtthelp.dat
+Status <t>Status type <classlink>status, ,$pwr_lang/pwrs_xtthelp.dat
+NetStatus <t>Network status type <classlink>netstatus, ,$pwr_lang/pwrs_xtthelp.dat
+Objid <t>Object identity <classlink>objid, ,$pwr_lang/pwrs_xtthelp.dat
+AttrRef <t>Attribute reference <classlink>attrrref, ,$pwr_lang/pwrs_xtthelp.dat
+VolumeId <t>Volume identity <classlink>volumeid, ,$pwr_lang/pwrs_xtthelp.dat
+ClassId <t>Class identity <classlink>classid, ,$pwr_lang/pwrs_xtthelp.dat
+
+<b>Attribute Flags
+Flags is a bitmask that contains the following bits <classlink>adefflags, ,$pwr_lang/pwrs_xtthelp.dat
+
+Pointer <t>Attribute is a pointer.
+Array   <t>Attribute is an array.
+Backup  <t>Not yet implemented.
+CastAttr<t>Attribute can be casted.
+State   <t>Value is only valid in runtime environment.
+Const   <t>Contant value.
+RtVirtual <t>Attribute is not valid in runtime.
+DevBodyRef <t>DevBody contains a corresponding attribute.
+Dynamic <t>Not yet implemented.
+ObjidSelf <t>The attribute contains the objects owh objid.
+NoEdit  <t>The value can not be changed in the configurator.
+Invisible <t>The attribute is invisible in the navigator.
+RefDirect <t>Not yet implemented.
+NoInvert <t>Function object input pin can not be inverted.
+NoRemove <t>Input or output pin can not be removed.
+RtdbRef  <t>Not yet implemented.
+Private  <t>Private pointer.
+Class    <t>The attribute is an attribute object, i.e. it is defined by a class.
+SuperClass <t>The attribute defines a superclass.
+Buffer   <t>The attribute is a buffer attribute.
+NoWbl    <t>The value of the attribute is not stored in wb_load files.
+AlwaysWbl <t>The value of the attribute is always stored in wb_load files.
+DisableAttr <t>The attribute can be disabled.
+RtHide    <t>The attribute is hidden in runtime.
+
+</topic>
+
+<topic> orm_proj_config
+Project Configuration
+The project configuration is made in the directory volume and is defined by the following classes.
+
+<h1>Volume Configuration
+ClassVolumeConfig <t><t>Configures a classvolume <classlink>classvolumeconfig, ,$pwr_lang/pwrb_xtthelp.dat
+ClassVolumeLoad <t><t>Configures extern classvolumes that should be loaded in the development environment<classlink>classvolumeload, ,$pwr_lang/pwrb_xtthelp.dat
+ExternVolumeConfig <t><t>Configures an extern volume <classlink>externvolumeconfig, ,$pwr_lang/pwrb_xtthelp.dat
+RootVolumeConfig <t><t>Configures a rootvolume <classlink>rootvolumeconfig, ,$pwr_lang/pwrb_xtthelp.dat
+SharedVolumeConfig <t><t>Configures a shared volume <classlink>sharedvolumeconfig, ,$pwr_lang/pwrb_xtthelp.dat
+SubVolumeConfig <t><t>Configures a subvolume <classlink>rootvolumeconfig, ,$pwr_lang/pwrb_xtthelp.dat
+WbEnvironment <t><t>Configures the development environment <classlink>wbenvironment, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Node Configuration
+ApplDistribute <t><t>Specifies a file or a set of files that should be included in the distribution package <classlink>appldistribute, ,$pwr_lang/pwrb_xtthelp.dat
+BusConfig <t><t>Configures a QCom bus <classlink>busconfig, ,$pwr_lang/pwrb_xtthelp.dat
+ClassVolumeLoad <t><t>Configures extern classvolumes that should be loaded in the runtime environment<classlink>classvolumeload, ,$pwr_lang/pwrb_xtthelp.dat
+Distribute <t><t>Specifies files that should be included in the distribution package <classlink>distribute, ,$pwr_lang/pwrb_xtthelp.dat
+FriendNodeConfig <t><t>Specifies an extern node that should be reachable via QCom <classlink>friendnodeconfig, ,$pwr_lang/pwrb_xtthelp.dat
+NodeConfig <t><t>Specifies a node in the project <classlink>nodeconfig, ,$pwr_lang/pwrb_xtthelp.dat
+RootVolumeLoad <t><t>Specifies which root volume should be loaded in a node at Proview startup<classlink>rootvolumeload, ,$pwr_lang/pwrb_xtthelp.dat
+SharedVolumeLoad <t><t>Specifies shared volume that should be loaded in a node at Proview startup<classlink>sharedvolumeload, ,$pwr_lang/pwrb_xtthelp.dat
+SubVolumeLoad <t><t>Specifies subvolume that should be loaded in a node at Proview startup<classlink>subvolumeload, ,$pwr_lang/pwrb_xtthelp.dat
+$System <t><t>Configures a Proview system<classlink>system, ,$pwr_lang/pwrs_xtthelp.dat
+
+</topic>
+
+<topic> orm_plant_config
+Plant Configuration
+
+ <h1>Signals
+ Ai<t><t>Analog input signal<classlink>ai, ,$pwr_lang/pwrb_xtthelp.dat
+ Ao<t><t>Analog output signal<classlink>ao, ,$pwr_lang/pwrb_xtthelp.dat
+ Av<t><t>Analog value <classlink>av, ,$pwr_lang/pwrb_xtthelp.dat
+ ATv<t><t>Absolute time value <classlink>atv, ,$pwr_lang/pwrb_xtthelp.dat
+ Co<t><t>Counter signal<classlink>co, ,$pwr_lang/pwrb_xtthelp.dat
+ Di<t><t>Digital input signal<classlink>di, ,$pwr_lang/pwrb_xtthelp.dat
+ Do<t><t>Digital output signal<classlink>do, ,$pwr_lang/pwrb_xtthelp.dat
+ Dv<t><t>Digital value <classlink>dv, ,$pwr_lang/pwrb_xtthelp.dat
+ DTv<t><t>Delta time value <classlink>dtv, ,$pwr_lang/pwrb_xtthelp.dat
+ Ii<t><t>Integer input signal<classlink>ii, ,$pwr_lang/pwrb_xtthelp.dat
+ Io<t><t>Integer output signal<classlink>io, ,$pwr_lang/pwrb_xtthelp.dat
+ Iv<t><t>Ineger value <classlink>iv, ,$pwr_lang/pwrb_xtthelp.dat
+ Po<t><t>Pulsed digital output signal<classlink>po, ,$pwr_lang/pwrb_xtthelp.dat
+ Sv<t><t>String value <classlink>sv, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Data Storage
+DsFastCurve <t><t>Configuration of a fast curve <classlink>dsfastcurve, ,$pwr_lang/pwrb_xtthelp.dat
+DsTrend <t><t>Configuratino of trend <classlink>dstrend, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Supervision
+ASup <t><t>Supervision of analog value<classlink>asup, ,$pwr_lang/pwrb_xtthelp.dat
+DSup <t><t>Supervision of digital value<classlink>dsup, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Miscellaneous
+$PlantHier <t><t>A hierarchy object in the plant hierarchy <classlink>planthier, ,$pwr_lang/pwrs_xtthelp.dat
+PlcPgm <t><t>Plc program object containing plc code <classlink>plcpgm, ,$pwr_lang/pwrb_xtthelp.dat
+Backup <t><t>Specifices an attribute or objects that is to be included in the backup <classlink>backup, ,$pwr_lang/pwrb_xtthelp.dat
+$LibHier <t><t>Library hierarchy object, objects below this map are not loaded in runtime<classlink>libhier, ,$pwr_lang/pwrs_xtthelp.dat
+$MountObject <t><t>Specifies a point in the object tree where an object in another volumes is mounted<classlink>mountobject, ,$pwr_lang/pwrs_xtthelp.dat
+$Alias <t><t>Specifies an alias<classlink>alias, ,$pwr_lang/pwrs_xtthelp.dat
+
+<h1>Components
+BaseComponents <t><t>Base component classes <link> orm_basecomponents
+</topic>
+
+<topic> orm_basecomponents
+Base Components
+
+<h1>Electric components
+BaseCircuitBreaker <t><t>Circuit breaker<classlink>basecircuitbreaker, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseContactor <t><t>Contactor<classlink>basecontactor, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseFcPPO3 <t><t>Frequency converter with Profibus PPO3 protocol <classlink>basefcppo3, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseFcPPO5 <t><t> Frequency converter with Profibus PPO5 protocol<classlink>basefcppo5, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseOverloadRelay <t><t>Overload relay <classlink>baseoverloadrelay, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseSafetySwitch <t><t>Safety switch <classlink>basesafetyswitch, ,$pwr_lang/basecomponent_xtthelp.dat
+
+<h1>Sensors
+BaseFlowSensor <t><t>Flow sensor <classlink>baseflowsensor, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseLevelSensor <t><t>Level sensor <classlink>baselevelsensor, ,$pwr_lang/basecomponent_xtthelp.dat
+BasePositSensor <t><t>Position sensor <classlink>basepositsensor, ,$pwr_lang/basecomponent_xtthelp.dat
+BasePressureSensor <t><t>Pressure sensor <classlink>basepressuresensor, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseSensor <t><t>Sensor <classlink>basesensor, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseTempSensor <t><t>Temperature sensor <classlink>basetempsensor, ,$pwr_lang/basecomponent_xtthelp.dat
+
+<h1>Switches
+BaseLevelSwitch <t><t>Level switch <classlink>baselevelswitch, ,$pwr_lang/basecomponent_xtthelp.dat
+BasePressureSwitch <t><t>Pressure switch <classlink>basepressureswitch, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseSupSwitch <t><t>Supervised switch <classlink>basesupswitch, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseSwitch <t><t>Switch <classlink>baseswitch, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseTempSwitch <t><t>Temperature switch <classlink>basetempswitch, ,$pwr_lang/basecomponent_xtthelp.dat
+
+<h1>Valves and dampers
+BaseC3WayValve <t><t>Three way control valve<classlink>basec3wayvalve, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseCDamper <t><t>Control damper<classlink>basecdamper, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseDirValve <t><t>Direct valve <classlink>basedirvalve, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseM3WayValve <t><t>Solenoid three way valve <classlink>basem3wayvalve, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseMDamper <t><t>Solenoid damper <classlink>basemdamper, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseMValve <t><t>Solenoid valve <classlink>basemvalve, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseManValve <t><t>Manual valve <classlink>basemanvalve, ,$pwr_lang/basecomponent_xtthelp.dat
+BasePropValve <t><t>Proportional valve <classlink>basepropvalve, ,$pwr_lang/basecomponent_xtthelp.dat
+
+<h1>Motor aggregates with frequency converter
+BaseFcPPO3FanAggr <t><t> Fan aggregate with frequency converter Profibus PPO3 protocol<classlink>basefcppo3fanaggr, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseFcPPO3MotorAggr <t><t> Motor aggregate with frequency converter Profibus PPO3 protocol<classlink>basefcppo3motoraggr, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseFcPPO3PumpAggr <t><t> Pump aggregate with frequency converter Profibus PPO3 protocol<classlink>basefcppo3pumpaggr, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseFcPPO5FanAggr <t><t> Fan aggregate with frequency converter Profibus PPO5 protocol<classlink>basefcppo5fanaggr, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseFcPPO5MotorAggr <t><t> Motor aggregate with frequency converter Profibus PPO5 protocol<classlink>basefcppo5motoraggr, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseFcPPO5PumpAggr <t><t> Pump aggregate with frequency converter Profibus PPO5 protocol<classlink>basefcppo5pumpaggr, ,$pwr_lang/basecomponent_xtthelp.dat
+
+<h1>Motor aggregates with contator
+BaseFanAggr <t><t>Fan aggregate <classlink>basefanaggr, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseMotorAggr <t><t>Motor aggregate <classlink>basemotoraggr, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseMotorIncrDecrAggr <t><t>Motor aggregate with forward/reverse contactors <classlink>basemotorincrdecraggr, ,$pwr_lang/basecomponent_xtthelp.dat
+BasePumpAggr <t><t>Pump aggregate <classlink>basepumpaggr, ,$pwr_lang/basecomponent_xtthelp.dat
+
+<h1>Miscellaneous
+BaseElHeater <t><t>Electric heater <classlink>baseelheater, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseFan <t><t>Fan <classlink>basefan, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseMotor <t><t>Motor <classlink>basemotor, ,$pwr_lang/basecomponent_xtthelp.dat
+BasePump <t><t>Pump <classlink>basepump, ,$pwr_lang/basecomponent_xtthelp.dat
+CompModePID <t><t>PID Mode object <classlink>compmodepid, ,$pwr_lang/basecomponent_xtthelp.dat
+CompOnOffBurner <t><t>Burner On/Off control<classlink>componoffburner, ,$pwr_lang/basecomponent_xtthelp.dat
+CompOnOffZone <t><t>Burner On/Off zone object<classlink>componoffzone, ,$pwr_lang/basecomponent_xtthelp.dat
+RunTimeCounter <t><t>Runtime counter <classlink>runtimecounter, ,$pwr_lang/basecomponent_xtthelp.dat
+
+</topic>
+
+<topic> orm_node_config
+Node Configuration
+
+<h1>Servers
+Backup_Conf <t><t>Configuration of backup server process <classlink>backup_conf, ,$pwr_lang/pwrb_xtthelp.dat
+DsFastConf <t><t>Configuration of fast curves server process<classlink>dsfastconf, ,$pwr_lang/pwrb_xtthelp.dat
+DsTrendConf <t><t>Configuration of trend server process <classlink>dstrendconf, ,$pwr_lang/pwrb_xtthelp.dat
+IoHandler <t><t>Configuration of I/O handler process <classlink>iohandler, ,$pwr_lang/pwrb_xtthelp.dat
+MessageHandler <t><t>Configuration of event monitor <classlink>messagehandler, ,$pwr_lang/pwrb_xtthelp.dat
+Opc_ServerConfig <t><t>Configuration OPC server <classlink>opc_serverconfig, ,$pwr_lang/opc_xtthelp.dat
+PlcProcess <t><t>Configuration of plc process <classlink>plcprocess, ,$pwr_lang/pwrb_xtthelp.dat
+PlcThread <t><t>Configuration of a plc thread <classlink>plcthread, ,$pwr_lang/pwrb_xtthelp.dat
+RemoteConfig <t><t>Configuration of remote communication <classlink>remoteconfig, ,$pwr_lang/remote_xtthelp.dat
+SysMonConfig <t><t>Configuration of system monitor <classlink>sysmonconfig, ,$pwr_lang/pwrb_xtthelp.dat
+StatusServerConfig <t><t>Configuration of status server <classlink>statusserverconfig, ,$pwr_lang/pwrb_xtthelp.dat
+WebHandler <t><t>Configuration of web handler process <classlink>webhandler, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Operator
+OpPlace <t><t>Configuration of operator place <classlink>opplace, ,$pwr_lang/pwrb_xtthelp.dat
+User <t><t>Configuration of event handling on operator place <classlink>user, ,$pwr_lang/pwrb_xtthelp.dat
+XttGraph <t><t>Configuration of HMI graphs <classlink>xttgraph, ,$pwr_lang/pwrb_xtthelp.dat
+RttConfig <t><t>Rtt and Xtt setup <classlink>rttconfig, ,$pwr_lang/pwrb_xtthelp.dat
+WebBrowserConfig <t><t>Configuration of web browser <classlink>webbrowserconfig, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Miscellaneous
+$NodeHier <t><t>Hierarchy object in the node hierarchy <classlink>nodehier, ,$pwr_lang/pwrs_xtthelp.dat
+$Node <t><t>Configures a node <classlink>node, ,$pwr_lang/pwrs_xtthelp.dat
+$MountObject <t><t>Specifies a point in the object tree where an object in another volumes is mounted<classlink>mountobject, ,$pwr_lang/pwrs_xtthelp.dat
+$CreateVolume <t><t>Defines a Dynamic volume <classlink>createvolume, ,$pwr_lang/pwrs_xtthelp.dat
+Application <t><t>Configures an application program <classlink>application, ,$pwr_lang/pwrb_xtthelp.dat
+PlotGroup <t><t>Configures a curve window with trends <classlink>plotgroup, ,$pwr_lang/pwrb_xtthelp.dat
+CycleSup <t><t>Supervision of cyclic processes, e.g. the plc treads <classlink>cyclesup, ,$pwr_lang/pwrb_xtthelp.dat
+NodeLinkSup <t><t>Supervision of link to remote nodes <classlink>nodelinksup, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>I/O Objects
+<h2>I/O Systems
+PSS9000 <t><t>Rack and card classes for PSS9000 <link> orm_pss9000
+Profibus <t><t>Master, slave and module classes for Profibus <link> orm_profibus
+Modbus TCP <t><t>Slave and module classes for Modbus TCP <link> orm_modbus_tcp
+MotionControl USB I/O <t><t>Classes for MotionControl USB I/O <link> orm_motioncontrol_usbio
+<h2>Channels
+ChanAi <t><t>Channel object for analog input <classlink>chanai, ,$pwr_lang/pwrb_xtthelp.dat
+ChanAit <t><t>Channel object for analog input with conversion table<classlink>chanait, ,$pwr_lang/pwrb_xtthelp.dat
+ChanAo <t><t>Channel object for analog output <classlink>chanao, ,$pwr_lang/pwrb_xtthelp.dat
+ChanCo <t><t>Channel object for counter <classlink>chanco, ,$pwr_lang/pwrb_xtthelp.dat
+ChanDi <t><t>Channel object for digital input <classlink>chandi, ,$pwr_lang/pwrb_xtthelp.dat
+ChanDo <t><t>Channel object for digital output <classlink>chando, ,$pwr_lang/pwrb_xtthelp.dat
+ChanIi <t><t>Channel object for integer input <classlink>chanii, ,$pwr_lang/pwrb_xtthelp.dat
+ChanIo <t><t>Channel object for integer output <classlink>chanio, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Communication
+Remnode3964R <t><t>Communication to a remote system using Siemens 3964R on a serial line <classlink>remnode3964r, ,$pwr_lang/remote_xtthelp.dat
+RemnodeALCM <t><t>Communication to a remote system using the ALCM protocol <classlink>remnodealcm, ,$pwr_lang/remote_xtthelp.dat
+RemnodeModbus <t><t>Communication to a remote system using Modbus on a serial line <classlink>remnodemodbus, ,$pwr_lang/remote_xtthelp.dat
+RemnodeMQ <t><t>Communication through a message queue using BEA MessageQ as a client<classlink>remnodemq, ,$pwr_lang/remote_xtthelp.dat
+RemnodeSerial <t><t>Communication to a remote system using a serial line <classlink>remnodeserial, ,$pwr_lang/remote_xtthelp.dat
+RemnodeTCP <t><t>Communication to a remote system using the TCP protocol <classlink>remnodetcp, ,$pwr_lang/remote_xtthelp.dat
+RemnodeUDP <t><t>Communication to a remote system using the UDP protocol <classlink>remnodeudp, ,$pwr_lang/remote_xtthelp.dat
+RemTrans <t><t>Specification of a transaction <classlink>remtrans, ,$pwr_lang/remote_xtthelp.dat
+Buff256 <t><t>Buffer object, size 256 byte <classlink>buff256, ,$pwr_lang/remote_xtthelp.dat
+Buff1440 <t><t>Buffer object, size 1440 byte <classlink>buff1440, ,$pwr_lang/remote_xtthelp.dat
+Buff4096 <t><t>Buffer object, size 4096 byte <classlink>buff4096, ,$pwr_lang/remote_xtthelp.dat
+Buff32k <t><t>Buffer object, size 32 kB <classlink>buff32k, ,$pwr_lang/remote_xtthelp.dat
+BuffStr80 <t><t>Buffer object, 79 character string <classlink>buffstr80, ,$pwr_lang/remote_xtthelp.dat
+
+</topic>
+
+<topic>orm_pss9000
+I/O System PSS9000
+
+<h1>Rack
+Rack_SSAB <t><t>Configures a PSS9000 rack <classlink>rack_ssab, ,$pwr_lang/ssabox_xtthelp.dat
+Ssab_RemoteRack <t><t>Configures a PSS9000 remote rack <classlink>ssab_remoterack, ,$pwr_lang/ssabox_xtthelp.dat
+
+<h1>Cards
+Ssab_AI32uP <t><t>Analog input card with 32 channels <classlink>ssab_ai32up, ,$pwr_lang/ssabox_xtthelp.dat
+Ssab_AI16uP <t><t>Analog input card with 16 channels <classlink>ssab_ai16up, ,$pwr_lang/ssabox_xtthelp.dat
+Ssab_AI8uP <t><t>Analog input card with 8 channels <classlink>ssab_ai8up, ,$pwr_lang/ssabox_xtthelp.dat
+Ssab_AO8uP <t><t>Analog output card with 8 channels <classlink>ssab_ao8up, ,$pwr_lang/ssabox_xtthelp.dat
+Ssab_AO8uPL <t><t>Analog output card with 8 channels <classlink>ssab_ao8upl, ,$pwr_lang/ssabox_xtthelp.dat
+Ssab_AO16uP_Logger <t><t>Analog output card with 16 channels <classlink>ssab_ao16up_logger, ,$pwr_lang/ssabox_xtthelp.dat
+Ssab_Co4uP <t><t>Counter card with 4 counters <classlink>ssab_co4up, ,$pwr_lang/ssabox_xtthelp.dat
+Ssab_DI32D <t><t>Digital input card with 32 channels <classlink>ssab_di32d, ,$pwr_lang/ssabox_xtthelp.dat
+Ssab_DO32DKS <t><t>Digital output card with 32 channels <classlink>ssab_do32dks, ,$pwr_lang/ssabox_xtthelp.dat
+Ssab_DO32DKS_Stall <t><t>Digital output card with 32 channels and stall function<classlink>ssab_do32dks_stall, ,$pwr_lang/ssabox_xtthelp.dat
+</topic>
+
+<topic>orm_profibus
+I/O System Profibus
+
+<h1>Masters
+Pb_Profiboard <t><t>Configures a Softing Profiboard master card <classlink>pb_profiboard, ,$pwr_lang/profibus_xtthelp.dat
+
+<h1>Slaves
+Pb_DP_Slave <t><t>Profibus slave <classlink>pb_dp_slave, ,$pwr_lang/profibus_xtthelp.dat
+ABB_ACS_Pb_Slave <t><t>Profibus slave for ABB ACS800 frequency converter <classlink>abb_acs_pb_slave, ,$pwr_lang/abb_xtthelp.dat
+Eurotherm_TC3001_PbSlave <t><t>Profibus slave for Eurotherm TC3001 thyristor unit <classlink>eurotherm_tc3001_pbslave, ,$pwr_lang/othermanufacturer_xtthelp.dat
+SEW_Movidrive_Pb_Slave <t><t>Profibus slave for SEW Movidrive frequency converter<classlink>sew_movidrive_pb_slave, ,$pwr_lang/othermanufacturer_xtthelp.dat
+Siemens_DiagRepeater <t><t>Profibus slave for Siemens diagnostic repeater <classlink>siemens_diagrepeater, ,$pwr_lang/siemens_xtthelp.dat
+Siemens_ET200S_IM151 <t><t>Profibus slave Siemens IM151 for ET200S<classlink>siemens_et200s_im151, ,$pwr_lang/siemens_xtthelp.dat
+Siemens_ET200M_IM153 <t><t>Profibus slave Siemens IM153 for ET200M<classlink>siemens_et200m_im153, ,$pwr_lang/siemens_xtthelp.dat
+</topic>
+
+<topic>orm_modbus_tcp
+I/O System Modbus TCP
+
+Modbus_TCP_Slave <t><t>Configures a Modbus TCP slave <classlink>modbus_tcp_slave, ,$pwr_lang/otherio_xtthelp.dat
+Modbus_Module <t><t>Configures a Modbus TCP module <classlink>modbus_module, ,$pwr_lang/otherio_xtthelp.dat
+</topic>
+
+<topic>orm_motioncontrol_usbio
+I/O System MotionControl USBIO
+
+MotionControl_USB <t><t>Configures a USB rack object <classlink>motioncontrol_usb, ,$pwr_lang/otherio_xtthelp.dat
+MotionControl_USBIO <t><t>Configures a MotionControl USBIO card object <classlink>motioncontrol_usbio, ,$pwr_lang/otherio_xtthelp.dat
+</topic>
+
+<topic>orm_modbus_tcp
+I/O System Modbus TCP
+
+Modbus_TCP_Slave <t><t>Configures a Modbus TCP slave <classlink>modbus_tcp_slave, ,$pwr_lang/otherio_xtthelp.dat
+Modbus_Module <t><t>Configures a Modbus TCP module <classlink>modbus_module, ,$pwr_lang/otherio_xtthelp.dat
+</topic>
+
+<topic>orm_class_def
+Class and Type Definition classes
+
+<h1>Type Definition
+$Bit <t><t>Defines a bit in a mask type <classlink>bit, ,$pwr_lang/pwrs_xtthelp.dat
+$TypeDef <t><t>Defines a derived type <classlink>typedef, ,$pwr_lang/pwrs_xtthelp.dat
+$TypeHier <t><t>Root object of a type definition tree <classlink>typehier, ,$pwr_lang/pwrs_xtthelp.dat
+$Value <t><t>Defines a value in an enum type <classlink>value, ,$pwr_lang/pwrs_xtthelp.dat
+
+<h1>Class Definition
+$Attribute <t><t>Defines an attribute in an object body <classlink>attribute, ,$pwr_lang/pwrs_xtthelp.dat
+$AttrXRef <t><t>Defines a cross reference attribute in an object body <classlink>attrxref, ,$pwr_lang/pwrs_xtthelp.dat
+$Buffer <t><t>Defines a buffer attribute in an object body <classlink>buffer, ,$pwr_lang/pwrs_xtthelp.dat
+$ClassDef <t><t>Defines a class <classlink>classdef, ,$pwr_lang/pwrs_xtthelp.dat
+$ClassHier <t><t>Root object of a class description tree <classlink>classhier, ,$pwr_lang/pwrs_xtthelp.dat
+$GraphPlcNode <t><t>Defines plc properties for a plc function object class<classlink>graphplcnode, ,$pwr_lang/pwrs_xtthelp.dat
+$Input <t><t>Defines an input pin on a plc function object <classlink>input, ,$pwr_lang/pwrs_xtthelp.dat
+$Intern <t><t>Defines an intern attribute in a plc function object <classlink>intern, ,$pwr_lang/pwrs_xtthelp.dat
+$ObjBodyDef <t><t>Defines a object body, RtBody or DevBody <classlink>objbodydef, ,$pwr_lang/pwrs_xtthelp.dat
+$Output <t><t>Defines an output pin on a plc function object <classlink>output, ,$pwr_lang/pwrs_xtthelp.dat
+PlcTemplate <t><t>Contains the code for a plc function object with plc code <classlink>plctemplate, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Menu
+$Menu <t><t>Defines a popup menu in development environment <classlink>menu, ,$pwr_lang/pwrs_xtthelp.dat
+$MenuButton <t><t>Defines a menu entry<classlink>menubutton, ,$pwr_lang/pwrs_xtthelp.dat
+$MenuCascade <t><t>Defines a cascading menu entry <classlink>menucascade, ,$pwr_lang/pwrs_xtthelp.dat
+$MenuSeparator <t><t>Defines separator in a popup menu <classlink>menuseparator, ,$pwr_lang/pwrs_xtthelp.dat
+$RtMenu <t><t>Defines a popup menu in runtime environment<classlink>rtmenu, ,$pwr_lang/pwrs_xtthelp.dat
+
+<h1>Method
+$Method <t><t>Defines a method <classlink>method, ,$pwr_lang/pwrs_xtthelp.dat
+$RtMethod <t><t>Root of a runtime method definition tree <classlink>rtmethod, ,$pwr_lang/pwrs_xtthelp.dat
+
+</topic>
+
+<topic>orm_plc_prog
+Function Object classes for plc programming
+
+Analog <t><t>Classes handling analog values <link> orm_plc_analog
+Logic <t><t>Classes handling digital values <link> orm_plc_logic
+Integer <t><t>Classes handling integer values <link> orm_plc_integer
+Grafcet <t><t>Grafcet sequential control <link> orm_plc_grafcet
+Time <t><t>Classes handling time values <link> orm_plc_time
+Data<t><t>Classes handling data objects <link> orm_plc_data
+String<t><t>Classes handling strings<link> orm_plc_string
+Type conversion<t><t>Classes handling type conversion <link> orm_plc_conversion
+Simulate<t><t>Simulate function objects <link> orm_plc_simulate
+Miscellaneous<t><t>Miscellaneous function objects<link> orm_plc_misc
+
+</topic>
+
+<topic>orm_plc_analog
+Classes handling analog values
+
+<h1>Comparision functions
+Comph <t><t>Compare an analog value to a high limit<classlink>comph, ,$pwr_lang/pwrb_xtthelp.dat
+Compl <t><t>Compare an analog value to a low limit<classlink>compl, ,$pwr_lang/pwrb_xtthelp.dat
+Equal <t><t>Compare two analog values for equality <classlink>equal, ,$pwr_lang/pwrb_xtthelp.dat
+GreaterEqual <t><t>Comparision of two analog values, greater than or equal to <classlink>greaterequal, ,$pwr_lang/pwrb_xtthelp.dat
+GreaterThan <t><t>Comparision of two analog values, greater than <classlink>greaterthan, ,$pwr_lang/pwrb_xtthelp.dat
+LessEqual <t><t>Comparision of two analog values, less than or equal to<classlink>lessequal, ,$pwr_lang/pwrb_xtthelp.dat
+LessThan <t><t>Comparision of two analog values, less than <classlink>lessthan, ,$pwr_lang/pwrb_xtthelp.dat
+NotEqual <t><t>Comparision of two analog values, not equal to <classlink>notequal, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Select functions
+Demux <t><t>Analog demultiplexer <classlink>demux, ,$pwr_lang/pwrb_xtthelp.dat
+Limit <t><t>Limits an analog value <classlink>limit, ,$pwr_lang/pwrb_xtthelp.dat
+Max <t><t>Get the highest of the input values <classlink>max, ,$pwr_lang/pwrb_xtthelp.dat
+Maxmin <t><t>Get the highest and/or the lowest of the input values <classlink>maxmin, ,$pwr_lang/pwrb_xtthelp.dat
+Min <t><t>Get the lowest of the input values <classlink>min, ,$pwr_lang/pwrb_xtthelp.dat
+Mux <t><t>Analog multiplexer, select one of the input values <classlink>mux, ,$pwr_lang/pwrb_xtthelp.dat
+Select <t><t>Select one of two analog values <classlink>select, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Arithmetic functions
+Div <t><t>Analog division <classlink>div, ,$pwr_lang/pwrb_xtthelp.dat
+Mul <t><t>Analog multiplication <classlink>mul, ,$pwr_lang/pwrb_xtthelp.dat
+Speed <t><t>Rate of change of an analog value <classlink>speed, ,$pwr_lang/pwrb_xtthelp.dat
+Sub <t><t>Analog subtraction <classlink>sub, ,$pwr_lang/pwrb_xtthelp.dat
+Sum <t><t>Weighted summing <classlink>sum, ,$pwr_lang/pwrb_xtthelp.dat
+Timint <t><t>Time integrator <classlink>timint, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>C-code programming objects
+AArithm <t><t>Expression in C-code with analog output<classlink>aarithm, ,$pwr_lang/pwrb_xtthelp.dat
+CArithm <t><t>C-code programming object <classlink>carithm, ,$pwr_lang/pwrb_xtthelp.dat
+DArithm <t><t>Expression in C-code with digital output <classlink>darithm, ,$pwr_lang/pwrb_xtthelp.dat
+DataArithm <t><t>C-code programming object with data inputs <classlink>datarithm, ,$pwr_lang/pwrb_xtthelp.dat
+ApCollect <t><t>Expansion of number of analog inputs handled in a DataArithm <classlink>apcollect, ,$pwr_lang/pwrb_xtthelp.dat
+ApDistribute <t><t>Expansion of number of analog ouputs handled in a DataArithm<classlink>apdistribute, ,$pwr_lang/pwrb_xtthelp.dat
+DataCollect <t><t>Expansion of number of data inputs handled in a DataArithm <classlink>datacollect, ,$pwr_lang/pwrb_xtthelp.dat
+DpCollect <t><t>Expansion of number of digital inputs handled in a DataArithm <classlink>dpcollect, ,$pwr_lang/pwrb_xtthelp.dat
+DpDistribute <t><t>Expansion of number of analog outputs handled in a DataArithm <classlink>dpdistribute, ,$pwr_lang/pwrb_xtthelp.dat
+IpCollect <t><t>Expansion of number of integer inputs handled in a DataArithm <classlink>ipcollect, ,$pwr_lang/pwrb_xtthelp.dat
+IpDistribute <t><t>Expansion of number of integer outputs handled in a DataArithm <classlink>ipdistribute, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Other
+Adelay <t><t>Time delay of an analog value <classlink>adelay, ,$pwr_lang/pwrb_xtthelp.dat
+ASup <t><t>Supervision of analog value <classlink>asup, ,$pwr_lang/pwrb_xtthelp.dat
+Curve <t><t>Interpolation in a table <classlink>curve, ,$pwr_lang/pwrb_xtthelp.dat
+Filter <t><t>First order lag filter <classlink>filter, ,$pwr_lang/pwrb_xtthelp.dat
+PiSpeed <t><t>Convert a pulse signal to velocity <classlink>pispeed, ,$pwr_lang/pwrb_xtthelp.dat
+Ramp <t><t>Limit a value's rate of change <classlink>ramp, ,$pwr_lang/pwrb_xtthelp.dat
+ScanTime <t><t>Fetch the scantime of the current plc thread<classlink>scantime, ,$pwr_lang/pwrb_xtthelp.dat
+Table <t><t>Table object <classlink>table, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Mathematical Functions
+Abs <t><t>Absolute value of an analog value <classlink>abs, ,$pwr_lang/pwrb_xtthelp.dat
+ASin <t><t>Arc sine <classlink>asin, ,$pwr_lang/pwrb_xtthelp.dat
+ATan <t><t>Arc tangent <classlink>atan, ,$pwr_lang/pwrb_xtthelp.dat
+Cos <t><t>Cosine <classlink>cos, ,$pwr_lang/pwrb_xtthelp.dat
+Exp <t><t>Natural exponential <classlink>exp, ,$pwr_lang/pwrb_xtthelp.dat
+Ln <t><t>Natural logarithm <classlink>ln, ,$pwr_lang/pwrb_xtthelp.dat
+Log <t><t>Base 10 logarithm <classlink>log, ,$pwr_lang/pwrb_xtthelp.dat
+Mod <t><t>Reminder of dividing <classlink>mod, ,$pwr_lang/pwrb_xtthelp.dat
+Sin <t><t>Sine <classlink>sin, ,$pwr_lang/pwrb_xtthelp.dat
+Sqrt <t><t>Square root <classlink>sqrt, ,$pwr_lang/pwrb_xtthelp.dat
+Tan <t><t>Tangent <classlink>tan, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Get and store analog signals and attributes
+CStoAo <t><t>Conditional store to an Ao <classlink>cstoao, ,$pwr_lang/pwrb_xtthelp.dat
+CStoAp <t><t>Conditional store to an analog attribute <classlink>cstoap, ,$pwr_lang/pwrb_xtthelp.dat
+CStoAtoIp <t><t>Conditional store of an analog value to an integer attribute <classlink>cstoatoip, ,$pwr_lang/pwrb_xtthelp.dat
+CStoAv <t><t>Conditional store to an Av <classlink>cstoav, ,$pwr_lang/pwrb_xtthelp.dat
+GetAi <t><t>Get Ai value <classlink>getai, ,$pwr_lang/pwrb_xtthelp.dat
+GetAo <t><t>Get Ao value <classlink>getao, ,$pwr_lang/pwrb_xtthelp.dat
+GetAp <t><t>Get value of an analog attribute <classlink>getap, ,$pwr_lang/pwrb_xtthelp.dat
+GetApPtr <t><t>Get value of an analog pointer attribute <classlink>getapptr, ,$pwr_lang/pwrb_xtthelp.dat
+GetAv <t><t>Get Av value <classlink>getav, ,$pwr_lang/pwrb_xtthelp.dat
+StoAo <t><t>Store to Ao <classlink>stoao, ,$pwr_lang/pwrb_xtthelp.dat
+StoAp <t><t>Store to analog attribute <classlink>stoap, ,$pwr_lang/pwrb_xtthelp.dat
+StoApPtr <t><t>Store to analog pointer attribute <classlink>stoapptr, ,$pwr_lang/pwrb_xtthelp.dat
+StoAtoIp <t><t>Store analog value to integer attribute <classlink>stoatoip, ,$pwr_lang/pwrb_xtthelp.dat
+StoAv <t><t>Store to Av <classlink>stoav, ,$pwr_lang/pwrb_xtthelp.dat
+</topic>
+
+<topic>orm_plc_logic
+Classes handling digital values
+
+<h1>Boolean algebra
+And <t><t>Logical and<classlink>and, ,$pwr_lang/pwrb_xtthelp.dat
+Inv <t><t>Logical inverter<classlink>inv, ,$pwr_lang/pwrb_xtthelp.dat
+Or <t><t>Logical or<classlink>or, ,$pwr_lang/pwrb_xtthelp.dat
+XOr <t><t>Exclusive or<classlink>xor, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Timer functions
+Pulse <t><t>One-shot pulse with variable length<classlink>pulse, ,$pwr_lang/pwrb_xtthelp.dat
+Timer <t><t>Reset delay<classlink>timer, ,$pwr_lang/pwrb_xtthelp.dat
+Wait <t><t>Set delay<classlink>wait, ,$pwr_lang/pwrb_xtthelp.dat
+Waith <t><t>Set delay with hold function<classlink>waith, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Other
+Count <t><t>Pulse counter<classlink>count, ,$pwr_lang/pwrb_xtthelp.dat
+DSup <t><t>Supervision of digital value<classlink>dsup, ,$pwr_lang/pwrb_xtthelp.dat
+Edge <t><t>Edge detector<classlink>edge, ,$pwr_lang/pwrb_xtthelp.dat
+FirstScan <t><t>True the first scan or the plc thread<classlink>firstscan, ,$pwr_lang/pwrb_xtthelp.dat
+SR_R <t><t>Set Reset flip-flop<classlink>sr_r, ,$pwr_lang/pwrb_xtthelp.dat
+SR_S <t><t>Set Reset flip-flop<classlink>sr_s, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Get and store digital signals and attributes
+GetDi <t><t>Get Di value <classlink>getdi, ,$pwr_lang/pwrb_xtthelp.dat
+GetDo <t><t>Get Do value <classlink>getdo, ,$pwr_lang/pwrb_xtthelp.dat
+GetDp <t><t>Get digital attribute value <classlink>getdp, ,$pwr_lang/pwrb_xtthelp.dat
+GetDpPtr <t><t>Get value of a digital pointer attribute <classlink>getdpptr, ,$pwr_lang/pwrb_xtthelp.dat
+GetDv <t><t>Get Dv value <classlink>getdv, ,$pwr_lang/pwrb_xtthelp.dat
+ResDo <t><t>Reset Do <classlink>resdo, ,$pwr_lang/pwrb_xtthelp.dat
+ResDp <t><t>Reset digital attribute <classlink>resdp, ,$pwr_lang/pwrb_xtthelp.dat
+ResDv <t><t>Reset Dv <classlink>resdv, ,$pwr_lang/pwrb_xtthelp.dat
+SetDo <t><t>Set Do <classlink>setdo, ,$pwr_lang/pwrb_xtthelp.dat
+SetDp <t><t>Set digital attribute <classlink>setdp, ,$pwr_lang/pwrb_xtthelp.dat
+SetDv <t><t>Set Dv <classlink>setdv, ,$pwr_lang/pwrb_xtthelp.dat
+StoDo <t><t>Store to Do <classlink>stodo, ,$pwr_lang/pwrb_xtthelp.dat
+StoDp <t><t>Store to digital attribute <classlink>stodp, ,$pwr_lang/pwrb_xtthelp.dat
+StoDpPtr <t><t>Store to digital pointer attribute <classlink>stodpptr, ,$pwr_lang/pwrb_xtthelp.dat
+StoDv <t><t>Store to Dv <classlink>stodv, ,$pwr_lang/pwrb_xtthelp.dat
+</topic>
+
+<topic>orm_plc_integer
+Classes handling integer values
+
+<h1>Bitwise operations
+BwAnd <t><t>Bitwise and <classlink>bwand, ,$pwr_lang/pwrb_xtthelp.dat
+BwInv <t><t>Bitwise invert<classlink>bwinv, ,$pwr_lang/pwrb_xtthelp.dat
+BwOr <t><t>Bitwise or<classlink>wbor, ,$pwr_lang/pwrb_xtthelp.dat
+BwRotateLeft <t><t>Bitwise rotate left<classlink>bwrotateleft, ,$pwr_lang/pwrb_xtthelp.dat
+BwRotateRight <t><t>Bitwise rotate right<classlink>bwrotateright, ,$pwr_lang/pwrb_xtthelp.dat
+BwShiftLeft <t><t>Bitwise shift left<classlink>bwshiftleft, ,$pwr_lang/pwrb_xtthelp.dat
+BwShiftRight <t><t>Bitwise shift right<classlink>bwshiftright, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Comparision functions
+IEqual <t><t>Compare two integer values for equality<classlink>iequal, ,$pwr_lang/pwrb_xtthelp.dat
+IGreaterEqual <t><t>Comparision of two integer values, greater than or equal of<classlink>igreaterequal, ,$pwr_lang/pwrb_xtthelp.dat
+IGreaterThan <t><t>Comparision of two integer values, greater than<classlink>igreaterthan, ,$pwr_lang/pwrb_xtthelp.dat
+ILessEqual <t><t>Comparision of two integer values, less than or equal of<classlink>ilessequal, ,$pwr_lang/pwrb_xtthelp.dat
+ILessThan <t><t>Comparision of two integer values, less than<classlink>ilessthan, ,$pwr_lang/pwrb_xtthelp.dat
+INotEqual <t><t>Comparision of two integer values, not equal to<classlink>inotequal, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Arithmetic functions
+Even <t><t>Check if input in even<classlink>even, ,$pwr_lang/pwrb_xtthelp.dat
+IAbs <t><t>Absolute value<classlink>iabs, ,$pwr_lang/pwrb_xtthelp.dat
+IAdd <t><t>Integer addition<classlink>iadd, ,$pwr_lang/pwrb_xtthelp.dat
+IDiv <t><t>Integer division<classlink>idiv, ,$pwr_lang/pwrb_xtthelp.dat
+IMul <t><t>Integer multiplication<classlink>imul, ,$pwr_lang/pwrb_xtthelp.dat
+ISub <t><t>Integer subtraction<classlink>isub, ,$pwr_lang/pwrb_xtthelp.dat
+Odd <t><t>Check if input is odd<classlink>odd, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Select functions
+IDemux <t><t>Integer demultiplexer<classlink>idemux, ,$pwr_lang/pwrb_xtthelp.dat
+ILimit <t><t>Limits an integer value<classlink>ilimit, ,$pwr_lang/pwrb_xtthelp.dat
+IMax <t><t>Get the highest of the input values<classlink>imax, ,$pwr_lang/pwrb_xtthelp.dat
+IMin <t><t>Get the lowest of the input values<classlink>imin, ,$pwr_lang/pwrb_xtthelp.dat
+IMux <t><t>Integer multiplexer, select one of the input values<classlink>imux, ,$pwr_lang/pwrb_xtthelp.dat
+ISel <t><t>Select one of two integer values<classlink>isel, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Get and store integer signals and attributes
+CStoIo <t><t>Conditional store to Io <classlink>cstoio, ,$pwr_lang/pwrb_xtthelp.dat
+CStoIp <t><t>Conditional store to integer attribute <classlink>cstoip, ,$pwr_lang/pwrb_xtthelp.dat
+CStoIv <t><t>Conditional store to Iv <classlink>cstoiv, ,$pwr_lang/pwrb_xtthelp.dat
+GetIi <t><t>Get Ii <classlink>getii, ,$pwr_lang/pwrb_xtthelp.dat
+GetIo <t><t>Get Io <classlink>getio, ,$pwr_lang/pwrb_xtthelp.dat
+GetIp <t><t>Get integer attribute <classlink>getip, ,$pwr_lang/pwrb_xtthelp.dat
+GetIpPtr <t><t>Get value of integer pointer attribute <classlink>getipptr, ,$pwr_lang/pwrb_xtthelp.dat
+GetIpToA <t><t>Get value of integer attribute and convert to analog <classlink>getiptoa, ,$pwr_lang/pwrb_xtthelp.dat
+GetIv <t><t>Get Iv <classlink>getiv, ,$pwr_lang/pwrb_xtthelp.dat
+StoIo <t><t>Store to Io <classlink>stoio, ,$pwr_lang/pwrb_xtthelp.dat
+StoIp <t><t>Store to integer attribute <classlink>stoip, ,$pwr_lang/pwrb_xtthelp.dat
+StoIpPtr <t><t>Store value to integer pointer attribute <classlink>stoipptr, ,$pwr_lang/pwrb_xtthelp.dat
+StoIv <t><t>Store to Iv <classlink>stoiv, ,$pwr_lang/pwrb_xtthelp.dat
+GetPi <t><t>Get Co value <classlink>getpi, ,$pwr_lang/pwrb_xtthelp.dat
+PiPos <t><t>Convert conter value <classlink>pipos, ,$pwr_lang/pwrb_xtthelp.dat
+
+</topic>
+
+<topic> orm_plc_grafcet
+Grafcet
+
+InitStep <t><t>Initial step, activate at startup <classlink>initstep, ,$pwr_lang/pwrb_xtthelp.dat
+Order <t><t>Grafcet order <classlink>order, ,$pwr_lang/pwrb_xtthelp.dat
+OrderAct <t><t>Fetch order activity from a order subwindow <classlink>orderact, ,$pwr_lang/pwrb_xtthelp.dat
+Reset_SO <t><t>Reset a stored order <classlink>reset_so, ,$pwr_lang/pwrb_xtthelp.dat
+SetCond <t><t>Set the transition condition from a transition subwindow <classlink>setcond, ,$pwr_lang/pwrb_xtthelp.dat
+SsBegin <t><t>Substep begin, first step in a substep window <classlink>ssbegin, ,$pwr_lang/pwrb_xtthelp.dat
+SsEnd <t><t>Substep end, last step in a substep window <classlink>ssend, ,$pwr_lang/pwrb_xtthelp.dat
+Step <t><t>Grafcet step <classlink>step, ,$pwr_lang/pwrb_xtthelp.dat
+SubStep <t><t>Grafcet expansion in subwindow <classlink>substep, ,$pwr_lang/pwrb_xtthelp.dat
+Trans <t><t>Grafcet transition <classlink>trans, ,$pwr_lang/pwrb_xtthelp.dat
+</topic>
+
+<topic> orm_plc_string
+Classes handling strings
+
+Strcat <t><t>Concatenate two strings <classlink>strcat, ,$pwr_lang/pwrb_xtthelp.dat
+Substr <t><t>Extract a substring from a string <classlink>substr, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Get and store string signals and attributes
+CStoNumSp <t><t>Conditional store of a number of characters to a string attribute <classlink>cstonumsp, ,$pwr_lang/pwrb_xtthelp.dat
+CStoSp <t><t>Conditional store to a string attribute <classlink>cstosp, ,$pwr_lang/pwrb_xtthelp.dat
+CStoSv <t><t>Conditional store to Sv <classlink>cstosv, ,$pwr_lang/pwrb_xtthelp.dat
+GetSp <t><t>Get string attribute <classlink>getsp, ,$pwr_lang/pwrb_xtthelp.dat
+GetSv <t><t>Get Sv <classlink>getsv, ,$pwr_lang/pwrb_xtthelp.dat
+StoNumSp <t><t>Store a number of characters to a string attribute <classlink>stonumsp, ,$pwr_lang/pwrb_xtthelp.dat
+StoSp <t><t>Store to a string attribute <classlink>stosp, ,$pwr_lang/pwrb_xtthelp.dat
+StoSv <t><t>Store to Sv <classlink>stosv, ,$pwr_lang/pwrb_xtthelp.dat
+</topic>
+
+<topic> orm_plc_conversion
+Type conversion
+
+AtoI <t><t>Convert analog value to integer <classlink>atoi, ,$pwr_lang/pwrb_xtthelp.dat
+AtoFloat64 <t><t>Convert analog value to Float64 <classlink>atofloat64, ,$pwr_lang/pwrb_xtthelp.dat
+AtoStr <t><t>Convert analog value to string <classlink>atostr, ,$pwr_lang/pwrb_xtthelp.dat
+BCDDo <t><t>Convert an analog value to BCD (Binary Coded Decimal) <classlink>bcddo, ,$pwr_lang/pwrb_xtthelp.dat
+DiBCD <t><t>Convert BCD (Binary Coded Decimal) to analog value  <classlink>dibcd, ,$pwr_lang/pwrb_xtthelp.dat
+DtoMask <t><t>Assamble digital values to integer bitmask <classlink>dtomask, ,$pwr_lang/pwrb_xtthelp.dat
+DtoEnum <t><t>Select an enumeration value <classlink>dtoenum, ,$pwr_lang/pwrb_xtthelp.dat
+DtoStr <t><t>Convert digital value to string <classlink>dtostr, ,$pwr_lang/pwrb_xtthelp.dat
+EnumToD <t><t>Identify an enumeration value <classlink>enumtod, ,$pwr_lang/pwrb_xtthelp.dat
+Float64toA <t><t>Convert a Float64 value to analog <classlink>float64toa, ,$pwr_lang/pwrb_xtthelp.dat
+Gray <t><t>Convert Gray code to analog value <classlink>gray, ,$pwr_lang/pwrb_xtthelp.dat
+Int64toI <t><t>Convert Int64 value to integer (Int32) <classlink>int64toi, ,$pwr_lang/pwrb_xtthelp.dat
+ItoA <t><t>Convert integer value to analog <classlink>itoa, ,$pwr_lang/pwrb_xtthelp.dat
+ItoInt64 <t><t>Convert integer value (Int32) to Int64 <classlink>itoint64, ,$pwr_lang/pwrb_xtthelp.dat
+ItoStr <t><t>Convert integer value to string <classlink>itostr, ,$pwr_lang/pwrb_xtthelp.dat
+ItoUInt32 <t><t>Convert integer value (Int32) to UInt32 <classlink>itouint32, ,$pwr_lang/pwrb_xtthelp.dat
+ItoUInt64 <t><t>Convert integer value (Int32) to UInt64 <classlink>itouint64, ,$pwr_lang/pwrb_xtthelp.dat
+MaskToD <t><t>Deassamble integer bitmask to digital values <classlink>masktod, ,$pwr_lang/pwrb_xtthelp.dat
+NameToStr <t><t>Converts attribute reference to string <classlink>nametostr, ,$pwr_lang/pwrb_xtthelp.dat
+UInt64toI <t><t>Convert UInt64 value to integer (Int32) <classlink>uint64toi, ,$pwr_lang/pwrb_xtthelp.dat
+UInt32toI <t><t>Convert UInt32 value to integer (Int32) <classlink>uint32toi, ,$pwr_lang/pwrb_xtthelp.dat
+
+</topic>
+
+<topic> orm_plc_data
+Data
+
+<h1>Get and store data object references
+CStoAttrRefP <t><t>Conditional store of attribute reference value <classlink>cstoattrrefp, ,$pwr_lang/pwrb_xtthelp.dat
+GetData <t><t>Get reference to data object <classlink>getdata, ,$pwr_lang/pwrb_xtthelp.dat
+GetDataP <t><t>Get reference to data object from data pointer attribute <classlink>getdatap, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Data manipulation
+DataCopy <t><t>Copy the content of one data object to another <classlink>datacopy, ,$pwr_lang/nmps_xtthelp.dat
+DataReset <t><t>Zero a data object <classlink>datareset, ,$pwr_lang/nmps_xtthelp.dat
+DataSelect <t><t>Select one of the input data objects <classlink>dataselect, ,$pwr_lang/nmps_xtthelp.dat
+
+<h1>NMpsCell objects
+CurrentData <t><t>Get current data object in a NMpsCell subwindow loop <classlink>currentdata, ,$pwr_lang/nmps_xtthelp.dat
+CurrentIndex <t><t>Get index in a NMpsCell subwindow loop <classlink>currentindex, ,$pwr_lang/nmps_xtthelp.dat
+NMpsCell <t><t>Data object container <classlink>nmpscell, ,$pwr_lang/nmps_xtthelp.dat
+NMpsMirrorCell <t><t>Cell mirroring the content of other cell objects <classlink>nmpsmirrorcell, ,$pwr_lang/nmps_xtthelp.dat
+NMpsOutCell <t><t>End station in a cell sequence <classlink>nmpsoutcell, ,$pwr_lang/nmps_xtthelp.dat
+NMpsStoreCell <t><t>Cell with select function <classlink>nmpsstorecell, ,$pwr_lang/nmps_xtthelp.dat
+NMpsTrp <t><t>Transport of data objects between cells <classlink>nmpstrp, ,$pwr_lang/nmps_xtthelp.dat
+NMpsTrpFF <t><t>Transport between cell front ends<classlink>nmpstrpff, ,$pwr_lang/nmps_xtthelp.dat
+NMpsTrpRR <t><t>Transport between cell rear ends <classlink>nmpstrprr, ,$pwr_lang/nmps_xtthelp.dat
+
+<h1>NMpsCell display
+CellDisp <t><t>Display content of dataobjects in cells <classlink>celldisp, ,$pwr_lang/nmps_xtthelp.dat
+CellUpdate <t><t>Diplay and update dataobjects in cells <classlink>cellupdate, ,$pwr_lang/nmps_xtthelp.dat
+DispLink <t><t>Object to link CellDisp objects <classlink>displink, ,$pwr_lang/nmps_xtthelp.dat
+
+<h1>Data communication
+DataCnv <t><t>Data telegram conversion <classlink>datacnv, ,$pwr_lang/nmps_xtthelp.dat
+DataRcv <t><t>Receive data and store in data object <classlink>datarcv, ,$pwr_lang/nmps_xtthelp.dat
+DataRequest <t><t>Request and receive data <classlink>datarequest, ,$pwr_lang/nmps_xtthelp.dat
+DataSend <t><t>Send data stored in data object <classlink>datasend, ,$pwr_lang/nmps_xtthelp.dat
+
+</topic>
+
+<topic> orm_plc_time
+Classes handling time values
+
+<h1>Compare
+AtEqual <t><t>Compare two absolute times for equality <classlink>atequal, ,$pwr_lang/pwrb_xtthelp.dat
+AtGreaterThan <t><t>Comparision of absolute times, greater than <classlink>atgreaterthan, ,$pwr_lang/pwrb_xtthelp.dat
+AtLessThan <t><t>Comparision of absolute times, less than <classlink>atlessthan, ,$pwr_lang/pwrb_xtthelp.dat
+DtEqual <t><t>Compare two delta times for equality <classlink>dtequal, ,$pwr_lang/pwrb_xtthelp.dat
+DtGreaterThan <t><t>Comparision of delta times, greater than <classlink>dtgreaterthan, ,$pwr_lang/pwrb_xtthelp.dat
+DtLessThan <t><t>Comparision of delta times, less than <classlink>dtlessthan, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Time arithmetic
+AtAdd <t><t>Add an absolute time and a delta time<classlink>atadd, ,$pwr_lang/pwrb_xtthelp.dat
+AtSub <t><t>Subtraction of absolute times <classlink>atsub, ,$pwr_lang/pwrb_xtthelp.dat
+AtDtSub <t><t>Subtract a delta time from an absolute time <classlink>atdtsub, ,$pwr_lang/pwrb_xtthelp.dat
+DtAdd <t><t>Add two delta times <classlink>dtadd, ,$pwr_lang/pwrb_xtthelp.dat
+DtSub <t><t>Subtraction of delta times <classlink>dtsub, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Time conversion
+AToDt <t><t>Convert analog value to delta time <classlink>atodt, ,$pwr_lang/pwrb_xtthelp.dat
+DtToA <t><t>Convert delta time to analog value <classlink>dttoa, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Get and store time values
+CStoATp <t><t>Conditional store to absolute time attribute <classlink>cstoatp, ,$pwr_lang/pwrb_xtthelp.dat
+CStoATv <t><t>Conditional store to ATv <classlink>cstoatv, ,$pwr_lang/pwrb_xtthelp.dat
+CStoDTp <t><t>Conditional store to delta time attribute <classlink>cstodtp, ,$pwr_lang/pwrb_xtthelp.dat
+CStoDTv <t><t>Conditional store to DTv <classlink>cstodtv, ,$pwr_lang/pwrb_xtthelp.dat
+CurrentTime <t><t>Fetch current time <classlink>currenttime, ,$pwr_lang/pwrb_xtthelp.dat
+GetATp <t><t>Get value of an absolute time attribute <classlink>getatp, ,$pwr_lang/pwrb_xtthelp.dat
+GetATv <t><t>Get ATv value <classlink>getatv, ,$pwr_lang/pwrb_xtthelp.dat
+GetDTp <t><t>Get value of a delta time attribute <classlink>getdtp, ,$pwr_lang/pwrb_xtthelp.dat
+GetDTv <t><t>Get DTv value <classlink>getdtv, ,$pwr_lang/pwrb_xtthelp.dat
+StoATp <t><t>Store to absolute time attribute <classlink>stoatp, ,$pwr_lang/pwrb_xtthelp.dat
+StoATv <t><t>Store to ATv <classlink>stoatv, ,$pwr_lang/pwrb_xtthelp.dat
+StoDTp <t><t>Store to delta time attribute <classlink>stodtp, ,$pwr_lang/pwrb_xtthelp.dat
+StoDTv <t><t>Store to DTv <classlink>stodtv, ,$pwr_lang/pwrb_xtthelp.dat
+
+</topic>
+
+<topic> orm_plc_simulate
+
+<h1>Simulate I/O input values
+CStoAi <t><t>Conditional store to Ai <classlink>cstoai, ,$pwr_lang/pwrb_xtthelp.dat
+CStoIi <t><t>Conditional store to Ii <classlink>cstoii, ,$pwr_lang/pwrb_xtthelp.dat
+ResDi <t><t>Reset Di <classlink>resdi, ,$pwr_lang/pwrb_xtthelp.dat
+SetDi <t><t>Set Di <classlink>setdi, ,$pwr_lang/pwrb_xtthelp.dat
+StoAi <t><t>Store to Ai <classlink>stoai, ,$pwr_lang/pwrb_xtthelp.dat
+StoDi <t><t>Store to Di <classlink>stodi, ,$pwr_lang/pwrb_xtthelp.dat
+StoIi <t><t>Store to Ii <classlink>stoii, ,$pwr_lang/pwrb_xtthelp.dat
+StoPi <t><t>Store to Co <classlink>stopi, ,$pwr_lang/pwrb_xtthelp.dat
+ToggleDi <t><t>Toggle Di value <classlink>toggledi, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Simulate base components
+BaseContactorSim <t><t>Simulation object to BaseContactor <classlink>basecontactorsim, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseCDamperSim <t><t>Simulation object to BaseCDamper <classlink>basecdampersim, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseCValveSim <t><t>Simulation object to BaseCValveSim <classlink>basecvalvesim, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseElHeaterSim <t><t>Simulation object to BaseElHeater <classlink>baseelheatersim, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseFcPPO3MotorAggrSim <t><t>Simulation object to BaseFcPPO3MotorAggr <classlink>basefcppo3motoraggrsim, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseFcPPO3Sim <t><t>Simulation object to BaseFcPPO3 <classlink>basefcppo3sim, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseFcPPO5MotorAggrSim <t><t>Simulation object to BaseFcPPO5MotorAggr <classlink>basefcppo3motoraggrsim, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseFcPPO5Sim <t><t>Simulation object to BaseFcPPO5 <classlink>basefcppo5sim, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseMValveSim <t><t>Simulation object to BaseMValve <classlink>basemvalvesim, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseSensorSim <t><t>Simulation object to BaseSensor <classlink>basesensorsim, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseMotorAggrSim <t><t>Simulation object to BaseMotorAggr <classlink>basemotoraggrsim, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseMotorIncrDecrAggrSim <t><t>Simulation object to BaseMotorIncrDecrAggr <classlink>basemotorincrdecraggrsim, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseMotorSim <t><t>Simulation object to BaseMotor <classlink>basemotorsim, ,$pwr_lang/basecomponent_xtthelp.dat
+</topic>
+
+<topic> orm_plc_misc
+Miscellanous plc classes
+
+<h1>Control
+Inc3P <t><t>Incremental 3-point output <classlink>inc3p, ,$pwr_lang/pwrb_xtthelp.dat
+Mode <t><t>Mode selection object to PID controller <classlink>mode, ,$pwr_lang/pwrb_xtthelp.dat
+Out2P <t><t>Pulse proportional relay control <classlink>out2p, ,$pwr_lang/pwrb_xtthelp.dat
+PID <t><t>PID controller <classlink>pid, ,$pwr_lang/pwrb_xtthelp.dat
+Pos3P <t><t>Positional 3-step controller <classlink>pos3p, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Drive
+Drive <t><t>Start/Stop motor control <classlink>drive, ,$pwr_lang/pwrb_xtthelp.dat
+MValve <t><t>Motor valve positioner <classlink>mvalve, ,$pwr_lang/pwrb_xtthelp.dat
+Posit <t><t>Positioner <classlink>posit, ,$pwr_lang/pwrb_xtthelp.dat
+Valve <t><t>Valve positioner <classlink>valve, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Edit
+BodyText <t><t>Text with multiple rows <classlink>bodytext, ,$pwr_lang/pwrb_xtthelp.dat
+Document <t><t>Document <classlink>document, ,$pwr_lang/pwrb_xtthelp.dat
+Frame <t><t>Rectangular frame <classlink>frame, ,$pwr_lang/pwrb_xtthelp.dat
+Head <t><t>Header text <classlink>head, ,$pwr_lang/pwrb_xtthelp.dat
+ShowPlcAttr <t><t>Shows program attributes <classlink>showplcattr, ,$pwr_lang/pwrb_xtthelp.dat
+Text <t><t>Single row text <classlink>text, ,$pwr_lang/pwrb_xtthelp.dat
+Title <t><t>Title text <classlink>title, ,$pwr_lang/pwrb_xtthelp.dat
+
+<h1>Other
+Backup <t><t>Store attribute or object in backup file <classlink>backup, ,$pwr_lang/pwrb_xtthelp.dat
+CLoop <t><t>Repeated execution of objects located in a subwindow <classlink>cloop, ,$pwr_lang/nmps_xtthelp.dat
+CSub <t><t>Conditional execution of objects located in a subwindow <classlink>csub, ,$pwr_lang/pwrb_xtthelp.dat
+CArea <t><t>Conditional execution of object located in an area <classlink>carea, ,$pwr_lang/pwrb_xtthelp.dat
+Disabled <t><t>Check if an attribute is disabled <classlink>disabled, ,$pwr_lang/pwrb_xtthelp.dat
+RemTransRcv <t><t>Supervise an receive a RemTrans object <classlink>remtransrcv, ,$pwr_lang/remote_xtthelp.dat
+RemTransSend <t><t>Send a RemTrans <classlink>remtranssend, ,$pwr_lang/remote_xtthelp.dat
+RunningTime <t><t>Running time measurement <classlink>runningtime, ,$pwr_lang/nmps_xtthelp.dat
+Ssab_AntiSway <t><t>Crane antisway object <classlink>ssab_antisway, ,$pwr_lang/ssabox_xtthelp.dat
+Ssab_ServoReg <t><t>Servo regulator with direct positioning <classlink>ssab_servoreg, ,$pwr_lang/ssabox_xtthelp.dat
+
+</topic>
+
+</chapter>
