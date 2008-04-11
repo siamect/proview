@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_nav_help.cpp,v 1.11 2008-02-27 06:24:37 claes Exp $
+ * Proview   $Id: co_nav_help.cpp,v 1.12 2008-04-11 16:30:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -368,6 +368,37 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
 	  {
 	    strcpy( link, "$web:");
 	    help_remove_spaces( link_part[0], &link[5]);
+	    help_remove_spaces( link_part[1], link_bookmark);
+	    help_remove_spaces( link_part[2], link_filename);
+            link_filename_p = link_filename;
+          }
+	}
+        else if ( (s = strstr( line, "<classlink>")) || (s = strstr( line, "<CLASSLINK>")))
+	{
+          help_remove_spaces( s + 11, link);
+	  *s = 0;
+
+          link_nr = dcli_parse( link, ",", "", (char *)link_part,
+                	sizeof( link_part) / sizeof( link_part[0]),
+			sizeof( link_part[0]), 0);
+          if ( link_nr == 1)
+	  {
+	    strcpy( link, "$class:");
+	    help_remove_spaces( link_part[0], &link[7]);
+            strcpy( link_bookmark, "");
+            link_filename_p = file_name;
+	  }
+          else if ( link_nr == 2)
+	  {
+	    strcpy( link, "$class:");
+	    help_remove_spaces( link_part[0], &link[7]);
+	    help_remove_spaces( link_part[1], link_bookmark);
+            link_filename_p = file_name;
+          }
+          else if ( link_nr > 2)
+	  {
+	    strcpy( link, "$class:");
+	    help_remove_spaces( link_part[0], &link[7]);
 	    help_remove_spaces( link_part[1], link_bookmark);
 	    help_remove_spaces( link_part[2], link_filename);
             link_filename_p = link_filename;

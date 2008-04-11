@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_xtthelptohtml.cpp,v 1.4 2007-05-24 14:51:19 claes Exp $
+ * Proview   $Id: cnv_xtthelptohtml.cpp,v 1.5 2008-04-11 16:30:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -119,7 +119,7 @@ void *CnvXtthelpToHtml::insert( navh_eItemType item_type, char *text1,
 "<TITLE>" << endl <<
 "Generated Documentation (Untitled)" << endl <<
 "</TITLE>" << endl <<
-"<LINK REL =\"stylesheet\" TYPE=\"text/css\" HREF=\"pwr_css.css\" TITLE=\"Style\">" << endl <<
+"<LINK REL =\"stylesheet\" TYPE=\"text/css\" HREF=\"../pcss.css\" TITLE=\"Style\">" << endl <<
 "</HEAD>" << endl <<
 	//"<H2>" << text1 << "</H2><BR>" << endl <<
 "<P>" << endl;
@@ -141,14 +141,28 @@ void *CnvXtthelpToHtml::insert( navh_eItemType item_type, char *text1,
       if ( !cf) 
 	break;
 
+      pwr_tFileName fname;
       if ( strcmp( link, "") != 0) {
-        pwr_tFileName fname;
 
 	if ( strncmp( link, "$web:", 5) == 0) {
 	  if ( strncmp( &link[5], "$pwrp_web/", 10) == 0)
 	    strcpy( fname, &link[15]);
 	  else
 	    strcpy( fname, &link[5]);
+	} 
+	else if ( strncmp( link, "$class:", 7) == 0) {
+	  char *s;
+
+	  // Get prefix from file
+	  strcpy( fname, "./orm/");
+	  s = strrchr( file_name, '/');
+	  if ( s)
+	    strcat( fname, s+1);
+	  s = strchr( fname, '_');
+	  if ( s)
+	    *(s+1) = 0;
+	  strcat( fname, &link[7]);
+	  strcat( fname, ".html");
 	} 
         else if ( (strstr( link, ".htm") != 0) || 
 		  (strstr( link, ".pdf") != 0)) {
@@ -162,11 +176,14 @@ void *CnvXtthelpToHtml::insert( navh_eItemType item_type, char *text1,
 	    strcat( fname, link_bookmark);
           }
         }
-        cf->f << "<A HREF=\"" <<  fname << "\">";
+	if ( !in_table)
+	  cf->f << "<A HREF=\"" <<  fname << "\">";
       }
       else if ( bookmark) {
-        cf->f << "</TABLE>" << endl;
-        in_table = 0;
+	if ( in_table) {
+	  cf->f << "</TABLE>" << endl;
+	  in_table = 0;
+	}
         cf->f << "<A NAME=\"" << bookmark << "\">";
       }
 
@@ -178,7 +195,12 @@ void *CnvXtthelpToHtml::insert( navh_eItemType item_type, char *text1,
           cf->f << "<BR>" << endl;
       }
       else {
-	cf->f << "<TR><TD>" << text1;
+	cf->f << "<TR><TD>";
+        if ( strcmp( link, "") != 0)
+          cf->f << "<A HREF=\"" <<  fname << "\">";
+        else if ( bookmark != 0)
+          cf->f << "<A NAME=\"" <<  bookmark << "\">";
+	cf->f << text1;
         if ( strcmp( text2, "") != 0 || strcmp( text3, "") != 0) {
           for ( i = 0; i < (int)(CNV_TAB - strlen(text1)); i++)
             cf->f << "&nbsp;";
@@ -189,11 +211,11 @@ void *CnvXtthelpToHtml::insert( navh_eItemType item_type, char *text1,
             cf->f << "&nbsp;&nbsp;</TD><TD>" << text3;
           }
         }
-        cf->f << "</TD></TR>";
         if ( strcmp( link, "") != 0 || bookmark)
           cf->f << "</A>" << endl;
         else
           cf->f << endl;
+        cf->f << "</TD></TR>";
       }
       return NULL;
     }
@@ -209,6 +231,20 @@ void *CnvXtthelpToHtml::insert( navh_eItemType item_type, char *text1,
 	    strcpy( fname, &link[15]);
 	  else
 	    strcpy( fname, &link[5]);
+	} 
+	else if ( strncmp( link, "$class:", 7) == 0) {
+	  char *s;
+
+	  // Get prefix from file
+	  strcpy( fname, "./orm/");
+	  s = strrchr( file_name, '/');
+	  if ( s)
+	    strcat( fname, s+1);
+	  s = strchr( fname, '_');
+	  if ( s)
+	    *(s+1) = 0;
+	  strcat( fname, &link[7]);
+	  strcat( fname, ".html");
 	} 
         else if ( (strstr( link, ".htm") != 0) || 
 		  (strstr( link, ".pdf") != 0)) {
@@ -255,11 +291,11 @@ void *CnvXtthelpToHtml::insert( navh_eItemType item_type, char *text1,
             cf->f << "&nbsp;&nbsp;</B></TD><TD><B>" << text3;
           }
         }
-        cf->f << "</B></TD></TR>";
         if ( strcmp( link, "") != 0 || bookmark)
           cf->f << "</A>" << endl;
         else
           cf->f << endl;
+        cf->f << "</B></TD></TR>";
       }
       return NULL;
     }

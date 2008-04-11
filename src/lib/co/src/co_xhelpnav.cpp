@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_xhelpnav.cpp,v 1.12 2008-02-27 06:24:37 claes Exp $
+ * Proview   $Id: co_xhelpnav.cpp,v 1.13 2008-04-11 16:30:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1018,6 +1018,11 @@ void *xhelpnav_help_insert_cb( void *ctx, navh_eItemType item_type, char *text1,
 		      navh_eHelpFile file_type, int help_index, char *bm)
 {
   CoXHelpNav *xhelpnav = (CoXHelpNav *)ctx;
+  char *llink = 0;
+  if ( link && strncmp( link, "$class:", 7) == 0)
+    llink = link + 7;
+  else if ( link)
+    llink = link;
 
   if ( xhelpnav->init_help) {
     xhelpnav->brow_pop();
@@ -1033,7 +1038,7 @@ void *xhelpnav_help_insert_cb( void *ctx, navh_eItemType item_type, char *text1,
       trim( text2);
       trim( text3);
       HItemHelp *item = new HItemHelp( xhelpnav->brow, "help", text1, text2, text3,
-	     link, bookmark, file_name, file_type, help_index,
+	     llink, bookmark, file_name, file_type, help_index,
 	     NULL, flow_eDest_IntoLast);
       return item->node;
     }
@@ -1043,7 +1048,7 @@ void *xhelpnav_help_insert_cb( void *ctx, navh_eItemType item_type, char *text1,
       trim( text2);
       trim( text3);
       HItemHelpBold *item = new HItemHelpBold( xhelpnav->brow, "help", text1, text2,
-	     text3, link, bookmark, file_name, file_type, help_index,
+	     text3, llink, bookmark, file_name, file_type, help_index,
 	     NULL, flow_eDest_IntoLast);
       return item->node;
     }
@@ -1083,7 +1088,7 @@ void *xhelpnav_help_insert_cb( void *ctx, navh_eItemType item_type, char *text1,
       brow_AddAnnotPixmap( nc, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
       brow_AddImage( nc, text1, 2, 0);
       HItemHelpImage *item = new HItemHelpImage( xhelpnav->brow, "help", nc,
-	     link, bookmark, file_name, file_type, NULL, flow_eDest_IntoLast);
+	     llink, bookmark, file_name, file_type, NULL, flow_eDest_IntoLast);
       return item->node;
     }
     default:
