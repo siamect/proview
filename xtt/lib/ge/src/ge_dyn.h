@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.h,v 1.35 2008-01-24 09:28:01 claes Exp $
+ * Proview   $Id: ge_dyn.h,v 1.36 2008-04-14 07:02:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -142,6 +142,7 @@
     ge_eDynPrio_PulldownMenu,
     ge_eDynPrio_OptionMenu,
     ge_eDynPrio_InputFocus,
+    ge_eDynPrio_DigCommand,
 
     // This should always be last
     ge_eDynPrio_CloseGraph = 10000
@@ -178,7 +179,8 @@
     ge_mDynType_StatusColor    	= 1 << 25,
     ge_mDynType_HostObject    	= 1 << 26,
     ge_mDynType_DigSound    	= 1 << 27,
-    ge_mDynType_XY_Curve    	= 1 << 28
+    ge_mDynType_XY_Curve    	= 1 << 28,
+    ge_mDynType_DigCommand    	= 1 << 29
   } ge_mDynType;
 
   //! Action types.
@@ -276,6 +278,7 @@
     ge_eSave_HostObject             	= 32,
     ge_eSave_DigSound	             	= 33,
     ge_eSave_XY_Curve	             	= 34,
+    ge_eSave_DigCommand	             	= 35,
     ge_eSave_PopupMenu			= 50,
     ge_eSave_SetDig			= 51,
     ge_eSave_ResetDig			= 52,
@@ -438,6 +441,10 @@
     ge_eSave_XY_Curve_instance_mask    	= 3415,
     ge_eSave_XY_Curve_curve_color    	= 3416,
     ge_eSave_XY_Curve_fill_color    	= 3417,
+    ge_eSave_DigCommand_attribute      	= 3500,
+    ge_eSave_DigCommand_command      	= 3501,
+    ge_eSave_DigCommand_instance        = 3502,
+    ge_eSave_DigCommand_instance_mask 	= 3503,
     ge_eSave_PopupMenu_ref_object      	= 5000,
     ge_eSave_SetDig_attribute		= 5100,
     ge_eSave_SetDig_instance		= 5101,
@@ -2171,6 +2178,39 @@ class GeXY_Curve : public GeDynElem {
     strcpy( y_minvalue_attr, x.y_minvalue_attr); strcpy( y_maxvalue_attr, x.y_maxvalue_attr); 
     strcpy( x_minvalue_attr, x.x_minvalue_attr); strcpy( x_maxvalue_attr, x.x_maxvalue_attr);
     strcpy( noofpoints_attr, x.noofpoints_attr); strcpy( update_attr, x.update_attr);}
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int disconnect( grow_tObject object);
+  int scan( grow_tObject object);
+  void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
+  int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
+};
+
+//! Execute the supplied command when the value gets high.
+class GeDigCommand : public GeDynElem {
+ public:
+  pwr_tAName attribute;		//!< Database reference for digital attribute.
+  char       command[400];	//!< Command to execute.
+
+  pwr_tBoolean *p;
+  pwr_tSubid subid;
+  int size;
+  graph_eDatabase db;
+  int inverted;
+  bool first_scan;
+  pwr_tBoolean old_value;
+  int a_typeid;
+
+  GeDigCommand( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
+    GeDynElem(e_dyn, ge_mDynType_DigCommand, (ge_mActionType) 0, ge_eDynPrio_DigCommand)
+    { strcpy( attribute, ""); strcpy( command, ""); instance = e_instance;}
+  GeDigCommand( const GeDigCommand& x) : 
+    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    { strcpy( attribute, x.attribute); strcpy( command, x.command);
+    instance = x.instance; instance_mask = x.instance_mask;}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);

@@ -84,3 +84,4 @@
 080408 cs  glow      Ge connections routing not sensitive for other nodes.
 080408 cs  ge        Connections menu added in gtk version.
 080408 cs  xtt       Format check added in Value dynamics.
+080414 cs  ge        Dynamic DigCommand added.

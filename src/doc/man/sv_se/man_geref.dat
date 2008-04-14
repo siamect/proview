@@ -1708,6 +1708,7 @@ AnalogShift <t>Float32 Int32 <t>Skiftar mellan olika sidor i subgrafen. Värdet <
 Animation <t>Boolean    <t>Olika typer av animering. <link>GeDynAnimation
 Video     <t>-          <t>Kontinuerlig uppdatering av en blidfil. <link>GeDynVideo
 SliderBackground <t>-   <t>Markerar att subgrafen är bakgrund till en slider-komponent. <link>GeDynSliderBackground
+DigCommand <t>Boolean   <t>Exekverar ett kommando när signalet blir hög. <link>GeDynDigCommand
 
 <h2>Inherit
 För en instans av en subgraph betyder det att dynamiken ärvs från subgrafs-klassen, dvs den 
@@ -2167,6 +2168,23 @@ Video
 
 Visar en gif-fil som kontinuerligt uppdateras av en Web-kamera.
 Video har inga attribut.
+</topic>
+
+<topic>GeDynDigCommand <style>function
+DigCommand
+Exekvera ett kommando när signalen går från låg till hög.
+
+Objektet kopplas till en digital signal i rtdb. När signalvärdet ändras från 0 till 1 
+exekveras kommandot.
+
+DigCommand kan finnas i flera instanser, vilket gör det möjlit att exekvera flera kommandon.
+
+<b>Attribute <t><t>Description
+DigCommand.Attribute <t><t>Signal i databasen av typ boolean som ska påverka komponenten.
+DigCommand.Command <t><t>Xtt kommando som exekveras när signalen går från 0 till 1.
+DigCommand.Instance <t><t>Anger vilka instanser som ska skapas.
+DigCommand2.Attribute <t><t>Signal för instans nr 2.
+DigCommand2.Command <t><t>Kommando för instans nr 2.
 </topic>
 </headerlevel>
 <pagebreak>

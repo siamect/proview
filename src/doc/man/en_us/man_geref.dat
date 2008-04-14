@@ -1709,6 +1709,7 @@ AnalogShift <t>Float32 Int32 <t>Shift between different pages in the subgraph. T
 Animation <t>Boolean    <t>Different types of animation. <link>GeDynAnimation
 Video     <t>-          <t>Display a continously updated image file. <link>GeDynVideo
 SliderBackground <t>-   <t>Indicates that the subgraph is background to a slider component. <link>GeDynSliderBackground
+DigCommand <t>Boolean   <t>Executes a command when signal gets high. <link>GeDynDigCommand
 
 <h2>Inherit
 For an instance of a subgraph, Inherit means, that the dynamic is inherited from the subgraph 
@@ -2182,6 +2183,25 @@ Video
 
 Displays a gif-file that is continously updated by a web camera.
 Video has no attribues.
+</topic>
+
+<topic>GeDynDigCommand <style>function
+DigCommand
+Execute specified command when the signal goes from low to high.
+
+The object is connected to a digital signal in the database. When the value changes from 0 to 
+1, the command is executed.
+
+DigCommand can exist in several instances, which makes it possible to execute several 
+command.
+
+<b>Attribute <t><t>Description
+DigCommand.Attribute <t><t>Signal in the database of type boolean that should 
+                   <t><t>influence the component.
+DigCommand.Command <t><t>Xtt command that is executed when the signal value changes from 0 to 1.
+DigCommand.Instance <t><t>States the number of instances that is created.
+DigCommand.Attribute <t><t>Signal for instance number 2.
+DigCommand.Command <t><t>Command for instance number 2.
 </topic>
 </headerlevel>
 <pagebreak>

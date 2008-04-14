@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.61 2008-04-08 11:21:52 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.62 2008-04-14 07:02:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -374,6 +374,8 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GeDigSound((const GeDigSound&) *elem); break;
     case ge_mDynType_XY_Curve:
       e = new GeXY_Curve((const GeXY_Curve&) *elem); break;
+    case ge_mDynType_DigCommand:
+      e = new GeDigCommand((const GeDigCommand&) *elem); break;
     default: ;
     }
     switch( elem->action_type) {
@@ -486,6 +488,7 @@ void GeDyn::open( ifstream& fp)
       case ge_eSave_HostObject: e = (GeDynElem *) new GeHostObject(this); break;
       case ge_eSave_DigSound: e = (GeDynElem *) new GeDigSound(this); break;
       case ge_eSave_XY_Curve: e = (GeDynElem *) new GeXY_Curve(this); break;
+      case ge_eSave_DigCommand: e = (GeDynElem *) new GeDigCommand(this); break;
       case ge_eSave_PopupMenu: e = (GeDynElem *) new GePopupMenu(this); break;
       case ge_eSave_SetDig: e = (GeDynElem *) new GeSetDig(this); break;
       case ge_eSave_ResetDig: e = (GeDynElem *) new GeResetDig(this); break;
@@ -1208,6 +1211,9 @@ GeDynElem *GeDyn::create_dyn_element( int mask, int instance)
   case ge_mDynType_XY_Curve:
     e = (GeDynElem *) new GeXY_Curve(this, (ge_mInstance)instance);
     break;
+  case ge_mDynType_DigCommand:
+    e = (GeDynElem *) new GeDigCommand(this, (ge_mInstance)instance);
+    break;
   default: ;
   }
   return e;
@@ -1340,6 +1346,9 @@ GeDynElem *GeDyn::copy_element( GeDynElem& x)
       break;
     case ge_mDynType_XY_Curve:
       e = (GeDynElem *) new GeXY_Curve((GeXY_Curve&) x);
+      break;
+    case ge_mDynType_DigCommand:
+      e = (GeDynElem *) new GeDigCommand((GeDigCommand&) x);
       break;
     case ge_mDynType_FillLevel:
       e = (GeDynElem *) new GeFillLevel((GeFillLevel&) x);
@@ -8664,6 +8673,192 @@ int GeFillLevel::export_java( grow_tObject object, ofstream& fp, bool first, cha
   return 1;
 }
 
+void GeDigCommand::get_attributes( attr_sItem *attrinfo, int *item_count)
+{
+  int i = *item_count;
+
+  if ( instance == ge_mInstance_1) {
+    strcpy( attrinfo[i].name, "DigCommand.Attribute");
+    attrinfo[i].value = attribute;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( attribute);
+
+    strcpy( attrinfo[i].name, "DigCommand.Command");
+    attrinfo[i].value = command;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( command);
+
+    strcpy( attrinfo[i].name, "DigCommand.Instances");
+    attrinfo[i].value = &instance_mask;
+    attrinfo[i].type = ge_eAttrType_InstanceMask;
+    attrinfo[i++].size = sizeof( instance_mask);    
+  }
+  else {
+    // Get instance number
+    int inst = 1;
+    unsigned int m = instance;
+    while( m > 1) {
+      m = m >> 1;
+      inst++;
+    }
+    
+    sprintf( attrinfo[i].name, "DigCommand%d.Attribute", inst);
+    attrinfo[i].value = attribute;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( attribute);
+
+    sprintf( attrinfo[i].name, "DigCommand%d.Command", inst);
+    attrinfo[i].value = command;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( command);
+  }
+  *item_count = i;
+}
+
+void GeDigCommand::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+{
+  (*cnt)--;
+  if ( *cnt == 0) {
+    char msg[200];
+
+    strncpy( attribute, attr_name, sizeof( attribute));
+    if ( instance == ge_mInstance_1) {
+      sprintf( msg, "DigCommand.Attribute = %s", attr_name);
+    }
+    else {
+      sprintf( msg, "DigCommand%d.Attribute = %s", GeDyn::instance_to_number( instance),
+	       attr_name);
+    }
+    dyn->graph->message( 'I', msg);
+  }
+}
+
+void GeDigCommand::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
+void GeDigCommand::save( ofstream& fp)
+{
+  fp << int(ge_eSave_DigCommand) << endl;
+  fp << int(ge_eSave_DigCommand_attribute) << FSPACE << attribute << endl;
+  fp << int(ge_eSave_DigCommand_command) << FSPACE << command << endl;
+  fp << int(ge_eSave_DigCommand_instance) << FSPACE << int(instance) << endl;
+  fp << int(ge_eSave_DigCommand_instance_mask) << FSPACE << int(instance_mask) << endl;
+  fp << int(ge_eSave_End) << endl;
+}
+
+void GeDigCommand::open( ifstream& fp)
+{
+  int		type;
+  int 		end_found = 0;
+  int		tmp;
+  char		dummy[40];
+
+  for (;;)
+  {
+    fp >> type;
+    switch( type) {
+      case ge_eSave_DigCommand: break;
+      case ge_eSave_DigCommand_attribute:
+        fp.get();
+        fp.getline( attribute, sizeof(attribute));
+        break;
+      case ge_eSave_DigCommand_command:
+        fp.get();
+        fp.getline( command, sizeof(command));
+        break;
+      case ge_eSave_DigCommand_instance: fp >> tmp; instance = (ge_mInstance)tmp; break;
+      case ge_eSave_DigCommand_instance_mask: fp >> tmp; instance_mask = (ge_mInstance)tmp; break;
+      case ge_eSave_End: end_found = 1; break;
+      default:
+        cout << "GeDigCommand:open syntax error" << endl;
+        fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
+  }  
+}
+
+int GeDigCommand::connect( grow_tObject object, glow_sTraceData *trace_data)
+{
+  int		attr_type, attr_size;
+  pwr_tAName   	parsed_name;
+  int		sts;
+
+  size = 4;
+  p = 0;
+  db = dyn->parse_attr_name( attribute, parsed_name,
+				    &inverted, &attr_type, &attr_size);
+  if ( strcmp( parsed_name,"") == 0)
+    return 1;
+
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size);
+  a_typeid = attr_type;
+
+  if ( EVEN(sts)) return sts;
+
+  trace_data->p = &pdummy;
+  first_scan = true;
+  return 1;
+}
+
+int GeDigCommand::disconnect( grow_tObject object)
+{
+  if ( p && db == graph_eDatabase_Gdh)
+    gdh_UnrefObjectInfo( subid);
+  p = 0;
+  return 1;
+}
+
+int GeDigCommand::scan( grow_tObject object)
+{
+  if ( first_scan) {
+    old_value = *p;
+    first_scan = false;
+    return 1;
+  }
+    
+  switch ( a_typeid) {
+  case pwr_eType_Boolean:
+  case pwr_eType_Int32:
+  case pwr_eType_UInt32: {
+
+    if ( old_value == *p) {
+      // No change since last time
+      return 1;
+    }
+    else {
+      if ( (!inverted && *p) || (inverted && !*p)) {
+	if ( dyn->graph->command_cb) {
+	  char cmd[400];
+
+	  dyn->graph->get_command( command, cmd, dyn);
+	  (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+	}
+      }
+    }
+    old_value = *p;
+    break;
+  }
+  default:;
+  }
+  return 1;
+}
+
+int GeDigCommand::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
+{
+#if 0
+  if ( first)
+    fp << "      ";
+  else
+    fp << "      ,";
+  fp << "new GeDynDigCommand(" << var_name << ".dd, \"" << attribute << "\",\"" << command << "\")" << endl;
+#endif
+  return 1;
+}
+
+
 void GePopupMenu::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -8868,6 +9063,7 @@ int GePopupMenu::export_java( grow_tObject object, ofstream& fp, bool first, cha
   fp << "new GeDynPopupMenu(" << var_name << ".dd, \"" << ref_object << "\")" << endl;
   return 1;
 }
+
 
 void GeSetDig::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
