@@ -100,3 +100,4 @@
 080318 cs  wb        Bugfix in cast. Internal references wasn't updated correctly.
 080403 cs  wb        New command 'print/pdf/all' to print all plcpgm's to pdf-files. Also a html file with links to the files is written.
 080407 cs  wb        Stolen database lock detected and save inhibited.
+080414 cs  wb        Bugfix in build volume, crossreferences wasn'n updated.
