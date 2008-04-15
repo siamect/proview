@@ -68,7 +68,7 @@ fi
 
 # Insert nodename in DirectoryVolume and create bootfile
 nodename=`eval uname -n`
-nodename=${nodename%%.*}
+# nodename=${nodename%%.*}
 initsh=/tmp/pwrdemo_init.sh
 initpwrc=/tmp/pwrdemo_init.pwr_com
 
@@ -86,7 +86,10 @@ chmod a+x $initsh
 
 # Create a wb_cmd script that inserts nodename and creates bootfile
 cat > $initpwrc <<EOF
-  set attr/name=Bus999-DemoNode/attr=NodeName/value="$nodename"/noconf
+  string netname = "$nodename";
+  string name;
+  name = element( 1, ".", netname);
+  set attr/name=Bus999-DemoNode/attr=NodeName/value="'name'"/noconf
   save
   create boot/node=DemoNode
   exit
