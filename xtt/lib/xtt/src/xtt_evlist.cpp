@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_evlist.cpp,v 1.19 2008-01-24 09:36:17 claes Exp $
+ * Proview   $Id: xtt_evlist.cpp,v 1.20 2008-04-15 06:42:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1225,7 +1225,7 @@ ItemAlarm::ItemAlarm( EvList *item_evlist, char *item_name, pwr_tTime item_time,
     strcpy( alias, "");
   if ( item_eventsound)
     eventsound = *item_eventsound;
-  if ( eventmoretext)
+  if ( eventmoretext && item_eventmoretext)
     strncpy( eventmoretext, item_eventmoretext, sizeof(eventmoretext));
   else
     strcpy( eventmoretext, "");
