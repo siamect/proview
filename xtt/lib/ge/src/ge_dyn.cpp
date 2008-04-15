@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.62 2008-04-14 07:02:30 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.63 2008-04-15 16:01:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -122,6 +122,8 @@ static int check_format( char *format, int type)
     if ( *s == 'd' || *s == 'u' || *s == 'o' || *s == 'x' || *s == 'X'|| 
 	 (*s == 'l' && (*(s+1) == 'd' || *(s+1) == 'u' || *(s+1) == 'o' || 
 			*(s+1) == 'x' || *(s+1) == 'X')))
+      return 1;
+    break;
   case pwr_eType_UInt16:
     if ( *s == 'd' || *s == 'u' || *s == 'o' || *s == 'x' || *s == 'X'|| 
 	 (*s == 'h' && (*(s+1) == 'd' || *(s+1) == 'u' || *(s+1) == 'o' || 
@@ -144,6 +146,7 @@ static int check_format( char *format, int type)
       return 1;
     break;
   case pwr_eType_Status:
+  case pwr_eType_NetStatus:
     if ( *s == 'm' || *s == 'd' || *s == 'u' ||
 	 strncmp( s, "hd", 2) == 0 || strncmp( s, "hu", 2) == 0)
       return 1;
@@ -152,11 +155,13 @@ static int check_format( char *format, int type)
     if ( *s == 's' || *s == 'd' || *s == 'u' || *s == 'o' || *s == 'x' || *s == 'X'|| 
 	 (*s == 'l' && (*(s+1) == 'd' || *(s+1) == 'u' || *(s+1) == 'o' || 
 			*(s+1) == 'x' || *(s+1) == 'X')))
+      return 1;
     break;
   case pwr_eType_Mask:
     if ( *s == 'b' || *s == 'd' || *s == 'u' || *s == 'o' || *s == 'x' || *s == 'X'|| 
 	 (*s == 'l' && (*(s+1) == 'd' || *(s+1) == 'u' || *(s+1) == 'o' || 
 			*(s+1) == 'x' || *(s+1) == 'X')))
+      return 1;
     break;
   default: ; 
   }
