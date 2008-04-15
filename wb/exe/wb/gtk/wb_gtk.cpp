@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gtk.cpp,v 1.4 2008-02-27 06:27:08 claes Exp $
+ * Proview   $Id: wb_gtk.cpp,v 1.5 2008-04-15 15:57:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -88,10 +88,11 @@ WVsel *WbGtk::vsel_new( pwr_tStatus *status, char *name, ldh_tWBContext ldhwbctx
 
 int main( int argc, char *argv[])
 {
-  setlocale( LC_ALL, "en_US");
-  setlocale( LC_NUMERIC, "en_US");
 
   gtk_init( &argc, &argv);
+
+  setlocale( LC_ALL, "en_US");
+  setlocale( LC_NUMERIC, "en_US");
 
   new WbGtk( argc, argv);
 }
