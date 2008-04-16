@@ -460,46 +460,52 @@ void XttAudio::audio_write( void *data)
     printf( "Write idx: %d totsize: %d size: %d\n", audio->write_buffer_idx, audio->write_buffer_size, size);
 
     snd_pcm_prepare( audio->ALSA_handle);
-    rc = snd_pcm_writei( audio->ALSA_handle, &audio->write_buffer[audio->write_buffer_idx], 
+    for (;;) {
+      rc = snd_pcm_writei( audio->ALSA_handle, &audio->write_buffer[audio->write_buffer_idx], 
 			 size/2);
-    if (rc == -EPIPE) {
-      // EPIPE means underrun
-      fprintf(stderr, "ALSA audio underrun occurred\n");
-      int time = 20;
-      audio->timerid->add( time, audio_write, audio);
-      return;
-      // snd_pcm_prepare( audio->ALSA_handle);
-    }
-    else if (rc < 0) {
-      printf("ALSA audio error from writei:%s\n",snd_strerror(rc));
-      snd_pcm_close( audio->ALSA_handle);
-      free( audio->write_buffer);
-      audio->write_buffer = 0;
-      return;
-    }
-    else if (rc != size/2) {
-     fprintf(stderr,"ALSA audio short write, write %d frames\n", rc);
-    }
-    audio->write_buffer_idx += size;
-    if ( audio->write_buffer_idx < audio->write_buffer_size) {
-      // Submit next write
-      int time = 1000 * size/2 / srate;
-      audio->timerid->add( time, audio_write, audio);
-    }    
-    else {
-      // Free buffer
-      free( audio->write_buffer);
-      audio->write_buffer = 0;
-
-      // Process next on queue
-      if ( audio->queue_cnt) {
-	pwr_tAttrRef aref = audio->queue[0];
-	for ( int i = 0; i < audio->queue_cnt - 1; i++)
-	  audio->queue[i] = audio->queue[i+1];
-	audio->queue_cnt--;
-
-	audio->beep( &aref);
+      if (rc == -EPIPE) {
+	// EPIPE means underrun
+	fprintf(stderr, "ALSA audio underrun occurred\n");
+	int time = 20;
+	audio->timerid->add( time, audio_write, audio);
+	return;
+	// snd_pcm_prepare( audio->ALSA_handle);
       }
+      else if (rc < 0) {
+	printf("ALSA audio error from writei:%s\n",snd_strerror(rc));
+	snd_pcm_close( audio->ALSA_handle);
+	free( audio->write_buffer);
+	audio->write_buffer = 0;
+	return;
+      }
+      else if (rc != size/2) {
+	fprintf(stderr,"ALSA audio short write, write %d frames\n", rc);
+      }
+      audio->write_buffer_idx += size;
+      if ( audio->write_buffer_idx < audio->write_buffer_size) {
+	// Submit next write
+#if 0
+	int time = 1000 * size/2 / srate;
+	audio->timerid->add( time, audio_write, audio);
+#endif
+      }    
+      else {
+	// Free buffer
+	free( audio->write_buffer);
+	audio->write_buffer = 0;
+
+	// Process next on queue
+	if ( audio->queue_cnt) {
+	  pwr_tAttrRef aref = audio->queue[0];
+	  for ( int i = 0; i < audio->queue_cnt - 1; i++)
+	    audio->queue[i] = audio->queue[i+1];
+	  audio->queue_cnt--;
+
+	  audio->beep( &aref);
+	}
+	snd_pcm_drain( audio->ALSA_handle);
+	break;
+      }      
     }
   }
 }
