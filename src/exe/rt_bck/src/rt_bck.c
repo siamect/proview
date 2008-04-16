@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_bck.c,v 1.12 2008-03-31 13:47:39 claes Exp $
+ * Proview   $Id: rt_bck.c,v 1.13 2008-04-16 08:34:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -601,6 +601,7 @@ bck_file_process (
   pwr_tUInt32 csts;
   pwr_tUInt32 cnt;
   char fname[200];
+  int         fd;
 
 
 #if defined OS_VMS || defined OS_ELN
@@ -695,6 +696,8 @@ bck_file_process (
       if (bckfile == NULL) 
         perror("BACKUP cannot create backupfile");
       else {
+      
+        fd = fileno(bckfile);
 
         errh_Info("BACKUP created new backupfile %s", FGETNAME);
 	memset(&filehead, 0, sizeof filehead);
@@ -773,6 +776,12 @@ bck_file_process (
       csts = fflush(bckfile);
       if (csts != 0) break;
 #endif
+
+      /* Sync writing of kernel buffers to disk */
+      
+      csts = fsync(fd);
+      if (csts != 0) break;
+      
       /* Update statistics in the configuration block */
 
       backup_confp->LastWrite = filehead.updatetime [c];
