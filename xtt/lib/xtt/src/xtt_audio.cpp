@@ -420,7 +420,7 @@ void XttAudio::audio_write( void *data)
   XttAudio *audio = (XttAudio *)data;
   int rc; 
 
-  audio->timerid = 0;
+  audio->timerid->remove();
 
   if ( audio->OSS_audio_ok) {
     int size = audio->write_buffer_size - audio->write_buffer_idx;
