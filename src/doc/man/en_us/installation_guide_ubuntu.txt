@@ -1,0 +1,151 @@
+INSTALLATION GUIDE UBUNTU
+-------------------------
+
+System Requirements:
+
+Platform: x86
+Kernel: >= 2.6.6
+glibc: >= 2.5-0ubuntu14
+
+See specific package information below:
+
+1. PACKAGE PWR45
+----------------
+
+
+Install with apt
+----------------
+Create a repository first, see section 4 below
+
+> apt-get install pwr45
+
+Install with dpkg
+-----------------
+dbkg doesn't check any depedencies. You have to check that these packages are installed
+
+libgtk2.0-0 (>= 2.10.11-0ubuntu3)
+libasound2 (>= 1.0.13-1ubuntu5)
+libdb4.4 (>=4.4.20-8ubuntu2)
+libmysqlclient15off (>=5.0.38-0ubuntu1)
+g++-4.1 (>=4.1.2-0ubuntu4)
+
+> dpkg -i pwrdemo45_4.5.0-1ubuntu_i386.deb
+
+Getting started
+---------------
+
+Log in as user 'pwrp' (or "su - pwrp") with password 'pwrp'. On the user 
+'pwrp' a correct environment for working with Proview will be set up. 
+How to work with Proview and set up your projects can be read in 
+"Proview/R Designer's guide" available from www.proview.se. Have a special 
+look at the 'Administration' chapter as well as the 'A case study' chapter. 
+Soon there will also exist a more simple  "Getting started guide" which 
+will help you taking the first steps.
+
+3. PACKAGE PWRDEMO45
+--------------------
+
+pwr45 has to be installed.
+
+Install with apt
+----------------
+
+> apt-get install pwrdemo44
+
+Install with dpkg
+-----------------
+
+> dpkg -i pwrdemo45_4.5.0-1ubuntu_i386.deb
+
+Getting started
+---------------
+
+Log in as user 'pwrp' (or "su - pwrp") with password 'pwrp'. On the user 
+'pwrp' a correct environment for working with Proview will be set up. 
+
+A demonstration project named pwrdemo45 is created. 
+Attach to the project with
+
+> sdf pwrdemo45
+
+Start proview runtime environment with
+
+> rt_ini &
+
+Start the operator environment with
+
+> rt_xtt -u op
+
+Press the 'PwrDemo' button in the operator window.
+
+Stop and reset the environment with
+> . pwr_stop.sh
+
+
+3. PACKAGE PWRRT
+----------------
+
+Create a repository first, see section 4 below
+
+> apt-get install pwrrt
+
+Install with dpkg
+-----------------
+dbkg doesn't check any depedencies. You have to check that these packages are installed
+
+libgtk2.0-0 (>= 2.10.11-0ubuntu3)
+libasound2 (>= 1.0.13-1ubuntu5)
+libdb4.4 (>=4.4.20-8ubuntu2)
+
+> dpkg -i pwrrt_4.5.0-1ubuntu_i386.deb
+
+Information:
+
+The runtime package should be installed "stand-alone" without the pwr45-package.
+A linux-system with the pwrrt-package is your control- or HMI-system. Proview will be
+started automatically at boot-time.
+
+
+4. CREATE APT REPOSITORY
+------------------------
+
+Login in a root.
+Create the directory /root/debs
+
+> mkdir /root/debs
+
+Download the packages to this directory.
+
+Create a package file
+
+> cd /root
+> dpkg-scanpackages debs /dev/null | gzip > /root/debs/Packages.gz
+
+To do this you might have to install dpkg-dev first.
+
+> apt-get install dpkg-dev
+
+Add the following line to /etc/apt/sources.list
+
+deb file:/root debs/
+
+Update apt with the new packages
+
+> apt-get update
+
+Check that the packages are found
+
+> apt-cache search pwr
+pwr45 - Proview development and runtime environment package
+pwrdemo45 - Proview Demo Project package
+pwrrt - Proview runtime environment
+
+If the command g++ is unknown you have to create the link
+> ln -s /usr/bin/g++-4.1 /usr/bin/g++
+
+
+
+
+
+
+

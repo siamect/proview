@@ -1,28 +1,27 @@
-INSTALLATION GUIDE SUSE
------------------------
-
-Suse distribution: openSuse 10.2
+INSTALLATION GUIDE FEDORA
+--------------------------
 
 System Requirements:
 
 Platform: x86
 Kernel: >= 2.6.6
-glibc: >= 2.5
+glibc: >= 2.3.4
 
-See specific packacke information below:
+Specific package information follow below:
 
 1. PACKAGE PWR45
 ----------------
 
 Dependencies:
 
-Berkeley DB v4.2
+Berkeley DB v4.5
+Alsa v1.0.14
 
 Download:
 
 Download your selected rpm-package and install it as:
 
-rpm -Uvh pwr45_4.5.0-1.suse10.i386.rpm
+rpm -Uvh pwr45_4.5.0-1.fedora.i386.rpm
 
 During installation the files will be unpacked and a user named 'pwrp'
 belonging to a group with the same name 'pwrp' will be created.
@@ -42,13 +41,14 @@ will help you taking the first steps.
 
 Dependencies:
 
-Berkeley DB v4.2
+Berkeley DB v4.5
+Alsa v1.0.14
 
 Download:
 
 Download your selected rpm-package and install it as:
 
-rpm -Uvh pwrrt_4.5.0-1.suse10.i386.rpm
+rpm -Uvh pwrrt_4.5.0-1.fedora.i386.rpm
 
 Information:
 
@@ -70,7 +70,7 @@ Download:
 
 Download your selected rpm-package and install it as:
 
-rpm -Uvh pwrdemo45_4.5.0-1.suse10.i386.deb
+rpm -Uvh pwrdemo45_4.5.0-1.fedora.i386.deb
 
 Getting started:
 
@@ -91,3 +91,5 @@ Start the operator environment with
 > rt_xtt -u op
 
 Press the 'PwrDemo' button in the operator window and
+
+
