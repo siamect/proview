@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_bck_load.c,v 1.6 2008-03-31 13:47:00 claes Exp $
+ * Proview   $Id: rt_bck_load.c,v 1.7 2008-04-16 08:35:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -201,7 +201,7 @@ bck_LoadBackup ()
 	    SET_ERRNO_STS;
 	    break;
           }
-
+	  
 	  if (dh.valid) {
 
 	    /* Find object */
@@ -217,6 +217,8 @@ bck_LoadBackup ()
 
 	      if (ODD (sts))
 		sts = gdh_SetObjectInfo(namep, datap, dh.size);
+
+              strncpy(objectname, namep, pwr_cSizAName);
 	    } /* Dynamic object */
 	    else {
 	      sts = gdh_ObjidToName (dh.objid, objectname, sizeof(objectname),
@@ -229,7 +231,7 @@ bck_LoadBackup ()
 	  } /* valid segment */
 
           if (EVEN (sts)) {
-            errh_Error("BACKUP error reloading %s, reason:\n%m", namep, sts);
+            errh_Error("BACKUP error reloading %s, reason:\n%m", objectname, sts);
             sts = 1;
           }
 
