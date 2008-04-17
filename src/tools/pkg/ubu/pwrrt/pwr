@@ -1,99 +1,111 @@
 #!/bin/bash
 #
-# Startscript för PWR av Ulf Ljungdahl
+# Startscript för PWR
 #
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+wrapper="/tmp/rt_ini_wrapper"
+killer="/tmp/pwr_killer"
 
 . /etc/pwrp_profile
+umask 002
+
+create_wrapper()
+{
+  if [ ! -e $wrapper ] ; then
+    echo "#!/bin/bash" > $wrapper
+    echo "source /etc/pwrp_profile" >> $wrapper
+    echo "umask 002" >> $wrapper
+    echo "\$pwr_exe/rt_ini \$* &" >> $wrapper
+    chmod a+rx $wrapper
+    if [ ! -e $wrapper ] ;then
+      echo "$wrapper not writable, check permissions"
+      exit
+    fi
+  fi
+}
+
+create_killer()
+{
+  if [ ! -e $killer ] ; then
+    echo "#!/bin/bash" > $killer
+    echo "source /etc/pwrp_profile" >> $killer
+    echo "umask 002" >> $killer
+    
+    echo "kill -9 `ps ax | grep "rt_" | awk '{ print $1}'`" >> $killer
+    echo "kill -9 `ps ax | grep "rs_" | awk '{ print $1}'`" >> $killer
+    echo "kill -9 `ps ax | grep "ra_" | awk '{ print $1}'`" >> $killer
+
+    echo "eval `ipcs -s|grep ^0x|grep "[ \t]pwrp[ \t]"|awk '{printf "ipcrm sem %s;", $2}'`" >> $killer
+    echo "eval `ipcs -q|grep ^0x|grep "[ \t]pwrp[ \t]"|awk '{printf "ipcrm msg %s;", $2}'`" >> $killer
+    echo "eval `ipcs -m|grep ^0x|grep "[ \t]pwrp[ \t]"|awk '{printf "ipcrm shm %s;", $2}'`" >> $killer
+    echo "rm /tmp/pwr*\$PWR_BUS_ID" >> $killer
+    
+    chmod a+rx $killer
+    if [ ! -e $killer ] ;then
+      echo "$killer not writable, check permissions"
+      exit
+    fi
+  fi
+}
 
 
 pwr_start()
 {
-  $pwr_exe/rt_ini &
+  create_wrapper
+  if [ `whoami` == "pwrp" ];then
+    $wrapper
+  else
+    sudo -u pwrp $wrapper
+  fi
 }
 
 pwr_stop()
 {
-  rt_ini -s
-  sleep 5
-  kill -9 `ps ax | grep "rt_neth_acp" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "rt_neth" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "rt_qmon" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "rt_emon" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "rt_tmon" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "rt_\|/pwr/exe/rs" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "\[rt_" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "plc_" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "jpwr.rt" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "rs_nmps" | awk '{ print $1}'`
-  kill -9 `ps ax | grep "rs_remote" | awk '{ print $1}'`
-  if [ -u $pwr_exe/rt_ini ]; then
-    user=`ls -al $pwr_exe/rt_ini | awk '{ print $3}'`
+  create_wrapper
+  if [ `whoami` == "pwrp" ];then
+    $wrapper -s
+    if [ -e $pwrp_exe/pwrp_stop.sh ]; then
+      source $pwrp_exe/pwrp_stop.sh
+    fi
   else
-    user=$USER
+    sudo -u pwrp $wrapper -s
+    if [ -e $pwrp_exe/pwrp_stop.sh ]; then
+      sudo -u pwrp source $pwrp_exe/pwrp_stop.sh
+    fi
+  fi 
+  while [ "`ps aux | grep -v grep | grep rt_`" != "" ] ; do sleep 1; done  
+}
+
+pwr_reload()
+{
+  if [ `whoami` == "pwrp" ];then
+    $pwr_exe/rt_ini_wrapper -r
+  else
+    sudo -u pwrp $pwr_exe/rt_ini_wrapper -r
   fi
+}
 
-  echo "User $user"
-
-  eval `ipcs -s|grep ^0x|grep "[ \t]$user[ \t]"|awk '{printf "ipcrm sem %s;", $2
-}'`
-
-# remove message queues
-  eval `ipcs -q|grep ^0x|grep "[ \t]$user[ \t]"|awk '{printf "ipcrm msg %s;", $2
-}'`
-
-# remove shared memory
-  eval `ipcs -m|grep ^0x|grep "[ \t]$user[ \t]"|awk '{printf "ipcrm shm %s;", $2
-}'`
-
-  if [ -e $pwrp_exe/pwrp_stop.sh ]; then
-    source $pwrp_exe/pwrp_stop.sh
-  fi
-
-  rm /tmp/pwr*$PWR_BUS_ID
-  
-  #rm -f /tmp/pwr*
-  #id=`ipcs -s | grep $user | awk '{print $2}'`
-  #id1=`echo $id | awk '{print $1}'`
-  #id2=`echo $id | awk '{print $2}'`
-  #id3=`echo $id | awk '{print $3}'`
-  #ipcrm sem $id1
-  #ipcrm sem $id2
-  #ipcrm sem $id3
-  #id=`ipcs -q | grep $user | awk '{print $2}'`
-  #id1=`echo $id | awk '{print $1}'`
-  #id2=`echo $id | awk '{print $2}'`
-  #id3=`echo $id | awk '{print $3}'`
-  #ipcrm msg $id1
-  #ipcrm msg $id2
-  #ipcrm msg $id3
+pwr_kill()
+{
+  create_killer
+  if [ `whoami` == "pwrp" ];then
+    $killer
+  else
+    sudo -u pwrp $killer
+  fi 
 }
 
 case "$1"
   in
     start)
-	echo "Startar PWR..."
-	
-	#if [ 'test -x ps aux | grep plc | grep -v grep' ]
-	#  then
-	#    echo "PWR kör, stoppar det först.."
-	#    pwr_stop
-	#  fi
+	echo "Startar PWR."
 	pwr_start    
 	echo "Klar."
       ;;
     stop)
 	echo "Stoppar PWR..."
 	pwr_stop
-	
- #     if [ "${SAVEONCE}" != "yes" ]
- #       then
-#	  save
-#          echo -n "ipchains-save"
-#	else
-#	  echo -n "Clearing IP chains:"
-#	fi   	   
 	echo "Klar"
       ;;
     restart)
@@ -105,10 +117,18 @@ case "$1"
 	pwr_start
 	echo "Klar."
 	;;
+    reload)
+	echo "PWR varmomstart "
+        pwr_reload
+	echo "Klar."
+	;;
+    kill)
+	echo "Tar bort delat minne och kvarblivna applikationer från PWR"
+        pwr_kill
+	echo "Klar."
+	;;
     *)
-	echo "Usage:{start|stop|restart}" >&2
-	#echo "Ingen parameter angiven, startar PWR"
-	#$0 start
+	echo "Usage:{start|stop|restart|reload|kill}" >&2
         exit 1
 	;;
   esac

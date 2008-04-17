@@ -13,11 +13,11 @@ fi
 
 # Generate version help file
 {
-  if [ ! -e $pwre_sroot/tools/pkg/deb/pwrrt/control ]; then
+  if [ ! -e $pwre_sroot/tools/pkg/ubu/pwrrt/control ]; then
     echo "Controlfile not found"
     exit 1
   fi
-  datfile=$pwre_sroot/tools/pkg/deb/pwrrt/control
+  datfile=$pwre_sroot/tools/pkg/ubu/pwrrt/control
 
   echo "<topic> version"
   d=`eval date +\"%F %X\"`
@@ -89,7 +89,7 @@ if [ "$1" == "-v" ]; then
 fi
 
 pkgroot=$pwre_broot/$pwre_target/bld/pkg/pwrrt
-pkgsrc=$pwre_sroot/tools/pkg/deb/pwrrt
+pkgsrc=$pwre_sroot/tools/pkg/ubu/pwrrt
 
 
 # Create directories
@@ -155,21 +155,21 @@ cp $pkgsrc/proview.cnf $pkgroot/usr/pwrrt/cnf
 
 # Copy op to cnf
 mkdir $pkgroot/usr/pwrrt/cnf/op
-cp $pwre_sroot/tools/pkg/deb/op/.bashrc $pkgroot/usr/pwrrt/cnf/op
-cp $pwre_sroot/tools/pkg/deb/op/.bash_profile $pkgroot/usr/pwrrt/cnf/op
-#cp $pwre_sroot/tools/pkg/deb/op/.mwmrc $pkgroot/usr/pwrrt/cnf/op
-cp $pwre_sroot/tools/pkg/deb/op/.rtt_start $pkgroot/usr/pwrrt/cnf/op
-cp $pwre_sroot/tools/pkg/deb/op/.xtt_start $pkgroot/usr/pwrrt/cnf/op
-#cp $pwre_sroot/tools/pkg/deb/op/.xsession $pkgroot/usr/pwrrt/cnf/op
+cp $pwre_sroot/tools/pkg/ubu/op/.bashrc $pkgroot/usr/pwrrt/cnf/op
+cp $pwre_sroot/tools/pkg/ubu/op/.bash_profile $pkgroot/usr/pwrrt/cnf/op
+#cp $pwre_sroot/tools/pkg/ubu/op/.mwmrc $pkgroot/usr/pwrrt/cnf/op
+cp $pwre_sroot/tools/pkg/ubu/op/.rtt_start $pkgroot/usr/pwrrt/cnf/op
+cp $pwre_sroot/tools/pkg/ubu/op/.xtt_start $pkgroot/usr/pwrrt/cnf/op
+#cp $pwre_sroot/tools/pkg/ubu/op/.xsession $pkgroot/usr/pwrrt/cnf/op
 
 # Copy user to cnf
 mkdir $pkgroot/usr/pwrrt/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.bashrc $pkgroot/usr/pwrrt/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.bash_profile $pkgroot/usr/pwrrt/cnf/user
-#cp $pwre_sroot/tools/pkg/deb/user/.mwmrc $pkgroot/usr/pwrrt/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.rtt_start $pkgroot/usr/pwrrt/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.xtt_start $pkgroot/usr/pwrrt/cnf/user
-#cp $pwre_sroot/tools/pkg/deb/user/.xsession $pkgroot/usr/pwrrt/cnf/user
+cp $pwre_sroot/tools/pkg/ubu/user/.bashrc $pkgroot/usr/pwrrt/cnf/user
+cp $pwre_sroot/tools/pkg/ubu/user/.bash_profile $pkgroot/usr/pwrrt/cnf/user
+#cp $pwre_sroot/tools/pkg/ubu/user/.mwmrc $pkgroot/usr/pwrrt/cnf/user
+cp $pwre_sroot/tools/pkg/ubu/user/.rtt_start $pkgroot/usr/pwrrt/cnf/user
+cp $pwre_sroot/tools/pkg/ubu/user/.xtt_start $pkgroot/usr/pwrrt/cnf/user
+#cp $pwre_sroot/tools/pkg/ubu/user/.xsession $pkgroot/usr/pwrrt/cnf/user
 
 # Create package
 echo "-- Building package"
