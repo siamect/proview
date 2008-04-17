@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_bck.c,v 1.13 2008-04-16 08:34:04 claes Exp $
+ * Proview   $Id: rt_bck.c,v 1.14 2008-04-17 14:57:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -697,8 +697,6 @@ bck_file_process (
         perror("BACKUP cannot create backupfile");
       else {
       
-        fd = fileno(bckfile);
-
         errh_Info("BACKUP created new backupfile %s", FGETNAME);
 	memset(&filehead, 0, sizeof filehead);
 	clock_gettime(CLOCK_REALTIME, &filehead.creationtime);
@@ -720,6 +718,8 @@ bck_file_process (
     }
 
     backup_confp->DiskStatus = 0;
+
+    fd = fileno(bckfile);
 
     while (TRUE) {
 
@@ -1160,6 +1160,7 @@ void bck_list_free (
   blep = list->first;
   while (blep != NULL) {
     blep2 = blep->next;
+//    printf("%s\n", blep->datablk.name);
     free(blep->datablk.name);
     free(blep);
     blep = blep2;
@@ -1273,7 +1274,8 @@ void *bck_coll_process (
 
     /* If forced activation or slow cycle tick: rebuild the backup list */
 
-    if (forced || (slowtick != oldslowtick)) {
+//    if ((forced || (slowtick != oldslowtick)) && (cycle == 1)) {
+    if (FALSE) {
       oldslowtick = slowtick;
       bck_list_free(bcklist);
       bck_list_build(cycle, &bcklist);
