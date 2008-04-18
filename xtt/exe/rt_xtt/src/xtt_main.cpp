@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_main.cpp,v 1.6 2008-04-01 14:19:30 claes Exp $
+ * Proview   $Id: xtt_main.cpp,v 1.7 2008-04-18 08:47:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -449,7 +449,7 @@ void Xtt::activate_help_proview()
 }
 
 Xtt::Xtt( int argc, char *argv[], int *return_sts) :
-  root_item(0), input_open(0), command_open(0), india_ok_cb(0), quiet(0), attach_audio(0), select_opplace(0), op_close_button(0)
+  root_item(0), input_open(0), command_open(0), india_ok_cb(0), queid(qcom_cNQid), quiet(0), attach_audio(0), select_opplace(0), op_close_button(0)
 {
   pwr_tStatus	sts;
   int		i;
