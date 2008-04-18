@@ -145,26 +145,28 @@ if ! grep -q "\bb55:" /etc/passwd; then
 
   # Check if group audio exist
   if grep -q "\baudio:" /etc/group; then
-    audio="-G audio"
+    groups="pwrp,audio"
   else
-    audio=""
+    groups="pwrp"
   fi
-  useradd -s /bin/bash -p aaQPClsglxJP6 -g b55 -G pwrp -d /home/b55 $audio b55
+  useradd -s /bin/bash -p aaQPClsglxJP6 -g b55 -G $groups -d /home/b55 b55
+
   if [ ! -e /home/b55 ]; then
     mkdir /home/b55
   fi
-  /bin/cp /usr/pwrrt/cnf/op/.bashrc /home/b55
-  /bin/cp /usr/pwrrt/cnf/op/.bash_profile /home/b55
-#  /bin/cp /usr/pwrrt/cnf/op/.mwmrc /home/b55
-  /bin/cp /usr/pwrrt/cnf/op/.rtt_start /home/b55
-  chmod a+x /home/b55/.rtt_start
-  /bin/cp /usr/pwrrt/cnf/op/.xtt_start /home/b55
-  chmod a+x /home/b55/.xtt_start
-#  /bin/cp /usr/pwrrt/cnf/op/.xsession /home/b55
+    /bin/cp /usr/pwrrt/cnf/op/.bashrc /home/b55
+    /bin/cp /usr/pwrrt/cnf/op/.bash_profile /home/b55
+#    /bin/cp /usr/pwrrt/cnf/op/.mwmrc /home/b55
+    /bin/cp /usr/pwrrt/cnf/op/.rtt_start /home/b55
+    chmod a+x /home/b55/.rtt_start
+    /bin/cp /usr/pwrrt/cnf/op/.xtt_start /home/b55
+    chmod a+x /home/b55/.xtt_start
+#    /bin/cp /usr/pwrrt/cnf/op/.xsession /home/b55
 
-  chown -R b55 /home/b55
-  chgrp -R pwrp /home/b55
-  chmod a+rwx /home/b55
+    chown -R b55 /home/b55
+    chgrp -R pwrp /home/b55
+    chmod a+rwx /home/b55
+  fi
 fi
 
 #echo "Change owner of files to pwrp"
