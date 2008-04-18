@@ -153,7 +153,7 @@ if ! grep -q "\bb55:" /etc/passwd; then
 
   if [ ! -e /home/b55 ]; then
     mkdir /home/b55
-  fi
+    
     /bin/cp /usr/pwrrt/cnf/op/.bashrc /home/b55
     /bin/cp /usr/pwrrt/cnf/op/.bash_profile /home/b55
 #    /bin/cp /usr/pwrrt/cnf/op/.mwmrc /home/b55
