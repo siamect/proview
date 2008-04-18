@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_db.cpp,v 1.41 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_db.cpp,v 1.42 2008-04-18 06:06:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,6 +35,8 @@
 #include "wb_convert_volume.h"
 
 static void printstat(DbEnv *ep, char *s);
+static void get_config( char *name, unsigned int *lk_max_locks, 
+			unsigned int *lk_max_objects);
 
 wb_db_info::wb_db_info(wb_db *db) :
   m_db(db), m_data(&m_volume, sizeof(m_volume))
@@ -1036,6 +1038,8 @@ void wb_db::openDb(bool useTxn)
 {
   struct stat sb;
   int rc;
+  unsigned int lk_max_locks;
+  unsigned int lk_max_objects;
   //DbTxn *txn = 0;
 
   /* Create the directory, read/write/access owner and group. */
@@ -1047,14 +1051,16 @@ void wb_db::openDb(bool useTxn)
 
   }
 
+  get_config( m_fileName, &lk_max_locks, &lk_max_objects);
+
   m_env = new DbEnv(0/*DB_CXX_NO_EXCEPTIONS*/);
   printf("%s\n", m_env->version(0, 0, 0));
   m_env->set_errpfx("PWR db");
   m_env->set_cachesize(0, 256 * 1024 * 1024, 0);
   rc = m_env->set_lg_bsize(1024*1024*2);
   rc = m_env->set_lg_max(1024*1024*8*2);
-  rc = m_env->set_lk_max_locks(50000); // Decreased from 500000
-  rc = m_env->set_lk_max_objects(20000);
+  rc = m_env->set_lk_max_locks(lk_max_locks); // Decreased from 500000
+  rc = m_env->set_lk_max_objects(lk_max_objects);
 
 #if 0
   try {
@@ -1385,4 +1391,57 @@ bool wb_db::importMeta(dbs_sMenv *mep)
     dbs_Split(&sts, mep, m_fileName);
 
   return true;
+}
+
+static void get_config( char *name, unsigned int *lk_max_locks, 
+			unsigned int *lk_max_objects)
+{
+  pwr_tFileName fname;
+  FILE *fp;
+  char line[200];
+  char	line_elem[2][100];
+  unsigned int max_locks;
+  unsigned int max_objects;
+  int nr;
+
+  *lk_max_locks = 50000;
+  *lk_max_objects = 20000;
+
+  strcpy( fname, name);
+  strcat( fname, ".cnf");
+  dcli_translate_filename( fname, fname);
+
+  fp = fopen( fname, "r");
+  if ( !fp)
+    return;
+
+  while ( dcli_read_line( line, sizeof(line), fp)) {
+    dcli_trim( line, line);
+    if ( line[0] == '#')
+      continue;
+    if ( strcmp( line, "") == 0)
+      continue;
+    
+    nr = dcli_parse( line, " 	", "",
+		(char *) line_elem, sizeof( line_elem)/sizeof( line_elem[0]), 
+		sizeof( line_elem[0]), 1);
+    if ( nr != 2)
+      continue;
+
+    if ( cdh_NoCaseStrcmp( line_elem[0], "lk_max_locks") == 0) {
+      nr = sscanf( line_elem[1], "%d", &max_locks);
+      if ( nr == 1) {
+	*lk_max_locks = max_locks;
+	printf( "lk_max_locks.........%d\n", max_locks);
+      }
+    }
+    else if ( cdh_NoCaseStrcmp( line_elem[0], "lk_max_objects") == 0) {
+      nr = sscanf( line_elem[1], "%d", &max_objects);
+      if ( nr == 1) {
+	*lk_max_objects = max_objects;
+	printf( "lk_max_objects.......%d\n", max_objects);
+      }
+    }
+  }
+  fclose( fp);
 }
