@@ -101,3 +101,4 @@
 080403 cs  wb        New command 'print/pdf/all' to print all plcpgm's to pdf-files. Also a html file with links to the files is written.
 080407 cs  wb        Stolen database lock detected and save inhibited.
 080414 cs  wb        Bugfix in build volume, crossreferences wasn'n updated.
+080418 cs  wb        Config file for BerkeleyDb with lk_max_locks and lk_max_objects (db.cnf).
