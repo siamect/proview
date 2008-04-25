@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_bck_load.c,v 1.7 2008-04-16 08:35:01 claes Exp $
+ * Proview   $Id: rt_bck_load.c,v 1.8 2008-04-25 11:27:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -75,7 +75,8 @@ bck_LoadBackup ()
   pwr_sClass_Backup_Conf *backup_confp;	/* Backup_Conf object pointer */
   FILE			*f;
   BCK_FILEHEAD_STRUCT	fh;		/* File header */
-  BCK_CYCLEHEAD_STRUCT	ch;
+  BCK_CYCLEHEAD_STRUCT	ch_old;
+  bck_t_cycleheader	ch;
   BCK_DATAHEAD_STRUCT	dh_old;
   bck_t_writeheader     dh;
   pwr_tUInt32		c;
@@ -124,17 +125,17 @@ bck_LoadBackup ()
   if (csts == 0) {
     SET_ERRNO_STS;
   } else {
-    if (fh.version < BCK_FILE_VERSION) {
+    if (fh.version < BCK_FILE_VERSION - 1) {
       errh_Info("BACKUP Loading old file version : %d", fh.version);
       /* Read the cycle data.  */
 
       for (c=0; c<2; c++) {
         fseek(f, fh.curdata [c], 0);
-	fread(&ch, sizeof ch, 1, f);
+	fread(&ch_old, sizeof ch_old, 1, f);
 
         /* Work thru the data segments */
 
-        for (d=0; d<ch.segments; d++) {
+        for (d=0; d<ch_old.segments; d++) {
 	  csts = fread(&dh_old, sizeof dh_old, 1, f);
 	  if (csts != 0) {
             datap = malloc(dh_old.attrref.Size);
@@ -172,6 +173,72 @@ bck_LoadBackup ()
             errh_Error("BACKUP error reloading %s, reason:\n%m", dh_old.dataname, sts);
             sts = 1;
           }
+
+        } /* For all data segments */
+        if (EVEN (sts)) break;	/* Fatal! Get out! */
+      } /* For each cycle */
+    } else if (fh.version == BCK_FILE_VERSION - 1) {
+
+      /* Read the cycle data.  */
+
+      for (c=0; c<2; c++) {
+        fseek(f, fh.curdata [c], 0);
+	fread(&ch_old, sizeof ch_old, 1, f);
+
+        /* Work thru the data segments */
+
+        for (d=0; d<ch_old.segments; d++) {
+	  csts = fread(&dh, sizeof dh, 1, f);
+	  if (csts != 0) {
+	    if (dh.namesize > 0) {
+	      namep = malloc(dh.namesize + 1);
+	      csts = fread(namep, dh.namesize + 1, 1, f);
+	    } else 
+	      namep = NULL;
+            datap = malloc(dh.size);
+	    csts = fread(datap, dh.size, 1, f);
+	  }
+	  if (csts == 0) {
+	    SET_ERRNO_STS;
+	    break;
+          }
+	  
+	  if (dh.valid) {
+
+	    /* Find object */
+
+	    if (dh.dynamic) {
+              strp = strchr(namep, '.');	/* always is a full object! */
+              if (strp != NULL) *strp = '\0';	/* Just make sure... */
+
+	      sts = gdh_CreateObject(namep, dh.class, dh.size,
+		&objid, dh.objid, 0, pwr_cNObjid);
+
+              if (strp != NULL) *strp = '.';
+
+	      if (ODD (sts))
+		sts = gdh_SetObjectInfo(namep, datap, dh.size);
+
+              strncpy(objectname, namep, pwr_cSizAName);
+	    } /* Dynamic object */
+	    else {
+	      sts = gdh_ObjidToName (dh.objid, objectname, sizeof(objectname),
+	                             cdh_mNName);
+	      if (ODD(sts)) {
+	        strcat(objectname, namep);
+	        sts = gdh_SetObjectInfo(objectname, datap, dh.size);
+	      }
+	    }
+	  } /* valid segment */
+
+          if (EVEN (sts)) {
+            errh_Error("BACKUP error reloading %s, reason:\n%m", objectname, sts);
+            sts = 1;
+          }
+
+          free(datap);
+	  free(namep);
+
 
         } /* For all data segments */
         if (EVEN (sts)) break;	/* Fatal! Get out! */

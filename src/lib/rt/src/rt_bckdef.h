@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_bckdef.h,v 1.4 2008-03-31 13:47:00 claes Exp $
+ * Proview   $Id: rt_bckdef.h,v 1.5 2008-04-25 11:27:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -58,7 +58,7 @@
      header area. The routines bck_falloc and bck_ffree are used
      to allocate and free areas in this section.  */
 
-#define	BCK_FILE_VERSION	5
+#define	BCK_FILE_VERSION	6
 
 typedef struct {
 
@@ -83,6 +83,13 @@ typedef struct {
 	pwr_tUInt16	cycle;		/* 0=fast, 1=slow */
 	pwr_tUInt16	segments;	/* # of segments in section */
 } BCK_CYCLEHEAD_STRUCT;
+
+typedef struct {
+	pwr_tTime	objtime;	/* Time up to which new objects are included */
+	pwr_tUInt32	length;		/* Length of section including this header */
+	pwr_tUInt16	cycle;		/* 0=fast, 1=slow */
+	pwr_tUInt32	segments;	/* # of segments in section */
+} bck_t_cycleheader;
 
 /* Each data section area is divided in a number of segments,
    each containing information pointed out by a single backup
