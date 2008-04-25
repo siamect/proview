@@ -74,3 +74,4 @@
 080327 rk  rt_bck    Backup always on attribute-level instead of object-level.
 080411 rk  rt        Fixed bug in subc_ActivateList when subscribing from several nodes.
 080414 cs  doc       Object overview added to Object Reference Manual.
+080425 rk  rt_bck    Increased number of possible backup segments.
