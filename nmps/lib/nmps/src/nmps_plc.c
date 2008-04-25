@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: nmps_plc.c,v 1.3 2008-01-25 14:35:29 claes Exp $
+ * Proview   $Id: nmps_plc.c,v 1.4 2008-04-25 11:27:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -32,6 +32,7 @@
 #include "pwr.h"
 #include "pwr_baseclasses.h"
 #include "pwr_nmpsclasses.h"
+#include "co_cdh.h"
 #include "rt_gdh.h"
 #include "rt_plc.h"
 #include "rt_nmps_lock.h"
@@ -2935,3 +2936,50 @@ int	nmps_RemoveAndDeleteData( pwr_tObjid objid)
 	return 1;
 }
 
+/*_*
+  DataFWrite
+
+  @aref datafwrite DataFWrite
+*/
+void DataFWrite_exec( plc_sThread		*tp,
+		      pwr_sClass_DataFWrite     *o)
+{
+  if ( o->Error)
+    o->Error = 0;
+
+  if ( *o->ConditionP && !o->CondOld) {
+    pwr_tAttrRef aref = cdh_ObjidToAref( *(pwr_tOid *)((char *)o->DataP + 4));
+
+    o->WriteStatus = gdh_FWriteObject( *o->FileNameP, &aref);
+    if ( EVEN(o->WriteStatus))
+      o->Error = 1;
+
+    if ( o->ConditionP == &o->Condition)
+      o->Condition = 0;
+  }
+  o->CondOld = *o->ConditionP;
+}
+
+/*_*
+  DataFRead
+
+  @aref datafread DataFRead
+*/
+void DataFRead_exec( plc_sThread		*tp,
+		     pwr_sClass_DataFRead       *o)
+{
+  if ( o->Error)
+    o->Error = 0;
+
+  if ( *o->ConditionP && !o->CondOld) {
+    pwr_tAttrRef aref = cdh_ObjidToAref( *(pwr_tOid *)((char *)o->DataP + 4));
+
+    o->ReadStatus = gdh_FReadObject( *o->FileNameP, &aref);
+    if ( EVEN(o->ReadStatus))
+      o->Error = 1;
+
+    if ( o->ConditionP == &o->Condition)
+      o->Condition = 0;
+  }
+  o->CondOld = *o->ConditionP;
+}
