@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_gtk.cpp,v 1.4 2008-04-01 14:19:30 claes Exp $
+ * Proview   $Id: xtt_xnav_gtk.cpp,v 1.5 2008-04-25 11:28:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -66,6 +66,7 @@ typedef void *Widget;
 #include "xtt_op_gtk.h"
 #include "xtt_hist_gtk.h"
 #include "ge_curve_gtk.h"
+#include "xtt_fileview_gtk.h"
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
@@ -250,6 +251,13 @@ GeCurve *XNavGtk::gecurve_new( char *name, char *filename, GeCurveData *data,
 				 int pos_right)
 {
   return new GeCurveGtk( this, parent_wid, name, filename, data, pos_right);
+}
+
+XttFileview *XNavGtk::fileview_new( pwr_tOid oid, char *title, char *dir, char *pattern,
+				    int type, char *target_attr, char *trigger_attr)
+{
+  return new XttFileviewGtk( this, parent_wid, oid, title, dir, pattern, type, target_attr,
+			     trigger_attr);
 }
 
 void XNavGtk::bell( int time)

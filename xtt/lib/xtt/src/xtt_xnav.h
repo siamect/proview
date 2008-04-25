@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.h,v 1.21 2007-05-21 14:28:32 claes Exp $
+ * Proview   $Id: xtt_xnav.h,v 1.22 2008-04-25 11:28:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -96,6 +96,7 @@ class Hist;
 class CLog;
 class XttGe;
 class RtTrace;
+class XttFileview;
 
 typedef enum {
 	xnav_mOpen_All		= ~0,
@@ -340,6 +341,8 @@ class XNav {
 				int (*xg_is_authorized_cb) (void *, unsigned int)) {return 0;}
     virtual GeCurve *gecurve_new( char *name, char *filename, GeCurveData *data,
 				  int pos_right) {return 0;}
+    virtual XttFileview *fileview_new( pwr_tOid oid, char *title, char *dir, char *pattern,
+				       int type, char *target_attr, char *trigger_attr) {return 0;}
     virtual void bell( int time) {}
 
     void start_trace( pwr_tObjid Objid, char *object_str);

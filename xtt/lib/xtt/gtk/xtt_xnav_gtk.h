@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_gtk.h,v 1.2 2007-05-21 14:28:56 claes Exp $
+ * Proview   $Id: xtt_xnav_gtk.h,v 1.3 2008-04-25 11:28:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -71,6 +71,8 @@ class XNavGtk : public XNav {
 			int (*xg_is_authorized_cb) (void *, unsigned int));
     GeCurve *gecurve_new( char *name, char *filename, GeCurveData *data,
 			  int pos_right);
+    XttFileview *fileview_new( pwr_tOid oid, char *title, char *dir, char *pattern,
+			       int type, char *target_attr, char *trigger_attr);
     void bell( int time);
     void get_popup_menu( pwr_sAttrRef attrref,
 			 xmenu_eItemType item_type, 
