@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_mvol.c,v 1.17 2007-04-25 07:24:30 claes Exp $
+ * Proview   $Id: rt_mvol.c,v 1.18 2008-04-25 11:12:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -386,6 +386,22 @@ mvol_ArefToAttribute (
   cp = hash_Search(sts, gdbroot->cid_ht, &cid);
   if (cp == NULL) {
     pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+  }
+
+  if ( arp->Flags.b.Object) {
+    ap->cp    = cp;
+    ap->cop   = pool_Address(NULL, gdbroot->pool, cp->cor);
+    ap->cdef  = pool_Address(NULL, gdbroot->rtdb, cp->cbr);
+    ap->bop   = pool_Address(NULL, gdbroot->pool, cp->bor);
+    ap->bdef  = pool_Address(NULL, gdbroot->rtdb, cp->bbr);
+
+    ap->aix   = ULONG_MAX;
+    ap->size  = arp->Size == 0 ? cp->size : MIN(arp->Size, cp->size);
+    ap->offs  = 0;
+    ap->tid   = cdh_TypeObjidToId(ap->bop->g.oid);
+    ap->elem  = 1;
+
+    pwr_Return(ap, sts, GDH__SUCCESS);
   }
 
   acp = cp;
