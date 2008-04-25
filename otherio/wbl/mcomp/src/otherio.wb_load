@@ -401,7 +401,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  ActValRangeLow             0
     !  ActValRangeHigh          100
     ! 
-    !  @classlink MotionControl_USB otherui_motioncontrol_usb.html
+    !  @classlink MotionControl_USB otherio_motioncontrol_usb.html
     !  @link Datasheet ../dsh/motioncontrol_usbio.pdf
     !*/
     Object MotionControl_USBIO $ClassDef 2 15-NOV-2007 14:36:59.65
