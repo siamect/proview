@@ -200,6 +200,16 @@ E 1.10.12 "Scale"
 E 1.10.13 "Attribute"
 E 1.10.14 "Time axis"
 #
+# Fileview
+E 1.11.1 "Save"
+E 1.11.2 "Open"
+E 1.11.3 "Save as"
+E 1.11.4 "File already exists"
+E 1.11.5 "already exists"
+E 1.11.6 "Do you want to replace it"
+E 1.11.7 "Open File"
+E 1.11.8 "Save File"
+#
 # Postscript printing
 E 2.1.1 "Contents"
 E 2.1.2 "page"

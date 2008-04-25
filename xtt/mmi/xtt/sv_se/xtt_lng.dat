@@ -200,6 +200,16 @@ E 1.10.12 "Skala"
 E 1.10.13 "Attribut"
 E 1.10.14 "Tidsaxel"
 #
+# Fileview
+E 1.11.1 "Spara"
+E 1.11.2 "Öppna"
+E 1.11.3 "Spara som"
+E 1.11.4 "Filen finns redan"
+E 1.11.5 "finns redan"
+E 1.11.6 "Vill du ersätta den"
+E 1.11.7 "Öppna fil"
+E 1.11.8 "Spara fil"
+#
 # Postscript printing
 E 2.1.1 "Innehåll"
 E 2.1.2 "sidan"
