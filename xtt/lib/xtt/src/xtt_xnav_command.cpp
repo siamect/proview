@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_command.cpp,v 1.33 2008-01-24 09:38:28 claes Exp $
+ * Proview   $Id: xtt_xnav_command.cpp,v 1.34 2008-04-25 11:29:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -72,6 +72,7 @@
 #include "xtt_audio.h"
 #include "xtt_clog.h"
 #include "xtt_hist.h"
+#include "xtt_fileview.h"
 
 class xnav_file {
 public:
@@ -186,6 +187,10 @@ static int	xnav_print_func(       	void		*client_data,
 					void		*client_flag);
 static int	xnav_sound_func(       	void		*client_data,
 					void		*client_flag);
+static int	xnav_write_func(       	void		*client_data,
+					void		*client_flag);
+static int	xnav_read_func(       	void		*client_data,
+					void		*client_flag);
 
 dcli_tCmdTable	xnav_command_table[] = {
 		{
@@ -205,7 +210,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"/NAVIGATOR", "/CENTER", "/OBJECT", "/NEW", 
 			"/INSTANCE", "/COLLECT", "/FOCUS", "/INPUTEMPTY", 
                         "/ENTRY", "/TITLE", "/ACCESS", "/CLASSGRAPH", "/BYPASS", 
-			"/CLOSEBUTTON", ""}
+			"/CLOSEBUTTON", "/TARGET", "/TRIGGER", "/TYPE", ""}
 		},
 		{
 			"CLOSE",
@@ -338,6 +343,16 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"SOUND",
 			&xnav_sound_func,
 			{ "dcli_arg1", "/OBJECT", ""}
+		},
+		{
+			"WRITE",
+			&xnav_write_func,
+			{ "dcli_arg1", "/OBJECT", "/FILE", ""}
+		},
+		{
+			"READ",
+			&xnav_read_func,
+			{ "dcli_arg1", "/OBJECT", "/FILE", ""}
 		},
 		{"",}};
 
@@ -3037,6 +3052,66 @@ static int	xnav_open_func(	void		*client_data,
       xnav->clog->close_cb = xnav_clog_close_cb;
     }
   }
+  else if ( strncmp( arg1_str, "FILEVIEW", strlen( arg1_str)) == 0)
+  {
+    XttFileview *fileview;
+    pwr_tFileName file_str;
+    pwr_tFileName dir_str;
+    pwr_tAName target_str;
+    pwr_tAName trigger_str;
+    char	title_str[80];
+    char	type_str[80];
+    int		type;
+    char 	*s;
+    pwr_tAttrRef aref;
+    pwr_tStatus sts;
+    
+    if ( EVEN( dcli_get_qualifier( "/FILE", dir_str, sizeof(dir_str)))) {
+      xnav->message('E', "Enter file specification");
+      return XNAV__HOLDCOMMAND;
+    }
+    if ( EVEN( dcli_get_qualifier( "/TARGET", target_str, sizeof(target_str)))) {
+      xnav->message('E', "Enter target attribute");
+      return XNAV__HOLDCOMMAND;
+    }
+    if ( EVEN( dcli_get_qualifier( "/TRIGGER", trigger_str, sizeof(trigger_str)))) {
+      xnav->message('E', "Enter trigger attribute");
+      return XNAV__HOLDCOMMAND;
+    }
+    if ( ODD( dcli_get_qualifier( "/TYPE", type_str, sizeof(type_str)))) {
+      if ( strcmp( type_str, "SAVE") == 0)
+	type = fileview_eType_Save;
+      else if ( strcmp( type_str, "OPEN") == 0)
+	type = fileview_eType_Open;
+      else {
+	xnav->message('E', "Type syntax error");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else
+      type = fileview_eType_Open;
+
+    if ( EVEN( dcli_get_qualifier( "/TITLE", title_str, sizeof(title_str)))) {
+      if ( type == fileview_eType_Open)
+	strcpy( title_str, "Open File");
+      else if ( type == fileview_eType_Save)
+	strcpy( title_str, "Save File");
+    }
+
+    if ( (s = strrchr( dir_str, '/'))) {
+      *s = 0;
+      strcpy( file_str, s+1);
+    }
+
+    sts = gdh_NameToAttrref( pwr_cNObjid, target_str, &aref);
+    if ( EVEN(sts)) {
+      xnav->message('E', "Uable to find target object");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    fileview = xnav->fileview_new( aref.Objid, title_str, dir_str, file_str, type,
+				   target_str, trigger_str);
+  }
   else
     xnav->message('E',"Syntax error");
 
@@ -4600,6 +4675,98 @@ static int	xnav_sound_func(void		*client_data,
   }
 
   xnav->sound( &aref);
+
+  return XNAV__SUCCESS;	
+}
+
+static int	xnav_write_func(void		*client_data,
+				void		*client_flag)
+{
+  XNav *xnav = (XNav *)client_data;
+
+  char	arg1_str[80];
+  int	arg1_sts;
+
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+
+  if ( strncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0) {
+    pwr_tOName object_str;
+    pwr_tFileName file_str;
+    int sts;
+    pwr_tAttrRef aref;
+
+    if ( EVEN( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
+      if ( EVEN( dcli_get_qualifier( "dcli_arg2", object_str, sizeof(object_str)))) {
+	xnav->message('E', "Object is missing");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+
+    if ( EVEN( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
+      xnav->message('E',"Enter file");  
+      return XNAV__HOLDCOMMAND;
+    }
+
+    sts = gdh_NameToAttrref( pwr_cNObjid, object_str, &aref);
+    if ( EVEN(sts)) {
+      xnav->message('E',"Object not found");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    sts = gdh_FWriteObject( file_str, &aref);
+    if ( EVEN(sts))
+      xnav->message(' ', XNav::get_message(sts));
+  }
+  else {
+    xnav->message('E',"Syntax error");
+    return XNAV__HOLDCOMMAND;
+  }
+
+  return XNAV__SUCCESS;	
+}
+
+static int	xnav_read_func(void		*client_data,
+			       void		*client_flag)
+{
+  XNav *xnav = (XNav *)client_data;
+
+  char	arg1_str[80];
+  int	arg1_sts;
+
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+
+  if ( strncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0) {
+    pwr_tOName object_str;
+    pwr_tFileName file_str;
+    int sts;
+    pwr_tAttrRef aref;
+
+    if ( EVEN( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
+      if ( EVEN( dcli_get_qualifier( "dcli_arg2", object_str, sizeof(object_str)))) {
+	xnav->message('E', "Object is missing");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+
+    if ( EVEN( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
+      xnav->message('E',"Enter file");  
+      return XNAV__HOLDCOMMAND;
+    }
+
+    sts = gdh_NameToAttrref( pwr_cNObjid, object_str, &aref);
+    if ( EVEN(sts)) {
+      xnav->message('E',"Object not found");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    sts = gdh_FReadObject( file_str, &aref);
+    if ( EVEN(sts))
+      xnav->message(' ', XNav::get_message(sts));
+  }
+  else {
+    xnav->message('E',"Syntax error");
+    return XNAV__HOLDCOMMAND;
+  }
 
   return XNAV__SUCCESS;	
 }
