@@ -554,8 +554,10 @@ Xtt commands
 <b>logging     <t>Logg attributes to file	<LINK> logging
 <b>open graph  <t>Open a graph			<LINK> open graph
 <b>open jgraph <t>Open a java graph		<LINK> open jgraph
+<b>open fileview <t>Open a fileview		<LINK> open fileview
 <b>open trend  <t>Open DsTrend or PlotGroup graph	<LINK> open trend
 <b>open operatorwindow<t>Open the operator window 	<LINK> open operatorwindow
+<b>read object <t>Read the content of an object from file <LINK> read object
 <b>search	<t>Leta efter object eller sträng <LINK> search
 <b>set advanceduser<t>Set advanced user		<LINK> set advanceduser
 <b>set folder	<t>Set a folder in a tabbed window.  <LINK> set folder
@@ -587,7 +589,7 @@ Xtt commands
 <b>show user  <t>Show current user		<LINK> show user
 <b>sound      <t>Play a sound defined by a sound object	<LINK> sound
 <b>store      <t>Store an attribute list in a file <LINK> store
-
+<b>write object <t>Write the content of an object to file <LINK> write object
 <H2>related subjects
 script <LINK> script
 </TOPIC>	
@@ -934,6 +936,36 @@ JBuilder.
 <B>xtt> open jgraph 'name'
 </TOPIC>
 
+<TOPIC> open fileview <style> function
+Command   open fileview
+
+Opens a fileview that displays files that matches the specified pattern.
+The fileview can be opened in 'Open File' or 'Save File' mode.
+
+In open mode, a file is selected and the selected filename is written to a
+string attribute in the database (target). Simultaneously a digital attribute is
+set (trigger) to indicate that an open should be performed. The actual opening
+can be done by a DataFRead object in th plc, but have to be programmed by the user.
+
+In save mode, a file is selected, or a filename is entered. The filename is
+written to a string attribute and a digital signal is set. The actual save
+can be performed by a DataFWrite object in the plc.
+
+<B>xtt> open fileview /file= /target= /trigger= /type=save
+<B>xtt> open fileview /file= /target= /trigger= /type=open
+
+/file   <t>File pattern, containing wildcard '*', for files that is to be viewed 
+        <t>in the fileview.
+/target <t>String attribute where the selected filename will be stored.
+/trigger <t>Boolean attribute that is set to indicate that a save or open should 
+        <t>be performed.
+/type   <t>'save' or 'open'
+
+<b>Example
+open fileview /file="$pwrp_load/*.txt"/target=P1-Sv.ActualValue/trigger=P1-Dv.ActualValue/type=save
+
+</TOPIC>
+
 <TOPIC> open trace <style> function
 Command   open trace
 
@@ -1024,6 +1056,19 @@ Search for an objectname or a string.
 <B>xtt> search 'object'
 <B>xtt> search /regularexpression 'expression'
 <B>xtt> search /next
+</TOPIC>
+
+<TOPIC> read object <style> function
+Command   read object
+
+Read the content of an object from file.
+Reads the content of a file, normally created by command 'write object',
+and insert the value into the specified object.
+
+<B>xtt> read object /object= /file=
+
+/object <t>Name of object.
+/file   <t>Name of file to read from.
 </TOPIC>
 
 <TOPIC> set advanceduser <style> function
@@ -1187,6 +1232,18 @@ logging show		<LINK> logging show
 logging store		<LINK> logging store
 
 </TOPIC>
+
+<TOPIC> write object <style> function
+Command   write object
+
+Write the content of an object to file.
+
+<B>xtt> write object /object= /file=
+
+/object <t>Name of object.
+/file   <t>Name of file to write to.
+</TOPIC>
+
 
 </headerlevel>
 </chapter>

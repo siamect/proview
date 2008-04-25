@@ -1,0 +1,152 @@
+! 
+!  Proview   $Id: nmps_c_datafwrite.wb_load,v 1.1 2008-04-25 11:06:02 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_c_datafwrite.wb_load -- Defines the class DataFWrite.
+!
+SObject NMps:Class
+!/**
+!  @Version 1.0
+!  @Code nmps_plc.c
+!  @Group Plc,PlcData
+!  @Summary Write the content of a data object to a file.
+!
+!  Write the content of a data object to a file.
+!  @image orm_datafwrite_fo.gif
+!  The write is executed when the condition input is set to true.
+!
+!  Hint!
+!  The filename and condition can be set from a fileview with the xtt 
+!  command 'open fileview'.
+!
+! @b See also
+!  @classlink GetData pwrb_getdata.html
+!  @classlink DataFRead nmps_datafread.html
+!*/
+  Object DataFWrite $ClassDef 50
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_Connections
+    EndBody
+    !
+    ! Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "DataFWrite"
+      EndBody
+      !/**
+      !  Data input connected to an output that keeps a reference to the data object.
+      !*/
+      Object Data $Input 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOREMOVE
+          Attr GraphName = "Data"
+        EndBody
+      EndObject
+      !/**
+      !  When Condition is goes from false to true, the write is executed.
+      !  If condition is connected, it has to be reset before the next write.
+      !  If condition is not connected it is automatically reset.
+      !*/
+      Object Condition $Input 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "cond"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary String contaning the filename to write data to.
+      !  String contaning the filename to write data to.
+      !*/
+      Object FileName $Input 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "File"
+        EndBody
+      EndObject
+      !/**
+      !  Status of last write operation.
+      !*/
+      Object WriteStatus $Intern 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Status"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  Old value of Condition to detect edge.
+      !*/
+      Object CondOld $Intern 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  Error attribute set at write failure.
+      !*/
+      Object Error $Output 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! Development Body
+    !
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 3
+        Attr parameters[1] = 2
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 7
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "DataFWrite"
+        Attr graphname = "DataFWrite"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object DevBody $ObjBodyDef 2
+      Object PlcNode $Buffer 1
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

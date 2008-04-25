@@ -670,6 +670,8 @@ palette PlcEditorPalette
     class CurrentIndex
     class DataCopy
     class DataCnv
+    class DataFRead
+    class DataFWrite
     class DataRcv
     class DataRequest
     class DataReset

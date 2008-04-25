@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: rt_gdh_msg.msg,v 1.5 2007-03-14 07:49:14 claes Exp $
+!  Proview   $Id: rt_gdh_msg.msg,v 1.6 2008-04-25 11:09:10 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -79,6 +79,9 @@ rtnotstarted	<Proview runtime is not started>			/error
 nocclasssup	<Cached Classes not supported on other node>		/error
 nomountobject	<Mount object is missing>				/error
 noattr          <AttrRef is not an attribute>				/error
+noobject        <AttrRef is not an object>				/error
+file		<Unable to open file>					/error
+convert		<Unable to convert value>				/error
 .end
 
 
