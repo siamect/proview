@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.h,v 1.16 2007-03-14 06:42:01 claes Exp $
+ * Proview   $Id: rt_gdh.h,v 1.17 2008-04-25 11:32:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -529,6 +529,15 @@ gdh_GetObjectDLCount (
   pwr_tUInt32		*count
 );
 
+pwr_tStatus 
+gdh_SearchFile (
+  pwr_tOid oid,
+  char *dir,
+  char *pattern,
+  pwr_tString40 *filelist[],
+  int *filecnt
+);
+
 /** @} */
 
 /** 
@@ -800,6 +809,38 @@ pwr_tStatus
 gdh_ArefDisabled(
   pwr_sAttrRef *arp, 
   pwr_tDisableAttr *disabled
+);
+
+pwr_tStatus 
+gdh_FWriteObject ( 
+  char *filename, 
+  pwr_tAttrRef *arp
+);
+
+pwr_tStatus 
+gdh_FReadObject ( 
+  char *filename,
+  pwr_tAttrRef *arp
+);
+
+pwr_tStatus 
+gdh_AttrValueToString ( 
+  pwr_eType type_id, 
+  pwr_tTid tid, 
+  void *value_ptr, 
+  char *str,
+  int size,
+  int *len,
+  char *format
+);
+
+pwr_tStatus 
+gdh_AttrStringToValue (
+  int type_id,
+  char *value_str, 
+  void *buffer_ptr,
+  int buff_size,
+  int attr_size
 );
 
 /* Undocumented routines. For internal use only.  */

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.c,v 1.31 2007-10-30 07:28:42 claes Exp $
+ * Proview   $Id: rt_gdh.c,v 1.32 2008-04-25 11:32:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,12 +29,13 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
+# include <float.h>
 #endif
-
 
 #include "pwr.h"              
 #include "co_cdh.h"
 #include "co_time.h"
+#include "co_dcli.h"
 #include "rt_gdh_msg.h"
 #include "rt_hash_msg.h"
 #include "rt_pwr_msg.h"
@@ -3727,7 +3728,731 @@ pwr_tStatus gdh_ArefDisabled( pwr_sAttrRef *arp,
 }
 
 
+static pwr_tStatus gdh_FWriteObjectR( FILE *fp, char *ap, char *aname, pwr_tAttrRef *arp, 
+				      pwr_tCid cid)
+{
+  pwr_tOName 	name;
+  char 		value_str[512];
+  gdh_sAttrDef 	*bd;
+  int 		i, j, rows, elements;
+  char		idx[20];
+  pwr_tStatus 	sts;
+  pwr_tAttrRef 	aref;
+  int		len;
+  char		attrName[40];
 
+  sts = gdh_GetObjectBodyDef( cid, &bd, &rows, arp->Objid);
+  if ( EVEN(sts)) return sts;
 
+  for ( i = 0; i < rows; i++) {
 
+    if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
+	 bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE)
+      continue;
 
+    strcpy( name, aname);
+    strcat( name, ".");
+    strcat( name, bd[i].attrName);
+    strcpy( attrName, bd[i].attrName);
+
+    if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY)
+      elements = bd[i].attr->Param.Info.Elements;
+    else
+      elements = 1;
+
+    for ( j = 0; j < elements; j++) {
+
+      if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY) {
+	sprintf( idx, "[%d]", j);
+	strcpy( name, aname);
+	strcat( name, ".");
+	strcat( name, bd[i].attrName);
+	strcat( name, idx);
+	strcpy( attrName, bd[i].attrName);
+	strcat( attrName, idx);
+      }
+
+      sts = gdh_ArefANameToAref( arp, attrName, &aref);
+      if ( EVEN(sts)) return sts;
+      
+      if ( bd[i].attr->Param.Info.Flags & PWR_MASK_CLASS) {
+	sts = gdh_FWriteObjectR( fp, ap + bd[i].attr->Param.Info.Offset + j *
+				 bd[i].attr->Param.Info.Size / elements, name, 
+				 &aref, bd[i].attr->Param.Info.Type);
+      }
+      else {
+	sts = gdh_AttrValueToString( bd[i].attr->Param.Info.Type,
+				     bd[i].attr->Param.TypeRef,
+				     ap + bd[i].attr->Param.Info.Offset + j *
+				     bd[i].attr->Param.Info.Size / elements,
+				     value_str, sizeof(value_str), &len, 0);
+	if ( ODD(sts)) {
+	  switch ( bd[i].attr->Param.Info.Type) {
+	  case pwr_eType_String:
+	  case pwr_eType_Text:
+	  case pwr_eType_Objid:
+	  case pwr_eType_AttrRef:
+	  case pwr_eType_ClassId:
+	  case pwr_eType_TypeId:
+	  case pwr_eType_CastId:
+	    fprintf( fp, "%s \"%s\"\n", &name[1], value_str);
+	    break;
+	  default:
+	    fprintf( fp, "%s %s\n", &name[1], value_str);
+	    break;
+	  }  
+	}
+	else {
+	  fprintf( fp, "# %s Value could not be converted\n", &name[1]);
+	}
+      }
+    }
+  }
+  return GDH__SUCCESS;
+}
+
+pwr_tStatus gdh_FWriteObject( char *filename, pwr_tAttrRef *arp)
+{
+  pwr_tFileName fname;
+  FILE *fp;
+  char *ap;
+  pwr_tStatus sts;
+  pwr_tTid tid;
+
+  sts = gdh_GetAttrRefTid( arp, &tid);
+  if ( EVEN(sts)) return sts;
+
+  if ( !cdh_tidIsCid(tid))
+    return GDH__NOOBJECT;
+
+  if ( arp->Flags.b.Object && arp->Size == 0) {
+    sts = gdh_GetObjectSize( arp->Objid, &arp->Size);
+    if ( EVEN(sts)) return sts;
+  }
+  else if ( arp->Size == 0)
+    return GDH__BADARG;
+
+  ap = calloc( 1, arp->Size);
+  if ( !ap) return GDH__INSVIRMEM;
+
+  sts = gdh_GetObjectInfoAttrref( arp, ap, arp->Size);
+  if ( EVEN(sts)) return sts;
+
+  dcli_translate_filename( fname, filename);
+  fp = fopen( fname, "w");
+  if ( !fp)
+    return GDH__FILE;
+
+  sts = gdh_FWriteObjectR( fp, ap, "", arp, tid);
+  
+  fclose( fp);
+  free( ap);
+  return sts;
+}
+
+pwr_tStatus gdh_FReadObject( char *filename, pwr_tAttrRef *arp)
+{
+  pwr_tFileName fname;
+  FILE *fp;
+  char *ap;
+  pwr_tStatus sts;
+  pwr_tTid tid;
+  char line[512];
+  char	line_elem[2][512];
+  int nr;
+  pwr_tTypeId  	a_tid;
+  unsigned int 	a_size;
+  unsigned int 	a_offs;
+  unsigned int 	a_elem;
+  char		buffer[512];
+  pwr_tAttrRef  aref;
+
+  sts = gdh_GetAttrRefTid( arp, &tid);
+  if ( EVEN(sts)) return sts;
+
+  if ( !cdh_tidIsCid(tid))
+    return GDH__NOOBJECT;
+
+  sts = gdh_AttrRefToPointer( arp, (void **)&ap);
+  if ( EVEN(sts)) return sts;
+
+  dcli_translate_filename( fname, filename);
+  fp = fopen( fname, "r");
+  if ( !fp)
+    return GDH__FILE;
+
+  while ( dcli_read_line( line, sizeof(line), fp)) {
+
+    dcli_trim( line, line);
+    if ( line[0] == '#')
+      continue;
+    if ( strcmp( line, "") == 0)
+      continue;
+    
+    nr = dcli_parse( line, " 	", "",
+		(char *) line_elem, sizeof( line_elem)/sizeof( line_elem[0]), 
+		sizeof( line_elem[0]), 1);
+    if ( nr != 2)
+      continue;
+
+    sts = gdh_ArefANameToAref( arp, line_elem[0], &aref);
+    if ( EVEN(sts)) continue;
+
+    sts = gdh_GetAttributeCharAttrref( &aref, &a_tid, &a_size, &a_offs, &a_elem);
+    if ( EVEN(sts)) continue;
+
+    switch ( a_tid) {
+    case pwr_eType_String:
+    case pwr_eType_Text:
+    case pwr_eType_Objid:
+    case pwr_eType_AttrRef:
+    case pwr_eType_ClassId:
+    case pwr_eType_TypeId:
+    case pwr_eType_CastId:
+      if ( line_elem[1][0] == '"' && line_elem[1][strlen(line_elem[1]) - 1] == '"') {
+	line_elem[1][strlen(line_elem[1]) - 1] = 0;     
+	sts = gdh_AttrStringToValue( a_tid, &line_elem[1][1], buffer, sizeof(buffer), 
+				     a_size);
+      }
+      else
+	sts = gdh_AttrStringToValue( a_tid, line_elem[1], buffer, sizeof(buffer), 
+				     a_size);
+      break;
+    default:
+      sts = gdh_AttrStringToValue( a_tid, line_elem[1], buffer, sizeof(buffer), 
+				   a_size);
+    }
+    if ( EVEN(sts)) continue;
+
+    sts = gdh_SetObjectInfoAttrref( &aref, buffer, a_size);
+  }
+
+  fclose( fp);
+  return sts;
+}
+
+//
+// Convert attribute value to string
+//
+pwr_tStatus gdh_AttrValueToString( pwr_eType type_id, pwr_tTid tid, void *value_ptr, 
+				   char *str, int size, int *len, char *format)
+{
+  int			sts;
+
+  switch ( type_id ) {
+  case pwr_eType_Boolean: {
+    if ( !format)
+      *len = sprintf( str, "%d", *(pwr_tBoolean *)value_ptr);
+    else
+      *len = sprintf( str, format, *(pwr_tBoolean *)value_ptr);
+    break;
+  }
+  case pwr_eType_Float32: {
+    if ( *(float *)value_ptr == FLT_MIN) {
+      strcpy( str, "FLT_MIN");
+      *len = strlen(str);
+    }
+    else if ( *(float *)value_ptr == FLT_MAX) {
+      strcpy( str, "FLT_MAX");
+      *len = strlen(str);
+    }
+    else {
+      if ( !format)
+	*len = sprintf( str, "%g", *(float *)value_ptr);
+      else
+	*len = sprintf( str, format, *(float *)value_ptr);
+    }
+    break;
+  }
+  case pwr_eType_Float64: {
+    if ( !format)
+      *len = sprintf( str, "%g", *(double *)value_ptr);
+    else
+      *len = sprintf( str, format, *(double *)value_ptr);
+    break;
+  }
+  case pwr_eType_Char: {
+    if ( !format)
+      *len = sprintf( str, "%c", *(char *)value_ptr);
+    else
+      *len = sprintf( str, format, *(char *)value_ptr);
+    break;
+  }
+  case pwr_eType_Int8: {
+    if ( !format)
+      *len = sprintf( str, "%d", *(char *)value_ptr);
+    else
+      *len = sprintf( str, format, *(char *)value_ptr);
+    break;
+  }
+  case pwr_eType_Int16: {
+    if ( !format)
+      *len = sprintf( str, "%hd", *(short *)value_ptr);
+    else
+      *len = sprintf( str, format, *(short *)value_ptr);
+    break;
+  }
+  case pwr_eType_Int32: {
+    if ( *(int *)value_ptr == INT_MIN) {
+      strcpy( str, "INT_MIN");
+      *len = strlen(str);
+    }
+    else if ( *(int *)value_ptr == INT_MAX) {
+      strcpy( str, "INT_MAX");
+      *len = strlen(str);
+    }
+    else {
+      if ( !format)
+	*len = sprintf( str, "%d", *(int *)value_ptr);
+      else
+	*len = sprintf( str, format, *(int *)value_ptr);
+    }
+    break;
+  }
+  case pwr_eType_Int64: {
+    if ( !format)
+      *len = sprintf( str, "%lld", *(pwr_tInt64 *)value_ptr);
+    else
+      *len = sprintf( str, format, *(pwr_tInt64 *)value_ptr);
+    break;
+  }
+  case pwr_eType_UInt8: {
+    if ( !format)
+      *len = sprintf( str, "%u", *(unsigned char *)value_ptr);
+    else
+      *len = sprintf( str, format, *(unsigned char *)value_ptr);
+    break;
+  }
+  case pwr_eType_UInt16: {
+    if ( !format)
+      *len = sprintf( str, "%hu", *(unsigned short *)value_ptr);
+    else
+      *len = sprintf( str, format, *(unsigned short *)value_ptr);
+    break;
+  }
+  case pwr_eType_UInt32:
+  case pwr_eType_Mask:
+  case pwr_eType_DisableAttr: {
+    if ( !format)
+      *len = sprintf( str, "%u", *(unsigned int *)value_ptr);
+    else
+      *len = sprintf( str, format, *(unsigned int *)value_ptr);
+    break;
+  }
+  case pwr_eType_UInt64: {
+    if ( !format)
+      *len = sprintf( str, "%llu", *(pwr_tUInt64 *)value_ptr);
+    else
+      *len = sprintf( str, format, *(pwr_tUInt64 *)value_ptr);
+    break;
+  }
+  case pwr_eType_Enum: {
+    if ( !format)
+      *len = sprintf( str, "%u", *(unsigned int *)value_ptr);
+    else
+      *len = sprintf( str, format, *(unsigned int *)value_ptr);
+    break;
+#if 0
+    gdh_sValueDef *valuedef;
+    int 		rows;
+    int		converted = 0;
+    int 	i;
+
+    sts = gdh_GetEnumValueDef( tid, &valuedef, &rows);
+    if ( ODD(sts)) {
+
+      for ( i = 0; i < rows; i++) {
+	if ( valuedef[i].Value->Value == *(pwr_tInt32 *)value_ptr) {
+	  strcpy( str, valuedef[i].Value->Text);
+	  *len = strlen(str);
+	  converted = 1;
+	  break;
+	}
+      }
+      free( (char *)valuedef);
+    }
+    if ( !converted) {
+      if ( !format)
+	*len = sprintf( str, "%d", *(unsigned int *)value_ptr);
+      else
+	*len = sprintf( str, format, *(unsigned int *)value_ptr);
+      break;
+    }
+    break;
+#endif
+  }
+  case pwr_eType_String: {
+    strncpy( str, (char *)value_ptr, size);
+    str[size-1] = 0;
+    *len = strlen(str);
+    break;
+  }
+  case pwr_eType_Text: {
+    char *s, *t;
+
+    for ( s = (char *)value_ptr, t = str; *s != 10 && *s != 0; s++, t++) {
+      if ( t - str >= size - 1)
+	break;
+      *t = *s;
+    }
+    *t = 0;
+    *len = strlen(str);
+    break;
+  }
+  case pwr_eType_Objid: {
+    pwr_tOName hiername;
+    pwr_tObjid		objid;
+
+    objid = *(pwr_tObjid *)value_ptr;
+    if ( !objid.oix)
+      sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), 
+			      cdh_mName_volumeStrict);
+    else
+      sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), 
+			      cdh_mNName);
+    if (EVEN(sts))
+      {
+        strcpy( str, "");
+        *len = 0;
+        break;
+      }
+    *len = sprintf( str, "%s", hiername);
+    break;
+  }
+  case pwr_eType_AttrRef: {
+    pwr_tAName hiername;
+    pwr_sAttrRef		*attrref;
+
+    attrref = (pwr_sAttrRef *) value_ptr;
+    sts = gdh_AttrrefToName( attrref, hiername, sizeof(hiername), cdh_mNName);
+    if (EVEN(sts)) {
+      strcpy( str, "");
+      *len = 0;
+      break;
+    }
+    *len = sprintf( str, "%s", hiername);
+    break;
+  }
+  case pwr_eType_DataRef: {
+    pwr_tAName hiername;
+    pwr_tDataRef *dataref;
+
+    dataref = (pwr_tDataRef *) value_ptr;
+    sts = gdh_AttrrefToName( &dataref->Aref, hiername, sizeof(hiername), cdh_mNName);
+    if (EVEN(sts)) {
+      strcpy( str, "");
+      *len = 0;
+      break;
+    }
+    *len = sprintf( str, "%s", hiername);
+    break;
+  }
+  case pwr_eType_Time: {
+    char			timstr[64];
+
+    sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_DateAndTime, 
+			 timstr, sizeof(timstr));
+    if ( EVEN(sts))
+      strcpy( timstr, "-");
+    *len = sprintf( str, "%s", timstr);
+    break;
+  }
+  case pwr_eType_DeltaTime: {
+    char			timstr[64];
+
+    sts = time_DtoAscii( (pwr_tDeltaTime *) value_ptr, 1, 
+			 timstr, sizeof(timstr));
+    if ( EVEN(sts))
+      strcpy( timstr, "Undefined time");
+    *len = sprintf( str, "%s", timstr);
+    break;
+  }
+  case pwr_eType_ObjectIx: {
+    *len = sprintf( str, "%s", cdh_ObjectIxToString( NULL, 
+						     *(pwr_tObjectIx *) value_ptr, 1));
+    break;
+  }
+  case pwr_eType_ClassId: {
+    pwr_tOName hiername;
+    pwr_tObjid		objid;
+
+    objid = cdh_ClassIdToObjid( *(pwr_tClassId *) value_ptr);
+    sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
+    if (EVEN(sts)) {
+      strcpy( str, "");
+      *len = 0;
+      break;
+    }
+    *len = sprintf( str, "%s", hiername);
+    break;
+  }
+  case pwr_eType_TypeId:
+  case pwr_eType_CastId: {
+    pwr_tOName hiername;
+    pwr_tObjid		objid;
+
+    objid = cdh_TypeIdToObjid( *(pwr_tTypeId *) value_ptr);
+    sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
+    if (EVEN(sts)) {
+      strcpy( str, "");
+      *len = 0;
+      break;
+    }
+    *len = sprintf( str, "%s", hiername);
+    break;
+  }
+  case pwr_eType_VolumeId: {
+    *len = sprintf( str, "%s", cdh_VolumeIdToString( NULL, 
+						     *(pwr_tVolumeId *) value_ptr, 1, 0));
+    break;
+  }
+  case pwr_eType_RefId: {
+    *len = sprintf( str, "%s", cdh_SubidToString( NULL, 
+						  *(pwr_tSubid *) value_ptr, 1));
+    break;
+  }
+  case pwr_eType_NetStatus:
+  case pwr_eType_Status: {
+    if ( !format)
+      *len = sprintf( str, "%u", *(unsigned int *)value_ptr);
+    else
+      *len = sprintf( str, format, *(unsigned int *)value_ptr);
+    break;
+  }
+  default:
+    return GDH__CONVERT;
+  }
+  return GDH__SUCCESS;
+}
+
+//
+// Convert attribute string to value
+//
+pwr_tStatus gdh_AttrStringToValue( int type_id, char *value_str, 
+				   void *buffer_ptr, int buff_size, int attr_size)
+{
+  int		sts;
+
+  switch ( type_id ) {
+  case pwr_eType_Boolean: {
+    if ( sscanf( value_str, "%d", (pwr_tBoolean *)buffer_ptr) != 1)
+      return GDH__CONVERT;
+    if ( *(pwr_tBoolean *)buffer_ptr > 1)
+      return GDH__CONVERT;
+    break;
+  }
+  case pwr_eType_Float32: {
+    if ( strcmp( value_str, "FLT_MIN") == 0)
+      *(float *)buffer_ptr = FLT_MIN;
+    else if ( strcmp( value_str, "FLT_MAX") == 0)
+      *(float *)buffer_ptr = FLT_MAX;
+    else if ( sscanf( value_str, "%f", (float *)buffer_ptr) != 1)
+      return GDH__CONVERT;
+    break;
+  }
+  case pwr_eType_Float64: {
+    pwr_tFloat32 f;
+    pwr_tFloat64 d;
+    if ( sscanf( value_str, "%f", &f) != 1)
+      return GDH__CONVERT;
+    d = f;
+    memcpy( buffer_ptr, (char *) &d, sizeof(d));
+
+    break;
+  }
+  case pwr_eType_Char: {
+    if ( sscanf( value_str, "%c", (char *)buffer_ptr) != 1)
+      return GDH__CONVERT;
+    break;
+  }
+  case pwr_eType_Int8: {
+    pwr_tInt8 	i8;
+    pwr_tInt16	i16;
+    if ( sscanf( value_str, "%hd", &i16) != 1)
+      return GDH__CONVERT;
+    i8 = i16;
+    memcpy( buffer_ptr, (char *)&i8, sizeof(i8));
+    break;
+  }
+  case pwr_eType_Int16: {
+    if ( sscanf( value_str, "%hd", (short *)buffer_ptr) != 1)
+      return GDH__CONVERT;
+    break;
+  }
+  case pwr_eType_Int32:
+  case pwr_eType_Status:
+  case pwr_eType_NetStatus: {
+    if ( strcmp( value_str, "INT_MIN") == 0)
+      *(int *)buffer_ptr = INT_MIN;
+    else if ( strcmp( value_str, "INT_MAX") == 0)
+      *(int *)buffer_ptr = INT_MAX;
+    else if ( sscanf( value_str, "%d", (int *)buffer_ptr) != 1)
+      return GDH__CONVERT;
+    break;
+  }
+  case pwr_eType_Int64: {
+    if ( sscanf( value_str, "%lld", ( pwr_tInt64 *)buffer_ptr) != 1)
+      return GDH__CONVERT;
+    break;
+  }
+  case pwr_eType_UInt8: {
+    pwr_tUInt8 	i8;
+    pwr_tUInt16	i16;
+    if ( sscanf( value_str, "%hu", &i16) != 1)
+      return GDH__CONVERT;
+    i8 = i16;
+    memcpy( buffer_ptr, (char *)&i8, sizeof(i8));
+    break;
+  }
+  case pwr_eType_UInt16: {
+    if ( sscanf( value_str, "%hu", (unsigned short *)buffer_ptr) != 1)
+      return GDH__CONVERT;
+    break;
+  }
+  case pwr_eType_UInt32:
+  case pwr_eType_Mask:
+  case pwr_eType_DisableAttr: {
+    if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
+      return GDH__CONVERT;
+    break;
+  }
+  case pwr_eType_UInt64: {
+    if ( sscanf( value_str, "%llu", (pwr_tUInt64 *)buffer_ptr) != 1)
+      return GDH__CONVERT;
+    break;
+  }
+  case pwr_eType_String:
+  case pwr_eType_Text: {
+    if ( (int) strlen( value_str) >= attr_size)
+      return GDH__CONVERT;
+    strncpy( (char *)buffer_ptr, value_str, attr_size < buff_size ? attr_size : buff_size);
+    break;
+  }
+  case pwr_eType_Objid: {
+    pwr_tObjid	objid;
+
+    if ( strcmp( value_str, "0") == 0)
+      objid = pwr_cNObjid;
+    else {
+      sts = gdh_NameToObjid ( value_str, &objid);
+      if (EVEN(sts)) return sts;
+    }
+    memcpy( buffer_ptr, &objid, sizeof(objid));
+    break;
+  }
+  case pwr_eType_ClassId: {
+    pwr_tClassId	classid;
+    pwr_tObjid	objid;
+
+    sts = gdh_NameToObjid ( value_str, &objid);
+    if (EVEN(sts)) return sts;
+    classid = cdh_ClassObjidToId( objid);
+    memcpy( buffer_ptr, (char *) &classid, sizeof(classid));
+    break;
+  }
+  case pwr_eType_TypeId:
+  case pwr_eType_CastId: {
+    pwr_tTypeId	val_typeid;
+    pwr_tObjid	objid;
+
+    sts = gdh_NameToObjid ( value_str, &objid);
+    if (EVEN(sts)) return sts;
+    val_typeid = cdh_TypeObjidToId( objid);
+    memcpy( buffer_ptr, (char *) &val_typeid, sizeof(val_typeid));
+    break;
+  }
+  case pwr_eType_ObjectIx: {
+    pwr_tObjectIx	objectix;
+
+    sts = cdh_StringToObjectIx( value_str, &objectix); 
+    if (EVEN(sts)) return sts;
+    memcpy( buffer_ptr, (char *) &objectix, sizeof(objectix));
+    break;
+  }
+  case pwr_eType_VolumeId: {
+    pwr_tVolumeId	volumeid;
+
+    sts = cdh_StringToVolumeId( value_str, &volumeid); 
+    if (EVEN(sts)) return sts;
+    memcpy( buffer_ptr, (char *) &volumeid, sizeof(volumeid));
+    break;
+  }
+  case pwr_eType_RefId: {
+    pwr_tRefId	subid;
+
+    sts = cdh_StringToSubid( value_str, &subid);
+    if (EVEN(sts)) return sts;
+    memcpy( buffer_ptr, (char *) &subid, sizeof(subid));
+    break;
+  }
+  case pwr_eType_AttrRef: {
+    pwr_sAttrRef	attrref;
+
+    if ( strcmp( value_str, "0") == 0)
+      attrref = pwr_cNAttrRef;
+    else {
+      sts = gdh_NameToAttrref ( pwr_cNObjid, value_str, &attrref);
+      if (EVEN(sts)) return sts;
+    }
+    memcpy( buffer_ptr, &attrref, sizeof(attrref));
+    break;
+  }
+  case pwr_eType_DataRef: {
+    pwr_tDataRef	dataref;
+
+    sts = gdh_NameToAttrref ( pwr_cNObjid, value_str, &dataref.Aref);
+    if (EVEN(sts)) return sts;
+    dataref.Ptr = 0;
+    memcpy( buffer_ptr, &dataref, sizeof(dataref));
+    break;
+  }
+  case pwr_eType_Time: {
+    pwr_tTime	time;
+
+    sts = time_AsciiToA( value_str, &time);
+    if (EVEN(sts)) return GDH__CONVERT;
+    memcpy( buffer_ptr, (char *) &time, sizeof(time));
+    break;
+  }
+  case pwr_eType_DeltaTime: {
+    pwr_tDeltaTime deltatime;
+
+    sts = time_AsciiToD( value_str, &deltatime);
+    if (EVEN(sts)) return GDH__CONVERT;
+    memcpy( buffer_ptr, (char *) &deltatime, sizeof(deltatime));
+    break;
+  }
+  case pwr_eType_Enum: {
+    if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
+      return GDH__CONVERT;
+    break;
+  }
+  }
+  return GDH__SUCCESS;
+}
+
+pwr_tStatus gdh_SearchFile( pwr_tOid oid, char *dir, char *pattern, 
+			    pwr_tString40 *filelist[], int *filecnt)
+{
+  pwr_tStatus sts;
+  gdb_sObject *op;
+  int is_cached = 0;
+
+  if ( oid.vid == 0) {
+    sts = dcli_get_files( dir, pattern, filelist, filecnt);
+    return sts;
+  }
+
+  gdh_ScopeLock {
+    op = vol_OidToObject(&sts, oid, gdb_mLo_global, vol_mTrans_all, cvol_eHint_none);
+
+    if ( op->l.flags.b.isCached) {
+      is_cached = 1;
+      //      cvolc_FileList( &sts, op, dir, pattern, filelist, filecnt);
+    }
+  } gdh_ScopeUnlock;
+
+  if  ( !is_cached)
+    sts = dcli_get_files( dir, pattern, filelist, filecnt);
+  return sts;
+}
