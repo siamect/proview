@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_bck.c,v 1.14 2008-04-17 14:57:39 claes Exp $
+ * Proview   $Id: rt_bck.c,v 1.15 2008-04-25 11:38:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -118,7 +118,7 @@ pdebug ()
    starting with a cycle header, followed by a number of segments.  */
 
 typedef struct {
-  BCK_CYCLEHEAD_STRUCT cyclehead;
+  bck_t_cycleheader cyclehead;
   struct {
     bck_t_writeheader datahead;
     char data [1];
@@ -865,7 +865,7 @@ typedef struct BCK_LISTENTRY_STRUCT BCK_LISTENTRY;
 
 typedef struct {
   BCK_LISTENTRY *first;		/* First object in list */
-  BCK_CYCLEHEAD_STRUCT cyclehead;	/* Header for this list */
+  bck_t_cycleheader cyclehead;	/* Header for this list */
 } BCK_LISTHEAD;
 
 
@@ -1099,7 +1099,7 @@ void bck_list_build (
   blhp->first = NULL;
   clock_gettime(CLOCK_REALTIME, &blhp->cyclehead.objtime);
   blhp->cyclehead.cycle = cycle;
-  blhp->cyclehead.length = sizeof(BCK_CYCLEHEAD_STRUCT);
+  blhp->cyclehead.length = sizeof(bck_t_cycleheader);
   *list = blhp;
 
   /* Find root of typelist, and walk thru it */
