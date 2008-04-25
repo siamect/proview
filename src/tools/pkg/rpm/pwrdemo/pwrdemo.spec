@@ -11,7 +11,7 @@
 Name:		pwrdemo45
 Summary: 	Proview/R demo project
 Version:        4.5.0
-Release: 	1
+Release: 	5
 License:        GPL
 BuildArch:      i386
 Packager: 	claes.sjofors@proview.se

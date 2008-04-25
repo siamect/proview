@@ -11,7 +11,7 @@
 Name: pwr45
 Summary: Proview/R development and runtime environment
 Version: 4.5.0
-Release: 1
+Release: 5
 License: GPL
 BuildArch: i386
 Packager: claes.sjofors@proview.se
@@ -177,5 +177,7 @@ fi
 #%postun
 
 %changelog
-* Tue Apr 01 2008 Claes Sjofors <claes.sjofors@ssabox.com> 4.5.0-1
-  - Base release.
+* Fri Apr 25 2008 Claes Sjofors <claes.sjofors@ssabox.com> 4.5.0-5
+  - Xtt Fileview added.
+  - Function objects DataFRead and DataFWrite added.
+
