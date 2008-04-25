@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_dcli_dir.c,v 1.4 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_dcli_dir.c,v 1.5 2008-04-25 11:26:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -271,6 +271,60 @@ int dcli_search_file( 		char 	*name ,
 #endif
 	return DCLI__SUCCESS;
 }  
+
+
+/*************************************************************************
+*
+* Name:		dcli_get_files
+*
+*
+**************************************************************************/
+
+int dcli_get_files( char *dir, char *pattern, pwr_tString40 *filelist[], int *filecnt)
+{
+  pwr_tStatus sts;
+  pwr_tFileName file_spec, found_file;
+  int cnt = 0;
+  int idx = 0;
+  char *s;
+
+  strcpy( file_spec, dir);
+  strcat( file_spec, "/");
+  strcat( file_spec, pattern);
+  dcli_translate_filename( file_spec, file_spec);
+  sts = dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_INIT);
+  while ( ODD(sts)) {
+    cnt++;
+    sts = dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_NEXT);
+  }
+  dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_END);
+
+  if ( !cnt) {
+    *filecnt = 0;
+    return 0;
+  }
+
+  *filelist = calloc( cnt, sizeof( pwr_tString40));
+
+  sts = dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_INIT);
+  while ( ODD(sts)) {
+    if ( (s = strrchr( found_file, '/'))) {
+      strncpy( (*filelist)[idx], s+1, sizeof(pwr_tString40));
+      (*filelist)[idx][sizeof(pwr_tString40)-1] = 0;
+    }
+    else {
+      strncpy( (*filelist)[idx], found_file, sizeof(pwr_tString40));
+      (*filelist)[idx][sizeof(pwr_tString40)-1] = 0;
+    }
+    idx++;
+
+    sts = dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_NEXT);
+  }
+  dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_END);
+  *filecnt = cnt;
+
+  return DCLI__SUCCESS;
+}
 
 
 /*************************************************************************

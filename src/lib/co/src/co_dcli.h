@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_dcli.h,v 1.10 2007-01-04 07:51:42 claes Exp $
+ * Proview   $Id: co_dcli.h,v 1.11 2008-04-25 11:26:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -101,6 +101,11 @@ pwr_tStatus dcli_file_ctime( char *filename, pwr_tTime *time);
 int dcli_search_file( 		char 	*file_name , 
 				char	*found_file,
 				int	new_search);
+
+int dcli_get_files( 		char *dir,
+		   		char *pattern, 
+				pwr_tString40 *filelist[], 
+				int *filecnt);
 
 int dcli_parse_filename( 	char	*filename,
 				char	*dev,
