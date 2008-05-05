@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: jpwr_rt_qcom.c,v 1.3 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: jpwr_rt_qcom.c,v 1.4 2008-05-05 06:57:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -87,7 +87,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Qcom_createIniEventQ
   jmethodID 	qcomrCreateQ_cid;
   jobject 	return_obj;
   jint		jsts;
-  qcom_sQid	qid;
+  qcom_sQid	qid = qcom_cNQid;
   qcom_sQattr	qAttr;
   qcom_sQid     qini;
   int		sts;
@@ -113,7 +113,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Qcom_createIniEventQ
 
 
   qAttr.type = qcom_eQtype_private;
-  qAttr.quota = 100;
+  qAttr.quota = 100; 
   if (!qcom_CreateQ(&sts, &qid, &qAttr, cstr)) {
     errh_Fatal("qcom_CreateQ, %m", sts);
     errh_SetStatus( PWR__APPLTERM);
