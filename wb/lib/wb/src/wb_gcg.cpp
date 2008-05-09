@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.cpp,v 1.11 2008-03-04 15:16:28 claes Exp $
+ * Proview   $Id: wb_gcg.cpp,v 1.12 2008-05-09 15:27:14 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -4648,16 +4648,12 @@ static int	gcg_get_child_plcthread(
 	
             /* Check the scantime */
 	    timebase = (int)((*scantime_ptr) * 1000 + 0.5);
-	    if ( (timebase <= 0)
-	        || (IS_LYNX(os) && (((timebase / 10) * 10) != timebase))
-		 || (IS_LINUX(os) && 0 /* (((timebase / 10) * 10) != timebase) */)
-	    	|| (IS_VMS_OR_ELN(os) && (((timebase / 10) * 10) != timebase))
-	    )
-	    {
-	      gcg_plc_msg( gcgctx, GSX__BADSCANTIME, objdid);
+	    if ( (IS_LINUX(os) && *scantime_ptr < 0.0000001)  ||
+		 (IS_LYNX(os) && ((timebase <= 0) || ((timebase / 10) * 10) != timebase)) || 
+		 (IS_VMS_OR_ELN(os) && ((timebase <= 0) || ((timebase / 10) * 10) != timebase)) ) {
+		gcg_plc_msg( gcgctx, GSX__BADSCANTIME, objdid);
 	    }
-	    else
-	    { 
+	    else { 
 	        
 	      /* Get the priority */
 	      sts = ldh_GetObjectPar( gcgctx->ldhses, objdid, "RtBody", 
@@ -5322,7 +5318,7 @@ int	gcg_comp_rtnode(
 	    timebase_ms = (int)((timebase+i)->scantime * 1000 + 0.5);
 	    timebase_ptr = (timebase+i)->plclist;
 	    printf (
-"-- Plc thread generated priority %d, scantime %7.3f s, %d plcpgm's \n",
+"-- Plc thread generated priority %d, scantime %9.5f s, %d plcpgm's \n",
 			(timebase+i)->prio, (timebase+i)->scantime, 
 			(timebase+i)->plc_count);
 
