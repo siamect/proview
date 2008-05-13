@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_colpalwidget_gtk.cpp,v 1.2 2007-02-06 15:13:34 claes Exp $
+ * Proview   $Id: glow_colpalwidget_gtk.cpp,v 1.3 2008-05-13 13:50:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -56,6 +56,15 @@ struct _ColPalWidgetGtk {
   GtkWidget    	*form;
   int		scroll_h_ignore;
   int		scroll_v_ignore;
+  gdouble       scroll_h_value;
+  gdouble       scroll_v_value;
+  int       	scroll_h_pagesize;
+  int       	scroll_v_pagesize;
+  int       	scroll_h_upper;
+  int       	scroll_v_upper;
+  gint 		scroll_timerid;
+  glow_sScroll  scroll_data;
+  int           scroll_configure;
 };
 
 struct _ColPalWidgetGtkClass {
@@ -63,12 +72,27 @@ struct _ColPalWidgetGtkClass {
 };
 
 G_DEFINE_TYPE( ColPalWidgetGtk, colpalwidgetgtk, GTK_TYPE_DRAWING_AREA);
+static gboolean scroll_callback_cb( void *d);
 
 static void scroll_callback( glow_sScroll *data)
 {
-  colpalwidget_sScroll *scroll_data;
+  colpalwidget_sScroll *scroll_data = (colpalwidget_sScroll *) data->scroll_data;
 
-  scroll_data = (colpalwidget_sScroll *) data->scroll_data;
+  if ( ((ColPalWidgetGtk *)scroll_data->colpal)->scroll_timerid) 
+    g_source_remove( ((ColPalWidgetGtk *)scroll_data->colpal)->scroll_timerid);
+
+  ((ColPalWidgetGtk *)scroll_data->colpal)->scroll_timerid = 
+    g_timeout_add( 200, scroll_callback_cb, scroll_data->colpal);
+  ((ColPalWidgetGtk *)scroll_data->colpal)->scroll_data = *data;
+}
+
+
+static gboolean scroll_callback_cb( void *d)
+{
+  glow_sScroll *data = &((ColPalWidgetGtk *)d)->scroll_data;
+  colpalwidget_sScroll *scroll_data = (colpalwidget_sScroll *) data->scroll_data;
+
+  ((ColPalWidgetGtk *)scroll_data->colpal)->scroll_timerid = 0;
 
   if ( data->total_width <= data->window_width) {
     if ( data->offset_x == 0)
@@ -114,25 +138,48 @@ static void scroll_callback( glow_sScroll *data)
 
   if ( scroll_data->scroll_h_managed) {
     ((ColPalWidgetGtk *)scroll_data->colpal)->scroll_h_ignore = 1;
-    g_object_set( ((GtkScrollbar *)scroll_data->scroll_h)->range.adjustment,
-		 "upper", (gdouble)data->total_width,
-		 "page-size", (gdouble)data->window_width,
-		 "value", (gdouble)data->offset_x,
-		 NULL);
-    gtk_adjustment_changed( 
-        ((GtkScrollbar *)scroll_data->scroll_h)->range.adjustment);
+    if ( data->window_width != ((ColPalWidgetGtk *)scroll_data->colpal)->scroll_h_pagesize ||
+	 data->total_width != ((ColPalWidgetGtk *)scroll_data->colpal)->scroll_h_upper ||
+	 ((ColPalWidgetGtk *)scroll_data->colpal)->scroll_configure) {
+      g_object_set( ((GtkScrollbar *)scroll_data->scroll_h)->range.adjustment,
+		    "upper", (gdouble)data->total_width,
+		    "page-size", (gdouble)data->window_width,
+		    "value", (gdouble)data->offset_x,
+		    NULL);
+      gtk_adjustment_changed( ((GtkScrollbar *)scroll_data->scroll_h)->range.adjustment);
+    }
+    else {
+      gtk_range_set_value( GTK_RANGE(scroll_data->scroll_h), (gdouble)data->offset_x);
+    }
+    ((ColPalWidgetGtk *)scroll_data->colpal)->scroll_h_value = (gdouble)data->offset_x;
+    ((ColPalWidgetGtk *)scroll_data->colpal)->scroll_h_pagesize = data->window_width;
+    ((ColPalWidgetGtk *)scroll_data->colpal)->scroll_h_upper = data->total_width;
   }
 
   if ( scroll_data->scroll_v_managed) {
     ((ColPalWidgetGtk *)scroll_data->colpal)->scroll_v_ignore = 1;
-    g_object_set( ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment,
-		 "upper", (gdouble)data->total_height,
-		 "page-size", (gdouble)data->window_height,
-		 "value", (gdouble)data->offset_y,
-		 NULL);
-    gtk_adjustment_changed( 
-        ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment);
+    if ( data->window_height != ((ColPalWidgetGtk *)scroll_data->colpal)->scroll_v_pagesize ||
+	 data->total_height != ((ColPalWidgetGtk *)scroll_data->colpal)->scroll_v_upper ||
+	 ((ColPalWidgetGtk *)scroll_data->colpal)->scroll_configure) {
+      g_object_set( ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment,
+		    "upper", (gdouble)data->total_height,
+		    "page-size", (gdouble)data->window_height,
+		    "value", (gdouble)data->offset_y,
+		    NULL);
+      gtk_adjustment_changed( ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment);
+    }
+    else {
+      g_object_set( ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment,
+		    "value", (gdouble)data->offset_y,
+		    NULL);
+      gtk_adjustment_value_changed( ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment);
+    }
+    ((ColPalWidgetGtk *)scroll_data->colpal)->scroll_v_value = (gdouble)data->offset_y;
+    ((ColPalWidgetGtk *)scroll_data->colpal)->scroll_h_pagesize = data->window_width;
+    ((ColPalWidgetGtk *)scroll_data->colpal)->scroll_h_upper = data->total_width;
   }
+  ((ColPalWidgetGtk *)scroll_data->colpal)->scroll_configure = 0;
+  return FALSE;
 }
 
 static void scroll_h_action( 	GtkWidget      	*w,
@@ -143,8 +190,6 @@ static void scroll_h_action( 	GtkWidget      	*w,
     colpalw->scroll_h_ignore = 0;
     return;
   }
-
-  printf( "Horizontal scroll callback\n");
 
   ColPalCtx *ctx = (ColPalCtx *) colpalw->colpal_ctx;
   gdouble value;
@@ -165,8 +210,6 @@ static void scroll_v_action( 	GtkWidget 	*w,
     return;
   }
     
-  printf( "Vertical scroll callback\n");
-
   ColPalCtx *ctx = (ColPalCtx *) colpalw->colpal_ctx;
   gdouble value;
   g_object_get( w,
@@ -309,6 +352,11 @@ GtkWidget *colpalwidgetgtk_new(
   w->client_data = client_data;
   w->scroll_h = 0;
   w->scroll_v = 0;
+  w->scroll_h_ignore = 0;
+  w->scroll_v_ignore = 0;
+  w->scroll_h_value = 0;
+  w->scroll_v_value = 0;
+  w->scroll_configure = 0;
   return (GtkWidget *) w;  
 }
 
@@ -329,6 +377,11 @@ GtkWidget *scrolledcolpalwidgetgtk_new(
   w->scroll_v = GTK_SCROLLED_WINDOW(form)->vscrollbar;
   w->scroll_h_ignore = 0;
   w->scroll_v_ignore = 0;
+  w->scroll_h_ignore = 0;
+  w->scroll_v_ignore = 0;
+  w->scroll_h_value = 0;
+  w->scroll_v_value = 0;
+  w->scroll_configure = 0;
   w->form = form;
   *colpalwidget = GTK_WIDGET( w);
 
@@ -357,6 +410,11 @@ GtkWidget *colpalnavwidgetgtk_new( GtkWidget *main_colpal)
   w->scroll_v = 0;
   w->scroll_h_ignore = 0;
   w->scroll_v_ignore = 0;
+  w->scroll_h_ignore = 0;
+  w->scroll_v_ignore = 0;
+  w->scroll_h_value = 0;
+  w->scroll_v_value = 0;
+  w->scroll_configure = 0;
   return (GtkWidget *) w;  
 }
 
