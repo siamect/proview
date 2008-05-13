@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_polyline.cpp,v 1.3 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_polyline.cpp,v 1.4 2008-05-13 13:59:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -96,6 +96,9 @@ void GlowPolyLine::open( ifstream& fp)
   int 		end_found = 0;
   char		dummy[40];
   int		tmp;
+
+  if ( a_points.size())
+    a_points.delete_all();
 
   for (;;)
   {

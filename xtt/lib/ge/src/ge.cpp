@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.cpp,v 1.30 2008-04-07 14:57:13 claes Exp $
+ * Proview   $Id: ge.cpp,v 1.31 2008-05-13 13:59:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -549,6 +549,9 @@ void Ge::open_graph( char *name)
 
   update();
   set_title();
+
+  if ( graph->journal)
+    graph->journal->open( graphname);
 }
 
 void Ge::open( char *name)
@@ -677,6 +680,12 @@ int Ge::command_cb( void *ge_ctx, char *command)
   return 0;
 }
 
+int Ge::create_modal_dialog_cb( void *ge_ctx, char *title, char *text, char *button1, char *button2,
+				char *button3, char *image)
+{
+  return ((Ge *)ge_ctx)->create_modal_dialog( title, text, button1, button2, button3, image);
+}
+
 //
 //  Callbackfunctions from menu entries
 //
@@ -700,6 +709,11 @@ void Ge::activate_preview_stop()
 {
   graph->close_trace( 1);
   set_title();
+}
+
+void Ge::activate_delete()
+{
+  graph->delete_select();
 }
 
 void Ge::activate_cut()

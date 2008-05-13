@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.h,v 1.15 2008-01-17 14:17:05 claes Exp $
+ * Proview   $Id: glow_growctx.h,v 1.16 2008-05-13 13:59:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -48,6 +48,8 @@ typedef enum {
   grow_eMode_EditPolyLine,	//!< Edit polyline mode
   grow_eMode_RectRounded	//!< Create rounded rectangle mode
 } grow_eMode;
+
+class GrowGroup;
 
 //! Extended class for the drawing window.
 /*! GlowCtx adds functions to GlowCtx for creation of Grow objects, background color and images,
@@ -235,15 +237,31 @@ class GrowCtx : public GlowCtx {
 
     Returns the number for next connectionpoint and increments the counter.
   */
-  int get_next_conpoint_num() { return conpoint_num_cnt++;};
+  int get_next_conpoint_num() { return conpoint_num_cnt++;}
 
   //! Get next objectname number.
   /*! 
     \return Next objectname number.
 
+    Returns the number for next objectname.
+  */
+  int get_next_objectname_num() { return objectname_cnt;}
+
+  //! Get and increment next objectname number.
+  /*! 
+    \return Next objectname number.
+
     Returns the number for next objectname and increments the counter.
   */
-  int get_next_objectname_num() { return objectname_cnt++;};
+  int incr_next_objectname_num() { return objectname_cnt++;}
+
+  //! Set next objectname number.
+  /*! 
+    \return Next objectname number.
+
+    Set the number for next objectname.
+  */
+  void set_next_objectname_num( int num) { objectname_cnt = num;}
 
   //! Clear the window.
   /*!
@@ -708,6 +726,9 @@ class GrowCtx : public GlowCtx {
   /*! \return	Always returns 1. */
   int ungroup_select();
 
+  //! Ungroup a groups.
+  void ungroup_group( GrowGroup *group);
+
   //! Get the group the specified object is a member of.
   /*!
     \param object	Object to get group for.
@@ -782,12 +803,24 @@ class GrowCtx : public GlowCtx {
   /*! \param o		Owner string. */
   void set_owner( char *o) { strcpy( owner, o);}
 
+  //! Get next object regarding position. */
+  int get_next_object_position( GlowArrayElem *object, glow_eDirection dir,
+				GlowArrayElem **next);
+
+  //! Get previous object. */
+  int get_previous_object( GlowArrayElem *object, GlowArrayElem **prev) { return a.get_previous( object, prev);}
+
   //! Get next object. */
-  int get_next_object( GlowArrayElem *object, glow_eDirection dir,
-		       GlowArrayElem **next);
+  int get_next_object( GlowArrayElem *object, GlowArrayElem **next) { return a.get_next( object, next);}
 
   //! Check if object is visible. */
   int is_visible( GlowArrayElem *element, glow_eVisible type);
+
+  //! Read object from file. */
+  void read_object( ifstream& fp, GlowArrayElem **o);
+
+  //! Order object. */
+  int order_object( GlowArrayElem *o, GlowArrayElem *dest, glow_eDest code) { return a.move( o, dest, code);}
 
   char		name[40];		//!< Name of the context.
   grow_eMode	edit_mode;		//!< Current edit mode.

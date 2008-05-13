@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.h,v 1.32 2008-01-24 09:28:01 claes Exp $
+ * Proview   $Id: ge_graph.h,v 1.33 2008-05-13 13:59:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,6 +37,10 @@
 
 #ifndef ge_graph_ccm_h
 #include "ge_graph_ccm.h"
+#endif
+
+#ifndef ge_graph_journal_h
+#include "ge_graph_journal.h"
 #endif
 
 #ifndef ge_attr_h
@@ -420,6 +424,7 @@ class Graph {
   GraphGrow		*grow_stack[GRAPH_GROW_MAX]; //! Grow stack. Not used.
   int			grow_cnt;		//! Number of grow in stack. Not used.
   ldh_tSesContext	ldhses;			//! Ldh session.
+  GraphJournal		*journal;	       	//! Journal file.
 
   void 		(*message_cb)( void *, char, char *);
   int 		(*get_current_subgraph_cb)( void *, char *, char *);
@@ -447,6 +452,8 @@ class Graph {
   int         	(*call_method_cb)(void *, char *, char *, pwr_sAttrRef,
 				  unsigned long, unsigned long, char *);
   int         	(*sound_cb)(void *, pwr_tAttrRef *);
+  int 		(*create_modal_dialog_cb)( void *, char *, char *, char *, char *, char *,
+					   char *);
   int			linewidth;		//!< Selected linewidth.
   glow_eLineType	linetype;		//!< Selected linetype.
   int			textsize;		//!< Selected text size.
@@ -796,6 +803,10 @@ class Graph {
   //! Rotate selected objects.
   /*! \param angel	Rotation angel in degrees. */
   void rotate( double angel);
+
+  //! Delete the selected object.
+  /*! The selected objects are deleted. */
+  void delete_select();
 
   //! Cut the selected object.
   /*! The selected objects are removed and put in the paste buffer. */
@@ -1260,6 +1271,12 @@ class Graph {
     \param filename    	Filename.
   */
   int export_plcfo( char *filename);
+
+  //! Store in journal file.
+  int journal_store( journal_eAction a, grow_tObject o) { 
+    if (journal) return journal->store( a, o);
+    else return 1;
+  }
 
 
   //

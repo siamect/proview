@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_gtk.cpp,v 1.12 2008-02-27 06:59:27 claes Exp $
+ * Proview   $Id: rt_xtt_gtk.cpp,v 1.13 2008-05-13 13:59:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -236,6 +236,8 @@ void XttGtk::activate_command( GtkWidget *w, gpointer data)
     return;
   }
 
+  gtk_editable_delete_text( GTK_EDITABLE(((XttGtk *)xtt)->cmd_input), 0, -1);
+
   if ( xtt->input_open)
     xtt->input_open = 0;
   else
@@ -243,7 +245,6 @@ void XttGtk::activate_command( GtkWidget *w, gpointer data)
   xtt->message( ' ', "");
   gtk_widget_grab_focus( ((XttGtk *)xtt)->cmd_input);
 
-  gtk_editable_delete_text( GTK_EDITABLE(((XttGtk *)xtt)->cmd_input), 0, -1);
   xtt->set_prompt( "xtt >");
   xtt->command_open = 1;
 }

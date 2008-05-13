@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.h,v 1.11 2008-01-24 09:28:01 claes Exp $
+ * Proview   $Id: ge.h,v 1.12 2008-05-13 13:59:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -117,6 +117,8 @@ class Ge {
   virtual int get_plant_select( char *name) { return 0;}
   virtual void create_list( char *title, char *texts,
 			    void (action_cb)( void *, char *), void *ctx) {}
+  virtual int create_modal_dialog( char *title, char *text, char *button1, char *button2, char *button3,
+				    char *image) { return 0;}
   virtual void plant_del( void *plantctx) {}
   virtual int plant_get_select( void *plantctx, pwr_sAttrRef *attrref, int *is_attr) {return 0;}
 
@@ -135,6 +137,7 @@ class Ge {
   void activate_change_name();
   void activate_preview_start();
   void activate_preview_stop();
+  void activate_delete();
   void activate_cut();
   void activate_copy();
   void activate_rotate();
@@ -286,6 +289,8 @@ class Ge {
   static int set_focus_cb( void *ctx, void *component);
   static void message_cb( void *ctx, char severity, char *message);
   static void help_cb( void *ctx, char *topic, char *helpfile);
+  static int create_modal_dialog_cb( void *ge_ctx, char *title, char *text, char *button1, char *button2,
+				     char *button3, char *image);
 };
 
 #endif

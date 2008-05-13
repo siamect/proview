@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.h,v 1.8 2008-01-24 09:28:01 claes Exp $
+ * Proview   $Id: ge_gtk.h,v 1.9 2008-05-13 13:59:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -89,6 +89,8 @@ class GeGtk : public Ge {
   virtual int get_plant_select( char *name);
   virtual void create_list( char *title, char *texts,
 			    void (action_cb)( void *, char *), void *ctx);
+  virtual int create_modal_dialog( char *title, char *text, char *button1, char *button2, char *button3,
+				   char *image);
 
   static void valchanged_cmd_input( GtkWidget *w, gpointer data);
   static void change_text_cb( void *ge_ctx, void *text_object, char *text);
@@ -111,6 +113,7 @@ class GeGtk : public Ge {
   static void activate_change_name( GtkWidget *w, gpointer gectx);
   static void activate_preview_start( GtkWidget *w, gpointer gectx);
   static void activate_preview_stop( GtkWidget *w, gpointer gectx);
+  static void activate_delete( GtkWidget *w, gpointer gectx);
   static void activate_cut( GtkWidget *w, gpointer gectx);
   static void activate_copy( GtkWidget *w, gpointer gectx);
   static void activate_rotate( GtkWidget *w, gpointer gectx);
@@ -149,6 +152,8 @@ class GeGtk : public Ge {
   static void activate_objectattributes( GtkWidget *w, gpointer gectx);
   static void activate_show_grid( GtkWidget *w, gpointer gectx);
   static void activate_paste( GtkWidget *w, gpointer gectx);
+  static void activate_undo( GtkWidget *w, gpointer gectx);
+  static void activate_redo( GtkWidget *w, gpointer gectx);
   static void activate_command( GtkWidget *w, gpointer gectx);
   static void activate_exit( GtkWidget *w, gpointer gectx);
   static void activate_print( GtkWidget *w, gpointer gectx);

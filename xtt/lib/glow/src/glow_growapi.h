@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.h,v 1.30 2008-01-17 14:17:05 claes Exp $
+ * Proview   $Id: glow_growapi.h,v 1.31 2008-05-13 13:59:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -529,6 +529,14 @@ extern "C" {
     \param cnt		Number of objects in list.
   */
   void grow_GetSelectList( grow_tCtx ctx, grow_tObject **list, int *cnt);
+
+  //! Get list of objects in paste buffer.
+  /*!
+    \param ctx		Grow context.
+    \param list		List of objects in paste buffer.
+    \param cnt		Number of objects in paste buffer.
+  */
+  void grow_GetPasteList( grow_tCtx ctx, grow_tObject **list, int *cnt);
 
   //! Get list of all objects in the grow context.
   /*!
@@ -1282,9 +1290,27 @@ extern "C" {
     \param ctx	Grow context.
     \return Next objectname number.
 
-    Returns the number for next objectname and increments the counter.
+    Returns the number for next objectname.
   */
   int grow_GetNextObjectNameNumber( grow_tCtx ctx);
+
+  //! Get and increment next objectname number.
+  /*! 
+    \param ctx	Grow context.
+    \return Next objectname number.
+
+    Returns the number for next objectname and increments the counter.
+  */
+  int grow_IncrNextObjectNameNumber( grow_tCtx ctx);
+
+  //! Set next objectname number.
+  /*! 
+    \param ctx	Grow context.
+    \return Next objectname number.
+
+    Sets the number for next objectname.
+  */
+  void grow_SetNextObjectNameNumber( grow_tCtx ctx, int num);
 
   //! Get attributes for an object.
   /*!
@@ -1756,6 +1782,15 @@ extern "C" {
   /*! \param ctx	Grow context. */
   void grow_PopSelectedObjects( grow_tCtx ctx);
 
+  //! Pop the selected objects.
+  /*! 
+    \param ctx	Grow context.
+    \param object      	Object to order.
+    \param destination	Destionation object.
+    \param code	        Destination code, glow_eDest_After or glow_eDest_Before.
+  */
+  int grow_OrderObject( grow_tCtx ctx, grow_tObject object, grow_tObject destination, glow_eDest code);
+       
   //! Set default layout. Adjust zoom factor to the current size of the window.
   /*! \param ctx	Grow context. */
   void grow_SetDefaultLayout( grow_tCtx ctx);
@@ -2553,6 +2588,9 @@ extern "C" {
   */
   int grow_UngroupSelect( grow_tCtx ctx);
 
+  //! Ungroup a group.
+  void grow_UngroupGroup( grow_tCtx ctx, grow_tObject group);
+
   //! Configure the curves of a curve object.
   /*!
     \param object	Curve object.
@@ -2903,10 +2941,15 @@ extern "C" {
   int grow_GetNodeClassAnnotBackground( grow_tNodeClass nodeclass, glow_eDrawType *background);
   void grow_SetSelectScale( grow_tCtx ctx, double scale_x, double scale_y,
 			    glow_eScaleType type);
-  int grow_GetNextObject( grow_tCtx ctx, grow_tObject object, glow_eDirection dir,
-			   grow_tObject *next);
+  int grow_GetNextObjectPosition( grow_tCtx ctx, grow_tObject object, glow_eDirection dir,
+				  grow_tObject *next);
+  int grow_GetPreviousObject( grow_tCtx ctx, grow_tObject object, grow_tObject *prev);
+  int grow_GetNextObject( grow_tCtx ctx, grow_tObject object, grow_tObject *next);
   int grow_IsVisible( grow_tCtx ctx, grow_tObject object, glow_eVisible type);
   int grow_ExportFlow( grow_tCtx ctx, char *filename);
+  void grow_ObjectSave( grow_tObject object, ofstream& fp, glow_eSaveMode mode);
+  void grow_ObjectOpen( grow_tObject object, ifstream& fp);
+  void grow_ObjectRead( grow_tCtx ctx, ifstream& fp, grow_tObject *object);
 
 /*@}*/
 #if defined __cplusplus

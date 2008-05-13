@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.cpp,v 1.15 2008-04-08 11:21:16 claes Exp $
+ * Proview   $Id: ge_gtk.cpp,v 1.16 2008-05-13 13:59:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -96,6 +96,12 @@ static GtkWidget *image_widget( char *filename)
   return image;
 }
 
+
+int GeGtk::create_modal_dialog( char *title, char *text, char *button1, char *button2, char *button3,
+				 char *image)
+{
+  return wow->CreateModalDialog( title, text, button1, button2, button3, image);
+}
 
 void GeGtk::create_list( char *title, char *texts,
 			   void (action_cb)( void *, char *), void *ctx) 
@@ -401,6 +407,11 @@ void GeGtk::activate_cut(GtkWidget *w, gpointer gectx)
   ((Ge *)gectx)->activate_cut();
 }
 
+void GeGtk::activate_delete(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_delete();
+}
+
 void GeGtk::activate_copy(GtkWidget *w, gpointer gectx)
 {
   ((Ge *)gectx)->activate_copy();
@@ -592,6 +603,18 @@ void GeGtk::activate_show_grid( GtkWidget *w, gpointer data)
 void GeGtk::activate_paste(GtkWidget *w, gpointer gectx)
 {
   ((Ge *)gectx)->activate_paste();
+}
+
+void GeGtk::activate_undo(GtkWidget *w, gpointer gectx)
+{
+  if ( ((Ge *)gectx)->graph->journal)
+    ((Ge *)gectx)->graph->journal->undo();
+}
+
+void GeGtk::activate_redo(GtkWidget *w, gpointer gectx)
+{
+  if ( ((Ge *)gectx)->graph->journal)
+    ((Ge *)gectx)->graph->journal->redo();
 }
 
 void GeGtk::activate_command(GtkWidget *w, gpointer data)
@@ -1543,6 +1566,21 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   GtkWidget *edit_paste = gtk_image_menu_item_new_from_stock(GTK_STOCK_PASTE, accel_g);
   g_signal_connect(edit_paste, "activate", G_CALLBACK(activate_paste), this);
 
+  GtkWidget *edit_delete = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE, accel_g);
+  g_signal_connect(edit_delete, "activate", G_CALLBACK(activate_delete), this);
+  gtk_widget_add_accelerator( edit_delete, "activate", accel_g,
+			      'd', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+  GtkWidget *edit_undo = gtk_image_menu_item_new_from_stock(GTK_STOCK_UNDO, accel_g);
+  g_signal_connect(edit_undo, "activate", G_CALLBACK(activate_undo), this);
+  gtk_widget_add_accelerator( edit_undo, "activate", accel_g,
+			      'z', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+  GtkWidget *edit_redo = gtk_image_menu_item_new_from_stock(GTK_STOCK_REDO, accel_g);
+  g_signal_connect(edit_redo, "activate", G_CALLBACK(activate_redo), this);
+  gtk_widget_add_accelerator( edit_redo, "activate", accel_g,
+			      'z', GdkModifierType(GDK_CONTROL_MASK | GDK_MOD1_MASK), GTK_ACCEL_VISIBLE);
+
   GtkWidget *edit_rotate = gtk_menu_item_new_with_mnemonic( "_Rotate...");
   g_signal_connect( edit_rotate, "activate", 
 		    G_CALLBACK(activate_rotate), this);
@@ -1573,6 +1611,9 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_cut);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_copy);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_paste);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_delete);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_undo);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_redo);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_rotate);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_polyline);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_change_text);
@@ -1808,8 +1849,6 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   GtkWidget *functions_show_grid = gtk_menu_item_new_with_mnemonic( "S_how Grid");
   g_signal_connect( functions_show_grid, "activate",
   		    G_CALLBACK(activate_show_grid), this);
-  gtk_widget_add_accelerator( functions_show_grid, "activate", accel_g,
-  			      'd', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
   GtkMenu *functions_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_background_color);
@@ -2215,6 +2254,13 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   g_signal_connect(tools_zoom_reset, "clicked", G_CALLBACK(activate_zoom_reset), this);
   gtk_toolbar_append_widget( tools2, tools_zoom_reset, "Zoom reset", "");
 
+  GtkWidget *tools_undo = image_button( "$pwr_exe/ge_undo.png");
+  gtk_toolbar_append_widget( tools2, tools_undo, "Undo", "");
+  g_signal_connect(tools_undo, "clicked", G_CALLBACK(activate_undo), this);
+
+  GtkWidget *tools_redo = image_button( "$pwr_exe/ge_redo.png");
+  gtk_toolbar_append_widget( tools2, tools_redo, "Redo", "");
+  g_signal_connect(tools_redo, "clicked", G_CALLBACK(activate_redo), this);
 
   // Line width option menu
   GtkWidget *tools_linewidth_1 = gtk_image_menu_item_new_with_label( "Linewidth 1");
@@ -2491,7 +2537,6 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_toolbar_append_widget( tools2, tools_incr_shift, "Shift color", "");
   g_signal_connect(tools_incr_shift, "clicked", G_CALLBACK(activate_incr_shift), this);
 
-
   // Statusbar and cmd input
   GtkWidget *statusbar = gtk_hbox_new( FALSE, 0);
   msg_label = gtk_label_new( "");
@@ -2539,6 +2584,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   graph->set_focus_cb = &Ge::set_focus_cb;
   graph->traverse_focus_cb = &Ge::traverse_focus;
   graph->get_ldhses_cb = &Ge::get_ldhses_cb;
+  graph->create_modal_dialog_cb = &Ge::create_modal_dialog_cb;
 
   // Vertical palette pane
   GtkWidget *vpaned1 = gtk_vpaned_new();

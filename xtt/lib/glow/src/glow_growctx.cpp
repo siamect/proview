@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.cpp,v 1.30 2008-01-17 14:17:05 claes Exp $
+ * Proview   $Id: glow_growctx.cpp,v 1.31 2008-05-13 13:59:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -52,6 +52,13 @@
 #include "glow_growmenu.h"
 #include "glow_growfolder.h"
 #include "glow_growtable.h"
+#include "glow_growconglue.h"
+#include "glow_growline.h"
+#include "glow_growarc.h"
+#include "glow_growconpoint.h"
+#include "glow_growbar.h"
+#include "glow_growtrend.h"
+#include "glow_growxycurve.h"
 #include "glow_exportflow.h"
 #include "glow_draw.h"
 
@@ -326,6 +333,20 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
       if ( event == event_region_select) 
         // Move and region select is defined as the same event
         node_move_event = 1;
+
+      // Send undo callback
+      if ( event_callback[glow_eEvent_AnteUndo] ) {
+	static glow_sEvent e;
+	
+	memset( &e, 0, sizeof(e));
+	e.event = glow_eEvent_AnteUndo;
+	e.any.type = glow_eEventType_Object;
+	if ( a_move.size() == 1) {
+	  e.object.object = a_move[0];
+	  e.object.object_type = a_move[0]->type();
+	}
+	event_callback[glow_eEvent_AnteUndo]( this, &e);
+      }
     }
     if ( event_callback[glow_eEvent_SliderMoveStart] && 
 	 a_move.size() == 1 && 
@@ -557,8 +578,14 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
         gdraw->set_cursor( &mw, glow_eDrawCursor_Normal);
 
 	/* Send callback for all move objects */
-	if ( event_callback[glow_eEvent_ObjectMoved] )
-	{
+	if ( event_callback[glow_eEvent_PasteSequenceEnd]) {
+	  static glow_sEvent e;
+	  memset( &e, 0, sizeof(0));
+	
+          e.event = glow_eEvent_PasteSequenceEnd;
+	  event_callback[glow_eEvent_PasteSequenceEnd]( this, &e);
+	}
+	if ( event_callback[glow_eEvent_ObjectMoved]) {
 	  static glow_sEvent e;
 	
           e.event = glow_eEvent_ObjectMoved;
@@ -1276,9 +1303,8 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 	    nav_zoom();
             gdraw->set_cursor( &mw, glow_eDrawCursor_CrossHair);
 
-	    /* Send callback for all move objects */
-	    if ( event_callback[glow_eEvent_ObjectMoved] )
-	    {
+	    // Send callback for all move objects
+	    if ( event_callback[glow_eEvent_ObjectMoved] ) {
 	      static glow_sEvent e;
 	
               e.event = glow_eEvent_ObjectMoved;
@@ -1287,12 +1313,24 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 	      e.any.y_pixel = y;
 	      e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
 	      e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
-              for ( i = 0; i < a_move.size(); i++)
-              {
+              for ( i = 0; i < a_move.size(); i++) {
 	        e.object.object = a_move[i];
 	        e.object.object_type = a_move[i]->type();
 	        event_callback[event_move_node]( this, &e);
               }
+	    }
+	    // Send undo callback
+	    if ( event_callback[glow_eEvent_PostUndo] ) {
+	      static glow_sEvent e;
+	
+	      memset( &e, 0, sizeof(e));
+              e.event = glow_eEvent_PostUndo;
+	      e.any.type = glow_eEventType_Object;
+              if ( a_move.size() == 1) {
+	        e.object.object = a_move[0];
+	        e.object.object_type = a_move[0]->type();
+	      }
+	      event_callback[glow_eEvent_PostUndo]( this, &e);
 	    }
             break;
           case glow_eMoveRestriction_VerticalSlider:
@@ -3776,6 +3814,16 @@ int GrowCtx::ungroup_select()
   return 1;
 }
 
+void GrowCtx::ungroup_group( GrowGroup *group)
+{
+  group->set_rootnode( 0);
+  group->ungroup();
+  a.remove( group);
+  a_sel.remove( group);
+  a_paste.remove( group);
+  delete group;
+}
+
 void GrowCtx::get_nodegrouplist( GlowArrayElem ***list, int *size)
 {
   GlowArray *a_ng = new GlowArray(20, 20);
@@ -3905,8 +3953,8 @@ void GrowCtx::delete_menu_child( GlowArrayElem *parent)
   }
 }
 
-int GrowCtx::get_next_object( GlowArrayElem *object, glow_eDirection dir,
-			      GlowArrayElem **next)
+int GrowCtx::get_next_object_position( GlowArrayElem *object, glow_eDirection dir,
+				       GlowArrayElem **next)
 {
   if ( object &&
        !(object->type() == glow_eObjectType_GrowNode ||
@@ -4153,4 +4201,151 @@ int GrowCtx::is_visible( GlowArrayElem *element, glow_eVisible type)
   default: ;
   }
   return 0;
+}
+
+void GrowCtx::read_object( ifstream& fp, GlowArrayElem **o) 
+{
+  int		type;
+  GlowArrayElem *n;
+
+  fp >> type;
+  switch( type) {
+  case glow_eSave_Array: break;
+  case glow_eSave_Rect: {
+    n = new GlowRect( this);
+    break;
+  }
+  case glow_eSave_Line: {
+    n = new GlowLine( this);
+    break;
+  }
+  case glow_eSave_PolyLine: {
+    n = new GlowPolyLine( this, (glow_sPoint *) NULL, 0);
+    break;
+  }
+  case glow_eSave_Arc: {
+    n = new GlowArc( this);
+    break;
+  }
+  case glow_eSave_Text: {
+    n = new GlowText( this, "");
+    break;
+  }
+  case glow_eSave_ConPoint: {
+    n = new GlowConPoint( this);
+    break;
+  }
+  case glow_eSave_Annot: {
+    n = new GlowAnnot( this);
+    break;
+  }
+  case glow_eSave_Arrow: {
+    n = new GlowArrow( this,0,0,0,0,0,0,glow_eDrawType_Line);
+    break;
+  }
+  case glow_eSave_Node: {
+    n = new GlowNode( this, "", 0, 0, 0);
+    break;
+  }
+  case glow_eSave_Con: {
+    n = new GlowCon( this, "", (GlowConClass *)0, 
+		     (GlowNode *)0, (GlowNode *)0, 0, 0);
+    break;
+  }
+  case glow_eSave_Point: {
+    n = new GlowPoint( this);
+    break;
+  }
+  case glow_eSave_GrowRect: {
+    n = new GrowRect( this, "");
+    break;
+  }
+  case glow_eSave_GrowRectRounded: {
+    n = new GrowRectRounded( this, "");
+    break;
+  }
+  case glow_eSave_GrowImage: {
+    n = new GrowImage( this, "");
+    break;
+  }
+  case glow_eSave_GrowAxis: {
+    n = new GrowAxis( this, "");
+    break;
+  }
+  case glow_eSave_GrowConGlue: {
+    n = new GrowConGlue( this, "");
+    break;
+  }
+  case glow_eSave_GrowLine: {
+    n = new GrowLine( this, "");
+    break;
+  }
+  case glow_eSave_GrowPolyLine: {
+    n = new GrowPolyLine( this, "", (glow_sPoint*) NULL, 0);
+    break;
+  }
+  case glow_eSave_GrowArc: {
+    n = new GrowArc( this, "");
+    break;
+  }
+  case glow_eSave_GrowConPoint: {
+    n = new GrowConPoint( this, "");
+    break;
+  }
+  case glow_eSave_GrowAnnot: {
+    n = new GrowAnnot( this);
+    break;
+  }
+  case glow_eSave_GrowSubAnnot: {
+    n = new GrowSubAnnot( this, "");
+    break;
+  }
+  case glow_eSave_GrowText: {
+    n = new GrowText( this, "", "");
+    break;
+  }
+  case glow_eSave_GrowBar: {
+    n = new GrowBar( this, "");
+    break;
+  }
+  case glow_eSave_GrowTrend: {
+    n = new GrowTrend( this, "");
+    break;
+  }
+  case glow_eSave_GrowWindow: {
+    n = new GrowWindow( this, "");
+    break;
+  }
+  case glow_eSave_GrowTable: {
+    n = new GrowTable( this, "");
+    break;
+  }
+  case glow_eSave_GrowFolder: {
+    n = new GrowFolder( this, "");
+    break;
+  }
+  case glow_eSave_GrowNode: {
+    n = new GrowNode( this, "", 0, 0, 0);
+    break;
+  }
+  case glow_eSave_GrowGroup: {
+    n = new GrowGroup( this, "");
+    break;
+  }
+  case glow_eSave_GrowSlider: {
+    n = new GrowSlider( this, "", 0, 0, 0);
+    break;
+  }
+  case glow_eSave_GrowXYCurve: {
+    n = new GrowXYCurve( this, "");
+    break;
+  }
+  case glow_eSave_End: 
+    break;
+  default:
+    break;
+  }
+  n->open( fp);
+  a.insert( n);
+  *o = n;
 }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow.h,v 1.25 2007-09-19 15:07:11 claes Exp $
+ * Proview   $Id: glow.h,v 1.26 2008-05-13 13:59:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -881,6 +881,7 @@ typedef enum {
   glow_eEvent_CursorMotion,		//!< Cursor motion event
   glow_eEvent_Init,			//!< Initialize event
   glow_eEvent_PasteSequenceStart,	//!< Start of paste sequence event
+  glow_eEvent_PasteSequenceEnd,		//!< End of paste sequence event
   glow_eEvent_VisibilityUnobscured,	//!< Visibility unobscured event
   glow_eEvent_VisibilityObscured,	//!< Visibility obscured event
   glow_eEvent_SelectClear,		//!< Select list is cleared event
@@ -929,6 +930,8 @@ typedef enum {
   glow_eEvent_MenuDelete,        	//!< Delete pulldown menu.
   glow_eEvent_ScrollUp,        		//!< Scroll up.
   glow_eEvent_ScrollDown,     		//!< Scroll down.
+  glow_eEvent_AnteUndo,     		//!< Before undo.
+  glow_eEvent_PostUndo,     		//!< Store undo.
   glow_eEvent__
 } glow_eEvent;
 

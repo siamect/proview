@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_array.h,v 1.5 2008-01-17 14:17:05 claes Exp $
+ * Proview   $Id: glow_array.h,v 1.6 2008-05-13 13:59:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -119,6 +119,7 @@ class GlowArray {
 
   //! Clear the array.
   void clear() { a_size = 0;}
+  void delete_all();
 
   void zoom();
   void nav_zoom();
@@ -165,7 +166,9 @@ class GlowArray {
   void set_inverse( int on);
   void configure();
   int brow_insert( GlowArrayElem *element, GlowArrayElem *destination, 
-	glow_eDest code);
+		   glow_eDest code);
+  int move( GlowArrayElem *element, GlowArrayElem *destination, 
+	    glow_eDest code);
   void brow_remove( void *ctx, GlowArrayElem *element);
   void brow_close( void *ctx, GlowArrayElem *element);
   int brow_get_parent( GlowArrayElem *element, GlowArrayElem **parent);

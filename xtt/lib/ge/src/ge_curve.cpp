@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.cpp,v 1.17 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: ge_curve.cpp,v 1.18 2008-05-13 13:59:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -145,7 +145,6 @@ int GeCurve::growcurve_cb( GlowCtx *ctx, glow_tEvent event)
   case glow_eEvent_MB1Click:
     break;
   case glow_eEvent_SliderMoveStart: {
-    printf( "Slider start\n");
     if ( event->object.object_type == glow_eObjectType_NoObject)
       grow_SetMoveRestrictions( (GrowCtx *)ctx, glow_eMoveRestriction_Disable, 0, 0, NULL);
     else
@@ -406,7 +405,6 @@ int GeCurve::growaxis_cb( GlowCtx *ctx, glow_tEvent event)
   {
     case glow_eEvent_MB1Click:
     {
-      printf( "GrowAxis callback MB1\n");
 
       if ( event->object.object_type != glow_eObjectType_NoObject) {
         for ( int i = 0; i < curve->cd->cols; i++) {
@@ -464,7 +462,6 @@ int GeCurve::grownames_cb( GlowCtx *ctx, glow_tEvent event)
     {
       glow_eDrawType color;
 
-      printf( "GrowNames callback MB1\n");
 
       if ( event->object.object_type != glow_eObjectType_NoObject) {
         for ( int i = 0; i < curve->cd->cols; i++) {
@@ -508,7 +505,6 @@ int GeCurve::grownames_cb( GlowCtx *ctx, glow_tEvent event)
       return 0;
     case glow_eEvent_Resized:
     {
-      printf( "GrowNames callback Resized\n");
 #if 0
       Arg args[2];
       short width;
@@ -972,16 +968,16 @@ int GeCurve::read_file( char *filename)
     return 0;
   }
 
-  printf( "line: %s\n", line);
-  for ( i = 0; i < nr; i++)
-    printf( "item: %s\n", item_str[i]);
+  //printf( "line: %s\n", line);
+  //for ( i = 0; i < nr; i++)
+  //  printf( "item: %s\n", item_str[i]);
 
   while( dcli_read_line( line, sizeof(line), fp)) {
     rows++;
   }    
   fclose( fp);
 
-  printf( "Rows: %d\n", rows);
+  // printf( "Rows: %d\n", rows);
 
   cd = new GeCurveData( curve_eDataType_LogFile);
 
@@ -1132,7 +1128,7 @@ void GeCurveData::get_borders()
       if ( value_type[i] == pwr_eType_Boolean && 
            !( data[i][j] == 1 || data[i][j] == 0)) {
         value_type[i] = pwr_eType_Float64;
-        printf( "Not Boolean %s: %f\n", name[i], data[i][j]);
+        // printf( "Not Boolean %s: %f\n", name[i], data[i][j]);
       }
     }
   } 
@@ -1554,9 +1550,9 @@ void GeCurveData::scale( int axis_type, int value_type,
     *axis_width = 0.65 * format_int + 0.4;
     break;
   }
-  printf( "%f	%f	%f	%f	%3d %5s %4.1f\n", 
-              min_value, max_value, 
-              *min_value_axis, *max_value_axis, *trend_lines, format, *axis_width);
+  //printf( "%f	%f	%f	%f	%3d %5s %4.1f\n", 
+  //            min_value, max_value, 
+  //            *min_value_axis, *max_value_axis, *trend_lines, format, *axis_width);
   return;
 }
 

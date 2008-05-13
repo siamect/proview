@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_ctx.h,v 1.12 2007-06-29 09:29:19 claes Exp $
+ * Proview   $Id: glow_ctx.h,v 1.13 2008-05-13 13:59:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -347,6 +347,14 @@ class GlowCtx {
   */
   void get_selectlist( GlowArrayElem ***list, int *size)
 		{ *list = a_sel.a; *size = a_sel.size();}; 
+
+  //! Get the paste list.
+  /*!
+    \param list		Returned pointer to the paste list.
+    \param size		Number of objects in the paste list.
+  */
+  void get_pastelist( GlowArrayElem ***list, int *size)
+		{ *list = a_paste.a; *size = a_paste.size();}; 
 
   //! Get the object list.
   /*!

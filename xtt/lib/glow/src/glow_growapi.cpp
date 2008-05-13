@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.36 2008-01-17 14:17:05 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.37 2008-05-13 13:59:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -496,6 +496,11 @@ void grow_CreateConClass( grow_tCtx ctx, char *name,
 void grow_GetSelectList( grow_tCtx ctx, grow_tObject **list, int *cnt)
 {
   ctx->get_selectlist( (GlowArrayElem ***)list, cnt);
+}
+
+void grow_GetPasteList( grow_tCtx ctx, grow_tObject **list, int *cnt)
+{
+  ctx->get_pastelist( (GlowArrayElem ***)list, cnt);
 }
 
 void grow_GetObjectList( grow_tCtx ctx, grow_tObject **list, int *cnt)
@@ -1142,6 +1147,16 @@ int grow_GetNextConPointNumber( grow_tCtx ctx)
 int grow_GetNextObjectNameNumber( grow_tCtx ctx)
 {
   return ctx->get_next_objectname_num();
+}
+
+int grow_IncrNextObjectNameNumber( grow_tCtx ctx)
+{
+  return ctx->incr_next_objectname_num();
+}
+
+void grow_SetNextObjectNameNumber( grow_tCtx ctx, int num)
+{
+  ctx->set_next_objectname_num( num);
 }
 
 int grow_GetObjectAttrInfo( grow_tObject object, char *transtab, 
@@ -3577,6 +3592,11 @@ void grow_PopSelectedObjects( grow_tCtx ctx)
   ctx->pop_select();
 }
 
+int grow_OrderObject( grow_tCtx ctx, grow_tObject object, grow_tObject destination, glow_eDest code)
+{
+  return ctx->order_object( (GlowArrayElem *)object, (GlowArrayElem *)destination, code);
+}
+
 void grow_SetDefaultLayout( grow_tCtx ctx)
 {
   ctx->set_default_layout();
@@ -4153,6 +4173,11 @@ int grow_UngroupSelect( grow_tCtx ctx)
   return ctx->ungroup_select();
 }
 
+void grow_UngroupGroup( grow_tCtx ctx, grow_tObject group)
+{
+  ctx->ungroup_group( (GrowGroup *)group);
+}
+
 void grow_CurveConfigure( grow_tObject object, glow_sCurveData *data)
 {
   ((GrowCurve *)object)->configure_curves( data);
@@ -4472,10 +4497,20 @@ void grow_SetSelectScale( grow_tCtx ctx, double scale_x, double scale_y,
   ctx->set_select_scale( scale_x, scale_y, type);
 }
 
-int grow_GetNextObject( grow_tCtx ctx, grow_tObject object, glow_eDirection dir,
-			 grow_tObject *next)
+int grow_GetNextObjectPosition( grow_tCtx ctx, grow_tObject object, glow_eDirection dir,
+				grow_tObject *next)
 {
-  return ctx->get_next_object( (GlowArrayElem *)object, dir, (GlowArrayElem **)next);
+  return ctx->get_next_object_position( (GlowArrayElem *)object, dir, (GlowArrayElem **)next);
+}
+
+int grow_GetPreviousObject( grow_tCtx ctx, grow_tObject object, grow_tObject *prev)
+{
+  return ctx->get_next_object( (GlowArrayElem *)object, (GlowArrayElem **)prev);
+}
+
+int grow_GetNextObject( grow_tCtx ctx, grow_tObject object, grow_tObject *next)
+{
+  return ctx->get_next_object( (GlowArrayElem *)object, (GlowArrayElem **)next);
 }
 
 int grow_IsVisible( grow_tCtx ctx, grow_tObject object, glow_eVisible type)
@@ -4486,6 +4521,21 @@ int grow_IsVisible( grow_tCtx ctx, grow_tObject object, glow_eVisible type)
 int grow_ExportFlow( grow_tCtx ctx, char *filename)
 {
   return ctx->export_flow( filename);
+}
+
+void grow_ObjectSave( grow_tObject object, ofstream& fp, glow_eSaveMode mode)
+{
+  ((GlowArrayElem *)object)->save( fp, mode);
+}
+
+void grow_ObjectOpen( grow_tObject object, ifstream& fp)
+{
+  ((GlowArrayElem *)object)->open( fp);
+}
+
+void grow_ObjectRead( grow_tCtx ctx, ifstream& fp, grow_tObject *object)
+{
+  ctx->read_object( fp, (GlowArrayElem **)object);
 }
 
 

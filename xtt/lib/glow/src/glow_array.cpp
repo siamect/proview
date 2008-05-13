@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_array.cpp,v 1.12 2008-01-17 14:17:05 claes Exp $
+ * Proview   $Id: glow_array.cpp,v 1.13 2008-05-13 13:59:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -421,6 +421,14 @@ void GlowArray::copy_from( const GlowArray& array)
   }
 }
 
+void GlowArray::delete_all()
+{
+  for ( int i = 0; i < a_size; i++) {
+    delete a[i];
+  }
+  a_size = 0;
+}
+
 GlowArray::~GlowArray()
 {
   int i;
@@ -553,6 +561,83 @@ int GlowArray::brow_insert( GlowArrayElem *element, GlowArrayElem *destination,
       a[idx] = element;
       ((GlowNode *)element)->set_level( destination_level);
       a_size++;
+      break;
+    default:
+      ;
+  }
+  return 1;
+}
+
+int GlowArray::move( GlowArrayElem *element, GlowArrayElem *destination, 
+		     glow_eDest code)
+{
+  int elem_idx, dest_idx, i, found;
+
+  found = 0;
+  for ( elem_idx = 0; elem_idx < a_size; elem_idx++) {
+    if ( a[elem_idx] == element) {
+      found = 1;
+      break;
+    }
+  }
+  if ( !found)
+    return 0;
+
+  if ( !destination ) {
+    // If no destinaion, move to first or last
+    switch( code) {
+      case glow_eDest_After:
+        dest_idx = a_size - 1;
+	if ( elem_idx == a_size - 1)
+	  return 1;
+        break;
+      default:
+        dest_idx = 0;
+	if ( elem_idx == 0)
+	  return 1;
+    }
+  }
+  else {
+    found = 0;
+    for ( dest_idx = 0; dest_idx < a_size; dest_idx++) {
+      if ( a[dest_idx] == destination) {
+        found = 1;
+        break;
+      }
+    }
+    if ( !found)
+      return 0;
+  }
+
+
+  switch( code) {
+    case glow_eDest_After:
+      if ( elem_idx == dest_idx + 1)
+	return 1;
+      if ( elem_idx < dest_idx + 1) {
+	for ( i = elem_idx + 1; i <= dest_idx; i++)
+	  a[i-1] = a[i];
+	a[dest_idx] = element;
+      }
+      else {
+	for ( i = elem_idx; i > dest_idx; i--)
+	  a[i] = a[i-1];
+	a[dest_idx+1] = element;
+      }
+      break;
+    case glow_eDest_Before:
+      if ( elem_idx == dest_idx - 1)
+	return 1;
+      if ( elem_idx < dest_idx - 1) {
+	for ( i = elem_idx + 1; i < dest_idx; i++)
+	  a[i-1] = a[i];
+	a[dest_idx-1] = element;
+      }
+      else {
+	for ( i = elem_idx; i >= dest_idx; i--)
+	  a[i] = a[i-1];
+	a[dest_idx] = element;
+      }
       break;
     default:
       ;
