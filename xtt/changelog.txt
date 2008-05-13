@@ -80,8 +80,16 @@
 080305 cs  ge        Min and MaxValue in ValueInput for DeltaTimes added.
 080320 cs  ge        Bugfix in position and size of option menu near lower window border.
 080401 cs  xtt       Bugfix in Jop, java process stopped at termination of xtt.
-080403 cs  flow      Bugrix for unbalanced paranthesis in pdf texts.
+080403 cs  flow      Bugfix for unbalanced paranthesis in pdf texts.
 080408 cs  glow      Ge connections routing not sensitive for other nodes.
 080408 cs  ge        Connections menu added in gtk version.
 080408 cs  xtt       Format check added in Value dynamics.
 080414 cs  ge        Dynamic DigCommand added.
+080425 cs  xtt       New commands 'write object' and 'read object'.
+080425 cs  xtt       New Fileview to read data from file or to save data to file.
+080429 cs  ge        Problem with initial color palette scrollbar size fixed.
+080430 cs  ge        Loaded Subgraphs: 'set all intern' added to menu.
+080505 cs  xtt       Command 'show graph' opens graphs without scrollbar.
+080505 cs  brow      Min and maxvalues for scrollbar adjusted.
+080513 cs  ge        Journal file and undo/redo implemented.
+080513 cs  ge        Delete added to menu, accelerator Ctrl+D moved from show grid to delete.
