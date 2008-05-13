@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subgraphs.h,v 1.4 2007-01-04 08:18:35 claes Exp $
+ * Proview   $Id: ge_subgraphs.h,v 1.5 2008-05-13 13:49:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -101,6 +101,7 @@ class SubGraphs {
     subgraphs_tAttr	attrlist;
 
     int get_select( pwr_sAttrRef *attrref, int *is_attr);
+    int set_all_extern( int eval);
     void message( char sev, char *text);
     void set_inputfocus();
     int object_attr();

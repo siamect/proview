@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subgraphs.cpp,v 1.6 2008-01-24 09:28:01 claes Exp $
+ * Proview   $Id: ge_subgraphs.cpp,v 1.7 2008-05-13 13:49:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -180,6 +180,23 @@ int SubGraphs::get_select( void **subgraph_item)
   return 1;
 }
 
+int SubGraphs::set_all_extern( int eval)
+{
+  brow_tNode	*node_list;
+  int		node_count;
+  SubGraphBaseItem *item;
+
+  brow_GetObjectList( brow->ctx, &node_list, &node_count);
+  if ( !node_count)
+    return 0;
+		      
+  for ( int i = 0; i < node_count; i++) {
+    brow_GetUserData( node_list[i], (void **)&item);
+    if ( item->type == subgraphs_eItemType_SubGraph)
+      ((ItemSubGraph *)item)->set_extern( eval);
+  }
+  return 1;
+}
 
 //
 // Callbacks from brow
@@ -691,7 +708,6 @@ static void subgraphs_attr_close_cb( Attr *attrctx)
   SubGraphs *subgraphs = (SubGraphs *) attrctx->parent_ctx;
   subgraphs_tAttr attrlist_p, prev_p;
 
-  printf( "Here in attr close\n");
 //  if ( attrctx->object)
 //    grow_FreeObjectAttrInfo( (grow_sAttrInfo *)attrctx->client_data);
 //  else
