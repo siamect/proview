@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_colpalctx.cpp,v 1.5 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_colpalctx.cpp,v 1.6 2008-05-13 13:58:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -184,10 +184,10 @@ void ColPalCtx::change_scrollbar()
   }
 
   data.scroll_data = scroll_data;
-  data.total_width = int( (x_right - x_left) / scroll_size);
-  data.total_height = int( (y_high - y_low) / scroll_size);
-  data.window_width = int( mw.window_width / scroll_size / mw.zoom_factor_x);
-  data.window_height = int( mw.window_height / scroll_size / mw.zoom_factor_y + 1);
+  data.total_width = int( (x_right - x_left) / scroll_size) + 1;
+  data.total_height = int( (y_high - y_low) / scroll_size) + 1;
+  data.window_width = int( mw.window_width / scroll_size / mw.zoom_factor_x) + 1;
+  data.window_height = int( mw.window_height / scroll_size / mw.zoom_factor_y) + 1;
   data.offset_x = int( mw.offset_x / scroll_size / mw.zoom_factor_x - x_left / 
 	scroll_size);
   data.offset_y = int( mw.offset_y /scroll_size / mw.zoom_factor_y - y_low / 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_browctx.cpp,v 1.7 2007-09-25 13:11:00 claes Exp $
+ * Proview   $Id: flow_browctx.cpp,v 1.8 2008-05-13 13:55:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -104,10 +104,10 @@ void BrowCtx::change_scrollbar()
   }
 
   data.scroll_data = scroll_data;
-  data.total_width = int( (x_right - x_left) / scroll_size);
-  data.total_height = int( (y_high - y_low) / scroll_size);
-  data.window_width = int( window_width / scroll_size / zoom_factor);
-  data.window_height = int( window_height / scroll_size / zoom_factor + 1);
+  data.total_width = int( (x_right - x_left) / scroll_size) + 1;
+  data.total_height = int( (y_high - y_low) / scroll_size) + 1;
+  data.window_width = int( window_width / scroll_size / zoom_factor) + 1;
+  data.window_height = int( window_height / scroll_size / zoom_factor) + 1;
   data.offset_x = int( offset_x / scroll_size / zoom_factor - x_left / 
 	scroll_size);
   data.offset_y = int( offset_y /scroll_size / zoom_factor - y_low / 
