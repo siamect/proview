@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_item.cpp,v 1.17 2007-01-04 08:22:47 claes Exp $
+ * Proview   $Id: xtt_item.cpp,v 1.18 2008-05-13 13:52:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1390,7 +1390,7 @@ int ItemFile::open_children( XNavBrow *brow, double x, double y)
       break;
     }
     case item_eFileType_Graph:
-      xnav->open_graph( name, file_name, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+      xnav->open_graph( name, file_name, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
       break;
     case item_eFileType_RttLog:
       xnav->open_rttlog( name, file_name);
