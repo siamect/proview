@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_curvewidget_gtk.cpp,v 1.6 2008-02-27 15:07:41 claes Exp $
+ * Proview   $Id: glow_curvewidget_gtk.cpp,v 1.7 2008-05-13 13:51:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -194,8 +194,6 @@ static void scroll_h_action( 	GtkWidget      	*w,
     return;
   }
 
-  printf( "Horizontal scroll callback\n");
-
   CurveCtx *ctx = (CurveCtx *) curvew->curve_ctx;
   gdouble value;
   g_object_get( w,
@@ -215,8 +213,6 @@ static void scroll_v_action( 	GtkWidget 	*w,
     return;
   }
     
-  printf( "Vertical scroll callback\n");
-
   CurveCtx *ctx = (CurveCtx *) curvew->curve_ctx;
   gdouble value;
   g_object_get( w,
