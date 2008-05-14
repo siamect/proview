@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_mvol.c,v 1.18 2008-04-25 11:12:47 claes Exp $
+ * Proview   $Id: rt_mvol.c,v 1.19 2008-05-14 14:05:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -450,6 +450,7 @@ mvol_ArefToAttribute (
 	if (arp->Offset > offset &&
 	    ((arp->Offset - offset) % (acp->attr[i].size / acp->attr[i].elem)) != 0)
 	  pwr_Return(NULL, sts, GDH__ATTRIBUTE);
+	offset -= idx * acp->attr[i].size / acp->attr[i].elem;
 	break;
       }
     }
