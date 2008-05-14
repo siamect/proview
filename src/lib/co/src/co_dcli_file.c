@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_dcli_file.c,v 1.6 2007-01-04 07:51:42 claes Exp $
+ * Proview   $Id: co_dcli_file.c,v 1.7 2008-05-14 06:50:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,6 +24,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/stat.h>
+# include <sys/types.h>
 
 #include "co_cdh.h"
 #include "co_dcli_msg.h"
@@ -165,17 +166,24 @@ int     dcli_replace_env( char *str, char *newstr)
   s = str;
   t = new;
 
-  while ( *s != 0)
-  {
-    if (*s == '$')
-    {
-      symbolmode = 1;
-      u = s + 1;
-      *t = *s;
-      t++;
+  while ( *s != 0) {
+    if (*s == '$') {
+      if ( *(s+1) == '$') {
+	/* '$$: insert pid */
+	char pid[20];
+	sprintf( pid, "%d", getpid());
+	strncpy( t, pid, strlen(pid));
+	t += strlen(pid);
+	s ++;
+      }
+      else {
+	symbolmode = 1;
+	u = s + 1;
+	*t = *s;
+	t++;
+      }
     }
-    else if (symbolmode && (*s == '/' || *s == '.'))
-    {
+    else if (symbolmode && (*s == '/' || *s == '.')) {
       /* End of potential symbol */
       size = (int) s - (int) u;
       strncpy( symbol, u, size);
@@ -184,14 +192,12 @@ int     dcli_replace_env( char *str, char *newstr)
 	strcpy( lower_symbol, symbol);
       else
 	cdh_ToLower( lower_symbol, symbol);
-      if ( (value = getenv( lower_symbol)) == NULL)
-      {
+      if ( (value = getenv( lower_symbol)) == NULL) {
         /* It was no symbol */
         *t = *s;
         t++;
       }
-      else
-      {
+      else {
         /* Symbol found */
         t -= strlen(symbol) + 1;
         strcpy( t, value);
@@ -201,28 +207,24 @@ int     dcli_replace_env( char *str, char *newstr)
       }
       symbolmode = 0;
     }
-    else
-    {
+    else {
       *t = *s;
       t++;
     }
     s++;
   }
 
-  if ( symbolmode)
-  {
+  if ( symbolmode) {
     /* End of potential symbol */
     size = (int) s - (int) u;
     strncpy( symbol, u, size);
     symbol[size] = 0;
     cdh_ToLower( lower_symbol, symbol);
-    if ( (value = getenv( lower_symbol)) == NULL)
-    {
+    if ( (value = getenv( lower_symbol)) == NULL) {
       /* It was no symbol */
       *t = 0;
     }
-    else
-    {
+    else {
       /* Symbol found */
       t -= strlen(symbol) + 1;
       strcpy( t, value);
