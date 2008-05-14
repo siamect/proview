@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_journal.cpp,v 1.1 2008-05-13 13:59:02 claes Exp $
+ * Proview   $Id: ge_graph_journal.cpp,v 1.2 2008-05-14 06:51:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -82,7 +82,7 @@ GraphJournal::GraphJournal( Graph *g, int *sts) : graph(g), status(journal_eStat
   strcpy( rename_name, "");
 
   // Open default file
-  *sts = open( "noname");
+  *sts = open( "nameless_$$");
 }
 
 GraphJournal::~GraphJournal()
