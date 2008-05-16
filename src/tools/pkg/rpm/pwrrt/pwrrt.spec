@@ -11,7 +11,7 @@
 Name: pwrrt
 Summary: Proview/R runtime environment
 Version: 4.5.0
-Release: 5
+Release: 6
 License: GPL
 BuildArch: i386
 Packager: claes.sjofors@proview.se
@@ -459,7 +459,7 @@ fi
 #%postun
 
 %changelog
-* Fri Apr 25 2008 Claes Sjofors <claes.sjofors@ssabox.com> 4.5.0-5
+* Fri May 16 2008 Claes Sjofors <claes.sjofors@ssabox.com> 4.5.0-6
   - Xtt Fileview added.
   - Function objects DataFRead and DataFWrite added.
 
