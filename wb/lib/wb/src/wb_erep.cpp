@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_erep.cpp,v 1.56 2008-04-07 14:53:06 claes Exp $
+ * Proview   $Id: wb_erep.cpp,v 1.57 2008-05-16 11:03:20 claes Exp $
  * Copyright (C) 2005 SSAB OxelÃ¶sund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1046,7 +1046,7 @@ wb_vrep *wb_erep::createVolume(pwr_tStatus *sts, pwr_tVid vid, pwr_tCid cid,
 {
   pwr_tFileName vname;
 
-  if ( type == ldh_eVolRep_Db) {
+  if ( type == ldh_eVolRep_Db || cid == pwr_eClass_DirectoryVolume) {
     sprintf( vname, "$pwrp_db/%s.db", cdh_Low(name));
     dcli_translate_filename( vname, vname);
     
