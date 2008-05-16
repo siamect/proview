@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.cpp,v 1.13 2008-04-10 10:39:29 claes Exp $
+ * Proview   $Id: wb_lfu.cpp,v 1.14 2008-05-16 14:50:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1043,7 +1043,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
 	    if ( *dbenum_p == pwr_eClassVolumeDatabaseEnum_WbLoad)
 	      volrep = ldh_eVolRep_Wbl;
-	    if ( *dbenum_p == pwr_eClassVolumeDatabaseEnum_BerkeleyDb)
+	    else if ( *dbenum_p == pwr_eClassVolumeDatabaseEnum_BerkeleyDb)
 	      volrep = ldh_eVolRep_Db;
 	    else if ( *dbenum_p == pwr_eClassVolumeDatabaseEnum_MySql)
 	      volrep = ldh_eVolRep_Dbms;
