@@ -29,6 +29,7 @@ libgtk2.0-dev
 cpp
 libasound2-dev
 libdb4.3-dev
+libdb4.3++-dev
 doxygen
 
 antlr: Download and build source package antlr-2.7.7 from www.antlr.org
