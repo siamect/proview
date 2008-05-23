@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_journal.cpp,v 1.2 2008-05-14 06:51:51 claes Exp $
+ * Proview   $Id: ge_graph_journal.cpp,v 1.3 2008-05-23 07:48:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -194,14 +194,6 @@ int GraphJournal::store( journal_eAction action, grow_tObject o)
 {
   static grow_tObject lock_object = 0;
 
-  if ( status == journal_eStatus_AnteProperties &&
-       !((action == journal_eAction_PostPropertiesObject ||
-	  action == journal_eAction_PostPropertiesSelect)
-	 && o == lock_object)) {
-    printf( "Journalfile blocked\n");
-    return 0;
-  }
-
   switch ( action) {
   case journal_eAction_AntePropertiesSelect:
   case journal_eAction_PostPropertiesSelect:
@@ -213,11 +205,62 @@ int GraphJournal::store( journal_eAction action, grow_tObject o)
     int		sel_count;
 
     grow_GetSelectList( graph->grow->ctx, &sel_list, &sel_count);
-    if ( sel_count == 0)
+    if ( sel_count == 0) {
       return GE__SUCCESS;
+    }
     break;
   }
   default: ;
+  }
+
+  if ( status == journal_eStatus_AnteProperties &&
+       !((action == journal_eAction_PostPropertiesObject ||
+	  action == journal_eAction_PostPropertiesSelect)
+	 && o == lock_object)) {
+    if ( debug)
+      printf( "Unfinished action, forced close\n");
+    // Close prevoius action
+    poslist[current_idx].redo_pos = fp.tellp();
+    fp << journal_cTag_Redo << " " << journal_eAction_No << " " << status << " " << current_idx << endl;
+
+    current_idx++;
+    status = journal_eStatus_Stored;
+    lock_object = 0;
+
+    if ( debug)
+      printf( "Store(F)x: %3d  list: %3d undo: %10d redo: %10d\n", current_idx-1, poslist.size() - 1, 
+	      (int)poslist[poslist.size()-1].undo_pos, (int)poslist[poslist.size()-1].redo_pos);
+
+  }
+  if ( (status != journal_eStatus_AnteProperties || 
+	(status == journal_eStatus_AnteProperties && lock_object != o)) &&
+       (action == journal_eAction_PostPropertiesObject ||
+	action == journal_eAction_PostPropertiesSelect)) {
+    if ( debug)
+      printf( "Interrupted action, reopening\n");
+    // Open prevoius action
+    JournalPos up;
+
+    switch ( status) {
+    case journal_eStatus_Stored:    
+    case journal_eStatus_Redo:
+    case journal_eStatus_Undo:
+      fp.seekp( poslist[current_idx-1].end_pos);
+      break;
+    default: ;
+    }
+
+    while ( (int)poslist.size() > current_idx) {
+      if ( debug)
+	printf( "Remove %d\n", poslist.size()-1);
+      poslist.pop_back();
+    }
+
+    up.undo_pos = fp.tellp();
+    poslist.push_back(up);
+    fp << journal_cTag_Undo << " " << journal_eAction_No << " " << status << " " << current_idx << endl;
+
+    status = journal_eStatus_AnteProperties;
   }
 
   if ( action == journal_eAction_AntePropertiesSelect ||
@@ -490,6 +533,8 @@ int GraphJournal::undo()
   case journal_eAction_PostRename:
     undo_rename();
     break;
+  case journal_eAction_No:
+    break;
   default: ;
   }
 
@@ -564,6 +609,8 @@ int GraphJournal::redo()
   case journal_eAction_AnteRename:
   case journal_eAction_PostRename:
     redo_rename();
+    break;
+  case journal_eAction_No:
     break;
   default: ;
   }
@@ -835,8 +882,10 @@ int GraphJournal::undo_properties_object()
   fp.getline( name, sizeof(name));
 
   sts = grow_FindObjectByName( graph->grow->ctx, name, &o);
-  if ( ODD(sts))
-    grow_ObjectOpen( o, (ifstream&)fp);  
+  if ( EVEN(sts))
+    return GE__SUCCESS;
+    
+  grow_ObjectOpen( o, (ifstream&)fp);
 
   fp.get();
   fp.getline( line, sizeof(line));
@@ -1657,6 +1706,8 @@ int GraphJournal::restore( char *fname)
     case journal_eAction_AnteRename:
     case journal_eAction_PostRename:
       redo_rename();
+      break;
+    case journal_eAction_No:
       break;
     default: ;
     }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_journal.h,v 1.1 2008-05-13 13:59:02 claes Exp $
+ * Proview   $Id: ge_graph_journal.h,v 1.2 2008-05-23 07:48:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -55,7 +55,8 @@ typedef enum {
   journal_eAction_AntePaste,
   journal_eAction_PostPaste,
   journal_eAction_AnteRename,
-  journal_eAction_PostRename
+  journal_eAction_PostRename,
+  journal_eAction_No
   } journal_eAction;
 
 typedef enum {
