@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_co_pi24bo.c,v 1.7 2008-02-27 06:58:52 claes Exp $
+ * Proview   $Id: rt_io_m_co_pi24bo.c,v 1.8 2008-05-27 12:06:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -284,14 +284,14 @@ static pwr_tStatus IoCardRead (
 	}
 	else if ( numofword == 2) {
 	  /* Read second word, then first word, and the second word again */
-	  int			i;
+	  int			j;
 	  pwr_tUInt16		val;
 
 	  rb.Address = local->Address + 4*i + 2;
 	  sts2 = read( local->Qbus_fp, &rb, sizeof(rb));
 	  val = (unsigned short) rb.Data;
 
-	  for ( i = 0; i < 3; i++) {
+	  for ( j = 0; j < 3; j++) {
 	    rb.Address -= 2;
 	    sts1 = read( local->Qbus_fp, &rb, sizeof(rb));
 	    re_data[0] = (unsigned short) rb.Data;
