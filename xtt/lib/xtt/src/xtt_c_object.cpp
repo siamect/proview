@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_c_object.cpp,v 1.17 2007-11-30 08:18:27 claes Exp $
+ * Proview   $Id: xtt_c_object.cpp,v 1.18 2008-05-28 12:04:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1728,12 +1728,38 @@ static pwr_tStatus CrrOpenTrace( xmenu_sMenuCall *ip)
 }
 
 
-// Open type graph filter
+// Open trace filter
 static pwr_tStatus CrrOpenTraceFilter( xmenu_sMenuCall *ip)
 {
-  // Check if there is any cross references...
+  pwr_tStatus sts;
+  pwr_tCid cid;
+
+  sts = gdh_GetObjectClass( ip->Pointed.Objid, &cid);
+  if ( ODD(sts) && cid == pwr_cClass_XttGraph)
+    return XNAV__INVISIBLE;
 
   return XNAV__SUCCESS;
+}
+
+// Open graph
+static pwr_tStatus CrrOpenGraph( xmenu_sMenuCall *ip)
+{
+  ((XNav *)ip->EditorContext)->exec_xttgraph( ip->Pointed.Objid, 0, 0, 0);
+  return XNAV__SUCCESS;
+}
+
+
+// Open graph filter
+static pwr_tStatus CrrOpenGraphFilter( xmenu_sMenuCall *ip)
+{
+  pwr_tStatus sts;
+  pwr_tCid cid;
+
+  sts = gdh_GetObjectClass( ip->Pointed.Objid, &cid);
+  if ( ODD(sts) && cid == pwr_cClass_XttGraph)
+    return XNAV__SUCCESS;
+
+  return XNAV__INVISIBLE;
 }
 
 
@@ -1788,6 +1814,8 @@ pwr_dExport pwr_BindXttMethods($Object) = {
   pwr_BindXttMethod(IsURLAttribute),
   pwr_BindXttMethod(CrrOpenTrace),
   pwr_BindXttMethod(CrrOpenTraceFilter),
+  pwr_BindXttMethod(CrrOpenGraph),
+  pwr_BindXttMethod(CrrOpenGraphFilter),
   pwr_NullMethod
 };
 
