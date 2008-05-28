@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_gvl.h,v 1.3 2006-09-15 09:33:20 claes Exp $
+ * Proview   $Id: wb_pvd_gvl.h,v 1.4 2008-05-28 11:46:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -32,6 +32,7 @@ public:
   void load( pwr_tStatus *sts);
   void save( pwr_tStatus *sts);
   void save_item( pwr_tOix oix, ofstream &of);
+  bool check_list( pwr_tStatus *sts);
 };
 
 #endif

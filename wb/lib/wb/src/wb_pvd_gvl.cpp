@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_gvl.cpp,v 1.4 2006-09-14 14:16:20 claes Exp $
+ * Proview   $Id: wb_pvd_gvl.cpp,v 1.5 2008-05-28 11:46:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,17 +29,20 @@
 #include "wb_pvd_gvl.h"
 #include "wb_ldh.h"
 #include "wb_ldh_msg.h"
-
-extern "C" {
 #include "co_cdh.h"
 #include "co_dcli.h"
-}
+#include "co_wow.h"
+#include "co_msgwindow.h"
 
 void wb_pvd_gvl::save( pwr_tStatus *sts)
 {
   ofstream of;
   pwr_tFileName fname;
   
+  
+  if ( !check_list(sts))
+    return;
+
   *sts = LDH__SUCCESS;
   dcli_translate_filename( fname, "$pwra_db/pwr_volumelist.dat");
   of.open( fname);
@@ -80,6 +83,49 @@ void wb_pvd_gvl::save_item( pwr_tOix oix, ofstream& of)
   default: ;
   }
 }
+
+bool wb_pvd_gvl::check_list( pwr_tStatus *sts)
+{
+  int error_cnt = 0;
+  char msg[200];
+
+  for ( int i = 0; i < (int) m_list.size(); i++) {
+    if ( m_list[i].flags & procom_obj_mFlags_Deleted)
+      continue;
+
+    switch ( m_list[i].cid) {
+    case pwr_cClass_VolumeReg: {
+      pwr_sClass_VolumeReg *body = (pwr_sClass_VolumeReg *)m_list[i].body;
+      pwr_tOid oid;
+
+      oid.oix = m_list[i].oix;
+      oid.vid = ldh_cProjectListVolume;
+
+      if ( body->VolumeId == 0) {
+	sprintf( msg, "VolumeId is missing, in object %s", longname(m_list[i].oix));
+	MsgWindow::message('E', msg, msgw_ePop_No, oid);
+	error_cnt++;
+      }
+      if ( strcmp( body->Project, "") == 0) {
+	sprintf( msg, "Project is missing, in object %s", longname(m_list[i].oix));
+	MsgWindow::message('E', msg, msgw_ePop_No, oid);
+	error_cnt++;
+      }
+      break;
+    }
+    default: ;
+    }
+  }
+  if ( error_cnt) {
+    sprintf( msg, "%d error(s) found, Save aborted", error_cnt);
+    MsgWindow::message('E', msg, msgw_ePop_Yes);
+    *sts = LDH__SYNTAX;
+    return false;
+  }
+  *sts = LDH__SUCCESS;
+  return true;
+}
+
 
 void wb_pvd_gvl::load( pwr_tStatus *rsts)
 {
