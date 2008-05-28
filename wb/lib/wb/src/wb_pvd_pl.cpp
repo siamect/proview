@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_pl.cpp,v 1.8 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_pvd_pl.cpp,v 1.9 2008-05-28 11:47:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -246,6 +246,9 @@ bool wb_pvd_pl::check_list( pwr_tStatus *sts)
 	    MsgWindow::message('E', msg, msgw_ePop_No, oid);
 	    error_cnt++;
 	  }
+	  if ( body->Path[ strlen(body->Path)-1] == '/')
+	    body->Path[ strlen(body->Path)-1] = 0;
+
 	  if ( m_list[i].flags & procom_obj_mFlags_Created) {
 	    if ( strcmp( body->CopyFrom, "") == 0) {
 	      // Create project 
