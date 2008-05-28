@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_api.h,v 1.14 2008-01-18 13:55:06 claes Exp $
+ * Proview   $Id: flow_api.h,v 1.15 2008-05-28 12:03:52 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -242,6 +242,7 @@ int flow_GetNextObject( flow_tCtx ctx, flow_tNode object, flow_eDirection dir,
 int flow_IsVisible( flow_tCtx ctx, flow_tObject object, flow_eVisible type);
 int flow_LoadNodeClass( flow_tCtx ctx, char *fname, flow_tNodeClass *nodeclass);
 void flow_SetTipText( flow_tCtx ctx, flow_tObject object, char *text, int x, int y);
+void flow_RemoveTipText( flow_tCtx ctx);
 
 #if defined __cplusplus
 }
