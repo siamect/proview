@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_item.cpp,v 1.18 2008-05-13 13:52:24 claes Exp $
+ * Proview   $Id: xtt_item.cpp,v 1.19 2008-05-28 12:05:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1669,6 +1669,7 @@ ItemCrossref::ItemCrossref( XNavBrow *brow, char *item_ref_name,
   int sts;
   pwr_tOName window_name;
   char *s;
+  pwr_tCid cid;
 
   type = xnav_eItemType_Crossref;
 
@@ -1685,6 +1686,21 @@ ItemCrossref::ItemCrossref( XNavBrow *brow, char *item_ref_name,
   *s = 0;
   sts = gdh_NameToObjid( window_name, &objid);
   if ( EVEN(sts)) return;
+
+  sts = gdh_GetObjectClass( objid, &cid);
+  if ( EVEN(sts)) return;
+
+  switch ( cid) {
+  case pwr_cClass_windowplc:
+  case pwr_cClass_windowcond:
+  case pwr_cClass_windoworderact:
+  case pwr_cClass_windowsubstep:
+    break;
+  default:
+    // No plc object, use original name
+    sts = gdh_NameToObjid( name, &objid);
+    if ( EVEN(sts)) return;
+  }
 
   brow_CreateNode( brow->ctx, "crr", brow->nc_object, 
 		dest, dest_code, (void *) this, 1, &node);
