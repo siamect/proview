@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.cpp,v 1.8 2008-04-07 14:53:06 claes Exp $
+ * Proview   $Id: wb_gre.cpp,v 1.9 2008-05-28 11:54:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -33,6 +33,7 @@
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_dcli.h"
+#include "co_trace.h"
 #include "wb_ldh.h"
 #include "wb_foe_msg.h"
 #include "wb_vldh_msg.h"
@@ -2922,6 +2923,7 @@ int WGre::set_trace_attributes( char *host)
   pwr_sAttrRef		*objarp;
   char			*np;
   char			*s;
+  unsigned int		options;
 
   sts = vldh_get_nodes( wind, &node_count, &nodelist);
   if ( EVEN(sts)) return sts;
@@ -2929,6 +2931,9 @@ int WGre::set_trace_attributes( char *host)
   node_ptr = nodelist;
   for ( i = 0; i < (int)node_count; i++) {
     inverted = 0;
+    options = 0;
+    strcpy( attr_str, "");
+
     sts = trace_get_attributes( this, *node_ptr, object_str, attr_str,
 		&trace_type, &inverted);
     if ( ODD(sts) && sts != TRA__DISCARD ) {
@@ -2938,6 +2943,22 @@ int WGre::set_trace_attributes( char *host)
 	strcat( tmp, &object_str[strlen(host)]);
 	strcpy( object_str, tmp);
       }
+      switch( (*node_ptr)->ln.cid ) {
+      case pwr_cClass_GetDp:
+      case pwr_cClass_stodp:
+      case pwr_cClass_resdp:
+      case pwr_cClass_setdp:
+	options |= trace_mAttrOptions_MenuAttr;
+	break;
+      default: ;
+      }
+
+      if ( options) {
+	char options_str[20];
+	sprintf( options_str, "#%u", options);
+	strcat( attr_str, options_str);
+      }
+
       flow_SetTraceAttr( (*node_ptr)->hn.node_id, object_str,
 		attr_str, trace_type, inverted);
     }
@@ -2963,6 +2984,10 @@ int WGre::set_trace_attributes( char *host)
       case pwr_cClass_cstoiv:
       case pwr_cClass_GetAp:
       case pwr_cClass_GetIp:
+      case pwr_cClass_stoap:
+      case pwr_cClass_cstoap:
+      case pwr_cClass_StoIp:
+      case pwr_cClass_CStoIp:
 	sts = ldh_GetObjectBodyDef( wind->hw.ldhses, 
 			(*node_ptr)->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
@@ -2998,11 +3023,37 @@ int WGre::set_trace_attributes( char *host)
       switch ((*node_ptr)->ln.cid ) {
       case pwr_cClass_GetAp:
       case pwr_cClass_GetIp:
+      case pwr_cClass_stoap:
+      case pwr_cClass_cstoap:
+      case pwr_cClass_StoIp:
+      case pwr_cClass_CStoIp:
 	s = strrchr( object_str, '.');
 	if ( s) {
 	  strcpy( attr_str, s + 1);
 	  *s = 0;
+
+	  options |= trace_mAttrOptions_MenuAttr;
 	}
+	break;
+      case pwr_cClass_GetAi:
+      case pwr_cClass_GetAo:
+      case pwr_cClass_GetAv:
+      case pwr_cClass_stoai:
+      case pwr_cClass_stoao:
+      case pwr_cClass_stoav:
+      case pwr_cClass_cstoai:
+      case pwr_cClass_cstoao:
+      case pwr_cClass_cstoav:
+      case pwr_cClass_GetIi:
+      case pwr_cClass_GetIo:
+      case pwr_cClass_GetIv:
+      case pwr_cClass_stoii:
+      case pwr_cClass_stoio:
+      case pwr_cClass_stoiv:
+      case pwr_cClass_cstoii:
+      case pwr_cClass_cstoio:
+      case pwr_cClass_cstoiv:
+	strcpy( attr_str, "ActualValue");
 	break;
       default: ;
       }
@@ -3013,6 +3064,13 @@ int WGre::set_trace_attributes( char *host)
 	strcat( tmp, &object_str[strlen(host)]);
 	strcpy( object_str, tmp);
       }
+
+      if ( options) {
+	char options_str[20];
+	sprintf( options_str, "#%u", options);
+	strcat( attr_str, options_str);
+      }
+      
       flow_SetTraceAttr( (*node_ptr)->hn.node_id, object_str,
       		attr_str, flow_eTraceType_User, inverted);
     }
