@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trace.cpp,v 1.6 2008-01-18 13:55:36 claes Exp $
+ * Proview   $Id: rt_trace.cpp,v 1.7 2008-05-28 11:43:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,22 +34,19 @@
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_wow.h"
+#include "co_trace.h"
 #include "rt_gdh.h"
 #include "rt_trace.h"
+#include "xtt_menu.h"
 
 #define GOEN_F_GRID 0.05
 
-// Until xtt_menu.h i unavailable...
-#define xmenu_mUtility_Trace     (1 << 1)
-#define xmenu_mUtility_Simulate  (1 << 2)
-#define xmenu_eItemType_Object   1
-
-
 void RtTrace::get_trace_attr( flow_tObject object, 
 			       char *object_str, char *attr_str, flow_eTraceType *type,
-			       int *inverted)
+			       int *inverted, unsigned int *options)
 {
   pwr_tOName name;
+  char *s;
 
   flow_GetTraceAttr( object, name, attr_str, type, inverted);
   if ( m_has_host) {
@@ -63,6 +60,14 @@ void RtTrace::get_trace_attr( flow_tObject object,
   }
   else
     strcpy( object_str, name);
+  
+  // Get options in attr_str after #
+  if ( (s = strchr( attr_str, '#'))) {
+    *s = 0;
+    sscanf( s+1, "%u", options);
+  }
+  else
+    *options = 0;
 }
 
 void RtTrace::get_save_filename( pwr_tObjid window_objid, char *filename)
@@ -208,6 +213,9 @@ int RtTrace::connect_bc( flow_tObject object, char *name, char *attr,
     strcpy( attr_str, name);
   strcat( attr_str, ".");
   strcat( attr_str, attr);  
+  if ( (s = strchr( attr_str, '#')))
+    *s = 0;
+       
 
   if ( flow_GetObjectType( object) == flow_eObjectType_Node)
   {
@@ -369,22 +377,28 @@ void RtTrace::activate_display_object()
 {
   flow_tObject 	node;
   int		sts;
-  pwr_tObjid	objid;
+  pwr_tAttrRef	attrref;
+  xmenu_eItemType itemtype;
 
   sts = get_selected_node( &node);
   if (EVEN(sts)) return;
 
-  sts = get_objid( node, &objid);
+  sts = get_attrref( node, &attrref);
   if (EVEN(sts)) return;
 
-  if ( call_method_cb) {
-    pwr_sAttrRef attrref = cdh_ObjidToAref( objid);
+  if ( attrref.Flags.b.ObjectAttr)
+    itemtype = xmenu_eItemType_AttrObject;
+  else if ( attrref.Flags.b.Object)
+    itemtype = xmenu_eItemType_Object;
+  else
+    itemtype = xmenu_eItemType_Attribute;
 
+  if ( call_method_cb) {
     (call_method_cb)( parent_ctx,
 		      "$Object-RtNavigator",
 		      "$Object-RtNavigatorFilter",
 		      attrref, 
-		      xmenu_eItemType_Object,
+		      itemtype,
 		      xmenu_mUtility_Trace, NULL);
   }
 }
@@ -393,22 +407,29 @@ void RtTrace::activate_collect_insert()
 {
   flow_tObject 	node;
   int		sts;
-  pwr_tObjid	objid;
+  pwr_tAttrRef	attrref;
+  xmenu_eItemType itemtype;
 
   sts = get_selected_node( &node);
   if (EVEN(sts)) return;
 
-  sts = get_objid( node, &objid);
+  sts = get_attrref( node, &attrref);
   if (EVEN(sts)) return;
 
+  if ( attrref.Flags.b.ObjectAttr)
+    itemtype = xmenu_eItemType_AttrObject;
+  else if ( attrref.Flags.b.Object)
+    itemtype = xmenu_eItemType_Object;
+  else
+    itemtype = xmenu_eItemType_Attribute;
+
   if ( call_method_cb) {
-    pwr_sAttrRef attrref = cdh_ObjidToAref( objid);
 
     (call_method_cb)( parent_ctx,
 		      "$Object-Collect",
 		      "$Object-CollectFilter",
 		      attrref, 
-		      xmenu_eItemType_Object,
+		      itemtype,
 		      xmenu_mUtility_Trace, NULL);
   }
 }
@@ -484,22 +505,28 @@ void RtTrace::activate_show_cross()
 {
   flow_tObject 	node;
   int		sts;
-  pwr_tObjid	objid;
+  pwr_tAttrRef  attrref;
+  xmenu_eItemType itemtype;
 
   sts = get_selected_node( &node);
   if (EVEN(sts)) return;
 
-  sts = get_objid( node, &objid);
+  sts = get_attrref( node, &attrref);
   if (EVEN(sts)) return;
 
-  if ( call_method_cb) {
-    pwr_sAttrRef attrref = cdh_ObjidToAref( objid);
+  if ( attrref.Flags.b.ObjectAttr)
+    itemtype = xmenu_eItemType_AttrObject;
+  else if ( attrref.Flags.b.Object)
+    itemtype = xmenu_eItemType_Object;
+  else
+    itemtype = xmenu_eItemType_Attribute;
 
+  if ( call_method_cb) {
     (call_method_cb)(parent_ctx,
 		     "$Object-OpenCrossref",
 		     "$Object-OpenCrossrefFilter",
 		     attrref, 
-		     xmenu_eItemType_Object,
+		     itemtype,
 		     xmenu_mUtility_Trace, NULL);
   }
 }
@@ -508,23 +535,38 @@ void RtTrace::activate_open_classgraph()
 {
   flow_tObject 	node;
   int		sts;
-  pwr_tObjid	objid;
+  pwr_tAttrRef	attrref;
+  xmenu_eItemType itemtype;
 
   sts = get_selected_node( &node);
   if (EVEN(sts)) return;
 
-  sts = get_objid( node, &objid);
+  sts = get_attrref( node, &attrref);
   if (EVEN(sts)) return;
 
-  if ( call_method_cb) {
-    pwr_sAttrRef attrref = cdh_ObjidToAref( objid);
+  if ( attrref.Flags.b.ObjectAttr)
+    itemtype = xmenu_eItemType_AttrObject;
+  else if ( attrref.Flags.b.Object)
+    itemtype = xmenu_eItemType_Object;
+  else
+    itemtype = xmenu_eItemType_Attribute;
 
-    (call_method_cb)( parent_ctx,
-		      "$Object-OpenObjectGraph",
-		      "$Object-OpenObjectGraphFilter",
-		      attrref, 
-		      xmenu_eItemType_Object,
-		      xmenu_mUtility_Trace, NULL);
+  if ( call_method_cb) {
+
+    if ( itemtype == xmenu_eItemType_Attribute)
+      (call_method_cb)( parent_ctx,
+			"$Object-OpenTypeGraph",
+			"$Object-OpenTypeGraphFilter",
+			attrref, 
+			itemtype,
+			xmenu_mUtility_Trace, NULL);
+    else
+      (call_method_cb)( parent_ctx,
+			"$Object-OpenObjectGraph",
+			"$Object-OpenObjectGraphFilter",
+			attrref, 
+			itemtype,
+			xmenu_mUtility_Trace, NULL);
   }
 }
 
@@ -693,67 +735,30 @@ int RtTrace::flow_cb( FlowCtx *ctx, flow_tEvent event)
     break;
   }
   case flow_eEvent_MB3Press: {
-    flow_tTraceObj   	object_str;
-    flow_tTraceAttr  	attr_str;
-    flow_eTraceType	trace_type;
-    int		inverted;
     pwr_sAttrRef      attrref;
     int		sts;
     int		x, y;
     unsigned int      utility;
-    pwr_tAName  name;
-    char        *s;
+    xmenu_eItemType itemtype;
 
     switch ( event->object.object_type) {
     case flow_eObjectType_Node:
-      if ( flow_GetNodeGroup( event->object.object) != 
-	   flow_eNodeGroup_Trace) {
-	tractx->get_trace_attr( event->object.object, object_str, attr_str,
-				&trace_type, &inverted);
+      sts = tractx->get_attrref( event->object.object, &attrref);
+      if ( EVEN(sts)) return 1;
 
-	if ( tractx->m_has_host) {
-	  if ( strncmp( object_str, "$host", 5) == 0) {
-	    /* Replace "$host" with hostname */
-	    strcpy( name, tractx->m_hostname);
-	    strcat( name, &object_str[5]);
-	  }
-	  else if ( strncmp( object_str, "$PlcFo:", 7) == 0) {
-	    /* Replace "$PlcFo:" with fo name */
-	    s = strchr( object_str, '.');
-	    if ( !s)
-	      strcpy( name, tractx->m_hostname);
-	    else {
-	      strcpy( name, tractx->m_hostname);
-	      strcat( name, s);
-	    }
-	  }      
-	  else if ( strncmp( object_str, "$PlcMain:", 9) == 0) {
-	    /* Replace "$PlcMain:" with plcconnect name */
-	    s = strchr( object_str, '.');
-	    if ( !s)
-	      strcpy( name, tractx->m_plcconnect);
-	    else {
-	      strcpy( name, tractx->m_plcconnect);
-	      strcat( name, s);
-	    }
-	  }      
-	  else
-	    strcpy( name, object_str);
-	}
-	else
-	  strcpy( name, object_str);
+      if ( attrref.Flags.b.ObjectAttr)
+	itemtype = xmenu_eItemType_AttrObject;
+      else if ( attrref.Flags.b.Object)
+	itemtype = xmenu_eItemType_Object;
+      else
+	itemtype = xmenu_eItemType_Attribute;
 
-	sts = gdh_NameToAttrref( pwr_cNObjid, name, &attrref);
-	if ( EVEN(sts)) return 1;
-
-	if ( tractx->popup_menu_cb) {
-	  // Display popup menu
-	  utility = xmenu_mUtility_Trace;
-	  tractx->popup_menu_position( event->any.x_pixel + 8, event->any.y_pixel, &x, &y);
-	  (tractx->popup_menu_cb)( tractx->parent_ctx, attrref, 
-				   xmenu_eItemType_Object,
-				   utility, NULL, x, y);
-	}
+      if ( tractx->popup_menu_cb) {
+	// Display popup menu
+	utility = xmenu_mUtility_Trace;
+	tractx->popup_menu_position( event->any.x_pixel + 8, event->any.y_pixel, &x, &y);
+	(tractx->popup_menu_cb)( tractx->parent_ctx, attrref, itemtype,
+				 utility, NULL, x, y);
       }
       break;
     default:
@@ -765,41 +770,25 @@ int RtTrace::flow_cb( FlowCtx *ctx, flow_tEvent event)
   }
   case flow_eEvent_MB1DoubleClick: {
     /* Open attribute editor */
-    flow_tTraceObj   	object_str;
-    flow_tTraceAttr  	attr_str;
-    flow_eTraceType	trace_type;
-    int		inverted;
-    pwr_tObjid	objid;
+    pwr_tAttrRef attrref;
     int		sts;
 
     /* Display object */
     switch ( event->object.object_type) {
     case flow_eObjectType_Node:
-      if ( flow_GetNodeGroup( event->object.object) != 
-	   flow_eNodeGroup_Trace) {
-	tractx->get_trace_attr( event->object.object, object_str, attr_str, 
-				&trace_type, &inverted);
+      sts = tractx->get_attrref( event->object.object, &attrref);
+      if (EVEN(sts)) return 1;
 
-	sts = gdh_NameToObjid( object_str, &objid);
-	if ( EVEN(sts)) return 1;
-
-	if ( tractx->call_method_cb) {
-	  // Display crossreferences
-	  unsigned long utility = xmenu_mUtility_Trace;
-	  pwr_sAttrRef attrref = cdh_ObjidToAref( objid);
-
-	  (tractx->call_method_cb)(tractx->parent_ctx, 
-				   "$Object-OpenCrossref",
-				   "$Object-OpenCrossrefFilter",
-				   attrref, 
-				   xmenu_eItemType_Object,
-				   utility, NULL);
-	}
-	//if ( tractx->display_object_cb)
-	//{
-	// Display the object in the parent context
-	//  (tractx->display_object_cb)(tractx->parent_ctx, objid);
-	//}
+      if ( tractx->call_method_cb) {
+	// Display crossreferences
+	unsigned long utility = xmenu_mUtility_Trace;
+	
+	(tractx->call_method_cb)(tractx->parent_ctx, 
+				 "$Object-OpenCrossref",
+				 "$Object-OpenCrossrefFilter",
+				 attrref, 
+				 xmenu_eItemType_Object,
+				 utility, NULL);
       }
       break;
     default:
@@ -875,9 +864,11 @@ int RtTrace::flow_cb( FlowCtx *ctx, flow_tEvent event)
     flow_ResetSelectInverse( ctx);
     break;
   case flow_eEvent_ScrollDown:
+    flow_RemoveTipText( ctx);
     flow_Scroll( ctx, 0, -0.05);
     break;
-  case flow_eEvent_ScrollUp:
+  case flow_eEvent_ScrollUp: 
+    flow_RemoveTipText( ctx);
     flow_Scroll( ctx, 0, 0.05);
     break;
   case flow_eEvent_TipText: {
@@ -886,14 +877,15 @@ int RtTrace::flow_cb( FlowCtx *ctx, flow_tEvent event)
     flow_eTraceType	trace_type;
     pwr_tAName		aname;
     pwr_tAName		name;
-    char		tiptext[512];
+    char		tiptext[512] = "";
     pwr_tStatus		sts;
     int			inverted;
     char		*s;
     bool		is_plcmain = false;
     bool		is_plcfo = false;
+    unsigned int 	options;
 
-    tractx->get_trace_attr( event->object.object, object_str, attr_str, &trace_type, &inverted);
+    tractx->get_trace_attr( event->object.object, object_str, attr_str, &trace_type, &inverted, &options);
 
     if ( tractx->m_has_host) {
       if ( strncmp( object_str, "$host", 5) == 0) {
@@ -942,16 +934,14 @@ int RtTrace::flow_cb( FlowCtx *ctx, flow_tEvent event)
 	strcat( aname, ".PlcConnect");
 	
 	sts = gdh_GetObjectInfo( aname, &aref, sizeof(aref)); 
-	if ( EVEN(sts)) break;
+	if ( ODD(sts))
+	  sts = gdh_AttrrefToName( &aref, aname, sizeof(aname),
+				   cdh_mName_volumeStrict);
+	if ( ODD(sts)) {
+	  strcat( aname, ".Description");
 	
-	sts = gdh_AttrrefToName( &aref, aname, sizeof(aname),
-				 cdh_mName_volumeStrict);
-	if ( EVEN(sts)) break;
-
-	strcat( aname, ".Description");
-	
-	sts = gdh_GetObjectInfo( aname, tiptext, sizeof(tiptext)); 
-	if ( EVEN(sts)) break;
+	  sts = gdh_GetObjectInfo( aname, tiptext, sizeof(tiptext)); 
+	}
       }
 
       if ( is_plcfo) {
@@ -1064,6 +1054,7 @@ int RtTrace::get_objid( flow_tObject node, pwr_tObjid *oid)
   flow_tTraceAttr      	attr_str;
   flow_eTraceType	trace_type;
   int			inverted;
+  unsigned int 		options;
 
   /* Try flow node name */
   sts = gdh_ObjidToName( objid, name, sizeof(name), cdh_mNName); 
@@ -1076,11 +1067,82 @@ int RtTrace::get_objid( flow_tObject node, pwr_tObjid *oid)
   sts = gdh_NameToObjid( name, oid);
   if ( EVEN(sts)) {
     /* Try trace object */
-    get_trace_attr( node, object_name, attr_str, &trace_type, &inverted);
+    get_trace_attr( node, object_name, attr_str, &trace_type, &inverted, &options);
 
     sts = gdh_NameToObjid( object_name, oid);
     if ( EVEN(sts)) return sts;
   }
+  return 1;
+}
+
+int RtTrace::get_attrref( flow_tObject node, pwr_tAttrRef *aref)
+{
+  flow_tTraceObj   	object_str;
+  flow_tTraceAttr  	attr_str;
+  flow_eTraceType	trace_type;
+  int		inverted;
+  pwr_sAttrRef      attrref;
+  int		sts;
+  pwr_tAName  name;
+  char        *s;
+  unsigned int options;
+
+  if ( flow_GetNodeGroup( node) == flow_eNodeGroup_Trace)
+    return 0;
+
+  get_trace_attr( node, object_str, attr_str,
+		  &trace_type, &inverted, &options);
+
+  if ( m_has_host) {
+    if ( strncmp( object_str, "$host", 5) == 0) {
+      /* Replace "$host" with hostname */
+      strcpy( name, m_hostname);
+      strcat( name, &object_str[5]);
+    }
+    else if ( strncmp( object_str, "$PlcFo:", 7) == 0) {
+      /* Replace "$PlcFo:" with fo name */
+      s = strchr( object_str, '.');
+      if ( !s)
+	strcpy( name, m_hostname);
+      else {
+	strcpy( name, m_hostname);
+	strcat( name, s);
+      }
+    }      
+    else if ( strncmp( object_str, "$PlcMain:", 9) == 0) {
+      /* Replace "$PlcMain:" with plcconnect name */
+      s = strchr( object_str, '.');
+      if ( !s)
+	strcpy( name, m_plcconnect);
+      else {
+	strcpy( name, m_plcconnect);
+	strcat( name, s);
+      }
+    }      
+    else
+      strcpy( name, object_str);
+  }
+  else
+    strcpy( name, object_str);
+
+  if ( options & trace_mAttrOptions_MenuAttr) {
+    if ( strcmp( attr_str, "") != 0) {
+      strcat( name, ".");
+      strcat( name, attr_str);
+      
+      sts = gdh_NameToAttrref( pwr_cNObjid, name, &attrref);
+      if ( EVEN(sts)) return sts;
+    }
+    else {
+      sts = gdh_NameToAttrref( pwr_cNObjid, name, &attrref);
+      if ( EVEN(sts)) return sts;
+    }
+  }
+  else {
+    sts = gdh_NameToAttrref( pwr_cNObjid, name, &attrref);
+    if ( EVEN(sts)) return sts;
+  }
+  *aref = attrref;
   return 1;
 }
 
@@ -1254,6 +1316,7 @@ void RtTrace::changevalue( flow_tNode fnode)
   flow_tTraceAttr      	attr_str;
   flow_eTraceType	trace_type;
   int			inverted;
+  unsigned int 		options;
 
   if ( is_authorized_cb) {
     if ( !(is_authorized_cb)(parent_ctx, 
@@ -1272,7 +1335,7 @@ void RtTrace::changevalue( flow_tNode fnode)
   }
   else {	    
     /* Toggle the value, start to get the current value */
-    get_trace_attr( fnode, object_str, attr_str, &trace_type, &inverted);
+    get_trace_attr( fnode, object_str, attr_str, &trace_type, &inverted, &options);
     strcpy( name, object_str);
     strcat( name, ".");
     strcat( name, attr_str);

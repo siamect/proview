@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_rtt_crr.c,v 1.4 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: rt_rtt_crr.c,v 1.5 2008-05-28 11:43:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -278,8 +278,6 @@ int	rtt_crr_signal(
 	pwr_tFileName	default_filename;
 	FILE		*file;
 	char		line[500];
-	int		hierarchy_spaces;
-	pwr_tOName     	hierarchy;
 	int		object_spaces;
 	pwr_tOName     	object;
 	pwr_tOName     	objname;
@@ -352,96 +350,67 @@ int	rtt_crr_signal(
 	  return RTT__NOPICTURE;
 	}
 
-	/* First line is a header, skip it */
-	sts = rtt_get_signal_line( file, line, sizeof( line), 
-				&hierarchy_spaces, hierarchy, &lines);
-	if ( EVEN(sts)) goto finish;
-
 	/* Get the hierarchy */
 	sts = rtt_get_signal_line( file, line, sizeof( line), 
 				&spaces, object, &lines);
 	if ( EVEN(sts)) goto finish;
-	hierarchy_spaces = spaces;
+	object_spaces = spaces;
 
 
 	first = 1;
 	while ( 1)
 	{
-	  while ( spaces != hierarchy_spaces)
-	  {
+	  if ( (s = strchr( object, ':')))
+	    strcpy( objname, s+1);
+	  else
+	    strcpy( objname, object);
+
+	  sts = rtt_wildcard( signalname, objname);
+	  if ( !sts )
+          {
+	    /* Hit, print this object */
+	    if ( signalcount == 0)
+	    {
+	      rtt_clear_screen();
+	      buffcnt = sprintf( buff, "Crossreferens list   %s\n\n", show_objname);
+	    }
+	    signalcount++;
+
 	    sts = rtt_get_signal_line( file, line, sizeof( line),
 				&spaces, object, &lines);
 	    if ( EVEN(sts)) goto finish;
-	  }
-	  strcpy( hierarchy, object);
-
-	  /* Next line is an object */
-	  sts = rtt_get_signal_line( file, line, sizeof( line), 
-				&spaces, object, &lines);
-	  if ( EVEN(sts)) goto finish;
-	  if ( first)
-	  {
-	    object_spaces = spaces;
-	    first = 0;
-	  }
-
-	  while ( spaces == object_spaces)
-	  {
-	    /* Put object and hierarchy together and check if this is 
-			the object */
-	    strcpy( objname, hierarchy);
-	    strcat( objname, "-");
-	    strcat( objname, object);
-	    strcpy( show_objname, objname);
-	    rtt_toupper( objname, objname);
-
-	    sts = rtt_wildcard( signalname, objname);
-	    if ( !sts )
+	    while( spaces > object_spaces)
 	    {
-	      /* Hit, print this object */
-	      if ( signalcount == 0)
+	      rtt_remove_spaces( line, line);
+
+	      if ( buffcnt > CRR_BUFF_SIZE - 100)
 	      {
-	        rtt_clear_screen();
-	        buffcnt = sprintf( buff, "Crossreferens list   %s\n\n", show_objname);
+		buffcnt += sprintf( buff+buffcnt, 
+				    "RTT-E-QUOTAEXC, Crossref quota exceeded");
+		goto finish;
 	      }
-	      signalcount++;
+	      if ( line[0] == '#')
+		buffcnt += sprintf( buff+buffcnt, " %s\n", line);
+	      else
+		buffcnt += sprintf( buff+buffcnt, "   %s\n", line);
 
 	      sts = rtt_get_signal_line( file, line, sizeof( line),
-				&spaces, object, &lines);
+					 &spaces, object, &lines);
 	      if ( EVEN(sts)) goto finish;
-	      while( spaces > object_spaces)
-	      {
-	        rtt_remove_spaces( line, line);
-
-	        if ( buffcnt > CRR_BUFF_SIZE - 100)
-	        {
-	          buffcnt += sprintf( buff+buffcnt, 
-	            "RTT-E-QUOTAEXC, Crossref quota exceeded");
-	          goto finish;
-	        }
-	        if ( line[0] == '#')
-	          buffcnt += sprintf( buff+buffcnt, " %s\n", line);
-	        else
-	          buffcnt += sprintf( buff+buffcnt, "   %s\n", line);
-
-	        sts = rtt_get_signal_line( file, line, sizeof( line),
-				&spaces, object, &lines);
-	        if ( EVEN(sts)) goto finish;
-	      }
-	      if ( !wildcard)
-	        goto finish;
 	    }
-	    else
+	    if ( !wildcard)
+	      goto finish;
+	  }
+	  else
+	  {
+	    sts = rtt_get_signal_line( file, line, sizeof( line),
+				       &spaces, object, &lines);
+	    if ( EVEN(sts)) goto finish;
+	    while( spaces > object_spaces)
 	    {
 	      sts = rtt_get_signal_line( file, line, sizeof( line),
-				&spaces, object, &lines);
+					 &spaces, object, &lines);
 	      if ( EVEN(sts)) goto finish;
-	      while( spaces > object_spaces)
-	      {
-	        sts = rtt_get_signal_line( file, line, sizeof( line),
-				&spaces, object, &lines);
-	        if ( EVEN(sts)) goto finish;
-	      }
 	    }
 	  }
 	}
@@ -485,8 +454,6 @@ int	rtt_crr_object(
 	pwr_tFileName	default_filename;
 	FILE		*file;
 	char		line[200];
-	int		hierarchy_spaces;
-	char		hierarchy[80];
 	int		object_spaces;
 	char		object[80];
 	pwr_tOName     	objname;
@@ -559,21 +526,7 @@ int	rtt_crr_object(
 	  return RTT__NOPICTURE;
 	}
 
-	/* First line is a header, skip it */
-	sts = rtt_get_signal_line( file, line, sizeof( line), 
-				&hierarchy_spaces, hierarchy, &lines);
-	if ( EVEN(sts)) goto finish;
-	sts = rtt_get_signal_line( file, line, sizeof( line), 
-				&hierarchy_spaces, hierarchy, &lines);
-	if ( EVEN(sts)) goto finish;
-	sts = rtt_get_signal_line( file, line, sizeof( line), 
-				&hierarchy_spaces, hierarchy, &lines);
-	if ( EVEN(sts)) goto finish;
-	sts = rtt_get_signal_line( file, line, sizeof( line), 
-				&hierarchy_spaces, hierarchy, &lines);
-	if ( EVEN(sts)) goto finish;
-
-	/* Get the hierarchy */
+	/* Get the object */
 	sts = rtt_get_signal_line( file, line, sizeof( line), 
 				&spaces, object, &lines);
 	if ( EVEN(sts)) goto finish;
@@ -583,18 +536,22 @@ int	rtt_crr_object(
 	first = 1;
 	while ( 1)
 	{
-	  while ( spaces != object_spaces)
-	  {
-	    sts = rtt_get_signal_line( file, line, sizeof( line),
-				&spaces, object, &lines);
-	    if ( EVEN(sts)) goto finish;
-	  }
-	  strcpy( objname, object);
+	  if ( (s = strchr( object, ':')))
+	    strcpy( objname, s+1);
+	  else
+	    strcpy( objname, object);
 
 	  strcpy( show_objname, objname);
 	  rtt_toupper( objname, objname);
 
 	  sts = rtt_wildcard( objectname, objname);
+	  if ( sts) {
+	    pwr_tAName subname;
+	    strcpy( subname, objectname);
+	    strcat( subname, ".*");
+
+	    sts = rtt_wildcard( subname, objname);
+	  }
 	  if ( !sts )
 	  {
 	    /* Hit, print this object */
@@ -619,22 +576,26 @@ int	rtt_crr_object(
 	        goto finish;
 	      }
 
-	      if ( line[0] == '#' || line[0] == '&')
-	        buffcnt += sprintf( buff+buffcnt, " %s\n", line);
-	      else
-	        buffcnt += sprintf( buff+buffcnt, "   %s\n", line);
+	      buffcnt += sprintf( buff+buffcnt, " %s\n", line);
 
 	      sts = rtt_get_signal_line( file, line, sizeof( line),
 				&spaces, object, &lines);
 	      if ( EVEN(sts)) goto finish;
 	    }
-	    if ( !wildcard)
-	      goto finish;
 	  }
 	  else
 	  {
+	    if ( !wildcard && signalcount)
+	      goto finish;
+
 	    sts = rtt_get_signal_line( file, line, sizeof( line),
 				&spaces, object, &lines);
+	    if ( EVEN(sts)) goto finish;
+	  }
+
+	  while ( spaces != object_spaces) {
+	    sts = rtt_get_signal_line( file, line, sizeof( line),
+				       &spaces, object, &lines);
 	    if ( EVEN(sts)) goto finish;
 	  }
 	}
@@ -683,9 +644,6 @@ int	rtt_crr_code(
 	FILE		*file;
 	char		line[500];
 	char		tst_line[500];
-	int		hierarchy_spaces;
-	pwr_tOName     	hierarchy;
-	int		object_spaces;
 	pwr_tAName     	object;
 	pwr_tOName	objname;
 	int		spaces;
@@ -745,44 +703,24 @@ int	rtt_crr_code(
 	  return RTT__NOPICTURE;
 	}
 
-	/* First line is a header, skip it */
-	sts = rtt_get_signal_line( file, line, sizeof( line), 
-				&hierarchy_spaces, hierarchy, &lines);
-	if ( EVEN(sts)) goto finish;
-	sts = rtt_get_signal_line( file, line, sizeof( line), 
-				&hierarchy_spaces, hierarchy, &lines);
-	if ( EVEN(sts)) goto finish;
-	sts = rtt_get_signal_line( file, line, sizeof( line), 
-				&hierarchy_spaces, hierarchy, &lines);
-	if ( EVEN(sts)) goto finish;
-	sts = rtt_get_signal_line( file, line, sizeof( line), 
-				&hierarchy_spaces, hierarchy, &lines);
-	if ( EVEN(sts)) goto finish;
-
 	/* Get the hierarchy */
-	sts = rtt_get_signal_line( file, line, sizeof( line), 
-				&spaces, object, &lines);
-	if ( EVEN(sts)) goto finish;
-	object_spaces = spaces;
-
+	while ( strncmp( line, " _Obj_ ", 7) != 0) {
+	  sts = rtt_get_signal_line( file, line, sizeof( line), 
+				     &spaces, object, &lines);
+	  if ( EVEN(sts)) goto finish;
+	}
 
 	first = 1;
 	while ( 1)
 	{
-	  while ( strncmp( line, "_Obj_ ", 6) != 0)
-	  {
-	    sts = rtt_get_signal_line( file, line, sizeof( line),
-				&spaces, object, &lines);
-	    if ( EVEN(sts)) goto finish;
-	  }
-	  strcpy( objname, &line[6]);
+	  strcpy( objname, &line[7]);
 	  for ( s = objname; !(*s == 32 || *s == 9 || *s == 0); s++);
 	  *s = 0;
 
 	  sts = rtt_get_signal_line( file, line, sizeof( line),
 				&spaces, object, &lines);
 	  objname_written = 0;
-	  while ( strncmp( line, "_Obj_ ", 6) != 0)
+	  while ( strncmp( line, " _Obj_ ", 7) != 0)
 	  {
 	    if ( !case_sensitive)
 	      rtt_toupper( tst_line, line);
@@ -852,7 +790,7 @@ int	rtt_crr_code(
 
 	      if ( brief)
 	      {
-	        while ( strncmp( line, "_Obj_ ", 6) != 0)
+	        while ( strncmp( line, " _Obj_ ", 7) != 0)
 	        {	      
 	          sts = rtt_get_signal_line( file, line, sizeof( line),
 				&spaces, object, &lines);

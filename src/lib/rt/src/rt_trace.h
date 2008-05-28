@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trace.h,v 1.10 2007-12-03 14:51:39 claes Exp $
+ * Proview   $Id: rt_trace.h,v 1.11 2008-05-28 11:43:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -111,8 +111,9 @@ class RtTrace {
  protected:
   void get_trace_attr( flow_tObject object, 
 		       char *object_str, char *attr_str, flow_eTraceType *type,
-		       int *inverted);
+		       int *inverted, unsigned int *options);
   int get_objid( flow_tObject node, pwr_tObjid *objid);
+  int get_attrref( flow_tObject node, pwr_tAttrRef *aref);
   int get_selected_node( flow_tObject *node);
   pwr_tStatus viewsetup();
   pwr_tStatus simsetup();
