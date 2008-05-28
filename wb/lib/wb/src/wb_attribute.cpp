@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_attribute.cpp,v 1.37 2008-01-24 09:47:01 claes Exp $
+ * Proview   $Id: wb_attribute.cpp,v 1.38 2008-05-28 11:51:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -423,7 +423,7 @@ pwr_sAttrRef *wb_attribute::aref(pwr_sAttrRef *arp) const
   if ( m_tid == m_orep->cid()) {
     arp->Flags.b.Object = 1;
 
-    arp->Body = m_tid;
+    arp->Body = m_tid | m_bix;
   }
   else if ( cdh_tidIsCid( m_tid))
     arp->Flags.b.ObjectAttr = 1;
