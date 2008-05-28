@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_plcpgm.cpp,v 1.3 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_c_plcpgm.cpp,v 1.4 2008-05-28 11:48:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -132,6 +132,31 @@ static pwr_tStatus SyntaxCheck (
   return PWRB__SUCCESS;
 }
 
+static pwr_tStatus PostCreate (
+  ldh_tSesContext   Session,
+  pwr_tOid	    Object,
+  pwr_tOid	    Father,
+  pwr_tCid	    Class
+) {
+  pwr_tOid oid;
+  pwr_tOid toid;
+  pwr_tStatus sts;
+  int cnt = 0;
+
+  sts = ldh_GetClassList( Session, pwr_cClass_PlcThread, &oid);
+  while ( ODD(sts)) {
+    cnt++;
+    toid = oid;
+    sts = ldh_GetNextObject( Session, oid, &oid);
+  }
+
+  if ( cnt > 0) {
+    sts = ldh_SetObjectPar( Session, Object, "RtBody", "ThreadObject", (char *)&toid,
+			 sizeof(toid));
+    if ( EVEN(sts)) return sts;
+  }
+  return PWRB__SUCCESS;
+}
 
 /*----------------------------------------------------------------------------*\
   Every method to be exported to the workbench should be registred here.
@@ -141,5 +166,6 @@ pwr_dExport pwr_BindMethods(PlcPgm) = {
   pwr_BindMethod(OpenProgram),
   pwr_BindMethod(Build),
   pwr_BindMethod(SyntaxCheck),
+  pwr_BindMethod(PostCreate),
   pwr_NullMethod
 };
