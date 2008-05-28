@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.cpp,v 1.36 2008-01-24 09:37:12 claes Exp $
+ * Proview   $Id: xtt_xnav.cpp,v 1.37 2008-05-28 12:05:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -863,7 +863,7 @@ void XNav::show_crossref()
       ((ItemChannel *)item)->open_crossref( brow, 0, 0);
       break;
     default:
-      message( 'E', "Can't show crossreferences for this object type");
+      message( 'I', "Open crossreferences from popup menu");
     }
   }
   catch ( co_error& e) {
