@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.h,v 1.11 2008-04-07 14:53:06 claes Exp $
+ * Proview   $Id: wb_utl.h,v 1.12 2008-05-28 11:53:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -60,6 +60,9 @@ class wb_utl {
 		      unsigned long overview, int pdf, FILE *plclink);
   int redraw_windows( pwr_tObjid Objdid, ldh_tSesContext ldhses,
 			      ldh_tWBContext ldhwb);
+  static pwr_tStatus utl_replace_symbol( ldh_tSesContext ldhses, 
+					 pwr_tObjid oid,
+					 pwr_sAttrRef *arp);
 };
 
 #endif

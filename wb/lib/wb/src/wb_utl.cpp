@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.cpp,v 1.9 2008-04-07 14:53:06 claes Exp $
+ * Proview   $Id: wb_utl.cpp,v 1.10 2008-05-28 11:53:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -11427,9 +11427,9 @@ static	cross_t_list	*cross_crosslist[CROSSLIST_SIZE] = {0,0,0,0,0,0,0,0,0,0};
 static	int		cross_crosslist_count[CROSSLIST_SIZE] = {0,0,0,0,0,0,0,0,0,0};
 
 
-pwr_tStatus utl_replace_symbol( ldh_tSesContext ldhses, 
-				pwr_tObjid oid,
-				pwr_sAttrRef *arp)
+pwr_tStatus wb_utl::utl_replace_symbol( ldh_tSesContext ldhses, 
+					pwr_tObjid oid,
+					pwr_sAttrRef *arp)
 {
   switch ( arp->Objid.vid) {
   case ldh_cPlcFoVolume: {
@@ -11613,7 +11613,7 @@ static int	cross_crosslist_object_insert(
 	    aref = *aref_ptr;
 	    free((char *) aref_ptr);
 
-	    utl_replace_symbol( ldhses, arp->Objid, &aref);
+	    wb_utl::utl_replace_symbol( ldhses, arp->Objid, &aref);
 
 	    if ( cdh_ObjidIsNotNull( aref.Objid)) {
 	      /* Check if object exists */
