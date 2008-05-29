@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_build.cpp,v 1.7 2008-04-14 10:13:33 claes Exp $
+ * Proview   $Id: wb_build.cpp,v 1.8 2008-05-29 14:56:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -265,7 +265,7 @@ void wb_build::rootvolume( pwr_tVid vid)
   dcli_translate_filename( fname, fname);
   m_sts = dcli_file_time( fname, &rtt_time);
   if ( opt.crossref && ( evenSts() || time_Acomp( &modtime, &rtt_time) == 1)) {
-    strcpy( cmd, "create rttfiles");
+    strcpy( cmd, "create crossreferencefiles");
     m_wnav->command( cmd);
     if ( ODD(sumsts))
       sumsts = PWRB__SUCCESS;

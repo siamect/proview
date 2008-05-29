@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.50 2008-04-07 14:52:31 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.51 2008-05-29 14:56:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,6 +47,7 @@
 #include "wb_lfu.h"
 #include "wb_dir.h"
 #include "wb_trv.h"
+#include "wb_crrgen.h"
 
 #include "flow.h"
 #include "flow_browctx.h"
@@ -197,7 +198,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"REDRAW",
 			&wnav_redraw_func,
 			{ "/ALL",
-			"/HIERARCHY", "/PLCPGM", "/FROM_PLCPGM",
+			"/HIERARCHY", "/PLCPGM", "/FROM_PLCPGM", "/TEMPLATE",
 			""}
 		},
 		{
@@ -268,7 +269,8 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"/LASTCHILD", "/VOLUME", "/ALL", 
 			"/CLASS", "/DEBUG", "/NODECONFIG",
 			"/NAME", "/IDENTITY", "/FILES", "/OUT", "/IGNORE",
-			"/DIRECTORY", "/BUILDVERSION", "/DATABASE", "/SERVER", ""}
+			"/DIRECTORY", "/BUILDVERSION", "/DATABASE", "/SERVER", 
+			  "/PLCPGM", "/HIERARCHY", "/FROM_PLCPGM", "/TEMPLATE", ""}
 		},
 		{
 			"NEW",
@@ -2321,6 +2323,7 @@ static int	wnav_redraw_func(	void		*client_data,
   char		from_str[120];
   char		*fromstr_ptr;
   int		sts;
+  int           templ;
 
   if ( !wnav->editmode)
   {
@@ -2334,6 +2337,8 @@ static int	wnav_redraw_func(	void		*client_data,
     sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
+    templ = ODD( dcli_get_qualifier( "/TEMPLATE", from_str, sizeof(from_str)));
+
     if ( ODD( dcli_get_qualifier( "/FROM_PLCPGM", from_str, sizeof(from_str))))
       fromstr_ptr = from_str;
     else
@@ -2344,7 +2349,7 @@ static int	wnav_redraw_func(	void		*client_data,
       utl->create_mainwindow( 0, NULL);
 
     sts = utl->redraw_plc_hier( wnav->ldhses, 
-	ldh_SessionToWB(wnav->ldhses), NULL, fromstr_ptr, 1);
+	ldh_SessionToWB(wnav->ldhses), NULL, fromstr_ptr, 1, templ);
     delete utl;
     if ( EVEN(sts)) {
       wnav->message(' ', wnav_get_message(sts));
@@ -2360,8 +2365,10 @@ static int	wnav_redraw_func(	void		*client_data,
     if ( !wnav->has_window())
       utl->create_mainwindow( 0, NULL);
 
-    sts = utl->redraw_plc( wnav->ldhses,
-		ldh_SessionToWB(wnav->ldhses), plcpgm_str);
+    templ = ODD( dcli_get_qualifier( "/TEMPLATE", from_str, sizeof(from_str)));
+
+    sts = utl->redraw_plc_hier( wnav->ldhses,
+		ldh_SessionToWB(wnav->ldhses), plcpgm_str, 0, 0, templ);
     if ( EVEN(sts)) {
       wnav->message(' ', wnav_get_message(sts));
       return sts;
@@ -2378,9 +2385,11 @@ static int	wnav_redraw_func(	void		*client_data,
     else
       fromstr_ptr = NULL;
    
+    templ = ODD( dcli_get_qualifier( "/TEMPLATE", from_str, sizeof(from_str)));
+
     wb_utl *utl = wnav->utl_new();
     sts = utl->redraw_plc_hier( wnav->ldhses, 
-	ldh_SessionToWB(wnav->ldhses), hier_str, fromstr_ptr, 0);
+	ldh_SessionToWB(wnav->ldhses), hier_str, fromstr_ptr, 0, templ);
     delete utl;
     if ( EVEN(sts)) {
       wnav->message(' ', wnav_get_message(sts));
@@ -2417,8 +2426,8 @@ static int	wnav_redraw_func(	void		*client_data,
         if ( EVEN(sts)) return sts;
 
 	wb_utl *utl = wnav->utl_new();
-        sts = utl->redraw_plc( wnav->ldhses,
-		ldh_SessionToWB(wnav->ldhses), plcpgm_str);
+        sts = utl->redraw_plc_hier( wnav->ldhses,
+		ldh_SessionToWB(wnav->ldhses), plcpgm_str, 0, 0, 0);
 	delete utl;
         if ( EVEN(sts)) {
           wnav->message(' ', wnav_get_message(sts));
@@ -3839,9 +3848,20 @@ static int	wnav_create_func( void		*client_data,
   }
   else if ( strncmp( arg1_str, "RTTFILES", strlen( arg1_str)) == 0)
   {
-    char cmd[80] = "LIST RTTLISTS";
+    char cmd[80] = "CREATE CROSSREFERENCEFILES";
     sts = wnav->command( cmd);
     if ( EVEN(sts)) return sts;
+  }
+  else if ( strncmp( arg1_str, "CROSSREFERENCEFILES", strlen( arg1_str)) == 0)
+  {
+    pwr_tStatus sts;
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
+    if ( EVEN(sts)) return sts;
+
+    wb_crrgen crrgen( (wb_session *)wnav->ldhses);
+    crrgen.load( &sts);
+    crrgen.write( &sts);
+    crrgen.write_code( &sts);
   }
   else if ( strncmp( arg1_str, "SNAPSHOT", strlen( arg1_str)) == 0)
   {
@@ -3895,6 +3915,120 @@ static int	wnav_create_func( void		*client_data,
     if ( EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
     return sts;
+  }
+  else if ( strncmp( arg1_str, "FLOWFILES", strlen( arg1_str)) == 0) {
+    char		plcpgm_str[120]; 
+    char		hier_str[120]; 
+    char		from_str[120];
+    char		*fromstr_ptr;
+    int			sts;
+    int			templ;
+
+    if ( !wnav->editmode) {
+      wnav->message('E', "Not in edit mode");
+      return WNAV__NOEDIT;
+    }
+
+    if ( ODD( dcli_get_qualifier( "/ALL", 0, 0))) {
+      templ = ODD( dcli_get_qualifier( "/TEMPLATE", 0, 0));
+   
+      sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
+      if ( EVEN(sts)) return sts;
+
+      if ( ODD( dcli_get_qualifier( "/FROM_PLCPGM", from_str, sizeof(from_str))))
+	fromstr_ptr = from_str;
+      else
+	fromstr_ptr = NULL;
+      
+      wb_utl *utl = wnav->utl_new();
+      if ( !wnav->has_window())
+	utl->create_mainwindow( 0, NULL);
+
+      sts = utl->create_flow_plc( wnav->ldhses, ldh_SessionToWB(wnav->ldhses), 
+				  NULL, fromstr_ptr, 1, templ);
+      delete utl;
+      if ( EVEN(sts)) {
+	wnav->message(' ', wnav_get_message(sts));
+	return sts;
+      }
+    }
+    else if ( ODD( dcli_get_qualifier( "/PLCPGM", plcpgm_str, sizeof(plcpgm_str)))) {
+      sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
+      if ( EVEN(sts)) return sts;
+
+      wb_utl *utl = wnav->utl_new();
+      if ( !wnav->has_window())
+	utl->create_mainwindow( 0, NULL);
+
+      sts = utl->create_flow_plc( wnav->ldhses, ldh_SessionToWB(wnav->ldhses), 
+				  plcpgm_str, 0, 0, templ);
+      if ( EVEN(sts)) {
+	wnav->message(' ', wnav_get_message(sts));
+	return sts;
+      }
+    }
+    else if ( ODD( dcli_get_qualifier( "/HIERARCHY", hier_str, sizeof(hier_str)))) {
+
+      templ = ODD( dcli_get_qualifier( "/TEMPLATE", 0, 0));
+   
+      sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
+      if ( EVEN(sts)) return sts;
+
+      if ( ODD( dcli_get_qualifier( "/FROM_PLCPGM", from_str, sizeof(from_str))))
+	fromstr_ptr = from_str;
+      else
+	fromstr_ptr = NULL;
+      
+      wb_utl *utl = wnav->utl_new();
+      sts = utl->create_flow_plc( wnav->ldhses, ldh_SessionToWB(wnav->ldhses), 
+				  hier_str, fromstr_ptr, 0, templ);
+      delete utl;
+      if ( EVEN(sts)) {
+	wnav->message(' ', wnav_get_message(sts));
+	return sts;
+      }
+    }
+    else {
+      // Redraw selected plcpgm objects
+      pwr_sAttrRef 	*sel_list;
+      int                 *sel_is_attr;
+      int			sel_cnt;
+      pwr_tClassId	classid;
+      int			i;
+      int			size;
+
+      templ = ODD( dcli_get_qualifier( "/TEMPLATE", 0, 0));
+
+      sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
+      if ( EVEN(sts)) return sts;
+
+      sts = wnav->get_select( &sel_list, &sel_is_attr, &sel_cnt);
+      if ( EVEN(sts)) {
+	wnav->message( 'E', "Qualifier or selection required");
+	return WNAV__QUAL;
+      }
+
+      for ( i = 0; i < sel_cnt; i++) {
+	ldh_GetObjectClass( wnav->ldhses, sel_list[i].Objid, &classid);
+	if ( classid == pwr_cClass_plc) {
+	  sts = ldh_ObjidToName( wnav->ldhses, sel_list[i].Objid, 
+				 ldh_eName_Hierarchy, plcpgm_str, sizeof(plcpgm_str), &size);
+	  if ( EVEN(sts)) return sts;
+
+	  wb_utl *utl = wnav->utl_new();
+	  sts = utl->create_flow_plc( wnav->ldhses, ldh_SessionToWB(wnav->ldhses), 
+				      plcpgm_str, 0, 0, templ);
+	  delete utl;
+	  if ( EVEN(sts)) {
+	    wnav->message(' ', wnav_get_message(sts));
+	    free( sel_list);
+	    return sts;
+	  }
+	}
+      }
+      free( sel_list);
+      free( sel_is_attr);
+    }
   }
   else
   {
@@ -4392,7 +4526,9 @@ static int	wnav_crossref_func(	void		*client_data,
       case pwr_cClass_Iv:
       case pwr_cClass_Ii:
       case pwr_cClass_Io:
-        sts = wnav->crr_signal( NULL, name_str, NULL);
+      case pwr_cClass_Sv:
+      case pwr_cClass_ATv:
+      case pwr_cClass_DTv:
         break;
       default:
         sts = wnav->crr_object( NULL, name_str, NULL);
