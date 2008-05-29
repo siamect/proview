@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xcrr_gtk.cpp,v 1.2 2007-01-11 11:40:31 claes Exp $
+ * Proview   $Id: xtt_xcrr_gtk.cpp,v 1.3 2008-05-29 14:59:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -120,7 +120,7 @@ XCrrGtk::XCrrGtk(
 
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 			   "default-height", 420,
-			   "default-width", 300,
+			   "default-width", 600,
 			   "title", title,
 			   NULL);
 
