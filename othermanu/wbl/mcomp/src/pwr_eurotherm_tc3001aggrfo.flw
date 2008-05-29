@@ -1,21 +1,21 @@
 1
 100 450
 101 450
-102 496
-103 2059
-104 10.8475
+102 0
+103 0
+104 0
 105 100
-106 5
-107 5
+106 0
+107 0
 108 3.9
 109 0.5
 110 12.275
 111 0.475
-116 6
-117 44
-118 30
-119 65
-120 0
+116 0
+117 0
+118 0
+119 0
+120 -1828716544
 121 Claes context
 122 0
 126 0.05
@@ -29,7 +29,7 @@
 123
 2
 3
-300 BodyText0
+300 BodyText21
 301
 2
 5
@@ -75,7 +75,7 @@
 303 0
 99
 3
-300 BodyText1
+300 BodyText22
 301
 2
 5
@@ -121,7 +121,7 @@
 303 0
 99
 3
-300 BodyText2
+300 BodyText23
 301
 2
 5
@@ -167,7 +167,7 @@
 303 0
 99
 3
-300 BodyText3
+300 BodyText24
 301
 2
 5
@@ -213,7 +213,7 @@
 303 0
 99
 3
-300 BodyText4
+300 BodyText25
 301
 2
 5
@@ -259,7 +259,7 @@
 303 0
 99
 3
-300 BodyText5
+300 BodyText26
 301
 2
 5
@@ -305,7 +305,7 @@
 303 0
 99
 3
-300 Inv0
+300 Inv31
 301
 2
 5
@@ -427,7 +427,7 @@
 303 0
 99
 3
-300 And1
+300 And32
 301
 2
 5
@@ -442,7 +442,7 @@
 503
 7
 700 0.119
-701 0.075
+701 0.125
 99
 99
 9
@@ -510,6 +510,47 @@
 601 2
 602
 7
+700 -0.03
+701 0.1
+99
+603
+7
+700 -0.02
+701 0.1
+99
+99
+8
+802 0
+803 2
+800 0
+801 360
+804
+7
+700 -0.02
+701 0.09
+99
+805
+7
+700 0
+701 0.11
+99
+99
+12
+1200 2
+1201 2
+1202
+7
+700 -0.03
+701 0.1
+99
+1203 
+1204 0
+99
+6
+600 0
+601 2
+602
+7
 700 0.119
 701 0
 99
@@ -520,7 +561,7 @@
 99
 99
 12
-1200 2
+1200 3
 1201 1
 1202
 7
@@ -538,7 +579,7 @@
 1303
 7
 700 0.0195
-701 0.0625
+701 0.1125
 99
 1304 0
 99
@@ -574,7 +615,7 @@
 303 0
 99
 3
-300 StoDp0
+300 StoDp144
 301
 2
 5
@@ -685,7 +726,7 @@
 303 0
 99
 3
-300 Text6
+300 Text27
 301
 2
 5
@@ -731,7 +772,7 @@
 303 0
 99
 3
-300 And2
+300 And33
 301
 2
 5
@@ -878,7 +919,7 @@
 303 0
 99
 3
-300 GetDp1
+300 GetDp145
 301
 2
 5
@@ -989,7 +1030,7 @@
 303 0
 99
 3
-300 StoAp2
+300 StoAp146
 301
 2
 5
@@ -1100,7 +1141,7 @@
 303 0
 99
 3
-300 GetDp3
+300 GetDp147
 301
 2
 5
@@ -1211,7 +1252,7 @@
 303 0
 99
 3
-300 Wait3
+300 Wait34
 301
 2
 5
@@ -1359,7 +1400,7 @@
 303 0
 99
 3
-300 StoDp4
+300 StoDp148
 301
 2
 5
@@ -1470,7 +1511,7 @@
 303 0
 99
 3
-300 GetDp5
+300 GetDp149
 301
 2
 5
@@ -1581,7 +1622,7 @@
 303 0
 99
 3
-300 GetDp6
+300 GetDp150
 301
 2
 5
@@ -1692,7 +1733,7 @@
 303 0
 99
 3
-300 BaseElHeaterFo0
+300 BaseElHeaterFo12
 301
 2
 5
@@ -1848,7 +1889,7 @@
 303 0
 99
 3
-300 Eurotherm_TC3001Fo1
+300 Eurotherm_TC3001Fo13
 301
 2
 5
@@ -2179,7 +2220,7 @@
 303 0
 99
 3
-300 StoDp7
+300 StoDp151
 301
 2
 5
@@ -2290,7 +2331,7 @@
 303 0
 99
 3
-300 GetDp8
+300 GetDp152
 301
 2
 5
@@ -2401,7 +2442,7 @@
 303 0
 99
 3
-300 FirstScan0
+300 FirstScan1
 301
 2
 5
@@ -2459,7 +2500,7 @@
 303 0
 99
 3
-300 CArea0
+300 CArea3
 301
 2
 5
@@ -2627,7 +2668,7 @@
 303 1
 99
 3
-300 GetDp10
+300 GetDp154
 301
 2
 5
@@ -2738,7 +2779,7 @@
 303 0
 99
 3
-300 GetDp11
+300 GetDp155
 301
 2
 5
@@ -2849,7 +2890,7 @@
 303 0
 99
 3
-300 GetDp12
+300 GetDp156
 301
 2
 5
@@ -2960,7 +3001,7 @@
 303 0
 99
 3
-300 CompModeAFo2
+300 CompModeAFo14
 301
 2
 5
@@ -3326,7 +3367,7 @@
 303 0
 99
 3
-300 Or4
+300 Or35
 301
 2
 5
@@ -3473,7 +3514,7 @@
 303 0
 99
 3
-300 Disabled13
+300 Disabled157
 301
 2
 5
@@ -3584,7 +3625,7 @@
 303 0
 99
 3
-300 Disabled14
+300 Disabled158
 301
 2
 5
@@ -3695,7 +3736,7 @@
 303 0
 99
 3
-300 Or5
+300 Or36
 301
 2
 5
@@ -3842,7 +3883,7 @@
 303 0
 99
 3
-300 GetDp15
+300 GetDp159
 301
 2
 5
@@ -3953,7 +3994,7 @@
 303 0
 99
 3
-300 And6
+300 And37
 301
 2
 5
@@ -4116,7 +4157,7 @@
 303 0
 99
 3
-300 Disabled16
+300 Disabled160
 301
 2
 5
@@ -4227,7 +4268,7 @@
 303 0
 99
 3
-300 GetDp17
+300 GetDp161
 301
 2
 5
@@ -4338,7 +4379,7 @@
 303 0
 99
 3
-300 GetDp18
+300 GetDp162
 301
 2
 5
@@ -4449,7 +4490,7 @@
 303 0
 99
 3
-300 Disabled19
+300 Disabled163
 301
 2
 5
@@ -4560,7 +4601,7 @@
 303 0
 99
 3
-300 Or7
+300 Or38
 301
 2
 5
@@ -4707,7 +4748,7 @@
 303 0
 99
 3
-300 Or8
+300 Or39
 301
 2
 5
@@ -4854,7 +4895,7 @@
 303 0
 99
 3
-300 Or9
+300 Or40
 301
 2
 5
@@ -5001,7 +5042,7 @@
 303 0
 99
 3
-300 Disabled20
+300 Disabled164
 301
 2
 5
@@ -5112,7 +5153,7 @@
 303 0
 99
 3
-300 CArea1
+300 CArea4
 301
 2
 5
@@ -5296,7 +5337,7 @@
 303 1
 99
 3
-300 Text7
+300 Text28
 301
 2
 5
@@ -5342,7 +5383,7 @@
 303 0
 99
 3
-300 Text8
+300 Text29
 301
 2
 5
@@ -5388,7 +5429,7 @@
 303 0
 99
 3
-300 Text9
+300 Text30
 301
 2
 5
@@ -5434,7 +5475,7 @@
 303 0
 99
 3
-300 Text10
+300 Text31
 301
 2
 5
@@ -5480,7 +5521,7 @@
 303 0
 99
 3
-300 Text11
+300 Text32
 301
 2
 5
@@ -5526,7 +5567,7 @@
 303 0
 99
 3
-300 Text12
+300 Text33
 301
 2
 5
@@ -5572,7 +5613,7 @@
 303 0
 99
 3
-300 Text13
+300 Text34
 301
 2
 5
@@ -5618,7 +5659,7 @@
 303 0
 99
 3
-300 Head14
+300 Head35
 301
 2
 5
@@ -5664,7 +5705,7 @@
 303 0
 99
 3
-300 Text15
+300 Text36
 301
 2
 5
@@ -5710,7 +5751,7 @@
 303 0
 99
 3
-300 Text16
+300 Text37
 301
 2
 5
@@ -5756,7 +5797,7 @@
 303 0
 99
 3
-300 GetDp22
+300 GetDp166
 301
 2
 5
@@ -5867,7 +5908,7 @@
 303 0
 99
 3
-300 GetDp23
+300 GetDp167
 301
 2
 5
@@ -5978,7 +6019,7 @@
 303 0
 99
 3
-300 Disabled24
+300 Disabled168
 301
 2
 5
@@ -6089,7 +6130,7 @@
 303 0
 99
 3
-300 CArea2
+300 CArea5
 301
 2
 5
@@ -6273,7 +6314,7 @@
 303 1
 99
 3
-300 GetDi26
+300 GetDi170
 301
 2
 5
@@ -6384,7 +6425,7 @@
 303 0
 99
 3
-300 GetDp27
+300 GetDp171
 301
 2
 5
@@ -6495,7 +6536,7 @@
 303 0
 99
 3
-300 Or10
+300 Or41
 301
 2
 5
@@ -6658,7 +6699,7 @@
 303 0
 99
 3
-300 NameToStr28
+300 NameToStr172
 301
 2
 5
@@ -6769,7 +6810,7 @@
 303 0
 99
 3
-300 Strcat11
+300 Strcat42
 301
 2
 5
@@ -6916,7 +6957,7 @@
 303 0
 99
 3
-300 StoSp29
+300 StoSp173
 301
 2
 5
@@ -7027,7 +7068,7 @@
 303 0
 99
 3
-300 DSup30
+300 DSup174
 301
 2
 5
@@ -7164,7 +7205,7 @@
 303 0
 99
 3
-300 GetSp31
+300 GetSp175
 301
 2
 5
@@ -7275,7 +7316,7 @@
 303 0
 99
 3
-300 And12
+300 And43
 301
 2
 5
@@ -7422,7 +7463,7 @@
 303 0
 99
 3
-300 GetDp32
+300 GetDp176
 301
 2
 5
@@ -7533,7 +7574,7 @@
 303 0
 99
 3
-300 GetDp33
+300 GetDp177
 301
 2
 5
@@ -7644,7 +7685,7 @@
 303 0
 99
 3
-300 GetDp34
+300 GetDp178
 301
 2
 5
@@ -7755,7 +7796,7 @@
 303 0
 99
 3
-300 And13
+300 And44
 301
 2
 5
@@ -7918,7 +7959,7 @@
 303 0
 99
 3
-300 DSup35
+300 DSup179
 301
 2
 5
@@ -8055,7 +8096,7 @@
 303 0
 99
 3
-300 StoSp36
+300 StoSp180
 301
 2
 5
@@ -8166,7 +8207,7 @@
 303 0
 99
 3
-300 Strcat14
+300 Strcat45
 301
 2
 5
@@ -8313,7 +8354,7 @@
 303 0
 99
 3
-300 GetSp37
+300 GetSp181
 301
 2
 5
@@ -8424,7 +8465,7 @@
 303 0
 99
 3
-300 NameToStr38
+300 NameToStr182
 301
 2
 5
@@ -8535,7 +8576,7 @@
 303 0
 99
 3
-300 StoDp39
+300 StoDp183
 301
 2
 5
@@ -8662,7 +8703,7 @@
 303 0
 99
 3
-300 StoDp40
+300 StoDp184
 301
 2
 5
@@ -8773,7 +8814,7 @@
 303 0
 99
 3
-300 GetDp41
+300 GetDp185
 301
 2
 5
@@ -8884,7 +8925,7 @@
 303 0
 99
 3
-300 GetDp42
+300 GetDp186
 301
 2
 5
@@ -8995,7 +9036,7 @@
 303 0
 99
 3
-300 GetDp43
+300 GetDp187
 301
 2
 5
@@ -9106,7 +9147,7 @@
 303 0
 99
 3
-300 GetDi44
+300 GetDi188
 301
 2
 5
@@ -9217,7 +9258,7 @@
 303 0
 99
 3
-300 GetDp45
+300 GetDp189
 301
 2
 5
@@ -9328,7 +9369,7 @@
 303 0
 99
 3
-300 Or15
+300 Or46
 301
 2
 5
@@ -9541,7 +9582,7 @@
 303 0
 99
 3
-300 GetAp46
+300 GetAp190
 301
 2
 5
@@ -9652,7 +9693,7 @@
 303 0
 99
 3
-300 And16
+300 And47
 301
 2
 5
@@ -9815,7 +9856,7 @@
 303 0
 99
 3
-300 And17
+300 And48
 301
 2
 5
@@ -9962,7 +10003,7 @@
 303 0
 99
 3
-300 GetDp47
+300 GetDp191
 301
 2
 5
@@ -10073,7 +10114,7 @@
 303 0
 99
 3
-300 ResDp48
+300 ResDp192
 301
 2
 5
@@ -10159,7 +10200,7 @@
 303 0
 99
 3
-300 ResDp49
+300 ResDp193
 301
 2
 5
@@ -10245,7 +10286,7 @@
 303 0
 99
 3
-300 GetDp50
+300 GetDp194
 301
 2
 5
@@ -10356,7 +10397,7 @@
 303 0
 99
 3
-300 Or18
+300 Or49
 301
 2
 5
@@ -10544,7 +10585,7 @@
 303 0
 99
 3
-300 GetDp51
+300 GetDp195
 301
 2
 5
@@ -10655,7 +10696,7 @@
 303 0
 99
 3
-300 SR_R3
+300 SR_R15
 301
 2
 5
@@ -10846,7 +10887,7 @@
 303 0
 99
 3
-300 Document0
+300 Document7
 301
 2
 6
@@ -11091,7 +11132,7 @@
 303 0
 99
 3
-300 Document1
+300 Document8
 301
 2
 6
@@ -11336,7 +11377,7 @@
 303 0
 99
 3
-300 StoDp52
+300 StoDp196
 301
 2
 5
@@ -11447,7 +11488,7 @@
 303 0
 99
 3
-300 Or19
+300 Or50
 301
 2
 5
@@ -11660,7 +11701,7 @@
 303 0
 99
 3
-300 BodyText17
+300 BodyText38
 301
 2
 5
@@ -11706,7 +11747,7 @@
 303 0
 99
 3
-300 BodyText18
+300 BodyText39
 301
 2
 5
@@ -11752,7 +11793,7 @@
 303 0
 99
 3
-300 BaseCircuitBreakerFo4
+300 BaseCircuitBreakerFo16
 301
 2
 5
@@ -11908,7 +11949,7 @@
 303 0
 99
 3
-300 BodyText19
+300 BodyText40
 301
 2
 5
@@ -11954,7 +11995,7 @@
 303 0
 99
 3
-300 StoDp53
+300 StoDp197
 301
 2
 5
@@ -12065,7 +12106,7 @@
 303 0
 99
 3
-300 StoDp54
+300 StoDp198
 301
 2
 5
@@ -12176,7 +12217,7 @@
 303 0
 99
 3
-300 StoDp55
+300 StoDp199
 301
 2
 5
@@ -12287,7 +12328,7 @@
 303 0
 99
 3
-300 GetDp56
+300 GetDp200
 301
 2
 5
@@ -12398,7 +12439,7 @@
 303 0
 99
 3
-300 StoDp57
+300 StoDp201
 301
 2
 5
@@ -12509,7 +12550,7 @@
 303 0
 99
 3
-300 GetDp58
+300 GetDp202
 301
 2
 5
@@ -12620,7 +12661,7 @@
 303 0
 99
 3
-300 GetDp59
+300 GetDp203
 301
 2
 5
@@ -12731,7 +12772,7 @@
 303 0
 99
 3
-300 And20
+300 And51
 301
 2
 5
@@ -12992,7 +13033,7 @@
 303 0
 99
 3
-300 StoDp60
+300 StoDp204
 301
 2
 5
@@ -13103,7 +13144,7 @@
 303 0
 99
 3
-300 And21
+300 And52
 301
 2
 5
@@ -13266,7 +13307,7 @@
 303 0
 99
 3
-300 BaseContactorFo5
+300 BaseContactorFo17
 301
 2
 5
@@ -13492,7 +13533,7 @@
 303 0
 99
 3
-300 Document2
+300 Document9
 301
 2
 6
@@ -13737,7 +13778,7 @@
 303 0
 99
 3
-300 Document3
+300 Document10
 301
 2
 6
@@ -13982,7 +14023,7 @@
 303 0
 99
 3
-300 BodyText20
+300 BodyText41
 301
 2
 5
@@ -14028,7 +14069,7 @@
 303 0
 99
 3
-300 BodyText21
+300 BodyText42
 301
 2
 5
@@ -14074,7 +14115,7 @@
 303 0
 99
 3
-300 Document4
+300 Document11
 301
 2
 6
@@ -14318,366 +14359,6 @@
 302 1
 303 0
 99
-3
-300 And22
-301
-2
-5
-500 0
-501 2
-504 1
-502
-7
-700 0
-701 -0.025
-99
-503
-7
-700 0.119
-701 0.125
-99
-99
-9
-900 2
-901 7
-902 And
-903
-7
-700 0.034
-701 0.0125
-99
-99
-6
-600 0
-601 2
-602
-7
-700 0
-701 0
-99
-603
-7
-700 -0.03
-701 0
-99
-99
-12
-1200 0
-1201 2
-1202
-7
-700 -0.03
-701 0
-99
-1203 
-1204 0
-99
-6
-600 0
-601 2
-602
-7
-700 0
-701 0.05
-99
-603
-7
-700 -0.03
-701 0.05
-99
-99
-12
-1200 1
-1201 2
-1202
-7
-700 -0.03
-701 0.05
-99
-1203 
-1204 0
-99
-6
-600 0
-601 2
-602
-7
-700 0
-701 0.1
-99
-603
-7
-700 -0.03
-701 0.1
-99
-99
-12
-1200 2
-1201 2
-1202
-7
-700 -0.03
-701 0.1
-99
-1203 
-1204 0
-99
-6
-600 0
-601 2
-602
-7
-700 0.119
-701 0
-99
-603
-7
-700 0.149
-701 0
-99
-99
-12
-1200 3
-1201 1
-1202
-7
-700 0.149
-701 0
-99
-1203 Status
-1204 0
-99
-13
-1300 0
-1301 7
-1302 2
-1305 1
-1303
-7
-700 0.0195
-701 0.1125
-99
-1304 0
-99
-5
-500 2
-501 0
-504 4
-502
-7
-700 0.029
-701 -0.025
-99
-503
-7
-700 0.119
-701 0.005
-99
-99
-13
-1300 9
-1301 7
-1302 2
-1305 4
-1303
-7
-700 0.046
-701 0.0015
-99
-1304 0
-99
-99
-302 0
-303 0
-99
-3
-300 And23
-301
-2
-5
-500 0
-501 2
-504 1
-502
-7
-700 0
-701 -0.025
-99
-503
-7
-700 0.119
-701 0.125
-99
-99
-9
-900 2
-901 7
-902 And
-903
-7
-700 0.034
-701 0.0125
-99
-99
-6
-600 0
-601 2
-602
-7
-700 0
-701 0
-99
-603
-7
-700 -0.03
-701 0
-99
-99
-12
-1200 0
-1201 2
-1202
-7
-700 -0.03
-701 0
-99
-1203 
-1204 0
-99
-6
-600 0
-601 2
-602
-7
-700 0
-701 0.05
-99
-603
-7
-700 -0.03
-701 0.05
-99
-99
-12
-1200 1
-1201 2
-1202
-7
-700 -0.03
-701 0.05
-99
-1203 
-1204 0
-99
-6
-600 0
-601 2
-602
-7
-700 -0.03
-701 0.1
-99
-603
-7
-700 -0.02
-701 0.1
-99
-99
-8
-802 0
-803 2
-800 0
-801 360
-804
-7
-700 -0.02
-701 0.09
-99
-805
-7
-700 0
-701 0.11
-99
-99
-12
-1200 2
-1201 2
-1202
-7
-700 -0.03
-701 0.1
-99
-1203 
-1204 0
-99
-6
-600 0
-601 2
-602
-7
-700 0.119
-701 0
-99
-603
-7
-700 0.149
-701 0
-99
-99
-12
-1200 3
-1201 1
-1202
-7
-700 0.149
-701 0
-99
-1203 Status
-1204 0
-99
-13
-1300 0
-1301 7
-1302 2
-1305 1
-1303
-7
-700 0.0195
-701 0.1125
-99
-1304 0
-99
-5
-500 2
-501 0
-504 4
-502
-7
-700 0.029
-701 -0.025
-99
-503
-7
-700 0.119
-701 0.005
-99
-99
-13
-1300 9
-1301 7
-1302 2
-1305 4
-1303
-7
-700 0.046
-701 0.0015
-99
-1304 0
-99
-99
-302 0
-303 0
-99
 99
 124
 2
@@ -14718,7 +14399,7 @@
 125
 2
 10
-1000 BodyText0
+1000 BodyText21
 1002 BodyText134
 1005
 0
@@ -14787,7 +14468,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 BodyText1
+1000 BodyText22
 1002 BodyText133
 1005
 0
@@ -14856,7 +14537,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 BodyText2
+1000 BodyText23
 1002 BodyText132
 1005
 0
@@ -14925,7 +14606,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 BodyText3
+1000 BodyText24
 1002 BodyText131
 1005
 0
@@ -14994,7 +14675,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 BodyText4
+1000 BodyText25
 1002 BodyText128
 1005
 0
@@ -15063,7 +14744,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 BodyText5
+1000 BodyText26
 1002 BodyText126
 1005
 0
@@ -15131,7 +14812,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 Inv0
+1000 Inv31
 1002 Inv1
 1005
 0
@@ -15198,7 +14879,74 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 StoDp0
+1000 And32
+1002 And10
+1005
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1006 2.149
+1007 1.97
+1008 5.475
+1009 5.325
+1013 2.149
+1014 1.97
+1015 5.475
+1016 5.325
+1003
+6
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1004
+"And10"
+1001
+7
+700 2
+701 5.35
+99
+1010 $host-W-And10
+1011 Status
+1012 0
+1017 0
+99
+10
+1000 StoDp144
 1002 StoDp28
 1005
 0
@@ -15260,12 +15008,12 @@ CurciutBreaker, Contactor"
 701 5.35
 99
 1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr
-1011 AggrReady
+1011 AggrReady#1
 1012 0
 1017 0
 99
 10
-1000 Text6
+1000 Text27
 1002 Text125
 1005
 0
@@ -15327,12 +15075,12 @@ CurciutBreaker, Contactor"
 701 5.25
 99
 1010 $host-W-Text125
-1011 AggrReady
+1011 
 1012 3
 1017 0
 99
 10
-1000 And2
+1000 And33
 1002 On
 1005
 0
@@ -15399,7 +15147,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 GetDp1
+1000 GetDp145
 1002 GetDp48
 1005
 0
@@ -15461,12 +15209,12 @@ CurciutBreaker, Contactor"
 701 5.7
 99
 1010 $PlcFo:OtherManufacturer-Class-Eurotherm_TC3001AggrFo
-1011 DisableSup
+1011 DisableSup#1
 1012 0
 1017 0
 99
 10
-1000 StoAp2
+1000 StoAp146
 1002 StoAp47
 1005
 0
@@ -15527,13 +15275,13 @@ CurciutBreaker, Contactor"
 700 3.3
 701 5.65
 99
-1010 $host-W-StoAp47
-1011 DisableSup
+1010 $PlcFo:OtherManufacturer-Class-Eurotherm_TC3001AggrFo
+1011 SetValue#1
 1012 3
 1017 0
 99
 10
-1000 GetDp3
+1000 GetDp147
 1002 GetDp46
 1005
 0
@@ -15595,12 +15343,12 @@ CurciutBreaker, Contactor"
 701 4.1
 99
 1010 $PlcFo:OtherManufacturer-Class-Eurotherm_TC3001AggrFo
-1011 Err
+1011 Err#1
 1012 0
 1017 0
 99
 10
-1000 Wait3
+1000 Wait34
 1002 ShutDown
 1005
 0
@@ -15668,7 +15416,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 StoDp4
+1000 StoDp148
 1002 StoDp27
 1005
 0
@@ -15730,12 +15478,12 @@ CurciutBreaker, Contactor"
 701 6.55
 99
 1010 $PlcFo:OtherManufacturer-Class-Eurotherm_TC3001AggrFo
-1011 AutoMode
+1011 AutoMode#1
 1012 0
 1017 0
 99
 10
-1000 GetDp5
+1000 GetDp149
 1002 GetDp45
 1005
 0
@@ -15797,12 +15545,12 @@ CurciutBreaker, Contactor"
 701 10.8
 99
 1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr.TC3001
-1011 IndWarning
+1011 IndWarning#1
 1012 0
 1017 0
 99
 10
-1000 GetDp6
+1000 GetDp150
 1002 GetDp44
 1005
 0
@@ -15864,12 +15612,12 @@ CurciutBreaker, Contactor"
 701 10.4
 99
 1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr.TC3001
-1011 IndError
+1011 IndError#1
 1012 0
 1017 0
 99
 10
-1000 BaseElHeaterFo0
+1000 BaseElHeaterFo12
 1002 Heater
 1005
 0
@@ -15931,12 +15679,12 @@ CurciutBreaker, Contactor"
 701 4.85
 99
 1010 $host-W-Heater
-1011 IndError
+1011 
 1012 3
 1017 0
 99
 10
-1000 Eurotherm_TC3001Fo1
+1000 Eurotherm_TC3001Fo13
 1002 Eurot_TC3001Fo
 1005
 0
@@ -15998,12 +15746,12 @@ CurciutBreaker, Contactor"
 701 5.5
 99
 1010 $host-W-Eurot_TC3001Fo
-1011 IndError
+1011 
 1012 3
 1017 0
 99
 10
-1000 StoDp7
+1000 StoDp151
 1002 StoDp26
 1005
 0
@@ -16065,12 +15813,12 @@ CurciutBreaker, Contactor"
 701 1.65
 99
 1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr
-1011 SupDisabled
+1011 SupDisabled#1
 1012 0
 1017 0
 99
 10
-1000 GetDp8
+1000 GetDp152
 1002 GetDp42
 1005
 0
@@ -16132,12 +15880,12 @@ CurciutBreaker, Contactor"
 701 1.65
 99
 1010 $PlcFo:OtherManufacturer-Class-Eurotherm_TC3001AggrFo
-1011 DisableSup
+1011 DisableSup#1
 1012 0
 1017 0
 99
 10
-1000 FirstScan0
+1000 FirstScan1
 1002 FirstScan119
 1005
 0
@@ -16198,12 +15946,12 @@ CurciutBreaker, Contactor"
 701 8.2
 99
 1010 $host-W-FirstScan119
-1011 DisableSup
+1011 
 1012 3
 1017 0
 99
 10
-1000 CArea0
+1000 CArea3
 1002 Init
 1005
 0
@@ -16270,7 +16018,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 GetDp10
+1000 GetDp154
 1002 GetDp41
 1005
 0
@@ -16332,12 +16080,12 @@ CurciutBreaker, Contactor"
 701 3.6
 99
 1010 $PlcFo:OtherManufacturer-Class-Eurotherm_TC3001AggrFo
-1011 DisableSup
+1011 DisableSup#1
 1012 0
 1017 0
 99
 10
-1000 GetDp11
+1000 GetDp155
 1002 GetDp40
 1005
 0
@@ -16399,12 +16147,12 @@ CurciutBreaker, Contactor"
 701 4.5
 99
 1010 $PlcFo:OtherManufacturer-Class-Eurotherm_TC3001AggrFo
-1011 DisableSup
+1011 DisableSup#1
 1012 0
 1017 0
 99
 10
-1000 GetDp12
+1000 GetDp156
 1002 GetDp38
 1005
 0
@@ -16466,12 +16214,12 @@ CurciutBreaker, Contactor"
 701 6.45
 99
 1010 $PlcFo:OtherManufacturer-Class-Eurotherm_TC3001AggrFo
-1011 ExtControl
+1011 ExtControl#1
 1012 0
 1017 0
 99
 10
-1000 CompModeAFo2
+1000 CompModeAFo14
 1002 Mode
 1005
 0
@@ -16533,12 +16281,12 @@ CurciutBreaker, Contactor"
 701 6.45
 99
 1010 $host-W-Mode
-1011 ExtControl
+1011 
 1012 3
 1017 0
 99
 10
-1000 Or4
+1000 Or35
 1002 Or16
 1005
 0
@@ -16605,7 +16353,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 Disabled13
+1000 Disabled157
 1002 Disabled116
 1005
 0
@@ -16672,7 +16420,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 Disabled14
+1000 Disabled158
 1002 Disabled112
 1005
 0
@@ -16739,7 +16487,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 Or5
+1000 Or36
 1002 Or13
 1005
 0
@@ -16806,7 +16554,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 GetDp15
+1000 GetDp159
 1002 GetDp37
 1005
 0
@@ -16868,12 +16616,12 @@ CurciutBreaker, Contactor"
 701 5.6
 99
 1010 $PlcFo:OtherManufacturer-Class-Eurotherm_TC3001AggrFo
-1011 PowerInterlock
+1011 PowerInterlock#1
 1012 0
 1017 0
 99
 10
-1000 And6
+1000 And37
 1002 NoCo
 1005
 0
@@ -16940,7 +16688,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 Disabled16
+1000 Disabled160
 1002 Disabled107
 1005
 0
@@ -17007,7 +16755,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 GetDp17
+1000 GetDp161
 1002 GetDp36
 1005
 0
@@ -17069,12 +16817,12 @@ CurciutBreaker, Contactor"
 701 11.05
 99
 1010 $host-W-PowerOn
-1011 Feedback
+1011 Feedback#1
 1012 0
 1017 0
 99
 10
-1000 GetDp18
+1000 GetDp162
 1002 GetDp35
 1005
 0
@@ -17136,12 +16884,12 @@ CurciutBreaker, Contactor"
 701 5.65
 99
 1010 $host-W-PowerOn
-1011 Feedback
+1011 Feedback#1
 1012 0
 1017 0
 99
 10
-1000 Disabled19
+1000 Disabled163
 1002 Disabled106
 1005
 0
@@ -17208,7 +16956,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 Or7
+1000 Or38
 1002 Or11
 1005
 0
@@ -17275,7 +17023,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 Or8
+1000 Or39
 1002 Pon
 1005
 0
@@ -17342,7 +17090,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 Or9
+1000 Or40
 1002 PowerFb
 1005
 0
@@ -17409,7 +17157,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 Disabled20
+1000 Disabled164
 1002 Disabled98
 1005
 0
@@ -17476,7 +17224,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 CArea1
+1000 CArea4
 1002 HasContactor
 1005
 0
@@ -17543,7 +17291,7 @@ CurciutBreaker, Contactor"
 1017 1
 99
 10
-1000 Text7
+1000 Text28
 1002 Text95
 1005
 0
@@ -17605,12 +17353,12 @@ CurciutBreaker, Contactor"
 701 5.4
 99
 1010 $host-W-Text95
-1011 DisableContactor
+1011 
 1012 3
 1017 0
 99
 10
-1000 Text8
+1000 Text29
 1002 Text93
 1005
 0
@@ -17672,12 +17420,12 @@ CurciutBreaker, Contactor"
 701 3.8
 99
 1010 $host-W-Text93
-1011 DisableContactor
+1011 
 1012 3
 1017 0
 99
 10
-1000 Text9
+1000 Text30
 1002 Text92
 1005
 0
@@ -17739,12 +17487,12 @@ CurciutBreaker, Contactor"
 701 4.05
 99
 1010 $host-W-Text92
-1011 DisableContactor
+1011 
 1012 3
 1017 0
 99
 10
-1000 Text10
+1000 Text31
 1002 Text91
 1005
 0
@@ -17806,12 +17554,12 @@ CurciutBreaker, Contactor"
 701 4.2
 99
 1010 $host-W-Text91
-1011 DisableContactor
+1011 
 1012 3
 1017 0
 99
 10
-1000 Text11
+1000 Text32
 1002 Text90
 1005
 0
@@ -17873,12 +17621,12 @@ CurciutBreaker, Contactor"
 701 3.95
 99
 1010 $host-W-Text90
-1011 DisableContactor
+1011 
 1012 3
 1017 0
 99
 10
-1000 Text12
+1000 Text33
 1002 Text87
 1005
 0
@@ -17940,12 +17688,12 @@ CurciutBreaker, Contactor"
 701 6.25
 99
 1010 $host-W-Text87
-1011 DisableContactor
+1011 
 1012 3
 1017 0
 99
 10
-1000 Text13
+1000 Text34
 1002 Text84
 1005
 0
@@ -18007,12 +17755,12 @@ CurciutBreaker, Contactor"
 701 6.4
 99
 1010 $host-W-Text84
-1011 DisableContactor
+1011 
 1012 3
 1017 0
 99
 10
-1000 Head14
+1000 Head35
 1002 Head83
 1005
 0
@@ -18074,12 +17822,12 @@ CurciutBreaker, Contactor"
 701 12.05
 99
 1010 $host-W-Head83
-1011 DisableContactor
+1011 
 1012 3
 1017 0
 99
 10
-1000 Text15
+1000 Text36
 1002 Text82
 1005
 0
@@ -18141,12 +17889,12 @@ CurciutBreaker, Contactor"
 701 9
 99
 1010 $host-W-Text82
-1011 DisableContactor
+1011 
 1012 3
 1017 0
 99
 10
-1000 Text16
+1000 Text37
 1002 Text81
 1005
 0
@@ -18208,12 +17956,12 @@ CurciutBreaker, Contactor"
 701 8.7
 99
 1010 $host-W-Text81
-1011 DisableContactor
+1011 
 1012 3
 1017 0
 99
 10
-1000 GetDp22
+1000 GetDp166
 1002 GetDp34
 1005
 0
@@ -18275,12 +18023,12 @@ CurciutBreaker, Contactor"
 701 10.9
 99
 1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr.Heater
-1011 IndWarning
+1011 IndWarning#1
 1012 0
 1017 0
 99
 10
-1000 GetDp23
+1000 GetDp167
 1002 GetDp33
 1005
 0
@@ -18342,12 +18090,12 @@ CurciutBreaker, Contactor"
 701 10.35
 99
 1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr.Heater
-1011 IndError
+1011 IndError#1
 1012 0
 1017 0
 99
 10
-1000 Disabled24
+1000 Disabled168
 1002 Disabled79
 1005
 0
@@ -18414,7 +18162,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 CArea2
+1000 CArea5
 1002 HasCircuitBreaker
 1005
 0
@@ -18481,7 +18229,7 @@ CurciutBreaker, Contactor"
 1017 1
 99
 10
-1000 GetDi26
+1000 GetDi170
 1002 GetDi8
 1005
 0
@@ -18548,7 +18296,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 GetDp27
+1000 GetDp171
 1002 GetDp30
 1005
 0
@@ -18610,12 +18358,12 @@ CurciutBreaker, Contactor"
 701 8.95
 99
 1010 $PlcFo:OtherManufacturer-Class-Eurotherm_TC3001AggrFo
-1011 PowerInterlock
+1011 PowerInterlock#1
 1012 0
 1017 0
 99
 10
-1000 Or10
+1000 Or41
 1002 NoPowOnOk
 1005
 0
@@ -18682,7 +18430,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 NameToStr28
+1000 NameToStr172
 1002 NameToStr70
 1005
 0
@@ -18744,12 +18492,12 @@ CurciutBreaker, Contactor"
 701 8.5
 99
 1010 $host-W-NameToStr70
-1011 Status
+1011 
 1012 3
 1017 0
 99
 10
-1000 Strcat11
+1000 Strcat42
 1002 Strcat69
 1005
 0
@@ -18811,12 +18559,12 @@ CurciutBreaker, Contactor"
 701 8.45
 99
 1010 $host-W-Strcat69
-1011 Status
+1011 
 1012 3
 1017 0
 99
 10
-1000 StoSp29
+1000 StoSp173
 1002 StoSp2
 1005
 0
@@ -18877,13 +18625,13 @@ CurciutBreaker, Contactor"
 700 2.15
 701 8.45
 99
-1010 $host-W-StoSp2
-1011 Status
+1010 $host-W-DSup2
+1011 DetectText#1
 1012 3
 1017 0
 99
 10
-1000 DSup30
+1000 DSup174
 1002 DSup2
 1005
 0
@@ -18951,7 +18699,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 GetSp31
+1000 GetSp175
 1002 GetSp2
 1005
 0
@@ -19012,13 +18760,13 @@ CurciutBreaker, Contactor"
 700 1.15
 701 8.45
 99
-1010 $host-W-GetSp2
-1011 Action
+1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr
+1011 AlarmTextPowOnNotOk#1
 1012 3
 1017 0
 99
 10
-1000 And12
+1000 And43
 1002 PowNoOk
 1005
 0
@@ -19085,7 +18833,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 GetDp32
+1000 GetDp176
 1002 GetDp28
 1005
 0
@@ -19147,12 +18895,12 @@ CurciutBreaker, Contactor"
 701 9.35
 99
 1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr
-1011 OpPowerOn
+1011 OpPowerOn#1
 1012 0
 1017 0
 99
 10
-1000 GetDp33
+1000 GetDp177
 1002 GetDp27
 1005
 0
@@ -19214,12 +18962,12 @@ CurciutBreaker, Contactor"
 701 8.8
 99
 1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr.Mode
-1011 OpManStart
+1011 OpManStart#1
 1012 0
 1017 0
 99
 10
-1000 GetDp34
+1000 GetDp178
 1002 GetDp26
 1005
 0
@@ -19281,12 +19029,12 @@ CurciutBreaker, Contactor"
 701 8.75
 99
 1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr
-1011 Ready
+1011 Ready#1
 1012 0
 1017 0
 99
 10
-1000 And13
+1000 And44
 1002 NotReady
 1005
 0
@@ -19353,7 +19101,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 DSup35
+1000 DSup179
 1002 DSup1
 1005
 0
@@ -19421,7 +19169,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 StoSp36
+1000 StoSp180
 1002 StoSp1
 1005
 0
@@ -19482,13 +19230,13 @@ CurciutBreaker, Contactor"
 700 2.15
 701 8.3
 99
-1010 $host-W-StoSp1
-1011 Action
+1010 $host-W-DSup1
+1011 DetectText#1
 1012 3
 1017 0
 99
 10
-1000 Strcat14
+1000 Strcat45
 1002 Strcat66
 1005
 0
@@ -19550,12 +19298,12 @@ CurciutBreaker, Contactor"
 701 8.3
 99
 1010 $host-W-Strcat66
-1011 Action
+1011 
 1012 3
 1017 0
 99
 10
-1000 GetSp37
+1000 GetSp181
 1002 GetSp1
 1005
 0
@@ -19616,13 +19364,13 @@ CurciutBreaker, Contactor"
 700 1.15
 701 8.3
 99
-1010 $host-W-GetSp1
-1011 Action
+1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr
+1011 AlarmTextStartNoOk#1
 1012 3
 1017 0
 99
 10
-1000 NameToStr38
+1000 NameToStr182
 1002 NameToStr65
 1005
 0
@@ -19684,12 +19432,12 @@ CurciutBreaker, Contactor"
 701 8.35
 99
 1010 $host-W-NameToStr65
-1011 Action
+1011 
 1012 3
 1017 0
 99
 10
-1000 StoDp39
+1000 StoDp183
 1002 StoDp18
 1005
 0
@@ -19751,12 +19499,12 @@ CurciutBreaker, Contactor"
 701 4.15
 99
 1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr
-1011 PowOnOffDim
+1011 PowOnOffDim#1
 1012 0
 1017 0
 99
 10
-1000 StoDp40
+1000 StoDp184
 1002 StoDp17
 1005
 0
@@ -19818,12 +19566,12 @@ CurciutBreaker, Contactor"
 701 1.55
 99
 1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr
-1011 PowExtInterlock
+1011 PowExtInterlock#1
 1012 0
 1017 0
 99
 10
-1000 GetDp41
+1000 GetDp185
 1002 GetDp24
 1005
 0
@@ -19885,12 +19633,12 @@ CurciutBreaker, Contactor"
 701 1.55
 99
 1010 $PlcFo:OtherManufacturer-Class-Eurotherm_TC3001AggrFo
-1011 PowerInterlock
+1011 PowerInterlock#1
 1012 0
 1017 0
 99
 10
-1000 GetDp42
+1000 GetDp186
 1002 GetDp23
 1005
 0
@@ -19952,12 +19700,12 @@ CurciutBreaker, Contactor"
 701 10.3
 99
 1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr.Contactor
-1011 IndError
+1011 IndError#1
 1012 0
 1017 0
 99
 10
-1000 GetDp43
+1000 GetDp187
 1002 GetDp22
 1005
 0
@@ -20019,12 +19767,12 @@ CurciutBreaker, Contactor"
 701 5.4
 99
 1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr
-1011 Ready
+1011 Ready#1
 1012 0
 1017 0
 99
 10
-1000 GetDi44
+1000 GetDi188
 1002 GetDi4
 1005
 0
@@ -20091,7 +19839,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 GetDp45
+1000 GetDp189
 1002 GetDp21
 1005
 0
@@ -20153,12 +19901,12 @@ CurciutBreaker, Contactor"
 701 10.85
 99
 1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr
-1011 ExtInterlock
+1011 ExtInterlock#1
 1012 0
 1017 0
 99
 10
-1000 Or15
+1000 Or46
 1002 Yellow
 1005
 0
@@ -20225,7 +19973,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 GetAp46
+1000 GetAp190
 1002 GetAp3
 1005
 0
@@ -20287,12 +20035,12 @@ CurciutBreaker, Contactor"
 701 6.65
 99
 1010 $PlcFo:OtherManufacturer-Class-Eurotherm_TC3001AggrFo
-1011 ReferenceExt
+1011 ReferenceExt#1
 1012 3
 1017 0
 99
 10
-1000 And16
+1000 And47
 1002 PowerStart
 1005
 0
@@ -20359,7 +20107,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 And17
+1000 And48
 1002 ReadyHeat
 1005
 0
@@ -20426,7 +20174,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 GetDp47
+1000 GetDp191
 1002 GetDp17
 1005
 0
@@ -20488,12 +20236,12 @@ CurciutBreaker, Contactor"
 701 4.2
 99
 1010 $PlcFo:OtherManufacturer-Class-Eurotherm_TC3001AggrFo
-1011 PowerInterlock
+1011 PowerInterlock#1
 1012 0
 1017 0
 99
 10
-1000 ResDp48
+1000 ResDp192
 1002 ResDp2
 1005
 0
@@ -20555,12 +20303,12 @@ CurciutBreaker, Contactor"
 701 12.15
 99
 1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr
-1011 OpPowerOn
+1011 OpPowerOn#1
 1012 0
 1017 0
 99
 10
-1000 ResDp49
+1000 ResDp193
 1002 ResDp1
 1005
 0
@@ -20622,12 +20370,12 @@ CurciutBreaker, Contactor"
 701 12.1
 99
 1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr
-1011 OpPowerOff
+1011 OpPowerOff#1
 1012 0
 1017 0
 99
 10
-1000 GetDp50
+1000 GetDp194
 1002 GetDp15
 1005
 0
@@ -20689,12 +20437,12 @@ CurciutBreaker, Contactor"
 701 3.5
 99
 1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr
-1011 OpPowerOff
+1011 OpPowerOff#1
 1012 0
 1017 0
 99
 10
-1000 Or18
+1000 Or49
 1002 PowerOff
 1005
 0
@@ -20761,7 +20509,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 GetDp51
+1000 GetDp195
 1002 GetDp14
 1005
 0
@@ -20823,12 +20571,12 @@ CurciutBreaker, Contactor"
 701 3.25
 99
 1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr
-1011 OpPowerOn
+1011 OpPowerOn#1
 1012 0
 1017 0
 99
 10
-1000 SR_R3
+1000 SR_R15
 1002 Power
 1005
 0
@@ -20895,7 +20643,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 Document0
+1000 Document7
 1002 Document7
 1005
 0
@@ -20954,7 +20702,7 @@ CurciutBreaker, Contactor"
 "Class-Eurotherm_TC3001AggrFo-Code"
 "W"
 "5"
-"15-OCT-2007 17:31"
+"15-OCT-2007 18:11"
 "JE"
 1001
 7
@@ -20962,12 +20710,12 @@ CurciutBreaker, Contactor"
 701 10
 99
 1010 $host-W-Document7
-1011 Status
+1011 
 1012 3
 1017 0
 99
 10
-1000 Document1
+1000 Document8
 1002 Document6
 1005
 0
@@ -21026,7 +20774,7 @@ CurciutBreaker, Contactor"
 "Class-Eurotherm_TC3001AggrFo-Code"
 "W"
 "4"
-"15-OCT-2007 17:31"
+"15-OCT-2007 18:11"
 "JE"
 1001
 7
@@ -21034,12 +20782,12 @@ CurciutBreaker, Contactor"
 701 7.6
 99
 1010 $host-W-Document6
-1011 Status
+1011 
 1012 3
 1017 0
 99
 10
-1000 StoDp52
+1000 StoDp196
 1002 StoDp8
 1005
 0
@@ -21101,12 +20849,12 @@ CurciutBreaker, Contactor"
 701 5.5
 99
 1010 $PlcFo:OtherManufacturer-Class-Eurotherm_TC3001AggrFo
-1011 On
+1011 On#1
 1012 0
 1017 0
 99
 10
-1000 Or19
+1000 Or50
 1002 Red
 1005
 0
@@ -21173,7 +20921,7 @@ CurciutBreaker, Contactor"
 1017 0
 99
 10
-1000 BodyText17
+1000 BodyText38
 1002 BodyText34
 1005
 0
@@ -21235,12 +20983,12 @@ CurciutBreaker, Contactor"
 701 10.1
 99
 1010 $host-W-BodyText34
-1011 Status
+1011 
 1012 3
 1017 0
 99
 10
-1000 BodyText18
+1000 BodyText39
 1002 BodyText31
 1005
 0
@@ -21305,12 +21053,12 @@ NB! start/stop is used as on/off."
 701 6.75
 99
 1010 $host-W-BodyText31
-1011 Status
+1011 
 1012 3
 1017 0
 99
 10
-1000 BaseCircuitBreakerFo4
+1000 BaseCircuitBreakerFo16
 1002 CircuitBreaker
 1005
 0
@@ -21372,12 +21120,12 @@ NB! start/stop is used as on/off."
 701 4.5
 99
 1010 $host-W-CircuitBreaker
-1011 Status
+1011 
 1012 3
 1017 0
 99
 10
-1000 BodyText19
+1000 BodyText40
 1002 BodyText19
 1005
 0
@@ -21441,12 +21189,12 @@ Yellow = Warning"
 701 10.3
 99
 1010 $host-W-BodyText19
-1011 Status
+1011 
 1012 3
 1017 0
 99
 10
-1000 StoDp53
+1000 StoDp197
 1002 StoDp5
 1005
 0
@@ -21508,12 +21256,12 @@ Yellow = Warning"
 701 3.9
 99
 1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr
-1011 Ready
+1011 Ready#1
 1012 0
 1017 0
 99
 10
-1000 StoDp54
+1000 StoDp198
 1002 StoDp4
 1005
 0
@@ -21575,12 +21323,12 @@ Yellow = Warning"
 701 10.8
 99
 1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr
-1011 IndWarning
+1011 IndWarning#1
 1012 0
 1017 0
 99
 10
-1000 StoDp55
+1000 StoDp199
 1002 StoDp3
 1005
 0
@@ -21642,12 +21390,12 @@ Yellow = Warning"
 701 10.2
 99
 1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr
-1011 IndError
+1011 IndError#1
 1012 0
 1017 0
 99
 10
-1000 GetDp56
+1000 GetDp200
 1002 GetDp3
 1005
 0
@@ -21709,12 +21457,12 @@ Yellow = Warning"
 701 6.5
 99
 1010 $PlcFo:OtherManufacturer-Class-Eurotherm_TC3001AggrFo
-1011 ExtOn
+1011 ExtOn#1
 1012 0
 1017 0
 99
 10
-1000 StoDp57
+1000 StoDp201
 1002 StoDp2
 1005
 0
@@ -21776,12 +21524,12 @@ Yellow = Warning"
 701 1.45
 99
 1010 $PlcMain:OtherManufacturer-Class-Eurotherm_TC3001Aggr
-1011 ExtInterlock
+1011 ExtInterlock#1
 1012 0
 1017 0
 99
 10
-1000 GetDp58
+1000 GetDp202
 1002 GetDp2
 1005
 0
@@ -21843,12 +21591,12 @@ Yellow = Warning"
 701 1.45
 99
 1010 $PlcFo:OtherManufacturer-Class-Eurotherm_TC3001AggrFo
-1011 ExtInterlock
+1011 ExtInterlock#1
 1012 0
 1017 0
 99
 10
-1000 GetDp59
+1000 GetDp203
 1002 GetDp1
 1005
 0
@@ -21910,12 +21658,12 @@ Yellow = Warning"
 701 5.35
 99
 1010 $PlcFo:OtherManufacturer-Class-Eurotherm_TC3001AggrFo
-1011 ExtInterlock
+1011 ExtInterlock#1
 1012 0
 1017 0
 99
 10
-1000 And20
+1000 And51
 1002 PowInterlockOk
 1005
 0
@@ -21982,7 +21730,7 @@ Yellow = Warning"
 1017 0
 99
 10
-1000 StoDp60
+1000 StoDp204
 1002 StoDp1
 1005
 0
@@ -22044,12 +21792,12 @@ Yellow = Warning"
 701 5.6
 99
 1010 $PlcFo:OtherManufacturer-Class-Eurotherm_TC3001AggrFo
-1011 Err
+1011 Err#1
 1012 0
 1017 0
 99
 10
-1000 And21
+1000 And52
 1002 Aready
 1005
 0
@@ -22116,7 +21864,7 @@ Yellow = Warning"
 1017 0
 99
 10
-1000 BaseContactorFo5
+1000 BaseContactorFo17
 1002 PowerOn
 1005
 0
@@ -22178,12 +21926,12 @@ Yellow = Warning"
 701 3.45
 99
 1010 $host-W-PowerOn
-1011 Status
+1011 
 1012 3
 1017 0
 99
 10
-1000 Document2
+1000 Document9
 1002 Document2
 1005
 0
@@ -22242,7 +21990,7 @@ Yellow = Warning"
 "Class-Eurotherm_TC3001AggrFo-Code"
 "W"
 "3"
-"15-OCT-2007 17:31"
+"15-OCT-2007 18:11"
 "JE"
 1001
 7
@@ -22250,12 +21998,12 @@ Yellow = Warning"
 701 5.25
 99
 1010 $host-W-Document2
-1011 Status
+1011 
 1012 3
 1017 0
 99
 10
-1000 Document3
+1000 Document10
 1002 Document1
 1005
 0
@@ -22314,7 +22062,7 @@ Yellow = Warning"
 "Class-Eurotherm_TC3001AggrFo-Code"
 "W"
 "2"
-"15-OCT-2007 17:31"
+"15-OCT-2007 18:11"
 "JE"
 1001
 7
@@ -22322,12 +22070,12 @@ Yellow = Warning"
 701 2.85
 99
 1010 $host-W-Document1
-1011 Status
+1011 
 1012 3
 1017 0
 99
 10
-1000 BodyText20
+1000 BodyText41
 1002 BodyText1
 1005
 0
@@ -22400,12 +22148,12 @@ SetValue = SV"
 701 0.8
 99
 1010 $host-W-BodyText1
-1011 Status
+1011 
 1012 3
 1017 0
 99
 10
-1000 BodyText21
+1000 BodyText42
 1002 BodyText0
 1005
 0
@@ -22467,12 +22215,12 @@ SetValue = SV"
 701 0.7
 99
 1010 $host-W-BodyText0
-1011 Status
+1011 
 1012 3
 1017 0
 99
 10
-1000 Document4
+1000 Document11
 1002 Document0
 1005
 0
@@ -22531,7 +22279,7 @@ SetValue = SV"
 "Class-Eurotherm_TC3001AggrFo-Code"
 "W"
 "1(5)"
-"15-OCT-2007 17:31"
+"15-OCT-2007 18:11"
 "JE"
 1001
 7
@@ -22539,75 +22287,8 @@ SetValue = SV"
 701 0.5
 99
 1010 $host-W-Document0
-1011 Status
+1011 
 1012 3
-1017 0
-99
-10
-1000 And23
-1002 And10
-1005
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-1006 2.149
-1007 1.97
-1008 5.475
-1009 5.325
-1013 2.149
-1014 1.97
-1015 5.475
-1016 5.325
-1003
-6
-0
-0
-0
-0
-0
-0
-0
-0
-0
-1004
-"And10"
-1001
-7
-700 2
-701 5.35
-99
-1010 $host-W-And10
-1011 Status
-1012 0
 1017 0
 99
 11
@@ -40748,6 +40429,966 @@ SetValue = SV"
 99
 11
 1100 1.97
+1101 1.65733
+1102 5.35
+1103 5.35
+1104 ConDigital
+1105 And10
+1106 Aready
+1107 0
+1108 2
+1109 2
+1110 1
+1111
+2
+6
+600 0
+601 1
+602
+7
+700 1.97
+701 5.35
+99
+603
+7
+700 1.65733
+701 5.35
+99
+99
+6
+600 0
+601 1
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+6
+600 0
+601 1
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+6
+600 0
+601 1
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+6
+600 0
+601 1
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+6
+600 0
+601 1
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+6
+600 0
+601 1
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+99
+1112
+2
+8
+802 0
+803 1
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+8
+802 0
+803 1
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+8
+802 0
+803 1
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+8
+802 0
+803 1
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+8
+802 0
+803 1
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+8
+802 0
+803 1
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+99
+1113
+2
+99
+1114
+2
+99
+1115 2
+1116 1
+1117 0
+1118 0
+1119 0
+1120
+1.97
+1.65733
+1121
+5.35
+5.35
+1122 0
+1123 0
+1124 
+1125 
+1126 
+1127 0
+1128 0
+99
+11
+1100 1.9865
+1101 1.649
+1102 5.55
+1103 5.4
+1104 ConDigital
+1105 And10
+1106 Pon
+1107 1
+1108 2
+1109 2
+1110 1
+1111
+2
+6
+600 0
+601 1
+602
+7
+700 1.649
+701 5.55
+99
+603
+7
+700 1.9115
+701 5.55
+99
+99
+6
+600 0
+601 1
+602
+7
+700 1.9365
+701 5.525
+99
+603
+7
+700 1.9365
+701 5.425
+99
+99
+6
+600 0
+601 1
+602
+7
+700 1.9615
+701 5.4
+99
+603
+7
+700 1.97
+701 5.4
+99
+99
+6
+600 0
+601 1
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+6
+600 0
+601 1
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+6
+600 0
+601 1
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+6
+600 0
+601 1
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+99
+1112
+2
+8
+802 0
+803 1
+800 270
+801 90
+804
+7
+700 1.8865
+701 5.5
+99
+805
+7
+700 1.9365
+701 5.55
+99
+99
+8
+802 0
+803 1
+800 90
+801 90
+804
+7
+700 1.9365
+701 5.4
+99
+805
+7
+700 1.9865
+701 5.45
+99
+99
+8
+802 0
+803 1
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+8
+802 0
+803 1
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+8
+802 0
+803 1
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+8
+802 0
+803 1
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+99
+1113
+2
+99
+1114
+2
+99
+1115 4
+1116 3
+1117 2
+1118 0
+1119 0
+1120
+1.649
+1.9365
+1.9365
+1.97
+1121
+5.55
+5.55
+5.4
+5.4
+1122 0
+1123 0
+1124 
+1125 
+1126 
+1127 0
+1128 0
+99
+11
+1100 2.17767
+1101 1.2865
+1102 6.55
+1103 5.35
+1104 ConDigital
+1105 Mode
+1106 And10
+1107 2
+1108 3
+1109 2
+1110 1
+1111
+2
+6
+600 0
+601 1
+602
+7
+700 2.149
+701 5.35
+99
+603
+7
+700 2.16333
+701 5.35
+99
+99
+6
+600 0
+601 1
+602
+7
+700 2.17767
+701 5.375
+99
+603
+7
+700 2.17767
+701 6.2985
+99
+99
+6
+600 0
+601 1
+602
+7
+700 2.15267
+701 6.3235
+99
+603
+7
+700 1.3115
+701 6.3235
+99
+99
+6
+600 0
+601 1
+602
+7
+700 1.2865
+701 6.3485
+99
+603
+7
+700 1.2865
+701 6.525
+99
+99
+6
+600 0
+601 1
+602
+7
+700 1.3115
+701 6.55
+99
+603
+7
+700 1.32
+701 6.55
+99
+99
+6
+600 0
+601 1
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+6
+600 0
+601 1
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+99
+1112
+2
+8
+802 0
+803 1
+800 0
+801 90
+804
+7
+700 2.149
+701 5.35
+99
+805
+7
+700 2.17767
+701 5.4
+99
+99
+8
+802 0
+803 1
+800 270
+801 90
+804
+7
+700 2.12767
+701 6.2735
+99
+805
+7
+700 2.17767
+701 6.3235
+99
+99
+8
+802 0
+803 1
+800 90
+801 90
+804
+7
+700 1.2865
+701 6.3235
+99
+805
+7
+700 1.3365
+701 6.3735
+99
+99
+8
+802 0
+803 1
+800 180
+801 90
+804
+7
+700 1.2865
+701 6.5
+99
+805
+7
+700 1.3365
+701 6.55
+99
+99
+8
+802 0
+803 1
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+8
+802 0
+803 1
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+99
+1113
+2
+99
+1114
+2
+99
+1115 6
+1116 5
+1117 4
+1118 0
+1119 0
+1120
+2.149
+2.17767
+2.17767
+1.2865
+1.2865
+1.32
+1121
+5.35
+5.35
+6.3235
+6.3235
+6.55
+6.55
+1122 0
+1123 0
+1124 
+1125 
+1126 
+1127 0
+1128 0
+99
+11
+1100 3.27
+1101 2.149
+1102 5.35
+1103 5.35
+1104 ConDigital
+1105 StoDp28
+1106 And10
+1107 0
+1108 3
+1109 2
+1110 1
+1111
+2
+6
+600 0
+601 1
+602
+7
+700 3.27
+701 5.35
+99
+603
+7
+700 2.149
+701 5.35
+99
+99
+6
+600 0
+601 1
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+6
+600 0
+601 1
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+6
+600 0
+601 1
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+6
+600 0
+601 1
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+6
+600 0
+601 1
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+6
+600 0
+601 1
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+99
+1112
+2
+8
+802 0
+803 1
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+8
+802 0
+803 1
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+8
+802 0
+803 1
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+8
+802 0
+803 1
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+8
+802 0
+803 1
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+8
+802 0
+803 1
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+99
+1113
+2
+99
+1114
+2
+99
+1115 2
+1116 1
+1117 0
+1118 0
+1119 0
+1120
+3.27
+2.149
+1121
+5.35
+5.35
+1122 0
+1123 0
+1124 
+1125 
+1126 
+1127 0
+1128 0
+99
+11
+1100 1.97
 1101 1.899
 1102 5.9
 1103 5.9
@@ -41470,966 +42111,6 @@ SetValue = SV"
 1128 0
 99
 11
-1100 1.97
-1101 1.65733
-1102 5.35
-1103 5.35
-1104 ConDigital
-1105 And10
-1106 Aready
-1107 0
-1108 2
-1109 2
-1110 1
-1111
-2
-6
-600 0
-601 1
-602
-7
-700 1.97
-701 5.35
-99
-603
-7
-700 1.65733
-701 5.35
-99
-99
-6
-600 0
-601 1
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-6
-600 0
-601 1
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-6
-600 0
-601 1
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-6
-600 0
-601 1
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-6
-600 0
-601 1
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-6
-600 0
-601 1
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-99
-1112
-2
-8
-802 0
-803 1
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-8
-802 0
-803 1
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-8
-802 0
-803 1
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-8
-802 0
-803 1
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-8
-802 0
-803 1
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-8
-802 0
-803 1
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-99
-1113
-2
-99
-1114
-2
-99
-1115 2
-1116 1
-1117 0
-1118 0
-1119 0
-1120
-1.97
-1.65733
-1121
-5.35
-5.35
-1122 0
-1123 0
-1124 
-1125 
-1126 
-1127 0
-1128 0
-99
-11
-1100 1.97
-1101 1.649
-1102 5.55
-1103 5.4
-1104 ConDigital
-1105 And10
-1106 Pon
-1107 1
-1108 2
-1109 2
-1110 1
-1111
-2
-6
-600 0
-601 1
-602
-7
-700 1.649
-701 5.55
-99
-603
-7
-700 1.87306
-701 5.55
-99
-99
-6
-600 0
-601 1
-602
-7
-700 1.89806
-701 5.525
-99
-603
-7
-700 1.89806
-701 5.425
-99
-99
-6
-600 0
-601 1
-602
-7
-700 1.92306
-701 5.4
-99
-603
-7
-700 1.97
-701 5.4
-99
-99
-6
-600 0
-601 1
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-6
-600 0
-601 1
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-6
-600 0
-601 1
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-6
-600 0
-601 1
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-99
-1112
-2
-8
-802 0
-803 1
-800 270
-801 90
-804
-7
-700 1.84806
-701 5.5
-99
-805
-7
-700 1.89806
-701 5.55
-99
-99
-8
-802 0
-803 1
-800 90
-801 90
-804
-7
-700 1.89806
-701 5.4
-99
-805
-7
-700 1.94806
-701 5.45
-99
-99
-8
-802 0
-803 1
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-8
-802 0
-803 1
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-8
-802 0
-803 1
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-8
-802 0
-803 1
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-99
-1113
-2
-99
-1114
-2
-99
-1115 4
-1116 3
-1117 2
-1118 0
-1119 0
-1120
-1.649
-1.89806
-1.89806
-1.97
-1121
-5.55
-5.55
-5.4
-5.4
-1122 0
-1123 0
-1124 
-1125 
-1126 
-1127 0
-1128 0
-99
-11
-1100 2.17767
-1101 1.2865
-1102 6.55
-1103 5.35
-1104 ConDigital
-1105 Mode
-1106 And10
-1107 2
-1108 3
-1109 2
-1110 1
-1111
-2
-6
-600 0
-601 1
-602
-7
-700 2.149
-701 5.35
-99
-603
-7
-700 2.16333
-701 5.35
-99
-99
-6
-600 0
-601 1
-602
-7
-700 2.17767
-701 5.375
-99
-603
-7
-700 2.17767
-701 6.2985
-99
-99
-6
-600 0
-601 1
-602
-7
-700 2.15267
-701 6.3235
-99
-603
-7
-700 1.3115
-701 6.3235
-99
-99
-6
-600 0
-601 1
-602
-7
-700 1.2865
-701 6.3485
-99
-603
-7
-700 1.2865
-701 6.525
-99
-99
-6
-600 0
-601 1
-602
-7
-700 1.3115
-701 6.55
-99
-603
-7
-700 1.32
-701 6.55
-99
-99
-6
-600 0
-601 1
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-6
-600 0
-601 1
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-99
-1112
-2
-8
-802 0
-803 1
-800 0
-801 90
-804
-7
-700 2.149
-701 5.35
-99
-805
-7
-700 2.17767
-701 5.4
-99
-99
-8
-802 0
-803 1
-800 270
-801 90
-804
-7
-700 2.12767
-701 6.2735
-99
-805
-7
-700 2.17767
-701 6.3235
-99
-99
-8
-802 0
-803 1
-800 90
-801 90
-804
-7
-700 1.2865
-701 6.3235
-99
-805
-7
-700 1.3365
-701 6.3735
-99
-99
-8
-802 0
-803 1
-800 180
-801 90
-804
-7
-700 1.2865
-701 6.5
-99
-805
-7
-700 1.3365
-701 6.55
-99
-99
-8
-802 0
-803 1
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-8
-802 0
-803 1
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-99
-1113
-2
-99
-1114
-2
-99
-1115 6
-1116 5
-1117 4
-1118 0
-1119 0
-1120
-2.149
-2.17767
-2.17767
-1.2865
-1.2865
-1.32
-1121
-5.35
-5.35
-6.3235
-6.3235
-6.55
-6.55
-1122 0
-1123 0
-1124 
-1125 
-1126 
-1127 0
-1128 0
-99
-11
-1100 3.27
-1101 2.149
-1102 5.35
-1103 5.35
-1104 ConDigital
-1105 StoDp28
-1106 And10
-1107 0
-1108 3
-1109 2
-1110 1
-1111
-2
-6
-600 0
-601 1
-602
-7
-700 3.27
-701 5.35
-99
-603
-7
-700 2.149
-701 5.35
-99
-99
-6
-600 0
-601 1
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-6
-600 0
-601 1
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-6
-600 0
-601 1
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-6
-600 0
-601 1
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-6
-600 0
-601 1
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-6
-600 0
-601 1
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-99
-1112
-2
-8
-802 0
-803 1
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-8
-802 0
-803 1
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-8
-802 0
-803 1
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-8
-802 0
-803 1
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-8
-802 0
-803 1
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-8
-802 0
-803 1
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-99
-1113
-2
-99
-1114
-2
-99
-1115 2
-1116 1
-1117 0
-1118 0
-1119 0
-1120
-3.27
-2.149
-1121
-5.35
-5.35
-1122 1073046093
-1123 -929457767
-1124 
-1125 
-1126 
-1127 0
-1128 0
-99
-11
 1100 2.7735
 1101 1.9345
 1102 5.55
@@ -42666,8 +42347,8 @@ SetValue = SV"
 5.275
 5.45
 5.45
-1122 -420811034
-1123 -286856466
+1122 0
+1123 0
 1124 
 1125 
 1126 

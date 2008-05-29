@@ -15,7 +15,7 @@
 117 0
 118 0
 119 0
-120 142195120
+120 921
 121 Claes context
 122 0
 126 0.05
@@ -29,7 +29,7 @@
 123
 2
 3
-300 Text119
+300 Text393
 301
 2
 5
@@ -75,7 +75,7 @@
 303 0
 99
 3
-300 ABB_ACS800_1Sim45
+300 BaseFcPPO3Sim104
 301
 2
 5
@@ -89,7 +89,7 @@
 99
 503
 7
-700 0.255
+700 0.290222
 701 0.025
 99
 99
@@ -103,17 +103,17 @@
 99
 603
 7
-700 0.255
+700 0.290222
 701 -0.025
 99
 99
 9
 900 2
 901 7
-902 ACS800_1Sim
+902 BaseFcPPO3Sim
 903
 7
-700 0.034
+700 0.0346111
 701 -0.0385
 99
 99
@@ -124,7 +124,7 @@
 1305 1
 1303
 7
-700 0.0352778
+700 0.034
 701 0.0115
 99
 1304 0
@@ -135,12 +135,12 @@
 504 4
 502
 7
-700 0.165
+700 0.200222
 701 -0.075
 99
 503
 7
-700 0.255
+700 0.290222
 701 -0.045
 99
 99
@@ -151,7 +151,7 @@
 1305 4
 1303
 7
-700 0.182
+700 0.217222
 701 -0.0485
 99
 1304 0
@@ -161,7 +161,7 @@
 303 0
 99
 3
-300 BodyText120
+300 BodyText394
 301
 2
 5
@@ -175,7 +175,7 @@
 99
 503
 7
-700 0.513222
+700 0.562111
 701 0.122
 99
 99
@@ -196,7 +196,7 @@
 1201 1
 1202
 7
-700 0.513222
+700 0.562111
 701 0.05
 99
 1203 
@@ -207,7 +207,7 @@
 303 0
 99
 3
-300 StoDp334
+300 StoDp1580
 301
 2
 5
@@ -318,7 +318,7 @@
 303 0
 99
 3
-300 GetDi335
+300 GetDi1581
 301
 2
 5
@@ -429,7 +429,7 @@
 303 0
 99
 3
-300 CArea4
+300 CArea69
 301
 2
 5
@@ -613,7 +613,7 @@
 303 1
 99
 3
-300 CArea5
+300 CArea70
 301
 2
 5
@@ -797,7 +797,7 @@
 303 1
 99
 3
-300 CArea6
+300 CArea71
 301
 2
 5
@@ -981,7 +981,7 @@
 303 1
 99
 3
-300 GetDi339
+300 GetDi1585
 301
 2
 5
@@ -1092,7 +1092,7 @@
 303 0
 99
 3
-300 GetDi340
+300 GetDi1586
 301
 2
 5
@@ -1203,7 +1203,7 @@
 303 0
 99
 3
-300 GetDi341
+300 GetDi1587
 301
 2
 5
@@ -1314,7 +1314,7 @@
 303 0
 99
 3
-300 StoDp342
+300 StoDp1588
 301
 2
 5
@@ -1425,7 +1425,7 @@
 303 0
 99
 3
-300 StoDp343
+300 StoDp1589
 301
 2
 5
@@ -1536,7 +1536,7 @@
 303 0
 99
 3
-300 StoDp344
+300 StoDp1590
 301
 2
 5
@@ -1663,7 +1663,7 @@
 303 0
 99
 3
-300 Text121
+300 Text395
 301
 2
 5
@@ -1709,7 +1709,7 @@
 303 0
 99
 3
-300 BaseContactorSim46
+300 BaseContactorSim105
 301
 2
 5
@@ -1795,7 +1795,7 @@
 303 0
 99
 3
-300 GetDp345
+300 GetDp1591
 301
 2
 5
@@ -1906,7 +1906,7 @@
 303 0
 99
 3
-300 ResDp346
+300 ResDp1592
 301
 2
 5
@@ -2017,7 +2017,7 @@
 303 0
 99
 3
-300 GetDp347
+300 GetDp1593
 301
 2
 5
@@ -2128,7 +2128,7 @@
 303 0
 99
 3
-300 ResDi348
+300 ResDi1594
 301
 2
 5
@@ -2239,7 +2239,7 @@
 303 0
 99
 3
-300 Disabled349
+300 Disabled1595
 301
 2
 5
@@ -2350,7 +2350,7 @@
 303 0
 99
 3
-300 Disabled350
+300 Disabled1596
 301
 2
 5
@@ -2461,7 +2461,7 @@
 303 0
 99
 3
-300 Disabled351
+300 Disabled1597
 301
 2
 5
@@ -2572,7 +2572,7 @@
 303 0
 99
 3
-300 GetDp352
+300 GetDp1598
 301
 2
 5
@@ -2683,7 +2683,7 @@
 303 0
 99
 3
-300 GetDp353
+300 GetDp1599
 301
 2
 5
@@ -2794,7 +2794,7 @@
 303 0
 99
 3
-300 BaseMotorSim47
+300 BaseMotorSim106
 301
 2
 5
@@ -2880,7 +2880,7 @@
 303 0
 99
 3
-300 Text122
+300 Text396
 301
 2
 5
@@ -2926,7 +2926,7 @@
 303 0
 99
 3
-300 ToggleDi354
+300 ToggleDi1600
 301
 2
 5
@@ -3037,7 +3037,7 @@
 303 0
 99
 3
-300 ResDp355
+300 ResDp1601
 301
 2
 5
@@ -3148,7 +3148,7 @@
 303 0
 99
 3
-300 SetDi356
+300 SetDi1602
 301
 2
 5
@@ -3259,7 +3259,7 @@
 303 0
 99
 3
-300 FirstScan1
+300 FirstScan20
 301
 2
 5
@@ -3317,7 +3317,7 @@
 303 0
 99
 3
-300 ResDp357
+300 ResDp1603
 301
 2
 5
@@ -3428,7 +3428,7 @@
 303 0
 99
 3
-300 FirstScan2
+300 FirstScan21
 301
 2
 5
@@ -3486,7 +3486,7 @@
 303 0
 99
 3
-300 SetDi358
+300 SetDi1604
 301
 2
 5
@@ -3597,7 +3597,7 @@
 303 0
 99
 3
-300 ToggleDi359
+300 ToggleDi1605
 301
 2
 5
@@ -3708,7 +3708,7 @@
 303 0
 99
 3
-300 BodyText123
+300 BodyText397
 301
 2
 5
@@ -3722,7 +3722,7 @@
 99
 503
 7
-700 0.513222
+700 0.562111
 701 0.122
 99
 99
@@ -3743,7 +3743,7 @@
 1201 1
 1202
 7
-700 0.513222
+700 0.562111
 701 0.05
 99
 1203 
@@ -3754,7 +3754,7 @@
 303 0
 99
 3
-300 Document20
+300 Document83
 301
 2
 6
@@ -3999,7 +3999,7 @@
 303 0
 99
 3
-300 Text124
+300 Text398
 301
 2
 5
@@ -4045,7 +4045,7 @@
 303 0
 99
 3
-300 Text125
+300 Text399
 301
 2
 5
@@ -4091,7 +4091,7 @@
 303 0
 99
 3
-300 Text126
+300 Text400
 301
 2
 5
@@ -4137,7 +4137,7 @@
 303 0
 99
 3
-300 GetDp360
+300 GetDp1606
 301
 2
 5
@@ -4248,7 +4248,7 @@
 303 0
 99
 3
-300 GetDp361
+300 GetDp1607
 301
 2
 5
@@ -4359,7 +4359,7 @@
 303 0
 99
 3
-300 Document21
+300 Document84
 301
 2
 6
@@ -4621,7 +4621,7 @@
 125
 2
 10
-1000 Text119
+1000 Text393
 1002 Text50
 1005
 0
@@ -4688,8 +4688,8 @@
 1017 0
 99
 10
-1000 ABB_ACS800_1Sim45
-1002 ACS800_1Sim
+1000 BaseFcPPO3Sim104
+1002 BaseFcPPO3Sim
 1005
 0
 0
@@ -4723,16 +4723,16 @@
 0
 0
 0
-1006 1.905
+1006 1.94022
 1007 1.65
 1008 1.925
 1009 1.825
-1013 1.905
+1013 1.94022
 1014 1.65
 1015 1.925
 1016 1.825
 1003
-12
+14
 0
 0
 0
@@ -4743,19 +4743,19 @@
 0
 0
 1004
-"ACS800_1Sim"
+"BaseFcPPO3Sim"
 1001
 7
 700 1.65
 701 1.9
 99
-1010 $host-W-ACS800_1Sim
+1010 $host-W-BaseFcPPO3Sim
 1011 
 1012 3
 1017 0
 99
 10
-1000 BodyText120
+1000 BodyText394
 1002 BodyText48
 1005
 0
@@ -4790,16 +4790,16 @@
 0
 0
 0
-1006 3.71322
+1006 3.76211
 1007 3.203
 1008 5.01556
 1009 4.828
-1013 3.71322
+1013 3.76211
 1014 3.203
 1015 5.01556
 1016 4.828
 1003
-47
+50
 0
 0
 0
@@ -4811,7 +4811,7 @@
 0
 1004
 "Functionobject Simulate
-ABB ACS800 Aggregate 
+Fc PPO3 Motor Aggregate 
 "
 1001
 7
@@ -4824,7 +4824,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 StoDp334
+1000 StoDp1580
 1002 StoDp4
 1005
 0
@@ -4885,13 +4885,13 @@ ABB ACS800 Aggregate
 700 2.25
 701 0.95
 99
-1010 $PlcFo:ABB-Class-ABB_ACS800MotorAggrSim
+1010 $PlcFo:BaseComponent-Class-BaseFcPPO3MotorAggrSim
 1011 IndSafetySwitchOn#1
 1012 0
 1017 0
 99
 10
-1000 GetDi335
+1000 GetDi1581
 1002 GetDi4
 1005
 0
@@ -4952,13 +4952,13 @@ ABB ACS800 Aggregate
 700 1.45
 701 0.95
 99
-1010 $PlcMain:ABB-Class-ABB_ACS800MotorAggr.SafetySwitch.On
+1010 $PlcMain:BaseComponent-Class-BaseFcPPO3MotorAggr.SafetySwitch.On
 1011 ActualValue
 1012 0
 1017 0
 99
 10
-1000 CArea4
+1000 CArea69
 1002 CArea47
 1005
 0
@@ -5025,7 +5025,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 CArea5
+1000 CArea70
 1002 CArea46
 1005
 0
@@ -5086,13 +5086,13 @@ ABB ACS800 Aggregate
 700 1.35
 701 0.8
 99
-1010 $PlcMain:ABB-Class-ABB_ACS800MotorAggr
+1010 $PlcMain:BaseComponent-Class-BaseFcPPO3MotorAggr
 1011 DisableSafetySwitch
 1012 0
 1017 1
 99
 10
-1000 CArea6
+1000 CArea71
 1002 CArea45
 1005
 0
@@ -5153,13 +5153,13 @@ ABB ACS800 Aggregate
 700 1.35
 701 0.55
 99
-1010 $PlcMain:ABB-Class-ABB_ACS800MotorAggr
+1010 $PlcMain:BaseComponent-Class-BaseFcPPO3MotorAggr
 1011 DisableCircuitBreaker
 1012 0
 1017 1
 99
 10
-1000 GetDi339
+1000 GetDi1585
 1002 GetDi3
 1005
 0
@@ -5220,13 +5220,13 @@ ABB ACS800 Aggregate
 700 1.4
 701 1.15
 99
-1010 $PlcMain:ABB-Class-ABB_ACS800MotorAggr.Contactor.Feedback
+1010 $PlcMain:BaseComponent-Class-BaseFcPPO3MotorAggr.Contactor.Feedback
 1011 ActualValue
 1012 0
 1017 0
 99
 10
-1000 GetDi340
+1000 GetDi1586
 1002 GetDi1
 1005
 0
@@ -5287,13 +5287,13 @@ ABB ACS800 Aggregate
 700 1.4
 701 1.2
 99
-1010 $PlcMain:ABB-Class-ABB_ACS800MotorAggr.SafetySwitch.On
+1010 $PlcMain:BaseComponent-Class-BaseFcPPO3MotorAggr.SafetySwitch.On
 1011 ActualValue
 1012 0
 1017 0
 99
 10
-1000 GetDi341
+1000 GetDi1587
 1002 GetDi0
 1005
 0
@@ -5354,13 +5354,13 @@ ABB ACS800 Aggregate
 700 1.45
 701 0.7
 99
-1010 $PlcMain:ABB-Class-ABB_ACS800MotorAggr.CircuitBreaker.NotTripped
+1010 $PlcMain:BaseComponent-Class-BaseFcPPO3MotorAggr.CircuitBreaker.NotTripped
 1011 ActualValue
 1012 0
 1017 0
 99
 10
-1000 StoDp342
+1000 StoDp1588
 1002 StoDp3
 1005
 0
@@ -5421,13 +5421,13 @@ ABB ACS800 Aggregate
 700 2.3
 701 1.15
 99
-1010 $PlcFo:ABB-Class-ABB_ACS800MotorAggrSim
+1010 $PlcFo:BaseComponent-Class-BaseFcPPO3MotorAggrSim
 1011 IndContactorFeedback#1
 1012 0
 1017 0
 99
 10
-1000 StoDp343
+1000 StoDp1589
 1002 StoDp1
 1005
 0
@@ -5488,13 +5488,13 @@ ABB ACS800 Aggregate
 700 2.3
 701 1.2
 99
-1010 $PlcFo:ABB-Class-ABB_ACS800MotorAggrSim
+1010 $PlcFo:BaseComponent-Class-BaseFcPPO3MotorAggrSim
 1011 IndSafetySwitchOn#1
 1012 0
 1017 0
 99
 10
-1000 StoDp344
+1000 StoDp1590
 1002 StoDp0
 1005
 0
@@ -5555,13 +5555,13 @@ ABB ACS800 Aggregate
 700 2.2
 701 0.7
 99
-1010 $PlcFo:ABB-Class-ABB_ACS800MotorAggrSim
+1010 $PlcFo:BaseComponent-Class-BaseFcPPO3MotorAggrSim
 1011 IndCircuitBreakerTripped#1
 1012 0
 1017 0
 99
 10
-1000 Text121
+1000 Text395
 1002 Text44
 1005
 0
@@ -5628,7 +5628,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 BaseContactorSim46
+1000 BaseContactorSim105
 1002 ContactorSim
 1005
 0
@@ -5695,7 +5695,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 GetDp345
+1000 GetDp1591
 1002 GetDp28
 1005
 0
@@ -5756,13 +5756,13 @@ ABB ACS800 Aggregate
 700 0.65
 701 5.05
 99
-1010 $PlcFo:ABB-Class-ABB_ACS800MotorAggrSim
+1010 $PlcFo:BaseComponent-Class-BaseFcPPO3MotorAggrSim
 1011 OpResetContactorFeedback#1
 1012 0
 1017 0
 99
 10
-1000 ResDp346
+1000 ResDp1592
 1002 ResDp3
 1005
 0
@@ -5823,13 +5823,13 @@ ABB ACS800 Aggregate
 700 1.45
 701 5.05
 99
-1010 $PlcFo:ABB-Class-ABB_ACS800MotorAggrSim
+1010 $PlcFo:BaseComponent-Class-BaseFcPPO3MotorAggrSim
 1011 OpResetContactorFeedback#1
 1012 0
 1017 0
 99
 10
-1000 GetDp347
+1000 GetDp1593
 1002 GetDp27
 1005
 0
@@ -5890,13 +5890,13 @@ ABB ACS800 Aggregate
 700 1.4
 701 1.1
 99
-1010 $PlcFo:ABB-Class-ABB_ACS800MotorAggrSim
+1010 $PlcFo:BaseComponent-Class-BaseFcPPO3MotorAggrSim
 1011 OpResetContactorFeedback#1
 1012 0
 1017 0
 99
 10
-1000 ResDi348
+1000 ResDi1594
 1002 ResDi0
 1005
 0
@@ -5957,13 +5957,13 @@ ABB ACS800 Aggregate
 700 2.3
 701 1.1
 99
-1010 $PlcMain:ABB-Class-ABB_ACS800MotorAggr.Contactor.Feedback
+1010 $PlcMain:BaseComponent-Class-BaseFcPPO3MotorAggr.Contactor.Feedback
 1011 ActualValue
 1012 0
 1017 0
 99
 10
-1000 Disabled349
+1000 Disabled1595
 1002 Disabled41
 1005
 0
@@ -6024,13 +6024,13 @@ ABB ACS800 Aggregate
 700 0.65
 701 1.05
 99
-1010 $PlcMain:ABB-Class-ABB_ACS800MotorAggr.Contactor
+1010 $PlcMain:BaseComponent-Class-BaseFcPPO3MotorAggr.Contactor
 1011 DisableFeedback
 1012 0
 1017 0
 99
 10
-1000 Disabled350
+1000 Disabled1596
 1002 Disabled40
 1005
 0
@@ -6091,13 +6091,13 @@ ABB ACS800 Aggregate
 700 0.65
 701 0.8
 99
-1010 $PlcMain:ABB-Class-ABB_ACS800MotorAggr
+1010 $PlcMain:BaseComponent-Class-BaseFcPPO3MotorAggr
 1011 DisableSafetySwitch
 1012 0
 1017 0
 99
 10
-1000 Disabled351
+1000 Disabled1597
 1002 CircDisabled
 1005
 0
@@ -6158,13 +6158,13 @@ ABB ACS800 Aggregate
 700 0.65
 701 0.55
 99
-1010 $PlcMain:ABB-Class-ABB_ACS800MotorAggr
+1010 $PlcMain:BaseComponent-Class-BaseFcPPO3MotorAggr
 1011 DisableCircuitBreaker
 1012 0
 1017 0
 99
 10
-1000 GetDp352
+1000 GetDp1598
 1002 GetDp26
 1005
 0
@@ -6225,13 +6225,13 @@ ABB ACS800 Aggregate
 700 0.65
 701 5
 99
-1010 $PlcFo:ABB-Class-ABB_ACS800MotorAggrSim
+1010 $PlcFo:BaseComponent-Class-BaseFcPPO3MotorAggrSim
 1011 OpToggleSafetySwitch#1
 1012 0
 1017 0
 99
 10
-1000 GetDp353
+1000 GetDp1599
 1002 GetDp25
 1005
 0
@@ -6292,13 +6292,13 @@ ABB ACS800 Aggregate
 700 0.65
 701 4.95
 99
-1010 $PlcFo:ABB-Class-ABB_ACS800MotorAggrSim
+1010 $PlcFo:BaseComponent-Class-BaseFcPPO3MotorAggrSim
 1011 OpToggleCircuitBreaker#1
 1012 0
 1017 0
 99
 10
-1000 BaseMotorSim47
+1000 BaseMotorSim106
 1002 MotorSim
 1005
 0
@@ -6365,7 +6365,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 Text122
+1000 Text396
 1002 Text31
 1005
 0
@@ -6432,7 +6432,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 ToggleDi354
+1000 ToggleDi1600
 1002 ToggleDi4
 1005
 0
@@ -6493,13 +6493,13 @@ ABB ACS800 Aggregate
 700 2.25
 701 0.9
 99
-1010 $PlcMain:ABB-Class-ABB_ACS800MotorAggr.SafetySwitch.On
+1010 $PlcMain:BaseComponent-Class-BaseFcPPO3MotorAggr.SafetySwitch.On
 1011 ActualValue
 1012 0
 1017 0
 99
 10
-1000 ResDp355
+1000 ResDp1601
 1002 ResDp2
 1005
 0
@@ -6560,13 +6560,13 @@ ABB ACS800 Aggregate
 700 1.45
 701 5
 99
-1010 $PlcFo:ABB-Class-ABB_ACS800MotorAggrSim
+1010 $PlcFo:BaseComponent-Class-BaseFcPPO3MotorAggrSim
 1011 OpToggleSafetySwitch#1
 1012 0
 1017 0
 99
 10
-1000 SetDi356
+1000 SetDi1602
 1002 SetDi1
 1005
 0
@@ -6627,13 +6627,13 @@ ABB ACS800 Aggregate
 700 2.25
 701 0.85
 99
-1010 $PlcMain:ABB-Class-ABB_ACS800MotorAggr.SafetySwitch.On
+1010 $PlcMain:BaseComponent-Class-BaseFcPPO3MotorAggr.SafetySwitch.On
 1011 ActualValue
 1012 0
 1017 0
 99
 10
-1000 FirstScan1
+1000 FirstScan20
 1002 FirstScan30
 1005
 0
@@ -6699,7 +6699,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 ResDp357
+1000 ResDp1603
 1002 ResDp1
 1005
 0
@@ -6760,13 +6760,13 @@ ABB ACS800 Aggregate
 700 1.45
 701 4.95
 99
-1010 $PlcFo:ABB-Class-ABB_ACS800MotorAggrSim
+1010 $PlcFo:BaseComponent-Class-BaseFcPPO3MotorAggrSim
 1011 OpToggleCircuitBreaker#1
 1012 0
 1017 0
 99
 10
-1000 FirstScan2
+1000 FirstScan21
 1002 FirstScan29
 1005
 0
@@ -6832,7 +6832,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 SetDi358
+1000 SetDi1604
 1002 SetDi0
 1005
 0
@@ -6893,13 +6893,13 @@ ABB ACS800 Aggregate
 700 2.2
 701 0.6
 99
-1010 $PlcMain:ABB-Class-ABB_ACS800MotorAggr.CircuitBreaker.NotTripped
+1010 $PlcMain:BaseComponent-Class-BaseFcPPO3MotorAggr.CircuitBreaker.NotTripped
 1011 ActualValue
 1012 0
 1017 0
 99
 10
-1000 ToggleDi359
+1000 ToggleDi1605
 1002 ToggleDi3
 1005
 0
@@ -6960,13 +6960,13 @@ ABB ACS800 Aggregate
 700 2.2
 701 0.65
 99
-1010 $PlcMain:ABB-Class-ABB_ACS800MotorAggr.CircuitBreaker.NotTripped
+1010 $PlcMain:BaseComponent-Class-BaseFcPPO3MotorAggr.CircuitBreaker.NotTripped
 1011 ActualValue
 1012 0
 1017 0
 99
 10
-1000 BodyText123
+1000 BodyText397
 1002 BodyText22
 1005
 0
@@ -7001,16 +7001,16 @@ ABB ACS800 Aggregate
 0
 0
 0
-1006 3.71322
+1006 3.76211
 1007 3.203
 1008 2.56556
 1009 2.378
-1013 3.71322
+1013 3.76211
 1014 3.203
 1015 2.56556
 1016 2.378
 1003
-47
+50
 0
 0
 0
@@ -7022,7 +7022,7 @@ ABB ACS800 Aggregate
 0
 1004
 "Functionobject Simulate
-ABB ACS800 Aggregate 
+Fc PPO3 Motor Aggregate 
 "
 1001
 7
@@ -7035,7 +7035,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 Document20
+1000 Document83
 1002 Document1
 1005
 0
@@ -7091,10 +7091,10 @@ ABB ACS800 Aggregate
 0
 1004
 ""
-"Class-ABB_ACS800MotorAggrSim-Code"
+"Class-BaseFcPPO3MotorAggrSim-Code"
 "W"
 "2"
-"07-DEC-2005 16:51"
+"13-MAR-2008 13:37"
 "JE"
 1001
 7
@@ -7107,7 +7107,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 Text124
+1000 Text398
 1002 Text2
 1005
 0
@@ -7174,7 +7174,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 Text125
+1000 Text399
 1002 Text1
 1005
 0
@@ -7241,7 +7241,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 Text126
+1000 Text400
 1002 Text0
 1005
 0
@@ -7308,7 +7308,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 GetDp360
+1000 GetDp1606
 1002 GetDp1
 1005
 0
@@ -7369,13 +7369,13 @@ ABB ACS800 Aggregate
 700 1.45
 701 0.9
 99
-1010 $PlcFo:ABB-Class-ABB_ACS800MotorAggrSim
+1010 $PlcFo:BaseComponent-Class-BaseFcPPO3MotorAggrSim
 1011 OpToggleSafetySwitch#1
 1012 0
 1017 0
 99
 10
-1000 GetDp361
+1000 GetDp1607
 1002 GetDp0
 1005
 0
@@ -7436,13 +7436,13 @@ ABB ACS800 Aggregate
 700 1.45
 701 0.65
 99
-1010 $PlcFo:ABB-Class-ABB_ACS800MotorAggrSim
+1010 $PlcFo:BaseComponent-Class-BaseFcPPO3MotorAggrSim
 1011 OpToggleCircuitBreaker#1
 1012 0
 1017 0
 99
 10
-1000 Document21
+1000 Document84
 1002 Document0
 1005
 0
@@ -7498,10 +7498,10 @@ ABB ACS800 Aggregate
 0
 1004
 ""
-"Class-ABB_ACS800MotorAggrSim-Code"
+"Class-BaseFcPPO3MotorAggrSim-Code"
 "W"
 "1(2)"
-"07-DEC-2005 16:51"
+"13-MAR-2008 13:37"
 "JE"
 1001
 7
@@ -7752,7 +7752,7 @@ ABB ACS800 Aggregate
 99
 11
 1100 1.42
-1101 1.23089
+1101 1.18644
 1102 5
 1103 5
 1104 ConDigital
@@ -7774,7 +7774,7 @@ ABB ACS800 Aggregate
 99
 603
 7
-700 1.23089
+700 1.18644
 701 5
 99
 99
@@ -7975,7 +7975,7 @@ ABB ACS800 Aggregate
 1119 0
 1120
 1.42
-1.23089
+1.18644
 1121
 5
 5
@@ -10122,7 +10122,7 @@ ABB ACS800 Aggregate
 99
 11
 1100 2.22
-1101 2.03089
+1101 1.98644
 1102 0.9
 1103 0.9
 1104 ConDigital
@@ -10144,7 +10144,7 @@ ABB ACS800 Aggregate
 99
 603
 7
-700 2.03089
+700 1.98644
 701 0.9
 99
 99
@@ -10345,7 +10345,7 @@ ABB ACS800 Aggregate
 1119 0
 1120
 2.22
-2.03089
+1.98644
 1121
 0.9
 0.9

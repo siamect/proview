@@ -1,21 +1,21 @@
 1
 100 450
 101 450
-102 480
-103 696
-104 37.7778
+102 0
+103 0
+104 0
 105 100
-106 18
-107 17
+106 0
+107 0
 108 3.9
 109 0.5
 110 12.175
 111 0.475
-116 22
-117 41
-118 77
-119 99
-120 0
+116 0
+117 0
+118 0
+119 0
+120 -1
 121 Claes context
 122 0
 126 0.05
@@ -27105,228 +27105,6 @@
 302 1
 303 0
 99
-3
-300 Backup130
-301
-2
-5
-500 0
-501 2
-504 1
-502
-7
-700 0
-701 -0.025
-99
-503
-7
-700 0.283333
-701 0.025
-99
-99
-6
-600 0
-601 2
-602
-7
-700 0.136
-701 -0.025
-99
-603
-7
-700 0.136
-701 0.025
-99
-99
-9
-900 2
-901 7
-902 Backup
-903
-7
-700 0.017
-701 0.0115
-99
-99
-6
-600 0
-601 2
-602
-7
-700 -0.03
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-12
-1200 0
-1201 2
-1202
-7
-700 -0.03
-701 0
-99
-1203 
-1204 0
-99
-13
-1300 0
-1301 7
-1302 2
-1305 1
-1303
-7
-700 0.153
-701 0.0115
-99
-1304 0
-99
-5
-500 2
-501 0
-504 4
-502
-7
-700 0.193333
-701 -0.025
-99
-503
-7
-700 0.283333
-701 0.005
-99
-99
-13
-1300 9
-1301 7
-1302 2
-1305 4
-1303
-7
-700 0.210333
-701 0.0015
-99
-1304 0
-99
-99
-302 0
-303 0
-99
-3
-300 Backup131
-301
-2
-5
-500 0
-501 2
-504 1
-502
-7
-700 0
-701 -0.025
-99
-503
-7
-700 0.283333
-701 0.025
-99
-99
-6
-600 0
-601 2
-602
-7
-700 0.136
-701 -0.025
-99
-603
-7
-700 0.136
-701 0.025
-99
-99
-9
-900 2
-901 7
-902 Backup
-903
-7
-700 0.017
-701 0.0115
-99
-99
-6
-600 0
-601 2
-602
-7
-700 -0.03
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-12
-1200 0
-1201 2
-1202
-7
-700 -0.03
-701 0
-99
-1203 
-1204 0
-99
-13
-1300 0
-1301 7
-1302 2
-1305 1
-1303
-7
-700 0.153
-701 0.0115
-99
-1304 0
-99
-5
-500 2
-501 0
-504 4
-502
-7
-700 0.193333
-701 -0.025
-99
-503
-7
-700 0.283333
-701 0.005
-99
-99
-13
-1300 9
-1301 7
-1302 2
-1305 4
-1303
-7
-700 0.210333
-701 0.0015
-99
-1304 0
-99
-99
-302 0
-303 0
-99
 99
 124
 2
@@ -27418,7 +27196,7 @@
 701 2.6
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpExtOnly
+1011 OpExtOnly#1
 1012 0
 1017 0
 99
@@ -27485,7 +27263,7 @@
 701 5.85
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 Ready
+1011 Ready#1
 1012 0
 1017 0
 99
@@ -27686,7 +27464,7 @@
 701 5.05
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 ExtControl
+1011 ExtControl#1
 1012 0
 1017 0
 99
@@ -27753,7 +27531,7 @@
 701 4.9
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpExtAndIntMan
+1011 OpExtAndIntMan#1
 1012 0
 1017 0
 99
@@ -27820,7 +27598,7 @@
 701 4.8
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpExtOnly
+1011 OpExtOnly#1
 1012 0
 1017 0
 99
@@ -28021,7 +27799,7 @@
 701 4.55
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 ManStart
+1011 ManStart#1
 1012 0
 1017 0
 99
@@ -28222,7 +28000,7 @@
 701 3.75
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpExtAndIntMan
+1011 OpExtAndIntMan#1
 1012 0
 1017 0
 99
@@ -28289,7 +28067,7 @@
 701 3.7
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpExtOnly
+1011 OpExtOnly#1
 1012 0
 1017 0
 99
@@ -28356,7 +28134,7 @@
 701 3.65
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 LocalMode
+1011 LocalMode#1
 1012 0
 1017 0
 99
@@ -28557,7 +28335,7 @@
 701 2.95
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpExtOnly
+1011 OpExtOnly#1
 1012 0
 1017 0
 99
@@ -28959,7 +28737,7 @@
 701 10.85
 99
 1010 $host-W-BodyText65
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -29026,7 +28804,7 @@
 701 10.75
 99
 1010 $host-W-BodyText64
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -29093,7 +28871,7 @@
 701 10.5
 99
 1010 $host-W-BodyText63
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -29160,7 +28938,7 @@
 701 10.65
 99
 1010 $host-W-BodyText62
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -29227,7 +29005,7 @@
 701 10.3
 99
 1010 $host-W-BodyText61
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -29294,7 +29072,7 @@
 701 10.15
 99
 1010 $host-W-BodyText60
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -29361,7 +29139,7 @@
 701 10.55
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpExtAndIntMan
+1011 OpExtAndIntMan#1
 1012 0
 1017 0
 99
@@ -29428,7 +29206,7 @@
 701 10.8
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpIntOnly
+1011 OpIntOnly#1
 1012 0
 1017 0
 99
@@ -29495,7 +29273,7 @@
 701 10.75
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpExtAndIntMan
+1011 OpExtAndIntMan#1
 1012 0
 1017 0
 99
@@ -29562,7 +29340,7 @@
 701 10.75
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 ExternOrdHide
+1011 ExternOrdHide#1
 1012 0
 1017 0
 99
@@ -29696,7 +29474,7 @@
 701 11.15
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpExtOnly
+1011 OpExtOnly#1
 1012 0
 1017 0
 99
@@ -29763,7 +29541,7 @@
 701 11.3
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpExtAndIntMan
+1011 OpExtAndIntMan#1
 1012 0
 1017 0
 99
@@ -29897,7 +29675,7 @@
 701 2.9
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 ExtControl
+1011 ExtControl#1
 1012 0
 1017 0
 99
@@ -29964,7 +29742,7 @@
 701 11.25
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 ExtControl
+1011 ExtControl#1
 1012 0
 1017 0
 99
@@ -30031,7 +29809,7 @@
 701 4
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpMan
+1011 OpMan#1
 1012 0
 1017 0
 99
@@ -30098,7 +29876,7 @@
 701 4.4
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 Ready
+1011 Ready#1
 1012 0
 1017 0
 99
@@ -30165,7 +29943,7 @@
 701 4.65
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpNoLocal
+1011 OpNoLocal#1
 1012 0
 1017 0
 99
@@ -30232,7 +30010,7 @@
 701 4.7
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 LocalMode
+1011 LocalMode#1
 1012 0
 1017 0
 99
@@ -30363,7 +30141,7 @@
 "Class-CompModeAFo-Code"
 "W"
 "5"
-"10-JUL-2006 10:33"
+"18-MAR-2008 08:28"
 ""
 1001
 7
@@ -30371,7 +30149,7 @@
 701 9.9
 99
 1010 $host-W-Document4
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -30440,7 +30218,74 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 11.75
 99
 1010 $host-W-BodyText59
-1011 Status
+1011 
+1012 3
+1017 0
+99
+10
+1000 Backup22
+1002 Backup6
+1005
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1006 2.28333
+1007 1.97
+1008 2.625
+1009 2.575
+1013 2.28333
+1014 1.97
+1015 2.625
+1016 2.575
+1003
+8
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1004
+"Backup6"
+1001
+7
+700 2
+701 2.6
+99
+1010 $host-W-Backup6
+1011 
 1012 3
 1017 0
 99
@@ -30507,7 +30352,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 10.4
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpNoAutoToMan
+1011 OpNoAutoToMan#1
 1012 0
 1017 0
 99
@@ -30640,8 +30485,8 @@ Start/Stop, Manual/Auto, Local/Remote"
 700 2
 701 2.05
 99
-1010 $host-W-StoAp78
-1011 Status
+1010 $PlcMain:BaseComponent-Class-CompModeA
+1011 OutRef#1
 1012 3
 1017 0
 99
@@ -30708,7 +30553,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 2.05
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 OutRef
+1011 OutRef#1
 1012 3
 1017 0
 99
@@ -30776,7 +30621,7 @@ set from HMI."
 701 6.05
 99
 1010 $host-W-BodyText58
-1011 OutRef
+1011 
 1012 3
 1017 0
 99
@@ -30843,7 +30688,7 @@ set from HMI."
 701 5.9
 99
 1010 $host-W-BodyText57
-1011 OutRef
+1011 
 1012 3
 1017 0
 99
@@ -30910,7 +30755,7 @@ set from HMI."
 701 6.6
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 Order
+1011 Order#1
 1012 0
 1017 0
 99
@@ -30977,7 +30822,7 @@ set from HMI."
 701 5.95
 99
 1010 $host-W-BodyText56
-1011 Order
+1011 
 1012 3
 1017 0
 99
@@ -31043,8 +30888,8 @@ set from HMI."
 700 2.8
 701 6.2
 99
-1010 $host-W-StoAp76
-1011 Order
+1010 $PlcFo:BaseComponent-Class-CompModeAFo
+1011 OutRef#1
 1012 3
 1017 0
 99
@@ -31111,7 +30956,7 @@ set from HMI."
 701 6.45
 99
 1010 $host-W-BodyText55
-1011 Order
+1011 
 1012 3
 1017 0
 99
@@ -31178,7 +31023,7 @@ set from HMI."
 701 6.55
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 LocalMode
+1011 LocalMode#1
 1012 0
 1017 0
 99
@@ -31245,7 +31090,7 @@ set from HMI."
 701 6.45
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 RefLoc
+1011 RefLoc#1
 1012 3
 1017 0
 99
@@ -31312,7 +31157,7 @@ set from HMI."
 701 6.25
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 RefAuto
+1011 RefAuto#1
 1012 3
 1017 0
 99
@@ -31379,7 +31224,7 @@ set from HMI."
 701 6.3
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpRefMan
+1011 OpRefMan#1
 1012 3
 1017 0
 99
@@ -31446,7 +31291,7 @@ set from HMI."
 701 6.15
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 AutoMode
+1011 AutoMode#1
 1012 0
 1017 0
 99
@@ -31513,7 +31358,7 @@ set from HMI."
 701 6.1
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpNoUpdateManRef
+1011 OpNoUpdateManRef#1
 1012 0
 1017 0
 99
@@ -31647,7 +31492,7 @@ set from HMI."
 701 6.05
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 RefAuto
+1011 RefAuto#1
 1012 3
 1017 0
 99
@@ -31713,8 +31558,8 @@ set from HMI."
 700 2.8
 701 6.05
 99
-1010 $host-W-CStoAp0
-1011 RefAuto
+1010 $PlcMain:BaseComponent-Class-CompModeA
+1011 OpRefMan#1
 1012 3
 1017 0
 99
@@ -31781,7 +31626,7 @@ set from HMI."
 701 6.3
 99
 1010 $host-W-Ref
-1011 RefAuto
+1011 
 1012 3
 1017 0
 99
@@ -31848,7 +31693,7 @@ set from HMI."
 701 6.45
 99
 1010 $host-W-LocRef
-1011 RefAuto
+1011 
 1012 3
 1017 0
 99
@@ -31915,7 +31760,7 @@ set from HMI."
 701 6.25
 99
 1010 $host-W-ManAutoRef
-1011 RefAuto
+1011 
 1012 3
 1017 0
 99
@@ -31982,7 +31827,74 @@ set from HMI."
 701 2.7
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpRefMan
+1011 OpRefMan#1
+1012 3
+1017 0
+99
+10
+1000 Backup36
+1002 Backup5
+1005
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1006 2.28333
+1007 1.97
+1008 2.725
+1009 2.675
+1013 2.28333
+1014 1.97
+1015 2.725
+1016 2.675
+1003
+8
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1004
+"Backup5"
+1001
+7
+700 2
+701 2.7
+99
+1010 $host-W-Backup5
+1011 
 1012 3
 1017 0
 99
@@ -32118,7 +32030,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 9.4
 99
 1010 $host-W-BodyText54
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -32187,7 +32099,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 7.1
 99
 1010 $host-W-BodyText53
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -32256,7 +32168,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 4.75
 99
 1010 $host-W-BodyText52
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -32323,7 +32235,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 2.55
 99
 1010 $host-W-Backup4
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -32390,7 +32302,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 2.55
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpExtAndIntMan
+1011 OpExtAndIntMan#1
 1012 0
 1017 0
 99
@@ -32457,7 +32369,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 2.5
 99
 1010 $host-W-Backup3
-1011 OpExtAndIntMan
+1011 
 1012 3
 1017 0
 99
@@ -32524,7 +32436,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 2.5
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpNoAutoToMan
+1011 OpNoAutoToMan#1
 1012 0
 1017 0
 99
@@ -32591,7 +32503,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 10.65
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 ManOrdHide
+1011 ManOrdHide#1
 1012 0
 1017 0
 99
@@ -32658,7 +32570,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 10.6
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpExtOnly
+1011 OpExtOnly#1
 1012 0
 1017 0
 99
@@ -32725,7 +32637,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 3
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpExtAndIntMan
+1011 OpExtAndIntMan#1
 1012 0
 1017 0
 99
@@ -32926,7 +32838,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 8.5
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpNoAutoToMan
+1011 OpNoAutoToMan#1
 1012 0
 1017 0
 99
@@ -32993,7 +32905,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 3.45
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpNoAutoToMan
+1011 OpNoAutoToMan#1
 1012 0
 1017 0
 99
@@ -33194,7 +33106,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 11.75
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpIntOnly
+1011 OpIntOnly#1
 1012 0
 1017 0
 99
@@ -33261,7 +33173,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 10.5
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 ManAutoHide
+1011 ManAutoHide#1
 1012 0
 1017 0
 99
@@ -33328,7 +33240,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 2.45
 99
 1010 $host-W-Backup2
-1011 ManAutoHide
+1011 
 1012 3
 1017 0
 99
@@ -33395,7 +33307,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 2.45
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpNoLocal
+1011 OpNoLocal#1
 1012 0
 1017 0
 99
@@ -33462,7 +33374,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 2.4
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpIntOnly
+1011 OpIntOnly#1
 1012 0
 1017 0
 99
@@ -33529,7 +33441,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 2.4
 99
 1010 $host-W-Backup1
-1011 OpIntOnly
+1011 
 1012 3
 1017 0
 99
@@ -33596,7 +33508,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 3.55
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpIntOnly
+1011 OpIntOnly#1
 1012 0
 1017 0
 99
@@ -33663,7 +33575,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 5.55
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpNoLocal
+1011 OpNoLocal#1
 1012 0
 1017 0
 99
@@ -33797,7 +33709,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 9.6
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 AutoMode
+1011 AutoMode#1
 1012 0
 1017 0
 99
@@ -33931,7 +33843,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 9.7
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpManStop
+1011 OpManStop#1
 1012 0
 1017 0
 99
@@ -33998,7 +33910,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 9.65
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpManStart
+1011 OpManStart#1
 1012 0
 1017 0
 99
@@ -34132,7 +34044,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 9.4
 99
 1010 $host-W-BodyText51
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -34199,7 +34111,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 9.5
 99
 1010 $host-W-BodyText50
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -34266,7 +34178,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 9.65
 99
 1010 $host-W-BodyText49
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -34333,7 +34245,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 9.4
 99
 1010 $host-W-Strcat48
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -34399,8 +34311,8 @@ Start/Stop, Manual/Auto, Local/Remote"
 700 0.65
 701 9.4
 99
-1010 $host-W-GetSp5
-1011 Status
+1010 $PlcMain:BaseComponent-Class-CompModeA
+1011 AlarmNotManOrd#1
 1012 3
 1017 0
 99
@@ -34467,7 +34379,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 9.45
 99
 1010 $host-W-NameToStr47
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -34533,8 +34445,8 @@ Start/Stop, Manual/Auto, Local/Remote"
 700 2.1
 701 9.55
 99
-1010 $host-W-StoSp5
-1011 Status
+1010 $host-W-DSup5
+1011 DetectText#1
 1012 3
 1017 0
 99
@@ -34669,7 +34581,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 10.85
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpNoLocal
+1011 OpNoLocal#1
 1012 0
 1017 0
 99
@@ -34736,7 +34648,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 10.85
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 LocalModHide
+1011 LocalModHide#1
 1012 0
 1017 0
 99
@@ -34803,7 +34715,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 10.3
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 ManModDim
+1011 ManModDim#1
 1012 0
 1017 0
 99
@@ -34870,7 +34782,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 10.5
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpIntOnly
+1011 OpIntOnly#1
 1012 0
 1017 0
 99
@@ -34937,7 +34849,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 10.35
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 Ready
+1011 Ready#1
 1012 0
 1017 0
 99
@@ -35004,7 +34916,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 10.35
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 AutoModDim
+1011 AutoModDim#1
 1012 0
 1017 0
 99
@@ -35071,7 +34983,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 8.2
 99
 1010 $host-W-BodyText46
-1011 AutoModDim
+1011 
 1012 3
 1017 0
 99
@@ -35138,7 +35050,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 8.3
 99
 1010 $host-W-BodyText44
-1011 AutoModDim
+1011 
 1012 3
 1017 0
 99
@@ -35205,7 +35117,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 8.45
 99
 1010 $host-W-BodyText43
-1011 AutoModDim
+1011 
 1012 3
 1017 0
 99
@@ -35271,8 +35183,8 @@ Start/Stop, Manual/Auto, Local/Remote"
 700 2.1
 701 8.35
 99
-1010 $host-W-StoSp4
-1011 AutoModDim
+1010 $host-W-DSup4
+1011 DetectText#1
 1012 3
 1017 0
 99
@@ -35339,7 +35251,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 8.2
 99
 1010 $host-W-Strcat42
-1011 AutoModDim
+1011 
 1012 3
 1017 0
 99
@@ -35405,8 +35317,8 @@ Start/Stop, Manual/Auto, Local/Remote"
 700 0.65
 701 8.2
 99
-1010 $host-W-GetSp4
-1011 AutoModDim
+1010 $PlcMain:BaseComponent-Class-CompModeA
+1011 AlarmNotReadyA#1
 1012 3
 1017 0
 99
@@ -35473,7 +35385,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 8.25
 99
 1010 $host-W-NameToStr41
-1011 AutoModDim
+1011 
 1012 3
 1017 0
 99
@@ -35675,7 +35587,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 8.4
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpAuto
+1011 OpAuto#1
 1012 0
 1017 0
 99
@@ -35742,7 +35654,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 2.25
 99
 1010 $host-W-BodyText40
-1011 OpAuto
+1011 
 1012 3
 1017 0
 99
@@ -35809,7 +35721,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 2.35
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 AutoMode
+1011 AutoMode#1
 1012 0
 1017 0
 99
@@ -35876,7 +35788,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 2.35
 99
 1010 $host-W-Backup0
-1011 AutoMode
+1011 
 1012 3
 1017 0
 99
@@ -35943,7 +35855,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 4.35
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpManStop
+1011 OpManStop#1
 1012 0
 1017 0
 99
@@ -36010,7 +35922,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 1.85
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 Order
+1011 Order#1
 1012 0
 1017 0
 99
@@ -36077,7 +35989,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 1.85
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 Order
+1011 Order#1
 1012 0
 1017 0
 99
@@ -36144,7 +36056,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 1.55
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 Ready
+1011 Ready#1
 1012 0
 1017 0
 99
@@ -36211,7 +36123,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 1.55
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 Ready
+1011 Ready#1
 1012 0
 1017 0
 99
@@ -36283,7 +36195,7 @@ No letters  = Auto mod
 701 11.55
 99
 1010 $host-W-BodyText39
-1011 Ready
+1011 
 1012 3
 1017 0
 99
@@ -36350,7 +36262,7 @@ No letters  = Auto mod
 701 10.95
 99
 1010 $host-W-BodyText38
-1011 Ready
+1011 
 1012 3
 1017 0
 99
@@ -36416,8 +36328,8 @@ No letters  = Auto mod
 700 2.6
 701 11.45
 99
-1010 $host-W-CStoSp3
-1011 Ready
+1010 $PlcMain:BaseComponent-Class-CompModeA
+1011 IndMode#1
 1012 3
 1017 0
 99
@@ -36483,8 +36395,8 @@ No letters  = Auto mod
 700 2.6
 701 11.35
 99
-1010 $host-W-CStoSp2
-1011 Ready
+1010 $PlcMain:BaseComponent-Class-CompModeA
+1011 IndMode#1
 1012 3
 1017 0
 99
@@ -36550,8 +36462,8 @@ No letters  = Auto mod
 700 2.6
 701 11.2
 99
-1010 $host-W-CStoSp1
-1011 Ready
+1010 $PlcMain:BaseComponent-Class-CompModeA
+1011 IndMode#1
 1012 3
 1017 0
 99
@@ -36617,8 +36529,8 @@ No letters  = Auto mod
 700 2.6
 701 11.05
 99
-1010 $host-W-CStoSp0
-1011 Ready
+1010 $PlcMain:BaseComponent-Class-CompModeA
+1011 IndMode#1
 1012 3
 1017 0
 99
@@ -36953,7 +36865,7 @@ No letters  = Auto mod
 701 11.4
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 LocalMode
+1011 LocalMode#1
 1012 0
 1017 0
 99
@@ -37020,7 +36932,7 @@ No letters  = Auto mod
 701 11.1
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 AutoMode
+1011 AutoMode#1
 1012 0
 1017 0
 99
@@ -37087,7 +36999,7 @@ No letters  = Auto mod
 701 9.05
 99
 1010 $host-W-BodyText37
-1011 AutoMode
+1011 
 1012 3
 1017 0
 99
@@ -37154,7 +37066,7 @@ No letters  = Auto mod
 701 8.55
 99
 1010 $host-W-BodyText36
-1011 AutoMode
+1011 
 1012 3
 1017 0
 99
@@ -37221,7 +37133,7 @@ No letters  = Auto mod
 701 7.8
 99
 1010 $host-W-BodyText35
-1011 AutoMode
+1011 
 1012 3
 1017 0
 99
@@ -37288,7 +37200,7 @@ No letters  = Auto mod
 701 10
 99
 1010 $host-W-BodyText34
-1011 AutoMode
+1011 
 1012 3
 1017 0
 99
@@ -37355,7 +37267,7 @@ No letters  = Auto mod
 701 10.15
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 AutoMode
+1011 AutoMode#1
 1012 0
 1017 0
 99
@@ -37422,7 +37334,7 @@ No letters  = Auto mod
 701 10.2
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 LocalMode
+1011 LocalMode#1
 1012 0
 1017 0
 99
@@ -37489,7 +37401,7 @@ No letters  = Auto mod
 701 10.15
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 ManOrdDim
+1011 ManOrdDim#1
 1012 0
 1017 0
 99
@@ -37623,7 +37535,7 @@ No letters  = Auto mod
 701 9.15
 99
 1010 $host-W-BodyText33
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -37690,7 +37602,7 @@ No letters  = Auto mod
 701 9.3
 99
 1010 $host-W-BodyText32
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -37757,7 +37669,7 @@ No letters  = Auto mod
 701 9.05
 99
 1010 $host-W-Strcat31
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -37823,8 +37735,8 @@ No letters  = Auto mod
 700 0.65
 701 9.05
 99
-1010 $host-W-GetSp3
-1011 Status
+1010 $PlcMain:BaseComponent-Class-CompModeA
+1011 Alarm2LocalMod#1
 1012 3
 1017 0
 99
@@ -37891,7 +37803,7 @@ No letters  = Auto mod
 701 9.1
 99
 1010 $host-W-NameToStr30
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -37957,8 +37869,8 @@ No letters  = Auto mod
 700 2.1
 701 9.2
 99
-1010 $host-W-StoSp3
-1011 Status
+1010 $host-W-DSup3
+1011 DetectText#1
 1012 3
 1017 0
 99
@@ -38093,7 +38005,7 @@ No letters  = Auto mod
 701 9.25
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 LocalMode
+1011 LocalMode#1
 1012 0
 1017 0
 99
@@ -38160,7 +38072,7 @@ No letters  = Auto mod
 701 8.9
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpManStop
+1011 OpManStop#1
 1012 0
 1017 0
 99
@@ -38227,7 +38139,7 @@ No letters  = Auto mod
 701 8.85
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpManStart
+1011 OpManStart#1
 1012 0
 1017 0
 99
@@ -38361,7 +38273,7 @@ No letters  = Auto mod
 701 8.75
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 LocalMode
+1011 LocalMode#1
 1012 0
 1017 0
 99
@@ -38428,7 +38340,7 @@ No letters  = Auto mod
 701 8.65
 99
 1010 $host-W-NameToStr29
-1011 LocalMode
+1011 
 1012 3
 1017 0
 99
@@ -38494,8 +38406,8 @@ No letters  = Auto mod
 700 0.65
 701 8.6
 99
-1010 $host-W-GetSp2
-1011 LocalMode
+1010 $PlcMain:BaseComponent-Class-CompModeA
+1011 Alarm1LocalMod#1
 1012 3
 1017 0
 99
@@ -38562,7 +38474,7 @@ No letters  = Auto mod
 701 8.6
 99
 1010 $host-W-Strcat28
-1011 LocalMode
+1011 
 1012 3
 1017 0
 99
@@ -38628,8 +38540,8 @@ No letters  = Auto mod
 700 2.1
 701 8.7
 99
-1010 $host-W-StoSp2
-1011 LocalMode
+1010 $host-W-DSup2
+1011 DetectText#1
 1012 3
 1017 0
 99
@@ -38764,7 +38676,7 @@ No letters  = Auto mod
 701 8.8
 99
 1010 $host-W-BodyText26
-1011 Action
+1011 
 1012 3
 1017 0
 99
@@ -38898,7 +38810,7 @@ No letters  = Auto mod
 701 8.7
 99
 1010 $host-W-BodyText25
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -38965,7 +38877,7 @@ No letters  = Auto mod
 701 7.6
 99
 1010 $host-W-BodyText24
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -39032,7 +38944,7 @@ No letters  = Auto mod
 701 7.9
 99
 1010 $host-W-BodyText23
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -39099,7 +39011,7 @@ No letters  = Auto mod
 701 8.05
 99
 1010 $host-W-BodyText22
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -39165,8 +39077,8 @@ No letters  = Auto mod
 700 2.1
 701 7.95
 99
-1010 $host-W-StoSp1
-1011 Status
+1010 $host-W-DSup1
+1011 DetectText#1
 1012 3
 1017 0
 99
@@ -39233,7 +39145,7 @@ No letters  = Auto mod
 701 7.8
 99
 1010 $host-W-Strcat20
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -39299,8 +39211,8 @@ No letters  = Auto mod
 700 0.65
 701 7.8
 99
-1010 $host-W-GetSp1
-1011 Status
+1010 $PlcMain:BaseComponent-Class-CompModeA
+1011 AlarmNotReadyM#1
 1012 3
 1017 0
 99
@@ -39367,7 +39279,7 @@ No letters  = Auto mod
 701 7.85
 99
 1010 $host-W-NameToStr19
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -39502,7 +39414,7 @@ No letters  = Auto mod
 701 8.05
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 Ready
+1011 Ready#1
 1012 0
 1017 0
 99
@@ -39636,7 +39548,7 @@ No letters  = Auto mod
 701 8
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpManStart
+1011 OpManStart#1
 1012 0
 1017 0
 99
@@ -39703,7 +39615,7 @@ No letters  = Auto mod
 701 5.45
 99
 1010 $host-W-BodyText18
-1011 OpManStart
+1011 
 1012 3
 1017 0
 99
@@ -39770,7 +39682,7 @@ No letters  = Auto mod
 701 3.95
 99
 1010 $host-W-BodyText17
-1011 OpManStart
+1011 
 1012 3
 1017 0
 99
@@ -39837,7 +39749,7 @@ No letters  = Auto mod
 701 2.9
 99
 1010 $host-W-BodyText16
-1011 OpManStart
+1011 
 1012 3
 1017 0
 99
@@ -39904,7 +39816,7 @@ No letters  = Auto mod
 701 5.3
 99
 1010 $host-W-BodyText15
-1011 OpManStart
+1011 
 1012 3
 1017 0
 99
@@ -39971,7 +39883,7 @@ No letters  = Auto mod
 701 5.75
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 ManStart
+1011 ManStart#1
 1012 0
 1017 0
 99
@@ -40038,7 +39950,7 @@ No letters  = Auto mod
 701 4.3
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 AutoMode
+1011 AutoMode#1
 1012 0
 1017 0
 99
@@ -40239,7 +40151,7 @@ No letters  = Auto mod
 701 4.15
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpManStart
+1011 OpManStart#1
 1012 0
 1017 0
 99
@@ -40373,7 +40285,7 @@ No letters  = Auto mod
 701 4.05
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 Feedback
+1011 Feedback#1
 1012 0
 1017 0
 99
@@ -40507,7 +40419,7 @@ No letters  = Auto mod
 701 1.7
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 Feedback
+1011 Feedback#1
 1012 0
 1017 0
 99
@@ -40574,7 +40486,7 @@ No letters  = Auto mod
 701 1.7
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 Feedback
+1011 Feedback#1
 1012 0
 1017 0
 99
@@ -40641,7 +40553,7 @@ No letters  = Auto mod
 701 5.65
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 LocalStart
+1011 LocalStart#1
 1012 0
 1017 0
 99
@@ -40708,7 +40620,7 @@ No letters  = Auto mod
 701 5.6
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 LocalMode
+1011 LocalMode#1
 1012 0
 1017 0
 99
@@ -40842,7 +40754,7 @@ No letters  = Auto mod
 701 3.5
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 Ready
+1011 Ready#1
 1012 0
 1017 0
 99
@@ -40909,7 +40821,7 @@ No letters  = Auto mod
 701 1.95
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 AutoMode
+1011 AutoMode#1
 1012 0
 1017 0
 99
@@ -40976,7 +40888,7 @@ No letters  = Auto mod
 701 1.95
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 AutoMode
+1011 AutoMode#1
 1012 0
 1017 0
 99
@@ -41043,7 +40955,7 @@ No letters  = Auto mod
 701 5.4
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 AutoMode
+1011 AutoMode#1
 1012 0
 1017 0
 99
@@ -41177,7 +41089,7 @@ No letters  = Auto mod
 701 3.4
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpMan
+1011 OpMan#1
 1012 0
 1017 0
 99
@@ -41244,7 +41156,7 @@ No letters  = Auto mod
 701 3.1
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpAuto
+1011 OpAuto#1
 1012 0
 1017 0
 99
@@ -41311,7 +41223,7 @@ No letters  = Auto mod
 701 5.45
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 ExtStart
+1011 ExtStart#1
 1012 0
 1017 0
 99
@@ -41445,7 +41357,7 @@ No letters  = Auto mod
 701 4.1
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 ManStart
+1011 ManStart#1
 1012 0
 1017 0
 99
@@ -41512,7 +41424,7 @@ No letters  = Auto mod
 701 4.15
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 ManStart
+1011 ManStart#1
 1012 0
 1017 0
 99
@@ -41579,7 +41491,7 @@ No letters  = Auto mod
 701 3.05
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 AutoMode
+1011 AutoMode#1
 1012 0
 1017 0
 99
@@ -41646,7 +41558,7 @@ No letters  = Auto mod
 701 3.1
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 AutoMode
+1011 AutoMode#1
 1012 0
 1017 0
 99
@@ -41713,7 +41625,7 @@ No letters  = Auto mod
 701 5.55
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 Order
+1011 Order#1
 1012 0
 1017 0
 99
@@ -41848,7 +41760,7 @@ The attribute below must always placed last in this PlcPgm."
 701 11.9
 99
 1010 $host-W-BodyText14
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -41912,7 +41824,7 @@ The attribute below must always placed last in this PlcPgm."
 "Class-CompModeAFo-Code"
 "W"
 "4"
-"10-JUL-2006 10:33"
+"18-MAR-2008 08:28"
 ""
 1001
 7
@@ -41920,7 +41832,7 @@ The attribute below must always placed last in this PlcPgm."
 701 7.55
 99
 1010 $host-W-Document3
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -41984,7 +41896,7 @@ The attribute below must always placed last in this PlcPgm."
 "Class-CompModeAFo-Code"
 "W"
 "3"
-"10-JUL-2006 10:33"
+"18-MAR-2008 08:28"
 ""
 1001
 7
@@ -41992,7 +41904,7 @@ The attribute below must always placed last in this PlcPgm."
 701 5.2
 99
 1010 $host-W-Document2
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -42059,7 +41971,7 @@ The attribute below must always placed last in this PlcPgm."
 701 12.05
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpManStart
+1011 OpManStart#1
 1012 0
 1017 0
 99
@@ -42126,7 +42038,7 @@ The attribute below must always placed last in this PlcPgm."
 701 12.1
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpManStop
+1011 OpManStop#1
 1012 0
 1017 0
 99
@@ -42193,7 +42105,7 @@ The attribute below must always placed last in this PlcPgm."
 701 12.1
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpMan
+1011 OpMan#1
 1012 0
 1017 0
 99
@@ -42260,7 +42172,7 @@ The attribute below must always placed last in this PlcPgm."
 701 12.05
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 OpAuto
+1011 OpAuto#1
 1012 0
 1017 0
 99
@@ -42329,7 +42241,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 2.4
 99
 1010 $host-W-BodyText11
-1011 OpAuto
+1011 
 1012 3
 1017 0
 99
@@ -42393,7 +42305,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 "Class-CompModeAFo-Code"
 "W"
 "2"
-"10-JUL-2006 10:33"
+"18-MAR-2008 08:28"
 ""
 1001
 7
@@ -42401,7 +42313,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 2.85
 99
 1010 $host-W-Document1
-1011 OpAuto
+1011 
 1012 3
 1017 0
 99
@@ -42468,7 +42380,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 1.4
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 LocalStart
+1011 LocalStart#1
 1012 0
 1017 0
 99
@@ -42535,7 +42447,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 1.4
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 LocalStart
+1011 LocalStart#1
 1012 0
 1017 0
 99
@@ -42602,7 +42514,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 1.25
 99
 1010 $PlcMain:BaseComponent-Class-CompModeA
-1011 LocalMode
+1011 LocalMode#1
 1012 0
 1017 0
 99
@@ -42669,7 +42581,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 1.25
 99
 1010 $PlcFo:BaseComponent-Class-CompModeAFo
-1011 LocalMode
+1011 LocalMode#1
 1012 0
 1017 0
 99
@@ -42736,7 +42648,7 @@ Start/Stop, Manual/Auto, Local/Remote"
 701 0.6
 99
 1010 $host-W-BodyText8
-1011 LocalMode
+1011 
 1012 3
 1017 0
 99
@@ -42817,7 +42729,7 @@ OutRef = REF"
 701 0.7
 99
 1010 $host-W-BodyText7
-1011 LocalMode
+1011 
 1012 3
 1017 0
 99
@@ -42881,7 +42793,7 @@ OutRef = REF"
 "Class-CompModeAFo-Code"
 "W"
 "1 (5)"
-"10-JUL-2006 10:33"
+"18-MAR-2008 08:28"
 ""
 1001
 7
@@ -42889,141 +42801,7 @@ OutRef = REF"
 701 0.5
 99
 1010 $host-W-Document0
-1011 LocalMode
-1012 3
-1017 0
-99
-10
-1000 Backup130
-1002 Backup6
-1005
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-1006 2.28333
-1007 1.97
-1008 2.625
-1009 2.575
-1013 2.28333
-1014 1.97
-1015 2.625
-1016 2.575
-1003
-8
-0
-0
-0
-0
-0
-0
-0
-0
-0
-1004
-"Backup6"
-1001
-7
-700 2
-701 2.6
-99
-1010 $host-W-Backup6
-1011 Status
-1012 3
-1017 0
-99
-10
-1000 Backup131
-1002 Backup5
-1005
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-1006 2.28333
-1007 1.97
-1008 2.725
-1009 2.675
-1013 2.28333
-1014 1.97
-1015 2.725
-1016 2.675
-1003
-8
-0
-0
-0
-0
-0
-0
-0
-0
-0
-1004
-"Backup5"
-1001
-7
-700 2
-701 2.7
-99
-1010 $host-W-Backup5
-1011 OpRefMan
+1011 
 1012 3
 1017 0
 99
@@ -43257,7 +43035,7 @@ OutRef = REF"
 1.25
 1.25
 1122 0
-1123 1346458183
+1123 0
 1124 
 1125 
 1126 
@@ -47542,8 +47320,8 @@ OutRef = REF"
 1121
 8.05
 8.05
-1122 185510568
-1123 185514240
+1122 185381584
+1123 185385496
 1124 
 1125 
 1126 
@@ -59444,8 +59222,8 @@ OutRef = REF"
 1121
 5.55
 5.55
-1122 185510568
-1123 185514240
+1122 185381584
+1123 185385496
 1124 
 1125 
 1126 
@@ -64943,6 +64721,243 @@ OutRef = REF"
 1121
 10.5
 10.5
+1122 0
+1123 0
+1124 
+1125 
+1126 
+1127 0
+1128 0
+99
+11
+1100 1.97
+1101 1.09867
+1102 2.7
+1103 2.7
+1104 ConAnalog
+1105 Backup5
+1106 GetAp0
+1107 0
+1108 0
+1109 2
+1110 1
+1111
+2
+6
+600 0
+601 2
+602
+7
+700 1.97
+701 2.7
+99
+603
+7
+700 1.09867
+701 2.7
+99
+99
+6
+600 0
+601 2
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+6
+600 0
+601 2
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+6
+600 0
+601 2
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+6
+600 0
+601 2
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+6
+600 0
+601 2
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+6
+600 0
+601 2
+602
+7
+700 0
+701 0
+99
+603
+7
+700 0
+701 0
+99
+99
+99
+1112
+2
+8
+802 0
+803 2
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+8
+802 0
+803 2
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+8
+802 0
+803 2
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+8
+802 0
+803 2
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+8
+802 0
+803 2
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+8
+802 0
+803 2
+800 0
+801 0
+804
+7
+700 0
+701 0
+99
+805
+7
+700 0
+701 0
+99
+99
+99
+1113
+2
+99
+1114
+2
+99
+1115 2
+1116 1
+1117 0
+1118 0
+1119 0
+1120
+1.97
+1.09867
+1121
+2.7
+2.7
 1122 0
 1123 0
 1124 
@@ -71137,8 +71152,8 @@ OutRef = REF"
 11.75
 11.2
 11.2
-1122 185510568
-1123 185514240
+1122 185381584
+1123 185385496
 1124 
 1125 
 1126 
@@ -83075,8 +83090,8 @@ OutRef = REF"
 5.6
 5.85
 5.85
-1122 185510568
-1123 185514240
+1122 185381584
+1123 185385496
 1124 
 1125 
 1126 
@@ -83312,243 +83327,6 @@ OutRef = REF"
 1121
 2.6
 2.6
-1122 0
-1123 0
-1124 
-1125 
-1126 
-1127 0
-1128 0
-99
-11
-1100 1.97
-1101 1.09867
-1102 2.7
-1103 2.7
-1104 ConAnalog
-1105 Backup5
-1106 GetAp0
-1107 0
-1108 0
-1109 2
-1110 1
-1111
-2
-6
-600 0
-601 2
-602
-7
-700 1.97
-701 2.7
-99
-603
-7
-700 1.09867
-701 2.7
-99
-99
-6
-600 0
-601 2
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-6
-600 0
-601 2
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-6
-600 0
-601 2
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-6
-600 0
-601 2
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-6
-600 0
-601 2
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-6
-600 0
-601 2
-602
-7
-700 0
-701 0
-99
-603
-7
-700 0
-701 0
-99
-99
-99
-1112
-2
-8
-802 0
-803 2
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-8
-802 0
-803 2
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-8
-802 0
-803 2
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-8
-802 0
-803 2
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-8
-802 0
-803 2
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-8
-802 0
-803 2
-800 0
-801 0
-804
-7
-700 0
-701 0
-99
-805
-7
-700 0
-701 0
-99
-99
-99
-1113
-2
-99
-1114
-2
-99
-1115 2
-1116 1
-1117 0
-1118 0
-1119 0
-1120
-1.97
-1.09867
-1121
-2.7
-2.7
 1122 0
 1123 0
 1124 

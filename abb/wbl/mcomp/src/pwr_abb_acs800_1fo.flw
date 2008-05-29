@@ -1,20 +1,20 @@
 1
 100 450
 101 450
-102 595
-103 3912
-104 10.8936
+102 0
+103 0
+104 0
 105 100
-106 5
-107 5
+106 0
+107 0
 108 3.9
 109 0.5
 110 12.225
 111 0.475
-116 9
-117 89
-118 25
-119 106
+116 0
+117 0
+118 0
+119 0
 120 0
 121 Claes context
 122 0
@@ -11047,154 +11047,7 @@
 303 0
 99
 3
-300 Or16
-301
-2
-5
-500 0
-501 2
-504 1
-502
-7
-700 0
-701 -0.025
-99
-503
-7
-700 0.119
-701 0.075
-99
-99
-9
-900 2
-901 7
-902 Or
-903
-7
-700 0.0425
-701 0.0125
-99
-99
-6
-600 0
-601 2
-602
-7
-700 0
-701 0
-99
-603
-7
-700 -0.03
-701 0
-99
-99
-12
-1200 0
-1201 2
-1202
-7
-700 -0.03
-701 0
-99
-1203 
-1204 0
-99
-6
-600 0
-601 2
-602
-7
-700 0
-701 0.05
-99
-603
-7
-700 -0.03
-701 0.05
-99
-99
-12
-1200 1
-1201 2
-1202
-7
-700 -0.03
-701 0.05
-99
-1203 
-1204 0
-99
-6
-600 0
-601 2
-602
-7
-700 0.119
-701 0
-99
-603
-7
-700 0.149
-701 0
-99
-99
-12
-1200 2
-1201 1
-1202
-7
-700 0.149
-701 0
-99
-1203 Status
-1204 0
-99
-13
-1300 0
-1301 7
-1302 2
-1305 1
-1303
-7
-700 0.0339444
-701 0.0625
-99
-1304 0
-99
-5
-500 2
-501 0
-504 4
-502
-7
-700 0.029
-701 -0.025
-99
-503
-7
-700 0.119
-701 0.005
-99
-99
-13
-1300 9
-1301 7
-1302 2
-1305 4
-1303
-7
-700 0.046
-701 0.0015
-99
-1304 0
-99
-99
-302 0
-303 0
-99
-3
-300 And17
+300 And16
 301
 2
 5
@@ -13854,7 +13707,7 @@
 303 0
 99
 3
-300 Timer18
+300 Timer17
 301
 2
 5
@@ -14002,7 +13855,7 @@
 303 0
 99
 3
-300 And19
+300 And18
 301
 2
 5
@@ -14922,7 +14775,7 @@
 303 0
 99
 3
-300 And20
+300 And19
 301
 2
 5
@@ -15242,7 +15095,7 @@
 303 0
 99
 3
-300 And21
+300 And20
 301
 2
 5
@@ -16536,7 +16389,7 @@
 303 0
 99
 3
-300 Strcat22
+300 Strcat21
 301
 2
 5
@@ -16905,7 +16758,7 @@
 303 0
 99
 3
-300 Wait23
+300 Wait22
 301
 2
 5
@@ -18370,7 +18223,7 @@
 701 7.2
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 PowerStartUp
+1011 PowerStartUp#1
 1012 0
 1017 0
 99
@@ -18505,7 +18358,7 @@
 701 12.1
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 OpBackupPar
+1011 OpBackupPar#1
 1012 0
 1017 0
 99
@@ -18572,7 +18425,7 @@
 701 10.3
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 OpBackupPar
+1011 OpBackupPar#1
 1012 0
 1017 0
 99
@@ -18707,7 +18560,7 @@
 701 10.5
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1.InIndPar
-1011 Status
+1011 ActualValue
 1012 3
 1017 0
 99
@@ -18773,8 +18626,8 @@
 700 2.9
 701 10.45
 99
-1010 $host-W-StoIp2
-1011 Status
+1010 $PlcMain:ABB-Class-ABB_ACS800_1
+1011 ReadCodeSubPar#1
 1012 3
 1017 0
 99
@@ -18849,7 +18702,7 @@ value = 1 = I8
 701 10.6
 99
 1010 $host-W-BodyText62
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -18916,7 +18769,7 @@ value = 1 = I8
 701 10.1
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 OpReadPar
+1011 OpReadPar#1
 1012 0
 1017 0
 99
@@ -18983,7 +18836,7 @@ value = 1 = I8
 701 10.2
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 OpWritePar
+1011 OpWritePar#1
 1012 0
 1017 0
 99
@@ -19049,8 +18902,8 @@ value = 1 = I8
 700 2.9
 701 10.4
 99
-1010 $host-W-StoIp1
-1011 OpWritePar
+1010 $PlcMain:ABB-Class-ABB_ACS800_1
+1011 ReadCodePar#1
 1012 3
 1017 0
 99
@@ -19116,8 +18969,8 @@ value = 1 = I8
 700 2.9
 701 10.35
 99
-1010 $host-W-StoIp0
-1011 OpWritePar
+1010 $PlcMain:ABB-Class-ABB_ACS800_1
+1011 ReadValuePar#1
 1012 3
 1017 0
 99
@@ -19184,7 +19037,7 @@ value = 1 = I8
 701 10.3
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1.OutValuePar
-1011 OpWritePar
+1011 ActualValue
 1012 3
 1017 0
 99
@@ -19251,7 +19104,7 @@ value = 1 = I8
 701 10.25
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1.OutIndPar
-1011 OpWritePar
+1011 ActualValue
 1012 3
 1017 0
 99
@@ -19318,7 +19171,7 @@ value = 1 = I8
 701 10.2
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1.OutIdPar
-1011 OpWritePar
+1011 ActualValue
 1012 3
 1017 0
 99
@@ -19385,7 +19238,7 @@ value = 1 = I8
 701 10.45
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1.InIdPar
-1011 OpWritePar
+1011 ActualValue
 1012 3
 1017 0
 99
@@ -19452,7 +19305,7 @@ value = 1 = I8
 701 10.4
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 WriteValuePar
+1011 WriteValuePar#1
 1012 3
 1017 0
 99
@@ -19519,7 +19372,7 @@ value = 1 = I8
 701 10.35
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 RequestPar
+1011 RequestPar#1
 1012 3
 1017 0
 99
@@ -19586,7 +19439,7 @@ value = 1 = I8
 701 10.55
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1.InValuePar
-1011 RequestPar
+1011 ActualValue
 1012 3
 1017 0
 99
@@ -19820,7 +19673,7 @@ else {
 701 10.2
 99
 1010 $host-W-Parameter
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -19887,7 +19740,7 @@ else {
 701 12.05
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 OpReadPar
+1011 OpReadPar#1
 1012 0
 1017 0
 99
@@ -19954,7 +19807,7 @@ else {
 701 12
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 OpWritePar
+1011 OpWritePar#1
 1012 0
 1017 0
 99
@@ -20021,7 +19874,7 @@ else {
 701 6.9
 99
 1010 $PlcFo:ABB-Class-ABB_ACS800_1Fo
-1011 DiIL
+1011 DiIL#1
 1012 0
 1017 0
 99
@@ -20088,7 +19941,7 @@ else {
 701 6.9
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1.StatusWordSW3
-1011 DiIL
+1011 ActualValue
 1012 3
 1017 0
 99
@@ -20155,7 +20008,7 @@ else {
 701 6.9
 99
 1010 $host-W-IO_2_converter
-1011 DiIL
+1011 
 1012 3
 1017 0
 99
@@ -20223,7 +20076,7 @@ signals are connected to converters digitala input."
 701 6.3
 99
 1010 $host-W-BodyText59
-1011 DiIL
+1011 
 1012 3
 1017 0
 99
@@ -20290,7 +20143,7 @@ signals are connected to converters digitala input."
 701 6.2
 99
 1010 $host-W-BodyText58
-1011 DiIL
+1011 
 1012 3
 1017 0
 99
@@ -20357,7 +20210,7 @@ signals are connected to converters digitala input."
 701 6.5
 99
 1010 $PlcFo:ABB-Class-ABB_ACS800_1Fo
-1011 Di2
+1011 Di2#1
 1012 0
 1017 0
 99
@@ -20424,7 +20277,7 @@ signals are connected to converters digitala input."
 701 6.55
 99
 1010 $PlcFo:ABB-Class-ABB_ACS800_1Fo
-1011 Di3
+1011 Di3#1
 1012 0
 1017 0
 99
@@ -20491,7 +20344,7 @@ signals are connected to converters digitala input."
 701 6.6
 99
 1010 $PlcFo:ABB-Class-ABB_ACS800_1Fo
-1011 Di4
+1011 Di4#1
 1012 0
 1017 0
 99
@@ -20558,7 +20411,7 @@ signals are connected to converters digitala input."
 701 6.65
 99
 1010 $PlcFo:ABB-Class-ABB_ACS800_1Fo
-1011 Di5
+1011 Di5#1
 1012 0
 1017 0
 99
@@ -20625,7 +20478,7 @@ signals are connected to converters digitala input."
 701 6.7
 99
 1010 $PlcFo:ABB-Class-ABB_ACS800_1Fo
-1011 Di6
+1011 Di6#1
 1012 0
 1017 0
 99
@@ -20692,7 +20545,7 @@ signals are connected to converters digitala input."
 701 6.45
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1.Di6_1
-1011 Di6
+1011 ActualValue
 1012 3
 1017 0
 99
@@ -20759,7 +20612,7 @@ signals are connected to converters digitala input."
 701 6.45
 99
 1010 $host-W-IO_1_converter
-1011 Di6
+1011 
 1012 3
 1017 0
 99
@@ -20826,7 +20679,7 @@ signals are connected to converters digitala input."
 701 6.45
 99
 1010 $PlcFo:ABB-Class-ABB_ACS800_1Fo
-1011 Di1
+1011 Di1#1
 1012 0
 1017 0
 99
@@ -20893,7 +20746,7 @@ signals are connected to converters digitala input."
 701 8.05
 99
 1010 $host-W-BodyText56
-1011 Di1
+1011 
 1012 3
 1017 0
 99
@@ -20960,7 +20813,7 @@ signals are connected to converters digitala input."
 701 7.25
 99
 1010 $host-W-BodyText55
-1011 Di1
+1011 
 1012 3
 1017 0
 99
@@ -21027,7 +20880,7 @@ signals are connected to converters digitala input."
 701 8.45
 99
 1010 $host-W-BodyText54
-1011 Di1
+1011 
 1012 3
 1017 0
 99
@@ -21094,7 +20947,7 @@ signals are connected to converters digitala input."
 701 8.7
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 AlarmOk
+1011 AlarmOk#1
 1012 0
 1017 0
 99
@@ -21160,8 +21013,8 @@ signals are connected to converters digitala input."
 700 2.45
 701 8.6
 99
-1010 $host-W-StoSp4
-1011 AlarmOk
+1010 $host-W-DSup4
+1011 DetectText#1
 1012 3
 1017 0
 99
@@ -21227,8 +21080,8 @@ signals are connected to converters digitala input."
 700 0.7
 701 8.6
 99
-1010 $host-W-GetSp4
-1011 AlarmOk
+1010 $PlcMain:ABB-Class-ABB_ACS800_1
+1011 AlarmError#1
 1012 3
 1017 0
 99
@@ -21295,7 +21148,7 @@ signals are connected to converters digitala input."
 701 8.65
 99
 1010 $host-W-NameToStr53
-1011 AlarmOk
+1011 
 1012 3
 1017 0
 99
@@ -21362,7 +21215,7 @@ signals are connected to converters digitala input."
 701 8.6
 99
 1010 $host-W-AlarmErr
-1011 AlarmOk
+1011 
 1012 3
 1017 0
 99
@@ -21429,7 +21282,7 @@ signals are connected to converters digitala input."
 701 8.75
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 ConvertFault
+1011 ConvertFault#1
 1012 0
 1017 0
 99
@@ -21631,7 +21484,7 @@ signals are connected to converters digitala input."
 701 8.45
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 AlarmOk
+1011 AlarmOk#1
 1012 0
 1017 0
 99
@@ -21697,8 +21550,8 @@ signals are connected to converters digitala input."
 700 2.45
 701 8.35
 99
-1010 $host-W-StoSp3
-1011 AlarmOk
+1010 $host-W-DSup3
+1011 DetectText#1
 1012 3
 1017 0
 99
@@ -21764,8 +21617,8 @@ signals are connected to converters digitala input."
 700 0.7
 701 8.35
 99
-1010 $host-W-GetSp3
-1011 AlarmOk
+1010 $PlcMain:ABB-Class-ABB_ACS800_1
+1011 AlarmWarning#1
 1012 3
 1017 0
 99
@@ -21832,7 +21685,7 @@ signals are connected to converters digitala input."
 701 8.4
 99
 1010 $host-W-NameToStr51
-1011 AlarmOk
+1011 
 1012 3
 1017 0
 99
@@ -21899,7 +21752,7 @@ signals are connected to converters digitala input."
 701 8.35
 99
 1010 $host-W-AlarmWarning
-1011 AlarmOk
+1011 
 1012 3
 1017 0
 99
@@ -21966,7 +21819,7 @@ signals are connected to converters digitala input."
 701 8.5
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 ConvertWarning
+1011 ConvertWarning#1
 1012 0
 1017 0
 99
@@ -22171,7 +22024,7 @@ Profibus communication."
 701 11.85
 99
 1010 $host-W-BodyText49
-1011 Action
+1011 
 1012 3
 1017 0
 99
@@ -22241,7 +22094,7 @@ Profibus communication."
 701 9.5
 99
 1010 $host-W-BodyText48
-1011 Action
+1011 
 1012 3
 1017 0
 99
@@ -22311,7 +22164,7 @@ Profibus communication."
 701 7.1
 99
 1010 $host-W-BodyText47
-1011 Action
+1011 
 1012 3
 1017 0
 99
@@ -22381,7 +22234,7 @@ Profibus communication."
 701 4.75
 99
 1010 $host-W-BodyText46
-1011 Action
+1011 
 1012 3
 1017 0
 99
@@ -22448,7 +22301,7 @@ Profibus communication."
 701 8.15
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1.AlarmWord5
-1011 Action
+1011 ActualValue
 1012 3
 1017 0
 99
@@ -22515,7 +22368,7 @@ Profibus communication."
 701 8.15
 99
 1010 $host-W-AlarmWord5_1
-1011 Action
+1011 
 1012 3
 1017 0
 99
@@ -22584,7 +22437,7 @@ AlarmWord5 bit:
 701 8.25
 99
 1010 $host-W-BodyText43
-1011 Action
+1011 
 1012 3
 1017 0
 99
@@ -22651,7 +22504,7 @@ AlarmWord5 bit:
 701 8
 99
 1010 $host-W-NameToStr42
-1011 Action
+1011 
 1012 3
 1017 0
 99
@@ -22717,8 +22570,8 @@ AlarmWord5 bit:
 700 2.45
 701 7.95
 99
-1010 $host-W-StoSp2
-1011 Action
+1010 $host-W-DSup2
+1011 DetectText#1
 1012 3
 1017 0
 99
@@ -22785,7 +22638,7 @@ AlarmWord5 bit:
 701 8.05
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 AlarmOk
+1011 AlarmOk#1
 1012 0
 1017 0
 99
@@ -22918,8 +22771,8 @@ AlarmWord5 bit:
 700 0.7
 701 7.95
 99
-1010 $host-W-GetSp2
-1011 Status
+1010 $PlcMain:ABB-Class-ABB_ACS800_1
+1011 AlarmFanOld#1
 1012 3
 1017 0
 99
@@ -22986,7 +22839,7 @@ AlarmWord5 bit:
 701 7.95
 99
 1010 $host-W-AlarmFan
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -23121,7 +22974,7 @@ AlarmWord5 bit:
 701 7.8
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 AlarmOk
+1011 AlarmOk#1
 1012 0
 1017 0
 99
@@ -23187,8 +23040,8 @@ AlarmWord5 bit:
 700 2.45
 701 7.7
 99
-1010 $host-W-StoSp1
-1011 AlarmOk
+1010 $host-W-DSup1
+1011 DetectText#1
 1012 3
 1017 0
 99
@@ -23254,8 +23107,8 @@ AlarmWord5 bit:
 700 0.7
 701 7.7
 99
-1010 $host-W-GetSp1
-1011 AlarmOk
+1010 $PlcMain:ABB-Class-ABB_ACS800_1
+1011 AlarmTripped#1
 1012 3
 1017 0
 99
@@ -23322,7 +23175,7 @@ AlarmWord5 bit:
 701 7.75
 99
 1010 $host-W-NameToStr39
-1011 AlarmOk
+1011 
 1012 3
 1017 0
 99
@@ -23389,7 +23242,7 @@ AlarmWord5 bit:
 701 7.7
 99
 1010 $host-W-AlarmTrip
-1011 AlarmOk
+1011 
 1012 3
 1017 0
 99
@@ -23456,7 +23309,7 @@ AlarmWord5 bit:
 701 7.85
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 ConvertTripped
+1011 ConvertTripped#1
 1012 0
 1017 0
 99
@@ -23658,7 +23511,7 @@ AlarmWord5 bit:
 701 7.35
 99
 1010 $PlcFo:ABB-Class-ABB_ACS800_1Fo
-1011 PowerOn
+1011 PowerOn#1
 1012 0
 1017 0
 99
@@ -23725,7 +23578,7 @@ AlarmWord5 bit:
 701 7.25
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 CommOk
+1011 CommOk#1
 1012 0
 1017 0
 99
@@ -23792,7 +23645,7 @@ AlarmWord5 bit:
 701 7.3
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 ConvertRemote
+1011 ConvertRemote#1
 1012 0
 1017 0
 99
@@ -23926,7 +23779,7 @@ AlarmWord5 bit:
 701 4.5
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 AlarmOk
+1011 AlarmOk#1
 1012 0
 1017 0
 99
@@ -24057,7 +23910,7 @@ AlarmWord5 bit:
 "Class-ABB_ACS800_1Fo-Code"
 "W"
 "5"
-"31-MAY-2006 10:06"
+"04-APR-2008 16:14"
 "JE"
 1001
 7
@@ -24065,7 +23918,7 @@ AlarmWord5 bit:
 701 9.95
 99
 1010 $host-W-Document4
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -24132,7 +23985,7 @@ AlarmWord5 bit:
 701 3.65
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 ConvertReady
+1011 ConvertReady#1
 1012 0
 1017 0
 99
@@ -24266,7 +24119,7 @@ AlarmWord5 bit:
 701 8.95
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 ConvertRun
+1011 ConvertRun#1
 1012 0
 1017 0
 99
@@ -24333,7 +24186,7 @@ AlarmWord5 bit:
 701 1.3
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1.RefSpeed
-1011 ConvertRun
+1011 ActualValue
 1012 3
 1017 0
 99
@@ -24402,7 +24255,7 @@ Yellow = Warning"
 701 9.3
 99
 1010 $host-W-BodyText34
-1011 ConvertRun
+1011 
 1012 3
 1017 0
 99
@@ -24474,7 +24327,7 @@ Yellow = Warning"
 1017 0
 99
 10
-1000 And17
+1000 And16
 1002 Yellow
 1005
 0
@@ -24603,7 +24456,7 @@ Yellow = Warning"
 701 9.4
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 IndError
+1011 IndError#1
 1012 0
 1017 0
 99
@@ -24670,7 +24523,7 @@ Yellow = Warning"
 701 9.3
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 IndWarning
+1011 IndWarning#1
 1012 0
 1017 0
 99
@@ -24737,7 +24590,7 @@ Yellow = Warning"
 701 5.25
 99
 1010 $host-W-BodyText33
-1011 IndWarning
+1011 
 1012 3
 1017 0
 99
@@ -24804,7 +24657,7 @@ Yellow = Warning"
 701 8.95
 99
 1010 $host-W-BodyText32
-1011 IndWarning
+1011 
 1012 3
 1017 0
 99
@@ -24871,7 +24724,7 @@ Yellow = Warning"
 701 9.15
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 ConvertRemote
+1011 ConvertRemote#1
 1012 0
 1017 0
 99
@@ -24938,7 +24791,7 @@ Yellow = Warning"
 701 9.1
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 ConvertWarning
+1011 ConvertWarning#1
 1012 0
 1017 0
 99
@@ -25005,7 +24858,7 @@ Yellow = Warning"
 701 9.05
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 ConvertFault
+1011 ConvertFault#1
 1012 0
 1017 0
 99
@@ -25072,7 +24925,7 @@ Yellow = Warning"
 701 9
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 ConvertTripped
+1011 ConvertTripped#1
 1012 0
 1017 0
 99
@@ -25139,7 +24992,7 @@ Yellow = Warning"
 701 5.3
 99
 1010 $host-W-BodyText31
-1011 ConvertTripped
+1011 
 1012 3
 1017 0
 99
@@ -25206,7 +25059,7 @@ Yellow = Warning"
 701 6
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1.StatusWordSW
-1011 ConvertTripped
+1011 ActualValue
 1012 3
 1017 0
 99
@@ -25273,7 +25126,7 @@ Yellow = Warning"
 701 6
 99
 1010 $host-W-SW_2
-1011 ConvertTripped
+1011 
 1012 3
 1017 0
 99
@@ -25337,7 +25190,7 @@ Yellow = Warning"
 "Class-ABB_ACS800_1Fo-Code"
 "W"
 "4"
-"31-MAY-2006 10:06"
+"04-APR-2008 16:14"
 "JE"
 1001
 7
@@ -25345,7 +25198,7 @@ Yellow = Warning"
 701 7.6
 99
 1010 $host-W-Document3
-1011 ConvertTripped
+1011 
 1012 3
 1017 0
 99
@@ -25412,7 +25265,7 @@ Yellow = Warning"
 701 8.9
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 ConvertReady
+1011 ConvertReady#1
 1012 0
 1017 0
 99
@@ -25479,7 +25332,7 @@ Yellow = Warning"
 701 9.2
 99
 1010 $host-W-BodyText26
-1011 ConvertReady
+1011 
 1012 3
 1017 0
 99
@@ -25553,7 +25406,7 @@ SW bit:
 701 9.3
 99
 1010 $host-W-BodyText25
-1011 ConvertReady
+1011 
 1012 3
 1017 0
 99
@@ -25620,7 +25473,7 @@ SW bit:
 701 5.9
 99
 1010 $host-W-BodyText23
-1011 ConvertReady
+1011 
 1012 3
 1017 0
 99
@@ -25687,7 +25540,7 @@ SW bit:
 701 6
 99
 1010 $PlcFo:ABB-Class-ABB_ACS800_1Fo
-1011 Run
+1011 Run#1
 1012 0
 1017 0
 99
@@ -25754,7 +25607,7 @@ SW bit:
 701 8.9
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1.StatusWordSW
-1011 Run
+1011 ActualValue
 1012 3
 1017 0
 99
@@ -25821,7 +25674,7 @@ SW bit:
 701 8.9
 99
 1010 $host-W-SW_3
-1011 Run
+1011 
 1012 3
 1017 0
 99
@@ -25890,7 +25743,7 @@ SW bit:
 701 6.15
 99
 1010 $host-W-BodyText21
-1011 Run
+1011 
 1012 3
 1017 0
 99
@@ -25957,7 +25810,7 @@ SW bit:
 701 1.55
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 ReadyRemote
+1011 ReadyRemote#1
 1012 0
 1017 0
 99
@@ -26024,7 +25877,7 @@ SW bit:
 701 1.55
 99
 1010 $PlcFo:ABB-Class-ABB_ACS800_1Fo
-1011 ReadyRemote
+1011 ReadyRemote#1
 1012 0
 1017 0
 99
@@ -26091,12 +25944,12 @@ SW bit:
 701 5.65
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 OpReset
+1011 OpReset#1
 1012 0
 1017 0
 99
 10
-1000 Timer18
+1000 Timer17
 1002 ResetTime
 1005
 0
@@ -26164,7 +26017,7 @@ SW bit:
 1017 0
 99
 10
-1000 And19
+1000 And18
 1002 Start
 1005
 0
@@ -26298,7 +26151,7 @@ CW bit:
 701 5.65
 99
 1010 $host-W-BodyText20
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -26365,7 +26218,7 @@ CW bit:
 701 5.4
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1.ControlWordCW
-1011 Status
+1011 ActualValue
 1012 3
 1017 0
 99
@@ -26432,7 +26285,7 @@ CW bit:
 701 5.4
 99
 1010 $host-W-CW
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -26499,7 +26352,7 @@ CW bit:
 701 5.45
 99
 1010 $PlcFo:ABB-Class-ABB_ACS800_1Fo
-1011 Start
+1011 Start#1
 1012 0
 1017 0
 99
@@ -26566,7 +26419,7 @@ CW bit:
 701 5.4
 99
 1010 $PlcFo:ABB-Class-ABB_ACS800_1Fo
-1011 ReadyRemote
+1011 ReadyRemote#1
 1012 0
 1017 0
 99
@@ -26633,7 +26486,7 @@ CW bit:
 701 3.7
 99
 1010 $host-W-BodyText18
-1011 ReadyRemote
+1011 
 1012 3
 1017 0
 99
@@ -26700,7 +26553,7 @@ CW bit:
 701 3.55
 99
 1010 $host-W-BodyText17
-1011 ReadyRemote
+1011 
 1012 3
 1017 0
 99
@@ -26767,12 +26620,12 @@ CW bit:
 701 3.65
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 PowerStartUp
+1011 PowerStartUp#1
 1012 0
 1017 0
 99
 10
-1000 And20
+1000 And19
 1002 StartingUp
 1005
 0
@@ -26901,7 +26754,7 @@ CW bit:
 701 3.95
 99
 1010 $host-W-BodyText16
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -26968,12 +26821,12 @@ CW bit:
 701 4.05
 99
 1010 $PlcFo:ABB-Class-ABB_ACS800_1Fo
-1011 ReadyRemote
+1011 ReadyRemote#1
 1012 0
 1017 0
 99
 10
-1000 And21
+1000 And20
 1002 Ready
 1005
 0
@@ -27108,7 +26961,7 @@ SW bit:
 701 4.25
 99
 1010 $host-W-BodyText15
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -27175,7 +27028,7 @@ SW bit:
 701 4.1
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1.StatusWordSW
-1011 Status
+1011 ActualValue
 1012 3
 1017 0
 99
@@ -27242,7 +27095,7 @@ SW bit:
 701 4.1
 99
 1010 $host-W-SW_1
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -27310,7 +27163,7 @@ communication after power lost."
 701 3.45
 99
 1010 $host-W-BodyText13
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -27377,7 +27230,7 @@ communication after power lost."
 701 7.05
 99
 1010 $host-W-BodyText11
-1011 Status
+1011 
 1012 3
 1017 0
 99
@@ -27512,7 +27365,7 @@ communication after power lost."
 701 7.15
 99
 1010 $host-W-NameToStr10
-1011 Action
+1011 
 1012 3
 1017 0
 99
@@ -27578,8 +27431,8 @@ communication after power lost."
 700 0.7
 701 7.1
 99
-1010 $host-W-GetSp0
-1011 Action
+1010 $PlcMain:ABB-Class-ABB_ACS800_1
+1011 AlarmLocalMod#1
 1012 3
 1017 0
 99
@@ -27645,13 +27498,13 @@ communication after power lost."
 700 2.45
 701 7.15
 99
-1010 $host-W-StoSp0
-1011 Action
+1010 $host-W-DSup0
+1011 DetectText#1
 1012 3
 1017 0
 99
 10
-1000 Strcat22
+1000 Strcat21
 1002 AlarmLoc
 1005
 0
@@ -27713,7 +27566,7 @@ communication after power lost."
 701 7.1
 99
 1010 $host-W-AlarmLoc
-1011 Action
+1011 
 1012 3
 1017 0
 99
@@ -27780,7 +27633,7 @@ communication after power lost."
 701 3.3
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 PowerUpTime
+1011 PowerUpTime#1
 1012 3
 1017 0
 99
@@ -27846,13 +27699,13 @@ communication after power lost."
 700 1.55
 701 3.3
 99
-1010 $host-W-StoAp2
-1011 PowerUpTime
+1010 $host-W-PowerUpTime
+1011 TimerTime#1
 1012 3
 1017 0
 99
 10
-1000 Wait23
+1000 Wait22
 1002 PowerUpTime
 1005
 0
@@ -27982,7 +27835,7 @@ communication after power lost."
 701 11.95
 99
 1010 $PlcMain:ABB-Class-ABB_ACS800_1
-1011 OpReset
+1011 OpReset#1
 1012 0
 1017 0
 99
@@ -28050,7 +27903,7 @@ The attribute below must always placed last in this PlcPgm."
 701 11.8
 99
 1010 $host-W-BodyText8
-1011 OpReset
+1011 
 1012 3
 1017 0
 99
@@ -28117,7 +27970,7 @@ The attribute below must always placed last in this PlcPgm."
 701 3.35
 99
 1010 $PlcFo:ABB-Class-ABB_ACS800_1Fo
-1011 PowerOn
+1011 PowerOn#1
 1012 0
 1017 0
 99
@@ -28184,7 +28037,7 @@ The attribute below must always placed last in this PlcPgm."
 701 1.3
 99
 1010 $PlcFo:ABB-Class-ABB_ACS800_1Fo
-1011 RefSpeed
+1011 RefSpeed#1
 1012 3
 1017 0
 99
@@ -28261,7 +28114,7 @@ Run = run
 701 0.75
 99
 1010 $host-W-BodyText4
-1011 RefSpeed
+1011 
 1012 3
 1017 0
 99
@@ -28328,7 +28181,7 @@ Run = run
 701 0.65
 99
 1010 $host-W-BodyText3
-1011 RefSpeed
+1011 
 1012 3
 1017 0
 99
@@ -28392,7 +28245,7 @@ Run = run
 "Class-ABB_ACS800_1Fo-Code"
 "W"
 "3"
-"31-MAY-2006 10:06"
+"04-APR-2008 16:14"
 "JE"
 1001
 7
@@ -28400,7 +28253,7 @@ Run = run
 701 5.2
 99
 1010 $host-W-Document2
-1011 RefSpeed
+1011 
 1012 3
 1017 0
 99
@@ -28464,7 +28317,7 @@ Run = run
 "Class-ABB_ACS800_1Fo-Code"
 "W"
 "2"
-"31-MAY-2006 10:06"
+"04-APR-2008 16:14"
 "JE"
 1001
 7
@@ -28472,7 +28325,7 @@ Run = run
 701 2.85
 99
 1010 $host-W-Document1
-1011 RefSpeed
+1011 
 1012 3
 1017 0
 99
@@ -28542,7 +28395,7 @@ Profibus communication."
 701 2.4
 99
 1010 $host-W-BodyText0
-1011 RefSpeed
+1011 
 1012 3
 1017 0
 99
@@ -28606,7 +28459,7 @@ Profibus communication."
 "Class-ABB_ACS800_1Fo-Code"
 "W"
 "1(5)"
-"31-MAY-2006 10:06"
+"04-APR-2008 16:14"
 "JE"
 1001
 7
@@ -28614,7 +28467,7 @@ Profibus communication."
 701 0.5
 99
 1010 $host-W-Document0
-1011 RefSpeed
+1011 
 1012 3
 1017 0
 99
@@ -35299,13 +35152,13 @@ Profibus communication."
 601 1
 602
 7
-700 2.40906
-701 9.30222
+700 0
+701 0
 99
 603
 7
-700 2.40906
-701 9.30222
+700 0
+701 0
 99
 99
 6
@@ -35313,13 +35166,13 @@ Profibus communication."
 601 1
 602
 7
-700 2.43406
-701 9.3
+700 0
+701 0
 99
 603
 7
-700 2.47
-701 9.3
+700 0
+701 0
 99
 99
 6
@@ -35384,33 +35237,33 @@ Profibus communication."
 8
 802 0
 803 1
-800 270
-801 90
+800 0
+801 0
 804
 7
-700 2.36511
-701 9.3
+700 0
+701 0
 99
 805
 7
-700 2.40906
-701 9.30444
+700 0
+701 0
 99
 99
 8
 802 0
 803 1
-800 90
-801 90
+800 0
+801 0
 804
 7
-700 2.40906
-701 9.3
+700 0
+701 0
 99
 805
 7
-700 2.45906
-701 9.30444
+700 0
+701 0
 99
 99
 8
@@ -51201,8 +51054,8 @@ Profibus communication."
 1121
 10.3
 10.3
-1122 158720568
-1123 158724344
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -52390,8 +52243,8 @@ Profibus communication."
 8.35
 8.35
 8.35
-1122 0
-1123 0
+1122 159173952
+1123 159177728
 1124 
 1125 
 1126 
@@ -52632,7 +52485,7 @@ Profibus communication."
 9.4
 9.4
 1122 0
-1123 1072693248
+1123 0
 1124 
 1125 
 1126 
@@ -52872,8 +52725,8 @@ Profibus communication."
 9.4
 9.35
 9.35
-1122 10
-1123 12
+1122 0
+1123 0
 1124 
 1125 
 1126 

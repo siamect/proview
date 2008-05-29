@@ -1,21 +1,21 @@
 1
 100 450
 101 450
-102 432
-103 288
-104 27.234
+102 0
+103 0
+104 0
 105 100
-106 13
-107 12
+106 0
+107 0
 108 3.9
 109 0.5
 110 5.175
 111 0.475
-116 13
-117 5
-118 53
-119 47
-120 0
+116 0
+117 0
+118 0
+119 0
+120 1879048192
 121 Claes context
 122 0
 126 0.05
@@ -29,7 +29,7 @@
 123
 2
 3
-300 Text0
+300 Text331
 301
 2
 5
@@ -75,7 +75,7 @@
 303 0
 99
 3
-300 BaseFcPPO5Sim0
+300 BaseFcPPO5Sim82
 301
 2
 5
@@ -161,7 +161,7 @@
 303 0
 99
 3
-300 BodyText1
+300 BodyText332
 301
 2
 5
@@ -175,7 +175,7 @@
 99
 503
 7
-700 0.513222
+700 0.562111
 701 0.122
 99
 99
@@ -196,7 +196,7 @@
 1201 1
 1202
 7
-700 0.513222
+700 0.562111
 701 0.05
 99
 1203 
@@ -207,7 +207,7 @@
 303 0
 99
 3
-300 StoDp0
+300 StoDp1404
 301
 2
 5
@@ -318,7 +318,7 @@
 303 0
 99
 3
-300 GetDi1
+300 GetDi1405
 301
 2
 5
@@ -429,7 +429,7 @@
 303 0
 99
 3
-300 CArea0
+300 CArea62
 301
 2
 5
@@ -613,7 +613,7 @@
 303 1
 99
 3
-300 CArea1
+300 CArea63
 301
 2
 5
@@ -797,7 +797,7 @@
 303 1
 99
 3
-300 CArea2
+300 CArea64
 301
 2
 5
@@ -981,7 +981,7 @@
 303 1
 99
 3
-300 GetDi5
+300 GetDi1409
 301
 2
 5
@@ -1092,7 +1092,7 @@
 303 0
 99
 3
-300 GetDi6
+300 GetDi1410
 301
 2
 5
@@ -1203,7 +1203,7 @@
 303 0
 99
 3
-300 GetDi7
+300 GetDi1411
 301
 2
 5
@@ -1314,7 +1314,7 @@
 303 0
 99
 3
-300 StoDp8
+300 StoDp1412
 301
 2
 5
@@ -1425,7 +1425,7 @@
 303 0
 99
 3
-300 StoDp9
+300 StoDp1413
 301
 2
 5
@@ -1536,7 +1536,7 @@
 303 0
 99
 3
-300 StoDp10
+300 StoDp1414
 301
 2
 5
@@ -1663,7 +1663,7 @@
 303 0
 99
 3
-300 Text2
+300 Text333
 301
 2
 5
@@ -1709,7 +1709,7 @@
 303 0
 99
 3
-300 BaseContactorSim1
+300 BaseContactorSim83
 301
 2
 5
@@ -1795,7 +1795,7 @@
 303 0
 99
 3
-300 GetDp11
+300 GetDp1415
 301
 2
 5
@@ -1906,7 +1906,7 @@
 303 0
 99
 3
-300 ResDp12
+300 ResDp1416
 301
 2
 5
@@ -2017,7 +2017,7 @@
 303 0
 99
 3
-300 GetDp13
+300 GetDp1417
 301
 2
 5
@@ -2128,7 +2128,7 @@
 303 0
 99
 3
-300 ResDi14
+300 ResDi1418
 301
 2
 5
@@ -2239,7 +2239,7 @@
 303 0
 99
 3
-300 Disabled15
+300 Disabled1419
 301
 2
 5
@@ -2350,7 +2350,7 @@
 303 0
 99
 3
-300 Disabled16
+300 Disabled1420
 301
 2
 5
@@ -2461,7 +2461,7 @@
 303 0
 99
 3
-300 Disabled17
+300 Disabled1421
 301
 2
 5
@@ -2572,7 +2572,7 @@
 303 0
 99
 3
-300 GetDp18
+300 GetDp1422
 301
 2
 5
@@ -2683,7 +2683,7 @@
 303 0
 99
 3
-300 GetDp19
+300 GetDp1423
 301
 2
 5
@@ -2794,7 +2794,7 @@
 303 0
 99
 3
-300 BaseMotorSim2
+300 BaseMotorSim84
 301
 2
 5
@@ -2880,7 +2880,7 @@
 303 0
 99
 3
-300 Text3
+300 Text334
 301
 2
 5
@@ -2926,7 +2926,7 @@
 303 0
 99
 3
-300 ToggleDi20
+300 ToggleDi1424
 301
 2
 5
@@ -3037,7 +3037,7 @@
 303 0
 99
 3
-300 ResDp21
+300 ResDp1425
 301
 2
 5
@@ -3148,7 +3148,7 @@
 303 0
 99
 3
-300 SetDi22
+300 SetDi1426
 301
 2
 5
@@ -3259,7 +3259,7 @@
 303 0
 99
 3
-300 FirstScan0
+300 FirstScan17
 301
 2
 5
@@ -3317,7 +3317,7 @@
 303 0
 99
 3
-300 ResDp23
+300 ResDp1427
 301
 2
 5
@@ -3428,7 +3428,7 @@
 303 0
 99
 3
-300 FirstScan1
+300 FirstScan18
 301
 2
 5
@@ -3486,7 +3486,7 @@
 303 0
 99
 3
-300 SetDi24
+300 SetDi1428
 301
 2
 5
@@ -3597,7 +3597,7 @@
 303 0
 99
 3
-300 ToggleDi25
+300 ToggleDi1429
 301
 2
 5
@@ -3708,7 +3708,7 @@
 303 0
 99
 3
-300 BodyText4
+300 BodyText335
 301
 2
 5
@@ -3722,7 +3722,7 @@
 99
 503
 7
-700 0.513222
+700 0.562111
 701 0.122
 99
 99
@@ -3743,7 +3743,7 @@
 1201 1
 1202
 7
-700 0.513222
+700 0.562111
 701 0.05
 99
 1203 
@@ -3754,7 +3754,7 @@
 303 0
 99
 3
-300 Document0
+300 Document71
 301
 2
 6
@@ -3999,7 +3999,7 @@
 303 0
 99
 3
-300 Text5
+300 Text336
 301
 2
 5
@@ -4045,7 +4045,7 @@
 303 0
 99
 3
-300 Text6
+300 Text337
 301
 2
 5
@@ -4091,7 +4091,7 @@
 303 0
 99
 3
-300 Text7
+300 Text338
 301
 2
 5
@@ -4137,7 +4137,7 @@
 303 0
 99
 3
-300 GetDp26
+300 GetDp1430
 301
 2
 5
@@ -4248,7 +4248,7 @@
 303 0
 99
 3
-300 GetDp27
+300 GetDp1431
 301
 2
 5
@@ -4359,7 +4359,7 @@
 303 0
 99
 3
-300 Document1
+300 Document72
 301
 2
 6
@@ -4621,7 +4621,7 @@
 125
 2
 10
-1000 Text0
+1000 Text331
 1002 Text50
 1005
 0
@@ -4688,7 +4688,7 @@
 1017 0
 99
 10
-1000 BaseFcPPO5Sim0
+1000 BaseFcPPO5Sim82
 1002 BaseFcPPO5Sim
 1005
 0
@@ -4755,7 +4755,7 @@
 1017 0
 99
 10
-1000 BodyText1
+1000 BodyText332
 1002 BodyText48
 1005
 0
@@ -4790,16 +4790,16 @@
 0
 0
 0
-1006 3.71322
+1006 3.76211
 1007 3.203
 1008 5.01556
 1009 4.828
-1013 3.71322
+1013 3.76211
 1014 3.203
 1015 5.01556
 1016 4.828
 1003
-47
+50
 0
 0
 0
@@ -4811,7 +4811,7 @@
 0
 1004
 "Functionobject Simulate
-ABB ACS800 Aggregate 
+Fc PPO5 Motor Aggregate 
 "
 1001
 7
@@ -4824,7 +4824,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 StoDp0
+1000 StoDp1404
 1002 StoDp4
 1005
 0
@@ -4886,12 +4886,12 @@ ABB ACS800 Aggregate
 701 0.95
 99
 1010 $PlcFo:BaseComponent-Class-BaseFcPPO5MotorAggrSim
-1011 IndSafetySwitchOn
+1011 IndSafetySwitchOn#1
 1012 0
 1017 0
 99
 10
-1000 GetDi1
+1000 GetDi1405
 1002 GetDi4
 1005
 0
@@ -4958,7 +4958,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 CArea0
+1000 CArea62
 1002 CArea47
 1005
 0
@@ -5020,12 +5020,12 @@ ABB ACS800 Aggregate
 701 1.05
 99
 1010 $host-W-CArea47
-1011 ActualValue
+1011 
 1012 3
 1017 0
 99
 10
-1000 CArea1
+1000 CArea63
 1002 CArea46
 1005
 0
@@ -5092,7 +5092,7 @@ ABB ACS800 Aggregate
 1017 1
 99
 10
-1000 CArea2
+1000 CArea64
 1002 CArea45
 1005
 0
@@ -5159,7 +5159,7 @@ ABB ACS800 Aggregate
 1017 1
 99
 10
-1000 GetDi5
+1000 GetDi1409
 1002 GetDi3
 1005
 0
@@ -5226,7 +5226,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 GetDi6
+1000 GetDi1410
 1002 GetDi1
 1005
 0
@@ -5293,7 +5293,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 GetDi7
+1000 GetDi1411
 1002 GetDi0
 1005
 0
@@ -5360,7 +5360,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 StoDp8
+1000 StoDp1412
 1002 StoDp3
 1005
 0
@@ -5422,12 +5422,12 @@ ABB ACS800 Aggregate
 701 1.15
 99
 1010 $PlcFo:BaseComponent-Class-BaseFcPPO5MotorAggrSim
-1011 IndContactorFeedback
+1011 IndContactorFeedback#1
 1012 0
 1017 0
 99
 10
-1000 StoDp9
+1000 StoDp1413
 1002 StoDp1
 1005
 0
@@ -5489,12 +5489,12 @@ ABB ACS800 Aggregate
 701 1.2
 99
 1010 $PlcFo:BaseComponent-Class-BaseFcPPO5MotorAggrSim
-1011 IndSafetySwitchOn
+1011 IndSafetySwitchOn#1
 1012 0
 1017 0
 99
 10
-1000 StoDp10
+1000 StoDp1414
 1002 StoDp0
 1005
 0
@@ -5556,12 +5556,12 @@ ABB ACS800 Aggregate
 701 0.7
 99
 1010 $PlcFo:BaseComponent-Class-BaseFcPPO5MotorAggrSim
-1011 IndCircuitBreakerTripped
+1011 IndCircuitBreakerTripped#1
 1012 0
 1017 0
 99
 10
-1000 Text2
+1000 Text333
 1002 Text44
 1005
 0
@@ -5623,12 +5623,12 @@ ABB ACS800 Aggregate
 701 1.55
 99
 1010 $host-W-Text44
-1011 IndCircuitBreakerTripped
+1011 
 1012 3
 1017 0
 99
 10
-1000 BaseContactorSim1
+1000 BaseContactorSim83
 1002 ContactorSim
 1005
 0
@@ -5690,12 +5690,12 @@ ABB ACS800 Aggregate
 701 1.65
 99
 1010 $host-W-ContactorSim
-1011 IndCircuitBreakerTripped
+1011 
 1012 3
 1017 0
 99
 10
-1000 GetDp11
+1000 GetDp1415
 1002 GetDp28
 1005
 0
@@ -5757,12 +5757,12 @@ ABB ACS800 Aggregate
 701 5.05
 99
 1010 $PlcFo:BaseComponent-Class-BaseFcPPO5MotorAggrSim
-1011 OpResetContactorFeedback
+1011 OpResetContactorFeedback#1
 1012 0
 1017 0
 99
 10
-1000 ResDp12
+1000 ResDp1416
 1002 ResDp3
 1005
 0
@@ -5824,12 +5824,12 @@ ABB ACS800 Aggregate
 701 5.05
 99
 1010 $PlcFo:BaseComponent-Class-BaseFcPPO5MotorAggrSim
-1011 OpResetContactorFeedback
+1011 OpResetContactorFeedback#1
 1012 0
 1017 0
 99
 10
-1000 GetDp13
+1000 GetDp1417
 1002 GetDp27
 1005
 0
@@ -5891,12 +5891,12 @@ ABB ACS800 Aggregate
 701 1.1
 99
 1010 $PlcFo:BaseComponent-Class-BaseFcPPO5MotorAggrSim
-1011 OpResetContactorFeedback
+1011 OpResetContactorFeedback#1
 1012 0
 1017 0
 99
 10
-1000 ResDi14
+1000 ResDi1418
 1002 ResDi0
 1005
 0
@@ -5963,7 +5963,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 Disabled15
+1000 Disabled1419
 1002 Disabled41
 1005
 0
@@ -6030,7 +6030,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 Disabled16
+1000 Disabled1420
 1002 Disabled40
 1005
 0
@@ -6097,7 +6097,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 Disabled17
+1000 Disabled1421
 1002 CircDisabled
 1005
 0
@@ -6164,7 +6164,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 GetDp18
+1000 GetDp1422
 1002 GetDp26
 1005
 0
@@ -6226,12 +6226,12 @@ ABB ACS800 Aggregate
 701 5
 99
 1010 $PlcFo:BaseComponent-Class-BaseFcPPO5MotorAggrSim
-1011 OpToggleSafetySwitch
+1011 OpToggleSafetySwitch#1
 1012 0
 1017 0
 99
 10
-1000 GetDp19
+1000 GetDp1423
 1002 GetDp25
 1005
 0
@@ -6293,12 +6293,12 @@ ABB ACS800 Aggregate
 701 4.95
 99
 1010 $PlcFo:BaseComponent-Class-BaseFcPPO5MotorAggrSim
-1011 OpToggleCircuitBreaker
+1011 OpToggleCircuitBreaker#1
 1012 0
 1017 0
 99
 10
-1000 BaseMotorSim2
+1000 BaseMotorSim84
 1002 MotorSim
 1005
 0
@@ -6360,12 +6360,12 @@ ABB ACS800 Aggregate
 701 1.45
 99
 1010 $host-W-MotorSim
-1011 OpToggleCircuitBreaker
+1011 
 1012 3
 1017 0
 99
 10
-1000 Text3
+1000 Text334
 1002 Text31
 1005
 0
@@ -6427,12 +6427,12 @@ ABB ACS800 Aggregate
 701 1.35
 99
 1010 $host-W-Text31
-1011 OpToggleCircuitBreaker
+1011 
 1012 3
 1017 0
 99
 10
-1000 ToggleDi20
+1000 ToggleDi1424
 1002 ToggleDi4
 1005
 0
@@ -6499,7 +6499,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 ResDp21
+1000 ResDp1425
 1002 ResDp2
 1005
 0
@@ -6561,12 +6561,12 @@ ABB ACS800 Aggregate
 701 5
 99
 1010 $PlcFo:BaseComponent-Class-BaseFcPPO5MotorAggrSim
-1011 OpToggleSafetySwitch
+1011 OpToggleSafetySwitch#1
 1012 0
 1017 0
 99
 10
-1000 SetDi22
+1000 SetDi1426
 1002 SetDi1
 1005
 0
@@ -6633,7 +6633,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 FirstScan0
+1000 FirstScan17
 1002 FirstScan30
 1005
 0
@@ -6694,12 +6694,12 @@ ABB ACS800 Aggregate
 701 0.85
 99
 1010 $host-W-FirstScan30
-1011 ActualValue
+1011 
 1012 3
 1017 0
 99
 10
-1000 ResDp23
+1000 ResDp1427
 1002 ResDp1
 1005
 0
@@ -6761,12 +6761,12 @@ ABB ACS800 Aggregate
 701 4.95
 99
 1010 $PlcFo:BaseComponent-Class-BaseFcPPO5MotorAggrSim
-1011 OpToggleCircuitBreaker
+1011 OpToggleCircuitBreaker#1
 1012 0
 1017 0
 99
 10
-1000 FirstScan1
+1000 FirstScan18
 1002 FirstScan29
 1005
 0
@@ -6827,12 +6827,12 @@ ABB ACS800 Aggregate
 701 0.6
 99
 1010 $host-W-FirstScan29
-1011 OpToggleCircuitBreaker
+1011 
 1012 3
 1017 0
 99
 10
-1000 SetDi24
+1000 SetDi1428
 1002 SetDi0
 1005
 0
@@ -6899,7 +6899,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 ToggleDi25
+1000 ToggleDi1429
 1002 ToggleDi3
 1005
 0
@@ -6966,7 +6966,7 @@ ABB ACS800 Aggregate
 1017 0
 99
 10
-1000 BodyText4
+1000 BodyText335
 1002 BodyText22
 1005
 0
@@ -7001,16 +7001,16 @@ ABB ACS800 Aggregate
 0
 0
 0
-1006 3.71322
+1006 3.76211
 1007 3.203
 1008 2.56556
 1009 2.378
-1013 3.71322
+1013 3.76211
 1014 3.203
 1015 2.56556
 1016 2.378
 1003
-47
+50
 0
 0
 0
@@ -7022,7 +7022,7 @@ ABB ACS800 Aggregate
 0
 1004
 "Functionobject Simulate
-ABB ACS800 Aggregate 
+Fc PPO5 Motor Aggregate 
 "
 1001
 7
@@ -7030,12 +7030,12 @@ ABB ACS800 Aggregate
 701 2.4
 99
 1010 $host-W-BodyText22
-1011 ActualValue
+1011 
 1012 3
 1017 0
 99
 10
-1000 Document0
+1000 Document71
 1002 Document1
 1005
 0
@@ -7094,7 +7094,7 @@ ABB ACS800 Aggregate
 "Class-BaseFcPPO5MotorAggrSim-Code"
 "W"
 "2"
-"07-DEC-2005 16:51"
+"13-MAR-2008 13:37"
 "JE"
 1001
 7
@@ -7102,12 +7102,12 @@ ABB ACS800 Aggregate
 701 2.9
 99
 1010 $host-W-Document1
-1011 ActualValue
+1011 
 1012 3
 1017 0
 99
 10
-1000 Text5
+1000 Text336
 1002 Text2
 1005
 0
@@ -7169,12 +7169,12 @@ ABB ACS800 Aggregate
 701 1
 99
 1010 $host-W-Text2
-1011 ActualValue
+1011 
 1012 3
 1017 0
 99
 10
-1000 Text6
+1000 Text337
 1002 Text1
 1005
 0
@@ -7236,12 +7236,12 @@ ABB ACS800 Aggregate
 701 0.75
 99
 1010 $host-W-Text1
-1011 ActualValue
+1011 
 1012 3
 1017 0
 99
 10
-1000 Text7
+1000 Text338
 1002 Text0
 1005
 0
@@ -7303,12 +7303,12 @@ ABB ACS800 Aggregate
 701 0.5
 99
 1010 $host-W-Text0
-1011 ActualValue
+1011 
 1012 3
 1017 0
 99
 10
-1000 GetDp26
+1000 GetDp1430
 1002 GetDp1
 1005
 0
@@ -7370,12 +7370,12 @@ ABB ACS800 Aggregate
 701 0.9
 99
 1010 $PlcFo:BaseComponent-Class-BaseFcPPO5MotorAggrSim
-1011 OpToggleSafetySwitch
+1011 OpToggleSafetySwitch#1
 1012 0
 1017 0
 99
 10
-1000 GetDp27
+1000 GetDp1431
 1002 GetDp0
 1005
 0
@@ -7437,12 +7437,12 @@ ABB ACS800 Aggregate
 701 0.65
 99
 1010 $PlcFo:BaseComponent-Class-BaseFcPPO5MotorAggrSim
-1011 OpToggleCircuitBreaker
+1011 OpToggleCircuitBreaker#1
 1012 0
 1017 0
 99
 10
-1000 Document1
+1000 Document72
 1002 Document0
 1005
 0
@@ -7501,7 +7501,7 @@ ABB ACS800 Aggregate
 "Class-BaseFcPPO5MotorAggrSim-Code"
 "W"
 "1(2)"
-"07-DEC-2005 16:51"
+"13-MAR-2008 13:37"
 "JE"
 1001
 7
@@ -7509,7 +7509,7 @@ ABB ACS800 Aggregate
 701 0.5
 99
 1010 $host-W-Document0
-1011 OpToggleCircuitBreaker
+1011 
 1012 3
 1017 0
 99

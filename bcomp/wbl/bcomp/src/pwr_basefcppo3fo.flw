@@ -1,21 +1,21 @@
 1
 100 450
 101 450
-102 552
-103 3864
-104 13.2589
+102 0
+103 0
+104 0
 105 100
-106 6
-107 6
+106 0
+107 0
 108 3.9
 109 0.5
 110 9.875
 111 0.475
-116 10
-117 107
-118 29
-119 128
-120 0
+116 0
+117 0
+118 0
+119 0
+120 8
 121 Claes context
 122 0
 126 0.05
@@ -29,154 +29,7 @@
 123
 2
 3
-300 Or22
-301
-2
-5
-500 0
-501 2
-504 1
-502
-7
-700 0
-701 -0.025
-99
-503
-7
-700 0.119
-701 0.075
-99
-99
-9
-900 2
-901 7
-902 Or
-903
-7
-700 0.0425
-701 0.0125
-99
-99
-6
-600 0
-601 2
-602
-7
-700 0
-701 0
-99
-603
-7
-700 -0.03
-701 0
-99
-99
-12
-1200 0
-1201 2
-1202
-7
-700 -0.03
-701 0
-99
-1203 
-1204 0
-99
-6
-600 0
-601 2
-602
-7
-700 0
-701 0.05
-99
-603
-7
-700 -0.03
-701 0.05
-99
-99
-12
-1200 1
-1201 2
-1202
-7
-700 -0.03
-701 0.05
-99
-1203 
-1204 0
-99
-6
-600 0
-601 2
-602
-7
-700 0.119
-701 0
-99
-603
-7
-700 0.149
-701 0
-99
-99
-12
-1200 2
-1201 1
-1202
-7
-700 0.149
-701 0
-99
-1203 Status
-1204 0
-99
-13
-1300 0
-1301 7
-1302 2
-1305 1
-1303
-7
-700 0.0350556
-701 0.0625
-99
-1304 0
-99
-5
-500 2
-501 0
-504 4
-502
-7
-700 0.029
-701 -0.025
-99
-503
-7
-700 0.119
-701 0.005
-99
-99
-13
-1300 9
-1301 7
-1302 2
-1305 4
-1303
-7
-700 0.046
-701 0.0015
-99
-1304 0
-99
-99
-302 0
-303 0
-99
-3
-300 GetDp71
+300 GetDp1432
 301
 2
 5
@@ -287,7 +140,7 @@
 303 0
 99
 3
-300 Wait23
+300 Wait469
 301
 2
 5
@@ -435,7 +288,7 @@
 303 0
 99
 3
-300 BodyText22
+300 BodyText339
 301
 2
 5
@@ -481,7 +334,7 @@
 303 0
 99
 3
-300 BodyText23
+300 BodyText340
 301
 2
 5
@@ -527,7 +380,7 @@
 303 0
 99
 3
-300 GetDp72
+300 GetDp1433
 301
 2
 5
@@ -638,7 +491,7 @@
 303 0
 99
 3
-300 StoSp73
+300 StoSp1434
 301
 2
 5
@@ -749,7 +602,7 @@
 303 0
 99
 3
-300 GetSp74
+300 GetSp1435
 301
 2
 5
@@ -860,7 +713,7 @@
 303 0
 99
 3
-300 NameToStr75
+300 NameToStr1436
 301
 2
 5
@@ -971,7 +824,7 @@
 303 0
 99
 3
-300 Strcat24
+300 Strcat470
 301
 2
 5
@@ -1118,7 +971,7 @@
 303 0
 99
 3
-300 GetDp76
+300 GetDp1437
 301
 2
 5
@@ -1229,7 +1082,7 @@
 303 0
 99
 3
-300 And25
+300 And471
 301
 2
 5
@@ -1376,7 +1229,7 @@
 303 0
 99
 3
-300 DSup77
+300 DSup1438
 301
 2
 5
@@ -1513,7 +1366,7 @@
 303 0
 99
 3
-300 GetDp78
+300 GetDp1439
 301
 2
 5
@@ -1624,7 +1477,7 @@
 303 0
 99
 3
-300 StoSp79
+300 StoSp1440
 301
 2
 5
@@ -1735,7 +1588,7 @@
 303 0
 99
 3
-300 GetSp80
+300 GetSp1441
 301
 2
 5
@@ -1846,7 +1699,7 @@
 303 0
 99
 3
-300 NameToStr81
+300 NameToStr1442
 301
 2
 5
@@ -1957,7 +1810,7 @@
 303 0
 99
 3
-300 Strcat26
+300 Strcat472
 301
 2
 5
@@ -2104,7 +1957,7 @@
 303 0
 99
 3
-300 GetDp82
+300 GetDp1443
 301
 2
 5
@@ -2215,7 +2068,7 @@
 303 0
 99
 3
-300 And27
+300 And473
 301
 2
 5
@@ -2362,7 +2215,7 @@
 303 0
 99
 3
-300 DSup83
+300 DSup1444
 301
 2
 5
@@ -2499,7 +2352,7 @@
 303 0
 99
 3
-300 GetDp84
+300 GetDp1445
 301
 2
 5
@@ -2610,7 +2463,7 @@
 303 0
 99
 3
-300 StoSp85
+300 StoSp1446
 301
 2
 5
@@ -2721,7 +2574,7 @@
 303 0
 99
 3
-300 GetSp86
+300 GetSp1447
 301
 2
 5
@@ -2832,7 +2685,7 @@
 303 0
 99
 3
-300 NameToStr87
+300 NameToStr1448
 301
 2
 5
@@ -2943,7 +2796,7 @@
 303 0
 99
 3
-300 Strcat28
+300 Strcat474
 301
 2
 5
@@ -3090,7 +2943,7 @@
 303 0
 99
 3
-300 GetDp88
+300 GetDp1449
 301
 2
 5
@@ -3201,7 +3054,7 @@
 303 0
 99
 3
-300 And29
+300 And475
 301
 2
 5
@@ -3348,7 +3201,7 @@
 303 0
 99
 3
-300 DSup89
+300 DSup1450
 301
 2
 5
@@ -3485,7 +3338,7 @@
 303 0
 99
 3
-300 GetDp90
+300 GetDp1451
 301
 2
 5
@@ -3596,7 +3449,7 @@
 303 0
 99
 3
-300 GetDp91
+300 GetDp1452
 301
 2
 5
@@ -3707,7 +3560,7 @@
 303 0
 99
 3
-300 GetDp92
+300 GetDp1453
 301
 2
 5
@@ -3818,7 +3671,7 @@
 303 0
 99
 3
-300 And30
+300 And476
 301
 2
 5
@@ -4047,7 +3900,7 @@
 303 0
 99
 3
-300 StoDp93
+300 StoDp1454
 301
 2
 5
@@ -4158,7 +4011,7 @@
 303 0
 99
 3
-300 And31
+300 And477
 301
 2
 5
@@ -4305,7 +4158,7 @@
 303 0
 99
 3
-300 GetDp94
+300 GetDp1455
 301
 2
 5
@@ -4416,7 +4269,7 @@
 303 0
 99
 3
-300 Or32
+300 Or478
 301
 2
 5
@@ -4563,7 +4416,7 @@
 303 0
 99
 3
-300 StoDp95
+300 StoDp1456
 301
 2
 5
@@ -4674,7 +4527,7 @@
 303 0
 99
 3
-300 StoAo96
+300 StoAo1457
 301
 2
 5
@@ -4785,7 +4638,7 @@
 303 0
 99
 3
-300 BodyText24
+300 BodyText341
 301
 2
 5
@@ -4831,7 +4684,7 @@
 303 0
 99
 3
-300 Or33
+300 Or479
 301
 2
 5
@@ -5035,7 +4888,7 @@
 303 0
 99
 3
-300 And34
+300 And480
 301
 2
 5
@@ -5198,7 +5051,7 @@
 303 0
 99
 3
-300 StoDp97
+300 StoDp1458
 301
 2
 5
@@ -5309,7 +5162,7 @@
 303 0
 99
 3
-300 StoDp98
+300 StoDp1459
 301
 2
 5
@@ -5420,7 +5273,7 @@
 303 0
 99
 3
-300 BodyText25
+300 BodyText342
 301
 2
 5
@@ -5466,7 +5319,7 @@
 303 0
 99
 3
-300 BodyText26
+300 BodyText343
 301
 2
 5
@@ -5512,7 +5365,7 @@
 303 0
 99
 3
-300 StoDp99
+300 StoDp1460
 301
 2
 5
@@ -5623,7 +5476,7 @@
 303 0
 99
 3
-300 StoDp100
+300 StoDp1461
 301
 2
 5
@@ -5734,7 +5587,7 @@
 303 0
 99
 3
-300 StoDp101
+300 StoDp1462
 301
 2
 5
@@ -5845,7 +5698,7 @@
 303 0
 99
 3
-300 StoDp102
+300 StoDp1463
 301
 2
 5
@@ -5956,7 +5809,7 @@
 303 0
 99
 3
-300 BodyText27
+300 BodyText344
 301
 2
 5
@@ -6002,7 +5855,7 @@
 303 0
 99
 3
-300 GetIi103
+300 GetIi1464
 301
 2
 5
@@ -6113,7 +5966,7 @@
 303 0
 99
 3
-300 MaskToD4
+300 MaskToD85
 301
 2
 5
@@ -6269,7 +6122,7 @@
 303 0
 99
 3
-300 Document5
+300 Document73
 301
 2
 6
@@ -6514,7 +6367,7 @@
 303 0
 99
 3
-300 StoDp104
+300 StoDp1465
 301
 2
 5
@@ -6625,7 +6478,7 @@
 303 0
 99
 3
-300 BodyText28
+300 BodyText345
 301
 2
 5
@@ -6671,7 +6524,7 @@
 303 0
 99
 3
-300 BodyText29
+300 BodyText346
 301
 2
 5
@@ -6717,7 +6570,7 @@
 303 0
 99
 3
-300 BodyText30
+300 BodyText347
 301
 2
 5
@@ -6763,7 +6616,7 @@
 303 0
 99
 3
-300 StoDp105
+300 StoDp1466
 301
 2
 5
@@ -6874,7 +6727,7 @@
 303 0
 99
 3
-300 GetIi106
+300 GetIi1467
 301
 2
 5
@@ -6985,7 +6838,7 @@
 303 0
 99
 3
-300 MaskToD5
+300 MaskToD86
 301
 2
 5
@@ -7316,7 +7169,7 @@
 303 0
 99
 3
-300 BodyText31
+300 BodyText348
 301
 2
 5
@@ -7362,7 +7215,7 @@
 303 0
 99
 3
-300 StoDp107
+300 StoDp1468
 301
 2
 5
@@ -7473,7 +7326,7 @@
 303 0
 99
 3
-300 GetDp108
+300 GetDp1469
 301
 2
 5
@@ -7584,7 +7437,7 @@
 303 0
 99
 3
-300 GetDp109
+300 GetDp1470
 301
 2
 5
@@ -7695,7 +7548,7 @@
 303 0
 99
 3
-300 Timer35
+300 Timer481
 301
 2
 5
@@ -7843,7 +7696,7 @@
 303 0
 99
 3
-300 And36
+300 And482
 301
 2
 5
@@ -7990,7 +7843,7 @@
 303 0
 99
 3
-300 BodyText32
+300 BodyText349
 301
 2
 5
@@ -8036,7 +7889,7 @@
 303 0
 99
 3
-300 StoIo110
+300 StoIo1471
 301
 2
 5
@@ -8147,7 +8000,7 @@
 303 0
 99
 3
-300 DtoMask6
+300 DtoMask87
 301
 2
 5
@@ -8338,7 +8191,7 @@
 303 0
 99
 3
-300 GetDp111
+300 GetDp1472
 301
 2
 5
@@ -8449,7 +8302,7 @@
 303 0
 99
 3
-300 GetDp112
+300 GetDp1473
 301
 2
 5
@@ -8560,7 +8413,7 @@
 303 0
 99
 3
-300 BodyText33
+300 BodyText350
 301
 2
 5
@@ -8606,7 +8459,7 @@
 303 0
 99
 3
-300 BodyText34
+300 BodyText351
 301
 2
 5
@@ -8652,7 +8505,7 @@
 303 0
 99
 3
-300 StoDp113
+300 StoDp1474
 301
 2
 5
@@ -8763,7 +8616,7 @@
 303 0
 99
 3
-300 And37
+300 And483
 301
 2
 5
@@ -8926,7 +8779,7 @@
 303 0
 99
 3
-300 BodyText35
+300 BodyText352
 301
 2
 5
@@ -8972,7 +8825,7 @@
 303 0
 99
 3
-300 StoDp114
+300 StoDp1475
 301
 2
 5
@@ -9083,7 +8936,7 @@
 303 0
 99
 3
-300 And38
+300 And484
 301
 2
 5
@@ -9337,7 +9190,7 @@
 303 0
 99
 3
-300 BodyText36
+300 BodyText353
 301
 2
 5
@@ -9383,7 +9236,7 @@
 303 0
 99
 3
-300 GetIi115
+300 GetIi1476
 301
 2
 5
@@ -9494,7 +9347,7 @@
 303 0
 99
 3
-300 MaskToD7
+300 MaskToD88
 301
 2
 5
@@ -9755,7 +9608,7 @@
 303 0
 99
 3
-300 BodyText37
+300 BodyText354
 301
 2
 5
@@ -9801,7 +9654,7 @@
 303 0
 99
 3
-300 BodyText38
+300 BodyText355
 301
 2
 5
@@ -9847,7 +9700,7 @@
 303 0
 99
 3
-300 DSup116
+300 DSup1477
 301
 2
 5
@@ -9984,7 +9837,7 @@
 303 0
 99
 3
-300 NameToStr117
+300 NameToStr1478
 301
 2
 5
@@ -10095,7 +9948,7 @@
 303 0
 99
 3
-300 GetSp118
+300 GetSp1479
 301
 2
 5
@@ -10206,7 +10059,7 @@
 303 0
 99
 3
-300 StoSp119
+300 StoSp1480
 301
 2
 5
@@ -10317,7 +10170,7 @@
 303 0
 99
 3
-300 Strcat39
+300 Strcat485
 301
 2
 5
@@ -10464,7 +10317,7 @@
 303 0
 99
 3
-300 GetAp120
+300 GetAp1481
 301
 2
 5
@@ -10575,7 +10428,7 @@
 303 0
 99
 3
-300 StoAp121
+300 StoAp1482
 301
 2
 5
@@ -10686,7 +10539,7 @@
 303 0
 99
 3
-300 Wait40
+300 Wait486
 301
 2
 5
@@ -10834,7 +10687,7 @@
 303 0
 99
 3
-300 ResDp122
+300 ResDp1483
 301
 2
 5
@@ -10920,7 +10773,7 @@
 303 0
 99
 3
-300 GetDp123
+300 GetDp1484
 301
 2
 5
@@ -11031,7 +10884,7 @@
 303 0
 99
 3
-300 GetAp124
+300 GetAp1485
 301
 2
 5
@@ -11142,7 +10995,7 @@
 303 0
 99
 3
-300 BodyText39
+300 BodyText356
 301
 2
 5
@@ -11188,7 +11041,7 @@
 303 0
 99
 3
-300 BodyText40
+300 BodyText357
 301
 2
 5
@@ -11234,7 +11087,7 @@
 303 0
 99
 3
-300 Document6
+300 Document74
 301
 2
 6
@@ -11479,7 +11332,7 @@
 303 0
 99
 3
-300 Document7
+300 Document75
 301
 2
 6
@@ -11724,7 +11577,7 @@
 303 0
 99
 3
-300 BodyText41
+300 BodyText358
 301
 2
 5
@@ -11770,7 +11623,7 @@
 303 0
 99
 3
-300 Document8
+300 Document76
 301
 2
 6
@@ -12043,7 +11896,7 @@
 125
 2
 10
-1000 GetDp71
+1000 GetDp1432
 1002 GetDp27
 1005
 0
@@ -12105,12 +11958,12 @@
 701 6.55
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 PowerStartUp
+1011 PowerStartUp#1
 1012 0
 1017 0
 99
 10
-1000 Wait23
+1000 Wait469
 1002 Wait1
 1005
 0
@@ -12178,7 +12031,7 @@
 1017 0
 99
 10
-1000 BodyText22
+1000 BodyText339
 1002 BodyText55
 1005
 0
@@ -12240,12 +12093,12 @@
 701 6.6
 99
 1010 $host-W-BodyText55
-1011 Status
+1011 
 1012 3
 1017 0
 99
 10
-1000 BodyText23
+1000 BodyText340
 1002 BodyText54
 1005
 0
@@ -12307,12 +12160,12 @@
 701 8.45
 99
 1010 $host-W-BodyText54
-1011 Status
+1011 
 1012 3
 1017 0
 99
 10
-1000 GetDp72
+1000 GetDp1433
 1002 GetDp23
 1005
 0
@@ -12374,12 +12227,12 @@
 701 8.7
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 AlarmOk
+1011 AlarmOk#1
 1012 0
 1017 0
 99
 10
-1000 StoSp73
+1000 StoSp1434
 1002 StoSp4
 1005
 0
@@ -12440,13 +12293,13 @@
 700 2.45
 701 8.6
 99
-1010 $host-W-StoSp4
-1011 AlarmOk
+1010 $host-W-DSup4
+1011 DetectText#1
 1012 3
 1017 0
 99
 10
-1000 GetSp74
+1000 GetSp1435
 1002 GetSp4
 1005
 0
@@ -12507,13 +12360,13 @@
 700 0.7
 701 8.6
 99
-1010 $host-W-GetSp4
-1011 AlarmOk
+1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
+1011 AlarmError#1
 1012 3
 1017 0
 99
 10
-1000 NameToStr75
+1000 NameToStr1436
 1002 NameToStr53
 1005
 0
@@ -12575,12 +12428,12 @@
 701 8.65
 99
 1010 $host-W-NameToStr53
-1011 AlarmOk
+1011 
 1012 3
 1017 0
 99
 10
-1000 Strcat24
+1000 Strcat470
 1002 AlarmErr
 1005
 0
@@ -12642,12 +12495,12 @@
 701 8.6
 99
 1010 $host-W-AlarmErr
-1011 AlarmOk
+1011 
 1012 3
 1017 0
 99
 10
-1000 GetDp76
+1000 GetDp1437
 1002 GetDp22
 1005
 0
@@ -12709,12 +12562,12 @@
 701 8.75
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 ConvertOnInhibit
+1011 ConvertOnInhibit#1
 1012 0
 1017 0
 99
 10
-1000 And25
+1000 And471
 1002 Error
 1005
 0
@@ -12781,7 +12634,7 @@
 1017 0
 99
 10
-1000 DSup77
+1000 DSup1438
 1002 DSup4
 1005
 0
@@ -12849,7 +12702,7 @@
 1017 0
 99
 10
-1000 GetDp78
+1000 GetDp1439
 1002 GetDp21
 1005
 0
@@ -12911,12 +12764,12 @@
 701 8.45
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 AlarmOk
+1011 AlarmOk#1
 1012 0
 1017 0
 99
 10
-1000 StoSp79
+1000 StoSp1440
 1002 StoSp3
 1005
 0
@@ -12977,13 +12830,13 @@
 700 2.45
 701 8.35
 99
-1010 $host-W-StoSp3
-1011 AlarmOk
+1010 $host-W-DSup3
+1011 DetectText#1
 1012 3
 1017 0
 99
 10
-1000 GetSp80
+1000 GetSp1441
 1002 GetSp3
 1005
 0
@@ -13044,13 +12897,13 @@
 700 0.7
 701 8.35
 99
-1010 $host-W-GetSp3
-1011 AlarmOk
+1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
+1011 AlarmWarning#1
 1012 3
 1017 0
 99
 10
-1000 NameToStr81
+1000 NameToStr1442
 1002 NameToStr51
 1005
 0
@@ -13112,12 +12965,12 @@
 701 8.4
 99
 1010 $host-W-NameToStr51
-1011 AlarmOk
+1011 
 1012 3
 1017 0
 99
 10
-1000 Strcat26
+1000 Strcat472
 1002 AlarmWarning
 1005
 0
@@ -13179,12 +13032,12 @@
 701 8.35
 99
 1010 $host-W-AlarmWarning
-1011 AlarmOk
+1011 
 1012 3
 1017 0
 99
 10
-1000 GetDp82
+1000 GetDp1443
 1002 GetDp20
 1005
 0
@@ -13246,12 +13099,12 @@
 701 8.5
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 ConvertWarning
+1011 ConvertWarning#1
 1012 0
 1017 0
 99
 10
-1000 And27
+1000 And473
 1002 Warning
 1005
 0
@@ -13318,7 +13171,7 @@
 1017 0
 99
 10
-1000 DSup83
+1000 DSup1444
 1002 DSup3
 1005
 0
@@ -13386,7 +13239,7 @@
 1017 0
 99
 10
-1000 GetDp84
+1000 GetDp1445
 1002 GetDp17
 1005
 0
@@ -13448,12 +13301,12 @@
 701 7.8
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 AlarmOk
+1011 AlarmOk#1
 1012 0
 1017 0
 99
 10
-1000 StoSp85
+1000 StoSp1446
 1002 StoSp1
 1005
 0
@@ -13514,13 +13367,13 @@
 700 2.45
 701 7.7
 99
-1010 $host-W-StoSp1
-1011 AlarmOk
+1010 $host-W-DSup1
+1011 DetectText#1
 1012 3
 1017 0
 99
 10
-1000 GetSp86
+1000 GetSp1447
 1002 GetSp1
 1005
 0
@@ -13581,13 +13434,13 @@
 700 0.7
 701 7.7
 99
-1010 $host-W-GetSp1
-1011 AlarmOk
+1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
+1011 AlarmTripped#1
 1012 3
 1017 0
 99
 10
-1000 NameToStr87
+1000 NameToStr1448
 1002 NameToStr39
 1005
 0
@@ -13649,12 +13502,12 @@
 701 7.75
 99
 1010 $host-W-NameToStr39
-1011 AlarmOk
+1011 
 1012 3
 1017 0
 99
 10
-1000 Strcat28
+1000 Strcat474
 1002 AlarmTrip
 1005
 0
@@ -13716,12 +13569,12 @@
 701 7.7
 99
 1010 $host-W-AlarmTrip
-1011 AlarmOk
+1011 
 1012 3
 1017 0
 99
 10
-1000 GetDp88
+1000 GetDp1449
 1002 GetDp16
 1005
 0
@@ -13783,12 +13636,12 @@
 701 7.85
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 ConvertTripped
+1011 ConvertTripped#1
 1012 0
 1017 0
 99
 10
-1000 And29
+1000 And475
 1002 Tripped
 1005
 0
@@ -13855,7 +13708,7 @@
 1017 0
 99
 10
-1000 DSup89
+1000 DSup1450
 1002 DSup1
 1005
 0
@@ -13923,7 +13776,7 @@
 1017 0
 99
 10
-1000 GetDp90
+1000 GetDp1451
 1002 GetDp13
 1005
 0
@@ -13985,12 +13838,12 @@
 701 6.7
 99
 1010 $PlcFo:BaseComponent-Class-BaseFcPPO3Fo
-1011 PowerOn
+1011 PowerOn#1
 1012 0
 1017 0
 99
 10
-1000 GetDp91
+1000 GetDp1452
 1002 GetDp12
 1005
 0
@@ -14052,12 +13905,12 @@
 701 6.6
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 CommOk
+1011 CommOk#1
 1012 0
 1017 0
 99
 10
-1000 GetDp92
+1000 GetDp1453
 1002 GetDp11
 1005
 0
@@ -14119,12 +13972,12 @@
 701 6.65
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 ConvertRemote
+1011 ConvertRemote#1
 1012 0
 1017 0
 99
 10
-1000 And30
+1000 And476
 1002 Local
 1005
 0
@@ -14191,7 +14044,7 @@
 1017 0
 99
 10
-1000 StoDp93
+1000 StoDp1454
 1002 StoDp18
 1005
 0
@@ -14253,12 +14106,12 @@
 701 4.5
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 AlarmOk
+1011 AlarmOk#1
 1012 0
 1017 0
 99
 10
-1000 And31
+1000 And477
 1002 AlarmOk
 1005
 0
@@ -14325,7 +14178,7 @@
 1017 0
 99
 10
-1000 GetDp94
+1000 GetDp1455
 1002 GetDp10
 1005
 0
@@ -14387,12 +14240,12 @@
 701 3.65
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 ConvertReady
+1011 ConvertReady#1
 1012 0
 1017 0
 99
 10
-1000 Or32
+1000 Or478
 1002 Or2
 1005
 0
@@ -14459,7 +14312,7 @@
 1017 0
 99
 10
-1000 StoDp95
+1000 StoDp1456
 1002 StoDp15
 1005
 0
@@ -14521,12 +14374,12 @@
 701 8.95
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 ConvertRun
+1011 ConvertRun#1
 1012 0
 1017 0
 99
 10
-1000 StoAo96
+1000 StoAo1457
 1002 StoAo0
 1005
 0
@@ -14588,12 +14441,12 @@
 701 1.3
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3.RefSpeed
-1011 ConvertRun
+1011 ActualValue
 1012 3
 1017 0
 99
 10
-1000 BodyText24
+1000 BodyText341
 1002 BodyText34
 1005
 0
@@ -14657,12 +14510,12 @@ Yellow = Warning"
 701 9.3
 99
 1010 $host-W-BodyText34
-1011 ConvertRun
+1011 
 1012 3
 1017 0
 99
 10
-1000 Or33
+1000 Or479
 1002 Or1
 1005
 0
@@ -14729,7 +14582,7 @@ Yellow = Warning"
 1017 0
 99
 10
-1000 And34
+1000 And480
 1002 Yellow
 1005
 0
@@ -14796,7 +14649,7 @@ Yellow = Warning"
 1017 0
 99
 10
-1000 StoDp97
+1000 StoDp1458
 1002 StoDp14
 1005
 0
@@ -14858,12 +14711,12 @@ Yellow = Warning"
 701 9.5
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 IndError
+1011 IndError#1
 1012 0
 1017 0
 99
 10
-1000 StoDp98
+1000 StoDp1459
 1002 StoDp13
 1005
 0
@@ -14925,12 +14778,12 @@ Yellow = Warning"
 701 9.35
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 IndWarning
+1011 IndWarning#1
 1012 0
 1017 0
 99
 10
-1000 BodyText25
+1000 BodyText342
 1002 BodyText33
 1005
 0
@@ -14992,12 +14845,12 @@ Yellow = Warning"
 701 5.25
 99
 1010 $host-W-BodyText33
-1011 IndWarning
+1011 
 1012 3
 1017 0
 99
 10
-1000 BodyText26
+1000 BodyText343
 1002 BodyText32
 1005
 0
@@ -15059,12 +14912,12 @@ Yellow = Warning"
 701 8.95
 99
 1010 $host-W-BodyText32
-1011 IndWarning
+1011 
 1012 3
 1017 0
 99
 10
-1000 StoDp99
+1000 StoDp1460
 1002 StoDp12
 1005
 0
@@ -15126,12 +14979,12 @@ Yellow = Warning"
 701 9.15
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 ConvertRemote
+1011 ConvertRemote#1
 1012 0
 1017 0
 99
 10
-1000 StoDp100
+1000 StoDp1461
 1002 StoDp11
 1005
 0
@@ -15193,12 +15046,12 @@ Yellow = Warning"
 701 9.1
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 ConvertWarning
+1011 ConvertWarning#1
 1012 0
 1017 0
 99
 10
-1000 StoDp101
+1000 StoDp1462
 1002 StoDp10
 1005
 0
@@ -15260,12 +15113,12 @@ Yellow = Warning"
 701 9.05
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 ConvertOnInhibit
+1011 ConvertOnInhibit#1
 1012 0
 1017 0
 99
 10
-1000 StoDp102
+1000 StoDp1463
 1002 StoDp9
 1005
 0
@@ -15327,12 +15180,12 @@ Yellow = Warning"
 701 9
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 ConvertTripped
+1011 ConvertTripped#1
 1012 0
 1017 0
 99
 10
-1000 BodyText27
+1000 BodyText344
 1002 BodyText31
 1005
 0
@@ -15394,12 +15247,12 @@ Yellow = Warning"
 701 5.3
 99
 1010 $host-W-BodyText31
-1011 ConvertTripped
+1011 
 1012 3
 1017 0
 99
 10
-1000 GetIi103
+1000 GetIi1464
 1002 GetIi3
 1005
 0
@@ -15461,12 +15314,12 @@ Yellow = Warning"
 701 6
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3.StatusWordSW
-1011 ConvertTripped
+1011 ActualValue
 1012 3
 1017 0
 99
 10
-1000 MaskToD4
+1000 MaskToD85
 1002 SW_2
 1005
 0
@@ -15528,12 +15381,12 @@ Yellow = Warning"
 701 6
 99
 1010 $host-W-SW_2
-1011 ConvertTripped
+1011 
 1012 3
 1017 0
 99
 10
-1000 Document5
+1000 Document73
 1002 Document3
 1005
 0
@@ -15592,7 +15445,7 @@ Yellow = Warning"
 "Class-BaseFcPPO3Fo-Code"
 "W"
 "4"
-"14-MAR-2008 16:04"
+"04-APR-2008 16:11"
 "JE"
 1001
 7
@@ -15600,12 +15453,12 @@ Yellow = Warning"
 701 7.6
 99
 1010 $host-W-Document3
-1011 ConvertTripped
+1011 
 1012 3
 1017 0
 99
 10
-1000 StoDp104
+1000 StoDp1465
 1002 StoDp8
 1005
 0
@@ -15667,12 +15520,12 @@ Yellow = Warning"
 701 8.9
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 ConvertReady
+1011 ConvertReady#1
 1012 0
 1017 0
 99
 10
-1000 BodyText28
+1000 BodyText345
 1002 BodyText26
 1005
 0
@@ -15734,12 +15587,12 @@ Yellow = Warning"
 701 9.2
 99
 1010 $host-W-BodyText26
-1011 ConvertReady
+1011 
 1012 3
 1017 0
 99
 10
-1000 BodyText29
+1000 BodyText346
 1002 BodyText25
 1005
 0
@@ -15808,12 +15661,12 @@ SW bit:
 701 9.3
 99
 1010 $host-W-BodyText25
-1011 ConvertReady
+1011 
 1012 3
 1017 0
 99
 10
-1000 BodyText30
+1000 BodyText347
 1002 BodyText23
 1005
 0
@@ -15875,12 +15728,12 @@ SW bit:
 701 5.9
 99
 1010 $host-W-BodyText23
-1011 ConvertReady
+1011 
 1012 3
 1017 0
 99
 10
-1000 StoDp105
+1000 StoDp1466
 1002 StoDp5
 1005
 0
@@ -15942,12 +15795,12 @@ SW bit:
 701 6
 99
 1010 $PlcFo:BaseComponent-Class-BaseFcPPO3Fo
-1011 Run
+1011 Run#1
 1012 0
 1017 0
 99
 10
-1000 GetIi106
+1000 GetIi1467
 1002 GetIi1
 1005
 0
@@ -16009,12 +15862,12 @@ SW bit:
 701 8.9
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3.StatusWordSW
-1011 Run
+1011 ActualValue
 1012 3
 1017 0
 99
 10
-1000 MaskToD5
+1000 MaskToD86
 1002 SW_3
 1005
 0
@@ -16076,12 +15929,12 @@ SW bit:
 701 8.9
 99
 1010 $host-W-SW_3
-1011 Run
+1011 
 1012 3
 1017 0
 99
 10
-1000 BodyText31
+1000 BodyText348
 1002 BodyText21
 1005
 0
@@ -16145,12 +15998,12 @@ SW bit:
 701 6.15
 99
 1010 $host-W-BodyText21
-1011 Run
+1011 
 1012 3
 1017 0
 99
 10
-1000 StoDp107
+1000 StoDp1468
 1002 StoDp4
 1005
 0
@@ -16212,12 +16065,12 @@ SW bit:
 701 1.4
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 ReadyRemote
+1011 ReadyRemote#1
 1012 0
 1017 0
 99
 10
-1000 GetDp108
+1000 GetDp1469
 1002 GetDp9
 1005
 0
@@ -16279,12 +16132,12 @@ SW bit:
 701 1.4
 99
 1010 $PlcFo:BaseComponent-Class-BaseFcPPO3Fo
-1011 ReadyRemote
+1011 ReadyRemote#1
 1012 0
 1017 0
 99
 10
-1000 GetDp109
+1000 GetDp1470
 1002 GetDp8
 1005
 0
@@ -16346,12 +16199,12 @@ SW bit:
 701 5.65
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 OpReset
+1011 OpReset#1
 1012 0
 1017 0
 99
 10
-1000 Timer35
+1000 Timer481
 1002 ResetTime
 1005
 0
@@ -16419,7 +16272,7 @@ SW bit:
 1017 0
 99
 10
-1000 And36
+1000 And482
 1002 Start
 1005
 0
@@ -16486,7 +16339,7 @@ SW bit:
 1017 0
 99
 10
-1000 BodyText32
+1000 BodyText349
 1002 BodyText20
 1005
 0
@@ -16553,12 +16406,12 @@ CW bit:
 701 5.65
 99
 1010 $host-W-BodyText20
-1011 Status
+1011 
 1012 3
 1017 0
 99
 10
-1000 StoIo110
+1000 StoIo1471
 1002 StoIo1
 1005
 0
@@ -16620,12 +16473,12 @@ CW bit:
 701 5.4
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3.ControlWordCW
-1011 Status
+1011 ActualValue
 1012 3
 1017 0
 99
 10
-1000 DtoMask6
+1000 DtoMask87
 1002 CW
 1005
 0
@@ -16687,12 +16540,12 @@ CW bit:
 701 5.4
 99
 1010 $host-W-CW
-1011 Status
+1011 
 1012 3
 1017 0
 99
 10
-1000 GetDp111
+1000 GetDp1472
 1002 GetDp7
 1005
 0
@@ -16754,12 +16607,12 @@ CW bit:
 701 5.45
 99
 1010 $PlcFo:BaseComponent-Class-BaseFcPPO3Fo
-1011 Start
+1011 Start#1
 1012 0
 1017 0
 99
 10
-1000 GetDp112
+1000 GetDp1473
 1002 GetDp6
 1005
 0
@@ -16821,12 +16674,12 @@ CW bit:
 701 5.4
 99
 1010 $PlcFo:BaseComponent-Class-BaseFcPPO3Fo
-1011 ReadyRemote
+1011 ReadyRemote#1
 1012 0
 1017 0
 99
 10
-1000 BodyText33
+1000 BodyText350
 1002 BodyText18
 1005
 0
@@ -16888,12 +16741,12 @@ CW bit:
 701 3.7
 99
 1010 $host-W-BodyText18
-1011 ReadyRemote
+1011 
 1012 3
 1017 0
 99
 10
-1000 BodyText34
+1000 BodyText351
 1002 BodyText17
 1005
 0
@@ -16955,12 +16808,12 @@ CW bit:
 701 3.55
 99
 1010 $host-W-BodyText17
-1011 ReadyRemote
+1011 
 1012 3
 1017 0
 99
 10
-1000 StoDp113
+1000 StoDp1474
 1002 StoDp3
 1005
 0
@@ -17022,12 +16875,12 @@ CW bit:
 701 3.65
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 PowerStartUp
+1011 PowerStartUp#1
 1012 0
 1017 0
 99
 10
-1000 And37
+1000 And483
 1002 StartingUp
 1005
 0
@@ -17094,7 +16947,7 @@ CW bit:
 1017 0
 99
 10
-1000 BodyText35
+1000 BodyText352
 1002 BodyText16
 1005
 0
@@ -17156,12 +17009,12 @@ CW bit:
 701 3.95
 99
 1010 $host-W-BodyText16
-1011 Status
+1011 
 1012 3
 1017 0
 99
 10
-1000 StoDp114
+1000 StoDp1475
 1002 StoDp2
 1005
 0
@@ -17223,12 +17076,12 @@ CW bit:
 701 4.05
 99
 1010 $PlcFo:BaseComponent-Class-BaseFcPPO3Fo
-1011 ReadyRemote
+1011 ReadyRemote#1
 1012 0
 1017 0
 99
 10
-1000 And38
+1000 And484
 1002 Ready
 1005
 0
@@ -17295,7 +17148,7 @@ CW bit:
 1017 0
 99
 10
-1000 BodyText36
+1000 BodyText353
 1002 BodyText15
 1005
 0
@@ -17363,12 +17216,12 @@ SW bit:
 701 4.25
 99
 1010 $host-W-BodyText15
-1011 Status
+1011 
 1012 3
 1017 0
 99
 10
-1000 GetIi115
+1000 GetIi1476
 1002 GetIi0
 1005
 0
@@ -17430,12 +17283,12 @@ SW bit:
 701 4.1
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3.StatusWordSW
-1011 Status
+1011 ActualValue
 1012 3
 1017 0
 99
 10
-1000 MaskToD7
+1000 MaskToD88
 1002 SW_1
 1005
 0
@@ -17497,12 +17350,12 @@ SW bit:
 701 4.1
 99
 1010 $host-W-SW_1
-1011 Status
+1011 
 1012 3
 1017 0
 99
 10
-1000 BodyText37
+1000 BodyText354
 1002 BodyText13
 1005
 0
@@ -17565,12 +17418,12 @@ communication after power lost."
 701 3.45
 99
 1010 $host-W-BodyText13
-1011 Status
+1011 
 1012 3
 1017 0
 99
 10
-1000 BodyText38
+1000 BodyText355
 1002 BodyText11
 1005
 0
@@ -17632,12 +17485,12 @@ communication after power lost."
 701 6.4
 99
 1010 $host-W-BodyText11
-1011 Status
+1011 
 1012 3
 1017 0
 99
 10
-1000 DSup116
+1000 DSup1477
 1002 DSup0
 1005
 0
@@ -17705,7 +17558,7 @@ communication after power lost."
 1017 0
 99
 10
-1000 NameToStr117
+1000 NameToStr1478
 1002 NameToStr10
 1005
 0
@@ -17767,12 +17620,12 @@ communication after power lost."
 701 6.5
 99
 1010 $host-W-NameToStr10
-1011 Action
+1011 
 1012 3
 1017 0
 99
 10
-1000 GetSp118
+1000 GetSp1479
 1002 GetSp0
 1005
 0
@@ -17833,13 +17686,13 @@ communication after power lost."
 700 0.7
 701 6.45
 99
-1010 $host-W-GetSp0
-1011 Action
+1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
+1011 AlarmLocalMod#1
 1012 3
 1017 0
 99
 10
-1000 StoSp119
+1000 StoSp1480
 1002 StoSp0
 1005
 0
@@ -17900,13 +17753,13 @@ communication after power lost."
 700 2.45
 701 6.5
 99
-1010 $host-W-StoSp0
-1011 Action
+1010 $host-W-DSup0
+1011 DetectText#1
 1012 3
 1017 0
 99
 10
-1000 Strcat39
+1000 Strcat485
 1002 AlarmLoc
 1005
 0
@@ -17968,12 +17821,12 @@ communication after power lost."
 701 6.45
 99
 1010 $host-W-AlarmLoc
-1011 Action
+1011 
 1012 3
 1017 0
 99
 10
-1000 GetAp120
+1000 GetAp1481
 1002 GetAp1
 1005
 0
@@ -18035,12 +17888,12 @@ communication after power lost."
 701 3.3
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 PowerUpTime
+1011 PowerUpTime#1
 1012 3
 1017 0
 99
 10
-1000 StoAp121
+1000 StoAp1482
 1002 StoAp2
 1005
 0
@@ -18101,13 +17954,13 @@ communication after power lost."
 700 1.55
 701 3.3
 99
-1010 $host-W-StoAp2
-1011 PowerUpTime
+1010 $host-W-PowerUpTime
+1011 TimerTime#1
 1012 3
 1017 0
 99
 10
-1000 Wait40
+1000 Wait486
 1002 PowerUpTime
 1005
 0
@@ -18175,7 +18028,7 @@ communication after power lost."
 1017 0
 99
 10
-1000 ResDp122
+1000 ResDp1483
 1002 ResDp0
 1005
 0
@@ -18237,12 +18090,12 @@ communication after power lost."
 701 9.75
 99
 1010 $PlcMain:BaseComponent-Class-BaseFcPPO3
-1011 OpReset
+1011 OpReset#1
 1012 0
 1017 0
 99
 10
-1000 GetDp123
+1000 GetDp1484
 1002 GetDp1
 1005
 0
@@ -18304,12 +18157,12 @@ communication after power lost."
 701 3.35
 99
 1010 $PlcFo:BaseComponent-Class-BaseFcPPO3Fo
-1011 PowerOn
+1011 PowerOn#1
 1012 0
 1017 0
 99
 10
-1000 GetAp124
+1000 GetAp1485
 1002 GetAp0
 1005
 0
@@ -18371,12 +18224,12 @@ communication after power lost."
 701 1.3
 99
 1010 $PlcFo:BaseComponent-Class-BaseFcPPO3Fo
-1011 RefSpeed
+1011 RefSpeed#1
 1012 3
 1017 0
 99
 10
-1000 BodyText39
+1000 BodyText356
 1002 BodyText4
 1005
 0
@@ -18448,12 +18301,12 @@ Run = run
 701 0.75
 99
 1010 $host-W-BodyText4
-1011 RefSpeed
+1011 
 1012 3
 1017 0
 99
 10
-1000 BodyText40
+1000 BodyText357
 1002 BodyText3
 1005
 0
@@ -18515,12 +18368,12 @@ Run = run
 701 0.65
 99
 1010 $host-W-BodyText3
-1011 RefSpeed
+1011 
 1012 3
 1017 0
 99
 10
-1000 Document6
+1000 Document74
 1002 Document2
 1005
 0
@@ -18579,7 +18432,7 @@ Run = run
 "Class-BaseFcPPO3Fo-Code"
 "W"
 "3"
-"14-MAR-2008 16:04"
+"04-APR-2008 16:11"
 "JE"
 1001
 7
@@ -18587,12 +18440,12 @@ Run = run
 701 5.2
 99
 1010 $host-W-Document2
-1011 RefSpeed
+1011 
 1012 3
 1017 0
 99
 10
-1000 Document7
+1000 Document75
 1002 Document1
 1005
 0
@@ -18651,7 +18504,7 @@ Run = run
 "Class-BaseFcPPO3Fo-Code"
 "W"
 "2"
-"14-MAR-2008 16:04"
+"04-APR-2008 16:11"
 "JE"
 1001
 7
@@ -18659,12 +18512,12 @@ Run = run
 701 2.85
 99
 1010 $host-W-Document1
-1011 RefSpeed
+1011 
 1012 3
 1017 0
 99
 10
-1000 BodyText41
+1000 BodyText358
 1002 BodyText0
 1005
 0
@@ -18728,12 +18581,12 @@ Profibus communication."
 701 2.4
 99
 1010 $host-W-BodyText0
-1011 RefSpeed
+1011 
 1012 3
 1017 0
 99
 10
-1000 Document8
+1000 Document76
 1002 Document0
 1005
 0
@@ -18792,7 +18645,7 @@ Profibus communication."
 "Class-BaseFcPPO3Fo-Code"
 "W"
 "1(5)"
-"14-MAR-2008 16:04"
+"04-APR-2008 16:11"
 "JE"
 1001
 7
@@ -18800,7 +18653,7 @@ Profibus communication."
 701 0.5
 99
 1010 $host-W-Document0
-1011 RefSpeed
+1011 
 1012 3
 1017 0
 99
@@ -19034,7 +18887,7 @@ Profibus communication."
 3.3
 3.3
 1122 0
-1123 0
+1123 1346458183
 1124 
 1125 
 1126 
@@ -19511,7 +19364,7 @@ Profibus communication."
 1121
 6.45
 6.45
-1122 72
+1122 0
 1123 0
 1124 
 1125 
@@ -20697,7 +20550,7 @@ Profibus communication."
 4.15
 4.15
 1122 0
-1123 98306
+1123 0
 1124 
 1125 
 1126 
@@ -20933,8 +20786,8 @@ Profibus communication."
 1121
 4.1
 4.1
-1122 89
-1123 146053832
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -21170,8 +21023,8 @@ Profibus communication."
 1121
 4.05
 4.05
-1122 48
-1123 146056744
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -21407,8 +21260,8 @@ Profibus communication."
 1121
 3.35
 3.35
-1122 48
-1123 146059792
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -21648,8 +21501,8 @@ Profibus communication."
 3.35
 3.7
 3.7
-1122 144167952
-1123 16
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -21885,8 +21738,8 @@ Profibus communication."
 1121
 3.65
 3.65
-1122 48
-1123 146065672
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -22122,8 +21975,8 @@ Profibus communication."
 1121
 5.4
 5.4
-1122 146068768
-1123 64
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -22359,8 +22212,8 @@ Profibus communication."
 1121
 5.4
 5.4
-1122 146165632
-1123 16
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -22596,7 +22449,7 @@ Profibus communication."
 1121
 5.45
 5.45
-1122 146244592
+1122 0
 1123 0
 1124 
 1125 
@@ -22833,8 +22686,8 @@ Profibus communication."
 1121
 5.4
 5.4
-1122 143093048
-1123 13636
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -23074,8 +22927,8 @@ Profibus communication."
 5.65
 5.45
 5.45
-1122 48
-1123 146254456
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -23311,7 +23164,7 @@ Profibus communication."
 1121
 5.65
 5.65
-1122 146194048
+1122 0
 1123 0
 1124 
 1125 
@@ -23549,7 +23402,7 @@ Profibus communication."
 1.4
 1.4
 1122 0
-1123 32
+1123 0
 1124 
 1125 
 1126 
@@ -23785,8 +23638,8 @@ Profibus communication."
 1121
 8.9
 8.9
-1122 143093048
-1123 13752
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -24022,8 +23875,8 @@ Profibus communication."
 1121
 8.9
 8.9
-1122 173303280
-1123 12
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -24259,7 +24112,7 @@ Profibus communication."
 1121
 6
 6
-1122 143103976
+1122 0
 1123 0
 1124 
 1125 
@@ -24496,8 +24349,8 @@ Profibus communication."
 1121
 9
 9
-1122 143093048
-1123 144783
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -24733,8 +24586,8 @@ Profibus communication."
 1121
 9.05
 9.05
-1122 24
-1123 173318816
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -24971,7 +24824,7 @@ Profibus communication."
 9.1
 9.1
 1122 0
-1123 32
+1123 0
 1124 
 1125 
 1126 
@@ -25207,8 +25060,8 @@ Profibus communication."
 1121
 9.15
 9.15
-1122 9
-1123 -1
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -25444,8 +25297,8 @@ Profibus communication."
 1121
 9.35
 9.35
-1122 145803688
-1123 145803824
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -25685,8 +25538,8 @@ Profibus communication."
 9.2
 9.35
 9.35
-1122 145806464
-1123 25
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -25926,8 +25779,8 @@ Profibus communication."
 9.1
 9.25
 9.25
-1122 48
-1123 145809304
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -26167,8 +26020,8 @@ Profibus communication."
 8.9
 9.2
 9.2
-1122 48
-1123 145812312
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -26408,7 +26261,7 @@ Profibus communication."
 9.15
 9.3
 9.3
-1122 143103976
+1122 0
 1123 0
 1124 
 1125 
@@ -26645,7 +26498,7 @@ Profibus communication."
 1121
 1.3
 1.3
-1122 145818020
+1122 0
 1123 0
 1124 
 1125 
@@ -26882,8 +26735,8 @@ Profibus communication."
 1121
 8.95
 8.95
-1122 143093048
-1123 12275
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -27119,8 +26972,8 @@ Profibus communication."
 1121
 3.35
 3.35
-1122 143093048
-1123 41619
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -27360,8 +27213,8 @@ Profibus communication."
 3.35
 3.65
 3.65
-1122 151498504
-1123 16
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -27601,8 +27454,8 @@ Profibus communication."
 3.35
 4.05
 4.05
-1122 17
-1123 151264624
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -27842,8 +27695,8 @@ Profibus communication."
 3.4
 3.65
 3.65
-1122 151499040
-1123 16
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -28083,7 +27936,7 @@ Profibus communication."
 3.35
 4.5
 4.5
-1122 151500952
+1122 0
 1123 0
 1124 
 1125 
@@ -28324,8 +28177,8 @@ Profibus communication."
 4.55
 4.25
 4.25
-1122 49
-1123 160
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -28561,8 +28414,8 @@ Profibus communication."
 1121
 4.5
 4.5
-1122 1886220099
-1123 1701080909
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -28798,8 +28651,8 @@ Profibus communication."
 1121
 6.65
 6.65
-1122 540356656
-1123 893005873
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -29035,8 +28888,8 @@ Profibus communication."
 1121
 6.6
 6.6
-1122 143093048
-1123 76273
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -29272,7 +29125,7 @@ Profibus communication."
 1121
 6.55
 6.55
-1122 158994888
+1122 0
 1123 0
 1124 
 1125 
@@ -29513,8 +29366,8 @@ Profibus communication."
 7.8
 7.75
 7.75
-1122 89
-1123 176935592
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -29750,8 +29603,8 @@ Profibus communication."
 1121
 7.7
 7.7
-1122 49
-1123 157862536
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -29987,8 +29840,8 @@ Profibus communication."
 1121
 7.75
 7.75
-1122 48
-1123 159003864
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -30224,8 +30077,8 @@ Profibus communication."
 1121
 7.7
 7.7
-1122 17
-1123 159130936
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -30461,7 +30314,7 @@ Profibus communication."
 1121
 7.85
 7.85
-1122 169932392
+1122 0
 1123 0
 1124 
 1125 
@@ -30698,8 +30551,8 @@ Profibus communication."
 1121
 7.8
 7.8
-1122 1701672295
-1123 1534293102
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -30935,8 +30788,8 @@ Profibus communication."
 1121
 6
 6
-1122 1752458573
-1123 1916888175
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -31172,8 +31025,8 @@ Profibus communication."
 1121
 8.45
 8.45
-1122 170033888
-1123 -1
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -31409,7 +31262,7 @@ Profibus communication."
 1121
 8.5
 8.5
-1122 169166184
+1122 0
 1123 0
 1124 
 1125 
@@ -31646,8 +31499,8 @@ Profibus communication."
 1121
 8.4
 8.4
-1122 1701672295
-1123 1534293102
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -31883,7 +31736,7 @@ Profibus communication."
 1121
 8.35
 8.35
-1122 150863800
+1122 0
 1123 0
 1124 
 1125 
@@ -32124,8 +31977,8 @@ Profibus communication."
 8.45
 8.4
 8.4
-1122 1663067237
-1123 32
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -32361,8 +32214,8 @@ Profibus communication."
 1121
 8.7
 8.7
-1122 -1218299720
-1123 -1
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -32598,8 +32451,8 @@ Profibus communication."
 1121
 8.75
 8.75
-1122 143093048
-1123 36344
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -32835,8 +32688,8 @@ Profibus communication."
 1121
 8.6
 8.6
-1122 6580591
-1123 24
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -33072,7 +32925,7 @@ Profibus communication."
 1121
 8.65
 8.65
-1122 150877980
+1122 0
 1123 0
 1124 
 1125 
@@ -33309,8 +33162,8 @@ Profibus communication."
 1121
 8.6
 8.6
-1122 149743680
-1123 25
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -33550,8 +33403,8 @@ Profibus communication."
 8.7
 8.65
 8.65
-1122 173376696
-1123 173376832
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -33787,8 +33640,8 @@ Profibus communication."
 1121
 6.7
 6.7
-1122 172979240
-1123 173378240
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -34024,8 +33877,8 @@ Profibus communication."
 1121
 6.7
 6.7
-1122 173382376
-1123 173382512
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -34261,8 +34114,8 @@ Profibus communication."
 1121
 6.55
 6.55
-1122 173385336
-1123 173385472
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -34502,7 +34355,7 @@ Profibus communication."
 8.35
 8.35
 8.35
-1122 172109332
+1122 0
 1123 0
 1124 
 1125 
@@ -34743,8 +34596,8 @@ Profibus communication."
 9
 9.5
 9.5
-1122 173342296
-1123 148668425
+1122 0
+1123 0
 1124 
 1125 
 1126 
@@ -34984,8 +34837,8 @@ Profibus communication."
 9.5
 9.4
 9.4
-1122 1702060354
-1123 1886220099
+1122 0
+1123 0
 1124 
 1125 
 1126 
