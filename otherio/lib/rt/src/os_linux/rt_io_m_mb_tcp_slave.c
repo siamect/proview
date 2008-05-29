@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_mb_tcp_slave.c,v 1.2 2008-03-27 09:58:50 claes Exp $
+ * Proview   $Id: rt_io_m_mb_tcp_slave.c,v 1.3 2008-05-29 06:49:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -459,7 +459,9 @@ static pwr_tStatus IoRackInit (
     local_card->input_area = (void *) &(op->Inputs) + input_counter;
     local_card->output_area = (void *) &(op->Outputs) + output_counter;
     card_input_counter = 0;
+    card_output_counter = 0;
     latent_input_counter = 0;
+    latent_output_counter = 0;
 
     /* From v4.1.3 we can have subclasses, find the super class */
     
@@ -589,8 +591,8 @@ static pwr_tStatus IoRackInit (
         break;
     } /* End - switch ... */
 
-    local_card->input_size = input_counter + card_input_counter + latent_input_counter;
-    local_card->output_size = output_counter + card_output_counter + latent_output_counter;
+    local_card->input_size = card_input_counter + latent_input_counter;
+    local_card->output_size = card_output_counter + latent_output_counter;
 
     cardp = cardp->next;
   }
@@ -635,10 +637,17 @@ static pwr_tStatus IoRackRead (
     }
   }
 
+  /* Start receving old data */
+  if (sp->Status == MB__NORMAL) {
+    sts = recv_data(local, rp, sp);
+  }  
+  
+  /* Request new data */
   if (sp->Status == MB__NORMAL && sp->DisableSlave != 1) {
     sts = send_data(local, rp, sp, mb_mSendMask_ReadReq);
   }
 
+  /* Receive data */
   if (sp->Status == MB__NORMAL) {
     sts = recv_data(local, rp, sp);
   }  
