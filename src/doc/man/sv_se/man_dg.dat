@@ -4679,11 +4679,12 @@ Wtt kommandon
 <b>copy       <t>Kopiera utvalt objektsträd 	<LINK> copy
 <b>copy object<t>Kopiera ett objekt		<LINK> copy object
 <b>create bootfiles <t>Skapa bootfiler		<LINK> create bootfiles
+<b>create crossreferencefiles <t>Skapa korsreferens filer		<LINK> create crossreferencefiles
+<b>create flowfiles <t>Skapa flowfiler for plc trace	<LINK> create flowfiles
 <b>create loadfiles <t>Skapa laddatafier	<LINK> create loadfiles
 <b>create object <t>Skapa ett objekt		<LINK> create object
 <b>create structfiles <t>Skapa structfiler	<LINK> create structfiles
 <b>create volume <t>Skapa en volym		<LINK> create volume
-<b>create rttfiles <t>Skapa rttfiler		<LINK> create rttfiles
 <b>cut		<t>Klipp ut objekt		<LINK> cut
 <b>define      	<t>Definiera en symbol		<LINK> define
 <b>delete object <t>Ta bort ett objekt		<LINK> delete object
@@ -4730,7 +4731,6 @@ Wtt kommandon
 <b>set template<t>Sätt templatevärden på objekt <LINK> set template
 <b>set verify  <t>Verifiera script	 	<LINK> set verify
 <b>set window  <t>Sätt fönsterstorlek	 	<LINK> set window
-<b>set volume  <t>Sätt volym			<LINK> set volume
 <b>setup       <t>Wtt setup			<LINK> setup
 <b>show children<t>Visa ett objekts barn	<LINK> show children
 <b>show license  <t>Visa licensvillkor		<LINK> show license
@@ -4902,6 +4902,35 @@ Skapa en ny bootfil.
 /debug		<t>Länka plcprogram med debug.
 </TOPIC>
 
+<TOPIC> create crossreferencefiles <style> function
+Kommando   create crossreferencefiles
+
+Skapa filer för att visa korsreferenser i xtt och rtt för aktuell volym.
+
+<B>wtt> create crossreferencefiles
+</TOPIC>
+
+<TOPIC> create flowfiles <style> function
+Kommando   create flowfiles
+
+Skapa flowfiler för plc trace.
+Plc programmens layout lagras i flowfiler och används i plc trace.
+
+<B>wtt> create flowfiles /plcpgm=
+<B>wtt> create flowfiles /hier=
+<B>wtt> create flowfiles /all
+
+Kommando för att skapa flowfiler från template plcpgm i en klassvolym
+<B>wtt> create flowfiles /template/plcpgm=
+<B>wtt> create flowfiles /template/hier=Class
+
+/all		<t>Skapa flowfiler för all plcprogram i volymen.
+                <t>(kan inte användas i en klassvolym, använd /hier=Class istället).
+/plcpgm		<t>Skapa flowfiler för specificerat PlcPgm objekt.
+/hierarchy      <t>Skapa flowfiler för alla PlcPgm under specificerad hieraki.
+/template	<t>Skapa flowfiler för PlcTemplate program i en klassvolym.
+</TOPIC>
+
 <TOPIC> create loadfiles <style> function
 Kommando   create loadfiles
 
@@ -4955,15 +4984,6 @@ Skapa c include filer för klasser i en klassvolym.
 <B>wtt> create structfiles [/files=]
 
 /files		<t>Namn på wb_load filen.
-</TOPIC>
-
-<TOPIC> create rttfiles <style> function
-Kommando   create rttfiles
-
-Skapa filer för att visa korsreferenser i rtt och xtt för objekt
-i den aktuella volymen.
-
-<B>wtt> create rttfiles
 </TOPIC>
 
 <TOPIC> cut <style> function
@@ -5500,12 +5520,7 @@ Set fönsterbredd och höjd.
 <TOPIC> set volume <style> function
 Kommando   set volume
 
-Öppna en session mot en volym.
-
-<B>wtt> set volume 'volumename'
-<B>wtt> set volume /volumename=
-
-/volumename		<t>Volymsnamn.
+set volume är obsolet.
 </TOPIC>
 
 <TOPIC> setup <style> function

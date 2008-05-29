@@ -4771,11 +4771,12 @@ Wtt commands
 <b>copy       <t>Copy selected object trees 	<LINK> copy
 <b>copy object<t>Copy an object			<LINK> copy object
 <b>create bootfiles <t>Create bootfiles		<LINK> create bootfiles
+<b>create crossreferencefiles <t>Create crossreferencefiles <LINK> create crossreferencefiles
+<b>create flowfiles <t>Create flow files for plc trace	<LINK> create flowfiles
 <b>create loadfiles <t>Create loadfiles		<LINK> create loadfiles
 <b>create object <t>Create an object		<LINK> create object
 <b>create structfiles <t>Create structfiles	<LINK> create structfiles
 <b>create volume <t>Create a volume		<LINK> create volume
-<b>create rttfiles <t>Create rttfiles		<LINK> create rttfiles
 <b>cut		<t>Cut objects			<LINK> cut
 <b>define      	<t>Define a symbol		<LINK> define
 <b>delete object <t>Delete an object		<LINK> delete object
@@ -4822,7 +4823,6 @@ Wtt commands
 <b>set template<t>Set template values for objects <LINK> set template
 <b>set verify  <t>Script verification	 	<LINK> set verify
 <b>set window  <t>Set window width and height 	<LINK> set window
-<b>set volume  <t>Set volume 			<LINK> set volume
 <b>setup       <t>Wtt setup			<LINK> setup
 <b>show children<t>Show the children of an object <LINK> show children
 <b>show license <t>Show license terms		<LINK> show license
@@ -4995,6 +4995,38 @@ Create new bootfiles.
 /debug		<t>Link plcprogram with debug.
 </TOPIC>
 
+<TOPIC> create crossreferencefiles <style> function
+Command   create crossreferencefiles
+
+Create files for displaying crossreferences in xtt and rtt for
+the current volume.
+
+<B>wtt> create crossreferencefiles
+</TOPIC>
+
+<TOPIC> create flowfiles <style> function
+Command   create flowfiles
+
+Create flowfiles for plc trace.
+The layout of the plc windows are stored in flow files and used
+in plc trace.
+
+<B>wtt> create flowfiles /plcpgm=
+<B>wtt> create flowfiles /hier=
+<B>wtt> create flowfiles /all
+
+Command to create flowfiles from template plcpgm's in a class volume
+<B>wtt> create flowfiles /template/plcpgm=
+<B>wtt> create flowfiles /template/hier=Class
+
+/all		<t>Create flowfiles for all plc programs in the volume
+                <t>(can not be used in class volumes, use /hier=Class instead).
+/plcpgm		<t>Create flowfiles for the specified PlcPgm object.
+/hierarchy      <t>Create flowfiles for all PlcPgm object under the 
+                <t>specified hierarchy.
+/template	<t>Create flowfiles for PlcTemplate programs in a class volume.
+</TOPIC>
+
 <TOPIC> create loadfiles <style> function
 Command   create loadfiles
 
@@ -5050,15 +5082,6 @@ Create c include-files for classes in a classvolume.
 
 /files		<t>Name of wb_load-file.
 		<t>Default name $pwrp_db/userclasses.wb_load
-</TOPIC>
-
-<TOPIC> create rttfiles <style> function
-Command   create rttfiles
-
-Create files for displaying crossreferences in rtt and xtt for
-the current volume.
-
-<B>wtt> create rttfiles
 </TOPIC>
 
 <TOPIC> cut <style> function
@@ -5608,12 +5631,7 @@ Set window width and height.
 <TOPIC> set volume <style> function
 Command   set volume
 
-Attach a volume.
-
-<B>wtt> set volume 'volumename'
-<B>wtt> set volume /volumename=
-
-/volumename		<t>Volume name.
+set volume is obsolete.
 </TOPIC>
 
 <TOPIC> setup <style> function
