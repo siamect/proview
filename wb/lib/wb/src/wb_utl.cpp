@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.cpp,v 1.10 2008-05-28 11:53:08 claes Exp $
+ * Proview   $Id: wb_utl.cpp,v 1.11 2008-05-29 14:57:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1022,6 +1022,7 @@ int wb_utl::print_document (
 
 
 
+#if 0
 
 /*************************************************************************
 *
@@ -1342,7 +1343,316 @@ int wb_utl::redraw_windows (
 
   return FOE__SUCCESS;
 }
+#endif
 
+
+/*************************************************************************
+*
+* Description: 	Find all plcpgm and open all windows and call the callback
+*		function.
+*
+**************************************************************************/
+
+int wb_utl::exec_plcpgms( ldh_tSesContext ldhses,
+			  ldh_tWBContext  ldhwb,
+			  char		*hiername,
+			  char		*fromname,
+			  int		all,
+			  int		templ,
+			  int		no_focode,
+			  int (*cb) (void *, void *))
+{
+  int			sts, sts2, size;
+  pwr_tClassId		*classp;
+  pwr_tObjid		hierobjdid;
+  pwr_tClassId		class_vect[2];
+  utl_t_objidlist	*list_ptr;
+  utl_t_objidlist	*plcpgmlist;
+  int			plcpgmcount;
+  pwr_tOName     	plcname;
+  pwr_tObjid		fromobjdid;
+  int			from;
+  int			from_found;
+  ldh_sSessInfo		info;
+  char			plc_objid_str[80];
+  pwr_tCid		cid;
+
+  /* Get class */
+  if ( !templ)
+    class_vect[0] = pwr_cClass_plc;
+  else
+    class_vect[0] = pwr_cClass_PlcTemplate;
+  class_vect[1] = 0;
+  classp = class_vect;
+
+  if ( !all) {
+    /* Get objdid for the hierarchy object */
+    sts = ldh_NameToObjid( ldhses, &hierobjdid, hiername);
+    if ( EVEN(sts))
+      return FOE__HIERNAME;
+  }
+  else
+    hierobjdid = pwr_cNObjid;
+
+  if ( fromname != NULL) {
+    sts = ldh_NameToObjid( ldhses, &fromobjdid, fromname);
+    if ( EVEN(sts)) {
+      return FOE__OBJECT;
+    }	
+    from = 1;
+  }
+  else
+    from = 0;
+
+  /* Check that the utilily session is saved */
+  sts = ldh_GetSessionInfo( ldhses, &info);
+  if ( EVEN(sts)) return sts;
+  if ( !info.Empty)
+    return GSX__NOTSAVED;
+
+  /* To be able to redraw the windows, the session has to 
+     be set to ReadOnly */
+  sts = ldh_SetSession( ldhses, ldh_eAccess_ReadOnly);
+  if ( EVEN(sts)) return sts;
+
+  plcpgmcount = 0;
+  plcpgmlist = 0;
+
+  if ( cdh_ObjidIsNotNull( hierobjdid)) {
+    sts = ldh_GetObjectClass( ldhses, hierobjdid, &cid);
+    if ( EVEN(sts)) return sts;
+  }
+  else 
+    cid = 0;
+
+  if ( cid == pwr_cClass_plc || cid == pwr_cClass_PlcTemplate) {
+    pwr_tAttrRef aref = cdh_ObjidToAref( hierobjdid);
+    utl_objidlist_insert( &aref, &plcpgmlist, &plcpgmcount, 0, 0, 0);
+  }
+  else {
+    sts = trv_get_objects_hier_class_name( ldhses, hierobjdid, classp, NULL,
+					   &utl_objidlist_insert, &plcpgmlist, &plcpgmcount,
+					   0, 0, 0);
+    if ( EVEN (sts)) goto error_return;
+  }
+
+  list_ptr = plcpgmlist;
+  from_found = 0;
+  while ( list_ptr) {
+    if ( from) {
+      if ( !from_found ) {
+	if ( cdh_ObjidIsEqual( list_ptr->objid, fromobjdid)) {
+	  /* Start to redraw from now on 	*/
+	  from_found = 1;
+	}
+	else {
+	  list_ptr = list_ptr->next;
+	  continue;
+	}
+      }
+    } 
+    
+    sts = ldh_ObjidToName( ldhses, list_ptr->objid, ldh_eName_Hierarchy,
+		plcname, sizeof( plcname), &size);
+    if ( EVEN (sts)) goto error_return;
+    sts = ldh_ObjidToName( ldhses, list_ptr->objid, ldh_eName_Objid,
+		plc_objid_str, sizeof( plc_objid_str), &size);
+    if ( EVEN (sts)) goto error_return;
+
+    printf( "Plcpgm  %s		%s\n", 
+	    plcname, plc_objid_str);
+
+    sts = exec_plcpgm_windows( list_ptr->objid,
+			    ldhses, ldhwb, no_focode, cb);
+    if ( EVEN (sts)) goto error_return;
+	  
+    list_ptr = list_ptr->next;
+  }
+  utl_objidlist_free( plcpgmlist);
+
+  /* Return to session access ReadWrite */ 
+  sts2 = ldh_SetSession( ldhses, ldh_eAccess_ReadWrite);
+  if ( EVEN(sts2)) return sts2;
+
+  return FOE__SUCCESS;
+
+error_return:
+  sts2 = ldh_SetSession( ldhses, ldh_eAccess_ReadWrite);
+  if ( EVEN(sts2)) return sts2;
+
+  return sts;
+}
+
+
+/*************************************************************************
+*
+* Description: 	Find all windows in a plcpgm and call the backcall function.
+*
+**************************************************************************/
+
+int wb_utl::exec_plcpgm_windows( pwr_tObjid	  Objdid,
+				 ldh_tSesContext ldhses,
+				 ldh_tWBContext  ldhwb,
+				 int 		no_focode,
+				 int (*cb) (void *, void *))
+{
+  int		sts, size;
+  int		j;
+  pwr_eClass	eclass;
+  unsigned long	wind_count;
+  pwr_tObjid	*windlist;
+  pwr_tObjid	*windlist_ptr;
+  pwr_tObjid	plc;
+  pwr_tObjid	window;
+  pwr_sPlcWindow	*windbuffer;
+  WFoe		*foe;
+  pwr_tObjid	nodeobjdid;
+  pwr_tObjid	parwindobjdid;
+  vldh_t_wind	parentwind;
+  vldh_t_node	node;
+  int		new_window;
+  unsigned long	windowindex;
+
+  /* Get objdid for the plcpgm */
+  plc = Objdid;
+ 
+  /* Get the windows */
+  sts = trv_get_plc_window( ldhses, plc, &window);
+  if ( sts == GSX__NOSUBWINDOW) {
+    /* No subwindows on this window, return */
+    return FOE__SUCCESS;
+  }
+  else if ( EVEN(sts)) return sts;
+
+  sts = trv_get_window_windows( ldhses, window, &wind_count, &windlist);
+  if ( EVEN(sts)) return sts;
+	  
+  /* We don't want to see foe on the screen */
+
+  /* Start foe for the root window */
+  sts = utl_foe_new( "AutoPrint", plc, ldhwb, ldhses,
+		    &foe, 0, ldh_eAccess_SharedReadWrite);
+  if ( EVEN(sts)) return sts;
+
+  // Call callback function
+  sts = (cb) ( this, foe);
+  if ( EVEN(sts)) return sts;
+
+  windlist_ptr = windlist;
+  windlist_ptr++;
+
+  for ( j = 1; j < (int)wind_count; j++) {
+    /* Get parent in ldh and find him in vldh */
+    sts = ldh_GetParent( ldhses, *windlist_ptr, &nodeobjdid);
+    if ( EVEN(sts)) return sts;
+
+    /* Get the window of the parent */
+    sts = ldh_GetParent( ldhses, nodeobjdid, &parwindobjdid);
+    if ( EVEN(sts)) return sts;
+
+    if ( no_focode) {
+      // Don't execute FoCode objects
+      pwr_tCid cid;
+      pwr_tOid p = nodeobjdid;
+      bool next = false;
+      sts = ldh_GetObjectClass( ldhses, p, &cid);
+      while ( cid != pwr_cClass_plc) {
+	if ( is_focodeobject( ldhses, cid)) {
+	  next = true;
+	  break;
+	}
+	sts = ldh_GetParent( ldhses, p, &p);
+	if ( EVEN(sts)) break;
+	
+	sts = ldh_GetObjectClass( ldhses, p, &cid);
+	if ( EVEN(sts)) break;
+      }
+      if ( next) {
+	windlist_ptr++;
+	continue;
+      }
+    }
+
+    sts = vldh_get_wind_objdid( parwindobjdid, &parentwind);
+    if ( EVEN(sts)) return sts;
+
+    sts = vldh_get_node_objdid( nodeobjdid, parentwind, &node);
+    if ( EVEN(sts)) return sts;
+	       
+    /* Get the window index for this window */
+    sts = ldh_GetObjectBuffer( ldhses,
+		*windlist_ptr,	"DevBody", "PlcWindow", &eclass,	
+		(char **)&windbuffer, &size);
+    if( EVEN(sts)) return sts;
+
+    windowindex = windbuffer->subwindowindex;
+    free((char *) windbuffer);
+
+    new_window = FALSE;
+    foe = (WFoe *)parentwind->hw.foe;
+
+    /* Create subwindow */
+    sts = utl_foe_new_local( foe,
+		node->hn.name, pwr_cNObjid, 0, parentwind->hw.ldhses,
+		node, windowindex, new_window, &foe, 0, 
+		ldh_eAccess_SharedReadWrite, foe_eFuncAccess_Edit);
+
+    /* Redraw the window */
+    sts = (cb) ( this, foe);
+    if ( EVEN(sts)) return sts;
+
+    windlist_ptr++;
+  }
+
+  /* Delete all foe */
+  for ( j = 0; j < (int)wind_count; j++) {
+    windlist_ptr--;
+    sts = vldh_get_wind_objdid( *windlist_ptr, &parentwind);
+    if ( EVEN(sts)) continue;
+
+    ((WFoe *)parentwind->hw.foe)->quit();
+  }
+
+
+  if ( wind_count > 0) free((char *) windlist);
+  if ( wind_count == 0)
+    return FOE__NOWIND;
+
+  return FOE__SUCCESS;
+}
+
+
+int wb_utl::create_flow_plc( ldh_tSesContext ldhses,
+			     ldh_tWBContext  ldhwb,
+			     char		*hiername,
+			     char		*fromname,
+			     int		all,
+			     int		templ)
+{
+  return exec_plcpgms( ldhses, ldhwb, hiername,fromname, all, templ, 1,
+		       create_flow_cb);
+}
+
+int wb_utl::create_flow_cb( void *utl, void *foe)
+{
+  return ((WFoe *)foe)->create_flow();
+}
+
+int wb_utl::redraw_plc_hier( ldh_tSesContext ldhses,
+			     ldh_tWBContext  ldhwb,
+			     char		*hiername,
+			     char		*fromname,
+			     int		all,
+			     int		templ)
+{
+  return exec_plcpgms( ldhses, ldhwb, hiername,fromname, all, templ, 1,
+		       plc_redraw_cb);
+}
+
+int wb_utl::plc_redraw_cb( void *utl, void *foe)
+{
+  return ((WFoe *)foe)->redraw_and_save();
+}
 
 /*_Methods defined for this module_______________________________________*/
 

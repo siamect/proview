@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_crrgen.cpp,v 1.1 2008-05-28 11:53:47 claes Exp $
+ * Proview   $Id: wb_crrgen.cpp,v 1.2 2008-05-29 14:57:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -61,57 +61,76 @@ typedef struct {
   pwr_tObjName 	attr;
   crrgen_eType	type;
   crrgen_eTable	table;
+  int		is_oid;
 } crrgen_tRefList;
 
 static crrgen_tRefList reflist[] = {
-    { pwr_cClass_plc, "DevBody", "ResetObject", crrgen_eType_Read, crrgen_eTable_Signal},
-    { pwr_cClass_resdv, "DevBody", "DvObject", crrgen_eType_Write, crrgen_eTable_Signal},
-    { pwr_cClass_setdv, "DevBody", "DvObject", crrgen_eType_Write, crrgen_eTable_Signal},
-    { pwr_cClass_stodv, "DevBody", "DvObject", crrgen_eType_Write, crrgen_eTable_Signal},
-    { pwr_cClass_GetDv, "DevBody", "DvObject", crrgen_eType_Read, crrgen_eTable_Signal},
-    { pwr_cClass_GetDo, "DevBody", "DoObject", crrgen_eType_Read, crrgen_eTable_Signal},
-    { pwr_cClass_resdo, "DevBody", "DoObject", crrgen_eType_Write, crrgen_eTable_Signal},
-    { pwr_cClass_setdo, "DevBody", "DoObject", crrgen_eType_Write, crrgen_eTable_Signal},
-    { pwr_cClass_stodo, "DevBody", "DoObject", crrgen_eType_Write, crrgen_eTable_Signal},
-    { pwr_cClass_GetDi, "DevBody", "DiObject", crrgen_eType_Read, crrgen_eTable_Signal},
-    { pwr_cClass_cstoav, "DevBody", "AvObject", crrgen_eType_Write, crrgen_eTable_Signal},
-    { pwr_cClass_GetAv, "DevBody", "AvObject", crrgen_eType_Read, crrgen_eTable_Signal},
-    { pwr_cClass_stoav, "DevBody", "AvObject", crrgen_eType_Write, crrgen_eTable_Signal},
-    { pwr_cClass_cstoao, "DevBody", "AoObject", crrgen_eType_Write, crrgen_eTable_Signal},
-    { pwr_cClass_GetAo, "DevBody", "AoObject", crrgen_eType_Read, crrgen_eTable_Signal},
-    { pwr_cClass_stoao, "DevBody", "AoObject", crrgen_eType_Write, crrgen_eTable_Signal},
-    { pwr_cClass_GetAi, "DevBody", "AiObject", crrgen_eType_Read, crrgen_eTable_Signal},
-    { pwr_cClass_pos3p, "DevBody", "DoOpen", crrgen_eType_Write, crrgen_eTable_Signal},
-    { pwr_cClass_pos3p, "DevBody", "DoClose", crrgen_eType_Write, crrgen_eTable_Signal},
-    { pwr_cClass_inc3p, "DevBody", "DoOpen", crrgen_eType_Write, crrgen_eTable_Signal},
-    { pwr_cClass_inc3p, "DevBody", "DoClose", crrgen_eType_Write, crrgen_eTable_Signal},
-    { pwr_cClass_stodp, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object},
-    { pwr_cClass_setdp, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object},
-    { pwr_cClass_resdp, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object},
-    { pwr_cClass_GetDp, "DevBody", "DpObject", crrgen_eType_Read, crrgen_eTable_Object},
-    { pwr_cClass_cstoap, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object},
-    { pwr_cClass_GetAp, "DevBody", "ApObject", crrgen_eType_Read, crrgen_eTable_Object},
-    { pwr_cClass_stoap, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object},
-    { pwr_cClass_CStoIp, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object},
-    { pwr_cClass_GetIp, "DevBody", "IpObject", crrgen_eType_Read, crrgen_eTable_Object},
-    { pwr_cClass_StoIp, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object},
-    { pwr_cClass_stoii, "DevBody", "IiObject", crrgen_eType_Write, crrgen_eTable_Signal},
-    { pwr_cClass_stoio, "DevBody", "IoObject", crrgen_eType_Write, crrgen_eTable_Signal},
-    { pwr_cClass_stoiv, "DevBody", "IvObject", crrgen_eType_Write, crrgen_eTable_Signal},
-    { pwr_cClass_cstoii, "DevBody", "IiObject", crrgen_eType_Write, crrgen_eTable_Signal},
-    { pwr_cClass_cstoio, "DevBody", "IoObject", crrgen_eType_Write, crrgen_eTable_Signal},
-    { pwr_cClass_cstoiv, "DevBody", "IvObject", crrgen_eType_Write, crrgen_eTable_Signal},
-    { pwr_cClass_GetIi, "DevBody", "IiObject", crrgen_eType_Read, crrgen_eTable_Signal},
-    { pwr_cClass_GetIo, "DevBody", "IoObject", crrgen_eType_Read, crrgen_eTable_Signal},
-    { pwr_cClass_GetIv, "DevBody", "IvObject", crrgen_eType_Read, crrgen_eTable_Signal},
-    { pwr_cClass_reset_so, "DevBody", "OrderObject", crrgen_eType_Read, crrgen_eTable_Object},
-    { pwr_cClass_GetData, "DevBody", "DataObject", crrgen_eType_Ref, crrgen_eTable_Object}};
+    { pwr_cClass_plc, "DevBody", "ResetObject", crrgen_eType_Read, crrgen_eTable_Signal, 0},
+    { pwr_cClass_resdv, "DevBody", "DvObject", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_setdv, "DevBody", "DvObject", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_stodv, "DevBody", "DvObject", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_GetDv, "DevBody", "DvObject", crrgen_eType_Read, crrgen_eTable_Signal, 0},
+    { pwr_cClass_GetDo, "DevBody", "DoObject", crrgen_eType_Read, crrgen_eTable_Signal, 0},
+    { pwr_cClass_resdo, "DevBody", "DoObject", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_setdo, "DevBody", "DoObject", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_stodo, "DevBody", "DoObject", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_GetDi, "DevBody", "DiObject", crrgen_eType_Read, crrgen_eTable_Signal, 0},
+    { pwr_cClass_cstoav, "DevBody", "AvObject", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_GetAv, "DevBody", "AvObject", crrgen_eType_Read, crrgen_eTable_Signal, 0},
+    { pwr_cClass_stoav, "DevBody", "AvObject", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_cstoao, "DevBody", "AoObject", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_GetAo, "DevBody", "AoObject", crrgen_eType_Read, crrgen_eTable_Signal, 0},
+    { pwr_cClass_stoao, "DevBody", "AoObject", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_GetAi, "DevBody", "AiObject", crrgen_eType_Read, crrgen_eTable_Signal, 0},
+    { pwr_cClass_pos3p, "DevBody", "DoOpen", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_pos3p, "DevBody", "DoClose", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_inc3p, "DevBody", "DoOpen", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_inc3p, "DevBody", "DoClose", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_stodp, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object, 0},
+    { pwr_cClass_setdp, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object, 0},
+    { pwr_cClass_resdp, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object, 0},
+    { pwr_cClass_GetDp, "DevBody", "DpObject", crrgen_eType_Read, crrgen_eTable_Object, 0},
+    { pwr_cClass_cstoap, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object, 0},
+    { pwr_cClass_GetAp, "DevBody", "ApObject", crrgen_eType_Read, crrgen_eTable_Object, 0},
+    { pwr_cClass_stoap, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object, 0},
+    { pwr_cClass_CStoIp, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object, 0},
+    { pwr_cClass_GetIp, "DevBody", "IpObject", crrgen_eType_Read, crrgen_eTable_Object, 0},
+    { pwr_cClass_StoIp, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object, 0},
+    { pwr_cClass_stoii, "DevBody", "IiObject", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_stoio, "DevBody", "IoObject", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_stoiv, "DevBody", "IvObject", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_cstoii, "DevBody", "IiObject", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_cstoio, "DevBody", "IoObject", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_cstoiv, "DevBody", "IvObject", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_GetIi, "DevBody", "IiObject", crrgen_eType_Read, crrgen_eTable_Signal, 0},
+    { pwr_cClass_GetIo, "DevBody", "IoObject", crrgen_eType_Read, crrgen_eTable_Signal, 0},
+    { pwr_cClass_GetIv, "DevBody", "IvObject", crrgen_eType_Read, crrgen_eTable_Signal, 0},
+    { pwr_cClass_GetSv, "DevBody", "SvObject", crrgen_eType_Read, crrgen_eTable_Signal, 0},
+    { pwr_cClass_stosv, "DevBody", "SvObject", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_cstosv, "DevBody", "SvObject", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_GetSp, "DevBody", "SpObject", crrgen_eType_Read, crrgen_eTable_Object, 0},
+    { pwr_cClass_stosp, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object, 0},
+    { pwr_cClass_cstosp, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object, 0},
+    { pwr_cClass_GetATv, "DevBody", "ATvObject", crrgen_eType_Read, crrgen_eTable_Signal, 0},
+    { pwr_cClass_StoATv, "DevBody", "ATvObject", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_CStoATv, "DevBody", "ATvObject", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_GetATp, "DevBody", "ATpObject", crrgen_eType_Read, crrgen_eTable_Object, 0},
+    { pwr_cClass_StoATp, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object, 0},
+    { pwr_cClass_CStoATp, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object, 0},
+    { pwr_cClass_GetDTv, "DevBody", "DTvObject", crrgen_eType_Read, crrgen_eTable_Signal, 0},
+    { pwr_cClass_StoDTv, "DevBody", "DTvObject", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_CStoDTv, "DevBody", "DTvObject", crrgen_eType_Write, crrgen_eTable_Signal, 0},
+    { pwr_cClass_GetDTp, "DevBody", "DTpObject", crrgen_eType_Read, crrgen_eTable_Object, 0},
+    { pwr_cClass_StoDTp, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object, 0},
+    { pwr_cClass_CStoDTp, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object, 0},
+    { pwr_cClass_reset_so, "DevBody", "OrderObject", crrgen_eType_Read, crrgen_eTable_Object, 1},
+    { pwr_cClass_GetData, "DevBody", "DataObject", crrgen_eType_Ref, crrgen_eTable_Object, 0}};
 
 static crrgen_tRefList codelist[] = {
-    { pwr_cClass_dataarithm, "DevBody", "Code", crrgen_eType_, crrgen_eTable_},
-    { pwr_cClass_carithm, "DevBody", "Code", crrgen_eType_, crrgen_eTable_},
-    { pwr_cClass_aarithm, "DevBody", "Expression", crrgen_eType_, crrgen_eTable_},
-    { pwr_cClass_darithm, "DevBody", "Expression", crrgen_eType_, crrgen_eTable_}};
+    { pwr_cClass_dataarithm, "DevBody", "Code", crrgen_eType_, crrgen_eTable_, 0},
+    { pwr_cClass_carithm, "DevBody", "Code", crrgen_eType_, crrgen_eTable_, 0},
+    { pwr_cClass_aarithm, "DevBody", "Expression", crrgen_eType_, crrgen_eTable_, 0},
+    { pwr_cClass_darithm, "DevBody", "Expression", crrgen_eType_, crrgen_eTable_, 0}};
 
 static int comp_crr(tree_sTable *tp, tree_sNode *x, tree_sNode *y);
 
@@ -217,7 +236,16 @@ void wb_crrgen::load( pwr_tStatus *rsts)
 
       wb_attribute a = m_sp->attribute( o.oid(), reflist[i].body, reflist[i].attr);
 
-      a.value( &aref);
+      if ( reflist[i].is_oid) {
+	// Objid reference
+	pwr_tOid oid;
+	a.value( &oid);
+	aref = cdh_ObjidToAref( oid);
+      }
+      else
+	// AttrRef reference
+	a.value( &aref);
+
       if ( cdh_ObjidIsNotNull( aref.Objid)) {
 	sCrrKey key;
 
@@ -347,7 +375,9 @@ void wb_crrgen::load( pwr_tStatus *rsts)
 	  case pwr_cClass_Ii:
 	  case pwr_cClass_Io:
 	  case pwr_cClass_Iv:
-	  case pwr_cClass_Co: {
+	  case pwr_cClass_Sv:
+	  case pwr_cClass_ATv:
+	  case pwr_cClass_DTv: {
 	    sCrrKey key;
 
 	    key.target = al.aref();
@@ -404,7 +434,9 @@ void wb_crrgen::load( pwr_tStatus *rsts)
 	  case pwr_cClass_Ii:
 	  case pwr_cClass_Io:
 	  case pwr_cClass_Iv:
-	  case pwr_cClass_Co: {
+	  case pwr_cClass_Sv:
+	  case pwr_cClass_ATv:
+	  case pwr_cClass_DTv: {
 	    sCrrKey key;
 
 	    key.target = al.aref();
@@ -458,13 +490,18 @@ void wb_crrgen::write( pwr_tStatus *rsts)
   while ( crr) {
     wb_attribute a_target = m_sp->attribute( &crr->key.target);
     wb_object o = m_sp->object( crr->key.reference.Objid);
+    if ( !a_target) {
+      printf( "** Undefined reference in: %s\n", o.longName().name(cdh_mName_volume | cdh_mName_path | cdh_mName_attribute));
+      crr = (sCrr *)tree_Successor(&sts, m_signal_th, crr);
+      continue;
+    }
     wb_cdef cdef = m_sp->cdef(o.cid());
 
     if ( !(crr->key.target.Objid.vid == prev_target.Objid.vid &&
 	   crr->key.target.Objid.oix == prev_target.Objid.oix &&
 	   crr->key.target.Offset == prev_target.Offset &&
 	   crr->key.target.Size == prev_target.Size))
-      fps << a_target.longName().c_str() << endl;
+      fps << a_target.longName().name(cdh_mName_volume | cdh_mName_path | cdh_mName_attribute) << endl;
 
     switch( crr->key.type) {
     case crrgen_eType_Write:
@@ -499,13 +536,18 @@ void wb_crrgen::write( pwr_tStatus *rsts)
   while ( crr) {
     wb_attribute a_target = m_sp->attribute( &crr->key.target);
     wb_object o = m_sp->object( crr->key.reference.Objid);
+    if ( !a_target) {
+      printf( "** Undefined reference in: %s\n", o.longName().name(cdh_mName_volume | cdh_mName_path | cdh_mName_attribute));
+      crr = (sCrr *)tree_Successor(&sts, m_object_th, crr);
+      continue;
+    }
     wb_cdef cdef = m_sp->cdef(o.cid());
 
     if ( !(crr->key.target.Objid.vid == prev_target.Objid.vid &&
 	   crr->key.target.Objid.oix == prev_target.Objid.oix &&
 	   crr->key.target.Offset == prev_target.Offset &&
 	   crr->key.target.Size == prev_target.Size))
-      fpo << a_target.longName().c_str() << endl;
+      fpo << a_target.longName().name(cdh_mName_volume | cdh_mName_path | cdh_mName_attribute) << endl;
 
     switch( crr->key.type) {
     case crrgen_eType_Write:
@@ -551,7 +593,7 @@ void wb_crrgen::write_code( pwr_tStatus *rsts)
       a.value( text);
 
       if ( strcmp( text, "") != 0) {
-	fpc << " _Obj_ " << o.longName().c_str()  << endl;
+	fpc << " _Obj_ " << o.longName().name(cdh_mName_path | cdh_mName_object)  << endl;
 	fpc << text << endl;
       }
     }

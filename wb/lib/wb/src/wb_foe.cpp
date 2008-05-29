@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe.cpp,v 1.8 2008-04-07 14:53:06 claes Exp $
+ * Proview   $Id: wb_foe.cpp,v 1.9 2008-05-29 14:57:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3710,6 +3710,48 @@ int WFoe::redraw_and_save()
   return FOE__SUCCESS;
 }
 
+
+//
+//  	Create flowfiles.
+//
+int WFoe::create_flow()
+{
+  int sts;
+
+  if ( !classeditor) {
+    sts = gre->set_trace_attributes( 0);
+    sts = gre->save( 0);
+  }
+  else {
+    vldh_t_wind	wind;
+    int 	size;
+    pwr_tOName 	name;
+    vldh_t_plc	plc;
+    pwr_tFileName fname;
+    char 	classname[80];
+    pwr_tObjid 	classdef;
+
+    wind = gre->wind;
+    plc = wind->hw.plc;
+
+    sts = ldh_ObjidToName( wind->hw.ldhses, plc->lp.oid,
+			   ldh_eName_Hierarchy, name, sizeof( name), &size); 
+    if ( EVEN(sts)) return sts;
+    
+    sts = ldh_GetParent( wind->hw.ldhses, plc->lp.oid, &classdef);
+    if ( EVEN(sts)) return sts;
+
+    sts = ldh_ObjidToName( wind->hw.ldhses, classdef,
+			   ldh_eName_Object, classname, sizeof( classname), &size); 
+    if ( EVEN(sts)) return sts;
+    cdh_ToLower( classname, classname);
+    sprintf( fname, "$pwrp_load/pwr_%s.flw", classname);
+    sts = gre->set_trace_attributes( name);
+    sts = gre->save( fname);
+  }
+
+  return sts;
+}
 
 /* API routines */
 

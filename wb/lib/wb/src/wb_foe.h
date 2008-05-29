@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe.h,v 1.15 2007-10-15 12:15:04 claes Exp $
+ * Proview   $Id: wb_foe.h,v 1.16 2008-05-29 14:57:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -255,6 +255,7 @@ class WFoe : public WUtility {
   int print_pdf_overview();
   int change_mode( int new_mode);
   int redraw_and_save();
+  int create_flow();
 
   static WFoe *get( pwr_tOid oid);
   static void reset_current_node( WFoe *foe);

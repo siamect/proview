@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.cpp,v 1.9 2008-05-28 11:54:59 claes Exp $
+ * Proview   $Id: wb_gre.cpp,v 1.10 2008-05-29 14:57:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2988,6 +2988,24 @@ int WGre::set_trace_attributes( char *host)
       case pwr_cClass_cstoap:
       case pwr_cClass_StoIp:
       case pwr_cClass_CStoIp:
+      case pwr_cClass_stosv:
+      case pwr_cClass_cstosv:
+      case pwr_cClass_GetSv:
+      case pwr_cClass_GetSp:
+      case pwr_cClass_stosp:
+      case pwr_cClass_cstosp:
+      case pwr_cClass_GetATv:
+      case pwr_cClass_StoATv:
+      case pwr_cClass_CStoATv:
+      case pwr_cClass_GetATp:
+      case pwr_cClass_StoATp:
+      case pwr_cClass_CStoATp:
+      case pwr_cClass_GetDTv:
+      case pwr_cClass_StoDTv:
+      case pwr_cClass_CStoDTv:
+      case pwr_cClass_GetDTp:
+      case pwr_cClass_StoDTp:
+      case pwr_cClass_CStoDTp:
 	sts = ldh_GetObjectBodyDef( wind->hw.ldhses, 
 			(*node_ptr)->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
@@ -3027,6 +3045,15 @@ int WGre::set_trace_attributes( char *host)
       case pwr_cClass_cstoap:
       case pwr_cClass_StoIp:
       case pwr_cClass_CStoIp:
+      case pwr_cClass_GetSp:
+      case pwr_cClass_stosp:
+      case pwr_cClass_cstosp:
+      case pwr_cClass_GetATp:
+      case pwr_cClass_StoATp:
+      case pwr_cClass_CStoATp:
+      case pwr_cClass_GetDTp:
+      case pwr_cClass_StoDTp:
+      case pwr_cClass_CStoDTp:
 	s = strrchr( object_str, '.');
 	if ( s) {
 	  strcpy( attr_str, s + 1);
@@ -3098,10 +3125,9 @@ int WGre::save( char *filename)
   }
   else
     dcli_translate_filename( fname, filename);
-  sts = flow_Save( flow_ctx, fname);  
+  sts = flow_Save( flow_ctx, fname); 
   return sts;
 }
-
 
 //
 // Set gridsize
