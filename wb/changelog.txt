@@ -100,5 +100,10 @@
 080318 cs  wb        Bugfix in cast. Internal references wasn't updated correctly.
 080403 cs  wb        New command 'print/pdf/all' to print all plcpgm's to pdf-files. Also a html file with links to the files is written.
 080407 cs  wb        Stolen database lock detected and save inhibited.
-080414 cs  wb        Bugfix in build volume, crossreferences wasn'n updated.
+080414 cs  wb        Bugfix in build volume, crossreferences wasn't updated.
 080418 cs  wb        Config file for BerkeleyDb with lk_max_locks and lk_max_objects (db.cnf).
+080429 cs  wb        Problems with lost selection when command input is opened fixed.
+080429 cs  wb        Syntax check in GlobalVolumeList added.
+080429 cs  wb        Default thread object set in PlcPgm object at creation time.
+080528 cs  wb        New crossreference list format.
+080529 cs  wb        New command 'create crossreferencefiles' replaces 'create rttfiles'.

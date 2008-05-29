@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nrep.cpp,v 1.16 2007-11-22 13:11:21 claes Exp $
+ * Proview   $Id: wb_nrep.cpp,v 1.17 2008-05-29 14:55:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -794,7 +794,7 @@ char *wb_nrep::normName( int ntype, char *res)
 
 char *wb_nrep::nameName(const char *n, int ntype, char *res)
 {
-  static char result[200];
+  static char result[512];
   int colon_added = 0;
 
   if ( !res)

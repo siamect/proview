@@ -93,3 +93,5 @@
 080505 cs  brow      Min and maxvalues for scrollbar adjusted.
 080513 cs  ge        Journal file and undo/redo implemented.
 080513 cs  ge        Delete added to menu, accelerator Ctrl+D moved from show grid to delete.
+080529 cs  xtt       Bugfix in display object, didn't work for local mounted volumes, 
+                     and attributes in subclasses wasn't selected.
