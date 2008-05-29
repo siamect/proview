@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_cdh.h,v 1.27 2007-12-21 13:31:57 claes Exp $
+ * Proview   $Id: co_cdh.h,v 1.28 2008-05-29 15:02:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1010,6 +1010,8 @@ pwr_sAttrRef cdh_ArefToDisableAref( pwr_sAttrRef *arp);
 pwr_sAttrRef cdh_ArefAdd( pwr_sAttrRef *arp1, pwr_sAttrRef *arp2);
 
 void cdh_SuppressSuper( char *out, char *in);
+
+void cdh_SuppressSuperAll( char *out, char *in);
 
 int cdh_TypeToMaxStrSize( pwr_eType type, int attr_size, int attr_elements);
 

@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_cdh.c,v 1.21 2007-04-25 13:39:21 claes Exp $
+ * Proview   $Id: co_cdh.c,v 1.22 2008-05-29 15:02:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2650,6 +2650,19 @@ void cdh_SuppressSuper( char *out, char *in)
   while ( strncmp( s, "Super.", 6) == 0)
     s += 6;
   strcpy( out, s);
+}
+
+void cdh_SuppressSuperAll( char *out, char *in)
+{
+  char *s, *t;
+
+  for ( s = in, t = out; *s; s++,t++) {
+    if ( strncmp( s, "Super.", 6) == 0)
+      s += 6;
+    else
+      *t = *s;
+  }
+  *t = 0;
 }
 
 int cdh_TypeToMaxStrSize( pwr_eType type, int attr_size, int attr_elements)
