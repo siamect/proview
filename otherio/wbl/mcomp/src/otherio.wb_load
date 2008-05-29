@@ -578,7 +578,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         !/**
         ! @Summary Error count of the slave.
         ! ErrorCount will increase every cycle if status is not MB__NORMAL.
-	! When ErrorCount reaches the ErrorLimit all inputs are reset to zero.
+        ! When ErrorCount reaches the ErrorLimit all inputs are reset to zero.
         !*/
         Object ErrorCount $Attribute 7 08-FEB-2008 10:50:15.18
           Body SysBody 08-FEB-2008 10:55:49.84
@@ -589,7 +589,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         !/**
         ! @Summary Error limit of the slave.
         ! ErrorCount will increase every cycle if status is not MB__NORMAL.
-	! When ErrorCount reaches the ErrorLimit all inputs are reset to zero.
+        ! When ErrorCount reaches the ErrorLimit all inputs are reset to zero.
         !*/
         Object ErrorLimit $Attribute 8 08-FEB-2008 10:55:37.72
           Body SysBody 08-FEB-2008 10:55:53.80
@@ -600,7 +600,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         !/**
         ! @Summary Reconnect count.
         ! If slave is disconnected Proview will try to reconnect until ReconnectLimit is reached.
-	! Reconnect attempt is performed when ErrorCount reaches ErrorLimit.
+        ! Reconnect attempt is performed when ErrorCount reaches ErrorLimit.
         !*/
         Object ReconnectCount $Attribute 9 08-FEB-2008 10:56:12.51
           Body SysBody 08-FEB-2008 10:56:17.20
@@ -611,8 +611,8 @@ Volume OtherIO $ClassVolume 0.0.250.10
         !/**
         ! @Summary Reconnect limit.
         ! If slave is disconnected Proview will try to reconnect until ReconnectLimit is reached.
-	! Reconnect attempt is performed when ErrorCount reaches ErrorLimit. When reconnect limit
-	! is reached no more attempts is performed and slave is treated as "dead".
+        ! Reconnect attempt is performed when ErrorCount reaches ErrorLimit. When reconnect limit
+        ! is reached no more attempts is performed and slave is treated as "dead".
         !*/
         Object ReconnectLimit $Attribute 10 08-FEB-2008 10:56:28.05
           Body SysBody 08-FEB-2008 11:19:48.56
@@ -689,6 +689,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       EndObject
       Object Template Modbus_TCP_Slave 2148499456 01-JAN-1970 01:00:00.00
         Body RtBody 08-FEB-2008 11:05:14.00
+          Attr Process = 1
           Attr ErrorLimit = 50
           Attr ReconnectLimit = 5
         EndBody
@@ -702,20 +703,20 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  Defines the type of Modbus action that is to be performed and at which address on the slave.
     !  The action is defined by a function code which means either reading or writing data to
     !  the Modbus slave.
-    !
+    ! 
     !  The supported function codes are:
     ! 	
     !  @b ReadCoils (FC 1)
     !  This function code is used to read from 1 to 2000 contiguous status of coils in a remote device.
     !  Typically the input data area is defined by a number of ChanDi's which represent
     !  the number of coils you want to read. The represenation on the ChanDi should be set to Bit8.
-    !
+    ! 
     !  @b ReadDiscreteInputs (FC 2)
     !  This function code is used to read from 1 to 2000 contiguous status of discrete inputs
     !  in a remote device. Typically the input data area is defined by a number of ChanDi's 
     !  which represent the number of coils you want to read. 
     !  The represenation on the ChanDi should be set to Bit8.
-    !
+    ! 
     !  @b ReadHoldingRegisters (FC 3)
     !  This function code is used to read the contents of a contiguous block of holding registers
     !  in a remote device.
@@ -723,7 +724,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  the number of registers you want to read. The represenation on the ChanIi should 
     !  be set to UInt16 or Int16. ChanAi and ChanDi is also applicable. In case of ChanDi the
     !  representation should be set to Bit16.
-    !
+    ! 
     !  @b ReadInputRegisters (FC 4)
     !  This function code is used to read from 1 to 125 contiguous input registers
     !  in a remote device.
@@ -731,14 +732,14 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  the number of registers you want to read. The represenation on the ChanIi should 
     !  be set to UInt16 or Int16. ChanAi and ChanDi is also applicable. In case of ChanDi the
     !  representation should be set to Bit16.
-    !
+    ! 
     !  @b WriteMultipleCoils (FC 15)
     !  This function code is used to force each coil in a sequence of coils to either ON or OFF
     !  in a remote Device.
     !  Typically the output data area is defined by a number of ChanDo's which represent
     !  the number of coils you want to write. The represenation on the ChanDo should 
     !  be set to Bit8.
-    !
+    ! 
     !  @b WriteMultipleRegisters (FC 16)
     !  This function code is used to write a block of contiguous registers (1 to 123 registers)
     !  in a remote device.
@@ -746,7 +747,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  the number of registers you want to write. The represenation on the ChanIo should 
     !  be set to UInt16 or Int16. ChanAo and ChanDo is also applicable. In case of ChanDo the
     !  representation should be set to Bit16.
-    !
+    ! 
     !  @classlink Modbus_TPC_Slave otherio_modbus_tcp_slave.html
     !*/
     Object Modbus_Module $ClassDef 4 08-FEB-2008 11:05:36.53
@@ -775,12 +776,12 @@ Volume OtherIO $ClassVolume 0.0.250.10
         ! The module is handled with the scantime of the thread.
         ! The supported function codes are:
         ! 	
-	! (FC 1) ReadCoils
-	! (FC 2) ReadDiscreteInputs
-	! (FC 3) ReadHoldingRegisters
-	! (FC 4) ReadInputRegisters
-	! (FC 15) WriteMultipleCoils 
-	! (FC 16) WriteMultipleRegisters
+        ! (FC 1) ReadCoils
+        ! (FC 2) ReadDiscreteInputs
+        ! (FC 3) ReadHoldingRegisters
+        ! (FC 4) ReadInputRegisters
+        ! (FC 15) WriteMultipleCoils 
+        ! (FC 16) WriteMultipleRegisters
         !*/
         Object FunctionCode $Attribute 5 08-FEB-2008 11:19:38.05
           Body SysBody 08-FEB-2008 11:30:37.32
@@ -790,7 +791,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
         !/**
         ! @Summary Address of data area on Modbus slave.
-	! Address of data area on Modbus slave. 
+        ! Address of data area on Modbus slave. 
         !*/
         Object Address $Attribute 6 08-FEB-2008 11:20:03.39
           Body SysBody 08-FEB-2008 11:30:42.64
@@ -801,12 +802,12 @@ Volume OtherIO $ClassVolume 0.0.250.10
         !/**
         ! @Summary Status of the slave.
         ! Status of the module. The status can be any of:
-	! OK
-	! IllegalFunction
-	! IllegalDataAddress
-	! IllegalDataValue
-	! SlaveServiceFailure
-	! Unknown
+        ! OK
+        ! IllegalFunction
+        ! IllegalDataAddress
+        ! IllegalDataValue
+        ! SlaveServiceFailure
+        ! Unknown
         !*/
         Object Status $Attribute 7 08-FEB-2008 11:20:34.93
           Body SysBody 08-FEB-2008 11:31:11.41
@@ -859,7 +860,8 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
       EndObject
       Object Template Modbus_Module 2148761600 01-JAN-1970 01:00:00.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 29-MAY-2008 08:28:24.16
+          Attr Process = 1
         EndBody
       EndObject
     EndObject
