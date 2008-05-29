@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.cpp,v 1.37 2008-05-28 12:05:53 claes Exp $
+ * Proview   $Id: xtt_xnav.cpp,v 1.38 2008-05-29 15:00:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2550,11 +2550,21 @@ int XNav::display_object( pwr_sAttrRef *arp, int open)
     if ( mount_cnt == MOUNTLIST_SIZE)
       break;
 
-    sts = gdh_ObjidToPointer( mountobject_list[mount_cnt], (void **)&mount_p);
-    if ( ODD(sts)) {
-      mounted_list[mount_cnt] = mount_p->Object;
+#if 0   
+    pwr_tOName n;
+    sts = gdh_ObjidToName ( objid, n, sizeof(n), cdh_mNName);
+    if ( ODD(sts))
+      sts = gdh_NameToObjid( n, &mounted_list[mount_cnt]);
+    if ( ODD(sts))
       mount_cnt++;
-    }
+#endif
+
+      sts = gdh_MountObjidToPointer( mountobject_list[mount_cnt], (void **)&mount_p);
+      if ( ODD(sts)) {
+	mounted_list[mount_cnt] = mount_p->Object;
+	mount_cnt++;
+      }
+
     sts = gdh_GetNextObject( mountobject_list[mount_cnt-1],
                 &mountobject_list[mount_cnt]);
   }
@@ -2702,12 +2712,14 @@ int XNav::find( pwr_tObjid objid, char *attr, void **item)
   int		object_cnt;
   Item	 	*object_item;
   int		i;
+  pwr_tOName	item_attr;
 
   brow_GetObjectList( brow->ctx, &object_list, &object_cnt);
   for ( i = 0; i < object_cnt; i++) {
     brow_GetUserData( object_list[i], (void **)&object_item);
+    cdh_SuppressSuperAll( item_attr, object_item->name);
     if ( cdh_ObjidIsEqual( object_item->objid, objid) && 
-	 strcmp( attr, object_item->name) == 0) {
+	 strcmp( attr, item_attr) == 0) {
       *item = (void *) object_item;
       return 1;
     }
