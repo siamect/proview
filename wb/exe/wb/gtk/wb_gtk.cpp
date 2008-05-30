@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gtk.cpp,v 1.6 2008-04-16 12:20:36 claes Exp $
+ * Proview   $Id: wb_gtk.cpp,v 1.7 2008-05-30 09:11:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -93,6 +93,7 @@ int main( int argc, char *argv[])
 
   setlocale( LC_ALL, "en_US");
   setlocale( LC_NUMERIC, "en_US");
+  setlocale( LC_TIME, "en_US");
 
   new WbGtk( argc, argv);
 }
