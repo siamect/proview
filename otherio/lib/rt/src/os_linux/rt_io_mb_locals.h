@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_mb_locals.h,v 1.1 2008-02-29 08:01:07 claes Exp $
+ * Proview   $Id: rt_io_mb_locals.h,v 1.2 2008-05-30 11:22:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -76,6 +76,7 @@ typedef struct {
   int input_size;
   int output_size;
   int expected_msgs;
+  pwr_tTime last_try_connect_time;
 } io_sRackLocal;
 
 typedef struct {

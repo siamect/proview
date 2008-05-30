@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_mb_tcp_slave.c,v 1.3 2008-05-29 06:49:45 claes Exp $
+ * Proview   $Id: rt_io_m_mb_tcp_slave.c,v 1.4 2008-05-30 11:22:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -32,9 +32,6 @@
 #include <unistd.h>
 #include <sys/socket.h>
 
-
-#include "rt_io_mb_locals.h"
-
 #include "pwr.h"
 #include "co_cdh.h"
 #include "pwr_baseclasses.h"
@@ -46,7 +43,10 @@
 #include "rt_io_msg.h"
 #include "rt_errh.h"
 #include "co_cdh.h"
+#include "co_time.h"
 #include "rt_mb_msg.h"
+
+#include "rt_io_mb_locals.h"
 
 char rcv_buffer[65536];
 
@@ -58,6 +58,12 @@ static int connect_slave( io_sRackLocal *local, io_sRack *rp)
   pwr_tStatus sts;
   pwr_sClass_Modbus_TCP_Slave *op;
   int buffsize = 10000;
+  int flags;
+  fd_set fdr;				/* For select call */
+  fd_set fdw;				/* For select call */
+  struct timeval tv;
+
+  clock_gettime(CLOCK_MONOTONIC, &local->last_try_connect_time);
 
   op = (pwr_sClass_Modbus_TCP_Slave *) rp->op;
 
@@ -82,11 +88,36 @@ static int connect_slave( io_sRackLocal *local, io_sRack *rp)
   local->rem_addr.sin_addr.s_addr = inet_addr((char *) &(op->Address));
   
   /* Connect to remote address */
+
+  fcntl(local->s, F_SETFL, (flags = fcntl(local->s, F_GETFL)) | O_NONBLOCK);
   
   sts = connect(local->s, (struct sockaddr *) &local->rem_addr, sizeof(local->rem_addr)); 
+
   if (sts < 0) { 
-    errh_Error( "Error connecting remote socket for IO modbus slave %s, %d", rp->Name, sts);
+    FD_ZERO(&fdr);
+    FD_ZERO(&fdw);
+    FD_SET(local->s, &fdr);
+    FD_SET(local->s, &fdw);
+    
+    if (op->ReconnectLimit > 200) {
+      tv.tv_sec = 0;
+      tv.tv_usec = 1000 * op->ReconnectLimit;
+    } else {
+      tv.tv_sec = 0;
+      tv.tv_usec = 200000;
+    }
+
+    sts = select(32, &fdr, &fdw, NULL, &tv);
+    
+    if (sts <= 0) {
+      close(local->s);
+      errh_Error( "Error connecting remote socket for IO modbus slave %s, %d", rp->Name, sts);
+      return -1;
+    }
   }
+
+  fcntl(local->s, F_SETFL, (flags = fcntl(local->s, F_GETFL)) ^ O_NONBLOCK);
+  
   return sts;
 }
 
@@ -100,6 +131,7 @@ static pwr_tStatus recv_data(io_sRackLocal *local,
   pwr_tStatus sts;
   fd_set fdr;				/* For select call */
   fd_set fde;				/* For select call */
+  fd_set fdw;				/* For select call */
   struct timeval tv;
   pwr_tBoolean found;
   int data_size;
@@ -115,9 +147,23 @@ static pwr_tStatus recv_data(io_sRackLocal *local,
 
   while (sts > 0) {
     FD_ZERO(&fdr);
+    FD_ZERO(&fdw);
     FD_ZERO(&fde);
     FD_SET(local->s, &fdr);
+    FD_SET(local->s, &fdw);
     FD_SET(local->s, &fde);
+
+    tv.tv_sec = 0;
+    tv.tv_usec = 0;
+
+    sts = select(32, &fdr, &fdw, &fde, &tv);
+    
+    if (!(FD_ISSET(local->s, &fdw))) {
+      sp->Status = MB__CONNDOWN;
+      close(local->s);
+      errh_Error( "Connection down to modbus slave, %s", rp->Name);
+      return IO__SUCCESS;
+    }
 
     if (local->expected_msgs > 0) {
       tv.tv_sec = 0;
@@ -127,6 +173,11 @@ static pwr_tStatus recv_data(io_sRackLocal *local,
       tv.tv_usec = 0;
     }
 
+    FD_ZERO(&fdr);
+    FD_ZERO(&fde);
+    FD_SET(local->s, &fdr);
+    FD_SET(local->s, &fde);
+
     sts = select(32, &fdr, NULL, &fde, &tv);
 
     if (sts < 0) {
@@ -134,8 +185,15 @@ static pwr_tStatus recv_data(io_sRackLocal *local,
       errh_Error( "Connection lost to modbus slave, %s", rp->Name);
       return IO__SUCCESS;
     }
+    
+    if ((sts == 0) && (local->expected_msgs > 0)) {
+      sp->Status = MB__CONNDOWN;
+      close(local->s);
+      errh_Error( "Connection down to modbus slave, %s", rp->Name);
+      return IO__SUCCESS;
+    }
 
-    if (sts > 0) {
+    if (sts > 0 && FD_ISSET(local->s, &fdr)) {
       data_size = recv(local->s, rcv_buffer, sizeof(rec_buf), 0);
 
       if (data_size < 0) {
@@ -294,7 +352,14 @@ static pwr_tStatus send_data(io_sRackLocal *local,
               rr.addr = htons(mp->Address);
               rr.quant = ntohs(local_card->input_size * 8);
 
-	      sts = send(local->s, &rr, sizeof(read_req), 0);
+	      sts = send(local->s, &rr, sizeof(read_req), MSG_DONTWAIT);
+	      if (sts < 0) {
+                sp->Status = MB__CONNDOWN;
+                close(local->s);
+                errh_Error( "Connection down to modbus slave, %s", rp->Name);
+                return IO__SUCCESS;
+              }
+	      
 	      local->expected_msgs++;
 	      sp->TX_packets++;
 	      break;
@@ -315,7 +380,13 @@ static pwr_tStatus send_data(io_sRackLocal *local,
               rr.addr = htons(mp->Address);
               rr.quant = ntohs((local_card->input_size + 1) / 2);
 
-	      sts = send(local->s, &rr, sizeof(read_req), 0);
+	      sts = send(local->s, &rr, sizeof(read_req), MSG_DONTWAIT);
+	      if (sts < 0) {
+                sp->Status = MB__CONNDOWN;
+                close(local->s);
+                errh_Error( "Connection down to modbus slave, %s", rp->Name);
+                return IO__SUCCESS;
+              }
 	      sp->TX_packets++;
 	      local->expected_msgs++;
 	      break;
@@ -343,7 +414,13 @@ static pwr_tStatus send_data(io_sRackLocal *local,
 	      wcr.bc = local_card->output_size;
 	      memcpy(wcr.reg, local_card->output_area, local_card->output_size);
 
-	      sts = send(local->s, &wcr, ntohs(wcr.head.length) + 6, 0);
+	      sts = send(local->s, &wcr, ntohs(wcr.head.length) + 6, MSG_DONTWAIT);
+	      if (sts < 0) {
+                sp->Status = MB__CONNDOWN;
+                close(local->s);
+                errh_Error( "Connection down to modbus slave, %s", rp->Name);
+                return IO__SUCCESS;
+              }
 	      local->expected_msgs++;
 	      sp->TX_packets++;
 	      break;
@@ -366,7 +443,13 @@ static pwr_tStatus send_data(io_sRackLocal *local,
 	      wrr.bc = local_card->output_size;
 	      memcpy(wrr.reg, local_card->output_area, local_card->output_size);
 
-	      sts = send(local->s, &wrr, ntohs(wrr.head.length) + 6, 0);
+	      sts = send(local->s, &wrr, ntohs(wrr.head.length) + 6, MSG_DONTWAIT);
+	      if (sts < 0) {
+                sp->Status = MB__CONNDOWN;
+                close(local->s);
+                errh_Error( "Connection down to modbus slave, %s", rp->Name);
+                return IO__SUCCESS;
+              }
 	      sp->TX_packets++;
 	      local->expected_msgs++;
 	      break;
@@ -435,7 +518,7 @@ static pwr_tStatus IoRackInit (
   sts = connect_slave(local, rp);
   
   if (sts < 0) {
-    op->Status = MB__INITFAIL;
+    op->Status = MB__CONNDOWN;
   } else {
     op->Status = MB__NORMAL;
   }
@@ -616,24 +699,27 @@ static pwr_tStatus IoRackRead (
   io_sRackLocal *local;
   pwr_sClass_Modbus_TCP_Slave *sp;
   pwr_tStatus sts;
+  pwr_tTime now;
+  pwr_tDeltaTime dt;
   
   local = rp->Local;
   
   sp = (pwr_sClass_Modbus_TCP_Slave *) rp->op;
 
-  if (sp->Status == MB__CONNDOWN && sp->DisableSlave != 1 && 
-      sp->ReconnectCount < sp->ReconnectLimit &&
-      sp->ErrorCount >= sp->ErrorLimit) {
+  if (sp->Status == MB__CONNDOWN && sp->DisableSlave != 1) {
     /* Reconnect */
-    sp->ReconnectCount++;
-    sts = connect_slave(local, rp);
-    
-    if (sts >= 0) {
-      sp->ErrorCount = 0;
-      sp->Status = MB__NORMAL;
-    } else {
-      memset(&sp->Inputs, 0, local->input_size);
-      sp->ErrorCount = 0;
+
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    time_Adiff(&dt, &now, &local->last_try_connect_time);
+    if (dt.tv_sec >= (1 << MIN(sp->ReconnectCount, 6))) {
+      sts = connect_slave(local, rp);
+      if (sts >= 0) {
+	sp->ReconnectCount = 0;
+        sp->Status = MB__NORMAL;
+      } else {
+        sp->ReconnectCount++;
+        memset(&sp->Inputs, 0, local->input_size);
+      }
     }
   }
 
