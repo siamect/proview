@@ -11,7 +11,7 @@
 Name: pwr45
 Summary: Proview/R development and runtime environment
 Version: 4.5.0
-Release: 6
+Release: 7
 License: GPL
 BuildArch: i386
 Packager: claes.sjofors@proview.se
@@ -181,4 +181,6 @@ fi
   - Xtt Fileview added.
   - Function objects DataFRead and DataFWrite added.
   - Bugfix in directory database creation.
+  - Bugfix in creation of wb_load file.
+  - Bugfix in Modbus TCP.
 
