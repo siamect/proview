@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.h,v 1.8 2008-02-04 13:34:49 claes Exp $
+ * Proview   $Id: wb_lfu.h,v 1.9 2008-06-02 14:57:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -133,6 +133,8 @@ pwr_tStatus lfu_GetVolumeCnf( char *name, pwr_tVid *vid, pwr_tCid *cid, ldh_eVol
 
 pwr_tStatus lfu_ParseDbmsServer( char *server, char *user, char *passw, 
 				 unsigned int *port, char *host);
+
+pwr_tStatus lfu_check_appl_file( char *nodename, int bus_number);
 
 #ifdef __cplusplus
 }

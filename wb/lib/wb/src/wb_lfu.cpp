@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.cpp,v 1.14 2008-05-16 14:50:31 claes Exp $
+ * Proview   $Id: wb_lfu.cpp,v 1.15 2008-06-02 14:57:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fstream.h>
 #include <vector>
 
 #if defined OS_VMS
@@ -1269,6 +1270,9 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  else
 	    scantime = 0;
 	  free( (char *) single_scan_ptr);
+
+
+	  lfu_check_appl_file( nodename_ptr, *bus_number_ptr);
 
 	  /* Find the volumes in this node */
 	  sts = ldh_GetChild( ldhses, nodeobjid, &volobjid);
@@ -2603,6 +2607,63 @@ pwr_tStatus lfu_ParseDbmsServer( char *server, char *user, char *password,
   strcpy( host, lhost);
   strcpy( user, luser);
   strcpy( password, lpassword);
+  return LFU__SUCCESS;
+}
+
+pwr_tStatus lfu_check_appl_file( char *nodename, int bus_number)
+{
+  pwr_tFileName fname;
+  pwr_tTime t;
+
+  sprintf( fname, load_cNameAppl, load_cDirectory, nodename, bus_number);
+  dcli_translate_filename( fname, fname);
+
+  if ( ODD(dcli_file_time( fname, &t)))
+    return LFU__SUCCESS;
+
+  //strcat( fname, "_template");
+  //if ( ODD(dcli_file_time( fname, &t)))
+  //  return LFU__SUCCESS;
+
+  // Create a template file
+  ofstream fp( fname);
+  if ( !fp)
+    return LFU__SUCCESS;
+  
+  fp << 
+    "#" << endl <<
+    "# Startup processes for Proview." << endl <<
+    "#" << endl <<
+    "#" << endl <<
+    "# User applications" << endl <<
+    "# id,   name,   load/noload run/norun,  file,   prio,   debug/nodebug,  \"arg\"" << endl <<
+    "#myappl, myappl, noload, run, myappl, 12, nodebug, \"\"" << endl <<
+    "#" << endl <<
+    "# System processes" << endl <<
+    "# System processes can be disabled by removing the #" << endl <<
+    "#pwr_neth,       , noload, norun, , 5, debug, \"\"" << endl <<
+    "#pwr_plc,        , noload, norun, ,  , debug, \"\"" << endl <<
+    "#pwr_alim,       , noload, norun, , 5, debug, \"\"" << endl <<
+    "#pwr_emon,       , noload, norun, , 10, debug, \"\"" << endl <<
+    "#pwr_tmon,       , noload, norun, , 5, debug, \"\"" << endl <<
+    "#pwr_qmon,       , noload, norun, , 19, debug, \"\"" << endl <<
+    "#pwr_nacp,       , noload, norun, , 5, debug, \"\"" << endl <<
+    "#pwr_bck,        , noload, norun, , 5, debug, \"\"" << endl <<
+    "#pwr_io,         , noload, norun, , 5, debug, \"\"" << endl <<
+    "#pwr_linksup,    , noload, norun, , 5, debug, \"\"" << endl <<
+    "#pwr_trend,      , noload, norun, , 5, debug, \"\"" << endl <<
+    "#pwr_fast,       , noload, norun, , 5, debug, \"\"" << endl <<
+    "#pwr_remh,       , noload, norun, , 5, debug, \"\"" << endl <<
+    "#pwr_remlog,     , noload, norun, , 5, debug, \"\"" << endl <<
+    "#pwr_elog,       , noload, norun, , 5, debug, \"\"" << endl <<
+    "#pwr_sysmon,     , noload, norun, , 5, debug, \"\"" << endl <<
+    "#pwr_webmon,     , noload, norun, , 5, debug, \"\"" << endl <<
+    "#pwr_webmonmh,   , noload, norun, , 5, debug, \"\"" << endl <<
+    "#pwr_webmonelog, , noload, norun, , 5, debug, \"\"" << endl <<
+    "#pwr_opc_server, , noload, norun, , 5, debug, \"\"" << endl <<
+    "#pwr_statussrv,  , noload, norun, , 5, debug, \"\"" << endl;
+
+  fp.close();
   return LFU__SUCCESS;
 }
 
