@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_adrep.h,v 1.19 2007-09-20 15:09:18 claes Exp $
+ * Proview   $Id: wb_adrep.h,v 1.20 2008-06-02 14:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -48,7 +48,7 @@ class wb_adrep
   pwr_tTid m_tid;
   pwr_tPgmName m_pgmname;
   pwr_tCid m_subClass;
-  char m_subName[120];
+  pwr_tOName m_subName;
   bool m_isSubattr;
 
   friend class wb_bdrep;
