@@ -1,6 +1,6 @@
 #! /bin/bash
 #
-# Proview   $Id: wb_gcg.sh,v 1.6 2007-11-26 13:22:17 claes Exp $
+# Proview   $Id: wb_gcg.sh,v 1.7 2008-06-02 14:58:42 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -194,7 +194,8 @@ CompileRtNode()
 CompileLibrary()
 {
   echo "-- Building archive for volume: $VolumeId" 
-  if ar -rc $pwrp_lib/$PlcLib `ls $pwrp_obj/plc_m${VolumeId}*.o`
+  cd $pwrp_obj
+  if ar -rc $pwrp_lib/$PlcLib `ls plc_m${VolumeId}*.o`
   then
     echo "-- Archive built for volume: $VolumeId"
     gcg_status=$gcg__success
