@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_webhandler.wb_load,v 1.11 2007-01-30 13:00:18 claes Exp $
+!  Proview   $Id: pwrb_c_webhandler.wb_load,v 1.12 2008-06-03 06:00:28 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -168,13 +168,16 @@ SObject pwrb:Class
       !/**
       !  @Summary Web archives that is loaded when the menu applet is opened.
       !  Web archives that is loaded when the menu applet is opened.
-      !  Object graphs for some classvolumes are not loaded as default, as
-      !  they are quite large and timeconsuming. They will be loaded if the
-      !  corresponding bit is set in this mask.
+      !  Object graphs for some classvolumes are not loaded by default, as
+      !  they are quite large and timeconsuming. They can be loaded by adding
+      !  the name of the archive in this attribute.
+      !  Also archives with graphs from other projects can be added.
+      !  Archive are separated by comma.
+      !  The archives has to be copied to $pwrp_web.
       !*/
       Object LoadArchives $Attribute 13 
         Body SysBody
-          Attr TypeRef = "pwrb:Type-WebLoadArchiveMask"
+          Attr TypeRef = "pwrs:Type-$String256"
         EndBody
       EndObject
     EndObject
