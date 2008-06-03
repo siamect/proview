@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_web.cpp,v 1.12 2007-02-07 15:45:44 claes Exp $
+ * Proview   $Id: ge_graph_web.cpp,v 1.13 2008-06-03 06:13:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -93,7 +93,7 @@ int Graph::generate_web( ldh_tSesContext ldhses)
   pwr_tBoolean  enable_alarmlist;
   pwr_tBoolean  enable_eventlog;
   pwr_tBoolean  enable_navigator;
-  pwr_tMask	load_archives;
+  pwr_tString256	load_archives;
   char          style_sheet[80];
   char          start_URL[80];
   char          name[80];
@@ -221,15 +221,15 @@ int Graph::generate_web( ldh_tSesContext ldhses)
   sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "LoadArchives",
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
-  load_archives = *(pwr_tMask *)value_p;
+  strcpy( load_archives, (char *)value_p);
   free( value_p); 
 
   strcpy( arlist, "pwr_rt_client.jar,pwr_jop.jar,pwr_jopc.jar");
-  if ( load_archives & pwr_mWebLoadArchiveMask_BaseComponent)
-    strcat( arlist, ",pwr_bcomp.jar");
-  if ( load_archives & pwr_mWebLoadArchiveMask_ABB)
-    strcat( arlist, ",pwr_abb.jar");
-
+  dcli_trim( load_archives, load_archives);
+  if ( strcmp( load_archives, "") != 0) {
+    strcat( arlist, ",");
+    strcat( arlist, load_archives);
+  }
 
   // Login applet as default start URL
   if ( strcmp( start_URL, "") == 0 && enable_login)
