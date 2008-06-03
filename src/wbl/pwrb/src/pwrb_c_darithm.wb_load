@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_darithm.wb_load,v 1.6 2005-09-01 14:58:01 claes Exp $
+!  Proview   $Id: pwrb_c_darithm.wb_load,v 1.7 2008-06-03 06:01:39 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -93,48 +93,56 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "d1"
+          Attr Flags |= PWR_MASK_NOINVERT
         EndBody
       EndObject
       Object DIn2 $Input 2 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "d2"
+          Attr Flags |= PWR_MASK_NOINVERT
         EndBody
       EndObject
       Object DIn3 $Input 3 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "d3"
+          Attr Flags |= PWR_MASK_NOINVERT
         EndBody
       EndObject
       Object DIn4 $Input 4 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "d4"
+          Attr Flags |= PWR_MASK_NOINVERT
         EndBody
       EndObject
       Object DIn5 $Input 5 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "d5"
+          Attr Flags |= PWR_MASK_NOINVERT
         EndBody
       EndObject
       Object DIn6 $Input 6 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "d6"
+          Attr Flags |= PWR_MASK_NOINVERT
         EndBody
       EndObject
       Object DIn7 $Input 7 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "d7"
+          Attr Flags |= PWR_MASK_NOINVERT
         EndBody
       EndObject
       Object DIn8 $Input 8 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "d8"
+          Attr Flags |= PWR_MASK_NOINVERT
         EndBody
       EndObject
       !/**
