@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_object.wb_load,v 1.17 2008-02-27 06:25:19 claes Exp $
+!  Proview   $Id: pwrs_c_object.wb_load,v 1.18 2008-06-03 05:59:53 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -1128,6 +1128,13 @@ SObject pwrs:Class
 	  Attr FilterName = "$Object-OpenTypeGraphFilter"
 	EndBody
       EndObject
+      Object RtNavigator $MenuButton
+	Body SysBody
+	  Attr ButtonName = "RtNavigator"
+	  Attr MethodName = "$Object-RtNavigator"
+	  Attr FilterName = "$Object-RtNavigatorFilter"
+	EndBody
+      EndObject
       Object RefOpenObject $MenuButton
 	Body SysBody
 	  Attr ButtonName = "Open Object..."
@@ -1137,9 +1144,16 @@ SObject pwrs:Class
       EndObject
       Object RefRtNavigator $MenuButton
 	Body SysBody
-	  Attr ButtonName = "RtNavigator"
+	  Attr ButtonName = "RefRtNavigator"
 	  Attr MethodName = "$Object-RefRtNavigator"
 	  Attr FilterName = "$Object-IsRefAttribute"
+	EndBody
+      EndObject
+      Object OpenCrossref $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Crossreferences"
+	  Attr MethodName = "$Object-OpenCrossref"
+	  Attr FilterName = "$Object-OpenCrossrefFilter"
 	EndBody
       EndObject
       Object OpenURL $MenuButton
@@ -1163,6 +1177,13 @@ SObject pwrs:Class
 	  Attr ButtonName = "Open Plc..."
 	  Attr MethodName = "$Object-CrrOpenTrace"
 	  Attr FilterName = "$Object-CrrOpenTraceFilter"
+	EndBody
+      EndObject
+      Object CrrOpenGraph $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Open Graph..."
+	  Attr MethodName = "$Object-CrrOpenGraph"
+	  Attr FilterName = "$Object-CrrOpenGraphFilter"
 	EndBody
       EndObject
     EndObject
