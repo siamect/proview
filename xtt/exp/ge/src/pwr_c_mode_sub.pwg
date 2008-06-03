@@ -4,8 +4,8 @@
 101 20
 102 0
 103 32
-104 4.15459
-136 4.15459
+104 4.07705
+136 4.07705
 105 100
 106 0
 107 6
@@ -15,9 +15,9 @@
 111 2
 116 0
 117 0
-118 140
-119 129
-120 1
+118 138
+119 127
+120 0
 121 Claes context
 122 0
 126 0.5
@@ -6201,11 +6201,11 @@ pwr_exe:
 0
 1006 8.54214
 1007 7.60784
-1008 4.85973
+1008 4.85972
 1009 3.58357
 1013 8.54214
 1014 7.60784
-1015 4.85973
+1015 4.85972
 1016 3.58357
 1003
 0
@@ -6264,8 +6264,8 @@ pwr_exe:
 103 0
 60
 6000 $object.SetVal##Float32
-6001 $object.SetMinShow##Float32
-6002 $object.SetMaxShow##Float32
+6001 $object.MinSet##Float32
+6002 $object.MaxSet##Float32
 6003 !$local.SetSliderEnable##Boolean
 99
 99
@@ -6459,11 +6459,11 @@ pwr_exe:
 0
 1006 15.977
 1007 15.0427
-1008 4.85973
+1008 4.85972
 1009 3.58357
 1013 15.977
 1014 15.0427
-1015 4.85973
+1015 4.85972
 1016 3.58357
 1003
 0
@@ -6522,8 +6522,8 @@ pwr_exe:
 103 0
 60
 6000 $object.ForcVal##Float32
-6001 $object.OutMinShow##Float32
-6002 $object.OutMaxShow##Float32
+6001 $object.MinOut##Float32
+6002 $object.MaxOut##Float32
 6003 !$local.OutSliderEnable##Boolean
 99
 99
@@ -6662,8 +6662,8 @@ pwr_exe:
 1304 0
 1305 0
 1306 0
-1307 $object.SetMinShow##Float32
-1308 $object.SetMaxShow##Float32
+1307 $object.MinSet##Float32
+1308 $object.MaxSet##Float32
 1309 0
 99
 99
@@ -6930,8 +6930,8 @@ pwr_exe:
 1304 0
 1305 0
 1306 0
-1307 $object.OutMinShow##Float32
-1308 $object.OutMaxShow##Float32
+1307 $object.MinOut##Float32
+1308 $object.MaxOut##Float32
 1309 0
 99
 99
