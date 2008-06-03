@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_gtk.cpp,v 1.13 2008-05-13 13:59:02 claes Exp $
+ * Proview   $Id: rt_xtt_gtk.cpp,v 1.14 2008-06-03 06:12:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -471,6 +471,8 @@ int main(  int argc, char *argv[])
   int sts;
 
   gtk_init( &argc, &argv);
+
+  setlocale( LC_TIME, "en_US");
 
   new XttGtk( argc, argv, &sts);
   exit(sts);
