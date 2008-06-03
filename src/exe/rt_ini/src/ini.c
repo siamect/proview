@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ini.c,v 1.31 2007-05-24 14:50:13 claes Exp $
+ * Proview   $Id: ini.c,v 1.32 2008-06-03 06:03:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2054,13 +2054,13 @@ ini_ProcTable (
   pp = ini_ProcInsert(sts, cp, "pwr_webmonmh", "pwr_webmonmh_%d", 0, 1, "rt_webmonmh.sh", cPrio_webmonmh, 0, "");
   pp->proc.flags.b.system = 1;
 
-  pp = ini_ProcInsert(sts, cp, "pwr_webmonelog", "pwr_webmonglog_%d", 0, 1, "rt_webmonelog.sh", cPrio_webmonelog, 0, "");
+  pp = ini_ProcInsert(sts, cp, "pwr_webmonelog", "pwr_webmonelog_%d", 0, 1, "rt_webmonelog.sh", cPrio_webmonelog, 0, "");
   pp->proc.flags.b.system = 1;
 
-  pp = ini_ProcInsert(sts, cp, "opc_server", "opc_server_%d", 0, 1, "opc_server", cPrio_opc_server, 0, "");
+  pp = ini_ProcInsert(sts, cp, "pwr_opc_server", "pwr_opc_server_%d", 0, 1, "opc_server", cPrio_opc_server, 0, "");
   pp->proc.flags.b.system = 1;
 
-  pp = ini_ProcInsert(sts, cp, "statussrv", "pwr_statussrv_%d", 0, 1, "rt_statussrv", cPrio_statussrv, 0, "");
+  pp = ini_ProcInsert(sts, cp, "pwr_statussrv", "pwr_statussrv_%d", 0, 1, "rt_statussrv", cPrio_statussrv, 0, "");
   pp->proc.flags.b.system = 1;
 #endif
 
