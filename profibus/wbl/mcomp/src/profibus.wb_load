@@ -745,7 +745,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         !/**
         ! @Summary Process that handles the slave. Plc(1), rt_io_comm(2) or application process(4).
         ! Process that handles the slave. All slaves belonging to the same Profiboard must be handled
-	! by the same process.
+        ! by the same process.
         ! 
         ! 1: The slave is handled by the plc process, and by a specific
         !    thread in the plc, which is specified in the ThreadObject attribute.
@@ -753,16 +753,16 @@ Volume Profibus $ClassVolume 0.0.250.7
         ! 4: The slave is handled by an application program.
         !*/
         Object Process $Attribute 4 16-JAN-2006 09:46:40.50
-          Body SysBody 16-JAN-2006 09:46:40.50
+          Body SysBody 30-MAY-2008 15:03:04.90
             Attr PgmName = "Process"
-            Attr TypeRef = "pwrs:Type-$UInt16"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
         !/**
         ! @Summary Plc thread that handles the slave.
         ! The PlcThread object of the plc thread that handles the slave.
         ! The slave is handled with the scantime of the thread.
-	! All slaves 
+        ! All slaves 
         !*/
         Object ThreadObject $Attribute 5 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
@@ -771,7 +771,7 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         !/**
-	! Address of the slave (1 - 127).
+        ! Address of the slave (1 - 127).
         !*/
         Object SlaveAddress $Attribute 6 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
@@ -780,8 +780,8 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         !/**
-	! Byte ordering of the slave.
-	! Little or Big Endian (from which side do this slave eat it's egg, the little or big end ?).
+        ! Byte ordering of the slave.
+        ! Little or Big Endian (from which side do this slave eat it's egg, the little or big end ?).
         !*/
         Object ByteOrdering $Attribute 7 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
@@ -790,8 +790,8 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         !/**
-	! Float representation of the slave..
-	! Intel or IEEE.
+        ! Float representation of the slave..
+        ! Intel or IEEE.
         !*/
         Object FloatRepresentation $Attribute 8 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
@@ -800,8 +800,8 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         !/**
-	! Stall action.
-	! No action, reset inputs or set emergency break.
+        ! Stall action.
+        ! No action, reset inputs or set emergency break.
         !*/
         Object StallAction $Attribute 9 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
@@ -915,7 +915,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         ! the watchdog control. The watchdog control in a DP-Slave takes care
         ! that, if the master fails, the outputs fall in the safe state after
         ! the expiration of this time.  
-	! t[ms] = 10*WdFact1*WdFact2
+        ! t[ms] = 10*WdFact1*WdFact2
         !*/
         Object WdFact1 $Attribute 21 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
@@ -929,7 +929,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         ! the watchdog control. The watchdog control in a DP-Slave takes care
         ! that, if the master fails, the outputs fall in the safe state after
         ! the expiration of this time.  
-	! t[ms] = 10*WdFact1*WdFact2
+        ! t[ms] = 10*WdFact1*WdFact2
         !*/
         Object WdFact2 $Attribute 22 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
@@ -1510,9 +1510,9 @@ Volume Profibus $ClassVolume 0.0.250.7
         ! 4: The card is handled by an application program.
         !*/
         Object Process $Attribute 3 16-JAN-2006 09:46:40.50
-          Body SysBody 16-JAN-2006 09:46:40.50
+          Body SysBody 30-MAY-2008 15:03:33.58
             Attr PgmName = "Process"
-            Attr TypeRef = "pwrs:Type-$UInt32"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
         !/**
@@ -1624,9 +1624,9 @@ Volume Profibus $ClassVolume 0.0.250.7
         ! 1 for the PLC process (default).
         !*/
         Object Process $Attribute 2 16-JAN-2006 09:46:40.51
-          Body SysBody 16-JAN-2006 09:46:40.51
+          Body SysBody 30-MAY-2008 15:03:56.49
             Attr PgmName = "Process"
-            Attr TypeRef = "pwrs:Type-$UInt16"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
         !/**
@@ -1685,8 +1685,8 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndObject
         !/**
         ! Maximum number of slaves allowed on the bus. Range 0..127.
-	! Observe that maximum size of the DPRAM is 16 kB.
-	! This means that: MaxNumberSlaves * (MaxSlaveOutputLen + MaxSlaveInputLen) < 16384
+        ! Observe that maximum size of the DPRAM is 16 kB.
+        ! This means that: MaxNumberSlaves * (MaxSlaveOutputLen + MaxSlaveInputLen) < 16384
         !*/
         Object MaxNumberSlaves $Attribute 8 16-JAN-2006 09:46:40.51
           Body SysBody 16-JAN-2006 09:46:40.51

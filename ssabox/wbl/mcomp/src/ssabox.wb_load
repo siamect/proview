@@ -320,9 +320,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! 4: The card is handled by an application program.
         !*/
         Object Process $Attribute 9 06-OCT-2005 14:45:53.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 30-MAY-2008 14:56:47.73
             Attr PgmName = "Process"
-            Attr TypeRef = "pwrs:Type-$UInt32"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
         !/**
@@ -349,7 +349,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         EndObject
       EndObject
       Object Template Ssab_BaseACard 2148237312 06-OCT-2005 14:45:53.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 30-MAY-2008 14:57:53.22
           Attr ErrorSoftLimit = 15
           Attr ErrorHardLimit = 50
           Attr MaxNoOfChannels = 32
@@ -500,9 +500,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! 4: The card is handled by an application program.
         !*/
         Object Process $Attribute 9 06-OCT-2005 14:45:53.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 30-MAY-2008 14:58:18.21
             Attr PgmName = "Process"
-            Attr TypeRef = "pwrs:Type-$UInt32"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
         !/**
@@ -717,9 +717,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! 4: The card is handled by an application program.
         !*/
         Object Process $Attribute 9 06-OCT-2005 14:45:53.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 30-MAY-2008 14:58:30.54
             Attr PgmName = "Process"
-            Attr TypeRef = "pwrs:Type-$UInt32"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
         !/**
@@ -4059,7 +4059,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! @Summary Speed measurement, pulses per second.
         ! Speed measurement, pulses per second.
         ! Bit 8 in the configuration word of the counter is set.
-        !
+        ! 
         ! If both LengthMeasurement and SpeedMeasurement is set, the counter is only
         ! affected in one direction.
         !*/
@@ -4125,9 +4125,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! 4: The card is handled by an application program.
         !*/
         Object Process $Attribute 22 06-OCT-2005 14:45:53.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 30-MAY-2008 14:58:51.83
             Attr PgmName = "Process"
-            Attr TypeRef = "pwrs:Type-$UInt32"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
         !/**
@@ -4316,9 +4316,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
           EndBody
         EndObject
         Object Process $Attribute 9 30-DEC-2005 11:26:36.69
-          Body SysBody 30-DEC-2005 11:26:36.69
+          Body SysBody 30-MAY-2008 14:59:12.59
             Attr PgmName = "Process"
-            Attr TypeRef = "pwrs:Type-$UInt32"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
         Object ThreadObject $Intern 10 30-DEC-2005 11:26:36.69
@@ -4481,9 +4481,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
           EndBody
         EndObject
         Object Process $Attribute 11 30-DEC-2005 11:26:36.69
-          Body SysBody 30-DEC-2005 11:26:36.69
+          Body SysBody 30-MAY-2008 14:59:22.94
             Attr PgmName = "Process"
-            Attr TypeRef = "pwrs:Type-$UInt32"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
         Object ThreadObject $Intern 12 30-DEC-2005 11:26:36.69
@@ -4644,9 +4644,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
           EndBody
         EndObject
         Object Process $Attribute 11 30-DEC-2005 11:26:36.69
-          Body SysBody 30-DEC-2005 11:26:36.69
+          Body SysBody 30-MAY-2008 14:59:37.71
             Attr PgmName = "Process"
-            Attr TypeRef = "pwrs:Type-$UInt32"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
         Object ThreadObject $Intern 12 30-DEC-2005 11:26:36.69
@@ -4809,9 +4809,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
           EndBody
         EndObject
         Object Process $Attribute 11 30-DEC-2005 11:26:36.69
-          Body SysBody 30-DEC-2005 11:26:36.69
+          Body SysBody 30-MAY-2008 14:59:48.52
             Attr PgmName = "Process"
-            Attr TypeRef = "pwrs:Type-$UInt32"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
         Object ThreadObject $Intern 12 30-DEC-2005 11:26:36.69
@@ -5051,9 +5051,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
           EndBody
         EndObject
         Object Process $Attribute 21 30-DEC-2005 11:26:36.69
-          Body SysBody 30-DEC-2005 11:26:36.69
+          Body SysBody 30-MAY-2008 15:00:07.51
             Attr PgmName = "Process"
-            Attr TypeRef = "pwrs:Type-$UInt32"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
         Object ThreadObject $Intern 22 30-DEC-2005 11:26:36.69
@@ -5314,9 +5314,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
           EndBody
         EndObject
         Object Process $Attribute 21 30-DEC-2005 11:26:36.69
-          Body SysBody 30-DEC-2005 11:26:36.69
+          Body SysBody 30-MAY-2008 15:00:16.16
             Attr PgmName = "Process"
-            Attr TypeRef = "pwrs:Type-$UInt32"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
         Object ThreadObject $Intern 22 30-DEC-2005 11:26:36.69
@@ -5508,9 +5508,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
           EndBody
         EndObject
         Object Process $Attribute 13 30-DEC-2005 11:26:36.69
-          Body SysBody 30-DEC-2005 11:26:36.69
+          Body SysBody 30-MAY-2008 15:00:24.89
             Attr PgmName = "Process"
-            Attr TypeRef = "pwrs:Type-$UInt32"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
         Object ThreadObject $Intern 14 30-DEC-2005 11:26:36.69
@@ -5713,9 +5713,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
           EndBody
         EndObject
         Object Process $Attribute 17 30-DEC-2005 11:26:36.69
-          Body SysBody 30-DEC-2005 11:26:36.69
+          Body SysBody 30-MAY-2008 15:00:32.64
             Attr PgmName = "Process"
-            Attr TypeRef = "pwrs:Type-$UInt32"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
         Object ThreadObject $Intern 18 30-DEC-2005 11:26:36.69
@@ -7710,9 +7710,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
           EndBody
         EndObject
         Object Process $Attribute 5 10-FEB-2006 15:59:53.79
-          Body SysBody 10-FEB-2006 15:59:53.79
+          Body SysBody 30-MAY-2008 15:00:50.63
             Attr PgmName = "Process"
-            Attr TypeRef = "pwrs:Type-$UInt32"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
         Object ThreadObject $Intern 6 10-FEB-2006 15:59:53.79
