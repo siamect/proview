@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.63 2008-04-15 16:01:16 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.64 2008-06-09 14:33:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -9188,7 +9188,6 @@ int GeSetDig::action( grow_tObject object, glow_tEvent event)
     break;
   case glow_eEvent_Key_Return:
   case glow_eEvent_MB1Click: {
-    pwr_tBoolean	value = 1;
     int			sts;
     pwr_tAName         	parsed_name;
     int			inverted;
@@ -9201,18 +9200,57 @@ int GeSetDig::action( grow_tObject object, glow_tEvent event)
     db = dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, 
 				      &attr_size);
     switch ( db) {
-    case graph_eDatabase_Local:
+    case graph_eDatabase_Local: {
+      pwr_tBoolean	value = 1;
+
       sts = dyn->graph->localdb_set_value( parsed_name, &value, sizeof(value));
       if ( EVEN(sts)) printf("SetDig error: %s\n", attribute);
       break;
+    }
     case graph_eDatabase_Gdh:
-      sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
-      if ( EVEN(sts)) printf("SetDig error: %s\n", attribute);
+      switch ( attr_type) {
+      case pwr_eType_Boolean: {
+	pwr_tBoolean	value = 1;
+	
+	sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+	if ( EVEN(sts)) printf("SetDig error: %s\n", attribute);
+	break;
+      }
+      case graph_eType_Bit: {
+	// Get bit number from parsed name
+	pwr_tUInt32	value = 1;
+	char *s;
+	int bitnum;
+
+	if ( (s = strchr( parsed_name, '['))) {
+	  sscanf( s+1, "%d", &bitnum);
+	  *s = 0;
+	  if ( !(bitnum >= 0 && bitnum < 32))
+	    break;
+	}
+
+	sts = gdh_GetObjectInfo( parsed_name, &value, sizeof(value));
+	if ( EVEN(sts)) {
+	  printf("SetDig error: %s\n", attribute);
+	  break;
+	}
+	value |= (1 << bitnum);
+
+	sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+	if ( EVEN(sts)) printf("SetDig error: %s\n", attribute);
+
+	break;
+      }
+      default: ;
+      }
       break;
-    case graph_eDatabase_Ccm:
+    case graph_eDatabase_Ccm: {
+      pwr_tBoolean	value = 1;
+
       sts = dyn->graph->ccm_set_variable( parsed_name, attr_type, &value);
       if ( EVEN(sts)) printf("SetDig error: %s\n", attribute);
       break;
+    }
     default:
       ;
     }
@@ -9351,7 +9389,6 @@ int GeResetDig::action( grow_tObject object, glow_tEvent event)
     break;
   case glow_eEvent_Key_Return:
   case glow_eEvent_MB1Click: {
-    pwr_tBoolean	value = 0;
     int			sts;
     pwr_tAName         	parsed_name;
     int			inverted;
@@ -9361,8 +9398,43 @@ int GeResetDig::action( grow_tObject object, glow_tEvent event)
       break;
 
     dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
-    sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
-    if ( EVEN(sts)) printf("ResetDig error: %s\n", attribute);
+
+    switch ( attr_type) {
+    case pwr_eType_Boolean: {
+      pwr_tBoolean	value = 0;
+	
+      sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+      if ( EVEN(sts)) printf("SetDig error: %s\n", attribute);
+      break;
+    }
+    case graph_eType_Bit: {
+      // Get bit number from parsed name
+      pwr_tUInt32	value = 0;
+      char *s;
+      int bitnum;
+
+      if ( (s = strchr( parsed_name, '['))) {
+	sscanf( s+1, "%d", &bitnum);
+	*s = 0;
+	if ( !(bitnum >= 0 && bitnum < 32))
+	  break;
+      }
+
+      sts = gdh_GetObjectInfo( parsed_name, &value, sizeof(value));
+      if ( EVEN(sts)) {
+	printf("ResetDig error: %s\n", attribute);
+	break;
+      }
+      value &= ~(1 << bitnum);
+
+      sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+      if ( EVEN(sts)) printf("ResetDig error: %s\n", attribute);
+      
+      break;
+    }
+    default: ;
+    }
+
     break;
   }
   default: ;    
@@ -9468,7 +9540,6 @@ int GeToggleDig::action( grow_tObject object, glow_tEvent event)
     break;
   case glow_eEvent_Key_Return:
   case glow_eEvent_MB1Click: {
-    pwr_tBoolean	value;
     int			sts;
     pwr_tAName         	parsed_name;
     int			inverted;
@@ -9483,33 +9554,74 @@ int GeToggleDig::action( grow_tObject object, glow_tEvent event)
       dyn->graph->get_reference_name( parsed_name, parsed_name);
 
     switch ( db) {
-    case graph_eDatabase_Gdh:
-      sts = gdh_GetObjectInfo( parsed_name, &value, sizeof(value));
+    case graph_eDatabase_Gdh: {
+
+      switch ( attr_type) {
+      case pwr_eType_Boolean: {
+	pwr_tBoolean	value;
+
+	sts = gdh_GetObjectInfo( parsed_name, &value, sizeof(value));
+	if ( EVEN(sts)) printf("ToggleDig error: %s\n", attribute);
+
+	value = !value;
+	sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+	if ( EVEN(sts)) printf("ToggleDig error: %s\n", attribute);
+	break;
+      }
+      case graph_eType_Bit: {
+	// Get bit number from parsed name
+	pwr_tUInt32	value;
+	char *s;
+	int bitnum;
+
+	if ( (s = strchr( parsed_name, '['))) {
+	  sscanf( s+1, "%d", &bitnum);
+	  *s = 0;
+	  if ( !(bitnum >= 0 && bitnum < 32))
+	    break;
+	}
+
+	sts = gdh_GetObjectInfo( parsed_name, &value, sizeof(value));
+	if ( EVEN(sts)) {
+	  printf("ToggleDig error: %s\n", attribute);
+	  break;
+	}
+
+	if ( value & (1 << bitnum))
+	  value &= ~(1 << bitnum);
+	else
+	  value |= (1 << bitnum);
+
+	sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+	if ( EVEN(sts)) printf("ToggleDig error: %s\n", attribute);
+	
+	break;
+      }
+      default: ;
+      }
+
       break;
-    case graph_eDatabase_Local:
+    }
+    case graph_eDatabase_Local: {
       sts = dyn->graph->localdb_toggle_value( parsed_name);
+      if ( EVEN(sts)) printf("ToggleDig error: %s\n", attribute);
+
       break;
-    case graph_eDatabase_Ccm:
+    }
+    case graph_eDatabase_Ccm: {
+      pwr_tBoolean	value;
+
       sts = dyn->graph->ccm_get_variable( parsed_name, attr_type, &value);
-      break;
-    default: ;
-    }
-    if ( EVEN(sts)) printf("ToggleDig error: %s\n", attribute);
+      if ( EVEN(sts)) printf("ToggleDig error: %s\n", attribute);
 
-    value = !value;
-
-    switch ( db) {
-    case graph_eDatabase_Gdh:
-      sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
-      break;
-    case graph_eDatabase_Local:
-      break;
-    case graph_eDatabase_Ccm:
+      value = !value;
       sts = dyn->graph->ccm_set_variable( parsed_name, attr_type, &value);
+      if ( EVEN(sts)) printf("ToggleDig error: %s\n", attribute);
       break;
+    }
     default: ;
     }
-    if ( EVEN(sts)) printf("ToggleDig error: %s\n", attribute);
+
     break;
   }
   default: ;    
