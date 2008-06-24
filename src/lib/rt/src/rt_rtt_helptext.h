@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_rtt_helptext.h,v 1.3 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_rtt_helptext.h,v 1.4 2008-06-24 07:39:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -96,6 +96,7 @@ exit\n\
 learn start/file=\n\
 learn stop\n\
 logging...\n\
+login\n\
 help\n\
 page\n\
 plcscan /on /off /hierarchy= /all\n\
@@ -134,6 +135,7 @@ show signals\n\
 show system\n\
 show subcli\n\
 show subsrv\n\
+show user\n\
 show device\n\
 store /file= /collect\n\
 top\n\
@@ -187,6 +189,7 @@ pwr_rtt> show clock\n\
 pwr_rtt> show alarm\n\
 pwr_rtt> show event\n\
 pwr_rtt> show symbol\n\
+pwr_rtt> show user\n\
 "},
 #ifdef OS_ELN
 {1,	"SHOW SYSTEM","",
@@ -492,6 +495,11 @@ Show the value of a symbol or show all the defined symbols.\n\n\
 pwr_rtt> show symbol 'symbol_name'\n\
 pwr_rtt> show symbol [/all]\n\
 "},
+{1,	"SHOW USER","",
+"\
+Show the current user with name and privileges.\n\n\
+pwr_rtt> show user\n\
+"},
 {1,	"MONITOR GRAFCET","",
 "\
 Display the active steps and orders of a grafcet sequence.\n\n\
@@ -784,6 +792,15 @@ pwr_rtt> logging stop /entry=\n\
 pwr_rtt> logging show /entry=\n\
 pwr_rtt> logging store [/entry=]/file=\n\
 pwr_rtt> logging store /all/file=\n\
+"},
+{1,	"LOGIN",
+"",
+"\
+Login as a Proview user with username and password.\n\
+The login command will open the login frame which promps for\n\
+username and password.\n\
+\n\
+pwr_rtt> login\n\
 "},
 {1,	"SET","",
 "\

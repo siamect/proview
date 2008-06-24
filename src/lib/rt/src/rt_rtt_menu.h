@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_rtt_menu.h,v 1.4 2005-09-06 14:17:56 claes Exp $
+ * Proview   $Id: rt_rtt_menu.h,v 1.5 2008-06-24 07:39:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -364,43 +364,40 @@ unsigned int	rtt_exception(	void	*signalP, void	*mechanismP); \
 int main(int argc, char *argv[])		\
 {						\
 int 	sts, i;					\
-char	login[20];				\
+char	username[40];				\
+char	password[40];				\
 char	commandfile[80];			\
 						\
 VAXC$ESTABLISH( rtt_exception);			\
 rtt_args = argc - 1;				\
-for ( i = 0; i < rtt_args; i++)			\
-{						\
+for ( i = 0; i < rtt_args; i++)	{		\
   if ( i >= (int)(sizeof(rtt_arg)/sizeof(rtt_arg[0])))	\
     break;					\
   strncpy( rtt_arg[i], argv[i+1], sizeof(rtt_arg[i]));\
   rtt_toupper( rtt_arg[i], rtt_arg[i]);		\
 }						\
-if ( argc >= 2 )				\
-{						\
-  strcpy( login, argv[1]);			\
-  rtt_toupper( login, login);			\
-  if ( argc >= 3 )				\
-  {						\
-    strcpy( commandfile, argv[2]);		\
-    if (argc >= 4)				\
-    {						\
-      strcpy(rtt_ConfigureObject,argv[3]);	\
-      if (argc >= 5)				\
-      {						\
-        strcpy( mainmenu_title, argv[4]);	\
+if ( argc >= 3 ) {				\
+  strcpy( username, argv[1]);			\
+  rtt_toupper( username, username);		\
+  strcpy( password, argv[2]);			\
+  if ( argc >= 4 ) {				\
+    strcpy( commandfile, argv[3]);		\
+    if (argc >= 5) {				\
+      strcpy(rtt_ConfigureObject,argv[4]);	\
+      if (argc >= 6) {				\
+        strcpy( mainmenu_title, argv[5]);	\
       }						\
     }						\
   }						\
   else						\
     strcpy( commandfile, "");			\
 }						\
-else						\
-{						\
-  strcpy( login, "");	       		\
+else {						\
+  strcpy( username, "");     			\
+  strcpy( password, "");	       	       	\
   strcpy( commandfile, "");			\
 }						\
-sts = rtt_initialize( login, commandfile, mainmenu_title);	\
+sts = rtt_initialize( username, password, commandfile, mainmenu_title);	\
 sts = rtt_menu_new( 0, pwr_cNObjid, &mainmenu_ptr, rtt_mainmenu_title,\
 	0, RTT_MENUTYPE_STAT); \
 rtt_error_msg(sts);				\

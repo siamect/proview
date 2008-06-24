@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_rtt_global.h,v 1.4 2005-11-22 12:20:19 claes Exp $
+ * Proview   $Id: rt_rtt_global.h,v 1.5 2008-06-24 07:39:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -49,6 +49,7 @@ extern	rtt_t_db 		rtt_appl_db[];
 extern	rtt_t_db 		rtt_rttsys_db[];
 extern	char			rtt_time[80];
 extern	unsigned long		rtt_priv;
+extern	char			rtt_user[40];
 extern  char			rtt_ConfigureObject[80];
 extern	pwr_tObjid		rtt_UserObject;
 extern  char			rtt_DefaultVMSNode[80];
@@ -125,6 +126,7 @@ unsigned long			rtt_chn[4];
 rtt_t_recall 			*rtt_recallbuff;
 rtt_t_recall			*rtt_value_recallbuff;
 unsigned long			rtt_priv;
+char				rtt_user[40] = "";
 char				rtt_time[80];
 char				rtt_hw[20];
 char				rtt_platform[20];

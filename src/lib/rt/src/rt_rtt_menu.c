@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_rtt_menu.c,v 1.12 2007-04-25 13:39:21 claes Exp $
+ * Proview   $Id: rt_rtt_menu.c,v 1.13 2008-06-24 07:39:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -67,9 +67,12 @@
 #include "pwr.h"
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"
+#include "pwr_privilege.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_time.h"
+#include "co_syi.h"
+#include "co_api_user.h"
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
 #include "rt_mh.h"
@@ -190,9 +193,9 @@ static int	rtt_help_getinfoline(
 			rtt_t_helptext	*helptext,
 			char		**infoline);
 static int	rtt_logon( unsigned long *chn,
-			unsigned long	*priv,
-			int		*noneth,
-			char		*login);
+			   unsigned long	*priv,
+			   char		*username,
+			   char		*password);
 static int	rtt_menu_new_update_add(
 			menu_ctx	parent_ctx,
 			rtt_t_menu_upd	**menulist,
@@ -329,25 +332,27 @@ int	rtt_init_state_table()
 *
 **************************************************************************/
 
-int	rtt_initialize( char	*login,
+int	rtt_initialize( char	*username,
+			char	*password,
 			char	*commandfile,
 			char	*mainmenu_title)
 {
 	int	sts;
-	int	noneth;
+	int	noneth = 0;
 
 	rtt_init_state_table();
 
   	qio_assign( "stdin", (int *) &rtt_chn);
 
-	rtt_logon( rtt_chn, &rtt_priv, &noneth, login);
-	sts = rtt_recall_create( &rtt_recallbuff);
-	if (EVEN(sts)) return sts;
-	sts = rtt_recall_create( &rtt_value_recallbuff);
-	if (EVEN(sts)) return sts;
-	if ( !noneth)
-	{
+	if ( strcmp( username, "NONETH_SYS") == 0) {
+	  noneth = 1;
+	  rtt_priv = RTT_PRV_SYS;
+	}
+
+	if ( !noneth) {
 	  sts = rtt_gdh_init();
+
+	  rtt_logon( rtt_chn, &rtt_priv, username, password);
 
 	  if ( rtt_gdh_started)
 	    sts = rtt_rttconfig();
@@ -360,8 +365,12 @@ int	rtt_initialize( char	*login,
           }
 	}
 
-	if ( rtt_AlarmAutoLoad)
-	{
+	sts = rtt_recall_create( &rtt_recallbuff);
+	if (EVEN(sts)) return sts;
+	sts = rtt_recall_create( &rtt_value_recallbuff);
+	if (EVEN(sts)) return sts;
+
+	if ( rtt_AlarmAutoLoad) {
 	  /* Load alarm list */
 	  sts  = rtt_alarm_connect( rtt_UserObject, 0, 0, rtt_AlarmAck,
 			rtt_AlarmReturn, rtt_AlarmBeep);
@@ -385,15 +394,13 @@ int	rtt_initialize( char	*login,
 
 	rtt_parse_mainmenu( mainmenu_title);
 
-	if ( *commandfile != 0)
-	{
+	if ( *commandfile != 0) {
 	  if ( rtt_args >= 5 && !strcmp( rtt_arg[4], "EXIT"))
 	    sts = rtt_commandmode_start( commandfile, 1);
 	  else
 	    sts = rtt_commandmode_start( commandfile, 0);
 
-	  if ( sts == RTT__NOFILE)
-	  {
+	  if ( sts == RTT__NOFILE) {
 	    rtt_message('E',"Unable to open file");
 	  }
 	}
@@ -421,17 +428,12 @@ int	rtt_gdh_init()
 	if ( rtt_gdh_started )
 	  return RTT__SUCCESS;
 
-/*** NEWGDH
-	sts = rtdb_CreateDB(&rtt_rtdb_size);
-	if (EVEN(sts)) return sts;
-*/
 	sts = gdh_Init("rt_rtt");
 	if (EVEN(sts)) return sts;
- 	sts = gdh_GetNodeIndex (&rtt_nodidx);
+
+ 	sts = gdh_GetNodeIndex( &rtt_nodidx);
 	if (EVEN(sts)) return sts;
-/*** NEWGDH
-	rtdb_GetBaseAddress (&rtt_rtdb_base);
-*/
+
 	rtt_gdh_started = 1;
 
 	return RTT__SUCCESS;
@@ -8241,60 +8243,113 @@ int	rtt_menu_item_delete(
 **************************************************************************/
 
 static int	rtt_logon( unsigned long *chn,
-			unsigned long	*priv,
-			int		*noneth,
-			char		*login)
+			   unsigned long *priv,
+			   char		*username,
+			   char		*password)
+{
+	int		sts;
+	unsigned int privilege;
+	char	systemgroup[80];
+	pwr_sSecurity sec;
+	char opsys_username[80];
+
+	sts = gdh_GetObjectInfo( "pwrNode-System.SystemGroup", &systemgroup, 
+				 sizeof(systemgroup));
+	if ( EVEN(sts)) return sts;
+
+	if ( strcmp(username, "") != 0 && strcmp( password, "") != 0) {
+	  sts = user_CheckUser( systemgroup, username, user_PwCrypt(password), &privilege);
+	  if ( ODD(sts) && privilege | pwr_mAccess_AllRt) {
+	    if ( privilege & pwr_mPrv_System)
+	      *priv = RTT_PRV_SYS;
+	    else if ( privilege & pwr_mPrv_Maintenance)
+	      *priv = RTT_PRV_EL;
+	    else if ( privilege & pwr_mPrv_Process ||
+		      privilege & pwr_mPrv_Instrument)
+	      *priv = RTT_PRV_PROC;
+	    else
+	      *priv = RTT_PRV_OP;
+	    strncpy( rtt_user, username, sizeof(rtt_user));
+	    return RTT__SUCCESS;
+	  }
+	  sts = rtt_logon_pict( chn, priv);
+	  if ( EVEN(sts))
+	    exit(0);
+	  return sts;
+	}
+
+	sts = gdh_GetSecurityInfo( &sec);
+	if ( ODD(sts) && sec.XttUseOpsysUser) {
+	  syi_UserName( opsys_username, sizeof(opsys_username));
+  
+	  sts = user_GetUserPriv( systemgroup, opsys_username, &privilege);
+	  if ( ODD(sts) && privilege | pwr_mAccess_AllRt) {
+	    if ( privilege & pwr_mPrv_System)
+	      *priv = RTT_PRV_SYS;
+	    else if ( privilege & pwr_mPrv_Maintenance)
+	      *priv = RTT_PRV_EL;
+	    else if ( privilege & pwr_mPrv_Process ||
+		      privilege & pwr_mPrv_Instrument)
+	      *priv = RTT_PRV_PROC;
+	    else if ( privilege | pwr_mAccess_AllRt)
+	      *priv = RTT_PRV_OP;
+	    strncpy( rtt_user, opsys_username, sizeof(rtt_user));
+	    return RTT__SUCCESS;
+	  }
+	}
+	else if ( ODD(sts) && sec.DefaultXttPriv) {
+	  privilege = sec.DefaultXttPriv;
+	  if ( privilege & pwr_mPrv_System)
+	    *priv = RTT_PRV_SYS;
+	  else if ( privilege & pwr_mPrv_Maintenance)
+	    *priv = RTT_PRV_EL;
+	  else if ( privilege & pwr_mPrv_Process ||
+		    privilege & pwr_mPrv_Instrument)
+	    *priv = RTT_PRV_PROC;
+	  else if ( privilege | pwr_mAccess_AllRt)
+	    *priv = RTT_PRV_OP;
+	  strcpy( rtt_user, "DefaultUser");
+	  return RTT__SUCCESS;
+	}
+	sts = rtt_logon_pict( chn, priv);
+	if ( EVEN(sts))
+	  exit(0);
+	return sts;
+}
+
+/*************************************************************************
+*
+* Name:		rtt_logon_pict()
+*
+* Type		int
+*
+* Type		Parameter	IOGF	Description
+* unsigned long	*chn		I	
+* unsigned long	*priv		O	
+*
+* Description:
+*	Logon of pwr_rtt.
+*
+**************************************************************************/
+
+int	rtt_logon_pict( unsigned long *chn,
+			unsigned long *priv)
 {
 	unsigned long	terminator;
 	unsigned long	option;
-	char		input_str[80];
+	char		user_str[80];
+	char		passw_str[80];
 	int		maxlen = 30;
 	int		attempts = 0;
-	char		sys_username[] = "SYS";	
-	char		sys_username2[] = "SYSANSV";	
-	char		proc_username[] = "PROC";	
-	char		el_username[] = "EL";	
-	char		el_username2[] = "SKIFTEL";	
-	char		op_username[] = "OP";	
-	char		noneth_str[] = "NONETH_";
-	// char		double_height_top_half[4] = {27,'#','3',0};
-	// char		double_height_bottom_half[4] = {27,'#','4',0};
-	// char		double_width[4] = {27,'#','6',0};
 	char		nodename[80];
 	int		sts;
 	rtt_t_backgr	*picture;
+	unsigned int privilege;
+	char	systemgroup[80];
 
-	*noneth = 0;
-	if ( *login != 0)
-	{
-	    if ( !strncmp( login, noneth_str, strlen( noneth_str)))
-	    {
-	      *noneth = 1;
-	      login += strlen( noneth_str);
-	    }
-	    if ( (strcmp( login, sys_username) == 0) ||
-		(strcmp( login, sys_username2) == 0))
-	    {
-	      *priv = RTT_PRV_SYS;
-	      return RTT__SUCCESS;
-	    }
-	    else if ( strcmp( login, proc_username) == 0)
-	    {
-	      *priv = RTT_PRV_PROC;
-	      return RTT__SUCCESS;
-	    }
-	    else if (( strcmp( login, el_username) == 0) ||
-		     ( strcmp( login, el_username2) == 0))
-	    {
-	      *priv = RTT_PRV_EL;
-	      return RTT__SUCCESS;
-	    }
-	    else if ( strcmp( login, op_username) == 0)
-	    {
-	      *priv = RTT_PRV_OP;
-	      return RTT__SUCCESS;
-	    }
-	}
+	sts = gdh_GetObjectInfo( "pwrNode-System.SystemGroup", &systemgroup, 
+				 sizeof(systemgroup));
+	if ( EVEN(sts)) return sts;
 
 	sts = rtt_get_nodename( nodename, sizeof(nodename));
 	rttsys_get_login_picture( &picture);
@@ -8306,59 +8361,58 @@ static int	rtt_logon( unsigned long *chn,
 	rtt_cursor_abs( 34, 11);
 	r_print(rtt_version);
 	r_print_buffer();
+	
 
-	option = RTT_OPT_NOSCROLL | RTT_OPT_NORECALL;
-
-	while ( attempts < 3)
-	{
+	while ( attempts < 3) {
 	  rtt_cursor_abs( 32, 20);
 	  rtt_eofline_erase();
 	  r_print_buffer();
-	  rtt_get_input_string( (char *) chn, input_str, &terminator, 
-		maxlen, 0, option, 0, 
-		0, 0, "Username: "); 
-	  rtt_toupper( input_str, input_str);
+	  option = RTT_OPT_NOSCROLL | RTT_OPT_NORECALL;
+	  rtt_get_input_string( (char *) chn, user_str, &terminator, 
+				maxlen, 0, option, 0, 
+				0, 0, "Username: "); 
+	  rtt_toupper( user_str, user_str);
 	  rtt_message('S',"");
-	  if ( terminator >= RTT_K_RETURN )
-	  {
-	    if ( !strncmp( login, noneth_str, strlen( noneth_str)))
-	    {
-	      *noneth = 1;
-	      login += strlen( noneth_str);
-	    }
-	    if ( !strncmp( input_str, noneth_str, strlen( noneth_str)))
-	    {
-	      *noneth = 1;
-	      strcpy( input_str, (char *) &input_str[strlen(noneth_str)]);
-	    }
-	    if ( (strcmp( input_str, sys_username) == 0) ||
-		(strcmp( input_str, sys_username2) == 0))
-	    {
-	      *priv = RTT_PRV_SYS;
+	  if ( terminator >= RTT_K_RETURN ) {
+	    rtt_cursor_abs( 32, 20);
+	    rtt_eofline_erase();
+	    r_print_buffer();
+	    option = RTT_OPT_NOSCROLL | RTT_OPT_NORECALL | RTT_OPT_NOECHO;
+	    rtt_get_input_string( (char *) chn, passw_str, &terminator, 
+				  maxlen, 0, option, 0, 
+				  0, 0, "Password: "); 
+	    cdh_ToLower( passw_str, passw_str);
+	    rtt_message('S',"");
+	    if ( terminator >= RTT_K_RETURN ) {
+
+	      sts = user_CheckUser( systemgroup, user_str, user_PwCrypt(passw_str), &privilege);
+	      if ( EVEN(sts)) {
+		attempts++;
+		rtt_message('E',"User not authorized");
+		continue;
+	      }
+
+	      if ( privilege & pwr_mPrv_System)
+		*priv = RTT_PRV_SYS;
+	      else if ( privilege & pwr_mPrv_Maintenance)
+		*priv = RTT_PRV_EL;
+	      else if ( privilege & pwr_mPrv_Process ||
+			privilege & pwr_mPrv_Instrument)
+		*priv = RTT_PRV_PROC;
+	      else if ( privilege | pwr_mAccess_AllRt)
+		*priv = RTT_PRV_OP;
+	      else {
+		attempts++;
+		rtt_message('E',"User not authorized");
+		continue;
+	      }
+	      strncpy( rtt_user, user_str, sizeof(rtt_user));
 	      return RTT__SUCCESS;
 	    }
-	    else if ( strcmp( input_str, proc_username) == 0)
-	    {
-	      *priv = RTT_PRV_PROC;
-	      return RTT__SUCCESS;
-	    }
-	    else if (( strcmp( input_str, el_username) == 0) ||
-		     ( strcmp( input_str, el_username2) == 0))
-	    {
-	      *priv = RTT_PRV_EL;
-	      return RTT__SUCCESS;
-	    }
-	    else if ( strcmp( input_str, op_username) == 0)
-	    {
-	      *priv = RTT_PRV_OP;
-	      return RTT__SUCCESS;
-	    }
-	    rtt_message('E',"User not authorized");
 	  }
-	  attempts++;
 	}
 	r_print_buffer();
-	exit(0);
+	return 0;
 }
 
 /*************************************************************************
@@ -10300,20 +10354,20 @@ static int	rtt_get_system_name( char *system_name, int size)
 {
 	pwr_tStatus	sts;
 	pwr_tObjid	objid;
-	pwr_sSystem	*system_ptr;	
+	pwr_tAttrRef	aref;
+	pwr_sSystem	sys;	
 
-	sts = gdh_GetClassList ( pwr_eClass_System, &objid);
-	if (EVEN(sts)) 
-	{
+	sts = gdh_GetClassList( pwr_eClass_System, &objid);
+	if (EVEN(sts)) {
 	  strcpy( system_name, "");
 	  return sts;
 	}
 
-
-	sts = gdh_ObjidToPointer ( objid, (pwr_tAddress *) &system_ptr);
+	aref = cdh_ObjidToAref( objid);
+	sts = gdh_GetObjectInfoAttrref( &aref, &sys, sizeof(sys));
 	if ( EVEN(sts)) return sts;
 
-	strncpy( system_name, system_ptr->SystemName, size);
+	strncpy( system_name, sys.SystemName, size);
 	return RTT__SUCCESS;
 }
 

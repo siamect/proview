@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_rtt_functions.h,v 1.2 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_rtt_functions.h,v 1.3 2008-06-24 07:39:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,8 @@
 /* Module rs_rtt_menu.c */
 
 int	rtt_gdh_init( void);
-int	rtt_initialize( char	*login,
+int	rtt_initialize( char	*username,
+			char	*password,
 			char	*commandfile,
 			char	*mainmenu_title);
 
@@ -393,6 +394,8 @@ char	*rtt_pwr_dir( char *dir);
 int rtt_ctx_push( menu_ctx ctx);
 int rtt_ctx_pop();
 menu_ctx rtt_current_ctx();
+int	rtt_logon_pict( unsigned long *chn,
+			unsigned long *priv);
 
 /* Module rs_rtt_crr.c */
 
