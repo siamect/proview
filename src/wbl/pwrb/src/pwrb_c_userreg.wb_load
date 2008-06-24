@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_userreg.wb_load,v 1.1 2005-09-20 13:18:56 claes Exp $
+!  Proview   $Id: pwrb_c_userreg.wb_load,v 1.2 2008-06-24 07:19:38 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -38,6 +38,26 @@ SObject pwrb:Class
       Object Privileges $Attribute 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$PrivMask"
+        EndBody
+      EndObject
+      Object FullName $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object Email $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object Phone $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object Sms $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
         EndBody
       EndObject
     EndObject
