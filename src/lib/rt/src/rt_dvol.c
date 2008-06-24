@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_dvol.c,v 1.2 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_dvol.c,v 1.3 2008-06-24 07:06:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -229,6 +229,7 @@ dvol_CreateObject (
   gdb_sObject		*op;
   gdb_sObject		*pop;
   gdb_sVolume		*vp;
+  pwr_sClassDef         *cdef;
   
   gdb_AssumeLocked;
 
@@ -296,6 +297,11 @@ dvol_CreateObject (
 
     op = adoptObject(sts, op, pop, &cm);
     if (op == NULL) break;
+
+    cdef  = pool_Address(NULL, gdbroot->rtdb, cp->cbr);
+
+    if ( cdef->Flags.b.RtReadOnly)
+      op->u.n.lflags.b.readOnly = 1;
 
     cvols_Notify(&cm);
 
