@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_gtk.h,v 1.1 2007-01-04 08:40:24 claes Exp $
+ * Proview   $Id: rt_xtt_gtk.h,v 1.2 2008-06-24 08:05:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -76,6 +76,8 @@ class XttGtk : public Xtt {
     static void activate_command( GtkWidget *w, gpointer data);
     static void activate_exit( GtkWidget *w, gpointer data);
     static void activate_print( GtkWidget *w, gpointer data);
+    static void activate_login( GtkWidget *w, gpointer data);
+    static void activate_logout( GtkWidget *w, gpointer data);
     static void activate_find( GtkWidget *w, gpointer data);
     static void activate_findregex( GtkWidget *w, gpointer data);
     static void activate_findnext( GtkWidget *w, gpointer data);

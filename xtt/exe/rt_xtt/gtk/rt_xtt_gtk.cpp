@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_gtk.cpp,v 1.14 2008-06-03 06:12:43 claes Exp $
+ * Proview   $Id: rt_xtt_gtk.cpp,v 1.15 2008-06-24 08:05:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -222,12 +222,18 @@ void XttGtk::activate_change_value( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
 
+  if ( !xtt->xnav->is_authorized())
+    return;
+
   xtt->open_change_value();
 }
 
 void XttGtk::activate_command( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
+
+  if ( !xtt->xnav->is_authorized())
+    return;
 
   if ( xtt->command_open) {
     g_object_set( ((XttGtk *)xtt)->cmd_input, "visible", FALSE, NULL);
@@ -260,12 +266,32 @@ void XttGtk::activate_print( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
 
+  if ( !xtt->xnav->is_authorized())
+    return;
+
   xtt->activate_print();
+}
+
+void XttGtk::activate_login( GtkWidget *w, gpointer data)
+{
+  Xtt *xtt = (Xtt *)data;
+
+  xtt->xnav->open_login();
+}
+
+void XttGtk::activate_logout( GtkWidget *w, gpointer data)
+{
+  Xtt *xtt = (Xtt *)data;
+
+  xtt->xnav->logout();
 }
 
 void XttGtk::activate_find( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
+
+  if ( !xtt->xnav->is_authorized())
+    return;
 
   xtt->activate_find();
 }
@@ -274,12 +300,18 @@ void XttGtk::activate_findregex( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
 
+  if ( !xtt->xnav->is_authorized())
+    return;
+
   xtt->activate_findregex();
 }
 
 void XttGtk::activate_findnext( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
+
+  if ( !xtt->xnav->is_authorized())
+    return;
 
   xtt->activate_findnext();
 }
@@ -288,12 +320,18 @@ void XttGtk::activate_collapse( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
 
+  if ( !xtt->xnav->is_authorized())
+    return;
+
   xtt->activate_collapse();
 }
 
 void XttGtk::activate_openobject( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
+
+  if ( !xtt->xnav->is_authorized())
+    return;
 
   xtt->activate_openobject();
 }
@@ -302,12 +340,18 @@ void XttGtk::activate_openplc( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
 
+  if ( !xtt->xnav->is_authorized())
+    return;
+
   xtt->activate_openplc();
 }
 
 void XttGtk::activate_showcrossref( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
+
+  if ( !xtt->xnav->is_authorized())
+    return;
 
   xtt->xnav->show_crossref();
 }
@@ -316,12 +360,18 @@ void XttGtk::activate_opengraph( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
 
+  if ( !xtt->xnav->is_authorized())
+    return;
+
   xtt->activate_opengraph();
 }
 
 void XttGtk::activate_collect_insert( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
+
+  if ( !xtt->xnav->is_authorized())
+    return;
 
   xtt->activate_collect_insert();
 }
@@ -330,12 +380,18 @@ void XttGtk::activate_collect_show( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
 
+  if ( !xtt->xnav->is_authorized())
+    return;
+
   xtt->xnav->collect_show();
 }
 
 void XttGtk::activate_collect_remove( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
+
+  if ( !xtt->xnav->is_authorized())
+    return;
 
   xtt->xnav->collect_remove();
 }
@@ -344,12 +400,18 @@ void XttGtk::activate_collect_clear( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
 
+  if ( !xtt->xnav->is_authorized())
+    return;
+
   xtt->xnav->collect_clear();
 }
 
 void XttGtk::activate_advanceduser( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
+
+  if ( !xtt->xnav->is_authorized())
+    return;
 
   xtt->activate_advanceduser();
 }
@@ -379,12 +441,18 @@ void XttGtk::activate_help( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
 
+  if ( !xtt->xnav->is_authorized())
+    return;
+
   xtt->activate_help();
 }
 
 void XttGtk::activate_help_project( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
+
+  if ( !xtt->xnav->is_authorized())
+    return;
 
   xtt->activate_help_project();
 }
@@ -393,12 +461,18 @@ void XttGtk::activate_help_proview( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
 
+  if ( !xtt->xnav->is_authorized())
+    return;
+
   xtt->activate_help_proview();
 }
 
 void XttGtk::activate_back( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
+
+  if ( !xtt->xnav->is_authorized())
+    return;
 
   xtt->xnav->brow_push();
 }
@@ -536,6 +610,14 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
 				 gtk_image_new_from_stock( "gtk-print", GTK_ICON_SIZE_MENU));
   g_signal_connect(file_print, "activate", G_CALLBACK(XttGtk::activate_print), this);
 
+  GtkWidget *file_login = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Login"));
+  g_signal_connect( file_login, "activate", 
+		    G_CALLBACK(XttGtk::activate_login), this);
+
+  GtkWidget *file_logout = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("Log_Out"));
+  g_signal_connect( file_logout, "activate", 
+		    G_CALLBACK(XttGtk::activate_logout), this);
+
   GtkWidget *file_close = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Close"));
   gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(file_close), 
 				 gtk_image_new_from_stock( "gtk-close", GTK_ICON_SIZE_MENU));
@@ -545,6 +627,8 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
 
   GtkMenu *file_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_print);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_login);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_logout);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 
   GtkWidget *file = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_File"));
@@ -845,6 +929,9 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   CoXHelp *xhelp = new CoXHelpGtk( toplevel, this, xhelp_eUtility_Xtt, &sts);
   xhelp->open_URL_cb = open_URL_cb;
   CoXHelp::set_default( xhelp);
+
+  if ( !xnav->is_authorized( pwr_mAccess_AllRt, 0))
+    xnav->open_login();
 
   wow = new CoWowGtk( toplevel);
   if ( !quiet)

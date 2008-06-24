@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_gtk.cpp,v 1.5 2008-04-25 11:28:54 claes Exp $
+ * Proview   $Id: xtt_xnav_gtk.cpp,v 1.6 2008-06-24 08:09:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,6 +51,7 @@ typedef void *Widget;
 #include "co_error.h"
 #include "co_xhelp.h"
 #include "co_wow_gtk.h"
+#include "co_login_gtk.h"
 #include "xtt_xnav_gtk.h"
 #include "xtt_item.h"
 #include "xtt_menu.h"
@@ -254,10 +255,19 @@ GeCurve *XNavGtk::gecurve_new( char *name, char *filename, GeCurveData *data,
 }
 
 XttFileview *XNavGtk::fileview_new( pwr_tOid oid, char *title, char *dir, char *pattern,
-				    int type, char *target_attr, char *trigger_attr)
+				    int type, char *target_attr, char *trigger_attr, char *filetype)
 {
   return new XttFileviewGtk( this, parent_wid, oid, title, dir, pattern, type, target_attr,
-			     trigger_attr);
+			     trigger_attr, filetype);
+}
+
+CoLogin *XNavGtk::login_new( char		*name,
+			     char		*groupname,
+			     void		(* bc_success)( void *),
+			     void		(* bc_cancel)( void *),
+			     pwr_tStatus  	*status)
+{
+  return new CoLoginGtk( this, parent_wid, name, groupname, bc_success, bc_cancel, status);
 }
 
 void XNavGtk::bell( int time)
