@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_syi.c,v 1.1 2007-05-24 14:48:38 claes Exp $
+ * Proview   $Id: co_syi.c,v 1.2 2008-06-24 07:03:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -130,4 +130,15 @@ syi_BootDisk (
   pwr_dStatus(sts, status, SYI__NYI);
 
   return NULL;
+}
+
+pwr_tStatus syi_UserName( char *user, int len)
+{
+  char *p;
+  
+  p = getlogin();
+  if ( !p)
+    return 0;
+  strncpy( user, p, len);
+  return 1;
 }

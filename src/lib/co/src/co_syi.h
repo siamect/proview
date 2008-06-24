@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_syi.h,v 1.1 2007-05-24 14:48:38 claes Exp $
+ * Proview   $Id: co_syi.h,v 1.2 2008-06-24 07:03:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,6 +35,7 @@ char		*syi_HostSpec (pwr_tStatus*, char*, int);
 char		*syi_NodeName (pwr_tStatus*, char*, int);
 char		*syi_NodeSpec (pwr_tStatus*, char*, int);
 pwr_tBoolean	syi_LocalBoot (pwr_tStatus*);
+pwr_tStatus 	syi_UserName( char *user, int len);
 
 #if defined __cplusplus
 }
