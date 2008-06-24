@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pvd_udb.h,v 1.1 2006-09-15 09:33:20 claes Exp $
+ * Proview   $Id: rt_pvd_udb.h,v 1.2 2008-06-24 07:15:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,6 +37,8 @@ public:
   void load_user( UserList *user, SystemList *sg);
   void save( pwr_tStatus *sts);
   char *groupname( char *name);
+  void writeAttribute( co_procom *pcom, pwr_tOix oix, unsigned int offset,
+		       unsigned int size, char *buffer);
 
   GeUser *gu;
   int menu_stack[100];

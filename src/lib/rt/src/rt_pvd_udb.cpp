@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pvd_udb.cpp,v 1.1 2006-09-15 09:33:20 claes Exp $
+ * Proview   $Id: rt_pvd_udb.cpp,v 1.2 2008-06-24 07:15:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,7 +47,7 @@ void rt_pvd_udb::save( pwr_tStatus *sts)
     case pwr_cClass_SystemGroupReg: {
       pwr_sClass_SystemGroupReg *body = (pwr_sClass_SystemGroupReg *)m_list[i].body;
 
-      *sts = gu->add_system( groupname(longname( m_list[i].oix)), body->Attributes);
+      *sts = gu->add_system( groupname(longname( m_list[i].oix)), body->Attributes, body->Description, m_list[i].oix-1);
       if ( EVEN(*sts)) return;
       break;
     }
@@ -61,7 +61,8 @@ void rt_pvd_udb::save( pwr_tStatus *sts)
 	*s = 0;
 	   
       *sts = gu->add_user( groupname(gname), m_list[i].name, body->Password, 
-			   body->Privileges);
+			   body->Privileges, body->FullName, body->Description, body->Email,
+			   body->Phone, body->Sms, m_list[i].oix-1);
       if ( EVEN(*sts)) return;
       break;
     }
@@ -143,7 +144,19 @@ void rt_pvd_udb::load_systemgroup( SystemList *systemgroup)
   char sname[120];
   char *s;
 
-  item.oix = next_oix++;
+  body = (pwr_sClass_SystemGroupReg *) calloc( 1, sizeof(pwr_sClass_SystemGroupReg));
+  item.body = body;
+  gu->get_system_name( systemgroup, sname);
+  if (( s = strrchr( sname, '.')))
+    strcpy( item.name, s+1);
+  else
+    strcpy( item.name, sname);
+
+  gu->get_system_data( sname, &body->Attributes, &item.oix, body->Description);
+  item.oix++;
+
+  if ( next_oix <= item.oix)
+    next_oix = item.oix + 1;
   item.cid = pwr_cClass_SystemGroupReg;
   item.fthoix = menu_stack[menu_cnt - 1];
   item.bwsoix = m_list[item.fthoix].lchoix;
@@ -154,18 +167,12 @@ void rt_pvd_udb::load_systemgroup( SystemList *systemgroup)
   m_list[item.fthoix].lchoix = item.oix;
 
   item.body_size = sizeof(pwr_sClass_SystemGroupReg);
-  body = (pwr_sClass_SystemGroupReg *) calloc( 1, item.body_size);
-  item.body = body;
-  gu->get_system_name( systemgroup, sname);
-  if (( s = strrchr( sname, '.')))
-    strcpy( item.name, s+1);
-  else
-    strcpy( item.name, sname);
 
-  gu->get_system_data( sname, &body->Attributes);
   menu_stack[menu_cnt] = item.oix;
   menu_cnt++;
-  m_list.push_back( item);
+  if ( m_list.size() <= item.oix + 1)
+    m_list.resize( item.oix + 1);
+  m_list[item.oix] = item;
 
   UserList *user = systemgroup->first_user();
   while ( user) {
@@ -187,7 +194,14 @@ void rt_pvd_udb::load_user( UserList *user, SystemList *sg)
   procom_obj item;
   pwr_sClass_UserReg *body;
 
-  item.oix = next_oix++;
+  body = (pwr_sClass_UserReg *) calloc( 1, sizeof(pwr_sClass_UserReg));
+  user->get_data( body->Password, &body->Privileges, &item.oix, body->FullName, body->Description, 
+		  body->Email, body->Phone, body->Sms);
+  item.oix++;
+
+  if ( next_oix <= item.oix)
+    next_oix = item.oix + 1;
+
   item.cid = pwr_cClass_UserReg;
   item.fthoix = menu_stack[menu_cnt - 1];
   item.bwsoix = m_list[item.fthoix].lchoix;
@@ -198,16 +212,41 @@ void rt_pvd_udb::load_user( UserList *user, SystemList *sg)
   m_list[item.fthoix].lchoix = item.oix;
 
   item.body_size = sizeof(pwr_sClass_UserReg);
-  body = (pwr_sClass_UserReg *) calloc( 1, item.body_size);
   item.body = body;
   strcpy( item.name, user->get_name());
-  user->get_data( body->Password, &body->Privileges);
 
-  m_list.push_back( item);
+  if ( m_list.size() <= item.oix + 1)
+    m_list.resize( item.oix + 1);
+  m_list[item.oix] = item;
+  // m_list.push_back( item);
 }
 
+void rt_pvd_udb::writeAttribute( co_procom *pcom, pwr_tOix oix, unsigned int offset,
+				 unsigned int size, char *buffer)
+{
+  if ( oix >= m_list.size() || oix <= 0) {
+    pcom->provideStatus( LDH__NOSUCHOBJ);
+    return;
+  }
 
+  if ( offset + size > m_list[oix].body_size) {
+    pcom->provideStatus( LDH__NOSUCHATTR);
+    return;
+  }
 
+  // Crypt password
+  if ( m_list[oix].cid == pwr_cClass_UserReg &&
+       (int)offset == (char *)((pwr_sClass_UserReg *)m_list[oix].body)->Password - (char *)m_list[oix].body) {
+    pwr_tString40 pw;
+
+    strncpy( pw, UserList::pwcrypt( buffer), sizeof(pw));
+    memcpy( (void *)((unsigned long)m_list[oix].body + (unsigned long)offset), pw, size);
+  }
+  else
+    memcpy( (void *)((unsigned long)m_list[oix].body + (unsigned long)offset), buffer, size);
+
+  pcom->provideStatus( 1);
+}
 
 
 
