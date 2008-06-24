@@ -10,7 +10,7 @@ ifeq ($(export_type),exp)
 	-lpwr_co_gtk -lpwr_co -lpwr_flow_gtk -lpwr_flow -lpwr_glow_gtk -lpwr_glow \
 	`pkg-config --libs gtk+-2.0` \
 	-lpwr_msg_dummy \
-	-ldb -lrpcsvc -lpthread -lm -lrt -lasound
+	-ldb -lrpcsvc -lpthread -lm -lrt -lcrypt -lasound
 else
   link = $(ldxx) $(elinkflags) $(domap) -o $(pwr_exe)/rt_xtt_gtk \
 	$(bld_dir)/rt_xtt_gtk.o $(bld_dir)/xtt_main.o $(rt_msg_eobjs) \
@@ -20,6 +20,6 @@ else
 	-lpwr_co_gtk -lpwr_co -lpwr_flow_gtk -lpwr_flow -lpwr_glow_gtk -lpwr_glow \
 	`pkg-config --libs gtk+-2.0` \
 	-lpwr_msg_dummy \
-	-ldb -lrpcsvc -lpthread -lm -lrt -lasound
+	-ldb -lrpcsvc -lpthread -lm -lrt -lcrypt -lasound
 endif
 endif
