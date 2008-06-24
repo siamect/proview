@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.cpp,v 1.12 2008-05-09 15:27:14 claes Exp $
+ * Proview   $Id: wb_gcg.cpp,v 1.13 2008-06-24 07:51:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -13194,6 +13194,12 @@ int	gcg_comp_m52( gcg_ctx gcgctx, vldh_t_node node)
 
 	refobjdid = *refobjdid_ptr;
 	free((char *) refobjdid_ptr);
+
+	pwr_tAttrRef refattrref = cdh_ObjidToAref( refobjdid);
+	sts = gcg_replace_ref( gcgctx, &refattrref, node);
+	if ( EVEN(sts)) return sts;
+
+	refobjdid = refattrref.Objid;
 
 	/* Check that this is objdid of an existing object */
 	sts = ldh_GetObjectClass(
