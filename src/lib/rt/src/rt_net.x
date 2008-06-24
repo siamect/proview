@@ -1,6 +1,6 @@
 #ifdef RPC_HDR
 %/* 
-% * Proview   $Id: rt_net.x,v 1.12 2007-11-22 15:10:23 claes Exp $
+% * Proview   $Id: rt_net.x,v 1.13 2008-06-24 07:14:53 claes Exp $
 % * Copyright (C) 2005 SSAB Oxelösund AB.
 % *
 % * This program is free software; you can redistribute it and/or 
@@ -102,6 +102,9 @@ enum net_eMsg {
   net_eMsg_getGclassR,
 
   net_eMsg_serverConnect,       /* New server */
+
+  net_eMsg_fileList,
+  net_eMsg_fileListR,
 
   net_eMsg_,			/* Not a valid message */
   
@@ -1248,6 +1251,76 @@ struct net_sGetCclass {
 %	return (TRUE);
 %}
 #endif
+
+
+struct net_sFileList {
+  net_sMessage		hdr;
+  char			dir[256];  
+  char			pattern[40];
+};
+
+
+#ifdef RPC_HDR
+%
+%
+%typedef struct {
+%  net_sMessage 	hdr;/**< Header */
+%  pwr_tStatus          sts;/**< Status */
+%  pwr_tUInt32		filecnt; /**< Number of files found. */  
+%  char			files[1]; /**< List of files */
+%} net_sFileListR;
+%
+%bool_t xdr_net_sFileListR(XDR *xdrs, net_sFileListR *objp);
+%
+#elif defined RPC_XDR
+%
+%bool_t
+%xdr_net_sFileListR(XDR *xdrs, net_sFileListR *objp)
+%{
+%	int 		filecnt;
+%	pwr_tStatus 	sts;
+% 
+%	if (xdrs->x_op == XDR_DECODE) {
+%		filecnt = (int) ntohl(objp->filecnt);
+%		sts = (int) ntohl(objp->sts);
+%	} else {
+%		filecnt = objp->filecnt;
+%		sts = objp->sts;
+%	}
+%
+%	if (!xdr_net_sMessage(xdrs, &objp->hdr)) {
+%		return (FALSE);
+%	}
+%	if (!xdr_pwr_tStatus(xdrs, &objp->sts)) {
+%		return (FALSE);
+%	}
+%
+%	if (EVEN(sts)) {
+%		filecnt = 0;
+%		if (!xdr_pwr_tUInt32(xdrs, (unsigned int *)&filecnt)) {
+%				return (FALSE);
+%		}
+%		return (TRUE); 
+%       }  
+%
+%
+%	if (!xdr_pwr_tUInt32(xdrs, &objp->filecnt  )) {
+%		return (FALSE);
+%	} 
+%	if (!xdr_opaque(xdrs, (char *)objp->files, filecnt * sizeof(pwr_tString40))) {
+%		return (FALSE);
+%	}
+%	return (TRUE);
+%
+%}
+#endif
+
+
+
+
+
+
+
 
 
 #ifdef RPC_HDR
