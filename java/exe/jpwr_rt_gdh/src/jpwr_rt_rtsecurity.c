@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: jpwr_rt_rtsecurity.c,v 1.2 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: jpwr_rt_rtsecurity.c,v 1.3 2008-06-24 13:25:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,11 @@
 
 #include "jpwr_rt_rtsecurity.h"
 #include "pwr.h"
+#include "pwr_class.h"
 #include "pwr_privilege.h"
 #include "co_api.h"
+#include "co_cdh.h"
+#include "rt_gdh.h"
 
 JNIEXPORT jobject JNICALL Java_jpwr_rt_RtSecurity_checkUser
   (JNIEnv *env , jclass object, jstring jsystemgroup, jstring juser, 
@@ -40,6 +43,9 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_RtSecurity_checkUser
   unsigned int priv;
   jint jsts;
   jint jpriv;
+  pwr_tObjid	oid;
+  pwr_sSecurity	sec;	
+  pwr_tAttrRef aref;
 
   cdhrInt_id = (*env)->FindClass( env, "jpwr/rt/CdhrInt");
   cdhrInt_cid = (*env)->GetMethodID( env, cdhrInt_id,
@@ -52,8 +58,14 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_RtSecurity_checkUser
   password = (*env)->GetStringUTFChars( env, jpassword, 0);
   cpassword = (char *)password;
 
-  sts = user_CheckUser( csystemgroup, cuser, cpassword, &priv);
-
+  sts = gdh_GetClassList ( pwr_eClass_Security, &oid);
+  if (ODD(sts)) {
+    aref = cdh_ObjidToAref( oid);
+    sts = gdh_GetObjectInfoAttrref( &aref, &sec, sizeof(sec));
+    if ( ODD(sts)){
+      sts = user_CheckUser( sec.WebSystemGroup, cuser, cpassword, &priv);
+    }
+  }
   (*env)->ReleaseStringUTFChars( env, jsystemgroup, csystemgroup);
   (*env)->ReleaseStringUTFChars( env, juser, cuser);
   (*env)->ReleaseStringUTFChars( env, jpassword, cpassword);

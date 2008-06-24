@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: Gdh.java,v 1.10 2007-09-17 15:35:28 claes Exp $
+ * Proview   $Id: Gdh.java,v 1.11 2008-06-24 13:27:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -78,7 +78,7 @@ public class Gdh {
 
   public int login( String user, String password) {
     // Get system group
-    String systemGroup = "SSAB";
+    String systemGroup = "NotUsed";
     CdhrInt ret = RtSecurity.checkUser( systemGroup, user, 
 			password);
     if ( ret.evenSts()) {
