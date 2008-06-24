@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: Pwrs.java,v 1.2 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: Pwrs.java,v 1.3 2008-06-24 13:29:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,4 +30,5 @@ package jpwr.rt;
 
 public class Pwrs {
   public static final int cClass_Node = 65784;
+  public static final int cClass_Security = 66080;
 }

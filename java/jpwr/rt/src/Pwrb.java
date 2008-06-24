@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: Pwrb.java,v 1.3 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: Pwrb.java,v 1.4 2008-06-24 13:28:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -231,7 +231,6 @@ public class Pwrb {
   public static final int cClass_RttConfig = 133280;
   public static final int cClass_RTP_DIOC = 132648;
   public static final int cClass_ScanTime = 133296;
-  public static final int cClass_Security = 132656;
   public static final int cClass_select = 132664;
   public static final int cClass_setcond = 132672;
   public static final int cClass_setdi = 132680;
