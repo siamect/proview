@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopOpWindowFrame.java,v 1.3 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: JopOpWindowFrame.java,v 1.4 2008-06-24 13:35:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -49,6 +49,10 @@ public class JopOpWindowFrame extends JFrame {
     localPanel = new JopOpWindow( session, (Object)this);
     init();
     pack();
+  }
+
+  public void setLabelText( String text) {
+    localPanel.setLabelText( text);
   }
 
   private void init() {

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopSessionIfc.java,v 1.5 2007-01-30 06:52:55 claes Exp $
+ * Proview   $Id: JopSessionIfc.java,v 1.6 2008-06-24 13:35:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,4 +42,5 @@ public interface JopSessionIfc {
   public boolean isApplication();
   public boolean isOpWindowApplet();
   public void openSearch(String object);
+  public void setOpWindowLabelText( String text );
 }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopLoginFrame.java,v 1.2 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: JopLoginFrame.java,v 1.3 2008-06-24 13:34:14 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -91,9 +91,7 @@ public class JopLoginFrame extends JFrame {
     });
     buttonClear.addActionListener( new ActionListener() {
       public void actionPerformed( ActionEvent e) {
-	textUser.setText("");
-	textPassword.setText("");
-        labelMessage.setText(" ");
+	clear();
       }
     });
     textUser.addActionListener( new ActionListener() {
@@ -109,9 +107,17 @@ public class JopLoginFrame extends JFrame {
     });
   }
 
+  public void clear() {
+    textUser.setText("");
+    textPassword.setText("");
+    labelMessage.setText(" ");
+    javax.swing.FocusManager.getCurrentManager().focusNextComponent( textUser);
+  }
+
   private void checkUser() {
     String user = textUser.getText();
     String passwd = new String(textPassword.getPassword());
+    passwd = JopCrypt.crypt( "aa", passwd);
     int sts = session.getEngine().gdh.login( user, passwd);
     if ( sts % 2 == 0) {
       JOptionPane.showMessageDialog( this, "User not authorized", 
@@ -119,7 +125,11 @@ public class JopLoginFrame extends JFrame {
       labelMessage.setText(" ");
     }
     else {
+      textUser.setText("");
+      textPassword.setText("");
       labelMessage.setText( "User " + user + " logged in");
+      session.setOpWindowLabelText( user + " logged in");
+      hide();
     }
   }
 }

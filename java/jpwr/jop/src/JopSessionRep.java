@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopSessionRep.java,v 1.11 2007-01-30 13:02:27 claes Exp $
+ * Proview   $Id: JopSessionRep.java,v 1.12 2008-06-24 13:35:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -102,6 +102,7 @@ public class JopSessionRep implements JopSessionIfc {
       login.setVisible( true);
     }
     else {
+      login.clear();
       login.setVisible( true);
       login.setState(Frame.NORMAL);
       login.toFront();
@@ -300,12 +301,22 @@ public class JopSessionRep implements JopSessionIfc {
   public boolean isOpWindowApplet() {
     return ( root instanceof JopOpWindowApplet);
   }
+  public boolean isOpWindowFrame() {
+    return ( root instanceof JopOpWindowFrame);
+  }
 
-    public void openSearch(String object){
-	HistSearch HSWindow = new HistSearch(object,session );
-        HSWindow.pack();        
-        HSWindow.setVisible(true);
-    }
+  public void openSearch(String object){
+    HistSearch HSWindow = new HistSearch(object,session );
+    HSWindow.pack();        
+    HSWindow.setVisible(true);
+  }
+
+  public void setOpWindowLabelText( String text) {
+    if ( isOpWindowApplet())
+      ((JopOpWindowApplet)root).setLabelText( text);
+    else if ( isOpWindowFrame())
+      ((JopOpWindowFrame)root).setLabelText( text);
+  }
 }
 
 

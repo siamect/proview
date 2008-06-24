@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopLoginApplet.java,v 1.2 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: JopLoginApplet.java,v 1.3 2008-06-24 13:33:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -142,6 +142,7 @@ public class JopLoginApplet extends JApplet {
   private void checkUser() {
     String user = textUser.getText();
     String passwd = new String(textPassword.getPassword());
+    passwd = JopCrypt.crypt( "aa", passwd);
     int sts = gdh.login( user, passwd);
     if ( sts % 2 == 0) {
       JOptionPane.showMessageDialog( this, "User not authorized", 

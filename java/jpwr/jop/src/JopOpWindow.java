@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopOpWindow.java,v 1.7 2007-01-30 06:52:55 claes Exp $
+ * Proview   $Id: JopOpWindow.java,v 1.8 2008-06-24 13:35:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,6 +28,7 @@ public class JopOpWindow extends JPanel {
   JopSession session;
   JopEngine en;
   Object root;
+  JLabel label = null;
 
   public JopOpWindow( JopSession session, Object root) {
     // super( BoxLayout.Y_AXIS);
@@ -46,19 +47,19 @@ public class JopOpWindow extends JPanel {
     CdhrString srettxt = en.gdh.getObjectInfoString( s);
     if ( srettxt.evenSts()) return;
 
-    JLabel label = new JLabel( srettxt.str);
+    JLabel llabel = new JLabel( srettxt.str);
     Font f = new Font("Helvetica", Font.BOLD, 24);
-    label.setFont( f);
-    this.add( label);
+    llabel.setFont( f);
+    this.add( llabel);
 
     s = sret.str + ".Text";
     srettxt = en.gdh.getObjectInfoString( s);
     if ( srettxt.evenSts()) return;
 
-    label = new JLabel( srettxt.str);
+    llabel = new JLabel( srettxt.str);
     f = new Font("Helvetica", Font.BOLD, 16);
-    label.setFont( f);
-    this.add( label);
+    llabel.setFont( f);
+    this.add( llabel);
 
     this.add( new JSeparator());
 
@@ -66,10 +67,18 @@ public class JopOpWindow extends JPanel {
     CdhrInt iret = en.gdh.getObjectInfoInt( s);
     if ( iret.evenSts()) return;
 
+    label = new JLabel();
+    this.add( label);
+
     OpWindButton button;
     if ( iret.value != 0) {
+
       button = new OpWindButton( session, "", "Login",
 				 OpWindButton.LOGIN);
+      this.add( button);
+
+      button = new OpWindButton( session, "", "Logout",
+				 OpWindButton.LOGOUT);
       this.add( button);
     }
       
@@ -172,11 +181,12 @@ public class JopOpWindow extends JPanel {
     public static final int WEBGRAPH = 1;
     public static final int WEBLINK = 2;
     public static final int LOGIN = 3;
-    public static final int NAVIGATOR = 4;
-    public static final int ALARMLIST = 5;
-    public static final int EVENTLOG = 6;
-    public static final int HELP = 7;
-    public static final int PROVIEW = 8;
+    public static final int LOGOUT = 4;
+    public static final int NAVIGATOR = 5;
+    public static final int ALARMLIST = 6;
+    public static final int EVENTLOG = 7;
+    public static final int HELP = 8;
+    public static final int PROVIEW = 9;
     JopSession session;
     String action;
     int type;
@@ -199,27 +209,45 @@ public class JopOpWindow extends JPanel {
         public void mouseReleased(MouseEvent e) {
 	  switch ( type) {
 	    case NAVIGATOR:
+	      if ( ! en.gdh.isAuthorized( Pwr.mAccess_AllPwr))
+		break;
 	      session.openNavigator( null);
 	      break;
 	    case LOGIN:
 	      session.openLogin();
 	      break;
+	    case LOGOUT:
+	      en.gdh.logout();
+	      setLabelText( " ");
+	      break;
 	    case ALARMLIST:
+	      if ( ! en.gdh.isAuthorized( Pwr.mAccess_AllPwr))
+		break;
 	      session.openAlarmList();
 	      break;
 	    case EVENTLOG:
+	      if ( ! en.gdh.isAuthorized( Pwr.mAccess_AllPwr))
+		break;
 	      session.openEventLog();
 	      break;
 	    case HELP:
+	      if ( ! en.gdh.isAuthorized( Pwr.mAccess_AllPwr))
+		break;
 	      session.executeCommand("help index");
 	      break;
 	    case PROVIEW:
+	      if ( ! en.gdh.isAuthorized( Pwr.mAccess_AllPwr))
+		break;
 	      session.executeCommand("open url \"$pwr_doc/sv_se/index.html\"");
 	      break;
 	    case WEBGRAPH:
+	      if ( ! en.gdh.isAuthorized( Pwr.mAccess_AllPwr))
+		break;
 	      session.openGraphFrame( action, instance, scrollbar, false);
 	      break;
 	    case WEBLINK:
+	      if ( ! en.gdh.isAuthorized( Pwr.mAccess_AllPwr))
+		break;
 	      String cmd = "open url \"" + action + "\"";
 	      session.executeCommand( cmd);
 	      break;
@@ -235,7 +263,10 @@ public class JopOpWindow extends JPanel {
     public void setInstance( String instance) {
       this.instance = instance;
     }
+  }
 
+  public void setLabelText( String text) {
+    label.setText( text);
   }
 }
 

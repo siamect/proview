@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopOpWindowApplet.java,v 1.2 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: JopOpWindowApplet.java,v 1.3 2008-06-24 13:35:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -62,6 +62,10 @@ public class JopOpWindowApplet extends JopApplet
       super.destroy();
   }
 
+  public void setLabelText( String text) {
+    localPanel.setLabelText( text);
+  }
+
   public void init()
   {
     super.init();
@@ -88,5 +92,7 @@ public class JopOpWindowApplet extends JopApplet
 
   public void stop() {
   }
+
+
 }
 

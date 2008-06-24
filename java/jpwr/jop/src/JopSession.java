@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopSession.java,v 1.5 2007-01-30 06:52:55 claes Exp $
+ * Proview   $Id: JopSession.java,v 1.6 2008-06-24 13:35:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -120,9 +120,13 @@ public class JopSession {
     return ((JopSessionIfc) sessionRep).isOpWindowApplet();
   }
 
-    public void openSearch(String object ){
-	((JopSessionIfc) sessionRep).openSearch(object);
-    }
+  public void openSearch( String object ){
+    ((JopSessionIfc) sessionRep).openSearch(object);
+  }
+
+  public void setOpWindowLabelText( String text ){
+    ((JopSessionIfc) sessionRep).setOpWindowLabelText( text);
+  }
 }
 
 
