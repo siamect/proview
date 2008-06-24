@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.h,v 1.17 2008-04-25 11:32:47 claes Exp $
+ * Proview   $Id: rt_gdh.h,v 1.18 2008-06-24 07:09:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -475,6 +475,12 @@ gdh_ObjidToPointer (
 );
 
 pwr_tStatus
+gdh_MountObjidToPointer (
+  pwr_tObjid		object,
+  void			**objectData
+);
+
+pwr_tStatus
 gdh_AttrRefToPointer (
   pwr_sAttrRef		*arp,
   void			**p
@@ -503,6 +509,13 @@ pwr_tStatus
 gdh_GetObjectSize (
   pwr_tObjid		oid,
   pwr_tUInt32		*size 
+);
+
+pwr_tStatus
+gdh_GetDynamicAttrSize(
+  pwr_tObjid		oid,
+  char			*name,
+  pwr_tUInt32		*size
 );
 
 pwr_tStatus
@@ -841,6 +854,16 @@ gdh_AttrStringToValue (
   void *buffer_ptr,
   int buff_size,
   int attr_size
+);
+
+pwr_tStatus 
+gdh_SetObjectReadOnly( 
+  pwr_tOid oid
+);
+
+pwr_tStatus 
+gdh_GetSecurityInfo( 
+  pwr_sSecurity *security
 );
 
 /* Undocumented routines. For internal use only.  */

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.c,v 1.32 2008-04-25 11:32:47 claes Exp $
+ * Proview   $Id: rt_gdh.c,v 1.33 2008-06-24 07:09:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -370,8 +370,16 @@ gdh_ClassAttrrefToAttr (
 
   } gdh_ScopeUnlock;
 
-  if (ap != NULL)
-    strncpy( name, ap->name, size);
+  if (ap != NULL) {
+    if ( ap->adef->Info.Elements > 1 && ap->size < ap->adef->Info.Size) {
+      pwr_tOName aname;
+
+      sprintf( aname, "%s[%d]", ap->name, ap->idx);
+      strncpy( name, aname, size);
+    }
+    else
+      strncpy( name, ap->name, size);
+  }
 
   return sts;
 }
@@ -521,6 +529,12 @@ gdh_DLRefObjectInfoAttrref (
 
     ap = vol_ArefToAttribute(&sts, &Attribute, arp, gdb_mLo_native, vol_mTrans_all);
     if (ap == NULL) break;
+
+    if ( ap->op->u.n.lflags.b.readOnly) {
+      sts = GDH__READONLY;
+      break;
+    }
+
     p = vol_AttributeToAddress(&sts, ap);    
     if (p == NULL) break;
 
@@ -964,6 +978,52 @@ gdh_GetObjectSize (
 
   return sts;
 }
+
+pwr_tStatus
+gdh_GetDynamicAttrSize(
+  pwr_tObjid		oid,   /**< The object identity. */ 
+  char			*name, /**< Attribute name. */
+  pwr_tUInt32		*size  /**< Receives the size in bytes of the object. */
+)
+{
+  pwr_tStatus		sts = GDH__SUCCESS;
+  gdb_sObject		*op;
+  mvol_sAttribute	Attribute;
+  mvol_sAttribute	*ap;
+  cdh_sParseName	ParseName;
+  cdh_sParseName	*pn = NULL;
+
+  if (size == NULL) return GDH__BADARG;
+
+  if (name != NULL && *name != '\0') {
+    pn = cdh_ParseName(&sts, &ParseName, pwr_cNObjid, name, 0);
+    if (pn == NULL)
+      return GDH__BADNAME;
+  }    
+  else
+    return GDH__BADNAME;
+    
+  memset(&Attribute, 0, sizeof(Attribute));
+
+  gdh_ScopeLock {
+
+    op = vol_OidToObject(&sts, oid, gdb_mLo_global, vol_mTrans_none, cvol_eHint_none);
+    if (op != NULL) {
+      touchObject(op);
+      *size = op->g.size;
+    }
+
+    ap = mvol_AnameToAttribute(&sts, &Attribute, op->g.cid, pn, NULL);
+    if (ap == NULL) break;
+
+  } gdh_ScopeUnlock;
+  if ( ap == 0)
+    sts = GDH__ATTRIBUTE;
+
+  *size -= ap->offs;
+  return sts;
+}
+
 
 /** 
  * @brief Get the class identifier of an object. 
@@ -1630,6 +1690,7 @@ gdh_GetNodeObject (
 
   return sts;
 }
+
 
 /** 
  * @brief Get the characteristics of an attribute, given
@@ -2100,6 +2161,35 @@ gdh_ObjidToPointer (
   gdh_ScopeLock {
 
     op = vol_OidToObject(&sts, oid, gdb_mLo_native, vol_mTrans_all, cvol_eHint_none);
+    if (op == NULL) 
+      break;
+
+    if ( op->u.n.lflags.b.readOnly) {
+      sts = GDH__READONLY;
+      break;
+    }
+
+    *p = vol_ObjectToAddress(&sts, op);
+
+  } gdh_ScopeUnlock;
+
+  return sts;
+}
+
+pwr_tStatus
+gdh_MountObjidToPointer (
+  pwr_tObjid		oid,   /**< The object identity. */
+  void			**p    /**< Reveives a pointer to the object. */
+)
+{
+  pwr_tStatus		sts = GDH__SUCCESS;
+  gdb_sObject		*op;
+
+  if (p == NULL) return GDH__BADARG;
+
+  gdh_ScopeLock {
+
+    op = vol_OidToObject(&sts, oid, gdb_mLo_native, vol_mTrans_none, cvol_eHint_none);
     if (op != NULL) 
       *p = vol_ObjectToAddress(&sts, op);
 
@@ -2129,10 +2219,16 @@ gdh_AttrRefToPointer (
   gdh_ScopeLock {
 
     op = vol_OidToObject(&sts, arp->Objid, gdb_mLo_native, vol_mTrans_all, cvol_eHint_none);
-    if (op != NULL) {
-      *p = vol_ObjectToAddress(&sts, op);
-      *p = (char *)*p + arp->Offset;
+    if (op == NULL)
+      break;
+
+    if ( op->u.n.lflags.b.readOnly) {
+      sts = GDH__READONLY;
+      break;
     }
+    
+    *p = vol_ObjectToAddress(&sts, op);
+    *p = (char *)*p + arp->Offset;
   } gdh_ScopeUnlock;
 
   return sts;
@@ -2224,6 +2320,11 @@ gdh_SetObjectInfo (
     ap = vol_NameToAttribute(&sts, &attribute, pn, gdb_mLo_global, vol_mTrans_all);
     if (ap == NULL || ap->op == NULL) break;
     
+    if ( ap->op->u.n.lflags.b.readOnly) {
+      sts = GDH__READONLY;
+      break;
+    }
+
     touchObject(ap->op);
     p = vol_AttributeToAddress(&sts, ap);
     if (p != NULL) {
@@ -4448,7 +4549,7 @@ pwr_tStatus gdh_SearchFile( pwr_tOid oid, char *dir, char *pattern,
 
     if ( op->l.flags.b.isCached) {
       is_cached = 1;
-      //      cvolc_FileList( &sts, op, dir, pattern, filelist, filecnt);
+      cvolc_FileList( &sts, op, dir, pattern, filelist, filecnt);
     }
   } gdh_ScopeUnlock;
 
@@ -4456,3 +4557,47 @@ pwr_tStatus gdh_SearchFile( pwr_tOid oid, char *dir, char *pattern,
     sts = dcli_get_files( dir, pattern, filelist, filecnt);
   return sts;
 }
+
+pwr_tStatus gdh_SetObjectReadOnly( pwr_tOid oid)
+{
+  pwr_tStatus sts = GDH__SUCCESS;
+  gdb_sObject *op;
+
+  gdh_ScopeLock {
+    op = vol_OidToObject(&sts, oid, gdb_mLo_native, vol_mTrans_all, cvol_eHint_none);
+    if (op == NULL)
+      break;
+
+    op->u.n.lflags.b.readOnly = 1;
+
+  } gdh_ScopeUnlock;
+
+  return sts;
+}
+
+pwr_tStatus gdh_GetSecurityInfo( pwr_sSecurity *security)
+{
+  pwr_tStatus sts;
+  pwr_tAttrRef aref;
+  pwr_tOid oid;
+  pwr_tCid cid;
+  pwr_tOName name;
+  
+  sts = gdh_ObjidToName( gdbroot->db->nod_oid, name, sizeof(name), 
+			 cdh_mName_volumeStrict);
+  if ( EVEN(sts)) return sts;
+  strcat( name, "-Security");
+
+  sts = gdh_NameToObjid( name, &oid);
+  if ( EVEN(sts)) return sts;
+
+  sts = gdh_GetObjectClass( oid, &cid);
+  if ( EVEN(sts)) return sts;
+
+  if ( cid != pwr_eClass_Security)
+    return GDH__NOSUCHOBJ;
+
+  aref = cdh_ObjidToAref( oid);
+  return gdh_GetObjectInfoAttrref( &aref, security, sizeof(*security));
+}
+
