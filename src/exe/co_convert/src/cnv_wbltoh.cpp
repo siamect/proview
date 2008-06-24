@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltoh.cpp,v 1.11 2008-01-24 09:56:26 claes Exp $
+ * Proview   $Id: cnv_wbltoh.cpp,v 1.12 2008-06-24 06:53:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -890,6 +890,7 @@ int CnvWblToH::cixstr_to_classid( char *cix_str, pwr_tClassId *cid)
 	{ "pwr_eCix_RtMethod",		pwr_eCix_RtMethod},
 	{ "pwr_eCix_ExternVolume",     	pwr_eCix_ExternVolume},
 	{ "pwr_eCix_Hier",     		pwr_eCix_Hier},
+	{ "pwr_eCix_Security",         	pwr_eCix_Security},
 	{ "", 0}};
 
   found = 0;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr_class.h,v 1.24 2007-09-19 15:09:34 claes Exp $
+ * Proview   $Id: pwr_class.h,v 1.25 2008-06-24 06:58:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -98,6 +98,7 @@ typedef struct pwr_s_MountObject	pwr_sMountObject;
 typedef struct pwr_s_Bit		pwr_sBit;
 typedef struct pwr_s_Value		pwr_sValue;
 typedef struct pwr_s_Method		pwr_sMethod;
+typedef struct pwr_s_Security		pwr_sSecurity;
 
 typedef union pwr_u_ParDef		pwr_uParDef;
 typedef union pwr_u_Volume		pwr_uVolume;
@@ -290,6 +291,7 @@ typedef enum {
   pwr_eCix_ExternVolume		=  65,
   pwr_eCix_Hier			=  66,
   pwr_eCix_ClassLost   		=  67,
+  pwr_eCix_Security  		=  68,
   pwr_eCix_
 } pwr_eCix;
     
@@ -361,6 +363,7 @@ typedef enum {
   pwr_eClass_ExternVolume	= pwr_ClassId(pwr_eCix_ExternVolume),
   pwr_eClass_Hier		= pwr_ClassId(pwr_eCix_Hier),
   pwr_eClass_ClassLost		= pwr_ClassId(pwr_eCix_ClassLost),
+  pwr_eClass_Security		= pwr_ClassId(pwr_eCix_Security),
   pwr_eClass_			
 } pwr_eClass;
     
@@ -502,7 +505,9 @@ union pwr_m_ClassDef {
     pwr_Bits( IORack      , 1),	/* object is IO rack  */
     pwr_Bits( IOCard      , 1),	/* object is IO card  */
     pwr_Bits( HasCallBack , 1),	/* object has DbCallBack  */
-    pwr_Bits( fill_1      , 8),,,,,,,,
+
+    pwr_Bits( RtReadOnly , 1),	/* object is readonly in runtime  */
+    pwr_Bits( fill_1      , 7),,,,,,,
     pwr_Bits( fill_2      , 8),,,,,,,
   ) b;
 
@@ -522,6 +527,7 @@ union pwr_m_ClassDef {
 #define pwr_mClassDef_IORack      pwr_Bit(13)
 #define pwr_mClassDef_IOCard      pwr_Bit(14)
 #define pwr_mClassDef_HasCallBack pwr_Bit(15)
+#define pwr_mClassDef_RtReadOnly  pwr_Bit(16)
 
 #define pwr_mClassDef_HasRef	  (pwr_mClassDef_ObjXRef|pwr_mClassDef_AttrXRef|\
 				   pwr_mClassDef_ObjRef|pwr_mClassDef_AttrRef)
@@ -1229,6 +1235,13 @@ struct pwr_s_MountVolume {
 struct pwr_s_MountObject {
   pwr_tString80		Description;
   pwr_tObjid		Object;
+};
+
+struct pwr_s_Security {
+  pwr_tMask	DefaultWebPriv;
+  pwr_tMask	DefaultXttPriv;
+  pwr_tBoolean	XttUseOpsysUser;
+  pwr_tString80 WebSystemGroup;
 };
 
 union pwr_u_Volume {
