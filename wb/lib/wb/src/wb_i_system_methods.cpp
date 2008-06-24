@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_i_system_methods.cpp,v 1.1 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_i_system_methods.cpp,v 1.2 2008-06-24 07:48:48 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,6 +35,7 @@ pwr_dImport pwr_BindMethods($ObjBodyDef);
 pwr_dImport pwr_BindMethods($AttrRef);
 pwr_dImport pwr_BindMethods($PlantHier);
 pwr_dImport pwr_BindMethods($NodeHier);
+pwr_dImport pwr_BindMethods($Security);
 
 pwr_dExport pwr_BindClasses(System) = {
   pwr_BindClass($AttrXRef),
@@ -51,5 +52,6 @@ pwr_dExport pwr_BindClasses(System) = {
   pwr_BindClass($AttrRef),
   pwr_BindClass($PlantHier),
   pwr_BindClass($NodeHier),
+  pwr_BindClass($Security),
   pwr_NullClass
 };
