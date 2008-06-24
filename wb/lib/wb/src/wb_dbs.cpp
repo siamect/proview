@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dbs.cpp,v 1.29 2008-02-22 09:24:50 claes Exp $
+ * Proview   $Id: wb_dbs.cpp,v 1.30 2008-06-24 07:49:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -265,6 +265,8 @@ bool wb_dbs::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
 
   if (flags.b.DevOnly)
     oep->o.flags.b.devOnly = 1;
+  if (flags.b.RtReadOnly)
+    oep->o.flags.b.readOnly = 1;
 
   oep->o.oid  = oid;
   oep->o.cid  = cid;
