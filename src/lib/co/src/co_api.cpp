@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_api.cpp,v 1.11 2007-02-07 15:46:22 claes Exp $
+ * Proview   $Id: co_api.cpp,v 1.12 2008-06-24 07:01:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,74 +45,7 @@ extern "C" {
 #include "co_dcli.h"
 }
 
-#include "co_user.h"
 #include "co_lng.h"
-
-//
-// c-api to co_user
-//
-
-int user_CheckUser( char *systemgroup, char *user, char *password, 
-	unsigned int *priv)
-{
-  GeUser *gu;
-  int sts;
-  char filename[120];
-
-  gu = new GeUser();
-  sts = dcli_get_defaultfilename( user_cFilename, filename, "");
-  sts = gu->load( filename);
-  if ( ODD(sts))
-    sts = gu->get_user( systemgroup, user, password, priv);
-  delete gu;
-  return sts;
-}
-
-int user_CheckSystemGroup( char *systemgroup)
-{
-  GeUser *gu;
-  int sts;
-  unsigned int attributes;
-  char filename[120];
-
-  gu = new GeUser();
-  sts = dcli_get_defaultfilename( user_cFilename, filename, "");
-  sts = gu->load( filename);
-  if ( ODD(sts))
-    sts = gu->get_system_data( systemgroup, &attributes);
-  delete gu;
-  return sts;
-}
-
-int user_GetUserPriv( char *systemgroup, char *user, unsigned int *priv)
-{
-  GeUser *gu;
-  int sts;
-  char filename[120];
-
-  gu = new GeUser();
-  sts = dcli_get_defaultfilename( user_cFilename, filename, "");
-  sts = gu->load( filename);
-  if ( ODD(sts))
-    sts = gu->get_user_priv( systemgroup, user, priv);
-  delete gu;
-  return sts;
-}
-
-void user_PrivToString( unsigned int priv, char *str, int size)
-{
-  GeUser::priv_to_string( priv, str, size);
-}
-
-void user_RtPrivToString( unsigned int priv, char *str, int size)
-{
-  GeUser::rt_priv_to_string( priv, str, size);
-}
-
-void user_DevPrivToString( unsigned int priv, char *str, int size)
-{
-  GeUser::dev_priv_to_string( priv, str, size);
-}
 
 //
 //  c api to co_lng
@@ -217,7 +150,3 @@ int crr_object( void *parent_ctx, char *objectname,
   delete navcrr;
   return sts;
 }
-
-
-
-

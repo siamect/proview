@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_api.h,v 1.7 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_api.h,v 1.8 2008-06-24 07:01:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -48,14 +48,6 @@ typedef enum {
 	navh_eHelpFile_Other
 	} navh_eHelpFile;
 #endif
-
-int user_CheckUser( char *systemgroup, char *user, char *password, 
-	unsigned int *priv);
-int user_CheckSystemGroup( char *systemgroup);
-int user_GetUserPriv( char *systemgroup, char *user, unsigned int *priv);
-void user_PrivToString( unsigned int priv, char *str, int size);
-void user_RtPrivToString( unsigned int priv, char *str, int size);
-void user_DevPrivToString( unsigned int priv, char *str, int size);
 
 void lng_get_uid( char *in, char *out);
 char *lng_translate( char *str);
