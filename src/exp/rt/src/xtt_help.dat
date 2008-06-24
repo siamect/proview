@@ -951,18 +951,20 @@ In save mode, a file is selected, or a filename is entered. The filename is
 written to a string attribute and a digital signal is set. The actual save
 can be performed by a DataFWrite object in the plc.
 
-<B>xtt> open fileview /file= /target= /trigger= /type=save
+<B>xtt> open fileview /file= /target= /trigger= /type=save [/ftype=]
 <B>xtt> open fileview /file= /target= /trigger= /type=open
 
 /file   <t>File pattern, containing wildcard '*', for files that is to be viewed 
         <t>in the fileview.
+/ftype  <t>Default file type for input file. If an entered filename (in save mode)
+        <t>doesn't contain a filetype, the default filetype will be added to the filename.
 /target <t>String attribute where the selected filename will be stored.
 /trigger <t>Boolean attribute that is set to indicate that a save or open should 
         <t>be performed.
 /type   <t>'save' or 'open'
 
 <b>Example
-open fileview /file="$pwrp_load/*.txt"/target=P1-Sv.ActualValue/trigger=P1-Dv.ActualValue/type=save
+open fileview /file="$pwrp_load/*.txt"/ftype="txt"/target=P1-Sv.ActualValue/trigger=P1-Dv.ActualValue/type=save
 
 </TOPIC>
 
