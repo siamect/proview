@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_rtt_command.c,v 1.10 2007-04-25 13:39:21 claes Exp $
+ * Proview   $Id: rt_rtt_command.c,v 1.11 2008-06-24 07:16:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -57,10 +57,12 @@
 
 #include "pwr.h"
 #include "pwr_class.h"
+#include "pwr_privilege.h"
 #include "pwr_baseclasses.h"
 #include "co_time.h"
 #include "co_cdh.h"
 #include "co_ccm.h"
+#include "co_api_user.h"
 #include "rt_gdh.h"
 #include "rt_ini_alias.h"
 #include "rt_rtt.h"
@@ -150,6 +152,8 @@ static int	help_func(	menu_ctx	ctx,
 static int	exit_func(	menu_ctx	ctx,
 				int		*flag);
 static int	classhier_func(	menu_ctx	ctx,
+				int		*flag);
+static int	rtt_login_func(	menu_ctx	ctx,
 				int		*flag);
 static int	rtt_show_object_add(
 			pwr_tObjid	objid,
@@ -1366,6 +1370,30 @@ static int	show_func(	menu_ctx	ctx,
 	  }
 	  sts = rtt_set_do_testvalue( objid, on, 1);
 	  return sts;
+	}
+	else if ( strncmp( arg1_str, "USER", strlen( arg1_str)) == 0)
+	{
+	  char msg[200];
+	  sprintf( msg, "User: %s ", rtt_user);
+	  switch( rtt_priv) {
+	  case RTT_PRV_SYS:
+	    strcat( msg, "(System)");
+	    break;
+	  case RTT_PRV_PROC:
+	    strcat( msg, "(Process)");
+	    break;
+	  case RTT_PRV_EL:
+	    strcat( msg, "(Maintenance)");
+	    break;
+	  case RTT_PRV_OP:
+	    strcat( msg, "(Operator)");
+	    break;
+	  default:
+	    strcat( msg, "(-)");
+	    break;
+	  }
+	  rtt_message('I', msg);
+	  return RTT__NOPICTURE;
 	}
 	else
 	{
@@ -4183,7 +4211,7 @@ static int	rtt_delete_func(	menu_ctx	ctx,
 
 /*************************************************************************
 *
-* Name:		rtt_delete_func()
+* Name:		rtt_view_func()
 *
 * Type		int
 *
@@ -4570,6 +4598,68 @@ static int	classhier_func(	menu_ctx	ctx,
 	return sts;
 }
 
+/*************************************************************************
+*
+* Name:		rtt_login_func()
+*
+* Type		int
+*
+* Type		Parameter	IOGF	Description
+* menu_ctx	ctx		I	rtt context.
+*
+* Description:
+*	This function is called when a "login" command i recieved.
+*
+**************************************************************************/
+
+static int	rtt_login_func(	menu_ctx	ctx,
+				int		*flag)
+{
+	int	sts;
+	char	username_str[80];
+	char	password_str[80];
+	char	systemgroup[80];
+	unsigned int privilege;
+
+	if ( ODD( rtt_get_qualifier( "rtt_arg1", username_str)) &&
+	     ODD( rtt_get_qualifier( "rtt_arg2", password_str))) {
+	  sts = gdh_GetObjectInfo( "pwrNode-System.SystemGroup", &systemgroup, 
+				   sizeof(systemgroup));
+	  if ( EVEN(sts)) return sts;
+	  
+	  cdh_ToLower( password_str, password_str);
+
+	  sts = user_CheckUser( systemgroup, username_str, user_PwCrypt(password_str), &privilege);
+	  if ( EVEN(sts)) {
+	    rtt_message('E',"User not authorized");
+	    return RTT__SUCCESS;
+	  }
+
+	  if ( privilege & pwr_mPrv_System)
+	    rtt_priv = RTT_PRV_SYS;
+	  else if ( privilege & pwr_mPrv_Maintenance)
+	    rtt_priv = RTT_PRV_EL;
+	  else if ( privilege & pwr_mPrv_Process ||
+		    privilege & pwr_mPrv_Instrument)
+	    rtt_priv = RTT_PRV_PROC;
+	  else if ( privilege | pwr_mAccess_AllRt)
+	    rtt_priv = RTT_PRV_OP;
+	  else {
+	    rtt_message('E',"User not authorized");
+	    return RTT__SUCCESS;
+
+	  }
+	  strncpy( rtt_user, username_str, sizeof(rtt_user));
+	  return RTT__SUCCESS;
+	}
+	else {
+	  sts = rtt_logon_pict( rtt_chn, &rtt_priv);
+	  if ( EVEN(sts))
+	    rtt_message('E',"Not authorized");	
+	  return RTT__SUCCESS; 	
+	} 
+	return RTT__SUCCESS;
+}
 
 /*************************************************************************
 *
@@ -4743,12 +4833,17 @@ rtt_t_comtbl	rtt_command_table[] = {
 		{
 			"DELETE",
 			&rtt_delete_func,
-			{ "rtt_arg1", "/NAME"}
+			{ "rtt_arg1", "/NAME", ""}
 		},
 		{
 			"VIEW",
 			&rtt_view_func,
-			{ "rtt_arg1", "/FILE"}
+			{ "rtt_arg1", "/FILE", ""}
+		},
+		{
+			"LOGIN",
+			&rtt_login_func,
+			{ "rtt_arg1", "rtt_arg2", ""}
 		},
 		{"",}};
 
