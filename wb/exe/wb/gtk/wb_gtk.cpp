@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gtk.cpp,v 1.7 2008-05-30 09:11:01 claes Exp $
+ * Proview   $Id: wb_gtk.cpp,v 1.8 2008-06-24 07:43:52 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,8 +40,8 @@
 #include "co_wow.h"
 #include "wb.h"
 #include "wb_ldh.h"
-#include "wb_login_gtk.h"
-#include "wb_login_msg.h"
+#include "co_login_gtk.h"
+#include "co_login_msg.h"
 #include "wb_utl_api.h"
 
 #include "wb_vsel_gtk.h"
@@ -49,6 +49,7 @@
 #include "co_xhelp_gtk.h"
 #include "co_lng.h"
 #include "co_wow_gtk.h"
+#include "co_user.h"
 #include "wb_wtt_gtk.h"
 
 #include "wb_erep.h"
@@ -111,7 +112,7 @@ WbGtk::WbGtk( int argc, char *argv[])
   char		*volumename_p;
   int           arg_cnt;
   char 		title[80];
-  char		backdoor[] = {112,108,101,97,115,101,99,108,97,101,115,108,101,116,109,101,105,110,0};
+  char		backdoor[] = "aaY2CiHS.y4Wc";
   int           sw_projectvolume = 0;
   int           sw_classeditor = 0;
   int           sw_projectlist = 0;
@@ -226,18 +227,18 @@ WbGtk::WbGtk( int argc, char *argv[])
   sts = utl_get_systemname( systemname, systemgroup);
   if ( EVEN(sts)) {
     /* No system object, login as system !! */
-    WLogin::insert_login_info( "SYSTEM", username, password, pwr_mAccess_AllPwr, 0);
+    CoLogin::insert_login_info( "SYSTEM", username, password, pwr_mAccess_AllPwr, 0);
     nav_display = 1;
   }
   else {
-    if ( arg_cnt >= 1 && strcmp( argv[1], backdoor) == 0) {
+    if ( arg_cnt >= 1 && strcmp( UserList::pwcrypt(argv[1]), backdoor) == 0) {
       /* Login as system !! */
-      WLogin::insert_login_info( "SYSTEM", "", "", pwr_mAccess_AllPwr, 0);
+      CoLogin::insert_login_info( "SYSTEM", "", "", pwr_mAccess_AllPwr, 0);
       nav_display = 1;
     }
     else if ( arg_cnt >= 1) {
       /* Check username and password */
-      sts = WLogin::user_check( systemgroup, username, password);
+      sts = CoLogin::user_check( systemgroup, username, password);
       if ( EVEN(sts)) 
         /* Login in is not ok, start login window */
         login_display = 1;
@@ -253,11 +254,11 @@ WbGtk::WbGtk( int argc, char *argv[])
   if ( !login_display) {
     char msg[80];
 
-    sprintf( msg, "User %s logged in", login_prv.username);
+    sprintf( msg, "User %s logged in", CoLogin::username());
     MsgWindow::message( 'I', msg);
 
     strcpy( title, "PwR Development ");
-    strcat( title, login_prv.username);
+    strcat( title, CoLogin::username());
     strcat( title, " on ");
     strcat( title, systemname);
     gtk_window_set_title( GTK_WINDOW(toplevel), title);
@@ -269,7 +270,7 @@ WbGtk::WbGtk( int argc, char *argv[])
     char		projectname[80];
     pwr_tVolumeId volume = ldh_cDirectoryVolume;
     utl_get_projectname( projectname);
-    strcpy( title, login_prv.username);
+    strcpy( title, CoLogin::username());
     strcat( title, " on ");
     strcat( title, projectname);
     wtt = wtt_new( title, "Navigator", wbctx, volume, 0, 0, &sts);
@@ -290,9 +291,9 @@ WbGtk::WbGtk( int argc, char *argv[])
     wtt_open_volume( 0, wb_eType_ExternVolume, "ProjectList", wow_eFileSelType_);
   }
   else if ( nav_display && !login_display) {
-    if ( login_prv.priv & pwr_mPrv_DevRead ) {
+    if ( CoLogin::privilege() & pwr_mPrv_DevRead ) {
       strcpy( title, "PwR Navigator: ");
-      strcat( title, login_prv.username);
+      strcat( title, CoLogin::username());
       strcat( title, " on ");
       strcat( title, systemname);
       appl_count++;
@@ -303,12 +304,12 @@ WbGtk::WbGtk( int argc, char *argv[])
       exit(LOGIN__NOPRIV);
   }
   else if ( login_display)
-    new WLoginGtk( NULL, mainwindow, "PwR Login", systemgroup,
+    new CoLoginGtk( NULL, mainwindow, "PwR Login", systemgroup,
 		   &Wb::login_success, &Wb::login_cancel, &sts);
 
 
   strcpy( title, "PwR Development ");
-  strcat( title, login_prv.username);
+  strcat( title, CoLogin::username());
   strcat( title, " on ");
   strcat( title, systemname);
 #if !(GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION < 8)
