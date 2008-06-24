@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_item.cpp,v 1.19 2008-05-28 12:05:23 claes Exp $
+ * Proview   $Id: xtt_item.cpp,v 1.20 2008-06-24 08:10:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -349,13 +349,26 @@ int ItemBaseObject::open_attributes( XNavBrow *brow, double x, double y)
       elements = 1;
       if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY ) {
 	attr_exist = 1;
+	int aelem, asize; 
+
+	if ( bd[i].attr->Param.Info.Flags & PWR_MASK_DYNAMIC) {
+	  sts = gdh_GetDynamicAttrSize( objid, bd[i].attrName, (pwr_tUInt32 *)&asize);
+	  if ( EVEN(sts)) return sts;
+
+	  aelem = asize / bd[i].attr->Param.Info.Size;
+	}
+	else {
+	  aelem = bd[i].attr->Param.Info.Elements;
+	  asize = bd[i].attr->Param.Info.Size;
+	}
+	
 	item = (Item *) new ItemAttrArray( brow, objid, node, 
 					   flow_eDest_IntoLast,
 					   bd[i].attrName,
-					   bd[i].attr->Param.Info.Elements, 
+					   aelem, 
 					   bd[i].attr->Param.Info.Type, 
 					   bd[i].attr->Param.TypeRef, 
-					   bd[i].attr->Param.Info.Size,
+					   asize,
 					   bd[i].attr->Param.Info.Flags, 0);
       }
       else if ( bd[i].attr->Param.Info.Flags & PWR_MASK_CLASS ) {
@@ -772,7 +785,22 @@ ItemAttr::ItemAttr( XNavBrow *brow, pwr_tObjid item_objid,
     sts = gdh_ObjidToName( objid, obj_name, sizeof(obj_name), cdh_mName_volumeStrict); 
     if ( EVEN(sts)) throw co_error(sts);
 
-    brow_SetTraceAttr( node, obj_name, attr_name, flow_eTraceType_User);
+    if ( flags & PWR_MASK_CONST) {
+      pwr_tAName aname;
+      char buff[512];
+      char str[512];
+      int len;      
+
+      strcpy( aname, obj_name);
+      strcat( aname, ".");
+      strcat( aname, attr_name);
+
+      sts = gdh_GetObjectInfo( aname, buff, size);
+      ((XNav *)brow->userdata)->attrvalue_to_string( type_id, tid, buff, str, sizeof(str), &len, NULL);
+      brow_SetAnnotation( node, 1, str, len);
+    }
+    else
+      brow_SetTraceAttr( node, obj_name, attr_name, flow_eTraceType_User);
   }
 }
 
