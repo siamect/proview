@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: wb_pwrs_msg.msg,v 1.3 2005-09-01 14:58:00 claes Exp $
+!  Proview   $Id: wb_pwrs_msg.msg,v 1.4 2008-06-24 07:40:16 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -45,6 +45,8 @@ posattribute	<an attribute or buffer object should be child to a ObjBodyDef obje
 posobjbodydef	<a body object should be child to a ClassDef object> /error
 moveattribute	<an attribute object can only be moved within the same childhood> /error
 movebody	<a body object can only be moved within the same childhood> /error
+possecurity	<a Security object should be a child to a $Node object> /error
+securityalrex	<a security object already exist> /error
 
 
 
