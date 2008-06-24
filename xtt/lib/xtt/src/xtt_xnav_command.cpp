@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_command.cpp,v 1.34 2008-04-25 11:29:21 claes Exp $
+ * Proview   $Id: xtt_xnav_command.cpp,v 1.35 2008-06-24 08:11:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -57,6 +57,7 @@
 #include "co_dcli_msg.h"
 #include "rt_xnav_msg.h"
 #include "co_xhelp.h"
+#include "co_login.h"
 
 #include "glow_curvectx.h"
 #include "ge_curve.h"
@@ -210,7 +211,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"/NAVIGATOR", "/CENTER", "/OBJECT", "/NEW", 
 			"/INSTANCE", "/COLLECT", "/FOCUS", "/INPUTEMPTY", 
                         "/ENTRY", "/TITLE", "/ACCESS", "/CLASSGRAPH", "/BYPASS", 
-			"/CLOSEBUTTON", "/TARGET", "/TRIGGER", "/TYPE", ""}
+			"/CLOSEBUTTON", "/TARGET", "/TRIGGER", "/TYPE", "/FTYPE", ""}
 		},
 		{
 			"CLOSE",
@@ -536,6 +537,20 @@ static int	xnav_define_func(	void		*client_data,
   return sts;
 }
 
+static void xnav_login_success_bc( void *ctx)
+{
+  XNav *xnav = (XNav *)ctx;
+  char	msg[80];
+
+  CoLogin::get_login_info( 0, 0, xnav->user, (unsigned long *)&xnav->priv, 0);
+  sprintf( msg, "User %s logged in", xnav->user);
+  xnav->message('I', msg);
+}
+
+static void xnav_login_cancel_bc(void *xnav)
+{  
+}
+
 static int	xnav_login_func(	void		*client_data,
 					void		*client_flag)
 {
@@ -547,9 +562,15 @@ static int	xnav_login_func(	void		*client_data,
   unsigned int	priv;
   char	msg[80];
 	
+  sts = gdh_GetObjectInfo ( "pwrNode-System.SystemGroup", &systemgroup, 
+		sizeof(systemgroup));
+  if ( EVEN(sts)) return sts;
+
   if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str))))
   {
-    xnav->message('E',"Syntax error");
+    xnav->login_new( "PwR Login", systemgroup, xnav_login_success_bc, 
+		     xnav_login_cancel_bc, &sts);
+
     return 1;
   }
   if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str))))
@@ -557,9 +578,6 @@ static int	xnav_login_func(	void		*client_data,
     xnav->message('E',"Syntax error");
     return 1;
   }
-  sts = gdh_GetObjectInfo ( "pwrNode-System.SystemGroup", &systemgroup, 
-		sizeof(systemgroup));
-  if ( EVEN(sts)) return sts;
 
   cdh_ToLower( arg1_str, arg1_str);
   cdh_ToLower( arg2_str, arg2_str);
@@ -1741,7 +1759,9 @@ static int	xnav_show_func(	void		*client_data,
 
     if ( strcmp( xnav->user, "") == 0)
     {
-      xnav->message('I', "Not logged in");
+      user_RtPrivToString( xnav->priv, priv_str, sizeof(priv_str));
+      sprintf( msg, "Not logged in (%s)", priv_str);
+      xnav->message('I', msg);
     }
     else
     {
@@ -3061,6 +3081,8 @@ static int	xnav_open_func(	void		*client_data,
     pwr_tAName trigger_str;
     char	title_str[80];
     char	type_str[80];
+    char	filetype_str[80];
+    char	*filetype_p = 0;
     int		type;
     char 	*s;
     pwr_tAttrRef aref;
@@ -3091,6 +3113,9 @@ static int	xnav_open_func(	void		*client_data,
     else
       type = fileview_eType_Open;
 
+    if ( ODD( dcli_get_qualifier( "/FTYPE", filetype_str, sizeof(filetype_str))))
+      filetype_p = filetype_str;
+
     if ( EVEN( dcli_get_qualifier( "/TITLE", title_str, sizeof(title_str)))) {
       if ( type == fileview_eType_Open)
 	strcpy( title_str, "Open File");
@@ -3110,7 +3135,7 @@ static int	xnav_open_func(	void		*client_data,
     }
 
     fileview = xnav->fileview_new( aref.Objid, title_str, dir_str, file_str, type,
-				   target_str, trigger_str);
+				   target_str, trigger_str, filetype_p);
   }
   else
     xnav->message('E',"Syntax error");

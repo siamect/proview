@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.h,v 1.22 2008-04-25 11:28:54 claes Exp $
+ * Proview   $Id: xtt_xnav.h,v 1.23 2008-06-24 08:11:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -74,6 +74,10 @@ extern "C" {
 #include "xtt_logging.h"
 #endif
 
+#ifndef pwr_privilege_h
+#include "pwr_privilege.h"
+#endif
+
 #define xnav_cVersion	"X3.0b"
 #define XNAV_BROW_MAX	25
 #define XNAV_LOGG_MAX   10
@@ -97,6 +101,7 @@ class CLog;
 class XttGe;
 class RtTrace;
 class XttFileview;
+class CoLogin;
 
 typedef enum {
 	xnav_mOpen_All		= ~0,
@@ -342,7 +347,13 @@ class XNav {
     virtual GeCurve *gecurve_new( char *name, char *filename, GeCurveData *data,
 				  int pos_right) {return 0;}
     virtual XttFileview *fileview_new( pwr_tOid oid, char *title, char *dir, char *pattern,
-				       int type, char *target_attr, char *trigger_attr) {return 0;}
+				       int type, char *target_attr, char *trigger_attr, 
+				       char *filetype) {return 0;}
+    virtual CoLogin *login_new( char		*wl_name,
+				char		*wl_groupname,
+				void		(* wl_bc_success)( void *),
+				void		(* wl_bc_cancel)( void *),
+				pwr_tStatus  	*status) { return 0;}
     virtual void bell( int time) {}
 
     void start_trace( pwr_tObjid Objid, char *object_str);
@@ -391,6 +402,10 @@ class XNav {
     int menu_tree_delete( char *name);
     int load_ev_from_opplace();
     int login_from_opplace();
+    int login();
+    void open_login();
+    void logout();
+    int is_authorized( unsigned int access = pwr_mAccess_AllRt, int msg = 1);
     static char *get_message( int sts);
     int show_object_as_struct( 
 			pwr_tObjid	objid, 

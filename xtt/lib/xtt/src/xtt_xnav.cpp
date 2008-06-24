@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.cpp,v 1.38 2008-05-29 15:00:37 claes Exp $
+ * Proview   $Id: xtt_xnav.cpp,v 1.39 2008-06-24 08:11:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,6 +35,7 @@
 #include "co_time.h"
 #include "co_api.h"
 #include "co_msg.h"
+#include "co_syi.h"
 #include "pwr_baseclasses.h"
 #include "rt_xnav_msg.h"
 #include "flow.h"
@@ -1494,6 +1495,15 @@ int XNav::get_all_collect_objects( pwr_sAttrRef **attrref, int **is_attr)
   return 1;
 }
 
+int XNav::is_authorized( unsigned int access, int msg)
+{
+  if (!(priv & access)) {
+    if ( msg)
+      message( 'I', "Not authorized for this operation");
+    return 0;
+  }
+  return 1;
+}
 
 
 
@@ -1635,6 +1645,9 @@ int XNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 
   brow_GetCtxUserData( (BrowCtx *)ctx, (void **) &xnav);
   if ( xnav->closing_down)
+    return 1;
+
+  if ( !xnav->is_authorized())
     return 1;
 
   xnav->message( ' ', null_str);
@@ -3445,6 +3458,9 @@ int XNav::init_brow_base_cb( FlowCtx *fctx, void *client_data)
     xnav->load_ev_from_opplace();
     xnav->login_from_opplace();
   }
+  else
+    xnav->login();
+
   return 1;
 }
 
@@ -3493,6 +3509,8 @@ int XNav::login_from_opplace()
   int sts;
   unsigned int privilege;
   char	systemgroup[80];
+  pwr_sSecurity sec;
+  char username[80];
 
   sts = gdh_ObjidToPointer( gbl.UserObject, (void **) &user_p);
   if ( EVEN(sts)) return sts;
@@ -3501,18 +3519,70 @@ int XNav::login_from_opplace()
 		sizeof(systemgroup));
   if ( EVEN(sts)) return sts;
 
-  sts = user_GetUserPriv( systemgroup, user_p->UserName, &privilege);
+
+  priv = base_priv = 0;
+
+  sts = gdh_GetSecurityInfo( &sec);
+  if ( ODD(sts) && sec.XttUseOpsysUser)
+    syi_UserName( username, sizeof(username));
+  else
+    strcpy( username, user_p->UserName);
+
+  sts = user_GetUserPriv( systemgroup, username, &privilege);
   if ( EVEN(sts)) {
-    // Failiure, set read priv
-    priv = pwr_mPrv_RtRead;
-    base_priv = pwr_mPrv_RtRead;
+    priv = base_priv = 0;
     return sts;
   }
-  strcpy( user, user_p->UserName);
-  strcpy( base_user, user_p->UserName);
-  priv = privilege;
-  base_priv = privilege;
+  strcpy( user, username);
+  strcpy( base_user, username);
+  priv = base_priv = privilege;
   return XNAV__SUCCESS;
+}
+
+int XNav::login()
+{
+  int sts;
+  unsigned int privilege;
+  char	systemgroup[80];
+  pwr_sSecurity sec;
+  char username[80];
+
+  priv = base_priv = 0;
+
+  sts = gdh_GetSecurityInfo( &sec);
+  if ( EVEN(sts)) return sts;
+
+  if ( sec.XttUseOpsysUser) {
+    syi_UserName( username, sizeof(username));
+  
+    sts = gdh_GetObjectInfo ( "pwrNode-System.SystemGroup", &systemgroup, 
+			      sizeof(systemgroup));
+    if ( EVEN(sts)) return sts;
+    
+    sts = user_GetUserPriv( systemgroup, username, &privilege);
+    if ( EVEN(sts)) return sts;
+
+    strcpy( user, username);
+    strcpy( base_user, username);
+    priv = base_priv = privilege;
+    return XNAV__SUCCESS;
+  }
+  priv = base_priv = sec.DefaultXttPriv;
+  return XNAV__SUCCESS;
+}
+
+void XNav::open_login()
+{
+  pwr_tCmd cmd;
+  strcpy( cmd, "login");
+  command( cmd);
+}
+
+void XNav::logout()
+{
+  pwr_tCmd cmd;
+  strcpy( cmd, "logout");
+  command( cmd);
 }
 
 int XNav::init_brow_collect_cb( BrowCtx *ctx, void *client_data)
