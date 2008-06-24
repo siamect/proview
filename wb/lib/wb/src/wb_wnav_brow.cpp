@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_brow.cpp,v 1.9 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_wnav_brow.cpp,v 1.10 2008-06-24 07:52:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -33,7 +33,6 @@
 #include "pwr_baseclasses.h"
 #include "wb_wnav_msg.h"
 #include "wb_ldh.h"
-#include "wb_login.h"
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wblnode.cpp,v 1.60 2007-12-06 10:53:18 claes Exp $
+ * Proview   $Id: wb_wblnode.cpp,v 1.61 2008-06-24 07:52:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -252,6 +252,8 @@ static wbl_sSym classes[] =
   ,{ "pwr_eCix_Hier", pwr_eCix_Hier }
   ,{ "pwr_eClass_ClassLost", pwr_eClass_ClassLost }
   ,{ "pwr_eCix_ClassLost", pwr_eCix_ClassLost }
+  ,{ "pwr_eClass_Security", pwr_eClass_Security }
+  ,{ "pwr_eCix_Security", pwr_eCix_Security }
   ,{ 0, 0 }
 };
 
@@ -324,6 +326,7 @@ static wbl_sSym attr_flags[] =
   ,{ "pwr_mClassDef_IORack",	pwr_mClassDef_IORack }
   ,{ "pwr_mClassDef_IOCard",	pwr_mClassDef_IOCard }
   ,{ "pwr_mClassDef_HasCallBack", pwr_mClassDef_HasCallBack }
+  ,{ "pwr_mClassDef_RtReadOnly", pwr_mClassDef_RtReadOnly }
   ,{ 0, 0 }
 };
 

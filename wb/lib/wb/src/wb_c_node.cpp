@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_node.cpp,v 1.2 2007-05-16 12:40:04 claes Exp $
+ * Proview   $Id: wb_c_node.cpp,v 1.3 2008-06-24 07:52:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -32,6 +32,8 @@ static pwr_tStatus PostCreate (
   pwr_tObjid oid;
   pwr_tClassId cid;
   pwr_tStatus sts;
+
+  sts = ldh_CreateObject(Session, &oid, "Security", pwr_eClass_Security, Object, ldh_eDest_IntoLast); 
 
   sts = ldh_ClassNameToId(Session, &cid, "MessageHandler");
   sts = ldh_CreateObject(Session, &oid, "MessageHandler", cid, Object, ldh_eDest_IntoLast); 

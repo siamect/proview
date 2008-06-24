@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_gtk.cpp,v 1.2 2007-05-16 07:42:20 claes Exp $
+ * Proview   $Id: wb_wnav_gtk.cpp,v 1.3 2008-06-24 07:52:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,7 +35,6 @@ extern "C" {
 #include "wb_wnav_msg.h"
 #include "wb_ldh_msg.h"
 #include "wb_ldh.h"
-#include "wb_login.h"
 #include "wb_wccm.h"
 }
 
@@ -47,6 +46,7 @@ extern "C" {
 #include "wb_wnav_gtk.h"
 #include "wb_wnav_item.h"
 #include "co_wow_gtk.h"
+#include "co_login_gtk.h"
 #include "wb_wge_gtk.h"
 #include "ge_gtk.h"
 #include "wb_wda_gtk.h"
@@ -383,6 +383,15 @@ void WNavGtk::wda_new( pwr_tOid oid, pwr_tCid cid, char *attribute,
 {
   new WdaGtk( parent_wid, this, ldhses, oid, cid, attribute, edit_mode, 
 	      advuser, display_objectname);
+}
+
+CoLogin *WNavGtk::login_new( char		*name,
+			     char		*groupname,
+			     void		(* bc_success)( void *),
+			     void		(* bc_cancel)( void *),
+			     pwr_tStatus  	*status)
+{
+  return new CoLoginGtk( this, parent_wid, name, groupname, bc_success, bc_cancel, status);
 }
 
 void WNavGtk::wge_subwindow_loop( WGe *wge)

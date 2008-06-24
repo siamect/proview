@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_projectreg.cpp,v 1.2 2007-04-26 12:38:12 claes Exp $
+ * Proview   $Id: wb_c_projectreg.cpp,v 1.3 2008-06-24 07:52:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,7 +27,7 @@
 #include "wb_ldh_msg.h"
 #include "wb_ldh.h"
 #include "wb_pwrb_msg.h"
-#include "wb_login.h"
+#include "co_login.h"
 
 
 /*----------------------------------------------------------------------------*\
@@ -53,7 +53,7 @@ static pwr_tStatus OpenProject (
   dcli_translate_filename( fname, "$pwr_exe/wb_pvd_pl.sh");
   sprintf( cmd,
 	"%s opendb \"%s\" \"%s\" \"%s\" &",
-	fname, project, login_prv.username, login_prv.password);
+	fname, project, CoLogin::username(), CoLogin::ucpassword());
 
   free( project);
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_motif.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_foe_motif.cpp,v 1.2 2008-06-24 07:52:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,7 +50,7 @@
 #include "wb_watt_motif.h"
 #include "wb_gre_motif.h"
 #include "wb_foe_motif.h"
-#include "wb_login.h"
+#include "co_login.h"
 #include "co_mrm_util.h"
 #include "wb_nav_motif.h"
 #include "wb_pal_motif.h"
@@ -1330,7 +1330,7 @@ pwr_tStatus WFoeMotif::create_window( int x_top,
 
   XtUnmanageChild(widgets.textinput);
 
-  if ( !(login_prv.priv & pwr_mPrv_DevPlc ) || 
+  if ( !(CoLogin::privilege() & pwr_mPrv_DevPlc ) || 
        (function_access == foe_eFuncAccess_View)) {
     /* Mode Edit and Simulate is not allowed */
     i=0;

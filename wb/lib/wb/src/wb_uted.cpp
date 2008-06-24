@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_uted.cpp,v 1.1 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_uted.cpp,v 1.2 2008-06-24 07:52:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,7 +25,6 @@
 #include <string.h>
 
 #include "pwr.h"
-#include "wb_login.h"
 #include "flow_ctx.h"
 #include "co_time.h"
 #include "co_msg.h"

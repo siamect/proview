@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.cpp,v 1.40 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_wnav.cpp,v 1.41 2008-06-24 07:52:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,7 +34,7 @@
 #include "wb_wnav_msg.h"
 #include "wb_ldh_msg.h"
 #include "wb_ldh.h"
-#include "wb_login.h"
+#include "co_login.h"
 #include "wb_wccm.h"
 
 #include "flow.h"
@@ -585,13 +585,13 @@ WNav::WNav(
 	layout_objid(pwr_cNObjid), search_last(pwr_cNObjid), search_compiled(0),
 	search_type(wnav_eSearchType_No), selection_owner(0), last_selected(0),
 	displayed(0), scriptmode(0), dialog_width(0), dialog_height(0),
-	dialog_x(0), dialog_y(0), menu(0)
+	dialog_x(0), dialog_y(0), menu(0), admin_login(0)
 {
   strcpy( name, xn_name);
 
-  strcpy( user, login_prv.username);
+  strcpy( user, CoLogin::username());
   strcpy( base_user, user);
-  priv = login_prv.priv;
+  priv = CoLogin::privilege();
   base_priv = priv;
 
   if ( window_type == wnav_eWindowType_No) {

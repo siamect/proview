@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_object.cpp,v 1.3 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_c_object.cpp,v 1.4 2008-06-24 07:52:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,7 +29,7 @@
 #include "co_dcli.h"
 #include "co_api.h"
 #include "wb_wtt.h"
-#include "wb_login.h"
+#include "co_login.h"
 
 static pwr_tStatus CopyObject (
   ldh_sMenuCall *ip
@@ -954,7 +954,7 @@ static pwr_tStatus ConfigureComponentFilter( ldh_sMenuCall *ip)
 // Common Build filter
 static pwr_tStatus BuildFilter( ldh_sMenuCall *ip) 
 {
-  if ( login_prv.priv & pwr_mPrv_DevConfig)
+  if ( CoLogin::privilege() & pwr_mPrv_DevConfig)
     return 1;
   else
     return 0;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_gtk.h,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_wnav_gtk.h,v 1.2 2008-06-24 07:52:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,6 +23,8 @@
 #include "wb_wnav.h"
 
 /* wtt_wnav_gtk.h -- Simple navigator */
+
+class CoLogin;
 
 class WNavGtk : public WNav {
   public:
@@ -72,6 +74,8 @@ class WNavGtk : public WNav {
     void wge_modal_loop( WGe *wge);
     bool has_window() {return parent_wid ? true : false;}
     wb_utl *utl_new();
+    CoLogin *login_new( char *name, char *groupname,
+			void (* bc_success)( void *), void (* bc_cancel)( void *), pwr_tStatus *status);
 
     static void trace_scan( WNavGtk *wnav);
     static void sel_lose_cb( GtkWidget *w, GdkEventSelection *event,

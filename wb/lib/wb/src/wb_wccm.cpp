@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wccm.cpp,v 1.3 2007-04-25 13:39:21 claes Exp $
+ * Proview   $Id: wb_wccm.cpp,v 1.4 2008-06-24 07:52:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,7 +29,7 @@
 #include "co_time.h"
 #include "co_ccm.h"
 #include "co_cdh.h"
-#include "co_api.h"
+#include "co_api_user.h"
 #include "wb_utl_api.h"
 #include "wb_trv.h"
 #include "wb_cmd_msg.h"

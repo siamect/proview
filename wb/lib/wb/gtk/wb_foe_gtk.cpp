@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_gtk.cpp,v 1.11 2007-09-26 11:51:46 claes Exp $
+ * Proview   $Id: wb_foe_gtk.cpp,v 1.12 2008-06-24 07:52:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -44,7 +44,7 @@
 #include "wb_watt_gtk.h"
 #include "wb_gre_gtk.h"
 #include "wb_foe_gtk.h"
-#include "wb_login.h"
+#include "co_login.h"
 #include "wb_pal_gtk.h"
 #include "wb_nav_gtk.h"
 #include "co_wow_gtk.h"
@@ -1769,7 +1769,7 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
 
   XtUnmanageChild(widgets.textinput);
 
-  if ( !(login_prv.priv & pwr_mPrv_DevPlc ) || 
+  if ( !(CoLogin::privilege() & pwr_mPrv_DevPlc ) || 
        (function_access == foe_eFuncAccess_View)) {
     /* Mode Edit and Simulate is not allowed */
     i=0;

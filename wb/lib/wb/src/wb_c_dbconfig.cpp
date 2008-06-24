@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_dbconfig.cpp,v 1.1 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_c_dbconfig.cpp,v 1.2 2008-06-24 07:52:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -32,7 +32,7 @@
 #include "wb_ldh_msg.h"
 #include "wb_ldh.h"
 #include "wb_utl_api.h"
-#include "wb_login.h"
+#include "co_login.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
 
@@ -65,7 +65,7 @@ static pwr_tStatus OpenDb (
 
   sprintf( cmd,
 	"@pwr_exe:wb_open_db \"%s\" \"%s\" \"%s\" \"\" \"%s\"",
-	db_id, login_prv.username, login_prv.password, name);
+	db_id, CoLogin::username(), CoLogin::uspassword(), name);
   free( db_id);
 
   sts = lib$spawn (&cmd_desc , 0 , 0 , &cli_flag );
@@ -95,7 +95,7 @@ static pwr_tStatus OpenDb (
   cdh_ToLower( db_id, db_id_p);
   sprintf( cmd,
 	"%s \"%s\" \"%s\" \"%s\" \"\" \"%s\" &",
-	filename, db_id, login_prv.username, login_prv.password, name);
+	filename, db_id, CoLogin::username(), CoLogin::ucpassword(), name);
   free( db_id_p);
 
   sts = system( cmd);

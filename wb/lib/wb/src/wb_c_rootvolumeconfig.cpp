@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_rootvolumeconfig.cpp,v 1.1 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_c_rootvolumeconfig.cpp,v 1.2 2008-06-24 07:52:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,7 +31,7 @@
 #include "wb_pwrs.h"
 #include "wb_ldh_msg.h"
 #include "wb_ldh.h"
-#include "wb_login.h"
+#include "co_login.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
 
@@ -57,7 +57,7 @@ static pwr_tStatus OpenDb (
   dcli_translate_filename( filename, "$pwr_exe/wb_open_db.sh");
   sprintf( cmd,
 	"%s \"%s\" \"%s\" \"%s\" \"%s\" &",
-	filename, login_prv.username, login_prv.password, volume_name, volume_name);
+	filename, CoLogin::username(), CoLogin::ucpassword(), volume_name, volume_name);
 
   sts = system( cmd);
   if ( sts == -1 || sts == 127) {

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe.cpp,v 1.9 2008-05-29 14:57:53 claes Exp $
+ * Proview   $Id: wb_foe.cpp,v 1.10 2008-06-24 07:52:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,7 +37,7 @@
 #include "wb_ldh.h"
 #include "wb_foe_msg.h"
 #include "wb_vldh_msg.h"
-#include "wb_login_msg.h"
+#include "co_login_msg.h"
 #include "wb_gcg.h"
 #include "wb_goen.h"
 #include "wb_gre.h"
@@ -45,7 +45,7 @@
 #include "wb_foe.h"
 #include "wb_gsx.h"
 #include "wb_utl_api.h"
-#include "wb_login.h"
+#include "co_login.h"
 #include "wb_tra.h"
 #include "wb_watt.h"
 #include "wb_gobj.h"
@@ -2574,7 +2574,7 @@ int WFoe::new_local( pwr_tObjid	plcprogram,
 	/* This is a brandnew plcprogram */
 
 	/* Check authorization to open a new plcpgm */
-	if ( !(login_prv.priv & pwr_mPrv_DevPlc )) {
+	if ( !(CoLogin::privilege() & pwr_mPrv_DevPlc )) {
 	  return LOGIN__USERNOTAU;
 	}
 	access = ldh_eAccess_ReadWrite;
@@ -3352,7 +3352,7 @@ int WFoe::change_mode( int new_mode)
     }
     break;
   case EDIT:
-    if ( !(login_prv.priv & pwr_mPrv_DevPlc )) {
+    if ( !(CoLogin::privilege() & pwr_mPrv_DevPlc )) {
       message( "No privilege to enter Edit");
       BEEP;
       set_mode_button_state( EDIT, 0);
@@ -3484,7 +3484,7 @@ int WFoe::change_mode( int new_mode)
     break;
   case SIMULATE:
     
-    if ( !(login_prv.priv & pwr_mPrv_DevPlc )) {
+    if ( !(CoLogin::privilege() & pwr_mPrv_DevPlc )) {
       message( "No privilege to enter Simulate");
       BEEP;
       set_mode_button_state( SIMULATE, 0);

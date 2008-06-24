@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.23 2008-02-27 06:29:51 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.24 2008-06-24 07:52:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -33,7 +33,6 @@
 #include "co_wow.h"
 #include "wb_utl_api.h"
 #include "wb_lfu.h"
-#include "wb_login.h"
 #include "rt_load.h"
 #include "wb_foe_msg.h"
 #include "wb_pwrb_msg.h"
@@ -870,6 +869,8 @@ void WttGtk::activate_command( GtkWidget *w, gpointer data)
     return;
   }
 
+  gtk_editable_delete_text( GTK_EDITABLE(((WttGtk *)wtt)->cmd_input), 0, -1);
+
   if ( wtt->input_open)
     wtt->input_open = 0;
   else
@@ -881,7 +882,6 @@ void WttGtk::activate_command( GtkWidget *w, gpointer data)
   ((WttGtk *)wtt)->cmd_entry->set_recall_buffer( &cmd_recall);
   gtk_widget_grab_focus( ((WttGtk *)wtt)->cmd_input);
 
-  gtk_editable_delete_text( GTK_EDITABLE(((WttGtk *)wtt)->cmd_input), 0, -1);
   wtt->command_open = 1;
 }
 

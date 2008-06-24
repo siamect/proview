@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.h,v 1.15 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_wnav.h,v 1.16 2008-06-24 07:52:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -140,6 +140,7 @@ typedef enum {
 class Ge;
 class WGe;
 class wb_utl;
+class CoLogin;
 
 class ApplListElem {
   public:
@@ -285,6 +286,7 @@ class WNav : public WUtility{
     PalFileMenu         *menu;
     int                 init_help;
     CoWow		*wow;
+    int			admin_login;
 
     virtual void pop() {}
     virtual void set_inputfocus( int focus) {}
@@ -308,6 +310,9 @@ class WNav : public WUtility{
     virtual void wge_modal_loop( WGe *wge) {}
     virtual bool has_window() {return false;}
     virtual wb_utl *utl_new() {return 0;}
+    virtual CoLogin *login_new( char *name, char *groupname,
+				void (* bc_success)( void *), void (* bc_cancel)( void *), 
+				pwr_tStatus *status) { return 0;}
 
     static int brow_cb( FlowCtx *ctx, flow_tEvent event);
     static int init_brow_base_cb( FlowCtx *fctx, void *client_data);

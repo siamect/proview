@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vsel_gtk.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_vsel_gtk.cpp,v 1.2 2008-06-24 07:52:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,8 +39,8 @@
 #include "wb_foe.h"
 #include "wb_utl_api.h"
 #include "wb_lfu.h"
-#include "wb_login.h"
-#include "wb_login_msg.h"
+#include "co_login.h"
+#include "co_login_msg.h"
 #include "wb_foe_msg.h"
 #include "wb_ldh_msg.h"
 #include "co_msgwindow.h"

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.51 2008-05-29 14:56:46 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.52 2008-06-24 07:52:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,10 +38,11 @@
 #include "pwr_baseclasses.h"
 #include "co_ccm_msg.h"
 #include "co_regex.h"
+#include "co_user.h"
 #include "rt_load.h"
 #include "wb_ldh.h"
 #include "wb_ldhload.h"
-#include "wb_login.h"
+#include "co_login.h"
 #include "wb_utl_api.h"
 #include "wb_genstruct.h"
 #include "wb_lfu.h"
@@ -62,7 +63,7 @@
 #include "wb_wge.h"
 #include "co_xhelp.h"
 #include "wb_wccm.h"
-#include "co_api.h"
+#include "co_api_user.h"
 #include "wb_env.h"
 #include "wb_erep.h"
 #include "wb_vrepwbl.h"
@@ -801,6 +802,26 @@ static int	wnav_noedit_func(	void		*client_data,
   return WNAV__SUCCESS;
 }
 
+static void wnav_login_success_bc( void *ctx)
+{
+  WNav *wnav = (WNav *)ctx;
+  char	msg[80];
+
+  CoLogin::get_login_info( 0, 0, wnav->user, (unsigned long *)&wnav->priv, 0);
+  if ( wnav->admin_login) {
+    wnav->admin_login = 0;
+    wnav->priv = pwr_mPrv_Administrator;
+    CoLogin::insert_login_info( "", "", wnav->user, wnav->priv, 0);
+  }
+  sprintf( msg, "User %s logged in", wnav->user);
+  wnav->message('I', msg);
+}
+
+static void wnav_login_cancel_bc(void *wnav)
+{  
+  ((WNav *)wnav)->admin_login = 0;
+}
+
 static int	wnav_login_func(	void		*client_data,
 					void		*client_flag)
 {
@@ -822,16 +843,17 @@ static int	wnav_login_func(	void		*client_data,
       // Username and password are not required
       strcpy( wnav->user, "Administrator");
       wnav->priv = pwr_mPrv_Administrator;
-      strcpy( login_prv.username, "Administrator");
-      login_prv.priv = (pwr_mPrv) wnav->priv;
+      CoLogin::insert_login_info( "", "", "Administrator", wnav->priv, 0);
       wnav->message('I', "Administrator logged in");
       return WNAV__SUCCESS;
     }
     else {
       // Check user and password in systemgroup "aministrator"
       if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str)))) {
-	wnav->message('E',"Username and password required");
-	return WNAV__SYNTAX;
+	wnav->admin_login = 1;
+	wnav->login_new( "PwR Login", "administrator", wnav_login_success_bc, 
+			 wnav_login_cancel_bc, &sts);
+	return WNAV__SUCCESS;
       }
       if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str)))) {
 	wnav->message('E',"Password required");
@@ -839,14 +861,14 @@ static int	wnav_login_func(	void		*client_data,
       }
       cdh_ToLower( arg1_str, arg1_str);
       cdh_ToLower( arg2_str, arg2_str);
+      strcpy( arg2_str, UserList::pwcrypt(arg2_str));
       sts = user_CheckUser( "administrator", arg1_str, arg2_str, &priv);
       if ( EVEN(sts))
 	wnav->message('E',"Login failure");
       else {
 	strcpy( wnav->user, arg1_str);
 	wnav->priv = pwr_mPrv_Administrator;
-	strcpy( login_prv.username, arg1_str);
-	login_prv.priv = (pwr_mPrv) wnav->priv;
+	CoLogin::insert_login_info( "", "", arg1_str, wnav->priv, 0);
 	sprintf( msg, "User %s logged in", arg1_str);
 	wnav->message('I', msg);
       }
@@ -854,19 +876,22 @@ static int	wnav_login_func(	void		*client_data,
     }
   }
 
+  sts = utl_get_systemname( systemname, systemgroup);
+  if ( EVEN(sts)) return sts;
+
   if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str)))) {
-    wnav->message('E',"Syntax error");
-    return WNAV__SYNTAX;
+    wnav->login_new( "PwR Login", systemgroup, wnav_login_success_bc, 
+		     wnav_login_cancel_bc, &sts);
+    wnav->admin_login = 0;
+    return WNAV__SUCCESS;
   }
   if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str)))) {
     wnav->message('E',"Syntax error");
     return WNAV__SYNTAX;
   }
-  sts = utl_get_systemname( systemname, systemgroup);
-  if ( EVEN(sts)) return sts;
-
   cdh_ToLower( arg1_str, arg1_str);
   cdh_ToLower( arg2_str, arg2_str);
+  strcpy( arg2_str, UserList::pwcrypt(arg2_str));
   sts = user_CheckUser( systemgroup, arg1_str, arg2_str, &priv);
   if ( EVEN(sts))
     wnav->message('E',"Login failure");
@@ -874,8 +899,7 @@ static int	wnav_login_func(	void		*client_data,
   {
     strcpy( wnav->user, arg1_str);
     wnav->priv = priv;
-    strcpy( login_prv.username, arg1_str);
-    login_prv.priv = (pwr_mPrv) priv;
+    CoLogin::insert_login_info( "", "", arg1_str, wnav->priv, 0);
     sprintf( msg, "User %s logged in", arg1_str);
     wnav->message('I', msg);
   }
@@ -900,8 +924,7 @@ static int	wnav_logout_func(	void		*client_data,
   }
   strcpy( wnav->user, wnav->base_user);
   wnav->priv = wnav->base_priv;
-  strcpy( login_prv.username, wnav->base_user);
-  login_prv.priv = (pwr_mPrv) wnav->priv;
+  CoLogin::insert_login_info( "", "", wnav->base_user, wnav->priv, 0);
   return WNAV__SUCCESS;
 }
 
@@ -1717,8 +1740,8 @@ static int	wnav_show_func(	void		*client_data,
     }
     else
     {
-      user_DevPrivToString( login_prv.priv, priv_str, sizeof(priv_str));
-      sprintf( msg, "User %s (%s)", login_prv.username, priv_str);
+      user_DevPrivToString( CoLogin::privilege(), priv_str, sizeof(priv_str));
+      sprintf( msg, "User %s (%s)", CoLogin::username(), priv_str);
       wnav->message('I', msg);
     }
   }

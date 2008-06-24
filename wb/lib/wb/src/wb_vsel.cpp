@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vsel.cpp,v 1.17 2008-02-27 06:32:41 claes Exp $
+ * Proview   $Id: wb_vsel.cpp,v 1.18 2008-06-24 07:52:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,8 +42,8 @@
 #include "wb_utl_api.h"
 #include "wb_lfu.h"
 #include "co_wow.h"
-#include "wb_login.h"
-#include "wb_login_msg.h"
+#include "co_login.h"
+#include "co_login_msg.h"
 #include "wb_foe_msg.h"
 #include "wb_ldh_msg.h"
 #include "co_msgwindow.h"
@@ -262,7 +262,7 @@ pwr_tStatus WVsel::check_volumelist(
   error_count = 0;
   *display_window = 0;
 	
-  if ( !(login_prv.priv & pwr_mPrv_DevConfig ))
+  if ( !(CoLogin::privilege() & pwr_mPrv_DevConfig ))
     // No privileges for edit, don't check the volumes
     return 1;
 

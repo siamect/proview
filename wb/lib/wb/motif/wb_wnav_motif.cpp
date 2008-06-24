@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_motif.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_wnav_motif.cpp,v 1.2 2008-06-24 07:52:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -33,7 +33,6 @@
 #include "wb_wnav_msg.h"
 #include "wb_ldh_msg.h"
 #include "wb_ldh.h"
-#include "wb_login.h"
 #include "wb_wccm.h"
 
 #include <Xm/Xm.h>
@@ -59,6 +58,7 @@
 
 #include "flow_x.h"
 #include "co_wow_motif.h"
+#include "co_login_motif.h"
 #include "wb_wge_motif.h"
 #include "ge_motif.h"
 #include "wb_utl_motif.h"
@@ -445,6 +445,15 @@ void WNavMotif::wda_new( pwr_tOid oid, pwr_tCid cid, char *attribute,
 {
     new WdaMotif( parent_wid, this, ldhses, oid, cid, attribute, edit_mode, 
 		  advuser, display_objectname);
+}
+
+CoLogin *WNavMotif::login_new( char		*name,
+			     char		*groupname,
+			     void		(* bc_success)( void *),
+			     void		(* bc_cancel)( void *),
+			     pwr_tStatus  	*status)
+{
+  return new CoLoginMotif( this, parent_wid, name, groupname, bc_success, bc_cancel, status);
 }
 
 void WNavMotif::wge_subwindow_loop( WGe *wge)

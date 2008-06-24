@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.cpp,v 1.38 2008-04-07 14:53:06 claes Exp $
+ * Proview   $Id: wb_wtt.cpp,v 1.39 2008-06-24 07:52:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -32,7 +32,7 @@
 #include "co_wow.h"
 #include "wb_utl_api.h"
 #include "wb_lfu.h"
-#include "wb_login.h"
+#include "co_login.h"
 #include "rt_load.h"
 #include "wb_foe_msg.h"
 #include "wb_pwrb_msg.h"
@@ -739,14 +739,14 @@ int Wtt::set_edit()
   case ldh_cGlobalVolumeListVolume:
   case ldh_cUserDatabaseVolume:
     // Privilege Administrator required
-    if ( !(login_prv.priv & pwr_mPrv_Administrator)) {
+    if ( !(CoLogin::privilege() & pwr_mPrv_Administrator)) {
       message( 'E', "User is not authorized to administrate");
       return 1;
     }
     break;
   default:
     // Privilege DevConfig required
-    if ( !(login_prv.priv & pwr_mPrv_DevConfig)) {
+    if ( !(CoLogin::privilege() & pwr_mPrv_DevConfig)) {
       message( 'E', "User is not authorized to configure");
       return 1;
     }
@@ -1204,7 +1204,7 @@ void Wtt::activate_utilities()
 
     utl_get_systemname( systemname, systemgroup);
     sprintf( title, "PwR Utilites Volume %s, %s on %s", volname, 
-		login_prv.username, systemname);
+		CoLogin::username(), systemname);
     set_clock_cursor();
     ute_new( title);
     reset_cursor();
@@ -1502,7 +1502,7 @@ void Wtt::activate_openclasseditor()
       dcli_translate_filename( filename, "$pwr_exe/wb_open_db.sh");
       sprintf( cmd,
 	       "%s \"%s\" \"%s\" \"%s\" \"%s\" &",
-	       filename, login_prv.username, login_prv.password, name, name);
+	       filename, CoLogin::username(), CoLogin::ucpassword(), name, name);
       
       set_clock_cursor();
       sts = system( cmd);
