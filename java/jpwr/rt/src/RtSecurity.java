@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: RtSecurity.java,v 1.2 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: RtSecurity.java,v 1.3 2008-06-24 13:30:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,25 +27,4 @@ public class RtSecurity {
 
   public static native CdhrInt checkUser( String group, String user, String password);
 
-  public static CdhrInt checkUser2( String group, String user, String password) {
-    CdhrInt cdhrInt;
-    int	sts = 1;
-    int priv;
-    if ( user.toUpperCase().equals("CLAES") &&
-         password.toUpperCase().equals("HEJHOPP")) {
-      priv = Pwr.mAccess_AllPwr;
-      return new CdhrInt( priv, sts);
-    }
-    else if ( user.toUpperCase().equals("SKIFTEL") &&
-         password.toUpperCase().equals("SKIFTEL")) {
-      priv = Pwr.mPrv_RtRead | Pwr.mPrv_RtWrite;
-      return new CdhrInt( priv, sts);
-    }
-    else if ( user.toUpperCase().equals("OP55") &&
-         password.toUpperCase().equals("OP55")) {
-      priv = Pwr.mPrv_RtRead | Pwr.mPrv_Operator1;
-      return new CdhrInt( priv, sts);
-    }
-    return new CdhrInt( 0, 0);
-  }
 }
