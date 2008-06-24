@@ -4,24 +4,21 @@
 #include <fstream.h>
 #include <string.h>
 
-extern "C" {
 #include "pwr.h"
 #include "pwr_privilege.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_dcli_input.h"
-}
+#include "co_api_user.h"
 #include "co_user.h"
 
 static GeUser *gu;
-static int super_user = 0;
 static dcli_sChannel 	user_chn;
 static dcli_sRecall 	*user_recall_buf;
+static unsigned int user_priv = 0;
 
 static void user_message( char severity, char *msg);
 static int	user_help_func(	void		*client_data,
-				void		*client_flag);
-static int	user_su_func(	void		*client_data,
 				void		*client_flag);
 static int	user_load_func(	void		*client_data,
 				void		*client_flag);
@@ -41,6 +38,8 @@ static int	user_modify_func( void		*client_data,
 				void		*client_flag);
 static int	user_get_func(	void		*client_data,
 				void		*client_flag);
+static int	user_login_func( void		*client_data,
+				void		*client_flag);
 
 
 dcli_tCmdTable	user_command_table[] = {
@@ -53,50 +52,47 @@ dcli_tCmdTable	user_command_table[] = {
 			"modify",
 			&user_modify_func,
 			{ "dcli_arg1", "dcli_arg2", "/user", "/group", 
-				"/password", "/privilege" ,
-				"/rtread", "/rtwrite", "/rtevents", "/system", 
-				"/maintenance", "/process", "/instrument", 
-				"/operator1", "/operator2", "/operator3", 
-				"/operator4", "/operator5", "/operator6", 
-				"/operator7", "/operator8", "/operator9", 
-				/* "/oper10",*/ "/devread", "/devplc", 
-				"/devconfig", "/devclass",
-				"/nortread", "/nortwrite", "/nortevents", 
-			        "/nosystem", 
-				"/nomaintenance", "/noprocess", "/noinstrument", 
-				"/nooperator1", "/nooperator2", "/nooperator3", 
-				"/nooperator4", "/nooperator5", "/nooperator6", 
-				"/nooperator7", "/nooperator8", "/nooperator9", 
-				/* "/nooper10",*/ "/nodevread", "/nodevplc", 
-				"/nodevconfig", "/nodevclass",
-				"/nouserinherit", "/userinherit",
-				""}
+			  "/password", "/privilege" , "/description", "/fullname",
+			  "/email", "/phone", "/sms",
+			  "/rtread", "/rtwrite", "/rtevents", "/system", 
+			  "/maintenance", "/process", "/instrument", 
+			  "/operator1", "/operator2", "/operator3", 
+			  "/operator4", "/operator5", "/operator6", 
+			  "/operator7", "/operator8", "/operator9", 
+			  /* "/oper10",*/ "/devread", "/devplc", 
+			  "/devconfig", "/devclass",
+			  "/nortread", "/nortwrite", "/nortevents", 
+			  "/nosystem", 
+			  "/nomaintenance", "/noprocess", "/noinstrument", 
+			  "/nooperator1", "/nooperator2", "/nooperator3", 
+			  "/nooperator4", "/nooperator5", "/nooperator6", 
+			  "/nooperator7", "/nooperator8", "/nooperator9", 
+			  /* "/nooper10",*/ "/nodevread", "/nodevplc", 
+			  "/nodevconfig", "/nodevclass",
+			  "/nouserinherit", "/userinherit",
+			  ""}
 		},
 		{
 			"add",
 			&user_add_func,
 			{ "dcli_arg1", "dcli_arg2", "/user", "/group", 
-				"/password", "/privilege" , 
-				"/rtread", "/rtwrite", "/rtevents", "/system", 
-				"/maintenance", "/process", "/instrument", 
-				"/operator1", "/operator2", "/operator3", 
-				"/operator4", "/operator5", "/operator6", 
-				"/operator7", "/operator8", "/operator9", 
-				"/oper10", "/devread", "/devplc", 
-				"/devconfig", "/devclass", 
-				"/nouserinherit", "/userinherit",
-				""}
+			  "/password", "/privilege" , "/fullname", "/description",
+			  "/email", "/phone", "/sms",
+			  "/rtread", "/rtwrite", "/rtevents", "/system", 
+			  "/maintenance", "/process", "/instrument", 
+			  "/operator1", "/operator2", "/operator3", 
+			  "/operator4", "/operator5", "/operator6", 
+			  "/operator7", "/operator8", "/operator9", 
+			  "/oper10", "/devread", "/devplc", 
+			  "/devconfig", "/devclass", 
+			  "/nouserinherit", "/userinherit",
+			  ""}
 		},
 		{
 			"remove",
 			&user_remove_func,
 			{ "dcli_arg1", "dcli_arg2", "dcli_arg3", "/group",
 			 "/user", ""}
-		},
-		{
-			"su",
-			&user_su_func,
-			{ ""}
 		},
 		{
 			"get",
@@ -107,19 +103,19 @@ dcli_tCmdTable	user_command_table[] = {
 		{
 			"list",
 			&user_list_func,
-			{ "dcli_arg1", "/user", "/group",
+			{ "dcli_arg1", "/user", "/group", "/brief",
 			  ""}
 		},
 		{
 			"show",
 			&user_list_func,
-			{ "dcli_arg1", "/user", "/group",
+			{ "dcli_arg1", "/user", "/group", "/brief",
 			  ""}
 		},
 		{
 			"__list",
 			&user___list_func,
-			{ "dcli_arg1", "/user", "/group",
+			{ "dcli_arg1", "/user", "/group", "/brief",
 			  ""}
 		},
 		{
@@ -136,6 +132,12 @@ dcli_tCmdTable	user_command_table[] = {
 			"quit",
 			&user_quit_func,
 			{ ""}
+		},
+		{
+			"login",
+			&user_login_func,
+			{ "dcli_arg1", "dcli_arg2", "/administrator",
+			  ""}
 		},
 		{"",}};
 
@@ -157,7 +159,8 @@ static int	user_help_func(	void		*client_data,
 "remove			Remove user or system group." << endl <<
 "modify			Modify user." << endl <<
 "get			Get user data." << endl <<
-"su			Become super-user." << endl << endl;
+"login			Login as administrator." << endl << endl <<
+"print   \"help 'command'\" to get help for a specific command." << endl << endl;
   }
   else if ( strncmp( arg1_str, "load", strlen( arg1_str)) == 0)
   {
@@ -189,6 +192,7 @@ static int	user_help_func(	void		*client_data,
 "pwr_user help" << endl << endl <<
 "add group 'systemgroup' /userinherit		Add system group." << endl <<
 "add user 'user' /group= /password= 		Add user." << endl <<
+"	/fullname= /description= /email= /phone= /sms=" << endl <<
 "	/rtread /rtwrite /rtevents /system /maintenance" << endl <<
 "	/process /instrument /operator1 /operator2" << endl <<
 "	/operator3 /operator4 /operator5 /operator6" << endl <<
@@ -208,6 +212,7 @@ static int	user_help_func(	void		*client_data,
     cout <<
 "pwr_user help" << endl << endl <<
 "modify user 'user' /group= /password= 		Modify user." << endl <<
+"	/fullname= /description= /email= /phone= /sms=" << endl <<
 "	/rtread /rtwrite /rtevents /system /maintenance" << endl <<
 "	/process /instrument /operator1 /operator2" << endl <<
 "	/operator3 /operator4 /operator5 /operator6" << endl <<
@@ -221,33 +226,16 @@ static int	user_help_func(	void		*client_data,
 "pwr_user help" << endl << endl <<
 "get 'user' /group= /password= 	Get user data." << endl << endl;
   }
-  else if ( strncmp( arg1_str, "su", strlen( arg1_str)) == 0)
+  else if ( strncmp( arg1_str, "login", strlen( arg1_str)) == 0)
   {
     cout <<
 "pwr_user help" << endl << endl <<
-"su		 	Become super-user. Requires password" << endl << endl;
+"login	'username' 'password'	    Login as administrator." << endl << endl;
   }
   else
   {
     cout << "No help on this subject" << endl << endl;
   }
-  return 1;
-}
-
-static int	user_su_func(	void		*client_data,
-				void		*client_flag)
-{
-  char line[80];
-
-  cout << "Enter password: ";
-  cin.getline( line, sizeof(line));
-  if ( strcmp( line, "pwr_su") == 0)
-  {
-    super_user = 1;
-    cout << "You are now super-user" << endl;
-  }
-  else
-    cout << "Authentication failure" << endl;
   return 1;
 }
 
@@ -270,6 +258,11 @@ static int	user_save_func(	void		*client_data,
   char filename[120];
   int sts;
 
+  if ( !(user_priv & pwr_mPrv_Administrator)) {
+    user_message( 'E', "Not authorized for this operation");
+    return 1;
+  }
+
   sts = dcli_get_defaultfilename( user_cFilename, filename, "");
   gu->save( filename);
   return 1;
@@ -278,17 +271,23 @@ static int	user_save_func(	void		*client_data,
 static int	user_list_func(	void		*client_data,
 				void		*client_flag)
 {
-  if ( !super_user)
-    gu->print();
-  else
-    gu->print_all();
+  int brief = ODD( dcli_get_qualifier( "/brief", 0, 0));
+
+  gu->print( brief);
   return 1;
 }
 
 static int	user___list_func( void		*client_data,
 				void		*client_flag)
 {
-  gu->print_all();
+  if ( !(user_priv & pwr_mPrv_Administrator)) {
+    user_message( 'E', "Not authorized for this operation");
+    return 1;
+  }
+
+  int brief = ODD( dcli_get_qualifier( "/brief", 0, 0));
+
+  gu->print_all( brief);
   return 1;
 }
 
@@ -307,6 +306,11 @@ static int	user_add_func(	void		*client_data,
   int	arg1_sts;
   int	sts;
 	
+  if ( !(user_priv & pwr_mPrv_Administrator)) {
+    user_message( 'E', "Not authorized for this operation");
+    return 1;
+  }
+
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "user", strlen( arg1_str)) == 0)
@@ -316,6 +320,16 @@ static int	user_add_func(	void		*client_data,
     char	system_str[80];
     char	password_str[80];
     char	privilege_str[80];
+    char	description_str[80];
+    char	fullname_str[80];
+    char	email_str[80];
+    char	phone_str[40];
+    char	sms_str[40];
+    char 	*description_p = description_str;
+    char 	*fullname_p = fullname_str;
+    char 	*email_p = email_str;
+    char 	*phone_p = phone_str;
+    char 	*sms_p = sms_str;
     unsigned int privilege;
     int		nr;
 
@@ -337,6 +351,17 @@ static int	user_add_func(	void		*client_data,
       user_message('E',"Enter password");
       return 1;
     }
+    if ( EVEN( dcli_get_qualifier( "/description", description_str, sizeof(description_str))))
+      description_p = 0;
+    if ( EVEN( dcli_get_qualifier( "/fullname", fullname_str, sizeof(fullname_str))))
+      fullname_p = 0;
+    if ( EVEN( dcli_get_qualifier( "/email", email_str, sizeof(email_str))))
+      email_p = 0;
+    if ( EVEN( dcli_get_qualifier( "/phone", fullname_str, sizeof(phone_str))))
+      phone_p = 0;
+    if ( EVEN( dcli_get_qualifier( "/sms", sms_str, sizeof(sms_str))))
+      sms_p = 0;
+
     privilege = 0;
     if ( ODD( dcli_get_qualifier( "/rtread", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_RtRead;
@@ -394,7 +419,11 @@ static int	user_add_func(	void		*client_data,
         return 1;
       }
     }
-    sts = gu->add_user( system_str, user_str, password_str, privilege);
+    cdh_ToLower( user_str, user_str);
+    cdh_ToLower( system_str, system_str);
+    cdh_ToLower( password_str, password_str);
+    sts = gu->add_user( system_str, user_str, UserList::pwcrypt(password_str), privilege, fullname_p, description_p,
+			email_p, phone_p, sms_p);
     cout << gu->get_status(sts) << endl;
   }
   else if ( strncmp( arg1_str, "group", strlen( arg1_str)) == 0)
@@ -403,6 +432,8 @@ static int	user_add_func(	void		*client_data,
     char	system_str[80];
     char	dummy_str[80];
     unsigned long	attributes;
+    char	description_str[80];
+    char 	*description_p = description_str;
 
     if ( EVEN( dcli_get_qualifier( "/group", system_str, sizeof(system_str))))
     {
@@ -415,7 +446,12 @@ static int	user_add_func(	void		*client_data,
     attributes = user_mSystemAttr_UserInherit;
     if ( ODD( dcli_get_qualifier( "/nouserinherit", dummy_str, sizeof(dummy_str))))
       attributes &= ~user_mSystemAttr_UserInherit;
-    sts = gu->add_system( system_str, attributes);
+
+    if ( EVEN( dcli_get_qualifier( "/description", description_str, sizeof(description_str))))
+      description_p = 0;
+
+    cdh_ToLower( system_str, system_str);
+    sts = gu->add_system( system_str, attributes, description_p);
     cout << gu->get_status(sts) << endl;
   }
   else
@@ -430,6 +466,11 @@ static int	user_remove_func( void		*client_data,
   int	arg1_sts;
   int	sts;
 	
+  if ( !(user_priv & pwr_mPrv_Administrator)) {
+    user_message( 'E', "Not authorized for this operation");
+    return 1;
+  }
+
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "user", strlen( arg1_str)) == 0)
@@ -482,6 +523,11 @@ static int	user_modify_func( void		*client_data,
   int	arg1_sts;
   int	sts;
 	
+  if ( !(user_priv & pwr_mPrv_Administrator)) {
+    user_message( 'E', "Not authorized for this operation");
+    return 1;
+  }
+
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "user", strlen( arg1_str)) == 0)
@@ -492,8 +538,19 @@ static int	user_modify_func( void		*client_data,
     char	password_str[80];
     char	p_str[80];
     char	privilege_str[80];
+    char	description_str[80];
+    char	fullname_str[80];
+    char	email_str[80];
+    char	phone_str[40];
+    char	sms_str[40];
+    char 	*description_p = description_str;
+    char 	*fullname_p = fullname_str;
+    char 	*email_p = email_str;
+    char 	*phone_p = phone_str;
+    char 	*sms_p = sms_str;
     unsigned int privilege;
     int		nr;
+    pwr_tOix 	id;
 
     if ( EVEN( dcli_get_qualifier( "/user", user_str, sizeof(user_str))))
     {
@@ -509,14 +566,30 @@ static int	user_modify_func( void		*client_data,
       return 1;
     }
 
-    sts = gu->get_user_data( system_str, user_str, password_str, &privilege);
+    cdh_ToLower( user_str, user_str);
+    cdh_ToLower( system_str, system_str);
+
+    sts = gu->get_user_data( system_str, user_str, password_str, &privilege, &id, fullname_str, description_str,
+			     email_str, phone_str, sms_str);
     if ( EVEN(sts))
     {
       cout << gu->get_status(sts) << endl;
       return 1;
     }
-    if ( ODD( dcli_get_qualifier( "/password", p_str, sizeof(p_str))))
+    if ( ODD( dcli_get_qualifier( "/password", p_str, sizeof(p_str)))) {
       strcpy( password_str, p_str);
+      cdh_ToLower( password_str, password_str);
+    }
+    if ( EVEN( dcli_get_qualifier( "/description", description_str, sizeof(description_str))))
+      description_p = 0;
+    if ( EVEN( dcli_get_qualifier( "/fullname", fullname_str, sizeof(fullname_str))))
+      fullname_p = 0;
+    if ( EVEN( dcli_get_qualifier( "/email", email_str, sizeof(email_str))))
+      email_p = 0;
+    if ( EVEN( dcli_get_qualifier( "/phone", phone_str, sizeof(phone_str))))
+      phone_p = 0;
+    if ( EVEN( dcli_get_qualifier( "/sms", sms_str, sizeof(sms_str))))
+      sms_p = 0;
 
     if ( ODD( dcli_get_qualifier( "/rtread", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_RtRead;
@@ -618,7 +691,9 @@ static int	user_modify_func( void		*client_data,
         return 1;
       }
     }
-    sts = gu->modify_user( system_str, user_str, password_str, privilege);
+
+    sts = gu->modify_user( system_str, user_str, UserList::pwcrypt(password_str), privilege, fullname_p, description_p,
+			   email_p, phone_p, sms_p);
     cout << gu->get_status(sts) << endl;
   }
   else if ( strncmp( arg1_str, "group", strlen( arg1_str)) == 0)
@@ -627,7 +702,10 @@ static int	user_modify_func( void		*client_data,
     char	system_str[80];
     char	dummy_str[80];
     unsigned int attributes;
-
+    char	description_str[80];
+    char 	*description_p = description_str;
+    pwr_tOix	id;
+    
     if ( EVEN( dcli_get_qualifier( "/group", system_str, sizeof(system_str))))
     {
       if ( EVEN( dcli_get_qualifier( "dcli_arg2", system_str, sizeof(system_str))))
@@ -636,8 +714,9 @@ static int	user_modify_func( void		*client_data,
         return 1;
       }
     }
+    cdh_ToLower( system_str, system_str);
 
-    sts = gu->get_system_data( system_str, &attributes);
+    sts = gu->get_system_data( system_str, &attributes, &id, description_str);
     if ( EVEN(sts))
     {
       cout << gu->get_status(sts) << endl;
@@ -647,7 +726,9 @@ static int	user_modify_func( void		*client_data,
       attributes &= ~user_mSystemAttr_UserInherit;
     if ( ODD( dcli_get_qualifier( "/userinherit", dummy_str, sizeof(dummy_str))))
       attributes |= user_mSystemAttr_UserInherit;
-    sts = gu->modify_system( system_str, attributes);
+    if ( EVEN( dcli_get_qualifier( "/description", description_str, sizeof(description_str))))
+      description_p = 0;
+    sts = gu->modify_system( system_str, attributes, description_p);
     cout << gu->get_status(sts) << endl;
   }
   else
@@ -684,12 +765,64 @@ static int	user_get_func(	void		*client_data,
       return 1;
     }
 
-    sts = gu->get_user( system_str, user_str, password_str, &privilege);
+    cdh_ToLower( user_str, user_str);
+    cdh_ToLower( system_str, system_str);
+    cdh_ToLower( password_str, password_str);
+
+    sts = gu->get_user( system_str, user_str, UserList::pwcrypt(password_str), &privilege);
     if ( EVEN( sts))
-      cout << gu->get_status(sts) << endl;
-    else 
-      cout << "Priv " << privilege << endl;      
+      cout << "Error: " << gu->get_status(sts) << endl;
+    else {
+      char str[200];
+
+      GeUser::priv_to_string( privilege, str, sizeof(str));
+      cout << "Success: " << "Privileges " << str << endl;      
+    }
     return 1;
+}
+
+static int	user_login_func(	void		*client_data,
+					void		*client_flag)
+{
+  char username_str[80];
+  char password_str[80];
+  unsigned int priv;
+  pwr_tStatus sts;
+  char msg[200];
+
+  sts = user_CheckSystemGroup( "administrator");
+  if ( EVEN(sts)) {
+    // Username and password are not required
+    user_priv = pwr_mPrv_Administrator;
+    user_message('I', "Administrator logged in");
+    return 1;
+  }
+  else {
+    // Check user and password in systemgroup "aministrator"
+    if ( EVEN( dcli_get_qualifier( "dcli_arg1", username_str, sizeof(username_str)))) {
+      user_message('E',"Username and password required");
+      return 1;
+    }
+    
+    if ( EVEN( dcli_get_qualifier( "dcli_arg1", password_str, sizeof(password_str)))) {
+      user_message('E',"Password required");
+      return 1;
+    }
+
+    cdh_ToLower( username_str, username_str);
+    cdh_ToLower( password_str, password_str);
+    strcpy( password_str, UserList::pwcrypt(password_str));
+    sts = user_CheckUser( "administrator", username_str, password_str, &priv);
+    if ( EVEN(sts))
+      user_message('E',"Login failure");
+    else {
+      user_priv = pwr_mPrv_Administrator;
+      sprintf( msg, "User %s logged in", username_str);
+      user_message('I', msg);
+    }
+    return 1;
+  }
+  return 1;
 }
 
 static void user_message( char severity, char *msg)
@@ -709,6 +842,16 @@ int main()
 
   sts = dcli_input_init( &user_chn, &user_recall_buf);
 
+  sts = user_CheckSystemGroup( "administrator");
+  if ( EVEN(sts)) {
+    // Username and password are not required
+    user_priv = pwr_mPrv_Administrator;
+  }
+  else {
+    printf("\n Administrator has disabled public write access.\n");
+    printf(" Login is required.\n\n");
+  }
+
   for (;;)
   {
     sts = dcli_get_input_command( &user_chn, "pwr> ", line, 
@@ -718,7 +861,7 @@ int main()
     if ( strcmp( line, "") == 0)
       continue;
 
-    cdh_ToLower( line, line);
+    // cdh_ToLower( line, line);
     sts = dcli_cli( (dcli_tCmdTable *)&user_command_table, 
 		line, 0, 0);
     if ( EVEN(sts))
