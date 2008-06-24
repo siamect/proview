@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_dcli.h,v 1.11 2008-04-25 11:26:04 claes Exp $
+ * Proview   $Id: co_dcli.h,v 1.12 2008-06-24 07:02:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,7 +41,7 @@ extern "C" {
 typedef	struct	{
 	char	command[20];
 	int	(*func) ( void *, void *);
-	char	qualifier[50][40];
+	char	qualifier[60][40];
 	} dcli_tCmdTable;
 
 
