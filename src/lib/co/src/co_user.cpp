@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_user.cpp,v 1.8 2005-11-22 12:19:47 claes Exp $
+ * Proview   $Id: co_user.cpp,v 1.9 2008-06-24 07:04:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <float.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "co_user.h"
 
@@ -79,25 +80,28 @@ int GeUser::load( char *filename)
     return USER__FILEOPEN;
 #endif
 
-  for (;;)
-  {
+  for (;;) {
     fp >> type;
 
     switch( type) {
-      case user_eData_GeUser: break;
-      case user_eData_GeUserVersion:
-        fp.get();
-        fp.getline( version, sizeof(version));
-        break;
-      case user_eData_System:
-        load_system( fp); break;
-      case user_eData_End: end_found = 1; break;
-      default:
-        cout << "GeUser:open syntax error" << endl;
-        fp.getline( dummy, sizeof(dummy));
-   }
-   if ( end_found)
-     break;
+    case user_eData_GeUser: break;
+    case user_eData_GeUserVersion:
+      fp.get();
+      fp.getline( version, sizeof(version));
+      if ( strcmp( version, user_cVersion) != 0) {
+	return USER__DBVERSION;
+      }
+      break;
+    case user_eData_GeNextId: fp >> next_id; break;
+    case user_eData_System:
+      load_system( fp); break;
+    case user_eData_End: end_found = 1; break;
+    default:
+      cout << "GeUser:open syntax error" << endl;
+      fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
   }
 
   fp.close();
@@ -118,6 +122,7 @@ int GeUser::save( char *filename)
   fp << int(user_eData_GeUser) << endl;
 
   fp <<	int(user_eData_GeUserVersion) << FSPACE << user_cVersion << endl;
+  fp <<	int(user_eData_GeNextId) << FSPACE << next_id << endl;
   for ( sl = root; sl != NULL; sl = sl->next)
     sl->save( fp);
 
@@ -130,7 +135,7 @@ int GeUser::save( char *filename)
 int GeUser::load_system( ifstream& fp)
 {
   // Insert
-  SystemList *system_list = new SystemList("", 0, 0);
+  SystemList *system_list = new SystemList(0, "", 0, 0, 0);
   SystemList *sl = root;
   if ( !sl)
     root = system_list;
@@ -143,28 +148,31 @@ int GeUser::load_system( ifstream& fp)
   return 1;
 }
 
-int GeUser::add_system( char *name, unsigned int attributes)
+int GeUser::add_system( char *name, pwr_tMask attributes, char *description, pwr_tOix id)
 {
   int sts;
 
   SystemName *sn = new SystemName( name);
   sts = sn->parse();
-  if ( EVEN(sts))
-  {
+  if ( EVEN(sts)) {
     delete sn;
     return sts;
   }
+
+  if ( id == user_cNId)
+    id = get_next_id();
+  else if ( id >= next_id)
+    next_id = id + 1;
 
   SystemList *sl = find_system( sn);
   if ( sl)
     return USER__SYSTEMALREXIST;
 
   SystemName *parent = sn->parent();
-  if ( !parent)
-  {
+  if ( !parent) {
     SystemList *sl;
 
-    SystemList *system_list = new SystemList(name, 0, attributes);
+    SystemList *system_list = new SystemList( id, name, 0, attributes, description);
     // Insert as last sibling to root
     if ( !root)
       root = system_list;
@@ -173,8 +181,7 @@ int GeUser::add_system( char *name, unsigned int attributes)
       sl->next = system_list;
     }
   }
-  else
-  {
+  else {
     parent->parse();
     SystemList *sl = find_system( parent);
     if ( !sl)
@@ -183,7 +190,7 @@ int GeUser::add_system( char *name, unsigned int attributes)
       delete parent;
       return USER__NOSUCHSYSTEM;
     }
-    sl->add_system( sn, attributes);
+    sl->add_system( id, sn, attributes, description);
     delete parent;
   }
   delete sn;
@@ -245,7 +252,7 @@ int GeUser::remove_system( char *name)
   return USER__NOSUCHSYSTEM;
 }
 
-int GeUser::modify_system( char *name, unsigned int attributes)
+int GeUser::modify_system( char *name, pwr_tMask attributes, char *description)
 {
   int sts;
 
@@ -264,11 +271,11 @@ int GeUser::modify_system( char *name, unsigned int attributes)
     return USER__NOSUCHSYSTEM;
   }
 
-  sl->modify( attributes);
+  sl->modify( attributes, description);
   return USER__SUCCESS;
 }
 
-int GeUser::get_system_data( char *name, unsigned int *attributes)
+int GeUser::get_system_data( char *name, pwr_tMask *attributes, pwr_tOix *id, char *description)
 {
   int sts;
 
@@ -287,7 +294,7 @@ int GeUser::get_system_data( char *name, unsigned int *attributes)
     return USER__NOSUCHSYSTEM;
   }
 
-  sl->get_data( attributes);
+  sl->get_data( attributes, id, description);
   return USER__SUCCESS;
 }
 
@@ -314,7 +321,8 @@ int GeUser::remove_user( char *system, char *user)
   return sts;
 }
 
-int GeUser::modify_user( char *system, char *user, char *password, unsigned int priv)
+int GeUser::modify_user( char *system, char *user, char *password, unsigned int priv, char *fullname, 
+			 char *description, char *email, char *phone, char *sms)
 {
   int sts;
   UserList *ul;
@@ -335,13 +343,14 @@ int GeUser::modify_user( char *system, char *user, char *password, unsigned int 
   ul = (UserList *) sl->find_user( user);
   if ( !ul)
     return USER__NOSUCHUSER;
-  ul->modify( password, priv);
+  ul->modify( password, priv, fullname, description, email, phone, sms);
 
   return USER__SUCCESS;
 }
 
 int GeUser::get_user_data( char *system, char *user, char *password, 
-		unsigned int *priv)
+			   pwr_tMask *priv, pwr_tOix *id, char *fullname, char *description, char *email,
+			   char *phone, char *sms)
 {
   int sts;
   UserList *ul;
@@ -362,7 +371,7 @@ int GeUser::get_user_data( char *system, char *user, char *password,
   ul = (UserList *) sl->find_user( user);
   if ( !ul)
     return USER__NOSUCHUSER;
-  ul->get_data( password, priv);
+  ul->get_data( password, priv, id, fullname, description, email, phone, sms);
 
   return USER__SUCCESS;
 }
@@ -383,7 +392,8 @@ SystemList *GeUser::find_system( SystemName *name)
   return NULL;
 }
 
-int GeUser::add_user( char *system, char *user, char *password, unsigned int priv)
+int GeUser::add_user( char *system, char *user, char *password, pwr_tMask priv, char *fullname, 
+		      char *description, char *email, char *phone, char *sms, pwr_tOix id)
 {
   SystemList *sl;
   int sts;
@@ -399,7 +409,12 @@ int GeUser::add_user( char *system, char *user, char *password, unsigned int pri
   sl = find_system( sn);
   if ( !sl) return USER__NOSUCHSYSTEM;
 
-  sl->add_user( user, password, priv);
+  if ( id == user_cNId)
+    id = get_next_id();
+  else if ( id >= next_id)
+    next_id = id + 1;
+
+  sl->add_user( id, user, password, priv, fullname, description, email, phone, sms);
   return USER__SUCCESS;
 }
 
@@ -415,7 +430,7 @@ int GeUser::get_user( char *gu_system, char *gu_user, char *gu_password, unsigne
 
   cdh_ToLower( system, gu_system);
   cdh_ToLower( user, gu_user);
-  cdh_ToLower( password, gu_password);
+  strcpy( password, gu_password);
 
   // Find system
   sn = new SystemName( system);
@@ -497,23 +512,23 @@ int GeUser::get_user_priv( char *gu_system, char *gu_user, unsigned int *priv)
   return USER__NOSUCHUSER;
 }
 
-void GeUser::print()
+void GeUser::print( int brief)
 {
   SystemList *sl;
 
   cout << endl << "Proview user database " << user_cVersion << endl << endl;
   for ( sl = root; sl != NULL; sl = sl->next)
-    sl->print();
+    sl->print( brief);
   cout << endl;
 }
 
-void GeUser::print_all()
+void GeUser::print_all( int brief)
 {
   SystemList *sl;
 
   cout << endl << "Proview user database " << user_cVersion << endl << endl;
   for ( sl = root; sl != NULL; sl = sl->next)
-    sl->print_all();
+    sl->print_all( brief);
   cout << endl;
 }
 
@@ -553,6 +568,11 @@ int SystemList::load( ifstream& fp)
         break;
       case user_eData_SystemLevel: fp >> level; break;
       case user_eData_SystemAttributes: fp >> attributes; break;
+      case user_eData_SystemId: fp >> id; break;
+      case user_eData_SystemDescription:
+        fp.get();
+        fp.getline( description, sizeof(description));
+        break;
       case user_eData_User:
         load_user( fp); break;
       case user_eData_System:
@@ -571,7 +591,7 @@ int SystemList::load( ifstream& fp)
 int SystemList::load_user( ifstream& fp)
 {
   // Insert
-  UserList *user_list = new UserList("", "", 0);
+  UserList *user_list = new UserList(0, "", "", 0, 0, 0, 0, 0, 0);
   UserList *ul = userlist;
   if ( !ul)
     userlist = user_list;
@@ -587,7 +607,7 @@ int SystemList::load_user( ifstream& fp)
 int SystemList::load_system( ifstream& fp)
 {
   // Insert
-  SystemList *system_list = new SystemList("", 0, 0);
+  SystemList *system_list = new SystemList( 0, "", 0, 0, 0);
   SystemList *sl = childlist;
   if ( !sl)
     childlist = system_list;
@@ -609,6 +629,8 @@ void SystemList::save( ofstream& fp)
   fp << int(user_eData_SystemName) << FSPACE << name << endl;
   fp << int(user_eData_SystemLevel) << FSPACE << level << endl;
   fp << int(user_eData_SystemAttributes) << FSPACE << attributes << endl;
+  fp << int(user_eData_SystemId) << FSPACE << id << endl;
+  fp << int(user_eData_SystemDescription) << FSPACE << description << endl;
   for ( ul = (UserList *) userlist; ul != NULL; ul = ul->next)
     ul->save( fp);
   for ( sl = childlist; sl; sl = sl->next)
@@ -616,7 +638,7 @@ void SystemList::save( ofstream& fp)
   fp << int(user_eData_End) << endl;
 }
 
-void SystemList::print()
+void SystemList::print( int brief)
 {
   UserList *ul;
   SystemList *sl;
@@ -632,12 +654,12 @@ void SystemList::print()
     cout << "UserInherit";
   cout << endl;
   for ( ul = (UserList *)userlist; ul; ul = ul->next)
-    ul->print();
+    ul->print( brief);
   for ( sl = childlist; sl; sl = sl->next)
-    sl->print();
+    sl->print( brief);
 }
 
-void SystemList::print_all()
+void SystemList::print_all( int brief)
 {
   UserList *ul;
   SystemList *sl;
@@ -653,9 +675,9 @@ void SystemList::print_all()
     cout << "UserInherit";
   cout << endl;
   for ( ul = (UserList *)userlist; ul; ul = ul->next)
-    ul->print_all();
+    ul->print_all( brief);
   for ( sl = childlist; sl; sl = sl->next)
-    sl->print_all();
+    sl->print_all( brief);
 }
 
 SystemList *SystemList::find_system( SystemName *name)
@@ -686,7 +708,8 @@ void *SystemList::find_user( char *name)
   return NULL;
 }
 
-int SystemList::add_user( char *user, char *password, unsigned int priv)
+int SystemList::add_user( pwr_tOix ident, char *user, char *password, pwr_tMask priv, char *fullname, char *description,
+			  char *email, char *phone, char *sms)
 {
   UserList *ul;
 
@@ -694,7 +717,7 @@ int SystemList::add_user( char *user, char *password, unsigned int priv)
   ul = (UserList *) find_user( user);
   if ( ul) return USER__USERALREXIST;
 
-  ul = new UserList( user, password, priv);
+  ul = new UserList( ident, user, password, priv, fullname, description, email, phone, sms);
   UserList *u = userlist;
   if ( !u)
     userlist = ul;
@@ -706,7 +729,7 @@ int SystemList::add_user( char *user, char *password, unsigned int priv)
   return USER__SUCCESS;
 }
 
-int SystemList::add_system( SystemName *name, unsigned int attributes)
+int SystemList::add_system( pwr_tOix ident, SystemName *name, pwr_tMask attributes, char *description)
 {
   SystemList *sl;
 
@@ -714,7 +737,7 @@ int SystemList::add_system( SystemName *name, unsigned int attributes)
   sl = find_system( name);
   if ( sl) return USER__SYSTEMALREXIST;
 
-  sl = new SystemList( name->segment(level+1), level + 1, attributes);
+  sl = new SystemList( ident, name->segment(level+1), level + 1, attributes, description);
   SystemList *s = childlist;
   if ( !s)
     childlist = sl;
@@ -769,14 +792,18 @@ int SystemList::remove_user( char *user)
   return USER__NOSUCHUSER;
 }
 
-void SystemList::modify( unsigned int attributes)
+void SystemList::modify( unsigned int attributes, char *description)
 {
   this->attributes = attributes;
+  if ( description)
+    strncpy( this->description, description, sizeof(this->description));
 }
 
-void SystemList::get_data( unsigned int *attributes)
+void SystemList::get_data( pwr_tMask *attributes, pwr_tOix *id, char *description)
 {
   *attributes = this->attributes;
+  *id = this->id;
+  strcpy( description, this->description);
 }
 
 int UserList::load( ifstream& fp)
@@ -798,9 +825,29 @@ int UserList::load( ifstream& fp)
       case user_eData_UserPassword:
         fp.get();
         fp.getline( password, sizeof(password));
-        strcpy( password, decrypt( password));
         break;
-      case user_eData_UserPrivilege: fp >> priv; priv = decrypt( priv); break;
+      case user_eData_UserPrivilege: fp >> priv; priv = idecrypt( priv); break;
+      case user_eData_UserId: fp >> id; break;
+      case user_eData_UserFullName:
+        fp.get();
+        fp.getline( fullname, sizeof(fullname));
+        break;
+      case user_eData_UserDescription:
+        fp.get();
+        fp.getline( description, sizeof(description));
+        break;
+      case user_eData_UserEmail:
+        fp.get();
+        fp.getline( email, sizeof(email));
+        break;
+      case user_eData_UserPhone:
+        fp.get();
+        fp.getline( phone, sizeof(phone));
+        break;
+      case user_eData_UserSms:
+        fp.get();
+        fp.getline( sms, sizeof(sms));
+        break;
       case user_eData_End: end_found = 1; break;
       default:
         cout << "User:open syntax error" << endl;
@@ -816,47 +863,86 @@ void UserList::save( ofstream& fp)
 { 
   fp << int(user_eData_User) << endl;
   fp << int(user_eData_UserName) << FSPACE << name << endl;
-  fp << int(user_eData_UserPassword) << FSPACE << crypt( password) << endl;
-  fp << int(user_eData_UserPrivilege) << FSPACE << crypt( priv) << endl;
+  fp << int(user_eData_UserPassword) << FSPACE << password << endl;
+  fp << int(user_eData_UserPrivilege) << FSPACE << icrypt( priv) << endl;
+  fp << int(user_eData_UserId) << FSPACE << id << endl;
+  fp << int(user_eData_UserFullName) << FSPACE << fullname << endl;
+  fp << int(user_eData_UserDescription) << FSPACE << description << endl;
+  fp << int(user_eData_UserEmail) << FSPACE << email << endl;
+  fp << int(user_eData_UserPhone) << FSPACE << phone << endl;
+  fp << int(user_eData_UserSms) << FSPACE << sms << endl;
   fp << int(user_eData_End) << endl;
 }
 
-void UserList::print_all()
+void UserList::print_all( int brief)
+{
+  if ( brief)
+    return;
+  print( brief);
+  for ( int i = 0; i < 6; i++)
+    cout << ". ";
+  cout << "  " << "Password    " << password << endl;
+}
+
+void UserList::print( int brief)
 {
   int i;
   char priv_str[300];
 
-  for ( i = 0; i < 6; i++)
-    cout << ". ";
-  cout << name << " ";
-  for ( i = 0; i < int(10 - strlen(name)); i++)
-    cout << " ";
-  cout << password << " ";
-  for ( i = 0; i < int(10 - strlen(password)); i++)
-    cout << " ";
-  GeUser::priv_to_string( priv, priv_str, sizeof(priv_str));
-  cout << priv_str;
-  cout  << "(" << priv << ")" << endl;
+  if ( brief) {
+    for ( i = 0; i < 6; i++)
+      cout << ". ";
+    cout << name << " ";
+    for ( i = 0; i < int(10 - strlen(name)); i++)
+      cout << " ";
+    GeUser::priv_to_string( priv, priv_str, sizeof(priv_str));
+    cout << priv_str;
+    cout  << "(" << priv << ")" << endl;
+  }
+  else {
+    for ( i = 0; i < 6; i++)
+      cout << ". ";
+    cout << name << endl;
+
+    for ( i = 0; i < 6; i++)
+      cout << ". ";
+    cout << "  " << "Id          " << id << endl;
+
+    for ( i = 0; i < 6; i++)
+      cout << ". ";
+    cout << "  " << "Priv        ";
+    GeUser::priv_to_string( priv, priv_str, sizeof(priv_str));
+    cout << priv_str;
+    cout  << "(" << priv << ")" << endl;
+
+    for ( i = 0; i < 6; i++)
+      cout << ". ";
+    cout << "  " << "FullName    " << fullname << endl;
+
+    for ( i = 0; i < 6; i++)
+      cout << ". ";
+    cout << "  " << "Description " << description << endl;
+
+    for ( i = 0; i < 6; i++)
+      cout << ". ";
+    cout << "  " << "Email       " << email << endl;
+
+    for ( i = 0; i < 6; i++)
+      cout << ". ";
+    cout << "  " << "Phone       " << phone << endl;
+
+    for ( i = 0; i < 6; i++)
+      cout << ". ";
+    cout << "  " << "Sms         " << sms << endl;
+  }
 }
 
-void UserList::print()
-{
-  int i;
-  char priv_str[300];
-
-  for ( i = 0; i < 6; i++)
-    cout << ". ";
-  cout << name << " ";
-  for ( i = 0; i < int(10 - strlen(name)); i++)
-    cout << " ";
-  GeUser::priv_to_string( priv, priv_str, sizeof(priv_str));
-  cout << priv_str;
-  cout  << "(" << priv << ")" << endl;
-}
-
-char *UserList::crypt( char *str)
+char *UserList::pwcrypt( char *str)
 {
   static char cstr[200];
+
+  strcpy( cstr, crypt( str, "aa"));
+#if 0
   char *s, *t;
 
   for ( s = str, t = cstr; *s; s++, t++)
@@ -867,50 +953,53 @@ char *UserList::crypt( char *str)
       *t = *s;
   }
   *t = *s;
+#endif
   return cstr;
 }
 
-unsigned long UserList::crypt( unsigned long i)
+unsigned long UserList::icrypt( unsigned long i)
 {
   return ~(i + 123456);
 }
 
-char *UserList::decrypt( char *str)
-{
-  static char cstr[200];
-  char *s, *t;
-
-  for ( s = str, t = cstr; *s; s++, t++)
-  {
-    if ( *s >= 48 && *s <= 122)
-      *t = 122 - ( *s - 48);
-    else
-      *t = *s;
-  }
-  *t = *s;
-  return cstr;
-}
-
-unsigned long UserList::decrypt( unsigned long i)
+unsigned long UserList::idecrypt( unsigned long i)
 {
   return ~i - 123456;
 }
 
-void UserList::modify( char *password, unsigned int priv)
+void UserList::modify( char *password, pwr_tMask priv, char *fullname, char *description,
+			 char *email, char *phone, char *sms)
 {
   strcpy( this->password, password);
   this->priv = priv;
+  if ( fullname)
+    strncpy( this->fullname, fullname, sizeof(this->fullname));
+  if ( description)
+    strncpy( this->description, description, sizeof(this->description));
+  if ( email)
+    strncpy( this->email, email, sizeof(this->email));
+  if ( phone)
+    strncpy( this->phone, phone, sizeof(this->phone));
+  if ( sms)
+    strncpy( this->sms, sms, sizeof(this->sms));
 }
 
-void UserList::get_data( char *password, unsigned int *priv)
+void UserList::get_data( char *password, unsigned int *priv, pwr_tOix *id, char *fullname, char *description,
+			 char *email, char *phone, char *sms)
 {
   strcpy( password,  this->password);
   *priv = this->priv;
+  *id = this->id;
+  strcpy( fullname, this->fullname);
+  strcpy( description, this->description);
+  strcpy( email, this->email);
+  strcpy( phone, this->phone);
+  strcpy( sms, this->sms);
 }
 
 int UserList::check_password( char *password)
 {
-  if ( cdh_NoCaseStrcmp( this->password, password) == 0)
+  if ( strcmp( this->password, password) == 0)
     return USER__SUCCESS;
   return USER__NOTAUTHORIZED;
 }
