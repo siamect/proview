@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_mvol.c,v 1.19 2008-05-14 14:05:38 claes Exp $
+ * Proview   $Id: rt_mvol.c,v 1.20 2008-06-24 07:12:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -335,7 +335,7 @@ mvol_AnameToAttribute (
     ap->flags.b.CastAttr = ((ap->adef->Info.Flags & PWR_MASK_CASTATTR) != 0);
     ap->flags.b.DisableAttr = ((ap->adef->Info.Flags & PWR_MASK_DISABLEATTR) != 0);
     if (ap->idx != ULONG_MAX) {
-      if (ap->idx > ap->adef->Info.Elements - 1)
+      if (ap->idx > ap->adef->Info.Elements - 1 && !(ap->adef->Info.Flags & PWR_MASK_DYNAMIC))
 	pwr_Return(NULL, sts, GDH__SUBSCRIPT);
       ap->size /= ap->elem;
       ap->offs += ap->size * ap->idx;
@@ -410,7 +410,7 @@ mvol_ArefToAttribute (
     if ( acp == NULL)
       pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
     for (i = 0; i < acp->acount; i++) {
-      if (arp->Offset <= (offset + acp->attr[i].moffset)) break;
+      if (arp->Offset <= (offset + acp->attr[i].moffset) || acp->attr[i].flags.b.dynamic) break;
     }
     if ( i == acp->acount)
       pwr_Return(NULL, sts, GDH__ATTRIBUTE);
@@ -432,7 +432,7 @@ mvol_ArefToAttribute (
     }
 
     if ( !acp->attr[i].flags.b.isclass) {
-      if ( acp->attr[i].elem > 1)
+      if ( acp->attr[i].elem > 1 || acp->attr[i].flags.b.dynamic)
 	idx = (arp->Offset - offset) / (acp->attr[i].size / acp->attr[i].elem);
       break;
     }
@@ -482,7 +482,7 @@ mvol_ArefToAttribute (
       ap->adef = NULL;
       strcpy( ap->name, "");
     }
-  } else if (param->Info.Elements > 1) {
+  } else if (param->Info.Elements > 1 || acp->attr[i].flags.b.dynamic) {
 
     /* Calculate index.  */
 
