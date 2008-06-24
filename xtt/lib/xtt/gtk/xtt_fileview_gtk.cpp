@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_fileview_gtk.cpp,v 1.1 2008-04-25 11:08:06 claes Exp $
+ * Proview   $Id: xtt_fileview_gtk.cpp,v 1.2 2008-06-24 08:09:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -128,13 +128,21 @@ void XttFileviewGtk::list_ok_cb ( GtkWidget *w,
     // Get value from text entry
     char 	*text, *textutf8;
     bool	file_exist = false;
+    char	input_text[200];
 
     textutf8 = gtk_editable_get_chars( GTK_EDITABLE(fileview->input_text), 0, -1);
     text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
     g_free( textutf8);
+    strncpy( input_text, text, sizeof(input_text));
+    g_free( text);
+    
+    if ( strcmp( fileview->filetype, "") != 0) {
+      if ( strchr( input_text, '.') == 0)
+	strcat( input_text, fileview->filetype);
+    }
 
     for ( int i = 0; i < fileview->filecnt; i++) {
-      if ( strcmp( fileview->filelist[i], text) == 0) {
+      if ( strcmp( fileview->filelist[i], input_text) == 0) {
 	file_exist = true;
 	break;
       }
@@ -142,9 +150,9 @@ void XttFileviewGtk::list_ok_cb ( GtkWidget *w,
     if ( file_exist) {
       char msg[200];
 
-      strcpy( fileview->selected_file, text);
+      strcpy( fileview->selected_file, input_text);
       sprintf( msg, "%s %s\n", 
-	       text, Lng::translate("already exists"));
+	       input_text, Lng::translate("already exists"));
       sprintf( &msg[strlen(msg)], "%s",
 	       Lng::translate("Do you want to replace it"));
       ((XNav *)fileview->parent_ctx)->wow->DisplayQuestion( fileview, 
@@ -152,7 +160,7 @@ void XttFileviewGtk::list_ok_cb ( GtkWidget *w,
 							    msg, list_save_cb, 0, 0);
       return;
     }
-    fileview->execute( text);
+    fileview->execute( input_text);
 
   }
   gtk_widget_destroy( fileview->toplevel);
@@ -191,7 +199,7 @@ static gboolean list_action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer 
 
 XttFileviewGtk::XttFileviewGtk( void *xn_parent_ctx, GtkWidget *xn_parent_wid, pwr_tOid xn_oid,
 				char *xn_title, char *xn_dir, char *xn_pattern, int xn_type,
-				char *xn_target_attr, char *xn_trigger_attr) :
+				char *xn_target_attr, char *xn_trigger_attr, char *xn_filetype) :
   filelist(0), parent_ctx( xn_parent_ctx), oid(xn_oid), type(xn_type)
 {
   pwr_tStatus sts;
@@ -205,6 +213,12 @@ XttFileviewGtk::XttFileviewGtk( void *xn_parent_ctx, GtkWidget *xn_parent_wid, p
   strncpy( pattern, xn_pattern, sizeof(pattern));
   strncpy( target_attr, xn_target_attr, sizeof(target_attr));
   strncpy( trigger_attr, xn_trigger_attr, sizeof(trigger_attr));
+  if ( xn_filetype) {
+    strcpy( filetype, ".");
+    strncat( filetype, xn_filetype, sizeof(filetype)-1);
+  }
+  else
+    strcpy( filetype, "");
   strcpy( selected_file, "");
 
   sts = gdh_SearchFile( oid, dir, pattern, &filelist, &filecnt);

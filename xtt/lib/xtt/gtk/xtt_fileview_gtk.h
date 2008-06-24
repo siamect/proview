@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: xtt_fileview_gtk.h,v 1.1 2008-04-25 11:08:06 claes Exp $
+ * Proview   $Id: xtt_fileview_gtk.h,v 1.2 2008-06-24 08:09:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,7 +28,7 @@ class XttFileviewGtk : public XttFileview {
  public:
   XttFileviewGtk( void *xn_parent_ctx, GtkWidget *xn_parent_wid, pwr_tOid xn_oid,
 		  char *xn_title, char *xn_dir, char *xn_pattern, int xn_type,
-		  char *xn_target_attr, char *xn_trigger_attr);
+		  char *xn_target_attr, char *xn_trigger_attr, char *xn_filetype);
   ~XttFileviewGtk() {}
 
   GtkWidget    	*toplevel;
@@ -40,6 +40,7 @@ class XttFileviewGtk : public XttFileview {
   pwr_tAName	trigger_attr;
   pwr_tString40	*filelist;
   pwr_tString40 selected_file;
+  pwr_tString40 filetype;
   int		filecnt;
   void      	*parent_ctx;
   pwr_tOid 	oid;
