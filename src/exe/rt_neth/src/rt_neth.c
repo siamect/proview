@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_neth.c,v 1.14 2006-09-14 14:16:07 claes Exp $
+ * Proview   $Id: rt_neth.c,v 1.15 2008-06-24 06:57:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -82,6 +82,7 @@ static void		volumes		(qcom_sGet*);
 static void		volumesR	(qcom_sGet*);
 static void		volumes7	(qcom_sGet*);
 static void		serverConnect	(qcom_sGet*);
+static void		fileList	(qcom_sGet*);
 #if 0
   static void		linkEvent	(pwr_tUInt32, net_eEvent);
   static void		sendIdAck	(gdb_sNode*);
@@ -123,6 +124,7 @@ static char *cMsg[net_eMsg_end] = {
   "getGclass",
   "getGclassR",
   "serverConnect",
+  "fileList",
   "net_eMsg_",
   "volumes7"
 };
@@ -158,6 +160,7 @@ static void (*fromApplication[net_eMsg_end])(qcom_sGet *) = {
   cmvolsm_GetGclass,
   bugError,                     /* net_eMsg_GetGclassR will never reach neth */
   serverConnect,                /* net_eMsg_serverConnect */
+  fileList,               	/* net_eMsg_fileList */
   bugError,                     /* net_eMsg_ */
   volumes7
 };
@@ -1474,4 +1477,57 @@ serverConnect (
   if ( remote && !new_server) {
     // nodeUp( np);
   }
+}
+
+static void
+fileList (
+  qcom_sGet	*get
+)
+{
+  net_sFileList *mp = get->data;
+  net_sFileListR *rmp;
+  gdb_sNode	*np;
+  pwr_tStatus 	sts;
+  pwr_tUInt32		size;
+  int	       		filecnt;
+  pwr_tString40         *filelist;
+  qcom_sPut		put;
+
+  gdb_ScopeLock {
+    np = hash_Search(&sts, gdbroot->nid_ht, &mp->hdr.nid);
+  } gdb_ScopeUnlock;
+
+
+  if (gdbroot->db->log.b.id) {
+    errh_Info("Sending 'fileList' to %s (%s)",
+      np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
+  }
+
+  sts = gdh_SearchFile( pwr_cNOid, mp->dir, mp->pattern, 
+			  &filelist, &filecnt);
+
+  if ( EVEN(sts))
+    size = sizeof(*rmp);
+  else
+    size = sizeof(*rmp) + filecnt * sizeof(pwr_tString40);
+  size = (size + 3) & ~3;   /* Size up to nearest multiple of 4.  */
+  
+  rmp = net_Alloc(&sts, &put, size, net_eMsg_fileListR);
+  if (rmp == NULL) {
+    errh_Error("Failed to allocate 'fileList' to %s (%s)",
+      np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
+    return;
+  }
+
+  rmp->sts = sts;
+  if ( EVEN(sts)) {
+    rmp->filecnt = 0;
+  }
+  else {
+    rmp->filecnt = filecnt;
+    memcpy( rmp->files, filelist, filecnt * sizeof(pwr_tString40));
+    free( filelist);
+  }
+
+  net_Reply(&sts, get, &put, 0);
 }
