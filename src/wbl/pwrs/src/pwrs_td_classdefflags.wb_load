@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_td_classdefflags.wb_load,v 1.4 2005-09-01 14:58:03 claes Exp $
+!  Proview   $Id: pwrs_td_classdefflags.wb_load,v 1.5 2008-06-24 07:18:32 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -193,6 +193,16 @@ SObject pwrs:Type
        Attr PgmName = "HasCallBack"
        Attr Text = "HasCallBack"
        Attr Value = 32768
+     EndBody
+    EndObject
+    !/**
+    !  Object is readonly in runtime.
+    !*/
+    Object RtReadOnly $Bit
+     Body SysBody
+       Attr PgmName = "RtReadOnly"
+       Attr Text = "RtReadOnly"
+       Attr Value = 65536
      EndBody
     EndObject
   EndObject
