@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: co_user_msg.msg,v 1.3 2005-09-01 14:58:00 claes Exp $
+!  Proview   $Id: co_user_msg.msg,v 1.4 2008-06-24 07:17:31 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -32,3 +32,4 @@ useralrexist	<user already exist>					/error
 systemalrexist	<system already exist>					/error
 fileopen	<unable to open user database>				/error
 systemnotempty	<system is not empty>					/error
+dbversion       <User database version mismatch, database needs conversion> /error

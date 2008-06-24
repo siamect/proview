@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: rt_gdh_msg.msg,v 1.6 2008-04-25 11:09:10 claes Exp $
+!  Proview   $Id: rt_gdh_msg.msg,v 1.7 2008-06-24 07:17:31 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -82,6 +82,7 @@ noattr          <AttrRef is not an attribute>				/error
 noobject        <AttrRef is not an object>				/error
 file		<Unable to open file>					/error
 convert		<Unable to convert value>				/error
+readonly	<Object is read only>					/error
 .end
 
 
