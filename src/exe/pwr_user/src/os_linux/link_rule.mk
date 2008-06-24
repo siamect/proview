@@ -5,6 +5,6 @@ link = $(ldxx) $(linkflags) $(domap) -o $(export_exe) \
 	$(export_obj) $(objects) $(rt_msg_objs) \
 	-lpwr_co \
 	-lpwr_msg_dummy \
-	-lrpcsvc -lpthread -lm -lrt
+	-lrpcsvc -lpthread -lm -lrt -lcrypt
 
 endif

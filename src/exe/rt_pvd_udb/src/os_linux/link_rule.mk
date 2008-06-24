@@ -6,6 +6,6 @@ link = $(ldxx) $(linkflags) $(domap) -o $(export_exe) \
 	$(pwr_obj)/rt_io_user.o\
 	-lpwr_rt -lpwr_co \
 	-lpwr_msg_dummy \
-	-lrpcsvc -lpthread -lm -lrt
+	-lrpcsvc -lpthread -lm -lrt -lcrypt
 
 endif
