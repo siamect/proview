@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.cpp,v 1.15 2008-06-02 14:57:07 claes Exp $
+ * Proview   $Id: wb_lfu.cpp,v 1.16 2008-06-24 07:48:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1273,6 +1273,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
 
 	  lfu_check_appl_file( nodename_ptr, *bus_number_ptr);
+	  lfu_check_opt_file( nodename_ptr, *bus_number_ptr, (pwr_mOpSys) os);
 
 	  /* Find the volumes in this node */
 	  sts = ldh_GetChild( ldhses, nodeobjid, &volobjid);
@@ -2662,6 +2663,44 @@ pwr_tStatus lfu_check_appl_file( char *nodename, int bus_number)
     "#pwr_webmonelog, , noload, norun, , 5, debug, \"\"" << endl <<
     "#pwr_opc_server, , noload, norun, , 5, debug, \"\"" << endl <<
     "#pwr_statussrv,  , noload, norun, , 5, debug, \"\"" << endl;
+
+  fp.close();
+  return LFU__SUCCESS;
+}
+
+pwr_tStatus lfu_check_opt_file( char *nodename, int bus_number, pwr_mOpSys opsys)
+{
+  pwr_tFileName fname;
+  pwr_tTime t;
+  char dir[80];
+
+  sprintf( dir, "$pwrp_root/%s/exe/", cdh_OpSysToStr( opsys));
+  sprintf( fname, load_cNameOpt, dir, nodename, bus_number);
+  dcli_translate_filename( fname, fname);
+
+  if ( ODD(dcli_file_time( fname, &t)))
+    return LFU__SUCCESS;
+
+  strcat( fname, "_template");
+  if ( ODD(dcli_file_time( fname, &t)))
+    return LFU__SUCCESS;
+
+  // Create a template file
+  ofstream fp( fname);
+  if ( !fp)
+    return LFU__SUCCESS;
+  
+  switch ( opsys) {
+  case pwr_mOpSys_PPC_LYNX:
+  case pwr_mOpSys_X86_LYNX:
+  case pwr_mOpSys_PPC_LINUX:
+  case pwr_mOpSys_X86_LINUX:
+  case pwr_mOpSys_AXP_LINUX:
+    fp << 
+      "$pwr_obj/rt_io_user.o -lpwr_rt -lpwr_usbio_dummy" << endl;
+    break;
+  default : ;
+  }
 
   fp.close();
   return LFU__SUCCESS;

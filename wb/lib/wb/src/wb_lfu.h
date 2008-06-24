@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.h,v 1.9 2008-06-02 14:57:07 claes Exp $
+ * Proview   $Id: wb_lfu.h,v 1.10 2008-06-24 07:48:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -135,6 +135,7 @@ pwr_tStatus lfu_ParseDbmsServer( char *server, char *user, char *passw,
 				 unsigned int *port, char *host);
 
 pwr_tStatus lfu_check_appl_file( char *nodename, int bus_number);
+pwr_tStatus lfu_check_opt_file( char *nodename, int bus_number, pwr_mOpSys opsys);
 
 #ifdef __cplusplus
 }
