@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_ctx.cpp,v 1.15 2008-05-13 13:56:03 claes Exp $
+ * Proview   $Id: flow_ctx.cpp,v 1.16 2008-06-24 08:07:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -531,6 +531,9 @@ void FlowCtx::paste_execute()
   int 	i;
   double ll_x, ll_y, ur_x, ur_y;
   int	delta_x, delta_y;
+
+  if ( node_movement_paste_active)
+    return;
 
   a_paste.zoom();
   a_paste.nav_zoom();
