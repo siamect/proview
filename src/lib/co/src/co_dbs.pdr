@@ -1,6 +1,6 @@
 #ifdef PDR_HDR
 %/** 
-% * Proview   $Id: co_dbs.pdr,v 1.24 2006-05-05 11:31:37 claes Exp $
+% * Proview   $Id: co_dbs.pdr,v 1.25 2008-06-24 07:02:08 claes Exp $
 % * Copyright (C) 2005 SSAB Oxelösund AB.
 % *
 % * This program is free software; you can redistribute it and/or 
@@ -252,7 +252,8 @@ enum dbs_eFile {
 %    pwr_Bits( isMountClient , 1),
 %    pwr_Bits( isMountClean  , 1),
 %    pwr_Bits( devOnly       , 1),
-%    pwr_Bits( fill0         , 4),,,,
+%    pwr_Bits( readOnly      , 1),
+%    pwr_Bits( fill0         , 3),,,
 %
 %    pwr_Bits( io            , 1),
 %    pwr_Bits( fill1         , 7),,,,,,,
