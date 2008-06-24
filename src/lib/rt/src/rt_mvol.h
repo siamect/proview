@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_mvol.h,v 1.6 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_mvol.h,v 1.7 2008-06-24 07:13:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -82,7 +82,7 @@ typedef struct {
   pwr_tUInt32		elem;
   pwr_tTypeId		tid;
   pwr_mAttrRef		flags;
-  char			name[120];	/**< Full attribute name */
+  pwr_tOName	       	name;	/**< Full attribute name */
 } mvol_sAttribute;
 
 /* Function prototypes.  */
