@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_cvolc.c,v 1.8 2006-09-14 14:16:07 claes Exp $
+ * Proview   $Id: rt_cvolc.c,v 1.9 2008-06-24 07:06:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -497,5 +497,70 @@ cvolc_UnlockObject (
   pwr_Assert(fqp == &vp->u.c.cacheLock);
   cvol_QmoveSucc(op, fqp, vqp);
   cvol_Qtrim(vqp);
+}
+
+void
+cvolc_FileList (
+  pwr_tStatus		*sts,
+  gdb_sObject		*p_op,
+  char			*dir,
+  char			*pattern,
+  pwr_tString40		*filelist[],
+  int			*filecnt
+)
+{
+  net_sFileList		*mp;
+  qcom_sPut		put;
+  gdb_sVolume		*vp;
+  pwr_tStatus	lsts;
+  qcom_sQid	tgt;
+  qcom_sGet	get;
+  net_sFileListR *rsp;
+  gdb_sNode	*np;
+  
+  gdb_AssumeLocked;
+
+  if (!p_op->l.flags.b.isCached) {
+    *sts = GDH__NOSUCHOBJ;
+    return;
+  }
+  vp = pool_Address(NULL, gdbroot->pool, p_op->l.vr);
+  if (vp == NULL) {
+    *sts = GDH__NOSUCHOBJ;
+    return;
+  }
+
+  mp = net_Alloc(sts, &put, sizeof(*mp), net_eMsg_fileList);
+  if (mp == NULL) return;
+
+  strncpy( mp->pattern, pattern, sizeof(mp->pattern));
+  strncpy( mp->dir, dir, sizeof(mp->dir));
+
+  np = hash_Search(sts, gdbroot->nid_ht, &vp->g.nid);
+  if (np == NULL) return;
+
+  tgt = np->handler;
+
+  gdb_Unlock;
+
+    rsp = net_Request(&lsts, &tgt, &put, &get, net_eMsg_fileListR, 0, 0);
+
+  gdb_Lock;
+
+  if (EVEN(lsts)) {
+    *sts = lsts;
+    return;
+  }
+  if (EVEN(rsp->sts)) {
+    *sts = rsp->sts;
+    net_Free(NULL, rsp);
+    return;
+  }
+
+  *filecnt = rsp->filecnt;
+  *filelist = calloc( rsp->filecnt, sizeof(pwr_tString40));
+  memcpy( (*filelist)[0], rsp->files, rsp->filecnt * sizeof(pwr_tString40));
+
+  net_Free(NULL, rsp);
 }
 

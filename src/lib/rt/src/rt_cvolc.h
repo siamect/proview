@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_cvolc.h,v 1.2 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_cvolc.h,v 1.3 2008-06-24 07:06:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -88,6 +88,16 @@ void
 cvolc_UnlockObject (
   pwr_tStatus		*sts,
   gdb_sObject		*op
+);
+
+void
+cvolc_FileList (
+  pwr_tStatus		*sts,
+  gdb_sObject		*p_op,
+  char			*dir,
+  char			*pattern,
+  pwr_tString40		*filelist[],
+  int			*filecnt
 );
 
 #endif
