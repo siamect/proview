@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_readwbl.h,v 1.5 2005-09-21 14:21:12 claes Exp $
+ * Proview   $Id: cnv_readwbl.h,v 1.6 2008-06-24 06:53:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -154,7 +154,7 @@ class CnvReadWbl {
     char		typedef_pgmname[32];
     char		bit_name[80];
     char		bit_type[80];
-    int			bit_value;
+    unsigned int       	bit_value;
     char		bit_text[80];
     char		bit_pgmname[80];
     char		doc_author[200];
