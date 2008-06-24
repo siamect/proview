@@ -1,0 +1,114 @@
+! 
+!  Proview   $Id: pwrs_c_security.wb_load,v 1.1 2008-06-24 06:52:19 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrs_c_security.wb_load -- Defines the class Security.
+!
+SObject pwrs:Class
+!/**
+!  @Group NodeConfiguration
+!  Contains security settings.
+!
+!  The object is placed under the $Node object and should have the name Security.
+!  
+!  The object is RtReadOnly, i.e. write is not allowed in the runtime
+!  environment. It is not possible to get a pointer or link to the object, or
+!  to set attributes in the object.
+!*/
+  Object $Security $ClassDef pwr_eCix_Security
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_SysBody
+      Attr Flags |= pwr_mClassDef_System
+      Attr Flags |= pwr_mClassDef_RtReadOnly
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "Security"
+      EndBody
+      !/**
+      !  @Summary The default privileges for the web interface.
+      !  The default privileges for the web interface.
+      !  No privileges (0): all functions are locked as default, the user has to login.
+      !  RtRead: the user can open navigator, graphs etc with read privileges.
+      !*/
+      Object DefaultWebPriv $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$PrivMask"
+          Attr Flags |= PWR_MASK_CONST
+        EndBody
+      EndObject
+      !/**
+      !  @Summary The default privileges for rt_xtt and the operator environment.
+      !  The default privileges for rt_xtt and the operator environment.
+      !  No privileges (0): all functions are locked as default, the user has to login.
+      !  
+      !  Note that the default value is System priviliges, which you only should use
+      !  if you trust your low privileged users.
+      !*/
+      Object DefaultXttPriv $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$PrivMask"
+          Attr Flags |= PWR_MASK_CONST
+        EndBody
+      EndObject
+      !/**
+      !  At rt_xtt and operator environment start, a Proview user with the same name as
+      !  the current operator system user is searched for.
+      !  If no corresponding proview user is found, login is required.
+      !*/
+      Object XttUseOpsysUser $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_CONST
+        EndBody
+      EndObject
+      !/**
+      !  Systemgroup used for login in the web interface.
+      !  Authorized users in the web interface has to be found in this group.
+      !*/
+      Object WebSystemGroup $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr Flags |= PWR_MASK_CONST
+        EndBody
+      EndObject
+    EndObject
+    Object Template $Security
+      Body SysBody
+        Attr DefaultWebPriv = 0
+        Attr DefaultXttPriv = 4
+        Attr WebSystemGroup = "common.web"
+      EndBody
+    EndObject
+    Object AnteCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "$Security-AnteCreate"
+      EndBody
+    EndObject
+    Object PostCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "$Security-PostCreate"
+      EndBody
+    EndObject
+    Object AnteMove $DbCallBack
+      Body SysBody
+        Attr MethodName = "$Security-AnteMove"
+      EndBody
+    EndObject
+  EndObject
+EndSObject
