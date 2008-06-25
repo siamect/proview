@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: jpwr_rt_rtsecurity.c,v 1.3 2008-06-24 13:25:41 claes Exp $
+ * Proview   $Id: jpwr_rt_rtsecurity.c,v 1.4 2008-06-25 08:00:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,7 +22,7 @@
 #include "pwr.h"
 #include "pwr_class.h"
 #include "pwr_privilege.h"
-#include "co_api.h"
+#include "co_api_user.h"
 #include "co_cdh.h"
 #include "rt_gdh.h"
 
