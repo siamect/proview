@@ -10,7 +10,7 @@ ifeq ($(export_type),exp)
 	-lpwr_co_motif -lpwr_co -lpwr_flow_motif -lpwr_flow -lpwr_glow_motif -lpwr_glow \
 	-lpwr_msg_dummy -lImlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp\
         -lSM -lICE\
-	-ldb -lrpcsvc -lpthread -lm -lrt -lasound
+	-ldb -lrpcsvc -lpthread -lm -lrt -lasound -lcrypt
 else
   link = $(ldxx) $(elinkflags) $(domap) -o $(pwr_exe)/rt_xtt_motif \
 	$(bld_dir)/rt_xtt_motif.o $(bld_dir)/xtt_main.o $(rt_msg_eobjs) \
@@ -20,6 +20,6 @@ else
 	-lpwr_co_motif -lpwr_co -lpwr_flow_motif -lpwr_flow -lpwr_glow_motif -lpwr_glow \
 	-lpwr_msg_dummy -lImlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp\
         -lSM -lICE\
-	-ldb -lrpcsvc -lpthread -lm -lrt -lasound
+	-ldb -lrpcsvc -lpthread -lm -lrt -lasound -lcrypt
 endif
 endif
