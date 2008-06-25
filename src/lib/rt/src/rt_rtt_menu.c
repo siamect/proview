@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_rtt_menu.c,v 1.13 2008-06-24 07:39:57 claes Exp $
+ * Proview   $Id: rt_rtt_menu.c,v 1.14 2008-06-25 07:50:14 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -72,6 +72,7 @@
 #include "co_dcli.h"
 #include "co_time.h"
 #include "co_syi.h"
+#include "co_msg.h"
 #include "co_api_user.h"
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
@@ -7747,13 +7748,13 @@ static int	rtt_set_value(
 		&attrref.Objid.vid, &attrref.Objid.oix, 
 		&attrref.Offset, &attrref.Size);
 	    sts = gdh_SetObjectInfoAttrref( &attrref, buffer_ptr, size);
-	    if ( EVEN(sts)) rtt_message('E',"gdh error");
+	    if ( EVEN(sts)) rtt_message_sts( sts);
 	  }
 	  else
 	  {
 	    sts = gdh_SetObjectInfo ( menu_ptr->parameter_name, 
 		buffer_ptr, size);
-	    if ( EVEN(sts)) rtt_message('E',"gdh error");
+	    if ( EVEN(sts)) rtt_message_sts( sts);
 	  }
 	}
 	else
@@ -7897,6 +7898,14 @@ int	rtt_message(	char	severity,
 	return RTT__SUCCESS;
 }
 
+int rtt_message_sts( int sts)
+{
+  char msg[256];
+
+  msg_GetMsg( sts, msg, sizeof(msg));
+  r_print( "%s", msg);
+  return RTT__SUCCESS;
+}
 
 /*************************************************************************
 *

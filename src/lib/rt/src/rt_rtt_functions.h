@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_rtt_functions.h,v 1.3 2008-06-24 07:39:57 claes Exp $
+ * Proview   $Id: rt_rtt_functions.h,v 1.4 2008-06-25 07:50:14 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -266,6 +266,7 @@ int 	rtt_exit( int ctx, pwr_tObjid argoi, void *arg1, void *arg2,
 			void *arg3, void *arg4);
 int	rtt_message(	char		severity,
 			char	*message);
+int	rtt_message_sts( int 		sts);
 int	rtt_help(	
 			menu_ctx	parent_ctx,
 			char		*subject,
