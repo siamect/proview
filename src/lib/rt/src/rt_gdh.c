@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.c,v 1.33 2008-06-24 07:09:25 claes Exp $
+ * Proview   $Id: rt_gdh.c,v 1.34 2008-06-25 07:48:52 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2320,7 +2320,8 @@ gdh_SetObjectInfo (
     ap = vol_NameToAttribute(&sts, &attribute, pn, gdb_mLo_global, vol_mTrans_all);
     if (ap == NULL || ap->op == NULL) break;
     
-    if ( ap->op->u.n.lflags.b.readOnly) {
+    if ( ap->op->u.n.lflags.b.readOnly || 
+	 (ap->adef && ap->adef->Info.Flags & PWR_MASK_CONST)) {
       sts = GDH__READONLY;
       break;
     }
@@ -2440,6 +2441,12 @@ gdh_SetObjectInfoAttrref (
 
     ap = vol_ArefToAttribute(&sts, &attribute, arp, gdb_mLo_global, vol_mTrans_all);
     if (ap == NULL || ap->op == NULL) break;
+
+    if ( ap->op->u.n.lflags.b.readOnly || 
+	 (ap->adef && ap->adef->Info.Flags & PWR_MASK_CONST)) {
+      sts = GDH__READONLY;
+      break;
+    }
 
     touchObject(ap->op);
     p = vol_AttributeToAddress(&sts, ap);
