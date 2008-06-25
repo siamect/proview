@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_motif.cpp,v 1.4 2007-05-25 13:36:08 claes Exp $
+ * Proview   $Id: rt_xtt_motif.cpp,v 1.5 2008-06-25 12:34:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -666,6 +666,9 @@ XttMotif::XttMotif( int argc, char *argv[], int *return_sts) :
   CoXHelp::set_default( xhelp);
 
   XtRealizeWidget( toplevel);
+
+  if ( !xnav->is_authorized( pwr_mAccess_AllRt, 0))
+    xnav->open_login();
 
   wow = new CoWowMotif( toplevel);
   if ( !quiet)
