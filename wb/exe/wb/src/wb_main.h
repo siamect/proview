@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_main.h,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_main.h,v 1.2 2008-06-25 07:54:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -66,8 +66,8 @@ class Wb {
 
   static void find_wnav_cb( void *ctx, pwr_tOid oid);
   static void find_plc_cb( void *ctx, pwr_tOid oid);
-  static void login_success();
-  static void login_cancel();
+  static void login_success( void *ctx);
+  static void login_cancel( void *ctx);
   static void wtt_close( void *wttctx);
   static int time_to_exit( void *wttctx);
   static void wtt_open_volume( void *wttctx, wb_eType type, char *filename, 
