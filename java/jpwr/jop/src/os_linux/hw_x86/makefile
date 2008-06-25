@@ -9,6 +9,7 @@ local_java_sources := \
 	GeColor.java \
 	JopDynamic.java \
 	LocalDb.java \
+	JopCrypt.java \
 	JopEngine.java \
 	JopSessionIfc.java \
 	JopUtilityIfc.java \
