@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_nodeconfig.wb_load,v 1.10 2005-09-01 14:58:02 claes Exp $
+!  Proview   $Id: pwrb_c_nodeconfig.wb_load,v 1.11 2008-06-25 08:08:25 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -145,6 +145,21 @@ SObject pwrb:Class
       Object DistributeDisable $Attribute 10
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Remote shell access type.
+      ! Remote shell access type, SSH or RSH.
+      ! SSH will copy the distribtion package with scp and unpack it with SSH.
+      ! This recommended of security reasons. It requires createion of a public/private
+      ! key pair, where the public should be copied to the target node.
+      !
+      ! RSH will copy with ftp and unpack with RSH. I requires a .rhosts file on the target
+      ! node and that the login of user pwrp is unchanged.
+      !*/
+      Object RemoteAccessType $Attribute 11 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-RemoteShellEnum"
         EndBody
       EndObject
     EndObject
