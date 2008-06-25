@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_uted_motif.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_uted_motif.cpp,v 1.2 2008-06-25 12:33:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,7 +24,7 @@
 #include <string.h>
 #include <string.h>
 
-#include "wb_login.h"
+#include "co_login.h"
 
 #include <Xm/Xm.h>
 #include <Mrm/MrmPublic.h>

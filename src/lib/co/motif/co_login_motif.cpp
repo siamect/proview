@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_login_motif.cpp,v 1.1 2008-06-24 06:51:43 claes Exp $
+ * Proview   $Id: co_login_motif.cpp,v 1.2 2008-06-25 12:32:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,7 +26,7 @@
 #include <Mrm/MrmPublic.h>
 #include <X11/Intrinsic.h>
 
-#include "wb_login_msg.h"
+#include "co_login_msg.h"
 #include "co_login_motif.h"
 #include "co_api.h"
 #include "co_dcli.h"

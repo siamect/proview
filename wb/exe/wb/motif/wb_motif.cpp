@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_motif.cpp,v 1.4 2008-06-24 07:43:53 claes Exp $
+ * Proview   $Id: wb_motif.cpp,v 1.5 2008-06-25 12:33:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,6 +42,7 @@
 #include "co_msg.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_user.h"
 #include "co_wow_motif.h"
 #include "wb.h"
 #include "wb_ldhld.h"
@@ -286,7 +287,7 @@ WbMotif::WbMotif( int argc, char *argv[])
   if ( !login_display) {
     char msg[80];
 
-    sprintf( msg, "User %s logged in", login_prv.username);
+    sprintf( msg, "User %s logged in", CoLogin::username());
     MsgWindow::message( 'I', msg);
 
     strcpy( title, "PwR Development ");
