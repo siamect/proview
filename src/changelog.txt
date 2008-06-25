@@ -75,3 +75,19 @@
 080411 rk  rt        Fixed bug in subc_ActivateList when subscribing from several nodes.
 080414 cs  doc       Object overview added to Object Reference Manual.
 080425 rk  rt_bck    Increased number of possible backup segments.
+080430 cs  rt        Message to transfer a file list added to nethandler protocol.
+080514 cs  co        '$$' in filenames are replaced by PID.
+080523 cs  trace     Bugfix in trace attributes GetAi, GetAv etc. Analyse node didn't work and tooltip text wasn't correct.
+080602 cs  pwrb      General array objects added: AArray100, DArray100, IArray100, SArray100, AArray500,                            DArray500, IArray500 and SArray500.
+080603 cs  gdh       Dynamic array attribute size implemented.
+080603 cs  init      Areaobject size is dependent of number of signals, i.e. there is no upper limit in number
+                     of signals any more.
+080605 cs  convert   Bugfix in enum for bitmask TypeDef, bit 32 was written as signed int (negative) 
+                     in generated includefile.
+080623 cs  rt        $ClassDef flag RtReadOnly implemented for objects that is not writeable in runtime.
+080623 cs  pwrs      System object changed to RtReadOnly.
+080623 cs  pwrs      Security object added.
+080623 cs  co        New user database format and password encryption changed.
+080623 cs  rtt       Login with Proview username and password required. Commands 'login' and 'logout' added.
+080624 cs  co        pwr_user: command 'login' added. Write access disabled without administrator privilege.
+
