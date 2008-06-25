@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_system.wb_load,v 1.5 2008-06-24 07:19:16 claes Exp $
+!  Proview   $Id: pwrs_c_system.wb_load,v 1.6 2008-06-25 12:32:12 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -64,7 +64,6 @@ SObject pwrs:Class
       Object SystemName $Attribute 2
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
-          Attr Flags |= PWR_MASK_CONST
         EndBody
       EndObject
       !/**
@@ -79,7 +78,6 @@ SObject pwrs:Class
       Object SystemGroup $Attribute 9
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
-          Attr Flags |= PWR_MASK_CONST
         EndBody
       EndObject
     EndObject
