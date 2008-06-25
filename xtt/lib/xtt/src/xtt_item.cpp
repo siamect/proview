@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_item.cpp,v 1.20 2008-06-24 08:10:43 claes Exp $
+ * Proview   $Id: xtt_item.cpp,v 1.21 2008-06-25 12:36:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -345,6 +345,9 @@ int ItemBaseObject::open_attributes( XNavBrow *brow, double x, double y)
 	if ( disabled)
 	  continue;
       }
+
+      if ( classid == pwr_eClass_System)
+	bd[i].attr->Param.Info.Flags |= PWR_MASK_CONST;
 
       elements = 1;
       if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY ) {
