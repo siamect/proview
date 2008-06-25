@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_ver.c,v 1.3 2005-09-20 13:23:45 claes Exp $
+ * Proview   $Id: co_ver.c,v 1.4 2008-06-25 07:48:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,10 +39,7 @@ ver_WriteVersionInfo (
    but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the\n\
    GNU General Public License for more details.\n\n");
-  printf("   %s\n", program);
-  printf("   Configuration: SMD-%s BMD-%s WB-%s LFF-%s\n\n",
-    pwrv_cSmdVersionStr, pwrv_cBmdVersionStr, pwrv_cWbdbVersionStr,
-    pwrv_cLffVersionStr);
+  printf("   %s\n\n", program);
 }
 
 
