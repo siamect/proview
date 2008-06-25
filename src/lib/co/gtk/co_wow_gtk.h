@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_gtk.h,v 1.4 2007-10-30 07:47:33 claes Exp $
+ * Proview   $Id: co_wow_gtk.h,v 1.5 2008-06-25 07:47:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -106,6 +106,7 @@ class CoWowGtk : public CoWow {
   int DisplayWarranty();
   void DisplayLicense();
   CoWowTimer *timer_new();
+  void SetParent( GtkWidget *parent) { m_parent = parent;}
 
   static void PopupPosition( GtkWidget *parent, int x_event, int y_event, int *x, int *y);
   static void GetAtoms( GdkAtom *graph_atom, GdkAtom *objid_atom, GdkAtom *attrref_atom);
