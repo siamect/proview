@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_user.wb_load,v 1.7 2005-09-01 14:58:02 claes Exp $
+!  Proview   $Id: pwrb_c_user.wb_load,v 1.8 2008-06-25 08:07:56 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -44,26 +44,24 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Specifies unconditionally the wildcard character
-      !  asterisk (*)
+      !  Proview user. The user with the specified username is fetched from the
+      !  user database and determines the privileges for the operator.
+      !
+      !  If no value is assigned, or if the username is invalid, the loginframe is
+      !  displayed, where the operator can login with username and password.
+      !
+      !  Note! If XttUseOpsysUser is set in the Security object, this value is
+      !  overrided, and the username is fetched from the current operator system user.
       !*/
       Object UserName $Attribute 2 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$String16"
-        EndBody
-      EndObject
-      !/**
-      !  Specifies unconditionally the wildcard character
-      !  asterisk (*)
-      !*/
-      Object PassWord $Attribute 3 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$String16"
+          Attr TypeRef = "pwrs:Type-$String32"
+	  Attr Flags |= PWR_MASK_CONST
         EndBody
       EndObject
       !/**
       !  The operator stations are numbered by means of OpNumber
-      !  of the OpPlace object; ( see p. 3-232). By specifying
+      !  of the OpPlace object. By specifying
       !  here the value of OpNumber for the wanted OpPlace
       !  object the User object is associated with a certain
       !  OpPlace object.
@@ -173,7 +171,6 @@ SObject pwrb:Class
       !  Specifies the number of defined FastAvaill[] attributes
       !  and the number of visible buttons in the operator
       !  window. The value has to be in the range 0 - 15.
-      !  NavigatorWritePriv
       !*/
       Object NoFastAvail $Attribute 11 
         Body SysBody
@@ -209,12 +206,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  From Runtime Navigator the operator may invoke
-      !  Attribute Editor to inspect different objects.
-      !  NavigatorWritePriv specifies the operator's authority
-      !  to change attributes from Attribute Editor. FALSE means
-      !  that the operator only may view at the attributes and
-      !  TRUE means write accsess as well.
+      !  Obsolete.
       !*/
       Object NavigatorWritePriv $Attribute 15 
         Body SysBody
