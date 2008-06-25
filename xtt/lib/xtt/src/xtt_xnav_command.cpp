@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_command.cpp,v 1.35 2008-06-24 08:11:28 claes Exp $
+ * Proview   $Id: xtt_xnav_command.cpp,v 1.36 2008-06-25 07:58:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,7 +41,7 @@
 #include "pwr_baseclasses.h"
 #include "pwr_nmpsclasses.h"
 #include "co_ccm_msg.h"
-#include "co_api.h"
+#include "co_api_user.h"
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
@@ -544,11 +544,13 @@ static void xnav_login_success_bc( void *ctx)
 
   CoLogin::get_login_info( 0, 0, xnav->user, (unsigned long *)&xnav->priv, 0);
   sprintf( msg, "User %s logged in", xnav->user);
+  xnav->cologin = 0;
   xnav->message('I', msg);
 }
 
 static void xnav_login_cancel_bc(void *xnav)
 {  
+  ((XNav *)xnav)->cologin = 0;
 }
 
 static int	xnav_login_func(	void		*client_data,
@@ -568,8 +570,8 @@ static int	xnav_login_func(	void		*client_data,
 
   if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str))))
   {
-    xnav->login_new( "PwR Login", systemgroup, xnav_login_success_bc, 
-		     xnav_login_cancel_bc, &sts);
+    xnav->cologin = xnav->login_new( "PwR Login", systemgroup, xnav_login_success_bc, 
+				     xnav_login_cancel_bc, &sts);
 
     return 1;
   }

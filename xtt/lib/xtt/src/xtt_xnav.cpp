@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.cpp,v 1.39 2008-06-24 08:11:28 claes Exp $
+ * Proview   $Id: xtt_xnav.cpp,v 1.40 2008-06-25 07:58:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -33,7 +33,7 @@
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_time.h"
-#include "co_api.h"
+#include "co_api_user.h"
 #include "co_msg.h"
 #include "co_syi.h"
 #include "pwr_baseclasses.h"
@@ -1059,7 +1059,7 @@ XNav::XNav(
 	menu_tree(NULL), ev(0), op(0), clog(0), closing_down(0),
 	base_priv(pwr_mPrv_System), priv(pwr_mPrv_System), displayed(0),
         current_logging_index(-1), search_last_found(0), search_compiled(0), 
-	attach_audio(0), audio(0), op_close_button(xn_op_close_button)
+	attach_audio(0), audio(0), op_close_button(xn_op_close_button), cologin(0)
 {
   strcpy( name, xn_name);
   strcpy( opplace_name, xn_opplace_name);
@@ -1151,7 +1151,10 @@ int XNav::set_attr_value( char *value_str)
     if ( EVEN(sts)) return sts;
 
     sts = gdh_SetObjectInfo( attr_str, buffer, item->size);
-    if ( EVEN(sts)) return sts;
+    if ( EVEN(sts)) {
+      message(' ', get_message(sts));
+      return sts;
+    }
     break;
   }
   case xnav_eItemType_Local: {

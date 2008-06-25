@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_gtk.cpp,v 1.15 2008-06-24 08:05:25 claes Exp $
+ * Proview   $Id: rt_xtt_gtk.cpp,v 1.16 2008-06-25 07:57:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,6 +31,7 @@
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_wow_gtk.h"
+#include "co_login_gtk.h"
 #include "pwr_baseclasses.h"
 #include "pwr_nmpsclasses.h"
 
@@ -934,9 +935,16 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
     xnav->open_login();
 
   wow = new CoWowGtk( toplevel);
-  if ( !quiet)
+  if ( !quiet) {
+    if ( xnav->cologin)
+      // Set login window as parent to warranty as focus is left to parent.
+      ((CoWowGtk *)wow)->SetParent( ((CoLoginGtk *)xnav->cologin)->widgets.toplevel);
+
     wow->DisplayWarranty();
 
+    if ( xnav->cologin)
+      ((CoWowGtk *)wow)->SetParent( toplevel);
+  }
   // TODO if ( xnav->op)
   //  close( this, 0);
 

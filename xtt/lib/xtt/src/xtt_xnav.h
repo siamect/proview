@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.h,v 1.23 2008-06-24 08:11:28 claes Exp $
+ * Proview   $Id: xtt_xnav.h,v 1.24 2008-06-25 07:58:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -313,6 +313,7 @@ class XNav {
     CoWow		*wow;
     int			op_close_button;
     static xmenu_sMenuCall *mcp;
+    CoLogin		*cologin;
 
     virtual void set_inputfocus() {}
     virtual void pop() {}
