@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_login.cpp,v 1.1 2008-06-24 06:51:43 claes Exp $
+ * Proview   $Id: co_login.cpp,v 1.2 2008-06-25 07:47:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,10 +21,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "wb_login_msg.h"
+#include "co_login_msg.h"
 #include "co_login.h"
 #include "co_user.h"
-#include "co_api.h"
+#include "co_api_user.h"
 #include "co_dcli.h"
 
 char		CoLogin::m_username[40] = "";
