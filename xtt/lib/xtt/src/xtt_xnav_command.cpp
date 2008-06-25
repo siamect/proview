@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_command.cpp,v 1.36 2008-06-25 07:58:04 claes Exp $
+ * Proview   $Id: xtt_xnav_command.cpp,v 1.37 2008-06-25 12:37:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,6 +38,7 @@
 #include "co_ccm.h"
 #include "co_time.h"
 #include "co_dcli.h"
+#include "co_user.h"
 #include "pwr_baseclasses.h"
 #include "pwr_nmpsclasses.h"
 #include "co_ccm_msg.h"
@@ -583,7 +584,7 @@ static int	xnav_login_func(	void		*client_data,
 
   cdh_ToLower( arg1_str, arg1_str);
   cdh_ToLower( arg2_str, arg2_str);
-  sts = user_CheckUser( systemgroup, arg1_str, arg2_str, &priv);
+  sts = user_CheckUser( systemgroup, arg1_str, UserList::pwcrypt(arg2_str), &priv);
   if ( EVEN(sts))
     xnav->message('E',"Login failure");
   else
