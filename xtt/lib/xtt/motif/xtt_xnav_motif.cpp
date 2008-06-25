@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_motif.cpp,v 1.2 2007-05-21 14:28:56 claes Exp $
+ * Proview   $Id: xtt_xnav_motif.cpp,v 1.3 2008-06-25 12:34:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -72,6 +72,7 @@ extern "C" {
 #include "co_error.h"
 #include "co_xhelp.h"
 #include "co_wow_motif.h"
+#include "co_login_motif.h"
 #include "xtt_xnav_motif.h"
 #include "xtt_item.h"
 #include "xtt_menu.h"
@@ -285,6 +286,15 @@ GeCurve *XNavMotif::gecurve_new( char *name, char *filename, GeCurveData *data,
 				 int pos_right)
 {
   return new GeCurveMotif( this, parent_wid, name, filename, data, pos_right);
+}
+
+CoLogin *XNavMotif::login_new( char		*name,
+			       char		*groupname,
+			       void		(* bc_success)( void *),
+			       void		(* bc_cancel)( void *),
+			       pwr_tStatus  	*status)
+{
+  return new CoLoginMotif( this, parent_wid, name, groupname, bc_success, bc_cancel, status);
 }
 
 void XNavMotif::bell( int time)

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_motif.h,v 1.2 2007-05-21 14:28:56 claes Exp $
+ * Proview   $Id: xtt_xnav_motif.h,v 1.3 2008-06-25 12:34:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -71,6 +71,11 @@ class XNavMotif : public XNav {
 			int (*xg_is_authorized_cb) (void *, unsigned int));
     GeCurve *gecurve_new( char *name, char *filename, GeCurveData *data,
 			  int pos_right);
+    CoLogin *login_new( char		*wl_name,
+			char		*wl_groupname,
+			void		(* wl_bc_success)( void *),
+			void		(* wl_bc_cancel)( void *),
+			pwr_tStatus  	*status);
     void bell( int time);
     void get_popup_menu( pwr_sAttrRef attrref,
 			 xmenu_eItemType item_type, 
