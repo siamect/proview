@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.h,v 1.10 2008-06-24 07:48:18 claes Exp $
+ * Proview   $Id: wb_lfu.h,v 1.11 2008-06-25 07:56:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -33,9 +33,9 @@ extern "C" {
 #endif
 
 typedef enum {
-	lfu_eDistrSts_Normal 		= 0,
-	lfu_eDistrSts_NoRootVolume 	= 1 << 0
-} lfu_eDistrSts;
+	lfu_mDistrOpt_NoRootVolume 	= 1 << 0,
+	lfu_mDistrOpt_RSH 		= 1 << 1
+} lfu_mDistrOpt;
 
 typedef enum {
   lfu_mDistrComponents_UserDatabase     = 1 << 0,

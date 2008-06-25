@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pkg.cpp,v 1.16 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_pkg.cpp,v 1.17 2008-06-25 07:56:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -83,7 +83,7 @@ void wb_pkg::readConfig()
     if ( strcmp( cdh_Low(line_item[0]), "node") == 0) {
       pwr_mOpSys opsys;
       int bus;
-      lfu_eDistrSts dstatus;
+      pwr_tMask dstatus;
       char bootnode[80];
 
       if ( !(num == 5 || num == 6))
@@ -562,16 +562,25 @@ void pkg_node::copyPackage( char *pkg_name)
   for ( int i = 0; i < bootnode_cnt; i++) {
     dcli_translate_filename( pack_fname, "$pwrp_tmp/pkg_pack.sh");
     ofstream of( pack_fname);
-    of <<
-      "cd $pwrp_load" << endl <<
-      "ftp -vin " << bootnodes[i] << " << EOF &>$pwrp_tmp/ftp_" << bootnodes[i] << ".log" << endl <<
-      "user pwrp pwrp" << endl <<
-      "binary" << endl <<
-      "put " << pkg_name << endl <<
-      "quit" << endl <<
-      "EOF" << endl <<
-      "rsh -l pwrp " << bootnodes[i] << " \\$pwr_exe/pwr_pkg.sh -i " << pkg_name << endl;
-    
+    if ( m_dstatus & lfu_mDistrOpt_RSH) {
+      // Use ftp and rsh
+      of <<
+	"cd $pwrp_load" << endl <<
+	"ftp -vin " << bootnodes[i] << " << EOF &>$pwrp_tmp/ftp_" << bootnodes[i] << ".log" << endl <<
+	"user pwrp pwrp" << endl <<
+	"binary" << endl <<
+	"put " << pkg_name << endl <<
+	"quit" << endl <<
+	"EOF" << endl <<
+	"rsh -l pwrp " << bootnodes[i] << " \\$pwr_exe/pwr_pkg.sh -i " << pkg_name << endl;
+    }
+    else {
+      // Use scp and SSH
+      of <<
+	"cd $pwrp_load" << endl <<
+	"scp " << pkg_name << " pwrp@" << bootnodes[i] << ":" << endl <<
+	"ssh pwrp@"  << bootnodes[i] << " \\$pwr_exe/pwr_pkg.sh -i " << pkg_name << endl;
+    }
     of.close();
 
     // Execute the pack file

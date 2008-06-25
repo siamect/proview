@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pkg.h,v 1.7 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_pkg.h,v 1.8 2008-06-25 07:56:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -109,29 +109,29 @@ class pkg_node {
   char m_bootnode[80];
   pwr_mOpSys m_opsys;
   int m_bus;
-  lfu_eDistrSts m_dstatus;
+  pwr_tMask m_dstatus;
   bool m_valid;
   int m_errors;
   int m_warnings;
 
  public:
   pkg_node( char *name): m_opsys(pwr_mOpSys__), m_bus(0),
-    m_dstatus(lfu_eDistrSts_Normal), m_valid(false), m_errors(0), m_warnings(0)
+    m_dstatus(0), m_valid(false), m_errors(0), m_warnings(0)
     { strcpy( m_name, name); strcpy( m_bootnode, "-");}
   pkg_node( char *name, pwr_mOpSys opsys, int bus, 
-	    lfu_eDistrSts dstatus, char *bootnode) :
+	    pwr_tMask dstatus, char *bootnode) :
     m_opsys(opsys), m_bus(bus), m_dstatus(dstatus),
     m_valid(true), m_errors(0), m_warnings(0)
     { strcpy( m_name, name); strcpy( m_bootnode, bootnode);}
   char *name() { return m_name;}
   pwr_mOpSys opsys() { return m_opsys;}
   int bus() { return m_bus;}
-  lfu_eDistrSts dstatus() { return m_dstatus;}
+  pwr_tMask dstatus() { return m_dstatus;}
   char *bootnode() { return m_bootnode;}
   bool valid() { return m_valid;}
   void setOpsys( pwr_mOpSys opsys) { m_opsys = opsys;}
   void setBus( int bus) { m_bus = bus;}
-  void setDStatus( lfu_eDistrSts dstatus) { m_dstatus = dstatus;} 
+  void setDStatus( pwr_tMask dstatus) { m_dstatus = dstatus;} 
   void setBootnode( char *bootnode) { strcpy( m_bootnode, bootnode);} 
   void setValid() { m_valid = true;}
   void push_back( pkg_pattern& pattern) { 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.cpp,v 1.16 2008-06-24 07:48:18 claes Exp $
+ * Proview   $Id: wb_lfu.cpp,v 1.17 2008-06-25 07:56:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -633,6 +633,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   char		*bootnode_ptr;
   pwr_tUInt32	*os_ptr;
   pwr_tUInt32	os;
+  pwr_tEnum	*remote_access_type_ptr;
   pwr_tUInt32	*bus_number_ptr;
   pwr_tBoolean	*single_scan_ptr;
   pwr_tFloat32	*scantime_ptr;
@@ -659,7 +660,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   trv_tCtx	trvctx;
   pwr_tObjid	distrobjid;
   pwr_tVolumeId	volume_id;
-  lfu_eDistrSts	distr_status;
+  pwr_tMask	distr_options = 0;
   char		fname[200];
   char          path[80];
   int           path_file_created = 0;
@@ -1937,6 +1938,15 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  os = *os_ptr;
 	  sprintf( os_str, "%d", os);
 
+          /* Get RemoteAccessType attribute */
+          sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
+			"RemoteAccessType", (char **)&remote_access_type_ptr, &size);
+	  if ( EVEN(sts)) return sts;
+
+	  if ( *remote_access_type_ptr == pwr_eRemoteShellEnum_RSH)
+	    distr_options |= lfu_mDistrOpt_RSH;
+	  free( remote_access_type_ptr);
+
 	  /* Check that there is a rootvolume for this node */
 	  found = 0;
 	  sts = ldh_GetChild( ldhses, nodeobjid, &volobjid);
@@ -1950,15 +1960,14 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    }
 	    sts = ldh_GetNextSibling( ldhses, volobjid, &volobjid);
 	  }
-	  distr_status = lfu_eDistrSts_Normal;
 	  if ( !found)  
-	    distr_status = (lfu_eDistrSts)((int)distr_status | lfu_eDistrSts_NoRootVolume);
+	    distr_options = (lfu_mDistrOpt)((int)distr_options | lfu_mDistrOpt_NoRootVolume);
 
 	  fprintf( file, "node %s %s %d %d %s\n",
 		   nodename_ptr,
 		   os_str,
 		   *bus_number_ptr,
-		   distr_status,
+		   distr_options,
 		   bootnode_ptr);
 
 	  /* Find the applications for this node */
@@ -1999,7 +2008,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	      if (EVEN(sts)) return sts;
 
 	      if ( *components_ptr & lfu_mDistrComponents_LoadFiles &&
-		   !(distr_status & lfu_eDistrSts_NoRootVolume)) {
+		   !(distr_options & lfu_mDistrOpt_NoRootVolume)) {
 		fprintf( file, "load %s\n", nodename_ptr);
 	      }
 	      if ( *components_ptr & lfu_mDistrComponents_UserDatabase)
