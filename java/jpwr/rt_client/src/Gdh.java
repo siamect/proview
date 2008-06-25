@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: Gdh.java,v 1.12 2007-09-17 15:35:28 claes Exp $
+ * Proview   $Id: Gdh.java,v 1.13 2008-06-25 07:59:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -93,7 +93,8 @@ public class Gdh
   private static String currentSystemGroup = null;
   private static String currentUser = null;
   private static String currentPassword = null;
-  private static int currentPrivilege = Pwr.mPrv_RtRead;
+  private static int currentPrivilege = 0; // Pwr.mPrv_RtRead;
+  private static int defaultPrivilege = 0;
 
   Socket gdhSocket;
   ObjectOutputStream out;
@@ -127,12 +128,15 @@ public class Gdh
       out = new ObjectOutputStream(new BufferedOutputStream(gdhSocket.getOutputStream()));
       in = new ObjectInputStream(new BufferedInputStream(gdhSocket.getInputStream()));
       
-      
+     
       poll();
+
+      getDefaultPrivilege();
+
     }
     catch(UnknownHostException e)
     {
-      System.err.println("Don't know about host: taranis.");
+      System.err.println("Don't know about host");
       System.exit(1);
     }
     catch(IOException e)
@@ -1308,6 +1312,22 @@ public class Gdh
   }
 
 
+  private void getDefaultPrivilege() {
+    CdhrObjid oretSec = getClassList( Pwrs.cClass_Security);
+    if ( oretSec.evenSts()) return;
+
+    CdhrString sret = objidToName( oretSec.objid, Cdh.mName_volumeStrict);            
+    if ( sret.evenSts()) return;
+
+    String s = sret.str + ".DefaultWebPriv";
+    CdhrInt sretint = getObjectInfoInt( s);
+    if ( sretint.evenSts()) return;
+
+    defaultPrivilege = sretint.value;
+    currentPrivilege = defaultPrivilege;
+    System.out.println( "Default privilege : " + defaultPrivilege);
+  }
+
   public CdhrObjid getClassList(int classid)
   {
     try
@@ -1392,7 +1412,7 @@ public class Gdh
   public int login(String user, String password)
   {
     // Fetch system group
-    String systemGroup = "SSAB";
+    String systemGroup = "NotUsed";
     try
     {
       out.writeInt(CHECK_USER);
@@ -1426,7 +1446,7 @@ public class Gdh
     currentSystemGroup = null;
     currentUser = null;
     currentPassword = null;
-    currentPrivilege = Pwr.mPrv_RtRead;
+    currentPrivilege = defaultPrivilege; // Pwr.mPrv_RtRead;
   }
 
 
