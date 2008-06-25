@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_cmd_motif.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_cmd_motif.cpp,v 1.2 2008-06-25 07:54:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,7 +53,7 @@
 #include "flow_browapi.h"
 #include "wb_utl.h"
 #include "wb_lfu.h"
-#include "wb_login.h"
+#include "co_login.h"
 #include "wb_wnav_motif.h"
 #include "wb_wnav_item.h"
 #include "wb_pal.h"

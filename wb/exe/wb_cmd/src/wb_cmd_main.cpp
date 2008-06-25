@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_cmd_main.cpp,v 1.2 2008-04-01 10:35:32 claes Exp $
+ * Proview   $Id: wb_cmd_main.cpp,v 1.3 2008-06-25 07:55:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,7 +39,7 @@
 #include "flow_browapi.h"
 #include "wb_utl.h"
 #include "wb_lfu.h"
-#include "wb_login.h"
+#include "co_login.h"
 #include "wb_wnav.h"
 #include "wb_wnav_item.h"
 #include "wb_pal.h"

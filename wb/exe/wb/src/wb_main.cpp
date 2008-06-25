@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_main.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_main.cpp,v 1.2 2008-06-25 07:53:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,8 +39,8 @@
 #include "wb.h"
 #include "wb_ldhld.h"
 #include "wb_ldh.h"
-#include "wb_login.h"
-#include "wb_login_msg.h"
+#include "co_login.h"
+#include "co_login_msg.h"
 #include "wb_gre.h"
 #include "wb_dir.h"
 #include "wb_utl_api.h"
@@ -143,7 +143,7 @@ void Wb::find_wnav_cb( void *ctx, pwr_tOid oid)
   }
   else {
     utl_get_projectname( projectname);
-    strcpy( title, login_prv.username);
+    strcpy( title, CoLogin::username());
     strcat( title, " on ");
     strcat( title, projectname);
 
@@ -173,7 +173,7 @@ void Wb::find_plc_cb( void *ctx, pwr_tOid oid)
   }
   else {
     utl_get_projectname( projectname);
-    strcpy( title, login_prv.username);
+    strcpy( title, CoLogin::username());
     strcat( title, " on ");
     strcat( title, projectname);
 
@@ -189,7 +189,7 @@ void Wb::find_plc_cb( void *ctx, pwr_tOid oid)
   }
 }
 
-void Wb::login_success()
+void Wb::login_success( void *ctx)
 {
   Wb *wb = main_wb;
   char title[80];
@@ -199,16 +199,16 @@ void Wb::login_success()
   char msg[80];
 
   printf( "-- Successfull login\n");
-  sprintf( msg, "User %s logged in", login_prv.username);
+  sprintf( msg, "User %s logged in", CoLogin::username());
   MsgWindow::message( 'I', msg);
 
   /* Successfull login, start the volume selection */ 
 
-  if ( login_prv.priv & pwr_mPrv_DevRead )
+  if ( CoLogin::privilege() & pwr_mPrv_DevRead )
   {
     utl_get_systemname( systemname, systemgroup);
     strcpy( title, "PwR Navigator: ");
-    strcat( title, login_prv.username);
+    strcat( title, CoLogin::username());
     strcat( title, " on ");
     strcat( title, systemname);
     wb->appl_count++;
@@ -252,12 +252,12 @@ void Wb::wtt_open_volume( void *wttctx, wb_eType type, char *filename, wow_eFile
   char systemgroup[80];
   pwr_tStatus sts;
 
-  if ( login_prv.priv & pwr_mPrv_DevRead || login_prv.priv & pwr_mPrv_Administrator)
+  if ( CoLogin::privilege() & pwr_mPrv_DevRead || CoLogin::privilege() & pwr_mPrv_Administrator)
   {
     if ( !filename) {
       utl_get_systemname( systemname, systemgroup);
       strcpy( title, "PwR Navigator: ");
-      strcat( title, login_prv.username);
+      strcat( title, CoLogin::username());
       strcat( title, " on ");
       strcat( title, systemname);
       wb->appl_count++;
@@ -436,13 +436,13 @@ int Wb::vsel_success( void *vselctx, pwr_tVolumeId *volumelist, int volume_count
   pwr_tStatus	status;
   
   sts = 1;
-  if ( login_prv.priv & pwr_mPrv_DevRead )
+  if ( CoLogin::privilege() & pwr_mPrv_DevRead )
   {
     for ( i = 0; i < volume_count; i++)
     {
       volume = *volumelist++;
       utl_get_projectname( projectname);
-      strcpy( title, login_prv.username);
+      strcpy( title, CoLogin::username());
       strcat( title, " on ");
       strcat( title, projectname);
       wtt = wb->wtt_new( title, "Navigator", wb->wbctx, volume, 0, 0, &status);
@@ -478,7 +478,7 @@ void Wb::vsel_cancel()
   }
 }
 
-void Wb::login_cancel()
+void Wb::login_cancel( void *ctx)
 {
   printf( "-- Login canceled\n");
   /* Not successfull login, exit */
