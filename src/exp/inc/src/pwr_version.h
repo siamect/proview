@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr_version.h,v 1.14 2008-03-03 11:04:20 claes Exp $
+ * Proview   $Id: pwr_version.h,v 1.15 2008-06-25 08:06:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -63,22 +63,11 @@
 # define SET_VERSION(a, b, c, d)  ((pwr_tVersion)((a << 24) + (a << 16) + (a << 8) + a))		  
 #endif
 
-#define pwrv_cBuildTimeStr       "23-NOV-2007 16:00:00"
+#define pwrv_cBuildTimeStr       "26-JUN-2008 09:00:00"
 
-#define pwrv_cPwrVersionStr      "V4.5.0"
-#define pwrv_cPwrVersion         SET_VERSION('V', 4, 5, 0)
+#define pwrv_cPwrVersionStr      "V4.5.1"
+#define pwrv_cPwrVersion         SET_VERSION('V', 4, 5, 1)
 
-#define pwrv_cSmdVersion         SET_VERSION('V', 4, 5, 0)
-#define pwrv_cSmdVersionStr      "V4.5.0"
-
-#define pwrv_cBmdVersion         SET_VERSION('V', 4, 5, 0)
-#define pwrv_cBmdVersionStr      "V4.5.0"
-
-#define pwrv_cWbdbVersion        SET_VERSION('V', 4, 5, 0)
-#define pwrv_cWbdbVersionStr     "V4.5.0"
 #define pwrv_cWbdbVersionShortStr "V45"
-
-#define pwrv_cLffVersion         SET_VERSION('V', 4, 5, 0)
-#define pwrv_cLffVersionStr      "V4.5.0"
 
 #endif
