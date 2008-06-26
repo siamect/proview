@@ -1,22 +1,41 @@
+199
+!/**
+! DamperAnim2
+! Group Process
+!
+! <image> pwr_damperanim2_gs.gif
+!
+! <h1>Description
+! Animated damper with annotation for local or manual mode.
+!
+! Subgraph with seven pages, where the damper is rotated from open
+! to closed position.
+! <image> pwr_damperanim2_ags.gif
+!
+! <h1>Default dynamics
+! Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
+! with AnimationSequence Dig.
+!
+!*/
 1
 100 71.6636
 135 71.6636
 101 20
 102 -266
 103 -250
-104 14.8866
-136 14.8866
+104 14.6088
+136 14.6088
 105 100
-106 -55
-107 -51
+106 -54
+107 -50
 108 1
 109 0
 110 1
 111 0
 116 0
 117 0
-118 140
-119 128
+118 138
+119 126
 120 1
 121 Claes context
 122 0
@@ -28,11 +47,11 @@
 131 0.8
 132 3
 133 2
-137 4001
+137 4510
 134
 22
 2200 2
-2201 1
+2201 6
 2202 pwr_damperanim__p4
 2203 300
 2205 0
@@ -96,7 +115,7 @@ pwr_exe:
 125
 2
 19
-1904 
+1904 O1
 1900 1
 1901 0
 1902 1
@@ -111,6 +130,7 @@ pwr_exe:
 1914 0
 1918 0
 1919 0
+1920 0
 1917 0
 1907 0
 1906
@@ -143,7 +163,7 @@ pwr_exe:
 99
 99
 21
-2104 
+2104 O2
 2100 0.3
 2101 -0.3
 2102 0.8
@@ -190,7 +210,7 @@ pwr_exe:
 99
 99
 21
-2104 
+2104 O3
 2100 1.3
 2101 0.7
 2102 0.8
@@ -237,7 +257,7 @@ pwr_exe:
 99
 99
 26
-2604 
+2604 O4
 2600 0.6
 2601 0.4
 2602 0.6
@@ -297,9 +317,10 @@ pwr_exe:
 2619 0
 2620 0
 2621 0
+2622 0
 99
 20
-2004 
+2004 O5
 2000 0.853554
 2001 0.146446
 2002 0.853553

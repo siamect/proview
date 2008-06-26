@@ -1,13 +1,40 @@
+199
+!/**
+! PressureSensor
+! Group Components/BaseComponent
+!
+! <image> bcomp_pressuresensor_gs.gif
+!
+! <h1>Description
+! Pressure sensor. Graphic symbol for basecomponent BasePressureSensor.
+! Should be connected to an instance of BasePressureSensor, or a 
+! subclass to this class.
+!
+! <h1>Default dynamics
+! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+!
+! Dynamics for the symbol
+! - flashing red when the high-high or low-low limits are exceeded.
+! - colored yellow when the high or low limits are exceeded.
+! - popupmenu with the methods of the connected object.
+!
+! DigFlash <t>$hostobject.IndError <link>GeDynDigFlash, ,$pwr_lang/man_geref.dat
+! DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+!
+! Default Cycle Slow 
+!
+!*/
 1
 100 20
 135 20
 101 20
 102 -112
 103 1
-104 4.07705
-136 4.07705
+104 0
+136 0
 105 100
-106 -22
+106 0
 107 0
 108 40.4564
 109 0.64779
@@ -28,11 +55,11 @@
 131 0.8
 132 3
 133 2
-137 4001
+137 4510
 134
 22
 2200 0
-2201 381
+2201 405
 2202 pwr_c_pb_dp_slave
 2203 51
 2205 0
@@ -449,7 +476,7 @@ pwr_exe:
 125
 2
 20
-2004 
+2004 O381
 2000 40.45
 2001 0.7
 2002 10.4
@@ -483,7 +510,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O382
 3000 5.15
 3001 1.1
 3002 3.25
@@ -516,7 +543,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O383
 3000 3.6
 3001 1.1
 3002 6.14929
@@ -1177,7 +1204,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O384
 3000 5
 3001 1.1
 3002 4.96052
@@ -1467,7 +1494,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O385
 3000 3.95
 3001 1.1
 3002 10.4105
@@ -1500,7 +1527,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O386
 3000 6.7
 3001 4.7
 3002 10.4105
@@ -1533,7 +1560,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O387
 3000 20.25
 3001 5.1
 3002 11.2
@@ -1566,7 +1593,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O388
 3000 19.9
 3001 5.1
 3002 12.0643
@@ -1599,7 +1626,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O389
 3000 22.65
 3001 5.1
 3002 12.9286
@@ -1632,7 +1659,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O390
 3000 16.75
 3001 5.1
 3002 13.7929
@@ -1665,7 +1692,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O391
 3000 27.1
 3001 5.1
 3002 14.6571
@@ -1698,7 +1725,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O392
 3000 20.4
 3001 5.1
 3002 15.5214
@@ -1731,7 +1758,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O393
 3000 23.5
 3001 5.1
 3002 16.3857
@@ -1764,7 +1791,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O394
 3000 22.35
 3001 5.1
 3002 17.25
@@ -1797,7 +1824,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O395
 3000 35.55
 3001 22.95
 3002 12.95
@@ -2854,7 +2881,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O396
 3000 16.75
 3001 5.1
 3002 18.65
@@ -2887,7 +2914,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O397
 3000 23.5
 3001 5.1
 3002 19.5143
@@ -2920,7 +2947,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O398
 3000 13.25
 3001 5.1
 3002 20.3786
@@ -2953,7 +2980,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O399
 3000 19.05
 3001 5.1
 3002 21.2429
@@ -2986,7 +3013,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O400
 3000 22.05
 3001 5.1
 3002 21.9571
@@ -3019,7 +3046,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O401
 3000 21.35
 3001 5.1
 3002 22.8214
@@ -3052,7 +3079,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O402
 3000 13.45
 3001 5.1
 3002 23.7857
@@ -3853,7 +3880,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O403
 3000 29.8
 3001 13.6
 3002 23.8357
@@ -3886,7 +3913,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O404
 3000 23.5
 3001 5.1
 3002 25.4357

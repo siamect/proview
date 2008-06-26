@@ -1,14 +1,34 @@
+199
+!/**
+! Fan2
+! Group Process
+!
+! <image> pwr_fan2_gs.gif
+!
+! <h1>Description
+! Fan.
+!
+! Subgraph with two pages, fan off (page 1) and fan on (page 2).
+! Annotation for display of manual or local mode.
+! <image> pwr_fan2_ags.gif
+!
+! <h1>Default dynamics
+! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+! DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+!
+!*/
 1
 100 20
 135 20
 101 20
 102 -24
 103 24
-104 3.73117
-136 3.73117
+104 0
+136 0
 105 100
-106 -4
-107 -8
+106 0
+107 0
 108 16.3616
 109 0.151105
 110 11.4671
@@ -28,11 +48,11 @@
 131 0.8
 132 3
 133 2
-137 4001
+137 4510
 134
 22
 2200 0
-2201 52
+2201 57
 2202 pwr_c_eurotherm_tc3001aggrsim
 2203 219
 2205 0
@@ -1473,7 +1493,7 @@ pwr_exe:
 125
 2
 19
-1904 
+1904 O52
 1900 16.0908
 1901 0.53546
 1902 11.4671
@@ -2059,7 +2079,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O53
 3000 12.35
 3001 0.85
 3002 1.1
@@ -2092,7 +2112,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O54
 3000 4.75
 3001 1.25
 3002 3.45
@@ -3668,7 +3688,7 @@ pwr_exe:
 301
 2
 30
-3004 
+3004 O55
 3000 7.10777
 3001 1.25
 3002 4.61338
@@ -3869,7 +3889,7 @@ pwr_exe:
 301
 2
 30
-3004 
+3004 O56
 3000 8.35
 3001 1.25
 3002 7.15

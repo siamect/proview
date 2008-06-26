@@ -1,14 +1,50 @@
+199
+!/**
+! FanAggr
+! Group Components/BaseComponent
+!
+! <image> bcomp_fanaggr_gs.gif
+!
+! <h1>Description
+! Fan aggregate. Graphic symbol for basecomponent BaseFanAggr.
+! Should be connected to an instance of BaseFanAggr, or a 
+! subclass to this class.
+!
+! Subgraph with two pages, fan off (page 1) and fan on (page 2).
+! <image> bcomp_fanaggr_ags.gif
+!
+! <h1>Default dynamics
+! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+!
+! Dynamics for the symbol
+! - colored red when an error occurs.
+! - colored yellow when a warning occurs.
+! - colored darkgray when the fan is off.
+! - the mode (manual or local) is displayed with a M or L.
+! - fan on and off is displayed with different pages.
+! - popupmenu with the methods of the connected object.
+!
+! DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+! DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+! DigLowColor <t>$hostobject.Contactor.IndFeedback <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! Value <t>$hostobject.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+! DigShift <t>$hostobject.Contactor.IndFeedback <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+!
+! Default Cycle Slow 
+!
+!*/
 1
 100 78.7269
 135 78.7269
 101 20
 102 -237
 103 -193
-104 16.0487
-136 16.0487
+104 0
+136 0
 105 100
-106 -48
-107 -39
+106 0
+107 0
 108 3
 109 -2.08167e-17
 110 4
@@ -28,11 +64,11 @@
 131 0.8
 132 3
 133 2
-137 4001
+137 4510
 134
 22
 2200 4
-2201 0
+2201 11
 2202 bcomp_fc
 2203 300
 2205 0
@@ -96,7 +132,7 @@ pwr_exe:
 125
 2
 19
-1904 
+1904 O0
 1900 3
 1901 0
 1902 4
@@ -144,7 +180,7 @@ pwr_exe:
 99
 99
 19
-1904 
+1904 O1
 1900 2.18188
 1901 0.818006
 1902 2.77278
@@ -192,7 +228,7 @@ pwr_exe:
 99
 99
 26
-2604 
+2604 O2
 2600 1.65
 2601 1.35
 2602 0.756728
@@ -259,7 +295,7 @@ pwr_exe:
 2622 0
 99
 19
-1904 
+1904 O3
 1900 2.1
 1901 0.9
 1902 2.7
@@ -307,7 +343,7 @@ pwr_exe:
 99
 99
 19
-1904 
+1904 O4
 1900 2
 1901 1
 1902 1.55673
@@ -355,7 +391,7 @@ pwr_exe:
 99
 99
 19
-1904 
+1904 O5
 1900 1.9
 1901 1.1
 1902 1.5
@@ -403,7 +439,7 @@ pwr_exe:
 99
 99
 26
-2604 
+2604 O6
 2600 2.17593
 2601 0.852878
 2602 0.702548
@@ -454,7 +490,7 @@ pwr_exe:
 2622 0
 99
 21
-2104 
+2104 O7
 2100 0.3
 2101 -0.3
 2102 2.3
@@ -501,7 +537,7 @@ pwr_exe:
 99
 99
 21
-2104 
+2104 O8
 2100 1.8
 2101 1.2
 2102 0.3
@@ -548,7 +584,7 @@ pwr_exe:
 99
 99
 21
-2104 
+2104 O9
 2100 3.3
 2101 2.7
 2102 2.3
@@ -595,7 +631,7 @@ pwr_exe:
 99
 99
 21
-2104 
+2104 O10
 2100 1.8
 2101 1.2
 2102 4.3

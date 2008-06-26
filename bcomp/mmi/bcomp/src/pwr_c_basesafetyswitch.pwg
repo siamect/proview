@@ -1,11 +1,36 @@
+199
+!/**
+! TempSwitch
+! Group Components/BaseComponent
+!
+! <image> bcomp_tempswitch_gs.gif
+!
+! <h1>Description
+! Temperature switch. Graphic symbol for basecomponent BaseTempSwitch.
+! Should be connected to an instance of BaseTempSwitch, or a 
+! subclass to this class.
+!
+! <h1>Default dynamics
+! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+!
+! Dynamics for the symbol
+! - flashing red at alarm status.
+! - popupmenu with the methods of the connected object.
+!
+! DigFlash <t>$hostobject.AlarmStatus <link>GeDynDigFlash, ,$pwr_lang/man_geref.dat
+! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+!
+! Default Cycle Slow 
+!
+!*/
 1
 100 20
 135 20
 101 20
 102 14
 103 -11
-104 4.15459
-136 4.15459
+104 4.07705
+136 4.07705
 105 100
 106 2
 107 -2
@@ -15,8 +40,8 @@
 111 1.2
 116 0
 117 0
-118 141
-119 128
+118 139
+119 126
 120 1
 121 Claes context
 122 0
@@ -28,11 +53,11 @@
 131 0.8
 132 3
 133 2
-137 4001
+137 4510
 134
 22
 2200 0
-2201 104
+2201 109
 2202 pwr_c_basesafetyswitch
 2203 33
 2205 0
@@ -5877,7 +5902,7 @@ pwr_exe:
 125
 2
 19
-1904 
+1904 O104
 1900 12.7582
 1901 3.6
 1902 11.3084
@@ -6054,7 +6079,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O105
 3000 5.35
 3001 4.5
 3002 7.72865
@@ -9879,7 +9904,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O106
 3000 9.12868
 3001 4.42868
 3002 12.5158
@@ -10332,7 +10357,7 @@ pwr_exe:
 9.6
 1122 0
 1123 0
-1124 
+1124 O107
 1125 
 1126 
 1127 0
@@ -10631,7 +10656,7 @@ pwr_exe:
 9.6
 1122 0
 1123 0
-1124 
+1124 O108
 1125 
 1126 
 1127 0

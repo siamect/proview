@@ -1,22 +1,41 @@
+199
+!/**
+! IndAnimRound
+! Group Indicators
+!
+! <image> pwr_indanimround_gs.gif
+!
+! <h1>Description
+! Round indicator with animated switching operation.
+!
+! Subgraph with six pages, where the indicator is switched from
+! on to off.
+! <image> pwr_indanimround_ags.gif
+!
+! <h1>Default dynamics
+! Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
+! with AnimationSequence Dig.
+!
+!*/
 1
 100 61.7398
 135 61.7398
 101 20
 102 -93
 103 -88
-104 21.9324
-136 21.9324
+104 12.5858
+136 12.5858
 105 100
-106 -33
-107 -31
+106 -18
+107 -17
 108 1
 109 0
 110 1
 111 0
 116 0
 117 0
-118 199
-119 155
+118 137
+119 126
 120 0
 121 Claes context
 122 0
@@ -28,11 +47,11 @@
 131 0.8
 132 3
 133 2
-137 4001
+137 4510
 134
 22
 2200 0
-2201 0
+2201 1
 2202 pwr_indanimsquare__p6
 2203 300
 2205 0
@@ -96,7 +115,7 @@ pwr_exe:
 125
 2
 26
-2604 
+2604 O0
 2600 1
 2601 0
 2602 1
@@ -155,6 +174,8 @@ pwr_exe:
 2613 1
 2619 0
 2620 0
+2621 0
+2622 0
 99
 99
 99

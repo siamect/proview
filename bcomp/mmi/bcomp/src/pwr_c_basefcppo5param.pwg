@@ -1,3 +1,28 @@
+199
+!/**
+! TempSwitch
+! Group Components/BaseComponent
+!
+! <image> bcomp_tempswitch_gs.gif
+!
+! <h1>Description
+! Temperature switch. Graphic symbol for basecomponent BaseTempSwitch.
+! Should be connected to an instance of BaseTempSwitch, or a 
+! subclass to this class.
+!
+! <h1>Default dynamics
+! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+!
+! Dynamics for the symbol
+! - flashing red at alarm status.
+! - popupmenu with the methods of the connected object.
+!
+! DigFlash <t>$hostobject.AlarmStatus <link>GeDynDigFlash, ,$pwr_lang/man_geref.dat
+! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+!
+! Default Cycle Slow 
+!
+!*/
 1
 100 20
 135 20
@@ -28,11 +53,11 @@
 131 0.8
 132 3
 133 2
-137 4001
+137 4510
 134
 22
 2200 0
-2201 158
+2201 174
 2202 pwr_c_basefcppo5param
 2203 33
 2205 0
@@ -1059,7 +1084,7 @@ pwr_exe:
 125
 2
 19
-1904 
+1904 O158
 1900 22.737
 1901 3.0104
 1902 17.7348
@@ -1107,7 +1132,7 @@ pwr_exe:
 99
 99
 19
-1904 
+1904 O159
 1900 22.737
 1901 3.0104
 1902 15.2755
@@ -1155,7 +1180,7 @@ pwr_exe:
 99
 99
 19
-1904 
+1904 O160
 1900 12.5691
 1901 3.3104
 1902 13.141
@@ -1620,7 +1645,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O161
 3000 6.95
 3001 3.85
 3002 5.45
@@ -1910,7 +1935,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O162
 3000 7.15
 3001 3.85
 3002 9.45
@@ -2072,7 +2097,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O163
 3000 7.3
 3001 3.85
 3002 14.4
@@ -2105,7 +2130,7 @@ pwr_exe:
 99
 99
 19
-1904 
+1904 O164
 1900 22.3691
 1901 13.1104
 1902 9.91935
@@ -2279,7 +2304,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O165
 3000 16.95
 3001 13.65
 3002 9.45
@@ -2312,7 +2337,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O166
 3000 9.3
 3001 3.85
 3002 17.05
@@ -2345,7 +2370,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O167
 3000 11.2
 3001 3.65
 3002 3.45
@@ -2785,7 +2810,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O168
 3000 16.3
 3001 13.7
 3002 14.4
@@ -3340,7 +3365,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O169
 3000 11.75
 3001 11.05
 3002 9.45
@@ -3373,7 +3398,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O170
 3000 12.15
 3001 11.05
 3002 10.8
@@ -3406,7 +3431,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O171
 3000 11.8
 3001 11.05
 3002 12.1
@@ -3439,7 +3464,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O172
 3000 10.35
 3001 10.1
 3002 12.85
@@ -3472,7 +3497,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O173
 3000 4.65
 3001 4.15
 3002 12.85

@@ -1,14 +1,39 @@
+199
+!/**
+! TempSwitch
+! Group Components/BaseComponent
+!
+! <image> bcomp_tempswitch_gs.gif
+!
+! <h1>Description
+! Temperature switch. Graphic symbol for basecomponent BaseTempSwitch.
+! Should be connected to an instance of BaseTempSwitch, or a 
+! subclass to this class.
+!
+! <h1>Default dynamics
+! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+!
+! Dynamics for the symbol
+! - flashing red at alarm status.
+! - popupmenu with the methods of the connected object.
+!
+! DigFlash <t>$hostobject.AlarmStatus <link>GeDynDigFlash, ,$pwr_lang/man_geref.dat
+! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+!
+! Default Cycle Slow 
+!
+!*/
 1
 100 19.5929
 135 19.5929
 101 20
 102 -37
 103 -150
-104 4.07002
-136 4.07002
+104 0
+136 0
 105 100
-106 -7
-107 -31
+106 0
+107 0
 108 15.9471
 109 0.244125
 110 3.68695
@@ -28,11 +53,11 @@
 131 0.8
 132 3
 133 2
-137 4001
+137 4510
 134
 22
 2200 0
-2201 74
+2201 77
 2202 pwr_c_baseelheatersim
 2203 219
 2205 0
@@ -692,7 +717,7 @@ pwr_exe:
 125
 2
 30
-3004 
+3004 O74
 3000 8.81207
 3001 0.85
 3002 0.184417
@@ -1131,7 +1156,7 @@ pwr_exe:
 99
 99
 19
-1904 
+1904 O75
 1900 15.1773
 1901 0.821069
 1902 3.68695
@@ -1445,7 +1470,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O76
 3000 4.51545
 3001 1.86143
 3002 1.9865

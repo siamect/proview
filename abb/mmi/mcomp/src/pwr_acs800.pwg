@@ -1,14 +1,50 @@
+199
+!/**
+! ACS800PumpAggr
+! Group Components/ABB
+!
+! <image> bcomp_pumpaggr_gs.gif
+!
+! <h1>Description
+! Pump aggregate. Graphic symbol for component ABB_ACS800PumpAggr.
+! Should be connected to an instance of ABB_ACS800PumpAggr, or a 
+! subclass to this class.
+!
+! Subgraph with two pages, pump off (page 1) and pump on (page 2).
+! <image> bcomp_pumpaggr_ags.gif
+!
+! <h1>Default dynamics
+! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+!
+! Dynamics for the symbol
+! - colored red when an error occurs.
+! - colored yellow when a warning occurs.
+! - colored darkgray when the pump is off.
+! - the mode (manual or local) is displayed with a M or L.
+! - pump on and off is displayed with different pages.
+! - popupmenu with the methods of the connected object.
+!
+! DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+! DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+! DigLowColor <t>$hostobject.ACS800.ConvertRun <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! Value <t>$hostobject.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+! DigShift <t>$hostobject.ACS800.ConvertRun <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+!
+! Default Cycle Slow 
+!
+!*/
 1
 100 53.4382
 135 53.4382
 101 20
 102 -98
 103 -59
-104 18.9834
-136 18.9834
+104 0
+136 0
 105 100
-106 -34
-107 -20
+106 0
+107 0
 108 3
 109 -2.08167e-17
 110 4
@@ -28,11 +64,11 @@
 131 0.8
 132 3
 133 2
-137 4001
+137 4510
 134
 22
 2200 4
-2201 0
+2201 16
 2202 pwr_acs800
 2203 300
 2205 0
@@ -96,7 +132,7 @@ pwr_exe:
 125
 2
 19
-1904 
+1904 O0
 1900 3
 1901 0
 1902 4
@@ -110,6 +146,8 @@ pwr_exe:
 1916 2
 1914 0
 1918 0
+1919 0
+1920 0
 1917 0
 1907 0
 1906
@@ -142,7 +180,7 @@ pwr_exe:
 99
 99
 26
-2604 
+2604 O1
 2600 2.15
 2601 0.85
 2602 2.80673
@@ -209,9 +247,11 @@ pwr_exe:
 2613 0
 2619 1
 2620 0
+2621 0
+2622 0
 99
 26
-2604 
+2604 O2
 2600 2.15
 2601 0.85
 2602 2.80673
@@ -278,9 +318,11 @@ pwr_exe:
 2613 0
 2619 0
 2620 1
+2621 0
+2622 0
 99
 26
-2604 
+2604 O3
 2600 1.65
 2601 1.35
 2602 0.756728
@@ -343,9 +385,11 @@ pwr_exe:
 2613 0
 2619 0
 2620 0
+2621 0
+2622 0
 99
 19
-1904 
+1904 O4
 1900 2.1
 1901 0.9
 1902 2.75673
@@ -359,6 +403,8 @@ pwr_exe:
 1916 2
 1914 0
 1918 0
+1919 0
+1920 0
 1917 0
 1907 0
 1906
@@ -391,7 +437,7 @@ pwr_exe:
 99
 99
 19
-1904 
+1904 O5
 1900 2
 1901 1
 1902 1.55673
@@ -405,6 +451,8 @@ pwr_exe:
 1916 2
 1914 0
 1918 0
+1919 0
+1920 0
 1917 1
 1907 0
 1906
@@ -437,7 +485,7 @@ pwr_exe:
 99
 99
 19
-1904 
+1904 O6
 1900 1.9
 1901 1.1
 1902 1.55673
@@ -451,6 +499,8 @@ pwr_exe:
 1916 2
 1914 0
 1918 0
+1919 0
+1920 0
 1917 1
 1907 0
 1906
@@ -483,7 +533,7 @@ pwr_exe:
 99
 99
 26
-2604 
+2604 O7
 2600 0.35
 2601 0.2
 2602 0.503649
@@ -542,9 +592,11 @@ pwr_exe:
 2613 0
 2619 0
 2620 0
+2621 0
+2622 0
 99
 19
-1904 
+1904 O8
 1900 0.455074
 1901 0.355074
 1902 0.503649
@@ -558,6 +610,8 @@ pwr_exe:
 1916 2
 1914 0
 1918 0
+1919 0
+1920 0
 1917 1
 1907 0
 1906
@@ -590,7 +644,7 @@ pwr_exe:
 99
 99
 19
-1904 
+1904 O9
 1900 0.568316
 1901 0.468316
 1902 0.503649
@@ -604,6 +658,8 @@ pwr_exe:
 1916 2
 1914 0
 1918 0
+1919 0
+1920 0
 1917 1
 1907 0
 1906
@@ -636,7 +692,7 @@ pwr_exe:
 99
 99
 26
-2604 
+2604 O10
 2600 2.17593
 2601 0.852878
 2602 0.702548
@@ -683,9 +739,11 @@ pwr_exe:
 2613 0
 2619 0
 2620 0
+2621 0
+2622 0
 99
 21
-2104 
+2104 O11
 2100 0.3
 2101 -0.3
 2102 2.3
@@ -732,7 +790,7 @@ pwr_exe:
 99
 99
 21
-2104 
+2104 O12
 2100 1.8
 2101 1.2
 2102 0.3
@@ -779,7 +837,7 @@ pwr_exe:
 99
 99
 21
-2104 
+2104 O13
 2100 3.3
 2101 2.7
 2102 2.3
@@ -826,7 +884,7 @@ pwr_exe:
 99
 99
 21
-2104 
+2104 O14
 2100 1.8
 2101 1.2
 2102 4.3
@@ -873,7 +931,7 @@ pwr_exe:
 99
 99
 19
-1904 
+1904 O15
 1900 2.83696
 1901 2.37539
 1902 0.472827
@@ -887,6 +945,8 @@ pwr_exe:
 1916 2
 1914 0
 1918 0
+1919 0
+1920 0
 1917 1
 1907 0
 1906

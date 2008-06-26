@@ -1,11 +1,29 @@
+199
+!/**
+! IndPulsarRound
+! Group Indicators
+!
+! <image> pwr_indpulsarround_gs.gif
+!
+! <h1>Description
+! Round indicator with animated on state.
+!
+! Subgraph with seven pages, with a pulsating animation.
+! <image> pwr_indpulsarround_ags.gif
+!
+! <h1>Default dynamics
+! Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
+! with AnimationSequence Cyclic.
+!
+!*/
 1
 100 20
 135 20
 101 20
 102 0
 103 0
-104 7.1048
-136 7.1048
+104 4.07705
+136 4.07705
 105 100
 106 0
 107 0
@@ -15,8 +33,8 @@
 111 0
 116 0
 117 0
-118 200
-119 155
+118 138
+119 127
 120 1
 121 Claes context
 122 0
@@ -28,11 +46,11 @@
 131 0.8
 132 3
 133 2
-137 4001
+137 4510
 134
 22
 2200 0
-2201 0
+2201 1
 2202 pwr_indpulsarsquare__p7
 2203 300
 2205 0
@@ -96,7 +114,7 @@ pwr_exe:
 125
 2
 26
-2604 
+2604 O0
 2600 1
 2601 0
 2602 1
@@ -155,6 +173,8 @@ pwr_exe:
 2613 1
 2619 0
 2620 0
+2621 0
+2622 0
 99
 99
 99

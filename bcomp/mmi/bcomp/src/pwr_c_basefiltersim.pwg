@@ -1,22 +1,47 @@
+199
+!/**
+! TempSwitch
+! Group Components/BaseComponent
+!
+! <image> bcomp_tempswitch_gs.gif
+!
+! <h1>Description
+! Temperature switch. Graphic symbol for basecomponent BaseTempSwitch.
+! Should be connected to an instance of BaseTempSwitch, or a 
+! subclass to this class.
+!
+! <h1>Default dynamics
+! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+!
+! Dynamics for the symbol
+! - flashing red at alarm status.
+! - popupmenu with the methods of the connected object.
+!
+! DigFlash <t>$hostobject.AlarmStatus <link>GeDynDigFlash, ,$pwr_lang/man_geref.dat
+! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+!
+! Default Cycle Slow 
+!
+!*/
 1
 100 19.5929
 135 19.5929
 101 20
 102 -77
 103 -135
-104 4.07002
-136 4.07002
+104 3.99406
+136 3.99406
 105 100
 106 -15
-107 -28
+107 -27
 108 15.9471
 109 0.244125
 110 3.68695
 111 -2.01545
 116 0
 117 0
-118 139
-119 128
+118 137
+119 126
 120 0
 121 Claes context
 122 0
@@ -28,11 +53,11 @@
 131 0.8
 132 3
 133 2
-137 4001
+137 4510
 134
 22
 2200 0
-2201 73
+2201 76
 2202 pwr_c_basefiltersim
 2203 219
 2205 0
@@ -103,6 +128,7 @@ pwr_exe:
 1914 0
 1918 0
 1919 0
+1920 0
 1917 0
 1907 0
 1906
@@ -218,6 +244,7 @@ pwr_exe:
 1914 0
 1918 0
 1919 0
+1920 0
 1917 0
 1907 0
 1906
@@ -305,6 +332,7 @@ pwr_exe:
 1914 0
 1918 0
 1919 0
+1920 0
 1917 0
 1907 0
 1906
@@ -392,6 +420,7 @@ pwr_exe:
 1914 0
 1918 0
 1919 0
+1920 0
 1917 1
 1907 0
 1906
@@ -484,6 +513,7 @@ pwr_exe:
 2619 0
 2620 1
 2621 0
+2622 0
 99
 26
 2604 
@@ -546,6 +576,7 @@ pwr_exe:
 2619 1
 2620 0
 2621 0
+2622 0
 99
 29
 2907
@@ -686,7 +717,7 @@ pwr_exe:
 125
 2
 30
-3004 
+3004 O73
 3000 7.68921
 3001 0.85
 3002 0.184417
@@ -734,6 +765,8 @@ pwr_exe:
 2714 0
 2715 0
 2720 0
+2725 0
+2726 0
 2702 0
 2701
 2700
@@ -854,6 +887,8 @@ pwr_exe:
 2714 0
 2715 0
 2720 0
+2725 0
+2726 0
 2702 0
 2701
 2700
@@ -999,6 +1034,8 @@ pwr_exe:
 2714 0
 2715 0
 2720 0
+2725 0
+2726 0
 2702 0
 2701
 2700
@@ -1119,7 +1156,7 @@ pwr_exe:
 99
 99
 19
-1904 
+1904 O74
 1900 15.1773
 1901 0.821069
 1902 3.68695
@@ -1134,6 +1171,7 @@ pwr_exe:
 1914 1
 1918 0
 1919 0
+1920 0
 1917 0
 1907 0
 1906
@@ -1181,6 +1219,8 @@ pwr_exe:
 2714 0
 2715 0
 2720 0
+2725 0
+2726 0
 2702 0
 2701
 2700
@@ -1308,6 +1348,8 @@ pwr_exe:
 2714 0
 2715 0
 2720 0
+2725 0
+2726 0
 2702 0
 2701
 2700
@@ -1417,7 +1459,7 @@ pwr_exe:
 99
 99
 30
-3004 
+3004 O75
 3000 7.16948
 3001 1.86143
 3002 1.9865
