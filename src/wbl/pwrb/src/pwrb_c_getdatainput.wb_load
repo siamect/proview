@@ -1,0 +1,138 @@
+! 
+!  Proview   $Id: pwrb_c_getdatainput.wb_load,v 1.1 2008-06-26 13:04:26 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_c_getdatainput.wb_load -- Defines the class GetDataInput.
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_div.h
+!  @Group Plc,PlcData
+!  @Summary Fetch a data object reference from a data input attribute.
+!  Fetch a data object reference from a data input attribute.
+!
+!  @image orm_getdatainput_fo.gif
+!
+!  This object is mainly used in a template plc for a function object with data 
+!  inputs defined. By inserting the symbolic link to a data input, the data object 
+!  reference the input is connected to will be transfered to the output of the 
+!  GetDataInput object.
+!
+!*/
+  Object GetDataInput $ClassDef 533
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtAndDevBodies
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "GetDataInput"
+      EndBody
+      !/**
+      !  Data object reference output.
+      !*/
+      Object OutDataP $Output 1
+        Body SysBody
+          Attr PgmName = "OutDataP"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "Out"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Objid for data object.
+      !*/
+      Object OutDataObjId $Intern 2
+        Body SysBody
+          Attr PgmName = "OutDataObjId"
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Data input from which the data pointer refrence is fetched.
+      !  This has to be an input of pointer type.
+      !*/
+      Object DataObject $Intern 1
+        Body SysBody
+          Attr PgmName = "DataObject"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
+          Attr NiNaAnnot = 1
+          Attr NiNaSegments = 1
+        EndBody
+      EndObject
+      !/**
+      !  Specifies number of segments in the input object name
+      !  that is to be displayed in the object symbol. The segments 
+      !  are counted from behind.
+      !  
+      !  0 and 1 both result in displaying the last segment of
+      !  the actual object name.
+      !*/
+      Object DataObjectSegments $Intern 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 3 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 0
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 7
+        Attr graphindex = 0
+        Attr default_mask[0] = 0
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 0
+        Attr devbody_annotation = 1
+        Attr compmethod = 66
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+        Attr connectmethod = 7
+        Attr executeordermethod = 2
+        Attr objname = "GetDataInput"
+        Attr graphname = "GetDataInput"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template GetDataInput
+      Body DevBody
+        Attr DataObjectSegments = 2
+      EndBody
+    EndObject
+  EndObject
+EndSObject
+
