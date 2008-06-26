@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_command.cpp,v 1.13 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: ge_graph_command.cpp,v 1.14 2008-06-26 13:23:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2308,7 +2308,7 @@ static int	graph_convert_func( void	*client_data,
   int	arg1_sts;
 	
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
-  if ( strncmp( arg1_str, "V40", strlen( arg1_str)) == 0) {
+  if ( strncmp( arg1_str, "V45", strlen( arg1_str)) == 0) {
     char name[40];
     char msg[80];
     int sts;

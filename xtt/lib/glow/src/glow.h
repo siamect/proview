@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow.h,v 1.26 2008-05-13 13:59:02 claes Exp $
+ * Proview   $Id: glow.h,v 1.27 2008-06-26 13:23:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,7 +40,7 @@ extern "C" {
 #endif
 
 
-#define GLOW_VERSION 4001
+#define GLOW_VERSION 4510
 #define DRAW_MP 6
 
 #define DRAW_TYPE_SIZE 9

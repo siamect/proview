@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.52 2008-05-13 13:59:02 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.53 2008-06-26 13:23:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -459,10 +459,10 @@ int Graph::save( char *filename)
   int sts;
 
   grow_GetVersion( grow->ctx, &grow_version, &graph_version);
-  if ( graph_version < 4000) {
+  if ( graph_version < 4500) {
     // Needs to be converted
     message( 'E', "Unable to save, graph needs conversion");
-    return 0;
+    return GE__NEEDCONV;
   }
 
   get_filename( filename, fname);
@@ -485,10 +485,10 @@ int Graph::save_subgraph( char *filename)
   int sts;
 
   grow_GetVersion( grow->ctx, &grow_version, &graph_version);
-  if ( graph_version < 4000) {
+  if ( graph_version < 4500) {
     // Needs to be converted
     message( 'E', "Unable to save, graph needs conversion");
-    return 0;
+    return GE__NEEDCONV;
   }
 
   get_filename( filename, fname);
@@ -526,7 +526,7 @@ void Graph::open( char *filename)
   strcpy( this->filename, filename);
 
   grow_GetVersion( grow->ctx, &grow_version, &graph_version);
-  if ( graph_version < 4000) {
+  if ( graph_version < 4500) {
     // Needs to be converted
     message( 'E', "Old version, graph needs conversion");
   }
