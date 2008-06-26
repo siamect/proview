@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_macro_div.h,v 1.6 2007-10-30 07:29:48 claes Exp $
+ * Proview   $Id: rt_plc_macro_div.h,v 1.7 2008-06-26 13:05:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -167,6 +167,13 @@
 */
 #define GetDatap_exec(object, in)\
     memcpy( &object->Out, &in, 12);
+
+/*_*
+  @aref getdatainput GetDatainput
+*/
+#define GetDataInput_exec(object, in)\
+    if ( in) \
+      memcpy( &object->OutDataP, in, 12);
 
 
 
