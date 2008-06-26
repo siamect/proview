@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_td_distrcomponentmask.wb_load,v 1.3 2007-12-21 13:25:33 claes Exp $
+!  Proview   $Id: pwrb_td_distrcomponentmask.wb_load,v 1.4 2008-06-26 13:15:43 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -147,14 +147,14 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  The .rhost file used by rsh is included. The source is fetched from
+    !  The .rhosts file used by rsh is included. The source is fetched from
     !     1. $pwrp_src/'nodename'/.rhosts
     !     2. $pwra_db/.rhosts
     !*/
-    Object RHostFile $Bit
+    Object RHostsFile $Bit
      Body SysBody
-       Attr PgmName = "RHostFile"
-       Attr Text = "RHostFile"
+       Attr PgmName = "RHostsFile"
+       Attr Text = "RHostsFile"
        Attr Value = 1024
      EndBody
     EndObject
@@ -176,6 +176,18 @@ SObject pwrb:Type
        Attr PgmName = "PwrpStop"
        Attr Text = "PwrpStop"
        Attr Value = 4096
+     EndBody
+    EndObject
+    !/**
+    !  The .ssh/authorized_keys file used by ssh is included. The source is fetched from
+    !     1. $pwrp_src/'nodename'/.authorized_keys
+    !     2. $pwra_db/.authorized_keys
+    !*/
+    Object AuthorizedKeysFile $Bit
+     Body SysBody
+       Attr PgmName = "AuthorizedKeysFile"
+       Attr Text = "AuthorizedKeysFile"
+       Attr Value = 8192
      EndBody
     EndObject
   EndObject
