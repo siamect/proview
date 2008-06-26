@@ -826,6 +826,7 @@ palette PlcEditorPalette
       class DataCollect
       class GetData
       class GetDatap
+      class GetDataInput
     }
     menu String
     {
