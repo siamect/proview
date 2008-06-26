@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: ge_msg.msg,v 1.5 2008-05-28 11:44:15 claes Exp $
+!  Proview   $Id: ge_msg.msg,v 1.6 2008-06-26 13:05:12 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -49,7 +49,7 @@ nosize		<Size not found>				/error
 no_propagate    <Don't propagate event handling>		/info
 isbaseclass     <Is baseclass>                                  /info
 fileopen	<Unable to open file>				/error
-
+needconv	<Unable to save, graph needs conversion>	/error
 
 
 
