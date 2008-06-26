@@ -272,9 +272,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
         ! 4: The card is handled by an application program.
         !*/
         Object Process $Attribute 10 15-NOV-2007 14:36:42.44
-          Body SysBody 15-NOV-2007 14:36:42.44
+          Body SysBody 30-MAY-2008 15:06:38.05
             Attr PgmName = "Process"
-            Attr TypeRef = "pwrs:Type-$UInt32"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
         !/**
@@ -539,9 +539,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
         ! 4: The slave is handled by an application program.
         !*/
         Object Process $Attribute 4 08-FEB-2008 10:43:19.48
-          Body SysBody 08-FEB-2008 10:43:35.60
+          Body SysBody 30-MAY-2008 15:07:17.32
             Attr PgmName = "Process"
-            Attr TypeRef = "pwrs:Type-$UInt16"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
         !/**
@@ -825,9 +825,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
         ! 4: The card is handled by an application program.
         !*/
         Object Process $Attribute 3 08-FEB-2008 11:19:22.97
-          Body SysBody 08-FEB-2008 11:31:49.58
+          Body SysBody 30-MAY-2008 15:07:32.84
             Attr PgmName = "Process"
-            Attr TypeRef = "pwrs:Type-$UInt16"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
         !/**
