@@ -1,6 +1,6 @@
 #! /bin/bash
 #
-# Proview   $Id: upgrade.sh,v 1.16 2008-06-26 13:13:41 claes Exp $
+# Proview   $Id: upgradeV451.sh,v 1.1 2008-06-26 13:13:41 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -350,13 +350,6 @@ reload_convertge()
     return
   fi
 
-  echo ""
-  echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-  echo "!                                                                   !"
-  echo "! Note ! This pass should not be executed when upgrading from V3.9 !!"
-  echo "!                                                                   !"
-  echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-
   reload_continue "Pass convert ge graphs"
 
   # Create a script that dumps each volume
@@ -389,7 +382,6 @@ EOF
 
 reload_exit()
 {
-  source pwrp_env.sh setdb
   exit $reload_status
 }
 
@@ -460,7 +452,7 @@ usage()
 {
   cat << EOF
 
-  upgrade.sh  Upgrade from V4.4 to V4.5
+  upgrade.sh  Upgrade from V4.5.0 to V4.5.1
 
 
   Pass
@@ -470,7 +462,6 @@ usage()
     renamedb       Rename old databases.
     dirvolume      Load the directory volume.
     loaddb         Load dumpfiles.
-    convertge      Convert Ge graphs.
     compile        Compile all plcprograms in the database
     createload     Create new loadfiles.
     createboot     Create bootfiles for all nodes in the project.
@@ -495,6 +486,13 @@ let go=0
 
 project=${pwrp_root##/*/}
 
+# fix V4.5.1, this is the only pass
+start_pass="convertge"
+passes="convertge"
+reload_convertge
+reload_exit
+# end fix
+
 usage
 
 echo ""
@@ -511,7 +509,7 @@ for db in $tmp; do
   fi
 done
 
-passes="dumpdb classvolumes renamedb dirvolume loaddb convertge compile createload createboot"
+passes="dumpdb classvolumes renamedb dirvolume loaddb compile createload createboot"
 #echo "Pass: $passes"
 echo ""
 echo -n "Enter start pass [dumpdb] > "
