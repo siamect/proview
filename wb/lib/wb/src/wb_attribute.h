@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_attribute.h,v 1.23 2005-10-07 05:57:28 claes Exp $
+ * Proview   $Id: wb_attribute.h,v 1.24 2008-06-26 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -133,6 +133,7 @@ public:
   wb_adrep *adrep() { return m_adrep;}
   void castId( pwr_tCastId *castid);
   pwr_tDisableAttr disabled();
+  pwr_tCid adefCid();
 
 private:
   void check() const;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_attribute.cpp,v 1.38 2008-05-28 11:51:09 claes Exp $
+ * Proview   $Id: wb_attribute.cpp,v 1.39 2008-06-26 13:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -767,3 +767,10 @@ void wb_attribute::name(wb_name *name)
 {
 }
 
+pwr_tCid wb_attribute::adefCid()
+{
+  if ( m_adrep)
+    return m_adrep->cid();
+  else
+    return 0;
+}
