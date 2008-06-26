@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.68 2008-04-10 10:39:29 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.69 2008-06-26 13:19:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2070,15 +2070,16 @@ ldh_GetAttrRefInfo(ldh_tSession session, pwr_sAttrRef *arp, ldh_sAttrRefInfo *in
   wb_session *sp = (wb_session *)session;
     
   try {
-  wb_attribute a = sp->attribute(arp);
-  if (!a) return a.sts();
+    wb_attribute a = sp->attribute(arp);
+    if (!a) return a.sts();
     
-  info->size = a.size();
-  info->nElement = a.nElement();
-  info->index = a.index();
-  info->flags = a.flags();
-  info->type = a.type();
-  info->tid = a.tid();
+    info->size = a.size();
+    info->nElement = a.nElement();
+    info->index = a.index();
+    info->flags = a.flags();
+    info->type = a.type();
+    info->tid = a.tid();
+    info->adefCid = a.adefCid();
   }
   catch ( wb_error& e) {
     return e.sts();

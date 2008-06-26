@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.h,v 1.45 2008-04-07 14:53:06 claes Exp $
+ * Proview   $Id: wb_ldh.h,v 1.46 2008-06-26 13:19:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -386,6 +386,7 @@ struct ldh_s_AttrRefInfo {
   pwr_eType		type;
   pwr_tTid		tid;
   int			flags;
+  pwr_tCid		adefCid;
 };
 
 struct ldh_s_ParDef {
