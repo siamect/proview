@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.cpp,v 1.13 2008-06-24 07:51:06 claes Exp $
+ * Proview   $Id: wb_gcg.cpp,v 1.14 2008-06-26 13:19:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -225,6 +225,7 @@ int	gcg_comp_m62( gcg_ctx gcgctx, vldh_t_node node);
 int	gcg_comp_m63( gcg_ctx gcgctx, vldh_t_node node);
 int	gcg_comp_m64( gcg_ctx gcgctx, vldh_t_node node);
 int	gcg_comp_m65( gcg_ctx gcgctx, vldh_t_node node);
+int	gcg_comp_m66( gcg_ctx gcgctx, vldh_t_node node);
 
 gcg_tMethod gcg_comp_m[70] = {
 	(gcg_tMethod)gcg_comp_m0,
@@ -292,7 +293,8 @@ gcg_tMethod gcg_comp_m[70] = {
 	gcg_comp_m62,
 	gcg_comp_m63,
 	gcg_comp_m64,
-	gcg_comp_m65
+	gcg_comp_m65,
+	gcg_comp_m66
 	};
 
 
@@ -15392,6 +15394,113 @@ int	gcg_comp_m65( gcg_ctx gcgctx, vldh_t_node node)
 	gcg_timer_print( gcgctx, node->ln.oid);
 	
  	free( extattr_ptr);
+
+	return GSX__SUCCESS;
+}
+
+/*************************************************************************
+*
+* Name:		gcg_comp_m66()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* gcg_ctx	gcgctx		I	gcg context.
+* vldh_t_node	node		I	vldh node.
+*
+* Description:
+*	Compile method for GetDataP
+*	Prints code for declaration and direkt link of a rtdbpointer.
+*	Prints an exec call :
+*	'structname'_exec( 'objpointer');
+*	ex: getpi_exec( Z80000811);
+*
+*	Checks that the referenced object exists and that the referenced
+*	parameter exists in that objekt, and that the type of the parameter
+*	is correct.
+*	Prints declaration and direct link of pointer to referenced object.
+*
+**************************************************************************/
+
+int	gcg_comp_m66( gcg_ctx gcgctx, vldh_t_node node)
+{
+	ldh_sParDef 		*bodydef;
+	int 			rows, sts;
+	int			size;
+	pwr_tAttrRef		refattrref;
+	pwr_tAttrRef		*refattrref_ptr;
+	ldh_sAttrRefInfo	info;
+	char			*name_p;
+	pwr_tOName		aname;
+	char			*s;
+	ldh_tSesContext 	ldhses;
+
+	ldhses = (node->hn.wind)->hw.ldhses;  
+
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+
+	/* Get the attrref of the referenced io object stored in the
+	  first parameter in defbody */
+
+	/* Get the devbody parameters for this class */
+	sts = ldh_GetObjectBodyDef( ldhses,
+			node->ln.cid, "DevBody", 1, 
+			&bodydef, &rows);
+	if ( EVEN(sts) ) return sts;
+
+	sts = ldh_GetObjectPar( ldhses,
+			node->ln.oid, 
+			"DevBody",
+			bodydef[0].ParName,
+			(char **)&refattrref_ptr, &size); 
+	if ( EVEN(sts)) return sts;
+
+        free((char *) bodydef);
+
+	refattrref = *refattrref_ptr;
+	free((char *) refattrref_ptr);
+
+	sts = gcg_replace_ref( gcgctx, &refattrref, node);
+	if ( EVEN(sts)) return sts;
+
+	/* Get properties of referenced attribute */
+	sts = ldh_GetAttrRefInfo( (node->hn.wind)->hw.ldhses, &refattrref, &info);
+	if ( EVEN(sts)) {
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
+	  free((char *) bodydef);	
+	  return GSX__NEXTNODE;
+	}
+
+	if ( !(info.flags & PWR_MASK_POINTER &&
+	       info.adefCid == pwr_eClass_Input)) {
+	  gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	  return GSX__NEXTNODE;
+	}
+
+	/* Get parameter name of attrref */
+	sts = ldh_AttrRefToName( ldhses, &refattrref, ldh_eName_ArefVol, 
+				 &name_p, &size);
+	if ( EVEN(sts)) return sts;
+
+	if ( (s = strchr( name_p, '.')) == 0) { 
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
+	  return GSX__NEXTPAR;
+	}
+
+	strcpy( aname, s+1);
+
+	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
+	if (EVEN(sts)) return sts; 
+
+	/* Print the referenced attribute */
+	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
+		"%c%s->%sP);\n",
+		GCG_PREFIX_REF,
+		vldh_IdToStr(0, refattrref.Objid), 
+		aname);
+
+	/* Insert object in ref list */
+	gcg_ref_insert( gcgctx, refattrref.Objid, GCG_PREFIX_REF);
 
 	return GSX__SUCCESS;
 }
