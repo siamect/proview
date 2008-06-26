@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pkg.cpp,v 1.17 2008-06-25 07:56:13 claes Exp $
+ * Proview   $Id: wb_pkg.cpp,v 1.18 2008-06-26 13:20:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -460,7 +460,10 @@ void pkg_node::fetchFiles( bool distribute)
     "cd /tmp" << endl <<
     "echo \"-- Unpack package " << pkg_name << "\"" << endl <<
     "tar -xzf /home/pwrp/" << pkg_name << endl <<
-    "echo \"-- Move files to target directories\"" << endl;
+    "echo \"-- Move files to target directories\"" << endl <<
+    "if [ ! -e /home/pwrp/.ssh ]; then" << endl <<
+    "  mkdir /home/pwrp/.ssh" << endl <<
+    "fi" << endl;
   
   for ( int i = 0; i < (int)m_filelist.size(); i++)
     ofu << 
@@ -486,6 +489,10 @@ void pkg_node::fetchFiles( bool distribute)
     "  if [ -e /home/pwrp/.rhosts ]; then" << endl <<
     "    sudo chown pwrp /home/pwrp/.rhosts" << endl <<
     "    sudo chmod g-w /home/pwrp/.rhosts" << endl <<
+    "  fi" << endl <<
+    "  if [ -e /home/pwrp/.ssh/authorized_keys ]; then" << endl <<
+    "    sudo chown pwrp /home/pwrp/.ssh/authorized_keys" << endl <<
+    "    sudo chmod g-w /home/pwrp/.ssh/authorized_keys" << endl <<
     "  fi" << endl <<
     "fi" << endl;
   

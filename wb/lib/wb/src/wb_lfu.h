@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.h,v 1.11 2008-06-25 07:56:04 claes Exp $
+ * Proview   $Id: wb_lfu.h,v 1.12 2008-06-26 13:20:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -36,22 +36,6 @@ typedef enum {
 	lfu_mDistrOpt_NoRootVolume 	= 1 << 0,
 	lfu_mDistrOpt_RSH 		= 1 << 1
 } lfu_mDistrOpt;
-
-typedef enum {
-  lfu_mDistrComponents_UserDatabase     = 1 << 0,
-  lfu_mDistrComponents_LoadFiles       	= 1 << 1,
-  lfu_mDistrComponents_ApplFile		= 1 << 2,
-  lfu_mDistrComponents_PwrpAliasFile   	= 1 << 3,
-  lfu_mDistrComponents_IncludeFiles    	= 1 << 4,
-  lfu_mDistrComponents_GraphFiles     	= 1 << 5,
-  lfu_mDistrComponents_XttHelpFile     	= 1 << 6,
-  lfu_mDistrComponents_XttResourceFile 	= 1 << 7,
-  lfu_mDistrComponents_XttSetupFile    	= 1 << 8,
-  lfu_mDistrComponents_FlowFiles        = 1 << 9,
-  lfu_mDistrComponents_RHostsFile      	= 1 << 10,
-  lfu_mDistrComponents_WebFiles        	= 1 << 11,
-  lfu_mDistrComponents_PwrpStop        	= 1 << 12
-} lfu_mDistrComponents;
 
 typedef enum {
 	lfu_eAccessType_StdLgi 		= 0,

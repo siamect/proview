@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.cpp,v 1.17 2008-06-25 07:56:00 claes Exp $
+ * Proview   $Id: wb_lfu.cpp,v 1.18 2008-06-26 13:20:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1996,7 +1996,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
 	    switch ( cid) {
 	    case pwr_cClass_Distribute: {
-	      lfu_mDistrComponents *components_ptr;
+	      pwr_mDistrComponentMask *components_ptr;
 
 	      sts = ldh_ObjidToName( ldhses, applobjid, ldh_eName_Object,
 				     appl_name, sizeof(appl_name), &size);
@@ -2007,45 +2007,48 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 				      "Components", (char **)&components_ptr, &size);
 	      if (EVEN(sts)) return sts;
 
-	      if ( *components_ptr & lfu_mDistrComponents_LoadFiles &&
+	      if ( *components_ptr & pwr_mDistrComponentMask_LoadFiles &&
 		   !(distr_options & lfu_mDistrOpt_NoRootVolume)) {
 		fprintf( file, "load %s\n", nodename_ptr);
 	      }
-	      if ( *components_ptr & lfu_mDistrComponents_UserDatabase)
-		fprintf( file, "appl %s W $pwrp_src/%s/pwr_user.dat:$pwra_db/pwr_user.dat $pwra_db/pwr_user.dat\n",
+	      if ( *components_ptr & pwr_mDistrComponentMask_UserDatabase)
+		fprintf( file, "appl %s W $pwrp_src/%s/pwr_user2.dat:$pwra_db/pwr_user2.dat $pwra_db/pwr_user2.dat\n",
 			 nodename_ptr, nodename_ptr);
-	      if ( *components_ptr & lfu_mDistrComponents_ApplFile)
+	      if ( *components_ptr & pwr_mDistrComponentMask_ApplFile)
 		fprintf( file, "appl %s W "load_cNameAppl"\n",
 			 nodename_ptr, "$pwrp_load/", nodename_ptr, *bus_number_ptr);
-	      if ( *components_ptr & lfu_mDistrComponents_PwrpAliasFile)
+	      if ( *components_ptr & pwr_mDistrComponentMask_PwrpAliasFile)
 		fprintf( file, "appl %s W $pwrp_load/pwrp_alias.dat $pwrp_load/pwrp_alias.dat\n", 
 		     nodename_ptr);
-	      if ( *components_ptr & lfu_mDistrComponents_IncludeFiles)
+	      if ( *components_ptr & pwr_mDistrComponentMask_IncludeFiles)
 		fprintf( file, "appl %s W $pwrp_inc/*.h\n", nodename_ptr);
-	      if ( *components_ptr & lfu_mDistrComponents_GraphFiles)
+	      if ( *components_ptr & pwr_mDistrComponentMask_GraphFiles)
 		fprintf( file, "appl %s W $pwrp_exe/*.pwg\n", nodename_ptr);
-	      if ( *components_ptr & lfu_mDistrComponents_XttHelpFile)
+	      if ( *components_ptr & pwr_mDistrComponentMask_XttHelpFile)
 		fprintf( file, "appl %s W $pwrp_src/%s/xtt_help.dat:$pwrp_exe/xtt_help.dat $pwrp_exe/xtt_help.dat\n", 
 			 nodename_ptr, nodename_ptr);
-	      if ( *components_ptr & lfu_mDistrComponents_XttResourceFile)
+	      if ( *components_ptr & pwr_mDistrComponentMask_XttResourceFile)
 		fprintf( file, "appl %s W $pwrp_src/%s/Rt_xtt:$pwrp_pop/Rt_xtt /home/b55/Rt_xtt\n", 
 			 nodename_ptr, nodename_ptr);
-	      if ( *components_ptr & lfu_mDistrComponents_XttSetupFile)
+	      if ( *components_ptr & pwr_mDistrComponentMask_XttSetupFile)
 		fprintf( file, "appl %s W $pwrp_src/%s/xtt_setup.rtt_com:$pwrp_pop/xtt_setup.rtt_com /home/b55/xtt_setup.rtt_com\n", 
 			 nodename_ptr, nodename_ptr);
-	      if ( *components_ptr & lfu_mDistrComponents_FlowFiles)
+	      if ( *components_ptr & pwr_mDistrComponentMask_FlowFiles)
 		fprintf( file, "appl %s W $pwrp_load/*.flw\n", nodename_ptr);
-	      if ( *components_ptr & lfu_mDistrComponents_RHostsFile)
+	      if ( *components_ptr & pwr_mDistrComponentMask_RHostsFile)
 		fprintf( file, "appl %s W $pwrp_src/%s/.rhosts:$pwra_db/.rhosts /home/pwrp/.rhosts\n",
 			 nodename_ptr, nodename_ptr);
-	      if ( *components_ptr & lfu_mDistrComponents_WebFiles) {
+	      if ( *components_ptr & pwr_mDistrComponentMask_AuthorizedKeysFile)
+		fprintf( file, "appl %s W $pwrp_src/%s/authorized_keys:$pwra_db/authorized_keys /home/pwrp/.ssh/authorized_keys\n",
+			 nodename_ptr, nodename_ptr);
+	      if ( *components_ptr & pwr_mDistrComponentMask_WebFiles) {
 		fprintf( file, "appl %s W $pwrp_web/*.html\n", nodename_ptr);
 		fprintf( file, "appl %s W $pwrp_web/*.jar\n", nodename_ptr);
 		fprintf( file, "appl %s S $pwrp_web/*.gif\n", nodename_ptr);
 		fprintf( file, "appl %s S $pwrp_web/*.jpg\n", nodename_ptr);
 		fprintf( file, "appl %s S $pwrp_web/*.pdf\n", nodename_ptr);
 	      }
-	      if ( *components_ptr & lfu_mDistrComponents_PwrpStop)
+	      if ( *components_ptr & pwr_mDistrComponentMask_PwrpStop)
 		fprintf( file, "appl %s W $pwrp_src/%s/pwrp_stop.sh:$pwrp_exe/pwrp_stop.sh $pwrp_exe/pwrp_stop.sh\n", 
 			 nodename_ptr, nodename_ptr);
 
