@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_getdatainput.wb_load,v 1.1 2008-06-26 13:04:26 claes Exp $
+!  Proview   $Id: pwrb_c_getdatainput.wb_load,v 1.2 2008-06-30 06:26:48 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -33,6 +33,7 @@ SObject pwrb:Class
 !  reference the input is connected to will be transfered to the output of the 
 !  GetDataInput object.
 !
+!  @exliblink "PlcTemplate example" ../../en_us/man_exlib_exlib_plctemplate.html
 !*/
   Object GetDataInput $ClassDef 533
     Body SysBody
