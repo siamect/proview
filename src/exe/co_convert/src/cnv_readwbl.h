@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_readwbl.h,v 1.6 2008-06-24 06:53:19 claes Exp $
+ * Proview   $Id: cnv_readwbl.h,v 1.7 2008-06-30 05:53:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -168,6 +168,9 @@ class CnvReadWbl {
     char                doc_clink_ref[20][80];
     char                doc_clink_text[20][200];
     int                 doc_clink_cnt;
+    char                doc_xlink_ref[20][80];
+    char                doc_xlink_text[20][200];
+    int                 doc_xlink_cnt;
     char		doc_summary[400];
     char		doc_text[1000][200];
     int			doc_cnt;

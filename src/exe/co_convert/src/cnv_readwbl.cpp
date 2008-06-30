@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_readwbl.cpp,v 1.10 2007-12-06 08:09:56 claes Exp $
+ * Proview   $Id: cnv_readwbl.cpp,v 1.11 2008-06-30 05:53:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1002,6 +1002,7 @@ void CnvReadWbl::doc_init()
   memset( doc_link_text, 0, sizeof(doc_link_text));
   memset( doc_groups, 0, sizeof(doc_groups));
   doc_clink_cnt = 0;
+  doc_xlink_cnt = 0;
   doc_link_cnt = 0;
   doc_group_cnt = 0;
 }
@@ -1082,6 +1083,25 @@ int CnvReadWbl::doc_add( char *line)
       }
     }
     doc_clink_cnt++;
+  }
+  else if ( strcmp( low(line_part[1]), "@exliblink") == 0) {
+    if ( doc_xlink_cnt >= (int) (sizeof(doc_xlink_ref)/sizeof(doc_xlink_ref[0]))) {
+      printf("Error: max number of classlinks exceeded\n");
+      return 1;
+    }
+    for ( i = 2; i < nr; i++) {
+      if ( i == nr - 1)
+        strcpy( doc_xlink_ref[doc_xlink_cnt], line_part[i]);
+      else {
+        if ( i == 2)
+	  strcpy( doc_xlink_text[doc_xlink_cnt], line_part[i]);
+	else {
+          strcat( doc_xlink_text[doc_xlink_cnt], " ");
+	  strcat( doc_xlink_text[doc_xlink_cnt], line_part[i]);
+	}
+      }
+    }
+    doc_xlink_cnt++;
   }
   else if ( strcmp( low(line_part[1]), "@code") == 0) {
     if ( nr > 2)

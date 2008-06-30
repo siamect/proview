@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltohtml.cpp,v 1.16 2008-03-05 11:47:59 claes Exp $
+ * Proview   $Id: cnv_wbltohtml.cpp,v 1.17 2008-06-30 05:53:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -628,6 +628,10 @@ endl <<
   html_clf->f <<
 "</XMP>" << endl;
 
+  for ( i = 0; i < ctx->rw->doc_xlink_cnt; i++) {
+    html_clf->f <<
+"  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << ctx->rw->doc_xlink_ref[i] << "\" TARGET=\"_self\"><FONT size=\"-1\"> " << ctx->rw->doc_xlink_text[i] <<"</FONT></A><BR>" << endl;
+  }
   for ( i = 0; i < ctx->rw->doc_clink_cnt; i++) {
     html_clf->f <<
 "  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << ctx->rw->doc_clink_ref[i] << "\" TARGET=\"_self\"><FONT size=\"-1\"> " << ctx->rw->doc_clink_text[i] <<"</FONT></A><BR>" << endl;

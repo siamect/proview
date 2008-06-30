@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltoxtthelp.cpp,v 1.9 2006-02-23 14:28:45 claes Exp $
+ * Proview   $Id: cnv_wbltoxtthelp.cpp,v 1.10 2008-06-30 05:53:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -143,6 +143,19 @@ Lng::translate("Class") << " " << full_class_name << endl <<
       else
 	fp_tmp << ctx->rw->doc_text[i] << endl;
     }
+  }
+  for ( i = 0; i < ctx->rw->doc_xlink_cnt; i++) {
+    if ( strncmp( ctx->rw->doc_xlink_ref[i], "../../en_us/man_exlib_", 
+		  strlen("../../en_us/man_exlib_")) == 0)
+      strncpy( link_ref, &ctx->rw->doc_xlink_ref[i][0] + strlen("../../en_us/man_exlib_"),
+	       sizeof(link_ref));
+    else
+      strncpy( link_ref, ctx->rw->doc_xlink_ref[i], sizeof(link_ref));
+    
+    if ( (s = strrchr( link_ref, '.')))
+      *s = 0;
+    strcat( link_ref, ", ,$pwr_exe/en_us/man_exlib.dat");
+    fp_tmp << "      " << ctx->rw->doc_xlink_text[i] << " <LINK>" << link_ref << endl;
   }
   for ( i = 0; i < ctx->rw->doc_clink_cnt; i++) {
     strcpy( prefix, CnvCtx::low(ctx->rw->volume_name));
