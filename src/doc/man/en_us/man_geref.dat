@@ -169,6 +169,7 @@ drawn by clickning on the symbol in the tool panel, and dragging or clicking wit
 working area.
 
 <h2>Hot
+<image> geref_fig4.gif
 An objects is hot when the cursor i placed on the object. This is marked by changing the
 cursor to a haircross, and drawing the hot object with a slightly larger line width.
 
@@ -206,6 +207,7 @@ input field is then opened, where you kan insert the text string. You can choose
 'TextSize', and bold or normal text with 'Bold' in the tool panel. If you want to change the 
 text, you activate 'Edit/Change text' (Ctrl+T) in the menu. The text color is choosen in the 
 palette with Shift MB1.
+<image> geref_fig1.gif
 
 <h2>Polylines
 You draw polylines by repeatedly drag with MB1 in the working area. When the last line is drawn,
@@ -214,6 +216,7 @@ polyline and activate 'Edit/Edit polyline' in the menu. The breakpoints of the p
 sensitive to Drag MB1. When the cursor is changed to a haircross, an breakpoint is hit, and you
 can drag it to the desired position. When the editing of the polyline is ready, you terminate
 with MB3.
+<image> geref_fig2.gif
 
 <h2>Circle segments
 A circle is drawn by selecting circle in the tool panel and dragging with MB1 in the working
@@ -221,6 +224,7 @@ area. If you wan to draw a segment of a circle, you first draw a circle, and the
 object editor for the circle (by doubleclicking MB1 on it). Here you find the attributes
 angel1 and angel2, where angel1 is the starting angel for the segment and angel2 the size of
 the segment.
+<image> geref_fig3.gif
 
 <h2>Color
 When you wan to create an object with a specific color, this can be achieved in two different 
@@ -241,6 +245,7 @@ An object can have a three dimensional, relief apearance by drawing it with a li
 the upper border, and a darker color at the lower border. This is choosen by '3D' in the tool
 panel. The width of the 3D-shadow is determined by the attribute 'ShadowWidth' that is changed
 from the object editor.
+<image> geref_fig5.gif
 
 <h2>Dynamic
 If you want to set dynamic properties to a base object, you have to let it be included in a 
@@ -1040,6 +1045,8 @@ Attributes'. AnimationSequence can be Cyclic, Dig or ForwBack.
 <topic>geref_windows
 Windows
 
+<image> geref_fig18.png
+
 In ge, there are a number of palettes and other windows to choose objects, subgraphs, colors etc.
 
 <h1>Working area
@@ -1050,25 +1057,28 @@ Click MB1       <t><t>Select an object, or create a base object.
 Shift/Click MB1 <t><t>Add an object to the select list.
 Press MB1       <t><t>Select objects in an area, or move objects.
 Chift/Press MB1 <t><t>Add objects in an area to the select list.
-DoubbleClick MB1 <t><t>Open the object editor for the object.
-Ctrl/DoubbelClick MB1 <t><t>Connect the first attribute in a subgraph object to a rtdb-object.
-Shift/Ctrl/DoubbelClick MB1 <t><t>Connect the second attribut in a subgraph object to a
+DoubleClick MB1 <t><t>Open the object editor for the object.
+Ctrl/DoubleClick MB1 <t><t>Connect the first attribute in a subgraph object to a rtdb-object.
+Shift/Ctrl/DoubleClick MB1 <t><t>Connect the second attribut in a subgraph object to a
                  <t><t>rtdb-object.
-Shift/DoubbelClick MB1 <t><t>Set selected fillcolor in LowColor in a subgraph object.
+Shift/DoubleClick MB1 <t><t>Set selected fillcolor in LowColor in a subgraph object.
 Click MB2        <t><t>Create a subgraph object.
 Press MB2        <t><t>Create a connection.
 
 <h1>Navigation window
+
 Down to the left there is a navigation window that contains a copy of the working area in
 reduced scale. From the navigation window you can scroll (MB1) or zoom (MB2) the graph in the
 working area.
 
 <h1>The subgraph palette
+
 The subgraph palette consists of a number of folders with subgraphs. Under the Local/Subgraphs
 folder there are subgraphs that is created within the project. Other folder contain subgraphs 
 that comes with Proview.
 
 <h1>The color palette
+
 In the color palette there are 300 colors. Here you choose fillcolor, border color and text
 color. The fillcolor is selected with MB1 and displayed in the left field of the top row of
 the palette, bordercolor is selected with MB2 and displayed in the middle field, and text color
@@ -1086,11 +1096,14 @@ ton for subgraph objects.
 Here is also a reset button to return to the original color of an object.
 
 <h1>Tool panel
+
 The tool panel consists of a number of pushbuttons to create rectangles, circles, lines etc.
 There are also functions to rotate and scale, to set linewidth, fontsize, to modify color of
 subgraphs etc.
 
 <h1>The object and attribute editor
+<image> geref_fig19.png
+
 The object and attribute editor makes it possible to enter properties to objects, graphs and
 subgraphs.
 
@@ -1107,6 +1120,8 @@ The fastest way is to select an attributes with ArrowUp and ArrowDown, and use A
 open and change the attribute, and ArrowLeft to close the attribute.
 
 <h1>Plant hierarchy
+<image> geref_fig20.png
+
 If Ge is started from the navigator, the plant hierarchy is displayed in a window below the
 color palette. It is used to connect dynamic objects to signals i rtdb. You connect a subgraph
 object to a signal by selecting the object (or an attribute in the object) in the plant
@@ -1150,6 +1165,7 @@ Table		<link>geref_table
 </topic>
 <topic>geref_rectangle <style>function
 Rectangle
+<image> geref_fig6.png
 
 A rectangle is created by selecting rectangle in the tool panel and drag with MB1 in the
 working area. If you first activate Functions/ScaleEqual an quadrat i drawn.
@@ -1175,6 +1191,7 @@ Dynamic       <t>Not implemented.
 
 <topic>geref_roundedrect <style>function
 Rounded rectangle
+<image> geref_fig7.png
 
 A rectangle with rounded corners are created by selecting rounded rectangle in the tool panel
 and drag with MB1 in the working area. If you first activate Functions/ScaleEqual a quadrat is
@@ -1202,6 +1219,7 @@ Dynamic       <t>Not implemented.
 
 <topic>geref_circle <style>function
 Ellipse
+<image> geref_fig8.png
 
 An ellipse is created by selecting circle in the tool panel and drag with MB1 in the working
 area. With angel1 and angel2 a segment of the circle is drawn. If you first activate
@@ -1230,6 +1248,7 @@ Dynamic       <t>Not implemented.
 
 <topic>geref_line <style>function
 Line
+<image> geref_fig10.png
 
 A line is created by selecting line in the tool panel and drag with MB1 in the working area.
 By activating Functions/MoveRestrictions/Horizontal or Vertical you draw horizontal or
@@ -1249,6 +1268,7 @@ Dynamic      <t>Not implemented.
 
 <topic>geref_polyline <style>function
 Polyline
+<image> geref_fig9.png
 
 A polyline is created by selecting polyline in the tool panel and drag MB1 in the working area.
 When MB1 is released, the first line segment is created. By dragging MB1 additional line
@@ -1291,6 +1311,7 @@ Dynamic       <t>Not implemented.
 
 <topic>geref_text <style>function
 Text
+<image> geref_fig11.png
 
 A text is created by selecting text in the tool panel and clicking MB1 in the working area.
 An input field is opened, where the text is entered. The text is modified from 
@@ -1374,6 +1395,7 @@ Complex objects
 
 <topic>geref_bar <style>function
 Bar
+<image> geref_fig13.png
 
 Bar is one way to display the value of an analog signal.
 The properties fill, fillcolor, bordercolor etc. states properties for the background rectangle.
@@ -1404,6 +1426,7 @@ Dynamic       <t>Not implemented
 
 <topic>geref_trend <style>function
 Trend
+<image> geref_fig14.png
 
 Trend displays the value of one or two analog values as curves.
 
@@ -1450,6 +1473,7 @@ Trend.Dynamic     <t><t>Not implemented
 
 <topic>geref_axis <style>function
 Axis
+<image> geref_fig12.png
 
 Axis shows the range for a curve or bar in x or y direction.
 
@@ -1468,6 +1492,7 @@ Dynamic      <t>Not implemented.
 
 <topic>geref_windowobject <style>function
 Window
+<image> geref_fig15.png
 
 Window displays a separate graph in a specified area in another graph. The graph is displayed
 with or without scrollbars.
@@ -1489,6 +1514,7 @@ Window.ScrollbarBgColor <t><t>Fillcolr of the background part of the scrollbar.
 
 <topic>geref_tabbedwind <style>function
 TabbedWindow
+<image> geref_fig17.png
 
 TabbedWindow is a window object with folders. For each folder a separate graph is stated,
 and when that folder is activated, the stated graph is displayed in the window.
@@ -1515,6 +1541,7 @@ Folder1.HorizontalScrollbar <t><t>A horizontal scrollbar is displayed for folder
 
 <topic>geref_table <style>function
 Table
+<image> geref_fig16.png
 
 A table object displayes a table with a number of rows and columns. Each column is connected
 to an array attribute in the database, and the values of the array elements are displayed

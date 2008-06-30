@@ -1047,6 +1047,8 @@ Fönster
 
 I ge finns ett antal paletter och andra fönster för att välja objekt, subgrafer, färger mm.
 
+<image> geref_fig18.png
+
 <h1>Arbetsarean
 I arbetsarean editeras bilden genom att klicka och dra med musen.
 
@@ -1066,16 +1068,19 @@ Klick MB2        <t><t>Skapa ett subgrafs-objekt.
 Press MB2        <t><t>Skapa en koppling
 
 <h1>Navigationsfönster
+
 Längst ner till vänster finns ett navigations-fönster som innehåller in mini-kopia av hela 
 arbetsarean. Från navigationsfönstret kan man förflytta sig (MB1) och zooma (MB2) bilden i 
 arbetsarean.
 
 <h1>Subgraf-paletten
+
 Subgraf-paletten består av ett antal mappar med subgrafer. Under Local/Subgraphs-mappen finns 
 subgrafer som har skapats inom projektet. Övriga mappar innehåller subgrafer som följer med 
 Proview.
 
 <h1>Färg-paletten
+
 I färgpaletten finns plats för 300 olika färg-nyanser. Här väljer man fyllnadsfärg, kantfärg 
 och text -färg. Fyllnadsfärgen väljs med MB1 och visas i det vänstra fältet överst i 
 paletten, kantfärg väljs med MB2 och visas i mitten fältet, och textfärgen väljs med 
@@ -1093,11 +1098,14 @@ subgrafs-objekt.
 Här finns även en reset-knapp med vilken man kan återgå till objektets ursprungliga färg.
 
 <h1>Verktygs-panel
+
 Verktygs-panelen består av ett antal tryckknappar för att skapa rektanglar, ellipser, linjer 
 etc. Där finns även funktioner för att rotera och skala, sätta linjebredd, fontstorlek, 
 modifera färger på subgrafer mm.
 
 <h1>Objekts och attribut-editorn
+<image> geref_fig19.png
+
 Objekts-och attribut-editorn gör det möjligt att ange olika egenskaper på objekt, grafer och 
 subgrafer.
 
@@ -1114,6 +1122,8 @@ Det snabbaste sättet är att välja ut attribut med PilUpp och PilNer, att använda
 att öppna och ändra attribut och PilVänster för att stänga attribut.
 
 <h1>Plant hierarki
+<image> geref_fig20.png
+
 Om Ge startas från Navigatören visas planthierarkin i ett fönster under färgpaletten. Det 
 används för att koppla dynamiska objekt till signaler i rtdb. Man kopplar ett subgraf-objekt 
 till en signal genom att välja ut objektet (eller ett attribut i objektet) i planthierarkin, 
@@ -1157,6 +1167,7 @@ Table		<link>geref_table
 </topic>
 <topic>geref_rectangle <style>function
 Rektangel
+<image> geref_fig6.png
 
 En rektangel skapas genom att välja rektangel i verktygs-panelen och dra med MB1 i 
 arbetsarean. Om man först aktiverar Functions/ScaleEqual ritas en kvadrat.
@@ -1181,6 +1192,7 @@ Dynamic       <t>Ej implementerat
 
 <topic>geref_roundedrect <style>function
 RundadRektangel
+<image> geref_fig7.png
 
 En rektangel med rundade hörn skapas genom att välja rundad rektangel i verktygs-panelen och 
 dra med MB1 i arbetsarean. Om man först aktiverar Functions/ScaleEqual ritas en kvadrat.
@@ -1206,6 +1218,7 @@ Dynamic      <t>Ej implementerat
 
 <topic>geref_circle <style>function
 Ellips
+<image> geref_fig8.png
 
 En ellips skapas genom att välja ellips i verktygs-panelen och dra med MB1 i arbetsarean. 
 Mha angel1 och angel2 kan segment eller pajbitar av ellipsen ritas. Om man först aktiverar 
@@ -1233,6 +1246,7 @@ Dynamic      <t>Ej implementerat
 
 <topic>geref_line <style>function
 Linje
+<image> geref_fig10.png
 
 En linje skapas genom att välja linje i verktygs-panelen och dra med MB1 i arbetsarean. 
 Genom att aktivera Functions/MoveRestrictions/Horizontal eller Vertical ritar man 
@@ -1251,6 +1265,7 @@ Dynamic      <t>Ej implementerat
 
 <topic>geref_polyline <style>function
 Polylinje
+<image> geref_fig9.png
 
 En polylinje skapas genom att välja polylinje i verktygs-panelen och dra med MB1 i 
 arbetsarean. När MB1 släpps skapas första del-linjen. Genom att på nytt dra med MB1 skapas 
@@ -1290,6 +1305,7 @@ Dynamic       <t>Ej implementerat
 
 <topic>geref_text <style>function
 Text
+<image> geref_fig11.png
 
 En text skapas genom att välja text i verktygs-panelen och klicka med MB1 i arbetsarean. Då 
 öppnar sig ett inmatningsfält och texten kan matas in. Texten kan ändras med Edit/Change 
@@ -1375,6 +1391,7 @@ Sammansatta objekt
 
 <topic>geref_bar <style>function
 Stapel
+<image> geref_fig13.png
 
 Stapel är ett sätt av visa värdet på en analog signal.
 Fyllnad och fyllnadsfärg, kantfärg mm anger egenskaper för stapelns bakgrundsrektangel. 
@@ -1405,6 +1422,7 @@ Dynamic       <t>Ej implementerat
 
 <topic>geref_trend <style>function
 Trendkurva
+<image> geref_fig14.png
 
 Trendkurva är ett sätt av visa värdet på en eller ett par analoga signaler.
 
@@ -1452,6 +1470,7 @@ Trend.Dynamic     <t><t>Ej implementerat
 
 <topic>geref_axis <style>function
 Axis
+<image> geref_fig12.png
 
 Axis visar skalområdet på kurva eller stapel i x- eller y-led.
 
@@ -1470,6 +1489,7 @@ Dynamic      <t>Ej implementerat.
 
 <topic>geref_windowobject <style>function
 Window
+<image> geref_fig15.png
 
 Window visar en separat graf inom ett specificerat område i en annan graf. Grafen kan visas 
 med eller utan skroll-lister.
@@ -1491,6 +1511,7 @@ Window.ScrollbarBgColor <t><t>Fyllnadsfärg på skroll-listens fasta del.
 
 <topic>geref_tabbedwind <style>function
 TabbedWindow
+<image> geref_fig17.png
 
 TabbedWindow är ett Window objekt med flik-register. För varje flik anges en separat graf, 
 och när fliken aktiveras visas en angivna grafen i fönstret.
@@ -1518,6 +1539,7 @@ Folder1.HorizontalScrollbar <t><t>För flik nr 1 visas en horisontell skroll-list
 
 <topic>geref_table <style>function
 Table
+<image> geref_fig16.png
 
 Ett table-objekt visar en tabell med ett visst antal rader och kolumner. Varje kolumn kopplas
 till ett vektor-attribut i databasen, och värdet för elementen i vektorn visas i kolumnen. 
