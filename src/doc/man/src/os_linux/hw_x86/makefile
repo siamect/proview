@@ -82,6 +82,15 @@ gsources := $(sort \
              ) \
            )
 
+pngsources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(source_dirs), \
+                 $(wildcard $(dir)/*.png) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
 pdf_sources := $(filter %.pdf,$(sources))
 pdf_sv_se_sources := $(filter %.pdf,$(sv_se_sources)) 
 pdf_en_us_sources := $(filter %.pdf,$(en_us_sources)) 
@@ -89,6 +98,7 @@ html_sources := $(filter %.html,$(htmlsources))
 html_sv_se_sources := $(filter %.html,$(htmlsv_se_sources)) 
 html_en_us_sources := $(filter %.html,$(htmlen_us_sources)) 
 gif_sources := $(filter %.gif,$(gsources))
+png_sources := $(filter %.png,$(pngsources))
 
 export_pdf := $(patsubst %.pdf,$(doc_dir)/%.pdf,$(pdf_sources))
 export_pdf_sv_se := $(patsubst %.pdf,$(doc_dir)/sv_se/%.pdf,$(pdf_sv_se_sources))
@@ -99,6 +109,9 @@ export_html_en_us := $(patsubst %.html,$(doc_dir)/en_us/%.html,$(html_en_us_sour
 export_gif_sv_se := $(patsubst %.gif,$(doc_dir)/sv_se/%.gif,$(gif_sources))
 export_gif_en_us := $(patsubst %.gif,$(doc_dir)/en_us/%.gif,$(gif_sources))
 export_gif_exe := $(patsubst %.gif,$(exe_dir)/%.gif,$(gif_sources))
+export_png_sv_se := $(patsubst %.png,$(doc_dir)/sv_se/%.png,$(png_sources))
+export_png_en_us := $(patsubst %.png,$(doc_dir)/en_us/%.png,$(png_sources))
+export_png_exe := $(patsubst %.png,$(exe_dir)/%.png,$(png_sources))
 clean_pdf := $(patsubst %.pdf,clean_%.pdf,$(pdf_sources))
 
 
@@ -185,6 +198,18 @@ $(doc_dir)/en_us/%.gif : ../../%.gif
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 
+$(exe_dir)/%.png : ../../%.png
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
+$(doc_dir)/sv_se/%.png : ../../%.png
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
+$(doc_dir)/en_us/%.png : ../../%.png
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
 .PHONY : all init copy lib exe clean realclean \
          $(clean_pdf)
 
@@ -194,6 +219,7 @@ init :
 
 copy : $(export_pdf) $(export_pdf_en_us) $(export_pdf_sv_se) \
        $(export_gif_exe) $(export_gif_en_us) $(export_gif_sv_se) \
+       $(export_png_exe) $(export_png_en_us) $(export_png_sv_se) \
        $(exe_dir)/en_us/wtt_help.dat $(exe_dir)/sv_se/wtt_help.dat \
        $(exe_dir)/en_us/man_dg.dat $(exe_dir)/sv_se/man_dg.dat \
        $(doc_dir)/en_us/man_dg_index.html $(doc_dir)/sv_se/man_dg_index.html \
@@ -208,6 +234,10 @@ copy : $(export_pdf) $(export_pdf_en_us) $(export_pdf_sv_se) \
        $(doc_dir)/en_us/man_subgraph.pdf \
        $(exe_dir)/en_us/man_orm.dat $(exe_dir)/sv_se/man_orm.dat \
        $(doc_dir)/en_us/man_orm_index.html $(doc_dir)/sv_se/man_orm_index.html \
+       $(exe_dir)/en_us/man_exlib.dat \
+       $(doc_dir)/en_us/man_exlib_index.html \
+       $(doc_dir)/en_us/man_exlib.pdf \
+       $(doc_dir)/en_us/man_exlib.ps \
        $(mediatargets) $(csstargets) \
        $(export_html) $(export_html_en_us) $(export_html_sv_se)
 
@@ -330,6 +360,22 @@ $(doc_dir)/en_us/man_subgraph_index.html : $(pwre_sroot)/doc/man/en_us/man_subgr
 
 $(doc_dir)/en_us/man_subgraph.pdf : $(pwre_sroot)/doc/man/en_us/man_subgraph.dat
 	@ echo "Generating pdf for en_us/man_subgraph"
+	@ co_convert -f -d $(doc_dir)/en_us $(source)
+
+$(exe_dir)/en_us/man_exlib.dat : $(pwre_sroot)/doc/man/en_us/man_exlib.dat
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
+$(doc_dir)/en_us/man_exlib.ps : $(pwre_sroot)/doc/man/en_us/man_exlib.dat
+	@ echo "Generating postscript for en_us/man_exlib"
+	@ co_convert -n -d $(doc_dir)/en_us $(source)
+
+$(doc_dir)/en_us/man_exlib_index.html : $(pwre_sroot)/doc/man/en_us/man_exlib.dat
+	@ echo "Generating html for en_us/man_exlib"
+	@ co_convert -t -d $(doc_dir)/en_us $(source)
+
+$(doc_dir)/en_us/man_exlib.pdf : $(pwre_sroot)/doc/man/en_us/man_exlib.dat
+	@ echo "Generating pdf for en_us/man_exlib"
 	@ co_convert -f -d $(doc_dir)/en_us $(source)
 
 
