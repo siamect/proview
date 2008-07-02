@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_procom.cpp,v 1.2 2007-03-20 12:36:38 claes Exp $
+ * Proview   $Id: rt_procom.cpp,v 1.3 2008-07-02 11:27:48 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1368,7 +1368,7 @@ void rt_procom::provideStatus( pwr_tStatus rsts)
   }
   case net_eMsg_nameToObject:
   case net_eMsg_oidToObject: {
-    respondError( m_getmsg, pwr_cNObjid, sts);
+    respondError( m_getmsg, pwr_cNObjid, rsts);
     break;
   }
   default: 
