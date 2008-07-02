@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.c,v 1.34 2008-06-25 07:48:52 claes Exp $
+ * Proview   $Id: rt_gdh.c,v 1.35 2008-07-02 11:26:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -371,7 +371,8 @@ gdh_ClassAttrrefToAttr (
   } gdh_ScopeUnlock;
 
   if (ap != NULL) {
-    if ( ap->adef->Info.Elements > 1 && ap->size < ap->adef->Info.Size) {
+    if ( ap->adef && 
+	 ap->adef->Info.Elements > 1 && ap->size < ap->adef->Info.Size) {
       pwr_tOName aname;
 
       sprintf( aname, "%s[%d]", ap->name, ap->idx);
