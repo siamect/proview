@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.h,v 1.24 2008-06-25 07:58:04 claes Exp $
+ * Proview   $Id: xtt_xnav.h,v 1.25 2008-07-17 11:23:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -78,6 +78,10 @@ extern "C" {
 #include "pwr_privilege.h"
 #endif
 
+#ifndef rt_sevcli_h
+#include "rt_sevcli.h"
+#endif
+
 #define xnav_cVersion	"X3.0b"
 #define XNAV_BROW_MAX	25
 #define XNAV_LOGG_MAX   10
@@ -87,6 +91,7 @@ class XAtt;
 class XCrr;
 class Block;
 class XttTrend;
+class XttDsHist;
 class XttFast;
 class XAttOne;
 class GeCurve;
@@ -314,6 +319,7 @@ class XNav {
     int			op_close_button;
     static xmenu_sMenuCall *mcp;
     CoLogin		*cologin;
+    sevcli_tCtx 	scctx;
 
     virtual void set_inputfocus() {}
     virtual void pop() {}
@@ -334,6 +340,8 @@ class XNav {
     virtual Op *op_new( char *opplace, pwr_tStatus *sts) {return 0;}
     virtual XttTrend *xtttrend_new( char *name, pwr_tAttrRef *objar, pwr_tAttrRef *plotgroup,
 			    pwr_tStatus *sts) {return 0;}
+    virtual XttDsHist *xttdshist_new( char *name, pwr_tOid *oid, pwr_tOName *aname,
+				      sevcli_tCtx scctx, pwr_tStatus *sts) {return 0;}
     virtual XttFast *xttfast_new( char *name, pwr_tAttrRef *objar, pwr_tStatus *sts) {return 0;}
     virtual XAttOne *xattone_new( pwr_tAttrRef *objar, char *title, unsigned int priv,
 			  pwr_tStatus *sts) {return 0;}

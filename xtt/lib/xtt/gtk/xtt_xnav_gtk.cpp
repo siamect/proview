@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_gtk.cpp,v 1.6 2008-06-24 08:09:56 claes Exp $
+ * Proview   $Id: xtt_xnav_gtk.cpp,v 1.7 2008-07-17 11:23:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -60,6 +60,7 @@ typedef void *Widget;
 #include "xtt_ge_gtk.h"
 #include "xtt_block_gtk.h"
 #include "xtt_trend_gtk.h"
+#include "xtt_dshist_gtk.h"
 #include "xtt_fast_gtk.h"
 #include "xtt_xattone_gtk.h"
 #include "xtt_clog_gtk.h"
@@ -215,6 +216,14 @@ XttTrend *XNavGtk::xtttrend_new( char *name, pwr_tAttrRef *objar, pwr_tAttrRef *
   GtkWidget *w;
 
   return new XttTrendGtk( this, parent_wid, name, &w, objar, plotgroup, sts);
+}
+
+XttDsHist *XNavGtk::xttdshist_new( char *name, pwr_tOid *oid, pwr_tOName *aname,
+				   sevcli_tCtx scctx, pwr_tStatus *sts)
+{
+  GtkWidget *w;
+
+  return new XttDsHistGtk( this, parent_wid, name, &w, oid, aname, scctx, sts);
 }
 
 XttFast *XNavGtk::xttfast_new( char *name, pwr_tAttrRef *objar, pwr_tStatus *sts)

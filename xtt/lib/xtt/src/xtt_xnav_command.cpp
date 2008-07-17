@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_command.cpp,v 1.37 2008-06-25 12:37:06 claes Exp $
+ * Proview   $Id: xtt_xnav_command.cpp,v 1.38 2008-07-17 11:23:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -63,6 +63,7 @@
 #include "glow_curvectx.h"
 #include "ge_curve.h"
 #include "xtt_trend.h"
+#include "xtt_dshist.h"
 #include "xtt_fast.h"
 #include "xtt_xcrr.h"
 #include "xtt_menu.h"
@@ -136,6 +137,8 @@ static int xnav_op_get_alarm_info_cb( void *xnav, evlist_sAlarmInfo *info);
 static void xnav_op_ack_last_cb( void *xnav, unsigned long type, unsigned long prio);
 static void xnav_trend_close_cb( void *ctx, XttTrend *trend);
 static void xnav_trend_help_cb( void *ctx, char *key);
+static void xnav_dshist_close_cb( void *ctx, XttDsHist *trend);
+static void xnav_dshist_help_cb( void *ctx, char *key);
 static void xnav_fast_close_cb( void *ctx, XttFast *fast);
 static void xnav_fast_help_cb( void *ctx, char *key);
 static void xnav_xao_close_cb( void *ctx, XAttOne *xao);
@@ -2893,6 +2896,167 @@ static int	xnav_open_func(	void		*client_data,
 	trend->help_cb = xnav_trend_help_cb;
     }
   }
+  else if ( strncmp( arg1_str, "HISTORY", strlen( arg1_str)) == 0)
+  {
+
+    pwr_tAName name_str;
+    char *name_ptr;
+    pwr_tAName title_str;
+    pwr_tAttrRef attr_aref, dshist_aref, histthread_aref;
+    pwr_tOid histthread_oid;
+    char server_node[40];
+    pwr_tOid oidv[11];
+    pwr_tOName anamev[11];
+    int sts;
+    pwr_tAName name_array[10];
+    int i, names;
+    int plotgroup_found = 0;
+    pwr_sAttrRef plotgroup = pwr_cNAttrRef;
+    pwr_tClassId classid;
+    pwr_tObjid node_objid;
+    pwr_tAName hist_name;
+    XttDsHist *hist;
+    pwr_tAttrRef aref;
+    pwr_tAName aname;
+    char *s;
+
+    // Command is "OPEN HISTORY"
+
+    /* Get the name qualifier */
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str)))) {
+      if ( name_str[0] != '/')
+        /* Assume that this is the namestring */
+        name_ptr = name_str;
+      else {
+        xnav->message('E', "Syntax error");
+        return XNAV__HOLDCOMMAND; 	
+      } 
+    }
+    else {
+      if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
+        name_ptr = name_str;
+      else {
+        /* Get the selected object */
+        sts = xnav->get_current_aref( &dshist_aref, name_str, 
+	  sizeof( name_str), cdh_mName_path | cdh_mName_object | cdh_mName_attribute);
+        if ( EVEN(sts)) {
+          xnav->message('E', "Enter name or select an object");
+          return XNAV__SUCCESS;
+        }
+        name_ptr = name_str;
+      }
+    }
+
+    // The name string can contain several hists separated by ','
+    names = dcli_parse( name_str, ",", "",
+	     (char *) name_array, sizeof( name_array)/sizeof( name_array[0]), 
+	     sizeof( name_array[0]), 0);
+
+    for ( i = 0; i < names; i++) {
+      if ( strncmp( name_array[i], "*-", 2) == 0) {
+        // Replace * by the node object
+        sts = gdh_GetNodeObject( 0, &node_objid);
+        if ( EVEN(sts)) return sts;
+        sts = gdh_ObjidToName( node_objid, hist_name, sizeof(hist_name), 
+			cdh_mNName);
+        if ( EVEN(sts)) return sts;
+        strcat( hist_name, &name_array[i][1]);
+      }
+      else
+        strcpy( hist_name, name_array[i]);
+
+      sts = gdh_NameToAttrref( pwr_cNObjid, hist_name, &dshist_aref);
+      if (EVEN(sts)) {
+        xnav->message('E', "Object not found");
+        return XNAV__HOLDCOMMAND;
+      }
+      sts = gdh_GetAttrRefTid( &dshist_aref, &classid);
+      if (EVEN(sts)) return sts;
+
+      switch ( classid) {
+        case pwr_cClass_DsHist:
+          break;
+        case pwr_cClass_PlotGroup:
+	  xnav->message('E', "Not yet implemented");
+	  return XNAV__HOLDCOMMAND;
+        default:
+          xnav->message('E', "Error in object class");
+          return XNAV__HOLDCOMMAND;
+      }
+      if ( plotgroup_found)
+        break;
+
+      sts = gdh_ArefANameToAref( &dshist_aref, "Attribute", &attr_aref);
+      if ( EVEN(sts)) return sts;
+
+      sts = gdh_GetObjectInfoAttrref( &attr_aref, &aref, sizeof(aref));
+      if ( EVEN(sts)) return sts;
+      
+      sts = gdh_AttrrefToName( &aref, aname, sizeof(aname), cdh_mNName);
+      if ( EVEN(sts)) {
+	xnav->message('E', "Error in DsHist configuration");
+	return XNAV__HOLDCOMMAND;
+      }
+      s = strchr( aname, '.');
+      if ( !s) {
+	xnav->message('E', "Error in DsHist configuration");
+	return XNAV__HOLDCOMMAND;
+      }
+	   
+      strcpy( anamev[i], s+1);
+      oidv[i] = aref.Objid;
+
+      // Get server and connect to server
+      sts = gdh_ArefANameToAref( &dshist_aref, "ThreadObject", &attr_aref);
+      if ( EVEN(sts)) return sts;
+
+      sts = gdh_GetObjectInfoAttrref( &attr_aref, &histthread_oid, sizeof(histthread_oid));
+      if ( EVEN(sts)) return sts;
+
+      histthread_aref = cdh_ObjidToAref( histthread_oid);
+      sts = gdh_ArefANameToAref( &histthread_aref, "ServerNode", &attr_aref);
+      if ( EVEN(sts)) {
+	xnav->message('E', "Error in DsHist configuration");
+	return XNAV__HOLDCOMMAND;
+      }
+      
+      sts = gdh_GetObjectInfoAttrref( &attr_aref, server_node, sizeof(server_node));
+      if ( EVEN(sts)) return sts;
+      
+      if ( !xnav->scctx) {
+	sevcli_init( &sts, &xnav->scctx);
+	if ( EVEN(sts)) return sts;
+      }
+      sevcli_set_servernode( &sts, xnav->scctx, server_node);
+      if ( EVEN(sts)) return sts;      
+    }
+    oidv[i] = pwr_cNOid;    
+
+    if ( EVEN( dcli_get_qualifier( "/TITLE", title_str, sizeof(title_str)))) {
+      if ( plotgroup_found) {
+        pwr_tAName attr;
+
+        // Get title from plotgroup object
+        strcpy( attr, hist_name);
+        strcat( attr, ".Title");
+        sts = gdh_GetObjectInfo( attr, &title_str, sizeof(title_str));
+        if ( EVEN(sts)) return sts;
+      }
+      else
+        strcpy( title_str, "History");
+    }
+
+    if ( plotgroup_found) {
+      xnav->message('E', "Not yet implemented");
+      return XNAV__HOLDCOMMAND;      
+    }
+    else {
+      hist = xnav->xttdshist_new( title_str, oidv, anamev, xnav->scctx, &sts);
+      if ( ODD(sts)) {
+	hist->help_cb = xnav_dshist_help_cb;
+      }
+    }
+  }
   else if ( strncmp( arg1_str, "FAST", strlen( arg1_str)) == 0)
   {
     pwr_tAName name_str;
@@ -3504,6 +3668,27 @@ static void xnav_trend_close_cb( void *ctx, XttTrend *trend)
 }
 
 static void xnav_trend_help_cb( void *ctx, char *key)
+{
+  XNav *xnav = (XNav *) ctx;
+
+  int	sts;
+
+  sts = CoXHelp::dhelp( key, "", navh_eHelpFile_Base, NULL, 0);
+  if ( EVEN(sts))
+    xnav->message( 'E', "Unable to find topic");
+  else
+    xnav->message( ' ', null_str);
+}
+
+static void xnav_dshist_close_cb( void *ctx, XttDsHist *hist)
+{
+  XNav *xnav = (XNav *) ctx;
+
+  xnav->appl.remove( (void *)hist);
+  delete hist;
+}
+
+static void xnav_dshist_help_cb( void *ctx, char *key)
 {
   XNav *xnav = (XNav *) ctx;
 

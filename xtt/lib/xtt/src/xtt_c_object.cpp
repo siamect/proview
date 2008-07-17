@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_c_object.cpp,v 1.18 2008-05-28 12:04:37 claes Exp $
+ * Proview   $Id: xtt_c_object.cpp,v 1.19 2008-07-17 11:23:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -398,7 +398,148 @@ static pwr_tStatus OpenTrendFilter( xmenu_sMenuCall *ip)
 }
 
 //
-// Open trend
+// Open History
+//
+static pwr_tStatus OpenHistory( xmenu_sMenuCall *ip)
+{
+  pwr_tAName name;
+  char cmd[800];
+  int sts;
+  pwr_tObjid child;
+  pwr_tClassId classid;
+  int found;
+  pwr_sAttrRef defhist;
+  pwr_sAttrRef *objar;
+
+  if (!ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid))
+    objar = &ip->Pointed;
+  else
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
+
+  sts = gdh_GetAttrRefTid( objar, &classid);
+  if ( EVEN(sts)) return sts;
+
+  if ( classid == pwr_cClass_DsHist || classid == pwr_cClass_PlotGroup) {
+    sts = gdh_AttrrefToName( &ip->Pointed, name, sizeof(name),
+			cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return sts;
+
+    // Open hist
+    sprintf( cmd, "open history /name=%s /title=\"%s\"", name, name);
+    ((XNav *)ip->EditorContext)->command( cmd);
+    return 1;
+  }
+
+  // Look for attribute DefHistory
+  sts = gdh_AttrrefToName( objar, name, sizeof(name),
+			cdh_mName_volumeStrict);
+  if ( EVEN(sts)) return sts;
+
+  strcat( name, ".DefHistory");
+  sts = gdh_GetObjectInfo( name, (void *)&defhist, sizeof(defhist));
+  if ( ODD(sts) && cdh_ObjidIsNotNull( defhist.Objid)) {
+    // Default XttGraph found
+    sts = gdh_GetAttrRefTid( &defhist, &classid);
+    if ( ODD(sts) &&
+         (classid == pwr_cClass_DsHist || classid == pwr_cClass_PlotGroup)) {
+
+      sts = gdh_AttrrefToName( &defhist, name, sizeof(name),
+			cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+
+      // Open hist
+      sprintf( cmd, "open history /name=%s /title=\"%s\"", name, name);
+      ((XNav *)ip->EditorContext)->command( cmd);
+      return 1;
+    }
+  }
+
+  // Look for DsHist as child
+  if ( !ip->Pointed.Flags.b.Object)
+    return 0;
+
+  found = 0;
+  sts = gdh_GetChild( objar->Objid, &child);
+  while ( ODD(sts)) {
+    sts = gdh_GetObjectClass( child, &classid);
+    if ( EVEN(sts)) return sts;
+    
+    if ( classid == pwr_cClass_DsHist) {
+      found = 1;
+      break;
+    }      
+    sts = gdh_GetNextSibling( child, &child);
+  }
+  if ( !found)
+    return 1;
+
+  sts = gdh_ObjidToName( child, name, sizeof(name),
+			   cdh_mName_volumeStrict);
+  if ( EVEN(sts)) return sts;
+
+  // Open history
+  sprintf( cmd, "open history /name=%s /title=\"%s\"", name, name);
+  ((XNav *)ip->EditorContext)->command( cmd);
+ 
+  return 1;
+}
+
+// Open History filter
+static pwr_tStatus OpenHistoryFilter( xmenu_sMenuCall *ip)
+{
+  int sts;
+  pwr_tObjid child;
+  pwr_tClassId classid;
+  pwr_sAttrRef defhist;
+  pwr_tAName name;
+  pwr_sAttrRef *objar;
+
+  if (!ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid))
+    objar = &ip->Pointed;
+  else 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
+
+  sts = gdh_GetAttrRefTid( objar, &classid);
+  if ( EVEN(sts)) return sts;
+
+  if ( classid == pwr_cClass_DsHist || classid == pwr_cClass_PlotGroup) {
+    return XNAV__SUCCESS;
+  }
+
+  // Check if attribute DefHist exist
+  sts = gdh_AttrrefToName( objar, name, sizeof(name),
+			cdh_mName_volumeStrict);
+  if ( EVEN(sts)) return sts;
+
+  strcat( name, ".DefHist");
+  sts = gdh_GetObjectInfo( name, (void *)&defhist, sizeof(defhist));
+  if ( ODD(sts) && cdh_ObjidIsNotNull( defhist.Objid)) {
+    // Default XttGraph found
+    sts = gdh_GetAttrRefTid( &defhist, &classid);
+    if ( ODD(sts) &&
+         (classid == pwr_cClass_DsHist || classid == pwr_cClass_PlotGroup))
+      return XNAV__SUCCESS;
+  }
+
+  // Check if object has a DsHist as child
+  if ( !objar->Flags.b.Object)
+    return XNAV__INVISIBLE;
+
+  sts = gdh_GetChild( objar->Objid, &child);
+  while ( ODD(sts)) {
+    sts = gdh_GetObjectClass( child, &classid);
+    if ( EVEN(sts)) return sts;
+
+    if ( classid == pwr_cClass_DsHist)
+      return XNAV__SUCCESS;
+
+    sts = gdh_GetNextSibling( child, &child);
+  }
+  return XNAV__INVISIBLE;
+}
+
+//
+// Open Fast
 //
 static pwr_tStatus OpenFast( xmenu_sMenuCall *ip)
 {
@@ -1779,6 +1920,8 @@ pwr_dExport pwr_BindXttMethods($Object) = {
   pwr_BindXttMethod(OpenTraceFilter),
   pwr_BindXttMethod(OpenTrend),
   pwr_BindXttMethod(OpenTrendFilter),
+  pwr_BindXttMethod(OpenHistory),
+  pwr_BindXttMethod(OpenHistoryFilter),
   pwr_BindXttMethod(OpenFast),
   pwr_BindXttMethod(OpenFastFilter),
   pwr_BindXttMethod(RtNavigator),

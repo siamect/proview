@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.cpp,v 1.40 2008-06-25 07:58:04 claes Exp $
+ * Proview   $Id: xtt_xnav.cpp,v 1.41 2008-07-17 11:23:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1059,7 +1059,7 @@ XNav::XNav(
 	menu_tree(NULL), ev(0), op(0), clog(0), closing_down(0),
 	base_priv(pwr_mPrv_System), priv(pwr_mPrv_System), displayed(0),
         current_logging_index(-1), search_last_found(0), search_compiled(0), 
-	attach_audio(0), audio(0), op_close_button(xn_op_close_button), cologin(0)
+	attach_audio(0), audio(0), op_close_button(xn_op_close_button), cologin(0), scctx(0)
 {
   strcpy( name, xn_name);
   strcpy( opplace_name, xn_opplace_name);
