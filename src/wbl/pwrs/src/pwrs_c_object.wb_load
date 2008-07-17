@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_object.wb_load,v 1.18 2008-06-03 05:59:53 claes Exp $
+!  Proview   $Id: pwrs_c_object.wb_load,v 1.19 2008-07-17 11:37:04 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -889,6 +889,13 @@ SObject pwrs:Class
 	  Attr FilterName = "$Object-OpenTrendFilter"
 	EndBody
       EndObject
+      Object OpenHistory $MenuButton
+	Body SysBody
+	  Attr ButtonName = "History"
+	  Attr MethodName = "$Object-OpenHistory"
+	  Attr FilterName = "$Object-OpenHistoryFilter"
+	EndBody
+      EndObject
       Object OpenFast $MenuButton
 	Body SysBody
 	  Attr ButtonName = "Fast"
@@ -1017,6 +1024,13 @@ SObject pwrs:Class
 	  Attr ButtonName = "Trend"
 	  Attr MethodName = "$Object-OpenTrend"
 	  Attr FilterName = "$Object-OpenTrendFilter"
+	EndBody
+      EndObject
+      Object OpenHistory $MenuButton
+	Body SysBody
+	  Attr ButtonName = "History"
+	  Attr MethodName = "$Object-OpenHistory"
+	  Attr FilterName = "$Object-OpenHistoryFilter"
 	EndBody
       EndObject
       Object OpenFast $MenuButton
