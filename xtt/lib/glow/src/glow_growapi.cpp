@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.37 2008-05-13 13:59:03 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.38 2008-07-17 11:25:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -529,6 +529,12 @@ void grow_MeasureNode( grow_tNode node, double *ll_x, double *ll_y,
 	double *ur_x, double *ur_y)
 {
   ((GlowNode *)node)->measure( ll_x, ll_y, ur_x, ur_y);
+}
+
+void grow_MeasureWindow( grow_tCtx ctx, double *ll_x, double *ll_y,
+			 double *ur_x, double *ur_y)
+{
+  ctx->measure_window( ll_x, ll_y, ur_x, ur_y);
 }
 
 void grow_Print( grow_tCtx ctx, char *filename, double x0, double x1, int end)

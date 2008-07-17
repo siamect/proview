@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.cpp,v 1.31 2008-05-13 13:59:03 claes Exp $
+ * Proview   $Id: glow_growctx.cpp,v 1.32 2008-07-17 11:25:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -4349,3 +4349,13 @@ void GrowCtx::read_object( ifstream& fp, GlowArrayElem **o)
   a.insert( n);
   *o = n;
 }
+
+void GrowCtx::measure_window( double *ll_x, double *ll_y, 
+			      double *ur_x, double *ur_y)
+{
+    *ll_x = double(mw.offset_x) / mw.zoom_factor_x;
+    *ur_x = double(mw.offset_x + mw.window_width) / mw.zoom_factor_x;
+    *ll_y = double(mw.offset_y) / mw.zoom_factor_y;
+    *ur_y = double(mw.offset_y + mw.window_height) / mw.zoom_factor_y;
+}
+

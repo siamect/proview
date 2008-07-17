@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.h,v 1.16 2008-05-13 13:59:03 claes Exp $
+ * Proview   $Id: glow_growctx.h,v 1.17 2008-07-17 11:25:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -821,6 +821,9 @@ class GrowCtx : public GlowCtx {
 
   //! Order object. */
   int order_object( GlowArrayElem *o, GlowArrayElem *dest, glow_eDest code) { return a.move( o, dest, code);}
+
+  void measure_window( double *ll_x, double *ll_y, 
+		       double *ur_x, double *ur_y);
 
   char		name[40];		//!< Name of the context.
   grow_eMode	edit_mode;		//!< Current edit mode.
