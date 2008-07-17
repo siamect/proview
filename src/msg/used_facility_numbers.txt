@@ -15,6 +15,7 @@
    22	timer
    23	thread
    24   proc
+   25   sev
    50   hd
   100   cdh
   101   ndc
