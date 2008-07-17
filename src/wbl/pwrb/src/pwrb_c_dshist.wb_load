@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_dshist.wb_load,v 1.3 2005-09-01 14:58:01 claes Exp $
+!  Proview   $Id: pwrb_c_dshist.wb_load,v 1.4 2008-07-17 11:36:41 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -20,12 +20,13 @@
 !
 SObject pwrb:Class
 !/**
-!  @Version 1.0
+!  @Version 2.0
+!  @Group PlantConfiguration,DsHist
+!  @Summary Configures historical data storage for a value.
 !  Configures historical data storage for a scalar
 !  quantity or element in a one-dimensional vector. (Datastorage
 !  History).
 !  
-!  Historical data storage is an option in PROVIEW/R.
 !  In a relational database, data resides in
 !  two-dimensional tables known as relations. A relation
 !  consist of rows and columns.
@@ -33,14 +34,17 @@ SObject pwrb:Class
 !  The DsHist object specifies which quantity is to be
 !  stored and in which relation. Up to three different
 !  relations can be specified.
-!         Hints
+
+!  Hints
 !  
 !  If the storage concern signal values DsHist is
 !  configured in the development environment often direct
 !  below the current signal object.
 !  
-!         See Also
-!  DsHistServer.
+! @b See also
+!  @classlink DsHistThread pwrb_dshistthread.html
+!  @classlink DsHistMonitor pwrb_dshistmonitor.html
+!  @classlink DsHistServer pwrb_dshistserver.html
 !*/
   Object DsHist $ClassDef 106 
     Body SysBody
@@ -51,6 +55,9 @@ SObject pwrb:Class
       Body SysBody
         Attr StructName = "DsHist"
       EndBody
+      !/**
+      !  Optional desription.
+      !*/
       Object Description $Attribute 1 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
@@ -58,27 +65,36 @@ SObject pwrb:Class
       EndObject
       !/**
       !  Specifies the complete name of the attribute whose
-      !  value is to be stored. The attribute has to be any of
-      !  the types: pwr_tBoolean, pwr_tFloat32, pwr_tInt8,
-      !  pwr_tInt16, or pwr_tInt32.
-      !  The value is always stored as pwr_tFloat32.
+      !  value is to be stored. 
       !*/
       Object Attribute $Attribute 2 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$AttrRef"
         EndBody
       EndObject
-      Object HistServerObject $Attribute 3 
+      !/**
+      !  DsHistThread object that specifies the storage scantime
+      !  and in which server the data is stored.
+      !*/
+      Object ThreadObject $Attribute 3 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
-          Attr Flags |= PWR_MASK_ARRAY
-          Attr Elements = 3
         EndBody
       EndObject
       !/**
-      !  The attribute is intended for use in the future.
+      !  Time the data will be stored in the database.
+      !  Data that is older than this time will be removed from
+      !  the database by a garbage collector.
       !*/
-      Object DeadBand $Attribute 4 
+      Object StorageTime $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
+        EndBody
+      EndObject
+      !/**
+      !  Not yet implemented.
+      !*/
+      Object DeadBand $Attribute 5 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
@@ -98,6 +114,21 @@ SObject pwrb:Class
       Body SysBody
         Attr MethodName = "DsHist-PostMove"
       EndBody
+    EndObject
+    Object ConfiguratorPoson $Menu
+      Object Pointed $Menu
+	Object ConnectThread $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Connect DsHistThread"
+	    Attr MethodName = "$Objid-Connect"
+	    Attr MethodArguments[0] = "ThreadObject"
+	    Attr MethodArguments[1] = "DsHistThread"
+	    Attr FilterName = "$Objid-IsOkConnect"
+	    Attr FilterArguments[0] = "ThreadObject"
+	    Attr FilterArguments[1] = "DsHistThread"
+	  EndBody
+	EndObject
+      EndObject
     EndObject
   EndObject
 EndSObject

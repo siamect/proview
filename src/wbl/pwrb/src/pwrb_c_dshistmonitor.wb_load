@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_dshistserver.wb_load,v 1.5 2008-07-17 11:36:41 claes Exp $
+!  Proview   $Id: pwrb_c_dshistmonitor.wb_load,v 1.1 2008-07-17 11:37:57 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -22,30 +22,27 @@ SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group Servers,NodeConfiguration
-!  Configures the DsHist server process.
+!  Configures the DsHist monitor process.
 !  
-!  Configures the server process for historical data storage.
-!  
-!  This object is used when the server is started on a node with
-!  the runtime environment started.
-!  The the server can also be started without the runtime
-!  environment, but with the storage environment (Sev) installed.
-!  See the documentation for the storage environment on how to
-!  start the server in this case.
+!  The DsHist monitor process keeps track of all DsHist objects
+!  in the current node. The process is divided into threads that 
+!  collect data with a specific scantime and sends to the specified
+!  database server. The threads are specified by DsHistThread objects
+!  that reside under the DsHistMonitor object in the node hierarchy.
 !
 ! @b See also
 !  @classlink DsHistThread pwrb_dshistthread.html
-!  @classlink DsHistMonitor pwrb_dshistmonitor.html
 !  @classlink DsHist pwrb_dshist.html
+!  @classlink DsHistServer pwrb_dshistserver.html
 !*/
-  Object DsHistServer $ClassDef 535 
+  Object DsHistMonitor $ClassDef 534 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_Standard
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "DsHistServer"
+        Attr StructName = "DsHistMonitor"
       EndBody
       !/**
       !  Optional description.
@@ -55,6 +52,11 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
+    EndObject
+    Object PostCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "DsHistMonitor-PostCreate"
+      EndBody
     EndObject
   EndObject
 EndSObject
