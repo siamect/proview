@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growaxis.cpp,v 1.9 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: glow_growaxis.cpp,v 1.10 2008-07-17 11:23:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,6 +28,8 @@
 #include "glow_grownode.h"
 #include "glow_draw.h"
 #include "glow_growctx.h"
+#include "pwr.h"
+#include "co_time.h"
 
 GrowAxis::GrowAxis( GrowCtx *glow_ctx, char *name, double x1, double y1, 
 		double x2, double y2, glow_eDrawType border_d_type, 
@@ -752,6 +754,28 @@ void GrowAxis::format_text( char *text, char *fmt, double value)
     int hours = (val - days * 24 * 3600) / 3600; 
     int minutes = (val - days * 24 * 3600 - hours * 3600) / 60; 
     sprintf( text, "%d %02d:%02d", days, hours, minutes);
+  }
+  else if ( strcmp( fmt, "%10t") == 0) {
+    // Date
+    char timstr[40];
+    pwr_tTime t;
+    t.tv_sec = (int) nearbyint(value);
+    t.tv_nsec = 0;
+    
+    time_AtoAscii( &t, time_eFormat_NumDateAndTime, timstr, sizeof(timstr));
+    timstr[19] = 0;
+    strcpy( text, timstr);
+  }
+  else if ( strcmp( fmt, "%11t") == 0) {
+    // Date, no seconds
+    char timstr[40];
+    pwr_tTime t;
+    t.tv_sec = (int) nearbyint(value);
+    t.tv_nsec = 0;
+    
+    time_AtoAscii( &t, time_eFormat_NumDateAndTime, timstr, sizeof(timstr));
+    timstr[16] = 0;
+    strcpy( text, timstr);
   }
   else
     sprintf( text, fmt, value);
