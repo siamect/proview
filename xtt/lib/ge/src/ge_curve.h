@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.h,v 1.10 2007-01-15 13:19:09 claes Exp $
+ * Proview   $Id: ge_curve.h,v 1.11 2008-07-17 11:21:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -120,6 +120,8 @@ class GeCurve {
     int          minmax_idx;
     void 	 (*close_cb)( void *);
     void 	 (*help_cb)( void *);
+    void 	 (*higher_res_cb)( void *);
+    void 	 (*lower_res_cb)( void *);
     int          initial_right_position;
     char	 title[300];
     double  	 last_cursor_x;
@@ -145,6 +147,7 @@ class GeCurve {
     void set_time( pwr_tTime time);
     void print( char *filename);
     void scroll( double value);
+    void measure_window( double *ll_x, double *ll_y, double *ur_x, double *ur_y);
     void activate_exit();
     void activate_configure();
     void activate_print();
@@ -152,7 +155,8 @@ class GeCurve {
     void activate_filledcurves( int set);
     void activate_help();
     void activate_minmax_ok( double min_value, double max_value);
-
+    void set_curvedata( GeCurveData *curve_data);
+    
     static int growcurve_cb( GlowCtx *ctx, glow_tEvent event);
     static int init_growcurve_cb( GlowCtx *fctx, void *client_data);
     static int growaxis_cb( GlowCtx *ctx, glow_tEvent event);

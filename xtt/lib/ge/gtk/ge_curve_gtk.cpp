@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve_gtk.cpp,v 1.2 2007-01-15 13:19:09 claes Exp $
+ * Proview   $Id: ge_curve_gtk.cpp,v 1.3 2008-07-17 11:21:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -119,6 +119,22 @@ void GeCurveGtk::activate_scroll_left( GtkWidget *w, gpointer data)
 
   curve_Scroll( curve->growcurve_ctx, 0.1);
   curve->set_inputfocus();
+}
+
+void GeCurveGtk::activate_higher_res( GtkWidget *w, gpointer data)
+{
+  GeCurve *curve = (GeCurve *)data;
+
+  if ( curve->higher_res_cb)
+    (curve->higher_res_cb)( curve->parent_ctx);
+}
+
+void GeCurveGtk::activate_lower_res( GtkWidget *w, gpointer data)
+{
+  GeCurve *curve = (GeCurve *)data;
+
+  if ( curve->lower_res_cb)
+    (curve->lower_res_cb)( curve->parent_ctx);
 }
 
 void GeCurveGtk::activate_background( GtkWidget *w, gpointer data)
@@ -461,6 +477,22 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   g_signal_connect(tools_page_right, "clicked", G_CALLBACK(activate_page_right), this);
   g_object_set( tools_page_right, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_page_right, CoWowGtk::translate_utf8("Page right"), "");
+
+  GtkWidget *tools_higher_res = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/ge_redo.png");
+  gtk_container_add( GTK_CONTAINER(tools_higher_res), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_higher_res, "clicked", G_CALLBACK(activate_higher_res), this);
+  g_object_set( tools_higher_res, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_higher_res, CoWowGtk::translate_utf8("Higer resolution"), "");
+
+  GtkWidget *tools_lower_res = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/ge_undo.png");
+  gtk_container_add( GTK_CONTAINER(tools_lower_res), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_lower_res, "clicked", G_CALLBACK(activate_lower_res), this);
+  g_object_set( tools_lower_res, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_lower_res, CoWowGtk::translate_utf8("Lower resolution"), "");
 
   GtkWidget *w;
   grownames_main_widget = scrolledgrowwidgetgtk_new( init_grownames_cb, this, &w);

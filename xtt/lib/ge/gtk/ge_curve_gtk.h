@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve_gtk.h,v 1.2 2007-01-15 13:19:09 claes Exp $
+ * Proview   $Id: ge_curve_gtk.h,v 1.3 2008-07-17 11:21:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -69,6 +69,8 @@ class GeCurveGtk : public GeCurve {
     static void activate_page_right( GtkWidget *w, gpointer data);
     static void activate_scroll_left( GtkWidget *w, gpointer data);
     static void activate_scroll_right( GtkWidget *w, gpointer data);
+    static void activate_higher_res( GtkWidget *w, gpointer data);
+    static void activate_lower_res( GtkWidget *w, gpointer data);
     static void activate_background( GtkWidget *w, gpointer data);
     static void activate_showname( GtkWidget *w, gpointer data);
     static void activate_filledcurves( GtkWidget *w, gpointer data);
