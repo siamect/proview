@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_dshist.cpp,v 1.1 2008-07-17 11:20:33 claes Exp $
+ * Proview   $Id: xtt_dshist.cpp,v 1.2 2008-07-18 11:35:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -74,7 +74,7 @@ int XttDsHist::get_data( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to)
   void *vbuf;
   pwr_tDeltaTime trange;
 
-  sevcli_get_itemdata( sts, scctx, oid, aname, from, to, 500, &tbuf, &vbuf,
+  sevcli_get_itemdata( sts, scctx, oid, aname, from, to, 1000, &tbuf, &vbuf,
   		       &rows, &vtype, &vsize);
   if ( EVEN(*sts))
     return 0;
