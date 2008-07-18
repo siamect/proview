@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: nmps_c_datafwrite.wb_load,v 1.1 2008-04-25 11:06:02 claes Exp $
+!  Proview   $Id: nmps_c_datafwrite.wb_load,v 1.2 2008-07-18 11:37:09 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -34,6 +34,7 @@ SObject NMps:Class
 !  command 'open fileview'.
 !
 ! @b See also
+!  @exliblink "Example with fileview" ../../en_us/man_exlib_exlib_datafread.html
 !  @classlink GetData pwrb_getdata.html
 !  @classlink DataFRead nmps_datafread.html
 !*/
