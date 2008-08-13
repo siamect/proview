@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_ai_hvai32.c,v 1.3 2007-04-30 12:08:08 claes Exp $
+ * Proview   $Id: rt_io_m_ai_hvai32.c,v 1.4 2008-08-13 12:29:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -267,6 +267,7 @@ static pwr_tStatus IoCardRead (
         }
 	/* Convert rawvalue to sigvalue and actualvalue */
 	sop->RawValue = data;
+        sop->SigValue = data * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
 	switch ( chanp->ChanClass)
         {
           case pwr_cClass_ChanAi:
@@ -278,11 +279,11 @@ static pwr_tStatus IoCardRead (
 	    break;
 	}
 
-	/* Check max/min */
+	/* Check max/min 
         if (actvalue > cop->ActValRangeHigh && cop->ActValRangeHigh > cop->ActValRangeLow) 
 		actvalue = cop->ActValRangeHigh;
         if (actvalue < cop->ActValRangeLow && cop->ActValRangeHigh > cop->ActValRangeLow) 
-		actvalue = cop->ActValRangeLow;
+		actvalue = cop->ActValRangeLow; */
 
         /* Filter */
 	if ( sop->FilterType == 1 &&
