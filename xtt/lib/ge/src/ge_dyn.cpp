@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.64 2008-06-09 14:33:12 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.65 2008-08-25 11:17:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1738,6 +1738,20 @@ int GeDigLowColor::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp( parsed_name,"") == 0)
     return 1;
 
+  a_typeid = attr_type;
+  if ( attr_type == graph_eType_Bit) {
+    // Get bit number from parsed name
+    char *s;
+    int bitnum;
+
+    if ( (s = strchr( parsed_name, '['))) {
+      sscanf( s+1, "%d", &bitnum);
+      *s = 0;
+      if ( bitnum >= 0 && bitnum < 32)
+	bitmask = 1 << bitnum;
+    }
+  }
+
   switch ( db) {
   case graph_eDatabase_Local:
     p = (pwr_tBoolean *) dyn->graph->localdb_ref_or_create( parsed_name, attr_type);
@@ -1767,34 +1781,75 @@ int GeDigLowColor::scan( grow_tObject object)
   if ( !p || dyn->ignore_color)
     return 1;
 
-  if ( !first_scan) {
-    if ( old_value == *p && !dyn->reset_color)
-      // No change since last time
-      return 1;
-  }
-  else
-    first_scan = false;
+  switch ( a_typeid) {
+  case pwr_eType_Boolean:
+  case pwr_eType_Int32:
+  case pwr_eType_UInt32: {
+    if ( !first_scan) {
+      if ( old_value == *p && !dyn->reset_color)
+	// No change since last time
+	return 1;
+    }
+    else
+      first_scan = false;
 
-  if ( dyn->total_dyn_type & ge_mDynType_Tone) {
-    if ( (!inverted && !*p) || (inverted && *p)) {
-      if ( color >= (glow_eDrawType) glow_eDrawTone__)
-	grow_SetObjectFillColor( object, color);
-      else
-	grow_SetObjectColorTone( object, (glow_eDrawTone) color);
+    if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+      if ( (!inverted && !*p) || (inverted && *p)) {
+	if ( color >= (glow_eDrawType) glow_eDrawTone__)
+	  grow_SetObjectFillColor( object, color);
+	else
+	  grow_SetObjectColorTone( object, (glow_eDrawTone) color);
+      }
+      else {
+	if ( color >= (glow_eDrawType) glow_eDrawTone__)
+	  grow_ResetObjectFillColor( object);
+	grow_ResetObjectColorTone( object);
+      }
     }
     else {
-      if ( color >= (glow_eDrawType) glow_eDrawTone__)
+      if ( (!inverted && !*p) || (inverted && *p))
+	grow_SetObjectFillColor( object, color);
+      else
 	grow_ResetObjectFillColor( object);
-      grow_ResetObjectColorTone( object);
     }
+    old_value = *p;
+    break;
   }
-  else {
-    if ( (!inverted && !*p) || (inverted && *p))
-      grow_SetObjectFillColor( object, color);
+  case graph_eType_Bit: {
+    pwr_tBoolean val = ((*p & bitmask) != 0);
+
+    if ( !first_scan) {
+      if ( old_value == val && !dyn->reset_color)
+	// No change since last time
+	return 1;
+    }
     else
-      grow_ResetObjectFillColor( object);
+      first_scan = false;
+
+    if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+      if ( (!inverted && !val) || (inverted && val)) {
+	if ( color >= (glow_eDrawType) glow_eDrawTone__)
+	  grow_SetObjectFillColor( object, color);
+	else
+	  grow_SetObjectColorTone( object, (glow_eDrawTone) color);
+	dyn->ignore_color = true;
+      }
+      else {
+	if ( color >= (glow_eDrawType) glow_eDrawTone__)
+	  grow_ResetObjectFillColor( object);
+	grow_ResetObjectColorTone( object);
+      }
+    }
+    else {
+      if ( (!inverted && !val) || (inverted && val))
+	grow_SetObjectFillColor( object, color);
+      else
+	grow_ResetObjectFillColor( object);
+    }
+    old_value = val;
+    break;
   }
-  old_value = *p;
+  }
   return 1;
 }
 
@@ -2220,6 +2275,20 @@ int GeDigWarning::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp( parsed_name,"") == 0)
     return 1;
 
+  a_typeid = attr_type;
+  if ( attr_type == graph_eType_Bit) {
+    // Get bit number from parsed name
+    char *s;
+    int bitnum;
+
+    if ( (s = strchr( parsed_name, '['))) {
+      sscanf( s+1, "%d", &bitnum);
+      *s = 0;
+      if ( bitnum >= 0 && bitnum < 32)
+	bitmask = 1 << bitnum;
+    }
+  }
+
   sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size);
   if ( EVEN(sts)) return sts;
 
@@ -2241,38 +2310,83 @@ int GeDigWarning::scan( grow_tObject object)
   if ( !p || dyn->ignore_color)
     return 1;
 
-  if ( !first_scan) {
-    if ( old_value == *p && !dyn->reset_color) {
-      // No change since last time
-      if ( (!inverted && *p) || (inverted && !*p))
+  switch ( a_typeid) {
+  case pwr_eType_Boolean:
+  case pwr_eType_Int32:
+  case pwr_eType_UInt32: {
+    if ( !first_scan) {
+      if ( old_value == *p && !dyn->reset_color) {
+	// No change since last time
+	if ( (!inverted && *p) || (inverted && !*p))
+	  dyn->ignore_color = true;
+	return 1;
+      }
+    }
+    else
+      first_scan = false;
+    
+    if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+      if ( (!inverted && *p) || (inverted && !*p)) {
+	grow_SetObjectColorTone( object, glow_eDrawTone_Yellow);
 	dyn->ignore_color = true;
-      return 1;
+      }
+      else {
+	grow_ResetObjectColorTone( object);
+	dyn->reset_color = true;
+      }
     }
+    else {
+      if ( (!inverted && *p) || (inverted && !*p)) {
+	grow_SetObjectFillColor( object, glow_eDrawType_ColorYellow);
+	dyn->ignore_color = true;
+      }
+      else {
+	grow_ResetObjectFillColor( object);
+	dyn->reset_color = true;
+      }
+    }
+    old_value = *p;
+    break;
   }
-  else
-    first_scan = false;
+  case graph_eType_Bit: {
+    pwr_tBoolean val = ((*p & bitmask) != 0);
 
-  if ( dyn->total_dyn_type & ge_mDynType_Tone) {
-    if ( (!inverted && *p) || (inverted && !*p)) {
-      grow_SetObjectColorTone( object, glow_eDrawTone_Yellow);
-      dyn->ignore_color = true;
+    if ( !first_scan) {
+      if ( old_value == val && !dyn->reset_color) {
+	// No change since last time
+	if ( (!inverted && val) || (inverted && !val))
+	  dyn->ignore_color = true;
+	return 1;
+      }
+    }
+    else
+      first_scan = false;
+
+    if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+      if ( (!inverted && val) || (inverted && !val)) {
+	grow_SetObjectColorTone( object, glow_eDrawTone_Yellow);
+	dyn->ignore_color = true;
+      }
+      else {
+	grow_ResetObjectColorTone( object);
+	dyn->reset_color = true;
+      }
     }
     else {
-      grow_ResetObjectColorTone( object);
-      dyn->reset_color = true;
+      if ( (!inverted && val) || (inverted && !val)) {
+	grow_SetObjectFillColor( object, glow_eDrawType_ColorYellow);
+	dyn->ignore_color = true;
+      }
+      else {
+	grow_ResetObjectFillColor( object);
+	dyn->reset_color = true;
+      }
     }
+    old_value = val;
+    break;
   }
-  else {
-    if ( (!inverted && *p) || (inverted && !*p)) {
-      grow_SetObjectFillColor( object, glow_eDrawType_ColorYellow);
-      dyn->ignore_color = true;
-    }
-    else {
-      grow_ResetObjectFillColor( object);
-      dyn->reset_color = true;
-    }
   }
-  old_value = *p;
+
   return 1;
 }
 
@@ -2360,6 +2474,20 @@ int GeDigError::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp( parsed_name,"") == 0)
     return 1;
 
+  a_typeid = attr_type;
+  if ( attr_type == graph_eType_Bit) {
+    // Get bit number from parsed name
+    char *s;
+    int bitnum;
+
+    if ( (s = strchr( parsed_name, '['))) {
+      sscanf( s+1, "%d", &bitnum);
+      *s = 0;
+      if ( bitnum >= 0 && bitnum < 32)
+	bitmask = 1 << bitnum;
+    }
+  }
+
   sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size);
   if ( EVEN(sts)) return sts;
 
@@ -2381,38 +2509,83 @@ int GeDigError::scan( grow_tObject object)
   if ( !p || dyn->ignore_color)
     return 1;
 
-  if ( !first_scan) {
-    if ( old_value == *p && !dyn->reset_color) {
-      // No change since last time
-      if ( (!inverted && *p) || (inverted && !*p))
-	dyn->ignore_color = true;
-      return 1;
+  switch ( a_typeid) {
+  case pwr_eType_Boolean:
+  case pwr_eType_Int32:
+  case pwr_eType_UInt32: {
+    if ( !first_scan) {
+      if ( old_value == *p && !dyn->reset_color) {
+	// No change since last time
+	if ( (!inverted && *p) || (inverted && !*p))
+	  dyn->ignore_color = true;
+	return 1;
+      }
     }
-  }
-  else
-    first_scan = false;
+    else
+      first_scan = false;
 
-  if ( dyn->total_dyn_type & ge_mDynType_Tone) {
-    if ( (!inverted && *p) || (inverted && !*p)) {
-      grow_SetObjectColorTone( object, glow_eDrawTone_Red);
-      dyn->ignore_color = true;
+    if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+      if ( (!inverted && *p) || (inverted && !*p)) {
+	grow_SetObjectColorTone( object, glow_eDrawTone_Red);
+	dyn->ignore_color = true;
+      }
+      else {
+	grow_ResetObjectColorTone( object);
+	dyn->reset_color = true;
+      }
     }
     else {
-      grow_ResetObjectColorTone( object);
-      dyn->reset_color = true;
+      if ( (!inverted && *p) || (inverted && !*p)) {
+	grow_SetObjectFillColor( object, glow_eDrawType_ColorRed);
+	dyn->ignore_color = true;
+      }
+      else {
+	grow_ResetObjectFillColor( object);
+	dyn->reset_color = true;
+      }
     }
+    old_value = *p;
+    break;
   }
-  else {
-    if ( (!inverted && *p) || (inverted && !*p)) {
-      grow_SetObjectFillColor( object, glow_eDrawType_ColorRed);
-      dyn->ignore_color = true;
+  case graph_eType_Bit: {
+    pwr_tBoolean val = ((*p & bitmask) != 0);
+
+    if ( !first_scan) {
+      if ( old_value == val && !dyn->reset_color) {
+	// No change since last time
+	if ( (!inverted && val) || (inverted && !val))
+	  dyn->ignore_color = true;
+	return 1;
+      }
+    }
+    else
+      first_scan = false;
+
+    if ( dyn->total_dyn_type & ge_mDynType_Tone) {
+      if ( (!inverted && val) || (inverted && !val)) {
+	grow_SetObjectColorTone( object, glow_eDrawTone_Red);
+	dyn->ignore_color = true;
+      }
+      else {
+	grow_ResetObjectColorTone( object);
+	dyn->reset_color = true;
+      }
     }
     else {
-      grow_ResetObjectFillColor( object);
-      dyn->reset_color = true;
+      if ( (!inverted && val) || (inverted && !val)) {
+	grow_SetObjectFillColor( object, glow_eDrawType_ColorRed);
+	dyn->ignore_color = true;
+      }
+      else {
+	grow_ResetObjectFillColor( object);
+	dyn->reset_color = true;
+      }
     }
+    old_value = val;
+    break;
   }
-  old_value = *p;
+  }
+
   return 1;
 }
 

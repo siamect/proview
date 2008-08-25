@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.h,v 1.36 2008-04-14 07:02:30 claes Exp $
+ * Proview   $Id: ge_dyn.h,v 1.37 2008-08-25 11:17:48 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -870,11 +870,12 @@ class GeDigLowColor : public GeDynElem {
   int inverted;
   bool first_scan;
   pwr_tBoolean old_value;
-  
+  int a_typeid;
+  unsigned int bitmask;  
 
   GeDigLowColor( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType_DigLowColor, (ge_mActionType) 0, ge_eDynPrio_DigLowColor),
-    color(glow_eDrawType_Inherit)
+    color(glow_eDrawType_Inherit), bitmask(0)
     { strcpy( attribute, "");}
   GeDigLowColor( const GeDigLowColor& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), color(x.color)
@@ -939,9 +940,11 @@ class GeDigWarning : public GeDynElem {
   int inverted;
   bool first_scan;
   pwr_tBoolean old_value;
+  int a_typeid;
+  unsigned int bitmask;  
 
   GeDigWarning( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_DigWarning, (ge_mActionType) 0, ge_eDynPrio_DigWarning)
+    GeDynElem(e_dyn, ge_mDynType_DigWarning, (ge_mActionType) 0, ge_eDynPrio_DigWarning), bitmask(0)
     { strcpy( attribute, "");}
   GeDigWarning( const GeDigWarning& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
@@ -970,9 +973,11 @@ class GeDigError : public GeDynElem {
   int inverted;
   bool first_scan;
   pwr_tBoolean old_value;
+  int a_typeid;
+  unsigned int bitmask;  
 
   GeDigError( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_DigError, (ge_mActionType) 0, ge_eDynPrio_DigError)
+    GeDynElem(e_dyn, ge_mDynType_DigError, (ge_mActionType) 0, ge_eDynPrio_DigError), bitmask(0)
     { strcpy( attribute, "");}
   GeDigError( const GeDigError& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
