@@ -1,0 +1,11 @@
+Package: pwrsev
+Version: 4.5.0-1
+Section: base
+Priority: optional
+Architecture: i386
+Depends: libc6 (>= 2.3.6), libgtk2.0-0 (>= 2.8.16-1), libasound2 (>= 1.0.11), libdb4.3 (>=4.3.29)
+Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45
+Maintainer: Proview <postmaster@proview.se>
+Description:
+ Proview storage environment
+ 4.5.0-1 Beta release
