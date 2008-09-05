@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_sevcli.h,v 1.1 2008-07-17 11:33:59 claes Exp $
+ * Proview   $Id: rt_sevcli.h,v 1.2 2008-09-05 09:00:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -64,7 +64,7 @@ int sevcli_get_itemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid,
 			 char *aname, pwr_tTime starttime, pwr_tTime endtime, int numpoints,
 			 pwr_tTime **tbuf, void **vbuf, int *rows, 
 			 pwr_eType *vtype, unsigned int *vsize);
-
+int sevcli_delete_item( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid, char *aname);
 
 
 #ifdef __cplusplus

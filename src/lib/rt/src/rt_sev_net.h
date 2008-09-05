@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_sev_net.h,v 1.1 2008-07-17 11:33:59 claes Exp $
+ * Proview   $Id: rt_sev_net.h,v 1.2 2008-09-05 09:00:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,6 +38,8 @@ typedef enum {
   sev_eMsgType_HistDataStore,
   sev_eMsgType_HistDataGetRequest,
   sev_eMsgType_HistDataGet,
+  sev_eMsgType_HistItemDelete,
+  sev_eMsgType_HistItemStatus
 } sev_eMsgType;  
 
 typedef struct {
@@ -97,6 +99,19 @@ typedef struct {
   unsigned int	       VSize;
   int	       	       Data[1];	
 } sev_sMsgHistDataGet;
+
+typedef struct {
+  sev_eMsgType         Type;
+  pwr_tOid	       Oid;
+  pwr_tOName	       AName;
+} sev_sMsgHistItemDelete;
+
+typedef struct {
+  sev_eMsgType         Type;
+  pwr_tOid	       Oid;
+  pwr_tOName	       AName;
+  pwr_tStatus	       Status;
+} sev_sMsgHistItemStatus;
 
 #ifdef __cplusplus
 }

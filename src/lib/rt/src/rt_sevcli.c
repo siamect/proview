@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_sevcli.c,v 1.1 2008-07-17 11:33:59 claes Exp $
+ * Proview   $Id: rt_sevcli.c,v 1.2 2008-09-05 09:00:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -253,5 +253,65 @@ int sevcli_get_itemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid,
   qcom_Free( sts, rmsg);
 
   *sts = SEV__SUCCESS;
+  return 1;
+}
+
+int sevcli_delete_item( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid, char *aname)
+{
+  sev_sMsgHistItemDelete	*msg;
+  qcom_sQid   	tgt;
+  qcom_sPut	put;
+  int tmo = 10000;
+  qcom_sGet get;
+  pwr_tStatus lsts;
+  
+  if ( ctx->server)
+    tgt.nid = ctx->server;
+  else
+    tgt.nid = ctx->qid.nid;
+  tgt.qix = sev_eProcSevServer;
+    
+
+  put.reply = ctx->qid;
+  put.type.b = (qcom_eBtype) sev_cMsgClass;
+  put.type.s = (qcom_eStype) sev_eMsgType_HistItemDelete;
+  put.msg_id = ctx->msg_id++;
+  put.size = sizeof(*msg);
+  msg = (sev_sMsgHistItemDelete *) qcom_Alloc( sts, put.size);
+  
+
+  put.data = msg;
+
+  msg->Type = sev_eMsgType_HistItemDelete;
+  msg->Oid = oid;
+  strncpy( msg->AName, aname, sizeof(msg->AName));
+
+  if ( !qcom_Put( sts, &tgt, &put)) {
+    qcom_Free( &lsts, put.data);
+    return 0;
+  }
+
+  sev_sMsgHistItemStatus *rmsg;
+
+  memset( &get, 0, sizeof(get));
+
+  for (;;) {
+    rmsg = (sev_sMsgHistItemStatus *) qcom_Get(sts, &ctx->qid, &get, tmo);
+    if ( *sts == QCOM__TMO || !rmsg)
+      return 0;
+
+    if ( get.type.b == sev_cMsgClass && 
+	 get.type.s == (qcom_eStype) sev_eMsgType_HistItemStatus &&
+	 cdh_ObjidIsEqual( oid, rmsg->Oid) &&
+	 cdh_NoCaseStrcmp( aname, rmsg->AName) == 0)
+      break;
+
+    qcom_Free( sts, rmsg);
+  }
+  
+  *sts = rmsg->Status;
+  if ( EVEN(*sts))
+    return 0;
+  qcom_Free( sts, rmsg);
   return 1;
 }
