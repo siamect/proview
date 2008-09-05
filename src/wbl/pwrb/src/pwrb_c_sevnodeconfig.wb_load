@@ -1,0 +1,147 @@
+! 
+!  Proview   $Id: pwrb_c_sevnodeconfig.wb_load,v 1.1 2008-09-05 09:01:58 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_c_sevnodeconfig.wb_load -- Defines the class SevNodeConfig.
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Group ProjectConfiguration
+!  @Summary Configures a proview storage environment node.
+!  The SevNodeConfig object configures a proview storage environment node.
+!  
+!  The SevNodeConfig object is used when a node only contains the storage
+!  environment, not the runtime environment. If the node also contains the
+!  runtime environment it should be configured with a NodeConfig object.
+!
+!  The SevNodeConfig object is created in the project volume as a child to
+!  a BusConfig-object in the node-hierachy.
+!
+! A root volumes has to be registred for the node. The volume is only used to give 
+! the node a unique identity, and no database is created for the volume.
+!
+! @b See also
+!  @classlink NodeConfig pwrb_nodeconfig.html
+!  
+!*/
+!
+  Object SevNodeConfig $ClassDef 536 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "SevNodeConfig"
+      EndBody
+      !/**
+      !  Description of the node
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Name of the node
+      !*/
+      Object NodeName $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Operating system of the node
+      !*/
+      Object OperatingSystem $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$OpSysEnum"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Boot system of the node.
+      !  Boot system of the node.
+      !  Loadfiles, applications and graph-files will be copied to this
+      !  node by the distributor.
+      !  In most cases this is the node itself. 
+      !  For ELN systems that is booted from a VMS node, the the VMS-node
+      !  is the boot node.
+      !  If the node is a development node which has access to the
+      !  directories of the development environment, no distribution is
+      !  required. This is marked with a '-' sign in the BootNode attribute.
+      !*/
+      Object BootNode $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      ! Ip address of the node.
+      !*/
+      Object Address $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+        EndBody
+      EndObject
+      !/**
+      ! QCOM port, if different from standard port.
+      !*/
+      Object Port $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      ! Name of the rootvolume of the node.
+      !*/
+      Object Volume $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      ! Disables distribution for this node.
+      !*/
+      Object DistributeDisable $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Remote shell access type.
+      ! Remote shell access type, SSH or RSH.
+      ! SSH will copy the distribtion package with scp and unpack it with SSH.
+      ! This recommended of security reasons. It requires createion of a public/private
+      ! key pair, where the public should be copied to the target node.
+      !
+      ! RSH will copy with ftp and unpack with RSH. I requires a .rhosts file on the target
+      ! node and that the login of user pwrp is unchanged.
+      !*/
+      Object RemoteAccessType $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-RemoteShellEnum"
+        EndBody
+      EndObject
+    EndObject
+    Object PostCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "SevNodeConfig-PostCreate"
+      EndBody
+    EndObject
+  EndObject
+EndSObject
