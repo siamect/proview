@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.65 2008-08-25 11:17:44 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.66 2008-09-05 14:08:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1785,8 +1785,9 @@ int GeDigLowColor::scan( grow_tObject object)
   case pwr_eType_Boolean:
   case pwr_eType_Int32:
   case pwr_eType_UInt32: {
+    pwr_tBoolean val = *p;
     if ( !first_scan) {
-      if ( old_value == *p && !dyn->reset_color)
+      if ( old_value == val && !dyn->reset_color)
 	// No change since last time
 	return 1;
     }
@@ -1794,7 +1795,7 @@ int GeDigLowColor::scan( grow_tObject object)
       first_scan = false;
 
     if ( dyn->total_dyn_type & ge_mDynType_Tone) {
-      if ( (!inverted && !*p) || (inverted && *p)) {
+      if ( (!inverted && !val) || (inverted && val)) {
 	if ( color >= (glow_eDrawType) glow_eDrawTone__)
 	  grow_SetObjectFillColor( object, color);
 	else
@@ -1807,12 +1808,12 @@ int GeDigLowColor::scan( grow_tObject object)
       }
     }
     else {
-      if ( (!inverted && !*p) || (inverted && *p))
+      if ( (!inverted && !val) || (inverted && val))
 	grow_SetObjectFillColor( object, color);
       else
 	grow_ResetObjectFillColor( object);
     }
-    old_value = *p;
+    old_value = val;
     break;
   }
   case graph_eType_Bit: {
@@ -2097,11 +2098,12 @@ int GeDigColor::scan( grow_tObject object)
   case pwr_eType_Boolean:
   case pwr_eType_Int32:
   case pwr_eType_UInt32: {
+    pwr_tBoolean val = *p;
 
     if ( !first_scan) {
-      if ( old_value == *p && !dyn->reset_color) {
+      if ( old_value == val && !dyn->reset_color) {
 	// No change since last time
-	if ( (!inverted && *p) || (inverted && !*p))
+	if ( (!inverted && val) || (inverted && !val))
 	  dyn->ignore_color = true;
 	return 1;
       }
@@ -2110,7 +2112,7 @@ int GeDigColor::scan( grow_tObject object)
       first_scan = false;
 
     if ( dyn->total_dyn_type & ge_mDynType_Tone) {
-      if ( (!inverted && *p) || (inverted && !*p)) {
+      if ( (!inverted && val) || (inverted && !val)) {
 	if ( color >= (glow_eDrawType) glow_eDrawTone__) {
 	  if ( dyn->reset_color)
 	    grow_ResetObjectFillColor( object); // Previous color might be a tone
@@ -2128,7 +2130,7 @@ int GeDigColor::scan( grow_tObject object)
       }
     }
     else {
-      if ( (!inverted && *p) || (inverted && !*p)) {
+      if ( (!inverted && val) || (inverted && !val)) {
 	grow_SetObjectFillColor( object, color);
 	dyn->ignore_color = true;
       }
@@ -2137,7 +2139,7 @@ int GeDigColor::scan( grow_tObject object)
 	dyn->reset_color = true;
       }
     }
-    old_value = *p;
+    old_value = val;
     break;
   }
   case graph_eType_Bit: {
@@ -2314,10 +2316,12 @@ int GeDigWarning::scan( grow_tObject object)
   case pwr_eType_Boolean:
   case pwr_eType_Int32:
   case pwr_eType_UInt32: {
+    pwr_tBoolean val = *p;
+
     if ( !first_scan) {
-      if ( old_value == *p && !dyn->reset_color) {
+      if ( old_value == val && !dyn->reset_color) {
 	// No change since last time
-	if ( (!inverted && *p) || (inverted && !*p))
+	if ( (!inverted && val) || (inverted && !val))
 	  dyn->ignore_color = true;
 	return 1;
       }
@@ -2326,7 +2330,7 @@ int GeDigWarning::scan( grow_tObject object)
       first_scan = false;
     
     if ( dyn->total_dyn_type & ge_mDynType_Tone) {
-      if ( (!inverted && *p) || (inverted && !*p)) {
+      if ( (!inverted && val) || (inverted && !val)) {
 	grow_SetObjectColorTone( object, glow_eDrawTone_Yellow);
 	dyn->ignore_color = true;
       }
@@ -2336,7 +2340,7 @@ int GeDigWarning::scan( grow_tObject object)
       }
     }
     else {
-      if ( (!inverted && *p) || (inverted && !*p)) {
+      if ( (!inverted && val) || (inverted && !val)) {
 	grow_SetObjectFillColor( object, glow_eDrawType_ColorYellow);
 	dyn->ignore_color = true;
       }
@@ -2345,7 +2349,7 @@ int GeDigWarning::scan( grow_tObject object)
 	dyn->reset_color = true;
       }
     }
-    old_value = *p;
+    old_value = val;
     break;
   }
   case graph_eType_Bit: {
@@ -2513,10 +2517,12 @@ int GeDigError::scan( grow_tObject object)
   case pwr_eType_Boolean:
   case pwr_eType_Int32:
   case pwr_eType_UInt32: {
+    pwr_tBoolean val = *p;
+
     if ( !first_scan) {
-      if ( old_value == *p && !dyn->reset_color) {
+      if ( old_value == val && !dyn->reset_color) {
 	// No change since last time
-	if ( (!inverted && *p) || (inverted && !*p))
+	if ( (!inverted && val) || (inverted && !val))
 	  dyn->ignore_color = true;
 	return 1;
       }
@@ -2525,7 +2531,7 @@ int GeDigError::scan( grow_tObject object)
       first_scan = false;
 
     if ( dyn->total_dyn_type & ge_mDynType_Tone) {
-      if ( (!inverted && *p) || (inverted && !*p)) {
+      if ( (!inverted && val) || (inverted && !val)) {
 	grow_SetObjectColorTone( object, glow_eDrawTone_Red);
 	dyn->ignore_color = true;
       }
@@ -2535,7 +2541,7 @@ int GeDigError::scan( grow_tObject object)
       }
     }
     else {
-      if ( (!inverted && *p) || (inverted && !*p)) {
+      if ( (!inverted && val) || (inverted && !val)) {
 	grow_SetObjectFillColor( object, glow_eDrawType_ColorRed);
 	dyn->ignore_color = true;
       }
@@ -2544,7 +2550,7 @@ int GeDigError::scan( grow_tObject object)
 	dyn->reset_color = true;
       }
     }
-    old_value = *p;
+    old_value = val;
     break;
   }
   case graph_eType_Bit: {
@@ -2748,10 +2754,12 @@ int GeDigFlash::scan( grow_tObject object)
   if ( !p || dyn->ignore_color)
     return 1;
 
+  pwr_tBoolean val = *p;
+
   if ( !first_scan) {
-    if ( old_value == *p && !dyn->reset_color) {
+    if ( old_value == val && !dyn->reset_color) {
       // No change since last time
-      if ( !((!inverted && *p) || (inverted && !*p)))
+      if ( !((!inverted && val) || (inverted && !val)))
 	return 1;
     }
   }
@@ -2759,7 +2767,7 @@ int GeDigFlash::scan( grow_tObject object)
     first_scan = false;
 
   if ( dyn->total_dyn_type & ge_mDynType_Tone) {
-    if ( (!inverted && *p) || (inverted && !*p)) {
+    if ( (!inverted && val) || (inverted && !val)) {
       if ( on) {
 	if ( color >= (glow_eDrawType) glow_eDrawTone__)
 	  grow_SetObjectFillColor( object, color);
@@ -2792,7 +2800,7 @@ int GeDigFlash::scan( grow_tObject object)
     }
   }
   else {
-    if ( (!inverted && *p) || (inverted && !*p)) {
+    if ( (!inverted && val) || (inverted && !val)) {
       if ( on) {
 	grow_SetObjectFillColor( object, color);
 	dyn->ignore_color = true;
@@ -2814,7 +2822,7 @@ int GeDigFlash::scan( grow_tObject object)
       dyn->reset_color = true;
     }
   }
-  old_value = *p;
+  old_value = val;
   return 1;
 }
 
@@ -3020,12 +3028,13 @@ int GeInvisible::scan( grow_tObject object)
   switch ( a_typeid) {
   case pwr_eType_Boolean:
   case pwr_eType_Int32:
-  case pwr_eType_UInt32:
+  case pwr_eType_UInt32: {
+    pwr_tBoolean val = *p;
 
     if ( !first_scan) {
-      if ( old_value == *p && !dyn->reset_invisible) {
+      if ( old_value == val && !dyn->reset_invisible) {
 	// No change since last time
-	if ( (!inverted && *p) || (inverted && !*p))
+	if ( (!inverted && val) || (inverted && !val))
 	  dyn->ignore_invisible = true;
 	return 1;
       }
@@ -3033,7 +3042,7 @@ int GeInvisible::scan( grow_tObject object)
     else
       first_scan = false;
 
-    if ( (!inverted && !*p) || (inverted && *p)) {
+    if ( (!inverted && !val) || (inverted && val)) {
       grow_SetObjectVisibility( object, glow_eVis_Visible);
       dyn->reset_color = true;
       dyn->reset_invisible = true;
@@ -3046,16 +3055,18 @@ int GeInvisible::scan( grow_tObject object)
       dyn->ignore_color = true;
       dyn->ignore_invisible = true;
     }
-    old_value = *p;
+    old_value = val;
     break;
+  }
   case pwr_eType_Float32: {
     pwr_tFloat32 *fp_old = (pwr_tFloat32 *) &old_value;
+    pwr_tFloat32 val = *(pwr_tFloat32 *)p;
 
     if ( !first_scan) {
-      if ( fabs( *(pwr_tFloat32 *)p - *fp_old) < FLT_EPSILON && !dyn->reset_invisible) {
+      if ( fabs( val - *fp_old) < FLT_EPSILON && !dyn->reset_invisible) {
 	// No change since last time
-	if ( (!inverted && fabs( *(pwr_tFloat32 *)p) > FLT_EPSILON) || 
-	     (inverted && fabs( *(pwr_tFloat32 *)p) < FLT_EPSILON))
+	if ( (!inverted && fabs( val) > FLT_EPSILON) || 
+	     (inverted && fabs( val) < FLT_EPSILON))
 	  dyn->ignore_invisible = true;
 	return 1;
       }
@@ -3063,8 +3074,8 @@ int GeInvisible::scan( grow_tObject object)
     else
       first_scan = false;
 
-    if ( (!inverted && fabs( *(pwr_tFloat32 *)p) < FLT_EPSILON) || 
-	 (inverted && fabs( *(pwr_tFloat32 *)p) > FLT_EPSILON)) {
+    if ( (!inverted && fabs( val) < FLT_EPSILON) || 
+	 (inverted && fabs( val) > FLT_EPSILON)) {
       grow_SetObjectVisibility( object, glow_eVis_Visible);
       dyn->reset_color = true;
       dyn->reset_invisible = true;
@@ -3077,7 +3088,7 @@ int GeInvisible::scan( grow_tObject object)
       dyn->ignore_color = true;
       dyn->ignore_invisible = true;
     }
-    *fp_old = *(pwr_tFloat32 *)p;
+    *fp_old = val;
     break;
   }
   case graph_eType_Bit: {
@@ -3264,8 +3275,10 @@ int GeDigBorder::scan( grow_tObject object)
   if ( !p)
     return 1;
 
+  pwr_tBoolean val = *p;
+
   if ( !first_scan) {
-    if ( old_value == *p) {
+    if ( old_value == val) {
       // No change since last time
       return 1;
     }
@@ -3273,13 +3286,13 @@ int GeDigBorder::scan( grow_tObject object)
   else
     first_scan = false;
 
-  if ( (!inverted && !*p) || (inverted && *p)) {
+  if ( (!inverted && !val) || (inverted && val)) {
     grow_SetObjectBorderColor( object, color);
   }
   else {
     grow_ResetObjectBorderColor( object);
   }
-  old_value = *p;
+  old_value = val;
   return 1;
 }
 
@@ -3449,10 +3462,11 @@ int GeDigText::scan( grow_tObject object)
   if ( !p || dyn->ignore_text_a1)
     return 1;
 
+  pwr_tBoolean val = *p;
   if ( instance == ge_mInstance_1) {
     // Write low_text on low signal
     if ( !first_scan) {
-      if ( old_value == *p && !dyn->reset_text_a1) {
+      if ( old_value == val && !dyn->reset_text_a1) {
 	// No change since last time
 	return 1;
       }
@@ -3460,7 +3474,7 @@ int GeDigText::scan( grow_tObject object)
     else
       first_scan = false;
 
-    if ( (!inverted && !*p) || (inverted && *p)) {
+    if ( (!inverted && !val) || (inverted && val)) {
       grow_SetAnnotation( object, 1, low_text, strlen(low_text));
       dyn->reset_text_a1 = true;
     }
@@ -3471,9 +3485,9 @@ int GeDigText::scan( grow_tObject object)
   else {
     // Instance > 1, write low_text on high signal
     if ( !first_scan) {
-      if ( old_value == *p && !dyn->reset_text_a1) {
+      if ( old_value == val && !dyn->reset_text_a1) {
 	// No change since last time
-	if ( (!inverted && *p) || (inverted && !*p))
+	if ( (!inverted && val) || (inverted && !val))
 	  dyn->ignore_text_a1 = true;
 	return 1;
       }
@@ -3481,7 +3495,7 @@ int GeDigText::scan( grow_tObject object)
     else
       first_scan = false;
 
-    if ( (!inverted && *p) || (inverted && !*p)) {
+    if ( (!inverted && val) || (inverted && !val)) {
       grow_SetAnnotation( object, 1, low_text, strlen(low_text));
       dyn->ignore_text_a1 = true;
     }
@@ -3490,7 +3504,7 @@ int GeDigText::scan( grow_tObject object)
       dyn->reset_text_a1 = true;      
     }
   }
-  old_value = *p;
+  old_value = val;
   return 1;
 }
 
@@ -3742,23 +3756,47 @@ int GeValue::scan( grow_tObject object)
 
 
   switch( annot_typeid) {
-  case pwr_eType_Float32:
-    if ( zero_blank && fabsf( *(pwr_tFloat32 *) p) < FLT_EPSILON) {
+  case pwr_eType_Float32: {
+    pwr_tFloat32 val = *(pwr_tFloat32 *)p;
+
+    if ( !first_scan) {
+      if ( memcmp( &old_value, &val, size) == 0 )
+	// No change since last time
+	return 1;
+    }
+    else
+      first_scan = false;
+
+    if ( zero_blank && fabsf( val) < FLT_EPSILON) {
       buf[0] = 0;
       len = 0;
     }
     else
-      len = sprintf( buf, format, *(pwr_tFloat32 *) p);
+      len = sprintf( buf, format, val);
+    memcpy( &old_value, &val, MIN(size, (int) sizeof(old_value)));
     break;
+  }
   case pwr_eType_Int32:
-  case pwr_eType_UInt32:
-    if ( zero_blank && *(pwr_tInt32 *) p == 0) {
+  case pwr_eType_UInt32: {
+    pwr_tInt32 val = *(pwr_tInt32 *)p;
+
+    if ( !first_scan) {
+      if ( memcmp( &old_value, &val, size) == 0 )
+	// No change since last time
+	return 1;
+    }
+    else
+      first_scan = false;
+
+    if ( zero_blank && val == 0) {
       buf[0] = 0;
       len = 0;
     }
     else
-      len = sprintf( buf, format, *(pwr_tInt32 *) p);
+      len = sprintf( buf, format, val);
+    memcpy( &old_value, &val, MIN(size, (int) sizeof(old_value)));
     break;
+  }
   case pwr_eType_NetStatus:
     if ( db == graph_eDatabase_Gdh) {
       pwr_tTime t;
@@ -3770,8 +3808,18 @@ int GeValue::scan( grow_tObject object)
 	*(pwr_tNetStatus *)p = PWR__NETTIMEOUT;
     }
     // No break
-  case pwr_eType_Status:
-    if ( *(pwr_tStatus *)p == 0) {
+  case pwr_eType_Status: {
+    pwr_tStatus val = *(pwr_tStatus *)p;
+
+    if ( !first_scan) {
+      if ( memcmp( &old_value, &val, size) == 0 )
+	// No change since last time
+	return 1;
+    }
+    else
+      first_scan = false;
+
+    if ( val == 0) {
       strcpy( buf, "");
       len = 0;
       break;
@@ -3779,20 +3827,41 @@ int GeValue::scan( grow_tObject object)
     switch ( format[1]) {
     case '1':
       // Format %1m: Write only the text
-      msg_GetText( *(pwr_tStatus *) p, buf, sizeof(buf));
+      msg_GetText( val, buf, sizeof(buf));
       break;
     default:
-      msg_GetMsg( *(pwr_tStatus *) p, buf, sizeof(buf));
+      msg_GetMsg( val, buf, sizeof(buf));
     }
     len = strlen(buf);
+    memcpy( &old_value, &val, MIN(size, (int) sizeof(old_value)));
     break;
+  }
   case pwr_eType_String:
+    if ( !first_scan) {
+      if ( strncmp( old_value, (char *)p, size) == 0)
+	// No change since last time
+	return 1;	
+    }
+    else
+      first_scan = false;
+
+    memcpy( &old_value, p, MIN(size, (int) sizeof(old_value)));
+
     len = sprintf( buf, format, (char *)p);
     break;
   case pwr_eType_Objid: {
     int sts;
     char name[120];
     pwr_tObjid objid = *(pwr_tObjid *)p;
+
+    if ( !first_scan) {
+      if ( memcmp( &old_value, &objid, size) == 0 )
+	// No change since last time
+	return 1;
+    }
+    else
+      first_scan = false;
+
     switch ( format[1]) {
     case '1':
       // Format %1o, write path
@@ -3811,12 +3880,22 @@ int GeValue::scan( grow_tObject object)
     if ( EVEN(sts))
       strcpy( name, "");
     len = sprintf( buf, "%s", name);
+    memcpy( &old_value, &objid, MIN(size, (int) sizeof(old_value)));
     break;
   }
   case pwr_eType_AttrRef: {
     int sts;
     char name[120];
     pwr_sAttrRef aref = *(pwr_sAttrRef *)p;
+
+    if ( !first_scan) {
+      if ( memcmp( &old_value, &aref, size) == 0 )
+	// No change since last time
+	return 1;
+    }
+    else
+      first_scan = false;
+
     switch ( format[1]) {
     case '1':
       // Format %1o, write path
@@ -3835,73 +3914,103 @@ int GeValue::scan( grow_tObject object)
     if ( EVEN(sts))
       strcpy( name, "");
     len = sprintf( buf, "%s", name);
+    memcpy( &old_value, &aref, MIN(size, (int) sizeof(old_value)));
     break;
   }
   case pwr_eType_Time: {
     int sts;
     char timstr[40];
+    pwr_tTime val = *(pwr_tTime *)p;
+
+    if ( !first_scan) {
+      if ( memcmp( &old_value, &val, size) == 0 )
+	// No change since last time
+	return 1;
+    }
+    else
+      first_scan = false;
 
     switch ( format[1]) {
     case '1': 
       // Format %1t, only time, no hundredth
-      sts = time_AtoAscii( (pwr_tTime *) p, time_eFormat_Time, 
+      sts = time_AtoAscii( &val, time_eFormat_Time, 
 			   timstr, sizeof(timstr));
       timstr[8] = 0;
       break;
     case '2': 
       // Format %2t, only time, with hundredth
-      sts = time_AtoAscii( (pwr_tTime *) p, time_eFormat_Time,
+      sts = time_AtoAscii( &val, time_eFormat_Time,
 			   timstr, sizeof(timstr));
       break;
     case '3': 
       // Format %3t, compressed date and time, no hundredth
-      sts = time_AtoAscii( (pwr_tTime *) p, time_eFormat_ComprDateAndTime,
+      sts = time_AtoAscii( &val, time_eFormat_ComprDateAndTime,
 			   timstr, sizeof(timstr));
       timstr[17] = 0;
       break;
     case '4':
       // Format %4t, date only
-      sts = time_AtoAscii( (pwr_tTime *) p, time_eFormat_DateAndTime, 
+      sts = time_AtoAscii( &val, time_eFormat_DateAndTime, 
 			   timstr, sizeof(timstr));
       timstr[11] = 0;
       break;
     case '5':
       // Format %5t, compressed date only
-      sts = time_AtoAscii( (pwr_tTime *) p, time_eFormat_ComprDateAndTime, 
+      sts = time_AtoAscii( &val, time_eFormat_ComprDateAndTime, 
 			   timstr, sizeof(timstr));
       timstr[8] = 0;
       break;
     default:
-      sts = time_AtoAscii( (pwr_tTime *) p, time_eFormat_DateAndTime, 
+      sts = time_AtoAscii( &val, time_eFormat_DateAndTime, 
 			   timstr, sizeof(timstr));
     }
     if ( EVEN(sts))
       strcpy( timstr, "-");
     len = sprintf( buf, "%s", timstr);
+    memcpy( &old_value, &val, MIN(size, (int) sizeof(old_value)));
     break;
   }
   case pwr_eType_DeltaTime: {
     int sts;
     char timstr[40];
+    pwr_tDeltaTime val = *(pwr_tDeltaTime *)p;
+
+    if ( !first_scan) {
+      if ( memcmp( &old_value, &val, size) == 0 )
+	// No change since last time
+	return 1;
+    }
+    else
+      first_scan = false;
 
     switch ( format[1]) {
     case '1':
       // Format %1t, only time, no hundredth
-      sts = time_DtoAscii( (pwr_tDeltaTime *) p, 0, 
+      sts = time_DtoAscii( &val, 0, 
 			   timstr, sizeof(timstr));
       break;
     default:
-      sts = time_DtoAscii( (pwr_tDeltaTime *) p, 1, 
+      sts = time_DtoAscii( &val, 1, 
 			   timstr, sizeof(timstr));
     }
     if ( EVEN(sts))
       strcpy( timstr, "-");
     len = sprintf( buf, "%s", timstr);
+    memcpy( &old_value, &val, MIN(size, (int) sizeof(old_value)));
     break;
   }
   case pwr_eType_Enum: {
     int sts;
     bool converted = false;
+    pwr_tInt32 val = *(pwr_tInt32 *)p;
+
+    if ( !first_scan) {
+      if ( memcmp( &old_value, &val, size) == 0 )
+	// No change since last time
+	return 1;
+    }
+    else
+      first_scan = false;
 
     switch ( format[strlen(format)-1]) {
     case 's': {
@@ -3913,7 +4022,7 @@ int GeValue::scan( grow_tObject object)
       if ( EVEN(sts)) break;
 
       for ( int i = 0; i < rows; i++) {
-	if ( valuedef[i].Value->Value == *(pwr_tInt32 *)p) {
+	if ( valuedef[i].Value->Value == val) {
 	  strcpy( buf, valuedef[i].Value->Text);
 	  len = strlen(buf);
 	  converted = true;
@@ -3927,36 +4036,58 @@ int GeValue::scan( grow_tObject object)
     }
     if ( !converted) {
       sts = cdh_AttrValueToString( (pwr_eType) annot_typeid, 
-				 p, buf, sizeof(buf));
+				 &val, buf, sizeof(buf));
       if ( EVEN(sts))
 	sprintf( buf, "Invalid type");
       len = strlen(buf);
     }
+    memcpy( &old_value, &val, MIN(size, (int) sizeof(old_value)));
     break;
   }
   case pwr_eType_Mask: {
+    pwr_tUInt32 val = *(pwr_tUInt32 *)p;
+
+    if ( !first_scan) {
+      if ( memcmp( &old_value, &val, size) == 0 )
+	// No change since last time
+	return 1;
+    }
+    else
+      first_scan = false;
 
     switch ( format[strlen(format)-1]) {
     case 'b':
       if ( strncmp( &format[1], "16", 2) == 0)
-	strcpy( buf, dyn_mask_to_bits( *(unsigned int *)p, 16));
+	strcpy( buf, dyn_mask_to_bits( val, 16));
       else
-	strcpy( buf, dyn_mask_to_bits( *(unsigned int *)p, 32));
+	strcpy( buf, dyn_mask_to_bits( val, 32));
       len = strlen(buf);
       break;
     default: {
       int sts;
       sts = cdh_AttrValueToString( (pwr_eType) annot_typeid, 
-				 p, buf, sizeof(buf));
+				 &val, buf, sizeof(buf));
       if ( EVEN(sts))
 	sprintf( buf, "Invalid type");
       len = strlen(buf);
       }
     }
+    memcpy( &old_value, &val, MIN(size, (int) sizeof(old_value)));
     break;
   }
   default: {
     int sts;
+
+    if ( !first_scan) {
+      if ( memcmp( &old_value, p, size) == 0 )
+	// No change since last time
+	return 1;
+    }
+    else
+      first_scan = false;
+
+    memcpy( &old_value, p, MIN(size, (int) sizeof(old_value)));
+
     sts = cdh_AttrValueToString( (pwr_eType) annot_typeid, 
 				 p, buf, sizeof(buf));
     if ( EVEN(sts))
@@ -3970,7 +4101,6 @@ int GeValue::scan( grow_tObject object)
     grow_SetAnnotation( object, annot_num, buf, len);
   else
     grow_SetAnnotation( object, annot_num, buf, len);
-  memcpy( &old_value, p, MIN(size, (int) sizeof(old_value)));
   return 1;
 }
 
@@ -4653,94 +4783,84 @@ int GeAnalogColor::scan( grow_tObject object)
   if ( !p || dyn->ignore_color)
     return 1;
   
-  if ( !first_scan) {
-    switch ( type) {
-    case pwr_eType_Float32:
-      if ( !dyn->reset_color && fabs( old_value - *p) < FLT_EPSILON) {
-	// No change since last time
-	if ( old_state)
-	  dyn->ignore_color = true;
-	return 1;
-      }
-      break;
-    default:
-      if ( !dyn->reset_color && memcmp( &old_value, p, size) == 0) {
+  bool state;
+
+  switch ( type) {
+  case pwr_eType_Float32: {
+    pwr_tFloat32 val = *(pwr_tFloat32 *)p;
+    if ( !first_scan) {
+      if ( !dyn->reset_color && fabs( old_value - val) < FLT_EPSILON) {
 	// No change since last time
 	if ( old_state)
 	  dyn->ignore_color = true;
 	return 1;
       }
     }
-  }
-  else
-    first_scan = false;
+    else
+      first_scan = false;
 
-  bool state;
+
+    switch ( limit_type) {
+    case ge_eLimitType_Gt:
+      state = val > limit;
+      break;
+    case ge_eLimitType_Ge:
+      state = val >= (limit - FLT_EPSILON);
+      break;
+    case ge_eLimitType_Lt:
+      state = val < limit;
+      break;
+    case ge_eLimitType_Le:
+      state = val <= (limit + FLT_EPSILON);
+      break;
+    case ge_eLimitType_Eq:
+      state = fabs(val - limit) < FLT_EPSILON;
+      break;
+    }
+
+    memcpy( &old_value, &val, size);
+    break;
+  }
+  case pwr_eType_Int32: {
+    pwr_tInt32 val = *(pwr_tInt32 *)p;
+
+    if ( !first_scan) {
+      if ( !dyn->reset_color && memcmp( &old_value, &val, size) == 0) {
+	// No change since last time
+	if ( old_state)
+	  dyn->ignore_color = true;
+	return 1;
+      }
+    }
+    else
+      first_scan = false;
+
+    switch ( limit_type) {
+    case ge_eLimitType_Gt:
+      state = val > limit;
+      break;
+    case ge_eLimitType_Ge:
+      state = val >= limit;
+      break;
+    case ge_eLimitType_Lt:
+      state = val < limit;
+      break;
+    case ge_eLimitType_Le:
+      state = val <= limit;
+      break;
+    case ge_eLimitType_Eq:
+      state = val == limit;
+      break;
+    }
+    
+    memcpy( &old_value, &val, size);
+    break;
+  }
+  default: ;
+  }
+
   bool set_color = false;
   bool reset_color = false;
-
-  switch ( limit_type) {
-  case ge_eLimitType_Gt: {
-    switch ( type) {
-    case pwr_eType_Float32:
-      state = *p > limit;
-      break;
-    case pwr_eType_Int32:
-      state = *(pwr_tInt32 *)p > limit;
-      break;
-    default: ;
-    }
-    break;
-  }
-  case ge_eLimitType_Ge: {
-    switch ( type) {
-    case pwr_eType_Float32:
-      state = *p >= (limit - FLT_EPSILON);
-      break;
-    case pwr_eType_Int32:
-      state = *(pwr_tInt32 *)p >= limit;
-      break;
-    default: ;
-    }
-    break;
-  }
-  case ge_eLimitType_Lt: {
-    switch ( type) {
-    case pwr_eType_Float32:
-      state = *p < limit;
-      break;
-    case pwr_eType_Int32:
-      state = *(pwr_tInt32 *)p < limit;
-      break;
-    default: ;
-    }
-    break;
-  }
-  case ge_eLimitType_Le: {
-    switch ( type) {
-    case pwr_eType_Float32:
-      state = *p <= (limit + FLT_EPSILON);
-      break;
-    case pwr_eType_Int32:
-      state = *(pwr_tInt32 *)p <= limit;
-      break;
-    default: ;
-    }
-    break;
-  }
-  case ge_eLimitType_Eq: {
-    switch ( type) {
-    case pwr_eType_Float32:
-      state = fabs(*p - limit) < FLT_EPSILON;
-      break;
-    case pwr_eType_Int32:
-      state = *(pwr_tInt32 *)p == limit;
-      break;
-    default: ;
-    }
-    break;
-  }
-  }
 
   if ( state != old_state || dyn->reset_color || first_scan) {
     if ( state) {
@@ -4755,8 +4875,6 @@ int GeAnalogColor::scan( grow_tObject object)
   }
   else if ( state)
     dyn->ignore_color = true;
-
-  memcpy( &old_value, p, size);
 
   if ( !set_color && !reset_color) {
     return 1;
@@ -4925,18 +5043,20 @@ int GeRotate::scan( grow_tObject object)
   if ( !p)
     return 1;
 
+  pwr_tFloat32 val = *p;
+
   if ( !first_scan) {
-    if ( fabs( old_value - *p) < FLT_EPSILON)
+    if ( fabs( old_value - val) < FLT_EPSILON)
       // No change since last time
       return 1;
   }
   else
     first_scan = false;
 
-  double value = *p * factor;
+  double value = val * factor;
 
   grow_SetObjectRotation( object, value, x0, y0, rotation_point);
-  old_value = *p;
+  old_value = val;
   return 1;
 }
 
@@ -5488,14 +5608,35 @@ int GeAnalogShift::scan( grow_tObject object)
   int index;
 
   switch ( type) {
-  case pwr_eType_Float32:
-    index = int( *p + 0.5);
+  case pwr_eType_Float32: {
+    pwr_tFloat32 val = *p;
+
+    if ( !first_scan) {
+      if ( fabs( old_value - val) < FLT_EPSILON)
+	return 1;
+    }
+    else
+      first_scan = false;
+
+    index = int( val + 0.5);
+    old_value = val;
     break;
-  default:
-    index = *(pwr_tInt32 *)p;
   }
+  default: {
+    pwr_tInt32 val = *(pwr_tInt32 *)p;
+    if ( !first_scan) {
+      if ( memcmp( &old_value, &val, size) == 0)
+	return 1;
+    }
+    else
+      first_scan = false;
+
+    index = val;
+    memcpy( &old_value, &val, size);
+  }
+  }
+
   grow_SetObjectNodeClassByIndex( object, index);
-  old_value = *p;
   return 1;
 }
 
@@ -5612,8 +5753,11 @@ int GeDigShift::scan( grow_tObject object)
 {
   if ( !p)
     return 1;
+
+  pwr_tBoolean val = *p;
+
   if ( !first_scan) {
-    if ( old_value == *p) {
+    if ( old_value == val) {
       // No change since last time
       return 1;
     }
@@ -5621,13 +5765,13 @@ int GeDigShift::scan( grow_tObject object)
   else
     first_scan = false;
 
-  if ( (!inverted && *p) || (inverted && !*p)) {
+  if ( (!inverted && val) || (inverted && !val)) {
     grow_SetObjectLastNodeClass( object);
   }
   else {
     grow_SetObjectFirstNodeClass( object);
   }
-  old_value = *p;
+  old_value = val;
   return 1;
 }
 
@@ -5752,25 +5896,27 @@ int GeAnimation::scan( grow_tObject object)
   if ( !p)
     return 1;
 
+  pwr_tBoolean val = *p;
+
   if ( first_scan) {
     animation_count = 0;
     animation_direction = 0;
     first_scan = false;
     if ( sequence == ge_eAnimSequence_Dig) {
-      if ( (!inverted && *p) || (inverted && !*p))
+      if ( (!inverted && val) || (inverted && !val))
 	grow_SetObjectLastNodeClass( object);
-      old_value = *p;
+      old_value = val;
     }
   }
 
   if ( sequence == ge_eAnimSequence_Dig) {
-    if ( old_value != *p) {
+    if ( old_value != val) {
       // Start animation
-      if ( (!inverted && *p) || (inverted && !*p)) {
+      if ( (!inverted && val) || (inverted && !val)) {
 	animation_count = 0;
 	animation_direction = 1;
       }
-      else if ( (!inverted && !*p) || (inverted && *p)) {
+      else if ( (!inverted && !val) || (inverted && val)) {
 	animation_direction = 2;
 	animation_count = 0;
       }
@@ -5807,7 +5953,7 @@ int GeAnimation::scan( grow_tObject object)
     }
   }
   else {
-    if ( (!inverted && *p) || (inverted && !*p)) {
+    if ( (!inverted && val) || (inverted && !val)) {
       if ( animation_direction == 0) {
 	// Animation has been stopped
 	animation_count = 0;
@@ -5856,7 +6002,7 @@ int GeAnimation::scan( grow_tObject object)
       }
     }
   }
-  old_value = *p;
+  old_value = val;
   return 1;
 }
 
@@ -6089,15 +6235,19 @@ int GeBar::scan( grow_tObject object)
   if ( !p)
     return 1;
 
-  if ( max_value_p && min_value_p && 
-       ( *max_value_p != old_max_value ||
-	 *min_value_p != old_min_value)) {
-    if ( fabsf( *max_value_p - *min_value_p) > FLT_EPSILON) {
-      grow_SetBarRange( object, double(*min_value_p), 
-		double(*max_value_p));
+  if ( max_value_p && min_value_p) {
+    pwr_tFloat32 maxval = *max_value_p;
+    pwr_tFloat32 minval = *min_value_p;
+
+    if ( maxval != old_max_value ||
+	 minval != old_min_value) {
+      if ( fabsf( maxval - minval) > FLT_EPSILON) {
+	grow_SetBarRange( object, double(minval), 
+			  double(maxval));
+      }
+      old_min_value = minval;
+      old_max_value = maxval;
     }
-    old_min_value = *min_value_p;
-    old_max_value = *max_value_p;
   }      
 
   if ( !first_scan) {
@@ -6109,19 +6259,26 @@ int GeBar::scan( grow_tObject object)
     first_scan = false;
 
   switch ( bar_typeid) {
-  case pwr_eType_Float32:
-    grow_SetBarValue( object, double( *(pwr_tFloat32 *) p));
+  case pwr_eType_Float32: {
+    pwr_tFloat32 val = *(pwr_tFloat32 *)p;
+    grow_SetBarValue( object, double( val));
+    memcpy( &old_value, &val, size);
     break;
-  case pwr_eType_UInt32:
-    grow_SetBarValue( object, double( *(pwr_tUInt32 *) p));
+  }
+  case pwr_eType_UInt32: {
+    pwr_tUInt32 val = *(pwr_tUInt32 *)p;
+    grow_SetBarValue( object, double( val));
+    memcpy( &old_value, &val, size);
     break;
-  case pwr_eType_Int32:
-    grow_SetBarValue( object, double( *(pwr_tInt32 *) p));
+  }
+  case pwr_eType_Int32: {
+    pwr_tInt32 val = *(pwr_tInt32 *)p;
+    grow_SetBarValue( object, double( val));
+    memcpy( &old_value, &val, size);
     break;
+  }
   default: ;
   }
-
-  memcpy( &old_value, p, size);
   return 1;
 }
 
@@ -6373,27 +6530,33 @@ int GeTrend::scan( grow_tObject object)
   if ( trend_hold)
     return 1;
 
-  if ( max_value1_p && min_value1_p && 
-       ( *max_value1_p != old_max_value1 ||
-	 *min_value1_p != old_min_value1)) {
-    if ( fabsf( *max_value1_p - *min_value1_p) > FLT_EPSILON) {
-      grow_SetTrendRangeY( object, 0, double(*min_value1_p), 
-		double(*max_value1_p));
-    }
-    old_min_value1 = *min_value1_p;
-    old_max_value1 = *max_value1_p;
-  }      
+  if ( max_value1_p && min_value1_p) {
+    pwr_tFloat32 maxval = *max_value1_p;
+    pwr_tFloat32 minval = *max_value1_p;
+    if ( maxval != old_max_value1 ||
+	 minval != old_min_value1) {
+      if ( fabsf( maxval - minval) > FLT_EPSILON) {
+	grow_SetTrendRangeY( object, 0, double(minval), 
+			     double(maxval));
+      }
+      old_min_value1 = minval;
+      old_max_value1 = maxval;
+    }      
+  }
+  if ( max_value2_p && min_value2_p) {
+    pwr_tFloat32 maxval = *max_value2_p;
+    pwr_tFloat32 minval = *max_value2_p;
 
-  if ( max_value2_p && min_value2_p && 
-       ( *max_value2_p != old_max_value2 ||
-	 *min_value2_p != old_min_value2)) {
-    if ( fabsf( *max_value2_p - *min_value2_p) > FLT_EPSILON) {
-      grow_SetTrendRangeY( object, 1, double(*min_value2_p), 
-		double(*max_value2_p));
-    }
-    old_min_value2 = *min_value2_p;
-    old_max_value2 = *max_value2_p;
-  }      
+    if ( maxval != old_max_value2 ||
+	 minval != old_min_value2) {
+      if ( fabsf( maxval - minval) > FLT_EPSILON) {
+	grow_SetTrendRangeY( object, 1, double(minval), 
+			     double(maxval));
+      }
+      old_min_value2 = minval;
+      old_max_value2 = maxval;
+    }      
+  }
 
   if ( first_scan)
     first_scan = false;
