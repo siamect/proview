@@ -29,7 +29,7 @@ copy :
 
 lib :
 
-exe : $(bld_dir)/control_pwrrt $(bld_dir)/control_pwr $(bld_dir)/control_pwrdemo
+exe : $(bld_dir)/control_pwrrt $(bld_dir)/control_pwr $(bld_dir)/control_pwrdemo $(bld_dir)/control_pwrsev
 
 clean :
 
@@ -53,6 +53,11 @@ $(bld_dir)/control_pwr : ../../../pwr/control
 $(bld_dir)/control_pwrdemo : ../../../pwrdemo/control
 	@ echo "build $(target)"
 	@ ../../../pwrdemo/build.sh
+	@ cp $(source) $(target)
+
+$(bld_dir)/control_pwrsev : ../../../pwrsev/control
+	@ echo "build $(target)"
+	@ ../../../pwrsev/build.sh
 	@ cp $(source) $(target)
 
 
