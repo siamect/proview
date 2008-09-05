@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.cpp,v 1.18 2008-06-26 13:20:41 claes Exp $
+ * Proview   $Id: wb_lfu.cpp,v 1.19 2008-09-05 09:07:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -71,7 +71,7 @@
 
 class lfu_nodeconf {
 public:
-  lfu_nodeconf() : isfriend(0), port(0), vid(0)
+  lfu_nodeconf() : isfriend(0), port(0), vid(0), connection(0)
   { strcpy( address, ""); strcpy( nodename, "");}
   int isfriend;
   pwr_tOid oid;
@@ -80,6 +80,7 @@ public:
   pwr_tString16 address;
   pwr_tUInt32 port;
   pwr_tVid vid;
+  pwr_tEnum connection;
 };
       
 
@@ -620,7 +621,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   int		found;
   pwr_tObjid	envobjid;
   pwr_tObjid	dbobjid;
-  pwr_tClassId	cid;
+  pwr_tClassId	cid, ccid;
   pwr_tObjid	volobjid;
   int		size;
   pwr_tString80	*path_ptr;
@@ -1451,6 +1452,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
 	break;
       }
+      case pwr_cClass_SevNodeConfig:
       case pwr_cClass_FriendNodeConfig: {
 	pwr_tString80 volstr;
 	lfu_nodeconf nc;
@@ -1479,6 +1481,18 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	a.value( &nc.port);
 	if ( !a) return sts;
 	
+	if ( nodeo.cid() == pwr_cClass_SevNodeConfig) {
+	  // Qcom only connection
+	  nc.connection = 1;  
+	}
+	else {
+	  // Get attribute Connection
+	  a = sp->attribute( nodeo.oid(), "RtBody", "Connection");
+	  if ( !a) return a.sts();
+
+	  a.value( &nc.connection);
+	  if ( !a) return sts;
+	}	
 	// Get attribute Volume
 	a = sp->attribute( nodeo.oid(), "RtBody", "Volume");
 	if ( !a) return a.sts();
@@ -1523,7 +1537,8 @@ pwr_tStatus lfu_SaveDirectoryVolume(
     for ( wb_object nodeo = buso.first(); nodeo; nodeo = nodeo.after()) {
 
       switch ( nodeo.cid()) {
-      case pwr_cClass_NodeConfig: {
+      case pwr_cClass_NodeConfig:
+      case pwr_cClass_SevNodeConfig: {
 	FILE *fp;
 	int idx;
 	int found = 0;
@@ -1550,12 +1565,8 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
 	for ( int i = 0; i < (int)nodevect.size(); i++) {
 	  lfu_nodeconf nc = nodevect[i];
-	  if ( nc.port == 0)
-	    fprintf( fp, "%s %s %s\n", nc.nodename, 
-		     cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address);
-	  else
-	    fprintf( fp, "%s %s %s %d\n", nc.nodename, 
-		     cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.port);
+	  fprintf( fp, "%s %s %s %d %d\n", nc.nodename, 
+		   cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.port, nc.connection);
 	}
 
 	// Add specific FriendNodes for the node
@@ -1588,6 +1599,13 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    a.value( &nc.port);
 	    if ( !a) return sts;
 	  
+	    // Get attribute Connection
+	    a = sp->attribute( fnodeo.oid(), "RtBody", "Connection");
+	    if ( !a) return a.sts();
+
+	    a.value( &nc.connection);
+	    if ( !a) return sts;
+	  
 	    // Get attribute Volume
 	    a = sp->attribute( fnodeo.oid(), "RtBody", "Volume");
 	    if ( !a) return a.sts();
@@ -1614,18 +1632,45 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	      syntax_error = 1;
 	    }
 
-	    if ( nc.port == 0)
-	      fprintf( fp, "%s %s %s\n", nc.nodename, 
-		       cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address);
-	    else
-	      fprintf( fp, "%s %s %s %d\n", nc.nodename, 
-		      cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.port);
+	    fprintf( fp, "%s %s %s %d %d\n", nc.nodename, 
+		     cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.port, nc.connection);
 	    break;
 	  }
 	  default: ;
 	  }
 	}
 	fclose( fp);
+
+	if ( nodeo.cid() == pwr_cClass_SevNodeConfig) {
+	  // Print a bootfile also
+	  char	timstr[40];
+
+	  sprintf( filename, load_cNameBoot, 
+		   load_cDirectory, cdh_Low(nodevect[idx].nodename), 
+		   bus_number);
+	  dcli_translate_filename( filename, filename);
+	  file = fopen( filename, "w");
+	  if ( !file) {
+	    printf( "** Error, Unable to open bootfile, %s", filename);
+	    return LFU__NOFILE;
+	  }
+
+	  time_AtoAscii(NULL, time_eFormat_DateAndTime, timstr,sizeof(timstr));
+	  fprintf( file, "%s\n", timstr);
+
+	  sts = utl_get_systemobject( ldhses, &systemobjid, systemname,
+				      systemgroup);
+	  if ( EVEN(sts)) {
+	    fprintf( file, "\n");
+	    fprintf( file, "\n");
+	  }
+	  else {
+	    fprintf( file, "%s\n", systemname);
+	    fprintf( file, "%s\n", systemgroup);
+	  }
+	  fclose( file);
+	}
+
 	break;
       }
       default: ;
@@ -1894,7 +1939,8 @@ pwr_tStatus lfu_SaveDirectoryVolume(
         sts = ldh_GetObjectClass( ldhses, nodeobjid, &cid);
         if ( EVEN(sts)) return sts;
 
-        if ( cid == pwr_cClass_NodeConfig) {
+        if ( cid == pwr_cClass_NodeConfig ||
+	     cid == pwr_cClass_SevNodeConfig) {
           sts = ldh_ObjidToName( ldhses, nodeobjid, ldh_eName_Object, 
 			nodeconfig_name, sizeof(nodeconfig_name), &size);
           if ( EVEN(sts)) return sts;
@@ -1951,10 +1997,10 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  found = 0;
 	  sts = ldh_GetChild( ldhses, nodeobjid, &volobjid);
 	  while ( ODD(sts)) {
-	    sts = ldh_GetObjectClass( ldhses, volobjid, &cid);
+	    sts = ldh_GetObjectClass( ldhses, volobjid, &ccid);
 	    if ( EVEN(sts)) return sts;
 
-	    if ( cid == pwr_cClass_RootVolumeLoad) {
+	    if ( ccid == pwr_cClass_RootVolumeLoad) {
 	      found = 1;
 	      break;
 	    }
@@ -1991,10 +2037,10 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
 	  for ( obj_ptr = objlist; obj_ptr; obj_ptr = obj_ptr->next) {
 	    applobjid = obj_ptr->objid;
-	    sts = ldh_GetObjectClass( ldhses, applobjid, &cid);
+	    sts = ldh_GetObjectClass( ldhses, applobjid, &ccid);
 	    if ( EVEN(sts)) return sts;
 
-	    switch ( cid) {
+	    switch ( ccid) {
 	    case pwr_cClass_Distribute: {
 	      pwr_mDistrComponentMask *components_ptr;
 
@@ -2011,6 +2057,9 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		   !(distr_options & lfu_mDistrOpt_NoRootVolume)) {
 		fprintf( file, "load %s\n", nodename_ptr);
 	      }
+	      if ( cid == pwr_cClass_SevNodeConfig)
+		fprintf( file, "boot %s\n", nodename_ptr);
+
 	      if ( *components_ptr & pwr_mDistrComponentMask_UserDatabase)
 		fprintf( file, "appl %s W $pwrp_src/%s/pwr_user2.dat:$pwra_db/pwr_user2.dat $pwra_db/pwr_user2.dat\n",
 			 nodename_ptr, nodename_ptr);
