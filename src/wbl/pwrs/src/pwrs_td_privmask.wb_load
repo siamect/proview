@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_td_privmask.wb_load,v 1.3 2007-12-21 13:26:40 claes Exp $
+!  Proview   $Id: pwrs_td_privmask.wb_load,v 1.4 2008-09-05 09:02:22 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -251,6 +251,26 @@ SObject pwrs:Type
        Attr PgmName = "Administrator"
        Attr Text = "Administrator"
        Attr Value = 67108864
+     EndBody
+    EndObject
+    !/**
+    !  Read access in Storage Environment
+    !*/
+    Object SevRead $Bit
+     Body SysBody
+       Attr PgmName = "SevRead"
+       Attr Text = "SevRead"
+       Attr Value = 134217728
+     EndBody
+    EndObject
+    !/**
+    !  Administrator access in Storage Environment
+    !*/
+    Object SevAdmin $Bit
+     Body SysBody
+       Attr PgmName = "SevAdmin"
+       Attr Text = "SevAdmin"
+       Attr Value = 268435456
      EndBody
     EndObject
   EndObject
