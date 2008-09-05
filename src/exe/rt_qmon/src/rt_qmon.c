@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qmon.c,v 1.11 2006-09-05 12:11:47 claes Exp $
+ * Proview   $Id: rt_qmon.c,v 1.12 2008-09-05 08:55:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -340,9 +340,13 @@ main (int argc, char *argv[])
   qcom_sQid	my_q = qcom_cNQid;
   pid_t         pid;
   int           count = 0;
+  int 		noneth = 0;
 
   /* Vänta en stund ... */
 //  sleep(5);
+
+  if ( argc > 1 && strcmp( argv[1], "-n") == 0)
+    noneth = 1;
 
   /* Wait for scheduler to be set */
   
@@ -387,18 +391,20 @@ main (int argc, char *argv[])
   neth_qid.qix = net_cProcHandler; 
   neth_qid.nid = qcom_cNNid;
 
-  for ( ; ; ) {
-    qdb_sQue *qp = NULL;
+  if ( !noneth) {
+    for ( ; ; ) {
+      qdb_sQue *qp = NULL;
 
-    qdb_ScopeLock {
-      qp = qdb_Que(NULL, &neth_qid, NULL);
-    } qdb_ScopeUnlock;
+      qdb_ScopeLock {
+	qp = qdb_Que(NULL, &neth_qid, NULL);
+      } qdb_ScopeUnlock;
 
-    if (qp != NULL)
-      break;
+      if (qp != NULL)
+	break;
 
-    errh_Info("Waiting for Nethandler to start...");
-    sleep(1);    
+      errh_Info("Waiting for Nethandler to start...");
+      sleep(1);    
+    }
   }
 
   do {
