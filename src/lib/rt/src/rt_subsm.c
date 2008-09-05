@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_subsm.c,v 1.8 2006-09-14 14:16:07 claes Exp $
+ * Proview   $Id: rt_subsm.c,v 1.9 2008-09-05 14:02:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -391,8 +391,8 @@ subsm_SendBuffer (
         if (classp != NULL)
 	  ndc_ConvertData(&dp->sts, np, classp, &sp->aref, dp->data, data, (pwr_tUInt32 *)&asize, ndc_eOp_encode, sp->aref.Offset, 0);
 	sp->count++;
-	mp->count++;
       }
+      mp->count++;
 
       /* Advance pointer to next sdata slot */
 
