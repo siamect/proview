@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qdb.c,v 1.11 2007-09-21 09:05:41 claes Exp $
+ * Proview   $Id: rt_qdb.c,v 1.12 2008-09-05 08:59:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1453,6 +1453,7 @@ qdb_NodeInfo (
   node->hw = np->hw;
   node->bo = np->bo;
   node->ft = np->ft;
+  node->connection = np->connection;
 }
 
 void

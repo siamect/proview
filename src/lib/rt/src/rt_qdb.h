@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qdb.h,v 1.11 2007-11-22 15:10:23 claes Exp $
+ * Proview   $Id: rt_qdb.h,v 1.12 2008-09-05 08:59:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -650,6 +650,7 @@ typedef struct {
   struct sockaddr_in	sa;
 
   void			*mon;		/* Monitor private data. */
+  qcom_eNodeConnection	connection;     /* Type of connection */
 } qdb_sNode;
 
 typedef struct {

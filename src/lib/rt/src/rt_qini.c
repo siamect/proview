@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qini.c,v 1.2 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_qini.c,v 1.3 2008-09-05 08:59:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,6 +50,8 @@ addNode (
     np->sa.sin_port = htons(55000 + qdb->g->bus);  
 
   memcpy(&np->arp.arp_pa.sa_data, &np->sa.sin_addr.s_addr, sizeof(np->sa.sin_addr.s_addr));
+
+  np->connection = nep->connection;
 
   return np;
 }
@@ -105,6 +107,7 @@ qini_ParseFile (
   char		s_nid[80];
   char		s_naddr[80];
   char		s_port[80];
+  char		s_connection[80];
   pwr_tNodeId	nid;
   struct in_addr	naddr;
   qini_sNode	*nep;
@@ -117,7 +120,7 @@ qini_ParseFile (
       continue;
     }
 
-    n = sscanf(s, "%s %s %s %s", name, s_nid, s_naddr, s_port);
+    n = sscanf(s, "%s %s %s %s %s", name, s_nid, s_naddr, s_port, s_connection);
     if (n < 3) {
       errh_Error("error in line, <wrong number of arguments>, skip to next line.\n>> %s", s);
       (*errors)++;
@@ -154,6 +157,7 @@ qini_ParseFile (
     strcpy(nep->name, name);
     nep->naddr.s_addr = htonl(naddr.s_addr);
     if (n > 3) nep->port = htons(atoi(s_port));
+    if (n > 4) nep->connection = atoi(s_connection);
     memset(&arpreq, 0, sizeof(arpreq));
     memcpy(&arpreq.arp_pa.sa_data, &naddr, sizeof(naddr));
     inet_GetArpEntry(&sts, 0, &arpreq);

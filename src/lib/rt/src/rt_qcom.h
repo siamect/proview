@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qcom.h,v 1.10 2008-01-25 14:34:18 claes Exp $
+ * Proview   $Id: rt_qcom.h,v 1.11 2008-09-05 08:58:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -121,6 +121,11 @@ typedef enum {
   qcom_eQtype_
 } qcom_eQtype;
 
+typedef enum {
+  qcom_eNodeConnectionFull = 0,
+  qcom_eNodeConnectionQcom = 1
+} qcom_eNodeConnection;
+
 
 /**
  * @brief ZZZ Text that appers when the Data structure is listed.
@@ -224,7 +229,6 @@ typedef union {
 
 } qcom_mNode;
 
-
 //! Data for a Qcom node.
 typedef struct {
   pwr_tNodeId	nid;		//!< node index
@@ -234,6 +238,7 @@ typedef struct {
   co_eHW	hw;		//!< hardware
   co_eBO	bo;		//!< big/little endian
   co_eFT	ft;		//!< float type
+  qcom_eNodeConnection	connection;     //!< type of connection
 } qcom_sNode;
 
 

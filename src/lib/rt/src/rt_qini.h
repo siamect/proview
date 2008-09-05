@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qini.h,v 1.2 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_qini.h,v 1.3 2008-09-05 08:59:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -91,6 +91,7 @@ typedef struct {
   char			name[80];
   struct in_addr	naddr;
   int			port;
+  qcom_eNodeConnection 	connection;
   pwr_tBoolean		connect;
 } qini_sNode;    
 
