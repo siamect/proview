@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr_privilege.h,v 1.5 2008-06-24 06:59:37 claes Exp $
+ * Proview   $Id: pwr_privilege.h,v 1.6 2008-09-05 08:56:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,7 +47,9 @@ typedef enum {
   pwr_mPrv_DevConfig		= 1 << 23,
   pwr_mPrv_DevClass		= 1 << 24,
   pwr_mPrv_RtEvents		= 1 << 25,
-  pwr_mPrv_Administrator       	= 1 << 26
+  pwr_mPrv_Administrator       	= 1 << 26,
+  pwr_mPrv_SevRead     		= 1 << 27,
+  pwr_mPrv_SevAdmin     	= 1 << 28
 } pwr_mPrv;
 
 typedef enum {
@@ -95,6 +97,8 @@ typedef enum {
 				  pwr_mPrv_Operator8 |
 				  pwr_mPrv_Operator9 |
 				  pwr_mPrv_Operator10,
+  pwr_mAccess_AllSev		= pwr_mPrv_SevRead |
+  				  pwr_mPrv_SevAdmin,
   pwr_mAccess_AllPwr		= ~(1 << 31),
   pwr_mAccess_Default     	= 1 << 31
 } pwr_mAccess;

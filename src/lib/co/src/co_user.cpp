@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_user.cpp,v 1.9 2008-06-24 07:04:33 claes Exp $
+ * Proview   $Id: co_user.cpp,v 1.10 2008-09-05 08:56:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1121,6 +1121,9 @@ void GeUser::priv_to_string( unsigned int priv, char *str, int size)
   if ( priv & pwr_mPrv_DevPlc) strcat(buff, "DevPlc ");
   if ( priv & pwr_mPrv_DevConfig) strcat(buff, "DevConfig ");
   if ( priv & pwr_mPrv_DevClass) strcat(buff, "DevClass ");
+  if ( priv & pwr_mPrv_Administrator) strcat(buff, "Administrator ");
+  if ( priv & pwr_mPrv_SevRead) strcat(buff, "SevRead ");
+  if ( priv & pwr_mPrv_SevAdmin) strcat(buff, "SevAdmin ");
   strncpy( str, buff, size);
   str[size-1] = 0;
 }
@@ -1147,6 +1150,8 @@ void GeUser::rt_priv_to_string( unsigned int priv, char *str, int size)
   if ( priv & pwr_mPrv_Operator8) strcat(buff, "Operator8 ");
   if ( priv & pwr_mPrv_Operator9) strcat(buff, "Operator9 ");
   if ( priv & pwr_mPrv_Operator10) strcat(buff, "Operator10 ");
+  if ( priv & pwr_mPrv_SevRead) strcat(buff, "SevRead ");
+  if ( priv & pwr_mPrv_SevAdmin) strcat(buff, "SevAdmin ");
   strncpy( str, buff, size);
   str[size-1] = 0;
 }
