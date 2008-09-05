@@ -95,3 +95,11 @@
 080513 cs  ge        Delete added to menu, accelerator Ctrl+D moved from show grid to delete.
 080529 cs  xtt       Bugfix in display object, didn't work for local mounted volumes, 
                      and attributes in subclasses wasn't selected.
+080602 cs  web       LoadArchives attribute in WebHandler change from bitmask to string.
+080602 cs  ge        Objectgraph for Mode: MinSet/MaxSet and MinOut/MaxOut used for slider limits and input limits.
+080603 cs  xtt       Arrays with dynamic size, e.g. areaobjects, can be viewed in xtt.
+080604 cs  xtt       Default filetype added to command 'open fileview' (qualifier /ftype).
+080623 cs  xtt       Login window in xtt added, opened with command 'login', from menu and at startup. Also commands 'show user' and 'logout' added.
+080623 cs  xtt       New login policy in Xtt: DefaultXttPriv and XttUseOpsysUser in Security object utilized to select user and privilges in xtt.
+080826 cs  ge        Bit type added to dynamics DigLowColor, DigWarning and DigError.
+080826 cs  ge        Bugfix in setting of fonttype in attribute editor.
