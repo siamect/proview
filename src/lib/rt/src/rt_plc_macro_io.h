@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_macro_io.h,v 1.8 2007-04-25 07:25:34 claes Exp $
+ * Proview   $Id: rt_plc_macro_io.h,v 1.9 2008-09-05 08:57:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -374,12 +374,132 @@
   }
 
 /*_*
+  CStoExtBoolean
+  @aref cstoextboolean CStoExtBoolean
+*/
+#define CStoExtBoolean_exec(obj, name, in, cond) \
+  if ( cond && !obj->OldCond) { \
+    obj->LastStatus = gdh_SetObjectInfo( name, (void *)&in, sizeof(pwr_tBoolean)); \
+  } \
+  obj->OldCond = cond;
+
+/*_*
   CStoExtFloat32
   @aref cstoextfloat32 CStoExtFloat32
 */
 #define CStoExtFloat32_exec(obj, name, in, cond) \
   if ( cond && !obj->OldCond) { \
     obj->LastStatus = gdh_SetObjectInfo( name, (void *)&in, sizeof(pwr_tFloat32)); \
+  } \
+  obj->OldCond = cond;
+
+/*_*
+  CStoExtFloat64
+  @aref cstoextfloat64 CStoExtFloat64
+*/
+#define CStoExtFloat64_exec(obj, name, in, cond) \
+  if ( cond && !obj->OldCond) { \
+    obj->LastStatus = gdh_SetObjectInfo( name, (void *)&in, sizeof(pwr_tFloat64)); \
+  } \
+  obj->OldCond = cond;
+
+/*_*
+  CStoExtInt8
+  @aref cstoextint8 CStoExtInt8
+*/
+#define CStoExtInt8_exec(obj, name, in, cond) \
+  if ( cond && !obj->OldCond) { \
+    obj->LastStatus = gdh_SetObjectInfo( name, (void *)&in, sizeof(pwr_tInt8)); \
+  } \
+  obj->OldCond = cond;
+
+/*_*
+  CStoExtInt16
+  @aref cstoextint16 CStoExtInt16
+*/
+#define CStoExtInt16_exec(obj, name, in, cond) \
+  if ( cond && !obj->OldCond) { \
+    obj->LastStatus = gdh_SetObjectInfo( name, (void *)&in, sizeof(pwr_tInt16)); \
+  } \
+  obj->OldCond = cond;
+
+/*_*
+  CStoExtInt32
+  @aref cstoextint32 CStoExtInt32
+*/
+#define CStoExtInt32_exec(obj, name, in, cond) \
+  if ( cond && !obj->OldCond) { \
+    obj->LastStatus = gdh_SetObjectInfo( name, (void *)&in, sizeof(pwr_tInt32)); \
+  } \
+  obj->OldCond = cond;
+
+/*_*
+  CStoExtInt64
+  @aref cstoextint64 CStoExtInt64
+*/
+#define CStoExtInt64_exec(obj, name, in, cond) \
+  if ( cond && !obj->OldCond) { \
+    obj->LastStatus = gdh_SetObjectInfo( name, (void *)&in, sizeof(pwr_tInt64)); \
+  } \
+  obj->OldCond = cond;
+
+/*_*
+  CStoExtInt8
+  @aref cstoextuint8 CStoExtUInt8
+*/
+#define CStoExtUInt8_exec(obj, name, in, cond) \
+  if ( cond && !obj->OldCond) { \
+    obj->LastStatus = gdh_SetObjectInfo( name, (void *)&in, sizeof(pwr_tUInt8)); \
+  } \
+  obj->OldCond = cond;
+
+/*_*
+  CStoExtUInt16
+  @aref cstoextuint16 CStoExtUInt16
+*/
+#define CStoExtUInt16_exec(obj, name, in, cond) \
+  if ( cond && !obj->OldCond) { \
+    obj->LastStatus = gdh_SetObjectInfo( name, (void *)&in, sizeof(pwr_tUInt16)); \
+  } \
+  obj->OldCond = cond;
+
+/*_*
+  CStoExtUInt32
+  @aref cstoextuint32 CStoExtUInt32
+*/
+#define CStoExtUInt32_exec(obj, name, in, cond) \
+  if ( cond && !obj->OldCond) { \
+    obj->LastStatus = gdh_SetObjectInfo( name, (void *)&in, sizeof(pwr_tUInt32)); \
+  } \
+  obj->OldCond = cond;
+
+/*_*
+  CStoExtUInt64
+  @aref cstoextuint64 CStoExtUInt64
+*/
+#define CStoExtUInt64_exec(obj, name, in, cond) \
+  if ( cond && !obj->OldCond) { \
+    obj->LastStatus = gdh_SetObjectInfo( name, (void *)&in, sizeof(pwr_tUInt64)); \
+  } \
+  obj->OldCond = cond;
+
+/*_*
+  CStoExtString
+  @aref cstoextstring CStoExtString
+*/
+#define CStoExtString_exec(obj, name, in, cond) \
+  if ( cond && !obj->OldCond) { \
+    obj->LastStatus = gdh_SetObjectInfo( name, (void *)&in, sizeof(pwr_tString80)); \
+  } \
+  obj->OldCond = cond;
+
+/*_*
+  CStoExtTime
+  @aref cstoexttime CStoExtTime
+*/
+#define CStoExtTime_exec(obj, name, in, cond) \
+  if ( cond && !obj->OldCond) { \
+    obj->LastStatus = gdh_SetObjectInfo( name, (void *)&in, sizeof(pwr_tTime)); \
   } \
   obj->OldCond = cond;
 
