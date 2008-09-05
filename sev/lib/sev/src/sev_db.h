@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: sev_db.h,v 1.1 2008-07-17 11:18:31 claes Exp $
+ * Proview   $Id: sev_db.h,v 1.2 2008-09-05 08:38:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,7 +28,7 @@
 
 class sev_item {
  public:
-  sev_item() {}
+  sev_item() : deleted(0) {}
   unsigned int 	id;
   char		tablename[256];
   pwr_tOid	oid;
@@ -43,6 +43,7 @@ class sev_item {
   pwr_tString80 description;
   pwr_tString16 unit;
   pwr_tFloat32  scantime;
+  int deleted;
 };
 
 
@@ -60,6 +61,7 @@ class sev_db {
 			pwr_tDeltaTime storagetime, pwr_eType type, unsigned int size, 
 			char *description, char *unit, pwr_tFloat32 scantime, unsigned int *idx) 
     { return 0;}
+  virtual int delete_item( pwr_tStatus *sts, pwr_tOid oid, char *aname) { return 0;}
   virtual int store_value( pwr_tStatus *sts, pwr_tOid oid, char *aname, pwr_eType type, 
 			   pwr_tTime time, void *buf, unsigned int size) { return 0;}
   virtual int get_values( pwr_tStatus *sts, pwr_tOid oid, char *aname, pwr_eType type, 

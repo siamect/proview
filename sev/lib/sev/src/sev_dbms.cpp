@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: sev_dbms.cpp,v 1.1 2008-07-17 11:18:31 claes Exp $
+ * Proview   $Id: sev_dbms.cpp,v 1.2 2008-09-05 08:38:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -446,6 +446,22 @@ int sev_dbms::create_table( pwr_tStatus *sts, pwr_tOid oid, char *aname, pwr_eTy
   return 1;
 }
 
+int sev_dbms::delete_table( pwr_tStatus *sts, pwr_tOid oid, char *aname)
+{
+  char query[200];
+
+  sprintf( query, "drop table %s;", 
+	   oid_to_table(oid, aname));
+
+  int rc = mysql_query( m_env->con(), query);
+  if (rc) {
+    printf( "Delete table: %s\n", mysql_error(m_env->con()));
+    *sts = SEV__DBERROR;
+    return 0;
+  }
+  return 1;
+}
+
 int sev_dbms::store_item( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, 
 			  char *aname, pwr_tDeltaTime storagetime, pwr_eType vtype, 
 			  unsigned int vsize, char *description, char *unit, pwr_tFloat32 scantime)
@@ -465,6 +481,23 @@ int sev_dbms::store_item( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char 
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
     printf( "Store item: %s\n", mysql_error(m_env->con()));
+    *sts = SEV__DBERROR;
+    return 0;
+  }
+
+  *sts = SEV__SUCCESS;
+  return 1;
+}
+
+int sev_dbms::remove_item( pwr_tStatus *sts, pwr_tOid oid, char *aname)
+{
+  char query[800];
+
+  sprintf( query, "delete from items where vid = %u and oix = %u and aname = '%s';",
+	   oid.vid, oid.oix, aname);
+  int rc = mysql_query( m_env->con(), query);
+  if (rc) {
+    printf( "Remove item: %s\n", mysql_error(m_env->con()));
     *sts = SEV__DBERROR;
     return 0;
   }
@@ -761,6 +794,9 @@ int sev_dbms::check_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *ana
   timestr[19] = 0;
 
   for ( unsigned int i = 0; i < m_items.size(); i++) {
+    if ( m_items[i].deleted)
+      continue;
+
     if ( cdh_ObjidIsEqual( oid, m_items[i].oid) && 
 	 cdh_NoCaseStrcmp( aname, m_items[i].aname) == 0) {
       char query[400];
@@ -827,6 +863,31 @@ int sev_dbms::add_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname
   *idx = m_items.size() - 1;
 
   *sts = SEV__SUCCESS;
+  return 1;
+}
+
+int sev_dbms::delete_item( pwr_tStatus *sts, pwr_tOid oid, char *aname)
+{
+  char tablename[256];
+
+  strcpy( tablename, oid_to_table( oid, aname));
+	  
+  remove_item( sts, oid, aname);
+  
+  if ( ODD(*sts))
+    delete_table( sts, oid, aname);
+
+  if ( ODD(*sts)) {
+    for ( int i = 0; i < (int)m_items.size(); i++) {
+      if ( m_items[i].deleted)
+	continue;
+      if ( cdh_ObjidIsEqual( m_items[i].oid, oid) &&
+	   cdh_NoCaseStrcmp( m_items[i].aname, aname) == 0) {
+	m_items[i].deleted = 1;
+	break;
+      }
+    }
+  }
   return 1;
 }
 

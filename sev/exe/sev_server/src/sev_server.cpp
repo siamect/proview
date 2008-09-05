@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: sev_server.cpp,v 1.1 2008-07-17 11:18:31 claes Exp $
+ * Proview   $Id: sev_server.cpp,v 1.2 2008-09-05 08:38:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,8 +22,10 @@
 #include "co_dcli.h"
 #include "co_time.h"
 #include "co_error.h"
+#include "co_cnf.h"
 #include "rt_qcom.h"
 #include "rt_qcom_msg.h"
+#include "rt_ini_event.h"
 #include "sev_server.h"
 #include "rt_sev_net.h"
 #include "sev_dbms.h"
@@ -37,6 +39,7 @@ int sev_server::init()
   pwr_tNid		nid;
   pwr_tStatus		sts;
   qcom_sAid		aid;
+  qcom_sQid 		qini;
 
   m_db->get_items( &m_sts);
 
@@ -61,15 +64,18 @@ int sev_server::init()
     if ( sts == QCOM__QALLREXIST) {
       if ( !qcom_AttachQ(&sts, &qid)) {
 	if ( !qcom_DeleteQ(&sts, &qid))
-	  co_error(sts);	     
+	  throw co_error(sts);	     
 	if ( !qcom_CreateQ(&sts, &qid, &attr, "SevServer"))
-	  co_error(sts);
+	  throw co_error(sts);
       }      
     }
     else
       throw co_error( sts);
   }
 
+  qini = qcom_cQini;
+  if (!qcom_Bind(&sts, &qid, &qini))
+    throw co_error(sts);
 
   // Get all qcom nodes
   qcom_MyNode( &m_sts, &node);
@@ -160,7 +166,12 @@ int sev_server::send_itemlist( qcom_sQid tgt)
   pwr_tStatus	sts, lsts;
   int		size;
 
-  item_cnt = m_db->m_items.size();
+  for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
+    if ( m_db->m_items[i].deleted)
+      continue;
+    item_cnt++;
+  }
+
   if ( !item_cnt)
     return 1;
 
@@ -171,19 +182,23 @@ int sev_server::send_itemlist( qcom_sQid tgt)
 
   ((sev_sMsgHistItems *)put.data)->Type = sev_eMsgType_HistItems;
 
+  int idx = 0;
   for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
-    ((sev_sMsgHistItems *)put.data)->Items[i].oid = m_db->m_items[i].oid;
-    strcpy( ((sev_sMsgHistItems *)put.data)->Items[i].oname, m_db->m_items[i].oname);
-    strcpy( ((sev_sMsgHistItems *)put.data)->Items[i].aname, m_db->m_items[i].aname);
-    ((sev_sMsgHistItems *)put.data)->Items[i].storagetime = m_db->m_items[i].storagetime;
-    ((sev_sMsgHistItems *)put.data)->Items[i].type = m_db->m_items[i].vtype;
-    ((sev_sMsgHistItems *)put.data)->Items[i].size = m_db->m_items[i].vsize;
-    strcpy( ((sev_sMsgHistItems *)put.data)->Items[i].description, m_db->m_items[i].description);
-    strcpy( ((sev_sMsgHistItems *)put.data)->Items[i].unit, m_db->m_items[i].unit);
-    ((sev_sMsgHistItems *)put.data)->Items[i].scantime = m_db->m_items[i].scantime;
+    if ( m_db->m_items[i].deleted)
+      continue;
+    ((sev_sMsgHistItems *)put.data)->Items[idx].oid = m_db->m_items[i].oid;
+    strcpy( ((sev_sMsgHistItems *)put.data)->Items[idx].oname, m_db->m_items[i].oname);
+    strcpy( ((sev_sMsgHistItems *)put.data)->Items[idx].aname, m_db->m_items[i].aname);
+    ((sev_sMsgHistItems *)put.data)->Items[idx].storagetime = m_db->m_items[i].storagetime;
+    ((sev_sMsgHistItems *)put.data)->Items[idx].type = m_db->m_items[i].vtype;
+    ((sev_sMsgHistItems *)put.data)->Items[idx].size = m_db->m_items[i].vsize;
+    strcpy( ((sev_sMsgHistItems *)put.data)->Items[idx].description, m_db->m_items[i].description);
+    strcpy( ((sev_sMsgHistItems *)put.data)->Items[idx].unit, m_db->m_items[i].unit);
+    ((sev_sMsgHistItems *)put.data)->Items[idx].scantime = m_db->m_items[i].scantime;
+    idx++;
   }
-
-  if ( m_db->m_items.size() == 0)
+  
+  if ( !item_cnt)
     ((sev_sMsgHistItems *)put.data)->Status = SEV__NOITEMS;
   else
     ((sev_sMsgHistItems *)put.data)->Status = SEV__SUCCESS;
@@ -192,6 +207,35 @@ int sev_server::send_itemlist( qcom_sQid tgt)
   put.reply.qix = sev_eProcSevServer;
   put.type.b = (qcom_eBtype) sev_cMsgClass;
   put.type.s = (qcom_eStype) sev_eMsgType_HistItems;
+  put.msg_id = m_msg_id++;
+
+  if ( !qcom_Put( &sts, &tgt, &put)) {
+    qcom_Free( &sts, put.data);
+    return 0;
+  }    
+  return 1;
+}
+
+int sev_server::delete_item( qcom_sQid tgt, sev_sMsgHistItemDelete *rmsg)
+{
+  qcom_sPut	put;
+  pwr_tStatus	sts, lsts;
+
+  put.size = sizeof(sev_sMsgHistItemStatus);
+  put.data = qcom_Alloc(&lsts, put.size);
+
+  m_db->delete_item( &sts, rmsg->Oid, rmsg->AName);
+
+  ((sev_sMsgHistItemStatus *)put.data)->Type = sev_eMsgType_HistItemStatus;
+
+  ((sev_sMsgHistItemStatus *)put.data)->Oid = rmsg->Oid;
+  strcpy( ((sev_sMsgHistItemStatus *)put.data)->AName, rmsg->AName);
+  ((sev_sMsgHistItemStatus *)put.data)->Status = sts;
+
+  put.reply.nid = m_nodes[0].nid;
+  put.reply.qix = sev_eProcSevServer;
+  put.type.b = (qcom_eBtype) sev_cMsgClass;
+  put.type.s = (qcom_eStype) sev_eMsgType_HistItemStatus;
   put.msg_id = m_msg_id++;
 
   if ( !qcom_Put( &sts, &tgt, &put)) {
@@ -250,9 +294,21 @@ int sev_server::mainloop()
       case sev_eMsgType_HistItemsRequest:
 	send_itemlist( get.reply);
 	break;
+      case sev_eMsgType_HistItemDelete:
+	delete_item( get.reply, (sev_sMsgHistItemDelete *) mp);
+	break;
       default: ;
       }
       break;
+    case qcom_eBtype_event: {
+      ini_mEvent  new_event;
+      qcom_sEvent *ep = (qcom_sEvent*) get.data;
+
+      new_event.m  = ep->mask;
+      if (new_event.b.terminate)
+	exit(0);
+      break;
+    }
     default: ;
     }
 
@@ -392,6 +448,8 @@ void sev_server::garbage_collector()
   clock_gettime( CLOCK_REALTIME, &currenttime);
   
   for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
+    if ( m_db->m_items[i].deleted)
+      continue;
     if ( m_db->m_items[i].storagetime.tv_sec == 0)
       continue;
 
@@ -407,6 +465,7 @@ int main()
 
   sev_dbms_env *env;
   pwr_tFileName envname;
+  char socket[200];
 
   sprintf( envname, "$pwrp_db/%s.db", sev_dbms_env::dbName());
   dcli_translate_filename( envname, envname);
@@ -414,8 +473,9 @@ int main()
   env = new sev_dbms_env( envname);
   env->open( envname);
   if ( !env->exists()) {
-    env->create( envname, "aristotle", "pwrp", "", sev_dbms_env::dbName(), 50, 
-		 "/var/run/mysqld/mysqld.sock");
+    cnf_get_value( "mysqlSocket", socket);
+    env->create( envname, "localhost", "pwrp", "", sev_dbms_env::dbName(), 50, 
+		 socket);
 
     env->open( envname);
 

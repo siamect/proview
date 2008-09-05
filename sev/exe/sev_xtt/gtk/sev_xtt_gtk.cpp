@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: sev_xtt_gtk.cpp,v 1.1 2008-07-17 11:18:31 claes Exp $
+ * Proview   $Id: sev_xtt_gtk.cpp,v 1.2 2008-09-05 08:38:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -18,15 +18,25 @@
  */
 
 
+#include <fstream.h>
+#include <vector.h>
 #include <gtk/gtk.h>
 
 #include "pwr.h"
 #include "pwr_class.h"
-#include "xtt_tbl_gtk.h"
 #include "co_error.h"
 #include "rt_qcom.h"
 #include "rt_errh.h"
 #include "rt_sevcli.h"
+#include "xtt_tbl_gtk.h"
+
+void tbl_close_cb( void *tbl)
+{
+  XttTblGtk *xtttbl = (XttTblGtk *)tbl;
+
+  delete xtttbl;
+  exit(0);
+}
 
 int main(  int argc, char *argv[])
 {
@@ -49,17 +59,24 @@ int main(  int argc, char *argv[])
   if ( EVEN(sts)) co_error(sts);
 
   sevcli_init( &sts, &sevcli);
-  if ( EVEN(sts)) co_error(sts);
+  if ( EVEN(sts)) {
+    printf( "Sev client init error %u\n", sts);
+    exit(0);
+  }
 
   if ( strcmp(servername, "") != 0)
     sevcli_set_servernode( &sts, sevcli, servername);
 
   sevcli_get_itemlist( &sts, sevcli, &items, &itemcnt);
-  if ( EVEN(sts)) co_error(sts);
+  if ( EVEN(sts)) {
+    printf( "Sev client get itemlist error %u\n", sts);
+    exit(0);
+  }
 
   gtk_init( &argc, &argv);
 
-  new XttTblGtk( 0, 0, sevcli, items, itemcnt);
+  XttTblGtk *tbl = new XttTblGtk( 0, 0, sevcli, items, itemcnt);
+  tbl->close_cb = tbl_close_cb;
 
   gtk_main();
   return 1;

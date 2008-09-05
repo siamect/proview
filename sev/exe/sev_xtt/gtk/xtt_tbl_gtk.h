@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_tbl_gtk.h,v 1.1 2008-07-17 11:18:31 claes Exp $
+ * Proview   $Id: xtt_tbl_gtk.h,v 1.2 2008-09-05 08:38:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,6 +26,8 @@
 
 /* ge_tbl.h -- Ge tblibute editor */
 
+class CoWowRecall;
+class CoWowEntryGtk;
 
 class XttTblGtk : public XttTbl {
   public:
@@ -40,10 +42,37 @@ class XttTblGtk : public XttTbl {
     GtkWidget	*form_widget;
     GtkWidget	*toplevel;
     GtkWidget	*msg_label;
+    GtkWidget	*cmd_prompt;
+    GtkWidget	*cmd_input;
     GtkWidget	*pane;
+    CoWowRecall *cmd_recall;
+    CoWowEntryGtk *cmd_entry;
 
     void message( char severity, char *message);
     XttDsHist *dshist_new( pwr_tOid oid, char *aname);
+    CoLogin *login_new( char		*wl_name,
+			char		*wl_groupname,
+			void		(* wl_bc_success)( void *),
+			void		(* wl_bc_cancel)( void *),
+			pwr_tStatus  	*status);
+    void set_prompt( char *prompt);
+
+    static void activate_command( GtkWidget *w, gpointer data);
+    static void valchanged_cmd_input( GtkWidget *w, gpointer data);
+    static void activate_print( GtkWidget *w, gpointer data);
+    static void activate_login( GtkWidget *w, gpointer data);
+    static void activate_logout( GtkWidget *w, gpointer data);
+    static void activate_close( GtkWidget *w, gpointer data);
+    static void activate_opendshist( GtkWidget *w, gpointer data);
+    static void activate_delete_item( GtkWidget *w, gpointer data);
+    static void activate_tree_layout( GtkWidget *w, gpointer data);
+    static void activate_list_layout( GtkWidget *w, gpointer data);
+    static void activate_zoom_in( GtkWidget *w, gpointer data);
+    static void activate_zoom_out( GtkWidget *w, gpointer data);
+    static void activate_zoom_reset( GtkWidget *w, gpointer data);
+    static void activate_help( GtkWidget *w, gpointer data);
+    static void activate_help_project( GtkWidget *w, gpointer data);
+    static void activate_help_proview( GtkWidget *w, gpointer data);
     
     ~XttTblGtk();
 };

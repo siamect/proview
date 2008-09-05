@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: sev_server.h,v 1.1 2008-07-17 11:18:31 claes Exp $
+ * Proview   $Id: sev_server.h,v 1.2 2008-09-05 08:38:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -88,6 +88,7 @@ class sev_server {
   int receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size);
   int send_histdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *msg, unsigned int size);
   int send_itemlist( qcom_sQid tgt);
+  int delete_item( qcom_sQid tgt, sev_sMsgHistItemDelete *rmsg);
   void garbage_collector();
 };
 #endif
