@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attrnav.cpp,v 1.20 2008-04-14 07:02:30 claes Exp $
+ * Proview   $Id: ge_attrnav.cpp,v 1.21 2008-09-05 09:17:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -828,8 +828,8 @@ static attrnav_sEnumElement elem_adjustment[] = {
 
 static attrnav_sEnumElement elem_font[] = {
 	{ (int) glow_eFont_Helvetica, "Helvetica"},
-	{ (int) glow_eFont_Courier, "Times"},
-	{ (int) glow_eFont_Courier, "New Century Schoolbook"},
+	{ (int) glow_eFont_Times, "Times"},
+	{ (int) glow_eFont_NewCenturySchoolbook, "New Century Schoolbook"},
 	{ (int) glow_eFont_Courier, "Courier"},
 	{ 0, ""}};
 
