@@ -424,6 +424,7 @@ topobjects ProjectNavigatorW2
   class $System
   class NodeConfig
   class FriendNodeConfig
+  class SevNodeConfig
   class BusConfig
 }
 
@@ -452,6 +453,7 @@ palette ProjectNavigatorPalette
     class NodeConfig
     class $NodeHier
     class RootVolumeLoad
+    class SevNodeConfig
     class SharedVolumeLoad
     class SubVolumeLoad
     class $System

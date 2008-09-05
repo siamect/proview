@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_i_base_methods.cpp,v 1.2 2007-01-30 07:13:02 claes Exp $
+ * Proview   $Id: wb_i_base_methods.cpp,v 1.3 2008-09-05 09:06:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -56,6 +56,7 @@ pwr_dImport pwr_BindMethods(WebHandler);
 pwr_dImport pwr_BindMethods(PlcProcess);
 pwr_dImport pwr_BindMethods(PlcThread);
 pwr_dImport pwr_BindMethods(NodeConfig);
+pwr_dImport pwr_BindMethods(SevNodeConfig);
 pwr_dImport pwr_BindMethods(Application);
 
 pwr_dExport pwr_BindClasses(Base) = {
@@ -94,6 +95,7 @@ pwr_dExport pwr_BindClasses(Base) = {
   pwr_BindClass(PlcProcess),
   pwr_BindClass(PlcThread),
   pwr_BindClass(NodeConfig),
+  pwr_BindClass(SevNodeConfig),
   pwr_BindClass(Application),
   pwr_NullClass
 };

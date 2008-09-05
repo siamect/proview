@@ -33,4 +33,5 @@ WebHandler
 PlcProcess
 PlcThread
 NodeConfig
+SevNodeConfig
 Application
