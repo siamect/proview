@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_mvol.c,v 1.20 2008-06-24 07:12:33 claes Exp $
+ * Proview   $Id: rt_mvol.c,v 1.21 2008-09-05 14:06:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -948,7 +948,7 @@ static void insertCattObject( pwr_tStatus *sts, pwr_tCid cid, gdb_sAttribute *ap
 	itemr = ptree_Insert( sts, gdbroot->catt_tt, &key);
 	item = (gdb_sClassAttr *) pool_Address( sts, gdbroot->pool, itemr);
 	if ( item == NULL) return;
-	item->offset[item->numOffset] = offset + ap->offs;
+	item->offset[item->numOffset] = offset + ap->offs + j * ap->size / ap->elem;
 	item->flags[item->numOffset++] = ap->flags;
       }
 
