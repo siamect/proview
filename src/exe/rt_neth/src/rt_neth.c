@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_neth.c,v 1.15 2008-06-24 06:57:36 claes Exp $
+ * Proview   $Id: rt_neth.c,v 1.16 2008-09-05 08:56:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -255,6 +255,9 @@ addNodes (void)
   gdb_AssumeUnlocked;
 
   for (nid = qcom_cNNid; qcom_NextNode(&sts, &node, nid); nid = node.nid) {
+    if ( node.connection != qcom_eNodeConnectionFull)
+      continue;
+
     np = addNode(&node);
     if (node.flags.b.connected)
       connectNode(np);
@@ -629,6 +632,8 @@ linkConnect (
 
   gdb_AssumeUnlocked;
 
+  if ( node->connection != qcom_eNodeConnectionFull)
+    return;
   np = addNode(node);
   connectNode(np);
 
