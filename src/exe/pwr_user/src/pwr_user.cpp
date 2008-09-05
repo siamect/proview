@@ -60,7 +60,7 @@ dcli_tCmdTable	user_command_table[] = {
 			  "/operator4", "/operator5", "/operator6", 
 			  "/operator7", "/operator8", "/operator9", 
 			  /* "/oper10",*/ "/devread", "/devplc", 
-			  "/devconfig", "/devclass",
+			  "/devconfig", "/devclass", "/sevread", "/sevadmin",
 			  "/nortread", "/nortwrite", "/nortevents", 
 			  "/nosystem", 
 			  "/nomaintenance", "/noprocess", "/noinstrument", 
@@ -68,7 +68,7 @@ dcli_tCmdTable	user_command_table[] = {
 			  "/nooperator4", "/nooperator5", "/nooperator6", 
 			  "/nooperator7", "/nooperator8", "/nooperator9", 
 			  /* "/nooper10",*/ "/nodevread", "/nodevplc", 
-			  "/nodevconfig", "/nodevclass",
+			  "/nodevconfig", "/nodevclass", "/nosevread", "/nosevadmin",
 			  "/nouserinherit", "/userinherit",
 			  ""}
 		},
@@ -84,7 +84,7 @@ dcli_tCmdTable	user_command_table[] = {
 			  "/operator4", "/operator5", "/operator6", 
 			  "/operator7", "/operator8", "/operator9", 
 			  "/oper10", "/devread", "/devplc", 
-			  "/devconfig", "/devclass", 
+			  "/devconfig", "/devclass", "/sevread", "/sevadmin",
 			  "/nouserinherit", "/userinherit",
 			  ""}
 		},
@@ -197,7 +197,7 @@ static int	user_help_func(	void		*client_data,
 "	/process /instrument /operator1 /operator2" << endl <<
 "	/operator3 /operator4 /operator5 /operator6" << endl <<
 "	/operator7 /operator8 /operator9 /oper10" << endl <<
-"	/devread /devplc /devconfig /devclass" << endl <<
+"	/devread /devplc /devconfig /devclass /sevread /sevadmin" << endl <<
 "	[/privilge=] " << endl << endl;
   }
   else if ( strncmp( arg1_str, "remove", strlen( arg1_str)) == 0)
@@ -217,7 +217,7 @@ static int	user_help_func(	void		*client_data,
 "	/process /instrument /operator1 /operator2" << endl <<
 "	/operator3 /operator4 /operator5 /operator6" << endl <<
 "	/operator7 /operator8 /operator9 /oper10" << endl <<
-"	/devread /devplc /devconfig /devclass" << endl <<
+"	/devread /devplc /devconfig /devclass /sevread /sevadmin" << endl <<
 "	[/privilge=] " << endl << endl;
   }
   else if ( strncmp( arg1_str, "get", strlen( arg1_str)) == 0)
@@ -405,6 +405,10 @@ static int	user_add_func(	void		*client_data,
       privilege |= pwr_mPrv_DevConfig;
     if ( ODD( dcli_get_qualifier( "/devclass", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_DevClass;
+    if ( ODD( dcli_get_qualifier( "/sevread", privilege_str, sizeof(privilege_str))))
+      privilege |= pwr_mPrv_SevRead;
+    if ( ODD( dcli_get_qualifier( "/sevadmin", privilege_str, sizeof(privilege_str))))
+      privilege |= pwr_mPrv_SevAdmin;
     if ( privilege == 0)
     {
       if ( EVEN( dcli_get_qualifier( "/privilege", privilege_str, sizeof(privilege_str))))
@@ -579,6 +583,7 @@ static int	user_modify_func( void		*client_data,
     if ( ODD( dcli_get_qualifier( "/password", p_str, sizeof(p_str)))) {
       strcpy( password_str, p_str);
       cdh_ToLower( password_str, password_str);
+      strcpy( password_str, UserList::pwcrypt(password_str));
     }
     if ( EVEN( dcli_get_qualifier( "/description", description_str, sizeof(description_str))))
       description_p = 0;
@@ -633,6 +638,10 @@ static int	user_modify_func( void		*client_data,
       privilege |= pwr_mPrv_DevConfig;
     if ( ODD( dcli_get_qualifier( "/devclass", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_DevClass;
+    if ( ODD( dcli_get_qualifier( "/sevread", privilege_str, sizeof(privilege_str))))
+      privilege |= pwr_mPrv_SevRead;
+    if ( ODD( dcli_get_qualifier( "/sevadmin", privilege_str, sizeof(privilege_str))))
+      privilege |= pwr_mPrv_SevAdmin;
 
     if ( ODD( dcli_get_qualifier( "/nortread", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_RtRead;
@@ -676,6 +685,10 @@ static int	user_modify_func( void		*client_data,
       privilege &= ~pwr_mPrv_DevConfig;
     if ( ODD( dcli_get_qualifier( "/nodevclass", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_DevClass;
+    if ( ODD( dcli_get_qualifier( "/nosevread", privilege_str, sizeof(privilege_str))))
+      privilege &= ~pwr_mPrv_SevRead;
+    if ( ODD( dcli_get_qualifier( "/nosevadmin", privilege_str, sizeof(privilege_str))))
+      privilege &= ~pwr_mPrv_SevAdmin;
 
     if ( privilege == 0)
     {
@@ -692,7 +705,7 @@ static int	user_modify_func( void		*client_data,
       }
     }
 
-    sts = gu->modify_user( system_str, user_str, UserList::pwcrypt(password_str), privilege, fullname_p, description_p,
+    sts = gu->modify_user( system_str, user_str, password_str, privilege, fullname_p, description_p,
 			   email_p, phone_p, sms_p);
     cout << gu->get_status(sts) << endl;
   }
