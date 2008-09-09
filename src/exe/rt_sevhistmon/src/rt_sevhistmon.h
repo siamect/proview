@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_sevhistmon.h,v 1.1 2008-07-17 11:33:09 claes Exp $
+ * Proview   $Id: rt_sevhistmon.h,v 1.2 2008-09-09 11:24:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,21 +17,23 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef rt_dshistmon_h
-#define rt_dshistmon_h
+#ifndef rt_sevhistmon_h
+#define rt_sevhistmon_h
 
 #include <vector.h>
 
 #include "pwr.h"
 #include "pwr_class.h"
 
-class sev_dshist {
+class sev_sevhist {
  public:
   pwr_tAttrRef 	aref;
   pwr_tAName	aname;
   pwr_tRefId	refid;
   void 		*datap;
   pwr_tDeltaTime storagetime;
+  pwr_tFloat32  deadband;
+  pwr_tBoolean  hightimeres;
   pwr_eType	type;
   unsigned int	size;
   pwr_tRefId	sevid;
@@ -40,14 +42,14 @@ class sev_dshist {
   pwr_tFloat32  scantime;
 };
 
-class sev_dshistthread {
+class sev_sevhistthread {
  public:
   pwr_tOid oid;
   pwr_tFloat32 scantime;
   char nodename[80];
   pwr_tNid nid;
   unsigned int size;
-  vector<sev_dshist> dshistlist;  
+  vector<sev_sevhist> sevhistlist;  
 };
 
 class sev_node {
@@ -56,13 +58,13 @@ class sev_node {
   char 		name[80];
 };
 
-class rt_dshistmon {
+class rt_sevhistmon {
  public:
 
-  rt_dshistmon() : m_msg_id(0), m_next_rix(0), m_loopcnt(0) {}
+  rt_sevhistmon() : m_msg_id(0), m_next_rix(0), m_loopcnt(0) {}
 
   pwr_tStatus m_sts;
-  vector<sev_dshistthread> m_hs;
+  vector<sev_sevhistthread> m_hs;
   vector<sev_node> m_nodes;
   unsigned int m_msg_id;
   unsigned int m_next_rix;

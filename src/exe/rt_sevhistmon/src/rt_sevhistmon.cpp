@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_sevhistmon.cpp,v 1.1 2008-07-17 11:33:09 claes Exp $
+ * Proview   $Id: rt_sevhistmon.cpp,v 1.2 2008-09-09 11:24:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,13 +27,13 @@
 #include "rt_qcom.h"
 #include "rt_qcom_msg.h"
 #include "rt_errh.h"
-#include "rt_dshistmon.h"
+#include "rt_sevhistmon.h"
 #include "rt_sev_net.h"
 #include "rt_sev_msg.h"
 
 #define sevclient_cQix 121
 
-int rt_dshistmon::init()
+int rt_sevhistmon::init()
 {
   pwr_tStatus sts;
   pwr_tOid hs_oid;
@@ -46,7 +46,7 @@ int rt_dshistmon::init()
   qcom_sNode		node;
   pwr_tNid		nid;
   
-  sts = gdh_Init( "rt_dshistmon");
+  sts = gdh_Init( "rt_sevhistmon");
 
   // Create a queue to server
   qcom_sQattr attr;
@@ -86,12 +86,12 @@ int rt_dshistmon::init()
     m_nodes.push_back( n);
   }
 
-  // Get all DsHist and DsHistThread objects
-  for ( sts = gdh_GetClassList( pwr_cClass_DsHistThread, &hs_oid);
+  // Get all SevHist and SevHistThread objects
+  for ( sts = gdh_GetClassList( pwr_cClass_SevHistThread, &hs_oid);
 	ODD(sts);
 	sts = gdh_GetNextObject( hs_oid, &hs_oid)) {
-    sev_dshistthread hs;
-    pwr_sClass_DsHistThread *hs_p;
+    sev_sevhistthread hs;
+    pwr_sClass_SevHistThread *hs_p;
   
     m_sts = gdh_ObjidToPointer( hs_oid, (void **)&hs_p);
     if ( EVEN(m_sts)) throw co_error(m_sts);
@@ -122,11 +122,11 @@ int rt_dshistmon::init()
     m_hs.push_back( hs);
   }
 
-  for ( sts = gdh_GetClassListAttrRef( pwr_cClass_DsHist, &h_aref);
+  for ( sts = gdh_GetClassListAttrRef( pwr_cClass_SevHist, &h_aref);
 	ODD(sts);
-	sts = gdh_GetNextAttrRef( pwr_cClass_DsHist, &h_aref, &h_aref)) {
-    sev_dshist h;
-    pwr_sClass_DsHist *h_p;
+	sts = gdh_GetNextAttrRef( pwr_cClass_SevHist, &h_aref, &h_aref)) {
+    sev_sevhist h;
+    pwr_sClass_SevHist *h_p;
     int hs_idx;
     
     m_sts = gdh_AttrRefToPointer( &h_aref, (void **)&h_p);
@@ -151,13 +151,15 @@ int rt_dshistmon::init()
     
     m_sts = gdh_GetAttributeCharAttrref( &h_p->Attribute, &a_tid, &a_size, &a_offset, &a_dim);
     if ( EVEN(m_sts)) {
-      errh_Error( "Invalid DsHist Attribute %s", hname);
+      errh_Error( "Invalid SevHist Attribute %s", hname);
       continue;
     }
 
     h.sevid.nid = m_nodes[0].nid;
     h.sevid.rix = m_next_rix++;
     h.storagetime = h_p->StorageTime;
+    h.deadband = h_p->DeadBand;
+    h.hightimeres = h_p->HighTimeResolution;
     strncpy( h.description, h_p->Description, sizeof(h.description));
 
     // Get unit from attribute object
@@ -189,7 +191,7 @@ int rt_dshistmon::init()
     case pwr_eType_Time:
       break;
     default:
-      errh_Error( "Invalid DsHist Attribute type %s", hname);
+      errh_Error( "Invalid SevHist Attribute type %s", hname);
       continue;
     }
     m_sts = gdh_AttrrefToName( &h_p->Attribute, h.aname, sizeof(h.aname), cdh_mName_volumeStrict);
@@ -201,7 +203,7 @@ int rt_dshistmon::init()
       continue;
     }
     m_hs[hs_idx].size += h.size;
-    m_hs[hs_idx].dshistlist.push_back(h);
+    m_hs[hs_idx].sevhistlist.push_back(h);
   }
 
   connect();
@@ -209,18 +211,18 @@ int rt_dshistmon::init()
   return 1;
 }
 
-int rt_dshistmon::close()
+int rt_sevhistmon::close()
 {
   for ( unsigned int i = 0; i < m_hs.size(); i++) {
-    for ( unsigned int j = 0; j < m_hs[i].dshistlist.size(); j++)
-      gdh_UnrefObjectInfo( m_hs[i].dshistlist[j].refid);
+    for ( unsigned int j = 0; j < m_hs[i].sevhistlist.size(); j++)
+      gdh_UnrefObjectInfo( m_hs[i].sevhistlist[j].refid);
   }
   m_hs.clear();
   return 1;
 }
 
 
-int rt_dshistmon::send_data()
+int rt_sevhistmon::send_data()
 {
   qcom_sQid   	tgt;
   qcom_sPut	put;
@@ -235,7 +237,7 @@ int rt_dshistmon::send_data()
     if ( !stime || m_loopcnt % stime != 0)
       continue;
 	   
-    msize = m_hs[i].dshistlist.size() * (sizeof(*dp) - sizeof(dp->data)) + m_hs[i].size; 
+    msize = m_hs[i].sevhistlist.size() * (sizeof(*dp) - sizeof(dp->data)) + m_hs[i].size; 
     msize += sizeof(*msg) - sizeof(msg->Data);
 
     msg = (sev_sMsgHistDataStore *) qcom_Alloc(&lsts, msize);
@@ -247,11 +249,11 @@ int rt_dshistmon::send_data()
     clock_gettime( CLOCK_REALTIME, &msg->Time);
 
     dp = (sev_sHistData *) &msg->Data;
-    for ( unsigned int j = 0; j < m_hs[i].dshistlist.size(); j++) {
-      dp->sevid = m_hs[i].dshistlist[j].sevid;
-      dp->type = m_hs[i].dshistlist[j].type;
-      dp->size = m_hs[i].dshistlist[j].size;
-      memcpy( &dp->data, m_hs[i].dshistlist[j].datap, dp->size);
+    for ( unsigned int j = 0; j < m_hs[i].sevhistlist.size(); j++) {
+      dp->sevid = m_hs[i].sevhistlist[j].sevid;
+      dp->type = m_hs[i].sevhistlist[j].type;
+      dp->size = m_hs[i].sevhistlist[j].size;
+      memcpy( &dp->data, m_hs[i].sevhistlist[j].datap, dp->size);
       dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
     }
 
@@ -272,7 +274,7 @@ int rt_dshistmon::send_data()
   return 1;
 }
 
-int rt_dshistmon::connect()
+int rt_sevhistmon::connect()
 {
   sev_sMsgAny 	*msg;
   qcom_sQid   	tgt;
@@ -314,7 +316,7 @@ int rt_dshistmon::connect()
   return 1;
 }
 
-int rt_dshistmon::send_itemlist( pwr_tNid nid)
+int rt_sevhistmon::send_itemlist( pwr_tNid nid)
 {
   int item_cnt = 0;
   qcom_sQid   	tgt;
@@ -327,7 +329,7 @@ int rt_dshistmon::send_itemlist( pwr_tNid nid)
   // Count items for this node
   for ( unsigned int i = 0; i < m_hs.size(); i++) {
     if ( nid == m_hs[i].nid)
-      item_cnt += m_hs[i].dshistlist.size();
+      item_cnt += m_hs[i].sevhistlist.size();
   }
 
   if ( item_cnt == 0)
@@ -344,26 +346,28 @@ int rt_dshistmon::send_itemlist( pwr_tNid nid)
   int k = 0;
   for ( unsigned int i = 0; i < m_hs.size(); i++) {
     if ( nid == m_hs[i].nid) {
-      for ( unsigned int j = 0; j < m_hs[i].dshistlist.size(); j++) {
-	((sev_sMsgHistItems *)put.data)->Items[k].oid = m_hs[i].dshistlist[j].aref.Objid;
-	strcpy( aname, m_hs[i].dshistlist[j].aname); 
+      for ( unsigned int j = 0; j < m_hs[i].sevhistlist.size(); j++) {
+	((sev_sMsgHistItems *)put.data)->Items[k].oid = m_hs[i].sevhistlist[j].aref.Objid;
+	strcpy( aname, m_hs[i].sevhistlist[j].aname); 
 	s = strchr( aname, '.');
 	if ( !s)
 	  continue;
 	*s = 0;
 	strcpy( ((sev_sMsgHistItems *)put.data)->Items[k].oname, aname);
-	strcpy( ((sev_sMsgHistItems *)put.data)->Items[k].aname, s + 1);
-	((sev_sMsgHistItems *)put.data)->Items[k].storagetime = m_hs[i].dshistlist[j].storagetime;
-	((sev_sMsgHistItems *)put.data)->Items[k].type = m_hs[i].dshistlist[j].type;
-	((sev_sMsgHistItems *)put.data)->Items[k].size = m_hs[i].dshistlist[j].size;
-	((sev_sMsgHistItems *)put.data)->Items[k].sevid = m_hs[i].dshistlist[j].sevid;
+	strcpy( ((sev_sMsgHistItems *)put.data)->Items[k].attr[0].aname, s + 1);
+	((sev_sMsgHistItems *)put.data)->Items[k].storagetime = m_hs[i].sevhistlist[j].storagetime;
+	((sev_sMsgHistItems *)put.data)->Items[k].deadband = m_hs[i].sevhistlist[j].deadband;
+	((sev_sMsgHistItems *)put.data)->Items[k].hightimeres = m_hs[i].sevhistlist[j].hightimeres;
+	((sev_sMsgHistItems *)put.data)->Items[k].attr[0].type = m_hs[i].sevhistlist[j].type;
+	((sev_sMsgHistItems *)put.data)->Items[k].attr[0].size = m_hs[i].sevhistlist[j].size;
+	((sev_sMsgHistItems *)put.data)->Items[k].sevid = m_hs[i].sevhistlist[j].sevid;
 	strncpy( ((sev_sMsgHistItems *)put.data)->Items[k].description,
-		 m_hs[i].dshistlist[j].description, 
+		 m_hs[i].sevhistlist[j].description, 
 		 sizeof(((sev_sMsgHistItems *)put.data)->Items[0].description));
-	strncpy( ((sev_sMsgHistItems *)put.data)->Items[k].unit,
-		 m_hs[i].dshistlist[j].unit, 
-		 sizeof(((sev_sMsgHistItems *)put.data)->Items[0].unit));
-	((sev_sMsgHistItems *)put.data)->Items[k].scantime = m_hs[i].dshistlist[j].scantime;
+	strncpy( ((sev_sMsgHistItems *)put.data)->Items[k].attr[0].unit,
+		 m_hs[i].sevhistlist[j].unit, 
+		 sizeof(((sev_sMsgHistItems *)put.data)->Items[0].attr[0].unit));
+	((sev_sMsgHistItems *)put.data)->Items[k].scantime = m_hs[i].sevhistlist[j].scantime;
 	k++;
       }
     }
@@ -386,7 +390,7 @@ int rt_dshistmon::send_itemlist( pwr_tNid nid)
   return 1;
 }
 
-int rt_dshistmon::mainloop()
+int rt_sevhistmon::mainloop()
 {
   qcom_sQid qid;
   int tmo = 1000;
@@ -426,7 +430,7 @@ int rt_dshistmon::mainloop()
 
 int main()
 {
-  rt_dshistmon client;
+  rt_sevhistmon client;
 
   client.init();
 
