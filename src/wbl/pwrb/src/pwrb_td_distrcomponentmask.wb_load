@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_td_distrcomponentmask.wb_load,v 1.4 2008-06-26 13:15:43 claes Exp $
+!  Proview   $Id: pwrb_td_distrcomponentmask.wb_load,v 1.5 2008-09-09 10:30:05 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -87,7 +87,7 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  All Ge graph files $pwrp_pop/*.pwg are included.
+    !  All Ge graph files $pwrp_exe/*.pwg are included.
     !*/
     Object GraphFiles $Bit
      Body SysBody

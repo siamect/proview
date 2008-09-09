@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_distribute.wb_load,v 1.6 2005-09-01 14:58:01 claes Exp $
+!  Proview   $Id: pwrb_c_distribute.wb_load,v 1.7 2008-09-09 10:30:05 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -51,7 +51,7 @@ SObject pwrb:Class
 ! @b IncludeFiles
 !  All includefiles in $pwrp_inc is included.
 ! @b GraphFiles
-!  All Ge graph files $pwrp_pop/*.pwg are included.
+!  All Ge graph files $pwrp_exe/*.pwg are included.
 ! @b XttHelpFile
 !  The xtt help file is included. The source file is fetched from
 !     1. $pwrp_src/'nodename'/xtt_help.dat
