@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_sevcli.c,v 1.2 2008-09-05 09:00:37 claes Exp $
+ * Proview   $Id: rt_sevcli.c,v 1.3 2008-09-09 11:27:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -159,13 +159,18 @@ int sevcli_get_itemlist( pwr_tStatus *sts, sevcli_tCtx ctx, sevcli_sHistItem **l
   for ( i = 0; i < item_cnt; i++) {
     lp[i].oid = rmsg->Items[i].oid;
     strncpy( lp[i].oname, rmsg->Items[i].oname, sizeof(lp[0].oname));
-    strncpy( lp[i].aname, rmsg->Items[i].aname, sizeof(lp[0].aname));
     lp[i].storagetime = rmsg->Items[i].storagetime;
-    lp[i].type = rmsg->Items[i].type;
-    lp[i].size = rmsg->Items[i].size;
+    lp[i].deadband = rmsg->Items[i].deadband;
+    lp[i].hightimeres = rmsg->Items[i].hightimeres;
+    lp[i].creatime = rmsg->Items[i].creatime;
+    lp[i].modtime = rmsg->Items[i].modtime;
     strncpy( lp[i].description, rmsg->Items[i].description, sizeof(lp[0].description));
-    strncpy( lp[i].unit, rmsg->Items[i].unit, sizeof(lp[0].unit));
     lp[i].scantime = rmsg->Items[i].scantime;
+    lp[i].attrnum = 1;
+    lp[i].attr[0].type = rmsg->Items[i].attr[0].type;
+    lp[i].attr[0].size = rmsg->Items[i].attr[0].size;
+    strncpy( lp[i].attr[0].aname, rmsg->Items[i].attr[0].aname, sizeof(lp[0].attr[0].aname));
+    strncpy( lp[i].attr[0].unit, rmsg->Items[i].attr[0].unit, sizeof(lp[0].attr[0].unit));
   }
 
   qcom_Free( sts, rmsg);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_sev_net.h,v 1.2 2008-09-05 09:00:19 claes Exp $
+ * Proview   $Id: rt_sev_net.h,v 1.3 2008-09-09 11:27:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -43,16 +43,26 @@ typedef enum {
 } sev_eMsgType;  
 
 typedef struct {
-  pwr_tOid oid;
-  pwr_tOName oname;
   pwr_tOName aname;
-  pwr_tDeltaTime storagetime;
   pwr_eType type;
   unsigned int size;
+  unsigned int elem;
+  pwr_tString16 unit;
+} sev_sHistAttr;
+
+typedef struct {
+  pwr_tOid oid;
+  pwr_tOName oname;
+  pwr_tDeltaTime storagetime;
+  pwr_tTime creatime;
+  pwr_tTime modtime;
   pwr_tRefId sevid;
   pwr_tString80 description;
-  pwr_tString16 unit;
   pwr_tFloat32 scantime;
+  pwr_tFloat32 deadband;
+  pwr_tBoolean hightimeres;
+  unsigned int attrnum;
+  sev_sHistAttr attr[1];
 } sev_sHistItem;
 
 typedef struct {
@@ -71,7 +81,7 @@ typedef struct {
 typedef struct {
   sev_eMsgType         Type;
   pwr_tStatus	       Status;
-  sev_sHistItem	       Items[1];	
+  sev_sHistItem	       Items[1];
 } sev_sMsgHistItems;
 
 typedef struct {

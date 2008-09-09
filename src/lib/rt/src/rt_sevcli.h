@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_sevcli.h,v 1.2 2008-09-05 09:00:37 claes Exp $
+ * Proview   $Id: rt_sevcli.h,v 1.3 2008-09-09 11:27:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,15 +42,26 @@ typedef struct {
 } sevcli_sCtx, *sevcli_tCtx;
 
 typedef struct {
-  pwr_tOid 	oid;
-  pwr_tAName	oname;
   pwr_tAName	aname;
-  pwr_tDeltaTime storagetime;
   pwr_eType	type;
   unsigned int	size;
-  pwr_tString80 description;
+  unsigned int  elem;
   pwr_tString16 unit;
+}
+sevcli_sHistAttr;
+
+typedef struct {
+  pwr_tOid 	oid;
+  pwr_tAName	oname;
+  pwr_tDeltaTime storagetime;
+  pwr_tTime	creatime;
+  pwr_tTime	modtime;
+  pwr_tString80 description;
   pwr_tFloat32  scantime;
+  pwr_tFloat32  deadband;
+  pwr_tBoolean  hightimeres;
+  unsigned int  attrnum;
+  sevcli_sHistAttr attr[1];
 } sevcli_sHistItem;
 
 
