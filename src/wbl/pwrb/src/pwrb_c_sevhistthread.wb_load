@@ -1,0 +1,81 @@
+! 
+!  Proview   $Id: pwrb_c_sevhistthread.wb_load,v 1.1 2008-09-09 11:30:00 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_c_sevhistthread.wb_load -- Defines the class SevHistThread.
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Group Servers,NodeConfiguration
+!  Configures a thread in the SevHist monitor process, with a 
+!  specific scantime and database server node.
+!  
+!  The SevHist monitor process keeps track of all SevHist objects
+!  in the current node. The process is divided into threads that 
+!  collect data with a specific scantime and sends to the specified
+!  database server. The threads are specified by SevHistThread objects
+!  that reside under the SevHistMonitor object in the node hierarchy.
+!
+! @b See also
+!  @classlink SevHist pwrb_sevhist.html
+!  @classlink SevHistMonitor pwrb_sevhistmonitor.html
+!  @classlink SevHistServer pwrb_sevhistserver.html
+!*/
+  Object SevHistThread $ClassDef 107 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "SevHistThread"
+      EndBody
+      !/**
+      !  Optional description.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  The name of the node where the data is stored.
+      !  The SevHistServer has to be started on this node.
+      !*/
+      Object ServerNode $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies, in seconds, the time between two samples.
+      !  The minimum allowed value is 1 seconds.
+      !*/
+      Object ScanTime $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+    EndObject
+    Object Template SevHistThread
+      Body RtBody
+        Attr ScanTime = 10
+      EndBody
+    EndObject
+  EndObject
+EndSObject

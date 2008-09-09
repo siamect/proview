@@ -1,0 +1,60 @@
+! 
+!  Proview   $Id: pwrb_c_sevserver.wb_load,v 1.1 2008-09-09 11:30:00 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_c_sevserver.wb_load -- Defines the class SevServer.
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Group Servers,NodeConfiguration
+!  Configures the Sev server process.
+!  
+!  Configures the server process for historical data storage.
+!  
+!  This object is used when the server is started on a node with
+!  the runtime environment started.
+!  The the server can also be started without the runtime
+!  environment, but with the storage environment (Sev) installed.
+!  See the documentation for the storage environment on how to
+!  start the server in this case.
+!
+! @b See also
+!  @classlink SevHistThread pwrb_sevhistthread.html
+!  @classlink SevHistMonitor pwrb_sevhistmonitor.html
+!  @classlink SevHist pwrb_sevhist.html
+!*/
+  Object SevServer $ClassDef 535 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "SevServer"
+      EndBody
+      !/**
+      !  Optional description.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

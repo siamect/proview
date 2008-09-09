@@ -1,0 +1,62 @@
+! 
+!  Proview   $Id: pwrb_c_sevhistmonitor.wb_load,v 1.1 2008-09-09 11:30:00 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_c_sevhistmonitor.wb_load -- Defines the class SevHistMonitor.
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Group Servers,NodeConfiguration
+!  Configures the SevHist monitor process.
+!  
+!  The SevHist monitor process keeps track of all SevHist objects
+!  in the current node. The process is divided into threads that 
+!  collect data with a specific scantime and sends to the specified
+!  database server. The threads are specified by SevHistThread objects
+!  that reside under the SevHistMonitor object in the node hierarchy.
+!
+! @b See also
+!  @classlink SevHistThread pwrb_sevhistthread.html
+!  @classlink SevHist pwrb_sevhist.html
+!  @classlink SevHistServer pwrb_sevhistserver.html
+!*/
+  Object SevHistMonitor $ClassDef 534 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "SevHistMonitor"
+      EndBody
+      !/**
+      !  Optional description.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject
+    Object PostCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "SevHistMonitor-PostCreate"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

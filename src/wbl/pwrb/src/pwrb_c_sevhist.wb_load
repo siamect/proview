@@ -1,0 +1,142 @@
+! 
+!  Proview   $Id: pwrb_c_sevhist.wb_load,v 1.1 2008-09-09 11:30:00 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_c_sevhist.wb_load -- Defines the class SevHist.
+!
+SObject pwrb:Class
+!/**
+!  @Version 2.0
+!  @Group PlantConfiguration,SevHist
+!  @Summary Configures historical data storage for a value.
+!  Configures historical data storage for a scalar
+!  quantity or element in a one-dimensional vector. (Datastorage
+!  History).
+!  
+!  In a relational database, data resides in
+!  two-dimensional tables known as relations. A relation
+!  consist of rows and columns.
+!  
+!  The SevHist object specifies which quantity is to be
+!  stored and in which relation. Up to three different
+!  relations can be specified.
+
+!  Hints
+!  
+!  If the storage concern signal values SevHist is
+!  configured in the development environment often direct
+!  below the current signal object.
+!  
+! @b See also
+!  @classlink SevHistThread pwrb_sevhistthread.html
+!  @classlink SevHistMonitor pwrb_sevhistmonitor.html
+!  @classlink SevHistServer pwrb_sevhistserver.html
+!*/
+  Object SevHist $ClassDef 106 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "SevHist"
+      EndBody
+      !/**
+      !  Optional desription.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the complete name of the attribute whose
+      !  value is to be stored. 
+      !*/
+      Object Attribute $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$AttrRef"
+        EndBody
+      EndObject
+      !/**
+      !  SevHistThread object that specifies the storage scantime
+      !  and in which server the data is stored.
+      !*/
+      Object ThreadObject $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !/**
+      !  Time the data will be stored in the database.
+      !  Data that is older than this time will be removed from
+      !  the database by a garbage collector.
+      !*/
+      Object StorageTime $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
+        EndBody
+      EndObject
+      !/**
+      !  Not yet implemented.
+      !*/
+      Object DeadBand $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Not yet implemented.
+      !*/
+      Object HighTimeResolution $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+    EndObject
+    Object Template SevHist
+      Body RtBody
+        Attr DeadBand = 0.0
+      EndBody
+    EndObject
+    Object PostCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "SevHist-PostCreate"
+      EndBody
+    EndObject
+    Object PostMove $DbCallBack
+      Body SysBody
+        Attr MethodName = "SevHist-PostMove"
+      EndBody
+    EndObject
+    Object ConfiguratorPoson $Menu
+      Object Pointed $Menu
+	Object ConnectThread $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Connect SevHistThread"
+	    Attr MethodName = "$Objid-Connect"
+	    Attr MethodArguments[0] = "ThreadObject"
+	    Attr MethodArguments[1] = "SevHistThread"
+	    Attr FilterName = "$Objid-IsOkConnect"
+	    Attr FilterArguments[0] = "ThreadObject"
+	    Attr FilterArguments[1] = "SevHistThread"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+  EndObject
+EndSObject
