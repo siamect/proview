@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.66 2008-09-05 14:08:00 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.67 2008-09-11 06:03:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3737,23 +3737,6 @@ int GeValue::scan( grow_tObject object)
     if ( old)
       *(pwr_tNetStatus *)p = PWR__NETTIMEOUT;
   }
-
-  if ( !first_scan) {
-    switch ( annot_typeid) {
-    case pwr_eType_String:
-      if ( strncmp( old_value, (char *)p, size) == 0)
-	// No change since last time
-	return 1;	
-      break;
-    default:
-      if ( memcmp( &old_value, p, size) == 0 )
-	// No change since last time
-	return 1;
-    }
-  }
-  else
-    first_scan = false;
-
 
   switch( annot_typeid) {
   case pwr_eType_Float32: {
