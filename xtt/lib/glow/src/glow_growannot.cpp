@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growannot.cpp,v 1.10 2007-05-23 08:04:09 claes Exp $
+ * Proview   $Id: glow_growannot.cpp,v 1.11 2008-09-15 09:23:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -222,6 +222,7 @@ void GrowAnnot::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
 
   if ( !((GlowNode *) node)->annotv[number])
     return;
+  int rot;
   double trf_scale = trf.vertical_scale( t);
   int idx = int( trf_scale * w->zoom_factor_y / w->base_zoom_factor * (text_size +4) - 4);
   if ( idx < 0)
@@ -231,17 +232,23 @@ void GrowAnnot::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
   if (!t) {
     x1 = int( trf.x( p.x, p.y) * w->zoom_factor_x) - w->offset_x;
     y1 = int( trf.y( p.x, p.y) * w->zoom_factor_y) - w->offset_y;
+    rot = (int) trf.rot();
   }
   else {
     x1 = int( trf.x( t, p.x, p.y) * w->zoom_factor_x) - w->offset_x;
     y1 = int( trf.y( t, p.x, p.y) * w->zoom_factor_y) - w->offset_y;
+    rot = (int) trf.rot( t);
   }
+  rot = rot < 0 ? rot % 360 + 360 : rot % 360;
+
   switch ( annot_type) {
     case glow_eAnnotType_OneLine: {
       int width, height, descent;
 
-      if ( ( ((GlowNode *) node)->annotv_inputmode[number] &&
-	     ((GrowNode *) node)->input_selected) ||
+      if ( ((rot < 45 || rot >= 315) &&
+	    ( ((GlowNode *) node)->annotv_inputmode[number] &&
+	      ((GrowNode *) node)->input_selected)) ||
+	   ( !(rot < 45 || rot >= 315)) ||
 	   adjustment == glow_eAdjustment_Right ||
 	   adjustment == glow_eAdjustment_Center)
 	ctx->gdraw->get_text_extent( ((GlowNode *) node)->annotv[number],
@@ -263,6 +270,21 @@ void GrowAnnot::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
 	   ((GrowNode *) node)->input_selected) {
 	ctx->gdraw->fill_rect( w, x1, y1 - height + descent, width, height, glow_eDrawType_LineErase);
       }
+
+      if ( !(rot < 45 || rot >= 315)) {
+	// Text is rotated, adjust the coordinates
+	if ( 45 <= rot && rot < 135) {
+	  y1 += height - descent;
+	}
+	else if ( 135 <= rot && rot < 225) {
+	  x1 -= width;
+	  y1 += height - descent;
+	}
+	else {
+	  x1 -= width;
+	}
+      } 
+
       ctx->gdraw->text_erase( w, x1, y1,
 		((GlowNode *) node)->annotv[number], 
 		strlen(((GlowNode *) node)->annotv[number]), draw_type, idx, 0, font);
