@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_thread.c,v 1.6 2006-03-29 12:18:16 claes Exp $
+ * Proview   $Id: rt_thread.c,v 1.7 2008-09-16 12:49:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -80,7 +80,11 @@ thread_CondInit (
 
 #elif defined OS_LYNX || defined OS_LINUX
 
-  return errno_Status(pthread_cond_init(&cp->c, 0));
+  pthread_condattr_t attr;
+  
+  pthread_condattr_init(&attr);
+
+  return errno_Status(pthread_cond_init(&cp->c, &attr));
 
 #else
 # error Not defined for this platform !
