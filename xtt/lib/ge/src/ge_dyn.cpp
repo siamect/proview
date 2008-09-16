@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.67 2008-09-11 06:03:42 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.68 2008-09-16 06:17:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -6515,7 +6515,7 @@ int GeTrend::scan( grow_tObject object)
 
   if ( max_value1_p && min_value1_p) {
     pwr_tFloat32 maxval = *max_value1_p;
-    pwr_tFloat32 minval = *max_value1_p;
+    pwr_tFloat32 minval = *min_value1_p;
     if ( maxval != old_max_value1 ||
 	 minval != old_min_value1) {
       if ( fabsf( maxval - minval) > FLT_EPSILON) {
@@ -6528,7 +6528,7 @@ int GeTrend::scan( grow_tObject object)
   }
   if ( max_value2_p && min_value2_p) {
     pwr_tFloat32 maxval = *max_value2_p;
-    pwr_tFloat32 minval = *max_value2_p;
+    pwr_tFloat32 minval = *min_value2_p;
 
     if ( maxval != old_max_value2 ||
 	 minval != old_min_value2) {
