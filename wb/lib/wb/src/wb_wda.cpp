@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wda.cpp,v 1.10 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_wda.cpp,v 1.11 2008-09-18 15:01:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -176,7 +176,7 @@ void Wda::open_attr_dialog()
 
 
   wow->CreateList( "Attributes", (char *)attr_vect,
-		   set_attr_cb, (void *)this);
+		   set_attr_cb, 0, (void *)this);
 
 }
 

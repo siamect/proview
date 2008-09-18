@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wcast.cpp,v 1.4 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_wcast.cpp,v 1.5 2008-09-18 15:01:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -91,7 +91,7 @@ pwr_tStatus WCast::open_castlist()
   }
   strcpy( class_vect[class_cnt], "");
 
-  wow->CreateList( name, (char *)class_vect, selected_cb, (void *)this);
+  wow->CreateList( name, (char *)class_vect, selected_cb, 0, (void *)this);
 
   return 1;
 }
