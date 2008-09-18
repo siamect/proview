@@ -258,6 +258,9 @@ sub build_all_modules ()
   _module("otherio");
   build_all( $flavour);
   merge();
+  _module("sev");
+  build_all( $flavour);
+  merge();
   _module("abb");
   build_all( $flavour);
   merge();
