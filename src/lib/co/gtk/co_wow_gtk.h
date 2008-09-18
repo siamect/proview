@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_gtk.h,v 1.5 2008-06-25 07:47:17 claes Exp $
+ * Proview   $Id: co_wow_gtk.h,v 1.6 2008-09-18 15:07:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -97,6 +97,7 @@ class CoWowGtk : public CoWow {
   void DisplayError( char *title, char *text);
   void *CreateList( char *title, char *texts,
 		    void (action_cb)( void *, char *),
+		    void (cancel_cb)( void *),
 		    void *ctx);
   void CreateFileSelDia( char *title, void *parent_ctx,
 			 void (*file_selected_cb)(void *, char *, wow_eFileSelType),

@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow.h,v 1.13 2007-01-17 10:27:06 claes Exp $
+ * Proview   $Id: co_wow.h,v 1.14 2008-09-18 15:07:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -80,6 +80,7 @@ class CoWow {
   virtual void DisplayError( char *title, char *text) {}
   virtual void *CreateList( char *title, char *texts,
 			    void (action_cb)( void *, char *),
+			    void (cancel_cb)( void *),
 			    void *ctx) { return NULL;}
   virtual void CreateFileSelDia( char *title, void *parent_ctx,
 				 void (*file_selected_cb)(void *, char *, wow_eFileSelType),

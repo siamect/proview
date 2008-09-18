@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_motif.cpp,v 1.1 2007-01-04 07:51:41 claes Exp $
+ * Proview   $Id: co_wow_motif.cpp,v 1.2 2008-09-18 15:07:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -263,6 +263,9 @@ void CoWowMotif::list_cancel_cb( Widget w, XtPointer data,
 {
   wow_tListCtx ctx = (wow_tListCtx) data;
   
+  if ( ctx->cancel_cb)
+    (ctx->cancel_cb)( ctx->parent_ctx);
+
   XtDestroyWidget( ctx->toplevel);
   free( ctx->texts);
   free( ctx);
@@ -294,6 +297,7 @@ void CoWowMotif::list_action_cb( Widget w, XtPointer data,
 
 void *CoWowMotif::CreateList( char *title, char *texts,
 				     void (action_cb)( void *, char *),
+				     void (cancel_cb)( void *),
 				     void *parent_ctx)
 {
   Arg	    args[15];
@@ -311,6 +315,7 @@ void *CoWowMotif::CreateList( char *title, char *texts,
 
   ctx = (wow_tListCtx) calloc( 1, sizeof(*ctx));
   ctx->action_cb = action_cb;
+  ctx->cancel_cb = cancel_cb;
   ctx->parent_ctx = parent_ctx;
   
   i=0;

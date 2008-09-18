@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_gtk.cpp,v 1.12 2008-02-27 06:23:43 claes Exp $
+ * Proview   $Id: co_wow_gtk.cpp,v 1.13 2008-09-18 15:07:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -189,6 +189,7 @@ class WowListCtx {
   GtkWidget    *list;
   char      *texts;
   void      (* action_cb) ( void *, char *);
+  void      (* cancel_cb) ( void *);
   void      *parent_ctx;
 };
 
@@ -240,6 +241,9 @@ void CoWowGtk::list_cancel_cb (
 {
   WowListCtx *ctx = (WowListCtx *) data;
   
+  if ( ctx->cancel_cb)
+    (ctx->cancel_cb)( ctx->parent_ctx);
+
   gtk_widget_destroy( ctx->toplevel);
   free( ctx->texts);
   delete ctx;
@@ -251,10 +255,17 @@ static gboolean list_action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer 
   return FALSE;
 }
 
+static gboolean list_delete_event( GtkWidget *w, GdkEvent *event, gpointer data)
+{
+  CoWowGtk::list_cancel_cb( w, data);
+  return TRUE;
+}
+
 void *CoWowGtk::CreateList (
   char	    *title,
   char      *texts,
   void	    (action_cb)( void *, char *),
+  void	    (cancel_cb)( void *),
   void	    *parent_ctx
 )
 {
@@ -268,6 +279,7 @@ void *CoWowGtk::CreateList (
 
   ctx = new WowListCtx();
   ctx->action_cb = action_cb;
+  ctx->cancel_cb = cancel_cb;
   ctx->parent_ctx = parent_ctx;
   
  
@@ -279,7 +291,7 @@ void *CoWowGtk::CreateList (
 					      NULL);
 
   g_signal_connect( ctx->toplevel, "focus-in-event", G_CALLBACK(list_action_inputfocus), ctx);
-
+  g_signal_connect( ctx->toplevel, "delete_event", G_CALLBACK(list_delete_event), ctx);
 
   store = gtk_list_store_new( 1, G_TYPE_STRING);
   name_p = texts;

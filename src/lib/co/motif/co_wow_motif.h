@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_motif.h,v 1.1 2007-01-04 07:51:41 claes Exp $
+ * Proview   $Id: co_wow_motif.h,v 1.2 2008-09-18 15:07:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -92,6 +92,7 @@ class CoWowMotif : public CoWow {
   void DisplayError( char *title, char *text);
   void *CreateList( char *title, char *texts,
 			    void (action_cb)( void *, char *),
+			    void (cancel_cb)( void *),
 			    void *ctx);
   void CreateFileSelDia( char *title, void *parent_ctx,
 	       void (*file_selected_cb)(void *, char *, wow_eFileSelType),
