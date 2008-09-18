@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.h,v 1.25 2008-07-17 11:23:07 claes Exp $
+ * Proview   $Id: xtt_xnav.h,v 1.26 2008-09-18 14:58:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -91,7 +91,7 @@ class XAtt;
 class XCrr;
 class Block;
 class XttTrend;
-class XttDsHist;
+class XttSevHist;
 class XttFast;
 class XAttOne;
 class GeCurve;
@@ -340,7 +340,7 @@ class XNav {
     virtual Op *op_new( char *opplace, pwr_tStatus *sts) {return 0;}
     virtual XttTrend *xtttrend_new( char *name, pwr_tAttrRef *objar, pwr_tAttrRef *plotgroup,
 			    pwr_tStatus *sts) {return 0;}
-    virtual XttDsHist *xttdshist_new( char *name, pwr_tOid *oid, pwr_tOName *aname,
+    virtual XttSevHist *xttsevhist_new( char *name, pwr_tOid *oid, pwr_tOName *aname,
 				      sevcli_tCtx scctx, pwr_tStatus *sts) {return 0;}
     virtual XttFast *xttfast_new( char *name, pwr_tAttrRef *objar, pwr_tStatus *sts) {return 0;}
     virtual XAttOne *xattone_new( pwr_tAttrRef *objar, char *title, unsigned int priv,

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_dshist.cpp,v 1.1 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_c_sevhist.cpp,v 1.1 2008-09-18 15:01:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,7 +17,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  **/
 
-/* wb_c_dshist.c -- work bench methods of the DsHist class. */
+/* wb_c_sevhist.c -- work bench methods of the SevHist class. */
 
 #include <string.h>
 #include "wb_pwrs.h"
@@ -43,7 +43,7 @@ static pwr_tStatus PostCreate (
   pwr_sAttrRef Attribute;
   
   /*
-    If father of DsHist has an "ActualValue" attribute, then make this DsHist
+    If father of SevHist has an "ActualValue" attribute, then make this SevHist
     refer to this attribute.
   */
 
@@ -81,7 +81,7 @@ static pwr_tStatus PostMove (
   pwr_sAttrRef Attribute;
   
   /*
-    If father of ASup has an "ActualValue" attribute, then make this ASup
+    If father of SevHist has an "ActualValue" attribute, then make this ASup
     refer to this attribute.
   */
 
@@ -107,7 +107,7 @@ static pwr_tStatus PostMove (
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/
 
-pwr_dExport pwr_BindMethods(DsHist) = {
+pwr_dExport pwr_BindMethods(SevHist) = {
   pwr_BindMethod(PostCreate),
   pwr_BindMethod(PostMove),
   pwr_NullMethod
