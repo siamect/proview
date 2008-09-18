@@ -1,0 +1,100 @@
+! 
+!  Proview   $Id: pwrb_td_sevhistoptionsmask.wb_load,v 1.1 2008-09-18 15:09:24 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_sevhistoptionsmask.wb_load -- Defines the mask type SevHistOptionsMask
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Options attribute type in SevHist objects.
+!
+! @b See also
+!  @classlink SevHist pwrb_sevhist.html
+!*/
+  Object SevHistOptionsMask $TypeDef 46
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Mask"
+      Attr PgmName = "SevOptionsMask"
+    EndBody
+    !/**
+    !  Time storage format is Posix Time.
+    !  If this bit in not set, the storage format is Sql time.
+    !  The sql time is displayed by sql as a readable time, while the posix time is
+    !  displayed as the elapsed time since 1970-01-01 in seconds.
+    !  In Mysql the size for Posix time is 4 bytes and the size for sql time 8 bytes.
+    !  The resolution is 1 second. If higher resulution in needed, use the 
+    !  HighTimeResoution bit.
+    !*/
+    Object PosixTime $Bit
+     Body SysBody
+       Attr PgmName = "PosixTime"
+       Attr Text = "PosixTime"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  HighTimeResolution increases the time resolution from seconds to nanoseconds.
+    !  An additional nono second variable is stored with the size 4 bytes.
+    !*/
+    Object HighTimeResolution $Bit
+     Body SysBody
+       Attr PgmName = "HighTimeResolution"
+       Attr Text = "HighTimeResolution"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !  The ReadOptimized bit will store an additional id value for each value
+    !  which decreases the time to read data. The size of the id variable is  
+    !  4 bytes, if the HighTimeResolution bit is set the size is 8 bytes.
+    !*/
+    Object ReadOptimized $Bit
+     Body SysBody
+       Attr PgmName = "ReadOptimized"
+       Attr Text = "ReadOptimized"
+       Attr Value = 4
+     EndBody
+    EndObject
+    !/**
+    !  The deadband is a range around the last stored value, where no new values
+    !  will be stored, i.e a value has to differ more than the deadband/2 from
+    !  the last stored value to be stored.
+    !  Set the UseDeadBand bit to activate the deadband function. Note that the value
+    !  of the deadband also has to be set in the DeadBand Attribute of the SevHist object.
+    !
+    !  UseDeadBand will increase the storage size with 1 byte. The ReadOptimized bit
+    !  also has to be set.
+    !*/
+    Object UseDeadBand $Bit
+     Body SysBody
+       Attr PgmName = "UseDeadBand"
+       Attr Text = "UseDeadBand"
+       Attr Value = 8
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+
+
+
+

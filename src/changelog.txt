@@ -90,4 +90,13 @@
 080623 cs  co        New user database format and password encryption changed.
 080623 cs  rtt       Login with Proview username and password required. Commands 'login' and 'logout' added.
 080624 cs  co        pwr_user: command 'login' added. Write access disabled without administrator privilege.
-
+080624 cs  pwrb      In class User, attribute UserName set constant, and Password removed.
+080624 cs  pwrb      In class NodeConfig, attribute RemoteAccessType added.
+080626 cs  pwrb      Bit AuthorizedKeysFile added to type DistrComponentMask.
+080626 cs  pwrb      Functionobject GetDataInput added. This makes it possible to define data inputs in a function object class with template plc code.
+080826 cs  plc       Code for CStoExtXxx was missing, except for Float32.
+080903 cs  gdh       Error status for subscription caused other subscription to be ignored.
+080905 cs  qcom      Qcom link without nethandler connection implemented. Configuration attribute in FriendNodeConfig object, Connection.
+080905 cs  qcom      Argument -n added to rt_qmon for start without the presence of rt_neth.
+080905 cs  pkg       New package pwrsev for Storage Environment.
+080915 cs  trend     Zero Multiple attribute in DsTrend object caused termination of rt_trend.
