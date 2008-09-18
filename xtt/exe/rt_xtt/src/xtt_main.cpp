@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_main.cpp,v 1.7 2008-04-18 08:47:58 claes Exp $
+ * Proview   $Id: xtt_main.cpp,v 1.8 2008-09-18 14:53:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -591,7 +591,7 @@ void Xtt::list_opplace()
   }
   else 
     // Select oplace from list
-    wow->CreateList( "Select Operator Place", (char *)texts, opplace_selected_cb, this);
+    wow->CreateList( "Select Operator Place", (char *)texts, opplace_selected_cb, 0, this);
 }
 
 

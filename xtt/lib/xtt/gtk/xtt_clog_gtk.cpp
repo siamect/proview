@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_clog_gtk.cpp,v 1.2 2007-01-11 12:00:05 claes Exp $
+ * Proview   $Id: xtt_clog_gtk.cpp,v 1.3 2008-09-18 14:55:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -310,7 +310,7 @@ void CLogGtk::activate_select_file( GtkWidget *w, gpointer data)
       strcat( str[i], clog->clognav->file_list[i].name);
 
   }
-  clog->wow->CreateList( "Select File", (char *)str, file_selected_cb, clog);
+  clog->wow->CreateList( "Select File", (char *)str, file_selected_cb, 0, clog);
 
   free( str);
 }
