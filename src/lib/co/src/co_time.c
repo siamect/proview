@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_time.c,v 1.11 2006-12-10 14:33:34 lw Exp $
+ * Proview   $Id: co_time.c,v 1.12 2008-09-18 15:08:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -892,6 +892,23 @@ pwr_tDeltaTime *
 time_FloatToD (
   pwr_tDeltaTime  *dt,
   pwr_tFloat32    f
+)
+{
+  static pwr_tDeltaTime time;
+  static pwr_tDeltaTime *t = &time;
+
+  if (dt != NULL) t = dt;
+
+  t->tv_sec  = f;
+  t->tv_nsec = (f - t->tv_sec) * 1e9;
+
+  return t;
+}
+
+pwr_tDeltaTime *
+time_Float64ToD (
+  pwr_tDeltaTime  *dt,
+  pwr_tFloat64    f
 )
 {
   static pwr_tDeltaTime time;

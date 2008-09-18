@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_time.h,v 1.8 2006-12-10 14:33:34 lw Exp $
+ * Proview   $Id: co_time.h,v 1.9 2008-09-18 15:08:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -127,6 +127,7 @@ pwr_tStatus   time_SetTime  (pwr_tTime*);
 #endif
 
 pwr_tDeltaTime *  time_FloatToD (pwr_tDeltaTime*, pwr_tFloat32);
+pwr_tDeltaTime *  time_Float64ToD (pwr_tDeltaTime*, pwr_tFloat64);
 pwr_tFloat32    time_DToFloat (pwr_tFloat32*, pwr_tDeltaTime*);
 
 pwr_tDeltaTime *  time_Uptime (pwr_tStatus*, pwr_tDeltaTime*, pwr_tDeltaTime*);
