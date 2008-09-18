@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_tbl.h,v 1.2 2008-09-05 08:38:58 claes Exp $
+ * Proview   $Id: xtt_tbl.h,v 1.3 2008-09-18 14:37:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,7 +31,7 @@
 
 
 class TblNav;
-class XttDsHist;
+class XttSevHist;
 class CoLogin;
 class CoWow;
 
@@ -55,7 +55,7 @@ class XttTbl {
   int		quiet;
 
   virtual void message( char severity, char *message) {}
-  virtual XttDsHist *dshist_new( pwr_tOid oid, char *aname) { return 0;}
+  virtual XttSevHist *sevhist_new( pwr_tOid oid, char *aname) { return 0;}
   virtual CoLogin *login_new( char		*wl_name,
 			      char		*wl_groupname,
 			      void		(* wl_bc_success)( void *),
@@ -67,7 +67,7 @@ class XttTbl {
   void open_login();
   void logout();
   void activate_print();
-  void activate_opendshist();
+  void activate_opensevhist();
   void activate_delete_item();
   void activate_zoom_in();
   void activate_zoom_out();

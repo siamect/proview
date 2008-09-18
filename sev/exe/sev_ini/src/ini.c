@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ini.c,v 1.1 2008-09-05 08:38:58 claes Exp $
+ * Proview   $Id: ini.c,v 1.2 2008-09-18 14:37:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -416,7 +416,7 @@ void ini_ProcTable (
   pp->flags.b.qmon = 1;
   pp->proc.flags.b.system = 1;
 
-  pp = ini_ProcInsert(sts, cp, "pwr_sev_server", "pwr_sev_server_%d", 0, 1, "sev_server", cPrio_sev_server, 0, "");
+  pp = ini_ProcInsert(sts, cp, "pwr_sev_server", "pwr_sev_server_%d", 0, 1, "sev_server", cPrio_sev_server, 0, "-n");
   pp->proc.flags.b.system = 1;
 
   

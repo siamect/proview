@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_tblnav.cpp,v 1.2 2008-09-05 08:38:58 claes Exp $
+ * Proview   $Id: xtt_tblnav.cpp,v 1.3 2008-09-18 14:37:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,6 +25,8 @@
 #include <stdlib.h>
 #include <vector.h>
 
+#include "pwr.h"
+#include "pwr_baseclasses.h"
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_dcli.h"
@@ -585,7 +587,7 @@ void TblNav::delete_item( sevcli_sHistItem *hi)
       continue;
     if ( tree[i].item &&
 	 cdh_ObjidIsEqual( tree[i].item->oid, hi->oid) &&
-	 strcmp( tree[i].item->aname, hi->aname) == 0) {
+	 strcmp( tree[i].item->attr[0].aname, hi->attr[0].aname) == 0) {
       tree[i].deleted = 1;
     }
   }
@@ -601,7 +603,7 @@ void TblNav::delete_item( sevcli_sHistItem *hi)
     case tblnav_eItemType_TreeLocal: {
       ItemLocal *item = (ItemLocal *)baseitem;
       if ( cdh_ObjidIsEqual( hi->oid, item->item.oid) &&
-	   strcmp( hi->aname, item->item.aname) == 0) {
+	   strcmp( hi->attr[0].aname, item->item.attr[0].aname) == 0) {
 	brow_DeleteNode( brow->ctx, item->node);
 	found = 1;
       }
@@ -628,7 +630,7 @@ ItemLocal::ItemLocal( TblNav *tblnav, sevcli_sHistItem *xitem,
 
   strcpy( aname, item.oname);
   strcat( aname, ".");
-  strcat( aname, item.aname);
+  strcat( aname, item.attr[0].aname);
   brow_SetAnnotation( node, 0, aname, strlen(aname));
   brow_SetAnnotation( node, 1, item.description, strlen(item.description));
 }
@@ -650,6 +652,7 @@ int ItemLocal::open_attributes( TblNav *tblnav, double x, double y)
   }
   else {
     char value[256];
+    char txt[80];
 
     brow_SetNodraw( tblnav->brow->ctx);
 
@@ -662,39 +665,64 @@ int ItemLocal::open_attributes( TblNav *tblnav, double x, double y)
 
     new ItemLocalAttr( tblnav, "Object", item.oname, node, flow_eDest_IntoLast);
 
-    new ItemLocalAttr( tblnav, "Attribute", item.aname, node, flow_eDest_IntoLast);
-
     time_DtoAscii( &item.storagetime, 0, value, sizeof(value));
     new ItemLocalAttr( tblnav, "StorageTime", value, node, flow_eDest_IntoLast);
 
-    switch ( item.type) {
-    case pwr_eType_Int64: strcpy( value, "Int64"); break;
-    case pwr_eType_Int32: strcpy( value, "Int32"); break;
-    case pwr_eType_Int16: strcpy( value, "Int16"); break;
-    case pwr_eType_Int8: strcpy( value, "Int8"); break;
-    case pwr_eType_UInt64: strcpy( value, "UInt64"); break;
-    case pwr_eType_UInt32: strcpy( value, "UInt32"); break;
-    case pwr_eType_UInt16: strcpy( value, "UInt16"); break;
-    case pwr_eType_UInt8: strcpy( value, "UInt8"); break;
-    case pwr_eType_Boolean: strcpy( value, "Boolean"); break;
-    case pwr_eType_Char: strcpy( value, "Char"); break;
-    case pwr_eType_Float32: strcpy( value, "Float32"); break;
-    case pwr_eType_Float64: strcpy( value, "Float64"); break;
-    case pwr_eType_String: strcpy( value, "String"); break;
-    case pwr_eType_Time: strcpy( value, "Time"); break;
-    case pwr_eType_DeltaTime: strcpy( value, "DeltaTime"); break;
-    default: strcpy( value, "Unknown");
-    }
-    new ItemLocalAttr( tblnav, "DataType", value, node, flow_eDest_IntoLast);
+    time_AtoAscii( &item.creatime, time_eFormat_DateAndTime, value, sizeof(value));
+    new ItemLocalAttr( tblnav, "CreationTime", value, node, flow_eDest_IntoLast);
 
-    sprintf( value, "%d", item.size);
-    new ItemLocalAttr( tblnav, "DataSize", value, node, flow_eDest_IntoLast);
-    
-    new ItemLocalAttr( tblnav, "Unit", item.unit, node, flow_eDest_IntoLast);
+    time_AtoAscii( &item.modtime, time_eFormat_DateAndTime, value, sizeof(value));
+    new ItemLocalAttr( tblnav, "ModificationTime", value, node, flow_eDest_IntoLast);
 
     sprintf( value, "%f", item.scantime);
     new ItemLocalAttr( tblnav, "ScanTime", value, node, flow_eDest_IntoLast);
 
+    strcpy( value, "");
+    if ( item.options & pwr_mSevOptionsMask_PosixTime)
+      strcat( value, " PosixTime");
+    if ( item.options & pwr_mSevOptionsMask_HighTimeResolution)
+      strcat( value, " HighTimeResolution");
+    if ( item.options & pwr_mSevOptionsMask_ReadOptimized)
+      strcat( value, " ReadOptimized");
+    if ( item.options & pwr_mSevOptionsMask_UseDeadBand)
+      strcat( value, " UseDeadBand");
+    new ItemLocalAttr( tblnav, "Options", value, node, flow_eDest_IntoLast);
+
+    sprintf( value, "%f", item.deadband);
+    new ItemLocalAttr( tblnav, "Deadband", value, node, flow_eDest_IntoLast);
+
+    for ( int i = 0; i < 1; i++) {
+      sprintf( txt, "Attr[%d].Name", i);
+      new ItemLocalAttr( tblnav, txt, item.attr[0].aname, node, flow_eDest_IntoLast);
+
+      switch ( item.attr[0].type) {
+      case pwr_eType_Int64: strcpy( value, "Int64"); break;
+      case pwr_eType_Int32: strcpy( value, "Int32"); break;
+      case pwr_eType_Int16: strcpy( value, "Int16"); break;
+      case pwr_eType_Int8: strcpy( value, "Int8"); break;
+      case pwr_eType_UInt64: strcpy( value, "UInt64"); break;
+      case pwr_eType_UInt32: strcpy( value, "UInt32"); break;
+      case pwr_eType_UInt16: strcpy( value, "UInt16"); break;
+      case pwr_eType_UInt8: strcpy( value, "UInt8"); break;
+      case pwr_eType_Boolean: strcpy( value, "Boolean"); break;
+      case pwr_eType_Char: strcpy( value, "Char"); break;
+      case pwr_eType_Float32: strcpy( value, "Float32"); break;
+      case pwr_eType_Float64: strcpy( value, "Float64"); break;
+      case pwr_eType_String: strcpy( value, "String"); break;
+      case pwr_eType_Time: strcpy( value, "Time"); break;
+      case pwr_eType_DeltaTime: strcpy( value, "DeltaTime"); break;
+      default: strcpy( value, "Unknown");
+      }
+      sprintf( txt, "Attr[%d].DataType", i);
+      new ItemLocalAttr( tblnav, txt, value, node, flow_eDest_IntoLast);
+
+      sprintf( txt, "Attr[%d].DataSize", i);
+      sprintf( value, "%d", item.attr[0].size);
+      new ItemLocalAttr( tblnav, txt, value, node, flow_eDest_IntoLast);
+    
+      sprintf( txt, "Attr[%d].Unit", i);
+      new ItemLocalAttr( tblnav, txt, item.attr[0].unit, node, flow_eDest_IntoLast);
+    }
     brow_SetOpen( node, tblnav_mOpen_Attributes);
     brow_ResetNodraw( tblnav->brow->ctx);
     brow_Redraw( tblnav->brow->ctx, node_y);
@@ -747,7 +775,7 @@ ItemTreeLocal::ItemTreeLocal( TblNav *tblnav, sevcli_sHistItem *xitem, int index
   else
     strcpy( aname, item.oname);
   strcat( aname, ".");
-  strcat( aname, item.aname);
+  strcat( aname, item.attr[0].aname);
   brow_SetAnnotation( node, 0, aname, strlen(aname));
 }
 
@@ -828,7 +856,7 @@ void TblNav::build_tree()
 
     strcpy( aname, itemlist[i].oname);
     strcat( aname, ".");
-    strcat( aname, itemlist[i].aname);
+    strcat( aname, itemlist[i].attr[0].aname);
 
     seg = dcli_parse( aname, "-", "",
 	     (char *) name_array, sizeof( name_array)/sizeof( name_array[0]), 

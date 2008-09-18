@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_tbl.cpp,v 1.2 2008-09-05 08:38:58 claes Exp $
+ * Proview   $Id: xtt_tbl.cpp,v 1.3 2008-09-18 14:37:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -118,13 +118,16 @@ void XttTbl::activate_print()
   system(cmd);
 }
 
-void XttTbl::activate_opendshist()
+void XttTbl::activate_opensevhist()
 {
   sevcli_sHistItem *hi;
 
-  tblnav->get_select( &hi);
+  if ( !tblnav->get_select( &hi)) {
+    message( 'E', "Select an storage item");
+    return;
+  }
 
-  dshist_new( hi->oid, hi->aname);
+  sevhist_new( hi->oid, hi->attr[0].aname);
 }
 
 void XttTbl::delete_item_yes( void *ctx, void *data)
@@ -134,7 +137,7 @@ void XttTbl::delete_item_yes( void *ctx, void *data)
   pwr_tStatus sts;
 
   printf("Deleting %s\n", hi->oname);
-  sevcli_delete_item( &sts, tbl->sevcli, hi->oid, hi->aname);
+  sevcli_delete_item( &sts, tbl->sevcli, hi->oid, hi->attr[0].aname);
   if ( EVEN(sts)) {
     tbl->message( 'E', "Delete error");
     return;
@@ -154,7 +157,7 @@ void XttTbl::activate_delete_item()
     return;
   }
 
-  sprintf( msg, "Do you really wan't to delete all stored data for item\n\n%s.%s\n", hi->oname, hi->aname);
+  sprintf( msg, "Do you really wan't to delete all stored data for item\n\n%s.%s\n", hi->oname, hi->attr[0].aname);
 
   wow->DisplayQuestion( this, "Confirm Delete Item", msg, delete_item_yes, 0, hi);
 }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_tbl_gtk.h,v 1.2 2008-09-05 08:38:58 claes Exp $
+ * Proview   $Id: xtt_tbl_gtk.h,v 1.3 2008-09-18 14:37:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -49,7 +49,7 @@ class XttTblGtk : public XttTbl {
     CoWowEntryGtk *cmd_entry;
 
     void message( char severity, char *message);
-    XttDsHist *dshist_new( pwr_tOid oid, char *aname);
+    XttSevHist *sevhist_new( pwr_tOid oid, char *aname);
     CoLogin *login_new( char		*wl_name,
 			char		*wl_groupname,
 			void		(* wl_bc_success)( void *),
@@ -63,7 +63,7 @@ class XttTblGtk : public XttTbl {
     static void activate_login( GtkWidget *w, gpointer data);
     static void activate_logout( GtkWidget *w, gpointer data);
     static void activate_close( GtkWidget *w, gpointer data);
-    static void activate_opendshist( GtkWidget *w, gpointer data);
+    static void activate_opensevhist( GtkWidget *w, gpointer data);
     static void activate_delete_item( GtkWidget *w, gpointer data);
     static void activate_tree_layout( GtkWidget *w, gpointer data);
     static void activate_list_layout( GtkWidget *w, gpointer data);

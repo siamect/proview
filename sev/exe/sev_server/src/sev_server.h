@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: sev_server.h,v 1.2 2008-09-05 08:38:58 claes Exp $
+ * Proview   $Id: sev_server.h,v 1.3 2008-09-18 14:37:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -79,8 +79,9 @@ class sev_server {
   map<sev_item_key, unsigned int> m_item_key;
   unsigned int m_msg_id;
   sev_db *m_db;
+  int m_noneth;
 
-  int init();
+  int init( int noneth);
   int connect();
   int request_items( pwr_tNid nid);
   int sev_server::mainloop();

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_tbl_gtk.cpp,v 1.2 2008-09-05 08:38:58 claes Exp $
+ * Proview   $Id: xtt_tbl_gtk.cpp,v 1.3 2008-09-18 14:37:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -43,7 +43,7 @@
 
 #include "xtt_tbl_gtk.h"
 #include "xtt_tblnav_gtk.h"
-#include "xtt_dshist_gtk.h"
+#include "xtt_sevhist_gtk.h"
 
 void XttTblGtk::message( char severity, char *message)
 {
@@ -162,14 +162,14 @@ void XttTblGtk::activate_help_proview( GtkWidget *w, gpointer data)
   xtt->activate_help_proview();
 }
 
-void XttTblGtk::activate_opendshist( GtkWidget *w, gpointer data)
+void XttTblGtk::activate_opensevhist( GtkWidget *w, gpointer data)
 {
   XttTbl *xtt = (XttTbl *)data;
 
   if ( !xtt->is_authorized())
     return;
 
-  xtt->activate_opendshist();
+  xtt->activate_opensevhist();
 }
 
 void XttTblGtk::activate_delete_item( GtkWidget *w, gpointer data)
@@ -202,7 +202,7 @@ void XttTblGtk::activate_list_layout( GtkWidget *w, gpointer data)
   xtt->tblnav->show_list();
 }
 
-XttDsHist *XttTblGtk::dshist_new( pwr_tOid oid, char *aname)
+XttSevHist *XttTblGtk::sevhist_new( pwr_tOid oid, char *aname)
 {
   GtkWidget *w;
   pwr_tStatus sts;
@@ -213,7 +213,7 @@ XttDsHist *XttTblGtk::dshist_new( pwr_tOid oid, char *aname)
   oidv[1] = pwr_cNOid;
   strncpy( anamev[0], aname, sizeof(anamev[0]));
 
-  return new XttDsHistGtk( (void *)this, toplevel, "DsHist", &w, oidv, anamev, 
+  return new XttSevHistGtk( (void *)this, toplevel, "SevHist", &w, oidv, anamev, 
 			   sevcli, &sts);
 }
 
@@ -344,8 +344,8 @@ XttTblGtk::XttTblGtk( GtkWidget *a_parent_wid,
 
 
   // Functions entry
-  GtkWidget *functions_opendshist = gtk_menu_item_new_with_mnemonic( "_Open DsHist");
-  g_signal_connect(functions_opendshist, "activate", G_CALLBACK(activate_opendshist), this);
+  GtkWidget *functions_opensevhist = gtk_menu_item_new_with_mnemonic( "_Open SevHist");
+  g_signal_connect(functions_opensevhist, "activate", G_CALLBACK(activate_opensevhist), this);
 
   GtkWidget *functions_command = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("Co_mmand"));
   g_signal_connect( functions_command, "activate", 
@@ -358,7 +358,7 @@ XttTblGtk::XttTblGtk( GtkWidget *a_parent_wid,
   g_signal_connect(functions_delete_item, "activate", G_CALLBACK(activate_delete_item), this);
 
   GtkMenu *functions_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
-  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_opendshist);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_opensevhist);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_command);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_delete_item);
 
@@ -432,13 +432,13 @@ XttTblGtk::XttTblGtk( GtkWidget *a_parent_wid,
   // Toolbar
   GtkToolbar *tools = (GtkToolbar *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
 
-  GtkWidget *tools_opendshist = gtk_button_new();
+  GtkWidget *tools_opensevhist = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_meth_trend.png");
-  gtk_container_add( GTK_CONTAINER(tools_opendshist), 
+  gtk_container_add( GTK_CONTAINER(tools_opensevhist), 
 		     gtk_image_new_from_file( fname));
-  g_signal_connect(tools_opendshist, "clicked", G_CALLBACK(activate_opendshist), this);
-  g_object_set( tools_opendshist, "can-focus", FALSE, NULL);
-  gtk_toolbar_append_widget( tools, tools_opendshist,CoWowGtk::translate_utf8("Open hist item"), "");
+  g_signal_connect(tools_opensevhist, "clicked", G_CALLBACK(activate_opensevhist), this);
+  g_object_set( tools_opensevhist, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_opensevhist,CoWowGtk::translate_utf8("Open hist item"), "");
 
   GtkWidget *tools_zoom_in = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_in.png");

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: sev_dbms.h,v 1.2 2008-09-05 08:38:58 claes Exp $
+ * Proview   $Id: sev_dbms.h,v 1.3 2008-09-18 14:37:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,6 +19,7 @@
 
 #ifndef sev_dbms_h
 #define sev_dbms_h
+#if defined PWRE_CONF_MYSQL
 
 #include <vector.h>
 
@@ -105,28 +106,34 @@ class sev_dbms : public sev_db {
 
   int check_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname, 
 		  pwr_tDeltaTime storagetime, pwr_eType type, unsigned int size, 
-		  char *description, char *unit, pwr_tFloat32 scantime, unsigned int *idx);
+		  char *description, char *unit, pwr_tFloat32 scantime, 
+		  pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx);
   int add_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname, 
 		pwr_tDeltaTime storagetime, pwr_eType type, unsigned int size, 
-		char *description, char *unit, pwr_tFloat32 scantime, unsigned int *idx);  
-  int store_value( pwr_tStatus *sts, pwr_tOid oid, char *aname, pwr_eType type, pwr_tTime time, 
-		   void *buf, unsigned int size);
-  int get_values( pwr_tStatus *sts, pwr_tOid oid, char *aname, pwr_eType type, unsigned int size, 
-		  pwr_tFloat32 scantime, pwr_tTime *starttime, pwr_tTime *endtime, 
-		  int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize);
-  int delete_old_data( pwr_tStatus *sts, pwr_tOid oid, char *aname, pwr_tTime limit);
+		char *description, char *unit, pwr_tFloat32 scantime, 
+		pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx);  
+  int store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
+		   pwr_tTime time, void *buf, unsigned int size);
+  int get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, float deadband, char *aname, 
+		  pwr_eType type, unsigned int size, pwr_tFloat32 scantime, pwr_tTime *starttime, 
+		  pwr_tTime *endtime, int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize);
+  int delete_old_data( pwr_tStatus *sts, pwr_tOid oid, char *aname, 
+		       pwr_tMask options, pwr_tTime limit);
   int delete_item( pwr_tStatus *sts, pwr_tOid oid, char *aname);
 
   int get_items( pwr_tStatus *sts);
-  int create_table( pwr_tStatus *sts, pwr_tOid oid, char *aname, pwr_eType type, unsigned int size);
+  int create_table( pwr_tStatus *sts, pwr_tOid oid, char *aname, pwr_eType type, unsigned int size,
+		    pwr_tMask options, float deadband);
   int delete_table( pwr_tStatus *sts, pwr_tOid oid, char *aname);
   int store_item( pwr_tStatus *sts, char *tabelname, pwr_tOid oid, char *oname, char *aname, 
 		  pwr_tDeltaTime storagetime, pwr_eType vtype, unsigned int vsize, 
-		  char *description, char *unit, pwr_tFloat32 scantime);
+		  char *description, char *unit, pwr_tFloat32 scantime, 
+		  pwr_tFloat32 deadband, pwr_tMask options);
   int remove_item( pwr_tStatus *sts, pwr_tOid oid, char *aname);
   char *oid_to_table( pwr_tOid oid, char *aname);
   char *pwrtype_to_type( pwr_eType type, unsigned int size);
   static int timestr_to_time( char *tstr, pwr_tTime *ts);
 
 };
+#endif
 #endif
