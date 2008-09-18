@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_c_object.cpp,v 1.19 2008-07-17 11:23:07 claes Exp $
+ * Proview   $Id: xtt_c_object.cpp,v 1.20 2008-09-18 14:58:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -405,7 +405,7 @@ static pwr_tStatus OpenHistory( xmenu_sMenuCall *ip)
   pwr_tAName name;
   char cmd[800];
   int sts;
-  pwr_tObjid child;
+  pwr_tOid oid, child;
   pwr_tClassId classid;
   int found;
   pwr_sAttrRef defhist;
@@ -419,7 +419,7 @@ static pwr_tStatus OpenHistory( xmenu_sMenuCall *ip)
   sts = gdh_GetAttrRefTid( objar, &classid);
   if ( EVEN(sts)) return sts;
 
-  if ( classid == pwr_cClass_DsHist || classid == pwr_cClass_PlotGroup) {
+  if ( classid == pwr_cClass_SevHist || classid == pwr_cClass_PlotGroup) {
     sts = gdh_AttrrefToName( &ip->Pointed, name, sizeof(name),
 			cdh_mName_volumeStrict);
     if ( EVEN(sts)) return sts;
@@ -441,7 +441,7 @@ static pwr_tStatus OpenHistory( xmenu_sMenuCall *ip)
     // Default XttGraph found
     sts = gdh_GetAttrRefTid( &defhist, &classid);
     if ( ODD(sts) &&
-         (classid == pwr_cClass_DsHist || classid == pwr_cClass_PlotGroup)) {
+         (classid == pwr_cClass_SevHist || classid == pwr_cClass_PlotGroup)) {
 
       sts = gdh_AttrrefToName( &defhist, name, sizeof(name),
 			cdh_mName_volumeStrict);
@@ -454,33 +454,44 @@ static pwr_tStatus OpenHistory( xmenu_sMenuCall *ip)
     }
   }
 
-  // Look for DsHist as child
+  // Look for SevHist as child
   if ( !ip->Pointed.Flags.b.Object)
     return 0;
 
   found = 0;
-  sts = gdh_GetChild( objar->Objid, &child);
+  sts = gdh_GetChild( objar->Objid, &oid);
   while ( ODD(sts)) {
-    sts = gdh_GetObjectClass( child, &classid);
+    sts = gdh_GetObjectClass( oid, &classid);
     if ( EVEN(sts)) return sts;
     
-    if ( classid == pwr_cClass_DsHist) {
-      found = 1;
-      break;
+    if ( classid == pwr_cClass_SevHist) {
+      found++;
+      if ( found == 1)
+	child = oid;
     }      
-    sts = gdh_GetNextSibling( child, &child);
+    sts = gdh_GetNextSibling( oid, &oid);
   }
   if ( !found)
     return 1;
 
-  sts = gdh_ObjidToName( child, name, sizeof(name),
+  if ( found == 1) {
+    sts = gdh_ObjidToName( child, name, sizeof(name),
 			   cdh_mName_volumeStrict);
-  if ( EVEN(sts)) return sts;
+    if ( EVEN(sts)) return sts;
 
-  // Open history
-  sprintf( cmd, "open history /name=%s /title=\"%s\"", name, name);
-  ((XNav *)ip->EditorContext)->command( cmd);
- 
+    // Open history
+    sprintf( cmd, "open history /name=%s /title=\"%s\"", name, name);
+    ((XNav *)ip->EditorContext)->command( cmd);
+  }
+  else {
+    // Open history selection
+    sts = gdh_AttrrefToName( &ip->Pointed, name, sizeof(name),
+			cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return sts;
+
+    sprintf( cmd, "open shist /name=%s", name);
+    ((XNav *)ip->EditorContext)->command( cmd);
+  }
   return 1;
 }
 
@@ -502,7 +513,7 @@ static pwr_tStatus OpenHistoryFilter( xmenu_sMenuCall *ip)
   sts = gdh_GetAttrRefTid( objar, &classid);
   if ( EVEN(sts)) return sts;
 
-  if ( classid == pwr_cClass_DsHist || classid == pwr_cClass_PlotGroup) {
+  if ( classid == pwr_cClass_SevHist || classid == pwr_cClass_PlotGroup) {
     return XNAV__SUCCESS;
   }
 
@@ -517,11 +528,11 @@ static pwr_tStatus OpenHistoryFilter( xmenu_sMenuCall *ip)
     // Default XttGraph found
     sts = gdh_GetAttrRefTid( &defhist, &classid);
     if ( ODD(sts) &&
-         (classid == pwr_cClass_DsHist || classid == pwr_cClass_PlotGroup))
+         (classid == pwr_cClass_SevHist || classid == pwr_cClass_PlotGroup))
       return XNAV__SUCCESS;
   }
 
-  // Check if object has a DsHist as child
+  // Check if object has a SevHist as child
   if ( !objar->Flags.b.Object)
     return XNAV__INVISIBLE;
 
@@ -530,7 +541,7 @@ static pwr_tStatus OpenHistoryFilter( xmenu_sMenuCall *ip)
     sts = gdh_GetObjectClass( child, &classid);
     if ( EVEN(sts)) return sts;
 
-    if ( classid == pwr_cClass_DsHist)
+    if ( classid == pwr_cClass_SevHist)
       return XNAV__SUCCESS;
 
     sts = gdh_GetNextSibling( child, &child);
