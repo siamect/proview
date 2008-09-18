@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_journal.h,v 1.2 2008-05-23 07:48:16 claes Exp $
+ * Proview   $Id: ge_graph_journal.h,v 1.3 2008-09-18 14:55:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -123,6 +123,9 @@ class GraphJournal {
     int store_redo_rename( grow_tObject o);
     int undo_rename();
     int redo_rename();
+    static void print( char *fname);
+    static char *tag_to_str( int tag);
+    static char *action_to_str( int action);
 
     Graph *graph;
     fstream fp;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_journal.cpp,v 1.3 2008-05-23 07:48:16 claes Exp $
+ * Proview   $Id: ge_graph_journal.cpp,v 1.4 2008-09-18 14:55:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1722,6 +1722,147 @@ int GraphJournal::restore( char *fname)
   return GE__SUCCESS;
 }
 
+void GraphJournal::print( char *fname)
+{
+  char line[200];
+  int nr = 0;
+  int tag;
+  int action;
+  int idx;
+  ifstream fp;
+  pwr_tFileName fn;
+  int status;
+  int row = 0;
+  int row_fetched = 0;
+
+  dcli_translate_filename( fn, fname);
+
+  fp.open( fn, ios::in);
+  if ( !fp) {
+    printf( "Unable to open journal file %s\n", fn);
+    return;
+  }
+
+  printf( "%4s %4s %-20s %-22s\n", "Row",  "Idx", "Tag", "Action");
+  printf( "%4s %4s %-20s %-22s\n", "---",  "---", "---", "------");
+
+  while ( row_fetched || fp.getline( line, sizeof(line))) {
+    row++;
+
+    nr = sscanf( line, "%d", &tag);
+    if ( nr == 1 && (tag == journal_cTag_Redo || tag == journal_cTag_Undo)) {
+      sscanf( line, "%d %d %d %d", &tag, &action, (int *)&status, &idx);
+
+      printf( "%4d %4d %-20s %-22s", row,  idx, tag_to_str( tag), action_to_str(action));
+
+      if  ( !fp.getline( line, sizeof(line)))
+	break;
+
+      nr = sscanf( line, "%d", &tag);
+      if ( nr == 1 && tag == journal_cTag_Object) {
+	if  ( !fp.getline( line, sizeof(line)))
+	  break;
+	row_fetched = 0;
+	printf("%-10s\n", line);
+      }
+      else {
+	row_fetched = 1;
+	printf("\n");
+      }
+    }
+    else
+      row_fetched = 0;
+  }
+  fp.close();
+}
+
+char *GraphJournal::action_to_str( int action)
+{
+  static char str[40];
+
+  switch ( action) {
+  case journal_eAction_DeleteObject:
+    strcpy( str, "DeleteObject");
+    break;
+  case journal_eAction_DeleteSelect:
+    strcpy( str, "DeleteSelect");
+    break;
+  case journal_eAction_MoveObject:
+    strcpy( str, "MoveObject");
+    break;
+  case journal_eAction_MoveSelect:
+    strcpy( str, "MoveSelect");
+    break;
+  case journal_eAction_CreateObject:
+    strcpy( str, "CreateObject");
+    break;
+  case journal_eAction_AntePropertiesSelect:
+    strcpy( str, "AntePropertiesSelect");
+    break;
+  case journal_eAction_PostPropertiesSelect:
+    strcpy( str, "PostPropertiesSelect");
+    break;
+  case journal_eAction_AntePropertiesObject:
+    strcpy( str, "AntePropertiesObject");
+    break;
+  case journal_eAction_PostPropertiesObject:
+    strcpy( str, "PostPropertiesObject");
+    break;
+  case journal_eAction_AnteGroupSelect:
+    strcpy( str, "AnteGroupSelect");
+    break;
+  case journal_eAction_PostGroupSelect:
+    strcpy( str, "PostGroupSelect");
+    break;
+  case journal_eAction_UngroupSelect:
+    strcpy( str, "UngroupSelect");
+    break;
+  case journal_eAction_PopSelect:
+    strcpy( str, "PopSelect");
+    break;
+  case journal_eAction_PushSelect:
+    strcpy( str, "PushSelect");
+    break;
+  case journal_eAction_AntePaste:
+    strcpy( str, "AntePaste");
+    break;
+  case journal_eAction_PostPaste:
+    strcpy( str, "PostPaste");
+    break;
+  case journal_eAction_AnteRename:
+    strcpy( str, "AnteRename");
+    break;
+  case journal_eAction_PostRename:
+    strcpy( str, "PostRename");
+    break;
+  default:
+    strcpy( str, "Undefined");
+  }
+  return str;
+}
+
+char *GraphJournal::tag_to_str( int tag)
+{
+  static char str[20];
+
+  switch ( tag) {
+  case journal_cTag_Undo:
+    strcpy( str, "Undo");
+    break;
+  case journal_cTag_Redo:
+    strcpy( str, "Redo");
+    break;
+  case journal_cTag_Object:
+    strcpy( str, "Object");
+    break;
+  case journal_cTag_End:
+    strcpy( str, "End");
+    break;
+  default:
+    strcpy( str, "Undefined");
+  }
+  return str;
+}
 
 
 
