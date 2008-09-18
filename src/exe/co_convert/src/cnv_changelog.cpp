@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_changelog.cpp,v 1.9 2008-02-29 13:19:35 claes Exp $
+ * Proview   $Id: cnv_changelog.cpp,v 1.10 2008-09-18 15:10:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -58,6 +58,7 @@ CnvChangeLog::CnvChangeLog( CnvCtx *cnv_ctx, char *from_str) :
   read( "tlog");
   read( "bcomp");
   read( "otherio");
+  read( "sev");
   read( "othermanu");
   read( "abb");
   read( "siemens");
