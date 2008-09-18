@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_sevhist.wb_load,v 1.1 2008-09-09 11:30:00 claes Exp $
+!  Proview   $Id: pwrb_c_sevhist.wb_load,v 1.2 2008-09-18 15:02:48 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -92,7 +92,12 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Not yet implemented.
+      !  The deadband is a range around the last stored value, where no new values
+      !  will be stored, i.e a value has to differ more than the deadband / 2 from
+      !  the last stored value to be stored.
+      !
+      !  Deadband contains the size of deadband. Note that the DeadBand bit in options also
+      !  has to be set to activte the deadband function.
       !*/
       Object DeadBand $Attribute 5 
         Body SysBody
@@ -100,17 +105,18 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Not yet implemented.
+      !  Storage options.
       !*/
-      Object HighTimeResolution $Attribute 6 
+      Object Options $Attribute 6 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr TypeRef = "pwrb:Type-SevHistOptionsMask"
         EndBody
       EndObject
     EndObject
     Object Template SevHist
       Body RtBody
         Attr DeadBand = 0.0
+	Attr Options = 4
       EndBody
     EndObject
     Object PostCreate $DbCallBack

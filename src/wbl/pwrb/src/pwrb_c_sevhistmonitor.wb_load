@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_sevhistmonitor.wb_load,v 1.1 2008-09-09 11:30:00 claes Exp $
+!  Proview   $Id: pwrb_c_sevhistmonitor.wb_load,v 1.2 2008-09-18 15:02:48 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -52,6 +52,19 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
+      !/**
+      !  The scanning period, in seconds, of the sevhist monitor.
+      !*/
+      Object ScanTime $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+    EndObject
+    Object Template SevHistMonitor
+      Body RtBody
+        Attr ScanTime = 1
+      EndBody
     EndObject
     Object PostCreate $DbCallBack
       Body SysBody
