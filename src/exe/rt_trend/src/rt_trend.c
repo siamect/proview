@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trend.c,v 1.11 2007-11-01 15:30:13 claes Exp $
+ * Proview   $Id: rt_trend.c,v 1.12 2008-09-18 15:10:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -310,6 +310,8 @@ InitTrendList (
     }
       
     Trend->DataType = Tix;
+    if ( Trend->Multiple == 0)
+      Trend->Multiple = 1;
     Trend->NoOfSample = (Trend->StorageTime * ScanTime) / Trend->Multiple;
 
     if(Trend->NoOfSample > Trend->NoOfBufElement)
