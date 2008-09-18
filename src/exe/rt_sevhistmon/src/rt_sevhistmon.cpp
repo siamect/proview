@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_sevhistmon.cpp,v 1.2 2008-09-09 11:24:42 claes Exp $
+ * Proview   $Id: rt_sevhistmon.cpp,v 1.3 2008-09-18 15:06:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,6 +30,7 @@
 #include "rt_sevhistmon.h"
 #include "rt_sev_net.h"
 #include "rt_sev_msg.h"
+#include "rt_pwr_msg.h"
 
 #define sevclient_cQix 121
 
@@ -45,8 +46,24 @@ int rt_sevhistmon::init()
   qcom_sQid qid;
   qcom_sNode		node;
   pwr_tNid		nid;
+  pwr_tOid		conf_oid;
+  pwr_sClass_SevHistMonitor *conf_p;
   
   sts = gdh_Init( "rt_sevhistmon");
+  if ( EVEN(sts)) throw co_error(sts);
+
+  // Get the config object
+  sts = gdh_GetClassList( pwr_cClass_SevHistMonitor, &conf_oid);
+  if ( EVEN(sts)) {
+    errh_CErrLog( PWR__SRVNOTCONF, 0);
+    exit(0);
+  }
+  sts = gdh_ObjidToPointer( conf_oid, (void **)&conf_p);
+  if ( EVEN(sts)) throw co_error(sts);
+
+  m_scantime = conf_p->ScanTime;
+  if ( m_scantime < 0.02)
+    m_scantime = 0.02;
 
   // Create a queue to server
   qcom_sQattr attr;
@@ -60,9 +77,9 @@ int rt_sevhistmon::init()
     if ( sts == QCOM__QALLREXIST) {
       if ( !qcom_AttachQ(&sts, &qid)) {
 	if ( !qcom_DeleteQ(&sts, &qid))
-	  co_error(sts);	     
+	  throw co_error(sts);	     
 	if ( !qcom_CreateQ(&sts, &qid, &attr, "SevClient"))
-	  co_error(sts);
+	  throw co_error(sts);
       }      
     }
     else
@@ -159,7 +176,7 @@ int rt_sevhistmon::init()
     h.sevid.rix = m_next_rix++;
     h.storagetime = h_p->StorageTime;
     h.deadband = h_p->DeadBand;
-    h.hightimeres = h_p->HighTimeResolution;
+    h.options = h_p->Options;
     strncpy( h.description, h_p->Description, sizeof(h.description));
 
     // Get unit from attribute object
@@ -233,7 +250,7 @@ int rt_sevhistmon::send_data()
   int		stime;
 
   for ( unsigned int i = 0; i < m_hs.size(); i++) {
-    stime = int(m_hs[i].scantime + 0.5);
+    stime = int(m_hs[i].scantime / m_scantime + 0.5);
     if ( !stime || m_loopcnt % stime != 0)
       continue;
 	   
@@ -357,7 +374,7 @@ int rt_sevhistmon::send_itemlist( pwr_tNid nid)
 	strcpy( ((sev_sMsgHistItems *)put.data)->Items[k].attr[0].aname, s + 1);
 	((sev_sMsgHistItems *)put.data)->Items[k].storagetime = m_hs[i].sevhistlist[j].storagetime;
 	((sev_sMsgHistItems *)put.data)->Items[k].deadband = m_hs[i].sevhistlist[j].deadband;
-	((sev_sMsgHistItems *)put.data)->Items[k].hightimeres = m_hs[i].sevhistlist[j].hightimeres;
+	((sev_sMsgHistItems *)put.data)->Items[k].options = m_hs[i].sevhistlist[j].options;
 	((sev_sMsgHistItems *)put.data)->Items[k].attr[0].type = m_hs[i].sevhistlist[j].type;
 	((sev_sMsgHistItems *)put.data)->Items[k].attr[0].size = m_hs[i].sevhistlist[j].size;
 	((sev_sMsgHistItems *)put.data)->Items[k].sevid = m_hs[i].sevhistlist[j].sevid;
@@ -393,7 +410,7 @@ int rt_sevhistmon::send_itemlist( pwr_tNid nid)
 int rt_sevhistmon::mainloop()
 {
   qcom_sQid qid;
-  int tmo = 1000;
+  int tmo = int(1000 * m_scantime);
   qcom_sGet get;
   void *mp;
   pwr_tStatus sts;
@@ -432,7 +449,13 @@ int main()
 {
   rt_sevhistmon client;
 
-  client.init();
+  try {
+    client.init();
+  }
+  catch ( co_error e) {
+    errh_Error( "SevHistMonitor terminating, %m", e.sts());
+    exit(0);
+  }
 
   client.mainloop();
 

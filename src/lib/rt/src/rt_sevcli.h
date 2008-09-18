@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_sevcli.h,v 1.3 2008-09-09 11:27:32 claes Exp $
+ * Proview   $Id: rt_sevcli.h,v 1.4 2008-09-18 15:06:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -59,7 +59,7 @@ typedef struct {
   pwr_tString80 description;
   pwr_tFloat32  scantime;
   pwr_tFloat32  deadband;
-  pwr_tBoolean  hightimeres;
+  pwr_tMask  	options;
   unsigned int  attrnum;
   sevcli_sHistAttr attr[1];
 } sevcli_sHistItem;

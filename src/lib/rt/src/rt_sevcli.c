@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_sevcli.c,v 1.3 2008-09-09 11:27:32 claes Exp $
+ * Proview   $Id: rt_sevcli.c,v 1.4 2008-09-18 15:06:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -161,7 +161,7 @@ int sevcli_get_itemlist( pwr_tStatus *sts, sevcli_tCtx ctx, sevcli_sHistItem **l
     strncpy( lp[i].oname, rmsg->Items[i].oname, sizeof(lp[0].oname));
     lp[i].storagetime = rmsg->Items[i].storagetime;
     lp[i].deadband = rmsg->Items[i].deadband;
-    lp[i].hightimeres = rmsg->Items[i].hightimeres;
+    lp[i].options = rmsg->Items[i].options;
     lp[i].creatime = rmsg->Items[i].creatime;
     lp[i].modtime = rmsg->Items[i].modtime;
     strncpy( lp[i].description, rmsg->Items[i].description, sizeof(lp[0].description));

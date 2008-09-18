@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_sevhistmon.h,v 1.2 2008-09-09 11:24:42 claes Exp $
+ * Proview   $Id: rt_sevhistmon.h,v 1.3 2008-09-18 15:06:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -33,7 +33,7 @@ class sev_sevhist {
   void 		*datap;
   pwr_tDeltaTime storagetime;
   pwr_tFloat32  deadband;
-  pwr_tBoolean  hightimeres;
+  pwr_tMask  	options;
   pwr_eType	type;
   unsigned int	size;
   pwr_tRefId	sevid;
@@ -69,6 +69,7 @@ class rt_sevhistmon {
   unsigned int m_msg_id;
   unsigned int m_next_rix;
   unsigned int m_loopcnt;
+  float m_scantime;
 
   int init();
   int close();
