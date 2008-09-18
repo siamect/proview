@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.h,v 1.11 2008-07-17 11:21:25 claes Exp $
+ * Proview   $Id: ge_curve.h,v 1.12 2008-09-18 15:00:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,6 +45,12 @@ typedef enum {
   curve_eAxis_y
   } curve_eAxis;
 
+typedef enum {
+  curve_eTimeFormat_Float,
+  curve_eTimeFormat_HourMinute,
+  curve_eTimeFormat_DayHour
+} curve_eTimeFormat;
+
 //! Contains data for the curves.
 class GeCurveData {
   public:
@@ -71,6 +77,8 @@ class GeCurveData {
     double  axis_width[CURVE_MAX_COLS];
     char    format[CURVE_MAX_COLS][20];
     int     x_reverse;
+    curve_eTimeFormat time_format;
+
     void get_borders();
     void get_default_axis();
     void select_color( bool dark_bg);
@@ -156,6 +164,7 @@ class GeCurve {
     void activate_help();
     void activate_minmax_ok( double min_value, double max_value);
     void set_curvedata( GeCurveData *curve_data);
+    void redraw();
     
     static int growcurve_cb( GlowCtx *ctx, glow_tEvent event);
     static int init_growcurve_cb( GlowCtx *fctx, void *client_data);

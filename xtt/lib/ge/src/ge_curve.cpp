@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.cpp,v 1.19 2008-07-17 11:21:25 claes Exp $
+ * Proview   $Id: ge_curve.cpp,v 1.20 2008-09-18 15:00:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -229,64 +229,130 @@ int GeCurve::growcurve_cb( GlowCtx *ctx, glow_tEvent event)
     int row;
     double time;
 
-    curve->last_cursor_x = event->any.x;
-    if ( !curve->cd->x_reverse)
-      time = event->any.x *
-        (curve->cd->max_value_axis[0] - curve->cd->min_value_axis[0]) / 200;
-    else
-      time = (200.0 - event->any.x) *
-        (curve->cd->max_value_axis[0] - curve->cd->min_value_axis[0]) / 200;
-
-    // Approximate row
-    row = int ((time - curve->cd->min_value[0]) / 
-        (curve->cd->max_value[0] - curve->cd->min_value[0]) *
-        (curve->cd->rows - 1) + 0.5);
-    if ( row > curve->cd->rows - 1)
-      row = curve->cd->rows - 1;
-    else if ( row < 0)
-      row = 0;
-    else {
-      // Find exact row
-      double b1, b2;
-      int r = row;
-      for (int i = 0;; i++) {
-	if ( r == 0) {
-	  b2 = (curve->cd->data[0][row] + curve->cd->data[0][r+1]) / 2;
-	  if ( time < b2)
-	    break;
-	  r++;
-	}
-	else if ( r == curve->cd->rows - 1) {
-	  b1 = (curve->cd->data[0][r] + curve->cd->data[0][r-1]) / 2;
-	  if ( time >= b1)
-	    break;
-	  r--;
-	}
-	else {
-	  b1 = (curve->cd->data[0][r] + curve->cd->data[0][r-1]) / 2;
-	  b2 = (curve->cd->data[0][r] + curve->cd->data[0][r+1]) / 2;
-	  if ( b1 <= time && time < b2)
-	    break;
-	  if ( b1 <= time)
+    if ( !(strcmp( curve->cd->format[0], "%10t") == 0 || 
+	   strcmp( curve->cd->format[0], "%11t") == 0)) {
+      curve->last_cursor_x = event->any.x;
+      if ( !curve->cd->x_reverse)
+	time = event->any.x *
+	  (curve->cd->max_value_axis[0] - curve->cd->min_value_axis[0]) / 200;
+      else
+	time = (200.0 - event->any.x) *
+	  (curve->cd->max_value_axis[0] - curve->cd->min_value_axis[0]) / 200;
+      
+      // Approximate row
+      row = int ((time - curve->cd->min_value[0]) / 
+		 (curve->cd->max_value[0] - curve->cd->min_value[0]) *
+		 (curve->cd->rows - 1) + 0.5);
+      if ( row > curve->cd->rows - 1)
+	row = curve->cd->rows - 1;
+      else if ( row < 0)
+	row = 0;
+      else {
+	// Find exact row
+	double b1, b2;
+	int r = row;
+	for (int i = 0;; i++) {
+	  if ( r == 0) {
+	    b2 = (curve->cd->data[0][row] + curve->cd->data[0][r+1]) / 2;
+	    if ( time < b2)
+	      break;
 	    r++;
-	  else
+	  }
+	  else if ( r == curve->cd->rows - 1) {
+	    b1 = (curve->cd->data[0][r] + curve->cd->data[0][r-1]) / 2;
+	    if ( time >= b1)
+	      break;
 	    r--;
+	  }
+	  else {
+	    b1 = (curve->cd->data[0][r] + curve->cd->data[0][r-1]) / 2;
+	    b2 = (curve->cd->data[0][r] + curve->cd->data[0][r+1]) / 2;
+	    if ( b1 <= time && time < b2)
+	      break;
+	    if ( b1 <= time)
+	      r++;
+	    else
+	      r--;
+	  }
+	  if ( i > 100) {
+	    // Corrupt data, se original row
+	    r = row;
+	    break;
+	  }	  
 	}
-	if ( i > 100) {
-	  // Corrupt data, se original row
-	  r = row;
-	  break;
-	}	  
+	row = r;
       }
-      row = r;
+      for ( int i = 1; i < curve->cd->cols; i++) {
+	sprintf( str, "%7.2f", curve->cd->data[i][row]);
+	grow_SetAnnotation( curve->cursor_annot[i], 0, str, strlen(str));
+      }
+      
+      sprintf( str, "%7.2f", curve->cd->data[0][row]);
+      grow_SetAnnotation( curve->cursor_annot[0], 0, str, strlen(str));
     }
-    for ( int i = 1; i < curve->cd->cols; i++) {
-      sprintf( str, "%7.2f", curve->cd->data[i][row]);
-      grow_SetAnnotation( curve->cursor_annot[i], 0, str, strlen(str));
+    else {
+      // Time is a date
+      curve->last_cursor_x = event->any.x;
+      if ( !curve->cd->x_reverse)
+	time = curve->cd->min_value_axis[0] + event->any.x *
+	  (curve->cd->max_value_axis[0] - curve->cd->min_value_axis[0]) / 200;
+      else
+	time = curve->cd->min_value_axis[0] + (200.0 - event->any.x) *
+	  (curve->cd->max_value_axis[0] - curve->cd->min_value_axis[0]) / 200;
+      
+      // Approximate row
+      row = int ((time - curve->cd->min_value[0]) / 
+		 (curve->cd->max_value[0] - curve->cd->min_value[0]) *
+		 (curve->cd->rows - 1) + 0.5);
+      if ( row > curve->cd->rows - 1)
+	row = curve->cd->rows - 1;
+      else if ( row < 0)
+	row = 0;
+      else {
+	// Find exact row
+	double b1, b2;
+	int r = row;
+	for (int i = 0;; i++) {
+	  if ( r == 0) {
+	    b2 = (curve->cd->data[0][row] + curve->cd->data[0][r+1]) / 2;
+	    if ( time < b2)
+	      break;
+	    r++;
+	  }
+	  else if ( r == curve->cd->rows - 1) {
+	    b1 = (curve->cd->data[0][r] + curve->cd->data[0][r-1]) / 2;
+	    if ( time >= b1)
+	      break;
+	    r--;
+	  }
+	  else {
+	    b1 = (curve->cd->data[0][r] + curve->cd->data[0][r-1]) / 2;
+	    b2 = (curve->cd->data[0][r] + curve->cd->data[0][r+1]) / 2;
+	    if ( b1 <= time && time < b2)
+	      break;
+	    if ( b1 <= time)
+	      r++;
+	    else
+	      r--;
+	  }
+	  if ( i > curve->cd->rows) {
+	    // Corrupt data, se original row
+	    r = row;
+	    break;
+	  }	  
+	}
+	row = r;
+      }
+      for ( int i = 1; i < curve->cd->cols; i++) {
+	sprintf( str, "%7.2f", curve->cd->data[i][row]);
+	grow_SetAnnotation( curve->cursor_annot[i], 0, str, strlen(str));
+      }
+      
+      pwr_tTime t;
+      time_Float64ToD( (pwr_tDeltaTime *) &t, curve->cd->data[0][row]);
+      time_AtoAscii( &t, time_eFormat_DateAndTime, str, sizeof(str));
+      grow_SetAnnotation( curve->cursor_annot[0], 0, str, strlen(str));
     }
-
-    sprintf( str, "%7.2f", curve->cd->data[0][row]);
-    grow_SetAnnotation( curve->cursor_annot[0], 0, str, strlen(str));
     break;
   }
   case glow_eEvent_Key_Left:
@@ -557,13 +623,21 @@ int GeCurve::init_growaxis_cb( GlowCtx *fctx, void *client_data)
 
 int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
 {
+  GeCurve *curve = (GeCurve *) client_data;
+  curve->grownames_ctx = (GrowCtx *) fctx;
   grow_tObject t1;
   grow_sAttributes grow_attr;
   unsigned long mask;
   glow_eDrawType color;
-
-  GeCurve *curve = (GeCurve *) client_data;
-  curve->grownames_ctx = (GrowCtx *) fctx;
+  double x;
+  int date = (strcmp( curve->cd->format[0], "%10t") == 0 || 
+	      strcmp( curve->cd->format[0], "%11t") == 0) ? 1 : 0;
+  int time_size;
+  if ( date)
+    time_size = 8;
+  else
+    time_size = 3;
+        
 
   mask = 0;
   // Double buffer is used for print
@@ -587,7 +661,7 @@ int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
   // Create nodeclass for mark values
   grow_tNodeClass nc;
   grow_CreateNodeClass( curve->grownames_ctx, "MarkVal", glow_eNodeGroup_Common, &nc);
-  grow_AddRect( nc, "", 0, 0, 3, 0.75, glow_eDrawType_LineGray, 1, 0,
+  grow_AddRect( nc, "", 0, 0, time_size, 0.75, glow_eDrawType_LineGray, 1, 0,
 		glow_mDisplayLevel_1, 0, 0, 0,
 		glow_eDrawType_Line, NULL);
   grow_AddAnnot( nc, 0.2, 0.7, 0, glow_eDrawType_TextHelvetica, 
@@ -601,28 +675,34 @@ int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
   grow_CreateGrowRect( curve->grownames_ctx, "", 0, 0, 60, 0.8,
 			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 0, 0, 1,
 			 glow_eDrawType_Color32, NULL, &o1);
+  x = 0.8;
   grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("View"),
-		       0.8, 0.6, glow_eDrawType_TextHelvetica, 
+		       x, 0.6, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
 		       glow_mDisplayLevel_1, NULL, &o1);
+  x += 2.2;
   grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Cursor"),
-		       3, 0.6, glow_eDrawType_TextHelvetica, 
+		       x, 0.6, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
 		       glow_mDisplayLevel_1, NULL, &o1);
+  x += time_size + 0.2;
   grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Mark"),
-		       5.7, 0.6, glow_eDrawType_TextHelvetica, 
+		       x, 0.6, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
 		       glow_mDisplayLevel_1, NULL, &o1);
+  x += time_size + 0.2;
   grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Unit"),
-		       9.0, 0.6, glow_eDrawType_TextHelvetica, 
+		       x, 0.6, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
 		       glow_mDisplayLevel_1, NULL, &o1);
+  x += 2;
   grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Scale"),
-		       11, 0.6, glow_eDrawType_TextHelvetica, 
+		       x, 0.6, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
 		       glow_mDisplayLevel_1, NULL, &o1);
+  x += 3;
   grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Attribute"),
-		       14, 0.6, glow_eDrawType_TextHelvetica, 
+		       x, 0.6, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
 		       glow_mDisplayLevel_1, NULL, &o1);
   
@@ -649,24 +729,30 @@ int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
     grow_CreateGrowRect( curve->grownames_ctx, "", 1.3, (i-0.2)+0.3, 0.5, 0.5,
 			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 0, 1, 1,
 			 glow_eDrawType_Color32, NULL, &curve->hide_rect[i]);
+
     // Draw nodes for mark and cursor values
-    grow_CreateGrowNode( curve->grownames_ctx, "", nc, 2.2, (i-0.2)+0.05, NULL, 
+    x = 2.2;
+    grow_CreateGrowNode( curve->grownames_ctx, "", nc, x, (i-0.2)+0.05, NULL, 
 			 &curve->cursor_annot[i]);
-    grow_CreateGrowNode( curve->grownames_ctx, "", nc, 5.4, (i-0.2)+0.05, NULL, 
+    x += time_size + 0.2;
+    grow_CreateGrowNode( curve->grownames_ctx, "", nc, x, (i-0.2)+0.05, NULL, 
 			 &curve->mark_annot[i]);
     // Draw unit
+    x += time_size + 0.6;
     grow_CreateGrowText( curve->grownames_ctx, "", curve->cd->unit[i],
-		       9.0, (i-0.2) + 0.75, glow_eDrawType_TextHelvetica, 
+		       x, (i-0.2) + 0.75, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
 			 glow_mDisplayLevel_1, NULL, &t1);
     // Draw button for scale
-    grow_CreateGrowRect( curve->grownames_ctx, "", 11, (i-0.2)+0.1, 1.2, 0.7,
+    x += 2;
+    grow_CreateGrowRect( curve->grownames_ctx, "", x, (i-0.2)+0.1, 1.2, 0.7,
 			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 1,
 			 glow_eDrawType_Color33, NULL, &curve->scale_rect[i]);
     grow_SetObjectShadowWidth( curve->scale_rect[i], 20);
     // Draw attribute name
+    x += 3;
     grow_CreateGrowText( curve->grownames_ctx, "", curve->cd->name[i],
-			 14.0, (i-0.2) + 0.75, glow_eDrawType_TextHelveticaBold, 
+			 x, (i-0.2) + 0.75, glow_eDrawType_TextHelveticaBold, 
 			 glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
 			 glow_mDisplayLevel_1, NULL, &t1);
     grow_SetAnnotation( curve->cursor_annot[i], 0, "0", 1);
@@ -677,23 +763,28 @@ int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
   grow_CreateGrowRect( curve->grownames_ctx, "", 0, (curve->cd->cols-0.2), 60, 1,
 			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 0, 0, 1,
 			 glow_eDrawType_Color32, NULL, &o1);
-  grow_CreateGrowNode( curve->grownames_ctx, "", nc, 2.2, (curve->cd->cols-0.2)+0.05, NULL, 
+  x = 2.2;
+  grow_CreateGrowNode( curve->grownames_ctx, "", nc, x, (curve->cd->cols-0.2)+0.05, NULL, 
 		       &curve->cursor_annot[0]);
-  grow_CreateGrowNode( curve->grownames_ctx, "", nc, 5.4, (curve->cd->cols-0.2)+0.05, NULL, 
+  x += time_size + 0.2;
+  grow_CreateGrowNode( curve->grownames_ctx, "", nc, x, (curve->cd->cols-0.2)+0.05, NULL, 
 		       &curve->mark_annot[0]);
   // Draw unit
+  x += time_size + 0.6;
   grow_CreateGrowText( curve->grownames_ctx, "", "s",
-		       9.0, (curve->cd->cols-0.2) + 0.75, glow_eDrawType_TextHelvetica, 
+		       x, (curve->cd->cols-0.2) + 0.75, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
 		       glow_mDisplayLevel_1, NULL, &t1);
   // Draw button for scale
-  grow_CreateGrowRect( curve->grownames_ctx, "", 11, (curve->cd->cols-0.2)+0.1, 1.2, 0.7,
+  x += 2;
+  grow_CreateGrowRect( curve->grownames_ctx, "", x, (curve->cd->cols-0.2)+0.1, 1.2, 0.7,
 		       glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 1,
 		       glow_eDrawType_Color33, NULL, &curve->scale_rect[0]);
   grow_SetObjectShadowWidth( curve->scale_rect[0], 20);
   // Draw attribute name
+  x += 3;
   grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Time axis"),
-		       14.0, (curve->cd->cols-0.2) + 0.75, glow_eDrawType_TextHelveticaBold, 
+		       x, (curve->cd->cols-0.2) + 0.75, glow_eDrawType_TextHelveticaBold, 
 		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
 		       glow_mDisplayLevel_1, NULL, &t1);
   grow_SetAnnotation( curve->cursor_annot[0], 0, "0", 1);
@@ -881,6 +972,11 @@ int GeCurve::configure_curves()
   grow_CurveConfigure( curve_object, &gcd); 
   
   return 1;
+}
+
+void GeCurve::redraw()
+{
+  grow_Redraw( growcurve_ctx);
 }
 
 void GeCurve::points_added()
@@ -1100,7 +1196,7 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
 }
 
 GeCurveData::GeCurveData( curve_eDataType datatype) :
-  type(datatype), rows(0), cols(0), x_reverse(0)
+  type(datatype), rows(0), cols(0), x_reverse(0), time_format(curve_eTimeFormat_Float)
 {
   memset( data, 0, sizeof(data));
   for ( int i = 0; i < CURVE_MAX_COLS; i++) {
@@ -1286,11 +1382,12 @@ void GeCurveData::scale( int axis_type, int value_type,
   int min_lines, max_lines;
   int min_zero, max_zero;
   int format_int, format_dec;
-  int format_type  = 0;
   int trendlinequot = 2;
   int axlinequot = 2;
   int axvaluequot = 2;
   
+  time_format = curve_eTimeFormat_Float;
+
   // Scale 0 - 10 for boolean
   if ( value_type == pwr_eType_Boolean) {
     maxval = 10;
@@ -1364,7 +1461,7 @@ void GeCurveData::scale( int axis_type, int value_type,
           i_value = int(min_value/60) * 60 - 60;
         minval = i_value;
         min_lines = i_value / 60;
-	format_type = 1;
+	time_format = curve_eTimeFormat_HourMinute;
 	trendlinequot = 2;
 	axlinequot = 10;
 	axvaluequot = 10;
@@ -1382,7 +1479,7 @@ void GeCurveData::scale( int axis_type, int value_type,
         min_lines = i_value / 600;
 	axlinequot = 6;
 	axvaluequot = 2;
-	format_type = 1;
+	time_format = curve_eTimeFormat_HourMinute;
       }
       else if ( max_value - min_value < 140000) {
         i_value = int(max_value/600) * 600 + 600;
@@ -1397,7 +1494,7 @@ void GeCurveData::scale( int axis_type, int value_type,
         min_lines = i_value / 600;
 	axlinequot = 6;
 	axvaluequot = 12;
-	format_type = 1;
+	time_format = curve_eTimeFormat_HourMinute;
       }
       else {
         i_value = int(max_value/3600) * 3600 + 3600;
@@ -1412,7 +1509,7 @@ void GeCurveData::scale( int axis_type, int value_type,
         min_lines = i_value / 3600;
 	axlinequot = 2 * int((max_value - min_value)/140000);
 	axvaluequot = 2 * int((max_value - min_value)/140000);
-	format_type = 2;
+	time_format = curve_eTimeFormat_DayHour;
       }
     }
     else {
@@ -1537,8 +1634,8 @@ void GeCurveData::scale( int axis_type, int value_type,
   *axis_linelongq = axlinequot;
   *axis_valueq = axvaluequot;
 
-  switch ( format_type) {
-  case 0:
+  switch ( time_format) {
+  case curve_eTimeFormat_Float:
     // Float format
     format_int = abs(n) + 1;
     if ( n > 0)
@@ -1553,12 +1650,12 @@ void GeCurveData::scale( int axis_type, int value_type,
     sprintf( format, "%%%d.%df", format_int, format_dec);
     *axis_width = 0.65 * format_int + 0.4;
     break;
-  case 1:
+  case curve_eTimeFormat_HourMinute:
     // Hour and minute format
     strcpy( format, "%2t");
     *axis_width = 0.65 * format_int + 0.4;
     break;
-  case 2:
+  case curve_eTimeFormat_DayHour:
     // Days and hour format
     strcpy( format, "%3t");
     *axis_width = 0.65 * format_int + 0.4;
