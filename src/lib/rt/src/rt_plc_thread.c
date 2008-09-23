@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_thread.c,v 1.13 2007-05-07 12:36:01 claes Exp $
+ * Proview   $Id: rt_plc_thread.c,v 1.14 2008-09-23 07:20:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,6 +28,7 @@
 
 #if defined(OS_LINUX)
 # include <pwd.h>
+# include <signal.h>
 #endif
 
 #include "pwr.h"
@@ -63,7 +64,6 @@
  * and rt_plc_process.c
  */
 #define USE_RT_TIMER 0
-
 
 static void scan (plc_sThread*);
 
@@ -170,13 +170,13 @@ plc_thread (
 
   pwrb_PlcThread_Zero(tp);
 
-  time_Uptime(&sts, &tp->sync_time, NULL);
+  clock_gettime(CLOCK_MONOTONIC, &tp->sync_time);
 
   tp->ActualScanTime = tp->f_scan_time;
 
-  while (!tp->exit)
+  while (!tp->exit) {
     scan(tp);
-
+  }
 #if 0 /*defined(OS_ELN)*/
   if (wfp) {
     /* We have exited the PLC loop. Clean up watchdog object */
@@ -200,16 +200,17 @@ scan (
   pwr_tStatus	sts;
   plc_sProcess	*pp = tp->pp;
   int		delay_action = 0;
-
-  time_Uptime(&sts, &tp->before_scan, NULL);  
+  
+//  time_Uptime(&sts, &tp->before_scan, NULL);  
+  clock_gettime(CLOCK_MONOTONIC, &tp->before_scan);
   clock_gettime(CLOCK_REALTIME, &tp->before_scan_abs);
   pp->Node->SystemTime = tp->before_scan_abs;
 
   if (tp->loops > 0) {
-    if (sts == TIME__CLKCHANGE) {
+/*    if (sts == TIME__CLKCHANGE) {
       time_Dadd(&tp->before_scan, &tp->one_before_scan, &tp->scan_time);
-    }
-    time_Dsub(&tp->delta_scan, &tp->before_scan, &tp->one_before_scan);
+    } */
+    time_Adiff(&tp->delta_scan, &tp->before_scan, &tp->one_before_scan);
     time_DToFloat(&tp->ActualScanTime, &tp->delta_scan);
     if (tp->ActualScanTime < MIN_SCANTIME)
       tp->ActualScanTime = MIN_SCANTIME;
@@ -255,10 +256,10 @@ scan (
   if ( tp->first_scan)
     tp->first_scan = 0;
 
-  time_Uptime(&sts, &tp->after_scan, NULL);
-  if (sts == TIME__CLKCHANGE) {
+  clock_gettime(CLOCK_MONOTONIC, &tp->after_scan);
+/*  if (sts == TIME__CLKCHANGE) {
     tp->after_scan = tp->before_scan;
-  }
+  }*/
   clock_gettime(CLOCK_REALTIME, &tp->after_scan_abs);
   if (tp->log)
     pwrb_PlcThread_Exec(tp);
@@ -267,8 +268,8 @@ scan (
     pwr_tDeltaTime delta;
 
     plc_timerhandler(tp); 
-    time_Dadd(NULL, &tp->sync_time, &tp->scan_time);
-    time_Dsub(&delta, &tp->sync_time, &tp->after_scan);
+    time_Aadd(NULL, &tp->sync_time, &tp->scan_time);
+    time_Adiff(&delta, &tp->sync_time, &tp->after_scan);
     if (time_Dcomp(&delta, NULL) > 0) {
       pwr_tStatus sts;
       int phase;
@@ -276,7 +277,7 @@ scan (
       if (tp->csup_lh != NULL) {
 	pwr_tTime now;
 	clock_gettime(CLOCK_REALTIME, &now);
-	delay_action = csup_Exec(&sts, tp->csup_lh, &tp->sync_time, &tp->after_scan, &now);
+	delay_action = csup_Exec(&sts, tp->csup_lh, (pwr_tDeltaTime *) &tp->sync_time, (pwr_tDeltaTime *) &tp->after_scan, &now);
 	if (delay_action == 2) {
 	  pp->IOHandler->IOReadWriteFlag = FALSE;
 	  errh_SetStatus( PLC__IOSTALLED);
@@ -287,7 +288,18 @@ scan (
       sem_wait(&tp->ScanSem);
       phase = 0;
 #else
-      phase = (int)que_Get(&sts, &tp->q_in, &delta, NULL);
+      /* REMARK 
+       * que_Get makes use of pthread_cond_timedwait.
+       * At this point it is not possible to set the clock-attribute of a condition variable.
+       * It should be set with pthread_condattr_setclock() to CLOCK_MONOTONIC, default
+       * is always CLOCK_REALTIME which might change. Instead we use clock_nanosleep()
+       * and don't have a controlled stop, in most cases we are sleeping anyway.
+       * The controlled stop is only needed for warm restart.
+       * END REMARK
+       */
+//      phase = (int)que_Get(&sts, &tp->q_in, &delta, NULL);
+      clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &tp->sync_time, NULL);
+      
 #endif
       if (phase > 0) {
 	tp->exit = TRUE;
