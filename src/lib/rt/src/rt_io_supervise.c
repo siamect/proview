@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_supervise.c,v 1.2 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_io_supervise.c,v 1.3 2008-09-23 07:25:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -592,7 +592,7 @@ pwr_tStatus io_ClearSupLst (
       ASupLstP = ANextP;
     }
 
-    free( (char *) Ctx);
+    free(Ctx);
 
     return IO__SUCCESS;
 } /* END io_ClearSupLst */
