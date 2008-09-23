@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_ndc.c,v 1.8 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_ndc.c,v 1.9 2008-09-23 07:25:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1343,6 +1343,18 @@ ndc_ConvertRemoteToNativeTable (
       ccKey.ccvoltime = ccvp->time;
 
       lccp = hash_Search(sts, gdbroot->cclass_ht, &ccKey);
+             
+      if (!lccp) {
+        /* If class iis not found something is very weird, it shouldn't happen 
+         * anyway if it happens zero local attribute and contnue with next
+         */
+        zsize = MIN(*size, ap->size);
+        memset((char *)tp + (ap->offs - base + toffs), 0, zsize);
+        *size -= zsize;
+        if (*first)
+          *first = 0;
+	continue;
+      }
 
       if (!lccp->flags.b.rnConv) {
         const gdb_sClass      *lcp = hash_Search(sts, gdbroot->cid_ht, &lccp->key.cid);
