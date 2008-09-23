@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_base.c,v 1.24 2007-10-01 14:39:38 claes Exp $
+ * Proview   $Id: rt_io_base.c,v 1.25 2008-09-23 07:28:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2742,10 +2742,6 @@ pwr_tStatus io_swap(
       }
     }
   }
-
-  /* Scan the Sup lists */
-  /* if ( ctx->Process != io_mProcess_Plc) */
-  sts = io_ScanSupLst( ctx->SupCtx);
 
   return IO__SUCCESS;
 }
