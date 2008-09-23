@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc.h,v 1.8 2006-01-13 06:38:27 claes Exp $
+ * Proview   $Id: rt_plc.h,v 1.9 2008-09-23 07:24:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -120,10 +120,10 @@ struct plc_sThread {
   float			f_scan_time;
   pwr_tDeltaTime	scan_time;
   float			ActualScanTime;
-  pwr_tDeltaTime	sync_time;
-  pwr_tDeltaTime	one_before_scan;
-  pwr_tDeltaTime	before_scan;
-  pwr_tDeltaTime	after_scan;
+  pwr_tTime	        sync_time;
+  pwr_tTime	        one_before_scan;
+  pwr_tTime	        before_scan;
+  pwr_tTime	        after_scan;
   pwr_tDeltaTime	delta_scan;
   pwr_tTime		one_before_scan_abs;
   pwr_tTime		before_scan_abs;
