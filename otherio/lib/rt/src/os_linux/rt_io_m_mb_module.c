@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_mb_module.c,v 1.1 2008-02-29 08:01:07 claes Exp $
+ * Proview   $Id: rt_io_m_mb_module.c,v 1.2 2008-09-30 14:20:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -33,7 +33,6 @@
 #include <sys/socket.h>
 
 
-#include "rt_io_mb_locals.h"
 
 #include "pwr.h"
 #include "pwr_baseclasses.h"
@@ -44,6 +43,8 @@
 #include "rt_errh.h"
 #include "rt_io_bus.h"
 #include "rt_mb_msg.h"
+
+#include "rt_io_mb_locals.h"
 
 /*----------------------------------------------------------------------------*\
    Init method for the Modbus module
