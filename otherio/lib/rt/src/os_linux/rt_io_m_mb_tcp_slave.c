@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_mb_tcp_slave.c,v 1.4 2008-05-30 11:22:06 claes Exp $
+ * Proview   $Id: rt_io_m_mb_tcp_slave.c,v 1.5 2008-09-30 14:25:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -121,7 +121,7 @@ static int connect_slave( io_sRackLocal *local, io_sRack *rp)
   return sts;
 }
 
-static pwr_tStatus recv_data(io_sRackLocal *local, 
+pwr_tStatus mb_recv_data(io_sRackLocal *local, 
                              io_sRack      *rp,
 			     pwr_sClass_Modbus_TCP_Slave *sp)
 {
@@ -167,7 +167,7 @@ static pwr_tStatus recv_data(io_sRackLocal *local,
 
     if (local->expected_msgs > 0) {
       tv.tv_sec = 0;
-      tv.tv_usec = 100000;
+      tv.tv_usec = sp->ResponseTime * 1000;
     } else {
       tv.tv_sec = 0;
       tv.tv_usec = 0;
@@ -187,9 +187,12 @@ static pwr_tStatus recv_data(io_sRackLocal *local,
     }
     
     if ((sts == 0) && (local->expected_msgs > 0)) {
-      sp->Status = MB__CONNDOWN;
-      close(local->s);
-      errh_Error( "Connection down to modbus slave, %s", rp->Name);
+      local->msgs_lost++;
+      if (local->msgs_lost > MAX_MSGS_LOST) {
+        sp->Status = MB__CONNDOWN;
+        close(local->s);
+        errh_Error( "Connection down to modbus slave, %s", rp->Name);
+      }
       return IO__SUCCESS;
     }
 
@@ -210,6 +213,8 @@ static pwr_tStatus recv_data(io_sRackLocal *local,
       }
 
       while (data_size > 0) {
+
+        local->msgs_lost = 0;
 
   	sp->RX_packets++;
 	
@@ -308,7 +313,7 @@ static pwr_tStatus recv_data(io_sRackLocal *local,
   return IO__SUCCESS;
 }
 
-static pwr_tStatus send_data(io_sRackLocal *local, 
+pwr_tStatus mb_send_data(io_sRackLocal *local, 
                              io_sRack      *rp,
 			     pwr_sClass_Modbus_TCP_Slave *sp, 
 			     mb_tSendMask   mask)
@@ -333,6 +338,12 @@ static pwr_tStatus send_data(io_sRackLocal *local,
       case pwr_cClass_Modbus_Module:
         mp = (pwr_sClass_Modbus_Module *) cardp->op;
 
+        if (!mp->Continous && !mp->SendOp) {
+	  break;
+	}
+	
+	mp->SendOp = FALSE;
+	
         local_card = cardp->Local;
 
         if (mask & mb_mSendMask_ReadReq) {
@@ -347,7 +358,7 @@ static pwr_tStatus send_data(io_sRackLocal *local,
               rr.head.trans_id = htons(local->trans_id);
               rr.head.proto_id = 0;
               rr.head.length = htons(sizeof(read_req) - 6);
-              rr.head.unit_id = 0;
+              rr.head.unit_id = mp->UnitId;
               rr.fc = mp->FunctionCode;
               rr.addr = htons(mp->Address);
               rr.quant = ntohs(local_card->input_size * 8);
@@ -375,7 +386,7 @@ static pwr_tStatus send_data(io_sRackLocal *local,
               rr.head.trans_id = htons(local->trans_id);
               rr.head.proto_id = 0;
               rr.head.length = htons(sizeof(read_req) - 6);
-              rr.head.unit_id = 0;
+              rr.head.unit_id = mp->UnitId;
               rr.fc = mp->FunctionCode;
               rr.addr = htons(mp->Address);
               rr.quant = ntohs((local_card->input_size + 1) / 2);
@@ -397,6 +408,40 @@ static pwr_tStatus send_data(io_sRackLocal *local,
         if (mask & mb_mSendMask_WriteReq) {
 	  switch (mp->FunctionCode) {
 
+	    case pwr_eModbus_FCEnum_WriteSingleCoil: {
+	      write_single_req wsr;
+
+	      local->trans_id++;
+	      local_card->trans_id = local->trans_id;
+
+              wsr.head.trans_id = htons(local->trans_id);
+              wsr.head.proto_id = 0;
+              wsr.head.length = htons(sizeof(wsr) - 6); 
+              wsr.head.unit_id = mp->UnitId;
+              wsr.fc = mp->FunctionCode;
+              wsr.addr = htons(mp->Address);
+	      if (local_card->output_size == 4) {
+                if (*(int *)local_card->output_area)
+		  wsr.value = ntohs(0xFF00);
+		else wsr.value = 0;
+	      } else if (local_card->output_size == 2) {
+                if (*(short int *)local_card->output_area)
+		  wsr.value = ntohs(0xFF00);
+		else wsr.value = 0;
+	      } else wsr.value = 0;
+
+	      sts = send(local->s, &wsr, ntohs(wsr.head.length) + 6, MSG_DONTWAIT);
+	      if (sts < 0) {
+                sp->Status = MB__CONNDOWN;
+                close(local->s);
+                errh_Error( "Connection down to modbus slave, %s", rp->Name);
+                return IO__SUCCESS;
+              }
+	      local->expected_msgs++;
+	      sp->TX_packets++;
+	      break;
+	    }
+
 	    case pwr_eModbus_FCEnum_WriteMultipleCoils: {
 	      write_coils_req wcr;
 
@@ -407,7 +452,7 @@ static pwr_tStatus send_data(io_sRackLocal *local,
               wcr.head.proto_id = 0;
               wcr.head.length = htons(sizeof(wcr) - 6 - 
 	                             sizeof(wcr.reg) + local_card->output_size);
-              wcr.head.unit_id = 0;
+              wcr.head.unit_id = mp->UnitId;
               wcr.fc = mp->FunctionCode;
               wcr.addr = htons(mp->Address);
               wcr.quant = ntohs((local_card->output_size) * 8);
@@ -436,7 +481,7 @@ static pwr_tStatus send_data(io_sRackLocal *local,
               wrr.head.proto_id = 0;
               wrr.head.length = htons(sizeof(wrr) - 6 - 
 	                             sizeof(wrr.reg) + local_card->output_size);
-              wrr.head.unit_id = 0;
+              wrr.head.unit_id = mp->UnitId;
               wrr.fc = mp->FunctionCode;
               wrr.addr = htons(mp->Address);
               wrr.quant = ntohs((local_card->output_size) / 2);
@@ -456,15 +501,21 @@ static pwr_tStatus send_data(io_sRackLocal *local,
 	    }
 	  } /* End - switch FC ... */
 	}
+	if (sts < 0) {
+	  sp->Status = MB__CONNDOWN;
+	  close(local->s);
+	  errh_Error( "Connection down to modbus slave, %s", rp->Name);
+	  return IO__SUCCESS;
+	}
+
+	if (sp->SingleOp)    
+	  sts = mb_recv_data(local, rp, sp);
+
+	if (sp->Status != MB__NORMAL) return IO__SUCCESS;
+
 	break;
     } /* End - switch cid ... */
 
-    if (sts < 0) {
-      sp->Status = MB__CONNDOWN;
-      close(local->s);
-      errh_Error( "Connection down to modbus slave, %s", rp->Name);
-      return IO__SUCCESS;
-    }
     cardp = cardp->next;
 
   } /* End - while cardp ... */
@@ -723,19 +774,9 @@ static pwr_tStatus IoRackRead (
     }
   }
 
-  /* Start receving old data */
-  if (sp->Status == MB__NORMAL) {
-    sts = recv_data(local, rp, sp);
-  }  
-  
-  /* Request new data */
-  if (sp->Status == MB__NORMAL && sp->DisableSlave != 1) {
-    sts = send_data(local, rp, sp, mb_mSendMask_ReadReq);
-  }
-
   /* Receive data */
-  if (sp->Status == MB__NORMAL) {
-    sts = recv_data(local, rp, sp);
+  if ((sp->Status == MB__NORMAL) && !sp->SingleOp) {
+    sts = mb_recv_data(local, rp, sp);
   }  
   
   if (sp->DisableSlave != 1) {
@@ -780,7 +821,7 @@ static pwr_tStatus IoRackWrite (
   local->expected_msgs = 0;
 
   if (sp->Status == MB__NORMAL && sp->DisableSlave != 1) {
-    sts = send_data(local, rp, sp, mb_mSendMask_WriteReq);
+    sts = mb_send_data(local, rp, sp, mb_mSendMask_WriteReq);
   }
 
   if (sp->DisableSlave == 1) sp->Status = MB__DISABLED;
