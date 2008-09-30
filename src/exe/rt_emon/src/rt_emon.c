@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_emon.c,v 1.13 2008-01-24 09:56:58 claes Exp $
+ * Proview   $Id: rt_emon.c,v 1.14 2008-09-30 14:00:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1205,16 +1205,17 @@ cSup_exec (
 )
 {
   pwr_sClass_CycleSup *o = (pwr_sClass_CycleSup *) sp->op;
-  pwr_tDeltaTime dnow;
-  pwr_tDeltaTime nextLimit;
+  pwr_tTime dnow;
+  pwr_tTime nextLimit;
   int diff;
 
-  time_Uptime(NULL, &dnow, NULL);
+//  time_Uptime(NULL, &dnow, NULL);
+  clock_gettime(CLOCK_MONOTONIC, &dnow);
   nextLimit.tv_nsec = o->NextLimit.tv_nsec;
   nextLimit.tv_sec = o->NextLimit.tv_sec;
   o->DetectCount++;
 
-  diff = time_Dcomp(&dnow, &nextLimit);
+  diff = time_Acomp(&dnow, &nextLimit);
 
   if (diff > 0 || (o->Delayed && !o->DelayNoted)) {
     if (o->AlarmCheck && o->DetectOn && !o->Blocked) {

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_comm.c,v 1.5 2007-05-18 12:04:17 claes Exp $
+ * Proview   $Id: rt_io_comm.c,v 1.6 2008-09-30 14:05:14 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -78,8 +78,8 @@ int main (int argc, char **argv)
   char mp[2000];
   qcom_sGet get;
   pwr_tTime now;
-  pwr_tDeltaTime next;
-  pwr_tDeltaTime after;
+  pwr_tTime next;
+  pwr_tTime after;
   pwr_tDeltaTime cycle;
   lst_sEntry *csup_lh;
   int delay_action = 0;
@@ -106,6 +106,7 @@ int main (int argc, char **argv)
 
     if (init_io) {
       double f;
+      
       sts = io_init(io_mProcess_IoComm, pwr_cNObjid, &io_ctx, 1, ihp->CycleTimeBus);
       if ( ODD(sts)) 
 	errh_SetStatus( PWR__SRUN);
@@ -120,7 +121,8 @@ int main (int argc, char **argv)
       cycle.tv_sec = f;
       cycle.tv_nsec = (ihp->CycleTimeBus - f) * 1.0e9;
       cycle.tv_nsec++;
-      time_Uptime(&sts, &next, &cycle);
+      clock_gettime(CLOCK_MONOTONIC, &next);
+      time_Aadd(NULL, &next, &cycle);
     }
 
     get.maxSize = sizeof(mp);
@@ -138,9 +140,11 @@ int main (int argc, char **argv)
       io_ScanSupLst( io_ctx->SupCtx);
 
       clock_gettime(CLOCK_REALTIME, &now);
-      time_Uptime(&sts, &after, NULL);
-      time_Uptime(&sts, &next, &cycle);
-      delay_action = csup_Exec(&sts, csup_lh, &next, &after, &now);
+      clock_gettime(CLOCK_MONOTONIC, &after);
+      next = after;
+      time_Aadd(NULL, &next, &cycle);
+      delay_action = csup_Exec(&sts, csup_lh, (pwr_tDeltaTime *) &next,
+                            (pwr_tDeltaTime *) &after, &now);
       if (delay_action == 2)
 	ihp->IOReadWriteFlag = FALSE;
 
