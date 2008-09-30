@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_mb_locals.h,v 1.2 2008-05-30 11:22:06 claes Exp $
+ * Proview   $Id: rt_io_mb_locals.h,v 1.3 2008-09-30 14:29:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,6 +22,7 @@
 #endif
 
 #define IO_MAXCHAN 96
+#define MAX_MSGS_LOST 5
 
 // These constants are obsolete from V4.1, except for the old style
 // (Pb_Di, Pb_Do etc)
@@ -65,6 +66,7 @@ typedef enum {
 } mb_mSendMask;
 
 typedef struct {
+  int initialized;
 } io_sAgentLocal;
 
 typedef struct {
@@ -76,6 +78,7 @@ typedef struct {
   int input_size;
   int output_size;
   int expected_msgs;
+  int msgs_lost;
   pwr_tTime last_try_connect_time;
 } io_sRackLocal;
 
@@ -117,6 +120,13 @@ typedef struct _rec_buf {
   short int    buf[1000];
 } rec_buf;
 
+typedef struct _write_single_req {
+  mbap_header  head;
+  unsigned char         fc;
+  short int    addr;
+  short int    value;
+} write_single_req;
+
 typedef struct _write_reg_req {
   mbap_header  head;
   unsigned char         fc;
@@ -154,4 +164,14 @@ typedef struct _res_fault {
 } res_fault;
 
 #pragma pack(0)
+
+pwr_tStatus mb_recv_data(io_sRackLocal *local, 
+                             io_sRack      *rp,
+			     pwr_sClass_Modbus_TCP_Slave *sp);
+
+pwr_tStatus mb_send_data(io_sRackLocal *local, 
+                             io_sRack      *rp,
+			     pwr_sClass_Modbus_TCP_Slave *sp, 
+			     mb_tSendMask   mask);
+
 
