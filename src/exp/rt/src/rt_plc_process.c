@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_process.c,v 1.12 2008-01-25 14:31:43 claes Exp $
+ * Proview   $Id: rt_plc_process.c,v 1.13 2008-09-30 14:11:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -604,7 +604,8 @@ create_thread (
 
   tp->i_scan_time = tp->f_scan_time * 1000.0 + 0.5;
 
-  time_MsToD(&tp->scan_time, tp->i_scan_time);
+  time_FloatToD(&tp->scan_time, tp->f_scan_time);
+
   tp->pp = pp;
  
   plc_inittimer(tp);
