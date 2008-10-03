@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gobj.cpp,v 1.3 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_gobj.cpp,v 1.4 2008-10-03 14:18:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1188,6 +1188,7 @@ int	gobj_get_object_m14( WFoe *foe, vldh_t_node node, unsigned long index)
   if ( EVEN(sts)) return sts;
 	
   foe->gre->node_update( new_node);
+  foe->gre->select_node( new_node);
   if ( con_count > 0) free((char *) con_list);
 
   return FOE__SUCCESS;
@@ -1303,6 +1304,7 @@ int	gobj_get_object_m15( WFoe *foe, vldh_t_node node, unsigned long index)
   if ( EVEN(sts)) return sts;
 
   foe->gre->node_update( new_node);
+  foe->gre->select_node( new_node);
   if ( con_count > 0) free((char *) con_list);
 
   return FOE__SUCCESS;
@@ -1429,6 +1431,7 @@ int	gobj_get_object_m16( WFoe *foe, vldh_t_node node, unsigned long index)
   if ( EVEN(sts)) return sts;
 
   foe->gre->node_update( new_node);
+  foe->gre->select_node( new_node);
   if ( con_count > 0) free((char *) con_list);
 
   return FOE__SUCCESS;
@@ -1545,6 +1548,7 @@ int	gobj_get_object_m17( WFoe *foe, vldh_t_node node, unsigned long index)
   if ( EVEN(sts)) return sts;
 
   foe->gre->node_update( new_node);
+  foe->gre->select_node( new_node);
 
   if ( con_count > 0) free((char *) con_list);
 
@@ -1706,6 +1710,7 @@ int	gobj_get_object_m19( WFoe *foe, vldh_t_node node, unsigned long index)
   if ( EVEN(sts)) return sts;
 	
   foe->gre->node_update( new_node);
+  foe->gre->select_node( new_node);
 
   if ( con_count > 0) free((char *) con_list);
 
@@ -1815,6 +1820,7 @@ int	gobj_get_object_m20( WFoe *foe, vldh_t_node node, unsigned long index)
   if ( EVEN(sts)) return sts;
 
   foe->gre->node_update( new_node);
+  foe->gre->select_node( new_node);
 
   if ( con_count > 0) free((char *) con_list);
 
@@ -2093,6 +2099,7 @@ int	gobj_get_object_m24( WFoe *foe, vldh_t_node node, unsigned long index)
   if ( EVEN(sts)) return sts;
 
   foe->gre->node_update( new_node);
+  foe->gre->select_node( new_node);
 
   if ( con_count > 0) free((char *) con_list);
 
@@ -2215,6 +2222,7 @@ int	gobj_get_object_m25( WFoe *foe, vldh_t_node node, unsigned long index)
   if ( EVEN(sts)) return sts;
 	
   foe->gre->node_update( new_node);
+  foe->gre->select_node( new_node);
 
   if ( con_count > 0) free((char *) con_list);
 
@@ -2466,6 +2474,7 @@ int	gobj_get_object_m28( WFoe *foe, vldh_t_node node, unsigned long index)
   if ( EVEN(sts)) return sts;
 	
   foe->gre->node_update( new_node);
+  foe->gre->select_node( new_node);
 
   if ( con_count > 0) free((char *) con_list);
 
@@ -2597,6 +2606,7 @@ int	gobj_get_object_m29( WFoe *foe, vldh_t_node node, unsigned long index)
   if ( EVEN(sts)) return sts;
 
   foe->gre->node_update( new_node);
+  foe->gre->select_node( new_node);
 
   if ( con_count > 0) free((char *) con_list);
 

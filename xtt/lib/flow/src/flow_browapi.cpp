@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_browapi.cpp,v 1.11 2008-01-24 09:33:47 claes Exp $
+ * Proview   $Id: flow_browapi.cpp,v 1.12 2008-10-03 14:19:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -760,4 +760,14 @@ void brow_SetFillColor( brow_tNode node, flow_eDrawType color)
 void brow_SetTipText( brow_tCtx ctx, brow_tObject object, char *text, int x, int y)
 {
   ctx->tiptext->draw_text( (FlowArrayElem *)object, text, x, y);
+}
+
+void brow_SetInverseColor( brow_tCtx ctx, flow_eDrawType color)
+{
+  ctx->set_inverse_color( color);
+}
+
+int brow_GetObjectLevel( brow_tObject object)
+{
+  return ((FlowNode *)object)->get_level();
 }

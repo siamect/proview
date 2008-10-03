@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_ctx.cpp,v 1.16 2008-06-24 08:07:06 claes Exp $
+ * Proview   $Id: flow_ctx.cpp,v 1.17 2008-10-03 14:19:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -64,13 +64,14 @@ FlowCtx::FlowCtx( char *ctx_name, double zoom_fact, int offs_x, int offs_y)
     node_movement_paste_active(0), node_movement_paste_pending(0),
     nav_rect_movement_active(0), nav_rect_zoom_active(0), 
     select_rect_active(0), 
-    con_create_active(0), auto_scrolling_active(0), defered_redraw_active(0),
+    con_create_active(0), conpoint_select_idx(0), auto_scrolling_active(0), 
+    defered_redraw_active(0),
     a(50,50), a_sel(20,20), a_paste(20,20),
     a_move(20,20), a_nc(20,20), a_cc(20,20),
     event_region_select(flow_eEvent_Null),
     event_region_add_select(flow_eEvent_Null),
     event_create_con(flow_eEvent_Null), event_create_node(flow_eEvent_Null),
-    event_move_node(flow_eEvent_Null), 
+    event_move_node(flow_eEvent_Null), event_select_conpoint(flow_eEvent_Null), 
     callback_object(0), callback_object_type(flow_eObjectType_NoObject),
     cursor_present(0), cursor_x(0), cursor_y(0), user_highlight(0),
     application_paste(0),
@@ -81,8 +82,8 @@ FlowCtx::FlowCtx( char *ctx_name, double zoom_fact, int offs_x, int offs_y)
     trace_connect_func(0), trace_scan_func(0), trace_started(0), 
     unobscured(1), nodraw(0), no_nav(1), widget_cnt(0),
     select_policy(flow_eSelectPolicy_Partial), tiptext(0),
-    display_level(flow_mDisplayLevel_1), scroll_size(0), 
-    scroll_callback(0), scroll_data(NULL)
+    inverse_color(flow_eDrawType_Line), display_level(flow_mDisplayLevel_1),  
+    scroll_size(0), scroll_callback(0), scroll_data(NULL)
 { 
   strcpy(name, ctx_name);
   memset( event_callback, 0, sizeof(event_callback));
@@ -262,6 +263,44 @@ void FlowCtx::con_create_source( FlowArrayElem *node, int cp_num, int cp_x, int 
   con_create_last_x = cp_x;
   con_create_last_y = cp_y;
   con_create_active = 1;
+}
+
+void FlowCtx::conpoint_select( FlowArrayElem *node, int cp_num)
+{
+  // Check if already selected
+  for ( int i = 0; i < conpoint_select_idx; i++) {
+    if ( conpoint_select_node[i] == node && conpoint_select_num[i] == cp_num) {
+      // Hit, remove selection
+      ((FlowNode *)node)->conpoint_select_clear( cp_num);
+
+      for ( int j = i; j < conpoint_select_idx - 1; j++) {
+	conpoint_select_node[j] = conpoint_select_node[j+1];	
+	conpoint_select_num[j] = conpoint_select_num[j+1];	
+      }
+      conpoint_select_idx--;
+      return;
+    }
+  }
+
+  // If list is full, replace last point
+  if ( conpoint_select_idx > CONPOINT_SELECTLIST_SIZE - 1) {
+    ((FlowNode *)conpoint_select_node[conpoint_select_idx-1])->conpoint_select_clear( conpoint_select_num[conpoint_select_idx-1]);
+    conpoint_select_idx--;
+  }
+  conpoint_select_node[conpoint_select_idx] = node;
+  conpoint_select_num[conpoint_select_idx] = cp_num;
+  ((FlowNode *)node)->conpoint_select( cp_num);
+  conpoint_select_idx++;
+}
+
+void FlowCtx::conpoint_select_clear()
+{
+  if ( conpoint_select_idx >= 1)
+    ((FlowNode *)conpoint_select_node[0])->conpoint_select_clear( conpoint_select_num[0]);
+  if ( conpoint_select_idx >= 2)
+    ((FlowNode *)conpoint_select_node[1])->conpoint_select_clear( conpoint_select_num[1]);
+
+  conpoint_select_idx = 0;
 }
 
 void FlowCtx::redraw_node_cons( void *node)
@@ -757,6 +796,15 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
         break;
     }
   }
+  else if ( event == event_select_conpoint)
+  {
+    sts = 0;
+    for ( i = 0; i < a.a_size; i++) {
+      sts = a.a[i]->event_handler( event, x, y);
+      if ( sts)
+        break;
+    }
+  }
   else if ( event == event_create_node)
   {
   }
@@ -883,6 +931,7 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
     case flow_eEvent_MB1DoubleClickCtrl:
     case flow_eEvent_MB1ClickShiftCtrl:
     case flow_eEvent_MB1DoubleClickShiftCtrl:
+    case flow_eEvent_MB1Press:
     case flow_eEvent_MB2Click:
     case flow_eEvent_MB2DoubleClick:
     case flow_eEvent_MB2ClickShift:
@@ -893,6 +942,8 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
     case flow_eEvent_MB2DoubleClickShiftCtrl:
     case flow_eEvent_MB3Click:
     case flow_eEvent_MB3Press:
+      if ( event == event_select_conpoint)
+	break;
       tiptext->remove();
       sts = 0;
       for ( i = 0; i < a.a_size; i++)
@@ -1360,6 +1411,9 @@ void FlowCtx::enable_event( flow_eEvent event, flow_eEventType event_type,
     case flow_eEventType_MoveNode:
       event_move_node = event;
       break;
+    case flow_eEventType_SelectConPoint:
+      event_select_conpoint = event;
+      break;
     default:
       ;
   }
@@ -1750,8 +1804,8 @@ int FlowCtx::get_next_object( FlowArrayElem *object, flow_eDirection dir,
 
   double ll_x, ll_y, ur_x, ur_y;
   double a_ll_x, a_ll_y, a_ur_x, a_ur_y;
-  double x, y, a_x, a_y;
-  double dir_angle;
+  double x, y, a_x, a_y, m_x, m_y, a_m_x, a_m_y;
+  double dir_angle, m_angle, m_distance;
   vector<NextElem> a0;
 
   if ( !object) {
@@ -1766,7 +1820,8 @@ int FlowCtx::get_next_object( FlowArrayElem *object, flow_eDirection dir,
 
     for ( int i = 0; i < a.size(); i++) {
 
-      if ( a[i]->type() == flow_eObjectType_Node) {
+      if ( a[i]->type() == flow_eObjectType_Node && 
+	   ((FlowNode *)a[i])->get_group() != flow_eNodeGroup_Document) {
 	NextElem n;
 
 	((FlowNode *)a[i])->measure( &a_ll_x, &a_ll_y, &a_ur_x, &a_ur_y);
@@ -1834,6 +1889,8 @@ int FlowCtx::get_next_object( FlowArrayElem *object, flow_eDirection dir,
     ((FlowNode *)object)->measure( &ll_x, &ll_y, &ur_x, &ur_y);
     x = ll_x;
     y = ll_y;
+    m_x = (ll_x + ur_x) / 2;
+    m_y = (ll_y + ur_y) / 2;
 
     switch ( dir) {
     case flow_eDirection_Left:
@@ -1855,18 +1912,28 @@ int FlowCtx::get_next_object( FlowArrayElem *object, flow_eDirection dir,
       if ( a[i] == object)
 	continue;
 
-      if ( a[i]->type() == flow_eObjectType_Node) {
+      if ( a[i]->type() == flow_eObjectType_Node &&
+	   ((FlowNode *)a[i])->get_group() != flow_eNodeGroup_Document) {
 
 	((FlowNode *)a[i])->measure( &a_ll_x, &a_ll_y, &a_ur_x, &a_ur_y);
 	if ( ll_x >= a_ll_x && ur_x <= a_ur_x &&
 	     ll_y >= a_ll_y && ur_y <= a_ur_y)
 	  continue;
+	if ( ll_x <= a_ll_x && ur_x >= a_ur_x &&
+	     ll_y <= a_ll_y && ur_y >= a_ur_y)
+	  continue;
+	
 	a_x = a_ll_x;
 	a_y = a_ll_y;
+	a_m_x = (a_ll_x + a_ur_x) / 2;
+	a_m_y = (a_ll_y + a_ur_y) / 2;
 	
 	NextElem n;
 	n.elem = a[i];
 	n.distance = sqrt((a_x - x)*(a_x - x) + (a_y - y)*(a_y - y));
+	m_distance = sqrt((a_m_x - m_x)*(a_m_x - m_x) + (a_m_y - m_y)*(a_m_y - m_y));
+	if ( m_distance < n.distance)
+	  n.distance = m_distance;
 	if ( fabs( a_y - y) < DBL_EPSILON) {
 	  if ( a_x > x)
 	    n.angle = 0;
@@ -1877,16 +1944,25 @@ int FlowCtx::get_next_object( FlowArrayElem *object, flow_eDirection dir,
 	  n.angle = atan((a_x - x)/(a_y - y)) + M_PI / 2;
 	  if ( (a_y - y) > 0)
 	    n.angle -= M_PI;
+	  if ( fabs( a_m_y - m_y) < DBL_EPSILON) {
+	    m_angle = atan((a_m_x - m_x)/(a_m_y - m_y)) + M_PI / 2;
+	    if ( (a_y - y) > 0)
+	      m_angle -= M_PI;
+	    if ( (n.angle < 0 && m_angle < 0 && m_angle > n.angle) ||
+		 (n.angle > 0 && m_angle > 0 && m_angle < n.angle))
+	      n.angle = m_angle;
+	  }
+
 	}
 	
-	double rank_angel = n.angle + dir_angle;
+	double rank_angle = n.angle + dir_angle;
 	double rank_distance = n.distance / (x_right - x_left);
-	if ( rank_angel > M_PI)
-	  rank_angel -= 2 * M_PI;
-	rank_angel = fabs( rank_angel) / M_PI;
-	if ( rank_angel > 0.5)
+	if ( rank_angle > M_PI)
+	  rank_angle -= 2 * M_PI;
+	rank_angle = fabs( rank_angle) / M_PI;
+	if ( rank_angle > 0.5)
 	  continue;
-	n.rank = rank_angel + ( 0.3 + rank_distance);
+	n.rank = rank_angle + ( 0.3 + rank_distance);
 	a0.push_back( n);
       }
     }
@@ -1908,6 +1984,80 @@ int FlowCtx::get_next_object( FlowArrayElem *object, flow_eDirection dir,
     return 0;
   *next = rank_elem;
   return 1;
+}
+
+int FlowCtx::get_next_conpoint( FlowArrayElem *object, int cp_num, flow_eDirection dir,
+				FlowArrayElem **next, int *next_cp_num)
+{
+  int sts;
+  int loop_cnt = 0;
+
+  if ( object == 0) {
+    *next = 0;
+    for (;;) {
+      sts = get_next_object( *next, dir, next);
+      if ( ODD(sts)) {
+	double ll_x, ll_y, ur_x, ur_y, x, y;
+    
+	((FlowNode *)*next)->measure( &ll_x, &ll_y, &ur_x, &ur_y);
+	switch ( dir) {
+	case flow_eDirection_Up:
+	  y = ur_y + 5;
+	  x = ll_x - 0.05;
+	  break;
+	case flow_eDirection_Down:
+	  y = ll_y - 5;
+	  x = ll_x - 0.05;
+	  break;
+	case flow_eDirection_Left:
+	  x = ur_x + 5;
+	  y = ll_y - 0.05;
+	  break;
+	case flow_eDirection_Right:
+	  x = ll_x - 5;
+	  y = ll_y - 0.05;
+	  break;
+	default:
+	  x = y = 0;
+	}      
+	sts = ((FlowNode *)*next)->get_next_conpoint( -1, dir, x, y, next_cp_num);
+	if ( ODD(sts)) return sts ;
+      }
+      loop_cnt++;
+      if ( loop_cnt > 100)
+	return 0;
+    }
+    return 0;
+  }
+
+  if ( object->type() != flow_eObjectType_Node)
+    return 0;  
+
+  // Try to get next on the same object
+  sts = ((FlowNode *)object)->get_next_conpoint( cp_num, dir, 0, 0, next_cp_num);
+  if ( ODD(sts)) {
+    *next = object;
+    return 1;
+  }
+
+  double o_x, o_y;
+  flow_eDirection o_num;
+
+  ((FlowNode *)object)->get_conpoint( cp_num, &o_x, &o_y, &o_num);
+  *next = object;
+  for (;;) {
+    sts = get_next_object( *next, dir, next);
+    if ( ODD(sts)) {
+      sts = ((FlowNode *)*next)->get_next_conpoint( -1, dir, o_x, o_y, next_cp_num);
+      if ( ODD(sts)) break;
+    }
+    else
+      break;
+    loop_cnt++;
+    if ( loop_cnt > 100)
+      return 0;
+  }
+  return sts;
 }
 
 int FlowCtx::is_visible( FlowArrayElem *element, flow_eVisible type)
@@ -2135,4 +2285,42 @@ void flow_scroll_vertical( FlowCtx *ctx, int value, int bottom)
   y_pix = int( - value * ctx->scroll_size * ctx->zoom_factor + 
 	(ctx->offset_y - ctx->y_low * ctx->zoom_factor));
   ctx->scroll( 0, y_pix);
+}
+
+void FlowCtx::move_selected_nodes( double delta_x, double delta_y, int grid)
+{
+  if ( !a_sel.size())
+    return;
+
+  int x = int( delta_x * zoom_factor);
+  int y = int( delta_y * zoom_factor);
+
+  for ( int i = 0; i < a_sel.size(); i++)
+    if ( a_sel[i]->type() == flow_eObjectType_Node)
+      a_sel[i]->move( x, y, grid);
+
+  for ( int i = 0; i < a_sel.size(); i++)
+    if ( a_sel[i]->type() == flow_eObjectType_Node)
+      redraw_node_cons( a_sel[i]);
+}
+
+int FlowCtx::paste_stop()
+{
+  if ( !node_movement_paste_active)
+    return 0;
+
+  if ( auto_scrolling_active)
+    auto_scrolling_stop();
+  node_movement_paste_active = 0;
+  fdraw->set_cursor( this, draw_eCursor_Normal);
+  return 1;
+}
+
+int FlowCtx::pending_paste_stop()
+{
+  if ( !node_movement_paste_pending)
+    return 0;
+  paste_clear();
+  node_movement_paste_pending = 0;
+  return 1;
 }

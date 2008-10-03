@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe.h,v 1.16 2008-05-29 14:57:53 claes Exp $
+ * Proview   $Id: wb_foe.h,v 1.17 2008-10-03 14:18:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -199,16 +199,24 @@ class WFoe : public WUtility {
   void activate_syntax();
   void activate_compile();
   void activate_delete();
+  void activate_delete_confirm();
   void activate_createobject( float x, float y);
   void activate_changetext();
   void activate_cut();
   void activate_copy();
   void activate_paste();
   void activate_select_nextobject( flow_eDirection dir);
+  void activate_select_addnextobject( flow_eDirection dir);
+  void activate_select_nextconpoint( flow_eDirection dir);
+  void activate_scroll( flow_eDirection dir);
+  void activate_move_object( flow_eDirection dir);
   void activate_attribute();
   void activate_subwindow();
   void activate_undelete();
   void activate_unselect();
+  void activate_createnode();
+  void activate_createconnection();
+  void activate_connect();
   void activate_redraw();
   void activate_zoomin();
   void activate_zoomout();
@@ -228,6 +236,7 @@ class WFoe : public WUtility {
   void activate_simulate_togg( int set);
   void activate_view_togg( int set);
   void activate_edit_togg( int set);
+  void activate_conpoint_lock();
 
   void function_setup();
   int register_callbacks();
@@ -281,6 +290,7 @@ class WFoe : public WUtility {
   static void edit_exit_save( WFoe *foe);
   static void edit_exit_nosave( WFoe *foe);
   static void delete_subwindow_ok_cb( void *ctx, void *data);
+  static void delete_ok_cb( void *ctx, void *data);
   
   static void exit_save( WFoe *foe);
   static void exit_nosave( WFoe *foe);
@@ -294,7 +304,7 @@ class WFoe : public WUtility {
   static void gre_con_selected( WGre *gre);
   static void gre_con_created( WGre *gre, double x, double y,
 			       vldh_t_node source_obj, unsigned long source_point,
-			       vldh_t_node destination_obj, unsigned long destination_point);
+			       vldh_t_node destination_obj, unsigned long destination_point, int select, int *sts);
   static void gre_region_selected( WGre *gre);
   static void gre_enter_leave( WGre *gre);
   static void gre_delete( WGre *gre, void *object, unsigned long object_type);
@@ -311,6 +321,8 @@ class WFoe : public WUtility {
   static void gre_help( WGre *gre, char *help_title);
   static void gre_regionmoved( WGre *gre);
   static void gre_message( WGre *gre, char *message);
+
+  static void pal_select_cb( void *ctx, pwr_tCid cid);
 
 };
 

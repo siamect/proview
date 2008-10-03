@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_nodeclass.cpp,v 1.7 2008-01-17 14:18:55 claes Exp $
+ * Proview   $Id: flow_nodeclass.cpp,v 1.8 2008-10-03 14:19:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,6 +19,8 @@
 
 #include "flow_std.h"
 
+#include <vector.h>
+#include <float.h>
 #include <iostream.h>
 #include <fstream.h>
 #include "flow_nodeclass.h"
@@ -26,6 +28,14 @@
 #include "flow_annotpixmap.h"
 #include "flow_conpoint.h"
 #include "flow_msg.h"
+
+class NextConPoint {
+ public:
+  FlowConPoint *cp;
+  double distance;
+  double angle;
+  double rank;
+};
 
 FlowNodeClass::FlowNodeClass( FlowCtx *flow_ctx, char *name, 
 	flow_eNodeGroup grp)
@@ -337,4 +347,100 @@ int FlowNodeClass::load( char *filename)
 
   fp.close();
   return FLOW__SUCCESS;
+}
+
+int FlowNodeClass::get_next_conpoint( int cp_num, flow_eDirection dir, double x0, double y0, int *next_cp_num)
+{
+  double x, y, a_x, a_y;
+  double dir_angle;
+  vector<NextConPoint> a0;
+
+  switch ( dir) {
+  case flow_eDirection_Left:
+    dir_angle = M_PI;
+    break;
+  case flow_eDirection_Right:
+    dir_angle = 0;
+    break;
+  case flow_eDirection_Up:
+    dir_angle = -M_PI/2;
+    break;
+  case flow_eDirection_Down:
+    dir_angle = M_PI/2;
+    break;
+  default: ;
+  }
+  
+  if ( cp_num == -1) {
+    x = x0;
+    y = y0;
+  }
+  else {
+    int found = 0;
+    for ( int i = 0; i < a.a_size; i++) {
+      if ( a.a[i]->type() == flow_eObjectType_ConPoint &&
+	   ((FlowConPoint *)a.a[i])->number == cp_num) {
+	x = ((FlowConPoint *)a.a[i])->p.x;
+	y = ((FlowConPoint *)a.a[i])->p.y;
+	found = 1;
+	break;
+      }
+    }
+    if ( !found)
+      return 0;
+  }
+
+  for ( int i = 0; i < a.a_size; i++) {
+    if ( a.a[i]->type() == flow_eObjectType_ConPoint &&
+	 ((FlowConPoint *)a.a[i])->number != cp_num) {
+      
+      a_x = ((FlowConPoint *)a.a[i])->p.x;
+      a_y = ((FlowConPoint *)a.a[i])->p.y;
+	
+      NextConPoint n;
+      n.cp = (FlowConPoint *)a[i];
+      n.distance = sqrt((a_x - x)*(a_x - x) + (a_y - y)*(a_y - y));
+      if ( fabs( a_y - y) < DBL_EPSILON) {
+	if ( a_x > x)
+	  n.angle = 0;
+	else
+	  n.angle = M_PI;
+      }
+      else {
+	n.angle = atan((a_x - x)/(a_y - y)) + M_PI / 2;
+	if ( (a_y - y) > 0)
+	  n.angle -= M_PI;
+      }
+      
+      double rank_angel = n.angle + dir_angle;
+      double rank_distance = n.distance;
+      if ( rank_angel > M_PI)
+	rank_angel -= 2 * M_PI;
+      if ( rank_angel < -M_PI)
+	rank_angel += 2 * M_PI;
+      rank_angel = fabs( rank_angel) / M_PI;
+      if ( rank_angel >= 0.5 - DBL_EPSILON)
+	continue;
+      n.rank = rank_angel + ( 0.3 + rank_distance);
+      a0.push_back( n);
+    }
+  }
+
+  if ( a0.size() == 0)
+    return 0;
+
+  // Find best object
+  double rank_min = 1E37;
+  FlowConPoint *rank_elem = 0;
+  for ( int i = 0; i < (int)a0.size(); i++) {
+
+    if ( a0[i].rank < rank_min) {
+      rank_min = a0[i].rank;
+      rank_elem = a0[i].cp;
+    }
+  }
+  if ( !rank_elem)
+    return 0;
+  *next_cp_num = rank_elem->number;
+  return 1;
 }

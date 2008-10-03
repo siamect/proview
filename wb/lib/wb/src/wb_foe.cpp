@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe.cpp,v 1.10 2008-06-24 07:52:21 claes Exp $
+ * Proview   $Id: wb_foe.cpp,v 1.11 2008-10-03 14:18:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -533,8 +533,56 @@ void WFoe::activate_compile()
     show_executeorder();
 }
 
+void WFoe::pal_select_cb( void *ctx, pwr_tCid cid)
+{
+  WFoe *foe = (WFoe *) ctx;
+  vldh_t_node node;
+  pwr_tStatus sts;
+
+  if ( foe->function != EDIT)
+    return;
+
+  foe->gre->pending_paste_stop();
+
+  foe->disable_ldh_cb();
+  sts = foe->gre->create_node_floating( cid, 0, 0, &node);
+  foe->enable_ldh_cb();
+  foe->error_msg( sts);
+}
+
+
+// 
+// Delete from menu
 //
-//	Callback from the menu.
+void WFoe::delete_ok_cb( void *ctx, void *data)
+{
+  WFoe *foe = (WFoe *) ctx;
+
+  foe->activate_delete();
+}
+
+void WFoe::activate_delete_confirm()
+{
+  unsigned long		node_count;
+  vldh_t_node		*nodelist;
+  char			msg[200];
+
+  gre->get_selnodes( &node_count, &nodelist);
+  if ( !node_count) {
+    message( "Nothing to delete");
+    return;    
+  }
+  
+  if ( node_count > 1)
+    strcpy( msg, "Do you want to delete the selected objects");
+  else
+    strcpy( msg, "Do you want to delete the selected object");
+
+  wow->DisplayQuestion( this, "Delete", msg, delete_ok_cb, 0, *nodelist);
+}
+
+//
+//	Callback from the popup menu.
 //	Deletes the selected nodes and connections.
 //	Checks first that a selected node does not contain a subwindow.
 //
@@ -600,7 +648,7 @@ void WFoe::activate_delete()
     /* Single node that has subwindow */
     char msg[200];
     sprintf( msg, 
-	     "Object \"%s\" has subwindow\n Do you wan't to delete the subwindow?",
+	     "Object \"%s\" has subwindow\n Do you want to delete the subwindow?",
 	     (*nodelist)->hn.name);
     wow->DisplayQuestion( this,
 			 "Delete subwindow", msg,
@@ -761,7 +809,32 @@ void WFoe::activate_paste()
 
 void WFoe::activate_select_nextobject( flow_eDirection dir)
 {
-  gre->select_nextobject( dir);
+  gre->select_nextobject( dir, 0);
+}
+
+void WFoe::activate_select_addnextobject( flow_eDirection dir)
+{
+  gre->select_nextobject( dir, 1);
+}
+
+void WFoe::activate_scroll( flow_eDirection dir)
+{
+  gre->scroll( dir);
+}
+
+void WFoe::activate_select_nextconpoint( flow_eDirection dir)
+{
+  gre->select_next_conpoint( dir);
+}
+
+void WFoe::activate_conpoint_lock()
+{
+  gre->conpoint_lock(1);
+}
+
+void WFoe::activate_move_object( flow_eDirection dir)
+{
+  gre->move_object( dir);
 }
 
 //
@@ -878,6 +951,94 @@ void WFoe::activate_unselect()
   gre->unselect();
 }
 
+
+//
+//	Callback from the menu.
+//	Create a node.
+//
+void WFoe::activate_createnode()
+{
+  pwr_tClassId		cid;
+  int			sts;
+  vldh_t_node		node;
+
+  if ( msg_label_id != 0 ) message( ""); 
+
+  gre->unselect();
+
+  /* Get selected nodes from palette */
+  sts =  node_palctx->get_select( &cid);
+
+  if ( EVEN(sts)) {
+    message( "Choose an object from the palette");
+    BEEP;
+    return;
+  }
+
+  gre->pending_paste_stop();
+
+  disable_ldh_cb();
+  sts = gre->create_node_floating( cid, 0, 0, &node);
+  enable_ldh_cb();
+  error_msg( sts);
+  if ( EVEN(sts)) return;
+}
+
+
+//
+//	Callback from the menu.
+//	Create a connection.
+//
+void WFoe::activate_createconnection()
+{
+  unsigned long		node_count;
+  vldh_t_node		*nodelist;
+  int			*numlist;
+  int			sts;
+
+  if ( msg_label_id != 0 ) message( ""); 
+
+  gre->get_conpoint_select( &node_count, &nodelist, &numlist);
+  if ( !node_count) {
+    message( "No connectionpoint is selected");
+    return;
+  }
+  if ( node_count == 1) {
+    double x, y;
+    flow_eDirection dir;
+
+    gre->get_conpoint( nodelist[0], numlist[0], &x, &y, &dir);
+    switch ( dir) {
+    case flow_eDirection_Up:
+      y += 0.15;
+      break;
+    case flow_eDirection_Down:
+      y -= 0.15;
+      break;
+    case flow_eDirection_Right:
+      x += 0.1;
+      break;
+    case flow_eDirection_Left:
+      x -= 0.3;
+      break;
+    default:
+      x -= 0.3;
+    }
+
+    gre_con_created( gre, x, y, nodelist[0], numlist[0], 0, 0, 1, &sts);
+  }
+  else {
+    gre_con_created( gre, 0, 0, nodelist[0], numlist[0], nodelist[1], numlist[1], 0, &sts);
+    gre->unselect();
+  }
+  if ( ODD(sts)) {
+    gre->conpoint_unselect();
+    gre->conpoint_lock(0);
+  }
+  free( nodelist);
+  free( numlist);
+
+}
 
 //
 //	Callback from the menu.
@@ -1024,7 +1185,7 @@ void WFoe::activate_getobj()
     /* get the id of the desired object */
     sts = gobj_get_object( this, *nodelist, 1) ;
     error_msg( sts);
-    gre->unselect();
+    // gre->unselect();
   }
 
   if ( node_count > 0) free((char *) nodelist);
@@ -1365,17 +1526,16 @@ void WFoe::gre_con_selected( WGre *gre)
 //
 // Description: Backcall from the controlled gre module when
 //	a connection should be created.
-//	Checks syntax and gets a suitible connectionclass by foe_gsx.
+//	Checks syntax and gets a suitable connectionclass by foe_gsx.
 //	If foe->con_palette_managed is set the class is fetched 
 //	from the connection palette. Creates a connection.
 //
 void WFoe::gre_con_created( WGre *gre, double x, double y,
 			    vldh_t_node source_obj, unsigned long source_point,
-			    vldh_t_node destination_obj, unsigned long destination_point)
+			    vldh_t_node destination_obj, unsigned long destination_point, int select, int *sts)
 {
   pwr_tClassId	con_class;
   pwr_tClassId 	user_class;
-  int		sts;	
   WFoe 		*foe;
   vldh_t_node	dest;
   unsigned long	destpoint;
@@ -1384,8 +1544,8 @@ void WFoe::gre_con_created( WGre *gre, double x, double y,
 
   if ( gre->trace_started) {
     if ( !destination_obj) {
-      sts = trace_create_analyse( gre, x, y, source_obj, source_point);
-      if ( EVEN(sts)) {
+      *sts = trace_create_analyse( gre, x, y, source_obj, source_point);
+      if ( EVEN(*sts)) {
 	foe->message( "Unable to find trace attribute");
 	BEEP;
 	return;
@@ -1404,8 +1564,8 @@ void WFoe::gre_con_created( WGre *gre, double x, double y,
   if ( foe->con_palette_managed == 0 )
     user_class = 0;
   else {
-    sts = foe->con_palctx->get_select( &user_class);
-    if ( EVEN(sts)) {
+    *sts = foe->con_palctx->get_select( &user_class);
+    if ( EVEN(*sts)) {
       /* SG 20.03.91 Inform the user that he has to choose a conn */
       foe->message( "Choose a connection from the palette");
       BEEP;
@@ -1415,33 +1575,39 @@ void WFoe::gre_con_created( WGre *gre, double x, double y,
   
   if ( !destination_obj) {
     foe->disable_ldh_cb();
-    sts = gsx_auto_create( foe, x, y, source_obj, source_point,
+    *sts = gsx_auto_create( foe, x, y, source_obj, source_point,
 			   &dest, &destpoint);
     foe->enable_ldh_cb();
-    if ( EVEN(sts)) return;
+    if ( EVEN(*sts)) return;
+
+    if ( select)
+      gre->select_node( dest);
+    foe->gre->set_node_visible( dest);
   }
   else {
     dest = destination_obj;
     destpoint = destination_point;
   }
   /* Check connection syntax */
-  sts = gsx_check_connection( foe, source_obj, source_point, 
+  *sts = gsx_check_connection( foe, source_obj, source_point, 
 			      dest, destpoint, &con_class, user_class);	
-  if ( sts == GSX__CONTYPE) {
+  if ( *sts == GSX__CONTYPE) {
     foe->message( "Connected attributes are not of the same type");
     BEEP;
     return;
   }
-  foe->error_msg( sts);
-  if ( EVEN(sts)) return;
+  foe->error_msg( *sts);
+  if ( EVEN(*sts)) return;
 
   if ( user_class)
     con_class = user_class;
 
-  sts = gre->create_con( con_class, source_obj, source_point,
+  *sts = gre->create_con( con_class, source_obj, source_point,
 			dest, destpoint, foe->con_drawtype);
-  foe->error_msg( sts);
-  if ( EVEN(sts)) return;
+  foe->error_msg( *sts);
+  if ( EVEN(*sts)) return;
+
+  *sts = FOE__SUCCESS;
 }
 
 //
@@ -2129,6 +2295,8 @@ void WFoe::quit()
   vldh_t_wind	wind;
   int		sts;
 
+  gre->pending_paste_stop();
+
   /* Tell my parent that his child is quitting, if parent is a node */
   wind = gre->wind;
   if ( wind->hw.parent_node_pointer != 0 )
@@ -2161,6 +2329,8 @@ void WFoe::foe_exit()
   vldh_t_wind	wind;
   vldh_t_node	parent_node;
   int		sts;
+
+  gre->pending_paste_stop();
 
   /* Tell my parent that his child is quitting, if parent is a node */
   wind = gre->wind;
@@ -2196,6 +2366,8 @@ void WFoe::foe_delete()
 
   /* Tell my parent that his child is deleted, if parent is a node */
   wind = gre->wind;
+
+  gre->pending_paste_stop();
 
   sts = ldh_SaveSession( wind->hw.ldhses);
   if ( EVEN(sts)) return;
@@ -3296,6 +3468,8 @@ int WFoe::change_mode( int new_mode)
       /* Save changes... */
       wind = gre->wind;
 
+      gre->pending_paste_stop();
+
       /* Check if changes are made */
       sts = ldh_GetSessionInfo( wind->hw.ldhses, &info);
       if ( EVEN(sts)) return sts;
@@ -3441,6 +3615,8 @@ int WFoe::change_mode( int new_mode)
       /* Save changes... */
       wind = gre->wind;
       
+      gre->pending_paste_stop();
+
       /* Check if changes are made */
       sts = ldh_GetSessionInfo( wind->hw.ldhses, &info);
       if ( EVEN(sts)) return sts;
@@ -3525,6 +3701,8 @@ int WFoe::change_mode( int new_mode)
       /* Save changes... */
       wind = gre->wind;
       
+      gre->pending_paste_stop();
+
       /* Check if changes are made */
       sts = ldh_GetSessionInfo( wind->hw.ldhses, &info);
       if ( EVEN(sts)) return sts;

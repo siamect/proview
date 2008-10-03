@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vldh.cpp,v 1.2 2008-01-24 09:49:05 claes Exp $
+ * Proview   $Id: wb_vldh.cpp,v 1.3 2008-10-03 14:18:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -4725,6 +4725,33 @@ char	*vldh_VolumeIdToStr( pwr_tVolumeId volumeid)
   sprintf( str, "%3.3u_%3.3u_%3.3u_%3.3u",
 	   volid[3], volid[2], volid[1], volid[0]);
   return str;
+}
+
+//
+// Check if node exist in this window
+//
+int vldh_check_node(
+  vldh_t_wind		wind,
+  vldh_t_node		node
+)
+{
+  vldh_t_node	*nodelist;
+  unsigned long	node_count;
+  int		sts, node_found;
+
+  sts = vldh_get_nodes( wind, &node_count, &nodelist);
+  if ( EVEN(sts)) return 0;
+
+  node_found = 0;
+  for ( unsigned int i = 0; i < node_count; i++) {
+    if ( node == nodelist[i]) {
+      node_found = 1;
+      break;
+    }
+  }
+  if ( node_count > 0) free((char *) nodelist);
+
+  return node_found;
 }
 
 static void cnv_from_neted( vldh_t_node n)

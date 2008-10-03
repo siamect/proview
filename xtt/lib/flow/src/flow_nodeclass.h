@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_nodeclass.h,v 1.6 2008-01-17 14:18:55 claes Exp $
+ * Proview   $Id: flow_nodeclass.h,v 1.7 2008-10-03 14:19:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -69,6 +69,8 @@ class FlowNodeClass : public FlowArrayElem {
     int get_conpoint_trace_attr( int num, char *trace_attr, 
 	flow_eTraceType *type);
     void set_no_con_obstacle( int no_obstacle) { no_con_obstacle = no_obstacle;}
+    int get_next_conpoint( int cp_num, flow_eDirection dir, double x0, double y0, int *next_cp_num);
+
     FlowCtx	*ctx;
     FlowArray 	a;
     flow_tName	nc_name;

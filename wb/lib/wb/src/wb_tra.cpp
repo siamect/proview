@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_tra.cpp,v 1.2 2007-11-22 08:50:55 claes Exp $
+ * Proview   $Id: wb_tra.cpp,v 1.3 2008-10-03 14:18:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1064,6 +1064,7 @@ static int trace_flow_cb( FlowCtx *ctx, flow_tEvent event)
   void		*vobject;
   double	ll_x, ll_y, ur_x, ur_y, width;
   int		subwindow_nr;
+  int		sts;
 
   flow_GetCtxUserData( ctx, (void **)&gre);
 
@@ -1087,7 +1088,7 @@ static int trace_flow_cb( FlowCtx *ctx, flow_tEvent event)
     (gre->gre_con_created) (gre, 
 		event->con_create.x, event->con_create.y, 
 		source, event->con_create.source_conpoint,
-		dest, event->con_create.dest_conpoint);	
+		dest, event->con_create.dest_conpoint, 0, &sts);	
   }
   switch ( event->event)
   {

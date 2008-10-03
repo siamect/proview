@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pal.h,v 1.6 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_pal.h,v 1.7 2008-10-03 14:18:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -60,6 +60,7 @@ class Pal {
     int        	(*set_focus_cb)( void *, void *);
     int        	(*traverse_focus_cb)( void *, void *);
     void       	(*create_popup_menu_cb)( void *, pwr_tCid, int, int);
+    void	(*select_cb)( void *, pwr_tCid);
     int		displayed;
     PalFileMenu *menu;
 

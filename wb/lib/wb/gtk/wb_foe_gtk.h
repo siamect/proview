@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_gtk.h,v 1.4 2007-09-25 13:36:32 claes Exp $
+ * Proview   $Id: wb_foe_gtk.h,v 1.5 2008-10-03 14:18:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -59,6 +59,8 @@ struct s_widgets {
   GtkWidget	*paste;
   GtkWidget	*undelete;
   GtkWidget	*unselect;
+  GtkWidget	*createnode;
+  GtkWidget	*createcon;
   GtkWidget	*connect;
   GtkWidget	*del;
   GtkWidget	*changetext;
@@ -79,6 +81,19 @@ struct s_widgets {
   GtkWidget	*view_plantpal;
   GtkWidget	*tools_save;
   GtkWidget	*tools_build;
+  GtkWidget	*lockconpoint;
+  GtkWidget	*move_right;
+  GtkWidget	*move_left;
+  GtkWidget	*move_up;
+  GtkWidget	*move_down;
+  GtkWidget	*select_addnextright;
+  GtkWidget	*select_addnextleft;
+  GtkWidget	*select_addnextup;
+  GtkWidget	*select_addnextdown;
+  GtkWidget	*select_cp_nextright;
+  GtkWidget	*select_cp_nextleft;
+  GtkWidget	*select_cp_nextup;
+  GtkWidget	*select_cp_nextdown;
 };
 
 class WFoeGtk : public WFoe {
@@ -174,6 +189,7 @@ class WFoeGtk : public WFoe {
   static void activate_compile( GtkWidget *w, gpointer data);
   static void delete_subwindow_ok_cb( void *ctx, void *data);
   static void activate_delete( GtkWidget *w, gpointer data);
+  static void activate_delete_confirm( GtkWidget *w, gpointer data);
   static void activate_createobject( GtkWidget *w, gpointer data);
   static void activate_changetext( GtkWidget *w, gpointer data);
   static void activate_cut( GtkWidget *w, gpointer data);
@@ -183,10 +199,29 @@ class WFoeGtk : public WFoe {
   static void activate_select_nextleft(GtkWidget *w, gpointer foe);
   static void activate_select_nextup(GtkWidget *w, gpointer foe);
   static void activate_select_nextdown(GtkWidget *w, gpointer foe);
+  static void activate_select_addnextright(GtkWidget *w, gpointer foe);
+  static void activate_select_addnextleft(GtkWidget *w, gpointer foe);
+  static void activate_select_addnextup(GtkWidget *w, gpointer foe);
+  static void activate_select_addnextdown(GtkWidget *w, gpointer foe);
+  static void activate_select_cp_nextright(GtkWidget *w, gpointer foe);
+  static void activate_select_cp_nextleft(GtkWidget *w, gpointer foe);
+  static void activate_select_cp_nextup(GtkWidget *w, gpointer foe);
+  static void activate_select_cp_nextdown(GtkWidget *w, gpointer foe);
+  static void activate_scroll_right(GtkWidget *w, gpointer foe);
+  static void activate_scroll_left(GtkWidget *w, gpointer foe);
+  static void activate_scroll_up(GtkWidget *w, gpointer foe);
+  static void activate_scroll_down(GtkWidget *w, gpointer foe);
+  static void activate_move_right(GtkWidget *w, gpointer foe);
+  static void activate_move_left(GtkWidget *w, gpointer foe);
+  static void activate_move_up(GtkWidget *w, gpointer foe);
+  static void activate_move_down(GtkWidget *w, gpointer foe);
   static void activate_attribute( GtkWidget *w, gpointer data);
   static void activate_subwindow( GtkWidget *w, gpointer data);
   static void activate_undelete( GtkWidget *w, gpointer data);
   static void activate_unselect( GtkWidget *w, gpointer data);
+  static void activate_createnode( GtkWidget *w, gpointer data);
+  static void activate_createcon( GtkWidget *w, gpointer data);
+  static void activate_lockconpoint( GtkWidget *w, gpointer data);
   static void activate_gridsize1( GtkWidget *w, gpointer data);
   static void activate_gridsize2( GtkWidget *w, gpointer data);
   static void activate_gridsize3( GtkWidget *w, gpointer data);

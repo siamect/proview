@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.cpp,v 1.39 2008-06-24 07:52:22 claes Exp $
+ * Proview   $Id: wb_wtt.cpp,v 1.40 2008-10-03 14:18:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1231,7 +1231,7 @@ void Wtt::activate_openobject()
   // Get selections in w1
   sts = wnav->get_select( &sel_list, &sel_is_attr, &sel_cnt1);
   set_clock_cursor();
-  if ODD(sts) {
+  if (ODD(sts)) {
     for ( i = 0; i < sel_cnt1; i++)
       watt_new( sel_list[i]);
     free( (char *)sel_list);
@@ -1239,7 +1239,7 @@ void Wtt::activate_openobject()
   }
 
   sts = wnavnode->get_select( &sel_list, &sel_is_attr, &sel_cnt2);
-  if ODD(sts) {
+  if (ODD(sts)) {
     for ( i = 0; i < sel_cnt2; i++)
       watt_new( sel_list[i]);
     free( (char *)sel_list);
@@ -1252,6 +1252,272 @@ void Wtt::activate_openobject()
     message( 'E', "No object is selected");
     return;
   }
+}
+
+void Wtt::activate_creaobj( ldh_eDest dest)
+{
+  int 		sts;
+  pwr_sAttrRef	*sel_list;
+  int           *sel_is_attr;
+  int 		sel_cnt;
+  pwr_tOid	oid;
+  pwr_tCid	cid;
+  int		navnode = 0;
+  
+  message( ' ', "");
+
+  sts = palette->get_select( &cid);
+  if ( EVEN(sts)) {
+    message( 'E', "Select a class in the palette");
+    return;
+  }
+
+  // Get selections in w1
+  sts = wnav->get_select( &sel_list, &sel_is_attr, &sel_cnt);
+  if ( EVEN(sts)) {
+    sts = wnavnode->get_select( &sel_list, &sel_is_attr, &sel_cnt);
+    navnode = 1;
+  }
+      
+  if ( EVEN(sts)) {
+    message( 'E', "No object is selected");
+    return;
+  }
+
+  if ( sel_cnt > 1) {
+    message( 'E', "Select one object");
+    return;
+  }
+
+  sts = ldh_CreateObject( ldhses, &oid, 0, cid, sel_list[0].Objid, dest);
+  if ( EVEN(sts)) {
+    message( 'E', wnav_get_message( sts));
+    return;
+  }
+  if ( navnode)
+    wnavnode->select_object( oid);
+  else
+    wnav->select_object( oid);
+
+  free( (char *)sel_list);
+  free( (char *)sel_is_attr);
+}
+
+void Wtt::activate_moveobj( wnav_eDestCode dest)
+{
+  int 		sts;
+  pwr_sAttrRef	*sel_list;
+  int           *sel_is_attr;
+  int 		sel_cnt;
+  pwr_tOid	next_oid;
+  int		navnode = 0;
+  wnav_eDestCode d;
+  pwr_tOid	parent;
+  pwr_tCid	cid;
+  
+  message( ' ', "");
+
+  // Get selections in w1
+  sts = wnav->get_select( &sel_list, &sel_is_attr, &sel_cnt);
+  if ( EVEN(sts)) {
+    sts = wnavnode->get_select( &sel_list, &sel_is_attr, &sel_cnt);
+    navnode = 1;
+  }
+      
+  if ( EVEN(sts)) {
+    message( 'E', "No object is selected");
+    return;
+  }
+
+  if ( sel_cnt > 1) {
+    message( 'E', "Select one object");
+    free( (char *)sel_list);
+    free( (char *)sel_is_attr);
+    return;
+  }
+
+  if ( sel_is_attr[0]) {
+    message( 'E', "Unable to move attributes");
+    free( (char *)sel_list);
+    free( (char *)sel_is_attr);
+    return;
+  }
+
+  if ( navnode)
+    sts = wnavnode->get_next( sel_list[0].Objid, dest, &next_oid, &d);
+  else
+    sts = wnav->get_next( sel_list[0].Objid, dest, &next_oid, &d);
+  if ( EVEN(sts)) {
+    message( 'E', wnav_get_message( sts));
+    free( (char *)sel_list);
+    free( (char *)sel_is_attr);
+    return;
+  }
+
+  // No plc objects can be moved
+  sts = ldh_GetParent( ldhses, sel_list[0].Objid, &parent);
+  while (ODD(sts)) {
+    sts = ldh_GetObjectClass( ldhses, parent, &cid);
+    if ( cid == pwr_cClass_plc || cid == pwr_cClass_PlcTemplate) {
+      message( 'E', "Unable to move plc objects");
+      free( (char *)sel_list);
+      free( (char *)sel_is_attr);
+      return;
+    }
+    sts = ldh_GetParent( ldhses, parent, &parent);
+  }
+
+  sts = ldh_GetParent( ldhses, next_oid, &parent);
+  while (ODD(sts)) {
+    sts = ldh_GetObjectClass( ldhses, parent, &cid);
+    if ( cid == pwr_cClass_plc || cid == pwr_cClass_PlcTemplate) {
+      message( 'E', "Unable to move plc objects");
+      free( (char *)sel_list);
+      free( (char *)sel_is_attr);
+      return;
+    }
+    sts = ldh_GetParent( ldhses, parent, &parent);
+  }
+
+  if ( d == wnav_eDestCode_FirstChild) {
+    sts = ldh_GetObjectClass( ldhses, next_oid, &cid);
+    if ( EVEN(sts)) return;
+
+    if ( cid == pwr_cClass_plc || cid == pwr_cClass_PlcTemplate) {
+      message( 'E', "Unable to move into plcpgm");
+      free( (char *)sel_list);
+      free( (char *)sel_is_attr);
+      return;
+    }    
+  }
+
+  switch ( d) {
+  case wnav_eDestCode_Before:
+    sts = ldh_MoveObject( ldhses, sel_list[0].Objid, next_oid, ldh_eDest_Before);
+    break;
+  case wnav_eDestCode_After:
+    sts = ldh_MoveObject( ldhses, sel_list[0].Objid, next_oid, ldh_eDest_After);
+    break;
+  case wnav_eDestCode_FirstChild:
+    sts = ldh_MoveObject( ldhses, sel_list[0].Objid, next_oid, ldh_eDest_IntoFirst);
+    break;
+  case wnav_eDestCode_LastChild:
+    sts = ldh_MoveObject( ldhses, sel_list[0].Objid, next_oid, ldh_eDest_IntoLast);
+    break;
+  }
+  if ( EVEN(sts)) {
+    message( 'E', wnav_get_message( sts));
+    free( (char *)sel_list);
+    free( (char *)sel_is_attr);
+    return;
+  }
+  
+  if ( navnode)
+    wnavnode->set_select_visible();
+  else
+    wnav->set_select_visible();
+
+  free( (char *)sel_list);
+  free( (char *)sel_is_attr);
+}
+
+void Wtt::activate_deleteobj()
+{
+  int 		sts;
+  pwr_sAttrRef	*sel_list;
+  int           *sel_is_attr;
+  int 		sel_cnt;
+  int		has_child = 0;
+  char		msg[200];
+  pwr_tOid	child;
+  
+  message( ' ', "");
+
+  // Get selections in w1
+  sts = wnav->get_select( &sel_list, &sel_is_attr, &sel_cnt);
+  if ( EVEN(sts))
+    sts = wnavnode->get_select( &sel_list, &sel_is_attr, &sel_cnt);
+      
+  if ( EVEN(sts)) {
+    message( 'E', "No object is selected");
+    return;
+  }
+
+  
+  for ( int i = 0; i < sel_cnt; i++) {
+    if ( sel_is_attr[i]) {
+      message( 'E', "Selected item is not an object");      
+      return;
+    }
+  }
+
+  for ( int i = 0; i < sel_cnt; i++) {
+    sts = ldh_GetChild( ldhses, sel_list[i].Objid, &child);
+    if ( ODD(sts)) {
+      has_child = 1;
+      break;
+    }
+  }
+
+  if ( sel_cnt == 1) {
+    if ( has_child)
+      strcpy( msg, "Selected object has children !\nDo you want to delete the object tree");
+    else
+      strcpy( msg, "Do you want to delete the selected object");
+  }
+  else {
+    if ( has_child)
+      strcpy( msg, "Selected objects have children !\nDo you want to delete the object trees");
+    else
+      strcpy( msg, "Do you want to delete the selected objects");
+  }
+
+  open_confirm( msg, "Delete Object", delete_ok, 0);
+
+  free( (char *)sel_list);
+  free( (char *)sel_is_attr);
+}
+
+void Wtt::delete_ok( Wtt *wtt)
+{
+  int 		sts;
+  pwr_sAttrRef	*sel_list;
+  int           *sel_is_attr;
+  int 		sel_cnt;
+  pwr_tOid	child;
+  
+  // Get selections in w1
+  sts = wtt->wnav->get_select( &sel_list, &sel_is_attr, &sel_cnt);
+  if ( EVEN(sts)) 
+    sts = wtt->wnavnode->get_select( &sel_list, &sel_is_attr, &sel_cnt);
+  if ( EVEN(sts))
+    return;
+      
+  if ( EVEN(sts)) {
+    wtt->message( 'E', "No object is selected");
+    return;
+  }
+
+  
+  for ( int i = 0; i < sel_cnt; i++) {
+    if ( sel_is_attr[i]) {
+      wtt->message( 'E', "Selected item is not an object");      
+      return;
+    }
+  }
+
+  for ( int i = 0; i < sel_cnt; i++) {
+    sts = ldh_GetChild( wtt->ldhses, sel_list[i].Objid, &child);
+    if ( ODD(sts)) {
+      sts = ldh_DeleteObjectTree( wtt->ldhses, sel_list[i].Objid, 0);
+    }
+    else {
+      sts = ldh_DeleteObject( wtt->ldhses, sel_list[i].Objid);
+    }
+  }
+
+  free( (char *)sel_list);
+  free( (char *)sel_is_attr);
 }
 
 void Wtt::activate_openvolobject()

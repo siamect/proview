@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_node.h,v 1.5 2007-05-11 15:07:21 claes Exp $
+ * Proview   $Id: flow_node.h,v 1.6 2008-10-03 14:19:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -167,6 +167,10 @@ class FlowNode : public FlowArrayElem {
     int get_conpoint_trace_attr( int num, char *trace_attr, flow_eTraceType *type) 
 	{ return nc->get_conpoint_trace_attr( num, trace_attr, type);};
     void set_fillcolor( flow_eDrawType color);
+    void conpoint_select( int num);
+    void conpoint_select_clear( int num);
+    void conpoint_select_clear();
+    int get_next_conpoint( int cp_num, flow_eDirection dir, double x0, double y0, int *next_cp_num);
 
     int	level;
     int node_open;
@@ -178,6 +182,8 @@ class FlowNode : public FlowArrayElem {
     void *annotv_input[10];
     int rbuttonv[10];
     flow_eDrawType fill_color;
+    int sel_conpoint1;
+    int sel_conpoint2;
 };
 
 #endif

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pal_gtk.cpp,v 1.3 2008-02-27 06:27:51 claes Exp $
+ * Proview   $Id: wb_pal_gtk.cpp,v 1.4 2008-10-03 14:18:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -146,6 +146,7 @@ void PalGtk::set_selection_owner()
      return;
   }	
   selection_owner = 1;
+  brow_SetInverseColor( brow_ctx, flow_eDrawType_Line);
 }
 
 static void pal_sel_convert_cb( GtkWidget *w, GtkSelectionData *selection_data,
@@ -185,7 +186,8 @@ static void pal_sel_lose_cb( GtkWidget *w, GdkEventSelection *event,
 {
   PalGtk     	*pal = (PalGtk *)data;
 
-  brow_SelectClear( pal->brow_ctx);
+  // brow_SelectClear( pal->brow_ctx);
+  brow_SetInverseColor( pal->brow_ctx, flow_eDrawType_LineGray);
   pal->selection_owner = 0;
 }
 

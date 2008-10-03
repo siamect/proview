@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow.h,v 1.14 2008-01-18 13:55:06 claes Exp $
+ * Proview   $Id: flow.h,v 1.15 2008-10-03 14:19:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -186,7 +186,8 @@ typedef enum {
 	flow_eEventType_MoveNode,
 	flow_eEventType_Object,
 	flow_eEventType_AnnotationInput,
-	flow_eEventType_Radiobutton
+	flow_eEventType_Radiobutton,
+	flow_eEventType_SelectConPoint
 	} flow_eEventType;
 
 typedef enum {

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.h,v 1.16 2008-06-24 07:52:21 claes Exp $
+ * Proview   $Id: wb_wnav.h,v 1.17 2008-10-03 14:18:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -402,6 +402,9 @@ class WNav : public WUtility{
     int search_next();
     int show_file( char	*filename, char *intitle, int hide_dir);
     void select_object( brow_tObject object);
+    int select_object( pwr_tOid oid);
+    int get_next( pwr_tOid oid, wnav_eDestCode dest, pwr_tOid *next_oid, wnav_eDestCode *d);
+    void set_select_visible();
 
     // Crr module member functions
     int	crr_signal( char *filename, char *signalname, brow_tNode parent_node);

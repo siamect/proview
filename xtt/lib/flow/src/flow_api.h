@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_api.h,v 1.15 2008-05-28 12:03:52 claes Exp $
+ * Proview   $Id: flow_api.h,v 1.16 2008-10-03 14:19:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -98,6 +98,8 @@ void flow_ResetSelectInverse( flow_tCtx ctx);
 void flow_SelectInsert( flow_tCtx ctx, flow_tObject object);
 void flow_SelectRemove( flow_tCtx ctx, flow_tObject object);
 void flow_SelectClear( flow_tCtx ctx);
+void flow_ConPointSelectInsert( flow_tCtx ctx, flow_tObject object, int num);
+void flow_ConPointSelectClear( flow_tCtx ctx);
 void flow_GetSelectedNodes( flow_tCtx ctx, flow_tNode **nodes, int *num);
 void flow_GetSelectedCons( flow_tCtx ctx, flow_tCon **cons, int *num);
 void flow_SetHighlight( flow_tObject object, int value);
@@ -177,7 +179,9 @@ void flow_CreateConClass( flow_tCtx ctx, char *name,
 void flow_SetDefaultConClass( flow_tCtx ctx, flow_tConClass conclass);
 flow_tConClass flow_GetDefaultConClass( flow_tCtx ctx);
 void flow_GetSelectList( flow_tCtx ctx, flow_tObject **list, int *cnt);
+void flow_GetPasteList( flow_tCtx ctx, flow_tObject **list, int *cnt);
 void flow_GetObjectList( flow_tCtx ctx, flow_tObject **list, int *cnt);
+void flow_GetConPointSelectList( flow_tCtx ctx, flow_tObject **list, int **num_list, int *cnt);
 flow_eObjectType flow_GetObjectType( flow_tObject object);
 void flow_MeasureNode( flow_tNode node, double *ll_x, double *ll_y,
 	double *ur_x, double *ur_y);
@@ -213,6 +217,7 @@ void flow_PixelToPosition( flow_tCtx ctx, int pix_x, int pix_y,
 			   double *x, double *y);
 void flow_UnZoom( flow_tCtx ctx);
 void flow_CenterObject( flow_tCtx ctx, flow_tObject object);
+void flow_MoveSelectedNodes( flow_tCtx ctx, double delta_x, double delta_y, int grid);
 void flow_GetNodePosition( flow_tNode node, double *x, double *y);
 void flow_GetConPosition( flow_tCon con, double *x_arr[], double *y_arr[],
 	int *num);
@@ -239,10 +244,16 @@ void flow_SetClickSensitivity( flow_tCtx ctx, int value);
 void flow_SetNoConObstacle( flow_tNodeClass nc, int no_obstacle);
 int flow_GetNextObject( flow_tCtx ctx, flow_tNode object, flow_eDirection dir,
 			flow_tNode *next);
+int flow_GetNextConPoint( flow_tCtx ctx, flow_tNode object, int cp_num, flow_eDirection dir,
+			  flow_tNode *next, int *next_cp_num);
 int flow_IsVisible( flow_tCtx ctx, flow_tObject object, flow_eVisible type);
 int flow_LoadNodeClass( flow_tCtx ctx, char *fname, flow_tNodeClass *nodeclass);
 void flow_SetTipText( flow_tCtx ctx, flow_tObject object, char *text, int x, int y);
 void flow_RemoveTipText( flow_tCtx ctx);
+int flow_PasteStop( flow_tCtx ctx);
+int flow_PendingPaste( flow_tCtx ctx);
+int flow_PendingPasteStop( flow_tCtx ctx);
+
 
 #if defined __cplusplus
 }

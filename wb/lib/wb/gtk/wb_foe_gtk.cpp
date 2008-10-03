@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_gtk.cpp,v 1.12 2008-06-24 07:52:21 claes Exp $
+ * Proview   $Id: wb_foe_gtk.cpp,v 1.13 2008-10-03 14:18:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -150,6 +150,13 @@ void WFoeGtk::activate_delete( GtkWidget *w, gpointer data)
   foe->activate_delete();
 }
 
+void WFoeGtk::activate_delete_confirm( GtkWidget *w, gpointer data)
+{
+  WFoe *foe = (WFoe *)data;
+
+  foe->activate_delete_confirm();
+}
+
 void WFoeGtk::activate_createobject( GtkWidget *w, gpointer data)
 {
   WFoe *foe = (WFoe *)data;
@@ -211,6 +218,86 @@ void WFoeGtk::activate_select_nextdown(GtkWidget *w, gpointer foe)
   ((WFoe *)foe)->activate_select_nextobject( flow_eDirection_Down);
 }
 
+void WFoeGtk::activate_select_addnextright(GtkWidget *w, gpointer foe)
+{
+  ((WFoe *)foe)->activate_select_addnextobject( flow_eDirection_Right);
+}
+
+void WFoeGtk::activate_select_addnextleft(GtkWidget *w, gpointer foe)
+{
+  ((WFoe *)foe)->activate_select_addnextobject( flow_eDirection_Left);
+}
+
+void WFoeGtk::activate_select_addnextup(GtkWidget *w, gpointer foe)
+{
+  ((WFoe *)foe)->activate_select_addnextobject( flow_eDirection_Up);
+}
+
+void WFoeGtk::activate_select_addnextdown(GtkWidget *w, gpointer foe)
+{
+  ((WFoe *)foe)->activate_select_addnextobject( flow_eDirection_Down);
+}
+
+void WFoeGtk::activate_select_cp_nextright(GtkWidget *w, gpointer foe)
+{
+  ((WFoe *)foe)->activate_select_nextconpoint( flow_eDirection_Right);
+}
+
+void WFoeGtk::activate_select_cp_nextleft(GtkWidget *w, gpointer foe)
+{
+  ((WFoe *)foe)->activate_select_nextconpoint( flow_eDirection_Left);
+}
+
+void WFoeGtk::activate_select_cp_nextup(GtkWidget *w, gpointer foe)
+{
+  ((WFoe *)foe)->activate_select_nextconpoint( flow_eDirection_Up);
+}
+
+void WFoeGtk::activate_select_cp_nextdown(GtkWidget *w, gpointer foe)
+{
+  ((WFoe *)foe)->activate_select_nextconpoint( flow_eDirection_Down);
+}
+
+void WFoeGtk::activate_scroll_right(GtkWidget *w, gpointer foe)
+{
+  ((WFoe *)foe)->activate_scroll( flow_eDirection_Right);
+}
+
+void WFoeGtk::activate_scroll_left(GtkWidget *w, gpointer foe)
+{
+  ((WFoe *)foe)->activate_scroll( flow_eDirection_Left);
+}
+
+void WFoeGtk::activate_scroll_up(GtkWidget *w, gpointer foe)
+{
+  ((WFoe *)foe)->activate_scroll( flow_eDirection_Up);
+}
+
+void WFoeGtk::activate_scroll_down(GtkWidget *w, gpointer foe)
+{
+  ((WFoe *)foe)->activate_scroll( flow_eDirection_Down);
+}
+
+void WFoeGtk::activate_move_right(GtkWidget *w, gpointer foe)
+{
+  ((WFoe *)foe)->activate_move_object( flow_eDirection_Right);
+}
+
+void WFoeGtk::activate_move_left(GtkWidget *w, gpointer foe)
+{
+  ((WFoe *)foe)->activate_move_object( flow_eDirection_Left);
+}
+
+void WFoeGtk::activate_move_up(GtkWidget *w, gpointer foe)
+{
+  ((WFoe *)foe)->activate_move_object( flow_eDirection_Up);
+}
+
+void WFoeGtk::activate_move_down(GtkWidget *w, gpointer foe)
+{
+  ((WFoe *)foe)->activate_move_object( flow_eDirection_Down);
+}
+
 
 //	Callback from the menu.
 void WFoeGtk::activate_attribute( GtkWidget *w, gpointer data)
@@ -243,6 +330,31 @@ void WFoeGtk::activate_unselect( GtkWidget *w, gpointer data)
   WFoe *foe = (WFoe *)data;
 
   foe->activate_unselect();
+}
+
+//	Callback from the menu.
+void WFoeGtk::activate_createnode( GtkWidget *w, gpointer data)
+{
+  WFoe *foe = (WFoe *)data;
+
+  foe->activate_createnode();
+}
+
+//	Callback from the menu.
+void WFoeGtk::activate_createcon( GtkWidget *w, gpointer data)
+{
+  WFoe *foe = (WFoe *)data;
+
+  foe->activate_createconnection();
+}
+
+
+//	Callback from the menu.
+void WFoeGtk::activate_lockconpoint( GtkWidget *w, gpointer data)
+{
+  WFoe *foe = (WFoe *)data;
+
+  foe->activate_conpoint_lock();
 }
 
 //
@@ -994,8 +1106,8 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
 				    ldh_tSesContext ldhsession,
 				    foe_eFuncAccess function_access)
 {
-  const int	window_width = 900;
-  const int    	window_height = 800;
+  const int	window_width = 1100;
+  const int    	window_height = 1000;
   const int    	palette_width = 220;
   pwr_tStatus 	sts;
   pwr_tFileName fname;
@@ -1096,9 +1208,27 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   g_signal_connect( widgets.undelete, "activate", 
 		    G_CALLBACK(WFoeGtk::activate_undelete), this);
 
-  widgets.unselect = gtk_menu_item_new_with_mnemonic( "_Undo Select");
+  widgets.unselect = gtk_menu_item_new_with_mnemonic( "_Reset");
   g_signal_connect( widgets.unselect, "activate", 
 		    G_CALLBACK(WFoeGtk::activate_unselect), this);
+
+  widgets.createnode = gtk_menu_item_new_with_mnemonic( "_Create Object");
+  g_signal_connect( widgets.createnode, "activate", 
+		    G_CALLBACK(WFoeGtk::activate_createnode), this);
+  gtk_widget_add_accelerator( widgets.createnode, "activate", accel_g,
+			      'd', GdkModifierType(GDK_MOD1_MASK), GTK_ACCEL_VISIBLE);
+
+  widgets.createcon = gtk_menu_item_new_with_mnemonic( "C_reate Connection");
+  g_signal_connect( widgets.createcon, "activate", 
+		    G_CALLBACK(WFoeGtk::activate_createcon), this);
+  gtk_widget_add_accelerator( widgets.createcon, "activate", accel_g,
+			      'd', GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
+
+  widgets.lockconpoint = gtk_menu_item_new_with_mnemonic( "_Lock ConnectionPoint Selection");
+  g_signal_connect( widgets.lockconpoint, "activate", 
+		    G_CALLBACK(WFoeGtk::activate_lockconpoint), this);
+  gtk_widget_add_accelerator( widgets.lockconpoint, "activate", accel_g,
+			      'z', GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
 
   widgets.cut = gtk_image_menu_item_new_from_stock(GTK_STOCK_CUT, accel_g);
   g_signal_connect(widgets.cut, "activate", G_CALLBACK(WFoeGtk::activate_cut), this);
@@ -1109,43 +1239,190 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   widgets.paste = gtk_image_menu_item_new_from_stock(GTK_STOCK_PASTE, accel_g);
   g_signal_connect(widgets.paste, "activate", G_CALLBACK(WFoeGtk::activate_paste), this);
 
+  // Edit Select submenu
+  widgets.unselect = gtk_menu_item_new_with_mnemonic( "_Reset");
+  g_signal_connect( widgets.unselect, "activate", 
+		    G_CALLBACK(WFoeGtk::activate_unselect), this);
+  gtk_widget_add_accelerator( widgets.unselect, "activate", accel_g,
+			      'z', GdkModifierType(GDK_MOD1_MASK), GTK_ACCEL_VISIBLE);
+
   GtkWidget *edit_select_nextright = gtk_menu_item_new_with_mnemonic( "Next Right");
   g_signal_connect( edit_select_nextright, "activate",
 		    G_CALLBACK(activate_select_nextright), this);
   gtk_widget_add_accelerator( edit_select_nextright, "activate", accel_g,
-			      GDK_Right, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+			      GDK_Right, GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
 
 
   GtkWidget *edit_select_nextleft = gtk_menu_item_new_with_mnemonic( "Next Left");
   g_signal_connect( edit_select_nextleft, "activate",
 		    G_CALLBACK(activate_select_nextleft), this);
   gtk_widget_add_accelerator( edit_select_nextleft, "activate", accel_g,
-			      GDK_Left, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+			      GDK_Left, GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
 
 
   GtkWidget *edit_select_nextup = gtk_menu_item_new_with_mnemonic( "Next Up");
   g_signal_connect( edit_select_nextup, "activate",
 		    G_CALLBACK(activate_select_nextup), this);
   gtk_widget_add_accelerator( edit_select_nextup, "activate", accel_g,
-			      GDK_Up, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+			      GDK_Up, GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
 
 
   GtkWidget *edit_select_nextdown = gtk_menu_item_new_with_mnemonic( "Next Down");
   g_signal_connect( edit_select_nextdown, "activate",
 		    G_CALLBACK(activate_select_nextdown), this);
   gtk_widget_add_accelerator( edit_select_nextdown, "activate", accel_g,
+			      GDK_Down, GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
+
+  widgets.select_addnextright = gtk_menu_item_new_with_mnemonic( "Add Next Right");
+  g_signal_connect( widgets.select_addnextright, "activate",
+		    G_CALLBACK(activate_select_addnextright), this);
+  gtk_widget_add_accelerator( widgets.select_addnextright, "activate", accel_g,
+			      GDK_Right, GdkModifierType(GDK_SHIFT_MASK | GDK_MOD1_MASK), GTK_ACCEL_VISIBLE);
+
+
+  widgets.select_addnextleft = gtk_menu_item_new_with_mnemonic( "Add Next Left");
+  g_signal_connect( widgets.select_addnextleft, "activate",
+		    G_CALLBACK(activate_select_addnextleft), this);
+  gtk_widget_add_accelerator( widgets.select_addnextleft, "activate", accel_g,
+			      GDK_Left, GdkModifierType(GDK_SHIFT_MASK | GDK_MOD1_MASK), GTK_ACCEL_VISIBLE);
+
+
+  widgets.select_addnextup = gtk_menu_item_new_with_mnemonic( "Add Next Up");
+  g_signal_connect( widgets.select_addnextup, "activate",
+		    G_CALLBACK(activate_select_addnextup), this);
+  gtk_widget_add_accelerator( widgets.select_addnextup, "activate", accel_g,
+			      GDK_Up, GdkModifierType(GDK_SHIFT_MASK | GDK_MOD1_MASK), GTK_ACCEL_VISIBLE);
+
+
+  widgets.select_addnextdown = gtk_menu_item_new_with_mnemonic( "Add Next Down");
+  g_signal_connect( widgets.select_addnextdown, "activate",
+		    G_CALLBACK(activate_select_addnextdown), this);
+  gtk_widget_add_accelerator( widgets.select_addnextdown, "activate", accel_g,
+			      GDK_Down, GdkModifierType(GDK_SHIFT_MASK | GDK_MOD1_MASK), GTK_ACCEL_VISIBLE);
+
+
+  widgets.select_cp_nextright = gtk_menu_item_new_with_mnemonic( "Next ConnectionPoint Right");
+  g_signal_connect( widgets.select_cp_nextright, "activate",
+		    G_CALLBACK(activate_select_cp_nextright), this);
+  gtk_widget_add_accelerator( widgets.select_cp_nextright, "activate", accel_g,
+			      GDK_Right, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+
+  widgets.select_cp_nextleft = gtk_menu_item_new_with_mnemonic( "Next ConnectionPoint Left");
+  g_signal_connect( widgets.select_cp_nextleft, "activate",
+		    G_CALLBACK(activate_select_cp_nextleft), this);
+  gtk_widget_add_accelerator( widgets.select_cp_nextleft, "activate", accel_g,
+			      GDK_Left, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+
+  widgets.select_cp_nextup = gtk_menu_item_new_with_mnemonic( "Next ConnectionPoint Up");
+  g_signal_connect( widgets.select_cp_nextup, "activate",
+		    G_CALLBACK(activate_select_cp_nextup), this);
+  gtk_widget_add_accelerator( widgets.select_cp_nextup, "activate", accel_g,
+			      GDK_Up, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+
+  widgets.select_cp_nextdown = gtk_menu_item_new_with_mnemonic( "Next ConnectionPoint Down");
+  g_signal_connect( widgets.select_cp_nextdown, "activate",
+		    G_CALLBACK(activate_select_cp_nextdown), this);
+  gtk_widget_add_accelerator( widgets.select_cp_nextdown, "activate", accel_g,
 			      GDK_Down, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
 
   GtkWidget *edit_select = gtk_menu_item_new_with_mnemonic( "Select");
   GtkMenu *edit_select_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_select_menu), widgets.unselect);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_select_menu), edit_select_nextright);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_select_menu), edit_select_nextleft);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_select_menu), edit_select_nextup);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_select_menu), edit_select_nextdown);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_select_menu), widgets.select_addnextright);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_select_menu), widgets.select_addnextleft);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_select_menu), widgets.select_addnextup);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_select_menu), widgets.select_addnextdown);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_select_menu), widgets.select_cp_nextright);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_select_menu), widgets.select_cp_nextleft);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_select_menu), widgets.select_cp_nextup);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_select_menu), widgets.select_cp_nextdown);
 
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(edit_select),
 			    GTK_WIDGET(edit_select_menu));
+
+  // Edit Scroll submenu
+  GtkWidget *edit_scroll_right = gtk_menu_item_new_with_mnemonic( "Right");
+  g_signal_connect( edit_scroll_right, "activate",
+		    G_CALLBACK(activate_scroll_right), this);
+  gtk_widget_add_accelerator( edit_scroll_right, "activate", accel_g,
+			      GDK_Right, GDK_MOD1_MASK, GTK_ACCEL_VISIBLE);
+
+  GtkWidget *edit_scroll_left = gtk_menu_item_new_with_mnemonic( "Left");
+  g_signal_connect( edit_scroll_left, "activate",
+		    G_CALLBACK(activate_scroll_left), this);
+  gtk_widget_add_accelerator( edit_scroll_left, "activate", accel_g,
+			      GDK_Left, GDK_MOD1_MASK, GTK_ACCEL_VISIBLE);
+
+
+  GtkWidget *edit_scroll_up = gtk_menu_item_new_with_mnemonic( "Up");
+  g_signal_connect( edit_scroll_up, "activate",
+		    G_CALLBACK(activate_scroll_up), this);
+  gtk_widget_add_accelerator( edit_scroll_up, "activate", accel_g,
+			      GDK_Up, GDK_MOD1_MASK, GTK_ACCEL_VISIBLE);
+
+
+  GtkWidget *edit_scroll_down = gtk_menu_item_new_with_mnemonic( "Down");
+  g_signal_connect( edit_scroll_down, "activate",
+		    G_CALLBACK(activate_scroll_down), this);
+  gtk_widget_add_accelerator( edit_scroll_down, "activate", accel_g,
+			      GDK_Down, GDK_MOD1_MASK, GTK_ACCEL_VISIBLE);
+
+
+  GtkWidget *edit_scroll = gtk_menu_item_new_with_mnemonic( "Scroll");
+  GtkMenu *edit_scroll_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_scroll_menu), edit_scroll_right);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_scroll_menu), edit_scroll_left);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_scroll_menu), edit_scroll_up);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_scroll_menu), edit_scroll_down);
+
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(edit_scroll),
+			    GTK_WIDGET(edit_scroll_menu));
+
+  widgets.move_right = gtk_menu_item_new_with_mnemonic( "Right");
+  g_signal_connect( widgets.move_right, "activate",
+		    G_CALLBACK(activate_move_right), this);
+  gtk_widget_add_accelerator( widgets.move_right, "activate", accel_g,
+			      GDK_Right, GdkModifierType(GDK_SHIFT_MASK | GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
+
+
+  widgets.move_left = gtk_menu_item_new_with_mnemonic( "Left");
+  g_signal_connect( widgets.move_left, "activate",
+		    G_CALLBACK(activate_move_left), this);
+  gtk_widget_add_accelerator( widgets.move_left, "activate", accel_g,
+			      GDK_Left, GdkModifierType(GDK_SHIFT_MASK | GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
+
+
+  widgets.move_up = gtk_menu_item_new_with_mnemonic( "Up");
+  g_signal_connect( widgets.move_up, "activate",
+		    G_CALLBACK(activate_move_up), this);
+  gtk_widget_add_accelerator( widgets.move_up, "activate", accel_g,
+			      GDK_Up, GdkModifierType(GDK_SHIFT_MASK | GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
+
+
+  widgets.move_down = gtk_menu_item_new_with_mnemonic( "Down");
+  g_signal_connect( widgets.move_down, "activate",
+		    G_CALLBACK(activate_move_down), this);
+  gtk_widget_add_accelerator( widgets.move_down, "activate", accel_g,
+			      GDK_Down, GdkModifierType(GDK_SHIFT_MASK | GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
+
+
+  GtkWidget *edit_move = gtk_menu_item_new_with_mnemonic( "Move");
+  GtkMenu *edit_move_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_move_menu), widgets.move_right);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_move_menu), widgets.move_left);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_move_menu), widgets.move_up);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_move_menu), widgets.move_down);
+
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(edit_move),
+			    GTK_WIDGET(edit_move_menu));
 
   widgets.connect = gtk_menu_item_new_with_mnemonic( "C_onnect");
   g_signal_connect( widgets.connect, "activate", 
@@ -1154,8 +1431,11 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
 			      'q', GdkModifierType(GDK_CONTROL_MASK), 
 			      GTK_ACCEL_VISIBLE);
 
+
   widgets.del = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE, NULL);
-  g_signal_connect(widgets.del, "activate", G_CALLBACK(WFoeGtk::activate_delete), this);
+  g_signal_connect(widgets.del, "activate", G_CALLBACK(WFoeGtk::activate_delete_confirm), this);
+  gtk_widget_add_accelerator( widgets.del, "activate", accel_g,
+			      GDK_Delete, GdkModifierType(0), GTK_ACCEL_VISIBLE);
 
   widgets.changetext = gtk_menu_item_new_with_mnemonic( "C_hange Text");
   g_signal_connect( widgets.changetext, "activate", 
@@ -1168,24 +1448,27 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   g_signal_connect( widgets.expand, "activate", 
 		    G_CALLBACK(WFoeGtk::activate_expand), this);
   gtk_widget_add_accelerator( widgets.expand, "activate", accel_g,
-  			      GDK_Right, GdkModifierType(GDK_SHIFT_MASK), 
-  			      GTK_ACCEL_VISIBLE);
+  			      'k', GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
 
   widgets.compress = gtk_menu_item_new_with_mnemonic( "C_ompress Object");
   g_signal_connect( widgets.compress, "activate", 
 		    G_CALLBACK(WFoeGtk::activate_compress), this);
   gtk_widget_add_accelerator( widgets.compress, "activate", accel_g,
-  			      GDK_Left, GdkModifierType(GDK_SHIFT_MASK), 
-  			      GTK_ACCEL_VISIBLE);
+  			      'j', GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
 
   GtkMenu *edit_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), widgets.undelete);
-  gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), widgets.unselect);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), widgets.createnode);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), widgets.createcon);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), widgets.connect);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), widgets.lockconpoint);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), widgets.cut);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), widgets.copy);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), widgets.paste);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), widgets.del);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_select);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_scroll);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_move);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), widgets.expand);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), widgets.compress);
 
@@ -1231,17 +1514,23 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   view_pal_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(widgets.view_objectpal));
   g_signal_connect( widgets.view_objectpal, "activate", 
 		    G_CALLBACK(WFoeGtk::activate_palette_object), this);
+  gtk_widget_add_accelerator( widgets.view_objectpal, "activate", accel_g,
+			      'o', GdkModifierType(GDK_MOD1_MASK), GTK_ACCEL_VISIBLE);
 
   widgets.view_conpal = gtk_radio_menu_item_new_with_mnemonic( view_pal_group, 
 							       "_Connection");
   view_pal_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(widgets.view_conpal));
   g_signal_connect( widgets.view_conpal, "activate", 
 		    G_CALLBACK(WFoeGtk::activate_palette_con), this);
+  gtk_widget_add_accelerator( widgets.view_conpal, "activate", accel_g,
+			      'i', GdkModifierType(GDK_MOD1_MASK), GTK_ACCEL_VISIBLE);
 
   widgets.view_plantpal = gtk_radio_menu_item_new_with_mnemonic( view_pal_group, 
 								 "_Plant");
   g_signal_connect( widgets.view_plantpal, "activate", 
 		    G_CALLBACK(WFoeGtk::activate_palette_plant), this);
+  gtk_widget_add_accelerator( widgets.view_plantpal, "activate", accel_g,
+			      'p', GdkModifierType(GDK_MOD1_MASK), GTK_ACCEL_VISIBLE);
 
   GtkWidget *view_pal = gtk_menu_item_new_with_mnemonic( "_Palette");
   GtkMenu *view_pal_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
@@ -1523,6 +1812,7 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
 			    ldhsession, "PlcEditorPalette",
 			    &widgets.node_palette, &sts);
   node_palette_managed = 1;
+  node_palctx->select_cb = pal_select_cb;
 
   con_palctx = new PalGtk( this, widgets.subpane, "Connections",
 			   ldhsession, "PlcEditorConPalette", 
@@ -1866,6 +2156,21 @@ int WFoeGtk::edit_set_entries()
     gtk_widget_set_sensitive( widgets.compress,TRUE);
     gtk_widget_set_sensitive( widgets.tools_save,TRUE);
     gtk_widget_set_sensitive( widgets.tools_build,TRUE);
+    gtk_widget_set_sensitive( widgets.select_addnextright,TRUE);
+    gtk_widget_set_sensitive( widgets.select_addnextleft,TRUE);
+    gtk_widget_set_sensitive( widgets.select_addnextup,TRUE);
+    gtk_widget_set_sensitive( widgets.select_addnextdown,TRUE);
+    gtk_widget_set_sensitive( widgets.select_cp_nextright,TRUE);
+    gtk_widget_set_sensitive( widgets.select_cp_nextleft,TRUE);
+    gtk_widget_set_sensitive( widgets.select_cp_nextup,TRUE);
+    gtk_widget_set_sensitive( widgets.select_cp_nextdown,TRUE);
+    gtk_widget_set_sensitive( widgets.move_right,TRUE);
+    gtk_widget_set_sensitive( widgets.move_left,TRUE);
+    gtk_widget_set_sensitive( widgets.move_up,TRUE);
+    gtk_widget_set_sensitive( widgets.move_down,TRUE);
+    gtk_widget_set_sensitive( widgets.createnode,TRUE);
+    gtk_widget_set_sensitive( widgets.createcon,TRUE);
+    gtk_widget_set_sensitive( widgets.lockconpoint,TRUE);
   }
   else {
     gtk_widget_set_sensitive( widgets.save,TRUE);
@@ -1890,6 +2195,21 @@ int WFoeGtk::edit_set_entries()
     gtk_widget_set_sensitive( widgets.compress,TRUE);
     gtk_widget_set_sensitive( widgets.tools_save,TRUE);
     gtk_widget_set_sensitive( widgets.tools_build,FALSE);
+    gtk_widget_set_sensitive( widgets.select_addnextright,TRUE);
+    gtk_widget_set_sensitive( widgets.select_addnextleft,TRUE);
+    gtk_widget_set_sensitive( widgets.select_addnextup,TRUE);
+    gtk_widget_set_sensitive( widgets.select_addnextdown,TRUE);
+    gtk_widget_set_sensitive( widgets.select_cp_nextright,TRUE);
+    gtk_widget_set_sensitive( widgets.select_cp_nextleft,TRUE);
+    gtk_widget_set_sensitive( widgets.select_cp_nextup,TRUE);
+    gtk_widget_set_sensitive( widgets.select_cp_nextdown,TRUE);
+    gtk_widget_set_sensitive( widgets.move_right,TRUE);
+    gtk_widget_set_sensitive( widgets.move_left,TRUE);
+    gtk_widget_set_sensitive( widgets.move_up,TRUE);
+    gtk_widget_set_sensitive( widgets.move_down,TRUE);
+    gtk_widget_set_sensitive( widgets.createnode,TRUE);
+    gtk_widget_set_sensitive( widgets.createcon,TRUE);
+    gtk_widget_set_sensitive( widgets.lockconpoint,TRUE);
   }
 
   return FOE__SUCCESS ;
@@ -1912,7 +2232,7 @@ int WFoeGtk::view_set_entries()
   gtk_widget_set_sensitive( widgets.cut,FALSE);
   gtk_widget_set_sensitive( widgets.paste,FALSE);
   gtk_widget_set_sensitive( widgets.undelete,FALSE);
-  gtk_widget_set_sensitive( widgets.unselect,FALSE);
+  gtk_widget_set_sensitive( widgets.unselect,TRUE);
   gtk_widget_set_sensitive( widgets.connect,FALSE);
   gtk_widget_set_sensitive( widgets.del,FALSE);
   gtk_widget_set_sensitive( widgets.changetext,FALSE);
@@ -1920,6 +2240,21 @@ int WFoeGtk::view_set_entries()
   gtk_widget_set_sensitive( widgets.compress,FALSE);
   gtk_widget_set_sensitive( widgets.tools_save,FALSE);
   gtk_widget_set_sensitive( widgets.tools_build,FALSE);
+  gtk_widget_set_sensitive( widgets.select_addnextright,FALSE);
+  gtk_widget_set_sensitive( widgets.select_addnextleft,FALSE);
+  gtk_widget_set_sensitive( widgets.select_addnextup,FALSE);
+  gtk_widget_set_sensitive( widgets.select_addnextdown,FALSE);
+  gtk_widget_set_sensitive( widgets.select_cp_nextright,FALSE);
+  gtk_widget_set_sensitive( widgets.select_cp_nextleft,FALSE);
+  gtk_widget_set_sensitive( widgets.select_cp_nextup,FALSE);
+  gtk_widget_set_sensitive( widgets.select_cp_nextdown,FALSE);
+  gtk_widget_set_sensitive( widgets.move_right,FALSE);
+  gtk_widget_set_sensitive( widgets.move_left,FALSE);
+  gtk_widget_set_sensitive( widgets.move_up,FALSE);
+  gtk_widget_set_sensitive( widgets.move_down,FALSE);
+  gtk_widget_set_sensitive( widgets.createnode,FALSE);
+  gtk_widget_set_sensitive( widgets.createcon,FALSE);
+  gtk_widget_set_sensitive( widgets.lockconpoint,FALSE);
 
   return FOE__SUCCESS;
 }

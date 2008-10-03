@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_annotpixmap.cpp,v 1.6 2007-09-25 13:11:00 claes Exp $
+ * Proview   $Id: flow_annotpixmap.cpp,v 1.7 2008-10-03 14:19:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -179,7 +179,7 @@ void FlowAnnotPixmap::draw_inverse( void *pos, int hot, void *node)
 	p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
 	&((FlowNode *) node)->annotpixmapv[number]->pixmap_data, 
 	((FlowNode *) node)->annotpixmapv[number]->pixmaps,
-	draw_type, idx, 0);
+	ctx->inverse_color, idx, 0);
 }
 
 void FlowAnnotPixmap::erase( void *pos, int hot, void *node)

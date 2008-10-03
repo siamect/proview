@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_api.cpp,v 1.15 2008-05-28 12:03:52 claes Exp $
+ * Proview   $Id: flow_api.cpp,v 1.16 2008-10-03 14:19:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -126,6 +126,16 @@ void flow_SelectRemove( flow_tCtx ctx, flow_tObject object)
 void flow_SelectClear( flow_tCtx ctx)
 {
   ctx->select_clear();
+}
+
+void flow_ConPointSelectInsert( flow_tCtx ctx, flow_tObject object, int num)
+{
+  ctx->conpoint_select( (FlowArrayElem *)object, num);
+}
+
+void flow_ConPointSelectClear( flow_tCtx ctx)
+{
+  ctx->conpoint_select_clear();
 }
 
 void flow_GetSelectedNodes( flow_tCtx ctx, flow_tNode **nodes, int *num)
@@ -415,9 +425,19 @@ void flow_GetSelectList( flow_tCtx ctx, flow_tObject **list, int *cnt)
   ctx->get_selectlist( (FlowArrayElem ***)list, cnt);
 }
 
+void flow_GetPasteList( flow_tCtx ctx, flow_tObject **list, int *cnt)
+{
+  ctx->get_pastelist( (FlowArrayElem ***)list, cnt);
+}
+
 void flow_GetObjectList( flow_tCtx ctx, flow_tObject **list, int *cnt)
 {
   ctx->get_objectlist( (FlowArrayElem ***)list, cnt);
+}
+
+void flow_GetConPointSelectList( flow_tCtx ctx, flow_tObject **list, int **num_list, int *cnt)
+{
+  ctx->get_conpoint_selectlist( (FlowArrayElem ***)list, num_list, cnt);
 }
 
 flow_eObjectType flow_GetObjectType( flow_tObject object)
@@ -606,6 +626,11 @@ void flow_CenterObject( flow_tCtx ctx, flow_tObject object)
   ctx->center_object( (FlowArrayElem *)object);
 }
 
+void flow_MoveSelectedNodes( flow_tCtx ctx, double delta_x, double delta_y, int grid)
+{
+  ctx->move_selected_nodes( delta_x, delta_y, grid);
+}
+
 void flow_GetNodePosition( flow_tNode node, double *x, double *y)
 {
   ((FlowNode *)node)->get_node_position( x, y);
@@ -710,6 +735,13 @@ int flow_GetNextObject( flow_tCtx ctx, flow_tNode object, flow_eDirection dir,
 			       (FlowArrayElem **)next);
 }
 
+int flow_GetNextConPoint( flow_tCtx ctx, flow_tNode object, int cp_num, flow_eDirection dir,
+			  flow_tNode *next, int *next_cp_num)
+{
+  return ctx->get_next_conpoint( (FlowArrayElem *)object, cp_num, dir,
+				 (FlowArrayElem **)next, next_cp_num);
+}
+
 int flow_IsVisible( flow_tCtx ctx, flow_tObject object, flow_eVisible type)
 {
   return ctx->is_visible( (FlowArrayElem *)object, type);
@@ -732,6 +764,21 @@ void flow_SetTipText( flow_tCtx ctx, flow_tObject object, char *text, int x, int
 void flow_RemoveTipText( flow_tCtx ctx)
 {
   ctx->tiptext->remove();
+}
+
+int flow_PasteStop( flow_tCtx ctx)
+{
+  return ctx->paste_stop();
+}
+
+int flow_PendingPaste( flow_tCtx ctx)
+{
+  return ctx->pending_paste();
+}
+
+int flow_PendingPasteStop( flow_tCtx ctx)
+{
+  return ctx->pending_paste_stop();
 }
 
 

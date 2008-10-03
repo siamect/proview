@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_node.cpp,v 1.10 2008-01-18 13:55:06 claes Exp $
+ * Proview   $Id: flow_node.cpp,v 1.11 2008-10-03 14:19:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,7 +41,7 @@ FlowNode::FlowNode( FlowCtx *flow_ctx, char *name, FlowNodeClass *node_class,
 	trace_inverted(0), trace_p(NULL), user_data(0),
 	level(0), node_open(0),
 	relative_annot_pos(rel_annot_pos), relative_annot_x(0), 
-	fill_color(flow_eDrawType_Inherit)
+	fill_color(flow_eDrawType_Inherit), sel_conpoint1(-1), sel_conpoint2(-1)
 {
   double x_grid, y_grid;
   strncpy( n_name, name, sizeof(n_name));
@@ -434,7 +434,7 @@ void FlowNode::draw_inverse()
        		int( y_low * ctx->zoom_factor - ctx->offset_y),
 		int( x_r * ctx->zoom_factor - x_left * ctx->zoom_factor),
   	     	int( y_high * ctx->zoom_factor - y_low * ctx->zoom_factor),
-		flow_eDrawType_Line);
+		ctx->inverse_color);
     nc->draw_inverse( &pos, 0, (void *)this);
   }
 }
@@ -770,12 +770,27 @@ int FlowNode::event_handler( flow_eEvent event, int x, int y)
       distance = 1e10;
       conpoint = 0;
       nc->a.conpoint_select( &pos, x, y, &distance, 
-		(void **) &conpoint);
-      if ( conpoint)
-      {
+			     (void **) &conpoint);
+      if ( conpoint) {
         ctx->con_create_source( this, conpoint->number, 
-		pos.z_x - ctx->offset_x + conpoint->p.z_x, 
-	 	pos.z_y - ctx->offset_y + conpoint->p.z_y);
+				pos.z_x - ctx->offset_x + conpoint->p.z_x, 
+				pos.z_y - ctx->offset_y + conpoint->p.z_y);
+      }
+    }
+    return sts;
+  }
+  else if ( event == ctx->event_select_conpoint)
+  {
+    sts = nc->event_handler( &pos, event, x, y, (void *)this);
+    if ( sts)
+    {
+      /* Find closest conpoint */
+      distance = 1e10;
+      conpoint = 0;
+      nc->a.conpoint_select( &pos, x, y, &distance, 
+			     (void **) &conpoint);
+      if ( conpoint) {
+        ctx->conpoint_select( this, conpoint->number);
       }
     }
     return sts;
@@ -1002,4 +1017,44 @@ void FlowNode::set_fillcolor( flow_eDrawType color)
 	     int(y_low * ctx->nav_zoom_factor - ctx->nav_offset_y - 1),
   	     int(x_right * ctx->nav_zoom_factor - ctx->nav_offset_x + 1),
 	     int(y_high * ctx->nav_zoom_factor - ctx->nav_offset_y + 1));
+}
+
+void FlowNode::conpoint_select( int num)
+{
+  if ( sel_conpoint1 == num || sel_conpoint2 == num)
+    return;
+  if ( sel_conpoint1 == -1)
+    sel_conpoint1 = num;
+  else if ( sel_conpoint2 == -1)
+    sel_conpoint2 = num;
+  nc->draw( &pos, highlight, hot, (void *)this);
+}
+
+void FlowNode::conpoint_select_clear( int num)
+{
+  if ( sel_conpoint1 == num) {
+    erase();
+    sel_conpoint1 = -1;
+    nc->draw( &pos, highlight, hot, (void *)this);
+  }
+  else if ( sel_conpoint2 == num) {
+    erase();
+    sel_conpoint2 = -1;
+    nc->draw( &pos, highlight, hot, (void *)this);
+  }
+}
+
+void FlowNode::conpoint_select_clear()
+{
+  if ( sel_conpoint1 != -1 || sel_conpoint2 != -1) {
+    erase();
+    sel_conpoint1 = -1;
+    sel_conpoint2 = -1;
+    nc->draw( &pos, highlight, hot, (void *)this);
+  }
+}
+
+int FlowNode::get_next_conpoint( int cp_num, flow_eDirection dir, double x0, double y0, int *next_cp_num)
+{
+  return nc->get_next_conpoint( cp_num, dir, x0 - pos.x, y0 - pos.y, next_cp_num);
 }

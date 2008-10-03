@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.24 2008-06-24 07:52:21 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.25 2008-10-03 14:18:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 
 #include "co_cdh.h"
 #include "co_time.h"
@@ -1000,6 +1001,48 @@ void WttGtk::activate_rename( GtkWidget *w, gpointer data)
 {
   Wtt *wtt = (Wtt *)data;
   wtt->open_change_name();
+}
+
+void WttGtk::activate_creaobjafter( GtkWidget *w, gpointer data)
+{
+  Wtt *wtt = (Wtt *)data;
+  wtt->activate_creaobj( ldh_eDest_After);
+}
+
+void WttGtk::activate_creaobjfirst( GtkWidget *w, gpointer data)
+{
+  Wtt *wtt = (Wtt *)data;
+  wtt->activate_creaobj( ldh_eDest_IntoFirst);
+}
+
+void WttGtk::activate_moveobjup( GtkWidget *w, gpointer data)
+{
+  Wtt *wtt = (Wtt *)data;
+  wtt->activate_moveobj( wnav_eDestCode_Before);
+}
+
+void WttGtk::activate_moveobjdown( GtkWidget *w, gpointer data)
+{
+  Wtt *wtt = (Wtt *)data;
+  wtt->activate_moveobj( wnav_eDestCode_After);
+}
+
+void WttGtk::activate_moveobjinto( GtkWidget *w, gpointer data)
+{
+  Wtt *wtt = (Wtt *)data;
+  wtt->activate_moveobj( wnav_eDestCode_FirstChild);
+}
+
+void WttGtk::activate_moveobjontop( GtkWidget *w, gpointer data)
+{
+  Wtt *wtt = (Wtt *)data;
+  wtt->activate_moveobj( wnav_eDestCode_LastChild);
+}
+
+void WttGtk::activate_deleteobj( GtkWidget *w, gpointer data)
+{
+  Wtt *wtt = (Wtt *)data;
+  wtt->activate_deleteobj();
 }
 
 void WttGtk::activate_configure( GtkWidget *w, gpointer data)
@@ -2065,6 +2108,7 @@ WttGtk::WttGtk(
   cm_add_attribute = gtk_check_menu_item_new_with_mnemonic( "_Add Attribute");
   g_signal_connect( cm_add_attribute, "activate", 
 		    G_CALLBACK(WttGtk::activate_selmode), this);
+
   cm_add_type = gtk_check_menu_item_new_with_mnemonic( "Add _Type");
   g_signal_connect( cm_add_type, "activate", 
 		    G_CALLBACK(WttGtk::activate_selmode), this);
@@ -2081,6 +2125,74 @@ WttGtk::WttGtk(
 
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(edit_cm),
 			    GTK_WIDGET(edit_cm_menu));
+
+  // Submenu Create Object
+  menu_creaobjafter_w = gtk_menu_item_new_with_mnemonic( "_After");
+  g_signal_connect( menu_creaobjafter_w, "activate", 
+		    G_CALLBACK(WttGtk::activate_creaobjafter), this);
+  gtk_widget_add_accelerator( menu_creaobjafter_w, "activate", accel_g,
+			      'd', GdkModifierType(GDK_CONTROL_MASK), 
+			      GTK_ACCEL_VISIBLE);
+
+  menu_creaobjfirst_w = gtk_menu_item_new_with_mnemonic( "_First Child");
+  g_signal_connect( menu_creaobjfirst_w, "activate", 
+		    G_CALLBACK(WttGtk::activate_creaobjfirst), this);
+  gtk_widget_add_accelerator( menu_creaobjfirst_w, "activate", accel_g,
+			      'd', GdkModifierType(GDK_CONTROL_MASK | GDK_SHIFT_MASK), 
+			      GTK_ACCEL_VISIBLE);
+
+  GtkWidget *edit_creaobj = gtk_menu_item_new_with_mnemonic( "C_reate Object");
+  GtkMenu *edit_creaobj_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_creaobj_menu), menu_creaobjafter_w);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_creaobj_menu), menu_creaobjfirst_w);
+
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(edit_creaobj),
+			    GTK_WIDGET(edit_creaobj_menu));
+
+  // Submenu Move Object
+  menu_moveobjup_w = gtk_menu_item_new_with_mnemonic( "_Up");
+  g_signal_connect( menu_moveobjup_w, "activate", 
+		    G_CALLBACK(WttGtk::activate_moveobjup), this);
+  gtk_widget_add_accelerator( menu_moveobjup_w, "activate", accel_g,
+			      GDK_Up, GdkModifierType(GDK_CONTROL_MASK | GDK_SHIFT_MASK), 
+			      GTK_ACCEL_VISIBLE);
+
+  menu_moveobjdown_w = gtk_menu_item_new_with_mnemonic( "_Down");
+  g_signal_connect( menu_moveobjdown_w, "activate", 
+		    G_CALLBACK(WttGtk::activate_moveobjdown), this);
+  gtk_widget_add_accelerator( menu_moveobjdown_w, "activate", accel_g,
+			      GDK_Down, GdkModifierType(GDK_CONTROL_MASK | GDK_SHIFT_MASK), 
+			      GTK_ACCEL_VISIBLE);
+
+  menu_moveobjinto_w = gtk_menu_item_new_with_mnemonic( "_Into");
+  g_signal_connect( menu_moveobjinto_w, "activate", 
+		    G_CALLBACK(WttGtk::activate_moveobjinto), this);
+  gtk_widget_add_accelerator( menu_moveobjinto_w, "activate", accel_g,
+			      GDK_Right, GdkModifierType(GDK_CONTROL_MASK | GDK_SHIFT_MASK), 
+			      GTK_ACCEL_VISIBLE);
+
+  menu_moveobjontop_w = gtk_menu_item_new_with_mnemonic( "_OnTop");
+  g_signal_connect( menu_moveobjontop_w, "activate",
+		    G_CALLBACK(WttGtk::activate_moveobjontop), this);
+  gtk_widget_add_accelerator( menu_moveobjontop_w, "activate", accel_g,
+			      GDK_Left, GdkModifierType(GDK_CONTROL_MASK | GDK_SHIFT_MASK), 
+			      GTK_ACCEL_VISIBLE);
+
+  GtkWidget *edit_moveobj = gtk_menu_item_new_with_mnemonic( "_Move Object");
+  GtkMenu *edit_moveobj_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_moveobj_menu), menu_moveobjup_w);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_moveobj_menu), menu_moveobjdown_w);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_moveobj_menu), menu_moveobjinto_w);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_moveobj_menu), menu_moveobjontop_w);
+
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(edit_moveobj),
+			    GTK_WIDGET(edit_moveobj_menu));
+
+  menu_deleteobj_w = gtk_menu_item_new_with_mnemonic( "_Delete Object");
+  g_signal_connect( menu_deleteobj_w, "activate", 
+		    G_CALLBACK(WttGtk::activate_deleteobj), this);
+  gtk_widget_add_accelerator( menu_deleteobj_w, "activate", accel_g,
+			      GDK_Delete, GdkModifierType(0), GTK_ACCEL_VISIBLE);
 
   GtkWidget *edit_collapse = gtk_menu_item_new_with_mnemonic( "Co_llapse");
   g_signal_connect( edit_collapse, "activate", 
@@ -2117,6 +2229,9 @@ WttGtk::WttGtk(
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), menu_edit_w);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_search);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_cm);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_creaobj);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_moveobj);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), menu_deleteobj_w);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_collapse);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), menu_cut_w);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), menu_copy_w);

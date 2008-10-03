@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.cpp,v 1.41 2008-06-24 07:52:21 claes Exp $
+ * Proview   $Id: wb_wnav.cpp,v 1.42 2008-10-03 14:18:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3050,6 +3050,117 @@ void WNav::select_object( brow_tObject object)
   brow_SetInverse( object, 1);
   brow_SelectInsert( brow->ctx, object);
 }
+
+int WNav::select_object( pwr_tOid oid)
+{
+  int sts;
+  WItem *item;
+
+  if ( !selection_owner)
+    return 0;
+
+  sts = find( oid, (void **)&item);
+  if ( EVEN(sts)) return sts;
+
+  brow_SelectClear( brow->ctx);
+  brow_SetInverse( item->node, 1);
+  brow_SelectInsert( brow->ctx, item->node);
+
+  return 1;
+}
+
+int WNav::get_next( pwr_tOid oid, wnav_eDestCode dest, pwr_tOid *next_oid, wnav_eDestCode *d)
+{
+  int sts;
+  WItem *item, *next_item, *next_next_item;
+  brow_tObject next_node, next_next_node;
+  int level, next_level, next_next_level;
+
+  sts = find( oid, (void **)&item);
+  if ( EVEN(sts)) return sts;
+
+  if ( dest == wnav_eDestCode_After) {
+    sts = brow_GetNext( brow->ctx, item->node, &next_node);
+    if ( EVEN(sts)) {
+      // No next, return parent as next
+      sts = brow_GetParent( brow->ctx, item->node, &next_node);
+      *d = wnav_eDestCode_After;
+      return sts;
+    }
+    else {
+      level = brow_GetObjectLevel( item->node);
+      next_level = brow_GetObjectLevel( next_node);
+      if ( level > next_level) {
+	// Next has higher level, return parent as next
+	sts = brow_GetParent( brow->ctx, item->node, &next_node);
+	*d = wnav_eDestCode_After;
+      }
+      else {
+	// If next has open children, move to first child
+	sts = brow_GetNext( brow->ctx, next_node, &next_next_node);
+	if ( ODD(sts)) {
+	  next_next_level = brow_GetObjectLevel( next_next_node);
+	  if ( next_level < next_next_level) {
+	    brow_GetUserData( next_next_node, (void **)&next_next_item);
+	    if ( next_next_item->type == wnav_eItemType_Object)
+	      *d = wnav_eDestCode_FirstChild;
+	    else
+	      *d = wnav_eDestCode_After;
+	  }
+	  else
+	    *d = wnav_eDestCode_After;
+	}
+	else
+	  *d = wnav_eDestCode_After;
+      }
+    }
+  }
+  else if ( dest == wnav_eDestCode_Before) {
+    sts = brow_GetPrevious( brow->ctx, item->node, &next_node);
+    if ( EVEN(sts)) return sts;
+
+    level = brow_GetObjectLevel( item->node);
+    next_level = brow_GetObjectLevel( next_node);
+    if ( level < next_level)
+      *d = wnav_eDestCode_After;
+    else
+      *d = wnav_eDestCode_Before;
+  }
+  else if ( dest == wnav_eDestCode_FirstChild) {
+    // First Child
+    sts = brow_GetPrevious( brow->ctx, item->node, &next_node);
+    if ( EVEN(sts)) return sts;
+
+    *d = wnav_eDestCode_FirstChild;
+  }
+  else {
+    // Parent
+    sts = brow_GetParent( brow->ctx, item->node, &next_node);
+    if ( EVEN(sts)) return sts;
+
+    *d = wnav_eDestCode_After;
+  }
+
+  brow_GetUserData( next_node, (void **)&next_item);
+  *next_oid = next_item->objid;
+  return 1;
+}
+
+void WNav::set_select_visible()
+{
+  brow_tNode	*node_list;
+  int		node_count;
+
+  brow_GetSelectedNodes( brow->ctx, &node_list, &node_count);
+  if ( !node_list)
+    return;
+
+  if ( !brow_IsVisible( brow->ctx, node_list[0], flow_eVisible_Full))
+    brow_CenterObject( brow->ctx, node_list[0], 0.50);
+
+  free( node_list);
+}
+
 
 void WNav::collapse()
 {

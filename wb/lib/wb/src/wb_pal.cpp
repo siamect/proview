@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pal.cpp,v 1.11 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: wb_pal.cpp,v 1.12 2008-10-03 14:18:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1254,10 +1254,11 @@ int Pal::brow_cb( FlowCtx *ctx, flow_tEvent event)
           ;
       }
       break;
-    case flow_eEvent_MB1Click:
+    case flow_eEvent_MB1Click: {
       // Select
       double ll_x, ll_y, ur_x, ur_y;
       int		sts;
+      pwr_tCid cid = pwr_cNCid;
 
       if ( pal->set_focus_cb)
         (pal->set_focus_cb)( pal->parent_ctx, pal);
@@ -1280,22 +1281,56 @@ int Pal::brow_cb( FlowCtx *ctx, flow_tEvent event)
             return sts;
           }
 
-          if ( brow_FindSelectedObject( pal->brow_ctx, event->object.object))
-          {
-            brow_SelectClear( pal->brow_ctx);
-          }
-          else
-          {
+          if ( !brow_FindSelectedObject( pal->brow_ctx, event->object.object)) {
             brow_SelectClear( pal->brow_ctx);
             brow_SetInverse( event->object.object, 1);
             brow_SelectInsert( pal->brow_ctx, event->object.object);
           }
+
+
+	  if ( !pal->select_cb)
+	    break;
+
+	  switch ( event->object.object_type) {
+	  case flow_eObjectType_Node:
+	    brow_GetUserData( event->object.object, (void **)&item);
+	    switch ( item->type) {
+	    case pal_ePalItemType_Object:
+	      char name[32];
+	      int size;
+
+	      sts = ldh_ObjidToName( pal->ldhses, item->objid, ldh_eName_Object,
+				     name, sizeof(name), &size);
+	      if ( EVEN(sts)) return sts;
+	      
+	      sts =  ldh_ClassNameToId( pal->ldhses, &cid, name);
+	      if ( EVEN(sts)) return sts;
+	      
+	      break;
+	    case pal_ePalItemType_Class:
+	      sts = ldh_ClassNameToId( pal->ldhses, &cid, ((PalItemClass *)item)->name);
+	      if ( EVEN(sts)) return sts;
+	      
+	      break;
+	    default:
+	      ;
+	    }
+	  default:
+	    ;
+	  }
+
+	  if ( cid == pwr_cNCid)
+	    break;
+	  
+	  pal->select_cb( pal->parent_ctx, cid);
+      
           break;
         default:
           brow_SelectClear( pal->brow_ctx);
       }
       pal->last_selected = event->object.object;
       break;
+    }
     case flow_eEvent_Map:
     {
       pal->displayed = 1;
@@ -1305,6 +1340,7 @@ int Pal::brow_cb( FlowCtx *ctx, flow_tEvent event)
     {
       // Popup menu
       pwr_tCid cid = pwr_cNCid;
+      pwr_tStatus sts;
 
       if ( !pal->create_popup_menu_cb)
 	break;
@@ -1503,7 +1539,7 @@ Pal::Pal(
   parent_ctx(pal_parent_ctx),
   wbctx(0), ldhses(pal_ldhses), root_objid(pwr_cNObjid), root_item(0),
   last_selected(0), selection_owner(0), set_focus_cb(0),
-  traverse_focus_cb(0), create_popup_menu_cb(0), displayed(0), menu(0)
+  traverse_focus_cb(0), create_popup_menu_cb(0), select_cb(0), displayed(0), menu(0)
 {
   strcpy( name, pal_name);
   strcpy( root_name, pal_root_name);

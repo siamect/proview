@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.h,v 1.7 2008-02-27 06:30:10 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.h,v 1.8 2008-10-03 14:18:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -99,6 +99,13 @@ class WttGtk : public Wtt {
     GtkWidget	*menu_edit_w;
     GtkWidget	*menu_classeditor_w;
     GtkWidget	*menu_updateclasses_w;
+    GtkWidget	*menu_creaobjafter_w;
+    GtkWidget	*menu_creaobjfirst_w;
+    GtkWidget	*menu_deleteobj_w;
+    GtkWidget	*menu_moveobjup_w;
+    GtkWidget	*menu_moveobjdown_w;
+    GtkWidget	*menu_moveobjinto_w;
+    GtkWidget	*menu_moveobjontop_w;
     GtkWidget	*tools_edit_w;
     GtkWidget	*tools_buildnode_w;
     GtkWidget	*tools_save_w;
@@ -183,6 +190,13 @@ class WttGtk : public Wtt {
     static void activate_pasteinto( GtkWidget *w, gpointer data);
     static void activate_copykeep( GtkWidget *w, gpointer data);
     static void activate_rename( GtkWidget *w, gpointer data);
+    static void activate_creaobjafter( GtkWidget *w, gpointer data);
+    static void activate_creaobjfirst( GtkWidget *w, gpointer data);
+    static void activate_moveobjup( GtkWidget *w, gpointer data);
+    static void activate_moveobjdown( GtkWidget *w, gpointer data);
+    static void activate_moveobjinto( GtkWidget *w, gpointer data);
+    static void activate_moveobjontop( GtkWidget *w, gpointer data);
+    static void activate_deleteobj( GtkWidget *w, gpointer data);
     static void activate_configure( GtkWidget *w, gpointer data);
     static void activate_utilities( GtkWidget *w, gpointer data);
     static void activate_openobject( GtkWidget *w, gpointer data);

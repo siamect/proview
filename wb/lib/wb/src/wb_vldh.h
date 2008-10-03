@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vldh.h,v 1.8 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_vldh.h,v 1.9 2008-10-03 14:18:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -542,6 +542,11 @@ char *vldh_VolumeIdToStr(
 pwr_tStatus vldh_StrToId( 
   char 		*instr, 
   pwr_tObjid 	*objid
+);
+
+int vldh_check_node(
+  vldh_t_wind		wind,
+  vldh_t_node		node
 );
 
 #ifdef __cplusplus

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.cpp,v 1.10 2008-05-29 14:57:53 claes Exp $
+ * Proview   $Id: wb_gre.cpp,v 1.11 2008-10-03 14:18:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -709,6 +709,13 @@ void WGre::unselect()
   sel_con_count = 0;
 }
 
+//
+//  Reset any selected connectionpoints
+//
+void WGre::conpoint_unselect()
+{
+  flow_ConPointSelectClear( flow_ctx);
+}
 
 //
 //	Delete the search rectangle.
@@ -1323,6 +1330,7 @@ int WGre::flow_cb( FlowCtx *ctx, flow_tEvent event)
   double	ll_x, ll_y, ur_x, ur_y, width, height;
   int		subwindow_nr;
   int		index;
+  int		sts;
 
   flow_GetCtxUserData( ctx, (void **)&gre);
 
@@ -1337,7 +1345,7 @@ int WGre::flow_cb( FlowCtx *ctx, flow_tEvent event)
     (gre->gre_con_created) (gre, 
 		event->con_create.x, event->con_create.y, 
 		source, event->con_create.source_conpoint,
-		dest, event->con_create.dest_conpoint);	
+		dest, event->con_create.dest_conpoint, 0, &sts);	
   }
 
   switch ( event->event) {
@@ -1372,10 +1380,14 @@ int WGre::flow_cb( FlowCtx *ctx, flow_tEvent event)
 	flow_SelectClear( ctx);
 	flow_SetHighlight( event->object.object, 1);
 	flow_SelectInsert( ctx, event->object.object);
+	// Store last selected
+	flow_GetUserData( event->object.object, (void **)&gre->last_selected);
       }
       break;
     default:
       flow_SelectClear( ctx);
+      flow_ConPointSelectClear( ctx);
+      gre->conpoint_lock(0);
     }
     break;
   case flow_eEvent_ObjectMoved: {
@@ -1532,6 +1544,7 @@ int WGre::flow_cb( FlowCtx *ctx, flow_tEvent event)
 			     gre->popupmenu_mode, current_node);
     break;
   }
+#if 0
   case flow_eEvent_MB1ClickCtrl: {
     char			help_title[32];
     vldh_t_node		node;
@@ -1560,6 +1573,7 @@ int WGre::flow_cb( FlowCtx *ctx, flow_tEvent event)
     }	
     break;
   }
+#endif
   case flow_eEvent_MB1DoubleClickShiftCtrl: {
     /* Copy */
     if ( event->object.object_type == flow_eObjectType_Node) {
@@ -1617,7 +1631,7 @@ WGre::WGre( void *wg_parent_ctx,
   conref_nodetypeid(0), display_nodetypeid(0),
   sel_node_count(0), del_node_count(0), searchrect_node_id(0), popupmenu_mode(0),
   trace_started(0), trace_analyse_nc(0), trace_con_cc(0),
-  trace_changenode(0)
+  trace_changenode(0), conpoint_locked(0), last_selected(0), last_cp_selected(0), last_cp_selected_num(0)
 {
 }
 
@@ -1708,6 +1722,8 @@ int WGre::edit_setup()
   flow_EnableEvent( ctx, flow_eEvent_MB1Press, flow_eEventType_MoveNode, 
 	flow_cb);
   flow_EnableEvent( ctx, flow_eEvent_MB2Press, flow_eEventType_CreateCon, 
+	flow_cb);
+  flow_EnableEvent( ctx, flow_eEvent_MB1ClickCtrl, flow_eEventType_SelectConPoint, 
 	flow_cb);
   flow_EnableEvent( ctx, flow_eEvent_MB1Press, flow_eEventType_RegionSelect, 
 	flow_cb);
@@ -1971,7 +1987,7 @@ int WGre::view_setup()
 int WGre::setup_backcalls (
 	void (*setup_window_bc)(WGre *),
 	void (*node_created_bc)(WGre *, unsigned long, float, float),
-	void (*con_created_bc)(WGre *, double, double, vldh_t_node, unsigned long, vldh_t_node,  unsigned long),
+	void (*con_created_bc)(WGre *, double, double, vldh_t_node, unsigned long, vldh_t_node, unsigned long, int, int *),
 	void (*node_moved_bc)(WGre *),
 	void (*delete_bc)(WGre *, void *, unsigned long),
 	void (*cut_bc)(WGre *, void *, unsigned long),
@@ -2067,6 +2083,72 @@ int WGre::create_node( pwr_tClassId cid, float x, float y, vldh_t_node *node)
 
   sts = node_annotations_draw( node_object, 0); 
   if( EVEN(sts) ) return sts;
+
+  UPDATE_SCREEN;
+
+  *node = node_object;
+
+  /* Update header /CJ 050415 */ 
+  if ( cid == pwr_cClass_Document) {
+    init_docobjects();
+  }
+	
+  return GRE__SUCCESS;
+}
+
+//
+//	Creates a node of specified class.
+//	A node is created in vldh and drawn in the window.
+//
+int WGre::create_node_floating( pwr_tClassId cid, float x, float y, vldh_t_node *node)
+{
+  flow_tNodeClass	node_class = 0;
+  vldh_t_node 	node_object;
+  double		ll_x, ll_y, ur_x, ur_y;
+  unsigned long	subwindowmark = 0;
+  int		sts;
+  int		visible = 0;
+
+  flow_PasteClear( flow_ctx);
+
+  sts = vldh_node_create( wind, cid, &node_object);
+  if( EVEN(sts) ) return sts;
+
+  sts = get_nodeclass( cid,
+		       (node_object->hn.wind)->hw.ldhses, 
+		       node_object->ln.object_type, 
+		       node_object->ln.mask,
+		       subwindowmark, 
+		       node_object->ln.nodewidth,
+		       &node_class, node_object);
+  if( EVEN(sts) ) return sts;
+
+  DEFERRED_UPDATE;
+
+  flow_CreatePasteNode( flow_ctx, node_object->hn.name, 
+			node_class, x, y,
+			node_object, &node_object->hn.node_id);
+  flow_MeasureNode( node_object->hn.node_id,
+		    &ll_x, &ll_y, &ur_x, &ur_y);
+  node_object->ln.width = ur_x - ll_x;
+  node_object->ln.height = ur_y - ll_y;
+  flow_GetNodePosition( node_object->hn.node_id, &ll_x, &ll_y);
+  node_object->ln.x = ll_x;
+  node_object->ln.y = ll_y;
+
+  flow_Paste( flow_ctx);
+  flow_SetSelectHighlight( flow_ctx);
+
+  if ( flow_FindSelectedObject( flow_ctx, node_object->hn.node_id))
+    visible = 1;
+
+  if ( !visible)
+    flow_SetNodraw( flow_ctx);
+  sts = node_annotations_draw( node_object, 0); 
+  if ( !visible)
+    flow_ResetNodraw( flow_ctx);
+  if( EVEN(sts) ) return sts;
+
 
   UPDATE_SCREEN;
 
@@ -3152,7 +3234,14 @@ void WGre::pixel_to_position( int pix_x, int pix_y, double *x, double *y)
   flow_PixelToPosition( flow_ctx, pix_x, pix_y, x, y);
 }
 
-void WGre::select_nextobject( flow_eDirection dir)
+void WGre::select_node( vldh_t_node node)
+{
+  flow_SelectClear( flow_ctx);
+  flow_SetHighlight( node->hn.node_id, 1);
+  flow_SelectInsert( flow_ctx, node->hn.node_id);
+}
+
+void WGre::select_nextobject( flow_eDirection dir, int add)
 {
   flow_tNode 	sel, next;
   flow_tNode	*fnode_list;
@@ -3165,6 +3254,12 @@ void WGre::select_nextobject( flow_eDirection dir)
   else
     sel = fnode_list[0];
 
+  if ( (!sel || add) && last_selected) {
+    // Take last selected
+    if ( vldh_check_node( wind, last_selected))
+      sel = last_selected->hn.node_id;
+  }
+
   if ( !sel || !flow_IsVisible( flow_ctx, sel, flow_eVisible_Partial)) {
     sts = flow_GetNextObject( flow_ctx, 0, dir, &next);
     if ( EVEN(sts)) {
@@ -3172,7 +3267,8 @@ void WGre::select_nextobject( flow_eDirection dir)
       return;
     }
 
-    flow_SelectClear( flow_ctx);
+    if ( !add)
+      flow_SelectClear( flow_ctx);
     flow_SetHighlight( next, 1);
     flow_SelectInsert( flow_ctx, next);
   }
@@ -3183,11 +3279,213 @@ void WGre::select_nextobject( flow_eDirection dir)
       return;
     }
 
-    flow_SelectClear( flow_ctx);
+    if ( !add)
+      flow_SelectClear( flow_ctx);
     flow_SetHighlight( next, 1);
     flow_SelectInsert( flow_ctx, next);
 
     if ( !flow_IsVisible( flow_ctx, next, flow_eVisible_Full))
       flow_CenterObject( flow_ctx, next);
   }
+
+  // Store last selected
+  flow_GetUserData( next, (void **)&last_selected);
+}
+
+void WGre::select_next_conpoint( flow_eDirection dir)
+{
+  flow_tNode 	sel, next;
+  flow_tNode	*select_list;
+  int		*select_num;
+  int		select_cnt;
+  int		sel_num, next_num;
+  int		sts;
+
+  flow_GetConPointSelectList( flow_ctx, &select_list, &select_num, &select_cnt);
+  if ( select_cnt == 0)
+    sel = 0;
+  else {
+    sel = select_list[select_cnt - 1];
+    sel_num = select_num[select_cnt - 1];
+  }
+  if ( !sel) {
+    // 
+    flow_tNode	*fnode_list;
+    int		fnode_count;
+
+    flow_GetSelectedNodes( flow_ctx, &fnode_list, &fnode_count);
+    if ( fnode_count != 0) {
+      sel = fnode_list[0];
+      sel_num = 0;
+    }
+  }
+  if ( !sel && last_cp_selected) {
+    // Take last selected
+    if ( vldh_check_node( wind, last_cp_selected)) {
+      sel = last_cp_selected->hn.node_id;
+      sel_num = last_cp_selected_num;
+    }
+  }
+
+  if ( !sel || !flow_IsVisible( flow_ctx, sel, flow_eVisible_Partial)) {
+    sts = flow_GetNextConPoint( flow_ctx, 0, 0, dir, &next, &next_num);
+    if ( EVEN(sts)) {
+      message( "Unable to find a visible object");
+      return;
+    }
+
+    if ( !conpoint_locked)
+      flow_ConPointSelectClear( flow_ctx);
+    flow_ConPointSelectInsert( flow_ctx, next, next_num);
+  }
+  else {
+    sts = flow_GetNextConPoint( flow_ctx, sel, sel_num, dir, &next, &next_num);
+    if ( EVEN(sts)) {
+      message( "Unable to find next object");
+      return;
+    }
+
+    if ( !conpoint_locked)
+      flow_ConPointSelectClear( flow_ctx);
+    flow_ConPointSelectInsert( flow_ctx, next, next_num);
+
+    // Store last selected
+    flow_GetUserData( next, (void **)&last_cp_selected);
+    last_cp_selected_num = next_num;
+
+    if ( !flow_IsVisible( flow_ctx, next, flow_eVisible_Full))
+      flow_CenterObject( flow_ctx, next);
+  }
+}
+
+void WGre::move_object( flow_eDirection dir)
+{
+  double	x, y, ll_x, ll_y;
+  unsigned long		node_count;
+  vldh_t_node		*nodelist;
+
+  switch ( dir) {
+  case flow_eDirection_Up:
+    x = 0;
+    y = -grid_size;
+    break;
+  case flow_eDirection_Down:
+    x = 0;
+    y = grid_size;
+    break;
+  case flow_eDirection_Right:
+    x = grid_size;
+    y = 0;
+    break;
+  case flow_eDirection_Left:
+    x = -grid_size;
+    y = 0;
+    break;
+  default: ;
+  }
+  get_selnodes( &node_count, &nodelist);
+  if ( !node_count)
+    return;
+
+  flow_PasteStop( flow_ctx);
+  flow_MoveSelectedNodes( flow_ctx, x, y, 1);
+
+  for ( unsigned int i = 0; i < node_count; i++) {
+    flow_GetNodePosition( nodelist[i]->hn.node_id, &ll_x, &ll_y);
+    nodelist[i]->ln.x = ll_x;
+    nodelist[i]->ln.y = ll_y;
+  }
+  free( nodelist);
+}
+
+void WGre::pending_paste_stop()
+{
+  vldh_t_node		node;
+  vldh_t_con 		*con_list;
+  unsigned long		con_count;
+  flow_tObject		*paste_list;
+  int			paste_cnt;
+  int			sts;
+  
+  if ( flow_PendingPaste( flow_ctx)) {
+    flow_GetPasteList( flow_ctx, &paste_list, &paste_cnt);
+    for ( int i = 0; i < paste_cnt; i++) {
+      if ( flow_GetObjectType( paste_list[i]) == flow_eObjectType_Node) {
+	flow_GetUserData( paste_list[i], (void **)&node);
+
+	sts = vldh_get_cons_node( node, &con_count, &con_list);
+	for ( int j = 0; j < (int)con_count; j++)
+	  vldh_con_delete( con_list[j]);
+	if ( con_count > 0) free((char *) con_list);
+
+	vldh_node_delete( node);
+      }
+    }
+  }
+}
+
+
+int WGre::get_conpoint_select( unsigned long *node_count, vldh_t_node **nodelist, int **numlist)
+{
+  flow_tObject	*select_list;
+  int		*select_num;
+  int		select_cnt;
+  vldh_t_node	node;
+
+  flow_GetConPointSelectList( flow_ctx, &select_list, &select_num, &select_cnt);
+
+  *node_count = 0;
+  if ( select_cnt == 0)
+    return GRE__SUCCESS;
+
+  /* create array */
+  *nodelist = (vldh_t_node *)calloc( select_cnt, sizeof(node));
+  *numlist = (int *)calloc( select_cnt, sizeof(int));
+
+  /* Insert the nodes */
+  for ( int i = 0; i < select_cnt; i++ ) {
+    flow_GetUserData( select_list[i], (void **)&node);
+    *(*nodelist + *node_count) = node;
+    *(*numlist + *node_count) = select_num[i];
+    (*node_count)++;
+  }
+  return GRE__SUCCESS;
+}
+
+int WGre::get_conpoint( vldh_t_node node, int num, double *x, double *y, flow_eDirection *dir)
+{  
+  return flow_GetConPoint( node->hn.node_id, num, x, y, dir);
+}
+
+void WGre::scroll( flow_eDirection dir)
+{
+  double x, y;
+
+  switch ( dir) {
+  case flow_eDirection_Right:
+    x = -0.20;
+    y = 0;
+    break;
+  case flow_eDirection_Left:
+    x = 0.20;
+    y = 0;
+    break;
+  case flow_eDirection_Up:
+    x = 0;
+    y = 0.20;
+    break;
+  case flow_eDirection_Down:
+    x = 0;
+    y = -0.20;
+    break;
+  default: ;
+  }
+
+  flow_Scroll( flow_ctx, x, y);
+}
+
+void WGre::set_node_visible( vldh_t_node node)
+{
+  if ( !flow_IsVisible( flow_ctx, node->hn.node_id, flow_eVisible_Full))
+    flow_CenterObject( flow_ctx, node->hn.node_id);
 }

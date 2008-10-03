@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.h,v 1.18 2007-09-21 10:49:39 claes Exp $
+ * Proview   $Id: wb_wtt.h,v 1.19 2008-10-03 14:18:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -214,6 +214,9 @@ class Wtt : public WUtility {
     void activate_configure();
     void activate_utilities();
     void activate_openobject();
+    void activate_creaobj( ldh_eDest dest);
+    void activate_moveobj( wnav_eDestCode dest);
+    void activate_deleteobj();
     void activate_openvolobject();
     void activate_openplc();
     void activate_buildobject();
@@ -324,6 +327,7 @@ class Wtt : public WUtility {
     static int get_wbctx( void *ctx, ldh_tWBContext *wbctx);
     static void wpkg_quit_cb( void *ctx);
     static void uted_quit_cb( void *ctx);
+    static void delete_ok( Wtt *wtt);
 
 
     virtual ~Wtt();

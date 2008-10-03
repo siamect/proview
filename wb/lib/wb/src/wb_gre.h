@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.h,v 1.9 2007-09-25 13:36:32 claes Exp $
+ * Proview   $Id: wb_gre.h,v 1.10 2008-10-03 14:18:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -112,11 +112,15 @@ class WGre {
   flow_tNode		trace_changenode;
   int			popup_menu_x;
   int			popup_menu_y;
+  int			conpoint_locked;
+  vldh_t_node		last_selected;
+  vldh_t_node		last_cp_selected;
+  int			last_cp_selected_num;
 
   /* Callbacks */
   void (*gre_setup_window)(WGre *);
   void (*gre_node_created)(WGre *, unsigned long, float, float);
-  void (*gre_con_created)(WGre *, double, double, vldh_t_node, unsigned long, vldh_t_node,  unsigned long);
+  void (*gre_con_created)(WGre *, double, double, vldh_t_node, unsigned long, vldh_t_node,  unsigned long, int, int *);
   void (*gre_node_moved)(WGre *);
   void (*gre_delete)(WGre *, void *, unsigned long);
   void (*gre_cut)(WGre *, void *, unsigned long);
@@ -146,6 +150,7 @@ class WGre {
   void message( char *message);
   void ctx_init();
   void unselect();
+  void conpoint_unselect();
   void search_rectangle_delete();
   void search_rectangle_create( vldh_t_node node);
   void create_cursors();
@@ -173,7 +178,7 @@ class WGre {
   int setup_backcalls (
 	void (*setup_window_bc)(WGre *),
 	void (*node_created_bc)(WGre *, unsigned long, float, float),
-	void (*con_created_bc)(WGre *, double, double, vldh_t_node, unsigned long, vldh_t_node,  unsigned long),
+	void (*con_created_bc)(WGre *, double, double, vldh_t_node, unsigned long, vldh_t_node, unsigned long, int, int *),
 	void (*node_moved_bc)(WGre *),
 	void (*delete_bc)(WGre *, void *, unsigned long),
 	void (*cut_bc)(WGre *, void *, unsigned long),
@@ -190,6 +195,7 @@ class WGre {
 	void (*regionmoved_bc)(WGre *),
 	void (*message_bc)(WGre *, char *));
   int create_node( pwr_tClassId cid, float x, float y, vldh_t_node *node);
+  int create_node_floating( pwr_tClassId cid, float x, float y, vldh_t_node *node);
   int create_con( pwr_tClassId  cid,
 		  vldh_t_node source_obj, unsigned long source_point,
 		  vldh_t_node destination_obj, unsigned long destination_point,
@@ -229,8 +235,17 @@ class WGre {
 		    flow_tConClass *con_class);
   void pixel_to_position( int pix_x, int pix_y, double *x, double *y);
 
-  void select_nextobject( flow_eDirection dir);
-
+  void select_node( vldh_t_node node);
+  void select_nextobject( flow_eDirection dir, int add);
+  void select_next_conpoint( flow_eDirection dir);
+  void move_object( flow_eDirection dir);
+  void pending_paste_stop();
+  int get_conpoint_select( unsigned long *node_count, vldh_t_node **nodelist, int **numlist);
+  int get_conpoint( vldh_t_node node, int num, double *x, double *y, flow_eDirection *dir);
+  void conpoint_lock( int lock) { conpoint_locked = lock;}
+  void scroll( flow_eDirection dir);
+  void set_node_visible( vldh_t_node node);
+  
   static int get_annot_width( flow_tNodeClass nodeclass,
 			      float *annot_width, char *annot_str, int annot_count,
 			      int annot_size);

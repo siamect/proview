@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_conpoint.cpp,v 1.3 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: flow_conpoint.cpp,v 1.4 2008-10-03 14:19:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,6 +25,7 @@
 
 #include "flow_conpoint.h"
 #include "flow_draw.h"
+#include "flow_node.h"
 
 void FlowConPoint::zoom()
 {
@@ -138,6 +139,79 @@ void FlowConPoint::get_trace_attr( char *object, char *attribute,
   strncpy( attribute, trace_attribute, sizeof( trace_attribute));
   *type = trace_attr_type;
   *inverted = 0;
+}
+
+void FlowConPoint::draw( void *pos, int highlight, int hot, void *node)
+{
+  int line_width = 1;
+  int idx = int( ctx->zoom_factor / ctx->base_zoom_factor * line_width - 1) + 2;
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
+  int size = (int)(0.025 * ctx->zoom_factor);
+  int x, y;
+
+  if ( ((FlowNode *)node)->sel_conpoint1 == number ||
+       ((FlowNode *)node)->sel_conpoint2 == number) {
+    switch ( direction) {
+    case flow_eDirection_Up:
+      x = p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x - size/2;
+      y = p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y - size;;
+      break;
+    case flow_eDirection_Down:
+      x = p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x - size/2;
+      y = p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y;
+      break;
+    case flow_eDirection_Right:
+      x = p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x - size;
+      y = p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y - size/2;
+      break;
+    case flow_eDirection_Left:
+      x = p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x;
+      y = p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y - size/2;
+      break;
+    default:
+      x = p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x - size/2;
+      y = p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y - size/2;
+    }
+    ctx->fdraw->arc( ctx, x, y, size, size, 0, 360,
+		     flow_eDrawType_LineRed, idx, 0);
+  }
+}
+
+void FlowConPoint::erase( void *pos, int hot, void *node)
+{
+  int line_width = 1;
+  int idx = int( ctx->zoom_factor / ctx->base_zoom_factor * line_width - 1) + 2;
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
+  int size = (int)(0.025 * ctx->zoom_factor);
+  int x, y;
+
+  if ( ((FlowNode *)node)->sel_conpoint1 == number ||
+       ((FlowNode *)node)->sel_conpoint2 == number) {
+    switch ( direction) {
+    case flow_eDirection_Up:
+      x = p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x - size/2;
+      y = p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y - size;;
+      break;
+    case flow_eDirection_Down:
+      x = p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x - size/2;
+      y = p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y;
+      break;
+    case flow_eDirection_Right:
+      x = p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x - size;
+      y = p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y - size/2;
+      break;
+    case flow_eDirection_Left:
+      x = p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x;
+      y = p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y - size/2;
+      break;
+    default:
+      x = p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x - size/2;
+      y = p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y - size/2;
+    }
+    ctx->fdraw->arc_erase( ctx, x, y, size, size, 0, 360, idx);
+  }
 }
 
 ostream& operator<< ( ostream& o, const FlowConPoint cp)

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_ctx.h,v 1.9 2008-01-18 13:55:06 claes Exp $
+ * Proview   $Id: flow_ctx.h,v 1.10 2008-10-03 14:19:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,6 +26,8 @@
 #include "flow_pscript.h"
 #include "flow_pdf.h"
 #include "flow_array.h"
+
+#define CONPOINT_SELECTLIST_SIZE 2
 
 class FlowDraw;
 class FlowTipText;
@@ -117,10 +119,16 @@ class FlowCtx {
     void node_movement( FlowArrayElem *node, int x, int y); 
     void con_create_source( FlowArrayElem *node, int cp_num, int cp_x, int cp_y); 
     void con_create_dest( FlowArrayElem *node, int cp_num, flow_eEvent event, int x, int y); 
+    void conpoint_select( FlowArrayElem *node, int cp_num);
+    void conpoint_select_clear();
     void get_selectlist( FlowArrayElem ***list, int *size)
 		{ *list = a_sel.a; *size = a_sel.size();}; 
+    void get_pastelist( FlowArrayElem ***list, int *size)
+		{ *list = a_paste.a; *size = a_paste.size();}; 
     void get_objectlist( FlowArrayElem ***list, int *size)
 		{ *list = a.a; *size = a.size();}; 
+    void get_conpoint_selectlist( FlowArrayElem ***list, int **num_list, int *size)
+		{ *list = conpoint_select_node; *num_list = conpoint_select_num; *size = conpoint_select_idx;};
     void set_gridsize( double size_x, double size_y) 
 		{ grid_size_x = size_x; grid_size_y = size_y;};
     void set_grid( int on) { grid_on = on;};
@@ -156,6 +164,9 @@ class FlowCtx {
     int		con_create_conpoint_x;
     int		con_create_conpoint_y;
     int		con_create_active;
+    FlowArrayElem *conpoint_select_node[CONPOINT_SELECTLIST_SIZE];
+    int		conpoint_select_num[CONPOINT_SELECTLIST_SIZE];
+    int		conpoint_select_idx;
     int		auto_scrolling_active;
     void	*auto_scrolling_id;
     void	auto_scrolling_stop();
@@ -207,6 +218,7 @@ class FlowCtx {
     flow_eEvent	event_create_con;
     flow_eEvent	event_create_node;
     flow_eEvent	event_move_node;
+    flow_eEvent	event_select_conpoint;
     FlowArrayElem *callback_object;
     flow_eObjectType callback_object_type;
     void	register_callback_object( flow_eObjectType type, FlowArrayElem *object)
@@ -272,6 +284,7 @@ class FlowCtx {
     int widget_cnt;
     flow_eSelectPolicy select_policy;
     FlowTipText *tiptext;
+    flow_eDrawType inverse_color;
 
     void set_nodraw() { nodraw++; };
     void reset_nodraw() { if ( nodraw) nodraw--; };
@@ -301,7 +314,14 @@ class FlowCtx {
     void get_zoom( double *zoom) { *zoom = zoom_factor;};
     int get_next_object( FlowArrayElem *object, flow_eDirection dir,
 			 FlowArrayElem **next);
+    int get_next_conpoint( FlowArrayElem *object, int cp_num, flow_eDirection dir,
+			   FlowArrayElem **next, int *next_cp_num);
     int is_visible( FlowArrayElem *element, flow_eVisible type);
+    void move_selected_nodes( double delta_x, double delta_y, int grid);
+    int paste_stop();
+    int pending_paste() { return node_movement_paste_pending;}
+    int pending_paste_stop();
+    void set_inverse_color( flow_eDrawType color) { inverse_color = color; redraw();}
     ~FlowCtx();
 };
 

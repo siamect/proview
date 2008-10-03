@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_conpoint.h,v 1.4 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: flow_conpoint.h,v 1.5 2008-10-03 14:19:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -46,9 +46,9 @@ class FlowConPoint : public FlowArrayElem {
     void print( void *pos, void *node) {};
     void save( ofstream& fp, flow_eSaveMode mode);
     void open( ifstream& fp);
-    void draw( void *pos, int highlight, int hot, void *node) {};
+    void draw( void *pos, int highlight, int hot, void *node);
     void nav_draw( void *pos, int highlight, void *node) {};
-    void erase( void *pos, int hot, void *node) {};
+    void erase( void *pos, int hot, void *node);
     void nav_erase( void *pos, void *node) {};
     void get_borders( double pos_x, double pos_y, double *x_right, 
 	double *x_left, double *y_high, double *y_low, void *node) {};
