@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.h,v 1.12 2008-09-18 15:00:21 claes Exp $
+ * Proview   $Id: ge_curve.h,v 1.13 2008-10-03 14:26:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -165,6 +165,7 @@ class GeCurve {
     void activate_minmax_ok( double min_value, double max_value);
     void set_curvedata( GeCurveData *curve_data);
     void redraw();
+    void x_to_points( double x, double *time, double *values);
     
     static int growcurve_cb( GlowCtx *ctx, glow_tEvent event);
     static int init_growcurve_cb( GlowCtx *fctx, void *client_data);

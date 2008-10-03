@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.cpp,v 1.20 2008-09-18 15:00:21 claes Exp $
+ * Proview   $Id: ge_curve.cpp,v 1.21 2008-10-03 14:26:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -155,14 +155,34 @@ int GeCurve::growcurve_cb( GlowCtx *ctx, glow_tEvent event)
   }
   case glow_eEvent_SliderMoved: {
     char str[40];
-    int row;
     double ll_x, ll_y, ur_x, ur_y;
     double time;
+    double values[CURVE_MAX_COLS];
 
     grow_MeasureNode( curve->curve_markobject, &ll_x, &ll_y, &ur_x, &ur_y);
     
     curve->last_mark_x = event->any.x;
 
+    curve->x_to_points( event->any.x, &time, values);
+
+    for ( int i = 1; i < curve->cd->cols; i++) {
+      sprintf( str, "%7.2f", values[i]);
+      grow_SetAnnotation( curve->mark_annot[i], 0, str, strlen(str));
+    }
+      
+    if ( !(strcmp( curve->cd->format[0], "%10t") == 0 || 
+	   strcmp( curve->cd->format[0], "%11t") == 0)) {
+      sprintf( str, "%7.2f", time);
+      grow_SetAnnotation( curve->mark_annot[0], 0, str, strlen(str));
+    }
+    else {
+      // Time is a date
+      pwr_tTime t;
+      time_Float64ToD( (pwr_tDeltaTime *) &t, time);
+      time_AtoAscii( &t, time_eFormat_DateAndTime, str, sizeof(str));
+      grow_SetAnnotation( curve->mark_annot[0], 0, str, strlen(str));
+    }
+#if 0
     if ( !curve->cd->x_reverse)
       time = event->any.x *
         (curve->cd->max_value_axis[0] - curve->cd->min_value_axis[0]) / 200;
@@ -221,135 +241,31 @@ int GeCurve::growcurve_cb( GlowCtx *ctx, glow_tEvent event)
 
     sprintf( str, "%7.2f", curve->cd->data[0][row]);
     grow_SetAnnotation( curve->mark_annot[0], 0, str, strlen(str));
-
+#endif
     break;
   }
   case glow_eEvent_CursorMotion: {
     char str[40];
-    int row;
     double time;
+    double values[CURVE_MAX_COLS];
 
+    curve->last_cursor_x = event->any.x;
+    curve->x_to_points( event->any.x, &time, values);
+
+    for ( int i = 1; i < curve->cd->cols; i++) {
+      sprintf( str, "%7.2f", values[i]);
+      grow_SetAnnotation( curve->cursor_annot[i], 0, str, strlen(str));
+    }
+      
     if ( !(strcmp( curve->cd->format[0], "%10t") == 0 || 
 	   strcmp( curve->cd->format[0], "%11t") == 0)) {
-      curve->last_cursor_x = event->any.x;
-      if ( !curve->cd->x_reverse)
-	time = event->any.x *
-	  (curve->cd->max_value_axis[0] - curve->cd->min_value_axis[0]) / 200;
-      else
-	time = (200.0 - event->any.x) *
-	  (curve->cd->max_value_axis[0] - curve->cd->min_value_axis[0]) / 200;
-      
-      // Approximate row
-      row = int ((time - curve->cd->min_value[0]) / 
-		 (curve->cd->max_value[0] - curve->cd->min_value[0]) *
-		 (curve->cd->rows - 1) + 0.5);
-      if ( row > curve->cd->rows - 1)
-	row = curve->cd->rows - 1;
-      else if ( row < 0)
-	row = 0;
-      else {
-	// Find exact row
-	double b1, b2;
-	int r = row;
-	for (int i = 0;; i++) {
-	  if ( r == 0) {
-	    b2 = (curve->cd->data[0][row] + curve->cd->data[0][r+1]) / 2;
-	    if ( time < b2)
-	      break;
-	    r++;
-	  }
-	  else if ( r == curve->cd->rows - 1) {
-	    b1 = (curve->cd->data[0][r] + curve->cd->data[0][r-1]) / 2;
-	    if ( time >= b1)
-	      break;
-	    r--;
-	  }
-	  else {
-	    b1 = (curve->cd->data[0][r] + curve->cd->data[0][r-1]) / 2;
-	    b2 = (curve->cd->data[0][r] + curve->cd->data[0][r+1]) / 2;
-	    if ( b1 <= time && time < b2)
-	      break;
-	    if ( b1 <= time)
-	      r++;
-	    else
-	      r--;
-	  }
-	  if ( i > 100) {
-	    // Corrupt data, se original row
-	    r = row;
-	    break;
-	  }	  
-	}
-	row = r;
-      }
-      for ( int i = 1; i < curve->cd->cols; i++) {
-	sprintf( str, "%7.2f", curve->cd->data[i][row]);
-	grow_SetAnnotation( curve->cursor_annot[i], 0, str, strlen(str));
-      }
-      
-      sprintf( str, "%7.2f", curve->cd->data[0][row]);
+      sprintf( str, "%7.2f", time);
       grow_SetAnnotation( curve->cursor_annot[0], 0, str, strlen(str));
     }
     else {
       // Time is a date
-      curve->last_cursor_x = event->any.x;
-      if ( !curve->cd->x_reverse)
-	time = curve->cd->min_value_axis[0] + event->any.x *
-	  (curve->cd->max_value_axis[0] - curve->cd->min_value_axis[0]) / 200;
-      else
-	time = curve->cd->min_value_axis[0] + (200.0 - event->any.x) *
-	  (curve->cd->max_value_axis[0] - curve->cd->min_value_axis[0]) / 200;
-      
-      // Approximate row
-      row = int ((time - curve->cd->min_value[0]) / 
-		 (curve->cd->max_value[0] - curve->cd->min_value[0]) *
-		 (curve->cd->rows - 1) + 0.5);
-      if ( row > curve->cd->rows - 1)
-	row = curve->cd->rows - 1;
-      else if ( row < 0)
-	row = 0;
-      else {
-	// Find exact row
-	double b1, b2;
-	int r = row;
-	for (int i = 0;; i++) {
-	  if ( r == 0) {
-	    b2 = (curve->cd->data[0][row] + curve->cd->data[0][r+1]) / 2;
-	    if ( time < b2)
-	      break;
-	    r++;
-	  }
-	  else if ( r == curve->cd->rows - 1) {
-	    b1 = (curve->cd->data[0][r] + curve->cd->data[0][r-1]) / 2;
-	    if ( time >= b1)
-	      break;
-	    r--;
-	  }
-	  else {
-	    b1 = (curve->cd->data[0][r] + curve->cd->data[0][r-1]) / 2;
-	    b2 = (curve->cd->data[0][r] + curve->cd->data[0][r+1]) / 2;
-	    if ( b1 <= time && time < b2)
-	      break;
-	    if ( b1 <= time)
-	      r++;
-	    else
-	      r--;
-	  }
-	  if ( i > curve->cd->rows) {
-	    // Corrupt data, se original row
-	    r = row;
-	    break;
-	  }	  
-	}
-	row = r;
-      }
-      for ( int i = 1; i < curve->cd->cols; i++) {
-	sprintf( str, "%7.2f", curve->cd->data[i][row]);
-	grow_SetAnnotation( curve->cursor_annot[i], 0, str, strlen(str));
-      }
-      
       pwr_tTime t;
-      time_Float64ToD( (pwr_tDeltaTime *) &t, curve->cd->data[0][row]);
+      time_Float64ToD( (pwr_tDeltaTime *) &t, time);
       time_AtoAscii( &t, time_eFormat_DateAndTime, str, sizeof(str));
       grow_SetAnnotation( curve->cursor_annot[0], 0, str, strlen(str));
     }
@@ -1667,3 +1583,65 @@ void GeCurveData::scale( int axis_type, int value_type,
   return;
 }
 
+
+void GeCurve::x_to_points( double x, double *t, double *values)
+{
+  int row;
+  double time;
+
+  // Time is a date
+  if ( !cd->x_reverse)
+    time = cd->min_value_axis[0] + x *
+      (cd->max_value_axis[0] - cd->min_value_axis[0]) / 200;
+  else
+    time = cd->min_value_axis[0] + (200.0 - x) *
+      (cd->max_value_axis[0] - cd->min_value_axis[0]) / 200;
+      
+  // Approximate row
+  row = int ((time - cd->min_value[0]) / 
+	     (cd->max_value[0] - cd->min_value[0]) *
+	     (cd->rows - 1) + 0.5);
+  if ( row > cd->rows - 1)
+    row = cd->rows - 1;
+  else if ( row < 0)
+    row = 0;
+  else {
+    // Find exact row
+    double b1, b2;
+    int r = row;
+    for (int i = 0;; i++) {
+      if ( r == 0) {
+	b2 = (cd->data[0][row] + cd->data[0][r+1]) / 2;
+	if ( time < b2)
+	  break;
+	r++;
+      }
+      else if ( r == cd->rows - 1) {
+	b1 = (cd->data[0][r] + cd->data[0][r-1]) / 2;
+	if ( time >= b1)
+	  break;
+	r--;
+      }
+      else {
+	b1 = (cd->data[0][r] + cd->data[0][r-1]) / 2;
+	b2 = (cd->data[0][r] + cd->data[0][r+1]) / 2;
+	if ( b1 <= time && time < b2)
+	  break;
+	if ( b1 <= time)
+	  r++;
+	else
+	  r--;
+      }
+      if ( i > cd->rows) {
+	// Corrupt data, se original row
+	r = row;
+	break;
+      }	  
+    }
+    row = r;
+  }
+  for ( int i = 1; i < cd->cols; i++)
+    values[i] = cd->data[i][row];
+      
+  *t = cd->data[0][row];
+}
