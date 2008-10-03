@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_do_hvdo32.c,v 1.6 2007-04-30 12:08:08 claes Exp $
+ * Proview   $Id: rt_io_m_do_hvdo32.c,v 1.7 2008-10-03 14:29:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -157,6 +157,9 @@ static pwr_tStatus IoCardWrite (
 
   for ( i = 0; i < 2; i++)
   { 
+    if ( i == 1 && op->MaxNoOfChannels <= 16)
+      break;
+
     if ( ctx->Node->EmergBreakTrue && ctx->Node->EmergBreakSelect == FIXOUT)
     {
       if ( i == 0)
