@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_emon.c,v 1.14 2008-09-30 14:00:54 claes Exp $
+ * Proview   $Id: rt_emon.c,v 1.15 2008-10-07 09:18:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3722,7 +3722,7 @@ sendEventToOutunit (
   sts = sendToOutunit(op, mh_eMsg_Event, ep->msg.info.EventType, &ep->msg, ep->msgSize);
 
   if (EVEN(sts)) {
-    errh_Error("%s\n%m", "sendEventToOutunit", sts);
+//    errh_Error("%s\n%m", "sendEventToOutunit", sts);
     return NO;
   }
 
