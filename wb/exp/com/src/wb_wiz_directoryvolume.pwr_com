@@ -1,6 +1,6 @@
 !** Description: Initial configuration of directory volume
 # 
-#  Proview   $Id: wb_wiz_directoryvolume.pwr_com,v 1.3 2008-03-20 13:25:55 claes Exp $
+#  Proview   $Id: wb_wiz_directoryvolume.pwr_com,v 1.4 2008-10-09 08:37:51 claes Exp $
 #  Copyright (C) 2005 SSAB Oxelösund AB.
 #
 #  This program is free software; you can redistribute it and/or 
@@ -93,6 +93,9 @@ main()
   extern int dv_node_skip_inv;
   extern int dv_node_disdistr;
   extern int dv_node_distr[15];
+  extern string dv_default_vname;
+  extern string dv_default_vid;
+  extern string dv_error_message;
 
   string project;
   string vol;
@@ -120,6 +123,21 @@ main()
   string name;
   string attr;
   int sts;
+  int fp;
+  string dvname1;
+  string dvname2;
+  string cmd;
+  int add_vid;
+  string vid0;
+  string vid1;
+  string vid2;
+  string vid3;
+  int ivid0;
+  int ivid1;
+  int ivid2;
+  int ivid3;
+  int vid;
+  string tmp_fname="$pwrp_tmp/wtmp.txt";
 
   verify(0);
 
@@ -136,7 +154,7 @@ main()
 
   dv_system_name = project;
 
-  OpenGraph( "$pwr_exe/wb_wizard_frame", 0);
+  OpenGraph( "$pwr_exe/wb_wizard_frame", 0, pwr_wizard_title);
 
 page_1:
   # System/Busid page
@@ -168,10 +186,106 @@ page_1:
     vol = getnextvol( vol, dv_system_name);
   endwhile
 
-  # Exit if no volumes are registred
+  # If no volumes are registred, register a volume
+page_2:
   if ( !volcnt)
-    SetSubwindow( "wb_wizard_frame", "wizwin", "$pwr_exe/wb_wiz_directoryvolume_2", 1);
-    goto exit_now;
+    dvname1 = extract( 1, 1, dv_system_name);
+    dvname2 = extract( 2, 80, dv_system_name);
+    dv_default_vname = "Vol" + toupper( dvname1) + dvname2; 
+    dv_default_vid = GetNextFreeUserVid();
+
+    if ( dv_default_vid == "")
+      SetSubwindow( "wb_wizard_frame", "wizwin", "$pwr_exe/wb_wiz_directoryvolume_2", 1);
+      goto exit_now;
+    endif
+
+page_2a:
+    SetSubwindow( "wb_wizard_frame", "wizwin", "$pwr_exe/wb_wiz_directoryvolume_6", 1);
+    if ( dv_quit)
+      goto exit_now;
+    endif
+    if ( dv_prev)
+      dv_prev = 0;
+      goto page_1;
+    endif
+
+    dv_default_vid = edit( dv_default_vid);
+    dv_default_vname = edit( dv_default_vname);
+
+    # Check values
+    vid3 = element( 1, ".", dv_default_vid);
+    vid2 = element( 2, ".", dv_default_vid);
+    vid1 = element( 3, ".", dv_default_vid);
+    vid0 = element( 4, ".", dv_default_vid);
+    if ( vid0 == "" || vid1 == "" || vid2 == "" || vid3 == "")
+      dv_error_message = dv_default_vid + " is not a valid volume identity";
+      SetSubwindow( "wb_wizard_frame", "wizwin", "$pwr_exe/wb_wiz_directoryvolume_7", 1);
+      if ( dv_prev)
+        dv_prev = 0;
+        goto page_2a;
+      else
+        goto exit_now;
+      endif
+    endif
+
+    ivid0 = vid0;
+    ivid1 = vid1;
+    ivid2 = vid2;
+    ivid3 = vid3;
+    vid = ivid0 + ivid1 * 256 + ivid2 * 65536 + ivid3 * 16777216;
+
+    if ( vid < 65793 || vid > 16711422 || ivid3 != 0 || ivid2 > 254 || ivid1 > 254 || ivid0 > 254)
+      dv_error_message = dv_default_vid + " is not a valid volume identity";
+      SetSubwindow( "wb_wizard_frame", "wizwin", "$pwr_exe/wb_wiz_directoryvolume_7", 1);
+      if ( dv_prev)
+        dv_prev = 0;
+        goto page_2a;
+      else
+        goto exit_now;
+      endif
+    endif
+
+    if ( dv_default_vname == "")
+      dv_error_message = "Volume name is missing";
+      SetSubwindow( "wb_wizard_frame", "wizwin", "$pwr_exe/wb_wiz_directoryvolume_7", 1);
+      if ( dv_prev)
+        dv_prev = 0;
+        goto page_2a;
+      else
+        goto exit_now;
+      endif
+    endif
+
+    sts = CheckNewVid( vid);
+    if ( sts == 0)
+      dv_error_message = "Volume identity already exist in Global Volume List";
+      SetSubwindow( "wb_wizard_frame", "wizwin", "$pwr_exe/wb_wiz_directoryvolume_7", 1);
+      if ( dv_prev)
+        dv_prev = 0;
+        goto page_2a;
+      else
+        goto exit_now;
+      endif
+    endif
+
+    sts = CheckNewVolumeName( dv_default_vname);
+    if ( sts == 0)
+      dv_error_message = "Volume name already exist in Global Volume List";
+      SetSubwindow( "wb_wizard_frame", "wizwin", "$pwr_exe/wb_wiz_directoryvolume_7", 1);
+      if ( dv_prev)
+        dv_prev = 0;
+        goto page_2a;
+      else
+        goto exit_now;
+      endif
+    endif
+
+
+    add_vid = 1;
+    volcnt = 1;
+    dv_volumes[0] = dv_default_vname;
+    dv_volume_found[0] = 1;
+
   endif
 
 page_3:
@@ -308,6 +422,18 @@ page_4:
     goto exit_now;
   endif
 
+  # Add volume to global volumelist
+  if ( add_vid)
+    fp = fopen( tmp_fname, "w");
+    fprintf( fp, " %s     %s      %s\n", dv_default_vname, dv_default_vid, dv_system_name);
+    fclose( fp);
+
+    cmd = "cat " + tmp_fname + " >> $pwra_db/pwr_volumelist.dat";
+    system( cmd);
+    cmd = "rm " + tmp_fname;
+    system( cmd);
+  endif
+
   # Create system object
   create object /dest=""/class=$System /name="System" /last
   SetAttribute( "System.SystemName", dv_system_name);
@@ -393,6 +519,15 @@ page_4:
     endfor
   endfor
 
+  save/quiet
+  noedit
+
+  SetSubwindow( "wb_wizard_frame", "wizwin", "$pwr_exe/wb_wiz_directoryvolume_8", 1);
+  if ( dv_quit)
+    goto exit_now;
+  endif
+  open database/volume='dv_volumes[0]'
+  
 exit_now:
   CloseGraph("wb_wizard_frame");
   delete dv_quit;
@@ -418,6 +553,9 @@ exit_now:
   delete dv_node_skip_inv;
   delete dv_node_disdistr;
   delete dv_node_distr[15];
+  delete dv_default_vname;
+  delete dv_default_vid;
+  delete dv_error_message;
 
 endmain
 
