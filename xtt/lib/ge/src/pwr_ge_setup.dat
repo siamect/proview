@@ -9,6 +9,10 @@ menu Images
 {
   subgraph	GrayInd		jpwr/jop/jop_grayind.gif 	6
   subgraph	GreenInd	jpwr/jop/jop_greenind.gif 	6
+  subgraph	GtkQuestion	$pwr_exe/pwr_gtk_question.png	6
+  subgraph	GtkError	$pwr_exe/pwr_gtk_error.png	6
+  subgraph	GtkWarning	$pwr_exe/pwr_gtk_warning.png	6
+  subgraph	GtkInfo		$pwr_exe/pwr_gtk_info.png	6
 }
 menu Analog
 {
