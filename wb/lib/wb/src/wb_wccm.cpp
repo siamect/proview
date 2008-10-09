@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wccm.cpp,v 1.4 2008-06-24 07:52:21 claes Exp $
+ * Proview   $Id: wb_wccm.cpp,v 1.5 2008-10-09 08:38:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,6 +35,7 @@
 #include "wb_cmd_msg.h"
 #include "co_ccm_msg.h"
 #include "wb_foe_msg.h"
+#include "wb_wnav.h"
 //#include "wb_cmd.h"
 
 
@@ -845,6 +846,88 @@ static int wccm_checksystemgroup_func(
   return 1;
 }
 
+static int wccm_getnextfreeuservid_func( 
+  void *filectx,
+  ccm_s_arg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  float *return_float, 
+  int *return_int, 
+  char *return_string)
+{
+  int		sts;
+  pwr_tVid 	next_vid;
+
+  if ( arg_count != 0)
+    return CCM__ARGMISM;
+
+  sts = WNav::get_next_free_vid( cdh_cUserVolMin, cdh_cUserVolMax, &next_vid);
+  if ( EVEN(sts))
+    strcpy( return_string, "");
+  else
+    strcpy( return_string, cdh_VolumeIdToString( 0, next_vid, 0, 0));
+
+  *return_decl = CCM_DECL_STRING;
+  
+  return 1;
+}
+
+static int wccm_checknewvid_func( 
+  void *filectx,
+  ccm_s_arg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  float *return_float, 
+  int *return_int, 
+  char *return_string)
+{
+  int		sts;
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_INT)
+    return CCM__VARTYPE;
+
+  sts = WNav::check_new_vid( arg_list->value_int);
+  if ( EVEN(sts))
+    *return_int = 0;
+  else
+    *return_int = 1;
+
+  *return_decl = CCM_DECL_INT;
+  
+  return 1;
+}
+
+static int wccm_checknewvolumename_func( 
+  void *filectx,
+  ccm_s_arg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  float *return_float, 
+  int *return_int, 
+  char *return_string)
+{
+  int		sts;
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__VARTYPE;
+
+  sts = WNav::check_new_volumename( arg_list->value_string);
+  if ( EVEN(sts))
+    *return_int = 0;
+  else
+    *return_int = 1;
+
+  *return_decl = CCM_DECL_INT;
+  
+  return 1;
+}
+
 /*************************************************************************
 *
 * Name:		wccm_register()
@@ -901,6 +984,12 @@ int	wccm_register(
     sts = ccm_register_function( "SetAttribute", wccm_setattribute_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "CheckSystemGroup", wccm_checksystemgroup_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetNextFreeUserVid", wccm_getnextfreeuservid_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "CheckNewVid", wccm_checknewvid_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "CheckNewVolumeName", wccm_checknewvolumename_func);
     if ( EVEN(sts)) return sts;
 
     sts = ccm_create_external_var( "cmd_status", CCM_DECL_INT, 0, 1, 
