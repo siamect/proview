@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.h,v 1.17 2008-10-03 14:18:37 claes Exp $
+ * Proview   $Id: wb_wnav.h,v 1.18 2008-10-09 08:41:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -245,7 +245,7 @@ class WNav : public WUtility{
     void 		(*set_twowindows_cb)( void *, int, int, int);
     void 		(*gbl_command_cb)( void *, char *);
     void 		(*create_popup_menu_cb)( void *, pwr_sAttrRef, int, int);
-    void 		(*save_cb)( void *);
+    void 		(*save_cb)( void *, int);
     void 		(*revert_cb)( void *, int confirm);
     char 		*(*script_filename_cb)( void *);
     int 		(*format_selection_cb)( void *, pwr_sAttrRef, char **,
@@ -405,6 +405,9 @@ class WNav : public WUtility{
     int select_object( pwr_tOid oid);
     int get_next( pwr_tOid oid, wnav_eDestCode dest, pwr_tOid *next_oid, wnav_eDestCode *d);
     void set_select_visible();
+    static int get_next_free_vid( pwr_tVid min_vid, pwr_tVid max_vid, pwr_tVid *next);
+    static int check_new_vid( pwr_tVid vid);
+    static int check_new_volumename( char *vname);
 
     // Crr module member functions
     int	crr_signal( char *filename, char *signalname, brow_tNode parent_node);

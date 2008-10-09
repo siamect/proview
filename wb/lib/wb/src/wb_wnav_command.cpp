@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.52 2008-06-24 07:52:22 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.53 2008-10-09 08:41:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -254,7 +254,8 @@ dcli_tCmdTable	wnav_command_table[] = {
 			&wnav_open_func,
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/FILE", 
 			"/SCROLLBAR", "/WIDTH", "/HEIGHT", "/MENU", 
-			"/NAVIGATOR", "/CENTER", "/OBJECT", "/MODAL", "/INSTANCE", ""}
+			"/NAVIGATOR", "/CENTER", "/OBJECT", "/MODAL", "/INSTANCE", "/TITLE", 
+			"/VOLUME", ""}
 		},
 		{
 			"CLOSE",
@@ -379,7 +380,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 		{
 			"SAVE",
 			&wnav_save_func,
-			{ ""}
+			{ "/QUIET", ""}
 		},
 		{
 			"REVERT",
@@ -2066,6 +2067,38 @@ static int	wnav_show_func(	void		*client_data,
     wb_erep *erep = *(wb_env *)wnav->wbctx;
     erep->printMethods();
   }
+  else if ( strncmp( arg1_str, "NEXT_FREE_USER_VID", strlen( arg1_str)) == 0)
+  {
+    // Command is "SHOW NEXT_FREE_USER_VID"
+    pwr_tVid next_vid;
+    int sts;
+
+    sts = wnav->get_next_free_vid( cdh_cUserVolMin, cdh_cUserVolMax, &next_vid);
+    if ( EVEN(sts))
+      wnav->message( 'E', wnav_get_message(sts));
+    else {
+      char msg[200];
+
+      sprintf( msg, "%s is next free user volume identity\n", cdh_VolumeIdToString( 0, next_vid, 0, 0));
+      wnav->message( 'I', msg);
+    }
+  }
+  else if ( strncmp( arg1_str, "NEXT_FREE_USERCLASS_VID", strlen( arg1_str)) == 0)
+  {
+    // Command is "SHOW NEXT_FREE_CLASSUSER_VID"
+    pwr_tVid next_vid;
+    int sts;
+
+    sts = wnav->get_next_free_vid( cdh_cUserClassVolMin, cdh_cUserClassVolMax, &next_vid);
+    if ( EVEN(sts))
+      wnav->message( 'E', wnav_get_message(sts));
+    else {
+      char msg[200];
+
+      sprintf( msg, "%s is next free userclass volume identity\n", cdh_VolumeIdToString( 0, next_vid, 0, 0));
+      wnav->message( 'I', msg);
+    }
+  }
   else
   {
     wnav->message('E', "Unknown qualifier");
@@ -3447,6 +3480,30 @@ static int	wnav_open_func(	void		*client_data,
     if ( wnav->open_vsel_cb)
       (wnav->open_vsel_cb)( wnav->parent_ctx, wb_eType_Buffer, NULL, wow_eFileSelType_All);
   }
+  else if ( strncmp( arg1_str, "DATABASE", strlen( arg1_str)) == 0)
+  {
+    char	volumestr[80];
+    pwr_tFileName filename;
+    pwr_tCmd cmd;
+    int sts;
+
+    if ( EVEN( dcli_get_qualifier( "/VOLUME", volumestr, sizeof(volumestr)))) {
+      wnav->message('E', "Volume is missing");
+      return WNAV__SYNTAX;
+    }
+
+
+    dcli_translate_filename( filename, "$pwr_exe/wb_open_db.sh");
+    sprintf( cmd,
+	     "%s \"%s\" \"%s\" \"%s\" \"%s\" &",
+	     filename, CoLogin::username(), CoLogin::ucpassword(), volumestr, volumestr);
+
+    sts = system( cmd);
+    if ( sts == -1 || sts == 127) {
+      wnav->message( 'E', "Error when creating process");
+      return sts;
+    }
+  }
   else if ( strncmp( arg1_str, "CLASSEDITOR", strlen( arg1_str)) == 0)
   {
     pwr_tFileName	filenamestr;
@@ -3469,6 +3526,7 @@ static int	wnav_open_func(	void		*client_data,
   else if ( strncmp( arg1_str, "GRAPH", strlen( arg1_str)) == 0)
   {
     pwr_tFileName	filenamestr;
+    char		titlestr[80];
     pwr_tAName		instancestr;
     char		*instance_p;
     WGe 		*wge;
@@ -3491,6 +3549,9 @@ static int	wnav_open_func(	void		*client_data,
     else
       instance_p = 0;
 
+    if ( EVEN( dcli_get_qualifier( "/TITLE", titlestr, sizeof(titlestr))))
+      strcpy( titlestr, "Pwr");
+
     modal = ODD( dcli_get_qualifier( "/MODAL", 0, 0));
 
     if ( wnav->window_type == wnav_eWindowType_No)
@@ -3504,7 +3565,7 @@ static int	wnav_open_func(	void		*client_data,
     if ( (s = strchr( applname, '.')))
       *s = 0;
 
-    wge = wnav->wge_new( "Name", filenamestr, instance_p, modal);
+    wge = wnav->wge_new( titlestr, filenamestr, instance_p, modal);
     wge->command_cb = wnav_wge_command_cb;
     wnav->appl.insert( applist_eType_Graph, (void *)wge, pwr_cNObjid, applname);
     if ( modal) {
@@ -4456,8 +4517,11 @@ static int	wnav_save_func(		void		*client_data,
 					void		*client_flag)
 {
   WNav *wnav = (WNav *)client_data;
+  int quiet;
 
-  (wnav->save_cb)( wnav->parent_ctx);
+  quiet =  ODD( dcli_get_qualifier( "/QUIET", 0, 0));
+
+  (wnav->save_cb)( wnav->parent_ctx, quiet);
   return 1;
 }
 
@@ -5610,10 +5674,11 @@ static int wnav_opengraph_func(
 {
   WNav *wnav;
   ccm_s_arg *arg_p2; 
+  ccm_s_arg *arg_p3; 
   int sts;
   pwr_tCmd cmd;
 
-  if ( arg_count != 2)
+  if ( arg_count < 2 || arg_count > 3)
     return CCM__ARGMISM;
 
   arg_p2 = arg_list->next;
@@ -5621,6 +5686,11 @@ static int wnav_opengraph_func(
     return CCM__VARTYPE;
   if ( arg_p2->value_decl != CCM_DECL_INT)
     return CCM__VARTYPE;
+  if ( arg_count >= 3) {
+    arg_p3 = arg_p2->next;
+    if ( arg_p3->value_decl != CCM_DECL_STRING)
+      return CCM__VARTYPE;
+  }
 
   wnav_get_stored_wnav( &wnav);
   if ( wnav->window_type == wnav_eWindowType_No)
@@ -5631,7 +5701,11 @@ static int wnav_opengraph_func(
   strcat( cmd, "\"");
   if ( arg_p2->value_int)
     strcat( cmd, " /modal");
-
+  if ( arg_count >= 3) {
+    strcat( cmd, " /title=\"");
+    strcat( cmd, arg_p3->value_string);
+    strcat( cmd, "\"");
+  }
   sts = wnav->command( cmd);
 
   *return_int = sts;
@@ -6318,9 +6392,89 @@ int WNav::display_objects( pwr_tCid *cidp, char *name, pwr_tObjid root,
   return sts;
 }
 
+int WNav::get_next_free_vid( pwr_tVid min_vid, pwr_tVid max_vid, pwr_tVid *next)
+{
+  lfu_t_volumelist *volumelist;
+  int volumecount;
+  pwr_tVid next_vid = 0;
+  int found;
+  int sts;
 
+  sts = lfu_volumelist_load( load_cNameGblVolumeList,  &volumelist, 
+			     &volumecount);
+  if ( EVEN(sts)) return sts;
 
+  for ( unsigned int j = min_vid; j <= max_vid; j++) {
 
+    found = 0;
+    for ( int i = 0; i < volumecount; i++) {
+      if ( volumelist[i].volume_id == j) {
+	found = 1;
+	break;
+      }
+    }
+    if ( !found) {
+      next_vid = j;
+      break;
+    }
+  }
 
+  if ( volumecount > 0)
+    free( (char *)volumelist);
+
+  if ( !next_vid)
+    return WNAV__NOFREEVID;
+
+  *next = next_vid;
+  return WNAV__SUCCESS;
+}
+
+int WNav::check_new_vid( pwr_tVid vid)
+{
+  lfu_t_volumelist *volumelist;
+  int volumecount;
+  int found = 0;
+  int sts;
+
+  sts = lfu_volumelist_load( load_cNameGblVolumeList,  &volumelist, 
+			     &volumecount);
+  if ( EVEN(sts)) return sts;
+
+  for ( int i = 0; i < volumecount; i++) {
+    if ( volumelist[i].volume_id == vid) {
+      found = 1;
+      break;
+    }
+  }
+
+  if ( found)
+    return WNAV__VIDEXIST;
+  else
+    return WNAV__SUCCESS;
+}
+
+int WNav::check_new_volumename( char *vname)
+{
+  lfu_t_volumelist *volumelist;
+  int volumecount;
+  int found = 0;
+  int sts;
+
+  sts = lfu_volumelist_load( load_cNameGblVolumeList,  &volumelist, 
+			     &volumecount);
+  if ( EVEN(sts)) return sts;
+
+  for ( int i = 0; i < volumecount; i++) {
+    if ( cdh_NoCaseStrcmp( vname, volumelist[i].volume_name) == 0) {
+      found = 1;
+      break;
+    }
+  }
+
+  if ( found)
+    return WNAV__VOLNAMEEXIST;
+  else
+    return WNAV__SUCCESS;
+}
 
 
