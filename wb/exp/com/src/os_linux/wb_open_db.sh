@@ -1,5 +1,5 @@
 #
-# Proview   $Id: wb_open_db.sh,v 1.2 2006-01-31 09:10:21 claes Exp $
+# Proview   $Id: wb_open_db.sh,v 1.3 2008-10-09 08:31:42 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -33,4 +33,4 @@ if [ -z $database ]; then
 fi
 
 echo "-- Opening volume '$database'"
-wb -q $username $password $database
+wb -q "$username" "$password" $database
