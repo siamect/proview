@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: wb_wnav_msg.msg,v 1.4 2005-09-01 14:58:00 claes Exp $
+!  Proview   $Id: wb_wnav_msg.msg,v 1.5 2008-10-09 08:50:40 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -57,6 +57,9 @@ dbopen		<Database is already open>			/error
 co_convert      <Error from co_convert>                         /error
 seltomany	<Too many objects is selected>			/error
 noplc		<Object is not a plc object>			/error
+nofreevid	<No free volume identity>			/error
+videxist	<Volume identity already exist>			/error
+volnameexist	<Volume name already exist>			/error
 
 
 
