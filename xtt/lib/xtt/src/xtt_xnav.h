@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.h,v 1.26 2008-09-18 14:58:26 claes Exp $
+ * Proview   $Id: xtt_xnav.h,v 1.27 2008-10-09 08:56:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -491,8 +491,9 @@ class XNav {
         char *focus, int inputempty, int use_default_access, 
         unsigned int access);
     void close_graph( char *filename, char *object_name);
-    int exec_xttgraph( pwr_tObjid xttgraph, char *instance, char *focus,
-        int inputemtpy);
+    int exec_xttgraph( pwr_tObjid xttgraph, char *instance,
+		       char *focus, int inputempty,
+		       int use_default_access, unsigned int access);
     int set_parameter( char *name_str, char *value_str, int bypass);
     void open_rttlog( char *name, char *filename);
     int search( char *search_str, int regexp);

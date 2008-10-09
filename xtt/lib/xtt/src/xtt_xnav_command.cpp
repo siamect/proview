@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_command.cpp,v 1.39 2008-09-18 14:58:54 claes Exp $
+ * Proview   $Id: xtt_xnav_command.cpp,v 1.40 2008-10-09 08:56:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2391,6 +2391,10 @@ static int	xnav_open_func(	void		*client_data,
       char focus_str[80];
       char *focus_p;
       int  inputempty;
+      char tmp_str[80];
+      int  use_default_access;
+      unsigned int access;
+      int nr;
 
       IF_NOGDH_RETURN;
       if ( strncmp( object_str, "*-", 2) == 0 || 
@@ -2422,7 +2426,18 @@ static int	xnav_open_func(	void		*client_data,
       else
         focus_p = 0;
 
-      xnav->exec_xttgraph( objid, instance_p, focus_p, inputempty);
+      if ( ODD( dcli_get_qualifier( "/ACCESS", tmp_str, sizeof(tmp_str)))) {
+        nr = sscanf( tmp_str, "%u", &access);
+        if ( nr != 1) {
+          xnav->message('E', "Syntax error in access");
+          return XNAV__HOLDCOMMAND;
+        }
+        use_default_access = 1;
+      }
+      else
+        use_default_access = 0;
+
+      xnav->exec_xttgraph( objid, instance_p, focus_p, inputempty, use_default_access, access);
     }
     else {
       pwr_tFileName file_str;
@@ -6617,7 +6632,8 @@ void XNav::close_graph( char *filename, char *object_name)
 }
 
 int XNav::exec_xttgraph( pwr_tObjid xttgraph, char *instance,
-        char *focus, int inputempty)
+			 char *focus, int inputempty,
+			 int use_default_access, unsigned int access)
 {
   pwr_sClass_XttGraph xttgraph_o;
   char	action[80];
@@ -6650,7 +6666,7 @@ int XNav::exec_xttgraph( pwr_tObjid xttgraph, char *instance,
     open_graph( xttgraph_o.Title, action, xttgraph_o.Scrollbar, 
 	xttgraph_o.Menu, xttgraph_o.Navigator, xttgraph_o.Width,
 	xttgraph_o.Height, xttgraph_o.X, xttgraph_o.Y, instance, 
-	focus, inputempty, 0, 0);
+	focus, inputempty, use_default_access, access);
   }
   else if ( (strstr( action, ".class")))
   {

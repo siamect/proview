@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_c_object.cpp,v 1.20 2008-09-18 14:58:00 claes Exp $
+ * Proview   $Id: xtt_c_object.cpp,v 1.21 2008-10-09 08:56:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1896,7 +1896,7 @@ static pwr_tStatus CrrOpenTraceFilter( xmenu_sMenuCall *ip)
 // Open graph
 static pwr_tStatus CrrOpenGraph( xmenu_sMenuCall *ip)
 {
-  ((XNav *)ip->EditorContext)->exec_xttgraph( ip->Pointed.Objid, 0, 0, 0);
+  ((XNav *)ip->EditorContext)->exec_xttgraph( ip->Pointed.Objid, 0, 0, 0, 0, 0);
   return XNAV__SUCCESS;
 }
 
