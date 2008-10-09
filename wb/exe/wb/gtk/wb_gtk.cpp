@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gtk.cpp,v 1.8 2008-06-24 07:43:52 claes Exp $
+ * Proview   $Id: wb_gtk.cpp,v 1.9 2008-10-09 08:35:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -227,7 +227,7 @@ WbGtk::WbGtk( int argc, char *argv[])
   sts = utl_get_systemname( systemname, systemgroup);
   if ( EVEN(sts)) {
     /* No system object, login as system !! */
-    CoLogin::insert_login_info( "SYSTEM", username, password, pwr_mAccess_AllPwr, 0);
+    CoLogin::insert_login_info( "SYSTEM", password, username, pwr_mAccess_AllPwr, 0);
     nav_display = 1;
   }
   else {
