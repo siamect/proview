@@ -105,3 +105,5 @@
 080826 cs  ge        Bugfix in setting of fonttype in attribute editor.
 080903 cs  ge        Bugfix in dynamics. A change of value could be undetected if scan function was interrupted by nethandler.
 080915 cs  ge        Bugfix in erase location for annotation text in rotated subgraphs.
+081006 cs  xtt       In command 'open graph /object' the qualifier /access can be used.
+081009 cs  ge        Gtk images for question, info, error and waring added to the Ge image palette.
