@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.cpp,v 1.19 2008-09-05 09:07:44 claes Exp $
+ * Proview   $Id: wb_lfu.cpp,v 1.20 2008-10-09 08:34:14 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -604,7 +604,8 @@ pwr_tStatus lfu_WriteSysObjectFile(
 *************************************************************************/
 pwr_tStatus lfu_SaveDirectoryVolume(
   ldh_tSesContext 	ldhses,
-  CoWow			*wow
+  CoWow			*wow, 
+  int			quiet
 )
 {
   pwr_tStatus 	sts;
@@ -981,7 +982,10 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		  sprintf( text, "   Volume '%s' is not yet created.\n \n\
    Do you want to create this volume.\n",
 			   volume_name);
-		  wow->DisplayQuestion( NULL,
+		  if ( quiet)
+		    lfu_creadb_qb_yes( NULL, (void *)data);
+		  else
+		    wow->DisplayQuestion( NULL,
 					"Create volume", text,
 					lfu_creadb_qb_yes, NULL, (void *)data);
 		}
@@ -1020,9 +1024,12 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		  sprintf( text, "   Volume '%s' is not yet created.\n \n\
    Do you want to create this volume.\n",
 			   volume_name);
-		  wow->DisplayQuestion( NULL,
-					"Create volume", text,
-					lfu_creadb_qb_yes, NULL, (void *)data);
+		  if ( quiet)
+		    lfu_creadb_qb_yes( NULL, (void *)data);
+		  else
+		    wow->DisplayQuestion( NULL,
+					  "Create volume", text,
+					  lfu_creadb_qb_yes, NULL, (void *)data);
 		}
 		else {
 		  char msg[200];
@@ -1077,9 +1084,12 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		  sprintf( text, "   ClassVolume '%s' is not yet created.\n \n\
    Do you want to create this volume.\n",
 			   volume_name);
-		  wow->DisplayQuestion( NULL,
-				     "Create Classvolume", text,
-				     lfu_creadb_qb_yes, NULL, (void *)data);
+		  if ( quiet)
+		    lfu_creadb_qb_yes( NULL, (void *)data);
+		  else
+		    wow->DisplayQuestion( NULL,
+					  "Create Classvolume", text,
+					  lfu_creadb_qb_yes, NULL, (void *)data);
 		}
 	      }
 	    }
@@ -1111,9 +1121,12 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		  sprintf( text, "   ClassVolume '%s' is not yet created.\n \n\
    Do you want to create this volume.\n",
 			   volume_name);
-		  wow->DisplayQuestion( NULL,
-				     "Create Classvolume", text,
-				     lfu_creadb_qb_yes, NULL, (void *)data);
+		  if ( quiet)
+		    lfu_creadb_qb_yes( NULL, (void *)data);
+		  else
+		    wow->DisplayQuestion( NULL,
+					  "Create Classvolume", text,
+					  lfu_creadb_qb_yes, NULL, (void *)data);
 		}
 	      }
 	    }

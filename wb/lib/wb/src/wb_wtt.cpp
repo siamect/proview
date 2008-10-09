@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.cpp,v 1.40 2008-10-03 14:18:37 claes Exp $
+ * Proview   $Id: wb_wtt.cpp,v 1.41 2008-10-09 08:36:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -398,7 +398,7 @@ void Wtt::file_selected_cb( void *ctx, char *filename, wow_eFileSelType file_typ
     (wtt->open_volume_cb) ( wtt, wb_eType_Volume, filename, file_type);
 }
 
-void Wtt::save_cb( void *ctx)
+void Wtt::save_cb( void *ctx, int quiet)
 {
   Wtt *wtt = (Wtt *) ctx;
   int sts;
@@ -419,7 +419,7 @@ void Wtt::save_cb( void *ctx)
   }
 
   if ( wtt->wb_type == wb_eType_Directory) {
-    sts = lfu_SaveDirectoryVolume( wtt->ldhses, wtt->wnav->wow);
+    sts = lfu_SaveDirectoryVolume( wtt->ldhses, wtt->wnav->wow, quiet);
     if ( EVEN(sts)) {
       wtt->message( 'E', "Syntax error");
       return;
@@ -673,7 +673,7 @@ int Wtt::set_noedit( wtt_eNoEditMode save, wtt_eNoEditVolMode detach)
       sts = ldh_SaveSession( ldhses);
       // TODO
       if ( ODD(sts) && wb_type == wb_eType_Directory)
-        sts = lfu_SaveDirectoryVolume( ldhses, wnav->wow);
+        sts = lfu_SaveDirectoryVolume( ldhses, wnav->wow, 0);
     }
     else
       sts = ldh_RevertSession( ldhses);
@@ -884,7 +884,7 @@ void Wtt::activate_collapse()
 void Wtt::activate_save()
 {  
   set_clock_cursor();
-  save_cb( this);
+  save_cb( this, 0);
   reset_cursor();
 }
 

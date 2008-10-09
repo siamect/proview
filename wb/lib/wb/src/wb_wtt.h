@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.h,v 1.19 2008-10-03 14:18:37 claes Exp $
+ * Proview   $Id: wb_wtt.h,v 1.20 2008-10-09 08:36:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -308,7 +308,7 @@ class Wtt : public WUtility {
     static void findregex_ok( Wtt *wtt, char *search_str);
     static void find_ok( Wtt *wtt, char *search_str);
     static void file_selected_cb( void *ctx, char *filename, wow_eFileSelType file_type);
-    static void save_cb( void *ctx);
+    static void save_cb( void *ctx, int quiet);
     static void revert_ok( Wtt *wtt);
     static void revert_cb( void *ctx, int confirm);
     static int attach_volume_cb( void *ctx, pwr_tVolumeId volid, int pop);
