@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_login.cpp,v 1.2 2008-06-25 07:47:49 claes Exp $
+ * Proview   $Id: co_login.cpp,v 1.3 2008-10-09 08:50:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -110,7 +110,7 @@ pwr_tStatus CoLogin::insert_login_info( char *groupname, char *password, char *u
 				       unsigned long priv, unsigned long attr)
 {
   strcpy( m_username, username);
-  strcpy( m_password, password);
+  strcpy( m_ucpassword, password);
   strcpy( m_group, groupname);
   m_priv = (pwr_mPrv)priv;
   m_attribute = (login_mAttr)attr;
