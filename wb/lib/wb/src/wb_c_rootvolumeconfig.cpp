@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_rootvolumeconfig.cpp,v 1.2 2008-06-24 07:52:21 claes Exp $
+ * Proview   $Id: wb_c_rootvolumeconfig.cpp,v 1.3 2008-10-09 08:31:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,8 +47,8 @@ static pwr_tStatus OpenDb (
   int size;
   int	sts;
   char volume_name[80];
-  char filename[80];
-  char	cmd[100];
+  pwr_tFileName filename;
+  pwr_tCmd cmd;
 
   sts = ldh_ObjidToName ( ip->PointedSession, ip->Pointed.Objid,
 		ldh_eName_Object, volume_name, sizeof(volume_name), &size);
