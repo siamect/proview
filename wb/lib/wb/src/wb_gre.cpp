@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.cpp,v 1.11 2008-10-03 14:18:37 claes Exp $
+ * Proview   $Id: wb_gre.cpp,v 1.12 2008-10-09 08:33:14 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1219,6 +1219,36 @@ int WGre::get_selnodes( unsigned long *node_count, vldh_t_node **nodelist)
     flow_GetUserData( fnode_list[i], (void **)&node);
     *(*nodelist + *node_count) = node;
     (*node_count)++;
+  }
+  return GRE__SUCCESS;
+}
+
+//
+//	Returns an array of all selected connections.
+//	The array should be freed by the user with a free call.
+//
+int WGre::get_selcons( unsigned long *con_count, vldh_t_con **conlist)
+{
+  int	i;
+  vldh_t_con	con;
+  flow_tCon	*fcon_list;
+  int		fcon_count;
+
+  flow_GetSelectedCons( flow_ctx, &fcon_list, &fcon_count);
+
+  *con_count = 0;
+  if ( fcon_count == 0)
+    return GRE__SUCCESS;
+
+  /* create array */
+  *conlist = (vldh_t_con *)calloc( fcon_count, 
+				     sizeof(con));
+
+  /* Insert the cons */
+  for ( i = 0; i < fcon_count; i++ ) {
+    flow_GetUserData( fcon_list[i], (void **)&con);
+    *(*conlist + *con_count) = con;
+    (*con_count)++;
   }
   return GRE__SUCCESS;
 }

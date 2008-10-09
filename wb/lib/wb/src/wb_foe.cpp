@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe.cpp,v 1.11 2008-10-03 14:18:37 claes Exp $
+ * Proview   $Id: wb_foe.cpp,v 1.12 2008-10-09 08:32:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -565,20 +565,27 @@ void WFoe::activate_delete_confirm()
 {
   unsigned long		node_count;
   vldh_t_node		*nodelist;
+  unsigned long		con_count = 0;
+  vldh_t_con		*conlist;
   char			msg[200];
 
   gre->get_selnodes( &node_count, &nodelist);
   if ( !node_count) {
-    message( "Nothing to delete");
-    return;    
+    gre->get_selcons( &con_count, &conlist);
+    if ( !con_count) {
+      message( "Nothing to delete");
+      return;    
+    }
+    if ( con_count > 0) free((char *) conlist);
   }
+  if ( node_count > 0) free((char *) nodelist);
   
-  if ( node_count > 1)
+  if ( node_count + con_count > 1)
     strcpy( msg, "Do you want to delete the selected objects");
   else
     strcpy( msg, "Do you want to delete the selected object");
 
-  wow->DisplayQuestion( this, "Delete", msg, delete_ok_cb, 0, *nodelist);
+  wow->DisplayQuestion( this, "Delete", msg, delete_ok_cb, 0, 0);
 }
 
 //

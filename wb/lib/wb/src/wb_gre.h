@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.h,v 1.10 2008-10-03 14:18:37 claes Exp $
+ * Proview   $Id: wb_gre.h,v 1.11 2008-10-09 08:33:14 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -168,6 +168,7 @@ class WGre {
   int copy();
   int window_draw();
   int get_selnodes( unsigned long *node_count, vldh_t_node **nodelist);
+  int get_selcons( unsigned long *con_count, vldh_t_con **conlist);
   int get_nodeclass( pwr_tClassId cid, ldh_tSesContext ldhses, unsigned long node_type,
 		     unsigned int *mask, unsigned long subwindowmark,
 		     unsigned long node_width, flow_tNodeClass *node_class,
