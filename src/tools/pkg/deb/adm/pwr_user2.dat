@@ -1,0 +1,66 @@
+1
+100 V2.0.0
+101 24
+2
+200 common
+201 0
+202 1
+203 15
+204 
+3
+300 pwrp
+301 aaupl/kQs1p3U
+302 4263386553
+303 16
+305 
+304 Proview project user
+307 
+306 
+308 
+99
+3
+300 op1
+301 aa.d10HWuKdCo
+302 4294843775
+303 17
+305 
+304 Operator with Operator1 privilege
+307 
+306 
+308 
+99
+3
+300 op2
+301 aa.d10HWuKdCo
+302 4294843711
+303 18
+305 
+304 Operator with Operator2 privilege
+307 
+306 
+308 
+99
+3
+300 op3
+301 aa.d10HWuKdCo
+302 4294843583
+303 19
+305 
+304 Operator with Operator3 privilege
+307 
+306 
+308 
+99
+3
+300 op4
+301 aa.d10HWuKdCo
+302 4294843327
+303 20
+305 
+304 Operator with Operator4 privilege
+307 
+306 
+308 
+99
+99
+99
