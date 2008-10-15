@@ -159,7 +159,7 @@ chmod a+x $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/pwr_setup.sh
 cp $pwre_sroot/tools/pkg/deb/adm/pwra_env.sh $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
 chmod a+x $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/pwra_env.sh
 cp $pwre_sroot/tools/pkg/deb/adm/pwr_volumelist.dat $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
-cp $pwre_sroot/tools/pkg/deb/adm/pwr_user.dat $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
+cp $pwre_sroot/tools/pkg/deb/adm/pwr_user2.dat $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
 
 # Copy user to cnf
 mkdir $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user

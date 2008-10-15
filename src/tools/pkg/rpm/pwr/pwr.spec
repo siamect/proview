@@ -141,8 +141,8 @@ cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/pwr_setup.sh $aroot/db
 if [ ! -e $aroot/db/pwr_volumelist.dat ]; then
   cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/pwr_volumelist.dat $aroot/db
 fi
-if [ ! -e $aroot/db/pwr_user.dat ]; then
-  cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/pwr_user.dat $aroot/db
+if [ ! -e $aroot/db/pwr_user2.dat ]; then
+  cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/pwr_user2.dat $aroot/db
 fi
 
 # Insert base in projectlist
