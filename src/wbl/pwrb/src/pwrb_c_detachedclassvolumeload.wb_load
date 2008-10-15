@@ -1,0 +1,61 @@
+! 
+!  Proview   $Id: pwrb_c_detachedclassvolumeload.wb_load,v 1.1 2008-10-15 05:56:26 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_c_DetachedClassVolumeLoad.wb_load -- Defines the class DetachedClassVolumeLoad.
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Group ProjectConfiguration
+!  @Summary Configures a class volume to load in a proview node.
+!  The DetachedClassVolumeLoad object configures a detached class volume to
+!  load into a proview node when proview is started on this node.
+!  If a mounted volume contains objects of classes that is not loaded
+!  by default into the node, a DetachedClassVolumeLoad object will force a
+!  load of the classvolume.
+!
+!  The object should be configured in the  project volume as a child 
+!  to a NodeConfig object.
+!
+!  The name of the object states the volume to load.
+!
+! @b See also
+!  @classlink NodeConfig pwrb_nodeconfig.html
+!  
+!*/
+!
+  Object DetachedClassVolumeLoad $ClassDef 538 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "DetachedClassVolumeLoad"
+      EndBody
+      !/**
+      !  Description of the object
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

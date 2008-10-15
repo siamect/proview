@@ -1,0 +1,136 @@
+! 
+!  Proview   $Id: pwrs_c_detachedclassvolume.wb_load,v 1.1 2008-10-15 05:56:26 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrs_c_detachedclassvolume.wb_load -- Defines the class DetachedClassVolume.
+!
+SObject pwrs:Class
+!/**
+!  @Version 1.0
+!  @Group Volumes,ClassDefinition
+!  A detached class volume is a classvolume where no version dependencies
+!  of other class volumes are checked.
+!  
+!  @b See also
+!  @classlink ClassVolume pwrb_classvolume.html
+!*/
+  Object $DetachedClassVolume $ClassDef pwr_eCix_DetachedClassVolume
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_System
+      Attr Flags |= pwr_mClassDef_TopObject
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "DetachedClassVolume"
+      EndBody
+      !/**
+      !  Optional text for description.
+      !*/
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Next free object index
+      !*/
+      Object NextOix $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjectIx"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Runtime version. Increments when a new load file is created.
+      !*/
+      Object RtVersion $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Last creation time for load file.
+      !*/
+      Object RtCreTime $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object RtCreator $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Number of runtime objects.
+      !*/
+      Object RtCardinality $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Total size of runtime object bodies.
+      !*/
+      Object RtBodySize $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Next free class index
+      !*/
+      Object NextCix $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjectIx"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Next free type index
+      !*/
+      Object NextTix $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjectIx"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Elements = 16
+        EndBody
+      EndObject
+      !/**
+      !  Version for detached volume reference
+      !*/
+      Object DvVersion $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+    EndObject
+    Object Template $DetachedClassVolume
+      Body SysBody
+      EndBody
+    EndObject
+  EndObject
+EndSObject
