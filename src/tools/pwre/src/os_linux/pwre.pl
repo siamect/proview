@@ -481,6 +481,8 @@ sub create_all_modules ()
   create();
   _module("profibus");
   create();
+  _module("sev");
+  create();
   _module("opc");
   create();
   _module("ssabox");
