@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_cmdc.h,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_cmdc.h,v 1.2 2008-10-15 06:06:14 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -64,7 +64,7 @@ class Cmd {
 				 pwr_tVolumeId	volid,
 				 int pop);
     static int detach_volume_cb( void *ctx);
-    static void save_cb( void *ctx);
+    static void save_cb( void *ctx, int quiet);
     static void revert_ok( Cmd *cmd);
     static void revert_cb( void *ctx, int confirm);
     static void close_cb( void *ctx);

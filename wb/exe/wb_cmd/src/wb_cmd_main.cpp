@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_cmd_main.cpp,v 1.3 2008-06-25 07:55:13 claes Exp $
+ * Proview   $Id: wb_cmd_main.cpp,v 1.4 2008-10-15 06:06:14 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -195,7 +195,7 @@ int Cmd::detach_volume_cb( void *ctx)
   return cmd->detach_volume();
 }
 
-void Cmd::save_cb( void *ctx)
+void Cmd::save_cb( void *ctx, int quiet)
 {
   Cmd *cmd = (Cmd *) ctx;
   int sts;
@@ -217,7 +217,7 @@ void Cmd::save_cb( void *ctx)
   ldh_GetVolumeClass( cmd->wbctx, info.Volume, &volcid);
   
   if ( volcid == pwr_eClass_DirectoryVolume) {
-    sts = lfu_SaveDirectoryVolume( cmd->ldhses, 0);
+    sts = lfu_SaveDirectoryVolume( cmd->ldhses, 0, quiet);
     if ( EVEN(sts)) {
       cmd->wnav->message( 'E', "Syntax error");
       return;
