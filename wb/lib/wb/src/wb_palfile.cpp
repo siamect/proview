@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_palfile.cpp,v 1.3 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_palfile.cpp,v 1.4 2008-10-15 06:04:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -276,7 +276,7 @@ int PalFile::check_volume( ldh_tSession ldhses, char *name)
     sts = ldh_GetVolumeClass( ldh_SessionToWB(ldhses), volume, &classid);
     if ( EVEN(sts)) return 0;
 
-    if ( classid == pwr_eClass_ClassVolume)
+    if ( cdh_isClassVolumeClass( classid))
     {
       sts = ldh_VolumeIdToName( ldh_SessionToWB(ldhses),
 		volume, volume_name, sizeof(volume_name), &size);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepwbl.cpp,v 1.55 2007-11-07 18:06:32 claes Exp $
+ * Proview   $Id: wb_vrepwbl.cpp,v 1.56 2008-10-15 06:04:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -323,7 +323,7 @@ int wb_vrepwbl::load( const char *fname)
   MsgWindow::dreset_nodraw();
 
   // If classvolume, insert itself into its merep
-  if ( cid() == pwr_eClass_ClassVolume ) {
+  if ( cdh_isClassVolumeClass( cid())) {
     m_merep = new wb_merep( *m_erep->merep(), this);
     wb_mvrep *mvrep = m_merep->volume( &sts, vid());
     if ( ODD(sts))
@@ -820,6 +820,7 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, s
     return 1;
   }
   case pwr_eClass_ClassVolume:
+  case pwr_eClass_DetachedClassVolume:
   {
     pwr_sClassVolume o;
 
@@ -850,6 +851,7 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, s
 	*flags = 0;
       }
     }
+    else IF_ATTR( DvVersion, pwr_eType_UInt32, 1, level)
     return 1;
   }
   case pwr_eClass_ClassHier:
@@ -1231,6 +1233,7 @@ int wb_vrepwbl::getTemplateBody( pwr_tCid cid, pwr_eBix bix, size_t *size, void 
     *body = calloc( 1, *size);
     return 1;
   case pwr_eClass_ClassVolume:
+  case pwr_eClass_DetachedClassVolume:
     if ( bix != pwr_eBix_sys)
       return 0;
     *size = sizeof( pwr_sClassVolume);

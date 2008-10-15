@@ -412,6 +412,7 @@ topobjects ProjectNavigatorW1
 {
   class RootVolumeConfig
   class ClassVolumeConfig
+  class DetachedClassVolumeConfig
   class SubVolumeConfig
   class SharedVolumeConfig
   class ExternVolumeConfig
@@ -435,6 +436,8 @@ palette ProjectNavigatorPalette
     class ClassVolumeConfig
     class ClassVolumeLoad
     class CommonClassDistribute
+    class DetachedClassVolumeConfig
+    class DetachedClassVolumeLoad
     class ExternVolumeConfig
     class $PlantHier
     class RootVolumeConfig
@@ -449,6 +452,7 @@ palette ProjectNavigatorPalette
     class BusConfig
     class ClassVolumeLoad
     class Distribute
+    class DetachedClassVolumeLoad
     class FriendNodeConfig
     class NodeConfig
     class $NodeHier

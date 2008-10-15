@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.cpp,v 1.20 2008-10-09 08:34:14 claes Exp $
+ * Proview   $Id: wb_lfu.cpp,v 1.21 2008-10-15 06:04:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -745,6 +745,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  if ( cid == pwr_cClass_RootVolumeLoad ||
 	       cid == pwr_cClass_SubVolumeLoad ||
 	       cid == pwr_cClass_ClassVolumeLoad ||
+	       cid == pwr_cClass_DetachedClassVolumeLoad ||
 	       cid == pwr_cClass_SharedVolumeLoad ) {
 	    sts = ldh_ObjidToName( ldhses, volobjid, ldh_eName_Object,
 				   volume_name, sizeof(volume_name), &size);
@@ -768,6 +769,9 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	          break;
 	        case pwr_cClass_ClassVolumeLoad :
 	          strcpy( classname, "ClassVolume");
+	          break;
+	        case pwr_cClass_DetachedClassVolumeLoad :
+	          strcpy( classname, "DetachedClassVolume");
 	          break;
 	        case pwr_cClass_SharedVolumeLoad :
 	          strcpy( classname, "SharedVolume");
@@ -796,11 +800,14 @@ pwr_tStatus lfu_SaveDirectoryVolume(
       else if ( cid == pwr_cClass_RootVolumeConfig ||
 		cid == pwr_cClass_SubVolumeConfig ||
 		cid == pwr_cClass_ClassVolumeConfig ||
+		cid == pwr_cClass_DetachedClassVolumeConfig ||
 		cid == pwr_cClass_SharedVolumeConfig ||
 		cid == pwr_cClass_ExternVolumeConfig ) {
-	if ( cid != pwr_cClass_ClassVolumeConfig && k == 0)
+	if ( ! (cid == pwr_cClass_ClassVolumeConfig || cid == pwr_cClass_DetachedClassVolumeConfig) && 
+	     k == 0)
 	  continue;
-	if ( cid == pwr_cClass_ClassVolumeConfig && k == 1)
+	if ( (cid == pwr_cClass_ClassVolumeConfig || cid == pwr_cClass_DetachedClassVolumeConfig) && 
+	     k == 1)
 	  continue;
 
 	sts = ldh_ObjidToName( ldhses, envobjid, ldh_eName_Object,
@@ -836,6 +843,12 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		   volumelist_ptr->volume_id > cdh_cUserClassVolMax)
 		out_of_range = true;
 	      break;
+	    case pwr_cClass_DetachedClassVolumeConfig :
+	      strcpy( classname, "DetachedClassVolume");
+	      if ( volumelist_ptr->volume_id < cdh_cUserClassVolMin ||
+		   volumelist_ptr->volume_id > cdh_cUserClassVolMax)
+		out_of_range = true;
+	      break;
 	    case pwr_cClass_SharedVolumeConfig :
 	      strcpy( classname, "SharedVolume");
 	      if ( volumelist_ptr->volume_id < cdh_cUserVolMin ||
@@ -862,6 +875,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    case pwr_cClass_RootVolumeConfig :
 	    case pwr_cClass_SubVolumeConfig :
 	    case pwr_cClass_ClassVolumeConfig :
+	    case pwr_cClass_DetachedClassVolumeConfig :
 	    case pwr_cClass_SharedVolumeConfig : {
 	      int *dbenum = 0;
 	      char *server = 0;
@@ -870,8 +884,8 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 				"Database", (char **) &dbenum, &size);
 	      if ( EVEN(sts)) return sts;
 
-	      if (( cid == pwr_cClass_ClassVolumeConfig && *dbenum == 2) ||
-		  ( cid != pwr_cClass_ClassVolumeConfig && *dbenum == 1)) {
+	      if (( cdh_isClassVolumeClass(cid) && *dbenum == 2) ||
+		  ( !cdh_isClassVolumeClass(cid) && *dbenum == 1)) {
 		sts = ldh_GetObjectPar( ldhses, envobjid, "RtBody",
 					"Server", (char **) &server, &size);
 		if ( EVEN(sts)) return sts;
@@ -1041,6 +1055,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    }
 	    break;
 	  }
+	  case pwr_cClass_DetachedClassVolumeConfig :
 	  case pwr_cClass_ClassVolumeConfig : {
 	    int *dbenum_p = 0;
 	    char *server_p = 0;
@@ -1076,7 +1091,10 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		  data = (lfu_sCreaDb *) calloc( 1, sizeof(*data));
 		  strcpy( data->name, volumelist_ptr->volume_name);
 		  data->vid = volumelist_ptr->volume_id;
-		  data->cid = pwr_eClass_ClassVolume;
+		  if ( cid ==  pwr_cClass_DetachedClassVolumeConfig)
+		    data->cid = pwr_eClass_DetachedClassVolume;
+		  else
+		    data->cid = pwr_eClass_ClassVolume;
 		  data->ldhses = ldhses;
 		  data->volrep = volrep;
 		  strcpy( data->server, "");
@@ -1113,7 +1131,10 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		  data = (lfu_sCreaDb *) calloc( 1, sizeof(*data));
 		  strcpy( data->name, volumelist_ptr->volume_name);
 		  data->vid = volumelist_ptr->volume_id;
-		  data->cid = pwr_eClass_ClassVolume;
+		  if ( cid ==  pwr_cClass_DetachedClassVolumeConfig)
+		    data->cid = pwr_eClass_DetachedClassVolume;
+		  else
+		    data->cid = pwr_eClass_ClassVolume;
 		  data->ldhses = ldhses;
 		  data->volrep = volrep;
 		  strcpy( data->server, server);
@@ -1133,7 +1154,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    else if ( volrep == ldh_eVolRep_Wbl) {
 	      // Check wbload-file...
 	      FILE *wblfile;
-	    
+
 	      sprintf( fname, "$pwrp_db/%s.wb_load", volume_name);
 	      cdh_ToLower( fname, fname);
 	      dcli_translate_filename( fname, fname);
@@ -1145,10 +1166,14 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		  sprintf( msg, "Error, unable to create file %s, ", fname);
 		  MsgWindow::message( 'E', msg, msgw_ePop_Default);
 		  break;
-		}	    
+		}
 	      
-		fprintf( wblfile, "Volume %s pwr_eClass_ClassVolume %s\nEndVolume\n", 
-			 volume_name, cdh_VolumeIdToString( 0, volumelist_ptr->volume_id, 0, 0));
+		if ( cid ==  pwr_cClass_DetachedClassVolumeConfig)
+		  fprintf( wblfile, "Volume %s pwr_eClass_DetachedClassVolume %s\nEndVolume\n", 
+			   volume_name, cdh_VolumeIdToString( 0, volumelist_ptr->volume_id, 0, 0));
+		else
+		  fprintf( wblfile, "Volume %s pwr_eClass_ClassVolume %s\nEndVolume\n", 
+			   volume_name, cdh_VolumeIdToString( 0, volumelist_ptr->volume_id, 0, 0));
 		fclose( wblfile);
 	      }
 	    }
@@ -1299,6 +1324,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    if ( cid == pwr_cClass_RootVolumeLoad ||
 		 cid == pwr_cClass_SubVolumeLoad ||
 		 cid == pwr_cClass_ClassVolumeLoad ||
+		 cid == pwr_cClass_DetachedClassVolumeLoad ||
 		 cid == pwr_cClass_SharedVolumeLoad ) {
 	      sts = ldh_ObjidToName( ldhses, volobjid, ldh_eName_Object,
 				     volume_name, sizeof(volume_name), &size);
@@ -1322,6 +1348,9 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		    break;
 		  case pwr_cClass_ClassVolumeLoad :
 		    strcpy( classname, "ClassVolume");
+		    break;
+		  case pwr_cClass_DetachedClassVolumeLoad :
+		    strcpy( classname, "DetachedClassVolume");
 		    break;
 		  case pwr_cClass_SharedVolumeLoad :
 		    strcpy( classname, "SharedVolume");
@@ -2183,6 +2212,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
     if ( cid == pwr_cClass_RootVolumeConfig ||
 	 cid == pwr_cClass_SubVolumeConfig ||
 	 cid == pwr_cClass_ClassVolumeConfig ||
+	 cid == pwr_cClass_DetachedClassVolumeConfig ||
 	 cid == pwr_cClass_SharedVolumeConfig ) {
       sts = ldh_ObjidToName( ldhses, volobjid, ldh_eName_Object,
 			     volume_name, sizeof(volume_name), &size);
@@ -2588,6 +2618,8 @@ pwr_tStatus lfu_GetVolumeCnf( char *name, pwr_tVid *vid, pwr_tCid *cid, ldh_eVol
       *cid = pwr_eClass_SharedVolume;
     else if ( cdh_NoCaseStrcmp( vol_array[2], "ClassVolume") == 0)
       *cid = pwr_eClass_ClassVolume;
+    else if ( cdh_NoCaseStrcmp( vol_array[2], "DetachedClassVolume") == 0)
+      *cid = pwr_eClass_DetachedClassVolume;
     
     switch ( *cid) {
     case pwr_eClass_RootVolume:
@@ -2603,6 +2635,7 @@ pwr_tStatus lfu_GetVolumeCnf( char *name, pwr_tVid *vid, pwr_tCid *cid, ldh_eVol
       }
       break;
     case pwr_eClass_ClassVolume:
+    case pwr_eClass_DetachedClassVolume:
       *volrep = ldh_eVolRep_Wbl;
       if ( cdh_NoCaseStrcmp( vol_array[0], name) == 0) {
 	if ( nr > 4 && strcmp( vol_array[4], "1") == 0)

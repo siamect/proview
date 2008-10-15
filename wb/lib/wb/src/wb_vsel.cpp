@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vsel.cpp,v 1.18 2008-06-24 07:52:21 claes Exp $
+ * Proview   $Id: wb_vsel.cpp,v 1.19 2008-10-15 06:04:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -130,7 +130,7 @@ pwr_tStatus WVsel::load_volumelist()
     if (EVEN(sts)) return sts;
 
     if ( !all) {
-      if ( classid == pwr_eClass_ClassVolume ||
+      if ( cdh_isClassVolumeClass( classid) ||
 	   classid == pwr_eClass_WorkBenchVolume  ||
 	   volume == ldh_cRtVolume) {
 	sts = ldh_GetNextVolume( wbctx, volume, &volume);
@@ -189,6 +189,9 @@ pwr_tStatus WVsel::load_volumelist()
       break;
     case pwr_eClass_ClassVolume:
       strcat( str, "ClassVolume");
+      break;
+    case pwr_eClass_DetachedClassVolume:
+      strcat( str, "DetachedClassVolume");
       break;
     case pwr_eClass_WorkBenchVolume:
       strcat( str, "WorkBenchVolume");
@@ -292,7 +295,7 @@ pwr_tStatus WVsel::check_volumelist(
     if ( classid == pwr_eClass_RootVolume ||
 	 classid == pwr_eClass_SubVolume ||
 	 (classid == pwr_eClass_SharedVolume && volume != ldh_cRtVolume) ||
-	 (classid == pwr_eClass_ClassVolume && 
+	 (cdh_isClassVolumeClass(classid) && 
 	  (cdh_cUserClassVolMin <= volume && volume <= cdh_cUserClassVolMax))) {
       // This volume should be configured
       volume_found = 0;
@@ -330,6 +333,10 @@ pwr_tStatus WVsel::check_volumelist(
 	    break;
 	  case pwr_eClass_ClassVolume :
 	    if ( strcmp( volumelist_ptr->p1, "ClassVolume"))
+	      class_error = 1;
+	    break;
+	  case pwr_eClass_DetachedClassVolume :
+	    if ( strcmp( volumelist_ptr->p1, "DetachedClassVolume"))
 	      class_error = 1;
 	    break;
 	  case pwr_eClass_SharedVolume :

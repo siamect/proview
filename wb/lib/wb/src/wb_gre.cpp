@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.cpp,v 1.12 2008-10-09 08:33:14 claes Exp $
+ * Proview   $Id: wb_gre.cpp,v 1.13 2008-10-15 06:04:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1659,7 +1659,7 @@ WGre::WGre( void *wg_parent_ctx,
 	    char *name) :
   parent_ctx( wg_parent_ctx), grid_size(0.05), gridobject(0), grid_on(0), wind(0), 
   conref_nodetypeid(0), display_nodetypeid(0),
-  sel_node_count(0), del_node_count(0), searchrect_node_id(0), popupmenu_mode(0),
+  sel_node_count(0), del_node_count(0), del_con_count(0), searchrect_node_id(0), popupmenu_mode(0),
   trace_started(0), trace_analyse_nc(0), trace_con_cc(0),
   trace_changenode(0), conpoint_locked(0), last_selected(0), last_cp_selected(0), last_cp_selected_num(0)
 {

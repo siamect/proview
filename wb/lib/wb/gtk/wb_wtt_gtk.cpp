@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.25 2008-10-03 14:18:37 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.26 2008-10-15 06:04:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1870,6 +1870,7 @@ WttGtk::WttGtk(
       strcpy( title_w2, "Node Configuration");
       break;
     case pwr_eClass_ClassVolume:
+    case pwr_eClass_DetachedClassVolume:
       if ( ldh_VolRepType( ldhses) == ldh_eVolRep_Mem ||
 	   ldh_VolRepType( ldhses) == ldh_eVolRep_Ced) {
 	wb_type = wb_eType_ClassEditor;

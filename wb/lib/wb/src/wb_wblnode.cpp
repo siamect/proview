@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wblnode.cpp,v 1.61 2008-06-24 07:52:21 claes Exp $
+ * Proview   $Id: wb_wblnode.cpp,v 1.62 2008-10-15 06:04:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -226,6 +226,8 @@ static wbl_sSym classes[] =
   ,{ "pwr_eCix_SystemVolume", pwr_eCix_SystemVolume }
   ,{ "pwr_eClass_ClassVolume", pwr_eClass_ClassVolume }
   ,{ "pwr_eCix_ClassVolume", pwr_eCix_ClassVolume }
+  ,{ "pwr_eClass_DetachedClassVolume", pwr_eClass_DetachedClassVolume }
+  ,{ "pwr_eCix_DetachedClassVolume", pwr_eCix_DetachedClassVolume }
   ,{ "pwr_eClass_WorkBenchVolume", pwr_eClass_WorkBenchVolume }
   ,{ "pwr_eCix_WorkBenchVolume", pwr_eCix_WorkBenchVolume }
   ,{ "pwr_eClass_DirectoryVolume", pwr_eClass_DirectoryVolume }
@@ -1810,7 +1812,7 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
     // Register volume
     m_vrep->registerVolume( name(), o->m_cid, vid, this);
 
-    if ( o->m_cid == pwr_eClass_ClassVolume) {
+    if ( o->m_cid == pwr_eClass_ClassVolume || o->m_cid == pwr_eClass_DetachedClassVolume ) {
       // Build to get next oix
       build( false);
     }

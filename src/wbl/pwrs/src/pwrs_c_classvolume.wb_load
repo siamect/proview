@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_classvolume.wb_load,v 1.5 2006-02-23 14:37:20 claes Exp $
+!  Proview   $Id: pwrs_c_classvolume.wb_load,v 1.6 2008-10-15 06:03:29 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -152,6 +152,14 @@ SObject pwrs:Class
           Attr Flags |= PWR_MASK_ARRAY
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Elements = 16
+        EndBody
+      EndObject
+      !/**
+      !  Version for detached volume reference
+      !*/
+      Object DvVersion $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
     EndObject

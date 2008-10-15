@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.cpp,v 1.41 2008-10-09 08:36:12 claes Exp $
+ * Proview   $Id: wb_wtt.cpp,v 1.42 2008-10-15 06:04:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1736,7 +1736,9 @@ void Wtt::activate_openclasseditor()
   if ( EVEN(sts)) return;
   
   if ( classid == pwr_cClass_ClassVolumeConfig ||
-       classid == pwr_cClass_ClassVolumeLoad) {
+       classid == pwr_cClass_ClassVolumeLoad ||
+       classid == pwr_cClass_DetachedClassVolumeConfig ||
+       classid == pwr_cClass_DetachedClassVolumeLoad) {
     sts = ldh_ObjidToName( ldhses, attrref.Objid, ldh_eName_Object, 
 					   name, sizeof(name), &size); 
     if ( EVEN(sts)) return;

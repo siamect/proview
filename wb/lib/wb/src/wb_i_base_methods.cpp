@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_i_base_methods.cpp,v 1.3 2008-09-05 09:06:56 claes Exp $
+ * Proview   $Id: wb_i_base_methods.cpp,v 1.4 2008-10-15 06:04:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 
 pwr_dImport pwr_BindMethods(ASup);
 pwr_dImport pwr_BindMethods(DsFast);
-pwr_dImport pwr_BindMethods(DsHist);
+pwr_dImport pwr_BindMethods(SevHist);
 pwr_dImport pwr_BindMethods(DsTrend);
 pwr_dImport pwr_BindMethods(DSup);
 pwr_dImport pwr_BindMethods(PlcPgm);
@@ -62,7 +62,7 @@ pwr_dImport pwr_BindMethods(Application);
 pwr_dExport pwr_BindClasses(Base) = {
   pwr_BindClass(ASup),
   pwr_BindClass(DsFast),
-  pwr_BindClass(DsHist),
+  pwr_BindClass(SevHist),
   pwr_BindClass(DsTrend),
   pwr_BindClass(DSup),
   pwr_BindClass(PlcPgm),

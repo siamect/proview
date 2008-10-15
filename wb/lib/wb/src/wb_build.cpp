@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_build.cpp,v 1.8 2008-05-29 14:56:46 claes Exp $
+ * Proview   $Id: wb_build.cpp,v 1.9 2008-10-15 06:04:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -164,6 +164,7 @@ void wb_build::volume()
     rootvolume(0);
     break;
   case pwr_eClass_ClassVolume:
+  case pwr_eClass_DetachedClassVolume:
     classvolume(0);
     break;
   default:

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_db.cpp,v 1.42 2008-04-18 06:06:30 claes Exp $
+ * Proview   $Id: wb_db.cpp,v 1.43 2008-10-15 06:04:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -878,6 +878,7 @@ void wb_db::create(pwr_tVid vid, pwr_tCid cid, const char *volumeName, const cha
     rbSize = sizeof(pwr_sSystemVolume);
     break;
   case pwr_eClass_ClassVolume:
+  case pwr_eClass_DetachedClassVolume:
     rbSize = sizeof(pwr_sClassVolume);
     break;
   case pwr_eClass_WorkBenchVolume:

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vsel_motif.cpp,v 1.2 2008-06-24 07:52:21 claes Exp $
+ * Proview   $Id: wb_vsel_motif.cpp,v 1.3 2008-10-15 06:04:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -310,7 +310,7 @@ WVselMotif::WVselMotif (
       sts = ldh_GetVolumeClass( wbctx, volume, &classid);
       if (EVEN(sts)) { *status = sts; return; }
   
-      if ( classid == pwr_eClass_ClassVolume ||
+      if ( cdh_isClassVolumeClass( classid)
  	   classid == pwr_eClass_WorkBenchVolume ||
 	   volume == ldh_cRtVolume)
       {

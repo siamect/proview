@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dbs.h,v 1.15 2006-05-11 07:12:19 claes Exp $
+ * Proview   $Id: wb_dbs.h,v 1.16 2008-10-15 06:04:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -99,6 +99,7 @@ public:
   wb_vrep      *m_v;
   dbs_sVolume  m_volume;
   pwr_tOid     m_oid;
+  pwr_tUInt32  m_dvVersion;
   dbs_sSect    m_sect[dbs_eSect_];    /**< section header */
 
   unsigned int m_warnings;
@@ -160,6 +161,7 @@ public:
   pwr_tStatus  writeSectClass();
   pwr_tStatus  writeSectDbody();
   pwr_tStatus  writeReferencedVolumes();
+  pwr_tUInt32  getDvVersion( wb_vrep *v);
 
 
   virtual bool importVolume(wb_export &e);

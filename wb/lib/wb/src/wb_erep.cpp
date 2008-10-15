@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_erep.cpp,v 1.57 2008-05-16 11:03:20 claes Exp $
+ * Proview   $Id: wb_erep.cpp,v 1.58 2008-10-15 06:04:55 claes Exp $
  * Copyright (C) 2005 SSAB OxelÃ¶sund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -291,7 +291,7 @@ void wb_erep::addDbs( pwr_tStatus *sts, wb_vrep *vrep)
     return;
   }
 
-  if ( vrep->cid() == pwr_eClass_ClassVolume) {
+  if ( cdh_isClassVolumeClass( vrep->cid())) {
     m_merep->addDbs( sts, (wb_mvrep *)vrep);
   }
 }
@@ -504,7 +504,7 @@ void wb_erep::loadCommonMeta( pwr_tStatus *status)
         vrep->load();
         addDbs( &sts, vrep);
         char buff[256];
-	if ( vrep->cid() == pwr_eClass_ClassVolume)
+	if ( cdh_isClassVolumeClass( vrep->cid()))
 	  sprintf(buff, "Global class volume \"%s\" loaded from \"%s\"", vrep->dbsenv()->vp->name, vname);
 	else
 	  sprintf(buff, "Volume \"%s\" loaded from \"%s\"", vrep->dbsenv()->vp->name, vname);
@@ -591,6 +591,7 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
       }
     }
     else if ( cdh_NoCaseStrcmp( vol_array[2], "ClassVolume") == 0 ||
+	      cdh_NoCaseStrcmp( vol_array[2], "DetachedClassVolume") == 0 ||
 	      strcmp( vol_array[3], "load") == 0) {
       if ( nr < 4)
 	cout << "Syntax error in file: " << fname << endl;

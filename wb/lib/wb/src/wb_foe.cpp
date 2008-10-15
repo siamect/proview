@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe.cpp,v 1.12 2008-10-09 08:32:51 claes Exp $
+ * Proview   $Id: wb_foe.cpp,v 1.13 2008-10-15 06:04:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2933,7 +2933,7 @@ int WFoe::new_local( pwr_tObjid	plcprogram,
   if ( EVEN(sts)) return sts;
 	
   if ( ldh_VolRepType( windowobject->hw.ldhses) == ldh_eVolRep_Mem &&
-       classid == pwr_eClass_ClassVolume)
+       cdh_isClassVolumeClass( classid))
     classeditor = 1;
   if ( function == EDIT)
     edit_set_entries();

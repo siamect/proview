@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_item.cpp,v 1.25 2008-01-24 09:50:00 claes Exp $
+ * Proview   $Id: wb_wnav_item.cpp,v 1.26 2008-10-15 06:04:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -869,6 +869,7 @@ WItemVolume::WItemVolume( WNav *wnav, pwr_tVolumeId item_volid,
   sts = ldh_GetVolumeClass( wnav->wbctx, volid, &classid);
   switch( classid) {
     case pwr_eClass_ClassVolume: strcpy( classname, "ClassVolume"); break;
+    case pwr_eClass_DetachedClassVolume: strcpy( classname, "DetachedClassVolume"); break;
     case pwr_eClass_WorkBenchVolume: strcpy( classname, "WorkBenchVolume"); break;
     case pwr_eClass_RootVolume: strcpy( classname, "RootVolume"); break;
     case pwr_eClass_SubVolume: strcpy( classname, "SubVolume"); break;

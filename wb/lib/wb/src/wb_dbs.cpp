@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dbs.cpp,v 1.30 2008-06-24 07:49:46 claes Exp $
+ * Proview   $Id: wb_dbs.cpp,v 1.31 2008-10-15 06:04:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -67,6 +67,7 @@ wb_dbs::wb_dbs(wb_vrep *v) :
   m_volume.cid = m_v->cid();
 
   //@todo strcpy(m_volume.className, m_ohp->chp->db.name.data);
+  m_volume.dvVersion = getDvVersion( m_v);
  
   sprintf(m_fileName, dbs_cNameVolume, dbs_cDirectory, m_v->name());
   dcli_translate_filename(m_fileName, m_fileName);
@@ -169,11 +170,11 @@ wb_dbs::checkObject(sOentry *oep)
     m_v->merep()->classVersion(&sts, cdh_ClassObjidToId(oep->o.oid), &oep->o.time);
     break;
   case pwr_eClass_LibHier:
-    if (m_volume.cid != pwr_eClass_ClassVolume)
+    if ( !cdh_isClassVolumeClass( m_volume.cid))
       oep->o.flags.b.devOnly = 1;
     break;
   case pwr_eClass_Alias:
-    if (m_volume.cid != pwr_eClass_ClassVolume)
+    if ( !cdh_isClassVolumeClass( m_volume.cid))
       oep->o.flags.b.isAliasClient = 1;
     break;
   case pwr_eClass_MountVolume:
@@ -554,6 +555,7 @@ wb_dbs::prepareSectVolref()
   cdh_uTid    cid;
   sCentry     *cep;
   pwr_tStatus sts;
+  pwr_tUInt32 dvVersion;
   
     
   if (fseek(m_fp, m_sect[dbs_eSect_volref].offset, SEEK_SET) != 0)
@@ -574,7 +576,9 @@ wb_dbs::prepareSectVolref()
     if (vid.pwr != m_volume.vid) {
       wb_mvrep *mvrep = m_v->merep()->volume(&sts, vid.pwr);
       if ( EVEN(sts)) throw wb_error_str("Metavolume not found");
-      
+
+      dvVersion = getDvVersion( mvrep);
+
       sVentry *vep;
 
       vep = (sVentry*)tree_Insert(&sts, m_vol_th, &vid.pwr);
@@ -584,7 +588,12 @@ wb_dbs::prepareSectVolref()
 
         strcpy(vep->v.name, mvrep->name());
         vep->v.cid  = mvrep->cid();
-        vep->v.time = vep->env.file.time;
+	if ( m_volume.cid == pwr_eClass_DetachedClassVolume) {
+	  vep->v.time.tv_sec = dvVersion;
+	  vep->v.time.tv_nsec = 0;
+	}
+	else
+	  vep->v.time = vep->env.file.time;
         vep->v.size = vep->env.file.size;
         vep->v.offset = 0;
 
@@ -597,11 +606,19 @@ wb_dbs::prepareSectVolref()
 	    wb_mvrep *nmvrep = m_v->merep()->volume(&sts, vp->vid);
 	    if ( EVEN(sts)) throw wb_error_str("Metavolume not found");
       
+	    dvVersion = getDvVersion( mvrep);
+      
 	    dbs_Open(&sts, &nvep->env, nmvrep->fileName());
 
             strcpy(nvep->v.name, vp->name);
             nvep->v.cid  = vp->cid;
-            nvep->v.time = vp->time;
+	    if ( m_volume.cid == pwr_eClass_DetachedClassVolume) {
+	      nvep->v.time.tv_sec = dvVersion;
+	      nvep->v.time.tv_nsec = 0;
+	    }
+	    else
+	      nvep->v.time = vp->time;
+	    // nvep->v.dvVersion = vp->dvVersion;
             nvep->v.size = vp->size;
             nvep->v.offset = 0;
           }          
@@ -1272,4 +1289,27 @@ void wb_dbs::getMountServer(sOentry *oep, void *p)
   default:
     break;
   }
+}
+
+pwr_tUInt32 wb_dbs::getDvVersion( wb_vrep *v) 
+{
+  pwr_tUInt32 dvVersion = 0;
+
+  if ( cdh_isClassVolumeClass( v->cid())) {
+    // Get DvVersion from volume object body
+    pwr_tObjName name;
+    pwr_sClassVolume body;
+    pwr_tStatus sts;
+
+    strcpy( name, v->name());
+    strcat( name, ":");
+    wb_name n( name);
+
+    wb_orep *o = v->object( &sts, n);
+    if ( ODD(sts))
+      v->readBody( &sts, o, pwr_eBix_sys, &body);
+    if ( ODD(sts))
+      dvVersion = body.DvVersion;
+  }
+  return dvVersion;
 }

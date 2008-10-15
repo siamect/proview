@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pal.cpp,v 1.12 2008-10-03 14:18:37 claes Exp $
+ * Proview   $Id: wb_pal.cpp,v 1.13 2008-10-15 06:04:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -179,7 +179,7 @@ int PalItemClassVolume::open( Pal *pal, double x, double y)
       sts = ldh_GetVolumeClass( pal->wbctx, volume, &classid);
       if ( EVEN(sts)) return sts;
 
-      if ( classid == pwr_eClass_ClassVolume)
+      if ( cdh_isClassVolumeClass( classid))
       {
         sts = ldh_VolumeIdToName( pal->wbctx,
 		volume, volume_name, sizeof(volume_name), &size);

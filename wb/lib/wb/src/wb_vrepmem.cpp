@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.cpp,v 1.33 2008-03-19 12:58:54 claes Exp $
+ * Proview   $Id: wb_vrepmem.cpp,v 1.34 2008-10-15 06:04:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1776,7 +1776,8 @@ bool wb_vrepmem::importVolume( wb_export &e)
     importBuildObject( root_object);
 
   switch( cid()) {
-  case pwr_eClass_ClassVolume: {
+  case pwr_eClass_ClassVolume:
+  case pwr_eClass_DetachedClassVolume: {
     // If classvolume, insert itself into its merep
 #if 0
     m_merep = new wb_merep( *m_erep->merep(), this);

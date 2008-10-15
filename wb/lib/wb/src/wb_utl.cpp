@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.cpp,v 1.11 2008-05-29 14:57:53 claes Exp $
+ * Proview   $Id: wb_utl.cpp,v 1.12 2008-10-15 06:04:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -4133,6 +4133,9 @@ pwr_tStatus utl_create_volume(
 	else if ( !strcmp( volumeclass_str, "CLASSVOLUME") ||
 	          !strcmp( volumeclass_str, "$CLASSVOLUME"))
 	  cid = pwr_eClass_ClassVolume;
+	else if ( !strcmp( volumeclass_str, "DETACHEDCLASSVOLUME") ||
+	          !strcmp( volumeclass_str, "$DETACHEDCLASSVOLUME"))
+	  cid = pwr_eClass_DetachedClassVolume;
 	else if ( !strcmp( volumeclass_str, "DIRECTORYVOLUME") ||
 	          !strcmp( volumeclass_str, "$DIRECTORYVOLUME"))
 	  cid = pwr_eClass_DirectoryVolume;
@@ -4204,7 +4207,7 @@ pwr_tStatus	utl_show_volumes(
 			&vol_class);
 	  if (EVEN(sts)) return sts;
 
-	  if ( vol_class == pwr_eClass_ClassVolume ||
+	  if ( cdh_isClassVolumeClass(vol_class) ||
  	        vol_class == pwr_eClass_WorkBenchVolume )
 	  {
 	    if ( !allvolumes)
@@ -7922,7 +7925,7 @@ int utl_list (
 			&vol_class);
 	    if (EVEN(sts)) return sts;
 
-	    if ( !(vol_class == pwr_eClass_ClassVolume ||
+	    if ( !( cdh_isClassVolumeClass(vol_class) ||
  	        vol_class == pwr_eClass_WorkBenchVolume ))
 	    {
 	      volume_vect[i] = vol_id;
@@ -11372,6 +11375,7 @@ int utl_create_loadfiles (
 
 	    if ( vol_class == pwr_eClass_WorkBenchVolume ||
 		 vol_class == pwr_eClass_ClassVolume ||
+		 vol_class == pwr_eClass_DetachedClassVolume ||
 		 vol_class == pwr_eClass_DirectoryVolume) {
 	      sts = ldh_GetNextVolume( ldh_SessionToWB( ldhses), vol_id, &vol_id);
 	      continue;
@@ -12009,7 +12013,7 @@ static int cross_crosslist_load( ldh_tSesContext ldhses)
 			&vol_class);
 	    if (EVEN(sts)) return sts;
 
-	    if ( !(vol_class == pwr_eClass_ClassVolume ||
+	    if ( !(cdh_isClassVolumeClass(vol_class) ||
  	        vol_class == pwr_eClass_WorkBenchVolume ))
 	    {
 	      volume_vect[i] = vol_id;

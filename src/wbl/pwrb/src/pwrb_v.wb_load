@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_v.wb_load,v 1.2 2005-09-01 14:58:03 claes Exp $
+!  Proview   $Id: pwrb_v.wb_load,v 1.3 2008-10-15 06:03:29 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -19,4 +19,7 @@
 !  pwrb_v.wb_load -- Loads the pwrb volume
 !
 Volume pwrb pwr_eClass_ClassVolume 0.0.0.2
+  Body SysBody
+    Attr DvVersion = 1
+  EndBody
 EndVolume

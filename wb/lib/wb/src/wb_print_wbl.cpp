@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_print_wbl.cpp,v 1.21 2007-12-06 10:53:18 claes Exp $
+ * Proview   $Id: wb_print_wbl.cpp,v 1.22 2008-10-15 06:04:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -179,7 +179,7 @@ void wb_print_wbl::printBuffer(wb_volume& v,
   wb_adef adef2;
   const char* bname;
 
-  if ( strcmp( attr.name(), "Template") == 0 && v.cid() == pwr_eClass_ClassVolume)
+  if ( strcmp( attr.name(), "Template") == 0 && cdh_isClassVolumeClass( v.cid()))
     // The parser can't handle subclasses in template objects yet...
     return;
 
