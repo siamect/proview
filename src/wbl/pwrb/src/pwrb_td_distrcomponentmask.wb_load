@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_td_distrcomponentmask.wb_load,v 1.5 2008-09-09 10:30:05 claes Exp $
+!  Proview   $Id: pwrb_td_distrcomponentmask.wb_load,v 1.6 2008-10-15 06:02:48 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -180,8 +180,8 @@ SObject pwrb:Type
     EndObject
     !/**
     !  The .ssh/authorized_keys file used by ssh is included. The source is fetched from
-    !     1. $pwrp_src/'nodename'/.authorized_keys
-    !     2. $pwra_db/.authorized_keys
+    !     1. $pwrp_src/'nodename'/authorized_keys
+    !     2. $pwra_db/authorized_keys
     !*/
     Object AuthorizedKeysFile $Bit
      Body SysBody
