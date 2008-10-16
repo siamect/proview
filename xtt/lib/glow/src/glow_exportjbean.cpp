@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_exportjbean.cpp,v 1.18 2007-12-21 13:20:31 claes Exp $
+ * Proview   $Id: glow_exportjbean.cpp,v 1.19 2008-10-16 11:05:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -976,7 +976,7 @@ void GlowExportJBean::rectrounded( double x0, double y0, double width, double he
 }
 
 void GlowExportJBean::arc( double x0, double y0, double width, double height,
-	double angel1, double angel2, int fill, int border,
+	double angle1, double angle2, int fill, int border,
 	glow_eDrawType fill_drawtype, glow_eDrawType border_drawtype,
 	int line_width, double shadow_width, int shadow, 
 	int drawtype_incr, glow_eExportPass pass, int *shape_cnt, 
@@ -1002,9 +1002,9 @@ void GlowExportJBean::arc( double x0, double y0, double width, double height,
 "    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
 	y0  - dim_y0 + glow_cJBean_Offset << "F, " << 
 	width << "F, " << height << "F, " << 
-	angel1 << "F, " << angel2 << "F, Arc2D." << arc_type_str <<")," << endl;
+	angle1 << "F, " << angle2 << "F, Arc2D." << arc_type_str <<")," << endl;
 
-      if ( !(shadow_width == 0 || angel2 != 360)) {
+      if ( !(shadow_width == 0 || angle2 != 360)) {
 	fp << 
 "    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
 	  y0  - dim_y0 + glow_cJBean_Offset << "F, " << 
@@ -1025,11 +1025,11 @@ void GlowExportJBean::arc( double x0, double y0, double width, double height,
 "    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + shadow_width << "F, " << 
 	  y0  - dim_y0 + glow_cJBean_Offset + shadow_width << "F, " << 
 	  width - 2*shadow_width << "F, " << height - 2*shadow_width << "F, " << 
-	  angel1 << "F, " << angel2 << "F, Arc2D." << arc_type_str <<")," << endl <<
+	  angle1 << "F, " << angle2 << "F, Arc2D." << arc_type_str <<")," << endl <<
 "    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
 	  y0  - dim_y0 + glow_cJBean_Offset << "F, " << 
 	  width << "F, " << height << "F, " << 
-	  angel1 << "F, " << angel2 << "F, Arc2D." << arc_type_str <<")," << endl;
+	  angle1 << "F, " << angle2 << "F, Arc2D." << arc_type_str <<")," << endl;
 
       }
       break;
@@ -1040,7 +1040,7 @@ void GlowExportJBean::arc( double x0, double y0, double width, double height,
     }
     case glow_eExportPass_Draw:
     {
-      if ( !shadow_width || angel2 != 360) {
+      if ( !shadow_width || angle2 != 360) {
 	if ( fill) {
 	  if ( border) {
 	    if ( page <= 1)

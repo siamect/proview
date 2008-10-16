@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltoh.cpp,v 1.12 2008-06-24 06:53:51 claes Exp $
+ * Proview   $Id: cnv_wbltoh.cpp,v 1.13 2008-10-16 11:07:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -876,6 +876,7 @@ int CnvWblToH::cixstr_to_classid( char *cix_str, pwr_tClassId *cid)
 	{ "pwr_eCix_DynamicVolume",	pwr_eCix_DynamicVolume},
 	{ "pwr_eCix_SystemVolume",	pwr_eCix_SystemVolume},
 	{ "pwr_eCix_ClassVolume",	pwr_eCix_ClassVolume},
+	{ "pwr_eCix_DetachedClassVolume", pwr_eCix_DetachedClassVolume},
 	{ "pwr_eCix_WorkBenchVolume",	pwr_eCix_WorkBenchVolume},
 	{ "pwr_eCix_DirectoryVolume",	pwr_eCix_DirectoryVolume},
 	{ "pwr_eCix_CreateVolume",	pwr_eCix_CreateVolume},
