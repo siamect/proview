@@ -1,7 +1,7 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X54"
-    Attr NextCix = "_X5"
+    Attr NextOix = "_X60"
+    Attr NextCix = "_X6"
     Attr NextTix[0] = "_X4"
   EndBody
   Object Type $TypeHier 1 15-NOV-2007 14:35:37.90
@@ -167,6 +167,13 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr Text = "ReadInputRegisters"
           Attr PgmName = "ReadInputRegisters"
           Attr Value = 4
+        EndBody
+      EndObject
+      Object WriteSingleCoil $Value 60 12-SEP-2008 16:20:33.70
+        Body SysBody 12-SEP-2008 16:20:50.36
+          Attr Text = "WriteSingleCoil"
+          Attr PgmName = "WriteSingleCoil"
+          Attr Value = 5
         EndBody
       EndObject
       Object WriteMultipleCoils $Value 36 07-FEB-2008 15:57:24.44
@@ -498,7 +505,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Object RtBody $ObjBodyDef 1 08-FEB-2008 10:26:36.84
         Body SysBody 08-FEB-2008 10:26:36.85
           Attr StructName = "Modbus_TCP_Slave"
-          Attr NextAix = "_X17"
+          Attr NextAix = "_X19"
         EndBody
         !/**
         ! Description of slave
@@ -570,9 +577,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
         ! Flag that disables the initialization of the slave, if initialized turns off i/o-handling.
         !*/
         Object DisableSlave $Attribute 16 20-FEB-2008 15:38:59.22
-          Body SysBody 20-FEB-2008 15:46:45.06
+          Body SysBody 08-SEP-2008 14:45:03.01
             Attr PgmName = "DisableSlave"
-            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr TypeRef = "pwrb:Type-YesNoEnum"
           EndBody
         EndObject
         !/**
@@ -599,8 +606,10 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
         !/**
         ! @Summary Reconnect count.
-        ! If slave is disconnected Proview will try to reconnect until ReconnectLimit is reached.
-        ! Reconnect attempt is performed when ErrorCount reaches ErrorLimit.
+        ! If slave is disconnected Proview will try to reconnect.
+        ! Reconnect attempts are made with a exponential backoff starting at 1 s.
+        ! The time is doubled every attempt up to 64 secs and then continues to
+        ! try to reconnect at this cylicity.
         !*/
         Object ReconnectCount $Attribute 9 08-FEB-2008 10:56:12.51
           Body SysBody 08-FEB-2008 10:56:17.20
@@ -610,14 +619,37 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
         !/**
         ! @Summary Reconnect limit.
-        ! If slave is disconnected Proview will try to reconnect until ReconnectLimit is reached.
-        ! Reconnect attempt is performed when ErrorCount reaches ErrorLimit. When reconnect limit
-        ! is reached no more attempts is performed and slave is treated as "dead".
+        ! If slave is disconnected Proview will try to reconnect to the slave.
+        ! Reconnect limit is no more in use, kept for possible future use.
         !*/
         Object ReconnectLimit $Attribute 10 08-FEB-2008 10:56:28.05
-          Body SysBody 08-FEB-2008 11:19:48.56
+          Body SysBody 04-SEP-2008 10:32:26.94
             Attr PgmName = "ReconnectLimit"
             Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Response time.
+        ! The time in ms as a response from a read or write request is expected.
+        ! This is the maximum time we will wait for a response.
+        !*/
+        Object ResponseTime $Attribute 17 04-SEP-2008 10:31:37.00
+          Body SysBody 04-SEP-2008 10:32:36.01
+            Attr PgmName = "ResponseTime"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Single operation.
+        ! Depending on the tcp stack used in the slave and also the size of its receive
+        ! buffer it may not be possible to send several requests at a time to a slave.
+        ! If the slave can only handle one request at a time this attribute should be set
+        ! to 'Yes'. The rule is all at once or one request at a time.
+        !*/
+        Object SingleOp $Attribute 18 04-SEP-2008 10:33:01.37
+          Body SysBody 04-SEP-2008 13:15:42.30
+            Attr PgmName = "SingleOp"
+            Attr TypeRef = "pwrb:Type-YesNoEnum"
           EndBody
         EndObject
         !/**
@@ -688,10 +720,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
       EndObject
       Object Template Modbus_TCP_Slave 2148499456 01-JAN-1970 01:00:00.00
-        Body RtBody 08-FEB-2008 11:05:14.00
+        Body RtBody 05-SEP-2008 11:08:41.87
           Attr Process = 1
           Attr ErrorLimit = 50
           Attr ReconnectLimit = 5
+          Attr ResponseTime = 200
         EndBody
       EndObject
     EndObject
@@ -732,6 +765,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  the number of registers you want to read. The represenation on the ChanIi should 
     !  be set to UInt16 or Int16. ChanAi and ChanDi is also applicable. In case of ChanDi the
     !  representation should be set to Bit16.
+    !
+    !  @b WriteSingleCoil (FC 5)
+    !  This function code is used to write to one single coil.
+    !  Typically the output data area is defined by one ChanDo's which represent
+    !  the state of the coil to write to.
     ! 
     !  @b WriteMultipleCoils (FC 15)
     !  This function code is used to force each coil in a sequence of coils to either ON or OFF
@@ -759,13 +797,13 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Object RtBody $ObjBodyDef 1 08-FEB-2008 11:15:54.62
         Body SysBody 08-FEB-2008 11:15:54.63
           Attr StructName = "Modbus_Module"
-          Attr NextAix = "_X8"
+          Attr NextAix = "_X11"
         EndBody
         !/**
         ! Description of module
         !*/
         Object Description $Attribute 2 08-FEB-2008 11:18:16.99
-          Body SysBody 08-FEB-2008 11:30:31.46
+          Body SysBody 03-SEP-2008 13:44:34.00
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
@@ -780,6 +818,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         ! (FC 2) ReadDiscreteInputs
         ! (FC 3) ReadHoldingRegisters
         ! (FC 4) ReadInputRegisters
+        ! (FC 5) WriteSingleCoil
         ! (FC 15) WriteMultipleCoils 
         ! (FC 16) WriteMultipleRegisters
         !*/
@@ -794,13 +833,25 @@ Volume OtherIO $ClassVolume 0.0.250.10
         ! Address of data area on Modbus slave. 
         !*/
         Object Address $Attribute 6 08-FEB-2008 11:20:03.39
-          Body SysBody 08-FEB-2008 11:30:42.64
+          Body SysBody 04-SEP-2008 14:12:29.49
             Attr PgmName = "Address"
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
         !/**
-        ! @Summary Status of the slave.
+        ! @Summary Unit id.
+        ! Identification of the modbus unit to communicate with. It is typically only used
+        ! if communicating with a tpc gateway that is connected to a Modbus serial line with
+        ! possibly several units. Usually this has no meaning and should be set to zero (0).   
+        !*/
+        Object UnitId $Attribute 8 04-SEP-2008 14:12:23.85
+          Body SysBody 08-SEP-2008 15:15:06.16
+            Attr PgmName = "UnitId"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Status of the module.
         ! Status of the module. The status can be any of:
         ! OK
         ! IllegalFunction
@@ -816,6 +867,28 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
         !/**
+        ! @Summary Continous operation of the module.
+        ! If set to Yes the module is scanned cylically for each scan (read or write operation).
+        ! If set to false the action defined by the FunctionCode-attribute will only be executed
+        ! when the SendOp-attribute is set.
+        !*/
+        Object Continous $Attribute 9 08-SEP-2008 14:44:22.43
+          Body SysBody 08-SEP-2008 14:45:19.10
+            Attr PgmName = "Continous"
+            Attr TypeRef = "pwrb:Type-YesNoEnum"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Request to execute action defined by FunctionCode-attribute once.
+        ! This attribute is only valid if Contious-attribute is set to 'No'.
+        !*/
+        Object SendOp $Attribute 10 08-SEP-2008 15:14:49.43
+          Body SysBody 08-SEP-2008 15:15:14.92
+            Attr PgmName = "SendOp"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
         ! @Summary Process that handles the card. Plc(1), rt_io_comm(2) or application process(4).
         ! Process that handles the card.
         ! 
@@ -825,7 +898,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         ! 4: The card is handled by an application program.
         !*/
         Object Process $Attribute 3 08-FEB-2008 11:19:22.97
-          Body SysBody 30-MAY-2008 15:07:32.84
+          Body SysBody 03-SEP-2008 16:02:36.20
             Attr PgmName = "Process"
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
@@ -836,7 +909,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         ! The module is handled with the scantime of the thread.
         !*/
         Object ThreadObject $Attribute 4 08-FEB-2008 11:19:22.97
-          Body SysBody 08-FEB-2008 11:31:53.32
+          Body SysBody 03-SEP-2008 16:03:01.41
             Attr PgmName = "ThreadObject"
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
@@ -860,7 +933,101 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
       EndObject
       Object Template Modbus_Module 2148761600 01-JAN-1970 01:00:00.00
-        Body RtBody 29-MAY-2008 08:28:24.16
+        Body RtBody 08-SEP-2008 15:15:31.38
+          Attr Continous = 1
+          Attr Process = 1
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Master object for Modbus TCP I/O.
+    !  Master object for Modbus TCP I/O.
+    ! 	
+    !  @classlink Modbus_Module otherio_modbus_module.html
+    !  @classlink Modbus_TPC_Slave otherio_modbus_tcp_slave.html
+    !*/
+    Object Modbus_Master $ClassDef 5 01-SEP-2008 10:52:09.59
+      Body SysBody 03-SEP-2008 16:03:48.36
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 4176
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-SEP-2008 10:54:17.57
+        Body SysBody 01-SEP-2008 10:54:17.57
+          Attr StructName = "Modbus_Master"
+          Attr NextAix = "_X5"
+        EndBody
+        !/**
+        ! Description of master.
+        !*/
+        Object Description $Attribute 1 03-SEP-2008 13:44:26.99
+          Body SysBody 03-SEP-2008 13:44:40.72
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! If TRUE the master is disabled.
+        !*/
+        Object Disable $Attribute 2 03-SEP-2008 13:45:29.86
+          Body SysBody 03-SEP-2008 13:45:42.30
+            Attr PgmName = "Disable"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Process that handles the card. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the master.
+        ! 
+        ! 1: The master is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The master is read by the rt_io_comm process.
+        ! 4: The master is handled by an application program.
+        !*/
+        Object Process $Attribute 3 03-SEP-2008 16:02:28.05
+          Body SysBody 03-SEP-2008 16:02:46.70
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Plc thread that handles the master.
+        ! The PlcThread object of the plc thread that handles the master.
+        ! The master is read with the scantime of the thread.
+        !*/
+        Object ThreadObject $Attribute 4 03-SEP-2008 16:03:14.03
+          Body SysBody 03-SEP-2008 16:03:06.72
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 55 01-SEP-2008 10:54:41.17
+        Object IoAgentInit $Method 56 01-SEP-2008 10:56:09.44
+          Body SysBody 01-SEP-2008 13:26:24.01
+            Attr MethodName = "Modbus_Master-IoAgentInit"
+          EndBody
+        EndObject
+        Object IoAgentRead $Method 57 01-SEP-2008 10:56:34.52
+          Body SysBody 01-SEP-2008 13:26:37.57
+            Attr MethodName = "Modbus_Master-IoAgentRead"
+          EndBody
+        EndObject
+        Object IoAgentWrite $Method 58 01-SEP-2008 10:56:49.10
+          Body SysBody 01-SEP-2008 13:26:48.07
+            Attr MethodName = "Modbus_Master-IoAgentWrite"
+          EndBody
+        EndObject
+        Object IoAgentClose $Method 59 01-SEP-2008 10:57:05.87
+          Body SysBody 01-SEP-2008 13:26:53.19
+            Attr MethodName = "Modbus_Master-IoAgentClose"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Modbus_Master 2149023744 01-JAN-1970 01:00:00.00
+        Body RtBody 05-SEP-2008 11:07:48.32
           Attr Process = 1
         EndBody
       EndObject
