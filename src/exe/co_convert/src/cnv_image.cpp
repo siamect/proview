@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_image.cpp,v 1.5 2007-01-17 13:44:51 claes Exp $
+ * Proview   $Id: cnv_image.cpp,v 1.6 2008-10-16 11:06:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -163,6 +163,8 @@ void cnv_image_pixel_iter( cnv_tImImage image,
     rgb = rgb_row;
     for ( int i = 0; i < rgb_width; i++) {
       if ( n_channels >= 4 && *(rgb+3))
+	(pixel_cb) ( userdata, fp, rgb);
+      else if ( n_channels == 3)
 	(pixel_cb) ( userdata, fp, rgb);
       rgb += n_channels;
     }
