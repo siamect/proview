@@ -100,3 +100,5 @@
 080905 cs  qcom      Argument -n added to rt_qmon for start without the presence of rt_neth.
 080905 cs  pkg       New package pwrsev for Storage Environment.
 080915 cs  trend     Zero Multiple attribute in DsTrend object caused termination of rt_trend.
+081016 rk  rt        Changed plc-handling so cycletimes faster tha 1 ms is possible.
+081017 rk  rt        Added a few new enumeration types to pwrb (YesNo, TrueFalse).
