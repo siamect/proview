@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.cpp,v 1.17 2008-09-18 14:54:14 claes Exp $
+ * Proview   $Id: ge_gtk.cpp,v 1.18 2008-10-16 08:53:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1569,7 +1569,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   GtkWidget *edit_delete = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE, accel_g);
   g_signal_connect(edit_delete, "activate", G_CALLBACK(activate_delete), this);
   gtk_widget_add_accelerator( edit_delete, "activate", accel_g,
-			      'd', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+			      GDK_Delete, GdkModifierType(0), GTK_ACCEL_VISIBLE);
 
   GtkWidget *edit_undo = gtk_image_menu_item_new_from_stock(GTK_STOCK_UNDO, accel_g);
   g_signal_connect(edit_undo, "activate", G_CALLBACK(activate_undo), this);
