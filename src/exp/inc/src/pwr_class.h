@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr_class.h,v 1.25 2008-06-24 06:58:49 claes Exp $
+ * Proview   $Id: pwr_class.h,v 1.26 2008-10-16 11:11:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -88,6 +88,7 @@ typedef struct pwr_s_SharedVolume	pwr_sSharedVolume;
 typedef struct pwr_s_DynamicVolume	pwr_sDynamicVolume;
 typedef struct pwr_s_SystemVolume	pwr_sSystemVolume;
 typedef struct pwr_s_ClassVolume	pwr_sClassVolume;
+typedef struct pwr_s_ClassVolume        pwr_sDetachedClassVolume;
 typedef struct pwr_s_WorkBenchVolume	pwr_sWorkBenchVolume;
 typedef struct pwr_s_DirectoryVolume	pwr_sDirectoryVolume;
 typedef struct pwr_s_VolatileVolume	pwr_sVolatileVolume;
@@ -292,6 +293,7 @@ typedef enum {
   pwr_eCix_Hier			=  66,
   pwr_eCix_ClassLost   		=  67,
   pwr_eCix_Security  		=  68,
+  pwr_eCix_DetachedClassVolume 	=  69,
   pwr_eCix_
 } pwr_eCix;
     
@@ -364,6 +366,7 @@ typedef enum {
   pwr_eClass_Hier		= pwr_ClassId(pwr_eCix_Hier),
   pwr_eClass_ClassLost		= pwr_ClassId(pwr_eCix_ClassLost),
   pwr_eClass_Security		= pwr_ClassId(pwr_eCix_Security),
+  pwr_eClass_DetachedClassVolume = pwr_ClassId(pwr_eCix_DetachedClassVolume),
   pwr_eClass_			
 } pwr_eClass;
     
@@ -1185,6 +1188,7 @@ struct pwr_s_ClassVolume {
   pwr_tUInt32		RtBodySize;
   pwr_tObjectIx		NextCix;			/* Next free class index.  */
   pwr_tObjectIx		NextTix[pwr_cMaxTyg + 1];	/* Next free type index.  */
+  pwr_tUInt32		DvVersion;
 };
 
 struct pwr_s_WorkBenchVolume {
