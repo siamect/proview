@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_mvol.c,v 1.21 2008-09-05 14:06:05 claes Exp $
+ * Proview   $Id: rt_mvol.c,v 1.22 2008-10-16 11:13:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -770,14 +770,14 @@ mvol_LinkObject (
     errh_Bugcheck(*sts, "add class");
   }
   
-  if (vp->g.cid == pwr_eClass_ClassVolume && strcmp(op->g.f.name.norm, "TEMPLATE") == 0)
+  if ( cdh_isClassVolumeClass( vp->g.cid) && strcmp(op->g.f.name.norm, "TEMPLATE") == 0)
     return cp; /* We don't want the 'Template' object.  */
 
   pwr_Assert(!op->u.n.flags.b.inCidList);
   pool_QinsertPred(sts, gdbroot->pool, &op->u.n.cid_ll, &cp->cid_lh);
   op->u.n.flags.b.inCidList = 1;
 
-  if (vp->g.cid == pwr_eClass_ClassVolume) {
+  if ( cdh_isClassVolumeClass( vp->g.cid)) {
     switch (cid) {
     case pwr_eClass_ClassDef:
       /* Link the class definition object to the class.  */

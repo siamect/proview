@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_cdh.h,v 1.28 2008-05-29 15:02:24 claes Exp $
+ * Proview   $Id: co_cdh.h,v 1.29 2008-10-16 11:11:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -120,6 +120,8 @@ typedef enum {
 #define cdh_cSystemClassVolMin  (0 + ((pwr_tVolumeId)0 << 24) + (0 << 16) + (0 << 8) + 1)
 //! Largest value of volume identity for system classvolumes
 #define cdh_cSystemClassVolMax  (0 + ((pwr_tVolumeId)0 << 24) + (0 << 16) + (1 << 8) + 254)
+
+#define cdh_isClassVolumeClass( Cid) ((Cid) == pwr_eClass_ClassVolume || (Cid) == pwr_eClass_DetachedClassVolume)
 
 //! Internal representatin of object identity.
 typedef struct {

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdb.c,v 1.8 2006-03-20 06:57:35 claes Exp $
+ * Proview   $Id: rt_gdb.c,v 1.9 2008-10-16 11:12:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1035,7 +1035,7 @@ gdb_LoadVolume (
   vp->l.flags.b.system		= load.b.native && cid == pwr_eClass_SystemVolume;
   vp->l.flags.b.dynamic		= vp->l.flags.b.system | (load.b.native && cid == pwr_eClass_DynamicVolume);
   vp->l.flags.b.shared		= cid == pwr_eClass_DynamicVolume || cid == pwr_eClass_SharedVolume;
-  vp->l.flags.b.classvol	= cid == pwr_eClass_ClassVolume;
+  vp->l.flags.b.classvol	= cdh_isClassVolumeClass(cid);
   vp->l.flags.b.netCached	= load.b.netCached;
   vp->l.flags.b.fileCached	= load.b.fileCached;
   vp->l.flags.b.remote		= load.b.netCached | load.b.fileCached;
