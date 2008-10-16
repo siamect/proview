@@ -229,7 +229,7 @@ avslutar man med MB3.
 En cirkel ritar man genom att välja cirkel i verktygspanelen och dra med MB1 i arbetsarean.
 Om man vill rita ett cirkel-segment ritar man först en cirkel, och öppnar därefter 
 objekt-editorn för cirkeln (genom att dubbelklicka med MB1 på den). Här finns attributen 
-angel1 och angel2, där Angel1 anger start-vinkeln för segmentet och angel2 storleken på 
+angle1 och angle2, där angle1 anger start-vinkeln för segmentet och angle2 storleken på 
 segmentet.
 <image> geref_fig3.gif
 
@@ -1221,7 +1221,7 @@ Ellips
 <image> geref_fig8.png
 
 En ellips skapas genom att välja ellips i verktygs-panelen och dra med MB1 i arbetsarean. 
-Mha angel1 och angel2 kan segment eller pajbitar av ellipsen ritas. Om man först aktiverar 
+Mha angle1 och angle2 kan segment eller pajbitar av ellipsen ritas. Om man först aktiverar 
 Functions/ScaleEqual ritas en cirkel.
 
 <h2>Egenskaper
@@ -1234,8 +1234,8 @@ Functions/ScaleEqual ritas en cirkel.
 
 <h2>Attribut
 <b>Attribut     <t>Beskrivning
-Angel1       <t>Vinkel från x-axeln i grader till början av segmentet.
-Angel2       <t>Vilkel i grader som anger storleken på segmentet.
+Angle1       <t>Vinkel från x-axeln i grader till början av segmentet.
+Angle2       <t>Vilkel i grader som anger storleken på segmentet.
 ShadowWidth  <t>Bredden av 3D-skuggan i % av längd eller bredd (den minsta).
 ShadowContrast <t>Kontrast på 3D-skuggan.
 Relief       <t>Up ger skugga på undersidan och Down ger skugga på ovansidan
@@ -3342,7 +3342,7 @@ Exempel på en halvcirkel
 <c>set nofill
 <c>set linewidth 2
 <c>set bordercolor 0
-<c>create arc /x1=1 /y1=1 /x2=3 /y2=2 /angel1=0 /angel2 =180
+<c>create arc /x1=1 /y1=1 /x2=3 /y2=2 /angle1=0 /angle2 =180
 
 <h2>Linje
 Exempel på en linje
@@ -3559,15 +3559,15 @@ Skapa en cikel eller oval, eller ett segment av en cirkel eller oval.
 
 <b>Syntax
 
-<c>ge> create arc /x1= /y1= /x2= /y2= /angel1= /angel2=
+<c>ge> create arc /x1= /y1= /x2= /y2= /angle1= /angle2=
 
 /x1 <t>x-koordinat för övre vänstra hörnet för den rektangel som omsluter ovalen.
 /y1 <t>y-koordinat för övre vänstra hörnet för den rektangel som omsluter ovalen.
 /x2 <t>x-koordinat för nedre högra hörnet för det rektangel som omsluter ovalen.
 /y2 <t>y-koordinat för nedre högra hörnet för den rektangel som omsluter ovalen.
-/angel1 <t>Vinkel som beskriver var ett cirkel-segment startar. Anges i grader. 
+/angle1 <t>Vinkel som beskriver var ett cirkel-segment startar. Anges i grader. 
     <t>Default-värde 0.
-/angel2 <t>Vinkel i grader som anger storleken på ett cirkel-segment. Default-värde 
+/angle2 <t>Vinkel i grader som anger storleken på ett cirkel-segment. Default-värde 
     <t>360 grader.
 </topic>
 
@@ -4057,9 +4057,9 @@ Roterar senast skapade objekt runt objektets mittpunkt.
 
 <b>Syntax
 
-<c>ge> rotate currentobject /angel=
+<c>ge> rotate currentobject /angle=
 
-/angel <t>Vinkel i grader som objektet ska roteras.
+/angle <t>Vinkel i grader som objektet ska roteras.
 </topic>
 
 <topic>gecmd_scale
@@ -4326,7 +4326,7 @@ Exempel
 <c>  ! Rita en halvcirkel
 <c>  set nofill
 <c>  set linewidth 2
-<c>  create arc /x1=1/y1=1/x2=3/y2=2/angel1=0 /angel2=180
+<c>  create arc /x1=1/y1=1/x2=3/y2=2/angle1=0 /angle2=180
   
 <c>  ! Rita en polyline
 <c>  set nofill

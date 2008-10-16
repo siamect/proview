@@ -222,7 +222,7 @@ with MB3.
 A circle is drawn by selecting circle in the tool panel and dragging with MB1 in the working
 area. If you wan to draw a segment of a circle, you first draw a circle, and then open the
 object editor for the circle (by doubleclicking MB1 on it). Here you find the attributes
-angel1 and angel2, where angel1 is the starting angel for the segment and angel2 the size of
+angle1 and angle2, where angle1 is the starting angle for the segment and angle2 the size of
 the segment.
 <image> geref_fig3.gif
 
@@ -1222,7 +1222,7 @@ Ellipse
 <image> geref_fig8.png
 
 An ellipse is created by selecting circle in the tool panel and drag with MB1 in the working
-area. With angel1 and angel2 a segment of the circle is drawn. If you first activate
+area. With angle1 and angle2 a segment of the circle is drawn. If you first activate
 Functions/ScaleEqual a circle is drawn.
 
 <h2>Properties
@@ -1235,8 +1235,8 @@ Functions/ScaleEqual a circle is drawn.
 
 <h2>Attributes
 <b>Attribute      <t>Description
-Angel1       <t>Angel from the x-axis in degrees to the start of the segment.
-Angel2       <t>Angel in degrees that states the size of the segment.
+Angle1       <t>Angle from the x-axis in degrees to the start of the segment.
+Angle2       <t>Angle in degrees that states the size of the segment.
 ShadowWidth   <t>The with of the 3D-shadow in % of width or length (the smallest).
 ShadowContrast <t>Contrast of the 3D-shadow.
 Relief        <t>Up gives a shadow on the lower side, and Down gives a shadow on the upper side.
@@ -2808,7 +2808,7 @@ Objects are selected in the following ways
   If the object already is selected, the select list is cleared.
 - Click on the object with Shift MB1. The object is added to the select list. I the object
   already is selected it is removed from the select list.
-- Drag with MB1. A rectangle is drawn and objects positioned totally inside the rectangel 
+- Drag with MB1. A rectangle is drawn and objects positioned totally inside the rectangle 
   becomes selected. Previously selected objects are remove from the select list. Note that as
   you also move objects with drag MB1, you should not hit any object when starting to drag.
   If there is an object covering the background, you can use Shift MB1 instead (se below).
@@ -2845,8 +2845,8 @@ in x and y direction.
 <h1>Rotate
 Selected objects are rotated 90 degrees clockwise when the rotate function in the tool panel
 is activated. The 90 degrees rotation works för all objects except texts. If you want to
-totate with another angel, this is done from 'Edit/Rotate' in the menu. Here you can enter an
-arbitrary angel. Note that only lines, polylines and circles can handle arbitrary rotations.
+totate with another angle, this is done from 'Edit/Rotate' in the menu. Here you can enter an
+arbitrary angle. Note that only lines, polylines and circles can handle arbitrary rotations.
 If you want subgraphs to be able to handle arbitrary rotation, you have to build them with
 lines and polylines.
 
@@ -3359,7 +3359,7 @@ An example of a half circle
 <c>set nofill
 <c>set linewidth 2
 <c>set bordercolor 0
-<c>create arc /x1=1 /y1=1 /x2=3 /y2=2 /angel1=0 /angel2 =180
+<c>create arc /x1=1 /y1=1 /x2=3 /y2=2 /angle1=0 /angle2 =180
 
 <h2>Line
 Line example
@@ -3561,7 +3561,7 @@ Create a rectangle.
 
 <b>Syntax
 
-<c>ge> create rectangel /x1= /y1= /width= /height=
+<c>ge> create rectangle /x1= /y1= /width= /height=
 
 /x1 <t>x-coordinate of upper left corner
 /y1 <t>y-coordinate of upper left corner
@@ -3576,15 +3576,15 @@ Create a circle or an ellipse, or a segment of a circle or ellipse.
 
 <b>Syntax
 
-<c>ge> create arc /x1= /y1= /x2= /y2= /angel1= /angel2=
+<c>ge> create arc /x1= /y1= /x2= /y2= /angle1= /angle2=
 
 /x1 <t>x-coordinate of upper left corner of a rectangle the surrounds the ellipse.
 /y1 <t>y-coordinate of upper left corner of a rectangle the surrounds the ellipse.
 /x2 <t>x-coordinate of lower right corner of a rectangle the surrounds the ellipse.
 /y2 <t>y-coordinate of lower right corner of a rectangle the surrounds the ellipse.
-/angel1 <t>Angel that states the start of a circle segment in degrees.
+/angle1 <t>Angle that states the start of a circle segment in degrees.
     <t>Default value 0.
-/angel2 <t>Angel that states the size of a circle segment in degrees.
+/angle2 <t>Angle that states the size of a circle segment in degrees.
     <t>Default value 360 degrees.
 </topic>
 
@@ -4076,9 +4076,9 @@ Rotates the current object around the center of the object.
 
 <b>Syntax
 
-<c>ge> rotate currentobject /angel=
+<c>ge> rotate currentobject /angle=
 
-/angel <t>Angel in degrees that the object is rotated.
+/angle <t>Angle in degrees that the object is rotated.
 </topic>
 
 <topic>gecmd_scale
@@ -4344,7 +4344,7 @@ Example
 <c>  ! Draw a half circle
 <c>  set nofill
 <c>  set linewidth 2
-<c>  create arc /x1=1/y1=1/x2=3/y2=2/angel1=0 /angel2=180
+<c>  create arc /x1=1/y1=1/x2=3/y2=2/angle1=0 /angle2=180
   
 <c>  ! Draw a polyline
 <c>  set nofill
