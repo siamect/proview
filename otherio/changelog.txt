@@ -2,3 +2,5 @@
 071202 cs  -         New classvolume and module for I/O systems added.
 071220 cs  usbio     Methods and objects for MotionControl USB I/O added.
 080229 rk  modbus    New I/O-system for Modbus TCP implemented.
+081016 rk  modbus    Added class Modbus_Master.
+081016 rk  modbus    Added moore functionality.
