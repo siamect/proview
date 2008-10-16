@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_tops.cpp,v 1.6 2008-10-16 11:06:50 claes Exp $
+ * Proview   $Id: cnv_tops.cpp,v 1.7 2008-10-16 13:08:52 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -43,6 +43,8 @@ extern "C" {
 #define ps_cHead "%!PS-Adobe-2.0\n\
 %%Creator: Proview co_convert\n\
 %%EndComments\n\
+\n\
+<< /Duplex true >> setpagedevice\n\
 \n\
 /Helvetica findfont\n\
 dup length dict begin\n\
