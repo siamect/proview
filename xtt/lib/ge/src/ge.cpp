@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.cpp,v 1.31 2008-05-13 13:59:02 claes Exp $
+ * Proview   $Id: ge.cpp,v 1.32 2008-10-16 08:54:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -711,9 +711,19 @@ void Ge::activate_preview_stop()
   set_title();
 }
 
+void Ge::delete_yes_cb( Ge *gectx)
+{
+  gectx->graph->delete_select();
+}
+
+void Ge::delete_no_cb( Ge *gectx)
+{
+}
+
 void Ge::activate_delete()
 {
-  graph->delete_select();
+  open_yesnodia( "Do you want to delete the selected objects", "Delete", 
+		 delete_yes_cb, delete_no_cb);
 }
 
 void Ge::activate_cut()

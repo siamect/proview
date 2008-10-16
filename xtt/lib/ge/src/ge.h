@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.h,v 1.12 2008-05-13 13:59:02 claes Exp $
+ * Proview   $Id: ge.h,v 1.13 2008-10-16 08:55:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -261,6 +261,8 @@ class Ge {
   static void save_graph_and_close( Ge *gectx, char *name);
   static void ungroup_yes_cb( Ge *gectx);
   static void ungroup_no_cb( Ge *gectx);
+  static void delete_yes_cb( Ge *gectx);
+  static void delete_no_cb( Ge *gectx);
   static void recover_dynprop_yes_cb( Ge *gectx);
   static void recover_dynprop_no_cb( Ge *gectx);
   static void exit_save_cb( Ge *gectx);
