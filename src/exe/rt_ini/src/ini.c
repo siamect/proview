@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ini.c,v 1.34 2008-09-18 15:04:41 claes Exp $
+ * Proview   $Id: ini.c,v 1.35 2008-10-16 11:10:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -121,7 +121,7 @@ static pwr_tBoolean	loadSectRbody (pwr_tStatus*, ini_sContext*, ivol_sVolume*);
 static pwr_tBoolean     loadSectScObject (pwr_tStatus*, ini_sContext*, ivol_sVolume*);
 static pwr_tBoolean	loadSectVolume (pwr_tStatus*, ini_sContext*, ivol_sVolume*);
 static pwr_tBoolean	readSectFile (pwr_tStatus*, ini_sContext*, ivol_sVolume*);
-static pwr_tBoolean	readSectVolRef (pwr_tStatus*, ini_sContext*);
+static pwr_tBoolean	readSectVolRef (pwr_tStatus*, ini_sContext*, ivol_sVolume*);
 static pwr_tBoolean	readSectVolume (pwr_tStatus*, ini_sContext*, ivol_sVolume*);
 static gdb_sObject*	reloadObject (pwr_tStatus*, ini_sContext*, ivol_sVolume*, dbs_sObject*);
 static pwr_tBoolean	reloadSectObject (pwr_tStatus*, ini_sContext*, ivol_sVolume*);
@@ -303,7 +303,7 @@ readSectFile (
       time_AtoAscii(&vp->time, time_eFormat_DateAndTime, timbuf1, sizeof(timbuf1));
       time_AtoAscii(&cp->dbs.file.time, time_eFormat_DateAndTime, timbuf2, sizeof(timbuf2));
 
-      errh_LogWarning(&cp->log, "Version missmatch for volume: %s, %s != %s\n",
+      errh_LogWarning(&cp->log, "Version missmatch for volume: %s, %s != %s",
 		      vp->name, timbuf1, timbuf2);
       cp->warnings++;
     }
@@ -322,7 +322,8 @@ readSectFile (
 static pwr_tBoolean
 readSectVolRef (
   pwr_tStatus		*status,
-  ini_sContext		*cp
+  ini_sContext		*cp,
+  ivol_sVolume		*dvp
 )
 {
   dbs_sVolRef		volRef;
@@ -362,7 +363,7 @@ readSectVolRef (
       lst_InsertPred(NULL, &cp->vol_lh, &vp->ll, vp);
       vp->time = volRef.time;
       strcpy(vp->name, volRef.name);
-      if (volRef.cid != pwr_eClass_ClassVolume)
+      if ( !cdh_isClassVolumeClass( volRef.cid))
         vp->isVolRef = 1;
       vp->volRef = volRef;
       vp->oid_t = tree_CreateTable(sts, sizeof(pwr_tObjectIx),
@@ -382,16 +383,29 @@ readSectVolRef (
 #endif
     } else if ( vp->time.tv_sec != 0) {
       /* Do some checks.  */
-      if (time_Acomp(&vp->time, &volRef.time) != 0) {
-        char timbuf1[32];
-        char timbuf2[32];
-
-        time_AtoAscii(&vp->time, time_eFormat_DateAndTime, timbuf1, sizeof(timbuf1));
-        time_AtoAscii(&volRef.time, time_eFormat_DateAndTime, timbuf2, sizeof(timbuf2));
-
-	errh_LogWarning(&cp->log, "Version missmatch for volume: %s, %s != %s\n",
-                        vp->name, timbuf1, timbuf2);
-	cp->warnings++;
+      if ( dvp->volume.cid == pwr_eClass_DetachedClassVolume) {
+	/* Check dvVersion */
+	if ( vp->volume.dvVersion != volRef.time.tv_sec) {
+	  errh_LogWarning(&cp->log, "Version missmatch for volume %s: %s, %u (present), %d (detached)",
+			  dvp->name, vp->name, vp->volume.dvVersion, volRef.time.tv_sec);
+	  cp->warnings++;
+	}
+	else 
+	  errh_LogInfo(&cp->log, "Detached volref for %s: %s, %u (present), %d (detached)",
+		     dvp->name, vp->name, vp->volume.dvVersion, volRef.time.tv_sec);
+      }
+      else {
+	if (time_Acomp(&vp->time, &volRef.time) != 0) {
+	  char timbuf1[32];
+	  char timbuf2[32];
+	  
+	  time_AtoAscii(&vp->time, time_eFormat_DateAndTime, timbuf1, sizeof(timbuf1));
+	  time_AtoAscii(&volRef.time, time_eFormat_DateAndTime, timbuf2, sizeof(timbuf2));
+	  
+	  errh_LogWarning(&cp->log, "Version missmatch for volume: %s, %s != %s",
+			  vp->name, timbuf1, timbuf2);
+	  cp->warnings++;
+	}
       }
     }
   }
@@ -1308,7 +1322,7 @@ ini_CheckVolumeFile (
       break;
     case dbs_eSect_volref:
       if (checkSect(sts, cp, sects, dbs_cVersionVolRef))
-	readSectVolRef(sts, cp);
+	readSectVolRef(sts, cp, vp);
       break;
     case dbs_eSect_oid:
       checkSect(sts, cp, sects, dbs_cVersionOid);
