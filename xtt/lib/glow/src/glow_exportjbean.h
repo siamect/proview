@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_exportjbean.h,v 1.11 2007-09-19 15:07:11 claes Exp $
+ * Proview   $Id: glow_exportjbean.h,v 1.12 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -60,7 +60,7 @@ class GlowExportJBean {
 	int drawtype_incr, glow_eExportPass pass, int *shape_cnt, 
 	int node_cnt, ofstream& fp);
     void arc( double x0, double y0, double width, double height,
-	double angel1, double angel2, int fill, int border,
+	double angle1, double angle2, int fill, int border,
 	glow_eDrawType fill_drawtype, glow_eDrawType border_drawtype,
 	int line_width, double shadow_width, int shadow, 
 	int drawtype_incr, glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp);

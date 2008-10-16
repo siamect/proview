@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_pscript.cpp,v 1.2 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_pscript.cpp,v 1.3 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -169,7 +169,7 @@ int GlowPscript::filled_rect( double x, double y, double width, double height, g
   return 1;
 }
 
-int GlowPscript::arc( double x, double y, double width, double height, int angel1, int angel2,
+int GlowPscript::arc( double x, double y, double width, double height, int angle1, int angle2,
 		glow_eDrawType type, int idx)
 {
   double r = 0.5*width;
@@ -188,20 +188,20 @@ int GlowPscript::arc( double x, double y, double width, double height, int angel
   setlinewidth( idx);
 
   fprintf( file, "newpath\n");
-  fprintf( file, "%f %f moveto\n", x+0.5*width+r*cos(pi*angel1/180)-offset_x,
-		offset_y-(y+0.5*height-0.5*height*sin( pi*angel1/180)));
+  fprintf( file, "%f %f moveto\n", x+0.5*width+r*cos(pi*angle1/180)-offset_x,
+		offset_y-(y+0.5*height-0.5*height*sin( pi*angle1/180)));
   if ( fabs( width - height) > 0.05 * width)
     /* Eclipse, draw a line instead */
     fprintf( file, "%f %f lineto\n", 
-		x+0.5*width+r*cos(pi*(angel1+angel2)/180)-offset_x,
-		offset_y-(y+0.5*height-0.5*height*sin( pi*(angel1+angel2)/180)));
+		x+0.5*width+r*cos(pi*(angle1+angle2)/180)-offset_x,
+		offset_y-(y+0.5*height-0.5*height*sin( pi*(angle1+angle2)/180)));
   else
     fprintf( file, "%f %f %f %d %d arc\n", x+0.5*width-offset_x, 
 		offset_y-(y+0.5*height),
-		r, angel1, angel1+angel2);
+		r, angle1, angle1+angle2);
   fprintf( file, "%f %f moveto\n", 
-		x+0.5*width+r*cos(pi*(angel1+angel2)/180)-offset_x,
-		offset_y-(y+0.5*height-r*sin( pi*(angel1+angel2)/180)));
+		x+0.5*width+r*cos(pi*(angle1+angle2)/180)-offset_x,
+		offset_y-(y+0.5*height-r*sin( pi*(angle1+angle2)/180)));
   fprintf( file, "closepath\n");
   fprintf( file, "stroke\n");
 

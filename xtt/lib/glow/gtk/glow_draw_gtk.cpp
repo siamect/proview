@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_gtk.cpp,v 1.12 2008-04-07 14:56:21 claes Exp $
+ * Proview   $Id: glow_draw_gtk.cpp,v 1.13 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1239,7 +1239,7 @@ int GlowDrawGtk::arrow_erase( GlowWind *wind, int x1, int y1, int x2, int y2,
 }
 
 int GlowDrawGtk::arc( GlowWind *wind, int x, int y, int width, int height, 
-		       int angel1, int angel2,
+		       int angle1, int angle2,
 		       glow_eDrawType gc_type, int idx, int highlight)
 {
   if ( ctx->nodraw) return 1;
@@ -1254,10 +1254,10 @@ int GlowDrawGtk::arc( GlowWind *wind, int x, int y, int width, int height,
 
   // if ( width < 35 && height < 35) {width++; height++;} // This looks good in Reflexion X ...
 
-  if ( angel1 >= 360)
-    angel1 = angel1 - angel1 / 360 * 360;
-  else if ( angel1 < 0)
-    angel1 = angel1 + ( -angel1 / 360 + 1) * 360;
+  if ( angle1 >= 360)
+    angle1 = angle1 - angle1 / 360 * 360;
+  else if ( angle1 < 0)
+    angle1 = angle1 + ( -angle1 / 360 + 1) * 360;
 
   if ( w->clip_on)
     set_clip( w, get_gc( this, gc_type+highlight, idx));
@@ -1265,12 +1265,12 @@ int GlowDrawGtk::arc( GlowWind *wind, int x, int y, int width, int height,
   if ( !w->draw_buffer_only)
     gdk_draw_arc( w->window,
 		  get_gc( this, gc_type+highlight, idx), 0,
-		  x, y, width, height, angel1*64, angel2*64);
+		  x, y, width, height, angle1*64, angle2*64);
 
   if ( w->double_buffer_on)
     gdk_draw_arc( w->buffer,
 		  get_gc( this, gc_type+highlight, idx), 0,
-		  x, y, width, height, angel1*64, angel2*64);
+		  x, y, width, height, angle1*64, angle2*64);
 
   if ( w->clip_on)
     reset_clip( w, get_gc( this, gc_type+highlight, idx));
@@ -1279,7 +1279,7 @@ int GlowDrawGtk::arc( GlowWind *wind, int x, int y, int width, int height,
 }
 
 int GlowDrawGtk::fill_arc( GlowWind *wind, int x, int y, int width, int height, 
-	int angel1, int angel2, glow_eDrawType gc_type, int highlight)
+	int angle1, int angle2, glow_eDrawType gc_type, int highlight)
 {
   if ( ctx->nodraw) return 1;
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
@@ -1287,10 +1287,10 @@ int GlowDrawGtk::fill_arc( GlowWind *wind, int x, int y, int width, int height,
   if ( gc_type == glow_eDrawType_LineGray && highlight)
     gc_type = glow_eDrawType_LineRed;
 
-  if ( angel1 >= 360)
-    angel1 = angel1 - angel1 / 360 * 360;
-  else if ( angel1 < 0)
-    angel1 = angel1 + ( -angel1 / 360 + 1) * 360;
+  if ( angle1 >= 360)
+    angle1 = angle1 - angle1 / 360 * 360;
+  else if ( angle1 < 0)
+    angle1 = angle1 + ( -angle1 / 360 + 1) * 360;
 
   if ( w->clip_on)
     set_clip( w, get_gc( this, gc_type+highlight, 0));
@@ -1298,11 +1298,11 @@ int GlowDrawGtk::fill_arc( GlowWind *wind, int x, int y, int width, int height,
   if ( !w->draw_buffer_only)
     gdk_draw_arc( w->window,
 		  get_gc( this, gc_type+highlight, 0), 1, 
-		  x, y, width, height, angel1*64, angel2*64);
+		  x, y, width, height, angle1*64, angle2*64);
   if ( w->double_buffer_on)
     gdk_draw_arc( w->buffer,
 		  get_gc( this, gc_type+highlight, 0), 1, 
-		  x, y, width, height, angel1*64, angel2*64);
+		  x, y, width, height, angle1*64, angle2*64);
 
   if ( w->clip_on)
     reset_clip( w, get_gc( this, gc_type+highlight, 0));
@@ -1311,7 +1311,7 @@ int GlowDrawGtk::fill_arc( GlowWind *wind, int x, int y, int width, int height,
 }
 
 int GlowDrawGtk::arc_erase( GlowWind *wind, int x, int y, int width, int height,
-	int angel1, int angel2,
+	int angle1, int angle2,
 	int idx)
 {
   if ( ctx->nodraw) return 1;
@@ -1319,10 +1319,10 @@ int GlowDrawGtk::arc_erase( GlowWind *wind, int x, int y, int width, int height,
 
   // if ( width < 35 && height < 35) {width++; height++;} // This looks good in Reflexion X ...
 
-  if ( angel1 >= 360)
-    angel1 = angel1 - angel1 / 360 * 360;
-  else if ( angel1 < 0)
-    angel1 = angel1 + ( -angel1 / 360 + 1) * 360;
+  if ( angle1 >= 360)
+    angle1 = angle1 - angle1 / 360 * 360;
+  else if ( angle1 < 0)
+    angle1 = angle1 + ( -angle1 / 360 + 1) * 360;
 
   if ( w->clip_on)
     set_clip( w, get_gc( this, glow_eDrawType_LineErase, idx));
@@ -1330,11 +1330,11 @@ int GlowDrawGtk::arc_erase( GlowWind *wind, int x, int y, int width, int height,
   if ( !w->draw_buffer_only)
     gdk_draw_arc( w->window,
 		  get_gc( this, glow_eDrawType_LineErase, idx), 0,
-		  x, y, width, height, angel1*64, angel2*64);
+		  x, y, width, height, angle1*64, angle2*64);
   if ( w->double_buffer_on)
     gdk_draw_arc( w->buffer,
 		  get_gc( this, glow_eDrawType_LineErase, idx), 0,
-		  x, y, width, height, angel1*64, angel2*64);
+		  x, y, width, height, angle1*64, angle2*64);
 
   if ( w->clip_on)
     reset_clip( w, get_gc( this, glow_eDrawType_LineErase, idx));
@@ -2538,7 +2538,7 @@ int GlowDrawGtk::print( char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.12 2008-04-07 14:56:21 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.13 2008-10-16 08:58:11 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else

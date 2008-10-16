@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.53 2008-06-26 13:23:59 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.54 2008-10-16 08:58:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -209,11 +209,11 @@ void Graph::print( char *filename)
 //
 //  Rotate
 //
-void Graph::rotate( double angel)
+void Graph::rotate( double angle)
 {
   journal_store( journal_eAction_AntePropertiesSelect, 0);
 
-  grow_RotateSelectedObjects( grow->ctx, angel, glow_eRotationPoint_Center);
+  grow_RotateSelectedObjects( grow->ctx, angle, glow_eRotationPoint_Center);
 
   journal_store( journal_eAction_PostPropertiesSelect, 0);
 }

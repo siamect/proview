@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_grownode.h,v 1.11 2007-09-19 15:07:11 claes Exp $
+ * Proview   $Id: glow_grownode.h,v 1.12 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -545,12 +545,12 @@ class GrowNode : public GlowNode {
 
   //! Rotate the object. The rotation is made from the last stored transform.
   /*!
-    \param angel	Rotation angel in degrees.
+    \param angle	Rotation angle in degrees.
     \param x0		x coordinate of rotation point.
     \param y0		y coordinate of rotation point.
     \param type		Type of rotation point.
   */
-  void set_rotation( double angel, 
+  void set_rotation( double angle, 
 		double x0, double y0, glow_eRotationPoint type);
 
   //! Redraw the area inside the objects border.

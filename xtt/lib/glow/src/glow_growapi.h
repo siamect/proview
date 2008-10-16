@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.h,v 1.32 2008-07-17 11:25:04 claes Exp $
+ * Proview   $Id: glow_growapi.h,v 1.33 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -466,7 +466,7 @@ extern "C" {
 	glow_eDrawType draw_type, int line_width, int fix_line_width, 
 	grow_tObject *line);
   void grow_CreateArc( grow_tCtx ctx, double x1, double y1, 
-	double x2, double y2, int angel1, int angel2,
+	double x2, double y2, int angle1, int angle2,
 	glow_eDrawType draw_type, int line_width, grow_tObject *arc);
   void grow_CreateText( grow_tCtx ctx, char *text_str, double x, double y, 
 	glow_eDrawType draw_type, int text_size, grow_tObject *text);
@@ -486,7 +486,7 @@ extern "C" {
 	int closed, void *user_data);
   void grow_AddArc( grow_tNodeClass nc, char *name, 
 	double x1, double y1, double x2, double y2,
-	int angel1, int angel2, glow_eDrawType draw_type, 
+	int angle1, int angle2, glow_eDrawType draw_type, 
 	int line_width, int fill_arc, int border, int shadow, glow_eDrawType fill_draw_type,
 	void *user_data);
   void grow_AddText( grow_tNodeClass nc, char *name, 
@@ -1082,8 +1082,8 @@ extern "C" {
     \param y1		y coordinate for first corner of a rectangle that surrouds the elipse of the arc.
     \param x2		x coordinate for second corner of a rectangle that surrouds the elipse of the arc.
     \param y2		y coordinate for second corner of a rectangle that surrouds the elipse of the arc.
-    \param angel1      	Start angel of the arc in degrees from the x axis.
-    \param angel2      	Lengh of the arc in degrees from the start angel.
+    \param angle1      	Start angle of the arc in degrees from the x axis.
+    \param angle2      	Lengh of the arc in degrees from the start angle.
     \param draw_type	Border color.
     \param line_width	Linewidth of border.
     \param fill_arc    	Arc is filled.
@@ -1095,7 +1095,7 @@ extern "C" {
   */
   void grow_CreateGrowArc( grow_tCtx ctx, char *name, 
 	double x1, double y1, double x2, double y2,
-	int angel1, int angel2, glow_eDrawType draw_type, 
+	int angle1, int angle2, glow_eDrawType draw_type, 
 	int line_width, int fill_arc, int border, int shadow, glow_eDrawType fill_draw_type,
 	void *user_data,
 	grow_tObject *arc);
@@ -1507,12 +1507,12 @@ extern "C" {
   //! Rotate an object. The rotations imade form the last stored transform.
   /*!
     \param object	Object to rotate.
-    \param angel	Rotation angel in degrees.
+    \param angle	Rotation angle in degrees.
     \param x0		x coordinate of rotation point.
     \param y0		y coordinate of rotation point.
     \param type		Type of rotation point.
   */
-  void grow_SetObjectRotation( grow_tObject object, double angel, double x0,
+  void grow_SetObjectRotation( grow_tObject object, double angle, double x0,
 			       double y0, glow_eRotationPoint type);
 
   //! Set object fill color.
@@ -1686,10 +1686,10 @@ extern "C" {
   //! Rotate selected objects.
   /*!
     \param ctx		Grow context.
-    \param angel	Rotation angel in degrees.
+    \param angle	Rotation angle in degrees.
     \param type		Type of rotation point.
   */
-  void grow_RotateSelectedObjects( grow_tCtx ctx, double angel, 
+  void grow_RotateSelectedObjects( grow_tCtx ctx, double angle, 
 				   glow_eRotationPoint type);
 
   //! Flip selected objects.

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.h,v 1.33 2008-05-13 13:59:02 claes Exp $
+ * Proview   $Id: ge_graph.h,v 1.34 2008-10-16 08:58:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -801,8 +801,8 @@ class Graph {
   void clear_all();
 
   //! Rotate selected objects.
-  /*! \param angel	Rotation angel in degrees. */
-  void rotate( double angel);
+  /*! \param angle	Rotation angle in degrees. */
+  void rotate( double angle);
 
   //! Delete the selected object.
   /*! The selected objects are deleted. */

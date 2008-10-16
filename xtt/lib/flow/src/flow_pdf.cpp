@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_pdf.cpp,v 1.5 2008-04-07 14:55:14 claes Exp $
+ * Proview   $Id: flow_pdf.cpp,v 1.6 2008-10-16 08:58:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -115,10 +115,10 @@ int FlowPdf::filled_rect( double x, double y, double width, double height,
   return 1;
 }
 
-int FlowPdf::arc( double x, double y, double width, double height, int angel1, int angel2,
+int FlowPdf::arc( double x, double y, double width, double height, int angle1, int angle2,
 		  flow_eDrawType type, double idx, int highlight)
 {
-  topdf->draw_arc( idx, x - offset_x, offset_y - y - height, width, height, angel1, angel2);
+  topdf->draw_arc( idx, x - offset_x, offset_y - y - height, width, height, angle1, angle2);
   return 1;
 }
 

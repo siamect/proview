@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_rect.h,v 1.4 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_rect.h,v 1.5 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -197,7 +197,7 @@ class GlowRect : public GlowArrayElem {
   int		line_width;	//!< Line width.
   int  		fix_line_width;	//!< Linewidth is independent of zoom factor.
   glow_mDisplayLevel display_level; //!< Displaylevel when the objects is visible.
-  int fill;			//!< The rectangel is filled.
+  int fill;			//!< The rectangle is filled.
 };
 
 /*@}*/

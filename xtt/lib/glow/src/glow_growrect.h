@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growrect.h,v 1.9 2008-01-17 14:17:05 claes Exp $
+ * Proview   $Id: glow_growrect.h,v 1.10 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -346,12 +346,12 @@ class GrowRect : public GlowRect {
 
   //! Rotate the object. The rotation is made form the last stored transform.
   /*!
-    \param angel	Rotation angel in degrees.
+    \param angle	Rotation angle in degrees.
     \param x0		x coordinate of rotation point.
     \param y0		y coordinate of rotation point.
     \param type		Type of rotation point.
   */
-  void set_rotation( double angel, 
+  void set_rotation( double angle, 
 		double x0, double y0, glow_eRotationPoint type);
 
   //! Set the fill color.

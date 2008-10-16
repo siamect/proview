@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.38 2008-07-17 11:25:03 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.39 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -376,11 +376,11 @@ void grow_CreateLine( grow_tCtx ctx, double x1, double y1,
 }
 
 void grow_CreateArc( grow_tCtx ctx, double x1, double y1, 
-	double x2, double y2, int angel1, int angel2,
+	double x2, double y2, int angle1, int angle2,
 	glow_eDrawType draw_type, int line_width, grow_tObject *arc)
 {
   *arc = (grow_tObject) new GlowArc( ctx, x1, y1, x2, y2, 
-	angel1, angel2, draw_type, line_width);
+	angle1, angle2, draw_type, line_width);
 }
 
 void grow_CreateText( grow_tCtx ctx, char *text_str, double x, double y, 
@@ -432,13 +432,13 @@ void grow_AddPolyLine( grow_tNodeClass nc, char *name,
 
 void grow_AddArc( grow_tNodeClass nc, char *name, 
 	double x1, double y1, double x2, double y2,
-	int angel1, int angel2, glow_eDrawType draw_type, 
+	int angle1, int angle2, glow_eDrawType draw_type, 
 	int line_width, int fill_arc, int border, int shadow, glow_eDrawType fill_draw_type,
 	void *user_data)
 {
   GrowArc *a1;
   a1 = new GrowArc( ((GlowNodeClass *)nc)->ctx, name, x1, y1, x2, y2, 
-		    angel1, angel2, draw_type, 
+		    angle1, angle2, draw_type, 
 		    line_width, fill_arc, border, shadow, fill_draw_type);
   a1->set_user_data( user_data);
   ((GlowNodeClass *)nc)->insert( a1);
@@ -1007,13 +1007,13 @@ void grow_CreateGrowPolyLine( grow_tCtx ctx, char *name,
 
 void grow_CreateGrowArc( grow_tCtx ctx, char *name, 
 	double x1, double y1, double x2, double y2,
-	int angel1, int angel2, glow_eDrawType draw_type, 
+	int angle1, int angle2, glow_eDrawType draw_type, 
 	int line_width, int fill_arc, int border, int shadow, glow_eDrawType fill_draw_type,
 	void *user_data,
 	grow_tObject *arc)
 {
   GrowArc *a1;
-  a1 = new GrowArc( ctx, name, x1, y1, x2, y2, angel1, angel2, draw_type, 
+  a1 = new GrowArc( ctx, name, x1, y1, x2, y2, angle1, angle2, draw_type, 
 	line_width, fill_arc, border, shadow, fill_draw_type);
   a1->set_user_data( user_data);
   ctx->insert( a1);
@@ -1375,15 +1375,15 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       char *dynamic;
       int  dynsize;
 
-      strcpy( attrinfo[i].name, "angel1");
-      attrinfo[i].value_p = &op->angel1;
+      strcpy( attrinfo[i].name, "angle1");
+      attrinfo[i].value_p = &op->angle1;
       attrinfo[i].type = glow_eType_Int;
-      attrinfo[i++].size = sizeof( op->angel1);
+      attrinfo[i++].size = sizeof( op->angle1);
       
-      strcpy( attrinfo[i].name, "angel2");
-      attrinfo[i].value_p = &op->angel2;
+      strcpy( attrinfo[i].name, "angle2");
+      attrinfo[i].value_p = &op->angle2;
       attrinfo[i].type = glow_eType_Int;
-      attrinfo[i++].size = sizeof( op->angel2);
+      attrinfo[i++].size = sizeof( op->angle2);
       
       strcpy( attrinfo[i].name, "shadow_width");
       attrinfo[i].value_p = &op->shadow_width;
@@ -3369,10 +3369,10 @@ void grow_SetObjectScalePos( grow_tObject object, double x, double y,
 					    type);
 }
 
-void grow_SetObjectRotation( grow_tObject object, double angel, double x0,
+void grow_SetObjectRotation( grow_tObject object, double angle, double x0,
 	double y0, glow_eRotationPoint type)
 {
-  ((GlowArrayElem *)object)->set_rotation( angel, x0, y0, type);
+  ((GlowArrayElem *)object)->set_rotation( angle, x0, y0, type);
 }
 
 void grow_SetObjectFillColor( grow_tObject object, glow_eDrawType drawtype)
@@ -3513,10 +3513,10 @@ void grow_SetObjectVisibility( grow_tObject object, glow_eVis visibility)
   ((GlowArrayElem *)object)->set_visibility( visibility);
 }
 
-void grow_RotateSelectedObjects( grow_tCtx ctx, double angel, 
+void grow_RotateSelectedObjects( grow_tCtx ctx, double angle, 
 	glow_eRotationPoint type)
 {
-  ctx->rotate_select( angel, type);
+  ctx->rotate_select( angle, type);
 }
 
 void grow_FlipSelectedObjects( grow_tCtx ctx, glow_eFlipDirection dir)

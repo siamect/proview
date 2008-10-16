@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growarc.h,v 1.6 2008-01-17 14:17:05 claes Exp $
+ * Proview   $Id: glow_growarc.h,v 1.7 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,8 +45,8 @@ class GrowArc : public GlowArc {
     \param y1		y coordinate for first corner of a rectangle that surrouds the elipse of the arc.
     \param x2		x coordinate for second corner of a rectangle that surrouds the elipse of the arc.
     \param y2		y coordinate for second corner of a rectangle that surrouds the elipse of the arc.
-    \param ang1		Start angel of the arc in degrees from the x axis.
-    \param ang2		Lengh of the arc in degrees from the start angel.
+    \param ang1		Start angle of the arc in degrees from the x axis.
+    \param ang2		Lengh of the arc in degrees from the start angle.
     \param border_d_type Border color.
     \param line_w	Linewidth of border.
     \param fill_arc	Arc is filled.
@@ -328,12 +328,12 @@ class GrowArc : public GlowArc {
 
   //! Rotate the object. The rotation is made form the last stored transform.
   /*!
-    \param angel	Rotation angel in degrees.
+    \param angle	Rotation angle in degrees.
     \param x0		x coordinate of rotation point.
     \param y0		y coordinate of rotation point.
     \param type		Type of rotation point.
   */
-  void set_rotation( double angel, 
+  void set_rotation( double angle, 
 		double x0, double y0, glow_eRotationPoint type);
 
   //! Set the fill color.

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growimage.cpp,v 1.7 2007-04-26 11:07:58 claes Exp $
+ * Proview   $Id: glow_growimage.cpp,v 1.8 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -749,12 +749,12 @@ void GrowImage::set_scale( double scale_x, double scale_y,
 	     y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
 }
 
-void GrowImage::set_rotation( double angel, 
+void GrowImage::set_rotation( double angle, 
 	double x0, double y0, glow_eRotationPoint type)
 {
   double old_x_left, old_x_right, old_y_low, old_y_high;
 
-  if ( fabs( angel - trf.rotation + trf.s_rotation) < FLT_EPSILON)
+  if ( fabs( angle - trf.rotation + trf.s_rotation) < FLT_EPSILON)
     return;
 
   switch( type)
@@ -789,7 +789,7 @@ void GrowImage::set_rotation( double angel,
   old_y_high = y_high;
   erase( &ctx->mw);
   erase( &ctx->navw);
-  trf.rotate_from_stored( angel, x0, y0);
+  trf.rotate_from_stored( angle, x0, y0);
   get_node_borders();
   ctx->draw( &ctx->mw, old_x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
 	     old_y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,

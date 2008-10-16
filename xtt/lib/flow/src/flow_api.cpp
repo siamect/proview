@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_api.cpp,v 1.16 2008-10-03 14:19:19 claes Exp $
+ * Proview   $Id: flow_api.cpp,v 1.17 2008-10-16 08:58:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -281,11 +281,11 @@ void flow_CreateLine( flow_tCtx ctx, double x1, double y1,
 }
 
 void flow_CreateArc( flow_tCtx ctx, double x1, double y1, 
-	double x2, double y2, int angel1, int angel2,
+	double x2, double y2, int angle1, int angle2,
 	flow_eDrawType draw_type, int line_width, flow_tObject *arc)
 {
   *arc = (flow_tObject) new FlowArc( ctx, x1, y1, x2, y2, 
-	angel1, angel2, draw_type, line_width);
+	angle1, angle2, draw_type, line_width);
 }
 
 void flow_CreateText( flow_tCtx ctx, char *text_str, double x, double y, 
@@ -345,11 +345,11 @@ void flow_AddLine( flow_tNodeClass nc, double x1, double y1,
 }
 
 void flow_AddArc( flow_tNodeClass nc, double x1, double y1, 
-	double x2, double y2, int angel1, int angel2,
+	double x2, double y2, int angle1, int angle2,
 	flow_eDrawType draw_type, int line_width)
 {
   FlowArc *arc = new FlowArc( ((FlowNodeClass *)nc)->ctx, 
-	x1, y1, x2, y2, angel1, angel2, draw_type, line_width);
+	x1, y1, x2, y2, angle1, angle2, draw_type, line_width);
   ((FlowNodeClass *)nc)->insert( arc);
 }
 

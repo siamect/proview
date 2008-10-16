@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_gtk.h,v 1.4 2007-07-17 12:43:42 claes Exp $
+ * Proview   $Id: glow_draw_gtk.h,v 1.5 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -100,12 +100,12 @@ class GlowDrawGtk : public GlowDraw {
 		   int x3, int y3,
 		   int idx);
   virtual int arc( GlowWind *w, int x, int y, int width, int height, 
-	   int angel1, int angel2,
+	   int angle1, int angle2,
 	   glow_eDrawType gc_type, int idx, int highlight);
   virtual int fill_arc( GlowWind *w, int x, int y, int width, int height, 
-		int angel1, int angel2, glow_eDrawType gc_type, int highlight);
+		int angle1, int angle2, glow_eDrawType gc_type, int highlight);
   virtual int arc_erase( GlowWind *w, int x, int y, int width, int height,
-		 int angel1, int angel2,
+		 int angle1, int angle2,
 		 int idx);
   virtual int line( GlowWind *w, int x1, int y1, int x2, int y2,
 	    glow_eDrawType gc_type, int idx, int highlight);

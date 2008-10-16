@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_command.cpp,v 1.14 2008-06-26 13:23:59 claes Exp $
+ * Proview   $Id: ge_graph_command.cpp,v 1.15 2008-10-16 08:58:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -134,7 +134,7 @@ dcli_tCmdTable	graph_command_table[] = {
 		{
 			"ROTATE",
 			&graph_rotate_func,
-			{ "dcli_arg1", "/ANGEL",
+			{ "dcli_arg1", "/ANGLE",
 			""}
 		},
 		{
@@ -159,7 +159,7 @@ dcli_tCmdTable	graph_command_table[] = {
 			"CREATE",
 			&graph_create_func,
 			{ "dcli_arg1", "/X1", "/Y1", "/X2", "/Y2", 
-			"/WIDTH", "/HEIGHT", "/ANGEL1", "/ANGEL2",
+			"/WIDTH", "/HEIGHT", "/ANGLE1", "/ANGLE2",
 			"/TEXT", "/SUBGRAPH",
 			""}
 		},
@@ -1381,14 +1381,14 @@ static int	graph_rotate_func( void		*client_data,
     char str[80];
     int sts;
     float value;
-    double angel;
+    double angle;
 
     if ( !graph->current_cmd_object)
     {
       graph->message('E', "No current object");
       return GE__NOCURRENT;
     }
-    if ( EVEN( dcli_get_qualifier( "/ANGEL", str, sizeof(str))))
+    if ( EVEN( dcli_get_qualifier( "/ANGLE", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -1399,10 +1399,10 @@ static int	graph_rotate_func( void		*client_data,
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
     }
-    angel = double(value);
+    angle = double(value);
     
     grow_StoreTransform( graph->current_cmd_object);
-    grow_SetObjectRotation( graph->current_cmd_object, angel, 0,
+    grow_SetObjectRotation( graph->current_cmd_object, angle, 0,
 	0, glow_eRotationPoint_Center);
     grow_SetModified( graph->grow->ctx, 1);
   }
@@ -1864,7 +1864,7 @@ static int	graph_create_func( void		*client_data,
     int sts;
     float value;
     double x1, y1, x2, y2;
-    int angel1, angel2;
+    int angle1, angle2;
 
     if ( EVEN( dcli_get_qualifier( "/X1", str, sizeof(str))))
     {
@@ -1918,9 +1918,9 @@ static int	graph_create_func( void		*client_data,
     }
     y2 = value;
     
-    if ( ODD( dcli_get_qualifier( "/ANGEL1", str, sizeof(str))))
+    if ( ODD( dcli_get_qualifier( "/ANGLE1", str, sizeof(str))))
     {
-      sts = sscanf( str, "%d", &angel1);
+      sts = sscanf( str, "%d", &angle1);
       if ( sts != 1)
       {
         graph->message('E', "Syntax error");
@@ -1928,11 +1928,11 @@ static int	graph_create_func( void		*client_data,
       }
     }
     else
-      angel1 = 0;
+      angle1 = 0;
     
-    if ( ODD( dcli_get_qualifier( "/ANGEL2", str, sizeof(str))))
+    if ( ODD( dcli_get_qualifier( "/ANGLE2", str, sizeof(str))))
     {
-      sts = sscanf( str, "%d", &angel2);
+      sts = sscanf( str, "%d", &angle2);
       if ( sts != 1)
       {
         graph->message('E', "Syntax error");
@@ -1940,10 +1940,10 @@ static int	graph_create_func( void		*client_data,
       }
     }
     else 
-      angel2 = 360;
+      angle2 = 360;
     
     grow_CreateGrowArc( graph->grow->ctx, "", 
-	x1, y1, x2, y2, angel1, angel2,
+	x1, y1, x2, y2, angle1, angle2,
 	graph->get_border_drawtype(), graph->linewidth,
 	graph->fill, graph->border, graph->shadow, graph->get_fill_drawtype(), NULL, 
 	&graph->current_cmd_object);

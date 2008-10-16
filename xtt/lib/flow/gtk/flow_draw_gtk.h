@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_gtk.h,v 1.3 2007-05-11 15:07:21 claes Exp $
+ * Proview   $Id: flow_draw_gtk.h,v 1.4 2008-10-16 08:58:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -88,16 +88,16 @@ class FlowDrawGtk : public FlowDraw {
 		       int x3, int y3,
 		       int idx);
   int arc( FlowCtx *ctx, int x, int y, int width, int height, 
-	   int angel1, int angel2,
+	   int angle1, int angle2,
 	   flow_eDrawType gc_type, int idx, int highlight);
   int arc_erase( FlowCtx *ctx, int x, int y, int width, int height,
-		 int angel1, int angel2,
+		 int angle1, int angle2,
 		 int idx);
   int nav_arc( FlowCtx *ctx, int x, int y, int width, int height,
-	       int angel1, int angel2,
+	       int angle1, int angle2,
 	       flow_eDrawType gc_type, int idx, int highlight);
   int nav_arc_erase( FlowCtx *ctx, int x, int y, int width, int height,
-		     int angel1, int angel2,
+		     int angle1, int angle2,
 		     int idx);
   int line( FlowCtx *ctx, int x1, int y1, int x2, int y2,
 	    flow_eDrawType gc_type, int idx, int highlight);

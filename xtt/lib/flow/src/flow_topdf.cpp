@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_topdf.cpp,v 1.1 2007-09-25 14:23:51 claes Exp $
+ * Proview   $Id: flow_topdf.cpp,v 1.2 2008-10-16 08:58:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -503,35 +503,35 @@ void CnvToPdf::draw_rect( double lw, double x, double y, double w, double h)
 }
 
 void CnvToPdf::draw_arc( double lw, double x, double y, double w, double h,
-			  int angel1, int angel2)
+			  int angle1, int angle2)
 {
       fp[cf] <<
 "  " << lw << " w" << endl;
-      if ( (angel1 == 0 && angel2 >= 90) ||
-	   (angel1 == 90 && angel2 >= 360) ||
-	   (angel1 == 180 && angel2 >= 270) ||
-	   (angel1 == 270 && angel2 >= 180))
+      if ( (angle1 == 0 && angle2 >= 90) ||
+	   (angle1 == 90 && angle2 >= 360) ||
+	   (angle1 == 180 && angle2 >= 270) ||
+	   (angle1 == 270 && angle2 >= 180))
 	fp[cf] <<
 "  " << x + w << " " << y + h/2 << " m" <<
 "  " << x + w << " " << y + h << " " << x + w << " " << y + h << " " << x + w/2 << " " << y + h << " " << " c" << endl;
-      if ( (angel1 == 0 && angel2 >= 180) ||
-	   (angel1 == 90 && angel2 >= 90) ||
-	   (angel1 == 180 && angel2 >= 360) ||
-	   (angel1 == 270 && angel2 >= 270))
+      if ( (angle1 == 0 && angle2 >= 180) ||
+	   (angle1 == 90 && angle2 >= 90) ||
+	   (angle1 == 180 && angle2 >= 360) ||
+	   (angle1 == 270 && angle2 >= 270))
 	fp[cf] <<
 "  " << x + w/2 << " " << y + h << " m" <<
 "  " << x << " " << y + h << " " << x << " " << y + h << " " << x << " " << y + h/2 << " " << " c" << endl;
-      if ( (angel1 == 0 && angel2 >= 270) ||
-	   (angel1 == 90 && angel2 >= 180) ||
-	   (angel1 == 180 && angel2 >= 90) ||
-	   (angel1 == 270 && angel2 >= 360))
+      if ( (angle1 == 0 && angle2 >= 270) ||
+	   (angle1 == 90 && angle2 >= 180) ||
+	   (angle1 == 180 && angle2 >= 90) ||
+	   (angle1 == 270 && angle2 >= 360))
 	fp[cf] <<
 "  " << x  << " " << y + h/2 << " m" <<
 "  " << x << " " << y << " " << x << " " << y << " " << x + w/2 << " " << y << " " << " c" << endl;
-      if ( (angel1 == 0 && angel2 >= 360) ||
-	   (angel1 == 90 && angel2 >= 270) ||
-	   (angel1 == 180 && angel2 >= 180) ||
-	   (angel1 == 270 && angel2 >= 90))
+      if ( (angle1 == 0 && angle2 >= 360) ||
+	   (angle1 == 90 && angle2 >= 270) ||
+	   (angle1 == 180 && angle2 >= 180) ||
+	   (angle1 == 270 && angle2 >= 90))
 	fp[cf] <<
 "  " << x + w/2  << " " << y << " m" <<
 "  " << x + w << " " << y << " " << x + w << " " << y << " " << x + w << " " << y + h/2 << " " << " c" << endl;

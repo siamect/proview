@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_topdf.h,v 1.1 2007-09-25 14:23:51 claes Exp $
+ * Proview   $Id: flow_topdf.h,v 1.2 2008-10-16 08:58:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -246,7 +246,7 @@ class CnvToPdf  {
   void print_text( char *text, CnvStyle& style, int mode = pdf_mPrintMode_Pos);
   void draw_rect( double lw, double x, double y, double w, double h);
   void draw_arc( double lw, double x, double y, double w, double h,
-		  int angel1, int angel2);
+		  int angle1, int angle2);
   void draw_line( double lw, double x1, double y1, double x2, double y2,
 		  int dashed, int gray);
   void draw_text( double x, double y, char *text, int bold, double size);

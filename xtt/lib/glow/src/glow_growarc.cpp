@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growarc.cpp,v 1.5 2008-01-17 14:17:05 claes Exp $
+ * Proview   $Id: glow_growarc.cpp,v 1.6 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -587,12 +587,12 @@ void GrowArc::set_scale( double scale_x, double scale_y,
 	     y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
 }
 
-void GrowArc::set_rotation( double angel, 
+void GrowArc::set_rotation( double angle, 
 	double x0, double y0, glow_eRotationPoint type)
 {
   double old_x_left, old_x_right, old_y_low, old_y_high;
 
-  if ( fabs( angel - trf.rotation + trf.s_rotation) < FLT_EPSILON)
+  if ( fabs( angle - trf.rotation + trf.s_rotation) < FLT_EPSILON)
     return;
 
   switch( type) {
@@ -626,7 +626,7 @@ void GrowArc::set_rotation( double angel,
   old_y_high = y_high;
   erase( &ctx->mw);
   erase( &ctx->navw);
-  trf.rotate_from_stored( angel, x0, y0);
+  trf.rotate_from_stored( angle, x0, y0);
   get_node_borders();
   ctx->draw( &ctx->mw, old_x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
 	     old_y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
@@ -689,9 +689,9 @@ void GrowArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void 
     glow_eDrawType fillcolor = ctx->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
 		 highlight, (GrowNode *)colornode, 1);
     
-    if ( !display_shadow || shadow_width == 0 || angel2 != 360) {
+    if ( !display_shadow || shadow_width == 0 || angle2 != 360) {
       ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-			  angel1 - rot, angel2, fillcolor, 0);
+			  angle1 - rot, angle2, fillcolor, 0);
     }
     else {
       int ish = int( shadow_width / 100 * min(ur_x - ll_x, ur_y - ll_y) + 0.5);
@@ -719,7 +719,7 @@ void GrowArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void 
 			  175, 40, fillcolor, 0);
 
       ctx->gdraw->fill_arc( w,  ll_x + ish, ll_y + ish, ur_x - ll_x - 2*ish, ur_y - ll_y - 2*ish,
-			  angel1 - rot, angel2, fillcolor, 0);
+			  angle1 - rot, angle2, fillcolor, 0);
     }
   }
   if ( border || !fill)
@@ -727,7 +727,7 @@ void GrowArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void 
     drawtype = ctx->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
 		 highlight, (GrowNode *)colornode, 0);
     ctx->gdraw->arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, 
-	angel1 - rot, angel2, drawtype, idx, 0);
+	angle1 - rot, angle2, drawtype, idx, 0);
   }
 }
 
@@ -775,10 +775,10 @@ void GrowArc::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
   w->set_draw_buffer_only();
   if ( border || !fill)
     ctx->gdraw->arc_erase( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-	angel1 - rot, angel2, idx);
+	angle1 - rot, angle2, idx);
   if ( fill)
     ctx->gdraw->fill_arc( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-	angel1 - rot, angel2, glow_eDrawType_LineErase, 0);
+	angle1 - rot, angle2, glow_eDrawType_LineErase, 0);
   w->reset_draw_buffer_only();
 }
 
@@ -955,7 +955,7 @@ void GrowArc::export_javabean( GlowTransform *t, void *node,
     drawtype_incr = -shadow_contrast;
 
   ctx->export_jbean->arc( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-	angel1 - rot, angel2, fill, border || !fill, fill_drawtype, draw_type,
+	angle1 - rot, angle2, fill, border || !fill, fill_drawtype, draw_type,
 	idx, ish, shadow, drawtype_incr, pass, shape_cnt, node_cnt, fp);
 }
 

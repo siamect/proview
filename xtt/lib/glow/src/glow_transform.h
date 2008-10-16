@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_transform.h,v 1.4 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_transform.h,v 1.5 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -32,7 +32,7 @@ class GlowTransform {
 	s_a12(0), s_a13(0), s_a21(0), s_a22(1), s_a23(0), s_rotation(0), stored(false) {};
     GlowTransform operator* (const GlowTransform p);
     void scale( double sx, double sy, double x0, double y0);
-    void rotate( double angel, double x0, double y0);
+    void rotate( double angle, double x0, double y0);
     void move( double x0, double y0);
     void posit( double x0, double y0);
     void reset() { a11=1; a12=0; a21=0; a22=1; a23=0; };
@@ -48,7 +48,7 @@ class GlowTransform {
     void store() { s_a11=a11;s_a12=a12;s_a13=a13;s_a21=a21;s_a22=a22;s_a23=a23;
 	s_rotation=rotation; stored=true;};
     void scale_from_stored( double sx, double sy, double x0, double y0);
-    void rotate_from_stored( double angel, double x0, double y0);
+    void rotate_from_stored( double angle, double x0, double y0);
     void move_from_stored( double x0, double y0);
     void set_from_stored( GlowTransform *t);
     double vertical_scale( GlowTransform *t);

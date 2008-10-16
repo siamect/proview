@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growwindow.h,v 1.6 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_growwindow.h,v 1.7 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -253,7 +253,7 @@ class GrowWindow : public GrowRect {
   void set_fill( int fillval) {}
   void set_fill_color( glow_eDrawType drawtype) {}
   void set_original_fill_color( glow_eDrawType drawtype) {}
-  void set_rotation( double angel, double x0, double y0, 
+  void set_rotation( double angle, double x0, double y0, 
 		glow_eRotationPoint type) {}
   void flip( double x0, double y0, glow_eFlipDirection dir) {}
   void set_transform( GlowTransform *t) {}

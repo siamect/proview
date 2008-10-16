@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_arc.cpp,v 1.8 2007-09-25 16:36:21 claes Exp $
+ * Proview   $Id: flow_arc.cpp,v 1.9 2008-10-16 08:58:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -56,7 +56,7 @@ void FlowArc::print( void *pos, void *node, int highlight)
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
   ctx->current_print->arc( ll.print_z_x + ((FlowPoint *)pos)->print_z_x, 
 	ll.print_z_y + ((FlowPoint *)pos)->print_z_y,
-	ur.print_z_x - ll.print_z_x, ur.print_z_y - ll.print_z_y, angel1, angel2,
+	ur.print_z_x - ll.print_z_x, ur.print_z_y - ll.print_z_y, angle1, angle2,
 	draw_type, idx, highlight);
 }
 
@@ -65,8 +65,8 @@ void FlowArc::save( ofstream& fp, flow_eSaveMode mode)
   fp << int(flow_eSave_Arc) << endl;
   fp << int(flow_eSave_Arc_draw_type) << FSPACE << int(draw_type) << endl;
   fp << int(flow_eSave_Arc_line_width) << FSPACE << line_width << endl;
-  fp << int(flow_eSave_Arc_angel1) << FSPACE << angel1 << endl;
-  fp << int(flow_eSave_Arc_angel2) << FSPACE << angel2 << endl;
+  fp << int(flow_eSave_Arc_angle1) << FSPACE << angle1 << endl;
+  fp << int(flow_eSave_Arc_angle2) << FSPACE << angle2 << endl;
   fp << int(flow_eSave_Arc_ll) << endl;
   ll.save( fp, mode);
   fp << int(flow_eSave_Arc_ur) << endl;
@@ -88,8 +88,8 @@ void FlowArc::open( ifstream& fp)
       case flow_eSave_Arc: break;
       case flow_eSave_Arc_draw_type: fp >> tmp; draw_type = (flow_eDrawType)tmp; break;
       case flow_eSave_Arc_line_width: fp >> line_width; break;
-      case flow_eSave_Arc_angel1: fp >> angel1; break;
-      case flow_eSave_Arc_angel2: fp >> angel2; break;
+      case flow_eSave_Arc_angle1: fp >> angle1; break;
+      case flow_eSave_Arc_angle2: fp >> angle2; break;
       case flow_eSave_Arc_ll: ll.open( fp); break;
       case flow_eSave_Arc_ur: ur.open( fp); break;
       case flow_eSave_End: end_found = 1; break;
@@ -110,7 +110,7 @@ void FlowArc::draw( void *pos, int highlight, int hot, void *node)
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
   ctx->fdraw->arc( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
 	ll.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
-	ur.z_x - ll.z_x, ur.z_y - ll.z_y, angel1, angel2,
+	ur.z_x - ll.z_x, ur.z_y - ll.z_y, angle1, angle2,
 	draw_type, idx, highlight);
 }
 
@@ -122,7 +122,7 @@ void FlowArc::erase( void *pos, int hot, void *node)
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
   ctx->fdraw->arc_erase( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
 	ll.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
-	ur.z_x - ll.z_x, ur.z_y - ll.z_y, angel1, angel2, idx);
+	ur.z_x - ll.z_x, ur.z_y - ll.z_y, angle1, angle2, idx);
 }
 
 void FlowArc::nav_draw( void *pos, int highlight, void *node)
@@ -133,7 +133,7 @@ void FlowArc::nav_draw( void *pos, int highlight, void *node)
   ctx->fdraw->nav_arc( ctx, 
 	ll.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
 	ll.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
-	ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y, angel1, angel2,
+	ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y, angle1, angle2,
 	draw_type, idx, highlight);
 }
 
@@ -145,7 +145,7 @@ void FlowArc::nav_erase( void *pos, void *node)
   ctx->fdraw->nav_arc_erase( ctx,
 	ll.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
 	ll.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
-	ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y, angel1, angel2,
+	ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y, angle1, angle2,
 	idx);
 }
 
@@ -155,7 +155,7 @@ int FlowArc::event_handler( void *pos, flow_eEvent event, int x, int y,
   FlowPoint *p;
 
   p = (FlowPoint *) pos;
-  if ( angel2 == 360 &&
+  if ( angle2 == 360 &&
        ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x <= x && 
        x <= ur.z_x  + ((FlowPoint *)pos)->z_x - ctx->offset_x &&
        ll.z_y  + ((FlowPoint *)pos)->z_y - ctx->offset_y <= y && 
@@ -189,8 +189,8 @@ void FlowArc::move( void *pos, double x1, double y1, double x2, double y2,
   ll.y = y1;
   ur.x = x2;
   ur.y = y2;
-  angel1 = ang1;
-  angel2 = ang2;  
+  angle1 = ang1;
+  angle2 = ang2;  
   zoom();
   nav_zoom();
   draw( pos, highlight, hot, NULL);

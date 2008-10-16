@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_arc.h,v 1.4 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_arc.h,v 1.5 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,8 +51,8 @@ class GlowArc : public GlowArrayElem {
     \param y1		y coordinate for first corner of a rectangle that surrouds the elipse of the arc.
     \param x2		x coordinate for second corner of a rectangle that surrouds the elipse of the arc.
     \param y2		y coordinate for second corner of a rectangle that surrouds the elipse of the arc.
-    \param ang1		Start angel of the arc in degrees from the x axis.
-    \param ang2		Lengh of the arc in degrees from the start angel.
+    \param ang1		Start angle of the arc in degrees from the x axis.
+    \param ang2		Lengh of the arc in degrees from the start angle.
     \param d_type 	Border color.
     \param line_w	Linewidth of border.
     \param fill_arc	Arc is filled.
@@ -61,7 +61,7 @@ class GlowArc : public GlowArrayElem {
 		double y2 = 0, int ang1 = 0, int ang2 = 0, 
 		glow_eDrawType d_type = glow_eDrawType_Line, int line_w = 1,
 		int fill_arc = 0) : 
-	ctx(glow_ctx), angel1(ang1), angel2(ang2),
+	ctx(glow_ctx), angle1(ang1), angle2(ang2),
 	ll(glow_ctx,x1,y1), ur(glow_ctx,x2,y2),
 	draw_type(d_type), line_width(line_w), fill(fill_arc)
       {}
@@ -160,7 +160,7 @@ class GlowArc : public GlowArrayElem {
     \param y1		y coordinate of first point.
     \param x2		x coordinate of second point.
     \param y2		y coordinate of second point.
-    \param ang1		Start angel in degrees.
+    \param ang1		Start angle in degrees.
     \param ang2		Length of arc in degrees.
     \param highlight	Draw with highlight colors.
     \param hot		Draw as hot, with larger line width.
@@ -178,7 +178,7 @@ class GlowArc : public GlowArrayElem {
     \param y1		y coordinate of first point.
     \param x2		x coordinate of second point.
     \param y2		y coordinate of second point.
-    \param ang1		Start angel in degrees.
+    \param ang1		Start angle in degrees.
     \param ang2		Length of arc in degrees.
     \param highlight	Draw with highlight colors.
     \param hot		Draw as hot, with larger line width.
@@ -263,10 +263,10 @@ class GlowArc : public GlowArrayElem {
   void convert( glow_eConvert version);
 
   GrowCtx *ctx;    	//!< Grow context.
-  int	      angel1;	//!< Start angel or arc from x-axis in degrees.
-  int	      angel2;	//!< Length of arc in degrees.
+  int	      angle1;	//!< Start angle or arc from x-axis in degrees.
+  int	      angle2;	//!< Length of arc in degrees.
   GlowPoint ll;		//!< Lower left corner of rectangle that surroundes the elipse of the arc.
-  GlowPoint ur;		//!< Upper right corner of rectangel that surroundes the elipse of the arc.
+  GlowPoint ur;		//!< Upper right corner of rectangle that surroundes the elipse of the arc.
   glow_eDrawType draw_type; //!< Border color.
   int	 line_width;	//!< Line width of border.
   int fill;		//!< Fill the object.

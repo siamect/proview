@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow.h,v 1.27 2008-06-26 13:23:59 claes Exp $
+ * Proview   $Id: glow.h,v 1.28 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1097,8 +1097,8 @@ typedef enum {
 	glow_eSave_Line_p2			= 603,
 	glow_eSave_Point_x			= 700,
 	glow_eSave_Point_y			= 701,
-	glow_eSave_Arc_angel1			= 800,
-	glow_eSave_Arc_angel2			= 801,
+	glow_eSave_Arc_angle1			= 800,
+	glow_eSave_Arc_angle2			= 801,
 	glow_eSave_Arc_draw_type		= 802,
 	glow_eSave_Arc_line_width		= 803,
 	glow_eSave_Arc_ll			= 804,

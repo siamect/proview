@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.cpp,v 1.32 2008-07-17 11:25:03 claes Exp $
+ * Proview   $Id: glow_growctx.cpp,v 1.33 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -4108,14 +4108,14 @@ int GrowCtx::get_next_object_position( GlowArrayElem *object, glow_eDirection di
 	    n.angle -= M_PI;
 	}
 	
-	double rank_angel = n.angle + dir_angle;
+	double rank_angle = n.angle + dir_angle;
 	double rank_distance = n.distance / (x_right - x_left);
-	if ( rank_angel > M_PI)
-	  rank_angel -= 2 * M_PI;
-	rank_angel = fabs( rank_angel) / M_PI;
-	if ( rank_angel > 0.5)
+	if ( rank_angle > M_PI)
+	  rank_angle -= 2 * M_PI;
+	rank_angle = fabs( rank_angle) / M_PI;
+	if ( rank_angle > 0.5)
 	  continue;
-	n.rank = rank_angel + ( 0.3 + rank_distance);
+	n.rank = rank_angle + ( 0.3 + rank_distance);
 	a0.push_back( n);
       }
     }

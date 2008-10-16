@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_exportflow.cpp,v 1.1 2008-01-17 14:17:05 claes Exp $
+ * Proview   $Id: glow_exportflow.cpp,v 1.2 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -179,8 +179,8 @@ void GlowExportFlow::arc( GrowArc *o)
   fp << int(flow_eSave_Arc) << endl;
   fp << int(flow_eSave_Arc_draw_type) << FSPACE << int(draw_type) << endl;
   fp << int(flow_eSave_Arc_line_width) << FSPACE << o->line_width << endl;
-  fp << int(flow_eSave_Arc_angel1) << FSPACE << o->angel1 << endl;
-  fp << int(flow_eSave_Arc_angel2) << FSPACE << o->angel2 << endl;
+  fp << int(flow_eSave_Arc_angle1) << FSPACE << o->angle1 << endl;
+  fp << int(flow_eSave_Arc_angle2) << FSPACE << o->angle2 << endl;
   fp << int(flow_eSave_Arc_ll) << endl;
   point( &o->ll, &o->trf);
   fp << int(flow_eSave_Arc_ur) << endl;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow.h,v 1.15 2008-10-03 14:19:19 claes Exp $
+ * Proview   $Id: flow.h,v 1.16 2008-10-16 08:58:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -432,8 +432,8 @@ typedef enum {
 	flow_eSave_Line_p2			= 603,
 	flow_eSave_Point_x			= 700,
 	flow_eSave_Point_y			= 701,
-	flow_eSave_Arc_angel1			= 800,
-	flow_eSave_Arc_angel2			= 801,
+	flow_eSave_Arc_angle1			= 800,
+	flow_eSave_Arc_angle2			= 801,
 	flow_eSave_Arc_draw_type		= 802,
 	flow_eSave_Arc_line_width		= 803,
 	flow_eSave_Arc_ll			= 804,

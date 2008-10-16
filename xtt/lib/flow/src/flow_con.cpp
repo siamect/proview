@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_con.cpp,v 1.7 2007-11-22 08:51:50 claes Exp $
+ * Proview   $Id: flow_con.cpp,v 1.8 2008-10-16 08:58:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3460,7 +3460,7 @@ void FlowCon::draw_routed_roundcorner( int points, double *x, double *y)
   double r = cc->round_corner_amount;
   double line_x1[8], line_y1[8], line_x2[8], line_y2[8];
   double arc_ll_x[8], arc_ll_y[8], arc_ur_x[8], arc_ur_y[8]; 
-  int	 arc_angel1[8], arc_angel2[8];
+  int	 arc_angle1[8], arc_angle2[8];
   con_eCorner corner_type[8];
   FlowLine *l;
   FlowArc *a;
@@ -3573,8 +3573,8 @@ void FlowCon::draw_routed_roundcorner( int points, double *x, double *y)
             arc_ll_y[i-1] = y[i];
             arc_ur_x[i-1] = x[i];
             arc_ur_y[i-1] = y[i] + 2*r_y[i-1];
-            arc_angel1[i-1] = 0;
-            arc_angel2[i-1] = 90;
+            arc_angle1[i-1] = 0;
+            arc_angle2[i-1] = 90;
             break;
           case eCorner_RightToDown:
             line_x1[i] = x[i];
@@ -3583,8 +3583,8 @@ void FlowCon::draw_routed_roundcorner( int points, double *x, double *y)
             arc_ll_y[i-1] = y[i] - 2*r_y[i-1];
             arc_ur_x[i-1] = x[i];
             arc_ur_y[i-1] = y[i];
-            arc_angel1[i-1] = 270;
-            arc_angel2[i-1] = 90;
+            arc_angle1[i-1] = 270;
+            arc_angle2[i-1] = 90;
             break;
           default:
             ;
@@ -3605,8 +3605,8 @@ void FlowCon::draw_routed_roundcorner( int points, double *x, double *y)
             arc_ll_y[i-1] = y[i];
             arc_ur_x[i-1] = x[i] + 2*r_x[i-1];
             arc_ur_y[i-1] = y[i] + 2*r_y[i-1];
-            arc_angel1[i-1] = 90;
-            arc_angel2[i-1] = 90;
+            arc_angle1[i-1] = 90;
+            arc_angle2[i-1] = 90;
             break;
           case eCorner_LeftToDown:
             line_x1[i] = x[i];
@@ -3615,8 +3615,8 @@ void FlowCon::draw_routed_roundcorner( int points, double *x, double *y)
             arc_ll_y[i-1] = y[i] - 2*r_y[i-1];
             arc_ur_x[i-1] = x[i] + 2*r_x[i-1];
             arc_ur_y[i-1] = y[i];
-            arc_angel1[i-1] = 180;
-            arc_angel2[i-1] = 90;
+            arc_angle1[i-1] = 180;
+            arc_angle2[i-1] = 90;
             break;
 	  default:
             ;
@@ -3637,8 +3637,8 @@ void FlowCon::draw_routed_roundcorner( int points, double *x, double *y)
             arc_ll_y[i-1] = y[i] - 2*r_y[i-1];
             arc_ur_x[i-1] = x[i] + 2*r_x[i-1];
             arc_ur_y[i-1] = y[i];
-            arc_angel1[i-1] = 180;
-            arc_angel2[i-1] = 90;
+            arc_angle1[i-1] = 180;
+            arc_angle2[i-1] = 90;
             break;
           case eCorner_UpToLeft:
             line_x1[i] = x[i] - r_x[i-1];
@@ -3647,8 +3647,8 @@ void FlowCon::draw_routed_roundcorner( int points, double *x, double *y)
             arc_ll_y[i-1] = y[i] - 2*r_y[i-1];
             arc_ur_x[i-1] = x[i];
             arc_ur_y[i-1] = y[i];
-            arc_angel1[i-1] = 270;
-            arc_angel2[i-1] = 90;
+            arc_angle1[i-1] = 270;
+            arc_angle2[i-1] = 90;
             break;
           default:
             ;
@@ -3669,8 +3669,8 @@ void FlowCon::draw_routed_roundcorner( int points, double *x, double *y)
             arc_ll_y[i-1] = y[i];
             arc_ur_x[i-1] = x[i] + 2*r_x[i-1];
             arc_ur_y[i-1] = y[i] + 2*r_y[i-1];
-            arc_angel1[i-1] = 90;
-            arc_angel2[i-1] = 90;
+            arc_angle1[i-1] = 90;
+            arc_angle2[i-1] = 90;
             break;
           case eCorner_DownToLeft:
             line_x1[i] = x[i] - r_x[i-1];
@@ -3679,8 +3679,8 @@ void FlowCon::draw_routed_roundcorner( int points, double *x, double *y)
             arc_ll_y[i-1] = y[i];
             arc_ur_x[i-1] = x[i];
             arc_ur_y[i-1] = y[i] + 2*r_y[i-1];
-            arc_angel1[i-1] = 0;
-            arc_angel2[i-1] = 90;
+            arc_angle1[i-1] = 0;
+            arc_angle2[i-1] = 90;
             break;
           default:
             ;
@@ -3712,7 +3712,7 @@ void FlowCon::draw_routed_roundcorner( int points, double *x, double *y)
   {
     a = (FlowArc *) arc_a[i];
     a->move( &cc->zero, arc_ll_x[i], arc_ll_y[i],
-		arc_ur_x[i], arc_ur_y[i], arc_angel1[i], arc_angel2[i],
+		arc_ur_x[i], arc_ur_y[i], arc_angle1[i], arc_angle2[i],
 		highlight, hot);
   }
   for ( i = points - 1; i < l_num; i++)

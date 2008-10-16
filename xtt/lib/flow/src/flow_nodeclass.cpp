@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_nodeclass.cpp,v 1.8 2008-10-03 14:19:19 claes Exp $
+ * Proview   $Id: flow_nodeclass.cpp,v 1.9 2008-10-16 08:58:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -412,16 +412,16 @@ int FlowNodeClass::get_next_conpoint( int cp_num, flow_eDirection dir, double x0
 	  n.angle -= M_PI;
       }
       
-      double rank_angel = n.angle + dir_angle;
+      double rank_angle = n.angle + dir_angle;
       double rank_distance = n.distance;
-      if ( rank_angel > M_PI)
-	rank_angel -= 2 * M_PI;
-      if ( rank_angel < -M_PI)
-	rank_angel += 2 * M_PI;
-      rank_angel = fabs( rank_angel) / M_PI;
-      if ( rank_angel >= 0.5 - DBL_EPSILON)
+      if ( rank_angle > M_PI)
+	rank_angle -= 2 * M_PI;
+      if ( rank_angle < -M_PI)
+	rank_angle += 2 * M_PI;
+      rank_angle = fabs( rank_angle) / M_PI;
+      if ( rank_angle >= 0.5 - DBL_EPSILON)
 	continue;
-      n.rank = rank_angel + ( 0.3 + rank_distance);
+      n.rank = rank_angle + ( 0.3 + rank_distance);
       a0.push_back( n);
     }
   }

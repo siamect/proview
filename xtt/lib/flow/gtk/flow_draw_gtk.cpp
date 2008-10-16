@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_gtk.cpp,v 1.10 2008-02-05 14:59:43 claes Exp $
+ * Proview   $Id: flow_draw_gtk.cpp,v 1.11 2008-10-16 08:58:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1041,7 +1041,7 @@ int FlowDrawGtk::nav_arrow_erase( FlowCtx *ctx, int x1, int y1, int x2, int y2,
 }
 
 int FlowDrawGtk::arc( FlowCtx *ctx, int x, int y, int width, int height, 
-	int angel1, int angel2,
+	int angle1, int angle2,
 	flow_eDrawType gc_type, int idx, int highlight)
 {
   if ( ctx->nodraw) return 1;
@@ -1051,24 +1051,24 @@ int FlowDrawGtk::arc( FlowCtx *ctx, int x, int y, int width, int height,
 
   gdk_draw_arc( window,
 		gcs[gc_type+highlight][idx], 0,
-		x, y, width, height, angel1*64, angel2*64);
+		x, y, width, height, angle1*64, angle2*64);
   return 1;
 }
 
 int FlowDrawGtk::arc_erase( FlowCtx *ctx, int x, int y, int width, int height,
-	int angel1, int angel2,
+	int angle1, int angle2,
 	int idx)
 {
   if ( ctx->nodraw) return 1;
 
   gdk_draw_arc( window,
 		gcs[flow_eDrawType_LineErase][idx], 0,
-		x, y, width, height, angel1*64, angel2*64);
+		x, y, width, height, angle1*64, angle2*64);
   return 1;
 }
 
 int FlowDrawGtk::nav_arc( FlowCtx *ctx, int x, int y, int width, int height,
-	int angel1, int angel2,
+	int angle1, int angle2,
 	flow_eDrawType gc_type, int idx, int highlight)
 {
   if ( ctx->no_nav || ctx->nodraw) return 1;
@@ -1078,19 +1078,19 @@ int FlowDrawGtk::nav_arc( FlowCtx *ctx, int x, int y, int width, int height,
 
   gdk_draw_arc( nav_window,
 		gcs[gc_type+highlight][idx], 0,
-		x, y, width, height, angel1*64, angel2*64);
+		x, y, width, height, angle1*64, angle2*64);
   return 1;
 }
 
 int FlowDrawGtk::nav_arc_erase( FlowCtx *ctx, int x, int y, int width, int height,
-	int angel1, int angel2,
+	int angle1, int angle2,
 	int idx)
 {
   if ( ctx->no_nav || ctx->nodraw) return 1;
 
   gdk_draw_arc( nav_window,
 		gcs[flow_eDrawType_LineErase][idx], 0,
-		x, y, width, height, angel1*64, angel2*64);
+		x, y, width, height, angle1*64, angle2*64);
   return 1;
 }
 

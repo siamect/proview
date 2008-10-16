@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.h,v 1.17 2008-07-17 11:25:03 claes Exp $
+ * Proview   $Id: glow_growctx.h,v 1.18 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -382,12 +382,12 @@ class GrowCtx : public GlowCtx {
 
   //! Rotate selected objects.
   /*!
-    \param angel	Angel in degrees of rotation.
+    \param angle	Angle in degrees of rotation.
     \param type		Type of rotation.
 
     Create a transform for the rotation and apply this to all selected objects.
   */
-  void rotate_select( double angel, glow_eRotationPoint type);
+  void rotate_select( double angle, glow_eRotationPoint type);
 
 
   //! Set textsize on all selected objects.

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_pscript.h,v 1.2 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_pscript.h,v 1.3 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,7 +30,7 @@ class GlowPscript {
      int print_page( double ll_x, double ll_y, double ur_x, double ur_y);
      int rect( double x, double y, double width, double height, glow_eDrawType type, int idx);
      int filled_rect( double x, double y, double width, double height, glow_eDrawType type, int idx);
-     int arc( double x, double y, double width, double height, int angel1, int angel2,
+     int arc( double x, double y, double width, double height, int angle1, int angle2,
 		glow_eDrawType type, int idx);
      int line( double x1, double y1, double x2, double y2, glow_eDrawType type, int idx);
      int text( double x, double y, char *text, int len,  glow_eDrawType type, int size);

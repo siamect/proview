@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_browapi.h,v 1.12 2008-10-03 14:19:19 claes Exp $
+ * Proview   $Id: flow_browapi.h,v 1.13 2008-10-16 08:58:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -114,7 +114,7 @@ void brow_CreateLine( brow_tCtx ctx, double x1, double y1,
 	flow_eDrawType draw_type, int line_width, int fix_line_width, 
 	brow_tObject *line);
 void brow_CreateArc( brow_tCtx ctx, double x1, double y1, 
-	double x2, double y2, int angel1, int angel2,
+	double x2, double y2, int angle1, int angle2,
 	flow_eDrawType draw_type, int line_width, brow_tObject *arc);
 void brow_CreateText( brow_tCtx ctx, char *text_str, double x, double y, 
 	flow_eDrawType draw_type, int text_size, brow_tObject *text);
@@ -139,7 +139,7 @@ void brow_AddLine( brow_tNodeClass nc, double x1, double y1,
 	double x2, double y2,
 	flow_eDrawType draw_type, int line_width);
 void brow_AddArc( brow_tNodeClass nc, double x1, double y1, 
-	double x2, double y2, int angel1, int angel2,
+	double x2, double y2, int angle1, int angle2,
 	flow_eDrawType draw_type, int line_width);
 void brow_AddImage( brow_tNodeClass nc, char *imagefile, double x, double y);
 void brow_AddText( brow_tNodeClass nc, char *text_str, double x, double y, 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growpolyline.h,v 1.7 2007-09-04 07:23:06 claes Exp $
+ * Proview   $Id: glow_growpolyline.h,v 1.8 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -306,8 +306,8 @@ class GrowPolyLine : public GlowPolyLine {
   void set_linewidth( int linewidth);
 
   //! Calculates which side of the polyline the shadow should be drawn.
-  /*! The shadow is drawn on the inside of the polyline. The sum of the inside angels is always 180 degrees
-    less the the angels on the outside. The angels is added to decide which side is the inside.
+  /*! The shadow is drawn on the inside of the polyline. The sum of the inside angles is always 180 degrees
+    less the the angles on the outside. The angles is added to decide which side is the inside.
   */
   int shadow_direction();
 
@@ -415,12 +415,12 @@ class GrowPolyLine : public GlowPolyLine {
 
   //! Rotate the object. The rotation is made form the last stored transform.
   /*!
-    \param angel	Rotation angel in degrees.
+    \param angle	Rotation angle in degrees.
     \param x0		x coordinate of rotation point.
     \param y0		y coordinate of rotation point.
     \param type		Type of rotation point.
   */
-  void set_rotation( double angel, 
+  void set_rotation( double angle, 
 		double x0, double y0, glow_eRotationPoint type);
 
   //! Set the fill color.

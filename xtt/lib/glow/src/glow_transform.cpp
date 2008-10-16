@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_transform.cpp,v 1.4 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_transform.cpp,v 1.5 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -79,20 +79,20 @@ void GlowTransform::scale_from_stored( double sx, double sy, double x0, double y
   a22 = s_a22 * sy;
 }
 
-void GlowTransform::rotate( double angel, double x0, double y0)
+void GlowTransform::rotate( double angle, double x0, double y0)
 {
   double sin_a;
   double cos_a;
   GlowTransform tmp( *this);
-  if ( -90.01 < angel && angel < -89.99)
+  if ( -90.01 < angle && angle < -89.99)
   {
     sin_a = -1.0;
     cos_a = 0.0;
   }
   else
   {
-    sin_a = sin( angel/180*3.14159);
-    cos_a = cos( angel/180*3.14159);
+    sin_a = sin( angle/180*3.14159);
+    cos_a = cos( angle/180*3.14159);
   }
 
   a11 = tmp.a11 * cos_a - tmp.a21 * sin_a;
@@ -101,23 +101,23 @@ void GlowTransform::rotate( double angel, double x0, double y0)
   a21 = tmp.a11 * sin_a + tmp.a21 * cos_a;
   a22 = tmp.a21 * sin_a + tmp.a22 * cos_a;
   a23 = tmp.a13 * sin_a + tmp.a23 * cos_a + y0 * ( 1 - cos_a) - x0 * sin_a;
-  rotation += angel;
+  rotation += angle;
 }
 
-void GlowTransform::rotate_from_stored( double angel, double x0, double y0)
+void GlowTransform::rotate_from_stored( double angle, double x0, double y0)
 {
 
   double sin_a;
   double cos_a;
-  if ( -90.01 < s_rotation + angel  && s_rotation + angel < -89.99)
+  if ( -90.01 < s_rotation + angle  && s_rotation + angle < -89.99)
   {
     sin_a = -1.0;
     cos_a = 0.0;
   }
   else
   {
-    sin_a = sin( (s_rotation + angel)/180*3.14159);
-    cos_a = cos( (s_rotation + angel)/180*3.14159);
+    sin_a = sin( (s_rotation + angle)/180*3.14159);
+    cos_a = cos( (s_rotation + angle)/180*3.14159);
   }
 
   a11 = s_a11 * cos_a - s_a21 * sin_a;
@@ -126,7 +126,7 @@ void GlowTransform::rotate_from_stored( double angel, double x0, double y0)
   a21 = s_a11 * sin_a + s_a21 * cos_a;
   a22 = s_a21 * sin_a + s_a22 * cos_a;
   a23 = s_a13 * sin_a + s_a23 * cos_a + y0 * ( 1 - cos_a) - x0 * sin_a;
-  rotation = s_rotation + angel;
+  rotation = s_rotation + angle;
 }
 
 void GlowTransform::move( double x0, double y0)

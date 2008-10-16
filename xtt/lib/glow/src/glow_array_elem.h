@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_array_elem.h,v 1.10 2008-01-17 14:17:05 claes Exp $
+ * Proview   $Id: glow_array_elem.h,v 1.11 2008-10-16 08:58:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -135,7 +135,7 @@ class GlowArrayElem {
     virtual void set_scale_pos( double scale_x, double x, double y, 
                 double scale_y, double x0, double y0, 
 		glow_eScaleType type) {};
-    virtual void set_rotation( double angel, double x0, double y0, 
+    virtual void set_rotation( double angle, double x0, double y0, 
 		glow_eRotationPoint type) {};
     virtual void exec_dynamic() {};
     virtual void set_fill_color( glow_eDrawType drawtype) {};

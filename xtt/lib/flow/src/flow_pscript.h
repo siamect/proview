@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_pscript.h,v 1.5 2007-09-25 13:11:00 claes Exp $
+ * Proview   $Id: flow_pscript.h,v 1.6 2008-10-16 08:58:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,7 +31,7 @@ class FlowPscript : public FlowPrint {
      int print_page( double ll_x, double ll_y, double ur_x, double ur_y);
      int rect( double x, double y, double width, double height, flow_eDrawType type, double idx, int highlight);
      int filled_rect( double x, double y, double width, double height, flow_eDrawType type, double idx);
-     int arc( double x, double y, double width, double height, int angel1, int angel2,
+     int arc( double x, double y, double width, double height, int angle1, int angle2,
 		flow_eDrawType type, double idx, int highlight);
      int line( double x1, double y1, double x2, double y2, flow_eDrawType type, double idx, int highlight);
      int text( double x, double y, char *text, int len,  flow_eDrawType type, double size);

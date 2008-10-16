@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.h,v 1.37 2008-08-25 11:17:48 claes Exp $
+ * Proview   $Id: ge_dyn.h,v 1.38 2008-10-16 08:58:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1257,7 +1257,7 @@ class GeRotate : public GeDynElem {
   pwr_tAName attribute;		//!< Database reference of analog attribute.
   double x0;			//!< x coordinate for rotation point.
   double y0;			//!< y coordinate for rotation point.
-  double factor;		//!< Conversion factor from value to rotation angel in degrees.
+  double factor;		//!< Conversion factor from value to rotation angle in degrees.
 
   pwr_tFloat32 *p;
   pwr_tSubid subid;

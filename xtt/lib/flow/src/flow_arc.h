@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_arc.h,v 1.3 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_arc.h,v 1.4 2008-10-16 08:58:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,7 +34,7 @@ class FlowArc : public FlowArrayElem {
     FlowArc( FlowCtx *flow_ctx, double x1 = 0, double y1 = 0, double x2 = 0, 
 		double y2 = 0, int ang1 = 0, int ang2 = 0, 
 		flow_eDrawType d_type = flow_eDrawType_Line, int line_w = 1) : 
-	ctx(flow_ctx), angel1(ang1), angel2(ang2),
+	ctx(flow_ctx), angle1(ang1), angle2(ang2),
 	ll(flow_ctx,x1,y1), ur(flow_ctx,x2,y2),
 	draw_type(d_type), line_width(line_w) {};
     friend ostream& operator<< ( ostream& o, const FlowArc a);
@@ -64,8 +64,8 @@ class FlowArc : public FlowArrayElem {
 		{ return 0;};
     flow_eObjectType type() { return flow_eObjectType_Arc;};
     FlowCtx *ctx;    
-    int	      angel1;
-    int	      angel2;
+    int	      angle1;
+    int	      angle2;
     FlowPoint ll;
     FlowPoint ur;
     flow_eDrawType draw_type;
