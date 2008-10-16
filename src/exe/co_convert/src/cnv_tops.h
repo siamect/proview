@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_tops.h,v 1.3 2005-12-21 08:30:25 claes Exp $
+ * Proview   $Id: cnv_tops.h,v 1.4 2008-10-16 11:06:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -114,13 +114,13 @@ class CnvToPs  {
       style[ps_eId_Content].boldtext = 
 	CnvStyle( "Helvetica-Bold-ISOLatin1", 10, 0, 11, 1, cnv_eAlignment_Left, 0, 0, 0);
       style[ps_eId_Chapter].text = 
-	CnvStyle( "TimesNewRoman-ISOLatin1", 10, 0, 11, 1, cnv_eAlignment_Left, 0, 0, 0);
+	CnvStyle( "Times-Roman-ISOLatin1", 10, 0, 11, 1, cnv_eAlignment_Left, 0, 0, 0);
       style[ps_eId_TopicL1].text = 
-	CnvStyle( "TimesNewRoman-ISOLatin1", 10, 0, 11, 1, cnv_eAlignment_Left, 0, 0, 0);
+	CnvStyle( "Times-Roman-ISOLatin1", 10, 0, 11, 1, cnv_eAlignment_Left, 0, 0, 0);
       style[ps_eId_TopicL2].text = 
-	CnvStyle( "TimesNewRoman-ISOLatin1", 10, 0, 11, 1, cnv_eAlignment_Left, 0, 0, 0);
+	CnvStyle( "Time-Roman-ISOLatin1", 10, 0, 11, 1, cnv_eAlignment_Left, 0, 0, 0);
       style[ps_eId_TopicL3].text = 
-	CnvStyle( "TimesNewRoman-ISOLatin1", 10, 0, 11, 1, cnv_eAlignment_Left, 0, 0, 0);
+	CnvStyle( "Times-Roman-ISOLatin1", 10, 0, 11, 1, cnv_eAlignment_Left, 0, 0, 0);
     }
   ~CnvToPs();
 

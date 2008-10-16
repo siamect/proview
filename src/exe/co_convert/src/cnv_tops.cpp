@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_tops.cpp,v 1.5 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: cnv_tops.cpp,v 1.6 2008-10-16 11:06:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,7 +40,7 @@ extern "C" {
 
 #define CNV_TAB 18
 
-#define ps_cHead "%!PS-Adobe-2.0 EPSF-1.2\n\
+#define ps_cHead "%!PS-Adobe-2.0\n\
 %%Creator: Proview co_convert\n\
 %%EndComments\n\
 \n\
@@ -77,7 +77,7 @@ dup length dict begin\n\
   currentdict\n\
 end\n\
 /Helvetica-Oblique-ISOLatin1 exch definefont pop\n\
-/TimesNewRoman findfont\n\
+/Times-Roman findfont\n\
 dup length dict begin\n\
   { 1 index /FID ne\n\
 	{def}\n\
@@ -87,8 +87,8 @@ dup length dict begin\n\
   /Encoding ISOLatin1Encoding def\n\
   currentdict\n\
 end\n\
-/TimesNewRoman-ISOLatin1 exch definefont pop\n\
-/TimesNewRoman-Bold findfont\n\
+/Times-Roman-ISOLatin1 exch definefont pop\n\
+/Times-Bold findfont\n\
 dup length dict begin\n\
   { 1 index /FID ne\n\
 	{def}\n\
@@ -98,7 +98,7 @@ dup length dict begin\n\
   /Encoding ISOLatin1Encoding def\n\
   currentdict\n\
 end\n\
-/TimesNewRoman-Bold-ISOLatin1 exch definefont pop\n\
+/Times-Bold-ISOLatin1 exch definefont pop\n\
 /Courier findfont\n\
 dup length dict begin\n\
   { 1 index /FID ne\n\
