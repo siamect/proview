@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_aiarea.wb_load,v 1.3 2005-09-01 14:58:00 claes Exp $
+!  Proview   $Id: pwrb_c_aiarea.wb_load,v 1.4 2008-10-16 11:14:45 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -47,6 +47,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr Flags |= PWR_MASK_ARRAY
           Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_DYNAMIC
           Attr Elements = 1
         EndBody
       EndObject

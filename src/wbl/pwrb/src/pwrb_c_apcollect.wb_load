@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_apcollect.wb_load,v 1.6 2005-09-01 14:58:01 claes Exp $
+!  Proview   $Id: pwrb_c_apcollect.wb_load,v 1.7 2008-10-16 11:14:45 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -82,144 +82,168 @@ SObject pwrb:Class
       Object ApIn1 $Input 1
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap1"
         EndBody
       EndObject
       Object ApIn2 $Input 2
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap2"
         EndBody
       EndObject
       Object ApIn3 $Input 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap3"
         EndBody
       EndObject
       Object ApIn4 $Input 4
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap4"
         EndBody
       EndObject
       Object ApIn5 $Input 5
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap5"
         EndBody
       EndObject
       Object ApIn6 $Input 6
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap6"
         EndBody
       EndObject
       Object ApIn7 $Input 7
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap7"
         EndBody
       EndObject
       Object ApIn8 $Input 8
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap8"
         EndBody
       EndObject
       Object ApIn9 $Input 9
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap9"
         EndBody
       EndObject
       Object ApIn10 $Input 10
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap10"
         EndBody
       EndObject
       Object ApIn11 $Input 11
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap11"
         EndBody
       EndObject
       Object ApIn12 $Input 12
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap12"
         EndBody
       EndObject
       Object ApIn13 $Input 13
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap13"
         EndBody
       EndObject
       Object ApIn14 $Input 14
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap14"
         EndBody
       EndObject
       Object ApIn15 $Input 15
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap15"
         EndBody
       EndObject
       Object ApIn16 $Input 16
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap16"
         EndBody
       EndObject
       Object ApIn17 $Input 17
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap17"
         EndBody
       EndObject
       Object ApIn18 $Input 18
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap18"
         EndBody
       EndObject
       Object ApIn19 $Input 19
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap19"
         EndBody
       EndObject
       Object ApIn20 $Input 20
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap20"
         EndBody
       EndObject
       Object ApIn21 $Input 21
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap21"
         EndBody
       EndObject
       Object ApIn22 $Input 22
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap22"
         EndBody
       EndObject
       Object ApIn23 $Input 23
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap23"
         EndBody
       EndObject
       Object ApIn24 $Input 24
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_BACKUP
           Attr GraphName = "Ap24"
         EndBody
       EndObject
@@ -229,6 +253,7 @@ SObject pwrb:Class
       Object MaxIndex $Intern 25
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"  
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**

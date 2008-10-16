@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_comph.wb_load,v 1.6 2005-09-01 14:58:01 claes Exp $
+!  Proview   $Id: pwrb_c_comph.wb_load,v 1.7 2008-10-16 11:14:45 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -59,6 +59,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "HIG"
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**
@@ -68,6 +69,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "IN"
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**
@@ -93,6 +95,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Hysteres"
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**

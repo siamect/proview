@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_dataarithm.wb_load,v 1.7 2005-09-01 14:58:01 claes Exp $
+!  Proview   $Id: pwrb_c_dataarithm.wb_load,v 1.8 2008-10-16 11:14:45 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -149,6 +149,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "A1"
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**
@@ -160,6 +161,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "A2"
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**
@@ -171,6 +173,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "A3"
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**
@@ -182,6 +185,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "A4"
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**
@@ -193,6 +197,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "A5"
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**
@@ -204,6 +209,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "A6"
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**
@@ -215,6 +221,8 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "d1"
+          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_NOINVERT
         EndBody
       EndObject
       !/**
@@ -226,6 +234,8 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "d2"
+          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_NOINVERT
         EndBody
       EndObject
       !/**
@@ -237,6 +247,8 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "d3"
+          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_NOINVERT
         EndBody
       EndObject
       !/**
@@ -248,6 +260,8 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "d4"
+          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_NOINVERT
         EndBody
       EndObject
       !/**
@@ -259,6 +273,8 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "d5"
+          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_NOINVERT
         EndBody
       EndObject
       !/**
@@ -270,6 +286,8 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "d6"
+          Attr Flags |= PWR_MASK_BACKUP
+          Attr Flags |= PWR_MASK_NOINVERT
         EndBody
       EndObject
       !/**
@@ -281,6 +299,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "I1"
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**
@@ -292,6 +311,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "I2"
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**
@@ -303,6 +323,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "I3"
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**
@@ -314,6 +335,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "I4"
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**
@@ -325,6 +347,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "I5"
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**
@@ -336,6 +359,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "I6"
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**

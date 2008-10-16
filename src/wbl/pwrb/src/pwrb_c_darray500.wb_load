@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_darray500.wb_load,v 1.1 2008-06-03 06:05:24 claes Exp $
+!  Proview   $Id: pwrb_c_darray500.wb_load,v 1.2 2008-10-16 11:14:45 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -41,6 +41,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_BACKUP
           Attr Elements = 500
         EndBody
       EndObject

@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_bwrotateright.wb_load,v 1.1 2007-10-30 07:26:47 claes Exp $
+!  Proview   $Id: pwrb_c_bwrotateright.wb_load,v 1.2 2008-10-16 11:14:45 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -60,12 +60,13 @@ SObject pwrb:Class
       Object Num $Input 2 
         Body SysBody
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_BACKUP
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "N"
         EndBody
       EndObject
       !/**
-      !  Rotateed word.
+      !  Rotated word.
       !*/
       Object Out $Output 3 
         Body SysBody

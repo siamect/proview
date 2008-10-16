@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_drive.wb_load,v 1.6 2005-09-01 14:58:01 claes Exp $
+!  Proview   $Id: pwrb_c_drive.wb_load,v 1.7 2008-10-16 11:14:45 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -148,6 +148,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_BACKUP
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "sta"
         EndBody
@@ -157,6 +158,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_BACKUP
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "nst"
         EndBody
@@ -173,6 +175,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "loc"
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**
@@ -187,6 +190,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**
@@ -202,6 +206,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**
@@ -251,6 +256,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**
@@ -268,6 +274,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**
@@ -287,6 +294,7 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**
@@ -460,6 +468,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "ProdTim"
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !/**
@@ -472,6 +481,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "SpeedTim"
+          Attr Flags |= PWR_MASK_BACKUP
         EndBody
       EndObject
       !
