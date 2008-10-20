@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_ccm.c,v 1.6 2006-06-08 06:10:56 claes Exp $
+ * Proview   $Id: co_ccm.c,v 1.7 2008-10-20 13:43:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,6 +31,8 @@
 #include "co_ccm_msg.h"
 #include "co_time.h"
 #include "co_dcli.h"
+#include "co_cnf.h"
+#include "co_syi.h"
 
 #define r_toupper(c) (((c) >= 'a' && (c) <= 'z') ? (c) & 0xDF : (c))
 #define r_tolower(c) (((c) >= 'A' && (c) <= 'Z') ? (c) | 0x20 : (c))
@@ -367,6 +369,10 @@ static int ccm_func_tolower( void *filectx, ccm_s_arg *arg_list, int arg_count, 
 	float *return_float, int *return_int, char *return_string);
 static int ccm_func_translate_filename( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl, 
 	float *return_float, int *return_int, char *return_string);
+static int ccm_func_get_pwr_config( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl, 
+	float *return_float, int *return_int, char *return_string);
+static int ccm_func_get_node_name( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl, 
+	float *return_float, int *return_int, char *return_string);
 
 #define CCM_SYSFUNC_MAX	100
 
@@ -395,6 +401,8 @@ static s_sysfunc	ccm_sysfunc[CCM_SYSFUNC_MAX] = {
 		{"toupper", 	&ccm_func_toupper},
 		{"tolower", 	&ccm_func_tolower},
 		{"translate_filename", 	&ccm_func_translate_filename},
+		{"get_pwr_config",  &ccm_func_get_pwr_config},
+		{"get_node_name",  &ccm_func_get_node_name},
 		{"", 		0}};
 
 /************* TEST *********************/
@@ -4873,6 +4881,58 @@ static int ccm_func_translate_filename(
   dcli_translate_filename( fname, arg_list->value_string);
   strncpy( return_string, fname, K_STRING_SIZE);
   return_string[K_STRING_SIZE-1] = 0;
+  *return_decl = K_DECL_STRING;
+  return 1;
+}
+
+static int ccm_func_get_pwr_config( 
+  void *filectx,
+  ccm_s_arg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  float *return_float, 
+  int *return_int, 
+  char *return_string)
+{
+  char value[512];
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+  if ( arg_list->value_decl != K_DECL_STRING)
+    return CCM__VARTYPE;
+
+  if ( cnf_get_value( arg_list->value_string, value)) {
+    strncpy( return_string, value, K_STRING_SIZE);
+    return_string[K_STRING_SIZE-1] = 0;
+  }
+  else
+    strcpy( return_string, "");
+  *return_decl = K_DECL_STRING;
+  return 1;
+}
+
+static int ccm_func_get_node_name( 
+  void *filectx,
+  ccm_s_arg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  float *return_float, 
+  int *return_int, 
+  char *return_string)
+{
+  char name[80];
+  pwr_tStatus sts;
+
+  if ( arg_count != 0)
+    return CCM__ARGMISM;
+
+  syi_NodeName( &sts, name, sizeof(name));
+  if ( ODD(sts)) {
+    strncpy( return_string, name, K_STRING_SIZE);
+    return_string[K_STRING_SIZE-1] = 0;
+  }
+  else
+    strcpy( return_string, "");
   *return_decl = K_DECL_STRING;
   return 1;
 }
