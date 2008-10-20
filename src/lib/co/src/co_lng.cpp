@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_lng.cpp,v 1.15 2008-02-05 13:15:48 claes Exp $
+ * Proview   $Id: co_lng.cpp,v 1.16 2008-10-20 13:45:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -246,11 +246,28 @@ bool Lng::read()
     dcli_translate_filename( filename2, filename2);
 
     ifstream fp1( filename1);
-    if ( !fp1)
+    if ( !fp1 && i == 0) {
+      // Try $pwr_eexe
+      strcpy( fname1, "$pwr_eexe/en_us/xtt_lng.dat");
+      dcli_translate_filename( filename1, fname1);
+      fp1.open( filename1);
+      if ( !fp1) 
+	return true;
+    }
+    else if ( !fp1)
       return i == 0 ? false : true;
 
     ifstream fp2( filename2);
-    if ( !fp2)
+    if ( !fp2 && i == 0) {
+      // Try $pwr_eexe
+      strcpy( fname2, "$pwr_eexe/%s/xtt_lng.dat");
+      sprintf( filename2, fname2, get_language_str());
+      dcli_translate_filename( filename2, filename2);
+      fp2.open( filename2);
+      if ( !fp2) 
+	return true;
+    }
+    else if ( !fp2)
       return i == 0 ? false : true;
 
     Row r1( fp1, fname1);
