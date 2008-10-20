@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_cnf.c,v 1.4 2008-02-05 13:16:23 claes Exp $
+ * Proview   $Id: co_cnf.c,v 1.5 2008-10-20 13:44:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,6 +34,10 @@ char default_values[][2][200] = {
     { "mysqlSocket",  "/var/run/mysqld/mysqld.sock"},
     { "defaultProjectRoot", "/usr/local/pwrp"},
     { "appletCodebase", "http://java.sun.com/update/1.4.2/jinstall-1_4-windows-i586.cab#Version=1,4,0,0"},
+    { "defaultSystemGroup", "Common"},
+    { "defaultProductionQbus", "1"},
+    { "defaultSimulationQbus", "999"},
+    { "defaultNodeHierRoot", "Nodes"},
   };
 
 
