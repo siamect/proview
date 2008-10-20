@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_tops.h,v 1.4 2008-10-16 11:06:50 claes Exp $
+ * Proview   $Id: cnv_tops.h,v 1.5 2008-10-20 13:42:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -118,7 +118,7 @@ class CnvToPs  {
       style[ps_eId_TopicL1].text = 
 	CnvStyle( "Times-Roman-ISOLatin1", 10, 0, 11, 1, cnv_eAlignment_Left, 0, 0, 0);
       style[ps_eId_TopicL2].text = 
-	CnvStyle( "Time-Roman-ISOLatin1", 10, 0, 11, 1, cnv_eAlignment_Left, 0, 0, 0);
+	CnvStyle( "Times-Roman-ISOLatin1", 10, 0, 11, 1, cnv_eAlignment_Left, 0, 0, 0);
       style[ps_eId_TopicL3].text = 
 	CnvStyle( "Times-Roman-ISOLatin1", 10, 0, 11, 1, cnv_eAlignment_Left, 0, 0, 0);
     }
