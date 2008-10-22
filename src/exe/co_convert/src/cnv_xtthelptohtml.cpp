@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_xtthelptohtml.cpp,v 1.5 2008-04-11 16:30:45 claes Exp $
+ * Proview   $Id: cnv_xtthelptohtml.cpp,v 1.6 2008-10-22 07:48:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -312,7 +312,12 @@ void *CnvXtthelpToHtml::insert( navh_eItemType item_type, char *text1,
       if ( !cf) 
 	break;
 
-      cf->f << "<H3>" << text1 << "</H3><BR>" << endl;
+      if ( bookmark != 0)
+	cf->f << "<A NAME=\"" <<  bookmark << "\">";
+      cf->f << "<H3>" << text1 << "</H3><BR>";
+      if ( bookmark != 0)
+	cf->f << "</A>";
+      cf->f << endl;
       return NULL;
     }
     case navh_eItemType_HeaderLarge:
@@ -320,7 +325,12 @@ void *CnvXtthelpToHtml::insert( navh_eItemType item_type, char *text1,
       if ( !cf) 
 	break;
 
-      cf->f << "<H2>" << text1 << "</H2><BR>" << endl;
+      if ( bookmark != 0)
+	cf->f << "<A NAME=\"" <<  bookmark << "\">";
+      cf->f << "<H2>" << text1 << "</H2><BR>";
+      if ( bookmark != 0)
+	cf->f << "</A>";
+      cf->f << endl;
       return NULL;
     }
     case navh_eItemType_HorizontalLine:
