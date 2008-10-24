@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_annot.cpp,v 1.8 2007-09-25 16:36:21 claes Exp $
+ * Proview   $Id: flow_annot.cpp,v 1.9 2008-10-24 07:32:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -452,6 +452,9 @@ void FlowAnnot::measure_annot( char *text, double *width, double *height)
       int line_cnt = 0;
       char *line = text;
       char *s;
+
+      ctx->fdraw->get_text_extent( ctx, "Ag", 1, draw_type, text_size, &z_width, &z_height);
+
       z_width = 0;
       for ( s = text; *s; s++)
       {
@@ -477,7 +480,7 @@ void FlowAnnot::measure_annot( char *text, double *width, double *height)
 	z_width = MAX( z_width, l_width);
         line_cnt++;
       }
-      z_height = line_cnt * l_height;      
+      z_height = line_cnt * z_height;      
       break;
     }
   }
@@ -590,6 +593,9 @@ void flow_measure_annot_text( FlowCtx *ctx, char *text, flow_eDrawType draw_type
       int line_cnt = 0;
       char *line = text;
       char *s;
+
+      ctx->fdraw->get_text_extent( ctx, "Ag", 1, draw_type, text_size, &z_width, &z_height);
+
       z_width = 0;
       for ( s = text; *s; s++)
       {
@@ -615,7 +621,7 @@ void flow_measure_annot_text( FlowCtx *ctx, char *text, flow_eDrawType draw_type
 	z_width = MAX( z_width, l_width);
         line_cnt++;
       }
-      z_height = line_cnt * l_height;      
+      z_height = line_cnt * z_height;      
       *rows = MAX( line_cnt, 1);
       break;
     }
