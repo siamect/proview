@@ -1,6 +1,6 @@
 !** Description: Initial configuration of directory volume
 # 
-#  Proview   $Id: wb_wiz_directoryvolume.pwr_com,v 1.4 2008-10-09 08:37:51 claes Exp $
+#  Proview   $Id: wb_wiz_directoryvolume.pwr_com,v 1.5 2008-10-28 09:49:00 claes Exp $
 #  Copyright (C) 2005 SSAB Oxelösund AB.
 #
 #  This program is free software; you can redistribute it and/or 
@@ -72,9 +72,9 @@ endfunction
 main()
   extern string pwr_wizard_title = "Configure Directory Volume";
   extern string dv_system_name;
-  extern string dv_system_group = "Common";
-  extern int dv_prd_qbus = 1;
-  extern int dv_sim_qbus = 999;
+  extern string dv_system_group;
+  extern int dv_prd_qbus;
+  extern int dv_sim_qbus;
   extern int dv_quit = 0;
   extern int dv_prev = 0;
   extern string dv_volumes[20];
@@ -96,7 +96,9 @@ main()
   extern string dv_default_vname;
   extern string dv_default_vid;
   extern string dv_error_message;
+  extern int dv_nomorereg;
 
+  string dv_vid[20];
   string project;
   string vol;
   int volcnt;
@@ -137,9 +139,16 @@ main()
   int ivid2;
   int ivid3;
   int vid;
+  int first_reg = 1;
+  int first_sim = 1;
   string tmp_fname="$pwrp_tmp/wtmp.txt";
 
+
   verify(0);
+
+  dv_system_group = get_pwr_config( "defaultSystemGroup");
+  dv_prd_qbus = get_pwr_config( "defaultProductionQbus");
+  dv_sim_qbus = get_pwr_config( "defaultSimulationQbus");
 
   if ( ! EditMode())
     MessageDialog("Error", "Enter edit mode before starting wizard");
@@ -189,10 +198,17 @@ page_1:
   # If no volumes are registred, register a volume
 page_2:
   if ( !volcnt)
-    dvname1 = extract( 1, 1, dv_system_name);
-    dvname2 = extract( 2, 80, dv_system_name);
-    dv_default_vname = "Vol" + toupper( dvname1) + dvname2; 
-    dv_default_vid = GetNextFreeUserVid();
+page_2aa:
+    if ( first_reg)
+      dvname1 = extract( 1, 1, dv_system_name);
+      dvname2 = extract( 2, 80, dv_system_name);
+      dv_default_vname = "Vol" + toupper( dvname1) + dvname2; 
+      dv_default_vid = GetNextFreeUserVid();
+    else
+      dv_default_vname = "";
+      vid++;
+      dv_default_vid = GetNextFreeUserVid( vid);
+    endif
 
     if ( dv_default_vid == "")
       SetSubwindow( "wb_wizard_frame", "wizwin", "$pwr_exe/wb_wiz_directoryvolume_2", 1);
@@ -206,6 +222,11 @@ page_2a:
     endif
     if ( dv_prev)
       dv_prev = 0;
+      volcnt = 0;
+      first_reg = 1;
+      for ( i = 0; i < volcnt; i++)
+        dv_volume_found[i] = 0;
+      endfor
       goto page_1;
     endif
 
@@ -282,10 +303,19 @@ page_2a:
 
 
     add_vid = 1;
-    volcnt = 1;
-    dv_volumes[0] = dv_default_vname;
-    dv_volume_found[0] = 1;
+    dv_volumes[volcnt] = dv_default_vname;
+    dv_vid[volcnt] = dv_default_vid;
+    dv_volume_found[volcnt] = 1;
+    volcnt++;
+    first_reg = 0;
 
+    SetSubwindow( "wb_wizard_frame", "wizwin", "$pwr_exe/wb_wiz_directoryvolume_9", 1);
+    if ( dv_nomorereg)
+      dv_nomorereg = 0;
+      goto page_3;
+    endif	
+
+    goto page_2aa;
   endif
 
 page_3:
@@ -296,6 +326,11 @@ page_3:
   endif
   if ( dv_prev)
     dv_prev = 0;
+    volcnt = 0;
+    first_reg = 1;
+    for ( i = 0; i < volcnt; i++)
+      dv_volume_found[i] = 0;
+    endfor
     goto page_1;
   endif
 
@@ -333,11 +368,20 @@ page_3:
     endif
 
     for ( i = 0; i < rvolcnt; i++)
-      dv_node_name = tolower( rootvolumes[i]);
-      if ( extract( 1, 3, dv_node_name) == "vol")
-        dv_node_name = extract( 4, 100, dv_node_name);
+      if ( first_sim && !dv_node_skip_inv)
+        dv_node_name = get_node_name();
+        first_sim = 0;
+      else
+        dv_node_name = tolower( rootvolumes[i]);
+        if ( extract( 1, 3, dv_node_name) == "vol")
+          dv_node_name = extract( 4, 100, dv_node_name);
+        endif
       endif
-      dv_node_ip = "0.0.0.0";
+      if ( !dv_node_skip_inv)
+        dv_node_ip = "127.0.0.1";
+      else
+        dv_node_ip = "0.0.0.0";
+      endif
       dv_node_description = "";
       dv_node_rootvolume = rootvolumes[i];
       for ( j = 0; j < addvolcnt; j++)
@@ -361,6 +405,7 @@ page_4:
       endif
       if ( dv_node_skip)
         dv_node_skip = 0;
+        first_sim = 0;
         continue;
       endif
       if ( dv_prev)
@@ -425,7 +470,9 @@ page_4:
   # Add volume to global volumelist
   if ( add_vid)
     fp = fopen( tmp_fname, "w");
-    fprintf( fp, " %s     %s      %s\n", dv_default_vname, dv_default_vid, dv_system_name);
+    for ( i = 0; i < volcnt; i++)
+      fprintf( fp, " %s     %s      %s\n", dv_volumes[i], dv_vid[i], dv_system_name);
+    endfor
     fclose( fp);
 
     cmd = "cat " + tmp_fname + " >> $pwra_db/pwr_volumelist.dat";
@@ -556,6 +603,7 @@ exit_now:
   delete dv_default_vname;
   delete dv_default_vid;
   delete dv_error_message;
+  delete dv_nomorereg;
 
 endmain
 
