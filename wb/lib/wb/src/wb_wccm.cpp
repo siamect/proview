@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wccm.cpp,v 1.5 2008-10-09 08:38:47 claes Exp $
+ * Proview   $Id: wb_wccm.cpp,v 1.6 2008-10-28 09:53:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -857,11 +857,20 @@ static int wccm_getnextfreeuservid_func(
 {
   int		sts;
   pwr_tVid 	next_vid;
+  pwr_tVid	start_vid = cdh_cUserVolMin;
 
-  if ( arg_count != 0)
+  if ( arg_count > 1)
     return CCM__ARGMISM;
 
-  sts = WNav::get_next_free_vid( cdh_cUserVolMin, cdh_cUserVolMax, &next_vid);
+  if ( arg_count > 0) {
+    if ( arg_list->value_decl != CCM_DECL_INT)
+      return CCM__VARTYPE;
+
+    if ( (pwr_tVid) arg_list->value_int > start_vid)
+      start_vid = arg_list->value_int;
+  }
+
+  sts = WNav::get_next_free_vid( start_vid, cdh_cUserVolMax, &next_vid);
   if ( EVEN(sts))
     strcpy( return_string, "");
   else
@@ -928,6 +937,53 @@ static int wccm_checknewvolumename_func(
   return 1;
 }
 
+static int wccm_getcurrentvolume_func( 
+  void *filectx,
+  ccm_s_arg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  float *return_float, 
+  int *return_int, 
+  char *return_string)
+{
+  int		sts;
+  char		name[80];
+  int		size;
+  ldh_tSesContext ldhses;
+  ldh_sSessInfo info;
+  ldh_tWBContext wbctx;
+
+  sts = wccm_get_wbctx( &wbctx);
+  if ( EVEN(sts)) {
+    strcpy( return_string, "");
+    *return_decl = CCM_DECL_STRING;
+    return CMD__NOWBATTACHED;
+  }
+
+  sts = wccm_get_ldhses( &ldhses);
+  if ( EVEN(sts)) {
+    strcpy( return_string, "");
+    *return_decl = CCM_DECL_STRING;
+    return CMD__NOVOLATTACHED;
+  }
+
+  if ( arg_count != 0)
+    return CCM__ARGMISM;
+
+  sts = ldh_GetSessionInfo( ldhses, &info);
+  if (ODD(sts))
+    sts = ldh_VolumeIdToName( wbctx, info.Vid,
+			      name, sizeof( name), &size);
+
+  if ( ODD(sts))
+    strcpy( return_string, name);
+  else
+    strcpy( return_string, "");
+  *return_decl = CCM_DECL_STRING;
+  
+  return 1;
+}
+
 /*************************************************************************
 *
 * Name:		wccm_register()
@@ -990,6 +1046,8 @@ int	wccm_register(
     sts = ccm_register_function( "CheckNewVid", wccm_checknewvid_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "CheckNewVolumeName", wccm_checknewvolumename_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetCurrentVolume", wccm_getcurrentvolume_func);
     if ( EVEN(sts)) return sts;
 
     sts = ccm_create_external_var( "cmd_status", CCM_DECL_INT, 0, 1, 
