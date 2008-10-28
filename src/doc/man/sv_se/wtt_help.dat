@@ -1,6 +1,10 @@
 <topic> overview
 Konfiguratören översikt
 
+<image> pwr_logga.gif
+
+<h1>Konfiguratören översikt
+
 <b>Konstruktörs handbok <link> index, ,$pwr_lang/man_dg.dat
 <b>Konfiguratör		<link> configurator_refman, ,$pwr_lang/man_dg.dat
 <b>Ge editor		<link> index, ,$pwr_lang/man_geref.dat
