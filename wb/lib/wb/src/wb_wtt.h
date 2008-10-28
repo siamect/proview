@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.h,v 1.20 2008-10-09 08:36:12 claes Exp $
+ * Proview   $Id: wb_wtt.h,v 1.21 2008-10-28 09:54:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -285,7 +285,7 @@ class Wtt : public WUtility {
     static int format_selection( void *ctx, pwr_sAttrRef attrref, 
 				 char **value_return, int is_class, int is_attr,
 				 wnav_eSelectionFormat format);
-    static int start_wizard( Wtt *wtt);
+    static int start_wizard( Wtt *wtt, pwr_tCid vcid);
     static void set_twowindows_cb( void *wtt, int two, int display_w1,
 				   int display_w2);
     static pwr_tStatus ldh_this_session_cb( void *ctx, ldh_sEvent *event);

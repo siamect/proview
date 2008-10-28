@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.cpp,v 1.42 2008-10-15 06:04:55 claes Exp $
+ * Proview   $Id: wb_wtt.cpp,v 1.43 2008-10-28 09:54:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -101,11 +101,20 @@ int Wtt::format_selection( void *ctx, pwr_sAttrRef attrref,
   return 0;
 }
 
-int Wtt::start_wizard( Wtt *wtt)
+int Wtt::start_wizard( Wtt *wtt, pwr_tCid vcid)
 {
   pwr_tCmd cmd;
 
-  strcpy( cmd, "@$pwr_exe/wb_wiz_directoryvolume");
+  switch ( vcid) {
+  case pwr_eClass_DirectoryVolume:
+    strcpy( cmd, "@$pwr_exe/wb_wiz_directoryvolume");
+    break;
+  case pwr_eClass_RootVolume:
+    strcpy( cmd, "@$pwr_exe/wb_wiz_rootvolume");
+    break;
+  default:
+    return 1;
+  }
   wtt->wnav->command( cmd);
   return 1;
 }

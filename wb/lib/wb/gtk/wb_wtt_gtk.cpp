@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.26 2008-10-15 06:04:55 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.27 2008-10-28 09:50:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2714,17 +2714,22 @@ WttGtk::WttGtk(
     wnavnode->volume_attached( wbctx, ldhses, 0);
   }
 
-  if ( wb_type == wb_eType_Directory) {
+  if ( wb_type == wb_eType_Directory || wb_type == wb_eType_Volume) {
     // Start configuration wizard if volume is empty
     pwr_tOid oid;
 
     sts = ldh_GetRootList( ldhses, &oid);
     if ( EVEN( sts)) {
-      wnav->wow->HideWarranty();  // Warranty window is hidden behind the wizard
-      set_edit();
-      start_wizard( this);
-      // XtAppAddWorkProc( XtWidgetToApplicationContext(toplevel),
-      //			(XtWorkProc)start_wizard, this) ;
+      pwr_tCid vcid;
+
+      if ( wbctx && volid) {
+	sts = ldh_GetVolumeClass( wbctx, volid, &vcid);
+	if ( vcid == pwr_eClass_RootVolume || vcid == pwr_eClass_DirectoryVolume) {
+	  wnav->wow->HideWarranty();  // Warranty window is hidden behind the wizard
+	  set_edit();
+	  start_wizard( this, vcid);
+	}
+      }
     }
   }
 
