@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_gtk.cpp,v 1.13 2008-10-03 14:18:37 claes Exp $
+ * Proview   $Id: wb_foe_gtk.cpp,v 1.14 2008-10-28 09:49:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1228,7 +1228,7 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   g_signal_connect( widgets.lockconpoint, "activate", 
 		    G_CALLBACK(WFoeGtk::activate_lockconpoint), this);
   gtk_widget_add_accelerator( widgets.lockconpoint, "activate", accel_g,
-			      'z', GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
+			      'd', GdkModifierType(GDK_CONTROL_MASK | GDK_SHIFT_MASK), GTK_ACCEL_VISIBLE);
 
   widgets.cut = gtk_image_menu_item_new_from_stock(GTK_STOCK_CUT, accel_g);
   g_signal_connect(widgets.cut, "activate", G_CALLBACK(WFoeGtk::activate_cut), this);
