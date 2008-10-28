@@ -16,8 +16,8 @@
 #include "xtt_audio.h"
 
 #define OSS_BUFFER_SIZE 65536
-#define ALSA_BUFFER_SIZE 65536
-#define AUDIO_BUFFER_SIZE 65536
+#define ALSA_BUFFER_SIZE (65536 * 4)
+#define AUDIO_BUFFER_SIZE (65536 * 4)
 #define AUDIO_SAMPLE_RATE 44100
 //using namespace std;
 
@@ -128,6 +128,7 @@ int XttAudio::init(char *OSS_device, char * ALSA_device)
 int XttAudio::beep( pwr_tAttrRef *arp)
 {
   int size;
+  int asize = 0;
   short *buffer;
   pwr_tTid tid;
   pwr_tStatus sts;
@@ -199,20 +200,20 @@ int XttAudio::beep( pwr_tAttrRef *arp)
 
 	if ( strncmp( sound.Source, "Sine", 4) == 0 ||
 	     strncmp( sound.Source, "Square", 6) == 0) {
-	  size = 2 * int(sound.Length * srate);
-	  size = ((size - 1) / (AUDIO_BUFFER_SIZE/2) + 1) * AUDIO_BUFFER_SIZE/2;
+	  asize = size = 2 * int(sound.Length * srate);
+	  size = ((size - 1) / (hw_buff_size) + 1) * hw_buff_size;
 	  buffer = (short *) calloc( sizeof(short), size);
 	  if(!buffer) return XNAV__NOMEMORY;
 
 	  for ( int i = 0; i < int(sizeof(sound.ToneTable)/sizeof(sound.ToneTable[0])); i++) {
 	    if ( sound.VolumeTable[i] > 0) {
 	      if ( strncmp( sound.Source, "Sine", 4) == 0) {
-		MakeSine( buffer, size, 0, 0, sound.Length, sound.BaseTone + sound.ToneTable[i], 
+		MakeSine( buffer, asize, 0, 0, sound.Length, sound.BaseTone + sound.ToneTable[i], 
 			  sound.Volume/100 * sound.VolumeTable[i], sound.Volume/100 * sound.VolumeTable[i], 
 			  sound.Attack, sound.Decay, sound.Sustain/100, sound.Release, sound.Tremolo/100);
 	      }
 	      else if ( strncmp( sound.Source, "Square", 6) == 0) {
-		MakeSquare( buffer, size, 0, 0, sound.Length, sound.BaseTone + sound.ToneTable[i], 
+		MakeSquare( buffer, asize, 0, 0, sound.Length, sound.BaseTone + sound.ToneTable[i], 
 			    sound.Volume/100 * sound.VolumeTable[i], sound.Volume/100 * sound.VolumeTable[i], 
 			    sound.Attack, sound.Decay, sound.Sustain/100, sound.Release, sound.Tremolo/100);
 	      }
@@ -254,7 +255,7 @@ int XttAudio::beep( pwr_tAttrRef *arp)
 	    
 	    if ( chunk.wChannels == 1) {
 	      size = chunk.dataSize * 2;
-	      size = ((size - 1) / (AUDIO_BUFFER_SIZE/2) + 1) * AUDIO_BUFFER_SIZE/2;
+	      size = ((size - 1) / (hw_buff_size) + 1) * hw_buff_size;
 	      buffer = (short *) calloc( sizeof(short), size);
 	      if ( !buffer) return XNAV__NOMEMORY;
 
@@ -265,7 +266,7 @@ int XttAudio::beep( pwr_tAttrRef *arp)
 	    else {
 	      // wChannels == 2
 	      size = chunk.dataSize;
-	      size = ((size - 1) / (AUDIO_BUFFER_SIZE/2) + 1) * AUDIO_BUFFER_SIZE/2;
+	      size = ((size - 1) / (hw_buff_size) + 1) * hw_buff_size;
 	      buffer = (short *) calloc( sizeof(short), size);
 	      if ( !buffer) return XNAV__NOMEMORY;
 
@@ -286,7 +287,7 @@ int XttAudio::beep( pwr_tAttrRef *arp)
 	      fclose(fp);
 
 	      size = chunk.dataSize * 2;
-	      size = ((size - 1) / (AUDIO_BUFFER_SIZE/2) + 1) * AUDIO_BUFFER_SIZE/2;
+	      size = ((size - 1) / (hw_buff_size) + 1) * hw_buff_size;
 	      buffer = (short *) calloc( sizeof(short), size);
 	      if ( !buffer) return XNAV__NOMEMORY;
 
@@ -298,7 +299,7 @@ int XttAudio::beep( pwr_tAttrRef *arp)
 	    else {
 	      // wChannels == 2
 	      size = chunk.dataSize / 2;
-	      size = ((size - 1) / (AUDIO_BUFFER_SIZE/2) + 1) * AUDIO_BUFFER_SIZE/2;
+	      size = ((size - 1) / (hw_buff_size) + 1) * hw_buff_size;
 	      buffer = (short *) calloc( sizeof(short), size);
 	      if ( !buffer) return XNAV__NOMEMORY;
 
@@ -331,7 +332,7 @@ int XttAudio::beep( pwr_tAttrRef *arp)
 	sound_cnt = j;
 
 	size = 2 * int(seq.Length * srate);
-	size = ((size - 1) / (AUDIO_BUFFER_SIZE/2) + 1) * AUDIO_BUFFER_SIZE/2;
+	size = ((size - 1) / (hw_buff_size) + 1) * hw_buff_size;
 	buffer = (short *) calloc( sizeof(short), size);
 	if(!buffer) return XNAV__NOMEMORY;
 
@@ -400,7 +401,7 @@ int XttAudio::beep( pwr_tAttrRef *arp)
   if ( EVEN(sts)) {
     // Standard beep
     size = 2 * int( 0.3 * srate);
-    size = ((size - 1) / (AUDIO_BUFFER_SIZE/2) + 1) * AUDIO_BUFFER_SIZE/2;
+    size = ((size - 1) / (hw_buff_size) + 1) * hw_buff_size;
     buffer = (short *) calloc( sizeof(short), size);
     if(!buffer) return XNAV__NOMEMORY;
 
@@ -408,11 +409,19 @@ int XttAudio::beep( pwr_tAttrRef *arp)
   }
 
   write_buffer = buffer;
+  write_buffer_asize = asize;
   write_buffer_size = size;
   write_buffer_idx = 0;
   audio_write( this);
 
   return XNAV__SUCCESS;
+}
+
+void XttAudio::audio_stop( void *a)
+{
+  XttAudio *audio = (XttAudio *)a;
+
+  snd_pcm_drop( audio->ALSA_handle);  
 }
 
 void XttAudio::audio_write( void *data)
@@ -453,27 +462,52 @@ void XttAudio::audio_write( void *data)
   }
 
   else if(ALSA_audio_ok) {
-    int size = audio->write_buffer_size - audio->write_buffer_idx;
-    if ( size > ALSA_BUFFER_SIZE/2)
-      size = ALSA_BUFFER_SIZE/2;
+    int size, asize;
 
-    printf( "Write idx: %d totsize: %d size: %d\n", audio->write_buffer_idx, audio->write_buffer_size, size);
+    asize = audio->write_buffer_asize;
+
+    if ( audio->write_buffer_asize && audio->write_buffer_asize < audio->write_buffer_size) {
+      snd_pcm_nonblock( audio->ALSA_handle, 1);
+      snd_pcm_drop( audio->ALSA_handle);
+    }
+    else {
+      snd_pcm_nonblock( audio->ALSA_handle, 0);
+      snd_pcm_drop( audio->ALSA_handle);
+    }
 
     snd_pcm_prepare( audio->ALSA_handle);
+    // snd_pcm_start( audio->ALSA_handle);
+
     for (;;) {
+      if ( audio->write_buffer_asize)
+      	size = audio->write_buffer_asize - audio->write_buffer_idx;
+      else
+	size = audio->write_buffer_size - audio->write_buffer_idx;
+      if ( size > audio->hw_buff_size)
+	size = audio->hw_buff_size;
+
+      int time = 1000 * asize/2 / srate;
+      audio->timerid->add( time, audio_stop, audio);
+
       rc = snd_pcm_writei( audio->ALSA_handle, &audio->write_buffer[audio->write_buffer_idx], 
 			 size/2);
+
+      printf( "Write idx: %d totsize: %d size: %d written: %d actsize: %d\n", audio->write_buffer_idx, audio->write_buffer_size, size, rc*2, asize);
+
       if (rc == -EPIPE) {
 	// EPIPE means underrun
 	fprintf(stderr, "ALSA audio underrun occurred\n");
-	int time = 20;
-	audio->timerid->add( time, audio_write, audio);
+	// int time = 20;
+	// audio->timerid->add( time, audio_write, audio);
+	snd_pcm_close( audio->ALSA_handle);
+	free( audio->write_buffer);
+	audio->write_buffer = 0;
 	return;
 	// snd_pcm_prepare( audio->ALSA_handle);
       }
       else if (rc < 0) {
 	printf("ALSA audio error from writei:%s\n",snd_strerror(rc));
-	snd_pcm_close( audio->ALSA_handle);
+	//snd_pcm_close( audio->ALSA_handle);
 	free( audio->write_buffer);
 	audio->write_buffer = 0;
 	return;
@@ -482,12 +516,14 @@ void XttAudio::audio_write( void *data)
 	fprintf(stderr,"ALSA audio short write, write %d frames\n", rc);
       }
       audio->write_buffer_idx += size;
-      if ( audio->write_buffer_idx < audio->write_buffer_size) {
+      if ( (audio->write_buffer_asize && audio->write_buffer_idx < audio->write_buffer_asize) ||
+      	   (!audio->write_buffer_asize && audio->write_buffer_idx < audio->write_buffer_size)) {
+	//if ( audio->write_buffer_idx < audio->write_buffer_size) {
 	// Submit next write
-#if 0
-	int time = 1000 * size/2 / srate;
-	audio->timerid->add( time, audio_write, audio);
-#endif
+
+	// int time = 1000 * size/2 / srate;
+	// audio->timerid->add( time, audio_write, audio);
+
       }    
       else {
 	// Free buffer
@@ -570,6 +606,21 @@ int XttAudio::Init_ALSA(char *device, unsigned int samplerate)
       snd_pcm_close(ALSA_handle);
       return -1;
     }
+
+    int msize;
+    err = snd_pcm_hw_params_get_buffer_size_min(hw_params, (snd_pcm_uframes_t *)&msize);
+    if ( err >= 0) {
+      hw_buff_size = 4 * msize;
+      // hw_buff_size = 65536 / 2;
+      printf( "Buffer size min: %d\n", msize * 2);
+      if((err =  snd_pcm_hw_params_set_buffer_size_near(ALSA_handle, hw_params, (snd_pcm_uframes_t *)&msize)) <0) {
+	fprintf(stderr, "could not set buffer size (%s)\n",snd_strerror (err));
+      }
+    }
+    err = snd_pcm_hw_params_get_buffer_size_max(hw_params, (snd_pcm_uframes_t *)&msize);
+    printf( "Buffer size max: %d\n", msize * 2);
+
+
     if ((err = snd_pcm_hw_params (ALSA_handle, hw_params)) < 0)
     {
       fprintf (stderr, "cannot set parameters (%s)\n",snd_strerror (err));

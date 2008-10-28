@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_audio.h,v 1.4 2007-01-04 08:22:46 claes Exp $
+ * Proview   $Id: xtt_audio.h,v 1.5 2008-10-28 10:08:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -64,7 +64,9 @@ class XttAudio
     static CoWow *wow;
     double freq[100];
     short *write_buffer;
+    int hw_buff_size;
     int write_buffer_size;
+    int write_buffer_asize;
     int write_buffer_idx;
     CoWowTimer *timerid;
     pwr_tAttrRef queue[AUDIO_QUESIZE];
@@ -82,6 +84,7 @@ class XttAudio
 		    int tone, double volume_ch1, double volume_ch2, double attack, double decay, 
 		    double sustain, double release, double tremolo);
     static void audio_write( void *data);
+    static void audio_stop( void *data);
 };
 
 #endif
