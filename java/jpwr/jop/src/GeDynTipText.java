@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeDynTipText.java,v 1.3 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: GeDynTipText.java,v 1.4 2008-10-28 09:47:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -32,7 +32,7 @@ public class GeDynTipText extends GeDynElem {
     this.text = text;
   }
   public void connect() {
-    if ( text.charAt(0) == '&') {
+    if ( text.length() > 0 && text.charAt(0) == '&') {
       String attrName = dyn.getAttrName( text.substring(1));        
 	
       CdhrString cdhr = dyn.en.gdh.getObjectInfoString( attrName);
