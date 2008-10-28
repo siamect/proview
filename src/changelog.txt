@@ -100,5 +100,10 @@
 080905 cs  qcom      Argument -n added to rt_qmon for start without the presence of rt_neth.
 080905 cs  pkg       New package pwrsev for Storage Environment.
 080915 cs  trend     Zero Multiple attribute in DsTrend object caused termination of rt_trend.
+081015 cs  pwrs      New volume class, DetachedClassVolume, added.
+081015 cs  convert   Conversion of .png files to postscript didn't work.
+081015 cs  convert   Font TimesNewRoman changed to Times-Roman in postscript generation (TimesNewRoman doesn't seems to be known by all printers).
 081016 rk  rt        Changed plc-handling so cycletimes faster tha 1 ms is possible.
 081017 rk  rt        Added a few new enumeration types to pwrb (YesNo, TrueFalse).
+081022 cs  convert   Xtthelp bookmark on header didn't work after html conversion.
+081024 cs  xtthelp   New program co_help to view helptexts.
