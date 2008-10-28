@@ -1,0 +1,258 @@
+!** Description: Initial configuration of directory volume
+# 
+#  Proview   $Id: wb_wiz_rootvolume.pwr_com,v 1.1 2008-10-28 09:46:10 claes Exp $
+#  Copyright (C) 2005 SSAB Oxelösund AB.
+#
+#  This program is free software; you can redistribute it and/or 
+#  modify it under the terms of the GNU General Public License as 
+#  published by the Free Software Foundation, either version 2 of 
+#  the License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful 
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License 
+#  along with the program, if not, write to the Free Software 
+#  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#
+
+#
+# Main script
+#
+main()
+  extern string pwr_wizard_title = "Configure Root Volume";
+  extern int rv_quit = 0;
+  extern int rv_prev = 0;
+  extern string rv_error_message;
+  extern int rv_prstation = 1;
+  extern int rv_opstation = 0;
+  extern int rv_standard = 1;
+  extern int rv_customized = 0;
+  extern string rv_nodehierroot;
+  extern string rv_nodename;
+  extern string rv_opop;
+  extern string rv_opmaintenance;
+  extern int rv_server_statusserver = 1;
+  extern int rv_server_backup = 1;
+  extern int rv_server_nodelinksup;
+  extern int rv_server_fast;
+  extern int rv_server_trend;
+  extern int rv_server_webhandler = 1;
+  extern int rv_server_sysmon;
+  extern int rv_server_histmon;
+  extern int rv_server_sevserver;
+  extern int rv_server_opcserver;
+  extern int rv_server_remh;
+  extern int rv_server_remlogg;
+  extern int rv_server_elog;
+
+  string volume;
+  string str1;
+  string nname;
+  string oname;
+  string current_node;
+
+  verify(0);
+
+  rv_nodehierroot = get_pwr_config( "defaultNodeHierRoot");
+  rv_opop = get_pwr_config( "defaultOpOp");
+  rv_opmaintenance = get_pwr_config( "defaultOpMaintenance");
+
+  if ( ! EditMode())
+    MessageDialog("Error", "Enter edit mode before starting wizard");
+    goto exit_now;
+  endif
+
+  volume = GetCurrentVolume();
+  if ( volume == "")
+    MessageDialog("Error", "Can't get current volume, wizard aborted");
+    goto_exit_now;
+  endif   
+
+  str1 = extract( 1, 3, volume);
+  str1 = toupper( str1);
+  if ( str1 == "VOL")
+    rv_nodename = extract( 4, 79, volume);
+  else
+    rv_nodename = volume;
+  endif
+
+  OpenGraph( "$pwr_exe/wb_wizard_frame", 0, pwr_wizard_title);
+
+page_1:
+  # Station type page
+  SetSubwindow( "wb_wizard_frame", "wizwin", "$pwr_exe/wb_wiz_rootvolume_1", 1);
+  if ( rv_quit)
+    goto exit_now;
+  endif
+
+  if ( rv_prstation)
+    printf( "PrStation configuration\n");
+  endif
+  if ( rv_opstation)
+    printf( "OpStation configuration\n");
+  endif
+  
+page_2:
+  # Configuration type page
+  SetSubwindow( "wb_wizard_frame", "wizwin", "$pwr_exe/wb_wiz_rootvolume_2", 1);
+  if ( rv_quit)
+    goto exit_now;
+  endif
+  if ( rv_prev)
+    rv_prev = 0;
+    goto page_1;
+  endif
+
+  if ( rv_standard)
+    goto page_4;
+  endif
+
+page_3:
+  # Customized configuration of Process station
+  SetSubwindow( "wb_wizard_frame", "wizwin", "$pwr_exe/wb_wiz_rootvolume_3", 1);
+  if ( rv_quit)
+    goto exit_now;
+  endif
+  if ( rv_prev)
+    rv_prev = 0;
+    goto page_2;
+  endif
+  
+page_4:
+  SetSubwindow( "wb_wizard_frame", "wizwin", "$pwr_exe/wb_wiz_rootvolume_4", 1);
+  if ( rv_quit)
+    goto exit_now;
+  endif
+
+  # Create objects
+  str1 = volume + ":";
+  set attr/name='str1'/attr=OperatingSystem/value=64/nolog/noconf
+
+  if ( rv_nodehierroot != "")
+    create object/name="'rv_nodehierroot'"/dest=""/class=$NodeHier
+    create object/name="'rv_nodename'"/dest='rv_nodehierroot'/class=$Node/first
+    nname = rv_nodehierroot + "-" + rv_nodename;
+  else
+    create object/name="'rv_nodename'"/dest=""/class=$Node
+    nname = rv_nodename;
+  endif
+
+  if ( rv_opop != "")
+    oname = nname + "-" + "Op";
+    move object/rename="'rv_opop'"/source='oname'
+  endif
+
+  if ( rv_opmaintenance != "")
+    oname = nname + "-" + "Maintenance";
+    move object/rename="'rv_opmaintenance'"/source='oname'
+  endif
+
+  # Create (or delete) server objects
+  if ( !rv_server_backup)
+    oname = nname + "-" + "Backup";
+    delete object/name='oname'/noconf/nolog
+  endif
+
+  if ( !rv_server_statusserver)
+    oname = nname + "-" + "StatusServer";
+    delete object/name='oname'/noconf/nolog
+  endif
+
+  if ( !rv_server_webhandler)
+    oname = nname + "-" + "WebHandler";
+    delete tree/name='oname'/noconf/nolog
+  endif
+
+  if ( rv_server_nodelinksup)
+    create object/dest='nname'/name="NodeLinkSup"/last/class=NodeLinkSup
+  endif
+
+  if ( rv_server_fast)
+    create object/dest='nname'/name="DsFastConf"/last/class=DsFastConf
+  endif
+  if ( rv_server_trend)
+    create object/dest='nname'/name="DsTrendConf"/last/class=DsTrendConf
+  endif
+  if ( rv_server_sysmon)
+    create object/dest='nname'/name="SysMon"/last/class=SysMonConfig
+  endif
+  if ( rv_server_histmon)
+    create object/dest='nname'/name="SevHistMonitor"/last/class=SevHistMonitor
+    oname = nname + "-SevHistMonitor";
+    create object/dest='oname'/name="1s"/last/class=SevHistThread
+    oname = nname + "-SevHistMonitor-1s";
+    set attr/name='oname'/attr=ScanTime/value=1/nolog/noconf
+    if ( rv_server_sevserver)
+      str1 = tolower( rv_nodename);
+      set attr/name='oname'/attr=ServerNode/value="'str1'"/nolog/noconf
+    endif
+  endif
+  if ( rv_server_sevserver)
+    create object/dest='nname'/name="SevServer"/last/class=SevServer
+  endif
+  if ( rv_server_opcserver)
+    create object/dest='nname'/name="OpcServer"/last/class=Opc_ServerConfig
+  endif
+  if ( rv_server_remh)
+    create object/dest='nname'/name="Remote"/last/class=RemoteConfig
+  endif
+  if ( rv_server_remlogg)
+    create object/dest='nname'/name="Logg"/last/class=LoggConfig
+  endif
+  if ( rv_server_elog)
+    oname = nname + "-" + "MessageHandler";
+    set attr/name='oname'/attr=EventLogSize/value=10000/noconf/nolog
+  endif
+
+  if ( rv_opstation)
+    # Create a dummy plc
+    #create object/dest=""/name="Op"/after/class=$PlantHier
+    #create object/dest=Op/name="Dummy"/first/class=PlcPgm
+    #create object/dest=Op-Dummy/name="W"/first/class=WindowPlc
+    #set attr/name=Op-Dummy-W/attr=Modified/value="01-JUL-2008 01:00:00"/nolog/noconf    
+  endif
+
+  save/quiet
+
+  # Build
+  #noedit
+  #current_node = get_node_name();
+  #build node/name='current_node'
+
+
+exit_now:
+  CloseGraph("wb_wizard_frame");
+  delete rv_quit;
+  delete rv_prev;
+  delete rv_prstation;
+  delete rv_opstation;
+  delete rv_standard;
+  delete rv_customized;
+  delete rv_nodehierroot;
+  delete rv_nodename;
+  delete rv_opop;
+  delete rv_opmaintenance;
+  delete pwr_wizard_title;
+  delete rv_error_message;
+  delete rv_server_statusserver;
+  delete rv_server_backup;
+  delete rv_server_nodelinksup;
+  delete rv_server_fast;
+  delete rv_server_trend;
+  delete rv_server_webhandler;
+  delete rv_server_sysmon;
+  delete rv_server_histmon;
+  delete rv_server_sevserver;
+  delete rv_server_opcserver;
+  delete rv_server_remh;
+  delete rv_server_remlogg;
+  delete rv_server_elog;
+
+endmain
+
+
+
+
