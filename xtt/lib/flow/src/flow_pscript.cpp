@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_pscript.cpp,v 1.8 2008-10-16 08:58:06 claes Exp $
+ * Proview   $Id: flow_pscript.cpp,v 1.9 2008-10-28 09:29:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -188,6 +188,8 @@ int FlowPscript::arc( double x, double y, double width, double height, int angle
   double pi = 3.14159;
 
   idx = MAX( 0.5, idx);
+  angle1 = angle1 % 360;
+  angle2 = angle2 % 360;
 
   if ( type == flow_eDrawType_LineDashed)
   {
