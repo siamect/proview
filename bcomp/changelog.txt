@@ -16,3 +16,4 @@
 080317 cs  bcomp      General Frequencyconverter classes for Profibus PPO5 and PPO3 protocol, with motor, fan and pump aggregates.
 080404 cs  bcomp      Connections replaced with lines in graphs to enable usage in subwindows.
 080602 cs  bcomp      Objectgraph for CompMode: MinSet/MaxSet and MinOut/MaxOut used for slider limits and input limits.
+081028 cs  bcomp      Components BaseActuatorIncrDecr and BaseValveIncrDecr added.
