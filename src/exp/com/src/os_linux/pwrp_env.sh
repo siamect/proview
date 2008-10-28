@@ -1,6 +1,6 @@
 #! /bin/bash
 #
-# Proview   $Id: pwrp_env.sh,v 1.14 2008-04-11 12:20:10 claes Exp $
+# Proview   $Id: pwrp_env.sh,v 1.15 2008-10-28 09:38:07 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -573,7 +573,7 @@ pwrc_create_func()
 if [ -e "$pwrp_login/sysinfo.txt" ]; then
   echo "-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_"
   echo "Welcome to"
-  echo "\`$pwr_exe/pwrp_env.sh show project\`"
+  echo "\`\$pwr_exe/pwrp_env.sh show project\`"
   echo ""
   cat \$pwrp_login/sysinfo.txt
   echo "-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_"
@@ -593,13 +593,16 @@ EOF
 Edit file $pwrp_exe/xtt_help.dat to write this description.
 </topic>
 
-<include> $pwr_lang/profibus_xtthelp.dat
-<include> $pwr_lang/opc_xtthelp.dat
-<include> $pwr_lang/basecomponent_xtthelp.dat
-<include> $pwr_lang/othermanufacturer_xtthelp.dat
-<include> $pwr_lang/abb_xtthelp.dat
-<include> $pwr_lang/siemens_xtthelp.dat
-<include> $pwr_lang/ssabox_xtthelp.dat
+<include> \$pwr_lang/profibus_xtthelp.dat
+<include> \$pwr_lang/opc_xtthelp.dat
+<include> \$pwr_lang/basecomponent_xtthelp.dat
+<include> \$pwr_lang/othermanufacturer_xtthelp.dat
+<include> \$pwr_lang/abb_xtthelp.dat
+<include> \$pwr_lang/siemens_xtthelp.dat
+<include> \$pwr_lang/remote_xtthelp.dat
+<include> \$pwr_lang/nmps_xtthelp.dat
+<include> \$pwr_lang/ssabox_xtthelp.dat
+
 EOF
 
     # Set ownership to user and group pwrp
