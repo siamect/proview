@@ -58,6 +58,10 @@ Texts.
 <TOPIC> overview
 Xtt overview
 
+<image> pwr_logga.gif
+
+<h1>Xtt Overview
+
 <B>Navigator		<LINK> navigator
 <B>Operator window	<LINK> operator window
 <B>Alarmlist		<LINK> alarmlist
@@ -2349,13 +2353,28 @@ If no object is associated, a null-string i returned.
 <TOPIC> classes
 Classes
 
-<B>SystemClasses        <LINK>pwrs
-<B>BaseClasses  	<LINK>pwrb
-<B>BaseComponent  	<LINK>basecomponent
+<B>SystemClasses	<LINK>pwrs, ,$pwr_lang/pwrs_xtthelp.dat
+<B>BaseClasses		<LINK>pwrb, ,$pwr_lang/pwrb_xtthelp.dat
+<B>BaseComponent  	<LINK>basecomponent, ,$pwr_lang/basecomponent_xtthelp.dat
+<B>Profibus	  	<LINK>profibus, ,$pwr_lang/profibus_xtthelp.dat
+<B>Opc	  		<LINK>opc, ,$pwr_lang/opc_xtthelp.dat
+<B>OtherIO	  	<LINK>otherio, ,$pwr_lang/otherio_xtthelp.dat
+<B>SsabOx	  	<LINK>ssabox, ,$pwr_lang/ssabox_xtthelp.dat
+<B>OtherManufacturer  	<LINK>othermanufacturer, ,$pwr_lang/othermanufacturer_xtthelp.dat
+<B>ABB	  		<LINK>abb, ,$pwr_lang/abb_xtthelp.dat
+<B>Siemens 		<LINK>siemens, ,$pwr_lang/siemens_xtthelp.dat
 
 </TOPIC>
 </chapter>
-<include> pwr_lang:pwrb_xtthelp.dat
-<include> pwr_lang:pwrs_xtthelp.dat
-<include> pwr_lang:basecomponent_xtthelp.dat
+
+<include> $pwr_lang/pwrs_xtthelp.dat
+<include> $pwr_lang/pwrb_xtthelp.dat
+<include> $pwr_lang/basecomponent_xtthelp.dat
+<include> $pwr_lang/profibus_xtthelp.dat
+<include> $pwr_lang/opc_xtthelp.dat
+<include> $pwr_lang/ssabox_xtthelp.dat
+<include> $pwr_lang/otherio_xtthelp.dat
+<include> $pwr_lang/othermanufacturer_xtthelp.dat
+<include> $pwr_lang/abb_xtthelp.dat
+<include> $pwr_lang/siemens_xtthelp.dat
 
