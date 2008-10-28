@@ -481,6 +481,7 @@ menu Components
     subgraph    PumpAggr 	pwr_exe:bcomp_pumpaggr.pwsg 		72
     subgraph    Sensor 		pwr_exe:bcomp_sensor.pwsg 		16
     subgraph    SupSwitch 	pwr_exe:bcomp_supswitch.pwsg 		16
+    subgraph    ValveIncrDecr 	pwr_exe:bcomp_valveincrdecr.pwsg 	53
     subgraph    TempSensor 	pwr_exe:bcomp_tempsensor.pwsg 		16
     subgraph    TempSwitch 	pwr_exe:bcomp_tempswitch.pwsg 		16
   }
