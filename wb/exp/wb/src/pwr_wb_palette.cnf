@@ -217,6 +217,9 @@ palette NavigatorPalette
       class RemoteConfig
       class SysMonConfig
       class StatusServerConfig
+      class SevHistMonitor
+      class SevHistThread
+      class SevServer
       class WebHandler
       class WebBrowserConfig
     }
@@ -926,6 +929,7 @@ palette PlcEditorPalette
     menu BaseComponent
     {
       class BaseActuatorAFo
+      class BaseActuatorIncrDecrFo
       class BaseCDamperFo
       class BaseCircuitBreakerFo
       class BaseContactorFo
@@ -946,6 +950,7 @@ palette PlcEditorPalette
       class BaseSafetySwitchFo
       class BaseSensorFo
       class BaseSupSwitchFo
+      class BaseValveIncrDecrFo
       class CompModeDFo
       class CompModeAFo
       class CompModeDMFo
@@ -994,6 +999,7 @@ palette PlcEditorPalette
       class BaseMotorAggrSim
       class BaseMotorIncrDecrAggrSim
       class BaseMotorSim
+      class BaseValveIncrDecrSim
       class Eurotherm_TC3001Sim
       class Eurotherm_TC3001AggrSim
       class SEW_Movidrive_1Sim

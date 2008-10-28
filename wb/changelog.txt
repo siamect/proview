@@ -111,3 +111,8 @@
 080602 cs  wb        Template for application file and .opt file automatically created.
 080624 cs  wb        Secure distribution using scp and ssh instead of ftp and rsh implemented.
 080626 cs  wb        authorized_keys file included in distribution.
+081009 cs  script    New script functions GetNextFreeUserVid, CheckNewVid and CheckNewVolumeName.
+081009 cs  wb        New command 'open database' to open the database for a volume.
+081009 cs  wb        Qualifier /quiet added to 'save' command to avoid questions when saving directory volume.
+081009 cs  wb        New pages in Configure DirectoryVolume wizard to register a volume and open the database for a volume.
+
