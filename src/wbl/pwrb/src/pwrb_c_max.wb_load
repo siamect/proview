@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_max.wb_load,v 1.3 2007-12-21 13:28:48 claes Exp $
+!  Proview   $Id: pwrb_c_max.wb_load,v 1.4 2008-10-28 09:38:40 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -27,7 +27,7 @@ SObject pwrb:Class
 !  Analog maximum function.
 !  @image orm_max_fo.gif
 !
-!  Get maximum of up to 8 integer inputs.
+!  Get maximum of up to 8 analog inputs.
 !  
 !*/
   Object Max $ClassDef 414
