@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.h,v 1.8 2008-10-03 14:18:37 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.h,v 1.9 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,8 +34,8 @@ class WttGtk : public Wtt {
     WttGtk( 
 	void	*wt_parent_ctx,
 	GtkWidget *wt_parent_wid,
-	char 	*wt_name,
-	char	*iconname,
+	const char 	*wt_name,
+	const char	*iconname,
 	ldh_tWBContext wt_wbctx,
 	pwr_tVolumeId wt_volid,
 	ldh_tVolume wt_volctx,
@@ -126,7 +126,7 @@ class WttGtk : public Wtt {
 
     GtkWidget *build_menu();
     GtkWidget *build_submenu( GtkWidget *Parent, int MenuType,
-			      char *MenuTitle, void *MenuUserData,
+			      const char *MenuTitle, void *MenuUserData,
 			      void (*Callback)( GtkWidget *, gpointer),
 			      void *CallbackData, ldh_sMenuItem *Items, int *idx);
 
@@ -143,8 +143,8 @@ class WttGtk : public Wtt {
     virtual void set_noedit_show();
     virtual void set_edit_show();
     virtual void set_twowindows( int two, int display_wnav, int display_wnavnode);
-    virtual void message( char severity, char *message);
-    virtual void set_prompt( char *prompt);
+    virtual void message( char severity, const char *message);
+    virtual void set_prompt( const char *prompt);
     virtual void open_change_value();
     virtual void close_change_value();
     virtual void open_change_name();
@@ -155,10 +155,10 @@ class WttGtk : public Wtt {
     virtual wb_build *build_new();
     virtual void wpkg_new();
     virtual int ute_new( char *title);
-    virtual void open_input_dialog( char *text, char *title,
-				    char *init_text,
+    virtual void open_input_dialog( const char *text, const char *title,
+				    const char *init_text,
 				    void (*ok_cb)( Wtt *, char *));
-    virtual void open_confirm( char *text, char *title, 
+    virtual void open_confirm( const char *text, const char *title, 
 			       void (*ok_cb)( Wtt *), void (*no_cb)( Wtt *));
     virtual void open_boot_window();
     virtual void update_options_form();

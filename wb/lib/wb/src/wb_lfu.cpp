@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.cpp,v 1.21 2008-10-15 06:04:55 claes Exp $
+ * Proview   $Id: wb_lfu.cpp,v 1.22 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <fstream.h>
+#include <fstream>
 #include <vector>
 
 #if defined OS_VMS
@@ -99,7 +99,7 @@ static void lfu_creadb_qb_yes (
 );
 
 pwr_tStatus lfu_volumelist_load( 
-	char	*filename,
+	const char *filename,
 	lfu_t_volumelist **vollist,
 	int 	*volcount
 )
@@ -641,7 +641,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   pwr_tFloat32	*scantime_ptr;
   pwr_tFloat32	scantime;
   pwr_tBoolean	*distr_disable_ptr;
-  char		*null_nodename = "-";
+  char   	null_nodename[4];
   char		filename[200];
   char		found_file[200];
   char		text[200];
@@ -668,6 +668,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   int           path_file_created = 0;
 
   syntax_error = 0;
+  strcpy( null_nodename, "-");
 
   /* Write system object */
   sts = lfu_WriteSysObjectFile( ldhses);

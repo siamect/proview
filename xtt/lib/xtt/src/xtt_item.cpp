@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_item.cpp,v 1.21 2008-06-25 12:36:18 claes Exp $
+ * Proview   $Id: xtt_item.cpp,v 1.22 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1180,7 +1180,7 @@ int ItemAttrObject::open_crossref( XNavBrow *brow, double x, double y)
   return 1;
 }
 
-ItemHeader::ItemHeader( XNavBrow *brow, char *item_name, char *title,
+ItemHeader::ItemHeader( XNavBrow *brow, const char *item_name, const char *title,
 	brow_tNode dest, flow_eDest dest_code) :
 	Item( pwr_cNObjid, 0)
 {
@@ -1191,7 +1191,7 @@ ItemHeader::ItemHeader( XNavBrow *brow, char *item_name, char *title,
   brow_SetAnnotation( node, 0, title, strlen(title));
 }
 
-ItemHeaderLarge::ItemHeaderLarge( XNavBrow *brow, char *item_name, char *title,
+ItemHeaderLarge::ItemHeaderLarge( XNavBrow *brow, const char *item_name, const char *title,
 	brow_tNode dest, flow_eDest dest_code) :
 	Item( pwr_cNObjid, 0)
 {
@@ -1204,7 +1204,7 @@ ItemHeaderLarge::ItemHeaderLarge( XNavBrow *brow, char *item_name, char *title,
 
 
 ItemTableHeader::ItemTableHeader( XNavBrow *brow ,XNav *tab_xnav, 
-	char *item_name, 
+	const char *item_name, 
 	item_sTableHeader *title,
 	brow_tNode dest, flow_eDest dest_code) :
 	Item( pwr_cNObjid, 0), xnav(tab_xnav), scan(NULL), disconnect(NULL)
@@ -1221,7 +1221,7 @@ ItemTableHeader::ItemTableHeader( XNavBrow *brow ,XNav *tab_xnav,
   brow_SetTraceAttr( node, "Yes", "", flow_eTraceType_User);
 }
 
-ItemText::ItemText( XNavBrow *brow, char *item_name, char *text,
+ItemText::ItemText( XNavBrow *brow, const char *item_name, const char *text,
 	brow_tNode dest, flow_eDest dest_code) :
 	Item( pwr_cNObjid, 0)
 {
@@ -1232,7 +1232,7 @@ ItemText::ItemText( XNavBrow *brow, char *item_name, char *text,
   brow_SetAnnotation( node, 0, text, strlen(text));
 }
 
-ItemHelpHeader::ItemHelpHeader( XNavBrow *brow, char *item_name, char *title,
+ItemHelpHeader::ItemHelpHeader( XNavBrow *brow, const char *item_name, const char *title,
 	brow_tNode dest, flow_eDest dest_code) :
 	Item( pwr_cNObjid, 0)
 {
@@ -1257,9 +1257,9 @@ void ItemHelpHeader::close( XNavBrow *brow, double x, double y)
     xnav->brow_push();
 }
 
-ItemHelp::ItemHelp( XNavBrow *brow, char *item_name, char *text, char *text2, 
-	char *text3, char *item_link, char *item_bookmark, 
-	char *item_file_name, navh_eHelpFile help_file_type, int help_index, brow_tNode dest, flow_eDest dest_code) :
+ItemHelp::ItemHelp( XNavBrow *brow, const char *item_name, const char *text, const char *text2, 
+	const char *text3, const char *item_link, const char *item_bookmark, 
+	const char *item_file_name, navh_eHelpFile help_file_type, int help_index, brow_tNode dest, flow_eDest dest_code) :
 	Item( pwr_cNObjid, 0), file_type(help_file_type), index(help_index)
 {
   type = xnav_eItemType_Help;
@@ -1318,9 +1318,9 @@ int ItemHelp::open_children( XNavBrow *brow, double x, double y)
   return 1;
 }
 
-ItemHelpBold::ItemHelpBold( XNavBrow *brow, char *item_name, char *text, char *text2, 
-	char *text3, char *item_link, char *item_bookmark, 
-	char *item_file_name, navh_eHelpFile help_file_type, int help_index, brow_tNode dest, flow_eDest dest_code) :
+ItemHelpBold::ItemHelpBold( XNavBrow *brow, const char *item_name, const char *text, const char *text2, 
+	const char *text3, const char *item_link, const char *item_bookmark, 
+	const char *item_file_name, navh_eHelpFile help_file_type, int help_index, brow_tNode dest, flow_eDest dest_code) :
 	Item( pwr_cNObjid, 0), file_type(help_file_type), index(help_index)
 {
   type = xnav_eItemType_HelpBold;
@@ -1379,8 +1379,8 @@ int ItemHelpBold::open_children( XNavBrow *brow, double x, double y)
   return 1;
 }
 
-ItemFile::ItemFile( XNavBrow *brow, char *item_name, char *text, 
-	char *item_file_name, item_eFileType item_filetype,
+ItemFile::ItemFile( XNavBrow *brow, const char *item_name, const char *text, 
+	const char *item_file_name, item_eFileType item_filetype,
 	brow_tNode dest, flow_eDest dest_code) :
 	Item( pwr_cNObjid, 0), file_type(item_filetype)
 {
@@ -1545,7 +1545,7 @@ int ItemPlc::open_children( XNavBrow *brow, double x, double y)
 }
 
 
-ItemMenu::ItemMenu( XNavBrow *brow, char *item_name, 
+ItemMenu::ItemMenu( XNavBrow *brow, const char *item_name, 
 	brow_tNode dest, flow_eDest dest_code, xnav_sMenu **item_child_list,
 	int item_is_root) :
 	Item( pwr_cNObjid, item_is_root), child_list(item_child_list)
@@ -1765,7 +1765,7 @@ int ItemCrossref::open_trace( XNavBrow *brow, double x, double y)
 }
 
 
-ItemLocal::ItemLocal( XNavBrow *brow, char *item_name, char *attr, 
+ItemLocal::ItemLocal( XNavBrow *brow, const char *item_name, const char *attr, 
 	int attr_type, int attr_size, double attr_min_limit, 
 	double attr_max_limit, int attr_nochange,
 	void *attr_value_p, brow_tNode dest, flow_eDest dest_code) :

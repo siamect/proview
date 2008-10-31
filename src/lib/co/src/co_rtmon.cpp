@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_rtmon.cpp,v 1.4 2007-05-25 13:39:28 claes Exp $
+ * Proview   $Id: co_rtmon.cpp,v 1.5 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,8 +35,8 @@
 #include "rt_xnav_msg.h"
 
 RtMon::RtMon( void *rtmon_parent_ctx,
-	      char *rtmon_name,
-	      char *rtmon_display,
+	      const char *rtmon_name,
+	      const char *rtmon_display,
 	      pwr_tStatus *status) :
   parent_ctx(rtmon_parent_ctx),
   nodelistnav(NULL), rtmon_displayed(0), help_cb(0), close_cb(0)

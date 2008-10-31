@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growwidget_motif.cpp,v 1.1 2007-01-04 08:08:00 claes Exp $
+ * Proview   $Id: glow_growwidget_motif.cpp,v 1.2 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -83,12 +83,12 @@ static char defaultTranslations[] = "#replace \n\
 <KeyDown>: notify()";
 
 
-static XtActionsRec actionsList[] = { {"notify", (XtActionProc) Notify}};
+static XtActionsRec actionsList[] = { {(char*) "notify", (XtActionProc) Notify}};
 
 GrowClassRec growClassRec = {
   { /* Core class part */
     (WidgetClass) &compositeClassRec,	/* superclass */
-    "Grow",				/* class name */
+    (char*) "Grow",				/* class name */
     sizeof(GrowRec),			/* widget size */
     NULL,				/* class initialize */
     NULL, 				/* class part initialize */
@@ -476,7 +476,7 @@ extern "C" Widget ScrolledGrowCreate(
   XtSetArg( arg[i], XmNbottomAttachment, XmATTACH_FORM);i++;
   XtSetArg( arg[i], XmNrightAttachment, XmATTACH_FORM);i++;
 */
-  grow = (GrowWidget) GrowCreate( form, "grow", arg, i, init_proc, client_data);
+  grow = (GrowWidget) GrowCreate( form, (char*) "grow", arg, i, init_proc, client_data);
   XtManageChild( (Widget) grow);
 
   grow->grow.scroll_h = scroll_h;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_main.cpp,v 1.8 2008-09-18 14:53:54 claes Exp $
+ * Proview   $Id: xtt_main.cpp,v 1.9 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -220,7 +220,7 @@ void Xtt::find_ok( Xtt *xtt, char *search_str)
     xtt->message( 'E', xtt->xnav->get_message( sts));
 }
 
-void Xtt::xtt_message_cb( void *ctx, char severity, char *msg)
+void Xtt::xtt_message_cb( void *ctx, char severity, const char *msg)
 {
   ((Xtt *)ctx)->message( severity, msg);
 }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_procom.h,v 1.2 2007-03-14 06:42:32 claes Exp $
+ * Proview   $Id: co_procom.h,v 1.3 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,12 +20,14 @@
 #ifndef co_procom_h
 #define co_procom_h
 
-#include <vector.h>
+#include <vector>
 
 extern "C" {
 #include "rt_errh.h"
 }
 #include "co_provider.h"
+
+using namespace std;
 
 typedef enum {
   procom_obj_mFlags_Deleted 	= 1 << 0,
@@ -100,7 +102,7 @@ public:
   virtual void provideObjects( pwr_tStatus, vector<procom_obj>&) {}
   virtual void provideObject( pwr_tStatus sts, pwr_tOix oix, pwr_tOix fthoix, pwr_tOix bwsoix,
 			      pwr_tOix fwsoix, pwr_tOix fchoix, pwr_tOix lchoix, pwr_tCid cid,
-			      char *name, char *longname) {}
+			      const char *name, const char *longname) {}
   virtual void provideBody( pwr_tStatus sts, pwr_tOix oix, int size, void *body) {}
   virtual void provideAttr( pwr_tStatus sts, pwr_tOix oix, int size, void *buff) {}
   virtual void provideStatus( pwr_tStatus sts) {}

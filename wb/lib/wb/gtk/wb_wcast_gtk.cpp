@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wcast_gtk.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_wcast_gtk.cpp,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,7 +41,7 @@
 WCastGtk::WCastGtk( 
 	void	*wc_parent_ctx,
 	GtkWidget *wc_parent_wid,
-	char 	*wc_name,
+	const char 	*wc_name,
 	ldh_tSesContext wc_ldhses,
 	pwr_sAttrRef wc_aref,
 	pwr_tStatus *status

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_item.h,v 1.13 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_wnav_item.h,v 1.14 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -117,7 +117,7 @@ class WItemObject : public WItemBaseObject {
 
 class WItemMenu : public WItem {
   public:
-    WItemMenu( WNav *wnav, char *item_name, 
+    WItemMenu( WNav *wnav, const char *item_name, 
 	brow_tNode dest, flow_eDest dest_code, wnav_sMenu **item_child_list,
 	int item_is_root);
     wnav_sMenu		**child_list;
@@ -127,7 +127,7 @@ class WItemMenu : public WItem {
 
 class WItemCommand : public WItem {
   public:
-    WItemCommand( WNav *wnav, char *item_name, 
+    WItemCommand( WNav *wnav, const char *item_name, 
 	brow_tNode dest, flow_eDest dest_code, char *item_command, 
 	int item_is_root, flow_sAnnotPixmap *pixmap);
     char		command[400];
@@ -137,7 +137,7 @@ class WItemCommand : public WItem {
 
 class WItemLocal : public WItem {
   public:
-    WItemLocal( WNav *wnav, char *item_name, char *attr,
+    WItemLocal( WNav *wnav, const char *item_name, const char *attr,
 	int attr_type, int attr_size, double attr_min_limit,
 	double attr_max_limit,
 	void *attr_value_p, brow_tNode dest, flow_eDest dest_code);
@@ -152,19 +152,19 @@ class WItemLocal : public WItem {
 
 class WItemText : public WItem {
   public:
-    WItemText( WNav *wnav, char *item_name, char *text,
+    WItemText( WNav *wnav, const char *item_name, char *text,
 	brow_tNode dest, flow_eDest dest_code);
 };
 
 class WItemHeader : public WItem {
   public:
-    WItemHeader( WNav *wnav, char *item_name, char *title,
+    WItemHeader( WNav *wnav, const char *item_name, const char *title,
 	brow_tNode dest, flow_eDest dest_code);
 };
 
 class WItemHeaderLarge : public WItem {
   public:
-    WItemHeaderLarge( WNav *wnav, char *item_name, char *title,
+    WItemHeaderLarge( WNav *wnav, const char *item_name, char *title,
 	brow_tNode dest, flow_eDest dest_code);
 };
 
@@ -218,7 +218,7 @@ class WItemDocBlock : public WItem {
 
 class WItemFile : public WItem {
   public:
-    WItemFile( WNav *wnav, char *item_name, char *text, char *file,
+    WItemFile( WNav *wnav, const char *item_name, char *text, char *file,
 	item_eFileType item_filetype, brow_tNode dest, flow_eDest dest_code);
     int			open_children( WNav *wnav, double x, double y);
     char file_name[120];

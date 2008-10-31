@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_curvectx.cpp,v 1.4 2007-01-15 13:19:09 claes Exp $
+ * Proview   $Id: glow_curvectx.cpp,v 1.5 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 #include <stdlib.h>
-#include <fstream.h>
+#include <fstream>
 #include <math.h>
 #include <float.h>
 #include "glow_ctx.h"

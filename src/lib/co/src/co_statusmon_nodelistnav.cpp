@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelistnav.cpp,v 1.7 2008-03-03 11:02:27 claes Exp $
+ * Proview   $Id: co_statusmon_nodelistnav.cpp,v 1.8 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -761,7 +761,7 @@ void NodelistNav::force_trace_scan()
     brow_TraceScan( brow->ctx);
 }
 
-void NodelistNav::message( pwr_tStatus sts, char *node, int idx, char *text)
+void NodelistNav::message( pwr_tStatus sts, const char *node, int idx, const char *text)
 {
   int severity;
   char msg[200];
@@ -835,7 +835,7 @@ int NodelistNav::update_nodes()
     if ( !first_scan && ODD(sts) && EVEN(node_list[i].connection_sts))
       message( sts, node_list[i].node_name, i, "Connection up to server");
     else if ( (!first_scan && EVEN(sts) && ODD(node_list[i].connection_sts)) ||
-	      first_scan && EVEN(sts))
+	      (first_scan && EVEN(sts)))
       message( sts, node_list[i].node_name, i, "Connection down to server");
     node_list[i].connection_sts = sts;
 
@@ -1022,7 +1022,7 @@ void NodelistNav::remove_node( char *name)
   }
 }
 
-void NodelistNav::add_node( char *name, char *description, char *opplace)
+void NodelistNav::add_node( const char *name, const char *description, const char *opplace)
 {
   brow_tNode	*nodelist;
   int		node_count;
@@ -1134,7 +1134,7 @@ void NodelistNav::attrvalue_to_string( int type_id, void *value_ptr,
   }
 }
 
-ItemNode::ItemNode( NodelistNav *item_nodelistnav, char *item_name, char *item_node_descr,
+ItemNode::ItemNode( NodelistNav *item_nodelistnav, const char *item_name, const char *item_node_descr,
 		    brow_tNode dest, flow_eDest dest_code):
   ItemBase( item_nodelistnav, item_name), syssts_open(0)
 {
@@ -1255,7 +1255,7 @@ int ItemNode::close( NodelistNav *nodelistnav, double x, double y)
   return 1;
 }
 
-ItemAttr::ItemAttr( NodelistNav *item_nodelistnav, char *item_name, char *attr, 
+ItemAttr::ItemAttr( NodelistNav *item_nodelistnav, const char *item_name, const char *attr, 
 	int attr_type, int attr_size, void *attr_value_p,
 	brow_tNode dest, flow_eDest dest_code) :
 	ItemBase( item_nodelistnav, item_name), value_p(attr_value_p), first_scan(1), 
@@ -1276,7 +1276,7 @@ ItemAttr::ItemAttr( NodelistNav *item_nodelistnav, char *item_name, char *attr,
   brow_SetTraceAttr( node, attr, "", flow_eTraceType_User);
 }
 
-ItemAttrSysSts::ItemAttrSysSts( NodelistNav *item_nodelistnav, char *item_name, char *attr, 
+ItemAttrSysSts::ItemAttrSysSts( NodelistNav *item_nodelistnav, const char *item_name, const char *attr, 
 				  int attr_type, int attr_size, void *attr_value_p, 
 				  void *attr_status_p, ItemNode *attr_parent, 
 				brow_tNode dest, flow_eDest dest_code) :
@@ -1591,7 +1591,7 @@ int ItemAttrSysSts::close( NodelistNav *nodelistnav, double x, double y)
   return 1;
 }
 
-ItemAttrSts::ItemAttrSts( NodelistNav *item_nodelistnav, char *item_name, char *attr, 
+ItemAttrSts::ItemAttrSts( NodelistNav *item_nodelistnav, const char *item_name, const char *attr, 
 			  char *attr_value_p, 
 			  pwr_tStatus *attr_status_p, char *attr_name_p, ItemAttrSysSts *attr_parent, 
 			  brow_tNode dest, flow_eDest dest_code) :

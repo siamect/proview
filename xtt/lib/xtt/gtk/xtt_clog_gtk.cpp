@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_clog_gtk.cpp,v 1.3 2008-09-18 14:55:59 claes Exp $
+ * Proview   $Id: xtt_clog_gtk.cpp,v 1.4 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -49,7 +49,7 @@ static void destroy_event( GtkWidget *w, gpointer data)
 
 CLogGtk::CLogGtk( void *clog_parent_ctx,
 		  GtkWidget *clog_parent_wid,
-		  char *clog_name,
+		  const char *clog_name,
 		  pwr_tStatus *status) :
   CLog( clog_parent_ctx, clog_name, status), parent_wid(clog_parent_wid), filter_form(0),
   clock_cursor(0)

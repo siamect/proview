@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_crrgen.h,v 1.1 2008-05-28 11:53:47 claes Exp $
+ * Proview   $Id: wb_crrgen.h,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #ifndef wb_crrgen_h
 #define wb_crrgen_h
 
-#include <iostream.h>
+#include <iostream>
 #include "pwr.h"
 #include "pwr_class.h"
 #include "co_wow.h"

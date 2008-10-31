@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_journal.cpp,v 1.4 2008-09-18 14:55:45 claes Exp $
+ * Proview   $Id: ge_graph_journal.cpp,v 1.5 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,9 +24,9 @@
 #include <ctype.h>
 #include <math.h>
 #include <float.h>
-#include <iostream.h>
-#include <fstream.h>
-#include <vector.h>
+#include <iostream>
+#include <fstream>
+#include <vector>
 
 #include "rt_load.h"
 #include "flow.h"
@@ -59,7 +59,7 @@
 
 static const int debug = 0;
 
-static char *gname( char *name)
+static char *gname( const char *name)
 {
   static char n[80];
   char *s;
@@ -97,7 +97,7 @@ GraphJournal::~GraphJournal()
   }
 }
 
-int GraphJournal::open( char *name)
+int GraphJournal::open( const char *name)
 {
   pwr_tFileName fname;
   pwr_tFileName new_filename;

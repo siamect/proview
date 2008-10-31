@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_topdf.cpp,v 1.2 2008-10-16 08:58:06 claes Exp $
+ * Proview   $Id: flow_topdf.cpp,v 1.3 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,9 +24,9 @@
 
 /*_Include files_________________________________________________________*/
 
-#include <iostream.h>
-#include <fstream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <fstream>
+#include <iomanip>
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>

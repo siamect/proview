@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_xtthelpto.h,v 1.3 2005-12-13 15:10:42 claes Exp $
+ * Proview   $Id: cnv_xtthelpto.h,v 1.4 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -43,11 +43,11 @@ class CnvXtthelpTo {
   // CnvXtthelpTo() {}
 
   virtual Cnv_eXtthelpToType type() { return Cnv_eXtthelpToType_Html;}
-  virtual void *insert( navh_eItemType item_type, char *text1,
-			char *text2, char *text3, char *link, 
-			char *link_bookmark, char *file_name,
+  virtual void *insert( navh_eItemType item_type, const char *text1,
+			const char *text2, const char *text3, const char *link, 
+			const char *link_bookmark, const char *file_name,
 			navh_eHelpFile file_type, int help_index, 
-			char *bookmark) 
+			const char *bookmark) 
     { return 0;}
   virtual bool confpass() { return false;}
   virtual void set_confpass( bool conf) {};

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growconglue.cpp,v 1.4 2007-07-05 07:23:49 claes Exp $
+ * Proview   $Id: glow_growconglue.cpp,v 1.5 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
@@ -31,7 +31,7 @@
 #include "glow_draw.h"
 #include "glow_growctx.h"
 
-GrowConGlue::GrowConGlue( GrowCtx *glow_ctx, char *name, double x1, double y1, int nodraw) : 
+GrowConGlue::GrowConGlue( GrowCtx *glow_ctx, const char *name, double x1, double y1, int nodraw) : 
 		GrowNode(glow_ctx,name,0,x1,y1,1,0),
 		line_width_up(-1), line_width_down(-1), line_width_left(-1), line_width_right(-1)
 {

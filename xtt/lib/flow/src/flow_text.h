@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_text.h,v 1.3 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_text.h,v 1.4 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #ifndef flow_text_h
 #define flow_text_h
 
-#include <iostream.h>
+#include <iostream>
 #include "flow.h"
 #include "flow_ctx.h"
 #include "flow_point.h"
@@ -29,7 +29,7 @@
 
 class FlowText : public FlowArrayElem {
   public:
-    FlowText( FlowCtx *flow_ctx, char *text1, double x = 0, double y = 0,
+    FlowText( FlowCtx *flow_ctx, const char *text1, double x = 0, double y = 0,
 	flow_eDrawType d_type = flow_eDrawType_TextHelveticaBold, int t_size = 2) : 
 	ctx(flow_ctx), p(flow_ctx,x,y), draw_type(d_type), text_size(t_size)
 	{ strncpy( text, text1, sizeof(text));};

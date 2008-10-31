@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_login.cpp,v 1.3 2008-10-09 08:50:13 claes Exp $
+ * Proview   $Id: co_login.cpp,v 1.4 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,7 +47,7 @@ void CoLogin::activate_ok()
     return;
   }
   else {
-    message( "User not authorized");
+    message( (char *)"User not authorized");
     printf( "User not authorized\n");
     strcpy( (char *) &password, "");
   }
@@ -65,8 +65,8 @@ void CoLogin::activate_cancel()
 // Constructor
 //
 CoLogin::CoLogin( void		*wl_parent_ctx,
-		char		*wl_name,
-		char		*wl_groupname,
+		const char     	*wl_name,
+		const char     	*wl_groupname,
 		void		(* wl_bc_success)( void *),
 		void		(* wl_bc_cancel)( void *),
 		pwr_tStatus   	*status) :
@@ -87,7 +87,7 @@ CoLogin::~CoLogin()
 //
 //	Check username and password and insert login infomation.
 //
-pwr_tStatus CoLogin::user_check( char *groupname, char *username, char *password)
+pwr_tStatus CoLogin::user_check( const char *groupname, const char *username, const char *password)
 {
   pwr_tStatus		sts;
   unsigned int		priv;
@@ -106,7 +106,7 @@ pwr_tStatus CoLogin::user_check( char *groupname, char *username, char *password
 //
 //	Inserts login info in global priv struct.
 //
-pwr_tStatus CoLogin::insert_login_info( char *groupname, char *password, char *username, 
+pwr_tStatus CoLogin::insert_login_info( const char *groupname, const char *password, const char *username, 
 				       unsigned long priv, unsigned long attr)
 {
   strcpy( m_username, username);

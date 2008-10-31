@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.68 2008-09-16 06:17:29 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.69 2008-10-31 12:51:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -676,7 +676,7 @@ void GeDyn::get_transtab( grow_tObject object, char **tt)
     *tt = (char *)transtab;
 }
 
-void GeDyn::set_attribute( grow_tObject object, char *attr_name, int second)
+void GeDyn::set_attribute( grow_tObject object, const char *attr_name, int second)
 {
   int cnt = second + 1;
 
@@ -730,7 +730,7 @@ void GeDyn::set_dyn( ge_mDynType type, ge_mActionType action)
   update_elements();
 }
 
-void GeDyn::set_command( char *cmd)
+void GeDyn::set_command( const char *cmd)
 {
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
     if ( elem->action_type == ge_mActionType_Command) {
@@ -797,7 +797,7 @@ graph_eDatabase GeDyn::parse_attr_name( char *name, char *parsed_name,
   }
   return graph->parse_attr_name( name, parsed_name, inverted, type, size, elem);
 }
-void GeDyn::set_value_input( char *format, double min_value, double max_value)
+void GeDyn::set_value_input( const char *format, double min_value, double max_value)
 {
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
     if ( elem->action_type == ge_mActionType_ValueInput) {
@@ -1648,7 +1648,7 @@ void GeDigLowColor::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeDigLowColor::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeDigLowColor::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -1946,7 +1946,7 @@ void GeDigColor::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeDigColor::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeDigColor::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -2215,7 +2215,7 @@ void GeDigWarning::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeDigWarning::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeDigWarning::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -2416,7 +2416,7 @@ void GeDigError::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeDigError::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeDigError::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -2644,7 +2644,7 @@ void GeDigFlash::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeDigFlash::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeDigFlash::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -2882,7 +2882,7 @@ void GeInvisible::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeInvisible::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeInvisible::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -3183,7 +3183,7 @@ void GeDigBorder::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeDigBorder::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeDigBorder::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -3362,7 +3362,7 @@ int GeDigText::get_transtab( char **tt)
   return 0;
 }
 
-void GeDigText::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeDigText::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -3576,7 +3576,7 @@ int GeValue::get_transtab( char **tt)
   return 0;
 }
 
-void GeValue::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeValue::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -4596,7 +4596,7 @@ void GeAnalogColor::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeAnalogColor::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeAnalogColor::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -4929,7 +4929,7 @@ void GeRotate::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeRotate::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeRotate::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -5137,7 +5137,7 @@ void GeMove::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeMove::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeMove::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -5481,7 +5481,7 @@ void GeAnalogShift::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeAnalogShift::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeAnalogShift::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -5645,7 +5645,7 @@ void GeDigShift::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeDigShift::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeDigShift::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -5793,7 +5793,7 @@ void GeAnimation::save( ofstream& fp)
   fp << int(ge_eSave_End) << endl;
 }
 
-void GeAnimation::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeAnimation::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -6083,7 +6083,7 @@ void GeBar::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeBar::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeBar::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -6302,7 +6302,7 @@ void GeTrend::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeTrend::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeTrend::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -6760,7 +6760,7 @@ void GeXY_Curve::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeXY_Curve::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeXY_Curve::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -7428,7 +7428,7 @@ void GeTable::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeTable::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeTable::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -8196,7 +8196,7 @@ void GeStatusColor::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeStatusColor::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeStatusColor::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -8437,7 +8437,7 @@ void GeHostObject::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeHostObject::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeHostObject::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -8571,7 +8571,7 @@ void GeDigSound::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeDigSound::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeDigSound::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -8761,7 +8761,7 @@ void GeFillLevel::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeFillLevel::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeFillLevel::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -9039,7 +9039,7 @@ void GeDigCommand::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeDigCommand::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeDigCommand::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -9196,7 +9196,7 @@ void GePopupMenu::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GePopupMenu::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GePopupMenu::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -9434,7 +9434,7 @@ int GeSetDig::get_transtab( char **tt)
   return 0;
 }
 
-void GeSetDig::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeSetDig::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -9635,7 +9635,7 @@ int GeResetDig::get_transtab( char **tt)
   return 0;
 }
 
-void GeResetDig::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeResetDig::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -9795,7 +9795,7 @@ int GeToggleDig::get_transtab( char **tt)
   return 0;
 }
 
-void GeToggleDig::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeToggleDig::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -9982,7 +9982,7 @@ int GeStoDig::get_transtab( char **tt)
   return 0;
 }
 
-void GeStoDig::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeStoDig::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -10372,7 +10372,7 @@ void GeIncrAnalog::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeIncrAnalog::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeIncrAnalog::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -10515,7 +10515,7 @@ void GeRadioButton::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeRadioButton::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeRadioButton::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -10945,7 +10945,7 @@ int GeOpenGraph::get_transtab( char **tt)
   return 0;
 }
 
-void GeOpenGraph::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeOpenGraph::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -11575,7 +11575,7 @@ void GeSlider::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeSlider::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeSlider::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -12060,7 +12060,7 @@ void GeFastCurve::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeFastCurve::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeFastCurve::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -13378,7 +13378,7 @@ int GeOptionMenu::get_transtab( char **tt)
   return 0;
 }
 
-void GeOptionMenu::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeOptionMenu::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {
@@ -13985,7 +13985,7 @@ void GeAnalogText::get_attributes( attr_sItem *attrinfo, int *item_count)
   *item_count = i;
 }
 
-void GeAnalogText::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+void GeAnalogText::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
 {
   (*cnt)--;
   if ( *cnt == 0) {

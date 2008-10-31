@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growarc.cpp,v 1.6 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_growarc.cpp,v 1.7 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
@@ -30,7 +30,7 @@
 #include "glow_growctx.h"
 #include "glow_exportflow.h"
 
-GrowArc::GrowArc( GrowCtx *glow_ctx, char *name, double x1, double y1, 
+GrowArc::GrowArc( GrowCtx *glow_ctx, const char *name, double x1, double y1, 
 		  double x2, double y2, int ang1, int ang2,
 		  glow_eDrawType border_d_type, int line_w, 
 		  int fill_arc, int display_border, int display_shadow,

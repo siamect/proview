@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ev_motif.cpp,v 1.1 2007-01-04 08:30:03 claes Exp $
+ * Proview   $Id: xtt_ev_motif.cpp,v 1.2 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -86,57 +86,57 @@ EvMotif::EvMotif( void *ev_parent_ctx,
 
   static XtActionsRec eve_actions[] =
   {
-    {"eve_inputfocus",      (XtActionProc) eve_action_inputfocus}
+    {(char*) "eve_inputfocus",      (XtActionProc) eve_action_inputfocus}
   };
   static XtActionsRec ala_actions[] =
   {
-    {"ala_inputfocus",      (XtActionProc) ala_action_inputfocus}
+    {(char*) "ala_inputfocus",      (XtActionProc) ala_action_inputfocus}
   };
   static XtActionsRec blk_actions[] =
   {
-    {"blk_inputfocus",      (XtActionProc) blk_action_inputfocus}
+    {(char*) "blk_inputfocus",      (XtActionProc) blk_action_inputfocus}
   };
 
   static MrmRegisterArg	reglist[] = {
-        { "ev_ctx", 0 },
-	{"ev_eve_activate_exit",(caddr_t)eve_activate_exit },
-	{"ev_eve_activate_print",(caddr_t)eve_activate_print },
-	{"ev_eve_activate_ack_last",(caddr_t)eve_activate_ack_last },
-	{"ev_eve_activate_zoom_in",(caddr_t)eve_activate_zoom_in },
-	{"ev_eve_activate_zoom_out",(caddr_t)eve_activate_zoom_out },
-	{"ev_eve_activate_zoom_reset",(caddr_t)eve_activate_zoom_reset },
-	{"ev_eve_activate_open_plc",(caddr_t)eve_activate_open_plc },
-	{"ev_eve_activate_display_in_xnav",(caddr_t)eve_activate_display_in_xnav },
-	{"ev_eve_activate_disp_hundredth",(caddr_t)eve_activate_disp_hundredth },
-	{"ev_eve_activate_hide_object",(caddr_t)eve_activate_hide_object },
-	{"ev_eve_activate_hide_text",(caddr_t)eve_activate_hide_text },
-	{"ev_eve_activate_help",(caddr_t)eve_activate_help },
-	{"ev_eve_activate_helpevent",(caddr_t)eve_activate_helpevent },
-	{"ev_eve_create_form",(caddr_t)eve_create_form },
-	{"ev_ala_activate_exit",(caddr_t)ala_activate_exit },
-	{"ev_ala_activate_print",(caddr_t)ala_activate_print },
-	{"ev_ala_activate_ack_last",(caddr_t)ala_activate_ack_last },
-	{"ev_ala_activate_zoom_in",(caddr_t)ala_activate_zoom_in },
-	{"ev_ala_activate_zoom_out",(caddr_t)ala_activate_zoom_out },
-	{"ev_ala_activate_zoom_reset",(caddr_t)ala_activate_zoom_reset },
-	{"ev_ala_activate_open_plc",(caddr_t)ala_activate_open_plc },
-	{"ev_ala_activate_display_in_xnav",(caddr_t)ala_activate_display_in_xnav },
-	{"ev_ala_activate_disp_hundredth",(caddr_t)ala_activate_disp_hundredth },
-	{"ev_ala_activate_hide_object",(caddr_t)ala_activate_hide_object },
-	{"ev_ala_activate_hide_text",(caddr_t)ala_activate_hide_text },
-	{"ev_ala_activate_help",(caddr_t)ala_activate_help },
-	{"ev_ala_activate_helpevent",(caddr_t)ala_activate_helpevent },
-	{"ev_ala_create_form",(caddr_t)ala_create_form },
-	{"ev_blk_activate_exit",(caddr_t)blk_activate_exit },
-	{"ev_blk_activate_print",(caddr_t)blk_activate_print },
-	{"ev_blk_activate_zoom_in",(caddr_t)blk_activate_zoom_in },
-	{"ev_blk_activate_zoom_out",(caddr_t)blk_activate_zoom_out },
-	{"ev_blk_activate_zoom_reset",(caddr_t)blk_activate_zoom_reset },
-	{"ev_blk_activate_block_remove",(caddr_t)blk_activate_block_remove },
-	{"ev_blk_activate_open_plc",(caddr_t)blk_activate_open_plc },
-	{"ev_blk_activate_display_in_xnav",(caddr_t)blk_activate_display_in_xnav },
-	{"ev_blk_activate_help",(caddr_t)blk_activate_help },
-	{"ev_blk_create_form",(caddr_t)blk_create_form }
+        {(char*) "ev_ctx", 0 },
+	{(char*) "ev_eve_activate_exit",(caddr_t)eve_activate_exit },
+	{(char*) "ev_eve_activate_print",(caddr_t)eve_activate_print },
+	{(char*) "ev_eve_activate_ack_last",(caddr_t)eve_activate_ack_last },
+	{(char*) "ev_eve_activate_zoom_in",(caddr_t)eve_activate_zoom_in },
+	{(char*) "ev_eve_activate_zoom_out",(caddr_t)eve_activate_zoom_out },
+	{(char*) "ev_eve_activate_zoom_reset",(caddr_t)eve_activate_zoom_reset },
+	{(char*) "ev_eve_activate_open_plc",(caddr_t)eve_activate_open_plc },
+	{(char*) "ev_eve_activate_display_in_xnav",(caddr_t)eve_activate_display_in_xnav },
+	{(char*) "ev_eve_activate_disp_hundredth",(caddr_t)eve_activate_disp_hundredth },
+	{(char*) "ev_eve_activate_hide_object",(caddr_t)eve_activate_hide_object },
+	{(char*) "ev_eve_activate_hide_text",(caddr_t)eve_activate_hide_text },
+	{(char*) "ev_eve_activate_help",(caddr_t)eve_activate_help },
+	{(char*) "ev_eve_activate_helpevent",(caddr_t)eve_activate_helpevent },
+	{(char*) "ev_eve_create_form",(caddr_t)eve_create_form },
+	{(char*) "ev_ala_activate_exit",(caddr_t)ala_activate_exit },
+	{(char*) "ev_ala_activate_print",(caddr_t)ala_activate_print },
+	{(char*) "ev_ala_activate_ack_last",(caddr_t)ala_activate_ack_last },
+	{(char*) "ev_ala_activate_zoom_in",(caddr_t)ala_activate_zoom_in },
+	{(char*) "ev_ala_activate_zoom_out",(caddr_t)ala_activate_zoom_out },
+	{(char*) "ev_ala_activate_zoom_reset",(caddr_t)ala_activate_zoom_reset },
+	{(char*) "ev_ala_activate_open_plc",(caddr_t)ala_activate_open_plc },
+	{(char*) "ev_ala_activate_display_in_xnav",(caddr_t)ala_activate_display_in_xnav },
+	{(char*) "ev_ala_activate_disp_hundredth",(caddr_t)ala_activate_disp_hundredth },
+	{(char*) "ev_ala_activate_hide_object",(caddr_t)ala_activate_hide_object },
+	{(char*) "ev_ala_activate_hide_text",(caddr_t)ala_activate_hide_text },
+	{(char*) "ev_ala_activate_help",(caddr_t)ala_activate_help },
+	{(char*) "ev_ala_activate_helpevent",(caddr_t)ala_activate_helpevent },
+	{(char*) "ev_ala_create_form",(caddr_t)ala_create_form },
+	{(char*) "ev_blk_activate_exit",(caddr_t)blk_activate_exit },
+	{(char*) "ev_blk_activate_print",(caddr_t)blk_activate_print },
+	{(char*) "ev_blk_activate_zoom_in",(caddr_t)blk_activate_zoom_in },
+	{(char*) "ev_blk_activate_zoom_out",(caddr_t)blk_activate_zoom_out },
+	{(char*) "ev_blk_activate_zoom_reset",(caddr_t)blk_activate_zoom_reset },
+	{(char*) "ev_blk_activate_block_remove",(caddr_t)blk_activate_block_remove },
+	{(char*) "ev_blk_activate_open_plc",(caddr_t)blk_activate_open_plc },
+	{(char*) "ev_blk_activate_display_in_xnav",(caddr_t)blk_activate_display_in_xnav },
+	{(char*) "ev_blk_activate_help",(caddr_t)blk_activate_help },
+	{(char*) "ev_blk_create_form",(caddr_t)blk_create_form }
 	};
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
 
@@ -181,21 +181,21 @@ EvMotif::EvMotif( void *ev_parent_ctx,
   parent_wid_eve = XtCreatePopupShell( eve_name, 
 		topLevelShellWidgetClass, parent_wid, args, i);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "eve_window", parent_wid_eve,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "eve_window", parent_wid_eve,
 			eve_name, args, 1, &toplevel_eve, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", eve_name);
 
   parent_wid_ala = XtCreatePopupShell( ala_name, 
 		topLevelShellWidgetClass, parent_wid, args, i);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "ala_window", parent_wid_ala,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "ala_window", parent_wid_ala,
 			ala_name, args, 1, &toplevel_ala, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", ala_name);
 
   parent_wid_blk = XtCreatePopupShell( blk_name, 
 		topLevelShellWidgetClass, parent_wid, args, i);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "blk_window", parent_wid_blk,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "blk_window", parent_wid_blk,
 			blk_name, args, 1, &toplevel_blk, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", blk_name);
 

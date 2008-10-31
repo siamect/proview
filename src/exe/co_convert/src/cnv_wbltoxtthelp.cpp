@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltoxtthelp.cpp,v 1.10 2008-06-30 05:53:27 claes Exp $
+ * Proview   $Id: cnv_wbltoxtthelp.cpp,v 1.11 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,8 +19,8 @@
 
 
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <float.h>
 #include <string.h>
 #include <stdlib.h>

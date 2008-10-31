@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subgraphs_motif.h,v 1.1 2007-01-04 08:22:16 claes Exp $
+ * Proview   $Id: ge_subgraphs_motif.h,v 1.2 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,7 +35,7 @@ class SubGraphsMotif : public SubGraphs {
     SubGraphsMotif(
 	void *xn_parent_ctx,
 	Widget	xn_parent_wid,
-	char *xn_name,
+	const char *xn_name,
 	void *grow_ctx,
 	Widget *w,
 	pwr_tStatus *status);

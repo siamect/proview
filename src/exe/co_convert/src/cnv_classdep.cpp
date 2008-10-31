@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_classdep.cpp,v 1.2 2005-11-17 08:59:21 claes Exp $
+ * Proview   $Id: cnv_classdep.cpp,v 1.3 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 
 
 #include <vector>
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <float.h>
 #include <string.h>
 #include <stdlib.h>
@@ -34,6 +34,8 @@ extern "C" {
 #include "co_dcli.h"
 }
 #include "co_lng.h"
+
+using namespace std;
 
 int CnvClassDep::read()
 {

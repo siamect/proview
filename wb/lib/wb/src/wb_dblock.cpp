@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dblock.cpp,v 1.4 2008-04-07 14:53:06 claes Exp $
+ * Proview   $Id: wb_dblock.cpp,v 1.5 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -18,8 +18,9 @@
  **/
 
 #include <sys/stat.h>
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
+#include <string.h>
 
 #include "pwr.h"
 #include "wb_dblock.h"

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wda.h,v 1.5 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_wda.h,v 1.6 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -48,7 +48,7 @@ class Wda {
 	ldh_tSesContext wa_ldhses,
 	pwr_tObjid 	wa_objid,
 	pwr_tClassId 	wa_classid,
-        char            *wa_attribute,
+        const char     *wa_attribute,
 	int 		wa_editmode,
 	int 		wa_advanced_user,
 	int		wa_display_objectname);
@@ -75,8 +75,8 @@ class Wda {
     int attrobjects;
     CoWow *wow;
 
-    virtual void message( char severity, char *message) {}
-    virtual void set_prompt( char *prompt) {}
+    virtual void message( char severity, const char *message) {}
+    virtual void set_prompt( const char *prompt) {}
     virtual void open_class_dialog( char *hierstr, char *classstr) {}
     virtual void change_value( int set_focus) {}
     virtual void change_value_close() {}
@@ -90,7 +90,7 @@ class Wda {
     int prev_attr();
     void print();
 
-    static void message_cb( void *wda, char severity, char *message);
+    static void message_cb( void *wda, char severity, const char *message);
     static void change_value_cb( void *wda);
     static void set_attr_cb( void *ctx, char *text);
 

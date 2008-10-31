@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attr_gtk.cpp,v 1.6 2008-01-24 09:28:01 claes Exp $
+ * Proview   $Id: ge_attr_gtk.cpp,v 1.7 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,7 +19,7 @@
 
 /* ge_attr.cpp -- Display object attributes */
 
-#include <vector.h>
+#include <vector>
 
 #include "glow_std.h"
 
@@ -41,14 +41,14 @@
 
 CoWowRecall AttrGtk::value_recall;
 
-void AttrGtk::message( char severity, char *message)
+void AttrGtk::message( char severity, const char *message)
 {
   // gtk_statusbar_pop( GTK_STATUSBAR(msg_label), 0);
   // gtk_statusbar_push( GTK_STATUSBAR(msg_label), 0, message);
   gtk_label_set_text( GTK_LABEL(msg_label), message);
 }
 
-void AttrGtk::set_prompt( char *prompt) {
+void AttrGtk::set_prompt( const char *prompt) {
   if ( strcmp(prompt, "") == 0) {
     g_object_set( cmd_prompt, "visible", FALSE, NULL);
     g_object_set( msg_label, "visible", TRUE, NULL);

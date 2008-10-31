@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pvd_udb.cpp,v 1.2 2008-06-24 07:15:31 claes Exp $
+ * Proview   $Id: rt_pvd_udb.cpp,v 1.3 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,11 +17,11 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  **/
 
-#include <vector.h>
+#include <vector>
 #include <string.h>
 #include <stdio.h>
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include "pwr.h"
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"

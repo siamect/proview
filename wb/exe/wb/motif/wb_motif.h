@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_motif.h,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_motif.h,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,10 +31,10 @@ class WbMotif : public Wb {
 
   WbMotif( int argc, char *argv[]);
   ~WbMotif() {};
-  Wtt *wtt_new( char *name, char *iconname, ldh_tWBContext wbctx,
+  Wtt *wtt_new( const char *name, const char *iconname, ldh_tWBContext wbctx,
 		pwr_tVolumeId volid, ldh_tVolume volctx,
 		wnav_sStartMenu *root_menu, pwr_tStatus *status);
-  WVsel *vsel_new( pwr_tStatus *status, char *name, ldh_tWBContext wbctx,
+  WVsel *vsel_new( pwr_tStatus *status, const char *name, ldh_tWBContext wbctx,
 		   char *volumename,
 		   int (*bc_success)( void *, pwr_tVolumeId *, int),
 		   void (*bc_cancel)(),

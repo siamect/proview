@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_node.h,v 1.6 2008-10-03 14:19:19 claes Exp $
+ * Proview   $Id: flow_node.h,v 1.7 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #ifndef flow_node_h
 #define flow_node_h
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include "flow_ctx.h"
 #include "flow_point.h"
 #include "flow_array_elem.h"
@@ -31,7 +31,7 @@
 
 class FlowNode : public FlowArrayElem {
   public:
-    FlowNode( FlowCtx *flow_ctx, char *name, FlowNodeClass *node_class,
+    FlowNode( FlowCtx *flow_ctx, const char *name, FlowNodeClass *node_class,
 	double x1, double y1, int nodraw = 0, int rel_annot_pos = 0);
     FlowNode() {};
     ~FlowNode();
@@ -77,7 +77,7 @@ class FlowNode : public FlowArrayElem {
     void select_region_insert( double ll_x, double ll_y, double ur_x, 
 		double ur_y);
     flow_eObjectType type() { return flow_eObjectType_Node;};
-    void	set_annotation( int num, char *text, int size, int nodraw);
+    void	set_annotation( int num, const char *text, int size, int nodraw);
     void	get_annotation( int num, char *text, int size);
     void 	measure_annotation( int num, char *text, double *width, 
 			double *height);
@@ -139,7 +139,7 @@ class FlowNode : public FlowArrayElem {
     void *user_data;
     void set_user_data( void *data) { user_data = data;};
     void get_user_data( void **data) { *data = user_data;};
-    void set_trace_attr( char *object, char *attribute, flow_eTraceType type, int inverted);
+    void set_trace_attr( const char *object, const char *attribute, flow_eTraceType type, int inverted);
     void get_trace_attr( char *object, char *attribute, flow_eTraceType *type, int *inverted);
     void set_trace_data( void *data) { trace_p = data;};
     void trace_scan();

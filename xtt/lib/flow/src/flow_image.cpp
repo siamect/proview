@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_image.cpp,v 1.9 2007-09-25 13:11:00 claes Exp $
+ * Proview   $Id: flow_image.cpp,v 1.10 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,14 +17,14 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  **/
 
-#include <iostream.h>
+#include <iostream>
 #include "co_dcli.h"
 #include "flow_std.h"
 #include <float.h>
 #include "flow_image.h"
 #include "flow_draw.h"
 
-FlowImage::FlowImage( FlowCtx *flow_ctx, char *imagefile, double x, double y,
+FlowImage::FlowImage( FlowCtx *flow_ctx, const char *imagefile, double x, double y,
 		      flow_mDisplayLevel display_lev) : 
 	ctx(flow_ctx), ll(flow_ctx,x,y), ur(flow_ctx,x,y), display_level(display_lev), 
 	image(0), original_image(0), 
@@ -35,7 +35,7 @@ FlowImage::FlowImage( FlowCtx *flow_ctx, char *imagefile, double x, double y,
     insert_image( imagefile);
 }
 
-int FlowImage::insert_image( char *imagefile)
+int FlowImage::insert_image( const char *imagefile)
 {
 
   ctx->fdraw->image_load( imagefile, ctx->zoom_factor / ctx->base_zoom_factor,

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr_rtmon_gtk.cpp,v 1.1 2007-05-25 13:41:30 claes Exp $
+ * Proview   $Id: pwr_rtmon_gtk.cpp,v 1.2 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,7 +31,7 @@ static void usage()
   printf("\nUsage: pwr_rtmonitor\n");
 }
 
-static void rtmon_help_cb( void *ctx, char *topic)
+static void rtmon_help_cb( void *ctx, const char *topic)
 {
 }
 

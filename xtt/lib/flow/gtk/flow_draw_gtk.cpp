@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_gtk.cpp,v 1.11 2008-10-16 08:58:06 claes Exp $
+ * Proview   $Id: flow_draw_gtk.cpp,v 1.12 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -86,7 +86,7 @@ static char	font_names[draw_eFont__][DRAW_FONT_SIZE][80] = { {
 
 static  GdkEvent last_event;
 
-static GdkColor flow_allocate_color( FlowDrawGtk *draw_ctx, char *named_color);
+static GdkColor flow_allocate_color( FlowDrawGtk *draw_ctx, const char *named_color);
 static void event_timer( FlowCtx *ctx, int time_ms);
 static void cancel_event_timer(FlowCtx *ctx);
 static gboolean event_timer_cb( void *ctx);
@@ -287,7 +287,7 @@ static int flow_create_gc( FlowDrawGtk *draw_ctx, GdkWindow *window)
 }
 
 
-static GdkColor flow_allocate_color( FlowDrawGtk *draw_ctx, char *named_color)
+static GdkColor flow_allocate_color( FlowDrawGtk *draw_ctx, const char *named_color)
 {
   GdkColor color;
 
@@ -1469,7 +1469,7 @@ void FlowDrawGtk::set_nav_cursor( FlowCtx *ctx, draw_eCursor cursor)
   gdk_display_flush( display);
 }
 
-int FlowDrawGtk::get_text_extent( FlowCtx *ctx, char *text, int len,
+int FlowDrawGtk::get_text_extent( FlowCtx *ctx, const char *text, int len,
 	flow_eDrawType gc_type, int idx,
 	int *width, int *height)
 {
@@ -1726,7 +1726,7 @@ void FlowDrawGtk::image_scale( float scale, flow_tImImage orig_im, flow_tImImage
   *im = gdk_pixbuf_scale_simple( (GdkPixbuf *)orig_im, current_width, current_height, GDK_INTERP_NEAREST);
 }
 
-int FlowDrawGtk::image_load( char *imagefile, float scale, float nav_scale,
+int FlowDrawGtk::image_load( const char *imagefile, float scale, float nav_scale,
 			     flow_tImImage *orig_im, flow_tImImage *im, 
 			     flow_tPixmap *im_pixmap, flow_tPixmap *im_mask,
 			     flow_tPixmap *im_nav_pixmap, flow_tPixmap *im_nav_mask)

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepext.h,v 1.12 2007-12-21 13:18:01 claes Exp $
+ * Proview   $Id: wb_vrepext.h,v 1.13 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -154,7 +154,7 @@ public:
     m_erep(erep), m_merep(erep->merep()), m_nRef(0) {}
 
   wb_vrepext( wb_erep *erep, pwr_tVid vid);
-  wb_vrepext( wb_erep *erep, pwr_tVid vid, char *name, char *provider);
+  wb_vrepext( wb_erep *erep, pwr_tVid vid, const char *name, const char *provider);
   ~wb_vrepext();
 
   virtual ldh_eVolRep type() const { return ldh_eVolRep_Ext;}
@@ -176,7 +176,7 @@ public:
   wb_merep *merep() const { return m_merep;}
 
   void info();
-  bool createVolumeObject( char *name);
+  bool createVolumeObject( const char *name);
 
   virtual pwr_tOid oid(pwr_tStatus *sts, const wb_orep *o) { return pwr_cNOid;}
     

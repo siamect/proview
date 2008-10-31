@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepext.cpp,v 1.10 2007-12-21 13:18:01 claes Exp $
+ * Proview   $Id: wb_vrepext.cpp,v 1.11 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -61,7 +61,7 @@ wb_vrepext::wb_vrepext( wb_erep *erep, pwr_tVid vid) :
   createVolumeObject("");
 }
 
-wb_vrepext::wb_vrepext( wb_erep *erep, pwr_tVid vid, char *name, char *provider) :
+wb_vrepext::wb_vrepext( wb_erep *erep, pwr_tVid vid, const char *name, const char *provider) :
   wb_vrep(vid), m_erep(erep), m_merep(erep->merep()), m_connected(0),
   m_procom(0), m_ptype( procom_eType_Ipc)
 {
@@ -423,7 +423,7 @@ wb_orep *wb_vrepext::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination
   return 0;
 }
 
-bool wb_vrepext::createVolumeObject( char *name)
+bool wb_vrepext::createVolumeObject( const char *name)
 {
   pwr_tStatus sts;
 

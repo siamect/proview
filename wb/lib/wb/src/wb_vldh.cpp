@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vldh.cpp,v 1.3 2008-10-03 14:18:37 claes Exp $
+ * Proview   $Id: wb_vldh.cpp,v 1.4 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -177,7 +177,7 @@ unsigned long vldh_check_plcpgm (
 
 pwr_tClassId vldh_eclass (
   ldh_tSesContext ldhses,
-  char	*classname
+  const char	*classname
 )
 {
   int	sts;

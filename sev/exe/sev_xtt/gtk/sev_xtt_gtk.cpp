@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: sev_xtt_gtk.cpp,v 1.2 2008-09-05 08:38:58 claes Exp $
+ * Proview   $Id: sev_xtt_gtk.cpp,v 1.3 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -18,8 +18,8 @@
  */
 
 
-#include <fstream.h>
-#include <vector.h>
+#include <fstream>
+#include <vector>
 #include <gtk/gtk.h>
 
 #include "pwr.h"

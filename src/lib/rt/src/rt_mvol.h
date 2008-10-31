@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_mvol.h,v 1.7 2008-06-24 07:13:41 claes Exp $
+ * Proview   $Id: rt_mvol.h,v 1.8 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -160,7 +160,7 @@ mvol_LinkScObject (
 gdb_sClass *
 mvol_NameToClass (
   pwr_tStatus		*sts,
-  char			*name
+  const char	       	*name
 );
 
 void 

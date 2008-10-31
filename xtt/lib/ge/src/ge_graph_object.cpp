@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_object.cpp,v 1.19 2008-01-24 09:28:01 claes Exp $
+ * Proview   $Id: ge_graph_object.cpp,v 1.20 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -77,7 +77,7 @@ static graph_sObjectFunction graph_object_functions[] = {
 	{ pwr_cClass_PlcThread, &graph_object_PlcThread},
 	{ 0, 0}};
 
-graph_sLocalDb *Graph::localdb_add( char *name, int type)
+graph_sLocalDb *Graph::localdb_add( const char *name, int type)
 {
   graph_sLocalDb *item_p;
 
@@ -91,7 +91,7 @@ graph_sLocalDb *Graph::localdb_add( char *name, int type)
   return item_p;
 }
 
-int Graph::localdb_find( char *name, graph_sLocalDb **item)
+int Graph::localdb_find( const char *name, graph_sLocalDb **item)
 {
   graph_sLocalDb *item_p;
 
@@ -148,7 +148,7 @@ void Graph::localdb_free()
   }
 }
 
-void *Graph::localdb_ref_or_create( char *name, int type)
+void *Graph::localdb_ref_or_create( const char *name, int type)
 {
   graph_sLocalDb *item_p;
   
@@ -784,7 +784,7 @@ static int graph_object_PID( Graph *graph, pwr_sAttrRef *arp)
 }
 
 
-int Graph::set_button_command( char *button_name, char *cmd)
+int Graph::set_button_command( const char *button_name, const char *cmd)
 {
   int 			sts;
   grow_tObject 		object;
@@ -1279,7 +1279,7 @@ static int graph_object_collect_build( Graph *graph, pwr_sAttrRef *attrref)
 
 
 
-int Graph::create_node( char *node_name, char *subgraph_str, double x1, 
+int Graph::create_node( const char *node_name, const char *subgraph_str, double x1, 
 			double y1, double x2, double y2, grow_tNode *node)
 {
   int 	sts;

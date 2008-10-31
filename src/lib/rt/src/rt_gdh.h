@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.h,v 1.18 2008-06-24 07:09:25 claes Exp $
+ * Proview   $Id: rt_gdh.h,v 1.19 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -205,7 +205,7 @@ gdh_MoveObject (
 
 pwr_tStatus
 gdh_GetObjectInfo (   
-  char			*name,		
+  const char	       	*name,		
   pwr_tAddress		bufp,					    
   pwr_tUInt32		bufsize	
 );
@@ -449,7 +449,7 @@ gdh_GetNextObjectAttrRef (
 
 pwr_tStatus
 gdh_ClassNameToId (
-  char			*className,
+  const char	       	*className,
   pwr_tClassId		*classid
 );
 
@@ -488,13 +488,13 @@ gdh_AttrRefToPointer (
 
 pwr_tStatus
 gdh_NameToObjid (
-  char			*objectName,
+  const char	       	*objectName,
   pwr_tObjid		*objid
 );
 
 pwr_tStatus
 gdh_NameToPointer (
-  char			*objectName,
+  const char	       	*objectName,
   void			**objectData
 );
 /** @} */
@@ -603,7 +603,7 @@ gdh_GetAttributeCharacteristics (
 pwr_tStatus
 gdh_NameToAttrref (
   pwr_tObjid		parent,
-  char			*attributeName,
+  const char	       	*attributeName,
   pwr_sAttrRef		*attributeReference
 );
 
@@ -618,7 +618,7 @@ gdh_AttrrefToName (
 pwr_tStatus
 gdh_ClassAttrToAttrref (
   pwr_tClassId		classid,
-  char			*attributeName,
+  const char	       	*attributeName,
   pwr_sAttrRef		*attributeReference
 );
 
@@ -648,7 +648,7 @@ gdh_AttrArefToObjectAref (
 pwr_tStatus
 gdh_ArefANameToAref (
   pwr_sAttrRef *arp,
-  char *aname,
+  const char *aname,
   pwr_sAttrRef *oarp
 );
 
@@ -691,7 +691,7 @@ gdh_SetAlarmBlockLevel (
  */
 
 pwr_tStatus gdh_Init (
-  char		*name
+  const char		*name
 );
 
 /** @} */

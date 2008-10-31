@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_nav_crr.cpp,v 1.4 2008-05-28 12:02:16 claes Exp $
+ * Proview   $Id: co_nav_crr.cpp,v 1.5 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -607,7 +607,7 @@ int	NavCrr::crr_code(
 
 	      if ( !objname_written) {
                 (insert_cb)( parent_ctx, parent_node, 
-			     navc_eItemType_Crossref, objname, "", 2);
+			     navc_eItemType_Crossref, objname, (char *)"", 2);
 	        objname_written = 1;
 	      }
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_xtthelptohtml.cpp,v 1.6 2008-10-22 07:48:04 claes Exp $
+ * Proview   $Id: cnv_xtthelptohtml.cpp,v 1.7 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,8 +22,8 @@
 
 /*_Include files_________________________________________________________*/
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>

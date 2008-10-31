@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl_gtk.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_utl_gtk.cpp,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,9 +39,9 @@
 
 static int gtk_initialized = 0;
 
-int wb_utl_gtk::utl_foe_new( char *name, pwr_tOid plcpgm,
-			       ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx,
-			       WFoe **foe, int map_window, ldh_eAccess access)
+int wb_utl_gtk::utl_foe_new( const char *name, pwr_tOid plcpgm,
+			     ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx,
+			     WFoe **foe, int map_window, ldh_eAccess access)
 {
   pwr_tStatus sts = 1;
 
@@ -52,7 +52,7 @@ int wb_utl_gtk::utl_foe_new( char *name, pwr_tOid plcpgm,
   return sts;
 }
 
-int wb_utl_gtk::utl_foe_new_local( WFoe *foe, char *name, pwr_tOid plcpgm, 
+int wb_utl_gtk::utl_foe_new_local( WFoe *foe, const char *name, pwr_tOid plcpgm, 
 				     ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx, 
 				     vldh_t_node nodeobject, unsigned long windowindex, 
 				     unsigned long new_window, WFoe **return_foe, 

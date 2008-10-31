@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_colpalwidget_motif.cpp,v 1.1 2007-01-04 08:08:00 claes Exp $
+ * Proview   $Id: glow_colpalwidget_motif.cpp,v 1.2 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -80,12 +80,12 @@ static char defaultTranslations[] = "#replace \n\
 <KeyDown>: notify()";
 
 
-static XtActionsRec actionsList[] = { {"notify", (XtActionProc) Notify}};
+static XtActionsRec actionsList[] = { {(char*) "notify", (XtActionProc) Notify}};
 
 ColPalClassRec colpalClassRec = {
   { /* Core class part */
     (WidgetClass) &compositeClassRec,	/* superclass */
-    "ColPal",				/* class name */
+    (char*) "ColPal",		       	/* class name */
     sizeof(ColPalRec),			/* widget size */
     NULL,				/* class initialize */
     NULL, 				/* class part initialize */
@@ -463,7 +463,7 @@ extern "C" Widget ScrolledColPalCreate(
   XtSetArg( arg[i], XmNbottomAttachment, XmATTACH_FORM);i++;
   XtSetArg( arg[i], XmNrightAttachment, XmATTACH_FORM);i++;
 */
-  colpal = (ColPalWidget) ColPalCreate( form, "colpal", arg, i, init_proc, client_data);
+  colpal = (ColPalWidget) ColPalCreate( form, (char*) "colpal", arg, i, init_proc, client_data);
   XtManageChild( (Widget) colpal);
 
   colpal->colpal.scroll_h = scroll_h;

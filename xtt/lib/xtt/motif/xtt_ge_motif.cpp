@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ge_motif.cpp,v 1.2 2007-01-23 13:18:33 claes Exp $
+ * Proview   $Id: xtt_ge_motif.cpp,v 1.3 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -167,20 +167,20 @@ void XttGeMotif::confirm_cb( void *ge_ctx, void *confirm_object, char *text)
 
   ge->message( ' ', "");
 
-  XtSetArg(args[0],XmNmessageString, XmStringCreateLtoR( text, "ISO8859-1"));
+  XtSetArg(args[0],XmNmessageString, XmStringCreateLtoR( text, (char*) "ISO8859-1"));
   XtSetValues( ((XttGeMotif *)ge)->confirm_widget, args, 1);
   ge->confirm_open = 1;
   ge->current_confirm_object = confirm_object;
 }
 
-void XttGeMotif::message_dialog_cb( void *ge_ctx, char *text)
+void XttGeMotif::message_dialog_cb( void *ge_ctx, const char *text)
 {
   Arg 		args[1];
   XttGe	*ge = (XttGe *)ge_ctx;
 
   XtManageChild( ((XttGeMotif *)ge)->message_dia_widget);
 
-  XtSetArg(args[0],XmNmessageString, XmStringCreateLtoR( text, "ISO8859-1"));
+  XtSetArg(args[0],XmNmessageString, XmStringCreateLtoR( (char*) text, (char*) "ISO8859-1"));
   XtSetValues( ((XttGeMotif *)ge)->message_dia_widget, args, 1);
 }
 
@@ -290,9 +290,10 @@ void XttGeMotif::pop()
   flow_MapWidget( toplevel);
 }
 
-XttGeMotif::XttGeMotif( Widget xg_parent_wid, void *xg_parent_ctx, char *xg_name, char *xg_filename,
-			int xg_scrollbar, int xg_menu, int xg_navigator, int xg_width, int xg_height,
-			int x, int y, double scan_time, char *object_name,
+XttGeMotif::XttGeMotif( Widget xg_parent_wid, void *xg_parent_ctx, const char *xg_name, 
+			const char *xg_filename, int xg_scrollbar, int xg_menu, 
+			int xg_navigator, int xg_width, int xg_height, int x, int y, 
+			double scan_time, const char *object_name,
 			int use_default_access, unsigned int access,
 			int (*xg_command_cb) (XttGe *, char *),
 			int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
@@ -320,24 +321,24 @@ XttGeMotif::XttGeMotif( Widget xg_parent_wid, void *xg_parent_ctx, char *xg_name
 
   static XtActionsRec actions[] =
   {
-    {"ge_xtt_inputfocus",      (XtActionProc) action_inputfocus},
-    {"resize",      (XtActionProc) action_resize},
+    {(char*) "ge_xtt_inputfocus",      (XtActionProc) action_inputfocus},
+    {(char*) "resize",      (XtActionProc) action_resize},
   };
 
   static MrmRegisterArg	reglist[] = {
-        { "ge_ctx", 0 },
-	{"ge_activate_exit",(caddr_t)activate_exit },
-	{"ge_activate_zoom_in",(caddr_t)activate_zoom_in },
-	{"ge_activate_zoom_out",(caddr_t)activate_zoom_out },
-	{"ge_activate_zoom_reset",(caddr_t)activate_zoom_reset },
-	{"ge_activate_help",(caddr_t)activate_help },
-	{"ge_create_graph_form",(caddr_t)create_graph_form },
-	{"ge_create_menu",(caddr_t)create_menu },
-	{"ge_create_value_input",(caddr_t)create_value_input },
-	{"ge_activate_value_input",(caddr_t)activate_value_input },
-	{"ge_activate_confirm_ok",(caddr_t)activate_confirm_ok },
-	{"ge_activate_confirm_cancel",(caddr_t)activate_confirm_cancel },
-	{"ge_create_message_dia",(caddr_t)create_message_dia }
+        {(char*) "ge_ctx", 0 },
+	{(char*) "ge_activate_exit",(caddr_t)activate_exit },
+	{(char*) "ge_activate_zoom_in",(caddr_t)activate_zoom_in },
+	{(char*) "ge_activate_zoom_out",(caddr_t)activate_zoom_out },
+	{(char*) "ge_activate_zoom_reset",(caddr_t)activate_zoom_reset },
+	{(char*) "ge_activate_help",(caddr_t)activate_help },
+	{(char*) "ge_create_graph_form",(caddr_t)create_graph_form },
+	{(char*) "ge_create_menu",(caddr_t)create_menu },
+	{(char*) "ge_create_value_input",(caddr_t)create_value_input },
+	{(char*) "ge_activate_value_input",(caddr_t)activate_value_input },
+	{(char*) "ge_activate_confirm_ok",(caddr_t)activate_confirm_ok },
+	{(char*) "ge_activate_confirm_cancel",(caddr_t)activate_confirm_cancel },
+	{(char*) "ge_create_message_dia",(caddr_t)create_message_dia }
 	};
 
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
@@ -365,19 +366,19 @@ XttGeMotif::XttGeMotif( Widget xg_parent_wid, void *xg_parent_ctx, char *xg_name
 
   MrmRegisterNames(reglist, reglist_num);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "ge_window", toplevel,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "ge_window", toplevel,
 			wname, args, 1, &ge_widget, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", wname);
 
-  sts = MrmFetchWidget(s_DRMh, "input_dialog", toplevel,
+  sts = MrmFetchWidget(s_DRMh, (char*) "input_dialog", toplevel,
 		&value_dialog, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch input dialog\n");
 
-  sts = MrmFetchWidget(s_DRMh, "confirm_dialog", toplevel,
+  sts = MrmFetchWidget(s_DRMh, (char*) "confirm_dialog", toplevel,
 		&confirm_widget, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch confirm dialog\n");
 
-  sts = MrmFetchWidget(s_DRMh, "message_dialog", toplevel,
+  sts = MrmFetchWidget(s_DRMh, (char*) "message_dialog", toplevel,
 		&message_dia_widget, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch message dialog\n");
 
@@ -451,7 +452,7 @@ XttGeMotif::XttGeMotif( Widget xg_parent_wid, void *xg_parent_ctx, char *xg_name
     XtSetArg(args[i],XmNy,500);i++;
     XtSetArg(args[i],XmNdeleteResponse, XmDO_NOTHING);i++;
 
-    nav_shell = XmCreateDialogShell( grow_widget, "Navigator",
+    nav_shell = XmCreateDialogShell( grow_widget, (char*) "Navigator",
         args, i);
     XtManageChild( nav_shell);
 

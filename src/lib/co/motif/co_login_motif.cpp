@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_login_motif.cpp,v 1.2 2008-06-25 12:32:46 claes Exp $
+ * Proview   $Id: co_login_motif.cpp,v 1.3 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -90,7 +90,7 @@ void CoLoginMotif::valchanged_passwordvalue( Widget w, CoLogin *loginctx, XmAnyC
   if (s == 0) {
     strcat(loginctx->password, value);
     XtFree( value);
-    XmTextSetString( ((CoLoginMotif *)loginctx)->widgets.passwordvalue, "");
+    XmTextSetString( ((CoLoginMotif *)loginctx)->widgets.passwordvalue, (char *)"");
     return;
   }
   
@@ -107,7 +107,7 @@ void CoLoginMotif::valchanged_passwordvalue( Widget w, CoLogin *loginctx, XmAnyC
     loginctx->message( "User not authorized");
     BEEP;
     printf( "User not authorized\n");
-    XmTextSetString( ((CoLoginMotif *)loginctx)->widgets.passwordvalue, "");
+    XmTextSetString( ((CoLoginMotif *)loginctx)->widgets.passwordvalue, (char *)"");
     strcpy(loginctx->password, "");
 
     XtFree( value);
@@ -152,8 +152,8 @@ void CoLoginMotif::valchanged_usernamevalue( Widget w, CoLogin *loginctx, XmAnyC
 //
 CoLoginMotif::CoLoginMotif( void		*wl_parent_ctx,
 			  Widget       	wl_parent_wid,
-			  char		*wl_name,
-			  char		*wl_groupname,
+			  const char   	*wl_name,
+			  const char   	*wl_groupname,
 			  void		(* wl_bc_success)( void *),
 			  void		(* wl_bc_cancel)( void *),
 			  pwr_tStatus  	*status) :
@@ -172,17 +172,17 @@ CoLoginMotif::CoLoginMotif( void		*wl_parent_ctx,
 
   static MrmRegisterArg	reglist[] = {
   /* First the context variable */
-  { "login_ctx", 0 },
+  {(char *) "login_ctx", 0 },
 
   /* Callbacks for the controlled login widget */
-  {"login_create_adb",(caddr_t)create_adb},
-  {"login_create_label",(caddr_t)create_label},
-  {"login_create_usernamevalue",(caddr_t)create_usernamevalue},
-  {"login_create_passwordvalue",(caddr_t)create_passwordvalue},
-  {"login_valchanged_usernamevalue",(caddr_t)valchanged_usernamevalue},
-  {"login_valchanged_passwordvalue",(caddr_t)valchanged_passwordvalue},
-  {"login_activate_ok",(caddr_t)activate_ok},
-  {"login_activate_cancel",(caddr_t)activate_cancel},
+  {(char *) "login_create_adb",(caddr_t)create_adb},
+  {(char *) "login_create_label",(caddr_t)create_label},
+  {(char *) "login_create_usernamevalue",(caddr_t)create_usernamevalue},
+  {(char *) "login_create_passwordvalue",(caddr_t)create_passwordvalue},
+  {(char *) "login_valchanged_usernamevalue",(caddr_t)valchanged_usernamevalue},
+  {(char *) "login_valchanged_passwordvalue",(caddr_t)valchanged_passwordvalue},
+  {(char *) "login_activate_ok",(caddr_t)activate_ok},
+  {(char *) "login_activate_cancel",(caddr_t)activate_cancel},
   };
 
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
@@ -236,7 +236,7 @@ CoLoginMotif::CoLoginMotif( void		*wl_parent_ctx,
   XtSetValues( widgets.toplevel  ,args,i);
 
   /* now that we have a top level we can get the main window */
-  sts = MrmFetchWidgetOverride(s_DRMh, "login_window",
+  sts = MrmFetchWidgetOverride(s_DRMh, (char *)"login_window",
     widgets.toplevel, name, args, 1, 
     &widgets.login_window, &dclass);
 
@@ -289,12 +289,12 @@ pwr_tStatus CoLoginMotif::get_values()
 //
 //	Displays a message in the login window.
 //
-void CoLoginMotif::message( char *new_label)
+void CoLoginMotif::message( const char *new_label)
 {
   Arg	args[2];
 
   XtSetArg(args[0], XmNlabelString, 
-	  XmStringCreateLtoR( new_label , "ISO8859-1"));
+	  XmStringCreateLtoR( (char *)new_label , (char *)"ISO8859-1"));
   XtSetValues( widgets.label, args, 1);
 }
 

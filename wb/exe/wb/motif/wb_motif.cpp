@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_motif.cpp,v 1.6 2008-10-09 08:35:36 claes Exp $
+ * Proview   $Id: wb_motif.cpp,v 1.7 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -72,18 +72,18 @@ using namespace std;
 /*  Fallback resources  */
 
 static String	fbr[] = {
-    "*XmDialogShell.mwmDecorations: 94",
-    "*XmDialogShell.mwmFunctions: 54",
-    "*XmText.fontList: -*-helvetica-bold-r-*--12-*",
-    "*XmTextField.fontList: -*-helvetica-bold-r-*--12-*",
-    "*XmList.fontList: -*-helvetica-bold-r-*--12-*",
-    "*XmPushButtonGadget.fontList: -*-helvetica-bold-r-*--12-*",
-    "*XmLabelGadget.fontList: -*-helvetica-bold-r-*--12-*",
+    (char*) "*XmDialogShell.mwmDecorations: 94",
+    (char*) "*XmDialogShell.mwmFunctions: 54",
+    (char*) "*XmText.fontList: -*-helvetica-bold-r-*--12-*",
+    (char*) "*XmTextField.fontList: -*-helvetica-bold-r-*--12-*",
+    (char*) "*XmList.fontList: -*-helvetica-bold-r-*--12-*",
+    (char*) "*XmPushButtonGadget.fontList: -*-helvetica-bold-r-*--12-*",
+    (char*) "*XmLabelGadget.fontList: -*-helvetica-bold-r-*--12-*",
     NULL  
     };
 
 
-Wtt *WbMotif::wtt_new( char *name, char *iconname, ldh_tWBContext ldhwbctx,
+Wtt *WbMotif::wtt_new( const char *name, const char *iconname, ldh_tWBContext ldhwbctx,
 		  pwr_tVolumeId volid, ldh_tVolume volctx,
 		  wnav_sStartMenu *root_menu, pwr_tStatus *status)
 {
@@ -91,7 +91,7 @@ Wtt *WbMotif::wtt_new( char *name, char *iconname, ldh_tWBContext ldhwbctx,
 		       status);
 }
 
-WVsel *WbMotif::vsel_new( pwr_tStatus *status, char *name, ldh_tWBContext ldhwbctx,
+WVsel *WbMotif::vsel_new( pwr_tStatus *status, const char *name, ldh_tWBContext ldhwbctx,
 		     char *volumename,
 		     int (*bc_success)( void *, pwr_tVolumeId *, int),
 		     void (*bc_cancel)(),
@@ -236,7 +236,7 @@ WbMotif::WbMotif( int argc, char *argv[])
     
 
   uilutil_fetch( &uid_filename_p, 1, 0, 0,
-		toplevel, "mainwindow", "svn_svn", 0, 0,
+		toplevel, (char*) "mainwindow", (char*) "svn_svn", 0, 0,
 		&mainwindow, NULL );
 
   XtManageChild(mainwindow);

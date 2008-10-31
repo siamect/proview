@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_motif.h,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_foe_motif.h,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -82,7 +82,7 @@ class WFoeMotif : public WFoe {
   
   WFoeMotif( void *f_parent_ctx,
 	      Widget f_parent_wid,
-	      char *f_name,
+	      const char *f_name,
 	      pwr_tObjid plcprogram,
 	      ldh_tWBContext ldhwbctx,
 	      ldh_tSesContext ldhsesctx,
@@ -91,7 +91,7 @@ class WFoeMotif : public WFoe {
 	      pwr_tStatus *sts);
   WFoeMotif( void      	*f_parent_ctx,
 	Widget		f_parent_wid,
-	char		*f_name,
+	const char     	*f_name,
 	pwr_tObjid     	plcprogram,
 	ldh_tWBContext 	ldhwbctx,
 	ldh_tSesContext	ldhsesctx,
@@ -124,21 +124,21 @@ class WFoeMotif : public WFoe {
 			       pwr_tStatus 	*sts);
   virtual void destroy();
   virtual void set_title();
-  virtual void message( char *new_label); 
-  virtual void msgbox( char *new_label); 
+  virtual void message( const char *new_label); 
+  virtual void msgbox( const char *new_label); 
   virtual int create_window( int x_top,
 			     int y_top,
 			     int width_adb,
 			     int height_adb, 
 			     ldh_tSesContext ldhsession,
 			     foe_eFuncAccess function_access);
-  virtual int get_textinput( char *message, int (*function) (WFoe *, char *));
+  virtual int get_textinput( const char *message, int (*function) (WFoe *, char *));
   virtual int edit_set_entries();
   virtual int view_set_entries();
   virtual void set_mode_button_state( int mode, int state);
   virtual int modify_popup( unsigned long popupmenu_mask, int x, int y);
   virtual int get_selection( char *str, int len);
-  virtual void popupmsg( char *new_label, void (* yes_procedure)(WFoe *), 
+  virtual void popupmsg( const char *new_label, void (* yes_procedure)(WFoe *), 
 			 void (* no_procedure)(WFoe *),
 			 void (* cancel_procedure)(WFoe *));
 

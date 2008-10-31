@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_ptree.c,v 1.2 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_ptree.c,v 1.3 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -62,12 +62,14 @@ static pool_tRef deleteNode( ptree_sTable *tp,
 static pool_tRef insertNode( ptree_sTable *tp, 
 			     pool_tRef zr);
 
+#if 0
 static void ptreePrint( ptree_sTable *tp,
 			pool_tRef    nr,
 			pool_tRef    or,
 			pool_tRef    oor,
 			int          level,
 			void         (*printNode)(ptree_sNode *, int));
+#endif
 
 static void ptreeCheck( ptree_sTable *tp, 
 		        pool_tRef nr, int *count, int *maxlevel,
@@ -803,6 +805,7 @@ static pool_tRef insertNode( ptree_sTable *tp,
 }
 
 
+#if 0
 static void ptreePrint( ptree_sTable *tp,
 			pool_tRef    nr,
 			pool_tRef    or,
@@ -838,6 +841,7 @@ static void ptreePrint( ptree_sTable *tp,
 
   ptreePrint(tp, np->right, nr, np->parent, level+1, printNode);
 } 
+#endif
 
 
 static void ptreeCheck( ptree_sTable *tp, 

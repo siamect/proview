@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_hotkey_gtk.cpp,v 1.2 2007-04-26 12:42:32 claes Exp $
+ * Proview   $Id: xtt_hotkey_gtk.cpp,v 1.3 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -52,7 +52,7 @@
 #include "co_cdh.h"
 #include "co_dcli.h"
 
-void XttHotkey::register_action( char *name, void (* action)(char *,void *), void *userdata)
+void XttHotkey::register_action( const char *name, void (* action)(char *,void *), void *userdata)
 {
   HotkeyAction a( name, action);
   m_actions.push_back( a);
@@ -62,7 +62,7 @@ void XttHotkey::register_action( char *name, void (* action)(char *,void *), voi
   }
 }
 
-XttHotkey::XttHotkey( char *filename)
+XttHotkey::XttHotkey( const char *filename)
 {
   strcpy( m_filename, filename);
   read_file();

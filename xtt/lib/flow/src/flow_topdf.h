@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_topdf.h,v 1.2 2008-10-16 08:58:06 claes Exp $
+ * Proview   $Id: flow_topdf.h,v 1.3 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,8 +24,8 @@
 
 using namespace std;
 
-#include <iostream.h>
-#include <vector.h>
+#include <iostream>
+#include <vector>
 #include <string>
 #include "pwr.h"
 //#include "cnv_style.h"

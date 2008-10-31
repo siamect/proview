@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_ctx.h,v 1.10 2008-10-03 14:19:19 claes Exp $
+ * Proview   $Id: flow_ctx.h,v 1.11 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -44,7 +44,7 @@ typedef struct {
 
 class FlowCtx {
   public:
-    FlowCtx( char *ctx_name, double zoom_fact = 100, int offs_x = 0, int offs_y = 0);
+    FlowCtx( const char *ctx_name, double zoom_fact = 100, int offs_x = 0, int offs_y = 0);
 
     flow_eCtxType ctx_type;
     double 	zoom_factor;

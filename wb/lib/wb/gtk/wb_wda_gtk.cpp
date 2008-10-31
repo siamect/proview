@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wda_gtk.cpp,v 1.3 2008-02-27 06:28:40 claes Exp $
+ * Proview   $Id: wb_wda_gtk.cpp,v 1.4 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,12 +41,12 @@
 
 CoWowRecall WdaGtk::value_recall;
 
-void WdaGtk::message( char severity, char *message)
+void WdaGtk::message( char severity, const char *message)
 {
   gtk_label_set_text( GTK_LABEL(msg_label), message);
 }
 
-void WdaGtk::set_prompt( char *prompt)
+void WdaGtk::set_prompt( const char *prompt)
 {
   if ( strcmp(prompt, "") == 0) {
     g_object_set( cmd_prompt, "visible", FALSE, NULL);
@@ -510,7 +510,7 @@ WdaGtk::WdaGtk(
 	ldh_tSesContext wa_ldhses, 
 	pwr_tObjid 	wa_objid,
 	pwr_tClassId 	wa_classid,
-	char            *wa_attribute,
+	const char     *wa_attribute,
 	int 		wa_editmode,
 	int 		wa_advanced_user,
 	int		wa_display_objectname) :

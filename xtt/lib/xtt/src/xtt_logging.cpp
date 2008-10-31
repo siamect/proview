@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_logging.cpp,v 1.8 2007-07-05 07:24:50 claes Exp $
+ * Proview   $Id: xtt_logging.cpp,v 1.9 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1451,7 +1451,7 @@ int  XttLogging::get_parinfo(
 **************************************************************************/
 
 int XttLogging::log_print( 
-		char		*format,
+		const char		*format,
 		... )
 {
 	char	buff[500];
@@ -1538,7 +1538,7 @@ int XttLogging::close_files()
 	return XNAV__SUCCESS;
 }
 
-void XttLogging::message( char severity, char *msg)
+void XttLogging::message( char severity, const char *msg)
 {
   ((XNav *)xnav)->message( severity, msg);
 }

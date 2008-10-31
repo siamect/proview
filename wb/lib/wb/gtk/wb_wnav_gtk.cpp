@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_gtk.cpp,v 1.3 2008-06-24 07:52:21 claes Exp $
+ * Proview   $Id: wb_wnav_gtk.cpp,v 1.4 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -78,8 +78,8 @@ void WNavGtk::pop()
 WNavGtk::WNavGtk(
 	void *xn_parent_ctx,
 	GtkWidget *xn_parent_wid,
-	char *xn_name,
-	char *xn_layout,
+	const char *xn_name,
+	const char *xn_layout,
 	GtkWidget **w,
         ldh_tSesContext	xn_ldhses,
 	wnav_sStartMenu *root_menu,
@@ -356,7 +356,7 @@ void WNavGtk::sel_lose_cb( GtkWidget *w, GdkEventSelection *event,
   wnav->selection_owner = 0;
 }
 
-int WNavGtk::open_foe( char *name, pwr_tOid plcpgm,
+int WNavGtk::open_foe( const char *name, pwr_tOid plcpgm,
 		       void **foectx, int map_window,
 		       ldh_eAccess access, pwr_tOid oid)
 {
@@ -385,8 +385,8 @@ void WNavGtk::wda_new( pwr_tOid oid, pwr_tCid cid, char *attribute,
 	      advuser, display_objectname);
 }
 
-CoLogin *WNavGtk::login_new( char		*name,
-			     char		*groupname,
+CoLogin *WNavGtk::login_new( const char		*name,
+			     const char		*groupname,
 			     void		(* bc_success)( void *),
 			     void		(* bc_cancel)( void *),
 			     pwr_tStatus  	*status)

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wblnode.h,v 1.20 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: wb_wblnode.h,v 1.21 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #ifndef wb_wblnode_h
 #define wb_wblnode_h
 
-#include <iostream.h>
+#include <iostream>
 #include "antlr/CommonAST.hpp"
 #include "antlr/ASTFactory.hpp"
 #include "pwr.h"
@@ -56,7 +56,7 @@ typedef enum {
 typedef antlr::ASTRefCount<wb_wblnode> ref_wblnode;
 
 typedef struct {
-  char	*sym;
+  const char	*sym;
   int	value;
 } wbl_sSym;
 
@@ -251,7 +251,7 @@ public:
     bool isBuffer() { return (node_type == wbl_eNodeType_Buffer);}
 
     void setFile( wb_wblfile *f);
-    char *getFileName() { if ( file) return file->file_name; else return "";}
+    char *getFileName() { static char r[]=""; if ( file) return file->file_name; else return r;}
     pwr_tTime getFileTime() 
     {
       if ( file) return file->time; 

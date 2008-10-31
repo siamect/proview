@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_conpoint.h,v 1.4 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_conpoint.h,v 1.5 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #ifndef glow_conpoint_h
 #define glow_conpoint_h
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include "glow.h"
 #include "glow_growctx.h"
 #include "glow_point.h"

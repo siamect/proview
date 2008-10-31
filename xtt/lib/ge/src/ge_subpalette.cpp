@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subpalette.cpp,v 1.11 2007-07-09 12:51:18 claes Exp $
+ * Proview   $Id: ge_subpalette.cpp,v 1.12 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include <vector.h>
+#include <vector>
 
 #include "co_cdh.h"
 #include "co_time.h"
@@ -619,7 +619,7 @@ void SubPaletteBrow::allocate_pixmaps()
 //
 SubPalette::SubPalette(
 	void *xn_parent_ctx,
-	char *xn_name,
+	const char *xn_name,
 	pwr_tStatus *status) :
 	parent_ctx(xn_parent_ctx),
 	trace_started(0),
@@ -1440,7 +1440,7 @@ int ItemLocalSubGraphs::close( SubPalette *subpalette, double x, double y)
   return 1;
 }
 
-ItemMenu::ItemMenu( SubPalette *subpalette, char *item_name, 
+ItemMenu::ItemMenu( SubPalette *subpalette, const char *item_name, 
 	brow_tNode dest, flow_eDest dest_code, subpalette_sMenu **item_child_list,
 	int item_is_root) :
 	Item( subpalette_eItemType_Menu), child_list(item_child_list), 

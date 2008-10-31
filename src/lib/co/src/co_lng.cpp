@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_lng.cpp,v 1.16 2008-10-20 13:45:25 claes Exp $
+ * Proview   $Id: co_lng.cpp,v 1.17 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -111,7 +111,7 @@ static int compKey( tree_sTable *tp, tree_sNode *x, tree_sNode *y)
     return 0;
 }
 
-char *Lng::translate( char *text) 
+char *Lng::translate( const char *text) 
 {
   static char result[200];
   lang_sKey key;
@@ -127,7 +127,7 @@ char *Lng::translate( char *text)
   }
 
   // Remove space
-  for ( in_p = text; *in_p == ' ' && *in_p; in_p++)
+  for ( in_p = (char *)text; *in_p == ' ' && *in_p; in_p++)
     ;
 
   strncpy( key.text, text, sizeof(key.text));

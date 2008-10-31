@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_dcli_file.c,v 1.7 2008-05-14 06:50:21 claes Exp $
+ * Proview   $Id: co_dcli_file.c,v 1.8 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -46,9 +46,9 @@ void 	dcli_set_default_directory( char *dir)
 }
 
 int	dcli_get_defaultfilename(
-			char	*inname,
-			char	*outname,
-			char	*ext)
+			const char	*inname,
+			char		*outname,
+			const char	*ext)
 {
   char	filename[80];
   char 	*s, *s2;
@@ -109,7 +109,7 @@ int	dcli_get_defaultfilename(
   {
     s = strrchr( inname, ':');
     if ( s == 0)
-      s = inname;
+      s = (char *)inname;
   
     s2 = strrchr( s, '>');
     if ( s2 == 0)

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xattnav_gtk.cpp,v 1.2 2007-02-07 15:45:44 claes Exp $
+ * Proview   $Id: xtt_xattnav_gtk.cpp,v 1.3 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,7 +51,7 @@ XAttNavGtk::XAttNavGtk(
 	void 		*xa_parent_ctx,
 	GtkWidget      	*xa_parent_wid,
 	xattnav_eType   xa_type,
-	char 		*xa_name,
+	const char     	*xa_name,
 	pwr_sAttrRef 	*xa_objar,
 	int 		xa_advanced_user,
 	GtkWidget      	**w,

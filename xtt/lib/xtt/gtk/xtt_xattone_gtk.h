@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xattone_gtk.h,v 1.1 2007-01-04 08:29:32 claes Exp $
+ * Proview   $Id: xtt_xattone_gtk.h,v 1.2 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -57,7 +57,7 @@ class XAttOneGtk : public XAttOne {
   static CoWowRecall value_recall;
   CoWowEntryGtk *cmd_entry;
 
-  void message( char severity, char *message);
+  void message( char severity, const char *message);
   void set_prompt( char *prompt);
   int change_value( int set_focus);
   int open_changevalue( char *name);

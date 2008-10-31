@@ -19,7 +19,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <math.h>
 
 #include "glow_annot.h"

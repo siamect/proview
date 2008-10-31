@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wpkg_gtk.h,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_wpkg_gtk.h,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,7 +45,7 @@ class WPkgGtk : public WPkg {
     GdkCursor  	*clock_cursor;
     CoWowFocusTimerGtk focustimer;
 
-    void message( char severity, char *message);
+    void message( char severity, const char *message);
     void pop();
     void set_clock_cursor();
     void reset_cursor();

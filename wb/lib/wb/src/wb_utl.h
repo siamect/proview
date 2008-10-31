@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.h,v 1.13 2008-05-29 14:57:53 claes Exp $
+ * Proview   $Id: wb_utl.h,v 1.14 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -36,10 +36,10 @@ class wb_utl {
   virtual ~wb_utl() {}
   virtual int create_mainwindow( int argc, char **argv) {return 0;}
   virtual int destroy_mainwindow() {return 0;}
-  virtual int utl_foe_new( char *name, pwr_tOid	plcpgm,
+  virtual int utl_foe_new( const char *name, pwr_tOid	plcpgm,
 			   ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx,
 			   WFoe **foectx, int map_window, ldh_eAccess access) {return 0;}
-  virtual int utl_foe_new_local( WFoe *foectx, char *name, pwr_tOid plcpgm, 
+  virtual int utl_foe_new_local( WFoe *foectx, const char *name, pwr_tOid plcpgm, 
 				 ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx, 
 				 vldh_t_node nodeobject, unsigned long windowindex, 
 				 unsigned long new_window, WFoe **return_foectx, 

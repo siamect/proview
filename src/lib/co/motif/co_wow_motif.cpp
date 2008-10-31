@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_motif.cpp,v 1.2 2008-09-18 15:07:38 claes Exp $
+ * Proview   $Id: co_wow_motif.cpp,v 1.3 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -102,7 +102,7 @@ void CoWowMotif::question_help_cb( Widget dialog,XtPointer data,
 *
 *************************************************************************/
 
-void CoWowMotif::DisplayQuestion( void *ctx, char *title, char *text,
+void CoWowMotif::DisplayQuestion( void *ctx, const char *title, const char *text,
 				  void (* questionbox_ok) ( void *, void *),
 				  void (* questionbox_cancel) ( void *, void *),
 				  void *data)
@@ -118,14 +118,14 @@ void CoWowMotif::DisplayQuestion( void *ctx, char *title, char *text,
     // Set default fontlist
     font = XLoadQueryFont( XtDisplay(m_parent),
 	      "-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1");
-    fontentry = XmFontListEntryCreate( "tag1", XmFONT_IS_FONT, font);
+    fontentry = XmFontListEntryCreate( (char*) "tag1", XmFONT_IS_FONT, font);
     fontlist = XmFontListAppendEntry( NULL, fontentry);
     XtFree( (char *)fontentry);
 
-    CStr2 = XmStringCreateLtoR( text, XmSTRING_DEFAULT_CHARSET);
-    TitleStr = XmStringCreateLtoR( title, XmSTRING_DEFAULT_CHARSET);    
-    okstr = XmStringCreateLtoR( " Yes ", XmSTRING_DEFAULT_CHARSET );    
-    cancelstr = XmStringCreateLtoR( " No  ", XmSTRING_DEFAULT_CHARSET );    
+    CStr2 = XmStringCreateLtoR( (char*) text, XmSTRING_DEFAULT_CHARSET);
+    TitleStr = XmStringCreateLtoR( (char*) title, XmSTRING_DEFAULT_CHARSET);    
+    okstr = XmStringCreateLtoR( (char*) " Yes ", XmSTRING_DEFAULT_CHARSET );    
+    cancelstr = XmStringCreateLtoR( (char*) " No  ", XmSTRING_DEFAULT_CHARSET );    
     XtSetArg(arg[0],XmNheight,75);
     XtSetArg(arg[1],XmNwidth,200);
     XtSetArg(arg[2],XmNmessageString, CStr2);
@@ -144,7 +144,7 @@ void CoWowMotif::DisplayQuestion( void *ctx, char *title, char *text,
     cbdata->ctx = ctx;
     cbdata->data = data;
 
-    question_widget = XmCreateQuestionDialog( m_parent,"questionDialog",arg,10);
+    question_widget = XmCreateQuestionDialog( m_parent,(char*) "questionDialog",arg,10);
     XtAddCallback( question_widget, XmNokCallback,
 		(XtCallbackProc) question_ok_cb, cbdata);
     XtAddCallback( question_widget, XmNcancelCallback, 
@@ -178,7 +178,7 @@ void CoWowMotif::DisplayQuestion( void *ctx, char *title, char *text,
 *
 *************************************************************************/
 
-void CoWowMotif::DisplayError( char *title, char *text)
+void CoWowMotif::DisplayError( const char *title, const char *text)
 {
     Arg	    arg[10];
     Widget  err_widget, w;
@@ -190,12 +190,12 @@ void CoWowMotif::DisplayError( char *title, char *text)
     // Set default fontlist
     font = XLoadQueryFont( XtDisplay(m_parent),
 	      "-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1");
-    fontentry = XmFontListEntryCreate( "tag1", XmFONT_IS_FONT, font);
+    fontentry = XmFontListEntryCreate( (char*) "tag1", XmFONT_IS_FONT, font);
     fontlist = XmFontListAppendEntry( NULL, fontentry);
     XtFree( (char *)fontentry);
 
-    cstr = XmStringCreateLtoR( text, XmSTRING_DEFAULT_CHARSET);
-    ctitle = XmStringCreateLtoR( title, XmSTRING_DEFAULT_CHARSET);    
+    cstr = XmStringCreateLtoR( (char*) text, XmSTRING_DEFAULT_CHARSET);
+    ctitle = XmStringCreateLtoR( (char*) title, XmSTRING_DEFAULT_CHARSET);    
     XtSetArg(arg[0],XmNheight,75);
     XtSetArg(arg[1],XmNwidth,200);
     XtSetArg(arg[2],XmNmessageString, cstr);
@@ -205,7 +205,7 @@ void CoWowMotif::DisplayError( char *title, char *text)
     XtSetArg(arg[6], XmNbuttonFontList, fontlist);
     XtSetArg(arg[7], XmNlabelFontList, fontlist);
 
-    err_widget = XmCreateErrorDialog( m_parent,"err_widget",arg,8);
+    err_widget = XmCreateErrorDialog( m_parent,(char*) "err_widget",arg,8);
     XtAddCallback(err_widget, XmNokCallback, 
 		(XtCallbackProc) error_ok_cb, NULL);
 
@@ -295,7 +295,7 @@ void CoWowMotif::list_action_cb( Widget w, XtPointer data,
   free( ctx);
 }
 
-void *CoWowMotif::CreateList( char *title, char *texts,
+void *CoWowMotif::CreateList( const char *title, const char *texts,
 				     void (action_cb)( void *, char *),
 				     void (cancel_cb)( void *),
 				     void *parent_ctx)
@@ -327,7 +327,7 @@ void *CoWowMotif::CreateList( char *title, char *texts,
   // Set default fontlist
   font = XLoadQueryFont( XtDisplay(ctx->toplevel),
 	      "-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1");
-  fontentry = XmFontListEntryCreate( "tag1", XmFONT_IS_FONT, font);
+  fontentry = XmFontListEntryCreate( (char*) "tag1", XmFONT_IS_FONT, font);
   fontlist = XmFontListAppendEntry( NULL, fontentry);
   XtFree( (char *)fontentry);
 
@@ -336,7 +336,7 @@ void *CoWowMotif::CreateList( char *title, char *texts,
   XtSetArg( args[i], XtNallowShellResize, TRUE); i++;
   XtSetValues( ctx->toplevel, args, i);
 
-  mainwindow = XmCreateMainWindow( ctx->toplevel, "mainWindow", NULL, 0);
+  mainwindow = XmCreateMainWindow( ctx->toplevel, (char*) "mainWindow", NULL, 0);
   XtManageChild( mainwindow);
 
   i=0;
@@ -344,10 +344,10 @@ void *CoWowMotif::CreateList( char *title, char *texts,
   XtSetArg(args[i],XmNheight, 400);i++;
   XtSetArg(args[i],XmNresizePolicy,XmRESIZE_NONE); i++;
 
-  form = XmCreateForm( mainwindow, "form", args, i);
+  form = XmCreateForm( mainwindow, (char*) "form", args, i);
   XtManageChild( form);
 
-  cstr = XmStringCreateLtoR( "Ok", XmSTRING_DEFAULT_CHARSET);
+  cstr = XmStringCreateLtoR( (char*) "Ok", XmSTRING_DEFAULT_CHARSET);
 
   i=0;
   XtSetArg( args[i], XmNbottomAttachment, XmATTACH_FORM); i++;
@@ -357,14 +357,14 @@ void *CoWowMotif::CreateList( char *title, char *texts,
   XtSetArg( args[i], XmNwidth, 50); i++;
   XtSetArg( args[i], XmNlabelString, cstr); i++;
 
-  ok_button = XmCreatePushButton( form, "okButton", args, i);
+  ok_button = XmCreatePushButton( form, (char*) "okButton", args, i);
   XtAddCallback( ok_button, XmNactivateCallback,
 		(XtCallbackProc) list_ok_cb, ctx);
   XtManageChild( ok_button);
 
   XmStringFree( cstr);
 
-  cstr = XmStringCreateLtoR( "Cancel", XmSTRING_DEFAULT_CHARSET);
+  cstr = XmStringCreateLtoR( (char*) "Cancel", XmSTRING_DEFAULT_CHARSET);
 
   i=0;
   XtSetArg( args[i], XmNbottomAttachment, XmATTACH_FORM); i++;
@@ -374,7 +374,7 @@ void *CoWowMotif::CreateList( char *title, char *texts,
   XtSetArg( args[i], XmNwidth, 50); i++;
   XtSetArg( args[i], XmNlabelString, cstr); i++;
 
-  cancel_button = XmCreatePushButton( form, "okButton", args, i);
+  cancel_button = XmCreatePushButton( form, (char*) "okButton", args, i);
   XtAddCallback( cancel_button, XmNactivateCallback,
 		(XtCallbackProc) list_cancel_cb, ctx);
   XtManageChild( cancel_button);
@@ -398,14 +398,14 @@ void *CoWowMotif::CreateList( char *title, char *texts,
   XtSetArg( args[i], XmNleftOffset, 15); i++;
   XtSetArg( args[i], XmNselectionPolicy, XmSINGLE_SELECT); i++;
   XtSetArg( args[i], XmNfontList, fontlist); i++;
-  ctx->list = XmCreateScrolledList( form, "scrolledList", args, i);
+  ctx->list = XmCreateScrolledList( form, (char*) "scrolledList", args, i);
   XtAddCallback( ctx->list, XmNdefaultActionCallback,
 		(XtCallbackProc) list_action_cb, ctx);
 
   XmFontListFree( fontlist);
   XtManageChild( ctx->list);
 
-  name_p = texts;
+  name_p = (char *)texts;
   i = 0;
   while ( strcmp( name_p, "") != 0) {
     cstr = XmStringCreateSimple( name_p);
@@ -494,7 +494,7 @@ void CoWowMotif::file_search_cb( Widget widget, XtPointer data)
 		   NULL);
 }
 
-void CoWowMotif::CreateFileSelDia( char *title, void *parent_ctx,
+void CoWowMotif::CreateFileSelDia( const char *title, void *parent_ctx,
 				   void (*file_selected_cb)(void *, char *, wow_eFileSelType),
 				   wow_eFileSelType file_type)
 {
@@ -510,7 +510,7 @@ void CoWowMotif::CreateFileSelDia( char *title, void *parent_ctx,
   ctx->parent_ctx = parent_ctx;
   ctx->file_type = file_type;
 
-  ctitle = XmStringCreateLtoR( title, XmSTRING_DEFAULT_CHARSET);    
+  ctitle = XmStringCreateLtoR( (char*) title, XmSTRING_DEFAULT_CHARSET);    
 
   i = 0;
   XtSetArg( args[i], XmNdialogTitle, ctitle); i++;
@@ -523,7 +523,7 @@ void CoWowMotif::CreateFileSelDia( char *title, void *parent_ctx,
   case wow_eFileSelType_Dbs:
     dcli_translate_filename( directory, "$pwrp_load/");
     cdirectory = XmStringCreateLtoR( directory, XmSTRING_DEFAULT_CHARSET);
-    cpattern = XmStringCreateLtoR( "*.dbs", XmSTRING_DEFAULT_CHARSET);
+    cpattern = XmStringCreateLtoR( (char*) "*.dbs", XmSTRING_DEFAULT_CHARSET);
     XtSetArg( args[i], XmNdirectory, cdirectory); i++;
     XtSetArg( args[i], XmNpattern, cpattern); i++;
     break;
@@ -531,14 +531,14 @@ void CoWowMotif::CreateFileSelDia( char *title, void *parent_ctx,
   case wow_eFileSelType_WblClass:
     dcli_translate_filename( directory, "$pwrp_db/");
     cdirectory = XmStringCreateLtoR( directory, XmSTRING_DEFAULT_CHARSET);
-    cpattern = XmStringCreateLtoR( "*.wb_load", XmSTRING_DEFAULT_CHARSET);
+    cpattern = XmStringCreateLtoR( (char*) "*.wb_load", XmSTRING_DEFAULT_CHARSET);
     XtSetArg( args[i], XmNdirectory, cdirectory); i++;
     XtSetArg( args[i], XmNpattern, cpattern); i++;
     break;
   default: ;
   }
 
-  ctx->dialog = XmCreateFileSelectionDialog( m_parent, "fileseldia", args, i);
+  ctx->dialog = XmCreateFileSelectionDialog( m_parent, (char*) "fileseldia", args, i);
   XtAddCallback( ctx->dialog, XmNokCallback, file_ok_cb, ctx);
   XtAddCallback( ctx->dialog, XmNcancelCallback, file_cancel_cb, ctx);
 
@@ -608,7 +608,7 @@ int CoWowMotif::DisplayWarranty()
     // Set default fontlist
     font = XLoadQueryFont( XtDisplay(m_parent),
 	      "-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1");
-    fontentry = XmFontListEntryCreate( "tag1", XmFONT_IS_FONT, font);
+    fontentry = XmFontListEntryCreate( (char*) "tag1", XmFONT_IS_FONT, font);
     fontlist = XmFontListAppendEntry( NULL, fontentry);
     XtFree( (char *)fontentry);
     
@@ -637,7 +637,7 @@ int CoWowMotif::DisplayWarranty()
     cbdata->ctx = 0;
     cbdata->data = (void *)this;
 
-    question_widget = XmCreateMessageDialog( m_parent,"questionDialog",arg, 12);
+    question_widget = XmCreateMessageDialog( m_parent,(char*) "questionDialog",arg, 12);
     XtAddCallback( question_widget, XmNokCallback,
 		(XtCallbackProc) question_ok_cb, cbdata);
     XtAddCallback( question_widget, XmNcancelCallback, 
@@ -697,13 +697,13 @@ void CoWowMotif::DisplayLicense()
     // Set default fontlist
     font = XLoadQueryFont( XtDisplay(m_parent),
 	      "-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1");
-    fontentry = XmFontListEntryCreate( "tag1", XmFONT_IS_FONT, font);
+    fontentry = XmFontListEntryCreate( (char*) "tag1", XmFONT_IS_FONT, font);
     fontlist = XmFontListAppendEntry( NULL, fontentry);
     XtFree( (char *)fontentry);
 
-    CStr2 = XmStringCreateLtoR( "", XmSTRING_DEFAULT_CHARSET);
+    CStr2 = XmStringCreateLtoR( (char*) "", XmSTRING_DEFAULT_CHARSET);
     TitleStr = XmStringCreateLtoR( title, XmSTRING_DEFAULT_CHARSET);    
-    cancelstr = XmStringCreateLtoR( " Close ", XmSTRING_DEFAULT_CHARSET );    
+    cancelstr = XmStringCreateLtoR( (char*) " Close ", XmSTRING_DEFAULT_CHARSET );    
     XtSetArg(arg[0],XmNheight,400);
     XtSetArg(arg[1],XmNwidth,600);
     XtSetArg(arg[2],XmNmessageString, CStr2);
@@ -714,7 +714,7 @@ void CoWowMotif::DisplayLicense()
     XtSetArg(arg[7], XmNbuttonFontList, fontlist);
     XtSetArg(arg[8], XmNlabelFontList, fontlist);
 
-    question_widget = XmCreateMessageDialog( m_parent,"questionDialog",arg,9);
+    question_widget = XmCreateMessageDialog( m_parent,(char*) "questionDialog",arg,9);
     XmStringFree( CStr2);
     XmStringFree( TitleStr);
     XmStringFree( cancelstr);
@@ -730,7 +730,7 @@ void CoWowMotif::DisplayLicense()
     XtSetArg(arg[5], XmNrows, 30);
     XtSetArg(arg[6], XmNvalue, text);
     XtSetArg(arg[7], XmNfontList, fontlist);
-    w = XmCreateScrolledText( question_widget, "text", arg, 7);
+    w = XmCreateScrolledText( question_widget, (char*) "text", arg, 7);
     XtVaSetValues( XtParent(w), 
 		   XmNleftAttachment, XmATTACH_FORM,
 		   XmNrightAttachment, XmATTACH_FORM,

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: sev_server.h,v 1.3 2008-09-18 14:37:43 claes Exp $
+ * Proview   $Id: sev_server.h,v 1.4 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #ifndef sev_server_h
 #define sev_server_h
 
-#include <vector.h>
-#include <map.h>
+#include <vector>
+#include <map>
 
 #include "pwr.h"
 #include "pwr_class.h"
@@ -84,7 +84,7 @@ class sev_server {
   int init( int noneth);
   int connect();
   int request_items( pwr_tNid nid);
-  int sev_server::mainloop();
+  int mainloop();
   int check_histitems( sev_sMsgHistItems *msg, unsigned int size);
   int receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size);
   int send_histdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *msg, unsigned int size);

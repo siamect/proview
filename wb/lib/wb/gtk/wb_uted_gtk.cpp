@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_uted_gtk.cpp,v 1.2 2007-07-05 13:37:35 claes Exp $
+ * Proview   $Id: wb_uted_gtk.cpp,v 1.3 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -269,8 +269,8 @@ static void destroy_event( GtkWidget *w, gpointer data)
 //
 WUtedGtk::WUtedGtk( void	       	*wu_parent_ctx,
 		    GtkWidget		*wu_parent_wid,
-		    char	       	*wu_name,
-		    char	       	*wu_iconname,
+		    const char	       	*wu_name,
+		    const char	       	*wu_iconname,
 		    ldh_tWBContext	wu_ldhwb,
 		    ldh_tSesContext	wu_ldhses,
 		    int	       	wu_editmode,
@@ -740,7 +740,7 @@ void WUtedGtk::reset_qual()
 //	Displays a message in the ute window.
 //	Changes the label of a label widget which id is stored in the context.
 //
-void WUtedGtk::message( char *new_label) 
+void WUtedGtk::message( const char *new_label) 
 {
   gtk_label_set_label( GTK_LABEL(widgets.label), new_label);
 }

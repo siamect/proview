@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre_motif.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_gre_motif.cpp,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -62,15 +62,15 @@
 //
 WGreMotif::WGreMotif( void *wg_parent_ctx,
 		      Widget wg_parent_wid,
-		      char *name) :
+		      const char *name) :
   WGre( wg_parent_ctx, 0), parent_wid(wg_parent_wid), trace_timerid(0)
 {
   Arg		args[20];
   int		i;
 	
   static MrmRegisterArg	reglist[] = {
-    { "gre_ctx", 0 }
-	};
+    { (char*) "gre_ctx", 0 }
+  };
 
   /* Create object context */
   reglist[0].value = (caddr_t) this;
@@ -88,7 +88,7 @@ WGreMotif::WGreMotif( void *wg_parent_ctx,
   XtSetArg( args[i], XmNleftAttachment, XmATTACH_FORM);i++;
   XtSetArg( args[i], XmNbottomAttachment, XmATTACH_FORM);i++;
 
-  form_widget = ScrolledFlowCreate( parent_wid, "Flow window", 
+  form_widget = ScrolledFlowCreate( parent_wid, (char*) "Flow window", 
 	      args, i, init_flow, this, &flow_widget);
 
   XtManageChild( form_widget);
@@ -110,7 +110,7 @@ int WGreMotif::new_navigator( Widget parent)
   XtSetArg(args[i],XmNheight,200);i++;
   XtSetArg(args[i],XmNpaneMinimum,75);i++;
   XtSetArg(args[i],XmNpaneMaximum,800);i++;
-  nav_widget = FlowCreateNav( parent, "navigator",
+  nav_widget = FlowCreateNav( parent, (char*) "navigator",
         args, i, flow_widget);
   XtManageChild( nav_widget);
 
@@ -131,14 +131,14 @@ int WGreMotif::new_navigator_popup()
   XtSetArg(args[i],XmNx,500);i++;
   XtSetArg(args[i],XmNy,500);i++;
 
-  nav_shell = XmCreateDialogShell( flow_widget, "Navigator",
+  nav_shell = XmCreateDialogShell( flow_widget, (char*) "Navigator",
 				   args, i);
   XtManageChild( nav_shell);
 
   i = 0;
   XtSetArg(args[i],XmNwidth,200);i++;
   XtSetArg(args[i],XmNheight,200);i++;
-  nav_widget = FlowCreateNav( nav_shell, "navigator",
+  nav_widget = FlowCreateNav( nav_shell, (char*) "navigator",
 			      args, i, flow_widget);
   XtManageChild( nav_widget);
   XtRealizeWidget( nav_shell);

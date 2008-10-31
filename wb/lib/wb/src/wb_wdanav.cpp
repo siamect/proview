@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wdanav.cpp,v 1.9 2008-02-27 06:34:38 claes Exp $
+ * Proview   $Id: wb_wdanav.cpp,v 1.10 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -52,7 +52,7 @@ static char null_str[] = "";
 static int wdanav_attr_found_cb( pwr_sAttrRef *aref, void *a1, void *a2,
 				 void *a3, void *a4, void *a5);
 
-void WdaNav::message( char sev, char *text)
+void WdaNav::message( char sev, const char *text)
 {
   (message_cb)( parent_ctx, sev, text);
 }
@@ -68,7 +68,7 @@ int WdaNav::print( char *filename)
 //
 WdaNav::WdaNav(
 	void 		*wa_parent_ctx,
-	char 		*wa_name,
+	const char     	*wa_name,
 	ldh_tSesContext wa_ldhses,
 	pwr_tObjid 	wa_objid,
 	pwr_tClassId 	wa_classid,

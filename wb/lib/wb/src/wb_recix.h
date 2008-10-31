@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_recix.h,v 1.1 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_recix.h,v 1.2 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,7 +45,7 @@ class wb_recix {
   }
   bool add_object_tree( wb_object &o);
   bool add( const char *str, pwr_tOix ix);
-  void set_destination( char *dest) { 
+  void set_destination( const char *dest) { 
     strncpy( m_destroot, dest, sizeof(m_destroot));
     m_destroot_len = strlen(m_destroot);
   }

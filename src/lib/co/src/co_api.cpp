@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_api.cpp,v 1.12 2008-06-24 07:01:04 claes Exp $
+ * Proview   $Id: co_api.cpp,v 1.13 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -56,7 +56,7 @@ void lng_get_uid( char *in, char *out)
   Lng::get_uid( in, out);
 }
 
-char *lng_translate( char *str)
+char *lng_translate( const char *str)
 {
   return Lng::translate( str);
 }
@@ -74,22 +74,22 @@ char *lng_get_language_str()
 //
 // c api to co_msgwindow
 //
-void msgw_message( int severity, char *text, msgw_ePop pop)
+void msgw_message( int severity, const char *text, msgw_ePop pop)
 {
   MsgWindow::message( severity, text, pop);
 }
 
-void msgw_message_sts( pwr_tStatus sts, char *text1, char *text2)
+void msgw_message_sts( pwr_tStatus sts, const char *text1, const char *text2)
 {
   MsgWindow::message( co_error(sts), text1, text2);
 }
 
-void msgw_message_object( pwr_tStatus sts, char *text1, char *text2, pwr_tOid oid)
+void msgw_message_object( pwr_tStatus sts, const char *text1, const char *text2, pwr_tOid oid)
 {
   MsgWindow::message( co_error(sts), text1, text2, oid);
 }
 
-void msgw_message_plcobject( pwr_tStatus sts, char *text1, char *text2, pwr_tOid oid)
+void msgw_message_plcobject( pwr_tStatus sts, const char *text1, const char *text2, pwr_tOid oid)
 {
   MsgWindow::message( co_error(sts), text1, text2, oid, true);
 }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_errh.c,v 1.12 2006-09-06 13:52:52 claes Exp $
+ * Proview   $Id: rt_errh.c,v 1.13 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -135,9 +135,9 @@ static char *get_message (const int, unsigned int, char*, int);
 static char *get_name (char*, int);
 static char get_severity (pwr_tStatus);
 static void openLog ();
-static void set_name (char*);
+static void set_name (const char*);
 static void errh_send (char*, char, pwr_tStatus, errh_eMsgType);
-static void log_message (errh_sLog*, char, char*, va_list);
+static void log_message (errh_sLog*, char, const char*, va_list);
 static int msg_vsprintf (char *, const char *, aa_list, va_list);
 
 #if defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_ELN)
@@ -162,7 +162,7 @@ errh_Interactive ()
 
 pwr_tStatus
 errh_Init (
-  char *name,
+  const char *name,
   errh_eAnix anix
 )
 {
@@ -226,7 +226,7 @@ char *
 errh_Log (
   char *buff,
   char severity,
-  char *msg,
+  const char *msg,
   ...
 )
 {
@@ -249,7 +249,7 @@ errh_Log (
 /* Log a success message.  */
 void
 errh_Success (
-  char *msg,
+  const char *msg,
   ...
 )
 {
@@ -263,7 +263,7 @@ errh_Success (
 /* Log an info message  */
 
 void
-errh_Info (char *msg, ...)
+errh_Info (const char *msg, ...)
 {
   va_list args;
 
@@ -275,7 +275,7 @@ errh_Info (char *msg, ...)
 /* Log a warning message  */
 
 void
-errh_Warning(char *msg, ...)
+errh_Warning(const char *msg, ...)
 {
   va_list args;
 
@@ -287,7 +287,7 @@ errh_Warning(char *msg, ...)
 /* Log an error message  */
 
 void
-errh_Error(char *msg, ...)
+errh_Error(const char *msg, ...)
 {
   va_list args;
 
@@ -299,7 +299,7 @@ errh_Error(char *msg, ...)
 /* Log a fatal message  */
 
 void
-errh_Fatal(char *msg, ...)
+errh_Fatal(const char *msg, ...)
 {
   va_list args;
 
@@ -312,7 +312,7 @@ errh_Fatal(char *msg, ...)
 void
 errh_LogFatal (
   errh_sLog *lp,
-  char *msg,
+  const char *msg,
   ...
 )
 {
@@ -327,7 +327,7 @@ errh_LogFatal (
 void
 errh_LogWarning (
   errh_sLog *lp,
-  char *msg,
+  const char *msg,
   ...
 )
 {
@@ -342,7 +342,7 @@ errh_LogWarning (
 void
 errh_LogError (
   errh_sLog *lp,
-  char *msg,
+  const char *msg,
   ...
 )
 {
@@ -357,7 +357,7 @@ errh_LogError (
 void
 errh_LogInfo (
   errh_sLog *lp,
-  char *msg,
+  const char *msg,
   ...
 )
 {
@@ -372,7 +372,7 @@ errh_LogInfo (
 void
 errh_LogSuccess (
   errh_sLog *lp,
-  char *msg,
+  const char *msg,
   ...
 )
 {
@@ -521,7 +521,7 @@ get_message (
 
 
 static void
-set_name (char *name)
+set_name (const char *name)
 {
 
   strncpy(programName, name, sizeof(programName) - 1);
@@ -697,7 +697,7 @@ get_header (char severity, char *s)
 /* Format a string and write it to log devices.  */
 
 static void
-log_message (errh_sLog *lp, char severity, char *msg, va_list ap)
+log_message (errh_sLog *lp, char severity, const char *msg, va_list ap)
 {
   char *s;
   char string[1000];

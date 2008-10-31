@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_motif.h,v 1.2 2008-09-18 15:07:38 claes Exp $
+ * Proview   $Id: co_wow_motif.h,v 1.3 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,12 +27,13 @@
 #include <Xm/Xm.h>
 #include <X11/Xatom.h>
 
-#ifndef co_wow_api_h
+//#ifndef co_wow_api_h
 typedef struct {
   Widget    toplevel;
   Widget    list;
   char      *texts;
   void      (* action_cb) ( void *, char *);
+  void      (* cancel_cb) ( void *);
   void      *parent_ctx;
 } *wow_tListCtx;
 
@@ -44,7 +45,7 @@ typedef struct {
   void	         	(* questionbox_help) ( void *, void *);
 } wow_t_question_cb;
 
-#endif
+//#endif
 
 class CoWowWidgetMotif : public CoWowWidget {
   CoWowWidgetMotif( Widget w) : widget(w) {}
@@ -85,16 +86,16 @@ class CoWowMotif : public CoWow {
 
   CoWowMotif( Widget parent) : m_parent(parent) {}
   ~CoWowMotif() {}
-  void DisplayQuestion( void *ctx, char	*title, char *text,
+  void DisplayQuestion( void *ctx, const char *title, const char *text,
 				void (* questionbox_ok) ( void *, void *),
 				void (* questionbox_cancel) ( void *, void *),
 				void *data);
-  void DisplayError( char *title, char *text);
-  void *CreateList( char *title, char *texts,
+  void DisplayError( const char *title, const char *text);
+  void *CreateList( const char *title, const char *texts,
 			    void (action_cb)( void *, char *),
 			    void (cancel_cb)( void *),
 			    void *ctx);
-  void CreateFileSelDia( char *title, void *parent_ctx,
+  void CreateFileSelDia( const char *title, void *parent_ctx,
 	       void (*file_selected_cb)(void *, char *, wow_eFileSelType),
 	       wow_eFileSelType file_type);
   int DisplayWarranty();

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wdanav.h,v 1.5 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_wdanav.h,v 1.6 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,7 +51,7 @@ class WdaNav {
   public:
     WdaNav(
 	void 		*wa_parent_ctx,
-	char 		*wa_name,
+	const char     	*wa_name,
 	ldh_tSesContext wa_ldhses,
 	pwr_tObjid 	wa_objid,
 	pwr_tClassId 	wa_classid,
@@ -75,7 +75,7 @@ class WdaNav {
     int			display_objectname;
     int			bypass;
     int			trace_started;
-    void 		(*message_cb)( void *, char, char *);
+    void 		(*message_cb)( void *, char, const char *);
     void 		(*change_value_cb)( void *);
     wb_eUtility		utility;
     int			displayed;
@@ -88,7 +88,7 @@ class WdaNav {
     int check_attr( int *multiline, brow_tObject *node, char *name,
 		char **init_value, int *size);
     int get_select( pwr_sAttrRef *attrref, int *is_attr);
-    void message( char sev, char *text);
+    void message( char sev, const char *text);
     void force_trace_scan();
     int get_attr();
     int object_exist( brow_tObject object);

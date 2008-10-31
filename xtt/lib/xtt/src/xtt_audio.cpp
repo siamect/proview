@@ -51,7 +51,7 @@ snd_pcm_uframes_t XttAudio::frames=AUDIO_BUFFER_SIZE/4;
 snd_pcm_hw_params_t *XttAudio::hw_params=NULL;
 static long unsigned int period_size = 65536;
 
-XttAudio::XttAudio( CoWow *a_wow, char *OSS_device, char * ALSA_device) :
+XttAudio::XttAudio( CoWow *a_wow, const char *OSS_device, const char * ALSA_device) :
   write_buffer(0), timerid(0), queue_cnt(0)
 {
   /*constructor*/
@@ -60,12 +60,12 @@ XttAudio::XttAudio( CoWow *a_wow, char *OSS_device, char * ALSA_device) :
 
   if(number_of<2 && audio_ok==0)
   {
-    if(Init_ALSA(ALSA_device,AUDIO_SAMPLE_RATE)>0)
+    if(Init_ALSA((char *)ALSA_device,AUDIO_SAMPLE_RATE)>0)
     {
       ALSA_audio_ok=1;
       errh_Info("ALSA audio init of device %s ok",ALSA_device);
     }
-    if(Init_OSS(OSS_device,AUDIO_SAMPLE_RATE)>0)
+    if(Init_OSS((char *)OSS_device,AUDIO_SAMPLE_RATE)>0)
     {
       OSS_audio_ok=1;
       errh_Info("OSS audio init of device %s ok",OSS_device);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attrnav.h,v 1.4 2007-01-04 08:42:20 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attrnav.h,v 1.5 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -117,14 +117,14 @@ class GsdAttrNav {
     int			item_cnt;
     int 		edit_mode;
     int			trace_started;
-    void 		(*message_cb)( void *, char, char *);
+    void 		(*message_cb)( void *, char, const char *);
     void 		(*change_value_cb)( void *);
     CoWow		*wow;
     CoWowTimer		*trace_timerid;
 
     GsdAttrNav(
 	void *xn_parent_ctx,
-	char *xn_name,
+	const char *xn_name,
 	pb_gsd  *xn_gsd,
 	int	xn_edit_mode,
 	pwr_tStatus *status);
@@ -136,7 +136,7 @@ class GsdAttrNav {
     int set_attr_value( char *value_str);
     int check_attr_value( char **value);
     int get_select( pwr_sAttrRef *attrref, int *is_attr);
-    void message( char sev, char *text);
+    void message( char sev, const char *text);
     void force_trace_scan();
     int object_attr();
     void print( char *filename);
@@ -175,7 +175,7 @@ class ItemPb {
 //! Item for a normal attribute.
 class ItemPbBase : public ItemPb {
   public:
-    ItemPbBase( GsdAttrNav *attrnav, char *item_name, char *attr,
+    ItemPbBase( GsdAttrNav *attrnav, const char *item_name, const char *attr,
 	int attr_type, int attr_size, double attr_min_limit,
 	double attr_max_limit, void *attr_value_p, 
         int attr_noedit,  gsd_sPrmText *attr_enumtext,
@@ -194,7 +194,7 @@ class ItemPbBase : public ItemPb {
 
 class ItemPbEnum : public ItemPbBase {
    public:
-    ItemPbEnum( GsdAttrNav *attrnav, char *item_name, char *attr,
+    ItemPbEnum( GsdAttrNav *attrnav, const char *item_name, const char *attr,
 	int attr_type, int attr_size, double attr_min_limit,
 	double attr_max_limit, void *attr_value_p,
         int attr_noedit,  gsd_sPrmText *attr_enumtext,
@@ -209,7 +209,7 @@ class ItemPbEnum : public ItemPbBase {
 //! Item for an enum attribute.
 class ItemPbEnumValue : public ItemPb {
   public:
-    ItemPbEnumValue( GsdAttrNav *attrnav, char *item_name, int item_num, 
+    ItemPbEnumValue( GsdAttrNav *attrnav, const char *item_name, int item_num, 
 	int item_type_id,
 	void *attr_value_p, brow_tNode dest, flow_eDest dest_code);
     int			num;
@@ -222,7 +222,7 @@ class ItemPbEnumValue : public ItemPb {
 //! Item for a module.
 class ItemPbModule : public ItemPb {
  public:
-  ItemPbModule( GsdAttrNav *attrnav, char *item_name, gsd_sModuleConf *item_mconf,
+  ItemPbModule( GsdAttrNav *attrnav, const char *item_name, gsd_sModuleConf *item_mconf,
 		brow_tNode dest, flow_eDest dest_code);
   virtual ~ItemPbModule() {}
 
@@ -237,7 +237,7 @@ class ItemPbModule : public ItemPb {
 //! Item for module type selection.
 class ItemPbModuleType : public ItemPb {
  public:
-  ItemPbModuleType( GsdAttrNav *attrnav, char *item_name, gsd_sModuleConf *item_mconf,
+  ItemPbModuleType( GsdAttrNav *attrnav, const char *item_name, gsd_sModuleConf *item_mconf,
 		    brow_tNode dest, flow_eDest dest_code);
   virtual ~ItemPbModuleType() {}
 
@@ -251,7 +251,7 @@ class ItemPbModuleType : public ItemPb {
 //! Item for module type selection.
 class ItemPbModuleData : public ItemPb {
  public:
-  ItemPbModuleData( GsdAttrNav *attrnav, char *item_name, gsd_sModuleConf *item_mconf,
+  ItemPbModuleData( GsdAttrNav *attrnav, const char *item_name, gsd_sModuleConf *item_mconf,
 		    brow_tNode dest, flow_eDest dest_code);
   virtual ~ItemPbModuleData() {}
 
@@ -264,7 +264,7 @@ class ItemPbModuleData : public ItemPb {
 //! Item for module class selection.
 class ItemPbModuleClass : public ItemPb {
  public:
-  ItemPbModuleClass( GsdAttrNav *attrnav, char *item_name, gsd_sModuleConf *item_mconf,
+  ItemPbModuleClass( GsdAttrNav *attrnav, const char *item_name, gsd_sModuleConf *item_mconf,
 		     brow_tNode dest, flow_eDest dest_code);
   virtual ~ItemPbModuleClass() {}
 
@@ -278,7 +278,7 @@ class ItemPbModuleClass : public ItemPb {
 //! Item for slave prmdata.
 class ItemPbPrmData : public ItemPb {
  public:
-  ItemPbPrmData( GsdAttrNav *attrnav, char *item_name,
+  ItemPbPrmData( GsdAttrNav *attrnav, const char *item_name,
 		    brow_tNode dest, flow_eDest dest_code);
   virtual ~ItemPbPrmData() {}
 
@@ -288,7 +288,7 @@ class ItemPbPrmData : public ItemPb {
 //! Item for slave prmdata.
 class ItemPbMoreData : public ItemPb {
  public:
-  ItemPbMoreData( GsdAttrNav *attrnav, char *item_name,
+  ItemPbMoreData( GsdAttrNav *attrnav, const char *item_name,
 		  brow_tNode dest, flow_eDest dest_code);
   virtual ~ItemPbMoreData() {}
   virtual int	       	open_children( GsdAttrNav *attrnav, double x, double y);
@@ -297,7 +297,7 @@ class ItemPbMoreData : public ItemPb {
 //! Item for slave byte order.
 class ItemPbEnumByteOrder : public ItemPbBase {
    public:
-    ItemPbEnumByteOrder( GsdAttrNav *attrnav, char *item_name, char *attr, 
+    ItemPbEnumByteOrder( GsdAttrNav *attrnav, const char *item_name, const char *attr, 
 	int attr_type, int attr_size, double attr_min_limit, 
 	double attr_max_limit, void *attr_value_p,
 	int attr_noedit,

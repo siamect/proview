@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_nav_help.h,v 1.8 2008-02-27 06:24:37 claes Exp $
+ * Proview   $Id: co_nav_help.h,v 1.9 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -60,26 +60,26 @@ typedef enum {
 
 class NavHelp {
   public:
-    NavHelp( void *h_parent_ctx, char *h_base_file, char *h_project_file) 
+    NavHelp( void *h_parent_ctx, const char *h_base_file, const char *h_project_file) 
       : parent_ctx(h_parent_ctx), noprop(0)
       { strcpy(project_file, h_project_file);
         strcpy(base_file, h_base_file);};
     void 	        *parent_ctx;
-    void 		*(*insert_cb)( void *, navh_eItemType, char *, 
-			     char *, char *, char *, char *, char *,
-			     navh_eHelpFile, int, char *);
+    void 		*(*insert_cb)( void *, navh_eItemType, const char *, 
+			     const char *, const char *, const char *, const char *, const char *,
+			     navh_eHelpFile, int, const char *);
     void 		(*draw_cb)( void *, int, void *);
     char                base_file[120];
     char                project_file[120];
     int			noprop;
 
-    int help( char *key, char *help_bookmark, navh_eHelpFile file_type, 
-	      char *file_name, void **bookmark, bool strict = false);
-    int	get_next_key( char *help_key, navh_eHelpFile file_type, char *file_name,
+    int help( const char *key, const char *help_bookmark, navh_eHelpFile file_type, 
+	      const char *file_name, void **bookmark, bool strict = false);
+    int	get_next_key( const char *help_key, navh_eHelpFile file_type, const char *file_name,
 		      bool strict, char *next_key);
-    int get_previous_key( char *help_key, navh_eHelpFile file_type, char *file_name,
+    int get_previous_key( const char *help_key, navh_eHelpFile file_type, const char *file_name,
 			  bool strict, char *prev_key);
-    int	help_index( navh_eHelpFile file_type, char *file_name);
+    int	help_index( navh_eHelpFile file_type, const char *file_name);
     void set_propagate( int prop) { noprop = !prop;}
 };
 

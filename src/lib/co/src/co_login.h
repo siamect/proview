@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_login.h,v 1.1 2008-06-24 06:51:43 claes Exp $
+ * Proview   $Id: co_login.h,v 1.2 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -49,8 +49,8 @@ class CoLogin {
   char	       	password[40];
 
   CoLogin( void		*wl_parent_ctx,
-	  char		*wl_name,
-	  char		*wl_groupname,
+	  const char   	*wl_name,
+	  const char   	*wl_groupname,
 	  void		(* wl_bc_success)( void *),
 	  void		(* wl_bc_cancel)( void *),
 	  pwr_tStatus  	*sts);
@@ -61,10 +61,10 @@ class CoLogin {
   void activate_cancel();
 
   virtual pwr_tStatus get_values() {return 0;}
-  virtual void message( char *new_label) {}
+  virtual void message( const char *new_label) {}
 
-  static pwr_tStatus user_check( char *groupname, char *username, char *password);
-  static pwr_tStatus insert_login_info( char *groupname, char *password, char *username, 
+  static pwr_tStatus user_check( const char *groupname, const char *username, const char *password);
+  static pwr_tStatus insert_login_info( const char *groupname, const char *password, const char *username, 
 					unsigned long priv, unsigned long attr);
   static pwr_tStatus get_login_info( char *groupname, char *password, char *username, 
 			      unsigned long *priv, unsigned long *attr);

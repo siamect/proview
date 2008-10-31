@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelist.cpp,v 1.10 2008-02-06 09:32:39 claes Exp $
+ * Proview   $Id: co_statusmon_nodelist.cpp,v 1.11 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -36,7 +36,7 @@
 #include "rt_xnav_msg.h"
 
 Nodelist::Nodelist( void *nodelist_parent_ctx,
-		    char *nodelist_name, int nodelist_mode, 
+		    const char *nodelist_name, int nodelist_mode, 
 		    int nodelist_view_node_descr, pwr_tStatus *status) :
   parent_ctx(nodelist_parent_ctx),
   nodelistnav(NULL), nodelist_displayed(0), help_cb(0), close_cb(0), mode(nodelist_mode),

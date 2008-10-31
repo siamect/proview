@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vsel_gtk.cpp,v 1.3 2008-10-15 06:04:55 claes Exp $
+ * Proview   $Id: wb_vsel_gtk.cpp,v 1.4 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -195,7 +195,7 @@ WVselGtk::WVselGtk (
   pwr_tStatus   *status,
   void		*wv_parent_ctx,
   GtkWidget	*wv_parent_wid,
-  char		*wv_name,
+  const char   	*wv_name,
   ldh_tWBContext wv_wbctx,
   char		*volumename,
   int		(*bc_success)( void *, pwr_tVolumeId *, int),

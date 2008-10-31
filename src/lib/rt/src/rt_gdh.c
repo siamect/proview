@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.c,v 1.35 2008-07-02 11:26:13 claes Exp $
+ * Proview   $Id: rt_gdh.c,v 1.36 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -187,7 +187,7 @@ gdh_AttrrefToName (
 pwr_tStatus
 gdh_ArefANameToAref (
   pwr_sAttrRef *arp,
-  char *aname,
+  const char *aname,
   pwr_sAttrRef *oarp
 )
 {
@@ -302,7 +302,7 @@ gdh_AttrArefToObjectAref (
 pwr_tStatus
 gdh_ClassAttrToAttrref (
   pwr_tClassId		cid,    /**< The class identity whose attribute we want to examin */
-  char			*name,  /**< The name of the attribute we want */
+  const char	       	*name,  /**< The name of the attribute we want */
   pwr_sAttrRef		*arp    /**< Receives the attribute description. */
 )
 {
@@ -393,7 +393,7 @@ gdh_ClassAttrrefToAttr (
  */
 pwr_tStatus
 gdh_ClassNameToId (
-  char			*name, /**< ZZZ */
+  const char	       	*name, /**< ZZZ */
   pwr_tClassId		*cid   /**< ZZZ */
 )
 {
@@ -725,7 +725,7 @@ gdh_GetObjectNodeIndex (
 
 pwr_tStatus
 gdh_GetObjectInfo (
-  char			*name,		/**<  Name of object or object.parameter.	 */
+  const char	       	*name,		/**<  Name of object or object.parameter.	 */
   pwr_tAddress		bufp,		/**<  Pointer to a buffer of 'bufsize' bytes
 					      to be filled with requested information.  */
   pwr_tUInt32		bufsize		/**<  Size of the 'bufp' buffer.	*/
@@ -1833,7 +1833,7 @@ gdh_GetPreviousObject (
 
 pwr_tStatus
 gdh_Init (
-  char		*name /**< ZZZ */
+  const char		*name /**< ZZZ */
 )
 {
   pwr_tStatus		sts = GDH__SUCCESS;
@@ -1954,7 +1954,7 @@ gdh_MoveObject (
  */
 pwr_tStatus
 gdh_NameToObjid (
-  char			*name, /**< The object name. */
+  const char	       	*name, /**< The object name. */
   pwr_tObjid		*oid   /**< receives the identity of the object. */
 )
 {
@@ -1991,7 +1991,7 @@ gdh_NameToObjid (
  */
 pwr_tStatus
 gdh_NameToPointer (
-  char			*name, /**< The name of the object. */ 
+  const char	       	*name, /**< The name of the object. */ 
   void			**p    /**< Receives a pointer to the object. */
 )
 {
@@ -2049,7 +2049,7 @@ gdh_NameToAttrref (
   pwr_tObjid		poid,   /**< This object is added to the Name argument to
                                      form the complete name of the object/attribute.
 				     It should be specified as pwr_cNobjid if it is not used.*/
-  char			*name,  /**< The argument is added to the parent to form the
+  const char	       	*name,  /**< The argument is added to the parent to form the
                                      complete item name. If the parent argument is supplied as 
                                      pwr_cNobjid, this argument is considered to decsribe the 
                                      full name. */ 

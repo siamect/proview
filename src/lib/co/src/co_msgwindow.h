@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msgwindow.h,v 1.8 2007-05-16 12:32:26 claes Exp $
+ * Proview   $Id: co_msgwindow.h,v 1.9 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,7 +47,7 @@ class MsgWindow {
   public:
     MsgWindow(
 	void *msg_parent_ctx,
-	char *msg_name,
+	const char *msg_name,
 	pwr_tStatus *status);
     virtual ~MsgWindow() {}
 

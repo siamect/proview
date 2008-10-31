@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wpkg.h,v 1.4 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_wpkg.h,v 1.5 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -60,13 +60,13 @@ class WPkg {
     void activate_zoom_out();
     void activate_zoom_reset();
 
-    virtual void message( char severity, char *message) {}
+    virtual void message( char severity, const char *message) {}
     virtual void pop() {}
     virtual void set_clock_cursor() {}
     virtual void reset_cursor() {}
     virtual void flush() {}
 
-    static void message_cb( void *wpkg, char severity, char *message);
+    static void message_cb( void *wpkg, char severity, const char *message);
     static void set_clock_cursor_cb( void *wpkg);
     static void reset_cursor_cb( void *wpkg);
     static void deletepkg_ok( void *ctx, void *data);

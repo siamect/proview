@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.cpp,v 1.12 2008-10-15 06:04:55 claes Exp $
+ * Proview   $Id: wb_utl.cpp,v 1.13 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -216,13 +216,13 @@ static void	u_force_pagebreak(
 static void	u_header( 
     utl_ctx		utlctx,
     ldh_tSesContext ldhses,
-    char		*title
+    const char		*title
 );
 
 static void	u_subheader(
     utl_ctx		utlctx,
-    char		*title,
-    char		*spec
+    const char		*title,
+    const char		*spec
 );
 
 static void	u_posit(
@@ -233,7 +233,7 @@ static void	u_posit(
 
 static int	u_open(
     utl_ctx		utlctx,
-    char		*filename,
+    const char		*filename,
     int			terminal,
     int			append
 );
@@ -244,7 +244,7 @@ static void	u_close(
 
 static void	u_print( 
     utl_ctx		utlctx,
-    char		*format,
+    const char		*format,
     ...
     /*	unsigned long	a1, */
     /*  unsigned long	a2, */
@@ -330,7 +330,7 @@ static int utl_list_print_columnheader (
 static void utl_ctx_new (
   utl_ctx	  *utlctx,
   ldh_tSesContext ldhses,
-  char		*page_title,
+  const char   	*page_title,
   int		landscape
 );
 
@@ -1703,9 +1703,9 @@ int utl_toupper (
 **************************************************************************/
 
 int utl_parse (
-  char	*instring,
-  char	*parse_char,
-  char	*inc_parse_char,
+  const char	*instring,
+  const char	*parse_char,
+  const char	*inc_parse_char,
   char	*outstr,
   int	max_rows,
   int 	max_cols
@@ -1723,7 +1723,7 @@ int utl_parse (
 	int	one_token = 0;
 	int	nullstr;
 
-	string = instring;
+	string = (char *)instring;
 	row = 0;
 	col = 0;
 	char_found = 0;
@@ -1731,8 +1731,8 @@ int utl_parse (
 	nullstr = 0;
 	while ( *string != '\0')	
 	{
-	  char_ptr = parse_char;
-	  inc_char_ptr = inc_parse_char;
+	  char_ptr = (char *)parse_char;
+	  inc_char_ptr = (char *)inc_parse_char;
 	  parsechar_found = 0;
 	  inc_parsechar_found = 0;
 	  if ( *string == '"')
@@ -2228,7 +2228,7 @@ static int utl_list_classsort (
 static void utl_ctx_new (
   utl_ctx	  *utlctx,
   ldh_tSesContext ldhses,
-  char		*page_title,
+  const char   	*page_title,
   int		landscape
 )
 {
@@ -2755,7 +2755,7 @@ static void	u_force_pagebreak(
 static void	u_header( 
     utl_ctx		utlctx,
     ldh_tSesContext ldhses,
-    char		*title
+    const char		*title
 )
 {
 	char		systemname[80];
@@ -2802,8 +2802,8 @@ static void	u_header(
 
 static void	u_subheader(
     utl_ctx		utlctx,
-    char		*title,
-    char		*spec
+    const char		*title,
+    const char		*spec
 )
 {
 	int	tabs;
@@ -2906,7 +2906,7 @@ static void	u_posit(
 
 static int	u_open(
     utl_ctx		utlctx,
-    char		*filename,
+    const char		*filename,
     int			terminal,
     int			append
 )
@@ -2968,7 +2968,7 @@ static void	u_close(
 
 static void	u_print( 
     utl_ctx		utlctx,
-    char		*format,
+    const char		*format,
     ...
 )
 {
@@ -3642,7 +3642,7 @@ int utl_set_object_parameter (
   char		*parameter,
   char		*valuestr,
   int		terminal,
-  char		*filename,
+  const char   	*filename,
   int		confirm,
   int		log
 )

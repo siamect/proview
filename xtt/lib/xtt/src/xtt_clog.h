@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_clog.h,v 1.3 2007-01-04 08:22:46 claes Exp $
+ * Proview   $Id: xtt_clog.h,v 1.4 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,7 +35,7 @@ class CoWow;
 class CLog {
   public:
     CLog( void *clog_parent_ctx,
-	  char *clog_name,
+	  const char *clog_name,
 	  pwr_tStatus *status);
     virtual ~CLog();
 
@@ -43,7 +43,7 @@ class CLog {
     char 		name[80];
     CLogNav		*clognav;
     int			clog_displayed;
-    void 		(*help_cb)( void *, char *);
+    void 		(*help_cb)( void *, const char *);
     void 		(*close_cb)( void *);
     bool		filesel_loaded;
     CoWow		*wow;

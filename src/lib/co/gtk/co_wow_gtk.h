@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_gtk.h,v 1.6 2008-09-18 15:07:38 claes Exp $
+ * Proview   $Id: co_wow_gtk.h,v 1.7 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -90,20 +90,20 @@ class CoWowGtk : public CoWow {
 
   CoWowGtk( GtkWidget *parent) : m_parent(parent) {}
   ~CoWowGtk() {}
-  void DisplayQuestion( void *ctx, char	*title, char *text,
+  void DisplayQuestion( void *ctx, const char *title, const char *text,
 			void (* questionbox_ok) ( void *, void *),
 			void (* questionbox_cancel) ( void *, void *),
 			void *data);
-  void DisplayError( char *title, char *text);
-  void *CreateList( char *title, char *texts,
+  void DisplayError( const char *title, const char *text);
+  void *CreateList( const char *title, const char *texts,
 		    void (action_cb)( void *, char *),
 		    void (cancel_cb)( void *),
 		    void *ctx);
-  void CreateFileSelDia( char *title, void *parent_ctx,
+  void CreateFileSelDia( const char *title, void *parent_ctx,
 			 void (*file_selected_cb)(void *, char *, wow_eFileSelType),
 			 wow_eFileSelType file_type);
-  int CreateModalDialog( char *title, char *text, char *button1, char *button2, char *button3,
-			 char *image);
+  int CreateModalDialog( const char *title, const char *text, const char *button1, const char *button2,
+			 const char *button3, const char *image);
   int DisplayWarranty();
   void DisplayLicense();
   CoWowTimer *timer_new();
@@ -117,8 +117,8 @@ class CoWowGtk : public CoWow {
   static void question_cancel_cb( GtkWidget *w, gpointer data);
   static void warranty_cb( GtkWidget *w, gint response, gpointer data);
   static void license_cb( GtkWidget *w, gint response, gpointer data);
-  static char *translate_utf8( char *str);
-  static char *convert_utf8( char *str);
+  static char *translate_utf8( const char *str);
+  static char *convert_utf8( const char *str);
 
 #if 0
   static void error_ok_cb(Widget w);

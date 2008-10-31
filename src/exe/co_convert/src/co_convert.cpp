@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_convert.cpp,v 1.15 2008-03-03 11:01:45 claes Exp $
+ * Proview   $Id: co_convert.cpp,v 1.16 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,9 +21,9 @@
 #include <float.h>
 #include <string.h>
 #include <stdlib.h>
-#include <iostream.h>
-#include <fstream.h>
-#include <vector.h>
+#include <iostream>
+#include <fstream>
+#include <vector>
 
 extern "C" {
 #include "pwr.h"

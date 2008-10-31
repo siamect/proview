@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attr_motif.h,v 1.1 2007-01-04 08:22:16 claes Exp $
+ * Proview   $Id: ge_attr_motif.h,v 1.2 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,8 +53,8 @@ class AttrMotif : public Attr {
     static char	value_recall[30][160];
     int		value_current_recall;
 
-    void message( char severity, char *message);
-    void set_prompt( char *prompt);
+    void message( char severity, const char *message);
+    void set_prompt( const char *prompt);
     void change_value();
     int reconfigure_attr();
     

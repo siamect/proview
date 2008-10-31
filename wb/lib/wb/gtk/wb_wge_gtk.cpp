@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wge_gtk.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_wge_gtk.cpp,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -96,7 +96,7 @@ void WGeGtk::confirm_cb( void *ge_ctx, void *confirm_object, char *text)
   ge->current_confirm_object = confirm_object;
 }
 
-void WGeGtk::message_dialog_cb( void *ge_ctx, char *text)
+void WGeGtk::message_dialog_cb( void *ge_ctx, const char *text)
 {
   WGe 	*ge = (WGe *)ge_ctx;
 

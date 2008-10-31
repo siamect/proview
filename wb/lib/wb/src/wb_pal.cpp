@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pal.cpp,v 1.13 2008-10-15 06:04:55 claes Exp $
+ * Proview   $Id: wb_pal.cpp,v 1.14 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1532,9 +1532,9 @@ int Pal::create_item( pwr_tObjid objid,
 //
 Pal::Pal(
 	void *pal_parent_ctx,
-	char *pal_name,
+	const char *pal_name,
 	ldh_tSesContext pal_ldhses,
-	char *pal_root_name,
+	const char *pal_root_name,
 	pwr_tStatus *status) : 
   parent_ctx(pal_parent_ctx),
   wbctx(0), ldhses(pal_ldhses), root_objid(pwr_cNObjid), root_item(0),

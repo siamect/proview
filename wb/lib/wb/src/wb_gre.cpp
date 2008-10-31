@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.cpp,v 1.13 2008-10-15 06:04:55 claes Exp $
+ * Proview   $Id: wb_gre.cpp,v 1.14 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -464,7 +464,7 @@ int WGre::get_annotations( vldh_t_node node, char *annot_str,
 //	Send a message to the gre_message backcallroutine.
 //	( foe_gre_message )
 //
-void WGre::message( char *message)
+void WGre::message( const char *message)
 {
   (gre_message)(this, message);
 }
@@ -1656,7 +1656,7 @@ int WGre::flow_cb( FlowCtx *ctx, flow_tEvent event)
 //
 
 WGre::WGre( void *wg_parent_ctx,
-	    char *name) :
+	    const char *name) :
   parent_ctx( wg_parent_ctx), grid_size(0.05), gridobject(0), grid_on(0), wind(0), 
   conref_nodetypeid(0), display_nodetypeid(0),
   sel_node_count(0), del_node_count(0), del_con_count(0), searchrect_node_id(0), popupmenu_mode(0),
@@ -2032,7 +2032,7 @@ int WGre::setup_backcalls (
 	void (*unselect_bc)(WGre *),
 	void (*help_bc)(WGre *, char *),
 	void (*regionmoved_bc)(WGre *),
-	void (*message_bc)(WGre *, char *))
+	void (*message_bc)(WGre *, const char *))
 {
 
   /* Fill in callback addresses */

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_node.h,v 1.5 2007-07-04 13:28:52 claes Exp $
+ * Proview   $Id: glow_node.h,v 1.6 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #ifndef glow_node_h
 #define glow_node_h
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include "glow_growctx.h"
 #include "glow_point.h"
 #include "glow_array_elem.h"
@@ -54,7 +54,7 @@ class GlowNode : public GlowArrayElem {
     \param nodraw	Don't draw the object now.
     \param rel_annot_pos Not used.
   */
-  GlowNode( GrowCtx *glow_ctx, char *name, GlowNodeClass *node_class,
+  GlowNode( GrowCtx *glow_ctx, const char *name, GlowNodeClass *node_class,
 	double x1, double y1, int nodraw = 0, int rel_annot_pos = 0);
 
   // Noargs constructor.

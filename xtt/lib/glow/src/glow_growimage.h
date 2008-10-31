@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growimage.h,v 1.7 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_growimage.h,v 1.8 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,9 +47,9 @@ class GrowImage : public GlowArrayElem {
     \param imagefile	Image filename.
     \param display_lev	Displaylevel when this object is visible.
   */
-  GrowImage( GrowCtx *glow_ctx, char *name, double x = 0, double y = 0, 
-	       char *imagefile = 0,
-		glow_mDisplayLevel display_lev = glow_mDisplayLevel_1);
+  GrowImage( GrowCtx *glow_ctx, const char *name, double x = 0, double y = 0, 
+	     const char *imagefile = 0,
+	     glow_mDisplayLevel display_lev = glow_mDisplayLevel_1);
 
   //! Noargs constructor
   GrowImage() {};
@@ -323,7 +323,7 @@ class GrowImage : public GlowArrayElem {
     Look for the file in the directories of the context's serachpath. Uses Imlib to read the file and
     create pixmap of desired scale. Changes the color to fit the color tone, intensity, lighness, etc.
   */
-  int insert_image( char *imagefile);
+  int insert_image( const char *imagefile);
 
   //! Zoom to the current zoom factor
   void zoom();

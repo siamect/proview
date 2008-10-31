@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_ctx.h,v 1.3 2005-11-14 16:11:23 claes Exp $
+ * Proview   $Id: cnv_ctx.h,v 1.4 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -62,8 +62,8 @@ class CnvCtx {
   CnvReadXtthelp *rx;
 
   static int read_line( char *line, int maxsize, FILE *file);
-  static int remove_spaces( char *in, char *out);
-  static char *low( char *in);
+  static int remove_spaces( const char *in, char *out);
+  static char *low( const char *in);
 };
 
 #if defined __cplusplus

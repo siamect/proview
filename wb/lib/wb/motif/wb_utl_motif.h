@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl_motif.h,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_utl_motif.h,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,10 +35,10 @@ class wb_utl_motif : public wb_utl {
   ~wb_utl_motif() {}
   int create_mainwindow( int argc, char **argv);
   int destroy_mainwindow();
-  int utl_foe_new( char *name, pwr_tOid	plcpgm,
+  int utl_foe_new( const char *name, pwr_tOid	plcpgm,
 			   ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx,
 			   WFoe **foectx, int map_window, ldh_eAccess access);
-  int utl_foe_new_local( WFoe *foectx, char *name, pwr_tOid plcpgm, 
+  int utl_foe_new_local( WFoe *foectx, const char *name, pwr_tOid plcpgm, 
 			 ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx, 
 			 vldh_t_node nodeobject, unsigned long windowindex, 
 			 unsigned long new_window, WFoe **return_foectx, 

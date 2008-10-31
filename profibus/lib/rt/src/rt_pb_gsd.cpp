@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd.cpp,v 1.12 2008-02-05 08:14:59 claes Exp $
+ * Proview   $Id: rt_pb_gsd.cpp,v 1.13 2008-10-31 12:51:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1563,7 +1563,7 @@ int pb_gsd::prm_text_val_to_str( gsd_sPrmText *prmtext, int val, char *str)
   return 0;
 }
 
-int pb_gsd::get_svalue( char *key, char *value, int size)
+int pb_gsd::get_svalue( const char *key, char *value, int size)
 {
   gsd_sKeyword *keyp;
   gsd_sData *datap;
@@ -1593,7 +1593,7 @@ int pb_gsd::get_svalue( char *key, char *value, int size)
   return 0;
 }
 
-int pb_gsd::get_ivalue( char *key, int *value)
+int pb_gsd::get_ivalue( const char *key, int *value)
 {
   gsd_sKeyword *keyp;
   gsd_sData *datap;

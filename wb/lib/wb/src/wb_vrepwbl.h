@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepwbl.h,v 1.41 2007-12-21 13:18:01 claes Exp $
+ * Proview   $Id: wb_vrepwbl.h,v 1.42 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -89,7 +89,7 @@ public:
   int getTemplateBody( pwr_tCid cid, pwr_eBix bix, size_t *size, void **body);
   int getTypeInfo( pwr_tTid tid, pwr_eType *type, size_t *size,
                    int *elements);
-  int getTypeInfo( const char *type, pwr_tTid *tid, pwr_eType *type, size_t *size,
+  int getTypeInfo( const char *name, pwr_tTid *tid, pwr_eType *type, size_t *size,
                    int *elements);
   int getClassInfo( pwr_tCid cid, size_t *rsize, size_t *dsize);
   int getAttrInfo( const char *attr, pwr_eBix bix, pwr_tCid cid, size_t *size,

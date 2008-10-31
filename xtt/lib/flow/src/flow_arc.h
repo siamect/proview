@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_arc.h,v 1.4 2008-10-16 08:58:06 claes Exp $
+ * Proview   $Id: flow_arc.h,v 1.5 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #ifndef flow_arc_h
 #define flow_arc_h
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include "flow.h"
 #include "flow_ctx.h"
 #include "flow_point.h"

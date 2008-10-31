@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msglist.cpp,v 1.8 2007-02-07 15:45:44 claes Exp $
+ * Proview   $Id: co_msglist.cpp,v 1.9 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -507,7 +507,7 @@ int MsgList::brow_cb( FlowCtx *ctx, flow_tEvent event)
   return 1;
 }
 
-ItemMsg::ItemMsg( MsgList *item_msglist, char *item_name,
+ItemMsg::ItemMsg( MsgList *item_msglist, const char *item_name,
 	char *item_text, int item_severity,
 	brow_tNode dest, flow_eDest dest_code):
 	msglist(item_msglist), severity(item_severity)
@@ -522,32 +522,32 @@ ItemMsg::ItemMsg( MsgList *item_msglist, char *item_name,
 
   switch ( severity) {
   case 'S':
-    brow_CreateNode( msglist->brow->ctx, "Success", msglist->brow->nc_success,
+    brow_CreateNode( msglist->brow->ctx, (char *)"Success", msglist->brow->nc_success,
 		dest, dest_code, (void *) this, 1, &node);
     strcpy( type_str, "S");
     break;
   case 'I':
-    brow_CreateNode( msglist->brow->ctx, "Info", msglist->brow->nc_info,
+    brow_CreateNode( msglist->brow->ctx, (char *)"Info", msglist->brow->nc_info,
 		dest, dest_code, (void *) this, 1, &node);
     strcpy( type_str, "I");
     break;
   case 'E':
-    brow_CreateNode( msglist->brow->ctx, "Error", msglist->brow->nc_error,
+    brow_CreateNode( msglist->brow->ctx, (char *)"Error", msglist->brow->nc_error,
 		dest, dest_code, (void *) this, 1, &node);
     strcpy( type_str, "E");
     break;
   case 'W':
-    brow_CreateNode( msglist->brow->ctx, "Warning", msglist->brow->nc_warning,
+    brow_CreateNode( msglist->brow->ctx, (char *)"Warning", msglist->brow->nc_warning,
 		dest, dest_code, (void *) this, 1, &node);
     strcpy( type_str, "W");
     break;
   case 'F':
-    brow_CreateNode( msglist->brow->ctx, "Fatal", msglist->brow->nc_fatal,
+    brow_CreateNode( msglist->brow->ctx, (char *)"Fatal", msglist->brow->nc_fatal,
 		dest, dest_code, (void *) this, 1, &node);
     strcpy( type_str, "F");
     break;
   default:
-    brow_CreateNode( msglist->brow->ctx, "Default", msglist->brow->nc_default,
+    brow_CreateNode( msglist->brow->ctx, (char *)"Default", msglist->brow->nc_default,
 		dest, dest_code, (void *) this, 1, &node);
     strcpy( type_str, "");
   }
@@ -563,7 +563,7 @@ ItemMsg::ItemMsg( MsgList *item_msglist, char *item_name,
 //  brow_SetAnnotPixmap( node, 0, msglist->brow->pixmap_leaf);
 }
 
-ItemMsgObject::ItemMsgObject( MsgList *item_msglist, char *item_name,
+ItemMsgObject::ItemMsgObject( MsgList *item_msglist, const char *item_name,
 			      char *item_text, int item_severity, pwr_tOid item_oid,
 			      brow_tNode dest, flow_eDest dest_code):
     ItemMsg( item_msglist, item_name, item_text, item_severity, dest, dest_code),
@@ -578,7 +578,7 @@ void ItemMsgObject::find()
     (msglist->find_wnav_cb)( msglist->parent_ctx, oid);
 }
 
-ItemMsgObjectPlc::ItemMsgObjectPlc( MsgList *item_msglist, char *item_name,
+ItemMsgObjectPlc::ItemMsgObjectPlc( MsgList *item_msglist, const char *item_name,
 			      char *item_text, int item_severity, pwr_tOid item_oid,
 			      brow_tNode dest, flow_eDest dest_code):
     ItemMsg( item_msglist, item_name, item_text, item_severity, dest, dest_code),

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_sevhist_gtk.cpp,v 1.1 2008-09-18 14:52:58 claes Exp $
+ * Proview   $Id: xtt_sevhist_gtk.cpp,v 1.2 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,7 +21,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <vector.h>
+#include <vector>
 #include <gtk/gtk.h>
 
 #include "pwr.h"
@@ -46,7 +46,7 @@
 
 XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
 			    GtkWidget *parent_wid,
-			    char *name,
+			    const char *name,
 			    GtkWidget **w,
 			    pwr_tOid *xn_oid,
 			    pwr_tOName *xn_aname,

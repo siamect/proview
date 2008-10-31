@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wda_motif.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_wda_motif.cpp,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -63,24 +63,24 @@
 // Static member elements
 char WdaMotif::value_recall[30][160];
 
-void WdaMotif::message( char severity, char *message)
+void WdaMotif::message( char severity, const char *message)
 {
   Arg 		args[2];
   XmString	cstr;
 
-  cstr=XmStringCreateLtoR( message, "ISO8859-1");
+  cstr=XmStringCreateLtoR( (char*) message, (char*) "ISO8859-1");
   XtSetArg(args[0],XmNlabelString, cstr);
   XtSetArg(args[1],XmNheight, 20);
   XtSetValues( msg_label, args, 2);
   XmStringFree( cstr);
 }
 
-void WdaMotif::set_prompt( char *prompt)
+void WdaMotif::set_prompt( const char *prompt)
 {
   Arg 		args[3];
   XmString	cstr;
 
-  cstr=XmStringCreateLtoR( prompt, "ISO8859-1");
+  cstr=XmStringCreateLtoR( (char*) prompt, (char*) "ISO8859-1");
   XtSetArg(args[0],XmNlabelString, cstr);
   XtSetArg(args[1],XmNwidth, 50);
   XtSetArg(args[2],XmNheight, 30);
@@ -130,7 +130,7 @@ void WdaMotif::change_value( int set_focus)
 //    XmTextSetInsertionPosition( text_w, strlen(value));
     }
     else
-      XmTextSetString( text_w, "");
+      XmTextSetString( text_w, (char*) "");
 
     input_multiline = 1;
   }
@@ -144,7 +144,7 @@ void WdaMotif::change_value( int set_focus)
       XmTextSetInsertionPosition( text_w, strlen(value));
     }
     else
-      XmTextSetString( text_w, "");
+      XmTextSetString( text_w, (char*) "");
 
     input_multiline = 0;
   }
@@ -513,7 +513,7 @@ WdaMotif::WdaMotif(
 	ldh_tSesContext wa_ldhses, 
 	pwr_tObjid 	wa_objid,
 	pwr_tClassId 	wa_classid,
-	char            *wa_attribute,
+	const char      *wa_attribute,
 	int 		wa_editmode,
 	int 		wa_advanced_user,
 	int		wa_display_objectname) :
@@ -537,35 +537,35 @@ WdaMotif::WdaMotif(
 
   static XtActionsRec actions[] =
   {
-    {"wda_inputfocus",      (XtActionProc) action_inputfocus}
+    {(char*) "wda_inputfocus",      (XtActionProc) action_inputfocus}
   };
 
   static MrmRegisterArg	reglist[] = {
-        { "wda_ctx", 0 },
-	{"wda_activate_setclass",(caddr_t)activate_setclass },
-	{"wda_activate_setattr",(caddr_t)activate_setattr },
-	{"wda_activate_nextattr",(caddr_t)activate_nextattr },
-	{"wda_activate_prevattr",(caddr_t)activate_prevattr },
-	{"wda_activate_exit",(caddr_t)activate_exit },
-	{"wda_activate_print",(caddr_t)activate_print },
-	{"wda_activate_change_value",(caddr_t)activate_change_value },
-	{"wda_activate_close_changeval",(caddr_t)activate_close_changeval },
-	{"wda_activate_help",(caddr_t)activate_help },
-	{"wda_create_msg_label",(caddr_t)create_msg_label },
-	{"wda_create_cmd_prompt",(caddr_t)create_cmd_prompt },
-	{"wda_create_cmd_input",(caddr_t)create_cmd_input },
-	{"wda_create_cmd_scrolledinput",(caddr_t)create_cmd_scrolledinput },
-	{"wda_create_cmd_scrolled_ok",(caddr_t)create_cmd_scrolled_ok },
-	{"wda_create_cmd_scrolled_ca",(caddr_t)create_cmd_scrolled_ca },
-	{"wda_create_wdanav_form",(caddr_t)create_wdanav_form },
-	{"wda_activate_cmd_scrolledinput",(caddr_t)activate_cmd_input },
-	{"wda_activate_cmd_scrolled_ok",(caddr_t)activate_cmd_scrolled_ok },
-	{"wda_activate_cmd_scrolled_ca",(caddr_t)activate_cmd_scrolled_ca },
-	{"wdaclass_activate_ok",(caddr_t)class_activate_ok },
-	{"wdaclass_activate_cancel",(caddr_t)class_activate_cancel },
-	{"wdaclass_create_hiervalue",(caddr_t)class_create_hiervalue },
-	{"wdaclass_create_classvalue",(caddr_t)class_create_classvalue },
-	{"wdaclass_create_attrobjects",(caddr_t)class_create_attrobjects }
+        {(char*) "wda_ctx", 0 },
+	{(char*) "wda_activate_setclass",(caddr_t)activate_setclass },
+	{(char*) "wda_activate_setattr",(caddr_t)activate_setattr },
+	{(char*) "wda_activate_nextattr",(caddr_t)activate_nextattr },
+	{(char*) "wda_activate_prevattr",(caddr_t)activate_prevattr },
+	{(char*) "wda_activate_exit",(caddr_t)activate_exit },
+	{(char*) "wda_activate_print",(caddr_t)activate_print },
+	{(char*) "wda_activate_change_value",(caddr_t)activate_change_value },
+	{(char*) "wda_activate_close_changeval",(caddr_t)activate_close_changeval },
+	{(char*) "wda_activate_help",(caddr_t)activate_help },
+	{(char*) "wda_create_msg_label",(caddr_t)create_msg_label },
+	{(char*) "wda_create_cmd_prompt",(caddr_t)create_cmd_prompt },
+	{(char*) "wda_create_cmd_input",(caddr_t)create_cmd_input },
+	{(char*) "wda_create_cmd_scrolledinput",(caddr_t)create_cmd_scrolledinput },
+	{(char*) "wda_create_cmd_scrolled_ok",(caddr_t)create_cmd_scrolled_ok },
+	{(char*) "wda_create_cmd_scrolled_ca",(caddr_t)create_cmd_scrolled_ca },
+	{(char*) "wda_create_wdanav_form",(caddr_t)create_wdanav_form },
+	{(char*) "wda_activate_cmd_scrolledinput",(caddr_t)activate_cmd_input },
+	{(char*) "wda_activate_cmd_scrolled_ok",(caddr_t)activate_cmd_scrolled_ok },
+	{(char*) "wda_activate_cmd_scrolled_ca",(caddr_t)activate_cmd_scrolled_ca },
+	{(char*) "wdaclass_activate_ok",(caddr_t)class_activate_ok },
+	{(char*) "wdaclass_activate_cancel",(caddr_t)class_activate_cancel },
+	{(char*) "wdaclass_create_hiervalue",(caddr_t)class_create_hiervalue },
+	{(char*) "wdaclass_create_classvalue",(caddr_t)class_create_classvalue },
+	{(char*) "wdaclass_create_attrobjects",(caddr_t)class_create_attrobjects }
 	};
 
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
@@ -597,11 +597,11 @@ WdaMotif::WdaMotif(
   parent_wid = XtCreatePopupShell("spreadSheetEditor", 
 		topLevelShellWidgetClass, parent_wid, args, 0);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "wda_window", parent_wid,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "wda_window", parent_wid,
 			name, args, 1, &toplevel, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
 
-  sts = MrmFetchWidget(s_DRMh, "wdaclass_dia", parent_wid,
+  sts = MrmFetchWidget(s_DRMh, (char*) "wdaclass_dia", parent_wid,
 		&wdaclass_dia, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch class input dialog\n");
 

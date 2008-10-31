@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growfolder.h,v 1.6 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_growfolder.h,v 1.7 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,7 +54,7 @@ class GrowFolder : public GrowWindow {
     \param display_lev	Displaylevel when this object is visible.
     \param nodraw	Don't draw the object now.
   */
-  GrowFolder( GrowCtx *glow_ctx, char *name, double x = 0, double y = 0, 
+  GrowFolder( GrowCtx *glow_ctx, const char *name, double x = 0, double y = 0, 
 		double w = 0, double h = 0, 
 		glow_eDrawType border_d_type = glow_eDrawType_Line, 
 	        int line_w = 1, glow_eDrawType sel_color = glow_eDrawType_LightGray,

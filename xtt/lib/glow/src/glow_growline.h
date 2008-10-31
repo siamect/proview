@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growline.h,v 1.6 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_growline.h,v 1.7 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -52,7 +52,7 @@ class GrowLine : public GlowLine {
 
     Create a line from the point (x1,y1) to the point (x2,y2).
   */
-  GrowLine( GrowCtx *glow_ctx, char *name, double x1 = 0, double y1 = 0, 
+  GrowLine( GrowCtx *glow_ctx, const char *name, double x1 = 0, double y1 = 0, 
 		double x2 = 0, double y2 = 0, 
 		glow_eDrawType d_type = glow_eDrawType_Line, 
 		int line_w = 1, int fix_line_w = 0, int nodraw = 0);

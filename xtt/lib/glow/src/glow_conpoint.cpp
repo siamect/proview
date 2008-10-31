@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_conpoint.cpp,v 1.5 2007-06-15 12:09:02 claes Exp $
+ * Proview   $Id: glow_conpoint.cpp,v 1.6 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,7 +21,7 @@
 
 
 #include <stdlib.h>
-#include <iostream.h>
+#include <iostream>
 #include <math.h>
 
 #include "glow_conpoint.h"

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_print_wbl.h,v 1.11 2008-01-28 06:33:58 claes Exp $
+ * Proview   $Id: wb_print_wbl.h,v 1.12 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,9 +27,11 @@
 #ifndef wb_print_wbl_h
 #define wb_print_wbl_h
 
-#include <iostream.h>
+#include <iostream>
 
 #include "pwr_class.h"
+
+using namespace std;
 
 class wb_adef;
 class wb_attribute;

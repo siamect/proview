@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_browapi.cpp,v 1.13 2008-10-16 08:58:06 claes Exp $
+ * Proview   $Id: flow_browapi.cpp,v 1.14 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,7 +19,7 @@
 
 #include "flow_std.h"
 
-#include <iostream.h>
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -153,7 +153,7 @@ void brow_SetInverse( brow_tObject object, int value)
   ((FlowArrayElem *) object)->set_inverse( value);
 }
 
-void brow_CreateNode( brow_tCtx ctx, char *name, brow_tNodeClass nc,
+void brow_CreateNode( brow_tCtx ctx, const char *name, brow_tNodeClass nc,
 	brow_tNode destination, flow_eDest destination_code, 
 	void *user_data, int relative_annot_pos, brow_tNode *node)
 {
@@ -176,7 +176,7 @@ void brow_CreatePasteNode( brow_tCtx ctx, char *name, brow_tNodeClass nc,
   *node = (brow_tNode) n1;
 }
 
-void brow_SetAnnotation( brow_tNode node, int number, char *text, int size)
+void brow_SetAnnotation( brow_tNode node, int number, const char *text, int size)
 {
   ((FlowNode *)node)->set_annotation( number, text, size, 0);
 }
@@ -362,14 +362,14 @@ void brow_AddArc( brow_tNodeClass nc, double x1, double y1,
   ((FlowNodeClass *)nc)->insert( arc);
 }
 
-void brow_AddImage( brow_tNodeClass nc, char *imagefile, double x, double y)
+void brow_AddImage( brow_tNodeClass nc, const char *imagefile, double x, double y)
 {
   FlowImage *image = new FlowImage( ((FlowNodeClass *)nc)->ctx, imagefile, x, y);
   ((FlowNodeClass *)nc)->insert( image);
   
 }
 
-void brow_AddText( brow_tNodeClass nc, char *text_str, double x, double y, 
+void brow_AddText( brow_tNodeClass nc, const char *text_str, double x, double y, 
 	flow_eDrawType draw_type, int text_size)
 {
   FlowText *text = new FlowText( ((FlowNodeClass *)nc)->ctx, 
@@ -405,7 +405,7 @@ void brow_AddRadiobutton( brow_tNodeClass nc, double x, double y,
   
 }
 
-void brow_CreateNodeClass( brow_tCtx ctx, char *name, flow_eNodeGroup group,
+void brow_CreateNodeClass( brow_tCtx ctx, const char *name, flow_eNodeGroup group,
 	brow_tNodeClass *nodeclass)
 {
   *nodeclass = (brow_tNodeClass) new FlowNodeClass( ctx, name, group);
@@ -468,8 +468,8 @@ brow_tCtx brow_GetCtx( brow_tObject object)
   return (brow_tCtx)((FlowArrayElem *)object)->get_ctx();
 }
 
-void brow_SetTraceAttr( brow_tObject object, char *trace_object, 
-		char *trace_attribute, flow_eTraceType trace_attr_type)
+void brow_SetTraceAttr( brow_tObject object, const char *trace_object, 
+		const char *trace_attribute, flow_eTraceType trace_attr_type)
 {
   ((FlowArrayElem *)object)->set_trace_attr( trace_object, trace_attribute,
 	trace_attr_type, 0);

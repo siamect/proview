@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growwindow.cpp,v 1.12 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_growwindow.cpp,v 1.13 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
@@ -33,7 +33,7 @@
 #include "glow_growscrollbar.h"
 #include "glow_msg.h"
 
-GrowWindow::GrowWindow( GrowCtx *glow_ctx, char *name, double x, double y, 
+GrowWindow::GrowWindow( GrowCtx *glow_ctx, const char *name, double x, double y, 
 		double w, double h, glow_eDrawType border_d_type, int line_w, 
 		glow_mDisplayLevel display_lev, int nodraw) : 
 		GrowRect(glow_ctx,name,x,y,w,h,border_d_type,line_w,0,

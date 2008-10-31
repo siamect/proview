@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_dcli_input.c,v 1.2 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_dcli_input.c,v 1.3 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -428,7 +428,7 @@ int	dcli_input_end( dcli_sChannel *chn, dcli_sRecall *recall_buf)
 }
 
 
-int	dcli_get_input_command( dcli_sChannel *chn, char *prompt, char *cmd, 
+int	dcli_get_input_command( dcli_sChannel *chn, const char *prompt, char *cmd, 
 		int maxlen, dcli_sRecall *recall_buf)
 {
   unsigned long	option = 0;
@@ -472,7 +472,7 @@ int	dcli_get_input_string( 	dcli_sChannel	*chn,
 				int		timeout,
 				int		(* timeout_func) (),
 				void		*timeout_arg,
-				char		*prompt)
+				const char     	*prompt)
 {
 	char		input_str[200];
 	char		out_str[200];

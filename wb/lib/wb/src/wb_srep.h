@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_srep.h,v 1.8 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_srep.h,v 1.9 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -86,7 +86,7 @@ public:
   void update() { m_nUpdate++;}
   void recix_add( wb_object o);
   void recix_clear();
-  void recix_set_destination( char *d);
+  void recix_set_destination( const char *d);
   wb_recix *recix() { return m_recix;}
 };
 #endif

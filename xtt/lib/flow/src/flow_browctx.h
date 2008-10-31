@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_browctx.h,v 1.6 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: flow_browctx.h,v 1.7 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #ifndef flow_browctx_h
 #define flow_browctx_h
 
-//#include <iostream.h>
-//#include <fstream.h>
+//#include <iostream>
+//#include <fstream>
 
 #ifndef flow_h
 #include "flow.h"
@@ -33,7 +33,7 @@
 
 class BrowCtx : public FlowCtx {
   public:
-    BrowCtx( char *ctx_name, double zoom_fact = 100) :
+    BrowCtx( const char *ctx_name, double zoom_fact = 100) :
     	FlowCtx( ctx_name, zoom_fact), 
 	indentation(0.8), frame_x_right(0), annotation_space(0.3)
 	{ ctx_type = flow_eCtxType_Brow; };

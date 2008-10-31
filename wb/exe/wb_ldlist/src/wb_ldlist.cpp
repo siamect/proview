@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldlist.cpp,v 1.2 2006-06-09 13:26:01 claes Exp $
+ * Proview   $Id: wb_ldlist.cpp,v 1.3 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <iostream.h>
+#include <iostream>
 
 #include "pwr.h"
 #include "co_time.h"
@@ -31,7 +31,7 @@
 #include "wb_erep.h"
 #include "wb_vrepdbs.h"
 
-static void usage( char *txt)
+static void usage( const char *txt)
 {
   cout << txt << endl;
 }

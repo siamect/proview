@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_motif.h,v 1.2 2008-06-24 07:52:21 claes Exp $
+ * Proview   $Id: wb_wnav_motif.h,v 1.3 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,8 +31,8 @@ class WNavMotif : public WNav {
     WNavMotif(
 	void *xn_parent_ctx,
 	Widget	xn_parent_wid,
-	char *xn_name,
-	char *xn_layout,
+	const char *xn_name,
+	const char *xn_layout,
 	Widget *w,
         ldh_tSesContext	xn_ldhses,
 	wnav_sStartMenu *root_menu,
@@ -60,7 +60,7 @@ class WNavMotif : public WNav {
 		  int modal);
     void create_popup_menu( pwr_tAttrRef aref, int x, int y);
     int get_selection( char *str, int len);
-    int open_foe( char *name, pwr_tOid plcpgm, void **foectx, int map_window,
+    int open_foe( const char *name, pwr_tOid plcpgm, void **foectx, int map_window,
 		  ldh_eAccess access, pwr_tOid oid);
     void wda_new( pwr_tOid oid, pwr_tCid cid, char *attribute,
 		  int edit_mode, int advuser, int display_objectname);
@@ -73,7 +73,7 @@ class WNavMotif : public WNav {
     void wge_modal_loop( WGe *wge);
     bool has_window() {return parent_wid ? true : false;}
     wb_utl *utl_new();
-    CoLogin *login_new( char *name, char *groupname,
+    CoLogin *login_new( const char *name, const char *groupname,
 			void (* bc_success)( void *), void (* bc_cancel)( void *), pwr_tStatus *status);
 
     static void trace_scan( WNavMotif *wnav);

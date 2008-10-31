@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_fast.cpp,v 1.9 2007-04-25 13:39:21 claes Exp $
+ * Proview   $Id: xtt_fast.cpp,v 1.10 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,7 +21,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <vector.h>
+#include <vector>
 
 #include "pwr.h"
 #include "pwr_baseclasses.h"

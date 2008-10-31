@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_xhelp.h,v 1.8 2008-02-27 06:24:37 claes Exp $
+ * Proview   $Id: co_xhelp.h,v 1.9 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,19 +51,19 @@ class CoXHelp {
 
     void map();
     void clear();
-    int help( char *key, char *help_bookmark, navh_eHelpFile file_type,
-	      char *file_name, bool strict);
-    int	help_index( navh_eHelpFile file_type, char *file_name);
+    int help( const char *key, const char *help_bookmark, navh_eHelpFile file_type,
+	      const char *file_name, bool strict);
+    int	help_index( navh_eHelpFile file_type, const char *file_name);
     int back();
     int next_topic();
     int previous_topic();
     static void set_default( CoXHelp *xhelp) { default_xhelp = xhelp;}
-    static int dhelp( char *key, char *help_bookmark, navh_eHelpFile file_type,
-		      char *file_name, bool strict);
-    static int	dhelp_index( navh_eHelpFile file_type, char *file_name);
+    static int dhelp( const char *key, const char *help_bookmark, navh_eHelpFile file_type,
+		      const char *file_name, bool strict);
+    static int	dhelp_index( navh_eHelpFile file_type, const char *file_name);
 
     static void open_URL( void *ctx, char *url);
-    static void open_input_dialog( CoXHelp *xhelp, char *text, char *title,
+    static void open_input_dialog( CoXHelp *xhelp, const char *text, const char *title,
 				   char *init_text,
 				   void (*ok_cb)( CoXHelp *, char *));
     static void find_ok( CoXHelp *xhelp, char *search_str);

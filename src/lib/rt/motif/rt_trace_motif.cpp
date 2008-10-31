@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trace_motif.cpp,v 1.1 2007-01-04 07:52:30 claes Exp $
+ * Proview   $Id: rt_trace_motif.cpp,v 1.2 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -243,33 +243,33 @@ RtTraceMotif::RtTraceMotif( void *tr_parent_ctx, Widget tr_parent_wid, pwr_tObji
   MrmType dclass;
   Widget	trace_widget;
   static MrmRegisterArg	reglist[] = {
-        { "tra_ctx", 0 },
-	{"tra_activate_close",(caddr_t)activate_close },
-	{"tra_activate_print",(caddr_t)activate_print },
-	{"tra_activate_printselect",(caddr_t)activate_printselect },
-	{"tra_activate_savetrace",(caddr_t)activate_savetrace },
-	{"tra_activate_restoretrace",(caddr_t)activate_restoretrace },
-	{"tra_activate_cleartrace",(caddr_t)activate_cleartrace },
-	{"tra_activate_trace",(caddr_t)activate_trace },
-	{"tra_activate_display_object",(caddr_t)activate_display_object },
-	{"tra_activate_open_object",(caddr_t)activate_open_object },
-	{"tra_activate_show_cross",(caddr_t)activate_show_cross },
-	{"tra_activate_open_classgraph",(caddr_t)activate_open_classgraph },
-	{"tra_activate_collect_insert",(caddr_t)activate_collect_insert },
-	{"tra_activate_view",(caddr_t)activate_view },
-	{"tra_activate_simulate",(caddr_t)activate_simulate },
-	{"tra_activate_zoomin",(caddr_t)activate_zoomin },
-	{"tra_activate_zoomout",(caddr_t)activate_zoomout },
-	{"tra_activate_zoomreset",(caddr_t)activate_zoomreset },
-	{"tra_activate_scantime1",(caddr_t)activate_scantime1 },
-	{"tra_activate_scantime2",(caddr_t)activate_scantime2 },
-	{"tra_activate_scantime3",(caddr_t)activate_scantime3 },
-	{"tra_activate_scantime4",(caddr_t)activate_scantime4 },
-	{"tra_activate_scantime5",(caddr_t)activate_scantime5 },
-	{"tra_activate_help",(caddr_t)activate_help },
-	{"tra_activate_helpplc",(caddr_t)activate_helpplc },
-	{"tra_create_form",(caddr_t)create_form },
-	{"tra_create_menu",(caddr_t)create_menu }
+        {(char*) "tra_ctx", 0 },
+	{(char*) "tra_activate_close",(caddr_t)activate_close },
+	{(char*) "tra_activate_print",(caddr_t)activate_print },
+	{(char*) "tra_activate_printselect",(caddr_t)activate_printselect },
+	{(char*) "tra_activate_savetrace",(caddr_t)activate_savetrace },
+	{(char*) "tra_activate_restoretrace",(caddr_t)activate_restoretrace },
+	{(char*) "tra_activate_cleartrace",(caddr_t)activate_cleartrace },
+	{(char*) "tra_activate_trace",(caddr_t)activate_trace },
+	{(char*) "tra_activate_display_object",(caddr_t)activate_display_object },
+	{(char*) "tra_activate_open_object",(caddr_t)activate_open_object },
+	{(char*) "tra_activate_show_cross",(caddr_t)activate_show_cross },
+	{(char*) "tra_activate_open_classgraph",(caddr_t)activate_open_classgraph },
+	{(char*) "tra_activate_collect_insert",(caddr_t)activate_collect_insert },
+	{(char*) "tra_activate_view",(caddr_t)activate_view },
+	{(char*) "tra_activate_simulate",(caddr_t)activate_simulate },
+	{(char*) "tra_activate_zoomin",(caddr_t)activate_zoomin },
+	{(char*) "tra_activate_zoomout",(caddr_t)activate_zoomout },
+	{(char*) "tra_activate_zoomreset",(caddr_t)activate_zoomreset },
+	{(char*) "tra_activate_scantime1",(caddr_t)activate_scantime1 },
+	{(char*) "tra_activate_scantime2",(caddr_t)activate_scantime2 },
+	{(char*) "tra_activate_scantime3",(caddr_t)activate_scantime3 },
+	{(char*) "tra_activate_scantime4",(caddr_t)activate_scantime4 },
+	{(char*) "tra_activate_scantime5",(caddr_t)activate_scantime5 },
+	{(char*) "tra_activate_help",(caddr_t)activate_help },
+	{(char*) "tra_activate_helpplc",(caddr_t)activate_helpplc },
+	{(char*) "tra_create_form",(caddr_t)create_form },
+	{(char*) "tra_create_menu",(caddr_t)create_menu }
 	};
 
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
@@ -346,7 +346,7 @@ RtTraceMotif::RtTraceMotif( void *tr_parent_ctx, Widget tr_parent_wid, pwr_tObji
 
   MrmRegisterNames(reglist, reglist_num);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "trace_window", toplevel,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "trace_window", toplevel,
 			title, args, 1, &trace_widget, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
 
@@ -370,7 +370,7 @@ RtTraceMotif::RtTraceMotif( void *tr_parent_ctx, Widget tr_parent_wid, pwr_tObji
   XtSetArg( args[i], XmNrightAttachment, XmATTACH_FORM);i++;
   XtSetArg( args[i], XmNleftAttachment, XmATTACH_FORM);i++;
   XtSetArg( args[i], XmNbottomAttachment, XmATTACH_FORM);i++;
-  flow_widget = FlowCreate( form, "Flow window", args, i, 
+  flow_widget = FlowCreate( form, (char*) "Flow window", args, i, 
 			    init_flow, (void *)this);
 
   XtManageChild( (Widget) flow_widget);
@@ -393,14 +393,14 @@ RtTraceMotif::RtTraceMotif( void *tr_parent_ctx, Widget tr_parent_wid, pwr_tObji
   XtSetArg(args[i],XmNx,500);i++;
   XtSetArg(args[i],XmNy,500);i++;
 
-  nav_shell = XmCreateDialogShell( flow_widget, "Navigator",
+  nav_shell = XmCreateDialogShell( flow_widget, (char*) "Navigator",
         args, i);
   XtManageChild( nav_shell);
 
   i = 0;
   XtSetArg(args[i],XmNwidth,200);i++;
   XtSetArg(args[i],XmNheight,200);i++;
-  nav_widget = FlowCreateNav( nav_shell, "navigator",
+  nav_widget = FlowCreateNav( nav_shell, (char*) "navigator",
         args, i, flow_widget);
   XtManageChild( nav_widget);
   XtRealizeWidget( nav_shell);

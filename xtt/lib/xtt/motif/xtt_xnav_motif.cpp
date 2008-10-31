@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_motif.cpp,v 1.3 2008-06-25 12:34:56 claes Exp $
+ * Proview   $Id: xtt_xnav_motif.cpp,v 1.4 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <vector.h>
+#include <vector>
 
 #include "co_nav_help.h"
 
@@ -97,7 +97,7 @@ extern "C" {
 //
 XNavMotif::XNavMotif( void *xn_parent_ctx,
 		      Widget	xn_parent_wid,
-		      char *xn_name,
+		      const char *xn_name,
 		      Widget *w,
 		      xnav_sStartMenu *root_menu,
 		      char *xn_opplace_name,
@@ -264,14 +264,14 @@ XAttOne *XNavMotif::xattone_new( pwr_tAttrRef *objar, char *title, unsigned int 
   return new XAttOneMotif( parent_wid, this, objar, title, priv, sts);
 }
 
-CLog *XNavMotif::clog_new( char *name, pwr_tStatus *sts)
+CLog *XNavMotif::clog_new( const char *name, pwr_tStatus *sts)
 {
   return new CLogMotif( this, parent_wid, name, sts);
 }
 
-XttGe *XNavMotif::xnav_ge_new( char *name, char *filename, int scrollbar, int menu, 
+XttGe *XNavMotif::xnav_ge_new( const char *name, const char *filename, int scrollbar, int menu, 
 			       int navigator, int width, int height, int x, int y, 
-			       double scan_time, char *object_name, 
+			       double scan_time, const char *object_name, 
 			       int use_default_access, unsigned int access,
 			       int (*command_cb) (XttGe *, char *),
 			       int (*get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
@@ -288,8 +288,8 @@ GeCurve *XNavMotif::gecurve_new( char *name, char *filename, GeCurveData *data,
   return new GeCurveMotif( this, parent_wid, name, filename, data, pos_right);
 }
 
-CoLogin *XNavMotif::login_new( char		*name,
-			       char		*groupname,
+CoLogin *XNavMotif::login_new( const char      	*name,
+			       const char      	*groupname,
 			       void		(* bc_success)( void *),
 			       void		(* bc_cancel)( void *),
 			       pwr_tStatus  	*status)
@@ -329,7 +329,7 @@ void XNavMotif::get_popup_menu( pwr_sAttrRef attrref,
 
 Widget XNavMotif::build_menu( Widget Parent,
 			      int   MenuType,
-			      char *MenuTitle,
+			      const char *MenuTitle,
 			      void *MenuUserData,
 			      void (*Callback)( Widget, XNav *, XmAnyCallbackStruct *),
 			      void *CallbackData,
@@ -349,7 +349,7 @@ Widget XNavMotif::build_menu( Widget Parent,
   // Set default fontlist
   font = XLoadQueryFont( flow_Display(Parent),
   	      "-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1");
-  fontentry = XmFontListEntryCreate( "tag1", XmFONT_IS_FONT, font);
+  fontentry = XmFontListEntryCreate( (char*) "tag1", XmFONT_IS_FONT, font);
   fontlist = XmFontListAppendEntry( NULL, fontentry);
   XtFree( (char *)fontentry);
 
@@ -358,16 +358,16 @@ Widget XNavMotif::build_menu( Widget Parent,
   XtSetArg(ArgList[i], XmNbuttonFontList, fontlist); i++;
   XtSetArg(ArgList[i], XmNlabelFontList, fontlist); i++;
   if (MenuType == MENU_PULLDOWN || MenuType == MENU_OPTION)
-    Menu = XmCreatePulldownMenu(Parent, "_pulldown", ArgList, i);
+    Menu = XmCreatePulldownMenu(Parent, (char*) "_pulldown", ArgList, i);
   else if (MenuType == MENU_POPUP)
-    Menu = XmCreatePopupMenu(Parent, "_popup", ArgList, i);  
+    Menu = XmCreatePopupMenu(Parent, (char*) "_popup", ArgList, i);  
   else  {
     XtWarning("Invalid menu type passed to BuildMenu().");
     return NULL;
   }
 
   if (MenuType == MENU_PULLDOWN) {
-    Str = XmStringCreateSimple(MenuTitle);	
+    Str = XmStringCreateSimple((char*) MenuTitle);	
     Cascade = XtVaCreateManagedWidget(MenuTitle,
 	    xmCascadeButtonGadgetClass, Parent,
 	    XmNsubMenuId,   Menu,
@@ -376,10 +376,10 @@ Widget XNavMotif::build_menu( Widget Parent,
     XmStringFree(Str);
   } 
   else if (MenuType == MENU_OPTION) {
-    Str = XmStringCreateSimple(MenuTitle);
+    Str = XmStringCreateSimple((char*) MenuTitle);
     XtSetArg(ArgList[0], XmNsubMenuId, Menu);
     XtSetArg(ArgList[1], XmNlabelString, Str);
-    Cascade = XmCreateOptionMenu(Parent, MenuTitle, ArgList, 2);
+    Cascade = XmCreateOptionMenu(Parent, (char*) MenuTitle, ArgList, 2);
     XmStringFree(Str);
   }
 

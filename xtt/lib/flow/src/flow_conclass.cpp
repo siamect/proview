@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_conclass.cpp,v 1.2 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_conclass.cpp,v 1.3 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,11 +19,11 @@
 
 #include "flow_std.h"
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include "flow_conclass.h"
 
-FlowConClass::FlowConClass( FlowCtx *flow_ctx, char *name, 
+FlowConClass::FlowConClass( FlowCtx *flow_ctx, const char *name, 
 	flow_eConType contype, flow_eCorner cornertype, flow_eDrawType d_type,
 	int line_w, double arrow_w, double arrow_l, double round_corner_amnt,
 	flow_eConGroup grp)

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_pwgtoxtthelp.h,v 1.1 2007-06-29 10:01:06 claes Exp $
+ * Proview   $Id: cnv_pwgtoxtthelp.h,v 1.2 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #ifndef cnv_pwgxtthelp_h
 #define cnv_pwgxtthelp_h
 
-#include <vector.h>
+#include <vector>
 #include <string.h>
 #include "pwr.h"
 

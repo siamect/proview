@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_selformat.cpp,v 1.7 2007-08-28 07:30:36 claes Exp $
+ * Proview   $Id: wb_wnav_selformat.cpp,v 1.8 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,7 +22,7 @@
 #include <string.h>
 #include "wb_wnav_selformat.h"
 
-typedef	struct {char	    *TypeStr;
+typedef	struct {const char  *TypeStr;
 		pwr_eType   Type;
 		pwr_tInt16  Size;
 		} wnav_sTypeStr;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attr.h,v 1.4 2007-01-04 08:18:34 claes Exp $
+ * Proview   $Id: ge_attr.h,v 1.5 2008-10-31 12:51:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -77,8 +77,8 @@ class Attr {
     int         recall_idx;
     GeDyn 	*original_data;
 
-    virtual void message( char severity, char *message) {}
-    virtual void set_prompt( char *prompt) {}
+    virtual void message( char severity, const char *message) {}
+    virtual void set_prompt( const char *prompt) {}
     virtual void change_value() {}
     virtual int reconfigure_attr() {return 1;}
     virtual void store();
@@ -94,7 +94,7 @@ class Attr {
 				attr_sItem **itemlist, int *item_cnt);
     static void change_value_c( void *attr);
     static int reconfigure_attr_c( void *attr);
-    static void message( void *attr, char severity, char *message);
+    static void message( void *attr, char severity, const char *message);
     virtual ~Attr();
 };
 

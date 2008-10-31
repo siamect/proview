@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_help.cpp,v 1.5 2007-01-04 08:22:47 claes Exp $
+ * Proview   $Id: xtt_xnav_help.cpp,v 1.6 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -61,10 +61,10 @@ static int help_cmp_items( const void *node1, const void *node2);
 *
 **************************************************************************/
 
-void *xnav_help_insert_cb( void *ctx, navh_eItemType item_type, char *text1,
-		      char *text2, char *text3, char *link, 
-		      char *bookmark, char *file_name,
-		      navh_eHelpFile file_type, int help_index, char *bm)
+void *xnav_help_insert_cb( void *ctx, navh_eItemType item_type, const char *text1,
+		      const char *text2, const char *text3, const char *link, 
+		      const char *bookmark, const char *file_name,
+		      navh_eHelpFile file_type, int help_index, const char *bm)
 {
   XNav *xnav = (XNav *)ctx;
 

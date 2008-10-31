@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gtk.cpp,v 1.9 2008-10-09 08:35:36 claes Exp $
+ * Proview   $Id: wb_gtk.cpp,v 1.10 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -67,7 +67,7 @@ static gboolean wbgtk_show_warranty( void *data)
   return FALSE;
 }
 
-Wtt *WbGtk::wtt_new( char *name, char *iconname, ldh_tWBContext ldhwbctx,
+Wtt *WbGtk::wtt_new( const char *name, const char *iconname, ldh_tWBContext ldhwbctx,
 		  pwr_tVolumeId volid, ldh_tVolume volctx,
 		  wnav_sStartMenu *root_menu, pwr_tStatus *status)
 {
@@ -75,7 +75,7 @@ Wtt *WbGtk::wtt_new( char *name, char *iconname, ldh_tWBContext ldhwbctx,
 		       status);
 }
 
-WVsel *WbGtk::vsel_new( pwr_tStatus *status, char *name, ldh_tWBContext ldhwbctx,
+WVsel *WbGtk::vsel_new( pwr_tStatus *status, const char *name, ldh_tWBContext ldhwbctx,
 		     char *volumename,
 		     int (*bc_success)( void *, pwr_tVolumeId *, int),
 		     void (*bc_cancel)(),

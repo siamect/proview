@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growconpoint.h,v 1.5 2008-01-17 14:17:05 claes Exp $
+ * Proview   $Id: glow_growconpoint.h,v 1.6 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,7 +47,7 @@ class GrowConPoint : public GlowConPoint {
     \param d 		Conpoint direction.
     \param nodraw	Don't draw the object now.
   */
-  GrowConPoint( GrowCtx *glow_ctx, char *name, double x = 0, double y = 0, 
+  GrowConPoint( GrowCtx *glow_ctx, const char *name, double x = 0, double y = 0, 
 		int cp_num = 0, glow_eDirection d = glow_eDirection_Center,
 		int nodraw =0);
 

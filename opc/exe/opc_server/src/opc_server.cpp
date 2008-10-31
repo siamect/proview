@@ -1,6 +1,6 @@
 /* 
- * Proview   $Id: opc_server.cpp,v 1.22 2007-12-03 13:31:35 claes Exp $
- * Proview   $Id: opc_server.cpp,v 1.22 2007-12-03 13:31:35 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.23 2008-10-31 12:51:29 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.23 2008-10-31 12:51:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -18,7 +18,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <map.h>
+#include <map>
 #include <net/if.h>
 #include <net/if_arp.h>
 #include <pthread.h>
@@ -41,6 +41,8 @@
 #include "rt_aproc.h"
 #include "rt_pwr_msg.h"
 #include "rt_qcom_msg.h"
+
+using namespace std;
 
 typedef struct {
   int address;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attr_gtk.cpp,v 1.2 2007-01-15 13:20:26 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attr_gtk.cpp,v 1.3 2008-10-31 12:51:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,12 +41,12 @@
 #include "rt_pb_gsd_attrnav_gtk.h"
 
 
-void GsdAttrGtk::message( char severity, char *message)
+void GsdAttrGtk::message( char severity, const char *message)
 {
   gtk_label_set_text( GTK_LABEL(msg_label), message);
 }
 
-void GsdAttrGtk::set_prompt( char *prompt)
+void GsdAttrGtk::set_prompt( const char *prompt)
 {
   if ( strcmp(prompt, "") == 0) {
     g_object_set( cmd_prompt, "visible", FALSE, NULL);

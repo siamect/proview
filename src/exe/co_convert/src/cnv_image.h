@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_image.h,v 1.4 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: cnv_image.h,v 1.5 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,10 @@
 #ifndef cnv_image_h
 #define cnv_image_h
 
+#include <fstream>
 #include <stdlib.h>
 
+using namespace std;
 
 typedef void *cnv_tImImage;
 typedef void *cnv_tPixmap;

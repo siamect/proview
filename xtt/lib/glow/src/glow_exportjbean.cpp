@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_exportjbean.cpp,v 1.19 2008-10-16 11:05:15 claes Exp $
+ * Proview   $Id: glow_exportjbean.cpp,v 1.20 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <float.h>
 #include <ctype.h>
 #include <math.h>

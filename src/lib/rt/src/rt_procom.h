@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_procom.h,v 1.1 2006-09-14 14:16:07 claes Exp $
+ * Proview   $Id: rt_procom.h,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -33,15 +33,15 @@ class rt_procom : public co_procom {
   int		m_global;
   qcom_sGet 	*m_getmsg;
   
-  rt_procom( co_provider *p, errh_eAnix anix, char *name, pwr_tSid sid, pwr_tVid vid,
-	     char *volumename, int global);
+  rt_procom( co_provider *p, errh_eAnix anix, const char *name, pwr_tSid sid, pwr_tVid vid,
+	     const char *volumename, int global);
   void init();
   void mainLoop();
   virtual ~rt_procom() {}
   virtual void provideObjects( pwr_tStatus, vector<procom_obj>&);
   virtual void provideObject( pwr_tStatus sts, pwr_tOix oix, pwr_tOix fthoix, pwr_tOix bwsoix,
 		      pwr_tOix fwsoix, pwr_tOix fchoix, pwr_tOix lchoix, pwr_tCid cid,
-		      char *name, char *longname) {}
+		      const char *name, const char *longname) {}
   virtual void provideBody( pwr_tStatus sts, pwr_tOix oix, int size, void *body) {}
   virtual void provideAttr( pwr_tStatus sts, pwr_tOix oix, int size, void *buff);
   virtual void provideStatus( pwr_tStatus sts);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_con.cpp,v 1.8 2008-10-16 08:58:06 claes Exp $
+ * Proview   $Id: flow_con.cpp,v 1.9 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "flow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <math.h>
 #include <stdlib.h>
 #include <float.h>
@@ -103,7 +103,7 @@ static FlowNode *sort_dest;
 void draw_line( FlowCtx *ctx, double x1, double y1, double x2, double y2);
 
 #if 0
-FlowCon::FlowCon( FlowCtx *flow_ctx, char *name, FlowConClass *con_class,
+FlowCon::FlowCon( FlowCtx *flow_ctx, const char *name, FlowConClass *con_class,
 	FlowNode *source, FlowNode *dest, int source_cp, int dest_cp) :
 	ctx(flow_ctx), cc(con_class),
 	source_node(source), dest_node(dest), source_conpoint(source_cp),
@@ -128,7 +128,7 @@ FlowCon::FlowCon( FlowCtx *flow_ctx, char *name, FlowConClass *con_class,
 }
 #endif
 
-FlowCon::FlowCon( FlowCtx *flow_ctx, char *name, FlowConClass *con_class,
+FlowCon::FlowCon( FlowCtx *flow_ctx, const char *name, FlowConClass *con_class,
 	FlowNode *source, FlowNode *dest, int source_cp, int dest_cp, 
 	int *rsts, int nodraw, int point_num, double *x_vect, double *y_vect) :
 	ctx(flow_ctx), cc(con_class),

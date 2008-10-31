@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe.cpp,v 1.13 2008-10-15 06:04:55 claes Exp $
+ * Proview   $Id: wb_foe.cpp,v 1.14 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1915,7 +1915,7 @@ void WFoe::gre_regionmoved( WGre *gre)
 //	Recieves messages from gre and displays them with
 //	foe_message.
 //
-void WFoe::gre_message( WGre *gre, char *message)
+void WFoe::gre_message( WGre *gre, const char *message)
 {
   /* 
      SG 19.03.91
@@ -2560,7 +2560,7 @@ void WFoe::attr_quit( void *a_ctx)
 // Constructor
 //
 WFoe::WFoe( void		*f_parent_ctx,
-	    char		*f_name,
+	    const char		*f_name,
 	    pwr_tObjid		plcprogram,
 	    ldh_tWBContext 	ldhwbctx,
 	    ldh_tSesContext	ldhsesctx,
@@ -2588,7 +2588,7 @@ WFoe::WFoe( void		*f_parent_ctx,
 // Constructor
 //
 WFoe::WFoe( void *f_parent_ctx,
-	    char *f_name,
+	    const char *f_name,
 	    pwr_tObjid plcprogram,
 	    ldh_tWBContext ldhwbctx,
 	    ldh_tSesContext ldhsesctx,

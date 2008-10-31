@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_polyline.cpp,v 1.4 2008-05-13 13:59:03 claes Exp $
+ * Proview   $Id: glow_polyline.cpp,v 1.5 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <stdlib.h>
 #include "glow_polyline.h"
 #include "glow_draw.h"

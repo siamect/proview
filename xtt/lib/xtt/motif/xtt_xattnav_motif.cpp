@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xattnav_motif.cpp,v 1.1 2007-01-04 08:30:03 claes Exp $
+ * Proview   $Id: xtt_xattnav_motif.cpp,v 1.2 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -60,7 +60,7 @@ XAttNavMotif::XAttNavMotif(
 	void 		*xa_parent_ctx,
 	Widget		xa_parent_wid,
 	xattnav_eType   xa_type,
-	char 		*xa_name,
+	const char     	*xa_name,
 	pwr_sAttrRef 	*xa_objar,
 	int 		xa_advanced_user,
 	Widget 		*w,

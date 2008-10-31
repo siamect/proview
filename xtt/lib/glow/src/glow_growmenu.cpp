@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growmenu.cpp,v 1.14 2008-03-20 13:10:46 claes Exp $
+ * Proview   $Id: glow_growmenu.cpp,v 1.15 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
@@ -30,7 +30,7 @@
 #include "glow_growctx.h"
 #include "glow_msg.h"
 
-GrowMenu::GrowMenu( GrowCtx *glow_ctx, char *name, glow_sMenuInfo *menu_info, double x, double y, 
+GrowMenu::GrowMenu( GrowCtx *glow_ctx, const char *name, glow_sMenuInfo *menu_info, double x, double y, 
 		    double min_w, glow_eDrawType border_d_type, int line_w, 
 		    int fill_rect, int display_border, 
 		    glow_eDrawType fill_d_type, int t_size, 

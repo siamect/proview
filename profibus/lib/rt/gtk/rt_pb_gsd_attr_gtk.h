@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attr_gtk.h,v 1.2 2007-01-15 13:20:26 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attr_gtk.h,v 1.3 2008-10-31 12:51:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,8 +50,8 @@ class GsdAttrGtk : public GsdAttr {
 	      int a_edit_mode);
   ~GsdAttrGtk();
 
-  void message( char severity, char *message);
-  void set_prompt( char *prompt);
+  void message( char severity, const char *message);
+  void set_prompt( const char *prompt);
   void change_value();
     
   static void gsdattr_message( void *attr, char severity, char *message);

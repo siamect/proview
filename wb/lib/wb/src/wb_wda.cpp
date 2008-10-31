@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wda.cpp,v 1.11 2008-09-18 15:01:36 claes Exp $
+ * Proview   $Id: wb_wda.cpp,v 1.12 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,7 +47,7 @@
 #include "co_xhelp.h"
 
 
-void Wda::message_cb( void *wda, char severity, char *message)
+void Wda::message_cb( void *wda, char severity, const char *message)
 {
   ((Wda *)wda)->message( severity, message);
 }
@@ -301,7 +301,7 @@ Wda::Wda(
 	ldh_tSesContext wa_ldhses, 
 	pwr_tObjid 	wa_objid,
 	pwr_tClassId 	wa_classid,
-	char            *wa_attribute,
+	const char      *wa_attribute,
 	int 		wa_editmode,
 	int 		wa_advanced_user,
 	int		wa_display_objectname) :

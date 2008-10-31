@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_widget_motif.cpp,v 1.1 2007-01-04 07:57:00 claes Exp $
+ * Proview   $Id: flow_widget_motif.cpp,v 1.2 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -70,12 +70,12 @@ static char defaultTranslations[] = "#replace \n\
 <Key>Down: notify()\n\
 <Key>Return: notify()";
 
-static XtActionsRec actionsList[] = { {"notify", (XtActionProc) Notify}};
+static XtActionsRec actionsList[] = { {(char*) "notify", (XtActionProc) Notify}};
 
 FlowClassRec flowClassRec = {
   { /* Core class part */
     (WidgetClass) &compositeClassRec,	/* superclass */
-    "Flow",				/* class name */
+    (char*) "Flow",		       	/* class name */
     sizeof(FlowRec),			/* widget size */
     NULL,				/* class initialize */
     NULL, 				/* class part initialize */
@@ -441,7 +441,7 @@ extern "C" Widget ScrolledFlowCreate(
   XtSetArg( arg[i], XmNbottomAttachment, XmATTACH_FORM);i++;
   XtSetArg( arg[i], XmNrightAttachment, XmATTACH_FORM);i++;
 */
-  flow = (FlowWidget) FlowCreate( form, "flow", arg, i, init_proc, client_data);
+  flow = (FlowWidget) FlowCreate( form, (char*) "flow", arg, i, init_proc, client_data);
   XtManageChild( (Widget) flow);
 
   flow->flow.scroll_h = scroll_h;

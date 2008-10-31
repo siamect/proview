@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_jop.h,v 1.2 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_jop.h,v 1.3 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -49,7 +49,7 @@ class Jop {
     int		create_que();
     void 	que_free( char *data);
     int 	que_get( char **data);
-    int 	que_put( char *data);
+    int 	que_put( const char *data);
     void	set_jop_qid( int qix);
     int 	command( char *command);
     void	close();

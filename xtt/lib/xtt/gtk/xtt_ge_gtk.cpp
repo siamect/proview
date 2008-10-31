@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ge_gtk.cpp,v 1.6 2008-01-24 09:34:40 claes Exp $
+ * Proview   $Id: xtt_ge_gtk.cpp,v 1.7 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -122,7 +122,7 @@ void XttGeGtk::confirm_cb( void *ge_ctx, void *confirm_object, char *text)
   ge->current_confirm_object = confirm_object;
 }
 
-void XttGeGtk::message_dialog_cb( void *ge_ctx, char *text)
+void XttGeGtk::message_dialog_cb( void *ge_ctx, const char *text)
 {
   XttGe 	*ge = (XttGe *)ge_ctx;
   CoWowGtk 	wow( ((XttGeGtk *)ge)->toplevel);
@@ -243,10 +243,10 @@ static gint nav_delete_event( GtkWidget *w, GdkEvent *event, gpointer ge)
   return TRUE;
 }
 
-XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, char *xg_name, char *xg_filename,
-		    int xg_scrollbar, int xg_menu, int xg_navigator, int xg_width, int xg_height,
-		    int x, int y, double scan_time, char *object_name,
-		    int use_default_access, unsigned int access,
+XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, const char *xg_name, 
+		    const char *xg_filename, int xg_scrollbar, int xg_menu, int xg_navigator, 
+		    int xg_width, int xg_height, int x, int y, double scan_time, 
+		    const char *object_name, int use_default_access, unsigned int access,
 		    int (*xg_command_cb) (XttGe *, char *),
 		    int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 		    int (*xg_is_authorized_cb) (void *, unsigned int)) :

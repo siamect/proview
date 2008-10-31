@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_nodeclass.h,v 1.6 2007-07-04 13:28:52 claes Exp $
+ * Proview   $Id: glow_nodeclass.h,v 1.7 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #ifndef glow_nodeclass_h
 #define glow_nodeclass_h
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include "glow_point.h"
 #include "glow_rect.h"
 #include "glow_array_elem.h"
@@ -51,7 +51,7 @@ class GlowNodeClass : public GlowArrayElem {
     \param name		Name of the nodeclass.
     \param grp		Node group.
   */
-  GlowNodeClass( GrowCtx *glow_ctx, char *name, 
+  GlowNodeClass( GrowCtx *glow_ctx, const char *name, 
 	glow_eNodeGroup grp = glow_eNodeGroup_Common);
 
   //! Copy constructor

@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_ccm.c,v 1.7 2008-10-20 13:43:32 claes Exp $
+ * Proview   $Id: co_ccm.c,v 1.8 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -283,20 +283,20 @@ static int ptable[256];
 static int ccm_element( char *element, int num, char *str, char delim);
 static int ccm_getvar( 
   t_func_ctx		ctx,
-  char			*name,
+  const char	       	*name,
   int			*decl,
   float			*value_float,
   int			*value_int,
   char			*value_string);
 static int ccm_setvar( 
   t_func_ctx	ctx,
-  char		*name,
+  const char   	*name,
   int		decl,
   float		value_float,
   int		value_int,
   char		*value_string);
 static int ccm_createvar(
-  char			*name,
+  const char	       	*name,
   int			decl,
   float			value_float,
   int			value_int,
@@ -306,7 +306,7 @@ static int ccm_createvar(
   ccm_s_stringvar	**stringlist
 );
 static int ccm_deletevar(
-  char			*name,
+  const char	       	*name,
   ccm_s_intvar		**intlist,
   ccm_s_floatvar	**floatlist,
   ccm_s_stringvar	**stringlist
@@ -656,7 +656,7 @@ int	ccm_remove_blank( char *out_str, char *in_str)
 
 int ccm_varname_parse( 
 	t_func_ctx	funcctx,
-	char 	*name, 
+	const char 	*name, 
 	char	*varname,
 	int	*array,
 	int	*element)
@@ -715,7 +715,7 @@ int ccm_varname_parse(
 }
 
 int ccm_register_function( 
-	char 	*name,
+	const char 	*name,
 	int 	(* sysfunc) ( void *, ccm_s_arg *, int, int *, float *,
 			  int *, char *)
 )
@@ -2873,7 +2873,7 @@ static void ccm_free_varlists(
 
 static int ccm_getvar( 
   t_func_ctx		funcctx,
-  char			*name,
+  const char	       	*name,
   int			*decl,
   float			*value_float,
   int			*value_int,
@@ -2991,7 +2991,7 @@ static int ccm_getvar(
 
 static int ccm_setvar( 
   t_func_ctx	funcctx,
-  char		*name,
+  const char   	*name,
   int		decl,
   float		value_float,
   int		value_int,
@@ -3138,7 +3138,7 @@ static int ccm_setvar(
 }
 
 int ccm_set_external_var( 
-  char		*name,
+  const char   	*name,
   int		decl,
   float		value_float,
   int		value_int,
@@ -3214,7 +3214,7 @@ int ccm_set_external_var(
 }
 
 int ccm_get_external_var( 
-  char		*name,
+  const char   	*name,
   int		decl,
   float		*value_float,
   int		*value_int,
@@ -3290,7 +3290,7 @@ int ccm_get_external_var(
 }
 
 int ccm_ref_external_var( 
-  char		*name,
+  const char   	*name,
   int		decl,
   void		**valuep)
 {
@@ -3365,7 +3365,7 @@ int ccm_ref_external_var(
 
 
 static int ccm_createvar(
-  char			*name,
+  const char   		*name,
   int			decl,
   float			value_float,
   int			value_int,
@@ -3445,7 +3445,7 @@ static int ccm_createvar(
 }
 
 static int ccm_deletevar(
-  char			*name,
+  const char	       	*name,
   ccm_s_intvar		**int_list,
   ccm_s_floatvar	**float_list,
   ccm_s_stringvar	**string_list
@@ -3523,7 +3523,7 @@ static int ccm_deletevar(
 }
 
 int ccm_create_external_var(
-  char			*name,
+  const char	       	*name,
   int			decl,
   float			value_float,
   int			value_int,
@@ -3540,7 +3540,7 @@ int ccm_create_external_var(
 }
 
 int ccm_delete_external_var(
-  char			*name,
+  const char	       	*name,
   float			value_float,
   int			value_int,
   char			*value_string

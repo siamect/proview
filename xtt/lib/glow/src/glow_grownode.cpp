@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_grownode.cpp,v 1.15 2007-07-17 12:43:42 claes Exp $
+ * Proview   $Id: glow_grownode.cpp,v 1.16 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
@@ -30,7 +30,7 @@
 #include "glow_conpoint.h"
 #include "glow_growgroup.h"
 
-GrowNode::GrowNode( GrowCtx *glow_ctx, char *name, GlowNodeClass *node_class,
+GrowNode::GrowNode( GrowCtx *glow_ctx, const char *name, GlowNodeClass *node_class,
 	double x1, double y1, int nodraw, int rel_annot_pos) :
 	GlowNode(glow_ctx,name,node_class,x1,y1,nodraw,rel_annot_pos),
 	dynamic(0), dynamicsize(0),
@@ -1298,7 +1298,7 @@ int GrowNode::get_conpoint( int num, double *x, double *y, glow_eDirection *dir)
 }
 
 
-void GrowNode::set_annotation( int num, char *text, int size, int nodraw, int brief)
+void GrowNode::set_annotation( int num, const char *text, int size, int nodraw, int brief)
 {
   if ( annotv_inputmode[num])
     return;

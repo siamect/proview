@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_con.cpp,v 1.11 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_con.cpp,v 1.12 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <math.h>
 #include <stdlib.h>
 #include <float.h>
@@ -105,7 +105,7 @@ static GlowNode *sort_dest;
 void draw_line( GrowCtx *ctx, double x1, double y1, double x2, double y2);
 
 #if 0
-GlowCon::GlowCon( GrowCtx *glow_ctx, char *name, GlowConClass *con_class,
+GlowCon::GlowCon( GrowCtx *glow_ctx, const char *name, GlowConClass *con_class,
 	GlowNode *source, GlowNode *dest, int source_cp, int dest_cp) :
 	ctx(glow_ctx), cc(con_class),
 	source_node(source), dest_node(dest), source_conpoint(source_cp),
@@ -138,7 +138,7 @@ GlowCon::GlowCon( GrowCtx *glow_ctx, char *name, GlowConClass *con_class,
 }
 #endif
 
-GlowCon::GlowCon( GrowCtx *glow_ctx, char *name, GlowConClass *con_class,
+GlowCon::GlowCon( GrowCtx *glow_ctx, const char *name, GlowConClass *con_class,
 	GlowNode *source, GlowNode *dest, int source_cp, int dest_cp, 
 	int nodraw, int point_num, double *x_vect, double *y_vect, int cborder, int cshadow) :
 	ctx(glow_ctx), cc(con_class),

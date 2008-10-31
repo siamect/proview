@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_block_motif.cpp,v 1.1 2007-01-04 08:30:03 claes Exp $
+ * Proview   $Id: xtt_block_motif.cpp,v 1.2 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -174,17 +174,17 @@ BlockMotif::BlockMotif( void *b_parent_ctx,
   pwr_tAName	aname;
 
   static MrmRegisterArg	reglist[] = {
-        { "blk_ctx", 0 },
-	{"blk_activate_cancel",(caddr_t)activate_cancel },
-	{"blk_activate_ok",(caddr_t)activate_ok },
-	{"blk_activate_apply",(caddr_t)activate_apply },
-	{"blk_create_ok",(caddr_t)create_ok },
-	{"blk_create_apply",(caddr_t)create_apply },
-	{"blk_create_toggleA",(caddr_t)create_toggleA },
-	{"blk_create_toggleB",(caddr_t)create_toggleB },
-	{"blk_create_toggleC",(caddr_t)create_toggleC },
-	{"blk_create_toggleD",(caddr_t)create_toggleD },
-	{"blk_create_toggleNo",(caddr_t)create_toggleNo }
+        {(char*) "blk_ctx", 0 },
+	{(char*) "blk_activate_cancel",(caddr_t)activate_cancel },
+	{(char*) "blk_activate_ok",(caddr_t)activate_ok },
+	{(char*) "blk_activate_apply",(caddr_t)activate_apply },
+	{(char*) "blk_create_ok",(caddr_t)create_ok },
+	{(char*) "blk_create_apply",(caddr_t)create_apply },
+	{(char*) "blk_create_toggleA",(caddr_t)create_toggleA },
+	{(char*) "blk_create_toggleB",(caddr_t)create_toggleB },
+	{(char*) "blk_create_toggleC",(caddr_t)create_toggleC },
+	{(char*) "blk_create_toggleD",(caddr_t)create_toggleD },
+	{(char*) "blk_create_toggleNo",(caddr_t)create_toggleNo }
 	};
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
 
@@ -217,7 +217,7 @@ BlockMotif::BlockMotif( void *b_parent_ctx,
   parent_wid = XtCreatePopupShell( title, 
 	  topLevelShellWidgetClass, parent_wid, args, i);
 
-  msts = MrmFetchWidgetOverride( s_DRMh, "blk_window", parent_wid,
+  msts = MrmFetchWidgetOverride( s_DRMh, (char*) "blk_window", parent_wid,
 			name, args, 1, &toplevel, &dclass);
   if (msts != MrmSUCCESS)  printf("can't fetch %s\n", name);
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_transform.cpp,v 1.5 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_transform.cpp,v 1.6 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <math.h>
 #include "glow_transform.h"
 

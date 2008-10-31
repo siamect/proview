@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msgwindow.cpp,v 1.13 2007-05-16 12:32:26 claes Exp $
+ * Proview   $Id: co_msgwindow.cpp,v 1.14 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -130,7 +130,7 @@ void MsgWindow::message( int severity, const char *text1, const char *text2, con
 
 MsgWindow::MsgWindow(
 	void *msg_parent_ctx,
-	char *msg_name,
+	const char *msg_name,
 	pwr_tStatus *status) :
   parent_ctx(msg_parent_ctx), msgnav(NULL), displayed(0),
   deferred_map(0), nodraw(0), size(0), max_size(500), find_wnav_cb(0), find_plc_cb(0),

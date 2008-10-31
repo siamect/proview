@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_tblnav.h,v 1.2 2008-09-05 08:38:58 claes Exp $
+ * Proview   $Id: xtt_tblnav.h,v 1.3 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,8 +22,8 @@
 
 /* xtt_attrnav.h -- Sev Table Viewer */
 
-#include <fstream.h>
-#include <vector.h>
+#include <fstream>
+#include <vector>
 
 #ifndef pwr_h
 # include "pwr.h"
@@ -113,7 +113,7 @@ class TblNav {
     TblNavBrow		*brow;
     sevcli_sHistItem  	*itemlist;
     int			item_cnt;
-    void 		(*message_cb)( void *, char, char *);
+    void 		(*message_cb)( void *, char, const char *);
     int 		(*is_authorized_cb)( void *, unsigned int, int);
     vector<TblTreeNode> tree;
     int 		list_layout;
@@ -130,7 +130,7 @@ class TblNav {
     void show_list();
     void delete_item( sevcli_sHistItem *hi);
 
-    virtual void message( char sev, char *text);
+    virtual void message( char sev, const char *text);
     virtual void set_inputfocus() {}
     static int init_brow_cb( FlowCtx *fctx, void *client_data);
 };
@@ -158,7 +158,7 @@ class ItemLocal : public ItemBase {
 
 class ItemLocalAttr : public ItemBase {
  public:
-  ItemLocalAttr( TblNav *tblnav, char *iname, char *ivalue, brow_tNode dest, flow_eDest dest_code);
+  ItemLocalAttr( TblNav *tblnav, const char *iname, char *ivalue, brow_tNode dest, flow_eDest dest_code);
   virtual ~ItemLocalAttr() {}
   
   sevcli_sHistItem 	item;

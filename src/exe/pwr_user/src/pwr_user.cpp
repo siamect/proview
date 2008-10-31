@@ -1,7 +1,7 @@
 
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <string.h>
 
 #include "pwr.h"
@@ -17,7 +17,7 @@ static dcli_sChannel 	user_chn;
 static dcli_sRecall 	*user_recall_buf;
 static unsigned int user_priv = 0;
 
-static void user_message( char severity, char *msg);
+static void user_message( char severity, const char *msg);
 static int	user_help_func(	void		*client_data,
 				void		*client_flag);
 static int	user_load_func(	void		*client_data,
@@ -838,7 +838,7 @@ static int	user_login_func(	void		*client_data,
   return 1;
 }
 
-static void user_message( char severity, char *msg)
+static void user_message( char severity, const char *msg)
 {
   cout << "%CLI-" << severity << "-MSG, " << msg << endl;
 }

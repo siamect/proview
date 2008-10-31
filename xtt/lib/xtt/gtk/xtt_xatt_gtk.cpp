@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xatt_gtk.cpp,v 1.3 2007-02-06 10:06:41 claes Exp $
+ * Proview   $Id: xtt_xatt_gtk.cpp,v 1.4 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,12 +41,12 @@
 
 CoWowRecall XAttGtk::value_recall;
 
-void XAttGtk::message( char severity, char *message)
+void XAttGtk::message( char severity, const char *message)
 {
   gtk_label_set_text( GTK_LABEL(msg_label), message);
 }
 
-void XAttGtk::set_prompt( char *prompt)
+void XAttGtk::set_prompt( const char *prompt)
 {
   if ( strcmp(prompt, "") == 0) {
     g_object_set( cmd_prompt, "visible", FALSE, NULL);

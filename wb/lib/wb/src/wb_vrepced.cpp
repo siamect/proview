@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepced.cpp,v 1.3 2008-01-24 09:49:24 claes Exp $
+ * Proview   $Id: wb_vrepced.cpp,v 1.4 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1160,7 +1160,7 @@ bool wb_vrepced::classeditorCheckMove( wb_orep *o, ldh_eDest dest_code,
   return true;
 }
 
-void wb_vrepced::error( char *msg, wb_orep *o)
+void wb_vrepced::error( const char *msg, wb_orep *o)
 {
   char text[400];
 

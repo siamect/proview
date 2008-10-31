@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_pushbutton.h,v 1.2 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_pushbutton.h,v 1.3 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #ifndef flow_pushbutton_h
 #define flow_pushbutton_h
 
-#include <iostream.h>
+#include <iostream>
 #include "flow_ctx.h"
 #include "flow_point.h"
 #include "flow_rect.h"

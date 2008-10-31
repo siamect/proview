@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_gtk.cpp,v 1.14 2008-10-28 09:49:47 claes Exp $
+ * Proview   $Id: wb_foe_gtk.cpp,v 1.15 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -946,7 +946,7 @@ WFoe *WFoeGtk::subwindow_new( void			*f_parent_ctx,
 //     	foe.msg_label_id is set to null if the the message to be displayed 
 //     	is "" . This case occurs when you want to erase a previous message.
 //
-void WFoeGtk::message( char *new_label) 
+void WFoeGtk::message( const char *new_label) 
 {
   int 		l;
 
@@ -966,7 +966,7 @@ void WFoeGtk::message( char *new_label)
 // Author: SG
 // Date : 24.02.91
 //
-void WFoeGtk::msgbox( char *new_label) 
+void WFoeGtk::msgbox( const char *new_label) 
 {
   wow->DisplayError( "Message", new_label);
 }
@@ -978,7 +978,7 @@ void WFoeGtk::msgbox( char *new_label)
 // Author: SG
 // Date : 13.02.91
 //
-void WFoeGtk::popupmsg( char *new_label, void (* yes_procedure)(WFoe *), 
+void WFoeGtk::popupmsg( const char *new_label, void (* yes_procedure)(WFoe *), 
 			void (* no_procedure)(WFoe *),
 			void (* cancel_procedure)(WFoe *)) 
 {
@@ -997,7 +997,7 @@ void WFoeGtk::popupmsg( char *new_label, void (* yes_procedure)(WFoe *),
 //
 WFoeGtk::WFoeGtk( void		*f_parent_ctx,
 		  GtkWidget    	*f_parent_wid,
-		  char		*f_name,
+		  const char   	*f_name,
 		  pwr_tObjid    plcprogram,
 		  ldh_tWBContext ldhwbctx,
 		  ldh_tSesContext ldhsesctx,
@@ -1027,7 +1027,7 @@ WFoeGtk::WFoeGtk( void		*f_parent_ctx,
 //
 WFoeGtk::WFoeGtk( void *f_parent_ctx,
 		      GtkWidget *f_parent_wid,
-		      char *f_name,
+		      const char *f_name,
 		      pwr_tObjid plcprogram,
 		      ldh_tWBContext ldhwbctx,
 		      ldh_tSesContext ldhsesctx,
@@ -2111,7 +2111,7 @@ void WFoeGtk::set_mode_button_state( int mode, int state)
 //
 //	Show the text input widget.
 //
-int WFoeGtk::get_textinput( char *msg, int (*function)(WFoe *, char *))
+int WFoeGtk::get_textinput( const char *msg, int (*function)(WFoe *, char *))
 {
   /* Print the text */
   message( msg);

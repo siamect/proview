@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_db.cpp,v 1.43 2008-10-15 06:04:55 claes Exp $
+ * Proview   $Id: wb_db.cpp,v 1.44 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,7 +34,7 @@
 #include "wb_export.h"
 #include "wb_convert_volume.h"
 
-static void printstat(DbEnv *ep, char *s);
+static void printstat(DbEnv *ep, const char *s);
 static void get_config( char *name, unsigned int *lk_max_locks, 
 			unsigned int *lk_max_objects);
 
@@ -958,7 +958,7 @@ void  wb_db::open(const char *fileName)
   }
 }
 
-static void printstat(DbEnv *ep, char *s)
+static void printstat(DbEnv *ep, const char *s)
 {
   DB_LOCK_STAT *lp;
 

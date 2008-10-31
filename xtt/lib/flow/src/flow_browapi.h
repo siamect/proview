@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_browapi.h,v 1.13 2008-10-16 08:58:06 claes Exp $
+ * Proview   $Id: flow_browapi.h,v 1.14 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -79,12 +79,12 @@ void brow_GetSelectedNodes( brow_tCtx ctx, brow_tNode **nodes, int *num);
 void brow_SetHighlight( brow_tObject object, int value);
 void brow_GetHighlight( brow_tObject object, int *value);
 void brow_SetInverse( brow_tObject object, int value);
-void brow_CreateNode( brow_tCtx ctx, char *name, brow_tNodeClass nc,
+void brow_CreateNode( brow_tCtx ctx, const char *name, brow_tNodeClass nc,
 	brow_tNode destination, flow_eDest destination_code, 
 	void *user_data, int relative_annot_pos, brow_tNode *node);
 void brow_CreatePasteNode( brow_tCtx ctx, char *name, brow_tNodeClass nc,
 	double x, double y, void *user_data, brow_tNode *node);
-void brow_SetAnnotation( brow_tNode node, int number, char *text, int size);
+void brow_SetAnnotation( brow_tNode node, int number, const char *text, int size);
 void brow_GetAnnotation( brow_tNode node, int number, char *text, int size);
 void brow_OpenAnnotationInput( brow_tNode node, int number);
 int brow_AnnotationInputIsOpen( brow_tNode node, int number);
@@ -141,8 +141,8 @@ void brow_AddLine( brow_tNodeClass nc, double x1, double y1,
 void brow_AddArc( brow_tNodeClass nc, double x1, double y1, 
 	double x2, double y2, int angle1, int angle2,
 	flow_eDrawType draw_type, int line_width);
-void brow_AddImage( brow_tNodeClass nc, char *imagefile, double x, double y);
-void brow_AddText( brow_tNodeClass nc, char *text_str, double x, double y, 
+void brow_AddImage( brow_tNodeClass nc, const char *imagefile, double x, double y);
+void brow_AddText( brow_tNodeClass nc, const char *text_str, double x, double y, 
 	flow_eDrawType draw_type, int text_size);
 void brow_AddAnnot( brow_tNodeClass nc, double x, double y, int number,
 	flow_eDrawType draw_type, int text_size, flow_eAnnotType annot_type,
@@ -154,7 +154,7 @@ void brow_AddRadiobutton( brow_tNodeClass nc, double x, double y,
 	flow_eDrawType draw_type, int line_width);
 void brow_CreatePushButton( brow_tCtx ctx, char *text, double x, double y, 
 	double width, double height, brow_tObject *pushbutton);
-void brow_CreateNodeClass( brow_tCtx ctx, char *name, flow_eNodeGroup group,
+void brow_CreateNodeClass( brow_tCtx ctx, const char *name, flow_eNodeGroup group,
 	brow_tNodeClass *nodeclass);
 void brow_NodeClassAdd( brow_tNodeClass nc, brow_tObject object);
 void brow_GetSelectList( brow_tCtx ctx, brow_tObject **list, int *cnt);
@@ -168,8 +168,8 @@ void brow_SetUserData( brow_tObject object, void *user_data);
 void brow_GetCtxUserData( brow_tCtx ctx, void **user_data);
 void brow_SetCtxUserData( brow_tCtx ctx, void *user_data);
 brow_tCtx brow_GetCtx( brow_tObject object);
-void brow_SetTraceAttr( brow_tObject object, char *trace_object, 
-		char *trace_attribute, flow_eTraceType trace_attr_type);
+void brow_SetTraceAttr( brow_tObject object, const char *trace_object, 
+		const char *trace_attribute, flow_eTraceType trace_attr_type);
 void brow_GetTraceAttr( brow_tObject object, char *trace_object, 
 		char *trace_attribute, flow_eTraceType *trace_attr_type);
 void brow_SetTraceData( brow_tObject object, void *trace_data);

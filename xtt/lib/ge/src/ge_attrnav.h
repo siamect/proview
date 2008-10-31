@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attrnav.h,v 1.4 2007-01-04 08:18:35 claes Exp $
+ * Proview   $Id: ge_attrnav.h,v 1.5 2008-10-31 12:51:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -122,7 +122,7 @@ class AttrNav {
   public:
     AttrNav(
 	void *xn_parent_ctx,
-	char *xn_name,
+	const char *xn_name,
 	attr_sItem  *xn_itemlist,
 	int xn_item_cnt,
 	pwr_tStatus *status);
@@ -134,7 +134,7 @@ class AttrNav {
     attr_sItem  	*itemlist;
     int			item_cnt;
     int			trace_started;
-    void 		(*message_cb)( void *, char, char *);
+    void 		(*message_cb)( void *, char, const char *);
     void 		(*change_value_cb)( void *);
     int			(*get_subgraph_info_cb)( void *, char *, attr_sItem  **, int *);
     int			(*get_dyn_info_cb)( void *, GeDyn *, attr_sItem  **, int *);
@@ -145,7 +145,7 @@ class AttrNav {
 
     virtual int set_attr_value( char *value_str);
     virtual int check_attr_value( int *multiline, char **value);
-    virtual void message( char sev, char *text);
+    virtual void message( char sev, const char *text);
     virtual void set_inputfocus() {}
     virtual void force_trace_scan();
     virtual int object_attr();
@@ -156,7 +156,7 @@ class AttrNav {
 //! Item for a normal attribute.
 class ItemLocal {
   public:
-    ItemLocal( AttrNav *attrnav, char *item_name, char *attr,
+    ItemLocal( AttrNav *attrnav, const char *item_name, const char *attr,
 	int attr_type, int attr_size, double attr_min_limit,
 	double attr_max_limit, void *attr_value_p, int attr_multiline, 
         int attr_noedit, int attr_mask,

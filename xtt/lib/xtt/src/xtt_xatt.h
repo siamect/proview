@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xatt.h,v 1.5 2007-01-04 08:22:47 claes Exp $
+ * Proview   $Id: xtt_xatt.h,v 1.6 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -48,15 +48,15 @@ class XAtt {
     void	(*redraw_cb) (void *);
     void 	(*popup_menu_cb)( void *, pwr_sAttrRef, unsigned long,
 				  unsigned long, char *, int x, int y);
-    int         (*call_method_cb)(void *, char *, char *, pwr_sAttrRef,
+    int         (*call_method_cb)(void *, const char *, const char *, pwr_sAttrRef,
 				  unsigned long, unsigned long, char *);
     int		(*is_authorized_cb)(void *, unsigned int);
     void	*client_data;
     brow_tObject input_node;
     char	input_name[80];
 
-    virtual void message( char severity, char *message) {}
-    virtual void set_prompt( char *prompt) {}
+    virtual void message( char severity, const char *message) {}
+    virtual void set_prompt( const char *prompt) {}
     virtual void change_value( int set_focus) {}
     virtual void change_value_close() {}
     virtual void pop() {}
@@ -73,7 +73,7 @@ class XAtt {
 			       unsigned long item_type, unsigned long utility,
 			       char *arg, int x, int y);
     static int xatt_is_authorized_cb( void *ctx, unsigned int access);
-    static void message_cb( void *xatt, char severity, char *message);
+    static void message_cb( void *xatt, char severity, const char *message);
     static void change_value_cb( void *xatt);
 };
 

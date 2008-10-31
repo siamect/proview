@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.h,v 1.34 2008-10-16 08:58:00 claes Exp $
+ * Proview   $Id: ge_graph.h,v 1.35 2008-10-31 12:51:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,7 +22,7 @@
 
 /* ge_graph.h -- Simple graphic editor */
 
-#include <vector.h>
+#include <vector>
 
 #ifndef pwr_h
 # include "pwr.h"
@@ -101,7 +101,7 @@ typedef enum {
 
 //! Extension of proview type pwr_eType. Should not collide with any pwr_eType.
 typedef enum {
-  graph_eType_Bit = 1 << 15 + 1 //!< Type for a bit in a bitmask
+  graph_eType_Bit = (1 << 15) + 1 //!< Type for a bit in a bitmask
 } graph_eType;
 
 typedef enum {
@@ -244,7 +244,7 @@ class GraphRecallBuff {
 	  \param key    Key to data. Usually group or object name. Can be zero.
 	  \param object	Object that is the owner of the dynamic data.
 	*/
-        void insert( GeDyn *data, char *key, grow_tObject object);
+        void insert( GeDyn *data, const char *key, grow_tObject object);
 
 	//! Get stored data with specified index.
 	/*!
@@ -399,11 +399,11 @@ class Graph {
   */
   Graph(
 	void *xn_parent_ctx,
-	char *xn_name,
-	char *xn_default_path,
+	const char *xn_name,
+	const char *xn_default_path,
 	graph_eMode graph_mode = graph_eMode_Development,
 	int xn_gdh_init_done = 0,
-	char *xn_object_name = 0,
+	const char *xn_object_name = 0,
 	int xn_use_default_access = 0,
 	unsigned int xn_default_access = 0);
 
@@ -426,14 +426,14 @@ class Graph {
   ldh_tSesContext	ldhses;			//! Ldh session.
   GraphJournal		*journal;	       	//! Journal file.
 
-  void 		(*message_cb)( void *, char, char *);
+  void 		(*message_cb)( void *, char, const char *);
   int 		(*get_current_subgraph_cb)( void *, char *, char *);
   void 		(*close_cb)( void *);
   void 		(*get_current_colors_cb)( void *, glow_eDrawType *, glow_eDrawType *, glow_eDrawType *);
   void 		(*set_current_colors_cb)( void *, glow_eDrawType, glow_eDrawType, glow_eDrawType);
   void 		(*init_cb)( void *);
   void 		(*cursor_motion_cb)( void *, double, double);
-  void 		(*change_text_cb)( void *, void *, char *);
+  void 		(*change_text_cb)( void *, void *, const char *);
   void 		(*change_name_cb)( void *, void *, char *);
   void 		(*change_value_cb)( void *, void *, char *);
   void 		(*confirm_cb)( void *, void *, char *);
@@ -441,7 +441,7 @@ class Graph {
   void 		(*load_graph_cb)( void *, char *);
   int 		(*get_plant_select_cb)( void *, char *attr_name);
   void 		(*display_in_xnav_cb)( void *, pwr_sAttrRef *arp);
-  void 		(*message_dialog_cb)( void *, char *);
+  void 		(*message_dialog_cb)( void *, const char *);
   int 		(*is_authorized_cb)( void *, unsigned int);
   int 		(*traverse_focus_cb)( void *, void *);
   int 		(*set_focus_cb)( void *, void *);
@@ -452,8 +452,8 @@ class Graph {
   int         	(*call_method_cb)(void *, char *, char *, pwr_sAttrRef,
 				  unsigned long, unsigned long, char *);
   int         	(*sound_cb)(void *, pwr_tAttrRef *);
-  int 		(*create_modal_dialog_cb)( void *, char *, char *, char *, char *, char *,
-					   char *);
+  int 		(*create_modal_dialog_cb)( void *, const char *, const char *, const char *, const char *, 
+					   const char *, const char *);
   int			linewidth;		//!< Selected linewidth.
   glow_eLineType	linetype;		//!< Selected linetype.
   int			textsize;		//!< Selected text size.
@@ -538,7 +538,7 @@ class Graph {
     \param sev	Severity. 'E' for error, 'I' for information, 'W' for warning.
     \param text	Message text.
   */
-  void message( char sev, char *text);
+  void message( char sev, const char *text);
 
   //! Print a status message
   /*!
@@ -1084,7 +1084,7 @@ class Graph {
 
   //! Set java class name for the graph
   /*! \param name	Java class name. */
-  void set_java_name( char *name);
+  void set_java_name( const char *name);
 
   //! Set java class name for the graph
   /*! \param name	Java class name. */
@@ -1096,7 +1096,7 @@ class Graph {
 
   //! Set the name of the next subgraph (subgraph of next page).
   /*! \param name	Name of next subgraph. */
-  void set_next_subgraph( char *name);
+  void set_next_subgraph( const char *name);
 
   //! Store the current zoomfactor and offsets.
   /*! The stored geometry is restored with restore_geometry(); */
@@ -1145,7 +1145,7 @@ class Graph {
     \param name		Name of the object.
     \param empty	Input field should be empty.
   */
-  int set_object_focus( char *name, int empty);
+  int set_object_focus( const char *name, int empty);
 
   //! Replace the string $object with the object name for the graph.
   /*!
@@ -1251,14 +1251,14 @@ class Graph {
     \param name		Object name of folder object.
     \param idx		Index of folder to display.
   */
-  int set_folder_index( char *name, int idx);
+  int set_folder_index( const char *name, int idx);
 
   //! Set graph source file for a window object.
   /*!
     \param name		Object name of window object.
     \param source      	Name of source graph.
   */
-  int set_subwindow_source( char *name, char *source);
+  int set_subwindow_source( const char *name, char *source);
 
   //! Play a sound.
   /*!
@@ -1308,7 +1308,7 @@ class Graph {
     \param button_name	Name of command button object.
     \param cmd		Command to set in the button.
   */
-  int set_button_command( char *button_name, char *cmd);
+  int set_button_command( const char *button_name, const char *cmd);
 
   //! Initialize trend, bar, slider hold and disable buttons, min and maxlimit buttons, for an object graph.
   /*!
@@ -1335,14 +1335,14 @@ class Graph {
     \param name		Variable name.
     \param type		Variable type (pwr_eType).
   */
-  graph_sLocalDb *localdb_add( char *name, int type);
+  graph_sLocalDb *localdb_add( const char *name, int type);
 
   //! Get a variable in local database.
   /*!
     \param name		Variable name.
     \param item		Variable item.
   */
-  int localdb_find( char *name, graph_sLocalDb **item);
+  int localdb_find( const char *name, graph_sLocalDb **item);
 
   //! Free whole local database.
   void localdb_free();
@@ -1352,7 +1352,7 @@ class Graph {
     \param name		Variable name.
     \param type		Variable type (pwr_eType).
   */
-  void *localdb_ref_or_create( char *name, int type);
+  void *localdb_ref_or_create( const char *name, int type);
 
   //! Set the value of a variable in local database.
   /*!
@@ -1373,7 +1373,7 @@ class Graph {
     \param y2		y coordinate of upper right corner.
     \param node		Created node object.
   */
- int create_node( char *node_name, char *subgraph_str, double x1, double y1, 
+ int create_node( const char *node_name, const char *subgraph_str, double x1, double y1, 
 		     double x2, double y2, grow_tNode *node);
 
 
@@ -1427,7 +1427,7 @@ int graph_init_grow_base_cb( GlowCtx *fctx, void *client_data);
   \param buff_size	Size of buffer.
   \param attr_size	Attribute size.
 */
-int  graph_attr_string_to_value( int type_id, char *value_str, 
+int  graph_attr_string_to_value( int type_id, const char *value_str, 
 	void *buffer_ptr, int buff_size, int attr_size);
 
 /*@}*/

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ge_motif.cpp,v 1.2 2007-09-07 06:26:21 claes Exp $
+ * Proview   $Id: wb_ge_motif.cpp,v 1.3 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -105,7 +105,7 @@ int main( int argc, char *argv[])
   sts = MrmOpenHierarchy( 1, &uid_filename_p, NULL, &s_DRMh);
   if (sts != MrmSUCCESS) printf("can't open %s\n", uid_filename);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "mainwindow", toplevel,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "mainwindow", toplevel,
 			name, NULL, 0, &mainwindow, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
 

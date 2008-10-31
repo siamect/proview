@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_xhelp_motif.cpp,v 1.1 2007-01-04 07:51:41 claes Exp $
+ * Proview   $Id: co_xhelp_motif.cpp,v 1.2 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,7 +54,7 @@
 #include "co_xhelpnav_motif.h"
 #include "co_xhelp_motif.h"
 
-void CoXHelpMotif::open_input_dialog( CoXHelpMotif *xhelp, char *text, char *title,
+void CoXHelpMotif::open_input_dialog( CoXHelpMotif *xhelp, const char *text, const char *title,
 	char *init_text,
 	void (*ok_cb)( CoXHelp *, char *))
 {
@@ -64,12 +64,12 @@ void CoXHelpMotif::open_input_dialog( CoXHelpMotif *xhelp, char *text, char *tit
 
   i = 0;
   XtSetArg(args[0], XmNlabelString,
-           cstr=XmStringCreateLtoR( text, "ISO8859-1") ); i++;
+           cstr=XmStringCreateLtoR((char*)  text, (char*) "ISO8859-1") ); i++;
   XtSetValues( xhelp->india_label, args, i);
   XmStringFree( cstr);
   i = 0;
   XtSetArg(args[0], XmNdialogTitle,
-           cstr=XmStringCreateLtoR( title, "ISO8859-1") ); i++;
+           cstr=XmStringCreateLtoR( (char*) title, (char*) "ISO8859-1") ); i++;
   XtSetValues( xhelp->india_widget, args, i);
   XmStringFree( cstr);
 
@@ -123,7 +123,7 @@ void CoXHelpMotif::activate_zoom_reset( Widget w, CoXHelpMotif *xhelp, XmAnyCall
 void CoXHelpMotif::activate_search( Widget w, CoXHelpMotif *xhelp, XmAnyCallbackStruct *data)
 {
   CoXHelpMotif::open_input_dialog( xhelp, "Search string", "Search string",
-	"", &CoXHelp::find_ok);
+	(char*) "", &CoXHelp::find_ok);
 }
 
 void CoXHelpMotif::activate_searchnext( Widget w, CoXHelpMotif *xhelp, XmAnyCallbackStruct *data)
@@ -252,24 +252,24 @@ CoXHelpMotif::CoXHelpMotif(
 
   static XtActionsRec actions[] =
     {
-      {"xhelp_inputfocus",      (XtActionProc) CoXHelpMotif::action_inputfocus}
+      {(char*) "xhelp_inputfocus",      (XtActionProc) CoXHelpMotif::action_inputfocus}
     };
 
   static MrmRegisterArg	reglist[] = {
-    { "xhelp_ctx", 0 },
-    {"xhelp_activate_exit",(caddr_t)CoXHelpMotif::activate_exit },
-    {"xhelp_activate_zoom_in",(caddr_t)CoXHelpMotif::activate_zoom_in },
-    {"xhelp_activate_zoom_out",(caddr_t)CoXHelpMotif::activate_zoom_out },
-    {"xhelp_activate_zoom_reset",(caddr_t)CoXHelpMotif::activate_zoom_reset },
-    {"xhelp_activate_search",(caddr_t)CoXHelpMotif::activate_search },
-    {"xhelp_activate_searchnext",(caddr_t)CoXHelpMotif::activate_searchnext },
-    {"xhelp_activate_searchprevious",(caddr_t)CoXHelpMotif::activate_searchprevious },
-    {"xhelp_activate_india_ok",(caddr_t)CoXHelpMotif::activate_india_ok },
-    {"xhelp_activate_india_cancel",(caddr_t)CoXHelpMotif::activate_india_cancel },
-    {"xhelp_create_india_label",(caddr_t)CoXHelpMotif::create_india_label },
-    {"xhelp_create_india_text",(caddr_t)CoXHelpMotif::create_india_text },
-    {"xhelp_activate_help",(caddr_t)CoXHelpMotif::activate_help },
-    {"xhelp_create_xhelpnav_form",(caddr_t)CoXHelpMotif::create_xhelpnav_form }
+    {(char*) "xhelp_ctx", 0 },
+    {(char*) "xhelp_activate_exit",(caddr_t)CoXHelpMotif::activate_exit },
+    {(char*) "xhelp_activate_zoom_in",(caddr_t)CoXHelpMotif::activate_zoom_in },
+    {(char*) "xhelp_activate_zoom_out",(caddr_t)CoXHelpMotif::activate_zoom_out },
+    {(char*) "xhelp_activate_zoom_reset",(caddr_t)CoXHelpMotif::activate_zoom_reset },
+    {(char*) "xhelp_activate_search",(caddr_t)CoXHelpMotif::activate_search },
+    {(char*) "xhelp_activate_searchnext",(caddr_t)CoXHelpMotif::activate_searchnext },
+    {(char*) "xhelp_activate_searchprevious",(caddr_t)CoXHelpMotif::activate_searchprevious },
+    {(char*) "xhelp_activate_india_ok",(caddr_t)CoXHelpMotif::activate_india_ok },
+    {(char*) "xhelp_activate_india_cancel",(caddr_t)CoXHelpMotif::activate_india_cancel },
+    {(char*) "xhelp_create_india_label",(caddr_t)CoXHelpMotif::create_india_label },
+    {(char*) "xhelp_create_india_text",(caddr_t)CoXHelpMotif::create_india_text },
+    {(char*) "xhelp_activate_help",(caddr_t)CoXHelpMotif::activate_help },
+    {(char*) "xhelp_create_xhelpnav_form",(caddr_t)CoXHelpMotif::create_xhelpnav_form }
 	};
 
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
@@ -295,11 +295,11 @@ CoXHelpMotif::CoXHelpMotif(
   parent_wid = XtCreatePopupShell( title, 
                                    topLevelShellWidgetClass, parent_wid, args, i);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "xhelp_window", parent_wid,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "xhelp_window", parent_wid,
                                 name, args, 1, &toplevel, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
 
-  sts = MrmFetchWidget(s_DRMh, "input_dialog", toplevel,
+  sts = MrmFetchWidget(s_DRMh, (char*) "input_dialog", toplevel,
                        &india_widget, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch input dialog\n");
 

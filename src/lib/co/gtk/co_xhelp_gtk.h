@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_xhelp_gtk.h,v 1.2 2008-02-27 06:24:37 claes Exp $
+ * Proview   $Id: co_xhelp_gtk.h,v 1.3 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -49,8 +49,8 @@ class CoXHelpGtk : public CoXHelp {
 
     void set_dimension( int width, int height);    
     void pop();
-    void open_input_dialog( char *text, char *title,
-			    char *init_text,
+    void open_input_dialog( const char *text, const char *title,
+			    const char *init_text,
 			    void (*ok_cb)( CoXHelp *, char *));
     static void activate_close( GtkWidget *w, gpointer data);
     static void activate_back( GtkWidget *w, gpointer data);

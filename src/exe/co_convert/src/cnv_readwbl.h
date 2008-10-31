@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_readwbl.h,v 1.7 2008-06-30 05:53:27 claes Exp $
+ * Proview   $Id: cnv_readwbl.h,v 1.8 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -218,7 +218,7 @@ class CnvReadWbl {
     void volume_init();
     int object_close();
     char *low( char *in);
-    int copy_tmp_file( char *tmpfilename, ofstream& fp_to);
+    int copy_tmp_file( const char *tmpfilename, ofstream& fp_to);
     char *flags_to_string( int value);
     int read_lng( char *cname, char *aname);
 };

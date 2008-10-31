@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_motif.cpp,v 1.2 2008-06-24 07:52:21 claes Exp $
+ * Proview   $Id: wb_foe_motif.cpp,v 1.3 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -622,7 +622,7 @@ void WFoeMotif::valchanged_textinput( Widget w, WFoeMotif *foe, XmAnyCallbackStr
     strcpy( foe->searchstring, value);
 
     foe->message( "");
-    XmTextSetString( foe->widgets.textinput, "");
+    XmTextSetString( foe->widgets.textinput, (char*) "");
     XtUnmanageChild(foe->widgets.textinput);
 
     /* Call the specified function */
@@ -683,70 +683,70 @@ int WFoeMotif::register_callbacks()
 {
   static MrmRegisterArg	reglist[] = {
     /* First the context variable */
-    { "foe_ctx", 0 },
+    {(char*) "foe_ctx", 0 },
 
     /* Callbacks for the controlled foe widget */
-    {"foe_activate_save",(XtPointer)activate_save},
-    {"foe_activate_exit",(XtPointer)activate_exit},
-    {"foe_activate_print",(XtPointer)activate_print},
-    {"foe_activate_printselect",(XtPointer)activate_printselect},
-    {"foe_activate_printoverv",(XtPointer)activate_printoverv},
-    {"foe_activate_compile",(XtPointer)activate_compile},
-    {"foe_activate_syntax",(XtPointer)activate_syntax},
-    {"foe_activate_winddelete",(XtPointer)activate_winddelete},
-    {"foe_activate_savetrace",(XtPointer)activate_savetrace},
-    {"foe_activate_restoretrace",(XtPointer)activate_restoretrace},
-    {"foe_activate_quit",(XtPointer)activate_quit},
-    {"foe_activate_delete",(XtPointer)activate_delete},
-    {"foe_activate_changetext",(XtPointer)activate_changetext},
-    {"foe_activate_cut",(XtPointer)activate_cut},
-    {"foe_activate_copy",(XtPointer)activate_copy},
-    {"foe_activate_paste",(XtPointer)activate_paste},
-    {"foe_activate_attribute",(XtPointer)activate_attribute},
-    {"foe_activate_subwindow",(XtPointer)activate_subwindow},
-    {"foe_activate_undelete",(XtPointer)activate_undelete},
-    {"foe_activate_unselect",(XtPointer)activate_unselect},
-    {"foe_activate_gridsize1",(XtPointer)activate_gridsize1},
-    {"foe_activate_gridsize2",(XtPointer)activate_gridsize2},
-    {"foe_activate_gridsize3",(XtPointer)activate_gridsize3},
-    {"foe_activate_gridsize4",(XtPointer)activate_gridsize4},
-    {"foe_activate_gridsize5",(XtPointer)activate_gridsize5},
-    {"foe_activate_showgrid",(XtPointer)activate_showgrid},
-    {"foe_activate_zoomin",(XtPointer)activate_zoomin},
-    {"foe_activate_zoomout",(XtPointer)activate_zoomout},
-    {"foe_activate_unzoom",(XtPointer)activate_unzoom},
-    {"foe_activate_redraw",(XtPointer)activate_redraw},
-    {"foe_activate_palette_plant",(XtPointer)activate_palette_plant},
-    {"foe_activate_palette_object",(XtPointer)activate_palette_object},
-    {"foe_activate_palette_con",(XtPointer)activate_palette_con},
-    {"foe_activate_refcon",(XtPointer)activate_refcon},
-    {"foe_activate_showexeord",(XtPointer)activate_showexeord},
-    {"foe_activate_plcattribute",(XtPointer)activate_plcattribute},
-    {"foe_activate_search",(XtPointer)activate_search},
-    {"foe_activate_searchobject",(XtPointer)activate_searchobject},
-    {"foe_activate_searchstring",(XtPointer)activate_searchstring},
-    {"foe_activate_searchnext",(XtPointer)activate_searchnext},
-    {"foe_activate_getobj",(XtPointer)activate_getobj}, /* sg 11.04.91 */
-    {"foe_activate_expand",(XtPointer)activate_expand},
-    {"foe_activate_compress",(XtPointer)activate_compress},
-    {"foe_activate_helpclass",(XtPointer)activate_helpclass},
-    {"foe_activate_help",(XtPointer)activate_help},
-    {"foe_activate_trace_togg",(XtPointer)activate_trace_togg},  
-    {"foe_activate_simulate_togg",(XtPointer)activate_simulate_togg},  
-    {"foe_activate_view_togg",(XtPointer)activate_view_togg},  
-    {"foe_activate_edit_togg",(XtPointer)activate_edit_togg},  
-    {"foe_create_adb",(XtPointer)create_adb},  /* SG 24.02.91 */
-    {"foe_create_widget_cb",(XtPointer)create_widget_cb},  
-    {"foe_create_label",(XtPointer)create_label},  
-    {"foe_create_textinput",(XtPointer)create_textinput},  
-    {"foe_create_edit_form",(XtPointer)create_edit_form},  
-    {"foe_create_subpane",(XtPointer)create_subpane},  
-    {"foe_create_palette_object",(XtPointer)create_palette_object},  
-    {"foe_valchanged_textinput",(XtPointer)valchanged_textinput},  
-    {"foe_yes_popupmsg",(XtPointer)yes_popupmsg},
-    {"foe_no_popupmsg",(XtPointer)no_popupmsg},
-    {"foe_cancel_popupmsg",(XtPointer)cancel_popupmsg},  
-    {"foe_popdown_pop",(XtPointer)popdown_pop}
+    {(char*) "foe_activate_save",(XtPointer)activate_save},
+    {(char*) "foe_activate_exit",(XtPointer)activate_exit},
+    {(char*) "foe_activate_print",(XtPointer)activate_print},
+    {(char*) "foe_activate_printselect",(XtPointer)activate_printselect},
+    {(char*) "foe_activate_printoverv",(XtPointer)activate_printoverv},
+    {(char*) "foe_activate_compile",(XtPointer)activate_compile},
+    {(char*) "foe_activate_syntax",(XtPointer)activate_syntax},
+    {(char*) "foe_activate_winddelete",(XtPointer)activate_winddelete},
+    {(char*) "foe_activate_savetrace",(XtPointer)activate_savetrace},
+    {(char*) "foe_activate_restoretrace",(XtPointer)activate_restoretrace},
+    {(char*) "foe_activate_quit",(XtPointer)activate_quit},
+    {(char*) "foe_activate_delete",(XtPointer)activate_delete},
+    {(char*) "foe_activate_changetext",(XtPointer)activate_changetext},
+    {(char*) "foe_activate_cut",(XtPointer)activate_cut},
+    {(char*) "foe_activate_copy",(XtPointer)activate_copy},
+    {(char*) "foe_activate_paste",(XtPointer)activate_paste},
+    {(char*) "foe_activate_attribute",(XtPointer)activate_attribute},
+    {(char*) "foe_activate_subwindow",(XtPointer)activate_subwindow},
+    {(char*) "foe_activate_undelete",(XtPointer)activate_undelete},
+    {(char*) "foe_activate_unselect",(XtPointer)activate_unselect},
+    {(char*) "foe_activate_gridsize1",(XtPointer)activate_gridsize1},
+    {(char*) "foe_activate_gridsize2",(XtPointer)activate_gridsize2},
+    {(char*) "foe_activate_gridsize3",(XtPointer)activate_gridsize3},
+    {(char*) "foe_activate_gridsize4",(XtPointer)activate_gridsize4},
+    {(char*) "foe_activate_gridsize5",(XtPointer)activate_gridsize5},
+    {(char*) "foe_activate_showgrid",(XtPointer)activate_showgrid},
+    {(char*) "foe_activate_zoomin",(XtPointer)activate_zoomin},
+    {(char*) "foe_activate_zoomout",(XtPointer)activate_zoomout},
+    {(char*) "foe_activate_unzoom",(XtPointer)activate_unzoom},
+    {(char*) "foe_activate_redraw",(XtPointer)activate_redraw},
+    {(char*) "foe_activate_palette_plant",(XtPointer)activate_palette_plant},
+    {(char*) "foe_activate_palette_object",(XtPointer)activate_palette_object},
+    {(char*) "foe_activate_palette_con",(XtPointer)activate_palette_con},
+    {(char*) "foe_activate_refcon",(XtPointer)activate_refcon},
+    {(char*) "foe_activate_showexeord",(XtPointer)activate_showexeord},
+    {(char*) "foe_activate_plcattribute",(XtPointer)activate_plcattribute},
+    {(char*) "foe_activate_search",(XtPointer)activate_search},
+    {(char*) "foe_activate_searchobject",(XtPointer)activate_searchobject},
+    {(char*) "foe_activate_searchstring",(XtPointer)activate_searchstring},
+    {(char*) "foe_activate_searchnext",(XtPointer)activate_searchnext},
+    {(char*) "foe_activate_getobj",(XtPointer)activate_getobj}, /* sg 11.04.91 */
+    {(char*) "foe_activate_expand",(XtPointer)activate_expand},
+    {(char*) "foe_activate_compress",(XtPointer)activate_compress},
+    {(char*) "foe_activate_helpclass",(XtPointer)activate_helpclass},
+    {(char*) "foe_activate_help",(XtPointer)activate_help},
+    {(char*) "foe_activate_trace_togg",(XtPointer)activate_trace_togg},  
+    {(char*) "foe_activate_simulate_togg",(XtPointer)activate_simulate_togg},  
+    {(char*) "foe_activate_view_togg",(XtPointer)activate_view_togg},  
+    {(char*) "foe_activate_edit_togg",(XtPointer)activate_edit_togg},  
+    {(char*) "foe_create_adb",(XtPointer)create_adb},  /* SG 24.02.91 */
+    {(char*) "foe_create_widget_cb",(XtPointer)create_widget_cb},  
+    {(char*) "foe_create_label",(XtPointer)create_label},  
+    {(char*) "foe_create_textinput",(XtPointer)create_textinput},  
+    {(char*) "foe_create_edit_form",(XtPointer)create_edit_form},  
+    {(char*) "foe_create_subpane",(XtPointer)create_subpane},  
+    {(char*) "foe_create_palette_object",(XtPointer)create_palette_object},  
+    {(char*) "foe_valchanged_textinput",(XtPointer)valchanged_textinput},  
+    {(char*) "foe_yes_popupmsg",(XtPointer)yes_popupmsg},
+    {(char*) "foe_no_popupmsg",(XtPointer)no_popupmsg},
+    {(char*) "foe_cancel_popupmsg",(XtPointer)cancel_popupmsg},  
+    {(char*) "foe_popdown_pop",(XtPointer)popdown_pop}
   };
   
   static int	reglist_num = XtNumber(reglist);
@@ -800,14 +800,14 @@ int WFoeMotif::modify_popup( unsigned long popupmenu_mask, int x, int y)
   // Set default fontlist
   font = XLoadQueryFont( flow_Display( widgets.pane),
 			 "-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1");
-  fontentry = XmFontListEntryCreate( "tag1", XmFONT_IS_FONT, font);
+  fontentry = XmFontListEntryCreate( (char*) "tag1", XmFONT_IS_FONT, font);
   fontlist = XmFontListAppendEntry( NULL, fontentry);
   XtFree( (char *)fontentry);
 
   i = 0;
   XtSetArg(ArgList[i], XmNbuttonFontList, fontlist); i++;
   XtSetArg(ArgList[i], XmNlabelFontList, fontlist); i++;
-  Menu = XmCreatePopupMenu( widgets.pane, "_popup", ArgList, i);  
+  Menu = XmCreatePopupMenu( widgets.pane, (char*) "_popup", ArgList, i);  
   XtAddCallback( Menu, XmNunmapCallback, 
 		 (XtCallbackProc)popup_unmap_cb, this);
 
@@ -961,7 +961,7 @@ WFoe *WFoeMotif::subwindow_new( void			*f_parent_ctx,
 //     	foe.msg_label_id is set to null if the the message to be displayed 
 //     	is "" . This case occurs when you want to erase a previous message.
 //
-void WFoeMotif::message( char *new_label) 
+void WFoeMotif::message( const char *new_label) 
 {
   Arg		args[2];
   int 		l;
@@ -972,7 +972,7 @@ void WFoeMotif::message( char *new_label)
   msg_label_id = ( l !=0 );
   if ( l == 0 ) new_label = " " ;
   XtSetArg(args[0], XmNlabelString, 
-	   cstr=XmStringCreateLtoR(new_label , "ISO8859-1"));
+	   cstr=XmStringCreateLtoR((char*) new_label , (char*) "ISO8859-1"));
   XtSetValues( widgets.label ,args,1);
   XmStringFree( cstr);
 }
@@ -984,7 +984,7 @@ void WFoeMotif::message( char *new_label)
 // Author: SG
 // Date : 24.02.91
 //
-void WFoeMotif::msgbox( char *new_label) 
+void WFoeMotif::msgbox( const char *new_label) 
 {
   Arg		args[10];
   int 		i;
@@ -992,7 +992,7 @@ void WFoeMotif::msgbox( char *new_label)
 
   i=0;
   XtSetArg(args[0], XmNmessageString,
-	   cstr=XmStringCreateLtoR(new_label , "ISO8859-1") ); i++;
+	   cstr=XmStringCreateLtoR((char*) new_label , (char*) "ISO8859-1") ); i++;
   XtSetValues( widgets.msgbox ,args,i);
   XmStringFree( cstr);
   XtManageChild( widgets.msgbox);
@@ -1005,7 +1005,7 @@ void WFoeMotif::msgbox( char *new_label)
 // Author: SG
 // Date : 13.02.91
 //
-void WFoeMotif::popupmsg( char *new_label, void (* yes_procedure)(WFoe *), 
+void WFoeMotif::popupmsg( const char *new_label, void (* yes_procedure)(WFoe *), 
 			  void (* no_procedure)(WFoe *),
 			  void (* cancel_procedure)(WFoe *)) 
 {
@@ -1013,7 +1013,7 @@ void WFoeMotif::popupmsg( char *new_label, void (* yes_procedure)(WFoe *),
   int 		i;
   XmString	cstr;
 
-  cstr = XmStringCreateLtoR(new_label , "ISO8859-1");
+  cstr = XmStringCreateLtoR((char*) new_label , (char*) "ISO8859-1");
   i=0;
   XtSetArg(args[0], XmNmessageString, cstr); i++;
   XtSetValues( widgets.caution ,args,i);
@@ -1030,7 +1030,7 @@ void WFoeMotif::popupmsg( char *new_label, void (* yes_procedure)(WFoe *),
 //
 WFoeMotif::WFoeMotif( void		*f_parent_ctx,
 		      Widget		f_parent_wid,
-		      char		*f_name,
+		      const char       	*f_name,
 		      pwr_tObjid       	plcprogram,
 		      ldh_tWBContext 	ldhwbctx,
 		      ldh_tSesContext	ldhsesctx,
@@ -1060,7 +1060,7 @@ WFoeMotif::WFoeMotif( void		*f_parent_ctx,
 //
 WFoeMotif::WFoeMotif( void *f_parent_ctx,
 		      Widget f_parent_wid,
-		      char *f_name,
+		      const char *f_name,
 		      pwr_tObjid plcprogram,
 		      ldh_tWBContext ldhwbctx,
 		      ldh_tSesContext ldhsesctx,
@@ -1148,7 +1148,7 @@ pwr_tStatus WFoeMotif::create_window( int x_top,
 
   static XtActionsRec actions[] =
     {
-      {"foe_inputfocus",      (XtActionProc) action_inputfocus}
+      {(char*) "foe_inputfocus",      (XtActionProc) action_inputfocus}
     };
        
   sts = dcli_translate_filename( uid_filename, uid_filename);
@@ -1187,7 +1187,7 @@ pwr_tStatus WFoeMotif::create_window( int x_top,
 
   /* create a pixmap for the icon */
   if ( icon_pixmap == 0 )
-    sts = MrmFetchBitmapLiteral(s_MrmH,"icon",
+    sts = MrmFetchBitmapLiteral(s_MrmH,(char*) "icon",
 				XtScreen(parent_wid), XtDisplay(parent_wid),
 				&icon_pixmap, &icon_w, &icon_h);  
  
@@ -1222,7 +1222,7 @@ pwr_tStatus WFoeMotif::create_window( int x_top,
   XtSetArg (args[0], XmNuserData, (unsigned int) this);
 
   /* now that we have a top level we can get the main window */
-  sts = MrmFetchWidgetOverride(s_MrmH, "foe_window", parent_wid ,
+  sts = MrmFetchWidgetOverride(s_MrmH, (char*) "foe_window", parent_wid ,
 		name, args, 1,
 		&widgets.foe_window, &dclass);
   if (sts != MrmSUCCESS) printf("can't fetch foedit widget\n");
@@ -1240,13 +1240,13 @@ pwr_tStatus WFoeMotif::create_window( int x_top,
   */
 
   if (MrmFetchWidget (s_MrmH, 
-			"foe_msgbox", 
+			(char*) "foe_msgbox", 
 			widgets.foe_window,
 			&widgets.msgbox,
 			&dclass) != MrmSUCCESS)
 	printf("can't fetch msgbox \n");
 
-  TitleStr = XmStringCreateLtoR("PlcEdit Message" , "ISO8859-1");    
+  TitleStr = XmStringCreateLtoR((char*) "PlcEdit Message" , (char*) "ISO8859-1");    
   XtSetArg(args[0],XmNdialogTitle,TitleStr);
   XtSetValues( widgets.msgbox, args, 1);
   XmStringFree(TitleStr);
@@ -1258,13 +1258,13 @@ pwr_tStatus WFoeMotif::create_window( int x_top,
   */
 
   if (MrmFetchWidget (s_MrmH, 
-			"foe_popupmsg", 
+			(char*) "foe_popupmsg", 
 			widgets.foe_window,
 			&widgets.caution,
 			&dclass) != MrmSUCCESS)
     printf("can't fetch popupmsg\n");
 
-  TitleStr = XmStringCreateLtoR("PlcEdit Confirm" , "ISO8859-1");    
+  TitleStr = XmStringCreateLtoR((char*) "PlcEdit Confirm" , (char*) "ISO8859-1");    
   XtSetArg(args[0],XmNdialogTitle,TitleStr);
   XtSetValues( widgets.caution, args, 1);
   XmStringFree(TitleStr);
@@ -1380,7 +1380,7 @@ void WFoeMotif::set_mode_button_state( int mode, int state)
 //
 //	Show the text input widget.
 //
-int WFoeMotif::get_textinput( char *msg, int (*function)(WFoe *, char *))
+int WFoeMotif::get_textinput( const char *msg, int (*function)(WFoe *, char *))
 {
   /* Print the text */
   message( msg);

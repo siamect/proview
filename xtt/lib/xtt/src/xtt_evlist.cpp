@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_evlist.cpp,v 1.20 2008-04-15 06:42:13 claes Exp $
+ * Proview   $Id: xtt_evlist.cpp,v 1.21 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1201,8 +1201,8 @@ int EvList::brow_cb( FlowCtx *ctx, flow_tEvent event)
   return 1;
 }
 
-ItemAlarm::ItemAlarm( EvList *item_evlist, char *item_name, pwr_tTime item_time,
-	char *item_eventtext, char *item_eventname, int item_eventflags,
+ItemAlarm::ItemAlarm( EvList *item_evlist, const char *item_name, pwr_tTime item_time,
+	const char *item_eventtext, char *item_eventname, int item_eventflags,
 	unsigned long item_eventprio, mh_sEventId item_eventid,
 	pwr_tObjid item_object, pwr_tAttrRef *item_eventsound, char *item_eventmoretext,
 	unsigned long item_status, evlist_eEventType item_event_type,

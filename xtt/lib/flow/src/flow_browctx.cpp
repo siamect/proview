@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_browctx.cpp,v 1.8 2008-05-13 13:55:29 claes Exp $
+ * Proview   $Id: flow_browctx.cpp,v 1.9 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,7 +19,7 @@
 
 #include "flow_std.h"
 
-#include <fstream.h>
+#include <fstream>
 #include <math.h>
 #include <float.h>
 #include "flow_ctx.h"

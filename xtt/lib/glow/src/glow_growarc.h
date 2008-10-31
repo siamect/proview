@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growarc.h,v 1.7 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_growarc.h,v 1.8 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -55,7 +55,7 @@ class GrowArc : public GlowArc {
     \param fill_d_type	Fill color.
     \param nodraw	Don't draw the object now.
   */
-  GrowArc( GrowCtx *glow_ctx, char *name, double x1 = 0, double y1 = 0, 
+  GrowArc( GrowCtx *glow_ctx, const char *name, double x1 = 0, double y1 = 0, 
 	     double x2 = 0, double y2 = 0, 
 	     int ang1 = 0, int ang2 = 0,
 	     glow_eDrawType border_d_type = glow_eDrawType_Line, 

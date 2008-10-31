@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_hist.h,v 1.6 2007-01-04 08:22:47 claes Exp $
+ * Proview   $Id: xtt_hist.h,v 1.7 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -55,7 +55,7 @@ class Hist {
     void 		(*start_trace_cb)( void *, pwr_tObjid, char *);
     void 		(*display_in_xnav_cb)( void *, pwr_sAttrRef *);
     void 		(*update_info_cb)( void *);
-    void 		(*help_cb)( void *, char *);
+    void 		(*help_cb)( void *, const char *);
     void 		(*popup_menu_cb)( void *, pwr_sAttrRef, unsigned long,
 					  unsigned long, char *, int x, int y);
     EvList		*hist;

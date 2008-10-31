@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.h,v 1.11 2008-10-09 08:33:14 claes Exp $
+ * Proview   $Id: wb_gre.h,v 1.12 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -135,10 +135,10 @@ class WGre {
   void (*gre_unselect)(WGre *);
   void (*gre_help)(WGre *, char *);
   void (*gre_regionmoved)(WGre *);
-  void (*gre_message)(WGre *, char *);
+  void (*gre_message)(WGre *, const char *);
 
   WGre( void *parent_ctx,
-	char *name);
+	const char *name);
   virtual ~WGre();
 
   virtual void trace_start() {}
@@ -147,7 +147,7 @@ class WGre {
 
   int node_sethighlight( vldh_t_node node, unsigned long highlight_flag);
   int node_gethighlight( vldh_t_node node, unsigned long *highlight_flag);
-  void message( char *message);
+  void message( const char *message);
   void ctx_init();
   void unselect();
   void conpoint_unselect();
@@ -194,7 +194,7 @@ class WGre {
 	void (*unselect_bc)(WGre *),
 	void (*help_bc)(WGre *, char *),
 	void (*regionmoved_bc)(WGre *),
-	void (*message_bc)(WGre *, char *));
+	void (*message_bc)(WGre *, const char *));
   int create_node( pwr_tClassId cid, float x, float y, vldh_t_node *node);
   int create_node_floating( pwr_tClassId cid, float x, float y, vldh_t_node *node);
   int create_con( pwr_tClassId  cid,

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wge.cpp,v 1.2 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_wge.cpp,v 1.3 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -88,7 +88,7 @@ int WGe::wge_is_authorized_cb( void *ge_ctx, unsigned int access)
   return 1;
 }
 
-void WGe::message( void *ctx, char severity, char *message)
+void WGe::message( void *ctx, char severity, const char *message)
 {
   if ( strcmp( message, "") != 0)
     printf("** WGe: %s\n", message);

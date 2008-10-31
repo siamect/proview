@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_watt.h,v 1.5 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_watt.h,v 1.6 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -67,15 +67,15 @@ class WAtt {
     char	input_name[80];
     wb_eUtility	utility;
 
-    virtual void message( char severity, char *message) {}
-    virtual void set_prompt( char *prompt) {}
+    virtual void message( char severity, const char *message) {}
+    virtual void set_prompt( const char *prompt) {}
     virtual void change_value( int set_focus) {}
     virtual void change_value_close() {}
     virtual void pop() {}
 
     void set_editmode( int editmode, ldh_tSesContext ldhses);
-    int open_changevalue( char *name);
-    static void message_cb( void *watt, char severity, char *message);
+    int open_changevalue( const char *name);
+    static void message_cb( void *watt, char severity, const char *message);
     static void change_value_cb( void *watt);
 
 };

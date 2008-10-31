@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_clognav.h,v 1.4 2007-01-04 08:22:46 claes Exp $
+ * Proview   $Id: xtt_clognav.h,v 1.5 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -94,7 +94,7 @@ class CLogNavBrow {
 
 class CLogMsg {
  public:
-  CLogMsg( errh_eSeverity msg_severity, char *msg_logger, int msg_pid,
+  CLogMsg( errh_eSeverity msg_severity, const char *msg_logger, int msg_pid,
        pwr_tTime msg_time, char *msg_text) :
     severity(msg_severity), pid(msg_pid), time(msg_time)
     { 
@@ -161,7 +161,7 @@ class CLogNav {
 
 class ItemMsgBase {
  public:
-  ItemMsgBase( CLogNav *item_clognav, char *item_name, brow_tNode dest) :
+  ItemMsgBase( CLogNav *item_clognav, const char *item_name, brow_tNode dest) :
     clognav(item_clognav), node(dest)
     {
       strcpy( name, item_name);
@@ -174,14 +174,14 @@ class ItemMsgBase {
 
 class ItemMsgRestart : public ItemMsgBase {
  public:
-    ItemMsgRestart( CLogNav *clognav, char *item_name, pwr_tTime item_time,
+    ItemMsgRestart( CLogNav *clognav, const char *item_name, pwr_tTime item_time,
 	brow_tNode dest, flow_eDest dest_code);
     pwr_tTime time;
 };
 
 class ItemMsg : public ItemMsgBase {
   public:
-    ItemMsg( CLogNav *clognav, char *item_name, errh_eSeverity item_severity, 
+    ItemMsg( CLogNav *clognav, const char *item_name, errh_eSeverity item_severity, 
 	char *item_logger, int item_pid, pwr_tTime item_time, char *item_text,
 	brow_tNode dest, flow_eDest dest_code);
     errh_eSeverity	severity;

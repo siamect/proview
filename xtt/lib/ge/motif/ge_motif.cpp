@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_motif.cpp,v 1.5 2008-03-19 12:59:38 claes Exp $
+ * Proview   $Id: ge_motif.cpp,v 1.6 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,7 +31,7 @@
 #include <ctype.h>
 #include <float.h>
 #include <math.h>
-#include <vector.h>
+#include <vector>
 #include <Xm/Xm.h>
 #include <Xm/XmP.h>
 #include <Xm/Text.h>
@@ -74,11 +74,11 @@
 #include "wb_wnav_selformat.h"
 #include "wb_nav_motif.h"
 
-void GeMotif::create_list( char *title, char *texts,
+void GeMotif::create_list( const char *title, const char *texts,
 			   void (action_cb)( void *, char *), void *ctx) 
 {
   CoWowMotif wow( toplevel);
-  wow.CreateList( title, texts, action_cb, ctx);
+  wow.CreateList( title, texts, action_cb, 0, ctx);
 }
 
 void GeMotif::subgraphs_new()
@@ -100,8 +100,8 @@ void GeMotif::set_title( char *title)
   XtSetValues( toplevel, args, 1);
 }
 
-void GeMotif::open_input_dialog( char *text, char *title,
-			    char *init_text,
+void GeMotif::open_input_dialog( const char *text, const char *title,
+			    const char *init_text,
 			    void (*x_india_ok_cb)( Ge *, char *))
 {
   Arg		args[10];
@@ -110,23 +110,23 @@ void GeMotif::open_input_dialog( char *text, char *title,
 
   i = 0;
   XtSetArg(args[0], XmNlabelString,
-		cstr=XmStringCreateLtoR( text, "ISO8859-1") ); i++;
+		cstr=XmStringCreateLtoR( (char*) text, (char*) "ISO8859-1") ); i++;
   XtSetValues( india_label, args, i);
   XmStringFree( cstr);
   i = 0;
   XtSetArg(args[0], XmNdialogTitle,
-		cstr=XmStringCreateLtoR( title, "ISO8859-1") ); i++;
+		cstr=XmStringCreateLtoR( (char*) title, (char*) "ISO8859-1") ); i++;
   XtSetValues( india_widget, args, i);
   XmStringFree( cstr);
 
-  XmTextSetString( india_text, init_text);
+  XmTextSetString( india_text, (char*) init_text);
 
   XtManageChild( india_widget);
 
   india_ok_cb = x_india_ok_cb;
 }
 
-void GeMotif::message( char severity, char *message)
+void GeMotif::message( char severity, const char *message)
 {
   Arg 		args[3];
   XmString	cstr;
@@ -136,7 +136,7 @@ void GeMotif::message( char severity, char *message)
   }
   else {
     XtManageChild( msg_label);
-    cstr=XmStringCreateLtoR( message, "ISO8859-1");
+    cstr=XmStringCreateLtoR( (char*) message, (char*) "ISO8859-1");
     XtSetArg(args[0],XmNlabelString, cstr);
     XtSetArg(args[1],XmNheight,30);
     XtSetValues( msg_label, args, 2);
@@ -149,7 +149,7 @@ void GeMotif::status_msg( char *pos_str)
   Arg 		args[2];
   XmString	cstr;
 
-  cstr=XmStringCreateLtoR( pos_str, "ISO8859-1");
+  cstr=XmStringCreateLtoR( pos_str, (char*) "ISO8859-1");
   XtSetArg(args[0],XmNlabelString, cstr);
   // XtSetArg(args[1],XmNwidth, 280);
   XtSetValues( cursor_position, args, 1);
@@ -164,7 +164,7 @@ void GeMotif::status_msg( char *pos_str)
     XtResizeWidget( cursor_position, 320, height, 0);
 }
 
-void GeMotif::change_text_cb( void *ge_ctx, void *text_object, char *text)
+void GeMotif::change_text_cb( void *ge_ctx, void *text_object, const char *text)
 {
   GeMotif *gectx = (GeMotif *)ge_ctx;
 
@@ -185,7 +185,7 @@ void GeMotif::change_text_cb( void *ge_ctx, void *text_object, char *text)
   gectx->message( ' ', "");
   XtSetKeyboardFocus( gectx->toplevel, gectx->cmd_input);
 
-  XmTextSetString( gectx->cmd_input, text);
+  XmTextSetString( gectx->cmd_input, (char*) text);
   XmTextSetInsertionPosition( gectx->cmd_input, strlen(text));
   XmTextSetSelection( gectx->cmd_input, 0, strlen(text), CurrentTime);
   gectx->set_prompt( "Enter text >");
@@ -313,7 +313,7 @@ int GeMotif::get_plant_select( char *select_name)
 #endif
 }
 
-void GeMotif::open_yesnodia( char *text, char *title, 
+void GeMotif::open_yesnodia( const char *text, const char *title, 
 	void (*yes_cb)( Ge *), void (*no_cb)( Ge *))
 {
   Arg 		args[3];
@@ -329,9 +329,9 @@ void GeMotif::open_yesnodia( char *text, char *title,
 
   message( ' ', "");
 
-  XtSetArg(args[0],XmNmessageString, XmStringCreateLtoR( text, "ISO8859-1"));
+  XtSetArg(args[0],XmNmessageString, XmStringCreateLtoR( (char*) text, (char*) "ISO8859-1"));
   XtSetArg(args[1], XmNdialogTitle,
-		cstr=XmStringCreateLtoR( title, "ISO8859-1") );
+		cstr=XmStringCreateLtoR( (char*) title, (char*) "ISO8859-1") );
   XtSetValues( yesnodia_widget, args, 2);
   XmStringFree( cstr);
   yesnodia_open = 1;
@@ -354,13 +354,13 @@ void GeMotif::confirm_cb( void *ge_ctx, void *confirm_object, char *text)
 
   gectx->message( ' ', "");
 
-  XtSetArg(args[0],XmNmessageString, XmStringCreateLtoR( text, "ISO8859-1"));
+  XtSetArg(args[0],XmNmessageString, XmStringCreateLtoR( text, (char*) "ISO8859-1"));
   XtSetValues( gectx->confirm_widget, args, 1);
   gectx->confirm_open = 1;
   gectx->current_confirm_object = confirm_object;
 }
 
-void GeMotif::set_prompt( char *prompt)
+void GeMotif::set_prompt( const char *prompt)
 {
   Arg 		args[1];
   XmString	cstr;
@@ -369,7 +369,7 @@ void GeMotif::set_prompt( char *prompt)
     XtUnmanageChild( cmd_prompt);
   else {
     XtManageChild( cmd_prompt);
-    cstr=XmStringCreateLtoR( prompt, "ISO8859-1");
+    cstr=XmStringCreateLtoR( (char*) prompt, (char*) "ISO8859-1");
     XtSetArg(args[0],XmNlabelString, cstr);
     XtSetValues( cmd_prompt, args, 1);
     XmStringFree( cstr);
@@ -1332,154 +1332,154 @@ GeMotif::GeMotif( 	void 	*x_parent_ctx,
 
   static XtActionsRec actions[] =
   {
-    {"ge_inputfocus",      (XtActionProc) GeMotif::action_inputfocus}
+    {(char*) "ge_inputfocus",      (XtActionProc) GeMotif::action_inputfocus}
   };
 
   static MrmRegisterArg	reglist[] = {
-        { "ge_ctx", 0 },
-	{"ge_activate_exit",(caddr_t)GeMotif::activate_exit },
-	{"ge_activate_print",(caddr_t)GeMotif::activate_print },
-	{"ge_activate_new",(caddr_t)GeMotif::activate_new },
-	{"ge_activate_save",(caddr_t)GeMotif::activate_save },
-	{"ge_activate_save_as",(caddr_t)GeMotif::activate_save_as },
-	{"ge_activate_graph_attr",(caddr_t)GeMotif::activate_graph_attr },
-	{"ge_activate_open",(caddr_t)GeMotif::activate_open },
-	{"ge_activate_export_java",(caddr_t)GeMotif::activate_export_java },
-	{"ge_activate_export_java_as",(caddr_t)GeMotif::activate_export_java_as },
-	{"ge_activate_generate_web",(caddr_t)GeMotif::activate_generate_web },
-	{"ge_activate_creanextpage",(caddr_t)GeMotif::activate_creanextpage },
-	{"ge_activate_nextpage",(caddr_t)GeMotif::activate_nextpage },
-	{"ge_activate_prevpage",(caddr_t)GeMotif::activate_prevpage },
-	{"ge_activate_preview_start",(caddr_t)GeMotif::activate_preview_start },
-	{"ge_activate_preview_stop",(caddr_t)GeMotif::activate_preview_stop },
-	{"ge_activate_subgraphs",(caddr_t)GeMotif::activate_subgraphs },
-	{"ge_activate_change_text",(caddr_t)GeMotif::activate_change_text },
-	{"ge_activate_change_name",(caddr_t)GeMotif::activate_change_name },
-	{"ge_activate_pop",(caddr_t)GeMotif::activate_pop },
-	{"ge_activate_push",(caddr_t)GeMotif::activate_push },
-	{"ge_activate_edit_polyline",(caddr_t)GeMotif::activate_edit_polyline },
-	{"ge_activate_scale_equal",(caddr_t)GeMotif::activate_scale_equal },
-	{"ge_activate_move_horizontal",(caddr_t)GeMotif::activate_move_horizontal },
-	{"ge_activate_move_vertical",(caddr_t)GeMotif::activate_move_vertical },
-	{"ge_activate_move_reset",(caddr_t)GeMotif::activate_move_reset },
-	{"ge_activate_align_vert_left",(caddr_t)GeMotif::activate_align_vert_left },
-	{"ge_activate_align_vert_right",(caddr_t)GeMotif::activate_align_vert_right },
-	{"ge_activate_align_vert_center",(caddr_t)GeMotif::activate_align_vert_center },
-	{"ge_activate_align_horiz_up",(caddr_t)GeMotif::activate_align_horiz_up },
-	{"ge_activate_align_horiz_down",(caddr_t)GeMotif::activate_align_horiz_down },
-	{"ge_activate_align_horiz_center",(caddr_t)GeMotif::activate_align_horiz_center },
-	{"ge_activate_equid_horiz_left",(caddr_t)GeMotif::activate_equid_horiz_left },
-	{"ge_activate_equid_horiz_right",(caddr_t)GeMotif::activate_equid_horiz_right },
-	{"ge_activate_equid_horiz_center",(caddr_t)GeMotif::activate_equid_horiz_center },
-	{"ge_activate_equid_vert_up",(caddr_t)GeMotif::activate_equid_vert_up },
-	{"ge_activate_equid_vert_down",(caddr_t)GeMotif::activate_equid_vert_down },
-	{"ge_activate_equid_vert_center",(caddr_t)GeMotif::activate_equid_vert_center },
-	{"ge_activate_select_cons",(caddr_t)GeMotif::activate_select_cons },
-	{"ge_activate_select_objects",(caddr_t)GeMotif::activate_select_objects },
-	{"ge_activate_group",(caddr_t)GeMotif::activate_group },
-	{"ge_activate_ungroup",(caddr_t)GeMotif::activate_ungroup },
-	{"ge_activate_connect",(caddr_t)GeMotif::activate_connect },
-	{"ge_activate_connectsecond",(caddr_t)GeMotif::activate_connectsecond },
-	{"ge_activate_objectattributes",(caddr_t)GeMotif::activate_objectattributes },
-	{"ge_activate_show_grid",(caddr_t)GeMotif::activate_show_grid },
-	{"ge_activate_cut",(caddr_t)GeMotif::activate_cut },
-	{"ge_activate_copy",(caddr_t)GeMotif::activate_copy },
-	{"ge_activate_paste",(caddr_t)GeMotif::activate_paste },
-	{"ge_activate_rotate",(caddr_t)GeMotif::activate_rotate },
-	{"ge_activate_rotate90",(caddr_t)GeMotif::activate_rotate90 },
-	{"ge_activate_flip_horiz",(caddr_t)GeMotif::activate_flip_horiz },
-	{"ge_activate_flip_vert",(caddr_t)GeMotif::activate_flip_vert },
-	{"ge_activate_command",(caddr_t)GeMotif::activate_command },
-	{"ge_activate_rect",(caddr_t)GeMotif::activate_rect },
-	{"ge_activate_rectrounded",(caddr_t)GeMotif::activate_rectrounded },
-	{"ge_activate_line",(caddr_t)GeMotif::activate_line },
-	{"ge_activate_polyline",(caddr_t)GeMotif::activate_polyline },
-	{"ge_activate_circle",(caddr_t)GeMotif::activate_circle },
-	{"ge_activate_text",(caddr_t)GeMotif::activate_text },
-	{"ge_activate_annot",(caddr_t)GeMotif::activate_annot },
-	{"ge_activate_conpoint",(caddr_t)GeMotif::activate_conpoint },
-	{"ge_activate_fill",(caddr_t)GeMotif::activate_fill },
-	{"ge_activate_border",(caddr_t)GeMotif::activate_border },
-	{"ge_activate_shadow",(caddr_t)GeMotif::activate_shadow },
-	{"ge_activate_incr_lightness",(caddr_t)GeMotif::activate_incr_lightness },
-	{"ge_activate_decr_lightness",(caddr_t)GeMotif::activate_decr_lightness },
-	{"ge_activate_incr_intensity",(caddr_t)GeMotif::activate_incr_intensity },
-	{"ge_activate_decr_intensity",(caddr_t)GeMotif::activate_decr_intensity },
-	{"ge_activate_incr_shift",(caddr_t)GeMotif::activate_incr_shift },
-	{"ge_activate_decr_shift",(caddr_t)GeMotif::activate_decr_shift },
-	{"ge_activate_scale",(caddr_t)GeMotif::activate_scale },
-	{"ge_activate_grid",(caddr_t)GeMotif::activate_grid },
-	{"ge_activate_linewidth_1",(caddr_t)GeMotif::activate_linewidth_1 },
-	{"ge_activate_linewidth_2",(caddr_t)GeMotif::activate_linewidth_2 },
-	{"ge_activate_linewidth_3",(caddr_t)GeMotif::activate_linewidth_3 },
-	{"ge_activate_linewidth_4",(caddr_t)GeMotif::activate_linewidth_4 },
-	{"ge_activate_linewidth_5",(caddr_t)GeMotif::activate_linewidth_5 },
-	{"ge_activate_linewidth_6",(caddr_t)GeMotif::activate_linewidth_6 },
-	{"ge_activate_linewidth_7",(caddr_t)GeMotif::activate_linewidth_7 },
-	{"ge_activate_linewidth_8",(caddr_t)GeMotif::activate_linewidth_8 },
-	{"ge_activate_linetype1",(caddr_t)GeMotif::activate_linetype1 },
-	{"ge_activate_linetype2",(caddr_t)GeMotif::activate_linetype2 },
-	{"ge_activate_linetype3",(caddr_t)GeMotif::activate_linetype3 },
-	{"ge_activate_linetype4",(caddr_t)GeMotif::activate_linetype4 },
-	{"ge_activate_linetype5",(caddr_t)GeMotif::activate_linetype5 },
-	{"ge_activate_linetype6",(caddr_t)GeMotif::activate_linetype6 },
-	{"ge_activate_linetype7",(caddr_t)GeMotif::activate_linetype7 },
-	{"ge_activate_textsize_0",(caddr_t)GeMotif::activate_textsize_0 },
-	{"ge_activate_textsize_1",(caddr_t)GeMotif::activate_textsize_1 },
-	{"ge_activate_textsize_2",(caddr_t)GeMotif::activate_textsize_2 },
-	{"ge_activate_textsize_3",(caddr_t)GeMotif::activate_textsize_3 },
-	{"ge_activate_textsize_4",(caddr_t)GeMotif::activate_textsize_4 },
-	{"ge_activate_textsize_5",(caddr_t)GeMotif::activate_textsize_5 },
-	{"ge_activate_textfont_1",(caddr_t)GeMotif::activate_textfont_1 },
-	{"ge_activate_textfont_2",(caddr_t)GeMotif::activate_textfont_2 },
-	{"ge_activate_textfont_3",(caddr_t)GeMotif::activate_textfont_3 },
-	{"ge_activate_textfont_4",(caddr_t)GeMotif::activate_textfont_4 },
-	{"ge_activate_textbold",(caddr_t)GeMotif::activate_textbold },
-	{"ge_activate_gridsize_1",(caddr_t)GeMotif::activate_gridsize_1 },
-	{"ge_activate_gridsize_2",(caddr_t)GeMotif::activate_gridsize_2 },
-	{"ge_activate_gridsize_3",(caddr_t)GeMotif::activate_gridsize_3 },
-	{"ge_activate_gridsize_4",(caddr_t)GeMotif::activate_gridsize_4 },
-	{"ge_activate_zoom_in",(caddr_t)GeMotif::activate_zoom_in },
-	{"ge_activate_zoom_out",(caddr_t)GeMotif::activate_zoom_out },
-	{"ge_activate_zoom_reset",(caddr_t)GeMotif::activate_zoom_reset },
-	{"ge_activate_help",(caddr_t)GeMotif::activate_help },
-	{"ge_create_widget_cb",(caddr_t)GeMotif::create_widget_cb },
-	{"ge_create_cursor_position",(caddr_t)GeMotif::create_cursor_position },
-	{"ge_create_msg_label",(caddr_t)GeMotif::create_msg_label },
-	{"ge_create_cmd_prompt",(caddr_t)GeMotif::create_cmd_prompt },
-	{"ge_create_cmd_input",(caddr_t)GeMotif::create_cmd_input },
-	{"ge_create_graph_form",(caddr_t)GeMotif::create_graph_form },
-	{"ge_create_main_pane",(caddr_t)GeMotif::create_main_pane },
-	{"ge_create_palette_pane",(caddr_t)GeMotif::create_palette_pane },
-	{"ge_activate_concorner_right",(caddr_t)GeMotif::activate_concorner_right },
-	{"ge_activate_concorner_rounded",(caddr_t)GeMotif::activate_concorner_rounded },
-	{"ge_activate_round_amount_1",(caddr_t)GeMotif::activate_round_amount_1 },
-	{"ge_activate_round_amount_2",(caddr_t)GeMotif::activate_round_amount_2 },
-	{"ge_activate_round_amount_3",(caddr_t)GeMotif::activate_round_amount_3 },
-	{"ge_activate_round_amount_4",(caddr_t)GeMotif::activate_round_amount_4 },
-	{"ge_activate_round_amount_5",(caddr_t)GeMotif::activate_round_amount_5 },
-	{"ge_activate_contype_straight",(caddr_t)GeMotif::activate_contype_straight },
-	{"ge_activate_contype_routed",(caddr_t)GeMotif::activate_contype_routed },
-	{"ge_activate_contype_stronearr",(caddr_t)GeMotif::activate_contype_stronearr },
-	{"ge_activate_contype_stepdiv",(caddr_t)GeMotif::activate_contype_stepdiv },
-	{"ge_activate_contype_stepconv",(caddr_t)GeMotif::activate_contype_stepconv },
-	{"ge_activate_contype_transdiv",(caddr_t)GeMotif::activate_contype_transdiv },
-	{"ge_activate_contype_transconv",(caddr_t)GeMotif::activate_contype_transconv },
-	{"ge_activate_condir_center",(caddr_t)GeMotif::activate_condir_center },
-	{"ge_activate_condir_left",(caddr_t)GeMotif::activate_condir_left },
-	{"ge_activate_condir_right",(caddr_t)GeMotif::activate_condir_right },
-	{"ge_activate_condir_up",(caddr_t)GeMotif::activate_condir_up },
-	{"ge_activate_condir_down",(caddr_t)GeMotif::activate_condir_down },
-	{"ge_activate_background_color",(caddr_t)GeMotif::activate_background_color },
-	{"ge_activate_india_ok",(caddr_t)GeMotif::activate_india_ok },
-	{"ge_activate_india_cancel",(caddr_t)GeMotif::activate_india_cancel },
-	{"ge_create_india_label",(caddr_t)GeMotif::create_india_label },
-	{"ge_create_india_text",(caddr_t)GeMotif::create_india_text },
-	{"ge_activate_yesnodia_yes",(caddr_t)GeMotif::activate_yesnodia_yes },
-	{"ge_activate_yesnodia_no",(caddr_t)GeMotif::activate_yesnodia_no },
-	{"ge_activate_yesnodia_cancel",(caddr_t)GeMotif::activate_yesnodia_cancel },
-	{"ge_activate_confirm_ok",(caddr_t)GeMotif::activate_confirm_ok },
-	{"ge_activate_confirm_cancel",(caddr_t)GeMotif::activate_confirm_cancel }
+        {(char*) "ge_ctx", 0 },
+	{(char*) "ge_activate_exit",(caddr_t)GeMotif::activate_exit },
+	{(char*) "ge_activate_print",(caddr_t)GeMotif::activate_print },
+	{(char*) "ge_activate_new",(caddr_t)GeMotif::activate_new },
+	{(char*) "ge_activate_save",(caddr_t)GeMotif::activate_save },
+	{(char*) "ge_activate_save_as",(caddr_t)GeMotif::activate_save_as },
+	{(char*) "ge_activate_graph_attr",(caddr_t)GeMotif::activate_graph_attr },
+	{(char*) "ge_activate_open",(caddr_t)GeMotif::activate_open },
+	{(char*) "ge_activate_export_java",(caddr_t)GeMotif::activate_export_java },
+	{(char*) "ge_activate_export_java_as",(caddr_t)GeMotif::activate_export_java_as },
+	{(char*) "ge_activate_generate_web",(caddr_t)GeMotif::activate_generate_web },
+	{(char*) "ge_activate_creanextpage",(caddr_t)GeMotif::activate_creanextpage },
+	{(char*) "ge_activate_nextpage",(caddr_t)GeMotif::activate_nextpage },
+	{(char*) "ge_activate_prevpage",(caddr_t)GeMotif::activate_prevpage },
+	{(char*) "ge_activate_preview_start",(caddr_t)GeMotif::activate_preview_start },
+	{(char*) "ge_activate_preview_stop",(caddr_t)GeMotif::activate_preview_stop },
+	{(char*) "ge_activate_subgraphs",(caddr_t)GeMotif::activate_subgraphs },
+	{(char*) "ge_activate_change_text",(caddr_t)GeMotif::activate_change_text },
+	{(char*) "ge_activate_change_name",(caddr_t)GeMotif::activate_change_name },
+	{(char*) "ge_activate_pop",(caddr_t)GeMotif::activate_pop },
+	{(char*) "ge_activate_push",(caddr_t)GeMotif::activate_push },
+	{(char*) "ge_activate_edit_polyline",(caddr_t)GeMotif::activate_edit_polyline },
+	{(char*) "ge_activate_scale_equal",(caddr_t)GeMotif::activate_scale_equal },
+	{(char*) "ge_activate_move_horizontal",(caddr_t)GeMotif::activate_move_horizontal },
+	{(char*) "ge_activate_move_vertical",(caddr_t)GeMotif::activate_move_vertical },
+	{(char*) "ge_activate_move_reset",(caddr_t)GeMotif::activate_move_reset },
+	{(char*) "ge_activate_align_vert_left",(caddr_t)GeMotif::activate_align_vert_left },
+	{(char*) "ge_activate_align_vert_right",(caddr_t)GeMotif::activate_align_vert_right },
+	{(char*) "ge_activate_align_vert_center",(caddr_t)GeMotif::activate_align_vert_center },
+	{(char*) "ge_activate_align_horiz_up",(caddr_t)GeMotif::activate_align_horiz_up },
+	{(char*) "ge_activate_align_horiz_down",(caddr_t)GeMotif::activate_align_horiz_down },
+	{(char*) "ge_activate_align_horiz_center",(caddr_t)GeMotif::activate_align_horiz_center },
+	{(char*) "ge_activate_equid_horiz_left",(caddr_t)GeMotif::activate_equid_horiz_left },
+	{(char*) "ge_activate_equid_horiz_right",(caddr_t)GeMotif::activate_equid_horiz_right },
+	{(char*) "ge_activate_equid_horiz_center",(caddr_t)GeMotif::activate_equid_horiz_center },
+	{(char*) "ge_activate_equid_vert_up",(caddr_t)GeMotif::activate_equid_vert_up },
+	{(char*) "ge_activate_equid_vert_down",(caddr_t)GeMotif::activate_equid_vert_down },
+	{(char*) "ge_activate_equid_vert_center",(caddr_t)GeMotif::activate_equid_vert_center },
+	{(char*) "ge_activate_select_cons",(caddr_t)GeMotif::activate_select_cons },
+	{(char*) "ge_activate_select_objects",(caddr_t)GeMotif::activate_select_objects },
+	{(char*) "ge_activate_group",(caddr_t)GeMotif::activate_group },
+	{(char*) "ge_activate_ungroup",(caddr_t)GeMotif::activate_ungroup },
+	{(char*) "ge_activate_connect",(caddr_t)GeMotif::activate_connect },
+	{(char*) "ge_activate_connectsecond",(caddr_t)GeMotif::activate_connectsecond },
+	{(char*) "ge_activate_objectattributes",(caddr_t)GeMotif::activate_objectattributes },
+	{(char*) "ge_activate_show_grid",(caddr_t)GeMotif::activate_show_grid },
+	{(char*) "ge_activate_cut",(caddr_t)GeMotif::activate_cut },
+	{(char*) "ge_activate_copy",(caddr_t)GeMotif::activate_copy },
+	{(char*) "ge_activate_paste",(caddr_t)GeMotif::activate_paste },
+	{(char*) "ge_activate_rotate",(caddr_t)GeMotif::activate_rotate },
+	{(char*) "ge_activate_rotate90",(caddr_t)GeMotif::activate_rotate90 },
+	{(char*) "ge_activate_flip_horiz",(caddr_t)GeMotif::activate_flip_horiz },
+	{(char*) "ge_activate_flip_vert",(caddr_t)GeMotif::activate_flip_vert },
+	{(char*) "ge_activate_command",(caddr_t)GeMotif::activate_command },
+	{(char*) "ge_activate_rect",(caddr_t)GeMotif::activate_rect },
+	{(char*) "ge_activate_rectrounded",(caddr_t)GeMotif::activate_rectrounded },
+	{(char*) "ge_activate_line",(caddr_t)GeMotif::activate_line },
+	{(char*) "ge_activate_polyline",(caddr_t)GeMotif::activate_polyline },
+	{(char*) "ge_activate_circle",(caddr_t)GeMotif::activate_circle },
+	{(char*) "ge_activate_text",(caddr_t)GeMotif::activate_text },
+	{(char*) "ge_activate_annot",(caddr_t)GeMotif::activate_annot },
+	{(char*) "ge_activate_conpoint",(caddr_t)GeMotif::activate_conpoint },
+	{(char*) "ge_activate_fill",(caddr_t)GeMotif::activate_fill },
+	{(char*) "ge_activate_border",(caddr_t)GeMotif::activate_border },
+	{(char*) "ge_activate_shadow",(caddr_t)GeMotif::activate_shadow },
+	{(char*) "ge_activate_incr_lightness",(caddr_t)GeMotif::activate_incr_lightness },
+	{(char*) "ge_activate_decr_lightness",(caddr_t)GeMotif::activate_decr_lightness },
+	{(char*) "ge_activate_incr_intensity",(caddr_t)GeMotif::activate_incr_intensity },
+	{(char*) "ge_activate_decr_intensity",(caddr_t)GeMotif::activate_decr_intensity },
+	{(char*) "ge_activate_incr_shift",(caddr_t)GeMotif::activate_incr_shift },
+	{(char*) "ge_activate_decr_shift",(caddr_t)GeMotif::activate_decr_shift },
+	{(char*) "ge_activate_scale",(caddr_t)GeMotif::activate_scale },
+	{(char*) "ge_activate_grid",(caddr_t)GeMotif::activate_grid },
+	{(char*) "ge_activate_linewidth_1",(caddr_t)GeMotif::activate_linewidth_1 },
+	{(char*) "ge_activate_linewidth_2",(caddr_t)GeMotif::activate_linewidth_2 },
+	{(char*) "ge_activate_linewidth_3",(caddr_t)GeMotif::activate_linewidth_3 },
+	{(char*) "ge_activate_linewidth_4",(caddr_t)GeMotif::activate_linewidth_4 },
+	{(char*) "ge_activate_linewidth_5",(caddr_t)GeMotif::activate_linewidth_5 },
+	{(char*) "ge_activate_linewidth_6",(caddr_t)GeMotif::activate_linewidth_6 },
+	{(char*) "ge_activate_linewidth_7",(caddr_t)GeMotif::activate_linewidth_7 },
+	{(char*) "ge_activate_linewidth_8",(caddr_t)GeMotif::activate_linewidth_8 },
+	{(char*) "ge_activate_linetype1",(caddr_t)GeMotif::activate_linetype1 },
+	{(char*) "ge_activate_linetype2",(caddr_t)GeMotif::activate_linetype2 },
+	{(char*) "ge_activate_linetype3",(caddr_t)GeMotif::activate_linetype3 },
+	{(char*) "ge_activate_linetype4",(caddr_t)GeMotif::activate_linetype4 },
+	{(char*) "ge_activate_linetype5",(caddr_t)GeMotif::activate_linetype5 },
+	{(char*) "ge_activate_linetype6",(caddr_t)GeMotif::activate_linetype6 },
+	{(char*) "ge_activate_linetype7",(caddr_t)GeMotif::activate_linetype7 },
+	{(char*) "ge_activate_textsize_0",(caddr_t)GeMotif::activate_textsize_0 },
+	{(char*) "ge_activate_textsize_1",(caddr_t)GeMotif::activate_textsize_1 },
+	{(char*) "ge_activate_textsize_2",(caddr_t)GeMotif::activate_textsize_2 },
+	{(char*) "ge_activate_textsize_3",(caddr_t)GeMotif::activate_textsize_3 },
+	{(char*) "ge_activate_textsize_4",(caddr_t)GeMotif::activate_textsize_4 },
+	{(char*) "ge_activate_textsize_5",(caddr_t)GeMotif::activate_textsize_5 },
+	{(char*) "ge_activate_textfont_1",(caddr_t)GeMotif::activate_textfont_1 },
+	{(char*) "ge_activate_textfont_2",(caddr_t)GeMotif::activate_textfont_2 },
+	{(char*) "ge_activate_textfont_3",(caddr_t)GeMotif::activate_textfont_3 },
+	{(char*) "ge_activate_textfont_4",(caddr_t)GeMotif::activate_textfont_4 },
+	{(char*) "ge_activate_textbold",(caddr_t)GeMotif::activate_textbold },
+	{(char*) "ge_activate_gridsize_1",(caddr_t)GeMotif::activate_gridsize_1 },
+	{(char*) "ge_activate_gridsize_2",(caddr_t)GeMotif::activate_gridsize_2 },
+	{(char*) "ge_activate_gridsize_3",(caddr_t)GeMotif::activate_gridsize_3 },
+	{(char*) "ge_activate_gridsize_4",(caddr_t)GeMotif::activate_gridsize_4 },
+	{(char*) "ge_activate_zoom_in",(caddr_t)GeMotif::activate_zoom_in },
+	{(char*) "ge_activate_zoom_out",(caddr_t)GeMotif::activate_zoom_out },
+	{(char*) "ge_activate_zoom_reset",(caddr_t)GeMotif::activate_zoom_reset },
+	{(char*) "ge_activate_help",(caddr_t)GeMotif::activate_help },
+	{(char*) "ge_create_widget_cb",(caddr_t)GeMotif::create_widget_cb },
+	{(char*) "ge_create_cursor_position",(caddr_t)GeMotif::create_cursor_position },
+	{(char*) "ge_create_msg_label",(caddr_t)GeMotif::create_msg_label },
+	{(char*) "ge_create_cmd_prompt",(caddr_t)GeMotif::create_cmd_prompt },
+	{(char*) "ge_create_cmd_input",(caddr_t)GeMotif::create_cmd_input },
+	{(char*) "ge_create_graph_form",(caddr_t)GeMotif::create_graph_form },
+	{(char*) "ge_create_main_pane",(caddr_t)GeMotif::create_main_pane },
+	{(char*) "ge_create_palette_pane",(caddr_t)GeMotif::create_palette_pane },
+	{(char*) "ge_activate_concorner_right",(caddr_t)GeMotif::activate_concorner_right },
+	{(char*) "ge_activate_concorner_rounded",(caddr_t)GeMotif::activate_concorner_rounded },
+	{(char*) "ge_activate_round_amount_1",(caddr_t)GeMotif::activate_round_amount_1 },
+	{(char*) "ge_activate_round_amount_2",(caddr_t)GeMotif::activate_round_amount_2 },
+	{(char*) "ge_activate_round_amount_3",(caddr_t)GeMotif::activate_round_amount_3 },
+	{(char*) "ge_activate_round_amount_4",(caddr_t)GeMotif::activate_round_amount_4 },
+	{(char*) "ge_activate_round_amount_5",(caddr_t)GeMotif::activate_round_amount_5 },
+	{(char*) "ge_activate_contype_straight",(caddr_t)GeMotif::activate_contype_straight },
+	{(char*) "ge_activate_contype_routed",(caddr_t)GeMotif::activate_contype_routed },
+	{(char*) "ge_activate_contype_stronearr",(caddr_t)GeMotif::activate_contype_stronearr },
+	{(char*) "ge_activate_contype_stepdiv",(caddr_t)GeMotif::activate_contype_stepdiv },
+	{(char*) "ge_activate_contype_stepconv",(caddr_t)GeMotif::activate_contype_stepconv },
+	{(char*) "ge_activate_contype_transdiv",(caddr_t)GeMotif::activate_contype_transdiv },
+	{(char*) "ge_activate_contype_transconv",(caddr_t)GeMotif::activate_contype_transconv },
+	{(char*) "ge_activate_condir_center",(caddr_t)GeMotif::activate_condir_center },
+	{(char*) "ge_activate_condir_left",(caddr_t)GeMotif::activate_condir_left },
+	{(char*) "ge_activate_condir_right",(caddr_t)GeMotif::activate_condir_right },
+	{(char*) "ge_activate_condir_up",(caddr_t)GeMotif::activate_condir_up },
+	{(char*) "ge_activate_condir_down",(caddr_t)GeMotif::activate_condir_down },
+	{(char*) "ge_activate_background_color",(caddr_t)GeMotif::activate_background_color },
+	{(char*) "ge_activate_india_ok",(caddr_t)GeMotif::activate_india_ok },
+	{(char*) "ge_activate_india_cancel",(caddr_t)GeMotif::activate_india_cancel },
+	{(char*) "ge_create_india_label",(caddr_t)GeMotif::create_india_label },
+	{(char*) "ge_create_india_text",(caddr_t)GeMotif::create_india_text },
+	{(char*) "ge_activate_yesnodia_yes",(caddr_t)GeMotif::activate_yesnodia_yes },
+	{(char*) "ge_activate_yesnodia_no",(caddr_t)GeMotif::activate_yesnodia_no },
+	{(char*) "ge_activate_yesnodia_cancel",(caddr_t)GeMotif::activate_yesnodia_cancel },
+	{(char*) "ge_activate_confirm_ok",(caddr_t)GeMotif::activate_confirm_ok },
+	{(char*) "ge_activate_confirm_cancel",(caddr_t)GeMotif::activate_confirm_cancel }
 	};
 
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
@@ -1519,19 +1519,19 @@ GeMotif::GeMotif( 	void 	*x_parent_ctx,
 
   MrmRegisterNames(reglist, reglist_num);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "ge_window", toplevel,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "ge_window", toplevel,
 			name, NULL, 0, &ge_widget, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
 
-  sts = MrmFetchWidget(s_DRMh, "input_dialog", toplevel,
+  sts = MrmFetchWidget(s_DRMh, (char*) "input_dialog", toplevel,
 		&india_widget, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch input dialog\n");
 
-  sts = MrmFetchWidget(s_DRMh, "confirm_dialog", toplevel,
+  sts = MrmFetchWidget(s_DRMh, (char*) "confirm_dialog", toplevel,
 		&confirm_widget, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch confirm dialog\n");
 
-  sts = MrmFetchWidget(s_DRMh, "yesno_dialog", toplevel,
+  sts = MrmFetchWidget(s_DRMh, (char*) "yesno_dialog", toplevel,
 		&yesnodia_widget, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch yesno dialog\n");
 
@@ -1582,7 +1582,7 @@ GeMotif::GeMotif( 	void 	*x_parent_ctx,
   subpalette_mapped = 1;
 
   colpal_main_widget = ScrolledColPalCreate( palette_pane, 
-		"Colors", NULL, 
+		(char*) "Colors", NULL, 
 		0, Ge::init_colorpalette_cb, this,
 		&colorpalette_widget);
   XtManageChild( colpal_main_widget);

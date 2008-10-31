@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_c_pb_dp_slave.cpp,v 1.5 2007-06-01 12:53:51 claes Exp $
+ * Proview   $Id: xtt_c_pb_dp_slave.cpp,v 1.6 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,7 +34,7 @@
 #include "xtt_c_pb_dp_slave.h"
 #include "rt_pb_msg.h"
 
-int xtt_pb_dp_slave_help_cb( void *sctx, char *text)
+int xtt_pb_dp_slave_help_cb( void *sctx, const char *text)
 {
   pwr_tCmd cmd;
   xtt_slave_sCtx *ctx = (xtt_slave_sCtx *)sctx;

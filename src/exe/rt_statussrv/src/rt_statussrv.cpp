@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_statussrv.cpp,v 1.7 2008-02-22 09:17:49 claes Exp $
+ * Proview   $Id: rt_statussrv.cpp,v 1.8 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,9 +17,9 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <map.h>
-#include <iostream.h>
-#include <fstream.h>
+#include <map>
+#include <iostream>
+#include <fstream>
 #include <net/if.h>
 #include <net/if_arp.h>
 #include <pthread.h>
@@ -41,6 +41,8 @@
 #include "rt_qcom_msg.h"
 #include "statussrv_Stub.h"
 #include "Service.nsmap"
+
+using namespace std;
 
 // Application offset and size in nodeobject
 #define APPL_OFFSET 20
@@ -561,12 +563,13 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__XttStart(struct soap *soap,
   pwr_tOName opplace = "";
   char display[80] = "";
   char gui[40] = "";
-  char *argv[] = {"rt_xtt", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  char prog[] = "rt_xtt";
   char sw_l[] = "-l";
   char sw_d[] = "--display";
   char sw_q[] = "-q";
   char sw_c[] = "-c";
   char sw_f[] = "-f";
+  char *argv[] = { prog, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
   if ( s0__XttStart->ClientRequestHandle) {
     s0__XttStartResponse->ClientRequestHandle = soap_new_std__string( soap, -1);
@@ -631,10 +634,11 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__RtMonStart(struct soap *soap,
   char lang[40] = "";
   char display[80] = "";
   char gui[40] = "";
-  char *argv[] = {"pwr_rtmon", "--display", 0, 0, 0, 0, 0};
+  char prog[] = "pwr_rtmon";
   char sw_l[] = "-l";
   char sw_d[] = "--display";
   char sw_f[] = "-f";
+  char *argv[] = {prog, sw_d, 0, 0, 0, 0, 0};
 
   if ( s0__RtMonStart->ClientRequestHandle) {
     s0__RtMonStartResponse->ClientRequestHandle = soap_new_std__string( soap, -1);

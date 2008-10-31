@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: sev_server.cpp,v 1.3 2008-09-18 14:37:43 claes Exp $
+ * Proview   $Id: sev_server.cpp,v 1.4 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -490,6 +490,8 @@ void sev_server::garbage_collector()
 
 int main (int argc, char *argv[])
 {
+#if defined PWRE_CONF_MYSQL
+
   sev_server srv;
 
   sev_dbms_env *env;
@@ -522,4 +524,5 @@ int main (int argc, char *argv[])
   srv.init( noneth);
   srv.connect();
   srv.mainloop();
+#endif
 }

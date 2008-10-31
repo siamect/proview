@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_pb_dp_slave.cpp,v 1.11 2008-02-05 14:51:40 claes Exp $
+ * Proview   $Id: wb_c_pb_dp_slave.cpp,v 1.12 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -73,7 +73,7 @@ static void get_subcid( ldh_tSession ldhses, pwr_tCid cid, vector<pwr_tCid>& v)
   }
 }
 
-int pb_dp_slave_help_cb( void *sctx, char *text)
+int pb_dp_slave_help_cb( void *sctx, const char *text)
 {
   pwr_tCmd cmd;
   slave_sCtx *ctx = (slave_sCtx *)sctx;

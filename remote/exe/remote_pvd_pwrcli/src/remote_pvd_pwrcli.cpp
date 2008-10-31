@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: remote_pvd_pwrcli.cpp,v 1.3 2007-05-24 07:02:21 claes Exp $
+ * Proview   $Id: remote_pvd_pwrcli.cpp,v 1.4 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,12 +17,12 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  **/
 
-#include <vector.h>
-#include <map.h>
+#include <vector>
+#include <map>
 #include <string.h>
 #include <stdio.h>
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include "pwr.h"
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"
@@ -98,7 +98,7 @@ static map<int, subitem> rpvd_sublist;
 static int rpvd_id = 1;
 const bool pvd_cLog = false;
 
-static void logg( char *logger, pwr_tOix oix, char *text)
+static void logg( const char *logger, pwr_tOix oix, const char *text)
 {
   char nowstr[40];
 

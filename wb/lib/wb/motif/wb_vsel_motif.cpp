@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vsel_motif.cpp,v 1.3 2008-10-15 06:04:55 claes Exp $
+ * Proview   $Id: wb_vsel_motif.cpp,v 1.4 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -241,7 +241,7 @@ WVselMotif::WVselMotif (
   pwr_tStatus   *status,
   void		*wv_parent_ctx,
   Widget	wv_parent_wid,
-  char		*wv_name,
+  const char   	*wv_name,
   ldh_tWBContext wv_wbctx,
   char		*volumename,
   int		(*bc_success)( void *, pwr_tVolumeId *, int),
@@ -272,19 +272,19 @@ WVselMotif::WVselMotif (
 
   static MrmRegisterArg	reglist[] = {
   /* First the context variable */
-  { "vsel_ctx", 0 },
-  { "vsel_write_priv", 0 },
+  {(char*) "vsel_ctx", 0 },
+  {(char*) "vsel_write_priv", 0 },
 
   /* Callbacks for the controlled login widget */
-  {"vsel_create_adb",(caddr_t)create_adb},
-  {"vsel_destroy_adb",(caddr_t)destroy_adb},
-  {"vsel_create_label",(caddr_t)create_label},
-  {"vsel_activate_ok",(caddr_t)activate_ok},
-  {"vsel_activate_cancel",(caddr_t)activate_cancel},
-  {"vsel_activate_close",(caddr_t)activate_close},
-  {"vsel_activate_showall",(caddr_t)activate_showall},
-  {"vsel_create_volumelist",(caddr_t)create_volumelist},
-  {"vsel_action_volumelist",(caddr_t)action_volumelist}
+  {(char*) "vsel_create_adb",(caddr_t)create_adb},
+  {(char*) "vsel_destroy_adb",(caddr_t)destroy_adb},
+  {(char*) "vsel_create_label",(caddr_t)create_label},
+  {(char*) "vsel_activate_ok",(caddr_t)activate_ok},
+  {(char*) "vsel_activate_cancel",(caddr_t)activate_cancel},
+  {(char*) "vsel_activate_close",(caddr_t)activate_close},
+  {(char*) "vsel_activate_showall",(caddr_t)activate_showall},
+  {(char*) "vsel_create_volumelist",(caddr_t)create_volumelist},
+  {(char*) "vsel_action_volumelist",(caddr_t)action_volumelist}
   };
 
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
@@ -310,7 +310,7 @@ WVselMotif::WVselMotif (
       sts = ldh_GetVolumeClass( wbctx, volume, &classid);
       if (EVEN(sts)) { *status = sts; return; }
   
-      if ( cdh_isClassVolumeClass( classid)
+      if ( cdh_isClassVolumeClass( classid) ||
  	   classid == pwr_eClass_WorkBenchVolume ||
 	   volume == ldh_cRtVolume)
       {
@@ -400,7 +400,7 @@ WVselMotif::WVselMotif (
   XtSetValues( widgets.toplevel  ,args,i);
 
   /* now that we have a top level we can get the main window */
-  sts = MrmFetchWidgetOverride(s_DRMh, "vsel_window",
+  sts = MrmFetchWidgetOverride(s_DRMh, (char*) "vsel_window",
     widgets.toplevel, name, args, 1, 
     &widgets.vsel_window, &dclass);
 
@@ -455,7 +455,7 @@ void WVselMotif::message( char *new_label)
   Arg	args[2];
 
   XtSetArg(args[0], XmNlabelString, 
-	  XmStringCreateLtoR(new_label , "ISO8859-1"));
+	  XmStringCreateLtoR(new_label , (char*) "ISO8859-1"));
   XtSetValues( widgets.label ,args, 1);
 }
 

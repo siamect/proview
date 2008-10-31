@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_xlib.h,v 1.3 2008-10-16 11:05:15 claes Exp $
+ * Proview   $Id: flow_draw_xlib.h,v 1.4 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -164,7 +164,7 @@ class FlowDrawXLib : public FlowDraw {
   void cancel_timer( FlowCtx *ctx, void *id);
   void set_cursor( FlowCtx *ctx, draw_eCursor cursor);
   void set_nav_cursor( FlowCtx *ctx, draw_eCursor cursor);
-  int get_text_extent( FlowCtx *ctx, char *text, int len,
+  int get_text_extent( FlowCtx *ctx, const char *text, int len,
 			    flow_eDrawType gc_type, int idx,
 			    int *width, int *height);
   void copy_area( FlowCtx *ctx, int x, int y);
@@ -195,7 +195,7 @@ class FlowDrawXLib : public FlowDraw {
   int image_get_height( flow_tImImage image);
   void image_scale( float scale, flow_tImImage *im, flow_tPixmap *im_pixmap,
 		    flow_tPixmap *im_mask);
-  int image_load( char *imagefile, float scale, float nav_scale,
+  int image_load( const char *imagefile, float scale, float nav_scale,
 		  flow_tImImage *orig_im, flow_tImImage *im, 
 		  flow_tPixmap *im_pixmap, flow_tPixmap *im_mask,
 		  flow_tPixmap *im_nav_pixmap, flow_tPixmap *im_nav_mask);

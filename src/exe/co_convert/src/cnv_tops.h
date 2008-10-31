@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_tops.h,v 1.5 2008-10-20 13:42:33 claes Exp $
+ * Proview   $Id: cnv_tops.h,v 1.6 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,12 +24,14 @@
 
 using namespace std;
 
-#include <iostream.h>
-#include <vector.h>
+#include <iostream>
+#include <vector>
 #include <string>
 #include "pwr.h"
 #include "cnv_style.h"
 #include "cnv_content.h"
+
+using namespace std;
 
 #define ps_cMaxLevel 4
 #define ps_cPageHeight 820
@@ -125,15 +127,15 @@ class CnvToPs  {
   ~CnvToPs();
 
   void close();
-  void print_text( char *text, CnvStyle& style, int mode = ps_mPrintMode_Pos);
+  void print_text( const char *text, CnvStyle& style, int mode = ps_mPrintMode_Pos);
   void print_pagebreak( int print_num);
   void print_content();
-  void print_h1( char *text, int hlevel, char *subject);
-  void print_h2( char *text);
-  void print_h3( char *text);
+  void print_h1( const char *text, int hlevel, char *subject);
+  void print_h2( const char *text);
+  void print_h3( const char *text);
   void print_horizontal_line();
-  int print_image( char *filename);
-  void cnv_text( char *to, char *from);
+  int print_image( const char *filename);
+  void cnv_text( char *to, const char *from);
   void set_confpass( bool conf) { 
     conf_pass = conf;
     if ( !conf) {
@@ -148,14 +150,14 @@ class CnvToPs  {
   }
   void set_ci( int val) { ci = val;}
   void set_cf( int val) { cf = val;}
-  void set_filename( int idx, char *name) {
+  void set_filename( int idx, const char *name) {
     strcpy( filename[idx], name);
   }
   void open();
   void incr_headerlevel();
   void decr_headerlevel();
   void reset_headernumbers( int level);
-  void set_pageheader( char *text);
+  void set_pageheader( const char *text);
 
   CnvContent content;
   CnvIdStyle style[ps_eId__];

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growwindow.h,v 1.7 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_growwindow.h,v 1.8 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,7 +54,7 @@ class GrowWindow : public GrowRect {
     \param display_lev	Displaylevel when this object is visible.
     \param nodraw	Don't draw the object now.
   */
-  GrowWindow( GrowCtx *glow_ctx, char *name, double x = 0, double y = 0, 
+  GrowWindow( GrowCtx *glow_ctx, const char *name, double x = 0, double y = 0, 
 		double w = 0, double h = 0, 
 		glow_eDrawType border_d_type = glow_eDrawType_Line, 
 		int line_w = 1, 

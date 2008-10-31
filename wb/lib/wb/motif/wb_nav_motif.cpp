@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav_motif.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_nav_motif.cpp,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -52,9 +52,9 @@ extern "C" {
 NavMotif::NavMotif(
 	void *nav_parent_ctx,
 	Widget	nav_parent_wid,
-	char *nav_name,
+	const char *nav_name,
 	ldh_tSesContext nav_ldhses,
-	char *nav_root_name,
+	const char *nav_root_name,
 	Widget *w,
 	pwr_tStatus *status
 	) :

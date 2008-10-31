@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve_motif.cpp,v 1.1 2007-01-04 08:22:16 claes Exp $
+ * Proview   $Id: ge_curve_motif.cpp,v 1.2 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -251,25 +251,25 @@ GeCurveMotif::GeCurveMotif( void 	*gc_parent_ctx,
   char		name[] = "PwR GeCurve";
 
   static MrmRegisterArg	reglist[] = {
-        { "gec_ctx", 0 },
-	{"gec_activate_exit",(caddr_t)activate_exit },
-	{"gec_activate_configure",(caddr_t)activate_configure },
-	{"gec_activate_print",(caddr_t)activate_print },
-	{"gec_activate_zoomin",(caddr_t)activate_zoomin },
-	{"gec_activate_zoomout",(caddr_t)activate_zoomout },
-	{"gec_activate_zoomreset",(caddr_t)activate_zoomreset },
-	{"gec_activate_background",(caddr_t)activate_background },
-	{"gec_activate_showname",(caddr_t)activate_showname },
-	{"gec_activate_filledcurves",(caddr_t)activate_filledcurves },
-	{"gec_activate_xlimits",(caddr_t)activate_xlimits },
-	{"gec_activate_help",(caddr_t)activate_help },
-	{"gec_create_pane",(caddr_t)create_pane },
-	{"gec_create_growform",(caddr_t)create_growform },
-	{"gec_create_nameform",(caddr_t)create_nameform },
-	{"gec_create_curveform",(caddr_t)create_curveform },
-	{"gec_create_minmax_textmin",(caddr_t)create_minmax_textmin },
-	{"gec_create_minmax_textmax",(caddr_t)create_minmax_textmax },
-	{"gec_activate_minmax_ok",(caddr_t)activate_minmax_ok }
+        {(char*) "gec_ctx", 0 },
+	{(char*) "gec_activate_exit",(caddr_t)activate_exit },
+	{(char*) "gec_activate_configure",(caddr_t)activate_configure },
+	{(char*) "gec_activate_print",(caddr_t)activate_print },
+	{(char*) "gec_activate_zoomin",(caddr_t)activate_zoomin },
+	{(char*) "gec_activate_zoomout",(caddr_t)activate_zoomout },
+	{(char*) "gec_activate_zoomreset",(caddr_t)activate_zoomreset },
+	{(char*) "gec_activate_background",(caddr_t)activate_background },
+	{(char*) "gec_activate_showname",(caddr_t)activate_showname },
+	{(char*) "gec_activate_filledcurves",(caddr_t)activate_filledcurves },
+	{(char*) "gec_activate_xlimits",(caddr_t)activate_xlimits },
+	{(char*) "gec_activate_help",(caddr_t)activate_help },
+	{(char*) "gec_create_pane",(caddr_t)create_pane },
+	{(char*) "gec_create_growform",(caddr_t)create_growform },
+	{(char*) "gec_create_nameform",(caddr_t)create_nameform },
+	{(char*) "gec_create_curveform",(caddr_t)create_curveform },
+	{(char*) "gec_create_minmax_textmin",(caddr_t)create_minmax_textmin },
+	{(char*) "gec_create_minmax_textmax",(caddr_t)create_minmax_textmax },
+	{(char*) "gec_activate_minmax_ok",(caddr_t)activate_minmax_ok }
 	};
 
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
@@ -294,11 +294,11 @@ GeCurveMotif::GeCurveMotif( void 	*gc_parent_ctx,
 
   MrmRegisterNames(reglist, reglist_num);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "ge_curve_window", toplevel,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "ge_curve_window", toplevel,
 			name, NULL, 0, &ge_curve_widget, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
 
-  sts = MrmFetchWidget(s_DRMh, "minmax_dialog", toplevel,
+  sts = MrmFetchWidget(s_DRMh, (char*) "minmax_dialog", toplevel,
 		&minmax_widget, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch input dialog\n");
 
@@ -314,7 +314,7 @@ GeCurveMotif::GeCurveMotif( void 	*gc_parent_ctx,
 
   Widget w;
   grownames_main_widget = ScrolledGrowCreate( nameform_widget, 
-		"GeCurveNames", NULL,
+		(char*) "GeCurveNames", NULL,
 		0, init_grownames_cb, this, &w);
   i = 0;
   XtSetArg(args[i],XmNwidth,200);i++;
@@ -323,7 +323,7 @@ GeCurveMotif::GeCurveMotif( void 	*gc_parent_ctx,
   XtManageChild( grownames_main_widget);
 
   growaxis_main_widget = GrowCreate( axisform_widget, 
-		"GeCurveAxis", NULL,
+		(char*) "GeCurveAxis", NULL,
 		0, init_growaxis_cb, this);
   i = 0;
   XtSetArg(args[i],XmNwidth,200);i++;
@@ -332,7 +332,7 @@ GeCurveMotif::GeCurveMotif( void 	*gc_parent_ctx,
   XtManageChild( growaxis_main_widget);
 
   growcurve_main_widget = CurveCreate( curveform_widget, 
-		"GeCurve", NULL,
+		(char*) "GeCurve", NULL,
 		0, init_growcurve_cb, this);
   XtManageChild( growcurve_main_widget);
 
@@ -341,7 +341,7 @@ GeCurveMotif::GeCurveMotif( void 	*gc_parent_ctx,
   XtSetArg(args[i],XmNheight,200);i++;
   XtSetArg(args[i],XmNpaneMinimum,75);i++;
   XtSetArg(args[i],XmNpaneMaximum,100);i++;
-  nav_widget = CurveCreateNav( pane_widget, "navigator",
+  nav_widget = CurveCreateNav( pane_widget, (char*) "navigator",
         args, i, growcurve_main_widget);
   XtManageChild( nav_widget);
 

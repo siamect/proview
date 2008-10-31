@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_xtthelptoxml.cpp,v 1.2 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: cnv_xtthelptoxml.cpp,v 1.3 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,8 +22,8 @@
 
 /*_Include files_________________________________________________________*/
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>

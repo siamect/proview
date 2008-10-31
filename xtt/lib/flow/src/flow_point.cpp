@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_point.cpp,v 1.3 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_point.cpp,v 1.4 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "flow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include "flow_point.h"
 
 

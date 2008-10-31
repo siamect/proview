@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attr.cpp,v 1.5 2007-01-04 08:42:20 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attr.cpp,v 1.6 2008-10-31 12:51:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -43,7 +43,7 @@
 // Static member variables
 char	GsdAttr::value_recall[30][160];
 
-void GsdAttr::gsdattr_message( void *attr, char severity, char *message)
+void GsdAttr::gsdattr_message( void *attr, char severity, const char *message)
 {
   ((GsdAttr *)attr)->message( severity, message);
 }

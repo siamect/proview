@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_array.cpp,v 1.13 2008-05-13 13:59:03 claes Exp $
+ * Proview   $Id: glow_array.cpp,v 1.14 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <stdlib.h>
 #include "glow_ctx.h"
 #include "glow_point.h"
@@ -1230,7 +1230,7 @@ int GlowArray::find( GlowArrayElem *element)
   return 0;
 }
 
-int GlowArray::find_by_name( char *name, GlowArrayElem **element) 
+int GlowArray::find_by_name( const char *name, GlowArrayElem **element) 
 {
   int i;
   char object_name[80];
@@ -1790,6 +1790,7 @@ char *GlowArray::get_last_group()
 {
   char *name;
   static char groups[10][32];
+  static char nullstr[] = "";
   char member_cnt[10];
   int group_cnt;
   int found;
@@ -1832,7 +1833,7 @@ char *GlowArray::get_last_group()
   if ( max_members > 0)
     return groups[max_idx];
 
-  return "";
+  return nullstr;
 }
 
 int GlowArray::get_background_object_limits( GlowTransform *t, 

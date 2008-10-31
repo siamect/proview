@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_ctx.cpp,v 1.21 2008-06-24 08:08:00 claes Exp $
+ * Proview   $Id: glow_ctx.cpp,v 1.22 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <math.h>
 #include <float.h>
 #include <stdlib.h>
@@ -46,7 +46,7 @@
 
 #include "glow_msg.h"
 
-GlowCtx::GlowCtx( char *ctx_name, double zoom_fact, int offs_x, int offs_y) 
+GlowCtx::GlowCtx( const char *ctx_name, double zoom_fact, int offs_x, int offs_y) 
   : ctx_type(glow_eCtxType_Glow), 
     mw( zoom_fact, zoom_fact, zoom_fact, offs_x, offs_y),
     navw(zoom_fact, zoom_fact, zoom_fact, 0, 0),
@@ -1581,7 +1581,7 @@ GlowArrayElem *GlowCtx::get_node_from_name( char *name)
   return 0;
 }
 
-GlowArrayElem *GlowCtx::get_nodeclass_from_name( char *name)
+GlowArrayElem *GlowCtx::get_nodeclass_from_name( const char *name)
 {
   int i;
         
@@ -2203,7 +2203,7 @@ void glow_scroll_vertical( GlowCtx *ctx, int value, int bottom)
 }
 
 // Fix because of bug in the cc-compiler on VMS
-int check_file( char *filename)
+int check_file( const char *filename)
 {
   FILE *fp;
 

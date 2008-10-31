@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_hist_motif.cpp,v 1.1 2007-01-04 08:30:03 claes Exp $
+ * Proview   $Id: xtt_hist_motif.cpp,v 1.2 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -96,65 +96,65 @@ HistMotif::HistMotif( void *hist_parent_ctx,
 
   static XtActionsRec hist_actions[] =
   {
-    {"hist_inputfocus",      (XtActionProc) action_inputfocus}
+    {(char*) "hist_inputfocus",      (XtActionProc) action_inputfocus}
   };
 
 
   static MrmRegisterArg	reglist[] = {
-        { "hist_ctx", 0 },
-	{"hist_activate_exit",(caddr_t)activate_exit },
-	{"hist_activate_print",(caddr_t)activate_print },
-	{"hist_activate_zoom_in",(caddr_t)activate_zoom_in },
-	{"hist_activate_zoom_out",(caddr_t)activate_zoom_out },
-	{"hist_activate_zoom_reset",(caddr_t)activate_zoom_reset },
-	{"hist_activate_open_plc",(caddr_t)activate_open_plc },
-	{"hist_activate_display_in_xnav",(caddr_t)activate_display_in_xnav },
-	{"hist_activate_disp_hundredth",(caddr_t)activate_disp_hundredth },
-	{"hist_activate_hide_object",(caddr_t)activate_hide_object },
-	{"hist_activate_hide_text",(caddr_t)activate_hide_text },
-	{"hist_activate_help",(caddr_t)activate_help },
-	{"hist_activate_helpevent",(caddr_t)activate_helpevent },
-	{"hist_create_form",(caddr_t)create_form },
-	{"hist_ok_btn",(caddr_t)ok_btn },
-	{"hist_cancel_cb",(caddr_t)cancel_cb },
+        {(char*) "hist_ctx", 0 },
+	{(char*) "hist_activate_exit",(caddr_t)activate_exit },
+	{(char*) "hist_activate_print",(caddr_t)activate_print },
+	{(char*) "hist_activate_zoom_in",(caddr_t)activate_zoom_in },
+	{(char*) "hist_activate_zoom_out",(caddr_t)activate_zoom_out },
+	{(char*) "hist_activate_zoom_reset",(caddr_t)activate_zoom_reset },
+	{(char*) "hist_activate_open_plc",(caddr_t)activate_open_plc },
+	{(char*) "hist_activate_display_in_xnav",(caddr_t)activate_display_in_xnav },
+	{(char*) "hist_activate_disp_hundredth",(caddr_t)activate_disp_hundredth },
+	{(char*) "hist_activate_hide_object",(caddr_t)activate_hide_object },
+	{(char*) "hist_activate_hide_text",(caddr_t)activate_hide_text },
+	{(char*) "hist_activate_help",(caddr_t)activate_help },
+	{(char*) "hist_activate_helpevent",(caddr_t)activate_helpevent },
+	{(char*) "hist_create_form",(caddr_t)create_form },
+	{(char*) "hist_ok_btn",(caddr_t)ok_btn },
+	{(char*) "hist_cancel_cb",(caddr_t)cancel_cb },
 
-	{"hist_start_time_entry_cr",(caddr_t)start_time_entry_cr },
-	{"hist_start_time_entry_lf",(caddr_t)start_time_entry_lf },
+	{(char*) "hist_start_time_entry_cr",(caddr_t)start_time_entry_cr },
+	{(char*) "hist_start_time_entry_lf",(caddr_t)start_time_entry_lf },
 
-	{"hist_stop_time_entry_cr",(caddr_t)stop_time_entry_cr },
-	{"hist_stop_time_entry_lf",(caddr_t)stop_time_entry_lf },
+	{(char*) "hist_stop_time_entry_cr",(caddr_t)stop_time_entry_cr },
+	{(char*) "hist_stop_time_entry_lf",(caddr_t)stop_time_entry_lf },
 
-	{"hist_today_cb",(caddr_t)today_cb },
-	{"hist_yesterday_cb",(caddr_t)yesterday_cb },
-	{"hist_thisw_cb",(caddr_t)thisw_cb },
-	{"hist_lastw_cb",(caddr_t)lastw_cb },
-	{"hist_thism_cb",(caddr_t)thism_cb },
-	{"hist_lastm_cb",(caddr_t)lastm_cb },
-	{"hist_all_cb",(caddr_t)all_cb },
-	{"hist_time_cb",(caddr_t)time_cb },
+	{(char*) "hist_today_cb",(caddr_t)today_cb },
+	{(char*) "hist_yesterday_cb",(caddr_t)yesterday_cb },
+	{(char*) "hist_thisw_cb",(caddr_t)thisw_cb },
+	{(char*) "hist_lastw_cb",(caddr_t)lastw_cb },
+	{(char*) "hist_thism_cb",(caddr_t)thism_cb },
+	{(char*) "hist_lastm_cb",(caddr_t)lastm_cb },
+	{(char*) "hist_all_cb",(caddr_t)all_cb },
+	{(char*) "hist_time_cb",(caddr_t)time_cb },
 
 
-	{"hist_alarm_toggle_cr",(caddr_t)alarm_toggle_cr },
-	{"hist_info_toggle_cr",(caddr_t)info_toggle_cr },
-	{"hist_ack_toggle_cr",(caddr_t)ack_toggle_cr },
-	{"hist_ret_toggle_cr",(caddr_t)ret_toggle_cr },
+	{(char*) "hist_alarm_toggle_cr",(caddr_t)alarm_toggle_cr },
+	{(char*) "hist_info_toggle_cr",(caddr_t)info_toggle_cr },
+	{(char*) "hist_ack_toggle_cr",(caddr_t)ack_toggle_cr },
+	{(char*) "hist_ret_toggle_cr",(caddr_t)ret_toggle_cr },
 
-	{"hist_prioA_toggle_cr",(caddr_t)prioA_toggle_cr },
-	{"hist_prioB_toggle_cr",(caddr_t)prioB_toggle_cr },
-	{"hist_prioC_toggle_cr",(caddr_t)prioC_toggle_cr },
-	{"hist_prioD_toggle_cr",(caddr_t)prioD_toggle_cr },
+	{(char*) "hist_prioA_toggle_cr",(caddr_t)prioA_toggle_cr },
+	{(char*) "hist_prioB_toggle_cr",(caddr_t)prioB_toggle_cr },
+	{(char*) "hist_prioC_toggle_cr",(caddr_t)prioC_toggle_cr },
+	{(char*) "hist_prioD_toggle_cr",(caddr_t)prioD_toggle_cr },
 
-	{"hist_event_text_entry_cr",(caddr_t)event_text_entry_cr },
-	{"hist_event_text_entry_lf",(caddr_t)event_text_entry_lf },
+	{(char*) "hist_event_text_entry_cr",(caddr_t)event_text_entry_cr },
+	{(char*) "hist_event_text_entry_lf",(caddr_t)event_text_entry_lf },
 
-	{"hist_event_name_entry_cr",(caddr_t)event_name_entry_cr },
-	{"hist_event_name_entry_lf",(caddr_t)event_name_entry_lf },
-	{"hist_nrofevents_string_label_cr",(caddr_t)nrofevents_string_label_cr },
-	{"hist_search_string_label_cr",(caddr_t)search_string_label_cr },
-	{"hist_search_string2_label_cr",(caddr_t)search_string2_label_cr },
-	{"hist_search_string3_label_cr",(caddr_t)search_string3_label_cr },
-	{"hist_search_string4_label_cr",(caddr_t)search_string4_label_cr },
-	{"hist_start_time_help_label_cr",(caddr_t)start_time_help_label_cr }
+	{(char*) "hist_event_name_entry_cr",(caddr_t)event_name_entry_cr },
+	{(char*) "hist_event_name_entry_lf",(caddr_t)event_name_entry_lf },
+	{(char*) "hist_nrofevents_string_label_cr",(caddr_t)nrofevents_string_label_cr },
+	{(char*) "hist_search_string_label_cr",(caddr_t)search_string_label_cr },
+	{(char*) "hist_search_string2_label_cr",(caddr_t)search_string2_label_cr },
+	{(char*) "hist_search_string3_label_cr",(caddr_t)search_string3_label_cr },
+	{(char*) "hist_search_string4_label_cr",(caddr_t)search_string4_label_cr },
+	{(char*) "hist_start_time_help_label_cr",(caddr_t)start_time_help_label_cr }
 
 	};
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
@@ -187,13 +187,13 @@ HistMotif::HistMotif( void *hist_parent_ctx,
   parent_wid_hist = XtCreatePopupShell( hist_name, 
 		topLevelShellWidgetClass, parent_wid, args, i);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "hist_window", parent_wid_hist,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "hist_window", parent_wid_hist,
 			hist_name, args, 1, &toplevel_hist, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", hist_name);
 
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "histSearchDialog", form_hist,
-			"searchdialog", args, 1, &toplevel_search, &searchclass);
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "histSearchDialog", form_hist,
+			(char*) "searchdialog", args, 1, &toplevel_search, &searchclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", "histSearchDialog");
 
 
@@ -401,7 +401,7 @@ void HistMotif::cancel_cb( Widget w, Hist *histOP, XmAnyCallbackStruct *data)
 void HistMotif::start_time_entry_cr( Widget w, Hist *histOP, XmAnyCallbackStruct *data)
 {
   ((HistMotif *)histOP)->start_time_entry_w = w;
-  XmTextSetString( ((HistMotif *)histOP)->start_time_entry_w, "1970-05-05 00:00:00");
+  XmTextSetString( ((HistMotif *)histOP)->start_time_entry_w, (char*) "1970-05-05 00:00:00");
   XtSetSensitive( ((HistMotif *)histOP)->start_time_entry_w, INSENS);
 }
 
@@ -537,7 +537,7 @@ void HistMotif::start_time_help_label_cr( Widget w, Hist *histOP, XmAnyCallbackS
 //  printf("hist_start_time_help_label_cr\n");
   ((HistMotif *)histOP)->start_time_help_lbl_w = w;
   char buf[40] = "Timeformat: 1970-05-05 23:30:00";
-  XmString str = XmStringCreateLtoR(buf, "tag1");
+  XmString str = XmStringCreateLtoR(buf, (char*) "tag1");
   XtVaSetValues( ((HistMotif *)histOP)->start_time_help_lbl_w, XmNlabelString,str,NULL);
   XmStringFree(str);
 }
@@ -587,7 +587,7 @@ void HistMotif::set_num_of_events( int nrOfEvents)
 {
   char buf[20];
   sprintf(buf, "    %u", nrOfEvents);
-  XmString str = XmStringCreateLtoR(buf, "tag1");
+  XmString str = XmStringCreateLtoR(buf, (char*) "tag1");
   XtVaSetValues(this->nrofevents_string_lbl_w, XmNlabelString,str,NULL);
   XmStringFree(str);
 }
@@ -598,22 +598,22 @@ void HistMotif::set_search_string( const char *s1, const char *s2,
   char buf[500];
 
   strncpy(buf, s1, sizeof(buf));
-  XmString str = XmStringCreateLtoR(buf, "tag1");
+  XmString str = XmStringCreateLtoR(buf, (char*) "tag1");
   XtVaSetValues(this->search_string_lbl_w, XmNlabelString,str,NULL);
   XmStringFree(str);
 
   strncpy(buf, s2, sizeof(buf));
-  XmString str2 = XmStringCreateLtoR(buf, "tag1");
+  XmString str2 = XmStringCreateLtoR(buf, (char*) "tag1");
   XtVaSetValues(this->search_string2_lbl_w, XmNlabelString,str2,NULL);
   XmStringFree(str2);
 
   strncpy(buf, s3, sizeof(buf));
-  XmString str3 = XmStringCreateLtoR(buf, "tag1");
+  XmString str3 = XmStringCreateLtoR(buf, (char*) "tag1");
   XtVaSetValues(this->search_string3_lbl_w, XmNlabelString,str3,NULL);
   XmStringFree(str3);
 
   strncpy(buf, s4, sizeof(buf));
-  XmString str4 = XmStringCreateLtoR(buf, "tag1");
+  XmString str4 = XmStringCreateLtoR(buf, (char*) "tag1");
   XtVaSetValues(this->search_string4_lbl_w, XmNlabelString,str4,NULL);
   XmStringFree(str4);
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growaxis.cpp,v 1.10 2008-07-17 11:23:53 claes Exp $
+ * Proview   $Id: glow_growaxis.cpp,v 1.11 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
@@ -31,7 +31,7 @@
 #include "pwr.h"
 #include "co_time.h"
 
-GrowAxis::GrowAxis( GrowCtx *glow_ctx, char *name, double x1, double y1, 
+GrowAxis::GrowAxis( GrowCtx *glow_ctx, const char *name, double x1, double y1, 
 		double x2, double y2, glow_eDrawType border_d_type, 
 		int line_w, int t_size, glow_eDrawType t_drawtype, 
 	        int nodraw) : 
@@ -704,7 +704,7 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
 }
 
 void GrowAxis::set_conf( double max_val, double min_val, int no_of_lines, 
-     int long_quot, int value_quot, double rot, char *value_format)
+     int long_quot, int value_quot, double rot, const char *value_format)
 {
   erase( &ctx->mw);
   max_value = max_val;

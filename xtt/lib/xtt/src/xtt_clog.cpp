@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_clog.cpp,v 1.4 2007-01-04 08:22:46 claes Exp $
+ * Proview   $Id: xtt_clog.cpp,v 1.5 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,7 +35,7 @@
 #include "rt_xnav_msg.h"
 
 CLog::CLog( void *clog_parent_ctx,
-	    char *clog_name,
+	    const char *clog_name,
 	    pwr_tStatus *status) :
   parent_ctx(clog_parent_ctx),
   clognav(NULL), clog_displayed(0), help_cb(0), close_cb(0), filesel_loaded(false)

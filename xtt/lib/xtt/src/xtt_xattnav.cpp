@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xattnav.cpp,v 1.18 2007-01-18 07:49:28 claes Exp $
+ * Proview   $Id: xtt_xattnav.cpp,v 1.19 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -44,7 +44,7 @@
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 
-void XAttNav::message( char sev, char *text)
+void XAttNav::message( char sev, const char *text)
 {
   if ( message_cb)
     (message_cb)( parent_ctx, sev, text);
@@ -57,7 +57,7 @@ void XAttNav::message( char sev, char *text)
 XAttNav::XAttNav(
 	void 		*xa_parent_ctx,
 	xattnav_eType   xa_type,
-	char 		*xa_name,
+	const char     	*xa_name,
 	pwr_sAttrRef 	*xa_objar,
 	int 		xa_advanced_user,
 	pwr_tStatus 	*status) :

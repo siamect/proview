@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_xhelp_motif.h,v 1.1 2007-01-04 07:51:41 claes Exp $
+ * Proview   $Id: co_xhelp_motif.h,v 1.2 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,7 +42,7 @@ class CoXHelpMotif : public CoXHelp {
     Widget	india_text;
 
     void set_dimension( int width, int height);    
-    static void open_input_dialog( CoXHelpMotif *xhelp, char *text, char *title,
+    static void open_input_dialog( CoXHelpMotif *xhelp, const char *text, const char *title,
 				   char *init_text,
 				   void (*ok_cb)( CoXHelp *, char *));
     static void activate_exit( Widget w, CoXHelpMotif *xhelp, XmAnyCallbackStruct *data);

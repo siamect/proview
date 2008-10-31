@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_motif.cpp,v 1.3 2008-10-15 06:04:55 claes Exp $
+ * Proview   $Id: wb_wtt_motif.cpp,v 1.4 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -639,12 +639,12 @@ void WttMotif::set_twowindows( int two, int display_wnav, int display_wnavnode)
   }
 }
 
-void WttMotif::message( char severity, char *message)
+void WttMotif::message( char severity, const char *message)
 {
   Arg 		args[2];
   XmString	cstr;
 
-  cstr=XmStringCreateLtoR( message, "ISO8859-1");
+  cstr=XmStringCreateLtoR( (char*) message, (char*) "ISO8859-1");
   XtSetArg(args[0],XmNlabelString, cstr);
   XtSetArg(args[1],XmNheight, 20);
   XtSetValues( msg_label, args, 2);
@@ -652,12 +652,12 @@ void WttMotif::message( char severity, char *message)
 }
 
 
-void WttMotif::set_prompt( char *prompt)
+void WttMotif::set_prompt( const char *prompt)
 {
   Arg 		args[3];
   XmString	cstr;
 
-  cstr=XmStringCreateLtoR( prompt, "ISO8859-1");
+  cstr=XmStringCreateLtoR( (char*) prompt, (char*) "ISO8859-1");
   XtSetArg(args[0],XmNlabelString, cstr);
   XtSetArg(args[1],XmNwidth, 50);
   XtSetArg(args[2],XmNheight, 30);
@@ -809,7 +809,7 @@ void WttMotif::open_change_value()
     XmTextSetSelection( cmd_input, 0, strlen(value), CurrentTime);
   }
   else
-    XmTextSetString( cmd_input, "");
+    XmTextSetString( cmd_input, (char*) "");
 
   set_prompt( "value >");
   input_open = 1;
@@ -926,7 +926,7 @@ void WttMotif::activate_command( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
   wtt->message( ' ', "");
   XtSetKeyboardFocus( ((WttMotif *)wtt)->toplevel, ((WttMotif *)wtt)->cmd_input);
 
-  XmTextSetString( ((WttMotif *)wtt)->cmd_input, "");
+  XmTextSetString( ((WttMotif *)wtt)->cmd_input, (char*) "");
   wtt->set_prompt( "wtt >");
   wtt->command_open = 1;
 }
@@ -1403,8 +1403,8 @@ void WttMotif::action_inputfocus( Widget w, XmAnyCallbackStruct *data)
   disable_set_focus( wtt, 400);
 }
 
-void WttMotif::open_input_dialog( char *text, char *title,
-			     char *init_text,
+void WttMotif::open_input_dialog( const char *text, const char *title,
+			     const char *init_text,
 			     void (*ok_cb)( Wtt *, char *))
 {
   Arg		args[10];
@@ -1413,16 +1413,16 @@ void WttMotif::open_input_dialog( char *text, char *title,
 
   i = 0;
   XtSetArg(args[0], XmNlabelString,
-		cstr=XmStringCreateLtoR( text, "ISO8859-1") ); i++;
+		cstr=XmStringCreateLtoR( (char*) text, (char*) "ISO8859-1") ); i++;
   XtSetValues( india_label, args, i);
   XmStringFree( cstr);
   i = 0;
   XtSetArg(args[0], XmNdialogTitle,
-		cstr=XmStringCreateLtoR( title, "ISO8859-1") ); i++;
+		cstr=XmStringCreateLtoR( (char*) title, (char*) "ISO8859-1") ); i++;
   XtSetValues( india_widget, args, i);
   XmStringFree( cstr);
 
-  XmTextSetString( india_text, init_text);
+  XmTextSetString( india_text, (char*) init_text);
 
   XtManageChild( india_widget);
 
@@ -1431,7 +1431,7 @@ void WttMotif::open_input_dialog( char *text, char *title,
   india_ok_cb = ok_cb;
 }
 
-void WttMotif::open_confirm( char *text, char *title, 
+void WttMotif::open_confirm( const char *text, const char *title, 
 	void (*ok_cb)( Wtt *), void (*no_cb)( Wtt *))
 {
   Arg 		args[3];
@@ -1447,9 +1447,9 @@ void WttMotif::open_confirm( char *text, char *title,
 
   message( ' ', "");
 
-  XtSetArg(args[0],XmNmessageString, XmStringCreateLtoR( text, "ISO8859-1"));
+  XtSetArg(args[0],XmNmessageString, XmStringCreateLtoR( (char*) text, (char*) "ISO8859-1"));
   XtSetArg(args[1], XmNdialogTitle,
-		cstr=XmStringCreateLtoR( title, "ISO8859-1") );
+		cstr=XmStringCreateLtoR( (char*) title, (char*) "ISO8859-1") );
   XtSetValues( confirm_widget, args, 2);
   XmStringFree( cstr);
   confirm_open = 1;
@@ -1571,11 +1571,11 @@ void WttMotif::open_boot_window()
   static MrmRegisterArg reglist[] =
   {
   /* First the context variable */
-    	{ "wtt_ctx", NULL },
-	{"wtt_boot_list_cr",(caddr_t)WttMotif::boot_list_cr },
-	{"wtt_boot_ok_cb",(caddr_t)WttMotif::boot_ok_cb },
-	{"wtt_boot_cancel_cb",(caddr_t)WttMotif::boot_cancel_cb },
-	{"wtt_boot_destroy_cb",(caddr_t)WttMotif::boot_destroy_cb },
+    	{(char*) "wtt_ctx", NULL },
+	{(char*) "wtt_boot_list_cr",(caddr_t)WttMotif::boot_list_cr },
+	{(char*) "wtt_boot_ok_cb",(caddr_t)WttMotif::boot_ok_cb },
+	{(char*) "wtt_boot_cancel_cb",(caddr_t)WttMotif::boot_cancel_cb },
+	{(char*) "wtt_boot_destroy_cb",(caddr_t)WttMotif::boot_destroy_cb },
 	};
   static int reglist_num = XtNumber(reglist);
 
@@ -1603,8 +1603,8 @@ void WttMotif::open_boot_window()
       	reglist, 
       	reglist_num,
       	toplevel,
-      	"bootFilesWindow", 
-     	"bootFilesWindow", 
+      	(char*) "bootFilesWindow", 
+     	(char*) "bootFilesWindow", 
      	 NULL, 
      	 0,
      	 &boot_dia, 
@@ -1894,8 +1894,8 @@ void WttMotif::options_hier_tog_cr( Widget w, Wtt *wtt, XmAnyCallbackStruct *dat
 WttMotif::WttMotif( 
 	void	*wt_parent_ctx,
 	Widget 	wt_parent_wid,
-	char 	*wt_name,
-	char	*iconname,
+	const char 	*wt_name,
+	const char	*iconname,
 	void	*wt_wbctx,
 	pwr_tVolumeId wt_volid,
 	ldh_tVolume wt_volctx,
@@ -1932,82 +1932,82 @@ WttMotif::WttMotif(
 
   static XtActionsRec actions[] =
   {
-    {"wtt_inputfocus",      (XtActionProc) WttMotif::action_inputfocus}
+    {(char*) "wtt_inputfocus",      (XtActionProc) WttMotif::action_inputfocus}
   };
 
   static MrmRegisterArg	reglist[] = {
-        { "wtt_ctx", 0 },
-	{"wtt_activate_exit",(caddr_t)WttMotif::activate_exit },
-	{"wtt_activate_collapse",(caddr_t)WttMotif::activate_collapse },
-	{"wtt_activate_save",(caddr_t)WttMotif::activate_save },
-	{"wtt_activate_revert",(caddr_t)WttMotif::activate_revert },
-	{"wtt_activate_syntax",(caddr_t)WttMotif::activate_syntax },
-	{"wtt_activate_print",(caddr_t)WttMotif::activate_print },
-	{"wtt_activate_find",(caddr_t)WttMotif::activate_find },
-	{"wtt_activate_findregex",(caddr_t)WttMotif::activate_findregex },
-	{"wtt_activate_findnext",(caddr_t)WttMotif::activate_findnext },
-	{"wtt_activate_selmode",(caddr_t)WttMotif::activate_selmode },
-	{"wtt_activate_cut",(caddr_t)WttMotif::activate_cut },
-	{"wtt_activate_copy",(caddr_t)WttMotif::activate_copy },
-	{"wtt_activate_paste",(caddr_t)WttMotif::activate_paste },
-	{"wtt_activate_pasteinto",(caddr_t)WttMotif::activate_pasteinto },
-	{"wtt_activate_copykeep",(caddr_t)WttMotif::activate_copykeep },
-	{"wtt_activate_rename",(caddr_t)WttMotif::activate_rename },
-	{"wtt_activate_configure",(caddr_t)WttMotif::activate_configure },
-	{"wtt_activate_utilities",(caddr_t)WttMotif::activate_utilities },
-	{"wtt_activate_openplc",(caddr_t)WttMotif::activate_openplc },
-	{"wtt_activate_openobject",(caddr_t)WttMotif::activate_openobject },
-	{"wtt_activate_openvolobject",(caddr_t)WttMotif::activate_openvolobject },
-	{"wtt_activate_confproject",(caddr_t)WttMotif::activate_confproject },
-	{"wtt_activate_openvolume",(caddr_t)WttMotif::activate_openvolume },
-	{"wtt_activate_openbuffer",(caddr_t)WttMotif::activate_openbuffer },
-	{"wtt_activate_openfile_dbs",(caddr_t)WttMotif::activate_openfile_dbs },
-	{"wtt_activate_openfile_wbl",(caddr_t)WttMotif::activate_openfile_wbl },
-	{"wtt_activate_openpl",(caddr_t)WttMotif::activate_openpl },
-	{"wtt_activate_opengvl",(caddr_t)WttMotif::activate_opengvl },
-	{"wtt_activate_openudb",(caddr_t)WttMotif::activate_openudb },
-	{"wtt_activate_spreadsheet",(caddr_t)WttMotif::activate_spreadsheet },
-	{"wtt_activate_openge",(caddr_t)WttMotif::activate_openge },
-	{"wtt_activate_openclasseditor",(caddr_t)WttMotif::activate_openclasseditor },
-	{"wtt_activate_buildobject",(caddr_t)WttMotif::activate_buildobject },
-	{"wtt_activate_buildvolume",(caddr_t)WttMotif::activate_buildvolume },
-	{"wtt_activate_buildnode",(caddr_t)WttMotif::activate_buildnode },
-	{"wtt_activate_distribute",(caddr_t)WttMotif::activate_distribute },
-	{"wtt_activate_updateclasses",(caddr_t)WttMotif::activate_updateclasses },
-	{"wtt_activate_showcrossref",(caddr_t)WttMotif::activate_showcrossref },
-	{"wtt_activate_change_value",(caddr_t)WttMotif::activate_change_value },
-	{"wtt_activate_command",(caddr_t)WttMotif::activate_command },
-	{"wtt_activate_zoom_in",(caddr_t)WttMotif::activate_zoom_in },
-	{"wtt_activate_zoom_out",(caddr_t)WttMotif::activate_zoom_out },
-	{"wtt_activate_zoom_reset",(caddr_t)WttMotif::activate_zoom_reset },
-	{"wtt_activate_twowindows",(caddr_t)WttMotif::activate_twowindows },
-	{"wtt_activate_messages",(caddr_t)WttMotif::activate_messages },
-	{"wtt_activate_view",(caddr_t)WttMotif::activate_view },
-	{"wtt_activate_savesettings",(caddr_t)WttMotif::activate_savesettings },
-	{"wtt_activate_restoresettings",(caddr_t)WttMotif::activate_restoresettings },
-	{"wtt_activate_scriptproj",(caddr_t)WttMotif::activate_scriptproj },
-	{"wtt_activate_scriptbase",(caddr_t)WttMotif::activate_scriptbase },
-	{"wtt_activate_help",(caddr_t)WttMotif::activate_help },
-	{"wtt_activate_help_project",(caddr_t)WttMotif::activate_help_project },
-	{"wtt_activate_help_proview",(caddr_t)WttMotif::activate_help_proview },
-	{"wtt_create_menubutton",(caddr_t)WttMotif::create_menubutton },
-	{"wtt_create_msg_label",(caddr_t)WttMotif::create_msg_label },
-	{"wtt_create_cmd_prompt",(caddr_t)WttMotif::create_cmd_prompt },
-	{"wtt_create_cmd_input",(caddr_t)WttMotif::create_cmd_input },
-	{"wtt_create_palette_form",(caddr_t)WttMotif::create_palette_form },
-	{"wtt_create_wnav_form",(caddr_t)WttMotif::create_wnav_form },
-	{"wtt_create_selmode",(caddr_t)WttMotif::create_selmode },
-	{"wtt_activate_india_ok",(caddr_t)WttMotif::activate_india_ok },
-	{"wtt_activate_india_cancel",(caddr_t)WttMotif::activate_india_cancel },
-	{"wtt_create_india_label",(caddr_t)WttMotif::create_india_label },
-	{"wtt_create_india_text",(caddr_t)WttMotif::create_india_text },
-	{"wtt_activate_confirm_ok",(caddr_t)WttMotif::activate_confirm_ok },
-	{"wtt_activate_confirm_no",(caddr_t)WttMotif::activate_confirm_no },
-	{"wtt_activate_confirm_cancel",(caddr_t)WttMotif::activate_confirm_cancel },
-	{"wtt_options_form_cr",(caddr_t)WttMotif::options_form_cr },
-	{"wtt_options_entry_tog_cr",(caddr_t)WttMotif::options_entry_tog_cr },
-	{"wtt_options_hier_tog_cr",(caddr_t)WttMotif::options_hier_tog_cr },
-	{"wtt_options_act_but_cb",(caddr_t)WttMotif::options_act_but_cb }
+        {(char*) "wtt_ctx", 0 },
+	{(char*) "wtt_activate_exit",(caddr_t)WttMotif::activate_exit },
+	{(char*) "wtt_activate_collapse",(caddr_t)WttMotif::activate_collapse },
+	{(char*) "wtt_activate_save",(caddr_t)WttMotif::activate_save },
+	{(char*) "wtt_activate_revert",(caddr_t)WttMotif::activate_revert },
+	{(char*) "wtt_activate_syntax",(caddr_t)WttMotif::activate_syntax },
+	{(char*) "wtt_activate_print",(caddr_t)WttMotif::activate_print },
+	{(char*) "wtt_activate_find",(caddr_t)WttMotif::activate_find },
+	{(char*) "wtt_activate_findregex",(caddr_t)WttMotif::activate_findregex },
+	{(char*) "wtt_activate_findnext",(caddr_t)WttMotif::activate_findnext },
+	{(char*) "wtt_activate_selmode",(caddr_t)WttMotif::activate_selmode },
+	{(char*) "wtt_activate_cut",(caddr_t)WttMotif::activate_cut },
+	{(char*) "wtt_activate_copy",(caddr_t)WttMotif::activate_copy },
+	{(char*) "wtt_activate_paste",(caddr_t)WttMotif::activate_paste },
+	{(char*) "wtt_activate_pasteinto",(caddr_t)WttMotif::activate_pasteinto },
+	{(char*) "wtt_activate_copykeep",(caddr_t)WttMotif::activate_copykeep },
+	{(char*) "wtt_activate_rename",(caddr_t)WttMotif::activate_rename },
+	{(char*) "wtt_activate_configure",(caddr_t)WttMotif::activate_configure },
+	{(char*) "wtt_activate_utilities",(caddr_t)WttMotif::activate_utilities },
+	{(char*) "wtt_activate_openplc",(caddr_t)WttMotif::activate_openplc },
+	{(char*) "wtt_activate_openobject",(caddr_t)WttMotif::activate_openobject },
+	{(char*) "wtt_activate_openvolobject",(caddr_t)WttMotif::activate_openvolobject },
+	{(char*) "wtt_activate_confproject",(caddr_t)WttMotif::activate_confproject },
+	{(char*) "wtt_activate_openvolume",(caddr_t)WttMotif::activate_openvolume },
+	{(char*) "wtt_activate_openbuffer",(caddr_t)WttMotif::activate_openbuffer },
+	{(char*) "wtt_activate_openfile_dbs",(caddr_t)WttMotif::activate_openfile_dbs },
+	{(char*) "wtt_activate_openfile_wbl",(caddr_t)WttMotif::activate_openfile_wbl },
+	{(char*) "wtt_activate_openpl",(caddr_t)WttMotif::activate_openpl },
+	{(char*) "wtt_activate_opengvl",(caddr_t)WttMotif::activate_opengvl },
+	{(char*) "wtt_activate_openudb",(caddr_t)WttMotif::activate_openudb },
+	{(char*) "wtt_activate_spreadsheet",(caddr_t)WttMotif::activate_spreadsheet },
+	{(char*) "wtt_activate_openge",(caddr_t)WttMotif::activate_openge },
+	{(char*) "wtt_activate_openclasseditor",(caddr_t)WttMotif::activate_openclasseditor },
+	{(char*) "wtt_activate_buildobject",(caddr_t)WttMotif::activate_buildobject },
+	{(char*) "wtt_activate_buildvolume",(caddr_t)WttMotif::activate_buildvolume },
+	{(char*) "wtt_activate_buildnode",(caddr_t)WttMotif::activate_buildnode },
+	{(char*) "wtt_activate_distribute",(caddr_t)WttMotif::activate_distribute },
+	{(char*) "wtt_activate_updateclasses",(caddr_t)WttMotif::activate_updateclasses },
+	{(char*) "wtt_activate_showcrossref",(caddr_t)WttMotif::activate_showcrossref },
+	{(char*) "wtt_activate_change_value",(caddr_t)WttMotif::activate_change_value },
+	{(char*) "wtt_activate_command",(caddr_t)WttMotif::activate_command },
+	{(char*) "wtt_activate_zoom_in",(caddr_t)WttMotif::activate_zoom_in },
+	{(char*) "wtt_activate_zoom_out",(caddr_t)WttMotif::activate_zoom_out },
+	{(char*) "wtt_activate_zoom_reset",(caddr_t)WttMotif::activate_zoom_reset },
+	{(char*) "wtt_activate_twowindows",(caddr_t)WttMotif::activate_twowindows },
+	{(char*) "wtt_activate_messages",(caddr_t)WttMotif::activate_messages },
+	{(char*) "wtt_activate_view",(caddr_t)WttMotif::activate_view },
+	{(char*) "wtt_activate_savesettings",(caddr_t)WttMotif::activate_savesettings },
+	{(char*) "wtt_activate_restoresettings",(caddr_t)WttMotif::activate_restoresettings },
+	{(char*) "wtt_activate_scriptproj",(caddr_t)WttMotif::activate_scriptproj },
+	{(char*) "wtt_activate_scriptbase",(caddr_t)WttMotif::activate_scriptbase },
+	{(char*) "wtt_activate_help",(caddr_t)WttMotif::activate_help },
+	{(char*) "wtt_activate_help_project",(caddr_t)WttMotif::activate_help_project },
+	{(char*) "wtt_activate_help_proview",(caddr_t)WttMotif::activate_help_proview },
+	{(char*) "wtt_create_menubutton",(caddr_t)WttMotif::create_menubutton },
+	{(char*) "wtt_create_msg_label",(caddr_t)WttMotif::create_msg_label },
+	{(char*) "wtt_create_cmd_prompt",(caddr_t)WttMotif::create_cmd_prompt },
+	{(char*) "wtt_create_cmd_input",(caddr_t)WttMotif::create_cmd_input },
+	{(char*) "wtt_create_palette_form",(caddr_t)WttMotif::create_palette_form },
+	{(char*) "wtt_create_wnav_form",(caddr_t)WttMotif::create_wnav_form },
+	{(char*) "wtt_create_selmode",(caddr_t)WttMotif::create_selmode },
+	{(char*) "wtt_activate_india_ok",(caddr_t)WttMotif::activate_india_ok },
+	{(char*) "wtt_activate_india_cancel",(caddr_t)WttMotif::activate_india_cancel },
+	{(char*) "wtt_create_india_label",(caddr_t)WttMotif::create_india_label },
+	{(char*) "wtt_create_india_text",(caddr_t)WttMotif::create_india_text },
+	{(char*) "wtt_activate_confirm_ok",(caddr_t)WttMotif::activate_confirm_ok },
+	{(char*) "wtt_activate_confirm_no",(caddr_t)WttMotif::activate_confirm_no },
+	{(char*) "wtt_activate_confirm_cancel",(caddr_t)WttMotif::activate_confirm_cancel },
+	{(char*) "wtt_options_form_cr",(caddr_t)WttMotif::options_form_cr },
+	{(char*) "wtt_options_entry_tog_cr",(caddr_t)WttMotif::options_entry_tog_cr },
+	{(char*) "wtt_options_hier_tog_cr",(caddr_t)WttMotif::options_hier_tog_cr },
+	{(char*) "wtt_options_act_but_cb",(caddr_t)WttMotif::options_act_but_cb }
 	};
 
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
@@ -2177,19 +2177,19 @@ WttMotif::WttMotif(
 
   MrmRegisterNames(reglist, reglist_num);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "wtt_window", toplevel,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "wtt_window", toplevel,
 			name, args, i, &wtt_widget, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
 
-  sts = MrmFetchWidget(s_DRMh, "input_dialog", toplevel,
+  sts = MrmFetchWidget(s_DRMh, (char*) "input_dialog", toplevel,
 		&india_widget, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch input dialog\n");
 
-  sts = MrmFetchWidget(s_DRMh, "confirm_dialog", toplevel,
+  sts = MrmFetchWidget(s_DRMh, (char*) "confirm_dialog", toplevel,
 		&confirm_widget, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch confirm dialog\n");
 
-  sts = MrmFetchWidget(s_DRMh, "optionsForm", toplevel,
+  sts = MrmFetchWidget(s_DRMh, (char*) "optionsForm", toplevel,
 		&options_form, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch options dialog\n");
 
@@ -2367,7 +2367,7 @@ Widget WttMotif::build_menu()
   Widget popup;
   int i = 0;
 
-  popup = build_submenu( wnav_form, MENU_POPUP, "", mcp, 
+  popup = build_submenu( wnav_form, MENU_POPUP, (char*) "", mcp, 
 			 popup_button_cb, (void *) this, 
 			 (ldh_sMenuItem *) mcp->ItemList, &i);
   if (popup != NULL) 
@@ -2395,7 +2395,7 @@ Widget WttMotif::build_submenu( Widget Parent, int MenuType,
   // Set default fontlist
   font = XLoadQueryFont( flow_Display(Parent),
 	      "-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1");
-  fontentry = XmFontListEntryCreate( "tag1", XmFONT_IS_FONT, font);
+  fontentry = XmFontListEntryCreate( (char*) "tag1", XmFONT_IS_FONT, font);
   fontlist = XmFontListAppendEntry( NULL, fontentry);
   XtFree( (char *)fontentry);
 
@@ -2404,9 +2404,9 @@ Widget WttMotif::build_submenu( Widget Parent, int MenuType,
   XtSetArg(ArgList[i], XmNbuttonFontList, fontlist); i++;
   XtSetArg(ArgList[i], XmNlabelFontList, fontlist); i++;
   if (MenuType == MENU_PULLDOWN || MenuType == MENU_OPTION)
-    Menu = XmCreatePulldownMenu(Parent, "_pulldown", ArgList, i);
+    Menu = XmCreatePulldownMenu(Parent, (char*) "_pulldown", ArgList, i);
   else if (MenuType == MENU_POPUP)
-    Menu = XmCreatePopupMenu(Parent, "_popup", ArgList, i);  
+    Menu = XmCreatePopupMenu(Parent, (char*) "_popup", ArgList, i);  
   else  {
     XtWarning("Invalid menu type passed to BuildMenu().");
     return NULL;

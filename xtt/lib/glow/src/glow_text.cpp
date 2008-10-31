@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_text.cpp,v 1.6 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: glow_text.cpp,v 1.7 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,8 +21,8 @@
 
 
 #include <stdlib.h>
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include "glow_text.h"
 #include "glow_draw.h"
 

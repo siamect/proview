@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_srep.cpp,v 1.7 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_srep.cpp,v 1.8 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -326,7 +326,7 @@ void wb_srep::recix_clear()
   m_recix = 0;
 }
 
-void wb_srep::recix_set_destination( char *d) 
+void wb_srep::recix_set_destination( const char *d) 
 { 
   m_recix->set_destination( d);
 }

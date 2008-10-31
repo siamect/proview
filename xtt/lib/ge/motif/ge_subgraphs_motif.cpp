@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subgraphs_motif.cpp,v 1.2 2008-03-19 12:59:38 claes Exp $
+ * Proview   $Id: ge_subgraphs_motif.cpp,v 1.3 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <vector.h>
+#include <vector>
 
 extern "C" {
 #include "co_cdh.h"
@@ -108,7 +108,7 @@ static void subgraphs_activate_help( Widget w, SubGraphsMotif *subgraphs, XmAnyC
 SubGraphsMotif::SubGraphsMotif(
 	void *xn_parent_ctx,
 	Widget	xn_parent_wid,
-	char *xn_name,
+	const char *xn_name,
 	void *xn_growctx,
 	Widget *w,
 	pwr_tStatus *status) :
@@ -126,13 +126,13 @@ SubGraphsMotif::SubGraphsMotif(
   char		name[] = "Proview/R Navigator";
 
   static MrmRegisterArg	reglist[] = {
-        { "subgraphs_ctx", 0 },
-	{"subgraphs_activate_exit",(caddr_t)subgraphs_activate_exit },
-	{"subgraphs_activate_attr",(caddr_t)subgraphs_activate_attr },
-	{"subgraphs_activate_set_extern",(caddr_t)subgraphs_activate_set_extern },
-	{"subgraphs_activate_set_intern",(caddr_t)subgraphs_activate_set_intern },
-	{"subgraphs_activate_help",(caddr_t)subgraphs_activate_help },
-	{"subgraphs_create_sg_form",(caddr_t)subgraphs_create_sg_form }
+        {(char*) "subgraphs_ctx", 0 },
+	{(char*) "subgraphs_activate_exit",(caddr_t)subgraphs_activate_exit },
+	{(char*) "subgraphs_activate_attr",(caddr_t)subgraphs_activate_attr },
+	{(char*) "subgraphs_activate_set_extern",(caddr_t)subgraphs_activate_set_extern },
+	{(char*) "subgraphs_activate_set_intern",(caddr_t)subgraphs_activate_set_intern },
+	{(char*) "subgraphs_activate_help",(caddr_t)subgraphs_activate_help },
+	{(char*) "subgraphs_create_sg_form",(caddr_t)subgraphs_create_sg_form }
 	};
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
 
@@ -157,7 +157,7 @@ SubGraphsMotif::SubGraphsMotif(
   parent_wid = XtCreatePopupShell(title, 
 		topLevelShellWidgetClass, parent_wid, args, 0);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "subgraphs_window", parent_wid,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "subgraphs_window", parent_wid,
 			name, args, 1, &toplevel, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
 

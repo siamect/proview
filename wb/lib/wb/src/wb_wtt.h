@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.h,v 1.21 2008-10-28 09:54:15 claes Exp $
+ * Proview   $Id: wb_wtt.h,v 1.22 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -94,7 +94,7 @@ class wb_session;
 class WttApplListElem {
   public:
     WttApplListElem( wb_eUtility al_type, void *al_ctx, pwr_tObjid al_objid,
-	char *al_name);
+	const char *al_name);
     wb_eUtility		type;
     void		*ctx;
     pwr_tObjid		objid;
@@ -110,9 +110,9 @@ class WttApplList {
 
     WttApplListElem *root;
     void insert( wb_eUtility type, void *ctx, 
-	pwr_tObjid objid, char *name);
+	pwr_tObjid objid, const char *name);
     void remove( void *ctx);
-    int find( wb_eUtility type, char *name, void **ctx);
+    int find( wb_eUtility type, const char *name, void **ctx);
     int find( wb_eUtility type, pwr_tObjid objid, void **ctx);
     void set_editmode( int editmode, ldh_tSesContext ldhses);
 };
@@ -121,8 +121,8 @@ class Wtt : public WUtility {
   public:
     Wtt( 
 	void	*wt_parent_ctx,
-	char 	*wt_name,
-	char	*iconname,
+	const char 	*wt_name,
+	const char	*iconname,
 	ldh_tWBContext wt_wbctx,
 	pwr_tVolumeId wt_volid,
 	ldh_tVolume wt_volctx,
@@ -177,7 +177,7 @@ class Wtt : public WUtility {
     pwr_tObjid	input_objid;
     wtt_eInputMode input_mode;
     void	(*close_cb)(void *ctx);
-    void	(*open_volume_cb)(void *ctx, wb_eType, char *, wow_eFileSelType);
+    void	(*open_volume_cb)(void *ctx, wb_eType, const char *, wow_eFileSelType);
     void	(*open_project_volume_cb)(void *ctx);
     int		(*time_to_exit_cb)(void *ctx);
     ldh_sMenuCall *mcp;
@@ -258,8 +258,8 @@ class Wtt : public WUtility {
     virtual void set_noedit_show() {}
     virtual void set_edit_show() {}
     virtual void set_twowindows( int two, int display_wnav, int display_wnavnode) {}
-    virtual void message( char severity, char *message) {}
-    virtual void set_prompt( char *prompt) {}
+    virtual void message( char severity, const char *message) {}
+    virtual void set_prompt( const char *prompt) {}
     virtual void open_change_value() {}
     virtual void close_change_value() {}
     virtual void open_change_name() {}
@@ -270,10 +270,10 @@ class Wtt : public WUtility {
     virtual wb_build *build_new() { return NULL;}
     virtual void wpkg_new() {}
     virtual int ute_new( char *title) {return 0;}
-    virtual void open_input_dialog( char *text, char *title,
-				    char *init_text,
+    virtual void open_input_dialog( const char *text, const char *title,
+				    const char *init_text,
 				    void (*ok_cb)( Wtt *, char *)) {}
-    virtual void open_confirm( char *text, char *title, 
+    virtual void open_confirm( const char *text, const char *title, 
 			       void (*ok_cb)( Wtt *), void (*no_cb)( Wtt *)) {}
     virtual void open_boot_window() {}
     virtual void update_options_form() {}
@@ -303,7 +303,7 @@ class Wtt : public WUtility {
 				      int x, int y);
     static void create_pal_popup_menu_cb( void *wtt, pwr_tCid cid,
 				      int x, int y);
-    static void gbl_command_cb( void *ctx, char *cmd);
+    static void gbl_command_cb( void *ctx, const char *cmd);
     static void configure_cb( void *ctx, int edit);
     static void findregex_ok( Wtt *wtt, char *search_str);
     static void find_ok( Wtt *wtt, char *search_str);
@@ -321,7 +321,7 @@ class Wtt : public WUtility {
     static void close_now_ok( Wtt *wtt);
     static int detach_volume_cb( void *ctx);
     static int get_palette_select_cb( void *ctx, pwr_tCid *classid);
-    static void message_cb( void *ctx, char severity, char *msg);
+    static void message_cb( void *ctx, char severity, const char *msg);
     static void close( void *ctx);
     static void change_value( void *ctx);
     static int get_wbctx( void *ctx, ldh_tWBContext *wbctx);

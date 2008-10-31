@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.cpp,v 1.33 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_growctx.cpp,v 1.34 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,8 +19,8 @@
 
 #include "glow_std.h"
 
-#include <fstream.h>
-#include <vector.h>
+#include <fstream>
+#include <vector>
 #include <math.h>
 #include <float.h>
 #include <stdlib.h>
@@ -2187,7 +2187,7 @@ int GrowCtx::export_flow( char *filename)
   return ef.export_flow( filename);
 }
 
-int GrowCtx::open_subgraph_from_name( char *name, glow_eSaveMode mode)
+int GrowCtx::open_subgraph_from_name( const char *name, glow_eSaveMode mode)
 {
   char filename[120];
   char path_name[120];
@@ -2342,7 +2342,7 @@ void GrowCtx::draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int		i;
 
-  if ( nodraw || w == &navw && no_nav)
+  if ( nodraw || (w == &navw && no_nav))
     return;
 
   if ( defered_redraw_active) {

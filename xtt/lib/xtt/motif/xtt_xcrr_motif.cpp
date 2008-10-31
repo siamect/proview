@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xcrr_motif.cpp,v 1.1 2007-01-04 08:30:03 claes Exp $
+ * Proview   $Id: xtt_xcrr_motif.cpp,v 1.2 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -148,15 +148,15 @@ XCrrMotif::XCrrMotif(
 
   static XtActionsRec actions[] =
   {
-    {"xcrr_inputfocus",      (XtActionProc) action_inputfocus}
+    {(char*) "xcrr_inputfocus",      (XtActionProc) action_inputfocus}
   };
 
   static MrmRegisterArg	reglist[] = {
-        { "xcrr_ctx", 0 },
-	{"xcrr_activate_exit",(caddr_t)activate_exit },
-	{"xcrr_activate_openplc",(caddr_t)activate_openplc },
-	{"xcrr_activate_help",(caddr_t)activate_help },
-	{"xcrr_create_xcrrnav_form",(caddr_t)create_xcrrnav_form }
+        {(char*) "xcrr_ctx", 0 },
+	{(char*) "xcrr_activate_exit",(caddr_t)activate_exit },
+	{(char*) "xcrr_activate_openplc",(caddr_t)activate_openplc },
+	{(char*) "xcrr_activate_help",(caddr_t)activate_help },
+	{(char*) "xcrr_create_xcrrnav_form",(caddr_t)create_xcrrnav_form }
 	};
 
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
@@ -184,7 +184,7 @@ XCrrMotif::XCrrMotif(
   parent_wid = XtCreatePopupShell( title, 
 		topLevelShellWidgetClass, parent_wid, args, i);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "xcrr_window", parent_wid,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "xcrr_window", parent_wid,
 			name, args, 1, &toplevel, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
 

@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_user.cpp,v 1.10 2008-09-05 08:56:58 claes Exp $
+ * Proview   $Id: co_user.cpp,v 1.11 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -275,7 +275,7 @@ int GeUser::modify_system( char *name, pwr_tMask attributes, char *description)
   return USER__SUCCESS;
 }
 
-int GeUser::get_system_data( char *name, pwr_tMask *attributes, pwr_tOix *id, char *description)
+int GeUser::get_system_data( const char *name, pwr_tMask *attributes, pwr_tOix *id, char *description)
 {
   int sts;
 
@@ -418,7 +418,8 @@ int GeUser::add_user( char *system, char *user, char *password, pwr_tMask priv, 
   return USER__SUCCESS;
 }
 
-int GeUser::get_user( char *gu_system, char *gu_user, char *gu_password, unsigned int *priv)
+int GeUser::get_user( const char *gu_system, const char *gu_user, const char *gu_password, 
+		      unsigned int *priv)
 {
   UserList *ul;
   SystemList *sl;
@@ -467,7 +468,7 @@ int GeUser::get_user( char *gu_system, char *gu_user, char *gu_password, unsigne
   return USER__NOSUCHUSER;
 }
 
-int GeUser::get_user_priv( char *gu_system, char *gu_user, unsigned int *priv)
+int GeUser::get_user_priv( const char *gu_system, const char *gu_user, unsigned int *priv)
 {
   UserList *ul;
   SystemList *sl;
@@ -937,7 +938,7 @@ void UserList::print( int brief)
   }
 }
 
-char *UserList::pwcrypt( char *str)
+char *UserList::pwcrypt( const char *str)
 {
   static char cstr[200];
 
@@ -945,7 +946,7 @@ char *UserList::pwcrypt( char *str)
 #if 0
   char *s, *t;
 
-  for ( s = str, t = cstr; *s; s++, t++)
+  for ( s = (char *)str, t = cstr; *s; s++, t++)
   {
     if ( *s >= 48 && *s <= 122)
       *t = 122 - ( *s - 48);

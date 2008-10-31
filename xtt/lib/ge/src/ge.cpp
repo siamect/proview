@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.cpp,v 1.32 2008-10-16 08:54:31 claes Exp $
+ * Proview   $Id: ge.cpp,v 1.33 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 /* ge.cpp -- Graphical editor window */
 
 
-#include <vector.h>
+#include <vector>
 #include "glow_std.h"
 
 #if defined OS_VMS || defined OS_LINUX
@@ -680,8 +680,8 @@ int Ge::command_cb( void *ge_ctx, char *command)
   return 0;
 }
 
-int Ge::create_modal_dialog_cb( void *ge_ctx, char *title, char *text, char *button1, char *button2,
-				char *button3, char *image)
+int Ge::create_modal_dialog_cb( void *ge_ctx, const char *title, const char *text, const char *button1, 
+				const char *button2, const char *button3, const char *image)
 {
   return ((Ge *)ge_ctx)->create_modal_dialog( title, text, button1, button2, button3, image);
 }
@@ -1977,7 +1977,7 @@ void Ge::message( pwr_tStatus sts)
   graph->message( sts);
 }
 
-void Ge::message_cb( void *ctx, char severity, char *message)
+void Ge::message_cb( void *ctx, char severity, const char *message)
 {
   ((Ge *)ctx)->message( severity, message);
 }

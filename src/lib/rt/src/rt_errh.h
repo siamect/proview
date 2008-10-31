@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_errh.h,v 1.8 2007-05-16 12:34:40 claes Exp $
+ * Proview   $Id: rt_errh.h,v 1.9 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -138,22 +138,22 @@ typedef struct {
 /* NOTE! errh_Init MUST always be called before any other
 	 errh-function is called.  */
 
-pwr_tStatus	errh_Init	(char *programName, errh_eAnix anix);
+pwr_tStatus	errh_Init	(const char *programName, errh_eAnix anix);
 void		errh_SetStatus  (pwr_tStatus sts);
 void		errh_Interactive	();
 char		*errh_GetMsg	(const pwr_tStatus sts, char *buf, int bufSize);
 char		*errh_GetText	(const pwr_tStatus sts, char *buf, int bufSize);
-char		*errh_Log	(char *buff, char severity, char *msg, ...);
-void		errh_Fatal	(char *msg, ...);
-void		errh_Error	(char *msg, ...);
-void		errh_Warning	(char *msg, ...);
-void		errh_Info	(char *msg, ...);
-void		errh_Success	(char *msg, ...);
-void		errh_LogFatal	(errh_sLog*, char *msg, ...);
-void		errh_LogError	(errh_sLog*, char *msg, ...);
-void		errh_LogWarning	(errh_sLog*, char *msg, ...);
-void		errh_LogInfo	(errh_sLog*, char *msg, ...);
-void		errh_LogSuccess	(errh_sLog*, char *msg, ...);
+char		*errh_Log	(char *buff, char severity, const char *msg, ...);
+void		errh_Fatal	(const char *msg, ...);
+void		errh_Error	(const char *msg, ...);
+void		errh_Warning	(const char *msg, ...);
+void		errh_Info	(const char *msg, ...);
+void		errh_Success	(const char *msg, ...);
+void		errh_LogFatal	(errh_sLog*, const char *msg, ...);
+void		errh_LogError	(errh_sLog*, const char *msg, ...);
+void		errh_LogWarning	(errh_sLog*, const char *msg, ...);
+void		errh_LogInfo	(errh_sLog*, const char *msg, ...);
+void		errh_LogSuccess	(errh_sLog*, const char *msg, ...);
 void		*errh_ErrArgMsg	(pwr_tStatus sts);
 void		*errh_ErrArgAF	(char *s);
 void		*errh_ErrArgL	(int val);

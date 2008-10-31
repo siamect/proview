@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growimage.cpp,v 1.8 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_growimage.cpp,v 1.9 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
@@ -44,8 +44,8 @@ extern "C" {
 #include "co_dcli.h"
 }
  
-GrowImage::GrowImage( GrowCtx *glow_ctx, char *name, double x, double y, 
-	        char *imagefile,
+GrowImage::GrowImage( GrowCtx *glow_ctx, const char *name, double x, double y, 
+	        const char *imagefile,
 		glow_mDisplayLevel display_lev) : 
                 ll(glow_ctx,x,y), ur(glow_ctx,x+1,y+1),
     		hot(0), pzero(glow_ctx), stored_pos(glow_ctx), 
@@ -132,7 +132,7 @@ GrowImage::~GrowImage()
 #endif
 }
 
-int GrowImage::insert_image( char *imagefile)
+int GrowImage::insert_image( const char *imagefile)
 {
   int found = 0;
   char imagename[80];

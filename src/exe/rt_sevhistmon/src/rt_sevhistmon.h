@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_sevhistmon.h,v 1.3 2008-09-18 15:06:13 claes Exp $
+ * Proview   $Id: rt_sevhistmon.h,v 1.4 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #ifndef rt_sevhistmon_h
 #define rt_sevhistmon_h
 
-#include <vector.h>
+#include <vector>
 
 #include "pwr.h"
 #include "pwr_class.h"

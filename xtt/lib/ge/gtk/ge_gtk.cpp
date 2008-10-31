@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.cpp,v 1.18 2008-10-16 08:53:42 claes Exp $
+ * Proview   $Id: ge_gtk.cpp,v 1.19 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,7 +28,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <vector.h>
+#include <vector>
 #include <ctype.h>
 #include <float.h>
 #include <math.h>
@@ -65,7 +65,7 @@
 #include "wb_nav_gtk.h"
 
 
-static GtkWidget *image_button( char *filename)
+static GtkWidget *image_button( const char *filename)
 {
   
   GtkWidget *image, *box;
@@ -84,7 +84,7 @@ static GtkWidget *image_button( char *filename)
   return box;
 }
 
-static GtkWidget *image_widget( char *filename)
+static GtkWidget *image_widget( const char *filename)
 {
   
   GtkWidget *image;
@@ -97,13 +97,13 @@ static GtkWidget *image_widget( char *filename)
 }
 
 
-int GeGtk::create_modal_dialog( char *title, char *text, char *button1, char *button2, char *button3,
-				 char *image)
+int GeGtk::create_modal_dialog( const char *title, const char *text, const char *button1, 
+				const char *button2, const char *button3, const char *image)
 {
   return wow->CreateModalDialog( title, text, button1, button2, button3, image);
 }
 
-void GeGtk::create_list( char *title, char *texts,
+void GeGtk::create_list( const char *title, const char *texts,
 			   void (action_cb)( void *, char *), void *ctx) 
 {
   CoWowGtk wow( toplevel);
@@ -126,8 +126,8 @@ void GeGtk::set_title( char *title)
   gtk_window_set_title( GTK_WINDOW(toplevel), title);
 }
 
-void GeGtk::open_input_dialog( char *text, char *title,
-			    char *init_text,
+void GeGtk::open_input_dialog( const char *text, const char *title,
+			    const char *init_text,
 			    void (*x_india_ok_cb)( Ge *, char *))
 {
   g_object_set( india_widget, 
@@ -144,7 +144,7 @@ void GeGtk::open_input_dialog( char *text, char *title,
   india_ok_cb = x_india_ok_cb;
 }
 
-void GeGtk::message( char severity, char *message)
+void GeGtk::message( char severity, const char *message)
 {
   char *messageutf8 = g_convert( message, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
   gtk_label_set_text( GTK_LABEL(msg_label), messageutf8);
@@ -156,7 +156,7 @@ void GeGtk::status_msg( char *pos_str)
   gtk_label_set_text( GTK_LABEL(cursor_position), pos_str);
 }
 
-void GeGtk::change_text_cb( void *ge_ctx, void *text_object, char *text)
+void GeGtk::change_text_cb( void *ge_ctx, void *text_object, const char *text)
 {
   GeGtk *gectx = (GeGtk *)ge_ctx;
 
@@ -327,7 +327,7 @@ int GeGtk::get_plant_select( char *select_name)
   return 0;
 }
 
-void GeGtk::open_yesnodia( char *text, char *title, 
+void GeGtk::open_yesnodia( const char *text, const char *title, 
 	void (*yes_cb)( Ge *), void (*no_cb)( Ge *))
 {
   if ( yesnodia_open)  {
@@ -366,7 +366,7 @@ void GeGtk::confirm_cb( void *ge_ctx, void *confirm_object, char *text)
   gectx->current_confirm_object = confirm_object;
 }
 
-void GeGtk::set_prompt( char *prompt)
+void GeGtk::set_prompt( const char *prompt)
 {
   if ( strcmp(prompt, "") == 0) {
     g_object_set( cmd_prompt, "visible", FALSE, NULL);

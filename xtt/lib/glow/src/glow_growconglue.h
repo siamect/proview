@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growconglue.h,v 1.4 2007-07-05 07:23:49 claes Exp $
+ * Proview   $Id: glow_growconglue.h,v 1.5 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -48,7 +48,7 @@ class GrowConGlue : public GrowNode {
     \param y1		y coordinate for position.
     \param nodraw	Don't draw the object now.
   */
-  GrowConGlue( GrowCtx *glow_ctx, char *name, double x1 = 0, double y1 = 0,
+  GrowConGlue( GrowCtx *glow_ctx, const char *name, double x1 = 0, double y1 = 0,
 		int nodraw = 0);
 
   //! Noargs constructor

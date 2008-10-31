@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_op_motif.cpp,v 1.1 2007-01-04 08:30:03 claes Exp $
+ * Proview   $Id: xtt_op_motif.cpp,v 1.2 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -72,32 +72,32 @@ OpMotif::OpMotif( void *op_parent_ctx,
   int 		decor, func;
 
   static MrmRegisterArg	reglist[] = {
-        { "op_ctx", 0 },
-	{"op_activate_exit",(caddr_t)activate_exit },
-	{"op_activate_aalarm_ack",(caddr_t)activate_aalarm_ack },
-	{"op_activate_aalarm_incr",(caddr_t)activate_aalarm_incr },
-	{"op_activate_aalarm_decr",(caddr_t)activate_aalarm_decr },
-	{"op_create_alarmcnt_label",(caddr_t)create_alarmcnt_label },
-	{"op_create_aalarm_label1",(caddr_t)create_aalarm_label1 },
-	{"op_create_aalarm_label2",(caddr_t)create_aalarm_label2 },
-	{"op_create_aalarm_label3",(caddr_t)create_aalarm_label3 },
-	{"op_create_aalarm_label4",(caddr_t)create_aalarm_label4 },
-	{"op_create_aalarm_label5",(caddr_t)create_aalarm_label5 },
-	{"op_create_aalarm_active1",(caddr_t)create_aalarm_active1 },
-	{"op_create_aalarm_active2",(caddr_t)create_aalarm_active2 },
-	{"op_create_aalarm_active3",(caddr_t)create_aalarm_active3 },
-	{"op_create_aalarm_active4",(caddr_t)create_aalarm_active4 },
-	{"op_create_aalarm_active5",(caddr_t)create_aalarm_active5 },
-	{"op_activate_balarm_ack",(caddr_t)activate_balarm_ack },
-	{"op_activate_alarmlist",(caddr_t)activate_alarmlist },
-	{"op_activate_eventlist",(caddr_t)activate_eventlist },
-	{"op_activate_eventlog",(caddr_t)activate_eventlog },
-	{"op_activate_navigator",(caddr_t)activate_navigator },
-	{"op_activate_help",(caddr_t)activate_help },
-	{"op_create_balarm_label",(caddr_t)create_balarm_label },
-	{"op_create_balarm_mark",(caddr_t)create_balarm_mark },
-	{"op_create_balarm_active",(caddr_t)create_balarm_active },
-	{"op_create_appl_form",(caddr_t)create_appl_form }
+        {(char*) "op_ctx", 0 },
+	{(char*) "op_activate_exit",(caddr_t)activate_exit },
+	{(char*) "op_activate_aalarm_ack",(caddr_t)activate_aalarm_ack },
+	{(char*) "op_activate_aalarm_incr",(caddr_t)activate_aalarm_incr },
+	{(char*) "op_activate_aalarm_decr",(caddr_t)activate_aalarm_decr },
+	{(char*) "op_create_alarmcnt_label",(caddr_t)create_alarmcnt_label },
+	{(char*) "op_create_aalarm_label1",(caddr_t)create_aalarm_label1 },
+	{(char*) "op_create_aalarm_label2",(caddr_t)create_aalarm_label2 },
+	{(char*) "op_create_aalarm_label3",(caddr_t)create_aalarm_label3 },
+	{(char*) "op_create_aalarm_label4",(caddr_t)create_aalarm_label4 },
+	{(char*) "op_create_aalarm_label5",(caddr_t)create_aalarm_label5 },
+	{(char*) "op_create_aalarm_active1",(caddr_t)create_aalarm_active1 },
+	{(char*) "op_create_aalarm_active2",(caddr_t)create_aalarm_active2 },
+	{(char*) "op_create_aalarm_active3",(caddr_t)create_aalarm_active3 },
+	{(char*) "op_create_aalarm_active4",(caddr_t)create_aalarm_active4 },
+	{(char*) "op_create_aalarm_active5",(caddr_t)create_aalarm_active5 },
+	{(char*) "op_activate_balarm_ack",(caddr_t)activate_balarm_ack },
+	{(char*) "op_activate_alarmlist",(caddr_t)activate_alarmlist },
+	{(char*) "op_activate_eventlist",(caddr_t)activate_eventlist },
+	{(char*) "op_activate_eventlog",(caddr_t)activate_eventlog },
+	{(char*) "op_activate_navigator",(caddr_t)activate_navigator },
+	{(char*) "op_activate_help",(caddr_t)activate_help },
+	{(char*) "op_create_balarm_label",(caddr_t)create_balarm_label },
+	{(char*) "op_create_balarm_mark",(caddr_t)create_balarm_mark },
+	{(char*) "op_create_balarm_active",(caddr_t)create_balarm_active },
+	{(char*) "op_create_appl_form",(caddr_t)create_appl_form }
 	};
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
 
@@ -145,7 +145,7 @@ OpMotif::OpMotif( void *op_parent_ctx,
   i = 0;
   XtSetArg(args[i], XmNuserData, (unsigned int) this);i++;
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "op_window", parent_wid_op,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "op_window", parent_wid_op,
 			name, args, i, &toplevel, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
 
@@ -239,7 +239,7 @@ void  OpMotif::update_alarm_info()
     active_height = 22;
 
     sprintf( str, "%d", info.alarms_total);
-    cstr=XmStringCreateLtoR( str, "ISO8859-1");
+    cstr=XmStringCreateLtoR( str, (char*) "ISO8859-1");
     XtSetArg(args[j=0],XmNlabelString, cstr);j++;
     XtSetValues( alarmcnt_label, args, j);
     XmStringFree( cstr);
@@ -249,7 +249,7 @@ void  OpMotif::update_alarm_info()
       if ( info.a_alarm_exist[i])
       {
 	sprintf( text, "%s  %s", info.a_alarm_alias[i], info.a_alarm_text[i]);
-        cstr=XmStringCreateLtoR( text, "ISO8859-1");
+        cstr=XmStringCreateLtoR( text, (char*) "ISO8859-1");
         XtSetArg(args[j=0],XmNlabelString, cstr);j++;
         XtSetValues( aalarm_label[i], args, j);
         XmStringFree( cstr);
@@ -268,7 +268,7 @@ void  OpMotif::update_alarm_info()
       }
       else
       {
-        cstr=XmStringCreateLtoR( "", "ISO8859-1");
+        cstr=XmStringCreateLtoR( (char*) "", (char*) "ISO8859-1");
         XtSetArg(args[j=0],XmNlabelString, cstr);j++;
         XtSetArg(args[j],XmNbackground, background);j++;
         XtSetValues( aalarm_label[i], args, j);
@@ -283,7 +283,7 @@ void  OpMotif::update_alarm_info()
       balarm_type = evlist_eEventType_Alarm;
       balarm_prio = mh_eEventPrio_B;
       sprintf( text, "%s  %s", info.b_alarm_alias[0], info.b_alarm_text[0]);
-      cstr=XmStringCreateLtoR( text, "ISO8859-1");
+      cstr=XmStringCreateLtoR( text, (char*) "ISO8859-1");
       XtSetArg(args[j=0],XmNlabelString, cstr);j++;
       XtSetValues( balarm_label, args, j);
       XmStringFree( cstr);
@@ -291,7 +291,7 @@ void  OpMotif::update_alarm_info()
       XtVaSetValues( balarm_label, XtVaTypedArg, XmNbackground,
 		XmRString, "yellow", 7, NULL);
 
-      cstr=XmStringCreateLtoR( "B", "ISO8859-1");
+      cstr=XmStringCreateLtoR( (char*) "B", (char*) "ISO8859-1");
       XtSetArg(args[j=0],XmNlabelString, cstr);j++;
       XtSetValues( balarm_mark, args, j);
       XmStringFree( cstr);
@@ -310,7 +310,7 @@ void  OpMotif::update_alarm_info()
       balarm_type = evlist_eEventType_Alarm;
       balarm_prio = mh_eEventPrio_C;
       sprintf( text, "%s  %s", info.c_alarm_alias[0], info.c_alarm_text[0]);
-      cstr=XmStringCreateLtoR( text, "ISO8859-1");
+      cstr=XmStringCreateLtoR( text, (char*) "ISO8859-1");
       XtSetArg(args[j=0],XmNlabelString, cstr);j++;
       XtSetValues( balarm_label, args, j);
       XmStringFree( cstr);
@@ -318,7 +318,7 @@ void  OpMotif::update_alarm_info()
       XtVaSetValues( balarm_label, XtVaTypedArg, XmNbackground,
 		XmRString, "lightblue", 7, NULL);
 
-      cstr=XmStringCreateLtoR( "C", "ISO8859-1");
+      cstr=XmStringCreateLtoR( (char*) "C", (char*) "ISO8859-1");
       XtSetArg(args[j=0],XmNlabelString, cstr);j++;
       XtSetValues( balarm_mark, args, j);
       XmStringFree( cstr);
@@ -337,7 +337,7 @@ void  OpMotif::update_alarm_info()
       balarm_type = evlist_eEventType_Alarm;
       balarm_prio = mh_eEventPrio_D;
       sprintf( text, "%s  %s", info.d_alarm_alias[0], info.d_alarm_text[0]);
-      cstr=XmStringCreateLtoR( text, "ISO8859-1");
+      cstr=XmStringCreateLtoR( text, (char*) "ISO8859-1");
       XtSetArg(args[j=0],XmNlabelString, cstr);j++;
       XtSetValues( balarm_label, args, j);
       XmStringFree( cstr);
@@ -345,7 +345,7 @@ void  OpMotif::update_alarm_info()
       XtVaSetValues( balarm_label, XtVaTypedArg, XmNbackground,
 		XmRString, "violet", 7, NULL);
 
-      cstr=XmStringCreateLtoR( "D", "ISO8859-1");
+      cstr=XmStringCreateLtoR( (char*) "D", (char*) "ISO8859-1");
       XtSetArg(args[j=0],XmNlabelString, cstr);j++;
       XtSetValues( balarm_mark, args, j);
       XmStringFree( cstr);
@@ -363,7 +363,7 @@ void  OpMotif::update_alarm_info()
     {
       balarm_type = evlist_eEventType_Info;
       sprintf( text, "%s  %s", info.i_alarm_alias[0], info.i_alarm_text[0]);
-      cstr=XmStringCreateLtoR( text, "ISO8859-1");
+      cstr=XmStringCreateLtoR( text, (char*) "ISO8859-1");
       XtSetArg(args[j=0],XmNlabelString, cstr);j++;
       XtSetValues( balarm_label, args, j);
       XmStringFree( cstr);
@@ -371,7 +371,7 @@ void  OpMotif::update_alarm_info()
       XtVaSetValues( balarm_label, XtVaTypedArg, XmNbackground,
 		XmRString, "green", 7, NULL);
 
-      cstr=XmStringCreateLtoR( "I", "ISO8859-1");
+      cstr=XmStringCreateLtoR( (char*) "I", (char*) "ISO8859-1");
       XtSetArg(args[j=0],XmNlabelString, cstr);j++;
       XtSetValues( balarm_mark, args, j);
       XmStringFree( cstr);
@@ -387,13 +387,13 @@ void  OpMotif::update_alarm_info()
     }
     else
     {
-      cstr=XmStringCreateLtoR( "", "ISO8859-1");
+      cstr=XmStringCreateLtoR( (char*) "", (char*) "ISO8859-1");
       XtSetArg(args[j=0],XmNlabelString, cstr);j++;
       XtSetArg(args[j],XmNbackground, background);j++;
       XtSetValues( balarm_label, args, j);
       XmStringFree( cstr);
 
-      cstr=XmStringCreateLtoR( "", "ISO8859-1");
+      cstr=XmStringCreateLtoR( (char*) "", (char*) "ISO8859-1");
       XtSetArg(args[j=0],XmNlabelString, cstr);j++;
       XtSetValues( balarm_mark, args, j);
       XmStringFree( cstr);
@@ -453,9 +453,9 @@ int OpMotif::configure( char *opplace_str)
   if ( EVEN(sts)) return sts;
 
   // Load font
-  entry = XmFontListEntryCreate( "tag1", XmFONT_IS_FONT, 
+  entry = XmFontListEntryCreate( (char*) "tag1", XmFONT_IS_FONT, 
 	XLoadQueryFont( flow_Display(appl_form), 
-	"-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1"));
+	(char*) "-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1"));
   fontlist = XmFontListAppendEntry( NULL, entry);
   XtFree( (char *)entry);
 

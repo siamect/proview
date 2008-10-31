@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wpkgnav.h,v 1.5 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_wpkgnav.h,v 1.6 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -57,7 +57,7 @@ class WPkgNav {
   public:
     WPkgNav(
 	void 		*wa_parent_ctx,
-	char 		*wa_name,
+	const char     	*wa_name,
 	wb_eUtility	wa_utility,
 	pwr_tStatus 	*status);
     virtual ~WPkgNav();
@@ -65,7 +65,7 @@ class WPkgNav {
     void 		*parent_ctx;
     char 		name[80];
     WNavBrow		*brow;
-    void 		(*message_cb)( void *, char, char *);
+    void 		(*message_cb)( void *, char, const char *);
     void 		(*set_clock_cursor_cb)( void *);
     void 		(*reset_cursor_cb)( void *);
     void 		(*change_value_cb)( void *);
@@ -75,7 +75,7 @@ class WPkgNav {
 
     virtual void set_inputfocus() {}
 
-    void message( char sev, char *text);
+    void message( char sev, const char *text);
     int root_objects();
     void redraw();
     void enable_events();
@@ -128,7 +128,7 @@ class WItemPkgPackage : public WItemPkg {
 
 class WItemPkgFile : public WItemPkg {
   public:
-    WItemPkgFile( WNavBrow *brow, char *item_name, char *item_filename, pwr_tTime item_time,
+    WItemPkgFile( WNavBrow *brow, const char *item_name, char *item_filename, pwr_tTime item_time,
 		  int dmode, brow_tNode dest, flow_eDest dest_code);
     char filename[120];
     pwr_tTime time;

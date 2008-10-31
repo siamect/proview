@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_tbl_gtk.h,v 1.3 2008-09-18 14:37:43 claes Exp $
+ * Proview   $Id: xtt_tbl_gtk.h,v 1.4 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,12 +50,12 @@ class XttTblGtk : public XttTbl {
 
     void message( char severity, char *message);
     XttSevHist *sevhist_new( pwr_tOid oid, char *aname);
-    CoLogin *login_new( char		*wl_name,
-			char		*wl_groupname,
+    CoLogin *login_new( const char     	*wl_name,
+			const char     	*wl_groupname,
 			void		(* wl_bc_success)( void *),
 			void		(* wl_bc_cancel)( void *),
 			pwr_tStatus  	*status);
-    void set_prompt( char *prompt);
+    void set_prompt( const char *prompt);
 
     static void activate_command( GtkWidget *w, gpointer data);
     static void valchanged_cmd_input( GtkWidget *w, gpointer data);

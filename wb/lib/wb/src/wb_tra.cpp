@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_tra.cpp,v 1.3 2008-10-03 14:18:37 claes Exp $
+ * Proview   $Id: wb_tra.cpp,v 1.4 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -687,7 +687,7 @@ static pwr_tStatus trace_get_attr_m7( 	WGre		*gre,
 **************************************************************************/
 pwr_tStatus trace_get_attr_con( 	WGre		*gre, 
 					vldh_t_con	con,
-					char		*debug_par,
+					const char     	*debug_par,
 					char		*object_str, 
 					char		*attr_str,
 					flow_eTraceType	*trace_type)

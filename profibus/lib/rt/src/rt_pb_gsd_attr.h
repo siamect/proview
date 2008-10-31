@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attr.h,v 1.4 2007-01-04 08:42:20 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attr.h,v 1.5 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,7 +50,7 @@ class GsdAttr {
   void 		*object;
   void       	(*close_cb) (void *);
   int		(*save_cb) (void *);
-  int		(*help_cb) (void *, char *);
+  int		(*help_cb) (void *, const char *);
   void		*client_data;
   int         	recall_idx;
   static char	value_recall[30][160];
@@ -63,8 +63,8 @@ class GsdAttr {
 	   int a_edit_mode);
   virtual ~GsdAttr();
 
-  virtual void message( char severity, char *message) {}
-  virtual void set_prompt( char *prompt) {}
+  virtual void message( char severity, const char *message) {}
+  virtual void set_prompt( const char *prompt) {}
   virtual void change_value() {}
 
   void activate_exit();
@@ -79,7 +79,7 @@ class GsdAttr {
   void activate_cmd_ok();
   void activate_cmd_ca();
     
-  static void gsdattr_message( void *attr, char severity, char *message);
+  static void gsdattr_message( void *attr, char severity, const char *message);
   static void gsdattr_change_value_cb( void *attr_ctx);
   static void cmd_close_apply_cb( void *ctx, void *data);
   static void cmd_close_no_cb( void *ctx, void *data);

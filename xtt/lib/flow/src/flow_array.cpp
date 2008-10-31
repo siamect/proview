@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_array.cpp,v 1.6 2007-11-22 08:51:50 claes Exp $
+ * Proview   $Id: flow_array.cpp,v 1.7 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #include "flow_std.h"
 
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <stdlib.h>
 #include "flow_ctx.h"
 #include "flow_point.h"

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attr.cpp,v 1.6 2008-01-24 09:28:01 claes Exp $
+ * Proview   $Id: ge_attr.cpp,v 1.7 2008-10-31 12:51:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <vector.h>
+#include <vector>
 #include "co_cdh.h"
 #include "co_time.h"
 
@@ -167,7 +167,7 @@ int Attr::reconfigure_attr_c( void *attr)
   return ((Attr *)attr)->reconfigure_attr();
 }
 
-void Attr::message( void *attr, char severity, char *message)
+void Attr::message( void *attr, char severity, const char *message)
 {
   ((Attr *)attr)->message( severity, message);
 }

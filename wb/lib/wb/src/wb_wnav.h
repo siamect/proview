@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.h,v 1.18 2008-10-09 08:41:08 claes Exp $
+ * Proview   $Id: wb_wnav.h,v 1.19 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -145,7 +145,7 @@ class CoLogin;
 class ApplListElem {
   public:
     ApplListElem( applist_eType al_type, void *al_ctx, pwr_tObjid al_objid,
-	char *al_name);
+	const char *al_name);
     applist_eType	type;
     void		*ctx;
     pwr_tObjid		objid;
@@ -160,7 +160,7 @@ class ApplList {
     
     ApplListElem *root;
     void insert( applist_eType type, void *ctx, 
-	pwr_tObjid objid, char *name);
+	pwr_tObjid objid, const char *name);
     void remove( void *ctx);
     int find( applist_eType type, char *name, void **ctx);
     int find( applist_eType type, pwr_tObjid objid, void **ctx);
@@ -209,8 +209,8 @@ class WNav : public WUtility{
   public:
     WNav(
 	void *xn_parent_ctx,
-	char *xn_name,
-	char *xn_layout,
+	const char *xn_name,
+	const char *xn_layout,
         ldh_tSesContext	xn_ldhses,
 	wnav_sStartMenu *root_menu,
 	wnav_eWindowType xn_type,
@@ -231,7 +231,7 @@ class WNav : public WUtility{
     pwr_tObjid		root_objid;
     void		*root_item;
     int			trace_started;
-    void 		(*message_cb)( void *, char, char *);
+    void 		(*message_cb)( void *, char, const char *);
     void 		(*close_cb)( void *);
     void 		(*map_cb)( void *);
     void 		(*change_value_cb)( void *);
@@ -243,7 +243,7 @@ class WNav : public WUtility{
     int 		(*traverse_focus_cb)( void *, void *);
     void 		(*set_configure_cb)( void *, int);
     void 		(*set_twowindows_cb)( void *, int, int, int);
-    void 		(*gbl_command_cb)( void *, char *);
+    void 		(*gbl_command_cb)( void *, const char *);
     void 		(*create_popup_menu_cb)( void *, pwr_sAttrRef, int, int);
     void 		(*save_cb)( void *, int);
     void 		(*revert_cb)( void *, int confirm);
@@ -297,7 +297,7 @@ class WNav : public WUtility{
 			  int modal) { return 0;}
     virtual void create_popup_menu( pwr_tAttrRef aref, int x, int y) {}
     virtual int get_selection( char *str, int len) {return 0;}
-    virtual int open_foe( char *name, pwr_tOid plcpgm, void **foectx, int map_window,
+    virtual int open_foe( const char *name, pwr_tOid plcpgm, void **foectx, int map_window,
 			  ldh_eAccess access, pwr_tOid oid) {return 0;}
     virtual void wda_new( pwr_tOid oid, pwr_tCid cid, char *attribute,
 			  int edit_mode, int advuser, int display_objectname) {}
@@ -310,7 +310,7 @@ class WNav : public WUtility{
     virtual void wge_modal_loop( WGe *wge) {}
     virtual bool has_window() {return false;}
     virtual wb_utl *utl_new() {return 0;}
-    virtual CoLogin *login_new( char *name, char *groupname,
+    virtual CoLogin *login_new( const char *name, const char *groupname,
 				void (* bc_success)( void *), void (* bc_cancel)( void *), 
 				pwr_tStatus *status) { return 0;}
 
@@ -336,7 +336,7 @@ class WNav : public WUtility{
     int check_object_name( brow_tObject node);
     int get_select( pwr_sAttrRef **attrref, int **is_attr, int *cnt);
     int get_selected_nodes( brow_tObject **sellist, int *sel_cnt);
-    void message( char sev, char *text);
+    void message( char sev, const char *text);
     int brow_pop( wnav_eBrowType type);
     int brow_push();
     int brow_push_all();
@@ -400,7 +400,7 @@ class WNav : public WUtility{
     int search_object( pwr_tObjid objid, char *search_str, 
 	pwr_tObjid *found_objid, int next);
     int search_next();
-    int show_file( char	*filename, char *intitle, int hide_dir);
+    int show_file( const char *filename, const char *intitle, int hide_dir);
     void select_object( brow_tObject object);
     int select_object( pwr_tOid oid);
     int get_next( pwr_tOid oid, wnav_eDestCode dest, pwr_tOid *next_oid, wnav_eDestCode *d);

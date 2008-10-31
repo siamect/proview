@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_ctx.cpp,v 1.17 2008-10-03 14:19:19 claes Exp $
+ * Proview   $Id: flow_ctx.cpp,v 1.18 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,9 +20,9 @@
 #include "flow_std.h"
 
 
-#include <iostream.h>
-#include <fstream.h>
-#include <vector.h>
+#include <iostream>
+#include <fstream>
+#include <vector>
 #include <math.h>
 #include <float.h>
 #include <stdlib.h>
@@ -52,7 +52,7 @@ class NextElem {
   double rank;
 };
 
-FlowCtx::FlowCtx( char *ctx_name, double zoom_fact, int offs_x, int offs_y) 
+FlowCtx::FlowCtx( const char *ctx_name, double zoom_fact, int offs_x, int offs_y) 
   : ctx_type(flow_eCtxType_Flow), zoom_factor(zoom_fact), base_zoom_factor(zoom_fact), 
     offset_x(offs_x), offset_y(offs_y), nav_zoom_factor(zoom_fact), 
     print_zoom_factor(100), 

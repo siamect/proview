@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.h,v 1.25 2008-02-22 09:31:06 claes Exp $
+ * Proview   $Id: wb_vrepmem.h,v 1.26 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -392,7 +392,7 @@ public:
   virtual bool importDocBlock(pwr_tOid oid, size_t size, char *block);
   virtual bool importMeta(dbs_sMenv *mep) { return true;}
   bool importBuildObject( mem_object *memo);
-  void loadWbl( char *filename, pwr_tStatus *sts, bool reload = false);
+  void loadWbl( const char *filename, pwr_tStatus *sts, bool reload = false);
   void freeObject( mem_object *mem);
   void clear();
   bool classeditorCheck( ldh_eDest dest_code, mem_object *dest, pwr_tCid cid,

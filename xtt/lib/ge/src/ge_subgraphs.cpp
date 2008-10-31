@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subgraphs.cpp,v 1.7 2008-05-13 13:49:25 claes Exp $
+ * Proview   $Id: ge_subgraphs.cpp,v 1.8 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <vector.h>
+#include <vector>
 
 #include "co_cdh.h"
 #include "co_time.h"
@@ -131,7 +131,7 @@ void SubGraphsBrow::allocate_pixmaps()
 //
 SubGraphs::SubGraphs(
 	void *xn_parent_ctx,
-	char *xn_name,
+	const char *xn_name,
 	void *xn_growctx,
 	pwr_tStatus *status) :
 	parent_ctx(xn_parent_ctx),

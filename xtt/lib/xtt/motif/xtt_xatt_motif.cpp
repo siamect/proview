@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xatt_motif.cpp,v 1.1 2007-01-04 08:30:03 claes Exp $
+ * Proview   $Id: xtt_xatt_motif.cpp,v 1.2 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,24 +50,24 @@
 // Static member elements
 char XAttMotif::value_recall[30][160];
 
-void XAttMotif::message( char severity, char *message)
+void XAttMotif::message( char severity, const char *message)
 {
   Arg 		args[2];
   XmString	cstr;
 
-  cstr=XmStringCreateLtoR( message, "ISO8859-1");
+  cstr=XmStringCreateLtoR( (char*) message, (char*) "ISO8859-1");
   XtSetArg(args[0],XmNlabelString, cstr);
   XtSetArg(args[1],XmNheight, 20);
   XtSetValues( msg_label, args, 2);
   XmStringFree( cstr);
 }
 
-void XAttMotif::set_prompt( char *prompt)
+void XAttMotif::set_prompt( const char *prompt)
 {
   Arg 		args[3];
   XmString	cstr;
 
-  cstr=XmStringCreateLtoR( prompt, "ISO8859-1");
+  cstr=XmStringCreateLtoR( (char*) prompt, (char*) "ISO8859-1");
   XtSetArg(args[0],XmNlabelString, cstr);
   XtSetArg(args[1],XmNwidth, 50);
   XtSetArg(args[2],XmNheight, 30);
@@ -117,7 +117,7 @@ void XAttMotif::change_value( int set_focus)
 //    XmTextSetInsertionPosition( text_w, strlen(value));
     }
     else
-      XmTextSetString( text_w, "");
+      XmTextSetString( text_w, (char*) "");
 
     input_multiline = 1;
   }
@@ -131,7 +131,7 @@ void XAttMotif::change_value( int set_focus)
       XmTextSetInsertionPosition( text_w, strlen(value));
     }
     else
-      XmTextSetString( text_w, "");
+      XmTextSetString( text_w, (char*) "");
 
     input_multiline = 0;
   }
@@ -428,29 +428,29 @@ XAttMotif::XAttMotif( Widget 		xa_parent_wid,
 
   static XtActionsRec actions[] =
   {
-    {"xatt_inputfocus",      (XtActionProc) action_inputfocus}
+    {(char*) "xatt_inputfocus",      (XtActionProc) action_inputfocus}
   };
 
   static MrmRegisterArg	reglist[] = {
-        { "xatt_ctx", 0 },
-	{"xatt_activate_exit",(caddr_t)activate_exit },
-	{"xatt_activate_display_object",(caddr_t)activate_display_object },
-	{"xatt_activate_show_cross",(caddr_t)activate_show_cross },
-	{"xatt_activate_open_classgraph",(caddr_t)activate_open_classgraph },
-	{"xatt_activate_open_plc",(caddr_t)activate_open_plc },
-	{"xatt_activate_change_value",(caddr_t)activate_change_value },
-	{"xatt_activate_close_changeval",(caddr_t)activate_close_changeval },
-	{"xatt_activate_help",(caddr_t)activate_help },
-	{"xatt_create_msg_label",(caddr_t)create_msg_label },
-	{"xatt_create_cmd_prompt",(caddr_t)create_cmd_prompt },
-	{"xatt_create_cmd_input",(caddr_t)create_cmd_input },
-	{"xatt_create_cmd_scrolledinput",(caddr_t)create_cmd_scrolledinput },
-	{"xatt_create_cmd_scrolled_ok",(caddr_t)create_cmd_scrolled_ok },
-	{"xatt_create_cmd_scrolled_ca",(caddr_t)create_cmd_scrolled_ca },
-	{"xatt_create_xattnav_form",(caddr_t)create_xattnav_form },
-	{"xatt_activate_cmd_scrolledinput",(caddr_t)activate_cmd_input },
-	{"xatt_activate_cmd_scrolled_ok",(caddr_t)activate_cmd_scrolled_ok },
-	{"xatt_activate_cmd_scrolled_ca",(caddr_t)activate_cmd_scrolled_ca }
+        {(char*) "xatt_ctx", 0 },
+	{(char*) "xatt_activate_exit",(caddr_t)activate_exit },
+	{(char*) "xatt_activate_display_object",(caddr_t)activate_display_object },
+	{(char*) "xatt_activate_show_cross",(caddr_t)activate_show_cross },
+	{(char*) "xatt_activate_open_classgraph",(caddr_t)activate_open_classgraph },
+	{(char*) "xatt_activate_open_plc",(caddr_t)activate_open_plc },
+	{(char*) "xatt_activate_change_value",(caddr_t)activate_change_value },
+	{(char*) "xatt_activate_close_changeval",(caddr_t)activate_close_changeval },
+	{(char*) "xatt_activate_help",(caddr_t)activate_help },
+	{(char*) "xatt_create_msg_label",(caddr_t)create_msg_label },
+	{(char*) "xatt_create_cmd_prompt",(caddr_t)create_cmd_prompt },
+	{(char*) "xatt_create_cmd_input",(caddr_t)create_cmd_input },
+	{(char*) "xatt_create_cmd_scrolledinput",(caddr_t)create_cmd_scrolledinput },
+	{(char*) "xatt_create_cmd_scrolled_ok",(caddr_t)create_cmd_scrolled_ok },
+	{(char*) "xatt_create_cmd_scrolled_ca",(caddr_t)create_cmd_scrolled_ca },
+	{(char*) "xatt_create_xattnav_form",(caddr_t)create_xattnav_form },
+	{(char*) "xatt_activate_cmd_scrolledinput",(caddr_t)activate_cmd_input },
+	{(char*) "xatt_activate_cmd_scrolled_ok",(caddr_t)activate_cmd_scrolled_ok },
+	{(char*) "xatt_activate_cmd_scrolled_ca",(caddr_t)activate_cmd_scrolled_ca }
 	};
 
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
@@ -487,7 +487,7 @@ XAttMotif::XAttMotif( Widget 		xa_parent_wid,
   parent_wid = XtCreatePopupShell( title, 
 		topLevelShellWidgetClass, parent_wid, args, i);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "xatt_window", parent_wid,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "xatt_window", parent_wid,
 			name, args, 1, &toplevel, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_nodeclass.h,v 1.7 2008-10-03 14:19:19 claes Exp $
+ * Proview   $Id: flow_nodeclass.h,v 1.8 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #ifndef flow_nodeclass_h
 #define flow_nodeclass_h
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include "flow_point.h"
 #include "flow_rect.h"
 #include "flow_array_elem.h"
@@ -29,7 +29,7 @@
 
 class FlowNodeClass : public FlowArrayElem {
   public:
-    FlowNodeClass( FlowCtx *flow_ctx, char *name, 
+    FlowNodeClass( FlowCtx *flow_ctx, const char *name, 
 	flow_eNodeGroup grp = flow_eNodeGroup_Common);
     void insert( FlowArrayElem *element) 
 		{ a.insert( element);};

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wattnav.h,v 1.6 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_wattnav.h,v 1.7 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,7 +47,7 @@ class WAttNav {
   public:
     WAttNav(
 	void 		*wa_parent_ctx,
-	char 		*wa_name,
+	const char     	*wa_name,
 	ldh_tSesContext wa_ldhses,
 	pwr_sAttrRef 	wa_aref,
 	int 		wa_editmode,
@@ -67,7 +67,7 @@ class WAttNav {
     int			display_objectname;
     int			bypass;
     int			trace_started;
-    void 		(*message_cb)( void *, char, char *);
+    void 		(*message_cb)( void *, char, const char *);
     void 		(*change_value_cb)( void *);
     wb_eUtility		utility;
     int			displayed;
@@ -80,7 +80,7 @@ class WAttNav {
     int check_attr( int *multiline, brow_tObject *node, char *name,
 		char **init_value, int *size);
     int get_select( pwr_sAttrRef *attrref, int *is_attr);
-    void message( char sev, char *text);
+    void message( char sev, const char *text);
     void force_trace_scan();
     int object_attr();
     int object_exist( brow_tObject object);
@@ -88,7 +88,7 @@ class WAttNav {
     void enable_events();
     void set_editmode( int editmode, ldh_tSesContext ldhses)
 	{ this->editmode = editmode; this->ldhses = ldhses;};
-    int select_by_name( char *name);
+    int select_by_name( const char *name);
 
     static int init_brow_cb( FlowCtx *fctx, void *client_data);
     static int brow_cb( FlowCtx *ctx, flow_tEvent event);

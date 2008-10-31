@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attrnav.cpp,v 1.5 2007-01-15 13:20:26 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attrnav.cpp,v 1.6 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -193,7 +193,7 @@ void GsdAttrNav::attrvalue_to_string( int type_id, void *value_ptr,
   }
 }
 
-void GsdAttrNav::message( char sev, char *text)
+void GsdAttrNav::message( char sev, const char *text)
 {
   (message_cb)( parent_ctx, sev, text);
 }
@@ -412,7 +412,7 @@ void GsdAttrNavBrow::allocate_pixmaps()
 //
 GsdAttrNav::GsdAttrNav(
 	void *xn_parent_ctx,
-	char *xn_name,
+	const char *xn_name,
 	pb_gsd  *xn_gsd,
 	int xn_edit_mode,
 	pwr_tStatus *status) :
@@ -1486,7 +1486,7 @@ int GsdAttrNav::init_brow_cb( FlowCtx *fctx, void *client_data)
   return 1;
 }
 
-ItemPbBase::ItemPbBase( GsdAttrNav *attrnav, char *item_name, char *attr, 
+ItemPbBase::ItemPbBase( GsdAttrNav *attrnav, const char *item_name, const char *attr, 
 	int attr_type, int attr_size, double attr_min_limit, 
 	double attr_max_limit, void *attr_value_p,
 	int attr_noedit, gsd_sPrmText *attr_enumtext,
@@ -1517,7 +1517,7 @@ ItemPbBase::ItemPbBase( GsdAttrNav *attrnav, char *item_name, char *attr,
   brow_SetTraceAttr( node, attr, "", flow_eTraceType_User);
 }
 
-ItemPbEnum::ItemPbEnum( GsdAttrNav *attrnav, char *item_name, char *attr, 
+ItemPbEnum::ItemPbEnum( GsdAttrNav *attrnav, const char *item_name, const char *attr, 
 	int attr_type, int attr_size, double attr_min_limit, 
 	double attr_max_limit, void *attr_value_p,
 	int attr_noedit, gsd_sPrmText *attr_enumtext,
@@ -1598,7 +1598,7 @@ int ItemPb::close( GsdAttrNav *attrnav, double x, double y)
   return 1;
 }
 
-ItemPbEnumValue::ItemPbEnumValue( GsdAttrNav *attrnav, char *item_name, int item_num, 
+ItemPbEnumValue::ItemPbEnumValue( GsdAttrNav *attrnav, const char *item_name, int item_num, 
 	int item_type_id, void *attr_value_p, 
 	brow_tNode dest, flow_eDest dest_code) :
 	num(item_num), type_id(item_type_id), value_p(attr_value_p), first_scan(1)
@@ -1620,7 +1620,7 @@ ItemPbEnumValue::ItemPbEnumValue( GsdAttrNav *attrnav, char *item_name, int item
   brow_SetTraceAttr( node, name, "", flow_eTraceType_User);
 }
 
-ItemPbModule::ItemPbModule( GsdAttrNav *attrnav, char *item_name, 
+ItemPbModule::ItemPbModule( GsdAttrNav *attrnav, const char *item_name, 
 			    gsd_sModuleConf *item_mconf,
 			    brow_tNode dest, flow_eDest dest_code):
   mconf(item_mconf), first_scan(1)
@@ -1690,7 +1690,7 @@ int ItemPbModule::open_children( GsdAttrNav *attrnav, double x, double y)
   return 1;
 }
 
-ItemPbModuleType::ItemPbModuleType( GsdAttrNav *attrnav, char *item_name, 
+ItemPbModuleType::ItemPbModuleType( GsdAttrNav *attrnav, const char *item_name, 
 				    gsd_sModuleConf *item_mconf,
 				    brow_tNode dest, flow_eDest dest_code):
   mconf(item_mconf), first_scan(1)
@@ -1746,7 +1746,7 @@ int ItemPbModuleType::open_children( GsdAttrNav *attrnav, double x, double y)
   return 1;
 }
 
-ItemPbModuleData::ItemPbModuleData( GsdAttrNav *attrnav, char *item_name, 
+ItemPbModuleData::ItemPbModuleData( GsdAttrNav *attrnav, const char *item_name, 
 				    gsd_sModuleConf *item_mconf,
 				    brow_tNode dest, flow_eDest dest_code):
   mconf(item_mconf)
@@ -1854,7 +1854,7 @@ int ItemPbModuleData::open_children( GsdAttrNav *attrnav, double x, double y)
   return 1;
 }
 
-ItemPbModuleClass::ItemPbModuleClass( GsdAttrNav *attrnav, char *item_name, 
+ItemPbModuleClass::ItemPbModuleClass( GsdAttrNav *attrnav, const char *item_name, 
 				    gsd_sModuleConf *item_mconf,
 				    brow_tNode dest, flow_eDest dest_code):
   mconf(item_mconf), first_scan(1)
@@ -1908,7 +1908,7 @@ int ItemPbModuleClass::open_children( GsdAttrNav *attrnav, double x, double y)
 }
 
 
-ItemPbPrmData::ItemPbPrmData( GsdAttrNav *attrnav, char *item_name, 
+ItemPbPrmData::ItemPbPrmData( GsdAttrNav *attrnav, const char *item_name, 
 				    brow_tNode dest, flow_eDest dest_code)
 {
   type = attrnav_eItemType_PbPrmData;
@@ -1981,7 +1981,7 @@ int ItemPbPrmData::open_children( GsdAttrNav *attrnav, double x, double y)
   return 1;
 }
 
-ItemPbMoreData::ItemPbMoreData( GsdAttrNav *attrnav, char *item_name, 
+ItemPbMoreData::ItemPbMoreData( GsdAttrNav *attrnav, const char *item_name, 
 				brow_tNode dest, flow_eDest dest_code)
 {
   type = attrnav_eItemType_PbMoreData;
@@ -2075,7 +2075,7 @@ int ItemPbMoreData::open_children( GsdAttrNav *attrnav, double x, double y)
   return 1;
 }
 
-ItemPbEnumByteOrder::ItemPbEnumByteOrder( GsdAttrNav *attrnav, char *item_name, char *attr, 
+ItemPbEnumByteOrder::ItemPbEnumByteOrder( GsdAttrNav *attrnav, const char *item_name, const char *attr, 
 	int attr_type, int attr_size, double attr_min_limit, 
 	double attr_max_limit, void *attr_value_p,
 	int attr_noedit,

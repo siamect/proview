@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_time.c,v 1.12 2008-09-18 15:08:19 claes Exp $
+ * Proview   $Id: co_time.c,v 1.13 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -536,7 +536,7 @@ time_AtoAscii (
 //! Convert ascii to timespec.
 pwr_tStatus
 time_AsciiToD (
-  char      *tstr,
+  const char      *tstr,
   pwr_tDeltaTime  *ts
 )
 {
@@ -600,7 +600,7 @@ time_AsciiToD (
 
 pwr_tStatus
 time_AsciiToA (
-  char        *tstr,
+  const char  *tstr,
   pwr_tTime   *ts
 )
 {
@@ -677,7 +677,7 @@ time_TmToAscii (
 
 pwr_tStatus
 time_AsciiToTm (
-  char    *tstr,
+  const char *tstr,
   struct tm *tmptr
 )
 {
@@ -725,7 +725,7 @@ time_AsciiToTm (
 
 pwr_tStatus
 time_FormAsciiToA (
-  char    *tstr,
+  const char *tstr,
   short   dissolution,
   short   formType,
   pwr_tTime *ts
@@ -740,7 +740,7 @@ time_FormAsciiToA (
   char    *dotp;
   char    buf[64];
   pwr_tStatus sts;
-  char    *cp = tstr;
+  char    *cp = (char *)tstr;
 
   /* Format of the date string should be YYYY-MM-DD HH:MM[:SS.CC] */
   while (*cp && isspace(*cp))

@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_dcli.h,v 1.12 2008-06-24 07:02:56 claes Exp $
+ * Proview   $Id: co_dcli.h,v 1.13 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,18 +45,18 @@ typedef	struct	{
 	} dcli_tCmdTable;
 
 
-int	dcli_parse( 	char	*string,
-			char	*parse_char,
-			char	*inc_parse_char,
+int	dcli_parse( 	const char *string,
+			const char *parse_char,
+			const char *inc_parse_char,
 			char	*outstr,
 			int	max_rows,
 			int 	max_cols,
 			int	keep_quota);
 int	dcli_cli( 	dcli_tCmdTable	*command_table,
-			char		*string,
+			const char     	*string,
 			void		*userdata1,
 			void		*userdata2);
-int	dcli_get_qualifier( 	char	*qualifier,
+int	dcli_get_qualifier( 	const char *qualifier,
 				char	*value,
 				size_t  size);
 int	dcli_store_symbols( char	*filename);
@@ -69,7 +69,7 @@ int 	dcli_toupper( 	char	*str_upper,
 				char	*str);
 int	dcli_trim( char *out_str, char *in_str);
 int	dcli_remove_blank( char *out_str, char *in_str);
-char	*dcli_pwr_dir( char *dir);
+char	*dcli_pwr_dir( const char *dir);
 int 	dcli_wildcard(	char	*wildname,
 			char	*name);
 int dcli_read_line( char *line, int maxsize, FILE *file);
@@ -79,9 +79,9 @@ int dcli_read_line( char *line, int maxsize, FILE *file);
 
 void 	dcli_set_default_directory( char *dir);
 int	dcli_get_defaultfilename(
-			char	*inname,
-			char	*outname,
-			char	*ext);
+			const char	*inname,
+			char		*outname,
+			const char	*ext);
 #if defined (OS_LYNX) || defined(OS_LINUX)
 int     dcli_replace_env( char *str, char *newstr);
 #endif
@@ -98,7 +98,7 @@ pwr_tStatus dcli_file_ctime( char *filename, pwr_tTime *time);
 #define DCLI_DIR_SEARCH_END 2
 
 
-int dcli_search_file( 		char 	*file_name , 
+int dcli_search_file( 		const char *file_name , 
 				char	*found_file,
 				int	new_search);
 
@@ -107,7 +107,7 @@ int dcli_get_files( 		char *dir,
 				pwr_tString40 *filelist[], 
 				int *filecnt);
 
-int dcli_parse_filename( 	char	*filename,
+int dcli_parse_filename( 	const char *filename,
 				char	*dev,
 				char	*dir,
 				char	*file,

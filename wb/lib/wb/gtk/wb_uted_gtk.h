@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_uted_gtk.h,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_uted_gtk.h,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -57,8 +57,8 @@ class WUtedGtk : public WUted {
 
   WUtedGtk( void	       	*wu_parent_ctx,
 	    GtkWidget		*wu_parent_wid,
-	    char	       	*wu_name,
-	    char	       	*wu_iconname,
+	    const char	       	*wu_name,
+	    const char	       	*wu_iconname,
 	    ldh_tWBContext	wu_ldhwb,
 	    ldh_tSesContext wu_ldhses,
 	    int	       		wu_editmode,
@@ -67,7 +67,7 @@ class WUtedGtk : public WUted {
   ~WUtedGtk();
   void remove_command_window();
   void reset_qual();
-  void message( char *new_label);
+  void message( const char *new_label);
   void set_command_window( char *cmd);
   void raise_window();
   void clock_cursor();

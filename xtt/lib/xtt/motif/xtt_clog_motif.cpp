@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_clog_motif.cpp,v 1.1 2007-01-04 08:30:03 claes Exp $
+ * Proview   $Id: xtt_clog_motif.cpp,v 1.2 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,7 +50,7 @@
 
 CLogMotif::CLogMotif( void *clog_parent_ctx,
 		      Widget	clog_parent_wid,
-		      char *clog_name,
+		      const char *clog_name,
 		      pwr_tStatus *status) :
   CLog( clog_parent_ctx, clog_name, status), parent_wid(clog_parent_wid),
   clock_cursor(0)
@@ -68,29 +68,29 @@ CLogMotif::CLogMotif( void *clog_parent_ctx,
   static XtTranslations clog_compiled_translations = NULL;
   static XtActionsRec clog_actions[] =
   {
-    {"clog_inputfocus",      (XtActionProc) action_inputfocus}
+    {(char*) "clog_inputfocus",      (XtActionProc) action_inputfocus}
   };
 
   static MrmRegisterArg	reglist[] = {
-        { "clog_ctx", 0 },
-	{"clog_activate_exit",(caddr_t)activate_exit },
-	{"clog_activate_select_file",(caddr_t)activate_select_file },
-	{"clog_activate_next_file",(caddr_t)activate_next_file },
-	{"clog_activate_prev_file",(caddr_t)activate_prev_file },
-	{"clog_activate_update",(caddr_t)activate_update },
-	{"clog_activate_zoom_in",(caddr_t)activate_zoom_in },
-	{"clog_activate_zoom_out",(caddr_t)activate_zoom_out },
-	{"clog_activate_zoom_reset",(caddr_t)activate_zoom_reset },
-	{"clog_activate_filter",(caddr_t)activate_filter },
-	{"clog_activate_help",(caddr_t)activate_help },
-	{"clog_activate_helpmsg",(caddr_t)activate_helpmsg },
-	{"clog_create_form",(caddr_t)create_form },
-	{"clog_filter_tog_cr",(caddr_t)filter_tog_cr },
-	{"clog_filter_string_cr",(caddr_t)filter_string_cr },
-	{"clog_filter_act_but_cb",(caddr_t)filter_act_but_cb },
-	{"clog_filesel_ok_cb",(caddr_t)filesel_ok_cb },
-	{"clog_filesel_cancel_cb",(caddr_t)filesel_cancel_cb },
-	{"clog_filesel_list_cr",(caddr_t)filesel_list_cr }
+        {(char*) "clog_ctx", 0 },
+	{(char*) "clog_activate_exit",(caddr_t)activate_exit },
+	{(char*) "clog_activate_select_file",(caddr_t)activate_select_file },
+	{(char*) "clog_activate_next_file",(caddr_t)activate_next_file },
+	{(char*) "clog_activate_prev_file",(caddr_t)activate_prev_file },
+	{(char*) "clog_activate_update",(caddr_t)activate_update },
+	{(char*) "clog_activate_zoom_in",(caddr_t)activate_zoom_in },
+	{(char*) "clog_activate_zoom_out",(caddr_t)activate_zoom_out },
+	{(char*) "clog_activate_zoom_reset",(caddr_t)activate_zoom_reset },
+	{(char*) "clog_activate_filter",(caddr_t)activate_filter },
+	{(char*) "clog_activate_help",(caddr_t)activate_help },
+	{(char*) "clog_activate_helpmsg",(caddr_t)activate_helpmsg },
+	{(char*) "clog_create_form",(caddr_t)create_form },
+	{(char*) "clog_filter_tog_cr",(caddr_t)filter_tog_cr },
+	{(char*) "clog_filter_string_cr",(caddr_t)filter_string_cr },
+	{(char*) "clog_filter_act_but_cb",(caddr_t)filter_act_but_cb },
+	{(char*) "clog_filesel_ok_cb",(caddr_t)filesel_ok_cb },
+	{(char*) "clog_filesel_cancel_cb",(caddr_t)filesel_cancel_cb },
+	{(char*) "clog_filesel_list_cr",(caddr_t)filesel_list_cr }
 	};
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
 
@@ -117,15 +117,15 @@ CLogMotif::CLogMotif( void *clog_parent_ctx,
   parent_wid_clog = XtCreatePopupShell( clog_name, 
 		topLevelShellWidgetClass, parent_wid, args, i);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "clog_window", parent_wid_clog,
-			clog_name, args, 1, &toplevel, &dclass);
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "clog_window", parent_wid_clog,
+			(char*) clog_name, args, 1, &toplevel, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", clog_name);
 
-  sts = MrmFetchWidget(s_DRMh, "filterForm", toplevel,
+  sts = MrmFetchWidget(s_DRMh, (char*) "filterForm", toplevel,
 		&filter_form, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch filter dialog\n");
 
-  sts = MrmFetchWidget(s_DRMh, "fileselForm", toplevel,
+  sts = MrmFetchWidget(s_DRMh, (char*) "fileselForm", toplevel,
 		&filesel_form, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch filesel dialog\n");
 

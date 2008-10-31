@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.cpp,v 1.41 2008-07-17 11:23:07 claes Exp $
+ * Proview   $Id: xtt_xnav.cpp,v 1.42 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -724,7 +724,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
   }
 }
 
-void XNav::message( char sev, char *text)
+void XNav::message( char sev, const char *text)
 {
   if ( message_cb)
     (message_cb)( parent_ctx, sev, text);
@@ -1047,7 +1047,7 @@ int XNav::create_object_item( pwr_tObjid objid,
 //
 XNav::XNav(
 	void *xn_parent_ctx,
-	char *xn_name,
+	const char *xn_name,
 	xnav_sStartMenu *root_menu,
 	char *xn_opplace_name,
 	int xn_op_close_button,
@@ -1599,7 +1599,7 @@ void XNav::trace_close_cb( RtTrace *tractx)
   delete tractx;
 }
 
-void XNav::trace_help_cb( RtTrace *tractx, char *key)
+void XNav::trace_help_cb( RtTrace *tractx, const char *key)
 {
   XNav *xnav = (XNav *) tractx->parent_ctx;
   int sts;
@@ -3616,7 +3616,7 @@ int XNav::init_brow_cb( BrowCtx *ctx, void *client_data)
 
 
 ApplListElem::ApplListElem( applist_eType al_type, void *al_ctx, 
-	pwr_sAttrRef *al_arp, char *al_name, char *al_instance):
+	pwr_sAttrRef *al_arp, const char *al_name, const char *al_instance):
 	type(al_type), ctx(al_ctx), aref(*al_arp), next(NULL)
 {
   strcpy( name, al_name);
@@ -3627,7 +3627,7 @@ ApplListElem::ApplListElem( applist_eType al_type, void *al_ctx,
 }
 
 void ApplList::insert( applist_eType type, void *ctx, 
-	pwr_sAttrRef *arp, char *name, char *instance)
+	pwr_sAttrRef *arp, const char *name, const char *instance)
 {
   ApplListElem *elem = new ApplListElem( type, ctx, arp, name, instance);
   elem->next = root;
@@ -3635,7 +3635,7 @@ void ApplList::insert( applist_eType type, void *ctx,
 }
 
 void ApplList::insert( applist_eType type, void *ctx, 
-	pwr_tObjid objid, char *name, char *instance)
+	pwr_tObjid objid, const char *name, const char *instance)
 {
   pwr_sAttrRef aref = cdh_ObjidToAref( objid);
 
@@ -3690,7 +3690,7 @@ int ApplList::find( applist_eType type, pwr_tObjid objid, void **ctx)
   return 0;
 }
 
-int ApplList::find( applist_eType type, char *name, char *instance, void **ctx)
+int ApplList::find( applist_eType type, const char *name, const char *instance, void **ctx)
 {
   ApplListElem *elem;
 

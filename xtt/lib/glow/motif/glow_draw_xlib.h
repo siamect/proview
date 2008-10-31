@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_xlib.h,v 1.5 2007-07-17 12:43:42 claes Exp $
+ * Proview   $Id: glow_draw_xlib.h,v 1.6 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -173,7 +173,7 @@ class GlowDrawXLib : public GlowDraw {
 	     glow_tImImage image, glow_tPixmap pixmap, glow_tPixmap clip_mask);
   
   virtual void set_cursor( GlowWind *w, glow_eDrawCursor cursor);
-  virtual int get_text_extent( char *text, int len,
+  virtual int get_text_extent( const char *text, int len,
 			       glow_eDrawType gc_type, int idx, glow_eFont font_idx,
 			       int *width, int *height, int *descent);
   virtual void copy_area( GlowWind *w, int x, int y);
@@ -191,7 +191,7 @@ class GlowDrawXLib : public GlowDraw {
   virtual int draw_points( GlowWind *w, glow_sPointX *points, int point_num, 
 	      glow_eDrawType gc_type);
   virtual void set_click_sensitivity( GlowWind *w, int value);
-  virtual void draw_background( GlowWind *w, int x, int y, int w, int h);
+  virtual void draw_background( GlowWind *wind, int x, int y, int w, int h);
   virtual int create_buffer( GlowWind *w);
   virtual void delete_buffer( GlowWind *w);
   virtual void buffer_background( DrawWind *w);

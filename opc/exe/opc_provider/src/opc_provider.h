@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.h,v 1.10 2007-11-22 15:10:23 claes Exp $
+ * Proview   $Id: opc_provider.h,v 1.11 2008-10-31 12:51:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #ifndef opc_provider_h
 #define opc_provider_h
 
-#include <map.h>
+#include <map>
 #include "co_provider.h"
 #include "co_procom.h"
 #include "pwr_opcclasses.h"

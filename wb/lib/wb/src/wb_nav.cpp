@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav.cpp,v 1.18 2007-11-06 13:28:09 claes Exp $
+ * Proview   $Id: wb_nav.cpp,v 1.19 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1723,9 +1723,9 @@ static int nav_create_object_item( Nav *nav, pwr_tObjid objid,
 //
 Nav::Nav(
 	 void *nav_parent_ctx,
-	 char *nav_name,
+	 const char *nav_name,
 	 ldh_tSesContext nav_ldhses,
-	 char *nav_root_name,
+	 const char *nav_root_name,
 	 pwr_tStatus *status
 	 ) :
   parent_ctx(nav_parent_ctx), ldhses(nav_ldhses),

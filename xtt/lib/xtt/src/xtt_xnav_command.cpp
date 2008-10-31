@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_command.cpp,v 1.40 2008-10-09 08:56:54 claes Exp $
+ * Proview   $Id: xtt_xnav_command.cpp,v 1.41 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -116,7 +116,7 @@ static char xtt_version[] = "V3.3a";
 static XNav *current_xnav;
 static pwr_tStatus command_sts = 1;
 
-static void xnav_ev_help_cb( void *xnav, char *key);
+static void xnav_ev_help_cb( void *xnav, const char *key);
 static void xnav_ev_display_in_xnav_cb( void *xnav, pwr_sAttrRef *arp);
 static int xnav_ev_sound_cb( void *xnav, pwr_sAttrRef *arp);
 static void xnav_ev_pop_cb( void *xnav);
@@ -137,15 +137,15 @@ static void xnav_hist_close_cb( void *ctx);
 //end new code by Jonas Nylund 030131
 static void xnav_op_command_cb( void *xnav, char *command);
 static void xnav_op_close_cb( void *ctx);
-static void xnav_op_help_cb( void *ctx, char *key);
+static void xnav_op_help_cb( void *ctx, const char *key);
 static void xnav_op_map_cb( void *ctx);
 static int xnav_op_get_alarm_info_cb( void *xnav, evlist_sAlarmInfo *info);
 static void xnav_op_ack_last_cb( void *xnav, unsigned long type, unsigned long prio);
 static void xnav_trend_close_cb( void *ctx, XttTrend *trend);
-static void xnav_trend_help_cb( void *ctx, char *key);
-static void xnav_sevhist_help_cb( void *ctx, char *key);
+static void xnav_trend_help_cb( void *ctx, const char *key);
+static void xnav_sevhist_help_cb( void *ctx, const char *key);
 static void xnav_fast_close_cb( void *ctx, XttFast *fast);
-static void xnav_fast_help_cb( void *ctx, char *key);
+static void xnav_fast_help_cb( void *ctx, const char *key);
 static void xnav_xao_close_cb( void *ctx, XAttOne *xao);
 static void xnav_clog_close_cb( void *ctx);
 static void xnav_open_shist_cb( void *ctx, char *text);
@@ -3713,7 +3713,7 @@ static int	xnav_close_func(	void		*client_data,
   return XNAV__SUCCESS;	
 }
 
-static void xnav_ge_help_cb( XttGe *gectx, char *key)
+static void xnav_ge_help_cb( XttGe *gectx, const char *key)
 {
   XNav *xnav = (XNav *)gectx->parent_ctx;
   int sts;
@@ -3754,7 +3754,7 @@ static void xnav_trend_close_cb( void *ctx, XttTrend *trend)
   delete trend;
 }
 
-static void xnav_trend_help_cb( void *ctx, char *key)
+static void xnav_trend_help_cb( void *ctx, const char *key)
 {
   XNav *xnav = (XNav *) ctx;
 
@@ -3767,7 +3767,7 @@ static void xnav_trend_help_cb( void *ctx, char *key)
     xnav->message( ' ', null_str);
 }
 
-static void xnav_sevhist_help_cb( void *ctx, char *key)
+static void xnav_sevhist_help_cb( void *ctx, const char *key)
 {
   XNav *xnav = (XNav *) ctx;
 
@@ -3788,7 +3788,7 @@ static void xnav_fast_close_cb( void *ctx, XttFast *fast)
   delete fast;
 }
 
-static void xnav_fast_help_cb( void *ctx, char *key)
+static void xnav_fast_help_cb( void *ctx, const char *key)
 {
   XNav *xnav = (XNav *) ctx;
 
@@ -6486,7 +6486,7 @@ void xnav_popup_menu_cb( void *xnav, pwr_sAttrRef attrref,
 				  ((XNav *)xnav)->priv, arg, x, y);
 }
 
-int xnav_call_method_cb( void *xnav, char *method, char *filter,
+int xnav_call_method_cb( void *xnav, const char *method, const char *filter,
 			 pwr_sAttrRef attrref,
 			 unsigned long item_type,
 			 unsigned long utility, char *arg)
@@ -6509,7 +6509,7 @@ static void xnav_clog_close_cb( void *ctx)
   xnav->clog = 0;
 }
 
-static void xnav_ev_help_cb( void *ctx, char *key)
+static void xnav_ev_help_cb( void *ctx, const char *key)
 {
   XNav *xnav = (XNav *) ctx;
   int	sts;
@@ -6586,9 +6586,9 @@ static int xnav_ge_get_current_objects_cb( void *vxnav, pwr_sAttrRef **alist,
   return sts;
 }
 
-void XNav::open_graph( char *name, char *filename, int scrollbar, int menu, 
+void XNav::open_graph( const char *name, const char *filename, int scrollbar, int menu, 
 	int navigator, int width, int height, int x, int y,
-	char *object_name, char *focus_name, int input_focus_empty,
+	const char *object_name, const char *focus_name, int input_focus_empty,
 	int use_default_access, unsigned int access)
 {
   XttGe *gectx;
@@ -6674,7 +6674,7 @@ int XNav::exec_xttgraph( pwr_tObjid xttgraph, char *instance,
     char cmd[80];
 
     strcpy( action, xttgraph_o.Action);
-    strrchr( action, '.');
+    s = strrchr( action, '.');
     *s = 0;
 
     if ( op)
@@ -6730,7 +6730,7 @@ static void xnav_op_close_cb( void *ctx)
     (xnav->close_cb)( xnav->parent_ctx, 1);
 }
 
-static void xnav_op_help_cb( void *ctx, char *key)
+static void xnav_op_help_cb( void *ctx, const char *key)
 {
   XNav *xnav = (XNav *) ctx;
   int	sts;

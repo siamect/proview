@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growslider.cpp,v 1.5 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_growslider.cpp,v 1.6 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
@@ -31,7 +31,7 @@
 
 #define SLIDER_BACKGROUND 21
 
-GrowSlider::GrowSlider( GrowCtx *glow_ctx, char *name, GlowNodeClass *node_class,
+GrowSlider::GrowSlider( GrowCtx *glow_ctx, const char *name, GlowNodeClass *node_class,
 	double x1, double y1, int nodraw, int rel_annot_pos) :
 	GrowNode(glow_ctx,name,node_class,x1,y1,nodraw,rel_annot_pos),
 	direction(glow_eDirection_Down),

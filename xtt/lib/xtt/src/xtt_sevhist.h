@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_sevhist.h,v 1.1 2008-09-18 14:52:58 claes Exp $
+ * Proview   $Id: xtt_sevhist.h,v 1.2 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -64,7 +64,7 @@ class XttSevHist {
   unsigned int  vsize;
   CoWowTimer    *timerid;		//!< Time id for scan.
   void       	(*close_cb)( void *, XttSevHist *); //!< Close callback to parent.
-  void       	(*help_cb)( void *, char *); //!< Open help window.
+  void       	(*help_cb)( void *, const char *); //!< Open help window.
   bool		first_scan;		//!< Indicates that this is the first scan.
   char		title[250];			//!< Window title
   sevcli_tCtx	scctx;
@@ -74,7 +74,7 @@ class XttSevHist {
 
   //! Constructor
   XttSevHist( void *xn_parent_ctx,
-	     char *xn_name,
+	     const char *xn_name,
 	     pwr_tOid* xn_oid,
 	     pwr_tOName *xn_aname,
 	     sevcli_tCtx xn_scctx,

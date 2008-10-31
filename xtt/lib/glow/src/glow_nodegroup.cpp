@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_nodegroup.cpp,v 1.3 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_nodegroup.cpp,v 1.4 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,8 +19,8 @@
 
 #include "glow_std.h"
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <stdlib.h>
 #include <string.h>
 #include "glow_nodegroup.h"
@@ -28,14 +28,14 @@
 #include "glow_grownode.h"
 #include "glow_msg.h"
 
-GlowNodeGroup::GlowNodeGroup( GrowCtx *glow_ctx, char *name, 
+GlowNodeGroup::GlowNodeGroup( GrowCtx *glow_ctx, const char *name, 
 			      GlowArray& array)
   : GlowNodeClass(glow_ctx, name, glow_eNodeGroup_Common)
 {
   a.copy_from_common_objects( array);
 }
 
-GlowNodeGroup::GlowNodeGroup( GrowCtx *glow_ctx, char *name)
+GlowNodeGroup::GlowNodeGroup( GrowCtx *glow_ctx, const char *name)
   : GlowNodeClass(glow_ctx, name, glow_eNodeGroup_Common)
 {
 }

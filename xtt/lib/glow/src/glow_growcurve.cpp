@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growcurve.cpp,v 1.5 2007-09-12 08:56:37 claes Exp $
+ * Proview   $Id: glow_growcurve.cpp,v 1.6 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
@@ -29,7 +29,7 @@
 #include "glow_draw.h"
 #include "glow_growctx.h"
 
-GrowCurve::GrowCurve( GrowCtx *glow_ctx, char *name, glow_sCurveData *data,
+GrowCurve::GrowCurve( GrowCtx *glow_ctx, const char *name, glow_sCurveData *data,
                 double x, double y,
 		double w, double h, glow_eDrawType border_d_type, int line_w,
 		glow_mDisplayLevel display_lev,

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_clog_gtk.h,v 1.1 2007-01-04 08:29:32 claes Exp $
+ * Proview   $Id: xtt_clog_gtk.h,v 1.2 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,7 +30,7 @@ class CLogGtk : public CLog {
   public:
     CLogGtk( void *clog_parent_ctx,
 	     GtkWidget *clog_parent_wid,
-	     char *clog_name,
+	     const char *clog_name,
 	     pwr_tStatus *status);
     ~CLogGtk();
 

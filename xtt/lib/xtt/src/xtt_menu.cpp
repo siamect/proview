@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_menu.cpp,v 1.15 2007-11-30 08:19:15 claes Exp $
+ * Proview   $Id: xtt_menu.cpp,v 1.16 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -409,7 +409,7 @@ int XNav::GetObjectMenu( xmenu_sMenuCall	*ip,
   return XNAV__SUCCESS;
 }
 
-int XNav::GetMethod( char *name, 
+int XNav::GetMethod( const char *name, 
 		     pwr_tStatus (**method)( xmenu_sMenuCall *))
 {
   int i, j;
@@ -469,7 +469,7 @@ int XNav::CheckMenuMethodFilter( xmenu_sMenuCall *ip, int idx)
 }
 
 
-int XNav::call_method( char *method, char *filter,
+int XNav::call_method( const char *method, const char *filter,
 		       pwr_sAttrRef attrref, 
 		       xmenu_eItemType item_type, 
 		       xmenu_mUtility caller,

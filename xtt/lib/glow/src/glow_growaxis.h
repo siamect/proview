@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growaxis.h,v 1.5 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_growaxis.h,v 1.6 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,7 +51,7 @@ class GrowAxis : public GrowRect {
     \param t_drawtype	Drawtype for text.
     \param nodraw	Don't draw the object now.
   */
-  GrowAxis( GrowCtx *glow_ctx, char *name, double x1 = 0, double y1 = 0, 
+  GrowAxis( GrowCtx *glow_ctx, const char *name, double x1 = 0, double y1 = 0, 
 		double x2 = 0, double y2 = 0, 
 		glow_eDrawType border_d_type = glow_eDrawType_Line, 
 	        int line_w = 1, int t_size = 2, 
@@ -205,7 +205,7 @@ class GrowAxis : public GrowRect {
 
   //! Set configuration values for the axis.
   void set_conf( double max_val, double min_val, int no_of_lines, 
-                   int long_quot, int value_quot, double rot, char *format);
+                   int long_quot, int value_quot, double rot, const char *format);
 
   //! Conversion between different versions of Glow
   /*!

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_xlib.cpp,v 1.4 2008-10-16 11:05:15 claes Exp $
+ * Proview   $Id: flow_draw_xlib.cpp,v 1.5 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -106,7 +106,7 @@ static char	font_names[draw_eFont__][DRAW_FONT_SIZE][80] = { {
 
 static  XEvent	last_event;
 
-static int flow_allocate_color( FlowDrawXLib *draw_ctx, char *named_color);
+static int flow_allocate_color( FlowDrawXLib *draw_ctx, const char *named_color);
 static void event_timer( FlowCtx *ctx, int time_ms);
 static void cancel_event_timer(FlowCtx *ctx);
 static void event_timer_cb( FlowCtx *ctx);
@@ -321,7 +321,7 @@ static int flow_create_gc( FlowDrawXLib *draw_ctx, Window window)
 }
 
 
-static int flow_allocate_color( FlowDrawXLib *draw_ctx, char *named_color)
+static int flow_allocate_color( FlowDrawXLib *draw_ctx, const char *named_color)
 {
   XColor exact_color, screen_color;
   Screen *screen;
@@ -1454,7 +1454,7 @@ void FlowDrawXLib::set_nav_cursor( FlowCtx *ctx, draw_eCursor cursor)
   XFlush( display);
 }
 
-int FlowDrawXLib::get_text_extent( FlowCtx *ctx, char *text, int len,
+int FlowDrawXLib::get_text_extent( FlowCtx *ctx, const char *text, int len,
 	flow_eDrawType gc_type, int idx,
 	int *width, int *height)
 {
@@ -1550,7 +1550,7 @@ int FlowDrawXLib::create_input( FlowCtx *ctx, int x, int y, char *text, int len,
   if ( ctx->nodraw) return 1;
 
   annot_data = (draw_sAnnotData *) calloc(1, sizeof( draw_sAnnotData));
-  entry = XmFontListEntryCreate("tag", XmFONT_IS_FONT, 
+  entry = XmFontListEntryCreate((char*)"tag", XmFONT_IS_FONT, 
 		font_struct[0][idx]);
   fontlist = XmFontListAppendEntry( NULL, entry);
 
@@ -1709,7 +1709,7 @@ void FlowDrawXLib::image_scale( float scale, flow_tImImage *im, flow_tPixmap *im
   *im_mask = (flow_tPixmap) Imlib_move_mask( (ImlibData *)imlib, (ImlibImage *)*im);
 }
 
-int FlowDrawXLib::image_load( char *imagefile, float scale, float nav_scale,
+int FlowDrawXLib::image_load( const char *imagefile, float scale, float nav_scale,
 			      flow_tImImage *orig_im, flow_tImImage *im, 
 			      flow_tPixmap *im_pixmap, flow_tPixmap *im_mask,
 			      flow_tPixmap *im_nav_pixmap, flow_tPixmap *im_nav_mask)

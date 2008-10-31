@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ge.cpp,v 1.15 2007-01-04 08:22:47 claes Exp $
+ * Proview   $Id: xtt_ge.cpp,v 1.16 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -140,29 +140,29 @@ int XttGe::ge_get_current_objects_cb( void *ge_ctx, pwr_sAttrRef **alist,
   return 0;
 }
 
-void XttGe::message_cb( void *ctx, char severity, char *msg)
+void XttGe::message_cb( void *ctx, char severity, const char *msg)
 {
   ((XttGe *)ctx)->message( severity, msg);
 }
 
-void XttGe::message( char severity, char *msg)
+void XttGe::message( char severity, const char *msg)
 {
   if ( strcmp( msg, "") != 0)
     printf("** XttGe: %s\n", msg);
 }
 
 
-int XttGe::set_object_focus( char *name, int empty)
+int XttGe::set_object_focus( const char *name, int empty)
 {
   return graph->set_object_focus( name, empty);
 }
 
-int XttGe::set_folder_index( char *name, int idx)
+int XttGe::set_folder_index( const char *name, int idx)
 {
   return graph->set_folder_index( name, idx);
 }
 
-int XttGe::set_subwindow_source( char *name, char *source)
+int XttGe::set_subwindow_source( const char *name, char *source)
 {
   return graph->set_subwindow_source( name, source);
 }
@@ -188,9 +188,9 @@ void XttGe::swap( int mode)
   graph->swap( mode);
 }
 
-XttGe::XttGe( void *xg_parent_ctx, char *xg_name, char *xg_filename,
+XttGe::XttGe( void *xg_parent_ctx, const char *xg_name, const char *xg_filename,
 	      int xg_scrollbar, int xg_menu, int xg_navigator, int xg_width, int xg_height,
-	      int x, int y, double scan_time, char *object_name,
+	      int x, int y, double scan_time, const char *object_name,
 	      int use_default_access, unsigned int access,
 	      int (*xg_command_cb) (XttGe *, char *),
 	      int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),

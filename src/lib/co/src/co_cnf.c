@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_cnf.c,v 1.5 2008-10-20 13:44:12 claes Exp $
+ * Proview   $Id: co_cnf.c,v 1.6 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,7 +41,7 @@ char default_values[][2][200] = {
   };
 
 
-char *cnf_get_value( char *name, char *value)
+char *cnf_get_value( const char *name, char *value)
 {
   FILE *fp;
   char line[400];

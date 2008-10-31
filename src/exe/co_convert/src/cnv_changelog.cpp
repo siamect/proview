@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_changelog.cpp,v 1.10 2008-09-18 15:10:58 claes Exp $
+ * Proview   $Id: cnv_changelog.cpp,v 1.11 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,8 +19,8 @@
 
 #include <functional>
 #include <algorithm>
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <float.h>
 #include <string.h>
 #include <stdlib.h>
@@ -70,7 +70,7 @@ CnvChangeLog::CnvChangeLog( CnvCtx *cnv_ctx, char *from_str) :
   print_html();
 }
 
-int CnvChangeLog::read( char *module)
+int CnvChangeLog::read( const char *module)
 {
   int sts;
   char orig_line[400];

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_api.h,v 1.17 2008-10-16 08:58:06 claes Exp $
+ * Proview   $Id: flow_api.h,v 1.18 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -105,7 +105,7 @@ void flow_GetSelectedCons( flow_tCtx ctx, flow_tCon **cons, int *num);
 void flow_SetHighlight( flow_tObject object, int value);
 void flow_GetHighlight( flow_tObject object, int *value);
 void flow_SetInverse( flow_tObject object, int value);
-void flow_CreateNode( flow_tCtx ctx, char *name, flow_tNodeClass nc,
+void flow_CreateNode( flow_tCtx ctx, const char *name, flow_tNodeClass nc,
 	double x, double y, void *user_data, flow_tNode *node);
 void flow_CreateCon( flow_tCtx ctx, char *name, flow_tConClass cc,
 	flow_tNode source, flow_tNode dest, int source_conpoint, 
@@ -117,7 +117,7 @@ void flow_CreatePasteCon( flow_tCtx ctx, char *name, flow_tConClass cc,
 	flow_tNode source, flow_tNode dest, int source_conpoint, 
 	int dest_conpoint, void *user_data, flow_tCon *con, 
 	int point_num, double *x_vect, double *y_vect, int *rsts);
-void flow_SetAnnotation( flow_tNode node, int number, char *text, int size);
+void flow_SetAnnotation( flow_tNode node, int number, const char *text, int size);
 void flow_SetPasteNodeAnnotation( flow_tNode node, int number, char *text, 
 	int size);
 void flow_EnableEvent( FlowCtx *ctx, flow_eEvent event, 
@@ -159,7 +159,7 @@ void flow_AddLine( flow_tNodeClass nc, double x1, double y1,
 void flow_AddArc( flow_tNodeClass nc, double x1, double y1, 
 	double x2, double y2, int angle1, int angle2,
 	flow_eDrawType draw_type, int line_width);
-void flow_AddText( flow_tNodeClass nc, char *text_str, double x, double y, 
+void flow_AddText( flow_tNodeClass nc, const char *text_str, double x, double y, 
 	flow_eDrawType draw_type, int text_size);
 void flow_AddAnnot( flow_tNodeClass nc, double x, double y, int number,
 	flow_eDrawType draw_type, int text_size, flow_eAnnotType annot_type,
@@ -168,10 +168,10 @@ void flow_AddConPoint( flow_tNodeClass nc, double x, double y, int number,
 	flow_eDirection direction);
 void flow_CreatePushButton( flow_tCtx ctx, char *text, double x, double y, 
 	double width, double height, flow_tObject *pushbutton);
-void flow_CreateNodeClass( flow_tCtx ctx, char *name, flow_eNodeGroup group,
+void flow_CreateNodeClass( flow_tCtx ctx, const char *name, flow_eNodeGroup group,
 	flow_tNodeClass *nodeclass);
 void flow_NodeClassAdd( flow_tNodeClass nc, flow_tObject object);
-void flow_CreateConClass( flow_tCtx ctx, char *name,
+void flow_CreateConClass( flow_tCtx ctx, const char *name,
 	flow_eConType con_type, flow_eCorner corner, flow_eDrawType line_type,
 	int line_width, double arrow_width, double arrow_length, 
 	double round_corner_amount, flow_eConGroup group,

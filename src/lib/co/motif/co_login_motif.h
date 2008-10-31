@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_login_motif.h,v 1.1 2008-06-24 06:51:43 claes Exp $
+ * Proview   $Id: co_login_motif.h,v 1.2 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,15 +41,15 @@ class CoLoginMotif : public CoLogin {
 
   CoLoginMotif( void		*wl_parent_ctx,
 	       Widget       	wl_parent_wid,
-	       char		*wl_name,
-	       char		*wl_groupname,
+	       const char      	*wl_name,
+	       const char      	*wl_groupname,
 	       void		(* wl_bc_success)( void *),
 	       void		(* wl_bc_cancel)( void *),
 	       pwr_tStatus   	*sts);
   ~CoLoginMotif();
 
   pwr_tStatus get_values();
-  void message( char *new_label);
+  void message( const char *new_label);
 
   static void activate_ok( Widget w, CoLogin *loginctx, XmAnyCallbackStruct *data);
   static void activate_cancel( Widget w, CoLogin *loginctx, XmAnyCallbackStruct *data);

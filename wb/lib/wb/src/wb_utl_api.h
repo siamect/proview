@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl_api.h,v 1.1 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_utl_api.h,v 1.2 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -62,12 +62,12 @@ int utl_toupper (
 );
 
 int utl_parse (
-  char	*instring,
-  char	*parse_char,
-  char	*inc_parse_char,
-  char	*outstr,
-  int	max_rows,
-  int 	max_cols
+  const char	*instring,
+  const char	*parse_char,
+  const char	*inc_parse_char,
+  char		*outstr,
+  int		max_rows,
+  int 		max_cols
 );
 
 int utl_parse_indexstring (
@@ -123,7 +123,7 @@ int utl_set_object_parameter (
   char		*parameter,
   char		*valuestr,
   int		terminal,
-  char		*filename,
+  const char   	*filename,
   int		confirm,
   int		log
 );

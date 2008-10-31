@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growpolyline.cpp,v 1.8 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_growpolyline.cpp,v 1.9 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
@@ -30,7 +30,7 @@
 #include "glow_grownode.h"
 
 
-GrowPolyLine::GrowPolyLine( GrowCtx *glow_ctx, char *name, 
+GrowPolyLine::GrowPolyLine( GrowCtx *glow_ctx, const char *name, 
 		glow_sPoint *pointarray, int point_cnt,
 		glow_eDrawType border_d_type, int line_w, 
 		int fix_line_w, int fill, int display_border, int display_shadow,

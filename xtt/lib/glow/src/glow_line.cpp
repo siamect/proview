@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_line.cpp,v 1.4 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_line.cpp,v 1.5 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,7 +21,7 @@
 
 
 #include <stdlib.h>
-#include <iostream.h>
+#include <iostream>
 #include "glow_line.h"
 #include "glow_draw.h"
 #include "glow_growctx.h"

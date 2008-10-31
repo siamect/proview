@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wge.h,v 1.2 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_wge.h,v 1.3 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -67,7 +67,7 @@ class WGe {
   static void graph_close_cb( void *client_data);
   static int wge_command_cb( void *ge_ctx, char *command);
   static int wge_is_authorized_cb( void *ge_ctx, unsigned int access);
-  static void message( void *ctx, char severity, char *message);
+  static void message( void *ctx, char severity, const char *message);
 
   
 };

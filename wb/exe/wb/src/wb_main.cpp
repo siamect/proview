@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_main.cpp,v 1.2 2008-06-25 07:53:34 claes Exp $
+ * Proview   $Id: wb_main.cpp,v 1.3 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -244,7 +244,7 @@ int Wb::time_to_exit( void *wttctx)
   return 0;
 }
 
-void Wb::wtt_open_volume( void *wttctx, wb_eType type, char *filename, wow_eFileSelType file_type)
+void Wb::wtt_open_volume( void *wttctx, wb_eType type, const char *filename, wow_eFileSelType file_type)
 {
   Wb *wb = main_wb;
   char title[80];
@@ -342,7 +342,7 @@ void Wb::wtt_open_volume( void *wttctx, wb_eType type, char *filename, wow_eFile
 	if ( (name_p = strrchr( filename, '/')))
 	  name_p++;
 	else
-	  name_p = filename;
+	  name_p = (char *)filename;
 
         Wtt *wtt = wb->wtt_new( name_p, 
 			    "Navigator", wb->wbctx, mem->vid(), vol, 0, &sts);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_watt.cpp,v 1.11 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_watt.cpp,v 1.12 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,7 +37,7 @@
 #include "co_xhelp.h"
 
 
-void WAtt::message_cb( void *watt, char severity, char *message)
+void WAtt::message_cb( void *watt, char severity, const char *message)
 {
   ((WAtt *)watt)->message( severity, message);
 }
@@ -54,7 +54,7 @@ void WAtt::set_editmode( int editmode, ldh_tSesContext ldhses)
   ((WAttNav *)wattnav)->set_editmode( editmode, ldhses);
 }
 
-int WAtt::open_changevalue( char *name)
+int WAtt::open_changevalue( const char *name)
 {
   int sts;
 

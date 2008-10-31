@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_xhelp.cpp,v 1.10 2008-02-27 06:24:37 claes Exp $
+ * Proview   $Id: co_xhelp.cpp,v 1.11 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -67,8 +67,8 @@ void CoXHelp::clear()
   xhelpnav->clear();
 }
 
-int CoXHelp::help( char *key, char *help_bookmark, navh_eHelpFile file_type,
-	      char *file_name, bool strict)
+int CoXHelp::help( const char *key, const char *help_bookmark, navh_eHelpFile file_type,
+	      const char *file_name, bool strict)
 {
   return xhelpnav->help( key, help_bookmark, file_type,
 				   file_name, 0, strict);
@@ -92,8 +92,8 @@ int CoXHelp::previous_topic()
 //
 //  Static function to call help for the default xhelp
 //
-int CoXHelp::dhelp( char *key, char *help_bookmark, navh_eHelpFile file_type,
-	      char *file_name, bool strict)
+int CoXHelp::dhelp( const char *key, const char *help_bookmark, navh_eHelpFile file_type,
+	      const char *file_name, bool strict)
 {
   if ( !default_xhelp)
     return 0;
@@ -105,12 +105,12 @@ int CoXHelp::dhelp( char *key, char *help_bookmark, navh_eHelpFile file_type,
 }
 
 
-int CoXHelp::help_index( navh_eHelpFile file_type, char *file_name)
+int CoXHelp::help_index( navh_eHelpFile file_type, const char *file_name)
 {
   return xhelpnav->help_index( file_type, file_name, 0);
 }
 
-int CoXHelp::dhelp_index( navh_eHelpFile file_type, char *file_name)
+int CoXHelp::dhelp_index( navh_eHelpFile file_type, const char *file_name)
 {
   if ( !default_xhelp)
     return 0;

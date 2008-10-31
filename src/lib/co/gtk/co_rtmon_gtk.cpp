@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_rtmon_gtk.cpp,v 1.5 2007-10-02 15:53:20 claes Exp $
+ * Proview   $Id: co_rtmon_gtk.cpp,v 1.6 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,8 +53,8 @@ static void destroy_event( GtkWidget *w, gpointer data)
 
 RtMonGtk::RtMonGtk( void *rtmon_parent_ctx,
 		    GtkWidget *rtmon_parent_wid,
-		    char *rtmon_name,
-		    char *rtmon_display,
+		    const char *rtmon_name,
+		    const char *rtmon_display,
 		    pwr_tStatus *status) :
   RtMon( rtmon_parent_ctx, rtmon_name, rtmon_display, status), parent_wid(rtmon_parent_wid),
   clock_cursor(0), timerid(0), old_status(9999)

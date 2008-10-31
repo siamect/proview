@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_exportflow.h,v 1.1 2008-01-17 14:17:05 claes Exp $
+ * Proview   $Id: glow_exportflow.h,v 1.2 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #ifndef glow_exportflow_h
 #define glow_exportflow_h
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 
 #include "glow.h"
 #include "glow_ctx.h"

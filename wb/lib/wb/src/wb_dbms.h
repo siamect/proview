@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dbms.h,v 1.4 2008-02-22 09:27:29 claes Exp $
+ * Proview   $Id: wb_dbms.h,v 1.5 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2007 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,6 +29,7 @@
 #include <exception>
 #include <string>
 #include <errno.h>
+#include <string.h>
 
 class wb_name;
 

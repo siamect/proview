@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xattnav.h,v 1.5 2007-01-04 08:22:47 claes Exp $
+ * Proview   $Id: xtt_xattnav.h,v 1.6 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,7 +54,7 @@ class XAttNav {
     XAttNav(
 	void 		*xa_parent_ctx,
         xattnav_eType   xa_type,
-	char 		*xa_name,
+	const char     	*xa_name,
 	pwr_sAttrRef 	*xa_objar,
 	int 		xa_advanced_user,
 	pwr_tStatus 	*status);
@@ -69,7 +69,7 @@ class XAttNav {
     int			bypass;
     CoWowTimer		*trace_timerid;
     int			trace_started;
-    void 		(*message_cb)( void *, char, char *);
+    void 		(*message_cb)( void *, char, const char *);
     void 		(*close_cb)( void *);
     void 		(*change_value_cb)( void *);
     void 		(*popup_menu_cb)( void *, pwr_sAttrRef, unsigned long,
@@ -87,7 +87,7 @@ class XAttNav {
     int check_attr( int *multiline, brow_tObject *node, char *name,
 		char **init_value, int *size);
     int get_select( pwr_sAttrRef *attrref, int *is_attr);
-    void message( char sev, char *text);
+    void message( char sev, const char *text);
     void force_trace_scan();
     int object_attr();
     int crossref();

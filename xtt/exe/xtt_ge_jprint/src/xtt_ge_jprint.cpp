@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ge_jprint.cpp,v 1.1 2008-09-18 15:16:18 claes Exp $
+ * Proview   $Id: xtt_ge_jprint.cpp,v 1.2 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,7 +17,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  **/
 
-#include <vector.h>
+#include <vector>
+#include <stdlib.h>
 #include "glow_std.h"
 #include "flow.h"
 #include "flow_browctx.h"

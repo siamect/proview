@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.cpp,v 1.42 2008-10-03 14:18:37 claes Exp $
+ * Proview   $Id: wb_wnav.cpp,v 1.43 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -521,7 +521,7 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id, void *value
   }
 }
 
-void WNav::message( char sev, char *text)
+void WNav::message( char sev, const char *text)
 {
   if ( message_cb && !scriptmode)
     (message_cb)( parent_ctx, sev, text);
@@ -568,8 +568,8 @@ int WNav::create_object_item( pwr_tObjid objid,
 //
 WNav::WNav(
 	void *xn_parent_ctx,
-	char *xn_name,
-	char *xn_layout,
+	const char *xn_name,
+	const char *xn_layout,
         ldh_tSesContext	xn_ldhses,
 	wnav_sStartMenu *root_menu,
 	wnav_eWindowType xn_type,
@@ -3319,14 +3319,14 @@ int WNav::init_brow_cb( BrowCtx *ctx, void *client_data)
 
 
 ApplListElem::ApplListElem( applist_eType al_type, void *al_ctx, 
-	pwr_tObjid al_objid, char *al_name):
+	pwr_tObjid al_objid, const char *al_name):
 	type(al_type), ctx(al_ctx), objid(al_objid), next(NULL)
 {
   strcpy( name, al_name);
 }
 
 void ApplList::insert( applist_eType type, void *ctx, 
-	pwr_tObjid objid, char *name)
+	pwr_tObjid objid, const char *name)
 {
   ApplListElem *elem = new ApplListElem( type, ctx, objid, name);
   elem->next = root;

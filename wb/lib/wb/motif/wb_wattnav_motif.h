@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wattnav_motif.h,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_wattnav_motif.h,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,7 +29,7 @@ class WAttNavMotif : public WAttNav {
     WAttNavMotif(
 	void 		*wa_parent_ctx,
 	Widget		wa_parent_wid,
-	char 		*wa_name,
+	const char     	*wa_name,
 	ldh_tSesContext wa_ldhses,
 	pwr_sAttrRef 	wa_aref,
 	int 		wa_editmode,

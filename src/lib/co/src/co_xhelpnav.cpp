@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_xhelpnav.cpp,v 1.13 2008-04-11 16:30:45 claes Exp $
+ * Proview   $Id: co_xhelpnav.cpp,v 1.14 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -730,7 +730,7 @@ pwr_tStatus CoXHelpNav::search_exec( bool reverse)
   return XHELP__SEARCHNOTFOUND;
 }
 
-HItemHeader::HItemHeader( CoXHelpNavBrow *brow, char *item_name, char *title,
+HItemHeader::HItemHeader( CoXHelpNavBrow *brow, const char *item_name, const char *title,
 	brow_tNode dest, flow_eDest dest_code)
 {
   type = xhelpnav_eHItemType_Header;
@@ -739,7 +739,7 @@ HItemHeader::HItemHeader( CoXHelpNavBrow *brow, char *item_name, char *title,
   brow_SetAnnotation( node, 0, title, strlen(title));
 }
 
-HItemHelpLine::HItemHelpLine( CoXHelpNavBrow *brow, char *item_name, 
+HItemHelpLine::HItemHelpLine( CoXHelpNavBrow *brow, const char *item_name, 
 			      brow_tNode dest, flow_eDest dest_code)
 {
   type = xhelpnav_eHItemType_HelpLine;
@@ -747,9 +747,9 @@ HItemHelpLine::HItemHelpLine( CoXHelpNavBrow *brow, char *item_name,
 		dest, dest_code, (void *)this, 1, &node);
 }
 
-HItemHelpImage::HItemHelpImage( CoXHelpNavBrow *brow, char *item_name, brow_tNodeClass nc,
-				char *item_link, char *item_bookmark, 
-				char *item_file_name, navh_eHelpFile help_file_type, 
+HItemHelpImage::HItemHelpImage( CoXHelpNavBrow *brow, const char *item_name, brow_tNodeClass nc,
+				const char *item_link, const char *item_bookmark, 
+				const char *item_file_name, navh_eHelpFile help_file_type, 
 				brow_tNode dest, flow_eDest dest_code)
   : file_type(help_file_type)
 {
@@ -795,7 +795,7 @@ int HItemHelpImage::doubleclick_action( CoXHelpNavBrow *brow, CoXHelpNav *xhelpn
   return 1;
 }
 
-HItemHeaderLarge::HItemHeaderLarge( CoXHelpNavBrow *brow, char *item_name, char *title,
+HItemHeaderLarge::HItemHeaderLarge( CoXHelpNavBrow *brow, const char *item_name, const char *title,
 	brow_tNode dest, flow_eDest dest_code)
 {
   type = xhelpnav_eHItemType_HeaderLarge;
@@ -818,8 +818,8 @@ bool HItemHeaderLarge::search( char *str, bool strict)
   return false;
 }
 
-HItemHelpHeader::HItemHelpHeader( CoXHelpNavBrow *brow, char *item_name, char *title, bool base,
-	brow_tNode dest, flow_eDest dest_code)
+HItemHelpHeader::HItemHelpHeader( CoXHelpNavBrow *brow, const char *item_name, const char *title, 
+				  bool base, brow_tNode dest, flow_eDest dest_code)
 {
   type = xhelpnav_eHItemType_HelpHeader;
   brow_CreateNode( brow->ctx, "header", brow->nc_header,
@@ -850,9 +850,10 @@ int HItemHelpHeader::doubleclick_action( CoXHelpNavBrow *brow, CoXHelpNav *xhelp
   return 1;
 }
 
-HItemHelp::HItemHelp( CoXHelpNavBrow *brow, char *item_name, char *text, char *text2, 
-	char *text3, char *item_link, char *item_bookmark, 
-	char *item_file_name, navh_eHelpFile help_file_type, int help_index, brow_tNode dest, flow_eDest dest_code) :
+HItemHelp::HItemHelp( CoXHelpNavBrow *brow, const char *item_name, const char *text, const char *text2, 
+		      const char *text3, const char *item_link, const char *item_bookmark, 
+		      const char *item_file_name, navh_eHelpFile help_file_type, int help_index, 
+		      brow_tNode dest, flow_eDest dest_code) :
 	file_type(help_file_type), index(help_index)
 {
   type = xhelpnav_eHItemType_Help;
@@ -921,10 +922,12 @@ int HItemHelp::doubleclick_action( CoXHelpNavBrow *brow, CoXHelpNav *xhelpnav, d
   return 1;
 }
 
-HItemHelpBold::HItemHelpBold( CoXHelpNavBrow *brow, char *item_name, char *text, char *text2, 
-	char *text3, char *item_link, char *item_bookmark, 
-	char *item_file_name, navh_eHelpFile help_file_type, int help_index, brow_tNode dest, flow_eDest dest_code) :
-        file_type(help_file_type), index(help_index)
+HItemHelpBold::HItemHelpBold( CoXHelpNavBrow *brow, const char *item_name, const char *text, 
+			      const char *text2, const char *text3, const char *item_link, 
+			      const char *item_bookmark, const char *item_file_name, 
+			      navh_eHelpFile help_file_type, int help_index, brow_tNode dest, 
+			      flow_eDest dest_code) :
+  file_type(help_file_type), index(help_index)
 {
   type = xhelpnav_eHItemType_HelpBold;
   strcpy( link, item_link);
@@ -1012,17 +1015,21 @@ static void trim( char *str)
 *
 **************************************************************************/
 
-void *xhelpnav_help_insert_cb( void *ctx, navh_eItemType item_type, char *text1,
-		      char *text2, char *text3, char *link, 
-		      char *bookmark, char *file_name,
-		      navh_eHelpFile file_type, int help_index, char *bm)
+static void *xhelpnav_help_insert_cb( void *ctx, navh_eItemType item_type, const char *text1,
+		      const char *text2, const char *text3, const char *link, 
+		      const char *bookmark, const char *file_name,
+		      navh_eHelpFile file_type, int help_index, const char *bm)
 {
   CoXHelpNav *xhelpnav = (CoXHelpNav *)ctx;
   char *llink = 0;
+  char *t1 = 0;
+  char *t2 = 0;
+  char *t3 = 0;
+
   if ( link && strncmp( link, "$class:", 7) == 0)
-    llink = link + 7;
+    llink = (char *)link + 7;
   else if ( link)
-    llink = link;
+    llink = (char *)link;
 
   if ( xhelpnav->init_help) {
     xhelpnav->brow_pop();
@@ -1034,43 +1041,88 @@ void *xhelpnav_help_insert_cb( void *ctx, navh_eItemType item_type, char *text1,
     case navh_eItemType_Help:
     case navh_eItemType_HelpCode:
     {      
-      trim( text1);
-      trim( text2);
-      trim( text3);
-      HItemHelp *item = new HItemHelp( xhelpnav->brow, "help", text1, text2, text3,
+      if ( text1) {
+	t1 = (char *)calloc( 1, strlen(text1)+1);
+	strcpy( t1, text1);
+	trim( t1);
+      }
+      if ( text2) {
+	t2 = (char *)calloc( 1, strlen(text1)+1);
+	strcpy( t2, text2);
+	trim( t2);
+      }
+      if ( text3) {
+	t3 = (char *)calloc( 1, strlen(text3)+1);
+	strcpy( t3, text3);
+	trim( t3);
+      }
+      HItemHelp *item = new HItemHelp( xhelpnav->brow, "help", t1, t2, t3,
 	     llink, bookmark, file_name, file_type, help_index,
 	     NULL, flow_eDest_IntoLast);
+      free( t1);
+      free( t2);
+      free( t3);
       return item->node;
     }
     case navh_eItemType_HelpBold:
     {
-      trim( text1);
-      trim( text2);
-      trim( text3);
-      HItemHelpBold *item = new HItemHelpBold( xhelpnav->brow, "help", text1, text2,
-	     text3, llink, bookmark, file_name, file_type, help_index,
+      if ( text1) {
+	t1 = (char *)calloc( 1, strlen(text1)+1);
+	strcpy( t1, text1);
+	trim( t1);
+      }
+      if ( text2) {
+	t2 = (char *)calloc( 1, strlen(text1)+1);
+	strcpy( t2, text2);
+	trim( t2);
+      }
+      if ( text3) {
+	t3 = (char *)calloc( 1, strlen(text3)+1);
+	strcpy( t3, text3);
+	trim( t3);
+      }
+      HItemHelpBold *item = new HItemHelpBold( xhelpnav->brow, "help", t1, t2,
+	     t3, llink, bookmark, file_name, file_type, help_index,
 	     NULL, flow_eDest_IntoLast);
+      free( t1);
+      free( t2);
+      free( t3);
       return item->node;
     }
     case navh_eItemType_HelpHeader:
     {      
-      trim( text1);
-      HItemHelpHeader *item = new HItemHelpHeader( xhelpnav->brow, "help", text1, xhelpnav->brow_cnt == 1,
+      if ( text1) {
+	t1 = (char *)calloc( 1, strlen(text1)+1);
+	strcpy( t1, text1);
+	trim( t1);
+      }
+      HItemHelpHeader *item = new HItemHelpHeader( xhelpnav->brow, "help", t1, xhelpnav->brow_cnt == 1,
 	     NULL, flow_eDest_IntoLast);
+      free( t1);
       return item->node;
     }
      case navh_eItemType_Header:
     {      
-      trim( text1);
-      HItemHeader *item = new HItemHeader( xhelpnav->brow, "help", text1,
+      if ( text1) {
+	t1 = (char *)calloc( 1, strlen(text1)+1);
+	strcpy( t1, text1);
+	trim( t1);
+      }
+      HItemHeader *item = new HItemHeader( xhelpnav->brow, "help", t1,
 	     NULL, flow_eDest_IntoLast);
+      free( t1);
       return item->node;
     }
     case navh_eItemType_HeaderLarge:
     {      
-      trim( text1);
-      HItemHeaderLarge *item = new HItemHeaderLarge( xhelpnav->brow, "help", text1,
+      if ( text1) {
+	t1 = (char *)calloc( 1, strlen(text1)+1);
+	strcpy( t1, text1);
+	trim( t1);
+      }
+      HItemHeaderLarge *item = new HItemHeaderLarge( xhelpnav->brow, "help", t1,
 	     NULL, flow_eDest_IntoLast);
+      free( t1);
       return item->node;
     }
     case navh_eItemType_HorizontalLine:
@@ -1096,8 +1148,8 @@ void *xhelpnav_help_insert_cb( void *ctx, navh_eItemType item_type, char *text1,
   }
 }
 
-int	CoXHelpNav::help( char *help_key, char *help_bookmark, 
-			  navh_eHelpFile file_type, char *file_name, int pop, bool strict)
+int	CoXHelpNav::help( const char *help_key, const char *help_bookmark, 
+			  navh_eHelpFile file_type, const char *file_name, int pop, bool strict)
 {
   int sts;
   brow_tNode bookmark_node;
@@ -1243,7 +1295,7 @@ int	CoXHelpNav::previous_topic()
 *
 **************************************************************************/
 
-int	CoXHelpNav::help_index( navh_eHelpFile file_type, char *file_name, int pop)
+int	CoXHelpNav::help_index( navh_eHelpFile file_type, const char *file_name, int pop)
 {
   int sts;
   brow_tObject 	*object_list;

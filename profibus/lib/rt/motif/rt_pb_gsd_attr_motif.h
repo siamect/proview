@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attr_motif.h,v 1.1 2007-01-04 08:43:47 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attr_motif.h,v 1.2 2008-10-31 12:51:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -48,8 +48,8 @@ class GsdAttrMotif : public GsdAttr {
 		int a_edit_mode);
   ~GsdAttrMotif();
 
-  void message( char severity, char *message);
-  void set_prompt( char *prompt);
+  void message( char severity, const char *message);
+  void set_prompt( const char *prompt);
   void change_value();
     
   static void gsdattr_message( void *attr, char severity, char *message);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attrnav.cpp,v 1.21 2008-09-05 09:17:54 claes Exp $
+ * Proview   $Id: ge_attrnav.cpp,v 1.22 2008-10-31 12:51:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <vector.h>
+#include <vector>
 
 #include "co_cdh.h"
 #include "co_time.h"
@@ -1139,7 +1139,7 @@ void  attrnav_attrvalue_to_string( int type_id, void *value_ptr,
   }
 }
 
-void AttrNav::message( char sev, char *text)
+void AttrNav::message( char sev, const char *text)
 {
   (message_cb)( parent_ctx, sev, text);
 }
@@ -1216,7 +1216,7 @@ void AttrNavBrow::allocate_pixmaps()
 //
 AttrNav::AttrNav(
 	void *xn_parent_ctx,
-	char *xn_name,
+	const char *xn_name,
 	attr_sItem  *xn_itemlist,
 	int xn_item_cnt,
 	pwr_tStatus *status) :
@@ -2091,7 +2091,7 @@ int AttrNav::init_brow_cb( FlowCtx *fctx, void *client_data)
 }
 
 
-ItemLocal::ItemLocal( AttrNav *attrnav, char *item_name, char *attr, 
+ItemLocal::ItemLocal( AttrNav *attrnav, const char *item_name, const char *attr, 
 	int attr_type, int attr_size, double attr_min_limit, 
 	double attr_max_limit, void *attr_value_p, int attr_multiline,
 	int attr_noedit, int attr_mask,

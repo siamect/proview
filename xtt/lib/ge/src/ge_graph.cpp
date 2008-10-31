@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.54 2008-10-16 08:58:00 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.55 2008-10-31 12:51:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -118,7 +118,7 @@ void Graph::message( pwr_tStatus sts)
   message('I', msg);
 }
 
-void Graph::message( char sev, char *text)
+void Graph::message( char sev, const char *text)
 {
   if ( message_cb)
     (message_cb)( parent_ctx, sev, text);
@@ -132,11 +132,11 @@ void Graph::message( char sev, char *text)
 //
 Graph::Graph(
 	void *xn_parent_ctx,
-	char *xn_name,
-	char *xn_default_path,
+	const char *xn_name,
+	const char *xn_default_path,
 	graph_eMode graph_mode,
 	int xn_gdh_init_done,
-	char *xn_object_name,
+	const char *xn_object_name,
 	int xn_use_default_access,
 	unsigned int xn_default_access) :
 	attr_list( 0, NULL),
@@ -353,7 +353,7 @@ void Graph::get_next_subgraph( char *next)
 //
 //  Set next subgraph
 //
-void Graph::set_next_subgraph( char *next)
+void Graph::set_next_subgraph( const char *next)
 {
   grow_SetNextSubgraph( grow->ctx, next);
 }
@@ -385,7 +385,7 @@ int Graph::get_java_name( char *name)
 //
 //  Set java name
 //
-void Graph::set_java_name( char *name)
+void Graph::set_java_name( const char *name)
 {
   char current_name[80];
 
@@ -3806,7 +3806,7 @@ void Graph::connect( grow_tObject object, char *attr_name, int second)
 
 }
 
-int Graph::set_object_focus( char *name, int empty)
+int Graph::set_object_focus( const char *name, int empty)
 {
   int  dyn_type;
   int  action_type;
@@ -3836,7 +3836,7 @@ int Graph::set_object_focus( char *name, int empty)
   return GE__SUCCESS;
 }
 
-int Graph::set_folder_index( char *name, int idx)
+int Graph::set_folder_index( const char *name, int idx)
 {
   int  sts;
   grow_tObject object;
@@ -3850,7 +3850,7 @@ int Graph::set_folder_index( char *name, int idx)
   return grow_SetFolderIndex( object, idx);
 }
 
-int Graph::set_subwindow_source( char *name, char *source)
+int Graph::set_subwindow_source( const char *name, char *source)
 {
   int  sts;
   grow_tObject object;
@@ -4755,7 +4755,7 @@ int GraphApplList::get_first( void **ctx)
 //
 // Convert attribute string to value
 //
-int  graph_attr_string_to_value( int type_id, char *value_str, 
+int  graph_attr_string_to_value( int type_id, const char *value_str, 
 	void *buffer_ptr, int buff_size, int attr_size)
 {
   int		sts;
@@ -4952,7 +4952,7 @@ GraphRecallBuff::~GraphRecallBuff()
   for ( int i = 0; i < cnt; i++)
     delete buff[i];
 }
-void GraphRecallBuff::insert( GeDyn *data, char *data_key, grow_tObject object)
+void GraphRecallBuff::insert( GeDyn *data, const char *data_key, grow_tObject object)
 {
   int i;
   char new_key[80];

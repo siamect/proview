@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_lng.h,v 1.8 2007-07-20 11:36:21 claes Exp $
+ * Proview   $Id: co_lng.h,v 1.9 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,8 +22,11 @@
 
 /* co_lng.h -- Language */
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
+#include <string.h>
+
+using namespace std;
 
 #if defined __cplusplus
 extern "C" {
@@ -122,7 +125,7 @@ class Lng {
 
     static bool read();
     static bool read_line( Row& r);
-    static char *translate( char *text);
+    static char *translate( const char *text);
     static char *get_language_str();
     static int translate( char *in, char *out);
     static void unload();

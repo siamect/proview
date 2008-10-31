@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtrend.h,v 1.6 2007-09-19 15:07:11 claes Exp $
+ * Proview   $Id: glow_growtrend.h,v 1.7 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,7 +42,7 @@
 class GrowTrend : public GrowRect {
  public:
 
-  GrowTrend( GrowCtx *glow_ctx, char *name, double x = 0, double y = 0, 
+  GrowTrend( GrowCtx *glow_ctx, const char *name, double x = 0, double y = 0, 
 		double w = 0, double h = 0, 
 		glow_eDrawType border_d_type = glow_eDrawType_Line, 
 		int line_w = 1, 

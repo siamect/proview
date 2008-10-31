@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growsubannot.h,v 1.7 2008-01-17 14:17:05 claes Exp $
+ * Proview   $Id: glow_growsubannot.h,v 1.8 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,7 +26,7 @@
 
 class GrowSubAnnot : public GlowAnnot {
   public:
-    GrowSubAnnot( GrowCtx *glow_ctx, char *name, double x = 0, double y = 0,
+    GrowSubAnnot( GrowCtx *glow_ctx, const char *name, double x = 0, double y = 0,
 	int annot_num = 0, glow_eDrawType d_type = glow_eDrawType_TextHelveticaBold,
 	glow_eDrawType color_d_type = glow_eDrawType_Line,
 	int t_size = 2, glow_eAnnotType a_type = glow_eAnnotType_OneLine,

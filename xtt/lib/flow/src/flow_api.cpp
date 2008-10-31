@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_api.cpp,v 1.17 2008-10-16 08:58:06 claes Exp $
+ * Proview   $Id: flow_api.cpp,v 1.18 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,7 +19,7 @@
 
 #include "flow_std.h"
 
-#include <iostream.h>
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -163,7 +163,7 @@ void flow_SetInverse( flow_tObject object, int value)
   ((FlowArrayElem *) object)->set_inverse( value);
 }
 
-void flow_CreateNode( flow_tCtx ctx, char *name, flow_tNodeClass nc,
+void flow_CreateNode( flow_tCtx ctx, const char *name, flow_tNodeClass nc,
 	double x, double y, void *user_data, flow_tNode *node)
 {
   FlowNode *n1;
@@ -217,7 +217,7 @@ void flow_CreatePasteCon( flow_tCtx ctx, char *name, flow_tConClass cc,
   *con = (flow_tCon) c1;
 }
 
-void flow_SetAnnotation( flow_tNode node, int number, char *text, int size)
+void flow_SetAnnotation( flow_tNode node, int number, const char *text, int size)
 {
   ((FlowNode *)node)->set_annotation( number, text, size, 0);
 }
@@ -353,7 +353,7 @@ void flow_AddArc( flow_tNodeClass nc, double x1, double y1,
   ((FlowNodeClass *)nc)->insert( arc);
 }
 
-void flow_AddText( flow_tNodeClass nc, char *text_str, double x, double y, 
+void flow_AddText( flow_tNodeClass nc, const char *text_str, double x, double y, 
 	flow_eDrawType draw_type, int text_size)
 {
   FlowText *text = new FlowText( ((FlowNodeClass *)nc)->ctx, 
@@ -386,7 +386,7 @@ void flow_CreatePushButton( flow_tCtx ctx, char *text, double x, double y,
   ctx->insert( (FlowArrayElem *) *pushbutton);
 }
 
-void flow_CreateNodeClass( flow_tCtx ctx, char *name, flow_eNodeGroup group,
+void flow_CreateNodeClass( flow_tCtx ctx, const char *name, flow_eNodeGroup group,
 	flow_tNodeClass *nodeclass)
 {
   *nodeclass = (flow_tNodeClass) new FlowNodeClass( ctx, name, group);
@@ -398,7 +398,7 @@ void flow_NodeClassAdd( flow_tNodeClass nc, flow_tObject object)
   ((FlowNodeClass *)nc)->insert( (FlowArrayElem *)object);
 }
 
-void flow_CreateConClass( flow_tCtx ctx, char *name,
+void flow_CreateConClass( flow_tCtx ctx, const char *name,
 	flow_eConType con_type, flow_eCorner corner, flow_eDrawType line_type,
 	int line_width, double arrow_width, double arrow_length, 
 	double round_corner_amount, flow_eConGroup group, 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_motif.cpp,v 1.2 2008-06-24 07:52:21 claes Exp $
+ * Proview   $Id: wb_wnav_motif.cpp,v 1.3 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -96,8 +96,8 @@ void WNavMotif::pop()
 WNavMotif::WNavMotif(
 	void *xn_parent_ctx,
 	Widget	xn_parent_wid,
-	char *xn_name,
-	char *xn_layout,
+	const char *xn_name,
+	const char *xn_layout,
 	Widget *w,
         ldh_tSesContext	xn_ldhses,
 	wnav_sStartMenu *root_menu,
@@ -418,7 +418,7 @@ void WNavMotif::sel_lose_cb( Widget w, Atom *selection)
   wnav->selection_owner = 0;
 }
 
-int WNavMotif::open_foe( char *name, pwr_tOid plcpgm,
+int WNavMotif::open_foe( const char *name, pwr_tOid plcpgm,
 			 void **foectx, int map_window,
 			 ldh_eAccess access, pwr_tOid oid)
 {
@@ -447,11 +447,11 @@ void WNavMotif::wda_new( pwr_tOid oid, pwr_tCid cid, char *attribute,
 		  advuser, display_objectname);
 }
 
-CoLogin *WNavMotif::login_new( char		*name,
-			     char		*groupname,
-			     void		(* bc_success)( void *),
-			     void		(* bc_cancel)( void *),
-			     pwr_tStatus  	*status)
+CoLogin *WNavMotif::login_new( const char      	*name,
+			       const char      	*groupname,
+			       void		(* bc_success)( void *),
+			       void		(* bc_cancel)( void *),
+			       pwr_tStatus  	*status)
 {
   return new CoLoginMotif( this, parent_wid, name, groupname, bc_success, bc_cancel, status);
 }
@@ -558,7 +558,7 @@ void WNavMotif::message_dialog( char *title, char *text)
     XtSetArg( args[i], XmNy, dialog_y); i++;
   }
 
-  dialog = XmCreateInformationDialog( parent_wid, "Info", args, i);
+  dialog = XmCreateInformationDialog( parent_wid, (char*) "Info", args, i);
   XmStringFree( text_str);
   XmStringFree( title_str);
 
@@ -600,9 +600,9 @@ int WNavMotif::confirm_dialog( char *title, char *text, int display_cancel,
 
   text_str = XmStringCreateLocalized( wnav_dialog_convert_text(text));
   title_str = XmStringCreateLocalized( title);
-  no_str = XmStringCreateLocalized( "No");
-  yes_str = XmStringCreateLocalized( "Yes");
-  cancel_str = XmStringCreateLocalized( "Cancel");
+  no_str = XmStringCreateLocalized( (char*) "No");
+  yes_str = XmStringCreateLocalized( (char*) "Yes");
+  cancel_str = XmStringCreateLocalized( (char*) "Cancel");
   i = 0;
   XtSetArg( args[i], XmNmessageString, text_str); i++;
   XtSetArg( args[i], XmNdialogTitle, title_str); i++;
@@ -618,7 +618,7 @@ int WNavMotif::confirm_dialog( char *title, char *text, int display_cancel,
     XtSetArg( args[i], XmNy, dialog_y); i++;
   }
 
-  dialog = XmCreateInformationDialog( parent_wid, "Info", args, i);
+  dialog = XmCreateInformationDialog( parent_wid, (char*) "Info", args, i);
   XmStringFree( text_str);
   XmStringFree( title_str);
   XmStringFree( no_str);
@@ -685,8 +685,8 @@ int WNavMotif::continue_dialog( char *title, char *text)
 
   text_str = XmStringCreateLocalized( wnav_dialog_convert_text(text));
   title_str = XmStringCreateLocalized( title);
-  continue_str = XmStringCreateLocalized( "Continue");
-  quit_str = XmStringCreateLocalized( "Quit");
+  continue_str = XmStringCreateLocalized( (char*) "Continue");
+  quit_str = XmStringCreateLocalized( (char*) "Quit");
   i = 0;
   XtSetArg( args[i], XmNmessageString, text_str); i++;
   XtSetArg( args[i], XmNdialogTitle, title_str); i++;
@@ -701,7 +701,7 @@ int WNavMotif::continue_dialog( char *title, char *text)
     XtSetArg( args[i], XmNy, dialog_y); i++;
   }
 
-  dialog = XmCreateInformationDialog( parent_wid, "Info", args, i);
+  dialog = XmCreateInformationDialog( parent_wid, (char*) "Info", args, i);
   XmStringFree( text_str);
   XmStringFree( title_str);
   XmStringFree( quit_str);
@@ -756,7 +756,7 @@ int WNavMotif::prompt_dialog( char *title, char *text, char **value)
   }
 //  XtSetArg( args[i], XmNautoUnmanage, False); i++;
 
-  dialog = XmCreatePromptDialog( parent_wid, "Info", args, i);
+  dialog = XmCreatePromptDialog( parent_wid, (char*) "Info", args, i);
   XmStringFree( text_str);
   XmStringFree( title_str);
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_motif.h,v 1.1 2007-01-04 08:40:33 claes Exp $
+ * Proview   $Id: rt_xtt_motif.h,v 1.2 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -58,13 +58,13 @@ class XttMotif : public Xtt {
     XttMotif( int argc, char *argv[], int *sts);
     ~XttMotif();
 
-    void message( char severity, char *msg);
+    void message( char severity, const char *msg);
     void xtt_mainloop (XtAppContext AppCtx);
     int init_hotkey( XtAppContext AppCtx, Widget Top);
-    void open_input_dialog( char *text, char *title,
-			    char *init_text,
+    void open_input_dialog( const char *text, const char *title,
+			    const char *init_text,
 			    void (*ok_cb)( Xtt *, char *));
-    void set_prompt( char *prompt);
+    void set_prompt( const char *prompt);
     void open_change_value();
 
     static void close( void *ctx, int terminate);

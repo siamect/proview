@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growmenu.h,v 1.4 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_growmenu.h,v 1.5 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -57,7 +57,7 @@ class GrowMenu : public GrowRect {
     \param parent	Parent menu.
     \param nodraw	Don't draw the object now.
   */
-  GrowMenu( GrowCtx *glow_ctx, char *name, glow_sMenuInfo *menu_info, double x = 0, double y = 0, 
+  GrowMenu( GrowCtx *glow_ctx, const char *name, glow_sMenuInfo *menu_info, double x = 0, double y = 0, 
 	    double min_w = 0,
 	    glow_eDrawType border_d_type = glow_eDrawType_Line, 
 	    int line_w = 1, 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_tbl.cpp,v 1.3 2008-09-18 14:37:43 claes Exp $
+ * Proview   $Id: xtt_tbl.cpp,v 1.4 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <vector.h>
+#include <vector>
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_xhelp.h"
@@ -72,7 +72,7 @@ XttTbl::XttTbl( void *xn_parent_ctx, sevcli_tCtx xn_sevcli) :
     priv = 0;
 }
 
-void XttTbl::message( void *xtttbl, char severity, char *message)
+void XttTbl::message( void *xtttbl, char severity, const char *message)
 {
   ((XttTbl *)xtttbl)->message( severity, message);
 }

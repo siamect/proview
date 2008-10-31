@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subpalette.h,v 1.11 2007-07-09 12:51:18 claes Exp $
+ * Proview   $Id: ge_subpalette.h,v 1.12 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -88,7 +88,7 @@ class SubPalette {
   public:
     SubPalette(
 	void *xn_parent_ctx,
-	char *xn_name,
+	const char *xn_name,
 	pwr_tStatus *status);
     virtual ~SubPalette();
 
@@ -96,7 +96,7 @@ class SubPalette {
     char 		name[80];
     SubPaletteBrow	*brow;
     int			trace_started;
-    void 		(*message_cb)( void *, char, char *);
+    void 		(*message_cb)( void *, char, const char *);
     int 		(*traverse_focus_cb)( void *, void *);
     int 		(*set_focus_cb)( void *, void *);
     void 		(*help_cb)( void *, char *, char *);
@@ -161,7 +161,7 @@ class ItemFile : public Item {
 
 class ItemMenu : public Item {
   public:
-    ItemMenu( SubPalette *subpalette, char *item_name, 
+    ItemMenu( SubPalette *subpalette, const char *item_name, 
 	brow_tNode dest, flow_eDest dest_code, subpalette_sMenu **item_child_list,
 	int item_is_root);
     subpalette_sMenu	**child_list;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_watt_gtk.cpp,v 1.6 2007-04-23 11:45:51 claes Exp $
+ * Proview   $Id: wb_watt_gtk.cpp,v 1.7 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,12 +41,12 @@
 
 CoWowRecall WAttGtk::value_recall;
 
-void WAttGtk::message( char severity, char *message)
+void WAttGtk::message( char severity, const char *message)
 {
   gtk_label_set_text( GTK_LABEL(msg_label), message);
 }
 
-void WAttGtk::set_prompt( char *prompt)
+void WAttGtk::set_prompt( const char *prompt)
 {
   if ( strcmp(prompt, "") == 0) {
     g_object_set( cmd_prompt, "visible", FALSE, NULL);

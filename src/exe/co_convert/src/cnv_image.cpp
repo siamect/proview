@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_image.cpp,v 1.6 2008-10-16 11:06:09 claes Exp $
+ * Proview   $Id: cnv_image.cpp,v 1.7 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -18,13 +18,16 @@
  */
 
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "cnv_image.h"
+
+using namespace std;
 
 #define PWRE_GTK 1
 

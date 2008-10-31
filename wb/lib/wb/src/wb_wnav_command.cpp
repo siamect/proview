@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.53 2008-10-09 08:41:08 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.54 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -6259,8 +6259,8 @@ char	*wnav_VolumeIdToStr( pwr_tVolumeId volumeid)
 //
 
 int	WNav::show_file(
-			char		*filename,
-			char		*intitle,
+			const char     	*filename,
+			const char     	*intitle,
 			int		hide_dir)
 {
   int		sts;

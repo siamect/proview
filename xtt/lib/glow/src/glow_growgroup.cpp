@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growgroup.cpp,v 1.5 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_growgroup.cpp,v 1.6 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
@@ -29,7 +29,7 @@
 #include "glow_growctx.h"
 #include "glow_nodegroup.h"
 
-GrowGroup::GrowGroup( GrowCtx *glow_ctx, char *name, GlowArray& array,
+GrowGroup::GrowGroup( GrowCtx *glow_ctx, const char *name, GlowArray& array,
 	int nodraw) :
 	GrowNode(glow_ctx,name,0,0,0,nodraw,0)
 {
@@ -38,7 +38,7 @@ GrowGroup::GrowGroup( GrowCtx *glow_ctx, char *name, GlowArray& array,
   get_node_borders();
 }
 
-GrowGroup::GrowGroup( GrowCtx *glow_ctx, char *name) :
+GrowGroup::GrowGroup( GrowCtx *glow_ctx, const char *name) :
 	GrowNode(glow_ctx,name,0,0,0)
 {
   object_type = glow_eObjectType_GrowGroup;

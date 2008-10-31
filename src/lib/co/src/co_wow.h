@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow.h,v 1.14 2008-09-18 15:07:38 claes Exp $
+ * Proview   $Id: co_wow.h,v 1.15 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -73,20 +73,21 @@ class CoWow {
  public:
   CoWow() {}
   virtual ~CoWow() {}
-  virtual void DisplayQuestion( void *ctx, char	*title, char *text,
+  virtual void DisplayQuestion( void *ctx, const char *title, const char *text,
 				void (* questionbox_ok) ( void *, void *),
 				void (* questionbox_cancel) ( void *, void *),
 				void *data) {}
-  virtual void DisplayError( char *title, char *text) {}
-  virtual void *CreateList( char *title, char *texts,
+  virtual void DisplayError( const char *title, const char *text) {}
+  virtual void *CreateList( const char *title, const char *texts,
 			    void (action_cb)( void *, char *),
 			    void (cancel_cb)( void *),
 			    void *ctx) { return NULL;}
-  virtual void CreateFileSelDia( char *title, void *parent_ctx,
+  virtual void CreateFileSelDia( const char *title, void *parent_ctx,
 				 void (*file_selected_cb)(void *, char *, wow_eFileSelType),
 				 wow_eFileSelType file_type) {}
-  virtual int CreateModalDialog( char *title, char *text, char *button1, char *button2, char *button3,
-				 char *image) { return wow_eModalDialogReturn_NYI;}
+  virtual int CreateModalDialog( const char *title, const char *text, const char *button1, 
+				 const char *button2, const char *button3,
+				 const char *image) { return wow_eModalDialogReturn_NYI;}
   static int HideWarranty();
   virtual int DisplayWarranty() { return 0;}
   virtual void DisplayLicense() {} 

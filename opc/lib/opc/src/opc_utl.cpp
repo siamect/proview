@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.cpp,v 1.21 2007-12-03 13:32:04 claes Exp $
+ * Proview   $Id: opc_utl.cpp,v 1.22 2008-10-31 12:51:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,6 +20,7 @@
 
 #include <float.h>
 #include <iconv.h>
+#include <typeinfo>
 #include "pwr_class.h"
 #include "co_time.h"
 #include "co_time_msg.h"

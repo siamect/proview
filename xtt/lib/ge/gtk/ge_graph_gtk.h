@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_gtk.h,v 1.2 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: ge_graph_gtk.h,v 1.3 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -48,14 +48,14 @@ class GraphGtk : public Graph {
   GraphGtk(
 	void *xn_parent_ctx,
 	GtkWidget	*xn_parent_wid,
-	char *xn_name,
+	const char *xn_name,
 	GtkWidget **w,
 	pwr_tStatus *status,
-	char *xn_default_path,
+	const char *xn_default_path,
 	graph_eMode graph_mode = graph_eMode_Development,
 	int scrollbar = 1,
 	int xn_gdh_init_done = 0,
-	char *xn_object_name = 0,
+	const char *xn_object_name = 0,
 	int xn_use_default_access = 0,
 	unsigned int xn_default_access = 0);
 

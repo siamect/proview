@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_fast.h,v 1.5 2007-01-04 08:22:47 claes Exp $
+ * Proview   $Id: xtt_fast.h,v 1.6 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -71,7 +71,7 @@ class XttFast {
   int        	max_points;		//!< Max number of points in curves.
   CoWowTimer    *timerid;		//!< Time id for scan.
   void       	(*close_cb)( void *, XttFast *); //!< Close callback to parent.
-  void       	(*help_cb)( void *, char *); //!< Open help window.
+  void       	(*help_cb)( void *, const char *); //!< Open help window.
   pwr_tBoolean 	old_new;		//!< Old value of new. Used to detect edge of New.
   pwr_tMask	fast_function;		//!< Function configured in DsFastCurve object.
   bool		first_scan;		//!< Indicates that this is the first scan.

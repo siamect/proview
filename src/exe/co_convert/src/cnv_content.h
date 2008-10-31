@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_content.h,v 1.3 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: cnv_content.h,v 1.4 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,8 +24,8 @@
 
 using namespace std;
 
-#include <iostream.h>
-#include <vector.h>
+#include <iostream>
+#include <vector>
 #include <string>
 #include "pwr.h"
 #include "cnv_style.h"

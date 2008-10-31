@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_dcli_dir.c,v 1.5 2008-04-25 11:26:04 claes Exp $
+ * Proview   $Id: co_dcli_dir.c,v 1.6 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -96,7 +96,7 @@
 *
 **************************************************************************/
 
-int dcli_search_file( 		char 	*name , 
+int dcli_search_file( 		const char *name , 
 				char	*found_file,
 				int	new)
 {
@@ -348,7 +348,7 @@ int dcli_get_files( char *dir, char *pattern, pwr_tString40 *filelist[], int *fi
 *
 **************************************************************************/
 
-int	dcli_parse_filename( 	char	*filename,
+int	dcli_parse_filename( 	const char *filename,
 				char	*dev,
 				char	*dir,
 				char	*file,
@@ -486,7 +486,7 @@ int	dcli_parse_filename( 	char	*filename,
 	if ( (s = strstr( filename, "::")))
 	  s += 2;
 	else
-	  s = filename;
+	  s = (char *)filename;
 	strcpy( ldev, "");
 	strcpy( ldir, s);
 

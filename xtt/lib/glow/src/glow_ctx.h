@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_ctx.h,v 1.13 2008-05-13 13:59:03 claes Exp $
+ * Proview   $Id: glow_ctx.h,v 1.14 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -118,7 +118,7 @@ class GlowCtx {
     \param offs_x	Initial offset for x-coordinate.
     \param offs_y	Initial offset for y-coordinate.
   */
-  GlowCtx( char *ctx_name, double zoom_fact = 100, int offs_x = 0, int offs_y = 0);
+  GlowCtx( const char *ctx_name, double zoom_fact = 100, int offs_x = 0, int offs_y = 0);
 
   glow_eCtxType ctx_type;		//!< Type of context
   GlowWind	mw;			//!< Main window data.
@@ -657,7 +657,7 @@ class GlowCtx {
     \param name		Nodeclass name.
     \return		Pointer to the nodeclass.
   */
-  GlowArrayElem *get_nodeclass_from_name( char *name);
+  GlowArrayElem *get_nodeclass_from_name( const char *name);
 
   //! Get connection class from name.
   /*!
@@ -899,7 +899,7 @@ void glow_scroll_vertical( GlowCtx *ctx, int value, int bottom);
 /*! The only justification of this function is that checking status of filestreams doesn't 
   work on some VMS compilers...
  */
-int check_file( char *filename);
+int check_file( const char *filename);
 
 
 /*@}*/

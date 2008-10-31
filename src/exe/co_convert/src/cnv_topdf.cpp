@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_topdf.cpp,v 1.6 2008-10-16 11:07:17 claes Exp $
+ * Proview   $Id: cnv_topdf.cpp,v 1.7 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,9 +22,9 @@
 
 /*_Include files_________________________________________________________*/
 
-#include <iostream.h>
-#include <fstream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <fstream>
+#include <iomanip>
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
@@ -38,6 +38,8 @@ extern "C" {
 #include "cnv_topdf.h"
 #include "co_lng.h"
 #include "cnv_image.h"
+
+using namespace std;
 
 #define CNV_TAB 18
 
@@ -313,7 +315,7 @@ number + topdf->v_outline.size() + topdf->v_pages.size() + topdf->v_content.size
   return 1;
 }
 
-void CnvToPdf::cnv_text( char *to, char *from)
+void CnvToPdf::cnv_text( char *to, const char *from)
 {
   if ( !from) {
     strcpy( to, "");
@@ -321,7 +323,7 @@ void CnvToPdf::cnv_text( char *to, char *from)
   }
 
   char *t = to;
-  char *s = from;
+  char *s = (char *)from;
 
   for ( ; *s; s++) {
     switch ( *s) {
@@ -343,7 +345,7 @@ void CnvToPdf::cnv_text( char *to, char *from)
   *t = 0;
 }
 
-void CnvToPdf::print_text( char *text, CnvStyle& style, int mode)
+void CnvToPdf::print_text( const char *text, CnvStyle& style, int mode)
 {
   char str[1000];
 

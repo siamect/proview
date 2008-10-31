@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_uilutil.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_uilutil.cpp,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,7 +28,7 @@
 
 /*_Local procedures___________________________________________*/
 
-static void s_errors( char *problem_string, char *ps2)
+static void s_errors( const char *problem_string, char *ps2)
 {
   if (ps2)
     printf(problem_string, ps2 );
@@ -158,7 +158,7 @@ void vms_perror(
   static $DESCRIPTOR( buf, msgbuf );
 #endif
 
-  if (userstring == NULL) userstring = "";
+  if (userstring == NULL) userstring = (char*) "";
 #if defined OS_VMS
   sys$getmsg( msgid, &msglen, &buf, 15, &outadr );
   msgbuf[msglen] = '\0';

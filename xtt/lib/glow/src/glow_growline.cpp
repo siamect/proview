@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growline.cpp,v 1.8 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_growline.cpp,v 1.9 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
@@ -30,7 +30,7 @@
 #include "glow_grownode.h"
 #include "glow_exportflow.h"
 
-GrowLine::GrowLine( GrowCtx *glow_ctx, char *name, double x1, double y1, 
+GrowLine::GrowLine( GrowCtx *glow_ctx, const char *name, double x1, double y1, 
 		double x2, double y2, glow_eDrawType d_type, int line_w, 
 		int fix_line_w, int nodraw) : 
 		GlowLine(glow_ctx,x1,y1,x2,y2,d_type,line_w,fix_line_w), 

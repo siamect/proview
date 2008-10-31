@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav_gtk.cpp,v 1.2 2007-06-15 10:53:06 claes Exp $
+ * Proview   $Id: wb_nav_gtk.cpp,v 1.3 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -43,9 +43,9 @@ static void nav_sel_convert_cb( GtkWidget *w, GtkSelectionData *selection_data,
 NavGtk::NavGtk(
 	void *nav_parent_ctx,
 	GtkWidget *nav_parent_wid,
-	char *nav_name,
+	const char *nav_name,
 	ldh_tSesContext nav_ldhses,
-	char *nav_root_name,
+	const char *nav_root_name,
 	GtkWidget **w,
 	pwr_tStatus *status
 	) :

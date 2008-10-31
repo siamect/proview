@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msglist_motif.cpp,v 1.1 2007-01-04 07:51:41 claes Exp $
+ * Proview   $Id: co_msglist_motif.cpp,v 1.2 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -60,7 +60,7 @@ MsgListMotif::MsgListMotif(
 	Widget *w) :
   MsgList( ev_parent_ctx), parent_wid(ev_parent_wid)
 {
-  form_widget = ScrolledBrowCreate( parent_wid, "MsgList", NULL, 0, 
+  form_widget = ScrolledBrowCreate( parent_wid, (char *)"MsgList", NULL, 0, 
 	MsgList::init_brow_cb, this, (Widget *)&brow_widget);
   XtManageChild( form_widget);
 

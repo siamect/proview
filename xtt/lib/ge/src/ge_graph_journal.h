@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_journal.h,v 1.3 2008-09-18 14:55:45 claes Exp $
+ * Proview   $Id: ge_graph_journal.h,v 1.4 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #ifndef ge_journal_h
 #define ge_journal_h
 
-#include <fstream.h>
-#include <vector.h>
+#include <fstream>
+#include <vector>
 
 using namespace std;
 
@@ -80,7 +80,7 @@ class GraphJournal {
     int undo();
     int redo();
     void check_object_number( grow_tObject o);
-    int open( char *name);
+    int open( const char *name);
     int clear( char *name = 0);
     int restore( char *fname);
     int store_undo_delete_select();

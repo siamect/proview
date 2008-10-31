@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subgraphs.h,v 1.5 2008-05-13 13:49:25 claes Exp $
+ * Proview   $Id: ge_subgraphs.h,v 1.6 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -87,7 +87,7 @@ class SubGraphs {
   public:
     SubGraphs(
 	void *xn_parent_ctx,
-	char *xn_name,
+	const char *xn_name,
 	void *grow_ctx,
 	pwr_tStatus *status);
 
@@ -95,7 +95,7 @@ class SubGraphs {
     char 		name[80];
     SubGraphsBrow	*brow;
     int			trace_started;
-    void 		(*message_cb)( void *, char, char *);
+    void 		(*message_cb)( void *, char, const char *);
     void 		(*close_cb)( SubGraphs *);
     void		*grow_ctx;
     subgraphs_tAttr	attrlist;

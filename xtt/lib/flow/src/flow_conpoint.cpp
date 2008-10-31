@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_conpoint.cpp,v 1.4 2008-10-03 14:19:19 claes Exp $
+ * Proview   $Id: flow_conpoint.cpp,v 1.5 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "flow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <math.h>
 
 #include "flow_conpoint.h"

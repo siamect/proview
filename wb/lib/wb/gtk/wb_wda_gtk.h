@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wda_gtk.h,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_wda_gtk.h,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,7 +38,7 @@ class WdaGtk : public Wda {
 	ldh_tSesContext wa_ldhses,
 	pwr_tObjid 	wa_objid,
 	pwr_tClassId 	wa_classid,
-        char            *wa_attribute,
+        const char      *wa_attribute,
 	int 		wa_editmode,
 	int 		wa_advanced_user,
 	int		wa_display_objectname);
@@ -65,8 +65,8 @@ class WdaGtk : public Wda {
     CoWowEntryGtk  *cmd_entry;
     CoWowFocusTimerGtk focustimer;
 
-    void message( char severity, char *message);
-    void set_prompt( char *prompt);
+    void message( char severity, const char *message);
+    void set_prompt( const char *prompt);
     void change_value( int set_focus);
     void change_value_close();
     void pop();

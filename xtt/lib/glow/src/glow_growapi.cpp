@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.39 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.40 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,8 +19,8 @@
 
 #include "glow_std.h"
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -71,7 +71,7 @@
 /*! \addtogroup GrowApi */
 /*@{*/
 
-static char *growapi_translate( char *transtab, char *name);
+static char *growapi_translate( char *transtab, const char *name);
 
 int grow_Save( grow_tCtx ctx, char *filename)
 {
@@ -207,7 +207,7 @@ void grow_CreateNode( grow_tCtx ctx, char *name, grow_tNodeClass nc,
   *node = (grow_tNode) n1;
 }
 
-void grow_CreateGrowNode( grow_tCtx ctx, char *name, grow_tNodeClass nc,
+void grow_CreateGrowNode( grow_tCtx ctx, const char *name, grow_tNodeClass nc,
 	double x, double y, void *user_data, grow_tNode *node)
 {
   GrowNode *n1;
@@ -218,7 +218,7 @@ void grow_CreateGrowNode( grow_tCtx ctx, char *name, grow_tNodeClass nc,
   *node = (grow_tNode) n1;
 }
 
-void grow_CreateGrowSlider( grow_tCtx ctx, char *name, grow_tNodeClass nc,
+void grow_CreateGrowSlider( grow_tCtx ctx, const char *name, grow_tNodeClass nc,
 	double x, double y, void *user_data, grow_tNode *node)
 {
   GrowSlider *n1;
@@ -229,7 +229,7 @@ void grow_CreateGrowSlider( grow_tCtx ctx, char *name, grow_tNodeClass nc,
   *node = (grow_tNode) n1;
 }
 
-void grow_CreateCon( grow_tCtx ctx, char *name, grow_tConClass cc,
+void grow_CreateCon( grow_tCtx ctx, const char *name, grow_tConClass cc,
 	grow_tNode source, grow_tNode dest, int source_conpoint, 
 	int dest_conpoint, void *user_data, grow_tCon *con, 
 	int point_num, double *x_vect, double *y_vect, int border, int shadow)
@@ -259,7 +259,7 @@ void grow_SetObjectInputFocus( grow_tNode node, int focus)
   ((GlowArrayElem *)node)->set_input_focus( focus);
 }
 
-void grow_SetAnnotation( grow_tNode node, int number, char *text, int size)
+void grow_SetAnnotation( grow_tNode node, int number, const char *text, int size)
 {
   if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode ||
        ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowSlider ||
@@ -267,7 +267,7 @@ void grow_SetAnnotation( grow_tNode node, int number, char *text, int size)
     ((GrowNode *)node)->set_annotation( number, text, size, 0);
 }
 
-void grow_SetAnnotationBrief( grow_tNode node, int number, char *text, int size)
+void grow_SetAnnotationBrief( grow_tNode node, int number, const char *text, int size)
 {
   if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode ||
        ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowSlider ||
@@ -390,7 +390,7 @@ void grow_CreateText( grow_tCtx ctx, char *text_str, double x, double y,
 	text_size);
 }
 
-void grow_AddRect( grow_tNodeClass nc, char *name, 
+void grow_AddRect( grow_tNodeClass nc, const char *name, 
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width, int fix_line_width, 
 	glow_mDisplayLevel display_level, int fill_rect, 
@@ -405,7 +405,7 @@ void grow_AddRect( grow_tNodeClass nc, char *name,
   
 }
 
-void grow_AddLine( grow_tNodeClass nc, char *name, 
+void grow_AddLine( grow_tNodeClass nc, const char *name, 
 	double x1, double y1, double x2, double y2,
 	glow_eDrawType draw_type, int line_width, int fix_line_width, 
 	void *user_data)
@@ -417,7 +417,7 @@ void grow_AddLine( grow_tNodeClass nc, char *name,
   ((GlowNodeClass *)nc)->insert( l1);
 }
 
-void grow_AddPolyLine( grow_tNodeClass nc, char *name, 
+void grow_AddPolyLine( grow_tNodeClass nc, const char *name, 
 	glow_sPoint *pointarray, int point_cnt,
 	glow_eDrawType draw_type, int line_width, int fix_line_width,
 	int fill, int border, int shadow, glow_eDrawType fill_draw_type, 
@@ -430,7 +430,7 @@ void grow_AddPolyLine( grow_tNodeClass nc, char *name,
   ((GlowNodeClass *)nc)->insert( l1);
 }
 
-void grow_AddArc( grow_tNodeClass nc, char *name, 
+void grow_AddArc( grow_tNodeClass nc, const char *name, 
 	double x1, double y1, double x2, double y2,
 	int angle1, int angle2, glow_eDrawType draw_type, 
 	int line_width, int fill_arc, int border, int shadow, glow_eDrawType fill_draw_type,
@@ -444,8 +444,8 @@ void grow_AddArc( grow_tNodeClass nc, char *name,
   ((GlowNodeClass *)nc)->insert( a1);
 }
 
-void grow_AddText( grow_tNodeClass nc, char *name, 
-	char *text, double x, double y,
+void grow_AddText( grow_tNodeClass nc, const char *name, 
+	const char *text, double x, double y,
 	glow_eDrawType draw_type, glow_eDrawType color, int t_size, 
 	glow_eFont t_font, glow_mDisplayLevel display_level, void *user_data)
 {
@@ -469,7 +469,7 @@ void grow_AddAnnot( grow_tNodeClass nc,
   ((GlowNodeClass *)nc)->insert( a1);
 }
 
-void grow_CreateNodeClass( grow_tCtx ctx, char *name, glow_eNodeGroup group,
+void grow_CreateNodeClass( grow_tCtx ctx, const char *name, glow_eNodeGroup group,
 	grow_tNodeClass *nodeclass)
 {
   *nodeclass = (grow_tNodeClass) new GlowNodeClass( ctx, name, group);
@@ -831,7 +831,7 @@ grow_eMode grow_Mode( grow_tCtx ctx)
   return ctx->mode();
 }
 
-void grow_CreateGrowRect( grow_tCtx ctx, char *name, 
+void grow_CreateGrowRect( grow_tCtx ctx, const char *name, 
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width, int fix_line_width, 
 	glow_mDisplayLevel display_level, int fill_rect, 
@@ -847,7 +847,7 @@ void grow_CreateGrowRect( grow_tCtx ctx, char *name,
   *rect = (grow_tObject) r1;
 }
 
-void grow_CreateGrowRectRounded( grow_tCtx ctx, char *name, 
+void grow_CreateGrowRectRounded( grow_tCtx ctx, const char *name, 
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width, int fix_line_width, 
 	glow_mDisplayLevel display_level, int fill_rect, 
@@ -863,7 +863,7 @@ void grow_CreateGrowRectRounded( grow_tCtx ctx, char *name,
   *rect = (grow_tObject) r1;
 }
 
-void grow_CreateGrowBar( grow_tCtx ctx, char *name, 
+void grow_CreateGrowBar( grow_tCtx ctx, const char *name, 
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width,
 	glow_mDisplayLevel display_level, int fill_rect, 
@@ -879,7 +879,7 @@ void grow_CreateGrowBar( grow_tCtx ctx, char *name,
   *bar = (grow_tObject) r1;
 }
 
-void grow_CreateGrowTrend( grow_tCtx ctx, char *name, 
+void grow_CreateGrowTrend( grow_tCtx ctx, const char *name, 
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width,
 	glow_mDisplayLevel display_level, int fill_rect, 
@@ -895,7 +895,7 @@ void grow_CreateGrowTrend( grow_tCtx ctx, char *name,
   *trend = (grow_tObject) r1;
 }
 
-void grow_CreateGrowXYCurve( grow_tCtx ctx, char *name, 
+void grow_CreateGrowXYCurve( grow_tCtx ctx, const char *name, 
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width,
 	glow_mDisplayLevel display_level, int fill_rect, 
@@ -911,7 +911,7 @@ void grow_CreateGrowXYCurve( grow_tCtx ctx, char *name,
   *xycurve = (grow_tObject) r1;
 }
 
-void grow_CreateGrowCurve( grow_tCtx ctx, char *name, glow_sCurveData *data,
+void grow_CreateGrowCurve( grow_tCtx ctx, const char *name, glow_sCurveData *data,
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width,
 	glow_mDisplayLevel display_level, int fill_rect, 
@@ -927,7 +927,7 @@ void grow_CreateGrowCurve( grow_tCtx ctx, char *name, glow_sCurveData *data,
   *curve = (grow_tObject) r1;
 }
 
-void grow_CreateGrowWindow( grow_tCtx ctx, char *name, 
+void grow_CreateGrowWindow( grow_tCtx ctx, const char *name, 
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width,
 	glow_mDisplayLevel display_level, void *user_data,
@@ -942,7 +942,7 @@ void grow_CreateGrowWindow( grow_tCtx ctx, char *name,
   *window = (grow_tObject) r1;
 }
 
-void grow_CreateGrowTable( grow_tCtx ctx, char *name, 
+void grow_CreateGrowTable( grow_tCtx ctx, const char *name, 
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width,
 	int fill, glow_eDrawType fillcolor,
@@ -958,7 +958,7 @@ void grow_CreateGrowTable( grow_tCtx ctx, char *name,
   *window = (grow_tObject) r1;
 }
 
-void grow_CreateGrowFolder( grow_tCtx ctx, char *name, 
+void grow_CreateGrowFolder( grow_tCtx ctx, const char *name, 
 	double x, double y, double width, double height,
         glow_eDrawType draw_type, int line_width, glow_eDrawType selected_color,
 	glow_eDrawType unselected_color,
@@ -974,7 +974,7 @@ void grow_CreateGrowFolder( grow_tCtx ctx, char *name,
   *window = (grow_tObject) r1;
 }
 
-void grow_CreateGrowLine( grow_tCtx ctx, char *name, 
+void grow_CreateGrowLine( grow_tCtx ctx, const char *name, 
 	double x1, double y1, double x2, double y2,
 	glow_eDrawType draw_type, int line_width, int fix_line_width, 
 	void *user_data,
@@ -989,7 +989,7 @@ void grow_CreateGrowLine( grow_tCtx ctx, char *name,
   *line = (grow_tObject) l1;
 }
 
-void grow_CreateGrowPolyLine( grow_tCtx ctx, char *name, 
+void grow_CreateGrowPolyLine( grow_tCtx ctx, const char *name, 
 	glow_sPoint *pointarray, int point_cnt,
 	glow_eDrawType draw_type, int line_width, int fix_line_width,
 	int fill, int border, int shadow, glow_eDrawType fill_draw_type, 
@@ -1005,7 +1005,7 @@ void grow_CreateGrowPolyLine( grow_tCtx ctx, char *name,
   *polyline = (grow_tObject) l1;
 }
 
-void grow_CreateGrowArc( grow_tCtx ctx, char *name, 
+void grow_CreateGrowArc( grow_tCtx ctx, const char *name, 
 	double x1, double y1, double x2, double y2,
 	int angle1, int angle2, glow_eDrawType draw_type, 
 	int line_width, int fill_arc, int border, int shadow, glow_eDrawType fill_draw_type,
@@ -1021,7 +1021,7 @@ void grow_CreateGrowArc( grow_tCtx ctx, char *name,
   *arc = (grow_tObject) a1;
 }
 
-void grow_CreateGrowConPoint( grow_tCtx ctx, char *name, 
+void grow_CreateGrowConPoint( grow_tCtx ctx, const char *name, 
 	double x, double y, int cp_num, glow_eDirection d,
 	void *user_data, grow_tObject *conpoint)
 {
@@ -1033,7 +1033,7 @@ void grow_CreateGrowConPoint( grow_tCtx ctx, char *name,
   *conpoint = (grow_tObject) cp1;
 }
 
-void grow_CreateGrowAnnot( grow_tCtx ctx, char *name, 
+void grow_CreateGrowAnnot( grow_tCtx ctx, const char *name, 
 	double x, double y, int annot_num, glow_eDrawType d_type, glow_eDrawType color_d_type,
 	int t_size, glow_eAnnotType a_type,
 	int rel_pos, glow_mDisplayLevel display_lev,
@@ -1048,8 +1048,8 @@ void grow_CreateGrowAnnot( grow_tCtx ctx, char *name,
   *annot = (grow_tObject) a1;
 }
 
-void grow_CreateGrowText( grow_tCtx ctx, char *name, 
-	char *text, double x, double y,
+void grow_CreateGrowText( grow_tCtx ctx, const char *name, 
+	const char *text, double x, double y,
 	glow_eDrawType draw_type, glow_eDrawType color, int t_size, 
 	glow_eFont t_font, glow_mDisplayLevel display_level, void *user_data,
 	grow_tObject *text_object)
@@ -1063,7 +1063,7 @@ void grow_CreateGrowText( grow_tCtx ctx, char *name,
   *text_object = (grow_tObject) t1;
 }
 
-void grow_CreateGrowImage( grow_tCtx ctx, char *name, char *filename,
+void grow_CreateGrowImage( grow_tCtx ctx, const char *name, const char *filename,
 	double x1, double y1, void *user_data, grow_tObject *image)
 {
   GrowImage *i1;
@@ -1074,7 +1074,7 @@ void grow_CreateGrowImage( grow_tCtx ctx, char *name, char *filename,
   *image = (grow_tObject) i1;
 }
 
-void grow_CreateGrowAxis( grow_tCtx ctx, char *name, 
+void grow_CreateGrowAxis( grow_tCtx ctx, const char *name, 
 	double x1, double y1, double x2, double y2,
 	glow_eDrawType draw_type, int line_width, int text_size, 
 	glow_eDrawType text_drawtype, void *user_data,
@@ -1089,7 +1089,7 @@ void grow_CreateGrowAxis( grow_tCtx ctx, char *name,
   *axis = (grow_tObject) l1;
 }
 
-void grow_CreateGrowConGlue( grow_tCtx ctx, char *name, 
+void grow_CreateGrowConGlue( grow_tCtx ctx, const char *name, 
 	double x, double y, grow_tObject *conglue)
 {
   GrowConGlue *r1;
@@ -1099,7 +1099,7 @@ void grow_CreateGrowConGlue( grow_tCtx ctx, char *name,
   *conglue = (grow_tObject) r1;
 }
 
-void grow_CreateGrowMenu( grow_tCtx ctx, char *name, glow_sMenuInfo *info,
+void grow_CreateGrowMenu( grow_tCtx ctx, const char *name, glow_sMenuInfo *info,
 			  double x, double y, double min_width,
 			  glow_eDrawType draw_type, int line_width,
 			  int fill_rect, int border, glow_eDrawType fill_draw_type,
@@ -1125,17 +1125,17 @@ int grow_OpenSubGraph( grow_tCtx ctx, char *filename)
   return ctx->open_subgraph( filename, glow_eSaveMode_SubGraph);
 }
 
-int grow_OpenSubGraphFromName( grow_tCtx ctx, char *name)
+int grow_OpenSubGraphFromName( grow_tCtx ctx, const char *name)
 {
   return ctx->open_subgraph_from_name( name, glow_eSaveMode_SubGraph);
 }
 
-int grow_FindObjectByName( grow_tCtx ctx, char *name, grow_tObject *object)
+int grow_FindObjectByName( grow_tCtx ctx, const char *name, grow_tObject *object)
 {
   return ctx->find_by_name( name, (GlowArrayElem **)object);
 }
 
-int grow_FindNodeClassByName( grow_tCtx ctx, char *name, grow_tObject *object)
+int grow_FindNodeClassByName( grow_tCtx ctx, const char *name, grow_tObject *object)
 {
   return ctx->find_nc_by_name( name, (GlowArrayElem **)object);
 }
@@ -3614,7 +3614,7 @@ void grow_SetLayout( grow_tCtx ctx, double x0, double y0, double x1,
   ctx->set_layout( x0, y0, x1, y1);
 }
 
-void grow_SetPath( grow_tCtx ctx, int path_cnt, char *path)
+void grow_SetPath( grow_tCtx ctx, int path_cnt, const char *path)
 {
   ctx->set_path( path_cnt, path);
 }
@@ -3734,7 +3734,7 @@ void grow_ChangeConConClass( grow_tCon con, grow_tConClass conclass)
   ((GlowCon *)con)->change_conclass( (GlowConClass *)conclass);
 }
 
-static char *growapi_translate( char *transtab, char *name)
+static char *growapi_translate( char *transtab, const char *name)
 {
   static char return_name[32];
   char	*name_p;
@@ -3944,7 +3944,7 @@ void grow_SetTrendLines( grow_tObject object, int vert_lines,
 }
 
 void grow_SetAxisConf( grow_tObject object, double max_val, double min_val, 
-     int no_of_lines, int long_quot, int value_quot, double rot, char *format)
+     int no_of_lines, int long_quot, int value_quot, double rot, const char *format)
 {
   ((GrowAxis *)object)->set_conf( max_val, min_val, no_of_lines,
       long_quot, value_quot, rot, format);
@@ -4001,7 +4001,7 @@ void grow_ExportNcJavaBeanFont( grow_tCtx ctx, grow_tNodeClass nc,
   ctx->export_nc_javabean_font( (GlowArrayElem *)nc, fp, components);
 }
 
-void grow_SetJavaName( grow_tCtx ctx, char *name)
+void grow_SetJavaName( grow_tCtx ctx, const char *name)
 {
   ctx->set_java_name( name);
 }
@@ -4123,7 +4123,7 @@ int grow_GetNodeClassPages( grow_tNodeClass nodeclass)
   return ((GlowNodeClass *)nodeclass)->get_pages();
 }
 
-void grow_SetNextSubgraph( grow_tCtx ctx, char *next)
+void grow_SetNextSubgraph( grow_tCtx ctx, const char *next)
 {
   strcpy( ctx->next_subgraph, next);
 }

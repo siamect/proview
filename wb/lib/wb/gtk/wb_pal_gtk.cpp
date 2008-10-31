@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pal_gtk.cpp,v 1.4 2008-10-03 14:18:37 claes Exp $
+ * Proview   $Id: wb_pal_gtk.cpp,v 1.5 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,9 +50,9 @@ static void pal_sel_convert_cb( GtkWidget *w, GtkSelectionData *selection_data,
 PalGtk::PalGtk (
 	void *pal_parent_ctx,
 	GtkWidget *pal_parent_wid,
-	char *pal_name,
+	const char *pal_name,
 	ldh_tSesContext pal_ldhses,
-	char *pal_root_name,
+	const char *pal_root_name,
 	GtkWidget **w,
 	pwr_tStatus *status) : 
   Pal( pal_parent_ctx, pal_name, pal_ldhses, pal_root_name, status),

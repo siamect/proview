@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_clognav_motif.cpp,v 1.2 2007-05-25 13:36:08 claes Exp $
+ * Proview   $Id: xtt_clognav_motif.cpp,v 1.3 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -59,7 +59,7 @@ CLogNavMotif::CLogNavMotif( void *clog_parent_ctx,
 			    Widget *w) :
   CLogNav( clog_parent_ctx), parent_wid(clog_parent_wid)
 {
-  form_widget = ScrolledBrowCreate( parent_wid, "CLogNav", NULL, 0, 
+  form_widget = ScrolledBrowCreate( parent_wid, (char*) "CLogNav", NULL, 0, 
 	init_brow_cb, this, (Widget *)&brow_widget);
   XtManageChild( form_widget);
 

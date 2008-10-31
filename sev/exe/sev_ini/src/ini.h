@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ini.h,v 1.1 2008-09-05 08:38:58 claes Exp $
+ * Proview   $Id: ini.h,v 1.2 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -114,7 +114,7 @@ typedef union {
 typedef struct {
   char name[256];
   int *errcount;
-  void (*logOpenFail)(errh_sLog*, char*, ...);
+  void (*logOpenFail)(errh_sLog*, const char*, ...);
 } ini_sFile;
 
 typedef struct {

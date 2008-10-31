@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xatt_gtk.h,v 1.2 2007-01-11 11:40:31 claes Exp $
+ * Proview   $Id: xtt_xatt_gtk.h,v 1.3 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -59,8 +59,8 @@ class XAttGtk : public XAtt {
     CoWowFocusTimerGtk focustimer;
     int input_max_length;
 
-    void message( char severity, char *message);
-    void set_prompt( char *prompt);
+    void message( char severity, const char *message);
+    void set_prompt( const char *prompt);
     void change_value( int set_focus);
     int open_changevalue( char *name);
     void change_value_close();

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelist_gtk.h,v 1.6 2007-10-02 15:53:20 claes Exp $
+ * Proview   $Id: co_statusmon_nodelist_gtk.h,v 1.7 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,7 +34,7 @@ class NodelistGtk : public Nodelist {
   public:
     NodelistGtk( void *nodelist_parent_ctx,
 		 GtkWidget *nodelist_parent_wid,
-		 char *nodelist_name, int nodelist_mode, 
+		 const char *nodelist_name, int nodelist_mode, 
 		 int nodelist_view_node_descr, int msgw_pop,
 		 pwr_tStatus *status);
     ~NodelistGtk();
@@ -59,8 +59,8 @@ class NodelistGtk : public Nodelist {
     void reset_cursor();
     void free_cursor();
     void create_input_dialog();
-    void open_input_dialog( char *text, char *text2, char *text3, char *title,
-			    char *init_text,
+    void open_input_dialog( const char *text, const char *text2, const char *text3, const char *title,
+			    const char *init_text,
 			    void (*ok_cb)( Nodelist *, char *, char *, char *));
 
     static gboolean action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data);

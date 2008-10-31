@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav_motif.h,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_nav_motif.h,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,9 +31,9 @@ class NavMotif : public Nav {
   NavMotif(
 	void *parent_ctx,
 	Widget	parent_wid,
-	char *name,
+	const char *name,
 	ldh_tSesContext ldhses,
-	char *root_name,
+	const char *root_name,
 	Widget *w,
 	pwr_tStatus *status
 	);

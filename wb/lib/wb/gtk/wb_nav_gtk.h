@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav_gtk.h,v 1.2 2007-06-15 10:53:06 claes Exp $
+ * Proview   $Id: wb_nav_gtk.h,v 1.3 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,9 +31,9 @@ class NavGtk : public Nav {
   NavGtk(
 	void *parent_ctx,
 	GtkWidget *parent_wid,
-	char *name,
+	const char *name,
 	ldh_tSesContext ldhses,
-	char *root_name,
+	const char *root_name,
 	GtkWidget **w,
 	pwr_tStatus *status
 	);

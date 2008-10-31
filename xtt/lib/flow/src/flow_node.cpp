@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_node.cpp,v 1.11 2008-10-03 14:19:19 claes Exp $
+ * Proview   $Id: flow_node.cpp,v 1.12 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "flow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
@@ -31,7 +31,7 @@
 #include "flow_tiptext.h"
 #include "flow_msg.h"
 
-FlowNode::FlowNode( FlowCtx *flow_ctx, char *name, FlowNodeClass *node_class,
+FlowNode::FlowNode( FlowCtx *flow_ctx, const char *name, FlowNodeClass *node_class,
 	double x1, double y1, int nodraw, int rel_annot_pos) : 
 	x_right(x1), x_left(x1), y_high(y1), y_low(y1), 
 	obst_x_right(x1), obst_x_left(x1), obst_y_high(y1), obst_y_low(y1),
@@ -584,7 +584,7 @@ void FlowNode::select_region_insert( double ll_x, double ll_y, double ur_x,
   }
 }
 
-void FlowNode::set_annotation( int num, char *text, int size, int nodraw)
+void FlowNode::set_annotation( int num, const char *text, int size, int nodraw)
 {
 
   if ( !nodraw)
@@ -860,8 +860,8 @@ void FlowNode::remove_notify()
   ctx->delete_node_cons( this);
 }
 
-void FlowNode::set_trace_attr( char *object, char *attribute, 
-	flow_eTraceType type, int inverted)
+void FlowNode::set_trace_attr( const char *object, const char *attribute, 
+			       flow_eTraceType type, int inverted)
 {
   strncpy( trace_object, object, sizeof( trace_object)); 
   strncpy( trace_attribute, attribute, sizeof( trace_attribute));

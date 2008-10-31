@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_readwbl.cpp,v 1.11 2008-06-30 05:53:27 claes Exp $
+ * Proview   $Id: cnv_readwbl.cpp,v 1.12 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,8 +21,8 @@
 #include <float.h>
 #include <string.h>
 #include <stdlib.h>
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 
 extern "C" {
 #include "pwr.h"
@@ -35,6 +35,8 @@ extern "C" {
 #include "cnv_readwbl.h"
 #include "cnv_wblto.h"
 #include "cnv_ctx.h"
+
+using namespace std;
 
 #define CNV__UNKNOWN_LINETYPE 2
 
@@ -1259,7 +1261,7 @@ char *CnvReadWbl::low( char *in)
   return str;
 }
 
-int CnvReadWbl::copy_tmp_file( char *tmpfilename, ofstream& fp_to)
+int CnvReadWbl::copy_tmp_file( const char *tmpfilename, ofstream& fp_to)
 {
   FILE *fp;
   char c;

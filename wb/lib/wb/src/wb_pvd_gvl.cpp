@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_gvl.cpp,v 1.5 2008-05-28 11:46:34 claes Exp $
+ * Proview   $Id: wb_pvd_gvl.cpp,v 1.6 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,11 +17,11 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  **/
 
-#include <vector.h>
+#include <vector>
 #include <string.h>
 #include <stdio.h>
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include "pwr.h"
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"

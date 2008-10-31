@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_tree.c,v 1.4 2006-12-10 14:33:34 lw Exp $
+ * Proview   $Id: co_tree.c,v 1.5 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -80,9 +80,11 @@ deleteNode(tree_sTable *tp, tree_sNode *z);
 static tree_sNode *
 insertNode(tree_sTable *tp, tree_sNode *z);
 
+#if 0
 static void
 treePrint(tree_sTable *tp, tree_sNode *np, tree_sNode *op, tree_sNode *oop,
           int level, void (*printNode)(tree_sNode *, int));
+#endif
 
 static void
 treeCheck(tree_sTable *tp, tree_sNode *np, int *count, int *maxlevel, int *hight,
@@ -736,6 +738,7 @@ insertNode(tree_sTable *tp, tree_sNode *z)
 }
 
 
+#if 0
 
 static void
 treePrint(
@@ -772,6 +775,7 @@ treePrint(
 
     treePrint(tp, np->right, np, np->parent, level+1, printNode);
 }  
+#endif
 
 
 static void

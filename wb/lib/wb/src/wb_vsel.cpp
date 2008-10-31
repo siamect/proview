@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vsel.cpp,v 1.19 2008-10-15 06:04:55 claes Exp $
+ * Proview   $Id: wb_vsel.cpp,v 1.20 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -69,7 +69,7 @@
 WVsel::WVsel (
   pwr_tStatus   *status,
   void		*wv_parent_ctx,
-  char		*wv_name,
+  const char   	*wv_name,
   ldh_tWBContext wv_wbctx,
   char		*volumename,
   int		(*bc_success)( void *, pwr_tVolumeId *, int),

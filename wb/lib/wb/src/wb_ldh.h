@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.h,v 1.46 2008-06-26 13:19:05 claes Exp $
+ * Proview   $Id: wb_ldh.h,v 1.47 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -350,7 +350,7 @@ struct ldh_s_MenuCall {
   ldh_sMenuItem		*ItemList;
   pwr_tUInt32		ItemCount;
   pwr_tUInt32		ChosenItem;
-  void			(*message_cb)( void *, char, char *);
+  void			(*message_cb)( void *, char, const char *);
 };
 #endif
 
@@ -496,7 +496,7 @@ ldh_ClassIdToName (
 pwr_tStatus ldh_ClassNameToId (
   ldh_tSession Session,
   pwr_tClassId *Class,
-  char *name
+  const char *name
 );
 
 pwr_tStatus ldh_CloseSession (
@@ -547,7 +547,7 @@ pwr_tStatus ldh_CopyObjectTrees (
 pwr_tStatus ldh_CreateObject (
   ldh_tSession Session,
   pwr_tObjid *object,
-  char *name,
+  const char *name,
   pwr_tClassId Class,
   pwr_tObjid destination,
   ldh_eDest destination_code
@@ -650,7 +650,7 @@ pwr_tStatus ldh_GetChildMnt (
 pwr_tStatus ldh_GetClassBody (
   ldh_tSession Session,
   pwr_tClassId Class,
-  char *bodyname,
+  const char *bodyname,
   pwr_tClassId *bodyclass,
   char **body,
   int *size
@@ -701,14 +701,14 @@ pwr_tStatus ldh_GetNextSibling (
 pwr_tStatus ldh_GetObjectBody (
   ldh_tSession Session,
   pwr_tObjid object,
-  char *bodyname,
+  const char *bodyname,
   void **body,
   int *size
 );
 pwr_tStatus ldh_GetObjectBodyDef (
   ldh_tSession Session,
   pwr_tClassId Class,
-  char *bodyname,
+  const char *bodyname,
   int maxlev,
 #if 0 // def __cplusplus
   ldh_sParDef (**bodydef)[1],
@@ -732,8 +732,8 @@ pwr_tStatus ldh_GetTrueObjectBodyDef (
 pwr_tStatus ldh_GetObjectBuffer (
   ldh_tSession Session,
   pwr_tObjid object,
-  char *bodyname,
-  char *buffername,
+  const char *bodyname,
+  const char *buffername,
   pwr_eClass *bufferclass,
   char **buff,
   int *size
@@ -780,16 +780,16 @@ pwr_tStatus ldh_GetObjectInfo (
 pwr_tStatus ldh_GetObjectPar (
   ldh_tSession Session,
   pwr_tObjid object,
-  char *bodyname,
-  char *parname,
+  const char *bodyname,
+  const char *parname,
   char **buff,
   int *size
 );
 pwr_tStatus ldh_GetAttrObjectPar (
   ldh_tSession Session,
   pwr_sAttrRef *arp,
-  char *bodyname,
-  char *parname,
+  const char *bodyname,
+  const char *parname,
   char **buff,
   int *size
 );
@@ -929,7 +929,7 @@ pwr_tStatus
 ldh_ArefANameToAref(
   ldh_tSession session,
   pwr_sAttrRef *arp,
-  char *aname,
+  const char *aname,
   pwr_sAttrRef *oarp
 );
 
@@ -937,7 +937,7 @@ pwr_tStatus
 ldh_NameToObjid (
   ldh_tSession	session,
   pwr_tObjid	*objid,
-  char		*name
+  const char  	*name
 );
 
 pwr_tStatus
@@ -999,7 +999,7 @@ ldh_ReadAttribute (
 pwr_tStatus ldh_ReadObjectBody (
   ldh_tSession 	Session,
   pwr_tObjid 	object,
-  char 		*bodyname,
+  const char   	*bodyname,
   void 		*body,
   int 		size
 );
@@ -1024,21 +1024,21 @@ ldh_tWorkbench ldh_SessionToWB (
 pwr_tStatus ldh_SetObjectBody (
   ldh_tSession Session,
   pwr_tObjid object,
-  char *bodyname,
+  const char *bodyname,
   char *body,
   int size
 );
 pwr_tStatus ldh_SetObjectBuffer (
   ldh_tSession Session,
   pwr_tObjid object,
-  char *bodyname,
-  char *buffername,
+  const char *bodyname,
+  const char *buffername,
   char *buff
 );
 pwr_tStatus ldh_SetObjectName (
   ldh_tSession		session,
   pwr_tObjid		object,
-  char 			*newname
+  const char 	       	*newname
 );
 pwr_tStatus ldh_SetObjectNode (
   ldh_tSession		session,
@@ -1049,8 +1049,8 @@ pwr_tStatus ldh_SetObjectNode (
 pwr_tStatus ldh_SetObjectPar (
   ldh_tSession		session,
   pwr_tObjid		object,
-  char			*bodyname,
-  char			*parname,
+  const char	       	*bodyname,
+  const char	       	*parname,
   char			*buff,
   int 			size
 );
@@ -1258,7 +1258,7 @@ ldh_OpenMntSession(
 void
 ldh_RecixSetDestination(
   ldh_tSession session,
-  char *destination
+  const char *destination
 );
 
 

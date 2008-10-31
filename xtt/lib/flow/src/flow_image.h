@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_image.h,v 1.4 2007-01-04 07:53:35 claes Exp $
+ * Proview   $Id: flow_image.h,v 1.5 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #ifndef flow_image_h
 #define flow_image_h
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include "flow.h"
 #include "flow_ctx.h"
 #include "flow_point.h"
@@ -30,7 +30,7 @@
 
 class FlowImage : public FlowArrayElem {
   public:
-    FlowImage( FlowCtx *flow_ctx, char *imagefile, double x = 0, double y = 0,
+    FlowImage( FlowCtx *flow_ctx, const char *imagefile, double x = 0, double y = 0,
 	       flow_mDisplayLevel display_lev = flow_mDisplayLevel_1);
     friend ostream& operator<< ( ostream& o, const FlowImage r);
     void zoom();
@@ -57,7 +57,7 @@ class FlowImage : public FlowArrayElem {
     int get_conpoint( int num, double *x, double *y, flow_eDirection *dir) 
 		{ return 0;};
     flow_eObjectType type() { return flow_eObjectType_Image;};
-    int insert_image( char *imagefile);
+    int insert_image( const char *imagefile);
 
     FlowCtx *ctx;    
     double width() { return ur.x - ll.x;};

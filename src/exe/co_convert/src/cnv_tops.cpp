@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_tops.cpp,v 1.7 2008-10-16 13:08:52 claes Exp $
+ * Proview   $Id: cnv_tops.cpp,v 1.8 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,8 +22,8 @@
 
 /*_Include files_________________________________________________________*/
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
@@ -37,6 +37,8 @@ extern "C" {
 #include "cnv_tops.h"
 #include "co_lng.h"
 #include "cnv_image.h"
+
+using namespace std;
 
 #define CNV_TAB 18
 
@@ -124,7 +126,7 @@ save\n"
 #define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
 #endif
 
-void CnvToPs::cnv_text( char *to, char *from)
+void CnvToPs::cnv_text( char *to, const char *from)
 {
   if ( !from) {
     strcpy( to, "");
@@ -132,7 +134,7 @@ void CnvToPs::cnv_text( char *to, char *from)
   }
 
   char *t = to;
-  char *s = from;
+  char *s = (char *)from;
 
   for ( ; *s; s++) {
     switch ( *s) {
@@ -154,7 +156,7 @@ void CnvToPs::cnv_text( char *to, char *from)
   *t = 0;
 }
 
-void CnvToPs::print_text( char *text, CnvStyle& style, int mode)
+void CnvToPs::print_text( const char *text, CnvStyle& style, int mode)
 {
   char str[1000];
 
@@ -415,7 +417,7 @@ static void image_pixel( void *userdata, ofstream& fp, unsigned char *rgb)
   }
 }
 
-int CnvToPs::print_image( char *filename)
+int CnvToPs::print_image( const char *filename)
 {
   cnv_tImImage image;
   cnv_tPixmap pixmap;
@@ -488,13 +490,13 @@ x/scalex/width << " " << (y - height*scaley)/scaley/height << " translate" << en
   return 1;
 }
 
-void CnvToPs::set_pageheader( char *text)
+void CnvToPs::set_pageheader( const char *text)
 {
   strcpy( previous_chapter, current_chapter);
   strcpy( current_chapter, text);
 }
 
-void CnvToPs::print_h1( char *text, int hlevel, char *subject)
+void CnvToPs::print_h1( const char *text, int hlevel, char *subject)
 {
   char hnum[40];
 
@@ -553,12 +555,12 @@ void CnvToPs::print_h1( char *text, int hlevel, char *subject)
   strcpy( previous_chapter, current_chapter);
 }
 
-void CnvToPs::print_h2( char *text)
+void CnvToPs::print_h2( const char *text)
 {
   print_text( text, style[ci].h2);
 }
 
-void CnvToPs::print_h3( char *text)
+void CnvToPs::print_h3( const char *text)
 {
   print_text( text, style[ci].h3);
 }

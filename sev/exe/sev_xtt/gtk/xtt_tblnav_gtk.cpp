@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_tblnav_gtk.cpp,v 1.1 2008-07-17 11:18:31 claes Exp $
+ * Proview   $Id: xtt_tblnav_gtk.cpp,v 1.2 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <vector.h>
+#include <vector>
 
 #include "co_cdh.h"
 #include "co_time.h"

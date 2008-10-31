@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: sev_dbms.h,v 1.3 2008-09-18 14:37:43 claes Exp $
+ * Proview   $Id: sev_dbms.h,v 1.4 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,12 +21,14 @@
 #define sev_dbms_h
 #if defined PWRE_CONF_MYSQL
 
-#include <vector.h>
+#include <vector>
 
 #include "pwr.h"
 #include "pwr_class.h"
 #include "sev_db.h"
 #include <mysql/mysql.h>
+
+using namespace std;
 
 class sev_dbms_env;
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw.h,v 1.6 2008-10-16 08:58:06 claes Exp $
+ * Proview   $Id: flow_draw.h,v 1.7 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -117,7 +117,7 @@ class FlowDraw {
   virtual void cancel_timer( FlowCtx *ctx, void *id) {}
   virtual void set_cursor( FlowCtx *ctx, draw_eCursor cursor) {}
   virtual void set_nav_cursor( FlowCtx *ctx, draw_eCursor cursor) {}
-  virtual int get_text_extent( FlowCtx *ctx, char *text, int len,
+  virtual int get_text_extent( FlowCtx *ctx, const char *text, int len,
 			    flow_eDrawType gc_type, int idx,
 			    int *width, int *height) {return 1;}
   virtual void copy_area( FlowCtx *ctx, int x, int y) {}
@@ -147,7 +147,7 @@ class FlowDraw {
   virtual int image_get_height( flow_tImImage image) {return 0;}
   virtual void image_scale( float scale, flow_tImImage orig_im, flow_tImImage *im, 
 			    flow_tPixmap *im_pixmap, flow_tPixmap *im_mask) {}
-  virtual int image_load( char *imagefile, float scale, float nav_scale,
+  virtual int image_load( const char *imagefile, float scale, float nav_scale,
 			  flow_tImImage *orig_im, flow_tImImage *im, 
 			  flow_tPixmap *im_pixmap, flow_tPixmap *im_mask,
 			  flow_tPixmap *im_nav_pixmap, flow_tPixmap *im_nav_mask) {return 0;}

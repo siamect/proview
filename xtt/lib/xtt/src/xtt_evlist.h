@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_evlist.h,v 1.12 2008-01-24 09:36:17 claes Exp $
+ * Proview   $Id: xtt_evlist.h,v 1.13 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -200,8 +200,8 @@ class EvList {
 
 class ItemAlarm {
   public:
-    ItemAlarm( EvList *evlist, char *item_name, pwr_tTime item_time,
-	char *item_eventtext, char *item_eventname, int item_eventflags,
+    ItemAlarm( EvList *evlist, const char *item_name, pwr_tTime item_time,
+	const char *item_eventtext, char *item_eventname, int item_eventflags,
 	unsigned long item_eventprio, mh_sEventId item_eventid,
 	pwr_tObjid item_object, pwr_tAttrRef *item_eventsound, 
         char *item_eventmoretext,unsigned long item_status,

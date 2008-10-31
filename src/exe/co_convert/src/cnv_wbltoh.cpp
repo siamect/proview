@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltoh.cpp,v 1.13 2008-10-16 11:07:17 claes Exp $
+ * Proview   $Id: cnv_wbltoh.cpp,v 1.14 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,8 +19,8 @@
 
 
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <float.h>
 #include <string.h>
 #include <stdlib.h>
@@ -34,6 +34,8 @@ extern "C" {
 }
 #include "cnv_ctx.h"
 #include "cnv_wbltoh.h"
+
+using namespace std;
 
 typedef struct {
 	char		name[40];

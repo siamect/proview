@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attrnav_gtk.cpp,v 1.3 2008-01-24 09:28:01 claes Exp $
+ * Proview   $Id: ge_attrnav_gtk.cpp,v 1.4 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <vector.h>
+#include <vector>
 
 #include "co_cdh.h"
 #include "co_time.h"
@@ -51,7 +51,7 @@
 AttrNavGtk::AttrNavGtk(
 	void *xn_parent_ctx,
 	GtkWidget	*xn_parent_wid,
-	char *xn_name,
+	const char *xn_name,
 	attr_sItem  *xn_itemlist,
 	int xn_item_cnt,
 	GtkWidget **w,

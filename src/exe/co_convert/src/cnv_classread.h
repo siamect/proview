@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_classread.h,v 1.11 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: cnv_classread.h,v 1.12 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -217,7 +217,7 @@ class ClassRead {
     void volume_init();
     int object_close();
     char *low( char *in);
-    int copy_tmp_file( char *tmpfilename, ofstream& fp_to);
+    int copy_tmp_file( const char *tmpfilename, ofstream& fp_to);
     char *flags_to_string( int value);
 
     // html

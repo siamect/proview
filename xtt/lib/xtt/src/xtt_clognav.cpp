@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_clognav.cpp,v 1.9 2007-08-24 13:42:26 claes Exp $
+ * Proview   $Id: xtt_clognav.cpp,v 1.10 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -755,7 +755,7 @@ int CLogNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
   return 1;
 }
 
-ItemMsg::ItemMsg( CLogNav *item_clognav, char *item_name, errh_eSeverity item_severity,
+ItemMsg::ItemMsg( CLogNav *item_clognav, const char *item_name, errh_eSeverity item_severity,
      	char *item_logger, int item_pid,
 	pwr_tTime item_time, char *item_text,
 	brow_tNode dest, flow_eDest dest_code):
@@ -815,7 +815,7 @@ ItemMsg::ItemMsg( CLogNav *item_clognav, char *item_name, errh_eSeverity item_se
 //  brow_SetAnnotPixmap( node, 0, clognav->brow->pixmap_leaf);
 }
 
-ItemMsgRestart::ItemMsgRestart( CLogNav *item_clognav, char *item_name, 
+ItemMsgRestart::ItemMsgRestart( CLogNav *item_clognav, const char *item_name, 
 				pwr_tTime item_time,
 	brow_tNode dest, flow_eDest dest_code):
 	ItemMsgBase(item_clognav, item_name, dest), 

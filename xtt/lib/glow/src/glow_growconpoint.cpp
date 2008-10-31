@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growconpoint.cpp,v 1.6 2008-01-17 14:17:05 claes Exp $
+ * Proview   $Id: glow_growconpoint.cpp,v 1.7 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
@@ -29,7 +29,7 @@
 #include "glow_growctx.h"
 #include "glow_exportflow.h"
 
-GrowConPoint::GrowConPoint( GrowCtx *glow_ctx, char *name, double x, double y, 
+GrowConPoint::GrowConPoint( GrowCtx *glow_ctx, const char *name, double x, double y, 
 		int cp_num, glow_eDirection d, int nodraw) :
 		GlowConPoint(glow_ctx,x,y,cp_num,d), 
     		hot(0), pzero(ctx), highlight(0), inverse(0), 

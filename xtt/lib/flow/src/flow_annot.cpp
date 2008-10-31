@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_annot.cpp,v 1.9 2008-10-24 07:32:46 claes Exp $
+ * Proview   $Id: flow_annot.cpp,v 1.10 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 
 #include "flow_std.h"
 
-#include <iostream.h>
+#include <iostream>
 #include <math.h>
 #include <stdlib.h>
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_nodearray.h,v 1.2 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_nodearray.h,v 1.3 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #ifndef glow_array_h
 #define glow_array_h
 
-#include <iostream.h>
+#include <iostream>
 
 #include "glow_array_elem.h"
 

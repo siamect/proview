@@ -10,6 +10,6 @@ link = $(ldxx) $(elinkflags) $(domap) -o $(pwr_exe)/wb_ge_motif \
 	-lpwr_glow_motif -lpwr_glow -lpwr_rt_motif -lpwr_rt -lpwr_co_motif -lpwr_co \
 	-lpwr_msg_dummy -lantlr -lImlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp\
         -lXmu -lSM -lICE\
-	-lrpcsvc -lpthread -lm -ldb_cxx -lz $(linkmysql)
+	-lcrypt -lrpcsvc -lpthread -lm -ldb_cxx -lz $(linkmysql)
 
 endif

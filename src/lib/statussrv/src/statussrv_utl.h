@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: statussrv_utl.h,v 1.5 2007-06-29 12:51:05 claes Exp $
+ * Proview   $Id: statussrv_utl.h,v 1.6 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,12 +53,13 @@ typedef struct {
 } statussrv_sGetExtStatus;
 
 
-pwr_tStatus statussrv_GetStatus( char *nodename, statussrv_sGetStatus *result);
-pwr_tStatus statussrv_GetExtStatus( char *nodename, statussrv_sGetExtStatus *result);
-pwr_tStatus statussrv_Restart( char *nodename);
-pwr_tStatus statussrv_XttStart( char *nodename, char *opplace, char *lang, char *display,
-				char *gui);
-pwr_tStatus statussrv_RtMonStart( char *nodename, char *lang, char *display, char *gui);
+pwr_tStatus statussrv_GetStatus( const char *nodename, statussrv_sGetStatus *result);
+pwr_tStatus statussrv_GetExtStatus( const char *nodename, statussrv_sGetExtStatus *result);
+pwr_tStatus statussrv_Restart( const char *nodename);
+pwr_tStatus statussrv_XttStart( const char *nodename, const char *opplace, const char *lang, 
+				const char *display, const char *gui);
+pwr_tStatus statussrv_RtMonStart( const char *nodename, const char *lang, const char *display, 
+				  const char *gui);
 
 #ifdef __cplusplus
 }

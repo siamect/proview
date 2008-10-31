@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attrnav_gtk.h,v 1.1 2007-01-04 08:42:43 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attrnav_gtk.h,v 1.2 2008-10-31 12:51:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -32,7 +32,7 @@ class GsdAttrNavGtk : public GsdAttrNav {
     GsdAttrNavGtk(
 	void *xn_parent_ctx,
 	GtkWidget *xn_parent_wid,
-	char *xn_name,
+	const char *xn_name,
 	pb_gsd *xn_gsd,
 	int xn_edit_mode,
 	GtkWidget **w,

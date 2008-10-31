@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ge_gtk.h,v 1.2 2007-01-11 11:40:31 claes Exp $
+ * Proview   $Id: xtt_ge_gtk.h,v 1.3 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -46,9 +46,9 @@ class XttGeGtk : public XttGe {
   GtkWidget	*message_dia_label;
   CoWowFocusTimerGtk focustimer;
 
-  XttGeGtk( GtkWidget *parent_wid, void *parent_ctx, char *name, char *filename,
+  XttGeGtk( GtkWidget *parent_wid, void *parent_ctx, const char *name, const char *filename,
 	    int scrollbar, int menu, int navigator, int width, int height,
-	    int x, int y, double scan_time, char *object_name, int use_default_access,
+	    int x, int y, double scan_time, const char *object_name, int use_default_access,
 	    unsigned int access,
 	    int (*xg_command_cb) (XttGe *, char *),
 	    int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
@@ -61,7 +61,7 @@ class XttGeGtk : public XttGe {
 
   static void ge_change_value_cb( void *ge_ctx, void *value_object, char *text);
   static void confirm_cb( void *ge_ctx, void *confirm_object, char *text);
-  static void message_dialog_cb( void *ge_ctx, char *text);
+  static void message_dialog_cb( void *ge_ctx, const char *text);
 
   static gboolean action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data);
   static void activate_value_input( GtkWidget *w, gpointer data);

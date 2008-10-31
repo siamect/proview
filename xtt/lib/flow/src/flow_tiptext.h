@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_tiptext.h,v 1.3 2008-01-28 14:55:40 claes Exp $
+ * Proview   $Id: flow_tiptext.h,v 1.4 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #ifndef flow_tiptext_h
 #define flow_tiptext_h
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 
 #include "flow.h"
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_tbl_gtk.cpp,v 1.3 2008-09-18 14:37:43 claes Exp $
+ * Proview   $Id: xtt_tbl_gtk.cpp,v 1.4 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,8 +19,8 @@
 
 /* xtt_tbl.cpp -- Sev Table Viewer */
 
-#include <fstream.h>
-#include <vector.h>
+#include <fstream>
+#include <vector>
 
 #include "glow_std.h"
 
@@ -217,8 +217,8 @@ XttSevHist *XttTblGtk::sevhist_new( pwr_tOid oid, char *aname)
 			   sevcli, &sts);
 }
 
-CoLogin *XttTblGtk::login_new( char		*name,
-			       char		*groupname,
+CoLogin *XttTblGtk::login_new( const char      	*name,
+			       const char      	*groupname,
 			       void		(* bc_success)( void *),
 			       void		(* bc_cancel)( void *),
 			       pwr_tStatus  	*status)
@@ -250,7 +250,7 @@ void XttTblGtk::activate_command( GtkWidget *w, gpointer data)
   xtt->command_open = 1;
 }
 
-void XttTblGtk::set_prompt( char *prompt)
+void XttTblGtk::set_prompt( const char *prompt)
 {
   if ( strcmp(prompt, "") == 0) {
     g_object_set( cmd_prompt, "visible", FALSE, NULL);

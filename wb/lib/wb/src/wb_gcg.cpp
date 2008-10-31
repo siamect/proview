@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.cpp,v 1.14 2008-06-26 13:19:31 claes Exp $
+ * Proview   $Id: wb_gcg.cpp,v 1.15 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -315,9 +315,9 @@ static pwr_tStatus gcg_get_build_host(
 
 static int gcg_cc(
     unsigned long	    filetype,
-    char		    *p1,
-    char		    *p2,
-    char		    *p3,
+    const char		    *p1,
+    const char		    *p2,
+    const char		    *p3,
     pwr_mOpSys		    os,
     unsigned long	    spawn
 );
@@ -570,7 +570,7 @@ static int gcg_reset_cmanager(
 static int gcg_check_attrref( 
     gcg_ctx gcgctx, 
     vldh_t_node node, 
-    char *attr);
+    const char *attr);
 
 
 /*_Methods defined for this module_______________________________________*/
@@ -929,9 +929,9 @@ static pwr_tStatus gcg_get_build_host(
 
 static int gcg_cc(
     unsigned long	    filetype,
-    char		    *p1,
-    char		    *p2,
-    char		    *p3,
+    const char		    *p1,
+    const char		    *p2,
+    const char		    *p3,
     pwr_mOpSys		    os,
     unsigned long	    spawn
 )
@@ -1270,7 +1270,7 @@ int gcg_plcwindow_compile (
 int	gcg_print_inputs( 
     gcg_ctx		gcgctx,
     vldh_t_node		node,
-    char		*delimstr,
+    const char		*delimstr,
     unsigned long	printtype,
     gcg_t_nocondef	*nocondef,
     unsigned long	*nocontype
@@ -7094,7 +7094,7 @@ int	gcg_comp_m15( gcg_ctx gcgctx, vldh_t_node node)
 	unsigned long		output_point;
 	ldh_sParDef 		output_bodydef;
 	int			pincond_found, wind_found;
-	char			*delimstr = " _z_ ";
+	char			delimstr[8];
 	char			*windbuffer;
 	pwr_tObjid		windowobjdid;
 	pwr_tClassId		windclass;
@@ -7102,6 +7102,7 @@ int	gcg_comp_m15( gcg_ctx gcgctx, vldh_t_node node)
 
 
 	ldhses = (node->hn.wind)->hw.ldhses;  
+	strcpy( delimstr, " _z_ ");
 
 
 	/* Insert trans object in ref list */
@@ -16021,7 +16022,7 @@ static int gcg_reset_cmanager(
   return GSX__SUCCESS;
 }	
 
-static int gcg_check_attrref( gcg_ctx gcgctx, vldh_t_node node, char *attr) 
+static int gcg_check_attrref( gcg_ctx gcgctx, vldh_t_node node, const char *attr) 
 {
   pwr_tStatus sts;
   int size;

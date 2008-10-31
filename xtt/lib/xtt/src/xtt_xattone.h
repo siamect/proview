@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xattone.h,v 1.3 2007-01-04 08:22:47 claes Exp $
+ * Proview   $Id: xtt_xattone.h,v 1.4 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,7 +54,7 @@ class XAttOne {
 	   int *xa_sts);
   virtual ~XAttOne();
 
-  virtual void message( char severity, char *message) {}
+  virtual void message( char severity, const char *message) {}
   virtual void set_prompt( char *prompt) {}
   virtual int change_value( int set_focus) {return 0;}
   virtual void change_value_close() {}

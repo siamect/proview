@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wblto.cpp,v 1.2 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: cnv_wblto.cpp,v 1.3 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,8 +17,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <float.h>
 #include <string.h>
 #include <stdlib.h>
@@ -30,6 +30,8 @@ extern "C" {
 #include "co_cdh.h"
 }
 #include "cnv_wblto.h"
+
+using namespace std;
 
 int CnvWblTo::init( char *) 
 { 

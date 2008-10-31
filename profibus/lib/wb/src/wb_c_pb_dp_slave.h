@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_pb_dp_slave.h,v 1.1 2007-01-04 08:44:02 claes Exp $
+ * Proview   $Id: wb_c_pb_dp_slave.h,v 1.2 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,7 +34,7 @@ typedef struct {
   
 pwr_tStatus pb_dp_slave_create_ctx( ldh_tSession ldhses, pwr_tAttrRef aref, 
 				    void *editor_ctx, slave_sCtx **ctxp);
-int pb_dp_slave_help_cb( void *sctx, char *text);
+int pb_dp_slave_help_cb( void *sctx, const char *text);
 void pb_dp_slave_close_cb( void *sctx);
 int pb_dp_slave_save_cb( void *sctx);
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_motif.cpp,v 1.2 2007-05-03 14:22:13 claes Exp $
+ * Proview   $Id: ge_graph_motif.cpp,v 1.3 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -52,14 +52,14 @@ extern "C" {
 GraphMotif::GraphMotif(
 	void *xn_parent_ctx,
 	Widget	xn_parent_wid,
-	char *xn_name,
+	const char *xn_name,
 	Widget *w,
 	pwr_tStatus *status,
-	char *xn_default_path,
+	const char *xn_default_path,
 	graph_eMode graph_mode,
 	int scrollbar,
 	int xn_gdh_init_done,
-	char *xn_object_name,
+	const char *xn_object_name,
 	int xn_use_default_access,
 	unsigned int xn_default_access) :
   Graph( xn_parent_ctx, xn_name, xn_default_path, graph_mode, xn_gdh_init_done, xn_object_name,
@@ -132,7 +132,7 @@ int GraphMotif::create_navigator( Widget parent)
   XtSetArg(args[i],XmNheight,200);i++;
   XtSetArg(args[i],XmNpaneMinimum,75);i++;
   XtSetArg(args[i],XmNpaneMaximum,800);i++;
-  nav_widget = GrowCreateNav( parent, "navigator",
+  nav_widget = GrowCreateNav( parent, (char*) "navigator",
         args, i, grow_widget);
   XtManageChild( nav_widget);
 

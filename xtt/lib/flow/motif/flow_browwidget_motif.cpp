@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_browwidget_motif.cpp,v 1.1 2007-01-04 07:57:00 claes Exp $
+ * Proview   $Id: flow_browwidget_motif.cpp,v 1.2 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -83,12 +83,12 @@ static char defaultTranslations[] = "#replace \n\
 <KeyDown>: notify()";
 
 
-static XtActionsRec actionsList[] = { {"notify", (XtActionProc) Notify}};
+static XtActionsRec actionsList[] = { {(char*) "notify", (XtActionProc) Notify}};
 
 BrowClassRec browClassRec = {
   { /* Core class part */
     (WidgetClass) &compositeClassRec,	/* superclass */
-    "Brow",				/* class name */
+    (char*) "Brow",		       	/* class name */
     sizeof(BrowRec),			/* widget size */
     NULL,				/* class initialize */
     NULL, 				/* class part initialize */
@@ -475,7 +475,7 @@ extern "C" Widget ScrolledBrowCreate(
   XtSetArg( arg[i], XmNbottomAttachment, XmATTACH_FORM);i++;
   XtSetArg( arg[i], XmNrightAttachment, XmATTACH_FORM);i++;
 */
-  brow = (BrowWidget) BrowCreate( form, "brow", arg, i, init_proc, client_data);
+  brow = (BrowWidget) BrowCreate( form, (char*) "brow", arg, i, init_proc, client_data);
   XtManageChild( (Widget) brow);
 
   brow->brow.scroll_h = scroll_h;

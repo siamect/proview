@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtext.h,v 1.8 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_growtext.h,v 1.9 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -52,7 +52,7 @@ class GrowText : public GlowText {
     \param display_lev	Level when the object is visible.
     \param nodraw	Don't draw the object now.
   */
-  GrowText( GrowCtx *glow_ctx, char *name, char *text1, double x = 0, double y = 0, 
+  GrowText( GrowCtx *glow_ctx, const char *name, const char *text1, double x = 0, double y = 0, 
 		glow_eDrawType border_d_type = glow_eDrawType_TextHelveticaBold,
 	        glow_eDrawType color_d_type = glow_eDrawType_Line,
 		int t_size = 2,

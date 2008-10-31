@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xatt.cpp,v 1.9 2007-01-04 08:22:47 claes Exp $
+ * Proview   $Id: xtt_xatt.cpp,v 1.10 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,7 +38,7 @@
 #include "rt_xatt_msg.h"
 
 
-void XAtt::message_cb( void *xatt, char severity, char *message)
+void XAtt::message_cb( void *xatt, char severity, const char *message)
 {
   ((XAtt *)xatt)->message( severity, message);
 }

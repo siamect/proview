@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xattone_gtk.cpp,v 1.1 2007-01-04 08:29:32 claes Exp $
+ * Proview   $Id: xtt_xattone_gtk.cpp,v 1.2 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,7 +50,7 @@
 
 CoWowRecall XAttOneGtk::value_recall;
 
-void XAttOneGtk::message( char severity, char *message)
+void XAttOneGtk::message( char severity, const char *message)
 {
   gtk_label_set_text( GTK_LABEL(msg_label), message);
 }

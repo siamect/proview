@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_dcli.c,v 1.6 2005-10-27 08:47:10 claes Exp $
+ * Proview   $Id: co_dcli.c,v 1.7 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -104,9 +104,9 @@ static void dcli_message( char s, char *text);
 *
 **************************************************************************/
 
-int	dcli_parse( 	char	*string,
-			char	*parse_char,
-			char	*inc_parse_char,
+int	dcli_parse( 	const char *string,
+			const char *parse_char,
+			const char *inc_parse_char,
 			char	*outstr,
 			int	max_rows,
 			int 	max_cols,
@@ -132,8 +132,8 @@ int	dcli_parse( 	char	*string,
 	nullstr = 0;
 	while ( *string != '\0')	
 	{
-	  char_ptr = parse_char;
-	  inc_char_ptr = inc_parse_char;
+	  char_ptr = (char *)parse_char;
+	  inc_char_ptr = (char *)inc_parse_char;
 	  parsechar_found = 0;
 	  inc_parsechar_found = 0;
 	  if ( *string == '"' && prev_char != '\\')
@@ -244,7 +244,7 @@ int	dcli_parse( 	char	*string,
 **************************************************************************/
 
 int	dcli_cli( 	dcli_tCmdTable	*command_table,
-			char		*string,
+			const char     	*string,
 			void		*userdata1,
 			void		*userdata2)
 {
@@ -264,7 +264,7 @@ int	dcli_cli( 	dcli_tCmdTable	*command_table,
 
 	/* Fill spaces around '=' with '=' , this is a trick to avoid
 	   parsing of the qualifier and value in the first step */
-	s = string;
+	s = (char *)string;
 	quota_mode = 0;
 	while ( *s != 0)
 	{
@@ -441,7 +441,7 @@ int	dcli_cli( 	dcli_tCmdTable	*command_table,
 *
 **************************************************************************/
 
-int	dcli_get_qualifier( 	char	*qualifier,
+int	dcli_get_qualifier( 	const char *qualifier,
 				char	*value,
 				size_t	size)
 {
@@ -1077,7 +1077,7 @@ int	dcli_remove_blank( char *out_str, char *in_str)
 }
 
 
-char	*dcli_pwr_dir( char *dir)
+char	*dcli_pwr_dir( const char *dir)
 {
 	static char pwr_dir[120];
 	char 	*s;

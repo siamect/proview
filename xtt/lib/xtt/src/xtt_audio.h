@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_audio.h,v 1.5 2008-10-28 10:08:18 claes Exp $
+ * Proview   $Id: xtt_audio.h,v 1.6 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 /* xtt_audio.h -- soundcard bell routines.
 */
 
-#include <iostream.h>
+#include <iostream>
 #include <alsa/asoundlib.h>
 #include <sys/soundcard.h>
 #include <sys/ioctl.h>
@@ -48,7 +48,7 @@ class XttAudio
 {
   public:
     static int audio_ok;
-    XttAudio( CoWow *a_wow, char *OSS_device="/dev/dsp", char *ALSA_device="plughw:0,0");
+    XttAudio( CoWow *a_wow, const char *OSS_device="/dev/dsp", const char *ALSA_device="plughw:0,0");
     ~XttAudio();
     int init(char *OSS_device="/dev/dsp", char *ALSA_device="plughw:0,0");
     int beep( pwr_tAttrRef *arp);

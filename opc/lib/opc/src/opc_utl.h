@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.h,v 1.18 2007-06-01 12:52:40 claes Exp $
+ * Proview   $Id: opc_utl.h,v 1.19 2008-10-31 12:51:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,7 +17,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <vector.h>
+#include <vector>
 #include <string.h>
 #include "pwr.h"
 #include "opc_soap_Stub.h"

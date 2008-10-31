@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_nodeclass.cpp,v 1.7 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_nodeclass.cpp,v 1.8 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,8 +19,8 @@
 
 #include "glow_std.h"
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <stdlib.h>
 #include <string.h>
 #include <float.h>
@@ -32,7 +32,7 @@
 #include "glow_growctx.h"
 #include "glow_msg.h"
 
-GlowNodeClass::GlowNodeClass( GrowCtx *glow_ctx, char *name, 
+GlowNodeClass::GlowNodeClass( GrowCtx *glow_ctx, const char *name, 
 	glow_eNodeGroup grp)
   : ctx(glow_ctx), a(10,10), group(grp), dynamic(0), dynamicsize(0),
     arg_cnt(0), nc_extern(0), dyn_type(0), dyn_action_type(0),

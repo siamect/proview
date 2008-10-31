@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_uted_motif.cpp,v 1.2 2008-06-25 12:33:34 claes Exp $
+ * Proview   $Id: wb_uted_motif.cpp,v 1.3 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -135,7 +135,7 @@ void WUtedMotif::activate_batch( Widget w, WUted *uted, XmAnyCallbackStruct *dat
 
   uted->message( "");
   uted->batch_sts = UTED_BATCH_BATCH;
-  XmTextSetString( ((WUtedMotif *)uted)->widgets.timevalue, "");
+  XmTextSetString( ((WUtedMotif *)uted)->widgets.timevalue, (char*) "");
   XtSetArg(args[0],XmNsensitive, 1);
   XtSetValues( ((WUtedMotif *)uted)->widgets.timelabel,args,1);
   XtManageChild( ((WUtedMotif *)uted)->widgets.timevalue);
@@ -540,8 +540,8 @@ void WUtedMotif::qbox_cancel_cb( Widget w, WUted *uted, XmAnyCallbackStruct *dat
 //
 WUtedMotif::WUtedMotif( void	       	*wu_parent_ctx,
 			Widget		wu_parent_wid,
-			char	       	*wu_name,
-			char	       	*wu_iconname,
+			const char	*wu_name,
+			const char      *wu_iconname,
 			ldh_tWBContext	wu_ldhwb,
 			ldh_tSesContext	wu_ldhses,
 			int	       	wu_editmode,
@@ -567,78 +567,78 @@ WUtedMotif::WUtedMotif( void	       	*wu_parent_ctx,
 
   static MrmRegisterArg	reglist[] = {
     /* First the context variable */
-    { "uted_ctx", 0 },
+    {(char*) "uted_ctx", 0 },
 
     /* Callbacks for the controlled foe widget */
-    {"uted_create_adb",(caddr_t)create_adb},
-    {"uted_create_quit",(caddr_t)create_quit},
-    {"uted_activate_quit",(caddr_t)activate_quit},
-    {"uted_create_commandlabel",(caddr_t)create_commandlabel},
-    {"uted_create_batchoptmenu",(caddr_t)create_batchoptmenu},
-    {"uted_create_batch",(caddr_t)create_batch},
-    {"uted_create_currsess",(caddr_t)create_currsess},
-    {"uted_create_file_entry",(caddr_t)create_file_entry},
-    {"uted_create_label",(caddr_t)create_label},
-    {"uted_create_adb",(caddr_t)create_adb},
-    {"uted_activate_command",(caddr_t)activate_command},
-    {"uted_create_command",(caddr_t)create_command},
-    {"uted_activate_batch",(caddr_t)activate_batch},
-    {"uted_activate_currsess",(caddr_t)activate_currsess},
-    {"uted_activate_ok",(caddr_t)activate_ok},
-    {"uted_activate_cancel",(caddr_t)activate_cancel},
-    {"uted_activate_show_cmd",(caddr_t)activate_show_cmd},
-    {"uted_create_commandwind_button",(caddr_t)create_commandwind_button},
-    {"uted_activate_cmd_wind",(caddr_t)activate_cmd_wind},
-    {"uted_create_cmd_wind",(caddr_t)create_cmd_wind},
-    {"uted_create_timelabel",(caddr_t)create_timelabel},
-    {"uted_create_timevalue",(caddr_t)create_timevalue},
-    {"uted_create_qualifier1",(caddr_t)create_qualifier1},
-    {"uted_create_value1",(caddr_t)create_value1},
-    {"uted_activate_present1",(caddr_t)activate_present1},
-    {"uted_create_present1",(caddr_t)create_present1},
-    {"uted_create_qualifier2",(caddr_t)create_qualifier2},
-    {"uted_create_value2",(caddr_t)create_value2},
-    {"uted_activate_present2",(caddr_t)activate_present2},
-    {"uted_create_present2",(caddr_t)create_present2},
-    {"uted_create_qualifier3",(caddr_t)create_qualifier3},
-    {"uted_create_value3",(caddr_t)create_value3},
-    {"uted_activate_present3",(caddr_t)activate_present3},
-    {"uted_create_present3",(caddr_t)create_present3},
-    {"uted_create_qualifier4",(caddr_t)create_qualifier4},
-    {"uted_create_value4",(caddr_t)create_value4},
-    {"uted_activate_present4",(caddr_t)activate_present4},
-    {"uted_create_present4",(caddr_t)create_present4},
-    {"uted_create_qualifier5",(caddr_t)create_qualifier5},
-    {"uted_create_value5",(caddr_t)create_value5},
-    {"uted_activate_present5",(caddr_t)activate_present5},
-    {"uted_create_present5",(caddr_t)create_present5},
-    {"uted_create_qualifier6",(caddr_t)create_qualifier6},
-    {"uted_create_value6",(caddr_t)create_value6},
-    {"uted_activate_present6",(caddr_t)activate_present6},
-    {"uted_create_present6",(caddr_t)create_present6},
-    {"uted_create_qualifier7",(caddr_t)create_qualifier7},
-    {"uted_create_value7",(caddr_t)create_value7},
-    {"uted_activate_present7",(caddr_t)activate_present7},
-    {"uted_create_present7",(caddr_t)create_present7},
-    {"uted_create_qualifier8",(caddr_t)create_qualifier8},
-    {"uted_create_value8",(caddr_t)create_value8},
-    {"uted_activate_present8",(caddr_t)activate_present8},
-    {"uted_create_present8",(caddr_t)create_present8},
-    {"uted_create_qualifier9",(caddr_t)create_qualifier9},
-    {"uted_create_value9",(caddr_t)create_value9},
-    {"uted_activate_present9",(caddr_t)activate_present9},
-    {"uted_create_present9",(caddr_t)create_present9},
-    {"uted_create_qualifier10",(caddr_t)create_qualifier10},
-    {"uted_create_value10",(caddr_t)create_value10},
-    {"uted_activate_present10",(caddr_t)activate_present10},
-    {"uted_create_present10",(caddr_t)create_present10},
-    {"uted_activate_helputils",(caddr_t)activate_helputils},
-    {"uted_activate_helppwr_plc",(caddr_t)activate_helppwr_plc},
-    {"uted_commandchanged",(caddr_t)commandchanged},
-    {"uted_qbox_cr",(caddr_t)qbox_cr},
-    {"uted_qbox_yes_cb",(caddr_t)qbox_yes_cb},
-    {"uted_qbox_no_cb",(caddr_t)qbox_no_cb},
-    {"uted_qbox_cancel_cb",(caddr_t)qbox_cancel_cb}
+    {(char*) "uted_create_adb",(caddr_t)create_adb},
+    {(char*) "uted_create_quit",(caddr_t)create_quit},
+    {(char*) "uted_activate_quit",(caddr_t)activate_quit},
+    {(char*) "uted_create_commandlabel",(caddr_t)create_commandlabel},
+    {(char*) "uted_create_batchoptmenu",(caddr_t)create_batchoptmenu},
+    {(char*) "uted_create_batch",(caddr_t)create_batch},
+    {(char*) "uted_create_currsess",(caddr_t)create_currsess},
+    {(char*) "uted_create_file_entry",(caddr_t)create_file_entry},
+    {(char*) "uted_create_label",(caddr_t)create_label},
+    {(char*) "uted_create_adb",(caddr_t)create_adb},
+    {(char*) "uted_activate_command",(caddr_t)activate_command},
+    {(char*) "uted_create_command",(caddr_t)create_command},
+    {(char*) "uted_activate_batch",(caddr_t)activate_batch},
+    {(char*) "uted_activate_currsess",(caddr_t)activate_currsess},
+    {(char*) "uted_activate_ok",(caddr_t)activate_ok},
+    {(char*) "uted_activate_cancel",(caddr_t)activate_cancel},
+    {(char*) "uted_activate_show_cmd",(caddr_t)activate_show_cmd},
+    {(char*) "uted_create_commandwind_button",(caddr_t)create_commandwind_button},
+    {(char*) "uted_activate_cmd_wind",(caddr_t)activate_cmd_wind},
+    {(char*) "uted_create_cmd_wind",(caddr_t)create_cmd_wind},
+    {(char*) "uted_create_timelabel",(caddr_t)create_timelabel},
+    {(char*) "uted_create_timevalue",(caddr_t)create_timevalue},
+    {(char*) "uted_create_qualifier1",(caddr_t)create_qualifier1},
+    {(char*) "uted_create_value1",(caddr_t)create_value1},
+    {(char*) "uted_activate_present1",(caddr_t)activate_present1},
+    {(char*) "uted_create_present1",(caddr_t)create_present1},
+    {(char*) "uted_create_qualifier2",(caddr_t)create_qualifier2},
+    {(char*) "uted_create_value2",(caddr_t)create_value2},
+    {(char*) "uted_activate_present2",(caddr_t)activate_present2},
+    {(char*) "uted_create_present2",(caddr_t)create_present2},
+    {(char*) "uted_create_qualifier3",(caddr_t)create_qualifier3},
+    {(char*) "uted_create_value3",(caddr_t)create_value3},
+    {(char*) "uted_activate_present3",(caddr_t)activate_present3},
+    {(char*) "uted_create_present3",(caddr_t)create_present3},
+    {(char*) "uted_create_qualifier4",(caddr_t)create_qualifier4},
+    {(char*) "uted_create_value4",(caddr_t)create_value4},
+    {(char*) "uted_activate_present4",(caddr_t)activate_present4},
+    {(char*) "uted_create_present4",(caddr_t)create_present4},
+    {(char*) "uted_create_qualifier5",(caddr_t)create_qualifier5},
+    {(char*) "uted_create_value5",(caddr_t)create_value5},
+    {(char*) "uted_activate_present5",(caddr_t)activate_present5},
+    {(char*) "uted_create_present5",(caddr_t)create_present5},
+    {(char*) "uted_create_qualifier6",(caddr_t)create_qualifier6},
+    {(char*) "uted_create_value6",(caddr_t)create_value6},
+    {(char*) "uted_activate_present6",(caddr_t)activate_present6},
+    {(char*) "uted_create_present6",(caddr_t)create_present6},
+    {(char*) "uted_create_qualifier7",(caddr_t)create_qualifier7},
+    {(char*) "uted_create_value7",(caddr_t)create_value7},
+    {(char*) "uted_activate_present7",(caddr_t)activate_present7},
+    {(char*) "uted_create_present7",(caddr_t)create_present7},
+    {(char*) "uted_create_qualifier8",(caddr_t)create_qualifier8},
+    {(char*) "uted_create_value8",(caddr_t)create_value8},
+    {(char*) "uted_activate_present8",(caddr_t)activate_present8},
+    {(char*) "uted_create_present8",(caddr_t)create_present8},
+    {(char*) "uted_create_qualifier9",(caddr_t)create_qualifier9},
+    {(char*) "uted_create_value9",(caddr_t)create_value9},
+    {(char*) "uted_activate_present9",(caddr_t)activate_present9},
+    {(char*) "uted_create_present9",(caddr_t)create_present9},
+    {(char*) "uted_create_qualifier10",(caddr_t)create_qualifier10},
+    {(char*) "uted_create_value10",(caddr_t)create_value10},
+    {(char*) "uted_activate_present10",(caddr_t)activate_present10},
+    {(char*) "uted_create_present10",(caddr_t)create_present10},
+    {(char*) "uted_activate_helputils",(caddr_t)activate_helputils},
+    {(char*) "uted_activate_helppwr_plc",(caddr_t)activate_helppwr_plc},
+    {(char*) "uted_commandchanged",(caddr_t)commandchanged},
+    {(char*) "uted_qbox_cr",(caddr_t)qbox_cr},
+    {(char*) "uted_qbox_yes_cb",(caddr_t)qbox_yes_cb},
+    {(char*) "uted_qbox_no_cb",(caddr_t)qbox_no_cb},
+    {(char*) "uted_qbox_cancel_cb",(caddr_t)qbox_cancel_cb}
   };
 
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
@@ -674,7 +674,7 @@ WUtedMotif::WUtedMotif( void	       	*wu_parent_ctx,
   MrmRegisterNames(reglist, reglist_num);
 
   if (icon == 0)
-    sts = MrmFetchBitmapLiteral(s_MrmH,"icon", 
+    sts = MrmFetchBitmapLiteral(s_MrmH,(char*) "icon", 
 	      XtScreen(parent_wid), XtDisplay(parent_wid),
 	      &icon, &icon_w, &icon_h);
 
@@ -698,7 +698,7 @@ WUtedMotif::WUtedMotif( void	       	*wu_parent_ctx,
   XtSetValues( parent_wid, args, i);
 
   /* now that we have a top level we can get the main window */
-  sts = MrmFetchWidgetOverride(s_MrmH, "uted_window", parent_wid ,
+  sts = MrmFetchWidgetOverride(s_MrmH, (char*) "uted_window", parent_wid ,
 		name, args, 1,
 		&widgets.uted_window, &dclass);
   if (sts != MrmSUCCESS) printf("can't fetch utedit widget\n");
@@ -711,7 +711,7 @@ WUtedMotif::WUtedMotif( void	       	*wu_parent_ctx,
   /* Ask MRM to fetch the question box */
   i=0;
   if (MrmFetchWidgetOverride(s_MrmH,
-			"uted_qbox", 
+			(char*) "uted_qbox", 
 	     	        widgets.uted_window,
 			0,
 			args , i,
@@ -783,10 +783,10 @@ void WUtedMotif::reset_qual()
     XtUnmanageChild( widgets.present[i]);
     present_sts[i] = 0;
     XmToggleButtonSetState( widgets.present[i], 0, 0);
-    XmTextSetString( widgets.value[i], "");
+    XmTextSetString( widgets.value[i], (char*) "");
   }
 
-  cstr = XmStringCreateSimple( UTED_TEXT_NOCOMMAND);
+  cstr = XmStringCreateSimple( (char*) UTED_TEXT_NOCOMMAND);
   XtVaSetValues( widgets.commandlabel, 
 		 XmNlabelString, cstr,
 		 NULL);
@@ -826,13 +826,13 @@ void WUtedMotif::GetCSText( XmString ar_value, char *t_buffer)
 //	Displays a message in the ute window.
 //	Changes the label of a label widget which id is stored in the context.
 //
-void WUtedMotif::message( char *new_label) 
+void WUtedMotif::message( const char *new_label) 
 {
   Arg		args[2];
   XmString	cstr;
 
   XtSetArg(args[0], XmNlabelString,
-	   cstr=XmStringCreateLtoR(new_label , "ISO8859-1"));
+	   cstr=XmStringCreateLtoR((char*) new_label , (char*) "ISO8859-1"));
   XtSetValues( widgets.label, args,1);
   XmStringFree( cstr);
 }
@@ -842,7 +842,7 @@ void WUtedMotif::set_command_window( char *cmd)
   XmString	cstr;
   Arg		arg[2];
 
-  cstr=XmStringCreateLtoR( cmd, "ISO8859-1");
+  cstr=XmStringCreateLtoR( cmd, (char*) "ISO8859-1");
   XtSetArg(arg[0], XmNcommand, cstr);
   XtSetValues( widgets.command_window, arg, 1);
   XmStringFree( cstr);
@@ -894,14 +894,14 @@ void WUtedMotif::configure_quals( char *label)
   while ( qual_ptr->qual[0] != 0) {
     if ( qual_ptr->type == UTED_QUAL_DEFQUAL) {
       latinstr = XmStringCreateLtoR( 
-		     "Select an object in the Navigator", "ISO8859-1");
+		     (char*) "Select an object in the Navigator", (char*) "ISO8859-1");
       XtSetArg( arg[0], XmNlabelString, latinstr);
       XtSetValues( widgets.qualifier[i], arg, 1);
       XmStringFree( latinstr);
       XtManageChild( widgets.qualifier[i]);
     }
     else {
-      latinstr = XmStringCreateLtoR( qual_ptr->qual, "ISO8859-1");
+      latinstr = XmStringCreateLtoR( qual_ptr->qual, (char*) "ISO8859-1");
       XtSetArg( arg[0], XmNlabelString, latinstr);
       XtSetValues( widgets.qualifier[i], arg, 1);
       XmStringFree( latinstr);
@@ -994,17 +994,17 @@ void WUtedMotif::questionbox( char *question_title,
   Widget		help_button;
   Widget		yes_button;
 
-  cstr = XmStringCreateLtoR( question_text, "ISO8859-1");
-  cstr2 = XmStringCreateLtoR( question_title, "ISO8859-1");
+  cstr = XmStringCreateLtoR( question_text, (char*) "ISO8859-1");
+  cstr2 = XmStringCreateLtoR( question_title, (char*) "ISO8859-1");
   help_button = XmMessageBoxGetChild(widgets.questionbox, 
 				     XmDIALOG_HELP_BUTTON);
   yes_button = XmMessageBoxGetChild( widgets.questionbox, 
 				     XmDIALOG_OK_BUTTON);
   
   if (cancel)
-    help_label = XmStringCreateLtoR("Cancel", "ISO8859-1");
+    help_label = XmStringCreateLtoR((char*) "Cancel", (char*) "ISO8859-1");
   else
-    help_label = XmStringCreateLtoR("Help", "ISO8859-1");
+    help_label = XmStringCreateLtoR((char*) "Help", (char*) "ISO8859-1");
 
   i=0;
   XtSetArg(args[i], XmNhelpLabelString, help_label); i++;

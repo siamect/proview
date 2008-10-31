@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_readxtthelp.cpp,v 1.2 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: cnv_readxtthelp.cpp,v 1.3 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,8 +22,8 @@
 
 /*_Include files_________________________________________________________*/
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
@@ -37,6 +37,8 @@ extern "C" {
 #include "co_nav_help.h"
 #include "cnv_readxtthelp.h"
 #include "cnv_xtthelpto.h"
+
+using namespace std;
 
 #define CNV_TAB 18
 
@@ -66,11 +68,11 @@ CnvReadXtthelp::CnvReadXtthelp( char *x_name, char *x_directory,
 
 }
 
-void *help_insert_cb( void *ctx, navh_eItemType item_type, char *text1,
-		      char *text2, char *text3, char *link, 
-		      char *link_bookmark, char *file_name,
+void *help_insert_cb( void *ctx, navh_eItemType item_type, const char *text1,
+		      const char *text2, const char *text3, const char *link, 
+		      const char *link_bookmark, const char *file_name,
 		      navh_eHelpFile file_type, int help_index, 
-		      char *bookmark)
+		      const char *bookmark)
 {
   CnvReadXtthelp *xh = (CnvReadXtthelp *)ctx;
 

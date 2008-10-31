@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wpkgnav.cpp,v 1.7 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_wpkgnav.cpp,v 1.8 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,7 +39,7 @@
 #include "wb_error.h"
 
 
-void WPkgNav::message( char sev, char *text)
+void WPkgNav::message( char sev, const char *text)
 {
   (message_cb)( parent_ctx, sev, text);
 }
@@ -74,7 +74,7 @@ void WPkgNav::unzoom()
 //
 WPkgNav::WPkgNav(
 	void 		*wa_parent_ctx,
-	char 		*wa_name,
+	const char     	*wa_name,
 	wb_eUtility	wa_utility,
 	pwr_tStatus 	*status) :
 	parent_ctx(wa_parent_ctx),
@@ -724,7 +724,7 @@ int WItemPkgPackage::open_children( WNavBrow *brow, double x, double y, int disp
   return 1;
 }
 
-WItemPkgFile::WItemPkgFile( WNavBrow *brow, char *item_name,
+WItemPkgFile::WItemPkgFile( WNavBrow *brow, const char *item_name,
 			    char *item_filename, pwr_tTime item_time, int dmode,
 			    brow_tNode dest, flow_eDest dest_code) 
   : time(item_time)

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attr_gtk.h,v 1.1 2007-01-04 08:21:58 claes Exp $
+ * Proview   $Id: ge_attr_gtk.h,v 1.2 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -61,8 +61,8 @@ class AttrGtk : public Attr {
     static CoWowRecall 	value_recall;
     CoWowEntryGtk	*cmd_entry;
 
-    void message( char severity, char *message);
-    void set_prompt( char *prompt);
+    void message( char severity, const char *message);
+    void set_prompt( const char *prompt);
     void change_value();
     int reconfigure_attr();
     

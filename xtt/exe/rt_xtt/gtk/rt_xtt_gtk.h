@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_gtk.h,v 1.2 2008-06-24 08:05:25 claes Exp $
+ * Proview   $Id: rt_xtt_gtk.h,v 1.3 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -58,13 +58,13 @@ class XttGtk : public Xtt {
     XttGtk( int argc, char *argv[], int *sts);
     ~XttGtk();
 
-    void message( char severity, char *msg);
+    void message( char severity, const char *msg);
     void xtt_mainloop();
     // int init_hotkey( XtAppContext AppCtx, Widget Top);
-    void open_input_dialog( char *text, char *title,
-			    char *init_text,
+    void open_input_dialog( const char *text, const char *title,
+			    const char *init_text,
 			    void (*ok_cb)( Xtt *, char *));
-    void set_prompt( char *prompt);
+    void set_prompt( const char *prompt);
     void open_change_value();
     void create_input_dialog();
 

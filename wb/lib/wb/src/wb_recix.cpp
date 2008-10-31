@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_recix.cpp,v 1.1 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_recix.cpp,v 1.2 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 /* wb_recix.cpp    Recycle objid. Stores name and oix of deleted tree
                    to recycle the oix when a similar tree is copied.*/
 
-#include <iostream.h>
+#include <iostream>
 #include "wb_recix.h"
 
 bool wb_recix::add( const char *str, pwr_tOix ix) {

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wge_motif.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_wge_motif.cpp,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -131,20 +131,20 @@ void WGeMotif::confirm_cb( void *ge_ctx, void *confirm_object, char *text)
 
   message( ge, ' ', "");
 
-  XtSetArg(args[0],XmNmessageString, XmStringCreateLtoR( text, "ISO8859-1"));
+  XtSetArg(args[0],XmNmessageString, XmStringCreateLtoR( text, (char*) "ISO8859-1"));
   XtSetValues( ((WGeMotif *)ge)->confirm_widget, args, 1);
   ge->confirm_open = 1;
   ge->current_confirm_object = confirm_object;
 }
 
-void WGeMotif::message_dialog_cb( void *ge_ctx, char *text)
+void WGeMotif::message_dialog_cb( void *ge_ctx, const char *text)
 {
   Arg 		args[1];
   WGe 	*ge = (WGe *)ge_ctx;
 
   XtManageChild( ((WGeMotif *)ge)->message_dia_widget);
 
-  XtSetArg(args[0],XmNmessageString, XmStringCreateLtoR( text, "ISO8859-1"));
+  XtSetArg(args[0],XmNmessageString, XmStringCreateLtoR( (char*) text, (char*) "ISO8859-1"));
   XtSetValues( ((WGeMotif *)ge)->message_dia_widget, args, 1);
 }
 
@@ -310,24 +310,24 @@ WGeMotif::WGeMotif( Widget wge_parent_wid, void *wge_parent_ctx, char *wge_name,
 
   static XtActionsRec actions[] =
   {
-    {"wge_inputfocus",      (XtActionProc) action_inputfocus},
-    {"resize",      (XtActionProc) action_resize},
+    {(char*) "wge_inputfocus",      (XtActionProc) action_inputfocus},
+    {(char*) "resize",      (XtActionProc) action_resize},
   };
 
   static MrmRegisterArg	reglist[] = {
-        { "wge_ctx", 0 },
-	{"wge_activate_exit",(caddr_t)activate_exit },
-	{"wge_activate_zoom_in",(caddr_t)activate_zoom_in },
-	{"wge_activate_zoom_out",(caddr_t)activate_zoom_out },
-	{"wge_activate_zoom_reset",(caddr_t)activate_zoom_reset },
-	{"wge_activate_help",(caddr_t)activate_help },
-	{"wge_create_graph_form",(caddr_t)create_graph_form },
-	{"wge_create_menu",(caddr_t)create_menu },
-	{"wge_create_value_input",(caddr_t)create_value_input },
-	{"wge_activate_value_input",(caddr_t)activate_value_input },
-	{"wge_activate_confirm_ok",(caddr_t)activate_confirm_ok },
-	{"wge_activate_confirm_cancel",(caddr_t)activate_confirm_cancel },
-	{"wge_create_message_dia",(caddr_t)create_message_dia }
+        {(char*) "wge_ctx", 0 },
+	{(char*) "wge_activate_exit",(caddr_t)activate_exit },
+	{(char*) "wge_activate_zoom_in",(caddr_t)activate_zoom_in },
+	{(char*) "wge_activate_zoom_out",(caddr_t)activate_zoom_out },
+	{(char*) "wge_activate_zoom_reset",(caddr_t)activate_zoom_reset },
+	{(char*) "wge_activate_help",(caddr_t)activate_help },
+	{(char*) "wge_create_graph_form",(caddr_t)create_graph_form },
+	{(char*) "wge_create_menu",(caddr_t)create_menu },
+	{(char*) "wge_create_value_input",(caddr_t)create_value_input },
+	{(char*) "wge_activate_value_input",(caddr_t)activate_value_input },
+	{(char*) "wge_activate_confirm_ok",(caddr_t)activate_confirm_ok },
+	{(char*) "wge_activate_confirm_cancel",(caddr_t)activate_confirm_cancel },
+	{(char*) "wge_create_message_dia",(caddr_t)create_message_dia }
 	};
 
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
@@ -363,19 +363,19 @@ WGeMotif::WGeMotif( Widget wge_parent_wid, void *wge_parent_ctx, char *wge_name,
 
   MrmRegisterNames(reglist, reglist_num);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "wge_window", toplevel,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "wge_window", toplevel,
 			wname, args, 1, &wge_widget, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", wname);
 
-  sts = MrmFetchWidget(s_DRMh, "input_dialog", toplevel,
+  sts = MrmFetchWidget(s_DRMh, (char*) "input_dialog", toplevel,
 		&value_dialog, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch input dialog\n");
 
-  sts = MrmFetchWidget(s_DRMh, "confirm_dialog", toplevel,
+  sts = MrmFetchWidget(s_DRMh, (char*) "confirm_dialog", toplevel,
 		&confirm_widget, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch confirm dialog\n");
 
-  sts = MrmFetchWidget(s_DRMh, "message_dialog", toplevel,
+  sts = MrmFetchWidget(s_DRMh, (char*) "message_dialog", toplevel,
 		&message_dia_widget, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch message dialog\n");
 
@@ -443,7 +443,7 @@ WGeMotif::WGeMotif( Widget wge_parent_wid, void *wge_parent_ctx, char *wge_name,
     XtSetArg(args[i],XmNy,500);i++;
     XtSetArg(args[i],XmNdeleteResponse, XmDO_NOTHING);i++;
 
-    nav_shell = XmCreateDialogShell( grow_widget, "Navigator",
+    nav_shell = XmCreateDialogShell( grow_widget, (char*) "Navigator",
         args, i);
     XtManageChild( nav_shell);
 

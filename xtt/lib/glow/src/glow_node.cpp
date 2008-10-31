@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_node.cpp,v 1.4 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_node.cpp,v 1.5 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
@@ -32,7 +32,7 @@
 #include "glow_tracedata.h"
 #include "glow_grownode.h"
 
-GlowNode::GlowNode( GrowCtx *glow_ctx, char *name, GlowNodeClass *node_class,
+GlowNode::GlowNode( GrowCtx *glow_ctx, const char *name, GlowNodeClass *node_class,
 	double x1, double y1, int nodraw, int rel_annot_pos) : 
 	x_right(x1), x_left(x1), y_high(y1), y_low(y1), 
 	obst_x_right(x1), obst_x_left(x1), obst_y_high(y1), obst_y_low(y1),

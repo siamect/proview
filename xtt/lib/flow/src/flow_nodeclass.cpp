@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_nodeclass.cpp,v 1.9 2008-10-16 08:58:06 claes Exp $
+ * Proview   $Id: flow_nodeclass.cpp,v 1.10 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,10 +19,10 @@
 
 #include "flow_std.h"
 
-#include <vector.h>
+#include <vector>
 #include <float.h>
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include "flow_nodeclass.h"
 #include "flow_annot.h"
 #include "flow_annotpixmap.h"
@@ -37,7 +37,7 @@ class NextConPoint {
   double rank;
 };
 
-FlowNodeClass::FlowNodeClass( FlowCtx *flow_ctx, char *name, 
+FlowNodeClass::FlowNodeClass( FlowCtx *flow_ctx, const char *name, 
 	flow_eNodeGroup grp)
   : ctx(flow_ctx), a(10,10), group(grp), no_con_obstacle(0)
 {

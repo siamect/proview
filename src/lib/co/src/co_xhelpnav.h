@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_xhelpnav.h,v 1.10 2008-02-27 06:24:37 claes Exp $
+ * Proview   $Id: co_xhelpnav.h,v 1.11 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -133,12 +133,12 @@ class CoXHelpNav {
     int brow_push();
     int brow_push_all();
     void enable_events( CoXHelpNavBrow *brow);
-    int help( char *key, char *help_bookmark, navh_eHelpFile file_type,
-	      char *file_name, int pop, bool strict);
+    int help( const char *key, const char *help_bookmark, navh_eHelpFile file_type,
+	      const char *file_name, int pop, bool strict);
     int back();
     int next_topic();
     int previous_topic();
-    int	help_index( navh_eHelpFile file_type, char *file_name, int pop);
+    int	help_index( navh_eHelpFile file_type, const char *file_name, int pop);
     pwr_tStatus search( char *str, bool strict);
     pwr_tStatus search_next();
     pwr_tStatus search_next_reverse();
@@ -166,21 +166,21 @@ class HItem {
 
 class HItemHeader : public HItem {
   public:
-    HItemHeader( CoXHelpNavBrow *brow, char *item_name, char *title,
+    HItemHeader( CoXHelpNavBrow *brow, const char *item_name, const char *title,
 	brow_tNode dest, flow_eDest dest_code);
 };
 
 class HItemHelpLine : public HItem {
   public:
-    HItemHelpLine( CoXHelpNavBrow *brow, char *item_name,
+    HItemHelpLine( CoXHelpNavBrow *brow, const char *item_name,
 	brow_tNode dest, flow_eDest dest_code);
 };
 
 class HItemHelpImage : public HItem {
   public:
-    HItemHelpImage( CoXHelpNavBrow *brow, char *item_name, brow_tNodeClass nc,
-		    char *item_link, char *item_bookmark, 
-		    char *item_file_name, navh_eHelpFile help_file_type, 
+    HItemHelpImage( CoXHelpNavBrow *brow, const char *item_name, brow_tNodeClass nc,
+		    const char *item_link, const char *item_bookmark, 
+		    const char *item_file_name, navh_eHelpFile help_file_type, 
 		    brow_tNode dest, flow_eDest dest_code);
     int	doubleclick_action( CoXHelpNavBrow *brow, CoXHelpNav *xhelpnav,
 				       double x, double y);
@@ -192,16 +192,17 @@ class HItemHelpImage : public HItem {
 
 class HItemHeaderLarge : public HItem {
   public:
-    HItemHeaderLarge( CoXHelpNavBrow *brow, char *item_name, char *title,
+    HItemHeaderLarge( CoXHelpNavBrow *brow, const char *item_name, const char *title,
 	brow_tNode dest, flow_eDest dest_code);
     bool search( char *str, bool strict);
 };
 
 class HItemHelp : public HItem {
   public:
-    HItemHelp( CoXHelpNavBrow *brow, char *item_name, char *text, char *text2, 
-	char *text3, char *item_link, char *item_bookmark, 
-	char *item_file_name, navh_eHelpFile help_file_type, int help_index, brow_tNode dest, flow_eDest dest_code);
+    HItemHelp( CoXHelpNavBrow *brow, const char *item_name, const char *text, const char *text2, 
+	       const char *text3, const char *item_link, const char *item_bookmark, 
+	       const char *item_file_name, navh_eHelpFile help_file_type, int help_index, 
+	       brow_tNode dest, flow_eDest dest_code);
     int	doubleclick_action( CoXHelpNavBrow *brow, CoXHelpNav *xhelpnav,
 				       double x, double y);
     bool search( char *str, bool strict);
@@ -214,9 +215,9 @@ class HItemHelp : public HItem {
 
 class HItemHelpBold : public HItem {
  public:
-  HItemHelpBold( CoXHelpNavBrow *brow, char *item_name, char *text, char *text2, 
-		char *text3, char *item_link, char *item_bookmark, 
-		char *item_file_name, navh_eHelpFile help_file_type, int help_index, 
+  HItemHelpBold( CoXHelpNavBrow *brow, const char *item_name, const char *text, const char *text2, 
+		const char *text3, const char *item_link, const char *item_bookmark, 
+		const char *item_file_name, navh_eHelpFile help_file_type, int help_index, 
 		brow_tNode dest, flow_eDest dest_code);
   int	doubleclick_action( CoXHelpNavBrow *brow, CoXHelpNav *xhelpnav, 
 			    double x, double y);
@@ -230,7 +231,7 @@ class HItemHelpBold : public HItem {
 
 class HItemHelpHeader : public HItem {
  public:
-  HItemHelpHeader( CoXHelpNavBrow *brow, char *item_name, char *title, bool base,
+  HItemHelpHeader( CoXHelpNavBrow *brow, const char *item_name, const char *title, bool base,
 		  brow_tNode dest, flow_eDest dest_code);
   int doubleclick_action( CoXHelpNavBrow *brow, CoXHelpNav *xhelpnav, double x, double y);
     bool search( char *str, bool strict);

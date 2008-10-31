@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe.h,v 1.17 2008-10-03 14:18:37 claes Exp $
+ * Proview   $Id: wb_foe.h,v 1.18 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -120,7 +120,7 @@ class WFoe : public WUtility {
 
   
   WFoe( void *f_parent_ctx,
-	char *f_name,
+	const char *f_name,
 	pwr_tObjid plcprogram,
 	ldh_tWBContext ldhwbctx,
 	ldh_tSesContext ldhsesctx,
@@ -128,7 +128,7 @@ class WFoe : public WUtility {
 	ldh_eAccess f_access,
 	pwr_tStatus *sts);
   WFoe( void		*f_parent_ctx,
-	char		*f_name,
+	const char     	*f_name,
 	pwr_tObjid     	plcprogram,
 	ldh_tWBContext 	ldhwbctx,
 	ldh_tSesContext	ldhsesctx,
@@ -164,8 +164,8 @@ class WFoe : public WUtility {
     {return 0;}
   virtual void destroy() {}
   virtual void set_title() {}
-  virtual void message( char *new_label) {}
-  virtual void msgbox( char *new_label) {} 
+  virtual void message( const char *new_label) {}
+  virtual void msgbox( const char *new_label) {} 
   virtual int create_window( int x_top,
 			     int y_top,
 			     int width_adb,
@@ -173,7 +173,7 @@ class WFoe : public WUtility {
 			     ldh_tSesContext ldhsession,
 			     foe_eFuncAccess function_access)
     {return 0;}
-  virtual int get_textinput( char *message, int (*function) (WFoe *, char *))
+  virtual int get_textinput( const char *message, int (*function) (WFoe *, char *))
     {return 0;}
   virtual int edit_set_entries() {return 0;}
   virtual int view_set_entries() {return 0;}
@@ -182,7 +182,7 @@ class WFoe : public WUtility {
   virtual void clock_cursor() {}
   virtual void normal_cursor() {}
   virtual int get_selection( char *str, int len) {return 0;}
-  virtual void popupmsg( char *new_label, void (* yes_procedure)(WFoe *), 
+  virtual void popupmsg( const char *new_label, void (* yes_procedure)(WFoe *), 
 			 void (* no_procedure)(WFoe *),
 			 void (* cancel_procedure)(WFoe *)) {}
 
@@ -320,7 +320,7 @@ class WFoe : public WUtility {
   static void gre_unselect( WGre *gre);
   static void gre_help( WGre *gre, char *help_title);
   static void gre_regionmoved( WGre *gre);
-  static void gre_message( WGre *gre, char *message);
+  static void gre_message( WGre *gre, const char *message);
 
   static void pal_select_cb( void *ctx, pwr_tCid cid);
 

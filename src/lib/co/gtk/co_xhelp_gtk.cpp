@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_xhelp_gtk.cpp,v 1.3 2008-02-27 06:24:37 claes Exp $
+ * Proview   $Id: co_xhelp_gtk.cpp,v 1.4 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,8 +34,8 @@
 #include "co_xhelpnav_gtk.h"
 #include "co_xhelp_gtk.h"
 
-void CoXHelpGtk::open_input_dialog( char *text, char *title,
-				    char *init_text,
+void CoXHelpGtk::open_input_dialog( const char *text, const char *title,
+				    const char *init_text,
 				    void (*ok_cb)( CoXHelp *, char *))
 {
   g_object_set( india_widget, 

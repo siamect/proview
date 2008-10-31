@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_db.h,v 1.21 2006-12-10 14:34:13 lw Exp $
+ * Proview   $Id: wb_db.h,v 1.22 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,6 +19,8 @@
 
 #ifndef wb_db_h
 #define wb_db_h
+
+#include <string.h>
 
 #include "pwr.h"
 #include "db_cxx.h"

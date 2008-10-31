@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepced.h,v 1.4 2008-04-07 14:53:06 claes Exp $
+ * Proview   $Id: wb_vrepced.h,v 1.5 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -186,7 +186,7 @@ public:
   bool buildTemplate( pwr_tStatus *sts, wb_orep *co);
   void updateTemplateRef( wb_adrep *subattr, char *body, pwr_tAttrRef aref,
 			  pwr_tOid toid);
-  void error( char *msg, wb_orep *o);
+  void error( const char *msg, wb_orep *o);
   bool classeditorCheck( ldh_eDest dest_code, wb_orep *dest, pwr_tCid cid,
 			 pwr_tOix *oix, char *name, pwr_tStatus *sts, 
 			 bool import_paste);

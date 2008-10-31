@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_tbl.h,v 1.3 2008-09-18 14:37:43 claes Exp $
+ * Proview   $Id: xtt_tbl.h,v 1.4 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,14 +54,14 @@ class XttTbl {
   CoWow		*wow;
   int		quiet;
 
-  virtual void message( char severity, char *message) {}
+  virtual void message( char severity, const char *message) {}
   virtual XttSevHist *sevhist_new( pwr_tOid oid, char *aname) { return 0;}
-  virtual CoLogin *login_new( char		*wl_name,
-			      char		*wl_groupname,
+  virtual CoLogin *login_new( const char       	*wl_name,
+			      const char       	*wl_groupname,
 			      void		(* wl_bc_success)( void *),
 			      void		(* wl_bc_cancel)( void *),
 			      pwr_tStatus  	*status) { return 0;}
-  virtual void set_prompt( char *prompt) {}
+  virtual void set_prompt( const char *prompt) {}
 
   int is_authorized( unsigned int access = pwr_mAccess_AllSev, int msg = 1);
   void open_login();
@@ -76,7 +76,7 @@ class XttTbl {
   void activate_help_project();
   void activate_help_proview();
 
-  static void message( void *attr, char severity, char *message);
+  static void message( void *attr, char severity, const char *message);
   static int is_authorized( void *ctx, unsigned int access, int msg);
   static void delete_item_yes( void *ctx, void *data);
   virtual ~XttTbl();

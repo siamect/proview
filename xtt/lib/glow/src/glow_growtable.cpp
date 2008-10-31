@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtable.cpp,v 1.14 2008-01-24 09:31:38 claes Exp $
+ * Proview   $Id: glow_growtable.cpp,v 1.15 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
@@ -32,7 +32,7 @@
 #include "glow_growctx.h"
 #include "glow_growscrollbar.h"
 
-GrowTable::GrowTable( GrowCtx *glow_ctx, char *name, double x, double y, 
+GrowTable::GrowTable( GrowCtx *glow_ctx, const char *name, double x, double y, 
 		double w, double h, glow_eDrawType border_d_type, int line_w, int fill_rect,
 		glow_eDrawType fill_d_type, glow_mDisplayLevel display_lev, int nodraw) : 
 		GrowRect(glow_ctx,name,x,y,w,h,border_d_type,line_w,0,

@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_ccm.h,v 1.5 2006-02-23 14:34:59 claes Exp $
+ * Proview   $Id: co_ccm.h,v 1.6 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -49,7 +49,7 @@ typedef struct s_arg_ {
 
 
 int ccm_register_function( 
-	char 	*name,
+	const char 	*name,
 	int 	(* sysfunc) ( void *, ccm_s_arg *, int, int *, float *,
 			  int *, char *)
 );
@@ -70,7 +70,7 @@ int ccm_file_exec(
 );
 
 int ccm_create_external_var(
-  char			*name,
+  const char	       	*name,
   int			decl,
   float			value_float,
   int			value_int,
@@ -78,14 +78,14 @@ int ccm_create_external_var(
 );
 
 int ccm_delete_external_var(
-  char			*name,
+  const char	       	*name,
   float			value_float,
   int			value_int,
   char			*value_string
 );
 
 int ccm_set_external_var(
-  char			*name,
+  const char   		*name,
   int			decl,
   float			value_float,
   int			value_int,
@@ -93,7 +93,7 @@ int ccm_set_external_var(
 );
 
 int ccm_get_external_var(
-  char			*name,
+  const char	       	*name,
   int			decl,
   float			*value_float,
   int			*value_int,
@@ -101,7 +101,7 @@ int ccm_get_external_var(
 );
 
 int ccm_ref_external_var(
-  char			*name,
+  const char	       	*name,
   int			decl,
   void 			**valuep
 );

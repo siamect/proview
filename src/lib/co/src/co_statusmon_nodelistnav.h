@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelistnav.h,v 1.4 2007-10-02 15:53:20 claes Exp $
+ * Proview   $Id: co_statusmon_nodelistnav.h,v 1.5 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -120,7 +120,7 @@ class CoWow;
 
 class NodelistNode {
  public:
-  NodelistNode( char *name) :
+  NodelistNode( const char *name) :
     item(0), connection_sts(0), init_done(0)
     { 
       strncpy( node_name, name, sizeof(node_name));
@@ -171,13 +171,13 @@ class NodelistNav {
   void draw();
   int update_nodes();
   void force_trace_scan();
-  void message( pwr_tStatus sts, char *node, int idx, char *text);
+  void message( pwr_tStatus sts, const char *node, int idx, const char *text);
   int select_node( int idx);
   void remove_node( char *name);
   int get_selected_node( char *name);
   int get_selected_opplace( char *opplace);
   void save();
-  void add_node( char *name, char *description, char *opplace);
+  void add_node( const char *name, const char *description, const char *opplace);
   void set_msgw_pop( int pop) { msgw_pop = pop;}
 
   static void attrvalue_to_string( int type_id, void *value_ptr, 
@@ -192,7 +192,7 @@ class NodelistNav {
 
 class ItemBase {
  public:
-  ItemBase( NodelistNav *item_nodelistnav, char *item_name) : 
+  ItemBase( NodelistNav *item_nodelistnav, const char *item_name) : 
     nodelistnav(item_nodelistnav)
     {
       strcpy( name, item_name);
@@ -210,7 +210,7 @@ class ItemBase {
 
 class ItemNode : public ItemBase {
  public:
-  ItemNode( NodelistNav *item_nodelistnav, char *item_name, char *item_node_descr,
+  ItemNode( NodelistNav *item_nodelistnav, const char *item_name, const char *item_node_descr,
 	    brow_tNode dest, flow_eDest dest_code);
   
   NodeData     	data;
@@ -226,7 +226,7 @@ class ItemNode : public ItemBase {
 //! Item for a normal attribute.
 class ItemAttr : public ItemBase {
   public:
-    ItemAttr( NodelistNav *item_nodelistnav, char *item_name, char *attr,
+    ItemAttr( NodelistNav *item_nodelistnav, const char *item_name, const char *attr,
 	int attr_type, int attr_size, void *attr_value_p,
 	brow_tNode dest, flow_eDest dest_code);
     void       	*value_p;
@@ -239,7 +239,7 @@ class ItemAttr : public ItemBase {
 //! Item for a system status attribute.
 class ItemAttrSysSts : public ItemBase {
   public:
-    ItemAttrSysSts( NodelistNav *item_nodelistnav, char *item_name, char *attr,
+    ItemAttrSysSts( NodelistNav *item_nodelistnav, const char *item_name, const char *attr,
 		     int attr_type, int attr_size, void *attr_value_p, void *attr_status_p,
 		     ItemNode *attr_parent, brow_tNode dest, flow_eDest dest_code);
     void       	*value_p;
@@ -257,7 +257,7 @@ class ItemAttrSysSts : public ItemBase {
 //! Item for a server status attribute.
 class ItemAttrSts : public ItemBase {
   public:
-    ItemAttrSts( NodelistNav *item_nodelistnav, char *item_name, char *attr,
+    ItemAttrSts( NodelistNav *item_nodelistnav, const char *item_name, const char *attr,
 		 char *attr_value_p, 
 		 pwr_tStatus *attr_status_p, char *attr_name_p, 
 		 ItemAttrSysSts *attr_parent, brow_tNode dest, 

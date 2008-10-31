@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_curvewidget_motif.cpp,v 1.1 2007-01-04 08:08:00 claes Exp $
+ * Proview   $Id: glow_curvewidget_motif.cpp,v 1.2 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -80,12 +80,12 @@ static char defaultTranslations[] = "#replace \n\
 <KeyDown>: notify()";
 
 
-static XtActionsRec actionsList[] = { {"notify", (XtActionProc) Notify}};
+static XtActionsRec actionsList[] = { {(char*) "notify", (XtActionProc) Notify}};
 
 CurveClassRec curveClassRec = {
   { /* Core class part */
     (WidgetClass) &compositeClassRec,	/* superclass */
-    "Curve",				/* class name */
+    (char*) "Curve",				/* class name */
     sizeof(CurveRec),			/* widget size */
     NULL,				/* class initialize */
     NULL, 				/* class part initialize */
@@ -473,7 +473,7 @@ extern "C" Widget ScrolledCurveCreate(
   XtSetArg( arg[i], XmNbottomAttachment, XmATTACH_FORM);i++;
   XtSetArg( arg[i], XmNrightAttachment, XmATTACH_FORM);i++;
 */
-  curve = (CurveWidget) CurveCreate( form, "curve", arg, i, init_proc, client_data);
+  curve = (CurveWidget) CurveCreate( form, (char*) "curve", arg, i, init_proc, client_data);
   XtManageChild( (Widget) curve);
 
   curve->curve.scroll_h = scroll_h;

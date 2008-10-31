@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_motif.h,v 1.1 2007-01-04 08:22:16 claes Exp $
+ * Proview   $Id: ge_graph_motif.h,v 1.2 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -46,14 +46,14 @@ class GraphMotif : public Graph {
   GraphMotif(
 	void *xn_parent_ctx,
 	Widget	xn_parent_wid,
-	char *xn_name,
+	const char *xn_name,
 	Widget *w,
 	pwr_tStatus *status,
-	char *xn_default_path,
+	const char *xn_default_path,
 	graph_eMode graph_mode = graph_eMode_Development,
 	int scrollbar = 1,
 	int xn_gdh_init_done = 0,
-	char *xn_object_name = 0,
+	const char *xn_object_name = 0,
 	int xn_use_default_access = 0,
 	unsigned int xn_default_access = 0);
 

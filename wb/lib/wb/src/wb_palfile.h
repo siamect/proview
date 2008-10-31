@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_palfile.h,v 1.3 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_palfile.h,v 1.4 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,6 +21,11 @@
 #define wb_palfile_h
 
 /* wb_palfile.h -- Palette configuration file */
+
+#include <string.h>
+#include <fstream>
+
+using namespace std;
 
 #if defined __cplusplus
 extern "C" {
@@ -53,7 +58,7 @@ typedef enum {
 
 class PalFileMenu {
  public:
-  PalFileMenu( char *menu_title, int menu_item_type, PalFileMenu *menu_parent) :
+  PalFileMenu( const char *menu_title, int menu_item_type, PalFileMenu *menu_parent) :
     item_type(menu_item_type), pixmap(0), child_list(0), parent(menu_parent), next(0)
     { strcpy( title, menu_title);}
 
@@ -69,14 +74,14 @@ class PalFileMenu {
 
 class PalFile {
   public:
-    static PalFileMenu *config_tree_build( ldh_tSession ldhses, char *filename, 
-	       pal_eNameType keytype, char *keyname, PalFileMenu *menu);
+    static PalFileMenu *config_tree_build( ldh_tSession ldhses, const char *filename, 
+	       pal_eNameType keytype, const char *keyname, PalFileMenu *menu);
     static PalFileMenu *config_tree_build_children( ldh_tSession ldhses, 
-               ifstream *fp, int *line_cnt, char *filename, PalFileMenu *parent);
+               ifstream *fp, int *line_cnt, const char *filename, PalFileMenu *parent);
     static void config_tree_free( PalFileMenu *menu_tree);
     static void config_tree_free_children( PalFileMenu *first_child);
     static int check_volume( ldh_tSession ldhses, char *name);
-    static void config_tree_print( char *filename, PalFileMenu *menu_tree, pwr_tStatus *sts);
+    static void config_tree_print( const char *filename, PalFileMenu *menu_tree, pwr_tStatus *sts);
     static void config_tree_print_item( PalFileMenu *item, ofstream& fp, int level);
 };
 

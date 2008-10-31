@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltops.cpp,v 1.7 2005-09-22 14:36:58 claes Exp $
+ * Proview   $Id: cnv_wbltops.cpp,v 1.8 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,8 +19,8 @@
 
 
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <float.h>
 #include <string.h>
 #include <stdlib.h>

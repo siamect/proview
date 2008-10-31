@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_item.cpp,v 1.26 2008-10-15 06:04:55 claes Exp $
+ * Proview   $Id: wb_wnav_item.cpp,v 1.27 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -662,7 +662,7 @@ int WItemBaseObject::close( WNav *wnav, double x, double y)
 }
 
 
-WItemMenu::WItemMenu( WNav *wnav, char *item_name, 
+WItemMenu::WItemMenu( WNav *wnav, const char *item_name, 
 	brow_tNode dest, flow_eDest dest_code, wnav_sMenu **item_child_list,
 	int item_is_root) :
 	WItem( pwr_cNObjid, item_is_root), child_list(item_child_list)
@@ -753,7 +753,7 @@ int WItemMenu::close( WNav *wnav, double x, double y)
   return 1;
 }
 
-WItemCommand::WItemCommand( WNav *wnav, char *item_name, 
+WItemCommand::WItemCommand( WNav *wnav, const char *item_name, 
 	brow_tNode dest, flow_eDest dest_code, char *item_command,
 	int item_is_root, flow_sAnnotPixmap *pixmap) :
 	WItem( pwr_cNObjid, item_is_root)
@@ -782,7 +782,7 @@ int WItemCommand::open_children( WNav *wnav, double x, double y)
 }
 
 
-WItemLocal::WItemLocal( WNav *wnav, char *item_name, char *attr, 
+WItemLocal::WItemLocal( WNav *wnav, const char *item_name, const char *attr, 
 	int attr_type, int attr_size, double attr_min_limit, 
 	double attr_max_limit,
 	void *attr_value_p, brow_tNode dest, flow_eDest dest_code) :
@@ -808,7 +808,7 @@ WItemLocal::WItemLocal( WNav *wnav, char *item_name, char *attr,
   brow_SetTraceAttr( node, attr, "", flow_eTraceType_User);
 }
 
-WItemText::WItemText( WNav *wnav, char *item_name, char *text,
+WItemText::WItemText( WNav *wnav, const char *item_name, char *text,
 	brow_tNode dest, flow_eDest dest_code) :
 	WItem( pwr_cNObjid, 0)
 {
@@ -819,7 +819,7 @@ WItemText::WItemText( WNav *wnav, char *item_name, char *text,
   brow_SetAnnotation( node, 0, text, strlen(text));
 }
 
-WItemHeader::WItemHeader( WNav *wnav, char *item_name, char *title,
+WItemHeader::WItemHeader( WNav *wnav, const char *item_name, const char *title,
 	brow_tNode dest, flow_eDest dest_code) :
 	WItem( pwr_cNObjid, 0)
 {
@@ -830,7 +830,7 @@ WItemHeader::WItemHeader( WNav *wnav, char *item_name, char *title,
   brow_SetAnnotation( node, 0, title, strlen(title));
 }
 
-WItemHeaderLarge::WItemHeaderLarge( WNav *wnav, char *item_name, char *title,
+WItemHeaderLarge::WItemHeaderLarge( WNav *wnav, const char *item_name, char *title,
 	brow_tNode dest, flow_eDest dest_code) :
 	WItem( pwr_cNObjid, 0)
 {
@@ -1007,7 +1007,7 @@ int WItemObjectModTime::update()
   return WNAV__SUCCESS;
 }
 
-WItemFile::WItemFile( WNav *wnav, char *item_name, char *text, 
+WItemFile::WItemFile( WNav *wnav, const char *item_name, char *text, 
 	char *item_file_name, item_eFileType item_filetype,
 	brow_tNode dest, flow_eDest dest_code) :
 	WItem( pwr_cNObjid, 0), file_type(item_filetype)

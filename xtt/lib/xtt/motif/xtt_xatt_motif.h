@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xatt_motif.h,v 1.1 2007-01-04 08:30:03 claes Exp $
+ * Proview   $Id: xtt_xatt_motif.h,v 1.2 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,8 +53,8 @@ class XAttMotif : public XAtt {
     static char	value_recall[30][160];
     int	value_current_recall;
 
-    void message( char severity, char *message);
-    void set_prompt( char *prompt);
+    void message( char severity, const char *message);
+    void set_prompt( const char *prompt);
     void change_value( int set_focus);
     int open_changevalue( char *name);
     void change_value_close();

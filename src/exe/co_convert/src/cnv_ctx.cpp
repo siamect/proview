@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_ctx.cpp,v 1.2 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: cnv_ctx.cpp,v 1.3 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,8 +22,8 @@
 #include <float.h>
 #include <string.h>
 #include <stdlib.h>
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 
 extern "C" {
 #include "pwr.h"
@@ -33,7 +33,9 @@ extern "C" {
 
 #include "cnv_ctx.h"
 
-char *CnvCtx::low( char *in)
+using namespace std;
+
+char *CnvCtx::low( const char *in)
 {
   static char str[400];
 
@@ -42,12 +44,12 @@ char *CnvCtx::low( char *in)
 }
 
 int CnvCtx::remove_spaces(
-			char	*in,
+			const char *in,
 			char	*out)
 {
   char    *s;
 
-  for ( s = in; !((*s == 0) || ((*s != ' ') && (*s != 9))); s++);
+  for ( s = (char *)in; !((*s == 0) || ((*s != ' ') && (*s != 9))); s++);
 
   strcpy( out, s);
         

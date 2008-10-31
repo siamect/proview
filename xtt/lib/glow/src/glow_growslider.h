@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growslider.h,v 1.4 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_growslider.h,v 1.5 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -48,7 +48,7 @@ class GrowSlider : public GrowNode {
     \param nodraw	Don't draw the object now.
     \param rel_annot_pos Not used.
   */
-  GrowSlider( GrowCtx *glow_ctx, char *name, GlowNodeClass *node_class,
+  GrowSlider( GrowCtx *glow_ctx, const char *name, GlowNodeClass *node_class,
 	double x1, double y1, int nodraw = 0, int rel_annot_pos = 0);
 
   //! Noargs constructor

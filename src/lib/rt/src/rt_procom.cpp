@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_procom.cpp,v 1.3 2008-07-02 11:27:48 claes Exp $
+ * Proview   $Id: rt_procom.cpp,v 1.4 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,8 +23,8 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-#include <vector.h>
-#include <map.h>
+#include <vector>
+#include <map>
 
 extern "C" {
 #include "pwr.h"
@@ -92,8 +92,8 @@ map<subkey, psub> m_sublist;
 
 static rt_procom *pvd_procom;
 
-rt_procom::rt_procom( co_provider *p, errh_eAnix anix, char *name, pwr_tSid sid, pwr_tVid vid,
-			  char *volumename, int global) :
+rt_procom::rt_procom( co_provider *p, errh_eAnix anix, const char *name, pwr_tSid sid, pwr_tVid vid,
+		      const char *volumename, int global) :
   co_procom(p), m_anix(anix), m_sid(sid), m_vid(vid), m_global(global), m_getmsg(0)
 {
   pvd_procom = this;
@@ -176,7 +176,7 @@ pvd_SubSendBuffer ();
 
 /* Dispatcher for 'net_cMsgClass' messages.  */
 
-static char *cMsg[net_eMsg_end] = {
+static const char *cMsg[net_eMsg_end] = {
   "error",
   "id",
   "idAck",

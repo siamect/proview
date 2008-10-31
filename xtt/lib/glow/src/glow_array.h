@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_array.h,v 1.6 2008-05-13 13:59:03 claes Exp $
+ * Proview   $Id: glow_array.h,v 1.7 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #ifndef glow_array_h
 #define glow_array_h
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 
 #include "glow_array_elem.h"
 #include "glow_transform.h"
@@ -115,7 +115,7 @@ class GlowArray {
     \param element	Returned pointer to the object.
     \return		Returns 1 if the object is found, else 0.
   */
-  int find_by_name( char *name, GlowArrayElem **element);
+  int find_by_name( const char *name, GlowArrayElem **element);
 
   //! Clear the array.
   void clear() { a_size = 0;}

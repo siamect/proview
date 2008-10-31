@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_op.h,v 1.4 2007-05-16 12:37:39 claes Exp $
+ * Proview   $Id: xtt_op.h,v 1.5 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -52,7 +52,7 @@ class Op {
   Jop	       	*jop;
   void 		(*command_cb)( void *, char *);
   void 		(*map_cb)( void *);
-  void 		(*help_cb)( void *, char *);
+  void 		(*help_cb)( void *, const char *);
   void 		(*close_cb)( void *);
   int 		(*get_alarm_info_cb)( void *, evlist_sAlarmInfo *);
   void 		(*ack_last_cb)( void *, unsigned long, unsigned long);

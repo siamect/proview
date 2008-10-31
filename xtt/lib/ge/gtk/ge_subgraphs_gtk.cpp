@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subgraphs_gtk.cpp,v 1.3 2008-05-13 13:53:11 claes Exp $
+ * Proview   $Id: ge_subgraphs_gtk.cpp,v 1.4 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <vector.h>
+#include <vector>
 
 extern "C" {
 #include "co_cdh.h"
@@ -123,7 +123,7 @@ static void subgraphs_activate_help( GtkWidget *w, gpointer data)
 SubGraphsGtk::SubGraphsGtk(
 	void 		*xn_parent_ctx,
 	GtkWidget	*xn_parent_wid,
-	char 		*xn_name,
+	const char     	*xn_name,
 	void 		*xn_growctx,
 	GtkWidget      	**w,
 	pwr_tStatus 	*status) :

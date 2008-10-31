@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.h,v 1.33 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_growapi.h,v 1.34 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -287,7 +287,7 @@ extern "C" {
     \param user_data	User data.
     \param node		Created GrowNode object.
   */
-  void grow_CreateGrowNode( grow_tCtx ctx, char *name, grow_tNodeClass nc,
+  void grow_CreateGrowNode( grow_tCtx ctx, const char *name, grow_tNodeClass nc,
 	double x, double y, void *user_data, grow_tNode *node);
 
   //! Create a GrowSlider object.
@@ -300,7 +300,7 @@ extern "C" {
     \param user_data	User data.
     \param node		Created GrowSlider object.
   */
-  void grow_CreateGrowSlider( grow_tCtx ctx, char *name, grow_tNodeClass nc,
+  void grow_CreateGrowSlider( grow_tCtx ctx, const char *name, grow_tNodeClass nc,
 	double x, double y, void *user_data, grow_tNode *node);
 
   //! Create a connection object.
@@ -325,7 +325,7 @@ extern "C" {
     routed connection, x_vect and y_vect can contain points for the route. If x_vect and
     y_vect are zero, a route will be calculated for the connection.
   */
-  void grow_CreateCon( grow_tCtx ctx, char *name, grow_tConClass cc,
+  void grow_CreateCon( grow_tCtx ctx, const char *name, grow_tConClass cc,
 	grow_tNode source, grow_tNode dest, int source_conpoint, 
 	int dest_conpoint, void *user_data, grow_tCon *con, 
 	int point_num, double *x_vect, double *y_vect, int border, int shadow);
@@ -356,7 +356,7 @@ extern "C" {
     \param text		Text to set in annotation.
     \param size		Length of text.
   */
-  void grow_SetAnnotation( grow_tNode node, int number, char *text, int size);
+  void grow_SetAnnotation( grow_tNode node, int number, const char *text, int size);
 
   //! Set the text of an annotation in a GrowNode object. Just redraw the background of the annotation.
   /*!
@@ -365,7 +365,7 @@ extern "C" {
     \param text		Text to set in annotation.
     \param size		Length of text.
   */
-  void grow_SetAnnotationBrief( grow_tNode node, int number, char *text, int size);
+  void grow_SetAnnotationBrief( grow_tNode node, int number, const char *text, int size);
 
   //! Get the text of an annotation in a GrowNode object.
   /*!
@@ -470,27 +470,27 @@ extern "C" {
 	glow_eDrawType draw_type, int line_width, grow_tObject *arc);
   void grow_CreateText( grow_tCtx ctx, char *text_str, double x, double y, 
 	glow_eDrawType draw_type, int text_size, grow_tObject *text);
-  void grow_AddRect( grow_tNodeClass nc, char *name, 
+  void grow_AddRect( grow_tNodeClass nc, const char *name, 
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width, int fix_line_width, 
 	glow_mDisplayLevel display_level, int fill_rect, 
 	int border, int shadow, glow_eDrawType fill_draw_type, void *user_data);
-  void grow_AddLine( grow_tNodeClass nc, char *name, 
+  void grow_AddLine( grow_tNodeClass nc, const char *name, 
 	double x1, double y1, double x2, double y2,
 	glow_eDrawType draw_type, int line_width, int fix_line_width, 
 	void *user_data);
-  void grow_AddPolyLine( grow_tNodeClass, char *name, 
+  void grow_AddPolyLine( grow_tNodeClass, const char *name, 
 	glow_sPoint *pointarray, int point_cnt,
 	glow_eDrawType draw_type, int line_width, int fix_line_width,
 	int fill, int border, int shadow, glow_eDrawType fill_draw_type, 
 	int closed, void *user_data);
-  void grow_AddArc( grow_tNodeClass nc, char *name, 
+  void grow_AddArc( grow_tNodeClass nc, const char *name, 
 	double x1, double y1, double x2, double y2,
 	int angle1, int angle2, glow_eDrawType draw_type, 
 	int line_width, int fill_arc, int border, int shadow, glow_eDrawType fill_draw_type,
 	void *user_data);
-  void grow_AddText( grow_tNodeClass nc, char *name, 
-	char *text, double x, double y,
+  void grow_AddText( grow_tNodeClass nc, const char *name, 
+	const char *text, double x, double y,
 	glow_eDrawType draw_type, glow_eDrawType color, int t_size, 
 	glow_eFont t_font, glow_mDisplayLevel display_level, void *user_data);
   void grow_AddAnnot( grow_tNodeClass nc, 
@@ -498,7 +498,7 @@ extern "C" {
 	int t_size, glow_eAnnotType a_type,
 	int rel_pos, glow_mDisplayLevel display_lev,
 	void *user_data);
-  void grow_CreateNodeClass( grow_tCtx ctx, char *name, glow_eNodeGroup group,
+  void grow_CreateNodeClass( grow_tCtx ctx, const char *name, glow_eNodeGroup group,
 	grow_tNodeClass *nodeclass);
   void grow_NodeClassAdd( grow_tNodeClass nc, grow_tObject object);
 
@@ -834,7 +834,7 @@ extern "C" {
     \param user_data	User data.
     \param rect		Created GrowRect object.
   */
-  void grow_CreateGrowRect( grow_tCtx ctx, char *name, 
+  void grow_CreateGrowRect( grow_tCtx ctx, const char *name, 
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width, int fix_line_width, 
 	glow_mDisplayLevel display_level, int fill_rect, 
@@ -860,7 +860,7 @@ extern "C" {
     \param user_data	User data.
     \param rect		Created GrowRectRounded object.
   */
-  void grow_CreateGrowRectRounded( grow_tCtx ctx, char *name, 
+  void grow_CreateGrowRectRounded( grow_tCtx ctx, const char *name, 
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width, int fix_line_width, 
 	glow_mDisplayLevel display_level, int fill_rect, 
@@ -884,7 +884,7 @@ extern "C" {
     \param user_data	User data.
     \param bar		Created GrowBar object.
   */
-  void grow_CreateGrowBar( grow_tCtx ctx, char *name, 
+  void grow_CreateGrowBar( grow_tCtx ctx, const char *name, 
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width,
 	glow_mDisplayLevel display_level, int fill_rect, 
@@ -908,7 +908,7 @@ extern "C" {
     \param user_data	User data.
     \param trend       	Created GrowTrend object.
   */
-  void grow_CreateGrowTrend( grow_tCtx ctx, char *name, 
+  void grow_CreateGrowTrend( grow_tCtx ctx, const char *name, 
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width,
 	glow_mDisplayLevel display_level, int fill_rect, 
@@ -932,7 +932,7 @@ extern "C" {
     \param user_data	User data.
     \param xycurve      Created GrowXYCurve object.
   */
-  void grow_CreateGrowXYCurve( grow_tCtx ctx, char *name, 
+  void grow_CreateGrowXYCurve( grow_tCtx ctx, const char *name, 
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width,
 	glow_mDisplayLevel display_level, int fill_rect, 
@@ -957,7 +957,7 @@ extern "C" {
     \param user_data	User data.
     \param curve       	Created GrowCurve object.
   */
-  void grow_CreateGrowCurve( grow_tCtx ctx, char *name, glow_sCurveData *data,
+  void grow_CreateGrowCurve( grow_tCtx ctx, const char *name, glow_sCurveData *data,
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width,
 	glow_mDisplayLevel display_level, int fill_rect, 
@@ -978,7 +978,7 @@ extern "C" {
     \param user_data	User data.
     \param bar		Created GrowWindow object.
   */
-  void grow_CreateGrowWindow( grow_tCtx ctx, char *name, 
+  void grow_CreateGrowWindow( grow_tCtx ctx, const char *name, 
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width,
 	glow_mDisplayLevel display_level, void *user_data,
@@ -1000,7 +1000,7 @@ extern "C" {
     \param user_data	User data.
     \param bar		Created GrowWindow object.
   */
-  void grow_CreateGrowTable( grow_tCtx ctx, char *name, 
+  void grow_CreateGrowTable( grow_tCtx ctx, const char *name, 
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width,
 	int fill, glow_eDrawType fillcolor,
@@ -1023,7 +1023,7 @@ extern "C" {
     \param user_data	User data.
     \param bar		Created GrowFolder object.
   */
-  void grow_CreateGrowFolder( grow_tCtx ctx, char *name, 
+  void grow_CreateGrowFolder( grow_tCtx ctx, const char *name, 
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width,
 	glow_eDrawType selected_color, glow_eDrawType unselected_color,
@@ -1044,7 +1044,7 @@ extern "C" {
     \param user_data	User data.
     \param line		Created GrowLine object.
   */
-  void grow_CreateGrowLine( grow_tCtx ctx, char *name, 
+  void grow_CreateGrowLine( grow_tCtx ctx, const char *name, 
 	double x1, double y1, double x2, double y2,
 	glow_eDrawType draw_type, int line_width, int fix_line_width, 
 	void *user_data,
@@ -1067,7 +1067,7 @@ extern "C" {
     \param user_data	User data.
     \param polyline    	Created GrowPolyLine object.
   */
- void grow_CreateGrowPolyLine( grow_tCtx ctx, char *name, 
+ void grow_CreateGrowPolyLine( grow_tCtx ctx, const char *name, 
 	glow_sPoint *pointarray, int point_cnt,
 	glow_eDrawType draw_type, int line_width, int fix_line_width,
 	int fill, int border, int shadow, glow_eDrawType fill_draw_type, 
@@ -1093,7 +1093,7 @@ extern "C" {
     \param user_data	User data.
     \param arc    	Created GrowArc object.
   */
-  void grow_CreateGrowArc( grow_tCtx ctx, char *name, 
+  void grow_CreateGrowArc( grow_tCtx ctx, const char *name, 
 	double x1, double y1, double x2, double y2,
 	int angle1, int angle2, glow_eDrawType draw_type, 
 	int line_width, int fill_arc, int border, int shadow, glow_eDrawType fill_draw_type,
@@ -1111,7 +1111,7 @@ extern "C" {
     \param user_data	User data.
     \param conpoint   	Created GrowConPoint object.
   */
-  void grow_CreateGrowConPoint( grow_tCtx ctx, char *name, 
+  void grow_CreateGrowConPoint( grow_tCtx ctx, const char *name, 
 	double x, double y, int cp_num, glow_eDirection d,
 	void *user_data, grow_tObject *conpoint);
 
@@ -1131,7 +1131,7 @@ extern "C" {
     \param user_data	User data.
     \param annot   	Created GrowAnnot object.
   */
-  void grow_CreateGrowAnnot( grow_tCtx ctx, char *name, 
+  void grow_CreateGrowAnnot( grow_tCtx ctx, const char *name, 
 	double x, double y, int annot_num, glow_eDrawType d_type, glow_eDrawType color_d_type,
 	int t_size, glow_eAnnotType a_type,
 	int rel_pos, glow_mDisplayLevel display_lev,
@@ -1151,8 +1151,8 @@ extern "C" {
     \param user_data	User data.
     \param text_object 	Created GrowText object.
   */
-  void grow_CreateGrowText( grow_tCtx ctx, char *name, 
-	char *text, double x, double y,
+  void grow_CreateGrowText( grow_tCtx ctx, const char *name, 
+	const char *text, double x, double y,
 	glow_eDrawType draw_type, glow_eDrawType color, int t_size, 
 	glow_eFont t_font, glow_mDisplayLevel display_level, void *user_data,
 	grow_tObject *text_object);
@@ -1167,7 +1167,7 @@ extern "C" {
     \param user_data	User data.
     \param image   	Created GrowImage object.
   */
-  void grow_CreateGrowImage( grow_tCtx ctx, char *name, char *filename, 
+  void grow_CreateGrowImage( grow_tCtx ctx, const char *name, const char *filename, 
 	double x1, double y1, void *user_data, grow_tObject *image);
 
   //! Create an image object, i.e an object of class GrowImage.
@@ -1185,7 +1185,7 @@ extern "C" {
     \param user_data	User data.
     \param axis   	Created GrowImage object.
   */
-  void grow_CreateGrowAxis( grow_tCtx ctx, char *name, 
+  void grow_CreateGrowAxis( grow_tCtx ctx, const char *name, 
 	double x1, double y1, double x2, double y2,
 	glow_eDrawType draw_type, int line_width, int text_size,
         glow_eDrawType text_drawtype, void *user_data,
@@ -1199,7 +1199,7 @@ extern "C" {
     \param y		y coordinate for position.
     \param conglue   	Created GrowConGlue object.
   */
-  void grow_CreateGrowConGlue( grow_tCtx ctx, char *name, 
+  void grow_CreateGrowConGlue( grow_tCtx ctx, const char *name, 
 	double x, double y, grow_tObject *conglue);
 
   //! Create a pulldown menu
@@ -1222,7 +1222,7 @@ extern "C" {
     \param parent	Parent menu.
     \param menu		Created GrowMenu object.
   */
-  void grow_CreateGrowMenu( grow_tCtx ctx, char *name, glow_sMenuInfo *info,
+  void grow_CreateGrowMenu( grow_tCtx ctx, const char *name, glow_sMenuInfo *info,
 			    double x, double y, double min_width,
 			    glow_eDrawType draw_type, int line_width,
 			    int fill_rect, int border, glow_eDrawType fill_draw_type,
@@ -1249,7 +1249,7 @@ extern "C" {
     \param ctx		Grow ctx.
     \param name		Name subgraph.
   */
-  int grow_OpenSubGraphFromName( grow_tCtx ctx, char *name);
+  int grow_OpenSubGraphFromName( grow_tCtx ctx, const char *name);
 
   //! Find an object with a specified name.
   /*!
@@ -1258,7 +1258,7 @@ extern "C" {
     \param object	Found object.
     \return		Returns 1 if the object if found, else 0.
   */
-  int grow_FindObjectByName( grow_tCtx ctx, char *name, grow_tObject *object);
+  int grow_FindObjectByName( grow_tCtx ctx, const char *name, grow_tObject *object);
 
   //! Find an nodeclass with a specified name.
   /*!
@@ -1267,7 +1267,7 @@ extern "C" {
     \param object	Found nodeclass.
     \return		Returns 1 if the nodeclass if found, else 0.
   */
-  int grow_FindNodeClassByName( grow_tCtx ctx, char *name, grow_tObject *object);
+  int grow_FindNodeClassByName( grow_tCtx ctx, const char *name, grow_tObject *object);
 
   //! Find an connection class with a specified name.
   /*!
@@ -1816,7 +1816,7 @@ extern "C" {
     \param path_cnt		Number of paths in path_vect.
     \param path			Array of paths char[10][80].
   */
-  void grow_SetPath( grow_tCtx ctx, int path_cnt, char *path);
+  void grow_SetPath( grow_tCtx ctx, int path_cnt, const char *path);
 
   //! Get dyntype and actiontype for the nodeclass of an object.
   /*!
@@ -2242,7 +2242,7 @@ extern "C" {
   */
   void grow_SetAxisConf( grow_tObject object, double max_val, double min_val, 
 			 int no_of_lines, int long_quot, int value_quot, double rot, 
-			 char *format);
+			 const char *format);
 
   //! Set that graph is modified or not since last save.
   /*! 
@@ -2344,7 +2344,7 @@ extern "C" {
     \param ctx		Grow context.
     \param name 	Name of java class for the graph. 
   */
-  void grow_SetJavaName( grow_tCtx ctx, char *name);
+  void grow_SetJavaName( grow_tCtx ctx, const char *name);
 
   //! Get java name of the context.
   /*!
@@ -2512,7 +2512,7 @@ extern "C" {
     \param ctx		Grow subgraph context.
     \param next		The name of the subgraph for next page.
   */
-  void grow_SetNextSubgraph( grow_tCtx ctx, char *next);
+  void grow_SetNextSubgraph( grow_tCtx ctx, const char *next);
 
   //! Store the current zoomfactor and offsets.
   /*! 

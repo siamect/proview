@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_evlist_motif.cpp,v 1.1 2007-01-04 08:30:03 claes Exp $
+ * Proview   $Id: xtt_evlist_motif.cpp,v 1.2 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -61,7 +61,7 @@ EvListMotif::EvListMotif( void *ev_parent_ctx,
 			  Widget *w) :
   EvList( ev_parent_ctx, ev_type, ev_size), parent_wid(ev_parent_wid)
 {
-  form_widget = ScrolledBrowCreate( parent_wid, "EvList", NULL, 0, 
+  form_widget = ScrolledBrowCreate( parent_wid, (char*) "EvList", NULL, 0, 
 				    init_brow_cb, this, (Widget *)&brow_widget);
   XtManageChild( form_widget);
 

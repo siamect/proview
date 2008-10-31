@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attrnav_motif.cpp,v 1.2 2008-03-19 12:59:38 claes Exp $
+ * Proview   $Id: ge_attrnav_motif.cpp,v 1.3 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <vector.h>
+#include <vector>
 
 extern "C" {
 #include "co_cdh.h"
@@ -61,7 +61,7 @@ extern "C" {
 AttrNavMotif::AttrNavMotif(
 	void *xn_parent_ctx,
 	Widget	xn_parent_wid,
-	char *xn_name,
+	const char *xn_name,
 	attr_sItem  *xn_itemlist,
 	int xn_item_cnt,
 	Widget *w,

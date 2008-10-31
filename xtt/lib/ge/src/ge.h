@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.h,v 1.13 2008-10-16 08:55:02 claes Exp $
+ * Proview   $Id: ge.h,v 1.14 2008-10-31 12:51:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -104,21 +104,22 @@ class Ge {
   void message( pwr_tStatus sts);
 
   virtual void set_title( char *title) {}
-  virtual void open_input_dialog( char *text, char *title,
-				  char *init_text,
+  virtual void open_input_dialog( const char *text, const char *title,
+				  const char *init_text,
 				  void (*india_ok_cb)( Ge *, char *)) {}
-  virtual void message( char severity, char *message) {}
+  virtual void message( char severity, const char *message) {}
   virtual void status_msg( char *pos_str) {}
-  virtual void open_yesnodia( char *text, char *title, 
+  virtual void open_yesnodia( const char *text, const char *title, 
 			      void (*yes_cb)( Ge *), void (*no_cb)( Ge *)) {}
-  virtual void set_prompt( char *prompt) {}
+  virtual void set_prompt( const char *prompt) {}
   virtual void subgraphs_new() {}
   virtual void update() {}
   virtual int get_plant_select( char *name) { return 0;}
-  virtual void create_list( char *title, char *texts,
+  virtual void create_list( const char *title, const char *texts,
 			    void (action_cb)( void *, char *), void *ctx) {}
-  virtual int create_modal_dialog( char *title, char *text, char *button1, char *button2, char *button3,
-				    char *image) { return 0;}
+  virtual int create_modal_dialog( const char *title, const char *text, const char *button1, 
+				   const char *button2, const char *button3,
+				   const char *image) { return 0;}
   virtual void plant_del( void *plantctx) {}
   virtual int plant_get_select( void *plantctx, pwr_sAttrRef *attrref, int *is_attr) {return 0;}
 
@@ -289,10 +290,11 @@ class Ge {
   static int get_ldhses_cb( void *ctx, ldh_tSesContext *ldhses, int load);
   static int traverse_focus( void *ctx, void *component);
   static int set_focus_cb( void *ctx, void *component);
-  static void message_cb( void *ctx, char severity, char *message);
+  static void message_cb( void *ctx, char severity, const char *message);
   static void help_cb( void *ctx, char *topic, char *helpfile);
-  static int create_modal_dialog_cb( void *ge_ctx, char *title, char *text, char *button1, char *button2,
-				     char *button3, char *image);
+  static int create_modal_dialog_cb( void *ge_ctx, const char *title, const char *text, 
+				     const char *button1, const char *button2, const char *button3, 
+				     const char *image);
 };
 
 #endif

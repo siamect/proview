@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.27 2008-10-28 09:50:20 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.28 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -594,7 +594,7 @@ void WttGtk::set_twowindows( int two, int display_wnav, int display_wnavnode)
   }
 }
 
-void WttGtk::message( char severity, char *message)
+void WttGtk::message( char severity, const char *message)
 {
   char *messageutf8 = g_convert( message, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
   gtk_label_set_text( GTK_LABEL(msg_label), messageutf8);
@@ -602,7 +602,7 @@ void WttGtk::message( char severity, char *message)
 }
 
 
-void WttGtk::set_prompt( char *prompt)
+void WttGtk::set_prompt( const char *prompt)
 {
   if ( strcmp(prompt, "") == 0) {
     g_object_set( cmd_prompt, "visible", FALSE, NULL);
@@ -886,7 +886,7 @@ void WttGtk::activate_command( GtkWidget *w, gpointer data)
   wtt->command_open = 1;
 }
 
-static void wtt_help_cb( void *ctx, char *topic)
+static void wtt_help_cb( void *ctx, const char *topic)
 {
   pwr_tCmd cmd;
   sprintf( cmd, "help %s", topic);
@@ -1388,8 +1388,8 @@ gboolean WttGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data
   return FALSE;
 }
 
-void WttGtk::open_input_dialog( char *text, char *title,
-			     char *init_text,
+void WttGtk::open_input_dialog( const char *text, const char *title,
+			     const char *init_text,
 			     void (*ok_cb)( Wtt *, char *))
 {
   create_input_dialog();
@@ -1409,7 +1409,7 @@ void WttGtk::open_input_dialog( char *text, char *title,
   india_ok_cb = ok_cb;
 }
 
-void WttGtk::open_confirm( char *text, char *title, 
+void WttGtk::open_confirm( const char *text, const char *title, 
 	void (*ok_cb)( Wtt *), void (*no_cb)( Wtt *))
 {
   if ( confirm_open)  {
@@ -1795,8 +1795,8 @@ static void destroy_event( GtkWidget *w, gpointer data)
 WttGtk::WttGtk( 
 	void	*wt_parent_ctx,
 	GtkWidget *wt_parent_wid,
-	char 	*wt_name,
-	char	*iconname,
+	const char 	*wt_name,
+	const char	*iconname,
 	void	*wt_wbctx,
 	pwr_tVolumeId wt_volid,
 	ldh_tVolume wt_volctx,
@@ -3008,7 +3008,7 @@ GtkWidget *WttGtk::build_menu()
 }
 
 GtkWidget *WttGtk::build_submenu( GtkWidget *Parent, int MenuType,
-				  char *MenuTitle, void *MenuUserData,
+				  const char *MenuTitle, void *MenuUserData,
 				  void (*Callback)( GtkWidget *, gpointer),
 				  void *CallbackData, ldh_sMenuItem *Items, int *idx)
 {

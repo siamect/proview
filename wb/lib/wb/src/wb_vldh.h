@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vldh.h,v 1.9 2008-10-03 14:18:37 claes Exp $
+ * Proview   $Id: wb_vldh.h,v 1.10 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -174,7 +174,7 @@ pwr_tClassId	vldh_uclass (
 
 pwr_tClassId	vldh_eclass (
   ldh_tSesContext ldhses,
-  char	*classname
+  const char	*classname
 );
 
 int vldh_node_con_insert (

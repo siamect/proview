@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_logging.h,v 1.5 2007-01-04 08:22:47 claes Exp $
+ * Proview   $Id: xtt_logging.h,v 1.6 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -108,13 +108,13 @@ class XttLogging {
 			char		*parameter_name,
 			pwr_sParInfo	*parinfo);
     int log_print( 
-		char		*format,
+		const char		*format,
 		... );
     int print_buffer();
     int close_files();
     int set_prio( int prio) { return 1;};
     int set_default_prio() { return 1;};
-    void message( char severity, char *msg);
+    void message( char severity, const char *msg);
 };
 
 #endif

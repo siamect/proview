@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_gtk.cpp,v 1.8 2008-09-18 14:56:57 claes Exp $
+ * Proview   $Id: xtt_xnav_gtk.cpp,v 1.9 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,7 +25,7 @@ typedef void *Widget;
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <vector.h>
+#include <vector>
 #include <gtk/gtk.h>
 
 #include "pwr.h"
@@ -78,7 +78,7 @@ typedef void *Widget;
 //
 XNavGtk::XNavGtk( void *xn_parent_ctx,
 		  GtkWidget *xn_parent_wid,
-		  char *xn_name,
+		  const char *xn_name,
 		  GtkWidget **w,
 		  xnav_sStartMenu *root_menu,
 		  char *xn_opplace_name,
@@ -239,14 +239,14 @@ XAttOne *XNavGtk::xattone_new( pwr_tAttrRef *objar, char *title, unsigned int pr
   return new XAttOneGtk( parent_wid, this, objar, title, priv, sts);
 }
 
-CLog *XNavGtk::clog_new( char *name, pwr_tStatus *sts)
+CLog *XNavGtk::clog_new( const char *name, pwr_tStatus *sts)
 {
   return new CLogGtk( this, parent_wid, name, sts);
 }
 
-XttGe *XNavGtk::xnav_ge_new( char *name, char *filename, int scrollbar, int menu, 
+XttGe *XNavGtk::xnav_ge_new( const char *name, const char *filename, int scrollbar, int menu, 
 			     int navigator, int width, int height, int x, int y, 
-			     double scan_time, char *object_name, 
+			     double scan_time, const char *object_name, 
 			     int use_default_access, unsigned int access,
 			     int (*command_cb) (XttGe *, char *),
 			     int (*get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
@@ -270,8 +270,8 @@ XttFileview *XNavGtk::fileview_new( pwr_tOid oid, char *title, char *dir, char *
 			     trigger_attr, filetype);
 }
 
-CoLogin *XNavGtk::login_new( char		*name,
-			     char		*groupname,
+CoLogin *XNavGtk::login_new( const char		*name,
+			     const char		*groupname,
 			     void		(* bc_success)( void *),
 			     void		(* bc_cancel)( void *),
 			     pwr_tStatus  	*status)
@@ -319,7 +319,7 @@ void XNavGtk::menu_position_func( GtkMenu *menu, gint *x, gint *y, gboolean *pus
 
 GtkWidget *XNavGtk::build_menu( GtkWidget *Parent,
 				int   MenuType,
-				char *MenuTitle,
+				const char *MenuTitle,
 				void *MenuUserData,
 				void (*Callback)( GtkWidget *, gpointer),
 				void *CallbackData,

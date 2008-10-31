@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pal.h,v 1.7 2008-10-03 14:18:37 claes Exp $
+ * Proview   $Id: wb_pal.h,v 1.8 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,9 +40,9 @@ class Pal {
   public:
     Pal(
 	void *parent_ctx,
-	char *name,
+	const char *name,
 	ldh_tSesContext ldhses,
-	char *root_name,
+	const char *root_name,
 	pwr_tStatus *status
 	);
     virtual ~Pal();

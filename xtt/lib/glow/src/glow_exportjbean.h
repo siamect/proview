@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_exportjbean.h,v 1.12 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_exportjbean.h,v 1.13 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #ifndef glow_exportjbean_h
 #define glow_exportjbean_h
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 
 #include <X11/Xlib.h>
 #include "glow.h"

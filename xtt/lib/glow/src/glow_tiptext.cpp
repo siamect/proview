@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_tiptext.cpp,v 1.5 2008-01-17 14:16:36 claes Exp $
+ * Proview   $Id: glow_tiptext.cpp,v 1.6 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,14 +17,14 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  **/
 
-#include "glow_std.h"
-#include "glow_tiptext.h"
-
+#include <iostream>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <iostream.h>
-#include <math.h>
+#include "glow_std.h"
+#include "glow_tiptext.h"
+
 #include "glow_ctx.h"
 #include "glow_draw.h"
 #include "glow_growctx.h"

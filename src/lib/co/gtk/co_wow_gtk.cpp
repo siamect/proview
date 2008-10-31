@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_gtk.cpp,v 1.13 2008-09-18 15:07:38 claes Exp $
+ * Proview   $Id: co_wow_gtk.cpp,v 1.14 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -80,7 +80,7 @@ static gint question_delete_event( GtkWidget *w, GdkEvent *event, gpointer data)
 *
 *************************************************************************/
 
-void CoWowGtk::DisplayQuestion( void *ctx, char *title, char *text,
+void CoWowGtk::DisplayQuestion( void *ctx, const char *title, const char *text,
 				void (* questionbox_ok) ( void *, void *),
 				void (* questionbox_cancel) ( void *, void *),
 				void *data)
@@ -156,7 +156,7 @@ static void displayerror_ok_cb( GtkWidget *w, gint arg1, gpointer data)
   gtk_widget_destroy( w);
 }
 
-void CoWowGtk::DisplayError( char *title, char *text)
+void CoWowGtk::DisplayError( const char *title, const char *text)
 {
   GtkWidget *parent = m_parent;
   if ( parent) {
@@ -262,8 +262,8 @@ static gboolean list_delete_event( GtkWidget *w, GdkEvent *event, gpointer data)
 }
 
 void *CoWowGtk::CreateList (
-  char	    *title,
-  char      *texts,
+  const char	    *title,
+  const char      *texts,
   void	    (action_cb)( void *, char *),
   void	    (cancel_cb)( void *),
   void	    *parent_ctx
@@ -294,7 +294,7 @@ void *CoWowGtk::CreateList (
   g_signal_connect( ctx->toplevel, "delete_event", G_CALLBACK(list_delete_event), ctx);
 
   store = gtk_list_store_new( 1, G_TYPE_STRING);
-  name_p = texts;
+  name_p = (char *)texts;
   i = 0;
   while ( strcmp( name_p, "") != 0) {
     char *nameutf8 = g_convert( name_p, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
@@ -588,7 +588,7 @@ int CoWowGtk::GetSelection( GtkWidget *w, char *str, int size, GdkAtom atom)
 }
 
 
-void CoWowGtk::CreateFileSelDia( char *title, void *parent_ctx,
+void CoWowGtk::CreateFileSelDia( const char *title, void *parent_ctx,
 				 void (*file_selected_cb)(void *, char *, wow_eFileSelType),
 				 wow_eFileSelType file_type) 
 {
@@ -869,7 +869,7 @@ void CoWowGtk::SetWindowIcon( GtkWidget *w)
   gtk_window_set_icon( GTK_WINDOW(w), icon);
 }
 
-char *CoWowGtk::translate_utf8( char *str)
+char *CoWowGtk::translate_utf8( const char *str)
 {
   static char result[400];
   gchar *s;
@@ -884,7 +884,7 @@ char *CoWowGtk::translate_utf8( char *str)
   return result;
 }
 
-char *CoWowGtk::convert_utf8( char *str)
+char *CoWowGtk::convert_utf8( const char *str)
 {
   static char result[400];
   gchar *s;
@@ -922,8 +922,9 @@ static gboolean modaldia_delete_event( GtkWidget *w, GdkEvent *event, gpointer d
   return TRUE;
 }
 
-int CoWowGtk::CreateModalDialog( char *title, char *text, char *button1, char *button2, char *button3,
-				 char *image)
+int CoWowGtk::CreateModalDialog( const char *title, const char *text, const char *button1, 
+				 const char *button2, const char *button3,
+				 const char *image)
 {
   int status = 0;
   GtkWidget *image_w;

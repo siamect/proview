@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.h,v 1.27 2008-10-09 08:56:54 claes Exp $
+ * Proview   $Id: xtt_xnav.h,v 1.28 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -182,7 +182,7 @@ typedef enum {
 class ApplListElem {
   public:
     ApplListElem( applist_eType al_type, void *al_ctx, pwr_sAttrRef *al_arp,
-	char *al_name, char *al_instance);
+	const char *al_name, const char *al_instance);
     applist_eType	type;
     void		*ctx;
     pwr_sAttrRef       	aref;
@@ -198,11 +198,11 @@ class ApplList {
     
     ApplListElem *root;
     void insert( applist_eType type, void *ctx, 
-	pwr_sAttrRef *arp, char *name, char *instance);
+	pwr_sAttrRef *arp, const char *name, const char *instance);
     void insert( applist_eType type, void *ctx, 
-	pwr_tObjid objid, char *name, char *instance);
+	pwr_tObjid objid, const char *name, const char *instance);
     void remove( void *ctx);
-    int find( applist_eType type, char *name, char *instance, void **ctx);
+    int find( applist_eType type, const char *name, const char *instance, void **ctx);
     int find( applist_eType type, pwr_sAttrRef *arp, void **ctx);
     int find( applist_eType type, pwr_tObjid objid, void **ctx);
     void swap( int mode);
@@ -264,7 +264,7 @@ class XNav {
   public:
     XNav(
 	void *xn_parent_ctx,
-	char *xn_name,
+	const char *xn_name,
 	xnav_sStartMenu *root_menu,
 	char *xn_opplace_name,
 	int xn_op_close_button,
@@ -286,7 +286,7 @@ class XNav {
     t_trace_node	*TraceList;
     CoWowTimer		*trace_timerid;
     int			trace_started;
-    void 		(*message_cb)( void *, char, char *);
+    void 		(*message_cb)( void *, char, const char *);
     void 		(*close_cb)( void *, int);
     void 		(*map_cb)( void *);
     void 		(*change_value_cb)( void *);
@@ -345,10 +345,10 @@ class XNav {
     virtual XttFast *xttfast_new( char *name, pwr_tAttrRef *objar, pwr_tStatus *sts) {return 0;}
     virtual XAttOne *xattone_new( pwr_tAttrRef *objar, char *title, unsigned int priv,
 			  pwr_tStatus *sts) {return 0;}
-    virtual CLog *clog_new( char *name, pwr_tStatus *sts) {return 0;}
-    virtual XttGe *xnav_ge_new( char *name, char *filename, int scrollbar, int menu, 
+    virtual CLog *clog_new( const char *name, pwr_tStatus *sts) {return 0;}
+    virtual XttGe *xnav_ge_new( const char *name, const char *filename, int scrollbar, int menu, 
 				int navigator, int width, int height, int x, int y, 
-				double scan_time, char *object_name, 
+				double scan_time, const char *object_name, 
 				int use_default_access, unsigned int access,
 				int (*xg_command_cb) (XttGe *, char *),
 				int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
@@ -358,8 +358,8 @@ class XNav {
     virtual XttFileview *fileview_new( pwr_tOid oid, char *title, char *dir, char *pattern,
 				       int type, char *target_attr, char *trigger_attr, 
 				       char *filetype) {return 0;}
-    virtual CoLogin *login_new( char		*wl_name,
-				char		*wl_groupname,
+    virtual CoLogin *login_new( const char     	*wl_name,
+				const char     	*wl_groupname,
 				void		(* wl_bc_success)( void *),
 				void		(* wl_bc_cancel)( void *),
 				pwr_tStatus  	*status) { return 0;}
@@ -386,7 +386,7 @@ class XNav {
     int collect_show();
     void collect_clear();
     void clear();
-    void message( char sev, char *text);
+    void message( char sev, const char *text);
     int brow_pop();
     int brow_push();
     int brow_push_all();
@@ -440,7 +440,7 @@ class XNav {
     static int is_authorized_cb( void *xnav, unsigned int access);
     static void trace_collect_insert_cb( void *ctx, pwr_tObjid objid);
     static void trace_close_cb( RtTrace *tractx);
-    static void trace_help_cb( RtTrace *tractx, char *key);
+    static void trace_help_cb( RtTrace *tractx, const char *key);
     static void xatt_close_cb( void *xnav, void *xatt);
     static void xcrr_close_cb( void *xnav, void *xcrr);
     static int brow_cb( FlowCtx *ctx, flow_tEvent event);
@@ -486,9 +486,9 @@ class XNav {
     int store(		char		*filename,
 			int		collect);
     int show_symbols();
-    void open_graph( char *name, char *filename, int scrollbar, int menu, 
-	int navigator, int width, int height, int x, int y, char *object_name,
-        char *focus, int inputempty, int use_default_access, 
+    void open_graph( const char *name, const char *filename, int scrollbar, int menu, 
+	int navigator, int width, int height, int x, int y, const char *object_name,
+        const char *focus, int inputempty, int use_default_access, 
         unsigned int access);
     void close_graph( char *filename, char *object_name);
     int exec_xttgraph( pwr_tObjid xttgraph, char *instance,
@@ -533,7 +533,7 @@ class XNav {
 			       unsigned int priv, char *arg);
     static int CallMenuMethod( xmenu_sMenuCall *ip, int idx);
     static int CheckMenuMethodFilter( xmenu_sMenuCall *ip, int idx);
-    int call_method( char *method, char *filter,
+    int call_method( const char *method, const char *filter,
 		     pwr_sAttrRef attrref, 
 		     xmenu_eItemType item_type, 
 		     xmenu_mUtility caller,
@@ -553,7 +553,7 @@ class XNav {
 			      int *nItems,
 			      int AddSeparator,
 			      pwr_sAttrRef *CurrentObject);
-    static int GetMethod( char *name, 
+    static int GetMethod( const char *name, 
 			  pwr_tStatus (**method)( xmenu_sMenuCall *));
     static int getAllMenuItems( xmenu_sMenuCall *ip,
 				xmenu_sMenuItem	**Item,
@@ -597,7 +597,7 @@ int xnav_check_object_methodfilter( XNav *xnav, pwr_sAttrRef attrref,
 void xnav_popup_menu_cb( void *xnav, pwr_sAttrRef attrref, 
 			 unsigned long item_type,
 			 unsigned long utility, char *arg, int x, int y);
-int xnav_call_method_cb( void *xnav, char *method, char *filter,
+int xnav_call_method_cb( void *xnav, const char *method, const char *filter,
 			 pwr_sAttrRef attrref,
 			 unsigned long item_type,
 			 unsigned long utility, char *arg);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl_motif.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_utl_motif.cpp,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,7 +40,7 @@
 #include "wb_uilutil.h"
 
 
-int wb_utl_motif::utl_foe_new( char *name, pwr_tOid plcpgm,
+int wb_utl_motif::utl_foe_new( const char *name, pwr_tOid plcpgm,
 			       ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx,
 			       WFoe **foe, int map_window, ldh_eAccess access)
 {
@@ -53,7 +53,7 @@ int wb_utl_motif::utl_foe_new( char *name, pwr_tOid plcpgm,
   return sts;
 }
 
-int wb_utl_motif::utl_foe_new_local( WFoe *foe, char *name, pwr_tOid plcpgm, 
+int wb_utl_motif::utl_foe_new_local( WFoe *foe, const char *name, pwr_tOid plcpgm, 
 				     ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx, 
 				     vldh_t_node nodeobject, unsigned long windowindex, 
 				     unsigned long new_window, WFoe **return_foe, 
@@ -107,7 +107,7 @@ int wb_utl_motif::create_mainwindow( int argc, char **argv)
   XtSetValues (toplevel, args, 1);
 
   uilutil_fetch( &uid_filename_p, 1, 0, 0,
-		toplevel, "mainwindow", "svn_svn", 0, 0,
+		toplevel, (char*) "mainwindow", (char*) "svn_svn", 0, 0,
 		&mainwindow, NULL );
 
   XtSetArg    (args[0], XmNheight, 500);

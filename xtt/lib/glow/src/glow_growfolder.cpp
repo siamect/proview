@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growfolder.cpp,v 1.8 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: glow_growfolder.cpp,v 1.9 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
@@ -31,7 +31,7 @@
 #include "glow_draw.h"
 #include "glow_growctx.h"
 
-GrowFolder::GrowFolder( GrowCtx *glow_ctx, char *name, double x, double y, 
+GrowFolder::GrowFolder( GrowCtx *glow_ctx, const char *name, double x, double y, 
 		double w, double h, glow_eDrawType border_d_type, int line_w, 
 		glow_eDrawType sel_color, glow_eDrawType unsel_color,
 		glow_mDisplayLevel display_lev, int nodraw) : 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_item.h,v 1.14 2007-10-31 11:52:15 claes Exp $
+ * Proview   $Id: xtt_item.h,v 1.15 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -147,19 +147,19 @@ class ItemBaseAttr : public Item {
 
 class ItemHeader : public Item {
   public:
-    ItemHeader( XNavBrow *brow, char *item_name, char *title,
+    ItemHeader( XNavBrow *brow, const char *item_name, const char *title,
 	brow_tNode dest, flow_eDest dest_code);
 };
 
 class ItemHeaderLarge : public Item {
   public:
-    ItemHeaderLarge( XNavBrow *brow, char *item_name, char *title,
+    ItemHeaderLarge( XNavBrow *brow, const char *item_name, const char *title,
 	brow_tNode dest, flow_eDest dest_code);
 };
 
 class ItemTableHeader : public Item {
   public:
-    ItemTableHeader( XNavBrow *brow, XNav *tab_xnav, char *item_name, 
+    ItemTableHeader( XNavBrow *brow, XNav *tab_xnav, const char *item_name, 
         item_sTableHeader *title, brow_tNode dest, flow_eDest dest_code);
     XNav		*xnav;
     void 		(*scan)(XNav *);
@@ -170,15 +170,15 @@ class ItemTableHeader : public Item {
 
 class ItemText : public Item {
   public:
-    ItemText( XNavBrow *brow, char *item_name, char *text,
+    ItemText( XNavBrow *brow, const char *item_name, const char *text,
 	brow_tNode dest, flow_eDest dest_code);
 };
 
 class ItemHelp : public Item {
   public:
-    ItemHelp( XNavBrow *brow, char *item_name, char *text, char *text2, 
-	char *text3, char *item_link, char *item_bookmark, 
-	char *item_file_name, navh_eHelpFile help_file_type, int help_index, brow_tNode dest, flow_eDest dest_code);
+    ItemHelp( XNavBrow *brow, const char *item_name, const char *text, const char *text2, 
+	const char *text3, const char *item_link, const char *item_bookmark, 
+	const char *item_file_name, navh_eHelpFile help_file_type, int help_index, brow_tNode dest, flow_eDest dest_code);
     int			open_children( XNavBrow *brow, double x, double y);
     char link[200];
     char bookmark[80];
@@ -189,9 +189,9 @@ class ItemHelp : public Item {
 
 class ItemHelpBold : public Item {
   public:
-    ItemHelpBold( XNavBrow *brow, char *item_name, char *text, char *text2, 
-	char *text3, char *item_link, char *item_bookmark, 
-	char *item_file_name, navh_eHelpFile help_file_type, int help_index, 
+    ItemHelpBold( XNavBrow *brow, const char *item_name, const char *text, const char *text2, 
+	const char *text3, const char *item_link, const char *item_bookmark, 
+	const char *item_file_name, navh_eHelpFile help_file_type, int help_index, 
 	brow_tNode dest, flow_eDest dest_code);
     int			open_children( XNavBrow *brow, double x, double y);
     char link[200];
@@ -203,14 +203,14 @@ class ItemHelpBold : public Item {
 
 class ItemHelpHeader : public Item {
   public:
-    ItemHelpHeader( XNavBrow *brow, char *item_name, char *title,
+    ItemHelpHeader( XNavBrow *brow, const char *item_name, const char *title,
 	brow_tNode dest, flow_eDest dest_code);
     void 		close( XNavBrow *brow, double x, double y);
 };
 
 class ItemFile : public Item {
   public:
-    ItemFile( XNavBrow *brow, char *item_name, char *text, char *file,
+    ItemFile( XNavBrow *brow, const char *item_name, const char *text, const char *file,
 	item_eFileType item_filetype, brow_tNode dest, flow_eDest dest_code);
     int			open_children( XNavBrow *brow, double x, double y);
     char file_name[120];
@@ -302,7 +302,7 @@ class ItemCollect : public ItemBaseAttr {
 
 class ItemMenu : public Item {
  public:
-  ItemMenu( XNavBrow *brow, char *item_name,
+  ItemMenu( XNavBrow *brow, const char *item_name,
 	brow_tNode dest, flow_eDest dest_code, xnav_sMenu **item_child_list,
 	int item_is_root);
   xnav_sMenu		**child_list;
@@ -332,7 +332,7 @@ class ItemCrossref : public Item {
 
 class ItemLocal : public Item {
   public:
-    ItemLocal( XNavBrow *brow, char *item_name, char *attr,
+    ItemLocal( XNavBrow *brow, const char *item_name, const char *attr,
 	int attr_type, int attr_size, double attr_min_limit,
 	double attr_max_limit, int attr_nochange,
 	void *attr_value_p, brow_tNode dest, flow_eDest dest_code);

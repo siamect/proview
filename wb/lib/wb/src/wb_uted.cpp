@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_uted.cpp,v 1.2 2008-06-24 07:52:21 claes Exp $
+ * Proview   $Id: wb_uted.cpp,v 1.3 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -257,8 +257,8 @@ void WUted::set_editmode( int edit, ldh_tSesContext ldhses)
 //	Create a new ute window
 //
 WUted::WUted( void	       	*wu_parent_ctx,
-	      char	       	*wu_name,
-	      char	       	*wu_iconname,
+	      const char	*wu_name,
+	      const char        *wu_iconname,
 	      ldh_tWBContext	wu_ldhwb,
 	      ldh_tSesContext	wu_ldhses,
 	      int	       	wu_editmode,

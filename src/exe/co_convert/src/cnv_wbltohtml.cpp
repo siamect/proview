@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltohtml.cpp,v 1.17 2008-06-30 05:53:27 claes Exp $
+ * Proview   $Id: cnv_wbltohtml.cpp,v 1.18 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,9 +19,9 @@
 
 
 
-#include <iostream.h>
-#include <fstream.h>
-#include <vector.h>
+#include <iostream>
+#include <fstream>
+#include <vector>
 #include <float.h>
 #include <string.h>
 #include <stdlib.h>
@@ -576,8 +576,8 @@ endl <<
 "<DT><B>" << Lng::translate("Author") << "</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->doc_author << "<DT>" << endl;
   }
 
-  if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_version, "") != 0 || 
-       strcmp( ctx->rw->class_version, "") != 0)
+  if ( ctx->rw->doc_fresh && (strcmp( ctx->rw->doc_version, "") != 0 || 
+			      strcmp( ctx->rw->class_version, "") != 0))
   {
     html_clf->f <<
 "<DT><B>" << Lng::translate("Version") << "</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -796,7 +796,8 @@ int CnvWblToHtml::class_close()
 }
 
 // Create class dependency file
-void CnvWblToHtml::create_cdp_file( char *volume_name, char *class_name, char *attr_typeref)
+void CnvWblToHtml::create_cdp_file( const char *volume_name, const char *class_name, 
+				    const char *attr_typeref)
 {
   pwr_tFileName fname;
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wge_gtk.h,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_wge_gtk.h,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -61,7 +61,7 @@ class WGeGtk : public WGe{
   static gboolean action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data);
   static void change_value_cb( void *ge_ctx, void *value_object, char *text);
   static void confirm_cb( void *ge_ctx, void *confirm_object, char *text);
-  static void message_dialog_cb( void *ge_ctx, char *text);
+  static void message_dialog_cb( void *ge_ctx, const char *text);
   static void activate_value_input(GtkWidget *w, gpointer data);
   static void activate_confirm_ok(GtkWidget *w, gpointer data);
   static void activate_confirm_cancel(GtkWidget *w, gpointer data);

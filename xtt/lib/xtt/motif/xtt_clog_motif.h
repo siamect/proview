@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_clog_motif.h,v 1.1 2007-01-04 08:30:03 claes Exp $
+ * Proview   $Id: xtt_clog_motif.h,v 1.2 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,7 +30,7 @@ class CLogMotif : public CLog {
   public:
     CLogMotif( void *clog_parent_ctx,
 	       Widget	clog_parent_wid,
-	       char *clog_name,
+	       const char *clog_name,
 	       pwr_tStatus *status);
     ~CLogMotif();
 

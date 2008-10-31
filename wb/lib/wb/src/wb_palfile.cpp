@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_palfile.cpp,v 1.4 2008-10-15 06:04:55 claes Exp $
+ * Proview   $Id: wb_palfile.cpp,v 1.5 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,8 +29,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 
 #include "wb_palfile.h"
 
@@ -42,8 +42,8 @@ extern "C" {
 }
 
 
-PalFileMenu *PalFile::config_tree_build( ldh_tSession ldhses, char *filename, 
-				   pal_eNameType keytype, char *keyname, PalFileMenu *menu)
+PalFileMenu *PalFile::config_tree_build( ldh_tSession ldhses, const char *filename, 
+				   pal_eNameType keytype, const char *keyname, PalFileMenu *menu)
 {
   ifstream	fp;
   int		line_cnt = 0;
@@ -138,7 +138,7 @@ PalFileMenu *PalFile::config_tree_build( ldh_tSession ldhses, char *filename,
 }
 
 PalFileMenu *PalFile::config_tree_build_children( ldh_tSession ldhses, ifstream *fp, 
-	       int *line_cnt, char *filename, PalFileMenu *parent)
+	       int *line_cnt, const char *filename, PalFileMenu *parent)
 {
   PalFileMenu	        *menu_p, *prev, *mp;
   PalFileMenu	        *return_menu = NULL;
@@ -310,7 +310,7 @@ void PalFile::config_tree_free_children( PalFileMenu *first_child)
   }
 }
 
-void PalFile::config_tree_print( char *filename, PalFileMenu *menu_tree, pwr_tStatus *sts)
+void PalFile::config_tree_print( const char *filename, PalFileMenu *menu_tree, pwr_tStatus *sts)
 {
   pwr_tFileName fname;
   ofstream fp;

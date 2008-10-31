@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trace.h,v 1.11 2008-05-28 11:43:43 claes Exp $
+ * Proview   $Id: rt_trace.h,v 1.12 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -57,7 +57,7 @@ class RtTrace {
   pwr_tObjid		objid;
   double		scan_time;
   void			(*close_cb) (RtTrace *);
-  void			(*help_cb) (RtTrace *, char *);
+  void			(*help_cb) (RtTrace *, const char *);
   void			(*subwindow_cb) (void *parent_ctx, pwr_tObjid objid);
   void			(*display_object_cb) (void *parent_ctx, pwr_tObjid objid);
   void			(*collect_insert_cb) (void *parent_ctx, pwr_tObjid objid);
@@ -67,8 +67,8 @@ class RtTrace {
 					 unsigned long item_type,
 					 unsigned long utility, 
 					 char *arg, int x, int y); 
-  int                   (*call_method_cb)(void *parent_ctx, char *method,
-					  char *filter,
+  int                   (*call_method_cb)(void *parent_ctx, const char *method,
+					  const char *filter,
 					  pwr_sAttrRef attrref,
 					  unsigned long item_type,
 					  unsigned long utility, 

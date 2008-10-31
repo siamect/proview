@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.h,v 1.9 2008-05-13 13:59:02 claes Exp $
+ * Proview   $Id: ge_gtk.h,v 1.10 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -76,24 +76,24 @@ class GeGtk : public Ge {
   ~GeGtk();
 
   virtual void set_title( char *title);
-  virtual void open_input_dialog( char *text, char *title,
-				  char *init_text,
+  virtual void open_input_dialog( const char *text, const char *title,
+				  const char *init_text,
 				  void (*india_ok_cb)( Ge *, char *));
-  virtual void message( char severity, char *message);
+  virtual void message( char severity, const char *message);
   virtual void status_msg( char *pos_str);
-  virtual void open_yesnodia( char *text, char *title, 
+  virtual void open_yesnodia( const char *text, const char *title, 
 			      void (*yes_cb)( Ge *), void (*no_cb)( Ge *));
-  virtual void set_prompt( char *prompt);
+  virtual void set_prompt( const char *prompt);
   virtual void subgraphs_new();
   virtual void update();
   virtual int get_plant_select( char *name);
-  virtual void create_list( char *title, char *texts,
+  virtual void create_list( const char *title, const char *texts,
 			    void (action_cb)( void *, char *), void *ctx);
-  virtual int create_modal_dialog( char *title, char *text, char *button1, char *button2, char *button3,
-				   char *image);
+  virtual int create_modal_dialog( const char *title, const char *text, const char *button1,
+				   const char *button2, const char *button3, const char *image);
 
   static void valchanged_cmd_input( GtkWidget *w, gpointer data);
-  static void change_text_cb( void *ge_ctx, void *text_object, char *text);
+  static void change_text_cb( void *ge_ctx, void *text_object, const char *text);
   static void change_name_cb( void *ge_ctx, void *text_object, char *text);
   static void change_value_cb( void *ge_ctx, void *value_object, char *text);
   static void confirm_cb( void *ge_ctx, void *confirm_object, char *text);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_rect.h,v 1.4 2007-05-11 15:07:21 claes Exp $
+ * Proview   $Id: flow_rect.h,v 1.5 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #ifndef flow_rect_h
 #define flow_rect_h
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include "flow.h"
 #include "flow_ctx.h"
 #include "flow_point.h"

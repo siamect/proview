@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.cpp,v 1.34 2008-10-15 06:04:55 claes Exp $
+ * Proview   $Id: wb_vrepmem.cpp,v 1.35 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -74,7 +74,7 @@ wb_vrepmem::~wb_vrepmem()
   clear();
 }
 
-void wb_vrepmem::loadWbl( char *filename, pwr_tStatus *sts, bool reload)
+void wb_vrepmem::loadWbl( const char *filename, pwr_tStatus *sts, bool reload)
 {
   if ( !reload && m_erep->refMerepOccupied()) {
     *sts = LDH__OTHERSESS;

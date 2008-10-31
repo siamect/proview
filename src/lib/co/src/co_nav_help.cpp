@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_nav_help.cpp,v 1.12 2008-04-11 16:30:45 claes Exp $
+ * Proview   $Id: co_nav_help.cpp,v 1.13 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -95,8 +95,8 @@ static int	help_remove_spaces(
 *
 **************************************************************************/
 
-int	NavHelp::help( char *help_key, char *help_bookmark, 
-		       navh_eHelpFile file_type, char *file_name, void **book_mark,
+int	NavHelp::help( const char *help_key, const char *help_bookmark, 
+		       navh_eHelpFile file_type, const char *file_name, void **book_mark,
 		       bool strict)
 {
   char	filestr[200];
@@ -326,13 +326,13 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
 	  {
 	    help_remove_spaces( link_part[0], link);
             strcpy( link_bookmark, "");
-            link_filename_p = file_name;
+            link_filename_p = (char *)file_name;
 	  }
           else if ( link_nr == 2)
 	  {
 	    help_remove_spaces( link_part[0], link);
 	    help_remove_spaces( link_part[1], link_bookmark);
-            link_filename_p = file_name;
+            link_filename_p = (char *)file_name;
           }
           else if ( link_nr > 2)
 	  {
@@ -355,14 +355,14 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
 	    strcpy( link, "$web:");
 	    help_remove_spaces( link_part[0], &link[5]);
             strcpy( link_bookmark, "");
-            link_filename_p = file_name;
+            link_filename_p = (char *)file_name;
 	  }
           else if ( link_nr == 2)
 	  {
 	    strcpy( link, "$web:");
 	    help_remove_spaces( link_part[0], &link[5]);
 	    help_remove_spaces( link_part[1], link_bookmark);
-            link_filename_p = file_name;
+            link_filename_p = (char *)file_name;
           }
           else if ( link_nr > 2)
 	  {
@@ -386,14 +386,14 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
 	    strcpy( link, "$class:");
 	    help_remove_spaces( link_part[0], &link[7]);
             strcpy( link_bookmark, "");
-            link_filename_p = file_name;
+            link_filename_p = (char *)file_name;
 	  }
           else if ( link_nr == 2)
 	  {
 	    strcpy( link, "$class:");
 	    help_remove_spaces( link_part[0], &link[7]);
 	    help_remove_spaces( link_part[1], link_bookmark);
-            link_filename_p = file_name;
+            link_filename_p = (char *)file_name;
           }
           else if ( link_nr > 2)
 	  {
@@ -589,7 +589,7 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
 }
 
 
-int	NavHelp::get_next_key( char *help_key, navh_eHelpFile file_type, char *file_name,
+int	NavHelp::get_next_key( const char *help_key, navh_eHelpFile file_type, const char *file_name,
 			       bool strict, char *next_key)
 {
   char	filestr[200];
@@ -700,7 +700,7 @@ int	NavHelp::get_next_key( char *help_key, navh_eHelpFile file_type, char *file_
   return NAV__SUCCESS;
 }
 
-int	NavHelp::get_previous_key( char *help_key, navh_eHelpFile file_type, char *file_name,
+int	NavHelp::get_previous_key( const char *help_key, navh_eHelpFile file_type, const char *file_name,
 				   bool strict, char *prev_key)
 {
   char	filestr[200];
@@ -813,7 +813,7 @@ int	NavHelp::get_previous_key( char *help_key, navh_eHelpFile file_type, char *f
 }
 
 
-int	NavHelp::help_index( navh_eHelpFile file_type, char *file_name)
+int	NavHelp::help_index( navh_eHelpFile file_type, const char *file_name)
 {
   char	filestr[80];
   FILE	*file;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_tblnav.cpp,v 1.3 2008-09-18 14:37:43 claes Exp $
+ * Proview   $Id: xtt_tblnav.cpp,v 1.4 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <vector.h>
+#include <vector>
 
 #include "pwr.h"
 #include "pwr_baseclasses.h"
@@ -48,7 +48,7 @@
 #define TBLNAV__ITEM_NOCREA 8
 #define TBLNAV__SUCCESS 1
 
-void TblNav::message( char sev, char *text)
+void TblNav::message( char sev, const char *text)
 {
   (message_cb)( parent_ctx, sev, text);
 }
@@ -748,7 +748,7 @@ int ItemLocal::close( TblNav *tblnav, double x, double y)
   return 1;
 }
 
-ItemLocalAttr::ItemLocalAttr( TblNav *tblnav, char *name, char *value,
+ItemLocalAttr::ItemLocalAttr( TblNav *tblnav, const char *name, char *value,
 			      brow_tNode dest, flow_eDest dest_code) :
   ItemBase( tblnav_eItemType_LocalAttr)
 {

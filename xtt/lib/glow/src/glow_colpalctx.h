@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_colpalctx.h,v 1.6 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_colpalctx.h,v 1.7 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #ifndef glow_colpalctx_h
 #define glow_colpalctx_h
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 
 #include "glow.h"
 #include "glow_growctx.h"
@@ -49,7 +49,7 @@ class ColPalCtx : public GrowCtx {
     \param ctx_name	Name of the context.
     \param zoom_fact	Initial zoomfactor.
   */
-  ColPalCtx( char *ctx_name, double zoom_fact = 100) :
+  ColPalCtx( const char *ctx_name, double zoom_fact = 100) :
     	GrowCtx( ctx_name, zoom_fact), columns(30), 
 	current_fill( glow_eDrawType_LineGray), current_border( glow_eDrawType_Line),
 	current_text(glow_eDrawType_Line), entry_width(0.3), entry_height(1), display_entry_width(3)

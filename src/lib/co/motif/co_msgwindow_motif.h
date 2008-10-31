@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msgwindow_motif.h,v 1.1 2007-01-04 07:51:41 claes Exp $
+ * Proview   $Id: co_msgwindow_motif.h,v 1.2 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -33,7 +33,7 @@ class MsgWindowMotif : public MsgWindow {
     MsgWindowMotif(
 	void *msg_parent_ctx,
 	Widget	msg_parent_wid,
-	char *msg_name,
+	const char *msg_name,
 	pwr_tStatus *status);
     ~MsgWindowMotif();
 

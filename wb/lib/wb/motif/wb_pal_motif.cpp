@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pal_motif.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_pal_motif.cpp,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -80,9 +80,9 @@ static void pal_reset_avoid_deadlock( PalMotif *pal);
 PalMotif::PalMotif(
 	void *pal_parent_ctx,
 	Widget	pal_parent_wid,
-	char *pal_name,
+	const char *pal_name,
 	ldh_tSesContext pal_ldhses,
-	char *pal_root_name,
+	const char *pal_root_name,
 	Widget *w,
 	pwr_tStatus *status) : 
 

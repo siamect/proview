@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_user.h,v 1.6 2008-06-24 07:04:33 claes Exp $
+ * Proview   $Id: co_user.h,v 1.7 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,9 +22,11 @@
 
 /* ge_user.h -- User authorization */
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <string.h>
+
+using namespace std;
 
 #include "pwr.h"
 
@@ -67,7 +69,7 @@ typedef enum {
 
 class SystemName {
  public:
-  SystemName( char *system_name) : segments(0)
+  SystemName( const char *system_name) : segments(0)
     {
       strcpy( pathname, system_name);
     };
@@ -91,7 +93,7 @@ class SystemList {
   friend class UserList;
 
  public:
-  SystemList( pwr_tOix sl_id, char *sl_name, int sl_level, unsigned int sl_attributes, char *sl_descr) :
+  SystemList( pwr_tOix sl_id, const char *sl_name, int sl_level, unsigned int sl_attributes, char *sl_descr) :
     level(sl_level), attributes( sl_attributes), id(sl_id),
     next(0), childlist(0), userlist(0) 
     {
@@ -142,8 +144,9 @@ class UserList {
   friend class GeUser;
 
  public:
-  UserList( pwr_tOix ul_id, char *ul_name, char *ul_password, pwr_tMask ul_priv, char *ul_fullname, char *ul_description,
-	    char *ul_email, char *ul_phone, char *ul_sms) :
+  UserList( pwr_tOix ul_id, const char *ul_name, const char *ul_password, pwr_tMask ul_priv, 
+	    const char *ul_fullname, const char *ul_description, const char *ul_email, 
+	    const char *ul_phone, const char *ul_sms) :
     priv(ul_priv), id(ul_id), next(NULL)
     {
       strcpy( name, ul_name);
@@ -199,7 +202,7 @@ class UserList {
   UserList	*next_user() { return next;}
   char		*get_name() { return name;}
   unsigned long	get_priv() { return priv;}		
-  static char     *pwcrypt( char *str);
+  static char     *pwcrypt( const char *str);
 };
 
 class GeUser {
@@ -242,11 +245,11 @@ class GeUser {
 			       pwr_tMask *priv, pwr_tOix *id, char *fullname, char *description, char *email,
 			       char *phone, char *sms);
   int	       	modify_system( char *system, unsigned int attributes, char *description);
-  int	       	get_system_data( char *system, pwr_tMask *attributes, pwr_tOix *id, char *description);
+  int	       	get_system_data( const char *system, pwr_tMask *attributes, pwr_tOix *id, char *description);
   int	       	remove_system( char *name);
-  int 		get_user( char *system, char *user, char *password,
+  int 		get_user( const char *system, const char *user, const char *password,
 			  unsigned int *priv);
-  int 		get_user_priv( char *system, char *user,
+  int 		get_user_priv( const char *system, const char *user,
 			       unsigned int *priv);
   char 		*get_status( int sts);
   SystemList   	*root_system() { return root;}

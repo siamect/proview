@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.69 2008-06-26 13:19:05 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.70 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,7 +26,7 @@
 #include <time.h>
 #include <assert.h>
 #include <stdarg.h>
-#include <fstream.h>
+#include <fstream>
 #ifdef OS_VMS
 #include <descrip.h>
 #include <libdef.h>
@@ -326,7 +326,7 @@ ldh_CheckObjXRefs(ldh_tSession session, pwr_tOid p, pwr_tObjName paname, pwr_tOi
 }
 
 pwr_tStatus
-ldh_ClassNameToId(ldh_tSession session, pwr_tCid *cid, char *name)
+ldh_ClassNameToId(ldh_tSession session, pwr_tCid *cid, const char *name)
 {
   wb_session *sp = (wb_session *)session;
   wb_name n(name);
@@ -399,7 +399,7 @@ ldh_CopyObject(ldh_tSession session, pwr_tObjid *oid, char *name, pwr_tObjid src
 }
 
 pwr_tStatus
-ldh_CreateObject(ldh_tSession session, pwr_tOid *oid, char *name, pwr_tCid cid, pwr_tOid doid, ldh_eDest dest)
+ldh_CreateObject(ldh_tSession session, pwr_tOid *oid, const char *name, pwr_tCid cid, pwr_tOid doid, ldh_eDest dest)
 {
   wb_session *sp = (wb_session *)session;
 
@@ -567,7 +567,7 @@ ldh_GetChildMnt(ldh_tSession session, pwr_tOid oid, pwr_tOid *coid)
 
 
 pwr_tStatus
-ldh_GetClassBody(ldh_tSession session, pwr_tCid cid, char *bname, pwr_tCid *bcid, char **body, int *size)
+ldh_GetClassBody(ldh_tSession session, pwr_tCid cid, const char *bname, pwr_tCid *bcid, char **body, int *size)
 {
   wb_session *sp = (wb_session *)session;
   wb_cdef c = sp->cdef(cid);
@@ -696,7 +696,7 @@ ldh_GetNextSibling(ldh_tSession session, pwr_tOid oid, pwr_tOid *noid)
    this space when no longer needed. Use free().  */
 
 pwr_tStatus
-ldh_GetObjectBody(ldh_tSession session, pwr_tOid oid, char *bname, void **buff, int *size)
+ldh_GetObjectBody(ldh_tSession session, pwr_tOid oid, const char *bname, void **buff, int *size)
 {
   wb_session *sp = (wb_session *)session;
   wb_attribute a = sp->attribute( oid, bname);
@@ -712,7 +712,7 @@ ldh_GetObjectBody(ldh_tSession session, pwr_tOid oid, char *bname, void **buff, 
 }
 
 pwr_tStatus
-ldh_GetObjectBodyDef(ldh_tSession session, pwr_tCid cid, char *bname,
+ldh_GetObjectBodyDef(ldh_tSession session, pwr_tCid cid, const char *bname,
                      int maxlev, ldh_sParDef **bdef, int *rows)
 {
   wb_session *sp = (wb_session *)session;
@@ -815,8 +815,8 @@ ldh_GetTrueObjectBodyDef(ldh_tSession session, pwr_tCid cid, char *bname,
 }
 
 pwr_tStatus
-ldh_GetObjectBuffer(ldh_tSession session, pwr_tOid oid, char *bname,
-                    char *aname, pwr_eClass *bufferclass, char **value, int *size)
+ldh_GetObjectBuffer(ldh_tSession session, pwr_tOid oid, const char *bname,
+                    const char *aname, pwr_eClass *bufferclass, char **value, int *size)
 {
   wb_session *sp = (wb_session*)session;
   wb_attribute a = sp->attribute(oid, bname, aname);
@@ -926,7 +926,8 @@ ldh_GetObjectInfo(ldh_tSession session, pwr_tOid oid, ldh_sObjInfo *ip)
 }
 
 pwr_tStatus
-ldh_GetObjectPar(ldh_tSession session, pwr_tOid oid, char *bname, char *aname, char **buff, int *size)
+ldh_GetObjectPar(ldh_tSession session, pwr_tOid oid, const char *bname, const char *aname, 
+		 char **buff, int *size)
 {
   wb_session *sp = (wb_session *)session;
   wb_attribute a = sp->attribute(oid, bname, aname);
@@ -943,7 +944,8 @@ ldh_GetObjectPar(ldh_tSession session, pwr_tOid oid, char *bname, char *aname, c
 }
 
 pwr_tStatus
-ldh_GetAttrObjectPar(ldh_tSession session, pwr_sAttrRef *arp, char *bname, char *aname, char **buff, int *size)
+ldh_GetAttrObjectPar(ldh_tSession session, pwr_sAttrRef *arp, const char *bname, const char *aname, 
+		     char **buff, int *size)
 {
   wb_session *sp = (wb_session *)session;
 
@@ -1268,7 +1270,7 @@ ldh_NameToAttrRef(ldh_tSession session, char *name, pwr_sAttrRef *arp)
 }
 
 pwr_tStatus
-ldh_ArefANameToAref(ldh_tSession session, pwr_sAttrRef *arp, char *aname, pwr_sAttrRef *oarp)
+ldh_ArefANameToAref(ldh_tSession session, pwr_sAttrRef *arp, const char *aname, pwr_sAttrRef *oarp)
 {
   wb_session *sp = (wb_session *)session;
 
@@ -1291,7 +1293,7 @@ ldh_ArefANameToAref(ldh_tSession session, pwr_sAttrRef *arp, char *aname, pwr_sA
 /*  Get the object identifier of a named object.  */
 
 pwr_tStatus
-ldh_NameToObjid(ldh_tSession session, pwr_tOid *oid, char *name)
+ldh_NameToObjid(ldh_tSession session, pwr_tOid *oid, const char *name)
 {
   wb_session *sp = (wb_session *)session;
   pwr_tStatus sts;
@@ -1593,7 +1595,7 @@ ldh_ReadAttribute(ldh_tSession session, pwr_sAttrRef *arp, void *value, int size
 /* Reads a named body of an object into a buffer supplied in the call.  */
 
 pwr_tStatus
-ldh_ReadObjectBody(ldh_tSession session, pwr_tObjid oid, char *bname, void *value, int size)
+ldh_ReadObjectBody(ldh_tSession session, pwr_tObjid oid, const char *bname, void *value, int size)
 {
   wb_session *sp = (wb_session *)session;
   wb_attribute a = sp->attribute( oid, bname);
@@ -1645,7 +1647,7 @@ ldh_SessionToWB(ldh_tSession session)
 /* Updates a named body of an object.  */
 
 pwr_tStatus
-ldh_SetObjectBody(ldh_tSession session, pwr_tOid oid, char *bname, char *value, int size)
+ldh_SetObjectBody(ldh_tSession session, pwr_tOid oid, const char *bname, char *value, int size)
 {
   wb_session *sp = (wb_session *)session;
   wb_attribute a = sp->attribute( oid, bname);
@@ -1661,7 +1663,7 @@ ldh_SetObjectBody(ldh_tSession session, pwr_tOid oid, char *bname, char *value, 
 }
 
 pwr_tStatus
-ldh_SetObjectBuffer(ldh_tSession session, pwr_tOid oid, char *bname, char *aname, char *value)
+ldh_SetObjectBuffer(ldh_tSession session, pwr_tOid oid, const char *bname, const char *aname, char *value)
 {
   wb_session *sp = (wb_session*)session;
 
@@ -1684,7 +1686,7 @@ ldh_SetObjectBuffer(ldh_tSession session, pwr_tOid oid, char *bname, char *aname
 /* The same as ChangeObjectName but without notification.  */
 
 pwr_tStatus
-ldh_SetObjectName(ldh_tSession session, pwr_tOid oid, char *name)
+ldh_SetObjectName(ldh_tSession session, pwr_tOid oid, const char *name)
 {
   wb_session *sp = (wb_session*)session;
   wb_object o = sp->object(oid);
@@ -1703,8 +1705,8 @@ ldh_SetObjectName(ldh_tSession session, pwr_tOid oid, char *name)
 }
 
 pwr_tStatus
-ldh_SetObjectPar(ldh_tSession session, pwr_tOid oid, char *bname,
-                 char *aname, char *value, int size)
+ldh_SetObjectPar(ldh_tSession session, pwr_tOid oid, const char *bname,
+                 const char *aname, char *value, int size)
 {
   wb_session *sp = (wb_session*)session;
 
@@ -2242,7 +2244,7 @@ ldh_OpenMntSession(ldh_tSession session, pwr_tOid oid, ldh_tSession *mntses)
 }
 
 void
-ldh_RecixSetDestination(ldh_tSession session, char *destination)
+ldh_RecixSetDestination(ldh_tSession session, const char *destination)
 {
   wb_session *sp = (wb_session*)session;
 

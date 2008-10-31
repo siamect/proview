@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msgwindow_motif.cpp,v 1.2 2007-05-11 15:11:17 claes Exp $
+ * Proview   $Id: co_msgwindow_motif.cpp,v 1.3 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -49,7 +49,7 @@ extern "C" {
 MsgWindowMotif::MsgWindowMotif(
 	void *msg_parent_ctx,
 	Widget	msg_parent_wid,
-	char *msg_name,
+	const char *msg_name,
 	pwr_tStatus *status) :
   MsgWindow( msg_parent_ctx, msg_name, status), parent_wid(msg_parent_wid)
 {
@@ -67,19 +67,19 @@ MsgWindowMotif::MsgWindowMotif(
 
   static XtActionsRec msg_actions[] =
   {
-    {"msg_inputfocus",      (XtActionProc) action_inputfocus}
+    {(char*) "msg_inputfocus",      (XtActionProc) action_inputfocus}
   };
 
   static MrmRegisterArg	reglist[] = {
-        { "msg_ctx", 0 },
-	{"msg_activate_exit",(caddr_t)activate_exit },
-	{"msg_activate_clear",(caddr_t)activate_clear },
-	{"msg_activate_zoom_in",(caddr_t)activate_zoom_in },
-	{"msg_activate_zoom_out",(caddr_t)activate_zoom_out },
-	{"msg_activate_zoom_reset",(caddr_t)activate_zoom_reset },
-	{"msg_activate_help",(caddr_t)activate_help },
-	{"msg_activate_help_message",(caddr_t)activate_help_message },
-	{"msg_create_form",(caddr_t)create_form }
+        {(char*) "msg_ctx", 0 },
+	{(char*) "msg_activate_exit",(caddr_t)activate_exit },
+	{(char*) "msg_activate_clear",(caddr_t)activate_clear },
+	{(char*) "msg_activate_zoom_in",(caddr_t)activate_zoom_in },
+	{(char*) "msg_activate_zoom_out",(caddr_t)activate_zoom_out },
+	{(char*) "msg_activate_zoom_reset",(caddr_t)activate_zoom_reset },
+	{(char*) "msg_activate_help",(caddr_t)activate_help },
+	{(char*) "msg_activate_help_message",(caddr_t)activate_help_message },
+	{(char*) "msg_create_form",(caddr_t)create_form }
 	};
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
 
@@ -106,7 +106,7 @@ MsgWindowMotif::MsgWindowMotif(
   parent_wid = XtCreatePopupShell( name, 
 		topLevelShellWidgetClass, parent_wid, args, i);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "msg_window", parent_wid,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "msg_window", parent_wid,
 			name, args, 1, &toplevel, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
 

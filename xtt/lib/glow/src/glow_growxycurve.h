@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growxycurve.h,v 1.1 2007-09-19 15:04:38 claes Exp $
+ * Proview   $Id: glow_growxycurve.h,v 1.2 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,7 +53,7 @@ class GrowXYCurve : public GrowTrend {
     \param fill_d_type	Fill color.
     \param nodraw	Don't draw the object now.
   */
-  GrowXYCurve( GrowCtx *glow_ctx, char *name,
+  GrowXYCurve( GrowCtx *glow_ctx, const char *name,
                 double x = 0, double y = 0, 
 		double w = 0, double h = 0, 
 		glow_eDrawType border_d_type = glow_eDrawType_Line, 

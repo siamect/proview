@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_hotkey_gtk.h,v 1.1 2007-01-04 08:29:32 claes Exp $
+ * Proview   $Id: xtt_hotkey_gtk.h,v 1.2 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,14 +20,16 @@
 #ifndef	xtt_hotkey_gtk_h
 #define	xtt_hotkey_gtk_h
 
-#include <vector.h>
+#include <vector>
 #include "pwr.h"
+
+using namespace std;
 
 class HotkeyAction {
  public:
   char m_name[80];
   void (* m_action)(char *,void *);
-  HotkeyAction( char *name, void (* action)(char *,void *)) : m_action(action) {
+  HotkeyAction( const char *name, void (* action)(char *,void *)) : m_action(action) {
     strcpy( m_name, name);
   }
   HotkeyAction( const HotkeyAction& x) : m_action(x.m_action) {
@@ -67,9 +69,9 @@ class XttHotkey {
   pwr_tFileName m_filename;
   vector<HotkeyAction> m_actions;
   vector<HotkeyKey> m_keys;
-  XttHotkey( char *filename);
+  XttHotkey( const char *filename);
   ~XttHotkey();
-  void register_action( char *name, void (* action)(char *,void *), void *userdata);
+  void register_action( const char *name, void (* action)(char *,void *), void *userdata);
   int read_file();
   int grab_key( int keysym, int modifier);
   static int event_handler( GdkXEvent *xevent, gpointer data);

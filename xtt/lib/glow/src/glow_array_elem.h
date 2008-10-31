@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_array_elem.h,v 1.11 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_array_elem.h,v 1.12 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #ifndef glow_array_elem_h
 #define glow_array_elem_h
 
-#include <iostream.h>
+#include <iostream>
 #include "glow.h"
 #include "glow_ctx.h"
 #include "glow_transform.h"
@@ -179,7 +179,7 @@ class GlowArrayElem {
     virtual int find_cc( GlowArrayElem *cc) { return 0;};
     virtual void get_nodegroups( void *a) {};
     virtual void set_last_group( char *name) {};
-    virtual char *get_last_group() { return ""; };
+    virtual char *get_last_group() { static char r[] = ""; return r; };
     virtual int get_background_object_limits( GlowTransform *t, 
 		    glow_eTraceType type,
 		    double x, double y, GlowArrayElem **background,

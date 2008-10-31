@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_topdf.h,v 1.5 2008-10-16 11:07:17 claes Exp $
+ * Proview   $Id: cnv_topdf.h,v 1.6 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,12 +24,14 @@
 
 using namespace std;
 
-#include <iostream.h>
-#include <vector.h>
+#include <iostream>
+#include <vector>
 #include <string>
 #include "pwr.h"
 #include "cnv_style.h"
 #include "cnv_content.h"
+
+using namespace std;
 
 #define pdf_cMaxLevel 4
 #define pdf_cPageHeight 790
@@ -173,7 +175,7 @@ class CnvToPdf  {
   ~CnvToPdf();
 
   void close();
-  void print_text( char *text, CnvStyle& style, int mode = pdf_mPrintMode_Pos);
+  void print_text( const char *text, CnvStyle& style, int mode = pdf_mPrintMode_Pos);
   void draw_rect( double lw, double x, double y, double w, double h);
   void draw_arc( double lw, double x, double y, double w, double h,
 		  int angle1, int angle2);
@@ -190,7 +192,7 @@ class CnvToPdf  {
   void print_horizontal_line();
   int print_image( char *filename);
   int print_image_inline( char *filename);
-  void cnv_text( char *to, char *from);
+  void cnv_text( char *to, const char *from);
   void set_confpass( bool conf) { 
     conf_pass = conf;
     if ( !conf) {

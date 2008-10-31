@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_gtk.h,v 1.6 2008-09-18 14:56:57 claes Exp $
+ * Proview   $Id: xtt_xnav_gtk.h,v 1.7 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,7 +31,7 @@ class XNavGtk : public XNav {
     XNavGtk(
 	void *xn_parent_ctx,
 	GtkWidget *xn_parent_wid,
-	char *xn_name,
+	const char *xn_name,
 	GtkWidget **w,
 	xnav_sStartMenu *root_menu,
 	char *xn_opplace_name,
@@ -63,10 +63,10 @@ class XNavGtk : public XNav {
     XttFast *xttfast_new( char *name, pwr_tAttrRef *objar, pwr_tStatus *sts);
     XAttOne *xattone_new( pwr_tAttrRef *objar, char *title, unsigned int priv,
 			  pwr_tStatus *sts);
-    CLog *clog_new( char *name, pwr_tStatus *sts);
-    XttGe *xnav_ge_new( char *name, char *filename, int scrollbar, int menu, 
+    CLog *clog_new( const char *name, pwr_tStatus *sts);
+    XttGe *xnav_ge_new( const char *name, const char *filename, int scrollbar, int menu, 
 			int navigator, int width, int height, int x, int y, 
-			double scan_time, char *object_name, 
+			double scan_time, const char *object_name, 
 			int use_default_access, unsigned int access,
 			int (*xg_command_cb) (XttGe *, char *),
 			int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
@@ -75,8 +75,8 @@ class XNavGtk : public XNav {
 			  int pos_right);
     XttFileview *fileview_new( pwr_tOid oid, char *title, char *dir, char *pattern,
 			       int type, char *target_attr, char *trigger_attr, char *filetype);
-    CoLogin *login_new( char		*wl_name,
-			char		*wl_groupname,
+    CoLogin *login_new( const char     	*wl_name,
+			const char     	*wl_groupname,
 			void		(* wl_bc_success)( void *),
 			void		(* wl_bc_cancel)( void *),
 			pwr_tStatus  	*status);
@@ -89,7 +89,7 @@ class XNavGtk : public XNav {
 				    gpointer data);
     static GtkWidget *build_menu( GtkWidget *Parent,
 				  int   MenuType,
-				  char *MenuTitle,
+				  const char *MenuTitle,
 				  void *MenuUserData,
 				  void (*Callback)( GtkWidget *, gpointer),
 				  void *CallbackData,

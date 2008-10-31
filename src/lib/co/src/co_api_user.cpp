@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_api_user.cpp,v 1.1 2008-06-24 06:51:43 claes Exp $
+ * Proview   $Id: co_api_user.cpp,v 1.2 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,7 +37,7 @@
 // c-api to co_user
 //
 
-int user_CheckUser( char *systemgroup, char *user, char *password, 
+int user_CheckUser( const char *systemgroup, const char *user, const char *password, 
 	unsigned int *priv)
 {
   GeUser *gu;
@@ -53,7 +53,7 @@ int user_CheckUser( char *systemgroup, char *user, char *password,
   return sts;
 }
 
-int user_CheckSystemGroup( char *systemgroup)
+int user_CheckSystemGroup( const char *systemgroup)
 {
   GeUser *gu;
   int sts;
@@ -71,7 +71,7 @@ int user_CheckSystemGroup( char *systemgroup)
   return sts;
 }
 
-int user_GetUserPriv( char *systemgroup, char *user, unsigned int *priv)
+int user_GetUserPriv( const char *systemgroup, const char *user, unsigned int *priv)
 {
   GeUser *gu;
   int sts;

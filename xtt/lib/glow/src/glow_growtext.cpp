@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtext.cpp,v 1.9 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_growtext.cpp,v 1.10 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
@@ -30,7 +30,7 @@
 #include "glow_growctx.h"
 #include "glow_exportflow.h"
 
-GrowText::GrowText( GrowCtx *glow_ctx, char *name, char *text1, double x, double y, 
+GrowText::GrowText( GrowCtx *glow_ctx, const char *name, const char *text1, double x, double y, 
 		glow_eDrawType d_type, glow_eDrawType color_d_type, int t_size, 
 		glow_eFont t_font, glow_mDisplayLevel display_lev, int nodraw) : 
 		GlowText(glow_ctx,text1,x,y,d_type,color_d_type,t_size,display_lev), 

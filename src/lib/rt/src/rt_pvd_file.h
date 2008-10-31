@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pvd_file.h,v 1.2 2007-03-20 12:36:38 claes Exp $
+ * Proview   $Id: rt_pvd_file.h,v 1.3 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -55,7 +55,7 @@ public:
 
   virtual void load( pwr_tStatus *rsts) {}
 
-  virtual bool find( pwr_tOix fthoix, char *name, pwr_tOix *oix);
+  virtual bool find( pwr_tOix fthoix, const char *name, pwr_tOix *oix);
   
   vector<procom_obj> m_list;
   pwr_tOix root;

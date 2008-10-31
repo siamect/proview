@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vsel_motif.h,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_vsel_motif.h,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,7 +47,7 @@ class WVselMotif : public WVsel {
 	 pwr_tStatus   *status,
 	 void		*wv_parent_ctx,
 	 Widget	wv_parent_wid,
-	 char		*wv_name,
+	 const char    	*wv_name,
 	 ldh_tWBContext wv_wbctx,
 	 char		*volumename,
 	 int		(*bc_success)( void *, pwr_tVolumeId *, int),

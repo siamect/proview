@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growrect.cpp,v 1.12 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_growrect.cpp,v 1.13 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
@@ -30,7 +30,7 @@
 #include "glow_growctx.h"
 #include "glow_exportflow.h"
 
-GrowRect::GrowRect( GrowCtx *glow_ctx, char *name, double x, double y, 
+GrowRect::GrowRect( GrowCtx *glow_ctx, const char *name, double x, double y, 
 		    double w, double h, glow_eDrawType border_d_type, int line_w, 
 		    int fix_line_w, glow_mDisplayLevel display_lev,
 		    int fill_rect, int display_border, int display_shadow,

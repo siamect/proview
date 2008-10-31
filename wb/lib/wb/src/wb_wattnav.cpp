@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wattnav.cpp,v 1.19 2007-09-26 11:56:54 claes Exp $
+ * Proview   $Id: wb_wattnav.cpp,v 1.20 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,7 +45,7 @@
 #include "wb_wnav_brow.h"
 #include "wb_wnav_item.h"
 
-void WAttNav::message( char sev, char *text)
+void WAttNav::message( char sev, const char *text)
 {
   (message_cb)( parent_ctx, sev, text);
 }
@@ -56,7 +56,7 @@ void WAttNav::message( char sev, char *text)
 //
 WAttNav::WAttNav(
 	void 		*wa_parent_ctx,
-	char 		*wa_name,
+	const char     	*wa_name,
 	ldh_tSesContext wa_ldhses,
 	pwr_sAttrRef 	wa_aref,
 	int 		wa_editmode,
@@ -1122,7 +1122,7 @@ void WAttNav::redraw()
     brow_Redraw( brow->ctx, 0);
 }
 
-int WAttNav::select_by_name( char *name)
+int WAttNav::select_by_name( const char *name)
 {
   WItem		*base_item;
   brow_tObject 	*object_list;

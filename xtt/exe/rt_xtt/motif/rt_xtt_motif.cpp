@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_motif.cpp,v 1.5 2008-06-25 12:34:05 claes Exp $
+ * Proview   $Id: rt_xtt_motif.cpp,v 1.6 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -73,10 +73,10 @@ static String   fbr[] = {
     NULL};
 
 static XtActionsRec HotkeyActions[] = {
-	{ "Command",	(XtActionProc) XttMotif::hotkey_Command},
-	{ "ToggleDig",	(XtActionProc) XttMotif::hotkey_ToggleDig},
-	{ "SetDig",	(XtActionProc) XttMotif::hotkey_SetDig},
-	{ "ResetDig",	(XtActionProc) XttMotif::hotkey_ResetDig}
+	{ (char*) "Command",	(XtActionProc) XttMotif::hotkey_Command},
+	{ (char*) "ToggleDig",	(XtActionProc) XttMotif::hotkey_ToggleDig},
+	{ (char*) "SetDig",	(XtActionProc) XttMotif::hotkey_SetDig},
+	{ (char*) "ResetDig",	(XtActionProc) XttMotif::hotkey_ResetDig}
     };
 
 void XttMotif::hotkey_Command( Widget w, XKeyEvent* ev, String* av, Cardinal* ac)
@@ -152,9 +152,9 @@ int XttMotif::init_hotkey( XtAppContext AppCtx, Widget Top)
   return 1;
 }
 
-void XttMotif::open_input_dialog( char *text, char *title,
-			     char *init_text,
-			     void (*ok_cb)( Xtt *, char *))
+void XttMotif::open_input_dialog( const char *text, const char *title,
+				  const char *init_text,
+				  void (*ok_cb)( Xtt *, char *))
 {
   Arg		args[10];
   int 		i;
@@ -162,16 +162,16 @@ void XttMotif::open_input_dialog( char *text, char *title,
 
   i = 0;
   XtSetArg(args[0], XmNlabelString,
-		cstr=XmStringCreateLtoR( text, "ISO8859-1") ); i++;
+		cstr=XmStringCreateLtoR( (char*) text, (char*) "ISO8859-1") ); i++;
   XtSetValues( india_label, args, i);
   XmStringFree( cstr);
   i = 0;
   XtSetArg(args[0], XmNdialogTitle,
-		cstr=XmStringCreateLtoR( title, "ISO8859-1") ); i++;
+		cstr=XmStringCreateLtoR( (char*) title, (char*) "ISO8859-1") ); i++;
   XtSetValues( india_widget, args, i);
   XmStringFree( cstr);
 
-  XmTextSetString( india_text, init_text);
+  XmTextSetString( india_text, (char*) init_text);
 
   XtManageChild( india_widget);
 
@@ -180,12 +180,12 @@ void XttMotif::open_input_dialog( char *text, char *title,
   india_ok_cb = ok_cb;
 }
 
-void XttMotif::message( char severity, char *message)
+void XttMotif::message( char severity, const char *message)
 {
   Arg 		args[2];
   XmString	cstr;
 
-  cstr=XmStringCreateLtoR( message, "ISO8859-1");
+  cstr=XmStringCreateLtoR( (char*) message, (char*) "ISO8859-1");
   XtSetArg(args[0],XmNlabelString, cstr);
   XtSetValues( msg_label, args, 1);
   XmStringFree( cstr);
@@ -232,12 +232,12 @@ void XttMotif::map( void *ctx)
     xtt->xnav->pop();
 }
 
-void XttMotif::set_prompt( char *prompt)
+void XttMotif::set_prompt( const char *prompt)
 {
   Arg 		args[1];
   XmString	cstr;
 
-  cstr=XmStringCreateLtoR( prompt, "ISO8859-1");
+  cstr=XmStringCreateLtoR( (char*) prompt, (char*) "ISO8859-1");
   XtSetArg(args[0],XmNlabelString, cstr);
   XtSetValues( cmd_prompt, args, 1);
   XmStringFree( cstr);
@@ -552,42 +552,42 @@ XttMotif::XttMotif( int argc, char *argv[], int *return_sts) :
 
   static XtActionsRec actions[] =
   {
-    {"xtt_inputfocus",      (XtActionProc) action_inputfocus}
+    {(char*) "xtt_inputfocus",      (XtActionProc) action_inputfocus}
   };
 
   static MrmRegisterArg	reglist[] = {
-        { "xtt_ctx", 0 },
-	{"xtt_activate_exit",(caddr_t)activate_exit },
-	{"xtt_activate_print",(caddr_t)activate_print },
-	{"xtt_activate_find",(caddr_t)activate_find },
-	{"xtt_activate_findregex",(caddr_t)activate_findregex },
-	{"xtt_activate_findnext",(caddr_t)activate_findnext },
-	{"xtt_activate_collapse",(caddr_t)activate_collapse },
-	{"xtt_activate_openobject",(caddr_t)activate_openobject },
-	{"xtt_activate_openplc",(caddr_t)activate_openplc },
-	{"xtt_activate_opengraph",(caddr_t)activate_opengraph },
-	{"xtt_activate_showcrossref",(caddr_t)activate_showcrossref },
-	{"xtt_activate_change_value",(caddr_t)activate_change_value },
-	{"xtt_activate_command",(caddr_t)activate_command },
-	{"xtt_activate_collect_insert",(caddr_t)activate_collect_insert },
-	{"xtt_activate_collect_show",(caddr_t)activate_collect_show },
-	{"xtt_activate_collect_remove",(caddr_t)activate_collect_remove },
-	{"xtt_activate_collect_clear",(caddr_t)activate_collect_clear },
-	{"xtt_activate_advanceduser",(caddr_t)activate_advanceduser },
-	{"xtt_activate_zoom_in",(caddr_t)activate_zoom_in },
-	{"xtt_activate_zoom_out",(caddr_t)activate_zoom_out },
-	{"xtt_activate_zoom_reset",(caddr_t)activate_zoom_reset },
-	{"xtt_activate_help",(caddr_t)activate_help },
-	{"xtt_activate_help_project",(caddr_t)activate_help_project },
-	{"xtt_activate_help_proview",(caddr_t)activate_help_proview },
-	{"xtt_create_msg_label",(caddr_t)create_msg_label },
-	{"xtt_create_cmd_prompt",(caddr_t)create_cmd_prompt },
-	{"xtt_create_cmd_input",(caddr_t)create_cmd_input },
-	{"xtt_create_xnav_form",(caddr_t)create_xnav_form },
-	{"xtt_activate_india_ok",(caddr_t)activate_india_ok },
-	{"xtt_activate_india_cancel",(caddr_t)activate_india_cancel },
-	{"xtt_create_india_label",(caddr_t)create_india_label },
-	{"xtt_create_india_text",(caddr_t)create_india_text }
+        {(char*) "xtt_ctx", 0 },
+	{(char*) "xtt_activate_exit",(caddr_t)activate_exit },
+	{(char*) "xtt_activate_print",(caddr_t)activate_print },
+	{(char*) "xtt_activate_find",(caddr_t)activate_find },
+	{(char*) "xtt_activate_findregex",(caddr_t)activate_findregex },
+	{(char*) "xtt_activate_findnext",(caddr_t)activate_findnext },
+	{(char*) "xtt_activate_collapse",(caddr_t)activate_collapse },
+	{(char*) "xtt_activate_openobject",(caddr_t)activate_openobject },
+	{(char*) "xtt_activate_openplc",(caddr_t)activate_openplc },
+	{(char*) "xtt_activate_opengraph",(caddr_t)activate_opengraph },
+	{(char*) "xtt_activate_showcrossref",(caddr_t)activate_showcrossref },
+	{(char*) "xtt_activate_change_value",(caddr_t)activate_change_value },
+	{(char*) "xtt_activate_command",(caddr_t)activate_command },
+	{(char*) "xtt_activate_collect_insert",(caddr_t)activate_collect_insert },
+	{(char*) "xtt_activate_collect_show",(caddr_t)activate_collect_show },
+	{(char*) "xtt_activate_collect_remove",(caddr_t)activate_collect_remove },
+	{(char*) "xtt_activate_collect_clear",(caddr_t)activate_collect_clear },
+	{(char*) "xtt_activate_advanceduser",(caddr_t)activate_advanceduser },
+	{(char*) "xtt_activate_zoom_in",(caddr_t)activate_zoom_in },
+	{(char*) "xtt_activate_zoom_out",(caddr_t)activate_zoom_out },
+	{(char*) "xtt_activate_zoom_reset",(caddr_t)activate_zoom_reset },
+	{(char*) "xtt_activate_help",(caddr_t)activate_help },
+	{(char*) "xtt_activate_help_project",(caddr_t)activate_help_project },
+	{(char*) "xtt_activate_help_proview",(caddr_t)activate_help_proview },
+	{(char*) "xtt_create_msg_label",(caddr_t)create_msg_label },
+	{(char*) "xtt_create_cmd_prompt",(caddr_t)create_cmd_prompt },
+	{(char*) "xtt_create_cmd_input",(caddr_t)create_cmd_input },
+	{(char*) "xtt_create_xnav_form",(caddr_t)create_xnav_form },
+	{(char*) "xtt_activate_india_ok",(caddr_t)activate_india_ok },
+	{(char*) "xtt_activate_india_cancel",(caddr_t)activate_india_cancel },
+	{(char*) "xtt_create_india_label",(caddr_t)create_india_label },
+	{(char*) "xtt_create_india_text",(caddr_t)create_india_text }
 	};
 
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
@@ -626,11 +626,11 @@ XttMotif::XttMotif( int argc, char *argv[], int *return_sts) :
 
   MrmRegisterNames(reglist, reglist_num);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "xtt_window", toplevel,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "xtt_window", toplevel,
 			title, args, i, &xtt_widget, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch xtt_window\n");
 
-  sts = MrmFetchWidget(s_DRMh, "input_dialog", toplevel,
+  sts = MrmFetchWidget(s_DRMh, (char*) "input_dialog", toplevel,
   		&india_widget, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch input dialog\n");
 

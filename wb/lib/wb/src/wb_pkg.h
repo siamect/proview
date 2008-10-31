@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pkg.h,v 1.8 2008-06-25 07:56:10 claes Exp $
+ * Proview   $Id: wb_pkg.h,v 1.9 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,13 +20,15 @@
 #ifndef wb_pkg_h
 #define wb_pkg_h
 
-#include <iostream.h>
-#include <vector.h>
+#include <iostream>
+#include <vector>
 #include <string>
 #include "pwr.h"
 #include "pwr_class.h"
 #include "co_wow.h"
 #include "wb_lfu.h"
+
+using namespace std;
 
 class pkg_node;
 
@@ -58,12 +60,12 @@ class pkg_pattern {
   char m_severity;
 
  public:
-  pkg_pattern( char *source, char *target, char severity = 'W') 
+  pkg_pattern( const char *source, const char *target, char severity = 'W') 
     : m_node(0), m_severity(severity) {
     strcpy( m_source, source);
     strcpy( m_target, target);
   }
-  pkg_pattern( char *source) : m_node(0), m_severity('W') {
+  pkg_pattern( const char *source) : m_node(0), m_severity('W') {
     strcpy( m_source, source);
     strcpy( m_target, "");
   }

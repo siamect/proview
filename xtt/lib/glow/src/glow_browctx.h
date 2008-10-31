@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_browctx.h,v 1.3 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_browctx.h,v 1.4 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #ifndef glow_browctx_h
 #define glow_browctx_h
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 
 #include "glow.h"
 #include "glow_ctx.h"
@@ -30,7 +30,7 @@
 
 class BrowCtx : public GlowCtx {
   public:
-    BrowCtx( char *ctx_name, double zoom_fact = 100) :
+    BrowCtx( const char *ctx_name, double zoom_fact = 100) :
     	GlowCtx( ctx_name, zoom_fact), 
 	indentation(0.8), frame_x_right(0), annotation_space(0.3)
 	{ ctx_type = glow_eCtxType_Brow; };

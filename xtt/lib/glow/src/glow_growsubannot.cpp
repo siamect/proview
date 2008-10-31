@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growsubannot.cpp,v 1.9 2008-01-17 14:17:05 claes Exp $
+ * Proview   $Id: glow_growsubannot.cpp,v 1.10 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #include "glow_std.h"
 
 
-#include <iostream.h>
+#include <iostream>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
@@ -29,7 +29,7 @@
 #include "glow_growctx.h"
 #include "glow_exportflow.h"
 
-GrowSubAnnot::GrowSubAnnot( GrowCtx *glow_ctx, char *name, double x, double y,
+GrowSubAnnot::GrowSubAnnot( GrowCtx *glow_ctx, const char *name, double x, double y,
 	int annot_num, glow_eDrawType d_type, glow_eDrawType color_d_type,
 	int t_size, glow_eAnnotType a_type,
 	int rel_pos, glow_mDisplayLevel display_lev,

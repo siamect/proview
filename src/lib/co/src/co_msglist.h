@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msglist.h,v 1.5 2007-01-04 07:51:42 claes Exp $
+ * Proview   $Id: co_msglist.h,v 1.6 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -102,7 +102,7 @@ class MsgList {
 
 class ItemMsg {
   public:
-    ItemMsg( MsgList *msglist, char *item_name,
+    ItemMsg( MsgList *msglist, const char *item_name,
 	     char *item_text, int item_severity,
 	     brow_tNode dest, flow_eDest dest_code);
     msglist_eItemType	type;
@@ -119,7 +119,7 @@ class ItemMsg {
 
 class ItemMsgObject : public ItemMsg {
  public:
-  ItemMsgObject( MsgList *msglist, char *item_name,
+  ItemMsgObject( MsgList *msglist, const char *item_name,
 		 char *item_text, int item_severity, pwr_tOid item_oid,
 		 brow_tNode dest, flow_eDest dest_code);
 
@@ -130,7 +130,7 @@ class ItemMsgObject : public ItemMsg {
 
 class ItemMsgObjectPlc : public ItemMsg {
  public:
-  ItemMsgObjectPlc( MsgList *msglist, char *item_name,
+  ItemMsgObjectPlc( MsgList *msglist, const char *item_name,
 		 char *item_text, int item_severity, pwr_tOid item_oid,
 		 brow_tNode dest, flow_eDest dest_code);
 

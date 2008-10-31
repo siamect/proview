@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growscrollbar.h,v 1.4 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_growscrollbar.h,v 1.5 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,7 +54,7 @@ class GrowScrollBar : public GrowRect {
     \param bar_d_type	Bar color.
     \param nodraw	Don't draw the object now.
   */
-  GrowScrollBar( GrowCtx *glow_ctx, char *name, double x = 0, double y = 0, 
+  GrowScrollBar( GrowCtx *glow_ctx, const char *name, double x = 0, double y = 0, 
 		 double w = 0, double h = 0, glow_eDir dir = glow_eDir_Vertical,
 		 glow_eDrawType border_d_type = glow_eDrawType_Line, 
 		 int line_w = 1,

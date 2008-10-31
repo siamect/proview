@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_grownode.h,v 1.12 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_grownode.h,v 1.13 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -49,7 +49,7 @@ class GrowNode : public GlowNode {
     \param nodraw	Don't draw the object now.
     \param rel_annot_pos Not used.
   */
-  GrowNode( GrowCtx *glow_ctx, char *name, GlowNodeClass *node_class,
+  GrowNode( GrowCtx *glow_ctx, const char *name, GlowNodeClass *node_class,
 	double x1, double y1, int nodraw = 0, int rel_annot_pos = 0);
 
   //! Noargs constructor
@@ -631,7 +631,7 @@ class GrowNode : public GlowNode {
     \param nodraw	Don't draw now.
     \param brief	Just redraw the background object for the annotation, not the whole area.
   */
-  void set_annotation( int num, char *text, int size, int nodraw, int brief = 0);
+  void set_annotation( int num, const char *text, int size, int nodraw, int brief = 0);
 
   //! Store the current transform
   /*! The stored transform can be used as starting point for future scaling or rotations.

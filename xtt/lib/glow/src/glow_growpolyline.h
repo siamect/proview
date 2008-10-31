@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growpolyline.h,v 1.8 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_growpolyline.h,v 1.9 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,7 +51,7 @@ class GrowPolyLine : public GlowPolyLine {
     \param closed	Polyline is closed.
     \param nodraw	Don't draw the object now.
   */
-  GrowPolyLine( GrowCtx *glow_ctx, char *name,
+  GrowPolyLine( GrowCtx *glow_ctx, const char *name,
 		  glow_sPoint *pointarray, int point_cnt,
 		  glow_eDrawType border_d_type = glow_eDrawType_Line, 
 		  int line_w = 1, int fix_line_w = 0, 

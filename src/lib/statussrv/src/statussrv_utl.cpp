@@ -12,7 +12,7 @@ static struct soap soap;
 static int init_done = 0;
 static int port = 18084;
 
-static char *nname( char *nodename)
+static char *nname( const char *nodename)
 {
   static char n[80];
   char name[80];
@@ -26,7 +26,7 @@ static char *nname( char *nodename)
   return n;
 }
 
-pwr_tStatus statussrv_GetStatus( char *nodename, statussrv_sGetStatus *result)
+pwr_tStatus statussrv_GetStatus( const char *nodename, statussrv_sGetStatus *result)
 {
   pwr_tStatus sts = PWR__SUCCESS;
   char endpoint[80];
@@ -120,7 +120,7 @@ pwr_tStatus statussrv_GetStatus( char *nodename, statussrv_sGetStatus *result)
   return sts;
 }
 
-pwr_tStatus statussrv_GetExtStatus( char *nodename, statussrv_sGetExtStatus *result)
+pwr_tStatus statussrv_GetExtStatus( const char *nodename, statussrv_sGetExtStatus *result)
 {
   pwr_tStatus sts = PWR__SUCCESS;
   char endpoint[80];
@@ -393,7 +393,7 @@ pwr_tStatus statussrv_GetExtStatus( char *nodename, statussrv_sGetExtStatus *res
   return sts;
 }
 
-pwr_tStatus statussrv_Restart( char *nodename)
+pwr_tStatus statussrv_Restart( const char *nodename)
 {
   pwr_tStatus sts = PWR__SUCCESS;
   char endpoint[80];
@@ -422,8 +422,8 @@ pwr_tStatus statussrv_Restart( char *nodename)
   return sts;
 }
 
-pwr_tStatus statussrv_XttStart( char *nodename, char *opplace, char *lang, char *display,
-				char *gui)
+pwr_tStatus statussrv_XttStart( const char *nodename, const char *opplace, const char *lang, 
+				const char *display, const char *gui)
 {
   pwr_tStatus sts = PWR__SUCCESS;
   char endpoint[80];
@@ -470,7 +470,8 @@ pwr_tStatus statussrv_XttStart( char *nodename, char *opplace, char *lang, char 
   return sts;
 }
 
-pwr_tStatus statussrv_RtMonStart( char *nodename, char *lang, char *display, char *gui)
+pwr_tStatus statussrv_RtMonStart( const char *nodename, const char *lang, const char *display, 
+				  const char *gui)
 {
   pwr_tStatus sts = PWR__SUCCESS;
   char endpoint[80];

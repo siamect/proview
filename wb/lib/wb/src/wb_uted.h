@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_uted.h,v 1.5 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_uted.h,v 1.6 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -81,8 +81,8 @@ class WUted {
   static uted_sCommand	commands[UTED_MAX_COMMANDS];
 
   WUted( void	       	*wu_parent_ctx,
-	 char	       	*wu_name,
-	 char	       	*wu_iconname,
+	 const char     *wu_name,
+	 const char	*wu_iconname,
 	 ldh_tWBContext	wu_ldhwb,
 	 ldh_tSesContext wu_ldhses,
 	 int	       	wu_editmode,
@@ -96,7 +96,7 @@ class WUted {
 
   virtual void remove_command_window() {}
   virtual void reset_qual() {}
-  virtual void message( char *new_label) {}
+  virtual void message( const char *new_label) {}
   virtual void set_command_window( char *cmd) {}
   virtual void raise_window() {}
   virtual void clock_cursor() {}

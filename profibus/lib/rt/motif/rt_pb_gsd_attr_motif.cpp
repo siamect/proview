@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attr_motif.cpp,v 1.1 2007-01-04 08:43:47 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attr_motif.cpp,v 1.2 2008-10-31 12:51:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,23 +54,23 @@ extern "C" {
 #include "rt_pb_gsd_attrnav_motif.h"
 
 
-void GsdAttrMotif::message( char severity, char *message)
+void GsdAttrMotif::message( char severity, const char *message)
 {
   Arg 		args[2];
   XmString	cstr;
 
-  cstr=XmStringCreateLtoR( message, "ISO8859-1");
+  cstr=XmStringCreateLtoR( (char*) message, (char*) "ISO8859-1");
   XtSetArg(args[0],XmNlabelString, cstr);
   XtSetValues( msg_label, args, 1);
   XmStringFree( cstr);
 }
 
-void GsdAttrMotif::set_prompt( char *prompt)
+void GsdAttrMotif::set_prompt( const char *prompt)
 {
   Arg 		args[3];
   XmString	cstr;
 
-  cstr=XmStringCreateLtoR( prompt, "ISO8859-1");
+  cstr=XmStringCreateLtoR( (char*) prompt, (char*) "ISO8859-1");
   XtSetArg(args[0],XmNlabelString, cstr);
   XtSetArg(args[1],XmNwidth, 50);
   XtSetArg(args[2],XmNheight, 30);
@@ -118,7 +118,7 @@ void GsdAttrMotif::change_value()
     XmTextSetSelection( text_w, 0, strlen(value), CurrentTime);
   }
   else {
-    XmTextSetString( cmd_input, "");
+    XmTextSetString( cmd_input, (char*) "");
   }
   set_prompt( "value >");
   input_open = 1;
@@ -304,30 +304,30 @@ GsdAttrMotif::GsdAttrMotif( Widget a_parent_wid,
 
   static XtActionsRec actions[] =
   {
-    {"gsdattr_inputfocus",      (XtActionProc) action_inputfocus}
+    {(char*) "gsdattr_inputfocus",      (XtActionProc) action_inputfocus}
   };
 
   static MrmRegisterArg	reglist[] = {
-        { "gsdattr_ctx", 0 },
-	{"gsdattr_activate_exit",(caddr_t)activate_exit },
-	{"gsdattr_activate_print",(caddr_t)activate_print },
-	{"gsdattr_activate_copy",(caddr_t)activate_copy },
-	{"gsdattr_activate_cut",(caddr_t)activate_cut },
-	{"gsdattr_activate_paste",(caddr_t)activate_paste },
-	{"gsdattr_activate_zoom_in",(caddr_t)activate_zoom_in },
-	{"gsdattr_activate_zoom_out",(caddr_t)activate_zoom_out },
-	{"gsdattr_activate_zoom_reset",(caddr_t)activate_zoom_reset },
-	{"gsdattr_activate_change_value",(caddr_t)activate_change_value },
-	{"gsdattr_activate_help",(caddr_t)activate_help },
-	{"gsdattr_create_msg_label",(caddr_t)create_msg_label },
-	{"gsdattr_create_menubutton",(caddr_t)create_menubutton },
-	{"gsdattr_create_cmd_prompt",(caddr_t)create_cmd_prompt },
-	{"gsdattr_create_cmd_input",(caddr_t)create_cmd_input },
-	{"gsdattr_create_attrnav_form",(caddr_t)create_attrnav_form },
-	{"gsdattr_create_cmd_ok",(caddr_t)create_cmd_ok },
-	{"gsdattr_activate_cmd_ok",(caddr_t)activate_cmd_ok },
-	{"gsdattr_create_cmd_ca",(caddr_t)create_cmd_ca },
-	{"gsdattr_activate_cmd_ca",(caddr_t)activate_cmd_ca }
+        {(char*) "gsdattr_ctx", 0 },
+	{(char*) "gsdattr_activate_exit",(caddr_t)activate_exit },
+	{(char*) "gsdattr_activate_print",(caddr_t)activate_print },
+	{(char*) "gsdattr_activate_copy",(caddr_t)activate_copy },
+	{(char*) "gsdattr_activate_cut",(caddr_t)activate_cut },
+	{(char*) "gsdattr_activate_paste",(caddr_t)activate_paste },
+	{(char*) "gsdattr_activate_zoom_in",(caddr_t)activate_zoom_in },
+	{(char*) "gsdattr_activate_zoom_out",(caddr_t)activate_zoom_out },
+	{(char*) "gsdattr_activate_zoom_reset",(caddr_t)activate_zoom_reset },
+	{(char*) "gsdattr_activate_change_value",(caddr_t)activate_change_value },
+	{(char*) "gsdattr_activate_help",(caddr_t)activate_help },
+	{(char*) "gsdattr_create_msg_label",(caddr_t)create_msg_label },
+	{(char*) "gsdattr_create_menubutton",(caddr_t)create_menubutton },
+	{(char*) "gsdattr_create_cmd_prompt",(caddr_t)create_cmd_prompt },
+	{(char*) "gsdattr_create_cmd_input",(caddr_t)create_cmd_input },
+	{(char*) "gsdattr_create_attrnav_form",(caddr_t)create_attrnav_form },
+	{(char*) "gsdattr_create_cmd_ok",(caddr_t)create_cmd_ok },
+	{(char*) "gsdattr_activate_cmd_ok",(caddr_t)activate_cmd_ok },
+	{(char*) "gsdattr_create_cmd_ca",(caddr_t)create_cmd_ca },
+	{(char*) "gsdattr_activate_cmd_ca",(caddr_t)activate_cmd_ca }
 	};
 
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
@@ -352,7 +352,7 @@ GsdAttrMotif::GsdAttrMotif( Widget a_parent_wid,
   parent_wid = XtCreatePopupShell("pbGsdEditor", 
 		topLevelShellWidgetClass, a_parent_wid, args, 0);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "gsd_attr_window", parent_wid,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "gsd_attr_window", parent_wid,
 			name, args, 1, &toplevel, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
 
@@ -379,7 +379,7 @@ GsdAttrMotif::GsdAttrMotif( Widget a_parent_wid,
   XtManageChild( toplevel);
   XtUnmanageChild( cmd_input);
 
-  attrnav = new GsdAttrNavMotif( this, attrnav_form, "Plant",
+  attrnav = new GsdAttrNavMotif( this, attrnav_form, (char*) "Plant",
 		gsd, edit_mode, &brow_widget, &sts);
   ((GsdAttrNav *)attrnav)->message_cb = &GsdAttr::gsdattr_message;
   ((GsdAttrNav *)attrnav)->change_value_cb = &GsdAttr::gsdattr_change_value_cb;

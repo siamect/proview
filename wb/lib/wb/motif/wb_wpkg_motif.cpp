@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wpkg_motif.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_wpkg_motif.cpp,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,12 +54,12 @@
 #include "wb_error.h"
 #include "co_xhelp.h"
 
-void WPkgMotif::message( char severity, char *message)
+void WPkgMotif::message( char severity, const char *message)
 {
   Arg 		args[2];
   XmString	cstr;
 
-  cstr=XmStringCreateLtoR( message, "ISO8859-1");
+  cstr=XmStringCreateLtoR( (char*) message, (char*) "ISO8859-1");
   XtSetArg(args[0],XmNlabelString, cstr);
   XtSetArg(args[1],XmNheight, 20);
   XtSetValues( msg_label, args, 2);
@@ -215,21 +215,21 @@ WPkgMotif::WPkgMotif(
 
   static XtActionsRec actions[] =
   {
-    {"wpkg_inputfocus",      (XtActionProc) action_inputfocus}
+    {(char*) "wpkg_inputfocus",      (XtActionProc) action_inputfocus}
   };
 
   static MrmRegisterArg	reglist[] = {
-        { "wpkg_ctx", 0 },
-	{"wpkg_activate_exit",(caddr_t)activate_exit },
-	{"wpkg_activate_distribute",(caddr_t)activate_distribute },
-	{"wpkg_activate_createpkg",(caddr_t)activate_createpkg },
-	{"wpkg_activate_deletepkg",(caddr_t)activate_deletepkg },
-	{"wpkg_activate_dmode_filediff",(caddr_t)activate_dmode_filediff },
-	{"wpkg_activate_dmode_filetime",(caddr_t)activate_dmode_filetime },
-	{"wpkg_activate_dmode_filepath",(caddr_t)activate_dmode_filepath },
-	{"wpkg_activate_help",(caddr_t)activate_help },
-	{"wpkg_create_msg_label",(caddr_t)create_msg_label },
-	{"wpkg_create_wpkgnav_form",(caddr_t)create_wpkgnav_form }
+        {(char*) "wpkg_ctx", 0 },
+	{(char*) "wpkg_activate_exit",(caddr_t)activate_exit },
+	{(char*) "wpkg_activate_distribute",(caddr_t)activate_distribute },
+	{(char*) "wpkg_activate_createpkg",(caddr_t)activate_createpkg },
+	{(char*) "wpkg_activate_deletepkg",(caddr_t)activate_deletepkg },
+	{(char*) "wpkg_activate_dmode_filediff",(caddr_t)activate_dmode_filediff },
+	{(char*) "wpkg_activate_dmode_filetime",(caddr_t)activate_dmode_filetime },
+	{(char*) "wpkg_activate_dmode_filepath",(caddr_t)activate_dmode_filepath },
+	{(char*) "wpkg_activate_help",(caddr_t)activate_help },
+	{(char*) "wpkg_create_msg_label",(caddr_t)create_msg_label },
+	{(char*) "wpkg_create_wpkgnav_form",(caddr_t)create_wpkgnav_form }
 	};
 
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
@@ -256,7 +256,7 @@ WPkgMotif::WPkgMotif(
   parent_wid = XtCreatePopupShell("PwR Distributor", 
 		topLevelShellWidgetClass, parent_wid, args, i);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "wpkg_window", parent_wid,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "wpkg_window", parent_wid,
 			name, args, 1, &toplevel, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelist_gtk.cpp,v 1.7 2007-10-02 15:53:20 claes Exp $
+ * Proview   $Id: co_statusmon_nodelist_gtk.cpp,v 1.8 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,7 +50,7 @@ static void destroy_event( GtkWidget *w, gpointer data)
 
 NodelistGtk::NodelistGtk( void *nodelist_parent_ctx,
 			  GtkWidget *nodelist_parent_wid,
-			  char *nodelist_name, int nodelist_mode, 
+			  const char *nodelist_name, int nodelist_mode, 
 			  int nodelist_view_node_descr, int msgw_pop, 
 			  pwr_tStatus *status) :
   Nodelist( nodelist_parent_ctx, nodelist_name, nodelist_mode, 
@@ -553,8 +553,8 @@ void NodelistGtk::activate_help( GtkWidget *w, gpointer data)
   nodelist->activate_help();
 }
 
-void NodelistGtk::open_input_dialog( char *text, char *text2, char *text3, 
-				     char *title, char *init_text,
+void NodelistGtk::open_input_dialog( const char *text, const char *text2, const char *text3, 
+				     const char *title, const char *init_text,
 				     void (*ok_cb)( Nodelist *, char *, char *, char *))
 {
   create_input_dialog();

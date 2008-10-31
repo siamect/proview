@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltohtml.h,v 1.5 2008-03-03 11:01:09 claes Exp $
+ * Proview   $Id: cnv_wbltohtml.h,v 1.6 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,7 +24,7 @@
 extern "C" {
 #endif
 
-#include <vector.h>
+#include <vector>
 #include "pwr.h"
 #include "cnv_readwbl.h"
 #include "cnv_wblto.h"
@@ -83,7 +83,7 @@ class CnvWblToHtml : public CnvWblTo {
   Cnv_eWblToType type() { return Cnv_eWblToType_Html;}
   int class_open() { return html_class_open;}
   int index_open() { return html_index_open;}
-  void create_cdp_file( char *volume_name, char *class_name, char *attr_typeref);
+  void create_cdp_file( const char *volume_name, const char *class_name, const char *attr_typeref);
   void print_all_menu();
   
 };

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre_gtk.cpp,v 1.2 2007-02-05 09:31:23 claes Exp $
+ * Proview   $Id: wb_gre_gtk.cpp,v 1.3 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,7 +54,7 @@
 //
 WGreGtk::WGreGtk( void *wg_parent_ctx,
 		  GtkWidget *wg_parent_wid,
-		  char *name) :
+		  const char *name) :
   WGre( wg_parent_ctx, 0), parent_wid(wg_parent_wid), trace_timerid(0)
 {
   ctx_init();

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_gtk.cpp,v 1.16 2008-06-25 07:57:25 claes Exp $
+ * Proview   $Id: rt_xtt_gtk.cpp,v 1.17 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -110,9 +110,9 @@ int XttGtk::init_hotkey( XtAppContext AppCtx, Widget Top)
 }
 #endif
 
-void XttGtk::open_input_dialog( char *text, char *title,
-			     char *init_text,
-			     void (*ok_cb)( Xtt *, char *))
+void XttGtk::open_input_dialog( const char *text, const char *title,
+				const char *init_text,
+				void (*ok_cb)( Xtt *, char *))
 {
   create_input_dialog();
 
@@ -132,7 +132,7 @@ void XttGtk::open_input_dialog( char *text, char *title,
   gtk_widget_grab_focus( india_text);
 }
 
-void XttGtk::message( char severity, char *msg)
+void XttGtk::message( char severity, const char *msg)
 {
   char *messageutf8 = g_convert( msg, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
   gtk_label_set_text( GTK_LABEL(msg_label), messageutf8);
@@ -170,7 +170,7 @@ void XttGtk::map( void *ctx)
   xtt->xnav->displayed = 1;
 }
 
-void XttGtk::set_prompt( char *prompt)
+void XttGtk::set_prompt( const char *prompt)
 {
   if ( strcmp(prompt, "") == 0) {
     g_object_set( cmd_prompt, "visible", FALSE, NULL);

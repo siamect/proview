@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_readxtthelp.h,v 1.2 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: cnv_readxtthelp.h,v 1.3 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,6 +19,10 @@
 
 #ifndef cnv_xtthelpread_h
 #define cnv_xtthelpread_h
+
+#include <fstream>
+
+using namespace std;
 
 #if defined __cplusplus
 extern "C" {

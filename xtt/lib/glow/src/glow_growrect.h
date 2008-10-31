@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growrect.h,v 1.10 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_growrect.h,v 1.11 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,7 +54,7 @@ class GrowRect : public GlowRect {
     \param fill_d_type	Fill color.
     \param nodraw	Don't draw the object now.
   */
-  GrowRect( GrowCtx *glow_ctx, char *name, double x = 0, double y = 0, 
+  GrowRect( GrowCtx *glow_ctx, const char *name, double x = 0, double y = 0, 
 	      double w = 0, double h = 0, 
 	      glow_eDrawType border_d_type = glow_eDrawType_Line, 
 	      int line_w = 1, int fix_line_w = 0, 

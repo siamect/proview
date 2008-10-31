@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.h,v 1.13 2008-10-09 08:34:14 claes Exp $
+ * Proview   $Id: wb_lfu.h,v 1.14 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -60,7 +60,7 @@ typedef struct {
         char		name[80];
 	} lfu_t_volref;
 
-pwr_tStatus lfu_volumelist_load( char *filename, 
+pwr_tStatus lfu_volumelist_load( const char *filename, 
 				 lfu_t_volumelist **vollist,
 				 int *volcount);
 

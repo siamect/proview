@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wpkg_gtk.cpp,v 1.3 2007-01-17 10:28:39 claes Exp $
+ * Proview   $Id: wb_wpkg_gtk.cpp,v 1.4 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,7 +42,7 @@
 #include "wb_error.h"
 #include "co_xhelp.h"
 
-void WPkgGtk::message( char severity, char *message)
+void WPkgGtk::message( char severity, const char *message)
 {
   gtk_label_set_text( GTK_LABEL(msg_label), message);
 }

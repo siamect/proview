@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw.h,v 1.10 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_draw.h,v 1.11 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -102,7 +102,7 @@ class GlowDraw {
   
   virtual void set_cursor( GlowWind *w, glow_eDrawCursor cursor) {}
   virtual void set_nav_cursor( glow_eDrawCursor cursor) {}
-  virtual int get_text_extent( char *text, int len,
+  virtual int get_text_extent( const char *text, int len,
 			       glow_eDrawType gc_type, int idx, glow_eFont font_idx,
 			       int *width, int *height, int *descent) {return 1;}
   virtual void copy_area( GlowWind *w, int x, int y) {}

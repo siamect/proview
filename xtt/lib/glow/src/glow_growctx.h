@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.h,v 1.18 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_growctx.h,v 1.19 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #ifndef glow_growctx_h
 #define glow_growctx_h
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 
 #include "glow.h"
 #include "glow_ctx.h"
@@ -63,7 +63,7 @@ class GrowCtx : public GlowCtx {
     \param ctx_name	Name of context.
     \param zoom_fact	Initial zoom factor.
   */
-  GrowCtx( char *ctx_name, double zoom_fact = 100) :
+  GrowCtx( const char *ctx_name, double zoom_fact = 100) :
     	GlowCtx( ctx_name, zoom_fact), edit_mode(grow_eMode_Edit),
 	conpoint_num_cnt(0), objectname_cnt(0), polyline_not_first(0),
 	background_color(glow_eDrawType_LineErase), highlight_disabled(0),
@@ -164,7 +164,7 @@ class GrowCtx : public GlowCtx {
     \param name		Name of the subgraph.
     \param mode		Not used.
   */
-  int open_subgraph_from_name( char *name, glow_eSaveMode mode);
+  int open_subgraph_from_name( const char *name, glow_eSaveMode mode);
 
   //! Save as a subgraph to file, i.e. as a GlowNodeClass.
   /*!
@@ -210,7 +210,7 @@ class GrowCtx : public GlowCtx {
     \param element	Pointer to found object.
     \return		Returns 1 if object is found, else 0.
   */
-  int find_by_name( char *name, GlowArrayElem **element)
+  int find_by_name( const char *name, GlowArrayElem **element)
 		{ return a.find_by_name( name, element);};
 
   //! Find a nodeclass by name.
@@ -219,7 +219,7 @@ class GrowCtx : public GlowCtx {
     \param element	Pointer to found nodeclass.
     \return		Returns 1 if nodeclass is found, else 0.
   */
-  int find_nc_by_name( char *name, GlowArrayElem **element)
+  int find_nc_by_name( const char *name, GlowArrayElem **element)
 		{ return a_nc.find_by_name( name, element);};
 
   //! Find a conclass by name.
@@ -505,7 +505,7 @@ class GrowCtx : public GlowCtx {
     \param path_count		Number of paths in path_vect.
     \param path_vect		Array of paths char[10][80].
   */
-  void set_path( int path_count, char *path_vect)
+  void set_path( int path_count, const char *path_vect)
 		{ path_cnt = path_count; memcpy( path, path_vect, sizeof(path)); };
 
   //! Check of any of the selected object is a connection object.
@@ -611,7 +611,7 @@ class GrowCtx : public GlowCtx {
 
   //! Set java name of the context.
   /*! \param name 	Name of java class for the graph. */
-  void set_java_name( char *name) { strcpy( java_name, name);};
+  void set_java_name( const char *name) { strcpy( java_name, name);};
 
   //! Get java name of the context.
   /*! \param name 	Name of java class for the graph. */

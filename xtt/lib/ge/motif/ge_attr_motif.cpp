@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attr_motif.cpp,v 1.2 2008-03-19 12:59:38 claes Exp $
+ * Proview   $Id: ge_attr_motif.cpp,v 1.3 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <vector.h>
+#include <vector>
 #include <Xm/Xm.h>
 #include <Xm/XmP.h>
 #include <Xm/Text.h>
@@ -59,23 +59,23 @@ char	AttrMotif::value_recall[30][160];
 
 static void attr_valchanged_cmd_input( Widget w, XEvent *event);
 
-void AttrMotif::message( char severity, char *message)
+void AttrMotif::message( char severity, const char *message)
 {
   Arg 		args[2];
   XmString	cstr;
 
-  cstr=XmStringCreateLtoR( message, "ISO8859-1");
+  cstr=XmStringCreateLtoR( (char*) message, (char*) "ISO8859-1");
   XtSetArg(args[0],XmNlabelString, cstr);
   XtSetValues( msg_label, args, 1);
   XmStringFree( cstr);
 }
 
-void AttrMotif::set_prompt( char *prompt)
+void AttrMotif::set_prompt( const char *prompt)
 {
   Arg 		args[3];
   XmString	cstr;
 
-  cstr=XmStringCreateLtoR( prompt, "ISO8859-1");
+  cstr=XmStringCreateLtoR( (char*) prompt, (char*) "ISO8859-1");
   XtSetArg(args[0],XmNlabelString, cstr);
   XtSetArg(args[1],XmNwidth, 50);
   XtSetArg(args[2],XmNheight, 30);
@@ -131,7 +131,7 @@ void AttrMotif::change_value()
     }
   }
   else {
-    XmTextSetString( cmd_input, "");
+    XmTextSetString( cmd_input, (char*) "");
   }
 //  i = 0;
 //  XtSetArg(args[i],XmNeditMode, XmMULTI_LINE_EDIT); i++;
@@ -375,27 +375,27 @@ AttrMotif::AttrMotif( Widget a_parent_wid,
 
   static XtActionsRec actions[] =
   {
-    {"attr_inputfocus",      (XtActionProc) attr_action_inputfocus}
+    {(char*) "attr_inputfocus",      (XtActionProc) attr_action_inputfocus}
   };
 
   static MrmRegisterArg	reglist[] = {
-        { "attr_ctx", 0 },
-	{"attr_activate_exit",(caddr_t)attr_activate_exit },
-	{"attr_activate_store",(caddr_t)attr_activate_store },
-	{"attr_activate_recall_prev",(caddr_t)attr_activate_recall_prev },
-	{"attr_activate_recall_next",(caddr_t)attr_activate_recall_next },
-	{"attr_activate_change_value",(caddr_t)attr_activate_change_value },
-	{"attr_activate_help",(caddr_t)attr_activate_help },
-	{"attr_create_msg_label",(caddr_t)attr_create_msg_label },
-	{"attr_create_cmd_prompt",(caddr_t)attr_create_cmd_prompt },
-	{"attr_create_cmd_input",(caddr_t)attr_create_cmd_input },
-	{"attr_create_cmd_scrolledinput",(caddr_t)attr_create_cmd_scrolledinput },
-	{"attr_create_cmd_scrolled_ok",(caddr_t)attr_create_cmd_scrolled_ok },
-	{"attr_create_cmd_scrolled_ca",(caddr_t)attr_create_cmd_scrolled_ca },
-	{"attr_create_attrnav_form",(caddr_t)attr_create_attrnav_form },
-	{"attr_activate_cmd_scrolledinput",(caddr_t)attr_activate_cmd_input },
-	{"attr_activate_cmd_scrolled_ok",(caddr_t)attr_activate_cmd_scrolled_ok },
-	{"attr_activate_cmd_scrolled_ca",(caddr_t)attr_activate_cmd_scrolled_ca }
+        {(char*) "attr_ctx", 0 },
+	{(char*) "attr_activate_exit",(caddr_t)attr_activate_exit },
+	{(char*) "attr_activate_store",(caddr_t)attr_activate_store },
+	{(char*) "attr_activate_recall_prev",(caddr_t)attr_activate_recall_prev },
+	{(char*) "attr_activate_recall_next",(caddr_t)attr_activate_recall_next },
+	{(char*) "attr_activate_change_value",(caddr_t)attr_activate_change_value },
+	{(char*) "attr_activate_help",(caddr_t)attr_activate_help },
+	{(char*) "attr_create_msg_label",(caddr_t)attr_create_msg_label },
+	{(char*) "attr_create_cmd_prompt",(caddr_t)attr_create_cmd_prompt },
+	{(char*) "attr_create_cmd_input",(caddr_t)attr_create_cmd_input },
+	{(char*) "attr_create_cmd_scrolledinput",(caddr_t)attr_create_cmd_scrolledinput },
+	{(char*) "attr_create_cmd_scrolled_ok",(caddr_t)attr_create_cmd_scrolled_ok },
+	{(char*) "attr_create_cmd_scrolled_ca",(caddr_t)attr_create_cmd_scrolled_ca },
+	{(char*) "attr_create_attrnav_form",(caddr_t)attr_create_attrnav_form },
+	{(char*) "attr_activate_cmd_scrolledinput",(caddr_t)attr_activate_cmd_input },
+	{(char*) "attr_activate_cmd_scrolled_ok",(caddr_t)attr_activate_cmd_scrolled_ok },
+	{(char*) "attr_activate_cmd_scrolled_ca",(caddr_t)attr_activate_cmd_scrolled_ca }
 	};
 
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
@@ -431,7 +431,7 @@ AttrMotif::AttrMotif( Widget a_parent_wid,
   parent_wid = XtCreatePopupShell("objectEditor", 
 		topLevelShellWidgetClass, a_parent_wid, args, 0);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "attr_window", parent_wid,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "attr_window", parent_wid,
 			name, args, 1, &toplevel, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
 

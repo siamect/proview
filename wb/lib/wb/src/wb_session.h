@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_session.h,v 1.13 2007-12-06 10:55:04 claes Exp $
+ * Proview   $Id: wb_session.h,v 1.14 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -104,7 +104,7 @@ public:
   bool validateDestination( wb_destination d, pwr_tCid cid);
   bool castAttribute( pwr_sAttrRef *arp, pwr_tCid cid);
   bool disableAttribute( pwr_sAttrRef *arp, pwr_tDisableAttr disable);
-  void recix_set_destination( char *d) { m_srep->recix_set_destination( d);}
+  void recix_set_destination( const char *d) { m_srep->recix_set_destination( d);}
 };
 
 

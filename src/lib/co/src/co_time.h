@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_time.h,v 1.9 2008-09-18 15:08:12 claes Exp $
+ * Proview   $Id: co_time.h,v 1.10 2008-10-31 12:51:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -111,11 +111,11 @@ pwr_tStatus   time_Dmul (pwr_tDeltaTime*, pwr_tDeltaTime*, pwr_tInt32);
 int     time_Dcomp  (pwr_tDeltaTime*, pwr_tDeltaTime*);
 pwr_tStatus   time_DtoAscii (pwr_tDeltaTime*, int, char*, int);
 pwr_tStatus   time_AtoAscii (pwr_tTime*, time_eFormat, char*, int);
-pwr_tStatus   time_AsciiToD (char*, pwr_tDeltaTime*);
-pwr_tStatus   time_AsciiToA (char*, pwr_tTime*);
+pwr_tStatus   time_AsciiToD (const char*, pwr_tDeltaTime*);
+pwr_tStatus   time_AsciiToA (const char*, pwr_tTime*);
 pwr_tStatus   time_TmToAscii  (struct tm*, time_eFormat, char*, int);
-pwr_tStatus   time_AsciiToTm  (char*, struct tm*);
-pwr_tStatus   time_FormAsciiToA(char*, short, short, pwr_tTime*);
+pwr_tStatus   time_AsciiToTm  (const char*, struct tm*);
+pwr_tStatus   time_FormAsciiToA(const char*, short, short, pwr_tTime*);
 void      time_AtoFormAscii(pwr_tTime*, short, short, char[], int);
 pwr_tDeltaTime *  time_MsToD  (pwr_tDeltaTime*, pwr_tInt32);
 

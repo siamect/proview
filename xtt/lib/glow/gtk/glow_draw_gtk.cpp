@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_gtk.cpp,v 1.13 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow_draw_gtk.cpp,v 1.14 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,8 +21,8 @@
 
 using namespace std;
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
@@ -176,13 +176,13 @@ static char	font_names[glow_eFont__][glow_eDrawFont__][DRAW_FONT_SIZE][80] = {
 
 static  GdkEvent	last_event;
 
-static GdkColor glow_allocate_named_color( GlowDrawGtk *draw_ctx, char *named_color);
+static GdkColor glow_allocate_named_color( GlowDrawGtk *draw_ctx, const char *named_color);
 static GdkColor glow_allocate_color( GlowDrawGtk *draw_ctx, int rgb_red,
 	int rgb_green, int rgb_blue);
 static void event_timer( GlowCtx *ctx, int time_ms);
 static void cancel_event_timer(GlowCtx *ctx);
 static gboolean event_timer_cb( void *ctx);
-static int glow_read_color_file( char *filename, draw_sColor **color_array, 
+static int glow_read_color_file( const char *filename, draw_sColor **color_array, 
 	int *size);
 
 static GdkGC *get_gc( GlowDrawGtk *draw_ctx, int i, int j)
@@ -436,7 +436,7 @@ static int glow_create_gc( GlowDrawGtk *draw_ctx, GdkWindow *window)
 }
 
 
-static GdkColor glow_allocate_named_color( GlowDrawGtk *draw_ctx, char *named_color)
+static GdkColor glow_allocate_named_color( GlowDrawGtk *draw_ctx, const char *named_color)
 {
   GdkColor color;
 
@@ -1901,7 +1901,7 @@ void GlowDrawGtk::set_cursor( GlowWind *wind, glow_eDrawCursor cursor)
   gdk_display_flush( display);
 }
 
-int GlowDrawGtk::get_text_extent( char *text, int len,
+int GlowDrawGtk::get_text_extent( const char *text, int len,
 				  glow_eDrawType gc_type, int idx, glow_eFont font_idx,
 				  int *width, int *height, int *descent)
 {
@@ -2060,7 +2060,7 @@ void GlowDrawGtk::set_inputfocus( GlowWind *wind)
   // gtk_widget_grab_focus( m_wind.toplevel);
 }
 
-static int glow_read_color_file( char *filename, draw_sColor **color_array, 
+static int glow_read_color_file( const char *filename, draw_sColor **color_array, 
 	int *size)
 {
   char		line[80];
@@ -2538,7 +2538,7 @@ int GlowDrawGtk::print( char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.13 2008-10-16 08:58:11 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.14 2008-10-31 12:51:35 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else

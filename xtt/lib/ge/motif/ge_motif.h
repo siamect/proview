@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_motif.h,v 1.2 2007-05-07 15:45:18 claes Exp $
+ * Proview   $Id: ge_motif.h,v 1.3 2008-10-31 12:51:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -72,24 +72,24 @@ class GeMotif : public Ge {
   ~GeMotif();
 
   virtual void set_title( char *title);
-  virtual void open_input_dialog( char *text, char *title,
-				  char *init_text,
+  virtual void open_input_dialog( const char *text, const char *title,
+				  const char *init_text,
 				  void (*india_ok_cb)( Ge *, char *));
-  virtual void message( char severity, char *message);
+  virtual void message( char severity, const char *message);
   virtual void status_msg( char *pos_str);
-  virtual void open_yesnodia( char *text, char *title, 
+  virtual void open_yesnodia( const char *text, const char *title, 
 			      void (*yes_cb)( Ge *), void (*no_cb)( Ge *));
-  virtual void set_prompt( char *prompt);
+  virtual void set_prompt( const char *prompt);
   virtual void subgraphs_new();
   virtual void update();
   virtual int get_plant_select( char *name);
-  virtual void create_list( char *title, char *texts,
+  virtual void create_list( const char *title, const char *texts,
 			    void (action_cb)( void *, char *), void *ctx);
   virtual void plant_del( void *plantctx);
   virtual int plant_get_select( void *plantctx, pwr_sAttrRef *attrref, int *is_attr);
 
   static void valchanged_cmd_input( Widget w, XEvent *event);
-  static void change_text_cb( void *ge_ctx, void *text_object, char *text);
+  static void change_text_cb( void *ge_ctx, void *text_object, const char *text);
   static void change_name_cb( void *ge_ctx, void *text_object, char *text);
   static void change_value_cb( void *ge_ctx, void *value_object, char *text);
   static void confirm_cb( void *ge_ctx, void *confirm_object, char *text);

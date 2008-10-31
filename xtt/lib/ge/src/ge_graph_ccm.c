@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: ge_graph_ccm.c,v 1.3 2007-04-25 13:39:21 claes Exp $
+ * Proview   $Id: ge_graph_ccm.c,v 1.4 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -686,7 +686,7 @@ int gccm_varname_parse(
 }
 
 int gccm_register_function( 
-	char 	*name,
+	const char 	*name,
 	int 	(* sysfunc) ( void *, gccm_s_arg *, int, int *, float *,
 			  int *, char *)
 )

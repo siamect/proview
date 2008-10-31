@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wcast.cpp,v 1.5 2008-09-18 15:01:36 claes Exp $
+ * Proview   $Id: wb_wcast.cpp,v 1.6 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,7 +39,7 @@
 
 WCast::WCast( 
 	void	*wc_parent_ctx,
-	char 	*wc_name,
+	const char *wc_name,
 	ldh_tSesContext wc_ldhses,
 	pwr_sAttrRef wc_aref,
 	pwr_tStatus *status

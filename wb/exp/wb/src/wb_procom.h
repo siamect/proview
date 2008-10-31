@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_procom.h,v 1.1 2006-09-14 14:16:20 claes Exp $
+ * Proview   $Id: wb_procom.h,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,7 +35,7 @@ class wb_procom : public co_procom
   procom_eType m_type;
 
 public:
-  wb_procom( char *key, co_provider *p, procom_eType type) : 
+  wb_procom( const char *key, co_provider *p, procom_eType type) : 
     co_procom( p), m_connected(0), m_type( type)
   {
     strcpy( m_key, key);
@@ -46,7 +46,7 @@ public:
   void mainloop();
   void provideObject( pwr_tStatus sts, pwr_tOix oix, pwr_tOix fthoix, pwr_tOix bwsoix,
 		      pwr_tOix fwsoix, pwr_tOix fchoix, pwr_tOix lchoix, pwr_tCid cid,
-		      char *name, char *longname);
+		      const char *name, const char *longname);
   void provideBody( pwr_tStatus sts, pwr_tOix oix, int size, void *body);
   void provideStatus( pwr_tStatus sts);
 

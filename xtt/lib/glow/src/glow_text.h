@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_text.h,v 1.4 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_text.h,v 1.5 2008-10-31 12:51:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #ifndef glow_text_h
 #define glow_text_h
 
-#include <iostream.h>
+#include <iostream>
 #include "glow.h"
 #include "glow_growctx.h"
 #include "glow_point.h"
@@ -51,7 +51,7 @@ class GlowText : public GlowArrayElem {
     \param t_size	Text size.
     \param display_lev	Level when the object is visible.
   */
-  GlowText( GrowCtx *glow_ctx, char *text1, double x = 0, double y = 0,
+  GlowText( GrowCtx *glow_ctx, const char *text1, double x = 0, double y = 0,
 	glow_eDrawType d_type = glow_eDrawType_TextHelveticaBold, 
 	glow_eDrawType color_d_type = glow_eDrawType_Line,
 	int t_size = 2, glow_mDisplayLevel display_lev = glow_mDisplayLevel_1) : 

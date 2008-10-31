@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.cpp,v 1.43 2008-10-28 09:54:15 claes Exp $
+ * Proview   $Id: wb_wtt.cpp,v 1.44 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -350,7 +350,7 @@ void Wtt::create_pal_popup_menu_cb( void *wtt, pwr_tCid cid,
   ((Wtt *)wtt)->create_pal_popup_menu( cid, x, y);
 }
 
-void Wtt::gbl_command_cb( void *ctx, char *cmd)
+void Wtt::gbl_command_cb( void *ctx, const char *cmd)
 {
   Wtt *wtt = (Wtt *) ctx;
   char command[200];
@@ -795,7 +795,7 @@ int Wtt::set_edit()
   return 1;
 }
 
-void Wtt::message_cb( void *ctx, char severity, char *msg)
+void Wtt::message_cb( void *ctx, char severity, const char *msg)
 {
   if ( ((WUtility *)ctx)->utype == wb_eUtility_Wtt)
     ((Wtt *)ctx)->message( severity, msg);
@@ -2065,8 +2065,8 @@ void Wtt::register_utility( void *ctx, wb_eUtility utility)
 
 Wtt::Wtt( 
 	void	*wt_parent_ctx,
-	char 	*wt_name,
-	char	*iconname,
+	const char 	*wt_name,
+	const char	*iconname,
 	void	*wt_wbctx,
 	pwr_tVolumeId wt_volid,
 	ldh_tVolume wt_volctx,
@@ -2265,7 +2265,7 @@ int Wtt::get_popup_menu_items( pwr_sAttrRef aref, pwr_tCid cid)
 }
 
 WttApplListElem::WttApplListElem( wb_eUtility al_type, void *al_ctx, 
-	pwr_tObjid al_objid, char *al_name):
+	pwr_tObjid al_objid, const char *al_name):
 	type(al_type), ctx(al_ctx), objid(al_objid), next(NULL)
 {
   strcpy( name, al_name);
@@ -2292,7 +2292,7 @@ WttApplList::~WttApplList()
 }
 
 void WttApplList::insert( wb_eUtility type, void *ctx, 
-	pwr_tObjid objid, char *name)
+	pwr_tObjid objid, const char *name)
 {
   WttApplListElem *elem = new WttApplListElem( type, ctx, objid, name);
   elem->next = root;
@@ -2360,7 +2360,7 @@ void WttApplList::set_editmode( int editmode, ldh_tSesContext ldhses)
   }
 }
 
-int WttApplList::find( wb_eUtility type, char *name, void **ctx)
+int WttApplList::find( wb_eUtility type, const char *name, void **ctx)
 {
   WttApplListElem *elem;
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_watt_motif.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_watt_motif.cpp,v 1.2 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -58,24 +58,24 @@
 // Static member elements
 char WAttMotif::value_recall[30][160];
 
-void WAttMotif::message( char severity, char *message)
+void WAttMotif::message( char severity, const char *message)
 {
   Arg 		args[2];
   XmString	cstr;
 
-  cstr=XmStringCreateLtoR( message, "ISO8859-1");
+  cstr= XmStringCreateLtoR( (char*) message, (char*) "ISO8859-1");
   XtSetArg(args[0],XmNlabelString, cstr);
   XtSetArg(args[1],XmNheight, 20);
   XtSetValues( msg_label, args, 2);
   XmStringFree( cstr);
 }
 
-void WAttMotif::set_prompt( char *prompt)
+void WAttMotif::set_prompt( const char *prompt)
 {
   Arg 		args[3];
   XmString	cstr;
 
-  cstr=XmStringCreateLtoR( prompt, "ISO8859-1");
+  cstr=XmStringCreateLtoR( (char*) prompt, (char*) "ISO8859-1");
   XtSetArg(args[0],XmNlabelString, cstr);
   XtSetArg(args[1],XmNwidth, 50);
   XtSetArg(args[2],XmNheight, 30);
@@ -125,7 +125,7 @@ void WAttMotif::change_value( int set_focus)
 //    XmTextSetInsertionPosition( text_w, strlen(value));
     }
     else
-      XmTextSetString( text_w, "");
+      XmTextSetString( text_w, (char*) "");
 
     input_multiline = 1;
   }
@@ -140,7 +140,7 @@ void WAttMotif::change_value( int set_focus)
       XmTextSetSelection( text_w, 0, strlen(value), CurrentTime);
     }
     else
-      XmTextSetString( text_w, "");
+      XmTextSetString( text_w, (char*) "");
 
     input_multiline = 0;
   }
@@ -435,25 +435,25 @@ WAttMotif::WAttMotif(
 
   static XtActionsRec actions[] =
   {
-    {"watt_inputfocus",      (XtActionProc) action_inputfocus}
+    {(char*) "watt_inputfocus",      (XtActionProc) action_inputfocus}
   };
 
   static MrmRegisterArg	reglist[] = {
-        { "watt_ctx", 0 },
-	{"watt_activate_exit",(caddr_t)activate_exit },
-	{"watt_activate_change_value",(caddr_t)activate_change_value },
-	{"watt_activate_close_changeval",(caddr_t)activate_close_changeval },
-	{"watt_activate_help",(caddr_t)activate_help },
-	{"watt_create_msg_label",(caddr_t)create_msg_label },
-	{"watt_create_cmd_prompt",(caddr_t)create_cmd_prompt },
-	{"watt_create_cmd_input",(caddr_t)create_cmd_input },
-	{"watt_create_cmd_scrolledinput",(caddr_t)create_cmd_scrolledinput },
-	{"watt_create_cmd_scrolled_ok",(caddr_t)create_cmd_scrolled_ok },
-	{"watt_create_cmd_scrolled_ca",(caddr_t)create_cmd_scrolled_ca },
-	{"watt_create_wattnav_form",(caddr_t)create_wattnav_form },
-	{"watt_activate_cmd_scrolledinput",(caddr_t)activate_cmd_input },
-	{"watt_activate_cmd_scrolled_ok",(caddr_t)activate_cmd_scrolled_ok },
-	{"watt_activate_cmd_scrolled_ca",(caddr_t)activate_cmd_scrolled_ca }
+        {(char*) "watt_ctx", 0 },
+	{(char*) "watt_activate_exit",(caddr_t)activate_exit },
+	{(char*) "watt_activate_change_value",(caddr_t)activate_change_value },
+	{(char*) "watt_activate_close_changeval",(caddr_t)activate_close_changeval },
+	{(char*) "watt_activate_help",(caddr_t)activate_help },
+	{(char*) "watt_create_msg_label",(caddr_t)create_msg_label },
+	{(char*) "watt_create_cmd_prompt",(caddr_t)create_cmd_prompt },
+	{(char*) "watt_create_cmd_input",(caddr_t)create_cmd_input },
+	{(char*) "watt_create_cmd_scrolledinput",(caddr_t)create_cmd_scrolledinput },
+	{(char*) "watt_create_cmd_scrolled_ok",(caddr_t)create_cmd_scrolled_ok },
+	{(char*) "watt_create_cmd_scrolled_ca",(caddr_t)create_cmd_scrolled_ca },
+	{(char*) "watt_create_wattnav_form",(caddr_t)create_wattnav_form },
+	{(char*) "watt_activate_cmd_scrolledinput",(caddr_t)activate_cmd_input },
+	{(char*) "watt_activate_cmd_scrolled_ok",(caddr_t)activate_cmd_scrolled_ok },
+	{(char*) "watt_activate_cmd_scrolled_ca",(caddr_t)activate_cmd_scrolled_ca }
 	};
 
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
@@ -490,7 +490,7 @@ WAttMotif::WAttMotif(
   parent_wid = XtCreatePopupShell( title, 
 		topLevelShellWidgetClass, parent_wid, args, i);
 
-  sts = MrmFetchWidgetOverride( s_DRMh, "watt_window", parent_wid,
+  sts = MrmFetchWidgetOverride( s_DRMh, (char*) "watt_window", parent_wid,
 				name, args, 1, &toplevel, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
 

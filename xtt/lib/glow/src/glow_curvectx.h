@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_curvectx.h,v 1.3 2007-01-15 13:19:09 claes Exp $
+ * Proview   $Id: glow_curvectx.h,v 1.4 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,15 +20,15 @@
 #ifndef glow_curvectx_h
 #define glow_curvectx_h
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 
 #include "glow.h"
 #include "glow_growctx.h"
 
 class CurveCtx : public GrowCtx {
   public:
-    CurveCtx( char *ctx_name, double zoom_fact = 100) :
+    CurveCtx( const char *ctx_name, double zoom_fact = 100) :
         GrowCtx( ctx_name, zoom_fact), layout_adjusted(0)
 	{ ctx_type = glow_eCtxType_Curve;};
     int layout_adjusted;

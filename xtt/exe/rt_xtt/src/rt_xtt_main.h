@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_main.h,v 1.3 2007-05-16 12:37:39 claes Exp $
+ * Proview   $Id: rt_xtt_main.h,v 1.4 2008-10-31 12:51:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -68,11 +68,11 @@ class Xtt {
 
     Xtt( int argc, char *argv[], int *return_sts);
     virtual ~Xtt() {}
-    virtual void message( char severity, char *msg) {}
-    virtual void open_input_dialog( char *text, char *title,
-				    char *init_text,
+    virtual void message( char severity, const char *msg) {}
+    virtual void open_input_dialog( const char *text, const char *title,
+				    const char *init_text,
 				    void (*ok_cb)( Xtt *, char *)) {}
-    virtual void set_prompt( char *prompt) {}
+    virtual void set_prompt( const char *prompt) {}
     virtual void open_change_value() {}
 
     void list_opplace();
@@ -87,7 +87,7 @@ class Xtt {
     static void qcom_events( void *data);
     static void findregex_ok( Xtt *xtt, char *search_str);
     static void find_ok( Xtt *xtt, char *search_str);
-    static void xtt_message_cb( void *ctx, char severity, char *msg);
+    static void xtt_message_cb( void *ctx, char severity, const char *msg);
     static void close_ok( void *ctx, void *data);
     static void change_value( void *ctx);
     static void selection_changed( void *ctx);

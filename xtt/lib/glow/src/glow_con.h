@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_con.h,v 1.4 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_con.h,v 1.5 2008-10-31 12:51:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,8 @@
 #ifndef glow_con_h
 #define glow_con_h
 
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include "glow.h"
 #include "glow_growctx.h"
 #include "glow_point.h"
@@ -66,7 +66,7 @@ typedef struct {
 class GlowCon : public GlowArrayElem {
  public:
 #if 0
-  GlowCon( GrowCtx *glow_ctx, char *name, GlowConClass *con_class,
+  GlowCon( GrowCtx *glow_ctx, const char *name, GlowConClass *con_class,
 	GlowNode *source, GlowNode *dest, int source_cp, int dest_cp);
 #endif
   //! Constructor.
@@ -85,7 +85,7 @@ class GlowCon : public GlowArrayElem {
     \param cborder	Draw with border.
     \param cshadow	Draw width shadow.
   */
-  GlowCon( GrowCtx *glow_ctx, char *name, GlowConClass *con_class,
+  GlowCon( GrowCtx *glow_ctx, const char *name, GlowConClass *con_class,
 	GlowNode *source, GlowNode *dest, int source_cp, int dest_cp,
 	int nodraw = 0, int point_num = 0, double *x_vect = 0,
 	double *y_vect = 0, int cborder = 0, int cshadow = 0);

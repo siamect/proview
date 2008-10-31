@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.h,v 1.8 2006-04-28 05:01:02 claes Exp $
+ * Proview   $Id: wb_gcg.h,v 1.9 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -275,7 +275,7 @@ int gcg_plcwindow_compile (
 int	gcg_print_inputs( 
     gcg_ctx		gcgctx,
     vldh_t_node		node,
-    char		*delimstr,
+    const char		*delimstr,
     unsigned long	printtype,
     gcg_t_nocondef	*nocondef,
     unsigned long	*nocontype

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dblock.h,v 1.4 2008-04-07 14:53:06 claes Exp $
+ * Proview   $Id: wb_dblock.h,v 1.5 2008-10-31 12:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,9 @@
 #ifndef wb_dblock_h
 #define wb_dblock_h
 
-#include <vector.h>
+#include <vector>
+
+using namespace std;
 
 class wb_lockfile
 {
