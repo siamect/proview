@@ -260,7 +260,8 @@ Plant Configuration
 
 <h1>Data Storage
 DsFastCurve <t><t>Configuration of a fast curve <classlink>dsfastcurve, ,$pwr_lang/pwrb_xtthelp.dat
-DsTrend <t><t>Configuratino of trend <classlink>dstrend, ,$pwr_lang/pwrb_xtthelp.dat
+DsTrend <t><t>Configuration of trend <classlink>dstrend, ,$pwr_lang/pwrb_xtthelp.dat
+SevHist <t><t>Configuration of history storage <classlink>sevhist, ,$pwr_lang/pwrb_xtthelp.dat
 
 <h1>Supervision
 ASup <t><t>Supervision of analog value<classlink>asup, ,$pwr_lang/pwrb_xtthelp.dat
@@ -307,12 +308,14 @@ BaseTempSwitch <t><t>Temperature switch <classlink>basetempswitch, ,$pwr_lang/ba
 <h1>Valves and dampers
 BaseC3WayValve <t><t>Three way control valve<classlink>basec3wayvalve, ,$pwr_lang/basecomponent_xtthelp.dat
 BaseCDamper <t><t>Control damper<classlink>basecdamper, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseCValve <t><t>Control vavle<classlink>basecvalve, ,$pwr_lang/basecomponent_xtthelp.dat
 BaseDirValve <t><t>Direct valve <classlink>basedirvalve, ,$pwr_lang/basecomponent_xtthelp.dat
 BaseM3WayValve <t><t>Solenoid three way valve <classlink>basem3wayvalve, ,$pwr_lang/basecomponent_xtthelp.dat
 BaseMDamper <t><t>Solenoid damper <classlink>basemdamper, ,$pwr_lang/basecomponent_xtthelp.dat
 BaseMValve <t><t>Solenoid valve <classlink>basemvalve, ,$pwr_lang/basecomponent_xtthelp.dat
 BaseManValve <t><t>Manual valve <classlink>basemanvalve, ,$pwr_lang/basecomponent_xtthelp.dat
 BasePropValve <t><t>Proportional valve <classlink>basepropvalve, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseValveIncrDecr <t><t>Valve with increment/decrement order<classlink>basevalveincrdecr, ,$pwr_lang/basecomponent_xtthelp.dat
 
 <h1>Motor aggregates with frequency converter
 BaseFcPPO3FanAggr <t><t> Fan aggregate with frequency converter Profibus PPO3 protocol<classlink>basefcppo3fanaggr, ,$pwr_lang/basecomponent_xtthelp.dat
@@ -356,6 +359,9 @@ RemoteConfig <t><t>Configuration of remote communication <classlink>remoteconfig
 SysMonConfig <t><t>Configuration of system monitor <classlink>sysmonconfig, ,$pwr_lang/pwrb_xtthelp.dat
 StatusServerConfig <t><t>Configuration of status server <classlink>statusserverconfig, ,$pwr_lang/pwrb_xtthelp.dat
 WebHandler <t><t>Configuration of web handler process <classlink>webhandler, ,$pwr_lang/pwrb_xtthelp.dat
+SevHistMonitor <t><t>Configuration of SevHist monitor <classlink>sevhistmonitor, ,$pwr_lang/pwrb_xtthelp.dat
+SevHistThread <t><t>Configuration of a thread in SevHist monitor <classlink>sevhistthread, ,$pwr_lang/pwrb_xtthelp.dat
+SevServer <t><t>Configuration of Sev server <classlink>sevserver, ,$pwr_lang/pwrb_xtthelp.dat
 
 <h1>Operator
 OpPlace <t><t>Configuration of operator place <classlink>opplace, ,$pwr_lang/pwrb_xtthelp.dat
@@ -857,6 +863,7 @@ BaseSensorSim <t><t>Simulation object to BaseSensor <classlink>basesensorsim, ,$
 BaseMotorAggrSim <t><t>Simulation object to BaseMotorAggr <classlink>basemotoraggrsim, ,$pwr_lang/basecomponent_xtthelp.dat
 BaseMotorIncrDecrAggrSim <t><t>Simulation object to BaseMotorIncrDecrAggr <classlink>basemotorincrdecraggrsim, ,$pwr_lang/basecomponent_xtthelp.dat
 BaseMotorSim <t><t>Simulation object to BaseMotor <classlink>basemotorsim, ,$pwr_lang/basecomponent_xtthelp.dat
+BaseValveIncrDecrSim <t><t>Simulation object to BaseValveIncrDecr <classlink>basevalveincrdecrsim, ,$pwr_lang/basecomponent_xtthelp.dat
 </topic>
 
 <topic> orm_plc_misc
