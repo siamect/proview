@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_topdf.h,v 1.6 2008-10-31 12:51:30 claes Exp $
+ * Proview   $Id: cnv_topdf.h,v 1.7 2008-11-03 09:50:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -186,12 +186,12 @@ class CnvToPdf  {
 		   int gray);
   void print_pagebreak( int print_num);
   void print_content();
-  void print_h1( char *text, int hlevel, char *subject);
-  void print_h2( char *text);
-  void print_h3( char *text);
+  void print_h1( const char *text, int hlevel, char *subject);
+  void print_h2( const char *text);
+  void print_h3( const char *text);
   void print_horizontal_line();
-  int print_image( char *filename);
-  int print_image_inline( char *filename);
+  int print_image( const char *filename);
+  int print_image_inline( const char *filename);
   void cnv_text( char *to, const char *from);
   void set_confpass( bool conf) { 
     conf_pass = conf;
@@ -214,7 +214,7 @@ class CnvToPdf  {
   void incr_headerlevel();
   void decr_headerlevel();
   void reset_headernumbers( int level);
-  void set_pageheader( char *text);
+  void set_pageheader( const char *text);
   void set_useoutlines( int u) { use_outlines = u;}
   char *fontname( CnvStyle& style);
 

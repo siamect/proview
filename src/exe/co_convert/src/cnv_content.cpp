@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_content.cpp,v 1.3 2008-10-31 12:51:30 claes Exp $
+ * Proview   $Id: cnv_content.cpp,v 1.4 2008-11-03 09:50:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,7 +38,7 @@ extern "C" {
 
 using namespace std;
 
-int CnvContent::find_link( char *subject, char *text, int *page)
+int CnvContent::find_link( const char *subject, char *text, int *page)
 {
   char	key_part[4][40];
   char	subject_part[4][40];

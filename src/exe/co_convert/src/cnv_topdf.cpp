@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_topdf.cpp,v 1.7 2008-10-31 12:51:30 claes Exp $
+ * Proview   $Id: cnv_topdf.cpp,v 1.8 2008-11-03 09:50:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -798,7 +798,7 @@ void CnvToPdf::print_horizontal_line()
   y -= 3;
 }
 
-int CnvToPdf::print_image_inline( char *filename)
+int CnvToPdf::print_image_inline( const char *filename)
 {
   cnv_tImImage image;
   cnv_tPixmap pixmap;
@@ -878,7 +878,7 @@ scalex * width << " 0 0 " << scaley * height << " " << x << " " << y - scaley * 
   return 1;
 }
 
-int CnvToPdf::print_image( char *filename)
+int CnvToPdf::print_image( const char *filename)
 {
   cnv_tImImage image;
   cnv_tPixmap pixmap;
@@ -961,13 +961,13 @@ int CnvToPdf::print_image( char *filename)
 }
 
 
-void CnvToPdf::set_pageheader( char *text)
+void CnvToPdf::set_pageheader( const char *text)
 {
   strcpy( previous_chapter, current_chapter);
   strcpy( current_chapter, text);
 }
 
-void CnvToPdf::print_h1( char *text, int hlevel, char *subject)
+void CnvToPdf::print_h1( const char *text, int hlevel, char *subject)
 {
   char hnum[40];
 
@@ -1023,12 +1023,12 @@ void CnvToPdf::print_h1( char *text, int hlevel, char *subject)
   strcpy( previous_chapter, current_chapter);
 }
 
-void CnvToPdf::print_h2( char *text)
+void CnvToPdf::print_h2( const char *text)
 {
   print_text( text, style[ci].h2);
 }
 
-void CnvToPdf::print_h3( char *text)
+void CnvToPdf::print_h3( const char *text)
 {
   print_text( text, style[ci].h3);
 }

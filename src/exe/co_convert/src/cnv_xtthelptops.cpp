@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_xtthelptops.cpp,v 1.4 2008-10-31 12:51:30 claes Exp $
+ * Proview   $Id: cnv_xtthelptops.cpp,v 1.5 2008-11-03 09:50:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,7 +51,7 @@ extern "C" {
 #define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
 #endif
 
-void CnvXtthelpToPs::subject_to_fname( char *fname, char *subject, int path)
+void CnvXtthelpToPs::subject_to_fname( char *fname, const char *subject, int path)
 {
 
   if ( path) {
@@ -74,11 +74,11 @@ CnvXtthelpToPs::~CnvXtthelpToPs()
   tops.close();
 }
 
-void *CnvXtthelpToPs::insert( navh_eItemType item_type, char *text1,
-			      char *text2, char *text3, char *link, 
-			      char *link_bookmark, char *file_name,
+void *CnvXtthelpToPs::insert( navh_eItemType item_type, const char *text1,
+			      const char *text2, const char *text3, const char *link, 
+			      const char *link_bookmark, const char *file_name,
 			      navh_eHelpFile file_type, int help_index, 
-			      char *bookmark)
+			      const char *bookmark)
 {
   if ( option & ps_mOption_printDisable &&
        item_type != navh_eItemType_Option)
