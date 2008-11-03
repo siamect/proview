@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_mh_appl.c,v 1.7 2006-02-14 05:27:43 claes Exp $
+ * Proview   $Id: rt_mh_appl.c,v 1.8 2008-11-03 08:58:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -113,7 +113,7 @@ mh_ApplConnect (
                                         of the messages. In this way a restarted application can find 
                                         out if it has any active messages. */ 
   mh_mApplFlags		flags,          /**< see mh_mApplFlags N.B.! Ignored for this release  */
-  pwr_tString80		abortEventName, /**< If the application terminates abnormally, an alarm message 
+  const pwr_tString80	abortEventName, /**< If the application terminates abnormally, an alarm message 
                                              with this text as the event name will be generated.<br>  
                                              N.B.! Ignored for this release  */
   mh_eEvent		abortEventType, /**< ZZZ */
@@ -123,7 +123,7 @@ mh_ApplConnect (
   mh_mEventFlags	abortEventFlags,/**< If the application terminates abnormally, an alarm message 
                                              with this priority will be generated.<br>
                                              N.B.! Ignored for this release  */ 
-  pwr_tString80		abortEventText, /**< If the application terminates abnormally, an alarm message 
+  const pwr_tString80  	abortEventText, /**< If the application terminates abnormally, an alarm message 
                                              with this arbitrary text as the event text will be 
                                              generated.<br> 
                                              N.B.! Ignored for this release  */

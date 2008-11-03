@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_mh_appl.h,v 1.6 2008-01-24 09:58:41 claes Exp $
+ * Proview   $Id: rt_mh_appl.h,v 1.7 2008-11-03 08:58:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -137,11 +137,11 @@ pwr_tStatus mh_ApplCancel (
 pwr_tStatus mh_ApplConnect (
   pwr_tObjid	  ApplObject,
   mh_mApplFlags   Flags,
-  pwr_tString80   AbortEventName,
+  const pwr_tString80 AbortEventName,
   mh_eEvent	  AbortEventType,
   mh_eEventPrio   AbortEventPrio,
   mh_mEventFlags  AbortEventFlags,
-  pwr_tString80   AbortEventText,
+  const pwr_tString80 AbortEventText,
   pwr_tUInt32	  *NoOfActMessages
 );
 
