@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_xtthelptohtml.h,v 1.3 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: cnv_xtthelptohtml.h,v 1.4 2008-11-03 13:20:14 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,12 +39,12 @@ class CnvXtthelpToHtml : public CnvXtthelpTo {
   virtual ~CnvXtthelpToHtml() {}
 
   Cnv_eXtthelpToType type() { return Cnv_eXtthelpToType_Html;}
-  void *insert( navh_eItemType item_type, char *text1,
-		char *text2, char *text3, char *link, 
-		char *link_bookmark, char *file_name,
+  void *insert( navh_eItemType item_type, const char *text1,
+		const char *text2, const char *text3, const char *link, 
+		const char *link_bookmark, const char *file_name,
 		navh_eHelpFile file_type, int help_index, 
-		char *bookmark);
-  void subject_to_fname( char *fname, char *subject, int path);
+		const char *bookmark);
+  void subject_to_fname( char *fname, const char *subject, int path);
 
   CnvCtx *ctx;
   CnvFile *cf;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_xtthelptohtml.cpp,v 1.7 2008-10-31 12:51:30 claes Exp $
+ * Proview   $Id: cnv_xtthelptohtml.cpp,v 1.8 2008-11-03 13:20:14 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,7 +50,7 @@ extern "C" {
 #define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
 #endif
 
-void CnvXtthelpToHtml::subject_to_fname( char *fname, char *subject, int path)
+void CnvXtthelpToHtml::subject_to_fname( char *fname, const char *subject, int path)
 {
   char *s, *t;
 
@@ -62,7 +62,7 @@ void CnvXtthelpToHtml::subject_to_fname( char *fname, char *subject, int path)
     strcpy( fname, ctx->rx->name);
   strcat( fname, "_");
   t = fname + strlen(fname);
-  for ( s = subject; *s; s++,t++) {
+  for ( s = (char *)subject; *s; s++,t++) {
     if ( *s == ' ' || *s == '(' || *s == ')')
       *t = '_';
     else
@@ -73,11 +73,11 @@ void CnvXtthelpToHtml::subject_to_fname( char *fname, char *subject, int path)
   cdh_ToLower( fname, fname);
 }
 
-void *CnvXtthelpToHtml::insert( navh_eItemType item_type, char *text1,
-				char *text2, char *text3, char *link, 
-				char *link_bookmark, char *file_name,
+void *CnvXtthelpToHtml::insert( navh_eItemType item_type, const char *text1,
+				const char *text2, const char *text3, const char *link, 
+				const char *link_bookmark, const char *file_name,
 				navh_eHelpFile file_type, int help_index, 
-				char *bookmark)
+				const char *bookmark)
 {
   int i;
   static int in_table = 0;
