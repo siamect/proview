@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_provider.cpp,v 1.8 2007-03-20 12:36:38 claes Exp $
+ * Proview   $Id: wb_provider.cpp,v 1.9 2008-11-03 08:22:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -90,7 +90,7 @@ void wb_procom::receive( vext_sQMsg *msg, int size, pwr_tStatus *sts)
 
 void wb_procom::provideObject( pwr_tStatus sts, pwr_tOix oix, pwr_tOix fthoix, pwr_tOix bwsoix,
 		      pwr_tOix fwsoix, pwr_tOix fchoix, pwr_tOix lchoix, pwr_tCid cid,
-		      char *name, char *longname)
+		      const char *name, const char *longname)
 {
   vext_sAMsg amsg;
   pwr_tStatus asts;
