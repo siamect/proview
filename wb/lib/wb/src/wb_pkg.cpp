@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pkg.cpp,v 1.19 2008-09-05 09:07:44 claes Exp $
+ * Proview   $Id: wb_pkg.cpp,v 1.20 2008-11-10 08:05:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -249,20 +249,25 @@ void wb_pkg::readConfig()
     }
     else if ( strcmp( cdh_Low(line_item[0]), "boot") == 0) {
       // A Sev node, only node and bootfile
-      if ( !(num == 2))
-	throw wb_error_str("File corrupt " load_cNameDistribute);
+      try {
+	if ( !(num == 2))
+	  throw wb_error_str("File corrupt " load_cNameDistribute);
 
-      pkg_node &n = getNode( line_item[1]);
-
-      // Add ld_node file
-      sprintf( fname, load_cNameNode, load_cDirectory, n.name(), n.bus());
-      pkg_pattern pnode( fname, "", 'E');
-      n.push_back( pnode);
-
-      // Add bootfile
-      sprintf( fname, load_cNameBoot, load_cDirectory, n.name(), n.bus());
-      pkg_pattern pboot( fname, "", 'E');
-      n.push_back( pboot);
+	pkg_node &n = getNode( line_item[1]);
+	// Add ld_node file
+	sprintf( fname, load_cNameNode, load_cDirectory, n.name(), n.bus());
+	pkg_pattern pnode( fname, "", 'E');
+	n.push_back( pnode);
+	
+	// Add bootfile
+	sprintf( fname, load_cNameBoot, load_cDirectory, n.name(), n.bus());
+	pkg_pattern pboot( fname, "", 'E');
+	n.push_back( pboot);
+      } catch ( wb_error &e) {
+	if  ( e.what() == string("No such node"))
+	  continue;
+	throw wb_error_str(e.what());
+      }
     }
   }
 
