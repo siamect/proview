@@ -15,16 +15,22 @@ fi
 
 aroot="/usr/pwrp/adm"
 
-# Create group pwrp
-if ! grep -q "\bpwrp:" /etc/group; then
-  echo "-- Add group pwrp"
-  groupadd pwrp
+if getent group pwrp > /dev/null; then
+  echo "-- group pwrp already exist"
+else
+  if groupadd pwrp; then
+    echo "-- group pwrp added"
+  fi
 fi
 
-if ! grep -q "\bpwrp:" /etc/passwd; then
-  echo "-- Add user pwrp"
+if getent passwd pwrp > /dev/null; then
+  echo "-- user pwrp already exist"
+else
   new_user=1
-  useradd -s /bin/bash -p aaupl/kQs1p3U -g pwrp -d /home/pwrp pwrp
+
+  if useradd -s /bin/bash -p aaupl/kQs1p3U -g pwrp -G b55,b66,skiftel -d /home/pwrp pwrp; then
+    echo "-- user pwrp added"
+  fi
   if [ ! -e /home/pwrp ]; then
     mkdir /home/pwrp
   fi
