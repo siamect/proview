@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dbms.cpp,v 1.9 2008-10-15 06:04:55 claes Exp $
+ * Proview   $Id: wb_dbms.cpp,v 1.10 2008-11-10 08:04:52 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -669,7 +669,7 @@ void wb_dbms_env::host(const char *host)
   if (!host)
     return;
   
-  m_host = (char *)realloc(m_host, strlen(host));
+  m_host = (char *)realloc(m_host, strlen(host)+1);
   strcpy(m_host, host);
 }
 
@@ -678,7 +678,7 @@ void wb_dbms_env::user(const char *user)
   if (!user)
     return;
   
-  m_user = (char *)realloc(m_user, strlen(user));
+  m_user = (char *)realloc(m_user, strlen(user)+1);
   strcpy(m_user, user);
 }
 
@@ -687,7 +687,7 @@ void wb_dbms_env::passwd(const char *passwd)
   if (!passwd)
     return;
   
-  m_passwd = (char *)realloc(m_passwd, strlen(passwd));
+  m_passwd = (char *)realloc(m_passwd, strlen(passwd)+1);
   strcpy(m_passwd, passwd);
 }
 
@@ -696,7 +696,7 @@ void wb_dbms_env::dbName(const char *dbName)
   if (!dbName)
     return;
   
-  m_dbName = (char *)realloc(m_dbName, strlen(dbName));
+  m_dbName = (char *)realloc(m_dbName, strlen(dbName)+1);
   strcpy(m_dbName, dbName);
 }
 
@@ -705,7 +705,7 @@ void wb_dbms_env::fileName(const char *fileName)
   if (!fileName)
     return;
   
-  m_fileName = (char *)realloc(m_fileName, strlen(fileName));
+  m_fileName = (char *)realloc(m_fileName, strlen(fileName)+1);
   strcpy(m_fileName, fileName);
 }
 
@@ -755,7 +755,7 @@ void wb_dbms_env::socket(const char *socket)
   if (!socket)
     return;
   
-  m_socket = (char *)realloc(m_socket, strlen(socket));
+  m_socket = (char *)realloc(m_socket, strlen(socket)+1);
   strcpy(m_socket, socket);
 }
 
