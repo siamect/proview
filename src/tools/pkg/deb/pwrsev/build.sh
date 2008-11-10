@@ -81,6 +81,12 @@ fi
 # Convert to html
 co_convert -t -d $pwr_doc $pwr_eexe/sev_xtt_version_help.dat
 
+{
+  echo "<html><head>"
+  echo "<meta http-equiv=\"Refresh\" content=\"5;../sev_xtt_version_help_version.html\">"
+  echo "</head></html>"
+} > $pwr_doc/en_us/package_version.html
+
 if [ "$1" == "-v" ]; then
   exit
 fi
@@ -129,41 +135,41 @@ cp $pkgsrc/sev_xtt.1 $pkgroot/usr/share/man/man1/sev_xtt.1
 gzip -fq --best $pkgroot/usr/share/man/man1/sev_xtt.1
 
 # Copy proview
-mkdir $pkgroot/usr/pwrrt
+mkdir $pkgroot/usr/pwrsev
 currentdir="`eval pwd`"
 tarfile=$pwre_broot/$pwre_target/bld/pkg/pwrtmp.tar
 cd $pwre_broot/$pwre_target/exp
 echo "-- Copy release to package tree"
-tar -cf $tarfile exe/rt_qmon exe/rt_prio exe/sev_ini exe/sev_xtt exe/sev_xtt_gtk exe/sev_server exe/*.gif exe/*.png exe/sev_xtt_version_help.dat exe/pwr_pkg.sh exe/en_us/*.txt
-cd $pkgroot/usr/pwrrt
+tar -cf $tarfile exe/rt_qmon exe/rt_prio exe/sev_ini exe/sev_xtt exe/sev_xtt_gtk exe/sev_server exe/*.gif exe/*.png exe/sev_xtt_version_help.dat exe/pwr_pkg.sh exe/en_us/*.txt doc/*
+cd $pkgroot/usr/pwrsev
 mkdir cnf
 tar -xf $tarfile
 rm $tarfile
-#rm -r $pkgroot/usr/pwrrt/lib/*.a
-#rm -r $pkgroot/usr/pwrrt/exe/wb*
-cp $pwr_eexe/wb_distr_keepboot.sh $pkgroot/usr/pwrrt/exe
+#rm -r $pkgroot/usr/pwrsev/lib/*.a
+#rm -r $pkgroot/usr/pwrsev/exe/wb*
+cp $pwr_eexe/wb_distr_keepboot.sh $pkgroot/usr/pwrsev/exe
 cd $currentdir
 
 # Copy configuration files to cnf
-cp $pkgsrc/proview.cnf $pkgroot/usr/pwrrt/cnf
+cp $pkgsrc/proview.cnf $pkgroot/usr/pwrsev/cnf
 
 # Copy op to cnf
-mkdir $pkgroot/usr/pwrrt/cnf/op
-cp $pwre_sroot/tools/pkg/deb/op/.bashrc $pkgroot/usr/pwrrt/cnf/op
-cp $pwre_sroot/tools/pkg/deb/op/.bash_profile $pkgroot/usr/pwrrt/cnf/op
-cp $pwre_sroot/tools/pkg/deb/op/.mwmrc $pkgroot/usr/pwrrt/cnf/op
-cp $pwre_sroot/tools/pkg/deb/op/.rtt_start $pkgroot/usr/pwrrt/cnf/op
-cp $pwre_sroot/tools/pkg/deb/op/.xtt_start $pkgroot/usr/pwrrt/cnf/op
-cp $pwre_sroot/tools/pkg/deb/op/.xsession $pkgroot/usr/pwrrt/cnf/op
+mkdir $pkgroot/usr/pwrsev/cnf/op
+cp $pwre_sroot/tools/pkg/deb/op/.bashrc $pkgroot/usr/pwrsev/cnf/op
+cp $pwre_sroot/tools/pkg/deb/op/.bash_profile $pkgroot/usr/pwrsev/cnf/op
+cp $pwre_sroot/tools/pkg/deb/op/.mwmrc $pkgroot/usr/pwrsev/cnf/op
+cp $pwre_sroot/tools/pkg/deb/op/.rtt_start $pkgroot/usr/pwrsev/cnf/op
+cp $pwre_sroot/tools/pkg/deb/op/.xtt_start $pkgroot/usr/pwrsev/cnf/op
+cp $pwre_sroot/tools/pkg/deb/op/.xsession $pkgroot/usr/pwrsev/cnf/op
 
 # Copy user to cnf
-mkdir $pkgroot/usr/pwrrt/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.bashrc $pkgroot/usr/pwrrt/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.bash_profile $pkgroot/usr/pwrrt/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.mwmrc $pkgroot/usr/pwrrt/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.rtt_start $pkgroot/usr/pwrrt/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.xtt_start $pkgroot/usr/pwrrt/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.xsession $pkgroot/usr/pwrrt/cnf/user
+mkdir $pkgroot/usr/pwrsev/cnf/user
+cp $pwre_sroot/tools/pkg/deb/user/.bashrc $pkgroot/usr/pwrsev/cnf/user
+cp $pwre_sroot/tools/pkg/deb/user/.bash_profile $pkgroot/usr/pwrsev/cnf/user
+cp $pwre_sroot/tools/pkg/deb/user/.mwmrc $pkgroot/usr/pwrsev/cnf/user
+cp $pwre_sroot/tools/pkg/deb/user/.rtt_start $pkgroot/usr/pwrsev/cnf/user
+cp $pwre_sroot/tools/pkg/deb/user/.xtt_start $pkgroot/usr/pwrsev/cnf/user
+cp $pwre_sroot/tools/pkg/deb/user/.xsession $pkgroot/usr/pwrsev/cnf/user
 
 # Create package
 echo "-- Building package"

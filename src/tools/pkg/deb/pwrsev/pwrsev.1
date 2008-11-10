@@ -3,7 +3,7 @@
 pwrsev - start and stop Proview Storage Environment
 .SH SYNOPSIS
 .B pwrsev 
-[start][stop]
+[start][stop][restart][reset]
 .SH DESCRIPTION
 Start and stop command for Proview Storage Environment.
 
@@ -17,6 +17,16 @@ Start Proview storage environment.
 \fBstop\fR
 .IP
 Stop Proview storage environment.
+
+.HP
+\fBrestart\fR
+.IP
+Stop and start the Proview storage environment.
+
+.HP
+\fBreset\fR
+.IP
+Remove all processes and resources.
 
 .SH FILES
 /etc/pwrp_profile
@@ -32,5 +42,5 @@ QCOM bus identity.
 Written by cs.
 
 .SH "SEE ALSO"
-.BR rt_ini(1)
+.BR sev_ini(1)
 

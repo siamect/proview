@@ -3,7 +3,7 @@
 pwr - start and stop Proview runtime environment
 .SH SYNOPSIS
 .B pwr 
-[start][stop][restart]
+[start][stop][restart][reload][reset]
 .SH DESCRIPTION
 Start and stop command for Proview runtime environment.
 
@@ -22,6 +22,16 @@ Stop Proview runtime environment.
 \fBrestart\fR
 .IP
 First stop and then start the Proview runtime environment.
+
+.HP
+\fBreload\fR
+.IP
+Soft restart of Proview runtime environment.
+
+.HP
+\fBreset\fR
+.IP
+Remove all processes and resources.
 
 .SH FILES
 /etc/pwrp_profile

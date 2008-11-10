@@ -27,13 +27,12 @@ create_wrapper()
 
 create_killer()
 {
-  if [ ! -e $killer ] ; then
     echo "#!/bin/bash" > $killer
     echo "source /etc/pwrp_profile" >> $killer
     echo "umask 002" >> $killer
     
-    echo "kill -9 `ps ax | grep "rt_" | awk '{ print $1}'`" >> $killer
-    echo "kill -9 `ps ax | grep "sev_" | awk '{ print $1}'`" >> $killer
+    echo "`ps ax | grep "rt_" | awk '{ print "kill -9 "$1}'`" >> $killer
+    echo "`ps ax | grep "sev_" | awk '{ print "kill -9 "$1}'`" >> $killer
 
     echo "eval `ipcs -s|grep ^0x|grep "[ \t]pwrp[ \t]"|awk '{printf "ipcrm sem %s;", $2}'`" >> $killer
     echo "eval `ipcs -q|grep ^0x|grep "[ \t]pwrp[ \t]"|awk '{printf "ipcrm msg %s;", $2}'`" >> $killer
@@ -45,7 +44,6 @@ create_killer()
       echo "$killer not writable, check permissions"
       exit
     fi
-  fi
 }
 
 
@@ -98,36 +96,55 @@ pwr_kill()
 case "$1"
   in
     start)
-	echo "Startar PWR."
+	echo "Start Proview Storage Environment."
 	pwr_start    
-	echo "Klar."
+	echo "Done."
       ;;
     stop)
-	echo "Stoppar PWR..."
+	echo "Stop Proveiw Storage Environment."
 	pwr_stop
-	echo "Klar"
+	echo "Done."
       ;;
     restart)
-	echo "Startar om PWR."
-	echo "Stoppar det först."
+	echo "Restart Proview Storage Environment."
+	echo "Closing down..."
 	pwr_stop
 	sleep 1
-	echo "Startar igen."
+	echo "Starting..."
 	pwr_start
-	echo "Klar."
+	echo "Done."
 	;;
     reload)
-	echo "PWR varmomstart "
-        pwr_reload
-	echo "Klar."
+	echo "Restart Proview Storage Environment."
+	echo "Closing down..."
+	pwr_stop
+	sleep 1
+	echo "Starting..."
+	pwr_start
+	echo "Done."
 	;;
     kill)
-	echo "Tar bort delat minne och kvarblivna applikationer från PWR"
+	echo "Remove all processes and resources for Proview Storage Environment"
         pwr_kill
-	echo "Klar."
+	echo "Done."
+	;;
+    reset)
+	echo "Remove all processes and resources for Proview Storage Environment"
+        pwr_kill
+	echo "Done."
 	;;
     *)
-	echo "Usage:{start|stop|restart|reload|kill}" >&2
+	echo "  pwrsev  Start and stop Proview Storage Environment" >&2
+	echo "" >&2
+	echo "  Usage:" >&2
+	echo "  pwrsev start|stop|restart|reset" >&2
+	echo "" >&2
+	echo "    start    Start Storage environment" >&2
+	echo "    stop     Stop Storage environment" >&2
+	echo "    restart  First stop and then start Storage environment" >&2
+	echo "    reset    Remove all processes and resources" >&2
+	echo "" >&2
+
         exit 1
 	;;
   esac

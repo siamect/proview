@@ -81,6 +81,12 @@ fi
 # Convert to html
 co_convert -t -d $pwr_doc $pwr_eexe/xtt_version_help.dat
 
+{
+  echo "<html><head>"
+  echo "<meta http-equiv=\"Refresh\" content=\"5;../xtt_version_help_version.html\">"
+  echo "</head></html>"
+} > $pwr_doc/en_us/package_version.html
+
 # Print rt version file
 echo "Version: $version" > $pwr_eexe/rt_version.dat
 

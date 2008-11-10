@@ -1,48 +1,11 @@
 Package: pwrrt
-Version: 4.4.4-5
+Version: 4.6.0-1
 Section: base
 Priority: optional
 Architecture: i386
-Depends: libc6 (>= 2.3.6), libgtk2.0-0 (>= 2.8.16-1), libasound2 (>= 1.0.11), libdb4.3 (>=4.3.29)
-Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44
+Depends: libc6 (>= 2.7-13), libgtk2.0-0 (>= 2.12.11-3), libasound2 (>= 1.0.16-2), libdb4.6 (>=4.6.21-11)
+Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45
 Maintainer: Proview <postmaster@proview.se>
 Description:
  Proview runtime environment
- 4.4.0-1 Base release
- 4.4.0-2
-  - Proview restart improved. Works with profibus.
-  - Ge: New fonts, Times, NC Schoolbook and Courier.
- 4.4.1-1
-  - Proview profibus restart improved.
-  - Statusmonitor to view status of remote nodes implemented.
-  - Runtime monitor to start and stop runtime in development environment implemented.
-  - Env variables allowed in filenames for remotelogg and nmpsbackup.
- 4.4.1-2
-  - Problems with national characters in opc_server fixed.
-  - Problems with memory leakage in opc_server fixed.
- 4.4.2-1
-  - Subgraphs for ventilation and circuit diagrams added.
-  - Baseobjects for threewayvalves, filters and dampers added.
- 4.4.2-2
-  - Ge: Gray backgroundcolor could be undefined.
- 4.4.2-3
-  - remote_mq present.
- 4.4.2-4
-  - XY_Curve class and Ge dynamic added.
- 4.4.3-1
-  - Changed qcom synchronization mechanism.
- 4.4.4-1
-  - Function to suppress alarms in basecomponents added.
-  - Classes IpDistribute, IpCollect, Demux, IDemux, GetDpPtr, StoDpPtr,
-    Eurotherm_TC3001, Eurotherm_TC3001Aggr and more added.
- 4.4.4-2
-  - Bugfix in gtk operatorwindow, long alarmtext could cause segfault
- 4.4.4-3
-  - Bugfix in trend, disabled trend object was handled.
-  - Bugfix in object graph for CompModePID and CompPID.
- 4.4.4-4
-  - Bugfix in Eurotherm 3001 profibus slave and module.
-  - Doublebuffering in graphs with window objects could be lost.
- 4.4.4-5
-  - Fixed several bugs in rs_remote_tcpip when acting as a server.
-  - Bugfix in rt_neth_acp. Subscriptions were not refreshed after a remote node restarted.
+ 4.6.0-1 Base release

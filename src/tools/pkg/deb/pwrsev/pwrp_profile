@@ -9,7 +9,7 @@ fi
 
 export PWR_BUS_ID=$bus_id
 
-export pwrb_root=/usr/pwrrt
+export pwrb_root=/usr/pwrsev
 export pwrp_root=/pwrp
 
 export pwr_exe=$pwrb_root/exe
@@ -39,10 +39,11 @@ PATH=$PATH:$pwr_exe:$pwrp_exe:$jdk_home
 export DISPLAY=$REMOTEHOST:0.0
 
 #symbols to define start/stop commands for PWR
-alias pwr_stop='/etc/init.d/pwr stop'
-alias pwr_stop.sh="/etc/init.d/pwr stop"
-alias pwr_start="/etc/init.d/pwr start"
-alias pwr="/etc/init.d/pwr"
+alias pwr_stop='/etc/init.d/pwrsvestop'
+alias pwr_stop.sh="/etc/init.d/pwrsev stop"
+alias pwr_start="/etc/init.d/pwrsev start"
+alias pwrsev="/etc/init.d/pwrsev"
+alias pwr="/etc/init.d/pwrsev"
 alias boot="/usr/bin/sudo /sbin/reboot"
 
 if [ -e $pwrp_exe/profile ]; then
