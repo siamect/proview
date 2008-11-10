@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_sevhistmon.cpp,v 1.3 2008-09-18 15:06:13 claes Exp $
+ * Proview   $Id: rt_sevhistmon.cpp,v 1.4 2008-11-10 08:00:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -194,6 +194,7 @@ int rt_sevhistmon::init()
     h.scantime = m_hs[hs_idx].scantime;
 
     switch ( h.type) {
+    case pwr_eType_Boolean:
     case pwr_eType_Int64:
     case pwr_eType_Int32:
     case pwr_eType_Int16:
