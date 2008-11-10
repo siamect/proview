@@ -1,6 +1,6 @@
 #! /bin/bash
 #
-# Proview   $Id: upgrade.sh,v 1.16 2008-06-26 13:13:41 claes Exp $
+# Proview   $Id: upgrade.sh,v 1.17 2008-11-10 08:00:40 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -27,7 +27,7 @@ let reload__loaddb=4
 let pass__continue=1
 let pass__execute=2
 #v44_root="/data1/pwr/x4-4-4/rls_dbg"
-v44_root="/usr/pwr44"
+v45_root="/usr/pwr45"
 
 reload_dumpdb()
 {
@@ -350,13 +350,6 @@ reload_convertge()
     return
   fi
 
-  echo ""
-  echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-  echo "!                                                                   !"
-  echo "! Note ! This pass should not be executed when upgrading from V3.9 !!"
-  echo "!                                                                   !"
-  echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-
   reload_continue "Pass convert ge graphs"
 
   # Create a script that dumps each volume
@@ -460,20 +453,12 @@ usage()
 {
   cat << EOF
 
-  upgrade.sh  Upgrade from V4.4 to V4.5
+  upgrade.sh  Upgrade from V4.5 to V4.6
 
 
   Pass
 
-    dumpdb	   Dump database to textfile \$pwrp_db/'volume'.wb_dmp
-    classvolumes   Create loadfiles for classvolumes.
-    renamedb       Rename old databases.
-    dirvolume      Load the directory volume.
-    loaddb         Load dumpfiles.
     convertge      Convert Ge graphs.
-    compile        Compile all plcprograms in the database
-    createload     Create new loadfiles.
-    createboot     Create bootfiles for all nodes in the project.
 
 EOF
 }
@@ -511,14 +496,14 @@ for db in $tmp; do
   fi
 done
 
-passes="dumpdb classvolumes renamedb dirvolume loaddb convertge compile createload createboot"
+passes="convertge"
 #echo "Pass: $passes"
 echo ""
-echo -n "Enter start pass [dumpdb] > "
+echo -n "Enter start pass [convertge] > "
 read start_pass
 
 if [ -z $start_pass ]; then
-  start_pass="dumpdb"
+  start_pass="convertge"
 fi
 
 for cpass in $passes; do
@@ -531,12 +516,6 @@ done
 
 echo ""
 echo "-- The upgrade procedure is now accomplished."
-echo "   Please remove the dumpfiles: \$pwrp_db/*.wb_dmp*"
-echo "   when you are satisfied with the upgrade."
-echo ""
-echo "-- Remaining tasks:"
-echo "   Build the applications"
-echo "   Create packages from the distributor"
 echo ""
 
 reload_exit
