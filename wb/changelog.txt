@@ -116,4 +116,4 @@
 081009 cs  wb        Qualifier /quiet added to 'save' command to avoid questions when saving directory volume.
 081009 cs  wb        New pages in Configure DirectoryVolume wizard to register a volume and open the database for a volume.
 081009 cs  wb        New script functions CheckSystemGroup, GetNextFreeUserVid, CheckNewVid, CheckNewVolumeName and GetCurrentVolume.
-
+081110 cs  plc       Bugfix in execute order for Set/Res/Sto objects without input or output connection.
