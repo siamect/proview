@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_xhelpnav.cpp,v 1.14 2008-10-31 12:51:30 claes Exp $
+ * Proview   $Id: co_xhelpnav.cpp,v 1.15 2008-11-10 08:01:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1047,7 +1047,7 @@ static void *xhelpnav_help_insert_cb( void *ctx, navh_eItemType item_type, const
 	trim( t1);
       }
       if ( text2) {
-	t2 = (char *)calloc( 1, strlen(text1)+1);
+	t2 = (char *)calloc( 1, strlen(text2)+1);
 	strcpy( t2, text2);
 	trim( t2);
       }
@@ -1072,7 +1072,7 @@ static void *xhelpnav_help_insert_cb( void *ctx, navh_eItemType item_type, const
 	trim( t1);
       }
       if ( text2) {
-	t2 = (char *)calloc( 1, strlen(text1)+1);
+	t2 = (char *)calloc( 1, strlen(text2)+1);
 	strcpy( t2, text2);
 	trim( t2);
       }
