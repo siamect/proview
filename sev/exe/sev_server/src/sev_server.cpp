@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: sev_server.cpp,v 1.4 2008-10-31 12:51:30 claes Exp $
+ * Proview   $Id: sev_server.cpp,v 1.5 2008-11-10 07:57:14 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -16,6 +16,8 @@
  * along with the program, if not, write to the Free Software 
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  **/
+
+#if defined PWRE_CONF_MYSQL
 
 
 #include "pwr.h"
@@ -44,13 +46,9 @@ int sev_server::init( int noneth)
   pwr_tStatus		sts;
   qcom_sAid		aid;
   qcom_sQid 		qini;
-
-  m_db->get_items( &m_sts);
-
-  for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
-    sev_item_key items_key( m_db->m_items[i].oid, m_db->m_items[i].attr[0].aname);
-    m_item_key[items_key] = i;
-  }
+  sev_dbms_env 		*env;
+  pwr_tFileName 	envname;
+  char 			socket[200];
 
   qcom_Init( &m_sts, &aid, "sev_server");
   if ( EVEN(m_sts)) throw co_error(m_sts);
@@ -68,6 +66,39 @@ int sev_server::init( int noneth)
       errh_CErrLog( PWR__SRVNOTCONF, 0);
       exit(0);
     }
+  }
+
+  sprintf( envname, "$pwrp_db/%s.db", sev_dbms_env::dbName());
+  dcli_translate_filename( envname, envname);
+  
+  env = new sev_dbms_env( envname);
+  env->open( envname);
+  if ( !env->exists()) {
+    cnf_get_value( "mysqlSocket", socket);
+    env->create( envname, "localhost", "pwrp", "", sev_dbms_env::dbName(), 50, 
+		 socket);
+
+    env->open( envname);
+
+    if ( !env->createDb()) {
+      errh_Fatal("Failed to create to database");
+      exit(0);
+    }
+  }
+  else {    
+    if ( !env->openDb()) {
+      errh_Fatal("Failed to connect to database");
+      exit(0);
+    }
+  }
+  
+  m_db = new sev_dbms( env);
+
+  m_db->get_items( &m_sts);
+
+  for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
+    sev_item_key items_key( m_db->m_items[i].oid, m_db->m_items[i].attr[0].aname);
+    m_item_key[items_key] = i;
   }
 
   // Create a queue to server
@@ -369,6 +400,7 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
 		      msg->Items[i].storagetime, msg->Items[i].attr[0].type, msg->Items[i].attr[0].size, 
 		      msg->Items[i].description, msg->Items[i].attr[0].unit, msg->Items[i].scantime, 
 		      msg->Items[i].deadband, msg->Items[i].options, &idx);
+      if ( EVEN(m_sts)) return m_sts;
       
       sev_item_key item_key( msg->Items[i].oid, msg->Items[i].attr[0].aname);
       m_item_key[item_key] = idx;
@@ -490,39 +522,15 @@ void sev_server::garbage_collector()
 
 int main (int argc, char *argv[])
 {
-#if defined PWRE_CONF_MYSQL
-
   sev_server srv;
 
-  sev_dbms_env *env;
-  pwr_tFileName envname;
-  char socket[200];
   int noneth = 0;
 
   if ( argc > 1 && strcmp( argv[1], "-n") == 0)
     noneth = 1;
 
-  sprintf( envname, "$pwrp_db/%s.db", sev_dbms_env::dbName());
-  dcli_translate_filename( envname, envname);
-  
-  env = new sev_dbms_env( envname);
-  env->open( envname);
-  if ( !env->exists()) {
-    cnf_get_value( "mysqlSocket", socket);
-    env->create( envname, "localhost", "pwrp", "", sev_dbms_env::dbName(), 50, 
-		 socket);
-
-    env->open( envname);
-
-    env->createDb();
-  }
-  else
-    env->openDb();
-  
-  srv.m_db = new sev_dbms( env);
-
   srv.init( noneth);
   srv.connect();
   srv.mainloop();
-#endif
 }
+#endif
