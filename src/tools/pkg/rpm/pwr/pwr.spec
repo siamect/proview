@@ -10,8 +10,8 @@
 
 Name: pwr45
 Summary: Proview/R development and runtime environment
-Version: 4.5.0
-Release: 7
+Version: 4.6.0
+Release: 1
 License: GPL
 BuildArch: i386
 Packager: claes.sjofors@proview.se
@@ -68,6 +68,15 @@ echo "$ver"
   echo "</topic>"
 } > %{buildroot}/usr/pwr%{ver}/%{pwre_target}/exp/exe/wtt_version_help.dat
 
+# Convert to html
+co_convert -t -d %{buildroot}/usr/pwr%{ver}/%{pwre_target}/exp/doc %{buildroot}/usr/pwr%{ver}/%{pwre_target}/exp/exe/wtt_version_help.dat
+
+{
+  echo "<html><head>"
+  echo "<meta http-equiv=\"Refresh\" content=\"5;../wtt_version_help_version.html\">"
+  echo "</head></html>"
+} > %{buildroot}/usr/pwr%{ver}/%{pwre_target}/exp/doc/en_us/package_version.html
+
 #%clean
 
 %files
@@ -80,25 +89,30 @@ echo "$ver"
 aroot="/usr/pwrp/adm"
 
 # Create group pwrp
-if ! grep -q "\bpwrp:" /etc/group; then
-  echo "-- Add group pwrp"
-  groupadd pwrp
+if getent group pwrp > /dev/null; then
+  echo "-- group pwrp already exist"
+else
+  if groupadd pwrp; then
+    echo "-- group pwrp added"
+  fi
 fi
 
-if ! grep -q "\bpwrp:" /etc/passwd; then
-  echo "-- Add user pwrp"
-  useradd -s /bin/bash -p aaupl/kQs1p3U -g pwrp -d /home/pwrp pwrp
+if getent passwd pwrp > /dev/null; then
+  echo "-- user pwrp already exist"
+else
+  new_user=1
+  if useradd -s /bin/bash -p aaupl/kQs1p3U -g pwrp -d /home/pwrp pwrp; then
+    echo "-- user pwrp added"
+  fi
   if [ ! -e /home/pwrp ]; then
     mkdir /home/pwrp
   fi
   cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.bashrc /home/pwrp
   cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.bash_profile /home/pwrp
-#  cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.mwmrc /home/pwrp
   cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.rtt_start /home/pwrp
   chmod a+x /home/pwrp/.rtt_start
   cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.xtt_start /home/pwrp
   chmod a+x /home/pwrp/.xtt_start
-#  cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.xsession /home/pwrp
   cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/wtt_init.pwr_com /home/pwrp
   cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/wtt_init1.pwr_com /home/pwrp
 
@@ -177,10 +191,6 @@ fi
 #%postun
 
 %changelog
-* Fri May 16 2008 Claes Sjofors <claes.sjofors@ssabox.com> 4.5.0-6
-  - Xtt Fileview added.
-  - Function objects DataFRead and DataFWrite added.
-  - Bugfix in directory database creation.
-  - Bugfix in creation of wb_load file.
-  - Bugfix in Modbus TCP.
+* Mon Nov 10 2008 Claes Sjofors <claes.sjofors@ssabox.com> 4.6.0-1
+  - Base release.
 

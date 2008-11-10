@@ -10,8 +10,8 @@
 
 Name: pwrrt
 Summary: Proview/R runtime environment
-Version: 4.5.0
-Release: 7
+Version: 4.6.0
+Release: 1
 License: GPL
 BuildArch: i386
 Packager: claes.sjofors@proview.se
@@ -70,6 +70,12 @@ For more information please see www.proview.se.
 # Convert to html
 co_convert -t -d %{buildroot}/usr/pwrrt/doc %{buildroot}/usr/pwrrt/exe/xtt_version_help.dat
 
+{
+  echo "<html><head>"
+  echo "<meta http-equiv=\"Refresh\" content=\"5;../xtt_version_help_version.html\">"
+  echo "</head></html>"
+} > %{buildroot}/usr/pwrrt/doc/en_us/package_version.html
+
 # Print rt version file
 echo "Version: %{version}-%{release}" > %{buildroot}/usr/pwrrt/exe/rt_version.dat
 
@@ -87,87 +93,104 @@ proot="/pwrp"
 
 # Create users ...
 
-if ! grep -q "\bpwrp:" /etc/group; then
-  echo "-- Add group pwrp"
-  groupadd pwrp
-fi
-if ! grep -q "\bb55:" /etc/group; then
-  echo "-- Add group b55"
-  groupadd b55
-fi
-if ! grep -q "\bskiftel:" /etc/group; then
-  echo "-- Add group skiftel"
-  groupadd skiftel
+if getent group pwrp > /dev/null; then
+  echo "-- group pwrp already exist"
+else
+  if groupadd pwrp; then
+    echo "-- group pwrp added"
+  fi
 fi
 
-if ! grep -q "\bpwrp:" /etc/passwd; then
-  echo "-- Add user pwrp"
-  useradd -s /bin/bash -p aaupl/kQs1p3U -g pwrp -d /home/pwrp pwrp
+if getent group b55 > /dev/null; then
+  echo "-- group b55 already exist"
+else
+  if groupadd b55; then
+    echo "-- group b55 added"
+  fi
+fi
+
+if getent group skiftel > /dev/null; then
+  echo "-- group skiftel already exist"
+else
+  if groupadd skiftel; then
+    echo "-- group skiftel added"
+  fi
+fi
+
+
+if getent passwd pwrp > /dev/null; then
+  echo "-- user pwrp already exist"
+else
+  new_user=1
+
+  if useradd -s /bin/bash -p aaupl/kQs1p3U -g pwrp -G b55,b66,skiftel -d /home/pwrp pwrp; then
+    echo "-- user pwrp added"
+  fi
   if [ ! -e /home/pwrp ]; then
     mkdir /home/pwrp
-  fi
-  /bin/cp /usr/pwrrt/cnf/user/.bashrc /home/pwrp
-  /bin/cp /usr/pwrrt/cnf/user/.bash_profile /home/pwrp
-#  /bin/cp /usr/pwrrt/cnf/user/.mwmrc /home/pwrp
-  /bin/cp /usr/pwrrt/cnf/user/.rtt_start /home/pwrp
-  chmod a+x /home/pwrp/.rtt_start
-  /bin/cp /usr/pwrrt/cnf/user/.xtt_start /home/pwrp
-  chmod a+x /home/pwrp/.xtt_start
-#  /bin/cp /usr/pwrrt/cnf/user/.xsession /home/pwrp
+    /bin/cp /usr/pwrrt/cnf/user/.bashrc /home/pwrp
+    /bin/cp /usr/pwrrt/cnf/user/.bash_profile /home/pwrp
+    /bin/cp /usr/pwrrt/cnf/user/.rtt_start /home/pwrp
+    chmod a+x /home/pwrp/.rtt_start
+    /bin/cp /usr/pwrrt/cnf/user/.xtt_start /home/pwrp
+    chmod a+x /home/pwrp/.xtt_start
 
-  chown -R pwrp /home/pwrp
-  chgrp -R pwrp /home/pwrp
+    chown -R pwrp /home/pwrp
+    chgrp -R pwrp /home/pwrp
+  fi
 fi
 
-if ! grep -q "\bskiftel:" /etc/passwd; then
-  echo "-- Add user skiftel"
+if getent passwd skiftel > /dev/null; then
+  echo "-- user skiftel already exist"
+else
   new_user=1
-  useradd -s /bin/bash -p aa6NzxS/aBgP6 -g skiftel -G pwrp -d /home/skiftel skiftel
-  if [ ! -e /home/pwrp ]; then
-    mkdir /home/skiftel
-  fi
-  /bin/cp /usr/pwrrt/cnf/user/.bashrc /home/skiftel
-  /bin/cp /usr/pwrrt/cnf/user/.bash_profile /home/skiftel
-#  /bin/cp /usr/pwrrt/cnf/user/.mwmrc /home/skiftel
-  /bin/cp /usr/pwrrt/cnf/user/.rtt_start /home/skiftel
-  chmod a+x /home/skiftel/.rtt_start
-  /bin/cp /usr/pwrrt/cnf/user/.xtt_start /home/skiftel
-  chmod a+x /home/skiftel/.xtt_start
-#  /bin/cp /usr/pwrrt/cnf/user/.xsession /home/skiftel
 
-  chown -R pwrp /home/skiftel
-  chgrp -R pwrp /home/skiftel
+  if useradd -s /bin/bash -p aa6NzxS/aBgP6 -g skiftel -G pwrp -d /home/skiftel skiftel; then
+    echo "-- user skiftel added"
+  fi
+
+  if [ ! -e /home/skiftel ]; then
+    mkdir /home/skiftel
+    cp /usr/pwrrt/cnf/user/.bashrc /home/skiftel
+    cp /usr/pwrrt/cnf/user/.bash_profile /home/skiftel
+    cp /usr/pwrrt/cnf/user/.rtt_start /home/skiftel
+    chmod a+x /home/skiftel/.rtt_start
+    cp /usr/pwrrt/cnf/user/.xtt_start /home/skiftel
+    chmod a+x /home/skiftel/.xtt_start
+
+    chown -R pwrp /home/skiftel
+    chgrp -R pwrp /home/skiftel
+  fi
 fi
 
-if ! grep -q "\bb55:" /etc/passwd; then
-  echo "-- Add user b55"
+if getent passwd b55 > /dev/null; then
   new_user=1
 
   # Check if group audio exist
-  if grep -q "\baudio:" /etc/group; then
+  if getent group audio > /dev/null; then
     groups="pwrp,audio"
   else
     groups="pwrp"
   fi
-  useradd -s /bin/bash -p aaQPClsglxJP6 -g b55 -G $groups -d /home/b55 b55
 
+  if useradd -s /bin/bash -p aaQPClsglxJP6 -g b55 -G $groups -d /home/b55 b55; then
+    echo "-- user b55 added"
+  fi
   if [ ! -e /home/b55 ]; then
     mkdir /home/b55
-    
-    /bin/cp /usr/pwrrt/cnf/op/.bashrc /home/b55
-    /bin/cp /usr/pwrrt/cnf/op/.bash_profile /home/b55
-#    /bin/cp /usr/pwrrt/cnf/op/.mwmrc /home/b55
-    /bin/cp /usr/pwrrt/cnf/op/.rtt_start /home/b55
+    cp /usr/pwrrt/cnf/op/.bashrc /home/b55
+    cp /usr/pwrrt/cnf/op/.bash_profile /home/b55
+    cp /usr/pwrrt/cnf/op/.rtt_start /home/b55
     chmod a+x /home/b55/.rtt_start
-    /bin/cp /usr/pwrrt/cnf/op/.xtt_start /home/b55
+    cp /usr/pwrrt/cnf/op/.xtt_start /home/b55
     chmod a+x /home/b55/.xtt_start
-#    /bin/cp /usr/pwrrt/cnf/op/.xsession /home/b55
 
     chown -R b55 /home/b55
     chgrp -R pwrp /home/b55
-    chmod a+rwx /home/b55
+    chmod g+rwx /home/b55
   fi
 fi
+
 
 #echo "Change owner of files to pwrp"
 chown -R pwrp /usr/pwrrt
@@ -230,6 +253,7 @@ if [ ! -e $proot ]; then
   mkdir $proot/common/inc
   mkdir $proot/common/load
   mkdir $proot/common/log
+  mkdir $proot/common/doc
   mkdir $proot/common/db
   mkdir $proot/common/web
   mkdir $proot/x86_linux
@@ -385,7 +409,7 @@ if [ "$remove_all" = "y" ]; then
   set -e
 
   echo "-- Remove user b55"
-  if grep -q "\bb55:" /etc/passwd; then
+  if getent passwd b55 > /dev/null; then
     userdel b55
   fi
   if [ -e /home/b55 ]; then
@@ -393,7 +417,7 @@ if [ "$remove_all" = "y" ]; then
   fi
 
   echo "-- Remove user pwrp"
-  if grep -q "\bpwrp:" /etc/passwd; then
+  if getent passwd pwrp > /dev/null; then
     userdel pwrp
   fi
   if [ -e /home/pwrp ]; then
@@ -401,22 +425,22 @@ if [ "$remove_all" = "y" ]; then
   fi
 
   echo "-- Remove user skiftel"
-  if grep -q "\bskiftel:" /etc/passwd; then
+  if getent skiftel pwrp > /dev/null; then
     userdel skiftel
   fi
   if [ -e /home/skiftel ]; then
     rm -r /home/skiftel
   fi
 
-  if grep -q "\bb55:" /etc/group; then
+  if getent group b55 > /dev/null; then
     groupdel b55
   fi
 
-  if grep -q "\bpwrp:" /etc/group; then
+  if getent group pwrp > /dev/null; then
     groupdel pwrp
   fi
 
-  if grep -q "\bskiftel:" /etc/group; then
+  if getent group skiftel > /dev/null; then
     groupdel skiftel
   fi
 
@@ -459,8 +483,6 @@ fi
 #%postun
 
 %changelog
-* Fri May 16 2008 Claes Sjofors <claes.sjofors@ssabox.com> 4.5.0-6
-  - Xtt Fileview added.
-  - Function objects DataFRead and DataFWrite added.
-  - Bugfix in Modbus TCP.
+* Mon Nov 10 2008 Claes Sjofors <claes.sjofors@ssabox.com> 4.6.0-1
+  - Base release.
 

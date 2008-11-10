@@ -3,11 +3,15 @@
 #
 # Default QCOM Bus Id
 #
-qcomBusId               999
+qcomBusId              999 
 #
 # Web directory
 #
 webDirectory            /var/www
+#
+# Default privileges for SevXtt: Read, Admin or None
+#
+sevXttDefaultPriv       Read
 
 
 

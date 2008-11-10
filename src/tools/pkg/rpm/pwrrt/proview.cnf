@@ -3,11 +3,15 @@
 #
 # Default QCOM Bus Id
 #
-qcomBusId               517
+qcomBusId              517 
 #
 # Web directory
 #
 webDirectory            /pwrp/common/web
+#
+# Default privileges for SevXtt: Read, Admin or None
+#
+sevXttDefaultPriv       Read
 
 
 
