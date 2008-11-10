@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_mozilla.cpp,v 1.2 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: rt_mozilla.cpp,v 1.3 2008-11-10 07:59:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -36,7 +36,7 @@ int main(  int argc, char *argv[])
   int sts;
   bool remote = false;
 
-  strcpy( cmd, "mozilla ");
+  strcpy( cmd, "firefox ");
   for ( int i = 1; i < argc; i++) {
     if ( strcmp( argv[i], "-remote") == 0) {
       remote = true;
