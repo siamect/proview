@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_thread.c,v 1.14 2008-09-23 07:20:51 claes Exp $
+ * Proview   $Id: rt_plc_thread.c,v 1.15 2008-11-10 15:38:48 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -272,7 +272,7 @@ scan (
     time_Adiff(&delta, &tp->sync_time, &tp->after_scan);
     if (time_Dcomp(&delta, NULL) > 0) {
       pwr_tStatus sts;
-      int phase;
+      int phase = 0;
 
       if (tp->csup_lh != NULL) {
 	pwr_tTime now;
@@ -286,7 +286,6 @@ scan (
 
 #if defined OS_LYNX && USE_RT_TIMER
       sem_wait(&tp->ScanSem);
-      phase = 0;
 #else
       /* REMARK 
        * que_Get makes use of pthread_cond_timedwait.
