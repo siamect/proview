@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_exo.cpp,v 1.1 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_exo.cpp,v 1.2 2008-11-10 11:38:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -700,7 +700,7 @@ int exo_exec_m6( exo_ctx exoctx, vldh_t_node node)
   vldh_t_node 		*nodelist;
   vldh_t_node 		*node_ptr;
   unsigned long		node_count;
-  unsigned long		order_execute_order;
+  unsigned long		order_execute_order = 0;
   pwr_tClassId		cid;
 
   if ( node->hn.executeorder != EXO_NOT_YET_EXECUTED) {
