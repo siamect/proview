@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_colpalwidget_gtk.cpp,v 1.3 2008-05-13 13:50:24 claes Exp $
+ * Proview   $Id: glow_colpalwidget_gtk.cpp,v 1.4 2008-11-11 14:57:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -252,6 +252,19 @@ static gboolean colpalwidgetgtk_expose( GtkWidget *glow, GdkEventExpose *event)
   return TRUE;
 }
 
+static void colpalwidgetgtk_destroy( GtkObject *object)
+{
+  ColPalWidgetGtk *colpal = (ColPalWidgetGtk *)object;
+
+  if ( colpal->scroll_timerid)
+    g_source_remove( colpal->scroll_timerid);
+  if ( colpal->is_navigator && colpal->colpal_ctx) {
+    ((ColPalCtx *)colpal->colpal_ctx)->no_nav = 1;
+  }
+  GTK_OBJECT_CLASS( colpalwidgetgtk_parent_class)->destroy( object);
+}
+
+
 static gboolean colpalwidgetgtk_event( GtkWidget *glow, GdkEvent *event)
 {
   if ( event->type == GDK_MOTION_NOTIFY) {
@@ -330,10 +343,13 @@ static void colpalwidgetgtk_realize( GtkWidget *widget)
 static void colpalwidgetgtk_class_init( ColPalWidgetGtkClass *klass)
 {
   GtkWidgetClass *widget_class;
+  GtkObjectClass *object_class;
   widget_class = GTK_WIDGET_CLASS( klass);
+  object_class = GTK_OBJECT_CLASS(klass);
   widget_class->realize = colpalwidgetgtk_realize;
   widget_class->expose_event = colpalwidgetgtk_expose;
   widget_class->event = colpalwidgetgtk_event;
+  object_class->destroy = colpalwidgetgtk_destroy;
 }
 
 static void colpalwidgetgtk_init( ColPalWidgetGtk *glow)
