@@ -8,7 +8,7 @@
 #
 
 
-Name:		pwrdemo45
+Name:		pwrdemo46
 Summary: 	Proview/R demo project
 Version:        4.6.0
 Release: 	1

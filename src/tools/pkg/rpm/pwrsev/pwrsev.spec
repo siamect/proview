@@ -418,5 +418,5 @@ fi
 
 %changelog
 * Mon Nov 10 2008 Claes Sjofors <claes.sjofors@ssabox.com> 4.6.0-1
-  - Base release.
+  - Beta release.
 

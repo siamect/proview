@@ -180,7 +180,7 @@ echo "-- Building package"
                --buildroot $pkgroot $pkgsrc/pwrsev.spec > /dev/null 2>&1
 
 mv $pkgroot/rpm/RPMS/i386/*.rpm $pwre_broot/$pwre_target/bld/pkg/.
-#rm -r $pkgroot
+rm -r $pkgroot
 
 
 

@@ -8,7 +8,7 @@
 #
 
 
-Name: pwr45
+Name: pwr46
 Summary: Proview/R development and runtime environment
 Version: 4.6.0
 Release: 1
