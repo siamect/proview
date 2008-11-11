@@ -29,7 +29,7 @@ copy :
 
 lib :
 
-exe : $(bld_dir)/pwr.spec $(bld_dir)/pwrrt.spec $(bld_dir)/pwrdemo.spec
+exe : $(bld_dir)/pwr.spec $(bld_dir)/pwrrt.spec $(bld_dir)/pwrdemo.spec $(bld_dir)/pwrsev.spec 
 
 clean :
 
@@ -53,6 +53,11 @@ $(bld_dir)/pwr.spec : ../../../pwr/pwr.spec
 $(bld_dir)/pwrdemo.spec : ../../../pwrdemo/pwrdemo.spec
 	@ echo "build $(target)"
 	@ ../../../pwrdemo/build.sh
+	@ cp $(source) $(target)
+
+$(bld_dir)/pwrsev.spec : ../../../pwrsev/pwrsev.spec
+	@ echo "build $(target)"
+	@ ../../../pwrsev/build.sh
 	@ cp $(source) $(target)
 
 
