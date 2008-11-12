@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_javabean.cpp,v 1.13 2007-09-19 15:07:22 claes Exp $
+ * Proview   $Id: ge_graph_javabean.cpp,v 1.14 2008-11-12 06:49:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1846,6 +1846,8 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
     // Set drawing attributes of components
     grow_ExportJavaBean( grow->ctx, fp, 2);
 
+    int ocnt = 0;
+    int fcnt = 0;
     object_p = objectlist;
     for ( i = 0; i < object_cnt; i++)
     {
@@ -1863,6 +1865,18 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
         // export_SliderTraceAttr( fp, *object_p, i);
         export_GejavaObjectTraceAttr( fp, *object_p, i);
       object_p++;
+      ocnt++;
+
+      // Avoid too large java functions
+      if ( ocnt > 150) {
+	fcnt++;
+	ocnt = 0;
+	fp << 
+"    geInit" << fcnt << "();" << endl <<
+"  }" << endl <<
+"  public void geInit" << fcnt << "() {" << endl;
+
+      }
     }
 
     fp <<
