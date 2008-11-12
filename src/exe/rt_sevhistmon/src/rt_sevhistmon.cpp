@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_sevhistmon.cpp,v 1.4 2008-11-10 08:00:06 claes Exp $
+ * Proview   $Id: rt_sevhistmon.cpp,v 1.5 2008-11-12 15:49:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,6 +26,7 @@
 #include "rt_gdh.h"
 #include "rt_qcom.h"
 #include "rt_qcom_msg.h"
+#include "rt_ini_event.h"
 #include "rt_errh.h"
 #include "rt_sevhistmon.h"
 #include "rt_sev_net.h"
@@ -44,6 +45,7 @@ int rt_sevhistmon::init()
   unsigned int a_size, a_offset, a_dim;
   pwr_tAName hname;
   qcom_sQid qid;
+  qcom_sQid 		qini;
   qcom_sNode		node;
   pwr_tNid		nid;
   pwr_tOid		conf_oid;
@@ -85,6 +87,10 @@ int rt_sevhistmon::init()
     else
       throw co_error( sts);
   }
+
+  qini = qcom_cQini;
+  if (!qcom_Bind(&sts, &qid, &qini))
+    throw co_error(sts);
 
   // Get all qcom nodes
   qcom_MyNode( &m_sts, &node);
@@ -439,6 +445,15 @@ int rt_sevhistmon::mainloop()
       default: ;
       }
       break;
+    case qcom_eBtype_event: {
+      ini_mEvent  new_event;
+      qcom_sEvent *ep = (qcom_sEvent*) get.data;
+
+      new_event.m  = ep->mask;
+      if (new_event.b.terminate)
+	exit(0);
+      break;
+    }
     default: ;
     }
 
