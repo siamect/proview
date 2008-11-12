@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_convert.cpp,v 1.16 2008-10-31 12:51:30 claes Exp $
+ * Proview   $Id: co_convert.cpp,v 1.17 2008-11-12 15:42:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -157,7 +157,7 @@ int main( int argc, char *argv[])
         strcat( ctx->dir , "/");
 #endif
     }
-    if ( strcmp( argv[i], "-g") == 0) {
+    else if ( strcmp( argv[i], "-g") == 0) {
       if ( i+1 >= argc) {
         usage();
         exit(0);
@@ -165,7 +165,7 @@ int main( int argc, char *argv[])
       strcpy( ctx->setup_filename, argv[i+1]);
       i++;
     }
-    if ( strcmp( argv[i], "-l") == 0) {
+    else if ( strcmp( argv[i], "-l") == 0) {
       if ( i+1 >= argc) {
         usage();
         exit(0);
