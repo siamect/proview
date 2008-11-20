@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_array_elem.h,v 1.12 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_array_elem.h,v 1.13 2008-11-20 10:30:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -127,6 +127,7 @@ class GlowArrayElem {
     virtual void set_border( int border) {};
     virtual void set_shadow( int shadow) {};
     virtual void set_shadow_width( double width) {};
+    virtual void set_gradient( glow_eGradient gradient) {};
     virtual void set_drawtype( glow_eDrawType draw_type) {};
     virtual void set_linewidth( int linewidth) {};
     virtual void set_position( double x, double y) {};

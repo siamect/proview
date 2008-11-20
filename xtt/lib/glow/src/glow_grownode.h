@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_grownode.h,v 1.13 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_grownode.h,v 1.14 2008-11-20 10:30:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -204,6 +204,7 @@ class GrowNode : public GlowNode {
   int 		shadow;	       	//!< Object should be drawn with shadows.
   int		input_position;	//!< Cursor position for input annotation.
   int		input_selected; //!< Text in input annotation is selected.
+  glow_eGradient gradient;      //!< Type of gradient.
     
   //! Set dynamic code
   /*!
@@ -853,6 +854,12 @@ class GrowNode : public GlowNode {
     \param shadowval	If 1 the object will be draw with shadow, if 0 the object will be drawn without shadow.
   */
   void set_shadow( int shadowval) { shadow = shadowval; draw();}
+
+  //! Set Gradient.
+  /*!
+    \param gradientval	Type of gradient.
+  */
+  void set_gradient( glow_eGradient gradientval) { gradient = gradientval; draw();}
 
   //! Set root node.
   /*!

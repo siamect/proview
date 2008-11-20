@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw.h,v 1.11 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_draw.h,v 1.12 2008-11-20 10:30:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -150,6 +150,24 @@ class GlowDraw {
   virtual void pixmap_free( glow_tPixmap pixmap) {}
   virtual void image_pixel_iter( glow_tImImage orig_image, glow_tImImage *image, 
 				 void (* pixel_cb)(void *, unsigned char *), void *userdata) {}
+  virtual glow_eGradient gradient_rotate( double rot, glow_eGradient gradient) { return glow_eGradient_No;}
+  virtual int gradient_fill_rect( GlowWind *wind, int x, int y, int w, int h, 
+				  glow_eDrawType d0, glow_eDrawType d1, glow_eDrawType d2,
+				  glow_eGradient gradient) 
+    {return fill_rect( wind, x, y, w, h, d0);} 
+  virtual int gradient_fill_rectrounded( GlowWind *wind, int x, int y, int w, int h, 
+					 int roundamount, glow_eDrawType d0, 
+					 glow_eDrawType d1, glow_eDrawType d2, 
+					 glow_eGradient gradient) 
+    {return fill_rect( wind, x, y, w, h, d0);}
+  virtual int gradient_fill_arc( GlowWind *wind, int x, int y, int w, int h, 
+				 int angle1, int angle2, glow_eDrawType d0, glow_eDrawType d1, 
+				 glow_eDrawType d2, glow_eGradient gradient) 
+    {return fill_arc( wind, x, y, w, h, angle1, angle2, d0, 0);}
+  virtual int gradient_fill_polyline( GlowWind *wind, glow_sPointX *points, int point_cnt,
+				      glow_eDrawType d0, glow_eDrawType d1, glow_eDrawType d2, 
+				      glow_eGradient gradient) 
+    {return fill_polyline( wind, points, point_cnt, d0, 0);}
 };
 
 class DrawWind {

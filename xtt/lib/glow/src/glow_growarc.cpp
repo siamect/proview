@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growarc.cpp,v 1.7 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_growarc.cpp,v 1.8 2008-11-20 10:30:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,7 +41,8 @@ GrowArc::GrowArc( GrowCtx *glow_ctx, const char *name, double x1, double y1,
   original_fill_drawtype(fill_d_type), fill_drawtype(fill_d_type),
   border(display_border),
   dynamic(0), dynamicsize(0), shadow(display_shadow), shadow_width(5), 
-  relief(glow_eRelief_Up), shadow_contrast(2), disable_shadow(0)
+  relief(glow_eRelief_Up), shadow_contrast(2), disable_shadow(0),
+  gradient(glow_eGradient_No), gradient_contrast(4), disable_gradient(0)
 { 
   strcpy( n_name, name);
   pzero.nav_zoom();
@@ -270,6 +271,9 @@ void GrowArc::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowArc_shadow_contrast) << FSPACE << shadow_contrast << endl;
   fp << int(glow_eSave_GrowArc_relief) << FSPACE << int(relief) << endl;
   fp << int(glow_eSave_GrowArc_disable_shadow) << FSPACE << disable_shadow << endl;
+  fp << int(glow_eSave_GrowArc_gradient) << FSPACE << int(gradient) << endl;
+  fp << int(glow_eSave_GrowArc_gradient_contrast) << FSPACE << gradient_contrast << endl;
+  fp << int(glow_eSave_GrowArc_disable_gradient) << FSPACE << disable_gradient << endl;
   fp << int(glow_eSave_GrowArc_dynamicsize) << FSPACE << dynamicsize << endl;
   fp << int(glow_eSave_GrowArc_dynamic) << endl;
   if( dynamic)
@@ -324,6 +328,9 @@ void GrowArc::open( ifstream& fp)
       case glow_eSave_GrowArc_shadow_contrast: fp >> shadow_contrast; break;
       case glow_eSave_GrowArc_relief: fp >> tmp; relief = (glow_eRelief)tmp; break;
       case glow_eSave_GrowArc_disable_shadow: fp >> disable_shadow; break;
+      case glow_eSave_GrowArc_gradient: fp >> tmp; gradient = (glow_eGradient)tmp; break;
+      case glow_eSave_GrowArc_gradient_contrast: fp >> gradient_contrast; break;
+      case glow_eSave_GrowArc_disable_gradient: fp >> disable_gradient; break;
       case glow_eSave_GrowArc_dynamicsize: fp >> dynamicsize; break;
       case glow_eSave_GrowArc_dynamic:
         fp.getline( dummy, sizeof(dummy));
@@ -688,38 +695,80 @@ void GrowArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void 
     int display_shadow = ((node && ((GrowNode *)node)->shadow) || shadow) && !disable_shadow;
     glow_eDrawType fillcolor = ctx->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
 		 highlight, (GrowNode *)colornode, 1);
+    glow_eGradient grad = gradient;
+    if ( gradient == glow_eGradient_No && 
+	 (node && ((GrowNode *)node)->gradient != glow_eGradient_No) && !disable_gradient)
+      grad = ((GrowNode *)node)->gradient;
     
     if ( !display_shadow || shadow_width == 0 || angle2 != 360) {
-      ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-			  angle1 - rot, angle2, fillcolor, 0);
+      if ( grad == glow_eGradient_No)
+	ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+			      angle1 - rot, angle2, fillcolor, 0);
+      else {
+	glow_eDrawType f1, f2;
+	if ( gradient_contrast >= 0) {
+	  f2 = GlowColor::shift_drawtype( fillcolor, -gradient_contrast/2, 0);
+	  f1 = GlowColor::shift_drawtype( fillcolor, int(float(gradient_contrast)/2+0.6), 0);
+	}
+	else {
+	  f2 = GlowColor::shift_drawtype( fillcolor, -int(float(gradient_contrast)/2-0.6), 0);
+	  f1 = GlowColor::shift_drawtype( fillcolor, gradient_contrast/2, 0);
+	}
+	ctx->gdraw->gradient_fill_arc( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, angle1 - rot, 
+				       angle2, fillcolor, f1, f2, grad);
+      }
     }
     else {
       int ish = int( shadow_width / 100 * min(ur_x - ll_x, ur_y - ll_y) + 0.5);
-
       int drawtype_incr = shadow_contrast;
       if ( relief == glow_eRelief_Down)
 	drawtype_incr = -shadow_contrast;
 
-      // Draw light shadow
-      drawtype = ctx->shift_drawtype( fillcolor, -drawtype_incr, (GrowNode *)colornode);
+      if ( grad == glow_eGradient_No) {
+
+	// Draw light shadow
+	drawtype = ctx->shift_drawtype( fillcolor, -drawtype_incr, (GrowNode *)colornode);
       
-      ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-			  35, 140, drawtype, 0);
+	ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+			      35, 140, drawtype, 0);
 
-      // Draw dark shadow
-      drawtype = ctx->shift_drawtype( fillcolor, drawtype_incr, (GrowNode *)colornode);
+	// Draw dark shadow
+	drawtype = ctx->shift_drawtype( fillcolor, drawtype_incr, (GrowNode *)colornode);
       
-      ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-			  215, 140, drawtype, 0);
+	ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+			      215, 140, drawtype, 0);
 
-      // Draw medium shadow and body
-      ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-			  -5, 40, fillcolor, 0);
-      ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-			  175, 40, fillcolor, 0);
+	// Draw medium shadow and body
+	ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+			      -5, 40, fillcolor, 0);
+	ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+			      175, 40, fillcolor, 0);
 
-      ctx->gdraw->fill_arc( w,  ll_x + ish, ll_y + ish, ur_x - ll_x - 2*ish, ur_y - ll_y - 2*ish,
-			  angle1 - rot, angle2, fillcolor, 0);
+	ctx->gdraw->fill_arc( w,  ll_x + ish, ll_y + ish, ur_x - ll_x - 2*ish, ur_y - ll_y - 2*ish,
+			      angle1 - rot, angle2, fillcolor, 0);
+      }
+      else {
+	glow_eDrawType f1, f2;
+
+	// Draw shadow
+	f1 = ctx->shift_drawtype( fillcolor, -drawtype_incr, (GrowNode *)colornode);
+	f2 = ctx->shift_drawtype( fillcolor, drawtype_incr, (GrowNode *)colornode);
+
+	ctx->gdraw->gradient_fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+			      angle1 - rot, angle2, fillcolor, f2, f1, glow_eGradient_DiagonalUpperLeft);
+
+	// Draw circle
+	if ( gradient_contrast >= 0) {
+	  f2 = GlowColor::shift_drawtype( fillcolor, -gradient_contrast/2, 0);
+	  f1 = GlowColor::shift_drawtype( fillcolor, int(float(gradient_contrast)/2+0.6), 0);
+	}
+	else {
+	  f2 = GlowColor::shift_drawtype( fillcolor, -int(float(gradient_contrast)/2-0.6), 0);
+	  f1 = GlowColor::shift_drawtype( fillcolor, gradient_contrast/2, 0);
+	}
+	ctx->gdraw->gradient_fill_arc( w,  ll_x + ish, ll_y + ish, ur_x - ll_x - 2*ish, ur_y - ll_y - 2*ish,
+			      angle1 - rot, angle2, fillcolor, f1, f2, grad);
+      }
     }
   }
   if ( border || !fill)

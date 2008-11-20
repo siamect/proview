@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growrect.cpp,v 1.13 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_growrect.cpp,v 1.14 2008-11-20 10:30:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,7 +41,8 @@ GrowRect::GrowRect( GrowCtx *glow_ctx, const char *name, double x, double y,
   original_fill_drawtype(fill_d_type), fill_drawtype(fill_d_type),
   border(display_border),
   dynamic(0), dynamicsize(0), shadow(display_shadow), shadow_width(5), relief(glow_eRelief_Up),
-  shadow_contrast(2), disable_shadow(0), invisible(0), fixcolor(0), fixposition(0)
+  shadow_contrast(2), disable_shadow(0), invisible(0), fixcolor(0), fixposition(0), 
+  gradient(glow_eGradient_No), gradient_contrast(4), disable_gradient(0)
 { 
   strcpy( n_name, name);
   pzero.nav_zoom();
@@ -285,6 +286,9 @@ void GrowRect::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowRect_fixcolor) << FSPACE << fixcolor << endl;
   fp << int(glow_eSave_GrowRect_fixposition) << FSPACE << fixposition << endl;
   fp << int(glow_eSave_GrowRect_disable_shadow) << FSPACE << disable_shadow << endl;
+  fp << int(glow_eSave_GrowRect_gradient) << FSPACE << int(gradient) << endl;
+  fp << int(glow_eSave_GrowRect_gradient_contrast) << FSPACE << gradient_contrast << endl;
+  fp << int(glow_eSave_GrowRect_disable_gradient) << FSPACE << disable_gradient << endl;
   fp << int(glow_eSave_GrowRect_dynamicsize) << FSPACE << dynamicsize << endl;
   fp << int(glow_eSave_GrowRect_dynamic) << endl;
   if( dynamic)
@@ -342,6 +346,9 @@ void GrowRect::open( ifstream& fp)
       case glow_eSave_GrowRect_invisible: fp >> invisible; break;
       case glow_eSave_GrowRect_fixcolor: fp >> fixcolor; break;
       case glow_eSave_GrowRect_fixposition: fp >> fixposition; break;
+      case glow_eSave_GrowRect_gradient: fp >> tmp; gradient = (glow_eGradient)tmp; break;
+      case glow_eSave_GrowRect_gradient_contrast: fp >> gradient_contrast; break;
+      case glow_eSave_GrowRect_disable_gradient: fp >> disable_gradient; break;
       case glow_eSave_GrowRect_dynamicsize: fp >> dynamicsize; break;
       case glow_eSave_GrowRect_dynamic:
         fp.getline( dummy, sizeof(dummy));
@@ -723,6 +730,10 @@ void GrowRect::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
   int display_shadow = ((node && ((GrowNode *)node)->shadow) || shadow) && !disable_shadow;
   glow_eDrawType fillcolor = ctx->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
 		 highlight, (GrowNode *)colornode, 1);
+  glow_eGradient grad = gradient;
+  if ( gradient == glow_eGradient_No && 
+       (node && ((GrowNode *)node)->gradient != glow_eGradient_No) && !disable_gradient)
+    grad = ((GrowNode *)node)->gradient;
 
   if ( display_shadow && ish != 0) {
     glow_sPointX points[7];
@@ -770,12 +781,51 @@ void GrowRect::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
     ctx->gdraw->fill_polyline( w, points, 7, drawtype, 0);
   }
   if ( fill) {
-    if ( display_shadow && ish != 0)
-      ctx->gdraw->fill_rect( w, ll_x + ish, ll_y + ish, ur_x - ll_x - 2 * ish, ur_y - ll_y - 2 * ish,
-			   fillcolor);
-    else
-      ctx->gdraw->fill_rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fillcolor);
+    if ( display_shadow && ish != 0) {
+      if ( grad == glow_eGradient_No)
+	ctx->gdraw->fill_rect( w, ll_x + ish, ll_y + ish, ur_x - ll_x - 2 * ish, ur_y - ll_y - 2 * ish,
+			       fillcolor);
+      else {
+	glow_eDrawType f1, f2;
+	double rotation;
+	if ( t)
+	  rotation = trf.rot( t);
+	else
+	  rotation = trf.rot();
 
+	if ( gradient_contrast >= 0) {
+	  f2 = GlowColor::shift_drawtype( fillcolor, -gradient_contrast/2, 0);
+	  f1 = GlowColor::shift_drawtype( fillcolor, int(float(gradient_contrast)/2+0.6), 0);
+	}
+	else {
+	  f2 = GlowColor::shift_drawtype( fillcolor, -int(float(gradient_contrast)/2-0.6), 0);
+	  f1 = GlowColor::shift_drawtype( fillcolor, gradient_contrast/2, 0);
+	}
+	ctx->gdraw->gradient_fill_rect( w, ll_x + ish, ll_y + ish, ur_x - ll_x - 2 * ish, ur_y - ll_y - 2 * ish,
+			       fillcolor, f1, f2, ctx->gdraw->gradient_rotate( rotation, grad));	
+      }
+    }
+    else {
+      if ( grad == glow_eGradient_No)
+	ctx->gdraw->fill_rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fillcolor);
+      else {
+	glow_eDrawType f1, f2;
+	double rotation;
+	if ( t)
+	  rotation = trf.rot( t);
+	else
+	  rotation = trf.rot();
+	if ( gradient_contrast >= 0) {
+	  f2 = GlowColor::shift_drawtype( fillcolor, -gradient_contrast/2, 0);
+	  f1 = GlowColor::shift_drawtype( fillcolor, int(float(gradient_contrast)/2+0.6), 0);
+	}
+	else {
+	  f2 = GlowColor::shift_drawtype( fillcolor, -int(float(gradient_contrast)/2-0.6), 0);
+	  f1 = GlowColor::shift_drawtype( fillcolor, gradient_contrast/2, 0);
+	}
+	ctx->gdraw->gradient_fill_rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fillcolor, f1, f2, ctx->gdraw->gradient_rotate( rotation, grad));
+      }
+    }
   }
   if ( border || !(fill || (display_shadow && shadow_width != 0))) {
     drawtype = ctx->get_drawtype( draw_type, glow_eDrawType_LineHighlight,

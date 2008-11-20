@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growbar.cpp,v 1.10 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_growbar.cpp,v 1.11 2008-11-20 10:30:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -257,6 +257,10 @@ void GrowBar::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void 
   }
   int idx;
   glow_eDrawType drawtype;
+  glow_eGradient grad = gradient;
+  if ( gradient == glow_eGradient_No && 
+       (node && ((GrowNode *)node)->gradient != glow_eGradient_No) && !disable_gradient)
+    grad = ((GrowNode *)node)->gradient;
 
   int bar_border_idx = int( w->zoom_factor_y / w->base_zoom_factor * 
 	bar_borderwidth - 1);
@@ -302,7 +306,27 @@ void GrowBar::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void 
   if ( fill) {
     drawtype = ctx->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
 		 highlight, (GrowNode *)colornode, 1);
-    ctx->gdraw->fill_rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype);
+    
+    if ( grad == glow_eGradient_No)
+      ctx->gdraw->fill_rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype);
+    else {
+      glow_eDrawType f1, f2;
+      double rotation;
+
+      if ( t)
+	rotation = trf.rot( t);
+      else
+	rotation = trf.rot();
+      if ( gradient_contrast >= 0) {
+	f2 = GlowColor::shift_drawtype( drawtype, -gradient_contrast/2, 0);
+	f1 = GlowColor::shift_drawtype( drawtype, int(float(gradient_contrast)/2+0.6), 0);
+      }
+      else {
+	f2 = GlowColor::shift_drawtype( drawtype, -int(float(gradient_contrast)/2-0.6), 0);
+	f1 = GlowColor::shift_drawtype( drawtype, gradient_contrast/2, 0);
+      }
+      ctx->gdraw->gradient_fill_rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, f1, f2, ctx->gdraw->gradient_rotate( rotation, grad));
+    }
   }
   drawtype = ctx->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
 		 highlight, (GrowNode *)colornode, 0);
@@ -367,7 +391,27 @@ void GrowBar::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void 
     glow_eDrawType dt = drawtype;
     if ( bar_drawtype != glow_eDrawType_Inherit)
       dt = bar_drawtype;
-    ctx->gdraw->fill_rect( w, x0, y0, width, height, dt);
+
+    if ( grad == glow_eGradient_No)
+      ctx->gdraw->fill_rect( w, x0, y0, width, height, dt);
+    else {
+      glow_eDrawType f1, f2;
+      double rotation;
+
+      if ( t)
+	rotation = trf.rot( t);
+      else
+	rotation = trf.rot();
+      if ( gradient_contrast >= 0) {
+	f2 = GlowColor::shift_drawtype( dt, -gradient_contrast/2, 0);
+	f1 = GlowColor::shift_drawtype( dt, int(float(gradient_contrast)/2+0.6), 0);
+      }
+      else {
+	f2 = GlowColor::shift_drawtype( dt, -int(float(gradient_contrast)/2-0.6), 0);
+	f1 = GlowColor::shift_drawtype( dt, gradient_contrast/2, 0);
+      }
+      ctx->gdraw->gradient_fill_rect( w, x0, y0, width, height, dt, f1, f2, ctx->gdraw->gradient_rotate( rotation, grad));
+    }
 
     dt = drawtype;
     if ( bar_bordercolor != glow_eDrawType_Inherit)

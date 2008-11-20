@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.h,v 1.10 2008-10-31 12:51:33 claes Exp $
+ * Proview   $Id: ge_gtk.h,v 1.11 2008-11-20 10:30:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -194,6 +194,27 @@ class GeGtk : public Ge {
   static void activate_decr_intensity( GtkWidget *w, gpointer gectx);
   static void activate_incr_shift( GtkWidget *w, gpointer gectx);
   static void activate_decr_shift( GtkWidget *w, gpointer gectx);
+  static void activate_gradient_no( GtkWidget *w, gpointer gectx);
+  static void activate_gradient_horizup( GtkWidget *w, gpointer gectx);
+  static void activate_gradient_horizdown( GtkWidget *w, gpointer gectx);
+  static void activate_gradient_horiztube1( GtkWidget *w, gpointer gectx);
+  static void activate_gradient_horiztube2( GtkWidget *w, gpointer gectx);
+  static void activate_gradient_vertleft( GtkWidget *w, gpointer gectx);
+  static void activate_gradient_vertright( GtkWidget *w, gpointer gectx);
+  static void activate_gradient_verttube1( GtkWidget *w, gpointer gectx);
+  static void activate_gradient_verttube2( GtkWidget *w, gpointer gectx);
+  static void activate_gradient_diagupperleft( GtkWidget *w, gpointer gectx);
+  static void activate_gradient_diaglowerleft( GtkWidget *w, gpointer gectx);
+  static void activate_gradient_diagupperright( GtkWidget *w, gpointer gectx);
+  static void activate_gradient_diaglowerright( GtkWidget *w, gpointer gectx);
+  static void activate_gradient_diaguptube( GtkWidget *w, gpointer gectx);
+  static void activate_gradient_diagdowntube( GtkWidget *w, gpointer gectx);
+  static void activate_gradient_globe( GtkWidget *w, gpointer gectx);
+  static void activate_gradient_radcenter( GtkWidget *w, gpointer gectx);
+  static void activate_gradient_radupperleft( GtkWidget *w, gpointer gectx);
+  static void activate_gradient_radlowerleft( GtkWidget *w, gpointer gectx);
+  static void activate_gradient_radupperright( GtkWidget *w, gpointer gectx);
+  static void activate_gradient_radlowerright( GtkWidget *w, gpointer gectx);
   static void activate_scale( GtkWidget *w, gpointer gectx);
   static void activate_scale_double( GtkWidget *w, gpointer gectx);
   static void activate_scale_half( GtkWidget *w, gpointer gectx);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.55 2008-10-31 12:51:34 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.56 2008-11-20 10:30:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1031,6 +1031,15 @@ void Graph::set_select_shadow( int border)
   journal_store( journal_eAction_AntePropertiesSelect, 0);
 
   grow_SetSelectShadow( grow->ctx, shadow);
+
+  journal_store( journal_eAction_PostPropertiesSelect, 0);
+}
+
+void Graph::set_select_gradient( glow_eGradient gradient)
+{
+  journal_store( journal_eAction_AntePropertiesSelect, 0);
+
+  grow_SetSelectGradient( grow->ctx, gradient);
 
   journal_store( journal_eAction_PostPropertiesSelect, 0);
 }

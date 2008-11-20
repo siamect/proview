@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growarc.h,v 1.8 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_growarc.h,v 1.9 2008-11-20 10:30:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -273,6 +273,9 @@ class GrowArc : public GlowArc {
   glow_eRelief 	relief;		//!< Type of relief.
   int 		shadow_contrast; //!< Shadow contrast.
   int		disable_shadow;	//!< Disable shadow, even if parent node has shadow.
+  glow_eGradient gradient;      //!< Type of gradient.
+  int		gradient_contrast; //!< Gradient contrast.
+  int		disable_gradient; //!< Disable gradient, even if parent node has gradient.
 
   //! Set user data.
   /*!
@@ -447,6 +450,12 @@ class GrowArc : public GlowArc {
     \param width	Width of shadow.
   */
   void set_shadow_width( double width) { shadow_width = width; draw();}
+
+  //! Set Gradient.
+  /*!
+    \param gradientval	Type of gradient.
+  */
+  void set_gradient( glow_eGradient gradientval) { gradient = gradientval; draw();}
 
   void get_ctx( void **c) { *c = (void *)ctx;}; 	//!< Should be replace by get_ctx() !!
 

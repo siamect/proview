@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_array.cpp,v 1.14 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_array.cpp,v 1.15 2008-11-20 10:30:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1679,6 +1679,12 @@ void GlowArray::set_shadow( int shadow)
 {
   for ( int i = 0; i < a_size; i++)
     a[i]->set_shadow( shadow);
+}
+
+void GlowArray::set_gradient( glow_eGradient gradient) 
+{
+  for ( int i = 0; i < a_size; i++)
+    a[i]->set_gradient( gradient);
 }
 
 void GlowArray::set_drawtype( glow_eDrawType drawtype) 

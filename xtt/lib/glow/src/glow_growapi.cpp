@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.40 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.41 2008-11-20 10:30:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1195,11 +1195,23 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].minlimit = 1;
       attrinfo[i].maxlimit = 3;
       attrinfo[i++].size = sizeof( op->shadow_contrast);
-      
+
       strcpy( attrinfo[i].name, "relief");
       attrinfo[i].value_p = &op->relief;
       attrinfo[i].type = glow_eType_Relief;
       attrinfo[i++].size = sizeof( op->relief);
+      
+      strcpy( attrinfo[i].name, "gradient_contrast");
+      attrinfo[i].value_p = &op->gradient_contrast;
+      attrinfo[i].type = glow_eType_Int;
+      attrinfo[i].minlimit = -10;
+      attrinfo[i].maxlimit = 10;
+      attrinfo[i++].size = sizeof( op->gradient_contrast);
+      
+      strcpy( attrinfo[i].name, "gradient");
+      attrinfo[i].value_p = &op->gradient;
+      attrinfo[i].type = glow_eType_Gradient;
+      attrinfo[i++].size = sizeof( op->gradient);
       
       strcpy( attrinfo[i].name, "invisible");
       attrinfo[i].value_p = &op->invisible;
@@ -1215,6 +1227,11 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].value_p = &op->disable_shadow;
       attrinfo[i].type = glow_eType_Boolean;
       attrinfo[i++].size = sizeof( op->disable_shadow);
+      
+      strcpy( attrinfo[i].name, "disable_gradient");
+      attrinfo[i].value_p = &op->disable_gradient;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->disable_gradient);
       
       strcpy( attrinfo[i].name, "fixposition");
       attrinfo[i].value_p = &op->fixposition;
@@ -1264,10 +1281,27 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].type = glow_eType_Relief;
       attrinfo[i++].size = sizeof( op->relief);
       
+      strcpy( attrinfo[i].name, "gradient_contrast");
+      attrinfo[i].value_p = &op->gradient_contrast;
+      attrinfo[i].type = glow_eType_Int;
+      attrinfo[i].minlimit = -10;
+      attrinfo[i].maxlimit = 10;
+      attrinfo[i++].size = sizeof( op->gradient_contrast);
+      
+      strcpy( attrinfo[i].name, "gradient");
+      attrinfo[i].value_p = &op->gradient;
+      attrinfo[i].type = glow_eType_Gradient;
+      attrinfo[i++].size = sizeof( op->gradient);
+      
       strcpy( attrinfo[i].name, "disable_shadow");
       attrinfo[i].value_p = &op->disable_shadow;
       attrinfo[i].type = glow_eType_Boolean;
       attrinfo[i++].size = sizeof( op->disable_shadow);
+      
+      strcpy( attrinfo[i].name, "disable_gradient");
+      attrinfo[i].value_p = &op->disable_gradient;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->disable_gradient);
       
       strcpy( attrinfo[i].name, "Dynamic");
       op->get_dynamic( &dynamic, &dynsize);
@@ -1307,10 +1341,27 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].type = glow_eType_Relief;
       attrinfo[i++].size = sizeof( op->relief);
       
+      strcpy( attrinfo[i].name, "gradient_contrast");
+      attrinfo[i].value_p = &op->gradient_contrast;
+      attrinfo[i].type = glow_eType_Int;
+      attrinfo[i].minlimit = -10;
+      attrinfo[i].maxlimit = 10;
+      attrinfo[i++].size = sizeof( op->gradient_contrast);
+      
+      strcpy( attrinfo[i].name, "gradient");
+      attrinfo[i].value_p = &op->gradient;
+      attrinfo[i].type = glow_eType_Gradient;
+      attrinfo[i++].size = sizeof( op->gradient);
+      
       strcpy( attrinfo[i].name, "disable_shadow");
       attrinfo[i].value_p = &op->disable_shadow;
       attrinfo[i].type = glow_eType_Boolean;
       attrinfo[i++].size = sizeof( op->disable_shadow);
+      
+      strcpy( attrinfo[i].name, "disable_gradient");
+      attrinfo[i].value_p = &op->disable_gradient;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->disable_gradient);
       
       strcpy( attrinfo[i].name, "fill_eq_border");
       attrinfo[i].value_p = &op->fill_eq_border;
@@ -1399,6 +1450,18 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].maxlimit = 3;
       attrinfo[i++].size = sizeof( op->shadow_contrast);
       
+      strcpy( attrinfo[i].name, "gradient_contrast");
+      attrinfo[i].value_p = &op->gradient_contrast;
+      attrinfo[i].type = glow_eType_Int;
+      attrinfo[i].minlimit = -10;
+      attrinfo[i].maxlimit = 10;
+      attrinfo[i++].size = sizeof( op->gradient_contrast);
+      
+      strcpy( attrinfo[i].name, "gradient");
+      attrinfo[i].value_p = &op->gradient;
+      attrinfo[i].type = glow_eType_Gradient;
+      attrinfo[i++].size = sizeof( op->gradient);
+      
       strcpy( attrinfo[i].name, "relief");
       attrinfo[i].value_p = &op->relief;
       attrinfo[i].type = glow_eType_Relief;
@@ -1408,6 +1471,11 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].value_p = &op->disable_shadow;
       attrinfo[i].type = glow_eType_Boolean;
       attrinfo[i++].size = sizeof( op->disable_shadow);
+      
+      strcpy( attrinfo[i].name, "disable_gradient");
+      attrinfo[i].value_p = &op->disable_gradient;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->disable_gradient);
       
       strcpy( attrinfo[i].name, "Dynamic");
       op->get_dynamic( &dynamic, &dynsize);
@@ -3701,6 +3769,11 @@ void grow_SetSelectBorder( grow_tCtx ctx, int border)
 void grow_SetSelectShadow( grow_tCtx ctx, int shadow)
 {
   ctx->set_select_shadow( shadow);
+}
+
+void grow_SetSelectGradient( grow_tCtx ctx, glow_eGradient gradient)
+{
+  ctx->set_select_gradient( gradient);
 }
 
 void grow_SetSelectLineType( grow_tCtx ctx, glow_eLineType type)

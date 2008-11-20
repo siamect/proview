@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attrnav.cpp,v 1.22 2008-10-31 12:51:34 claes Exp $
+ * Proview   $Id: ge_attrnav.cpp,v 1.23 2008-11-20 10:30:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -914,6 +914,30 @@ static attrnav_sEnumElement elem_curve_datatype[] = {
 	{ (int) ge_eCurveDataType_TableObject, 	"TableObject"},
 	{ 0, ""}};
 
+static attrnav_sEnumElement elem_gradient[] = {
+	{ (int) glow_eGradient_No, 	"No"},
+	{ (int) glow_eGradient_HorizontalUp, 	"HorizontalUp"},
+	{ (int) glow_eGradient_HorizontalDown, 	"HorizontalDown"},
+	{ (int) glow_eGradient_HorizontalTube1,	"HorizontalTube1"},
+	{ (int) glow_eGradient_HorizontalTube2,	"HorizontalTube2"},
+	{ (int) glow_eGradient_VerticalLeft, 	"VerticalLeft"},
+	{ (int) glow_eGradient_VerticalRight, 	"VerticalRight"},
+	{ (int) glow_eGradient_VerticalTube1, 	"VerticalTube1"},
+	{ (int) glow_eGradient_VerticalTube2, 	"VerticalTube2"},
+	{ (int) glow_eGradient_DiagonalUpperLeft, 	"DiagonalUpperLeft"},
+	{ (int) glow_eGradient_DiagonalLowerLeft, 	"DiagonalLowerLeft"},
+	{ (int) glow_eGradient_DiagonalUpperRight, 	"DiagonalUpperRight"},
+	{ (int) glow_eGradient_DiagonalLowerRight, 	"DiagonalLowerRight"},
+	{ (int) glow_eGradient_DiagonalUpTube, 	"DiagonalUpTube"},
+	{ (int) glow_eGradient_DiagonalDownTube, "DiagonalDownTube"},
+	{ (int) glow_eGradient_Globe, 		"Globe"},
+	{ (int) glow_eGradient_RadialCenter, 	"RadialCenter"},
+	{ (int) glow_eGradient_RadialUpperLeft,	"RadialUpperLeft"},
+	{ (int) glow_eGradient_RadialLowerLeft,	"RadialLowerLeft"},
+	{ (int) glow_eGradient_RadialUpperRight, "RadialUpperRight"},
+	{ (int) glow_eGradient_RadialLowerRight, "RadialLowerRight"},
+	{ 0, ""}};
+
 static attrnav_sEnum enum_types[] = {
 	{ (int) glow_eType_Direction, 	(attrnav_sEnumElement *) &elem_direction},
 	{ (int) glow_eType_Color, 	(attrnav_sEnumElement *) &elem_color},
@@ -930,6 +954,7 @@ static attrnav_sEnum enum_types[] = {
 	{ (int) glow_eType_Adjustment, 	(attrnav_sEnumElement *) &elem_adjustment},
 	{ (int) glow_eType_Font, 	(attrnav_sEnumElement *) &elem_font},
 	{ (int) ge_eAttrType_CurveDataType, (attrnav_sEnumElement *) &elem_curve_datatype},
+	{ (int) glow_eType_Gradient, (attrnav_sEnumElement *) &elem_gradient},
 	{ 0, NULL}};
 
 static attrnav_sEnum mask_types[] = {
@@ -992,6 +1017,7 @@ int  attrnav_attr_string_to_value( int type_id, char *value_str,
     case glow_eType_InputFocusMark: 
     case glow_eType_Relief: 
     case glow_eType_TextSize: 
+    case glow_eType_Gradient: 
     case ge_eAttrType_DynType:
     case ge_eAttrType_DynTypeTone:
     case ge_eAttrType_ActionType:
@@ -1074,6 +1100,7 @@ void  attrnav_attrvalue_to_string( int type_id, void *value_ptr,
     case glow_eType_InputFocusMark:
     case glow_eType_Relief:
     case glow_eType_TextSize:
+    case glow_eType_Gradient: 
     case ge_eAttrType_AnimSequence:
     case ge_eAttrType_LimitType:
     case ge_eAttrType_ScaleType:
@@ -2129,6 +2156,7 @@ ItemLocal::ItemLocal( AttrNav *attrnav, const char *item_name, const char *attr,
     case glow_eType_InputFocusMark:
     case glow_eType_Relief:
     case glow_eType_TextSize:
+    case glow_eType_Gradient: 
     case ge_eAttrType_DynType:
     case ge_eAttrType_DynTypeTone:
     case ge_eAttrType_ActionType:

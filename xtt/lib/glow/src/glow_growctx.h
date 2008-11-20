@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.h,v 1.19 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_growctx.h,v 1.20 2008-11-20 10:30:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -364,6 +364,11 @@ class GrowCtx : public GlowCtx {
   /*! \param shadow	Shadow. */
   void set_select_shadow( int shadow)
 	{ a_sel.set_shadow( shadow);};
+
+  //! Set gradient type on all selected objects.
+  /*! \param gradient	Gradient type. */
+  void set_select_gradient( glow_eGradient gradient)
+	{ a_sel.set_gradient( gradient);};
 
   //! Set linetype on all selected objects.
   /*! \param type       Linetype. */

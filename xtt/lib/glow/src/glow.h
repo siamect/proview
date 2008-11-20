@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow.h,v 1.28 2008-10-16 08:58:11 claes Exp $
+ * Proview   $Id: glow.h,v 1.29 2008-11-20 10:30:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -79,7 +79,8 @@ typedef enum {
   glow_eType_InputFocusMark,  	//!< Type is glow_eInputFocusMark
   glow_eType_TextSize,	  	//!< Type is a text size, glow_eTextSize
   glow_eType_Adjustment,  	//!< Type is glow_eAdjustment
-  glow_eType_Font	  	//!< Type is glow_eFont
+  glow_eType_Font,	  	//!< Type is glow_eFont
+  glow_eType_Gradient      	//!< Type is glow_eGradient
 } glow_eType;
 
 //! Type of Ctx class
@@ -342,6 +343,32 @@ typedef enum {
   glow_eRelief_Up,   //!< The shadow is lighter on the left-upper side, and darker on the right-lower side  
   glow_eRelief_Down  //!< The shadow is darker on the left-upper side, and lighter on the left-lower side
 } glow_eRelief;
+
+//! Type of gradient
+typedef enum {
+  glow_eGradient_No,
+  glow_eGradient_HorizontalUp,
+  glow_eGradient_HorizontalDown,
+  glow_eGradient_HorizontalTube1,
+  glow_eGradient_HorizontalTube2,
+  glow_eGradient_VerticalLeft,
+  glow_eGradient_VerticalRight,
+  glow_eGradient_VerticalTube1,
+  glow_eGradient_VerticalTube2,
+  glow_eGradient_DiagonalUpperLeft,
+  glow_eGradient_DiagonalLowerLeft,
+  glow_eGradient_DiagonalUpperRight,
+  glow_eGradient_DiagonalLowerRight,
+  glow_eGradient_DiagonalUpTube,
+  glow_eGradient_DiagonalDownTube,
+  glow_eGradient_Globe,
+  glow_eGradient_RadialCenter,
+  glow_eGradient_RadialUpperLeft,
+  glow_eGradient_RadialLowerLeft,
+  glow_eGradient_RadialUpperRight,
+  glow_eGradient_RadialLowerRight
+} glow_eGradient;
+
 
 //! Color index for a color
 /*! The drawtype is index in an array that contains the gc for colors in the color palette. 
@@ -1212,6 +1239,9 @@ typedef enum {
 	glow_eSave_GrowRect_invisible      	= 1918,
 	glow_eSave_GrowRect_fixcolor      	= 1919,
 	glow_eSave_GrowRect_fixposition      	= 1920,
+	glow_eSave_GrowRect_gradient          	= 1921,
+	glow_eSave_GrowRect_gradient_contrast   = 1922,
+	glow_eSave_GrowRect_disable_gradient    = 1923,
 	glow_eSave_GrowLine_x_right		= 2000,
 	glow_eSave_GrowLine_x_left		= 2001,
 	glow_eSave_GrowLine_y_high		= 2002,
@@ -1303,6 +1333,9 @@ typedef enum {
 	glow_eSave_GrowArc_shadow      		= 2415,
 	glow_eSave_GrowArc_shadow_contrast      = 2416,
 	glow_eSave_GrowArc_disable_shadow       = 2417,
+	glow_eSave_GrowArc_gradient          	= 2418,
+	glow_eSave_GrowArc_gradient_contrast    = 2419,
+	glow_eSave_GrowArc_disable_gradient     = 2420,
 	glow_eSave_PolyLine_draw_type		= 2500,
 	glow_eSave_PolyLine_line_width		= 2501,
 	glow_eSave_PolyLine_a_points		= 2502,
@@ -1331,6 +1364,9 @@ typedef enum {
 	glow_eSave_GrowPolyLine_fill_eq_shadow  = 2620,
 	glow_eSave_GrowPolyLine_fixcolor  	= 2621,
 	glow_eSave_GrowPolyLine_fixposition  	= 2622,
+	glow_eSave_GrowPolyLine_gradient   	= 2623,
+	glow_eSave_GrowPolyLine_gradient_contrast = 2624,
+	glow_eSave_GrowPolyLine_disable_gradient = 2625,
 	glow_eSave_GrowNode_node_part		= 2700,
 	glow_eSave_GrowNode_dynamic		= 2701,
 	glow_eSave_GrowNode_dynamicsize		= 2702,
@@ -1358,6 +1394,7 @@ typedef enum {
 	glow_eSave_GrowNode_shadow 		= 2724,
 	glow_eSave_GrowNode_flip_horizontal    	= 2725,
 	glow_eSave_GrowNode_flip_vertical      	= 2726,
+	glow_eSave_GrowNode_gradient          	= 2727,
 	glow_eSave_Transform_a11		= 2800,
 	glow_eSave_Transform_a12		= 2801,
 	glow_eSave_Transform_a13		= 2802,
@@ -1493,6 +1530,9 @@ typedef enum {
 	glow_eSave_GrowRectRounded_shadow      	= 3816,
 	glow_eSave_GrowRectRounded_shadow_contrast = 3817,
 	glow_eSave_GrowRectRounded_disable_shadow = 3818,
+	glow_eSave_GrowRectRounded_gradient   	= 3819,
+	glow_eSave_GrowRectRounded_gradient_contrast = 3820,
+	glow_eSave_GrowRectRounded_disable_gradient = 3821,
 	glow_eSave_GrowConGlue_line_width_up 	= 3900,
 	glow_eSave_GrowConGlue_line_width_down 	= 3901,
 	glow_eSave_GrowConGlue_line_width_left 	= 3902,

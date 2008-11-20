@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.h,v 1.14 2008-10-31 12:51:34 claes Exp $
+ * Proview   $Id: ge.h,v 1.15 2008-11-20 10:30:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -246,6 +246,7 @@ class Ge {
   void activate_condir_up();
   void activate_condir_down();
   void activate_background_color();
+  void activate_gradient( glow_eGradient gradient);
   void activate_help();
   void activate_help_subgraph();
   void activate_india_ok( char *value);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.cpp,v 1.19 2008-10-31 12:51:33 claes Exp $
+ * Proview   $Id: ge_gtk.cpp,v 1.20 2008-11-20 10:30:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -902,6 +902,111 @@ void GeGtk::activate_incr_shift(GtkWidget *w, gpointer gectx){
 void GeGtk::activate_decr_shift(GtkWidget *w, gpointer gectx)
 {
   ((Ge *)gectx)->activate_decr_shift();
+}
+
+void GeGtk::activate_gradient_no(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_gradient( glow_eGradient_No);
+}
+
+void GeGtk::activate_gradient_horizup(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_gradient( glow_eGradient_HorizontalUp);
+}
+
+void GeGtk::activate_gradient_horizdown(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_gradient( glow_eGradient_HorizontalDown);
+}
+
+void GeGtk::activate_gradient_horiztube1(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_gradient( glow_eGradient_HorizontalTube1);
+}
+
+void GeGtk::activate_gradient_horiztube2(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_gradient( glow_eGradient_HorizontalTube2);
+}
+
+void GeGtk::activate_gradient_vertleft(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_gradient( glow_eGradient_VerticalLeft);
+}
+
+void GeGtk::activate_gradient_vertright(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_gradient( glow_eGradient_VerticalRight);
+}
+
+void GeGtk::activate_gradient_verttube1(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_gradient( glow_eGradient_VerticalTube1);
+}
+
+void GeGtk::activate_gradient_verttube2(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_gradient( glow_eGradient_VerticalTube2);
+}
+
+void GeGtk::activate_gradient_diagupperleft(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_gradient( glow_eGradient_DiagonalUpperLeft);
+}
+
+void GeGtk::activate_gradient_diaglowerleft(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_gradient( glow_eGradient_DiagonalLowerLeft);
+}
+
+void GeGtk::activate_gradient_diagupperright(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_gradient( glow_eGradient_DiagonalUpperRight);
+}
+
+void GeGtk::activate_gradient_diaglowerright(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_gradient( glow_eGradient_DiagonalLowerRight);
+}
+
+void GeGtk::activate_gradient_diaguptube(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_gradient( glow_eGradient_DiagonalUpTube);
+}
+
+void GeGtk::activate_gradient_diagdowntube(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_gradient( glow_eGradient_DiagonalDownTube);
+}
+
+void GeGtk::activate_gradient_globe(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_gradient( glow_eGradient_Globe);
+}
+
+void GeGtk::activate_gradient_radcenter(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_gradient( glow_eGradient_RadialCenter);
+}
+
+void GeGtk::activate_gradient_radupperleft(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_gradient( glow_eGradient_RadialUpperLeft);
+}
+
+void GeGtk::activate_gradient_radlowerleft(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_gradient( glow_eGradient_RadialLowerLeft);
+}
+
+void GeGtk::activate_gradient_radupperright(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_gradient( glow_eGradient_RadialUpperRight);
+}
+
+void GeGtk::activate_gradient_radlowerright(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_gradient( glow_eGradient_RadialLowerRight);
 }
 
 void GeGtk::activate_scale(GtkWidget *w, gpointer gectx)
@@ -2480,6 +2585,142 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   g_object_set( tools_gridsize_omenu, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools2, tools_gridsize_omenu, "Grid Size", "");
 
+  // Gradient option menu
+  GtkWidget *tools_gradient_no = gtk_image_menu_item_new_with_label( "Gradient No");
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_no.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(tools_gradient_no), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect(tools_gradient_no, "activate", G_CALLBACK(activate_gradient_no), this);
+  GtkWidget *tools_gradient_horizup = gtk_image_menu_item_new_with_label( "Gradient HorizontalUp");
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_horizup.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(tools_gradient_horizup), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect(tools_gradient_horizup, "activate", G_CALLBACK(activate_gradient_horizup), this);
+  GtkWidget *tools_gradient_horizdown = gtk_image_menu_item_new_with_label( "Gradient HorizontalDown");
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_horizdown.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(tools_gradient_horizdown), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect(tools_gradient_horizdown, "activate", G_CALLBACK(activate_gradient_horizdown), this);
+  GtkWidget *tools_gradient_horiztube1 = gtk_image_menu_item_new_with_label( "Gradient HorizontalTube1");
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_horiztube1.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(tools_gradient_horiztube1), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect(tools_gradient_horiztube1, "activate", G_CALLBACK(activate_gradient_horiztube1), this);
+  GtkWidget *tools_gradient_horiztube2 = gtk_image_menu_item_new_with_label( "Gradient HorizontalTube2");
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_horiztube2.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(tools_gradient_horiztube2), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect(tools_gradient_horiztube2, "activate", G_CALLBACK(activate_gradient_horiztube2), this);
+  GtkWidget *tools_gradient_vertleft = gtk_image_menu_item_new_with_label( "Gradient VerticalLeft");
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_vertleft.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(tools_gradient_vertleft), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect(tools_gradient_vertleft, "activate", G_CALLBACK(activate_gradient_vertleft), this);
+  GtkWidget *tools_gradient_vertright = gtk_image_menu_item_new_with_label( "Gradient VerticalRight");
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_vertright.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(tools_gradient_vertright), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect(tools_gradient_vertright, "activate", G_CALLBACK(activate_gradient_vertright), this);
+  GtkWidget *tools_gradient_verttube1 = gtk_image_menu_item_new_with_label( "Gradient VerticalTube1");
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_verttube1.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(tools_gradient_verttube1), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect(tools_gradient_verttube1, "activate", G_CALLBACK(activate_gradient_verttube1), this);
+  GtkWidget *tools_gradient_verttube2 = gtk_image_menu_item_new_with_label( "Gradient VerticalTube2");
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_verttube2.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(tools_gradient_verttube2), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect(tools_gradient_verttube2, "activate", G_CALLBACK(activate_gradient_verttube2), this);
+  GtkWidget *tools_gradient_diagupperleft = gtk_image_menu_item_new_with_label( "Gradient DiagonalUpperLeft");
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_diagupperleft.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(tools_gradient_diagupperleft), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect(tools_gradient_diagupperleft, "activate", G_CALLBACK(activate_gradient_diagupperleft), this);
+  GtkWidget *tools_gradient_diaglowerleft = gtk_image_menu_item_new_with_label( "Gradient DiagonalLowerLeft");
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_diaglowerleft.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(tools_gradient_diaglowerleft), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect(tools_gradient_diaglowerleft, "activate", G_CALLBACK(activate_gradient_diaglowerleft), this);
+  GtkWidget *tools_gradient_diagupperright = gtk_image_menu_item_new_with_label( "Gradient DiagonalUpperRight");
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_diagupperright.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(tools_gradient_diagupperright), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect(tools_gradient_diagupperright, "activate", G_CALLBACK(activate_gradient_diagupperright), this);
+  GtkWidget *tools_gradient_diaglowerright = gtk_image_menu_item_new_with_label( "Gradient DiagonalLowerRight");
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_diaglowerright.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(tools_gradient_diaglowerright), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect(tools_gradient_diaglowerright, "activate", G_CALLBACK(activate_gradient_diaglowerright), this);
+  GtkWidget *tools_gradient_diaguptube = gtk_image_menu_item_new_with_label( "Gradient DiagonalUpTube");
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_diaguptube.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(tools_gradient_diaguptube), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect(tools_gradient_diaguptube, "activate", G_CALLBACK(activate_gradient_diaguptube), this);
+  GtkWidget *tools_gradient_diagdowntube = gtk_image_menu_item_new_with_label( "Gradient DiagonalDownTube");
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_diagdowntube.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(tools_gradient_diagdowntube), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect(tools_gradient_diagdowntube, "activate", G_CALLBACK(activate_gradient_diagdowntube), this);
+  GtkWidget *tools_gradient_globe = gtk_image_menu_item_new_with_label( "Gradient Globe");
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_globe.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(tools_gradient_globe), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect(tools_gradient_globe, "activate", G_CALLBACK(activate_gradient_globe), this);
+  GtkWidget *tools_gradient_radcenter = gtk_image_menu_item_new_with_label( "Gradient RadialCenter");
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_radcenter.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(tools_gradient_radcenter), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect(tools_gradient_radcenter, "activate", G_CALLBACK(activate_gradient_radcenter), this);
+  GtkWidget *tools_gradient_radupperleft = gtk_image_menu_item_new_with_label( "Gradient RadialUpperLeft");
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_radupperleft.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(tools_gradient_radupperleft), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect(tools_gradient_radupperleft, "activate", G_CALLBACK(activate_gradient_radupperleft), this);
+  GtkWidget *tools_gradient_radlowerleft = gtk_image_menu_item_new_with_label( "Gradient RadialLowerLeft");
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_radlowerleft.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(tools_gradient_radlowerleft), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect(tools_gradient_radlowerleft, "activate", G_CALLBACK(activate_gradient_radlowerleft), this);
+  GtkWidget *tools_gradient_radupperright = gtk_image_menu_item_new_with_label( "Gradient RadialUpperRight");
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_radupperright.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(tools_gradient_radupperright), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect(tools_gradient_radupperright, "activate", G_CALLBACK(activate_gradient_radupperright), this);
+  GtkWidget *tools_gradient_radlowerright = gtk_image_menu_item_new_with_label( "Gradient RadialLowerRight");
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_radlowerright.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(tools_gradient_radlowerright), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect(tools_gradient_radlowerright, "activate", G_CALLBACK(activate_gradient_radlowerright), this);
+
+  GtkMenu *gradient_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append( GTK_MENU_SHELL(gradient_menu), tools_gradient_no);
+  gtk_menu_shell_append( GTK_MENU_SHELL(gradient_menu), tools_gradient_horizup);
+  gtk_menu_shell_append( GTK_MENU_SHELL(gradient_menu), tools_gradient_horizdown);
+  gtk_menu_shell_append( GTK_MENU_SHELL(gradient_menu), tools_gradient_horiztube1);
+  gtk_menu_shell_append( GTK_MENU_SHELL(gradient_menu), tools_gradient_horiztube2);
+  gtk_menu_shell_append( GTK_MENU_SHELL(gradient_menu), tools_gradient_vertleft);
+  gtk_menu_shell_append( GTK_MENU_SHELL(gradient_menu), tools_gradient_vertright);
+  gtk_menu_shell_append( GTK_MENU_SHELL(gradient_menu), tools_gradient_verttube1);
+  gtk_menu_shell_append( GTK_MENU_SHELL(gradient_menu), tools_gradient_verttube2);
+  gtk_menu_shell_append( GTK_MENU_SHELL(gradient_menu), tools_gradient_diagupperleft);
+  gtk_menu_shell_append( GTK_MENU_SHELL(gradient_menu), tools_gradient_diaglowerleft);
+  gtk_menu_shell_append( GTK_MENU_SHELL(gradient_menu), tools_gradient_diagupperright);
+  gtk_menu_shell_append( GTK_MENU_SHELL(gradient_menu), tools_gradient_diaglowerright);
+  gtk_menu_shell_append( GTK_MENU_SHELL(gradient_menu), tools_gradient_diaguptube);
+  gtk_menu_shell_append( GTK_MENU_SHELL(gradient_menu), tools_gradient_diagdowntube);
+  gtk_menu_shell_append( GTK_MENU_SHELL(gradient_menu), tools_gradient_globe);
+  gtk_menu_shell_append( GTK_MENU_SHELL(gradient_menu), tools_gradient_radcenter);
+  gtk_menu_shell_append( GTK_MENU_SHELL(gradient_menu), tools_gradient_radupperleft);
+  gtk_menu_shell_append( GTK_MENU_SHELL(gradient_menu), tools_gradient_radlowerleft);
+  gtk_menu_shell_append( GTK_MENU_SHELL(gradient_menu), tools_gradient_radupperright);
+  gtk_menu_shell_append( GTK_MENU_SHELL(gradient_menu), tools_gradient_radlowerright);
+  GtkWidget *tools_gradient_omenu = (GtkWidget *)g_object_new( GTK_TYPE_OPTION_MENU, 
+								"menu", gradient_menu, NULL);
+
+  gtk_option_menu_set_history( GTK_OPTION_MENU(tools_gradient_omenu), 0);
+  g_object_set( tools_gradient_omenu, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools3, tools_gradient_omenu, "Gradient", "");
+
   // Show grid checkbutton
   show_grid_w = gtk_toggle_button_new();
   dcli_translate_filename( fname, "$pwr_exe/ge_showgrid.png");
@@ -2536,6 +2777,39 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   GtkWidget *tools_incr_shift = image_button( "$pwr_exe/ge_arrowright.png");
   gtk_toolbar_append_widget( tools2, tools_incr_shift, "Shift color", "");
   g_signal_connect(tools_incr_shift, "clicked", G_CALLBACK(activate_incr_shift), this);
+
+  // Gradient buttons
+  GtkWidget *tools_button_gradient_no = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_no.png");
+  gtk_container_add( GTK_CONTAINER(tools_button_gradient_no), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_button_gradient_no, "clicked", G_CALLBACK(activate_gradient_no), this);
+  g_object_set( tools_button_gradient_no, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools3, tools_button_gradient_no, "Reset gradient on selected object", "");
+
+  GtkWidget *tools_button_gradient_vert = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_vertright.png");
+  gtk_container_add( GTK_CONTAINER(tools_button_gradient_vert), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_button_gradient_vert, "clicked", G_CALLBACK(activate_gradient_vertright), this);
+  g_object_set( tools_button_gradient_vert, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools3, tools_button_gradient_vert, "Set vertical gradient on selected object", "");
+
+  GtkWidget *tools_button_gradient_horiz = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_horizdown.png");
+  gtk_container_add( GTK_CONTAINER(tools_button_gradient_horiz), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_button_gradient_horiz, "clicked", G_CALLBACK(activate_gradient_horizdown), this);
+  g_object_set( tools_button_gradient_horiz, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools3, tools_button_gradient_horiz, "Set horizontal gradient on selected object", "");
+
+  GtkWidget *tools_button_gradient_diag = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/ge_gradient_diaglowerright.png");
+  gtk_container_add( GTK_CONTAINER(tools_button_gradient_diag), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_button_gradient_diag, "clicked", G_CALLBACK(activate_gradient_diaglowerright), this);
+  g_object_set( tools_button_gradient_diag, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools3, tools_button_gradient_diag, "Set diagonal gradient on selected object", "");
 
   // Statusbar and cmd input
   GtkWidget *statusbar = gtk_hbox_new( FALSE, 0);

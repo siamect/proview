@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.h,v 1.34 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_growapi.h,v 1.35 2008-11-20 10:30:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1911,6 +1911,13 @@ extern "C" {
     \param shadow      	Shadow.
   */
   void grow_SetSelectShadow( grow_tCtx ctx, int shadow);
+
+  //! Set gradient type on all selected objects.
+  /*!
+    \param ctx		Grow context.
+    \param gradient   	Gradient type.
+  */
+  void grow_SetSelectGradient( grow_tCtx ctx, glow_eGradient gradient);
 
   //! Set linetype on all selected objects.
   /*!

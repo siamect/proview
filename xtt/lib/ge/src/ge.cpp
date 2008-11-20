@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.cpp,v 1.33 2008-10-31 12:51:33 claes Exp $
+ * Proview   $Id: ge.cpp,v 1.34 2008-11-20 10:30:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1761,6 +1761,11 @@ void Ge::activate_condir_down()
 void Ge::activate_background_color()
 {
   graph->set_background_color();
+}
+
+void Ge::activate_gradient( glow_eGradient gradient)
+{
+  graph->set_select_gradient( gradient);
 }
 
 void Ge::activate_help()

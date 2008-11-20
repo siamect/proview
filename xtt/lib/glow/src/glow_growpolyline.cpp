@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growpolyline.cpp,v 1.9 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_growpolyline.cpp,v 1.10 2008-11-20 10:30:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -44,7 +44,8 @@ GrowPolyLine::GrowPolyLine( GrowCtx *glow_ctx, const char *name,
 		border(display_border), fill_eq_border(0), current_point(0),
 		shadow(display_shadow), shadow_width(5), relief(glow_eRelief_Up),
 		shadow_contrast(2), disable_shadow(0), fill_eq_light(0), 
-		fill_eq_shadow(0), fixcolor(0), fixposition(0)
+		fill_eq_shadow(0), fixcolor(0), fixposition(0),
+		gradient(glow_eGradient_No), gradient_contrast(4), disable_gradient(0)
 { 
   strcpy( n_name, name);
   pzero.nav_zoom();
@@ -364,6 +365,11 @@ void GrowPolyLine::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, 
   }
   if ( fill)
   {
+    glow_eGradient grad = gradient;
+    if ( gradient == glow_eGradient_No && 
+	 (node && ((GrowNode *)node)->gradient != glow_eGradient_No) && !disable_gradient)
+      grad = ((GrowNode *)node)->gradient;
+    
     if ( fill_eq_border)
       drawtype = ctx->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
 		 highlight, (GrowNode *)colornode, 0);
@@ -376,7 +382,27 @@ void GrowPolyLine::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, 
     else if ( fill_eq_shadow && node && ((GrowNode *)node)->shadow)
       drawtype = ctx->shift_drawtype( drawtype, shadow_contrast, 
 						   (GrowNode *)colornode);
-    ctx->gdraw->fill_polyline( w, points, a_points.a_size, drawtype, 0);
+    if ( grad == glow_eGradient_No)
+      ctx->gdraw->fill_polyline( w, points, a_points.a_size, drawtype, 0);
+    else {
+      glow_eDrawType f1, f2;
+      double rotation;
+      if ( t)
+	rotation = trf.rot( t);
+      else
+	rotation = trf.rot();
+
+      if ( gradient_contrast >= 0) {
+	f2 = GlowColor::shift_drawtype( drawtype, -gradient_contrast/2, 0);
+	f1 = GlowColor::shift_drawtype( drawtype, int(float(gradient_contrast)/2+0.6), 0);
+      }
+      else {
+	f2 = GlowColor::shift_drawtype( drawtype, -int(float(gradient_contrast)/2-0.6), 0);
+	f1 = GlowColor::shift_drawtype( drawtype, gradient_contrast/2, 0);
+      }
+      ctx->gdraw->gradient_fill_polyline( w, points, a_points.a_size,
+				      drawtype, f1, f2, ctx->gdraw->gradient_rotate( rotation, grad));	
+    }
   }
 
   int display_shadow = ((node && ((GrowNode *)node)->shadow) || shadow) && !disable_shadow &&
@@ -816,6 +842,9 @@ void GrowPolyLine::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowPolyLine_fill_eq_shadow) << FSPACE << fill_eq_shadow << endl;
   fp << int(glow_eSave_GrowPolyLine_fixcolor) << FSPACE << fixcolor << endl;
   fp << int(glow_eSave_GrowPolyLine_fixposition) << FSPACE << fixposition << endl;
+  fp << int(glow_eSave_GrowPolyLine_gradient) << FSPACE << int(gradient) << endl;
+  fp << int(glow_eSave_GrowPolyLine_gradient_contrast) << FSPACE << gradient_contrast << endl;
+  fp << int(glow_eSave_GrowPolyLine_disable_gradient) << FSPACE << disable_gradient << endl;
   fp << int(glow_eSave_End) << endl;
 }
 
@@ -853,6 +882,9 @@ void GrowPolyLine::open( ifstream& fp)
       case glow_eSave_GrowPolyLine_shadow: fp >> shadow; break;
       case glow_eSave_GrowPolyLine_relief: fp >> tmp; relief = (glow_eRelief)tmp; break;
       case glow_eSave_GrowPolyLine_disable_shadow: fp >> disable_shadow; break;
+      case glow_eSave_GrowPolyLine_gradient: fp >> tmp; gradient = (glow_eGradient)tmp; break;
+      case glow_eSave_GrowPolyLine_gradient_contrast: fp >> gradient_contrast; break;
+      case glow_eSave_GrowPolyLine_disable_gradient: fp >> disable_gradient; break;
       case glow_eSave_GrowPolyLine_dynamicsize: fp >> dynamicsize; break;
       case glow_eSave_GrowPolyLine_dynamic:
         fp.getline( dummy, sizeof(dummy));

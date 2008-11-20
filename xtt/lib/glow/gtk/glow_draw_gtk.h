@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_gtk.h,v 1.6 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_draw_gtk.h,v 1.7 2008-11-20 10:30:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -195,6 +195,26 @@ class GlowDrawGtk : public GlowDraw {
   void image_pixel_iter( glow_tImImage orig_image, glow_tImImage *image, 
 			 void (* pixel_cb)(void *, unsigned char *), void *userdata);
 
+  void set_cairo_clip( DrawWind *wind, cairo_t *cr);
+  void reset_cairo_clip( DrawWind *wind, cairo_t *cr);
+  int gradient_create_pattern( int x, int y, int w, int h, 
+			       glow_eDrawType d0, glow_eDrawType d1, 
+			       glow_eDrawType d2, glow_eGradient gradient,
+			       cairo_pattern_t **pat);
+  virtual glow_eGradient gradient_rotate( double rot, glow_eGradient gradient);
+  virtual int gradient_fill_rect( GlowWind *wind, int x, int y, int w, int h, 
+				  glow_eDrawType d0, glow_eDrawType d1, glow_eDrawType d2, 
+				  glow_eGradient gradient);
+  virtual int gradient_fill_rectrounded( GlowWind *wind, int x, int y, int w, int h, 
+					 int roundamount, glow_eDrawType d0, 
+					 glow_eDrawType d1, glow_eDrawType d2, 
+					 glow_eGradient gradient);
+  virtual int gradient_fill_arc( GlowWind *wind, int x, int y, int w, int h, 
+				 int angle1, int angle2, glow_eDrawType d0, glow_eDrawType d1, 
+				 glow_eDrawType d2, glow_eGradient gradient);
+  virtual int gradient_fill_polyline( GlowWind *wind, glow_sPointX *points, int point_cnt,
+				      glow_eDrawType d0, glow_eDrawType d1, glow_eDrawType d2, 
+				      glow_eGradient gradient);
 };
 
 class DrawPs {

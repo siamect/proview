@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growrectrounded.cpp,v 1.5 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_growrectrounded.cpp,v 1.6 2008-11-20 10:30:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,7 +41,8 @@ GrowRectRounded::GrowRectRounded( GrowCtx *glow_ctx, const char *name, double x,
 		original_fill_drawtype(fill_d_type), fill_drawtype(fill_d_type),
 		border(display_border),
 		dynamic(0), dynamicsize(0), round_amount(15), shadow(display_shadow), 
-		shadow_width(5), relief(glow_eRelief_Up), shadow_contrast(2), disable_shadow(0)
+		shadow_width(5), relief(glow_eRelief_Up), shadow_contrast(2), disable_shadow(0),
+		gradient(glow_eGradient_No), gradient_contrast(4), disable_gradient(0)
 { 
   strcpy( n_name, name);
   pzero.nav_zoom();
@@ -270,6 +271,9 @@ void GrowRectRounded::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowRectRounded_shadow_contrast) << FSPACE << shadow_contrast << endl;
   fp << int(glow_eSave_GrowRectRounded_relief) << FSPACE << int(relief) << endl;
   fp << int(glow_eSave_GrowRectRounded_disable_shadow) << FSPACE << disable_shadow << endl;
+  fp << int(glow_eSave_GrowRectRounded_gradient) << FSPACE << int(gradient) << endl;
+  fp << int(glow_eSave_GrowRectRounded_gradient_contrast) << FSPACE << gradient_contrast << endl;
+  fp << int(glow_eSave_GrowRectRounded_disable_gradient) << FSPACE << disable_gradient << endl;
   fp << int(glow_eSave_GrowRectRounded_dynamicsize) << FSPACE << dynamicsize << endl;
   fp << int(glow_eSave_GrowRectRounded_dynamic) << endl;
   if( dynamic)
@@ -325,6 +329,9 @@ void GrowRectRounded::open( ifstream& fp)
       case glow_eSave_GrowRectRounded_shadow_contrast: fp >> shadow_contrast; break;
       case glow_eSave_GrowRectRounded_relief: fp >> tmp; relief = (glow_eRelief)tmp; break;
       case glow_eSave_GrowRectRounded_disable_shadow: fp >> disable_shadow; break;
+      case glow_eSave_GrowRectRounded_gradient: fp >> tmp; gradient = (glow_eGradient)tmp; break;
+      case glow_eSave_GrowRectRounded_gradient_contrast: fp >> gradient_contrast; break;
+      case glow_eSave_GrowRectRounded_disable_gradient: fp >> disable_gradient; break;
       case glow_eSave_GrowRectRounded_dynamicsize: fp >> dynamicsize; break;
       case glow_eSave_GrowRectRounded_dynamic:
         fp.getline( dummy, sizeof(dummy));
@@ -712,19 +719,44 @@ void GrowRectRounded::draw( GlowWind *w, GlowTransform *t, int highlight, int ho
     int display_shadow = ((node && ((GrowNode *)node)->shadow) || shadow) && !disable_shadow;
     glow_eDrawType fillcolor = ctx->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
 		 highlight, (GrowNode *)colornode, 1);
-
+    glow_eGradient grad = gradient;
+    if ( gradient == glow_eGradient_No && 
+	 (node && ((GrowNode *)node)->gradient != glow_eGradient_No) && !disable_gradient)
+      grad = ((GrowNode *)node)->gradient;
+    
     if ( !display_shadow || ish == 0) {
-      ctx->gdraw->fill_rect( w, ll_x, ll_y + amount, ur_x - ll_x, ur_y - ll_y - 2*amount, fillcolor);
-      ctx->gdraw->fill_rect( w, ll_x + amount, ll_y, ur_x - ll_x - 2*amount, amount, fillcolor);
-      ctx->gdraw->fill_rect( w, ll_x + amount, ur_y - amount, ur_x - ll_x - 2*amount, amount, fillcolor);
-      ctx->gdraw->fill_arc( w,  ll_x, ll_y, 2*amount, 2*amount, 90, 90, 
-			  fillcolor, 0);
-      ctx->gdraw->fill_arc( w,  ll_x, ur_y - 2*amount, 2*amount, 2*amount, 180, 90, 
-			  fillcolor, 0);
-      ctx->gdraw->fill_arc( w,  ur_x - 2*amount, ur_y - 2*amount, 2*amount, 2*amount, 270, 90, 
-			  fillcolor, 0);
-      ctx->gdraw->fill_arc( w,  ur_x - 2*amount, ll_y, 2*amount, 2*amount, 0, 90, 
-			  fillcolor, 0);
+      if ( grad == glow_eGradient_No) {
+	ctx->gdraw->fill_rect( w, ll_x, ll_y + amount, ur_x - ll_x, ur_y - ll_y - 2*amount, fillcolor);
+	ctx->gdraw->fill_rect( w, ll_x + amount, ll_y, ur_x - ll_x - 2*amount, amount, fillcolor);
+	ctx->gdraw->fill_rect( w, ll_x + amount, ur_y - amount, ur_x - ll_x - 2*amount, amount, fillcolor);
+	ctx->gdraw->fill_arc( w,  ll_x, ll_y, 2*amount, 2*amount, 90, 90, 
+			      fillcolor, 0);
+	ctx->gdraw->fill_arc( w,  ll_x, ur_y - 2*amount, 2*amount, 2*amount, 180, 90, 
+			      fillcolor, 0);
+	ctx->gdraw->fill_arc( w,  ur_x - 2*amount, ur_y - 2*amount, 2*amount, 2*amount, 270, 90, 
+			      fillcolor, 0);
+	ctx->gdraw->fill_arc( w,  ur_x - 2*amount, ll_y, 2*amount, 2*amount, 0, 90, 
+			      fillcolor, 0);
+      }
+      else {
+	glow_eDrawType f1, f2;
+	double rotation;
+	if ( t)
+	  rotation = trf.rot( t);
+	else
+	  rotation = trf.rot();
+
+	if ( gradient_contrast >= 0) {
+	  f2 = GlowColor::shift_drawtype( fillcolor, -gradient_contrast/2, 0);
+	  f1 = GlowColor::shift_drawtype( fillcolor, int(float(gradient_contrast)/2+0.6), 0);
+	}
+	else {
+	  f2 = GlowColor::shift_drawtype( fillcolor, -int(float(gradient_contrast)/2-0.6), 0);
+	  f1 = GlowColor::shift_drawtype( fillcolor, gradient_contrast/2, 0);
+	}
+	ctx->gdraw->gradient_fill_rectrounded( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, amount,
+					       fillcolor, f1, f2, ctx->gdraw->gradient_rotate( rotation, grad));	
+      }
     }
     else {
 
@@ -754,21 +786,42 @@ void GrowRectRounded::draw( GlowWind *w, GlowTransform *t, int highlight, int ho
 			  drawtype, 0);
 
 
-      if ( amount > ish) {
-	ctx->gdraw->fill_rect( w, ll_x+ish, ll_y + amount, ur_x - ll_x-2*ish, ur_y - ll_y - 2*amount, fillcolor);
-	ctx->gdraw->fill_rect( w, ll_x + amount, ll_y+ish, ur_x - ll_x - 2*amount, amount-ish, fillcolor);
-	ctx->gdraw->fill_rect( w, ll_x + amount, ur_y - amount, ur_x - ll_x - 2*amount, amount-ish, fillcolor);
-	ctx->gdraw->fill_arc( w,  ll_x+ish, ll_y+ish, 2*amount-2*ish, 2*amount-2*ish, 90, 90, 
-			  fillcolor, 0);
-	ctx->gdraw->fill_arc( w,  ll_x+ish, ur_y - 2*amount+ish, 2*amount-2*ish, 2*amount-2*ish, 180, 90, 
-			  fillcolor, 0);
-	ctx->gdraw->fill_arc( w,  ur_x - 2*amount+ish, ur_y - 2*amount+ish, 2*amount-2*ish, 2*amount-2*ish, 270, 90, 
-			  fillcolor, 0);
-	ctx->gdraw->fill_arc( w,  ur_x - 2*amount+ish, ll_y+ish, 2*amount-2*ish, 2*amount-2*ish, 0, 90, 
-			  fillcolor, 0);
+      if ( grad == glow_eGradient_No) {
+	if ( amount > ish) {
+	  ctx->gdraw->fill_rect( w, ll_x+ish, ll_y + amount, ur_x - ll_x-2*ish, ur_y - ll_y - 2*amount, fillcolor);
+	  ctx->gdraw->fill_rect( w, ll_x + amount, ll_y+ish, ur_x - ll_x - 2*amount, amount-ish, fillcolor);
+	  ctx->gdraw->fill_rect( w, ll_x + amount, ur_y - amount, ur_x - ll_x - 2*amount, amount-ish, fillcolor);
+	  ctx->gdraw->fill_arc( w,  ll_x+ish, ll_y+ish, 2*amount-2*ish, 2*amount-2*ish, 90, 90, 
+				fillcolor, 0);
+	  ctx->gdraw->fill_arc( w,  ll_x+ish, ur_y - 2*amount+ish, 2*amount-2*ish, 2*amount-2*ish, 180, 90, 
+				fillcolor, 0);
+	  ctx->gdraw->fill_arc( w,  ur_x - 2*amount+ish, ur_y - 2*amount+ish, 2*amount-2*ish, 2*amount-2*ish, 270, 90, 
+				fillcolor, 0);
+	  ctx->gdraw->fill_arc( w,  ur_x - 2*amount+ish, ll_y+ish, 2*amount-2*ish, 2*amount-2*ish, 0, 90, 
+				fillcolor, 0);
+	}
+	else {
+	  ctx->gdraw->fill_rect( w, ll_x+amount, ll_y + amount, ur_x - ll_x-2*amount, ur_y - ll_y - 2*amount, fillcolor);
+	}
       }
       else {
-	ctx->gdraw->fill_rect( w, ll_x+amount, ll_y + amount, ur_x - ll_x-2*amount, ur_y - ll_y - 2*amount, fillcolor);
+	glow_eDrawType f1, f2;
+	double rotation;
+	if ( t)
+	  rotation = trf.rot( t);
+	else
+	  rotation = trf.rot();
+
+	if ( gradient_contrast >= 0) {
+	  f2 = GlowColor::shift_drawtype( fillcolor, -gradient_contrast/2, 0);
+	  f1 = GlowColor::shift_drawtype( fillcolor, int(float(gradient_contrast)/2+0.6), 0);
+	}
+	else {
+	  f2 = GlowColor::shift_drawtype( fillcolor, -int(float(gradient_contrast)/2-0.6), 0);
+	  f1 = GlowColor::shift_drawtype( fillcolor, gradient_contrast/2, 0);
+	}
+	ctx->gdraw->gradient_fill_rectrounded( w, ll_x + ish, ll_y + ish, ur_x - ll_x - 2 * ish, ur_y - ll_y - 2 * ish,
+					       amount - ish, fillcolor, f1, f2, ctx->gdraw->gradient_rotate( rotation, grad));	
       }
     }
   }

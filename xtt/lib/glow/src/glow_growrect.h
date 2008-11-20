@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growrect.h,v 1.11 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_growrect.h,v 1.12 2008-11-20 10:30:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -289,6 +289,9 @@ class GrowRect : public GlowRect {
   int		invisible;	//!< Invisible if not highlighted.
   int		fixcolor;	//!< Color independent of node color.
   int		fixposition;	//!< Can't be moved.
+  glow_eGradient gradient;  //!< Type of gradient.
+  int		gradient_contrast; //!< Gradient contrast.
+  int		disable_gradient; //!< Disable gradient, even if parent node has gradient.
 
   //! Set user data.
   /*!
@@ -465,6 +468,12 @@ class GrowRect : public GlowRect {
     \param width	Width of shadow.
   */
   void set_shadow_width( double width) { shadow_width = width; draw();}
+
+  //! Set Gradient.
+  /*!
+    \param gradientval	Type of gradient.
+  */
+  void set_gradient( glow_eGradient gradientval) { gradient = gradientval; draw();}
 
   void get_ctx( void **c) { *c = (void *)ctx;}; 	//!< Should be replace by get_ctx() !!
 

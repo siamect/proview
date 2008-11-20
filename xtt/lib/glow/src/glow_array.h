@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_array.h,v 1.7 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_array.h,v 1.8 2008-11-20 10:30:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -205,6 +205,7 @@ class GlowArray {
   void set_fill( int fill);
   void set_border( int border);
   void set_shadow( int shadow);
+  void set_gradient( glow_eGradient gradient);
   void set_drawtype( glow_eDrawType drawtype);
   void set_transform( GlowTransform *t);
   void set_transform_from_stored(  GlowTransform *t);

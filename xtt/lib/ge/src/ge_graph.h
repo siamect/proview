@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.h,v 1.35 2008-10-31 12:51:34 claes Exp $
+ * Proview   $Id: ge_graph.h,v 1.36 2008-11-20 10:30:52 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -661,6 +661,10 @@ class Graph {
   //! Set shadow on all selected objects.
   /*! /param shadow 	Shadow. */
   void set_select_shadow( int shadow);
+
+  //! Set gradient type on all selected objects.
+  /*! /param gradient 	Gradient. */
+  void set_select_gradient( glow_eGradient gradient);
 
   //! Set backgound color.
   /*! Background color is set to the currently selected fill color. */

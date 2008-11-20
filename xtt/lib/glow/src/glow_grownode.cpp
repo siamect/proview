@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_grownode.cpp,v 1.16 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_grownode.cpp,v 1.17 2008-11-20 10:30:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,7 +45,8 @@ GrowNode::GrowNode( GrowCtx *glow_ctx, const char *name, GlowNodeClass *node_cla
 	original_color_shift(0), color_shift(0), color_inverse(0), line_width(0),
 	invisible(0), dimmed(0), object_type(glow_eObjectType_GrowNode), root_node(0),
 	flip_horizontal(false), flip_vertical(false), fill_level(1),
-	level_direction( glow_eDirection_Right), shadow(0), input_position(0), input_selected(0)
+	level_direction( glow_eDirection_Right), shadow(0), input_position(0), input_selected(0),
+	gradient(glow_eGradient_No)
 {  
   memset( argv, 0, sizeof(argv));
   memset( argsize, 0, sizeof(argsize));
@@ -170,6 +171,7 @@ void GrowNode::save( ofstream& fp, glow_eSaveMode mode)
   }
   fp << int(glow_eSave_GrowNode_line_width) << FSPACE << line_width << endl;
   fp << int(glow_eSave_GrowNode_shadow) << FSPACE << shadow << endl;
+  fp << int(glow_eSave_GrowNode_gradient) << FSPACE << int(gradient) << endl;
 
   if ( user_data && ctx->userdata_save_callback) {
     fp << int(glow_eSave_GrowNode_userdata_cb) << endl;
@@ -287,6 +289,7 @@ void GrowNode::open( ifstream& fp)
         break;
       case glow_eSave_GrowNode_line_width: fp >> line_width; break;
       case glow_eSave_GrowNode_shadow: fp >> shadow; break;
+      case glow_eSave_GrowNode_gradient: fp >> tmp; gradient = (glow_eGradient)tmp; break;
       case glow_eSave_GrowNode_userdata_cb:
 	if ( ctx->userdata_open_callback)
 	  (ctx->userdata_open_callback)(&fp, this, glow_eUserdataCbType_Node);
