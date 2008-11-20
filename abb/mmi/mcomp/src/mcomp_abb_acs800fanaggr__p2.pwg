@@ -1,22 +1,58 @@
+199
+!/**
+! ACS800FanAggr
+! Group Components/ABB
+!
+! <image> bcomp_fanaggr_gs.gif
+!
+! <h1>Description
+! Fan aggregate. Graphic symbol for component ABB_ACS800FanAggr.
+! Should be connected to an instance of ABB_ACS800FanAggr, or a 
+! subclass to this class.
+!
+! Subgraph with two pages, fan off (page 1) and fan on (page 2).
+! <image> bcomp_fanaggr_ags.gif
+!
+! <h1>Default dynamics
+! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+!
+! Dynamics for the symbol
+! - colored red when an error occurs.
+! - colored yellow when a warning occurs.
+! - colored darkgray when the fan is off.
+! - the mode (manual or local) is displayed with a M or L.
+! - fan on and off is displayed with different pages.
+! - popupmenu with the methods of the connected object.
+!
+! DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+! DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+! DigLowColor <t>$hostobject.ACS800.ConvertRun <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! Value <t>$hostobject.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+! DigShift <t>$hostobject.ACS800.ConvertRun <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+!
+! Default Cycle Slow 
+!
+!*/
 1
 100 98.5671
 135 98.5671
 101 20
 102 -85
 103 -128
-104 0
-136 0
+104 18.4207
+136 18.4207
 105 100
-106 0
-107 0
+106 -15
+107 -23
 108 3
 109 0
 110 2
 111 0
 116 0
 117 0
-118 199
-119 155
+118 126
+119 113
 120 1
 121 Claes context
 122 0
@@ -113,6 +149,9 @@ pwr_exe:
 1919 1
 1920 0
 1917 1
+1921 0
+1922 4
+1923 1
 1907 0
 1906
 1905
@@ -158,6 +197,9 @@ pwr_exe:
 2416 2
 2414 0
 2417 0
+2418 0
+2419 4
+2420 0
 2407 0
 2406
 2405
@@ -247,6 +289,9 @@ pwr_exe:
 2620 0
 2621 0
 2622 0
+2623 0
+2624 4
+2625 0
 99
 23
 2304 O4
