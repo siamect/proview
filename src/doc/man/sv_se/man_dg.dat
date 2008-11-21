@@ -31,8 +31,8 @@
 
 
 <hr>
-2008-01-14
-Version 4.4.0	
+2008-10-21
+Version 4.6.0	
 <hr>
 </topic>
 
@@ -95,6 +95,10 @@ när systemet är skapat, finner du att du även har gjort dokumentationen för syst
 <topic> index
 Konstruktörs handbok
 
+<image> pwr_logga.gif
+
+<h1>Konstruktörshandbok
+
 Översikt <link> design_overview
 Databas struktur <link> database_structure
 En fallstudie <link> case_study
@@ -111,6 +115,7 @@ Objektseditorn Referensmanual<link> objecteditor_refman
 Spreadsheeteditorn Referensmanual<link> spreadsheeteditor_refman
 Plceditorn Referensmanual <link> plceditor_refman
 Klasseditorn Referensmanual <link> classeditor
+OPC <link> opc_intro
 Commands <link> help command
 Script <link> script
 </topic>
@@ -124,7 +129,7 @@ Eftersom det här är en handledning för konstruktörer kan det vara lämpligt att i
 beskrivning av vad designen av ett styrsystem innebär. Beskrivningen kan även fungera som en 
 introduktion till de olika begrepp som kommer att användas i den här handledningen.
 
-En konstrukör utgår naturligtvis från den process som styrsystemet ska styra, och den första 
+En konstruktör utgår naturligtvis från den process som styrsystemet ska styra, och den första 
 uppgiften är att lära sig processen och fundera över bästa sättet att styra den: vilka 
 reglerloopar som behövs, vilka förreglingar som ska finnas, hur anläggningen startas upp och 
 stoppas, hur operatörer och underhållare ska arbeta mot systemet. Detta sammanfattar man i 
@@ -136,14 +141,14 @@ måste även kunna påverka processen genom på olika sätt, t ex mha ventiler och mo
 resulterar i en Signal lista, som är lista på alla in och utgående signaler till systemet.
 
 I det här läget dyker även frågan upp om vilket styrsystem man ska använda sig av, och ett
-alternativ är naturligtvis Proview. Man måste även bestämma sig för vilket IO-system man ska 
+alternativ är naturligtvis Proview. Man måste även bestämma sig för vilket I/O-system man ska 
 använda, och hur man ska dela upp funktionen i olika processstationer.
 
-<h1>IO-system
-IO-systemet uppgift är att ta in signaler från processen till styrsystemet, och att ställa 
+<h1>I/O-system
+I/O-systemet uppgift är att ta in signaler från processen till styrsystemet, och att ställa 
 ut  signaler för att påverka processen. Signalerna är vanligtvis digitala eller analoga, men
 det finns även andra typer som heltalsvärden och pulsgivare. Man kan välja mellan rack
-och kort system i anslutning till datorn, eller distributerat io som t ex profibus.
+och kort system i anslutning till datorn, eller distributerat I/O som t ex profibus.
 
 <h1>Konfigurering
 När det är dags att börja konfigurera system, skapar man först ett nytt Projekt i 
@@ -152,14 +157,14 @@ eftersom dessa kan bli ganska många med tiden.
 
 Konfigureringen av ett system sker till stor del genom att skapa objekt i en databas,
 arbetsbänken. Det finns en stor mängd olika objekt för att konfigurera allt från IO-kanaler 
-till processbilder. Proview's objektshandbok innehåller över 400 typer av objekt. Objekten 
+till processbilder. Proview's objektshandbok innehåller över 800 typer av objekt. Objekten 
 läggs upp  i en trädstruktur och  man använder ett verktyg som kallas för Konfiguratören
 för att skapa objekt och för att navigera i objektsträdet.
 
 Objektsträdet delas in i två delar, anläggningshierakin och nodhierakin. 
-Anläggningshierakin speglar olika funktioner eller i anläggningen och processen, medan 
-nodhierakin speglar styrsystemets uppbyggnad ur hårdvaru synpunkt med datorer, IO-rack och 
-IO-kort.
+Anläggningshierakin speglar olika funktioner i anläggningen och processen, medan 
+nodhierakin speglar styrsystemets uppbyggnad ur hårdvaru synpunkt med datorer, I/O-rack och 
+I/O-kort.
 
 När man senare startar upp styrsystemet i runtime, skapas en kopia av objektträdet som 
 läggs in i en realtidsdatabas, rtdb. Överföringen från arbetsbänken till rtdb sker med s k 
@@ -211,7 +216,7 @@ Proview innehåller en operatörsmiljö där processbilder, felsökningsverktyg, pres
 trendkurvor, datablad, hjälptexter, larmlistor mm är väl integrerade och länkade så att den 
 rätt konfigurerad, blir ett oerhört effektivt hjälpmedel för alla användare. Man kan snabbt 
 och enkelt genom s k metoder, som aktiveras från popupmenyer, hämta upp all information som 
-finns om olika objekt, i realtidsdatabasen eller på olika serversystem, i form av PLCkod, 
+finns om olika objekt, i realtidsdatabasen eller på olika serversystem, i form av PLC kod, 
 trendkurvor, datablad mm.
 
 <h1>Processbilder
@@ -224,10 +229,11 @@ Processbilderna kan, förutom att användas i den ordinare operatörsmiljön, export
 java-kod för att visas på webben med full dynamik.
 
 <h1>Övervakning
-Om något fel uppstår i processen, måste operatören uppmärksammas på detta. Det sker speciella 
-övervaknings-objekt, som konfigureras i anläggningshierakin eller i PLC-programmet, och som 
-ger upphov till larm eller meddelanden. Larmen har fyra prioritets nivåer: A, B, C eller D, 
-och presenteras för operatören i larmlistan, händelselistan och den historisk händelselistan.
+Om något fel uppstår i processen, måste operatören uppmärksammas på detta. Det sker med 
+speciella övervaknings-objekt, som konfigureras i anläggningshierakin eller i PLC-programmet, 
+och som ger upphov till larm eller meddelanden. Larmen har fyra prioritets nivåer: A, B, C 
+eller D, och presenteras för operatören i larmlistan, händelselistan och den historisk 
+händelselistan.
 
 Larmlistan inhåller okvitterade och rådande larm. Ett larm måste normalt kvitteras av 
 operatören innan de försvinner från listan. Om larmtillståndet fortfarande är rådande, ligger 
@@ -244,14 +250,14 @@ distraheras av larm utan betydelse. Blockerade anläggningsdelar visas in en Bloc
 
 <h1>Datalagring
 Ofta vill man kunna se hur en signal förändras över tiden, i form av en kurva. I Proview finns
-tre olika funktioner för detta, DsTrend, DsFast och DsHist.
+tre olika funktioner för detta, DsTrend, DsFast och SevHist.
 
 DsTrend är en trendkurva som lagras i realtidsdatabasen. Mätvärdet för en signal lagras
 kontinuerligt med ett intervall på 1 sekund och uppåt. För varje kurva finns det plats för ca
 500 mätvärden, så väljer man att lagra ett nytt värde varje sekund får man en kurva på hur
 signalen har förändrats under ca 8 min.
 
-DsHist lagrar signaler på liknande sätt i en databas på disk, vilket gör att man kan lagra
+SevHist lagrar signaler på liknande sätt i en databas på disk, vilket gör att man kan lagra
 värden under längre perioder än DsTrend.
 
 DsFast lagrar ofta snabbare förlopp, där lagringen startas på ett triggvillkor, och forsätter
@@ -378,7 +384,7 @@ Analoga attribut är av typen Float32, dvs ett 32-bitars flyttal.
 
 <h2>Int32
 Heltals attribut är vanligen av typen Int32, dvs ett 32-bitars heltal. Men det finns även
-ett antal andra typer av heltal Int8, Int16, UInt8 och UInt16.
+ett antal andra typer av heltal: Int8, Int16, Int64, UInt8, UInt16, UInt32 och UInt64.
 
 <h2>String
 I ett string-attribut kan man lagra en sträng av ascii-tecken. Det finns olika sträng typer
@@ -414,7 +420,7 @@ PLCeditorn eller i operatörsmiljön.
 Varje klass har ett template objekt, en instans av klassen som innehåller defaultvärden
 för olika attribut i klassen.
 
-Proview's bassystem innehåller ca 500 klasser. Se Objektshandboken för närmare beskrivning.
+Proview's bassystem innehåller ca 900 klasser. Se Objektshandboken för närmare beskrivning.
 Konstruktören kan även skapa egna klasser inom ett projekt.
 </topic>
 
@@ -429,7 +435,7 @@ tala om relationerna mellan objekt i trädet i termer av förälder, syskon, barn, 
 <topic>object_name
 Objektsnamn
 Varje objekt har ett namn som är unikt inom sin syskonskara. Objektet har även ett
-fullständigt namn som är unikt i världen. I det fullständiga namnet objekt ingår, förutom 
+fullständigt namn som är unikt i världen. I det fullständiga namnet ingår, förutom 
 objektsnamnet, även namnet på volymen och på samtliga förfäder, t ex 
 
 <c>VolTrafficCross1:TrafficCross1-ControlSignals-Reset
@@ -497,7 +503,7 @@ Processbilder <link> process_graphics
 <option> printenable
 I det här kapitlet ska vi ge en idé om hur ett Proview system skapas. Processen som ska
 styras i det här fallet är mycket enkel, en korsning mellan fyra trafikljus, men kommer att
-ge en idé om de olika steg man ska genomgå för att skapa ett Proview system.
+ge ett begrepp om de olika steg man ska genomgå för att skapa ett Proview system.
 
 Trafikljuset ska kunna arbeta i två olika moder:
 
@@ -845,6 +851,409 @@ Skapa processbilder.
 </chapter>
 
 <chapter>
+<topic>communication
+Communication
+
+The Remote concept in Proview is a way to standardize the methods of communication with other
+systems. It describes a number of transport programs and Proview objects used to implement
+a variety of different communication protocols and to handle incoming and outgoing messages.
+Remote is designed to use different transport protocols such as TCP/IP or BEA Message Queue,
+and different hardware media such as ethernet or serial lines.
+The main purpose of Remote is to provide the programmer with an interface to communication.
+
+<option> printdisable
+Introduction <link> comm_introduction
+Protocols <link> protocols
+An example <link> an_example
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic>comm_introduction
+Introduction
+There are some different classes/components/objects that are used to handle the communication.
+
+<h2>RemoteConfig
+Required to have any remote communication at all. Without this no remtehandler is started.
+Place one object in the node-hierarchy.
+
+<h2>RemNode
+Defines a link of some type to a remote node over a specific protocol. 
+Several different protocols are supported and there is one specific class for each protocol.
+The supported protocols are:
+
+TCP/IP
+UDP/IP
+MQ (BEA Message Queue)
+ALCM (an old Digital protocol, supported for historical reasons)
+Serial
+Modbus/RTU Serial
+3964R (serial protocol from Siemens)
+
+Configuration of each protocol is described further down.
+Place RemNode-objects below the RemoteConfig-object.
+
+<h2>RemTrans
+Generic class that defines a specific message to or from a specific remote node on a
+specific protocol. Should be placed below the RemNode-object. The size of a message to be sent 
+is specified in the RemTrans-object. The data however to be sent resides in a buffer that is
+configured as a child to the remtrans-object. When a message is to be sent data of the length
+specified in the remtrans-object is fetched from the buffer. Sometimes however a header of some
+length is added to the message.
+
+<h2>Buffer
+Defining the send- and/or receive data area for each message. Exists in different sizes.
+Should be placed below a RemTrans-object. The buffer must be of at least the size of the
+message that will be received or sent. If size is not enough message will be cut in the end.
+
+<h2>RemTransSend 
+Function object used in a plc-program for sending messages.
+
+<h2>RemTransRcv
+Function object used in a plc-program for receiving messages.
+
+</topic>
+
+<topic> protocols
+Protocols
+Which protocol to use is defined by the type of Remnode-object you configure. For each configured 
+Remnode-object a transport job is started. That is, a program to handle the specific protocol is
+started as a process. This process will handle all RemTrans-object that is configured as children
+to the Remnode-object. 
+
+<option> printdisable
+UDP <link> udp_ip
+TCP <link> tcp_ip
+BEA Message Queue <link> bea_mq
+Serial <link> serial
+3964-R <link> 3964r
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic> udp_ip
+UDP
+UDP uses socket communication without connection (datagram), compared to TCP wich is a connected protocol.
+In the RemnodeUDP-object you specify the name and ip-address of the node to communicate with
+aswell as the port-numbers for both ends. The local port-numer need to be unique on your node
+not to conflict with other communications.
+
+As default all messages is sent with a special header that is not included in the user data buffer.
+This header is added at the beginning of the message. The purpose for the header is to give information
+about the message that is sent. This helps identify what type of message is received and to wich buffer
+the data will be unpacked. The header looks like:
+
+<c>char       RemId1;  /* STX (Hex 02) */
+<c>char       RemId2;  /* ETB (Hex 0F) in data message without acknowledge 
+<c>                       ENQ (Hex 05) in data message with acknowledge 
+<c>                       ACK (Hex 06) in acknowledge message */
+<c>short int  Length;  /* Number of bytes in message including this header */
+<c>short int  MessId1; /* Message identity part 1 */
+<c>short int  MessId2; /* Message identity part 2 */
+ 
+All of the integers in the header will be sent as big endian values, that is most significant byte first
+in the datagram. The user data is the responsibility of the user to switch, if he wants integers to be sent
+with big endian. VAX, Alpha and Intel (x86) all uses little endian! To send messages without headers the
+attribute DisableHeader should be set to TRUE. When communicating between two Proview-systems the header
+should be kept on. MessId1 and MessId2 is fetched from attributes RemTrans.Address[0] and RemTrans.Address[1].
+Through the header it is also possible to request an acknowledge of a sent message. If there is no
+acknowledge the message will be resent with a cyclicity specified by the RetransmitTime-attribute in the
+remtrans-object.
+
+Since UDP/IP is a connectionless protocol there is a possibility to watch the connection using
+keepalive-messages. This is set through the attribute UseKeepalive.
+
+<h2>Sending messages
+The transport will send a message to the remote port, consisting of header + data.
+MessId in the header is taken from RemTrans.Address[0,1], byte-switched to send as big endian.
+If MaxBuffers in remtrans-object > 0, the message is sent with type "want acknowledge" and is stored
+in the retransmit queue for the remnode. When a correspondning acknowledge message is received the 
+message is deleted from the retransmit queue. This is done automatically by the transport process.
+
+<h2>Receiving messages
+When we receive a buffer, first we check the header to see that this is a correct RemTrans message.
+Then we search for RemTrans.Address[0,1] that matches the byte-switched MessId. If the data object for 
+this message is big enough to contain the message, the message will be stored, and the 
+DataValid flag will be set.
+If the Remnode is marked to be used without header (DisableHeader-attribute set) then a RemTrans marked as a
+receiving remtrans with a enough large buffer will be searched.
+
+</topic>
+
+<topic> tcp_ip
+TCP
+RemnodeTCP is configured in much the same way as RemnodeUDP. The big (only) difference is that TCP is
+a connected protocol which acts in client/server fashion. Thus you have to either connect to a 
+remote socket (act like a client) or await a connection (act like a server). When acting like a server
+only one client will be accepted. The ConnectionMode-attribute in the remnode-object defines if you are
+a client or a server. Setting it to zero (default) means client and setting it to one means server. 
+
+</topic>
+
+<topic> bea_mq
+MQ
+RemnodeMQ is a transport for sending messages on BEA Message Queue (BMQ). It requires you to have
+BEA Message Queue installed on your node. This message queue is good for safely delivering messages 
+to a remote node even if it is not up at the moment you send your message. Vice versa, 
+messages will safely be delivered to you.
+
+This documentation expects you to have basic knowledge on BEA Message Queue. In basic the communication 
+runs on a specific bus. Each node has group-number and can only communicate to other groups on the same bus.
+On each group several queues can be configured.
+
+To be able to start this transport of course the Message Queue sotware need to be runnning. You also need some 
+environment variables to be set. These are:
+
+<c>DMQ_BUS_ID
+<c>DMQ_GROUP_ID
+<c>DMQ_GROUPNAME
+
+In the RemnodeMQ-object you configure on which BMQ-queue to recieve messages in the attribute MyQueue.
+You also configure the remote nodes group-number and queue to send to in the attributes TargetGroup and
+TargetQueue.
+
+<h2>Sending messages
+Similarly to UDP and TCP-transports RemTrans. Address[0,1] are used to identify the message. Address[0]
+represent the message-class and Address[1] represent the message-type (according to the BMQ-nomenclature).
+Address[2,3] are used to define what type delivery mode (Address[2]) that should be used and what action should be
+taken when a message cannot be deilvered (Address[3]).
+
+Possible delivery modes are:
+
+<c>PDEL_MODE_WF_SAF 25
+<c>PDEL_MODE_WF_DQF 26
+<c>PDEL_MODE_WF_NET 27
+<c>PDEL_MODE_WF_RCM 28
+<c>PDEL_MODE_WF_MEM 29
+<c>PDEL_MODE_AK_SAF 30
+<c>PDEL_MODE_AK_DQF 31
+<c>PDEL_MODE_AK_NET 32
+<c>PDEL_MODE_AK_RCM 33
+<c>PDEL_MODE_AK_MEM 34
+<c>PDEL_MODE_NN_SAF 35
+<c>PDEL_MODE_NN_DQF 36
+<c>PDEL_MODE_NN_NET 37
+<c>PDEL_MODE_NN_RCM 38
+<c>PDEL_MODE_NN_MEM 39
+<c>PDEL_MODE_WF_DEQ 40
+<c>PDEL_MODE_AK_DEQ 41
+<c>PDEL_MODE_WF_CONF 42
+<c>PDEL_MODE_AK_CONF 43
+<c>PDEL_MODE_WF_ACK 44
+<c>PDEL_MODE_AK_ACK 45
+
+and possible actions are:
+
+PDEL_UMA_RTS 1
+PDEL_UMA_DLJ 2
+PDEL_UMA_DLQ 3
+PDEL_UMA_SAF 4
+PDEL_UMA_DISC 5
+PDEL_UMA_DISCL 6
+
+Not all combinations are possible (see BEA Message Queue documentation for more information).
+
+Recommended combinations are,
+
+for safe delivery of message
+Address[2] = 26
+Address[3] = 4
+
+and for discarding the message if it cannot be delivered
+Address[2] = 39
+Address[3] = 5
+
+If Address[2,3] are both set to zero a default setting will be used. The default is to discard the 
+message if it cannot be delivered.
+
+<h2>Receiving messages
+Address[0,1] are used to identify the message. Address[0] represent the message-class and Address[1]
+represent the message-type (according to the BMQ-nomenclature).
+</topic>
+
+<topic> serial
+Serial
+RemoteSerial is an attempt to generalize the using of a simple serial line communication protocols.
+Its useful when we have a one-way sending of messages from some equipment to the control system. 
+You can specify up to eight termination characters in the attribute TermChar[0-7]. 
+These termination characters are used to detect the end of a received message (if a charachter matches
+any of the termination characters). 
+Specify also the settings for the serial link, that is - DevName , Speed , Parity (0 = none, 1 = odd, 
+2 = even), StopBits and DataBits. These could be for example /dev/ttyS0, 9600, 0, 1, 8.
+
+</topic>
+
+<topic> 3964r
+3964-R
+3964R is a simple serial line communication protocol that is developed by Siemens. 
+
+You specify the settings for the serial link as with RemnodeSerial, except for that there are no stp bits
+to specify. You must also specify the character timeout (the maximum time between received characters)
+in the attribute CharTimeout. The AckTimeout-attribute specifies the time to wait for an answer.
+
+Messages will be sent straight on without any header. ACK, NAK, DLE and BCC is handled according to 
+the 3964R protocol.
+
+<h2>Receiving messages
+There can be only one RemTrans object for receive-messages because of the lack of header 
+in this protocol. Every received message will be put in the first found RemTrans-object below 
+the RemNode-object. If the data object for this message is big enough to contain the message, 
+the message will be stored, and the DataValid flag will be set.
+
+<h2>Sending messages
+The transport will send a 3964R message to the serial without adding any header.
+If we don't have contact with the other node the message will be buffered, 
+if there are still free buffers for this message. 
+</topic>
+
+<topic> modbus-serial
+Modbus Serial
+The format of MODBUS that is implemented is RTU. For identification of messages we use the fields 
+known as slave address and function code in the MODBUS header. The RemTrans.Address[0] and [1] 
+defines these fields in the Proview environment. Se MODBUS specifications documents for more information.
+
+Modbus Serial is not yet implemented as an I/O-system in Proview. You have to configure the messages
+yourself by using RemnodeModbus and specifying RemTrans-object for the various operations you
+want to perform. Modbus works in a request/reply manner so for each operation you want to perform
+you specify one RemTrans-object for sending and one for receiving. Except for the Modbus-header of the
+message and the checksum handling you have to specify the content of the message to send in the
+send-buffer. In the same way you must decode the content of a received message yourself.
+
+Modbus TCP is implemented as an I/O-system in Proview. See more information about this in the document
+"Guide to I/O-systems". With Modbus TCP you don't have to care about the encoding of the messages.
+
+<h2>Receiving messages
+When we receive a buffer, we search for RemTrans.Address[0] and [1] that matches the fields 
+slave adress and function code in the message header. 
+If the data object for this message is big enough to contain the message, the message will be stored, 
+and the DataValid flag will be set.
+
+<h2>Sending messages
+Messages will be sent using the contents of RemTrans.Address[0] and [1] as the fields 
+slave address and function code in the message header.
+
+</topic>
+
+</headerlevel>
+
+<topic> an_example
+An example
+To show how to work with the classes that are briefly described above we will start with a little
+example. The classes are described in more detail below.
+
+In our example we have one Proview-system communicating with an other node via UDP/IP. We will
+send a few messages in both directions. My node is named 'dumle' and the remote node is named
+'asterix'.
+
+The messages we will send is:
+
+d_a_RequestData <t> 4 Byte
+d_a_Report <t> 20 Byte
+
+and the messages we will receive is:
+
+a_d_Data <t> 365 Byte (as an answer to the d_a_RequestData-message)
+a_d_Error <t> 10 Byte
+
+The configuration in the node-hierarchy looks like this.
+
+The RemoteConfig-object has to be there. I have added a RemnodeUDP object below this and
+configured address and nodename aswell as the port-numbers to communicate on.
+
+<image> dg_fig70.png
+
+Below the RemnodeUDP-object I have added four RemTrans-objects, one for each message. In the
+remrans-objects I have configured the direction (send or receive). Numbered the addresses so I can
+distinguish between the messages and set the sizes on the sending messages.
+
+<image> dg_fig71.png
+
+Below the remtrans-objects I have put the data-buffers. For the smaller messages I have chosen the
+small Buff256-buffer. The Data-message is larger and I have therefor chosen the Buff1440-buffer for
+this message.
+
+<image> dg_fig72.png
+
+<h2>The data structures
+The data structures for the messages are defined in the file ra_plc_user.h in $pwrp_inc-directory. This
+file is automatically included when you compile the plc-code. The structures look like:
+
+<c>typedef struct {
+<c>  pwr_tUInt32  Id;
+<c>} d_a_RequestData;
+<c>
+<c>#define pwr_sClass_d_a_RequestData d_a_RequestData
+<c>
+<c>typedef struct {
+<c>  pwr_tUInt32   Id;
+<c>  pwr_tFloat32  data_1;
+<c>  pwr_tInt32    data_2;
+<c>  pwr_tInt32    data_3;
+<c>  pwr_tInt32    data_4;
+<c>} d_a_Report;
+<c>
+<c>#define pwr_sClass_d_a_Report d_a_Report
+<c>
+<c>typedef struct {
+<c>  pwr_tUInt32   Id;
+<c>  pwr_tFloat32  data_1;
+<c>  ...
+<c>  ...
+<c>  pwr_tInt32    data_xx;
+<c>} a_d_Data;
+<c>
+<c>#define pwr_sClass_a_d_Data a_d_Data
+<c>
+<c>typedef struct {
+<c>  pwr_tUInt32   Id;
+<c>  pwr_tInt32    func_no;
+<c>  pwr_tInt16    err_code;
+<c>} a_d_Data;
+<c>
+<c>#define pwr_sClass_a_d_Error a_d_Error
+
+<h2>The plc code
+
+I have a plc program named Comm. In this program I have placed one RemTransSend-object and one
+RemTransRcv-object. These objects are found below the "Other"-hierarchy in the plc-editor palette.
+To the RemTransSend-object I have connected the RemTrans that I want to send. In this case the
+d_a_ReuestData-message. The message will be sent when the Dv-signal "RequestData" is set. Similarly 
+I have to the RemTransRcv-object connected the a_d_Data-message which will be the answer 
+to my request.
+
+<image> dg_fig73.png
+
+Both the RemTransSend and the RemTransRcv-objects have a subwindow. For the RemTransSend this subwindow 
+will be executed when there is a flank on the snd-pin. When the subwindow has been executed the
+DataValid-attribute of the connected RemTrans-object is set. The transport job for this Remnode 
+sends the message and sets the DataValid-flag to zero.
+
+For the RemTransRcv the subwindow will be executed when the DataValid-attribute in the connected 
+RemTrans-object is set. When the transport job for this Remnode receives a message it fills the
+data buffer with the received data and then sets the DataValid-flag. 
+After execution the flag will be reset.
+
+<h2>Send subwindow
+In the send subwindow we fill in the data in the send-buffer. The send-buffer for the message to send
+is connected to a DataArithm. The special 'classdef'-syntax casts Da1 to be a pointer to a
+d_a_RequestData-struct (or actually it will cast this pointer to a pwr_sClass_d_a_RequestData,
+therefor the define-statement as described above).
+
+<image> dg_fig74.png
+
+<h2>Receive subwindow
+In the receive subwindow unpack the data received in the receive-buffer. The recieve buffer
+is connected to a DataArithm. Again we use the classdef-statement to cast the Da1-pointer.
+We unpack the data to the output pins of the DataArithm. If one DataArithm is not enough to unpack
+the parameters we just add more DataArithm's and continue in the same way. 
+
+<image> dg_fig75.png
+
+</topic>
+
+</chapter>
+
+<chapter>
 <topic>administrator
 Administration
 
@@ -963,7 +1372,7 @@ Skapa ett projekt i administratören:
   (File/Open/ProjectList).
 - Logga in som administratör.
 - Gå in i edit mode från meny, 'Edit/Edit mode'.
-  Projekt representeras av object av klassen ProjectReg, som visas i paletten till vänster.
+  Projekt representeras av objekt av klassen ProjectReg, som visas i paletten till vänster.
   ProjectReg objekten kan ordnas i hierakier mha $Hier objekt.
 - Skapa ett ProjectReg objekt och ange projektnamn, basversion, filkatalog och beskrivning.
 - Projektet skapas när man sparar, efter att en verifiering har gjorts. Spara och logga ut.
@@ -1554,6 +1963,8 @@ För att läsa resp. tilldela värden på attribut (andra än ActualValue) använder m
 - GetAp och StoAp för analoga attribut.
 - GetIp och StoIp för heltals attribut.
 - GetDp och StoDp, SetDp eller ResDp för digitala attribut.
+- GetSp för strängattribut.
+- GetAtp och GetDtp for tidsattribut.
 
 <h2>Logiska block
 Det finns ett antal block tillgängliga för logisk programmering. t ex och-grind (And), 
@@ -1614,7 +2025,7 @@ Se Proview Objekt handbok beträffande objektens attribut.
 För att övervaka digitala signaler eller attribut, använder man DSup objekt (Digital 
 Supervisory), som finns under mappen 'Logic' i paletten.
 
-Signal eller ett attributet som ska övervakas, hämtas med ett Get-objekt som förbinder med
+Signal eller ett attributet som ska övervakas, hämtas med ett Get-objekt som förbinds med
 DSup objektet. Utgångar på logiska block kan kopplas direkt till DSup objektet.
 
 <b>Digital övervakning
@@ -1668,9 +2079,9 @@ Ge öppnas från menyn i konfiguratören, 'Functions/Open Ge'. Den består av
 En bakgrundsbild ritas med basobjekt som rektanglar, cirklar, linjer, polylinjer och texter.
 Dessa hittar man i verktygspanelen. Skapa att basobjekt genom att aktivera tryckknappen i
 verktygspanelen, och dra eller klicka med MB1 i arbetsarean. Om basobjektet ska vara fyllt,
-väljer man objektet och aktivera 'Fill' i vertygspanelen. Ändar fyllnadsfärg genom att välja
-ut objektet och klicka på den önskade färgen i färgpaletten. Kantfärg ändras genom att man
-klickar med MB2 i färgpaletten, och textfärg med Shift/Klick MB1.
+väljer man objektet och aktiverar 'Fill' i vertygspanelen. Man ändar fyllnadsfärg genom att 
+välja ut objektet och klicka på den önskade färgen i färgpaletten. Kantfärg ändras genom att 
+man klickar med MB2 i färgpaletten, och textfärg med Shift/Klick MB1.
 
 <h2>Subgrafer
 En subgraf är en komponent, t ex en ventil, en motor eller en tryckknapp. För att skapa en
@@ -1685,7 +2096,7 @@ Basobjekt och subgrafsobjekt kan grupperas genom att välja ut dem, och aktivera
 Subgrafer och grupper har dynamiska egenskaper, dvs de kan kopplas till en signal i runtime
 databasen, och ändra färg, position eller form beroende på signalernas värde. En subgraf
 har ofta en default dynamik, t ex en indikator kan skifta mellan två färger. Man behöver 
-endas koppla ventilen till en digital signal för att den ska fungera. Det här görs genom att 
+endast koppla ventilen till en digital signal för att den ska fungera. Det här görs genom att 
 välja ut signalen i anläggningshierakin, och klicka på ventilen med Ctrl/dubbelklick MB1.
 
 En tryckknapp har aktions egenskaper, den sätter, återställer eller togglar en 
@@ -1832,20 +2243,21 @@ Konfiguratören
 
 Konfiguratören används för att navigera och konfigurera i arbetsbänken.
 Konfiguratören visar objekten i en volym. Objekten delas vanligen upp i två fönster, ett
-övre och ett under, och hur uppdelningen görs beror på vilken typ av volym som hanteras.
+till vänster och ett till höger, och hur uppdelningen görs beror på vilken typ av volym som 
+hanteras.
 
-- För rotvolymer och subvolymer visas anläggningshierakin i det övre fönstret och
-  nodhierkin i det undre. Närmare bestämt visas toppobjekt av klassen $PlantHier i det övre
-  och toppobjekt av klassen $NodeHier i det undre.
+- För rotvolymer och subvolymer visas anläggningshierakin i det vänstra fönstret och
+  nodhierkin i det högra. Närmare bestämt visas toppobjekt av klassen $PlantHier i det vänstra
+  och toppobjekt av klassen $NodeHier i det högra.
 
-- För directory volymen visas volymer i det övre fönstret och bussar och noder i det undre.
+- För directory volymen visas volymer i det vänstra fönstret och bussar och noder i det högra.
   Även systemobjektet visas i det undre fönstret.
 
-- För klassvolymer visas klasser i det övre fönstret och typer i det undre.
+- För klassvolymer visas klasser i det vänstra fönstret och typer i det högra.
 
 Med 'View/TwoWindow' kan man välja om man vill visa två fönster eller bara ett. Om endast ett
-fönster visas kommer det varannan gång man aktiverar 'TwoWindows' att vara det övre fönstret
-som visas och varannan gång det undre.
+fönster visas kommer det varannan gång man aktiverar 'TwoWindows' att vara det vänstra fönstret
+som visas och varannan gång det högra.
 
 Med 'Edit/Edit mode' går man in i editerings mode, och palett med olika klasser dyker upp 
 till vänster. Man kan nu skapa nya objekt, flytta objekt, ändra värden på attribut mm.
@@ -1888,12 +2300,12 @@ VolTrafficCross1 är öppnad, medan den andra rotvolymen, VolOpTrafficCross1 är öp
 laddadafil. Även klassvolymerna är öppnade som laddatafiler.
 <image> dg_fig24.gif
 
-Om ingen volym anges som argument öppnas direktory volymens databas, och övriga volymer som
-dbs-volymer.
+Om ingen volym anges som argument när man startar konfiguratören, öppnas direktory volymens 
+databas, och övriga volymer som dbs-volymer.
 
 <h1>Navigera <bookmark>wnav_navigate
 I konfiguratören visas objekten i den aktuella volymen. Objekten ligger i en trädstruktur,
-och objekt som har barn visas med en mapp, objekt utan bar med ett löv. För varje objekt
+och objekt som har barn visas med en mapp, objekt utan barn med ett löv. För varje objekt
 visas som default, dessutom objektets namn, klass och eventuell beskrivning (beskrivningen
 hämtas från ett Description attribut i objektet).
 
@@ -1939,7 +2351,7 @@ också välja ut flera objekt.
 
 Ur ergonomisk synvinkel är det ofta bättre att navigera från tangenbordet. Man använder då
 främst piltangenterna. Först måste man se till att fönstret har inmatings fokus genom att 
-klicka på det. Inmatnings fokus mellan övre och undre fönster skiftas med TAB.
+klicka på det. Inmatnings fokus mellan vänster och höger fönster skiftas med TAB.
 
 Men PilUpp/PilNer väljer man ut ett objekt. Har objektet barn öppnar man barnaskaran med
 PilHöger, och stänger med PilVänster. Innehållet i objektet, dvs objektets attribut, visas
@@ -2065,12 +2477,12 @@ Functions/Change value  <t><t>öppna inmatningsfältet för det utvalda attributet.
                         <t><t>Detta kan endast göras i edit mode.
 Functions/Close change value <t><t>stäng inmatningsfältet.
 
-<b>Objectseditorn
+<b>Objektseditorn
 <image> dg_fig30.gif
 
 Objektseditorn har inmatingsfält för att mata in flerradiga texter. I det här fallet kan man
 inte avsluta inmatingen med 'Enter' som med enradiga texter. Antingen klickar man på 'Ok' 
-knappen, eller också aktiverar man 'Functions/Close change value' (ctrl/W) för att avsluta.
+knappen, eller också aktiverar man 'Functions/Close change value' (Ctrl/T) för att avsluta.
 
 <b>Flerradiga texter
 <image> dg_fig31.gif
@@ -2174,7 +2586,7 @@ Plceditorn
 
 Plceditorn används för att skapa plcprogram mha ett grafiskt programmeringsspråk.
 
-Progammeringen sker med funktionsblock som läggs i ett horisontellt nät av noder och 
+Programmeringen sker med funktionsblock som läggs i ett horisontellt nät av noder och 
 förbindningar från vänster till höger. Signaler eller attribut hämtas upp på den vänstra
 sidan av nätet, och värdena skickas vidare med förbindningar från utgångs-pinnar till
 ingångs-pinnar på funktionsblocken. Funktionsblocken opererar på värdena och på nätets
@@ -2198,7 +2610,7 @@ View innebär att plceditorn är i visningsmod. Man kan inte skapa eller modifiera
 Många av menyalternativen som har med editering att göra är dimmade.
 
 <b>Edit
-Om man har editeringsprivilegers kan man gå över i editeringsmod. Här kan man skapa och 
+Om man har editeringsprivileger kan man gå över i editeringsmod. Här kan man skapa och 
 modifiera objekt.
 
 <b>Trace och Simulate
@@ -2279,7 +2691,7 @@ annat funktionsobjekt, eller om det ska datasättas. Datasättningen i objektedito
 i runtime som ett intialvärde, som sedan kan modifieras på olika sätt.
 
 En del digitala ingångar kan inverteras. Detta görs genom att checkboxen för 'Inverted'
-markeras i objektseditorn. I funktionsobjektet visas detta med en rund ring på ingånspinnen.
+markeras i objektseditorn. I funktionsobjektet visas detta med en rund ring på ingångspinnen.
 
 <b>Interna attribut
 Interna attribut kan innehålla konfigureringsvärden som datasätts i utvecklingsmiljön, eller
@@ -2361,7 +2773,7 @@ kopplingarna. Dessa ritas med streckade linjer.
 Här hittar man även kopplingstypen 'ConExecuteOrder'. I vissa fall vill man styra
 exekveringsordningen mellan två funktionsobjekt, trots att de inte är förbundna med varandra.
 Man kan då dra en ConExecuteOrder mellan dem (mellan vilka in eller utgångar är egalt).
-Kopplingen ska dra från det objekt som ska exekveras först, till det som ska exekveras sist.
+Kopplingen ska dras från det objekt som ska exekveras först, till det som ska exekveras sist.
 I figuren nedan exekveras lagringen av attributet 'Temperaturer' före lagringen av attributet
 'Tjocklek'.
 
@@ -2603,7 +3015,7 @@ Hjälpfil
 
 Hjälptexter visas i hjälp fönstret, som öppnas från konfiguratören eller från 
 operatörsmiljön. Hjälptexter skrivs i filen $pwrp_exe/xtt_help.dat. Hjälptexterna delas upp
-i ämnen (topics), och värje ämne har en nyckel, som specificerar när hjälptexten för ämnet
+i ämnen (topics), och varje ämne har en nyckel, som specificerar när hjälptexten för ämnet
 ska visas. Länkar i hjälptexterna, som pekar på andra ämnen, gör det möjligt att navigera
 i hjälptexterna.
 
@@ -2616,8 +3028,10 @@ i hjälptexterna.
 Specificerade hjälpämnen kan öppnas från Ge grafer genom tryckknappar (aktionstyp Help), eller
 från popup-menyn för ett objekt i operatörsmiljön (metod 'Help').
 
+<option> printdisable
 <b>Syntax <link> helpfile syntax
 <b>Konvertering <link> helpfile conversion
+<option> printenable
 </topic>
 
 </headerlevel>
@@ -2958,17 +3372,19 @@ hålls på en rimlig nivå.
 
 Användardatabasen hanteras av 'pwr_user' (se nedan) eller från administratören.
 
+<option> printdisable
 Användar databas <link> userdatabase
 Exempel <link> user example
 Inloggning <link> user login
 pwr_user <link> pwr_user
+<option> printenable
 </topic>
 
 <headerlevel>
 <topic>userdatabase
 Användardatabas
 
-Användar-databasen  populeras av systemgrupper och användare. När en proview-funktion 
+Användardatabasen  populeras av systemgrupper och användare. När en proview-funktion 
 startas, t ex operatörs- eller utvecklings-miljön, kontrolleras att användaren finns i 
 databasen och användarens privilegier registreras. Privilegerna avgör vad en användare 
 tillåts att göra i systemet.
@@ -2993,7 +3409,7 @@ En systemgrupp refereras med 'path'-namnet i hierarkin där namnet är åtskilda me
 'ssab.hql.se1', där ssab är rot-gruppen och se1 understa nivån i hierarkin.
 
 Ett proview-system knyts till en systemgrupp genom att systemgruppen anges i System-objektet.
-Om systemgruppen inte finns i användar-databasen, men någon förälder, eller förfader 
+Om systemgruppen inte finns i användardatabasen, men någon förälder, eller förfader 
 återfinns, antas att systemgruppen ärver användare från förfadern.
 
 <h2>Attribut
@@ -3002,13 +3418,13 @@ UserInherit <t>Systemgruppen ärver användare av närmast ovanliggande systemgrupp
             <t>i hierarkin (även system som den systemgruppen har ärvt).
 
 <h1>Användare
-En användare karakteriseras av ett användar-namn, ett passer-ord och en uppsättning 
-privileger. Dessutom knyter man en användare till en system-grupp.
+En användare karakteriseras av ett användarnamn, ett passerord och en uppsättning 
+privileger. Dessutom knyter man en användare till en systemgrupp.
 
 Privilegierna definierar vad en användare har rätt att göra i proview. En del privilegier 
 styr möjligheterna att kunna ändra i proview's bas-program t ex xtt eller plc-editorn, en del 
 är avsedda att användas vid konstruktion av operatörsbilder så att man kan styra vilka 
-inmatnings-fält och vilka knappar olika operatörer ska kunna påverka.
+inmatningsfält och vilka knappar olika operatörer ska kunna påverka.
 
 Ett användarnamn kan vara knutet till flera systemgrupper, men ur databasen synvinkel är det 
 olika användare, med unika passerord och privilegier. De råkar bara ha samma användarnamn.
@@ -3104,11 +3520,9 @@ Från xtt kan man med login/logout kommandot logga in som en annan användare och 
 sina privilegier.
 
 <h1>Operatörsbilder på intranätet
-För operatörbilder på webben finns en speciell inloggnings-applet som bör läggas in på 
-start-web-sidan för ett system. Inloggnings-appleten kontroller användarnamn och passerord. 
-Dessutom kontrolleras de varje gång man tar upp en ny operatörs-bild. Man är inloggad ända 
-tills man loggar ut (från inloggnings-appleten), eller tar upp en bild i ett system där 
-användaren inte längre har behörighet.
+För operatörbilder på webben finns en speciellt inloggningsfönster som kan öppnas om detta
+är konfigurerat i WebHandler objektet. Man kan ange default privileger och även en speciell 
+systemgrupp fpr 
 </topic>
 
 <topic> pwr_user
@@ -3317,7 +3731,7 @@ form av plc-kod eller c-kod.
 
 <h2>Komponenter
 Ett komponent-objekt speglar en komponent i anläggningen och är ofta uppdelad i två eller tre
-olika klasser, ett huvudobjekt, ett funktionsobjekt och ett busobjekt, ibland även ett 
+olika klasser, ett huvudobjekt, ett funktionsobjekt och ett bussobjekt, ibland även ett 
 simuleringsobjekt. Huvudobjektet läggs i anläggningshierarkin och innehåller de signaler som
 är kopplade till komponenten, jämte andra konfigureringsdata. I ett plcprogram läggs ett 
 funktionsobjekt som kopplas till huvudobjektet och som arbetar dels med data från sina egna 
@@ -3572,7 +3986,7 @@ Skapa klasser
 <option> printdisable
 <b>Skapa en klassvolym <link> ced_createclassvolume
 <b>Dataklasser <link> ced_dataclasses
-<b>Funktionsobject <link>ced_foclasses
+<b>Funktionsobjekt <link>ced_foclasses
 <b>Komponenter <link>ced_components
 <option> printenable
 </topic>
@@ -3623,7 +4037,7 @@ Klasserna består av en RtBody med attribut.
 För att skapa en klass lägger man ett $ClassDef objekt under 'Class' objektet.
 Namnet på $ClassDef objektet kommer att bli klassens namn.
 
-Under $ClassDef objektet skapar man ett $ObjBodyDef object som automatiskt får namnet RtBody.
+Under $ClassDef objektet skapar man ett $ObjBodyDef objekt som automatiskt får namnet RtBody.
 
 Under RtBody objektet skapas ett $Attribute objekt som definierar ett attribut i klassen.
 Namnet på $Attribut-objektet ger attribut-namnet. I objektet måste anges följande:
@@ -3708,8 +4122,8 @@ och den kod som ska exekveras av plc-programmet.
 Koden kan defineras antingen med c-kod, eller med grafiskt programmering i plc-editorn.
 
 <option> printdisable
-<b>Funktions-object med c-kod <link> ced_ccodefo
-<b>Funktions-object med plc-kod <link> ced_plccodefo
+<b>Funktions-objekt med c-kod <link> ced_ccodefo
+<b>Funktions-objekt med plc-kod <link> ced_plccodefo
 <option> printenable
 </topic>
 
@@ -3845,7 +4259,7 @@ Ingångar, interna attribute och utgångar i funktionsobjektet definieras, på samm
 för funktionsobjektet med c-kod, med $Input, $Intern och $Output attribut.
 
 <image> ced_fig8.gif
-<b>Definition av funktionsobject med plc-kod.
+<b>Definition av funktionsobjekt med plc-kod.
 
 <b>Kod
 Genom att aktivera 'Open Program...' i popupmeny för Code objektet öppas plc-editorn. Här kan
@@ -3877,7 +4291,7 @@ Om template-koden ändras kommer instansernas kod att uppdateras nästa gång de ko
 <topic>ced_ioclasses
 I/O klasser
 
-I/O object är de objekt som hanteras av I/O hanteringen i Proview. De kan indelas i Agent, 
+I/O objekt är de objekt som hanteras av I/O hanteringen i Proview. De kan indelas i Agent, 
 Rack, Card och Channel objekt. Vid knytning av nya I/O system till Proview måste man oftast 
 skapa  ny klasser av typerna Agent, Rack och Card. I/O objekt skapas med ett $ClassDef objekt
 där man i Flags sätter biten IoAgent, IoRack eller IoCard.
@@ -4665,6 +5079,161 @@ inte hanteras vid konverteringen.
 
 </chapter>
 
+<chapter>
+<topic>opc_intro
+OPC
+Proview har implementerat OPC XML/DA protokollet för datautbyte med andra typer av 
+automationenheter. För mer information om OPC, se www.opcfoundation.org.
+
+<option> printdisable
+OPC Server <link> opc_server
+OPC Client <link> opc_client
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic>opc_server
+OPC XML/DA Server
+
+En OPC XML/DA Server är en web service från vilken an OPC XML/DA Client kan hämta information
+om ett Proview-system. En opc klient kan t ex visa objektshierarkin, läsa och skriva 
+attributvärden, och lägga upp prenumerationer på attribut.
+
+Opc servern implementerar även http protokollet och är inte kopplad till en webserver.
+Portnummret till opc_server är satt till 80, och URI'n för webservicen på noden 'mynode' blir
+
+<c>http://mynode
+
+Om en webserver är installerad, använder den vanligtvis port 80, och en annan port måste
+väljas för opc_server. Om man stället väljer 8080, blir URI'n
+
+<c>http://mynode:8080
+
+<h1>Browsing
+Browsing funktionen i OPC XML/DA stödjer grenar (branches) och punkter (item). En punkt 
+innehåller ett värde, medan en gren är en hierarkikomponent utan värde. Det finns inte något
+stöd för objekt, så ett Proview objekt är implementerat som en gren, och varje attribut är
+en punkt under grenen. Även arrayer är implementerade som grenar, med varje element som en 
+punkt. Om ett element är ett attributobjekt är även detta en gren.
+
+<h1>Trådar
+Om opc klienten använder HoldTime och WaitTime attributen i SubscriptionPollledRefresh 
+förfrågan, måste opcservern vara multitrådad, dvs skapa en ny tråd för varje förfrågan. Om 
+HoldTime och Waittime inte används (som i Proview's opc klient), kan alla förfrågningar 
+hanteras i en enda tråd, vilket sparar cpu-tid. Multitrådning eller inte, konfigureras i
+konfigurationsobjektet för opc servern. Defaultvärdet är 'IfNeeded' som slår på multitrådning
+för en klient om HoldTime eller WaitTime upptäcks.
+
+<h1>Kient åtkomst
+För att få åtkomst till en Proview opc server, måste ip-adressen för klienten konfigureras i
+konfigurationsobjektet för opc servern. Här kan man också välja om klienten ska a läs- eller
+skriv-rättigheter (ReadOnly resp ReadWrite). ReadOnly tillåter klienten att läsa och 
+prenumerera på värden, medan ReadWrite även tillåter skrivning av attributvärden. 
+
+<h1>Buffring av prenumerationer
+Servern stödjer inte buffring av prenumerationer.
+
+<h1>Konfigurering
+Opc servern konfigureras med ett Opc_ServerConfig objekt, som placeras i nodhierarkin. 
+Konfigurationsobjektet medför att en serverprocess (opc_server) startas vid Proview startup.
+
+</topic>
+</headerlevel>
+
+<headerlevel>
+<topic> opc_client
+OPC XML/DA Client
+
+Proveiw's opc klient är implementerad som en extern volym, som monteras i rotvolymens 
+objektsträd. Under monteringsobjektet visas de grenar och punkter som opc servern innehåller
+med speciella opc objekt. Ett Opc_Hier objekt representerar en gren, ett Opc_Int objekt en
+punkt med ett heltalsvärde, ett Opc_Boolean objekt en punkt med ett boolskt värde etc.
+Om ett punktobjekt öppnas, visas punkvärdet i Value attributet, och en del andra egenskaper
+som beskrivning, lowEU, highEU, ingenjörsenhet, lowIR och highIR visas också. När objektet
+öppnas startas en prenumeration, och värdet uppdateras kontinuerligt. För heltal- och
+flyttalsvärden finns även en objektsbild som visar en kurva på värdet.
+
+Med en opc klient kan man
+
+- visa grenar och punkter i Xtt, och även visa punkvärden och sätta punktvärden.
+- prenumerera på värden och visa dem i en Ge bild.
+- hämta upp punktvärden i ett plcprogram, och även skriva punktvärden.
+
+Opc klienten kräver att namn browsing är implementerat i opc servern.
+
+<h1>Ge
+Ett punkvärde kan visas i en Ge bild genom att använda namnet på punkten i den externa volymen.
+Till exempel, om monteringsobjektet för den externa volyment är 'Ext-P1', och det lokala
+namnet för punkten är
+
+<c> /P1/Signals/Ai22
+
+kommer sinalnamnet i Ge antagligen att bli (detta är beroende av browsing funktionen i 
+servern)
+
+<c> Ext-P1-P1-Signals-Ai22.Value##Float32
+
+om det är en flyttalspunkt.
+
+<h1>Plc
+Punktvärden kan även hanteras i plc programm, genom att använda GeExt... och CStoExt... objekt.
+De objekt som normalt används för att hämta och lagra attributvärden, GetDp, GetAp, StoDp,
+StoAp etc, kan inte användas efter som det refererade objektets identitet  måste vara känt i 
+utvecklingsmiljön, vilket inte är fallet med externa volymer. I Ext objekten, utgörs
+referenserna av strängar, vilket gör det möjligt att lägga in punktnamnet. För att hämta värdet
+av punken i föregående exempel, ska man använda ett GetExtFloat32 objekt, och punktnamnet ska
+vara
+
+<c>Ext-P1-P1-Signals-Ai22.Value
+
+För att lagra ett värde i en punkt, t ex /P1/Signals/Ao5, använder man en CStoExtFloat32.
+Det här objektet gör en villkorlig lagring, och enbart på positiv flank på villkoret. Jämför
+med CStoAp där värdet är lagrat så länge villkoret är sant. Referensnamnet i CStoExtFloat32
+objetet blir i det här fallet
+
+<c>Ext-P1-P1-Signals-Ao5.Value
+
+<h1>Klient process
+För varje Opc klient/server förbindelse måste en klientprocess startas. Programmet för denna
+process är opc_provider, som tar argumenten
+
+ 1. Opc server URL.
+ 2. Extern volume id.
+ 3. Extern volume name.
+ 4. Server identity (optional, default 200).
+
+<h1>Konfigurering
+<h2>Registrering av ExternVolym
+Registrera externvolymen i den globala volymslistan (GlobalVolumeList) med volymsnamn och 
+identitet.
+
+<h2>Applikationsfil
+Addera en rad i applikationsfilen för att starta opc_provider. Här är ett exempel för en
+opc klient som kopplas upp sig mot opc servern 'http://servernode::8080. Den registrerade
+externvolymen har namnet MyOpcVolume med volymsidentiteten 0.1.99.55.
+
+<c>opc_provider, opc_provider, noload, run, opc_provider, 9, nodebug, 
+<c>   http://servernode:8080 0.1.99.55 MyOpcVolume
+
+Om punkvärden hämtas i plc programmet, ska prioriteten sättas till 4 (sjätte argumentet).
+
+<h2>Monteringsobjekt
+Skapa ett monteringsobjekt i anläggningshierarkin i rotvolymen, och lägg in objektsidentiten
+för volymsobjektet i externvolymen i Objekt attributet. I exemplet ovan är denna objid
+_O0.1.99.55:0.
+
+<h2>Tips
+Applikationsfilen ligger på $pwrp_load och har nament
+
+<c>$pwrp_load/ld_appl_'nodename'_'busnumber'.txt 
+
+där nodename är nodens namn och busnumber Qcombusnumret. Om noden är 'mynode' och busnumret
+är 507, blir filnamnet
+
+<c> $pwrp_load/ls_appl_mynode_507.txt
+</topic>
+</headerlevel>
+</chapter>
 
 <chapter>
 <TOPIC> help command
@@ -5082,9 +5651,9 @@ Om ingen hjälpfil anges kommer ämnet att eftersökas i
 bas och projekt hjälpfilerna.
 
 <B>wtt> help 'subject'
-<B>wtt> help 'subject' /file=
+<B>wtt> help 'subject' /helpfile=
 
-/file<t>En hjälpfil som innehåller information om ämnet.
+/helpfile<t>En hjälpfil som innehåller information om ämnet.
 
 <H2>närliggande ämnen
 helpfile <LINK> helpfile
@@ -6690,7 +7259,7 @@ int SetAttribute( string name, (godtycklig typ) value)
 <b>Description
 
 Sätt värde på ett attribut.
-Attributet specificeras med fullt objects och attributnamn.
+Attributet specificeras med fullt objekts och attributnamn.
 Returnerar operationens status.
 
 <b>Argument

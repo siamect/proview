@@ -34,8 +34,8 @@
 
 
 <hr>
-2008-01-14
-Version 4.4.0	
+2008-10-21
+Version 4.6.0	
 <hr>
 </topic>
 
@@ -99,6 +99,9 @@ documentation for the system.
 <topic> index
 Designer's Guide
 
+<image> pwr_logga.gif
+
+<h1>Designer's Guide
 Overview <link> design_overview
 Database structure <link> database_structure
 A case study <link> case_study
@@ -115,6 +118,7 @@ The Object Editor<link> objecteditor_refman
 The Spreadsheet Editor<link> spreadsheeteditor_refman
 The Plc Editor<link> plceditor_refman
 The Class Editor<link> classeditor
+OPC <link> opc_intro
 Commands <link> help command
 Script <link> script
 </topic>
@@ -140,14 +144,14 @@ system also has to influence the process i varous ways, for example with valves 
 This ends in a Signal list, that is alist of all input and output signals of the system.
 
 At this point the question of which control system is to be used is raised, and on alternative
-is of course Proview. You also has to decide whick IO-system to use, and how to devide the
+is of course Proview. You also has to decide whick I/O-system to use, and how to devide the
 function i different process stations.
 
 <h1>IO-systems
-The task of the IO-system is to bring signals from the process to the control system, and to
+The task of the I/O-system is to bring signals from the process to the control system, and to
 put out signals to influence the process. The signals are usually digital or analog, but
 there are also other types as integers and counters. You can choose between a rack and card
-system connected to the process station, or a distributed io, e.g profibus.
+system connected to the process station, or a distributed I/O, e.g profibus.
 
 <h1>Configure the system
 When it's time to start configure the system, you first create a new project in the
@@ -156,14 +160,14 @@ can be plenty of them in time.
 
 The configuration of a system is mainly done by creating objects in a database, the Workbench. 
 There is a large amount of objects to configure everything from IO-channels to PLC programs.
-The Proview Object Reference Manual contains over 400 different types of objects. The objects
+The Proview Object Reference Manual contains over 800 different types of objects. The objects
 are placed in a tree structure, and you use a tool called the Configurator to create objects and
 to navigate it the object tree.
 
 The object tree is separated in to parts, the plant hierarchy and the node hierarchy.
 The Plant hierarchy reflects the different functions in the plant and in the process, while
-the Node hierarchy reflects the hardware of the control system, with computors, IO-racks and
-IO-cards.
+the Node hierarchy reflects the hardware of the control system, with computors, I/O-racks and
+I/O-cards.
 
 When later the control system is started in runtime, a copy of the object tree is created in
 a realtime database, rtdb. The transfer from the Workbench to rtdb is done with so called
@@ -241,18 +245,18 @@ operator. Blocked plant parts are displayed in the Block list.
 
 <h1>Data Storage
 You often want to follow the change of a signal over time, in the shape of a curve. In Proview
-there are there kinds of funktions for this, DsTrend, DsFast and DsHist.
+there are there kinds of funktions for this, DsTrend, DsFast and SevHist.
 
 DsTrend is a trend that is stored in the realtime database. The value of a signal is stored
 continously with an interval of 1 second and upwards. For each curve there is space for about
 500 samples, so if you choose to store a new sample every second, you have a trend of the
 signal of about 8 minutes.
 
-DsHist store signales in a similar way in a database on disk, which makes it possible to store
+SevHist stores signals in a similar way in a database on disk, which makes it possible to store
 values a longer period of time then DsTrend.
 
-DsFast store more rapid sequences, where the storage is started on a trigg condition, and 
-continues a specified time, and is then displayed as a curve.
+DsFast stores more rapid sequences, where the storage is started on a trigg condition, and 
+continues a specified time. When the sequence is finished, it is displayed as a curve.
 </topic>
 </chapter>
 
@@ -376,7 +380,7 @@ Analogue attributes are of type Float32, i.e. a 32-bit float.
 
 <h2>Int32
 Integer attributes are usually of type Int32, i.e. a 32-bit integer. There are also a number
-of other integer types, e.g. Int8, Int16, UInt8 and UInt16.
+of other integer types, e.g. Int8, Int16, Int64, UInt8, UInt16, UInt32 and UInt64.
 
 <h2>String
 In a string attribute a character string is stored. There are different string types with
@@ -414,7 +418,7 @@ in the PLCeditor or in the operator environment.
 Each class has a template object, i.e. an instance of the class that contains default values
 for the attributes of the class.
 
-Proview's basesystem conatins about 500 classes. See Object Reference Manaual detailed
+Proview's basesystem contains about 900 classes. See Object Reference Manaual detailed
 description. The designer can also create his own classes within a project.
 </topic>
 
@@ -862,6 +866,409 @@ graphics is described in chapter 5 Creating Plant Graphics .
 <image>dg_fig21.gif
 <b>The Plant Graphics for the Intersection
 </topic>
+</chapter>
+
+<chapter>
+<topic>communication
+Communication
+
+The Remote concept in Proview is a way to standardize the methods of communication with other
+systems. It describes a number of transport programs and Proview objects used to implement
+a variety of different communication protocols and to handle incoming and outgoing messages.
+Remote is designed to use different transport protocols such as TCP/IP or BEA Message Queue,
+and different hardware media such as ethernet or serial lines.
+The main purpose of Remote is to provide the programmer with an interface to communication.
+
+<option> printdisable
+Introduction <link> comm_introduction
+Protocols <link> protocols
+An example <link> an_example
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic>comm_introduction
+Introduction
+There are some different classes/components/objects that are used to handle the communication.
+
+<h2>RemoteConfig
+Required to have any remote communication at all. Without this no remtehandler is started.
+Place one object in the node-hierarchy.
+
+<h2>RemNode
+Defines a link of some type to a remote node over a specific protocol. 
+Several different protocols are supported and there is one specific class for each protocol.
+The supported protocols are:
+
+TCP/IP
+UDP/IP
+MQ (BEA Message Queue)
+ALCM (an old Digital protocol, supported for historical reasons)
+Serial
+Modbus/RTU Serial
+3964R (serial protocol from Siemens)
+
+Configuration of each protocol is described further down.
+Place RemNode-objects below the RemoteConfig-object.
+
+<h2>RemTrans
+Generic class that defines a specific message to or from a specific remote node on a
+specific protocol. Should be placed below the RemNode-object. The size of a message to be sent 
+is specified in the RemTrans-object. The data however to be sent resides in a buffer that is
+configured as a child to the remtrans-object. When a message is to be sent data of the length
+specified in the remtrans-object is fetched from the buffer. Sometimes however a header of some
+length is added to the message.
+
+<h2>Buffer
+Defining the send- and/or receive data area for each message. Exists in different sizes.
+Should be placed below a RemTrans-object. The buffer must be of at least the size of the
+message that will be received or sent. If size is not enough message will be cut in the end.
+
+<h2>RemTransSend 
+Function object used in a plc-program for sending messages.
+
+<h2>RemTransRcv
+Function object used in a plc-program for receiving messages.
+
+</topic>
+
+<topic> protocols
+Protocols
+Which protocol to use is defined by the type of Remnode-object you configure. For each configured 
+Remnode-object a transport job is started. That is, a program to handle the specific protocol is
+started as a process. This process will handle all RemTrans-object that is configured as children
+to the Remnode-object. 
+
+<option> printdisable
+UDP <link> udp_ip
+TCP <link> tcp_ip
+BEA Message Queue <link> bea_mq
+Serial <link> serial
+3964-R <link> 3964r
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic> udp_ip
+UDP
+UDP uses socket communication without connection (datagram), compared to TCP wich is a connected protocol.
+In the RemnodeUDP-object you specify the name and ip-address of the node to communicate with
+aswell as the port-numbers for both ends. The local port-numer need to be unique on your node
+not to conflict with other communications.
+
+As default all messages is sent with a special header that is not included in the user data buffer.
+This header is added at the beginning of the message. The purpose for the header is to give information
+about the message that is sent. This helps identify what type of message is received and to wich buffer
+the data will be unpacked. The header looks like:
+
+<c>char       RemId1;  /* STX (Hex 02) */
+<c>char       RemId2;  /* ETB (Hex 0F) in data message without acknowledge 
+<c>                       ENQ (Hex 05) in data message with acknowledge 
+<c>                       ACK (Hex 06) in acknowledge message */
+<c>short int  Length;  /* Number of bytes in message including this header */
+<c>short int  MessId1; /* Message identity part 1 */
+<c>short int  MessId2; /* Message identity part 2 */
+ 
+All of the integers in the header will be sent as big endian values, that is most significant byte first
+in the datagram. The user data is the responsibility of the user to switch, if he wants integers to be sent
+with big endian. VAX, Alpha and Intel (x86) all uses little endian! To send messages without headers the
+attribute DisableHeader should be set to TRUE. When communicating between two Proview-systems the header
+should be kept on. MessId1 and MessId2 is fetched from attributes RemTrans.Address[0] and RemTrans.Address[1].
+Through the header it is also possible to request an acknowledge of a sent message. If there is no
+acknowledge the message will be resent with a cyclicity specified by the RetransmitTime-attribute in the
+remtrans-object.
+
+Since UDP/IP is a connectionless protocol there is a possibility to watch the connection using
+keepalive-messages. This is set through the attribute UseKeepalive.
+
+<h2>Sending messages
+The transport will send a message to the remote port, consisting of header + data.
+MessId in the header is taken from RemTrans.Address[0,1], byte-switched to send as big endian.
+If MaxBuffers in remtrans-object > 0, the message is sent with type "want acknowledge" and is stored
+in the retransmit queue for the remnode. When a correspondning acknowledge message is received the 
+message is deleted from the retransmit queue. This is done automatically by the transport process.
+
+<h2>Receiving messages
+When we receive a buffer, first we check the header to see that this is a correct RemTrans message.
+Then we search for RemTrans.Address[0,1] that matches the byte-switched MessId. If the data object for 
+this message is big enough to contain the message, the message will be stored, and the 
+DataValid flag will be set.
+If the Remnode is marked to be used without header (DisableHeader-attribute set) then a RemTrans marked as a
+receiving remtrans with a enough large buffer will be searched.
+
+</topic>
+
+<topic> tcp_ip
+TCP
+RemnodeTCP is configured in much the same way as RemnodeUDP. The big (only) difference is that TCP is
+a connected protocol which acts in client/server fashion. Thus you have to either connect to a 
+remote socket (act like a client) or await a connection (act like a server). When acting like a server
+only one client will be accepted. The ConnectionMode-attribute in the remnode-object defines if you are
+a client or a server. Setting it to zero (default) means client and setting it to one means server. 
+
+</topic>
+
+<topic> bea_mq
+MQ
+RemnodeMQ is a transport for sending messages on BEA Message Queue (BMQ). It requires you to have
+BEA Message Queue installed on your node. This message queue is good for safely delivering messages 
+to a remote node even if it is not up at the moment you send your message. Vice versa, 
+messages will safely be delivered to you.
+
+This documentation expects you to have basic knowledge on BEA Message Queue. In basic the communication 
+runs on a specific bus. Each node has group-number and can only communicate to other groups on the same bus.
+On each group several queues can be configured.
+
+To be able to start this transport of course the Message Queue sotware need to be runnning. You also need some 
+environment variables to be set. These are:
+
+<c>DMQ_BUS_ID
+<c>DMQ_GROUP_ID
+<c>DMQ_GROUPNAME
+
+In the RemnodeMQ-object you configure on which BMQ-queue to recieve messages in the attribute MyQueue.
+You also configure the remote nodes group-number and queue to send to in the attributes TargetGroup and
+TargetQueue.
+
+<h2>Sending messages
+Similarly to UDP and TCP-transports RemTrans. Address[0,1] are used to identify the message. Address[0]
+represent the message-class and Address[1] represent the message-type (according to the BMQ-nomenclature).
+Address[2,3] are used to define what type delivery mode (Address[2]) that should be used and what action should be
+taken when a message cannot be deilvered (Address[3]).
+
+Possible delivery modes are:
+
+<c>PDEL_MODE_WF_SAF 25
+<c>PDEL_MODE_WF_DQF 26
+<c>PDEL_MODE_WF_NET 27
+<c>PDEL_MODE_WF_RCM 28
+<c>PDEL_MODE_WF_MEM 29
+<c>PDEL_MODE_AK_SAF 30
+<c>PDEL_MODE_AK_DQF 31
+<c>PDEL_MODE_AK_NET 32
+<c>PDEL_MODE_AK_RCM 33
+<c>PDEL_MODE_AK_MEM 34
+<c>PDEL_MODE_NN_SAF 35
+<c>PDEL_MODE_NN_DQF 36
+<c>PDEL_MODE_NN_NET 37
+<c>PDEL_MODE_NN_RCM 38
+<c>PDEL_MODE_NN_MEM 39
+<c>PDEL_MODE_WF_DEQ 40
+<c>PDEL_MODE_AK_DEQ 41
+<c>PDEL_MODE_WF_CONF 42
+<c>PDEL_MODE_AK_CONF 43
+<c>PDEL_MODE_WF_ACK 44
+<c>PDEL_MODE_AK_ACK 45
+
+and possible actions are:
+
+PDEL_UMA_RTS 1
+PDEL_UMA_DLJ 2
+PDEL_UMA_DLQ 3
+PDEL_UMA_SAF 4
+PDEL_UMA_DISC 5
+PDEL_UMA_DISCL 6
+
+Not all combinations are possible (see BEA Message Queue documentation for more information).
+
+Recommended combinations are,
+
+for safe delivery of message
+Address[2] = 26
+Address[3] = 4
+
+and for discarding the message if it cannot be delivered
+Address[2] = 39
+Address[3] = 5
+
+If Address[2,3] are both set to zero a default setting will be used. The default is to discard the 
+message if it cannot be delivered.
+
+<h2>Receiving messages
+Address[0,1] are used to identify the message. Address[0] represent the message-class and Address[1]
+represent the message-type (according to the BMQ-nomenclature).
+</topic>
+
+<topic> serial
+Serial
+RemoteSerial is an attempt to generalize the using of a simple serial line communication protocols.
+Its useful when we have a one-way sending of messages from some equipment to the control system. 
+You can specify up to eight termination characters in the attribute TermChar[0-7]. 
+These termination characters are used to detect the end of a received message (if a charachter matches
+any of the termination characters). 
+Specify also the settings for the serial link, that is - DevName , Speed , Parity (0 = none, 1 = odd, 
+2 = even), StopBits and DataBits. These could be for example /dev/ttyS0, 9600, 0, 1, 8.
+
+</topic>
+
+<topic> 3964r
+3964-R
+3964R is a simple serial line communication protocol that is developed by Siemens. 
+
+You specify the settings for the serial link as with RemnodeSerial, except for that there are no stp bits
+to specify. You must also specify the character timeout (the maximum time between received characters)
+in the attribute CharTimeout. The AckTimeout-attribute specifies the time to wait for an answer.
+
+Messages will be sent straight on without any header. ACK, NAK, DLE and BCC is handled according to 
+the 3964R protocol.
+
+<h2>Receiving messages
+There can be only one RemTrans object for receive-messages because of the lack of header 
+in this protocol. Every received message will be put in the first found RemTrans-object below 
+the RemNode-object. If the data object for this message is big enough to contain the message, 
+the message will be stored, and the DataValid flag will be set.
+
+<h2>Sending messages
+The transport will send a 3964R message to the serial without adding any header.
+If we don't have contact with the other node the message will be buffered, 
+if there are still free buffers for this message. 
+</topic>
+
+<topic> modbus-serial
+Modbus Serial
+The format of MODBUS that is implemented is RTU. For identification of messages we use the fields 
+known as slave address and function code in the MODBUS header. The RemTrans.Address[0] and [1] 
+defines these fields in the Proview environment. Se MODBUS specifications documents for more information.
+
+Modbus Serial is not yet implemented as an I/O-system in Proview. You have to configure the messages
+yourself by using RemnodeModbus and specifying RemTrans-object for the various operations you
+want to perform. Modbus works in a request/reply manner so for each operation you want to perform
+you specify one RemTrans-object for sending and one for receiving. Except for the Modbus-header of the
+message and the checksum handling you have to specify the content of the message to send in the
+send-buffer. In the same way you must decode the content of a received message yourself.
+
+Modbus TCP is implemented as an I/O-system in Proview. See more information about this in the document
+"Guide to I/O-systems". With Modbus TCP you don't have to care about the encoding of the messages.
+
+<h2>Receiving messages
+When we receive a buffer, we search for RemTrans.Address[0] and [1] that matches the fields 
+slave adress and function code in the message header. 
+If the data object for this message is big enough to contain the message, the message will be stored, 
+and the DataValid flag will be set.
+
+<h2>Sending messages
+Messages will be sent using the contents of RemTrans.Address[0] and [1] as the fields 
+slave address and function code in the message header.
+
+</topic>
+
+</headerlevel>
+
+<topic> an_example
+An example
+To show how to work with the classes that are briefly described above we will start with a little
+example. The classes are described in more detail below.
+
+In our example we have one Proview-system communicating with an other node via UDP/IP. We will
+send a few messages in both directions. My node is named 'dumle' and the remote node is named
+'asterix'.
+
+The messages we will send is:
+
+d_a_RequestData <t> 4 Byte
+d_a_Report <t> 20 Byte
+
+and the messages we will receive is:
+
+a_d_Data <t> 365 Byte (as an answer to the d_a_RequestData-message)
+a_d_Error <t> 10 Byte
+
+The configuration in the node-hierarchy looks like this.
+
+The RemoteConfig-object has to be there. I have added a RemnodeUDP object below this and
+configured address and nodename aswell as the port-numbers to communicate on.
+
+<image> dg_fig70.png
+
+Below the RemnodeUDP-object I have added four RemTrans-objects, one for each message. In the
+remrans-objects I have configured the direction (send or receive). Numbered the addresses so I can
+distinguish between the messages and set the sizes on the sending messages.
+
+<image> dg_fig71.png
+
+Below the remtrans-objects I have put the data-buffers. For the smaller messages I have chosen the
+small Buff256-buffer. The Data-message is larger and I have therefor chosen the Buff1440-buffer for
+this message.
+
+<image> dg_fig72.png
+
+<h2>The data structures
+The data structures for the messages are defined in the file ra_plc_user.h in $pwrp_inc-directory. This
+file is automatically included when you compile the plc-code. The structures look like:
+
+<c>typedef struct {
+<c>  pwr_tUInt32  Id;
+<c>} d_a_RequestData;
+<c>
+<c>#define pwr_sClass_d_a_RequestData d_a_RequestData
+<c>
+<c>typedef struct {
+<c>  pwr_tUInt32   Id;
+<c>  pwr_tFloat32  data_1;
+<c>  pwr_tInt32    data_2;
+<c>  pwr_tInt32    data_3;
+<c>  pwr_tInt32    data_4;
+<c>} d_a_Report;
+<c>
+<c>#define pwr_sClass_d_a_Report d_a_Report
+<c>
+<c>typedef struct {
+<c>  pwr_tUInt32   Id;
+<c>  pwr_tFloat32  data_1;
+<c>  ...
+<c>  ...
+<c>  pwr_tInt32    data_xx;
+<c>} a_d_Data;
+<c>
+<c>#define pwr_sClass_a_d_Data a_d_Data
+<c>
+<c>typedef struct {
+<c>  pwr_tUInt32   Id;
+<c>  pwr_tInt32    func_no;
+<c>  pwr_tInt16    err_code;
+<c>} a_d_Data;
+<c>
+<c>#define pwr_sClass_a_d_Error a_d_Error
+
+<h2>The plc code
+
+I have a plc program named Comm. In this program I have placed one RemTransSend-object and one
+RemTransRcv-object. These objects are found below the "Other"-hierarchy in the plc-editor palette.
+To the RemTransSend-object I have connected the RemTrans that I want to send. In this case the
+d_a_ReuestData-message. The message will be sent when the Dv-signal "RequestData" is set. Similarly 
+I have to the RemTransRcv-object connected the a_d_Data-message which will be the answer 
+to my request.
+
+<image> dg_fig73.png
+
+Both the RemTransSend and the RemTransRcv-objects have a subwindow. For the RemTransSend this subwindow 
+will be executed when there is a flank on the snd-pin. When the subwindow has been executed the
+DataValid-attribute of the connected RemTrans-object is set. The transport job for this Remnode 
+sends the message and sets the DataValid-flag to zero.
+
+For the RemTransRcv the subwindow will be executed when the DataValid-attribute in the connected 
+RemTrans-object is set. When the transport job for this Remnode receives a message it fills the
+data buffer with the received data and then sets the DataValid-flag. 
+After execution the flag will be reset.
+
+<h2>Send subwindow
+In the send subwindow we fill in the data in the send-buffer. The send-buffer for the message to send
+is connected to a DataArithm. The special 'classdef'-syntax casts Da1 to be a pointer to a
+d_a_RequestData-struct (or actually it will cast this pointer to a pwr_sClass_d_a_RequestData,
+therefor the define-statement as described above).
+
+<image> dg_fig74.png
+
+<h2>Receive subwindow
+In the receive subwindow unpack the data received in the receive-buffer. The recieve buffer
+is connected to a DataArithm. Again we use the classdef-statement to cast the Da1-pointer.
+We unpack the data to the output pins of the DataArithm. If one DataArithm is not enough to unpack
+the parameters we just add more DataArithm's and continue in the same way. 
+
+<image> dg_fig75.png
+
+</topic>
+
 </chapter>
 
 <chapter>
@@ -1588,7 +1995,8 @@ following:
 - analog attributes, GetAp and StoAp 
 - integer attributes, GetIp and StoIp
 - digital attributes, GetDp and StoDp, SetDp or ResDp 
-
+- string attributes, GetSp and StoSp
+- time attributes, GetAtp, GetDtp, StoAtp and StoDtp
 
 <h2>Logic Blocks 
 A number of objects are available for logical programming, for instance And-gate (And), 
@@ -1880,16 +2288,16 @@ The Configurator
 
 The configurator is used to navigate in and configure the Workbench.
 The configurator displayes the object in one volume. The objects are usually separated in two
-windows, an upper and a lower, and how the separation is done depends on what type of volumes
+windows, a left and a right, and how the separation is done depends on what type of volumes
 is handled.
 
-- For rootvolumes and subvolumes, the plant hierarchy is displayed in the upper window, and
-  the node hierarchy in the lower.
+- For rootvolumes and subvolumes, the plant hierarchy is displayed in the left window, and
+  the node hierarchy in the right.
 
-- For the directory volume, volumes are displayed in the upper window and busses and nodes in
-  the lower.
+- For the directory volume, volumes are displayed in the left window and busses and nodes in
+  the right.
 
-- For class volumes, classes are displayed in the upper window and types in the lower.
+- For class volumes, classes are displayed in the left window and types in the right.
 
 From 'View/TwoWindow' you kan choose wether to display two windows or only one. I only one
 window is displayed, every second time you activate 'TwoWindow' it will be the upper window
@@ -1937,8 +2345,8 @@ volume VolTrafficCross1 is opened, while the other root volume, VolOpTrafficCros
 as a loadfile. Also the class volumes are opened as loadfiles.
 <image> dg_fig24.gif
 
-If no volume is given as argument, the database of the directory volume is opened, and the
-other volumes are opened as dbs-volumes.
+If no volume is given as argument when starting the configurator, the database of the 
+directory volume is opened, and the other volumes are opened as dbs-volumes.
 
 <h1>Navigate <bookmark>wnav_navigate
 The object of the current volume are displayed in the configurator. The objects are ordered
@@ -1989,7 +2397,7 @@ several objects.
 
 From an ergonomic point of view, it is often better to navigat from the keyboard. You mainly
 use the arrow keys. First you have to set input focus to the window, by clicking on it. Input
-focus between the upper and lower window is shifted with TAB.
+focus between the left and right window is shifted with TAB.
 
 With ArrowUp/ArrowDown you select an object. If the object has children, you open the children
 whigh ArrowRight, and close with ArrowLeft. The content of the object, i.e the attributes, are
@@ -2041,10 +2449,10 @@ paste/keepoid to keep the identity.
 You kan copy an object with copy/paste or from the popup menu.
 
 - copy/paste. Select the object or objects that are to be copiedm and activate 'Edit/Copy'
-  (ctrl/C) in the menu. The selected object are now copied to a paste buffer. Select a
-  destination object, and activate 'Edit/Paste' (ctrl/V). The objects in the paste buffer are
+  (Ctrl/C) in the menu. The selected object are now copied to a paste buffer. Select a
+  destination object, and activate 'Edit/Paste' (Ctrl/V). The objects in the paste buffer are
   now placed as siblings to the destination objects. If you instead activate 'Edit/Paste Into'
-  (shift+ctrl/V) the new objects are placed as children to the destination object. If the
+  (Shift+Ctrl/V) the new objects are placed as children to the destination object. If the
   copied objects have children, the children are also copied by copy/paste.
 
 - from the popup menu. Select the object or objects that are to be copied, open the popup
@@ -2055,14 +2463,14 @@ You kan copy an object with copy/paste or from the popup menu.
 
 <h2>Change object name
 The name of an object is changed by selecting the object, and activating 'Edit/Rename' 
-(ctrl/N) in the menu. An input field is opened in the lower region of the configurator, where
+(Ctrl/N) in the menu. An input field is opened in the lower region of the configurator, where
 the new name is entered. An object name kan have max 31 characters.
 
 You can also change the name by displaying the object attributes. In edit mode, the object
 name is displayed above the attributes, and is changed in the same way as an attribute.
 
 <h2>Change an attribute value
-Select the attribute to be changed, and activate 'Functions/Change value' (ctrl/Q) in the menu.
+Select the attribute to be changed, and activate 'Functions/Change value' (Ctrl/Q) in the menu.
 Enter the new value in the input field. If you want to terminate the input, you activate
 'Change value' again.
 
@@ -2123,7 +2531,7 @@ Functions/Close change value <t><t>Close the input field.
 
 The Object Editor has an input field to enter multiline texts. In this case you can not
 terminate the input with 'Enter', as for singleline texts. You either click on the 'Ok' button
-or activate 'Functions/Close change value' (ctrl/W) to terminate.
+or activate 'Functions/Close change value' (Ctrl/T) to terminate.
 
 <b>A Multiline text
 <image> dg_fig31.gif
@@ -2670,8 +3078,10 @@ The topic 'index' is the root topic that is displayed from different utilities
 Specific help topics can be opened from Ge graphs by buttons (actiontype Help), or from the 
 popup menu for an object in the operator environment (method 'Help').
 
+<option> printdisable
 <b>Syntax <link> helpfile syntax
 <b>Conversion <link> helpfile conversion
+<option> printenable
 </topic>
 
 </headerlevel>
@@ -3015,10 +3425,12 @@ the users for different systems, and where you have the possibility to group sys
 common users. The database is designed to face the demands of increasing access control, and
 att the same time keep the administration on an low level.
 
+<option> printdisable
 User database <link> userdatabase
 Example <link> user example
 Login <link> user login
 pwr_user <link> pwr_user
+<option> printenable
 </topic>
 
 <headerlevel>
@@ -4757,6 +5169,160 @@ that are not handled by the converter.
 
 </chapter>
 
+<chapter>
+<topic>opc_intro
+OPC
+Proview has implemented the OPC XML/DA protocol for data exchange with other automation
+software. For more information about OPC see www.opcfoundation.org.
+
+<option> printdisable
+OPC Server <link> opc_server
+OPC Client <link> opc_client
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic>opc_server
+OPC XML/DA Server
+
+An OPC XML/DA Server is a web service from which an OPC XML/DA Client can get information of a 
+Proview system. A opc client can, for example, browse the object hierachy, read and write 
+attribute value, and subscribe to attributes. 
+
+The opc server implements the http protocol as well and is not  connected to a web server. The 
+port number of the opc_server is set to 80, the URI for the web service is on node 'mynode' is
+
+<c>http://mynode
+
+If a web server is present, this normally has allocated the port 80, and another port has to be
+choosen for the opc_sever. If port 8080 is choosen, the URI will be
+
+<c>http://mynode:8080
+
+<h1>Browsing
+The OPC XML/DA browsing supports branches and items. The item contains a value, while the 
+branch is an hierarchical component without a value. There is no support for objects, so an 
+object has to be implemented as a branch, while an attribute is implemented as an item. Also 
+arrays are implemented as branches, while array elements (that is not a class) is implemented 
+as an item.
+
+<h1>Threads
+If the opc client uses the HoldTime and WaitTime attributes in the SubscriptionPolledRefresh 
+request, the opc server has to be multi threaded, that is, for every request, an new thread is 
+created. If the HoldTime and WaitTime is not used (as in the proview opc client), all requests 
+can be handled in a single thread, which is less time consuming. Multithreads or not is 
+configured in the configuration object for the opc server. The default value is 'IfNeeded' 
+which turns on the multithreading for a client if HoldTime or WaitTime are detected.
+
+<h1>Client access
+To gain access to a proview opc server, the ip address of the client has to be configured in 
+the configuration object for the opc server. Here you can also choose if the client has 
+ReadWrite or ReadOnly access, where ReadOnly, allows the client to read and subscribe to 
+attribute values, while ReadWrite also is allowed to write attribute values.
+
+<h1>Buffering of subscriptions
+The server does not support buffering of subscriptions.
+
+<h1>Configuration
+The opc server is configured with a Opc_ServerConfig object that is placed in the Node
+hierarchy. The configuration object will cause a server process (opc_server) to start at 
+proview startup.
+</topic>
+</headerlevel>
+
+<headerlevel>
+<topic> opc_client
+OPC XML/DA Client
+
+The proview opc client is implemented as an extern volume, which is mounted somewhere in the 
+object tree of the root volume. Under the mount object, the branches and items of the server 
+are displayed with special opc objects. An Opc_Hier object represents a branch and Opc_Int an 
+item with an integer value, Opc_Boolean an item with a boolean value etc. If an item object is 
+opened the item value are displayed in a Value attribute, and some other properties as 
+description, lowEU, highEU, engineeringUnit, lowIR and highIR are displayed. When the object is
+opened a subscription is started, and the value is continuously updated. For integer and float 
+items there is also an object graph that displays a trend of the value.
+
+With the opc client you can
+
+- browse the branches and items in Xtt, and also display item values and set item values.
+- subscribe item values and display them in a Ge graph.
+- fetch item values into the plc logic and also write values to items.
+
+The opc client requires that name browsing is implemented in the opc server.
+
+<h1>Ge
+An item value can be displayed in a Ge graph by using the name in the extern volume. For 
+example, if the mount object for the extern volume is 'Ext-P1', and the local name of the item 
+is
+
+<c> /P1/Signals/Ai22
+
+the signal name in Ge will probably be (this is dependent of the browsing function of the 
+server)
+
+<c> Ext-P1-P1-Signals-Ai22.Value##Float32
+
+presuming that it is a float datatype.
+
+<h1>Plc
+Item values can also be handled in the plc program, using the GetExt... and CStoExt... objects.
+The normally used objects for getting and storing attributes GetDp, GetAp, StoDp, StoAp etc. 
+can not be used, as they require that the referenced name is known in the development 
+environment, which is not the case for most extern volumes. In the Ext objects, the reference 
+is made with a name string, making it possible to enter the item name. To get the value of the 
+item in the previous example, you should use a GetExtFloat32 object, and the object name should
+be
+
+<c>Ext-P1-P1-Signals-Ai22.Value
+
+To store a value in an item, lets say /P1/Signals/Ao5, you use a CStoExtFoat32. This objects 
+makes a conditional storage, and only on a positive edge of the condition. Compare with the 
+CStoAp, where the value is stored, as long as the condition is true. The reference name in the 
+CStoExtFloat32 object in this case should be
+
+<c>Ext-P1-P1-Signals-Ao5.Value
+
+<h1>Client process
+For each opc client-server connection a client process has to be started. The executable for 
+this process is opc_provider that has the arguments
+
+ 1. Opc server URL.
+ 2. Extern volume id.
+ 3. Extern volume name.
+ 4. Server identity (optional, default 200).
+
+<h1>Configuration
+<h2>Register ExternVolume
+Register the externvolume in the GlobalVolumeList with a volume name and identity.
+
+<h2>Application file
+Add a line in the application file to start the opc_provider. Here is an example for a opc 
+client connecting to the opc server 'http://servernode:8080'. The registered externvolume has 
+the name MyOpcVolume with volume id 0.1.99.55
+
+<c>opc_provider, opc_provider, noload, run, opc_provider, 9, nodebug, 
+<c>   http://servernode:8080 0.1.99.55 MyOpcVolume
+
+If item values are fetched into the plc, the priority should be set to 4 (sixth argument).
+
+<h2>Mount object
+Create a mount object in the plant hierarchy of the rootvolume, and insert the objid of the 
+volumeobject in the externvolume into the Object attribute. In the example above this objid is 
+_O0.1.99.55:0.
+
+<h2>Hint
+The application file reside on $pwrp_load and has the name 
+
+<c>$pwrp_load/ld_appl_'nodename'_'busnumber'.txt 
+
+where nodename is the name of the node, and busnumber the qcom bus number. If the node is 
+'mynode' and the busnumber is 507, the filename will be
+
+<c> $pwrp_load/ls_appl_mynode_507.txt
+</topic>
+</headerlevel>
+</chapter>
 
 <chapter>
 <TOPIC> help command
@@ -5179,9 +5745,9 @@ the project helpfile or another help file.
 If no helpfile is supplied the subject will be searched for in the base and project helpfiles.
 
 <B>wtt> help 'subject'
-<B>wtt> help 'subject' /file=
+<B>wtt> help 'subject' /helpfile=
 
-/file<t>A help file that contains information of the help subject.
+/helpfile<t>A help file that contains information of the help subject.
 
 <H2>related subjects
 helpfile <LINK> helpfile
