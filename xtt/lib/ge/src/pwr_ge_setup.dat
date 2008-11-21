@@ -211,6 +211,7 @@ menu Hydraulics
   subgraph 	Pump	 	pwr_exe:pwr_hydraulicpump.pwsg 		17
   subgraph 	ReleaseValve	pwr_exe:pwr_releasevalve.pwsg 		19
   subgraph 	Tank	 	pwr_exe:pwr_tank.pwsg			14
+  subgraph 	Tank2	 	pwr_exe:pwr_tank2.pwsg			14
 }
 menu Ventilation
 {
