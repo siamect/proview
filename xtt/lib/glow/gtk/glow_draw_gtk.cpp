@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_gtk.cpp,v 1.15 2008-11-20 10:30:44 claes Exp $
+ * Proview   $Id: glow_draw_gtk.cpp,v 1.16 2008-11-21 10:29:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2538,7 +2538,7 @@ int GlowDrawGtk::print( char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.15 2008-11-20 10:30:44 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.16 2008-11-21 10:29:10 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else
@@ -2851,6 +2851,7 @@ int GlowDrawGtk::gradient_create_pattern( int x, int y, int w, int h,
 					  cairo_pattern_t **pat)
 {
   double r1, g1, b1, r2, g2, b2;
+  int a = 15;
 
   GlowColor::rgb_color( d1, &r1, &g1, &b1);
   GlowColor::rgb_color( d2, &r2, &g2, &b2);
@@ -2912,16 +2913,16 @@ int GlowDrawGtk::gradient_create_pattern( int x, int y, int w, int h,
     double x0,x1,y0,y1;
 
     if ( w > h) {
-      x0 = x+w/2-h/2;
-      y0 = y;
+      x0 = x+ w/2-h/2;
+      y0 = y - (w-h)/a;
       x1 = x+w/2+h/2;
-      y1 = y + h;
+      y1 = y + h + (w-h)/a;
     }
     else {
       y0 = y+h/2-w/2;
-      x0 = x;
+      x0 = x - (h-w)/a;
       y1 = y+h/2+w/2;
-      x1 = x + w;
+      x1 = x + w + (h-w)/a;
     }
     *pat = cairo_pattern_create_linear(x0, y0, x1, y1);
     cairo_pattern_add_color_stop_rgb( *pat, 0.1, r2, g2, b2);
@@ -2933,15 +2934,15 @@ int GlowDrawGtk::gradient_create_pattern( int x, int y, int w, int h,
     // *pat = cairo_pattern_create_linear( x, y, x+w, y+h);
     if ( w > h) {
       x0 = x+w/2-h/2;
-      y0 = y + h;
+      y0 = y + h + (w-h)/a;
       x1 = x+w/2+h/2;
-      y1 = y;
+      y1 = y - (w-h)/a;
     }
     else {
       y1 = y+h/2-w/2;
-      x1 = x + w;
+      x1 = x + w + (h-w)/a;
       y0 = y+h/2+w/2;
-      x0 = x;
+      x0 = x - (h-w)/a;
     }
     *pat = cairo_pattern_create_linear(x0, y0, x1, y1);
     cairo_pattern_add_color_stop_rgb( *pat, 0.1, r2, g2, b2);
@@ -2953,15 +2954,15 @@ int GlowDrawGtk::gradient_create_pattern( int x, int y, int w, int h,
     // *pat = cairo_pattern_create_linear( x, y, x+w, y+h);
     if ( w > h) {
       x0 = x+w/2-h/2;
-      y0 = y + h;
+      y0 = y + h + (w-h)/a;
       x1 = x+w/2+h/2;
-      y1 = y;
+      y1 = y - (w-h)/a;
     }
     else {
       y1 = y+h/2-w/2;
-      x1 = x + w;
+      x1 = x + w + (h-w)/a;
       y0 = y+h/2+w/2;
-      x0 = x;
+      x0 = x - (h-w)/a;
     }
     *pat = cairo_pattern_create_linear(x0, y0, x1, y1);
     cairo_pattern_add_color_stop_rgb( *pat, 0.1, r1, g1, b1);
@@ -2973,15 +2974,15 @@ int GlowDrawGtk::gradient_create_pattern( int x, int y, int w, int h,
 
     if ( w > h) {
       x0 = x+w/2-h/2;
-      y0 = y;
+      y0 = y - (w-h)/a;
       x1 = x+w/2+h/2;
-      y1 = y + h;
+      y1 = y + h + (w-h)/a;
     }
     else {
       y0 = y+h/2-w/2;
-      x0 = x;
+      x0 = x - (h-w)/a;
       y1 = y+h/2+w/2;
-      x1 = x + w;
+      x1 = x + w + (h-w)/a;
     }
     *pat = cairo_pattern_create_linear(x0, y0, x1, y1);
     cairo_pattern_add_color_stop_rgb( *pat, 0.1, r1, g1, b1);
@@ -2993,15 +2994,15 @@ int GlowDrawGtk::gradient_create_pattern( int x, int y, int w, int h,
 
     if ( w > h) {
       x0 = x+w/2-h/2;
-      y0 = y;
+      y0 = y - (w-h)/a;
       x1 = x+w/2+h/2;
-      y1 = y + h;
+      y1 = y + h + (w-h)/a;
     }
     else {
       y0 = y+h/2-w/2;
-      x0 = x;
+      x0 = x - (h-w)/a;
       y1 = y+h/2+w/2;
-      x1 = x + w;
+      x1 = x + w + (h-w)/a;
     }
     *pat = cairo_pattern_create_linear(x0, y0, x1, y1);
     cairo_pattern_add_color_stop_rgb( *pat, 0.1, r1, g1, b1);
@@ -3014,15 +3015,15 @@ int GlowDrawGtk::gradient_create_pattern( int x, int y, int w, int h,
     // *pat = cairo_pattern_create_linear( x, y, x+w, y+h);
     if ( w > h) {
       x0 = x+w/2-h/2;
-      y0 = y + h;
+      y0 = y + h + (w-h)/a;
       x1 = x+w/2+h/2;
-      y1 = y;
+      y1 = y - (w-h)/a;
     }
     else {
       y1 = y+h/2-w/2;
-      x1 = x + w;
+      x1 = x + w + (h-w)/a;
       y0 = y+h/2+w/2;
-      x0 = x;
+      x0 = x - (h-w)/a;
     }
     *pat = cairo_pattern_create_linear(x0, y0, x1, y1);
     cairo_pattern_add_color_stop_rgb( *pat, 0.1, r1, g1, b1);
