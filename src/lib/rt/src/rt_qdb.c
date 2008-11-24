@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qdb.c,v 1.12 2008-09-05 08:59:23 claes Exp $
+ * Proview   $Id: rt_qdb.c,v 1.13 2008-11-24 15:20:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -524,6 +524,11 @@ qdb_Enque (
 
   qdb_AssumeLocked;
 
+  if ( qp->in_quota && qp->in_lc >= qp->in_quota) {
+    *status = QDB__QUOTAEXCEEDED;
+    return 0;
+  }
+    
   pool_Qremove(sts, &qdb->pool, &bp->c.ll);
   if (!bp->c.flags.b.remote && bp->c.flags.b.reply) {
     if (qp->flags.b.reply && bp->b.info.rid == qp->rid) {

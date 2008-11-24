@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qcom.c,v 1.9 2008-01-25 14:34:18 claes Exp $
+ * Proview   $Id: rt_qcom.c,v 1.10 2008-11-24 15:20:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -256,6 +256,8 @@ qcom_CreateQ (
     qid->nid = qdb->my_nid;
     qp->type = type;
     qp->flags.m = flags.m;
+    if ( attr)
+      qp->in_quota = attr->quota;
     qp = qdb_AttachQue(sts, qp, qdb->ap);
     if (qp == NULL) break;
     if (flags.b.broadcast) {
