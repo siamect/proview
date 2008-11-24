@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: sev_server.cpp,v 1.5 2008-11-10 07:57:14 claes Exp $
+ * Proview   $Id: sev_server.cpp,v 1.6 2008-11-24 15:26:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -108,7 +108,7 @@ int sev_server::init( int noneth)
   qid.qix = sev_eProcSevServer;
   qid.nid = 0;
   attr.type = qcom_eQtype_private;
-  attr.quota = 100;
+  attr.quota = 200;
 
   if (!qcom_CreateQ(&sts, &qid, &attr, "SevServer")) {
     if ( sts == QCOM__QALLREXIST) {
