@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_sevhistmon.cpp,v 1.5 2008-11-12 15:49:57 claes Exp $
+ * Proview   $Id: rt_sevhistmon.cpp,v 1.6 2008-11-24 15:21:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,19 +38,16 @@
 int rt_sevhistmon::init()
 {
   pwr_tStatus sts;
-  pwr_tOid hs_oid;
-  pwr_tAttrRef h_aref;
-  pwr_tAttrRef uaref;
-  pwr_tTid a_tid;
-  unsigned int a_size, a_offset, a_dim;
-  pwr_tAName hname;
   qcom_sQid qid;
   qcom_sQid 		qini;
   qcom_sNode		node;
   pwr_tNid		nid;
   pwr_tOid		conf_oid;
-  pwr_sClass_SevHistMonitor *conf_p;
+  pwr_tOName oname;
   
+  errh_Init("pwr_sevhistmon", errh_eNAnix);
+  // errh_SetStatus( PWR__SRVSTARTUP);
+
   sts = gdh_Init( "rt_sevhistmon");
   if ( EVEN(sts)) throw co_error(sts);
 
@@ -60,10 +57,15 @@ int rt_sevhistmon::init()
     errh_CErrLog( PWR__SRVNOTCONF, 0);
     exit(0);
   }
-  sts = gdh_ObjidToPointer( conf_oid, (void **)&conf_p);
-  if ( EVEN(sts)) throw co_error(sts);
 
-  m_scantime = conf_p->ScanTime;
+  m_sts = gdh_ObjidToName( conf_oid, oname, sizeof(oname), cdh_mName_volumeStrict);
+  if ( EVEN(m_sts)) throw co_error(m_sts);
+
+  m_sts = gdh_RefObjectInfo( oname, (void **)&m_confp, &m_conf_refid, sizeof(*m_confp));
+  if ( EVEN(m_sts)) throw co_error(m_sts);
+
+  m_confp->Status = m_server_status = PWR__SRVSTARTUP;
+  m_scantime = m_confp->ScanTime;
   if ( m_scantime < 0.02)
     m_scantime = 0.02;
 
@@ -109,19 +111,39 @@ int rt_sevhistmon::init()
     m_nodes.push_back( n);
   }
 
+  while(EVEN(gdh_NethandlerRunning()))
+    sleep(1);
+
+  return init_objects();
+}
+
+int rt_sevhistmon::init_objects()
+{
+  pwr_tStatus sts;
+  pwr_tOid hs_oid;
+  pwr_tAttrRef h_aref;
+  pwr_tAttrRef uaref;
+  pwr_tTid a_tid;
+  unsigned int a_size, a_offset, a_dim;
+  pwr_tAName hname;
+  pwr_tOName oname;
+
   // Get all SevHist and SevHistThread objects
+  int thread_cnt = 0;
   for ( sts = gdh_GetClassList( pwr_cClass_SevHistThread, &hs_oid);
 	ODD(sts);
 	sts = gdh_GetNextObject( hs_oid, &hs_oid)) {
     sev_sevhistthread hs;
-    pwr_sClass_SevHistThread *hs_p;
   
-    m_sts = gdh_ObjidToPointer( hs_oid, (void **)&hs_p);
+    m_sts = gdh_ObjidToName( hs_oid, oname, sizeof(oname), cdh_mName_volumeStrict);
+    if ( EVEN(m_sts)) throw co_error(m_sts);
+
+    m_sts = gdh_RefObjectInfo( oname, (void **)&hs.threadp, &hs.refid, sizeof(*hs.threadp));
     if ( EVEN(m_sts)) throw co_error(m_sts);
 
     hs.oid = hs_oid;
-    hs.scantime = hs_p->ScanTime;
-    strncpy( hs.nodename, hs_p->ServerNode, sizeof(hs.nodename));
+    hs.scantime = hs.threadp->ScanTime;
+    strncpy( hs.nodename, hs.threadp->ServerNode, sizeof(hs.nodename));
     hs.size = 0;
 
     bool found = false;
@@ -132,6 +154,7 @@ int rt_sevhistmon::init()
 	break;
       }
     }
+    m_confp->ThreadObjects[thread_cnt++] = hs_oid;
     if ( !found) {
       pwr_tOName oname;
 
@@ -139,11 +162,16 @@ int rt_sevhistmon::init()
       if ( EVEN(m_sts)) throw co_error(m_sts);
 
       errh_Error( "Unknown nodename, %s", oname);
-      continue;
+      hs.threadp->Status = SEV__UNKNOWNNODE;
+      hs.configerror = 1;
     }
-    
+    else
+      hs.threadp->Status = SEV__INIT;
     m_hs.push_back( hs);
   }
+
+  for ( int i = thread_cnt; i < int(sizeof(m_confp->ThreadObjects)/sizeof(m_confp->ThreadObjects[0])); i++)
+    m_confp->ThreadObjects[i] = pwr_cNOid;
 
   for ( sts = gdh_GetClassListAttrRef( pwr_cClass_SevHist, &h_aref);
 	ODD(sts);
@@ -228,23 +256,34 @@ int rt_sevhistmon::init()
     }
     m_hs[hs_idx].size += h.size;
     m_hs[hs_idx].sevhistlist.push_back(h);
+    m_hs[hs_idx].threadp->NoOfItems++;
   }
 
-  connect();
+  set_status();
 
   return 1;
 }
 
-int rt_sevhistmon::close()
+int rt_sevhistmon::close_objects()
 {
   for ( unsigned int i = 0; i < m_hs.size(); i++) {
     for ( unsigned int j = 0; j < m_hs[i].sevhistlist.size(); j++)
       gdh_UnrefObjectInfo( m_hs[i].sevhistlist[j].refid);
+    gdh_UnrefObjectInfo( m_hs[i].refid);
   }
   m_hs.clear();
+
   return 1;
 }
 
+
+int rt_sevhistmon::close()
+{
+  close_objects();
+  m_confp->Status = PWR__SRVTERM;
+  gdh_UnrefObjectInfo( m_conf_refid);
+  return 1;
+}
 
 int rt_sevhistmon::send_data()
 {
@@ -255,12 +294,18 @@ int rt_sevhistmon::send_data()
   sev_sMsgHistDataStore *msg;
   sev_sHistData *dp;
   int		stime;
+  pwr_tStatus   conf_sts = SEV__SUCCESS;
 
   for ( unsigned int i = 0; i < m_hs.size(); i++) {
+    if ( m_hs[i].configerror)
+      continue;
+
     stime = int(m_hs[i].scantime / m_scantime + 0.5);
     if ( !stime || m_loopcnt % stime != 0)
       continue;
 	   
+    m_hs[i].threadp->ScanCount++;
+
     msize = m_hs[i].sevhistlist.size() * (sizeof(*dp) - sizeof(dp->data)) + m_hs[i].size; 
     msize += sizeof(*msg) - sizeof(msg->Data);
 
@@ -291,25 +336,62 @@ int rt_sevhistmon::send_data()
     put.msg_id = m_msg_id++;
 
     if ( !qcom_Put( &sts, &tgt, &put)) {
+      m_hs[i].threadp->ErrorCount++;
+      m_hs[i].threadp->Status = sts;
+      conf_sts = sts;
       qcom_Free( &sts, put.data);
       continue;
     }    
+    m_hs[i].threadp->SendCount++;
+    m_hs[i].threadp->Status = sts;
+  }
+
+  set_status();
+  return 1;
+}
+
+void rt_sevhistmon::set_status()
+{
+  pwr_tStatus sts = m_server_status;
+
+  for ( unsigned int i = 0; i < m_hs.size(); i++) {
+    if ( EVEN( m_hs[i].threadp->Status) &&
+	 errh_Severity( m_hs [i].threadp->Status) > errh_Severity( sts)) {
+      sts = m_hs[i].threadp->Status;
+    }
+  }
+  m_confp->Status = sts;
+}
+
+int rt_sevhistmon::retry_connect()
+{
+  pwr_tStatus	sts;  
+
+  for ( unsigned int i = 0; i < m_nodes.size(); i++) {
+
+    if ( m_nodes[i].is_server && !m_nodes[i].connected) {
+      m_nodes[i].ctime += m_scantime;
+      if ( m_nodes[i].ctime > 60) {
+	m_nodes[i].ctime = 0;
+
+	send_connect( m_nodes[i].nid, &sts);
+      }
+    }
   }
   return 1;
 }
 
 int rt_sevhistmon::connect()
 {
-  sev_sMsgAny 	*msg;
-  qcom_sQid   	tgt;
-  qcom_sPut	put;
-  pwr_tStatus	sts, lsts;  
+  pwr_tStatus	sts;  
 
   for ( unsigned int i = 0; i < m_nodes.size(); i++) {
 
     // Check if this node should be connected
     bool found = false;
     for ( unsigned int j = 0; j < m_hs.size(); j++) {
+      if ( m_hs[i].configerror)
+	continue;
       if ( cdh_NoCaseStrcmp( m_nodes[i].name, m_hs[j].nodename) == 0) {
 	found = true;
 	break;
@@ -318,26 +400,39 @@ int rt_sevhistmon::connect()
     if ( !found)
       continue;
 
-    tgt.nid = m_nodes[i].nid;
-    tgt.qix = sev_eProcSevServer;
-    
-    put.reply.nid = m_nodes[0].nid;
-    put.reply.qix = sev_eProcSevClient;
-    put.type.b = (qcom_eBtype) sev_cMsgClass;
-    put.type.s = (qcom_eStype) sev_eMsgType_NodeUp;
-    put.msg_id = m_msg_id++;
-    put.size = sizeof(*msg);
-    msg = (sev_sMsgAny *) qcom_Alloc(&lsts, put.size);
-    put.data = msg;
+    m_nodes[i].is_server = 1;
 
-    msg->Type = sev_eMsgType_NodeUp;
-
-    if ( !qcom_Put( &sts, &tgt, &put)) {
-      qcom_Free( &sts, put.data);
-    }    
+    send_connect( m_nodes[i].nid, &sts);
   }
-
   return 1;
+}
+
+bool rt_sevhistmon::send_connect( pwr_tNid nid, pwr_tStatus *sts)
+{
+  sev_sMsgAny 	*msg;
+  qcom_sQid   	tgt;
+  qcom_sPut	put;
+  pwr_tStatus   lsts;  
+
+  tgt.nid = nid;
+  tgt.qix = sev_eProcSevServer;
+    
+  put.reply.nid = m_nodes[0].nid;
+  put.reply.qix = sev_eProcSevClient;
+  put.type.b = (qcom_eBtype) sev_cMsgClass;
+  put.type.s = (qcom_eStype) sev_eMsgType_NodeUp;
+  put.msg_id = m_msg_id++;
+  put.size = sizeof(*msg);
+  msg = (sev_sMsgAny *) qcom_Alloc(&lsts, put.size);
+  put.data = msg;
+
+  msg->Type = sev_eMsgType_NodeUp;
+
+  if ( !qcom_Put( sts, &tgt, &put)) {
+    qcom_Free( &lsts, put.data);
+  }    
+
+  return ODD(*sts);
 }
 
 int rt_sevhistmon::send_itemlist( pwr_tNid nid)
@@ -350,8 +445,20 @@ int rt_sevhistmon::send_itemlist( pwr_tNid nid)
   pwr_tAName	aname;
   char		*s;
 
+  // Identify node
+  bool found = false;
+  for ( unsigned int i = 0; i < m_nodes.size(); i++) {
+    if ( nid == m_nodes[i].nid) {
+      found = true;
+      m_nodes[i].connected = 1;
+      break;
+    }
+  }
+
   // Count items for this node
   for ( unsigned int i = 0; i < m_hs.size(); i++) {
+    if ( m_hs[i].configerror)
+      continue;
     if ( nid == m_hs[i].nid)
       item_cnt += m_hs[i].sevhistlist.size();
   }
@@ -369,6 +476,8 @@ int rt_sevhistmon::send_itemlist( pwr_tNid nid)
 
   int k = 0;
   for ( unsigned int i = 0; i < m_hs.size(); i++) {
+    if ( m_hs[i].configerror)
+      continue;
     if ( nid == m_hs[i].nid) {
       for ( unsigned int j = 0; j < m_hs[i].sevhistlist.size(); j++) {
 	((sev_sMsgHistItems *)put.data)->Items[k].oid = m_hs[i].sevhistlist[j].aref.Objid;
@@ -411,6 +520,22 @@ int rt_sevhistmon::send_itemlist( pwr_tNid nid)
     qcom_Free( &sts, put.data);
     return 0;
   }    
+
+  // If all nodes are connected, set running status
+  if ( !m_allconnected) {
+    bool all_conn = true;
+    for ( unsigned int i = 0; i < m_nodes.size(); i++) {
+      if ( m_nodes[i].is_server && !m_nodes[i].connected) {
+	all_conn = false;
+	break;
+      }
+    }
+    if ( all_conn) {
+      m_allconnected = 1;
+      m_server_status = PWR__SRUN;
+      set_status();
+    }
+  }
   return 1;
 }
 
@@ -436,7 +561,6 @@ int rt_sevhistmon::mainloop()
 
     switch (get.type.b) {
     case sev_cMsgClass:
-      printf( "Message received\n");
       switch ( get.type.s) {
       case sev_eMsgType_NodeUp:
       case sev_eMsgType_HistItemsRequest:
@@ -450,15 +574,41 @@ int rt_sevhistmon::mainloop()
       qcom_sEvent *ep = (qcom_sEvent*) get.data;
 
       new_event.m  = ep->mask;
-      if (new_event.b.terminate)
+      if (new_event.b.oldPlcStop && !m_swap) {
+	m_swap = 1;
+	// errh_SetStatus( PWR__SRVRESTART);
+	m_confp->Status = PWR__SRVRESTART;
+	close();
+      } 
+      else if (new_event.b.swapDone && m_swap) {
+	m_swap = 0;
+	try {
+	  init_objects();
+	  connect();
+	}
+	catch ( co_error e) {
+	  errh_Error( "SevHistMonitor terminating, %m", e.sts());
+	  exit(0);
+	}
+	// errh_SetStatus( PWR__SRUN);
+	m_confp->Status = PWR__SRUN;
+	errh_Info("Warm restart completed");
+      }
+      else if (new_event.b.terminate) {
+	m_confp->Status = PWR__SRVTERM;
 	exit(0);
+      }
       break;
     }
     default: ;
     }
 
     qcom_Free( &sts, mp);
+
+    if ( !m_allconnected)
+      retry_connect();
   }
+
 }
 
 int main()
@@ -467,6 +617,7 @@ int main()
 
   try {
     client.init();
+    client.connect();
   }
   catch ( co_error e) {
     errh_Error( "SevHistMonitor terminating, %m", e.sts());

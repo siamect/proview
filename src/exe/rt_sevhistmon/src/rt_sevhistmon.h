@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_sevhistmon.h,v 1.4 2008-10-31 12:51:30 claes Exp $
+ * Proview   $Id: rt_sevhistmon.h,v 1.5 2008-11-24 15:21:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -44,24 +44,33 @@ class sev_sevhist {
 
 class sev_sevhistthread {
  public:
-  pwr_tOid oid;
-  pwr_tFloat32 scantime;
-  char nodename[80];
-  pwr_tNid nid;
-  unsigned int size;
+  sev_sevhistthread() : configerror(0) {}
+  pwr_tOid 	oid;
+  pwr_tFloat32 	scantime;
+  char 		nodename[80];
+  pwr_tNid 	nid;
+  unsigned int 	size;
+  pwr_sClass_SevHistThread *threadp;
+  pwr_tRefId 	refid;
+  int 		configerror;
   vector<sev_sevhist> sevhistlist;  
 };
 
 class sev_node {
  public:
+  sev_node() : is_server(0), connected(0), ctime(0) {}
   pwr_tNid 	nid;
   char 		name[80];
+  int		is_server;
+  int		connected;
+  double       	ctime;
 };
 
 class rt_sevhistmon {
  public:
 
-  rt_sevhistmon() : m_msg_id(0), m_next_rix(0), m_loopcnt(0) {}
+  rt_sevhistmon() : m_msg_id(0), m_next_rix(0), m_loopcnt(0), m_allconnected(0), m_server_status(0), 
+    m_swap(0) {}
 
   pwr_tStatus m_sts;
   vector<sev_sevhistthread> m_hs;
@@ -70,11 +79,21 @@ class rt_sevhistmon {
   unsigned int m_next_rix;
   unsigned int m_loopcnt;
   float m_scantime;
+  pwr_sClass_SevHistMonitor *m_confp;
+  pwr_tRefId m_conf_refid;
+  int m_allconnected;
+  pwr_tStatus m_server_status;
+  int m_swap;
 
   int init();
+  int init_objects();
   int close();
+  int close_objects();
   int mainloop();
+  void set_status();
   int connect();
+  int retry_connect();
+  bool send_connect( pwr_tNid nid, pwr_tStatus *sts);
   int send_itemlist( pwr_tNid nid);
   int send_data();
 };
