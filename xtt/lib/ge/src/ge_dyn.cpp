@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.69 2008-10-31 12:51:34 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.70 2008-11-24 15:24:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -11017,11 +11017,33 @@ int GeOpenGraph::action( grow_tObject object, glow_tEvent event)
 
     if ( dyn->graph->command_cb) {
       char command[400];
-      char cmd[400];
+      char cmd[400] = "";
 
-      sprintf( command, "open graph/object=%s", graph_object);
-      dyn->graph->get_command( command, cmd, dyn);
-      (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+      if ( strcmp( graph_object, "") != 0)
+	sprintf( command, "open graph/object=%s", graph_object);
+      else {
+	// Open classgraph for popup menu object
+	if ( dyn->total_action_type & ge_mActionType_PopupMenu) {
+	  for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
+	    if ( elem->action_type == ge_mActionType_PopupMenu) {
+	      sprintf( command, "open graph/class/instance=%s", ((GePopupMenu *)elem)->ref_object);
+	      break;
+	    }
+	  }
+	}
+	else if ( dyn->total_dyn_type & ge_mDynType_HostObject) {
+	  for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
+	    if ( elem->dyn_type == ge_mDynType_HostObject) {
+	      sprintf( command, "open graph/class/instance=%s", ((GeHostObject *)elem)->hostobject);
+	      break;
+	    }
+	  }
+	}
+      }
+      if ( strcmp( command, "") != 0) {
+	dyn->graph->get_command( command, cmd, dyn);
+	(dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+      }
     }
     break;
   default: ;    
