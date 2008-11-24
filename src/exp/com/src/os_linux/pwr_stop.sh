@@ -1,5 +1,5 @@
 #
-# Proview   $Id: pwr_stop.sh,v 1.2 2005-09-01 14:57:49 claes Exp $
+# Proview   $Id: pwr_stop.sh,v 1.3 2008-11-24 15:22:42 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -28,6 +28,8 @@
   kill -9 `ps ax | grep "jpwr.rt" | awk '{ print $1}'`
   kill -9 `ps ax | grep "rs_nmps" | awk '{ print $1}'`
   kill -9 `ps ax | grep "rs_remote" | awk '{ print $1}'`
+  kill -9 `ps ax | grep "sev_server" | awk '{ print $1}'`
+  kill -9 `ps ax | grep "opc_server" | awk '{ print $1}'`
   if [ -u $pwr_exe/rt_ini ]; then
     user=`ls -al $pwr_exe/rt_ini | awk '{ print $3}'`
   else
