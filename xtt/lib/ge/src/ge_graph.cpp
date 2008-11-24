@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.56 2008-11-20 10:30:51 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.57 2008-11-24 15:25:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -4368,6 +4368,9 @@ int Graph::get_reference_name( char *name, char *tname)
     pwr_tAName refattrname = "";
     char *s;
     pwr_sAttrRef aref;
+    pwr_tOid oid;
+    pwr_tTypeId atid;
+    pwr_tUInt32 asize, aoffs, aelem;
 
     if ( name[1] == '(') {
       strcpy( refname, &name[2]);
@@ -4379,12 +4382,25 @@ int Graph::get_reference_name( char *name, char *tname)
     else
       strcpy( refname, &name[1]);
 
-    sts = gdh_GetObjectInfo( refname, &aref, sizeof(aref));
+    sts = gdh_GetAttributeCharacteristics( refname, &atid, &asize, &aoffs, &aelem);
     if ( EVEN(sts)) return sts;
 
-    sts = gdh_AttrrefToName( &aref, aname, sizeof(aname), cdh_mName_volumeStrict);
-    if ( EVEN(sts)) return sts;
+    if ( asize == sizeof(pwr_tOid)) {
+      // Reference is an objid
+      sts = gdh_GetObjectInfo( refname, &oid, sizeof(oid));
+      if ( EVEN(sts)) return sts;
 
+      sts = gdh_ObjidToName( oid, aname, sizeof(aname), cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+    }
+    else {
+      // Reference is an attrref
+      sts = gdh_GetObjectInfo( refname, &aref, sizeof(aref));
+      if ( EVEN(sts)) return sts;
+
+      sts = gdh_AttrrefToName( &aref, aname, sizeof(aname), cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+    }
     strcat( aname, refattrname);
     strcpy( tname, aname);
   }
