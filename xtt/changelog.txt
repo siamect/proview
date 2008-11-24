@@ -107,4 +107,6 @@
 080915 cs  ge        Bugfix in erase location for annotation text in rotated subgraphs.
 081006 cs  xtt       In command 'open graph /object' the qualifier /access can be used.
 081009 cs  ge        Gtk images for question, info, error and waring added to the Ge image palette.
-081024 xa  flow      Bugfix in multiline annotation text height calculation.
+081024 cs  flow      Bugfix in multiline annotation text height calculation.
+081120 cs  ge        Functionallity for gradient colors added.
+081121 cs  ge        Dynamic OpenGraph without any object supplied, opens classgraph for object in PopupMenu or HostObject dynamics.

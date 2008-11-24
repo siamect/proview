@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: rt_sev_msg.msg,v 1.1 2008-07-17 11:38:21 claes Exp $
+!  Proview   $Id: rt_sev_msg.msg,v 1.2 2008-11-24 15:21:49 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -27,6 +27,8 @@ nosuchnode	<No such node exists>					/error
 curvetype	<Uable to draw a curve for this type>			/error
 nodatatime	<No data found in this time interval>			/error
 noitems		<No items found>					/error
+unknownnode     <Unknown server nodename>				/error
+init		<Initialization done>					/info
 .end
 
 

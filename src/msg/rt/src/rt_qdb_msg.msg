@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: rt_qdb_msg.msg,v 1.2 2005-09-01 14:58:00 claes Exp $
+!  Proview   $Id: rt_qdb_msg.msg,v 1.3 2008-11-24 15:21:49 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -30,5 +30,7 @@ linked		<buffer is linked>					/error
 alrcre		<database is already created>				/error
 alrmap		<database is already mapped>				/error
 net_send	<error sending to network>				/error
+quotaexceeded	<queue quota exceeded>					/error
+
 
 .end
