@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_sevhistthread.wb_load,v 1.1 2008-09-09 11:30:00 claes Exp $
+!  Proview   $Id: pwrb_c_sevhistthread.wb_load,v 1.2 2008-11-24 15:22:18 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -69,6 +69,58 @@ SObject pwrb:Class
       Object ScanTime $Attribute 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Status of sev server link.
+      !*/
+      Object Status $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Status"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Number of items handled by this thread.
+      !*/
+      Object NoOfItems $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Scan counter.
+      !*/
+      Object ScanCount $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Send counter.
+      !  Counter of the number of messages sent to the server for this thread.
+      !*/
+      Object SendCount $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Error counter.
+      !  Counter for message errors.
+      !*/
+      Object ErrorCount $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
     EndObject
