@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.cpp,v 1.17 2008-10-31 12:51:29 claes Exp $
+ * Proview   $Id: opc_provider.cpp,v 1.18 2008-11-25 08:13:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1274,7 +1274,7 @@ void opc_provider::errlog( std::string* item, std::vector<s0__OPCError *>& errve
 
 void usage()
 {
-  cout << "remote_pvd_pwrcli   Proview provider client" << endl << endl <<
+  cout << "opc_provider   Proview Opc client" << endl << endl <<
     "Arguments: " << endl <<
     "  1   Opc server URL" << endl <<
     "  2   Extern volume id" << endl <<
@@ -1291,7 +1291,7 @@ int main(int argc, char *argv[])
   int server_id;
   
   /* Read arguments */
-  if ( argc < 4) {
+  if ( argc < 5) {
     usage();
     exit(0);
   }
