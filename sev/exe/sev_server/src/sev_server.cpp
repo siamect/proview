@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: sev_server.cpp,v 1.6 2008-11-24 15:26:08 claes Exp $
+ * Proview   $Id: sev_server.cpp,v 1.7 2008-11-26 15:27:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -533,4 +533,6 @@ int main (int argc, char *argv[])
   srv.connect();
   srv.mainloop();
 }
+#else
+int main(){}
 #endif
