@@ -110,3 +110,4 @@
 081024 cs  flow      Bugfix in multiline annotation text height calculation.
 081120 cs  ge        Functionallity for gradient colors added.
 081121 cs  ge        Dynamic OpenGraph without any object supplied, opens classgraph for object in PopupMenu or HostObject dynamics.
+081126 cs  xtt       Method OpenGraph always viewed on XttGraph objects.
