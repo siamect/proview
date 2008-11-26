@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_c_object.cpp,v 1.21 2008-10-09 08:56:54 claes Exp $
+ * Proview   $Id: xtt_c_object.cpp,v 1.22 2008-11-26 15:25:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -808,6 +808,18 @@ static pwr_tStatus OpenGraph( xmenu_sMenuCall *ip)
 
   aref = *objar;
   sts = XNAV__SUCCESS;
+
+  sts = gdh_GetAttrRefTid( objar, &classid);
+  if ( EVEN(sts)) return sts;
+
+  if ( classid == pwr_cClass_XttGraph) {
+    sts = gdh_AttrrefToName( objar, name, sizeof(name), cdh_mNName);
+    strcpy( cmd, "ope gra/obj=");
+    strcat( cmd, name);
+    sts = ((XNav *)ip->EditorContext)->command( cmd);
+    return XNAV__SUCCESS;
+  }
+
   while( ODD(sts)) {
     sts = gdh_AttrrefToName( &aref, name, sizeof(name),
 			cdh_mName_volumeStrict);
@@ -861,6 +873,13 @@ static pwr_tStatus OpenGraphFilter( xmenu_sMenuCall *ip)
 
   aref = *objar;
   sts = XNAV__SUCCESS;
+
+  sts = gdh_GetAttrRefTid( objar, &classid);
+  if ( EVEN(sts)) return sts;
+
+  if ( classid == pwr_cClass_XttGraph)
+    return XNAV__SUCCESS;
+
   while( ODD(sts)) {
     sts = gdh_AttrrefToName( &aref, name, sizeof(name),
 			     cdh_mName_volumeStrict);
