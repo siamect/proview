@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msglist.cpp,v 1.9 2008-10-31 12:51:30 claes Exp $
+ * Proview   $Id: co_msglist.cpp,v 1.10 2008-11-28 17:14:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -78,10 +78,10 @@ void MsgListBrow::create_nodeclasses()
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_default, 2.2, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_default, 9, 0.6, 2,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
 
   // Nodeclass for Error
@@ -95,10 +95,10 @@ void MsgListBrow::create_nodeclasses()
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_error, 2.2, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_error, 9, 0.6, 2,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
 
   // Nodeclass for Fatal
@@ -112,10 +112,10 @@ void MsgListBrow::create_nodeclasses()
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_fatal, 2.2, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_fatal, 9, 0.6, 2,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
 
   // Nodeclass for Warning
@@ -129,10 +129,10 @@ void MsgListBrow::create_nodeclasses()
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_warning, 2.2, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_warning, 9, 0.6, 2,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
 
   // Nodeclass for Info
@@ -146,10 +146,10 @@ void MsgListBrow::create_nodeclasses()
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_info, 2.2, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_info, 9, 0.6, 2,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
 
   // Nodeclass for Success
@@ -163,10 +163,10 @@ void MsgListBrow::create_nodeclasses()
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_success, 2.2, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_success, 9, 0.6, 2,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine,
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine,
 		0);
 }
 

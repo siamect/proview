@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growannot.cpp,v 1.12 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_growannot.cpp,v 1.13 2008-11-28 17:13:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -95,9 +95,22 @@ void GrowAnnot::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
   int rot;
   double trf_scale = trf.vertical_scale( t);
   int idx = int( trf_scale * w->zoom_factor_y / w->base_zoom_factor * (text_size +4) - 4);
+  double tsize = trf_scale * w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
   if ( idx < 0)
     return;
   idx = min( idx, DRAW_TYPE_SIZE-1);
+
+  glow_eFont lfont;
+  glow_eDrawType ldraw_type;
+
+  if ( node && ((GrowNode *)node)->text_font != glow_eFont_No) {
+    lfont = ((GrowNode *)colornode)->text_font;
+    ldraw_type = ((GrowNode *)colornode)->text_type;
+  }
+  else {
+    lfont = font;
+    ldraw_type = draw_type;
+  }
 
   if (!t)
   {
@@ -129,8 +142,8 @@ void GrowAnnot::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 	 adjustment == glow_eAdjustment_Center)
       ctx->gdraw->get_text_extent( ((GlowNode *) node)->annotv[number],
 				   strlen(((GlowNode *) node)->annotv[number]),
-				   draw_type, idx, font,
-				   &width, &height, &descent);
+				   ldraw_type, idx, lfont,
+				   &width, &height, &descent, tsize);
 
     switch ( adjustment) {
     case glow_eAdjustment_Left:
@@ -166,15 +179,15 @@ void GrowAnnot::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
     } 
 
     ctx->gdraw->text( w, x1, y1,
-		    ((GlowNode *) node)->annotv[number], 
-		    strlen(((GlowNode *) node)->annotv[number]), draw_type, color, idx, 
-		    highlight, 0, font);
+		      ((GlowNode *) node)->annotv[number], 
+		      strlen(((GlowNode *) node)->annotv[number]), ldraw_type, color, idx, 
+		      highlight, 0, lfont, tsize);
     if ( ((GlowNode *) node)->annotv_inputmode[number])
       ctx->gdraw->text_cursor( w, x1, y1,
-			     ((GlowNode *) node)->annotv[number],
-			     strlen(((GlowNode *) node)->annotv[number]),
-			     draw_type, color, idx, highlight, 
-			     ((GrowNode *)node)->input_position, font);
+			       ((GlowNode *) node)->annotv[number],
+			       strlen(((GlowNode *) node)->annotv[number]),
+			       ldraw_type, color, idx, highlight, 
+			       ((GrowNode *)node)->input_position, lfont, tsize);
     break;
   }
   case glow_eAnnotType_MultiLine: {
@@ -186,13 +199,16 @@ void GrowAnnot::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
     color = ((GrowCtx *)ctx)->get_drawtype( color_drawtype, glow_eDrawType_LineHighlight,
 					    highlight, (GrowNode *)colornode, 2);
 
-    ctx->gdraw->get_text_extent( "", 0, draw_type, idx, font, &z_width, &z_height,
-				 &z_descent);
+    ctx->gdraw->get_text_extent( "", 0, ldraw_type, idx, lfont, &z_width, &z_height,
+				 &z_descent, tsize);
     for ( s = ((GlowNode *) node)->annotv[number]; *s; s++) {
       if ( *s == 10) {
-	if ( len)
+	if ( len) {
+	  *s = 0;
 	  ctx->gdraw->text( w, x1, y1 + line_cnt * z_height, line, 
-			  len, draw_type, color, idx, highlight, 0, font);
+			    len, ldraw_type, color, idx, highlight, 0, lfont, tsize);
+	  *s = 10;
+	}
 	len = 0;
 	line = s+1;
 	line_cnt++;
@@ -202,7 +218,7 @@ void GrowAnnot::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
     }
     if ( len)
       ctx->gdraw->text( w, x1, y1 + line_cnt * z_height, line, 
-		      len, draw_type, color, idx, highlight, 0, font);
+			len, ldraw_type, color, idx, highlight, 0, lfont, tsize);
     break;
   }
   }
@@ -225,6 +241,7 @@ void GrowAnnot::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
   int rot;
   double trf_scale = trf.vertical_scale( t);
   int idx = int( trf_scale * w->zoom_factor_y / w->base_zoom_factor * (text_size +4) - 4);
+  double tsize = trf_scale * w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
   if ( idx < 0)
     return;
   idx = min( idx, DRAW_TYPE_SIZE-1);
@@ -254,7 +271,7 @@ void GrowAnnot::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
 	ctx->gdraw->get_text_extent( ((GlowNode *) node)->annotv[number],
 				     strlen(((GlowNode *) node)->annotv[number]),
 				     draw_type, idx, font,
-				     &width, &height, &descent);
+				     &width, &height, &descent, tsize);
 
       switch ( adjustment) {
       case glow_eAdjustment_Left:
@@ -286,8 +303,9 @@ void GrowAnnot::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
       } 
 
       ctx->gdraw->text_erase( w, x1, y1,
-		((GlowNode *) node)->annotv[number], 
-		strlen(((GlowNode *) node)->annotv[number]), draw_type, idx, 0, font);
+			      ((GlowNode *) node)->annotv[number], 
+			      strlen(((GlowNode *) node)->annotv[number]), draw_type, idx, 0, font,
+			      tsize);
       break;
     }
     case glow_eAnnotType_MultiLine:
@@ -298,12 +316,15 @@ void GrowAnnot::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
       char *line = ((GlowNode *) node)->annotv[number];
       char *s;
       ctx->gdraw->get_text_extent( "", 0, draw_type, idx, font, &z_width, &z_height,
-				   &z_descent);
+				   &z_descent, tsize);
       for ( s = ((GlowNode *) node)->annotv[number]; *s; s++) {
         if ( *s == 10) {
-	  if ( len)
+	  if ( len) {
+	    *s = 0;
             ctx->gdraw->text_erase( w, x1, y1 + line_cnt * z_height, line, 
-				    len, draw_type, idx, 0, font);
+				    len, draw_type, idx, 0, font, tsize);
+	    *s = 10;
+	  }
 	  len = 0;
 	  line = s+1;
 	  line_cnt++;
@@ -313,7 +334,7 @@ void GrowAnnot::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
       }
       if ( len)
         ctx->gdraw->text_erase( w, x1, y1 + line_cnt * z_height, line, 
-				len, draw_type, idx, 0, font);
+				len, draw_type, idx, 0, font, tsize);
       break;
     }
   }
@@ -330,9 +351,22 @@ void GrowAnnot::erase_background( GlowWind *w, GlowTransform *t, int hot, void *
     return;
   double trf_scale = trf.vertical_scale( t);
   int idx = int( trf_scale * w->zoom_factor_y / w->base_zoom_factor * (text_size +4) - 4);
+  double tsize = trf_scale * w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
   if ( idx < 0)
     return;
   idx = min( idx, DRAW_TYPE_SIZE-1);
+
+  glow_eFont lfont;
+  glow_eDrawType ldraw_type;
+
+  if ( node && ((GrowNode *)node)->text_font != glow_eFont_No) {
+    lfont = ((GrowNode *)node)->text_font;
+    ldraw_type = ((GrowNode *)node)->text_type;
+  }
+  else {
+    lfont = font;
+    ldraw_type = draw_type;
+  }
 
   if (!t) {
     x1 = int( trf.x( p.x, p.y) * w->zoom_factor_x) - w->offset_x;
@@ -356,8 +390,9 @@ void GrowAnnot::erase_background( GlowWind *w, GlowTransform *t, int hot, void *
       }
       else
         ctx->gdraw->text_erase( w, x1, y1,
-		((GlowNode *) node)->annotv[number], 
-		strlen(((GlowNode *) node)->annotv[number]), draw_type, idx, 0, font);
+				((GlowNode *) node)->annotv[number], 
+				strlen(((GlowNode *) node)->annotv[number]), ldraw_type, idx, 0, 
+				lfont, tsize);
       break;
     }
     case glow_eAnnotType_MultiLine: {
@@ -366,13 +401,16 @@ void GrowAnnot::erase_background( GlowWind *w, GlowTransform *t, int hot, void *
       int line_cnt = 0;
       char *line = ((GlowNode *) node)->annotv[number];
       char *s;
-      ctx->gdraw->get_text_extent( "", 0, draw_type, idx, font, &z_width, &z_height,
-				   &z_descent);
+      ctx->gdraw->get_text_extent( "", 0, ldraw_type, idx, lfont, &z_width, &z_height,
+				   &z_descent, tsize);
       for ( s = ((GlowNode *) node)->annotv[number]; *s; s++) {
         if ( *s == 10) {
-	  if ( len)
+	  if ( len) {
+	    *s = 0;
             ctx->gdraw->text_erase( w, x1, y1 + line_cnt * z_height, line, 
-				    len, draw_type, idx, 0, font);
+				    len, ldraw_type, idx, 0, lfont, tsize);
+	    *s = 10;
+	  }
 	  len = 0;
 	  line = s+1;
 	  line_cnt++;
@@ -382,7 +420,7 @@ void GrowAnnot::erase_background( GlowWind *w, GlowTransform *t, int hot, void *
       }
       if ( len)
         ctx->gdraw->text_erase( w, x1, y1 + line_cnt * z_height, line, 
-	  	len, draw_type, idx, 0, font);
+				len, ldraw_type, idx, 0, lfont, tsize);
       break;
     }
   }
@@ -455,13 +493,25 @@ void GrowAnnot::export_javabean_font( GlowTransform *t, void *node,
     return;
   idx = min( idx, DRAW_TYPE_SIZE-1);
 
-  bold = (draw_type == glow_eDrawType_TextHelveticaBold);
+  glow_eFont lfont;
+  glow_eDrawType ldraw_type;
+
+  if ( node && ((GrowNode *)node)->text_font != glow_eFont_No) {
+    lfont = ((GrowNode *)node)->text_font;
+    ldraw_type = ((GrowNode *)node)->text_type;
+  }
+  else {
+    lfont = font;
+    ldraw_type = draw_type;
+  }
+
+  bold = (ldraw_type == glow_eDrawType_TextHelveticaBold);
 
   ((GrowCtx *)ctx)->export_jbean->nc->get_annot_background( NULL, NULL,
 	&background);
 
   ((GrowCtx *)ctx)->export_jbean->annot_font( number,
-	draw_type, background, bold, idx, pass, fp);
+	ldraw_type, background, bold, idx, pass, fp);
 }
 
 void GrowAnnot::convert( glow_eConvert version) 

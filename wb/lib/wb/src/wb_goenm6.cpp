@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goenm6.cpp,v 1.1 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_goenm6.cpp,v 1.2 2008-11-28 17:14:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -238,18 +238,18 @@ int goen_create_nodetype_m6(
     flow_AddText( nc_pid, "Proview",
 		f_width - f_header_width + f_header_sep1 + f_repeat, 
 		f_height - f_repeat /2 - f_yoffs,
-		flow_eDrawType_TextHelveticaBold, 9);
+		flow_eDrawType_TextHelvetica, 9);
   else
   {
 
     flow_AddText( nc_pid, "SSAB",
 		f_width - f_header_width + f_header_sep1 + f_repeat, 
 		f_height - f_repeat * 3/4 - f_yoffs,
-		flow_eDrawType_TextHelveticaBold, 9);
+		flow_eDrawType_TextHelvetica, 9);
     flow_AddText( nc_pid, "Oxelösund",
 		f_width - f_header_width + f_header_sep1 + f_repeat * 1.1, 
 		f_height - f_repeat /4 - f_yoffs,
-		flow_eDrawType_TextHelveticaBold, 1);
+		flow_eDrawType_TextHelvetica, 1);
 
 #if 0
     int 	i;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_xlib.cpp,v 1.10 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_draw_xlib.cpp,v 1.11 2008-11-28 17:13:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1632,7 +1632,7 @@ int GlowDrawXLib::polyline_erase( GlowWind *wind, glow_sPointX *points, int poin
 
 int GlowDrawXLib::text( GlowWind *wind, int x, int y, char *text, int len,
 			glow_eDrawType gc_type, glow_eDrawType color, int idx, 
-			int highlight, int line, glow_eFont font_idx)
+			int highlight, int line, glow_eFont font_idx, double size)
 {
   if ( ctx->nodraw) return 1;
   DrawWindXLib *w = (DrawWindXLib *) wind->window;
@@ -1685,7 +1685,7 @@ int GlowDrawXLib::text( GlowWind *wind, int x, int y, char *text, int len,
 
 int GlowDrawXLib::text_cursor( GlowWind *wind, int x, int y, char *text, int len,
 			       glow_eDrawType gc_type, glow_eDrawType color, int idx, 
-			       int highlight, int pos, glow_eFont font_idx)
+			       int highlight, int pos, glow_eFont font_idx, double size)
 {
   if ( ctx->nodraw) return 1;
   DrawWindXLib *w = (DrawWindXLib *) wind->window;
@@ -1715,7 +1715,7 @@ int GlowDrawXLib::text_cursor( GlowWind *wind, int x, int y, char *text, int len
 
 int GlowDrawXLib::text_erase( GlowWind *wind, int x, int y, char *text, int len,
 			      glow_eDrawType gc_type, int idx, int line,
-			      glow_eFont font_idx)
+			      glow_eFont font_idx, double size)
 {
   if ( ctx->nodraw) return 1;
   DrawWindXLib *w = (DrawWindXLib *) wind->window;
@@ -2062,7 +2062,7 @@ void GlowDrawXLib::set_cursor( GlowWind *wind, glow_eDrawCursor cursor)
 
 int GlowDrawXLib::get_text_extent( const char *text, int len,
 				   glow_eDrawType gc_type, int idx, glow_eFont font_idx,
-				   int *width, int *height, int *descent)
+				   int *width, int *height, int *descent, double size)
 {
   int	text_direction, text_ascent, text_descent;
   XCharStruct char_struct;
@@ -2721,7 +2721,7 @@ int GlowDrawXLib::print( char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw_xlib.cpp,v 1.10 2008-10-31 12:51:35 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw_xlib.cpp,v 1.11 2008-11-28 17:13:45 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else

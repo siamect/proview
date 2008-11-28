@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goenm15.cpp,v 1.1 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_goenm15.cpp,v 1.2 2008-11-28 17:14:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -140,19 +140,19 @@ int goen_create_nodetype_m15(
   if ( annot_count > 0)
   {
     flow_MeasureAnnotText( ctx, annot_str[0],
-	     	flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, flow_eAnnotType_OneLine,
+	     	flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, flow_eAnnotType_OneLine,
 		&annot_width[0], &annot_height, &annot_rows);
   }
   if ( annot_count > 1)
   {
     flow_MeasureAnnotText( ctx, annot_str[1],
-	     	flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, flow_eAnnotType_OneLine,
+	     	flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, flow_eAnnotType_OneLine,
 		&annot_width[1], &annot_height, &annot_rows);
   }
   if ( annot_count > 2)
   {
     flow_MeasureAnnotText( ctx, annot_str[2],
-	     	flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, flow_eAnnotType_OneLine,
+	     	flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, flow_eAnnotType_OneLine,
 		&annot_width[2], &annot_height, &annot_rows);
   }
 
@@ -233,7 +233,7 @@ int goen_create_nodetype_m15(
 
   flow_AddText( nc_pid, graphbody->graphname, f_strlength, 
 		f_height/4 + f_strheight/2 - f_yoffs,
-		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+		flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE);
 
   /* Draw the leadnames and lines */
   conpoint_nr = 0;
@@ -276,7 +276,7 @@ int goen_create_nodetype_m15(
 
     flow_AddText( nc_pid, bodydef[i].Par->Input.Graph.GraphName, 
 		f_strlength, f_height*3/4 + f_strheight/2 - f_yoffs, 
-		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+		flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE);
 
     if ( (*invertmask_pointer & 2) == 0)
     {
@@ -328,12 +328,12 @@ int goen_create_nodetype_m15(
   flow_AddAnnot( nc_pid, 
 	f_classnamewidth + f_strlength,
 	f_height/4 + f_strheight/2 - f_yoffs,
-	0, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+	0, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 	flow_eAnnotType_OneLine, flow_mDisplayLevel_1);
   flow_AddAnnot( nc_pid, 
 	f_classnamewidth + f_strlength,
 	f_height/4 + f_strheight/2 + GOEN_F_GRID - f_yoffs,
-	1, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+	1, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 	flow_eAnnotType_OneLine, flow_mDisplayLevel_1);
 
   if ( annot3_found )
@@ -341,7 +341,7 @@ int goen_create_nodetype_m15(
     flow_AddAnnot( nc_pid, 
 	f_width - f_width_left + f_strlength,
 	GOEN_F_GRID/2 + f_strheight/2 - f_yoffs,
-	2, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+	2, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 	flow_eAnnotType_OneLine, flow_mDisplayLevel_1);
   }
 
@@ -352,7 +352,7 @@ int goen_create_nodetype_m15(
   flow_AddAnnot( nc_pid, 
 	f_width - GOEN_DISPLAYNODEWIDTH + f_strlength,
 	(GOEN_DISPLAYNODEHEIGHT + f_strheight)/2.0 - f_yoffs,
-	 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+	 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 	flow_eAnnotType_OneLine, flow_mDisplayLevel_2);
 
   free((char *) bodydef);

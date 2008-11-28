@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growfolder.cpp,v 1.9 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_growfolder.cpp,v 1.10 2008-11-28 17:13:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -324,6 +324,7 @@ void GrowFolder::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, vo
   idx = min( idx, DRAW_TYPE_SIZE-1);
 
   int text_idx = int( w->zoom_factor_y / w->base_zoom_factor * (text_size +4) - 4);
+  double tsize = w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
   text_idx = min( text_idx, DRAW_TYPE_SIZE-1);
 
   int ll_x, ll_y, ur_x, ur_y;
@@ -420,8 +421,8 @@ void GrowFolder::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, vo
       
     if ( text_idx >= 0) {
       ctx->gdraw->text( w, x + h/2, ll_y + h - 2,
-		    folder_text[i], strlen(folder_text[i]), text_drawtype, text_color_drawtype, 
-		    text_idx, highlight, 0, glow_eFont_Helvetica);
+			folder_text[i], strlen(folder_text[i]), text_drawtype, text_color_drawtype, 
+			text_idx, highlight, 0, glow_eFont_Helvetica, tsize);
     }
     if ( i == current_folder)
       break;

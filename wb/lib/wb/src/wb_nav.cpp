@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav.cpp,v 1.19 2008-10-31 12:51:32 claes Exp $
+ * Proview   $Id: wb_nav.cpp,v 1.20 2008-11-28 17:14:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1613,13 +1613,13 @@ void Nav::create_nodeclasses()
   brow_AddAnnotPixmap( nc_object, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_object, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_object, 2, 0.6, 0,
-		 flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		 flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		 0);
   brow_AddAnnot( nc_object, 5, 0.6, 1,
-		 flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		 flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		 1);
   brow_AddAnnot( nc_object, 9, 0.6, 2,
-		 flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		 flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		 1);
 }
 

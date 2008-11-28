@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.cpp,v 1.34 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_growctx.cpp,v 1.35 2008-11-28 17:13:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2913,6 +2913,8 @@ void GrowCtx::set_select_textbold( int bold)
       ((GrowTable *)a_sel[i])->set_textbold( bold);
     else if ( a_sel[i]->type() == glow_eObjectType_GrowSubAnnot)
       ((GrowSubAnnot *)a_sel[i])->set_textbold( bold);
+    else if ( a_sel[i]->type() == glow_eObjectType_GrowNode)
+      ((GrowNode *)a_sel[i])->set_textbold( bold);
   }
 }
 
@@ -2923,6 +2925,8 @@ void GrowCtx::set_select_textfont( glow_eFont font)
       ((GrowText *)a_sel[i])->set_textfont( font);
     else if ( a_sel[i]->type() == glow_eObjectType_GrowTable)
       ((GrowTable *)a_sel[i])->set_textfont( font);
+    else if ( a_sel[i]->type() == glow_eObjectType_GrowNode)
+      ((GrowNode *)a_sel[i])->set_textfont( font);
   }
 }
 
@@ -3737,9 +3741,10 @@ void GrowCtx::get_text_extent( char *text, int len, glow_eDrawType draw_type,
 	int text_size, glow_eFont font, double *width, double *height, double *descent)
 {
   int z_width, z_height, z_descent;
+  double tsize = mw.zoom_factor_y / mw.base_zoom_factor * (8+2*text_size);
 
   gdraw->get_text_extent( text, len, draw_type, text_size, font,
-	&z_width, &z_height, &z_descent);
+			  &z_width, &z_height, &z_descent, tsize);
 
   *width = double( z_width) / mw.zoom_factor_y;
   *height = double( z_height) / mw.zoom_factor_y;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_evlist.cpp,v 1.21 2008-10-31 12:51:36 claes Exp $
+ * Proview   $Id: xtt_evlist.cpp,v 1.22 2008-11-28 17:13:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -199,16 +199,16 @@ void EvListBrow::create_nodeclasses()
   brow_AddAnnotPixmap( nc_event, 0, 1.6, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_event, 1, 2.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_event, 3.3, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_event, 10, 0.6, 2,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_event, 12, 0.6, 3,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnot( nc_event, 28, 0.6, 4,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
 
   // Nodeclass for A-alarm
@@ -222,13 +222,13 @@ void EvListBrow::create_nodeclasses()
   brow_AddAnnotPixmap( nc_a_alarm, 0, 1.6, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_a_alarm, 1, 2.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_a_alarm, 3.3, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot( nc_a_alarm, 10, 0.6, 2,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot( nc_a_alarm, 12, 0.6, 3,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 1);
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
   brow_AddAnnot( nc_a_alarm, 28, 0.6, 4,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 1);
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
 
   // Nodeclass for B-alarm
   brow_CreateNodeClass( ctx, "B_Alarm", 
@@ -241,13 +241,13 @@ void EvListBrow::create_nodeclasses()
   brow_AddAnnotPixmap( nc_b_alarm, 0, 1.6, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_b_alarm, 1, 2.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_b_alarm, 3.3, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot( nc_b_alarm, 10, 0.6, 2,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot( nc_b_alarm, 12, 0.6, 3,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 1);
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
   brow_AddAnnot( nc_b_alarm, 28, 0.6, 4,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 1);
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
 
   // Nodeclass for Info
   brow_CreateNodeClass( ctx, "Info", 
@@ -260,13 +260,13 @@ void EvListBrow::create_nodeclasses()
   brow_AddAnnotPixmap( nc_info, 0, 1.6, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_info, 1, 2.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_info, 3.3, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot( nc_info, 10, 0.6, 2,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot( nc_info, 12, 0.6, 3,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 1);
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
   brow_AddAnnot( nc_info, 28, 0.6, 4,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 1);
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
 
 }
 

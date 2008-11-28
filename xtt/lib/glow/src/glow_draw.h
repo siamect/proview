@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw.h,v 1.12 2008-11-20 10:30:44 claes Exp $
+ * Proview   $Id: glow_draw.h,v 1.13 2008-11-28 17:13:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -80,12 +80,13 @@ class GlowDraw {
 		      int idx) {return 1;}
   virtual int text( GlowWind *w, int x, int y, char *text, int len,
 	    glow_eDrawType gc_type, glow_eDrawType color, int idx, int highlight, 
-		    int line, glow_eFont font_idx) {return 1;}
+		    int line, glow_eFont font_idx, double size) {return 1;}
   virtual int text_cursor( GlowWind *w, int x, int y, char *text, int len,
 			   glow_eDrawType gc_type, glow_eDrawType color, int idx, 
-			   int highlight, int pos, glow_eFont font) {return 1;}
+			   int highlight, int pos, glow_eFont font, double size) {return 1;}
   virtual int text_erase( GlowWind *w, int x, int y, char *text, int len,
-		  glow_eDrawType gc_type, int idx, int line, glow_eFont font_idx) {return 1;}
+			  glow_eDrawType gc_type, int idx, int line, glow_eFont font_idx,
+			  double size) {return 1;}
   virtual int fill_rect( GlowWind *w, int x, int y, int width, int height, 
 		 glow_eDrawType gc_type) {return 1;}
   virtual int pixmaps_create( GlowWind *w, glow_sPixmapData *pixmap_data,
@@ -104,7 +105,7 @@ class GlowDraw {
   virtual void set_nav_cursor( glow_eDrawCursor cursor) {}
   virtual int get_text_extent( const char *text, int len,
 			       glow_eDrawType gc_type, int idx, glow_eFont font_idx,
-			       int *width, int *height, int *descent) {return 1;}
+			       int *width, int *height, int *descent, double size) {return 1;}
   virtual void copy_area( GlowWind *w, int x, int y) {}
   virtual void clear_area( GlowWind *w, int ll_x, int ur_x, int ll_y, int ur_y) {}
   virtual void set_inputfocus( GlowWind *w) {}

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goenm12.cpp,v 1.1 2008-01-17 14:22:31 claes Exp $
+ * Proview   $Id: wb_goenm12.cpp,v 1.2 2008-11-28 17:14:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -134,7 +134,7 @@ int goen_create_nodetype_m12( pwr_sGraphPlcNode	*graphbody,
   flow_AddAnnot( nc, 
 		 x + f_strlength,
 		 y + (GOEN_DISPLAYNODEHEIGHT + f_strheight)/2.0,
-		 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+		 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 		 flow_eAnnotType_OneLine, flow_mDisplayLevel_2);
 
   *node_class = nc;

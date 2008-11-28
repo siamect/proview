@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_text.cpp,v 1.8 2008-10-31 12:51:33 claes Exp $
+ * Proview   $Id: flow_text.cpp,v 1.9 2008-11-28 17:13:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -105,8 +105,20 @@ void FlowText::draw( void *pos, int highlight, int hot, void *node)
     return;
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
   ctx->fdraw->text( ctx, p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
-	p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, text, strlen(text),
-	draw_type, idx, highlight, 0);
+		    p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, text, strlen(text),
+		    draw_type, idx, highlight, 0, 
+		    ctx->zoom_factor / ctx->base_zoom_factor * (8+2*text_size));
+}
+
+void FlowText::draw_inverse( void *pos, int hot, void *node)
+{
+  int idx = int( ctx->zoom_factor / ctx->base_zoom_factor * (text_size +4) - 4);
+  if ( idx < 0)
+    return;
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
+  ctx->fdraw->text_inverse( ctx, p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
+			    p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, text,  strlen(text),
+			    draw_type, idx, 0, ctx->zoom_factor / ctx->base_zoom_factor * (8+2*text_size));
 }
 
 void FlowText::erase( void *pos, int hot, void *node)
@@ -116,8 +128,9 @@ void FlowText::erase( void *pos, int hot, void *node)
     return;
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
   ctx->fdraw->text_erase( ctx, p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
-	p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, text,  strlen(text),
-	draw_type, idx, 0);
+			  p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, text,  strlen(text),
+			  draw_type, idx, 0, 
+			  ctx->zoom_factor / ctx->base_zoom_factor * (8+2*text_size));
 }
 
 void FlowText::nav_draw( void *pos, int highlight, void *node)
@@ -128,9 +141,10 @@ void FlowText::nav_draw( void *pos, int highlight, void *node)
     return;
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
   ctx->fdraw->nav_text( ctx, 
-	p.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
-	p.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
-	text, strlen(text), draw_type, idx, highlight, 0);
+			p.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
+			p.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
+			text, strlen(text), draw_type, idx, highlight, 0, 
+			ctx->nav_zoom_factor / ctx->base_zoom_factor * (8+2*text_size));
 }
 
 void FlowText::nav_erase( void *pos, void *node)
@@ -141,9 +155,10 @@ void FlowText::nav_erase( void *pos, void *node)
     return;
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
   ctx->fdraw->nav_text_erase( ctx,
-	p.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
-	p.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
-	text, strlen(text), draw_type, idx, 0);
+			      p.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
+			      p.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
+			      text, strlen(text), draw_type, idx, 0, 
+			      ctx->nav_zoom_factor / ctx->base_zoom_factor * (8+2*text_size));
 }
 
 int FlowText::event_handler( void *pos, flow_eEvent event, int x, int y,

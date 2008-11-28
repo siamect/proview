@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelistnav.cpp,v 1.8 2008-10-31 12:51:30 claes Exp $
+ * Proview   $Id: co_statusmon_nodelistnav.cpp,v 1.9 2008-11-28 17:14:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -118,13 +118,13 @@ void NodelistNavBrow::create_nodeclasses()
   brow_AddFilledRect( nc_node, 1.3, 0.15, 0.4, 0.4, flow_eDrawType_DarkGray);
   brow_AddRect( nc_node, 1.3, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_node, 2.2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_node, 8, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_node, 21, 0.6, 2,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
 
   // Create attribute nodeclass
@@ -134,10 +134,10 @@ void NodelistNavBrow::create_nodeclasses()
   brow_AddFrame( nc_attr, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
   brow_AddAnnotPixmap( nc_attr, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_attr, 2.2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_attr, 8, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
 
   // Create system status attribute nodeclass
@@ -149,10 +149,10 @@ void NodelistNavBrow::create_nodeclasses()
   brow_AddFilledRect( nc_sys_sts_attr, 1.3, 0.15, 0.4, 0.4, flow_eDrawType_DarkGray);
   brow_AddRect( nc_sys_sts_attr, 1.3, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_sys_sts_attr, 2.2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_sys_sts_attr, 8, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
 
   // Create system status attribute nodeclass
@@ -164,13 +164,13 @@ void NodelistNavBrow::create_nodeclasses()
   brow_AddFilledRect( nc_sts_attr, 1.3, 0.15, 0.4, 0.4, flow_eDrawType_DarkGray);
   brow_AddRect( nc_sts_attr, 1.3, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_sts_attr, 2.2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_sts_attr, 5, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnot( nc_sts_attr, 10, 0.6, 2,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
 }
 

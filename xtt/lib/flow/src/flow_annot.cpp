@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_annot.cpp,v 1.10 2008-10-31 12:51:32 claes Exp $
+ * Proview   $Id: flow_annot.cpp,v 1.11 2008-11-28 17:13:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -87,7 +87,8 @@ void FlowAnnot::print( void *pos, void *node, int highlight)
       int line_cnt = 0;
       char *line = ((FlowNode *) node)->annotv[number];
       char *s;
-      ctx->fdraw->get_text_extent( ctx, "Ag", 1, draw_type, text_size, &z_width, &z_height);
+      ctx->fdraw->get_text_extent( ctx, "Ag", 1, draw_type, text_size, &z_width, &z_height,
+				   ctx->print_zoom_factor / ctx->base_zoom_factor * (8+2*text_size));
       z_height = int( ctx->print_zoom_factor / ctx->base_zoom_factor * z_height);
       for ( s = ((FlowNode *) node)->annotv[number]; *s; s++)
       {
@@ -176,10 +177,11 @@ void FlowAnnot::draw( void *pos, int highlight, int hot, void *node)
       else
         x = p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x;
       ctx->fdraw->text( ctx, x, 
-	p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
-	((FlowNode *) node)->annotv[number], 
-	strlen(((FlowNode *) node)->annotv[number]), draw_type, idx, 
-	highlight, 0);
+			p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
+			((FlowNode *) node)->annotv[number],
+			strlen(((FlowNode *) node)->annotv[number]), draw_type, idx, 
+			highlight, 0,
+			tsize(text_size));
       if ( ((FlowNode *) node)->annotv_inputmode[number])
         ctx->fdraw->move_input( ctx, 
 	  ((FlowNode *) node)->annotv_input[number],
@@ -195,14 +197,19 @@ void FlowAnnot::draw( void *pos, int highlight, int hot, void *node)
       int line_cnt = 0;
       char *line = ((FlowNode *) node)->annotv[number];
       char *s;
-      ctx->fdraw->get_text_extent( ctx, "Ag", 1, draw_type, idx, &z_width, &z_height);
+      ctx->fdraw->get_text_extent( ctx, "Ag", 1, draw_type, idx, &z_width, &z_height,
+				   tsize(text_size));
       for ( s = ((FlowNode *) node)->annotv[number]; *s; s++)
       {
         if ( *s == 10)
 	{
-	  if ( len)
+	  if ( len) {
+	    *s = 0;
             ctx->fdraw->text( ctx, z_x, z_y + line_cnt * z_height, line, 
-	  	len, draw_type, idx, highlight, 0);
+			      len, draw_type, idx, highlight, 0,
+			      tsize(text_size));
+	    *s = 10;
+	  }
 	  len = 0;
 	  line = s+1;
 	  line_cnt++;
@@ -212,7 +219,8 @@ void FlowAnnot::draw( void *pos, int highlight, int hot, void *node)
       }
       if ( len)
         ctx->fdraw->text( ctx, z_x, z_y + line_cnt * z_height, line, 
-	  	len, draw_type, idx, highlight, 0);
+			  len, draw_type, idx, highlight, 0,
+			  tsize(text_size));
       break;
     }
   }
@@ -241,9 +249,10 @@ void FlowAnnot::erase( void *pos, int hot, void *node)
       else
         x = p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x;
       ctx->fdraw->text_erase( ctx, x, 
-	p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
-	((FlowNode *) node)->annotv[number], 
-	strlen(((FlowNode *) node)->annotv[number]), draw_type, idx, 0);
+			      p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
+			      ((FlowNode *) node)->annotv[number], 
+			      strlen(((FlowNode *) node)->annotv[number]), draw_type, idx, 0,
+			      tsize(text_size));
       break;
     case flow_eAnnotType_MultiLine:
     {
@@ -254,14 +263,19 @@ void FlowAnnot::erase( void *pos, int hot, void *node)
       int line_cnt = 0;
       char *line = ((FlowNode *) node)->annotv[number];
       char *s;
-      ctx->fdraw->get_text_extent( ctx, "Ag", 1, draw_type, idx, &z_width, &z_height);
+      ctx->fdraw->get_text_extent( ctx, "Ag", 1, draw_type, idx, &z_width, &z_height,
+				   tsize(text_size));
       for ( s = ((FlowNode *) node)->annotv[number]; *s; s++)
       {
         if ( *s == 10)
 	{
-	  if ( len)
+	  if ( len) {
+	    *s = 0;
             ctx->fdraw->text_erase( ctx, z_x, z_y + line_cnt * z_height, line, 
-	  	len, draw_type, idx, 0);
+				    len, draw_type, idx, 0,
+				    tsize(text_size));
+	    *s = 10;
+	  }
 	  len = 0;
 	  line = s+1;
 	  line_cnt++;
@@ -271,7 +285,74 @@ void FlowAnnot::erase( void *pos, int hot, void *node)
       }
       if ( len)
         ctx->fdraw->text_erase( ctx, z_x, z_y + line_cnt * z_height, line, 
-	  	len, draw_type, idx, 0);
+				len, draw_type, idx, 0,
+				tsize(text_size));
+      break;
+    }
+  }
+}
+
+void FlowAnnot::draw_inverse( void *pos, int hot, void *node)
+{
+  int x;
+
+  if ( !(display_level & ctx->display_level))
+    return;
+
+  if ( !((FlowNode *) node)->annotv[number])
+    return;
+  int idx = int( ctx->zoom_factor / ctx->base_zoom_factor * (text_size +4) - 4);
+  if ( idx < 0)
+    return;
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
+  switch ( annot_type) {
+    case flow_eAnnotType_OneLine:
+      if ( relative_pos && ((FlowNode *)node)->relative_annot_pos)
+      {
+        x = int( ((FlowPoint *)pos)->z_x - ctx->offset_x + MAX( p.z_x,
+           ((FlowNode *)node)->rel_annot_x[number] * ctx->zoom_factor));
+      }
+      else
+        x = p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x;
+      ctx->fdraw->text_inverse( ctx, x, 
+				p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
+				((FlowNode *) node)->annotv[number], 
+				strlen(((FlowNode *) node)->annotv[number]), draw_type, idx, 0,
+				tsize(text_size));
+      break;
+    case flow_eAnnotType_MultiLine:
+    {
+      int z_width, z_height;
+      int z_x = p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x;
+      int z_y = p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y;
+      int len = 0;
+      int line_cnt = 0;
+      char *line = ((FlowNode *) node)->annotv[number];
+      char *s;
+      ctx->fdraw->get_text_extent( ctx, "Ag", 1, draw_type, idx, &z_width, &z_height,
+				   tsize(text_size));
+      for ( s = ((FlowNode *) node)->annotv[number]; *s; s++)
+      {
+        if ( *s == 10)
+	{
+	  if ( len) {
+	    *s = 0;
+            ctx->fdraw->text_inverse( ctx, z_x, z_y + line_cnt * z_height, line, 
+				      len, draw_type, idx, 0,
+				      tsize(text_size));
+	    *s = 10;
+	  }
+	  len = 0;
+	  line = s+1;
+	  line_cnt++;
+	}
+	else
+	  len++;
+      }
+      if ( len)
+        ctx->fdraw->text_inverse( ctx, z_x, z_y + line_cnt * z_height, line, 
+				  len, draw_type, idx, 0,
+				  tsize(text_size));
       break;
     }
   }
@@ -291,11 +372,12 @@ void FlowAnnot::nav_draw( void *pos, int highlight, void *node)
   switch ( annot_type) {
     case flow_eAnnotType_OneLine:
       ctx->fdraw->nav_text( ctx, 
-	p.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
-	p.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
-	((FlowNode *) node)->annotv[number], 
-	strlen(((FlowNode *) node)->annotv[number]), draw_type, idx, 
-	highlight, 0);
+			    p.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
+			    p.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
+			    ((FlowNode *) node)->annotv[number], 
+			    strlen(((FlowNode *) node)->annotv[number]), draw_type, idx, 
+			    highlight, 0,
+			    nav_tsize( text_size));
       break;
     case flow_eAnnotType_MultiLine:
     {
@@ -306,14 +388,19 @@ void FlowAnnot::nav_draw( void *pos, int highlight, void *node)
       int line_cnt = 0;
       char *line = ((FlowNode *) node)->annotv[number];
       char *s;
-      ctx->fdraw->get_text_extent( ctx, "Ag", 1, draw_type, idx, &z_width, &z_height);
+      ctx->fdraw->get_text_extent( ctx, "Ag", 1, draw_type, idx, &z_width, &z_height,
+				   nav_tsize( text_size));
       for ( s = ((FlowNode *) node)->annotv[number]; *s; s++)
       {
         if ( *s == 10)
 	{
-	  if ( len)
+	  if ( len) {
+	    * s = 0;
             ctx->fdraw->nav_text( ctx, z_x, z_y + line_cnt * z_height, line, 
-	  	len, draw_type, idx, highlight, 0);
+				  len, draw_type, idx, highlight, 0,
+				  nav_tsize( text_size));
+	    *s = 10;
+	  }
 	  len = 0;
 	  line = s+1;
 	  line_cnt++;
@@ -323,7 +410,8 @@ void FlowAnnot::nav_draw( void *pos, int highlight, void *node)
       }
       if ( len)
         ctx->fdraw->nav_text( ctx, z_x, z_y + line_cnt * z_height, line, 
-	  	len, draw_type, idx, highlight, 0);
+			      len, draw_type, idx, highlight, 0,
+			      nav_tsize( text_size));
       break;
     }
   }
@@ -343,10 +431,11 @@ void FlowAnnot::nav_erase( void *pos, void *node)
   switch ( annot_type) {
     case flow_eAnnotType_OneLine:
       ctx->fdraw->nav_text_erase( ctx,
-	p.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
-	p.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
-	((FlowNode *) node)->annotv[number], 
-	strlen(((FlowNode *) node)->annotv[number]), draw_type, idx, 0);
+				  p.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
+				  p.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
+				  ((FlowNode *) node)->annotv[number], 
+				  strlen(((FlowNode *) node)->annotv[number]), draw_type, idx, 0,
+				  nav_tsize( text_size));
       break;
     case flow_eAnnotType_MultiLine:
     {
@@ -357,14 +446,19 @@ void FlowAnnot::nav_erase( void *pos, void *node)
       int line_cnt = 0;
       char *line = ((FlowNode *) node)->annotv[number];
       char *s;
-      ctx->fdraw->get_text_extent( ctx, "Ag", 1, draw_type, idx, &z_width, &z_height);
+      ctx->fdraw->get_text_extent( ctx, "Ag", 1, draw_type, idx, &z_width, &z_height,
+				   tsize(text_size));
       for ( s = ((FlowNode *) node)->annotv[number]; *s; s++)
       {
         if ( *s == 10)
 	{
-	  if ( len)
+	  if ( len) {
+	    *s = 0;
             ctx->fdraw->nav_text_erase( ctx, z_x, z_y + line_cnt * z_height, line, 
-	  	len, draw_type, idx, 0);
+					len, draw_type, idx, 0,
+					nav_tsize( text_size));
+	    *s = 10;
+	  }
 	  len = 0;
 	  line = s+1;
 	  line_cnt++;
@@ -374,7 +468,8 @@ void FlowAnnot::nav_erase( void *pos, void *node)
       }
       if ( len)
         ctx->fdraw->nav_text_erase( ctx, z_x, z_y + line_cnt * z_height, line, 
-	  	len, draw_type, idx, 0);
+				    len, draw_type, idx, 0,
+				    nav_tsize( text_size));
       break;
     }
   }
@@ -443,7 +538,8 @@ void FlowAnnot::measure_annot( char *text, double *width, double *height)
   switch ( annot_type) {
     case flow_eAnnotType_OneLine:
       ctx->fdraw->get_text_extent( ctx, text, strlen(text), draw_type, idx, 
-		&z_width, &z_height);
+				   &z_width, &z_height,
+				   tsize(text_size));
       break;
     case flow_eAnnotType_MultiLine:
     {
@@ -453,7 +549,8 @@ void FlowAnnot::measure_annot( char *text, double *width, double *height)
       char *line = text;
       char *s;
 
-      ctx->fdraw->get_text_extent( ctx, "Ag", 1, draw_type, text_size, &z_width, &z_height);
+      ctx->fdraw->get_text_extent( ctx, "Ag", 1, draw_type, text_size, &z_width, &z_height,
+				   tsize(text_size));
 
       z_width = 0;
       for ( s = text; *s; s++)
@@ -463,7 +560,8 @@ void FlowAnnot::measure_annot( char *text, double *width, double *height)
 	  if ( len)
 	  {
             ctx->fdraw->get_text_extent( ctx, line, len, draw_type, idx, 
-		&l_width, &l_height);
+					 &l_width, &l_height, 
+					 tsize(text_size));
 	    z_width = MAX( z_width, l_width);
 	  }
 	  len = 0;
@@ -476,7 +574,8 @@ void FlowAnnot::measure_annot( char *text, double *width, double *height)
       if ( len)
       {
         ctx->fdraw->get_text_extent( ctx, line, len, draw_type, idx, 
-		&l_width, &l_height);
+				     &l_width, &l_height,
+				     tsize(text_size));
 	z_width = MAX( z_width, l_width);
         line_cnt++;
       }
@@ -583,7 +682,8 @@ void flow_measure_annot_text( FlowCtx *ctx, char *text, flow_eDrawType draw_type
   switch ( annot_type) {
     case flow_eAnnotType_OneLine:
       ctx->fdraw->get_text_extent( ctx, text, strlen(text), draw_type, text_size, 
-		&z_width, &z_height);
+				   &z_width, &z_height,
+				   ctx->zoom_factor / ctx->base_zoom_factor * (8+2*text_size));
       *rows = 1;
       break;
     case flow_eAnnotType_MultiLine:
@@ -594,7 +694,8 @@ void flow_measure_annot_text( FlowCtx *ctx, char *text, flow_eDrawType draw_type
       char *line = text;
       char *s;
 
-      ctx->fdraw->get_text_extent( ctx, "Ag", 1, draw_type, text_size, &z_width, &z_height);
+      ctx->fdraw->get_text_extent( ctx, "Ag", 1, draw_type, text_size, &z_width, &z_height,
+				   ctx->zoom_factor / ctx->base_zoom_factor * (8+2*text_size));
 
       z_width = 0;
       for ( s = text; *s; s++)
@@ -604,7 +705,8 @@ void flow_measure_annot_text( FlowCtx *ctx, char *text, flow_eDrawType draw_type
 	  if ( len)
 	  {
             ctx->fdraw->get_text_extent( ctx, line, len, draw_type, text_size, 
-		&l_width, &l_height);
+					 &l_width, &l_height,
+					 ctx->zoom_factor / ctx->base_zoom_factor * (8+2*text_size));
 	    z_width = MAX( z_width, l_width);
 	  }
 	  len = 0;
@@ -617,7 +719,8 @@ void flow_measure_annot_text( FlowCtx *ctx, char *text, flow_eDrawType draw_type
       if ( len)
       {
         ctx->fdraw->get_text_extent( ctx, line, len, draw_type, text_size, 
-		&l_width, &l_height);
+				     &l_width, &l_height,
+				     ctx->zoom_factor / ctx->base_zoom_factor * (8+2*text_size));
 	z_width = MAX( z_width, l_width);
         line_cnt++;
       }
@@ -630,3 +733,12 @@ void flow_measure_annot_text( FlowCtx *ctx, char *text, flow_eDrawType draw_type
   *height = 1.0 * z_height / ctx->base_zoom_factor;
 }
 
+double FlowAnnot::tsize( int text_idx)
+{
+  return ctx->zoom_factor / ctx->base_zoom_factor * (8+2*text_size);
+}
+
+double FlowAnnot::nav_tsize( int text_idx)
+{
+  return ctx->zoom_factor / ctx->base_zoom_factor * (8+2*text_size);
+}

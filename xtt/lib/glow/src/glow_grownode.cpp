@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_grownode.cpp,v 1.17 2008-11-20 10:30:44 claes Exp $
+ * Proview   $Id: glow_grownode.cpp,v 1.18 2008-11-28 17:13:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -46,7 +46,8 @@ GrowNode::GrowNode( GrowCtx *glow_ctx, const char *name, GlowNodeClass *node_cla
 	invisible(0), dimmed(0), object_type(glow_eObjectType_GrowNode), root_node(0),
 	flip_horizontal(false), flip_vertical(false), fill_level(1),
 	level_direction( glow_eDirection_Right), shadow(0), input_position(0), input_selected(0),
-	gradient(glow_eGradient_No)
+	gradient(glow_eGradient_No), text_type(glow_eDrawType_TextHelvetica), 
+	text_font(glow_eFont_No)
 {  
   memset( argv, 0, sizeof(argv));
   memset( argsize, 0, sizeof(argsize));
@@ -172,6 +173,8 @@ void GrowNode::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowNode_line_width) << FSPACE << line_width << endl;
   fp << int(glow_eSave_GrowNode_shadow) << FSPACE << shadow << endl;
   fp << int(glow_eSave_GrowNode_gradient) << FSPACE << int(gradient) << endl;
+  fp << int(glow_eSave_GrowNode_text_type) << FSPACE << int(text_type) << endl;
+  fp << int(glow_eSave_GrowNode_text_font) << FSPACE << int(text_font) << endl;
 
   if ( user_data && ctx->userdata_save_callback) {
     fp << int(glow_eSave_GrowNode_userdata_cb) << endl;
@@ -290,6 +293,8 @@ void GrowNode::open( ifstream& fp)
       case glow_eSave_GrowNode_line_width: fp >> line_width; break;
       case glow_eSave_GrowNode_shadow: fp >> shadow; break;
       case glow_eSave_GrowNode_gradient: fp >> tmp; gradient = (glow_eGradient)tmp; break;
+      case glow_eSave_GrowNode_text_type: fp >> tmp; text_type = (glow_eDrawType)tmp; break;
+      case glow_eSave_GrowNode_text_font: fp >> tmp; text_font = (glow_eFont)tmp; break;
       case glow_eSave_GrowNode_userdata_cb:
 	if ( ctx->userdata_open_callback)
 	  (ctx->userdata_open_callback)(&fp, this, glow_eUserdataCbType_Node);
@@ -2067,6 +2072,31 @@ void GrowNode::set_visibility( glow_eVis visibility)
     invisible = 0;
     break;
   }
+  draw();
+}
+
+void GrowNode::set_textbold( int bold) 
+{ 
+  if ( ( bold && text_type == glow_eDrawType_TextHelveticaBold) ||
+       ( !bold && text_type == glow_eDrawType_TextHelvetica))
+    return;
+
+  erase( &ctx->mw);
+  erase( &ctx->navw);
+  if ( bold)
+    text_type = glow_eDrawType_TextHelveticaBold;
+  else
+    text_type = glow_eDrawType_TextHelvetica;
+  get_node_borders();
+  draw();
+}
+
+void GrowNode::set_textfont( glow_eFont textfont) 
+{ 
+  erase( &ctx->mw);
+  erase( &ctx->navw);
+  text_font = textfont;
+  get_node_borders();
   draw();
 }
 

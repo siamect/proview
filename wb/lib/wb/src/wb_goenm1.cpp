@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goenm1.cpp,v 1.1 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_goenm1.cpp,v 1.2 2008-11-28 17:14:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -144,13 +144,13 @@ int goen_create_nodetype_m1(
   if ( annot_count > 0)
   {
     flow_MeasureAnnotText( ctx, annot_str[0],
-	     	flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, flow_eAnnotType_OneLine,
+	     	flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, flow_eAnnotType_OneLine,
 		&annot_width[0], &annot_height, &rows);
   }
   if ( annot_count > 1)
   {
     flow_MeasureAnnotText( ctx, annot_str[1],
-	     	flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, flow_eAnnotType_OneLine,
+	     	flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, flow_eAnnotType_OneLine,
 		&annot_width[1], &annot_height, &rows);
   }
 
@@ -227,7 +227,7 @@ int goen_create_nodetype_m1(
   /* Draw the class name */
   flow_AddText( nc_pid, graphbody->graphname, f_namepos,
 		f_header * .75 - f_yoffs,
-		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+		flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE);
 
   /* Draw the leadnames and lines					      */
 
@@ -293,7 +293,7 @@ int goen_create_nodetype_m1(
   flow_AddAnnot( nc_pid, 
 	(f_width - f_width_left - annot_width[0])/2,
 	f_height - f_header * 0.25 - f_yoffs,
-	0, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+	0, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 	flow_eAnnotType_OneLine, flow_mDisplayLevel_1);
 
   if ( annot_count >= 2)
@@ -301,7 +301,7 @@ int goen_create_nodetype_m1(
     flow_AddAnnot( nc_pid, 
 	f_width - f_width_left + f_strlength,
 	f_height - f_header * 0.75 - f_yoffs,
-	1, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+	1, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 	flow_eAnnotType_OneLine, flow_mDisplayLevel_1);
   }
 
@@ -312,7 +312,7 @@ int goen_create_nodetype_m1(
   flow_AddAnnot( nc_pid, 
 	f_width - GOEN_DISPLAYNODEWIDTH + f_strlength,
 	(GOEN_DISPLAYNODEHEIGHT + f_strheight)/2.0 - f_yoffs,
-	 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+	 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 	flow_eAnnotType_OneLine, flow_mDisplayLevel_2);
 
   *node_class = nc_pid;

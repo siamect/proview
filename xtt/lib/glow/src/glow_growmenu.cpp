@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growmenu.cpp,v 1.15 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_growmenu.cpp,v 1.16 2008-11-28 17:13:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -143,6 +143,7 @@ void GrowMenu::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
   }
   int idx;
   int text_idx = int( trf.vertical_scale(t) * w->zoom_factor_y / w->base_zoom_factor * (text_size +4) - 4);
+  double tsize = trf.vertical_scale(t) * w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
   text_idx = min( text_idx, DRAW_TYPE_SIZE-1);
   text_idx = max( 0, text_idx);
 
@@ -162,7 +163,8 @@ void GrowMenu::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
   for ( i = 0; i < (int) (sizeof(info.item)/sizeof(info.item[0])); i++) {
     if ( info.item[i].occupied) {
       ctx->gdraw->get_text_extent( info.item[i].text, strlen(info.item[i].text), text_drawtype, 
-                max( 0, text_idx), glow_eFont_Helvetica, &z_width, &z_height, &z_descent);
+				   max( 0, text_idx), glow_eFont_Helvetica, &z_width, &z_height, 
+				   &z_descent, tsize);
       if ( z_width > max_z_width)
 	max_z_width = z_width;
       tot_z_height += int( 1.3 * z_height);
@@ -216,10 +218,10 @@ void GrowMenu::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
       }
       if ( info.item[i].type == glow_eMenuItem_ButtonDisabled)
 	ctx->gdraw->text( w, x_text, y_text, info.item[i].text, strlen(info.item[i].text), text_drawtype, 
-			text_color_disabled, text_idx, highlight, 0, glow_eFont_Helvetica);
+			  text_color_disabled, text_idx, highlight, 0, glow_eFont_Helvetica, tsize);
       else
 	ctx->gdraw->text( w, x_text, y_text, info.item[i].text, strlen(info.item[i].text), text_drawtype, 
-			text_color, text_idx, highlight, 0, glow_eFont_Helvetica);
+			  text_color, text_idx, highlight, 0, glow_eFont_Helvetica, tsize);
       if ( info.item[i].type == glow_eMenuItem_PulldownMenu) {
 	// Draw arrow
 	glow_sPointX p[4];

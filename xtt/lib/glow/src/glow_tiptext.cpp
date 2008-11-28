@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_tiptext.cpp,v 1.6 2008-10-31 12:51:36 claes Exp $
+ * Proview   $Id: glow_tiptext.cpp,v 1.7 2008-11-28 17:13:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,8 +53,9 @@ void GlowTipText::draw_text( GlowArrayElem *e, char *text, int x, int y)
     timer_id = 0;
   }
 
-  ctx->gdraw->get_text_extent( text, strlen(text), glow_eDrawType_TextHelvetica, 2, 
-			       glow_eFont_Helvetica, &z_width, &z_height, &z_descent);
+  ctx->gdraw->get_text_extent( text, strlen(text), glow_eDrawType_TextHelvetica, text_size, 
+			       glow_eFont_Helvetica, &z_width, &z_height, &z_descent,
+			       ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (8+2*text_size));
 
   text_x = x;
   text_y = y;
@@ -86,9 +87,9 @@ void GlowTipText::draw()
   ctx->gdraw->rect( &ctx->mw, text_x, text_y, text_width, text_height,
 		       glow_eDrawType_Line, 0, 0);
   ctx->gdraw->text( &ctx->mw, text_x + 2, text_y + text_height - text_descent - 2, tiptext, 
-		    strlen(tiptext), glow_eDrawType_TextHelvetica, glow_eDrawType_Line, 2, 
-		    0, 0, glow_eFont_Helvetica);
-
+		    strlen(tiptext), glow_eDrawType_TextHelvetica, glow_eDrawType_Line, text_size, 
+		    0, 0, glow_eFont_Helvetica,
+		    ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (8+2*text_size));
 }
 
 void GlowTipText::remove_text( GlowArrayElem *e)

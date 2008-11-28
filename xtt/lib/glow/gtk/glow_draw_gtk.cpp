@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_gtk.cpp,v 1.16 2008-11-21 10:29:10 claes Exp $
+ * Proview   $Id: glow_draw_gtk.cpp,v 1.17 2008-11-28 17:13:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,6 +40,8 @@ using namespace std;
 #include "glow_draw_gtk.h"
 
 #include "glow_msg.h"
+
+static int pango = 1;
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
@@ -1552,12 +1554,15 @@ int GlowDrawGtk::polyline_erase( GlowWind *wind, glow_sPointX *points, int point
 
 int GlowDrawGtk::text( GlowWind *wind, int x, int y, char *text, int len,
 		       glow_eDrawType gc_type, glow_eDrawType color, int idx, 
-		       int highlight, int line, glow_eFont font_idx)
+		       int highlight, int line, glow_eFont font_idx, double size)
 {
   if ( ctx->nodraw) return 1;
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
 
-  if ( font_idx >= glow_eFont__ - 1)
+  if ( pango)
+    return text_pango( wind, x, y, text, len, gc_type, color, idx, highlight, line, font_idx, size);
+
+  if ( font_idx > glow_eFont_Courier)
     font_idx = glow_eFont_Helvetica;
 
   if ( w->clip_on)
@@ -1609,17 +1614,17 @@ int GlowDrawGtk::text( GlowWind *wind, int x, int y, char *text, int len,
 
 int GlowDrawGtk::text_cursor( GlowWind *wind, int x, int y, char *text, int len,
 			      glow_eDrawType gc_type, glow_eDrawType color, int idx, 
-			      int highlight, int pos, glow_eFont font)
+			      int highlight, int pos, glow_eFont font, double size)
 {
   if ( ctx->nodraw) return 1;
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
 
   int theight, tdescent, width, height, descent;
   get_text_extent( "A", 1, gc_type, idx, font,
-			&width, &height, &descent);
+		   &width, &height, &descent, size);
   if ( pos != 0)
     get_text_extent( text, pos, gc_type, idx, font,
-		     &width, &theight, &tdescent);
+		     &width, &theight, &tdescent, size);
   else
     width = 0;
 
@@ -1643,12 +1648,16 @@ int GlowDrawGtk::text_cursor( GlowWind *wind, int x, int y, char *text, int len,
 }
 
 int GlowDrawGtk::text_erase( GlowWind *wind, int x, int y, char *text, int len,
-	glow_eDrawType gc_type, int idx, int line, glow_eFont font_idx)
+			     glow_eDrawType gc_type, int idx, int line, glow_eFont font_idx, 
+			     double size)
 {
   if ( ctx->nodraw) return 1;
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
 
-  if ( font_idx >= glow_eFont__ - 1)
+  if ( pango)
+    return text_erase_pango( wind, x, y, text, len, gc_type, idx, line, font_idx, size);
+
+  if ( font_idx > glow_eFont_Courier)
     font_idx = glow_eFont_Helvetica;
 
   if ( gc_type == glow_eDrawType_TextHelvetica)
@@ -1903,11 +1912,14 @@ void GlowDrawGtk::set_cursor( GlowWind *wind, glow_eDrawCursor cursor)
 
 int GlowDrawGtk::get_text_extent( const char *text, int len,
 				  glow_eDrawType gc_type, int idx, glow_eFont font_idx,
-				  int *width, int *height, int *descent)
+				  int *width, int *height, int *descent, double size)
 {
   int	text_width, text_ascent, text_descent, text_lbearing, text_rbearing;
 
-  if ( font_idx >= glow_eFont__ - 1)
+  if ( pango)
+    return get_text_extent_pango( text, len, gc_type, idx, font_idx, width, height, descent, size);
+
+  if ( font_idx > glow_eFont_Courier)
     font_idx = glow_eFont_Helvetica;
 
   int font_type = get_font_type( gc_type);
@@ -2538,7 +2550,7 @@ int GlowDrawGtk::print( char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.16 2008-11-21 10:29:10 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.17 2008-11-28 17:13:45 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else
@@ -3344,3 +3356,210 @@ int GlowDrawGtk::gradient_fill_polyline( GlowWind *wind, glow_sPointX *points, i
   return 1;
 }
 
+#define FONTSTR "Lucida Sans"
+#define FONT_SCALE 0.7
+
+static char *font_string( int font_idx, int font_type, double size)
+{
+  static char str[80];
+  char bold_str[20];
+
+  if ( font_type == glow_eDrawFont_HelveticaBold)
+    strcpy( bold_str, "Bold ");
+  else
+    strcpy( bold_str, "");
+
+  switch ( font_idx) {
+  case glow_eFont_Helvetica:
+    sprintf( str, "%s %s%f", "Helvetica", bold_str, FONT_SCALE * size);
+    break;
+  case glow_eFont_Times:
+    sprintf( str, "%s %s%f", "DejaVu Serif", bold_str, FONT_SCALE * size);
+    break;
+  case glow_eFont_NewCenturySchoolbook:
+    sprintf( str, "%s %s%f", "Century Schoolbook L", bold_str, FONT_SCALE * size);
+    break;
+  case glow_eFont_Courier:
+    sprintf( str, "%s %s%f", "Courier 10 pitch", bold_str, FONT_SCALE * size);
+    break;
+  default:
+    sprintf( str, "%s %s%f", "Lucida Sans", bold_str, FONT_SCALE * size);
+  }
+  return str;
+}
+
+int GlowDrawGtk::text_pango( GlowWind *wind, int x, int y, char *text, int len,
+			     glow_eDrawType gc_type, glow_eDrawType color, int idx, 
+			     int highlight, int line, glow_eFont font_idx, double size)
+{
+  if ( ctx->nodraw) return 1;
+  DrawWindGtk *w = (DrawWindGtk *) wind->window;
+
+  if ( font_idx >= glow_eFont__)
+    font_idx = glow_eFont_Helvetica;
+
+  int font_type = get_font_type( gc_type);
+
+  if ( w->clip_on)
+    set_clip( w, get_gc( this, gc_type, idx));
+
+  if ( color != glow_eDrawType_Line) {
+    GdkGCValues 		xgcv;
+
+    gdk_gc_get_values( get_gc( this, color, 0), &xgcv);
+
+    gdk_gc_set_values( get_gc( this, gc_type, idx), &xgcv,
+	GDK_GC_FOREGROUND);
+  }
+
+  PangoRenderer *pr = gdk_pango_renderer_get_default( screen);
+  gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), get_gc( this, gc_type, idx));
+
+  for ( int i = 0; i < 2; i++) {
+    if ( i == 0) {
+      if ( !w->draw_buffer_only)
+	gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), w->window);
+      else
+	continue;
+    }
+    else if ( i == 1) {
+      if ( w->double_buffer_on)
+	gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), w->buffer);
+      else
+	continue;
+    }
+
+    PangoContext *pctx = gdk_pango_context_get_for_screen( screen);
+    PangoLayout *layout = pango_layout_new( pctx);
+    char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+    pango_layout_set_text( layout, textutf8, -1);
+    g_free( textutf8);
+    PangoFontDescription *desc = pango_font_description_from_string( font_string( font_idx, font_type, size));
+    pango_layout_set_font_description( layout, desc);
+    pango_font_description_free( desc);
+
+    int width, height;
+    pango_layout_get_size( layout, &width, &height);
+    pango_renderer_draw_layout( pr, layout, PANGO_SCALE * x, PANGO_SCALE * y - height * 0.8);
+  
+    g_object_unref( layout);
+    g_object_unref( pctx);
+  }
+  gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);
+  gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), 0);
+
+  if ( w->clip_on)
+    reset_clip( w, get_gc( this, gc_type, idx));
+
+  if ( color != glow_eDrawType_Line) {
+    GdkGCValues 		xgcv;
+
+    gdk_gc_get_values( get_gc( this, glow_eDrawType_Line, 0), 
+	&xgcv);
+
+    gdk_gc_set_values( get_gc( this, gc_type, idx), &xgcv,
+	GDK_GC_FOREGROUND);
+  }
+
+  return 1;
+}
+
+int GlowDrawGtk::text_erase_pango( GlowWind *wind, int x, int y, char *text, int len,
+				   glow_eDrawType gc_type, int idx, int line, glow_eFont font_idx,
+				   double size)
+{
+  if ( ctx->nodraw) return 1;
+  DrawWindGtk *w = (DrawWindGtk *) wind->window;
+
+  if ( font_idx >= glow_eFont__)
+    font_idx = glow_eFont_Helvetica;
+
+  if ( gc_type == glow_eDrawType_TextHelvetica)
+    gc_type = glow_eDrawType_TextHelveticaErase;
+  else if ( gc_type == glow_eDrawType_TextHelveticaBold)
+    gc_type = glow_eDrawType_TextHelveticaEraseBold;
+
+  int font_type = get_font_type( gc_type);
+
+  if ( w->clip_on)
+    set_clip( w, get_gc( this, gc_type, idx));
+
+  PangoRenderer *pr = gdk_pango_renderer_get_default( screen);
+  gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), gcs[gc_type][0]);
+  gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), w->window);
+
+  PangoContext *pctx = gdk_pango_context_get_for_screen( screen);
+  PangoLayout *layout = pango_layout_new( pctx);
+  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  pango_layout_set_text( layout, textutf8, -1);
+  g_free( textutf8);
+  PangoFontDescription *desc = pango_font_description_from_string( font_string( font_idx, font_type, size));
+  pango_layout_set_font_description( layout, desc);
+  pango_font_description_free( desc);
+
+  int width, height;
+  pango_layout_get_size( layout, &width, &height);
+
+  if ( !w->draw_buffer_only)
+    gdk_draw_rectangle( w->window, 
+		      get_gc( this, gc_type, idx), 1, 
+		      x, y - 0.8 / PANGO_SCALE * height, width / PANGO_SCALE, height / PANGO_SCALE);
+ if ( w->double_buffer_on)
+    gdk_draw_rectangle( w->buffer, 
+		      get_gc( this, gc_type, idx), 1, 
+		      x, y - 0.8 / PANGO_SCALE * height, width / PANGO_SCALE, height / PANGO_SCALE);
+  
+  g_object_unref( layout);
+  g_object_unref( pctx);
+  gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);
+  gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), 0);
+
+  if ( w->clip_on)
+    reset_clip( w, get_gc( this, gc_type, idx));
+
+  return 1;
+}
+
+int GlowDrawGtk::get_text_extent_pango( const char *text, int len,
+					glow_eDrawType gc_type, int idx, glow_eFont font_idx,
+					int *width, int *height, int *descent, double size)
+{
+  DrawWindGtk *w = &m_wind;
+
+  if ( font_idx >= glow_eFont__)
+    font_idx = glow_eFont_Helvetica;
+
+  if ( gc_type == glow_eDrawType_TextHelvetica)
+    gc_type = glow_eDrawType_TextHelveticaErase;
+  else if ( gc_type == glow_eDrawType_TextHelveticaBold)
+    gc_type = glow_eDrawType_TextHelveticaEraseBold;
+
+  int font_type = get_font_type( gc_type);
+
+  PangoRenderer *pr = gdk_pango_renderer_get_default( screen);
+  gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), gcs[gc_type][0]);
+  gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), w->window);
+
+  PangoContext *pctx = gdk_pango_context_get_for_screen( screen);
+  PangoLayout *layout = pango_layout_new( pctx);
+  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  pango_layout_set_text( layout, textutf8, -1);
+  g_free( textutf8);
+  PangoFontDescription *desc = pango_font_description_from_string( font_string( font_idx, font_type, size));
+  pango_layout_set_font_description( layout, desc);
+  pango_font_description_free( desc);
+
+  int lwidth, lheight;
+  pango_layout_get_size( layout, &lwidth, &lheight);
+
+  *width = lwidth / PANGO_SCALE;
+  *height = lheight / PANGO_SCALE;
+  *descent = *height * 0.2;
+
+  g_object_unref( layout);
+  g_object_unref( pctx);
+  gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);
+  gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), 0);
+
+  return 1;
+}

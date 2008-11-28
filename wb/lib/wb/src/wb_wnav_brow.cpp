@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_brow.cpp,v 1.10 2008-06-24 07:52:21 claes Exp $
+ * Proview   $Id: wb_wnav_brow.cpp,v 1.11 2008-11-28 17:14:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -982,13 +982,13 @@ void WNavBrow::create_nodeclasses()
   brow_AddAnnotPixmap( nc_object, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_object, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_object, 2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_object, 7, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnot( nc_object, 11, 0.6, 2,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
 
   // Create multi object class
@@ -999,32 +999,32 @@ void WNavBrow::create_nodeclasses()
   brow_AddAnnotPixmap( nc_multiobject, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_multiobject, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_multiobject, 2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_multiobject, 7, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnot( nc_multiobject, 11, 0.6, 2,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnot( nc_multiobject, 15, 0.6, 3,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnotPixmap( nc_multiobject, 2, 12.2, 0.1, flow_eDrawType_Line, 2, 1);
   brow_AddAnnot( nc_multiobject, 12.7, 0.6, 4,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnotPixmap( nc_multiobject, 3, 14.2, 0.1, flow_eDrawType_Line, 2, 1);
   brow_AddAnnot( nc_multiobject, 14.7, 0.6, 5,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnotPixmap( nc_multiobject, 4, 16.2, 0.1, flow_eDrawType_Line, 2, 1);
   brow_AddAnnot( nc_multiobject, 16.7, 0.6, 6,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnotPixmap( nc_multiobject, 5, 18.2, 0.1, flow_eDrawType_Line, 2, 1);
   brow_AddAnnot( nc_multiobject, 18.7, 0.6, 7,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
 
   // Create attribute nodeclass
@@ -1035,10 +1035,10 @@ void WNavBrow::create_nodeclasses()
   brow_AddAnnotPixmap( nc_attr, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_attr, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_attr, 2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_attr, 8, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
 
   // Create attribute nodeclass for fullname display
@@ -1049,10 +1049,10 @@ void WNavBrow::create_nodeclasses()
   brow_AddAnnotPixmap( nc_attr_full, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_attr_full, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_attr_full, 2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_attr_full, 25, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
 
   // Input with Used and Inverted radiobutton
@@ -1064,15 +1064,15 @@ void WNavBrow::create_nodeclasses()
   brow_AddAnnotPixmap( nc_attr_input, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_attr_input, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_attr_input, 2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_attr_input, 8, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddText( nc_attr_input, "Used", 12, 0.6, 
-	flow_eDrawType_TextHelveticaBold, 2);
+	flow_eDrawType_TextHelvetica, 2);
   brow_AddText( nc_attr_input, "Inverted", 15, 0.6,
-	flow_eDrawType_TextHelveticaBold, 2);
+	flow_eDrawType_TextHelvetica, 2);
 
   // Input with Inverted radiobutton
   brow_CreateNodeClass( ctx, "NavigatorAttrInputNoinv",
@@ -1082,13 +1082,13 @@ void WNavBrow::create_nodeclasses()
   brow_AddAnnotPixmap( nc_attr_inputinv, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_attr_inputinv, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_attr_inputinv, 2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_attr_inputinv, 8, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddText( nc_attr_inputinv, "Inverted", 12, 0.6, 
-	flow_eDrawType_TextHelveticaBold, 2);
+	flow_eDrawType_TextHelvetica, 2);
 
   // Input and output with Used radiobutton
   brow_CreateNodeClass( ctx, "NavigatorAttrOutput", 
@@ -1098,13 +1098,13 @@ void WNavBrow::create_nodeclasses()
   brow_AddAnnotPixmap( nc_attr_output, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_attr_output, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_attr_output, 2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_attr_output, 8, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddText( nc_attr_output, "Used", 12, 0.6, 
-	flow_eDrawType_TextHelveticaBold, 2);
+	flow_eDrawType_TextHelvetica, 2);
 
   // Create multiline attribute nodeclass
 
@@ -1114,10 +1114,10 @@ void WNavBrow::create_nodeclasses()
   brow_AddAnnotPixmap( nc_attr_multiline, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_attr_multiline, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_attr_multiline, 2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_attr_multiline, 8, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_MultiLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_MultiLine, 
 		1);
 
   // Create multiline attribute nodeclass for fullname
@@ -1131,10 +1131,10 @@ void WNavBrow::create_nodeclasses()
   brow_AddAnnotPixmap( nc_attr_multiline_full, 1, 1.1, 0.1, 
 		       flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_attr_multiline_full, 2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_attr_multiline_full, 25, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2,
+		flow_eDrawType_TextHelvetica, 2,
 		flow_eAnnotType_MultiLine, 1);
 
   // Create attribute nodeclass
@@ -1146,7 +1146,7 @@ void WNavBrow::create_nodeclasses()
   brow_AddAnnotPixmap( nc_enum, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_enum, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_enum, 2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
  
   // Create table nodeclass
@@ -1157,34 +1157,34 @@ void WNavBrow::create_nodeclasses()
   brow_AddAnnotPixmap( nc_table, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_table, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_table, 2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_table, 8, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnot( nc_table, 12, 0.6, 2,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnot( nc_table, 16, 0.6, 3,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnot( nc_table, 20, 0.6, 4,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnot( nc_table, 24, 0.6, 5,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnot( nc_table, 28, 0.6, 6,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnot( nc_table, 32, 0.6, 7,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnot( nc_table, 35, 0.6, 8,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnot( nc_table, 38, 0.6, 9,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
 
   // Create text

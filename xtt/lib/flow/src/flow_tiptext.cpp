@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_tiptext.cpp,v 1.2 2008-10-31 12:51:33 claes Exp $
+ * Proview   $Id: flow_tiptext.cpp,v 1.3 2008-11-28 17:13:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -79,8 +79,8 @@ void FlowTipText::draw_text( FlowArrayElem *e, char *text, int x, int y)
   text_width = 0;
   text_height = 0;
   for ( int i = 0; i < tiptext_rows; i++) {
-    ctx->fdraw->get_text_extent( ctx, tiptext[i], strlen(tiptext[i]), flow_eDrawType_TextHelvetica, 2, 
-				 &z_width, &z_height);
+    ctx->fdraw->get_text_extent( ctx, tiptext[i], strlen(tiptext[i]), flow_eDrawType_TextHelvetica, text_size, 
+				 &z_width, &z_height, ctx->zoom_factor / ctx->base_zoom_factor * (8+2*text_size));
     if ( z_width > text_width)
       text_width = z_width;
     text_height += z_height + 3;
@@ -117,8 +117,9 @@ void FlowTipText::draw()
   int y = text_y + 4 + (text_height-4)/tiptext_rows;
   for ( int i = 0; i < tiptext_rows; i++) {
     ctx->fdraw->text( ctx, text_x + 6, y - text_descent - 2, 
-		      tiptext[i], strlen(tiptext[i]), flow_eDrawType_TextHelvetica, 2, 
-		      0, 0);
+		      tiptext[i], strlen(tiptext[i]), flow_eDrawType_TextHelvetica, text_size, 
+		      0, 0, ctx->zoom_factor / ctx->base_zoom_factor * (8+2*text_size));
+
     y += (text_height-3)/tiptext_rows;
   }
 }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_xlib.h,v 1.4 2008-10-31 12:51:32 claes Exp $
+ * Proview   $Id: flow_draw_xlib.h,v 1.5 2008-11-28 17:13:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -134,13 +134,16 @@ class FlowDrawXLib : public FlowDraw {
   int nav_line_erase( FlowCtx *ctx, int x1, int y1, int x2, int y2,
 		      int idx);
   int text( FlowCtx *ctx, int x, int y, char *text, int len,
-	    flow_eDrawType gc_type, int idx, int highlight, int line);
+	    flow_eDrawType gc_type, int idx, int highlight, int line, double size);
   int text_erase( FlowCtx *ctx, int x, int y, char *text, int len,
-		  flow_eDrawType gc_type, int idx, int line);
+		  flow_eDrawType gc_type, int idx, int line, double size);
+  int text_inverse( FlowCtx *ctx, int x, int y, char *text, int len,
+		    flow_eDrawType gc_type, int idx, int line, double size)
+    { text_erase( ctx, x, y, text, len, gc_type, idx, line, size);}
   int nav_text( FlowCtx *ctx, int x, int y, char *text, int len,
-		flow_eDrawType gc_type, int idx, int highlight, int line);
+		flow_eDrawType gc_type, int idx, int highlight, int line, double size);
   int nav_text_erase( FlowCtx *ctx, int x, int y, char *text, int len,
-		      flow_eDrawType gc_type, int idx, int line);
+		      flow_eDrawType gc_type, int idx, int line, double size);
   int fill_rect( FlowCtx *ctx, int x, int y, int width, int height, 
 		 flow_eDrawType gc_type);
   int image( FlowCtx *ctx, int x, int y, int width, int height,
@@ -165,8 +168,8 @@ class FlowDrawXLib : public FlowDraw {
   void set_cursor( FlowCtx *ctx, draw_eCursor cursor);
   void set_nav_cursor( FlowCtx *ctx, draw_eCursor cursor);
   int get_text_extent( FlowCtx *ctx, const char *text, int len,
-			    flow_eDrawType gc_type, int idx,
-			    int *width, int *height);
+		       flow_eDrawType gc_type, int idx, double size,
+		       int *width, int *height);
   void copy_area( FlowCtx *ctx, int x, int y);
   void clear_area( FlowCtx *ctx, int ll_x, int ur_x, int ll_y, int ur_y);
   int create_input( FlowCtx *ctx, int x, int y, char *text, int len,

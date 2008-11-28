@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_grownode.h,v 1.14 2008-11-20 10:30:44 claes Exp $
+ * Proview   $Id: glow_grownode.h,v 1.15 2008-11-28 17:13:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -205,6 +205,8 @@ class GrowNode : public GlowNode {
   int		input_position;	//!< Cursor position for input annotation.
   int		input_selected; //!< Text in input annotation is selected.
   glow_eGradient gradient;      //!< Type of gradient.
+  glow_eDrawType text_type;	//!< Text type, bold or normal.
+  glow_eFont	text_font;	//!< Text font.
     
   //! Set dynamic code
   /*!
@@ -906,6 +908,8 @@ class GrowNode : public GlowNode {
   int get_annotation_info( int num, int *t_size, glow_eDrawType *t_drawtype, glow_eDrawType *t_color,
 				 glow_eDrawType *bg_color, double *scale);
   int get_java_name( char *name) { return nc->get_java_name( name);}
+  void set_textbold( int bold);
+  void set_textfont( glow_eFont textfont);
 
   //! Destructor
   /*! Remove the object from the context and erase it from the screen.

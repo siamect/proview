@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_text.h,v 1.4 2008-10-31 12:51:33 claes Exp $
+ * Proview   $Id: flow_text.h,v 1.5 2008-11-28 17:13:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -46,8 +46,7 @@ class FlowText : public FlowArrayElem {
     void open( ifstream& fp);
     void draw( void *pos, int highlight, int hot, void *node);
     void nav_draw( void *pos, int highlight, void *node);
-    void draw_inverse( void *pos, int hot, void *node)
-	{ erase( pos, hot, node);};
+    void draw_inverse( void *pos, int hot, void *node);
     void erase( void *pos, int hot, void *node);
     void nav_erase( void *pos, void *node);
     void move( void *pos, double x, double y, int highlight, int hot);

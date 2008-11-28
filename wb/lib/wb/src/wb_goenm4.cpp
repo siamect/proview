@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goenm4.cpp,v 1.1 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_goenm4.cpp,v 1.2 2008-11-28 17:14:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -148,7 +148,7 @@ int goen_create_nodetype_m4(
       flow_AddConPoint(nc, 0, f_height/2 + f_pinlength, 
 		2, flow_eDirection_Up);
       flow_AddAnnot( nc, -f_width/2 + f_strlength, 0,
-		0, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+		0, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 		flow_eAnnotType_OneLine, flow_mDisplayLevel_1);
 
       /* Add execute order display */
@@ -158,7 +158,7 @@ int goen_create_nodetype_m4(
       flow_AddAnnot( nc, 
 	f_width/2 - GOEN_DISPLAYNODEWIDTH + f_strlength,
 	(GOEN_DISPLAYNODEHEIGHT + f_strheight)/2.0 - f_height/2,
-	 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+	 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 	flow_eAnnotType_OneLine, flow_mDisplayLevel_2);
       break;
     }
@@ -186,7 +186,7 @@ int goen_create_nodetype_m4(
       flow_AddConPoint(nc, 0, f_height/2 + f_pinlength, 
 		2, flow_eDirection_Up);
       flow_AddAnnot( nc, -f_width/2 + f_strlength, 0, 
-		0, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+		0, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 		flow_eAnnotType_OneLine, flow_mDisplayLevel_1);
       /* Add execute order display */
       flow_AddFilledRect( nc, f_width/2 - GOEN_DISPLAYNODEWIDTH, -f_height/2, 
@@ -195,7 +195,7 @@ int goen_create_nodetype_m4(
       flow_AddAnnot( nc, 
 	f_width/2 - GOEN_DISPLAYNODEWIDTH + f_strlength,
 	(GOEN_DISPLAYNODEHEIGHT + f_strheight)/2.0 - f_height/2,
-	 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+	 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 	flow_eAnnotType_OneLine, flow_mDisplayLevel_2);
       break;
     }
@@ -227,7 +227,7 @@ int goen_create_nodetype_m4(
       flow_AddConPoint(nc, 0, f_height/2 + f_pinlength, 
 		2, flow_eDirection_Up);
       flow_AddAnnot( nc, -f_width/2 + f_strlength, 0, 
-		0, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+		0, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 		flow_eAnnotType_OneLine, flow_mDisplayLevel_1);
       /* Add execute order display */
       flow_AddFilledRect( nc, f_width/2 - GOEN_DISPLAYNODEWIDTH, -f_height/2, 
@@ -236,7 +236,7 @@ int goen_create_nodetype_m4(
       flow_AddAnnot( nc, 
 	f_width/2 - GOEN_DISPLAYNODEWIDTH + f_strlength,
 	(GOEN_DISPLAYNODEHEIGHT + f_strheight)/2.0 - f_height/2,
-	 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+	 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 	flow_eAnnotType_OneLine, flow_mDisplayLevel_2);
       break;
     }
@@ -255,7 +255,7 @@ int goen_create_nodetype_m4(
       flow_AddConPoint(nc, f_width/2 + f_pinlength, 0, 
 		1, flow_eDirection_Right);
       flow_AddAnnot( nc, -f_width/2 + f_strlength, 0,
-		0, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+		0, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 		flow_eAnnotType_OneLine, flow_mDisplayLevel_1);
       /* Add execute order display */
       flow_AddFilledRect( nc, f_width/2 - GOEN_DISPLAYNODEWIDTH, -f_height/2, 
@@ -264,7 +264,7 @@ int goen_create_nodetype_m4(
       flow_AddAnnot( nc, 
 	f_width/2 - GOEN_DISPLAYNODEWIDTH + f_strlength,
 	(GOEN_DISPLAYNODEHEIGHT + f_strheight)/2.0 - f_height/2,
-	 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+	 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 	flow_eAnnotType_OneLine, flow_mDisplayLevel_2);
       break;
     }
@@ -283,7 +283,7 @@ int goen_create_nodetype_m4(
       flow_AddConPoint(nc, 0, f_height/2 + f_pinlength, 
 		1, flow_eDirection_Up);
       flow_AddAnnot( nc, -f_width/2 + f_strlength, 0,
-		0, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+		0, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 		flow_eAnnotType_OneLine, flow_mDisplayLevel_1);
       /* Add execute order display */
       flow_AddFilledRect( nc, f_width/2 - GOEN_DISPLAYNODEWIDTH, -f_height/2, 
@@ -292,7 +292,7 @@ int goen_create_nodetype_m4(
       flow_AddAnnot( nc, 
 	f_width/2 - GOEN_DISPLAYNODEWIDTH + f_strlength,
 	(GOEN_DISPLAYNODEHEIGHT + f_strheight)/2.0 - f_height/2,
-	 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+	 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 	flow_eAnnotType_OneLine, flow_mDisplayLevel_2);
       break;
     }
@@ -315,7 +315,7 @@ int goen_create_nodetype_m4(
       flow_AddConPoint( nc, -f_width/2, 0, 
 		1, flow_eDirection_Left);
       flow_AddAnnot( nc, f_strlength, - f_strheight/2, 
-		0, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+		0, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 		flow_eAnnotType_OneLine, flow_mDisplayLevel_1);
       /* Add execute order display */
       flow_AddFilledRect( nc, f_width/2 - GOEN_DISPLAYNODEWIDTH, 0, 
@@ -324,7 +324,7 @@ int goen_create_nodetype_m4(
       flow_AddAnnot( nc, 
 	f_width/2 - GOEN_DISPLAYNODEWIDTH + f_strlength,
 	(GOEN_DISPLAYNODEHEIGHT + f_strheight)/2.0,
-	 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+	 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 	flow_eAnnotType_OneLine, flow_mDisplayLevel_2);
       break;
     }
@@ -349,7 +349,7 @@ int goen_create_nodetype_m4(
       flow_AddConPoint( nc, f_width + f_pinlength, 0,
 		0, flow_eDirection_Right);
       flow_AddText( nc, "OrderAct", f_strlength, 0.5 * f_strheight,
-		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+		flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE);
       break;
     }
     case goen_eGraphIndex_SetCond:
@@ -363,7 +363,7 @@ int goen_create_nodetype_m4(
       flow_AddConPoint( nc, -f_pinlength, 0,
 		0, flow_eDirection_Left);
       flow_AddText( nc, "SetCond", f_strlength, 0.5 * f_strheight,
-		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+		flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE);
 
       /* Add execute order display */
       flow_AddFilledRect( nc, f_width - GOEN_DISPLAYNODEWIDTH, -f_height/2, 
@@ -372,7 +372,7 @@ int goen_create_nodetype_m4(
       flow_AddAnnot( nc, 
 	f_width - GOEN_DISPLAYNODEWIDTH + f_strlength,
 	(GOEN_DISPLAYNODEHEIGHT + f_strheight)/2.0 - f_height/2,
-	 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+	 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 	flow_eAnnotType_OneLine, flow_mDisplayLevel_2);
       break;
     }
@@ -390,13 +390,13 @@ int goen_create_nodetype_m4(
       flow_AddLine( nc, 0, f_repeat * 2 - f_yoffs, f_width, f_repeat * 2 - f_yoffs, 
 		flow_eDrawType_Line, 2);
       flow_AddAnnot( nc, f_repeat*2.7, f_repeat - f_strheight*0.25 - f_yoffs, 
-		0, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+		0, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 		flow_eAnnotType_OneLine, flow_mDisplayLevel_1);
       flow_AddAnnot( nc, f_repeat*2.7, f_repeat*2 - f_strheight*0.25 - f_yoffs, 
-		1, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+		1, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 		flow_eAnnotType_OneLine, flow_mDisplayLevel_1);
       flow_AddAnnot( nc, f_repeat*2.7, f_repeat*3 - f_strheight*0.25 - f_yoffs, 
-		2, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+		2, flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE, 
 		flow_eAnnotType_OneLine, flow_mDisplayLevel_1);
       flow_AddText( nc, "Volume", f_strlength/3, f_repeat - f_strheight*0.3 - f_yoffs, 
 		flow_eDrawType_TextHelvetica, 1);
@@ -423,22 +423,22 @@ int goen_create_nodetype_m4(
 		0, flow_eDirection_Right);
       if ( graph_index == goen_eGraphIndex_GetAgeneric)
         flow_AddText( nc, "GetA", f_strlength, 0.5 * f_strheight,
-		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+		flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE);
       else if ( graph_index == goen_eGraphIndex_GetSgeneric)
         flow_AddText( nc, "GetS", f_strlength, 0.5 * f_strheight,
-		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+		flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE);
       else if ( graph_index == goen_eGraphIndex_GetIgeneric)
         flow_AddText( nc, "GetI", f_strlength, 0.5 * f_strheight,
-		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+		flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE);
       else if ( graph_index == goen_eGraphIndex_GetATgeneric)
         flow_AddText( nc, "GetAT", f_strlength, 0.5 * f_strheight,
-		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+		flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE);
       else if ( graph_index == goen_eGraphIndex_GetDTgeneric)
         flow_AddText( nc, "GetDT", f_strlength, 0.5 * f_strheight,
-		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+		flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE);
       else
         flow_AddText( nc, "GetD", f_strlength, 0.5 * f_strheight,
-		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+		flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE);
       break;
     }
     case goen_eGraphIndex_StoAgeneric:
@@ -458,22 +458,22 @@ int goen_create_nodetype_m4(
 		0, flow_eDirection_Left);
       if ( graph_index == goen_eGraphIndex_StoAgeneric)
         flow_AddText( nc, "StoA", f_strlength, 0.5 * f_strheight,
-		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+		flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE);
       else if ( graph_index == goen_eGraphIndex_StoSgeneric)
         flow_AddText( nc, "StoS", f_strlength, 0.5 * f_strheight,
-		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+		flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE);
       else if ( graph_index == goen_eGraphIndex_StoIgeneric)
         flow_AddText( nc, "StoI", f_strlength, 0.5 * f_strheight,
-		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+		flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE);
       else if ( graph_index == goen_eGraphIndex_StoATgeneric)
         flow_AddText( nc, "StoAT", f_strlength, 0.5 * f_strheight,
-		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+		flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE);
       else if ( graph_index == goen_eGraphIndex_StoDTgeneric)
         flow_AddText( nc, "StoDT", f_strlength, 0.5 * f_strheight,
-		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+		flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE);
       else
         flow_AddText( nc, "StoD", f_strlength, 0.5 * f_strheight,
-		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+		flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE);
       break;
     }
     case goen_eGraphIndex_FirstScan:
@@ -487,7 +487,7 @@ int goen_create_nodetype_m4(
       flow_AddConPoint( nc, f_width + f_pinlength, 0,
 		0, flow_eDirection_Right);
       flow_AddText( nc, "FirstScan", f_strlength, 0.5 * f_strheight,
-		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+		flow_eDrawType_TextHelvetica, GOEN_F_TEXTSIZE);
       break;
     }
   }

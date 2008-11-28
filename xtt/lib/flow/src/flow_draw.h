@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw.h,v 1.7 2008-10-31 12:51:33 claes Exp $
+ * Proview   $Id: flow_draw.h,v 1.8 2008-11-28 17:13:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -87,13 +87,18 @@ class FlowDraw {
   virtual int nav_line_erase( FlowCtx *ctx, int x1, int y1, int x2, int y2,
 		      int idx) {return 1;}
   virtual int text( FlowCtx *ctx, int x, int y, char *text, int len,
-	    flow_eDrawType gc_type, int idx, int highlight, int line) {return 1;}
+		    flow_eDrawType gc_type, int idx, int highlight, int line, double size) 
+    {return 1;}
+  virtual int text_inverse( FlowCtx *ctx, int x, int y, char *text, int len,
+			    flow_eDrawType gc_type, int idx, int line, double size)
+    {return 1;}
   virtual int text_erase( FlowCtx *ctx, int x, int y, char *text, int len,
-		  flow_eDrawType gc_type, int idx, int line) {return 1;}
+			  flow_eDrawType gc_type, int idx, int line, double size) {return 1;}
   virtual int nav_text( FlowCtx *ctx, int x, int y, char *text, int len,
-		flow_eDrawType gc_type, int idx, int highlight, int line) {return 1;}
+			flow_eDrawType gc_type, int idx, int highlight, int line, double sizes) 
+    {return 1;}
   virtual int nav_text_erase( FlowCtx *ctx, int x, int y, char *text, int len,
-		      flow_eDrawType gc_type, int idx, int line) {return 1;}
+			      flow_eDrawType gc_type, int idx, int line, double size) {return 1;}
   virtual int fill_rect( FlowCtx *ctx, int x, int y, int width, int height, 
 		 flow_eDrawType gc_type) {return 1;}
   virtual int image( FlowCtx *ctx, int x, int y, int width, int height,
@@ -118,8 +123,8 @@ class FlowDraw {
   virtual void set_cursor( FlowCtx *ctx, draw_eCursor cursor) {}
   virtual void set_nav_cursor( FlowCtx *ctx, draw_eCursor cursor) {}
   virtual int get_text_extent( FlowCtx *ctx, const char *text, int len,
-			    flow_eDrawType gc_type, int idx,
-			    int *width, int *height) {return 1;}
+			       flow_eDrawType gc_type, int idx,
+			       int *width, int *height, double size) {return 1;}
   virtual void copy_area( FlowCtx *ctx, int x, int y) {}
   virtual void clear_area( FlowCtx *ctx, int ll_x, int ur_x, int ll_y, int ur_y) {}
   virtual int create_input( FlowCtx *ctx, int x, int y, char *text, int len,
@@ -151,7 +156,6 @@ class FlowDraw {
 			  flow_tImImage *orig_im, flow_tImImage *im, 
 			  flow_tPixmap *im_pixmap, flow_tPixmap *im_mask,
 			  flow_tPixmap *im_nav_pixmap, flow_tPixmap *im_nav_mask) {return 0;}
-
 };
 
 

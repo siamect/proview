@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_xlib.cpp,v 1.5 2008-10-31 12:51:32 claes Exp $
+ * Proview   $Id: flow_draw_xlib.cpp,v 1.6 2008-11-28 17:13:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1129,7 +1129,7 @@ int FlowDrawXLib::nav_line_erase( FlowCtx *ctx, int x1, int y1, int x2, int y2,
 }
 
 int FlowDrawXLib::text( FlowCtx *ctx, int x, int y, char *text, int len,
-	flow_eDrawType gc_type, int idx, int highlight, int line)
+			flow_eDrawType gc_type, int idx, int highlight, int line, double size)
 {
   if ( ctx->nodraw) return 1;
 
@@ -1140,7 +1140,7 @@ int FlowDrawXLib::text( FlowCtx *ctx, int x, int y, char *text, int len,
 }
 
 int FlowDrawXLib::text_erase( FlowCtx *ctx, int x, int y, char *text, int len,
-	flow_eDrawType gc_type, int idx, int line)
+			      flow_eDrawType gc_type, int idx, int line, double size)
 {
   if ( ctx->nodraw) return 1;
 
@@ -1155,7 +1155,7 @@ int FlowDrawXLib::text_erase( FlowCtx *ctx, int x, int y, char *text, int len,
 }
 
 int FlowDrawXLib::nav_text( FlowCtx *ctx, int x, int y, char *text, int len,
-	flow_eDrawType gc_type, int idx, int highlight, int line)
+			    flow_eDrawType gc_type, int idx, int highlight, int line, double size)
 {
   if ( ctx->no_nav || ctx->nodraw) return 1;
 
@@ -1166,7 +1166,7 @@ int FlowDrawXLib::nav_text( FlowCtx *ctx, int x, int y, char *text, int len,
 }
 
 int FlowDrawXLib::nav_text_erase( FlowCtx *ctx, int x, int y, char *text, int len,
-	flow_eDrawType gc_type, int idx, int line)
+				  flow_eDrawType gc_type, int idx, int line, double size)
 {
   if ( ctx->no_nav || ctx->nodraw) return 1;
 
@@ -1455,8 +1455,8 @@ void FlowDrawXLib::set_nav_cursor( FlowCtx *ctx, draw_eCursor cursor)
 }
 
 int FlowDrawXLib::get_text_extent( FlowCtx *ctx, const char *text, int len,
-	flow_eDrawType gc_type, int idx,
-	int *width, int *height)
+				   flow_eDrawType gc_type, int idx, double size,
+				   int *width, int *height)
 {
   int	direction, ascent, descent;
   XCharStruct char_struct;

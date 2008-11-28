@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_tiptext.h,v 1.4 2008-10-31 12:51:36 claes Exp $
+ * Proview   $Id: glow_tiptext.h,v 1.5 2008-11-28 17:13:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -48,7 +48,7 @@ class GlowTipText {
   /*!
     \param gctx		Glow context.
   */
-  GlowTipText( GrowCtx *gctx) : ctx(gctx), active(false), timer_id(0) {}
+  GlowTipText( GrowCtx *gctx) : ctx(gctx), active(false), timer_id(0), text_size(2) {}
 
   //! Destructor
   /*! Removes the timer if it is set.
@@ -65,6 +65,7 @@ class GlowTipText {
   char tiptext[200];	//!< Current tip text.
   bool active;		//!< Tip text is active, i.e. timer is running or text is displayed.
   void *timer_id;	//!< Timer id.
+  int  text_size;	//!< Text size.
 
   //! Activate tooltip.
   /*!

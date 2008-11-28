@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_tiptext.h,v 1.4 2008-10-31 12:51:33 claes Exp $
+ * Proview   $Id: flow_tiptext.h,v 1.5 2008-11-28 17:13:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,7 +50,8 @@ class FlowTipText {
   /*!
     \param gctx		Flow context.
   */
-  FlowTipText( FlowCtx *gctx) : ctx(gctx), tiptext_rows(0), active(false), timer_id(0) {}
+  FlowTipText( FlowCtx *gctx) : ctx(gctx), tiptext_rows(0), active(false), timer_id(0), 
+    text_size(2) {}
 
   //! Destructor
   /*! Removes the timer if it is set.
@@ -68,6 +69,7 @@ class FlowTipText {
   char tiptext[TIPTEXT_ROWS][256]; //!< Current tip text.
   bool active;		//!< Tip text is active, i.e. timer is running or text is displayed.
   void *timer_id;	//!< Timer id.
+  int  text_size;	//!< Text size.
 
   //! Activate tooltip.
   /*!

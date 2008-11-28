@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_gtk.cpp,v 1.12 2008-10-31 12:51:32 claes Exp $
+ * Proview   $Id: flow_draw_gtk.cpp,v 1.13 2008-11-28 17:13:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,6 +39,8 @@
 typedef void *GdkImlibImage;
 
 #define DRAW_PRESS_PIX 9
+
+static int pango = 1;
 
 typedef struct {
 	GtkWidget      	*w;
@@ -1144,10 +1146,136 @@ int FlowDrawGtk::nav_line_erase( FlowCtx *ctx, int x1, int y1, int x2, int y2,
   return 1;
 }
 
-int FlowDrawGtk::text( FlowCtx *ctx, int x, int y, char *text, int len,
-	flow_eDrawType gc_type, int idx, int highlight, int line)
+#define FONTSTR "Lucida Sans"
+#define FONT_SCALE 0.7
+
+static char *font_string( flow_eDrawType gc_type, double size)
+{
+  static char str[80];
+  switch ( gc_type) {
+  case  flow_eDrawType_TextHelveticaBold:
+  case flow_eDrawType_TextHelveticaEraseBold:
+    sprintf( str, "%s Bold %f", FONTSTR, FONT_SCALE * size);
+    break;
+  default:
+    sprintf( str, "%s %f", FONTSTR, FONT_SCALE * size);
+  }
+  return str;
+}
+
+int FlowDrawGtk::text_pango( FlowCtx *ctx, int x, int y, char *text, int len,
+			     flow_eDrawType gc_type, int idx, int highlight, int line, double size)
 {
   if ( ctx->nodraw) return 1;
+
+  PangoRenderer *pr = gdk_pango_renderer_get_default( screen);
+  gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), window);
+  gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), gcs[gc_type][0]);
+
+  PangoContext *pctx = gdk_pango_context_get_for_screen( screen);
+  PangoLayout *layout = pango_layout_new( pctx);
+  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  pango_layout_set_text( layout, textutf8, -1);
+  g_free( textutf8);
+  PangoFontDescription *desc = pango_font_description_from_string( font_string( gc_type, size));
+  pango_layout_set_font_description( layout, desc);
+  pango_font_description_free( desc);
+
+  int w, h;
+  pango_layout_get_size( layout, &w, &h);
+  pango_renderer_draw_layout( pr, layout, PANGO_SCALE * x, PANGO_SCALE * y - h * 0.8);
+  
+  gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);
+  gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), 0);
+  g_object_unref( layout);
+  g_object_unref( pctx);
+  
+  return 1;
+}
+
+int FlowDrawGtk::text_inverse_pango( FlowCtx *ctx, int x, int y, char *text, int len,
+				     flow_eDrawType gc_type, int idx, int line, double size)
+{
+  if ( ctx->nodraw) return 1;
+
+  if ( gc_type == flow_eDrawType_TextHelvetica)
+    gc_type = flow_eDrawType_TextHelveticaErase;
+  else if ( gc_type == flow_eDrawType_TextHelveticaBold)
+    gc_type = flow_eDrawType_TextHelveticaEraseBold;
+
+  PangoRenderer *pr = gdk_pango_renderer_get_default( screen);
+  gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), window);
+  gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), gcs[gc_type][idx]);
+
+  PangoContext *pctx = gdk_pango_context_get_for_screen( screen);
+  PangoLayout *layout = pango_layout_new( pctx);
+  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  pango_layout_set_text( layout, textutf8, -1);
+  g_free( textutf8);
+  PangoFontDescription *desc = pango_font_description_from_string( font_string( gc_type, size));
+  pango_layout_set_font_description( layout, desc);
+  pango_font_description_free( desc);
+
+  int w, h;
+  pango_layout_get_size( layout, &w, &h);
+
+  pango_renderer_draw_layout( pr, layout, PANGO_SCALE * x, PANGO_SCALE * y - h * 0.8);
+  
+  gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);
+  gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), 0);
+  g_object_unref( layout);
+  g_object_unref( pctx);
+
+  return 1;
+}
+
+int FlowDrawGtk::text_erase_pango( FlowCtx *ctx, int x, int y, char *text, int len,
+				   flow_eDrawType gc_type, int idx, int line, double size)
+{
+  if ( ctx->nodraw) return 1;
+
+  if ( gc_type == flow_eDrawType_TextHelvetica)
+    gc_type = flow_eDrawType_TextHelveticaErase;
+  else if ( gc_type == flow_eDrawType_TextHelveticaBold)
+    gc_type = flow_eDrawType_TextHelveticaEraseBold;
+
+  PangoRenderer *pr = gdk_pango_renderer_get_default( screen);
+  gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), window);
+  gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), gcs[gc_type][idx]);
+
+  PangoContext *pctx = gdk_pango_context_get_for_screen( screen);
+  PangoLayout *layout = pango_layout_new( pctx);
+  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  pango_layout_set_text( layout, textutf8, -1);
+  g_free( textutf8);
+  PangoFontDescription *desc = pango_font_description_from_string( font_string( gc_type, size));
+  pango_layout_set_font_description( layout, desc);
+  pango_font_description_free( desc);
+
+  int w, h;
+  pango_layout_get_size( layout, &w, &h);
+
+  gdk_draw_rectangle( window, 
+		      gcs[flow_eDrawType_LineErase][idx], 1, 
+		      x, y - 0.8 / PANGO_SCALE * h, w / PANGO_SCALE, h / PANGO_SCALE);
+  // pango_renderer_draw_layout( pr, layout, PANGO_SCALE * x, PANGO_SCALE * y - h * 0.8);
+  
+  gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);
+  gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), 0);
+  g_object_unref( layout);
+  g_object_unref( pctx);
+
+  return 1;
+}
+
+int FlowDrawGtk::text( FlowCtx *ctx, int x, int y, char *text, int len,
+		       flow_eDrawType gc_type, int idx, int highlight, int line, double size)
+{
+  if ( ctx->nodraw) return 1;
+
+  if ( pango)
+    return text_pango( ctx, x, y, text, len, gc_type, idx, highlight, line, size);
+
   int font_idx = get_font_idx( gc_type);
 
   gdk_draw_text( window, font[font_idx][idx],
@@ -1156,16 +1284,32 @@ int FlowDrawGtk::text( FlowCtx *ctx, int x, int y, char *text, int len,
   return 1;
 }
 
-int FlowDrawGtk::text_erase( FlowCtx *ctx, int x, int y, char *text, int len,
-	flow_eDrawType gc_type, int idx, int line)
+int FlowDrawGtk::text_inverse( FlowCtx *ctx, int x, int y, char *text, int len,
+			     flow_eDrawType gc_type, int idx, int line, double size)
 {
   if ( ctx->nodraw) return 1;
+
+  if ( pango)
+    return text_inverse_pango( ctx, x, y, text, len, gc_type, idx, line, size);
+  else
+    return text_erase( ctx, x, y, text, len, gc_type, idx, line, size);
+}
+
+int FlowDrawGtk::text_erase( FlowCtx *ctx, int x, int y, char *text, int len,
+			     flow_eDrawType gc_type, int idx, int line, double size)
+{
+  if ( ctx->nodraw) return 1;
+
+  if ( pango)
+    return text_erase_pango( ctx, x, y, text, len, gc_type, idx, line, size);
+
   int font_idx = get_font_idx( gc_type);
 
   if ( gc_type == flow_eDrawType_TextHelvetica)
     gc_type = flow_eDrawType_TextHelveticaErase;
   else if ( gc_type == flow_eDrawType_TextHelveticaBold)
     gc_type = flow_eDrawType_TextHelveticaEraseBold;
+
   gdk_draw_text( window, font[font_idx][idx],
 		 gcs[gc_type][idx], 
 		 x, y, text, len);
@@ -1173,7 +1317,7 @@ int FlowDrawGtk::text_erase( FlowCtx *ctx, int x, int y, char *text, int len,
 }
 
 int FlowDrawGtk::nav_text( FlowCtx *ctx, int x, int y, char *text, int len,
-	flow_eDrawType gc_type, int idx, int highlight, int line)
+			   flow_eDrawType gc_type, int idx, int highlight, int line, double size)
 {
   if ( ctx->no_nav || ctx->nodraw) return 1;
   int font_idx = get_font_idx( gc_type);
@@ -1185,7 +1329,7 @@ int FlowDrawGtk::nav_text( FlowCtx *ctx, int x, int y, char *text, int len,
 }
 
 int FlowDrawGtk::nav_text_erase( FlowCtx *ctx, int x, int y, char *text, int len,
-	flow_eDrawType gc_type, int idx, int line)
+				 flow_eDrawType gc_type, int idx, int line, double size)
 {
   if ( ctx->no_nav || ctx->nodraw) return 1;
   int font_idx = get_font_idx( gc_type);
@@ -1470,9 +1614,12 @@ void FlowDrawGtk::set_nav_cursor( FlowCtx *ctx, draw_eCursor cursor)
 }
 
 int FlowDrawGtk::get_text_extent( FlowCtx *ctx, const char *text, int len,
-	flow_eDrawType gc_type, int idx,
-	int *width, int *height)
+				  flow_eDrawType gc_type, int idx,
+				  int *width, int *height, double size)
 {
+  if ( pango)
+    return get_text_extent_pango( ctx, text, len, gc_type, idx, size, width, height);
+
   int	text_width, text_ascent, text_descent, text_lbearing, text_rbearing;
   int font_idx = get_font_idx( gc_type);
 
@@ -1481,6 +1628,37 @@ int FlowDrawGtk::get_text_extent( FlowCtx *ctx, const char *text, int len,
 		    &text_descent);
   *height = int(1.6 * text_ascent)  + text_descent;
   *width = text_width;
+  return 1;
+}
+
+int FlowDrawGtk::get_text_extent_pango( FlowCtx *ctx, const char *text, int len,
+					flow_eDrawType gc_type, int idx, double size,
+					int *width, int *height)
+{
+  PangoRenderer *pr = gdk_pango_renderer_get_default( screen);
+  gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), window);
+  gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), gcs[gc_type][idx]);
+
+  PangoContext *pctx = gdk_pango_context_get_for_screen( screen);
+  PangoLayout *layout = pango_layout_new( pctx);
+  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  pango_layout_set_text( layout, textutf8, -1);
+  g_free( textutf8);
+  PangoFontDescription *desc = pango_font_description_from_string( font_string( gc_type, size));
+  pango_layout_set_font_description( layout, desc);
+  pango_font_description_free( desc);
+
+  int w, h;
+  pango_layout_get_size( layout, &w, &h);
+
+  *width = w / PANGO_SCALE;
+  *height = h / PANGO_SCALE;
+  
+  gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);
+  gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), 0);
+  g_object_unref( layout);
+  g_object_unref( pctx);
+
   return 1;
 }
 

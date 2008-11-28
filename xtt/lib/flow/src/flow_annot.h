@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_annot.h,v 1.4 2008-10-31 12:51:32 claes Exp $
+ * Proview   $Id: flow_annot.h,v 1.5 2008-11-28 17:13:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,8 +50,7 @@ class FlowAnnot : public FlowArrayElem {
     void open( ifstream& fp);
     void draw( void *pos, int highlight, int hot, void *node);
     void nav_draw( void *pos, int highlight, void *node);
-    void draw_inverse( void *pos, int hot, void *node)
-	{ erase( pos, hot, node);};
+    void draw_inverse( void *pos, int hot, void *node);
     void erase( void *pos, int hot, void *node);
     void nav_erase( void *pos, void *node);
     void get_borders( double pos_x, double pos_y, double *x_right, 
@@ -65,6 +64,9 @@ class FlowAnnot : public FlowArrayElem {
     void close_annotation_input( void *node);
     int get_annotation_input( void *node, char **text);
     void move_widgets( void *node, int x, int y);
+    double tsize( int text_idx);
+    double nav_tsize( int text_idx);
+
     FlowCtx *ctx;    
     int	number;
     FlowPoint p;

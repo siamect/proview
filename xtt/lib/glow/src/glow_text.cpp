@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_text.cpp,v 1.7 2008-10-31 12:51:36 claes Exp $
+ * Proview   $Id: glow_text.cpp,v 1.8 2008-11-28 17:13:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -95,8 +95,9 @@ void GlowText::draw( GlowWind *w, void *pos, int highlight, int hot, void *node)
     return;
   idx = min( idx, DRAW_TYPE_SIZE-1);
   ctx->gdraw->text( w, p.z_x + ((GlowPoint *)pos)->z_x - w->offset_x, 
-	p.z_y + ((GlowPoint *)pos)->z_y - w->offset_y, text, strlen(text),
-	draw_type, color_drawtype, idx, highlight, 0, glow_eFont_Helvetica);
+		    p.z_y + ((GlowPoint *)pos)->z_y - w->offset_y, text, strlen(text),
+		    draw_type, color_drawtype, idx, highlight, 0, glow_eFont_Helvetica,
+		    w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size));
 }
 
 void GlowText::erase( GlowWind *w, void *pos, int hot, void *node)
@@ -106,8 +107,9 @@ void GlowText::erase( GlowWind *w, void *pos, int hot, void *node)
     return;
   idx = min( idx, DRAW_TYPE_SIZE-1);
   ctx->gdraw->text_erase( w, p.z_x + ((GlowPoint *)pos)->z_x - w->offset_x, 
-	p.z_y + ((GlowPoint *)pos)->z_y - w->offset_y, text,  strlen(text),
-	draw_type, idx, 0, glow_eFont_Helvetica);
+			  p.z_y + ((GlowPoint *)pos)->z_y - w->offset_y, text,  strlen(text),
+			  draw_type, idx, 0, glow_eFont_Helvetica,
+			  w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size));
 }
 
 int GlowText::event_handler( GlowWind *w, void *pos, glow_eEvent event, int x, int y,

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_pushbutton.cpp,v 1.4 2008-10-31 12:51:33 claes Exp $
+ * Proview   $Id: flow_pushbutton.cpp,v 1.5 2008-11-28 17:13:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,7 +54,8 @@ void FlowPushButton::draw( int ll_x, int ll_y, int ur_x, int ur_y)
 	  r.ur.z_x - r.ll.z_x, r.ur.z_y - r.ll.z_y, r.draw_type, 
 	  r.line_width-1, 0);
   ctx->fdraw->text( ctx, pos.z_x + t.p.z_x, pos.z_y + t.p.z_y, t.text,
-	  strlen(t.text), t.draw_type, t.text_size, 0, 0);
+		    strlen(t.text), t.draw_type, t.text_size, 0, 0,
+		    ctx->zoom_factor / ctx->base_zoom_factor * (8+2*t.text_size));
 }
 
 int FlowPushButton::event_handler( flow_eEvent event, int x, int y)

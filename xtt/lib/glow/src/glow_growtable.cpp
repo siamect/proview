@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtable.cpp,v 1.15 2008-10-31 12:51:36 claes Exp $
+ * Proview   $Id: glow_growtable.cpp,v 1.16 2008-11-28 17:13:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -302,6 +302,7 @@ void GrowTable::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
   idx = min( idx, DRAW_TYPE_SIZE-1);
 
   int text_idx = int( w->zoom_factor_y / w->base_zoom_factor * (text_size +4) - 4);
+  double tsize = w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
   text_idx = min( text_idx, DRAW_TYPE_SIZE-1);
   int header_text_idx = int( w->zoom_factor_y / w->base_zoom_factor * (header_text_size +4) - 4);
   header_text_idx = min( header_text_idx, DRAW_TYPE_SIZE-1);
@@ -425,8 +426,8 @@ void GrowTable::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
     for ( int i = header_column; i < columns; i++) {
       if ( header_text_idx >= 0 && strcmp( header_text[i], "") != 0) {
 	ctx->gdraw->text( w, int(x + text_offs), int(y + header_h - 4),
-		    header_text[i], strlen(header_text[i]), header_text_drawtype, header_text_color,
-		    header_text_idx, highlight, 0, font);
+			  header_text[i], strlen(header_text[i]), header_text_drawtype, header_text_color,
+			  header_text_idx, highlight, 0, font, tsize);
       }
       x += column_width[i] * w->zoom_factor_x;
       if ( x > ur_x)
@@ -452,7 +453,7 @@ void GrowTable::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
       if ( header_text_idx >= 0 && strcmp( header_text[0], "") != 0)
 	ctx->gdraw->text( w, int(x + text_offs), int(y + header_h - 4),
 			header_text[0], strlen(header_text[0]), header_text_drawtype, header_text_color,
-			header_text_idx, highlight, 0, font);
+			  header_text_idx, highlight, 0, font, tsize);
     }
   }
 
@@ -506,7 +507,7 @@ void GrowTable::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 	    int width, height, descent;
 	    ctx->gdraw->get_text_extent( cell_value + offs, strlen(cell_value + offs),
 					 text_drawtype, text_idx, font,
-					 &width, &height, &descent);
+					 &width, &height, &descent, tsize);
 
 	    switch ( column_adjustment[0]) {
 	    case glow_eAdjustment_Left:
@@ -520,8 +521,8 @@ void GrowTable::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 	    }
 	  }
 	  ctx->gdraw->text( w, text_x, int(y - 2),
-		    cell_value + offs, strlen(cell_value + offs), text_drawtype, text_color_drawtype,
-		    text_idx, highlight, 0, font);
+			    cell_value + offs, strlen(cell_value + offs), text_drawtype, text_color_drawtype,
+			    text_idx, highlight, 0, font, tsize);
 	}
       }
     }
@@ -632,7 +633,7 @@ void GrowTable::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 	      int width, height, descent;
 	      ctx->gdraw->get_text_extent( cell_value + offs, strlen(cell_value + offs),
 					   text_drawtype, text_idx, font,
-					   &width, &height, &descent);
+					   &width, &height, &descent, tsize);
 
 	      switch ( column_adjustment[i]) {
 	      case glow_eAdjustment_Left:
@@ -648,7 +649,7 @@ void GrowTable::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 
 	    ctx->gdraw->text( w, text_x, int(y - 2),
 			    cell_value + offs, strlen(cell_value + offs), text_drawtype, text_color_drawtype,
-			    text_idx, highlight, 0, font);
+			      text_idx, highlight, 0, font, tsize);
 	  }
 	}
       }

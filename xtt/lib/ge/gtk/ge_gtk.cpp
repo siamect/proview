@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.cpp,v 1.20 2008-11-20 10:30:51 claes Exp $
+ * Proview   $Id: ge_gtk.cpp,v 1.21 2008-11-28 17:13:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1168,6 +1168,10 @@ void GeGtk::activate_textfont_3(GtkWidget *w, gpointer gectx)
 void GeGtk::activate_textfont_4(GtkWidget *w, gpointer gectx)
 {
   ((Ge *)gectx)->activate_textfont( glow_eFont_Courier);
+}
+void GeGtk::activate_textfont_5(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_textfont( glow_eFont_LucidaSans);
 }
 
 void GeGtk::activate_textbold( GtkWidget *w, gpointer gectx)
@@ -2544,11 +2548,15 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   GtkWidget *tools_textfont_4 = gtk_image_menu_item_new_with_label( "Courier");
   g_signal_connect(tools_textfont_4, "activate", G_CALLBACK(activate_textfont_4), this);
 
+  GtkWidget *tools_textfont_5 = gtk_image_menu_item_new_with_label( "Lucida Sans");
+  g_signal_connect(tools_textfont_5, "activate", G_CALLBACK(activate_textfont_5), this);
+
   GtkMenu *textfont_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append( GTK_MENU_SHELL(textfont_menu), tools_textfont_1);
   gtk_menu_shell_append( GTK_MENU_SHELL(textfont_menu), tools_textfont_2);
   gtk_menu_shell_append( GTK_MENU_SHELL(textfont_menu), tools_textfont_3);
   gtk_menu_shell_append( GTK_MENU_SHELL(textfont_menu), tools_textfont_4);
+  gtk_menu_shell_append( GTK_MENU_SHELL(textfont_menu), tools_textfont_5);
   GtkWidget *tools_textfont_omenu = (GtkWidget *)g_object_new( GTK_TYPE_OPTION_MENU, 
 								"menu", textfont_menu, NULL);
 

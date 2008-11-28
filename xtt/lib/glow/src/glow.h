@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow.h,v 1.29 2008-11-20 10:30:44 claes Exp $
+ * Proview   $Id: glow.h,v 1.30 2008-11-28 17:13:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -329,7 +329,9 @@ typedef enum {
   glow_eFont_Times,  		//!< Font Times
   glow_eFont_NewCenturySchoolbook, //!< Font New Century Schoolbook
   glow_eFont_Courier,  		//!< Font Courier
-  glow_eFont__			//!< Number of defined fonts
+  glow_eFont_LucidaSans,	//!< Font Lucida Sans
+  glow_eFont__,			//!< Number of defined fonts
+  glow_eFont_No = 9999        	//!< No font defined
 } glow_eFont;
 
 typedef enum {
@@ -1395,6 +1397,8 @@ typedef enum {
 	glow_eSave_GrowNode_flip_horizontal    	= 2725,
 	glow_eSave_GrowNode_flip_vertical      	= 2726,
 	glow_eSave_GrowNode_gradient          	= 2727,
+	glow_eSave_GrowNode_text_type          	= 2728,
+	glow_eSave_GrowNode_text_font          	= 2729,
 	glow_eSave_Transform_a11		= 2800,
 	glow_eSave_Transform_a12		= 2801,
 	glow_eSave_Transform_a13		= 2802,

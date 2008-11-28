@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_item.cpp,v 1.27 2008-10-31 12:51:32 claes Exp $
+ * Proview   $Id: wb_wnav_item.cpp,v 1.28 2008-11-28 17:14:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1013,7 +1013,7 @@ WItemFile::WItemFile( WNav *wnav, const char *item_name, char *text,
 	WItem( pwr_cNObjid, 0), file_type(item_filetype)
 {
   FILE *file;
-  char script_descr[200];
+  char script_descr[200] = "";
 
   type = wnav_eItemType_File;
   strcpy( name, item_name);
@@ -1028,8 +1028,11 @@ WItemFile::WItemFile( WNav *wnav, const char *item_name, char *text,
       char *s;
       char line[200];
       if ( fgets( line, sizeof(line), file)) {
-        if ((s = strstr( line, wnav_cScriptDescKey)))
+        if ((s = strstr( line, wnav_cScriptDescKey))) {
           strcpy( script_descr, s + strlen(wnav_cScriptDescKey) + 1);
+	  if ( script_descr[strlen(script_descr)-1] == '\n')
+	    script_descr[strlen(script_descr)-1] = 0;
+	}
         else if ((s = strstr( line, wnav_cScriptInvisKey))) {
           delete this;
 	  return;
