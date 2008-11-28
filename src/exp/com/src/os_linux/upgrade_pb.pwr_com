@@ -1,5 +1,6 @@
+!** Invisible: Script for converting Profibus objects during upgrading from v3.9 to v4.0.0
 ! 
-!  Proview   $Id: upgrade_pb.pwr_com,v 1.2 2005-09-01 14:57:49 claes Exp $
+!  Proview   $Id: upgrade_pb.pwr_com,v 1.3 2008-11-28 17:15:37 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 

@@ -1,3 +1,130 @@
+!** Invisible: 
+
+function string getnextvol( string prev, string project)
+  int vlist;
+  string line;
+  string proj;
+  string vol;
+  string vollow;
+  int prev_found;
+  int found;
+
+  project = tolower( project);
+  if ( prev == "")
+    prev_found = 1;
+  else
+    prev = tolower(prev);
+    prev_found = 0;
+  endif
+
+  vol = "";
+  found = 0;
+  vlist = fopen("$pwra_db/pwr_volumelist.dat", "r");
+  while( fgets( line, vlist))
+    line = edit( line);
+    proj = element(3, " ", line);
+    proj = tolower( proj);
+    if ( proj == project)
+      vol = element(1, " ", line);
+      if ( !prev_found)
+        vollow = tolower(vol);        
+        if ( vollow == prev)
+          prev_found = 1;
+        endif
+      else
+        found = 1;
+        break;
+      endif
+    endif
+  endwhile
+
+  fclose( vlist);
+  if ( found )
+    return vol;
+  endif
+  return "";
+endfunction
+
+
+main()
+  string vol;
+  string project = "v10pm1";
+  string prefix;
+  string node;
+  string busprd = "507";
+  string bussim = "517";
+  string name;
+  int volcnt = 0;
+
+  if ( ! ContinueDialog("Message","This script will configure the DirectoryVolume\nDo you want to continue ?"))
+    exit();
+  endif
+
+  if ( ! EditMode())
+    MessageDialog("Error", "Not in edit mode, script aborted");
+    exit();
+  endif
+
+  project = GetProjectName();
+  if ( project == "")
+    MessageDialog("Error", "Can't get project name, script aborted");
+    exit();
+  endif   
+
+  if ( ! PromptDialog("Bus Number", "Enter QCOM bus number for production bus", busprd))
+    MessageDialog("Error", "Script aborted");
+    exit();
+  endif
+
+  verify(0);
+
+  create object /destination="" /name="System" /class="$System"/last
+  set attribut /attribute="SystemName" /name="System" /value="'project'" /noconf/nolog
+  set attribut /attribute="SystemGroup" /name="System" /value="ssab" /noconf/nolog
+  create object /destination="" /name="'busprd'" /class="BusConfig"/last
+  set attribut /attribute="BusNumber" /name='busprd' /value='busprd' /noconf/nolog
+  set attribut /attribute="Description" /name='busprd' /value="Produktions bus" /noconf/nolog
+  create object /destination="" /name="'bussim'" /class="BusConfig"/last
+  set attribut /attribute="BusNumber" /name='bussim' /value=517 /noconf/nolog
+  set attribut /attribute="Description" /name='bussim' /value="Simulerings bus" /noconf/nolog
+
+
+  vol = "";
+  vol = getnextvol( "", project);
+  while( vol != "")
+    printf( "-- %s\n", vol);
+    volcnt++;
+
+    prefix = extract(1, 4, vol);
+    if ( prefix == "CVol")
+      ! Create ClassVolumeConfig
+      printf( "Class %s\n", prefix);
+      create object /destination="" /name="'vol'" /class="ClassVolumeConfig"/first
+    else
+      node = extract( 4, 32, vol);
+      node = tolower( node);
+      printf( "Node: %s\n", node);
+      create object /destination="" /name="'vol'" /class="RootVolumeConfig"/last
+      create object /destination='busprd' /name="'node'" /class="NodeConfig"/last
+      name = busprd + "-" + node + "-" + "O1";
+      move object /source='name' /rename="'vol'"
+      name = busprd + "-" + node;
+      set attribut /attribute="NodeName"/name='name'/value="'node'"/noconf/nolog
+      set attribut /attribute="BootNode"/name='name'/value="'node'"/noconf/nolog
+      set attribut /attribute="OperatingSystem"/name='name'/value=64/noconf/nolog
+      set attribut /attribute="Address"/name='name'/value="0.0.0.0"/noconf/nolog
+    endif
+    vol = getnextvol( vol, project);
+  endwhile
+  show obj/name=*
+
+  if ( !volcnt)
+    MessageDialog("Not registred", "No volumes are registred for this project");
+  else
+    MessageDialog("Completed", "Enter ip address in the NodeConfig objects and save the session");
+  endif  
+endmain
+
 
 
 function string getnextvol( string prev, string project)
