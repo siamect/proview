@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growmenu.h,v 1.5 2008-10-31 12:51:35 claes Exp $
+ * Proview   $Id: glow_growmenu.h,v 1.6 2008-12-01 16:32:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,6 +54,7 @@ class GrowMenu : public GrowRect {
     \param t_drawtype	Drawtype for text.
     \param t_color	Text color.
     \param t_color_disabled Text color for disabled item.
+    \param t_font	Text font.
     \param parent	Parent menu.
     \param nodraw	Don't draw the object now.
   */
@@ -66,6 +67,7 @@ class GrowMenu : public GrowRect {
 	    glow_eDrawType t_drawtype = glow_eDrawType_TextHelvetica, 
 	    glow_eDrawType t_color = glow_eDrawType_Line, 
 	    glow_eDrawType t_color_disabled = glow_eDrawType_Line, 
+	    glow_eFont t_font = glow_eFont_Helvetica,
 	    GlowArrayElem *parent = 0, int nodraw = 0);
 
   //! Destructor
@@ -119,6 +121,7 @@ class GrowMenu : public GrowRect {
   GlowArrayElem		*parent_menu;		//!< Parent menu.
   double		min_width;		//!< Minimum width of menu.
   int			input_focus;		//!< This menu has input focus.
+  glow_eFont		font;			//!< Text font.
 
   //! Draw the object.
   /*!
@@ -164,7 +167,8 @@ class GrowMenu : public GrowRect {
     \param t_color_disabled Text color for disabled button.
   */
   void get_menu_char( int *t_size, glow_eDrawType *fill_color, glow_eDrawType *t_drawtype,
-		      glow_eDrawType *t_color, glow_eDrawType *t_color_disabled);
+		      glow_eDrawType *t_color, glow_eDrawType *t_color_disabled,
+		      glow_eFont *t_font);
 
   void shift_current_item( int shift);
   int get_current_item( int *item);

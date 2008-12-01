@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_grownode.h,v 1.15 2008-11-28 17:13:45 claes Exp $
+ * Proview   $Id: glow_grownode.h,v 1.16 2008-12-01 16:32:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -903,10 +903,11 @@ class GrowNode : public GlowNode {
     \param t_color	Annotation text color.
     \param bg_color	Annotation background color.
     \param scale	Annotation scale.
+    \param font		Annotation font.
     \return		0 if annotation doesn't exist, else 1.
   */
   int get_annotation_info( int num, int *t_size, glow_eDrawType *t_drawtype, glow_eDrawType *t_color,
-				 glow_eDrawType *bg_color, double *scale);
+			   glow_eDrawType *bg_color, double *scale, glow_eFont *font);
   int get_java_name( char *name) { return nc->get_java_name( name);}
   void set_textbold( int bold);
   void set_textfont( glow_eFont textfont);

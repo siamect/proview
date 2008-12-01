@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow.h,v 1.30 2008-11-28 17:13:45 claes Exp $
+ * Proview   $Id: glow.h,v 1.31 2008-12-01 16:32:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -986,6 +986,12 @@ typedef enum {
   glow_eSaveMode_ReadConfigOnly	//!< Read only configuration data.
 } glow_eSaveMode;
 
+//! Environment.
+typedef enum {
+  glow_eEnv_Development,      	//!< Editing mode.
+  glow_eEnv_Runtime	        //!< Runtime mode.
+} glow_eEnv;
+
 //! Tags used when writing objects to a .pwg fil.
 /*! Every data written is preceeded by a tag to identify the data. 
   All tags for all classes are defined here.
@@ -1307,6 +1313,7 @@ typedef enum {
 	glow_eSave_GrowCtx_dyn_attr4	        = 2242,
 	glow_eSave_GrowCtx_input_focus_mark     = 2243,
 	glow_eSave_GrowCtx_userdata_cb	        = 2244,
+	glow_eSave_GrowCtx_bitmap_fonts	        = 2245,
 	glow_eSave_GrowSubAnnot_x_right		= 2300,
 	glow_eSave_GrowSubAnnot_x_left		= 2301,
 	glow_eSave_GrowSubAnnot_y_high		= 2302,

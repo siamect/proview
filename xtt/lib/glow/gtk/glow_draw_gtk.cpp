@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_gtk.cpp,v 1.17 2008-11-28 17:13:45 claes Exp $
+ * Proview   $Id: glow_draw_gtk.cpp,v 1.18 2008-12-01 16:32:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,8 +40,6 @@ using namespace std;
 #include "glow_draw_gtk.h"
 
 #include "glow_msg.h"
-
-static int pango = 1;
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
@@ -1559,7 +1557,7 @@ int GlowDrawGtk::text( GlowWind *wind, int x, int y, char *text, int len,
   if ( ctx->nodraw) return 1;
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
 
-  if ( pango)
+  if ( !((GrowCtx *)ctx)->bitmap_fonts)
     return text_pango( wind, x, y, text, len, gc_type, color, idx, highlight, line, font_idx, size);
 
   if ( font_idx > glow_eFont_Courier)
@@ -1654,7 +1652,7 @@ int GlowDrawGtk::text_erase( GlowWind *wind, int x, int y, char *text, int len,
   if ( ctx->nodraw) return 1;
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
 
-  if ( pango)
+  if ( !((GrowCtx *)ctx)->bitmap_fonts)
     return text_erase_pango( wind, x, y, text, len, gc_type, idx, line, font_idx, size);
 
   if ( font_idx > glow_eFont_Courier)
@@ -1916,7 +1914,7 @@ int GlowDrawGtk::get_text_extent( const char *text, int len,
 {
   int	text_width, text_ascent, text_descent, text_lbearing, text_rbearing;
 
-  if ( pango)
+  if ( !((GrowCtx *)ctx)->bitmap_fonts)
     return get_text_extent_pango( text, len, gc_type, idx, font_idx, width, height, descent, size);
 
   if ( font_idx > glow_eFont_Courier)
@@ -2550,7 +2548,7 @@ int GlowDrawGtk::print( char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.17 2008-11-28 17:13:45 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.18 2008-12-01 16:32:40 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else
@@ -3358,6 +3356,7 @@ int GlowDrawGtk::gradient_fill_polyline( GlowWind *wind, glow_sPointX *points, i
 
 #define FONTSTR "Lucida Sans"
 #define FONT_SCALE 0.7
+#define FONT_DESCENT 0.2
 
 static char *font_string( int font_idx, int font_type, double size)
 {
@@ -3440,7 +3439,8 @@ int GlowDrawGtk::text_pango( GlowWind *wind, int x, int y, char *text, int len,
 
     int width, height;
     pango_layout_get_size( layout, &width, &height);
-    pango_renderer_draw_layout( pr, layout, PANGO_SCALE * x, PANGO_SCALE * y - height * 0.8);
+    height *= 0.9;
+    pango_renderer_draw_layout( pr, layout, PANGO_SCALE * x, PANGO_SCALE * y - 0.85*height);
   
     g_object_unref( layout);
     g_object_unref( pctx);
@@ -3499,15 +3499,17 @@ int GlowDrawGtk::text_erase_pango( GlowWind *wind, int x, int y, char *text, int
 
   int width, height;
   pango_layout_get_size( layout, &width, &height);
-
+  height *= 0.9;
   if ( !w->draw_buffer_only)
     gdk_draw_rectangle( w->window, 
 		      get_gc( this, gc_type, idx), 1, 
-		      x, y - 0.8 / PANGO_SCALE * height, width / PANGO_SCALE, height / PANGO_SCALE);
+			x, y - (1.0 - FONT_DESCENT) * height / PANGO_SCALE, 
+			width / PANGO_SCALE, height / PANGO_SCALE);
  if ( w->double_buffer_on)
     gdk_draw_rectangle( w->buffer, 
-		      get_gc( this, gc_type, idx), 1, 
-		      x, y - 0.8 / PANGO_SCALE * height, width / PANGO_SCALE, height / PANGO_SCALE);
+			get_gc( this, gc_type, idx), 1, 
+			x, y - (1.0 - FONT_DESCENT) * height / PANGO_SCALE, 
+			width / PANGO_SCALE, height / PANGO_SCALE);
   
   g_object_unref( layout);
   g_object_unref( pctx);
@@ -3542,7 +3544,7 @@ int GlowDrawGtk::get_text_extent_pango( const char *text, int len,
 
   PangoContext *pctx = gdk_pango_context_get_for_screen( screen);
   PangoLayout *layout = pango_layout_new( pctx);
-  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  char *textutf8 = g_convert( text, len, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
   pango_layout_set_text( layout, textutf8, -1);
   g_free( textutf8);
   PangoFontDescription *desc = pango_font_description_from_string( font_string( font_idx, font_type, size));
@@ -3551,10 +3553,11 @@ int GlowDrawGtk::get_text_extent_pango( const char *text, int len,
 
   int lwidth, lheight;
   pango_layout_get_size( layout, &lwidth, &lheight);
+  lheight *= 0.9;
 
   *width = lwidth / PANGO_SCALE;
   *height = lheight / PANGO_SCALE;
-  *descent = *height * 0.2;
+  *descent = FONT_DESCENT * lheight / PANGO_SCALE;
 
   g_object_unref( layout);
   g_object_unref( pctx);

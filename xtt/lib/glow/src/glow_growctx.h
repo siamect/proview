@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.h,v 1.20 2008-11-20 10:30:44 claes Exp $
+ * Proview   $Id: glow_growctx.h,v 1.21 2008-12-01 16:32:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -81,7 +81,8 @@ class GrowCtx : public GlowCtx {
         is_javaapplication(0), cycle(glow_eCycle_Slow),
         mb3_action(glow_eMB3Action_Close), scale_equal(0), translate_on(0),
         input_focus_mark(glow_eInputFocusMark_Relief), background_disabled(0),
-        redraw_callback(0), redraw_data(0), has_subwindows(-1)
+        redraw_callback(0), redraw_data(0), has_subwindows(-1), bitmap_fonts(0),
+        environment(glow_eEnv_Runtime)
 	{ ctx_type = glow_eCtxType_Grow;
 	  strcpy( name, "");
 	  strcpy( java_name, ""); 
@@ -907,6 +908,8 @@ class GrowCtx : public GlowCtx {
   void 		*redraw_data;		//!< Data for redraw callback.
   int		has_subwindows;		//!< Graph contains subwindow objects (GrowWindow or GrowFolder)
   char		owner[256];		//!< Owner, used by application
+  int		bitmap_fonts;		//!< Use bitmap fonts
+  glow_eEnv	environment;		//!< Environment Development or Runtime.
 };
 
 void grow_auto_scrolling( GrowCtx *ctx);

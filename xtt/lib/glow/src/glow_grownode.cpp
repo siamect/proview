@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_grownode.cpp,v 1.18 2008-11-28 17:13:45 claes Exp $
+ * Proview   $Id: glow_grownode.cpp,v 1.19 2008-12-01 16:32:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2037,7 +2037,7 @@ void GrowNode::annot_input_event( glow_eEvent event, int keycode)
 }
 
 int GrowNode::get_annotation_info( int num, int *t_size, glow_eDrawType *t_drawtype, glow_eDrawType *t_color,
-				 glow_eDrawType *bg_color, double *scale)
+				   glow_eDrawType *bg_color, double *scale, glow_eFont *t_font)
 {
   int sts;
 
@@ -2045,7 +2045,7 @@ int GrowNode::get_annotation_info( int num, int *t_size, glow_eDrawType *t_drawt
   if ( EVEN(sts))
     *bg_color = glow_eDrawType_No;
 
-  sts = nc->get_annotation_info( (void*)this, num, t_size, t_drawtype, t_color);
+  sts = nc->get_annotation_info( (void*)this, num, t_size, t_drawtype, t_color, t_font);
   *scale = trf.vertical_scale(0);
   return sts;
 }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtext.cpp,v 1.11 2008-11-28 17:13:45 claes Exp $
+ * Proview   $Id: glow_growtext.cpp,v 1.12 2008-12-01 16:32:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -651,6 +651,18 @@ void GrowText::draw( GlowWind *w,  GlowTransform *t, int highlight, int hot, voi
     highl = 0;
   }
 
+  glow_eFont lfont;
+  glow_eDrawType ldraw_type;
+
+  if ( node && ((GrowNode *)node)->text_font != glow_eFont_No) {
+    lfont = ((GrowNode *)node)->text_font;
+    ldraw_type = ((GrowNode *)node)->text_type;
+  }
+  else {
+    lfont = font;
+    ldraw_type = draw_type;
+  }
+
   if (!t) {
     x1 = int( trf.x( p.x, p.y) * w->zoom_factor_x + 0.5) - w->offset_x;
     y1 = int( trf.y( p.x, p.y) * w->zoom_factor_y + 0.5) - w->offset_y;
@@ -662,13 +674,13 @@ void GrowText::draw( GlowWind *w,  GlowTransform *t, int highlight, int hot, voi
 
   if ( strcmp( text, "")) {
     if ( highl) {
-      ctx->gdraw->get_text_extent( text, strlen(text), draw_type, max( 0, idx), font,
+      ctx->gdraw->get_text_extent( text, strlen(text), ldraw_type, max( 0, idx), lfont,
 				   &z_width, &z_height, &z_descent, tsize);
       ctx->gdraw->rect( w, x1, y1 - (z_height-z_descent), z_width, z_height, 
 	glow_eDrawType_FillHighlight, max( 1, min( idx + hot, 2)), 0);
     }
     else if ( hot && !node) {
-      ctx->gdraw->get_text_extent( text, strlen(text), draw_type, max( 0, idx), font,
+      ctx->gdraw->get_text_extent( text, strlen(text), ldraw_type, max( 0, idx), lfont,
 				   &z_width, &z_height, &z_descent, tsize);
       ctx->gdraw->rect( w, x1, y1 - (z_height-z_descent), z_width, z_height,
 	glow_eDrawType_LineGray, max( min(idx,2), 1), 0);
@@ -676,8 +688,8 @@ void GrowText::draw( GlowWind *w,  GlowTransform *t, int highlight, int hot, voi
     if ( idx >= 0) {
       glow_eDrawType color = ctx->get_drawtype( color_drawtype, glow_eDrawType_LineHighlight,
 		 highlight, (GrowNode *)colornode, 2);
-      ctx->gdraw->text( w, x1, y1, text, strlen(text), draw_type, color, idx, highlight, 
-			0, font, tsize);
+      ctx->gdraw->text( w, x1, y1, text, strlen(text), ldraw_type, color, idx, highlight, 
+			0, lfont, tsize);
     }
   }
   else {
@@ -707,6 +719,18 @@ void GrowText::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
   if ( node)
     highl = ((GrowNode *)node)->highlight; 
 
+  glow_eFont lfont;
+  glow_eDrawType ldraw_type;
+
+  if ( node && ((GrowNode *)node)->text_font != glow_eFont_No) {
+    lfont = ((GrowNode *)node)->text_font;
+    ldraw_type = ((GrowNode *)node)->text_type;
+  }
+  else {
+    lfont = font;
+    ldraw_type = draw_type;
+  }
+
   if (!t)
   {
     x1 = int( trf.x( p.x, p.y) * w->zoom_factor_x + 0.5) - w->offset_x;
@@ -721,19 +745,19 @@ void GrowText::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
   // w->set_draw_buffer_only();
   if ( strcmp( text, "")) {
     if ( highl) {
-      ctx->gdraw->get_text_extent( text, strlen(text), draw_type, max( 0, idx),
-				   font, &z_width, &z_height, &z_descent, tsize);
+      ctx->gdraw->get_text_extent( text, strlen(text), ldraw_type, max( 0, idx),
+				   lfont, &z_width, &z_height, &z_descent, tsize);
       ctx->gdraw->rect_erase( w, x1, y1 - (z_height-z_descent), z_width, z_height, 
 		max( 1, min( idx + hot, 2)));
     }
     else if ( hot && !node) {
-      ctx->gdraw->get_text_extent( text, strlen(text), draw_type, max( 0, idx), 
-				   font, &z_width, &z_height, &z_descent, tsize);
+      ctx->gdraw->get_text_extent( text, strlen(text), ldraw_type, max( 0, idx), 
+				   lfont, &z_width, &z_height, &z_descent, tsize);
       ctx->gdraw->rect_erase( w, x1, y1 - (z_height-z_descent), z_width, z_height, 
 		max (1, min(idx,2)));
     }
     if ( idx >= 0)
-      ctx->gdraw->text_erase( w, x1, y1, text, strlen(text), draw_type, idx, 0, font, tsize);
+      ctx->gdraw->text_erase( w, x1, y1, text, strlen(text), ldraw_type, idx, 0, lfont, tsize);
   }
   else
   {

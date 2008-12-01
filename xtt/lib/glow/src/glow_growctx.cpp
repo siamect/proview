@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.cpp,v 1.35 2008-11-28 17:13:45 claes Exp $
+ * Proview   $Id: glow_growctx.cpp,v 1.36 2008-12-01 16:32:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1915,6 +1915,7 @@ void GrowCtx::save_grow( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowCtx_mb3_action) << FSPACE << int(mb3_action) << endl;
   fp << int(glow_eSave_GrowCtx_translate_on) << FSPACE << translate_on << endl;
   fp << int(glow_eSave_GrowCtx_input_focus_mark) << FSPACE << int(input_focus_mark) << endl;
+  fp << int(glow_eSave_GrowCtx_bitmap_fonts) << FSPACE << bitmap_fonts << endl;
   if ( user_data && userdata_save_callback) {
     fp << int(glow_eSave_GrowCtx_userdata_cb) << endl;
     (userdata_save_callback)(&fp, this, glow_eUserdataCbType_Ctx);
@@ -2059,6 +2060,7 @@ void GrowCtx::open_grow( ifstream& fp)
 	if ( userdata_open_callback)
 	  (userdata_open_callback)(&fp, this, glow_eUserdataCbType_Ctx);
 	break;
+      case glow_eSave_GrowCtx_bitmap_fonts: fp >> bitmap_fonts; break;
       default:
         cout << "GrowCtx:open syntax error" << endl;
         fp.getline( dummy, sizeof(dummy));
@@ -2071,7 +2073,8 @@ void GrowCtx::open_grow( ifstream& fp)
       mw.set_double_buffer_on(1);
       gdraw->create_buffer( &mw);
     }
-    else if ( !double_buffered && mw.window && mw.double_buffer_on()) {
+    else if ( !double_buffered && mw.window && mw.double_buffer_on() && 
+	      environment != glow_eEnv_Development) {
       mw.set_double_buffer_on(0);
       gdraw->delete_buffer( &mw);
     }
@@ -2927,6 +2930,8 @@ void GrowCtx::set_select_textfont( glow_eFont font)
       ((GrowTable *)a_sel[i])->set_textfont( font);
     else if ( a_sel[i]->type() == glow_eObjectType_GrowNode)
       ((GrowNode *)a_sel[i])->set_textfont( font);
+    else if ( a_sel[i]->type() == glow_eObjectType_GrowGroup)
+      ((GrowGroup *)a_sel[i])->set_textfont( font);
   }
 }
 

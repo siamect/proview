@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.h,v 1.35 2008-11-20 10:30:44 claes Exp $
+ * Proview   $Id: glow_growapi.h,v 1.36 2008-12-01 16:32:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -100,6 +100,7 @@ extern "C" {
     int     	double_buffer_on;
     glow_eHotMode hot_mode;
     glow_eDirection initial_position;
+    glow_eEnv	environment;
   } grow_sAttributes;
 
   typedef enum {
@@ -123,7 +124,8 @@ extern "C" {
     grow_eAttr_enable_bg_pixmap     	= 1 << 17,
     grow_eAttr_double_buffer_on     	= 1 << 18,
     grow_eAttr_hot_mode             	= 1 << 19,
-    grow_eAttr_initial_position     	= 1 << 20
+    grow_eAttr_initial_position     	= 1 << 20,
+    grow_eAttr_environment	     	= 1 << 21
   } grow_eAttribute;
 
 
@@ -1228,7 +1230,7 @@ extern "C" {
 			    int fill_rect, int border, glow_eDrawType fill_draw_type,
 			    int text_size, glow_eDrawType text_drawtype,
 			    glow_eDrawType text_color, glow_eDrawType disabled_text_color,
-			    grow_tObject parent, grow_tObject *menu);
+			    glow_eFont text_font, grow_tObject parent, grow_tObject *menu);
 
   //! Save subgraph to file.
   /*!
@@ -2920,7 +2922,8 @@ extern "C" {
     \return		0 if annotation doesn't exist, else 1.
   */
   int grow_GetObjectAnnotInfo( grow_tObject object, int num, int *text_size, glow_eDrawType *text_drawtype,
-				glow_eDrawType *text_color, glow_eDrawType *bg_color, double *scale);
+			       glow_eDrawType *text_color, glow_eDrawType *bg_color, double *scale,
+			       glow_eFont *text_font);
 
   //! Get color, textsize and text colors for a menu.
   /*!
@@ -2932,7 +2935,8 @@ extern "C" {
     \param t_color_disabled Text color for disabled button.
   */
   void grow_GetMenuChar( grow_tObject menu, int *t_size, glow_eDrawType *fill_color, glow_eDrawType *t_drawtype,
-			 glow_eDrawType *t_color, glow_eDrawType *t_color_disabled);
+			 glow_eDrawType *t_color, glow_eDrawType *t_color_disabled,
+			 glow_eFont *t_font);
 
 
   void grow_MenuShiftCurrentItem( grow_tObject menu, int shift);

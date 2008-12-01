@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growannot.cpp,v 1.13 2008-11-28 17:13:45 claes Exp $
+ * Proview   $Id: glow_growannot.cpp,v 1.14 2008-12-01 16:32:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -104,8 +104,8 @@ void GrowAnnot::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
   glow_eDrawType ldraw_type;
 
   if ( node && ((GrowNode *)node)->text_font != glow_eFont_No) {
-    lfont = ((GrowNode *)colornode)->text_font;
-    ldraw_type = ((GrowNode *)colornode)->text_type;
+    lfont = ((GrowNode *)node)->text_font;
+    ldraw_type = ((GrowNode *)node)->text_type;
   }
   else {
     lfont = font;
@@ -246,6 +246,18 @@ void GrowAnnot::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
     return;
   idx = min( idx, DRAW_TYPE_SIZE-1);
 
+  glow_eFont lfont;
+  glow_eDrawType ldraw_type;
+
+  if ( node && ((GrowNode *)node)->text_font != glow_eFont_No) {
+    lfont = ((GrowNode *)node)->text_font;
+    ldraw_type = ((GrowNode *)node)->text_type;
+  }
+  else {
+    lfont = font;
+    ldraw_type = draw_type;
+  }
+
   if (!t) {
     x1 = int( trf.x( p.x, p.y) * w->zoom_factor_x) - w->offset_x;
     y1 = int( trf.y( p.x, p.y) * w->zoom_factor_y) - w->offset_y;
@@ -270,7 +282,7 @@ void GrowAnnot::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
 	   adjustment == glow_eAdjustment_Center)
 	ctx->gdraw->get_text_extent( ((GlowNode *) node)->annotv[number],
 				     strlen(((GlowNode *) node)->annotv[number]),
-				     draw_type, idx, font,
+				     ldraw_type, idx, lfont,
 				     &width, &height, &descent, tsize);
 
       switch ( adjustment) {
@@ -304,7 +316,7 @@ void GrowAnnot::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
 
       ctx->gdraw->text_erase( w, x1, y1,
 			      ((GlowNode *) node)->annotv[number], 
-			      strlen(((GlowNode *) node)->annotv[number]), draw_type, idx, 0, font,
+			      strlen(((GlowNode *) node)->annotv[number]), ldraw_type, idx, 0, lfont,
 			      tsize);
       break;
     }
@@ -315,14 +327,14 @@ void GrowAnnot::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
       int line_cnt = 0;
       char *line = ((GlowNode *) node)->annotv[number];
       char *s;
-      ctx->gdraw->get_text_extent( "", 0, draw_type, idx, font, &z_width, &z_height,
+      ctx->gdraw->get_text_extent( "", 0, ldraw_type, idx, lfont, &z_width, &z_height,
 				   &z_descent, tsize);
       for ( s = ((GlowNode *) node)->annotv[number]; *s; s++) {
         if ( *s == 10) {
 	  if ( len) {
 	    *s = 0;
             ctx->gdraw->text_erase( w, x1, y1 + line_cnt * z_height, line, 
-				    len, draw_type, idx, 0, font, tsize);
+				    len, ldraw_type, idx, 0, lfont, tsize);
 	    *s = 10;
 	  }
 	  len = 0;
@@ -334,7 +346,7 @@ void GrowAnnot::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
       }
       if ( len)
         ctx->gdraw->text_erase( w, x1, y1 + line_cnt * z_height, line, 
-				len, draw_type, idx, 0, font, tsize);
+				len, ldraw_type, idx, 0, lfont, tsize);
       break;
     }
   }
@@ -527,10 +539,17 @@ void GrowAnnot::convert( glow_eConvert version)
 }
 
 void GrowAnnot::get_annotation_info( void *node, int *t_size, glow_eDrawType *t_drawtype,
-				    glow_eDrawType *t_color)
+				     glow_eDrawType *t_color, glow_eFont *t_font)
 {
   *t_color = ((GrowCtx *)ctx)->get_drawtype( color_drawtype, glow_eDrawType_LineHighlight,
 		 0, (GrowNode *)node, 2);
   *t_size = text_size;
-  *t_drawtype = draw_type;
+  if ( node && ((GrowNode *)node)->text_font != glow_eFont_No) {
+    *t_font = ((GrowNode *)node)->text_font;
+    *t_drawtype = ((GrowNode *)node)->text_type;
+  }
+  else {
+    *t_drawtype = draw_type;
+    *t_font = font;
+  }
 }

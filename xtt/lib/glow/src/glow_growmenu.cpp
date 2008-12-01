@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growmenu.cpp,v 1.16 2008-11-28 17:13:45 claes Exp $
+ * Proview   $Id: glow_growmenu.cpp,v 1.17 2008-12-01 16:32:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,16 +35,18 @@ GrowMenu::GrowMenu( GrowCtx *glow_ctx, const char *name, glow_sMenuInfo *menu_in
 		    int fill_rect, int display_border, 
 		    glow_eDrawType fill_d_type, int t_size, 
 		    glow_eDrawType t_drawtype, glow_eDrawType t_color, 
-		    glow_eDrawType t_color_disabled, GlowArrayElem *parent, int nodraw) : 
+		    glow_eDrawType t_color_disabled, glow_eFont t_font, 
+		    GlowArrayElem *parent, int nodraw) : 
 		GrowRect(glow_ctx,name,x,y,10,10,border_d_type,line_w,0,
 		glow_mDisplayLevel_1,fill_rect,display_border,0,fill_d_type,1),
 	        info(*menu_info), text_size(t_size),  text_drawtype(t_drawtype), 
-		text_color(t_color), text_color_disabled(t_color_disabled), item_cnt(0),
-		item_height(0), current_item(-1), new_item(0), old_item(-1), parent_menu(parent),
-		min_width(min_w), input_focus(0)
+		text_color(t_color), text_color_disabled(t_color_disabled),
+		item_cnt(0), item_height(0), current_item(-1), new_item(0), old_item(-1), 
+		parent_menu(parent), min_width(min_w), input_focus(0), font(t_font)
 {
   if ( !nodraw)
     draw( &ctx->mw, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
+
 }
 
 GrowMenu::~GrowMenu()
@@ -163,11 +165,11 @@ void GrowMenu::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
   for ( i = 0; i < (int) (sizeof(info.item)/sizeof(info.item[0])); i++) {
     if ( info.item[i].occupied) {
       ctx->gdraw->get_text_extent( info.item[i].text, strlen(info.item[i].text), text_drawtype, 
-				   max( 0, text_idx), glow_eFont_Helvetica, &z_width, &z_height, 
+				   max( 0, text_idx), font, &z_width, &z_height, 
 				   &z_descent, tsize);
       if ( z_width > max_z_width)
 	max_z_width = z_width;
-      tot_z_height += int( 1.3 * z_height);
+      tot_z_height += int( 1.6 * z_height);
       if ( info.item[i].type == glow_eMenuItem_PulldownMenu)
 	pulldown_found = 1;
       item_cnt++;
@@ -218,10 +220,10 @@ void GrowMenu::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
       }
       if ( info.item[i].type == glow_eMenuItem_ButtonDisabled)
 	ctx->gdraw->text( w, x_text, y_text, info.item[i].text, strlen(info.item[i].text), text_drawtype, 
-			  text_color_disabled, text_idx, highlight, 0, glow_eFont_Helvetica, tsize);
+			  text_color_disabled, text_idx, highlight, 0, font, tsize);
       else
 	ctx->gdraw->text( w, x_text, y_text, info.item[i].text, strlen(info.item[i].text), text_drawtype, 
-			  text_color, text_idx, highlight, 0, glow_eFont_Helvetica, tsize);
+			  text_color, text_idx, highlight, 0, font, tsize);
       if ( info.item[i].type == glow_eMenuItem_PulldownMenu) {
 	// Draw arrow
 	glow_sPointX p[4];
@@ -469,13 +471,15 @@ void GrowMenu::delete_menu_child( GlowArrayElem *parent) {
 }
 
 void GrowMenu::get_menu_char( int *t_size, glow_eDrawType *fill_color, glow_eDrawType *t_drawtype,
-		      glow_eDrawType *t_color, glow_eDrawType *t_color_disabled)
+			      glow_eDrawType *t_color, glow_eDrawType *t_color_disabled,
+			      glow_eFont *t_font)
 {
   *t_size = text_size;
   *fill_color = fill_drawtype;
   *t_drawtype = text_drawtype;
   *t_color = text_color;
   *t_color_disabled = text_color_disabled;
+  *t_font = font;
 }
 
 void GrowMenu::shift_current_item( int shift)

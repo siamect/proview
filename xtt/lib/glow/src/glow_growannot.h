@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growannot.h,v 1.5 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_growannot.h,v 1.6 2008-12-01 16:32:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -173,7 +173,7 @@ class GrowAnnot : public GlowAnnot {
     \param t_color	Annotation text color.
   */
   void get_annotation_info( void *node, int *t_size, glow_eDrawType *t_drawtype,
-			    glow_eDrawType *t_color);
+			    glow_eDrawType *t_color, glow_eFont *font);
 };
 
 /*@}*/

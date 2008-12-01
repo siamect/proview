@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_nodeclass.h,v 1.7 2008-10-31 12:51:36 claes Exp $
+ * Proview   $Id: glow_nodeclass.h,v 1.8 2008-12-01 16:32:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -349,7 +349,7 @@ class GlowNodeClass : public GlowArrayElem {
     \return		0 if annotation doesn't exist, else 1.
   */
   int get_annotation_info( void *node, int num, int *t_size, glow_eDrawType *t_drawtype,
-			   glow_eDrawType *t_color);
+			   glow_eDrawType *t_color, glow_eFont *t_font);
 
   //! Set user data.
   /*!

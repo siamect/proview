@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.41 2008-11-20 10:30:44 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.42 2008-12-01 16:32:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -693,6 +693,8 @@ void grow_SetAttributes( grow_tCtx ctx, grow_sAttributes *attr,
   }
   if ( mask & grow_eAttr_initial_position)
     ctx->initial_position = attr->initial_position;
+  if ( mask & grow_eAttr_environment)
+    ctx->environment = attr->environment;
 }
 
 void grow_GetAttributes( grow_tCtx ctx, grow_sAttributes *attr, 
@@ -1104,13 +1106,14 @@ void grow_CreateGrowMenu( grow_tCtx ctx, const char *name, glow_sMenuInfo *info,
 			  glow_eDrawType draw_type, int line_width,
 			  int fill_rect, int border, glow_eDrawType fill_draw_type,
 			  int text_size, glow_eDrawType text_drawtype,
-			  glow_eDrawType text_color, glow_eDrawType disabled_text_color,
+			  glow_eDrawType text_color,
+			  glow_eDrawType disabled_text_color, glow_eFont text_font,
 			  grow_tObject parent, grow_tObject *menu)
 {
   GrowMenu *r1;
   r1 = new GrowMenu( ctx, name, info, x, y, min_width, draw_type, line_width,
 		     fill_rect, border, fill_draw_type, text_size, text_drawtype, 
-		     text_color, disabled_text_color, (GlowArrayElem *)parent);
+		     text_color, disabled_text_color, text_font, (GlowArrayElem *)parent);
   ctx->insert( r1);
   *menu = (grow_tObject) r1;
 }
@@ -2794,6 +2797,11 @@ int grow_GetGraphAttrInfo( grow_tCtx ctx, grow_sAttrInfo **info,
   attrinfo[i].value_p = &ctx->translate_on;
   attrinfo[i].type = glow_eType_Boolean;
   attrinfo[i++].size = sizeof( ctx->translate_on);
+      
+  strcpy( attrinfo[i].name, "BitmapFonts");
+  attrinfo[i].value_p = &ctx->bitmap_fonts;
+  attrinfo[i].type = glow_eType_Boolean;
+  attrinfo[i++].size = sizeof( ctx->bitmap_fonts);
       
   attrinfo[i].info_type = grow_eInfoType_End;
   *attr_cnt = i;
@@ -4479,16 +4487,19 @@ void grow_SetXYCurveData( grow_tObject object, double *y_data, double *x_data, i
 }
 
 int grow_GetObjectAnnotInfo( grow_tObject object, int num, int *text_size, glow_eDrawType *text_drawtype,
-			glow_eDrawType *text_color, glow_eDrawType *bg_color, double *scale)
+			     glow_eDrawType *text_color, glow_eDrawType *bg_color, double *scale, 
+			     glow_eFont *font)
 {
   return ((GrowNode *)object)->get_annotation_info( num, text_size, text_drawtype, text_color, bg_color,
-						    scale);
+						    scale, font);
 }
 
 void grow_GetMenuChar( grow_tObject menu, int *t_size, glow_eDrawType *fill_color, glow_eDrawType *t_drawtype,
-		       glow_eDrawType *t_color, glow_eDrawType *t_color_disabled)
+		       glow_eDrawType *t_color, glow_eDrawType *t_color_disabled,
+		       glow_eFont *t_font)
 {
-  ((GrowMenu *)menu)->get_menu_char( t_size, fill_color, t_drawtype, t_color, t_color_disabled);
+  ((GrowMenu *)menu)->get_menu_char( t_size, fill_color, t_drawtype, t_color, t_color_disabled,
+				     t_font);
 }
 
 void grow_MenuShiftCurrentItem( grow_tObject menu, int shift)
