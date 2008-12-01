@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_gtk.h,v 1.7 2008-10-31 12:51:30 claes Exp $
+ * Proview   $Id: co_wow_gtk.h,v 1.8 2008-12-01 16:42:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -98,7 +98,8 @@ class CoWowGtk : public CoWow {
   void *CreateList( const char *title, const char *texts,
 		    void (action_cb)( void *, char *),
 		    void (cancel_cb)( void *),
-		    void *ctx);
+		    void *ctx,
+		    int show_apply_button = 0);
   void CreateFileSelDia( const char *title, void *parent_ctx,
 			 void (*file_selected_cb)(void *, char *, wow_eFileSelType),
 			 wow_eFileSelType file_type);
@@ -129,6 +130,7 @@ class CoWowGtk : public CoWow {
 				     GtkTreePath *path,
 				     GtkTreeViewColumn *column,
 				     gpointer data);
+  static void list_apply_cb( GtkWidget *w, gpointer data);
   static void list_ok_cb( GtkWidget *w, gpointer data);
   static void list_cancel_cb( GtkWidget *w, gpointer data);
 };

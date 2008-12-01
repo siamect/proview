@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_gtk.cpp,v 1.14 2008-10-31 12:51:30 claes Exp $
+ * Proview   $Id: co_wow_gtk.cpp,v 1.15 2008-12-01 16:42:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -201,7 +201,7 @@ void CoWowGtk::list_row_activated_cb( GtkTreeView *tree_view,
   list_ok_cb( 0, data);
 }
 
-void CoWowGtk::list_ok_cb (
+void CoWowGtk::list_apply_cb (
   GtkWidget *w, 
   gpointer data
 )
@@ -228,6 +228,17 @@ void CoWowGtk::list_ok_cb (
 
     (ctx->action_cb)( ctx->parent_ctx, selected_text);
   }
+
+}
+
+void CoWowGtk::list_ok_cb (
+  GtkWidget *w, 
+  gpointer data
+)
+{
+  WowListCtx *ctx = (WowListCtx *) data;
+
+  list_apply_cb( w, data);
 
   gtk_widget_destroy( ctx->toplevel);
   free( ctx->texts);
@@ -266,7 +277,8 @@ void *CoWowGtk::CreateList (
   const char      *texts,
   void	    (action_cb)( void *, char *),
   void	    (cancel_cb)( void *),
-  void	    *parent_ctx
+  void	    *parent_ctx,
+  int	    show_apply_button
 )
 {
   char *name_p;
@@ -334,12 +346,21 @@ void *CoWowGtk::CreateList (
   g_signal_connect( ok_button, "clicked", 
  		    G_CALLBACK(CoWowGtk::list_ok_cb), ctx);
 
+  GtkWidget *apply_button;
+  if ( show_apply_button) {
+    apply_button = gtk_button_new_with_label( translate_utf8("Apply"));
+    gtk_widget_set_size_request( apply_button, 70, 28);
+    g_signal_connect( apply_button, "clicked", 
+		      G_CALLBACK(CoWowGtk::list_apply_cb), ctx);
+  }
   GtkWidget *cancel_button = gtk_button_new_with_label( translate_utf8("Cancel"));
   gtk_widget_set_size_request( cancel_button, 70, 28);
   g_signal_connect( cancel_button, "clicked", 
  		    G_CALLBACK(CoWowGtk::list_cancel_cb), ctx);
 
   GtkWidget *hboxbuttons = gtk_hbox_new( TRUE, 40);
+  if ( show_apply_button)
+    gtk_box_pack_start( GTK_BOX(hboxbuttons), apply_button, FALSE, FALSE, 20);
   gtk_box_pack_start( GTK_BOX(hboxbuttons), ok_button, FALSE, FALSE, 20);
   gtk_box_pack_end( GTK_BOX(hboxbuttons), cancel_button, FALSE, FALSE, 20);
 

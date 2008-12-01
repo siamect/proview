@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow.h,v 1.15 2008-10-31 12:51:30 claes Exp $
+ * Proview   $Id: co_wow.h,v 1.16 2008-12-01 16:42:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -81,7 +81,8 @@ class CoWow {
   virtual void *CreateList( const char *title, const char *texts,
 			    void (action_cb)( void *, char *),
 			    void (cancel_cb)( void *),
-			    void *ctx) { return NULL;}
+			    void *ctx, 
+			    int show_apply_button = 0) { return NULL;}
   virtual void CreateFileSelDia( const char *title, void *parent_ctx,
 				 void (*file_selected_cb)(void *, char *, wow_eFileSelType),
 				 wow_eFileSelType file_type) {}

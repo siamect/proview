@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_motif.cpp,v 1.3 2008-10-31 12:51:30 claes Exp $
+ * Proview   $Id: co_wow_motif.cpp,v 1.4 2008-12-01 16:42:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -296,9 +296,10 @@ void CoWowMotif::list_action_cb( Widget w, XtPointer data,
 }
 
 void *CoWowMotif::CreateList( const char *title, const char *texts,
-				     void (action_cb)( void *, char *),
-				     void (cancel_cb)( void *),
-				     void *parent_ctx)
+			      void (action_cb)( void *, char *),
+			      void (cancel_cb)( void *),
+			      void *parent_ctx,
+			      int show_apply_button)
 {
   Arg	    args[15];
   XmString cstr;
