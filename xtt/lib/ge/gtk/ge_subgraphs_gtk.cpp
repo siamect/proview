@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subgraphs_gtk.cpp,v 1.4 2008-10-31 12:51:33 claes Exp $
+ * Proview   $Id: ge_subgraphs_gtk.cpp,v 1.5 2008-12-01 16:40:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -113,6 +113,13 @@ static void subgraphs_activate_set_all_intern( GtkWidget *w, gpointer data)
   ((SubGraphs *)subgraphs)->set_all_extern( 0);
 }
 
+static void subgraphs_activate_set_all_extern( GtkWidget *w, gpointer data)
+{
+  SubGraphsGtk *subgraphs = (SubGraphsGtk *)data;
+
+  ((SubGraphs *)subgraphs)->set_all_extern( 1);
+}
+
 static void subgraphs_activate_help( GtkWidget *w, gpointer data)
 {
 }
@@ -173,6 +180,12 @@ SubGraphsGtk::SubGraphsGtk(
   gtk_widget_add_accelerator( file_setallintern, "activate", accel_g,
 			      'l', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
+  GtkWidget *file_setallextern = gtk_menu_item_new_with_mnemonic( "Set A_ll Extern");
+  g_signal_connect( file_setallextern, "activate", 
+		    G_CALLBACK(subgraphs_activate_set_all_extern), this);
+  gtk_widget_add_accelerator( file_setallextern, "activate", accel_g,
+			      'k', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
   GtkWidget *file_close = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLOSE, accel_g);
   g_signal_connect(file_close, "activate", G_CALLBACK(subgraphs_activate_close), this);
 
@@ -181,6 +194,7 @@ SubGraphsGtk::SubGraphsGtk(
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_setextern);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_setintern);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_setallintern);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_setallextern);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 
   GtkWidget *file = gtk_menu_item_new_with_mnemonic("_File");

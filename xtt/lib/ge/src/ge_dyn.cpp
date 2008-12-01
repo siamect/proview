@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.70 2008-11-24 15:24:16 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.71 2008-12-01 16:40:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -13152,12 +13152,14 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
       int text_size;
       int sts;
       double scale;
+      glow_eFont text_font;
       
-      sts = grow_GetObjectAnnotInfo( object, 1, &text_size, &text_drawtype, &text_color, &bg_color,
-				     &scale);
+      sts = grow_GetObjectAnnotInfo( object, 1, &text_size, &text_drawtype, &text_color, 
+				     &bg_color, &scale, &text_font);
       if ( EVEN(sts)) {
 	text_size = 2;
 	text_drawtype = glow_eDrawType_TextHelveticaBold;
+	text_font = glow_eFont_Helvetica;
 	text_color = glow_eDrawType_Line;
 	bg_color = glow_eDrawType_LightGray;
       }
@@ -13168,7 +13170,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
       grow_CreateGrowMenu( dyn->graph->grow->ctx, "__Menu", &info, ll_x, ur_y, ur_x - ll_x,
 			   glow_eDrawType_Line, 0, 1, 1, bg_color, text_size,
 			   text_drawtype, text_color,
-			   glow_eDrawType_MediumGray, 0,
+			   glow_eDrawType_MediumGray, text_font, 0,
 			   &menu_object);
       grow_SetObjectScale( menu_object, scale, scale, 0, 0, glow_eScaleType_LowerLeft);
       grow_SetMenuInputFocus( menu_object, 1);
@@ -13237,14 +13239,15 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
 
 	glow_eDrawType text_drawtype, text_color, bg_color, text_color_disabled;
 	int text_size;
+	glow_eFont text_font;
 
 	grow_GetMenuChar( object, &text_size, &bg_color, &text_drawtype, &text_color, 
-			  &text_color_disabled);
+			  &text_color_disabled, &text_font);
 
 	grow_CreateGrowMenu( dyn->graph->grow->ctx, "__Menu", &info, event->menu.x, event->menu.y, 0,
 			     glow_eDrawType_Line, 0, 1, 1, bg_color, text_size,
 			     text_drawtype, text_color,
-			     text_color_disabled, object,
+			     text_color_disabled, text_font, object,
 			     &menu_object);
 	grow_SetMenuInputFocus( object, 0);
 	grow_SetMenuInputFocus( menu_object, 1);
@@ -13834,9 +13837,10 @@ int GeOptionMenu::action( grow_tObject object, glow_tEvent event)
       int text_size;
       int sts;
       double scale;
+      glow_eFont text_font;
 
       sts = grow_GetObjectAnnotInfo( object, 1, &text_size, &text_drawtype, &text_color, &bg_color,
-				     &scale);
+				     &scale, &text_font);
       if ( EVEN(sts)) {
 	text_size = 2;
 	text_drawtype = glow_eDrawType_TextHelveticaBold;
@@ -13850,7 +13854,7 @@ int GeOptionMenu::action( grow_tObject object, glow_tEvent event)
       grow_CreateGrowMenu( dyn->graph->grow->ctx, "__Menu", &info, ll_x, ur_y, ur_x - ll_x,
 			   glow_eDrawType_Line, 0, 1, 1, bg_color, text_size,
 			   text_drawtype, text_color,
-			   glow_eDrawType_MediumGray, 0,
+			   glow_eDrawType_MediumGray, text_font, 0,
 			   &menu_object);
       grow_SetObjectScale( menu_object, scale, scale, 0, 0, glow_eScaleType_LowerLeft);
     }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.cpp,v 1.21 2008-11-28 17:13:44 claes Exp $
+ * Proview   $Id: ge_gtk.cpp,v 1.22 2008-12-01 16:40:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -107,7 +107,7 @@ void GeGtk::create_list( const char *title, const char *texts,
 			   void (action_cb)( void *, char *), void *ctx) 
 {
   CoWowGtk wow( toplevel);
-  wow.CreateList( title, texts, action_cb, 0, ctx);
+  wow.CreateList( title, texts, action_cb, 0, ctx, 1);
 }
 
 void GeGtk::subgraphs_new()

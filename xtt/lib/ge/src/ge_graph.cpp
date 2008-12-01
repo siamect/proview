@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.57 2008-11-24 15:25:15 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.58 2008-12-01 16:40:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2853,10 +2853,15 @@ void GraphGrow::grow_setup()
   else
     grow_attr.enable_bg_pixmap = 1; 
   mask |= grow_eAttr_double_buffer_on;
-  if ( ((Graph *)graph)->mode == graph_eMode_Development)
+  mask |= grow_eAttr_environment;
+  if ( ((Graph *)graph)->mode == graph_eMode_Development) {
     grow_attr.double_buffer_on = 1;
-  else
+    grow_attr.environment = glow_eEnv_Development;
+  }
+  else {
     grow_attr.double_buffer_on = 0; 
+    grow_attr.environment = glow_eEnv_Runtime;
+  }
   grow_SetAttributes( ctx, &grow_attr, mask); 
   grow_SetCtxUserData( ctx, graph);
   grow_SetMoveRestrictions( ctx, glow_eMoveRestriction_No, 0, 0, NULL);
