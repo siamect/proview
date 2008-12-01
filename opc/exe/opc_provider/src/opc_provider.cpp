@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.cpp,v 1.18 2008-11-25 08:13:26 claes Exp $
+ * Proview   $Id: opc_provider.cpp,v 1.19 2008-12-01 08:38:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1291,7 +1291,7 @@ int main(int argc, char *argv[])
   int server_id;
   
   /* Read arguments */
-  if ( argc < 5) {
+  if ( argc < 4) {
     usage();
     exit(0);
   }
