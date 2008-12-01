@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growrect.cpp,v 1.14 2008-11-20 10:30:44 claes Exp $
+ * Proview   $Id: glow_growrect.cpp,v 1.15 2008-12-01 16:31:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -782,7 +782,7 @@ void GrowRect::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
   }
   if ( fill) {
     if ( display_shadow && ish != 0) {
-      if ( grad == glow_eGradient_No)
+      if ( grad == glow_eGradient_No || fillcolor == glow_eDrawType_ColorRed)
 	ctx->gdraw->fill_rect( w, ll_x + ish, ll_y + ish, ur_x - ll_x - 2 * ish, ur_y - ll_y - 2 * ish,
 			       fillcolor);
       else {
@@ -806,7 +806,7 @@ void GrowRect::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
       }
     }
     else {
-      if ( grad == glow_eGradient_No)
+      if ( grad == glow_eGradient_No || fillcolor == glow_eDrawType_ColorRed)
 	ctx->gdraw->fill_rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fillcolor);
       else {
 	glow_eDrawType f1, f2;

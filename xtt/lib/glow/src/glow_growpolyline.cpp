@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growpolyline.cpp,v 1.10 2008-11-20 10:30:44 claes Exp $
+ * Proview   $Id: glow_growpolyline.cpp,v 1.11 2008-12-01 16:31:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -382,7 +382,7 @@ void GrowPolyLine::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, 
     else if ( fill_eq_shadow && node && ((GrowNode *)node)->shadow)
       drawtype = ctx->shift_drawtype( drawtype, shadow_contrast, 
 						   (GrowNode *)colornode);
-    if ( grad == glow_eGradient_No)
+    if ( grad == glow_eGradient_No || drawtype == glow_eDrawType_ColorRed)
       ctx->gdraw->fill_polyline( w, points, a_points.a_size, drawtype, 0);
     else {
       glow_eDrawType f1, f2;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growarc.cpp,v 1.8 2008-11-20 10:30:44 claes Exp $
+ * Proview   $Id: glow_growarc.cpp,v 1.9 2008-12-01 16:31:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -701,7 +701,7 @@ void GrowArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void 
       grad = ((GrowNode *)node)->gradient;
     
     if ( !display_shadow || shadow_width == 0 || angle2 != 360) {
-      if ( grad == glow_eGradient_No)
+      if ( grad == glow_eGradient_No || fillcolor == glow_eDrawType_ColorRed)
 	ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
 			      angle1 - rot, angle2, fillcolor, 0);
       else {
@@ -724,7 +724,7 @@ void GrowArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void 
       if ( relief == glow_eRelief_Down)
 	drawtype_incr = -shadow_contrast;
 
-      if ( grad == glow_eGradient_No) {
+      if ( grad == glow_eGradient_No || fillcolor == glow_eDrawType_ColorRed) {
 
 	// Draw light shadow
 	drawtype = ctx->shift_drawtype( fillcolor, -drawtype_incr, (GrowNode *)colornode);
