@@ -113,3 +113,5 @@
 081126 cs  xtt       Method OpenGraph always viewed on XttGraph objects.
 081128 cs  flow      Metric antialiased fonts.
 081128 cs  glow      Metric antialiased fonts, scalable texts, change of fonts for subgraphs.
+081130 cs  glow      Font can be set on node and group level for text and annotations.
+081130 cs  glow      Red error color is not affected by gradient property.
