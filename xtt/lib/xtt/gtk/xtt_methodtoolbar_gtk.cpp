@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_methodtoolbar_gtk.cpp,v 1.3 2007-10-18 12:46:35 claes Exp $
+ * Proview   $Id: xtt_methodtoolbar_gtk.cpp,v 1.4 2008-12-02 09:31:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,7 +28,7 @@
 #include "xtt_methodtoolbar_gtk.h"
 
 XttMethodToolbarGtk::XttMethodToolbarGtk( XNav *xnav) :
-  XttMethodToolbar(xnav)
+  XttMethodToolbar(xnav), m_timerid(0)
 {
   for ( int i = 0; i < m_size; i++) {
     m_cb[i].mt = this;
