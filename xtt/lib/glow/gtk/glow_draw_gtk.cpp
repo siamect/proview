@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_gtk.cpp,v 1.18 2008-12-01 16:32:40 claes Exp $
+ * Proview   $Id: glow_draw_gtk.cpp,v 1.19 2008-12-02 15:11:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2548,7 +2548,7 @@ int GlowDrawGtk::print( char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.18 2008-12-01 16:32:40 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.19 2008-12-02 15:11:00 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else
@@ -3356,7 +3356,7 @@ int GlowDrawGtk::gradient_fill_polyline( GlowWind *wind, glow_sPointX *points, i
 
 #define FONTSTR "Lucida Sans"
 #define FONT_SCALE 0.7
-#define FONT_DESCENT 0.2
+#define FONT_DESCENT 0.22
 
 static char *font_string( int font_idx, int font_type, double size)
 {
@@ -3440,7 +3440,7 @@ int GlowDrawGtk::text_pango( GlowWind *wind, int x, int y, char *text, int len,
     int width, height;
     pango_layout_get_size( layout, &width, &height);
     height *= 0.9;
-    pango_renderer_draw_layout( pr, layout, PANGO_SCALE * x, PANGO_SCALE * y - 0.85*height);
+    pango_renderer_draw_layout( pr, layout, PANGO_SCALE * x, PANGO_SCALE * y - (1.0-FONT_DESCENT)*height);
   
     g_object_unref( layout);
     g_object_unref( pctx);
