@@ -34,22 +34,22 @@ p               {font-family: Arial, Verdana;
 
 h1              {font-family: 'Arial Black', Arial, Verdana;
                 color: #003399;
-                font-size: 20pt;
+                font-size: 24pt;
                 font-weight: bold;
                 margin-top: 16px;
                 margin-bottom: 0px;
                 text-align: center;
                 }
 
-h2              {font-family: Times New Roman, Times, Sabon;
-                font-size: 130%;
+h2              {font-family: 'Arial Black', Arial, Verdana;
+                font-size: 24pt;
                 font-weight: bold;
                 color: #000000;
                 margin-top: 5px;
                 margin-bottom: 0px}
 
-h3              {font-family: Times New Roman, Times, Sabon;
-                font-size: 110%;
+h3              {font-family: 'Arial Black', Arial, Verdana;
+                font-size: 18pt;
                 font-weight: bold;
                 color: #000000;
                 margin-top: 5px;
