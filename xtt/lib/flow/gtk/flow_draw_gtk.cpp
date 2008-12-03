@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_gtk.cpp,v 1.13 2008-11-28 17:13:44 claes Exp $
+ * Proview   $Id: flow_draw_gtk.cpp,v 1.14 2008-12-03 08:28:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1183,6 +1183,12 @@ int FlowDrawGtk::text_pango( FlowCtx *ctx, int x, int y, char *text, int len,
 
   int w, h;
   pango_layout_get_size( layout, &w, &h);
+
+  // Erase old test first
+  gdk_draw_rectangle( window, 
+		      gcs[flow_eDrawType_LineErase][idx], 1, 
+		      x, y - 0.8 / PANGO_SCALE * h, w / PANGO_SCALE, h / PANGO_SCALE);
+
   pango_renderer_draw_layout( pr, layout, PANGO_SCALE * x, PANGO_SCALE * y - h * 0.8);
   
   gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);
