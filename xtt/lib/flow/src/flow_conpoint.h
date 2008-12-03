@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_conpoint.h,v 1.6 2008-10-31 12:51:33 claes Exp $
+ * Proview   $Id: flow_conpoint.h,v 1.7 2008-12-03 12:01:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,7 +54,7 @@ class FlowConPoint : public FlowArrayElem {
 	double *x_left, double *y_high, double *y_low, void *node) {};
     int get_conpoint( int num, double *x, double *y, flow_eDirection *dir);
     flow_eObjectType type() { return flow_eObjectType_ConPoint;};
-    void set_trace_attr( char *object, char *attribute, flow_eTraceType type, int inverted);
+    void set_trace_attr( const char *object, const char *attribute, flow_eTraceType type, int inverted);
     void get_trace_attr( char *object, char *attribute, flow_eTraceType *type, int *inverted);
     FlowCtx *ctx;
     int	number;

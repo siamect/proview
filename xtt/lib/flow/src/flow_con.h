@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_con.h,v 1.5 2008-10-31 12:51:33 claes Exp $
+ * Proview   $Id: flow_con.h,v 1.6 2008-12-03 12:01:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -190,7 +190,7 @@ class FlowCon : public FlowArrayElem {
     void *user_data;
     void set_user_data( void *data) { user_data = data;};
     void get_user_data( void **data) { *data = user_data;};
-    void set_trace_attr( char *object, char *attribute, flow_eTraceType type, int inverted)
+    void set_trace_attr( const char *object, const char *attribute, flow_eTraceType type, int inverted)
         { strncpy( trace_object, object, sizeof( trace_object)); 
           strncpy( trace_attribute, attribute, sizeof( trace_attribute));
           trace_attr_type = type;};

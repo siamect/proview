@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_conpoint.cpp,v 1.5 2008-10-31 12:51:33 claes Exp $
+ * Proview   $Id: flow_conpoint.cpp,v 1.6 2008-12-03 12:01:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -126,7 +126,7 @@ int FlowConPoint::get_conpoint( int num, double *x, double *y,
   return 0;
 }
 
-void FlowConPoint::set_trace_attr( char *object, char *attribute, 
+void FlowConPoint::set_trace_attr( const char *object, const char *attribute, 
 	flow_eTraceType type, int inverted)
 {
   strncpy( trace_attribute, attribute, sizeof( trace_attribute));
