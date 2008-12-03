@@ -52,6 +52,7 @@ palette NavigatorPalette
     {
       class DsFastCurve
       class DsTrend
+      class SevHist
     }
     menu Supervision
     {
@@ -199,11 +200,12 @@ palette NavigatorPalette
   }
   menu Node
   {
+    class $CreateVolume
+    class $MountObject
+    class $MountVolume
     class $NodeHier
     class $Node
-    class $MountObject
-    class $CreateVolume
-    class $MountVolume
+    class $Security
     menu Servers
     {
       class Backup_Conf
