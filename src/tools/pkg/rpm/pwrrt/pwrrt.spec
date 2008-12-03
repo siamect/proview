@@ -11,7 +11,7 @@
 Name: pwrrt
 Summary: Proview/R runtime environment
 Version: 4.6.0
-Release: 1
+Release: 4
 License: GPL
 BuildArch: i386
 Packager: claes.sjofors@proview.se
@@ -483,6 +483,11 @@ fi
 #%postun
 
 %changelog
-* Mon Nov 10 2008 Claes Sjofors <claes.sjofors@ssabox.com> 4.6.0-1
+* Mon Nov 10 2008 Claes Sjofors <claes.sjofors@proview.se> 4.6.0-1
   - Base release.
-
+  4.6.0-2 
+  - Ge: functions for color gradients added.
+  4.6.0-3 
+  - Sev: Improved error handling.
+  4.6.0-4 
+  - Xtt/Ge: Metric fonts.
