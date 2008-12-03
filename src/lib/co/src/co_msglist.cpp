@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msglist.cpp,v 1.11 2008-12-03 12:00:38 claes Exp $
+ * Proview   $Id: co_msglist.cpp,v 1.12 2008-12-03 12:08:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -519,6 +519,10 @@ ItemMsg::ItemMsg( MsgList *item_msglist, const char *item_name,
 
   strncpy( text, item_text, sizeof(text));
   text[sizeof(text)-1] = 0;
+
+  // Remove newline at end
+  if ( text[strlen(text)-1] == '\n')
+    text[strlen(text)-1] = 0;
 
   switch ( severity) {
   case 'S':
