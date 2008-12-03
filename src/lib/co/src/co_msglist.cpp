@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msglist.cpp,v 1.10 2008-11-28 17:14:53 claes Exp $
+ * Proview   $Id: co_msglist.cpp,v 1.11 2008-12-03 12:00:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -72,7 +72,6 @@ void MsgListBrow::create_nodeclasses()
 
   brow_CreateNodeClass( ctx, "EventDefault", 
 		flow_eNodeGroup_Common, &nc_default);
-  brow_AddFrame( nc_default, 0, 0, 35, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_default, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_default, 1.4, 0.6, 0,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
@@ -83,11 +82,11 @@ void MsgListBrow::create_nodeclasses()
   brow_AddAnnot( nc_default, 9, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
+  brow_AddFrame( nc_default, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Nodeclass for Error
   brow_CreateNodeClass( ctx, "Error", 
 		flow_eNodeGroup_Common, &nc_error);
-  brow_AddFrame( nc_error, 0, 0, 35, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_error, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddFilledRect( nc_error, 0.8, 0.15, 0.4, 0.4, flow_eDrawType_LineRed);
   brow_AddRect( nc_error, 0.8, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
@@ -100,11 +99,11 @@ void MsgListBrow::create_nodeclasses()
   brow_AddAnnot( nc_error, 9, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
+  brow_AddFrame( nc_error, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Nodeclass for Fatal
   brow_CreateNodeClass( ctx, "Fatal", 
 		flow_eNodeGroup_Common, &nc_fatal);
-  brow_AddFrame( nc_fatal, 0, 0, 35, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_fatal, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddFilledRect( nc_fatal, 0.8, 0.15, 0.4, 0.4, flow_eDrawType_LineRed);
   brow_AddRect( nc_fatal, 0.8, 0.15, 0.4, 0.4, flow_eDrawType_Line, 2, 0);
@@ -117,11 +116,11 @@ void MsgListBrow::create_nodeclasses()
   brow_AddAnnot( nc_fatal, 9, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
+  brow_AddFrame( nc_fatal, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Nodeclass for Warning
   brow_CreateNodeClass( ctx, "Warning", 
 		flow_eNodeGroup_Common, &nc_warning);
-  brow_AddFrame( nc_warning, 0, 0, 35, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_warning, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddFilledRect( nc_warning, 0.8, 0.15, 0.4, 0.4, flow_eDrawType_Yellow);
   brow_AddRect( nc_warning, 0.8, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
@@ -134,11 +133,11 @@ void MsgListBrow::create_nodeclasses()
   brow_AddAnnot( nc_warning, 9, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
+  brow_AddFrame( nc_warning, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Nodeclass for Info
   brow_CreateNodeClass( ctx, "Info", 
 		flow_eNodeGroup_Common, &nc_info);
-  brow_AddFrame( nc_info, 0, 0, 35, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_info, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddFilledRect( nc_info, 0.8, 0.15, 0.4, 0.4, flow_eDrawType_Green);
   brow_AddRect( nc_info, 0.8, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
@@ -151,11 +150,11 @@ void MsgListBrow::create_nodeclasses()
   brow_AddAnnot( nc_info, 9, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
+  brow_AddFrame( nc_info, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Nodeclass for Success
   brow_CreateNodeClass( ctx, "Success", 
 		flow_eNodeGroup_Common, &nc_success);
-  brow_AddFrame( nc_success, 0, 0, 35, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_success, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   // brow_AddFilledRect( nc_success, 0.8, 0.15, 0.4, 0.4, flow_eDrawType_Green);
   brow_AddRect( nc_success, 0.8, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
@@ -168,6 +167,7 @@ void MsgListBrow::create_nodeclasses()
   brow_AddAnnot( nc_success, 9, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine,
 		0);
+  brow_AddFrame( nc_success, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
 }
 
 void MsgListBrow::brow_setup()

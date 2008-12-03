@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_evlist.cpp,v 1.22 2008-11-28 17:13:45 claes Exp $
+ * Proview   $Id: xtt_evlist.cpp,v 1.23 2008-12-03 12:00:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -193,7 +193,6 @@ void EvListBrow::create_nodeclasses()
 
   brow_CreateNodeClass( ctx, "EventDefault", 
 		flow_eNodeGroup_Common, &nc_event);
-  brow_AddFrame( nc_event, 0, 0, 35, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnot( nc_event, 0.8, 0.6, 0,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnotPixmap( nc_event, 0, 1.6, 0.1, flow_eDrawType_Line, 2, 0);
@@ -210,11 +209,11 @@ void EvListBrow::create_nodeclasses()
   brow_AddAnnot( nc_event, 28, 0.6, 4,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddFrame( nc_event, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Nodeclass for A-alarm
   brow_CreateNodeClass( ctx, "A_Alarm", 
 		flow_eNodeGroup_Common, &nc_a_alarm);
-  brow_AddFrame( nc_a_alarm, 0, 0, 35, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddFilledRect( nc_a_alarm, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_LineRed);
   brow_AddRect( nc_a_alarm, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_a_alarm, 0.8, 0.6, 0,
@@ -229,11 +228,11 @@ void EvListBrow::create_nodeclasses()
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
   brow_AddAnnot( nc_a_alarm, 28, 0.6, 4,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
+  brow_AddFrame( nc_a_alarm, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Nodeclass for B-alarm
   brow_CreateNodeClass( ctx, "B_Alarm", 
 		flow_eNodeGroup_Common, &nc_b_alarm);
-  brow_AddFrame( nc_b_alarm, 0, 0, 35, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddFilledRect( nc_b_alarm, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Yellow);
   brow_AddRect( nc_b_alarm, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_b_alarm, 0.8, 0.6, 0,
@@ -248,11 +247,11 @@ void EvListBrow::create_nodeclasses()
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
   brow_AddAnnot( nc_b_alarm, 28, 0.6, 4,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
+  brow_AddFrame( nc_b_alarm, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Nodeclass for Info
   brow_CreateNodeClass( ctx, "Info", 
 		flow_eNodeGroup_Common, &nc_info);
-  brow_AddFrame( nc_info, 0, 0, 35, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddFilledRect( nc_info, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Green);
   brow_AddRect( nc_info, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_info, 0.8, 0.6, 0,
@@ -267,6 +266,7 @@ void EvListBrow::create_nodeclasses()
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
   brow_AddAnnot( nc_info, 28, 0.6, 4,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 1);
+  brow_AddFrame( nc_info, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
 
 }
 

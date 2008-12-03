@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attrnav.cpp,v 1.6 2008-10-31 12:51:30 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attrnav.cpp,v 1.7 2008-12-03 12:00:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1188,99 +1188,98 @@ void GsdAttrNavBrow::create_nodeclasses()
 
   brow_CreateNodeClass( ctx, "NavigatorDefault", 
 		flow_eNodeGroup_Common, &nc_object);
-  brow_AddFrame( nc_object, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_object, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_object, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_object, 2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_object, 7, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnot( nc_object, 12, 0.6, 2,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddFrame( nc_object, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Create attribute nodeclass
 
   brow_CreateNodeClass( ctx, "NavigatorGsdAttr", 
 		flow_eNodeGroup_Common, &nc_attr);
-  brow_AddFrame( nc_attr, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_attr, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_attr, 2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_attr, 12, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddFrame( nc_attr, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Create multiline attribute nodeclass
 
   brow_CreateNodeClass( ctx, "NavigatorGsdAttrMultiLine", 
 		flow_eNodeGroup_Common, &nc_attr_multiline);
-  brow_AddFrame( nc_attr_multiline, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_attr_multiline, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_attr_multiline, 2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_attr_multiline, 8, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_MultiLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_MultiLine, 
 		1);
+  brow_AddFrame( nc_attr_multiline, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Create attribute nodeclass
 
   brow_CreateNodeClass( ctx, "NavigatorEnum", 
 		flow_eNodeGroup_Common, &nc_enum);
-  brow_AddRadiobutton( nc_enum, 15, 0.1, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
-  brow_AddFrame( nc_enum, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_enum, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_enum, 2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
+  brow_AddFrame( nc_enum, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddRadiobutton( nc_enum, 15, 0.1, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
  
   // Create table nodeclass
 
   brow_CreateNodeClass( ctx, "NavigatorTable", 
 		flow_eNodeGroup_Common, &nc_table);
-  brow_AddFrame( nc_table, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_table, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_table, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_table, 2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_table, 8, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnot( nc_table, 12, 0.6, 2,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnot( nc_table, 16, 0.6, 3,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnot( nc_table, 20, 0.6, 4,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnot( nc_table, 24, 0.6, 5,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnot( nc_table, 28, 0.6, 6,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnot( nc_table, 32, 0.6, 7,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnot( nc_table, 35, 0.6, 8,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddAnnot( nc_table, 38, 0.6, 9,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddFrame( nc_table, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Create Header
 
   brow_CreateNodeClass( ctx, "NavigatorHead", 
 		flow_eNodeGroup_Common, &nc_header);
-  brow_AddFrame( nc_header, 0, 0, 20, 0.8, flow_eDrawType_LineGray, 2, 1);
   brow_AddAnnotPixmap( nc_header, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_header, 2, 0.6, 0,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
@@ -1288,12 +1287,12 @@ void GsdAttrNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_header, 8, 0.6, 1,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddFrame( nc_header, 0, 0, 20, 0.8, flow_eDrawType_LineGray, 2, 1);
 
   // Create TableHeader
 
   brow_CreateNodeClass( ctx, "NavigatorTableHead", 
 		flow_eNodeGroup_Common, &nc_table_header);
-  brow_AddFrame( nc_table_header, 0, 0, 20, 0.8, flow_eDrawType_LineGray, 2, 1);
   brow_AddAnnotPixmap( nc_table_header, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_table_header, 2, 0.6, 0,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
@@ -1325,6 +1324,7 @@ void GsdAttrNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_table_header, 38, 0.6, 9,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		0);
+  brow_AddFrame( nc_table_header, 0, 0, 20, 0.8, flow_eDrawType_LineGray, 2, 1);
 
 }
 

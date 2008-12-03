@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_brow.cpp,v 1.11 2008-11-28 17:14:04 claes Exp $
+ * Proview   $Id: wb_wnav_brow.cpp,v 1.12 2008-12-03 12:00:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -978,7 +978,6 @@ void WNavBrow::create_nodeclasses()
 
   brow_CreateNodeClass( ctx, "NavigatorDefault", 
 		flow_eNodeGroup_Common, &nc_object);
-  brow_AddFrame( nc_object, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_object, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_object, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_object, 2, 0.6, 0,
@@ -990,12 +989,12 @@ void WNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_object, 11, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddFrame( nc_object, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Create multi object class
 
   brow_CreateNodeClass( ctx, "NavigatorObject", 
 		flow_eNodeGroup_Common, &nc_multiobject);
-  brow_AddFrame( nc_multiobject, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_multiobject, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_multiobject, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_multiobject, 2, 0.6, 0,
@@ -1026,12 +1025,12 @@ void WNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_multiobject, 18.7, 0.6, 7,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddFrame( nc_multiobject, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Create attribute nodeclass
 
   brow_CreateNodeClass( ctx, "NavigatorAttr", 
 		flow_eNodeGroup_Common, &nc_attr);
-  brow_AddFrame( nc_attr, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_attr, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_attr, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_attr, 2, 0.6, 0,
@@ -1040,12 +1039,12 @@ void WNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_attr, 8, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddFrame( nc_attr, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Create attribute nodeclass for fullname display
 
   brow_CreateNodeClass( ctx, "NavigatorAttrFull", 
 		flow_eNodeGroup_Common, &nc_attr_full);
-  brow_AddFrame( nc_attr_full, 0, 0, 60, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_attr_full, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_attr_full, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_attr_full, 2, 0.6, 0,
@@ -1054,13 +1053,11 @@ void WNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_attr_full, 25, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddFrame( nc_attr_full, 0, 0, 60, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Input with Used and Inverted radiobutton
   brow_CreateNodeClass( ctx, "NavigatorAttrInput", 
 		flow_eNodeGroup_Common, &nc_attr_input);
-  brow_AddRadiobutton( nc_attr_input, 14, 0.1, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
-  brow_AddRadiobutton( nc_attr_input, 18, 0.1, 0.7, 0.7, 1, flow_eDrawType_Line, 1);
-  brow_AddFrame( nc_attr_input, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_attr_input, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_attr_input, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_attr_input, 2, 0.6, 0,
@@ -1073,12 +1070,13 @@ void WNavBrow::create_nodeclasses()
 	flow_eDrawType_TextHelvetica, 2);
   brow_AddText( nc_attr_input, "Inverted", 15, 0.6,
 	flow_eDrawType_TextHelvetica, 2);
+  brow_AddFrame( nc_attr_input, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddRadiobutton( nc_attr_input, 14, 0.03, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
+  brow_AddRadiobutton( nc_attr_input, 18, 0.03, 0.7, 0.7, 1, flow_eDrawType_Line, 1);
 
   // Input with Inverted radiobutton
   brow_CreateNodeClass( ctx, "NavigatorAttrInputNoinv",
 		flow_eNodeGroup_Common, &nc_attr_inputinv);
-  brow_AddRadiobutton( nc_attr_inputinv, 15, 0.1, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
-  brow_AddFrame( nc_attr_inputinv, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_attr_inputinv, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_attr_inputinv, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_attr_inputinv, 2, 0.6, 0,
@@ -1089,12 +1087,12 @@ void WNavBrow::create_nodeclasses()
 		1);
   brow_AddText( nc_attr_inputinv, "Inverted", 12, 0.6, 
 	flow_eDrawType_TextHelvetica, 2);
+  brow_AddFrame( nc_attr_inputinv, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddRadiobutton( nc_attr_inputinv, 15, 0.03, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
 
   // Input and output with Used radiobutton
   brow_CreateNodeClass( ctx, "NavigatorAttrOutput", 
 		flow_eNodeGroup_Common, &nc_attr_output);
-  brow_AddRadiobutton( nc_attr_output, 14, 0.1, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
-  brow_AddFrame( nc_attr_output, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_attr_output, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_attr_output, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_attr_output, 2, 0.6, 0,
@@ -1105,12 +1103,13 @@ void WNavBrow::create_nodeclasses()
 		1);
   brow_AddText( nc_attr_output, "Used", 12, 0.6, 
 	flow_eDrawType_TextHelvetica, 2);
+  brow_AddFrame( nc_attr_output, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddRadiobutton( nc_attr_output, 14, 0.03, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
 
   // Create multiline attribute nodeclass
 
   brow_CreateNodeClass( ctx, "NavigatorAttrMultiLine", 
 		flow_eNodeGroup_Common, &nc_attr_multiline);
-  brow_AddFrame( nc_attr_multiline, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_attr_multiline, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_attr_multiline, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_attr_multiline, 2, 0.6, 0,
@@ -1119,13 +1118,12 @@ void WNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_attr_multiline, 8, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_MultiLine, 
 		1);
+  brow_AddFrame( nc_attr_multiline, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Create multiline attribute nodeclass for fullname
 
   brow_CreateNodeClass( ctx, "NavigatorAttrMultiLineFull", 
 		       flow_eNodeGroup_Common, &nc_attr_multiline_full);
-  brow_AddFrame( nc_attr_multiline_full, 0, 0, 60, 0.8, 
-		 flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_attr_multiline_full, 0, 0.2, 0.1, 
 		       flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_attr_multiline_full, 1, 1.1, 0.1, 
@@ -1136,24 +1134,25 @@ void WNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_attr_multiline_full, 25, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2,
 		flow_eAnnotType_MultiLine, 1);
+  brow_AddFrame( nc_attr_multiline_full, 0, 0, 60, 0.8, 
+		 flow_eDrawType_LineGray, -1, 1);
 
   // Create attribute nodeclass
 
   brow_CreateNodeClass( ctx, "NavigatorEnum", 
 		flow_eNodeGroup_Common, &nc_enum);
-  brow_AddRadiobutton( nc_enum, 12, 0.1, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
-  brow_AddFrame( nc_enum, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_enum, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_enum, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_enum, 2, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
+  brow_AddFrame( nc_enum, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddRadiobutton( nc_enum, 12, 0.03, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
  
   // Create table nodeclass
 
   brow_CreateNodeClass( ctx, "NavigatorTable", 
 		flow_eNodeGroup_Common, &nc_table);
-  brow_AddFrame( nc_table, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_table, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_table, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_table, 2, 0.6, 0,
@@ -1186,12 +1185,12 @@ void WNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_table, 38, 0.6, 9,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddFrame( nc_table, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Create text
 
   brow_CreateNodeClass( ctx, "NavigatorText", 
 		flow_eNodeGroup_Common, &nc_text);
-  brow_AddFrame( nc_text, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_text, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_text, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_text, 2, 0.6, 0,
@@ -1203,12 +1202,12 @@ void WNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_text, 11, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddFrame( nc_text, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Create Header
 
   brow_CreateNodeClass( ctx, "NavigatorHead", 
 		flow_eNodeGroup_Common, &nc_header);
-  brow_AddFrame( nc_header, 0, 0, 20, 0.8, flow_eDrawType_LineGray, 2, 1);
   brow_AddAnnotPixmap( nc_header, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_header, 2, 0.6, 0,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
@@ -1216,12 +1215,12 @@ void WNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_header, 8, 0.6, 1,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddFrame( nc_header, 0, 0, 20, 0.8, flow_eDrawType_LineGray, 2, 1);
 
   // Create Header2
 
   brow_CreateNodeClass( ctx, "NavigatorHeadLarge", 
 		flow_eNodeGroup_Common, &nc_headerlarge);
-  brow_AddFrame( nc_headerlarge, 0, 0, 20, 1.4, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_headerlarge, 0, 0.5, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_headerlarge, 2, 1.0, 0,
 		flow_eDrawType_TextHelveticaBold, 4, flow_eAnnotType_OneLine, 
@@ -1229,12 +1228,12 @@ void WNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_headerlarge, 8, 1.0, 1,
 		flow_eDrawType_TextHelveticaBold, 4, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddFrame( nc_headerlarge, 0, 0, 20, 1.4, flow_eDrawType_LineGray, -1, 1);
 
   // Create TableHeader
 
   brow_CreateNodeClass( ctx, "NavigatorTableHead", 
 		flow_eNodeGroup_Common, &nc_table_header);
-  brow_AddFrame( nc_table_header, 0, 0, 20, 0.8, flow_eDrawType_LineGray, 2, 1);
   brow_AddAnnotPixmap( nc_table_header, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_table_header, 2, 0.6, 0,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
@@ -1266,5 +1265,5 @@ void WNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_table_header, 38, 0.6, 9,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		0);
+  brow_AddFrame( nc_table_header, 0, 0, 20, 0.8, flow_eDrawType_LineGray, 2, 1);
 }
-

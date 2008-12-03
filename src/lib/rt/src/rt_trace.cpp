@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trace.cpp,v 1.7 2008-05-28 11:43:43 claes Exp $
+ * Proview   $Id: rt_trace.cpp,v 1.8 2008-12-03 12:00:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1275,8 +1275,8 @@ int RtTrace::trace_start()
 		&trace_analyse_nc);
       flow_AddRect( trace_analyse_nc, 0, 0, f_width, f_height, 
 		flow_eDrawType_Line, 1, flow_mDisplayLevel_1);
-      flow_AddAnnot( trace_analyse_nc, f_width/8, 0.7*f_height, 0,
-		flow_eDrawType_TextHelvetica, 4, flow_eAnnotType_OneLine,
+      flow_AddAnnot( trace_analyse_nc, f_width/8, 0.8*f_height, 0,
+		flow_eDrawType_TextHelvetica, 3, flow_eAnnotType_OneLine,
 		flow_mDisplayLevel_1);
       flow_AddConPoint( trace_analyse_nc, 0, 0.5*f_height, 0, 
 		flow_eDirection_Left);

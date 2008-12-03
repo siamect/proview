@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_clognav.cpp,v 1.11 2008-11-28 17:13:45 claes Exp $
+ * Proview   $Id: xtt_clognav.cpp,v 1.12 2008-12-03 12:00:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -97,7 +97,6 @@ void CLogNavBrow::create_nodeclasses()
 
   brow_CreateNodeClass( ctx, "EventDefault", 
 		flow_eNodeGroup_Common, &nc_event);
-  brow_AddFrame( nc_event, 0, 0, 35, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnot( nc_event, 0.8, 0.6, 0,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		0);
@@ -112,11 +111,11 @@ void CLogNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_event, 26, 0.6, 3,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddFrame( nc_event, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Nodeclass for Info message
   brow_CreateNodeClass( ctx, "InfoMsg", 
 		flow_eNodeGroup_Common, &nc_msg_info);
-  brow_AddFrame( nc_msg_info, 0, 0, 35, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddFilledRect( nc_msg_info, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Green);
   brow_AddRect( nc_msg_info, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_msg_info, 0.8, 0.6, 0,
@@ -134,11 +133,11 @@ void CLogNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_msg_info, 18, 0.6, 4,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
+  brow_AddFrame( nc_msg_info, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Nodeclass for Warning message
   brow_CreateNodeClass( ctx, "WarningMsg", 
 		flow_eNodeGroup_Common, &nc_msg_warning);
-  brow_AddFrame( nc_msg_warning, 0, 0, 35, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddFilledRect( nc_msg_warning, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Yellow);
   brow_AddRect( nc_msg_warning, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_msg_warning, 0.8, 0.6, 0,
@@ -156,11 +155,11 @@ void CLogNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_msg_warning, 18, 0.6, 4,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
+  brow_AddFrame( nc_msg_warning, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Nodeclass for Error message
   brow_CreateNodeClass( ctx, "ErrorMsg", 
 		flow_eNodeGroup_Common, &nc_msg_error);
-  brow_AddFrame( nc_msg_error, 0, 0, 35, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddFilledRect( nc_msg_error, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_LineRed);
   brow_AddRect( nc_msg_error, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_msg_error, 0.8, 0.6, 0,
@@ -178,11 +177,11 @@ void CLogNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_msg_error, 18, 0.6, 4,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
+  brow_AddFrame( nc_msg_error, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Nodeclass for Fatal messages
   brow_CreateNodeClass( ctx, "FatalMsg", 
 		flow_eNodeGroup_Common, &nc_msg_fatal);
-  brow_AddFrame( nc_msg_fatal, 0, 0, 35, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddFilledRect( nc_msg_fatal, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_LineRed);
   brow_AddRect( nc_msg_fatal, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 4, 0);
   brow_AddAnnot( nc_msg_fatal, 0.8, 0.6, 0,
@@ -200,11 +199,11 @@ void CLogNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_msg_fatal, 18, 0.6, 4,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
+  brow_AddFrame( nc_msg_fatal, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Nodeclass for Proview restart
   brow_CreateNodeClass( ctx, "Restart", 
 		flow_eNodeGroup_Common, &nc_restart);
-  brow_AddFrame( nc_restart, 0, 0, 35, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddFilledRect( nc_restart, 0, 0, 48, 0.8, flow_eDrawType_Yellow);
   brow_AddAnnot( nc_restart, 11, 0.6, 0,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
@@ -212,14 +211,15 @@ void CLogNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_restart, 18, 0.6, 1,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		0);
+  brow_AddFrame( nc_restart, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   brow_CreateNodeClass( ctx, "Text", 
 		flow_eNodeGroup_Common, &nc_text);
-  brow_AddFrame( nc_text, 0, 0, 35, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddRect( nc_text, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_text, 18, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
+  brow_AddFrame( nc_text, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
 
 }
 

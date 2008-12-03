@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_xhelpnav.cpp,v 1.15 2008-11-10 08:01:26 claes Exp $
+ * Proview   $Id: co_xhelpnav.cpp,v 1.16 2008-12-03 12:00:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -153,7 +153,6 @@ void CoXHelpNavBrow::create_nodeclasses()
 
   brow_CreateNodeClass( ctx, "NavigatorDefault", 
 		flow_eNodeGroup_Common, &nc_object);
-  brow_AddFrame( nc_object, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_object, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_object, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_object, 2, 0.6, 0,
@@ -165,12 +164,12 @@ void CoXHelpNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_object, 11, 0.6, 2,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddFrame( nc_object, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Create text
 
   brow_CreateNodeClass( ctx, "NavigatorText", 
 		flow_eNodeGroup_Common, &nc_text);
-  brow_AddFrame( nc_text, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_text, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_text, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_text, 2, 0.6, 0,
@@ -182,12 +181,12 @@ void CoXHelpNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_text, 11, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddFrame( nc_text, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Create Header
 
   brow_CreateNodeClass( ctx, "NavigatorHead", 
 		flow_eNodeGroup_Common, &nc_header);
-  brow_AddFrame( nc_header, 0, 0, 20, 1.4, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_header, 0, 0.2, 0.4, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_header, 2, 1.0, 0,
 		flow_eDrawType_TextHelveticaBold, 4, flow_eAnnotType_OneLine, 
@@ -195,12 +194,12 @@ void CoXHelpNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_header, 8, 1.0, 1,
 		flow_eDrawType_TextHelveticaBold, 4, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddFrame( nc_header, 0, 0, 20, 1.4, flow_eDrawType_LineGray, -1, 1);
 
   // Create Header2
 
   brow_CreateNodeClass( ctx, "NavigatorHeadLarge", 
 		flow_eNodeGroup_Common, &nc_headerlarge);
-  brow_AddFrame( nc_headerlarge, 0, 0, 20, 2.0, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_headerlarge, 0, 0.2, 0.4, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_headerlarge, 2, 1.0, 0,
 		flow_eDrawType_TextHelveticaBold, 6, flow_eAnnotType_OneLine, 
@@ -208,6 +207,7 @@ void CoXHelpNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_headerlarge, 8, 1.0, 1,
 		flow_eDrawType_TextHelveticaBold, 6, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddFrame( nc_headerlarge, 0, 0, 20, 2.0, flow_eDrawType_LineGray, -1, 1);
 
   // Create Horizontal line
 
@@ -1136,7 +1136,7 @@ static void *xhelpnav_help_insert_cb( void *ctx, navh_eItemType item_type, const
       brow_tNodeClass nc;
 
       brow_CreateNodeClass( xhelpnav->brow->ctx, "Image", flow_eNodeGroup_Common, &nc);
-      brow_AddFrame( nc, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
+      brow_AddFrame( nc, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
       brow_AddAnnotPixmap( nc, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
       brow_AddImage( nc, text1, 2, 0);
       HItemHelpImage *item = new HItemHelpImage( xhelpnav->brow, "help", nc,
