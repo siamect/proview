@@ -3734,7 +3734,7 @@ static int	wnav_create_func( void		*client_data,
     }
 
     // Create xtt help-files
-    sprintf( cmd, "co_convert -xv -d $pwrp_inc/ %s", filenamestr);
+    sprintf( cmd, "co_convert -xv -d $pwrp_exe/ %s", filenamestr);
     sts = system( cmd);
     if ( sts != 0) {
       wnav->message('E', "Conversion error, see terminal window for more information");
