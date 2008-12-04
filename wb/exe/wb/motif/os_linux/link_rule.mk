@@ -11,7 +11,7 @@ ifeq ($(export_type),exp)
 	-lpwr_flow_motif -lpwr_flow -lpwr_glow_motif -lpwr_glow -lpwr_co_motif -lpwr_co \
 	-lpwr_msg_dummy -lantlr -lImlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp\
         -lXmu -lSM -lICE\
-	-lrpcsvc -lpthread -lm -ldb_cxx -lz $(linkmysql)
+	-lrpcsvc -lpthread -lm -ldb_cxx -lz -lcrypt $(linkmysql)
 else
   link = $(ldxx) $(elinkflags) $(domap) -o $(pwr_exe)/wb_motif \
 	$(bld_dir)/wb_motif.o $(bld_dir)/wb_main.o $(wb_msg_eobjs) $(rt_msg_eobjs) \
@@ -22,6 +22,6 @@ else
 	-lpwr_flow_motif -lpwr_flow -lpwr_glow_motif -lpwr_glow -lpwr_co_motif -lpwr_co \
 	-lpwr_msg_dummy -lantlr -lImlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp\
         -lXmu -lSM -lICE\
-	-lrpcsvc -lpthread -lm -ldb_cxx -lz $(linkmysql)
+	-lrpcsvc -lpthread -lm -ldb_cxx -lz -lcrypt $(linkmysql)
 endif
 endif
