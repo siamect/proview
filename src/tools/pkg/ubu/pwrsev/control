@@ -1,0 +1,15 @@
+Package: pwrsev
+Version: 4.6.0-4
+Section: base
+Priority: optional
+Architecture: i386
+Depends: libc6 (>= 2.8~20080505-0ubuntu7), libgtk2.0-0 (>= 2.14.4-0ubuntu1), libasound2 (>= 1.0.17-0ubuntu4), libdb4.7 (>=4.7.25-3)
+Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46
+Maintainer: Proview <postmaster@proview.se>
+Description:
+ Proview storage environment
+ 4.6.0-1 Beta release
+ 4.6.0-3
+  - Sev: error handling improved.
+ 4.6.0-4
+  - Metric fonts in Ge and Xtt.
