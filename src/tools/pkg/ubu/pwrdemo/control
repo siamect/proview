@@ -1,11 +1,11 @@
-Package: pwrdemo44
-Version: 4.4.4-5
+Package: pwrdemo46
+Version: 4.6.0-4
 Section: base
 Priority: optional
 Architecture: i386
-Depends: pwr44 (>= 4.4.4-2)
+Depends: pwr46 (>= 4.6.0-4)
 Replaces:
 Maintainer: Proview <postmaster@proview.se>
 Description: Proview Demo Project package
  Proview Demo Project
- 4.4.0-1 Base release 
+ 4.6.0-1 Base release 

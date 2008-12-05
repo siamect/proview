@@ -1,11 +1,17 @@
 Package: pwrrt
-Version: 4.5.0-1
+Version: 4.6.0-4
 Section: base
 Priority: optional
 Architecture: i386
-Depends: libc6 (>= 2.5-0ubuntu14), libgtk2.0-0 (>= 2.10.11-0ubuntu3), libasound2 (>= 1.0.13-1ubuntu5), libdb4.4 (>=4.4.20-8ubuntu2)
-Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45
+Depends: libc6 (>= 2.8~20080505-0ubuntu7), libgtk2.0-0 (>= 2.14.4-0ubuntu1), libasound2 (>= 1.0.17-0ubuntu4), libdb4.7 (>=4.7.25-3)
+Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46
 Maintainer: Proview <postmaster@proview.se>
 Description:
  Proview runtime environment
- 4.5.0-1 Base release
+ 4.6.0-1 Base release
+ 4.6.0-2
+  - Ge color gradients added.
+ 4.6.0-3
+  - Sev: error handling improved.
+ 4.6.0-4
+  - Metric fonts in Ge and Xtt.

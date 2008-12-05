@@ -3,7 +3,7 @@ Version: 4.6.0-4
 Section: base
 Priority: optional
 Architecture: i386
-Depends: libc6 (>= 2.8~20080505-0ubuntu7), libgtk2.0-0 (>= 2.14.4-0ubuntu1), libasound2 (>= 1.0.17-0ubuntu4), libdb4.7 (>=4.7.25-3)
+Depends: libc6 (>= 2.8~20080505-0ubuntu7), libgtk2.0-0 (>= 2.14.4-0ubuntu1), libasound2 (>= 1.0.17-0ubuntu4), libdb4.7 (>=4.7.25-3), libmysqlclient15off (>= 5.0.51a-15)
 Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46
 Maintainer: Proview <postmaster@proview.se>
 Description:

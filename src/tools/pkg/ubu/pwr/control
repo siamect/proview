@@ -1,44 +1,17 @@
-Package: pwr44
-Version: 4.4.4-5
+Package: pwr46
+Version: 4.6.0-4
 Section: base
 Priority: optional
 Architecture: i386
-Depends: libc6 (>= 2.5-0ubuntu14), libgtk2.0-0 (>= 2.10.11-0ubuntu3), libasound2 (>= 1.0.13-1ubuntu5), libdb4.4 (>=4.4.20-8ubuntu2), libdb4.4++ (>=4.4.20-8ubuntu2)
-Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44
+Depends: libc6 (>= 2.8~20080505-0ubuntu7), libgtk2.0-0 (>= 2.14.4-0ubuntu1), libasound2 (>= 1.0.17a-0ubuntu4), libdb4.7 (>=4.7.25-3), libdb4.7++ (>=4.7.25-3), libmysqlclient15off (>= 5.0.67-0ubuntu6), g++ (>= 4:4.3.1-1ubuntu2)
+Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45
 Maintainer: Proview <postmaster@proview.se>
 Description: Proview development and runtime environment package
  Proview development and runtime environment
- 4.4.0-1 Base release 
- 4.4.0-2
-  - Proview restart improved. Works with profibus.
-  - Ge: New fonts, Times, NC Schoolbook and Courier.
- 4.4.1-1
-  - Proview profibus restart improved.
-  - Statusmonitor to view status of remote nodes implemented.
-  - Runtime monitor to start and stop runtime in development environment implemented.
- 4.4.2-1
-  - Subgraphs for ventilation and circuitdiagrams added.
-  - Baseobjects for threewayvalves, filters and dampers added.
- 4.4.2-2
-  - Ge: Gray backgroundcolor could be undefined.
- 4.4.2-3
-  - remote_mq present.
- 4.4.2-4
-  - XY_Curve class and Ge dynamic added.
- 4.4.3-1
-  - Changed qcom synchronization mechanism.
- 4.4.4-1
-  - Function to suppress alarms in basecomponents added.
-  - Classes IpDistribute, IpCollect, Demux, IDemux, GetDpPtr, StoDpPtr,
-    Eurotherm_TC3001, Eurotherm_TC3001Aggr and more added.
- 4.4.4-2
-  - Bugfix in gtk operatorwindow, long alarmtext could cause segfault
- 4.4.4-3
-  - Bugfix in trend, disabled trend object was handled.
-  - Bugfix in object graph for CompModePID and CompPID.
- 4.4.4-4
-  - Bugfix in Eurotherm 3001 profibus slave and module.
-  - Doublebuffering in graphs with window objects could be lost.
- 4.4.4-5
-  - Fixed several bugs in rs_remote_tcpip when acting as a server.
-  - Bugfix in rt_neth_acp. Subscriptions were not refreshed after a remote node restarted.
+ 4.6.0-1 Base release 
+ 4.6.0-2
+  - Ge color gradients added.
+ 4.6.0-3
+  - Sev: error handling improved.
+ 4.6.0-4
+  - Metric fonts in Ge and Xtt.
