@@ -79,6 +79,14 @@ cat > $initsh <<EOF
 source $aroot/db/pwr_setup.sh
 source \$pwr_exe/pwrp_env.sh set project pwrdemo%{ver}
 
+if [ ! -e "\$pwrp_db/directory.db" ]; then
+  wb_cmd create volume/directory
+  wb_cmd wb load /load=\"\$pwrp_db/directory.wb_dmp\"
+fi
+if [ ! -e "\$pwrp_db/volpwrdemo.db" ]; then
+  wb_cmd wb load /load=\"\$pwrp_db/volpwrdemo.wb_dmp\"
+fi
+
 wb_cmd @$initpwrc
 EOF
 
@@ -100,7 +108,6 @@ sudo -u pwrp $initsh
 
 rm $initsh
 rm $initpwrc
-ls
 
 %preun
 
