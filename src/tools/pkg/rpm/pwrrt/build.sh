@@ -112,7 +112,9 @@ mkdir -p $pkgroot/rpm/SPECS
 mkdir -p $pkgroot/rpm/SOURCES
 mkdir -p $pkgroot/rpm/SRPMS
 mkdir -p $pkgroot/usr/share/doc/pwrrt
-mkdir -p $pkgroot/etc/init.d
+mkdir -p $pkgroot/etc
+# init.d is a symlink on fedora that is owned by with chkconfig and causes conflict
+#mkdir -p $pkgroot/etc/init.d
 
 find $pkgroot -type d | xargs chmod 755
 
@@ -126,8 +128,8 @@ gzip -fq --best $pkgroot/usr/share/doc/pwrrt/changelog
 # Startup files
 cp $pkgsrc/pwrp_profile $pkgroot/etc
 chmod a+x $pkgroot/etc/pwrp_profile
-cp $pkgsrc/pwr $pkgroot/etc/init.d
-chmod a+x $pkgroot/etc/init.d/pwr
+#cp $pkgsrc/pwr $pkgroot/etc/init.d
+#chmod a+x $pkgroot/etc/init.d/pwr
 
 # Man pages
 mkdir -p $pkgroot/usr/share/man/man1
@@ -157,6 +159,7 @@ cd $currentdir
 
 # Copy configuration files to cnf
 cp $pkgsrc/proview.cnf $pkgroot/usr/pwrrt/cnf
+cp $pkgsrc/pwr $pkgroot/usr/pwrrt/cnf
 
 # Copy op to cnf
 mkdir $pkgroot/usr/pwrrt/cnf/op
