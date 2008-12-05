@@ -1692,7 +1692,7 @@ int GlowDrawXLib::text_cursor( GlowWind *wind, int x, int y, char *text, int len
 
   int width, height, descent;
   get_text_extent( text, pos, gc_type, idx, font_idx,
-			&width, &height, &descent);
+			&width, &height, &descent, size);
 
   if ( w->clip_on)
     set_clip( w, get_gc( this, gc_type, idx));
