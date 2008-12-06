@@ -1,11 +1,13 @@
 INSTALLATION GUIDE UBUNTU
 -------------------------
 
+Release Ubuntu 8.10
+
 System Requirements:
 
 Platform: x86
-Kernel: >= 2.6.6
-glibc: >= 2.5-0ubuntu14
+Kernel   >= 2.6.27
+glibc    >= 2.8-0ubuntu7
 
 See specific package information below:
 
@@ -15,7 +17,7 @@ See specific package information below:
 
 Install with apt
 ----------------
-Create a repository first, see section 4 below
+Create a repository first, see section 5 below
 
 > apt-get install pwr45
 
@@ -23,13 +25,14 @@ Install with dpkg
 -----------------
 dbkg doesn't check any depedencies. You have to check that these packages are installed
 
-libgtk2.0-0 (>= 2.10.11-0ubuntu3)
-libasound2 (>= 1.0.13-1ubuntu5)
-libdb4.4 (>=4.4.20-8ubuntu2)
-libmysqlclient15off (>=5.0.38-0ubuntu1)
-g++-4.1 (>=4.1.2-0ubuntu4)
+libgtk2.0-0   >= 2.14.4-0ubuntu1
+libasound2    >= 1.0.17a-0ubuntu4
+libdb4.7      >= 4.7.25-3
+libdb4.7++    >= 4.7.25-3
+libmysqlclient15off >= 5.0.67-0ubuntu6)
+g++-4.1       >= 4:4.3.1-1ubuntu2)
 
-> dpkg -i pwrdemo45_4.5.0-1ubuntu_i386.deb
+> dpkg -i pwrdemo46_4.6.0-3ubuntu_i386.deb
 
 Getting started
 ---------------
@@ -45,17 +48,17 @@ will help you taking the first steps.
 3. PACKAGE PWRDEMO45
 --------------------
 
-pwr45 has to be installed.
+pwr46 has to be installed.
 
 Install with apt
 ----------------
 
-> apt-get install pwrdemo44
+> apt-get install pwrdemo46
 
 Install with dpkg
 -----------------
 
-> dpkg -i pwrdemo45_4.5.0-1ubuntu_i386.deb
+> dpkg -i pwrdemo46_4.6.0-3ubuntu_i386.deb
 
 Getting started
 ---------------
@@ -63,10 +66,10 @@ Getting started
 Log in as user 'pwrp' (or "su - pwrp") with password 'pwrp'. On the user 
 'pwrp' a correct environment for working with Proview will be set up. 
 
-A demonstration project named pwrdemo45 is created. 
+A demonstration project named pwrdemo46 is created. 
 Attach to the project with
 
-> sdf pwrdemo45
+> sdf pwrdemo46
 
 Start proview runtime environment with
 
@@ -85,7 +88,7 @@ Stop and reset the environment with
 3. PACKAGE PWRRT
 ----------------
 
-Create a repository first, see section 4 below
+Create a repository first, see section 5 below
 
 > apt-get install pwrrt
 
@@ -93,20 +96,46 @@ Install with dpkg
 -----------------
 dbkg doesn't check any depedencies. You have to check that these packages are installed
 
-libgtk2.0-0 (>= 2.10.11-0ubuntu3)
-libasound2 (>= 1.0.13-1ubuntu5)
-libdb4.4 (>=4.4.20-8ubuntu2)
+libgtk2.0-0   >= 2.14.4-0ubuntu1
+libasound2    >= 1.0.17a-0ubuntu4
+libdb4.7      >= 4.7.25-3
 
-> dpkg -i pwrrt_4.5.0-1ubuntu_i386.deb
+> dpkg -i pwrrt_4.6.0-3ubuntu_i386.deb
 
 Information:
 
-The runtime package should be installed "stand-alone" without the pwr45-package.
+The runtime package should be installed "stand-alone" without the pwr46-package.
 A linux-system with the pwrrt-package is your control- or HMI-system. Proview will be
 started automatically at boot-time.
 
 
-4. CREATE APT REPOSITORY
+3. PACKAGE PWRSEV
+----------------
+
+Install mysql-client and mysql-server.
+
+Create a repository first, see section 5 below
+
+> apt-get install pwrsev
+
+Install with dpkg
+-----------------
+dbkg doesn't check any depedencies. You have to check that these packages are installed
+
+libgtk2.0-0   >= 2.14.4-0ubuntu1
+libasound2    >= 1.0.17a-0ubuntu4
+libdb4.7      >= 4.7.25-3
+libmysqlclient15off >= 5.0.67-0ubuntu6)
+
+> dpkg -i pwrsev_4.6.0-3ubuntu_i386.deb
+
+Information:
+
+The storage environment package should be installed "stand-alone" without the 
+pwr46 or pwrrt package. 
+
+
+5. CREATE APT REPOSITORY
 ------------------------
 
 Login in a root.
@@ -136,8 +165,8 @@ Update apt with the new packages
 Check that the packages are found
 
 > apt-cache search pwr
-pwr45 - Proview development and runtime environment package
-pwrdemo45 - Proview Demo Project package
+pwr46 - Proview development and runtime environment package
+pwrdemo46 - Proview Demo Project package
 pwrrt - Proview runtime environment
 
 If the command g++ is unknown you have to create the link

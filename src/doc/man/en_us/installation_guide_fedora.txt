@@ -1,27 +1,34 @@
 INSTALLATION GUIDE FEDORA
 --------------------------
 
+Release Fedora 10
+
 System Requirements:
 
 Platform: x86
-Kernel: >= 2.6.6
-glibc: >= 2.3.4
+Kernel  >= 2.6.26.5
+glibc   >= 2.9-2
 
 Specific package information follow below:
 
-1. PACKAGE PWR45
+1. PACKAGE PWR46
 ----------------
 
 Dependencies:
 
-Berkeley DB v4.5
-Alsa v1.0.14
+alsa-lib    >= 1.0.18-6
+db4         >= 4.7.25-5
+db4-cxx     >= 4.7.25-5
+gtk2        >= 2.14.4-3
+mysql       >= 5.0.67-2
+gcc-c++     >= 4.3.2-7
+
 
 Download:
 
 Download your selected rpm-package and install it as:
 
-rpm -Uvh pwr45_4.5.0-1.fedora.i386.rpm
+rpm -Uvh pwr46_4.6.0-3.fedora.i386.rpm
 
 During installation the files will be unpacked and a user named 'pwrp'
 belonging to a group with the same name 'pwrp' will be created.
@@ -41,22 +48,23 @@ will help you taking the first steps.
 
 Dependencies:
 
-Berkeley DB v4.5
-Alsa v1.0.14
+alsa-lib    >= 1.0.18-6
+db4         >= 4.7.25-5
+gtk2        >= 2.14.4-3
 
 Download:
 
 Download your selected rpm-package and install it as:
 
-rpm -Uvh pwrrt_4.5.0-1.fedora.i386.rpm
+rpm -Uvh pwrrt_4.6.0-1.fedora.i386.rpm
 
 Information:
 
-The runtime package should be installed "stand-alone" without the pwr45-package.
+The runtime package should be installed "stand-alone" without the pwr46-package.
 A linux-system with the pwrrt-package is your control-system. Proview will be
 started automatically at boot-time.
 
-3. PACKAGE PWRDEMO45
+3. PACKAGE PWRDEMO46
 --------------------
 
 The proview demo project contains demo of HMI functions, component objects, and some
@@ -64,23 +72,23 @@ process control applications.
 
 Dependencies:
 
-pwr45 V4.5.0
+pwr46 V4.6.0-3
 
 Download:
 
 Download your selected rpm-package and install it as:
 
-rpm -Uvh pwrdemo45_4.5.0-1.fedora.i386.deb
+rpm -Uvh pwrdemo46_4.6.0-3.fedora.i386.deb
 
 Getting started:
 
 Log in as user 'pwrp' (or "su - pwrp") with password 'pwrp'. On the user 
 'pwrp' a correct environment for working with Proview will be set up. 
 
-A demonstration project named pwrdemo45 is created. 
+A demonstration project named pwrdemo46 is created. 
 Attach to the project with
 
-> sdf pwrdemo45
+> sdf pwrdemo46
 
 Start proview runtime environment with
 
@@ -92,4 +100,26 @@ Start the operator environment with
 
 Press the 'PwrDemo' button in the operator window and
 
+4. PACKAGE PWRSEV
+-----------------
+
+Install mysql and mysql-server.
+
+Dependencies:
+
+alsa-lib    >= 1.0.18-6
+db4         >= 4.7.25-5
+gtk2        >= 2.14.4-3
+mysql       >= 5.0.67-2
+
+Download:
+
+Download your selected rpm-package and install it as:
+
+rpm -Uvh pwrsev_4.6.0-1.fedora.i386.rpm
+
+Information:
+
+The storage environment package should be installed "stand-alone" without the 
+pwr46 or pwrrt package.
 

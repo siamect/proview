@@ -1,24 +1,27 @@
 INSTALLATION GUIDE DEBIAN
 -------------------------
 
-Debian distribution: Debian Sarge
+Debian distribution: Debian Lenny/Sid
 
 System Requirements:
 
 Platform: x86
-Kernel: >= 2.6.6
-glibc: >= 2.3.6
+Kernel: >= 2.6.26
+glibc: >= 2.7.14
 
 See specific package information below:
 
-1. PACKAGE PWR44
+1. PACKAGE PWR46
 ----------------
 
 Dependencies:
 
-GTK+ v2.0 (libgtk2.0)
-Berkeley DB v4.3.29 (libdb4.3, libdb++4.3)
-Alsa v1.0.11 (libasound2)
+libgtk2.0-0 >= 2.12.11-4
+libasound2  >= 1.0.16-2
+libdb4.6    >= 4.6.21-11
+libdb4.6++  >= 4.6.21-11
+libmysqlclient15off >= 5.0.51a-15
+g++         >= 4:4.3.2-2
 
 Install with dpkg
 
@@ -26,7 +29,7 @@ dpkg doesn't check any dependency, and all the depedencies package has to be ins
 
 Download your selected debian-package and install it as:
 
-> dpkg -i pwr44_4.4.x-x_i386.deb
+> dpkg -i pwr46_4.6.x-x_i386.deb
 
 During installation the files will be unpacked and a user named 'pwrp'
 belonging to a group with the same name 'pwrp' will be created.
@@ -53,11 +56,11 @@ Update apt with the new packages
 Check that the packages are found
 
 > apt-cache search pwr
-pwr44 - Proview development and runtime environment package
-pwrdemo44 - Proview Demo Project package
+pwr46 - Proview development and runtime environment package
+pwrdemo46 - Proview Demo Project package
 
 Install
-> apt-get install pwr44
+> apt-get install pwr46
 
 Getting started:
 
@@ -74,51 +77,52 @@ will help you taking the first steps.
 
 Dependencies:
 
-GTK+ v2.0 (libgtk2.0)
-Berkeley DB v4.3.29 (libdb4.3)
-Alsa v1.0.11 (libasound2)
+libgtk2.0-0 >= 2.12.11-4
+libasound2  >= 1.0.16-2
+libdb4.6    >= 4.6.21-11
 
 Download:
 
 Download your selected debian-package and install it as:
 
-> dpkg -i pwrrt_4.4.x-x_i386.deb
+> dpkg -i pwrrt_4.6.x-x_i386.deb
 
 Information:
 
-The runtime package should be installed "stand-alone" without the pwr44-package.
+The runtime package should be installed "stand-alone" without the pwr46-package.
 A linux-system with the pwrrt-package is your control-system. Proview will be
 started automatically at boot-time.
 
-3. PACKAGE PWRDEMO44
+3. PACKAGE PWRDEMO46
 --------------------
 
-The proview demo project is under construction and contains so far
-a demo of the dynamics and components of the HMI.
+The demo package installs a Proview project that contains a demo of 
+of the dynamics and components of the HMI, some application examples,
+a level and a temperature control, and some examples of basecomponent.
 
 Dependencies:
 
-pwr44 V4.4.x
+pwr46 V4.6.x
 
 Download:
 
 Download your selected debian-package and install with dpkg
 
-> dpkg -i pwrdemo44_4.4.x-x_i386.deb
+> dpkg -i pwrdemo46_4.6.x-x_i386.deb
 
 or install with apt (see section 1)
 
-> apt-get install pwrdemo44
+> apt-get install pwrdemo46
 
 Getting started:
 
 Log in as user 'pwrp' (or "su - pwrp") with password 'pwrp'. On the user 
 'pwrp' a correct environment for working with Proview will be set up. 
 
-A demonstration project named pwrdemo44 is created. 
+A demonstration project named pwrdemo46 is created. 
 Attach to the project with
 
-> sdf pwrdemo44
+> sdf pwrdemo46
 
 Start proview runtime environment with
 
@@ -132,6 +136,31 @@ Press the 'PwrDemo' button in the operator window.
 
 Stop and reset the environment with
 > . pwr_stop.sh
+
+4. PACKAGE PWRSEV
+-----------------
+
+Install mysql-client and mysql-server.
+
+Create a repository first and install with apt
+
+> apt-get install pwrsev
+
+Install with dpkg
+-----------------
+dbkg doesn't check any depedencies. You have to check that these packages are installed
+
+libgtk2.0-0 >= 2.12.11-4
+libasound2  >= 1.0.16-2
+libdb4.6    >= 4.6.21-11
+libmysqlclient15off >= 5.0.51a-15
+
+> dpkg -i pwrsev_4.6.0-3_i386.deb
+
+Information:
+
+The storage environment package should be installed "stand-alone" without the 
+pwr46 or pwrrt package. 
 
 
 
