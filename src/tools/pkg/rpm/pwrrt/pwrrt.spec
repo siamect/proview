@@ -117,7 +117,7 @@ else
   fi
 fi
 
-
+new_user=0
 if getent passwd pwrp > /dev/null; then
   echo "-- user pwrp already exist"
 else
@@ -213,6 +213,9 @@ if [ ! -e /etc/proview.cnf ]; then
   cp /usr/pwrrt/cnf/proview.cnf /etc
   new_cnf=1
 fi
+cp /usr/pwrrt/cnf/pwr /etc/init.d
+chmod a+x /etc/init.d/pwr
+
 
 # Add pwrp_profile to profile
 if ! grep -q "/etc/pwrp_profile\b" /etc/profile; then

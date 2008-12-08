@@ -114,7 +114,7 @@ else
   fi
 fi
 
-
+new_user=0
 if getent passwd pwrp > /dev/null; then
   echo "-- user pwrp already exist"
 else
@@ -203,6 +203,8 @@ if [ ! -e /etc/proview.cnf ]; then
   cp /usr/pwrsev/cnf/proview.cnf /etc
   new_cnf=1
 fi
+cp /usr/pwrsev/cnf/pwrsev /etc/init.d
+chmod a+x /etc/init.d/pwrsev
 
 # Add pwrp_profile to profile
 if ! grep -q "/etc/pwrp_profile\b" /etc/profile; then
@@ -391,14 +393,14 @@ fi
 # Remove startup
 
 if [ -e /etc/init.d/rc2.d ]; then
-  checklink=`eval ls /etc/init.d/rc2.d/S90pwr 2>/dev/null`
+  checklink=`eval ls /etc/init.d/rc2.d/S90pwrsev 2>/dev/null`
   if [ "$checklink" != "" ]; then
-    rm /etc/init.d/rc2.d/S90pwr
+    rm /etc/init.d/rc2.d/S90pwrsev
   fi
 elif [ -e /etc/rc2.d ]; then
-  checklink=`eval ls /etc/rc2.d/S90pwr 2>/dev/null`
+  checklink=`eval ls /etc/rc2.d/S90pwrsev 2>/dev/null`
   if [ "$checklink" != "" ]; then
-    rm /etc/rc2.d/S90pwr
+    rm /etc/rc2.d/S90pwrsev
   fi
 fi
 
