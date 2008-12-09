@@ -1000,7 +1000,6 @@ void XNavBrow::create_nodeclasses()
 
   brow_CreateNodeClass( ctx, "NavigatorDefault", 
 		flow_eNodeGroup_Common, &nc_object);
-  brow_AddFrame( nc_object, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_object, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_object, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_object, 2, 1.1, 0.1, flow_eDrawType_LineRed, 2, 0);
@@ -1149,13 +1148,13 @@ void XNavBrow::create_nodeclasses()
 
   brow_CreateNodeClass( ctx, "NavigatorEnum", 
 		flow_eNodeGroup_Common, &nc_enum);
+  brow_AddRadiobutton( nc_enum, 12, 0.03, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
   brow_AddAnnotPixmap( nc_enum, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_enum, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_enum, 2.9, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddFrame( nc_enum, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
-  brow_AddRadiobutton( nc_enum, 12, 0.03, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
  
 }
 
