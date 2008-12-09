@@ -28,7 +28,7 @@ if getent passwd pwrp > /dev/null; then
 else
   new_user=1
 
-  if useradd -s /bin/bash -p aaupl/kQs1p3U -g pwrp -G b55,b66,skiftel -d /home/pwrp pwrp; then
+  if useradd -s /bin/bash -p aaupl/kQs1p3U -g pwrp -d /home/pwrp pwrp; then
     echo "-- user pwrp added"
   fi
   if [ ! -e /home/pwrp ]; then
