@@ -1058,6 +1058,8 @@ void WNavBrow::create_nodeclasses()
   // Input with Used and Inverted radiobutton
   brow_CreateNodeClass( ctx, "NavigatorAttrInput", 
 		flow_eNodeGroup_Common, &nc_attr_input);
+  brow_AddRadiobutton( nc_attr_input, 14, 0.03, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
+  brow_AddRadiobutton( nc_attr_input, 18, 0.03, 0.7, 0.7, 1, flow_eDrawType_Line, 1);
   brow_AddAnnotPixmap( nc_attr_input, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_attr_input, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_attr_input, 2, 0.6, 0,
@@ -1071,12 +1073,11 @@ void WNavBrow::create_nodeclasses()
   brow_AddText( nc_attr_input, "Inverted", 15, 0.6,
 	flow_eDrawType_TextHelvetica, 2);
   brow_AddFrame( nc_attr_input, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
-  brow_AddRadiobutton( nc_attr_input, 14, 0.03, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
-  brow_AddRadiobutton( nc_attr_input, 18, 0.03, 0.7, 0.7, 1, flow_eDrawType_Line, 1);
 
   // Input with Inverted radiobutton
   brow_CreateNodeClass( ctx, "NavigatorAttrInputNoinv",
 		flow_eNodeGroup_Common, &nc_attr_inputinv);
+  brow_AddRadiobutton( nc_attr_inputinv, 15, 0.03, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
   brow_AddAnnotPixmap( nc_attr_inputinv, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_attr_inputinv, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_attr_inputinv, 2, 0.6, 0,
@@ -1088,11 +1089,11 @@ void WNavBrow::create_nodeclasses()
   brow_AddText( nc_attr_inputinv, "Inverted", 12, 0.6, 
 	flow_eDrawType_TextHelvetica, 2);
   brow_AddFrame( nc_attr_inputinv, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
-  brow_AddRadiobutton( nc_attr_inputinv, 15, 0.03, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
 
   // Input and output with Used radiobutton
   brow_CreateNodeClass( ctx, "NavigatorAttrOutput", 
 		flow_eNodeGroup_Common, &nc_attr_output);
+  brow_AddRadiobutton( nc_attr_output, 14, 0.03, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
   brow_AddAnnotPixmap( nc_attr_output, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_attr_output, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_attr_output, 2, 0.6, 0,
@@ -1104,7 +1105,6 @@ void WNavBrow::create_nodeclasses()
   brow_AddText( nc_attr_output, "Used", 12, 0.6, 
 	flow_eDrawType_TextHelvetica, 2);
   brow_AddFrame( nc_attr_output, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
-  brow_AddRadiobutton( nc_attr_output, 14, 0.03, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
 
   // Create multiline attribute nodeclass
 
@@ -1141,13 +1141,13 @@ void WNavBrow::create_nodeclasses()
 
   brow_CreateNodeClass( ctx, "NavigatorEnum", 
 		flow_eNodeGroup_Common, &nc_enum);
+  brow_AddRadiobutton( nc_enum, 12, 0.03, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
   brow_AddAnnotPixmap( nc_enum, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_enum, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_enum, 2, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddFrame( nc_enum, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
-  brow_AddRadiobutton( nc_enum, 12, 0.03, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
  
   // Create table nodeclass
 

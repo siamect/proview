@@ -395,7 +395,6 @@ void SubGraphsBrow::create_nodeclasses()
 
   brow_CreateNodeClass( ctx, "NavigatorDefault", 
 		flow_eNodeGroup_Common, &nc_object);
-  brow_AddFrame( nc_object, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_object, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_object, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_object, 2, 0.6, 0,
@@ -407,12 +406,12 @@ void SubGraphsBrow::create_nodeclasses()
   brow_AddAnnot( nc_object, 11, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddFrame( nc_object, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Create attribute nodeclass
 
   brow_CreateNodeClass( ctx, "NavigatorAttr", 
 		flow_eNodeGroup_Common, &nc_attr);
-  brow_AddFrame( nc_attr, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_attr, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_attr, 2, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
@@ -420,12 +419,12 @@ void SubGraphsBrow::create_nodeclasses()
   brow_AddAnnot( nc_attr, 8, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddFrame( nc_attr, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Create table nodeclass
 
   brow_CreateNodeClass( ctx, "NavigatorTable", 
 		flow_eNodeGroup_Common, &nc_table);
-  brow_AddFrame( nc_table, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnotPixmap( nc_table, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_table, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_table, 2, 0.6, 0,
@@ -458,12 +457,12 @@ void SubGraphsBrow::create_nodeclasses()
   brow_AddAnnot( nc_table, 38, 0.6, 9,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddFrame( nc_table, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
 
   // Create Header
 
   brow_CreateNodeClass( ctx, "NavigatorHead", 
 		flow_eNodeGroup_Common, &nc_header);
-  brow_AddFrame( nc_header, 0, 0, 20, 0.8, flow_eDrawType_LineGray, 2, 1);
   brow_AddAnnotPixmap( nc_header, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_header, 2, 0.6, 0,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
@@ -471,12 +470,12 @@ void SubGraphsBrow::create_nodeclasses()
   brow_AddAnnot( nc_header, 8, 0.6, 1,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		1);
+  brow_AddFrame( nc_header, 0, 0, 20, 0.8, flow_eDrawType_LineGray, 2, 1);
 
   // Create TableHeader
 
   brow_CreateNodeClass( ctx, "NavigatorTableHead", 
 		flow_eNodeGroup_Common, &nc_table_header);
-  brow_AddFrame( nc_table_header, 0, 0, 20, 0.8, flow_eDrawType_LineGray, 2, 1);
   brow_AddAnnotPixmap( nc_table_header, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_table_header, 2, 0.6, 0,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
@@ -508,6 +507,7 @@ void SubGraphsBrow::create_nodeclasses()
   brow_AddAnnot( nc_table_header, 38, 0.6, 9,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		0);
+  brow_AddFrame( nc_table_header, 0, 0, 20, 0.8, flow_eDrawType_LineGray, 2, 1);
 }
 
 int	SubGraphs::object_attr()

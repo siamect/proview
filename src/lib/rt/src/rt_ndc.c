@@ -1479,9 +1479,11 @@ ndc_ConvertRemoteToNativeTable (
         relem = cap->elem;
       }
       
+      /* Adjust size to be multiple of element size */
+      if (*size < ap->size)
+        *size -= *size % (ap->size / ap->elem) ;
 
-
-      if(!conv_Fctn[cidx](ap->elem, ap->size/ap->elem, (char *)tp + (ap->offs - base) + toffs, (int *) size,
+            if(!conv_Fctn[cidx](ap->elem, ap->size/ap->elem, (char *)tp + (ap->offs - base) + toffs, (int *) size,
                         relem, cap->size/cap->elem, (const char *)sp + roffs + soffs, adef))
         pwr_Return(NO, sts, NDC__CONVERT);      
       
