@@ -28,7 +28,7 @@
    This include file contains the Proview NMps type definitions.
 */
 
-/** @addtogroup NMps */
+/** @addtogroup NMpsAppl */
 /*@{*/
 
 #if defined __cplusplus
@@ -46,7 +46,7 @@ extern "C" {
 #define nmpsappl_mOption_ReverseOrder	(1 << 2)
 
 
-/** @defgroup NMPS_DS Data Structures
+/** @defgroup NMPS_DS NMpsAppl Data Structures
  *  @ingroup NMps
  *  @{
  */
@@ -65,15 +65,31 @@ typedef struct nmpsappl_s_cellist {
 	} nmpsappl_t_cellist;
 
 typedef struct {
-	pwr_tObjid		objid; /**< Dataobjektets objid */
-	pwr_tString80		name; /**< Dataobjektet namn (sista namnledet) */
-	pwr_tAddress		object_ptr;  /**< Pekare till dataobjektet */ 
-	pwr_tBoolean		select; /**< Select-attributet för dataobjektet i cell-objektet. Om ett dataobjekt ligger i flera celler, sätts select om objektet är utvalt i minst en av cellerna. */
-	pwr_tBoolean		front; /**< Front-attributet för dataobjektet i cell-objektet. Om ett dataobjekt ligger i flera celler, sätts front om front-flaggen är satt i en av cellerna. */ 
-	pwr_tBoolean		back; /**< Back-attributet för dataobjektet i cell-objektet. Om ett dataobjekt ligger i flera celler, sätts back om back-flaggen är satt i en av cellerna. */ 
-	pwr_tBoolean		newdata; /**< Markerar att ett dataobjekt är nytt sedan senaste speglingen.*/
-	pwr_tBoolean		removed;  /**< Markerar att dataobjektet har försvunnit sedan senaste speglingen. Kräver att nmpsappl_mOption_Remove har angetts i options. */
-	unsigned long		cell_mask; /**< Anger vilken eller vilka celler dataobjektet befinner sig i. cell_mask är en bitmask där första biten anger första cellen (dvs den som angivits först i listan till nmpsappl_mirror_init), osv. */
+	pwr_tObjid		objid; /**< Dataobject objid */
+	pwr_tString80		name; /**< Dataobject name (last segment) */
+	pwr_tAddress		object_ptr;  /**< Pointer to data object */ 
+	pwr_tBoolean		select; /**< The select attribute for the dataobject in the
+					   cell object. If the dataobject is present in several
+					   cells, select is set if the dataobject is selected
+					   in at least one of the cells. */
+	pwr_tBoolean		front; /**< The Front attribute for the dataobject in the cell
+					  object. If the dataobject is present in several 
+					  cells, front is set if the Front flag is set in one
+					  of the cells. */
+	pwr_tBoolean		back; /**< The Back attribute for the dataobject in the cell
+					  object. If the dataobject is present in several 
+					  cells, back is set if the Back flag is set in one
+					  of the cells. */
+	pwr_tBoolean		newdata; /**< Marks that a data object is new since the last
+					    mirror. */
+	pwr_tBoolean		removed;  /**< Marks that the dataobject has disappeard since
+					     the last mirror. Requires the the option
+					     nmpsappl_mOption_Remove is selected. */
+	unsigned long		cell_mask; /**< Mask that specifies in which cell or which
+					      cells the dataobject resides. The first bit
+					      corresponds to the first cell, i.e. the first
+					      cell in cell list supplied to nmpsappl_MirrorInit,
+					      etc. */
 	} nmpsappl_t_datainfo;
 
 typedef struct nmpsappl_s_ctx {
@@ -90,7 +106,7 @@ typedef struct nmpsappl_s_ctx {
 
 /** @} */
 /** 
- * @defgroup NMPS_FC Function Calls
+ * @defgroup NMPS_FC NMpsAppl Functions
  * @ingroup NMps
  * @{
  */

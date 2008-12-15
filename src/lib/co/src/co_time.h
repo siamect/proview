@@ -56,8 +56,14 @@ typedef unsigned int time_tClock;
    This include file contains definitions and function prototypes
    needed to use time functions.
 */
-/*! \addtogroup Time */
+
+/*! \defgroup Time_DS Time Data Structures
+    \ingroup Time
+*/
+
+/*! \addtogroup Time_DS */
 /*@{*/
+
 
 //! Time string format
 typedef enum {
@@ -91,6 +97,15 @@ typedef enum {
     struct timespec *tp
   );
 #endif
+
+/*@}*/
+
+/*! \defgroup Time_FC Time Functions
+    \ingroup Time
+*/
+
+/*! \addtogroup Time_FC */
+/*@{*/
 
 int time_IsNull (pwr_tTime *t1);
 pwr_tTime *   time_Aabs (pwr_tTime*, pwr_tTime*);
