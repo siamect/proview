@@ -263,26 +263,28 @@ static pwr_tStatus	nmpsappl_cell_init(
 }
 
 /**
- *@brief Initierar spegling.  
+ *@brief Initialize mirroring.
  *
- * Med nmpsappl_MirrorInit initierar man en spegling genom att ange de celler som ska speglas. 
- * Man för till baka en context som används för att skilja olika speglingar åt. 
- * Efter initieringen anropas nmpsappl_Mirror cykliskt för att få information om cellinnehållet.
+ * nmpsappl_MirrorInit initiates a mirroring by specifying the cells that should
+ * be mirrored.
  * 
- * 
- *@return pwr_tStatus
+ * Use nmpsappl_Mirror to fetch the mirrored data structure.
+ *
+ * The option argument is a bitmask where the bits specifies different functions 
+ * in nmpsappl_mirror:
+ * - nmpsappl_mOption_Remove Dataobject that is removed since the last call of 
+ *   nmpsappl_Mirror is added to the dataobject list with the remove flags set.
+ * - nmpsappl_mOption_NamePath The name field for a dataobject in the datastructure 
+ *   returned by nmpsappl_Mirror contains the path.
+ *
+ * @see nmpsappl_Mirror
+ * @return pwr_tStatus
  */
 pwr_tStatus 
 nmpsappl_MirrorInit(	
-		    pwr_tString80 *cell_array, /**< En vektor som innehåller namnet på de celler som ska speglas.
-						  De speglade dataobjekten ordnas i den ordning cellerna anges i vektorn.
-						  En NULL-string markerar sista cellnamnet. */ 
-		    unsigned long options, /**< Options är en bitmask. Bitarna anger olika funktioner för nmpsappl_mirror:
-					      nmpsappl_mOption_Remove - Dataobjekt som har försvunnit från de angivna cellerna sedan senaste 
-					      anropet läggs med i dataobjektlistan med remove-flaggan satt.
-					      nmpsappl_mOption_NamePath - Namnfältet i den datastruktur som returneras för ett dataobjekt 
-					      på dataobjektet innehåller hierarkinamnet. */
-		    nmpsappl_t_ctx *ctx /**< En kontext-pekare som skickas med till nmpsappl_mirror rutinen. */
+		    pwr_tString80 *cell_array, /**< A string array with the names of the cells that should be mirrored. The element after the last cellname should be a NULL string. */
+		    unsigned long options, /**< Bitmask specifying options for the mirroring.*/
+		    nmpsappl_t_ctx *ctx /**< Context pointer. */
 )
 {
 	pwr_tString80		*cellname;
@@ -422,64 +424,58 @@ nmpsappl_MirrorInit(
 }
 
 /**
- *@brief Anropas cykliskt för att uppdatera speglingen.  
+ *@brief Update mirroring.
  *
- * Rutinen fyller i en lista på samtliga dataobjekt som finns i cellerna. 
- * Listan är av typen nmpsappl_t_datainfo. (länk till structdef?)
+ * nmpsappl_Mirror mirrors the content of one or several cells into an application
+ * program. 
  *
- * nmpsappl_mirror speglar innehållet i en eller flera celler till ett applikationsprogram. 
- * Funktionen hanterar direktlänkning av celler och dataobjekt och returnerar ej lista på dataobjekt till applikationen, 
- * tillsammans med information om bakkant, framkant, utval, vilka objekt som är nya eller har försvunnit, vilken cell ett objekt tillhör. 
- * Applikationen förses även med pekare till dataobjekten.
- * 
- * Man initierar en spegling genom att anropar rutinen nmpsappl_MirrorInit. 
- * Som argument skickar man med en lista på de celler som ska speglas. 
- * Sedan anropas nmpsappl_Mirror cykliskt för att få information om vilka dataobjekt som ligger i cellerna. 
- * Alla dataobjekt som finns i den angivna cellerna bakas ihop i en vektor, 
- * och ordningen bestämms av den ordning man angivit cellerna till nmpsappl_MirrorInit. 
- * 
- * Flera speglingar (max 32 st) kan hanteras i samma program, och varje spegling  omfattar maximalt 32 celler. 
- * Samma cell kan tillhöra flera speglingar. 
- * Man kan t ex spegla samtliga celler i systemet i en array, samtidigt som man speglar enstaka celler, eller urval av celler i andra arrayer.
- * 
- * 
+ * The function handles direct link of cells and dataobjects, and returns a list of
+ * data objects to the application together with information about front, back, select
+ * properties, and which data objects are new or has disappeard. The application also
+ * receives a pointer to each data object. 
+ *
+ * The mirroring is initiated by calling nmpsappl_MirrorInit. The cells are
+ * mirrored are specified in this call. Then nmpsappl_Mirror is called cyclic
+ * to recieve the current content of the cells. All the dataobjects found in the
+ * cells are placed in an array, and the order the cells was specified in 
+ * nmpsappl_MirrorInit determines the order in the dataobject array.
+ *
+ * Several mirroring can be handled in the same application (max 32), and each
+ * mirroring can handle maximum 32 cells.
+ *
  * Exempel
- *
+ * @code
  * #include "pwr_inc:pwr.h"
  * #include "ssab_inc:rs_nmps_appl.h"
  * #include "pwrp_inc:pwr_cvolvkvendclasses.h"
  * 
  * main()
  * {
- *         nmpsappl_t_ctx     	ctx;
- *         int                 	i;
- *         int                 	plate_count;
- *         nmpsappl_t_datainfo 	*plate_info;
- *         pwr_tStatus          	sts;
- *         pwr_sClass_Plate     	*plate_ptr;
- *         pwr_tString80       	cellnames[] = {
- *                         "VKV-END-PF-Plåtföljning-W-Svb15",
- *                         "VKV-END-PF-Plåtföljning-W-R30A",
+ *   nmpsappl_t_ctx      ctx;
+ *   int                 i;
+ *   int                 plate_count;
+ *   nmpsappl_t_datainfo *plate_info;
+ *   pwr_tStatus         sts;
+ *   pwr_sClass_Plate    *plate_ptr;
+ *   pwr_tString80       cellnames[] = {
+ *                         "VKV-END-PF-Plc-W-Svb15",
+ *                         "VKV-END-PF-Plc-W-R30A",
  *                         ""};
  * 
- *         // Init pams and gdh 
- *         sts = gdh_Init( 0, NULL);
- *         if (EVEN(sts)) LogAndExit( sts);
+ *   // Init Proview runtime 
+ *   sts = gdh_Init( "rs_nmps);
+ *   if (EVEN(sts)) LogAndExit( sts);
  * 
- *        // Init the mirroring 
- *         sts = nmpsappl_MirrorInit( cellnames,
- *  nmpsappl_mOption_Remove, &ctx);
- *         if (EVEN(sts)) exit(sts);
+ *  // Init the mirroring 
+ *  sts = nmpsappl_MirrorInit( cellnames, nmpsappl_mOption_Remove, &ctx);
+ *  if (EVEN(sts)) exit(sts);
  * 
- *         for (;;)
- *         {
- *              sts = nmpsappl_Mirror( ctx, &plate_count,
- *  &plate_info);
+ *  for (;;) {
+ *    sts = nmpsappl_Mirror( ctx, &plate_count, &plate_info);
  * 
- *           for ( i = 0; i < plate_count; i++)
- *          {
- *             plate_ptr = plate_info[i].object_ptr;
- *            printf( "%20s %1d %1d %1d %1d %1d %4d %5.1f\n",
+ *    for ( i = 0; i < plate_count; i++) {
+ *      plate_ptr = plate_info[i].object_ptr;
+ *      printf( "%20s %1d %1d %1d %1d %1d %4d %5.1f\n",
  *                         plate_info[i].name,
  *                         plate_info[i].front,
  *                         plate_info[i].back,
@@ -488,18 +484,18 @@ nmpsappl_MirrorInit(
  *                         plate_info[i].removed,
  *                         plate_info[i].cell_mask,
  *                         plate_ptr->Tjocklek);
- *           }
- *           sleep( 1);
- *         }
+ *     }
+ *     sleep( 1);
+ *   }
  * }
- *
+ *@endcode
  *@return pwr_tStatus
  */
 pwr_tStatus 
 nmpsappl_Mirror( 	
-		nmpsappl_t_ctx applctx,        /**< En kontext-pekare som erhölls vid anrop till nmpsappl_mirror_init. */ 
-		int *data_count,               /**< Antal dataobjekt i dataobjekts-listan. */ 
-		nmpsappl_t_datainfo **datainfo /**<Lista på dataobjekten i cellerna. */
+		nmpsappl_t_ctx applctx,        /**< Context for nmpsappl mirror. */ 
+		int *data_count,               /**< Number or data object in the array. */ 
+		nmpsappl_t_datainfo **datainfo /**< Data strucure with dataobjects found in the cells. */
 )
 {
 	int	i, j, k;
@@ -752,15 +748,15 @@ nmpsappl_Mirror(
 }
 
 /**
- *@brief Tar bort ett dataobjekt ur de celler som speglas.  
+ *@brief Removes a dataobject from one of the cells that are mirrored.
  * 
- * 
+ *@see nmpsappl_RemoveAndDeleteData
  *@return pwr_tStatus
  */
 pwr_tStatus
 nmpsappl_RemoveData(
-		    nmpsappl_t_ctx applctx, /**< Kontext-pekare som erhölls vid anrop till nmpsappl_mirror_init. */
-		    pwr_tObjid objid /**< Objid för dataobjekt som ska tas bort. */
+		    nmpsappl_t_ctx applctx, /**< Context for nmpsappl mirror. */
+		    pwr_tObjid objid /**< Objid for dataobject that is to be removed. */
 )
 {
 	int			k;
@@ -791,16 +787,15 @@ nmpsappl_RemoveData(
 
 
 /**
- *@brief Tar bort ett dataobjekt ur de celler som speglas. 
+ *@brief Removes and deletes a dataobject from one of the cells that are mirrored. 
  * 
- * Tar bort ett dataobjekt ur de celler som speglas. Dessutom tas objektet bort ur databasen.
- * 
+ *@see nmpsappl_RemoveData
  *@return pwr_tStatus
  */
 pwr_tStatus 
 nmpsappl_RemoveAndDeleteData(
-			nmpsappl_t_ctx applctx, /**< Kontext-pekare som erhölls vid anrop till nmpsappl_mirror_init. */
-			pwr_tObjid objid /**< Objid för dataobjekt som ska tas bort. */
+			     nmpsappl_t_ctx applctx, /**< nmpsappl mirror context. */
+			     pwr_tObjid objid /**< Objid for the data object that is to be removed. */
 )
 {
 	int			sts, k;

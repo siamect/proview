@@ -45,7 +45,7 @@ extern "C" {
    needed to use CDH.
 */
 
-/*! \defgroup Cdh_DS Data Structures
+/*! \defgroup Cdh_DS Cdh Data Structures
     \ingroup Cdh
 */
 
@@ -444,6 +444,15 @@ typedef union {
 
 //! Name string format description.
 /*!
+  Bitmask that denotes an object or attriubte name string, i.e. which components of the
+  name that is included in the string.<br>
+  Some common examples are
+
+  <b>cdh_mName_object</b> Object.<br>
+  <b>cdh_mName_object | cdh_mName_attribute</b> Object and attribute.<br>
+  <b>cdh_mName_pathStrict</b>          Path, object and attribute<br>
+  <b>cdh_mName_volumeStrict</b>       Volume, path, object and attribute.
+
    Let us assume we have an object of class Ai.
    The object has an attribute called FilterAttribute.
 
@@ -663,7 +672,12 @@ typedef struct {
 } cdh_sParseName;
 
 /*@}*/
-/*! \addtogroup Cdh */
+
+/*! \defgroup Cdh_FC Cdh Functions
+    \ingroup Cdh
+*/
+
+/*! \addtogroup Cdh_FC */
 /*@{*/
 
 /*  Function prototypes to exported functions.  */

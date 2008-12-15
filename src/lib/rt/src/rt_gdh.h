@@ -53,7 +53,7 @@ typedef pwr_tSubid   SUBID;
 typedef	pwr_tDlid    gdh_tDlid;
 typedef	pwr_tDlid    DLID;
 
-/** @defgroup DS Data Structures
+/** @defgroup DS Gdh Data Structures
  *  @ingroup GDH
  *  @{
  */
@@ -158,15 +158,86 @@ typedef struct {
 
 /** @} */
 /** 
- * @defgroup FC Function Calls
+ * @defgroup GDHFC Gdh Functions
  * @ingroup GDH
  * @{
  */
-/** 
- * @defgroup OMR Object manupilation routines
- * @ingroup FC
- * @{
- */
+
+#define gdh_ClassNameToNumber gdh_ClassNameToId
+
+pwr_tStatus
+gdh_ArefANameToAref (
+  pwr_sAttrRef *arp,
+  const char *aname,
+  pwr_sAttrRef *oarp
+);
+
+pwr_tStatus 
+gdh_ArefDisabled(
+  pwr_sAttrRef *arp, 
+  pwr_tDisableAttr *disabled
+);
+
+pwr_tStatus
+gdh_AttrArefToObjectAref (
+  pwr_sAttrRef *arp,
+  pwr_sAttrRef *oarp
+);
+
+pwr_tStatus
+gdh_AttrrefToName (
+  pwr_sAttrRef		*attributeReference,
+  char			*nameBuffer,
+  unsigned int		sizeOfNameBuffer,
+  pwr_tBitMask		nameType
+);
+
+pwr_tStatus
+gdh_AttrRefToPointer (
+  pwr_sAttrRef		*arp,
+  void			**p
+);
+
+pwr_tStatus 
+gdh_AttrStringToValue (
+  int type_id,
+  char *value_str, 
+  void *buffer_ptr,
+  int buff_size,
+  int attr_size
+);
+
+pwr_tStatus 
+gdh_AttrValueToString ( 
+  pwr_eType type_id, 
+  pwr_tTid tid, 
+  void *value_ptr, 
+  char *str,
+  int size,
+  int *len,
+  char *format
+);
+
+pwr_tStatus
+gdh_ClassAttrrefToAttr (
+  pwr_tClassId		classid,
+  pwr_sAttrRef		*attributeReference,
+  char			*nameBuffer,
+  int			sizeOfNameBuffer
+);
+
+pwr_tStatus
+gdh_ClassAttrToAttrref (
+  pwr_tClassId		classid,
+  const char	       	*attributeName,
+  pwr_sAttrRef		*attributeReference
+);
+
+pwr_tStatus
+gdh_ClassNameToId (
+  const char	       	*className,
+  pwr_tClassId		*classid
+);
 
 pwr_tStatus
 gdh_CreateObject (
@@ -185,23 +256,179 @@ gdh_DeleteObject (
 );
 
 pwr_tStatus
-gdh_RenameObject (
-  pwr_tObjid		objectId,
-  char			*newObjectName
+gdh_DLRefObjectInfoAttrref (
+  pwr_sAttrRef		*addressOfAttributeReference,
+  void			**objectData,
+  pwr_tDlid		*directLinkId
 );
 
 pwr_tStatus
-gdh_MoveObject (
-  pwr_tObjid		objectId,
-  pwr_tObjid		newParentId
+gdh_DLUnrefObjectInfo (
+  pwr_tDlid		directLinkId
 );
-/** @} */
 
-/** 
- * @defgroup RWO Reading and writing object data
- * @ingroup FC
- * @{
- */
+void
+gdh_DLUnrefObjectInfoAll ();
+
+pwr_tStatus 
+gdh_FReadObject ( 
+  char *filename,
+  pwr_tAttrRef *arp
+);
+
+pwr_tStatus 
+gdh_FWriteObject ( 
+  char *filename, 
+  pwr_tAttrRef *arp
+);
+
+pwr_tStatus
+gdh_GetAlarmInfo (
+  pwr_tObjid		object,
+  pwr_tUInt32		*alarmLevel,
+  pwr_tUInt32		*maxAlarmLevel,
+  pwr_tUInt32		*alarmBlockLevel,
+  pwr_tUInt32		*maxAlarmBlockLevel,
+  pwr_tUInt32		*alarmVisibility
+);
+
+pwr_tStatus
+gdh_GetAttributeCharAttrref (
+  pwr_sAttrRef		*attributeReference,
+  pwr_tTypeId		*attributeType,
+  unsigned int		*attributeSize,
+  unsigned int		*attributeOffset,
+  unsigned int		*attributeDimension
+);
+
+pwr_tStatus
+gdh_GetAttributeCharacteristics (
+  char			*name,					  
+  pwr_tTypeId		*tid,	
+  pwr_tUInt32		*size,		
+  pwr_tUInt32		*offs,		
+  pwr_tUInt32		*elem	
+);
+
+pwr_tStatus
+gdh_GetAttrRefTid (
+  pwr_sAttrRef		*arp,
+  pwr_tTid		*tid
+);
+
+pwr_tStatus
+gdh_GetChild (
+  pwr_tObjid		object,
+  pwr_tObjid		*firstChild
+);
+
+pwr_tStatus
+gdh_GetClassList (
+  pwr_tClassId		classid,
+  pwr_tObjid		*object
+);
+
+pwr_tStatus
+gdh_GetClassListAttrRef (
+  pwr_tClassId		cid,
+  pwr_sAttrRef		*arp
+);
+
+pwr_tStatus
+gdh_GetDynamicAttrSize(
+  pwr_tObjid		oid,
+  char			*name,
+  pwr_tUInt32		*size
+);
+
+pwr_tStatus
+gdh_GetEnumValueDef(
+  pwr_tTid tid,
+  gdh_sValueDef **vd,
+  int *rows
+);
+
+pwr_tStatus
+gdh_GetLocalParent (
+  pwr_tObjid		object,
+  pwr_tObjid		*parent
+);
+
+pwr_tStatus
+gdh_GetMaskBitDef(
+  pwr_tTid tid,
+  gdh_sBitDef **bd,
+  int *rows
+);
+
+pwr_tStatus
+gdh_GetNextAttrRef (
+  pwr_tClassId		cid,
+  pwr_sAttrRef		*arp,
+  pwr_sAttrRef		*new_arp
+);
+
+pwr_tStatus
+gdh_GetNextObject (
+  pwr_tObjid		object,
+  pwr_tObjid		*nextObject
+);
+
+
+pwr_tStatus
+gdh_GetNextObjectAttrRef (
+  pwr_tClassId		cid,          /**< The class identity. */
+  pwr_sAttrRef		*arp,         /**< The attribute reference. */
+  pwr_sAttrRef		*new_arp      /**< Receives the attribute reference */
+);
+
+pwr_tStatus
+gdh_GetNextSibling (
+  pwr_tObjid		object,
+  pwr_tObjid		*nextSibling
+);
+
+pwr_tStatus
+gdh_GetNextVolume( 
+  pwr_tVid pvid,
+  pwr_tVid *vid
+);
+
+pwr_tStatus
+gdh_GetNodeIndex (
+  pwr_tNodeId		*nodeIndex
+);
+
+pwr_tStatus
+gdh_GetNodeInfo (
+  pwr_tNodeId nodidx,
+  gdh_sNodeInfo *ip
+);
+
+pwr_tStatus
+gdh_GetNodeObject (
+  pwr_tNodeId		nodeIndex,
+  pwr_tObjid		*object
+);
+
+pwr_tStatus
+gdh_GetObjectClass (
+  pwr_tObjid		object,
+  pwr_tClassId		*classid
+);
+
+pwr_tStatus
+gdh_GetObjectClassList (
+  pwr_tCid		cid,        /**< The class identity. */
+  pwr_tOid		oid,	    /**< Host object. */
+  pwr_sAttrRef		*arp        /**< Receives the attribute reference. */
+);
+
+pwr_tStatus
+gdh_GetObjectDLCount (
+  pwr_tObjid		object,
+  pwr_tUInt32		*count
+);
 
 pwr_tStatus
 gdh_GetObjectInfo (   
@@ -218,74 +445,21 @@ gdh_GetObjectInfoAttrref (
 );
 
 pwr_tStatus
-gdh_SetObjectInfo (
-  char			*attributeName,
-  void			*buffer,
-  unsigned int		sizeOfBuffer
+gdh_GetObjectLocation (
+  pwr_tObjid		object,
+  pwr_tBoolean		*isLocal
 );
 
 pwr_tStatus
-gdh_SetObjectInfoAttrref (
-  pwr_sAttrRef		*attributeReference,
-  void			*buffer,
-  unsigned int		sizeOfBuffer
-);
-/** @} */
-/** 
- * @defgroup DL Direct linking
- * @ingroup FC
- * @{
- */
-
-pwr_tStatus
-gdh_DLRefObjectInfoAttrref (
-  pwr_sAttrRef		*addressOfAttributeReference,
-  void			**objectData,
-  pwr_tDlid		*directLinkId
+gdh_GetObjectNodeIndex (
+  pwr_tObjid		object,
+  pwr_tNodeId		*nodeIndex
 );
 
 pwr_tStatus
-gdh_DLUnrefObjectInfo (
-  pwr_tDlid		directLinkId
-);
-
-void
-gdh_DLUnrefObjectInfoAll ();
-
-/** @} */
-/** 
- * @defgroup DLS Direct link/subscription
- * @ingroup FC
- * @{
- */
-
-pwr_tStatus
-gdh_GetSubscriptionOldness (
-  pwr_tSubid		subid,
-  pwr_tBoolean		*isOld,
-  pwr_tTime		*lastUpdate,
-  pwr_tStatus		*lastStatus
-);
-
-pwr_tStatus
-gdh_RefObjectInfo (
-  char			*attributeName,
-  void			**objectData,
-  pwr_tSubid		*subid,
-  unsigned int		sizeOfObjectData
-);
-
-pwr_tStatus
-gdh_UnrefObjectInfo (
-  pwr_tSubid		subid
-);
-
-pwr_tStatus
-gdh_UnrefObjectInfoAll ();
-
-pwr_tStatus
-gdh_GetRootList (
-  pwr_tObjid		*object
+gdh_GetObjectSize (
+  pwr_tObjid		oid,
+  pwr_tUInt32		*size 
 );
 
 pwr_tStatus
@@ -295,21 +469,9 @@ gdh_GetParent (
 );
 
 pwr_tStatus
-gdh_GetLocalParent (
+gdh_GetPreviousObject (
   pwr_tObjid		object,
-  pwr_tObjid		*parent
-);
-
-pwr_tStatus
-gdh_GetChild (
-  pwr_tObjid		object,
-  pwr_tObjid		*firstChild
-);
-
-pwr_tStatus
-gdh_GetNextSibling (
-  pwr_tObjid		object,
-  pwr_tObjid		*nextSibling
+  pwr_tObjid		*previousObject
 );
 
 pwr_tStatus
@@ -319,146 +481,87 @@ gdh_GetPreviousSibling (
 );
 
 pwr_tStatus
-gdh_RefObjectInfoList (
-  unsigned int		nEntry,
-  gdh_sObjRef		*objectReference,
-  pwr_tSubid		*subid
-);
-
-/** @} */
-/** 
- * @defgroup SUB Subscription 
- * @ingroup FC
- * @{
- */
-
-pwr_tStatus
-gdh_SetSubscriptionDefaults (
-  pwr_tInt32		defaultUpdateTime,
-  pwr_tInt32		defaultTimeOut
-);
-
-
-pwr_tStatus
-gdh_SubRefObjectInfoAttrref (
-  pwr_sAttrRef		*attributeReference,
-  pwr_tSubid		*subid
-);
-
-pwr_tStatus
-gdh_SubRefObjectInfoName (
-  char			*attributeName,
-  pwr_tSubid		*subid
-);
-
-pwr_tStatus
-gdh_SubUnrefObjectInfoList (
-  unsigned int		nEntry,
-  pwr_tSubid		*subid
-);
-
-pwr_tStatus
-gdh_SubUnrefObjectInfo (
-  pwr_tSubid		subid
-);
-
-void
-gdh_SubUnrefObjectInfoAll ();
-
-pwr_tStatus
-gdh_SubData (
-  pwr_tSubid		subid,
-  void			*buffer,
-  unsigned int		sizeOfBuffer
-);
-
-pwr_tStatus
-gdh_SubSize (
-  pwr_tSubid		subid,
-  unsigned int		*size
-);
-
-pwr_tStatus
-gdh_SubAssociateBuffer (
-  pwr_tSubid		subid,
-  void			**buffer,
-  unsigned int		sizeOfBuffer
-);
-
-pwr_tStatus
-gdh_SubRefObjectInfoList (
-  unsigned int		entryCount,
-  void			*object[],
-  pwr_tBoolean		isAttrref[],
-  pwr_tSubid		subid[]
-);
-
-/** @} */
-
-/** 
- * @defgroup CR Class routines
- * @ingroup FC
- * @{
- */
-
-pwr_tStatus
-gdh_GetClassList (
-  pwr_tClassId		classid,
+gdh_GetRootList (
   pwr_tObjid		*object
 );
 
+pwr_tStatus 
+gdh_GetSecurityInfo( 
+  pwr_sSecurity *security
+);
+
 pwr_tStatus
-gdh_GetNextObject (
+gdh_GetVolumeInfo(
+  pwr_tVid vid,
+  gdh_sVolumeInfo *info
+);
+
+pwr_tStatus
+gdh_GetVolumeList( 
+  pwr_tVid *vid
+);
+
+pwr_tStatus 
+gdh_SearchFile (
+  pwr_tOid oid,
+  char *dir,
+  char *pattern,
+  pwr_tString40 *filelist[],
+  int *filecnt
+);
+
+pwr_tStatus
+gdh_GetSubscriptionOldness (
+  pwr_tSubid		subid,
+  pwr_tBoolean		*isOld,
+  pwr_tTime		*lastUpdate,
+  pwr_tStatus		*lastStatus
+);
+
+pwr_tStatus 
+gdh_GetSuperClass( 
+  pwr_tCid   cid,
+  pwr_tCid   *supercid, 
+  pwr_tObjid oid
+);
+
+pwr_tStatus gdh_Init (
+  const char		*name
+);
+
+pwr_tStatus
+gdh_MountObjidToPointer (
   pwr_tObjid		object,
-  pwr_tObjid		*nextObject
+  void			**objectData
 );
 
 pwr_tStatus
-gdh_GetPreviousObject (
-  pwr_tObjid		object,
-  pwr_tObjid		*previousObject
+gdh_MoveObject (
+  pwr_tObjid		objectId,
+  pwr_tObjid		newParentId
 );
 
 pwr_tStatus
-gdh_GetClassListAttrRef (
-  pwr_tClassId		cid,
-  pwr_sAttrRef		*arp
+gdh_NameToAttrref (
+  pwr_tObjid		parent,
+  const char	       	*attributeName,
+  pwr_sAttrRef		*attributeReference
 );
 
 pwr_tStatus
-gdh_GetNextAttrRef (
-  pwr_tClassId		cid,
-  pwr_sAttrRef		*arp,
-  pwr_sAttrRef		*new_arp
+gdh_NameToObjid (
+  const char	       	*objectName,
+  pwr_tObjid		*objid
 );
 
 pwr_tStatus
-gdh_GetObjectClassList (
-  pwr_tCid		cid,        /**< The class identity. */
-  pwr_tOid		oid,	    /**< Host object. */
-  pwr_sAttrRef		*arp        /**< Receives the attribute reference. */
+gdh_NameToPointer (
+  const char	       	*objectName,
+  void			**objectData
 );
 
 pwr_tStatus
-gdh_GetNextObjectAttrRef (
-  pwr_tClassId		cid,          /**< The class identity. */
-  pwr_sAttrRef		*arp,         /**< The attribute reference. */
-  pwr_sAttrRef		*new_arp      /**< Receives the attribute reference */
-);
-#define gdh_ClassNameToNumber gdh_ClassNameToId
-
-pwr_tStatus
-gdh_ClassNameToId (
-  const char	       	*className,
-  pwr_tClassId		*classid
-);
-
-/** @} */ 
-/** 
- * @defgroup TBDOR Translating between different object representation
- * @ingroup FC
- * @{
- */
+gdh_NethandlerRunning ();
 
 pwr_tStatus
 gdh_ObjidToName (
@@ -475,199 +578,30 @@ gdh_ObjidToPointer (
 );
 
 pwr_tStatus
-gdh_MountObjidToPointer (
+gdh_RefObjectInfo (
+  char			*attributeName,
+  void			**objectData,
+  pwr_tSubid		*subid,
+  unsigned int		sizeOfObjectData
+);
+
+pwr_tStatus
+gdh_RefObjectInfoList (
+  unsigned int		nEntry,
+  gdh_sObjRef		*objectReference,
+  pwr_tSubid		*subid
+);
+
+pwr_tStatus
+gdh_RenameObject (
+  pwr_tObjid		objectId,
+  char			*newObjectName
+);
+
+pwr_tStatus
+gdh_SetAlarmBlockLevel (
   pwr_tObjid		object,
-  void			**objectData
-);
-
-pwr_tStatus
-gdh_AttrRefToPointer (
-  pwr_sAttrRef		*arp,
-  void			**p
-);
-
-pwr_tStatus
-gdh_NameToObjid (
-  const char	       	*objectName,
-  pwr_tObjid		*objid
-);
-
-pwr_tStatus
-gdh_NameToPointer (
-  const char	       	*objectName,
-  void			**objectData
-);
-/** @} */
-
-/** 
- * @defgroup OP Object properties
- * @ingroup FC
- * @{
- */
-
-pwr_tStatus
-gdh_GetObjectSize (
-  pwr_tObjid		oid,
-  pwr_tUInt32		*size 
-);
-
-pwr_tStatus
-gdh_GetDynamicAttrSize(
-  pwr_tObjid		oid,
-  char			*name,
-  pwr_tUInt32		*size
-);
-
-pwr_tStatus
-gdh_GetObjectClass (
-  pwr_tObjid		object,
-  pwr_tClassId		*classid
-);
-
-pwr_tStatus
-gdh_GetAttrRefTid (
-  pwr_sAttrRef		*arp,
-  pwr_tTid		*tid
-);
-
-pwr_tStatus
-gdh_GetObjectLocation (
-  pwr_tObjid		object,
-  pwr_tBoolean		*isLocal
-);
-
-pwr_tStatus
-gdh_GetObjectDLCount (
-  pwr_tObjid		object,
-  pwr_tUInt32		*count
-);
-
-pwr_tStatus 
-gdh_SearchFile (
-  pwr_tOid oid,
-  char *dir,
-  char *pattern,
-  pwr_tString40 *filelist[],
-  int *filecnt
-);
-
-/** @} */
-
-/** 
- * @defgroup Node Node information
- * @ingroup FC
- * @{
- */
-
-pwr_tStatus
-gdh_GetObjectNodeIndex (
-  pwr_tObjid		object,
-  pwr_tNodeId		*nodeIndex
-);
-
-pwr_tStatus
-gdh_GetNodeIndex (
-  pwr_tNodeId		*nodeIndex
-);
-
-pwr_tStatus
-gdh_GetNodeObject (
-  pwr_tNodeId		nodeIndex,
-  pwr_tObjid		*object
-);
-
-pwr_tStatus
-gdh_GetNodeInfo (
-  pwr_tNodeId nodidx,
-  gdh_sNodeInfo *ip
-);
-
-
-/** @} */
-
-/** 
- * @defgroup AR Attribute routines
- * @ingroup FC
- * @{
- */
-
-pwr_tStatus
-gdh_GetAttributeCharacteristics (
-  char			*name,					  
-  pwr_tTypeId		*tid,	
-  pwr_tUInt32		*size,		
-  pwr_tUInt32		*offs,		
-  pwr_tUInt32		*elem	
-);
-
-pwr_tStatus
-gdh_NameToAttrref (
-  pwr_tObjid		parent,
-  const char	       	*attributeName,
-  pwr_sAttrRef		*attributeReference
-);
-
-pwr_tStatus
-gdh_AttrrefToName (
-  pwr_sAttrRef		*attributeReference,
-  char			*nameBuffer,
-  unsigned int		sizeOfNameBuffer,
-  pwr_tBitMask		nameType
-);
-
-pwr_tStatus
-gdh_ClassAttrToAttrref (
-  pwr_tClassId		classid,
-  const char	       	*attributeName,
-  pwr_sAttrRef		*attributeReference
-);
-
-pwr_tStatus
-gdh_ClassAttrrefToAttr (
-  pwr_tClassId		classid,
-  pwr_sAttrRef		*attributeReference,
-  char			*nameBuffer,
-  int			sizeOfNameBuffer
-);
-
-pwr_tStatus
-gdh_GetAttributeCharAttrref (
-  pwr_sAttrRef		*attributeReference,
-  pwr_tTypeId		*attributeType,
-  unsigned int		*attributeSize,
-  unsigned int		*attributeOffset,
-  unsigned int		*attributeDimension
-);
-
-pwr_tStatus
-gdh_AttrArefToObjectAref (
-  pwr_sAttrRef *arp,
-  pwr_sAttrRef *oarp
-);
-
-pwr_tStatus
-gdh_ArefANameToAref (
-  pwr_sAttrRef *arp,
-  const char *aname,
-  pwr_sAttrRef *oarp
-);
-
-/** @} */
-
-/** 
- * @defgroup OAS Object alarm status
- * @ingroup FC
- * @{
- */
-
-pwr_tStatus
-gdh_GetAlarmInfo (
-  pwr_tObjid		object,
-  pwr_tUInt32		*alarmLevel,
-  pwr_tUInt32		*maxAlarmLevel,
-  pwr_tUInt32		*alarmBlockLevel,
-  pwr_tUInt32		*maxAlarmBlockLevel,
-  pwr_tUInt32		*alarmVisibility
+  pwr_tUInt32		alarmBlockLevel
 );
 
 pwr_tStatus
@@ -677,32 +611,94 @@ gdh_SetAlarmLevel (
 );
 
 pwr_tStatus
-gdh_SetAlarmBlockLevel (
-  pwr_tObjid		object,
-  pwr_tUInt32		alarmBlockLevel
+gdh_SetObjectInfo (
+  char			*attributeName,
+  void			*buffer,
+  unsigned int		sizeOfBuffer
 );
 
-/** @} */
-
-/** 
- * @defgroup INIT Initializing GDH
- * @ingroup FC
- * @{
- */
-
-pwr_tStatus gdh_Init (
-  const char		*name
-);
-
-/** @} */
-
-/** 
- * @defgroup MI Miscellaneous
- * @ingroup FC
- * @{
- */
 pwr_tStatus
-gdh_NethandlerRunning ();
+gdh_SetObjectInfoAttrref (
+  pwr_sAttrRef		*attributeReference,
+  void			*buffer,
+  unsigned int		sizeOfBuffer
+);
+
+pwr_tStatus
+gdh_SubAssociateBuffer (
+  pwr_tSubid		subid,
+  void			**buffer,
+  unsigned int		sizeOfBuffer
+);
+
+pwr_tStatus
+gdh_SubData (
+  pwr_tSubid		subid,
+  void			*buffer,
+  unsigned int		sizeOfBuffer
+);
+
+pwr_tStatus
+gdh_SubRefObjectInfoAttrref (
+  pwr_sAttrRef		*attributeReference,
+  pwr_tSubid		*subid
+);
+
+pwr_tStatus
+gdh_SubRefObjectInfoList (
+  unsigned int		entryCount,
+  void			*object[],
+  pwr_tBoolean		isAttrref[],
+  pwr_tSubid		subid[]
+);
+
+pwr_tStatus
+gdh_SubRefObjectInfoName (
+  char			*attributeName,
+  pwr_tSubid		*subid
+);
+
+pwr_tStatus
+gdh_SubSize (
+  pwr_tSubid		subid,
+  unsigned int		*size
+);
+
+pwr_tStatus
+gdh_SetSubscriptionDefaults (
+  pwr_tInt32		defaultUpdateTime,
+  pwr_tInt32		defaultTimeOut
+);
+
+pwr_tStatus
+gdh_SubUnrefObjectInfo (
+  pwr_tSubid		subid
+);
+
+void
+gdh_SubUnrefObjectInfoAll ();
+
+pwr_tStatus
+gdh_SubUnrefObjectInfoList (
+  unsigned int		nEntry,
+  pwr_tSubid		*subid
+);
+
+pwr_tStatus
+gdh_UnrefObjectInfo (
+  pwr_tSubid		subid
+);
+
+pwr_tStatus
+gdh_UnrefObjectInfoAll ();
+
+pwr_tStatus
+gdh_VolumeIdToName(
+  pwr_tVid vid,
+  char *name,
+  int size
+);
+
 
 /** @} */
 
@@ -751,31 +747,6 @@ gdh_TranslateRtdbPointer (
   pwr_tUInt32		rtdbReference
 );
 
-
-pwr_tStatus
-gdh_GetVolumeList( 
-  pwr_tVid *vid
-);
-
-pwr_tStatus
-gdh_GetNextVolume( 
-  pwr_tVid pvid,
-  pwr_tVid *vid
-);
-
-pwr_tStatus
-gdh_VolumeIdToName(
-  pwr_tVid vid,
-  char *name,
-  int size
-);
-
-pwr_tStatus
-gdh_GetVolumeInfo(
-  pwr_tVid vid,
-  gdh_sVolumeInfo *info
-);
-
 pwr_tStatus
 gdh_GetObjectBodyDef(
   pwr_tCid cid,
@@ -798,75 +769,11 @@ gdh_GetAttrRefAdef(
 );
 
 pwr_tStatus 
-gdh_GetSuperClass( 
-  pwr_tCid   cid,
-  pwr_tCid   *supercid, 
-  pwr_tObjid oid
-);
-
-pwr_tStatus
-gdh_GetEnumValueDef(
-  pwr_tTid tid,
-  gdh_sValueDef **vd,
-  int *rows
-);
-
-pwr_tStatus
-gdh_GetMaskBitDef(
-  pwr_tTid tid,
-  gdh_sBitDef **bd,
-  int *rows
-);
-
-pwr_tStatus 
-gdh_ArefDisabled(
-  pwr_sAttrRef *arp, 
-  pwr_tDisableAttr *disabled
-);
-
-pwr_tStatus 
-gdh_FWriteObject ( 
-  char *filename, 
-  pwr_tAttrRef *arp
-);
-
-pwr_tStatus 
-gdh_FReadObject ( 
-  char *filename,
-  pwr_tAttrRef *arp
-);
-
-pwr_tStatus 
-gdh_AttrValueToString ( 
-  pwr_eType type_id, 
-  pwr_tTid tid, 
-  void *value_ptr, 
-  char *str,
-  int size,
-  int *len,
-  char *format
-);
-
-pwr_tStatus 
-gdh_AttrStringToValue (
-  int type_id,
-  char *value_str, 
-  void *buffer_ptr,
-  int buff_size,
-  int attr_size
-);
-
-pwr_tStatus 
 gdh_SetObjectReadOnly( 
   pwr_tOid oid
 );
 
-pwr_tStatus 
-gdh_GetSecurityInfo( 
-  pwr_sSecurity *security
-);
-
-/* Undocumented routines. For internal use only.  */
+/* Undocumented functions. For internal use only.  */
 
 pwr_tStatus
 gdh_MDAttribute (
@@ -885,7 +792,6 @@ gdh_SetCache (
   pwr_tUInt32           trimmed_level
 );
 
-/** @} */
 /** @} */
 
 #if defined __cplusplus

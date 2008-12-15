@@ -82,7 +82,7 @@ extern "C"
 #define qcom_cInacp		(1<<31 | 106)
 #define qcom_cIini		(1<<31 | 107)
 
-/** @defgroup QCOM_DS Data Structures
+/** @defgroup QCOM_DS Qcom Data Structures
  *  @ingroup QCOM
  *  @{
  */
@@ -244,7 +244,7 @@ typedef struct {
 
 /** @} */
 
-/** @defgroup QCOM_FC Function Calls
+/** @defgroup QCOM_FC Qcom Functions
  *  @ingroup QCOM
  *  @{
  */

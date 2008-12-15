@@ -46,7 +46,7 @@ extern "C" {
 #endif
 
 
-/** @defgroup MSGH_DS Data Structures
+/** @defgroup MSGH_DS MhAppl Data Structures
  *  @ingroup MSGH
  *  @{
  */
@@ -117,12 +117,8 @@ struct mhs_ApplMessage {
 
 /**@}*/
 
-/** @defgroup MSGH_FC Function Calls
+/** @defgroup MSGH_FC MhAppl Functions
  *  @ingroup MSGH
- *  @{
- */
-/** @defgroup MSG_AR Application routines
- *  @ingroup MSGH_FC
  *  @{
  */
 
@@ -175,7 +171,6 @@ pwr_tStatus mh_ApplGetMsgInfo (
   mh_sApplMessage   *Message
 );
 
-/**@}*/
 /**@}*/
 /**@}*/
 

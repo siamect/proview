@@ -99,9 +99,9 @@
  */
 static void
 getAlarmVisibility (
-  pwr_tStatus		*status,   /**< ZZZ */
-  gdb_sObject		*op,       /**< ZZZ */
-  pwr_tUInt32 		*avis      /**< ZZZ */
+  pwr_tStatus		*status,   /**< Status */
+  gdb_sObject		*op,       /**< Object */
+  pwr_tUInt32 		*avis      /**< The alarm block level */
 ) 
 {
   gdb_sObject		*pop;
@@ -118,18 +118,15 @@ getAlarmVisibility (
   } 
 }
 /**
- * @brief This routine translates an attribute reference structure 
- * into the name of the attribute that it denominates.
+ * @brief Translate an attribute referece to a name.
  * @return pwr_tStatus
  */
 pwr_tStatus
 gdh_AttrrefToName (
-  pwr_sAttrRef		*arp,     /**< Supplies the attribute reference structure 
-                                       that defines an attribute. */
-  char			*name,    /**< Receives the name of the form 'object name',
-				       'attributename'. */
-  unsigned int		size,     /**< Supplies the maximun length of the buffer */
-  pwr_tBitMask		nametype  /**< ZZZ */
+  pwr_sAttrRef		*arp,     /**< Pointer to the attribute reference. */
+  char			*name,    /**< Name buffer supplied by the user, where name is written. */
+  unsigned int		size,     /**< Size of the name buffer */
+  pwr_tBitMask		nametype  /**< Mask of type cdh_mName.  */
 )
 {
   pwr_tStatus		sts = GDH__SUCCESS;
@@ -180,15 +177,16 @@ gdh_AttrrefToName (
 
 
 /** 
- * @brief Get attrref of an attribute specified by name.
+ * @brief Get the attribute reference for an attribute in an object attribute
+ * reference, where the attribute is specified by an string.
  *
  * @return pwr_tStatus 
  */
 pwr_tStatus
 gdh_ArefANameToAref (
-  pwr_sAttrRef *arp,
-  const char *aname,
-  pwr_sAttrRef *oarp
+  pwr_sAttrRef *arp, /**< Pointer to object attribute reference */
+  const char *aname, /**< Attribute name string */
+  pwr_sAttrRef *oarp /**< Receives the  attribute reference. */
 )
 {
   pwr_tStatus		sts = GDH__SUCCESS;
@@ -238,14 +236,17 @@ gdh_ArefANameToAref (
 
 
 /** 
- * @brief Get the object attrref for an attribute attrref.
+ * @brief Get the attribute reference to an object or attribute object, from the 
+ * attribute reference to an attribute in the object.
+ * 
+ * This functions cuts the last attribute segment.
  *
  * @return pwr_tStatus 
  */
 pwr_tStatus
 gdh_AttrArefToObjectAref (
-  pwr_sAttrRef *arp,
-  pwr_sAttrRef *oarp
+  pwr_sAttrRef *arp,  /**< Attribute reference to the attribute. */
+  pwr_sAttrRef *oarp  /**< Returned attribute reference to the object or attribute object.*/
 )
 {
   pwr_tStatus		sts = GDH__SUCCESS;
@@ -293,10 +294,10 @@ gdh_AttrArefToObjectAref (
 
 
 /** 
- * @brief Converts a class & attribute to attrref format.
+ * @brief Converts a class and attribute string to attrref format.
  *
- * The Objid of the attrref is left untouched.  
- * @return pwr_tStatus 
+ * The Objid of the attrref is left untouched.
+ * @return pwr_tStatus
  */
 
 pwr_tStatus
@@ -388,13 +389,13 @@ gdh_ClassAttrrefToAttr (
 
 /** 
  * @brief Get the class identity corresponding to a class
- * with name 'classname'.
+ * specified by name.
  * @return pwr_tStatus   
  */
 pwr_tStatus
 gdh_ClassNameToId (
-  const char	       	*name, /**< ZZZ */
-  pwr_tClassId		*cid   /**< ZZZ */
+  const char	       	*name, /**< Class name string. */
+  pwr_tClassId		*cid   /**< Returned class identity. */
 )
 {
   pwr_tStatus		sts = GDH__SUCCESS;
@@ -414,12 +415,13 @@ gdh_ClassNameToId (
 }
 
 /**
- * @brief Create and initialize a new local object.
+ * @brief Create an object in a dynamic volume.
  *
+ * Objects can only be created in local dynamic volumes, or in the local
+ * system volume. <br>
  * Space is allocated for the object which must not exist. 
  * This call is possible only if the object is created
  * in a local volume, i.e a volume owned by the local node.
- * The volume must furthermore be of class $DynamicVolume or $SystemVolume.
  *
  * All reachable nodes, who have mounted the volume in question,
  * are notified about this new object.   
@@ -435,14 +437,15 @@ gdh_ClassNameToId (
 
 pwr_tStatus
 gdh_CreateObject (
-  char			*name,		/**< Null terminated object name string.  */
-  pwr_tClassId		cid,		/**< What class should the object be of?  */
-  unsigned int		size,		/**< Size of object body.  */
-  pwr_tObjid		*oid,		/**< Address of a pwr_tObjid where
-					   the object identity is to be stored.  */
-  pwr_tObjid		req_oid,	/**< Requested objid, */
-  pwr_tBitMask		flags,		/**< Alias client or mount client?  */
-  pwr_tObjid		soid		/**< Server objid.  */
+  char			*name,		/**< Object name string. Last segment only.*/
+  pwr_tClassId		cid,		/**< Class id for object. */
+  unsigned int		size,		/**< Size of object body. Only needed for objects 
+						with dynamic size, else 0. */
+  pwr_tObjid		*oid,		/**< Returned objid.  */
+  pwr_tObjid		req_oid,	/**< Requested objid. Only if any special objid is 
+						prefered, else pwr_cNOid. */
+  pwr_tBitMask		flags,		/**< Alias client or mount client.  */
+  pwr_tObjid		soid		/**< Server objid. Used for ExternVolumes. Normally pwr_cNOid */
 )
 {
   pwr_tStatus		sts = GDH__SUCCESS;
@@ -480,6 +483,9 @@ gdh_CreateObject (
  *
  * All reachable nodes, who have mounted the volume in question,
  * are notified about the removal of this object.
+ *
+ * The object is not completly removed until all directlink and
+ * subscriptions to the object are removed.
  * @return pwr_tStatus 
  */
 
@@ -506,14 +512,18 @@ gdh_DeleteObject (
  * @brief Request a direct link to the data denoted by an attribute reference.
  * 
  * The object owning the data must be owned by the local node.
- * The caller can change the data without restriction. 
+ * The caller receives a pointer to data in the object body in the realtime database.
+ * The data can be changed by the user without restriction.
+ *
+ * The data should be unlinked with a gdh_DLUnrefObjectInfo() call.
+ *
  * @return pwr_tStatus 
  */
 pwr_tStatus
 gdh_DLRefObjectInfoAttrref (
-  pwr_sAttrRef		*arp,      /**< ZZZ */
-  void			**infop,   /**< ZZZ */
-  pwr_tDlid		*dlid      /**< ZZZ */
+  pwr_sAttrRef		*arp,      /**< Pointer to attribute reference for object or attribute to link to.*/
+  void			**infop,   /**< Returnd pointer to the data. */
+  pwr_tDlid		*dlid      /**< Id for the direct link. Used to unlink the data.*/
 )
 {
   pwr_tStatus		sts = GDH__SUCCESS;
@@ -551,16 +561,19 @@ gdh_DLRefObjectInfoAttrref (
 }
 
 /** 
- * @brief Terminate direct linking of an object or an object parameter.
+ * @brief Terminate direct linking of an object or an object attribute.
  * 
  * The pointer returned by DLRefObjectInfo can become invalid
  * after this call.
+ *
+ * @see gdh_DLRefObjectInfo
+ * @see gdh_DLRefObjectInfoAttrref
  * @return pwr_tStatus  
  */
 
 pwr_tStatus
 gdh_DLUnrefObjectInfo (
-  pwr_tDlid		dlid  /** <The id of the direct link we want to break */
+  pwr_tDlid		dlid  /** <The id of the direct link we want to remove */
 )
 {
   pwr_tStatus		sts = GDH__SUCCESS;
@@ -576,7 +589,7 @@ gdh_DLUnrefObjectInfo (
 }
 
 /** 
- * @brief Terminates all direct links set up by this user (job/process).  
+ * @brief Removes all direct links set up by this process.  
  */
 
 void
@@ -603,7 +616,7 @@ gdh_GetAlarmInfo (
   pwr_tUInt32		*maxa, /**< Receives the highest alarm level of the object. Can be NULL */
   pwr_tUInt32		*b,    /**< Receives the blocking level of the object. CAn be NULL */        
   pwr_tUInt32		*maxb, /**< Receives the highest existing blocking level of the object. Can be NULL */ 
-  pwr_tUInt32		*alarmvisibility /**< ZZZ */
+  pwr_tUInt32		*alarmvisibility /**< Receives the alarm block level. */
 )
 {
   pwr_tStatus		sts = GDH__SUCCESS;
@@ -980,6 +993,12 @@ gdh_GetObjectSize (
   return sts;
 }
 
+/**
+ * @brief Get the size of a dynamic attribute. 
+ *
+ * @return pwr_tStatus
+ */
+
 pwr_tStatus
 gdh_GetDynamicAttrSize(
   pwr_tObjid		oid,   /**< The object identity. */ 
@@ -1202,6 +1221,7 @@ gdh_GetObjectDLCount (
 
 /** 
  * @brief Get the object identity of the parent of an object.  
+ * @see gdh_GetLocalParent
  * @return pwr_tStatus
  */ 
 
@@ -1237,6 +1257,10 @@ gdh_GetParent (
 
 /** 
  * @brief Get the object identity of the local parent of an object.  
+ *
+ * If the parent is a MountObject, the objid for the MountObject will be returned,
+ * not the mounted object, as in gdh_GetParent:
+ * @see gdh_GetParent
  * @return pwr_tStatus
  */ 
 
@@ -1321,7 +1345,25 @@ gdh_GetSubscriptionOldness (
 }
 
 /** 
- * @brief Get the object identity of the first child of an object.  
+ * @brief Get the object identity of the first child of an object.
+ *
+ * Other children are fetched with gdh_GetNextSibling.
+ * @see gdh_GetNextSibling
+ *
+ * Example
+ * @code
+ * pwr_tStatus sts;
+ * pwr_tOid coid;
+ * pwr_tOName name;
+ *
+ * // Get all children to oid
+ * for ( sts = gdh_GetChild( oid, &coid); ODD(sts); sts = gdh_GetNextSibling( coid, &coid)) {
+ *   sts = gdh_ObjidToName( coid, name, sizeof(name), cdh_mName_volumeStrict);
+ *   if ( EVEN(sts)) throw co_error(sts);
+ *
+ *   cout << "Child: " << name << endl;
+ * }
+ * @endcode
  * @return pwr_tStatus
  */
 
@@ -1355,7 +1397,9 @@ gdh_GetChild (
 
 /**
  * @brief Get the object identity of the next sibling (i.e.
- * the objects have the parent in common). 
+ * the next object with the same parent). 
+ * @see Example in gdh_GetChild
+ * @see gdh_GetPreviousSibling
  * @return pwr_tStatus
  */
 pwr_tStatus
@@ -1397,6 +1441,7 @@ gdh_GetNextSibling (
 /** 
  * @brief Get the object identity of the previous sibling (i.e.
  * the previous object with the same parent).  
+ * @see gdh_GetNextSibling
  * @return pwr_tStatus
 */
 
@@ -1438,14 +1483,31 @@ gdh_GetPreviousSibling (
 }
 
 /** 
- * @brief Get the object identity for the first object not
- * having a parent, i.e. the top level of the
- * naming hierarchy.  
+ * @brief Get the first root object in the object tree.
+ *
+ * Returns the object identity for the first root object.<br>
+ * Other root objects are fetched with gdh_GetNextSibling.
+ * 
+ * Example
+ * @code
+ * pwr_tStatus sts;
+ * pwr_tOName name;
+ * pwr_tOid oid;
+ *
+ * // Get all top objects on this node
+ * for ( sts = gdh_GetRootList( &oid); ODD(sts); sts = gdh_GetNextSibling( oid, &oid)) {
+ *   sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_volumeStrict);
+ *   if ( EVEN(sts)) throw co_error(sts);
+ *
+ *   cout << "Top object: " << name << endl;
+ * }
+ * @endcode
+ * @see gdh_GetNextSibling
  * @return pwr_tStatus 
  */
 pwr_tStatus
 gdh_GetRootList (
-  pwr_tObjid		*oid /**< Receives the object identity. */
+  pwr_tObjid		*oid /**< Receives the object identity of the first root object. */
 )
 {
   pwr_tStatus		sts = GDH__SUCCESS;
@@ -1480,6 +1542,21 @@ gdh_GetRootList (
  * (of class $RootVolume, $SubVolume,
  * $DynamicVolume, $ClassVolume and $SystemVolume),
  * and shared volumes.  
+ * 
+ * Example
+ * @code
+ * pwr_tStatus sts;
+ * pwr_tOName name;
+ * pwr_tOid oid;
+ *
+ * // Get all objects of class cid
+ * for ( sts = gdh_GetClassList( cid); ODD(sts); sts = gdh_GetNextObject( oid, &oid)) {
+ *   sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_volumeStrict);
+ *   if ( EVEN(sts)) throw co_error(sts);
+ *
+ *   cout << "Object: " << name << endl;
+ * }
+ * @endcode
  * @return pwr_tStatus 
 */
 
@@ -1513,6 +1590,7 @@ gdh_GetClassList (
  * (of class $RootVolume, $SubVolume,
  * $DynamicVolume, $ClassVolume and $SystemVolume),
  * and in shared volumes.  
+ * @see Example in gdh_GetClassList
  * @return pwr_tStatus
  */
 
@@ -1549,6 +1627,22 @@ gdh_GetNextObject (
  * (of class $RootVolume, $SubVolume,
  * $DynamicVolume, $ClassVolume and $SystemVolume),
  * and shared volumes.  
+ *
+ * Example
+ * @code
+ * pwr_tStatus sts;
+ * pwr_tAttrRef aref;
+ * pwr_tAName name;
+ *
+ * // Get all objects and attribute objects for class cid
+ * for ( sts = gdh_GetClassListAttrRef( cid, &aref); ODD(sts); sts = gdh_GetNextAttrRef( cid, &aref, &aref)) {
+ *   sts = gdh_AttrrefToName( &aref, name, sizeof(name), cdh_mName_volumeStrict);
+ *   if ( EVEN(sts)) throw co_error(sts);
+ *
+ *   cout << "Object: " << name << endl;
+ * }
+ * @endcode
+ * @see gdh_GetNextAttrRef
  * @return pwr_tStatus 
 */
 
@@ -1579,6 +1673,7 @@ gdh_GetClassListAttrRef (
  * (of class $RootVolume, $SubVolume,
  * $DynamicVolume, $ClassVolume and $SystemVolume),
  * and in shared volumes.  
+ * @see Example in gdh_GetClassListAttrRef
  * @return pwr_tStatus
  */
 
@@ -1822,18 +1917,20 @@ gdh_GetPreviousObject (
 }
 
 /** 
- * Map the object and node database and start communications.
- *   
- * If the GDH user wants to make use of PAMS, then he should
- * call PAMS_DCL_PROCESS before calling gdh_Init, and supply
- * the actual PAMS process number as parameter to gdh_Init.
- * If the user does NOT use PAMS, a zero process_num must be
- * passed as argument. 
+ * @brief Initialize the process to the Proview runtime environment.
+ *
+ * Example
+ * @code
+ * pwr_tStatus sts;
+ *
+ * sts = gdh_Init( "my_appl");
+ * if ( EVEN(sts)) throw co_error(sts);
+ * @endcode
  */
 
 pwr_tStatus
 gdh_Init (
-  const char		*name /**< ZZZ */
+  const char		*name /**< Process name */
 )
 {
   pwr_tStatus		sts = GDH__SUCCESS;
@@ -1845,35 +1942,34 @@ gdh_Init (
   return sts;
 }
 
-/** 
- * @brief Fetch the meta data of an attribute, given its attrref or its name.
+/*
+ * Fetch the meta data of an attribute, given its attrref or its name.
  *
  * If meta data is wanted for a class use the class parameter.  
  * The output arguments can be NULL if they are not wanted.  
- * @return pwr_tStatus
  */
 pwr_tStatus
 gdh_MDAttribute (
-  pwr_tClassId		cid,		/**< Class. Use pwr_cNClassId if meta
+  pwr_tClassId		cid,		/* Class. Use pwr_cNClassId if meta
 					    data for an object and not for
 					    a class is wanted.  */
-  pwr_sAttrRef		*arp,		/**< Use NULL if attrname should be used
+  pwr_sAttrRef		*arp,		/* Use NULL if attrname should be used
 					    instead of the attribute reference.  */
-  char			*aname,		/**< String containing
+  char			*aname,		/* String containing
 					    object.attribute or
 					    object.attribute[index]
 					    If class data then name of attribute
 					    must start with a dot.  */
-  pwr_tTypeId		*tid,		/**< Address of an type id where the
+  pwr_tTypeId		*tid,		/* Address of an type id where the
 					    attribute type will be stored
 					    or NULL if not wanted  */
-  unsigned int		*size,		/**< Address of an integer where the
+  unsigned int		*size,		/* Address of an integer where the
 					    attribute size will be stored
 					    or NULL if not wanted.  */
-  unsigned int		*offs,		/**< Address of an integer where the
+  unsigned int		*offs,		/* Address of an integer where the
 					    attribute offset will be stored
 					    or NULL if not wanted.  */
-  unsigned int		*elem		/**< Address of an integer where the
+  unsigned int		*elem		/* Address of an integer where the
 					    number of elements will be stored
 					    or NULL if not wanted.  */
 )
@@ -1950,6 +2046,15 @@ gdh_MoveObject (
 
 /** 
  * @brief Get the object identity of an object with name 'name'.  
+ *
+ * Example
+ * @code
+ *   pwr_tOid oid;
+ *   pwr_tOName name = "H1-H2-Valve";
+ *
+ *   sts = gdh_NameToObjid( name, &oid);
+ *   if ( EVEN(sts)) throw co_error(sts);
+ * @endcode
  * @return pwr_tStatus
  */
 pwr_tStatus
@@ -2019,6 +2124,16 @@ gdh_NameToPointer (
 
 /** 
  *@brief Check if the Nethandler has started.  
+ *
+ * Returns GDH__SUCCESS if the nethandler is running, 
+ * else GDH__NONETHANDLER.
+ *
+ * Example
+ * @code
+ *   // Wait for nethandler to start
+ *   while ( EVEN( gdh_NethandlerRunning()))
+ *     sleep(5);
+ * @endcode
  *@return pwr_tStatus
  */
 
@@ -2042,6 +2157,16 @@ gdh_NethandlerRunning (
 
 /** 
  * @brief Converts from name string to attribute reference. 
+ *
+ * Example
+ * @code
+ * pwr_tStatus sts;
+ * pwr_tAttrRef aref;
+ * pwr_tAName name = "H1-H2-Temperature.ActualValue";
+ *
+ * sts = gdh_NameToAttrref( pwr_cNOid, name, &aref);
+ * if ( EVEN(sts)) throw co_error(sts);
+ * @endcode
  * @return pwr_tStatus
  */
 pwr_tStatus
@@ -2085,6 +2210,14 @@ gdh_NameToAttrref (
 /** 
  * @brief Get the name of an object identified by its object identity.
  * 
+ * Example
+ * @code
+ * pwr_tStatus sts;
+ * pwr_tOName name;
+ *
+ * sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_volumeStrict);
+ * if ( EVEN(sts)) throw co_error(sts);
+ * @endcode
  * The caller is responsible for supplying a sufficient buffer. 
  * @return pwr_tStatus
  */ 
@@ -2093,7 +2226,7 @@ gdh_ObjidToName (
   pwr_tObjid		oid,		/**<  Object id of an object.  */
   char			*namebuf,	/**<  A buffer where the name can be put.  */
   pwr_tUInt32		size,		/**<  Size of namebuf.  */
-  pwr_tBitMask		nametype        /**< ZZZ */
+  pwr_tBitMask		nametype        /**<  Mask of type cdh_mName.  */
 )
 {
   pwr_tStatus		sts = GDH__SUCCESS;
@@ -2177,6 +2310,10 @@ gdh_ObjidToPointer (
   return sts;
 }
 
+/**
+ * @brief Get a pointer to a mount object.
+ * @return pwr_tStatus
+ */
 pwr_tStatus
 gdh_MountObjidToPointer (
   pwr_tObjid		oid,   /**< The object identity. */
@@ -2278,6 +2415,16 @@ gdh_RenameObject (
  * The caller is responsible for the information in the buffer.
  * If the buffer is shorter then what is required,
  * then a partial update takes place.  
+ *
+ * Example
+ * @code
+ * pwr_tStatus sts;
+ * pwr_tOName name = "H1-H2-Temperature.ActualValue";
+ * pwr_tFloat32 value = 1.23;
+ *
+ * sts = gdh_SetObjectInfo( name, &value, sizeof(value));
+ * if ( EVEN(sts)) throw co_error(sts);
+ * @endcode
  * @return pwr_tStatus 
  */
 
@@ -2406,6 +2553,15 @@ gdh_SetObjectInfo (
  * The routine stalls until the operation is performed. The caller
  * is responsible for the information in the buffer. If the buffer
  * is shorter then what is required, then a partial update takes place.  
+ *
+ * Example
+ * @code
+ * pwr_tStatus sts;
+ * pwr_tFloat32 value = 1.23;
+ *
+ * sts = gdh_SetObjectInfoAttrref( &aref, &value, sizeof(value));
+ * if ( EVEN(sts)) throw co_error(sts);
+ * @endcode
  * @return pwr_tStatus
  */
 
@@ -2593,7 +2749,7 @@ gdh_SubRefObjectInfoList (
 /** 
  * @brief This routine returns a subid to the information that is
  * denoted by 'aref'. The name can be either an object or an 
- * object parameter.
+ * object attribute.
  *
  * Since this routine operates on a single data item, it is
  * pretty slow. For faster setup of many subscriptions in one
@@ -2645,8 +2801,9 @@ gdh_SubRefObjectInfoName (
 }
 
 /**
- * @brief Terminates subscriptions. All invalid pwr_tSubids remain in the
- * list. The valid pwr_tSubids are zeroed out!  
+ * @brief Terminates a list of subscriptions. 
+ *
+ * All invalid pwr_tSubids remain in the list. The valid pwr_tSubids are zeroed out!
  *
  * @return pwr_tStatus
  */
@@ -2890,7 +3047,7 @@ gdh_SubAssociateBuffer (
       cp->usersize = buffersize;
       *buffer = pool_Address(NULL, gdbroot->rtdb, cp->userdata);
     } else {
-      if (cp->usersize >= buffersize) {	/** @todo !!! Try to understand this code!, LW?  
+      if (cp->usersize >= buffersize) {	/** todo !!! Try to understand this code!, LW?  
                                            I think it shall be usersize instead of userdata, ML.
                                            Please verify.*/ 
 	*buffer = pool_Address(NULL, gdbroot->rtdb, cp->userdata);
@@ -3053,7 +3210,21 @@ gdh_RefObjectInfoList (
  * subscription update. If you need to write data on another node use gdh_SetObjectInfo.
  * If you want to issue several requests at the same time use gdh_RefObjectInfoList, 
  * this is much more efficient than repeated calls to gdh_RefObjectInfo. 
- * @sa Examples
+ * @see gdh_UnrefObjectinfo
+ *
+ * Example
+ * @code
+ * pwr_tStatus sts;
+ * pwr_tOName name = "H1-H2-Temperature.ActualValue";
+ * pwr_tSubid subid;
+ * pwr_tFloat32 *valuep;
+ * 
+ * sts = RefObjectInfo( name, &valuep, &subid, sizeof(*valuep));
+ * if ( EVEN(sts)) throw co_error(sts);
+ * ...
+ * sts = gdh_UnrefObjectInfo( subid);
+ * @endcode
+ * @see gdh_UnrefObjectInfo();
  * @return pwr_tStatus
  */
 pwr_tStatus
@@ -3088,12 +3259,13 @@ gdh_RefObjectInfo (
  * subscription identity.
  *
  * The pointer returned by for example gdh_RefObjectInfo 
- * is invalid after this call.  
+ * is invalid after this call.
+ *
  * N.B.! The user is responsible for removing all subscriptions 
  * before terminating a process, the system will not do it for you. 
  * This call will result in either a gdh_DLUnrefObjectInfo or a 
  * gdh_SubUnrefObjectInfo.
- * @sa Examples
+ * @see gdh_RefObjectInfo, gdh_DLUnrefObjectInfo, gdh_SubUnrefObjectInfo
  * @return pwr_tStatus
  */ 
 pwr_tStatus
@@ -3118,10 +3290,11 @@ gdh_UnrefObjectInfo (
 }
 
 /**
- *@brief Terminates all subscriptions set up by this user (job/process).
+ *@brief Terminates all subscriptions set up by this process.
  * 
  * This call will result in either a gdh_DLUnrefObjectInfoAll or a 
  * gdh_SubUnrefObjectInfoAll. 
+ * @see gdh_DLUnrefObjectInfoAll, gdhSubUnrefObjectInfoAll
  * @return pwr_tStatus
  */
 pwr_tStatus
@@ -3144,8 +3317,8 @@ gdh_UnrefObjectInfoAll ()
 
 pwr_tStatus
 gdh_SetAlarmLevel (
-  pwr_tObjid		oid,           /**< ZZZ */
-  pwr_tUInt32		alarmlevel     /**< ZZZ */
+  pwr_tObjid		oid,           /**< Object identity for the object */
+  pwr_tUInt32		alarmlevel     /**< New alarm level */
 ) 
 {
   pwr_tStatus		sts = GDH__SUCCESS;
@@ -3174,8 +3347,8 @@ gdh_SetAlarmLevel (
  */
 pwr_tStatus
 gdh_SetAlarmBlockLevel (
-  pwr_tObjid		oid,             /**< ZZZ */
-  pwr_tUInt32		blocklevel       /**< ZZZ */
+  pwr_tObjid		oid,             /**< Object identity for the object */
+  pwr_tUInt32		blocklevel       /**< New block level */
 )
 {
   pwr_tStatus		sts = GDH__SUCCESS;
@@ -3307,9 +3480,31 @@ gdh_SetCache (
   
 }
 
+/**
+ * @brief Get the first volume.
+ *
+ * Other volumes can be fetched with gdh_GetNextVolume.
+ *
+ * Example
+ * @code
+ * pwr_tStatus sts;
+ * pwr_tVid vid;
+ * pwr_tObjName vname;
+ * 
+ * // Get all volumes
+ * for ( sts = gdh_GetVolumeList( &vid); ODD(sts); sts = gdh_GetNextVolume( vid, &vid)) {
+ *   sts = gdh_VolumeIdToName( vid, vname, sizeof(vname));
+ *   if (EVEN(sts)) throw co_error(sts);
+ *
+ *   cout << "Volume: " << vname << endl;
+ * }
+ * @endcode
+ * @see gdh_GetNextVolume
+ * @return pwr_tStatus
+ */
 pwr_tStatus
 gdh_GetVolumeList( 
-  pwr_tVid *vid
+		  pwr_tVid *vid		/**< Recieves the volume identity for the first volume. */
 )
 {
   pool_sQlink		*vl;
@@ -3327,6 +3522,13 @@ gdh_GetVolumeList(
   return GDH__SUCCESS;
 }
 
+/**
+ * @brief Get the next volume in the volume list.
+ *
+ * The first volume can be fetched with gdh_GetVolumeList.
+ * @see Example in gdh_GetVolumeList 
+ * @return pwr_tStatus
+ */
 pwr_tStatus
 gdh_GetNextVolume( 
   pwr_tVid pvid,
@@ -3364,11 +3566,16 @@ gdh_GetNextVolume(
   return rsts;
 }
 
+/**
+ * @brief Get the name for a volume denoted by volume identity.
+ * @see Example in gdh_GetVolumeList
+ * @return pwr_tStatus
+ */
 pwr_tStatus
 gdh_VolumeIdToName(
-  pwr_tVid vid,
-  char *name,
-  int size
+		   pwr_tVid vid,		/**< Volume identity */
+		   char *name,			/**< Name buffer, allocated by the user */
+		   int size			/**< Size of name buffer */
 )
 {
   gdb_sVolume *vp;
@@ -3389,10 +3596,13 @@ gdh_VolumeIdToName(
   return rsts;
 }
 
+/**
+ * @brief Get info for a volume.
+ */
 pwr_tStatus
 gdh_GetVolumeInfo(
-  pwr_tVid vid,
-  gdh_sVolumeInfo *info
+		  pwr_tVid vid,			/**< Volume identity */
+		  gdh_sVolumeInfo *info		/**< Pointer to info area, supplied by the user */
 )
 {
   gdb_sVolume *vp;
@@ -3624,11 +3834,27 @@ gdh_GetAttrRefAdef(
   return rsts;
 }
 
+/**
+ * @brief Get the superclass for a class.
+ *
+ * If the class for a remote object is examined, the class might not be loded on the local,
+ * and in this case the object itself has to supplied in the oid argument. For local classes,
+ * this argument can be set to pwr_cNOid.
+ *
+ * Example
+ * @code
+ * pwr_tStatus sts;
+ * pwr_tCid supercid;
+ *
+ * sts = gdh_GetSuperClass( cid, &supercid, pwr_cNOid);
+ * @endcode
+ * @return pwr_tStatus
+ */
 pwr_tStatus 
 gdh_GetSuperClass( 
-  pwr_tCid    cid,
-  pwr_tCid    *supercid, 
-  pwr_tObjid  oid
+		  pwr_tCid    cid,		/**< Class identity. */
+		  pwr_tCid    *supercid, 	/**< Received class identity for the super class. */
+		  pwr_tObjid  oid		/**< Object id for remote object, normally pwr_cNOid */
 )
 {
   gdb_sClass  *cp;
@@ -3675,8 +3901,22 @@ gdh_GetSuperClass(
   return sts;
 }
 
+/**
+ * @brief Get definition information for an enumeration type. 
+ *
+ * Returns a data stucture with the defined enumeration values and
+ * corresponding texts for an enumeration type. The datastructure is
+ * of type gdh_sValueDef, with an array of pointers to the values
+ * definition objects of the enumeration values.
+ *
+ * The data structure should be freed with a free() call.
+ */
 pwr_tStatus
-gdh_GetEnumValueDef( pwr_tTid tid, gdh_sValueDef **vd, int *rows)
+gdh_GetEnumValueDef( 
+		    pwr_tTid tid,  	/**< Enumeration type id */
+		    gdh_sValueDef **vd, /**< Recieves a pointer to the data structure. */
+		    int *rows		/**< Number defined enum values */
+)
 {
   gdb_sObject *top;
   gdb_sObject *vop;
@@ -3743,8 +3983,22 @@ gdh_GetEnumValueDef( pwr_tTid tid, gdh_sValueDef **vd, int *rows)
   return sts;
 }
 
+/**
+ * @brief Get definition information for a mask type. 
+ *
+ * Returns a data stucture with the defined bit values and
+ * corresponding texts for a mask type. The datastructure is
+ * of type gdh_sBitDef, which contains an array with
+ * ponters to the but definition objects for the bits.
+ *
+ * The data structure should be freed with a free() call.
+ */
 pwr_tStatus
-gdh_GetMaskBitDef( pwr_tTid tid, gdh_sBitDef **bd, int *rows)
+gdh_GetMaskBitDef( 
+		  pwr_tTid tid, 	/**< Type identity for mask. */
+		  gdh_sBitDef **bd, 	/**< Receives a pointer to the data structure. */
+		  int *rows		/**< Number of defined bit values. */
+)
 {
   gdb_sObject *top;
   gdb_sObject *bop;
@@ -3810,8 +4064,14 @@ gdh_GetMaskBitDef( pwr_tTid tid, gdh_sBitDef **bd, int *rows)
   return sts;
 }
 
-pwr_tStatus gdh_ArefDisabled( pwr_sAttrRef *arp, 
-			      pwr_tDisableAttr *disabled)
+/**
+ * @brief Check if an attribute is disabled.
+ * @return pwr_tStatus
+ */
+pwr_tStatus gdh_ArefDisabled( 
+			     pwr_sAttrRef *arp, 	/**< Attribute reference */
+			     pwr_tDisableAttr *disabled	/**< Recives 1 if disabled else 0 */
+)
 {
   pwr_tStatus sts;
   pwr_sAttrRef		daref;
@@ -3920,7 +4180,19 @@ static pwr_tStatus gdh_FWriteObjectR( FILE *fp, char *ap, char *aname, pwr_tAttr
   return GDH__SUCCESS;
 }
 
-pwr_tStatus gdh_FWriteObject( char *filename, pwr_tAttrRef *arp)
+/**
+ * @brief Write the content of an object to textfile.
+ *
+ * The file can later be read and the attribute values inserted in the
+ * object or in another object of the same class with the function
+ * gdh_FReadObject.
+ * @see gdh_FReadObject
+ * @return pwr_tStatus
+ */
+pwr_tStatus gdh_FWriteObject( 
+			     char *filename, 	/**< File specification */
+			     pwr_tAttrRef *arp 	/**< Attribute reference to object */
+)
 {
   pwr_tFileName fname;
   FILE *fp;
@@ -3959,7 +4231,21 @@ pwr_tStatus gdh_FWriteObject( char *filename, pwr_tAttrRef *arp)
   return sts;
 }
 
-pwr_tStatus gdh_FReadObject( char *filename, pwr_tAttrRef *arp)
+/**
+ * @brief Read a textfile into an object.
+ *
+ * Reads a textfile, created by gdh_FWriteObject, and inserts the values
+ * into the specified object.
+ *
+ * The file has to be generated from the same object or from an object of the
+ * same class.
+ * @see gdh_FWriteObject
+ * @return pwr_tStatus
+ */
+pwr_tStatus gdh_FReadObject( 
+			    char *filename, 	/**< File specification */
+			    pwr_tAttrRef *arp 	/**< Attribute reference for object */
+)
 {
   pwr_tFileName fname;
   FILE *fp;
@@ -4040,11 +4326,18 @@ pwr_tStatus gdh_FReadObject( char *filename, pwr_tAttrRef *arp)
   return sts;
 }
 
-//
-// Convert attribute value to string
-//
-pwr_tStatus gdh_AttrValueToString( pwr_eType type_id, pwr_tTid tid, void *value_ptr, 
-				   char *str, int size, int *len, char *format)
+/**
+ * @brief Convert a string to attribute value.
+ */
+pwr_tStatus gdh_AttrValueToString( 
+				  pwr_eType type_id, 	/**< Attribute type */
+				  pwr_tTid tid, 	/**< Attribute type identity */
+				  void *value_ptr, 	/**< Pointer to attribute value */
+				  char *str, 		/**< String buffer */
+				  int size, 		/**< Size of string buffer */
+				  int *len, 		/**< Receives the string length */
+				  char *format		/**< Format for conversion in printf syntax */
+)
 {
   int			sts;
 
@@ -4334,11 +4627,16 @@ pwr_tStatus gdh_AttrValueToString( pwr_eType type_id, pwr_tTid tid, void *value_
   return GDH__SUCCESS;
 }
 
-//
-// Convert attribute string to value
-//
-pwr_tStatus gdh_AttrStringToValue( int type_id, char *value_str, 
-				   void *buffer_ptr, int buff_size, int attr_size)
+/**
+ * @brief Convert an attribute string to value
+ */
+pwr_tStatus gdh_AttrStringToValue( 
+				  int type_id, 		/**< Attribute type */
+				  char *value_str, 	/**< String value */
+				  void *buffer_ptr, 	/**< Value buffer */
+				  int buff_size, 	/**< Size of value buffer */
+				  int attr_size		/**< Attribute size, used for String and Text attributes */
+)
 {
   int		sts;
 
@@ -4583,7 +4881,15 @@ pwr_tStatus gdh_SetObjectReadOnly( pwr_tOid oid)
   return sts;
 }
 
-pwr_tStatus gdh_GetSecurityInfo( pwr_sSecurity *security)
+/**
+ * @brief Get security information
+ * 
+ * Returns the content of the $Securiy object of the current node.
+ * @return pwr_tStatus
+ */
+pwr_tStatus gdh_GetSecurityInfo( 
+				pwr_sSecurity *security /**< Pointer to buffer supplied by the user */
+)
 {
   pwr_tStatus sts;
   pwr_tAttrRef aref;
