@@ -139,7 +139,7 @@ class FlowDrawXLib : public FlowDraw {
 		  flow_eDrawType gc_type, int idx, int line, double size);
   int text_inverse( FlowCtx *ctx, int x, int y, char *text, int len,
 		    flow_eDrawType gc_type, int idx, int line, double size)
-    { text_erase( ctx, x, y, text, len, gc_type, idx, line, size);}
+    { return text_erase( ctx, x, y, text, len, gc_type, idx, line, size);}
   int nav_text( FlowCtx *ctx, int x, int y, char *text, int len,
 		flow_eDrawType gc_type, int idx, int highlight, int line, double size);
   int nav_text_erase( FlowCtx *ctx, int x, int y, char *text, int len,
@@ -168,8 +168,8 @@ class FlowDrawXLib : public FlowDraw {
   void set_cursor( FlowCtx *ctx, draw_eCursor cursor);
   void set_nav_cursor( FlowCtx *ctx, draw_eCursor cursor);
   int get_text_extent( FlowCtx *ctx, const char *text, int len,
-		       flow_eDrawType gc_type, int idx, double size,
-		       int *width, int *height);
+		       flow_eDrawType gc_type, int idx,
+		       int *width, int *height, double size);
   void copy_area( FlowCtx *ctx, int x, int y);
   void clear_area( FlowCtx *ctx, int ll_x, int ur_x, int ll_y, int ur_y);
   int create_input( FlowCtx *ctx, int x, int y, char *text, int len,
