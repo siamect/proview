@@ -10156,7 +10156,7 @@ int utl_sortchildren (
 	  while( child_listptr)
 	  {
 	    next = child_listptr->next;
-	    free((char *) child_list);
+	    free((char *) child_listptr);
 	    child_listptr = next;
 	  }
 
