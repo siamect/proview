@@ -460,7 +460,7 @@ menu Components
     subgraph    FlowSensor 	pwr_exe:bcomp_flowsensor.pwsg 		16
     subgraph    FcPPO3MotorAggr pwr_exe:bcomp_basefcppo3motoraggr.pwsg 	23
     subgraph	FcPPO3FanAggr   pwr_exe:bcomp_basefcppo3fanaggr.pwsg    71
-    subgraph	FcPPO3umpAggr   pwr_exe:bcomp_basefcppo3pumpaggr.pwsg   72
+    subgraph	FcPPO3PumpAggr   pwr_exe:bcomp_basefcppo3pumpaggr.pwsg   72
     subgraph    FcPPO5MotorAggr pwr_exe:bcomp_basefcppo5motoraggr.pwsg 	23
     subgraph	FcPPO5FanAggr   pwr_exe:bcomp_basefcppo5fanaggr.pwsg    71
     subgraph	FcPPO5umpAggr   pwr_exe:bcomp_basefcppo5pumpaggr.pwsg   72

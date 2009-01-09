@@ -53,16 +53,7 @@
 
 #define PB_UDATA_DIAG 		1
 
-typedef struct {
-  int             hServiceReadDevice;               // Handle for Service device
-  int             hServiceWriteDevice;              // Handle for Service device
-  int             hDpDataDevice;                    // Handle for DP-Data device
-  int             hDpsInputDataDevice;              // Handle for DP-Slave Input-Data device
-  int             hDpsOutputDataDevice;             // Handle for DP-Slave Output-Data device
-  unsigned char   CurrentBoardNumber;
-  int             slave_diag_requested;
-  int             hDpsBoardDevice;                  // Handle for DP-Slave Output-Data device
-} io_sAgentLocal;
+/* io_sAgentLocal now lives in the respective agent modules.  */
 
 typedef struct {
   int initialized;
