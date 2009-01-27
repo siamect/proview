@@ -62,7 +62,7 @@ void MyAppl::init( qcom_sQid *qid)
  }
 
  // Create a queue to receive stop and restart events
- if (!qcom_Init(&amp;sts, 0, "rs_appl")) {
+ if (!qcom_Init(&sts, 0, "rs_appl")) {
    errh_Fatal("qcom_Init, %m", sts); 
    errh_SetStatus( PWR__APPLTERM);
    exit(sts);
@@ -70,14 +70,14 @@ void MyAppl::init( qcom_sQid *qid)
 
  qAttr.type = qcom_eQtype_private;
  qAttr.quota = 100;
- if (!qcom_CreateQ(&amp;sts, qid, &amp;qAttr, "events")) {
+ if (!qcom_CreateQ(&sts, qid, &qAttr, "events")) {
    errh_Fatal("qcom_CreateQ, %m", sts);
    errh_SetStatus( PWR__APPLTERM);
    exit(sts);
  } 
 
  qini = qcom_cQini;
- if (!qcom_Bind(&amp;sts, qid, &amp;qini)) {
+ if (!qcom_Bind(&sts, qid, &qini)) {
    errh_Fatal("qcom_Bind(Qini), %m", sts);
    errh_SetStatus( PWR__APPLTERM);
    exit(-1);
@@ -90,7 +90,7 @@ void MyAppl::open()
  pwr_tStatus sts;
 
  // Get configuration object
- sts = gdh_NameToObjid( "Noder-Node-MyAppl", &amp;oid);
+ sts = gdh_NameToObjid( "Noder-Node-MyAppl", &oid);
  if ( EVEN(sts)) throw co_error(sts);
 
  aproc_RegisterObject( oid);
@@ -121,12 +121,12 @@ int main()
  int swap = 0;
  bool first_scan = true;
 
- appl.init( &amp;qid);
+ appl.init( &qid);
 
  try {
    appl.open();
  }
- catch ( co_error&amp; e) {
+ catch ( co_error& e) {
    errh_Error( (char *)e.what().c_str());
    errh_Fatal( "rs_appl aborting");
    errh_SetStatus( PWR__APPLTERM);
@@ -144,21 +144,21 @@ int main()
 
    get.maxSize = sizeof(mp);
    get.data = mp;
-   qcom_Get( &amp;sts, &amp;qid, &amp;get, tmo);
+   qcom_Get( &sts, &qid, &get, tmo);
    if (sts == QCOM__TMO || sts == QCOM__QEMPTY) {
      if ( !swap)
-appl.scan();
+       appl.scan();
    } 
    else {
      ini_mEvent  new_event;
      qcom_sEvent *ep = (qcom_sEvent*) get.data;
 
-     new_event.m  = ep-&gt;mask;
-     if (new_event.b.oldPlcStop &amp;&amp; !swap) {
+     new_event.m  = ep->mask;
+     if (new_event.b.oldPlcStop && !swap) {
        errh_SetStatus( PWR__APPLRESTART);
        swap = 1;
        appl.close();
-     } else if (new_event.b.swapDone &amp;&amp; swap) {
+     } else if (new_event.b.swapDone && swap) {
        swap = 0;
        appl.open();
        errh_SetStatus( PWR__ARUN);

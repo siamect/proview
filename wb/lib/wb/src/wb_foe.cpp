@@ -71,12 +71,7 @@ void WFoe::activate_save()
   vldh_t_wind	wind;
   vldh_t_node	parent_node;
   int		sts;
-  int 		size;
-  pwr_tOName 	name;
   vldh_t_plc	plc;
-  pwr_tFileName 	fname;
-  char 		classname[80];
-  pwr_tObjid 	classdef;
 
   if ( msg_label_id != 0 ) message( ""); 
 
@@ -98,28 +93,8 @@ void WFoe::activate_save()
     }
   }
   clock_cursor();
-  if ( !classeditor) {
-    sts = gre->set_trace_attributes( 0);
-    sts = gre->save( 0);
-    sts = gre->undelete_reset();
-  }
-  else {
-    sts = ldh_ObjidToName( wind->hw.ldhses, plc->lp.oid,
-			   ldh_eName_Hierarchy, name, sizeof( name), &size); 
-    if ( EVEN(sts)) return;
-    
-    sts = ldh_GetParent( wind->hw.ldhses, plc->lp.oid, &classdef);
-    if ( EVEN(sts)) return;
-
-    sts = ldh_ObjidToName( wind->hw.ldhses, classdef,
-			   ldh_eName_Object, classname, sizeof( classname), &size); 
-    if ( EVEN(sts)) return;
-    cdh_ToLower( classname, classname);
-    sprintf( fname, "$pwrp_load/pwr_%s.flw", classname);
-    sts = gre->set_trace_attributes( name);
-    sts = gre->save( fname);
-    sts = gre->undelete_reset();	  
-  }
+  sts = create_flow();
+  sts = gre->undelete_reset();	  
   disable_ldh_cb();
   sts = vldh_wind_save( gre->wind);
   enable_ldh_cb();
@@ -1399,12 +1374,11 @@ void WFoe::exit_save( WFoe *foe)
     }
   }
   foe->clock_cursor();
+  sts = foe->create_flow();
   foe->disable_ldh_cb();
   sts = vldh_wind_save( foe->gre->wind);
   foe->error_msg( sts);
 	
-  foe->gre->save( 0);
-
   foe->normal_cursor();
   if ( sts == VLDH__PLCNOTSAVED ) {
     foe->msgbox( "Save the plcprogram in the hierarchy editor first");
@@ -3804,7 +3778,7 @@ void WFoe::edit_exit_save( WFoe *foe)
     return;
   }
 
-  foe->gre->save( 0);
+  foe->create_flow();
 	
   /* Change the funktion */
   switch( foe->wanted_function) {
@@ -3888,8 +3862,7 @@ int WFoe::redraw_and_save()
   enable_ldh_cb();
   if ( EVEN(sts)) return sts;
 
-  sts = gre->set_trace_attributes( 0);
-  sts = gre->save( 0);
+  sts = create_flow();
   if ( EVEN(sts)) return sts;
 
   return FOE__SUCCESS;

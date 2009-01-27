@@ -1160,6 +1160,9 @@ static char *font_string( flow_eDrawType gc_type, double size)
   default:
     sprintf( str, "%s %f", FONTSTR, FONT_SCALE * size);
   }
+  for ( char *s = str; *s; s++)
+    if ( *s == ',')
+      *s = '.';
   return str;
 }
 

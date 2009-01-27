@@ -1,5 +1,5 @@
 Package: pwr46
-Version: 4.6.0-4
+Version: 4.6.0-5
 Section: base
 Priority: optional
 Architecture: i386
@@ -15,3 +15,5 @@ Description: Proview development and runtime environment package
   - Sev: error handling improved.
  4.6.0-4
   - Metric fonts in Ge and Xtt.
+ 4.6.0-5
+  - Wb, Xtt: Problem with insensitive radiobuttons fixed.

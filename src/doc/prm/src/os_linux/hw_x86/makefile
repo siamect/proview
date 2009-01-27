@@ -41,7 +41,7 @@ $(clean_html) : clean_%.html : %.html
 $(doc_dir)/prm/index.html : ../../doxygen.dx
 	@ echo "doxygen documentation $(source) $(target)"
 	@ doxygen
-	@ if [ -e latex ]; then \
+	@ if [ "`eval which pdflatex`" != "" ]; then \
 	    ./repl.sh latex/*.tex; \
 	    cd latex; \
 	    make pdf; \
@@ -49,10 +49,10 @@ $(doc_dir)/prm/index.html : ../../doxygen.dx
 	    cp classra__appl.pdf $(pwr_doc)/en_us/; \
 	    cp classrt__appl.pdf $(pwr_doc)/en_us/; \
 	    cd ..; \
-	    rm -r -f latex; \
 	    rm -f repl.sed; \
 	    rm -f repl.tmp; \
-	  fi
+	  fi; \
+	  rm -r -f latex;
 
 
 

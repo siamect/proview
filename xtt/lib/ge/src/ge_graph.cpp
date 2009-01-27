@@ -511,7 +511,7 @@ void Graph::open( char *filename)
   grow->grow_setup();
 
   // Set temporary language translation on class graphs
-  if ( strcmp( object_name, "") != 0)
+  // if ( strcmp( object_name, "") != 0)
     grow_EnableEvent( grow->ctx, glow_eEvent_Translate, 
 		      glow_eEventType_CallBack, graph_grow_cb);
 

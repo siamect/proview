@@ -20,6 +20,10 @@
 #ifndef	rt_nmps_lock_h
 #define rt_nmps_lock_h
 
+#if defined __cplusplus
+extern "C" {
+#endif
+
 #include "pwr.h"
 #include "rt_sect.h"
 
@@ -33,4 +37,7 @@ void nmps_create_lock( pwr_tStatus *sts);
 void nmps_delete_lock( pwr_tStatus *sts);
 void nmps_unlink_lock( pwr_tStatus *sts);
 
+#if defined __cplusplus
+}
+#endif
 #endif
