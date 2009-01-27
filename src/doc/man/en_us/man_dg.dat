@@ -34,7 +34,7 @@ co
 
 
 <hr>
-2008-10-21
+2009-01-27
 Version 4.6.0	
 <hr>
 </topic>
@@ -105,7 +105,6 @@ Designer's Guide
 Overview <link> design_overview
 Database structure <link> database_structure
 A case study <link> case_study
-Communication <link> communication
 Administration <link> administrator
 Navigating the project <link> project_structure
 Configure the directoryvolume <link> configure_directoryvolume
@@ -113,6 +112,7 @@ Configure the rootvolume <link> configure_rootvolume
 Plc programming <link>plc_programming
 Components and Aggregates <link>dg_components
 Call functions from the plc program <link>dg_plc_functions
+Communication <link> communication
 Application programming <link>dg_application
 Creating Process Graphics  <link> ge_man
 Running and Testing a Proview System <link> conf_test
@@ -284,7 +284,6 @@ Object Name <link> object_name
 Mounting <link> mounting
 Object Identity <link> object_identity
 <option> printenable
-
 </topic>
 
 <topic> object
@@ -475,7 +474,7 @@ way, that the objects have the same pathname in both volumes.
 </topic>
 
 <topic>object_identity
-Objekt Identity
+Object Identity
 An object has an identity that is unic. It consits of the volume identity, and an object index
 that is unic within the volume. An object identity is written for example "_O0.3.4.23:34" where
 0.3.4.23 is the volume identity, and 34 the object index. The prefix _O states that it is an
@@ -515,7 +514,7 @@ The traffic lights should be able to operate in two different modes:
   - Flash: The traffic lights are flashing yellow.
 
 <image> dg_fig1.gif
-<b>Traffic lights in an Intersecion
+<b>Traffic lights in an Intersection
 
 The operating mode of the traffic lights is decided by an operator at via operator station, or 
 by a maintenance technician, who influences a switch. The maintenance technician can change 
@@ -640,8 +639,9 @@ The plant is structured hierarchically. Examples of levels in the plant can be p
 
 
 <h2>The Process Station
-Den största delen av konfigureringen görs i processtationens volym, VolTrafficCross1. Det
-är ju här som all kort, kanaler, signaler och PLC program ska konfigureras.
+The major part of the configuration is done in the volume of the process station, VolTrafficCross1.
+This because it's here all physical hardware is configured (the i/o), all the signals and the 
+PLC-programs that work with the signals.
 
 The plant is structured hierarchically. Examples of levels in the plant can be plant, process, 
 process part, component, and signal. These are the logical signals represented by signal 
@@ -814,7 +814,7 @@ The program for the normal operating mode is based on a traffic light following 
 <b>   <t>North-South <t>West-East
 1     <t>Red         <t>Red
 2     <t>Red, Yellow <t>Red
-3     <t>Grön        <t>Red
+3     <t>Green       <t>Red
 4     <t>Yellow, Green <t>Red
 5     <t>Red         <t>Red
 6     <t>Red         <t>Red, Yellow
@@ -871,405 +871,6 @@ graphics is described in chapter 5 Creating Plant Graphics .
 <image>dg_fig21.gif
 <b>The Plant Graphics for the Intersection
 </topic>
-</chapter>
-
-<chapter>
-<topic>communication
-Communication
-
-The Remote concept in Proview is a way to standardize the methods of communication with other
-systems. It describes a number of transport programs and Proview objects used to implement
-a variety of different communication protocols and to handle incoming and outgoing messages.
-Remote is designed to use different transport protocols such as TCP/IP or BEA Message Queue,
-and different hardware media such as ethernet or serial lines.
-The main purpose of Remote is to provide the programmer with an interface to communication.
-
-<option> printdisable
-Introduction <link> comm_introduction
-Protocols <link> protocols
-An example <link> an_example
-<option> printenable
-</topic>
-
-<headerlevel>
-<topic>comm_introduction
-Introduction
-There are some different classes/components/objects that are used to handle the communication.
-
-<h2>RemoteConfig
-Required to have any remote communication at all. Without this no remotehandler is started.
-Place one object in the node-hierarchy.
-
-<h2>RemNode
-Defines a link of some type to a remote node over a specific protocol. 
-Several different protocols are supported and there is one specific class for each protocol.
-The supported protocols are:
-
-TCP/IP
-UDP/IP
-MQ (BEA Message Queue)
-ALCM (an old Digital protocol, supported for historical reasons)
-Serial
-Modbus/RTU Serial
-3964R (serial protocol from Siemens)
-
-Configuration of each protocol is described further down.
-Place RemNode-objects below the RemoteConfig-object.
-
-<h2>RemTrans
-Generic class that defines a specific message to or from a specific remote node on a
-specific protocol. Should be placed below the RemNode-object. The size of a message to be sent 
-is specified in the RemTrans-object. The data however to be sent resides in a buffer that is
-configured as a child to the remtrans-object. When a message is to be sent data of the length
-specified in the remtrans-object is fetched from the buffer. Sometimes however a header of some
-length is added to the message.
-
-<h2>Buffer
-Defining the send- and/or receive data area for each message. Exists in different sizes.
-Should be placed below a RemTrans-object. The buffer must be of at least the size of the
-message that will be received or sent. If size is not enough message will be cut in the end.
-
-<h2>RemTransSend 
-Function object used in a plc-program for sending messages.
-
-<h2>RemTransRcv
-Function object used in a plc-program for receiving messages.
-</topic>
-
-<topic> protocols
-Protocols
-Which protocol to use is defined by the type of Remnode-object you configure. For each configured 
-Remnode-object a transport job is started. That is, a program to handle the specific protocol is
-started as a process. This process will handle all RemTrans-object that is configured as children
-to the Remnode-object. 
-
-<option> printdisable
-UDP <link> udp_ip
-TCP <link> tcp_ip
-BEA Message Queue <link> bea_mq
-Serial <link> serial
-3964-R <link> 3964r
-<option> printenable
-</topic>
-
-<headerlevel>
-<topic> udp_ip
-UDP
-UDP uses socket communication without connection (datagram), compared to TCP wich is a connected protocol.
-In the RemnodeUDP-object you specify the name and ip-address of the node to communicate with
-aswell as the port-numbers for both ends. The local port-number need to be unique on your node
-not to conflict with other communications.
-
-As default all messages is sent with a special header that is not included in the user data buffer.
-This header is added at the beginning of the message. The purpose for the header is to give information
-about the message that is sent. This helps identify what type of message is received and to wich buffer
-the data will be unpacked. The header looks like:
-
-<c>char       RemId1;  /* STX (Hex 02) */
-<c>char       RemId2;  /* ETB (Hex 0F) in data message without acknowledge 
-<c>                       ENQ (Hex 05) in data message with acknowledge 
-<c>                       ACK (Hex 06) in acknowledge message */
-<c>short int  Length;  /* Number of bytes in message including this header */
-<c>short int  MessId1; /* Message identity part 1 */
-<c>short int  MessId2; /* Message identity part 2 */
- 
-All of the integers in the header will be sent as big endian values, that is most significant byte first
-in the datagram. The user data is the responsibility of the user to switch, if he wants integers to be sent
-with big endian. Intel (x86), VAX and Alpha all uses little endian! To send messages without headers the
-attribute DisableHeader should be set to TRUE. When communicating between two Proview-systems the header
-should be kept on. MessId1 and MessId2 is fetched from attributes RemTrans.Address[0] and RemTrans.Address[1].
-Through the header it is also possible to request an acknowledge of a sent message. If there is no
-acknowledge the message will be resent with a cyclicity specified by the RetransmitTime-attribute in the
-remtrans-object.
-
-Since UDP/IP is a connectionless protocol there is a possibility to watch the connection using
-keepalive-messages. This is set through the attribute UseKeepalive.
-
-<h2>Sending messages
-The transport will send a message to the remote port, consisting of header + data.
-MessId in the header is taken from RemTrans.Address[0,1], byte-switched to send as big endian.
-If MaxBuffers in remtrans-object > 0, the message is sent with type "want acknowledge" and is stored
-in the retransmit queue for the remnode. When a correspondning acknowledge message is received the 
-message is deleted from the retransmit queue. This is done automatically by the transport process.
-
-<h2>Receiving messages
-When we receive a buffer, first we check the header to see that this is a correct RemTrans message.
-Then we search for RemTrans.Address[0,1] that matches the byte-switched MessId. If the data object for 
-this message is big enough to contain the message, the message will be stored, and the 
-DataValid flag will be set.
-If the Remnode is marked to be used without header (DisableHeader-attribute set) then a RemTrans marked as a
-receiving remtrans with a enough large buffer will be searched.
-
-</topic>
-
-<topic> tcp_ip
-TCP
-RemnodeTCP is configured in much the same way as RemnodeUDP. The big (only) difference is that TCP is
-a connected protocol which acts in client/server fashion. Thus you have to either connect to a 
-remote socket (act like a client) or await a connection (act like a server). When acting like a server
-only one client will be accepted. The ConnectionMode-attribute in the remnode-object defines if you are
-a client or a server. Setting it to zero (default) means client and setting it to one means server. 
-
-</topic>
-
-<topic> bea_mq
-MQ
-RemnodeMQ is a transport for sending messages on BEA Message Queue (BMQ). It requires you to have
-BEA Message Queue installed on your node. This message queue is good for safely delivering messages 
-to a remote node even if it is not up at the moment you send your message. Vice versa, 
-messages will safely be delivered to you.
-
-This documentation expects you to have basic knowledge on BEA Message Queue. In basic the communication 
-runs on a specific bus. Each node has group-number and can only communicate to other groups on the same bus.
-On each group several queues can be configured.
-
-To be able to start this transport of course the Message Queue sotware need to be runnning. You also need some 
-environment variables to be set. These are:
-
-<c>DMQ_BUS_ID
-<c>DMQ_GROUP_ID
-<c>DMQ_GROUPNAME
-
-In the RemnodeMQ-object you configure on which BMQ-queue to recieve messages in the attribute MyQueue.
-You also configure the remote nodes group-number and queue to send to in the attributes TargetGroup and
-TargetQueue.
-
-<h2>Sending messages
-Similarly to UDP and TCP-transports RemTrans. Address[0,1] are used to identify the message. Address[0]
-represent the message-class and Address[1] represent the message-type (according to the BMQ-nomenclature).
-Address[2,3] are used to define what type delivery mode (Address[2]) that should be used and what action should be
-taken when a message cannot be deilvered (Address[3]).
-
-Possible delivery modes are:
-
-<c>PDEL_MODE_WF_SAF 25
-<c>PDEL_MODE_WF_DQF 26
-<c>PDEL_MODE_WF_NET 27
-<c>PDEL_MODE_WF_RCM 28
-<c>PDEL_MODE_WF_MEM 29
-<c>PDEL_MODE_AK_SAF 30
-<c>PDEL_MODE_AK_DQF 31
-<c>PDEL_MODE_AK_NET 32
-<c>PDEL_MODE_AK_RCM 33
-<c>PDEL_MODE_AK_MEM 34
-<c>PDEL_MODE_NN_SAF 35
-<c>PDEL_MODE_NN_DQF 36
-<c>PDEL_MODE_NN_NET 37
-<c>PDEL_MODE_NN_RCM 38
-<c>PDEL_MODE_NN_MEM 39
-<c>PDEL_MODE_WF_DEQ 40
-<c>PDEL_MODE_AK_DEQ 41
-<c>PDEL_MODE_WF_CONF 42
-<c>PDEL_MODE_AK_CONF 43
-<c>PDEL_MODE_WF_ACK 44
-<c>PDEL_MODE_AK_ACK 45
-
-and possible actions are:
-
-PDEL_UMA_RTS 1
-PDEL_UMA_DLJ 2
-PDEL_UMA_DLQ 3
-PDEL_UMA_SAF 4
-PDEL_UMA_DISC 5
-PDEL_UMA_DISCL 6
-
-Not all combinations are possible (see BEA Message Queue documentation for more information).
-
-Recommended combinations are,
-
-for safe delivery of message
-Address[2] = 26
-Address[3] = 4
-
-and for discarding the message if it cannot be delivered
-Address[2] = 39
-Address[3] = 5
-
-If Address[2,3] are both set to zero a default setting will be used. The default is to discard the 
-message if it cannot be delivered.
-
-<h2>Receiving messages
-Address[0,1] are used to identify the message. Address[0] represent the message-class and Address[1]
-represent the message-type (according to the BMQ-nomenclature).
-</topic>
-
-<topic> serial
-Serial
-RemoteSerial is an attempt to generalize the using of a simple serial line communication protocols.
-Its useful when we have a one-way sending of messages from some equipment to the control system. 
-You can specify up to eight termination characters in the attribute TermChar[0-7]. 
-These termination characters are used to detect the end of a received message (if a charachter matches
-any of the termination characters). 
-Specify also the settings for the serial link, that is - DevName , Speed , Parity (0 = none, 1 = odd, 
-2 = even), StopBits and DataBits. These could be for example /dev/ttyS0, 9600, 0, 1, 8.
-</topic>
-
-<topic> 3964r
-3964-R
-3964R is a simple serial line communication protocol that is developed by Siemens. 
-
-You specify the settings for the serial link as with RemnodeSerial, except for that there are no stp bits
-to specify. You must also specify the character timeout (the maximum time between received characters)
-in the attribute CharTimeout. The AckTimeout-attribute specifies the time to wait for an answer.
-
-Messages will be sent straight on without any header. ACK, NAK, DLE and BCC is handled according to 
-the 3964R protocol.
-
-<h2>Receiving messages
-There can be only one RemTrans object for receive-messages because of the lack of header 
-in this protocol. Every received message will be put in the first found RemTrans-object below 
-the RemNode-object. If the data object for this message is big enough to contain the message, 
-the message will be stored, and the DataValid flag will be set.
-
-<h2>Sending messages
-The transport will send a 3964R message to the serial without adding any header.
-If we don't have contact with the other node the message will be buffered, 
-if there are still free buffers for this message. 
-</topic>
-
-<topic> modbus-serial
-Modbus Serial
-The format of MODBUS that is implemented is RTU. For identification of messages we use the fields 
-known as slave address and function code in the MODBUS header. The RemTrans.Address[0] and [1] 
-defines these fields in the Proview environment. Se MODBUS specifications documents for more information.
-
-Modbus Serial is not yet implemented as an I/O-system in Proview. You have to configure the messages
-yourself by using RemnodeModbus and specifying RemTrans-object for the various operations you
-want to perform. Modbus works in a request/reply manner so for each operation you want to perform
-you specify one RemTrans-object for sending and one for receiving. Except for the Modbus-header of the
-message and the checksum handling you have to specify the content of the message to send in the
-send-buffer. In the same way you must decode the content of a received message yourself.
-
-Modbus TCP is implemented as an I/O-system in Proview. See more information about this in the document
-"Guide to I/O-systems". With Modbus TCP you don't have to care about the encoding of the messages.
-
-<h2>Receiving messages
-When we receive a buffer, we search for RemTrans.Address[0] and [1] that matches the fields 
-slave adress and function code in the message header. 
-If the data object for this message is big enough to contain the message, the message will be stored, 
-and the DataValid flag will be set.
-
-<h2>Sending messages
-Messages will be sent using the contents of RemTrans.Address[0] and [1] as the fields 
-slave address and function code in the message header.
-</topic>
-</headerlevel>
-
-<topic> an_example
-An example
-To show how to work with the classes that are briefly described above we will start with a little
-example. The classes are described in more detail below.
-
-In our example we have one Proview-system communicating with an other node via UDP/IP. We will
-send a few messages in both directions. My node is named 'dumle' and the remote node is named
-'asterix'.
-
-The messages we will send is:
-
-d_a_RequestData <t> 4 Byte
-d_a_Report <t> 20 Byte
-
-and the messages we will receive is:
-
-a_d_Data <t> 365 Byte (as an answer to the d_a_RequestData-message)
-a_d_Error <t> 10 Byte
-
-The configuration in the node-hierarchy looks like this.
-
-The RemoteConfig-object has to be there. I have added a RemnodeUDP object below this and
-configured address and nodename aswell as the port-numbers to communicate on.
-
-<image> dg_fig70.png
-
-Below the RemnodeUDP-object I have added four RemTrans-objects, one for each message. In the
-remrans-objects I have configured the direction (send or receive). Numbered the addresses so I can
-distinguish between the messages and set the sizes on the sending messages.
-
-<image> dg_fig71.png
-
-Below the remtrans-objects I have put the data-buffers. For the smaller messages I have chosen the
-small Buff256-buffer. The Data-message is larger and I have therefor chosen the Buff1440-buffer for
-this message.
-
-<image> dg_fig72.png
-
-<h2>The data structures
-The data structures for the messages are defined in the file ra_plc_user.h in $pwrp_inc-directory. This
-file is automatically included when you compile the plc-code. The structures look like:
-
-<c>typedef struct {
-<c>  pwr_tUInt32  Id;
-<c>} d_a_RequestData;
-<c>
-<c>#define pwr_sClass_d_a_RequestData d_a_RequestData
-<c>
-<c>typedef struct {
-<c>  pwr_tUInt32   Id;
-<c>  pwr_tFloat32  data_1;
-<c>  pwr_tInt32    data_2;
-<c>  pwr_tInt32    data_3;
-<c>  pwr_tInt32    data_4;
-<c>} d_a_Report;
-<c>
-<c>#define pwr_sClass_d_a_Report d_a_Report
-<c>
-<c>typedef struct {
-<c>  pwr_tUInt32   Id;
-<c>  pwr_tFloat32  data_1;
-<c>  ...
-<c>  ...
-<c>  pwr_tInt32    data_xx;
-<c>} a_d_Data;
-<c>
-<c>#define pwr_sClass_a_d_Data a_d_Data
-<c>
-<c>typedef struct {
-<c>  pwr_tUInt32   Id;
-<c>  pwr_tInt32    func_no;
-<c>  pwr_tInt16    err_code;
-<c>} a_d_Data;
-<c>
-<c>#define pwr_sClass_a_d_Error a_d_Error
-
-<h2>The plc code
-
-I have a plc program named Comm. In this program I have placed one RemTransSend-object and one
-RemTransRcv-object. These objects are found below the "Other"-hierarchy in the plc-editor palette.
-To the RemTransSend-object I have connected the RemTrans that I want to send. In this case the
-d_a_ReuestData-message. The message will be sent when the Dv-signal "RequestData" is set. Similarly 
-I have to the RemTransRcv-object connected the a_d_Data-message which will be the answer 
-to my request.
-
-<image> dg_fig73.png
-
-Both the RemTransSend and the RemTransRcv-objects have a subwindow. For the RemTransSend this subwindow 
-will be executed when there is a flank on the snd-pin. When the subwindow has been executed the
-DataValid-attribute of the connected RemTrans-object is set. The transport job for this Remnode 
-sends the message and sets the DataValid-flag to zero.
-
-For the RemTransRcv the subwindow will be executed when the DataValid-attribute in the connected 
-RemTrans-object is set. When the transport job for this Remnode receives a message it fills the
-data buffer with the received data and then sets the DataValid-flag. 
-After execution the flag will be reset.
-
-<h2>Send subwindow
-In the send subwindow we fill in the data in the send-buffer. The send-buffer for the message to send
-is connected to a DataArithm. The special 'classdef'-syntax casts Da1 to be a pointer to a
-d_a_RequestData-struct (or actually it will cast this pointer to a pwr_sClass_d_a_RequestData,
-therefor the define-statement as described above).
-
-<image> dg_fig74.png
-
-<h2>Receive subwindow
-In the receive subwindow unpack the data received in the receive-buffer. The recieve buffer
-is connected to a DataArithm. Again we use the classdef-statement to cast the Da1-pointer.
-We unpack the data to the output pins of the DataArithm. If one DataArithm is not enough to unpack
-the parameters we just add more DataArithm's and continue in the same way. 
-
-<image> dg_fig75.png
-
-</topic>
-
 </chapter>
 
 <chapter>
@@ -1674,7 +1275,7 @@ In the object indicates, for example the number of events that is stored in the 
 is automatically create below a $Node object.
 See MessageHandler i Object Reference Manual <link>messagehandler,"",$pwr_lang/pwrb_xtthelp.dat
 
-<h2>IOHandler objekt
+<h2>IOHandler object
 IOHandler configures properties for the I/O handling.
 
 - ReadWriteFlag specifies whether to adress physical hardware or not.
@@ -2527,21 +2128,10 @@ expressions. These are written in the C language.
 In the figure below the block will calculate the expression (A1 + A2 * A3) and give the output 
 this value. A1, A2 and A3 are representing analog values, for instance signals supposed to be 
 connected to the inputs of the object. 
-
-The expression can contain advanced C code with arrays and pointers.
 When writing these expressions it is important to use space before and after the operators, otherwise the expression may be misinterpreted at the execution. 
 
-
-Här beskrivs inte funktionen hos objekten, men det kan vara lämpligt att kommentera
-användningen av aritmetiska block. Blocken används för beräkning av användardefinierade
-uttryck, som skrivs i programmeringsspråket C.
-
-I figuren ovan kommer blocket att beräkna värdet (A1 + A2 * A3) och lägga detta på utgången.
-A1, A2 och A3 representerar analoga värden, t ex signaler som antas vara kopplade till
-ingångarna på objektet. 
-
-Uttrycken kan innehålla avancerad C kod med arrayer och pekar. When you write these, you 
-should ge aware of that indexing outside arrays, or erroneous pointers might cause the
+The expression can contain advanced C code with arrays and pointers. When you write these, you 
+should be aware of that indexing outside arrays, or erroneous pointers might cause the
 execution of the plcprogram to terminate.
 
 <h1>Alarm Supervision 
@@ -3362,6 +2952,403 @@ You can also kill the current plc process and start a new one in debug.
 
 <c>> killall plc_mynode_0999_00003
 <c>> gdb plc_mynode_0999_00003
+
+</topic>
+</chapter>
+<chapter>
+<topic>communication
+Communication
+
+The Remote concept in Proview is a way to standardize the methods of communication with other
+systems. It describes a number of transport programs and Proview objects used to implement
+a variety of different communication protocols and to handle incoming and outgoing messages.
+Remote is designed to use different transport protocols such as TCP/IP or BEA Message Queue,
+and different hardware media such as ethernet or serial lines.
+The main purpose of Remote is to provide the programmer with an interface to communication.
+
+<option> printdisable
+Introduction <link> comm_introduction
+Protocols <link> protocols
+An example <link> an_example
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic>comm_introduction
+Introduction
+There are some different classes/components/objects that are used to handle the communication.
+
+<h2>RemoteConfig
+Required to have any remote communication at all. Without this no remotehandler is started.
+Place one object in the node-hierarchy.
+
+<h2>RemNode
+Defines a link of some type to a remote node over a specific protocol. 
+Several different protocols are supported and there is one specific class for each protocol.
+The supported protocols are:
+
+TCP/IP
+UDP/IP
+MQ (BEA Message Queue)
+ALCM (an old Digital protocol, supported for historical reasons)
+Serial
+Modbus/RTU Serial
+3964R (serial protocol from Siemens)
+
+Configuration of each protocol is described further down.
+Place RemNode-objects below the RemoteConfig-object.
+
+<h2>RemTrans
+Generic class that defines a specific message to or from a specific remote node on a
+specific protocol. Should be placed below the RemNode-object. The size of a message to be sent 
+is specified in the RemTrans-object. The data however to be sent resides in a buffer that is
+configured as a child to the remtrans-object. When a message is to be sent data of the length
+specified in the remtrans-object is fetched from the buffer. Sometimes however a header of some
+length is added to the message.
+
+<h2>Buffer
+Defining the send- and/or receive data area for each message. Exists in different sizes.
+Should be placed below a RemTrans-object. The buffer must be of at least the size of the
+message that will be received or sent. If size is not enough message will be cut in the end.
+
+<h2>RemTransSend 
+Function object used in a plc-program for sending messages.
+
+<h2>RemTransRcv
+Function object used in a plc-program for receiving messages.
+</topic>
+
+<topic> protocols
+Protocols
+Which protocol to use is defined by the type of Remnode-object you configure. For each configured 
+Remnode-object a transport job is started. That is, a program to handle the specific protocol is
+started as a process. This process will handle all RemTrans-object that is configured as children
+to the Remnode-object. 
+
+<option> printdisable
+UDP <link> udp_ip
+TCP <link> tcp_ip
+BEA Message Queue <link> bea_mq
+Serial <link> serial
+3964-R <link> 3964r
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic> udp_ip
+UDP
+UDP uses socket communication without connection (datagram), compared to TCP wich is a connected protocol.
+In the RemnodeUDP-object you specify the name and ip-address of the node to communicate with
+aswell as the port-numbers for both ends. The local port-number need to be unique on your node
+not to conflict with other communications.
+
+As default all messages is sent with a special header that is not included in the user data buffer.
+This header is added at the beginning of the message. The purpose for the header is to give information
+about the message that is sent. This helps identify what type of message is received and to wich buffer
+the data will be unpacked. The header looks like:
+
+<c>char       RemId1;  /* STX (Hex 02) */
+<c>char       RemId2;  /* ETB (Hex 0F) in data message without acknowledge 
+<c>                       ENQ (Hex 05) in data message with acknowledge 
+<c>                       ACK (Hex 06) in acknowledge message */
+<c>short int  Length;  /* Number of bytes in message including this header */
+<c>short int  MessId1; /* Message identity part 1 */
+<c>short int  MessId2; /* Message identity part 2 */
+ 
+All of the integers in the header will be sent as big endian values, that is most significant byte first
+in the datagram. The user data is the responsibility of the user to switch, if he wants integers to be sent
+with big endian. Intel (x86), VAX and Alpha all uses little endian! To send messages without headers the
+attribute DisableHeader should be set to TRUE. When communicating between two Proview-systems the header
+should be kept on. MessId1 and MessId2 is fetched from attributes RemTrans.Address[0] and RemTrans.Address[1].
+Through the header it is also possible to request an acknowledge of a sent message. If there is no
+acknowledge the message will be resent with a cyclicity specified by the RetransmitTime-attribute in the
+remtrans-object.
+
+Since UDP/IP is a connectionless protocol there is a possibility to watch the connection using
+keepalive-messages. This is set through the attribute UseKeepalive.
+
+<h2>Sending messages
+The transport will send a message to the remote port, consisting of header + data.
+MessId in the header is taken from RemTrans.Address[0,1], byte-switched to send as big endian.
+If MaxBuffers in remtrans-object > 0, the message is sent with type "want acknowledge" and is stored
+in the retransmit queue for the remnode. When a correspondning acknowledge message is received the 
+message is deleted from the retransmit queue. This is done automatically by the transport process.
+
+<h2>Receiving messages
+When we receive a buffer, first we check the header to see that this is a correct RemTrans message.
+Then we search for RemTrans.Address[0,1] that matches the byte-switched MessId. If the data object for 
+this message is big enough to contain the message, the message will be stored, and the 
+DataValid flag will be set.
+If the Remnode is marked to be used without header (DisableHeader-attribute set) then a RemTrans marked as a
+receiving remtrans with a enough large buffer will be searched.
+
+</topic>
+
+<topic> tcp_ip
+TCP
+RemnodeTCP is configured in much the same way as RemnodeUDP. The big (only) difference is that TCP is
+a connected protocol which acts in client/server fashion. Thus you have to either connect to a 
+remote socket (act like a client) or await a connection (act like a server). When acting like a server
+only one client will be accepted. The ConnectionMode-attribute in the remnode-object defines if you are
+a client or a server. Setting it to zero (default) means client and setting it to one means server. 
+
+</topic>
+
+<topic> bea_mq
+MQ
+RemnodeMQ is a transport for sending messages on BEA Message Queue (BMQ). It requires you to have
+BEA Message Queue installed on your node. This message queue is good for safely delivering messages 
+to a remote node even if it is not up at the moment you send your message. Vice versa, 
+messages will safely be delivered to you.
+
+This documentation expects you to have basic knowledge on BEA Message Queue. In basic the communication 
+runs on a specific bus. Each node has group-number and can only communicate to other groups on the same bus.
+On each group several queues can be configured.
+
+To be able to start this transport of course the Message Queue sotware need to be runnning. You also need some 
+environment variables to be set. These are:
+
+<c>DMQ_BUS_ID
+<c>DMQ_GROUP_ID
+<c>DMQ_GROUPNAME
+
+In the RemnodeMQ-object you configure on which BMQ-queue to recieve messages in the attribute MyQueue.
+You also configure the remote nodes group-number and queue to send to in the attributes TargetGroup and
+TargetQueue.
+
+<h2>Sending messages
+Similarly to UDP and TCP-transports RemTrans. Address[0,1] are used to identify the message. Address[0]
+represent the message-class and Address[1] represent the message-type (according to the BMQ-nomenclature).
+Address[2,3] are used to define what type delivery mode (Address[2]) that should be used and what action should be
+taken when a message cannot be deilvered (Address[3]).
+
+Possible delivery modes are:
+
+<c>PDEL_MODE_WF_SAF 25
+<c>PDEL_MODE_WF_DQF 26
+<c>PDEL_MODE_WF_NET 27
+<c>PDEL_MODE_WF_RCM 28
+<c>PDEL_MODE_WF_MEM 29
+<c>PDEL_MODE_AK_SAF 30
+<c>PDEL_MODE_AK_DQF 31
+<c>PDEL_MODE_AK_NET 32
+<c>PDEL_MODE_AK_RCM 33
+<c>PDEL_MODE_AK_MEM 34
+<c>PDEL_MODE_NN_SAF 35
+<c>PDEL_MODE_NN_DQF 36
+<c>PDEL_MODE_NN_NET 37
+<c>PDEL_MODE_NN_RCM 38
+<c>PDEL_MODE_NN_MEM 39
+<c>PDEL_MODE_WF_DEQ 40
+<c>PDEL_MODE_AK_DEQ 41
+<c>PDEL_MODE_WF_CONF 42
+<c>PDEL_MODE_AK_CONF 43
+<c>PDEL_MODE_WF_ACK 44
+<c>PDEL_MODE_AK_ACK 45
+
+and possible actions are:
+
+PDEL_UMA_RTS 1
+PDEL_UMA_DLJ 2
+PDEL_UMA_DLQ 3
+PDEL_UMA_SAF 4
+PDEL_UMA_DISC 5
+PDEL_UMA_DISCL 6
+
+Not all combinations are possible (see BEA Message Queue documentation for more information).
+
+Recommended combinations are,
+
+for safe delivery of message
+Address[2] = 26
+Address[3] = 4
+
+and for discarding the message if it cannot be delivered
+Address[2] = 39
+Address[3] = 5
+
+If Address[2,3] are both set to zero a default setting will be used. The default is to discard the 
+message if it cannot be delivered.
+
+<h2>Receiving messages
+Address[0,1] are used to identify the message. Address[0] represent the message-class and Address[1]
+represent the message-type (according to the BMQ-nomenclature).
+</topic>
+
+<topic> serial
+Serial
+RemoteSerial is an attempt to generalize the using of a simple serial line communication protocols.
+Its useful when we have a one-way sending of messages from some equipment to the control system. 
+You can specify up to eight termination characters in the attribute TermChar[0-7]. 
+These termination characters are used to detect the end of a received message (if a charachter matches
+any of the termination characters). 
+Specify also the settings for the serial link, that is - DevName , Speed , Parity (0 = none, 1 = odd, 
+2 = even), StopBits and DataBits. These could be for example /dev/ttyS0, 9600, 0, 1, 8.
+</topic>
+
+<topic> 3964r
+3964-R
+3964R is a simple serial line communication protocol that is developed by Siemens. 
+
+You specify the settings for the serial link as with RemnodeSerial, except for that there are no stp bits
+to specify. You must also specify the character timeout (the maximum time between received characters)
+in the attribute CharTimeout. The AckTimeout-attribute specifies the time to wait for an answer.
+
+Messages will be sent straight on without any header. ACK, NAK, DLE and BCC is handled according to 
+the 3964R protocol.
+
+<h2>Receiving messages
+There can be only one RemTrans object for receive-messages because of the lack of header 
+in this protocol. Every received message will be put in the first found RemTrans-object below 
+the RemNode-object. If the data object for this message is big enough to contain the message, 
+the message will be stored, and the DataValid flag will be set.
+
+<h2>Sending messages
+The transport will send a 3964R message to the serial without adding any header.
+If we don't have contact with the other node the message will be buffered, 
+if there are still free buffers for this message. 
+</topic>
+
+<topic> modbus-serial
+Modbus Serial
+The format of MODBUS that is implemented is RTU. For identification of messages we use the fields 
+known as slave address and function code in the MODBUS header. The RemTrans.Address[0] and [1] 
+defines these fields in the Proview environment. Se MODBUS specifications documents for more information.
+
+Modbus Serial is not yet implemented as an I/O-system in Proview. You have to configure the messages
+yourself by using RemnodeModbus and specifying RemTrans-object for the various operations you
+want to perform. Modbus works in a request/reply manner so for each operation you want to perform
+you specify one RemTrans-object for sending and one for receiving. Except for the Modbus-header of the
+message and the checksum handling you have to specify the content of the message to send in the
+send-buffer. In the same way you must decode the content of a received message yourself.
+
+Modbus TCP is implemented as an I/O-system in Proview. See more information about this in the document
+"Guide to I/O-systems". With Modbus TCP you don't have to care about the encoding of the messages.
+
+<h2>Receiving messages
+When we receive a buffer, we search for RemTrans.Address[0] and [1] that matches the fields 
+slave adress and function code in the message header. 
+If the data object for this message is big enough to contain the message, the message will be stored, 
+and the DataValid flag will be set.
+
+<h2>Sending messages
+Messages will be sent using the contents of RemTrans.Address[0] and [1] as the fields 
+slave address and function code in the message header.
+</topic>
+</headerlevel>
+
+<topic> an_example
+An example
+To show how to work with the classes that are briefly described above we will start with a little
+example. The classes are described in more detail below.
+
+In our example we have one Proview-system communicating with an other node via UDP/IP. We will
+send a few messages in both directions. My node is named 'dumle' and the remote node is named
+'asterix'.
+
+The messages we will send is:
+
+d_a_RequestData <t> 4 Byte
+d_a_Report <t> 20 Byte
+
+and the messages we will receive is:
+
+a_d_Data <t> 365 Byte (as an answer to the d_a_RequestData-message)
+a_d_Error <t> 10 Byte
+
+The configuration in the node-hierarchy looks like this.
+
+The RemoteConfig-object has to be there. I have added a RemnodeUDP object below this and
+configured address and nodename aswell as the port-numbers to communicate on.
+
+<image> dg_fig70.png
+
+Below the RemnodeUDP-object I have added four RemTrans-objects, one for each message. In the
+remrans-objects I have configured the direction (send or receive). Numbered the addresses so I can
+distinguish between the messages and set the sizes on the sending messages.
+
+<image> dg_fig71.png
+
+Below the remtrans-objects I have put the data-buffers. For the smaller messages I have chosen the
+small Buff256-buffer. The Data-message is larger and I have therefor chosen the Buff1440-buffer for
+this message.
+
+<image> dg_fig72.png
+
+<h2>The data structures
+The data structures for the messages are defined in the file ra_plc_user.h in $pwrp_inc-directory. This
+file is automatically included when you compile the plc-code. The structures look like:
+
+<c>typedef struct {
+<c>  pwr_tUInt32  Id;
+<c>} d_a_RequestData;
+<c>
+<c>#define pwr_sClass_d_a_RequestData d_a_RequestData
+<c>
+<c>typedef struct {
+<c>  pwr_tUInt32   Id;
+<c>  pwr_tFloat32  data_1;
+<c>  pwr_tInt32    data_2;
+<c>  pwr_tInt32    data_3;
+<c>  pwr_tInt32    data_4;
+<c>} d_a_Report;
+<c>
+<c>#define pwr_sClass_d_a_Report d_a_Report
+<c>
+<c>typedef struct {
+<c>  pwr_tUInt32   Id;
+<c>  pwr_tFloat32  data_1;
+<c>  ...
+<c>  ...
+<c>  pwr_tInt32    data_xx;
+<c>} a_d_Data;
+<c>
+<c>#define pwr_sClass_a_d_Data a_d_Data
+<c>
+<c>typedef struct {
+<c>  pwr_tUInt32   Id;
+<c>  pwr_tInt32    func_no;
+<c>  pwr_tInt16    err_code;
+<c>} a_d_Data;
+<c>
+<c>#define pwr_sClass_a_d_Error a_d_Error
+
+<h2>The plc code
+
+I have a plc program named Comm. In this program I have placed one RemTransSend-object and one
+RemTransRcv-object. These objects are found below the "Other"-hierarchy in the plc-editor palette.
+To the RemTransSend-object I have connected the RemTrans that I want to send. In this case the
+d_a_ReuestData-message. The message will be sent when the Dv-signal "RequestData" is set. Similarly 
+I have to the RemTransRcv-object connected the a_d_Data-message which will be the answer 
+to my request.
+
+<image> dg_fig73.png
+
+Both the RemTransSend and the RemTransRcv-objects have a subwindow. For the RemTransSend this subwindow 
+will be executed when there is a flank on the snd-pin. When the subwindow has been executed the
+DataValid-attribute of the connected RemTrans-object is set. The transport job for this Remnode 
+sends the message and sets the DataValid-flag to zero.
+
+For the RemTransRcv the subwindow will be executed when the DataValid-attribute in the connected 
+RemTrans-object is set. When the transport job for this Remnode receives a message it fills the
+data buffer with the received data and then sets the DataValid-flag. 
+After execution the flag will be reset.
+
+<h2>Send subwindow
+In the send subwindow we fill in the data in the send-buffer. The send-buffer for the message to send
+is connected to a DataArithm. The special 'classdef'-syntax casts Da1 to be a pointer to a
+d_a_RequestData-struct (or actually it will cast this pointer to a pwr_sClass_d_a_RequestData,
+therefor the define-statement as described above).
+
+<image> dg_fig74.png
+
+<h2>Receive subwindow
+In the receive subwindow unpack the data received in the receive-buffer. The recieve buffer
+is connected to a DataArithm. Again we use the classdef-statement to cast the Da1-pointer.
+We unpack the data to the output pins of the DataArithm. If one DataArithm is not enough to unpack
+the parameters we just add more DataArithm's and continue in the same way. 
+
+<image> dg_fig75.png
 
 </topic>
 </chapter>
@@ -5539,7 +5526,7 @@ by points, e.g. 'ssab.hql.se1', where ssab is the root group, and se1 the lowest
 hierarchy.
 
 A Proview system is connected to a system group by stating the systemgroup in the System 
-objekt. If the systemgroup is not present in the user database, though a parent or ancestor
+object. If the systemgroup is not present in the user database, though a parent or ancestor
 is, it is supposed that the systemgroup inherits users from the ancestor.
 
 <h2>Attributes
@@ -6819,7 +6806,7 @@ to easily be parted from other object graphs. Note that attributes in the main o
 referenced by the '&' notation, e.g. &($object.PlcConnect).IndError##Boolean.
 
 <image> ced_fig15.gif
-<b>Objekt graph for a simulation object
+<b>Object graph for a simulation object
 
 </topic>
 
