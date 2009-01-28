@@ -105,7 +105,6 @@ Designer's Guide
 Overview <link> design_overview
 Database structure <link> database_structure
 A case study <link> case_study
-Administration <link> administrator
 Navigating the project <link> project_structure
 Configure the directoryvolume <link> configure_directoryvolume
 Configure the rootvolume <link> configure_rootvolume
@@ -123,6 +122,7 @@ The Object Editor<link> objecteditor_refman
 The Spreadsheet Editor<link> spreadsheeteditor_refman
 The Plc Editor<link> plceditor_refman
 The Class Editor<link> classeditor
+Administration <link> administrator
 OPC <link> opc_intro
 Commands <link> help command
 Script <link> script
@@ -483,15 +483,6 @@ object identity.
 </chapter>
 
 <chapter>
-<topic>development environment
-Development environment
-
-The configuration of a Proview system is done in a development station. The Proview development
-enviroment is installed in the development station.
-</topic>
-</chapter>
-
-<chapter>
 <topic>case_study
 A Case Study
 
@@ -568,7 +559,6 @@ When we have decided upon the I/O needed, we can choose the hardware. We choose:
 
 <h2>Specification of Plant Graphics 
 We need a display from which the operator can control and survey the traffic lights. 
-
 </topic>
 
 <topic> administration
@@ -870,154 +860,6 @@ graphics is described in chapter 5 Creating Plant Graphics .
 
 <image>dg_fig21.gif
 <b>The Plant Graphics for the Intersection
-</topic>
-</chapter>
-
-<chapter>
-<topic>administrator
-Administration
-
-<option> printdisable
-Create users <link> adm_user
-Register volumes <link> register_volumes
-Create project <link> create_project
-<option> printenable
-</topic>
-
-<topic> adm_user
-Users
-
-To gain access to the Proview development and runtime environment you need to login with 
-username and password. Users are kept in the user database and are granted privileges which 
-states the users authority to make changes in the system.
-
-Systems that share the same users are grouped into a system group, and the the users for this 
-group is defined. You can also build a hierarchy of system groups where child groups inherit 
-the users of their parent, and additional users can be defined for each child.
-
-A system is connected to a systemgroup by the SystemGroup attribute in the $System object. 
-The notation for a system group in a hierarchy is the names of the group separated by a point, 
-for example 'Main.West.F1’.
-
-In the example below Eric is responsible for all the systems in the plant, and is defined on 
-the highest level in the hierarchy. Nils is working with the west side of the plant and is 
-defined on the 'West’ system group. Finally, Carl working with the systems in the F1 part of 
-the plant. All system groups has the attribute UserInherit, that states that a child group
-inherits all the users of the parent.
- 
-
-<image> dg_fig22.gif
-
-Users and systemgroups are created in the administrator:
-
-- Start the administrator with the command 'pwra'
-- Enter the UserDatabase from the menu 'File/Open/UserDatabase'.
-- Login by entering the login command. Open the login prompt from the menu 'Functions/Command'
-  and enter 'login /adm’ on the command line. If the systemgroup 'administrator’ is presen
-  you also has to add username and password to a user defined in the administrator systemgroup.
-- Enter edit mode from the menu 'Edit/Edit mode'.
-  Systemgroups and users are represented by object of the classes SystemGroupReg and
-  UserReg, that are displayed in the palette to the left. An object is created by selecting
-  a class in the palette. After that, you click with the middle mousebutton on the future 
-  sibling or parent to the new object. If you click on the map/leaf in the destination object, 
-  the new object is placed as the first child, if you click to the right of the map/leaf, 
-  it is placed as a sibling.
-- Create a systemgroup by selecting 'SystemGroupReg' in the palette, and click with MB2
-  (the middle mousebutton) in the right window. Open the SystemGroupReg object and enter
-  name ant attribute for the system group. Enter the complete hierarchy name, e.g. 
-  'Main.West'.
-- Create a user by selecting 'UserReg' in the palette and click with MB2 on the map/leaf
-  of the SystemGroupReg object that the UserReg should be a child of. Open the object and
-  enter username, password and privileges for the user.
-- Save.
-- Logout with the command 'logout'.
-
-
-The user database reside in the directory $pwra_db.
-
-</topic>
-
-<topic>register_volumes
-Register Volumes
-
-All volumes in a network has to have a unique volumname and volume identity. To assure this, 
-all volumes is registered in a global volume.
-
-The registration is done by the administrator:
-
-- Start the administrator with the command 'pwra’
-- Enter volume mode from the menu 'File/Open/GlobalVolumeList'.
-- Login as administartor.
-- Enter edit mode from the menu 'Edit/Edit mode'.
-  Volumes are registred by objects of class VolumeReg, that is dislayed in the palette to
-  the left. In the palette, there is also the $Hier class, that can be used to order the
-  VolumeReg objects in a tree structure.
-- Create a VolumeReg object, open the object and enter volumename (equals objectname),
-  volumeidentity and project.  
-- Save.
-- Logout with the command 'logout'.
-
-<h2>Volume name
-The name of the volume, a unic name with max 31 characters.
-
-<h2>Volume Identity
-The volume identity is a 32 bit word specified in the form v1.v2.v3.v4 where v1, v2, v3 and v4 
-are numbers in the interval 0-255. Dependent on the class of the volume, the numbers can be 
-chosen in separate intervals. 
-
-RootVolumes            <t>0. 1-254. 1-254. 1-254
-User ClassVolumes      <t>0. 0. 2-254. 1-254
-
-The DirectoryVolume always has the identity 254.254.254.253
-</topic>
-
-<topic>create_project
-Create project
-
-A project is a number of nodes and volumes that share the same development environment. Usually
-it consist of some process stations and a couple of operators stations that control a part of 
-the plant, but there are no restrictions in the size of a project. You can choose to have each 
-node in its own project or all the nodes in the same project.
-
-- All the nodes in a project (on the same bus) has a nethandler link between each other.
-- All the volumes and nodes share the same directory tree.
-- All node has to be upgraded to new Proview versions at the same time.
-
-A common size is 1-10 nodes in a project. Too many nodes will increase the communication 
-overhead and make it harder to upgrade the project.
-
-Create the project in the administrator:
-
-- Start the administrator with the command 'pwra’.
-- The projectlist is shown as default when starting the administrator. It can also be opened
-  from the menu (File/Open/ProjectList).
-- Login as administrator.
-- Enter edit mode from the menu 'Edit/Edit mode'.
-  Projects are represented by objects of class ProjectReg, that is displayed in the palette
-  to the left. $Hier objects can be used to order the ProjectReg objects in a tree structure.
-- Create a ProjectReg object and enter project name, base version, path and description.
-- The project is created when saving. First you have to confirm the changes.
-- Save and logout.
-
-<h2>Project name
-A project has a project name that identifies the project in the development environment. It is 
-similar the system name that identifies the project in the runtime environment, but it 
-doesn’t have to be the same. Actually a system can have several projects in the development 
-environment. When upgrading or making a major modification of the system, it is advisable to 
-take a copy of the project and keep the currently running version of the system available for 
-minor corrections. The copy is then created under a new project name, though it has the same 
-system name.
-
-<h2>Base
-Proview is a multiversion system, i.e. different versions of proview can be installed in 
-the same development environment and projects of different proview versions can coexist in 
-the same development environment. A project points at a Proview base, e.g. V3.4, V4.0, and 
-when creating a project you have to choose which base the project should point at.
-
-<h2>Path
-The project consist of a directory tree where databases, source files, archives etc is stored. 
-The path is the root directory of this tree.
-
 </topic>
 </chapter>
 
@@ -1407,7 +1249,6 @@ directories in the project. These variables are always defined as:
 <c> $pwrp_<directory>
 
 For example $pwrp_exe for the directory <project_root>/bld/x86_linux/exe.
-
 </topic>
 
 <topic> source_tree
@@ -1460,6 +1301,14 @@ the directory volume where the project is configured). Each database resides in 
 sub-directory. This is valid is valid if you choose to create your databases as
 BerkleyDB-databases. If you instead choose to have mysql-databases the databases will be
 created on your mysql-server.
+
+In this directory resides also the files for user-defined classes, the UserClassVolumes.
+They are text-files with file-end wb_load. The user-classvolume usually has a similar name
+as the RootVolume in the project that uses the classes. If your RootVolume is named
+VolMyProject then the ClassVolume will be named CVolMyProject and the name of the file
+thus will be:
+
+<c>cvolmyproject.wb_load
 </topic>
 
 <topic> project_pop
@@ -1603,6 +1452,14 @@ are named:
 <c><volumename>.dbs 
 </topic>
 
+Here are also placed files that are produced when you edit your plc-programs. They contain
+all information needed to display the plc-programs graphically during runtime and enable
+online trace. These files have file ending .flw and are called flow-files.
+
+Files for the cross reference function will also be produced here. They begin with the letters
+"rtt" ([r]un [t]ime [t]race). Cross reference file are produced manually through the
+"Utilities"-function in the Navigator. 
+
 <topic> project_log
 $pwrp_log
 This directory contains log-files that are produced during simulation of your project.
@@ -1628,6 +1485,15 @@ A file called
 will always be searched in this directory. If you have other header-files to include, then include
 them in this one.
 The master for all these include files should be kept in the source tree and copied here.
+
+Header-files for userclasses wil be created here when you build a classvolume. If you have
+documented your classes, a help-file will also be created. The files are named:
+
+<c>pwr_<classvoumename>classes.h
+<c>pwr_<classvoumename>classes.hpp
+<c><classvoumename>_xtthelp.dat
+<c><classvolumename>.html
+
 </topic>
 
 <topic> project_web
@@ -1725,7 +1591,7 @@ To create a sub menu (first child) to this use this command:
 
 To create an entry that performs a command below the VVS menu use this command:
 
-<c>create item/text="Graph P1"/command="open graph/object=$Node-pics-h4_proc1"\
+<c>create item/text="Graph P1"/command="open graph/object=$Node-pics-h4_proc1"\ 
 <c>       /pixmap=graph/dest=Maintenance-VVS/lastchild
 The pixmap qualifier defines the appearance (icon) of this entry. Without this qualifier the icon will be a leaf.
 The command opens a graph defined by a XttGraph-object in the node hierarchy.
@@ -2174,6 +2040,134 @@ simulation system and in a educational system, and the systems can have differen
 
 Now, the plcgpm is compiled, by choosing 'File/Build' in the plc editor. Any waring or error 
 messages will be displayed in the message window.
+</topic>
+</chapter>
+<chapter>
+<topic> dg_plc_functions
+Call functions from the plc program
+
+The functionobject programming in the plc editor has its limitations, and some tasks can
+be done much easier and nicer in c-code. c programming can be achieved in CArithm and
+DataArihm where you can put an amount of c-code, but the number of characters are limited
+to 1023, and occationally this is not enough. Then you have two possibilities, to write a
+detached application, or to call a c-function from a CArithm or DataArithm. The advantage 
+with calling a c-function is that all initialization and linking to objects and attributes 
+are handled by the plc program. The execution of the function is also syncronous with the 
+execution lf the plc thread calling the function.  
+
+<h1>Write the code
+The code is put into a c file, created somewhere under $pwrp_src. We create the file
+$pwrp_src/ra_myfunction.c and inserts the function MyFunction() that performs some simple
+calculation.
+
+<c>#include "pwr.h"
+<c>#include "ra_plc_user.h"
+
+<c>void MyFunction( pwr_tBoolean cond, pwr_tFloat32 in1, pwr_tFloat32 in2, 
+<c>                 pwr_tFloat32 *out)
+<c>{
+<c>  if ( cond)
+<c>    *out = in1 * in2;
+<c>  else
+<c>    *out = in1 + in2;
+<c>}
+
+<h1>Prototype declaration
+In the include file ra_plc_user.h a prototype declaration is inserted.
+
+<c>void MyFunction( pwr_tBoolean cond, pwr_tFloat32 in1, pwr_tFloat32 in2, 
+<c>                 pwr_tFloat32 *out);
+
+ra_plc_user.h is included by the plc program, and the function can be called from a CArithm
+or DataArithm object. You should also include ra_plc_user.h in the function code to ensure
+that the prototype is correct.
+
+ra_plc_user should be placed on $pwrp_src and copied to $pwrp_inc, from where it is included
+by the plc program and the function code.
+
+<h1>Compile the code
+The c file is compiled, for example with make. Below a makefile is shown, that compiles
+ra_myfunction.cpp and puts the result, ra_myfunction.o on $pwrp_obj. Note that there is also 
+a dependency on ra_plc_user.h, which causes this file to be copied from $pwrp_src to $pwrp_inc.
+
+
+<c>ra_myfunction_top : ra_myfunction
+
+<c>include $(pwr_exe)/pwrp_rules.mk
+
+<c>ra_myfunction_modules : \ 
+<c>		$(pwrp_inc)/ra_plc_user.h \ 
+<c>		$(pwrp_obj)/ra_myfunction.o
+
+<c>ra_myfunction : ra_myfunction_modules
+<c>	@ echo "ra_myfunction built"
+
+<c>#
+<c># Modules
+<c>#
+
+<c>$(pwrp_inc)/ra_plc_user.h : $(pwrp_src)/ra_plc_user.h
+
+<c>$(pwrp_obj)/ra_myfunction.o : $(pwrp_src)/ra_myfunction.c \ 
+<c>                              $(pwrp_inc)/ra_plc_user.h
+
+
+<b>Call in the plc program
+The function is called from a CArithm or DataArithm.
+
+<image>dg_fig97.png
+<b>Fig Function call from the plc code
+
+<b>Link the plc program
+When the source code of the function was compiled, the object module
+$pwrp_obj/ra_myfunction.o was created. This has to be added to the link command when the
+plc program is built, which is achieved by addning the objectmodule to an option file that
+is input to the linker. The optionfile resides on the directory $pwrp_exe and is named
+plc_'nodename'_'qbus'.opt, for example
+
+<c>$pwrp_exe/plc_mynode_0999.opt
+
+The following line is inserted into this file
+
+<c>$pwr_obj/rt_io_user.o $pwrp_obj/ra_myfunction.o -lpwr_rt -lpwr_usbio_dummy
+
+We kan now build the node and startup Proview runtime.
+
+<b>Debug
+One disadvantage when you leave the graphic programming and call c-functons is that you
+can not use trace any more for debugging. If you suspect some error in the  function code, 
+you occasionally have to start the plc program in debug, set a breakpoint in the function 
+and step forward in the code.
+
+First you have to build the plc program with debug, by opening Options/Setting from the
+configurator and activate Build/Debug, and then build the node.
+
+After that you start Proview runtime and attach the debugger, gdb, to the plc process by
+starting gdb with the pid for the process. pid is viewed by 'ps x'
+
+<c>> ps x
+<c>...
+<c>5473 pts/0    Sl     0:18 plc_mynode_0999_00003
+
+where 5473 is pid for the plc process, and we start the debugger, set a breakpoint in the
+function and let the program continue to execute
+
+<c>> gdb -p 5473 plc_mynode_0999_00003
+<c>(gdb) b MyFunction
+<c>(gdb) c
+
+When the program enters the function it stops in the debugger, and we kan step (s) and 
+examin the content in variables (x) etc.
+
+If the plc program is terminated immediately after start, you can restart in debug.
+
+<c>> gdb plc_mynode_0999_00003
+
+You can also kill the current plc process and start a new one in debug.
+
+<c>> killall plc_mynode_0999_00003
+<c>> gdb plc_mynode_0999_00003
+
 </topic>
 </chapter>
 
@@ -2827,134 +2821,6 @@ From the simulate graph various events can be simulated.
 </headerlevel>
 </chapter>
 
-<chapter>
-<topic> dg_plc_functions
-Call functions from the plc program
-
-The functionobject programming in the plc editor has its limitations, and some tasks can
-be done much easier and nicer in c-code. c programming can be achieved in CArithm and
-DataArihm where you can put an amount of c-code, but the number of characters are limited
-to 1023, and occationally this is not enough. Then you have two possibilities, to write a
-detached application, or to call a c-function from a CArithm or DataArithm. The advantage 
-with calling a c-function is that all initialization and linking to objects and attributes 
-are handled by the plc program. The execution of the function is also syncronous with the 
-execution lf the plc thread calling the function.  
-
-<h1>Write the code
-The code is put into a c file, created somewhere under $pwrp_src. We create the file
-$pwrp_src/ra_myfunction.c and inserts the function MyFunction() that performs some simple
-calculation.
-
-<c>#include "pwr.h"
-<c>#include "ra_plc_user.h"
-
-<c>void MyFunction( pwr_tBoolean cond, pwr_tFloat32 in1, pwr_tFloat32 in2, 
-<c>                 pwr_tFloat32 *out)
-<c>{
-<c>  if ( cond)
-<c>    *out = in1 * in2;
-<c>  else
-<c>    *out = in1 + in2;
-<c>}
-
-<h1>Prototype declaration
-In the include file ra_plc_user.h a prototype declaration is inserted.
-
-<c>void MyFunction( pwr_tBoolean cond, pwr_tFloat32 in1, pwr_tFloat32 in2, 
-<c>                 pwr_tFloat32 *out);
-
-ra_plc_user.h is included by the plc program, and the function can be called from a CArithm
-or DataArithm object. You should also include ra_plc_user.h in the function code to ensure
-that the prototype is correct.
-
-ra_plc_user should be placed on $pwrp_src and copied to $pwrp_inc, from where it is included
-by the plc program and the function code.
-
-<h1>Compile the code
-The c file is compiled, for example with make. Below a makefile is shown, that compiles
-ra_myfunction.cpp and puts the result, ra_myfunction.o on $pwrp_obj. Note that there is also 
-a dependency on ra_plc_user.h, which causes this file to be copied from $pwrp_src to $pwrp_inc.
-
-
-<c>ra_myfunction_top : ra_myfunction
-
-<c>include $(pwr_exe)/pwrp_rules.mk
-
-<c>ra_myfunction_modules : \ 
-<c>		$(pwrp_inc)/ra_plc_user.h \ 
-<c>		$(pwrp_obj)/ra_myfunction.o
-
-<c>ra_myfunction : ra_myfunction_modules
-<c>	@ echo "ra_myfunction built"
-
-<c>#
-<c># Modules
-<c>#
-
-<c>$(pwrp_inc)/ra_plc_user.h : $(pwrp_src)/ra_plc_user.h
-
-<c>$(pwrp_obj)/ra_myfunction.o : $(pwrp_src)/ra_myfunction.c \ 
-<c>                              $(pwrp_inc)/ra_plc_user.h
-
-
-<b>Call in the plc program
-The function is called from a CArithm or DataArithm.
-
-<image>dg_fig97.png
-<b>Fig Function call from the plc code
-
-<b>Link the plc program
-When the source code of the function was compiled, the object module
-$pwrp_obj/ra_myfunction.o was created. This has to be added to the link command when the
-plc program is built, which is achieved by addning the objectmodule to an option file that
-is input to the linker. The optionfile resides on the directory $pwrp_exe and is named
-plc_'nodename'_'qbus'.opt, for example
-
-<c>$pwrp_exe/plc_mynode_0999.opt
-
-The following line is inserted into this file
-
-<c>$pwr_obj/rt_io_user.o $pwrp_obj/ra_myfunction.o -lpwr_rt -lpwr_usbio_dummy
-
-We kan now build the node and startup Proview runtime.
-
-<b>Debug
-One disadvantage when you leave the graphic programming and call c-functons is that you
-can not use trace any more for debugging. If you suspect some error in the  function code, 
-you occasionally have to start the plc program in debug, set a breakpoint in the function 
-and step forward in the code.
-
-First you have to build the plc program with debug, by opening Options/Setting from the
-configurator and activate Build/Debug, and then build the node.
-
-After that you start Proview runtime and attach the debugger, gdb, to the plc process by
-starting gdb with the pid for the process. pid is viewed by 'ps x'
-
-<c>> ps x
-<c>...
-<c>5473 pts/0    Sl     0:18 plc_mynode_0999_00003
-
-where 5473 is pid for the plc process, and we start the debugger, set a breakpoint in the
-function and let the program continue to execute
-
-<c>> gdb -p 5473 plc_mynode_0999_00003
-<c>(gdb) b MyFunction
-<c>(gdb) c
-
-When the program enters the function it stops in the debugger, and we kan step (s) and 
-examin the content in variables (x) etc.
-
-If the plc program is terminated immediately after start, you can restart in debug.
-
-<c>> gdb plc_mynode_0999_00003
-
-You can also kill the current plc process and start a new one in debug.
-
-<c>> killall plc_mynode_0999_00003
-<c>> gdb plc_mynode_0999_00003
-
-</topic>
-</chapter>
 <chapter>
 <topic>communication
 Communication
@@ -4736,7 +4602,7 @@ you can also set values to signals.
 Trace is nowdays easier and faster performed from Xtt. We recommend that you use PlcTrace in
 Xtt instead.
 
-<h1>Editering
+<h1>Editing
 The Plc editor consist of
 
 - a working area.
@@ -5574,7 +5440,7 @@ DevClass  <t>Write access in class editor (not yet implemented)
 </topic>
 
 <topic> user example
-Exempel
+Example
 Proview user database V1.0.0
 
 <c>ssab
@@ -7232,6 +7098,152 @@ that are not handled by the converter.
 <c>@aref 'bookmark' 'text' 
 </topic>
 
+</chapter>
+
+<chapter>
+<topic>administrator
+Administration
+
+<option> printdisable
+Create users <link> adm_user
+Register volumes <link> register_volumes
+Create project <link> create_project
+<option> printenable
+</topic>
+
+<topic> adm_user
+Users
+
+To gain access to the Proview development and runtime environment you need to login with 
+username and password. Users are kept in the user database and are granted privileges which 
+states the users authority to make changes in the system.
+
+Systems that share the same users are grouped into a system group, and the the users for this 
+group is defined. You can also build a hierarchy of system groups where child groups inherit 
+the users of their parent, and additional users can be defined for each child.
+
+A system is connected to a systemgroup by the SystemGroup attribute in the $System object. 
+The notation for a system group in a hierarchy is the names of the group separated by a point, 
+for example 'Main.West.F1’.
+
+In the example below Eric is responsible for all the systems in the plant, and is defined on 
+the highest level in the hierarchy. Nils is working with the west side of the plant and is 
+defined on the 'West’ system group. Finally, Carl working with the systems in the F1 part of 
+the plant. All system groups has the attribute UserInherit, that states that a child group
+inherits all the users of the parent.
+ 
+
+<image> dg_fig22.gif
+
+Users and systemgroups are created in the administrator:
+
+- Start the administrator with the command 'pwra'
+- Enter the UserDatabase from the menu 'File/Open/UserDatabase'.
+- Login by entering the login command. Open the login prompt from the menu 'Functions/Command'
+  and enter 'login /adm’ on the command line. If the systemgroup 'administrator’ is presen
+  you also has to add username and password to a user defined in the administrator systemgroup.
+- Enter edit mode from the menu 'Edit/Edit mode'.
+  Systemgroups and users are represented by object of the classes SystemGroupReg and
+  UserReg, that are displayed in the palette to the left. An object is created by selecting
+  a class in the palette. After that, you click with the middle mousebutton on the future 
+  sibling or parent to the new object. If you click on the map/leaf in the destination object, 
+  the new object is placed as the first child, if you click to the right of the map/leaf, 
+  it is placed as a sibling.
+- Create a systemgroup by selecting 'SystemGroupReg' in the palette, and click with MB2
+  (the middle mousebutton) in the right window. Open the SystemGroupReg object and enter
+  name ant attribute for the system group. Enter the complete hierarchy name, e.g. 
+  'Main.West'.
+- Create a user by selecting 'UserReg' in the palette and click with MB2 on the map/leaf
+  of the SystemGroupReg object that the UserReg should be a child of. Open the object and
+  enter username, password and privileges for the user.
+- Save.
+- Logout with the command 'logout'.
+
+
+The user database reside in the directory $pwra_db.
+</topic>
+
+<topic>register_volumes
+Register Volumes
+
+All volumes in a network has to have a unique volumname and volume identity. To assure this, 
+all volumes is registered in a global volume.
+
+The registration is done by the administrator:
+
+- Start the administrator with the command 'pwra’
+- Enter volume mode from the menu 'File/Open/GlobalVolumeList'.
+- Login as administartor.
+- Enter edit mode from the menu 'Edit/Edit mode'.
+  Volumes are registred by objects of class VolumeReg, that is dislayed in the palette to
+  the left. In the palette, there is also the $Hier class, that can be used to order the
+  VolumeReg objects in a tree structure.
+- Create a VolumeReg object, open the object and enter volumename (equals objectname),
+  volumeidentity and project.  
+- Save.
+- Logout with the command 'logout'.
+
+<h2>Volume name
+The name of the volume, a unic name with max 31 characters.
+
+<h2>Volume Identity
+The volume identity is a 32 bit word specified in the form v1.v2.v3.v4 where v1, v2, v3 and v4 
+are numbers in the interval 0-255. Dependent on the class of the volume, the numbers can be 
+chosen in separate intervals. 
+
+RootVolumes            <t>0. 1-254. 1-254. 1-254
+User ClassVolumes      <t>0. 0. 2-254. 1-254
+
+The DirectoryVolume always has the identity 254.254.254.253
+</topic>
+
+<topic>create_project
+Create project
+
+A project is a number of nodes and volumes that share the same development environment. Usually
+it consist of some process stations and a couple of operators stations that control a part of 
+the plant, but there are no restrictions in the size of a project. You can choose to have each 
+node in its own project or all the nodes in the same project.
+
+- All the nodes in a project (on the same bus) has a nethandler link between each other.
+- All the volumes and nodes share the same directory tree.
+- All node has to be upgraded to new Proview versions at the same time.
+
+A common size is 1-10 nodes in a project. Too many nodes will increase the communication 
+overhead and make it harder to upgrade the project.
+
+Create the project in the administrator:
+
+- Start the administrator with the command 'pwra’.
+- The projectlist is shown as default when starting the administrator. It can also be opened
+  from the menu (File/Open/ProjectList).
+- Login as administrator.
+- Enter edit mode from the menu 'Edit/Edit mode'.
+  Projects are represented by objects of class ProjectReg, that is displayed in the palette
+  to the left. $Hier objects can be used to order the ProjectReg objects in a tree structure.
+- Create a ProjectReg object and enter project name, base version, path and description.
+- The project is created when saving. First you have to confirm the changes.
+- Save and logout.
+
+<h2>Project name
+A project has a project name that identifies the project in the development environment. It is 
+similar the system name that identifies the project in the runtime environment, but it 
+doesn’t have to be the same. Actually a system can have several projects in the development 
+environment. When upgrading or making a major modification of the system, it is advisable to 
+take a copy of the project and keep the currently running version of the system available for 
+minor corrections. The copy is then created under a new project name, though it has the same 
+system name.
+
+<h2>Base
+Proview is a multiversion system, i.e. different versions of proview can be installed in 
+the same development environment and projects of different proview versions can coexist in 
+the same development environment. A project points at a Proview base, e.g. V3.4, V4.0, and 
+when creating a project you have to choose which base the project should point at.
+
+<h2>Path
+The project consist of a directory tree where databases, source files, archives etc is stored. 
+The path is the root directory of this tree.
+</topic>
 </chapter>
 
 <chapter>
