@@ -255,7 +255,7 @@ public class GdhServer
     if(sts % 2 == 0)
     {
       errh.setStatus( 0);
-      return;
+      System.exit(0);
     }
 
     errh.setStatus( Errh.PWR__SRUN);
