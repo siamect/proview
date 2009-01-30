@@ -170,9 +170,11 @@ void Ev::eve_activate_ack_last()
 
   sts = ala->get_last_not_acked( &id);
   if ( EVEN(sts)) return;
+
+  mh_sEventId lid = *id;
   ala->ack( id);
   eve->ack( id);
-  mh_OutunitAck( id);
+  mh_OutunitAck( &lid);
 }
 
 void Ev::eve_activate_help()
@@ -281,9 +283,11 @@ void Ev::ack_last_prio( unsigned long type, unsigned long prio)
   sts = ala->get_last_not_acked_prio( &id, type, prio);
   if ( ODD(sts))
   {
+    mh_sEventId lid = *id;
+
     ala->ack( id);
     eve->ack( id);
-    mh_OutunitAck( id);
+    mh_OutunitAck( &lid);
   }
 }
 
