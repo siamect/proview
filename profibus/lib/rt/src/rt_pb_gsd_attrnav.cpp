@@ -1231,12 +1231,12 @@ void GsdAttrNavBrow::create_nodeclasses()
 
   brow_CreateNodeClass( ctx, "NavigatorEnum", 
 		flow_eNodeGroup_Common, &nc_enum);
+  brow_AddRadiobutton( nc_enum, 15, 0.1, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
   brow_AddAnnotPixmap( nc_enum, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_enum, 2, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddFrame( nc_enum, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
-  brow_AddRadiobutton( nc_enum, 15, 0.1, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
  
   // Create table nodeclass
 
