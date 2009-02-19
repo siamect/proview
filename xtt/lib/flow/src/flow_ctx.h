@@ -120,6 +120,7 @@ class FlowCtx {
     void con_create_source( FlowArrayElem *node, int cp_num, int cp_x, int cp_y); 
     void con_create_dest( FlowArrayElem *node, int cp_num, flow_eEvent event, int x, int y); 
     void conpoint_select( FlowArrayElem *node, int cp_num);
+    void conpoint_select_remove( FlowArrayElem *node);
     void conpoint_select_clear();
     void get_selectlist( FlowArrayElem ***list, int *size)
 		{ *list = a_sel.a; *size = a_sel.size();}; 

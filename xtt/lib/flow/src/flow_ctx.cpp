@@ -293,6 +293,21 @@ void FlowCtx::conpoint_select( FlowArrayElem *node, int cp_num)
   conpoint_select_idx++;
 }
 
+void FlowCtx::conpoint_select_remove( FlowArrayElem *node)
+{
+  // Remove all occurences of the node
+  for ( int i = 0; i < conpoint_select_idx; i++) {
+    if ( conpoint_select_node[i] == node) {
+      // Hit, remove node
+      for ( int j = i; j < conpoint_select_idx - 1; j++) {
+	conpoint_select_node[j] = conpoint_select_node[j+1];
+	conpoint_select_num[j] = conpoint_select_num[j+1];
+      }
+      conpoint_select_idx--;
+    }
+  }
+}
+
 void FlowCtx::conpoint_select_clear()
 {
   if ( conpoint_select_idx >= 1)
