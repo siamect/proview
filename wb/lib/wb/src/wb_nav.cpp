@@ -782,7 +782,7 @@ ItemAttr::ItemAttr( Nav *nav, pwr_tObjid item_objid,
   attr_idx(idx), type_id(attr_type_id)
 {
   char type_id_name[80];
-  pwr_tOName aname;
+  pwr_tOName lname;
 
   type = nav_eItemType_Attr;
 
@@ -808,8 +808,8 @@ ItemAttr::ItemAttr( Nav *nav, pwr_tObjid item_objid,
       brow_SetAnnotPixmap( node, 0, nav->pixmap_attr);
     }
 
-    cdh_SuppressSuper( aname, attr_name);
-    brow_SetAnnotation( node, 0, aname, strlen(aname));
+    cdh_SuppressSuper( lname, attr_name);
+    brow_SetAnnotation( node, 0, lname, strlen(lname));
     brow_SetAnnotation( node, 1, type_id_name, strlen(type_id_name));
     brow_SetUserData( node, (void *)this);
   }
@@ -1789,6 +1789,13 @@ int Nav::get_select( pwr_sAttrRef *attrref, int *is_attr)
   case nav_eItemType_Attr:
     strcat( attr_str, ".");
     strcat( attr_str, ((ItemAttr *)item)->aname);
+    sts = ldh_NameToAttrRef( ldhses, attr_str, attrref);
+    if ( EVEN(sts)) return sts;
+    *is_attr = 1;
+    break;
+  case nav_eItemType_AttrObject:
+    strcat( attr_str, ".");
+    strcat( attr_str, ((ItemAttrObject *)item)->aname);
     sts = ldh_NameToAttrRef( ldhses, attr_str, attrref);
     if ( EVEN(sts)) return sts;
     *is_attr = 1;
