@@ -1269,13 +1269,13 @@ int RtTrace::trace_start()
 
     /* Create node and con classes for trace */
     if ( !trace_analyse_nc) {
-      f_width = 4*GOEN_F_GRID;
+      f_width = 4.5 * GOEN_F_GRID;
       f_height = GOEN_F_GRID;
       flow_CreateNodeClass( flow_ctx, "TraceNode", flow_eNodeGroup_Trace, 
 		&trace_analyse_nc);
       flow_AddRect( trace_analyse_nc, 0, 0, f_width, f_height, 
 		flow_eDrawType_Line, 1, flow_mDisplayLevel_1);
-      flow_AddAnnot( trace_analyse_nc, f_width/8, 0.8*f_height, 0,
+      flow_AddAnnot( trace_analyse_nc, 0.07 * f_width, 0.75 *f_height, 0,
 		flow_eDrawType_TextHelvetica, 3, flow_eAnnotType_OneLine,
 		flow_mDisplayLevel_1);
       flow_AddConPoint( trace_analyse_nc, 0, 0.5*f_height, 0, 
