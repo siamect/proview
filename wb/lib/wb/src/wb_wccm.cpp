@@ -405,6 +405,107 @@ static int wccm_getnextobject_func(
   return 1;
 }
 
+static int wccm_getclasslistattrref_func( 
+  void *filectx,
+  ccm_s_arg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  float *return_float, 
+  int *return_int, 
+  char *return_string)
+{
+  int		sts;
+  char   	*name;
+  pwr_tCid	cid;
+  pwr_tAttrRef	aref;
+  int		size;
+  ldh_tSesContext ldhses;
+
+  sts = wccm_get_ldhses( &ldhses);
+  if ( EVEN(sts)) {
+    strcpy( return_string, "");
+    *return_decl = CCM_DECL_STRING;
+    return CMD__NOVOLATTACHED;
+  }
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+
+  sts = ldh_ClassNameToId( ldhses, &cid, arg_list->value_string);
+  if ( ODD(sts)) {
+    sts = ldh_GetClassListAttrRef( ldhses, cid, &aref);
+    if (ODD(sts))
+      sts = ldh_AttrRefToName( ldhses, &aref, 
+		ldh_eName_Hierarchy, &name, &size);
+  }
+
+  if ( ODD(sts))
+    strcpy( return_string, name);
+  else
+    strcpy( return_string, "");
+  *return_decl = CCM_DECL_STRING;
+  
+  return 1;
+}
+
+static int wccm_getnextattrref_func( 
+  void *filectx,
+  ccm_s_arg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  float *return_float, 
+  int *return_int, 
+  char *return_string)
+{
+  int		sts;
+  char   	*name;
+  pwr_tAttrRef	aref;
+  pwr_tAttrRef	next_aref;
+  int		size;
+  ldh_tSesContext ldhses;
+  pwr_tCid	cid;
+  ccm_s_arg 	*arg_p2; 
+
+  sts = wccm_get_ldhses( &ldhses);
+  if ( EVEN(sts))
+  {
+    strcpy( return_string, "");
+    *return_decl = CCM_DECL_STRING;
+    return CMD__NOVOLATTACHED;
+  }
+
+  if ( arg_count != 2)
+    return CCM__ARGMISM;
+  arg_p2 = arg_list->next;
+
+  if ( arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+  if ( arg_p2->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+
+  sts = ldh_ClassNameToId( ldhses, &cid, arg_list->value_string);
+  if ( ODD(sts)) {
+
+    sts = ldh_NameToAttrRef( ldhses, arg_p2->value_string, &aref);
+    if ( ODD(sts)) {
+      sts = ldh_GetNextAttrRef( ldhses, cid, &aref, &next_aref); 
+      if (ODD(sts))
+	sts = ldh_AttrRefToName( ldhses, &next_aref, 
+				 ldh_eName_Hierarchy, &name, &size);
+    }
+  }
+  if ( ODD(sts))
+    strcpy( return_string, name);
+  else
+    strcpy( return_string, "");
+  *return_decl = CCM_DECL_STRING;
+  
+  return 1;
+}
+
 static int wccm_getrootlist_func( 
   void *filectx,
   ccm_s_arg *arg_list, 
@@ -1018,6 +1119,10 @@ int	wccm_register(
     sts = ccm_register_function( "GetClassList", wccm_getclasslist_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "GetNextObject", wccm_getnextobject_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetClassListAttrRef", wccm_getclasslistattrref_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetNextAttrRef", wccm_getnextattrref_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "GetRootList", wccm_getrootlist_func);
     if ( EVEN(sts)) return sts;
