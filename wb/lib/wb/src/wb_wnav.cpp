@@ -233,7 +233,7 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
   case pwr_eType_AttrRef: {
     pwr_sAttrRef	attrref;
     
-    if ( strcmp( value_str, "0") == 0)
+    if ( strcmp( value_str, "0") == 0 || strcmp( value_str, "") == 0)
       attrref = pwr_cNAttrRef;
     else {
       sts = ldh_NameToAttrRef( ldhses, value_str, &attrref);
