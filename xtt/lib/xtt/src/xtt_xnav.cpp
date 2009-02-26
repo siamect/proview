@@ -441,9 +441,9 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
   switch ( type_id ) {
   case pwr_eType_Boolean: {
     if ( !format)
-      *len = sprintf( str, "%d", *(pwr_tBoolean *)value_ptr);
+      *len = snprintf( str, size, "%d", *(pwr_tBoolean *)value_ptr);
     else
-      *len = sprintf( str, format, *(pwr_tBoolean *)value_ptr);
+      *len = snprintf( str, size, format, *(pwr_tBoolean *)value_ptr);
     break;
   }
   case pwr_eType_Float32: {
@@ -457,38 +457,38 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     }
     else {
       if ( !format)
-	*len = sprintf( str, "%f", *(float *)value_ptr);
+	*len = snprintf( str, size, "%g", *(float *)value_ptr);
       else
-	*len = sprintf( str, format, *(float *)value_ptr);
+	*len = snprintf( str, size, format, *(float *)value_ptr);
     }
     break;
   }
   case pwr_eType_Float64: {
     if ( !format)
-      *len = sprintf( str, "%f", *(double *)value_ptr);
+      *len = snprintf( str, size, "%g", *(double *)value_ptr);
     else
-      *len = sprintf( str, format, *(double *)value_ptr);
+      *len = snprintf( str, size, format, *(double *)value_ptr);
     break;
   }
   case pwr_eType_Char: {
     if ( !format)
-      *len = sprintf( str, "%c", *(char *)value_ptr);
+      *len = snprintf( str, size, "%c", *(char *)value_ptr);
     else
-      *len = sprintf( str, format, *(char *)value_ptr);
+      *len = snprintf( str, size, format, *(char *)value_ptr);
     break;
   }
   case pwr_eType_Int8: {
     if ( !format)
-      *len = sprintf( str, "%d", *(char *)value_ptr);
+      *len = snprintf( str, size, "%d", *(char *)value_ptr);
     else
-      *len = sprintf( str, format, *(char *)value_ptr);
+      *len = snprintf( str, size, format, *(char *)value_ptr);
     break;
   }
   case pwr_eType_Int16: {
     if ( !format)
-      *len = sprintf( str, "%hd", *(short *)value_ptr);
+      *len = snprintf( str, size, "%hd", *(short *)value_ptr);
     else
-      *len = sprintf( str, format, *(short *)value_ptr);
+      *len = snprintf( str, size, format, *(short *)value_ptr);
     break;
   }
   case pwr_eType_Int32: {
@@ -502,47 +502,47 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     }
     else {
       if ( !format)
-	*len = sprintf( str, "%d", *(int *)value_ptr);
+	*len = snprintf( str, size, "%d", *(int *)value_ptr);
       else
-	*len = sprintf( str, format, *(int *)value_ptr);
+	*len = snprintf( str, size, format, *(int *)value_ptr);
     }
     break;
   }
   case pwr_eType_Int64: {
     if ( !format)
-      *len = sprintf( str, "%lld", *(pwr_tInt64 *)value_ptr);
+      *len = snprintf( str, size, "%lld", *(pwr_tInt64 *)value_ptr);
     else
-      *len = sprintf( str, format, *(pwr_tInt64 *)value_ptr);
+      *len = snprintf( str, size, format, *(pwr_tInt64 *)value_ptr);
     break;
   }
   case pwr_eType_UInt8: {
     if ( !format)
-      *len = sprintf( str, "%u", *(unsigned char *)value_ptr);
+      *len = snprintf( str, size, "%u", *(unsigned char *)value_ptr);
     else
-      *len = sprintf( str, format, *(unsigned char *)value_ptr);
+      *len = snprintf( str, size, format, *(unsigned char *)value_ptr);
     break;
   }
   case pwr_eType_UInt16: {
     if ( !format)
-      *len = sprintf( str, "%hu", *(unsigned short *)value_ptr);
+      *len = snprintf( str, size, "%hu", *(unsigned short *)value_ptr);
     else
-      *len = sprintf( str, format, *(unsigned short *)value_ptr);
+      *len = snprintf( str, size, format, *(unsigned short *)value_ptr);
     break;
   }
   case pwr_eType_UInt32:
   case pwr_eType_Mask:
   case pwr_eType_DisableAttr: {
     if ( !format)
-      *len = sprintf( str, "%u", *(unsigned int *)value_ptr);
+      *len = snprintf( str, size, "%u", *(unsigned int *)value_ptr);
     else
-      *len = sprintf( str, format, *(unsigned int *)value_ptr);
+      *len = snprintf( str, size, format, *(unsigned int *)value_ptr);
     break;
   }
   case pwr_eType_UInt64: {
     if ( !format)
-      *len = sprintf( str, "%llu", *(pwr_tUInt64 *)value_ptr);
+      *len = snprintf( str, size, "%llu", *(pwr_tUInt64 *)value_ptr);
     else
-      *len = sprintf( str, format, *(pwr_tUInt64 *)value_ptr);
+      *len = snprintf( str, size, format, *(pwr_tUInt64 *)value_ptr);
     break;
   }
   case pwr_eType_Enum: {
@@ -565,9 +565,9 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     }
     if ( !converted) {
       if ( !format)
-	*len = sprintf( str, "%d", *(unsigned int *)value_ptr);
+	*len = snprintf( str, size, "%d", *(unsigned int *)value_ptr);
       else
-	*len = sprintf( str, format, *(unsigned int *)value_ptr);
+	*len = snprintf( str, size, format, *(unsigned int *)value_ptr);
       break;
     }
     break;
@@ -606,7 +606,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
         *len = 0;
         break;
       }
-    *len = sprintf( str, "%s", hiername);
+    *len = snprintf( str, size, "%s", hiername);
     break;
   }
   case pwr_eType_AttrRef: {
@@ -619,7 +619,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
       *len = 0;
       break;
     }
-    *len = sprintf( str, "%s", hiername);
+    *len = snprintf( str, size, "%s", hiername);
     break;
   }
   case pwr_eType_DataRef: {
@@ -633,7 +633,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
       *len = 0;
       break;
     }
-    *len = sprintf( str, "%s", hiername);
+    *len = snprintf( str, size, "%s", hiername);
     break;
   }
   case pwr_eType_Time: {
@@ -641,7 +641,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
 			 timstr, sizeof(timstr));
     if ( EVEN(sts))
       strcpy( timstr, "-");
-    *len = sprintf( str, "%s", timstr);
+    *len = snprintf( str, size, "%s", timstr);
     break;
   }
   case pwr_eType_DeltaTime: {
@@ -649,12 +649,12 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
 			 timstr, sizeof(timstr));
     if ( EVEN(sts))
       strcpy( timstr, "Undefined time");
-    *len = sprintf( str, "%s", timstr);
+    *len = snprintf( str, size, "%s", timstr);
     break;
   }
   case pwr_eType_ObjectIx: {
-    *len = sprintf( str, "%s", cdh_ObjectIxToString( NULL, 
-						     *(pwr_tObjectIx *) value_ptr, 1));
+    *len = snprintf( str, size, "%s", cdh_ObjectIxToString( NULL, 
+				   *(pwr_tObjectIx *) value_ptr, 1));
     break;
   }
   case pwr_eType_ClassId: {
@@ -667,7 +667,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
       *len = 0;
       break;
     }
-    *len = sprintf( str, "%s", hiername);
+    *len = snprintf( str, size, "%s", hiername);
     break;
   }
   case pwr_eType_TypeId:
@@ -681,16 +681,16 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
       *len = 0;
       break;
     }
-    *len = sprintf( str, "%s", hiername);
+    *len = snprintf( str, size, "%s", hiername);
     break;
   }
   case pwr_eType_VolumeId: {
-    *len = sprintf( str, "%s", cdh_VolumeIdToString( NULL, 
+    *len = snprintf( str, size, "%s", cdh_VolumeIdToString( NULL, 
 						     *(pwr_tVolumeId *) value_ptr, 1, 0));
     break;
   }
   case pwr_eType_RefId: {
-    *len = sprintf( str, "%s", cdh_SubidToString( NULL, 
+    *len = snprintf( str, size, "%s", cdh_SubidToString( NULL, 
 						  *(pwr_tSubid *) value_ptr, 1));
     break;
   }
@@ -707,7 +707,7 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
 			 timstr, sizeof(timstr));
     if ( EVEN(sts))
       strcpy( timstr, "Undefined time");
-    *len = sprintf( str, "%s", timstr);
+    *len = snprintf( str, size, "%s", timstr);
     break;
   }
   case xnav_eType_GdbNodeFlags: {
