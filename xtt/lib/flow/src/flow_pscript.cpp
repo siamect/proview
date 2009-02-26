@@ -188,8 +188,10 @@ int FlowPscript::arc( double x, double y, double width, double height, int angle
   double pi = 3.14159;
 
   idx = MAX( 0.5, idx);
-  angle1 = angle1 % 360;
-  angle2 = angle2 % 360;
+  if ( abs(angle1) > 360)
+    angle1 = angle1 % 360;
+  if ( abs(angle2) > 360)
+    angle2 = angle2 % 360;
 
   if ( type == flow_eDrawType_LineDashed)
   {
