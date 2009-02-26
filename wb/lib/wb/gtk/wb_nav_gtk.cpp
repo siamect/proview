@@ -100,7 +100,7 @@ static void nav_sel_convert_cb( GtkWidget *w, GtkSelectionData *selection_data,
     strcpy( name, "");
   }
   else {
-    sts = nav->get_plant_select_cb( nav->parent_ctx, name);
+    sts = nav->get_plant_select_cb( nav->parent_ctx, name, sizeof(name));
     if ( EVEN(sts)) {
       strcpy( name, "");
     }

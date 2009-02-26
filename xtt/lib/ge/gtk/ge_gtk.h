@@ -86,7 +86,7 @@ class GeGtk : public Ge {
   virtual void set_prompt( const char *prompt);
   virtual void subgraphs_new();
   virtual void update();
-  virtual int get_plant_select( char *name);
+  virtual int get_plant_select( char *name, int size);
   virtual void create_list( const char *title, const char *texts,
 			    void (action_cb)( void *, char *), void *ctx);
   virtual int create_modal_dialog( const char *title, const char *text, const char *button1,

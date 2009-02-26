@@ -120,11 +120,11 @@ void Attr::recall_prev()
   }
 }
 
-int Attr::get_plant_select_c( void *attr_ctx, char *value)
+int Attr::get_plant_select_c( void *attr_ctx, char *value, int size)
 {
   Attr *attr = (Attr *) attr_ctx;
   if ( attr->get_plant_select_cb)
-    return attr->get_plant_select_cb( attr->parent_ctx, value);  
+    return attr->get_plant_select_cb( attr->parent_ctx, value, size);  
   return 0;
 }
 

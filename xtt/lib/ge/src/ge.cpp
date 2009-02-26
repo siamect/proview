@@ -926,7 +926,7 @@ void Ge::activate_connect()
     message( 'E', "More than one object is selected");
     return;
   }
-  sts = Ge::get_plant_select_cb( (void *)this, name);
+  sts = Ge::get_plant_select_cb( (void *)this, name, sizeof(name));
   if ( EVEN(sts)) {
     message( 'E', "Select an object in the plant hierarchy");
     return;
@@ -952,7 +952,7 @@ void Ge::activate_connectsecond()
     message( 'E', "More than one object is selected");
     return;
   }
-  sts = Ge::get_plant_select_cb( (void *)this, name);
+  sts = Ge::get_plant_select_cb( (void *)this, name, sizeof(name));
   if ( EVEN(sts)) {
     message( 'E', "Select an object in the plant hierarchy");
     return;
@@ -994,9 +994,9 @@ void Ge::activate_command()
 {
 }
 
-int Ge::get_plant_select_cb( void *ge_ctx, char *select_name)
+int Ge::get_plant_select_cb( void *ge_ctx, char *select_name, int size)
 {
-  return ((Ge *)ge_ctx)->get_plant_select( select_name);
+  return ((Ge *)ge_ctx)->get_plant_select( select_name, size);
 }
 
 void Ge::activate_exit()

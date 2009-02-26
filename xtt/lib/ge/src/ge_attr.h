@@ -70,7 +70,7 @@ class Attr {
     void	(*store_cb) (void *, void *);
     int		(*recall_cb) (void *, void *, int, GeDyn **);
     int		(*set_data_cb) (void *, void *, GeDyn *);
-    int		(*get_plant_select_cb) (void *, char *);
+    int		(*get_plant_select_cb) (void *, char *, int);
     int 	(*get_current_colors_cb)( void *, glow_eDrawType *, glow_eDrawType *,
 						  glow_eDrawType *);
     void	*client_data;
@@ -84,7 +84,7 @@ class Attr {
     virtual void store();
     virtual void recall_next();
     virtual void recall_prev();
-    static int get_plant_select_c( void *attr_ctx, char *value);
+    static int get_plant_select_c( void *attr_ctx, char *value, int size);
     static int get_current_colors_c( void *attr_ctx, glow_eDrawType *fill_color, 
 				      glow_eDrawType *border_color, 
 				      glow_eDrawType *text_color);    

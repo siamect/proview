@@ -256,7 +256,7 @@ void GeMotif::change_value_cb( void *ge_ctx, void *value_object, char *text)
   gectx->current_value_object = value_object;
 }
 
-int GeMotif::get_plant_select( char *select_name)
+int GeMotif::get_plant_select( char *select_name, int size)
 {
 #if LDH
   pwr_sAttrRef	attrref;
@@ -268,11 +268,11 @@ int GeMotif::get_plant_select( char *select_name)
   if ( !ldhses) {
     sts = CoWowMotif::GetSelection( toplevel, str, sizeof(str), graph_atom);
     if ( ODD(sts))
-      strcpy( select_name, str);
+      strncpy( select_name, str, size);
     else {
       sts = CoWowMotif::GetSelection( toplevel, str, sizeof(str), XA_STRING);
       if ( ODD(sts))
-	strcpy( select_name, str);
+	strncpy( select_name, str, size);
     }
     return sts;
   }
@@ -283,17 +283,17 @@ int GeMotif::get_plant_select( char *select_name)
 				 0, 1, 1, buff))
       return 0;
 
-    strcpy( select_name, buff);
+    strncpy( select_name, buff, size);
     return 1;
   }
   else {
     sts = CoWowMotif::GetSelection( toplevel, str, sizeof(str), graph_atom);
     if ( ODD(sts))
-      strcpy( select_name, str);
+      strncpy( select_name, str, size);
     else {
       sts = CoWowMotif::GetSelection( toplevel, str, sizeof(str), XA_STRING);
       if ( ODD(sts))
-	strcpy( select_name, str);
+	strncpy( select_name, str, size);
     }
     return sts;
   }
@@ -303,11 +303,11 @@ int GeMotif::get_plant_select( char *select_name)
 
   sts = CoWowMotif::GetSelection( toplevel, str, sizeof(str), graph_atom);
   if ( ODD(sts))
-    strcpy( select_name, str);
+    strncpy( select_name, str, size);
   else {
     sts = CoWowMotif::GetSelection( toplevel, str, sizeof(str), XA_STRING);
     if ( ODD(sts))
-      strcpy( select_name, str);
+      strncpy( select_name, str, size);
   }
   return sts;
 #endif

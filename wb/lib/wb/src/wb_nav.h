@@ -68,7 +68,7 @@ class Nav {
   flow_sAnnotPixmap *pixmap_attrarray;
   flow_sAnnotPixmap *pixmap_attrarrayelem;
   flow_sAnnotPixmap *pixmap_attrobject;
-  int 		(*get_plant_select_cb)( void *, char *);
+  int 		(*get_plant_select_cb)( void *, char *, int);
   int 		(*set_focus_cb)( void *, void *);
   int 		(*traverse_focus_cb)( void *, void *);
   int		displayed;
