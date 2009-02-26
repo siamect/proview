@@ -238,7 +238,7 @@ int goen_create_nodetype_m3(
 		&width, &height, &annot_rows);
 	free((char *) parvalue);	
 
-	f_height = (floor( height / GOEN_F_GRID) + 1) * GOEN_F_GRID - f_delta*2;
+	f_height = (floor( (height + f_delta*2)/ GOEN_F_GRID) + 1) * GOEN_F_GRID - f_delta*2;
 	f_width = co_max( width + f_strlength *2, f_defwidth) - f_delta*2;
 	if ( (height < GOEN_F_GRID-f_delta*2) && (f_height > GOEN_F_GRID))
 	  f_height = GOEN_F_GRID - f_delta*2; 
