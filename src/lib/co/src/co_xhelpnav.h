@@ -135,6 +135,7 @@ class CoXHelpNav {
     void enable_events( CoXHelpNavBrow *brow);
     int help( const char *key, const char *help_bookmark, navh_eHelpFile file_type,
 	      const char *file_name, int pop, bool strict);
+    int home();
     int back();
     int next_topic();
     int previous_topic();
