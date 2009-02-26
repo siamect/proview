@@ -1013,7 +1013,7 @@ void XNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_object, 11.9, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
-  brow_AddFrame( nc_object, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_object, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Create attribute nodeclass
 
@@ -1026,7 +1026,7 @@ void XNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_attr, 8.9, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
-  brow_AddFrame( nc_attr, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_attr, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Create table nodeclass
 
@@ -1064,7 +1064,7 @@ void XNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_table, 38.9, 0.6, 9,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
-  brow_AddFrame( nc_table, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_table, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Create text
 
@@ -1081,7 +1081,7 @@ void XNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_text, 11.9, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
-  brow_AddFrame( nc_text, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_text, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Create Header
 
@@ -1094,7 +1094,7 @@ void XNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_header, 8.9, 0.6, 1,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		1);
-  brow_AddFrame( nc_header, 0, 0, 20, 0.8, flow_eDrawType_LineGray, 2, 1);
+  brow_AddFrame( nc_header, 0, 0, 20, 0.83, flow_eDrawType_LineGray, 2, 1);
 
   // Create Header2
 
@@ -1144,7 +1144,7 @@ void XNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_table_header, 38.9, 0.6, 9,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		0);
-  brow_AddFrame( nc_table_header, 0, 0, 20, 0.8, flow_eDrawType_LineGray, 2, 1);
+  brow_AddFrame( nc_table_header, 0, 0, 20, 0.83, flow_eDrawType_LineGray, 2, 1);
 
   brow_CreateNodeClass( ctx, "NavigatorEnum", 
 		flow_eNodeGroup_Common, &nc_enum);
@@ -1154,7 +1154,7 @@ void XNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_enum, 2.9, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
-  brow_AddFrame( nc_enum, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_enum, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
  
 }
 

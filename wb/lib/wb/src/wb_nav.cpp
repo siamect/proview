@@ -1620,7 +1620,7 @@ void Nav::create_nodeclasses()
   brow_AddAnnot( nc_object, 9, 0.6, 2,
 		 flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		 1);
-  brow_AddFrame( nc_object, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_object, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
 }
 
 //

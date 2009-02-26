@@ -125,7 +125,7 @@ void NodelistNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_node, 21, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
-  brow_AddFrame( nc_node, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_node, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Create attribute nodeclass
 
@@ -138,7 +138,7 @@ void NodelistNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_attr, 8, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
-  brow_AddFrame( nc_attr, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_attr, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Create system status attribute nodeclass
 
@@ -153,7 +153,7 @@ void NodelistNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_sys_sts_attr, 8, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
-  brow_AddFrame( nc_sys_sts_attr, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_sys_sts_attr, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Create system status attribute nodeclass
 
@@ -171,7 +171,7 @@ void NodelistNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_sts_attr, 10, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
-  brow_AddFrame( nc_sts_attr, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_sts_attr, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
 }
 
 void NodelistNavBrow::brow_setup()
