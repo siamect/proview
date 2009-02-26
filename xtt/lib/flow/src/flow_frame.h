@@ -41,6 +41,8 @@ class FlowFrame : public FlowRect {
     void get_borders( double pos_x, double pos_y, double *x_right, 
 		double *x_left, double *y_high, double *y_low, void *node);
     flow_eObjectType type() { return flow_eObjectType_Frame;};
+    int event_handler( void *pos, flow_eEvent event, int x, int y,
+		       void *node);
 };
 
 #endif
