@@ -1115,6 +1115,8 @@ void grow_CreateGrowMenu( grow_tCtx ctx, const char *name, glow_sMenuInfo *info,
 		     fill_rect, border, fill_draw_type, text_size, text_drawtype, 
 		     text_color, disabled_text_color, text_font, (GlowArrayElem *)parent);
   ctx->insert( r1);
+  ctx->pop( r1);
+  r1->draw();
   *menu = (grow_tObject) r1;
 }
 
