@@ -6325,6 +6325,8 @@ GetNextSibling()	<LINK> getnextsibling()
 GetNextVolume()		<LINK> getnextvolume()
 GetClassList()		<LINK> getclasslist()
 GetNextObject()		<LINK> getnextobject()
+GetClassListAttrRef()	<LINK> getclasslistattrref()
+GetNextAttrRef()	<LINK> getnextattrref()
 GetObjectClass()	<LINK> getobjectclass()
 GetNodeObject()		<LINK> getnodeobject()
 GetRootList()		<LINK> getrootlist()
@@ -7130,6 +7132,56 @@ string		<t>name		<t>objektets namn.
 <c>  while ( name != "")
 <c>    printf("Di object found: %s", name);
 <c>    name = GetNextObject(name);
+<c>  endwhile
+</TOPIC>
+
+<TOPIC> getclasslistattrref() <style> function
+GetClassListAttrRef()
+
+string GetClassListAttrRef( string class)
+
+<b>Beskrivning
+
+Hämta första objekt eller attributeobjekt av angiven klass. Nästa objekt 
+eller attributobjekt av klassen kan hämtas med GetNextAttrRef().
+Returnerar namnet på första objektet. Om det inte finns några instanser
+eller attributobjekt av klassen returneras en null-sträng.
+
+<b>Argument
+
+string		<t>name		<t>namn på klassen.
+
+<b>Exempel
+
+<c>  string name;
+
+<c>  name = GetClassListAttrRef("Dv");
+</TOPIC>
+
+<TOPIC> getnextattrref() <style> function
+GetNextAttrRef()
+
+string GetNextAttrRef( string class, string name)
+
+<b>Beskrivning
+
+Hämta nästa objekt i klasslistan.
+Returnerar namnet på objektet eller attributobjektet. Om det inte finns 
+något nästa objekt returneras en null-sträng.
+
+<b>Argument
+
+string		<t>class	<t>namn på klassen.
+string		<t>name		<t>namn på objektet eller attributobjektet.
+
+<b>Exempel
+
+<c>  string name;
+
+<c>  name = GetClassListAttrRef("Di");
+<c>  while ( name != "")
+<c>    printf("Di object found: %s", name);
+<c>    name = GetNextAttrRef(name);
 <c>  endwhile
 </TOPIC>
 
