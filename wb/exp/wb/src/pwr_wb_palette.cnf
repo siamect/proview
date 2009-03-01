@@ -289,13 +289,14 @@ palette NavigatorPalette
     }
     menu Remote
     {
+      class LoggConfig
       class RemoteConfig
-      class RemnodeMQ
-      class RemnodeUDP
-      class RemnodeTCP
       class RemnodeALCM
-      class RemnodeSerial
       class RemnodeModbus
+      class RemnodeMQ
+      class RemnodeSerial
+      class RemnodeTCP
+      class RemnodeUDP
       class Remnode3964R
       class RemTrans
       menu Buffers
