@@ -108,3 +108,4 @@
 081022 cs  convert   Xtthelp bookmark on header didn't work after html conversion.
 081024 cs  xtthelp   New program co_help to view helptexts.
 081124 cs  qcom      Quota check for max number of buffered messages in a queue added.
+090224 cs  xtthelp   New home button in help window.
