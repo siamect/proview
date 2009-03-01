@@ -11,7 +11,7 @@
 Name: pwrsev
 Summary: Proview/R storage environment
 Version: 4.6.0
-Release: 4
+Release: 6
 License: GPL
 BuildArch: i386
 Packager: claes.sjofors@proview.se
@@ -425,4 +425,5 @@ fi
   - Sev: Improved error handling.
   4.6.0-4 
   - Xtt/Ge: Metric fonts.
-
+  4.6.0-6
+  - Problem with '.' in tablename fixed.

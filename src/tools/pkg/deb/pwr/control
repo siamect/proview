@@ -1,5 +1,5 @@
 Package: pwr46
-Version: 4.6.0-5
+Version: 4.6.0-6
 Section: base
 Priority: optional
 Architecture: i386
@@ -17,3 +17,11 @@ Description: Proview development and runtime environment package
   - Metric fonts in Ge and Xtt.
  4.6.0-5
   - Wb, Xtt: Problem with insensitive radiobuttons fixed.
+ 4.6.0-6
+  - Problem with missing invert circle in postscript poc doc fixed.
+  - Configurator script functions GetClassListAttrRef() and GetNextAttrRef() added to wtt.
+  - Improved handling of unexpected mousekey combinations in plc editor.
+  - Error message in class editor if Elements > 1 and arraybit not set in $Attribte added.
+  - DataArithm: structdef statement added to DataArtithm code.
+  - Bugfix in plc editor connectionpoint selection.
+  - Bugfix, activating connect function in plc editor when nothing was selected caused X exception.
