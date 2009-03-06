@@ -27,10 +27,9 @@
 #include <stdio.h>
 #include "cnv_wbltops.h"
 #include "cnv_ctx.h"
-extern "C" {
 #include "pwr.h"
+#include "pwr_version.h"
 #include "co_cdh.h"
-}
 #include "co_lng.h"
 
 CnvWblToPs::~CnvWblToPs()
@@ -63,14 +62,14 @@ int CnvWblToPs::init( char *first)
   tops.print_h2( ctx->rw->volume_name);
   tops.y -= 150;
   tops.print_horizontal_line();
-  tops.print_text("Version V4.1.0", tops.style[tops.ci].text);
+  tops.print_text("Version " pwrv_cPwrVersionStr, tops.style[tops.ci].text);
   tops.print_horizontal_line();
   tops.print_pagebreak( 0);
 
   tops.set_cf( ps_eFile_Info);
   tops.set_ci( ps_eId_InfoPage);
   tops.y = ps_cPageHeight - ps_cTopMargin - 450;
-  tops.print_text("Copyright 2005 SSAB Oxelösund AB", tops.style[tops.ci].text);
+  tops.print_text(pwrv_cPwrCopyright, tops.style[tops.ci].text);
   tops.print_text("", tops.style[tops.ci].text);
   tops.print_text("Permission is granted to copy, distribute and/or modify this document", tops.style[tops.ci].text);
   tops.print_text("under the terms of the GNU Free Documentation License, Version 1.2", tops.style[tops.ci].text);
