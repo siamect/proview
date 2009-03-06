@@ -93,6 +93,7 @@ static crrgen_tRefList reflist[] = {
     { pwr_cClass_cstoap, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object, 0},
     { pwr_cClass_GetAp, "DevBody", "ApObject", crrgen_eType_Read, crrgen_eTable_Object, 0},
     { pwr_cClass_stoap, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object, 0},
+    { pwr_cClass_GetPi, "DevBody", "CoObject", crrgen_eType_Read, crrgen_eTable_Signal, 0},
     { pwr_cClass_CStoIp, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object, 0},
     { pwr_cClass_GetIp, "DevBody", "IpObject", crrgen_eType_Read, crrgen_eTable_Object, 0},
     { pwr_cClass_StoIp, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object, 0},
@@ -372,6 +373,7 @@ void wb_crrgen::load( pwr_tStatus *rsts)
 	  case pwr_cClass_Ai:
 	  case pwr_cClass_Ao:
 	  case pwr_cClass_Av:
+	  case pwr_cClass_Co:
 	  case pwr_cClass_Ii:
 	  case pwr_cClass_Io:
 	  case pwr_cClass_Iv:
@@ -431,6 +433,7 @@ void wb_crrgen::load( pwr_tStatus *rsts)
 	  case pwr_cClass_Ai:
 	  case pwr_cClass_Ao:
 	  case pwr_cClass_Av:
+	  case pwr_cClass_Co:
 	  case pwr_cClass_Ii:
 	  case pwr_cClass_Io:
 	  case pwr_cClass_Iv:

@@ -7320,6 +7320,7 @@ static int utl_signalref (
 		{ pwr_cClass_pos3p, "DevBody", "DoClose", CRR_WRITE, 0},
 		{ pwr_cClass_inc3p, "DevBody", "DoOpen", CRR_WRITE, 0},
 		{ pwr_cClass_inc3p, "DevBody", "DoClose", CRR_WRITE, 0},
+		{ pwr_cClass_GetPi, "DevBody", "CoObject", CRR_READ, 0},
  		{ 0, }};
 
 	/* get all the children to the object */
@@ -11733,8 +11734,9 @@ static int	cross_get_object_page(
 #define CROSSLIST_IO	6
 #define CROSSLIST_II	7
 #define CROSSLIST_IV	8
-#define CROSSLIST_OBJ	9
-#define CROSSLIST_SIZE  10
+#define CROSSLIST_CO	9
+#define CROSSLIST_OBJ	10
+#define CROSSLIST_SIZE  11
 
 static	int		cross_crosslist_loaded = 0;
 static	cross_t_list	*cross_crosslist[CROSSLIST_SIZE] = {0,0,0,0,0,0,0,0,0,0};
@@ -11899,6 +11901,7 @@ static int	cross_crosslist_object_insert(
     { pwr_cClass_GetIi, "DevBody", "IiObject", CRR_READ, CROSSLIST_II},
     { pwr_cClass_GetIo, "DevBody", "IoObject", CRR_READ, CROSSLIST_IO},
     { pwr_cClass_GetIv, "DevBody", "IvObject", CRR_READ, CROSSLIST_IV},
+    { pwr_cClass_GetPi, "DevBody", "CoObject", CRR_READ, CROSSLIST_CO},
     { pwr_cClass_ExternRef, "DevBody", "Object", CRR_GETFROMOBJECT, CROSSLIST_OBJ},
     { pwr_cClass_reset_so, "DevBody", "OrderObject", CRR_READ, CROSSLIST_OBJ},
     { pwr_cClass_GetData, "DevBody", "DataObject", CRR_REF, CROSSLIST_OBJ},
@@ -12266,6 +12269,8 @@ static int	crr_crossref(
 	  cr_index = CROSSLIST_IO;
 	else if ( cid == pwr_cClass_Iv)
 	  cr_index = CROSSLIST_IV;
+	else if ( cid == pwr_cClass_Co)
+	  cr_index = CROSSLIST_CO;
 	else
 	  cr_index = CROSSLIST_OBJ;
 

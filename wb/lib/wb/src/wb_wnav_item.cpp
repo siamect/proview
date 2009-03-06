@@ -613,6 +613,7 @@ int WItemBaseObject::open_crossref( WNav *wnav, double x, double y)
       case pwr_cClass_Av:
       case pwr_cClass_Ai:
       case pwr_cClass_Ao:
+      case pwr_cClass_Co:
       case pwr_cClass_Iv:
       case pwr_cClass_Ii:
       case pwr_cClass_Io:
