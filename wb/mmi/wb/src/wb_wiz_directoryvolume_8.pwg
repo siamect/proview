@@ -637,7 +637,7 @@ pwr_exe:
 102 33619964
 103 0
 12
-1200 $ccm.dv_volumes[0]##String80
+1200 $ccm.dv_open_volume##String80
 1201 %s
 1202 1
 1203 1

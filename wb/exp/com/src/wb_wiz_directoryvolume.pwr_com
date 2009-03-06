@@ -97,6 +97,7 @@ main()
   extern string dv_default_vid;
   extern string dv_error_message;
   extern int dv_nomorereg;
+  extern string dv_open_volume;
 
   string dv_vid[20];
   string project;
@@ -142,6 +143,7 @@ main()
   int first_reg = 1;
   int first_sim = 1;
   string tmp_fname="$pwrp_tmp/wtmp.txt";
+  int found;
 
 
   verify(0);
@@ -569,11 +571,24 @@ page_4:
   save/quiet
   noedit
 
+  found = 0;
+  for ( i = 0; i < volcnt; i++)
+    if ( dv_vol_class[i] == 0)
+      dv_open_volume = dv_volumes[i];
+      found = 1;
+      break;
+    endif
+  endfor
+
+  if ( !found)
+    goto exit_now;
+  endif
+   
   SetSubwindow( "wb_wizard_frame", "wizwin", "$pwr_exe/wb_wiz_directoryvolume_8", 1);
   if ( dv_quit)
     goto exit_now;
   endif
-  open database/volume='dv_volumes[0]'
+  open database/volume='dv_open_volume'
   
 exit_now:
   CloseGraph("wb_wizard_frame");
