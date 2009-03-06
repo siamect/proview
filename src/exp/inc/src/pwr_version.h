@@ -69,5 +69,6 @@
 #define pwrv_cPwrVersion         SET_VERSION('V', 4, 6, 0)
 
 #define pwrv_cWbdbVersionShortStr "V46"
+#define pwrv_cPwrCopyright	 "Copyright (C) 2005-2009 SSAB Oxelösund AB"
 
 #endif
