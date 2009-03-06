@@ -32,6 +32,13 @@
 /*! \addtogroup Glow */
 /*@{*/
 
+typedef enum {
+  colpal_eActive_FillColor,
+  colpal_eActive_BorderColor,
+  colpal_eActive_TextColor
+} colpal_eActive;
+
+
 
 //! Context for the color palette.
 /*! The color palette consists of 300 colors, where the bordercolor, fillcolor and the textcolor
@@ -50,10 +57,11 @@ class ColPalCtx : public GrowCtx {
     \param zoom_fact	Initial zoomfactor.
   */
   ColPalCtx( const char *ctx_name, double zoom_fact = 100) :
-    	GrowCtx( ctx_name, zoom_fact), columns(30), 
-	current_fill( glow_eDrawType_LineGray), current_border( glow_eDrawType_Line),
-	current_text(glow_eDrawType_Line), entry_width(0.3), entry_height(1), display_entry_width(3)
-	{ ctx_type = glow_eCtxType_ColPal; grid_on = 0; };
+    GrowCtx( ctx_name, zoom_fact), columns(30), 
+    current_fill( glow_eDrawType_LineGray), current_border( glow_eDrawType_Line),
+    current_text(glow_eDrawType_Line), entry_width(0.3), entry_height(1), display_entry_width(3),
+    active(colpal_eActive_FillColor)
+      { ctx_type = glow_eCtxType_ColPal; grid_on = 0; };
 
   //! Destructor
   ~ColPalCtx() {};
@@ -95,6 +103,10 @@ class ColPalCtx : public GrowCtx {
   */
   int event_handler( glow_eEvent event, int x, int y, int w, int h);
 
+  void set_active( colpal_eActive a);
+  colpal_eActive get_active() { return active;}
+  void set_colors();
+
   int columns;			//!< Number of columns in the color palette.
   glow_eDrawType current_fill;	//!< The currently selected fill color.
   glow_eDrawType current_border; //!< The currently selected border color.
@@ -102,9 +114,16 @@ class ColPalCtx : public GrowCtx {
   GlowArrayElem *display_fill;	//!< The rectangle object to display the current fillcolor.
   GlowArrayElem *display_border; //!< The rectangle object to display the current border color.
   GlowArrayElem *display_text;	//!< The rectangle object to display the current text color.
+  GlowArrayElem *active_fill;	//!< The rectangle object to mark fill color active. 
+  GlowArrayElem *active_border;	//!< The rectangle object to mark border color active. 
+  GlowArrayElem *active_text;	//!< The rectangle object to mark text color active. 
+  GlowArrayElem *text_fill;	//!< The fill color text object. 
+  GlowArrayElem *text_border;	//!< The border color text object. 
+  GlowArrayElem *text_text;	//!< The text color text object. 
   double entry_width;		//!< Width of a color palette entry.
   double entry_height;		//!< Height of a color palette entry.
   double display_entry_width;	//!< Width of a display entry.
+  colpal_eActive active;	//!< Active colortype (fill, border or text).
 };
 
 //! Scroll horizontal.

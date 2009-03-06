@@ -44,40 +44,62 @@
 
 void ColPalCtx::configure()
 {
-  GrowRect *rect;
   GrowText *text;
+  GrowRect *rect;
   double x, y;
   int i;
+  double d = 0.02;
 
   if ( nodraw) 
     return;
   
-  display_fill = new GrowRect( this, "FillRect", 0, 0, display_entry_width, 
+  display_fill = new GrowRect( this, "FillRect", d, 0, display_entry_width - 2 * d, 
 	entry_height, 
-	glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 0, current_fill);
+	glow_eDrawType_Color37, 1, 0, glow_mDisplayLevel_1, 1, 1, 0, current_fill);
   insert( (GlowArrayElem *)display_fill);
-  text = new GrowText( this, "FillText", "Fill", 0.3, 
-		       entry_height / 2 + 0.3, 
-	glow_eDrawType_TextHelvetica, glow_eDrawType_Line, 2);
-  insert( (GlowArrayElem *)text);
+  active_fill = new GrowRect( this, "FillRectActive", d, 0, display_entry_width - 2 * d, 
+	entry_height, 
+	glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 0, 1, 1, current_fill);
+  insert( (GlowArrayElem *)active_fill);
+  ((GrowRect *)active_fill)->shadow_width = 15;
+  ((GrowRect *)active_fill)->relief = glow_eRelief_Down;
+  text_fill = new GrowText( this, "FillText", "Fill", 0.3, 
+			    entry_height / 2 + 0.2, 
+			    glow_eDrawType_TextHelvetica, glow_eDrawType_Line, 2);
+  insert( text_fill);
 
-  display_border = new GrowRect( this, "BorderRect", display_entry_width, 0, 
-	display_entry_width, entry_height,
-	glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 0, current_border);
+  display_border = new GrowRect( this, "BorderRect", display_entry_width + d, 0, 
+	display_entry_width - 2 * d, entry_height,
+	glow_eDrawType_Color37, 1, 0, glow_mDisplayLevel_1, 1, 1, 0, current_border);
   insert( (GlowArrayElem *)display_border);
-  text = new GrowText( this, "BorderText", "Border", display_entry_width + 0.3, 
-		       entry_height / 2 + 0.3, 
+  active_border = new GrowRect( this, "BorderRectActive", display_entry_width + d, 0, 
+	display_entry_width - 2 * d, entry_height,
+	glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 0, 1, 1, current_border);
+  insert( (GlowArrayElem *)active_border);
+  ((GrowRect *)active_border)->shadow_width = 15;
+  ((GrowRect *)active_border)->relief = glow_eRelief_Down;
+  ((GrowRect *)active_border)->display_level = glow_mDisplayLevel_2;
+  text_border = new GrowText( this, "BorderText", "Border", display_entry_width + 0.3, 
+		       entry_height / 2 + 0.2, 
 	glow_eDrawType_TextHelvetica, glow_eDrawType_Color4, 2);
-  insert( (GlowArrayElem *)text);
+  insert( text_border);
 
-  display_text = new GrowRect( this, "TextRect", display_entry_width * 2, 0, 
-	display_entry_width, entry_height,
-	glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 0, current_border);
+  display_text = new GrowRect( this, "TextRect", display_entry_width * 2 + d, 0, 
+	display_entry_width - 2 * d, entry_height,
+	glow_eDrawType_Color37, 1, 0, glow_mDisplayLevel_1, 1, 1, 0, current_text);
   insert( (GlowArrayElem *)display_text);
-  text = new GrowText( this, "TextText", "Text", display_entry_width * 2 + 0.3, 
-		       entry_height / 2 + 0.3, 
+  active_text = new GrowRect( this, "TextRectActive", display_entry_width * 2 + d, 0, 
+	display_entry_width - 2 * d, entry_height,
+	glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 0, 1, 1, current_text);
+  ((GrowRect *)active_text)->shadow_width = 15;
+  ((GrowRect *)active_text)->relief = glow_eRelief_Down;
+  ((GrowRect *)active_text)->display_level = glow_mDisplayLevel_2;
+  insert( (GlowArrayElem *)active_text);
+  ((GrowRect *)active_text)->display_level = glow_mDisplayLevel_2;
+  text_text = new GrowText( this, "TextText", "Text", display_entry_width * 2 + 0.3, 
+		       entry_height / 2 + 0.2, 
 	glow_eDrawType_TextHelvetica, glow_eDrawType_Color4, 2);
-  insert( (GlowArrayElem *)text);
+  insert( text_text);
 
   for ( i = glow_eDrawType_Line; i <= glow_eDrawType_Color300; i++)
   {
@@ -172,6 +194,7 @@ void ColPalCtx::configure()
   a.zoom();
   redraw();
   change_scrollbar();
+  set_colors();
 }
 
 void ColPalCtx::change_scrollbar()
@@ -302,6 +325,9 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
   callback_object = 0;
 
   switch ( event) {
+    case glow_eEvent_MB1Down:
+      ctx->gdraw->set_click_sensitivity( &ctx->mw, glow_mSensitivity_MB1Click);
+      break;
     case glow_eEvent_MB1Click:
     case glow_eEvent_MB1ClickShift:
     case glow_eEvent_MB2Click:
@@ -313,13 +339,44 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
       }
 
       if ( callback_object_type != glow_eObjectType_NoObject) {
-        if ( callback_object->type() == glow_eObjectType_GrowRect) {
+        if ( callback_object->type() == glow_eObjectType_GrowText) {
+	  GrowText *text;
+	  char name[32];
+
+          text = (GrowText *)callback_object;
+          text->get_object_name( name);
+          if ( strncmp( name, "FillText", 8) == 0 &&
+	       event == glow_eEvent_MB1Click) {
+	    set_active( colpal_eActive_FillColor);
+	  }
+          else if ( strncmp( name, "BorderText", 10) == 0 &&
+		    event == glow_eEvent_MB1Click) {
+	    set_active( colpal_eActive_BorderColor);
+	  }
+          else if ( strncmp( name, "TextText", 8) == 0 &&
+		    event == glow_eEvent_MB1Click) {
+	    set_active( colpal_eActive_TextColor);
+	  }
+	}
+        else if ( callback_object->type() == glow_eObjectType_GrowRect) {
           GrowRect *rect;
           char name[32];
 
           rect = (GrowRect *)callback_object;
           rect->get_object_name( name);
-          if ( strncmp( name, "ToneEntry", 9) == 0 &&
+          if ( strncmp( name, "FillRect", 8) == 0 &&
+	       event == glow_eEvent_MB1Click) {
+	    set_active( colpal_eActive_FillColor);
+	  }
+          else if ( strncmp( name, "BorderRect", 10) == 0 &&
+	       event == glow_eEvent_MB1Click) {
+	    set_active( colpal_eActive_BorderColor);
+	  }
+          else if ( strncmp( name, "TextRect", 8) == 0 &&
+	       event == glow_eEvent_MB1Click) {
+	    set_active( colpal_eActive_TextColor);
+	  }
+          else if ( strncmp( name, "ToneEntry", 9) == 0 &&
                 event == glow_eEvent_MB1Click)
           {
             glow_eDrawTone tone;
@@ -359,16 +416,26 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
           }
 	  else {
 	    if ( event == glow_eEvent_MB1Click) {
-	      current_fill = rect->fill_drawtype;
-	      ((GrowRect *)display_fill)->set_fill_color( current_fill);
+	      switch ( active) {
+	      case colpal_eActive_FillColor:
+		current_fill = rect->fill_drawtype;
+		break;
+	      case colpal_eActive_BorderColor:
+		current_border = rect->fill_drawtype;
+		break;
+	      case colpal_eActive_TextColor:
+		current_text = rect->fill_drawtype;
+		break;
+	      }
+	      set_colors();
 	    }
 	    else if ( event == glow_eEvent_MB1ClickShift) {
 	      current_text = rect->fill_drawtype;
-	      ((GrowRect *)display_text)->set_fill_color( current_text);
+	      set_colors();
 	    }
 	    else {
 	      current_border = rect->fill_drawtype;
-	      ((GrowRect *)display_border)->set_fill_color( current_border);
+	      set_colors();
 	    }
 	    callback = 1;
 	  }
@@ -455,3 +522,135 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
   return 1;
 }
 
+void ColPalCtx::set_active( colpal_eActive a)
+{
+  active = a;
+  switch ( active) {
+  case colpal_eActive_FillColor:
+    ((GrowRect *)active_fill)->display_level = glow_mDisplayLevel_1;
+    ((GrowRect *)active_border)->display_level = glow_mDisplayLevel_2;
+    ((GrowRect *)active_text)->display_level = glow_mDisplayLevel_2;
+    break;
+  case colpal_eActive_BorderColor:
+    ((GrowRect *)active_fill)->display_level = glow_mDisplayLevel_2;
+    ((GrowRect *)active_border)->display_level = glow_mDisplayLevel_1;
+    ((GrowRect *)active_text)->display_level = glow_mDisplayLevel_2;
+    break;
+  case colpal_eActive_TextColor:
+    ((GrowRect *)active_fill)->display_level = glow_mDisplayLevel_2;
+    ((GrowRect *)active_border)->display_level = glow_mDisplayLevel_2;
+    ((GrowRect *)active_text)->display_level = glow_mDisplayLevel_1;
+    break;
+  }
+  set_colors();
+}
+
+void ColPalCtx::set_colors()
+{
+  glow_eDrawType shadowcolor;
+  glow_eDrawType textcolor;
+
+  ((GrowRect *)display_fill)->set_fill_color( current_fill);
+  switch ( current_fill) {
+  case 0: shadowcolor = glow_eDrawType_Color30; break;
+  case 1: shadowcolor = glow_eDrawType_Color188; break;
+  case 2: shadowcolor = glow_eDrawType_Color24; break;
+  case 3: shadowcolor = glow_eDrawType_Color31; break;
+  case 4: shadowcolor = glow_eDrawType_Color87; break;
+  case 5: shadowcolor = glow_eDrawType_Color115; break;
+  case 6: shadowcolor = glow_eDrawType_Color144; break;
+  case 7: shadowcolor = glow_eDrawType_Color145; break;
+  case 8: shadowcolor = glow_eDrawType_Color175; break;
+  case 9: shadowcolor = glow_eDrawType_Color176; break;
+  case 10: shadowcolor = glow_eDrawType_Color205; break;
+  case 11: shadowcolor = glow_eDrawType_Color206; break;
+  case 12: shadowcolor = glow_eDrawType_Color209; break;
+  case 13: shadowcolor = glow_eDrawType_Color239; break;
+  case 14: shadowcolor = glow_eDrawType_Color238; break;
+  case 15: shadowcolor = glow_eDrawType_Color236; break;
+  case 16: shadowcolor = glow_eDrawType_Color264; break;
+  case 17: shadowcolor = glow_eDrawType_Color264; break;
+  case 18: shadowcolor = glow_eDrawType_Color294; break;
+  case 19: shadowcolor = glow_eDrawType_Color294; break;
+  default: shadowcolor = current_fill;
+  }
+  ((GrowRect *)active_fill)->set_fill_color( shadowcolor);
+  
+  if ( current_fill == glow_eDrawType_Line || 
+       (((current_fill + 1) % 10 == 0) && current_fill > 20) ||
+       (((current_fill + 2) % 10 == 0) && current_fill > 20))
+    textcolor = glow_eDrawType_Color4;
+  else
+    textcolor = glow_eDrawType_Line;
+  text_fill->set_text_color( textcolor);
+
+  ((GrowRect *)display_border)->set_fill_color( current_border);
+  switch ( current_border) {
+  case 0: shadowcolor = glow_eDrawType_Color30; break;
+  case 1: shadowcolor = glow_eDrawType_Color188; break;
+  case 2: shadowcolor = glow_eDrawType_Color24; break;
+  case 3: shadowcolor = glow_eDrawType_Color31; break;
+  case 4: shadowcolor = glow_eDrawType_Color87; break;
+  case 5: shadowcolor = glow_eDrawType_Color115; break;
+  case 6: shadowcolor = glow_eDrawType_Color144; break;
+  case 7: shadowcolor = glow_eDrawType_Color145; break;
+  case 8: shadowcolor = glow_eDrawType_Color175; break;
+  case 9: shadowcolor = glow_eDrawType_Color176; break;
+  case 10: shadowcolor = glow_eDrawType_Color205; break;
+  case 11: shadowcolor = glow_eDrawType_Color206; break;
+  case 12: shadowcolor = glow_eDrawType_Color209; break;
+  case 13: shadowcolor = glow_eDrawType_Color239; break;
+  case 14: shadowcolor = glow_eDrawType_Color238; break;
+  case 15: shadowcolor = glow_eDrawType_Color236; break;
+  case 16: shadowcolor = glow_eDrawType_Color264; break;
+  case 17: shadowcolor = glow_eDrawType_Color264; break;
+  case 18: shadowcolor = glow_eDrawType_Color294; break;
+  case 19: shadowcolor = glow_eDrawType_Color294; break;
+  default: shadowcolor = current_border;
+  }
+  ((GrowRect *)active_border)->set_fill_color( shadowcolor);
+  
+  if ( current_border == glow_eDrawType_Line || 
+       (((current_border + 1) % 10 == 0) && current_border > 20) ||
+       (((current_border + 2) % 10 == 0) && current_border > 20))
+    textcolor = glow_eDrawType_Color4;
+  else
+    textcolor = glow_eDrawType_Line;
+  text_border->set_text_color( textcolor);
+
+  ((GrowRect *)display_text)->set_fill_color( current_text);
+  switch ( current_text) {
+  case 0: shadowcolor = glow_eDrawType_Color30; break;
+  case 1: shadowcolor = glow_eDrawType_Color188; break;
+  case 2: shadowcolor = glow_eDrawType_Color24; break;
+  case 3: shadowcolor = glow_eDrawType_Color31; break;
+  case 4: shadowcolor = glow_eDrawType_Color87; break;
+  case 5: shadowcolor = glow_eDrawType_Color115; break;
+  case 6: shadowcolor = glow_eDrawType_Color144; break;
+  case 7: shadowcolor = glow_eDrawType_Color145; break;
+  case 8: shadowcolor = glow_eDrawType_Color175; break;
+  case 9: shadowcolor = glow_eDrawType_Color176; break;
+  case 10: shadowcolor = glow_eDrawType_Color205; break;
+  case 11: shadowcolor = glow_eDrawType_Color206; break;
+  case 12: shadowcolor = glow_eDrawType_Color209; break;
+  case 13: shadowcolor = glow_eDrawType_Color239; break;
+  case 14: shadowcolor = glow_eDrawType_Color238; break;
+  case 15: shadowcolor = glow_eDrawType_Color236; break;
+  case 16: shadowcolor = glow_eDrawType_Color264; break;
+  case 17: shadowcolor = glow_eDrawType_Color264; break;
+  case 18: shadowcolor = glow_eDrawType_Color294; break;
+  case 19: shadowcolor = glow_eDrawType_Color294; break;
+  default: shadowcolor = current_text;
+  }
+  ((GrowRect *)active_text)->set_fill_color( shadowcolor);
+  
+  if ( current_text == glow_eDrawType_Line || 
+       (((current_text + 1) % 10 == 0) && current_text > 20) ||
+       (((current_text + 2) % 10 == 0) && current_text > 20))
+    textcolor = glow_eDrawType_Color4;
+  else
+    textcolor = glow_eDrawType_Line;
+  text_text->set_text_color( textcolor);
+
+  draw( &mw, 0, 0, mw.window_width, mw.window_height);
+}

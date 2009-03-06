@@ -72,3 +72,8 @@ void colpal_SetCurrentColors( colpal_tCtx ctx, glow_eDrawType fill_color,
   ctx->current_text = text_color;
 }
 
+
+colpal_eActive colpal_GetActive( colpal_tCtx ctx)
+{
+  return ctx->get_active();
+}

@@ -348,7 +348,7 @@ static pwr_tStatus OpenTrendFilter( xmenu_sMenuCall *ip)
 {
   int sts;
   pwr_tObjid child;
-  pwr_tClassId classid;
+  pwr_tClassId classid, cid;
   pwr_sAttrRef deftrend;
   pwr_tAName name;
   pwr_sAttrRef *objar;
@@ -358,10 +358,10 @@ static pwr_tStatus OpenTrendFilter( xmenu_sMenuCall *ip)
   else 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  sts = gdh_GetAttrRefTid( objar, &classid);
+  sts = gdh_GetAttrRefTid( objar, &cid);
   if ( EVEN(sts)) return sts;
 
-  if ( classid == pwr_cClass_DsTrend || classid == pwr_cClass_PlotGroup) {
+  if ( cid == pwr_cClass_DsTrend || cid == pwr_cClass_PlotGroup) {
     return XNAV__SUCCESS;
   }
 
@@ -381,6 +381,9 @@ static pwr_tStatus OpenTrendFilter( xmenu_sMenuCall *ip)
   }
 
   // Check if object has a DsTrend as child
+  if ( cid == pwr_eClass_PlantHier)
+    return XNAV__INVISIBLE;
+
   if ( !objar->Flags.b.Object)
     return XNAV__INVISIBLE;
 

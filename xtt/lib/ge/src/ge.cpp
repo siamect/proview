@@ -1817,16 +1817,29 @@ void Ge::activate_confirm_cancel()
 int Ge::colorpalette_cb( GlowCtx *ctx, glow_tEvent event)
 {
   Ge 	*gectx;
+  colpal_eActive active;
 
   colpal_GetCtxUserData( (ColPalCtx *)ctx, (void **) &gectx);
 
   switch ( event->event) {
   case glow_eEvent_MB1Click:
-    if ( event->any.type == glow_eEventType_ColorTone) {
-      gectx->graph->set_select_color_tone( event->colortone.tone);
+
+    active = colpal_GetActive( gectx->colorpalette_ctx);
+
+    switch ( active) {
+    case colpal_eActive_FillColor:
+      if ( event->any.type == glow_eEventType_ColorTone)
+	gectx->graph->set_select_color_tone( event->colortone.tone);
+      else
+	gectx->graph->set_select_fill_color();
+      break;
+    case colpal_eActive_BorderColor:
+      gectx->graph->set_select_border_color();
+      break;
+    case colpal_eActive_TextColor:
+      gectx->graph->set_select_text_color();
+      break;
     }
-    else
-      gectx->graph->set_select_fill_color();
     break;
   case glow_eEvent_MB1ClickShift:
     gectx->graph->set_select_text_color();
