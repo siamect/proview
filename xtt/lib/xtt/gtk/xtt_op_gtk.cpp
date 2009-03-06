@@ -298,19 +298,19 @@ OpGtk::OpGtk( void *op_parent_ctx,
   gtk_toolbar_append_widget( GTK_TOOLBAR(tools), tools_close, "Close", "");
 
   // System pushbuttons
-  GtkWidget *alarmlist_button = gtk_button_new_with_label("Alarmlist");
+  GtkWidget *alarmlist_button = gtk_button_new_with_label( CoWowGtk::translate_utf8("Alarmlist"));
   gtk_widget_set_size_request( alarmlist_button, 90, 25);
   g_signal_connect( alarmlist_button, "clicked", G_CALLBACK(activate_alarmlist), this);
 
-  GtkWidget *eventlist_button = gtk_button_new_with_label("Eventlist");
+  GtkWidget *eventlist_button = gtk_button_new_with_label( CoWowGtk::translate_utf8("Eventlist"));
   gtk_widget_set_size_request( eventlist_button, 90, 25);
   g_signal_connect( eventlist_button, "clicked", G_CALLBACK(activate_eventlist), this);
 
-  eventlog_button = gtk_button_new_with_label("Eventlog");
+  eventlog_button = gtk_button_new_with_label( CoWowGtk::translate_utf8("Eventlog"));
   gtk_widget_set_size_request( eventlog_button, 90, 25);
   g_signal_connect( eventlog_button, "clicked", G_CALLBACK(activate_eventlog), this);
 
-  help_button = gtk_button_new_with_label("Help");
+  help_button = gtk_button_new_with_label( CoWowGtk::translate_utf8("Help"));
   gtk_widget_set_size_request( help_button, 90, 25);
   g_signal_connect( help_button, "clicked", G_CALLBACK(activate_help), this);
 
