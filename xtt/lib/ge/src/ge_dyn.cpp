@@ -6329,6 +6329,10 @@ void GeTrend::replace_attribute( char *from, char *to, int *cnt, int strict)
 {
   GeDyn::replace_attribute( attribute1, sizeof(attribute1), from, to, cnt, strict);
   GeDyn::replace_attribute( attribute2, sizeof(attribute2), from, to, cnt, strict);
+  GeDyn::replace_attribute( minvalue_attr1, sizeof(minvalue_attr1), from, to, cnt, strict);
+  GeDyn::replace_attribute( maxvalue_attr1, sizeof(maxvalue_attr1), from, to, cnt, strict);
+  GeDyn::replace_attribute( minvalue_attr2, sizeof(minvalue_attr2), from, to, cnt, strict);
+  GeDyn::replace_attribute( maxvalue_attr2, sizeof(maxvalue_attr2), from, to, cnt, strict);
 }
 
 void GeTrend::save( ofstream& fp)
@@ -11617,6 +11621,7 @@ void GeSlider::replace_attribute( char *from, char *to, int *cnt, int strict)
   GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
   GeDyn::replace_attribute( minvalue_attr, sizeof(minvalue_attr), from, to, cnt, strict);
   GeDyn::replace_attribute( maxvalue_attr, sizeof(maxvalue_attr), from, to, cnt, strict);
+  GeDyn::replace_attribute( insensitive_attr, sizeof(insensitive_attr), from, to, cnt, strict);
 }
 
 void GeSlider::save( ofstream& fp)
