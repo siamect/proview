@@ -524,7 +524,7 @@ static int  gcg_sort_threadlist(
     unsigned long	size
 );
 
-static int	gcg_file_check(
+static int	gcg_check_ra_plc_user(
     char	*filename
 );
 
@@ -5944,8 +5944,8 @@ int	gcg_comp_m1( vldh_t_wind wind,
 	     libraries exist */
 	  
 	  /* pwrp_inc:ra_plc_user.h */
-	  dcli_translate_filename( fullfilename, "pwrp_inc:ra_plc_user.h");
-	  sts = gcg_file_check( fullfilename);
+	  dcli_translate_filename( fullfilename, "$pwrp_inc/ra_plc_user.h");
+	  sts = gcg_check_ra_plc_user( fullfilename);
 	  if ( EVEN(sts))
 	    gcg_error_msg( gcgctx, sts, 0);
 	  else if ( sts == GSX__FILECREATED)
@@ -15719,7 +15719,7 @@ int gcg_plcpgm_to_operating_system
 
 /*************************************************************************
 *
-* Name:		gcg_file_check()
+* Name:		gcg_check_ra_plc_user()
 *
 * Type		int
 *
@@ -15729,7 +15729,7 @@ int gcg_plcpgm_to_operating_system
 *
 **************************************************************************/
 
-static int	gcg_file_check(
+static int	gcg_check_ra_plc_user(
     char	*filename
 )
 {
@@ -15748,7 +15748,18 @@ static int	gcg_file_check(
 	  if ( checkfile == 0)
 	    return GSX__OPENFILE;
 
-	  fprintf( checkfile, "/*  Filename: %s    */\n", filename);
+	  fprintf( checkfile, "/*  Filename: $pwrp_inc/ra_plc_user.h */\n\n");
+	  fprintf( checkfile, "/*  This file is included by the plc code generated from the plc windows. */\n");
+	  fprintf( checkfile, "/*  Includefiles for classvolumes with classes referenced by the */\n");
+	  fprintf( checkfile, "/*  plc program should be inserted here. Also declarations of types and */\n");
+	  fprintf( checkfile, "/*  functions used in arithm code can be inserted. */\n\n");
+	  fprintf( checkfile, "#include \"pwr_nmpsclasses.h\"\n");
+	  fprintf( checkfile, "#include \"pwr_remoteclasses.h\"\n");
+	  fprintf( checkfile, "#include \"pwr_profibusclasses.h\"\n");
+	  fprintf( checkfile, "#include \"pwr_otherioclasses.h\"\n");
+	  fprintf( checkfile, "#include \"pwr_basecomponentclasses.h\"\n");
+	  fprintf( checkfile, "#include \"pwr_siemensclasses.h\"\n");
+	  fprintf( checkfile, "#include \"pwr_abbclasses.h\"\n\n");
 	  fclose( checkfile);
 	  return GSX__FILECREATED;
 	}
