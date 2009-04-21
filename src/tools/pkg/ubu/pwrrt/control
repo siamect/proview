@@ -1,5 +1,5 @@
 Package: pwrrt
-Version: 4.6.0-4
+Version: 4.6.0-6
 Section: base
 Priority: optional
 Architecture: i386
@@ -15,3 +15,12 @@ Description:
   - Sev: error handling improved.
  4.6.0-4
   - Metric fonts in Ge and Xtt.
+ 4.6.0-5
+  - Wb, Xtt: Problem with insensitive radiobuttons fixed.
+ 4.6.0-6
+  - Bugfix in alarmlist acknowledge. 
+  - Operator window: Alarmtext containg an ampersand was displayed a a blank link.
+  - Home button in help window added.
+  - Ge: problem with soiled texts fixed.
+  - Ge: problem with scaled optionmenu fixed.
+  - Usbio: bugfix for mixed Ai and Di/Do on port B.

@@ -139,7 +139,7 @@ class AttrNav {
     int			(*get_subgraph_info_cb)( void *, char *, attr_sItem  **, int *);
     int			(*get_dyn_info_cb)( void *, GeDyn *, attr_sItem  **, int *);
     int 		(*reconfigure_attr_cb)( void *);
-    int 		(*get_plant_select_cb)( void *, char *);
+    int 		(*get_plant_select_cb)( void *, char *, int);
     int 		(*get_current_colors_cb)( void *, glow_eDrawType *, glow_eDrawType *,
 						  glow_eDrawType *);
 

@@ -42,6 +42,25 @@
 #define OP_HEIGHT_MAX (OP_HEIGHT_MIN + 3 * OP_HEIGHT_INC)
 
 
+static void cnv_pango_text( char *in, char *out, int size)
+{
+  char *s = in;
+  char *t = out;
+
+  for ( int i = 0; i < size && *s; i++, s++) {
+    *(t++) = *s;
+    if ( *s == '&') {
+      // & -> &amp;
+      if ( i+4 >= size)
+	break;
+      *(t++) = 'a';
+      *(t++) = 'm';
+      *(t++) = 'p';
+      *(t++) = ';';
+    }
+  }
+  *t = 0;
+}
 
 
 OpGtk::OpGtk( void *op_parent_ctx,
@@ -391,7 +410,7 @@ void  OpGtk::update_alarm_info()
   int		i;
   int		height, active_height;
   char          str[40];
-  char		text[500];
+  char		text[500], ctext[500];
   int 		fsize = text_size * 1024;
 
   if ( get_alarm_info_cb) {
@@ -411,10 +430,14 @@ void  OpGtk::update_alarm_info()
     for ( i = 0; i < 5; i++) {
       a_exist[i] = info.a_alarm_exist[i];
       a_active[i] = info.a_alarm_active[i];
+
       if ( info.a_alarm_exist[i]) {
-	
+	cnv_pango_text( info.a_alarm_text[i], ctext, sizeof(ctext));
+
 	snprintf( text, sizeof(text), "<span size=\"%d\">%s  %s</span>", 
-		 fsize, info.a_alarm_alias[i], info.a_alarm_text[i]);
+		 fsize, info.a_alarm_alias[i], ctext);
+
+
 	gtk_label_set_markup( GTK_LABEL(aalarm_label[i]), CoWowGtk::convert_utf8(text));
 	// gtk_widget_modify_bg( aalarm_box[i], GTK_STATE_NORMAL, &red_color);
 	if ( i < a_height) {
@@ -441,8 +464,10 @@ void  OpGtk::update_alarm_info()
 
       balarm_type = evlist_eEventType_Alarm;
       balarm_prio = mh_eEventPrio_B;
+
+      cnv_pango_text( info.b_alarm_text[0], ctext, sizeof(ctext));
       snprintf( text, sizeof(text), "<span size=\"%d\">%s  %s</span>", 
-	       fsize, info.b_alarm_alias[0], info.b_alarm_text[0]);
+	       fsize, info.b_alarm_alias[0], ctext);
       gtk_label_set_markup( GTK_LABEL(balarm_label), CoWowGtk::convert_utf8(text));
       gtk_widget_modify_bg( balarm_ebox, GTK_STATE_NORMAL, &yellow_color);
       g_object_set( balarm_box, "visible", TRUE, NULL);
@@ -462,8 +487,9 @@ void  OpGtk::update_alarm_info()
 
       balarm_type = evlist_eEventType_Alarm;
       balarm_prio = mh_eEventPrio_C;
+      cnv_pango_text( info.c_alarm_text[0], ctext, sizeof(ctext));
       snprintf( text, sizeof(text), "<span size=\"%d\">%s  %s</span>", 
-	       fsize, info.c_alarm_alias[0], info.c_alarm_text[0]);
+	       fsize, info.c_alarm_alias[0], ctext);
       gtk_label_set_markup( GTK_LABEL(balarm_label), CoWowGtk::convert_utf8(text));
       gtk_widget_modify_bg( balarm_ebox, GTK_STATE_NORMAL, &blue_color);
       g_object_set( balarm_box, "visible", TRUE, NULL);
@@ -484,8 +510,9 @@ void  OpGtk::update_alarm_info()
 
       balarm_type = evlist_eEventType_Alarm;
       balarm_prio = mh_eEventPrio_D;
+      cnv_pango_text( info.d_alarm_text[0], ctext, sizeof(ctext));
       snprintf( text, sizeof(text), "<span size=\"%d\">%s  %s</span>", 
-	       fsize, info.d_alarm_alias[0], info.d_alarm_text[0]);
+	       fsize, info.d_alarm_alias[0], ctext);
       gtk_label_set_markup( GTK_LABEL(balarm_label), CoWowGtk::convert_utf8(text));
       gtk_widget_modify_bg( balarm_ebox, GTK_STATE_NORMAL, &violet_color);
       g_object_set( balarm_box, "visible", TRUE, NULL);
@@ -505,8 +532,9 @@ void  OpGtk::update_alarm_info()
       gdk_color_parse( "Green", &green_color);
 
       balarm_type = evlist_eEventType_Info;
+      cnv_pango_text( info.i_alarm_text[0], ctext, sizeof(ctext));
       snprintf( text, sizeof(text), "<span size=\"%d\">%s  %s</span>", 
-	       fsize, info.i_alarm_alias[0], info.i_alarm_text[0]);
+	       fsize, info.i_alarm_alias[0], ctext);
       gtk_label_set_markup( GTK_LABEL(balarm_label), CoWowGtk::convert_utf8(text));
       gtk_widget_modify_bg( balarm_ebox, GTK_STATE_NORMAL, &green_color);
       g_object_set( balarm_box, "visible", TRUE, NULL);

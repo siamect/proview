@@ -11,7 +11,7 @@
 Name: pwrrt
 Summary: Proview/R runtime environment
 Version: 4.6.0
-Release: 4
+Release: 6
 License: GPL
 BuildArch: i386
 Packager: claes.sjofors@proview.se
@@ -494,3 +494,12 @@ fi
   - Sev: Improved error handling.
   4.6.0-4 
   - Xtt/Ge: Metric fonts.
+  4.6.0-5
+  - Wb, Xtt: Problem with insensitive radiobuttons fixed.
+  4.6.0-6
+  - Bugfix in alarmlist acknowledge. 
+  - Operator window: Alarmtext containg an ampersand was displayed a a blank link.
+  - Home button in help window added.
+  - Ge: problem with soiled texts fixed.
+  - Ge: problem with scaled optionmenu fixed.
+  - Usbio: bugfix for mixed Ai and Di/Do on port B.

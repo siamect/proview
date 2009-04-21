@@ -1,5 +1,5 @@
 Package: pwrsev
-Version: 4.6.0-4
+Version: 4.6.0-6
 Section: base
 Priority: optional
 Architecture: i386
@@ -13,3 +13,5 @@ Description:
   - Sev: error handling improved.
  4.6.0-4
   - Metric fonts in Ge and Xtt.
+ 4.6.0-6
+  - Problem with '.' in tablename fixed.

@@ -992,6 +992,10 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
     if ( !o->bws || o->bws->o->a.type !=  pwr_eType_DisableAttr)
       m_vrep->error( "DisableAttr attribute not found", getFileName(), line_number);
   }
+  if ( ((pwr_sParam *)o->rbody)->Info.Elements > 1 && 
+       !(((pwr_sParam *)o->rbody)->Info.Flags & PWR_MASK_ARRAY))
+    m_vrep->error( "Array flag not set though Elements larger than 1", getFileName(), line_number);
+
 }
 
 void wb_wblnode::buildBuffer( ref_wblnode classdef, ref_wblnode objbodydef, 

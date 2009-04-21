@@ -269,7 +269,7 @@ void GeGtk::change_value_cb( void *ge_ctx, void *value_object, char *text)
   gectx->current_value_object = value_object;
 }
 
-int GeGtk::get_plant_select( char *select_name)
+int GeGtk::get_plant_select( char *select_name, int size)
 {
 #ifdef LDH
   pwr_sAttrRef	attrref;
@@ -296,17 +296,17 @@ int GeGtk::get_plant_select( char *select_name)
 				 0, 1, 1, buff))
       return 0;
 
-    strcpy( select_name, buff);
+    strncpy( select_name, buff, size);
     return 1;
   }
   else {
     sts = CoWowGtk::GetSelection( toplevel, str, sizeof(str), graph_atom);
     if ( ODD(sts))
-      strcpy( select_name, str);
+      strncpy( select_name, str, size);
     else {
       sts = CoWowGtk::GetSelection( toplevel, str, sizeof(str), GDK_TARGET_STRING);
       if ( ODD(sts))
-	strcpy( select_name, str);
+	strncpy( select_name, str, size);
     }
     return sts;
   }
@@ -316,11 +316,11 @@ int GeGtk::get_plant_select( char *select_name)
 
   sts = CoWowGtk::GetSelection( toplevel, str, sizeof(str), graph_atom);
   if ( ODD(sts))
-    strcpy( select_name, str);
+    strncpy( select_name, str, size);
   else {
     sts = CoWowGtk::GetSelection( toplevel, str, sizeof(str), GDK_ATOM_STRING);
     if ( ODD(sts))
-      strcpy( select_name, str);
+      strncpy( select_name, str, size);
   }
   return sts;
 #endif

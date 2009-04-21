@@ -1061,25 +1061,25 @@ void  attrnav_attrvalue_to_string( int type_id, void *value_ptr,
     case glow_eType_Boolean:
     {
       if ( !format)
-        *len = sprintf( str, "%d", *(pwr_tBoolean *)value_ptr);
+        *len = snprintf( str, size, "%d", *(pwr_tBoolean *)value_ptr);
       else
-        *len = sprintf( str, format, *(pwr_tBoolean *)value_ptr);
+        *len = snprintf( str, size, format, *(pwr_tBoolean *)value_ptr);
       break;
     }
     case glow_eType_Double:
     {
       if ( !format)
-        *len = sprintf( str, "%f", *(double *)value_ptr);
+        *len = snprintf( str, size, "%g", *(double *)value_ptr);
       else
-        *len = sprintf( str, format, *(double *)value_ptr);
+        *len = snprintf( str, size, format, *(double *)value_ptr);
       break;
     }
     case glow_eType_Int:
     {
       if ( !format)
-        *len = sprintf( str, "%d", *(int *)value_ptr);
+        *len = snprintf( str, size, "%d", *(int *)value_ptr);
       else
-        *len = sprintf( str, format, *(int *)value_ptr);
+        *len = snprintf( str, size, format, *(int *)value_ptr);
       break;
     }
     case glow_eType_String:
@@ -1159,7 +1159,7 @@ void  attrnav_attrvalue_to_string( int type_id, void *value_ptr,
       str[size-1] = 0;
       *len = strlen( str);
 #if 0
-      *len = sprintf( str, "%u", *(unsigned int *)value_ptr);
+      *len = snprintf( str, size, "%u", *(unsigned int *)value_ptr);
 #endif
       break;
     }
@@ -1639,7 +1639,7 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 
 	    if ( ! attrnav->get_plant_select_cb)
 	      break;
-	    sts = (attrnav->get_plant_select_cb) (attrnav->parent_ctx, attr_name);
+	    sts = (attrnav->get_plant_select_cb) (attrnav->parent_ctx, attr_name, sizeof(attr_name));
 	    if ( EVEN(sts)) break;
 
 	    strncpy( (char *)item->value_p, attr_name, item->size);
@@ -1892,7 +1892,7 @@ void AttrNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_object, 11, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
-  brow_AddFrame( nc_object, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_object, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Create attribute nodeclass
 
@@ -1905,7 +1905,7 @@ void AttrNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_attr, 8, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
-  brow_AddFrame( nc_attr, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_attr, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Create multiline attribute nodeclass
 
@@ -1918,7 +1918,7 @@ void AttrNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_attr_multiline, 8, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_MultiLine, 
 		1);
-  brow_AddFrame( nc_attr_multiline, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_attr_multiline, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Create attribute nodeclass
 
@@ -1929,7 +1929,7 @@ void AttrNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_enum, 2, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
-  brow_AddFrame( nc_enum, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_enum, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
  
   // Create table nodeclass
 
@@ -1967,7 +1967,7 @@ void AttrNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_table, 38, 0.6, 9,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
-  brow_AddFrame( nc_table, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_table, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Create Header
 
@@ -1980,7 +1980,7 @@ void AttrNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_header, 8, 0.6, 1,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		1);
-  brow_AddFrame( nc_header, 0, 0, 20, 0.8, flow_eDrawType_LineGray, 2, 1);
+  brow_AddFrame( nc_header, 0, 0, 20, 0.83, flow_eDrawType_LineGray, 2, 1);
 
   // Create TableHeader
 
@@ -2017,7 +2017,7 @@ void AttrNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_table_header, 38, 0.6, 9,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		0);
-  brow_AddFrame( nc_table_header, 0, 0, 20, 0.8, flow_eDrawType_LineGray, 2, 1);
+  brow_AddFrame( nc_table_header, 0, 0, 20, 0.83, flow_eDrawType_LineGray, 2, 1);
 
 }
 

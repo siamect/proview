@@ -111,7 +111,7 @@ void CLogNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_event, 26, 0.6, 3,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
-  brow_AddFrame( nc_event, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_event, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Nodeclass for Info message
   brow_CreateNodeClass( ctx, "InfoMsg", 
@@ -133,7 +133,7 @@ void CLogNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_msg_info, 18, 0.6, 4,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
-  brow_AddFrame( nc_msg_info, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_msg_info, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Nodeclass for Warning message
   brow_CreateNodeClass( ctx, "WarningMsg", 
@@ -155,7 +155,7 @@ void CLogNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_msg_warning, 18, 0.6, 4,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
-  brow_AddFrame( nc_msg_warning, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_msg_warning, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Nodeclass for Error message
   brow_CreateNodeClass( ctx, "ErrorMsg", 
@@ -177,7 +177,7 @@ void CLogNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_msg_error, 18, 0.6, 4,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
-  brow_AddFrame( nc_msg_error, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_msg_error, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Nodeclass for Fatal messages
   brow_CreateNodeClass( ctx, "FatalMsg", 
@@ -199,7 +199,7 @@ void CLogNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_msg_fatal, 18, 0.6, 4,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
-  brow_AddFrame( nc_msg_fatal, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_msg_fatal, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Nodeclass for Proview restart
   brow_CreateNodeClass( ctx, "Restart", 
@@ -211,7 +211,7 @@ void CLogNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_restart, 18, 0.6, 1,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		0);
-  brow_AddFrame( nc_restart, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_restart, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   brow_CreateNodeClass( ctx, "Text", 
 		flow_eNodeGroup_Common, &nc_text);
@@ -219,7 +219,7 @@ void CLogNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_text, 18, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
-  brow_AddFrame( nc_text, 0, 0, 35, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_text, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
 }
 

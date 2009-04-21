@@ -831,6 +831,10 @@ class GrowCtx : public GlowCtx {
   void measure_window( double *ll_x, double *ll_y, 
 		       double *ur_x, double *ur_y);
 
+  void pop( GlowArrayElem *element) { a.pop( element);}
+
+
+
   char		name[40];		//!< Name of the context.
   grow_eMode	edit_mode;		//!< Current edit mode.
   int		conpoint_num_cnt;	//!< Counter to get next number for when creating conpoints in a subgraph.

@@ -117,3 +117,10 @@
 081009 cs  wb        New pages in Configure DirectoryVolume wizard to register a volume and open the database for a volume.
 081009 cs  wb        New script functions CheckSystemGroup, GetNextFreeUserVid, CheckNewVid, CheckNewVolumeName and GetCurrentVolume.
 081110 cs  plc       Bugfix in execute order for Set/Res/Sto objects without input or output connection.
+081218 cs  plc       Bugfix in flow file. Trace data wasn't stored at change of mode from edit to view.
+090218 cs  plc       Bugfix, activating connect function when nothing was selected could cause X exception.
+090218 cs  plc       Bugfix, connect from local plant navigator on attribute objects didn't work.
+090223 cs  plc       DataArithm, structdef statement added to DataArithm code.
+090224 cs  plc       Handling of unexpected mousekey combinations in plc editor.
+090224 cs  wb        Error message in class editor if Elements > 1 and arraybit not set in $Attribute added.
+090225 cs  script    Script functions GetClassListAttrRef() and GetNextAttrRef() added.

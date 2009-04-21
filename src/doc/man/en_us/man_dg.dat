@@ -34,7 +34,7 @@
 
 
 <hr>
-2008-10-21
+2009-01-27
 Version 4.6.0	
 <hr>
 </topic>
@@ -105,10 +105,14 @@ Designer's Guide
 Overview <link> design_overview
 Database structure <link> database_structure
 A case study <link> case_study
-Administration <link> administrator
+Navigating the project <link> project_structure
 Configure the directoryvolume <link> configure_directoryvolume
 Configure the rootvolume <link> configure_rootvolume
 Plc programming <link>plc_programming
+Components and Aggregates <link>dg_components
+Call functions from the plc program <link>dg_plc_functions
+Communication <link> communication
+Application programming <link>dg_application
 Creating Process Graphics  <link> ge_man
 Running and Testing a Proview System <link> conf_test
 
@@ -118,6 +122,7 @@ The Object Editor<link> objecteditor_refman
 The Spreadsheet Editor<link> spreadsheeteditor_refman
 The Plc Editor<link> plceditor_refman
 The Class Editor<link> classeditor
+Administration <link> administrator
 OPC <link> opc_intro
 Commands <link> help command
 Script <link> script
@@ -279,7 +284,6 @@ Object Name <link> object_name
 Mounting <link> mounting
 Object Identity <link> object_identity
 <option> printenable
-
 </topic>
 
 <topic> object
@@ -470,20 +474,11 @@ way, that the objects have the same pathname in both volumes.
 </topic>
 
 <topic>object_identity
-Objekt Identity
+Object Identity
 An object has an identity that is unic. It consits of the volume identity, and an object index
 that is unic within the volume. An object identity is written for example "_O0.3.4.23:34" where
 0.3.4.23 is the volume identity, and 34 the object index. The prefix _O states that it is an
 object identity.
-</topic>
-</chapter>
-
-<chapter>
-<topic>development environment
-Development environment
-
-The configuration of a Proview system is done in a development station. The Proview development
-enviroment is installed in the development station.
 </topic>
 </chapter>
 
@@ -510,7 +505,7 @@ The traffic lights should be able to operate in two different modes:
   - Flash: The traffic lights are flashing yellow.
 
 <image> dg_fig1.gif
-<b>Traffic lights in an Intersecion
+<b>Traffic lights in an Intersection
 
 The operating mode of the traffic lights is decided by an operator at via operator station, or 
 by a maintenance technician, who influences a switch. The maintenance technician can change 
@@ -564,7 +559,6 @@ When we have decided upon the I/O needed, we can choose the hardware. We choose:
 
 <h2>Specification of Plant Graphics 
 We need a display from which the operator can control and survey the traffic lights. 
-
 </topic>
 
 <topic> administration
@@ -622,7 +616,7 @@ Note also the system object with the attribute SystemGroup that is assigned the 
 'trafficdepartment'. This grants the users eric, carl and lisa access to the project.
 
 <image>dg_fig5.gif
-<b>The Directory Voluem
+<b>The Directory Volume
 </topic>
 
 <topic> plant_configuration
@@ -635,8 +629,9 @@ The plant is structured hierarchically. Examples of levels in the plant can be p
 
 
 <h2>The Process Station
-Den största delen av konfigureringen görs i processtationens volym, VolTrafficCross1. Det
-är ju här som all kort, kanaler, signaler och PLC program ska konfigureras.
+The major part of the configuration is done in the volume of the process station, VolTrafficCross1.
+This because it's here all physical hardware is configured (the i/o), all the signals and the 
+PLC-programs that work with the signals.
 
 The plant is structured hierarchically. Examples of levels in the plant can be plant, process, 
 process part, component, and signal. These are the logical signals represented by signal 
@@ -700,7 +695,7 @@ available in the operator station. We have mounted the topmost $PlantHier object
 </topic>
 
 <topic> node_configuration
-Node Configration
+Node Configuration
 
 When you have configured the plant, continue to configure the nodes.
 
@@ -809,7 +804,7 @@ The program for the normal operating mode is based on a traffic light following 
 <b>   <t>North-South <t>West-East
 1     <t>Red         <t>Red
 2     <t>Red, Yellow <t>Red
-3     <t>Grön        <t>Red
+3     <t>Green       <t>Red
 4     <t>Yellow, Green <t>Red
 5     <t>Red         <t>Red
 6     <t>Red         <t>Red, Yellow
@@ -847,7 +842,7 @@ Plant graphics are often used as an interface between the operator and the proce
 graphics are created with the Plant Graphics Editor. 
 
 <image> dg_fig20.gif
-<b>The Plant Graphics Edtitor
+<b>The Plant Graphics Editor
 
 Plant graphics can contain dynamics, which are connected to the logical signals, e.g.: 
 
@@ -865,557 +860,6 @@ graphics is described in chapter 5 Creating Plant Graphics .
 
 <image>dg_fig21.gif
 <b>The Plant Graphics for the Intersection
-</topic>
-</chapter>
-
-<chapter>
-<topic>communication
-Communication
-
-The Remote concept in Proview is a way to standardize the methods of communication with other
-systems. It describes a number of transport programs and Proview objects used to implement
-a variety of different communication protocols and to handle incoming and outgoing messages.
-Remote is designed to use different transport protocols such as TCP/IP or BEA Message Queue,
-and different hardware media such as ethernet or serial lines.
-The main purpose of Remote is to provide the programmer with an interface to communication.
-
-<option> printdisable
-Introduction <link> comm_introduction
-Protocols <link> protocols
-An example <link> an_example
-<option> printenable
-</topic>
-
-<headerlevel>
-<topic>comm_introduction
-Introduction
-There are some different classes/components/objects that are used to handle the communication.
-
-<h2>RemoteConfig
-Required to have any remote communication at all. Without this no remtehandler is started.
-Place one object in the node-hierarchy.
-
-<h2>RemNode
-Defines a link of some type to a remote node over a specific protocol. 
-Several different protocols are supported and there is one specific class for each protocol.
-The supported protocols are:
-
-TCP/IP
-UDP/IP
-MQ (BEA Message Queue)
-ALCM (an old Digital protocol, supported for historical reasons)
-Serial
-Modbus/RTU Serial
-3964R (serial protocol from Siemens)
-
-Configuration of each protocol is described further down.
-Place RemNode-objects below the RemoteConfig-object.
-
-<h2>RemTrans
-Generic class that defines a specific message to or from a specific remote node on a
-specific protocol. Should be placed below the RemNode-object. The size of a message to be sent 
-is specified in the RemTrans-object. The data however to be sent resides in a buffer that is
-configured as a child to the remtrans-object. When a message is to be sent data of the length
-specified in the remtrans-object is fetched from the buffer. Sometimes however a header of some
-length is added to the message.
-
-<h2>Buffer
-Defining the send- and/or receive data area for each message. Exists in different sizes.
-Should be placed below a RemTrans-object. The buffer must be of at least the size of the
-message that will be received or sent. If size is not enough message will be cut in the end.
-
-<h2>RemTransSend 
-Function object used in a plc-program for sending messages.
-
-<h2>RemTransRcv
-Function object used in a plc-program for receiving messages.
-
-</topic>
-
-<topic> protocols
-Protocols
-Which protocol to use is defined by the type of Remnode-object you configure. For each configured 
-Remnode-object a transport job is started. That is, a program to handle the specific protocol is
-started as a process. This process will handle all RemTrans-object that is configured as children
-to the Remnode-object. 
-
-<option> printdisable
-UDP <link> udp_ip
-TCP <link> tcp_ip
-BEA Message Queue <link> bea_mq
-Serial <link> serial
-3964-R <link> 3964r
-<option> printenable
-</topic>
-
-<headerlevel>
-<topic> udp_ip
-UDP
-UDP uses socket communication without connection (datagram), compared to TCP wich is a connected protocol.
-In the RemnodeUDP-object you specify the name and ip-address of the node to communicate with
-aswell as the port-numbers for both ends. The local port-numer need to be unique on your node
-not to conflict with other communications.
-
-As default all messages is sent with a special header that is not included in the user data buffer.
-This header is added at the beginning of the message. The purpose for the header is to give information
-about the message that is sent. This helps identify what type of message is received and to wich buffer
-the data will be unpacked. The header looks like:
-
-<c>char       RemId1;  /* STX (Hex 02) */
-<c>char       RemId2;  /* ETB (Hex 0F) in data message without acknowledge 
-<c>                       ENQ (Hex 05) in data message with acknowledge 
-<c>                       ACK (Hex 06) in acknowledge message */
-<c>short int  Length;  /* Number of bytes in message including this header */
-<c>short int  MessId1; /* Message identity part 1 */
-<c>short int  MessId2; /* Message identity part 2 */
- 
-All of the integers in the header will be sent as big endian values, that is most significant byte first
-in the datagram. The user data is the responsibility of the user to switch, if he wants integers to be sent
-with big endian. VAX, Alpha and Intel (x86) all uses little endian! To send messages without headers the
-attribute DisableHeader should be set to TRUE. When communicating between two Proview-systems the header
-should be kept on. MessId1 and MessId2 is fetched from attributes RemTrans.Address[0] and RemTrans.Address[1].
-Through the header it is also possible to request an acknowledge of a sent message. If there is no
-acknowledge the message will be resent with a cyclicity specified by the RetransmitTime-attribute in the
-remtrans-object.
-
-Since UDP/IP is a connectionless protocol there is a possibility to watch the connection using
-keepalive-messages. This is set through the attribute UseKeepalive.
-
-<h2>Sending messages
-The transport will send a message to the remote port, consisting of header + data.
-MessId in the header is taken from RemTrans.Address[0,1], byte-switched to send as big endian.
-If MaxBuffers in remtrans-object > 0, the message is sent with type "want acknowledge" and is stored
-in the retransmit queue for the remnode. When a correspondning acknowledge message is received the 
-message is deleted from the retransmit queue. This is done automatically by the transport process.
-
-<h2>Receiving messages
-When we receive a buffer, first we check the header to see that this is a correct RemTrans message.
-Then we search for RemTrans.Address[0,1] that matches the byte-switched MessId. If the data object for 
-this message is big enough to contain the message, the message will be stored, and the 
-DataValid flag will be set.
-If the Remnode is marked to be used without header (DisableHeader-attribute set) then a RemTrans marked as a
-receiving remtrans with a enough large buffer will be searched.
-
-</topic>
-
-<topic> tcp_ip
-TCP
-RemnodeTCP is configured in much the same way as RemnodeUDP. The big (only) difference is that TCP is
-a connected protocol which acts in client/server fashion. Thus you have to either connect to a 
-remote socket (act like a client) or await a connection (act like a server). When acting like a server
-only one client will be accepted. The ConnectionMode-attribute in the remnode-object defines if you are
-a client or a server. Setting it to zero (default) means client and setting it to one means server. 
-
-</topic>
-
-<topic> bea_mq
-MQ
-RemnodeMQ is a transport for sending messages on BEA Message Queue (BMQ). It requires you to have
-BEA Message Queue installed on your node. This message queue is good for safely delivering messages 
-to a remote node even if it is not up at the moment you send your message. Vice versa, 
-messages will safely be delivered to you.
-
-This documentation expects you to have basic knowledge on BEA Message Queue. In basic the communication 
-runs on a specific bus. Each node has group-number and can only communicate to other groups on the same bus.
-On each group several queues can be configured.
-
-To be able to start this transport of course the Message Queue sotware need to be runnning. You also need some 
-environment variables to be set. These are:
-
-<c>DMQ_BUS_ID
-<c>DMQ_GROUP_ID
-<c>DMQ_GROUPNAME
-
-In the RemnodeMQ-object you configure on which BMQ-queue to recieve messages in the attribute MyQueue.
-You also configure the remote nodes group-number and queue to send to in the attributes TargetGroup and
-TargetQueue.
-
-<h2>Sending messages
-Similarly to UDP and TCP-transports RemTrans. Address[0,1] are used to identify the message. Address[0]
-represent the message-class and Address[1] represent the message-type (according to the BMQ-nomenclature).
-Address[2,3] are used to define what type delivery mode (Address[2]) that should be used and what action should be
-taken when a message cannot be deilvered (Address[3]).
-
-Possible delivery modes are:
-
-<c>PDEL_MODE_WF_SAF 25
-<c>PDEL_MODE_WF_DQF 26
-<c>PDEL_MODE_WF_NET 27
-<c>PDEL_MODE_WF_RCM 28
-<c>PDEL_MODE_WF_MEM 29
-<c>PDEL_MODE_AK_SAF 30
-<c>PDEL_MODE_AK_DQF 31
-<c>PDEL_MODE_AK_NET 32
-<c>PDEL_MODE_AK_RCM 33
-<c>PDEL_MODE_AK_MEM 34
-<c>PDEL_MODE_NN_SAF 35
-<c>PDEL_MODE_NN_DQF 36
-<c>PDEL_MODE_NN_NET 37
-<c>PDEL_MODE_NN_RCM 38
-<c>PDEL_MODE_NN_MEM 39
-<c>PDEL_MODE_WF_DEQ 40
-<c>PDEL_MODE_AK_DEQ 41
-<c>PDEL_MODE_WF_CONF 42
-<c>PDEL_MODE_AK_CONF 43
-<c>PDEL_MODE_WF_ACK 44
-<c>PDEL_MODE_AK_ACK 45
-
-and possible actions are:
-
-PDEL_UMA_RTS 1
-PDEL_UMA_DLJ 2
-PDEL_UMA_DLQ 3
-PDEL_UMA_SAF 4
-PDEL_UMA_DISC 5
-PDEL_UMA_DISCL 6
-
-Not all combinations are possible (see BEA Message Queue documentation for more information).
-
-Recommended combinations are,
-
-for safe delivery of message
-Address[2] = 26
-Address[3] = 4
-
-and for discarding the message if it cannot be delivered
-Address[2] = 39
-Address[3] = 5
-
-If Address[2,3] are both set to zero a default setting will be used. The default is to discard the 
-message if it cannot be delivered.
-
-<h2>Receiving messages
-Address[0,1] are used to identify the message. Address[0] represent the message-class and Address[1]
-represent the message-type (according to the BMQ-nomenclature).
-</topic>
-
-<topic> serial
-Serial
-RemoteSerial is an attempt to generalize the using of a simple serial line communication protocols.
-Its useful when we have a one-way sending of messages from some equipment to the control system. 
-You can specify up to eight termination characters in the attribute TermChar[0-7]. 
-These termination characters are used to detect the end of a received message (if a charachter matches
-any of the termination characters). 
-Specify also the settings for the serial link, that is - DevName , Speed , Parity (0 = none, 1 = odd, 
-2 = even), StopBits and DataBits. These could be for example /dev/ttyS0, 9600, 0, 1, 8.
-
-</topic>
-
-<topic> 3964r
-3964-R
-3964R is a simple serial line communication protocol that is developed by Siemens. 
-
-You specify the settings for the serial link as with RemnodeSerial, except for that there are no stp bits
-to specify. You must also specify the character timeout (the maximum time between received characters)
-in the attribute CharTimeout. The AckTimeout-attribute specifies the time to wait for an answer.
-
-Messages will be sent straight on without any header. ACK, NAK, DLE and BCC is handled according to 
-the 3964R protocol.
-
-<h2>Receiving messages
-There can be only one RemTrans object for receive-messages because of the lack of header 
-in this protocol. Every received message will be put in the first found RemTrans-object below 
-the RemNode-object. If the data object for this message is big enough to contain the message, 
-the message will be stored, and the DataValid flag will be set.
-
-<h2>Sending messages
-The transport will send a 3964R message to the serial without adding any header.
-If we don't have contact with the other node the message will be buffered, 
-if there are still free buffers for this message. 
-</topic>
-
-<topic> modbus-serial
-Modbus Serial
-The format of MODBUS that is implemented is RTU. For identification of messages we use the fields 
-known as slave address and function code in the MODBUS header. The RemTrans.Address[0] and [1] 
-defines these fields in the Proview environment. Se MODBUS specifications documents for more information.
-
-Modbus Serial is not yet implemented as an I/O-system in Proview. You have to configure the messages
-yourself by using RemnodeModbus and specifying RemTrans-object for the various operations you
-want to perform. Modbus works in a request/reply manner so for each operation you want to perform
-you specify one RemTrans-object for sending and one for receiving. Except for the Modbus-header of the
-message and the checksum handling you have to specify the content of the message to send in the
-send-buffer. In the same way you must decode the content of a received message yourself.
-
-Modbus TCP is implemented as an I/O-system in Proview. See more information about this in the document
-"Guide to I/O-systems". With Modbus TCP you don't have to care about the encoding of the messages.
-
-<h2>Receiving messages
-When we receive a buffer, we search for RemTrans.Address[0] and [1] that matches the fields 
-slave adress and function code in the message header. 
-If the data object for this message is big enough to contain the message, the message will be stored, 
-and the DataValid flag will be set.
-
-<h2>Sending messages
-Messages will be sent using the contents of RemTrans.Address[0] and [1] as the fields 
-slave address and function code in the message header.
-
-</topic>
-
-</headerlevel>
-
-<topic> an_example
-An example
-To show how to work with the classes that are briefly described above we will start with a little
-example. The classes are described in more detail below.
-
-In our example we have one Proview-system communicating with an other node via UDP/IP. We will
-send a few messages in both directions. My node is named 'dumle' and the remote node is named
-'asterix'.
-
-The messages we will send is:
-
-d_a_RequestData <t> 4 Byte
-d_a_Report <t> 20 Byte
-
-and the messages we will receive is:
-
-a_d_Data <t> 365 Byte (as an answer to the d_a_RequestData-message)
-a_d_Error <t> 10 Byte
-
-The configuration in the node-hierarchy looks like this.
-
-The RemoteConfig-object has to be there. I have added a RemnodeUDP object below this and
-configured address and nodename aswell as the port-numbers to communicate on.
-
-<image> dg_fig70.png
-
-Below the RemnodeUDP-object I have added four RemTrans-objects, one for each message. In the
-remrans-objects I have configured the direction (send or receive). Numbered the addresses so I can
-distinguish between the messages and set the sizes on the sending messages.
-
-<image> dg_fig71.png
-
-Below the remtrans-objects I have put the data-buffers. For the smaller messages I have chosen the
-small Buff256-buffer. The Data-message is larger and I have therefor chosen the Buff1440-buffer for
-this message.
-
-<image> dg_fig72.png
-
-<h2>The data structures
-The data structures for the messages are defined in the file ra_plc_user.h in $pwrp_inc-directory. This
-file is automatically included when you compile the plc-code. The structures look like:
-
-<c>typedef struct {
-<c>  pwr_tUInt32  Id;
-<c>} d_a_RequestData;
-<c>
-<c>#define pwr_sClass_d_a_RequestData d_a_RequestData
-<c>
-<c>typedef struct {
-<c>  pwr_tUInt32   Id;
-<c>  pwr_tFloat32  data_1;
-<c>  pwr_tInt32    data_2;
-<c>  pwr_tInt32    data_3;
-<c>  pwr_tInt32    data_4;
-<c>} d_a_Report;
-<c>
-<c>#define pwr_sClass_d_a_Report d_a_Report
-<c>
-<c>typedef struct {
-<c>  pwr_tUInt32   Id;
-<c>  pwr_tFloat32  data_1;
-<c>  ...
-<c>  ...
-<c>  pwr_tInt32    data_xx;
-<c>} a_d_Data;
-<c>
-<c>#define pwr_sClass_a_d_Data a_d_Data
-<c>
-<c>typedef struct {
-<c>  pwr_tUInt32   Id;
-<c>  pwr_tInt32    func_no;
-<c>  pwr_tInt16    err_code;
-<c>} a_d_Data;
-<c>
-<c>#define pwr_sClass_a_d_Error a_d_Error
-
-<h2>The plc code
-
-I have a plc program named Comm. In this program I have placed one RemTransSend-object and one
-RemTransRcv-object. These objects are found below the "Other"-hierarchy in the plc-editor palette.
-To the RemTransSend-object I have connected the RemTrans that I want to send. In this case the
-d_a_ReuestData-message. The message will be sent when the Dv-signal "RequestData" is set. Similarly 
-I have to the RemTransRcv-object connected the a_d_Data-message which will be the answer 
-to my request.
-
-<image> dg_fig73.png
-
-Both the RemTransSend and the RemTransRcv-objects have a subwindow. For the RemTransSend this subwindow 
-will be executed when there is a flank on the snd-pin. When the subwindow has been executed the
-DataValid-attribute of the connected RemTrans-object is set. The transport job for this Remnode 
-sends the message and sets the DataValid-flag to zero.
-
-For the RemTransRcv the subwindow will be executed when the DataValid-attribute in the connected 
-RemTrans-object is set. When the transport job for this Remnode receives a message it fills the
-data buffer with the received data and then sets the DataValid-flag. 
-After execution the flag will be reset.
-
-<h2>Send subwindow
-In the send subwindow we fill in the data in the send-buffer. The send-buffer for the message to send
-is connected to a DataArithm. The special 'classdef'-syntax casts Da1 to be a pointer to a
-d_a_RequestData-struct (or actually it will cast this pointer to a pwr_sClass_d_a_RequestData,
-therefor the define-statement as described above).
-
-<image> dg_fig74.png
-
-<h2>Receive subwindow
-In the receive subwindow unpack the data received in the receive-buffer. The recieve buffer
-is connected to a DataArithm. Again we use the classdef-statement to cast the Da1-pointer.
-We unpack the data to the output pins of the DataArithm. If one DataArithm is not enough to unpack
-the parameters we just add more DataArithm's and continue in the same way. 
-
-<image> dg_fig75.png
-
-</topic>
-
-</chapter>
-
-<chapter>
-<topic>administrator
-Administration
-
-<option> printdisable
-Create users <link> adm_user
-Register volumes <link> register_volumes
-Create project <link> create_project
-<option> printenable
-</topic>
-
-<topic> adm_user
-Users
-
-To gain access to the Proview development and runtime environment you need to login with 
-username and password. Users are kept in the user database and are granted privileges which 
-states the users authority to make changes in the system.
-
-Systems that share the same users are grouped into a system group, and the the users for this 
-group is defined. You can also build a hierarchy of system groups where child groups inherit 
-the users of their parent, and additional users can be defined for each child.
-
-A system is connected to a systemgroup by the SystemGroup attribute in the $System object. 
-The notation for a system group in a hierarchy is the names of the group separated by a point, 
-for example 'Main.West.F1’.
-
-In the example below Eric is responsible for all the systems in the plant, and is defined on 
-the highest level in the hierarchy. Nils is working with the west side of the plant and is 
-defined on the 'West’ system group. Finally, Carl working with the systems in the F1 part of 
-the plant. All system groups has the attribute UserInherit, that states that a child group
-inherits all the users of the parent.
- 
-
-<image> dg_fig22.gif
-
-Users and systemgroups are created in the administrator:
-
-- Start the administrator with the command 'pwra'
-- Enter the UserDatabase from the menu 'File/Open/UserDatabase'.
-- Login by entering the login command. Open the login prompt from the menu 'Functions/Command'
-  and enter 'login /adm’ on the command line. If the systemgroup 'administrator’ is presen
-  you also has to add username and password to a user defined in the administrator systemgroup.
-- Enter edit mode from the menu 'Edit/Edit mode'.
-  Systemgroups and users are represented by object of the classes SystemGroupReg and
-  UserReg, that are displayed in the palette to the left. An object is created by selecting
-  a class in the palette. After that, you click with the middle mousebutton on the future 
-  sibling or parent to the new object. If you click on the map/leaf in the destination object, 
-  the new object is placed as the first child, if you click to the right of the map/leaf, 
-  it is placed as a sibling.
-- Create a systemgroup by selecting 'SystemGroupReg' in the palette, and click with MB2
-  (the middle mousebutton) in the right window. Open the SystemGroupReg object and enter
-  name ant attribute for the system group. Enter the complete hierarchy name, e.g. 
-  'Main.West'.
-- Create a user by selecting 'UserReg' in the palette and click with MB2 on the map/leaf
-  of the SystemGroupReg object that the UserReg should be a child of. Open the object and
-  enter username, password and privileges for the user.
-- Save.
-- Logout with the command 'logout'.
-
-
-The user database reside in the directory $pwra_db.
-
-</topic>
-
-<topic>register_volumes
-Register Volumes
-
-All volumes in a network has to have a unique volumname and volume identity. To assure this, 
-all volumes is registered in a global volume.
-
-The registration is done by the administrator:
-
-- Start the administrator with the command 'pwra’
-- Enter volume mode from the menu 'File/Open/GlobalVolumeList'.
-- Login as administartor.
-- Enter edit mode from the menu 'Edit/Edit mode'.
-  Volumes are registred by objects of class VolumeReg, that is dislayed in the palette to
-  the left. In the palette, there is also the $Hier class, that can be used to order the
-  VolumeReg objects in a tree structure.
-- Create a VolumeReg object, open the object and enter volumename (equals objectname),
-  volumeidentity and project.  
-- Save.
-- Logout with the command 'logout'.
-
-<h2>Volume name
-The name of the volume, a unic name with max 31 characters.
-
-<h2>Volume Identity
-The volume identity is a 32 bit word specified in the form v1.v2.v3.v4 where v1, v2, v3 and v4 
-are numbers in the interval 0-255. Dependent on the class of the volume, the numbers can be 
-chosen in separate intervals. 
-
-RootVolumes            <t>0. 1-254. 1-254. 1-254
-User ClassVolumes      <t>0. 0. 2-254. 1-254
-
-The DirectoryVolume always has the identity 254.254.254.253
-</topic>
-
-<topic>create_project
-Create project
-
-A project is a number of nodes and volumes that share the same development environment. Usually
-it consist of some process stations and a couple of operators stations that control a part of 
-the plant, but there are no restrictions in the size of a project. You can choose to have each 
-node in its own project or all the nodes in the same project.
-
-- All the nodes in a project (on the same bus) has a nethandler link between each other.
-- All the volumes and nodes share the same directory tree.
-- All node has to be upgraded to new Proview versions at the same time.
-
-A common size is 1-10 nodes in a project. Too many nodes will increase the communication 
-overhead and make it harder to upgrade the project.
-
-Create the project in the administrator:
-
-- Start the administrator with the command 'pwra’.
-- The projectlist is shown as default when starting the administrator. It can also be opened
-  from the menu (File/Open/ProjectList).
-- Login as administrator.
-- Enter edit mode from the menu 'Edit/Edit mode'.
-  Projects are represented by objects of class ProjectReg, that is displayed in the palette
-  to the left. $Hier objects can be used to order the ProjectReg objects in a tree structure.
-- Create a ProjectReg object and enter project name, base version, path and description.
-- The project is created when saving. First you have to confirm the changes.
-- Save and logout.
-
-<h2>Project name
-A project has a project name that identifies the project in the development environment. It is 
-similar the system name that identifies the project in the runtime environment, but it 
-doesn’t have to be the same. Actually a system can have several projects in the development 
-environment. When upgrading or making a major modification of the system, it is advisable to 
-take a copy of the project and keep the currently running version of the system available for 
-minor corrections. The copy is then created under a new project name, though it has the same 
-system name.
-
-<h2>Base
-Proview is a multiversion system, i.e. different versions of proview can be installed in 
-the same development environment and projects of different proview versions can coexist in 
-the same development environment. A project points at a Proview base, e.g. V3.4, V4.0, and 
-when creating a project you have to choose which base the project should point at.
-
-<h2>Path
-The project consist of a directory tree where databases, source files, archives etc is stored. 
-The path is the root directory of this tree.
-
 </topic>
 </chapter>
 
@@ -1447,8 +891,8 @@ wb takes user, password and volume as arguments.
 
 <h2>The Configuration Editor
 
-The configuration editor displays two windows, and for the DirectoryVolume, the upper shows 
-the volume configuration, and the lower the node configuration. 
+The configuration editor displays two windows, and for the DirectoryVolume, the left shows 
+the volume configuration, and the right the node configuration. 
 
 <h2>Configure Volumes
 First we configure all the root volumes, sub volumes and class volumes in the project. This
@@ -1673,7 +1117,7 @@ In the object indicates, for example the number of events that is stored in the 
 is automatically create below a $Node object.
 See MessageHandler i Object Reference Manual <link>messagehandler,"",$pwr_lang/pwrb_xtthelp.dat
 
-<h2>IOHandler objekt
+<h2>IOHandler object
 IOHandler configures properties for the I/O handling.
 
 - ReadWriteFlag specifies whether to adress physical hardware or not.
@@ -1771,6 +1215,516 @@ See XttGraph in Object Reference Manual <link>xttgraph,"",$pwr_lang/pwrb_xtthelp
 </chapter>
 
 <chapter>
+<topic>project_structure
+Navigating the project
+
+This chapter describes the projects structure and explains the purpose of the different
+directories. The chapter also describes some important files that you can use to configure
+and control different things in your project.
+
+The directory structure is divided into two branches, one which contains all source files that
+your project consists of and the other is the build tree where all produced files are placed.
+<option> printdisable
+Introduction <link> proj_introduction
+The source tree <link> source_tree
+The build tree <link> build_tree
+Special files <link> special_files
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic>proj_introduction
+Introduction
+The figure below shows a projects structure of the directory tree.
+
+<image> dg_psfig1.png
+
+This directory structure is new to Proview v4.6. The reason for this is to make it more clear
+what is the sources and configuration files of the project and what is generated content.
+Earlier versions did not make this as clear and the idea is that everything that resides in
+the build tree can be regenerated from the source tree.
+
+All directories have an environment variable defined so it will be easy to reach all
+directories in the project. These variables are always defined as:
+<c> $pwrp_<directory>
+
+For example $pwrp_exe for the directory <project_root>/bld/x86_linux/exe.
+</topic>
+
+<topic> source_tree
+The source tree
+The source tree contains all the files that is the projects sources and configuration files.
+Yhe top level only contains subdirectories and no source or configuration files. In the
+following the contents and purpose of the subdirectories is described.
+
+<option> printdisable
+The login directory
+$pwrp_login <link> project_login
+
+The database directory
+$pwrp_db <link> project_db
+
+The graphical directory
+$pwrp_pop <link> project_pop
+
+The application directory
+$pwrp_appl <link> project_appl
+
+The documentation directory
+$pwrp_doc <link> project_doc
+
+The configuration directory
+$pwrp_cnf <link> project_cnf
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic> project_login
+$pwrp_login
+This is the directory you will start in when you move to a project with the 'sdf'-command.
+Two files here are of interest.
+
+<c>login.sh
+<c>sysinfo.txt
+
+login.sh is script that is ran when you go to the project. It can be used to set up
+project-specific environment variables and alikes.
+
+sysinfo.txt is a text-file which will be printed in the terminal-window when you come to the
+project.
+</topic>
+
+<topic> project_db
+$pwrp_db
+This is the directory where the databases for all your local volumes will reside (including
+the directory volume where the project is configured). Each database resides in it's own
+sub-directory. This is valid if you choose to create your databases as BerkleyDB-databases. 
+If you instead choose to have mysql-databases the databases will be created on your 
+mysql-server.
+
+In this directory resides also the files for user-defined classes, the UserClassVolumes.
+They are text-files with file-end wb_load. The user-classvolume usually has a similar name
+as the RootVolume in the project that uses the classes. If your RootVolume is named
+VolMyProject then the ClassVolume will be named CVolMyProject and the name of the file
+thus will be:
+
+<c>cvolmyproject.wb_load
+</topic>
+
+<topic> project_pop
+$pwrp_pop
+This is the directory where the the pictures developed with the ge-editor will be stored
+(fileend *.pwg). Finished files should be copied to the exe-directory in the build-tree
+($pwrp_exe). Also xtt-helpfiles should be developed here and copied to the
+$pwrp_exe-directory.
+Pictures that has a corresponding XttGraph-object in the node-hierarchy of a RootVolume will
+automatically be copied to the $pwrp_exe-directory when that volume is built.
+</topic>
+
+<topic> project_appl
+$pwrp_appl
+This is the directory where you should keep source code for your own applications belonging
+to the project and also for code that you want to link with the plc-program.
+
+One file of special interest that should be kept here is the 
+<c>ra_plc_user.h-file
+This file will by default be included when you compile the plc-code. It is however included
+from a directory in the build-tree (<project_root>/bld/common/inc).
+
+All header-files located here or in subdirectories and that should be included with the
+plc-program must be distributed to the $pwrp_inc-directory (<project_root>/bld/common/inc).
+
+If you have some small functions that you only link with the plc-program and nothing else
+then you typically place this code in a file called:
+<c>ra_plc_user.c
+</topic>
+
+<topic> project_doc
+$pwrp_doc
+This is the place where you put documentation related to the project. This can be your own 
+produced documentation or for example DataSheet's on components existing in your plant
+that you might want to distribute to the operator stations. 
+</topic>
+
+<topic> project_cnf
+$pwrp_cnf
+This directory contains all configuration files for your project. Some configuration files
+are common for the whole project and they are placed here. Some configuration files are 
+specific for each node in your project. Create a subdirectory here for each node that has
+specific configuration files. Sometimes a configuration is unique to a specific user. If 
+this is the case then create a subdirecty in the node-directory for that user.
+
+Files that you should keep here is:
+
+Configuration of Global function keys.
+<c>Rt_xtt
+
+Configuration of menus and quick commands in rt_xtt.
+<c>xtt_setup.rtt_com
+
+Startup file for Proview.
+<c>ld_appl_<nodename>_<bus_no>.txt
+
+File to decide which libraries to link with the plc-program.
+<c>plc_<nodename>_<bus_no>.opt
+
+File to control setting of initial values when starting Proview.
+<c>pwrp_alias.dat
+
+All the above files are further described below.
+</topic>
+
+</headerlevel>
+
+<topic> build_tree
+The build tree
+The build tree contains all the files needed when building the plc-program. It contains also
+all the files produced when you build. Files needed when building the plc-program should be 
+in this tree, but the master for all files should be in the source tree. The idea is that 
+the build tree should be possible to remove completely and regenerated from tho source tree.
+
+<option> printdisable
+The exe directory
+$pwrp_exe <link> project_exe
+
+The object files directory
+$pwrp_obj <link> project_obj
+
+The list files directory
+$pwrp_lis <link> project_lis
+
+The library directory
+$pwrp_lib <link> project_lib
+
+The load files directory
+$pwrp_load <link> project_load
+
+The log file directory
+$pwrp_log <link> project_log
+
+The temporary files directory
+$pwrp_tmp <link> project_tmp
+
+The include files directory
+$pwrp_inc <link> project_inc
+
+The web files directory
+$pwrp_web <link> project_web
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic> project_exe
+$pwrp_exe
+This is the directory where the exe-files for plc-programs are created. The plc-program
+is named:
+
+<c>plc_<nodename>_<bus_no>_<version_no>
+
+If you have your own applications in the project these exe-files should also be generated here.
+</topic>
+
+<topic> project_obj
+$pwrp_obj
+This is the directory where all object files produced during compilation should be placed.
+Object-files for the plc-program are automatically placed here. The object file for a 
+a PlcPgm-object placed in the PlantHier is named after object identity of this object.
+
+Object files for all other code should also be placed here.
+</topic>
+
+<topic> project_lis
+$pwrp_lis
+This is the directory where you place list-files produced during compilation.
+</topic>
+
+<topic> project_lib
+$pwrp_lib
+This is the directory where libraries will be created containg object files belonging to 
+a certain volume. You should also place your own libraries here.
+</topic>
+
+<topic> project_load
+$pwrp_load
+This is the place where load-files for the projects volumes will be created. The load-files 
+are named:
+
+<c><volumename>.dbs 
+</topic>
+
+Here are also placed files that are produced when you edit your plc-programs. They contain
+all information needed to display the plc-programs graphically during runtime and enable
+online trace. These files have file ending .flw and are called flow-files.
+
+Files for the cross reference function will also be produced here. They begin with the letters
+"rtt" ([r]un [t]ime [t]race). Cross reference file are produced manually through the
+"Utilities"-function in the Navigator. 
+
+<topic> project_log
+$pwrp_log
+This directory contains log-files that are produced during simulation of your project.
+Proview's main log-file is named
+
+<c>pwr_<nodename>.log
+
+If you restart simulation logging will be appended to this file. Remove it if you want a fresh one.
+</topic>
+
+<topic> project_tmp
+$pwrp_tmp
+This directory contains temporary files. These files will be created at certain operations.
+For example if you compile a plc-program with debug-mode the sorce files created for this 
+program will be created here.
+</topic>
+
+<topic> project_inc
+$pwrp_inc
+This directory contains include-files that will be included when you build the plc-program.
+A file called
+<c>ra_plc_user.h
+will always be searched in this directory. If you have other header-files to include, then include
+them in this one.
+The master for all these include files should be kept in the source tree and copied here.
+
+Header-files for userclasses wil be created here when you build a classvolume. If you have
+documented your classes, a help-file will also be created. The files are named:
+
+<c>pwr_<classvoumename>classes.h
+<c>pwr_<classvoumename>classes.hpp
+<c><classvoumename>_xtthelp.dat
+<c><classvolumename>.html
+
+</topic>
+
+<topic> project_web
+$pwrp_web
+This directory contains all files for the web-interface. For example xtt-helpfiles that you generate
+as html-files. Also if you create java-pictures from your ge-graphs they will be created here.
+</topic>
+
+</headerlevel>
+
+<topic> project_special_files
+Special files
+All special files that can be used for different kinds of configuration or is of other interest 
+and is located somewhere in the project directory tree is described here. They are all
+mentioned above in this chapter.
+
+<option> printdisable
+Configuration of Global function keys.
+Rt_xtt <link> file_rt_xtt
+
+Configuration of menus and quick commands in rt_xtt.
+xtt_setup.rtt_com <link> file_rt_xtt
+
+Startup file for Proview.
+ld_appl_<nodename>_<bus_no>.txt <link> file_ld_appl
+
+File to decide which libraries to link with the plc-program.
+plc_<nodename>_<bus_no>.opt <link> file_plc_opt
+
+File to control setting of initial values when starting Proview.
+pwrp_alias.dat <link> file_pwrp_alias
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic> file_rt_xtt
+Rt_xtt
+This is file is read by rt_xtt when started and the file is searched from the directory where
+you start rt_xtt. The file configures hot-keys to perform different kinds of commands.
+
+Valid commands are:
+
+<c>Command     // This will perform a xtt command
+<c>SetDig      // This will set a digital signal to TRUE
+<c>ToggleDig   // This will toggle the state of a digital signal
+<c>ResetDig    // This will reset a digital signal to FALSE
+
+To bind a hot-key to a command you first define the key and then states the command.
+For example to bind the keystroke <ctrl>F5 to a command that acknowledges a type A alarm:
+
+<c>Control <Key>F5: Command(event ack /prio=A)
+
+A typical Rt_xtt-file could look something like this:
+
+<c>#
+<c># Function key definition file
+<c>#
+<c>Control <Key>F5: Command(event ack /prio=A)
+<c>Control <Key>F6: Command(event ack /prio=NOA) # ack non A-alarms 
+<c>Control <Key>F7: Command(show alarm)          # open alarm list
+<c>Control <Key>F8: Command(show event)          # open event list
+<c># Below opens a graph defined by a XttGraph-object in the node hierarchy.
+<c># The $Node-expression will be replaced by the node-object on this node.
+<c># This makes the Rt_xtt-file work on different nodes.
+<c>Alt <Key>F12: Command(open graph /object=$Node-Pictures-rkt_overview)
+<c># Below opens a graph defined by a XttGraph-object in the node hierarchy.
+<c># The /focus-syntax sets focus on a object in the graph named NewPlate
+<c>Control <Key>F9: Command(open graph /object=*-Pictures-rkt_platepic/focus="NewPlate")
+<c>Control <Key>F10: Command(open graph /object=*-Bilder-rkt_cells/focus="Check_no")
+<c># Below closes all open graphs except rkt_overview.
+<c>Control <Key>F11: Command(close all/except=rkt_overview)
+<c>Shift <Key>F1: SetDig(VWX-RKT-RB-DS-OnOffMan_1_2.ActualValue)
+<c>Shift <Key>F6: ResetDig(VWX-RKT-RI-RP-CalcPrePos.ActualValue)
+<c>Shift Control <Key>v: ToggleDig(VWX-RKT-COM-VWXSVR-BlockOrder_RKT.ActualValue)
+
+</topic>
+<topic> file_xtt_setup
+xtt_setup.rtt_com
+This is file is read by rt_xtt when started and the file is searched from the directory where
+you start rt_xtt. The file configures the appearance of rt_xtt. You can build your own menues
+and make entries that perform certain commands.
+
+All commands in the file follow standard xtt command syntax. There is a built in help in
+rt_xtt which explain most of the commands. To view this help type <ctrl>-b when in xtt to open the command
+line and write help. Navigate through the commands to understand them.
+
+When you start rt_xtt there is by default some menues where the first one is named Database.
+If for example you would like to create a menu on top (before) this then use this command:
+
+<c>create item/text="Maintenance"/menu/dest=DataBase/before
+
+To create a sub menu (first child) to this use this command:
+
+<c>create item/text="VVS"/menu/dest=Maintenance/firstchild
+
+To create an entry that performs a command below the VVS menu use this command:
+
+<c>create item/text="Graph P1"/command="open graph/object=$Node-pics-h4_proc1"\ 
+<c>       /pixmap=graph/dest=Maintenance-VVS/lastchild
+The pixmap qualifier defines the appearance (icon) of this entry. Without this qualifier the icon will be a leaf.
+The command opens a graph defined by a XttGraph-object in the node hierarchy.
+
+The result will look like this:
+
+<image> dg_psfig2.png
+
+In addition to building a menu you can also define symbols (shortcuts) which can be used as commands.
+The symbols can be entered on the command line and the command defined by the symbol will 
+be executed.
+The following defines a symbol 'h4' that will open a graph:
+
+<c>define h4 "open graph /object=*-pics-h4_process1"
+
+In the xtt_setup-file you create one command per line. Comment lines starts with a exclamation mark.
+</topic>
+
+<topic> file_ld_appl
+ld_appl_<node>_<bus_no>.txt
+This file controls which applications should start when you start Proview runtime. You can add your
+own applications aswell as turn off one or more of the Proview kernel applications.
+
+A typical ld_appl-file can look like this:
+
+<c># Startup file for PROVIEW/R
+<c>#
+<c># id,   name,   load/noload run/norun,  file,   prio,   debug/nodebug,  "arg" 
+<c>#pwr_neth,      , noload, norun, , 5, debug, ""
+<c>#pwr_plc,       , noload, norun, ,  , debug, ""
+<c>#pwr_alim,      , noload, norun, , 5, debug, ""
+<c>#pwr_emon,      , noload, norun, , 5, nodebug, ""
+<c>#pwr_tmon,      , noload, norun, , 5, debug, ""
+<c>#pwr_qmon,      , noload, norun, , 19, debug, ""
+<c>#pwr_nacp,      , noload, norun, , 5, debug, ""
+<c>#pwr_bck,       , noload, norun, , 5, debug, ""
+<c>#pwr_io,         , noload, norun, , 5, debug, ""
+<c>#pwr_linksup,   , noload, norun, , 5, debug, ""
+<c>#pwr_trend,     , noload, norun, , 5, debug, ""
+<c>#pwr_fast,       , noload, norun, , 5, debug, ""
+<c>#pwr_remh,       , noload, norun, , 5, debug, ""
+<c>pwr_remlog,       , noload, norun, , 5, debug, ""
+<c>#pwr_sysmon,       , noload, norun, , 5, debug, ""
+<c>#pwr_elog,       , noload, norun, , 5, debug, ""
+<c>pwr_webmon,       , noload, norun, , 5, debug, ""
+<c>pwr_webmonmh,       , noload, norun, , 5, debug, ""
+<c>pwr_webmonelog,       , noload, norun, , 5, debug, ""
+<c>#pwr_opc_server,       , noload, norun, , 5, debug, ""
+<c>#pwr_sevhistmon,       , noload, norun, , 5, debug, ""
+<c>#pwr_sev_server,       , noload, norun, , 5, debug, ""
+<c>#rs_nmps_bck, rs_nmps_bck, noload, run, rs_nmps_bck, 12, nodebug, ""
+<c>ra_utl_track, ra_utl_track, noload, run, ra_utl_track, 12, nodebug, ""
+
+The sharp sign means those lines are commented away. Almost all of the proview kernel applications
+are commented away since we want those to start. If I take away the hash sign then this kernel 
+application will not be started. For example in this case I have no web-interface so I don't 
+want the web-applications to start (pwr_webmon).
+
+If I use Nmps-cells and want the content of the cells to be backed up I take away the sharp sign
+on rs_nmps_bck.
+
+On the last line I have added an application produced by myself. I've chosen priority 12. I don't
+want this application to interfere with the kernel applications and they run between 17 and 19.
+</topic>
+
+<topic> file_plc_opt
+plc_<node>_<bus_no>.opt
+This file (if it exists) will be used as the link options when I build the plc-program.
+Proview by default links against some libraries and object-files. If you have your own
+opt-file you need to include these. A default opt-file would look like:
+
+<c>$pwr_obj/rt_io_user.o -lpwr_rt -lpwr_usbio_dummy
+
+If you don't have any io-methods of your own (see "Guide to I/O-systems") then you can
+skip the first one (rt_io_user). Add your own libraries at will.
+
+</topic>
+
+<topic> file_pwrp_alias
+pwrp_alias.dat
+File to control setting of initial values when starting Proview.
+
+There are some different ways of setting values through the pwrp_alias-file.
+The same file is used for all nodes in the project. Each row in the file should start
+with the following expression:
+
+<c><nodename>_setval
+
+The different ways of setting things is described below:
+
+1. Setting an attribute value
+
+<c><nodename>_setval <attribute_name> = <value>
+
+example:
+
+<c>bslds1_setval bsl-ds1-par-maxtemp.actualvalue = 70.0
+
+Using the above described syntax will set the value before the backup is loaded and before
+the plc-program is started. This means that if a value is backed up then the backuped value
+will always be valid.
+
+If you instead really want the setting in this file to have effect then use this syntax:
+
+<c><nodename>_setvalp <attribute_name> = <value> 
+
+In this case the setting will take effect after the backup-file is loaded and the plc-program
+is started.
+
+2. Setting simulation mode
+
+Setting the simulation mode means that no physical i/o will be handled. You can write simulation
+programs to set correct values on the input i/o. Add this line to the file:
+
+<c><nodename>_setval plcsim = yes
+
+3. Set all plc-programs to scan off at startup
+
+To set all plc-programs to scan-off use this line:
+
+<c><nodename>_setval plcscan = off
+
+Turn a plc-program on by finding the corresponding WindowPlc-object (child to PlcPgm-object) and
+set the attribute ScanOff to 1. Observe that there might be subwindows in this program
+that also need to be turned on.
+</topic>
+
+
+</headerlevel>
+
+</chapter>
+
+<chapter>
 <topic>plc_programming
 Graphical PLC Programming 
 	 
@@ -1857,7 +1811,7 @@ A Grafcet program is always a closed sequence.
 <b>A Simple Straight Grafcet Sequence
 <image> dg_fig47.gif
 
-<h2>Förgrenad sekvens
+<h2>Diverged sequence
 
 A straight sequence is the most simple variant of sequences. Sometimes you may require 
 alternative branches in your program, for instance when you have a machine, which can 
@@ -2040,21 +1994,11 @@ expressions. These are written in the C language.
 In the figure below the block will calculate the expression (A1 + A2 * A3) and give the output 
 this value. A1, A2 and A3 are representing analog values, for instance signals supposed to be 
 connected to the inputs of the object. 
+When writing these expressions it is important to use space before and after the operators, 
+otherwise the expression may be misinterpreted at the execution. 
 
-The expression can contain advanced C code with arrays and pointers.
-When writing these expressions it is important to use space before and after the operators, otherwise the expression may be misinterpreted at the execution. 
-
-
-Här beskrivs inte funktionen hos objekten, men det kan vara lämpligt att kommentera
-användningen av aritmetiska block. Blocken används för beräkning av användardefinierade
-uttryck, som skrivs i programmeringsspråket C.
-
-I figuren ovan kommer blocket att beräkna värdet (A1 + A2 * A3) och lägga detta på utgången.
-A1, A2 och A3 representerar analoga värden, t ex signaler som antas vara kopplade till
-ingångarna på objektet. 
-
-Uttrycken kan innehålla avancerad C kod med arrayer och pekar. When you write these, you 
-should ge aware of that indexing outside arrays, or erroneous pointers might cause the
+The expression can contain advanced C code with arrays and pointers. When you write these, you 
+should be aware of that indexing outside arrays, or erroneous pointers might cause the
 execution of the plcprogram to terminate.
 
 <h1>Alarm Supervision 
@@ -2099,8 +2043,1996 @@ Now, the plcgpm is compiled, by choosing 'File/Build' in the plc editor. Any war
 messages will be displayed in the message window.
 </topic>
 </chapter>
+<chapter>
+<topic> dg_plc_functions
+Call functions from the plc program
+
+The functionobject programming in the plc editor has its limitations, and some tasks can
+be done much easier and nicer in c-code. c programming can be achieved in CArithm and
+DataArihm where you can put an amount of c-code, but the number of characters are limited
+to 1023, and occationally this is not enough. Then you have two possibilities, to write a
+detached application, or to call a c-function from a CArithm or DataArithm. The advantage 
+with calling a c-function is that all initialization and linking to objects and attributes 
+are handled by the plc program. The execution of the function is also syncronous with the 
+execution lf the plc thread calling the function.  
+
+<h1>Write the code
+The code is put into a c file, created somewhere under $pwrp_src. We create the file
+$pwrp_src/ra_myfunction.c and inserts the function MyFunction() that performs some simple
+calculation.
+
+<c>#include "pwr.h"
+<c>#include "ra_plc_user.h"
+
+<c>void MyFunction( pwr_tBoolean cond, pwr_tFloat32 in1, pwr_tFloat32 in2, 
+<c>                 pwr_tFloat32 *out)
+<c>{
+<c>  if ( cond)
+<c>    *out = in1 * in2;
+<c>  else
+<c>    *out = in1 + in2;
+<c>}
+
+<h1>Prototype declaration
+In the include file ra_plc_user.h a prototype declaration is inserted.
+
+<c>void MyFunction( pwr_tBoolean cond, pwr_tFloat32 in1, pwr_tFloat32 in2, 
+<c>                 pwr_tFloat32 *out);
+
+ra_plc_user.h is included by the plc program, and the function can be called from a CArithm
+or DataArithm object. You should also include ra_plc_user.h in the function code to ensure
+that the prototype is correct.
+
+ra_plc_user should be placed on $pwrp_src and copied to $pwrp_inc, from where it is included
+by the plc program and the function code.
+
+<h1>Compile the code
+The c file is compiled, for example with make. Below a makefile is shown, that compiles
+ra_myfunction.cpp and puts the result, ra_myfunction.o on $pwrp_obj. Note that there is also 
+a dependency on ra_plc_user.h, which causes this file to be copied from $pwrp_src to $pwrp_inc.
+
+
+<c>ra_myfunction_top : ra_myfunction
+
+<c>include $(pwr_exe)/pwrp_rules.mk
+
+<c>ra_myfunction_modules : \ 
+<c>		$(pwrp_inc)/ra_plc_user.h \ 
+<c>		$(pwrp_obj)/ra_myfunction.o
+
+<c>ra_myfunction : ra_myfunction_modules
+<c>	@ echo "ra_myfunction built"
+
+<c>#
+<c># Modules
+<c>#
+
+<c>$(pwrp_inc)/ra_plc_user.h : $(pwrp_src)/ra_plc_user.h
+
+<c>$(pwrp_obj)/ra_myfunction.o : $(pwrp_src)/ra_myfunction.c \ 
+<c>                              $(pwrp_inc)/ra_plc_user.h
+
+
+<b>Call in the plc program
+The function is called from a CArithm or DataArithm.
+
+<image>dg_fig97.png
+<b>Fig Function call from the plc code
+
+<b>Link the plc program
+When the source code of the function was compiled, the object module
+$pwrp_obj/ra_myfunction.o was created. This has to be added to the link command when the
+plc program is built, which is achieved by addning the objectmodule to an option file that
+is input to the linker. The optionfile resides on the directory $pwrp_exe and is named
+plc_'nodename'_'qbus'.opt, for example
+
+<c>$pwrp_exe/plc_mynode_0999.opt
+
+The following line is inserted into this file
+
+<c>$pwr_obj/rt_io_user.o $pwrp_obj/ra_myfunction.o -lpwr_rt -lpwr_usbio_dummy
+
+We kan now build the node and startup Proview runtime.
+
+<b>Debug
+One disadvantage when you leave the graphic programming and call c-functons is that you
+can not use trace any more for debugging. If you suspect some error in the  function code, 
+you occasionally have to start the plc program in debug, set a breakpoint in the function 
+and step forward in the code.
+
+First you have to build the plc program with debug, by opening Options/Setting from the
+configurator and activate Build/Debug, and then build the node.
+
+After that you start Proview runtime and attach the debugger, gdb, to the plc process by
+starting gdb with the pid for the process. pid is viewed by 'ps x'
+
+<c>> ps x
+<c>...
+<c>5473 pts/0    Sl     0:18 plc_mynode_0999_00003
+
+where 5473 is pid for the plc process, and we start the debugger, set a breakpoint in the
+function and let the program continue to execute
+
+<c>> gdb -p 5473 plc_mynode_0999_00003
+<c>(gdb) b MyFunction
+<c>(gdb) c
+
+When the program enters the function it stops in the debugger, and we kan step (s) and 
+examin the content in variables (x) etc.
+
+If the plc program is terminated immediately after start, you can restart in debug.
+
+<c>> gdb plc_mynode_0999_00003
+
+You can also kill the current plc process and start a new one in debug.
+
+<c>> killall plc_mynode_0999_00003
+<c>> gdb plc_mynode_0999_00003
+
+</topic>
+</chapter>
 
 <chapter>
+<topic>dg_components
+Components and Aggregates
+
+This chapter is about how to program with components and aggregates.
+
+A component is one (or a number of) objects that handles a component in the plant. A 
+component can be for example a valve, a contactor, a temperaturesensor or a frequency
+converter. As these components are very common and exist in many different types of plants,
+its a great advantage if we can construct an object that containts all that it needed to
+control and supervise the component, and is that general that it can be used in most
+applications.
+
+A component in Proview can be divided in a number of objects:
+- a main object containing configuration data and data needed to supervise and operate
+  the component. It also contains the signal objects for the component.
+- a function object that is placed in the plc program and that contains the code to 
+  control the component.
+- an I/O object that defines possible communication with for example a profibus module.
+- a simulate object, used to test and simulate the system.
+
+Furthermore an object graph, documentation, trends etc are included in the component.
+
+An aggregate is a larger part in the plant than the component, and contains a number of
+components. An aggregate can for example be a pump drive, consisting of the components
+pump, motor, contactor and safety switch. In other respects, the aggregate is built as
+a component with main object, function object, simulate object, object graph, documentation
+etc.
+
+<b>Object orientation
+Proview is an object oriented system, and components and aggregates are a field where 
+the benefits of object orientation are used. In the components, one can see how an object
+is built by other objects, that an attribute, besides from beeing a simple type as a float
+or boolean, also can be an object, that in its turn are composed by other objects. An
+attribute that is an object is called an attribute object. It is not quite analogous to
+a free-standing object, as it lacks object head and an object identity, but apart from that
+it contatins all the properties of a free-standing object in terms of methods, object graph 
+etc.
+
+One example of an attrbute object can be seen in the component object of a solenoid valve.
+Here all the signal objects, two Di objects for limit switches, and a Do object for order,
+are placed internally as attribute objects. Thus, we don't have to create these signals
+separately. When the valve object is created, also the signals for the valve are created.
+Another example of attribute objects are a motor aggregate that contains the component
+objects for frequency converer, safetyswitch, motor etc. in the shape of attribute objects. 
+
+Another important property in object orientation is inheritage. With inheritage means that
+you can create a subclass derived from an existing class, a superclass. The subclass
+inherits all the properties of the superclass, but has also the possibility to extend
+or modify some of the properties. One example is a component for a temperature sensor that
+is a subclass to a general sensor object for analogous sensors. The only difference 
+between the temperature sensor class and its superclass is the object graph, where
+the sensor value is presented in the shape of a thermometer instead of a bar. Another
+example is a pump aggregate derived from a motor aggregate. The pump aggregate is
+extended by a pump attribute object and also has a modified object graph that apart
+from the motor control also displays a pump.
+
+<image> orm_basetempsensor_og.gif
+<b>Fig Object graph for the class BaseTempSensor
+
+Another property that we have introduced is the posibility to disable attributes. The 
+reason for this is that the component objects has to be as general as possible, to 
+be able to handle all variants of the plant component. A solenoid valve can, for example,
+have a limit switch indicating valve open, but there are also solenoid valves with a
+limit switch indicating valve closed, or valves with both switches or without switches.
+Of course we could create four different component classes, one for each limit switch
+alternative, but problems will arise when you start building aggregate of the components.
+The number of variants of an aggregate will soon be unmanageable if you want to cover
+all the variants of the components. If we for example want to create an aggregate
+containing four solenoid valves, and there are four variants of each valve, there will
+be 64 variants of the aggregate. If we want to build an aggregate containing four valve
+aggregates there number of variants are 4096. The solution is to build a valve component
+that contains both switches, but where you can disable one or both switches to be able
+to handle all four limit switch variants. In this case attribute objects of class Di are
+disabled, which means that they are not viewed in the navigator, ignored by the
+I/O handling. Also the in code for the valve component and in the object graph this is taken 
+into consideration. The configuration is made in the configurator from the popup menu
+where you under 'ConfigureComponent' can choose a configuration from the alternatives.
+
+<image> dg_fig76.png
+<b>Fig The ConfigureComponent method for a BaseMValve. 
+
+<h2>Basecomponents
+Proview contains a number of component and aggregate objects for common plant components,
+e.g. temperature sensor, pressure sensor, pressure switch, solenoid valve, filter, 
+motor and fan drives. The are gathered in the classvolume BaseComponent. A basecomponent
+can be used directly, and this is probably the usual way to use them, but the idea is also 
+that you from the basecomponents create libraries and classes for the specific components 
+you are using in your plant.
+
+For solenoid valves there are the baseclass BaseMValve. If you have a solenoid valve
+of type Durholt 100.103 you create a subclass with BaseMValve as superclass, 
+Durholt_Valve_100_103 and insert the configuration that is valid for this valve. You
+also add a link to a datasheet and fill in the Specification attribute, which makes it
+possible to identify and order spareparts to the valve. When using a Durholt_Valve_100_103
+object you don't have to to so much configuring and adaptations because this is already
+made in the class. In this way, component archives can be built for the types of component
+you use in your plant.
+
+A problem arises when you use aggregates. An aggregate contains basecomponents from
+the BaseComponent volume, and if there are specific subclasses for a component, you
+want to use these. The solution is the Cast function. A basecomponent in an aggregate
+can be casted to a subclass, given that the subclass is not extended with new attributes.
+The casting means that the component fetches initial values, configurations, methods,
+object graph etc. from the subclass, i.e. in all situations it acts as the subclass it is 
+casted to. The casting is performed from the popup menu in the configurator, where you
+in the 'Cast' alternative get a list of all the available subclasses. By selecting a
+subclass, the component is casted to this.
+
+<h1>Pressure switch
+Let's have a look at a relatively simpel component, a pressure switch, to examine how
+it is built and how to configure it. For pressure switches there is the base component
+BasePressureSwitch, that is a subclass to BaseSupSwitch. As temperature, pressure and 
+limitswithes are quite alike, they have a common superclass. BaseSupSwitch has also a 
+superclass, Component, that is common for all component classes. The class dependency for
+the pressure switch class can be written
+
+<c>Component-BaseSubSwitch-BasePressureSwitch
+
+<b>The Component class
+
+Component contains the attributes Desciption, Specification, HelpTopic, DataSheet, 
+CircuitDiagram, Note and Photo that thus are present in all components. In Description
+there are place for a short description, in Specification you enter the model specification,
+the other are used to configure the corresponding methods in the operator environment.
+
+<b>BaseSubSwitch
+From the superclass BaseSupSwitch the attributes Switch, AlarmStatus, AlarmText, Delay,
+SupDisabled and PlcConnect are inherited.
+
+- Switch is a Di object for the pressure switch. It should be connected to a channel
+  object in the node hierarchy.
+- AlarmStatus shows the alarm status in runtime.
+- AlarmText contains the alarm text for the alarm sent at alarm status. The alarm text
+  has the default value "Pressure switch, ", but can be changed to some other text.
+  Note that if the default text is kept, this will be translated if another language
+  is selected. If it is replace by another text, the translation will fail.
+- Delay is the alarm delay in seconds, default 0.
+- SupDisabled indicates that the alarm is disabled.
+- PlcConnect is a link to the function object in the plc code.
+
+To the main object BaseSupSwitch there is a corresponding function object, BaseSupSwitchFo,
+which also is inherited by the subclass BasePressureSwitch.
+
+<b>BasePressureSwitch
+BasePressureSwitch doesn't have any attributes beyond those inherited from the superclasses.
+The unique properties in BasePressureSwitch in the graphic symbol,
+Components/BaseComponent/PressureSwitch, and the object graph where the switch symbol includes
+a P for pressure.
+
+<b>Configuration
+We open the configurator and creates the main object, BasePressureSwitch, in the plant
+hierarchy. In a suitable PlcPgm we insert a function object BaseSupSwitchFo and connects
+it to the main object with the connect function. Select the main object and click with
+Shift/Doubleclick MB1 on the function object. The function object contains the code for
+the component, which for a BaseSubSwitch is an alarm that is sent when the switch signal 
+is lost.
+
+<image> dg_fig77.png
+<b>Fig Main object with corresponding function object
+
+The pressure switch is to be viewed in a Ge graph. We open the Ge graph and fetches the
+subgraph BaseComponent/SupSwitch from the palette. The subgraph is adapted to a
+BaseSubSwitch object, and all we have to do is to connect it to the main object. Select
+the main object in the plant hierarchy and click with Shift/Doubleclick MB1 on the
+subgraph.
+
+<image> dg_fig78.png
+<b>Fig Graphic symbol, popup menu with methods and object graph
+
+We have now accomplished a working component. We can of course also continue to configure
+the method attributes with helptexts and links to photos, circuit diagrams and datasheet.
+
+<h1>Control Valve
+Let's have a closer look at a bit more complicated component, BaseCValve, that manoeuvers a
+control valve. In contrast to the pressureswitch above, you also have to use 
+ConfigureComponent to configure the object, and there are also a simulate object that is
+used to test the component.
+
+Suppose now that we have a control valve, that is controlled by an analog output, and that gives
+back the valve position in an analog input. Here we can use a BaseCValve. It has the analog 
+output 'Order' and the analog input 'Position', i.e. the signals we request. Apart from these,
+there are two digital input signals for switch open and switch closed, but these can be 
+disabled by a configuration.
+
+<b>Configuration
+We place the main object BaseCValve in the plant hierarchy and the function object BaseCValveFo
+in a PlcPgm, and links them together with the Connect function. The functionobject has an
+order input pin that we connects to a PID object. We also have to state that our valve does not 
+have any switches, and we do this by activating 'ConfigureComponent/PositionNoSwitches' in the 
+popupmenu for the main object. When we open the main object, and in this the Actuator object,
+we shall find a Position signal, but no input signals for the switches.
+
+<image> dg_fig79.png
+<b>Fig Main object with function object
+
+<image> dg_fig81.png
+<b>Fig Configuring the main object with ConfigureComponent/PositionNoSwiches
+
+In the HMI we place the subgraph BaseComponent/CValve in a Ge graph and connects it to the main
+object.
+
+We also want to be able to simulate the valve, to see that it works the way we want. For
+simulation there is the function object BaseCValveSim that we place in a specific PlcPgm
+for simulation, as this PlcPgm is not to be executed in the production system. The function
+object is connected to the main object with the Connect function.
+
+<image> dg_fig80.png
+<b>Fig Simulate object for the control valve
+
+The configuration is finished and after building the simulation node we can test the system
+and examine the result.
+
+<h1>Pump drive
+The next example is an aggregate, a pump drive with a frequency converter that communicates
+via Profibus with the protocol PPO3. We will see how a component object in the aggregate,
+in addition to the usual main, function and simulation object, also contains I/O objects to 
+fetch and send data via Profibus.
+
+The class we use is BaseFcPPO3PumpAggr, and the class dependency for this class is
+
+<c> Aggregate-BaseFcPPO3MotorAggr-BaseFcPPO3PumpAggr
+
+All aggregates have the superclass Aggregate that corresponds to the Component class for 
+components. The next superclass, BaseFcPPO3MotorAggr contains all the functionallity for
+the control. The pump class BaseFcPPO3PumpAggr extends the motor aggregate with a pump object
+representing the mechanical pump, but this doesn't contain any signal or any additional 
+functionallity. The pump aggregate also has its own object graph and graphical symbol.
+
+<b>Configuration
+The main object BaseFcPPO3PumpAggr is placed in the plant hierarchy, and the function object,
+that is inherited from the motor aggregate, BaseFcPPO3MotorAggrFo, is placed in a PlcPgm, and
+they are linked together by the Connect function.
+ 
+The main object has no less than 24 different configuration alternatives to choose between,
+dependent of which of the components Fuse, Contactor, SafetySwitch, StartLock and CircuitBreaker
+are present in the construction. In our case we only have a contactor and a frequence converter
+and we the choose the ConfigureComponent alternative CoFc.
+
+Some components in an aggregate can have its own configurations. In this case the contactor
+and the motor can be configured individually. Our contactor has to signals, a Do for order and
+a Di for feedback, and this applies to the default configuration, i.e. we don't have to change
+this. The motor, however has a temperature switch, and thus we select the motor component
+and activates ConfigureComponent/TempSwitch in the popup menu.
+
+The next step is to connect the signal objects to the channel objects. The contactor has a
+Do for order and a Di for feedback that is to be connected to suitable channels in the node 
+hierarchy. The motor has a temperature switch in the shape of a Di that also shoud be 
+connected. The frequence converter contatins four signals, StatusWordSW (Ii), ActSpeed (Ai), 
+ControlWordCW (Io) and RefSpeed (Ao). These signals are exchanged with the frequency converter 
+via Prifibus with the protocol PPO3. There is a specific Profibus module object for PPO3, 
+BaseVcPPO3PbModule, that contains the signals for PPO3 communication. The module is configured 
+by the Profibus configuratior (se Guide to I/O System) and is connected to the 
+FrequencyConverter component in the pump aggregate. As the komponent object and module object 
+are adapted to each other, you don't have to connect each signal, you connect the component to 
+the module instead. By selecting the module object and activating ConnectIo in the popupmenu 
+for the FrequenceConverter component the connection is made.
+
+We also put the subgraph Component/BaseComponents/FccPPO3PumpAggr in an overview graph and
+connects this to the main object. Furthermore we place the simulate object 
+BaseFcPPO3MotorAggrSim in specific simulate PlcPgm and connects it to the main object.
+
+<b>Mode
+
+The pump aggregate contains a Mode object in which one configures from where the pump is
+controlled. It can have the modes Auto, Manuel or Local which means:
+
+- Auto: the pump is controlled by the plc program.
+- Manuel: the pump is controlled by the operator from the object graph.
+- Local: the pump is controlled from a pulpet.
+
+In the mode object you can configure the modes that applies to the pump in question.
+</topic>
+<headerlevel>
+<topic> dg_compcasestudy
+A Component case study
+
+In this section we are going to use components and aggregates to program the control of 
+the level in a watertank, 
+
+<b>Process
+The process we will control is shown in figure 'Level control'. The water is pumped from
+a reservoir to a tank. Our task is to control the level in the tank. To our disposition we
+have a level sensor and a control valve. I the system there are also a return pipe with a
+solenoid valve that is always open during the control. 
+
+We note that the tank is 1 meter high, which will be reflected in various min and max values 
+in the configuration.
+
+<image> dg_fig82.png
+<b>Fig Level control
+
+We can identify the following components and aggregates:
+- a contactor operated pump, with circuitbreaker, contactor, overload relay and safetyswitch.
+- a control valve with two limit switches for open and closed.
+- a level sensor.
+- a solenoid valve with two limit switches for open and closed valve. 
+
+The following component object corresponds to the components in the plant:
+
+- Pump <t><t>BasePumpAggr
+- Control valve <t><t>BaseCValve
+- Level sensor <t><t>BaseLevelSensor
+- Solenoid valve <t><t>BaseMValve
+
+<h2>Configuration in the plant hierarchy
+The components are created under the hierarchy LevelControl. Under this we place a PlcPgm
+'Plc' that will contain the code for the control, and a PlcPgm 'Simulate' that will contain
+the code neede for simulation and testing of the program. We also create three Dv objects
+to start, stop and reset the control program, Start, Stop and Reset.
+
+<image> dg_fig83.png
+<b>Fig Plant configuration
+
+<b>Pump
+The pumpdrive consists of
+- a circuitbreaker with one Di.
+- a contactor with a Do for order, and a Di for feedback.
+- a safety switch with one Di.
+- a motor without any signals.
+
+For the pump, a BasePumpAggr object is created with the name P1.
+
+The ConfigureComponent alternative that corresponds to the construction is CbCoOrSs
+(CircuitBreaker, Contactor, Order, SafetySwitch) and we select P1 and activates this
+alternative in ConfigureComponent from the popupmenu.
+
+<image> dg_fig86.png
+<b>Fig Pump configuration
+
+The components Contactor and Motor has their own configurations, and for them also we have
+to activate ConfigureComponent. We select Contactor and select ConfigureComponent/OrderFeedback
+as we one signal for order and one for feedback. For the Motor object we activate 
+ConfigureComponent/NoTempSwitchOrSensor, as the motor doesn't have any signals.
+
+All the signals in the pump aggregate has to be connected to channel objects in the node 
+hierarchy. We find the following signal objects and connect them to suitable channels:
+
+P1.Contactor.Order 		<t><t>Do contactor order.
+P1.Contactor.Feedback 		<t><t>Di contactor feedback.
+P1.CircuitBreaker.NotTripped 	<t><t>Di circuitbreaker not tripped.
+P1.SafetySwitch.On 		<t><t>Di safety switch on.
+P1.OverloadRelay.Overload 	<t><t>Di overload relay tripped.
+
+
+<b>Control valve
+The control valve has as actuator that is controlled by an analog output signal, and limit
+switches for open and closed valve.
+
+We create a BaseCValve object with the name CV1. The ConfigureComponent alternative that
+corresponds to our construction is TwoSwitches.
+
+The following signals are connected to suitable channels in the node hierarchy:
+
+CV1.Actuator.Order 		<t><t>Ao for order.
+CV1.Actuator.SwitchOpen 	<t><t>Di for switch open.
+CV1.Actuator.SwitchClosed 	<t><t>Di for switch closed.
+
+<b>Level sensor
+For the level sensor we create a BaseLevelSensor object with the name LC1. This doesn't
+have any ConfigureComponent method, but there are some other properties to configure.
+
+The sensor object has alarm limits for HighHigh, High, Low and LowLow and these are 
+stated in the attributes LC1.LimitHH.Limit, LC1.LimitH.Limit, LC1.LimitL.Limit and 
+LC1.LimitLL.Limit. We set the limit values to 0.95, 0.90, 0.10 and 0.05. We also set the 
+upper limit for presentation of the value in LC1.Value.PresMaxLimit to 1. This will affect 
+the range in bars and trends.
+
+<b>Solenoid valve
+The solenoid valve is controled by a digital output and has feedback in the shape of
+digital inputs for limitswitch open and limitswitch closed.
+
+For the solenoid valve we create a BaseMValve object with the name MV1.
+
+In ConfigureComponent we activate TwoSwitches that correspones to the current configuration
+with both limitswitches present.
+
+The signals that is to be connected to channels in the nodehierarchy are:
+
+MV1.Order 		<t><t>Do for order to open the valve.
+MV1.SwitchOpen 		<t><t>Di for limitswitch open.
+MV1.SwitchClosed 	<t><t>Di for limitswitch closed.
+
+<h1>Plcprogram
+The next step is top write the plc program for the level control, in which the function 
+object for the components will be inserted:
+
+- BaseMotorAggrFo for the pump P1.
+- BaseCValveFo for the control valve CV1.
+- BaseMValveFo for the solenoid valve MV1.
+- BaseSensorFo for the level sensor LC1.
+
+We create the function objects and connects them to their main objects, by selecting the
+main object and activate Connect in the popupmenu for the function object.
+
+We will also use a PID controller to control the level in the tank. The controller will
+have the value from the level sensor as process value, and set out the outvalue to the
+control valve. The inflow to the tank will then be adjusted to reach the desired level.
+The controller is created with the functionobjects Mode and PID.
+
+The program is built around a Grafcet sequence with four steps. See Fig Plc program
+
+1. The initial step IS0 is the resting position when the pump is turned off and all the
+   valves are closed.
+
+2. When the Start Dv is set from a button in the operator graph, step S0 is activated. 
+   Here the pump is started as the sorder Ord0 is connected to the start inputpin of the
+   functionobject for the pump P1. When the pump is started, the On outputpin of the pump
+   object is set, and the activity is moved to the next step S1. Note that the sorder
+   Ord0 continues to be active, i.e. the pump is turned on until the reset in step S2.
+
+   The value of the error outputpin Err of the pump object is set into the Reset Dv. Reset 
+   is stated as ResetObject in the PlcPgm object, and all the sequences in the PlcPgm will 
+   be reseted when Reset is set, i.e. the sequence will return to the initial position
+   and the pump and the control will be turned off.
+
+3. S1 is the working step, where the controller is active, controlling the level in the tank.
+   As long is S1 is not active, the force input of the mode object is set, and the 
+   controller has 0 as outvalue. When the step is active, the controller fetches the
+   processvalue from the output of the sensor object LC1, and the setpoint is set into
+   the mode object LC1_Mode.SetVal from the operator graph. The outvalue of the
+   controller is connected to the order inputpin of the control valve. 
+   The order Ord1 is also connected to the order input of the solenoid valve, which
+   opens the valve.
+
+4. Step S1 is active until the Stop Dv is set from a button in the operator graph. When
+   the step is left, the controller is again forced to zero and the control valve is closed.
+   Also the solenoid valve is closed. The step S2 is active for a moment, reseting the
+   sorder Ord0, thus stopping the pump. Then the sequence returns to the resting position
+   IS0.
+
+The mode object LC1_Mode and the controller LC1_PID requires som additional configuration.
+In the mode object
+- OpMode = Auto to start the controlerl in auto mode.
+- MaxSet = 1, maximum setpoint value is the height of the tank, 1 m.
+- SetMaxShow = 1, also the hight of the tank.
+- SetEngUnit = m, meter.
+- PidObjDid = LevelControl-Plc-W-LC1_PID, the name of the PID object.
+
+In PID object
+- PidAlg = PID
+- Gain = 100
+- IntTime = 10
+- MaxGain = 200
+- SetMaxShow = 1
+- SetEngUnit = m
+- ModeObjDid = LevelControl-Plc-W-LC1_Mode, the name of the mode object.
+
+<image> dg_fig84.png
+<b>Fig Plc program
+
+<h1>Simulate program
+We create the simulate program to be able to test all the functions in the program, alarm
+handling and operator graphs before the commissioning. You can also use it for education and
+demonstration.
+
+The simulate code is put in a separate program 'Simulate', that should not execute in the
+production system. In this program, the simulation objects for the components are created:
+
+- BaseMotorAggrSim for the pump P1.
+- BaseCValveSim for the control valve CV1.
+- BaseMValveSim for the solenoid valve MV1.
+- BaseSensorSim for the level sensor LC1.
+
+The function object are connected to their main objects, by selecting the main object and
+activate Connect in the popupmenu of the function object.
+
+The simulate objects for the pump, control valve and solenoid valve doesn't have any in or
+output pins, they work solely against data in the main object, where they read output signals
+and set suitable values into the input signals. The simulate objects also have an object graph,
+from which the you can influence the simulation and cause different faults to check that the
+errors are handled in a proper way and that the operator is informed via process graphs and
+alarms.
+
+The simulate object for the level sensor, however, has an input pin, and for this we have
+to calculate a simulated level in the tank. A change of the level is determined by the input 
+flow minus the output flow divided by the area of the tank. If we assume that the input flow
+is proportional to the order output to the control valve (CV1.Actuator.Order), and subtracts
+the out flow throgh the solenoid valve when this is open. The change in flow is accumulated
+in the OA1 output of the CArithm, which is sent forward to the simulate object of the level
+sensor LC1. In LC1, some noise is added to the signal to get a more realistic appearence. This
+is achieved by setting LC1.RandomCurve to 1, and LC1.RandomAmplitude to 0.01.
+
+<image> dg_fig85.png
+<b>Fig Simulate program
+
+<h1>Process graph
+The process graph for the level control is drawn in Ge. We find the graphic symbols for the 
+components in the Ge palette:
+
+- Component/BaseComponent/PumpAggr for the pump.
+- Component/BaseComponent/CValve for the control vavle.
+- Component/BaseComponent/MValve for the solenoid valve.
+- Component/BaseComponent/LevelSensor for the level sensor.
+
+The symbols have the dynamic HostObject, which means that they have a preprogrammed dynamic
+that is connected to different attributes in the object. You only need to insert the object
+name of the main object in HostObject.Object, or connect them by selecting the main object 
+and click with DoubleClick Ctrl/MB1 on the symbol.
+
+The default dynamic doesn't include opening the object graph when clicking on the symbol. 
+We add this function by opening the attribute editor for the symbol and adding OpenGraph 
+in action (if no OpenGraph.GraphObject is stated, the object graph is opened).
+
+We also assemble a tank, from a rectangle and two halfellipses, that we set fill and gradient
+properties and also group. On the group, the dynamic FillLevel is set, and FillLevel.Attribute
+is connected to the value of the level sensor, LevelControl-LC1.Value.ActualValue. The 
+min and max values for FillLevel are set to 0 and 1.
+
+To the left of the tank, a slider i placed from which the setpoint of the level is be set.
+It consists of a Slider/SliderBackground3 and a Slider/Slider3. The slider is connected
+to the setpoint in the mode object LC1_Mode, i.e. LevelControl-Plc-W-LC1_Mode.SetVal. The
+min and max values for the slider are set to 0 and 1.
+
+For the setpoint, also an input field 'SetValue' is created, which is connected to the same
+value as the slider above. The process value of the level is displayed in the 'Level' field,
+which is connected to the value of the level sensor.
+
+The controller symbol is fetched from Process/PID_Controller in the palette. Is has no
+dynamic as default, but we want the object graph for the mode object to be opened when 
+clicking on the object, so we add Command to Action with the command 
+
+<c>open graph /class/instance=LevelControl-Plc-W-LC1_Mode
+
+The pushbuttons for Start and Stop are of type Buttons/SmallButton. SmallButton has ToggleDig
+as default action, but we want SetDig instead, as the Start and Stop signals are reseted by
+the plc program. We remove Inherit in Actions to avoid ToggleDig and add SetDig instead, and
+connects to the Start and Stop Dv.
+
+The trend curve is fetched from Analog/Trend in the palette. The process and set values are
+to be displayed here, i.e.
+- Trend.Attribute1 is set to LevelControl-LC1.Value.ActualValue (the value of the level sensor).
+- Trend.Attribute2 is set to LevelControl-Plc-W-LC1_Mode.SetVal (the set value in the mode 
+  object).
+
+Finally we draw some pipes and lines and the graph is finished.
+
+We also enter File/Graph attributes and insert the coordinates for the upper left and lower
+right corners in x0,y0 and x1,y1. DoubleBuffered is set to 1 and MB3Action to PopupMenu.
+
+<image> dg_fig87.png
+<b>Fig Graphic editor
+
+<h1>Simulation
+To look at the result of our programming effort, we start the simulation.
+
+When we open the graph, both valves are colored white, which markes that they are closed.
+The pump is not started, which is marked with gray color and the the triangle in the pump
+symbol doesn't point in the flow direction. The tank is colored white, i.e. it is empty, and
+the levelsensor flashes red as the level is beneath the LowLow level in the level sensor object.
+
+By pressing the start button, we leave the resting step in the Grafcet sequence, and activates
+the step that starts the pump (S0). When the pump is started, it is colored blue and the
+triangle points in the flow direction. In this step, also the solenoid valve is opened and
+colored blue. When the pump has started, the sequence proceeds to the working step S1.
+
+We set a set value with the slider to aproximatley 0.3 and hopefully the controller starts
+to work. Eventually, some adjustment of the controller parameters are needed, and the controller
+graph is opened by clicking on the controller symbol, which opens the object graph for the
+Mode object. In this, we click on the PID button to open the object graph of the PID object.
+Here we can adjust the gain (Kp) and integration time (Ti).
+
+<image> dg_fig92.png
+<b>Fig Object graph mode and PID object.
+
+Let's have a look at what we can do with the components in the process graph.
+
+<b>Level sensor
+If you rightclick on the level sensor, an popup menu is opened with the methods that
+are defined for the sensor. With OpenPlc you open plc trace for the function object of
+the component. with RtNavigator the object is looked up and viewed in the navigator, with
+Trend a trend curve for the level is displayed and with OpenGraph the object graph is
+opened. The object graph can also be opened by clicking on the symbol.
+
+The upper part of the object graph for components and aggregates have a similar appearence.
+There is a meny where you under 'Methods' can activate the methods of the component. Under
+'Signals' you can see the signals in the component and open the object graph for them. For
+aggregates you can also see the components and open the object graph for them under 
+'Components'. There is also a toolbar with pushbuttons for the methods, and two text fields
+that displays Description and Specification for the component. In the lowest row in the graph
+the Note message is viewed if such a message is inserted (by the Note method).
+
+Furthermore the level is displayed as a number and with a bar, and the alarm limits are also
+viewed. The alarm limits can be adjusted with sliders and enabled or disabled by checkboxes.
+
+In the upper right corner of the graph there is a button marked with a 'S'. It is only visible
+in simulation mode (i.e. IOSimulFlag in the IOHandler object is set) and is opens the 
+simulate graph. From the simulate graph you kan influence the simulated signal. We have already
+configured Random with amplitude 0.01, but you kan also add a sinus curve or a sawtoothed curve
+to the signal.
+
+<image> dg_fig88.png
+<b>Fig Object graph for the levelsensor and simulate graph
+
+<b>Control valve
+
+The object graph for the control valve has indicators for the limit switches and shows
+the order output to the valve as a bar.
+
+You can take over the valve in manuel mode, i.e. the valve position is now adjusted with
+the slider 'Manual' instead of beeing feched from the outsignal from the controller.
+The control loop is now out of order and the water flow is adjusted from the slider.
+
+From the simulate graph you can for example influence the simulation of the limit switches.
+If order is 0 and switch closed are not affected, you receive a limit switch alarm and a
+red flashing symbol. At simulation the simulate objects sets the correct values into the
+limitswitches, but this can be overriden from the simulate graph. By pushing 'Manual Control'
+the switch is controlled from the graph instead, and by zeroing the limit switch you can
+check that the limitswitch supervision works.
+
+<image> dg_fig89.png
+<b>Fig Object graph for the controlvalve and simulate graph
+
+<b>Solenoid valve
+
+The object graph for the solenoid valve displays limit switches and order signal
+with indicators. The valve is switched to manual control by clicking on the Man button,
+and can now be manouvred by the Open and Close buttons.
+
+From the simulate graph you can, as for the control valve, influence the simulation of the
+limitswitches and trigger a switch error alarm.
+
+<image> dg_fig91.png
+<b>Fig Object graph for the solenoidvalve and simulate graph
+
+<b>Pump
+
+The object graph for the pump shows a schematic drawing of the components in the pump, and
+also a status indicator for each component. By clicking on a component, you open the object
+graph for the component.
+
+With the 'Man' button you can switch the mode to manuel and start and stop the pump from
+the Start and Stop buttons in the graph.
+
+From the simulate graph various events can be simulated.
+- 'SafetySwich on' simuates that someone activates the safety switch. This causes the pump
+  to turn off, and the pump symbol is colored yellow. Also the Err outputpin of the function 
+  object is set. As This is connected to the Reset Dv the sequence is reset and the control is 
+  turned off.
+- 'CircuitBreaker tripped' simulates that the circuitbreaker has tripped. 
+- 'Contacor feeback lost' simulates that the contactor feedback is lost.
+- 'OverloadRelay tripped' simulates that the overloadrelay has tripped.
+
+<image> dg_fig90.png
+<b>Fig Object graph for the pump and simulate graph
+
+</topic>
+</headerlevel>
+</chapter>
+
+<chapter>
+<topic>communication
+Communication
+
+The Remote concept in Proview is a way to standardize the methods of communication with other
+systems. It describes a number of transport programs and Proview objects used to implement
+a variety of different communication protocols and to handle incoming and outgoing messages.
+Remote is designed to use different transport protocols such as TCP/IP or BEA Message Queue,
+and different hardware media such as ethernet or serial lines.
+The main purpose of Remote is to provide the programmer with an interface to communication.
+
+<option> printdisable
+Introduction <link> comm_introduction
+Protocols <link> protocols
+An example <link> an_example
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic>comm_introduction
+Introduction
+There are some different classes/components/objects that are used to handle the communication.
+
+<h2>RemoteConfig
+Required to have any remote communication at all. Without this no remotehandler is started.
+Place one object in the node-hierarchy.
+
+<h2>RemNode
+Defines a link of some type to a remote node over a specific protocol. 
+Several different protocols are supported and there is one specific class for each protocol.
+The supported protocols are:
+
+TCP/IP
+UDP/IP
+MQ (BEA Message Queue)
+ALCM (an old Digital protocol, supported for historical reasons)
+Serial
+Modbus/RTU Serial
+3964R (serial protocol from Siemens)
+
+Configuration of each protocol is described further down.
+Place RemNode-objects below the RemoteConfig-object.
+
+<h2>RemTrans
+Generic class that defines a specific message to or from a specific remote node on a
+specific protocol. Should be placed below the RemNode-object. The size of a message to be sent 
+is specified in the RemTrans-object. The data however to be sent resides in a buffer that is
+configured as a child to the remtrans-object. When a message is to be sent data of the length
+specified in the remtrans-object is fetched from the buffer. Sometimes however a header of some
+length is added to the message.
+
+<h2>Buffer
+Defining the send- and/or receive data area for each message. Exists in different sizes.
+Should be placed below a RemTrans-object. The buffer must be of at least the size of the
+message that will be received or sent. If size is not enough message will be cut in the end.
+
+<h2>RemTransSend 
+Function object used in a plc-program for sending messages.
+
+<h2>RemTransRcv
+Function object used in a plc-program for receiving messages.
+</topic>
+
+<topic> protocols
+Protocols
+Which protocol to use is defined by the type of Remnode-object you configure. For each configured 
+Remnode-object a transport job is started. That is, a program to handle the specific protocol is
+started as a process. This process will handle all RemTrans-object that is configured as children
+to the Remnode-object. 
+
+<option> printdisable
+UDP <link> udp_ip
+TCP <link> tcp_ip
+BEA Message Queue <link> bea_mq
+Serial <link> serial
+3964-R <link> 3964r
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic> udp_ip
+UDP
+UDP uses socket communication without connection (datagram), compared to TCP wich is a connected protocol.
+In the RemnodeUDP-object you specify the name and ip-address of the node to communicate with
+aswell as the port-numbers for both ends. The local port-number need to be unique on your node
+not to conflict with other communications.
+
+As default all messages is sent with a special header that is not included in the user data buffer.
+This header is added at the beginning of the message. The purpose for the header is to give information
+about the message that is sent. This helps identify what type of message is received and to wich buffer
+the data will be unpacked. The header looks like:
+
+<c>char       RemId1;  /* STX (Hex 02) */
+<c>char       RemId2;  /* ETB (Hex 0F) in data message without acknowledge 
+<c>                       ENQ (Hex 05) in data message with acknowledge 
+<c>                       ACK (Hex 06) in acknowledge message */
+<c>short int  Length;  /* Number of bytes in message including this header */
+<c>short int  MessId1; /* Message identity part 1 */
+<c>short int  MessId2; /* Message identity part 2 */
+ 
+All of the integers in the header will be sent as big endian values, that is most significant byte first
+in the datagram. The user data is the responsibility of the user to switch, if he wants integers to be sent
+with big endian. Intel (x86), VAX and Alpha all uses little endian! To send messages without headers the
+attribute DisableHeader should be set to TRUE. When communicating between two Proview-systems the header
+should be kept on. MessId1 and MessId2 is fetched from attributes RemTrans.Address[0] and RemTrans.Address[1].
+Through the header it is also possible to request an acknowledge of a sent message. If there is no
+acknowledge the message will be resent with a cyclicity specified by the RetransmitTime-attribute in the
+remtrans-object.
+
+Since UDP/IP is a connectionless protocol there is a possibility to watch the connection using
+keepalive-messages. This is set through the attribute UseKeepalive.
+
+<h2>Sending messages
+The transport will send a message to the remote port, consisting of header + data.
+MessId in the header is taken from RemTrans.Address[0,1], byte-switched to send as big endian.
+If MaxBuffers in remtrans-object > 0, the message is sent with type "want acknowledge" and is stored
+in the retransmit queue for the remnode. When a correspondning acknowledge message is received the 
+message is deleted from the retransmit queue. This is done automatically by the transport process.
+
+<h2>Receiving messages
+When we receive a buffer, first we check the header to see that this is a correct RemTrans message.
+Then we search for RemTrans.Address[0,1] that matches the byte-switched MessId. If the data object for 
+this message is big enough to contain the message, the message will be stored, and the 
+DataValid flag will be set.
+If the Remnode is marked to be used without header (DisableHeader-attribute set) then a RemTrans marked as a
+receiving remtrans with a enough large buffer will be searched.
+
+</topic>
+
+<topic> tcp_ip
+TCP
+RemnodeTCP is configured in much the same way as RemnodeUDP. The big (only) difference is that TCP is
+a connected protocol which acts in client/server fashion. Thus you have to either connect to a 
+remote socket (act like a client) or await a connection (act like a server). When acting like a server
+only one client will be accepted. The ConnectionMode-attribute in the remnode-object defines if you are
+a client or a server. Setting it to zero (default) means client and setting it to one means server. 
+
+</topic>
+
+<topic> bea_mq
+MQ
+RemnodeMQ is a transport for sending messages on BEA Message Queue (BMQ). It requires you to have
+BEA Message Queue installed on your node. This message queue is good for safely delivering messages 
+to a remote node even if it is not up at the moment you send your message. Vice versa, 
+messages will safely be delivered to you.
+
+This documentation expects you to have basic knowledge on BEA Message Queue. In basic the communication 
+runs on a specific bus. Each node has group-number and can only communicate to other groups on the same bus.
+On each group several queues can be configured.
+
+To be able to start this transport of course the Message Queue sotware need to be runnning. You also need some 
+environment variables to be set. These are:
+
+<c>DMQ_BUS_ID
+<c>DMQ_GROUP_ID
+<c>DMQ_GROUPNAME
+
+In the RemnodeMQ-object you configure on which BMQ-queue to recieve messages in the attribute MyQueue.
+You also configure the remote nodes group-number and queue to send to in the attributes TargetGroup and
+TargetQueue.
+
+<h2>Sending messages
+Similarly to UDP and TCP-transports RemTrans. Address[0,1] are used to identify the message. Address[0]
+represent the message-class and Address[1] represent the message-type (according to the BMQ-nomenclature).
+Address[2,3] are used to define what type delivery mode (Address[2]) that should be used and what action should be
+taken when a message cannot be deilvered (Address[3]).
+
+Possible delivery modes are:
+
+<c>PDEL_MODE_WF_SAF 25
+<c>PDEL_MODE_WF_DQF 26
+<c>PDEL_MODE_WF_NET 27
+<c>PDEL_MODE_WF_RCM 28
+<c>PDEL_MODE_WF_MEM 29
+<c>PDEL_MODE_AK_SAF 30
+<c>PDEL_MODE_AK_DQF 31
+<c>PDEL_MODE_AK_NET 32
+<c>PDEL_MODE_AK_RCM 33
+<c>PDEL_MODE_AK_MEM 34
+<c>PDEL_MODE_NN_SAF 35
+<c>PDEL_MODE_NN_DQF 36
+<c>PDEL_MODE_NN_NET 37
+<c>PDEL_MODE_NN_RCM 38
+<c>PDEL_MODE_NN_MEM 39
+<c>PDEL_MODE_WF_DEQ 40
+<c>PDEL_MODE_AK_DEQ 41
+<c>PDEL_MODE_WF_CONF 42
+<c>PDEL_MODE_AK_CONF 43
+<c>PDEL_MODE_WF_ACK 44
+<c>PDEL_MODE_AK_ACK 45
+
+and possible actions are:
+
+PDEL_UMA_RTS 1
+PDEL_UMA_DLJ 2
+PDEL_UMA_DLQ 3
+PDEL_UMA_SAF 4
+PDEL_UMA_DISC 5
+PDEL_UMA_DISCL 6
+
+Not all combinations are possible (see BEA Message Queue documentation for more information).
+
+Recommended combinations are,
+
+for safe delivery of message
+Address[2] = 26
+Address[3] = 4
+
+and for discarding the message if it cannot be delivered
+Address[2] = 39
+Address[3] = 5
+
+If Address[2,3] are both set to zero a default setting will be used. The default is to discard the 
+message if it cannot be delivered.
+
+<h2>Receiving messages
+Address[0,1] are used to identify the message. Address[0] represent the message-class and Address[1]
+represent the message-type (according to the BMQ-nomenclature).
+</topic>
+
+<topic> serial
+Serial
+RemoteSerial is an attempt to generalize the using of a simple serial line communication protocols.
+Its useful when we have a one-way sending of messages from some equipment to the control system. 
+You can specify up to eight termination characters in the attribute TermChar[0-7]. 
+These termination characters are used to detect the end of a received message (if a charachter matches
+any of the termination characters). 
+Specify also the settings for the serial link, that is - DevName , Speed , Parity (0 = none, 1 = odd, 
+2 = even), StopBits and DataBits. These could be for example /dev/ttyS0, 9600, 0, 1, 8.
+</topic>
+
+<topic> 3964r
+3964-R
+3964R is a simple serial line communication protocol that is developed by Siemens. 
+
+You specify the settings for the serial link as with RemnodeSerial, except for that there are no stp bits
+to specify. You must also specify the character timeout (the maximum time between received characters)
+in the attribute CharTimeout. The AckTimeout-attribute specifies the time to wait for an answer.
+
+Messages will be sent straight on without any header. ACK, NAK, DLE and BCC is handled according to 
+the 3964R protocol.
+
+<h2>Receiving messages
+There can be only one RemTrans object for receive-messages because of the lack of header 
+in this protocol. Every received message will be put in the first found RemTrans-object below 
+the RemNode-object. If the data object for this message is big enough to contain the message, 
+the message will be stored, and the DataValid flag will be set.
+
+<h2>Sending messages
+The transport will send a 3964R message to the serial without adding any header.
+If we don't have contact with the other node the message will be buffered, 
+if there are still free buffers for this message. 
+</topic>
+
+<topic> modbus-serial
+Modbus Serial
+The format of MODBUS that is implemented is RTU. For identification of messages we use the fields 
+known as slave address and function code in the MODBUS header. The RemTrans.Address[0] and [1] 
+defines these fields in the Proview environment. Se MODBUS specifications documents for more information.
+
+Modbus Serial is not yet implemented as an I/O-system in Proview. You have to configure the messages
+yourself by using RemnodeModbus and specifying RemTrans-object for the various operations you
+want to perform. Modbus works in a request/reply manner so for each operation you want to perform
+you specify one RemTrans-object for sending and one for receiving. Except for the Modbus-header of the
+message and the checksum handling you have to specify the content of the message to send in the
+send-buffer. In the same way you must decode the content of a received message yourself.
+
+Modbus TCP is implemented as an I/O-system in Proview. See more information about this in the document
+"Guide to I/O-systems". With Modbus TCP you don't have to care about the encoding of the messages.
+
+<h2>Receiving messages
+When we receive a buffer, we search for RemTrans.Address[0] and [1] that matches the fields 
+slave adress and function code in the message header. 
+If the data object for this message is big enough to contain the message, the message will be stored, 
+and the DataValid flag will be set.
+
+<h2>Sending messages
+Messages will be sent using the contents of RemTrans.Address[0] and [1] as the fields 
+slave address and function code in the message header.
+</topic>
+</headerlevel>
+
+<topic> an_example
+An example
+To show how to work with the classes that are briefly described above we will start with a little
+example. The classes are described in more detail below.
+
+In our example we have one Proview-system communicating with an other node via UDP/IP. We will
+send a few messages in both directions. My node is named 'dumle' and the remote node is named
+'asterix'.
+
+The messages we will send is:
+
+d_a_RequestData <t> 4 Byte
+d_a_Report <t> 20 Byte
+
+and the messages we will receive is:
+
+a_d_Data <t> 365 Byte (as an answer to the d_a_RequestData-message)
+a_d_Error <t> 10 Byte
+
+The configuration in the node-hierarchy looks like this.
+
+The RemoteConfig-object has to be there. I have added a RemnodeUDP object below this and
+configured address and nodename aswell as the port-numbers to communicate on.
+
+<image> dg_fig70.png
+
+Below the RemnodeUDP-object I have added four RemTrans-objects, one for each message. In the
+remrans-objects I have configured the direction (send or receive). Numbered the addresses so I can
+distinguish between the messages and set the sizes on the sending messages.
+
+<image> dg_fig71.png
+
+Below the remtrans-objects I have put the data-buffers. For the smaller messages I have chosen the
+small Buff256-buffer. The Data-message is larger and I have therefor chosen the Buff1440-buffer for
+this message.
+
+<image> dg_fig72.png
+
+<h2>The data structures
+The data structures for the messages are defined in the file ra_plc_user.h in $pwrp_inc-directory. This
+file is automatically included when you compile the plc-code. The structures look like:
+
+<c>typedef struct {
+<c>  pwr_tUInt32  Id;
+<c>} d_a_RequestData;
+<c>
+<c>#define pwr_sClass_d_a_RequestData d_a_RequestData
+<c>
+<c>typedef struct {
+<c>  pwr_tUInt32   Id;
+<c>  pwr_tFloat32  data_1;
+<c>  pwr_tInt32    data_2;
+<c>  pwr_tInt32    data_3;
+<c>  pwr_tInt32    data_4;
+<c>} d_a_Report;
+<c>
+<c>#define pwr_sClass_d_a_Report d_a_Report
+<c>
+<c>typedef struct {
+<c>  pwr_tUInt32   Id;
+<c>  pwr_tFloat32  data_1;
+<c>  ...
+<c>  ...
+<c>  pwr_tInt32    data_xx;
+<c>} a_d_Data;
+<c>
+<c>#define pwr_sClass_a_d_Data a_d_Data
+<c>
+<c>typedef struct {
+<c>  pwr_tUInt32   Id;
+<c>  pwr_tInt32    func_no;
+<c>  pwr_tInt16    err_code;
+<c>} a_d_Data;
+<c>
+<c>#define pwr_sClass_a_d_Error a_d_Error
+
+<h2>The plc code
+
+I have a plc program named Comm. In this program I have placed one RemTransSend-object and one
+RemTransRcv-object. These objects are found below the "Other"-hierarchy in the plc-editor palette.
+To the RemTransSend-object I have connected the RemTrans that I want to send. In this case the
+d_a_ReuestData-message. The message will be sent when the Dv-signal "RequestData" is set. Similarly 
+I have to the RemTransRcv-object connected the a_d_Data-message which will be the answer 
+to my request.
+
+<image> dg_fig73.png
+
+Both the RemTransSend and the RemTransRcv-objects have a subwindow. For the RemTransSend this subwindow 
+will be executed when there is a flank on the snd-pin. When the subwindow has been executed the
+DataValid-attribute of the connected RemTrans-object is set. The transport job for this Remnode 
+sends the message and sets the DataValid-flag to zero.
+
+For the RemTransRcv the subwindow will be executed when the DataValid-attribute in the connected 
+RemTrans-object is set. When the transport job for this Remnode receives a message it fills the
+data buffer with the received data and then sets the DataValid-flag. 
+After execution the flag will be reset.
+
+<h2>Send subwindow
+In the send subwindow we fill in the data in the send-buffer. The send-buffer for the message to send
+is connected to a DataArithm. The special 'classdef'-syntax casts Da1 to be a pointer to a
+d_a_RequestData-struct (or actually it will cast this pointer to a pwr_sClass_d_a_RequestData,
+therefor the define-statement as described above).
+
+<image> dg_fig74.png
+
+<h2>Receive subwindow
+In the receive subwindow unpack the data received in the receive-buffer. The recieve buffer
+is connected to a DataArithm. Again we use the classdef-statement to cast the Da1-pointer.
+We unpack the data to the output pins of the DataArithm. If one DataArithm is not enough to unpack
+the parameters we just add more DataArithm's and continue in the same way. 
+
+<image> dg_fig75.png
+
+</topic>
+</chapter>
+
+<chapter>
+<topic> dg_application
+Application programming
+
+This chapter is about how to write application programs, i.e. programs in c, c++ or java,
+that attaches Proview. It is assumed that the reader has basic knowlage in the c
+programming language.
+
+In many Proview applications, coding everything in the plc editor with function object
+programming works excellent. There are though applications that with graphic programming
+will be unecessary complex, for example advancde models, handling of databases and 
+materialplanning. In this case you write an application program in c, c++ or java, that
+attaches the realtime database, rtdb. The program reads input data from rtdb, makes its
+calculations, and sets outdata to rtdb, where the data is further processed by the plc program,
+sent to the I/O system and viewed in operator graphs.
+
+We will concentrate on c/c++, as this is the programming languge that i most common in 
+application programming and also has most functionality. The interfaces used are described
+in Programmer's Reference Manual (PRM).
+
+<option> printdisable
+Attach to the realtime database and handle object and data. <link> dg_appl_gdh
+Write on the console log. <link> dg_appl_errh
+Start an application. <link> dg_appl_file
+Handle system events. <link> dg_appl_inievents
+Application baseclass rt_appl. <link> dg_appl_rtappl
+Send messages and alarms. <link> dg_appl_mh
+Communicate with other processes via Qcom. <link> dg_appl_qcom
+Fetch data from storage stations. <link> dg_appl_sev
+Read and write to the I/O System. <link> dg_appl_io
+Build an application with make. <link> dg_appl_build
+Java applications. <link> dg_appl_java
+<option> printenable
+</topic>
+
+<headerlevel>
+
+<topic> dg_appl_gdh
+Attach to the database and handle object and data
+
+We start by writing a simple c++ program that attaches to the realtime database and links
+to some objects.
+
+The cpp file should be created on the $pwrp_src directory, or subdirectory to this. We create
+the directory $pwrp-src/myappl and edits the file ra_myappl.cpp.
+
+<h1>Datatypes
+In the includefile pwr.h the basic datatypes in Proview are defined. The most common is
+pwr_tBoolean for digital signals and pwr_tFloat32 for analogous signals, but there are also
+c types for all the other Proview types, e.g. pwr_tInt32, pwr_tUInt32, pwr_tString80 etc.
+
+<h1>Gdh initialization
+The database is attached with a call to gdh_Init() which takes an idenfifier string for the
+application as an argument. First we include pwr.h that contains the baseic types in Proview
+and rt_gdh.h that contains the API to the database.
+
+<c>#include "pwr.h"
+<c>#include "rt_gdh.h"
+
+<c>int main() {
+<c>  pwr_tStatus sts;
+
+<c>  sts = gdh_Init( "ra_myappl");
+<c>  if ( EVEN(sts)) {
+<c>    cout << "gdh_Init failure " << sts << endl;
+<c>    exit(0);
+<c>  }
+<c>}
+
+The function returns a status variable of type pwr_tStatus. An even status implies that
+something is wrong, an odd that the call was a success. The status kan be translated into
+a string that gives more information about what is wrong. This is achieved with the
+errh interface which is described later.
+
+<h1>Read and write attribute values
+If we want to read or write an object attribute you can use the functions
+gdh_SetObjectInfo() and gdh_GetObjectInfo().  
+
+A read and write of the Dv H1-H2-Start can look like this. Note that the value of the Dv
+is fetched from the attribute ActualValue.
+
+<c>pwr_tBoolean value;
+
+<c>sts = gdh_GetObjectInfo( "H1-H2-Start.ActualValue", &value, sizeof(value));
+<c>if (ODD(sts)) {
+<c>  value = !value;
+<c>  sts = gdh_SetObjectInfo( "H1-H2-Start.ActualValue", &value, sizeof(value));
+<c>}
+
+<h1>Direct link to attributes
+Application programs are often put into an infinite loop, supervising attributes in the
+database and reacting to certain changes. In this case you preferably direct link to the
+attribute, i.e. get a pointer. This is done by gdh_RefObjectInfo(). In the exampel below
+the program is separated in an init() function direct linking to attributes, a scan()
+function containing the supervision and control functions, and a close() function removing
+the direct links.
+
+<c>class ra_myappl {
+<c>  pwr_tBoolean *start_ptr;
+<c>  pwr_tRefId dlid;
+<c> public:
+<c>  ra_myappl() {}
+<c>  void init();
+<c>  void scan();
+<c>  void close();
+<c> };
+
+<c>void ra_myappl::init()
+<c>{
+<c>  sts = gdh_RefObectInfo( "H1-H2-Start.ActualValue", &start_ptr, &dlid, 
+<c>                          sizeof(*start_ptr));
+<c>  if ( EVEN(sts)) exit(0);
+<c>}
+
+<c>void ra_myappl::scan()
+<c>{
+<c>  for (;;) {
+<c>    if ( *start_ptr) {
+<c>      // Do something...
+<c>      cout << "Starting" << endl;
+	
+<c>      *start_ptr = 0;
+
+<c>    }
+<c>    sleep(1);
+<c>  }
+<c>}
+
+<c>void ra_myappl::close()
+<c>{
+<c>  gdh_UnrefObjectInfo( &dlid);
+<c>}
+
+In the init() function the pointer start_ptr is set to point to the value of the Dv 
+H1-H2-Start in the database.
+
+<h2>Warning
+Note that pointers in c requires caution. If you use pointer arithmetics or array indices 
+its easy to point at wrong position in the database, and to write in wrong position.
+This can give rise to errors that are very hard to find this cause of.
+
+<h1>Direct link to objects
+gdh_RefObjectInfo() can, besides direct link to individual attributes, also direct link to
+objects and attribute objects.
+
+Suppose that we will set points in a curve and display the curve in a graph. We direct link
+to the object H1-H2-Curve of class XyCurve. The includefile pwr_baseclasses.hpp contains a
+c++ class, pwr_Class_XyCurve, for the object.
+
+<c>#include <math.h>
+<c>#include "pwr.h"
+<c>#include "pwr_baseclasses.hpp"
+<c>#include "rt_gdh.h"
+
+<c>class ra_myappl {
+<c>  pwr_Class_XyCurve *curve_ptr;
+<c>  pwr_tRefId dlid;
+<c> public:
+<c>  ra_myappl() {}
+<c>  void init();
+<c>  void scan();
+<c>  void close();
+<c> };
+
+<c>void ra_myappl::init()
+<c>{
+<c>  pwr_tStatus sts;
+<c>  pwr_tOName name = "H1-H2-Curve";
+
+<c>  // Connect to database
+<c>  sts = gdh_Init( "ra_myappl");
+<c>  if ( EVEN(sts)) exit(0);
+
+<c>  // Direct link to curve object
+<c>  sts = gdh_RefObjectInfo( name, (void **)&curve_ptr, &dlid, sizeof(*curve_ptr));
+<c>  if ( EVEN(sts)) exit(0);
+<c>}
+
+<c>void ra_myappl::scan()
+<c>{
+<c>  for ( unsigned int i = 0;;i++) {
+<c>    if ( i % 5 == 0) {
+<c>      // Calculate x and y coordinates for a sine curve every fifth second
+<c>      for ( int j = 0; j < 100; j++) {
+<c>        curve_ptr->XValue[j] = j;
+<c>        curve_ptr->YValue[j] = 50 + 50 * sin( 2.0 *  M_PI * (j + i) / 100);
+<c>      }
+<c>      // Indicate new curve to graph
+<c>      curve_ptr->Update = 1;
+<c>    }
+<c>    else if ( i % 5 == 2)
+<c>      curve_ptr->Update = 0;
+<c>    sleep(1);
+<c>    if ( i > 360)
+<c>      i = 0;
+<c>  }
+<c>}
+
+<c>void ra_myappl::close()
+<c>{
+<c>  gdh_UnrefObjectInfo( dlid);
+<c>}
+
+
+<c>int main()
+<c>{
+<c>  ra_myappl myappl;
+
+<c>  myappl.init();
+<c>  myappl.scan();
+<c>  myappl.close();
+<c>}
+
+The program is compiled and linked with
+
+<c>> g++ -g -c  ra_myappl.cpp -o $pwrp_obj/ra_myappl.o -I$pwr_inc -DOS_LINUX=1 
+<c>      -DOS=linux -DHW_X86=1 -DHW=x86
+<c>> g++ -g -o $pwrp_exe/ra_myappl $pwrp_obj/ra_myappl.o $pwr_obj/pwr_msg_rt.o 
+<c>      -L$pwr_lib -lpwr_rt -lpwr_co -lpwr_msg_dummy -lrt
+
+Later we will see how to use make for compiling and linking.
+
+When opening the object graph for the H1-H2-Curve object, we can study the result.
+
+<image> dg_fig93.png
+<b>Fig Object graph for the curve object.
+
+</topic>
+
+<topic> dg_appl_errh
+Console log
+
+<h1>Log on the console log
+<h2>Console log
+The console log contains log messages from system processes. If there is something wrong
+with the system, you should look in the console log to examine if any process logs error
+messages. The error log is a text file on $pwrp_log, pwr_'nodename'.log, which can also
+be opened in rt_xtt from System/SystemMessages. The loggings have five severity levels, 
+fatal, error, warning, info and success. Fatal and error are colored red, warning colored 
+yellow info and success colored green.
+
+Also applications can write on the console log. First you attach to the console log with
+errh_Init(), then you kan write messages with different severity with errh_Fatal(),
+errh_Error(), errh_Warning(), errh_Info() and errh_Success(),
+
+errh_Init() is called before gdh_Init() and has as arguments a name of the application and 
+an application index supplied as errh_eAnix_Appl1, errh_eAnix_Appl2 etc. Every application
+should have a unique application index within the node.
+
+<c>#include "rt_errh.h"
+
+<c>sts = errh_Init( "ra_myappl", errh_eAnix_Appl1);
+
+To the log functions you send the string that is to be written in the log, e.g.
+
+errh_Error( "Something went wrong");
+
+The string can also work as a format statement contaning %s to format strings, %f for
+float and %d for integer, see printf for more info.
+
+<c>errh_Error( "Number is to high: %d", n);
+
+The format %m translates a status code to corresponding text
+
+<c>catch ( co_error e) {
+<c>  errh_Error( "Error status: %m", e.sts());
+<c>}
+
+<h1>Application status
+Every application has a status word in the $Node object. It is found in the attribute 
+ProcStatus[] in element applicationindex + 20. The status should reflect the  condition 
+of the application and is set by the application itself by the function errh_SetStatus(). 
+
+<c>errh_SetStatus( PWR__ARUN);
+
+PWR__ARUN is defined in rt_pwr_msg.h and linked to the text "Application running".
+
+Other useful status codes are
+
+PWR__APPLSTARTUP "Application starting up"  (info)
+PWR__APPLRESTART "Application restaring"  (info)
+PWR__APPLTERM    "Application terminated"  (fatal)
+
+In the node object there is also a SystemStatus that is a kind of sum of all the status
+of server and application processes. Into the systemstatus the server or application status
+that is most severe is placed.
+
+<h1>Watchdog
+An application that has called errt_Init() is supervised by the system. It should call
+aproc_TimeStamp cyclic, or the application status is set to "Process timeout" (fatal).
+The timeout for applications is 5 s.
+
+<h1>Application object
+An application object can be created for the applications. It is placed in the node
+hierarchy under the $Node object and is of class Application.
+
+The application object is registred by the function aproc_RegisterObject() that has
+the object identity for the object as argument.
+
+<c>pwr_tObjid aoid;
+<c>pwr_tOName name = "Nodes-MyNode-ra_myappl";
+
+<c>sts = gdh_NameToObjid( name, &aoid);
+<c>if (EVEN(sts)) throw co_error(sts);
+
+<c>sts = aproc_RegisterObject( aoid);
+<c>if (EVEN(sts)) throw co_error(sts);
+
+<h1>Status graph
+The application is viewed in the status graph for the node, if the application has attached
+errh and registred the application object. I will be shown under 'Application' on the row
+corresponding to the application index. In the graph the status of the application and the
+last/most severe log message are displayed.
+
+<image> dg_fig94.png
+<b>Fig Detail for the status graph displaying status and logg message for the application.
+
+If the process i halted, status is set to timeout. This vill also affect the system status.
+
+<image> dg_fig95.png
+<b>Fig The application is halted.
+
+<b>Example
+In the example we have extended the program with the xy-curve above, and inserted
+calls to set application status, log on the console log and register the application
+object.
+
+<c>#include <math.h>
+<c>#include <iostream>
+<c>#include "pwr.h"
+<c>#include "pwr_baseclasses.hpp"
+<c>#include "rt_gdh.h"
+<c>#include "rt_errh.h"
+<c>#include "rt_aproc.h"
+<c>#include "rt_pwr_msg.h"
+<c>#include "co_error.h"
+
+<c>class ra_myappl {
+<c>  pwr_Class_XyCurve *curve_ptr;
+<c>  pwr_tRefId dlid;
+<c> public:
+<c>  ra_myappl() {}
+<c>  void init();
+<c>  void scan();
+<c>  void close();
+<c>};
+
+<c>void ra_myappl::init()
+<c>{
+<c>  pwr_tStatus sts;
+<c>  pwr_tOName name = "H1-H2-Curve";
+<c>  pwr_tObjid aoid;
+
+<c>  // Init errh with anix 1
+<c>  sts = errh_Init( "ra_myappl", errh_eAnix_appl1);
+<c>  if ( EVEN(sts)) throw co_error(sts);
+
+<c>  // Write message to consolelog and set application status
+<c>  errh_Info( "I feel fine");
+<c>  errh_SetStatus( PWR__APPLSTARTUP);
+
+<c>  // Connect to database
+<c>  sts = gdh_Init( "ra_myappl");
+<c>  if ( EVEN(sts)) throw co_error(sts);
+ 
+<c>  // Register application object
+<c>  sts = gdh_NameToObjid( "Nodes-Saturnus7-ra_myappl", &aoid);
+<c>  if ( EVEN(sts)) throw co_error(sts);
+
+<c>  aproc_RegisterObject( aoid);
+
+<c>  // Directlink to curve object
+<c>  sts = gdh_RefObjectInfo( name, (void **)&curve_ptr, &dlid, sizeof(*curve_ptr));
+<c>  if ( EVEN(sts)) throw co_error(sts);
+
+<c>  errh_SetStatus( PWR__ARUN);
+<c>}
+
+<c>void ra_myappl::scan()
+<c>{
+<c>  for ( unsigned int i = 0;;i++) {
+<c>    // Notify that we are still alive
+<c>    aproc_TimeStamp();
+<c>
+<c>    if ( i % 5 == 0) {
+<c>      for ( int j = 0; j < 100; j++) {
+<c>        curve_ptr->XValue[j] = j;
+<c>        curve_ptr->YValue[j] = 50 + 50 * sin( 2.0 *  M_PI * (j + i) / 100);
+<c>      }
+<c>      curve_ptr->Update = 1;
+<c>    }
+<c>    else if ( i % 5 == 2)
+<c>      curve_ptr->Update = 0;
+<c>    sleep(1);
+<c>    if ( i > 360)
+<c>      i = 0;
+<c>  }
+<c>}
+
+<c>void ra_myappl::close()
+<c>{
+<c>  gdh_UnrefObjectInfo( dlid);
+<c>}
+
+
+<c>int main()
+<c>{
+<c>  ra_myappl myappl;
+
+<c>  try {
+<c>    myappl.init();
+<c>  }
+<c>  catch ( co_error e) {
+<c>    errh_Fatal( "ra_myappl terminated, %m", e.sts());
+<c>    errh_SetStatus( PWR__APPLTERM);
+<c>    exit(0);
+<c>  }
+<c>  myappl.scan();
+<c>  myappl.close();
+<c>}
+
+</topic>
+
+<topic> dg_appl_file
+Start the application
+
+An application that is to be started at Proview runtime startup is inserted into the
+application file. This resides on $pwrp_load and is named ls_app_'nodename'_'qbus'.txt,
+e.g.
+
+<c>$pwrp_load/ld_app_mynode_999.txt
+
+In the file you insert one line for each application that is to be started
+
+<c># id       name      [no]load [no]run file       prio  [no]debug  "arg"
+<c>ra_myappl, ra_myappl, noload,  run,   ra_myappl, 12,   nodebug,   ""
+
+</topic>
+
+<topic> dg_appl_inievents
+Receive system events
+
+Proview transmitts messages at certain events, e.g. when a soft restart proceeds or when
+the runtime environment is stopped. An application can listen to these messages, for 
+example to terminate when Proview is terminated. The messages are receive from Qcom. You
+create a Qcom queue and binds this queue to the queue that submits the messages.
+
+<c>#include "rt_qcom.h"
+<c>#include "rt_ini_event.h"
+<c>#include "rt_qcom_msg.h"
+
+<c>qcom_sQid qid = qcom_cNQid;
+<c>qcom_sQid qini;
+<c>qcom_sQattr qAttr;
+
+<c>if ( !qcom_Init(&sts, 0, "ra_myappl")) {
+<c>  throw co_error(sts);
+
+<c>// Create a queue to receive stop and restart events
+<c>qAttr.type = qcom_eQtype_private;
+<c>qAttr.quota = 100;
+<c>if ( !qcom_CreateQ(&sts, &qid, &qAttr, "events"))
+<c>  throw co_error(sts);
+
+<c>// Bind to init event queue
+<c>qini = qcom_cQini;
+<c>if ( !qcom_Bind(&sts, qid, &qini))
+<c>  throw co_error(sts);
+
+In each scan you read the queue with qcom_Get() to see if any messages has arrived. You
+can also use the timeout in qcom_Get() to wait to next scan. In the example below, the
+terminate event is handled, but also the oldPlcStop and swapDone events that indicates
+the start and end of a soft restart. This you only have to do if you want the application
+to discover new objects of new configurations after a soft restart.
+
+<c>int tmo = 1000;
+<c>char mp[2000];
+<c>qcom_sGet get;
+<c>int swap = 0;
+
+<c>for (;;) {
+<c>  get.maxSize = sizeof(mp);
+<c>  get.data = mp;
+<c>  qcom_Get( &sts, &qid, &get, tmo);
+<c>  if (sts == QCOM__TMO || sts == QCOM__QEMPTY) {
+<c>    if ( !swap)
+<c>      // Do the normal thing
+<c>      scan();
+<c>  } 
+<c>  else {
+<c>    // Ini event received
+<c>    ini_mEvent  new_event;
+<c>    qcom_sEvent *ep = (qcom_sEvent*) get.data;
+
+<c>    new_event.m  = ep->mask;
+<c>    if (new_event.b.oldPlcStop && !swap) {
+<c>      errh_SetStatus( PWR__APPLRESTART);
+<c>      swap = 1;
+<c>      close();
+<c>    } else if (new_event.b.swapDone && swap) {
+<c>      swap = 0;
+<c>      open();
+<c>      errh_SetStatus( PWR__ARUN);
+<c>    } else if (new_event.b.terminate) {
+<c>      exit(0);
+<c>    }
+<c>  }
+<c>}
+
+If you are only interested in stopping the proccess when Proview is taken down, there is
+a more simpel way to kill it. You can put a scripfile, pwrp_stop.sh, on $pwrp_exe where
+you kill the process.
+
+<c>killall ra_myappl
+
+</topic>
+
+<topic> dg_appl_rtappl
+Baseclass for applications rt_appl
+
+The baseclass rt_appl contains many of the initializations and supervision of events 
+described above. By subclassing rt_appl you don't have to supply any code for this, it
+is done by rt_appl. rt_appl contains three virtual functions that are to be implemented
+by the subclass, open(), close() and scan(). open() is used at initialization to direct
+link to attributes anad object, scan() is called cyclic with supplied cycletime, and in
+close() you remove the direct links.
+
+rt_appl handles this:
+
+- Initialization of gdh, errh and qcom.
+- Setting of application status at startup and restart.
+- Handling events for soft restart and termination.
+- Timestamps to avoid timeout.
+
+This exampel shows the application ra_appl subclassing rt_appl.
+
+<c>class ra_appl : public rt_appl {
+<c>public:
+<c> ra_appl() : rt_appl( "ra_appl", errh_eAnix_appl1) {}
+<c> void open();
+<c> void close();
+<c> void scan();
+<c>};
+
+<c>void ra_appl::open()
+<c>{
+<c> // Link to database objects
+<c>}
+
+<c>void ra_appl::close()
+<c>{
+<c> // Unlink to database objects
+<c>}
+
+<c>void ra_appl::scan()
+<c>{
+<c> // Do something
+<c>}
+
+<c>int main()
+<c>{
+<c> ra_appl appl;
+
+<c> appl.init();
+<c> appl.register_appl( "Nodes-MyNode-MyAppl");
+
+<c> appl.mainloop();
+<c>}
+
+
+</topic>
+
+<topic> dg_appl_mh
+Send alarms and messages
+
+From an application you can send alarm and messages to the alarmlist and eventlist of
+the operator. First you have to connect to the event monitor with mh_ApplConnect() which
+takes the object identity for the application object as first argument.
+
+<c>#include "rt_mh_appl.h"
+<c>
+<c>pwr_tUInt32 num;
+<c>sts = mh_ApplConnect( aoid, mh_mApplFlags(0), "", mh_eEvent_Info, mh_eEventPrio_A,
+<c>			mh_mEventFlags_Bell, "", &num);
+<c>  if (EVEN(sts)) throw co_error(sts);
+
+We then can send alarms with mh_ApplMessage().
+
+<c>mh_sApplMessage msg;
+<c>pwr_tUInt32 msgid;
+
+<c>memset( &msg, 0, sizeof(msg));
+<c>msg.EventFlags = mh_mEventFlags(mh_mEventFlags_Returned | 
+<c>				  mh_mEventFlags_NoObject | 
+<c>				  mh_mEventFlags_Bell);
+<c>clock_gettime( CLOCK_REALTIME, &msg.EventTime);
+<c>strcpy( msg.EventName, "Message from ra_myappl");
+<c>strcpy( msg.EventText, "I'm up and running now !");
+<c>msg.EventType = mh_eEvent_Alarm;
+<c>msg.EventPrio = mh_eEventPrio_B;
+
+<c>sts = mh_ApplMessage( &msgid, &msg);
+<c>if (EVEN(sts)) throw co_error(sts);    
+
+<image> dg_fig96.png
+<b>Fig The alarm in the alarmlist.
+</topic>
+
+<topic> dg_appl_qcom
+Communicate with other processes
+
+Proview's protocol for communication between processes can be used also by applications.
+The communication can be
+
+- between processes in the same node.
+- between processes in different nodes that belongs to the same project.
+- between processes in nodes that belongs different projects, if the project has the same
+  Qcom bus. In this case the nodes have to be configured by FriendNodeConfig objects where
+  Connection is set to QcomOnly.
+
+Read more about Qcom in Qcom Refrence Guide.
+</topic>
+
+<topic> dg_appl_sev
+Fetch data from a storage station
+
+Data stored in a Proview storage station can be fetched by the client interface sevcli.
+First you initiate sevcli with sevcli_init() and state which storage station you want to
+fetch the data from with sevcli_set_servernode().
+
+<c>sevcli_tCtx sevctx;
+<c>char server_node[40] = "MyStorageStation";
+
+<c>if ( !sevcli_init( &sts, &sevctx))
+<c>  throw co_error(sts);
+
+<c>if ( !sevcli_set_servernode( &sts, sevctx, server_node))
+<c>  throw co_error(sts);
+
+Then you can fetch data with sevcli_get_itemdata(). Data is identified by object identity and
+attribute name. You also state the time range for the data that is to be fetched and
+maximum number of points.
+
+<c>pwr_tTime *time_buf;
+<c>void *value_buf;
+<c>pwr_tTime from = pwr_cNTime;
+<c>pwr_tTime to = pwr_cNTime;
+<c>int rows;
+<c>pwr_eType vtype;
+<c>unsigned int vsize;
+<c>pwr_tOName name = "H1-H2-Temperature";
+<c>pwr_tOName aname = "ActualValue";
+<c>pwr_tObjid oid;
+<c>char timstr[40];
+
+<c>sts = gdh_NameToObjid( name, &oid);
+<c>if (EVEN(sts)) throw co_error(sts);
+
+<c>if ( !sevcli_get_itemdata( &sts, sevctx, oid, aname, from, to, 1000, &time_buf, &value_buf,
+<c>                           &rows, &vtype, &vsize))
+<c>  throw co_error(sts);
+
+<c>for ( int i = 0; i < rows; i++) {
+<c>  time_AtoAscii( &time_buf[i], time_eFormat_DateAndTime, timstr, sizeof(timstr));
+<c>
+<c>  cout << timstr << " " << ((pwr_tFloat32 *)value_buf)[i] << endl;
+<c>}
+
+<c>free( time_buf);
+<c>free( value_buf);
+
+Finally you call sevcli_close() to disconnect the server node.
+
+<c>sevcli_close( &sts, sevctx);
+
+</topic>
+
+<topic> dg_appl_io
+I/O handling
+
+If an application requires fast and syncronized I/O data it can work directly against the
+I/O system and call the I/O routines to read and write I/O on its own.
+
+Initialization is done with the function io_init(), to which a process argument is supplied.
+Process identifies which I/O uints (agent, rack or card) are handled by a specific process. 
+Each I/O object has a Process attribute and if this corresponds to the process sent as 
+argument to io_init(), the unit will be handled by the application. If a card is handled 
+by an application, also the rack and agent of the card have to be handled by the application.
+
+As the Process attribute is a bitmask, a unit can be handled by several processes by
+setting several bits in the mask. If you for example have several cards in a rack, and some 
+of the card should be handled by the plc-process and some by an application, the rack unit 
+has to be handled by both the plc and the application. How and if it works to handle a 
+unit from several processes depends on how the I/O methods for the unit are written.
+For example for Profibus, you can not separate the handling of slaves in different
+processes.
+
+<c>#include rt_io_base.h
+
+<c>io_tCtx io_ctx;
+
+<c>sts = io_init( io_mProcess_User, pwr_cNOid, &io_ctx, 0, scantime);
+<c>if ( EVEN(sts)) {
+<c>  errh_Error( "Io init error: %m", sts);
+<c>  throw co_error(sts);
+<c>}
+
+Reading in executed with io_read() which reads data from the I/O units and places
+the data in the signals connected to the unit. The application preferably direct links
+to these signals, and also to the signals of the output units. The output units are written 
+to with the function io_write().
+
+<c>sts = io_read( io_ctx);
+
+<c>sts = io_write( io_ctx);
+
+</topic>
+
+<topic> dg_appl_build
+Build an application
+
+A c++ application has to be compiled and linked, and you can use make to do this. Proview
+contains a rule file, $pwr_exe/pwrp_rules.mk, that contains rules for compilation.
+
+A makefile for the application ra_myappl on the directory $pwrp_src/myappl can look 
+like this ($pwrp_src/myappl/makefile): 
+
+<c>ra_myappl_top : ra_myappl
+
+<c>include $(pwr_exe)/pwrp_rules.mk
+
+<c>ra_myappl_modules : \ 
+		$(pwrp_obj)/ra_myappl.o \ 
+		$(pwrp_exe)/ra_myappl
+
+<c>ra_myappl : ra_myappl_modules
+	@ echo "ra_myappl built"
+
+<c>#
+<c># Modules
+<c>#
+
+<c>$(pwrp_obj)/ra_myappl.o : $(pwrp_src)/myappl/ra_myappl.cpp \ 
+<c>                          $(pwrp_src)/myappl/ra_myappl.h
+
+<c>$(pwrp_exe)/ra_myappl : $(pwrp_obj)/ra_myappl.o
+<c>	@ echo "Link $(tname)"
+<c>	@ $(ldxx) $(linkflags) -o $(target) $(source) -lpwr_rt -lpwr_co \ 
+<c>		-lpwr_msg_dummy -lrpcsvc -lpthread -lm -lrt
+
+The makefile is executed by positioning on the directory and writing make
+
+<c>make
+
+You can also insert the build command into the Application object for the application 
+in the attribute BuildCmd. In this case the build command is
+
+<c>make -f $pwrp_src/myappl/makefile
+
+This command is the executed when the node is built from the configurator. This is a
+way to ensure that all applications are updated when the node is built.
+
+</topic>
+
+<topic> dg_appl_java
+Java applications
+
+Some API also exist for java in the shape of the classes Gdh, Errh and Qcom. Below is
+an example of a java application attaching the realtime database and reading and writing
+an attribute.
+
+<c>import jpwr.rt.*;
+
+<c>public class MyJappl {
+<c>  public MyJappl() {
+<c>    Gdh gdh = new Gdh( null);
+
+<c>    CdhrBoolean rb = gdh.getObjectInfoBoolean( "H1-H2-Start.ActualValue");
+
+<c>    PwrtStatus rsts = gdh.setObjectInfo( "H1-H1-Start.ActualValue", 
+<c>					    !rb.value);
+<c>  }
+
+<c>  //Main method
+<c>  public static void main(String[] args) {
+<c>    new MyJappl();
+<c>  }
+<c>}
+
+To compile and execute you have to put $pwr_lib/pwr_rt.jar and the working directory into
+CLASSPATH, and $pwr_exe into LD_LIBRARY_PATH
+
+<c>> export CLASSPATH=$pwr_lib/pwr_rt.jar:$pwrp_src/myjappl
+<c>> export LD_LIBRARY_PATH=$pwr_exe
+
+Compile with
+<c>> javac MyJappl.java
+
+and execute with
+<c>> java MyJappl
+
+For auto start of the application you create a shellscript that exports CLASSPATH and
+LD_LIBRARY_PATH, and starts the java application. The script is inserted into the appl-file
+in the same way as a c application.
+
+</topic>
+
+</headerlevel>
+</headerlevel>
+</chapter>
+
+<chapter>
+
 <topic>ge_man
 Creating Process Graphics
 
@@ -2671,7 +4603,7 @@ you can also set values to signals.
 Trace is nowdays easier and faster performed from Xtt. We recommend that you use PlcTrace in
 Xtt instead.
 
-<h1>Editering
+<h1>Editing
 The Plc editor consist of
 
 - a working area.
@@ -3462,7 +5394,7 @@ by points, e.g. 'ssab.hql.se1', where ssab is the root group, and se1 the lowest
 hierarchy.
 
 A Proview system is connected to a system group by stating the systemgroup in the System 
-objekt. If the systemgroup is not present in the user database, though a parent or ancestor
+object. If the systemgroup is not present in the user database, though a parent or ancestor
 is, it is supposed that the systemgroup inherits users from the ancestor.
 
 <h2>Attributes
@@ -3479,7 +5411,7 @@ the access to make changes from proview utilities, e.g. the navigator or plc-edi
 regards the construction of operators graphics, to control which input fields and pushbuttons
 a user can influence.
 
-A username can be connected to several system groups, but from the databse point of view,
+A username can be connected to several system groups, but from the database point of view,
 they are different users, with unic passwords and privileges. They just happen to have the
 same username.
 
@@ -3509,7 +5441,7 @@ DevClass  <t>Write access in class editor (not yet implemented)
 </topic>
 
 <topic> user example
-Exempel
+Example
 Proview user database V1.0.0
 
 <c>ssab
@@ -4742,7 +6674,7 @@ to easily be parted from other object graphs. Note that attributes in the main o
 referenced by the '&' notation, e.g. &($object.PlcConnect).IndError##Boolean.
 
 <image> ced_fig15.gif
-<b>Objekt graph for a simulation object
+<b>Object graph for a simulation object
 
 </topic>
 
@@ -5167,6 +7099,152 @@ that are not handled by the converter.
 <c>@aref 'bookmark' 'text' 
 </topic>
 
+</chapter>
+
+<chapter>
+<topic>administrator
+Administration
+
+<option> printdisable
+Create users <link> adm_user
+Register volumes <link> register_volumes
+Create project <link> create_project
+<option> printenable
+</topic>
+
+<topic> adm_user
+Users
+
+To gain access to the Proview development and runtime environment you need to login with 
+username and password. Users are kept in the user database and are granted privileges which 
+states the users authority to make changes in the system.
+
+Systems that share the same users are grouped into a system group, and the the users for this 
+group is defined. You can also build a hierarchy of system groups where child groups inherit 
+the users of their parent, and additional users can be defined for each child.
+
+A system is connected to a systemgroup by the SystemGroup attribute in the $System object. 
+The notation for a system group in a hierarchy is the names of the group separated by a point, 
+for example 'Main.West.F1’.
+
+In the example below Eric is responsible for all the systems in the plant, and is defined on 
+the highest level in the hierarchy. Nils is working with the west side of the plant and is 
+defined on the 'West’ system group. Finally, Carl working with the systems in the F1 part of 
+the plant. All system groups has the attribute UserInherit, that states that a child group
+inherits all the users of the parent.
+ 
+
+<image> dg_fig22.gif
+
+Users and systemgroups are created in the administrator:
+
+- Start the administrator with the command 'pwra'
+- Enter the UserDatabase from the menu 'File/Open/UserDatabase'.
+- Login by entering the login command. Open the login prompt from the menu 'Functions/Command'
+  and enter 'login /adm’ on the command line. If the systemgroup 'administrator’ is presen
+  you also has to add username and password to a user defined in the administrator systemgroup.
+- Enter edit mode from the menu 'Edit/Edit mode'.
+  Systemgroups and users are represented by object of the classes SystemGroupReg and
+  UserReg, that are displayed in the palette to the left. An object is created by selecting
+  a class in the palette. After that, you click with the middle mousebutton on the future 
+  sibling or parent to the new object. If you click on the map/leaf in the destination object, 
+  the new object is placed as the first child, if you click to the right of the map/leaf, 
+  it is placed as a sibling.
+- Create a systemgroup by selecting 'SystemGroupReg' in the palette, and click with MB2
+  (the middle mousebutton) in the right window. Open the SystemGroupReg object and enter
+  name ant attribute for the system group. Enter the complete hierarchy name, e.g. 
+  'Main.West'.
+- Create a user by selecting 'UserReg' in the palette and click with MB2 on the map/leaf
+  of the SystemGroupReg object that the UserReg should be a child of. Open the object and
+  enter username, password and privileges for the user.
+- Save.
+- Logout with the command 'logout'.
+
+
+The user database reside in the directory $pwra_db.
+</topic>
+
+<topic>register_volumes
+Register Volumes
+
+All volumes in a network has to have a unique volumname and volume identity. To assure this, 
+all volumes is registered in a global volume.
+
+The registration is done by the administrator:
+
+- Start the administrator with the command 'pwra’
+- Enter volume mode from the menu 'File/Open/GlobalVolumeList'.
+- Login as administartor.
+- Enter edit mode from the menu 'Edit/Edit mode'.
+  Volumes are registred by objects of class VolumeReg, that is dislayed in the palette to
+  the left. In the palette, there is also the $Hier class, that can be used to order the
+  VolumeReg objects in a tree structure.
+- Create a VolumeReg object, open the object and enter volumename (equals objectname),
+  volumeidentity and project.  
+- Save.
+- Logout with the command 'logout'.
+
+<h2>Volume name
+The name of the volume, a unic name with max 31 characters.
+
+<h2>Volume Identity
+The volume identity is a 32 bit word specified in the form v1.v2.v3.v4 where v1, v2, v3 and v4 
+are numbers in the interval 0-255. Dependent on the class of the volume, the numbers can be 
+chosen in separate intervals. 
+
+RootVolumes            <t>0. 1-254. 1-254. 1-254
+User ClassVolumes      <t>0. 0. 2-254. 1-254
+
+The DirectoryVolume always has the identity 254.254.254.253
+</topic>
+
+<topic>create_project
+Create project
+
+A project is a number of nodes and volumes that share the same development environment. Usually
+it consist of some process stations and a couple of operators stations that control a part of 
+the plant, but there are no restrictions in the size of a project. You can choose to have each 
+node in its own project or all the nodes in the same project.
+
+- All the nodes in a project (on the same bus) has a nethandler link between each other.
+- All the volumes and nodes share the same directory tree.
+- All node has to be upgraded to new Proview versions at the same time.
+
+A common size is 1-10 nodes in a project. Too many nodes will increase the communication 
+overhead and make it harder to upgrade the project.
+
+Create the project in the administrator:
+
+- Start the administrator with the command 'pwra’.
+- The projectlist is shown as default when starting the administrator. It can also be opened
+  from the menu (File/Open/ProjectList).
+- Login as administrator.
+- Enter edit mode from the menu 'Edit/Edit mode'.
+  Projects are represented by objects of class ProjectReg, that is displayed in the palette
+  to the left. $Hier objects can be used to order the ProjectReg objects in a tree structure.
+- Create a ProjectReg object and enter project name, base version, path and description.
+- The project is created when saving. First you have to confirm the changes.
+- Save and logout.
+
+<h2>Project name
+A project has a project name that identifies the project in the development environment. It is 
+similar the system name that identifies the project in the runtime environment, but it 
+doesn’t have to be the same. Actually a system can have several projects in the development 
+environment. When upgrading or making a major modification of the system, it is advisable to 
+take a copy of the project and keep the currently running version of the system available for 
+minor corrections. The copy is then created under a new project name, though it has the same 
+system name.
+
+<h2>Base
+Proview is a multiversion system, i.e. different versions of proview can be installed in 
+the same development environment and projects of different proview versions can coexist in 
+the same development environment. A project points at a Proview base, e.g. V3.4, V4.0, and 
+when creating a project you have to choose which base the project should point at.
+
+<h2>Path
+The project consist of a directory tree where databases, source files, archives etc is stored. 
+The path is the root directory of this tree.
+</topic>
 </chapter>
 
 <chapter>
@@ -6436,6 +8514,8 @@ GetNextSibling()	<LINK> getnextsibling()
 GetNextVolume()		<LINK> getnextvolume()
 GetClassList()		<LINK> getclasslist()
 GetNextObject()		<LINK> getnextobject()
+GetClassListAttrRef()	<LINK> getclasslistattrref()
+GetNextAttrRef()	<LINK> getnextattrref()
 GetObjectClass()	<LINK> getobjectclass()
 GetNodeObject()		<LINK> getnodeobject()
 GetRootList()		<LINK> getrootlist()
@@ -7240,6 +9320,56 @@ string		<t>name		<t>name of object.
 <c>  while ( name != "")
 <c>    printf("Di object found: %s", name);
 <c>    name = GetNextObject(name);
+<c>  endwhile
+</TOPIC>
+
+<TOPIC> getclasslistattrref() <style> function
+GetClassListAttrRef()
+
+string GetClassListAttrRef( string class)
+
+<b>Description
+
+Get the first object or attribute object of a specified class. The next object 
+or attribute object of the class can be fetched whith GetNextAttrRef().
+Returns the name of the first object. If no instances or attribute object of the 
+class exists a null-string is returned.
+
+<b>Arguments
+
+string		<t>name		<t>name of class.
+
+<b>Example
+
+<c>  string name;
+
+<c>  name = GetClassListAttrRef("Dv");
+</TOPIC>
+
+<TOPIC> getnextattrref() <style> function
+GetNextAttrRef()
+
+string GetNextAttrRef( string class, string name)
+
+<b>Description
+
+Get the next object or attribute object in a classlist.
+Returns the name of the object or attribute object . If no next 
+object exist a null-string is returned.
+
+<b>Arguments
+
+string		<t>class	<t>name of class.
+string		<t>name		<t>name of object or attribute object.
+
+<b>Example
+
+<c>  string name;
+
+<c>  name = GetClassListAttrRef("Di");
+<c>  while ( name != "")
+<c>    printf("Di object found: %s", name);
+<c>    name = GetNextAttrRef(name);
 <c>  endwhile
 </TOPIC>
 

@@ -93,6 +93,7 @@ FlowNode::~FlowNode()
 
   ctx->set_defered_redraw();
   ctx->delete_node_cons( this);
+  ctx->conpoint_select_remove( this);
   ctx->draw( int(x_left * ctx->zoom_factor - ctx->offset_x - 20),
 	     int(y_low * ctx->zoom_factor - ctx->offset_y - 20),
   	     int(x_right * ctx->zoom_factor - ctx->offset_x + 20),

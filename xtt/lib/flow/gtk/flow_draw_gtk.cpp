@@ -1160,6 +1160,9 @@ static char *font_string( flow_eDrawType gc_type, double size)
   default:
     sprintf( str, "%s %f", FONTSTR, FONT_SCALE * size);
   }
+  for ( char *s = str; *s; s++)
+    if ( *s == ',')
+      *s = '.';
   return str;
 }
 
@@ -1263,7 +1266,7 @@ int FlowDrawGtk::text_erase_pango( FlowCtx *ctx, int x, int y, char *text, int l
 
   gdk_draw_rectangle( window, 
 		      gcs[flow_eDrawType_LineErase][idx], 1, 
-		      x, y - 0.8 / PANGO_SCALE * h, w / PANGO_SCALE, h / PANGO_SCALE);
+		      x, y - 0.8 / PANGO_SCALE * h, w / PANGO_SCALE, h / PANGO_SCALE * 1.2);
   // pango_renderer_draw_layout( pr, layout, PANGO_SCALE * x, PANGO_SCALE * y - h * 0.8);
   
   gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);

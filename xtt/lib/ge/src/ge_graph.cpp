@@ -103,7 +103,7 @@ static int graph_get_dyn_info_cb( void *g, GeDyn *dyn,
 	attr_sItem **itemlist, int *itemlist_cnt);
 static int graph_reconfigure_attr_cb( void *g, grow_tObject object,
 	attr_sItem **itemlist, int *itemlist_cnt, void **client_data);
-static int graph_get_plant_select_cb( void *g, char *value);
+static int graph_get_plant_select_cb( void *g, char *value, int size);
 static int graph_get_current_colors_cb( void *g, glow_eDrawType *fill_color, 
 					glow_eDrawType *border_color, glow_eDrawType *text_color);
 static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event);
@@ -511,7 +511,7 @@ void Graph::open( char *filename)
   grow->grow_setup();
 
   // Set temporary language translation on class graphs
-  if ( strcmp( object_name, "") != 0)
+  // if ( strcmp( object_name, "") != 0)
     grow_EnableEvent( grow->ctx, glow_eEvent_Translate, 
 		      glow_eEventType_CallBack, graph_grow_cb);
 
@@ -1698,11 +1698,11 @@ int Graph::edit_attributes( grow_tObject object)
 }
 
 
-static int graph_get_plant_select_cb( void *g, char *value)
+static int graph_get_plant_select_cb( void *g, char *value, int size)
 {
   Graph	*graph = (Graph *)g;
   if ( graph->get_plant_select_cb)
-    return (graph->get_plant_select_cb) (graph->parent_ctx, value);
+    return (graph->get_plant_select_cb) (graph->parent_ctx, value, size);
   return 0;
 }
 
@@ -2641,7 +2641,7 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
         if ( ! graph->get_plant_select_cb)
           break;
 
-        sts = (graph->get_plant_select_cb) (graph->parent_ctx, attr_name);
+        sts = (graph->get_plant_select_cb) (graph->parent_ctx, attr_name, sizeof(attr_name));
         if ( EVEN(sts)) {
           graph->message( 'E', "Select an object in the Plant palette");
           break;

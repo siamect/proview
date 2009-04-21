@@ -90,6 +90,8 @@ void GlowTipText::draw()
 		    strlen(tiptext), glow_eDrawType_TextHelvetica, glow_eDrawType_Line, text_size, 
 		    0, 0, glow_eFont_Helvetica,
 		    ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (8+2*text_size));
+  if ( ctx->mw.double_buffer_on() && !ctx->mw.draw_buffer_only())
+    ctx->gdraw->copy_buffer( &ctx->mw, text_x, text_y, text_x + text_width, text_y + text_height);
 }
 
 void GlowTipText::remove_text( GlowArrayElem *e)

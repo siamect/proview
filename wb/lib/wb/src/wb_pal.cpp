@@ -1402,7 +1402,7 @@ void Pal::create_nodeclasses()
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnotPixmap( nc, 1, 7, 0.1, flow_eDrawType_Line, 2, 1);
-  brow_AddFrame( nc, 0, 0, 10, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc, 0, 0, 10, 0.83, flow_eDrawType_LineGray, -1, 1);
 }
 
 //

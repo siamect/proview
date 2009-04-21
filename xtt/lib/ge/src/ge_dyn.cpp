@@ -4306,6 +4306,9 @@ int GeValueInput::change_value( grow_tObject object, char *text)
 
   db = dyn->parse_attr_name( value_element->attribute, parsed_name, &inverted, 
 			       &attr_type, &attr_size);
+  if ( parsed_name[0] == '&')
+    dyn->graph->get_reference_name( parsed_name, parsed_name);
+
   if ( !annot_size ) {
     pwr_sAttrRef 	ar;
     pwr_tTypeId 	a_type_id;

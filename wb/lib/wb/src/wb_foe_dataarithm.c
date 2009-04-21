@@ -65,6 +65,10 @@ struct dataa_s_ctx {
 	char		classdef_Da2[80];
 	char		classdef_Da3[80];
 	char		classdef_Da4[80];
+	char		structdef_Da1[80];
+	char		structdef_Da2[80];
+	char		structdef_Da3[80];
+	char		structdef_Da4[80];
 	char		aliasdef_Da1[80];
 	char		aliasdef_Da2[80];
 	char		aliasdef_Da3[80];
@@ -238,9 +242,14 @@ static pwr_tStatus dataa_Da1 (
 	}
 	if ( !strncmp( pos, "->", 2) || !strncmp( pos, " ->", 3)) 
 	{
-	  if ( !strcmp( dataactx->classdef_Da1, "")) return GSX__DATAASYNTAX;
-	  sprintf( out, "((pwr_sClass_%s *)(*(%s->DataIn1P)))",
-		dataactx->classdef_Da1, var);
+	  if ( strcmp( dataactx->classdef_Da1, "") != 0) 
+	    sprintf( out, "((pwr_sClass_%s *)(*(%s->DataIn1P)))",
+		     dataactx->classdef_Da1, var);
+	  else if ( strcmp( dataactx->structdef_Da1, "") != 0) 
+	    sprintf( out, "((%s *)(*(%s->DataIn1P)))",
+		     dataactx->structdef_Da1, var);
+	  else
+	    return GSX__DATAASYNTAX;
 	}
 	else
 	  sprintf( out, " *(%s->DataIn1P)", var);
@@ -291,9 +300,14 @@ static pwr_tStatus dataa_Da2 (
 	}
 	if ( !strncmp( pos, "->", 2) || !strncmp( pos, " ->", 3)) 
 	{
-	  if ( !strcmp( dataactx->classdef_Da2, "")) return GSX__DATAASYNTAX;
-	  sprintf( out, "((pwr_sClass_%s *)(*(%s->DataIn2P)))",
-		dataactx->classdef_Da2, var);
+	  if ( strcmp( dataactx->classdef_Da2, "") != 0) 
+	    sprintf( out, "((pwr_sClass_%s *)(*(%s->DataIn2P)))",
+		     dataactx->classdef_Da2, var);
+	  else if ( strcmp( dataactx->structdef_Da2, "") != 0) 
+	    sprintf( out, "((%s *)(*(%s->DataIn2P)))",
+		     dataactx->structdef_Da2, var);
+	  else 
+	    return GSX__DATAASYNTAX;
 	}
 	else
 	  sprintf( out, " *(%s->DataIn2P)", var); 
@@ -344,9 +358,14 @@ static pwr_tStatus dataa_Da3 (
 	}
 	if ( !strncmp( pos, "->", 2) || !strncmp( pos, " ->", 3)) 
 	{
-	  if ( !strcmp( dataactx->classdef_Da3, "")) return GSX__DATAASYNTAX;
-	  sprintf( out, "((pwr_sClass_%s *)(*(%s->DataIn3P)))",
-		dataactx->classdef_Da3, var);
+	  if ( strcmp( dataactx->classdef_Da3, "") != 0) 
+	    sprintf( out, "((pwr_sClass_%s *)(*(%s->DataIn3P)))",
+		     dataactx->classdef_Da3, var);
+	  else if ( strcmp( dataactx->structdef_Da3, "") != 0) 
+	    sprintf( out, "((%s *)(*(%s->DataIn3P)))",
+		     dataactx->structdef_Da3, var);
+	  else
+	    return GSX__DATAASYNTAX;
 	}
 	else
 	  sprintf( out, " *(%s->DataIn3P)", var); 
@@ -397,9 +416,14 @@ static pwr_tStatus dataa_Da4 (
 	}
 	if ( !strncmp( pos, "->", 2) || !strncmp( pos, " ->", 3)) 
 	{
-	  if ( !strcmp( dataactx->classdef_Da4, "")) return GSX__DATAASYNTAX;
-	  sprintf( out, "((pwr_sClass_%s *)(*(%s->DataIn4P)))",
-		dataactx->classdef_Da4, var);
+	  if ( strcmp( dataactx->classdef_Da4, "") != 0) 
+	    sprintf( out, "((pwr_sClass_%s *)(*(%s->DataIn4P)))",
+		     dataactx->classdef_Da4, var);
+	  else if ( strcmp( dataactx->structdef_Da4, "") != 0) 
+	    sprintf( out, "((%s *)(*(%s->DataIn4P)))",
+		     dataactx->structdef_Da4, var);
+	  else
+	    return GSX__DATAASYNTAX;
 	}
 	else
 	  sprintf( out, " *(%s->DataIn4P)", var);
@@ -944,6 +968,116 @@ static pwr_tStatus dataa_classdef (
 	      /* Already used */
 	      return GSX__DATAASYNTAX;
 	    strcpy( dataactx->classdef_Da4, out_str[1]);
+	    if ( nr == 3)
+	    {
+	      dataa_add_item( dataactx,  out_str[2], "A", "A", &dataa_Da4);
+	      strcpy( dataactx->aliasdef_Da4, out_str[2]);
+	    }
+	  }
+	  else
+	    return GSX__DATAASYNTAX;
+	}
+
+	return GSX__SUCCESS;
+}
+
+/*************************************************************************
+*
+* Name:		dataa_structdef
+*
+* Type		int
+*
+* Type		Parameter	IOGF	Description
+* dataa_ctx	dataactx	I	dataa context
+* char		*line		I	current line
+*
+* Description:
+*	Backcall function called when a structdef command is detected.
+*
+**************************************************************************/
+static pwr_tStatus dataa_structdef (
+  dataa_ctx dataactx,
+  char *line
+)
+{
+	char	out_str[5][80];
+	char	comm_str[20][80];
+	int	nr;
+	int	comm_nr;
+	int	i, j;
+
+	/* Remove the last character (linefeed) */
+	*(line + strlen(line) - 1)  = 0;
+
+	/* Parse the command string */
+	comm_nr = dataa_parse( line, ",;", "", comm_str[0],
+		sizeof( comm_str) / sizeof( comm_str[0]), sizeof( comm_str[0]));
+
+	for ( i = 0; i < comm_nr; i++)
+	{
+	  if ( !strcmp( comm_str[i], ""))
+	    break;
+
+	  nr = dataa_parse( comm_str[i], "	 ", "", out_str[0],
+		sizeof( out_str) / sizeof( out_str[0]), sizeof( out_str[0]));
+	  if ( nr == 0)
+	    continue;
+
+	  if ( i == 0)
+	  {
+	    if ( strcmp( out_str[0], "structdef"))
+	      return GSX__DATAASYNTAX;
+
+	    for ( j = 0; j < nr-1; j++)
+	      strcpy( out_str[j], out_str[j+1]);
+	    nr--;
+	  }
+
+	  if (!( nr == 2 || nr == 3))
+	    return GSX__DATAASYNTAX;
+
+	  if ( !strcmp( out_str[0], "Da1"))
+	  {
+	    if ( dataactx->structdef_Da1[0] != 0)
+	      /* Already used */
+	      return GSX__DATAASYNTAX;
+	    strcpy( dataactx->structdef_Da1, out_str[1]);
+	    if ( nr == 3)
+	    {
+	      dataa_add_item( dataactx,  out_str[2], "A", "A", &dataa_Da1);
+	      strcpy( dataactx->aliasdef_Da1, out_str[2]);
+	    }
+	  }
+	  else if ( !strcmp( out_str[0], "Da2"))
+	  {
+	    if ( dataactx->structdef_Da2[0] != 0)
+	      /* Already used */
+	      return GSX__DATAASYNTAX;
+	    strcpy( dataactx->structdef_Da2, out_str[1]);
+	    if ( nr == 3)
+	    {
+	      dataa_add_item( dataactx,  out_str[2], "A", "A", &dataa_Da2);
+	      strcpy( dataactx->aliasdef_Da2, out_str[2]);
+	    }
+	  }
+	  else if ( !strcmp( out_str[0], "Da3"))
+	  {
+	    if ( dataactx->structdef_Da3[0] != 0)
+	      /* Already used */
+	      return GSX__DATAASYNTAX;
+	    strcpy( dataactx->structdef_Da3, out_str[1]);
+	    if ( nr == 3)
+	    {
+	      dataa_add_item( dataactx,  out_str[2], "A", "A", &dataa_Da3);
+	      strcpy( dataactx->aliasdef_Da3, out_str[2]);
+	    }
+	  }
+	  else if ( !strcmp( out_str[0], "Da4"))
+	  {
+	    if ( dataactx->structdef_Da4[0] != 0)
+	      /* Already used */
+	      return GSX__DATAASYNTAX;
+	    strcpy( dataactx->structdef_Da4, out_str[1]);
 	    if ( nr == 3)
 	    {
 	      dataa_add_item( dataactx,  out_str[2], "A", "A", &dataa_Da4);
@@ -1605,6 +1739,17 @@ pwr_tStatus dataarithm_convert (
 	  if ( strstr( line, "classdef"))
 	  {
 	    sts = dataa_classdef( dataactx, line);
+	    if ( EVEN(sts))
+	    {
+	      strncpy( error_line, line, *error_line_size);
+	      *error_line_num = dataactx->line_count,
+	      dataa_delete_ctx( dataactx);
+	      return sts;
+	    }
+	  }
+	  else if ( strstr( line, "structdef"))
+	  {
+	    sts = dataa_structdef( dataactx, line);
 	    if ( EVEN(sts))
 	    {
 	      strncpy( error_line, line, *error_line_size);

@@ -935,6 +935,8 @@ void WGre::delete_selected()
 
   sel_con_count = 0;
   sel_node_count = 0;
+
+  flow_PasteStop( flow_ctx);
 }
 
 //
@@ -1367,6 +1369,8 @@ int WGre::flow_cb( FlowCtx *ctx, flow_tEvent event)
   gre->search_rectangle_delete();
 
   if ( event->any.type == flow_eEventType_CreateCon) {
+    if ( flow_GetPasteActive( ctx) || flow_GetAutoscrollingActive(ctx))
+      return 1;
     flow_GetUserData( event->con_create.source_object, (void **) &source);
     if ( event->con_create.dest_object)
       flow_GetUserData( event->con_create.dest_object, (void **) &dest);
@@ -1389,6 +1393,7 @@ int WGre::flow_cb( FlowCtx *ctx, flow_tEvent event)
     case flow_eObjectType_Node:
       flow_GetUserData( event->object.object, &vobject);
       (gre->gre_delete) (gre, vobject, VLDH_NODE);
+      flow_PasteStop( ctx);
       break;
     case flow_eObjectType_Con:
       flow_GetUserData( event->object.object, &vobject);
@@ -1481,6 +1486,14 @@ int WGre::flow_cb( FlowCtx *ctx, flow_tEvent event)
     break;
   case flow_eEvent_MB2Click:
     /* Create node */
+    if ( flow_GetAutoscrollingActive( ctx))
+      return 1;
+
+    if ( flow_GetPasteActive( ctx)) {
+      flow_PasteStop( ctx);
+      return 1;
+    }
+
     switch ( event->object.object_type) {
     case flow_eObjectType_NoObject:
       (gre->gre_node_created) ( gre, dummy, event->object.x,
@@ -1550,6 +1563,10 @@ int WGre::flow_cb( FlowCtx *ctx, flow_tEvent event)
     vldh_t_node		current_node;
     flow_tObject	*select_list;
     int			select_cnt;
+
+    if ( flow_GetPasteActive( ctx) || flow_GetAutoscrollingActive(ctx) ||
+	 flow_GetConCreateActive(ctx))
+      return 1;
 
     flow_PositionToPixel( gre->flow_ctx, event->object.x,
 			  event->object.y, &x_pix, &y_pix); 

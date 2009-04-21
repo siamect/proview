@@ -3416,7 +3416,7 @@ int GlowDrawGtk::text_pango( GlowWind *wind, int x, int y, char *text, int len,
 
   for ( int i = 0; i < 2; i++) {
     if ( i == 0) {
-      if ( !w->draw_buffer_only)
+      if ( !w->draw_buffer_only && !w->double_buffer_on)
 	gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), w->window);
       else
 	continue;

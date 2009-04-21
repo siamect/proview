@@ -936,7 +936,7 @@ void SubPaletteBrow::create_nodeclasses()
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnotPixmap( nc_object, 1, 7.8, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddFrame( nc_object, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_object, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Create subgraph-class
 
@@ -947,7 +947,7 @@ void SubPaletteBrow::create_nodeclasses()
   brow_AddAnnot( nc_sub, 2.7, 0.6, 0,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
-  brow_AddFrame( nc_sub, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_sub, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
 
 }
 

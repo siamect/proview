@@ -74,6 +74,11 @@ int CoXHelp::help( const char *key, const char *help_bookmark, navh_eHelpFile fi
 				   file_name, 0, strict);
 }
 
+int CoXHelp::home()
+{
+  return xhelpnav->home();
+}
+
 int CoXHelp::back()
 {
   return xhelpnav->back();

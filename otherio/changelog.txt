@@ -4,3 +4,4 @@
 080229 rk  modbus    New I/O-system for Modbus TCP implemented.
 081016 rk  modbus    Added class Modbus_Master.
 081016 rk  modbus    Added moore functionality.
+090301 cs  usbio     Bugfix for Ai on port B. If Ai and Di/Do were mixed the Ai didn't work.

@@ -123,7 +123,7 @@ static Boolean nav_sel_convert_cb(
     if ( !nav->get_plant_select_cb)
       return FALSE;
 
-    sts = nav->get_plant_select_cb( nav->parent_ctx, name);
+    sts = nav->get_plant_select_cb( nav->parent_ctx, name, sizeof(name));
     if ( EVEN(sts)) return FALSE;
     *value_return = XtNewString(name);      
     *length_return = strlen(name) + 1;

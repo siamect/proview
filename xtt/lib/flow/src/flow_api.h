@@ -251,8 +251,12 @@ int flow_LoadNodeClass( flow_tCtx ctx, char *fname, flow_tNodeClass *nodeclass);
 void flow_SetTipText( flow_tCtx ctx, flow_tObject object, char *text, int x, int y);
 void flow_RemoveTipText( flow_tCtx ctx);
 int flow_PasteStop( flow_tCtx ctx);
+int flow_GetPasteActive( flow_tCtx ctx);
+int flow_GetAutoscrollingActive( flow_tCtx ctx);
 int flow_PendingPaste( flow_tCtx ctx);
 int flow_PendingPasteStop( flow_tCtx ctx);
+int flow_GetConCreateActive( flow_tCtx ctx);
+int flow_ConCreateStop( flow_tCtx ctx);
 
 
 #if defined __cplusplus

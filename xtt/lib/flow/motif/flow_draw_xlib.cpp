@@ -1455,8 +1455,8 @@ void FlowDrawXLib::set_nav_cursor( FlowCtx *ctx, draw_eCursor cursor)
 }
 
 int FlowDrawXLib::get_text_extent( FlowCtx *ctx, const char *text, int len,
-				   flow_eDrawType gc_type, int idx, double size,
-				   int *width, int *height)
+				   flow_eDrawType gc_type, int idx, 
+				   int *width, int *height, double size)
 {
   int	direction, ascent, descent;
   XCharStruct char_struct;

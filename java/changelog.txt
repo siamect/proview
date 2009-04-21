@@ -10,3 +10,4 @@
 080314 cs  jop       Bugfix in integer format conversion.
 080623 cs  rt        Password encryption class added.
 080623 cs  rt        Default privileges and system group fetched from Security object (DefaultWebPriv and WebSystemGroup).
+090129 cs  rt        GdhServer terminated with error status, not 0, is no WebHandler object was found.

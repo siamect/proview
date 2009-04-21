@@ -115,4 +115,13 @@
 081128 cs  glow      Metric antialiased fonts, scalable texts, change of fonts for subgraphs.
 081130 cs  glow      Font can be set on node and group level for text and annotations.
 081130 cs  glow      Red error color is not affected by gradient property.
-090128 cs  xtt       Bugfix in alarmlist acknowlege.
+090128 cs  xtt       Bugfix in alarmlist acknowledge.
+090218 cs  glow      Bugfix for connection with the same source and destination object.
+090219 cs  flow      Bugfix in connectionpoint selection. Removed node wasn't removed from selection list.
+090219 cs  ge        Bugfix in Ge journal when attribute editor is open on create undo object.
+090224 cs  flow      Navigator items wasn't sensitive and correctly drawn to right window border.
+090225 cs  xtt       Ampersand in alarmtext cause a blank alarmtext in operator window.
+090225 cs  flow      Problem with missing invert circle in postscript plc doc fixed.
+090225 cs  xtt       Size check of attribute input and float format changed to %g.
+090227 cs  glow      Bugfix in scaled option menu close to lower window border. Event coordinate translation was wrong.
+090227 cs  ge        Problem with soiled texts fixed.

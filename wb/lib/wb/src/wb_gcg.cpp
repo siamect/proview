@@ -15823,7 +15823,8 @@ static pwr_tStatus gcg_replace_ref( gcg_ctx gcgctx, pwr_sAttrRef *attrref,
 
     attrref->Objid = connect_arp->Objid;
     attrref->Offset += connect_arp->Offset;
-    if ( attrref->Flags.b.Object && (attrref->Offset || attrref->Size < connect_arp->Size)) {
+    if ( attrref->Flags.b.Object && 
+	 (attrref->Offset || ( attrref->Size && attrref->Size < connect_arp->Size))) {
       attrref->Flags.b.Object = 0;
       attrref->Flags.b.ObjectAttr = 1;
     }

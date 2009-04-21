@@ -1,0 +1,489 @@
+#
+# Swedish documentation for BaseComponent classes
+#
+<class> CompModeD
+ @Version
+ Manöverbild för att köra en drift med start/stopp order.
+ @b Objektsbild
+ @image orm_compmoded_og.gif 
+ - Knappen Start har toggelfunktion (behöver ej trycka på stopp!).
+ - Knappar Man/Auto väljer mod vid fjärrstyrning.
+ - Lokal mod indikatorn visar gult när lokal styrning pågår. Start, stopp knappar
+   dimmas (körning via Auto/man mod förreglas).
+
+ - Indikator Extern som inte syns i bilden visar status när auto/man mod inte styrs
+   via knappar i bilden.
+    
+   Dimmad Start och Stopp knapp betyder att automod gäller (Extern indikator grön).
+   
+   syns inga knappar alls är ALLTID Extern indikator grön och auto/man visas på annat
+   sätt.
+
+ - Indikator Start visar status på återkopplingen (kontaktorsvar).
+  
+
+ @h1 Konfiguering
+ Modobjekt CompModeD hanterar en orderutgång och kan konfigueras på många sätt och
+ innehåller funktioner:
+ -Felhantering för manövrering (5 larm).
+ -Dimmar knappar i objektsbild så felmanövrering undviks.
+
+  Startorder styrs av tre olika moder:
+ -i auto mod styr ingången ExtStart från funktionsobjektet.
+ -i manuell mod styr knapparna Start/Stop från bilden.
+ -i lokal mod styr ingången LokalStart från funktionsobjektet.
+
+ @b Styrning av mod från objektsbild (default)
+ Bilden ovan visar en konfiguration där objektets alla funktioner används. Operatören
+ väljer manuell eller automod via knapparna Man/Auto. I auto styrs utgången av
+ funktionsobjektets ingång ExtStart, ingång ExtControl används ej.
+
+
+ @b Styrning av mod från programmet
+ @image orm_compmoded_extern.png
+ 
+ Vänstra bilden visar när auto/man mod styrs av ingång ExtControl i funktionsobjektet
+ och i manuell mod av knapparna Incr/Decr bilden. Operatören väljer automod genom att
+ sätta ingång ExtControl till 1 (knappar dimmas) och styr sedan utgångarna via
+ ingångar ExtIncr och ExtDecr. Denna konfiguration fås genom att sätta
+ OpExtAndIntMan till 1.
+
+ Högra bilden visar när både auto/man mod och manövrering start/stopp i manell mod
+ styrs utanför objektet. Genom att sätta OpExtOnly till 1 tas även knapparna Start,
+ Stopp bort i bilden och styrning av utgången sker endast via ExtStart ingången,
+ dvs. ingen manövrering och mod hantering i objektet används (inga knappar syns i
+ bilden).
+
+ @b Endast manuell mod 
+ @image orm_compmoded_int_only.png
+ 
+ Bilden visar när bara manuel mode är konfiguerad. Ingångar Ext och Local på
+ funktionsobjektet används ej. Knapparna Man/auto och indikator Local är gömda i
+ bilden. Denna konfiguration fås genom att sätta OpIntOnly och OpNoLocal till 1.
+
+
+ @b Lokal mod 
+ @image orm_compmoded_local.png
+ 
+ Bilden visar när lokal mod är aktiverad (ingång LocalMod hög). Detta styrsätt är
+ tänkt att användas för styrning via tryckknappar från lokal manöverlåda. Lokal mod
+ förreglar auto och manuell körning (dvs. högsta prioritet).
+ 
+ 
+ @b Start, stoppknapp och indikering
+ Startknappen fungerar också som en toggelknapp, dvs. man behöver inte trycka på
+ stoppknappen för att stoppa.
+ 
+ Indikering bredvid startknappp blir grön när ingång Feedback bli hög, Dvs. där man
+ normalt kopplar in styrobjektets kontaktorsvar eller motsvarande.
+ 
+
+ @b Felhantering
+ Om ingång Ready går låg är det normala beteendet att tvinga objektet i manuell mod.
+ Vill man ligga kvar i automod oavsett Ready kan man konfigura detta genom att sätta
+ OpNoAutoToMan till 1. Om Ready är låg förreglas utgången och detta gäller i alla
+ moder.
+ 
+ Försöker man påverka objektets olika moder mm och förreglingar är aktiva som ska
+ hindra felmanövrering utgår diverse larm. Exempel på förregling är när ingång Ready
+ är låg.
+
+ @b Plc kod
+ För plc programmering används funktionsobjektet CompModeDFo.
+ @image orm_compmodedfo_fo.gif
+ 
+ Skapa ett funktionsobjekt i plc editorn och koppla (connect) till objektet i
+ planthierarkin.
+
+Se även
+<attr> Description
+  @summary Textsträng för beskrivning av objektet.
+  Textfält synlig i XTT som beskriver objektet lite mer än namnet på objektet 
+</attr>
+<attr> OpAuto
+  Påverkas normalt via knapp Auto i objektsbild (nollställs alltid).
+</attr>
+<attr> OpMan
+  Påverkas normalt via knapp Man i objektsbild (nollställs alltid).
+</attr>
+<attr> OpManStart
+  Påverkas normalt via knapp Start i objektsbild (nollställs alltid).
+</attr>
+<attr> OpManStop
+  Påverkas normalt via knapp Decr/minska i objektsbild (nollställs alltid).
+</attr>
+<attr> LocalMode
+  Påverkas via ingång i funktionsobjektet och är normalt en omkopplare i lokal
+  manöverlåda. Denna mod gäller före alla andra.
+</attr>
+<attr> LocalStart
+  Påverkas via ingång i funktionsobjektet och är normalt en tryckknapp i lokal
+  manöverlåda.
+</attr>
+<attr> Ready
+  Förregling av drift via ingång i funktionsobjektet som förreglar start i alla moder
+  om inte signalen är hög.
+</attr>
+<attr> FeedBack
+  Kontaktorsvaret för driften, påverkas via ingång i funktionsobjektet
+</attr>
+<attr> Order
+  Orderutgång i funktionsobjektet som går hög när driften ska starta.
+</attr>
+<attr> AutoMode
+  Är hög när aktuell mod är Auto, styrs normalt av funktionsobjektet och knapp i bild.
+  Påverkas av ingång ExtControl i funktionsobjektet om konfigurationen OpExtAndIntMan är 1.
+<attr> ManOrdDim
+  Dimmar Start och Stoppknappen i objektbilden.
+</attr>
+<attr> AutoModDim
+  Dimmar knapp auto i objektbilden.
+</attr>
+<attr> ManModDim
+  Dimmar knapp man i objektbilden.
+</attr>
+<attr> LocalModHide
+  Gömmer indikator local i objektbilden.
+</attr>
+<attr> ManAutoHide
+  Gömmer knappar man/auto i objektbilden.
+</attr>
+<attr> ManOrdHide
+  Gömmer knappar Incr, Decr och stoppknappen i objektbilden.
+</attr>
+<attr> ExternOrdHide
+  Gömmer indikator Extern i objektbilden.
+</attr>
+<attr> OpIntOnly
+  Konfiguerar funktionsobjektet att tillhandahålla endas manuell mod, dvs. auto/man
+  knappar i bild tas bort och ingångar för extern styrning görs verkningslösa. 
+</attr>
+<attr> OpNoLocal
+  Konfiguerar funktionsobjektet att INTE tillhandahålla lokal mod, dvs. indikering
+  lokal i bild tas bort och ingångar för lokal styrning görs verkningslösa.
+</attr>
+<attr> OpNoAutoToMan
+  Konfiguerar funktionsobjektet att INTE vid låg signal på ingång Ready automatisk
+  återgå till manuell mod. OBS! Detta kan medföra risk för återstart när Ready går
+  hög igen.
+</attr>
+<attr> OpExtOnly
+  Konfiguerar funktionsobjektet att INTE tillhandahålla manuell styrning och
+  modhantering, dvs. alla knappar i bilden tas bort och modhanteringen görs
+  verkningslös.
+</attr>
+<attr> OpExtAndIntMan
+  Konfiguerar funktionsobjektet att INTE tillhandahålla modhantering auto/man, dvs.
+  knappar auto/man i bilden tas bort och och mod styrs via ingång ExtControl. När
+  ExtControl är låg dimmas knapparna Start/Stopp i bilden upp och signal AutoMod går
+  låg, dvs. manuell mod. 
+</attr>
+<attr> ManStart
+  Styrs av funktionsobjektet och går hög när manuell startorder aktiveras.
+</attr>
+<attr> AlarmNotReadyM
+  B larmtext vid fel, texten adderas med prefix hierarkinamn (1led) + objektsnamnet.
+</attr>
+<attr> AlarmNotReadyA
+  B larmtext vid fel, texten adderas med prefix hierarkinamn (1led) + objektsnamnet. 
+</attr>
+<attr> Alarm1LocalMod
+  B larmtext vid fel, texten adderas med prefix hierarkinamn (1led) + objektsnamnet.
+</attr>
+<attr> Alarm2LocalMod
+  B larmtext vid fel, texten adderas med prefix hierarkinamn (1led) + objektsnamnet.
+</attr>
+<attr> AlarmNotManOrd
+  B larmtext vid fel, texten adderas med prefix hierarkinamn (1led) + objektsnamnet.
+</attr>
+</class>
+<attr> IndMode
+  Textsträng som visar ett L och M i objektsymbol bilder, (L)okal, (M)anuell.
+</attr>
+<attr> PlcConnect
+  Referens som visar vilket objekt funktionsobjektet har blivit knuten (connected) till.
+</attr>
+
+</class>
+
+
+<class> CompModeD2
+ @Version
+ Manöverbild för att köra en drift med öka/minska order.
+ @b Objektsbild
+ @image orm_compmoded2_og.gif
+
+ - Knappar Öka/minska Incr/Decr har toggelfunktion (behöver ej trycka på stopp!).
+ - Knappar Man/Auto väljer mod vid fjärrstyrning.
+ - Lokal mod indikatorn visar gult när lokal styrning pågår. Start, stopp knappar
+   dimmas (körning via Auto/man mod förreglas).
+ - Indikator Extern som inte syns i bilden visar status när auto/man mod inte styrs
+   via knappar i bilden.
+   
+   Dimmad Incr, Decr och Stopp knapp betyder att automod gäller (Extern indikator grön).
+
+   
+   Syns inga knappar alls är ALLTID extern indikator grön och auto/man visas på annat
+   sätt.
+   
+ - Indikatorer Incr/Decr visar status på återkopplingen (kontaktorsvar).
+ - Indikatorer under Limit Switches visar status på yttre återkoppling (gränslägen).
+
+ @h1 Konfiguering
+ Modobjekt CompModeD2  hanterar två orderutgångar och kan konfigueras på många sätt
+ och innehåller funktioner:
+ -Öka och minska order.
+ -Felhantering för lägesåterföring och manövrering (5 larm).
+ -Dimmar knappar i objektsbild så felmanövrering undviks.
+ 
+ Öka (incr) och minska (decr) order styrs av tre olika moder:
+ -i auto mod styr ingångarna ExtIncr och ExtDecr från funktionsobjektet.
+ -i manuell mod styr knapparna Incr/Öka och Decr/Minska från bilden.
+ -i lokal mod styr ingångarna LokalIncr och LocalDecr från funktionsobjektet.
+ 
+ @b Styrning av mod från objektsbild (default)
+ Bilden ovan visar en konfiguration där objektets alla funktioner används. Operatören
+ väljer manuell eller automod via knapparna Man/Auto. I auto styrs utgångarna av
+ funktionsobjektets ingångar ExtIncr och ExtDecr, ingång ExtControl används ej.
+
+
+ @b Styrning av mod från programmet
+ @image orm_compmoded2_extern.png
+ 
+ Vänstra bilden visar när auto/man mod styrs av ingång ExtControl i funktionsobjektet
+ och i manuell mod av knapparna Incr/Decr bilden. Operatören väljer automod genom att
+ sätta ingång ExtControl till 1 (knappar dimmas) och styr sedan utgångarna via
+ ingångar ExtIncr och ExtDecr. Denna konfiguration fås genom att sätta
+ OpExtAndIntMan till 1.
+
+ Högra bilden visar när både auto/man mod och manövrering i manuell styrs utanför
+ objektet. Genom att sätta OpExtOnly till 1 tas även knapparna Incr, Decr och
+ Stop bort i bilden och styrning av utgångarna sker endast via ExtIncr och ExtDecr
+ ingångarna, dvs. ingen manövrering och mod hantering i objektet används (inga knappar
+ syns i bilden).
+ 
+ @b Endast manuell mod 
+ @image orm_compmoded2_int_only.png
+ 
+ Bilden visar när bara manuel mode är konfiguerad. Ingångar Ext och Local på
+ funktionsobjektet används ej. Knapparna Man/auto och indikator Local är gömda i
+ bilden. Denna konfiguration fås genom att sätta OpIntOnly och OpNoLocal till 1.
+
+
+ @b Lokal mod 
+ @image orm_compmoded2_local.png
+ 
+ Bilden visar när lokal mod är aktiverad (ingång LocalMod hög). Detta styrsätt är
+ tänkt att användas för styrning via tryckknappar från lokal manöverlåda. Lokal mod
+ förreglar auto och manuell körning (dvs. högsta prioritet).
+ 
+ 
+ @b Incr, Decr, stoppknappen och indikeringar
+ Knapparnas funktion kan konfigureras på två sätt, normalt togglas knapparna
+ Incr/Decr. Om man konfigurerar OpNoStopButton till 1 fungerar knapparna så länge
+ knappen hålls intryckt (stoppknappen görs osynlig i bilden).    
+ 
+ Indikering bredvid knapparna blir gröna när återkopplingen för respektive utgång blir
+ hög (ingång FeedbackIncr och FeedbackDecr), dvs. där man normalt kopplar in
+ styrobjektets kontaktorsvar eller motsvarande.
+
+ 
+ @b Gränslägen (Limit switch)
+ Om gränslägen används tillåts styrorder pågå tills tid OrderTimeLimit löpt ut. 
+ Löper tiden ut går utgång error hög och larm genereras och eventuellt går auto
+ över i manuell mod beroende på konfigurationen för OpNoAutoToMan. OrderTimeLimit är
+ förinställt på 10s.
+
+ Indikeringar i bilder under rubrik LimitSwitches blir gröna när återkopplingen
+ från respektive gränsläge blir hög (ingång LimitSwitchIncr och LimitSwitchDecr).
+ 
+ Ingångar för gränslägena sker via funktionsobjektets ingångar LimitSwitchIncr och
+ LimitSwitchDecr. Används inte gränslägen ska man sätta OpNoLimitSwitch till 1. 
+
+
+ @b Felhantering
+ Om ingång Ready går låg eller utgång Error går hög är det normala beteende att tvinga
+ objektet i manuell mod. Vill man ligga kvar i automod oavsett Ready och Error kan man
+ konfigura detta genom att sätta OpNoAutoToMan till 1. Om Ready är låg förreglas
+ utgångarna och detta gäller i alla moder.
+ 
+ Försöker man påverka objektets olika moder mm och förreglingar är aktiva som ska
+ hindra felmanövrering utgår diverse larm. Exempel på förregling är när ingång Ready
+ är låg.
+
+ OBS!
+ När man styr Auto/man mod externt (även Lokalt) är det viktigt att titta på utgången
+ Error för att få återkoppling till sitt program (återställa order), dvs. man bör ta
+ ner styrorder på ingångarna vid fel.
+
+
+ @b Plc kod
+ För plc programmering används funktionsobjektet CompModeD2Fo.
+ @image orm_compmoded2fo_fo.gif
+ 
+ Skapa ett funktionsobjekt i plc editorn och koppla (connect) till objektet i
+ planthierarkin.
+
+Se även
+<attr> Description
+  @summary Textsträng för beskrivning av objektet.
+  Textfält synlig i XTT som beskriver objektet lite mer än namnet på objektet.
+</attr>
+<attr> OpAuto
+  Påverkas normalt via knapp Auto i objektsbild (nollställs alltid).
+</attr>
+<attr> OpMan
+  Påverkas normalt via knapp Man i objektsbild (nollställs alltid).
+</attr>
+<attr> OpManIncr
+  Påverkas normalt via knapp Incr/Öka i objektsbild (nollställs alltid).
+</attr>
+<attr> OpManDecr
+  Påverkas normalt via knapp Decr/minska i objektsbild (nollställs alltid).
+</attr>
+<attr> OpManStop
+  Påverkas normalt via knapp Stop i objektsbild (nollställs alltid).
+</attr>
+<attr> LocalMode
+  Normalt en omkopplare i lokal manöverlåda, påverkas via ingång i funktionsobjektet.
+  Denna mod gäller före alla andra.
+</attr>
+<attr> LocalIncr
+  Normalt en tryckknapp i lokal manöverlåda, påverkas via ingång i funktionsobjektet.
+</attr>
+<attr> LocalDecr
+  Normalt en tryckknapp i lokal manöverlåda, påverkas via ingång i funktionsobjektet.
+</attr>
+<attr> Ready
+  Förregling av drift via ingång i funktionsobjektet som förreglar start i alla moder
+  om inte signalen är hög.
+</attr>
+<attr> FeedBackIncr
+  Kontaktorsvaret för öka, påverkas via ingång i funktionsobjektet.
+</attr>
+<attr> FeedBackDecr
+  Kontaktorsvaret för minska, påverkas via ingång i funktionsobjektet.
+</attr>
+<attr> LimitSwitchDecr
+  Stoppgränsläge för öka, påverkas via ingång i funktionsobjektet. Obs! lokal mod
+  förreglas inte av gränsläget.
+</attr>
+<attr> LimitSwitchIncr
+  Stoppgränsläge för minska, påverkas via ingång i funktionsobjektet. Obs! lokal mod
+  förreglas inte av gränsläget.
+</attr>
+<attr> ErrorDecr
+  Styrs av funktionsobjektet och går hög (minst 2s) om driftsvar från LimitSwichDecr
+  uteblir när tid OrderTimeLimit löpt ut vid order Decr.   
+</attr>
+<attr> ErrorIncr
+  Styrs av funktionsobjektet och går hög (minst 2s) om driftsvar från LimitSwichIncr
+  uteblir när tid OrderTimeLimit löpt ut vid Order Incr.
+</attr>
+<attr> OrderIncr
+  Orderutgång i funktionsobjektet som går hög när driften ska öka.
+</attr>
+<attr> OrderDecr
+  Orderutgång i funktionsobjektet som går hög när driften ska minska.
+</attr>
+<attr> OrderIncr
+  Orderutgång i funktionsobjektet som går hög när driften ska minska.
+</attr>
+<attr> AutoMode
+  Är hög när aktuell mod är Auto, styrs normalt av funktionsobjektet och knapp i bild.
+  Påverkas av ingång ExtControl i funktionsobjektet om konfigurationen OpExtAndIntMan är 1.
+</attr>
+<attr> ManOrdDim
+  Dimmar Incr, Decr, Stoppknappar i objektbilden.
+</attr>
+<attr> AutoModDim
+  Dimmar knapp auto i objektbilden.
+</attr>
+<attr> ManModDim
+  Dimmar knapp man i objektbilden.
+</attr>
+<attr> LocalModHide
+  Gömmer indikator local i objektbilden.
+</attr>
+<attr> ManAutoHide
+  Gömmer knappar man/auto i objektbilden.
+</attr>
+<attr> ManOrdHide
+  Gömmer knappar Incr, Decr och stoppknappen i objektbilden.
+</attr>
+<attr> ManStopHide
+  Gömmer knapp stop i objektbilden.
+</attr>
+<attr> ExternOrdHide
+  Gömmer indikator Extern i objektbilden.
+</attr>
+<attr> OpIntOnly
+  Konfiguerar funktionsobjektet att tillhandahålla endas manuell mod, dvs. auto/man
+  knappar i bild tas bort och ingångar för extern styrning görs verkningslösa. 
+</attr>
+<attr> OpNoLocal
+  Konfiguerar funktionsobjektet att INTE tillhandahålla lokal mod, dvs. indikering
+  lokal i bild tas bort och ingångar för lokal styrning görs verkningslösa.
+</attr>
+<attr> OpNoAutoToMan
+  Konfiguerar funktionsobjektet att INTE vid låg signal på ingång Ready automatisk
+  återgå till manuell mod. OBS! Detta kan medföra risk för återstart när Ready går
+  hög igen.
+</attr>
+<attr> OpExtOnly
+  Konfiguerar funktionsobjektet att INTE tillhandahålla manuell styrning och
+  modhantering, dvs. alla knappar i bilden tas bort och modhanteringen görs
+  verkningslös.
+</attr>
+<attr> OpExtAndIntMan
+  Konfiguerar funktionsobjektet att INTE tillhandahålla modhantering auto/man, dvs.
+  knappar auto/man i bilden tas bort och och mod styrs via ingång ExtControl. När
+  ExtControl är låg dimmas knapparna Start/Stopp i bilden upp och signal AutoMod går
+  låg, dvs. manuell mod. 
+</attr>
+<attr> OpNoLimitSwitch
+  Konfiguerar att ingen stoppgränslägen för minska/öka order används. Dvs. order
+  förreglas inte av någon stopposition. 
+</attr>
+<attr> OpNoStopButton
+  Konfiguerar att ingen stoppknapp syns i objektsbild och samtidigt gör så att
+  öka/minska knapparna fungerar som en tryckknapp med fjäderretur (måste hålla
+  intryckt med musknappen hela tiden för att aktivera utgång). 
+</attr>
+<attr> ManIncr
+  Order manuell öka/increment internt i funktionsobjektet
+</attr>
+<attr> ManDecr
+  Order manuell minska/decrement internt i funktionsobjektet.
+</attr>
+<attr> OrderTimeLimit
+  Tid i sekunder. Löper denna tid ut blir det Error. Detta händer vid order och om
+  driftsvar från LimitSwiches uteblir.   
+</attr>
+<attr> AlarmNotReadyM
+  B larmtext vid fel, texten adderas med prefix hierarkinamn (1led) + objektsnamnet.
+</attr>
+<attr> AlarmNotReadyA
+  B larmtext vid fel, texten adderas med prefix hierarkinamn (1led) + objektsnamnet. 
+</attr>
+<attr> Alarm1LocalMod
+  B larmtext vid fel, texten adderas med prefix hierarkinamn (1led) + objektsnamnet.
+</attr>
+<attr> Alarm2LocalMod
+  B larmtext vid fel, texten adderas med prefix hierarkinamn (1led) + objektsnamnet.
+</attr>
+<attr> AlarmNotManOrd
+  B larmtext vid fel, texten adderas med prefix hierarkinamn (1led) + objektsnamnet.
+</attr>
+<attr> AlarmOrderTimeOut
+  A larmtext vid gångtidfel, texten adderas med prefix hierarkinamn (1led) +
+  objektsnamnet.
+</attr>
+<attr> IndMode
+  Textsträng som visar ett L och M i objektsymbol bilder, (L)okal, (M)anuell.
+</attr>
+<attr> PlcConnect
+  Referens som visar vilket objekt funktionsobjektet har blivit knuten (connected) till.
+</attr>
+
+</class>
