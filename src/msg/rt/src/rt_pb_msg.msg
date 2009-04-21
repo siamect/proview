@@ -41,6 +41,9 @@ configerr	<Configuration error>					/error
 masterlock	<Slave is locked by other master>			/error
 notready	<Not ready>						/warning
 gsdattr		<Gsdfile attibute is empty>				/error
+nyi		<Not yet implemented>					/error
+syntax		<Conversion syntax error>				/error
+gsdmlfile	<Unable to open GSDML file>				/error
 .end
 
 

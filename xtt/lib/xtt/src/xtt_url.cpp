@@ -42,7 +42,7 @@ int xnav_open_URL( pwr_tURL url)
 {
   char cmd[200];
   int sts;
-  pwr_sClass_WebBrowserConfig *config_p;
+  pwr_sClass_WebBrowserConfig *config_p = 0;
   char browser[40] = "netscape";
   pwr_tObjid config_objid;
 
@@ -53,28 +53,29 @@ int xnav_open_URL( pwr_tURL url)
   if ( ODD(sts)) {
     if ( strcmp( config_p->WebBrowser, "") != 0)
       strcpy( browser, config_p->WebBrowser);
+  }
 
-    if ( strncmp( url, "$pwr_lang/", 10) == 0) {
-      // If file in $pwr_lang, check if file exist, else take en_us
+  if ( strncmp( url, "$pwr_lang/", 10) == 0) {
+    // If file in $pwr_lang, check if file exist, else take en_us
 
-      if ( Lng::current() != lng_eLanguage_en_us) {
-	pwr_tURL testurl;
-	pwr_tTime t;
-
-	replace_symbol( url, testurl, config_p);
-	dcli_translate_filename( testurl, testurl);
-	sts = dcli_file_time( testurl, &t);
-	if ( EVEN(sts)) {
-	  // Try en_us
-	  strcpy( testurl, "$pwr_doc/en_us/");
-	  strcat( testurl, &url[10]);
-	  strcpy( url, testurl);
-	}
+    if ( Lng::current() != lng_eLanguage_en_us) {
+      pwr_tURL testurl;
+      pwr_tTime t;
+      
+      replace_symbol( url, testurl, config_p);
+      dcli_translate_filename( testurl, testurl);
+      sts = dcli_file_time( testurl, &t);
+      if ( EVEN(sts)) {
+	// Try en_us
+	strcpy( testurl, "$pwr_doc/en_us/");
+	strcat( testurl, &url[10]);
+	strcpy( url, testurl);
       }
     }
-
-    replace_symbol( url, url, config_p);
   }
+  
+  replace_symbol( url, url, config_p);
+
   if ( strcmp( browser, "mozilla") == 0 ||
        strcmp( browser, "rt_mozilla") == 0) {
     // Try remote display first
@@ -112,6 +113,10 @@ static int replace_symbol( pwr_tURL in, pwr_tURL out,
   else
     strncpy( url, in, sizeof(pwr_tURL));
      
+  if ( !config) {
+    strcpy( out, url);
+    return XNAV__SUCCESS;
+  }
 
   sym_start = 0;
   t = tmp;
