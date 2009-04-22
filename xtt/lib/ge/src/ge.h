@@ -114,7 +114,7 @@ class Ge {
   virtual void set_prompt( const char *prompt) {}
   virtual void subgraphs_new() {}
   virtual void update() {}
-  virtual int get_plant_select( char *name) { return 0;}
+  virtual int get_plant_select( char *name, int size) { return 0;}
   virtual void create_list( const char *title, const char *texts,
 			    void (action_cb)( void *, char *), void *ctx) {}
   virtual int create_modal_dialog( const char *title, const char *text, const char *button1, 
@@ -257,7 +257,7 @@ class Ge {
   void activate_confirm_ok();
   void activate_confirm_cancel();
 
-  static int get_plant_select_cb( void *ge_ctx, char *select_name);
+  static int get_plant_select_cb( void *ge_ctx, char *select_name, int size);
   static void load_graph_cb( void *ge_ctx, char *name);
   static void save_graph( Ge *gectx, char *name);
   static void save_graph_and_close( Ge *gectx, char *name);

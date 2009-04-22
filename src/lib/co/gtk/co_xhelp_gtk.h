@@ -53,6 +53,7 @@ class CoXHelpGtk : public CoXHelp {
 			    const char *init_text,
 			    void (*ok_cb)( CoXHelp *, char *));
     static void activate_close( GtkWidget *w, gpointer data);
+    static void activate_home( GtkWidget *w, gpointer data);
     static void activate_back( GtkWidget *w, gpointer data);
     static void activate_nexttopic( GtkWidget *w, gpointer data);
     static void activate_previoustopic( GtkWidget *w, gpointer data);

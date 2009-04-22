@@ -59,6 +59,8 @@ GrowTrend::GrowTrend( GrowCtx *glow_ctx, const char *name, double x, double y,
   for ( int i = 0; i < TREND_MAX_CURVES; i++) { 
     y_min_value[i] = 0;
     y_max_value[i]= 100;
+    x_min_value[i] = 0;
+    x_max_value[i]= 100;
     curve[i] = 0;
     curve_drawtype[i] = glow_eDrawType_Inherit;
     curve_fill_drawtype[i] = glow_eDrawType_Inherit;

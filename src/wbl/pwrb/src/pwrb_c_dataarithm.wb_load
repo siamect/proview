@@ -64,6 +64,20 @@ SObject pwrb:Class
 !        if ( EngineStarted && Temperature < 400)
 !          StartEngine = 1;
 !          
+!  If the the databuffer object is a general buffer object, e.g. Buff256, but
+!  should be casted in the code to a c struct, the structdef statement can be
+!  used.
+!
+!        structdef Da1 MyStruct;
+!
+!        Da1->Temperature = 20;
+!
+!  where the struct MyStruct is defined in ra_plc_user.h
+!
+!        typedef struct {
+!          pwr_tFloat32 Temperature;
+!        } MyStruct;
+!
 !  DpDistribute, ApDistribute, DpCollect and ApCollect objects can be used
 !  to expand the number of inputs and outputs to the DataArithm.  
 !

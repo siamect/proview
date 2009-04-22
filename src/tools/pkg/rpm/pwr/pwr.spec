@@ -11,7 +11,7 @@
 Name: pwr46
 Summary: Proview/R development and runtime environment
 Version: 4.6.0
-Release: 4
+Release: 6
 License: GPL
 BuildArch: i386
 Packager: claes.sjofors@proview.se
@@ -199,4 +199,13 @@ fi
   - Sev: Improved error handling.
   4.6.0-4 
   - Xtt/Ge: Metric fonts.
-
+  4.6.0-5
+  - Wb, Xtt: Problem with insensitive radiobuttons fixed.
+  4.6.0-6
+  - Problem with missing invert circle in postscript poc doc fixed.
+  - Configurator script functions GetClassListAttrRef() and GetNextAttrRef() added to wtt.
+  - Improved handling of unexpected mousekey combinations in plc editor.
+  - Error message in class editor if Elements > 1 and arraybit not set in $Attribte added.
+  - DataArithm: structdef statement added to DataArtithm code.
+  - Bugfix in plc editor connectionpoint selection.
+  - Bugfix, activating connect function in plc editor when nothing was selected caused X exception.

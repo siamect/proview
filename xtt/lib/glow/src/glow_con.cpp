@@ -1593,7 +1593,8 @@ int GlowCon::con_route_area( double wind_ll_x, double wind_ll_y,
     }
   }
   dest_node->link_insert( (void **)&nodelist);
-  source_node->link_insert( (void **)&nodelist);
+  if ( dest_node != source_node)
+    source_node->link_insert( (void **)&nodelist);
   if ( !nodelist)
     return 0;
 

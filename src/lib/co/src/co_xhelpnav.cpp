@@ -164,7 +164,7 @@ void CoXHelpNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_object, 11, 0.6, 2,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		1);
-  brow_AddFrame( nc_object, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_object, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Create text
 
@@ -181,7 +181,7 @@ void CoXHelpNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_text, 11, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
-  brow_AddFrame( nc_text, 0, 0, 20, 0.8, flow_eDrawType_LineGray, -1, 1);
+  brow_AddFrame( nc_text, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Create Header
 
@@ -1211,6 +1211,29 @@ int	CoXHelpNav::help( const char *help_key, const char *help_bookmark,
 
   delete navhelp;
 
+  return 1;
+}
+
+int CoXHelpNav::home()
+{
+  navh_eHelpFile current_filetype;
+  char topic[80] = "index";
+  pwr_tFileName current_filename = "";
+
+  current_filetype = brow_stack[0]->current_filetype;
+  
+  if ( current_filetype == navh_eHelpFile_Other)
+    strncpy( current_filename, brow_stack[0]->current_filename, sizeof(current_filename));
+
+  // if ( current_filetype == navh_eHelpFile_Other)
+  //  current_filetype = navh_eHelpFile_Project;
+
+  if ( current_filetype == navh_eHelpFile_Base /*&& utility == xhelp_eUtility_Xtt*/)
+    strcpy( topic, "overview");
+
+  brow_push_all();
+  clear();
+  help( topic, 0, current_filetype, current_filename[0] == 0 ? 0 : current_filename, 0, 0);
   return 1;
 }
 

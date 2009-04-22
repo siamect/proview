@@ -143,6 +143,13 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
       io_AiRangeToCoef( &cp->chanlist[i]);
     }
   }
+
+  if ( local->portB_hasDi || local->portB_hasDo) {
+    op->Status = USBIO_ConfigDIO( &local->USB_Handle, 2, local->portB_diMask);
+    if ( op->Status)
+      errh_Error( "IO Init Card '%s', Status %d", cp->Name, op->Status);
+  }
+
   if ( local->portB_hasAi) {
     int num_ai;
     for ( i = 0; i < 8; i++) {
@@ -155,12 +162,6 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
   }
   else
     op->Status = USBIO_ConfigAI( &local->USB_Handle, 0);
-
-  if ( local->portB_hasDi || local->portB_hasDo) {
-    op->Status = USBIO_ConfigDIO( &local->USB_Handle, 2, local->portB_diMask);
-    if ( op->Status)
-      errh_Error( "IO Init Card '%s', Status %d", cp->Name, op->Status);
-  }
 
   /* Configure port C */
   local->portC_hasDi = 0;
@@ -196,6 +197,12 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
        cp->chanlist[18].ChanClass == pwr_cClass_ChanIi)
       local->portC_hasIi = 1;
 
+  if ( local->portC_hasDi || local->portC_hasDo) {
+    op->Status = USBIO_ConfigDIO( &local->USB_Handle, 3, local->portC_diMask);
+    if ( op->Status)
+      errh_Error( "IO Init Card '%s', Status %d", cp->Name, op->Status);
+  }
+
   if ( local->portC_hasAo) {
     op->Status = USBIO_ConfigAO( &local->USB_Handle, local->portC_aoMask >> 3);
     if ( op->Status)
@@ -206,12 +213,6 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
 
   if ( local->portC_hasIi) {
     op->Status = USBIO_ConfigCounter( &local->USB_Handle, 0);
-    if ( op->Status)
-      errh_Error( "IO Init Card '%s', Status %d", cp->Name, op->Status);
-  }
-
-  if ( local->portC_hasDi || local->portC_hasDo) {
-    op->Status = USBIO_ConfigDIO( &local->USB_Handle, 3, local->portC_diMask);
     if ( op->Status)
       errh_Error( "IO Init Card '%s', Status %d", cp->Name, op->Status);
   }

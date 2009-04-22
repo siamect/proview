@@ -695,7 +695,7 @@ available in the operator station. We have mounted the topmost $PlantHier object
 </topic>
 
 <topic> node_configuration
-Node Configration
+Node Configuration
 
 When you have configured the plant, continue to configure the nodes.
 
@@ -842,7 +842,7 @@ Plant graphics are often used as an interface between the operator and the proce
 graphics are created with the Plant Graphics Editor. 
 
 <image> dg_fig20.gif
-<b>The Plant Graphics Edtitor
+<b>The Plant Graphics Editor
 
 Plant graphics can contain dynamics, which are connected to the logical signals, e.g.: 
 
@@ -891,8 +891,8 @@ wb takes user, password and volume as arguments.
 
 <h2>The Configuration Editor
 
-The configuration editor displays two windows, and for the DirectoryVolume, the upper shows 
-the volume configuration, and the lower the node configuration. 
+The configuration editor displays two windows, and for the DirectoryVolume, the left shows 
+the volume configuration, and the right the node configuration. 
 
 <h2>Configure Volumes
 First we configure all the root volumes, sub volumes and class volumes in the project. This
@@ -1298,9 +1298,9 @@ project.
 $pwrp_db
 This is the directory where the databases for all your local volumes will reside (including
 the directory volume where the project is configured). Each database resides in it's own
-sub-directory. This is valid is valid if you choose to create your databases as
-BerkleyDB-databases. If you instead choose to have mysql-databases the databases will be
-created on your mysql-server.
+sub-directory. This is valid if you choose to create your databases as BerkleyDB-databases. 
+If you instead choose to have mysql-databases the databases will be created on your 
+mysql-server.
 
 In this directory resides also the files for user-defined classes, the UserClassVolumes.
 They are text-files with file-end wb_load. The user-classvolume usually has a similar name
@@ -1811,7 +1811,7 @@ A Grafcet program is always a closed sequence.
 <b>A Simple Straight Grafcet Sequence
 <image> dg_fig47.gif
 
-<h2>Förgrenad sekvens
+<h2>Diverged sequence
 
 A straight sequence is the most simple variant of sequences. Sometimes you may require 
 alternative branches in your program, for instance when you have a machine, which can 
@@ -1994,7 +1994,8 @@ expressions. These are written in the C language.
 In the figure below the block will calculate the expression (A1 + A2 * A3) and give the output 
 this value. A1, A2 and A3 are representing analog values, for instance signals supposed to be 
 connected to the inputs of the object. 
-When writing these expressions it is important to use space before and after the operators, otherwise the expression may be misinterpreted at the execution. 
+When writing these expressions it is important to use space before and after the operators, 
+otherwise the expression may be misinterpreted at the execution. 
 
 The expression can contain advanced C code with arrays and pointers. When you write these, you 
 should be aware of that indexing outside arrays, or erroneous pointers might cause the
@@ -2186,7 +2187,7 @@ applications.
 
 A component in Proview can be divided in a number of objects:
 - a main object containing configuration data and data needed to supervise and operate
-  the component. Is also contains the signal objects for the component.
+  the component. It also contains the signal objects for the component.
 - a function object that is placed in the plc program and that contains the code to 
   control the component.
 - an I/O object that defines possible communication with for example a profibus module.
@@ -2195,7 +2196,7 @@ A component in Proview can be divided in a number of objects:
 Furthermore an object graph, documentation, trends etc are included in the component.
 
 An aggregate is a larger part in the plant than the component, and contains a number of
-components. An aggregeate can for example be a pump drive, consisting of the components
+components. An aggregate can for example be a pump drive, consisting of the components
 pump, motor, contactor and safety switch. In other respects, the aggregate is built as
 a component with main object, function object, simulate object, object graph, documentation
 etc.
@@ -2632,7 +2633,7 @@ production system. In this program, the simulation objects for the components ar
 
 - BaseMotorAggrSim for the pump P1.
 - BaseCValveSim for the control valve CV1.
-- BaseValveSim for the solenoid valve MV1.
+- BaseMValveSim for the solenoid valve MV1.
 - BaseSensorSim for the level sensor LC1.
 
 The function object are connected to their main objects, by selecting the main object and
@@ -2706,9 +2707,9 @@ to be displayed here, i.e.
 - Trend.Attribute2 is set to LevelControl-Plc-W-LC1_Mode.SetVal (the set value in the mode 
   object).
 
-Finally we draw som pipes and lines and the graph is finished.
+Finally we draw some pipes and lines and the graph is finished.
 
-We also enter File/Graph attributes and insert the koordinates for the upper left and lower
+We also enter File/Graph attributes and insert the coordinates for the upper left and lower
 right corners in x0,y0 and x1,y1. DoubleBuffered is set to 1 and MB3Action to PopupMenu.
 
 <image> dg_fig87.png
@@ -5410,7 +5411,7 @@ the access to make changes from proview utilities, e.g. the navigator or plc-edi
 regards the construction of operators graphics, to control which input fields and pushbuttons
 a user can influence.
 
-A username can be connected to several system groups, but from the databse point of view,
+A username can be connected to several system groups, but from the database point of view,
 they are different users, with unic passwords and privileges. They just happen to have the
 same username.
 
@@ -8513,6 +8514,8 @@ GetNextSibling()	<LINK> getnextsibling()
 GetNextVolume()		<LINK> getnextvolume()
 GetClassList()		<LINK> getclasslist()
 GetNextObject()		<LINK> getnextobject()
+GetClassListAttrRef()	<LINK> getclasslistattrref()
+GetNextAttrRef()	<LINK> getnextattrref()
 GetObjectClass()	<LINK> getobjectclass()
 GetNodeObject()		<LINK> getnodeobject()
 GetRootList()		<LINK> getrootlist()
@@ -9317,6 +9320,56 @@ string		<t>name		<t>name of object.
 <c>  while ( name != "")
 <c>    printf("Di object found: %s", name);
 <c>    name = GetNextObject(name);
+<c>  endwhile
+</TOPIC>
+
+<TOPIC> getclasslistattrref() <style> function
+GetClassListAttrRef()
+
+string GetClassListAttrRef( string class)
+
+<b>Description
+
+Get the first object or attribute object of a specified class. The next object 
+or attribute object of the class can be fetched whith GetNextAttrRef().
+Returns the name of the first object. If no instances or attribute object of the 
+class exists a null-string is returned.
+
+<b>Arguments
+
+string		<t>name		<t>name of class.
+
+<b>Example
+
+<c>  string name;
+
+<c>  name = GetClassListAttrRef("Dv");
+</TOPIC>
+
+<TOPIC> getnextattrref() <style> function
+GetNextAttrRef()
+
+string GetNextAttrRef( string class, string name)
+
+<b>Description
+
+Get the next object or attribute object in a classlist.
+Returns the name of the object or attribute object . If no next 
+object exist a null-string is returned.
+
+<b>Arguments
+
+string		<t>class	<t>name of class.
+string		<t>name		<t>name of object or attribute object.
+
+<b>Example
+
+<c>  string name;
+
+<c>  name = GetClassListAttrRef("Di");
+<c>  while ( name != "")
+<c>    printf("Di object found: %s", name);
+<c>    name = GetNextAttrRef(name);
 <c>  endwhile
 </TOPIC>
 

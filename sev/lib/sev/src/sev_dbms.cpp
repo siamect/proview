@@ -1385,6 +1385,12 @@ char *sev_dbms::oid_to_table( pwr_tOid oid, char *aname)
   memcpy( &vid, &oid.vid, sizeof(vid));
   sprintf( tbl, "O%3.3u_%3.3u_%3.3u_%3.3u_%8.8x_%s",
 	   vid[3], vid[2], vid[1], vid[0], oid.oix, cdh_Low(aname));
+
+  // Replace '.' in attribute with '_'
+  for ( char *s = tbl; *s; s++) {
+    if ( *s == '.')
+      *s = '_';
+  }
   return tbl;
 }
 

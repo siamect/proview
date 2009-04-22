@@ -293,6 +293,21 @@ void FlowCtx::conpoint_select( FlowArrayElem *node, int cp_num)
   conpoint_select_idx++;
 }
 
+void FlowCtx::conpoint_select_remove( FlowArrayElem *node)
+{
+  // Remove all occurences of the node
+  for ( int i = 0; i < conpoint_select_idx; i++) {
+    if ( conpoint_select_node[i] == node) {
+      // Hit, remove node
+      for ( int j = i; j < conpoint_select_idx - 1; j++) {
+	conpoint_select_node[j] = conpoint_select_node[j+1];
+	conpoint_select_num[j] = conpoint_select_num[j+1];
+      }
+      conpoint_select_idx--;
+    }
+  }
+}
+
 void FlowCtx::conpoint_select_clear()
 {
   if ( conpoint_select_idx >= 1)
@@ -964,6 +979,9 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
       if ( window_width != width || window_height != height) {
         window_width = width;
         window_height = height;
+	if ( type() == flow_eCtxType_Brow)
+	  // Get FlowFrame borders
+	  ((BrowCtx *)ctx)->frame_x_right = MAX( x_right, 1.0 * (window_width + offset_x) / zoom_factor);
 	size_changed = 1;
 	
         if ( event_callback[flow_eEvent_Resized]) {
@@ -2324,3 +2342,15 @@ int FlowCtx::pending_paste_stop()
   node_movement_paste_pending = 0;
   return 1;
 }
+
+int FlowCtx::con_create_stop()
+{
+  if ( !con_create_active)
+    return 0;
+
+  if ( auto_scrolling_active)
+    auto_scrolling_stop();
+  con_create_active = 0;
+  return 1;
+}
+

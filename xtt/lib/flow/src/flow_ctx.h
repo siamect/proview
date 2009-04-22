@@ -120,6 +120,7 @@ class FlowCtx {
     void con_create_source( FlowArrayElem *node, int cp_num, int cp_x, int cp_y); 
     void con_create_dest( FlowArrayElem *node, int cp_num, flow_eEvent event, int x, int y); 
     void conpoint_select( FlowArrayElem *node, int cp_num);
+    void conpoint_select_remove( FlowArrayElem *node);
     void conpoint_select_clear();
     void get_selectlist( FlowArrayElem ***list, int *size)
 		{ *list = a_sel.a; *size = a_sel.size();}; 
@@ -319,8 +320,12 @@ class FlowCtx {
     int is_visible( FlowArrayElem *element, flow_eVisible type);
     void move_selected_nodes( double delta_x, double delta_y, int grid);
     int paste_stop();
+    int get_paste_active() { return node_movement_paste_active;}
+    int get_autoscrolling_active() { return auto_scrolling_active;}
     int pending_paste() { return node_movement_paste_pending;}
     int pending_paste_stop();
+    int get_con_create_active() { return con_create_active;}
+    int con_create_stop();
     void set_inverse_color( flow_eDrawType color) { inverse_color = color; redraw();}
     ~FlowCtx();
 };

@@ -73,6 +73,13 @@ void CoXHelpGtk::activate_back( GtkWidget *w, gpointer data)
   xhelp->back();
 }
 
+void CoXHelpGtk::activate_home( GtkWidget *w, gpointer data)
+{
+  CoXHelpGtk *xhelp = (CoXHelpGtk *)data;
+
+  xhelp->home();
+}
+
 void CoXHelpGtk::activate_nexttopic( GtkWidget *w, gpointer data)
 {
   CoXHelpGtk *xhelp = (CoXHelpGtk *)data;
@@ -263,6 +270,12 @@ CoXHelpGtk::CoXHelpGtk(
   GtkWidget *file_close = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLOSE, accel_g);
   g_signal_connect(file_close, "activate", G_CALLBACK(CoXHelpGtk::activate_close), this);
 
+  GtkWidget *file_home = gtk_menu_item_new_with_mnemonic( "_Home");
+  g_signal_connect( file_home, "activate",
+		    G_CALLBACK(activate_home), this);
+  gtk_widget_add_accelerator( file_home, "activate", accel_g,
+			      'a', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
   GtkWidget *file_back = gtk_menu_item_new_with_mnemonic( "_Back");
   g_signal_connect( file_back, "activate", 
 		    G_CALLBACK(activate_back), this);
@@ -283,6 +296,7 @@ CoXHelpGtk::CoXHelpGtk(
 
   GtkMenu *file_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_home);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_back);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_nexttopic);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_prevtopic);
@@ -305,7 +319,7 @@ CoXHelpGtk::CoXHelpGtk(
   g_signal_connect( edit_searchprevious, "activate", 
 		    G_CALLBACK(CoXHelpGtk::activate_searchprevious), this);
   gtk_widget_add_accelerator( edit_searchprevious, "activate", accel_g,
-			      'g', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+			      'd', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
   GtkMenu *edit_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_search);
@@ -352,6 +366,14 @@ CoXHelpGtk::CoXHelpGtk(
 
 
   // Toolbar
+  GtkWidget *tools_home = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_home.png");
+  gtk_container_add( GTK_CONTAINER(tools_home), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_home, "clicked", G_CALLBACK(activate_home), this);
+  g_object_set( tools_home, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_home,CoWowGtk::translate_utf8("Go to start page"), "");
+
   GtkWidget *tools_back = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_back.png");
   gtk_container_add( GTK_CONTAINER(tools_back), 

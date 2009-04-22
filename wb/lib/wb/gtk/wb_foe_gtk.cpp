@@ -1857,6 +1857,8 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   gre->init();
   function_setup();
 
+  CoWowGtk::GetAtoms( 0, &objid_atom, 0);
+
 #if 0
   Arg	args[20];
   int	sts;
@@ -2078,7 +2080,7 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
 			    (XtCallbackProc)activate_quit, this);
   }
 
-  wow_GetAtoms( parent_wid, 0, &objid_atom, 0);
+  CoWowGtk::GetAtoms( 0, &objid_atom, 0);
 
   /* SG 09.02.91 a top level should always be realized !
    * ML 16.03.94 changed Realize to Popup

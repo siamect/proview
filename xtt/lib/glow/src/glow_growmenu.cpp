@@ -46,7 +46,6 @@ GrowMenu::GrowMenu( GrowCtx *glow_ctx, const char *name, glow_sMenuInfo *menu_in
 {
   if ( !nodraw)
     draw( &ctx->mw, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
-
 }
 
 GrowMenu::~GrowMenu()
@@ -145,7 +144,7 @@ void GrowMenu::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
   }
   int idx;
   int text_idx = int( trf.vertical_scale(t) * w->zoom_factor_y / w->base_zoom_factor * (text_size +4) - 4);
-  double tsize = trf.vertical_scale(t) * w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
+  double tsize =  trf.vertical_scale(t) * w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
   text_idx = min( text_idx, DRAW_TYPE_SIZE-1);
   text_idx = max( 0, text_idx);
 
@@ -186,9 +185,10 @@ void GrowMenu::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
     ur_x = ll_x + int(min_width * w->zoom_factor_x);
   ur_y = ll_y + int(tot_z_height);
 
-  if ( ur_y > ctx->y_high * w->zoom_factor_y + w->subwindow_y) {
+  if ( ur_y > w->window_height + w->offset_y + w->subwindow_y) {
     // Outside window border
-    ur_y = int(ctx->y_high * w->zoom_factor_y + w->subwindow_y);
+    trf.move( 0, double(ur_y - (w->window_height + w->offset_y + w->subwindow_y)) / w->zoom_factor_y);
+    ur_y = w->window_height + w->offset_y + w->subwindow_y;
     ll_y = ur_y - int(tot_z_height);
     ll.posit_z( ll.z_x, ll_y + w->offset_y + w->subwindow_y);
     ur.posit_z( ur.z_x, ur_y + w->offset_y + w->subwindow_y); // Might not always be correct?

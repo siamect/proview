@@ -771,6 +771,16 @@ int flow_PasteStop( flow_tCtx ctx)
   return ctx->paste_stop();
 }
 
+int flow_GetPasteActive( flow_tCtx ctx)
+{
+  return ctx->get_paste_active();
+}
+
+int flow_GetAutoscrollingActive( flow_tCtx ctx)
+{
+  return ctx->get_autoscrolling_active();
+}
+
 int flow_PendingPaste( flow_tCtx ctx)
 {
   return ctx->pending_paste();
@@ -779,6 +789,16 @@ int flow_PendingPaste( flow_tCtx ctx)
 int flow_PendingPasteStop( flow_tCtx ctx)
 {
   return ctx->pending_paste_stop();
+}
+
+int flow_GetConCreateActive( flow_tCtx ctx)
+{
+  return ctx->get_con_create_active();
+}
+
+int flow_ConCreateStop( flow_tCtx ctx)
+{
+  return ctx->con_create_stop();
 }
 
 

@@ -63,10 +63,10 @@ void FlowFrame::draw( void *pos, int highlight, int hot, void *node)
   idx = MAX( 0, idx);
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
   ctx->fdraw->rect( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
-	ll.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
-	int( ur_x * ctx->zoom_factor - ll.z_x - ((FlowPoint *)pos)->z_x - 1), 
-	int( ur_y * ctx->zoom_factor - ll.z_y - ((FlowPoint *)pos)->z_y - 1), 
-	draw_type, idx, highlight);
+		    ll.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
+		    int( ur_x * ctx->zoom_factor - ll.z_x - ((FlowPoint *)pos)->z_x - 1), 
+		    int( ur_y * ctx->zoom_factor - ll.z_y - ((FlowPoint *)pos)->z_y - 1), 
+		    draw_type, idx, highlight);
 }
 
 void FlowFrame::erase( void *pos, int hot, void *node)
@@ -94,10 +94,10 @@ void FlowFrame::erase( void *pos, int hot, void *node)
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
 
   ctx->fdraw->rect_erase( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, ll.z_y + 
-	((FlowPoint *)pos)->z_y - ctx->offset_y, 
-	int( ur_x * ctx->zoom_factor - ll.z_x - ((FlowPoint *)pos)->z_x - 1), 
-	int( ur_y * ctx->zoom_factor - ll.z_y - ((FlowPoint *)pos)->z_y - 1), 
-	idx);
+			  ((FlowPoint *)pos)->z_y - ctx->offset_y, 
+			  int( ur_x * ctx->zoom_factor - ll.z_x - ((FlowPoint *)pos)->z_x - 1),
+			  int( ur_y * ctx->zoom_factor - ll.z_y - ((FlowPoint *)pos)->z_y - 1), 
+			  idx);
 }
 
 void FlowFrame::get_borders( double pos_x, double pos_y, double *x_right, 
@@ -111,5 +111,31 @@ void FlowFrame::get_borders( double pos_x, double pos_y, double *x_right,
     *y_low = pos_y + ll.y;
   if ( pos_y + ur.y > *y_high)
     *y_high = pos_y + ur.y;
+}
+
+int FlowFrame::event_handler( void *pos, flow_eEvent event, int x, int y,
+	void *node)
+{
+  FlowPoint *p;
+
+  p = (FlowPoint *) pos;
+  if ( ctx->type() == flow_eCtxType_Brow) {
+    if ( ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x <= x && 
+	 ll.z_y  + ((FlowPoint *)pos)->z_y - ctx->offset_y <= y && 
+	 y <= ur.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y)
+      return 1;
+    else
+      return 0;
+  }
+  else {
+    if ( ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x <= x && 
+	 x <= ur.z_x  + ((FlowPoint *)pos)->z_x - ctx->offset_x &&
+	 ll.z_y  + ((FlowPoint *)pos)->z_y - ctx->offset_y <= y && 
+	 y <= ur.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y)
+      //    cout << "Event handler: Hit in rect" << endl;
+      return 1;
+    else
+      return 0;
+  }  
 }
 
