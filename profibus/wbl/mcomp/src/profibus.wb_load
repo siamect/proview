@@ -1,7 +1,7 @@
 Volume Profibus $ClassVolume 0.0.250.7 
   Body SysBody 05-SEP-2005 17:51:40.00
-    Attr NextOix = "_X115"
-    Attr NextCix = "_X15"
+    Attr NextOix = "_X161"
+    Attr NextCix = "_X18"
     Attr NextTix[0] = "_X7"
   EndBody
   Object Type $TypeHier 55 16-JAN-2006 10:07:43.21
@@ -2315,6 +2315,379 @@ Volume Profibus $ClassVolume 0.0.250.7
           Attr MinSlaveInterval = 1
           Attr PollTimeout = 1000
           Attr DataControlTime = 100
+        EndBody
+      EndObject
+    EndObject
+    Object PnControllerSoftingPNAK $ClassDef 15 21-APR-2009 13:41:08.17
+      Body SysBody 21-APR-2009 13:41:08.17
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 4176
+      EndBody
+      Object RtBody $ObjBodyDef 1 21-APR-2009 13:41:08.17
+        Body SysBody 21-APR-2009 13:41:08.17
+          Attr StructName = "Pb_Profiboard"
+          Attr NextAix = "_X57"
+        EndBody
+        Object Description $Attribute 53 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Process $Attribute 54 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 55 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object Status $Attribute 56 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "Status"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 116 21-APR-2009 13:41:08.17
+        Object IoAgentInit $Method 117 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnControllerSoftingPNAK-IoAgentInit"
+          EndBody
+        EndObject
+        Object IoAgentClose $Method 118 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnControllerSoftingPNAK-IoAgentClose"
+          EndBody
+        EndObject
+        Object IoAgentRead $Method 119 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnControllerSoftingPNAK-IoAgentRead"
+          EndBody
+        EndObject
+        Object IoAgentWrite $Method 120 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnControllerSoftingPNAK-IoAgentWrite"
+          EndBody
+        EndObject
+        Object IoAgentSwap $Method 121 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnControllerSoftingPNAK-IoAgentSwap"
+          EndBody
+        EndObject
+      EndObject
+      Object Template PnControllerSoftingPNAK 2151645184 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object PnDevice $ClassDef 16 21-APR-2009 13:41:08.17
+      Body SysBody 21-APR-2009 13:41:08.17
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 8272
+      EndBody
+      Object RtBody $ObjBodyDef 1 21-APR-2009 13:41:08.17
+        Body SysBody 21-APR-2009 13:41:08.17
+          Attr StructName = "PnDevice"
+          Attr NextAix = "_X97"
+        EndBody
+        Object Description $Attribute 87 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Specification $Attribute 88 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "Specification"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object DataSheet $Attribute 89 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+        Object GSDMLfile $Attribute 90 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "GSDMLfile"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Status $Attribute 91 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "Status"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+        Object Process $Attribute 92 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 93 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object ErrorCount $Attribute 94 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrorSoftLimit $Attribute 95 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrorHardLimit $Attribute 96 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPosnn $Menu 122 21-APR-2009 13:41:08.17
+        Object Pointed $Menu 123 21-APR-2009 13:41:08.17
+          Object ConfigureDevice $MenuButton 124 21-APR-2009 13:41:08.17
+            Body SysBody 21-APR-2009 13:41:08.17
+              Attr ButtonName = "ConfigureDevice"
+              Attr MethodName = "PnDevice-Configure"
+              Attr FilterName = "PnDevice-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPoscn $Menu 125 21-APR-2009 13:41:08.17
+        Object Pointed $Menu 126 21-APR-2009 13:41:08.17
+          Object ConfigureDevice $MenuButton 127 21-APR-2009 13:41:08.17
+            Body SysBody 21-APR-2009 13:41:08.17
+              Attr ButtonName = "ConfigureDevice"
+              Attr MethodName = "PnDevice-Configure"
+              Attr FilterName = "PnDevice-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosos $Menu 128 21-APR-2009 13:41:08.17
+        Object Pointed $Menu 129 21-APR-2009 13:41:08.17
+          Object ConfigureDevice $MenuButton 130 21-APR-2009 13:41:08.17
+            Body SysBody 21-APR-2009 13:41:08.17
+              Attr ButtonName = "ConfigureDevice"
+              Attr MethodName = "PnDevice-Configure"
+              Attr FilterName = "PnDevice-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 131 21-APR-2009 13:41:08.17
+        Object Pointed $Menu 132 21-APR-2009 13:41:08.17
+          Object ConfigureDevice $MenuButton 133 21-APR-2009 13:41:08.17
+            Body SysBody 21-APR-2009 13:41:08.17
+              Attr ButtonName = "ConfigureDevice"
+              Attr MethodName = "PnDevice-Configure"
+              Attr FilterName = "PnDevice-ConfigureFilter"
+            EndBody
+          EndObject
+          Object ConnectThread $MenuButton 134 21-APR-2009 13:41:08.17
+            Body SysBody 21-APR-2009 13:41:08.17
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object NavigatorPosnn $Menu 135 21-APR-2009 13:41:08.17
+        Object Pointed $Menu 136 21-APR-2009 13:41:08.17
+          Object ConfigureDevice $MenuButton 137 21-APR-2009 13:41:08.17
+            Body SysBody 21-APR-2009 13:41:08.17
+              Attr ButtonName = "ConfigureDevice"
+              Attr MethodName = "PnDevice-Configure"
+              Attr FilterName = "PnDevice-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object NavigatorPoscn $Menu 138 21-APR-2009 13:41:08.17
+        Object Pointed $Menu 139 21-APR-2009 13:41:08.17
+          Object ConfigureDevice $MenuButton 140 21-APR-2009 13:41:08.17
+            Body SysBody 21-APR-2009 13:41:08.17
+              Attr ButtonName = "ConfigureDevice"
+              Attr MethodName = "PnDevice-Configure"
+              Attr FilterName = "PnDevice-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object NavigatorPosos $Menu 141 21-APR-2009 13:41:08.17
+        Object Pointed $Menu 142 21-APR-2009 13:41:08.17
+          Object ConfigureDevice $MenuButton 143 21-APR-2009 13:41:08.17
+            Body SysBody 21-APR-2009 13:41:08.17
+              Attr ButtonName = "ConfigureDevice"
+              Attr MethodName = "PnDevice-Configure"
+              Attr FilterName = "PnDevice-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object NavigatorPoson $Menu 144 21-APR-2009 13:41:08.17
+        Object Pointed $Menu 145 21-APR-2009 13:41:08.17
+          Object ConfigureDevice $MenuButton 146 21-APR-2009 13:41:08.17
+            Body SysBody 21-APR-2009 13:41:08.17
+              Attr ButtonName = "ConfigureDevice"
+              Attr MethodName = "PnDevice-Configure"
+              Attr FilterName = "PnDevice-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object RtXtt $RtMenu 147 21-APR-2009 13:41:08.17
+        Object ShowConfiguration $MenuButton 148 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr ButtonName = "ShowConfiguration"
+            Attr MethodName = "PnDevice-ShowConfiguration"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 149 21-APR-2009 13:41:08.17
+        Object IoRackInit $Method 150 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnDevice-IoRackInit"
+          EndBody
+        EndObject
+        Object IoRackClose $Method 151 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnDevice-IoRackClose"
+          EndBody
+        EndObject
+        Object IoRackRead $Method 152 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnDevice-IoRackRead"
+          EndBody
+        EndObject
+        Object IoRackWrite $Method 153 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnDevice-IoRackWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template PnDevice 2151907328 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object PnModule $ClassDef 17 21-APR-2009 13:41:08.17
+      Body SysBody 21-APR-2009 13:41:08.17
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 21-APR-2009 13:41:08.17
+        Body SysBody 21-APR-2009 13:41:08.17
+          Attr StructName = "PnModule"
+          Attr NextAix = "_X22"
+        EndBody
+        Object Description $Attribute 15 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Specification $Attribute 16 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "Specification"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object ModuleName $Attribute 17 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "ModuleName"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object Process $Attribute 18 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 19 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object Status $Attribute 20 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "Status"
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+        Object DataSheet $Attribute 21 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 154 21-APR-2009 13:41:08.17
+        Object Pointed $Menu 155 21-APR-2009 13:41:08.17
+          Object ConnectThread $MenuButton 156 21-APR-2009 13:41:08.17
+            Body SysBody 21-APR-2009 13:41:08.17
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 157 21-APR-2009 13:41:08.17
+        Object IoCardInit $Method 158 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnModule-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 159 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnModule-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 160 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnModule-IoCardRead"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 161 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnModule-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template PnModule 2152169472 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
         EndBody
       EndObject
     EndObject
