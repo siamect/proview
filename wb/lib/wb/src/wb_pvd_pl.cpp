@@ -170,7 +170,7 @@ bool wb_pvd_pl::check_list( pwr_tStatus *sts)
 {
   int error_cnt = 0;
   char msg[200];
-  char text[4000] = "Do you wan't to execute these actions \n\n";
+  char text[4000] = "Do you want to execute these actions \n\n";
   int actions_found = 0;
   pwr_tCmd cmd;
   int csts;

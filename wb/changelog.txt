@@ -124,3 +124,5 @@
 090224 cs  plc       Handling of unexpected mousekey combinations in plc editor.
 090224 cs  wb        Error message in class editor if Elements > 1 and arraybit not set in $Attribute added.
 090225 cs  script    Script functions GetClassListAttrRef() and GetNextAttrRef() added.
+090306 cs  wb        Crossreferences on Co signals added.
+090306 cs  plc       Default include in ra_plc_user.h added. 

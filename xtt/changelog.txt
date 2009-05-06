@@ -125,3 +125,6 @@
 090225 cs  xtt       Size check of attribute input and float format changed to %g.
 090227 cs  glow      Bugfix in scaled option menu close to lower window border. Event coordinate translation was wrong.
 090227 cs  ge        Problem with soiled texts fixed.
+090305 cs  glow      Ge color palette fillcolor,bordercolor and textcolor selection changed.
+090305 cs  xtt       Trend method not viewed for $PlantHier with a Trend child object.
+090306 cs  xtt       Language translation of operator window buttons.
