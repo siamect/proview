@@ -153,6 +153,15 @@ void GsdmlAttrGtk::activate_paste( GtkWidget *w, gpointer data)
   attr->activate_paste();
 }
 
+void GsdmlAttrGtk::activate_viewio( GtkWidget *w, gpointer data)
+{
+  GsdmlAttr *attr = (GsdmlAttr *)data;
+
+  int set = (int) gtk_check_menu_item_get_active( GTK_CHECK_MENU_ITEM(w));
+  attr->activate_viewio( set);
+}
+
+
 void GsdmlAttrGtk::activate_zoom_in( GtkWidget *w, gpointer data)
 {
   GsdmlAttr *attr = (GsdmlAttr *)data;
@@ -359,6 +368,10 @@ GsdmlAttrGtk::GsdmlAttrGtk( GtkWidget *a_parent_wid,
 
   // View Entry
 
+  // Edit entry
+  menubutton_viewio = gtk_check_menu_item_new_with_mnemonic( "_View I/O");
+  g_signal_connect(menubutton_viewio, "activate", G_CALLBACK(activate_viewio), this);
+
   GtkWidget *view_zoom_in = gtk_image_menu_item_new_from_stock(GTK_STOCK_ZOOM_IN, NULL);
   g_signal_connect( view_zoom_in, "activate", 
 		    G_CALLBACK(activate_zoom_in), this);
@@ -381,6 +394,7 @@ GsdmlAttrGtk::GsdmlAttrGtk( GtkWidget *a_parent_wid,
   			      GTK_ACCEL_VISIBLE);
 
   GtkMenu *view_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), menubutton_viewio);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_in);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_out);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_reset);

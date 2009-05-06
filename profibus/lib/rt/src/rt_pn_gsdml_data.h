@@ -100,6 +100,11 @@ class GsdmlSlotData {
     for ( unsigned int i = 0; i < subslot_data.size(); i++)
       delete subslot_data[i];
   }
+  void slot_reset() {
+    for ( unsigned int i = 0; i < subslot_data.size(); i++)
+      delete subslot_data[i];
+    subslot_data.clear();
+  }
   GsdmlSlotData( const GsdmlSlotData& x) : module_enum_number(x.module_enum_number), 
     module_class(x.module_class), module_oid(pwr_cNObjid), slot_number(x.slot_number),
     slot_idx(x.slot_idx) {
@@ -110,10 +115,23 @@ class GsdmlSlotData {
   int print( ofstream& fp);
 };
 
+class GsdmlChannelDiag {
+ public:
+  GsdmlChannelDiag() : error_type(0) {
+    strcpy( name, ""); strcpy( help, "");
+  }
+  unsigned short error_type;
+  char name[200];
+  char help[256];
+
+  int print( ofstream& fp);
+};
+
 class GsdmlDeviceData {
  public:
-  GsdmlDeviceData() { device_name[0]=0; ip_address[0]=0; subnet_mask[0]=0; mac_address[0]=0;
-    device_text[0]=0; version[0]=0;}
+  GsdmlDeviceData() 
+    { device_name[0]=0; ip_address[0]=0; subnet_mask[0]=0; mac_address[0]=0;
+      device_text[0]=0; version[0]=0; gsdmlfile[0]=0;}
   char device_name[80];
   char ip_address[20];
   char subnet_mask[20];
@@ -124,9 +142,11 @@ class GsdmlDeviceData {
   unsigned short device_id;
   char version[20];
   int byte_order;
+  pwr_tFileName gsdmlfile;
   vector<GsdmlSlotData *> slot_data;
   vector<GsdmlIOCRData *> iocr_data;
   static GsdmlSlotData *paste_slotdata;
+  vector<GsdmlChannelDiag *> channel_diag;
 
   ~GsdmlDeviceData() { device_reset();}
   void device_reset() {
@@ -136,6 +156,11 @@ class GsdmlDeviceData {
     for ( unsigned int i = 0; i < iocr_data.size(); i++)
       delete iocr_data[i];
     iocr_data.clear();
+  }
+  void channel_diag_reset() {
+    for ( unsigned int i = 0; i < channel_diag.size(); i++)
+      delete channel_diag[i];
+    channel_diag.clear();
   }
   int print( const char *filename);
   int read( const char *filename);

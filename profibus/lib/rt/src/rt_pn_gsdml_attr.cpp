@@ -61,15 +61,13 @@ void GsdmlAttr::gsdmlattr_change_value_cb( void *attr_ctx)
 void GsdmlAttr::activate_exit()
 {
   if ( close_cb) {
-#if 0
-    if ( gsdml->is_modified()) {
+    if ( attrnav->is_modified()) {
       wow->DisplayQuestion( (void *)this, "Apply",
 			    "Do you want to apply changes",
 			    cmd_close_apply_cb, cmd_close_no_cb, 0);
 
     }
     else
-#endif
       (close_cb)( parent_ctx);
   }
   else
@@ -146,6 +144,11 @@ void GsdmlAttr::activate_paste()
   attrnav->redraw();
 }
 
+void GsdmlAttr::activate_viewio( int set)
+{
+  attrnav->set_viewio( set);
+}
+
 void GsdmlAttr::activate_zoom_in()
 {
   double zoom_factor;
@@ -199,49 +202,22 @@ void GsdmlAttr::activate_cmd_ok()
     else
       attrnav->set_modified(0);
   }  
-#if 0
-  int idx;
-  char msg[80];
-
-  if ( save_cb) {    
-    // Check syntax
-    sts = gsdml->syntax_check( &idx);
-    if ( EVEN(sts)) {
-      switch ( sts) {
-      case PB__NOMODULENAME:
-	sprintf( msg, "Syntax error in module %d, No module name", idx + 1);
-	break;
-      case PB__DUPLMODULENAME:
-	sprintf( msg, "Syntax error in module %s, Duplicate module name", 
-		 gsdml->module_conf[idx].name);
-	break;
-      case PB__NOMODULECLASS:
-	sprintf( msg, "Syntax error in module %s, Module class is missing", 
-		 gsdml->module_conf[idx].name);
-	break;
-      default:
-	sprintf( msg, "Syntax error in module %d", idx + 1);
-      }
-      message( 'E', msg);
-      return;
-    }
-#endif
 }
 
 void GsdmlAttr::cmd_close_apply_cb( void *ctx, void *data)
 {
-#if 0
   GsdmlAttr *attr = (GsdmlAttr *)ctx;
   int sts;
 
-  sts = (attr->save_cb)( attr->parent_ctx);
-  if ( EVEN(sts))
-    attr->message( 'E', "Error saving profibus data");
-  else {
-    attr->gsdml->set_modified(0);
-    (attr->close_cb)( attr->parent_ctx);
-  }
-#endif
+  attr->attrnav->save( attr->data_filename);
+
+  if ( attr->save_cb) {
+    sts = (attr->save_cb)( attr->parent_ctx);
+    if ( EVEN(sts))
+      attr->message( 'E', "Error saving profibus data");
+    else
+     (attr->close_cb)( attr->parent_ctx);
+  }  
 }
 
 void GsdmlAttr::cmd_close_no_cb( void *ctx, void *data)
@@ -253,16 +229,15 @@ void GsdmlAttr::cmd_close_no_cb( void *ctx, void *data)
 
 void GsdmlAttr::activate_cmd_ca()
 {
+
   if ( close_cb) {
-#if 0
-    if ( gsdml->is_modified()) {
+    if ( edit_mode && attrnav->is_modified()) {
       wow->DisplayQuestion( (void *)this, "Apply",
 			    "Do you want to apply changes",
 			    cmd_close_apply_cb, cmd_close_no_cb, 0);
 
     }
     else
-#endif
       (close_cb)( parent_ctx);
   }
 }

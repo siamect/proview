@@ -287,6 +287,7 @@ class WNav : public WUtility{
     int                 init_help;
     CoWow		*wow;
     int			admin_login;
+    int			nodraw;
 
     virtual void pop() {}
     virtual void set_inputfocus( int focus) {}
@@ -416,6 +417,8 @@ class WNav : public WUtility{
 		  int case_sensitive);
     int display_objects( pwr_tCid *cidp, char *name, pwr_tObjid root,
 			 int depth);
+    void set_nodraw() { nodraw = 1;}
+    void reset_nodraw() { nodraw = 0; refresh();}
 };
 
 int wnav_cut_segments (

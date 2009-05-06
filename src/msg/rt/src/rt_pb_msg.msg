@@ -44,6 +44,9 @@ gsdattr		<Gsdfile attibute is empty>				/error
 nyi		<Not yet implemented>					/error
 syntax		<Conversion syntax error>				/error
 gsdmlfile	<Unable to open GSDML file>				/error
+nodevice	<No device selected>					/error
+createchan	<Unable to create channel>				/error
+gsdmlfilemismatch <Gsdmlfile doesn't match original filename>		/error
 .end
 
 

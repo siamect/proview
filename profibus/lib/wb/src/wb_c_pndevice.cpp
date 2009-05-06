@@ -40,6 +40,7 @@
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_wow.h"
+#include "co_msgwindow.h"
 #include "co_xhelp.h"
 #include "rt_pn_gsdml.h"
 #include "rt_pn_gsdml_attr.h"
@@ -55,6 +56,22 @@
 
 using namespace std;
 
+class ChanItem {
+ public:
+  ChanItem() : subslot_number(0), representation(0), number(0), use_as_bit(0), cid(0) {}
+
+  unsigned int subslot_number;
+  unsigned int representation;
+  unsigned int number;
+  unsigned int use_as_bit;
+  pwr_tCid cid;
+  char description[80];
+};
+
+static int pndevice_add_channels( device_sCtx *ctx, gsdml_VirtualSubmoduleItem *vi, int subslot_number,
+				  vector<ChanItem>& input_vect, vector<ChanItem>& output_vect);
+static int pndevice_check_io( device_sCtx *ctx, gsdml_VirtualSubmoduleList *vsl, 
+			      vector<ChanItem>& input_vect, vector<ChanItem>& output_vect);
 
 /*----------------------------------------------------------------------------*\
   Configure the slave from gsd file.
@@ -99,9 +116,37 @@ int pndevice_save_cb( void *sctx)
   int size;
   pwr_tOid oid;
   
+  // Syntax check
+  if ( ctx->attr->attrnav->device_num == 0) {
+    MsgWindow::message( 'E', "Device type not selected");
+    return PB__SYNTAX;
+  }
+
+  for ( unsigned int i = 1; i < ctx->attr->attrnav->dev_data.slot_data.size(); i++) {
+    if ( ctx->attr->attrnav->dev_data.slot_data[i]->module_enum_number == 0 &&
+	 ctx->attr->attrnav->dev_data.slot_data[i]->module_class != 0) {
+      // Module class selected but not module type
+      char msg[20];
+
+      sprintf( msg, "Slot %d", i);
+      MsgWindow::message( 'E', "Module type not selected, ", msg);
+    }
+    if ( ctx->attr->attrnav->dev_data.slot_data[i]->module_class == 0 &&
+	 ctx->attr->attrnav->dev_data.slot_data[i]->module_enum_number != 0) {
+      // Module type selected but not module class
+      char msg[20];
+
+      sprintf( msg, "Slot %d", i);
+      MsgWindow::message( 'E', "Module class not selected, ", msg);
+    }
+  }
+
+  // Save configuration
+  ((WNav *)ctx->editor_ctx)->set_nodraw();
+
   sts = ldh_ObjidToName(ctx->ldhses, ctx->aref.Objid, 
 			ldh_eName_Hierarchy, name, sizeof(name), &size);
-  if ( EVEN(sts)) return sts;
+  if ( EVEN(sts)) goto return_now;
 
   // Do a temporary rename all module object to avoid name collisions
   for ( sts = ldh_GetChild( ctx->ldhses, ctx->aref.Objid, &oid);
@@ -109,10 +154,11 @@ int pndevice_save_cb( void *sctx)
 	sts = ldh_GetNextSibling( ctx->ldhses, oid, &oid)) {
     sts = ldh_ObjidToName( ctx->ldhses,  oid, cdh_mName_object, name,
 			   sizeof(name), &size);
-    if ( EVEN(sts)) return sts;
+    if ( EVEN(sts)) goto return_now;
+
     strcat( name, "__tmp");
     sts = ldh_ChangeObjectName( ctx->ldhses, oid, name);
-    if ( EVEN(sts)) return sts;    
+    if ( EVEN(sts)) goto return_now;
   }
 
   for ( unsigned int i = 1; i < ctx->attr->attrnav->dev_data.slot_data.size(); i++) {
@@ -136,12 +182,12 @@ int pndevice_save_cb( void *sctx)
 	  // Check if name is changed
 	  sts = ldh_ObjidToName( ctx->ldhses, slot->module_oid, cdh_mName_object, name,
 				 sizeof(name), &size);
-	  if ( EVEN(sts)) return sts;
+	  if ( EVEN(sts)) goto return_now;
 
 	  if ( strcmp( name, mname) != 0) {
 	    // Change name
 	    sts = ldh_ChangeObjectName( ctx->ldhses, slot->module_oid, mname);
-	    if ( EVEN(sts)) return sts;
+	    if ( EVEN(sts)) goto return_now;
 	  }	  
 	  
 	  // Check that sibling position is right
@@ -181,15 +227,17 @@ int pndevice_save_cb( void *sctx)
 				ldh_eDest_After);
       if ( EVEN(sts)) {
 	printf( "Error creating module object, %d\n", sts);
-	return 0;
+	sts = 0;
+	goto return_now;
       }
     }
   }
 
   // Remove modules that wasn't configured any more
   pwr_tOid moid[100];
-  int mcnt = 0;
+  int mcnt;
   int found;
+  mcnt = 0;
   for ( sts = ldh_GetChild( ctx->ldhses, ctx->aref.Objid, &oid);
 	ODD(sts);
 	sts = ldh_GetNextSibling( ctx->ldhses, oid, &oid)) {
@@ -210,105 +258,457 @@ int pndevice_save_cb( void *sctx)
   for ( int i = 0; i < mcnt; i++)
     sts = ldh_DeleteObjectTree( ctx->ldhses, moid[i], 0);
 
-  return PWRB__SUCCESS;
-}
+  for ( unsigned int i = 0; i < ctx->attr->attrnav->dev_data.slot_data.size(); i++) {
+    GsdmlSlotData *slot = ctx->attr->attrnav->dev_data.slot_data[i];
+    
+    if ( i == 0) {
+      vector<ChanItem> input_vect;
+      vector<ChanItem> output_vect;
 
-static pwr_tStatus load_modules( device_sCtx *ctx)
-{
-#if 0
-  pwr_tOid oid;
-  pwr_tCid cid;
-  int found;
-  pwr_tObjName name;
-  pwr_tString40 module_name;
-  int sts;
-  int size;
-  pwr_tAttrRef maref, aaref;
-
-  for ( sts = ldh_GetChild( ctx->ldhses, ctx->aref.Objid, &oid);
-	ODD(sts);
-	sts = ldh_GetNextSibling( ctx->ldhses, oid, &oid)) {
-
-    // Check that this is a module
-    sts = ldh_GetObjectClass( ctx->ldhses, oid, &cid);
-    if ( EVEN(sts)) return sts;
-
-    found = 0;
-    for ( int i = 0; ; i++) {
-      if ( ctx->gsd->module_classlist[i].cid == 0)
-	break;
-      if ( ctx->gsd->module_classlist[i].cid == cid) {
-	found = 1;
-	break;
+      sts = pndevice_check_io( ctx, ctx->attr->attrnav->device_item->VirtualSubmoduleList,
+			       input_vect, output_vect);
+      if ( sts == PB__CREATECHAN) {
+	char msg[20];
+	sprintf( msg, "Slot %d", i);
+	MsgWindow::message( 'W', "Unexpected datatype, channel not created, ", msg);
       }
     }
-    if ( !found)
-      // This is not a known module object
-      continue;
+    else {
+      if ( slot->module_class == pwr_cClass_PnModule) {
+	vector<ChanItem> input_vect;
+	vector<ChanItem> output_vect;
+	gsdml_UseableModules *um = ctx->gsdml->ApplicationProcess->DeviceAccessPointList->
+	  DeviceAccessPointItem[ctx->attr->attrnav->device_num-1]->UseableModules;
 
-    // Get name
-    sts = ldh_ObjidToName( ctx->ldhses, oid, cdh_mName_object, name,
-			   sizeof(name), &size);
-    if ( EVEN(sts)) return sts;
+	if ( !um)
+	  continue;
+	gsdml_ModuleItem *mi = (gsdml_ModuleItem *)um->
+	  ModuleItemRef[slot->module_enum_number-1]->Body.ModuleItemTarget.p;
 
-    maref = cdh_ObjidToAref( oid);
+	sts = pndevice_check_io( ctx, mi->VirtualSubmoduleList, input_vect, output_vect);
+	if ( sts == PB__CREATECHAN) {
+	  char msg[20];
+	  sprintf( msg, "Slot %d", i);
+	  MsgWindow::message( 'W', "Unexpected datatype, channel not created, ", msg);
+	}
 
-    // Get ModuleName attribute
-    sts = ldh_ArefANameToAref( ctx->ldhses, &maref, "ModuleName", &aaref);
-    if ( EVEN(sts)) return sts;
+	// Create the channels
+	if ( EVEN(ldh_GetChild( ctx->ldhses, slot->module_oid, &oid))) {
+	  unsigned int chan_cnt = 0;
+	  for ( unsigned int j = 0; j < input_vect.size(); j++) {
+	    char name[80];
+	    sprintf( name, "Ch%02u", chan_cnt++);
+	    sts = ldh_CreateObject( ctx->ldhses, &oid, name, input_vect[j].cid,
+				    slot->module_oid, ldh_eDest_IntoLast);
+	    if ( EVEN(sts)) goto return_now;
+
+	    pwr_tAttrRef aaref;
+	    pwr_tAttrRef chanaref = cdh_ObjidToAref( oid);
+
+	    // Set Representation
+	    pwr_tEnum representation = input_vect[j].representation;
+	    sts = ldh_ArefANameToAref( ctx->ldhses, &chanaref, "Representation", &aaref);
+	    if ( EVEN(sts)) goto return_now;
+	    
+	    sts = ldh_WriteAttribute( ctx->ldhses, &aaref, &representation, sizeof(representation));
+	    if ( EVEN(sts)) goto return_now;
+
+	    // Set Number
+	    pwr_tUInt16 number = input_vect[j].number;
+	    sts = ldh_ArefANameToAref( ctx->ldhses, &chanaref, "Number", &aaref);
+	    if ( EVEN(sts)) goto return_now;
+	    
+	    sts = ldh_WriteAttribute( ctx->ldhses, &aaref, &number, sizeof(number));
+	    if ( EVEN(sts)) goto return_now;
+
+	    // Set Description
+	    pwr_tString80 description;
+	    strncpy( description, input_vect[j].description, sizeof(description));
+	    sts = ldh_ArefANameToAref( ctx->ldhses, &chanaref, "Description", &aaref);
+	    if ( EVEN(sts)) goto return_now;
+	    
+	    sts = ldh_WriteAttribute( ctx->ldhses, &aaref, description, sizeof(description));
+	    if ( EVEN(sts)) goto return_now;
+	  }
+	  for ( unsigned int j = 0; j < output_vect.size(); j++) {
+	    char name[80];
+	    sprintf( name, "Ch%02u", chan_cnt++);
+	    sts = ldh_CreateObject( ctx->ldhses, &oid, name, output_vect[j].cid,
+				    slot->module_oid, ldh_eDest_IntoLast);
+	    if ( EVEN(sts)) goto return_now;
+
+	    pwr_tAttrRef aaref;
+	    pwr_tAttrRef chanaref = cdh_ObjidToAref( oid);
+
+	    // Set Representation
+	    pwr_tEnum representation = output_vect[j].representation;
+	    sts = ldh_ArefANameToAref( ctx->ldhses, &chanaref, "Representation", &aaref);
+	    if ( EVEN(sts)) goto return_now;
+	    
+	    sts = ldh_WriteAttribute( ctx->ldhses, &aaref, &representation, sizeof(representation));
+	    if ( EVEN(sts)) goto return_now;
+
+	    // Set Number
+	    pwr_tUInt16 number = output_vect[j].number;
+	    sts = ldh_ArefANameToAref( ctx->ldhses, &chanaref, "Number", &aaref);
+	    if ( EVEN(sts)) goto return_now;
+	    
+	    sts = ldh_WriteAttribute( ctx->ldhses, &aaref, &number, sizeof(number));
+	    if ( EVEN(sts)) goto return_now;
+
+	    // Set Description
+	    pwr_tString80 description;
+	    strncpy( description, output_vect[j].description, sizeof(description));
+	    sts = ldh_ArefANameToAref( ctx->ldhses, &chanaref, "Description", &aaref);
+	    if ( EVEN(sts)) goto return_now;
+	    
+	    sts = ldh_WriteAttribute( ctx->ldhses, &aaref, description, sizeof(description));
+	    if ( EVEN(sts)) goto return_now;
+	  }
+	}
+      }
+      else {
+	// Remove existing channels
+	vector<pwr_tOid> chanvect;
+	pwr_tCid cid;
       
-    sts = ldh_ReadAttribute( ctx->ldhses, &aaref, module_name, sizeof(module_name));
-    if ( EVEN(sts)) return sts;
-
-    ctx->gsd->add_module_conf( cid, oid, name, module_name);
+	for ( sts = ldh_GetChild( ctx->ldhses, slot->module_oid, &oid);
+	      ODD(sts);
+	      sts = ldh_GetNextSibling( ctx->ldhses, oid, &oid)) {
+	  sts = ldh_GetObjectClass( ctx->ldhses, oid, &cid);
+	  if ( EVEN(sts)) goto return_now;
+	
+	  switch ( cid) {
+	  case pwr_cClass_ChanDi:
+	  case pwr_cClass_ChanDo:
+	  case pwr_cClass_ChanAi:
+	  case pwr_cClass_ChanAo:
+	  case pwr_cClass_ChanIi:
+	  case pwr_cClass_ChanIo:
+	    chanvect.push_back( oid);
+	    break;
+	  default: ;
+	  }
+	}
+	for ( unsigned int i = 0; i < chanvect.size(); i++) {
+	  sts = ldh_DeleteObject( ctx->ldhses, chanvect[i]);
+	  if ( EVEN(sts)) goto return_now;
+	}
+      }
+    }
   }
+  sts = PWRB__SUCCESS;
 
-  // Set address
-  pwr_tUInt16 address;
-
-  sts = ldh_ArefANameToAref( ctx->ldhses, &ctx->aref, "SlaveAddress", &aaref);
-  if ( EVEN(sts)) return sts;
-
-  sts = ldh_ReadAttribute( ctx->ldhses, &aaref, &address, sizeof(address));
-  if ( EVEN(sts)) return sts;
-
-  ctx->gsd->address = address;
-
-  // Set byte order
-  pwr_tByteOrderingEnum byte_order;
-
-  sts = ldh_ArefANameToAref( ctx->ldhses, &ctx->aref, "ByteOrdering", &aaref);
-  if ( EVEN(sts)) return sts;
-
-  sts = ldh_ReadAttribute( ctx->ldhses, &aaref, &byte_order, sizeof(byte_order));
-  if ( EVEN(sts)) return sts;
-
-  ctx->gsd->byte_order = byte_order;
-
-  // Set Ext_User_Prm_Data
-  pwr_tUInt8 prm_user_data[256];
-  pwr_tUInt16 prm_user_data_len;
-  int len;
+ return_now:
+  ((WNav *)ctx->editor_ctx)->reset_nodraw();
+  return sts;
+}
   
-  sts = ldh_ArefANameToAref( ctx->ldhses, &ctx->aref, "PrmUserData", &aaref);
-  if ( EVEN(sts)) return sts;
+static int pndevice_check_io( device_sCtx *ctx, gsdml_VirtualSubmoduleList *vsl, 
+			      vector<ChanItem>& input_vect, vector<ChanItem>& output_vect)
+{
+  int sts;
 
-  sts = ldh_ReadAttribute( ctx->ldhses, &aaref, prm_user_data, sizeof(prm_user_data));
-  if ( EVEN(sts)) return sts;
-
-  sts = ldh_ArefANameToAref( ctx->ldhses, &ctx->aref, "PrmUserDataLen", &aaref);
-  if ( EVEN(sts)) return sts;
-
-  sts = ldh_ReadAttribute( ctx->ldhses, &aaref, &prm_user_data_len, sizeof(prm_user_data_len));
-  if ( EVEN(sts)) return sts;
-
-  len = prm_user_data_len;
-  if ( len != 0) {
-    sts = ctx->gsd->unpack_ext_user_prm_data( (char *)prm_user_data, len);
-    if ( EVEN(sts)) return sts;
+  if ( vsl) {
+    unsigned int subslot_number = 0;
+	
+    for ( unsigned int i = 0; i < vsl->VirtualSubmoduleItem.size(); i++) {
+      if ( strcmp( vsl->VirtualSubmoduleItem[i]->Body.FixedInSubslots.str, "") == 0) {
+	// FixedInSubslots not supplied, default subslot number is 1 
+	
+	if ( vsl->VirtualSubmoduleItem.size() == 1)
+	  subslot_number = 1;
+	else
+	  subslot_number++;
+	
+	sts = pndevice_add_channels( ctx, vsl->VirtualSubmoduleItem[i], subslot_number,
+				     input_vect, output_vect);
+	if ( EVEN(sts)) return sts;
+      }
+      else {
+	// FixedInSubslots supplied, create channels for all fixed subslots
+	
+	gsdml_Valuelist *vl = new gsdml_Valuelist(  vsl->
+			      VirtualSubmoduleItem[i]->Body.FixedInSubslots.str);
+	gsdml_ValuelistIterator iter( vl);
+	
+	for ( unsigned int j = iter.begin(); j != iter.end(); j = iter.next()) {
+	  subslot_number = j;
+	  
+	  sts = pndevice_add_channels( ctx, vsl->VirtualSubmoduleItem[i], subslot_number,
+				       input_vect, output_vect);
+	  if (EVEN(sts)) { 
+	    delete vl; 
+	    return sts;
+	  }
+	}
+	delete vl;
+      }
+    }
   }
-#endif
-  return 1;
+  return PB__SUCCESS;
+}
+    
+static int pndevice_add_channels( device_sCtx *ctx, gsdml_VirtualSubmoduleItem *vi, int subslot_number,
+				  vector<ChanItem>& input_vect, vector<ChanItem>& output_vect)
+{
+
+  // Find input data
+  if ( vi->IOData && vi->IOData->Input) {
+    for ( unsigned int i = 0; 
+	  i < vi->IOData->Input->DataItem.size(); 
+	  i++) {
+      gsdml_DataItem *di = vi->IOData->Input->DataItem[i];
+      gsdml_eValueDataType datatype;
+      
+      ctx->attr->attrnav->gsdml->string_to_value_datatype( di->Body.DataType, &datatype);
+      
+      if ( !di->Body.UseAsBits) {
+	unsigned int representation;
+	int invalid_type = 0;
+
+	switch ( datatype) {
+	case gsdml_eValueDataType_Integer8:	
+	  representation = pwr_eDataRepEnum_Int8;
+	  break;
+	case gsdml_eValueDataType_Unsigned8:
+	  representation = pwr_eDataRepEnum_UInt8;
+	  break;
+	case gsdml_eValueDataType_Integer16:
+	  representation = pwr_eDataRepEnum_Int16;
+	  break;
+	case gsdml_eValueDataType_Unsigned16:
+	  representation = pwr_eDataRepEnum_UInt16;
+	  break;
+	case gsdml_eValueDataType_Integer32:
+	  representation = pwr_eDataRepEnum_Int32;
+	  break;
+	case gsdml_eValueDataType_Unsigned32:
+	  representation = pwr_eDataRepEnum_UInt32;
+	  break;
+	case gsdml_eValueDataType_Integer64:
+	  representation = pwr_eDataRepEnum_Int64;
+	  break;
+	case gsdml_eValueDataType_Unsigned64:
+	  representation = pwr_eDataRepEnum_UInt64;
+	  break;
+	case gsdml_eValueDataType_Float32:
+	  representation = pwr_eDataRepEnum_Float32;
+	  break;
+	case gsdml_eValueDataType_Float64:
+	  representation = pwr_eDataRepEnum_Float64;
+	  break;
+	default:
+	  invalid_type = 1;
+	}
+
+	if ( invalid_type)
+	  return PB__CREATECHAN;
+
+	ChanItem ci;
+	ci.subslot_number = subslot_number;
+	ci.number = 0;
+	ci.representation = representation;
+	ci.use_as_bit = 0;	
+	ci.cid = pwr_cClass_ChanAi;
+	strncpy( ci.description, (char *)di->Body.TextId.p, sizeof(ci.description));
+	ci.description[sizeof(ci.description)-1] = 0;
+	
+	input_vect.push_back( ci);
+      }
+      else {
+	// Use as bits
+	unsigned int bits;
+	unsigned int representation;
+
+	switch ( datatype) {
+	case gsdml_eValueDataType_Integer8:
+	case gsdml_eValueDataType_Unsigned8:
+	  representation = pwr_eDataRepEnum_Bit8;
+	  bits = 8;
+	  break;
+	case gsdml_eValueDataType_Integer16:
+	case gsdml_eValueDataType_Unsigned16:
+	  representation = pwr_eDataRepEnum_Bit16;
+	  bits = 16;
+	  break;
+	case gsdml_eValueDataType_Integer32:
+	case gsdml_eValueDataType_Unsigned32:
+	  representation = pwr_eDataRepEnum_Bit32;
+	  bits = 32;
+	  break;
+	case gsdml_eValueDataType_Integer64:
+	case gsdml_eValueDataType_Unsigned64:
+	  representation = pwr_eDataRepEnum_Bit64;
+	  bits = 64;
+	  break;
+	default:
+	  bits = 0;
+	}
+	if ( di->BitDataItem.size() == 0) {
+	  // Add all bits
+	  for ( unsigned int j = 0; j < bits; j++) {
+	    // Add Channel
+	    ChanItem ci;
+	    ci.subslot_number = subslot_number;
+	    ci.number = j;
+	    ci.representation = representation;
+	    ci.use_as_bit = 1;
+	    ci.cid = pwr_cClass_ChanDi;
+	    strncpy( ci.description, (char *)di->Body.TextId.p, sizeof(ci.description));
+	    ci.description[sizeof(ci.description)-2] = 0;			   
+	    
+	    input_vect.push_back( ci);
+	  }
+	}
+	else {
+	  for ( unsigned int j = 0; j < di->BitDataItem.size(); j++) {
+	    // Add channel
+	    ChanItem ci;
+	    ci.subslot_number = subslot_number;
+	    ci.number = di->BitDataItem[j]->Body.BitOffset;
+	    ci.representation = representation;
+	    ci.use_as_bit = 1;
+	    ci.cid = pwr_cClass_ChanDi;
+	    strncpy( ci.description, (char *)di->BitDataItem[j]->Body.TextId.p, sizeof(ci.description));
+	    ci.description[sizeof(ci.description)-2] = 0;			   
+
+	    input_vect.push_back( ci);
+	  }
+	}
+      }
+    }
+  }
+
+  // Find output data
+  if ( vi->IOData && vi->IOData->Output) {
+    for ( unsigned int i = 0; 
+	  i < vi->IOData->Output->DataItem.size(); 
+	  i++) {
+      gsdml_DataItem *di = vi->IOData->Output->DataItem[i];
+      gsdml_eValueDataType datatype;
+      
+      ctx->attr->attrnav->gsdml->string_to_value_datatype( di->Body.DataType, &datatype);
+      
+      if ( !di->Body.UseAsBits) {
+	unsigned int representation;
+	int invalid_type = 0;
+
+	switch ( datatype) {
+	case gsdml_eValueDataType_Integer8:	
+	  representation = pwr_eDataRepEnum_Int8;
+	  break;
+	case gsdml_eValueDataType_Unsigned8:
+	  representation = pwr_eDataRepEnum_UInt8;
+	  break;
+	case gsdml_eValueDataType_Integer16:
+	  representation = pwr_eDataRepEnum_Int16;
+	  break;
+	case gsdml_eValueDataType_Unsigned16:
+	  representation = pwr_eDataRepEnum_UInt16;
+	  break;
+	case gsdml_eValueDataType_Integer32:
+	  representation = pwr_eDataRepEnum_Int32;
+	  break;
+	case gsdml_eValueDataType_Unsigned32:
+	  representation = pwr_eDataRepEnum_UInt32;
+	  break;
+	case gsdml_eValueDataType_Integer64:
+	  representation = pwr_eDataRepEnum_Int64;
+	  break;
+	case gsdml_eValueDataType_Unsigned64:
+	  representation = pwr_eDataRepEnum_UInt64;
+	  break;
+	case gsdml_eValueDataType_Float32:
+	  representation = pwr_eDataRepEnum_Float32;
+	  break;
+	case gsdml_eValueDataType_Float64:
+	  representation = pwr_eDataRepEnum_Float64;
+	  break;
+	default:
+	  invalid_type = 1;
+	}
+
+	if ( invalid_type) {
+	  printf("GSDML-Error, Invalid type, unable to create channel\n");
+	  return 0;
+	}
+
+	ChanItem ci;
+	ci.subslot_number = subslot_number;
+	ci.number = 0;
+	ci.representation = representation;
+	ci.use_as_bit = 0;	
+	ci.cid = pwr_cClass_ChanAo;
+	strncpy( ci.description, (char *)di->Body.TextId.p, sizeof(ci.description));
+	ci.description[sizeof(ci.description)-2] = 0;			   
+
+	output_vect.push_back( ci);
+      }
+      else {
+	// Use as bits
+	unsigned int bits;
+	unsigned int representation;
+
+	switch ( datatype) {
+	case gsdml_eValueDataType_Integer8:
+	case gsdml_eValueDataType_Unsigned8:
+	  representation = pwr_eDataRepEnum_Bit8;
+	  bits = 8;
+	  break;
+	case gsdml_eValueDataType_Integer16:
+	case gsdml_eValueDataType_Unsigned16:
+	  representation = pwr_eDataRepEnum_Bit16;
+	  bits = 16;
+	  break;
+	case gsdml_eValueDataType_Integer32:
+	case gsdml_eValueDataType_Unsigned32:
+	  representation = pwr_eDataRepEnum_Bit32;
+	  bits = 32;
+	  break;
+	case gsdml_eValueDataType_Integer64:
+	case gsdml_eValueDataType_Unsigned64:
+	  representation = pwr_eDataRepEnum_Bit64;
+	  bits = 64;
+	  break;
+	default:
+	  bits = 0;
+	}
+	if ( di->BitDataItem.size() == 0) {
+	  // Add all bits
+	  for ( unsigned int j = 0; j < bits; j++) {
+	    // Add Channel
+	    ChanItem ci;
+	    ci.subslot_number = subslot_number;
+	    ci.number = j;
+	    ci.representation = representation;
+	    ci.use_as_bit = 1;
+	    ci.cid = pwr_cClass_ChanDo;
+	    strncpy( ci.description, (char *)di->Body.TextId.p, sizeof(ci.description));
+	    ci.description[sizeof(ci.description)-2] = 0;			   
+	    
+	    output_vect.push_back( ci);
+	  }
+	}
+	else {
+	  for ( unsigned int j = 0; j < di->BitDataItem.size(); j++) {
+	    // Add channel
+	    ChanItem ci;
+	    ci.subslot_number = subslot_number;
+	    ci.number = di->BitDataItem[j]->Body.BitOffset;
+	    ci.representation = representation;
+	    ci.use_as_bit = 1;
+	    ci.cid = pwr_cClass_ChanDo;
+	    strncpy( ci.description, (char *)di->BitDataItem[j]->Body.TextId.p, sizeof(ci.description));
+	    ci.description[sizeof(ci.description)-2] = 0;			   
+
+	    output_vect.push_back( ci);
+	  }
+	}
+      }
+    }
+  }
+  return PB__SUCCESS;
 }
 
 pwr_tStatus pndevice_create_ctx( ldh_tSession ldhses, pwr_tAttrRef aref, 

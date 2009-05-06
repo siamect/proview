@@ -41,6 +41,7 @@ class GsdmlAttrGtk : public GsdmlAttr {
   GtkWidget	*menubutton_cut;
   GtkWidget	*menubutton_paste;
   GtkWidget	*menubutton_changevalue;
+  GtkWidget	*menubutton_viewio;
   CoWowFocusTimerGtk focustimer;
 
   GsdmlAttrGtk( GtkWidget *a_parent_wid,
@@ -63,6 +64,7 @@ class GsdmlAttrGtk : public GsdmlAttr {
   static void activate_copy( GtkWidget *w, gpointer data);
   static void activate_cut( GtkWidget *w, gpointer data);
   static void activate_paste( GtkWidget *w, gpointer data);
+  static void activate_viewio( GtkWidget *w, gpointer data);
   static void activate_zoom_in( GtkWidget *w, gpointer data);
   static void activate_zoom_out( GtkWidget *w, gpointer data);
   static void activate_zoom_reset( GtkWidget *w, gpointer data);

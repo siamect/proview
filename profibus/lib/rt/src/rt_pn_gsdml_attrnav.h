@@ -69,7 +69,6 @@ typedef enum {
  	attrnav_eItemType_PnPortSubmodule,
  	attrnav_eItemType_PnSlot,
  	attrnav_eItemType_PnSubslot,
- 	attrnav_eItemType_PnModule,
  	attrnav_eItemType_PnModuleInfo,
 	attrnav_eItemType_PnModuleType,
 	attrnav_eItemType_PnParRecord,
@@ -77,7 +76,13 @@ typedef enum {
 	attrnav_eItemType_PnParEnum,
 	attrnav_eItemType_PnParEnumBit,
 	attrnav_eItemType_PnModuleClass,
-	attrnav_eItemType_PnEnumByteOrder
+ 	attrnav_eItemType_PnIOData,
+ 	attrnav_eItemType_PnInput,
+ 	attrnav_eItemType_PnOutput,
+ 	attrnav_eItemType_PnDataItem,
+ 	attrnav_eItemType_PnBitDataItem,
+	attrnav_eItemType_PnEnumByteOrder,
+	attrnav_eItemType_PnEnumTimeRatio
 	} attrnav_eItemType;
 
 typedef enum {
@@ -140,6 +145,8 @@ class GsdmlAttrNav {
     int			modified;
     GsdmlDeviceData	dev_data;
     int			device_read;
+    int			viewio;
+    unsigned int 	time_ratio;
     
     GsdmlAttrNav(
 	void *xn_parent_ctx,
@@ -164,9 +171,11 @@ class GsdmlAttrNav {
     void unzoom();
     void get_zoom( double *zoom_factor);
     void set_modified( int value) { modified = value;}
+    int is_modified() { return modified;}
     int save( const char *filename);
     int open( const char *filename);
     void redraw();
+    void set_viewio( int set) { viewio = set;}
 
     static void trace_scan( void *data);
     static int trace_scan_bc( brow_tObject object, void *p);
@@ -200,16 +209,12 @@ class ItemPn {
   virtual void 		value_changed( GsdmlAttrNav *attrnav, char *value_str) {}
 };
 
-typedef void gsd_sPrmText;
-typedef void gsd_sModuleConf;
-
 //! Item for a normal attribute.
 class ItemPnBase : public ItemPn {
   public:
     ItemPnBase( GsdmlAttrNav *attrnav, const char *item_name, const char *attr,
 	int attr_type, int attr_size, double attr_min_limit,
-	double attr_max_limit, void *attr_value_p, 
-        int attr_noedit,  gsd_sPrmText *attr_enumtext,
+	double attr_max_limit, void *attr_value_p, int attr_noedit,
 	brow_tNode dest, flow_eDest dest_code);
     void		*value_p;
     char 		old_value[80];
@@ -219,10 +224,10 @@ class ItemPnBase : public ItemPn {
     double		min_limit;
     double		max_limit;
     int			noedit;
-    gsd_sPrmText      	*enumtext;
     int			subgraph;
 
-    virtual int 	       	scan( GsdmlAttrNav *attrnav, void *p);
+    virtual int 	scan( GsdmlAttrNav *attrnav, void *p);
+    virtual void 	value_changed( GsdmlAttrNav *attrnav, char *value_str);
 };
 
 //! Item for an enum attribute.
@@ -281,21 +286,6 @@ class ItemPnSubslot : public ItemPn {
   gsdml_VirtualSubmoduleItem *virtualsubmodule;
   
   int open_children( GsdmlAttrNav *attrnav, double x, double y);
-};
-
-//! Item for a module.
-class ItemPnModule : public ItemPn {
- public:
-  ItemPnModule( GsdmlAttrNav *attrnav, const char *item_name, gsd_sModuleConf *item_mconf,
-		brow_tNode dest, flow_eDest dest_code);
-  virtual ~ItemPnModule() {}
-
-  gsd_sModuleConf *mconf;
-  char 		old_value[80];
-  char 		old_type[80];
-  int 		first_scan;
-
-  virtual int  open_children( GsdmlAttrNav *attrnav, double x, double y);
 };
 
 //! Item for the DeviceAccessPoint, slot 0
@@ -475,6 +465,66 @@ class ItemPnParEnumBit : public ItemPn {
   void 			update( GsdmlAttrNav *attrnav);
 };
 
+//! Item for a IOData.
+class ItemPnIOData : public ItemPn {
+ public:
+  ItemPnIOData( GsdmlAttrNav *attrnav, const char *item_name, gsdml_IOData *item_iodata, 
+		 brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPnIOData() {}
+
+  gsdml_IOData *iodata;
+  
+  int open_children( GsdmlAttrNav *attrnav, double x, double y);
+};
+
+//! Item for a Input.
+class ItemPnInput : public ItemPn {
+ public:
+  ItemPnInput( GsdmlAttrNav *attrnav, const char *item_name, gsdml_Input *item_input, 
+	       brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPnInput() {}
+
+  gsdml_Input *input;
+  
+  int open_children( GsdmlAttrNav *attrnav, double x, double y);
+};
+
+//! Item for a Output.
+class ItemPnOutput : public ItemPn {
+ public:
+  ItemPnOutput( GsdmlAttrNav *attrnav, const char *item_name, gsdml_Output *item_output, 
+	       brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPnOutput() {}
+
+  gsdml_Output *output;
+  
+  int open_children( GsdmlAttrNav *attrnav, double x, double y);
+};
+
+//! Item for a DataItem.
+class ItemPnDataItem : public ItemPn {
+ public:
+  ItemPnDataItem( GsdmlAttrNav *attrnav, const char *item_name, gsdml_DataItem *item_dataitem, 
+	       brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPnDataItem() {}
+
+  gsdml_DataItem *dataitem;
+  
+  int open_children( GsdmlAttrNav *attrnav, double x, double y);
+};
+
+//! Item for a BitDataItem.
+class ItemPnBitDataItem : public ItemPn {
+ public:
+  ItemPnBitDataItem( GsdmlAttrNav *attrnav, const char *item_name, gsdml_BitDataItem *item_bitdataitem, 
+	       brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPnBitDataItem() {}
+
+  gsdml_BitDataItem *bitdataitem;
+  
+  int open_children( GsdmlAttrNav *attrnav, double x, double y);
+};
+
 //! Item for module class selection.
 class ItemPnModuleClass : public ItemPn {
  public:
@@ -492,16 +542,33 @@ class ItemPnModuleClass : public ItemPn {
 
 //! Item for slave byte order.
 class ItemPnEnumByteOrder : public ItemPnBase {
-   public:
-    ItemPnEnumByteOrder( GsdmlAttrNav *attrnav, const char *item_name, const char *attr, 
-	int attr_type, int attr_size, void *attr_value_p, int attr_noedit,
-	brow_tNode dest, flow_eDest dest_code);
-    virtual ~ItemPnEnumByteOrder() {}
+ public:
+  ItemPnEnumByteOrder( GsdmlAttrNav *attrnav, const char *item_name, const char *attr, 
+		       int attr_type, int attr_size, void *attr_value_p, int attr_noedit,
+		       brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPnEnumByteOrder() {}
+  
+  int 	    old_value;
+  
+  int	open_children( GsdmlAttrNav *attrnav, double x, double y);
+  int scan( GsdmlAttrNav *attrnav, void *p);
+};
 
-    int 	    old_value;
+//! Item for time ratio.
+class ItemPnEnumTimeRatio : public ItemPn {
+ public:
+  ItemPnEnumTimeRatio( GsdmlAttrNav *attrnav, const char *item_name, 
+		       gsdml_InterfaceSubmoduleItem *item_interfacesubmodule,
+		       void *attr_value_p, brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPnEnumTimeRatio() {}
 
-    int	open_children( GsdmlAttrNav *attrnav, double x, double y);
-    int scan( GsdmlAttrNav *attrnav, void *p);
+  gsdml_InterfaceSubmoduleItem *interfacesubmodule;
+  void		*value_p;
+  int 		first_scan;
+  int 	    old_value;
+
+  int open_children( GsdmlAttrNav *attrnav, double x, double y);
+  int scan( GsdmlAttrNav *attrnav, void *p);
 };
 
 /*@}*/

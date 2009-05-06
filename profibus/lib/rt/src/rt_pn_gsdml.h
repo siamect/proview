@@ -201,6 +201,7 @@ typedef enum {
   gsdml_eTag_Assign,
   gsdml_eTag_ChannelDiagList,
   gsdml_eTag_ChannelDiagItem,
+  gsdml_eTag_ProfileChannelDiagItem,
   gsdml_eTag_ExtChannelDiagList,
   gsdml_eTag_ExtChannelDiagItem,
   gsdml_eTag_ExtChannelAddValue,
@@ -1247,6 +1248,7 @@ class gsdml_ChannelDiagItem {
   gsdml_ExtChannelDiagList *ExtChannelDiagList;
   pn_gsdml *gsdml;
   ~gsdml_ChannelDiagItem();
+  void build();
   void print( int ind);
 };
 
@@ -1256,6 +1258,7 @@ class gsdml_ChannelDiagList {
   vector<gsdml_ChannelDiagItem *> ChannelDiagItem;
   pn_gsdml *gsdml;
   ~gsdml_ChannelDiagList();
+  void build();
   void print( int ind);
 };
 
@@ -1437,6 +1440,7 @@ class pn_gsdml {
   char current_lang[10];
   int byte_order;
   gsdml_sModuleClass *module_classlist;
+  pwr_tFileName gsdmlfile;
   gsdml_Xml *xml;
   gsdml_ProfileHeader *ProfileHeader;
   gsdml_DeviceIdentity *DeviceIdentity;
@@ -1463,6 +1467,8 @@ class pn_gsdml {
   int string_to_datavalue( gsdml_eValueDataType datatype, void *value,
 			   unsigned int size, char *str);
   void set_classes( gsdml_sModuleClass *mclist) { module_classlist = mclist;}
+  int set_par_record_default( unsigned char *data, int size, 
+			      gsdml_ParameterRecordDataItem *par_record);
 
   void *next_token();
   bool is_space( const char c);

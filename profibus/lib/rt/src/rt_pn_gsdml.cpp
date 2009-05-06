@@ -153,8 +153,12 @@ static gsdml_sTag taglist[] = {
   { "ExtChannelDiagList", gsdml_eTag_ExtChannelDiagList, gsdml_eType_, 0, 0, 1},
   { "ExtChannelDiagItem", gsdml_eTag_ExtChannelDiagItem, gsdml_eType_, 0, 0, 1},
   { "ExtChannelAddValue", gsdml_eTag_ExtChannelAddValue, gsdml_eType_, 0, 0, 1},
+  { "ProfileChannelDiagItem", gsdml_eTag_ChannelDiagItem, gsdml_eType_, 0, 0, 1},
+  { "ProfileExtChannelDiagList", gsdml_eTag_ExtChannelDiagList, gsdml_eType_, 0, 0, 1},
+  { "ProfileExtChannelDiagItem", gsdml_eTag_ExtChannelDiagItem, gsdml_eType_, 0, 0, 1},
   { "UnitDiagTypeList", gsdml_eTag_UnitDiagTypeList, gsdml_eType_, 0, 0, 1},
   { "UnitDiagTypeItem", gsdml_eTag_UnitDiagTypeItem, gsdml_eType_, 0, 0, 1},
+  { "ProfileUnitDiagTypeItem", gsdml_eTag_UnitDiagTypeItem, gsdml_eType_, 0, 0, 1},
   { "GraphicsList", gsdml_eTag_GraphicsList, gsdml_eType_, 0, 0, 1},
   { "GraphicItem", gsdml_eTag_GraphicItem, gsdml_eType_, 0, 0, 1},
   { "Embedded", gsdml_eTag_Embedded, gsdml_eType_String, sizeof(gsdml_tString80), offsetof(gsdml_sGraphicItem,Embedded), 0},
@@ -570,6 +574,7 @@ pn_gsdml::pn_gsdml() : logglevel(0), first_token(true), state( gsdml_eState_Init
 		       byte_order(0), module_classlist(0), xml(0), ProfileHeader(0), 
 		       DeviceIdentity(0), DeviceFunction(0), ApplicationProcess(0)
 {
+  strcpy( gsdmlfile, "");
 }
 
 pn_gsdml::~pn_gsdml()
@@ -651,6 +656,8 @@ bool pn_gsdml::is_space( const char c)
 int pn_gsdml::read( const char *filename)
 {
   pwr_tFileName fname;
+
+  strncpy( gsdmlfile, filename, sizeof(gsdmlfile));
 
   dcli_translate_filename( fname, filename);
   fp.open( fname);
@@ -3040,6 +3047,99 @@ int pn_gsdml::ostring_to_data( unsigned char **data, const char *str, int size, 
   return 1;
 }
 
+int pn_gsdml::set_par_record_default( unsigned char *data, int size, 
+				      gsdml_ParameterRecordDataItem *par_record)
+{
+  gsdml_eValueDataType type;
+  int sts;
+  int datasize;
+
+  for ( unsigned int i = 0; i < par_record->Ref.size(); i++) {
+    if ( strcmp( par_record->Ref[i]->Body.DefaultValue, "") == 0)
+      continue;
+
+    sts = string_to_value_datatype( par_record->Ref[i]->Body.DataType, &type);
+    if ( EVEN(sts)) continue;
+
+    switch ( type) {
+    case gsdml_eValueDataType_Integer8:
+    case gsdml_eValueDataType_Unsigned8: 
+    case gsdml_eValueDataType_Bit:
+    case gsdml_eValueDataType_BitArea:
+      datasize = 1;
+      break;
+    case gsdml_eValueDataType_Integer16:
+    case gsdml_eValueDataType_Unsigned16:
+      datasize = 2;
+      break;
+    case gsdml_eValueDataType_Integer32:
+    case gsdml_eValueDataType_Unsigned32:
+    case gsdml_eValueDataType_Float32:
+      datasize = 4;
+      break;
+    case gsdml_eValueDataType_Integer64:
+    case gsdml_eValueDataType_Unsigned64:
+    case gsdml_eValueDataType_Float64:
+      datasize = 8;
+      break;
+    case gsdml_eValueDataType_OctetString:
+    case gsdml_eValueDataType_VisibleString:
+      datasize = par_record->Ref[i]->Body.Length;
+      break;
+    default:
+      datasize = 0;
+    }
+
+    switch ( type) {
+    case gsdml_eValueDataType_Bit: {
+      if ( datasize + par_record->Ref[i]->Body.ByteOffset > (unsigned int)size) {
+	printf( "GSDML-Parser error, Default value exceeds data size");
+	return 0;
+      }
+
+      unsigned char mask = 1 << par_record->Ref[i]->Body.BitOffset;
+      if ( strcmp( par_record->Ref[i]->Body.DefaultValue, "0") == 0)
+	*(data + par_record->Ref[i]->Body.ByteOffset) &= ~mask;
+      else if ( strcmp( par_record->Ref[i]->Body.DefaultValue, "1") == 0)
+	*(data + par_record->Ref[i]->Body.ByteOffset) |= mask;
+      break;
+    }
+    case gsdml_eValueDataType_BitArea: {
+      unsigned short mask = 0;
+      unsigned short value;
+
+      if ( datasize + par_record->Ref[i]->Body.ByteOffset > (unsigned int)size) {
+	printf( "GSDML-Parser error, Default value exceeds data size");
+	return 0;
+      }
+
+      for ( int j = 0; j < par_record->Ref[i]->Body.BitLength; j++)
+	mask |= (mask << 1) | 1; 
+      mask <<= par_record->Ref[i]->Body.BitOffset;
+      
+      sts = sscanf( par_record->Ref[i]->Body.DefaultValue, "%hu", &value);
+      if ( sts != 1)
+	break;
+
+      value <<= par_record->Ref[i]->Body.BitOffset;
+
+      *(data + par_record->Ref[i]->Body.ByteOffset) &= ~mask;
+      *(data + par_record->Ref[i]->Body.ByteOffset) |= value;
+      break;
+    }
+    default:
+      if ( datasize + par_record->Ref[i]->Body.ByteOffset > (unsigned int)size) {
+	printf( "GSDML-Parser error, Default value exceeds data size");
+	return 0;
+      }
+
+      string_to_datavalue( type, data + par_record->Ref[i]->Body.ByteOffset,
+			   par_record->Ref[i]->Body.Length, par_record->Ref[i]->Body.DefaultValue);
+    }
+  }
+  return 1;
+}
+
 void gsdml_ProfileHeader::print( int ind) {
   char is[] = "                    ";
   is[ind] = 0;
@@ -4876,10 +4976,30 @@ gsdml_ChannelDiagItem::~gsdml_ChannelDiagItem()
     delete ExtChannelDiagList;
 }
 
+void gsdml_ChannelDiagItem::build()
+{
+  if ( strcmp( Body.Name.ref, "") != 0) {
+    Body.Name.p = gsdml->find_text_ref( Body.Name.ref);
+    if ( Body.Name.p == noref) 
+      gsdml->error_message("Name not found: \"%s\"", Body.Name.ref);
+  }
+  if ( strcmp( Body.Help.ref, "") != 0) {
+    Body.Help.p = gsdml->find_text_ref( Body.Help.ref);
+    if ( Body.Help.p == noref) 
+      gsdml->error_message("Help not found: \"%s\"", Body.Help.ref);
+  }
+}
+
 gsdml_ChannelDiagList::~gsdml_ChannelDiagList()
 {
   for ( unsigned int i = 0; i < ChannelDiagItem.size(); i++)
     delete ChannelDiagItem[i];
+}
+
+void gsdml_ChannelDiagList::build()
+{
+  for ( unsigned int i = 0; i < ChannelDiagItem.size(); i++)
+    ChannelDiagItem[i]->build();
 }
 
 gsdml_UnitDiagTypeItem::~gsdml_UnitDiagTypeItem()
@@ -4940,6 +5060,8 @@ void gsdml_ApplicationProcess::build()
     ModuleList->build();
   if ( ValueList)
     ValueList->build();
+  if ( ChannelDiagList)
+    ChannelDiagList->build();
 }
 
 gsdml_ApplicationProcess::~gsdml_ApplicationProcess()
@@ -5026,6 +5148,9 @@ gsdml_Valuelist::gsdml_Valuelist( char *str) : status(PB__SUCCESS)
 
 void gsdml_Valuelist::sort()
 {
+  if ( value.size() == 0)
+    return;
+
   for ( unsigned int i = value.size() - 1; i > 0; i--) {
     for ( unsigned int j = 0; j < i; j++) {
       if ( value[i].value1 < value[j].value1) {
@@ -5183,6 +5308,9 @@ gsdml_SValuelist::gsdml_SValuelist( char *str) : status(PB__SUCCESS)
 
 void gsdml_SValuelist::sort()
 {
+  if ( value.size() == 0)
+    return;
+
   for ( unsigned int i = value.size() - 1; i > 0; i--) {
     for ( unsigned int j = 0; j < i; j++) {
       if ( value[i].value1 < value[j].value1) {
@@ -5307,6 +5435,9 @@ gsdml_FValuelist::gsdml_FValuelist( char *str) : status(PB__SUCCESS)
 
 void gsdml_FValuelist::sort()
 {
+  if ( value.size() == 0)
+    return;
+
   for ( unsigned int i = value.size() - 1; i > 0; i--) {
     for ( unsigned int j = 0; j < i; j++) {
       if ( value[i].value1 < value[j].value1) {

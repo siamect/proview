@@ -76,6 +76,7 @@ class GsdmlAttr {
   void activate_cut();
   void activate_paste();
   void activate_print();
+  void activate_viewio( int set);
   void activate_zoom_in();
   void activate_zoom_out();
   void activate_zoom_reset();

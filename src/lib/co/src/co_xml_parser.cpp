@@ -111,6 +111,8 @@ bool co_xml_parser::is_space( const char c)
 
 int co_xml_parser::read( const char *filename)
 {
+  int sts;
+
   fp.open( filename);
   if ( !fp)
     return DCLI__NOFILE;
@@ -148,7 +150,11 @@ int co_xml_parser::read( const char *filename)
 	    // End of tag name
 	    current_tag[current_tag_idx] = 0;	
 	    state &= ~xml_eState_TagName;
-	    interpreter->metatag( current_tag);	
+	    sts = interpreter->metatag( current_tag);	
+	    if ( EVEN(sts)) {
+	      fp.close();
+	      return sts;
+	    }
 	  }
 	  else if ( c == '?' && c_f == '>') {
 	    // End of meta tag
@@ -160,7 +166,11 @@ int co_xml_parser::read( const char *filename)
 	    state &= ~xml_eState_TagName;
 	    state &= ~xml_eState_TagNameFound;
 	    state &= ~xml_eState_MetaTag;
-	    interpreter->metatag( current_tag);	
+	    sts = interpreter->metatag( current_tag);	
+	    if ( EVEN(sts)) {
+	      fp.close();
+	      return sts;
+	    }
 	  }
 	  else {
 	    // Next tag character
@@ -183,7 +193,11 @@ int co_xml_parser::read( const char *filename)
 	    state &= ~xml_eState_AttributeValueFound;
 	    state &= ~xml_eState_TagNameFound;
 	    state &= ~xml_eState_MetaTag;
-	    interpreter->metatag_end( current_tag);
+	    sts = interpreter->metatag_end( current_tag);
+	    if ( EVEN(sts)) {
+	      fp.close();
+	      return sts;
+	    }
 	  }
 	  else {
 	    if ( !(state & xml_eState_AttributeNameFound)) {
@@ -240,7 +254,11 @@ int co_xml_parser::read( const char *filename)
 		  state &= ~xml_eState_Attribute;
 		  state &= ~xml_eState_AttributeNameFound;
 		  state &= ~xml_eState_AttributeValueFound;
-		  interpreter->tag_attribute( current_attribute_name, current_attribute_value);
+		  sts = interpreter->tag_attribute( current_attribute_name, current_attribute_value);
+		  if ( EVEN(sts)) {
+		    fp.close();
+		    return sts;
+		  }
 		}
 		else {
 		  // Next char in attribute value
@@ -276,14 +294,26 @@ int co_xml_parser::read( const char *filename)
 	    // End of tag name
 	    current_tag[current_tag_idx] = 0;	
 	    state &= ~xml_eState_TagName;
-	    interpreter->tag( current_tag);
+	    sts = interpreter->tag( current_tag);
+	    if ( EVEN(sts)) {
+	      fp.close();
+	      return sts;
+	    }
 	  }
 	  else if ( c == '/' && c_f == '>') {
 	    // End of tag
 	    next_token();
 	    current_tag[current_tag_idx] = 0;
-	    interpreter->tag( current_tag);
-	    interpreter->tag_end( current_tag);
+	    sts = interpreter->tag( current_tag);
+	    if ( EVEN(sts)) {
+	      fp.close();
+	      return sts;
+	    }
+	    sts = interpreter->tag_end( current_tag);
+	    if ( EVEN(sts)) {
+	      fp.close();
+	      return sts;
+	    }
 	    if ( state & xml_eState_AttributeName || 
 		 state & xml_eState_AttributeValue)
 	      error_message_line( "Syntax error");
@@ -302,7 +332,11 @@ int co_xml_parser::read( const char *filename)
 	    state &= ~xml_eState_Tag;
 	    state |= xml_eState_TagValue;
 	    current_tag_value_idx = 0;
-	    interpreter->tag( current_tag);
+	    sts = interpreter->tag( current_tag);
+	    if ( EVEN(sts)) {
+	      fp.close();
+	      return sts;
+	    }
 	  }
 	  else {
 	    // Next tag character
@@ -328,7 +362,11 @@ int co_xml_parser::read( const char *filename)
 		current_attribute_value[current_attribute_value_idx++] = c;
 	      continue;
 	    }
-	    interpreter->tag_end( current_tag);
+	    sts = interpreter->tag_end( current_tag);
+	    if ( EVEN(sts)) {
+	      fp.close();
+	      return sts;
+	    }
 	    state &= ~xml_eState_AttributeNameFound;
 	    state &= ~xml_eState_AttributeValueFound;
 	    state &= ~xml_eState_TagNameFound;
@@ -417,7 +455,11 @@ int co_xml_parser::read( const char *filename)
 		  state &= ~xml_eState_AttributeNameFound;
 		  state &= ~xml_eState_AttributeValueFound;
 		  suppress_msg = 0;
-		  interpreter->tag_attribute( current_attribute_name, current_attribute_value);
+		  sts = interpreter->tag_attribute( current_attribute_name, current_attribute_value);
+		  if ( EVEN(sts)) {
+		    fp.close();
+		    return sts;
+		  }
 		}
 		else {
 		  // Next char in attribute value
@@ -450,7 +492,11 @@ int co_xml_parser::read( const char *filename)
 	next_token();
 	current_tag_value[current_tag_value_idx] = 0;
 	if ( state & xml_eState_TagValueFound) {
-	  interpreter->tag_value( current_tag_value);
+	  sts = interpreter->tag_value( current_tag_value);
+	  if ( EVEN(sts)) {
+	    fp.close();
+	    return sts;
+	  }
 	  state &= ~xml_eState_TagValueFound;
 	}
 	state &= ~xml_eState_TagValue;
@@ -493,7 +539,11 @@ int co_xml_parser::read( const char *filename)
 	    // End of tag name
 	    current_tag[current_tag_idx] = 0;	
 	    state &= ~xml_eState_TagName;
-	    interpreter->tag_end( current_tag);
+	    sts = interpreter->tag_end( current_tag);
+	    if ( EVEN(sts)) {
+	      fp.close();
+	      return sts;
+	    }
 	  }
 	  else if ( c == '>') {
 	    // End of tag
@@ -501,7 +551,11 @@ int co_xml_parser::read( const char *filename)
 	    state &= ~xml_eState_TagName;
 	    state &= ~xml_eState_TagNameFound;
 	    state &= ~xml_eState_EndTag;
-	    interpreter->tag_end( current_tag);
+	    sts = interpreter->tag_end( current_tag);
+	    if ( EVEN(sts)) {
+	      fp.close();
+	      return sts;
+	    }
 	  }
 	  else {
 	    // Next tag character

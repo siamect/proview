@@ -40,10 +40,21 @@ typedef enum {
   gsdmldata_eTag_Subslot,
   gsdmldata_eTag_DataRecord,
   gsdmldata_eTag_IOCR,
+  gsdmldata_eTag_ChannelDiag,
   gsdmldata_eTag__
 } gsdmldata_eTag;
 
 GsdmlSlotData *GsdmlDeviceData::paste_slotdata = 0;
+
+int GsdmlChannelDiag::print( ofstream& fp)
+{
+  fp <<
+    "      <ChannelDiag ErrorType=\"" << error_type << "\"" << endl << 
+    "         Name=\"" << name << "\"" << endl <<
+    "         Help=\"" << help << "\" />" << endl;
+
+  return 1;
+}
 
 int GsdmlDataRecord::print( ofstream& fp)
 {
@@ -107,13 +118,21 @@ int GsdmlDeviceData::print( const char *filename)
 {
   pwr_tFileName fname;
   ofstream fp;
+  char *gsdmlfile_p;
   
+  // Print name of gsdmlfile, not path
+  if ( (gsdmlfile_p = strrchr(gsdmlfile, '/')))
+    gsdmlfile_p++;
+  else
+    gsdmlfile_p = gsdmlfile;
+
   dcli_translate_filename( fname, filename);
 
   fp.open( fname);
 
   fp << 
-    "<PnDevice DeviceNumber=\"" << device_num << "\"" << endl <<
+    "<PnDevice GsdmlFile=\"" << gsdmlfile_p << "\"" << endl <<
+    "  DeviceNumber=\"" << device_num << "\"" << endl <<
     "  DeviceText=\"" << device_text << "\"" << endl <<
     "  VendorId=\"" << vendor_id << "\"" << endl <<
     "  DeviceId=\"" << device_id << "\"" << endl <<
@@ -130,6 +149,9 @@ int GsdmlDeviceData::print( const char *filename)
   }
   for ( unsigned int i = 0; i < iocr_data.size(); i++) {
     iocr_data[i]->print( fp);
+  }
+  for ( unsigned int i = 0; i < channel_diag.size(); i++) {
+    channel_diag[i]->print( fp);
   }
 
   fp <<
@@ -240,6 +262,8 @@ int GsdmlDataReader::tag_name_to_id( const char *name, unsigned int *id)
     *id = gsdmldata_eTag_DataRecord;
   else if ( strcmp( name, "IOCR") == 0)    
     *id = gsdmldata_eTag_IOCR;
+  else if ( strcmp( name, "ChannelDiag") == 0)    
+    *id = gsdmldata_eTag_ChannelDiag;
   else
     return 0;
 
@@ -248,8 +272,6 @@ int GsdmlDataReader::tag_name_to_id( const char *name, unsigned int *id)
 
 int GsdmlDataReader::tag( const char *name)
 {
-  printf( "Tag: %s\n", name);
-  
   if ( tag_name_to_id( name, &current_tag))
     tag_stack_push( current_tag);
   else {
@@ -298,6 +320,13 @@ int GsdmlDataReader::tag( const char *name)
     object_stack_push( iod, current_tag);
     break;
   }
+  case gsdmldata_eTag_ChannelDiag: {
+    GsdmlChannelDiag *cd = new GsdmlChannelDiag();
+    
+    data->channel_diag.push_back( cd);
+    object_stack_push( cd, current_tag);
+    break;
+  }
   default: ;
   }
 
@@ -311,7 +340,6 @@ int GsdmlDataReader::tag_end( const char *name)
 {
   unsigned int id;
 
-  printf( "TagEnd: %s\n", name);
   if ( tag_name_to_id( name, &id))
     tag_stack_pull( id);
   else {
@@ -342,16 +370,27 @@ int GsdmlDataReader::metatag_end( const char *name)
 }
 int GsdmlDataReader::tag_value( const char *name)
 {
-  printf( "TagValue: %s\n", name);
   return 1;
 }
 int GsdmlDataReader::tag_attribute( const char *name, const char *value)
 {
-  printf( "Attr: %s=%s\n", name, value);
 
   switch ( current_tag) {
   case gsdmldata_eTag_PnDevice:
-    if ( strcmp( name, "DeviceText") == 0)
+    if ( strcmp( name, "GsdmlFile") == 0) {
+      // Check that the GSDML file is not changed
+      char *gsdmlfile_p;
+  
+      // Print name of gsdmlfile, not path
+      if ( (gsdmlfile_p = strrchr(data->gsdmlfile, '/')))
+	gsdmlfile_p++;
+      else
+	gsdmlfile_p = data->gsdmlfile;
+
+      if ( strcmp( value, gsdmlfile_p) != 0)
+	return PB__GSDMLFILEMISMATCH;
+    }
+    else if ( strcmp( name, "DeviceText") == 0)
       strncpy( data->device_text, value, sizeof(data->device_text));
     else if ( strcmp( name, "DeviceNumber") == 0)
       sscanf( value, "%d", &data->device_num);
@@ -422,6 +461,17 @@ int GsdmlDataReader::tag_attribute( const char *name, const char *value)
       sscanf( value, "%hu", &iod->reduction_ratio);
     else if ( strcmp( name, "API") == 0)
       sscanf( value, "%u", &iod->api);
+    break;
+  }
+  case gsdmldata_eTag_ChannelDiag: {
+    GsdmlChannelDiag *cd = (GsdmlChannelDiag *) get_object_stack( current_tag);
+
+    if ( strcmp( name, "ErrorType") == 0)
+      sscanf( value, "%hu", &cd->error_type);
+    else if ( strcmp( name, "Name") == 0)
+      strncpy( cd->name, value, sizeof(cd->name));
+    else if ( strcmp( name, "Help") == 0)
+      strncpy( cd->help, value, sizeof(cd->help));
     break;
   }
   default: ;
