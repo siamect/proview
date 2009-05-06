@@ -264,6 +264,7 @@ palette NavigatorPalette
         menu Masters
         {
           class Pb_Profiboard
+          class Pb_Hilscher
         }
         menu Slaves
         {

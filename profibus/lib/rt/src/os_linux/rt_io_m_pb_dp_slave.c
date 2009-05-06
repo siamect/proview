@@ -27,15 +27,6 @@
 #include <sys/file.h>
 #include <sys/ioctl.h>
 
-#include "keywords.h"
-
-#include "pb_type.h"
-#include "pb_conf.h"
-#include "pb_if.h"
-#include "pb_err.h"
-#include "pb_fmb.h"
-#include "pb_dp.h"
-
 #include "rt_io_pb_locals.h"
 
 #include "pwr.h"
@@ -316,21 +307,13 @@ static pwr_tStatus IoRackRead (
 {
   pwr_sClass_Pb_Profiboard *mp;
   pwr_sClass_Pb_DP_Slave *sp;
-  T_PROFI_DEVICE_HANDLE *hDevice;
-  pwr_tUInt16 sts;
-  pwr_tUInt16 data_len;
-  
-  hDevice = (T_PROFI_DEVICE_HANDLE *) ap->Local;
   
   sp = (pwr_sClass_Pb_DP_Slave *) rp->op;
   mp = (pwr_sClass_Pb_Profiboard *) ap->op;
 
-  if (sp->Status == PB__NORMAL && mp->Status == PB__NORMAL && sp->DisableSlave != 1 && mp->DisableBus != 1) {
+  /* The reading of the process image is now performed at the agent level,
+  this eliminates the need for board specific code at the rack level.  */
 
-    data_len = sp->BytesOfInput;
-    sts = profi_get_data(hDevice, ID_DP_SLAVE_IO_IMAGE, sp->OffsetInputs, &data_len, &sp->Inputs );
-  }
-  
   if (sp->DisableSlave != 1 && mp->DisableBus != 1) {
   
     if (sp->Status == PB__NORMAL) {
@@ -368,26 +351,12 @@ static pwr_tStatus IoRackWrite (
 {
   pwr_sClass_Pb_Profiboard *mp;
   pwr_sClass_Pb_DP_Slave *sp;
-  T_PROFI_DEVICE_HANDLE *hDevice;
-  pwr_tUInt16 sts;
-
-  hDevice = (T_PROFI_DEVICE_HANDLE *) ap->Local;
   
   sp = (pwr_sClass_Pb_DP_Slave *) rp->op;
   mp = (pwr_sClass_Pb_Profiboard *) ap->op;
 
-  // Write the whole I/O output area from local area
-
-  if ((sp->Status == PB__NORMAL || sp->Status == PB__NOCONN) && 
-       mp->Status == PB__NORMAL && (sp->DisableSlave != 1) && (mp->DisableBus != 1)) {
-
-    if (sp->BytesOfOutput > 0) {
-    
-      sts = profi_set_data(hDevice, ID_DP_SLAVE_IO_IMAGE, sp->OffsetOutputs, sp->BytesOfOutput, &sp->Outputs);
-
-      if (sts != E_OK) sp->ErrorCount++;
-    }
-  }
+  /* The writing of the process image is now performed at the agent level,
+  this eliminates the need for board specific code at the rack level.  */
 
   if (sp->DisableSlave == 1 || mp->DisableBus == 1) sp->Status = PB__DISABLED;
 

@@ -1,7 +1,7 @@
 Volume SsabOx $ClassVolume 0.0.250.5 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X162"
-    Attr NextCix = "_X30"
+    Attr NextOix = "_X167"
+    Attr NextCix = "_X31"
     Attr NextTix[0] = "_X5"
   EndBody
   Object Type $TypeHier 138 30-DEC-2005 14:28:03.99
@@ -4254,6 +4254,188 @@ Volume SsabOx $ClassVolume 0.0.250.5
         EndObject
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO,IO_PSS9000
+    !  @Summary Configuration of a PID card PIDuP.
+    !  Configuration of a PSS9000 PID card PIDuP.
+    ! 
+    !  The PIDuP object is positioned below a SSAB_Rack object in the node configuration.
+    ! 
+    !  @h2 Function
+    ! 
+    !  The PIDuP-card is an autonomous PID-controller where the PID-algorithm runs
+    !  in the micro-processor of the card. Proview only send setpoint-values to the
+    !  card and the card itself calulates the control-value.
+    ! 
+    !  @h2 Console
+    !  The card has a terminal port that can be used to view the signal values of the card and to
+    !  trace trouble. To use the terminal port you
+    !  - connect the serial port of the computer to the terminal port of the card.
+    !  - open a consol window on the screen of the computer from the popup menu of the background,
+    !    menu item 'PSS Kort'.
+    !  - view information and help with (Shift) '?'.
+    !  - view the signal values of the card with 'R'.
+    !  For more information about the console program, follow the link below. 
+    ! 
+    !  @b See hardware specification
+    !  @link Datasheet ../dsh/ssab_pidup.pdf
+    !  @Link Console program http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#AI32uP
+    !*/
+    Object Ssab_PIDuP $ClassDef 30 27-MAR-2009 13:34:16.63
+      Body SysBody 25-MAR-2009 10:38:54.30
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 25-MAR-2009 10:39:31.96
+        Body SysBody 27-MAR-2009 13:34:30.21
+          Attr StructName = "Ssab_PIDuP"
+          Attr NextAix = "_X14"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 11 25-MAR-2009 10:41:05.61
+          Body SysBody 25-MAR-2009 10:40:51.04
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! Optional device name.
+        !*/
+        Object DevName $Attribute 10 25-MAR-2009 10:41:15.44
+          Body SysBody 25-MAR-2009 10:40:51.04
+            Attr PgmName = "DevName"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        !/**
+        ! Error counter, incremented for every failed read or write operation of the card.
+        ! When the error counter reaches ErrorSoftLimit, a message is sent to the console log.
+        ! When it reaches ErrorHardLimit, all IO handling is aborted.
+        !*/
+        Object ErrorCount $Attribute 9 25-MAR-2009 10:41:21.76
+          Body SysBody 25-MAR-2009 10:40:51.04
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 16
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Value of the error counter, when a message is sent to the console log.
+        !*/
+        Object ErrorSoftLimit $Attribute 8 25-MAR-2009 10:41:28.70
+          Body SysBody 25-MAR-2009 10:40:51.04
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Value of the error counter, when all IO handling is aborted.
+        !*/
+        Object ErrorHardLimit $Attribute 7 25-MAR-2009 10:41:35.61
+          Body SysBody 25-MAR-2009 10:40:51.04
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary QBUS address of the card.
+        ! QBUS address of the card.
+        ! The value is set with address switches on the card.
+        ! Typically addresses are:
+        ! 
+        ! 	Card number	Decimal address
+        ! 	1		4193024
+        ! 	2		4193028
+        ! 	3		4193032
+        ! 	4		4193036
+        !*/
+        Object RegAddress $Attribute 5 25-MAR-2009 10:41:55.11
+          Body SysBody 25-MAR-2009 10:40:51.04
+            Attr PgmName = "RegAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Object identity of PidX-block that should be connected
+        ! to this card.
+        !*/
+        Object PidXCon $Attribute 12 25-MAR-2009 10:47:49.69
+          Body SysBody 25-MAR-2009 10:48:12.80
+            Attr PgmName = "PidXCon"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Process that handles the card. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the card.
+        ! 
+        ! 1: The card is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The card is read by the rt_io_comm process.
+        ! 4: The card is handled by an application program.
+        !*/
+        Object Process $Attribute 3 25-MAR-2009 10:42:14.10
+          Body SysBody 25-MAR-2009 10:40:51.04
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Plc thread that handles the card.
+        ! The PlcThread object of the plc thread that handles the card.
+        ! The card read to with the scantime of the thread.
+        !*/
+        Object ThreadObject $Attribute 13 25-MAR-2009 10:48:37.17
+          Body SysBody 25-MAR-2009 10:48:38.85
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this object.
+        !  A URL to the data sheet for the equipment of this object.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
+        Object DataSheet $Attribute 1 25-MAR-2009 10:44:41.26
+          Body SysBody 25-MAR-2009 10:40:51.04
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 163 25-MAR-2009 10:50:23.12
+        Object IoCardInit $Method 164 25-MAR-2009 10:52:00.36
+          Body SysBody 30-MAR-2009 13:49:05.19
+            Attr MethodName = "Ssab_PIDuP-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 165 25-MAR-2009 10:53:21.52
+          Body SysBody 30-MAR-2009 13:49:12.65
+            Attr MethodName = "Ssab_PIDuP-IoCardRead"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 166 25-MAR-2009 10:54:43.00
+          Body SysBody 30-MAR-2009 13:49:21.22
+            Attr MethodName = "Ssab_PIDuP-IoCardWrite"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 167 25-MAR-2009 10:54:55.04
+          Body SysBody 30-MAR-2009 13:49:28.53
+            Attr MethodName = "Ssab_PIDuP-IoCardClose"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Ssab_PIDuP 2155577344 01-JAN-1970 01:00:00.00
+        Body RtBody 02-APR-2009 08:35:02.91
+          Attr ErrorSoftLimit = 100
+          Attr ErrorHardLimit = 500
+        EndBody
+      EndObject
+    EndObject
     Object Ai_AI32uP $ClassDef 16 30-DEC-2005 11:26:36.69
       Body SysBody 30-DEC-2005 11:26:36.69
         Attr Editor = 0
@@ -5802,425 +5984,30 @@ Volume SsabOx $ClassVolume 0.0.250.5
         EndBody
       EndObject
     EndObject
-    Object PID_1uP $ClassDef 25 12-JAN-2006 07:29:56.01
-      Body SysBody 12-JAN-2006 07:29:56.01
-        Attr Editor = 0
-        Attr Method = 5
-        Attr Flags = 2128
-      EndBody
-      Object RtBody $ObjBodyDef 1 12-JAN-2006 07:29:56.01
-        Body SysBody 12-JAN-2006 07:29:56.01
-          Attr StructName = "PID_1uP"
-          Attr NextAix = "_X58"
-        EndBody
-        Object Description $Attribute 1 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "Description"
-            Attr TypeRef = "pwrs:Type-$String80"
-          EndBody
-        EndObject
-        Object DevName $Attribute 2 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "DevName"
-            Attr TypeRef = "pwrs:Type-$String40"
-          EndBody
-        EndObject
-        Object ErrorCount $Attribute 3 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "ErrorCount"
-            Attr Flags = 1024
-            Attr TypeRef = "pwrs:Type-$UInt32"
-          EndBody
-        EndObject
-        Object ErrorSoftLimit $Attribute 4 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "ErrorSoftLimit"
-            Attr TypeRef = "pwrs:Type-$UInt32"
-          EndBody
-        EndObject
-        Object ErrorHardLimit $Attribute 5 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "ErrorHardLimit"
-            Attr TypeRef = "pwrs:Type-$UInt32"
-          EndBody
-        EndObject
-        Object StallReact $Attribute 6 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "StallReact"
-            Attr TypeRef = "pwrs:Type-$UInt32"
-          EndBody
-        EndObject
-        Object RegAddress $Attribute 7 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "RegAddress"
-            Attr TypeRef = "pwrs:Type-$UInt32"
-          EndBody
-        EndObject
-        Object VectAddress $Attribute 8 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "VectAddress"
-            Attr TypeRef = "pwrs:Type-$UInt32"
-          EndBody
-        EndObject
-        Object Process $Attribute 9 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "Process"
-            Attr TypeRef = "pwrs:Type-$UInt32"
-          EndBody
-        EndObject
-        Object ThreadObject $Attribute 10 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "ThreadObject"
-            Attr TypeRef = "pwrs:Type-$Objid"
-          EndBody
-        EndObject
-        Object PidXCon $Intern 11 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "PidXCon"
-            Attr TypeRef = "pwrs:Type-$Objid"
-          EndBody
-        EndObject
-        Object SetVal $Attribute 12 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "SetVal"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object BiasD $Attribute 13 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "BiasD"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object ForcVal $Attribute 14 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "ForcVal"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object Force $Attribute 15 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "Force"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Boolean"
-          EndBody
-        EndObject
-        Object IntOff $Attribute 16 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "IntOff"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Boolean"
-          EndBody
-        EndObject
-        Object Init $Attribute 17 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "Init"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Boolean"
-          EndBody
-        EndObject
-        Object PidAlg $Attribute 18 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "PidAlg"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$UInt32"
-          EndBody
-        EndObject
-        Object Inverse $Attribute 19 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "Inverse"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Boolean"
-          EndBody
-        EndObject
-        Object PidGain $Attribute 20 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "PidGain"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object IntTime $Attribute 21 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "IntTime"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object DerTime $Attribute 22 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "DerTime"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object DerGain $Attribute 23 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "DerGain"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object MinOut $Attribute 24 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "MinOut"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object MaxOut $Attribute 25 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "MaxOut"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object EndHys $Attribute 26 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "EndHys"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object BiasGain $Attribute 27 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "BiasGain"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object UseDynBias $Attribute 28 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "UseDynBias"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Boolean"
-          EndBody
-        EndObject
-        Object ActMax $Attribute 29 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "ActMax"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object ActMin $Attribute 30 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "ActMin"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object ActRawMax $Attribute 31 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "ActRawMax"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Int32"
-          EndBody
-        EndObject
-        Object ActRawMin $Attribute 32 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "ActRawMin"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Int32"
-          EndBody
-        EndObject
-        Object BiasMax $Attribute 33 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "BiasMax"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object BiasMin $Attribute 34 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "BiasMin"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object BiasRawMax $Attribute 35 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "BiasRawMax"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Int32"
-          EndBody
-        EndObject
-        Object BiasRawMin $Attribute 36 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "BiasRawMin"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Int32"
-          EndBody
-        EndObject
-        Object UseAo $Attribute 37 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "UseAo"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Boolean"
-          EndBody
-        EndObject
-        Object AoMax $Attribute 38 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "AoMax"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object AoMin $Attribute 39 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "AoMin"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object AoRawMax $Attribute 40 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "AoRawMax"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Int32"
-          EndBody
-        EndObject
-        Object AoRawMin $Attribute 41 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "AoRawMin"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Int32"
-          EndBody
-        EndObject
-        Object UsePos3p $Attribute 42 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "UsePos3p"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Boolean"
-          EndBody
-        EndObject
-        Object PosMax $Attribute 43 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "PosMax"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object PosMin $Attribute 44 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "PosMin"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object PosRawMax $Attribute 45 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "PosRawMax"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Int32"
-          EndBody
-        EndObject
-        Object PosRawMin $Attribute 46 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "PosRawMin"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Int32"
-          EndBody
-        EndObject
-        Object ErrSta $Attribute 47 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "ErrSta"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object ErrSto $Attribute 48 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "ErrSto"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object Pos3pGain $Attribute 49 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "Pos3pGain"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object ProcFiltTime $Attribute 50 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "ProcFiltTime"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object BiasFiltTime $Attribute 51 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "BiasFiltTime"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object PosFiltTime $Attribute 52 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "PosFiltTime"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object UseInc3p $Attribute 53 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "UseInc3p"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Boolean"
-          EndBody
-        EndObject
-        Object Inc3pGain $Attribute 54 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "Inc3pGain"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object MinTim $Attribute 55 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "MinTim"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object MaxTim $Attribute 56 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "MaxTim"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object MaxInteg $Attribute 57 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr PgmName = "MaxInteg"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-      EndObject
-      Object DevBody $ObjBodyDef 2 12-JAN-2006 07:29:56.01
-        Body SysBody 12-JAN-2006 07:29:56.01
-          Attr NextAix = "_X2"
-        EndBody
-        Object PlcNode $Buffer 1 12-JAN-2006 07:29:56.01
-          Body SysBody 12-JAN-2006 07:29:56.01
-            Attr Flags = 2048
-            Attr Class = "pwrs:Class-$PlcNode"
-          EndBody
-        EndObject
-      EndObject
-      Object Template PID_1uP 2154266624 01-JAN-1970 01:00:00.00
-        Body RtBody 01-JAN-1970 01:00:00.00
-        EndBody
-        Body DevBody 01-JAN-1970 01:00:00.00
-        EndBody
-      EndObject
-    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Code ssabox_plc_pidx.c
+    !  @Group Plc,PlcControl
+    !  @Summary Implements the robust PID control algorithm
+    !  Implements the robust PID control algorithm.
+    !  @image orm_en1-141.gif
+    ! 
+    !  Different PID strategies are implemented for
+    !  incremental as well as positional form, see PidAlg
+    !  below.
+    !  The proportional respectively derivative term can be
+    !  based either on process value or control deviation.
+    !  
+    !  The derivative term can be filtered by a first order
+    !  lag filter.
+    !  A feed forward signal, Bias, may be included in the
+    !  algorithm.
+    !  
+    !  It is possible to switch the integration on/off.
+    !  The control signal OutVal is checked against the limit
+    !  values MinOut and MaxOut.
+    !  
+    !*/
     Object PidX $ClassDef 26 12-JAN-2006 07:30:19.53
       Body SysBody 12-JAN-2006 07:30:19.53
         Attr Editor = 0
@@ -6233,6 +6020,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
           Attr StructName = "PidX"
           Attr NextAix = "_X62"
         EndBody
+        !/**
+        !  Specifies the set point value. 
+        !*/
         Object SetVal $Input 1 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "SetVal"
@@ -6247,6 +6037,12 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr GraphName = "BIS"
           EndBody
         EndObject
+        !/**
+        !  Specifies which value is to be used when Force is TRUE.
+        !  When Force is TRUE OutVal is equal to ForcVal. This
+        !  input is in general connected to the corresponding
+        !  output of a Mode object.
+        !*/
         Object ForcVal $Input 3 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "ForcVal"
@@ -6254,6 +6050,10 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr GraphName = "FOV"
           EndBody
         EndObject
+        !/**
+        !  Specifies whether forced control is selected
+        !  or not. FALSE means none; 
+        !*/
         Object Force $Input 4 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "Force"
@@ -6262,6 +6062,11 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr GraphName = "for"
           EndBody
         EndObject
+        !/**
+        !  Specifies whether to enable or disable the integration.
+        !  FALSE means that the integration is on; TRUE switches
+        !  the integration off.
+        !*/
         Object IntOff $Input 5 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "IntOff"
@@ -6270,36 +6075,18 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr GraphName = "iof"
           EndBody
         EndObject
-        Object PosVal $Output 6 12-JAN-2006 07:30:19.53
-          Body SysBody 12-JAN-2006 07:30:19.53
-            Attr PgmName = "PosVal"
-            Attr Flags = 1040
-            Attr TypeRef = "pwrs:Type-$Float32"
-            Attr GraphName = "POS"
-          EndBody
-        EndObject
-        Object ProcVal $Output 7 12-JAN-2006 07:30:19.53
-          Body SysBody 12-JAN-2006 07:30:19.53
-            Attr PgmName = "ProcVal"
-            Attr Flags = 1040
-            Attr TypeRef = "pwrs:Type-$Float32"
-            Attr GraphName = "PV"
-          EndBody
-        EndObject
-        Object Bias $Output 8 12-JAN-2006 07:30:19.53
-          Body SysBody 12-JAN-2006 07:30:19.53
-            Attr PgmName = "Bias"
-            Attr Flags = 1040
-            Attr TypeRef = "pwrs:Type-$Float32"
-            Attr GraphName = "BIS"
-          EndBody
-        EndObject
+        !/**
+        !  Description.
+        !*/
         Object Description $Intern 9 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Not used.
+        !*/
         Object Pid1uPCon $Intern 10 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "Pid1uPCon"
@@ -6307,6 +6094,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr NiNaAnnot = 1
           EndBody
         EndObject
+        !/**
+        !  Accumulated control error - in time form.
+        !*/
         Object Acc $Intern 11 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "Acc"
@@ -6314,6 +6104,10 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  The controller's control signal. The value is based
+        !  either on the algorithm's current result or a forced value.
+        !*/
         Object OutVal $Intern 12 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "OutVal"
@@ -6321,6 +6115,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Control error (= ProcVal - SetVal).
+        !*/
         Object ControlDiff $Intern 13 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "ControlDiff"
@@ -6335,6 +6132,17 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Specifies if OutVal at this scanning has been limited
+        !  against any of the limit values in the interval {
+        !  MinOut, MaxOut } or not. If a limitation is done
+        !  against
+        !  
+        !  --  MinOut, then EndMin is set TRUE
+        !  --  MaxOut, then EndMax is set TRUE
+        !  else they are FALSE.
+        !  
+        !*/
         Object EndMax $Intern 15 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "EndMax"
@@ -6342,6 +6150,17 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Specifies if OutVal at this scanning has been limited
+        !  against any of the limit values in the interval {
+        !  MinOut, MaxOut } or not. If a limitation is done
+        !  against
+        !  
+        !  --  MinOut, then EndMin is set TRUE
+        !  --  MaxOut, then EndMax is set TRUE
+        !  else they are FALSE.
+        !  
+        !*/
         Object EndMin $Intern 16 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "EndMin"
@@ -6349,274 +6168,582 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Request to initialize card, not implemented.
+        !*/
         Object Init $Intern 17 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "Init"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary The PID control algorithm
+        !  There are several variations of the PID control
+        !  algorithm. PidAlg specifies the current choice. The
+        !  possible values are as follows:
+        !  
+        !  1   -- I     Integral controller. Gain is not used.
+        ! 
+        !  3   -- I+P   Integral controller with proportional
+        !               control action. The P-term is based on the
+        !               the process value.
+        ! 
+        !  6   -- P     Proportional Controller.
+        ! 
+        !  7   -- PI    Proportional Integral Controller. The
+        !               P-term is based on the control error.
+        !  
+        !  11  -- I+PD Integral controller with proportional
+        !              derivative control action. Both the P- and
+        !              D-term are based on the process value.
+        ! 
+        !  14  -- P+D  Proportional Controller with derivative
+        !              control action. P is based on the control error,
+        !              D on the process value.
+        !  
+        !  15  -- PI+D Proportional Integral Controller with
+        !              derivative control action. P is based on
+        !              the control error, D on the process value.
+        ! 
+        !  30  -- PD   Proportional Derivative Controller. Both
+        !              the P- and D-term are based on the control
+        !              error.
+        !  
+        !  31  -- PID  Proportional Integral Derivative
+        !              Controller. Both the P- and D-term are
+        !              based on the control error.
+        !*/
         Object PidAlg $Intern 18 12-JAN-2006 07:30:19.53
-          Body SysBody 12-JAN-2006 07:30:19.53
+          Body SysBody 31-MAR-2009 14:29:29.84
             Attr PgmName = "PidAlg"
-            Attr TypeRef = "pwrs:Type-$UInt32"
+            Attr TypeRef = "pwrb:Type-PidAlgEnum"
           EndBody
         EndObject
+        !/**
+        !  Specifies whether the control action should be inverted
+        !  or not. FALSE means that a spontaneous increasing
+        !  process value, in a control with fixed set point, is
+        !  met by an increasing control signal, i.e. reverse
+        !  control action. TRUE is the normal case, where a
+        !  spontaneous increasing process value is met by a
+        !  decreasing control signal.
+        !*/
         Object Inverse $Intern 19 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "Inverse"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Specifies the proportional control factor; >= 0.
+        !  The value may be changed in the more info form of the
+        !  Pid object.
+        !*/
         Object PidGain $Intern 20 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "PidGain"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Specifies the integral action time in seconds.
+        !  The value may be changed in the more info form of the
+        !  Pid object.
+        !*/
         Object IntTime $Intern 21 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "IntTime"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Specifies the derivative time in seconds; see p. 3-258.
+        !  Normally DerTime is greater than ScanTime and
+        !     1.0 <=  DerGain < DerTime/ScanTime
+        !*/
         Object DerTime $Intern 22 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "DerTime"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Factor to specify the first order lag filter used in
+        !  filtering of the derivative contribution.
+        !     
+        !  1.0 <= DerGain < DerTime/ScanTime, otherwise no filtering
+        !  
+        !  DerGain is normally in the size of 3 to 4.
+        !  The value may be changed in the more info form of the
+        !  Pid object.
+        !*/
         Object DerGain $Intern 23 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "DerGain"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  The control signal OutVal
+        !  is supposed to be in the interval { MinOut, MaxOut }.
+        !  The EndMin /EndMax flags are used to signal if any
+        !  limitation has occurred.
+        !  If OutVal is greater than MaxOut or less than MinOut,
+        !  OutVal is limited to the value at the end of the
+        !  interval.
+        !  
+        !  If MinOut >= MaxOut no limitation will occur.
+        !*/
         Object MinOut $Intern 24 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "MinOut"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  The control signal OutVal
+        !  is supposed to be in the interval { MinOut, MaxOut }.
+        !  The EndMin /EndMax flags are used to signal if any
+        !  limitation has occurred.
+        !  If OutVal is greater than MaxOut or less than MinOut,
+        !  OutVal is limited to the value at the end of the
+        !  interval.
+        !  
+        !  If MinOut >= MaxOut no limitation will occur.
+        !*/
         Object MaxOut $Intern 25 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "MaxOut"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Specifies the hysteresis on MinOut and MaxOut in
+        !  connection with the handling of EndMin/EndMax.
+        !  @image orm_en1-144.gif
+        !*/
         Object EndHys $Intern 26 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "EndHys"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Specifies the feed forward gain; this factor may be
+        !  negative.
+        !  
+        !  The values may be changed in the more info form of the
+        !  Pid object.
+        !*/
         Object BiasGain $Intern 27 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "BiasGain"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  True if bias should be used.
+        !*/
         Object UseDynBias $Intern 28 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "UseDynBias"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Engineering value representing maximum raw value
+        !  of the process value.
+        !*/
         Object ProcMax $Intern 29 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "ProcMax"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Engineering value representing minimum raw value
+        !  of the process value.
+        !*/
         Object ProcMin $Intern 30 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "ProcMin"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  The unit of the process value.
+        !*/
         Object ProcValueUnit $Intern 31 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "ProcValueUnit"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        !/**
+        !  Filter time of the analog input of the process value.
+        !*/
         Object ProcFiltTime $Intern 32 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "ProcFiltTime"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Raw value representing the maximum value of the analog input
+        !  of the process value. This is default 30000.
+        !*/
         Object ProcRawMax $Intern 33 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "ProcRawMax"
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
+        !/**
+        !  Raw value representing the minimum value of the analog input
+        !  of the process value. This is default 30000.
+        !*/
         Object ProcRawMin $Intern 34 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "ProcRawMin"
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
+        !/**
+        !  Engineering value representing maximum raw value
+        !  of the bias analog input.
+        !*/
         Object BiasMax $Intern 35 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "BiasMax"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Engineering value representing minimum raw value
+        !  of the bias analog input.
+        !*/
         Object BiasMin $Intern 36 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "BiasMin"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  The unit of the bias value.
+        !*/
         Object BiasValueUnit $Intern 37 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "BiasValueUnit"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        !/**
+        !  Filter time of the analog input of the bias value.
+        !*/
         Object BiasFiltTime $Intern 38 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "BiasFiltTime"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Raw value representing the maximum value of the analog input
+        !  of the bias value. This is default 30000.
+        !*/
         Object BiasRawMax $Intern 39 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "BiasRawMax"
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
+        !/**
+        !  Raw value representing the minimum value of the analog input
+        !  of the bias value. This is default 0.
+        !*/
         Object BiasRawMin $Intern 40 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "BiasRawMin"
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
+        !/**
+        !  Represents the stall action to be taken when there is no cyclic
+        !  communication with the card. if TRUE the analog output of the
+        !  control value will be held. If FALSE the PID-algorithm will
+        !  continue calculating the control value.
+        !*/
         Object UseAo $Intern 41 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "UseAo"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Engineering value representing maximum raw value
+        !  of the control signal analog output.
+        !*/
         Object AoMax $Intern 42 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "AoMax"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Engineering value representing minimum raw value
+        !  of the control signal analog output.
+        !*/
         Object AoMin $Intern 43 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "AoMin"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  The unit of the control value.
+        !*/
         Object AoValueUnit $Intern 44 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "AoValueUnit"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        !/**
+        !  Raw value representing the maximum value of the analog output
+        !  of the control value. This is default 30000.
+        !*/
         Object AoRawMax $Intern 45 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "AoRawMax"
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
+        !/**
+        !  Raw value representing the minimum value of the analog output
+        !  of the control value. This is default 0.
+        !*/
         Object AoRawMin $Intern 46 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "AoRawMin"
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
+        !/**
+        !  Positional 3-step controller with position feedback and
+        !  dead zone. Positional is aimed at the input signal and
+        !  the digit 3 on the fact that the output signals specify
+        !  one of three distinct orders e.g. increase / decrease.
+        !  
+        !  If set to TRUE, the positional 3-step controller will be used.
+        !*/
         Object UsePos3p $Intern 47 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "UsePos3p"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Engineering value representing maximum raw value
+        !  of the position signal analog input.
+        !*/
         Object PosMax $Intern 48 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "PosMax"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Engineering value representing minimum raw value
+        !  of the position signal analog input.
+        !*/
         Object PosMin $Intern 49 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "PosMin"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  The unit of the position signal.
+        !*/
         Object PosValueUnit $Intern 50 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "PosValueUnit"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        !/**
+        !  Filter time of the analog input of the position value.
+        !*/
         Object PosFiltTime $Intern 51 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "PosFiltTime"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Raw value representing the maximum value of the analog input
+        !  of the position signal. This is default 30000.
+        !*/
         Object PosRawMax $Intern 52 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "PosRawMax"
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
+        !/**
+        !  Raw value representing the minimum value of the analog input
+        !  of the position signal. This is default 0.
+        !*/
         Object PosRawMin $Intern 53 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "PosRawMin"
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
+        !/**
+        !  Specifies the dead zone value which the control error
+        !  has to exceed before an open- or close-signal will be
+        !  set or started.
+        !  
+        !  The demand on the dead zone is 0 £ ErrSto £ ErrSta
+        !  Open or Close is set when the absolute value of (OutVal(t)
+        !  - Pos(t) ) is greater than ErrSta.
+        !  
+        !  Only used when UsePos3p is TRUE.
+        !*/
         Object ErrSta $Intern 54 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "ErrSta"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Specifies the dead zone value which the control error
+        !  have to be below before an open- or close-signal will
+        !  be reset or stopped.
+        !  Open or Close is interrupted when the absolute value of
+        !  (OutVal(t)  - Post(t)) is less than ErrSto.
+        !  The demand on the dead zone is 0 <= ErrSto <= ErrSta
+        !  
+        !  Only used when UsePos3p is TRUE.
+        !*/
         Object ErrSto $Intern 55 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "ErrSto"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Gain, in seconds, per control signal unit. The control
+        !  signal is often in the range 0 - 100 %. Suppose it is
+        !  possible to measure the running time, e.g. the time to
+        !  drive a valve from completely open to completely
+        !  closed. Then select Gain as running time divided by the
+        !  range; ( here 100 - 0).
+        !  
+        !  Gain is only used in conjunction with timer control of
+        !  the outputs.
+        !*/
         Object Pos3pGain $Intern 56 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "Pos3pGain"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Incremental 3-point output with dead zone. Incremental
+        !  comes from the type of input and the digit 3 of the
+        !  output, which can have three distinct values, e.g. open
+        !  / close / 0 but also with the meaning of up / down / 0
+        !  or right / left / 0 or increase / decrease / 0 etc. The
+        !  outputs are time-proportional to the input.
+        !  
+        !  If set to TRUE, the positional 3-step controller will be used.
+        !*/
         Object UseInc3p $Intern 57 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "UseInc3p"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Gain, in seconds, per control signal unit. Often the
+        !  control signal is in the range 0 - 100 %. Suppose it is
+        !  possible to measure the running time, for example, the
+        !  time to drive a valve from completely open to
+        !  running time / divided by the range; ( here 100 - 0).
+        !*/
         Object Inc3pGain $Intern 58 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "Inc3pGain"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  The dead zone in seconds; see the description above. If
+        !  the absolute value of Acc is less than MinTim no output
+        !  at all is set.
+        !  
+        !  Only used when UseInc3p is TRUE.
+        !*/
         Object MinTim $Intern 59 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "MinTim"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  When the MaxTim, in seconds, has elapsed without any
+        !  output signal Acc is set equal to 0.
+        !  
+        !  Only used when UseInc3p is TRUE.
+        !*/
         Object MaxTim $Intern 60 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "MaxTim"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Unknown usage. Should be set to 1.0.
+        !*/
         Object MaxInteg $Intern 61 12-JAN-2006 07:30:19.53
           Body SysBody 12-JAN-2006 07:30:19.53
             Attr PgmName = "MaxInteg"
             Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        !  Position, from card.
+        !*/
+        Object PosVal $Output 6 27-MAR-2009 16:11:46.22
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "PosVal"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "POS"
+          EndBody
+        EndObject
+        !/**
+        !  Process value, from card.
+        !*/
+        Object ProcVal $Output 7 27-MAR-2009 16:11:48.43
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "ProcVal"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "PV"
+          EndBody
+        EndObject
+        !/**
+        !  Bias Value, from card.
+        !*/
+        Object Bias $Output 8 27-MAR-2009 16:11:49.77
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "Bias"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "BIS"
           EndBody
         EndObject
       EndObject
@@ -6632,7 +6759,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         EndObject
       EndObject
       Object GraphPlcNode $GraphPlcNode 148 12-JAN-2006 07:30:19.53
-        Body SysBody 12-JAN-2006 07:30:19.53
+        Body SysBody 27-MAR-2009 16:05:51.62
           Attr object_type = 11
           Attr parameters[0] = 5
           Attr parameters[1] = 53
@@ -6654,7 +6781,29 @@ Volume SsabOx $ClassVolume 0.0.250.5
         EndBody
       EndObject
       Object Template PidX 2154528768 01-JAN-1970 01:00:00.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 31-MAR-2009 14:44:34.00
+          Attr PidAlg = 3
+          Attr Inverse = 1
+          Attr PidGain = 1.000000e+00
+          Attr IntTime = 1.200000e+02
+          Attr DerGain = 3.000000e+00
+          Attr MaxOut = 1.000000e+02
+          Attr BiasGain = 1.000000e+00
+          Attr ProcMax = 1.000000e+02
+          Attr ProcRawMax = 30000
+          Attr BiasMax = 1.000000e+02
+          Attr BiasRawMax = 30000
+          Attr AoMax = 1.000000e+02
+          Attr AoRawMax = 30000
+          Attr PosMax = 1.000000e+02
+          Attr PosRawMax = 30000
+          Attr ErrSta = 1.000000e+00
+          Attr ErrSto = 1.000000e+00
+          Attr Pos3pGain = 1.000000e+00
+          Attr Inc3pGain = 1.000000e+00
+          Attr MinTim = 1.000000e+00
+          Attr MaxTim = 1.000000e+00
+          Attr MaxInteg = 1.000000e+00
         EndBody
         Body DevBody 01-JAN-1970 01:00:00.00
         EndBody

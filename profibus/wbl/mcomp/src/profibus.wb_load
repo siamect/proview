@@ -1,7 +1,7 @@
 Volume Profibus $ClassVolume 0.0.250.7 
   Body SysBody 05-SEP-2005 17:51:40.00
-    Attr NextOix = "_X109"
-    Attr NextCix = "_X14"
+    Attr NextOix = "_X161"
+    Attr NextCix = "_X18"
     Attr NextTix[0] = "_X7"
   EndBody
   Object Type $TypeHier 55 16-JAN-2006 10:07:43.21
@@ -1967,6 +1967,728 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr MethodName = "Pb_Profiboard-IoAgentSwap"
           EndBody
         EndObject
+      EndObject
+    EndObject
+    !/**
+    ! @Author Ferdinand Hauck
+    ! @Version 1.0
+    ! @Group IO
+    ! @Summary Configures a Hilscher CIF 50-PB (Profibus DP master board)
+    ! Configuresa Hilscher CIF 50-PB (Profibus DP master board).
+    ! Available on GNU/Linux.  The object should be named Px, where x is
+    ! the number of the device, e.g. P1.  It should in theory be possible
+    ! to run up to four Hilscher Profibus DP master boards in parallel per
+    ! system.
+    ! This class is based on the Softing Profiboard class by Claes Jurstrand.
+    !*/
+    Object Pb_Hilscher $ClassDef 14 09-DEC-2008 13:19:56.59
+      Body SysBody 09-DEC-2008 13:19:32.10
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 4176
+      EndBody
+      Object RtBody $ObjBodyDef 1 09-DEC-2008 13:20:25.79
+        Body SysBody 09-DEC-2008 13:26:35.55
+          Attr StructName = "Pb_Hilscher"
+          Attr NextAix = "_X53"
+        EndBody
+        !/**
+        ! Text description of the object (comment).
+        !*/
+        Object Description $Attribute 27 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! Defines the Proview process that will handle I/O for the bus.
+        ! 1 for the PLC process (default).
+        !*/
+        Object Process $Attribute 28 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        !/**
+        ! Defines which of the PLC threads that will handle I/O for the bus (if Process = 1).
+        !*/
+        Object ThreadObject $Attribute 29 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        !/**
+        ! Indicates the current state of the bus in runtime. Updated by the I/O-handler.
+        ! PB__NOTINIT : Bus is not initialized.
+        ! PB__INITFAIL : Bus failed to be initialized.
+        ! PB__DISABLED : Bus is disabled, no I/O-handling will be performed.
+        ! PB__STOPPED : Bus is in stopped mode.
+        ! PB__CLEARED : Bus is in cleared mode.
+        ! PB__NORMAL : Bus is in operating mode (this should be the normal state when running).
+        !*/
+        Object Status $Attribute 30 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "Status"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+        !/**
+        ! Flag that disables the initialization of the bus, if initialized turns off I/O-handling.
+        !*/
+        Object DisableBus $Attribute 31 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "DisableBus"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        !/**
+        ! Number of configured slaves in the bus. Updated by the I/O-handler.
+        !*/
+        Object NumberSlaves $Attribute 32 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "NumberSlaves"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Number of the bus.  This value is independent for different agent
+        ! classes, so if you mix boards from different vendors, the agent
+        ! objects for the cards will share BusNumber in some cases.
+        ! It should be possible to attach up to four Hilscher Profibus DP
+        ! master boards to each system.
+        !*/
+        Object BusNumber $Attribute 33 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "BusNumber"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Baud rate for the bus in Kbit/s. Possible values are 500, 1500, 3000, 6000, 12000.
+        ! Note that the values for some of the following attributes are depending on the 
+        ! baud rate.
+        !*/
+        Object BaudRate $Attribute 37 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "BaudRate"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Watchdog timer for write supervision in the master card. This watchdog is 
+        ! activated at the first write operation after initialization. If the timer later 
+        ! elapses without a write operation, the master card will reset itself, and the bus 
+        ! will stop, leaving all slaves to stall when their own stall time elapses.
+        ! A value of 0 will disable the board's watchdog functionality altogether.
+        ! Range 0..65535 ms
+        !*/
+        Object StallTime $Attribute 38 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "StallTime"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Slot time, the maximum time a master station must wait for a transaction response. 
+        ! Range 37..16383 Bit Times.
+        ! Recommended values for each baud rate:
+        ! 500 kbit/s - 200
+        ! 1500 kbit/s - 300
+        ! 3000 kbit/s - 400
+        ! 6000 kbit/s - 600
+        ! 12000 kbit/s - 1000
+        !*/
+        Object Tsl $Attribute 39 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "Tsl"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Minimum station delay time for responder, the period of time which may elapse before 
+        ! the responder can send the response frame. Range 11..1023 Bit Times.
+        ! Recommended values for each baud rate:
+        ! 500 kbit/s - 11
+        ! 1500 kbit/s - 11
+        ! 3000 kbit/s - 11
+        ! 6000 kbit/s - 11
+        ! 12000 kbit/s - 11
+        !*/
+        Object MinTsdr $Attribute 40 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "MinTsdr"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Maximum station delay time for responder, the responder has to send the response frame
+        ! before this time is elapsed. Range 37..2^16-1 Bit Times.
+        ! Recommended values for each baud rate:
+        ! 500 kbit/s - 100
+        ! 1500 kbit/s - 150
+        ! 3000 kbit/s - 250
+        ! 6000 kbit/s - 450
+        ! 12000 kbit/s - 800
+        !*/
+        Object MaxTsdr $Attribute 41 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "MaxTsdr"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Quiet time, the period of time which a transmitting station must wait after the end of a frame
+        ! before enabling its receiver. It is significant when using repeaters. Range 0..493 Bit Times.
+        ! Recommended values for each baud rate:
+        ! 500 kbit/s - 0
+        ! 1500 kbit/s - 0
+        ! 3000 kbit/s - 3
+        ! 6000 kbit/s - 6
+        ! 12000 kbit/s - 9
+        !*/
+        Object Tqui $Attribute 42 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "Tqui"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        !/**
+        ! Setup time, the time between the occurrence of an interrupt request and the necessary request 
+        ! action is performed. Range 1..494-Tqui BitTimes.
+        ! Recommended values for each baud rate:
+        ! 500 kbit/s - 1
+        ! 1500 kbit/s - 1
+        ! 3000 kbit/s - 4
+        ! 6000 kbit/s - 8
+        ! 12000 kbit/s - 16
+        !*/
+        Object Tset $Attribute 43 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "Tset"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        !/**
+        ! Target rotation time, the anticipated time for one token rotation on the bus, including
+        ! allowances for high and low priority transactions and GAP maintenance. 
+        ! Range 256..2^24-1 Bit Times.
+        ! The value is irrelevant in Profibus DP operations.
+        !*/
+        Object Ttr $Attribute 44 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "Ttr"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Gap update factor, defines the number of token rotations between GAP maintenance cycles.
+        ! Range 1..100.
+        ! Recommended values for each baud rate:
+        ! 500 kbit/s - 1
+        ! 1500 kbit/s - 10
+        ! 3000 kbit/s - 10
+        ! 6000 kbit/s - 10
+        ! 12000 kbit/s - 10
+        !*/
+        Object G $Attribute 45 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "G"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        !/**
+        ! Highest station address. Range 1..126.
+        !*/
+        Object Hsa $Attribute 46 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "Hsa"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        !/**
+        ! Maximum retry limit, indicates how often FDL has to repeat the request frame when no response 
+        ! or acknowledge frame is receive from the recognized station within the slot time. Range 0..7.
+        ! Recommended values for each baud rate:
+        ! 500 kbit/s - 1
+        ! 1500 kbit/s - 1
+        ! 3000 kbit/s - 2
+        ! 6000 kbit/s - 3
+        ! 12000 kbit/s - 4
+        !*/
+        Object MaxRetryLimit $Attribute 47 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "MaxRetryLimit"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        !/**
+        ! Bus parameter flag. Should not be changed from the default value.
+        !*/
+        Object BpFlag $Attribute 48 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "BpFlag"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        !/**
+        ! Data exchange cycle time in 100 us. Should not be changed from the default value.
+        !*/
+        Object MinSlaveInterval $Attribute 49 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "MinSlaveInterval"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Watchdog timer for Master to Master communication.
+        !*/
+        Object PollTimeout $Attribute 50 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "PollTimeout"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Control interval for global control status reports of the DP master.
+        !*/
+        Object DataControlTime $Attribute 51 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "DataControlTime"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Area for receiving diagnostic data from the master. Not implemented yet.
+        !*/
+        Object Diag $Attribute 52 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:19:32.10
+            Attr PgmName = "Diag"
+            Attr Flags = 3074
+            Attr Elements = 256
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 110 09-DEC-2008 13:19:32.10
+        Object IoAgentInit $Method 111 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:20:59.19
+            Attr MethodName = "Pb_Hilscher-IoAgentInit"
+          EndBody
+        EndObject
+        Object IoAgentClose $Method 112 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:21:12.28
+            Attr MethodName = "Pb_Hilscher-IoAgentClose"
+          EndBody
+        EndObject
+        Object IoAgentRead $Method 113 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:21:25.05
+            Attr MethodName = "Pb_Hilscher-IoAgentRead"
+          EndBody
+        EndObject
+        Object IoAgentWrite $Method 114 09-DEC-2008 13:19:32.10
+          Body SysBody 09-DEC-2008 13:21:42.78
+            Attr MethodName = "Pb_Hilscher-IoAgentWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Pb_Hilscher 2151383040 01-JAN-1970 01:00:00.00
+        Body RtBody 09-DEC-2008 13:24:06.12
+          Attr Process = 1
+          Attr BusNumber = 1
+          Attr BaudRate = 12000
+          Attr StallTime = 3000
+          Attr Tsl = 1000
+          Attr MinTsdr = 11
+          Attr MaxTsdr = 800
+          Attr Tqui = 9
+          Attr Tset = 16
+          Attr Ttr = 300000
+          Attr G = 10
+          Attr Hsa = 126
+          Attr MaxRetryLimit = 4
+          Attr MinSlaveInterval = 1
+          Attr PollTimeout = 1000
+          Attr DataControlTime = 100
+        EndBody
+      EndObject
+    EndObject
+    Object PnControllerSoftingPNAK $ClassDef 15 21-APR-2009 13:41:08.17
+      Body SysBody 21-APR-2009 13:41:08.17
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 4176
+      EndBody
+      Object RtBody $ObjBodyDef 1 21-APR-2009 13:41:08.17
+        Body SysBody 21-APR-2009 13:41:08.17
+          Attr StructName = "Pb_Profiboard"
+          Attr NextAix = "_X57"
+        EndBody
+        Object Description $Attribute 53 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Process $Attribute 54 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 55 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object Status $Attribute 56 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "Status"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 116 21-APR-2009 13:41:08.17
+        Object IoAgentInit $Method 117 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnControllerSoftingPNAK-IoAgentInit"
+          EndBody
+        EndObject
+        Object IoAgentClose $Method 118 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnControllerSoftingPNAK-IoAgentClose"
+          EndBody
+        EndObject
+        Object IoAgentRead $Method 119 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnControllerSoftingPNAK-IoAgentRead"
+          EndBody
+        EndObject
+        Object IoAgentWrite $Method 120 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnControllerSoftingPNAK-IoAgentWrite"
+          EndBody
+        EndObject
+        Object IoAgentSwap $Method 121 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnControllerSoftingPNAK-IoAgentSwap"
+          EndBody
+        EndObject
+      EndObject
+      Object Template PnControllerSoftingPNAK 2151645184 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object PnDevice $ClassDef 16 21-APR-2009 13:41:08.17
+      Body SysBody 21-APR-2009 13:41:08.17
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 8272
+      EndBody
+      Object RtBody $ObjBodyDef 1 21-APR-2009 13:41:08.17
+        Body SysBody 21-APR-2009 13:41:08.17
+          Attr StructName = "PnDevice"
+          Attr NextAix = "_X97"
+        EndBody
+        Object Description $Attribute 87 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Specification $Attribute 88 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "Specification"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object DataSheet $Attribute 89 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+        Object GSDMLfile $Attribute 90 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "GSDMLfile"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Status $Attribute 91 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "Status"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+        Object Process $Attribute 92 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 93 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object ErrorCount $Attribute 94 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrorSoftLimit $Attribute 95 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrorHardLimit $Attribute 96 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPosnn $Menu 122 21-APR-2009 13:41:08.17
+        Object Pointed $Menu 123 21-APR-2009 13:41:08.17
+          Object ConfigureDevice $MenuButton 124 21-APR-2009 13:41:08.17
+            Body SysBody 21-APR-2009 13:41:08.17
+              Attr ButtonName = "ConfigureDevice"
+              Attr MethodName = "PnDevice-Configure"
+              Attr FilterName = "PnDevice-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPoscn $Menu 125 21-APR-2009 13:41:08.17
+        Object Pointed $Menu 126 21-APR-2009 13:41:08.17
+          Object ConfigureDevice $MenuButton 127 21-APR-2009 13:41:08.17
+            Body SysBody 21-APR-2009 13:41:08.17
+              Attr ButtonName = "ConfigureDevice"
+              Attr MethodName = "PnDevice-Configure"
+              Attr FilterName = "PnDevice-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosos $Menu 128 21-APR-2009 13:41:08.17
+        Object Pointed $Menu 129 21-APR-2009 13:41:08.17
+          Object ConfigureDevice $MenuButton 130 21-APR-2009 13:41:08.17
+            Body SysBody 21-APR-2009 13:41:08.17
+              Attr ButtonName = "ConfigureDevice"
+              Attr MethodName = "PnDevice-Configure"
+              Attr FilterName = "PnDevice-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 131 21-APR-2009 13:41:08.17
+        Object Pointed $Menu 132 21-APR-2009 13:41:08.17
+          Object ConfigureDevice $MenuButton 133 21-APR-2009 13:41:08.17
+            Body SysBody 21-APR-2009 13:41:08.17
+              Attr ButtonName = "ConfigureDevice"
+              Attr MethodName = "PnDevice-Configure"
+              Attr FilterName = "PnDevice-ConfigureFilter"
+            EndBody
+          EndObject
+          Object ConnectThread $MenuButton 134 21-APR-2009 13:41:08.17
+            Body SysBody 21-APR-2009 13:41:08.17
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object NavigatorPosnn $Menu 135 21-APR-2009 13:41:08.17
+        Object Pointed $Menu 136 21-APR-2009 13:41:08.17
+          Object ConfigureDevice $MenuButton 137 21-APR-2009 13:41:08.17
+            Body SysBody 21-APR-2009 13:41:08.17
+              Attr ButtonName = "ConfigureDevice"
+              Attr MethodName = "PnDevice-Configure"
+              Attr FilterName = "PnDevice-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object NavigatorPoscn $Menu 138 21-APR-2009 13:41:08.17
+        Object Pointed $Menu 139 21-APR-2009 13:41:08.17
+          Object ConfigureDevice $MenuButton 140 21-APR-2009 13:41:08.17
+            Body SysBody 21-APR-2009 13:41:08.17
+              Attr ButtonName = "ConfigureDevice"
+              Attr MethodName = "PnDevice-Configure"
+              Attr FilterName = "PnDevice-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object NavigatorPosos $Menu 141 21-APR-2009 13:41:08.17
+        Object Pointed $Menu 142 21-APR-2009 13:41:08.17
+          Object ConfigureDevice $MenuButton 143 21-APR-2009 13:41:08.17
+            Body SysBody 21-APR-2009 13:41:08.17
+              Attr ButtonName = "ConfigureDevice"
+              Attr MethodName = "PnDevice-Configure"
+              Attr FilterName = "PnDevice-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object NavigatorPoson $Menu 144 21-APR-2009 13:41:08.17
+        Object Pointed $Menu 145 21-APR-2009 13:41:08.17
+          Object ConfigureDevice $MenuButton 146 21-APR-2009 13:41:08.17
+            Body SysBody 21-APR-2009 13:41:08.17
+              Attr ButtonName = "ConfigureDevice"
+              Attr MethodName = "PnDevice-Configure"
+              Attr FilterName = "PnDevice-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object RtXtt $RtMenu 147 21-APR-2009 13:41:08.17
+        Object ShowConfiguration $MenuButton 148 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr ButtonName = "ShowConfiguration"
+            Attr MethodName = "PnDevice-ShowConfiguration"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 149 21-APR-2009 13:41:08.17
+        Object IoRackInit $Method 150 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnDevice-IoRackInit"
+          EndBody
+        EndObject
+        Object IoRackClose $Method 151 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnDevice-IoRackClose"
+          EndBody
+        EndObject
+        Object IoRackRead $Method 152 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnDevice-IoRackRead"
+          EndBody
+        EndObject
+        Object IoRackWrite $Method 153 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnDevice-IoRackWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template PnDevice 2151907328 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object PnModule $ClassDef 17 21-APR-2009 13:41:08.17
+      Body SysBody 21-APR-2009 13:41:08.17
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 21-APR-2009 13:41:08.17
+        Body SysBody 21-APR-2009 13:41:08.17
+          Attr StructName = "PnModule"
+          Attr NextAix = "_X22"
+        EndBody
+        Object Description $Attribute 15 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Specification $Attribute 16 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "Specification"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object ModuleName $Attribute 17 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "ModuleName"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object Process $Attribute 18 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 19 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object Status $Attribute 20 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "Status"
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+        Object DataSheet $Attribute 21 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 154 21-APR-2009 13:41:08.17
+        Object Pointed $Menu 155 21-APR-2009 13:41:08.17
+          Object ConnectThread $MenuButton 156 21-APR-2009 13:41:08.17
+            Body SysBody 21-APR-2009 13:41:08.17
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 157 21-APR-2009 13:41:08.17
+        Object IoCardInit $Method 158 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnModule-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 159 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnModule-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 160 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnModule-IoCardRead"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 161 21-APR-2009 13:41:08.17
+          Body SysBody 21-APR-2009 13:41:08.17
+            Attr MethodName = "PnModule-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template PnModule 2152169472 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
       EndObject
     EndObject
   EndObject

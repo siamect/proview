@@ -54,6 +54,17 @@
 
 #include "rt_io_profiboard.h"
 
+typedef struct {
+  int             hServiceReadDevice;               // Handle for Service device
+  int             hServiceWriteDevice;              // Handle for Service device
+  int             hDpDataDevice;                    // Handle for DP-Data device
+  int             hDpsInputDataDevice;              // Handle for DP-Slave Input-Data device
+  int             hDpsOutputDataDevice;             // Handle for DP-Slave Output-Data device
+  unsigned char   CurrentBoardNumber;
+  int             slave_diag_requested;
+  int             hDpsBoardDevice;                  // Handle for DP-Slave Output-Data device
+} io_sAgentLocal;
+
 #define DP_MAX_SERVICE_RETRY    10
 
 
@@ -807,9 +818,31 @@ static pwr_tStatus IoAgentRead (
   T_PROFI_SERVICE_DESCR    con_ind_sdb;
   T_DP_GET_SLAVE_DIAG_CON   FAR *get_slave_diag_con_ptr;
 
+  pwr_sClass_Pb_Profiboard *mp;
+  pwr_sClass_Pb_DP_Slave *sp;
+  pwr_tUInt16 data_len;
+  io_sRack *slave_list;
+
   hDevice = (T_PROFI_DEVICE_HANDLE *) ap->Local;
   local = (io_sAgentLocal *) ap->Local;
   op = (pwr_sClass_Pb_Profiboard *) ap->op;
+
+  /* Iterate over the slaves.  */
+  for (slave_list = ap->racklist; slave_list != NULL;
+      slave_list = slave_list->next) {
+
+    sp = (pwr_sClass_Pb_DP_Slave *) slave_list->op;
+    mp = (pwr_sClass_Pb_Profiboard *) ap->op;
+
+    /* Read process data.  */
+    if (sp->Status == PB__NORMAL && mp->Status == PB__NORMAL && sp->DisableSlave != 1 && mp->DisableBus != 1) {
+
+      data_len = sp->BytesOfInput;
+      sts = profi_get_data(hDevice, ID_DP_SLAVE_IO_IMAGE, sp->OffsetInputs, &data_len, &sp->Inputs );
+    }
+
+  }
+  
 
   /* If everything is fine we should be in state OPERATE
      Make a poll to see if there are diagnostics, the answer also tell us
@@ -1003,6 +1036,37 @@ static pwr_tStatus IoAgentWrite (
   io_sAgent	*ap
 ) 
 {
+  T_PROFI_DEVICE_HANDLE *hDevice;
+  pwr_tUInt16 sts;
+
+  pwr_sClass_Pb_Profiboard *mp;
+  pwr_sClass_Pb_DP_Slave *sp;
+  io_sRack *slave_list;
+
+  hDevice = (T_PROFI_DEVICE_HANDLE *) ap->Local;
+
+  /* Iterate over the slaves.  */
+  for (slave_list = ap->racklist; slave_list != NULL;
+      slave_list = slave_list->next) {
+
+    sp = (pwr_sClass_Pb_DP_Slave *) slave_list->op;
+    mp = (pwr_sClass_Pb_Profiboard *) ap->op;
+
+    // Write the whole I/O output area from local area
+
+    if ((sp->Status == PB__NORMAL || sp->Status == PB__NOCONN) && 
+         mp->Status == PB__NORMAL && (sp->DisableSlave != 1) && (mp->DisableBus != 1)) {
+
+      if (sp->BytesOfOutput > 0) {
+    
+        sts = profi_set_data(hDevice, ID_DP_SLAVE_IO_IMAGE, sp->OffsetOutputs, sp->BytesOfOutput, &sp->Outputs);
+
+        if (sts != E_OK) sp->ErrorCount++;
+      }
+    }
+
+  }
+
   return IO__SUCCESS;
 }
 

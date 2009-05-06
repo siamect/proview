@@ -25,15 +25,6 @@
 #include <sys/file.h>
 #include <sys/ioctl.h>
 
-#include "keywords.h"
-
-#include "pb_type.h"
-#include "pb_conf.h"
-#include "pb_if.h"
-#include "pb_err.h"
-#include "pb_fmb.h"
-#include "pb_dp.h"
-
 #include "rt_io_pb_locals.h"
 
 #include "pwr.h"
@@ -43,7 +34,6 @@
 #include "rt_io_bus.h"
 #include "rt_io_msg.h"
 #include "rt_errh.h"
-#include "rt_io_profiboard.h"
 
 
 /*----------------------------------------------------------------------------*\
