@@ -22,6 +22,7 @@
 #include "pwr.h"
 #include "pwr_basecomponentclasses.h"
 #include "pwr_otherioclasses.h"
+#include "co_time.h"
 #include "rt_io_base.h"
 #include "rt_io_card_init.h"
 #include "rt_io_card_close.h"
@@ -51,7 +52,52 @@ typedef struct {
   int portC_diMask;
   int portC_doMask;
   int portC_aoMask;
+  int Idx;
+  int Disconnected;
+  pwr_tTime ConnectRetry;
 } io_sLocal;
+
+
+static int usbio_reconnect( io_tCtx ctx,
+			    io_sAgent *ap,
+			    io_sRack *rp,
+			    io_sCard *cp)
+{
+  io_sLocal *local = cp->Local;
+  io_sLocalUSB *localUSB = (io_sLocalUSB *)rp->Local;
+  pwr_sClass_MotionControl_USBIO *op = (pwr_sClass_MotionControl_USBIO *)cp->op;
+  pwr_tTime time;
+  pwr_tDeltaTime diff;
+  unsigned int snum;
+  int handle;
+  int i;
+  int status;
+
+  clock_gettime(CLOCK_REALTIME, &time);
+
+  time_Adiff( &diff, &time, &local->ConnectRetry);
+  if ( time_DToFloat( 0, &diff) > 1.0) {
+    for ( i = 0; i < (int)sizeof(localUSB->USB_Handle); i++) {
+      status = USBIO_Open( &handle);
+      if ( status) break;
+
+      status = USBIO_GetSerialNr( &handle, &snum);
+
+      if ( snum == op->Super.Address) {
+	local->USB_Handle = localUSB->USB_Handle[local->Idx] = handle;
+	op->Status = status;
+	op->Super.ErrorCount = 0;
+
+	IoCardClose( ctx, ap, rp, cp);
+	IoCardInit( ctx, ap, rp, cp);
+
+	errh_Info( "USBIO card reconnected '%s'", cp->Name);
+	return 1;
+      }
+    }
+  }
+  return 0;
+}
 
 static pwr_tStatus IoCardInit( io_tCtx ctx,
 			       io_sAgent *ap,
@@ -252,6 +298,11 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
   unsigned int m;
   pwr_tUInt32 error_count = op->Super.ErrorCount;
 
+  if ( local->Disconnected) {
+    if ( !usbio_reconnect( ctx, ap, rp, cp))
+      return IO__SUCCESS;
+  }
+
   if ( local->portA_hasDi) {
     op->Status = USBIO_ReadDI( &local->USB_Handle, 1, &value);
     if ( op->Status) 
@@ -344,7 +395,7 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
       op->Super.ErrorCount++;
     else {
       if ( !overflow) {
-	*(pwr_tUInt32 *)cp->chanlist[18].vbp = covalue;      
+	*(pwr_tUInt32 *)cp->chanlist[18].vbp = covalue;
       }
       else {
 	// Reset counter
@@ -355,9 +406,11 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
   }
 
   if ( op->Super.ErrorCount >= op->Super.ErrorSoftLimit && 
-       error_count < op->Super.ErrorSoftLimit)
+       error_count < op->Super.ErrorSoftLimit) {
     errh_Warning( "IO Card ErrorSoftLimit reached, '%s'", cp->Name);
-    
+    //    if ( op->Reconnect)
+    //      local->Disconnected = 1;
+  }
   if ( op->Super.ErrorCount >= op->Super.ErrorHardLimit) {
     errh_Error( "IO Card ErrorHardLimit reached '%s', IO stopped", cp->Name);
     ctx->Node->EmergBreakTrue = 1;
@@ -379,6 +432,11 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
   int i;
   unsigned int m;
   pwr_tUInt32 error_count = op->Super.ErrorCount;
+
+  if ( local->Disconnected) {
+    if ( !usbio_reconnect( ctx, ap, rp, cp))
+      return IO__SUCCESS;
+  }
 
   if ( local->portA_hasDo) {
     m = 1;
@@ -455,9 +513,11 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
   }
 
   if ( op->Super.ErrorCount >= op->Super.ErrorSoftLimit && 
-       error_count < op->Super.ErrorSoftLimit)
+       error_count < op->Super.ErrorSoftLimit) {
     errh_Warning( "IO Card ErrorSoftLimit reached, '%s'", cp->Name);
-    
+    //    if ( op->Reconnect)
+    //      local->Disconnected = 1;
+  }    
   if ( op->Super.ErrorCount >= op->Super.ErrorHardLimit) {
     errh_Error( "IO Card ErrorHardLimit reached '%s', IO stopped", cp->Name);
     ctx->Node->EmergBreakTrue = 1;
