@@ -239,8 +239,12 @@ int XNav::attr_string_to_value( int type_id, char *value_str,
   case pwr_eType_Float32: {
     if ( strcmp( value_str, "FLT_MIN") == 0)
       *(float *)buffer_ptr = FLT_MIN;
+    else if ( strcmp( value_str, "FLT_NMIN") == 0)
+      *(float *)buffer_ptr = -FLT_MIN;
     else if ( strcmp( value_str, "FLT_MAX") == 0)
       *(float *)buffer_ptr = FLT_MAX;
+    else if ( strcmp( value_str, "FLT_NMAX") == 0)
+      *(float *)buffer_ptr = -FLT_MAX;
     else if ( sscanf( value_str, "%f", (float *)buffer_ptr) != 1)
       return XNAV__INPUT_SYNTAX;
     break;
@@ -451,8 +455,16 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
       strcpy( str, "FLT_MIN");
       *len = strlen(str);
     }
+    else if ( *(float *)value_ptr == -FLT_MIN) {
+      strcpy( str, "FLT_NMIN");
+      *len = strlen(str);
+    }
     else if ( *(float *)value_ptr == FLT_MAX) {
       strcpy( str, "FLT_MAX");
+      *len = strlen(str);
+    }
+    else if ( *(float *)value_ptr == -FLT_MAX) {
+      strcpy( str, "FLT_NMAX");
       *len = strlen(str);
     }
     else {

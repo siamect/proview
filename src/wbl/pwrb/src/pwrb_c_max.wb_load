@@ -166,14 +166,14 @@ SObject pwrb:Class
     EndObject
     Object Template Max
       Body RtBody
-	Attr In1 = FLT_MIN
-	Attr In2 = FLT_MIN
-	Attr In3 = FLT_MIN
-	Attr In4 = FLT_MIN
-	Attr In5 = FLT_MIN
-	Attr In6 = FLT_MIN
-	Attr In7 = FLT_MIN
-	Attr In8 = FLT_MIN
+	Attr In1 = FLT_NMAX
+	Attr In2 = FLT_NMAX
+	Attr In3 = FLT_NMAX
+	Attr In4 = FLT_NMAX
+	Attr In5 = FLT_NMAX
+	Attr In6 = FLT_NMAX
+	Attr In7 = FLT_NMAX
+	Attr In8 = FLT_NMAX
       EndBody
     EndObject
   EndObject

@@ -2026,12 +2026,14 @@ int wb_wblnode::attrStringToValue( int type_id, char *value_str,
     }
     case pwr_eType_Float32:
     {
-      if ( strcmp( value_str, "FLT_MIN") == 0) {
+      if ( strcmp( value_str, "FLT_MIN") == 0)
 	*(float *)buffer_ptr = FLT_MIN;
-      }
-      else if ( strcmp( value_str, "FLT_MAX") == 0) {
+      else if ( strcmp( value_str, "FLT_NMIN") == 0)
+	*(float *)buffer_ptr = -FLT_MIN;
+      else if ( strcmp( value_str, "FLT_MAX") == 0)
 	*(float *)buffer_ptr = FLT_MAX;
-      }
+      else if ( strcmp( value_str, "FLT_NMAX") == 0)
+	*(float *)buffer_ptr = -FLT_MAX;
       else if ( sscanf( value_str, "%f", (float *)buffer_ptr) != 1)
         return 0;
       break;

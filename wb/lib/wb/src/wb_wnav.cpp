@@ -69,8 +69,12 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
   case pwr_eType_Float32: {
     if ( strcmp( value_str, "FLT_MIN") == 0)
       *(float *)buffer_ptr = FLT_MIN;
+    else if ( strcmp( value_str, "FLT_NMIN") == 0)
+      *(float *)buffer_ptr = -FLT_MIN;
     else if ( strcmp( value_str, "FLT_MAX") == 0)
       *(float *)buffer_ptr = FLT_MAX;
+    else if ( strcmp( value_str, "FLT_NMAX") == 0)
+      *(float *)buffer_ptr = -FLT_MAX;
     else if ( sscanf( value_str, "%f", (float *)buffer_ptr) != 1)
       return WNAV__INPUT_SYNTAX;
     break;
@@ -293,8 +297,16 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id, void *value
       strcpy( str, "FLT_MIN");
       *len = strlen( str);
     }
+    else if ( *(float *)value_ptr == -FLT_MIN) {
+      strcpy( str, "FLT_NMIN");
+      *len = strlen( str);
+    }
     else if ( *(float *)value_ptr == FLT_MAX) {
       strcpy( str, "FLT_MAX");
+      *len = strlen( str);
+    }
+    else if ( *(float *)value_ptr == -FLT_MAX) {
+      strcpy( str, "FLT_NMAX");
       *len = strlen( str);
     }
     else
