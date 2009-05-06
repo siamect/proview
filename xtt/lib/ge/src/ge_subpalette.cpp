@@ -280,6 +280,13 @@
 #include "ge_bitmap_voltagetransformer238.h"
 #include "ge_bitmap_voltagetransformer2wnd239.h"
 #include "ge_bitmap_actuatorfailkeep240.h"
+#include "ge_bitmap_minicircuitbreaker241.h"
+#include "ge_bitmap_minicircuitbreaker242.h"
+#include "ge_bitmap_minicircuitbreaker243.h"
+#include "ge_bitmap_overloadrelay244.h"
+#include "ge_bitmap_damper245.h"
+#include "ge_bitmap_threewayvalve246.h"
+#include "ge_bitmap_elheater247.h"
 
 #define SUBPALETTE__INPUT_SYNTAX 2
 #define SUBPALETTE__OBJNOTFOUND 4
@@ -611,6 +618,13 @@ void SubPaletteBrow::allocate_pixmaps()
   ALLOC_PIXMAP( ge_bitmap_voltagetransformer238, 238);
   ALLOC_PIXMAP( ge_bitmap_voltagetransformer2wnd239, 239);
   ALLOC_PIXMAP( ge_bitmap_actuatorfailkeep240, 240);
+  ALLOC_PIXMAP( ge_bitmap_minicircuitbreaker241, 241);
+  ALLOC_PIXMAP( ge_bitmap_minicircuitbreaker242, 242);
+  ALLOC_PIXMAP( ge_bitmap_minicircuitbreaker243, 243);
+  ALLOC_PIXMAP( ge_bitmap_overloadrelay244, 244);
+  ALLOC_PIXMAP( ge_bitmap_damper245, 245);
+  ALLOC_PIXMAP( ge_bitmap_threewayvalve246, 246);
+  ALLOC_PIXMAP( ge_bitmap_elheater247, 247);
 }
 
 

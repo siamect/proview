@@ -25,12 +25,12 @@ menu Analog
 menu Process
 {
   subgraph	Actuator	pwr_exe:pwr_actuator.pwsg		57
-  subgraph	BaseDamper	pwr_exe:pwr_basedamper.pwsg		56
-  subgraph	BaseDamper2	pwr_exe:pwr_basedamper2.pwsg		56
+  subgraph	BaseDamper	pwr_exe:pwr_basedamper.pwsg		245
+  subgraph	BaseDamper2	pwr_exe:pwr_basedamper2.pwsg		245
   subgraph	BaseValve	pwr_exe:pwr_basevalve.pwsg		56
   subgraph	BaseValve2	pwr_exe:pwr_basevalve2.pwsg		56
-  subgraph	Base3WayValve	pwr_exe:pwr_base3wayvalve.pwsg		56
-  subgraph	Base3WayValve2	pwr_exe:pwr_base3wayvalve2.pwsg		56
+  subgraph	Base3WayValve	pwr_exe:pwr_base3wayvalve.pwsg		246
+  subgraph	Base3WayValve2	pwr_exe:pwr_base3wayvalve2.pwsg		246
   subgraph 	Burner		pwr_exe:pwr_burner.pwsg 		59
   subgraph	Damper		pwr_exe:pwr_damper.pwsg			98
   subgraph	DamperAnim	pwr_exe:pwr_damperanim.pwsg		98
@@ -39,7 +39,7 @@ menu Process
   subgraph	DamperControl2	pwr_exe:pwr_dampercontrol2.pwsg	       104
   subgraph 	ElHeater1	pwr_exe:pwr_elheater1.pwsg	       179
   subgraph 	ElHeater2	pwr_exe:pwr_elheater2.pwsg	       179
-  subgraph 	ElHeater3	pwr_exe:pwr_elheater3.pwsg	         5
+  subgraph 	ElHeater3	pwr_exe:pwr_elheater3.pwsg	       247
   subgraph	Fan		pwr_exe:pwr_fan.pwsg			69
   subgraph	Fan2		pwr_exe:pwr_fan2.pwsg			71
   subgraph	Fan3		pwr_exe:pwr_fan3.pwsg			70
@@ -89,10 +89,13 @@ menu Electric
   subgraph 	Fuse3		pwr_exe:pwr_fuse3.pwsg 			64
   subgraph 	EmergencyStop	pwr_exe:pwr_emergencystop.pwsg 		34
   subgraph 	OverloadRelay	pwr_exe:pwr_overloadrelay.pwsg 		66
-  subgraph 	OverloadRelay2	pwr_exe:pwr_overloadrelay2.pwsg 	66
+  subgraph 	OverloadRelay2	pwr_exe:pwr_overloadrelay2.pwsg 	244
   subgraph	ManSwitch	pwr_exe:pwr_manswitch.pwsg		74
   subgraph	ManSwitch2	pwr_exe:pwr_manswitch2.pwsg		76
   subgraph	ManSwitch3	pwr_exe:pwr_manswitch3.pwsg		75
+  subgraph	MiniCircuitBreaker pwr_exe:pwr_minicircuitbreaker.pwsg	241
+  subgraph	MiniCircuitBreaker2 pwr_exe:pwr_minicircuitbreaker2.pwsg 242
+  subgraph	MiniCircuitBreaker3 pwr_exe:pwr_minicircuitbreaker3.pwsg 243
   subgraph	FrequencyConverter pwr_exe:pwr_frequencyconverter.pwsg  77  
 }
 menu Indicators
