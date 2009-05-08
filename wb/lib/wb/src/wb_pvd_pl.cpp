@@ -94,6 +94,19 @@ void wb_pvd_pl::writeAttribute( co_procom *pcom, pwr_tOix oix, unsigned int offs
     if ( offset == (unsigned int)((char *)&body.Project - (char *)&body)) {
       m_list[oix].flags |= pl_mFlags_ProjectModified;
       cdh_ToLower( buffer, buffer);      
+
+      // Set path
+      char path[80];
+      char *s;
+      unsigned int path_offset;
+
+      path_offset = (unsigned int)((char *)&body.Path - (char *)&body);
+      strcpy( path, (char *)((unsigned long)m_list[oix].body + (unsigned long)path_offset));
+      if ( (s = strrchr( path, '/'))) {
+	strncpy( s+1, buffer, sizeof(path)-strlen(path));
+	strncpy( (char *)((unsigned long)m_list[oix].body + (unsigned long)path_offset), path, 
+		sizeof(body.Path));
+      }
     }
     else if ( offset == (unsigned int)((char *)&body.Path - (char *)&body)) {
       m_list[oix].flags |= pl_mFlags_PathModified;
