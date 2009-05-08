@@ -144,6 +144,7 @@ main()
   int first_sim = 1;
   string tmp_fname="$pwrp_tmp/wtmp.txt";
   int found;
+  string oname;	
 
 
   verify(0);
@@ -523,11 +524,13 @@ page_4:
   # Create node config objects
   for ( i = 0; i < nodecnt; i++)
     if ( node_busid[i] == 0)
-      create object /class=NodeConfig /dest='prd_bus_name' /name="'node_name[i]'" /last
-      name = prd_bus_name + "-" + node_name[i];
+      oname = StringToObjectName( node_name[i]);
+      create object /class=NodeConfig /dest='prd_bus_name' /name="'oname'" /last
+      name = prd_bus_name + "-" + oname;
     else
-      create object /class=NodeConfig /dest='sim_bus_name' /name="'node_name[i]'" /last
-      name = sim_bus_name + "-" + node_name[i];
+      oname = StringToObjectName( node_name[i]);
+      create object /class=NodeConfig /dest='sim_bus_name' /name="'oname'" /last
+      name = sim_bus_name + "-" + oname;
     endif
     attr = name + ".Description";
     SetAttribute( attr, node_description[i]);

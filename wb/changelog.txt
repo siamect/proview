@@ -126,3 +126,5 @@
 090225 cs  script    Script functions GetClassListAttrRef() and GetNextAttrRef() added.
 090306 cs  wb        Crossreferences on Co signals added.
 090306 cs  plc       Default include in ra_plc_user.h added. 
+090507 cs  adm       In projectlist, the project name in a ProjectReg is changed, also the path is changed.
+090507 cs  wb        Bugfix in directory wizard, for nodenames containing '-' NodeConfig object was not configured correctly.

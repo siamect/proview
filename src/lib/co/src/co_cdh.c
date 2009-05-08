@@ -2737,6 +2737,52 @@ int cdh_TypeToMaxStrSize( pwr_eType type, int attr_size, int attr_elements)
   return size;
 }
 
+//! Convert string to valid object name.
+/*!
+  Invalid characters in the string are replaced by '_'. If the first char is invalid
+  it is replaced by 'O'.
+
+  \param t	Out string.
+  \param s	In string.
+  \return 	Returns t.
+*/
+char *
+cdh_StringToObjectName (
+  char			*t,
+  const char		*s
+)
+{
+  static const char     valtab[] = "\
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
+!!!!$!!!!!!!!!!!0123456789!!!!!!\
+!ABCDEFGHIJKLMNOPQRSTUVWXYZ!!!!_\
+!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!\
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
+ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏ!ÑÒÓÔÕÖ×ØÙÚÛÜİ!!\
+^^^^^^^^^^^^^^^^!^^^^^^^^^^^^^!!";
+  char			*rs = t;
+  const char	       	*s1 = s;
+
+  if (t == NULL) return NULL;
+  if (s == NULL) s = t;
+
+  while (*s1)
+    if (valtab[(unsigned char)*s1] == '!') {
+      if ( s1 == s)
+	*t++ = 'O';
+      else
+	*t++ = '_';
+      s1++;
+    }
+    else
+      *t++ = *s1++; 
+
+  *t = *s1;  /* Copy the null byte.  */
+
+  return rs;
+}
+
 /*@}*/
 
 

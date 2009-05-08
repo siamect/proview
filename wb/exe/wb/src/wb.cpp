@@ -35,7 +35,6 @@ int main( int argc, char *argv[])
   char wmg[80];
   pwr_tFileName file;
   
-  printf( "Argc: %d\n", argc);
   if ( argc > 1) {
 
     for ( i = 1; i < argc; i++) {
