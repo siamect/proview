@@ -1466,6 +1466,7 @@ class pn_gsdml {
 			   unsigned int size, char *str, unsigned int strsize);
   int string_to_datavalue( gsdml_eValueDataType datatype, void *value,
 			   unsigned int size, char *str);
+  int get_datavalue_length( gsdml_eValueDataType datatype, int strlength, unsigned int *len);
   void set_classes( gsdml_sModuleClass *mclist) { module_classlist = mclist;}
   int set_par_record_default( unsigned char *data, int size, 
 			      gsdml_ParameterRecordDataItem *par_record);

@@ -1862,6 +1862,52 @@ int pn_gsdml::string_to_datavalue( gsdml_eValueDataType datatype, void *value,
   return 1;
 }
 
+//
+// Get the length of an IO type specified in a data item
+//
+int pn_gsdml::get_datavalue_length( gsdml_eValueDataType datatype, int strlength, unsigned int *len)
+{
+  switch ( datatype) {
+  case gsdml_eValueDataType_Integer8:	
+  case gsdml_eValueDataType_Unsigned8:	
+    *len = 1;
+    break;
+  case gsdml_eValueDataType_Integer16:	
+  case gsdml_eValueDataType_Unsigned16:	
+    *len = 2;
+    break;
+  case gsdml_eValueDataType_Integer32:	
+  case gsdml_eValueDataType_Unsigned32:	
+  case gsdml_eValueDataType_Float32:	
+    *len = 4;
+    break;
+  case gsdml_eValueDataType_Integer64:	
+  case gsdml_eValueDataType_Unsigned64:	
+  case gsdml_eValueDataType_Float64:	
+    *len = 8;
+    break;
+  case gsdml_eValueDataType_VisibleString:	
+  case gsdml_eValueDataType_OctetString:	
+    *len = strlength;
+    break;
+  case gsdml_eValueDataType_Date:
+  case gsdml_eValueDataType_TimeOfDayWithDate:
+  case gsdml_eValueDataType_TimeOfDayWithoutDate:
+  case gsdml_eValueDataType_TimeDiffWithDate:
+  case gsdml_eValueDataType_TimeDiffWithoutDate:
+  case gsdml_eValueDataType_NetworkTime:
+  case gsdml_eValueDataType_NetworkTimeDiff:
+    // TODO
+    return PB__NYI;
+    *len = 0;
+    break;
+  default:
+    return PB__NYI;
+    *len = 0;
+  }
+  return PB__SUCCESS;
+}
+
 int pn_gsdml::set_default_values( gsdml_eTag id, void *data, unsigned int size)
 {
   for ( unsigned int i = 0; i < sizeof(attrlist)/sizeof(attrlist[0]); i++) {

@@ -74,7 +74,10 @@ int GsdmlDataRecord::print( ofstream& fp)
 int GsdmlSubslotData::print( ofstream& fp)
 {
   fp <<
-    "    <Subslot SubslotNumber=\"" << subslot_number << "\" >" << endl;
+    "    <Subslot SubslotNumber=\"" << subslot_number << "\"" << endl <<
+    "       SubmoduleIdentNumber=\"" << submodule_ident_number << "\"" << endl <<
+    "       IOInputLength=\"" << io_input_length << "\"" << endl <<
+    "       IOOutputLength=\"" << io_output_length << "\" >" << endl;
 
   for ( unsigned int i = 0; i < data_record.size(); i++) {
     data_record[i]->print( fp);
@@ -431,6 +434,12 @@ int GsdmlDataReader::tag_attribute( const char *name, const char *value)
 
     if ( strcmp( name, "SubslotNumber") == 0)
       sscanf( value, "%u", &sd->subslot_number);
+    else if ( strcmp( name, "SubmoduleIdentNumber") == 0)
+      sscanf( value, "%u", &sd->submodule_ident_number);
+    else if ( strcmp( name, "IOInputLength") == 0)
+      sscanf( value, "%u", &sd->io_input_length);
+    else if ( strcmp( name, "IOOutputLength") == 0)
+      sscanf( value, "%u", &sd->io_output_length);
     break;
   }
   case gsdmldata_eTag_DataRecord: {

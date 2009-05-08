@@ -1345,6 +1345,7 @@ int GsdmlAttrNav::init_brow_cb( FlowCtx *fctx, void *client_data)
 
 int GsdmlAttrNav::save( const char *filename)
 {
+  int sts;
 
   dev_data.device_num = device_num;
 
@@ -1389,9 +1390,151 @@ int GsdmlAttrNav::save( const char *filename)
       cd->error_type = gsdml->ApplicationProcess->ChannelDiagList->ChannelDiagItem[i]->Body.ErrorType;
       strncpy( cd->name, (char *)gsdml->ApplicationProcess->ChannelDiagList->ChannelDiagItem[i]->
 	       Body.Name.p, sizeof(cd->name));
-      strncpy( cd->help, (char *)gsdml->ApplicationProcess->ChannelDiagList->ChannelDiagItem[i]->
-	       Body.Help.p, sizeof(cd->help));
+      if ( gsdml->ApplicationProcess->ChannelDiagList->ChannelDiagItem[i]->Body.Help.p)
+	strncpy( cd->help, (char *)gsdml->ApplicationProcess->ChannelDiagList->ChannelDiagItem[i]->
+		 Body.Help.p, sizeof(cd->help));
       dev_data.channel_diag.push_back( cd);
+    }
+  }
+
+  // Calculate subslot IO length
+  for ( unsigned int i = 0; i < dev_data.slot_data.size(); i++) {
+    if ( i == 0) {
+      // Device access point
+      gsdml_DeviceAccessPointItem *mi = device_item;
+
+      for ( unsigned int j = 0; j < dev_data.slot_data[i]->subslot_data.size(); j++) {
+	GsdmlSubslotData *ssd = dev_data.slot_data[i]->subslot_data[j];
+
+	ssd->io_input_length = 0;
+	ssd->io_output_length = 0;
+
+	if ( mi->VirtualSubmoduleList->VirtualSubmoduleItem.size() == 0)
+	  continue;
+
+	gsdml_VirtualSubmoduleItem *vsd = 0;
+	if ( mi->VirtualSubmoduleList->VirtualSubmoduleItem.size() == 1)
+	  vsd = mi->VirtualSubmoduleList->VirtualSubmoduleItem[0];
+	else {
+	  for ( unsigned int k = 0; k < mi->VirtualSubmoduleList->VirtualSubmoduleItem.size(); k++) {
+	    if ( mi->VirtualSubmoduleList->VirtualSubmoduleItem[k]->Body.SubmoduleIdentNumber == 
+		 ssd->submodule_ident_number) {
+	      vsd = mi->VirtualSubmoduleList->VirtualSubmoduleItem[k];	      
+	      break;
+	    }
+	  }
+	}
+	if ( !vsd) {
+	  continue;
+	}
+
+	if ( !vsd->IOData)
+	  continue;
+
+	if ( vsd->IOData->Input) {
+	  for ( unsigned k = 0; k < vsd->IOData->Input->DataItem.size(); k++) {
+
+	    gsdml_DataItem *di = vsd->IOData->Input->DataItem[k];
+	    gsdml_eValueDataType datatype;
+	  
+	    gsdml->string_to_value_datatype( di->Body.DataType, &datatype);
+	    unsigned int len;
+
+	    sts = gsdml->get_datavalue_length( datatype, di->Body.Length, &len);
+	    if ( EVEN(sts)) printf( "GSDML-Error, Datatype %s not yet implemented\n", di->Body.DataType);
+	  
+	    ssd->io_input_length += len;	    
+	  }
+	}
+	if ( vsd->IOData->Output) {
+	  for ( unsigned k = 0; k < vsd->IOData->Output->DataItem.size(); k++) {
+	  
+	    gsdml_DataItem *di = vsd->IOData->Output->DataItem[k];
+	    gsdml_eValueDataType datatype;
+	  
+	    gsdml->string_to_value_datatype( di->Body.DataType, &datatype);
+	    unsigned int len;
+	  
+	    sts = gsdml->get_datavalue_length( datatype, di->Body.Length, &len);
+	    if ( EVEN(sts)) printf( "GSDML-Error, Datatype %s not yet implemented\n", di->Body.DataType);
+	  
+	    ssd->io_output_length += len;	    
+	  }
+	}
+      }
+    }
+    else {
+
+      if ( dev_data.slot_data[i]->module_enum_number == 0)
+	continue;
+
+      gsdml_UseableModules *um = device_item->UseableModules;
+      if ( !um)
+	continue;
+
+      gsdml_ModuleItem *mi = (gsdml_ModuleItem *)um->
+	ModuleItemRef[dev_data.slot_data[i]->module_enum_number-1]->Body.ModuleItemTarget.p;
+
+      for ( unsigned int j = 0; j < dev_data.slot_data[i]->subslot_data.size(); j++) {
+	GsdmlSubslotData *ssd = dev_data.slot_data[i]->subslot_data[j];
+
+	ssd->io_input_length = 0;	    
+	ssd->io_output_length = 0;	    
+
+	if ( mi->VirtualSubmoduleList->VirtualSubmoduleItem.size() == 0)
+	  continue;
+
+	gsdml_VirtualSubmoduleItem *vsd = 0;
+	if ( mi->VirtualSubmoduleList->VirtualSubmoduleItem.size() == 1)
+	  vsd = mi->VirtualSubmoduleList->VirtualSubmoduleItem[0];
+	else {
+	  for ( unsigned int k = 0; k < mi->VirtualSubmoduleList->VirtualSubmoduleItem.size(); k++) {
+	    if ( mi->VirtualSubmoduleList->VirtualSubmoduleItem[k]->Body.SubmoduleIdentNumber == 
+		 ssd->submodule_ident_number) {
+	      vsd = mi->VirtualSubmoduleList->VirtualSubmoduleItem[k];	      
+	      break;
+	    }
+	  }
+	}
+	if ( !vsd) {
+	  printf( "GSDML-Error, subslot number not found\n");
+	  continue;
+	}
+
+	if ( !vsd->IOData)
+	  continue;
+
+	if ( vsd->IOData->Input) {
+	  for ( unsigned k = 0; k < vsd->IOData->Input->DataItem.size(); k++) {
+
+	    gsdml_DataItem *di = vsd->IOData->Input->DataItem[k];
+	    gsdml_eValueDataType datatype;
+      
+	    gsdml->string_to_value_datatype( di->Body.DataType, &datatype);
+	    unsigned int len;
+
+	    sts = gsdml->get_datavalue_length( datatype, di->Body.Length, &len);
+	    if ( EVEN(sts)) printf( "GSDML-Error, Datatype %s not yet implemented\n", di->Body.DataType);
+
+	    ssd->io_input_length += len;	    
+	  }
+	}
+	if ( vsd->IOData->Output) {
+	  for ( unsigned k = 0; k < vsd->IOData->Output->DataItem.size(); k++) {
+
+	    gsdml_DataItem *di = vsd->IOData->Output->DataItem[k];
+	    gsdml_eValueDataType datatype;
+      
+	    gsdml->string_to_value_datatype( di->Body.DataType, &datatype);
+	    unsigned int len;
+	    
+	    sts = gsdml->get_datavalue_length( datatype, di->Body.Length, &len);
+	    if ( EVEN(sts)) printf( "GSDML-Error, Datatype %s not yet implemented\n", di->Body.DataType);
+
+	    ssd->io_output_length += len;	    
+	  }
+	}
+      }
     }
   }
 
@@ -1780,12 +1923,17 @@ int ItemPnSlot::open_children( GsdmlAttrNav *attrnav, double x, double y)
 		ssd = new GsdmlSubslotData();
 		ssd->subslot_number = subslot_number;
 		ssd->subslot_idx = subslot_index;
+		ssd->submodule_ident_number = 
+		    mi->VirtualSubmoduleList->VirtualSubmoduleItem[i]->Body.SubmoduleIdentNumber;
 		slotdata->subslot_data.push_back(ssd);
 	      }
 	      else {
 		ssd = slotdata->subslot_data[subslot_index];
 		ssd->subslot_idx = subslot_index;
+		ssd->submodule_ident_number = 
+		    mi->VirtualSubmoduleList->VirtualSubmoduleItem[i]->Body.SubmoduleIdentNumber;
 		if ( ssd->subslot_number != subslot_number) {
+		  ssd->subslot_number = subslot_number;
 		  printf( "GSML-Error, datafile corrupt, unexpected subslot number\n");
 		}
 	      }
@@ -1811,12 +1959,17 @@ int ItemPnSlot::open_children( GsdmlAttrNav *attrnav, double x, double y)
 		  ssd = new GsdmlSubslotData();
 		  ssd->subslot_number = subslot_number;
 		  ssd->subslot_idx = subslot_index;
+		  ssd->submodule_ident_number = 
+		    mi->VirtualSubmoduleList->VirtualSubmoduleItem[i]->Body.SubmoduleIdentNumber;
 		  slotdata->subslot_data.push_back(ssd);
 		}
 		else {
 		  ssd = slotdata->subslot_data[subslot_index];
 		  ssd->subslot_idx = subslot_index;
+		  ssd->submodule_ident_number = 
+		    mi->VirtualSubmoduleList->VirtualSubmoduleItem[i]->Body.SubmoduleIdentNumber;
 		  if ( ssd->subslot_number != subslot_number) {
+		    ssd->subslot_number = subslot_number;
 		    printf( "GSML-Error, datafile corrupt, unexpected subslot number\n");
 		  }
 		}
@@ -2020,12 +2173,17 @@ int ItemPnDAP::open_children( GsdmlAttrNav *attrnav, double x, double y)
 	      ssd = new GsdmlSubslotData();
 	      ssd->subslot_number = subslot_number;
 	      ssd->subslot_idx = subslot_index;
+	      ssd->submodule_ident_number = 
+		mi->VirtualSubmoduleList->VirtualSubmoduleItem[i]->Body.SubmoduleIdentNumber;
 	      slotdata->subslot_data.push_back(ssd);
 	    }
 	    else {
 	      ssd = slotdata->subslot_data[subslot_index];
 	      ssd->subslot_idx = subslot_index;
+	      ssd->submodule_ident_number = 
+		mi->VirtualSubmoduleList->VirtualSubmoduleItem[i]->Body.SubmoduleIdentNumber;
 	      if ( ssd->subslot_number != subslot_number) {
+		ssd->subslot_number = subslot_number;
 		printf( "GSML-Error, datafile corrupt, unexpected subslot number\n");
 	      }
 	    }
@@ -2052,12 +2210,17 @@ int ItemPnDAP::open_children( GsdmlAttrNav *attrnav, double x, double y)
 		ssd = new GsdmlSubslotData();
 		ssd->subslot_number = subslot_number;
 		ssd->subslot_idx = subslot_index;
+		ssd->submodule_ident_number = 
+		  mi->VirtualSubmoduleList->VirtualSubmoduleItem[i]->Body.SubmoduleIdentNumber;
 		slotdata->subslot_data.push_back(ssd);
 	      }
 	      else {
 		ssd = slotdata->subslot_data[subslot_index];
 		ssd->subslot_idx = subslot_index;
+		ssd->submodule_ident_number = 
+		    mi->VirtualSubmoduleList->VirtualSubmoduleItem[i]->Body.SubmoduleIdentNumber;
 		if ( ssd->subslot_number != subslot_number) {
+		  ssd->subslot_number = subslot_number;
 		  printf( "GSML-Error, datafile corrupt, unexpected subslot number\n");
 		}
 	      }
@@ -2093,12 +2256,15 @@ int ItemPnDAP::open_children( GsdmlAttrNav *attrnav, double x, double y)
 	    ssd = new GsdmlSubslotData();
 	    ssd->subslot_number = ii->Body.SubslotNumber;
 	    ssd->subslot_idx = subslot_index;
+	    ssd->submodule_ident_number = ii->Body.SubmoduleIdentNumber;
 	    slotdata->subslot_data.push_back(ssd);
 	  }
 	  else {
 	    ssd = slotdata->subslot_data[subslot_index];
 	    ssd->subslot_idx = subslot_index;
+	    ssd->submodule_ident_number = ii->Body.SubmoduleIdentNumber;
 	    if ( ssd->subslot_number != ii->Body.SubslotNumber) {
+	      ssd->subslot_number = ii->Body.SubslotNumber;
 	      printf( "GSML-Error, datafile corrupt, unexpected subslot number\n");
 	    }
 	  }
@@ -2126,12 +2292,15 @@ int ItemPnDAP::open_children( GsdmlAttrNav *attrnav, double x, double y)
 	    ssd = new GsdmlSubslotData();
 	    ssd->subslot_number = pi->Body.SubslotNumber;
 	    ssd->subslot_idx = subslot_index;
+	    ssd->submodule_ident_number = pi->Body.SubmoduleIdentNumber;
 	    slotdata->subslot_data.push_back(ssd);
 	  }
 	  else {
 	    ssd = slotdata->subslot_data[subslot_index];
 	    ssd->subslot_idx = subslot_index;
+	    ssd->submodule_ident_number = pi->Body.SubmoduleIdentNumber;
 	    if ( ssd->subslot_number != pi->Body.SubslotNumber) {
+	      ssd->subslot_number = pi->Body.SubslotNumber;
 	      printf( "GSML-Error, datafile corrupt, unexpected subslot number\n");
 	    }
 	  }
