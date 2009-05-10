@@ -50,7 +50,7 @@ extern "C" {
 
 #ifndef errh_ReturnOrBugcheck
 # define errh_ReturnOrBugcheck(a, sts, lsts, str)\
-         return (((int)(sts)?((*sts)=(lsts)):(EVEN(lsts)?(errh_Bugcheck(lsts, (str)),(lsts)):(lsts))),a)
+         return (((long int)(sts)?((*sts)=(lsts)):(EVEN(lsts)?(errh_Bugcheck(lsts, (str)),(lsts)):(lsts))),a)
 #endif
 
 #define errh_SeveritySuccess(sts) 	((sts) & 7 == 3)

@@ -258,7 +258,7 @@ pwr_tStatus io_InitPoFilter
 	 Data_1 = (sFilterData *) malloc( sizeof(sFilterData) );
 	 Data_1->ScanTime  = ScanTime;
 	 Data_1->TimerPulse  = SignalObj[Idx]->PulseLength/Data_1->ScanTime + 0.5;
-	 Data_1->ActualValue = gdh_TranslateRtdbPointer((pwr_tUInt32)SignalObj[Idx]->ActualValue);
+	 Data_1->ActualValue = gdh_TranslateRtdbPointer((unsigned long)SignalObj[Idx]->ActualValue);
 	 Data_1->OldValue  = *Data_1->ActualValue;
 	 Data_1->Type  = _eState_Neutral;
 	 FilterData[Idx] = Data_1; 

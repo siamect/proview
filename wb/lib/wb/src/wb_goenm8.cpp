@@ -66,7 +66,7 @@ int goen_create_nodetype_m8(
     pwr_tClassId	cid,
     ldh_tSesContext	ldhses,
     flow_tCtx		ctx,
-    unsigned long 	*mask,
+    unsigned int 	*mask,
     unsigned long	subwindowmark,
     unsigned long	node_width,
     flow_tNodeClass	*node_class,
@@ -125,7 +125,7 @@ int goen_create_nodetype_m8(
 *
 **************************************************************************/
 int goen_get_point_info_m8( WGre *grectx, pwr_sGraphPlcNode *graphbody, 
-			    unsigned long point, unsigned long *mask, 
+			    unsigned long point, unsigned int *mask, 
 			    unsigned long node_width, goen_conpoint_type *info_pointer, 
 			    vldh_t_node node)
 {
@@ -179,7 +179,7 @@ int goen_get_point_info_m8( WGre *grectx, pwr_sGraphPlcNode *graphbody,
 **************************************************************************/
 int	goen_get_parameter_m8( pwr_sGraphPlcNode *graphbody, pwr_tClassId cid, 
 			       ldh_tSesContext ldhses, unsigned long con_point, 
-			       unsigned long *mask, unsigned long *par_type, 
+			       unsigned int *mask, unsigned long *par_type, 
 			       unsigned long *par_inverted, unsigned long *par_index)
 {
 	int sts;
@@ -212,7 +212,7 @@ int	goen_get_parameter_m8( pwr_sGraphPlcNode *graphbody, pwr_tClassId cid,
 *
 **************************************************************************/
 int goen_get_location_point_m8( WGre *grectx, pwr_sGraphPlcNode *graphbody, 
-				unsigned long *mask, unsigned long node_width, 
+				unsigned int *mask, unsigned long node_width, 
 				goen_point_type *info_pointer, vldh_t_node node)
 {
 	int sts;

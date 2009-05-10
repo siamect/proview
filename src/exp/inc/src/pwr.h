@@ -578,7 +578,7 @@ static const pwr_tDeltaTime pwr_cNDeltaTime = {0, 0};	//!< Zero deltatime consta
 #endif
 
 #ifndef pwr_Offset
-#define pwr_Offset(base, field) ((unsigned int)&((base)->field)-(unsigned int)(base))
+#define pwr_Offset(base, field) ((unsigned long)&((base)->field)-(unsigned long)(base))
 #endif
 
 #define pwr_Field(a, n) a n;

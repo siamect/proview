@@ -228,7 +228,7 @@ int GraphJournal::store( journal_eAction action, grow_tObject o)
     lock_object = 0;
 
     if ( debug)
-      printf( "Store(F)x: %3d  list: %3d undo: %10d redo: %10d\n", current_idx-1, poslist.size() - 1, 
+      printf( "Store(F)x: %3d  list: %3ld undo: %10d redo: %10d\n", current_idx-1, poslist.size() - 1, 
 	      (int)poslist[poslist.size()-1].undo_pos, (int)poslist[poslist.size()-1].redo_pos);
 
   }
@@ -252,7 +252,7 @@ int GraphJournal::store( journal_eAction action, grow_tObject o)
 
     while ( (int)poslist.size() > current_idx) {
       if ( debug)
-	printf( "Remove %d\n", poslist.size()-1);
+	printf( "Remove %ld\n", poslist.size()-1);
       poslist.pop_back();
     }
 
@@ -285,7 +285,7 @@ int GraphJournal::store( journal_eAction action, grow_tObject o)
 
     while ( (int)poslist.size() > current_idx) {
       if ( debug)
-	printf( "Remove %d\n", poslist.size()-1);
+	printf( "Remove %ld\n", poslist.size()-1);
       poslist.pop_back();
     }
 
@@ -375,7 +375,7 @@ int GraphJournal::store( journal_eAction action, grow_tObject o)
     current_idx++;
 
     if ( debug)
-      printf( "Store idx: %3d  list: %3d undo: %10d redo: %10d\n", current_idx-1, poslist.size() - 1, 
+      printf( "Store idx: %3d  list: %3ld undo: %10d redo: %10d\n", current_idx-1, poslist.size() - 1, 
 	      (int)poslist[poslist.size()-1].undo_pos, (int)poslist[poslist.size()-1].redo_pos);
 
     return GE__SUCCESS;
@@ -398,7 +398,7 @@ int GraphJournal::store( journal_eAction action, grow_tObject o)
 
   while ( (int)poslist.size() > current_idx) {
     if ( debug)
-      printf( "Remov idx: %3d  list: %3d undo: %10d redo: %10d\n", 0, poslist.size() - 1, 
+      printf( "Remov idx: %3d  list: %3ld undo: %10d redo: %10d\n", 0, poslist.size() - 1, 
 	      (int)poslist[poslist.size()-1].undo_pos, (int)poslist[poslist.size()-1].redo_pos);
     poslist.pop_back();
   }
@@ -461,7 +461,7 @@ int GraphJournal::store( journal_eAction action, grow_tObject o)
   current_idx++;
 
   if ( debug)
-    printf( "Store idx: %3d  list: %3d undo: %10d redo: %10d\n", current_idx-1, poslist.size() - 1, 
+    printf( "Store idx: %3d  list: %3ld undo: %10d redo: %10d\n", current_idx-1, poslist.size() - 1, 
 	    (int)poslist[poslist.size()-1].undo_pos, (int)poslist[poslist.size()-1].redo_pos);
 
   return GE__SUCCESS;
@@ -478,7 +478,7 @@ int GraphJournal::undo()
     return 0;
 
   if ( debug)
-    printf( "Undo  idx: %3d  list: %3d undo: %10d redo: %10d\n", current_idx-1, poslist.size() - 1, 
+    printf( "Undo  idx: %3d  list: %3ld undo: %10d redo: %10d\n", current_idx-1, poslist.size() - 1, 
 	    (int)poslist[current_idx-1].undo_pos, (int)poslist[current_idx-1].redo_pos);
 
   fp.seekp( poslist[current_idx-1].undo_pos);
@@ -555,7 +555,7 @@ int GraphJournal::redo()
     return 0;
 
   if ( debug)
-    printf( "Redo  idx: %3d  list: %3d undo: %10d redo: %10d\n", current_idx, poslist.size() - 1, 
+    printf( "Redo  idx: %3d  list: %3ld undo: %10d redo: %10d\n", current_idx, poslist.size() - 1, 
 	    (int)poslist[current_idx].undo_pos, (int)poslist[current_idx].redo_pos);
 
   if ( poslist[current_idx].redo_pos == -1)

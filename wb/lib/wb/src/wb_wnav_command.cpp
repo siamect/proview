@@ -5513,7 +5513,7 @@ static int wnav_confirmdialog_func(
     wnav_get_stored_wnav( &wnav);
     if ( wnav->window_type == wnav_eWindowType_No)
     {
-      printf( arg_p2->value_string);
+      printf( "%s", arg_p2->value_string);
       printf(" (y/n/q) : ");
       scanf( "%s", str);
       if ( strcmp( str, "Y") == 0 || strcmp( str, "y") == 0 ||
@@ -5544,7 +5544,7 @@ static int wnav_confirmdialog_func(
     wnav_get_stored_wnav( &wnav);
     if ( wnav->window_type == wnav_eWindowType_No)
     {
-      printf( arg_p2->value_string);
+      printf( "%s", arg_p2->value_string);
       printf(" (y/n) : ");
       scanf( "%s", str);
       if ( strcmp( str, "Y") == 0 || strcmp( str, "y") == 0 ||
@@ -5596,7 +5596,7 @@ static int wnav_continuedialog_func(
   wnav_get_stored_wnav( &wnav);
   if ( wnav->window_type == wnav_eWindowType_No)
   {
-    printf( arg_p2->value_string);
+    printf( "%s", arg_p2->value_string);
     printf("\nDo you want to continue ? (y/n) : ");
     scanf( "%s", str);
     if ( strcmp( str, "Y") == 0 || strcmp( str, "y") == 0 ||
@@ -5644,7 +5644,7 @@ static int wnav_promptdialog_func(
   wnav_get_stored_wnav( &wnav);
   if ( wnav->window_type == wnav_eWindowType_No)
   {
-    printf( arg_p2->value_string);
+    printf( "%s", arg_p2->value_string);
     printf( " : ");
     scanf( "%s", str);
     value = str;

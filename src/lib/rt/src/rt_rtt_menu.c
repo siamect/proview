@@ -3548,7 +3548,7 @@ int	rtt_menu_upd_new(
 	      break;
 	    case RTT_K_PF3:
 	    case RTT_K_ARROW_RIGHT:
-	      if ((int) (menu_ptr + ctx->current_item)->value_ptr != RTT_ERASE) {
+	      if ((long int) (menu_ptr + ctx->current_item)->value_ptr != RTT_ERASE) {
 		rtt_get_value( ctx, rtt_scantime, &rtt_menu_upd_update,
 			       (void *) ctx, 
 			       "Enter value: ", 0, RTT_ROW_COMMAND);
@@ -6188,10 +6188,10 @@ static int	rtt_attribute_elements(
 	pwr_tCid	cid;
 
 	objar.Objid = objid;
-	objar.Body = (pwr_tCid) arg1;
-	objar.Offset = (pwr_tUInt32) arg2;
-	objar.Size = (pwr_tUInt32) arg3;
-	objar.Flags.m = (pwr_tBitMask) arg4;
+	objar.Body = (pwr_tCid) ((unsigned long)arg1);
+	objar.Offset = (pwr_tUInt32) ((unsigned long)arg2);
+	objar.Size = (pwr_tUInt32) ((unsigned long)arg3);
+	objar.Flags.m = (pwr_tBitMask) ((unsigned long)arg4);
 	
 	/* Get object name */
 	sts = gdh_AttrrefToName( &objar, objname, sizeof(objname), cdh_mName_volumeStrict);
@@ -6235,8 +6235,8 @@ static int	rtt_attribute_elements(
 
 	for ( j = 0; j < (int)elements; j++) {
 	  if ( rtt_mode_address) {
-	    sprintf( parnameindex,"%8u    ", 
-			(unsigned int)(parameter_ptr + rtt_rtdb_offset));
+	    sprintf( parnameindex,"%8lu    ", 
+			(unsigned long)(parameter_ptr + rtt_rtdb_offset));
 	    strcat( parnameindex, parname);
 	  }
 	  else
@@ -6296,8 +6296,8 @@ static int	rtt_attribute_elements(
 		parnameindex, 
 		0, 
 		&rtt_object_parameters,
-		0, objid, (void *)aref.Body, (void *)aref.Offset, 
-		(void *)aref.Size, (void *)(aref.Flags.m | RTT_ISAREF),
+		0, objid, (void *)(long)aref.Body, (void *)(long)aref.Offset, 
+	        (void *)(long)aref.Size, (void *)(long)(aref.Flags.m | RTT_ISAREF),
 		parameter_name, RTT_PRIV_NOOP, parameter_ptr, atype, 
 		aflags, asize / elements, subid, 0, 0, 0, 0,
 		0.0, 0.0, RTT_DATABASE_GDH, 0);
@@ -6523,12 +6523,12 @@ int	rtt_object_parameters(
 	int		flags;
 	pwr_tCid	cid;
 
-	if ( ((unsigned int) arg4 & 0xffff0000) == RTT_ISAREF) {
+	if ( ((unsigned int) ((unsigned long)arg4) & 0xffff0000) == RTT_ISAREF) {
 	  objar.Objid = objid;
-	  objar.Body = (pwr_tCid) arg1;
-	  objar.Offset = (pwr_tUInt32) arg2;
-	  objar.Size = (pwr_tUInt32) arg3;
-	  objar.Flags.m = (pwr_tBitMask) arg4 & 0xffff;
+	  objar.Body = (pwr_tCid) ((unsigned long)arg1);
+	  objar.Offset = (pwr_tUInt32) ((unsigned long)arg2);
+	  objar.Size = (pwr_tUInt32) ((unsigned long)arg3);
+	  objar.Flags.m = (pwr_tBitMask) ((unsigned long)arg4) & 0xffff;
 	}
 	else
 	  objar = cdh_ObjidToAref( objid);
@@ -6632,8 +6632,8 @@ int	rtt_object_parameters(
 
 	  for ( j = 0; j < (int)elements; j++) {
 	    if ( rtt_mode_address) {
-	      sprintf( parnameindex,"%8u    ", 
-			(unsigned int)(parameter_ptr + rtt_rtdb_offset));
+	      sprintf( parnameindex,"%8lu    ", 
+			(unsigned long)(parameter_ptr + rtt_rtdb_offset));
 	      strcat( parnameindex, bd[i].attrName);
 	    }
 	    else
@@ -6656,8 +6656,8 @@ int	rtt_object_parameters(
 
 	    if ( bd[i].attrClass == pwr_eClass_Input && rtt_mode_address) {
 	      /* Add the content of the pointer */
-	      sprintf( parnameindex,"%8u    ",
-			(unsigned int)(parameter_ptr - 4 + rtt_rtdb_offset));
+	      sprintf( parnameindex,"%8lu    ",
+			(unsigned long)(parameter_ptr - 4 + rtt_rtdb_offset));
 	      strcat( parnameindex, bd[i].attrName);
 	      strcat( parnameindex, "P");
 
@@ -6697,8 +6697,8 @@ int	rtt_object_parameters(
 			parnameindex,
 			0,
 			&rtt_object_parameters,
-			0, objid, (void *)aref.Body, (void *)aref.Offset, 
-			(void *)aref.Size, (void *)(aref.Flags.m | RTT_ISAREF),
+			0, objid, (void *)(long)aref.Body, (void *)(long)aref.Offset, 
+		        (void *)(long)aref.Size, (void *)(long)(aref.Flags.m | RTT_ISAREF),
 			parameter_name, RTT_PRIV_NO, parameter_ptr - 4,
 			pwr_eType_Int32,
 			flags, 4, pwr_cNDlid, 0, 0, 0, 0,
@@ -6730,8 +6730,8 @@ int	rtt_object_parameters(
 			parnameindex,
 			0,
 			&rtt_attribute_elements,
-			0, objid, (void *)aref.Body, (void *)aref.Offset, 
-			(void *)aref.Size, (void *)aref.Flags.m,
+		        0, objid, (void *)(long)aref.Body, (void *)(long)aref.Offset, 
+			(void *)(long)aref.Size, (void *)(long)aref.Flags.m,
 			parameter_name, RTT_PRIV_NO, parameter_ptr - 4,
 			pwr_eType_Int32,
 			flags, 4, pwr_cNDlid, 0, 0, 0, 0,

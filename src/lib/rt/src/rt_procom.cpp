@@ -1209,7 +1209,7 @@ pvd_SubSendBuffer ()
 	}
 
 	/* Advance pointer to next sdata slot */
-	dp = (net_sSubData *)((pwr_tInt32)dp + it->second.aref.Size + subdatahdrsize);
+	dp = (net_sSubData *)((unsigned long)dp + it->second.aref.Size + subdatahdrsize);
       }
     } gdb_ScopeUnlock;
 

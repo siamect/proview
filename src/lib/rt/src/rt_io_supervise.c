@@ -288,12 +288,12 @@ static pwr_tStatus io_ConnectToAnaSupLst (
     switch (Class) {
       case pwr_cClass_Ai:
         AiP = (pwr_sClass_Ai *) ObjP;
-        Float32P = gdh_TranslateRtdbPointer( (pwr_tUInt32)AiP->ActualValue ); 
+        Float32P = gdh_TranslateRtdbPointer( (unsigned long)AiP->ActualValue ); 
 	break;
 
       case pwr_cClass_Ao:
         AoP = (pwr_sClass_Ao *) ObjP;
-        Float32P = gdh_TranslateRtdbPointer( (pwr_tUInt32)AoP->ActualValue ); 
+        Float32P = gdh_TranslateRtdbPointer( (unsigned long)AoP->ActualValue ); 
 	break;
 
       default:
@@ -373,17 +373,17 @@ static pwr_tStatus io_ConnectToDigSupLst (
     switch (Class) {
       case pwr_cClass_Di:
         DiP = (pwr_sClass_Di *) ObjP;
-        BooleanP = gdh_TranslateRtdbPointer( (pwr_tUInt32)DiP->ActualValue ); 
+        BooleanP = gdh_TranslateRtdbPointer( (unsigned long)DiP->ActualValue ); 
 	break;
 
       case pwr_cClass_Do:
         DoP = (pwr_sClass_Do *) ObjP;
-        BooleanP = gdh_TranslateRtdbPointer( (pwr_tUInt32)DoP->ActualValue ); 
+        BooleanP = gdh_TranslateRtdbPointer( (unsigned long)DoP->ActualValue ); 
 	break;
 
       case pwr_cClass_Po:
         PoP = (pwr_sClass_Po *) ObjP;
-        BooleanP = gdh_TranslateRtdbPointer( (pwr_tUInt32)PoP->ActualValue ); 
+        BooleanP = gdh_TranslateRtdbPointer( (unsigned long)PoP->ActualValue ); 
 	break;
 
       default:

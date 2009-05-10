@@ -76,7 +76,7 @@ plc_thread (
 {
   pwr_tStatus sts;
   int rel_vec;
-  int phase;
+  long int phase;
   uid_t ruid;
   plc_sProcess *pp = tp->pp;
 
@@ -95,7 +95,7 @@ plc_thread (
   }
   
   que_Put(&sts, &tp->q_out, &tp->event, (void *)1);
-  phase = (int)que_Get(&sts, &tp->q_in, NULL, NULL);
+  phase = (long int)que_Get(&sts, &tp->q_in, NULL, NULL);
   pwr_Assert(phase == 2);
 
   /* Once thread's has set it's priority don't run as root */
@@ -120,7 +120,7 @@ plc_thread (
   tp->init(2, tp);
 
   que_Put(&sts, &tp->q_out, &tp->event, (void *)2);
-  phase = (int)que_Get(&sts, &tp->q_in, NULL, NULL);
+  phase = (long int)que_Get(&sts, &tp->q_in, NULL, NULL);
   pwr_Assert(phase == 3);
 
   /* Phase 3.  */
@@ -161,7 +161,7 @@ plc_thread (
   thread_MutexUnlock(&tp->pp->io_copy_mutex);
   
   que_Put(&sts, &tp->q_out, &tp->event, (void *)3);
-  phase = (int)que_Get(&sts, &tp->q_in, NULL, NULL);
+  phase = (long int)que_Get(&sts, &tp->q_in, NULL, NULL);
   pwr_Assert(phase == 4);
   
   /* Phase 4.  */

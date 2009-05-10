@@ -582,7 +582,7 @@ int	dcli_replace_symbol( char *command, char *newcommand, int newsize)
 	char	*t;
 	char	*u;
 	int	symbolmode;
-	int	size;
+	long int size;
 	char	value[80];
 	char	symbol[80];
 	char	upper_symbol[80];
@@ -611,7 +611,7 @@ int	dcli_replace_symbol( char *command, char *newcommand, int newsize)
 	    if ( symbolmode)
 	    {
 	      /* End of potential symbol */
-	      size = (int) s - (int) u;
+	      size = (long int) s - (long int) u;
 	      strncpy( symbol, u, size);
 	      symbol[size] = 0;
 	      cdh_ToUpper( upper_symbol, symbol);

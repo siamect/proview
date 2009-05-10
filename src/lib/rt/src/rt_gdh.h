@@ -738,13 +738,13 @@ gdh_ExclusiveModeOff ();
  */
 
 void gdh_StoreRtdbPointer (
-  pwr_tUInt32		*rtdbReference,
+  unsigned long		*rtdbReference,
   void			*virtualAddress
 );
 
 void *
 gdh_TranslateRtdbPointer (
-  pwr_tUInt32		rtdbReference
+  unsigned long		rtdbReference
 );
 
 pwr_tStatus

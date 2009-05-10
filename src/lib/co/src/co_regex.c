@@ -1765,7 +1765,7 @@ struct register_info
 
 #define PUSH_FAILURE_POINT(pattern_place, string_place)			\
   {									\
-    int last_used_reg, this_reg;					\
+    long int last_used_reg, this_reg;					\
 									\
     /* Find out how many registers are active or have been matched.	\
        (Aside from register zero, which is only set at the end.)  */	\
@@ -1776,7 +1776,7 @@ struct register_info
     if (stacke - stackp < NUM_FAILURE_ITEMS)				\
       {									\
 	unsigned char **stackx;						\
-	unsigned int len = stacke - stackb;				\
+	unsigned long len = stacke - stackb;				\
 	if (len > re_max_failures * MAX_NUM_FAILURE_ITEMS)		\
 	  return -2;							\
 									\
@@ -1821,9 +1821,9 @@ struct register_info
 
 #define POP_FAILURE_POINT()						\
   {									\
-    int temp;								\
+    long int temp;	       						\
     stackp -= 2;		/* Remove failure points.  */		\
-    temp = (int) *--stackp;	/* How many regs pushed.  */	        \
+    temp = (long int) *--stackp; /* How many regs pushed.  */	        \
     temp *= NUM_REG_ITEMS;	/* How much to take off the stack.  */	\
     stackp -= temp; 		/* Remove the register info.  */	\
   }
@@ -2569,7 +2569,7 @@ re_match_2 (pbufp, string1_arg, size1, string2_arg, size2, pos, regs, mstop)
       if (stackp != stackb)
 	/* A restart point is known.  Restart there and pop it. */
 	{
-          int last_used_reg, this_reg;
+          long int last_used_reg, this_reg;
           
           /* If this failure point is from a dummy_failure_point, just
              skip it.  */
@@ -2584,7 +2584,7 @@ re_match_2 (pbufp, string1_arg, size1, string2_arg, size2, pos, regs, mstop)
           if (d >= string1 && d <= end1)
 	    dend = end_match_1;
           /* Restore register info.  */
-          last_used_reg = (int) *--stackp;
+          last_used_reg = (long int) *--stackp;
           
           /* Make the ones that weren't saved -1 or 0 again.  */
           for (this_reg = RE_NREGS - 1; this_reg > last_used_reg; this_reg--)

@@ -453,11 +453,11 @@ errh_CErrLog (
   while ((eap = va_arg(ap, sArg *)) != NULL) {
     switch (eap->class) {
     case eArg_sts:
-      args[argno++] = (char *)(eap->u.sts);
+      args[argno++] = (char *)((long int)eap->u.sts);
       strcat(msg, "\n%m");
       break;
     case eArg_int:
-      args[argno++] = (char *)(eap->u.intval);
+      args[argno++] = (char *)((long int)eap->u.intval);
       break;
     case eArg_string:
       args[argno++] = eap->u.string;
@@ -770,8 +770,8 @@ msg_vsprintf (
   const char *cs;
   int flags;        /* flags to number() */
 
-  int field_width;  /* width of output field */
-  int precision;    /* min. # of digits for integers; max
+  long int field_width;  /* width of output field */
+  long int precision;    /* min. # of digits for integers; max
                        number of chars for from string */
   int qualifier;    /* 'h', 'l', or 'L' for integer fields */
 
@@ -809,7 +809,7 @@ repeat:
     } else if (*fmt == '*') {
       ++fmt;
       /* it's the next argument */
-      field_width = aa_arg(ap, vap, int);
+      field_width = aa_arg(ap, vap, long int);
       if (field_width < 0) {
         field_width = -field_width;
         flags |= LEFT;
@@ -825,7 +825,7 @@ repeat:
       } else if (*fmt == '*') {
         ++fmt;
         /* it's the next argument */
-        precision = aa_arg(ap, vap, int);
+        precision = aa_arg(ap, vap, long int);
       }
       if (precision < 0)
         precision = 0;
@@ -846,7 +846,7 @@ repeat:
       if (!(flags & LEFT))
         while (--field_width > 0)
           *str++ = ' ';
-      *str++ = (unsigned char) aa_arg(ap, vap, int);
+      *str++ = (unsigned char) aa_arg(ap, vap, long int);
       while (--field_width > 0)
         *str++ = ' ';
       continue;
@@ -868,7 +868,7 @@ repeat:
       continue;
 
     case 'm' :
-      sts = aa_arg(ap, vap, int);
+      sts = aa_arg(ap, vap, long int);
       errh_GetMsg(sts, msg, sizeof(msg));
       s = msg;
       while (*s != '\0')
@@ -929,9 +929,9 @@ repeat:
       else
         num = aa_arg(ap, vap, unsigned long);
     else if (flags & SIGN)
-      num = aa_arg(ap, vap, int);
+      num = aa_arg(ap, vap, long int);
     else
-      num = aa_arg(ap, vap, unsigned int);
+      num = aa_arg(ap, vap, unsigned long);
     str = number(str, num, base, field_width, precision, flags);
   }
   *str = '\0';

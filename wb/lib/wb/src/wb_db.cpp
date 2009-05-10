@@ -989,7 +989,7 @@ static void printstat(DbEnv *ep, const char *s)
   printf("  nconflicts...: %d\n", lp->st_nconflicts);
 #endif
   printf("  ndeadlocks...: %d\n", lp->st_ndeadlocks);
-  printf("  regsize......: %d\n", lp->st_regsize);
+  printf("  regsize......: %ld\n", lp->st_regsize);
   printf("  region_wait..: %d\n", lp->st_region_wait);
   printf("  region_nowait: %d\n", lp->st_region_nowait);
   printf("\n");

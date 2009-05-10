@@ -212,7 +212,7 @@ pwr_tStatus RemIO_Init_ALCM(remnode_item *remnode)
                 objp->NumberOfDI++;
                 remdi->objp = chandip;
                 remdi->actval = (pwr_tBoolean *) gdh_TranslateRtdbPointer(
-			(pwr_tUInt32) dip->ActualValue);
+			(unsigned long) dip->ActualValue);
               if (class == pwr_cClass_Di)  
                 chandip->ActualValue = dip->ActualValue;
                 remdi->objp->BuffOff = remdi->objp->ConvOff / 8;
@@ -247,7 +247,7 @@ pwr_tStatus RemIO_Init_ALCM(remnode_item *remnode)
                 objp->NumberOfDO++;
                 remdo->objp = chandop;
                 remdo->actval = gdh_TranslateRtdbPointer(
-			(pwr_tUInt32) dop->ActualValue);
+			(unsigned long) dop->ActualValue);
               if (class == pwr_cClass_Do)   
                 chandop->ActualValue = dop->ActualValue;
                 remdo->objp->BuffOff = remdo->objp->ConvOff / 8;
@@ -283,7 +283,7 @@ pwr_tStatus RemIO_Init_ALCM(remnode_item *remnode)
                 objp->NumberOfDV++;
                 remdv->objp = chandvp;
                 remdv->actval = gdh_TranslateRtdbPointer(
-			(pwr_tUInt32) dvp->ActualValue);
+			(unsigned long) dvp->ActualValue);
                 chandvp->ActualValue = dvp->ActualValue;
                 remdv->objp->OldValue = *remdv->actval;
                 remdv->objp->BuffOff = remdv->objp->ConvOff / 8;
@@ -318,7 +318,7 @@ pwr_tStatus RemIO_Init_ALCM(remnode_item *remnode)
                 objp->NumberOfAI++;
                 remai->objp = chanaip;
                 remai->actval = (pwr_tFloat32 *) gdh_TranslateRtdbPointer(
-			(pwr_tUInt32) aip->ActualValue);
+			(unsigned long) aip->ActualValue);
                 chanaip->ActualValue = aip->ActualValue;
                 remai->rawval = (short int *) &aip->RawValue;
               }	/* END Class Ai */
@@ -351,7 +351,7 @@ pwr_tStatus RemIO_Init_ALCM(remnode_item *remnode)
                 objp->NumberOfAO++;
                 remao->objp = chanaop;
                 remao->actval = (pwr_tFloat32 *) gdh_TranslateRtdbPointer(
-			(pwr_tUInt32) aop->ActualValue);
+			(unsigned long) aop->ActualValue);
                 chanaop->ActualValue = aop->ActualValue;
                 remao->rawval = (short int *)&aop->RawValue;
                 remao->objp->OldValue = aop->RawValue;
@@ -385,10 +385,10 @@ pwr_tStatus RemIO_Init_ALCM(remnode_item *remnode)
                 objp->NumberOfCo++;
                 remco->objp = chancop;
                 remco->extval = (pwr_tInt32 *) gdh_TranslateRtdbPointer(
-			(pwr_tUInt32) cop->AbsValue);
+			(unsigned long) cop->AbsValue);
                 chancop->ExtendedValue = cop->AbsValue;
                 remco->actval = (pwr_tInt32 *) gdh_TranslateRtdbPointer(
-			(pwr_tUInt32) cop->RawValue);
+			(unsigned long) cop->RawValue);
                 chancop->ActualValue = cop->RawValue;
               }	/* END Class Co */
             }	/* END Object Co */
@@ -952,7 +952,7 @@ pwr_tStatus RemIO_Init_3964R(remnode_item *remnode)
 //                objp->NumberOfDI++;
                 remdi->objp = chandip;
                 remdi->actval = (pwr_tBoolean *) gdh_TranslateRtdbPointer(
-			(pwr_tUInt32) dip->ActualValue);
+			(unsigned long) dip->ActualValue);
               if (class == pwr_cClass_Di)  
                 chandip->ActualValue = dip->ActualValue;
                 remdi->objp->BuffOff = remdi->objp->ConvOff / 8;
@@ -987,7 +987,7 @@ pwr_tStatus RemIO_Init_3964R(remnode_item *remnode)
 //                objp->NumberOfDO++;
                 remdo->objp = chandop;
                 remdo->actval = gdh_TranslateRtdbPointer(
-			(pwr_tUInt32) dop->ActualValue);
+			(unsigned long) dop->ActualValue);
               if (class == pwr_cClass_Do)   
                 chandop->ActualValue = dop->ActualValue;
                 remdo->objp->BuffOff = remdo->objp->ConvOff / 8;
@@ -1023,7 +1023,7 @@ pwr_tStatus RemIO_Init_3964R(remnode_item *remnode)
 //                objp->NumberOfDV++;
                 remdv->objp = chandvp;
                 remdv->actval = gdh_TranslateRtdbPointer(
-			(pwr_tUInt32) dvp->ActualValue);
+			(unsigned long) dvp->ActualValue);
                 chandvp->ActualValue = dvp->ActualValue;
                 remdv->objp->OldValue = *remdv->actval;
                 remdv->objp->BuffOff = remdv->objp->ConvOff / 8;
@@ -1058,7 +1058,7 @@ pwr_tStatus RemIO_Init_3964R(remnode_item *remnode)
 //                objp->NumberOfAI++;
                 remai->objp = chanaip;
                 remai->actval = (pwr_tFloat32 *) gdh_TranslateRtdbPointer(
-			(pwr_tUInt32) aip->ActualValue);
+			(unsigned long) aip->ActualValue);
                 chanaip->ActualValue = aip->ActualValue;
                 remai->rawval = (short int *) &aip->RawValue;
               }	/* END Class Ai */
@@ -1091,7 +1091,7 @@ pwr_tStatus RemIO_Init_3964R(remnode_item *remnode)
 //                objp->NumberOfAO++;
                 remao->objp = chanaop;
                 remao->actval = (pwr_tFloat32 *) gdh_TranslateRtdbPointer(
-			(pwr_tUInt32) aop->ActualValue);
+			(unsigned long) aop->ActualValue);
                 chanaop->ActualValue = aop->ActualValue;
                 remao->rawval = (short int *)&aop->RawValue;
                 remao->objp->OldValue = aop->RawValue;
@@ -1125,10 +1125,10 @@ pwr_tStatus RemIO_Init_3964R(remnode_item *remnode)
 //                objp->NumberOfCo++;
                 remco->objp = chancop;
                 remco->extval = (pwr_tInt32 *) gdh_TranslateRtdbPointer(
-			(pwr_tUInt32) cop->AbsValue);
+			(unsigned long) cop->AbsValue);
                 chancop->ExtendedValue = cop->AbsValue;
                 remco->actval = (pwr_tInt32 *) gdh_TranslateRtdbPointer(
-			(pwr_tUInt32) cop->RawValue);
+			(unsigned long) cop->RawValue);
                 chancop->ActualValue = cop->RawValue;
               }	/* END Class Co */
             }	/* END Object Co */

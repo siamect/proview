@@ -364,12 +364,12 @@ init_threads (
   int i;
   plc_sThread *tp;
   pwr_tStatus sts;
-  int phase;  
+  long int phase;  
 
   for (i = 0, tp = pp->thread; i < pp->thread_count ; i++, tp++) {
     /* Tell thread it is time for phase 2.  */
     que_Put(&sts, &tp->q_in, &tp->event, (void *)2);
-    phase = (int)que_Get(&sts, &tp->q_out, NULL, NULL);
+    phase = (long int)que_Get(&sts, &tp->q_out, NULL, NULL);
     pwr_Assert(phase == 2);
   }
 }
@@ -382,7 +382,7 @@ start_threads (
   int i;
   plc_sThread *tp;
   pwr_tStatus sts;
-  int phase;
+  long int phase;
 
 #if defined OS_LYNX && USE_RT_TIMER
   create_timer(pp);
@@ -391,7 +391,7 @@ start_threads (
   for (i = 0, tp = pp->thread; i < pp->thread_count ; i++, tp++) {
     /* Tell thread it is time for phase 3, start.  */
     que_Put(&sts, &tp->q_in, &tp->event, (void *)3);
-    phase = (int)que_Get(&sts, &tp->q_out, NULL, NULL);
+    phase = (long int)que_Get(&sts, &tp->q_out, NULL, NULL);
     pwr_Assert(phase == 3);
   }
 }
@@ -404,7 +404,7 @@ run_threads (
   int i;
   plc_sThread *tp;
   pwr_tStatus sts;
-  int phase;
+  long int phase;
 
 #if defined OS_LYNX && USE_RT_TIMER
   create_timer(pp);
@@ -413,7 +413,7 @@ run_threads (
   for (i = 0, tp = pp->thread; i < pp->thread_count ; i++, tp++) {
     /* Tell thread it is time for phase 4, run.  */
     que_Put(&sts, &tp->q_in, &tp->event, (void *)4);
-    phase = (int)que_Get(&sts, &tp->q_out, NULL, NULL);
+    phase = (long int)que_Get(&sts, &tp->q_out, NULL, NULL);
     pwr_Assert(phase == 4);
   }
 }
@@ -592,7 +592,7 @@ create_thread (
 )
 {
   pwr_tStatus	sts;
-  int phase;
+  long int phase;
 
   tp->aref.Objid = ptp->thread;
   tp->init = ptp->init;
@@ -641,7 +641,7 @@ create_thread (
   }
 
   /* Wait for thread to initialize.  */
-  phase = (int)que_Get(&sts, &tp->q_out, NULL, NULL);
+  phase = (long int)que_Get(&sts, &tp->q_out, NULL, NULL);
   pwr_Assert(phase == 1);
 }
 

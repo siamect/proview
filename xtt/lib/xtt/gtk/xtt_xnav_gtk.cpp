@@ -385,7 +385,7 @@ void XNavGtk::popup_button_cb( GtkWidget *w, gpointer data)
   int idx;
   pwr_tStatus sts;
 
-  idx = (int) g_object_get_data( (GObject *)w, "userdata");
+  idx = (int) (unsigned long)g_object_get_data( (GObject *)w, "userdata");
 
   xnav->mcp->ChosenItem = idx;
   //xnav->set_clock_cursor();

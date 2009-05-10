@@ -940,7 +940,7 @@ void GsdmlAttrNav::device_changed_ok( void *ctx, void *data)
 
 void GsdmlAttrNav::device_changed_cancel( void *ctx, void *data)
 {
-  int old_device = (int )data;
+  long int old_device = (long int )data;
   GsdmlAttrNav *attrnav = (GsdmlAttrNav *)ctx;
   attrnav->device_num = old_device;
   attrnav->device_confirm_active = 0;

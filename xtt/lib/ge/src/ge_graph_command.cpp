@@ -2623,7 +2623,7 @@ static int graph_getcurrentobject_func(
 
   graph_get_stored_graph( &graph);
 
-  *return_int = (int) graph->current_cmd_object;
+  *return_int = (long int) graph->current_cmd_object;
   *return_decl = CCM_DECL_INT;
   
   return 1;

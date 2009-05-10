@@ -160,8 +160,8 @@ subcm_Data (
       i < mp->msg.count;
 
       i++,
-      dr += offsetof(net_sSubData, data) + dp->size,
-      dp = (net_sSubData *)((pwr_tUInt32)&dp->data + dp->size)
+      dr += offsetof(net_sSubData, data) + (unsigned long)dp->size,
+      dp = (net_sSubData *)((unsigned long)&dp->data + dp->size)
     ) {
 
       cp = hash_Search(&sts, gdbroot->subc_ht, &dp->sid);

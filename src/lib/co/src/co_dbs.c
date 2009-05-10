@@ -190,14 +190,14 @@ checkQ(const dbs_sVenv *vep, dbs_sQlink *item)
     return NO;
   }
   if (item->self == dbs_cNref) {
-    printf("checkQ in volume: %s, item->self == dbs_cNref, item: %u", "not known", (unsigned int)item);
+    printf("checkQ in volume: %s, item->self == dbs_cNref, item: %lu", "not known", (unsigned long)item);
     return NO;
   }
 
   link = dbs_Address(NULL, vep, item->self);
   if (item != link) {
-    printf("checkQ in volume: %s, item != dbs_Address(NULL, ep, item->self),\n item: %u != %u",
-      "not known", (unsigned int)item, (unsigned int)link);
+    printf("checkQ in volume: %s, item != dbs_Address(NULL, ep, item->self),\n item: %lu != %lu",
+      "not known", (unsigned long)item, (unsigned long)link);
     return NO;
   }
 

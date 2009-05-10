@@ -1200,40 +1200,40 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
     if ( size == sizeof(int_val) && convconst( &int_val, value)) {
       if ( oper == tokens.EQ) {
         if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys)
-          memcpy( (char *)((unsigned int) object->o->rbody + offset), 
+          memcpy( (char *)((unsigned long) object->o->rbody + offset), 
                   &int_val, size);
         else if ( bix == pwr_eBix_dev)
-          memcpy( (char *)((unsigned int) object->o->dbody + offset), 
+          memcpy( (char *)((unsigned long) object->o->dbody + offset), 
                   &int_val, size);
       }
       else if ( oper == tokens.OREQ) {
         if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys) {
-          current_int_val = *(int *) ((unsigned int) object->o->rbody + offset);
+          current_int_val = *(int *) ((unsigned long) object->o->rbody + offset);
           int_val |= current_int_val;
-          memcpy( (char *)((unsigned int) object->o->rbody + offset),
+          memcpy( (char *)((unsigned long) object->o->rbody + offset),
                   &int_val, size);
         }
         else if ( bix == pwr_eBix_dev) {
-          current_int_val = *(int *) ((unsigned int) object->o->dbody + offset);
+          current_int_val = *(int *) ((unsigned long) object->o->dbody + offset);
           int_val |= current_int_val;
-          memcpy( (char *)((unsigned int) object->o->dbody + offset),            
+          memcpy( (char *)((unsigned long) object->o->dbody + offset),            
                   &int_val, size);
         }
       }
     }
     else if ( attrStringToValue( type, value, buf, sizeof( buf), size)) {
       if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys) {
-	if ( string_continue && ! *(char *)((unsigned int) object->o->rbody + offset - 1))
+	if ( string_continue && ! *(char *)((unsigned long) object->o->rbody + offset - 1))
 	  // If previous char is null, this was originally linefeed
-	  *(char *)((unsigned int) object->o->rbody + offset - 1) = '\n';
-        memcpy( (char *)((unsigned int) object->o->rbody + offset), 
+	  *(char *)((unsigned long) object->o->rbody + offset - 1) = '\n';
+        memcpy( (char *)((unsigned long) object->o->rbody + offset), 
                 buf, size);
       }
       else if ( bix == pwr_eBix_dev) {
-	if ( string_continue && ! *(char *)((unsigned int) object->o->dbody + offset - 1))
+	if ( string_continue && ! *(char *)((unsigned long) object->o->dbody + offset - 1))
 	  // If previous char is null, this was originally linefeed
-	  *(char *)((unsigned int) object->o->dbody + offset - 1) = '\n';
-        memcpy( (char *)((unsigned int) object->o->dbody + offset), 
+	  *(char *)((unsigned long) object->o->dbody + offset - 1) = '\n';
+        memcpy( (char *)((unsigned long) object->o->dbody + offset), 
                 buf, size);
       }
     }
@@ -1471,33 +1471,33 @@ void wb_wblnode::buildBuffAttr( ref_wblnode object, pwr_eBix bix, pwr_tCid buffe
     if ( size/elements == sizeof(int_val) && convconst( &int_val, value)) {
       if ( oper == tokens.EQ) {
         if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys) 
-          memcpy( (char *)((unsigned int) object->o->rbody + offset), 
+          memcpy( (char *)((unsigned long) object->o->rbody + offset), 
                   &int_val, size/elements);
         else if ( bix == pwr_eBix_dev)
-          memcpy( (char *)((unsigned int) object->o->dbody + offset), 
+          memcpy( (char *)((unsigned long) object->o->dbody + offset), 
                   &int_val, size/elements);
       }
       else if ( oper == tokens.OREQ) {
         if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys) {
-          current_int_val = *(int *) ((unsigned int) object->o->rbody + offset);
+          current_int_val = *(int *) ((unsigned long) object->o->rbody + offset);
           int_val |= current_int_val;
-          memcpy( (char *)((unsigned int) object->o->rbody + offset),
+          memcpy( (char *)((unsigned long) object->o->rbody + offset),
                   &int_val, size/elements);
         }
         else if ( bix == pwr_eBix_dev) {
-          current_int_val = *(int *) ((unsigned int) object->o->dbody + offset);
+          current_int_val = *(int *) ((unsigned long) object->o->dbody + offset);
           int_val |= current_int_val;
-          memcpy( (char *)((unsigned int) object->o->dbody + offset),            
+          memcpy( (char *)((unsigned long) object->o->dbody + offset),            
                   &int_val, size/elements);
         }
       }
     }
     else if ( attrStringToValue( type, value, buf, sizeof( buf), size)) {
       if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys)
-        memcpy( (char *)((unsigned int) object->o->rbody + offset), 
+        memcpy( (char *)((unsigned long) object->o->rbody + offset), 
                 buf, size/elements);
       else if ( bix == pwr_eBix_dev)
-        memcpy( (char *)((unsigned int) object->o->dbody + offset), 
+        memcpy( (char *)((unsigned long) object->o->dbody + offset), 
                 buf, size/elements);
     }
     else {

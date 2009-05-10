@@ -2042,18 +2042,18 @@ void print_line()
       {
         for ( j = 0; j < line_table[line_table_cnt].horiz_cnt; j++)
         {
-          printf( "%d ", int( line_table[line_table_cnt].horiz[j]));
+          printf( "%ld ", long( line_table[line_table_cnt].horiz[j]));
           if ( j < line_table[line_table_cnt].vert_cnt )
-            printf( "%d ", int( line_table[line_table_cnt].vert[j]));
+            printf( "%ld ", long( line_table[line_table_cnt].vert[j]));
         }
       }
       else
       {
         for ( j = 0; j < line_table[line_table_cnt].vert_cnt; j++)
         {
-          printf( "%d ", int( line_table[line_table_cnt].vert[j]));
+          printf( "%ld ", long( line_table[line_table_cnt].vert[j]));
           if ( j < line_table[line_table_cnt].horiz_cnt )
-            printf( "%d ", int( line_table[line_table_cnt].horiz[j]));
+            printf( "%ld ", long( line_table[line_table_cnt].horiz[j]));
         }
       }
       printf( "\n");

@@ -805,7 +805,7 @@ static int	gccm_replace_symbol( t_func_ctx funcctx, char *command, char *newcomm
 	    if ( symbolmode)
 	    {
 	      /* End of potential symbol */
-	      size = (int) s - (int) u;
+	      size = (long int) s - (long int) u;
 	      strncpy( symbol, u, size);
 	      symbol[size] = 0;
               sts = gccm_getvar( funcctx, symbol, K_OPERAND_NAME, 
@@ -4168,7 +4168,7 @@ static int gccm_func_say(
   if ( arg_p->value_decl == K_DECL_FLOAT)
     sts = printf( "%f", arg_p->value_float);
   else if ( arg_p->value_decl == K_DECL_INT)
-    sts = printf( "%d", arg_p->value_int);
+    sts = printf( "%ld", arg_p->value_int);
   else if ( arg_p->value_decl == K_DECL_STRING)
     sts = printf( "%s\n", arg_p->value_string);
 
@@ -4234,7 +4234,7 @@ static int gccm_func_ask(
   if ( arg_p->value_decl == K_DECL_FLOAT)
     sts = scanf( "%f", &arg_p->value_float);
   else if ( arg_p->value_decl == K_DECL_INT)
-    sts = scanf( "%d", &arg_p->value_int);
+    sts = scanf( "%ld", &arg_p->value_int);
   else if ( arg_p->value_decl == K_DECL_STRING)
     sts = scanf( "%s", arg_p->value_string);
   arg_p->value_returned = 1;
@@ -4724,7 +4724,7 @@ static int gccm_func_fopen(
     return CCM__VARTYPE;
   file = fopen( arg_p1->value_string, arg_p2->value_string);
   *return_decl = K_DECL_INT;
-  *return_int = (int) file;
+  *return_int = (long int) file;
   return 1;
 }
 

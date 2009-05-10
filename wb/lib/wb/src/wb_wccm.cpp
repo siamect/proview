@@ -900,7 +900,7 @@ static int wccm_setattribute_func(
       strcpy( buf, arg_p2->value_string);
       break;
     case CCM_DECL_INT:
-      sprintf( buf, "%d", arg_p2->value_int);
+      sprintf( buf, "%ld", arg_p2->value_int);
       break;
     case CCM_DECL_FLOAT:
       sprintf( buf, "%f", arg_p2->value_float);

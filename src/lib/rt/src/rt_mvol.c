@@ -230,7 +230,7 @@ mvol_AnameToAttribute (
     
     ap->aop = NULL;
     ap->adef = NULL;
-    ap->idx = ULONG_MAX;
+    ap->idx = UINT_MAX;
   } else {
     acp = ap->cp;
     abop = ap->bop;
@@ -314,7 +314,7 @@ mvol_AnameToAttribute (
     if (pn->hasIndex[pn->nAttribute-1])
       ap->idx = pn->index[pn->nAttribute-1];
     else
-      ap->idx = ULONG_MAX;
+      ap->idx = UINT_MAX;
   }
 
   ap->cop   = pool_Address(NULL, gdbroot->pool, ap->cp->cor);
@@ -344,7 +344,7 @@ mvol_AnameToAttribute (
     ap->flags.b.ObjectAttr = (cdh_tidIsCid( ap->tid) != 0);
     ap->flags.b.Array = (ap->idx == ULONG_MAX && ap->adef->Info.Flags & PWR_MASK_ARRAY);
   } else {
-    ap->aix   = ULONG_MAX;
+    ap->aix   = UINT_MAX;
     ap->size  = ap->cp->size;
     ap->offs  = 0;
     ap->tid   = cdh_TypeObjidToId(ap->bop->g.oid);
@@ -371,7 +371,7 @@ mvol_ArefToAttribute (
   cdh_uObjid            coid;
   int			i, j;
   int			offset = 0;
-  int			idx = ULONG_MAX;
+  int			idx = UINT_MAX;
   char			idxstr[20];
   pwr_tBoolean          noDot = TRUE;
 
@@ -395,7 +395,7 @@ mvol_ArefToAttribute (
     ap->bop   = pool_Address(NULL, gdbroot->pool, cp->bor);
     ap->bdef  = pool_Address(NULL, gdbroot->rtdb, cp->bbr);
 
-    ap->aix   = ULONG_MAX;
+    ap->aix   = UINT_MAX;
     ap->size  = arp->Size == 0 ? cp->size : MIN(arp->Size, cp->size);
     ap->offs  = 0;
     ap->tid   = cdh_TypeObjidToId(ap->bop->g.oid);
@@ -455,7 +455,7 @@ mvol_ArefToAttribute (
       }
     }
     else
-      idx = ULONG_MAX;
+      idx = UINT_MAX;
 
   }
 
@@ -470,7 +470,7 @@ mvol_ArefToAttribute (
 
   ap->aop   = pool_Address(NULL, gdbroot->pool, acp->attr[i].aor);
   ap->adef  = param;
-  ap->idx   = ULONG_MAX;		/* Guess, no index.  */
+  ap->idx   = UINT_MAX;		/* Guess, no index.  */
 
   if (arp->Size > (param->Info.Size / param->Info.Elements) || arp->Size == 0) {
 
@@ -509,7 +509,7 @@ mvol_ArefToAttribute (
       ap->elem = 1;
     }
   } else {
-    ap->aix   = ULONG_MAX;
+    ap->aix   = UINT_MAX;
     ap->size  = arp->Size == 0 ? cp->size : MIN(arp->Size, cp->size);
     ap->offs  = 0;
     ap->tid   = cdh_TypeObjidToId(ap->bop->g.oid);

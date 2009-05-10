@@ -3102,7 +3102,7 @@ void WttGtk::popup_button_cb( GtkWidget *w, gpointer data)
   XtVaGetValues (w, XmNuserData, &idx, NULL);
 #endif
 
-  idx = (int) g_object_get_data( (GObject *)w, "userdata");
+  idx = (int) (unsigned long)g_object_get_data( (GObject *)w, "userdata");
 
   wtt->mcp->ChosenItem = idx;
   wtt->set_clock_cursor();
