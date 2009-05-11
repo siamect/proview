@@ -413,9 +413,9 @@ hash_Print (
 
   ghtp = htp->ghtp;
 
-  printf("  size............: %ld\n", ghtp->size);
-  printf("  key_size........: %ld\n", ghtp->key_size);
-  printf("  record_size.....: %ld\n", ghtp->record_size);
+  printf("  size............: %zd\n", ghtp->size);
+  printf("  key_size........: %zd\n", ghtp->key_size);
+  printf("  record_size.....: %zd\n", ghtp->record_size);
   printf("  key_offset......: %d\n", (int)ghtp->key_offset);
   printf("  link_offset.....: %d\n", (int)ghtp->link_offset);
   printf("  key_type........: %d\n", ghtp->key_type);
