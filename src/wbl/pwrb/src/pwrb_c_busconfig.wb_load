@@ -60,6 +60,16 @@ SObject pwrb:Class
       !/**
       ! Specification of a Qcom bus. 
       ! A number in the intervall 1-999.
+      !
+      ! Qcom is the communication protocoll used by the nethandler and
+      ! message handler to communicate between Proview nodes. The Qcom network 
+      ! is divided into busses, where two nodes has to be on the same bus to be
+      ! able to communicate.
+      ! 
+      ! Normally you divide the network into one production bus and one simulation
+      ! bus, thus preventing the simulation nodes to interfere with the production
+      ! nodes. In large networks it is also possible to divide the production nodes
+      ! into several busses.
       !*/
       Object BusNumber $Attribute 2
         Body SysBody

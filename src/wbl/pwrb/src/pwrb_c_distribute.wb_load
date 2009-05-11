@@ -23,14 +23,16 @@ SObject pwrb:Class
 !  @Version 1.0
 !  @Group ProjectConfiguration
 !  @Summary Configures distribution of files.
-!  The Distribute object configures distribution of files to process and
-!  operator stations.
+!  The Distribute object configures distribution of files from the 
+!  development environment to process and operator stations.
 !
 !  The object reside in the project volume beneath a NodeConfig object.
-!  The specified file(s) will be included in the distribution package and
+!  The specified files will be included in the distribution package and
 !  copied to the node configured by the NodeConfig object.
 !
-!  The files are specified in the Components attribute, which is a bitmask.
+!  The collected files are specified in the Components attribute, which is 
+!  a bitmask.
+!
 !  Description of the bits in Compontents:
 !
 ! @b UserDatabase
@@ -79,6 +81,12 @@ SObject pwrb:Class
 !
 !  Other files can be included with an ApplDistribute object.
 !  The GraphDistribute and SystemDistribute objects are obsolete.
+!
+!  The distribution is performed by the Distributor, which is activated
+!  from the menu in the configurator. The distributor collects all the 
+!  files that are needed for a process or operator station, into a package
+!  file. The package is copied to the process and operator station and 
+!  unpacked there.
 !
 ! @b See also
 !  @classlink NodeConfig pwrb_nodeconfig.html

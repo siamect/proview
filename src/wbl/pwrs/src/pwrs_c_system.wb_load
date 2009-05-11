@@ -59,7 +59,7 @@ SObject pwrs:Class
       !  the project name. Sometimes, at an upgrade or major revision, it is
       !  a good idea to make a copy, to keep the current state of the project.
       !  The copy will have a new projectname, but the system name remains the
-      !  same, and identifies the volumes and node that belongs to the system.
+      !  same, and identifies the volumes and nodes that belongs to the system.
       !*/
       Object SystemName $Attribute 2
         Body SysBody

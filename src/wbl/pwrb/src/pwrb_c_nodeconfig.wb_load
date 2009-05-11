@@ -65,7 +65,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Name of the node
+      !  The name of the node, i.e. the network node hostname.
       !*/
       Object NodeName $Attribute 2 
         Body SysBody
@@ -73,7 +73,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Operating system of the node
+      !  Operating system of the node.
       !*/
       Object OperatingSystem $Attribute 3 
         Body SysBody
@@ -86,6 +86,7 @@ SObject pwrb:Class
       !  Loadfiles, applications and graph-files will be copied to this
       !  node by the distributor.
       !  In most cases this is the node itself. 
+      !
       !  For ELN systems that is booted from a VMS node, the the VMS-node
       !  is the boot node.
       !  If the node is a development node which has access to the
@@ -108,7 +109,9 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      ! Ip address of the node.
+      ! IP address of the node.
+      !
+      ! In format a.b.c.d, e.g. 192.168.32.144
       !*/
       Object Address $Attribute 6 
         Body SysBody
