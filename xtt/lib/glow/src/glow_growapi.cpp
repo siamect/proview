@@ -254,9 +254,9 @@ void grow_CreatePasteNode( grow_tCtx ctx, char *name, grow_tNodeClass nc,
   *node = (grow_tNode) n1;
 }
 
-void grow_SetObjectInputFocus( grow_tNode node, int focus)
+void grow_SetObjectInputFocus( grow_tNode node, int focus, glow_eEvent event)
 {
-  ((GlowArrayElem *)node)->set_input_focus( focus);
+  ((GlowArrayElem *)node)->set_input_focus( focus, event);
 }
 
 void grow_SetAnnotation( grow_tNode node, int number, const char *text, int size)
@@ -4516,7 +4516,7 @@ int grow_MenuGetCurrentItem( grow_tObject menu, int *item)
 
 void grow_SetMenuInputFocus( grow_tObject menu, int focus)
 {
-  ((GrowMenu *)menu)->set_input_focus( focus);
+  ((GrowMenu *)menu)->set_input_focus( focus, glow_eEvent_Null);
 }
 
 int grow_GetMenuInputFocus( grow_tObject menu)

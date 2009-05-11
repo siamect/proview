@@ -1171,7 +1171,7 @@ int GrowTable::get_selected_cell( int *column, int *row)
   return 1;
 }
 
-void GrowTable::set_input_focus( int focus)
+void GrowTable::set_input_focus( int focus, glow_eEvent event)
 {
   if ( focus && !input_focus) {
     input_focus = 1;
