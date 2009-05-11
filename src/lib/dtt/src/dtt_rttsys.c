@@ -11113,7 +11113,7 @@ int RTTSYS_QCOM_APPL( 	menu_ctx	ctx,
             /* Name */
             menu_ptr->value_ptr =  ap->name;
             menu_ptr->func = &rttsys_qcom_queue_start;
-            menu_ptr->arg1 = (void *)ap->aid.aix;
+            menu_ptr->arg1 = (void *)(long)ap->aid.aix;
             menu_ptr++;
             /* Aid */
             menu_ptr->value_ptr = (char *) &ap->aid.aix;
@@ -11230,7 +11230,7 @@ int RTTSYS_QCOM_APPL( 	menu_ctx	ctx,
             /* Name */
             menu_ptr->value_ptr =  ap->name;
             menu_ptr->func = &rttsys_qcom_queue_start;
-            menu_ptr->arg1 = (void *)ap->aid.aix;
+            menu_ptr->arg1 = (void *)(long)ap->aid.aix;
             menu_ptr++;
             /* Aid */
             menu_ptr->value_ptr = (char *) &ap->aid.aix;
@@ -11536,7 +11536,7 @@ int RTTSYS_QCOM_QUEUE( 	menu_ctx	ctx,
 
       QCOM_QUE_PAGE = page + 1;
 
-      aix = (int)objectname;
+      aix = (int)(unsigned long)objectname;
 
       menulist = (rtt_t_menu_upd *) ctx->menu;
       menu_ptr = menulist;
@@ -11750,7 +11750,7 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
             /* Name */
             menu_ptr->value_ptr = (char *) &np->name;
             menu_ptr->func = &rttsys_qcom_node_start;
-            menu_ptr->arg1 = (void *) np->nid;
+            menu_ptr->arg1 = (void *) (long)np->nid;
             menu_ptr++;
 
             /* Os */
@@ -11909,7 +11909,7 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
             /* Name */
             menu_ptr->value_ptr = (char *) &np->name;
             menu_ptr->func = &rttsys_qcom_node_start;
-            menu_ptr->arg1 = (void *) np->nid;
+            menu_ptr->arg1 = (void *) (long)np->nid;
             menu_ptr++;
 
             /* Os */
@@ -12864,7 +12864,7 @@ int RTTSYS_QCOM_NODE( menu_ctx	ctx,
       break;
     case RTT_APPL_INIT:
 
-      nid = (pwr_tNodeId) objectname;
+      nid = (pwr_tNodeId) (unsigned long)objectname;
 
       menulist = (rtt_t_menu_upd *) ctx->menu;
       menu_ptr = menulist;

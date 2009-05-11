@@ -53,15 +53,15 @@
 #include "wb_goenm16.h"
 
 typedef int (* goen_tCreateNodeTypeFunc)(pwr_sGraphPlcNode *, pwr_tCid, ldh_tSesContext,
-					 flow_tCtx, unsigned long *, unsigned long,
+					 flow_tCtx, unsigned int *, unsigned long,
 					 unsigned long, flow_tNodeClass *, vldh_t_node);
 typedef int (* goen_tGetParamFunc)(pwr_sGraphPlcNode *, pwr_tCid, ldh_tSesContext,
-				   unsigned long, unsigned long *, unsigned long *,
+				   unsigned long, unsigned int *, unsigned long *,
 				   unsigned long *, unsigned long *);
 typedef int (* goen_tGetPointInfoFunc)(WGre *, pwr_sGraphPlcNode *, unsigned long,
-				       unsigned long *, unsigned long, goen_conpoint_type *,
+				       unsigned int *, unsigned long, goen_conpoint_type *,
 				       vldh_t_node);
-typedef int (* goen_tGetLocationPointFunc)( WGre *, pwr_sGraphPlcNode *, unsigned long *,
+typedef int (* goen_tGetLocationPointFunc)( WGre *, pwr_sGraphPlcNode *, unsigned int *,
 					    unsigned long, goen_point_type *, vldh_t_node);
 
 /*_Local variables_______________________________________________________*/
@@ -318,7 +318,7 @@ int goen_create_nodetype(
   if ( graphmethod >= GOEN_MAX_GRAPHMETHOD ) return GOEN__BADMETHOD;
 
   sts = (goen_create_nodetype_m[graphmethod]) ( graphbody, cid, ldhses, ctx, 
-						(unsigned long *)mask, subwindowmark, 
+						mask, subwindowmark, 
 						node_width, node_class, node);
 
   return sts;
@@ -355,12 +355,12 @@ int	goen_get_parinfo(
   if ( graphmethod >= GOEN_MAX_GRAPHMETHOD ) return GOEN__BADMETHOD;
 
   sts = (goen_get_point_info_m[graphmethod]) 
-    ( grectx, graphbody, con_point, (unsigned long *)mask, node_width, 
+    ( grectx, graphbody, con_point, mask, node_width, 
       graph_pointer, node);
   if ( EVEN(sts) ) return ( sts);
 
   sts = (goen_get_parameter_m[graphmethod]) 
-    ( graphbody, cid, ldhses, con_point, (unsigned long *)mask, 
+    ( graphbody, cid, ldhses, con_point, mask, 
       par_type, par_inverted,	par_index);
   return sts;	
 }
@@ -390,7 +390,7 @@ int	goen_get_pointinfo(
   if ( graphmethod >= GOEN_MAX_GRAPHMETHOD ) return GOEN__BADMETHOD;
 
   sts = (goen_get_point_info_m[graphmethod]) 
-    ( grectx, graphbody, con_point, (unsigned long *)mask, node_width, 
+    ( grectx, graphbody, con_point, mask, node_width, 
       graph_pointer, node);
   return sts;
 }
@@ -421,7 +421,7 @@ int	goen_get_parameter(
   if ( graphmethod >= GOEN_MAX_GRAPHMETHOD ) return GOEN__BADMETHOD;
 
   sts = ( goen_get_parameter_m[graphmethod])
-    ( graphbody, cid, ldhses, con_point, (unsigned long *)mask, 
+    ( graphbody, cid, ldhses, con_point, mask, 
       par_type, par_inverted, par_index);
   return sts;
 }
@@ -454,7 +454,7 @@ int	goen_get_location_point(
   if ( graphmethod >= GOEN_MAX_GRAPHMETHOD ) return GOEN__BADMETHOD;
 
   sts = (goen_get_location_point_m[graphbody->graphmethod]) 
-    ( grectx, graphbody, (unsigned long *)mask, node_width, location_point, node);
+    ( grectx, graphbody, mask, node_width, location_point, node);
   return sts;
 }
 

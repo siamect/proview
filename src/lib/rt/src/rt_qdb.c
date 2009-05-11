@@ -1550,7 +1550,7 @@ qdb_Signal (
     qos_SignalQue(sts, qp);
   }
 
-  return ODD(sts);
+  return ODD(*sts);
 }
 
 int

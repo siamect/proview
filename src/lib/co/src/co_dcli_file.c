@@ -156,7 +156,7 @@ int     dcli_replace_env( char *str, char *newstr)
   char    *t;
   char    *u;
   int     symbolmode;
-  int     size;
+  long int size;
   char    *value;
   char    symbol[80];
   char    lower_symbol[80];
@@ -185,7 +185,7 @@ int     dcli_replace_env( char *str, char *newstr)
     }
     else if (symbolmode && (*s == '/' || *s == '.')) {
       /* End of potential symbol */
-      size = (int) s - (int) u;
+      size = (long int) s - (long int) u;
       strncpy( symbol, u, size);
       symbol[size] = 0;
       if ( strcmp( symbol, "HOME") == 0)
@@ -216,7 +216,7 @@ int     dcli_replace_env( char *str, char *newstr)
 
   if ( symbolmode) {
     /* End of potential symbol */
-    size = (int) s - (int) u;
+    size = (long int) s - (long int) u;
     strncpy( symbol, u, size);
     symbol[size] = 0;
     cdh_ToLower( lower_symbol, symbol);

@@ -104,7 +104,7 @@ static int compKey( tree_sTable *tp, tree_sNode *x, tree_sNode *y)
       char *s = strrchr( xKey->text, ',');
       if ( s)
 	return strncmp(xKey->text, yKey->text, 
-		       (unsigned int)s - (unsigned int)xKey->text);
+		       (unsigned long)s - (unsigned long)xKey->text);
       return strcmp(xKey->text, yKey->text);
     }
     }
@@ -140,7 +140,7 @@ char *Lng::translate( const char *text)
       if ( s) {
 	char *t = strrchr( text, ',');
 	if ( t) {
-	  int len = (unsigned int)s - (unsigned int)record->transl + 1;
+	  long int len = (unsigned long)s - (unsigned long)record->transl + 1;
 	  strncpy( result, record->transl, len);
 	  result[len] = 0;
 	  strcat( result, t+1);
@@ -191,7 +191,7 @@ int Lng::translate( char *text, char *out)
 	char *t = strrchr( text, ',');
 	if ( t) {
 	  strncpy( result, record->transl, 
-		   (unsigned int)s - (unsigned int)record->transl + 1);
+		   (unsigned long)s - (unsigned long)record->transl + 1);
 	  strcat( result, t+1);
 	}
 	else

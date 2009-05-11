@@ -129,7 +129,7 @@ pwr_tStatus io_InitAiFilter
 
     case _FilterType_1:
           Data_1 = (sFilterData_1 *) malloc( sizeof(sFilterData_1) );
-          Data_1->ActualValue = gdh_TranslateRtdbPointer((pwr_tUInt32)SignalObj->ActualValue); 
+          Data_1->ActualValue = gdh_TranslateRtdbPointer((unsigned long)SignalObj->ActualValue); 
           Data_1->ScanTime = (pwr_tFloat32) (ScanTime * ChanObj->ScanInterval); /* Scan time (seconds) */
           *FilterData = Data_1;
 	break;

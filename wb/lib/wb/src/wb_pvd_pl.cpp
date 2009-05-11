@@ -394,7 +394,7 @@ void wb_pvd_pl::process_list( pwr_tStatus *sts)
 	else {
 	  sprintf( cmd, "pwrp_env.sh copy project %s %s %s %s noconfirm",
 		     body->CopyFrom, body->Project, body->Path, longname(m_list[i].oix));
-	  printf( cmd);
+	  printf( "%s\n", cmd);
 	  csts = system( cmd);      
 	  if ( (csts >>= 8) != 0) {
 	    sprintf( msg, "%s, in object %s", pwrp_status_to_string(csts), 

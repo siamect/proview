@@ -182,7 +182,7 @@ vol_AttributeToAddress (
     p = pool_Address(sts, gdbroot->rtdb, ap->op->u.n.body); 
     if (p == NULL) break;
 
-    p = (void *)((unsigned int)p + ap->offs);
+    p = (void *)((unsigned long)p + ap->offs);
 
     if (!ap->flags.b.Indirect) break;
 

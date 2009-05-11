@@ -677,7 +677,7 @@ qcom_Put (
     }
 
     qdb_Put(sts, bp, qp);
-    if (ODD(sts)) qdb->ap->put_count++;
+    if (ODD(*sts)) qdb->ap->put_count++;
 
   } qdb_ScopeUnlock;
 
@@ -1013,7 +1013,7 @@ qcom_Request (
     }
 
     gbp = qdb_Request(sts, pbp, pqp, gqp, tmo, gp, flags);
-    if (ODD(sts)) qdb->ap->request_count++;
+    if (ODD(*sts)) qdb->ap->request_count++;
 
   } qdb_ScopeUnlock;
 

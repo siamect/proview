@@ -104,7 +104,7 @@ int goen_create_nodetype_m16(
     pwr_tClassId	cid,
     ldh_tSesContext	ldhses,
     flow_tCtx		ctx,
-    unsigned long 	*mask,
+    unsigned int 	*mask,
     unsigned long	subwindowmark,
     unsigned long	node_width,
     flow_tNodeClass	*node_class,
@@ -118,9 +118,9 @@ int goen_create_nodetype_m16(
   int	points_at_top, points_at_bottom, points_at_left, points_at_right;
   unsigned long    inpointmask;
   unsigned long    outpointmask;
-  unsigned long    *inmask_pointer;
-  unsigned long    *outmask_pointer;
-  unsigned long    *invertmask_pointer;
+  unsigned int     *inmask_pointer;
+  unsigned int     *outmask_pointer;
+  unsigned int     *invertmask_pointer;
   ldh_sParDef 	*bodydef;
   int 		rows;
 
@@ -438,7 +438,7 @@ int goen_create_nodetype_m16(
 *
 **************************************************************************/
 int goen_get_point_info_m16( WGre *grectx, pwr_sGraphPlcNode *graphbody, 
-			    unsigned long point_nr, unsigned long *mask, 
+			    unsigned long point_nr, unsigned int *mask, 
 			    unsigned long node_width, goen_conpoint_type *info_pointer, 
 			    vldh_t_node node)
 {
@@ -598,7 +598,7 @@ int goen_get_point_info_m16( WGre *grectx, pwr_sGraphPlcNode *graphbody,
 **************************************************************************/
 int	goen_get_parameter_m16( pwr_sGraphPlcNode *graphbody, pwr_tClassId cid, 
 			       ldh_tSesContext ldhses, unsigned long con_point, 
-			       unsigned long *mask, unsigned long *par_type, 
+			       unsigned int *mask, unsigned long *par_type, 
 			       unsigned long *par_inverted, unsigned long *par_index)
 {
 
@@ -606,7 +606,7 @@ int	goen_get_parameter_m16( pwr_sGraphPlcNode *graphbody, pwr_tClassId cid,
 	unsigned long	conpointcount;
 	unsigned long	pointmask;
 	int		i, input_found, output_found;
-	unsigned long	*invertmask_pointer;
+	unsigned int	*invertmask_pointer;
 	int		rows;
 	ldh_sParDef 	*bodydef;
 
@@ -731,7 +731,7 @@ int	goen_get_parameter_m16( pwr_sGraphPlcNode *graphbody, pwr_tClassId cid,
 *
 **************************************************************************/
 int goen_get_location_point_m16( WGre *grectx, pwr_sGraphPlcNode *graphbody, 
-				unsigned long *mask, unsigned long node_width, 
+				unsigned int *mask, unsigned long node_width, 
 				goen_point_type *info_pointer, vldh_t_node node)
 {
    info_pointer->y = 0;

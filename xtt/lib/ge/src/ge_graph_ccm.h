@@ -36,13 +36,13 @@ extern "C" {
 typedef struct s_garg_ {
 	char			value_name[80];
 	int			value_decl;
-	int			value_int;
+	long int       		value_int;
 	float			value_float;
 	char			value_string[80];
 	int			value_type;
 	int			var_decl;
 	char			var_name[32];
-	int			value_returned;
+	long int	       	value_returned;
 	struct s_garg_		*next;
 } gccm_s_arg;
 

@@ -96,7 +96,7 @@ static	dtt_item	dtt_paste_itemlist = 0;
 static	int		dtt_paste_size_x;
 static	int		dtt_paste_size_y;
 
-static	int		dtt_current_index = 2;
+static	long int       	dtt_current_index = 2;
 static 	int		dtt_is_rttsys;
 static	int		dtt_opsys = 0;
 static	int		dtt_current_opsys;
@@ -294,11 +294,11 @@ static int	dtt_edit_process_menues(
 			unsigned long	arg5);
 static int	dtt_edit_process_one_menu(
 			int		(* func) (),
-			int		arg1,
-			int		arg2,
-			int		arg3,
-			int		arg4,
-			int		arg5,
+			unsigned long		arg1,
+			unsigned long		arg2,
+			unsigned long		arg3,
+			unsigned long		arg4,
+			unsigned long		arg5,
 			menu_ctx	ctx,
 			int		index);
 static int	dtt_edit_write_gdhrefs( char *filename);
@@ -7010,7 +7010,7 @@ RTT_DB_END\n");
 	/* Datafile: Start to write the current index and the main title */
 	if ( !generate_only)
 	{
-	  fprintf( fout, "%d\n", dtt_current_index);
+	  fprintf( fout, "%ld\n", dtt_current_index);
 	  fprintf( fout, "%d\n", dtt_opsys);
 	  fprintf( fout, "%s/%s\n", dtt_maintitle, dtt_title_prefix);
 	}
@@ -7429,7 +7429,7 @@ static int	dtt_edit_read_menues(	char		*filename)
 	/* Start to read the current index and maintitle*/
 	sts = dtt_read_line( line, sizeof(line), fin);
 	if ( EVEN(sts)) return sts;
-	sts = sscanf( line, "%d", &dtt_current_index);
+	sts = sscanf( line, "%ld", &dtt_current_index);
 	if ( sts != 1) return 0;
 	sts = dtt_read_line( line, sizeof(line), fin);
 	if ( EVEN(sts)) return sts;
@@ -7484,7 +7484,7 @@ static int	dtt_edit_read_one_menu(	FILE		*fin,
 	rtt_t_menu	*menu_ptr;
 	rtt_t_menu	*menulist = 0;
 	rtt_t_menu	*parent_menu_ptr;
-	int		index;
+	long int       	index;
 	int		type;
 	int		first = 0;
 	char		text[80];
@@ -7507,7 +7507,7 @@ static int	dtt_edit_read_one_menu(	FILE		*fin,
 	  sts = dtt_read_line( line, sizeof(line), fin);
 	  sts = sscanf( line, "%d", &type);
 	  sts = dtt_read_line( line, sizeof(line), fin);
-	  sts = sscanf( line, "%d", &index);
+	  sts = sscanf( line, "%ld", &index);
 	  /* If command type read the command */
 	  if (( type == DTT_MENUITEM_COMMAND) ||
 	      ( type == DTT_MENUITEM_COMMANDHOLD) ||
@@ -8276,11 +8276,11 @@ static int	dtt_edit_process_menues(
 
 static int	dtt_edit_process_one_menu(
 			int		(* func) (),
-			int		arg1,
-			int		arg2,
-			int		arg3,
-			int		arg4,
-			int		arg5,
+			unsigned long  	arg1,
+			unsigned long  	arg2,
+			unsigned long  	arg3,
+			unsigned long  	arg4,
+			unsigned long  	arg5,
 			menu_ctx	ctx,
 			int		index)
 {

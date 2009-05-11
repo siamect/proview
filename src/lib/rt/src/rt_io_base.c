@@ -188,7 +188,7 @@ int io_connect_status( pwr_sAttrRef *sig_aref, pwr_sAttrRef *chan_aref)
   sts = gdh_AttrRefToPointer( &status_aref, (void **)&status_p);
   if ( EVEN(sts)) return 0;
 
-  gdh_StoreRtdbPointer( (unsigned int *)iostatus_p, status_p);
+  gdh_StoreRtdbPointer( (unsigned long *)iostatus_p, status_p);
 
   last_ioconnect = ioconnect_aref;
   return 1;
@@ -281,10 +281,10 @@ pwr_tStatus io_init_ai_signals(
 	}
       }		
     }
-    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
+    gdh_StoreRtdbPointer( (unsigned long *) &sig_op->ActualValue, &area_op->Value[sig_count]);
     sig_op->ValueIndex = sig_count;
 
-    gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
+    gdh_StoreRtdbPointer( (unsigned long *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
 
     io_connect_status( &sig_aref, &sig_op->SigChanCon);
     sig_count++;
@@ -376,10 +376,10 @@ pwr_tStatus io_init_ao_signals(
 	}
       }		
     }
-    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
+    gdh_StoreRtdbPointer( (unsigned long *) &sig_op->ActualValue, &area_op->Value[sig_count]);
     sig_op->ValueIndex = sig_count;
 
-    gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
+    gdh_StoreRtdbPointer( (unsigned long *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
 
     io_connect_status( &sig_aref, &sig_op->SigChanCon);
     sig_count++;
@@ -470,10 +470,10 @@ pwr_tStatus io_init_di_signals(
 	}
       }		
     }
-    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
+    gdh_StoreRtdbPointer( (unsigned long *) &sig_op->ActualValue, &area_op->Value[sig_count]);
     sig_op->ValueIndex = sig_count;
 
-    gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
+    gdh_StoreRtdbPointer( (unsigned long *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
 
     io_connect_status( &sig_aref, &sig_op->SigChanCon);
     sig_count++;
@@ -566,10 +566,10 @@ pwr_tStatus io_init_do_signals(
 	}
       }		
     }
-    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
+    gdh_StoreRtdbPointer( (unsigned long *) &sig_op->ActualValue, &area_op->Value[sig_count]);
     sig_op->ValueIndex = sig_count;
 
-    gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
+    gdh_StoreRtdbPointer( (unsigned long *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
 
     io_connect_status( &sig_aref, &sig_op->SigChanCon);
     sig_count++;
@@ -612,7 +612,7 @@ pwr_tStatus io_init_do_signals(
 	}
       }
     }
-    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
+    gdh_StoreRtdbPointer( (unsigned long *) &sig_op->ActualValue, &area_op->Value[sig_count]);
     sig_op->ValueIndex = sig_count;
 
     io_connect_status( &sig_aref, &sig_op->SigChanCon);
@@ -705,8 +705,8 @@ pwr_tStatus io_init_co_signals(
 	}
       }		
     }
-    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->RawValue, &area_op->Value[sig_count]);
-    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->AbsValue, &abs_area_op->Value[sig_count]);
+    gdh_StoreRtdbPointer( (unsigned long *) &sig_op->RawValue, &area_op->Value[sig_count]);
+    gdh_StoreRtdbPointer( (unsigned long *) &sig_op->AbsValue, &abs_area_op->Value[sig_count]);
     sig_op->ValueIndex = sig_count;
     io_connect_status( &sig_aref, &sig_op->SigChanCon);
     sig_count++;
@@ -768,12 +768,12 @@ io_init_av_signals (
     if (EVEN(sts) && sts != GDH__NO_TYPE) return sts;
 			    
     if (sts != GDH__REMOTE) {
-      gdh_StoreRtdbPointer( (pwr_tUInt32 *)&o->ActualValue, p);
+      gdh_StoreRtdbPointer( (unsigned long *)&o->ActualValue, p);
       o->ValueIndex = av_count;
 #if 0
       *p = o->InitialValue;
 #endif
-      gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[av_count], &o->InitialValue);
+      gdh_StoreRtdbPointer( (unsigned long *)&iarea_op->Value[av_count], &o->InitialValue);
       av_count++;
       p++;
     }
@@ -835,12 +835,12 @@ io_init_dv_signals (
     if (EVEN(sts) && sts != GDH__NO_TYPE) return sts;
 			    
     if (sts != GDH__REMOTE)  {
-      gdh_StoreRtdbPointer( (pwr_tUInt32 *)&o->ActualValue, p);
+      gdh_StoreRtdbPointer( (unsigned long *)&o->ActualValue, p);
       o->ValueIndex = dv_count;
 #if 0
       *p = o->InitialValue;
 #endif
-      gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[dv_count], &o->InitialValue);
+      gdh_StoreRtdbPointer( (unsigned long *)&iarea_op->Value[dv_count], &o->InitialValue);
       dv_count++;
       p++;
     }
@@ -936,10 +936,10 @@ pwr_tStatus io_init_ii_signals(
 	}
       }
     }
-    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
+    gdh_StoreRtdbPointer( (unsigned long *) &sig_op->ActualValue, &area_op->Value[sig_count]);
     sig_op->ValueIndex = sig_count;
 
-    gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
+    gdh_StoreRtdbPointer( (unsigned long *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
 
     io_connect_status( &sig_aref, &sig_op->SigChanCon);
     sig_count++;
@@ -1032,10 +1032,10 @@ pwr_tStatus io_init_io_signals(
 	}
       }		
     }
-    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
+    gdh_StoreRtdbPointer( (unsigned long *) &sig_op->ActualValue, &area_op->Value[sig_count]);
     sig_op->ValueIndex = sig_count;
 
-    gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
+    gdh_StoreRtdbPointer( (unsigned long *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
 
     io_connect_status( &sig_aref, &sig_op->SigChanCon);
     sig_count++;
@@ -1094,12 +1094,12 @@ io_init_iv_signals (
     if (EVEN(sts) && sts != GDH__NO_TYPE) return sts;
 			    
     if (sts != GDH__REMOTE)  {
-      gdh_StoreRtdbPointer( (pwr_tUInt32 *)&o->ActualValue, p);
+      gdh_StoreRtdbPointer( (unsigned long *)&o->ActualValue, p);
       o->ValueIndex = iv_count;
 #if 0
       *p = o->InitialValue;
 #endif
-      gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[iv_count], &o->InitialValue);
+      gdh_StoreRtdbPointer( (unsigned long *)&iarea_op->Value[iv_count], &o->InitialValue);
       iv_count++;
       p++;
     }
@@ -1673,37 +1673,37 @@ static pwr_tStatus io_init_card(
 		switch( sigclass) {
 		case pwr_cClass_Di:
 		  chanp->vbp = gdh_TranslateRtdbPointer( 
-		   (pwr_tUInt32) ((pwr_sClass_Di *)sig_op)->ActualValue);
+		   (unsigned long) ((pwr_sClass_Di *)sig_op)->ActualValue);
 		  break;
 		case pwr_cClass_Do:
 		  chanp->vbp = gdh_TranslateRtdbPointer( 
-		    (pwr_tUInt32) ((pwr_sClass_Do *)sig_op)->ActualValue);
+		    (unsigned long) ((pwr_sClass_Do *)sig_op)->ActualValue);
 		  break;
 		case pwr_cClass_Po:
 		  chanp->vbp = gdh_TranslateRtdbPointer( 
-		    (pwr_tUInt32) ((pwr_sClass_Po *)sig_op)->ActualValue);
+		    (unsigned long) ((pwr_sClass_Po *)sig_op)->ActualValue);
 		  break;
 		case pwr_cClass_Ai:
 		  chanp->vbp = gdh_TranslateRtdbPointer( 
-		    (pwr_tUInt32) ((pwr_sClass_Ai *)sig_op)->ActualValue);
+		    (unsigned long) ((pwr_sClass_Ai *)sig_op)->ActualValue);
 		  break;
 		case pwr_cClass_Ao:
 		  chanp->vbp = gdh_TranslateRtdbPointer( 
-		    (pwr_tUInt32) ((pwr_sClass_Ao *)sig_op)->ActualValue);
+		    (unsigned long) ((pwr_sClass_Ao *)sig_op)->ActualValue);
 		  break;
 		case pwr_cClass_Ii:
 		  chanp->vbp = gdh_TranslateRtdbPointer( 
-		    (pwr_tUInt32) ((pwr_sClass_Ii *)sig_op)->ActualValue);
+		    (unsigned long) ((pwr_sClass_Ii *)sig_op)->ActualValue);
 		  break;
 		case pwr_cClass_Io:
 		  chanp->vbp = gdh_TranslateRtdbPointer( 
-		    (pwr_tUInt32) ((pwr_sClass_Io *)sig_op)->ActualValue);
+		    (unsigned long) ((pwr_sClass_Io *)sig_op)->ActualValue);
 		  break;
 		case pwr_cClass_Co:
 		  chanp->vbp = gdh_TranslateRtdbPointer( 
-		    (pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->RawValue);
+		    (unsigned long) ((pwr_sClass_Co *)sig_op)->RawValue);
 		  chanp->abs_vbp = gdh_TranslateRtdbPointer( 
-		    (pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->AbsValue);
+		    (unsigned long) ((pwr_sClass_Co *)sig_op)->AbsValue);
 		  break;
 		default:
 		  errh_Error( 
@@ -1843,37 +1843,37 @@ static pwr_tStatus io_init_card(
 		    switch( sigclass) {
 		    case pwr_cClass_Di:
 		      chanp->vbp = gdh_TranslateRtdbPointer( 
-		       (pwr_tUInt32) ((pwr_sClass_Di *)sig_op)->ActualValue);
+		       (unsigned long) ((pwr_sClass_Di *)sig_op)->ActualValue);
 		      break;
 		    case pwr_cClass_Do:
 		      chanp->vbp = gdh_TranslateRtdbPointer( 
-	               (pwr_tUInt32) ((pwr_sClass_Do *)sig_op)->ActualValue);
+	               (unsigned long) ((pwr_sClass_Do *)sig_op)->ActualValue);
 		      break;
 		    case pwr_cClass_Po:
 		      chanp->vbp = gdh_TranslateRtdbPointer( 
-		       (pwr_tUInt32) ((pwr_sClass_Po *)sig_op)->ActualValue);
+		       (unsigned long) ((pwr_sClass_Po *)sig_op)->ActualValue);
 		      break;
 		    case pwr_cClass_Ai:
 		      chanp->vbp = gdh_TranslateRtdbPointer( 
-		       (pwr_tUInt32) ((pwr_sClass_Ai *)sig_op)->ActualValue);
+		       (unsigned long) ((pwr_sClass_Ai *)sig_op)->ActualValue);
 		      break;
 		    case pwr_cClass_Ao:
 		      chanp->vbp = gdh_TranslateRtdbPointer( 
-		       (pwr_tUInt32) ((pwr_sClass_Ao *)sig_op)->ActualValue);
+		       (unsigned long) ((pwr_sClass_Ao *)sig_op)->ActualValue);
 		      break;
 		    case pwr_cClass_Ii:
 		      chanp->vbp = gdh_TranslateRtdbPointer( 
-		       (pwr_tUInt32) ((pwr_sClass_Ii *)sig_op)->ActualValue);
+		       (unsigned long) ((pwr_sClass_Ii *)sig_op)->ActualValue);
 		      break;
 		    case pwr_cClass_Io:
 		      chanp->vbp = gdh_TranslateRtdbPointer( 
-		       (pwr_tUInt32) ((pwr_sClass_Io *)sig_op)->ActualValue);
+		       (unsigned long) ((pwr_sClass_Io *)sig_op)->ActualValue);
 		      break;
 		    case pwr_cClass_Co:
 		      chanp->vbp = gdh_TranslateRtdbPointer( 
-		       (pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->RawValue);
+		       (unsigned long) ((pwr_sClass_Co *)sig_op)->RawValue);
 		      chanp->abs_vbp = gdh_TranslateRtdbPointer( 
-		       (pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->AbsValue);
+		       (unsigned long) ((pwr_sClass_Co *)sig_op)->AbsValue);
 		      break;
 		    default:
 		      errh_Error( 

@@ -2217,8 +2217,8 @@ wb_vrepdb::updateObject(pwr_tOid oid, pwr_tCid cid)
 
   void *rbody = 0;
   void *dbody = 0;
-  pwr_tUInt32 rsize;
-  pwr_tUInt32 dsize;
+  size_t rsize;
+  size_t dsize;
   int rc = 0;
   
   n_crep->convertObject(m_merep, rp, dp, &rsize, &dsize, &rbody, &dbody);

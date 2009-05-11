@@ -7757,7 +7757,7 @@ int GeTable::scan( grow_tObject object)
 	    len = 0;
 	    break;
 	  }
-	  switch ( (int)format[1]) {
+	  switch ( format[i][1]) {
 	  case '1':
 	    // Format %1m: Write only the text
 	    msg_GetText( *(pwr_tStatus *) headerref_p[i][j], buf, sizeof(buf));

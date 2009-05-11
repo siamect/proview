@@ -1643,7 +1643,7 @@ ndc_NarefToRaref(
 
   *sts = GDH__SUCCESS;
   *equal = 0;  
-  *ridx = ULONG_MAX;
+  *ridx = UINT_MAX;
 
   if (ap->aop == NULL) { /* whole object */
     *rarp = *narp;
@@ -1923,7 +1923,7 @@ ndc_UpdateRemoteToNativeTable(
 
     if (j >= ccp->acount) {
       tbl[i].cidx = conv_eIdx_invalid;
-      tbl[i].raidx = ULONG_MAX;
+      tbl[i].raidx = UINT_MAX;
     } 
   }
 

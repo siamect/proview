@@ -396,7 +396,7 @@ subsm_SendBuffer (
 
       /* Advance pointer to next sdata slot */
 
-      dp = (net_sSubData *)((pwr_tInt32)dp + sp->aref.Size + subdatahdrsize);
+      dp = (net_sSubData *)((unsigned long)dp + (unsigned long)sp->aref.Size + subdatahdrsize);
     }
   }
 

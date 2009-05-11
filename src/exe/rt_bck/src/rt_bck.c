@@ -1196,12 +1196,12 @@ void *bck_coll_process (
   pwr_tBoolean forced;
   pwr_tUInt32 cycletime;				/* in 0.1 second units */
   pwr_tUInt32 oldslowtick;
-  pwr_tUInt32 cycle;
+  unsigned long cycle;
   int sts4a;
   pwr_tTime abstime;
   pwr_tDeltaTime delta;
 
-  cycle = (pwr_tUInt32)arg;
+  cycle = (unsigned long)arg;
 
 #ifdef BCK_TRACE
   printf("coll_proc %d running...\n", cycle);
@@ -1495,7 +1495,7 @@ pwr_tUInt32 bck_init ()
   check4a(sts4a, "pthread_create thr_file");
 
   for (c=0; c<2; c++) {
-    sts4a = pthread_create(&thr_coll[c], &attr, bck_coll_process, (void *)c);
+    sts4a = pthread_create(&thr_coll[c], &attr, bck_coll_process, (void *)(long)c);
     check4a(sts4a, "pthread_create thr_coll");
   }
 

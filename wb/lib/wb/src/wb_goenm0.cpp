@@ -99,7 +99,7 @@ int goen_create_nodetype_m0(
     pwr_tClassId	cid,
     ldh_tSesContext	ldhses,
     flow_tCtx		ctx,
-    unsigned long 	*mask,
+    unsigned int 	*mask,
     unsigned long	subwindowmark,
     unsigned long	node_width,
     flow_tNodeClass	*node_class,
@@ -109,9 +109,9 @@ int goen_create_nodetype_m0(
   int	ipoints;
   int	inputpoints, outputpoints;
   unsigned long    pointmask;
-  unsigned long    *inmask_pointer;
-  unsigned long    *outmask_pointer;
-  unsigned long    *invertmask_pointer;
+  unsigned int    *inmask_pointer;
+  unsigned int    *outmask_pointer;
+  unsigned int    *invertmask_pointer;
   int 		i_innr;
   int 		i_internnr;
   int			i_outnr;
@@ -346,14 +346,14 @@ int goen_create_nodetype_m0(
 *
 **************************************************************************/
 int goen_get_point_info_m0( WGre *grectx, pwr_sGraphPlcNode *graphbody, 
-			    unsigned long point, unsigned long *mask, 
+			    unsigned long point, unsigned int *mask, 
 			    unsigned long node_width, goen_conpoint_type *info_pointer, 
 			    vldh_t_node node)
 {
     int  i;
     int	inputpoints, outputpoints;
     unsigned long    pointmask;
-    unsigned long    *mask_pointer;
+    unsigned int     *mask_pointer;
     int 		i_innr;
     int 		i_internnr;
     int			i_outnr;
@@ -435,14 +435,14 @@ int goen_get_point_info_m0( WGre *grectx, pwr_sGraphPlcNode *graphbody,
 **************************************************************************/
 int	goen_get_parameter_m0( pwr_sGraphPlcNode *graphbody, pwr_tClassId cid, 
 			       ldh_tSesContext ldhses, unsigned long con_point, 
-			       unsigned long *mask, unsigned long *par_type, 
+			       unsigned int *mask, unsigned long *par_type, 
 			       unsigned long *par_inverted, unsigned long *par_index)
 {
 
 	unsigned long	inputs,interns,outputs,conpointcount;
 	unsigned long	pointmask;
 	int		i, input_found, output_found;
-	unsigned long	*invertmask_pointer;
+	unsigned int	*invertmask_pointer;
 
 	inputs = graphbody->parameters[PAR_INPUT];
 	interns = graphbody->parameters[PAR_INTERN];
@@ -513,7 +513,7 @@ int	goen_get_parameter_m0( pwr_sGraphPlcNode *graphbody, pwr_tClassId cid,
 *
 **************************************************************************/
 int goen_get_location_point_m0( WGre *grectx, pwr_sGraphPlcNode *graphbody, 
-				unsigned long *mask, unsigned long node_width, 
+				unsigned int *mask, unsigned long node_width, 
 				goen_point_type *info_pointer, vldh_t_node node)
 {
    info_pointer->y = 0;

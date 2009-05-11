@@ -760,7 +760,7 @@ gdh_GetObjectInfo (
   gdb_sCclass		*ccpLocked = NULL;
   pwr_tBoolean		equal;
   pwr_tBoolean		fetched;
-  pwr_tUInt32		ridx = ULONG_MAX;
+  pwr_tUInt32		ridx = UINT_MAX;
   
 
   if (name == NULL) return GDH__BADARG;
@@ -835,7 +835,7 @@ gdh_GetObjectInfo (
 
   if (np != NULL && ODD(sts)) {
     if (equal)
-      cvolc_GetObjectInfo(&sts, np, arp, NULL, NULL, ULONG_MAX, ap, bufp, bufsize);
+      cvolc_GetObjectInfo(&sts, np, arp, NULL, NULL, UINT_MAX, ap, bufp, bufsize);
     else
       cvolc_GetObjectInfo(&sts, np, arp, ccp, rarp, ridx, ap, bufp, bufsize);
   }
@@ -880,7 +880,7 @@ gdh_GetObjectInfoAttrref (
   pwr_sAttrRef		*rarp = NULL;
   pwr_tBoolean		equal;
   pwr_tBoolean		fetched;
-  pwr_tUInt32		ridx = ULONG_MAX;
+  pwr_tUInt32		ridx = UINT_MAX;
 
   memset(&attribute, 0, sizeof(attribute));
 
@@ -946,7 +946,7 @@ gdh_GetObjectInfoAttrref (
 
   if (np != NULL && ODD(sts)) {
     if (equal)
-      cvolc_GetObjectInfo(&sts, np, arp, NULL, NULL, ULONG_MAX, ap, bufp, bufsize);
+      cvolc_GetObjectInfo(&sts, np, arp, NULL, NULL, UINT_MAX, ap, bufp, bufsize);
     else
       cvolc_GetObjectInfo(&sts, np, arp, ccp, rarp, ridx, ap, bufp, bufsize);
   }
@@ -2451,7 +2451,7 @@ gdh_SetObjectInfo (
   gdb_sCclass		*ccpLocked = NULL;
   pwr_tBoolean		equal;
   pwr_tBoolean		fetched;
-  pwr_tUInt32		ridx = ULONG_MAX;
+  pwr_tUInt32		ridx = UINT_MAX;
 
   if (name == NULL) return GDH__BADARG;
   if (bufp == NULL) return GDH__BADARG;
@@ -2532,7 +2532,7 @@ gdh_SetObjectInfo (
 
   if (np != NULL && ODD(sts)) {
     if (equal)
-      cvolc_SetObjectInfo(&sts, np, arp, NULL, NULL, ULONG_MAX, ap, bufp, bufsize);
+      cvolc_SetObjectInfo(&sts, np, arp, NULL, NULL, UINT_MAX, ap, bufp, bufsize);
     else
       cvolc_SetObjectInfo(&sts, np, arp, ccp, rarp, ridx, ap, bufp, bufsize);
   }
@@ -2585,7 +2585,7 @@ gdh_SetObjectInfoAttrref (
   pwr_sAttrRef		*rarp = NULL;
   pwr_tBoolean		equal;
   pwr_tBoolean		fetched;
-  pwr_tUInt32		ridx = ULONG_MAX;
+  pwr_tUInt32		ridx = UINT_MAX;
 
 
   if (arp  == NULL) return GDH__BADARG;
@@ -2659,7 +2659,7 @@ gdh_SetObjectInfoAttrref (
 
   if (np != NULL && ODD(sts)) {
     if (equal)
-      cvolc_SetObjectInfo(&sts, np, arp, NULL, NULL, ULONG_MAX, ap, bufp, bufsize);
+      cvolc_SetObjectInfo(&sts, np, arp, NULL, NULL, UINT_MAX, ap, bufp, bufsize);
     else
       cvolc_SetObjectInfo(&sts, np, arp, ccp, rarp, ridx, ap, bufp, bufsize);
   }
@@ -3370,7 +3370,7 @@ gdh_SetAlarmBlockLevel (
 
 void
 gdh_StoreRtdbPointer (
-  pwr_tUInt32		*rp,
+  unsigned long		*rp,
   void			*p
 )
 {
@@ -3389,7 +3389,7 @@ gdh_StoreRtdbPointer (
 
 void *
 gdh_TranslateRtdbPointer (
-  pwr_tUInt32		r
+  unsigned long		r
 )
 {
 

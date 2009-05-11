@@ -309,7 +309,7 @@ pwr_tStatus io_InitDiFilter
              Data_1->ScanTime = ScanTime;
              Data_1->TimerDelayOn  = SignalObj[Idx]->FilterAttribute[0]/Data_1->ScanTime + 0.5;
              Data_1->TimerDelayOff  = SignalObj[Idx]->FilterAttribute[1]/Data_1->ScanTime + 0.5;
-	     Data_1->ActualValue = gdh_TranslateRtdbPointer((pwr_tUInt32)SignalObj[Idx]->ActualValue);
+	     Data_1->ActualValue = gdh_TranslateRtdbPointer((unsigned long)SignalObj[Idx]->ActualValue);
 	     Data_1->OldValue = *Data_1->ActualValue;
              Data_1->Type  = _eState_1_Neutral;
              FilterData[Idx] = Data_1; 

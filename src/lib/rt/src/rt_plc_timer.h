@@ -51,10 +51,10 @@ typedef	struct plc_sTimertag {
 } plc_sTimer;
 
 #define PTRREL(r, p) \
-  gdh_StoreRtdbPointer((pwr_tUInt32 *)r, (void *)p )
+  gdh_StoreRtdbPointer((unsigned long *)r, (void *)p )
 
 #define RELPTR(r) \
-((unsigned int)r == 0) ? NULL : gdh_TranslateRtdbPointer((pwr_tUInt32)r)
+((unsigned long)r == 0) ? NULL : gdh_TranslateRtdbPointer((unsigned long)r)
 
 /*	Insert timer into timer-queue	*/
 #ifdef OS_ELN
