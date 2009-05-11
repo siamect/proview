@@ -77,18 +77,18 @@ main()
   extern int dv_sim_qbus;
   extern int dv_quit = 0;
   extern int dv_prev = 0;
-  extern string dv_volumes[20];
-  extern int dv_cvol_sel[20];
-  extern int dv_vol_class[20];
-  extern int dv_volume_found[20];
+  extern string dv_volumes[40];
+  extern int dv_cvol_sel[40];
+  extern int dv_vol_class[40];
+  extern int dv_volume_found[40];
   extern int dv_node_busid;
   extern string dv_node_name;
   extern string dv_node_ip;
   extern string dv_node_description;
   extern string dv_node_rootvolume;
-  extern string dv_addvol[20];
-  extern int dv_addvol_sel[20];
-  extern int dv_addvol_occ[20];
+  extern string dv_addvol[40];
+  extern int dv_addvol_sel[40];
+  extern int dv_addvol_occ[40];
   extern int dv_node_skip;
   extern int dv_node_skip_inv;
   extern int dv_node_disdistr;
@@ -99,25 +99,25 @@ main()
   extern int dv_nomorereg;
   extern string dv_open_volume;
 
-  string dv_vid[20];
+  string dv_vid[40];
   string project;
   string vol;
   int volcnt;
-  string rootvolumes[20];
+  string rootvolumes[40];
   int rvolcnt;
   int i;
   int j;
   int k;
   int ix;
   int addvolcnt;
-  int addvol_class[20];
-  string node_name[20];
-  string node_ip[20];
-  string node_description[20];
-  string node_rootvolume[20];
-  int node_busid[20];
-  int node_disdistr[20];
-  int node_distr[20];
+  int addvol_class[40];
+  string node_name[40];
+  string node_ip[40];
+  string node_description[40];
+  string node_rootvolume[40];
+  int node_busid[40];
+  int node_disdistr[40];
+  int node_distr[40];
   int node_addvol_sel[400];
   int nodecnt;
   string prd_bus_name;
@@ -182,7 +182,7 @@ page_1:
   endif
     
   # Get registred volumes for this system
-  for ( i = 0; i < 20; i++)
+  for ( i = 0; i < 40; i++)
     dv_volume_found[i] = 0;
   endfor
   volcnt = 0;
@@ -347,7 +347,7 @@ page_3:
 
   # Find additional volumes (class, sub or shared)
   addvolcnt = 0;
-  for ( j = 0; j < 20; j++)
+  for ( j = 0; j < 40; j++)
     dv_addvol_occ[j] = 0;
   endfor
   for ( j = 0; j < volcnt; j++)
@@ -411,14 +411,18 @@ page_4:
         first_sim = 0;
         continue;
       endif
+	printf( "dv_prev: %d\n", dv_prev);
       if ( dv_prev)
         dv_prev = 0;
         if ( i == 0)
+	  if ( k == 1)
+            first_sim = 1;
+          endif
           goto page_3;
         endif
         # Display data for previous node
         i -= 1;
-	k = node_busid[i];
+	# k = node_busid[i];
         dv_node_name = node_name[i];
         dv_node_ip = node_ip[i];
 	dv_node_description = node_description[i];
@@ -432,7 +436,7 @@ page_4:
           endif
         endfor
         for ( j = 0; j < addvolcnt; j++)
-          ix = i * 20 + j;
+          ix = i * 40 + j;
           dv_addvol_sel[j] = node_addvol_sel[ix];
         endfor
         dv_node_disdistr = node_disdistr[i];
@@ -458,7 +462,7 @@ page_4:
         endif
       endfor
       for ( j = 0; j < addvolcnt; j++)
-        ix = nodecnt * 20 + j;
+        ix = nodecnt * 40 + j;
         node_addvol_sel[ix] = dv_addvol_sel[j];
       endfor
       nodecnt++;
@@ -555,7 +559,7 @@ page_4:
     move object/source='attr'/rename="'node_rootvolume[i]'"
     name = name + "-" + node_rootvolume[i];
     for ( j = 0; j < addvolcnt; j++)
-      ix = i * 20 + j;
+      ix = i * 40 + j;
       if ( node_addvol_sel[ix])
         if ( addvol_class[j] == 1)
           classname = "SubVolumeLoad";
@@ -602,18 +606,18 @@ exit_now:
   delete dv_prd_qbus;
   delete dv_sim_qbus;
   delete pwr_wizard_title;
-  delete dv_volumes[20];
-  delete dv_cvol_sel[20];
-  delete dv_vol_class[20];
-  delete dv_volume_found[20];
+  delete dv_volumes[40];
+  delete dv_cvol_sel[40];
+  delete dv_vol_class[40];
+  delete dv_volume_found[40];
   delete dv_node_busid;
   delete dv_node_name;
   delete dv_node_ip;
   delete dv_node_description;
   delete dv_node_rootvolume;
-  delete dv_addvol[20];
-  delete dv_addvol_sel[20];
-  delete dv_addvol_occ[20];
+  delete dv_addvol[40];
+  delete dv_addvol_sel[40];
+  delete dv_addvol_occ[40];
   delete dv_node_skip;
   delete dv_node_skip_inv;
   delete dv_node_disdistr;
