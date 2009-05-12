@@ -1502,10 +1502,15 @@ GeGtk::~GeGtk()
   delete cmd_recall;
   delete graph;
   delete wow;
+#ifdef LDH
+  if ( plantctx)
+    delete plantctx;
+#endif
   gtk_widget_destroy( india_widget);
   gtk_widget_destroy( confirm_widget);
   gtk_widget_destroy( yesnodia_widget);
   gtk_widget_destroy( toplevel);
+
 
   if ( exit_when_close)
     exit(0);

@@ -128,3 +128,4 @@
 090305 cs  glow      Ge color palette fillcolor,bordercolor and textcolor selection changed.
 090305 cs  xtt       Trend method not viewed for $PlantHier with a Trend child object.
 090306 cs  xtt       Language translation of operator window buttons.
+090512 cs  ge        Bugfix in ge editor, navigator palette wasn't destroyed at exit.
