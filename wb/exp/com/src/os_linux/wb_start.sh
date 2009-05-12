@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # Proview   $Id: wb_start.sh,v 1.2 2007-05-28 14:50:48 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.

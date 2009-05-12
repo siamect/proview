@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 #
 # Proview   $Id: pwrp_env.sh,v 1.15 2008-10-28 09:38:07 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
@@ -918,6 +918,22 @@ pwrc_set_func()
       
       export PATH=$PATH:$pwr_exe
     fi
+    pwrc_status=$pwrc__success
+    return
+  fi
+
+  cmd="bus"
+  if [ $1 = $cmd ] || [ ${cmd#$1} != $cmd ]; then
+    # Command is "set bus"
+
+    bus_id=$2
+
+    if [ "$bus_id" == "" ]; then
+      if [ -e /etc/proview.cnf ]; then
+        bus_id=`eval cat /etc/proview.cnf | grep "\\bqcomBusId\\b" | awk '{print $2}'`
+      fi
+    fi
+    export PWR_BUS_ID=$bus_id
     pwrc_status=$pwrc__success
     return
   fi

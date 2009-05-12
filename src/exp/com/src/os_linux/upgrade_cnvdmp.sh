@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 #
 # Proview   $Id: upgrade_cnvdmp.sh,v 1.4 2006-01-30 09:02:51 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.

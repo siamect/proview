@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 #
 # Proview   $Id: reload.sh,v 1.11 2008-04-10 10:38:30 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
