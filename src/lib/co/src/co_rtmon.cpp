@@ -101,7 +101,7 @@ void RtMon::stop_ok_cb( void *ctx, void *data)
 
 void RtMon::activate_reset()
 {
-  char cmd[] = "source pwr_stop.sh";
+  char cmd[] = ". pwr_stop.sh";
 
   system( cmd);
 }

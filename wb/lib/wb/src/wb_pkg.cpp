@@ -557,7 +557,7 @@ void pkg_node::fetchFiles( bool distribute)
 
   // Execute the pack file
   char cmd[200];
-  sprintf( cmd, "source %s", pack_fname);
+  sprintf( cmd, ". %s", pack_fname);
   system( cmd);
 
   if ( distribute) {
@@ -614,7 +614,7 @@ void pkg_node::copyPackage( char *pkg_name)
 
     // Execute the pack file
     char cmd[200];
-    sprintf( cmd, "source %s", pack_fname);
+    sprintf( cmd, ". %s", pack_fname);
     system( cmd);
   }
 }
