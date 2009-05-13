@@ -71,9 +71,11 @@ sudo -u pwrp $initsh
 rm $initsh
 rm $initpwrc
 
-
-
-
+if [ -e /home/pwrp/Desktop ]; then
+  cp /usr/pwrp/pwrdemo$ver/cnf/proviewdemo$ver.desktop /home/pwrp/Desktop/
+  chown pwrp:pwrp /home/pwrp/Desktop/proviewdemo$ver.desktop
+  chmod a+x /home/pwrp/Desktop/proviewdemo$ver.desktop
+fi
 
 
 

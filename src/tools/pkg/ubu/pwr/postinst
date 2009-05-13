@@ -48,9 +48,9 @@ fi
 if [ ! -e /home/pwrp/Desktop ]; then
   mkdir /home/pwrp/Desktop
 fi
-cp /usr/pwr$ver/$pwre_target/exp/cnf/user/proview.desktop /home/pwrp/Desktop
-chown pwrp:pwrp /home/pwrp/Desktop/proview.desktop
-chmod a+x /home/pwrp/Desktop/proview.desktop
+cp /usr/pwr$ver/$pwre_target/exp/cnf/user/proview$ver.desktop /home/pwrp/Desktop
+chown pwrp:pwrp /home/pwrp/Desktop/proview$ver.desktop
+chmod a+x /home/pwrp/Desktop/proview$ver.desktop
 
 
 echo "Change owner of files to pwrp"
