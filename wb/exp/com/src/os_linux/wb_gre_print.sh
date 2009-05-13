@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 #
 # Proview   $Id: wb_gre_print.sh,v 1.1 2006-01-23 08:44:30 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.

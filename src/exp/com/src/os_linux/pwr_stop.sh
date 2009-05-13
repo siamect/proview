@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # Proview   $Id: pwr_stop.sh,v 1.3 2008-11-24 15:22:42 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.

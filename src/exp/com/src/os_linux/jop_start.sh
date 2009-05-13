@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # Proview   $Id: jop_start.sh,v 1.2 2005-09-01 14:57:49 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
