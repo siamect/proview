@@ -34,44 +34,44 @@ static rtt_t_helptext	helptext[] = {
 In an object menu picture it is possible to select an item and execute\n\
 a number of functions that is specific for each item.\n\
 The following keys are defined.\n\n\
-ARROWS		Navigate in the menu and select an item.\n\
-RETURN		Execute a function or display a child menu if there is one.\n\
-PF1 or CTRL/A  	Execute some function if specified.\n\
-PF2 or CTRL/T  	Execute some function if specified.\n\
-PF3 or CTRL/E  	Set the value of the current item.\n\
-PF4 or CTRL/R	Go back to previous menu.\n\
-NEXT SIDE or CTRL/F	Go to next side of the menu.\n\
-PREV SIDE or CTRL/D	Go to previous side of the menu.\n\
-CTRL/Z		Back to root menu.\n\
-CTRL/W		Redraw the picture.\n\
-HELP		Help.\n\
-DELETE		Delete an item in the menu.\n\
-DO or CTRL/B	Command mode.\n\
-CTRL/K		Acknowledge last alarm.\n\
-CTRL/L		Show or hide description attribute.\n\
+Arrow keys     	Navigate in the menu and select an item.\n\
+Return		Execute a function or display a child menu if there is one.\n\
+Ctrl/A or PF1  	Execute some function if specified.\n\
+Ctrl/T or PF2  	Execute some function if specified.\n\
+Ctrl/E or PF3  	Set the value of the current item.\n\
+Ctrl/R or PF4	Go back to previous menu.\n\
+Page Down or Ctrl/F Go to next page of the menu.\n\
+Page Up or Ctrl/D Go to previous page of the menu.\n\
+Ctrl/Z		Back to root menu.\n\
+Ctrl/W		Redraw the picture.\n\
+Help		Help.\n\
+Delete		Delete an item in the menu.\n\
+Ctrl/B or DO    Command mode.\n\
+Ctrl/K		Acknowledge last alarm.\n\
+Ctrl/L		Show or hide description attribute.\n\
 "},
 {1,	"OBJECT MENU","",
 "\
 In an object menu picture it is possible to select an object and execute\n\
 a number of functions, show children or attributes, set the value of\n\
 an attribute. The following keys are defined.\n\n\
-ARROWS		Navigate in the menu and select an object.\n\
-RETURN		Display the children in the object hierarchy of the object.\n\
-PF1 or CTRL/A  	Show the attributes of the object.\n\
-PF2 or CTRL/T  	Debug the children of the object.\n\
-PF3 or CTRL/E  	Set the value of a parameter.\n\
-PF4 or CTRL/R	Go back to previous menu.\n\
-NEXT SIDE or CTRL/F	Go to next side of the menu.\n\
-PREV SIDE or CTRL/D	Go to previous side of the menu.\n\
-CTRL/Z		Back to root menu.\n\
-CTRL/W		Redraw the picture.\n\
-HELP		Help.\n\
-DELETE		Delete an item in the menu.\n\
-DO or CTRL/B	Command mode.\n\
-CTRL/K		Acknowledge last alarm.\n\
-CTRL/L		Show or hide description attribute.\n\
-CTRL/V		Insert selected object in collection picture.\n\
-CTRL/N		Show collection picture.\n\
+Arrow keys     	Navigate in the menu and select an object.\n\
+Return		Display the children in the object hierarchy of the object.\n\
+Ctrl/A or PF1  	Show the attributes of the object.\n\
+Ctrl/T or PF2  	Debug the children of the object.\n\
+Ctrl/E or PF3  	Set the value of a parameter.\n\
+Ctrl/R or PF4	Go back to previous menu.\n\
+Page Down or Ctrl/F Go to next side of the menu.\n\
+Page Up or Ctrl/D Go to previous side of the menu.\n\
+Ctrl/Z		Back to root menu.\n\
+Ctrl/W		Redraw the picture.\n\
+Help		Help.\n\
+Delete		Delete an item in the menu.\n\
+Ctrl/B or DO	Command mode.\n\
+Ctrl/K		Acknowledge last alarm.\n\
+Ctrl/L		Show or hide description attribute.\n\
+Ctrl/V		Insert selected object in collection picture.\n\
+Ctrl/N		Show collection picture.\n\
 "},
 {1,	"COMMAND","",
 "\
@@ -333,8 +333,8 @@ The following data are shown in the picture:\n\
 - Last name segment of the data object.\n\n\
 Select a cell or a data object with the arrow keys.\n\
 RETURN diplays the object picture of the selected cell.\n\
-PF1 shows the selected data object.\n\
-PF2 expands/collapses the cell. Show all or the first data objects of.\n\
+Ctrl/A or PF1 shows the selected data object.\n\
+Ctrl/T or PF2 expands/collapses the cell. Show all or the first data objects of.\n\
  the selected cell\n\n\
 In the cell object picture you can examine the content of the cell and\n\
 set attributes.\n\
@@ -509,7 +509,7 @@ also be started from the 'SHOW GRAFCET' picture.\n\n\
 pwr_rtt> monitor grafcet\n\
 "},
 {0,	"FILE LIST",
-"       RETURN execute a file                                       PF4 back",
+"       RETURN execute a file                                    Ctrl/R back",
 "\
 List of files.\n\n\
 A rtt commandfile (with the extention .rtt_com) can be executed by selecting\n\
@@ -738,7 +738,7 @@ pwr_rtt> store /file= [/collect]\n\n\
 			picture.\n\
 "},
 {0,	"STORED PICTURES AND COMMANDFILES",
-"       RETURN show a picture or execute a command file               PF4 back",
+"       RETURN show a picture or execute a command file            Ctrl/R back",
 "\
 List of the stored pictures and commandfiles in the default directory.\n\n\
 To show a picture or execute a commandfile, select the picture or file\n\
@@ -1032,7 +1032,7 @@ and orders in the plcpgm will be shown.\n\
 Max four plc can be shown at the same time.\n\
 "},
 {0,	"LIST OF SIGNALS",
-"  PF1 show object     PF2 cross reference     PF3 change value     PF4 back",
+"Ctrl/A Open object  Ctrl/T Crossreference  Ctrl/E Change value  Ctrl/R Back",
 "\
 Display the signals referenced in a plcpgm or a window.\n\
 Press PF1 to open an object.\n\
@@ -1045,9 +1045,9 @@ Press PF4 to go back.\n\
 "\
 Show the content of a file.\n\n\
 Press arrows to scroll up, down, left or right.\n\
-Press PF1 to show the beginning of the file.\n\
-Press PF2 to show the end of the file.\n\
-Press PF4 to go back.\n\
+Press Ctrl/A or PF1 to show the beginning of the file.\n\
+Press Ctrl/T or PF2 to show the end of the file.\n\
+Press Ctrl/R PF4 to go back.\n\
 Use the command search function to search for a string in the file\n\
 Ex pwr_rtt> search \"3.2\"\n\
 "},
@@ -1119,7 +1119,7 @@ pwr_rtt> @'filename'\n\n\n\
 For more information about the rtt script syntax use command 'HELP SCRIPT'\n\
 "},
 {0,	"HELP SUBJECTS",
-" Select a subject and press RETURN                                  PF4 back",
+" Select a subject and press RETURN                               Ctrl/R Back",
 "\
 List of the help subjects in rtt.\n\n\
 To display the help text for a subject, select a subject and press return.\n\

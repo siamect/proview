@@ -99,7 +99,7 @@ int main( int argc, char *argv[])
   new WbGtk( argc, argv);
 }
 
-WbGtk::WbGtk( int argc, char *argv[])
+WbGtk::WbGtk( int argc, char *argv[]) : mainwindow(0)
 {
   pwr_tStatus   sts;
   int 		login_display = 0;

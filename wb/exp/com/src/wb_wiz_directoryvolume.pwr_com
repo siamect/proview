@@ -411,7 +411,6 @@ page_4:
         first_sim = 0;
         continue;
       endif
-	printf( "dv_prev: %d\n", dv_prev);
       if ( dv_prev)
         dv_prev = 0;
         if ( i == 0)

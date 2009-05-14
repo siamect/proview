@@ -7541,11 +7541,11 @@ int RTTSYS_CHANDO( 	menu_ctx	ctx,
 
     if ( signal_test_mode)
       strcpy( CHANDO_INFO,
-      " RETURN show signal | PF1 testvalue 1/0 | PF2 test on/off | PF4 back   "
+      " RETURN show signal | c/A testvalue 1/0 | c/T test on/off | c/R back   "
 	);
     else
       strcpy( CHANDO_INFO,
-      " RETURN show signal | PF1 show channel | PF2 show cross | PF4 back     "
+      " RETURN show signal | c/A show channel | c/T show cross | c/R back     "
 	);
     strcpy( CHANDO_TST, "Tst");
   }
@@ -8670,7 +8670,7 @@ int RTTSYS_CHANAO( 	menu_ctx	ctx,
     else
     {
       strcpy( CHANAO_INFO,
-      " RETURN show signal | PF1 show channel | PF2 show cross | PF4 back      "
+      " RETURN show signal | c/A show channel | c/T show cross | c/R back      "
 	);
       strcpy( CHANAO_TESTVALUE, " SigValue");
     }
