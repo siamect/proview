@@ -54,6 +54,7 @@ gzip -fq --best $pkgroot/usr/share/doc/pwrdemo$ver/changelog.Debian
 
 # Copy pwrdemo
 mkdir $pkgroot/usr/pwrp/pwrdemo$ver
+mkdir $pkgroot/usr/pwrp/pwrdemo$ver/cnf
 currentdir="`eval pwd`"
 tarfile=$pwre_broot/$pwre_target/bld/pkg/pwrtmp.tar
 cd $proot
@@ -64,6 +65,19 @@ cd $pkgroot/usr/pwrp
 tar -xf $tarfile
 rm $tarfile
 cd $currentdir
+
+# Generate desktop file
+{
+  echo "[Desktop Entry]"
+  echo "Version=1.0"
+  echo "Encoding=UTF-8"
+  echo "Name=Proview Demo"
+  echo "Type=Application"
+  echo "Comment=Start Proview Demo"
+  echo "Exec=xterm -title \"Proview Demo Console\" -e 'export pwra_db=$aroot/db;source \$pwra_db/pwr_setup.sh;source \$pwra_db/pwra_env.sh set project pwrdemo""$ver"";export PWR_BUS_ID=999;pwr_rtmon'"
+  echo "Icon=$aroot/db/proview_icon.png"
+  echo "Categories=GNOME;GTK;Application;"
+} > $pkgroot/usr/pwrp/pwrdemo$ver/cnf/proviewdemo$ver.desktop
 
 # Create package
 echo "-- Building package"
