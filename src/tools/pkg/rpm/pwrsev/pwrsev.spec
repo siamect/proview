@@ -10,11 +10,12 @@
 
 Name: pwrsev
 Summary: Proview/R storage environment
-Version: 4.6.0
-Release: 6
+Version: 4.6.1
+Release: 1
 License: GPL
 BuildArch: i386
 Packager: claes.sjofors@proview.se
+Requires: xorg-x11-fonts-ISO8859-1-100dpi, xorg-x11-fonts-ISO8859-1-75dpi, xorg-x11-fonts-Type1
 Group: Applications/System
 Url: http://www.proview.se
 

@@ -10,11 +10,12 @@
 
 Name: pwr46
 Summary: Proview/R development and runtime environment
-Version: 4.6.0
-Release: 6
+Version: 4.6.1
+Release: 1
 License: GPL
 BuildArch: i386
 Packager: claes.sjofors@proview.se
+Requires: gcc, gcc-c++, xorg-x11-fonts-ISO8859-1-100dpi, xorg-x11-fonts-ISO8859-1-75dpi, xorg-x11-fonts-Type1, xterm
 Group: Development/Tools/Other
 Url: http://www.proview.se
 
@@ -119,6 +120,13 @@ else
   chown -R pwrp /home/pwrp
   chgrp -R pwrp /home/pwrp
 fi
+if [ ! -e /home/pwrp/Desktop ]; then
+  mkdir /home/pwrp/Desktop
+  chown pwrp:pwrp /home/pwrp/Desktop	
+fi
+cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/proview%{ver}.desktop /home/pwrp/Desktop
+chown pwrp:pwrp /home/pwrp/Desktop/proview%{ver}.desktop
+chmod a+x /home/pwrp/Desktop/proview%{ver}.desktop
 
 echo "Change owner of files to pwrp"
 chown -R pwrp /usr/pwr%{ver}
@@ -152,6 +160,7 @@ fi
 
 cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/pwra_env.sh $aroot/db
 cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/pwr_setup.sh $aroot/db
+cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/proview_icon.png $aroot/db
 if [ ! -e $aroot/db/pwr_volumelist.dat ]; then
   cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/pwr_volumelist.dat $aroot/db
 fi
