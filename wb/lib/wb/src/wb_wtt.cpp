@@ -129,8 +129,12 @@ pwr_tStatus Wtt::ldh_this_session_cb( void *ctx, ldh_sEvent *event)
 {
   Wtt *wtt = (Wtt *) ctx;
 
-  if ( wtt->input_open)
-    wtt->close_change_value();
+  if ( wtt->input_open) {
+    if ( wtt->keep_input_open)
+      wtt->keep_input_open = 0;
+    else
+      wtt->close_change_value();
+  }
   wtt->wnav->ldh_event( event);
   wtt->wnavnode->ldh_event( event);
   return 1;
@@ -2080,7 +2084,7 @@ Wtt::Wtt(
         select_attr(0), select_type(0),
         wnav_mapped(0), wnavnode_mapped(0), utedctx(0), wpkg(0),
 	close_cb(0), open_volume_cb(0), open_project_volume_cb(0), time_to_exit_cb(0),
-	mcp(0), disable_w2(0)
+	mcp(0), disable_w2(0), keep_input_open(0)
 {
   strcpy( name, wt_name);
   *status = 1;

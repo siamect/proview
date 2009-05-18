@@ -182,6 +182,7 @@ class Wtt : public WUtility {
     int		(*time_to_exit_cb)(void *ctx);
     ldh_sMenuCall *mcp;
     int		disable_w2;
+    int		keep_input_open;
 
     int restore_settings();
     int save_settings();
