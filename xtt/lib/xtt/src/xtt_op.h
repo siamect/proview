@@ -46,7 +46,7 @@ class Op {
   unsigned long	balarm_prio;
   unsigned long	balarm_type;
   char		button_title[20][80];
-  pwr_tObjid   	button_objid[20];
+  pwr_tAttrRef  button_aref[20];
   int	       	button_cnt;
   int	       	start_jop;
   Jop	       	*jop;

@@ -79,7 +79,7 @@ int Op::appl_action( int idx)
   int sts;
 
   if ( command_cb) {
-    sts = gdh_ObjidToName( button_objid[idx], name, sizeof(name), cdh_mNName);
+    sts = gdh_AttrrefToName( &button_aref[idx], name, sizeof(name), cdh_mNName);
     strcpy( cmd, "ope gra/obj=");
     strcat( cmd, name);
 
