@@ -188,7 +188,7 @@ SObject pwrs:Class
 	    Attr ButtonName = "Connect Graph"
 	    Attr MethodName = "$AttrRef-Connect"
 	    Attr MethodArguments[0] = "DefGraph"
-	    Attr MethodArguments[1] = "PlantHier"
+	    Attr MethodArguments[1] = "XttGraph"
 	    Attr FilterName = "$AttrRef-IsOkConnect"
 	    Attr FilterArguments[0] = "DefGraph"
 	    Attr FilterArguments[1] = "XttGraph"
