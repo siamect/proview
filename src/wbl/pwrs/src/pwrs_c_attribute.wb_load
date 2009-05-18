@@ -207,6 +207,214 @@ SObject pwrs:Class
         Attr MethodName = "$Attribute-AnteMove"
       EndBody
     EndObject
+    Object ConfiguratorPasnn $Menu
+      Object Pointed $Menu
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Attribute-HelpClass"
+	    Attr FilterName = "$Attribute-HelpClassFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPascn $Menu
+      Object Pointed $Menu
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Attribute-HelpClass"
+	    Attr FilterName = "$Attribute-HelpClassFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPasos $Menu
+      Object Pointed $Menu
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Attribute-HelpClass"
+	    Attr FilterName = "$Attribute-HelpClassFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPasas $Menu
+      Object Pointed $Menu
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Attribute-HelpClass"
+	    Attr FilterName = "$Attribute-HelpClassFilter"
+	  EndBody
+        EndObject
+        Object ChangeValue $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "ChangeValue"
+	    Attr MethodName = "$Attribute-ChangeValue"
+	    Attr FilterName = "$Attribute-ChangeValueFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPason $Menu
+      Object Pointed $Menu
+	Object InsertSelectedObject $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Insert Selected Object"
+	    Attr MethodName = "$Attribute-InsertSelectedObject"
+	    Attr FilterName = "$Attribute-InsertSelectedObjectFilter"
+	  EndBody
+	EndObject
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Attribute-HelpClass"
+	    Attr FilterName = "$Attribute-HelpClassFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPasan $Menu
+      Object Pointed $Menu
+	Object InsertSelectedObject $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Insert Selected Object"
+	    Attr MethodName = "$Attribute-InsertSelectedObject"
+	    Attr FilterName = "$Attribute-InsertSelectedObjectFilter"
+	  EndBody
+	EndObject
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Attribute-HelpClass"
+	    Attr FilterName = "$Attribute-HelpClassFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPasmn $Menu
+      Object Pointed $Menu
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Attribute-HelpClass"
+	    Attr FilterName = "$Attribute-HelpClassFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPasms $Menu
+      Object Pointed $Menu
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Attribute-HelpClass"
+	    Attr FilterName = "$Attribute-HelpClassFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object NavigatorPasnn $Menu
+      Object Pointed $Menu
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Attribute-HelpClass"
+	    Attr FilterName = "$Attribute-HelpClassFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object NavigatorPasos $Menu
+      Object Pointed $Menu
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Attribute-HelpClass"
+	    Attr FilterName = "$Attribute-HelpClassFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object NavigatorPason $Menu
+      Object Pointed $Menu
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Attribute-HelpClass"
+	    Attr FilterName = "$Attribute-HelpClassFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object NavigatorPasas $Menu
+      Object Pointed $Menu
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Attribute-HelpClass"
+	    Attr FilterName = "$Attribute-HelpClassFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object NavigatorPasan $Menu
+      Object Pointed $Menu
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Attribute-HelpClass"
+	    Attr FilterName = "$Attribute-HelpClassFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object NavigatorPasmn $Menu
+      Object Pointed $Menu
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Attribute-HelpClass"
+	    Attr FilterName = "$Attribute-HelpClassFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object NavigatorPasms $Menu
+      Object Pointed $Menu
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Attribute-HelpClass"
+	    Attr FilterName = "$Attribute-HelpClassFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPxsxx $Menu
+      Object Pointed $Menu
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Attribute-HelpClass"
+	    Attr FilterName = "$Attribute-HelpClassFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object NavigatorPxsxx $Menu
+      Object Pointed $Menu
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Attribute-HelpClass"
+	    Attr FilterName = "$Attribute-HelpClassFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
   EndObject
 EndSObject
 

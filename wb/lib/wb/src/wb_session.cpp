@@ -51,7 +51,7 @@ static struct {
   {"None",		'n',  ldh_eMenuSet_None},
   {"Object",		'o',  ldh_eMenuSet_Object},
   {"ObjectAttr",       	'o',  ldh_eMenuSet_ObjectAttr},
-  {"Array",       	'y',  ldh_eMenuSet_Array},
+  {"Array",       	'a',  ldh_eMenuSet_Array},
   {"-",			'\0', ldh_eMenuSet_}
 };
 
@@ -616,6 +616,32 @@ pwr_tStatus wb_session::getMenu( ldh_sMenuCall *ip)
     sprintf(Menu, "pwrs:Class-$Object-%s-Pointed", OMenuFolder);
 
     wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, pwr_eClass_Object);
+    if ( EVEN(sts)) return sts;
+
+    wb_orep *o = m_vrep->erep()->object( &sts, Menu);
+    if ( EVEN(sts)) return sts;
+    o->ref();
+
+    Object = o->oid();
+    void *o_menu_body;
+
+    wb_orep *o_menu = cdrep->menuFirst( &sts, o, &o_menu_body);
+    while ( ODD(sts)) {
+      o_menu->ref();
+      getAllMenuItems( ip, &Item, cdrep, o_menu, o_menu_body, 0, &nItems, 0);
+      wb_orep *prev = o_menu; 
+      o_menu = cdrep->menuAfter( &sts, o_menu, &o_menu_body);
+      prev->unref();
+    }
+    delete cdrep;
+    o->unref();
+    break;
+  }
+  case ldh_eMenuSet_Attribute:
+  case ldh_eMenuSet_Array: {
+    sprintf(Menu, "pwrs:Class-$Attribute-%s-Pointed", MenuFolder);
+
+    wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, pwr_eClass_Param);
     if ( EVEN(sts)) return sts;
 
     wb_orep *o = m_vrep->erep()->object( &sts, Menu);
