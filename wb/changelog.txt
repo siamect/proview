@@ -131,3 +131,4 @@
 090515 cs  wtt       Ctrl/Doubleclick MB1 to insert selected object into an objid attribute also works on attrref attributes.
 090515 cs  wtt       Popup menu on attributes. Methods HelpClass, InsertSelectedObject and ChangeValue added.
 090515 cs  wtt       Bugfix in ConnectGraph method for PlantHier objects.
+090518 cs  wb        Wb method PostRename added and implemented for XttGraph and ProjectReg objects.

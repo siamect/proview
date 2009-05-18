@@ -750,6 +750,26 @@ pwr_tStatus wb_volume::triggPostUnadopt(wb_object& father, wb_object& o)
   return sts;
 }
 
+pwr_tStatus wb_volume::triggPostRename(wb_object& o)
+{
+  pwr_tStatus sts;
+  char *methodName;
+  wb_tMethod method;
+  
+  wb_cdrep *cdrep = m_vrep->merep()->cdrep(&sts, o.cid());
+  if (EVEN(sts)) return sts;
+
+  cdrep->dbCallBack(&sts, ldh_eDbCallBack_PostRename, &methodName, 0);
+  delete cdrep;
+  if (EVEN(sts)) return LDH__SUCCESS;
+
+  m_vrep->erep()->method(&sts, methodName, &method);
+  if (EVEN(sts)) return LDH__SUCCESS;
+
+  sts = ((wb_tMethodPostRename) (method))((ldh_tSesContext)this, o.oid());
+  return sts;
+}
+
 ldh_sRefInfo *wb_volume::refinfo(wb_object o, ldh_sRefInfo *rp)
 {
   int rows;

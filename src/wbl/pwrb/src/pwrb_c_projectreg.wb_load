@@ -54,6 +54,11 @@ SObject pwrb:Class
         EndBody
       EndObject
     EndObject
+    Object PostRename $DbCallBack
+      Body SysBody
+        Attr MethodName = "ProjectReg-PostRename"
+      EndBody
+    EndObject
     Object NavigatorPosnn $Menu
       Object Pointed $Menu
         Object OpenProject $MenuButton

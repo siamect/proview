@@ -262,6 +262,8 @@ bool wb_session::renameObject(wb_object o, wb_name name)
   bool ok = m_vrep->renameObject(&m_sts, (wb_orep*)o, name);
   if (!ok) return ok;
 
+  triggPostRename(o);
+
   m_srep->update();
   ldh_sEvent *ep = m_srep->eventStart(o.oid(), ldh_eEvent_ObjectRenamed);
   m_srep->eventSend(ep);

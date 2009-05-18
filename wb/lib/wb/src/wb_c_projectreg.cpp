@@ -19,6 +19,8 @@
 
 /* wb_c_projectref.c -- work bench methods of the ProjectReg class. */
 
+#include <ctype.h>
+
 #undef Status
 #include <string.h>
 #include "co_dcli.h"
@@ -111,6 +113,35 @@ static pwr_tStatus CopyProject (
   return 1;
 }
 
+static pwr_tStatus PostRename (
+  ldh_tSesContext   Session,
+  pwr_tOid	    Object
+) {
+  pwr_tStatus sts;
+  int size;
+  pwr_tString80 name;
+  char *project;
+
+  sts = ldh_GetObjectPar( Session, Object, "RtBody",
+			"Project", &project, &size); 
+  if ( EVEN(sts)) return sts;
+
+  if ( strcmp( project, "") == 0 ||
+       (project[0] == 'o' && isdigit( project[1]))) {
+    sts = ldh_ObjidToName( Session, Object, ldh_eName_Object, name, sizeof(name), &size);
+    if ( EVEN(sts)) return sts;
+
+    cdh_ToLower( name, name);
+
+    sts = ldh_SetObjectPar( Session, Object, "RtBody", "Project", name,
+			  sizeof(name));
+    if ( EVEN(sts)) return sts;
+  }
+  free( project);
+
+  return PWRB__SUCCESS;
+}
+
 
 
 /*----------------------------------------------------------------------------*\
@@ -120,5 +151,6 @@ static pwr_tStatus CopyProject (
 pwr_dExport pwr_BindMethods(ProjectReg) = {
   pwr_BindMethod(OpenProject),
   pwr_BindMethod(CopyProject),
+  pwr_BindMethod(PostRename),
   pwr_NullMethod
 };

@@ -182,6 +182,11 @@ SObject pwrb:Class
         Attr UpdateInterval = 1.0
       EndBody
     EndObject
+    Object PostRename $DbCallBack
+      Body SysBody
+        Attr MethodName = "XttGraph-PostRename"
+      EndBody
+    EndObject
     Object NavigatorPosnn $Menu
       Object Pointed $Menu
 	Object OpenGraph $MenuButton
