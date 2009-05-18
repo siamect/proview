@@ -213,7 +213,7 @@ class XNavGbl {
     XNavGbl() :
       priv(0), UserObject(pwr_cNObjid), AlarmAutoLoad(0), AlarmMessage(0),
       AlarmBeep(0), AlarmReturn(0), AlarmAck(0), gdh_started(1),
-      verify(0), scantime(0.5), signal_test_mode(0), advanced_user(0), show_truedb(0),
+      verify(0), scantime(0.5), signal_test_mode(0), advanced_user(1), show_truedb(0),
       show_allattr(0), no_graph_ratio(0)
       { 
 	strcpy( version, xnav_cVersion); strcpy( time, "");

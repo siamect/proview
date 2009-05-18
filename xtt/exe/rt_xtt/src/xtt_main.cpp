@@ -449,7 +449,7 @@ void Xtt::activate_help_proview()
 }
 
 Xtt::Xtt( int argc, char *argv[], int *return_sts) :
-  root_item(0), input_open(0), command_open(0), india_ok_cb(0), queid(qcom_cNQid), quiet(0), attach_audio(0), select_opplace(0), op_close_button(0)
+  root_item(0), input_open(0), command_open(0), india_ok_cb(0), queid(qcom_cNQid), quiet(0), attach_audio(0), select_opplace(0), op_close_button(0), no_advanceduser(0)
 {
   pwr_tStatus	sts;
   int		i;
@@ -501,6 +501,8 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
       select_opplace = 1;
     else if ( strcmp( argv[i], "-c") == 0)
       op_close_button = 1;
+    else if ( strcmp( argv[i], "-d") == 0)
+      no_advanceduser = 1;
     else if ( strcmp( argv[i], "-u") == 0 && i + 1 < argc) {
       char oname[80];
 

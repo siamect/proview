@@ -129,3 +129,6 @@
 090305 cs  xtt       Trend method not viewed for $PlantHier with a Trend child object.
 090306 cs  xtt       Language translation of operator window buttons.
 090512 cs  ge        Bugfix in ge editor, navigator palette wasn't destroyed at exit.
+090518 cs  xtt       More flexible layout of operator buttons. NoFastAvail not used any more.
+090518 cs  xtt       Bugfix in xtt termination. Free in wrong order could cause segfault.
+090518 cs  xtt       Advanced user set as default, not set with option -d.

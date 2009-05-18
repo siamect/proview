@@ -971,6 +971,10 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   if ( select_opplace)
     list_opplace();
 
+  if ( xnav->gbl.advanced_user && !no_advanceduser) {
+    xnav->gbl.advanced_user = 0;    
+    g_object_set( tools_advuser, "visible", FALSE, NULL);
+  }
   xtt_mainloop();  
 
 }

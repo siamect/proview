@@ -1872,6 +1872,8 @@ WttGtk::WttGtk(
       strcpy( layout_palette, "ProjectNavigatorPalette");
       strcpy( title_w1, "Volume Configuration");
       strcpy( title_w2, "Node Configuration");
+      window_width = 500;
+      window_height = 400;
       break;
     case pwr_eClass_ClassVolume:
     case pwr_eClass_DetachedClassVolume:
@@ -2747,6 +2749,8 @@ WttGtk::WttGtk(
       }
     }
   }
+  if ( wnav->gbl.advanced_user)
+    g_object_set( tools_set_advuser, "visible", FALSE, NULL);
 
   menu_setup();
   *status = 1;
