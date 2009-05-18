@@ -15,7 +15,7 @@ Release: 1
 License: GPL
 BuildArch: i386
 Packager: claes.sjofors@proview.se
-Requires: gcc, gcc-c++, xorg-x11-fonts-ISO8859-1-100dpi, xorg-x11-fonts-ISO8859-1-75dpi, xorg-x11-fonts-Type1, xterm
+Requires: gcc, gcc-c++, xorg-x11-fonts, xterm
 Group: Development/Tools/Other
 Url: http://www.proview.se
 

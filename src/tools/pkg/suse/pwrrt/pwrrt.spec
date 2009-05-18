@@ -8,14 +8,14 @@
 #
 
 
-Name: pwrsev
-Summary: Proview/R storage environment
+Name: pwrrt
+Summary: Proview/R runtime environment
 Version: 4.6.1
 Release: 1
 License: GPL
 BuildArch: i386
 Packager: claes.sjofors@proview.se
-Requires: xorg-x11-fonts-ISO8859-1-100dpi, xorg-x11-fonts-ISO8859-1-75dpi, xorg-x11-fonts-Type1
+Requires: xorg-x11-fonts
 Group: Applications/System
 Url: http://www.proview.se
 
@@ -39,7 +39,7 @@ For more information please see www.proview.se.
   echo ""
   echo ""
   echo ""
-  echo "<b>Proview Storage Environment V%{version}"
+  echo "<b>Proview V%{version}"
   echo "Version V%{version}-%{release}"
   echo ""
   echo "Copyright © 2004-${d:0:4} SSAB Oxelösund AB"
@@ -66,16 +66,19 @@ For more information please see www.proview.se.
   echo ""
   echo %{summary}
   echo "</topic>"
-} > %{buildroot}/usr/pwrsev/exe/sev_xtt_version_help.dat
+} > %{buildroot}/usr/pwrrt/exe/xtt_version_help.dat
 
 # Convert to html
-co_convert -t -d %{buildroot}/usr/pwrsev/doc %{buildroot}/usr/pwrsev/exe/sev_xtt_version_help.dat
+co_convert -t -d %{buildroot}/usr/pwrrt/doc %{buildroot}/usr/pwrrt/exe/xtt_version_help.dat
 
 {
   echo "<html><head>"
-  echo "<meta http-equiv=\"Refresh\" content=\"5;../sev_xtt_version_help_version.html\">"
+  echo "<meta http-equiv=\"Refresh\" content=\"5;../xtt_version_help_version.html\">"
   echo "</head></html>"
-} > %{buildroot}/usr/pwrsev/doc/en_us/package_version.html
+} > %{buildroot}/usr/pwrrt/doc/en_us/package_version.html
+
+# Print rt version file
+echo "Version: %{version}-%{release}" > %{buildroot}/usr/pwrrt/exe/rt_version.dat
 
 #%clean
 
@@ -126,11 +129,11 @@ else
   fi
   if [ ! -e /home/pwrp ]; then
     mkdir /home/pwrp
-    /bin/cp /usr/pwrsev/cnf/user/.bashrc /home/pwrp
-    /bin/cp /usr/pwrsev/cnf/user/.bash_profile /home/pwrp
-    /bin/cp /usr/pwrsev/cnf/user/.rtt_start /home/pwrp
+    /bin/cp /usr/pwrrt/cnf/user/.bashrc /home/pwrp
+    /bin/cp /usr/pwrrt/cnf/user/.bash_profile /home/pwrp
+    /bin/cp /usr/pwrrt/cnf/user/.rtt_start /home/pwrp
     chmod a+x /home/pwrp/.rtt_start
-    /bin/cp /usr/pwrsev/cnf/user/.xtt_start /home/pwrp
+    /bin/cp /usr/pwrrt/cnf/user/.xtt_start /home/pwrp
     chmod a+x /home/pwrp/.xtt_start
 
     chown -R pwrp /home/pwrp
@@ -149,11 +152,11 @@ else
 
   if [ ! -e /home/skiftel ]; then
     mkdir /home/skiftel
-    cp /usr/pwrsev/cnf/user/.bashrc /home/skiftel
-    cp /usr/pwrsev/cnf/user/.bash_profile /home/skiftel
-    cp /usr/pwrsev/cnf/user/.rtt_start /home/skiftel
+    cp /usr/pwrrt/cnf/user/.bashrc /home/skiftel
+    cp /usr/pwrrt/cnf/user/.bash_profile /home/skiftel
+    cp /usr/pwrrt/cnf/user/.rtt_start /home/skiftel
     chmod a+x /home/skiftel/.rtt_start
-    cp /usr/pwrsev/cnf/user/.xtt_start /home/skiftel
+    cp /usr/pwrrt/cnf/user/.xtt_start /home/skiftel
     chmod a+x /home/skiftel/.xtt_start
 
     chown -R pwrp /home/skiftel
@@ -176,11 +179,11 @@ if getent passwd b55 > /dev/null; then
   fi
   if [ ! -e /home/b55 ]; then
     mkdir /home/b55
-    cp /usr/pwrsev/cnf/op/.bashrc /home/b55
-    cp /usr/pwrsev/cnf/op/.bash_profile /home/b55
-    cp /usr/pwrsev/cnf/op/.rtt_start /home/b55
+    cp /usr/pwrrt/cnf/op/.bashrc /home/b55
+    cp /usr/pwrrt/cnf/op/.bash_profile /home/b55
+    cp /usr/pwrrt/cnf/op/.rtt_start /home/b55
     chmod a+x /home/b55/.rtt_start
-    cp /usr/pwrsev/cnf/op/.xtt_start /home/b55
+    cp /usr/pwrrt/cnf/op/.xtt_start /home/b55
     chmod a+x /home/b55/.xtt_start
 
     chown -R b55 /home/b55
@@ -191,21 +194,29 @@ fi
 
 
 #echo "Change owner of files to pwrp"
-chown -R pwrp /usr/pwrsev
-chgrp -R pwrp /usr/pwrsev
+chown -R pwrp /usr/pwrrt
+chgrp -R pwrp /usr/pwrrt
 
-chmod u+s /usr/pwrsev/exe/sev_ini
-chown root /usr/pwrsev/exe/rt_prio
-chmod u+s /usr/pwrsev/exe/rt_prio
+chmod u+s /usr/pwrrt/exe/rt_ini
+chmod u+s /usr/pwrrt/exe/rt_rtt
+#chmod u+s /usr/pwrrt/exe/rt_xtt
+chmod u+s /usr/pwrrt/exe/rt_bck
+chown root /usr/pwrrt/exe/rs_remote_alcm
+chmod u+s /usr/pwrrt/exe/rs_remote_alcm
+chown root /usr/pwrrt/exe/rt_prio
+chmod u+s /usr/pwrrt/exe/rt_prio
+chown root /usr/pwrrt/exe/rt_mozilla
+chmod u+s /usr/pwrrt/exe/rt_mozilla
 
 # Copy configuration files
 new_cnf=0
 if [ ! -e /etc/proview.cnf ]; then
-  cp /usr/pwrsev/cnf/proview.cnf /etc
+  cp /usr/pwrrt/cnf/proview.cnf /etc
   new_cnf=1
 fi
-cp /usr/pwrsev/cnf/pwrsev /etc/init.d
-chmod a+x /etc/init.d/pwrsev
+cp /usr/pwrrt/cnf/pwr /etc/init.d
+chmod a+x /etc/init.d/pwr
+
 
 # Add pwrp_profile to profile
 if ! grep -q "/etc/pwrp_profile\b" /etc/profile; then
@@ -220,20 +231,20 @@ fi
 
 if [ -e /etc/init.d/rc2.d ]; then 
   set +e
-  checklink=`eval ls /etc/init.d/rc2.d/S90pwrsev 2>/dev/null`
+  checklink=`eval ls /etc/init.d/rc2.d/S90pwr 2>/dev/null`
   set -e
   if [ "$checklink" != "" ]; then
-    rm /etc/init.d/rc2.d/S90pwrsev
+    rm /etc/init.d/rc2.d/S90pwr
   fi
-  ln -s /etc/init.d/pwrsev /etc/init.d/rc2.d/S90pwrsev
+  ln -s /etc/init.d/pwr /etc/init.d/rc2.d/S90pwr
 elif [ -e /etc/rc2.d ]; then
   set +e
-  checklink=`eval ls /etc/rc2.d/S90pwrsev 2>/dev/null`
+  checklink=`eval ls /etc/rc2.d/S90pwr 2>/dev/null`
   set -e
   if [ "$checklink" != "" ]; then
-    rm /etc/rc2.d/S90pwrsev
+    rm /etc/rc2.d/S90pwr
   fi
-  ln -s /etc/init.d/pwrsev /etc/rc2.d/S90pwrsev
+  ln -s /etc/init.d/pwr /etc/rc2.d/S90pwr
 fi
 
 # Create project
@@ -262,6 +273,62 @@ fi
 if [ ! -e $aroot/db ]; then
   mkdir -p $aroot/db
   chown -R pwrp $aroot
+fi
+
+# Copy jar-files to web directory
+if [ -e /etc/proview.cnf ]; then
+  set +e
+  web_dir=`eval cat /etc/proview.cnf | grep "\\bwebDirectory\\b" | awk '{print $2}'`
+  set -e
+
+  if [ -e "$web_dir" ]; then
+    cp /usr/pwrrt/lib/pwr_rt_client.jar $web_dir
+    chown pwrp $web_dir/pwr_rt_client.jar
+    cp /usr/pwrrt/lib/pwr_jop.jar $web_dir
+    chown pwrp $web_dir/pwr_jop.jar
+    cp /usr/pwrrt/lib/pwr_jopc.jar $web_dir
+    chown pwrp $web_dir/pwr_jopc.jar
+  fi
+fi
+
+#
+# Add proview web directories to Apache
+#
+if [ -e /etc/apache2/apache2.conf ]; then
+  if ! egrep -q "Alias[ ]+/pwrp_web/" /etc/apache2/apache2.conf; then
+    cat >> /etc/apache2/apache2.conf <<-EOF
+
+	#
+	# Proview alias pwrp_web, added by Proview installation
+	#
+	Alias /pwrp_web/ /pwrp/common/web/
+
+	<Directory /pwrp/common/web>
+	    Options Indexes MultiViews
+	    AllowOverride None
+	    Order allow,deny
+	    Allow from all
+	</Directory>
+EOF
+  fi
+
+
+  if ! egrep -q "Alias[ ]+/pwr_doc/" /etc/apache/httpd.conf; then
+    cat >> /etc/apache/httpd.conf <<-EOF
+
+	#
+	# Proview alias pwr_doc, added by Proview installation
+	#
+	Alias /pwr_doc/ /usr/pwrrt/doc/
+
+	<Directory /usr/pwrrt/doc>
+	    Options Indexes MultiViews
+	    AllowOverride None
+	    Order allow,deny
+	    Allow from all
+	</Directory>
+EOF
+  fi
 fi
 
 changes=0
@@ -394,14 +461,14 @@ fi
 # Remove startup
 
 if [ -e /etc/init.d/rc2.d ]; then
-  checklink=`eval ls /etc/init.d/rc2.d/S90pwrsev 2>/dev/null`
+  checklink=`eval ls /etc/init.d/rc2.d/S90pwr 2>/dev/null`
   if [ "$checklink" != "" ]; then
-    rm /etc/init.d/rc2.d/S90pwrsev
+    rm /etc/init.d/rc2.d/S90pwr
   fi
 elif [ -e /etc/rc2.d ]; then
-  checklink=`eval ls /etc/rc2.d/S90pwrsev 2>/dev/null`
+  checklink=`eval ls /etc/rc2.d/S90pwr 2>/dev/null`
   if [ "$checklink" != "" ]; then
-    rm /etc/rc2.d/S90pwrsev
+    rm /etc/rc2.d/S90pwr
   fi
 fi
 
@@ -421,10 +488,19 @@ fi
 
 %changelog
 * Mon Nov 10 2008 Claes Sjofors <claes.sjofors@proview.se> 4.6.0-1
-  - Beta release.
+  - Base release.
+  4.6.0-2 
+  - Ge: functions for color gradients added.
   4.6.0-3 
   - Sev: Improved error handling.
   4.6.0-4 
   - Xtt/Ge: Metric fonts.
+  4.6.0-5
+  - Wb, Xtt: Problem with insensitive radiobuttons fixed.
   4.6.0-6
-  - Problem with '.' in tablename fixed.
+  - Bugfix in alarmlist acknowledge. 
+  - Operator window: Alarmtext containg an ampersand was displayed a a blank link.
+  - Home button in help window added.
+  - Ge: problem with soiled texts fixed.
+  - Ge: problem with scaled optionmenu fixed.
+  - Usbio: bugfix for mixed Ai and Di/Do on port B.

@@ -15,6 +15,7 @@ Release: 	1
 License:        GPL
 BuildArch:      i386
 Packager: 	claes.sjofors@proview.se
+Requires: 	pwr46
 Group: 		Development/Tools/Other
 Url:            http://www.proview.se
 

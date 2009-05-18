@@ -15,29 +15,21 @@ fi
 
 proot=/data0/pwrp/pwrdemo$ver
 pkgroot=$pwre_broot/$pwre_target/bld/pkg/pwrdemo$ver
-pkgsrc=$pwre_sroot/tools/pkg/deb/pwrdemo
+pkgsrc=$pwre_sroot/tools/pkg/suse/pwrdemo
 
 echo "-- Building pwrdemo$ver"
 
 # Create directories
-mkdir -p $pkgroot/DEBIAN
+echo "-- Create package tree"
+mkdir -p $pkgroot/rpm/BUILD
+mkdir -p $pkgroot/rpm/RPMS
+mkdir -p $pkgroot/rpm/SPECS
+mkdir -p $pkgroot/rpm/SOURCES
+mkdir -p $pkgroot/rpm/SRPMS
 mkdir -p $pkgroot/usr/share/doc/pwrdemo$ver
 mkdir -p $pkgroot/usr/pwrp
 
 find $pkgroot -type d | xargs chmod 755
-
-# control
-cp $pkgsrc/control $pkgroot/DEBIAN
-echo "#!/bin/bash" > $pkgroot/DEBIAN/postinst
-echo "ver=\"$ver\"" >> $pkgroot/DEBIAN/postinst
-echo "pwre_target=\"$pwre_target\"" >> $pkgroot/DEBIAN/postinst
-cat $pkgsrc/postinst >> $pkgroot/DEBIAN/postinst
-chmod a+x $pkgroot/DEBIAN/postinst
-
-echo "#!/bin/sh" > $pkgroot/DEBIAN/prerm
-echo "ver=\"$ver\"" >> $pkgroot/DEBIAN/prerm
-cat $pkgsrc/prerm >> $pkgroot/DEBIAN/prerm
-chmod a+x $pkgroot/DEBIAN/prerm
 
 # copyright
 cp $pkgsrc/copyright $pkgroot/usr/share/doc/pwrdemo$ver
@@ -45,10 +37,6 @@ cp $pkgsrc/copyright $pkgroot/usr/share/doc/pwrdemo$ver
 # changelog
 cp $pkgsrc/changelog $pkgroot/usr/share/doc/pwrdemo$ver
 gzip -fq --best $pkgroot/usr/share/doc/pwrdemo$ver/changelog
-
-# changelog.Debian
-cp $pkgsrc/changelog.Debian $pkgroot/usr/share/doc/pwrdemo$ver
-gzip -fq --best $pkgroot/usr/share/doc/pwrdemo$ver/changelog.Debian
 
 # Man pages
 
@@ -81,22 +69,11 @@ cd $currentdir
 
 # Create package
 echo "-- Building package"
-if which fakeroot > /dev/null; then
-  fakeroot dpkg -b $pkgroot $pwre_broot/$pwre_target/bld/pkg
-else
-  dpkg -b $pkgroot $pwre_broot/$pwre_target/bld/pkg
-fi
 
+  rpmbuild -bb --quiet \
+               --define "_topdir $pkgroot/rpm" \
+               --define "ver $ver" \
+               --buildroot $pkgroot $pkgsrc/pwrdemo.spec > /dev/null 2>&1
+                                                                                
+mv $pkgroot/rpm/RPMS/i386/*.rpm $pwre_broot/$pwre_target/bld/pkg/.
 rm -r $pkgroot
-
-
-
-
-
-
-
-
-
-
-
-

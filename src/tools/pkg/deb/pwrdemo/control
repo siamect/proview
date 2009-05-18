@@ -1,10 +1,10 @@
 Package: pwrdemo46
-Version: 4.6.0-6
+Version: 4.6.1-1
 Section: base
 Priority: optional
 Architecture: i386
-Depends: pwr46 (>= 4.6.0-6)
+Depends: pwr46 (>= 4.6.1-1)
 Maintainer: Proview <postmaster@proview.se>
 Description: Proview Demo Project package
  Proview Demo Project
- 4.6.0-1 Base release 
+ 4.6.1-1 Base release 
