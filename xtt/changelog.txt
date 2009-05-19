@@ -132,3 +132,4 @@
 090518 cs  xtt       More flexible layout of operator buttons. NoFastAvail not used any more.
 090518 cs  xtt       Bugfix in xtt termination. Free in wrong order could cause segfault.
 090518 cs  xtt       Advanced user set as default, not set with option -d.
+090519 cs  ge        Bugfix in fonts for language se_sv.
