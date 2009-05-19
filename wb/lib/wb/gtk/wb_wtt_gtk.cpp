@@ -1866,13 +1866,13 @@ WttGtk::WttGtk(
     switch( volclass) {
     case pwr_eClass_DirectoryVolume:
       wb_type = wb_eType_Directory;
-      sprintf( title, "PwR Navigator Directory %s", name);
+      sprintf( title, "PwR Directory,   %s", name);
       strcpy( layout_w1, "ProjectNavigatorW1");
       strcpy( layout_w2, "ProjectNavigatorW2");
       strcpy( layout_palette, "ProjectNavigatorPalette");
       strcpy( title_w1, "Volume Configuration");
       strcpy( title_w2, "Node Configuration");
-      window_width = 500;
+      window_width = 900;
       window_height = 400;
       break;
     case pwr_eClass_ClassVolume:
@@ -1880,11 +1880,11 @@ WttGtk::WttGtk(
       if ( ldh_VolRepType( ldhses) == ldh_eVolRep_Mem ||
 	   ldh_VolRepType( ldhses) == ldh_eVolRep_Ced) {
 	wb_type = wb_eType_ClassEditor;
-	sprintf( title, "PwR ClassEditor Volume %s, %s", volname, name);
+	sprintf( title, "PwR ClassEditor %s,   %s", volname, name);
       }
       else {
 	wb_type = wb_eType_Class;
-	sprintf( title, "PwR Navigator Volume %s, %s", volname, name);
+	sprintf( title, "PwR %s,   %s", volname, name);
       }
       strcpy( layout_w1, "ClassNavigatorW1");
       strcpy( layout_w2, "ClassNavigatorW2");
@@ -1899,7 +1899,7 @@ WttGtk::WttGtk(
       strcpy( layout_palette, "NavigatorPalette");
       strcpy( title_w1, "Plant Configuration");
       strcpy( title_w2, "Node Configuration");
-      sprintf( title, "PwR Navigator Buffer %s, %s", volname, name);
+      sprintf( title, "PwR Buffer %s,   %s", volname, name);
       window_width = 500;
       window_height = 400;
       disable_w2 = 1;
@@ -1949,7 +1949,7 @@ WttGtk::WttGtk(
 	strcpy( layout_palette, "NavigatorPalette");
 	strcpy( title_w1, "Plant Configuration");
 	strcpy( title_w2, "Node Configuration");
-	sprintf( title, "PwR Navigator Volume %s, %s", volname, name);
+	sprintf( title, "PwR %s,   %s", volname, name);
       }
       break;
     }
@@ -1960,7 +1960,7 @@ WttGtk::WttGtk(
       strcpy( layout_palette, "NavigatorPalette");
       strcpy( title_w1, "Plant Configuration");
       strcpy( title_w2, "Node Configuration");
-      sprintf( title, "PwR Navigator Volume %s, %s", volname, name);
+      sprintf( title, "PwR %s,   %s", volname, name);
     }
   }
   else {
