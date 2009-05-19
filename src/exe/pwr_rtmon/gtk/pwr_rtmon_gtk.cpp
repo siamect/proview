@@ -25,6 +25,7 @@
 
 #include "pwr.h"
 #include "co_rtmon_gtk.h"
+#include "co_xhelp_gtk.h"
 
 static void usage()
 {
@@ -33,6 +34,7 @@ static void usage()
 
 static void rtmon_help_cb( void *ctx, const char *topic)
 {
+  CoXHelp::dhelp( "index", "", navh_eHelpFile_Other, "$pwr_lang/rtmon_help.dat", 0);
 }
 
 static void rtmon_close_cb( void *ctx)
@@ -58,6 +60,10 @@ int main( int argc, char *argv[])
   }
 
   gtk_init( &argc, &argv);
+
+  // Create help window
+  CoXHelp *xhelp = new CoXHelpGtk( 0, 0, xhelp_eUtility_Xtt, &sts);
+  CoXHelp::set_default( xhelp);
 
   RtMon *rtmon = new RtMonGtk( NULL, NULL, "Runtime Monitor", display, &sts);
   rtmon->help_cb = rtmon_help_cb;

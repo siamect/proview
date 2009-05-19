@@ -45,6 +45,7 @@ class RtMonGtk : public RtMon {
     GtkWidget 		*bbox_start;
     GtkWidget 		*bbox_restart;
     GtkWidget 		*bbox_stop;
+    GtkWidget 		*lbox_reset;
     GtkWidget 		*bbox_image;
     GtkWidget 		*bbox_image_gray;
     GtkWidget 		*tools_xtt;

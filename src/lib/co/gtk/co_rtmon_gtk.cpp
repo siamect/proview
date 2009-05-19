@@ -69,7 +69,7 @@ RtMonGtk::RtMonGtk( void *rtmon_parent_ctx,
   strcat( title, rtmon_name);
 
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
-			   "default-height", 330,
+			   "default-height", 340,
 			   "default-width", 480,
 			   "title", title,
 			   NULL);
@@ -97,8 +97,8 @@ RtMonGtk::RtMonGtk( void *rtmon_parent_ctx,
   gtk_widget_add_accelerator( file_close, "activate", accel_g,
 			      'w', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
-  GtkWidget *file_reset = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Reset Runtime"));
-  g_signal_connect(file_reset, "activate", G_CALLBACK(activate_reset), this);
+  // GtkWidget *file_reset = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Reset Runtime"));
+  // g_signal_connect(file_reset, "activate", G_CALLBACK(activate_reset), this);
 
   file_xtt = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Start Runtime Navigator"));
   g_signal_connect(file_xtt, "activate", G_CALLBACK(activate_xtt), this);
@@ -107,7 +107,7 @@ RtMonGtk::RtMonGtk( void *rtmon_parent_ctx,
   g_signal_connect(file_op, "activate", G_CALLBACK(activate_op), this);
 
   GtkMenu *file_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
-  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_reset);
+  // gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_reset);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_xtt);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_op);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
@@ -242,6 +242,12 @@ RtMonGtk::RtMonGtk( void *rtmon_parent_ctx,
   g_signal_connect( bbox_stop, "clicked", 
   		    G_CALLBACK(activate_stop), this);
 
+  lbox_reset = gtk_button_new_with_label( "Reset Runtime");
+  gtk_widget_set_size_request( lbox_reset, 170, 25);
+  g_object_set( lbox_reset, "can-focus", FALSE, NULL);
+  g_signal_connect( lbox_reset, "clicked", 
+  		    G_CALLBACK(activate_reset), this);
+
   bbox_label = gtk_label_new( "Down");
   bbox_label_eb = gtk_event_box_new();
   gtk_container_add( GTK_CONTAINER(bbox_label_eb), bbox_label);
@@ -256,7 +262,9 @@ RtMonGtk::RtMonGtk( void *rtmon_parent_ctx,
   gtk_box_pack_end( GTK_BOX(bbox), bbox_stop, FALSE, FALSE, 5);
 
   GtkWidget *lbox = gtk_vbox_new( FALSE, 0);
+  g_object_set( lbox, "spacing", 33, NULL);
   gtk_box_pack_start( GTK_BOX(lbox), bbox_label_fr, FALSE, FALSE, 5);
+  gtk_box_pack_end( GTK_BOX(lbox), lbox_reset, FALSE, FALSE, 5);
 
   GtkWidget *bbox_vbox = gtk_hbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(bbox_vbox), bbox_image, FALSE, FALSE, 30);

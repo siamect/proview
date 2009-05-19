@@ -1,0 +1,68 @@
+<topic> index
+Runtime Monitor
+
+The Runtime Monitor is a window to start and stop the Proview runtime environment.
+
+<h1> Start Runtime
+<image> rtmon_fig2.png
+
+The runtime environment is started by pressing the 'Start Runtime' button. 
+
+When the runtime has started the gray 'Down' label changes to a green 'Running' label.
+
+If the runtime doesn't start, press the 'Reset Runtime' to remove any remaining
+shared resources or processes, and then press 'Start Runtime' again.
+
+<h1> Stop Runtime
+<image> rtmon_fig1.png
+
+Stop the runtime environment by pressing the 'Stop Runtime' button.
+
+If the runtime is not stopping, activate the 'Reset Runtime' also.
+While the 'Stop Runtime' politely asks the runtime processes to terminate, the
+'Reset Runtime' brutally kills them.
+
+<h1>Start operator window
+When Proview is running, the operator window can be started from the menu, 
+File/Start Operator Environment. If several operator places are configured
+in the system, a operator place is choosen from a list, and the operator
+window for this operator is viewed.
+
+There is also an icon in the toolbar to open the operator window.
+
+<image> rtmon_fig4.png
+
+<image> rtmon_fig6.png
+
+<h1> Start Runtime Navigator
+The runtime navigator, xtt, is started from 'File/Start Runtime Navigator' in the menu,
+or from the corresponding icon in the toolbar.
+
+<image> rtmon_fig7.png
+
+<h1>System status
+In the lower part of the window, the status of the runtime environment is shown.
+
+When runtime is stopped, the status is 'Connection down to server', and the normal
+status when runtime is started is 'Proview running'.
+
+The SystemStatus map can be opened to show the individual status of the system
+and application processes.
+
+<image> rtmon_fig3.png
+
+If an error status is recieved, the 'Running' label is colored red. By opening
+the SystemStatus map, you can se which process is causing the error status.
+
+<image> rtmon_fig5.png
+
+The status is fetched from statusserver, which has to be configured in the started
+Proview system. 
+
+<h1> Start Runtime Monitor
+The runtime monitor can be started
+- from the the prompt in a terminal window with the command 'pwr_rtmon'.
+- from the Configurator tools menu.
+- from the File menu in the Status Monitor.
+
+</topic>
