@@ -157,19 +157,19 @@ cp $pkgsrc/proview.cnf $pkgroot/usr/pwrsev/cnf
 mkdir $pkgroot/usr/pwrsev/cnf/op
 cp $pwre_sroot/tools/pkg/deb/op/.bashrc $pkgroot/usr/pwrsev/cnf/op
 cp $pwre_sroot/tools/pkg/deb/op/.bash_profile $pkgroot/usr/pwrsev/cnf/op
-cp $pwre_sroot/tools/pkg/deb/op/.mwmrc $pkgroot/usr/pwrsev/cnf/op
+#cp $pwre_sroot/tools/pkg/deb/op/.mwmrc $pkgroot/usr/pwrsev/cnf/op
 cp $pwre_sroot/tools/pkg/deb/op/.rtt_start $pkgroot/usr/pwrsev/cnf/op
 cp $pwre_sroot/tools/pkg/deb/op/.xtt_start $pkgroot/usr/pwrsev/cnf/op
-cp $pwre_sroot/tools/pkg/deb/op/.xsession $pkgroot/usr/pwrsev/cnf/op
+#cp $pwre_sroot/tools/pkg/deb/op/.xsession $pkgroot/usr/pwrsev/cnf/op
 
 # Copy user to cnf
 mkdir $pkgroot/usr/pwrsev/cnf/user
 cp $pwre_sroot/tools/pkg/deb/user/.bashrc $pkgroot/usr/pwrsev/cnf/user
 cp $pwre_sroot/tools/pkg/deb/user/.bash_profile $pkgroot/usr/pwrsev/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.mwmrc $pkgroot/usr/pwrsev/cnf/user
+#cp $pwre_sroot/tools/pkg/deb/user/.mwmrc $pkgroot/usr/pwrsev/cnf/user
 cp $pwre_sroot/tools/pkg/deb/user/.rtt_start $pkgroot/usr/pwrsev/cnf/user
 cp $pwre_sroot/tools/pkg/deb/user/.xtt_start $pkgroot/usr/pwrsev/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.xsession $pkgroot/usr/pwrsev/cnf/user
+#cp $pwre_sroot/tools/pkg/deb/user/.xsession $pkgroot/usr/pwrsev/cnf/user
 
 # Create package
 echo "-- Building package"
