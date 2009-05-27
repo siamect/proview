@@ -229,7 +229,7 @@ void Xtt::close_ok( void *ctx, void *data)
 {
   Xtt	*xtt = (Xtt *) ctx;
 
-  delete xtt->xnav;
+  delete xtt;
   exit(0);
 }
 
@@ -589,6 +589,8 @@ void Xtt::list_opplace()
     pwr_tCmd cmd;
 
     sprintf( cmd, "open operator %s", texts[0]);  
+    if ( op_close_button)
+      strcat( cmd, " /closebutton");
     xnav->command( cmd);
   }
   else 
