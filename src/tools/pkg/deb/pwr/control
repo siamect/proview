@@ -3,25 +3,9 @@ Version: 4.6.1-1
 Section: base
 Priority: optional
 Architecture: i386
-Depends: libc6 (>= 2.7-14), libgtk2.0-0 (>= 2.12.11-4), libasound2 (>= 1.0.16-2), libdb4.6 (>=4.6.21-11), libdb4.6++ (>= 4.6.21-11), libmysqlclient15off (>= 5.0.51a-15), g++ (>= 4:4.3.2-2)
+Depends: libc6 (>= 2.7-18), libgtk2.0-0 (>= 2.12.12-1~lenny1), libasound2 (>= 1.0.16-2), libdb4.6 (>=4.6.21-11), libdb4.6++ (>= 4.6.21-11), libmysqlclient15off (>= 5.0.51a-24+lenny1), g++ (>= 4:4.3.2-2)
 Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45
 Maintainer: Proview <postmaster@proview.se>
 Description: Proview development and runtime environment package
  Proview development and runtime environment
- 4.6.0-1 Base release 
- 4.6.0-2
-  - Ge color gradients added.
- 4.6.0-3
-  - Sev: error handling improved.
- 4.6.0-4
-  - Metric fonts in Ge and Xtt.
- 4.6.0-5
-  - Wb, Xtt: Problem with insensitive radiobuttons fixed.
- 4.6.0-6
-  - Problem with missing invert circle in postscript poc doc fixed.
-  - Configurator script functions GetClassListAttrRef() and GetNextAttrRef() added to wtt.
-  - Improved handling of unexpected mousekey combinations in plc editor.
-  - Error message in class editor if Elements > 1 and arraybit not set in $Attribte added.
-  - DataArithm: structdef statement added to DataArtithm code.
-  - Bugfix in plc editor connectionpoint selection.
-  - Bugfix, activating connect function in plc editor when nothing was selected caused X exception.
+ 4.6.1-1 Base release 
