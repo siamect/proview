@@ -420,11 +420,5 @@ fi
 #%postun
 
 %changelog
-* Mon Nov 10 2008 Claes Sjofors <claes.sjofors@proview.se> 4.6.0-1
-  - Beta release.
-  4.6.0-3 
-  - Sev: Improved error handling.
-  4.6.0-4 
-  - Xtt/Ge: Metric fonts.
-  4.6.0-6
-  - Problem with '.' in tablename fixed.
+* Thu May 28 2009 Claes Sjofors <claes.sjofors@proview.se> 4.6.1-1
+  - Base release.
