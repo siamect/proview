@@ -129,6 +129,6 @@ fi
 #%postun
 
 %changelog
-* Mon Nov 10 2008 Claes Sjofors <claes.sjofors@proview.se> 4.6.0-1
+* Thu May 28 2009 Claes Sjofors <claes.sjofors@proview.se> 4.6.1-1
 - Base release
  
