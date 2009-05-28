@@ -121,6 +121,8 @@ XNavGtk::~XNavGtk()
     mcp = 0;
   }
   menu_tree_free();
+  delete (ItemMenu *)root_item;
+
   for ( int i = 0; i < brow_cnt; i++) {
     brow_stack[i]->free_pixmaps();
     brow_DeleteSecondaryCtx( brow_stack[i]->ctx);

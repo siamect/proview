@@ -560,6 +560,7 @@ XttGtk::~XttGtk()
   delete value_recall;
   delete hotkey;
   delete methodtoolbar;
+  delete xnav;
 }
 
 static gint delete_event( GtkWidget *w, GdkEvent *event, gpointer xtt)

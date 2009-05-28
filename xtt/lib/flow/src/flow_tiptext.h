@@ -50,8 +50,8 @@ class FlowTipText {
   /*!
     \param gctx		Flow context.
   */
-  FlowTipText( FlowCtx *gctx) : ctx(gctx), tiptext_rows(0), active(false), timer_id(0), 
-    text_size(2) {}
+  FlowTipText( FlowCtx *gctx) : ctx(gctx), text_object(0), tiptext_rows(0), 
+    active(false), timer_id(0), text_size(2) {}
 
   //! Destructor
   /*! Removes the timer if it is set.
