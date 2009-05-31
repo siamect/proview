@@ -101,12 +101,12 @@ SObject pwrs:Type
      EndBody
     EndObject
     !/**
-    !  Operating system is AXP_LINUX
+    !  Operating system is Linux on x86
     !*/
-    Object AXP_LINUX $Value
+    Object X86_64_LINUX $Value
      Body SysBody
-       Attr PgmName = "AXP_LINUX"
-       Attr Text = "Linux on Alpha"
+       Attr PgmName = "X86_64_LINUX"
+       Attr Text = "Linux on x86_64"
        Attr Value = 128
      EndBody
     EndObject

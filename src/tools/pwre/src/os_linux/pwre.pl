@@ -40,11 +40,16 @@ $vmsinc = "";
 $broot  = "/usr/users/$user/$user" . "_dbg";
 $btype  = "dbg";
 $os	= "linux";
-if ($ENV{"HOSTTYPE"} eq "rs6000") {
+if ($ENV{"pwre_hosttype"} eq "rs6000") {
   $hw	= "ppc";
 } else {
-  $hw	= "x86";
+  if ($ENV{"pwre_hosttype"} eq "x86_64") {
+    $hw	= "x86_64";
+  } else {
+    $hw	= "x86";
+  }
 }
+
 $desc	= $user. "'s environment";
 @vars;
 $varstr;

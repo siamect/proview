@@ -745,7 +745,7 @@ cdh_StringToAttrValue (
     while (*String && isspace(*String)) String++;
     if (*String != '\0') {
       ui32val = strtoul(String, &endp, 0);
-      if (errno == ERANGE || *endp != '\0' || ui32val > ULONG_MAX
+      if (errno == ERANGE || *endp != '\0' || ui32val > UINT_MAX
 	|| *String == '-') {
 	sts = CDH__INVUINT32;
 	break;
@@ -2594,7 +2594,7 @@ char *cdh_OpSysToStr( pwr_mOpSys opsys)
   case pwr_mOpSys_X86_LYNX: strcpy( str, "x86_lynx"); break;
   case pwr_mOpSys_PPC_LINUX: strcpy( str, "ppc_linux"); break;
   case pwr_mOpSys_X86_LINUX: strcpy( str, "x86_linux"); break;
-  case pwr_mOpSys_AXP_LINUX: strcpy( str, "axp_linux"); break;
+  case pwr_mOpSys_X86_64_LINUX: strcpy( str, "x86_64_linux"); break;
   default: strcpy( str, "");
   }
   return str;

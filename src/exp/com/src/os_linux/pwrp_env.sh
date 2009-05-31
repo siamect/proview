@@ -1491,9 +1491,10 @@ pwrp_env ()
 
 pwrc_parse ()
 {
-  platform="x86_linux"
+  machine=`eval uname -m`
+  platform=$machine"_linux"
   os="os_linux"
-  hw="hw_x86"
+  hw="hw_"$machine
 
   local cmd
 

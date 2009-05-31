@@ -33,7 +33,12 @@
 #include "wb_name.h"
 #include "wb_treeimport.h"
 
-#define wblAlign(size) ((size + 3) & ~3)
+#define wblAlign(size) (((size) + 3) & ~3)
+#if defined(__x86_64__)
+#define wblAlign8(offs) (((offs) + 7) & ~7)
+#else
+#define wblAlign8(offs) (offs)
+#endif
 
 struct wb_wblvocabTokenTypes tokens;
 
@@ -935,6 +940,7 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
 
   if ( o->a.flags & pwr_mAdef_pointer) {
     size = sizeof( void *);
+    *boffset = wblAlign8(*boffset);
   }
   if ( o->a.flags & pwr_mAdef_array) {
     size *= o->a.elements;
@@ -945,6 +951,7 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
   }
   if ( cdh_NoCaseStrcmp( o->cname, "$Input") == 0) {
     o->a.size = ((pwr_sParam *)o->rbody)->Info.Size = size;
+    *boffset = wblAlign8( *boffset);
     o->a.offset = ((pwr_sParam *)o->rbody)->Info.Offset = *boffset + sizeof( void *);
     *boffset += sizeof( void *) + wblAlign( o->a.size);
   }

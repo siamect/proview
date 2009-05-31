@@ -217,7 +217,7 @@ vol_AttributeToName (
     if (*s != '\0' || lnametype.b.separator)
       strcat(s, ".");
     strcat(s, ap->name);
-    if (ap->idx != ULONG_MAX && lnametype.b.index) {
+    if (ap->idx != UINT_MAX && lnametype.b.index) {
       sprintf(index, "[%d]", ap->idx);
       strcat(s, index);
     }

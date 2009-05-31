@@ -45,7 +45,7 @@ then
   else
 #   echo "Is rttsys"
     ar_name_pict=${pwr_lib}/libpwr_dtt.a
-    bld_dir=$pwre_broot/os_linux/hw_x86/bld/lib/dtt
+    bld_dir=$pwre_broot/$pwre_os/$pwre_hw/bld/lib/dtt
 #   echo $ar_name $ar_name_pict
 
     cc=gcc

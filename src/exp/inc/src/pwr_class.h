@@ -619,7 +619,7 @@ typedef enum {
   pwr_mOpSys_X86_LYNX = 1 << 4,
   pwr_mOpSys_PPC_LINUX = 1 << 5,
   pwr_mOpSys_X86_LINUX = 1 << 6,
-  pwr_mOpSys_AXP_LINUX = 1 << 7,
+  pwr_mOpSys_X86_64_LINUX = 1 << 7,
   pwr_mOpSys_ = 1 << 8
 } pwr_mOpSys;
 

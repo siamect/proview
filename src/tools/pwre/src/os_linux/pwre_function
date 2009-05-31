@@ -30,6 +30,7 @@ pwre()
 		pwre_silent="-s"
 	fi 
 
+	export pwre_hosttype=$HOSTTYPE
 	local flags="$-"
 
 	# Turn off filename globber

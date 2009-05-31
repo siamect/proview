@@ -847,8 +847,8 @@ static int	save_func(	edit_ctx	ctx,
 	      opsys = pwr_mOpSys_PPC_LINUX;
 	    else if ( strncmp( arg1_str, "X86_LINUX", strlen( arg1_str)) == 0)
  	      opsys = pwr_mOpSys_X86_LINUX;
-	    else if ( strncmp( arg1_str, "AXP_LINUX", strlen( arg1_str)) == 0)
- 	      opsys = pwr_mOpSys_AXP_LINUX;
+	    else if ( strncmp( arg1_str, "X86_64_LINUX", strlen( arg1_str)) == 0)
+ 	      opsys = pwr_mOpSys_X86_64_LINUX;
 	    else
 	    {
 	      rtt_message('E', "Unknown platform");
@@ -903,8 +903,8 @@ static int	save_func(	edit_ctx	ctx,
 	        opsys = pwr_mOpSys_PPC_LINUX;
 	      else if ( strncmp( arg1_str, "X86_LINUX", strlen( arg1_str)) == 0)
 	        opsys = pwr_mOpSys_X86_LINUX;
-	      else if ( strncmp( arg1_str, "AXP_LINUX", strlen( arg1_str)) == 0)
-	        opsys = pwr_mOpSys_AXP_LINUX;
+	      else if ( strncmp( arg1_str, "X86_64_LINUX", strlen( arg1_str)) == 0)
+	        opsys = pwr_mOpSys_X86_64_LINUX;
 	      else
 	      {
 	        rtt_message('E', "Unknown platform");
@@ -1004,8 +1004,8 @@ static int	generate_func(	edit_ctx	ctx,
 	    opsys = pwr_mOpSys_PPC_LINUX;
  	  else if ( strncmp( arg1_str, "X86_LINUX", strlen( arg1_str)) == 0)
  	    opsys = pwr_mOpSys_X86_LINUX;
-	  else if ( strncmp( arg1_str, "AXP_LINUX", strlen( arg1_str)) == 0)
-	    opsys = pwr_mOpSys_AXP_LINUX;
+	  else if ( strncmp( arg1_str, "X86_64_LINUX", strlen( arg1_str)) == 0)
+	    opsys = pwr_mOpSys_X86_64_LINUX;
 	  else
 	  {
 	    rtt_message('E', "Unknown platform");
@@ -1743,8 +1743,8 @@ static int	dtt_link_func(	edit_ctx	ctx,
 	    opsys = pwr_mOpSys_PPC_LINUX;
 	  else if ( strncmp( arg1_str, "X86_LINUX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_X86_LINUX;
-	  else if ( strncmp( arg1_str, "AXP_LINUX", strlen( arg1_str)) == 0)
-	    opsys = pwr_mOpSys_AXP_LINUX;
+	  else if ( strncmp( arg1_str, "X86_64_LINUX", strlen( arg1_str)) == 0)
+	    opsys = pwr_mOpSys_X86_64_LINUX;
 	  else
 	  {
 	    rtt_message('E', "Unknown platform");
@@ -1847,8 +1847,8 @@ static int	dtt_compile_func(	edit_ctx	ctx,
 	    opsys = pwr_mOpSys_PPC_LINUX;
 	  else if ( strncmp( arg1_str, "X86_LINUX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_X86_LINUX;
-	  else if ( strncmp( arg1_str, "AXP_LINUX", strlen( arg1_str)) == 0)
-	    opsys = pwr_mOpSys_AXP_LINUX;
+	  else if ( strncmp( arg1_str, "X86_64_LINUX", strlen( arg1_str)) == 0)
+	    opsys = pwr_mOpSys_X86_64_LINUX;
 	  else
 	  {
 	    rtt_message('E', "Unknown platform");
@@ -7759,11 +7759,11 @@ int	dtt_start( char		*programname)
 #elif defined(OS_LINUX)
 	if ( strcmp( rtt_hw, "x86") == 0)
 	  dtt_current_opsys = pwr_mOpSys_X86_LINUX;
-	else if ( strcmp( rtt_hw, "axp") == 0)
-	  dtt_current_opsys = pwr_mOpSys_AXP_LINUX;
+	else if ( strcmp( rtt_hw, "x86_64") == 0)
+	  dtt_current_opsys = pwr_mOpSys_X86_LINUX;
 	else
 	  dtt_current_opsys = pwr_mOpSys_PPC_LINUX;
-#endif	
+#endif	  
 
 	/* Create path for source and build directories */
 #if defined(OS_VMS)
@@ -10576,7 +10576,7 @@ static char *dtt_opsys_to_name( int opsys)
 	  case pwr_mOpSys_X86_LYNX: strcpy( name, "X86_LYNX"); break;
 	  case pwr_mOpSys_PPC_LINUX: strcpy( name, "PPC_LINUX"); break;
 	  case pwr_mOpSys_X86_LINUX: strcpy( name, "X86_LINUX"); break;
-	  case pwr_mOpSys_AXP_LINUX: strcpy( name, "AXP_LINUX"); break;
+	  case pwr_mOpSys_X86_64_LINUX: strcpy( name, "X86_64_LINUX"); break;
 	  default: strcpy( name, "Unknwn");
 	}
 	return name;

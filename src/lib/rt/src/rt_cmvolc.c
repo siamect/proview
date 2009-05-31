@@ -283,7 +283,7 @@ cmvolc_GetCachedClass (
 
       } else {
         nextIdx = rmp->naidx;
-        stopIdx = nextIdx != ULONG_MAX ? nextIdx : rmp->cclass.acount;
+        stopIdx = nextIdx != UINT_MAX ? nextIdx : rmp->cclass.acount;
         
         for (i = rmp->saidx; i < stopIdx; i++)
           ccp->attr[i] = rmp->attr[i];
@@ -294,7 +294,7 @@ cmvolc_GetCachedClass (
       net_Free(NULL, rmp);
       rmp = NULL;
 
-    } while(!*equal && nextIdx != ULONG_MAX);
+    } while(!*equal && nextIdx != UINT_MAX);
   }
 
   ccp->key = ccKey;
@@ -403,7 +403,7 @@ cmvolc_GetNonExistingClass (
     msgs[msgcnt++] = rmp;
     rmp = NULL;
 
-  } while(nextIdx != ULONG_MAX);
+  } while(nextIdx != UINT_MAX);
   
   gdb_Lock;
   

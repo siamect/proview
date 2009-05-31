@@ -1507,7 +1507,9 @@ int	rtt_get_hw( char *hw)
 
 	if (uname( &buf) == -1)
 	  return 0;
-	if (strstr( buf.machine, "86") != 0)
+	if (strstr( buf.machine, "86_64") != 0)
+	  strcpy( hw, "x86_64");
+	else if (strstr( buf.machine, "86") != 0)
 	  strcpy( hw, "x86");
 	return 1;
 #endif

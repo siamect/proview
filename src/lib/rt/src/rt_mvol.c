@@ -334,7 +334,7 @@ mvol_AnameToAttribute (
       ((ap->adef->Info.Flags & PWR_MASK_PRIVATE) == 0);
     ap->flags.b.CastAttr = ((ap->adef->Info.Flags & PWR_MASK_CASTATTR) != 0);
     ap->flags.b.DisableAttr = ((ap->adef->Info.Flags & PWR_MASK_DISABLEATTR) != 0);
-    if (ap->idx != ULONG_MAX) {
+    if (ap->idx != UINT_MAX) {
       if (ap->idx > ap->adef->Info.Elements - 1 && !(ap->adef->Info.Flags & PWR_MASK_DYNAMIC))
 	pwr_Return(NULL, sts, GDH__SUBSCRIPT);
       ap->size /= ap->elem;
@@ -342,7 +342,7 @@ mvol_AnameToAttribute (
       ap->elem = 1;
     }
     ap->flags.b.ObjectAttr = (cdh_tidIsCid( ap->tid) != 0);
-    ap->flags.b.Array = (ap->idx == ULONG_MAX && ap->adef->Info.Flags & PWR_MASK_ARRAY);
+    ap->flags.b.Array = (ap->idx == UINT_MAX && ap->adef->Info.Flags & PWR_MASK_ARRAY);
   } else {
     ap->aix   = UINT_MAX;
     ap->size  = ap->cp->size;
@@ -415,7 +415,7 @@ mvol_ArefToAttribute (
     if ( i == acp->acount)
       pwr_Return(NULL, sts, GDH__ATTRIBUTE);
     offset += acp->attr[i].offs;
-    if ( idx != ULONG_MAX) {
+    if ( idx != UINT_MAX) {
       sprintf( idxstr, "[%d]", idx);
       strcat( ap->name, idxstr);
     }
@@ -503,7 +503,7 @@ mvol_ArefToAttribute (
     ap->tid   = param->Info.Type;
     ap->elem  = param->Info.Elements;
 
-    if (ap->idx != ULONG_MAX) {
+    if (ap->idx != UINT_MAX) {
       ap->size /= ap->elem;
       ap->offs += ap->size * ap->idx;
       ap->elem = 1;

@@ -317,7 +317,7 @@ encode_sfloat (
   return TRUE;
 }    
 
-#elif (defined(OS_LYNX) || defined(OS_LINUX)) && defined(HW_X86)
+#elif (defined(OS_LYNX) || defined(OS_LINUX)) && (defined(HW_X86) || defined(HW_X86_64))
 
 static pwr_tBoolean
 encode_sfloat (
@@ -387,7 +387,7 @@ decode_sfloat (
   return TRUE;
 }    
 
-#elif (defined(OS_LYNX) || defined(OS_LINUX)) && defined(HW_X86)
+#elif (defined(OS_LYNX) || defined(OS_LINUX)) && (defined(HW_X86) || defined(HW_X86_64))
 
 static pwr_tBoolean
 decode_sfloat(
@@ -1315,9 +1315,9 @@ ndc_ConvertRemoteToNativeTable (
   for (; i < cp->acount && *size > 0; i++, ap++) {
     cidx = tbl[i].cidx;
     raidx =  tbl[i].raidx;
-    pwr_Assert(raidx < ccp->acount || raidx == ULONG_MAX);    
+    pwr_Assert(raidx < ccp->acount || raidx == UINT_MAX);    
 
-    if ( raidx == ULONG_MAX || cidx == conv_eIdx_invalid) {
+    if ( raidx == UINT_MAX || cidx == conv_eIdx_invalid) {
       /* Attribute doesn't exist on remote node or there is no valid conversion
        * Zero the local attribute 
        */
@@ -1547,9 +1547,9 @@ ndc_ConvertRemoteToNativeTableOld (
   for (first = 1; i < cp->acount && size > 0; i++, ap++) {
     cidx = tbl[i].cidx;
     raidx =  tbl[i].raidx;
-    pwr_Assert(raidx < ccp->acount || raidx == ULONG_MAX);    
+    pwr_Assert(raidx < ccp->acount || raidx == UINT_MAX);    
 
-    if ( raidx == ULONG_MAX || cidx == conv_eIdx_invalid) {
+    if ( raidx == UINT_MAX || cidx == conv_eIdx_invalid) {
       /* Attribute doesn't exist on remote node or there is no valid conversion
        * Zero the local attribute 
        */
@@ -1653,7 +1653,7 @@ ndc_NarefToRaref(
 
   /* It's a single attribute */
 
-  pwr_Assert(ap->aix != ULONG_MAX);
+  pwr_Assert(ap->aix != UINT_MAX);
   
   acp = ap->cp;
   if (acp == NULL)
@@ -1823,7 +1823,7 @@ ndc_NarefToRaref(
     cmvolc_UnlockClass(NULL, l_ccp);
   }
    
-  if (ap->idx == ULONG_MAX) {
+  if (ap->idx == UINT_MAX) {
     rarp->Objid   = narp->Objid;
     rarp->Body    = narp->Body;
     rarp->Offset  = roffset;

@@ -121,7 +121,7 @@ cmvolsm_GetCclass (
 
     rmp->acntmsg = acnt;
     rmp->saidx = mp->aidx;
-    rmp->naidx = (i == cp->acount) ? ULONG_MAX : i;
+    rmp->naidx = (i == cp->acount) ? UINT_MAX : i;
 
   } gdb_ScopeUnlock;
 
@@ -246,7 +246,7 @@ cmvolsm_GetGclass (
 
     rmp->acntmsg = acnt;
     rmp->saidx = mp->aidx;
-    rmp->naidx = (i == cp->acount) ? ULONG_MAX : i;
+    rmp->naidx = (i == cp->acount) ? UINT_MAX : i;
 
   } gdb_ScopeUnlock;
 
