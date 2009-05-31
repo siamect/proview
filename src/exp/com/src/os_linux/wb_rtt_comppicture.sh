@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 #
 # Proview   $Id: wb_rtt_comppicture.sh,v 1.2 2005-09-01 14:57:49 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
@@ -38,7 +38,7 @@ then
     ar_name_pict=${pwrp_lib}/ra_rtt_${pgmname}_pict.a
 
     cc=gcc
-    cinc="-I$pwr_inc -I$pwrp_rttbld -I-"
+    cinc="-I$pwr_inc -I$pwrp_rttbld"
     cflags="-DOS_LINUX -DOS=linux -DHW_X86=1 -DPOSIX_SOURCE -DWall" 
     ${cc} -c -o $pwrp_obj/${name}.o $pwrp_rttbld/${name}.c ${cinc} ${cflags}
     ar rc ${ar_name_pict} $pwrp_obj/${name}.o
@@ -49,7 +49,7 @@ then
 #   echo $ar_name $ar_name_pict
 
     cc=gcc
-    cinc="-I$pwr_inc -I${bld_dir} -I-"
+    cinc="-I$pwr_inc -I${bld_dir}"
     cflags="-DOS_LINUX -DOS=linux -DHW_X86=1 -DPOSIX_SOURCE -DWall" 
     ${cc} -c -o ${bld_dir}/${name}.o \
        ${bld_dir}/${name}.c ${cinc} ${cflags}

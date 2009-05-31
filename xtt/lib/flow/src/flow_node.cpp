@@ -342,7 +342,7 @@ void FlowNode::open( ifstream& fp)
 	    {
 	      if ((c = fp.get()) == '"')
 	      {
-	        if ( annotv[i][j-1] == '\\')
+	        if ( j > 0 && annotv[i][j-1] == '\\')
 	          j--;
 	        else
                 {

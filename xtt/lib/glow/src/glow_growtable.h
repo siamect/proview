@@ -338,7 +338,7 @@ class GrowTable : public GrowRect {
 
   //! Set or reset input focus.
   /*! \param focus	if 1 focus is set, else focus is reset. */
-  void set_input_focus( int focus);
+  void set_input_focus( int focus, glow_eEvent event);
 
   int make_cell_visible( int column, int row);
   

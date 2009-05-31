@@ -73,7 +73,7 @@ typedef struct {
 \*----------------------------------------------------------------------------*/
 
 typedef pwr_tStatus (* wb_tMethodMenu)( ldh_sMenuCall *);
-typedef pwr_tStatus (* wb_tMethodMenuFilter)( ldh_sMenuCall *, pwr_sMenuButton *);
+typedef pwr_tStatus (* wb_tMethodMenuFilter) (ldh_sMenuCall *, pwr_sMenuButton *);
 typedef pwr_tStatus (* wb_tMethodAnteCreate) (ldh_tSesContext, pwr_tOid, pwr_tCid);
 typedef pwr_tStatus (* wb_tMethodPostCreate) (ldh_tSesContext, pwr_tOid, pwr_tOid, pwr_tCid);
 typedef pwr_tStatus (* wb_tMethodAnteMove)   (ldh_tSesContext, pwr_tOid, pwr_tOid, pwr_tOid);
@@ -82,6 +82,7 @@ typedef pwr_tStatus (* wb_tMethodAnteAdopt)  (ldh_tSesContext, pwr_tOid, pwr_tCi
 typedef pwr_tStatus (* wb_tMethodPostAdopt)  (ldh_tSesContext, pwr_tOid, pwr_tOid, pwr_tCid);
 typedef pwr_tStatus (* wb_tMethodAnteUnadopt)(ldh_tSesContext, pwr_tOid, pwr_tOid, pwr_tCid);
 typedef pwr_tStatus (* wb_tMethodPostUnadopt)(ldh_tSesContext, pwr_tOid, pwr_tOid, pwr_tCid);
+typedef pwr_tStatus (* wb_tMethodPostRename) (ldh_tSesContext, pwr_tOid);
 typedef pwr_tStatus (* wb_tMethodSyntaxCheck)(ldh_tSesContext, pwr_tOid, int *, int *);
 
 

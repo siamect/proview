@@ -1893,7 +1893,7 @@ void GrowNode::convert( glow_eConvert version)
   }  
 }
 
-void GrowNode::set_input_focus( int focus)
+void GrowNode::set_input_focus( int focus, glow_eEvent event)
 {
   if ( focus && !input_focus) {
     input_focus = 1;

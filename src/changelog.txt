@@ -110,3 +110,5 @@
 081124 cs  qcom      Quota check for max number of buffered messages in a queue added.
 090224 cs  xtthelp   New home button in help window.
 090506 cs  pwrb      Bugfix in Max object. Default values were wrong and didn't work for negative input values.
+090519 cs  rtmon     New help file for runtime monitor, and pushbutton for reset runtime.
+090527 cs  doc       Getting Started Guide updated.

@@ -65,6 +65,7 @@ class Xtt {
     XttMethodToolbar *methodtoolbar;
     int		select_opplace;
     int		op_close_button;
+    int		no_advanceduser;
 
     Xtt( int argc, char *argv[], int *return_sts);
     virtual ~Xtt() {}

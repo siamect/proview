@@ -11,6 +11,44 @@
          <td><b>Module</b></td>
          <td><b>Change</b></td>
          <td><b>Sign</b></td></tr>
+<tr><td>19-MAY-2009</td><td>xtt/ge</td>
+<td>Bugfix in fonts for language se_sv.</td><td>cs</td></tr>
+<tr><td>19-MAY-2009</td><td>src/rtmon</td>
+<td>New help file for runtime monitor, and pushbutton for reset runtime.</td><td>cs</td></tr>
+<tr><td>18-MAY-2009</td><td>xtt/xtt</td>
+<td>Advanced user set as default, not set with option -d.</td><td>cs</td></tr>
+<tr><td>18-MAY-2009</td><td>wb/wb</td>
+<td>Advanced user set as default in wb.</td><td>cs</td></tr>
+<tr><td>18-MAY-2009</td><td>wb/wb</td>
+<td>Wb method PostRename added and implemented for XttGraph and ProjectReg objects.</td><td>cs</td></tr>
+<tr><td>18-MAY-2009</td><td>xtt/xtt</td>
+<td>Bugfix in xtt termination. Free in wrong order could cause segfault.</td><td>cs</td></tr>
+<tr><td>18-MAY-2009</td><td>xtt/xtt</td>
+<td>More flexible layout of operator buttons. NoFastAvail not used any more.</td><td>cs</td></tr>
+<tr><td>15-MAY-2009</td><td>wb/wtt</td>
+<td>Popup menu on attributes. Methods HelpClass, InsertSelectedObject and ChangeValue added.</td><td>cs</td></tr>
+<tr><td>15-MAY-2009</td><td>wb/wtt</td>
+<td>Ctrl/Doubleclick MB1 to insert selected object into an objid attribute also works on attrref attributes.</td><td>cs</td></tr>
+<tr><td>15-MAY-2009</td><td>wb/wtt</td>
+<td>Bugfix in ConnectGraph method for PlantHier objects.</td><td>cs</td></tr>
+<tr><td>12-MAY-2009</td><td>xtt/ge</td>
+<td>Bugfix in ge editor, navigator palette wasn't destroyed at exit.</td><td>cs</td></tr>
+<tr><td>07-MAY-2009</td><td>wb/wb</td>
+<td>Bugfix in directory wizard, for nodenames containing '-' NodeConfig object was not configured correctly.</td><td>cs</td></tr>
+<tr><td>07-MAY-2009</td><td>wb/adm</td>
+<td>In projectlist, the project name in a ProjectReg is changed, also the path is changed.</td><td>cs</td></tr>
+<tr><td>06-MAY-2009</td><td>src/pwrb</td>
+<td>Bugfix in Max object. Default values were wrong and didn't work for negative input values.</td><td>cs</td></tr>
+<tr><td>06-MAR-2009</td><td>wb/plc</td>
+<td>Default include in ra_plc_user.h added. </td><td>cs</td></tr>
+<tr><td>06-MAR-2009</td><td>wb/wb</td>
+<td>Crossreferences on Co signals added.</td><td>cs</td></tr>
+<tr><td>06-MAR-2009</td><td>xtt/xtt</td>
+<td>Language translation of operator window buttons.</td><td>cs</td></tr>
+<tr><td>05-MAR-2009</td><td>xtt/xtt</td>
+<td>Trend method not viewed for $PlantHier with a Trend child object.</td><td>cs</td></tr>
+<tr><td>05-MAR-2009</td><td>xtt/glow</td>
+<td>Ge color palette fillcolor,bordercolor and textcolor selection changed.</td><td>cs</td></tr>
 <tr><td>01-MAR-2009</td><td>otherio/usbio</td>
 <td>Bugfix for Ai on port B. If Ai and Di/Do were mixed the Ai didn't work.</td><td>cs</td></tr>
 <tr><td>27-FEB-2009</td><td>xtt/glow</td>
@@ -19,32 +57,32 @@
 <td>Problem with soiled texts fixed.</td><td>cs</td></tr>
 <tr><td>25-FEB-2009</td><td>xtt/xtt</td>
 <td>Size check of attribute input and float format changed to %g.</td><td>cs</td></tr>
+<tr><td>25-FEB-2009</td><td>xtt/xtt</td>
+<td>Ampersand in alarmtext cause a blank alarmtext in operator window.</td><td>cs</td></tr>
 <tr><td>25-FEB-2009</td><td>xtt/flow</td>
 <td>Problem with missing invert circle in postscript plc doc fixed.</td><td>cs</td></tr>
 <tr><td>25-FEB-2009</td><td>wb/script</td>
 <td>Script functions GetClassListAttrRef() and GetNextAttrRef() added.</td><td>cs</td></tr>
-<tr><td>25-FEB-2009</td><td>xtt/xtt</td>
-<td>Ampersand in alarmtext cause a blank alarmtext in operator window.</td><td>cs</td></tr>
-<tr><td>24-FEB-2009</td><td>xtt/flow</td>
-<td>Navigator items wasn't sensitive and correctly drawn to right window border.</td><td>cs</td></tr>
 <tr><td>24-FEB-2009</td><td>wb/plc</td>
 <td>Handling of unexpected mousekey combinations in plc editor.</td><td>cs</td></tr>
-<tr><td>24-FEB-2009</td><td>wb/wb</td>
-<td>Error message in class editor if Elements > 1 and arraybit not set in $Attribute added.</td><td>cs</td></tr>
 <tr><td>24-FEB-2009</td><td>src/xtthelp</td>
 <td>New home button in help window.</td><td>cs</td></tr>
+<tr><td>24-FEB-2009</td><td>xtt/flow</td>
+<td>Navigator items wasn't sensitive and correctly drawn to right window border.</td><td>cs</td></tr>
+<tr><td>24-FEB-2009</td><td>wb/wb</td>
+<td>Error message in class editor if Elements > 1 and arraybit not set in $Attribute added.</td><td>cs</td></tr>
 <tr><td>23-FEB-2009</td><td>wb/plc</td>
 <td>DataArithm, structdef statement added to DataArithm code.</td><td>cs</td></tr>
 <tr><td>19-FEB-2009</td><td>xtt/ge</td>
 <td>Bugfix in Ge journal when attribute editor is open on create undo object.</td><td>cs</td></tr>
 <tr><td>19-FEB-2009</td><td>xtt/flow</td>
 <td>Bugfix in connectionpoint selection. Removed node wasn't removed from selection list.</td><td>cs</td></tr>
+<tr><td>18-FEB-2009</td><td>wb/plc</td>
+<td>Bugfix, connect from local plant navigator on attribute objects didn't work.</td><td>cs</td></tr>
 <tr><td>18-FEB-2009</td><td>xtt/glow</td>
 <td>Bugfix for connection with the same source and destination object.</td><td>cs</td></tr>
 <tr><td>18-FEB-2009</td><td>wb/plc</td>
 <td>Bugfix, activating connect function when nothing was selected could cause X exception.</td><td>cs</td></tr>
-<tr><td>18-FEB-2009</td><td>wb/plc</td>
-<td>Bugfix, connect from local plant navigator on attribute objects didn't work.</td><td>cs</td></tr>
 <tr><td>29-JAN-2009</td><td>java/rt</td>
 <td>GdhServer terminated with error status, not 0, is no WebHandler object was found.</td><td>cs</td></tr>
 <tr><td>28-JAN-2009</td><td>xtt/xtt</td>
@@ -54,9 +92,9 @@
 <tr><td>05-DEC-2008</td><td>/.</td>
 <td>Release 4.6.0-4.</td><td>cs</td></tr>
 <tr><td>30-NOV-2008</td><td>xtt/glow</td>
-<td>Font can be set on node and group level for text and annotations.</td><td>cs</td></tr>
-<tr><td>30-NOV-2008</td><td>xtt/glow</td>
 <td>Red error color is not affected by gradient property.</td><td>cs</td></tr>
+<tr><td>30-NOV-2008</td><td>xtt/glow</td>
+<td>Font can be set on node and group level for text and annotations.</td><td>cs</td></tr>
 <tr><td>28-NOV-2008</td><td>xtt/glow</td>
 <td>Metric antialiased fonts, scalable texts, change of fonts for subgraphs.</td><td>cs</td></tr>
 <tr><td>28-NOV-2008</td><td>xtt/flow</td>
@@ -75,70 +113,70 @@
 <td>Bugfix in execute order for Set/Res/Sto objects without input or output connection.</td><td>cs</td></tr>
 <tr><td>28-OCT-2008</td><td>bcomp/bcomp</td>
 <td>Components BaseActuatorIncrDecr and BaseValveIncrDecr added.</td><td>cs</td></tr>
-<tr><td>24-OCT-2008</td><td>xtt/flow</td>
-<td>Bugfix in multiline annotation text height calculation.</td><td>cs</td></tr>
 <tr><td>24-OCT-2008</td><td>src/xtthelp</td>
 <td>New program co_help to view helptexts.</td><td>cs</td></tr>
+<tr><td>24-OCT-2008</td><td>xtt/flow</td>
+<td>Bugfix in multiline annotation text height calculation.</td><td>cs</td></tr>
 <tr><td>22-OCT-2008</td><td>src/convert</td>
 <td>Xtthelp bookmark on header didn't work after html conversion.</td><td>cs</td></tr>
 <tr><td>17-OCT-2008</td><td>src/rt</td>
 <td>Added a few new enumeration types to pwrb (YesNo, TrueFalse).</td><td>rk</td></tr>
 <tr><td>16-OCT-2008</td><td>otherio/modbus</td>
+<td>Added class Modbus_Master.</td><td>rk</td></tr>
+<tr><td>16-OCT-2008</td><td>otherio/modbus</td>
 <td>Added moore functionality.</td><td>rk</td></tr>
 <tr><td>16-OCT-2008</td><td>src/rt</td>
 <td>Changed plc-handling so cycletimes faster tha 1 ms is possible.</td><td>rk</td></tr>
-<tr><td>16-OCT-2008</td><td>otherio/modbus</td>
-<td>Added class Modbus_Master.</td><td>rk</td></tr>
 <tr><td>15-OCT-2008</td><td>src/pwrs</td>
 <td>New volume class, DetachedClassVolume, added.</td><td>cs</td></tr>
 <tr><td>15-OCT-2008</td><td>src/convert</td>
-<td>Font TimesNewRoman changed to Times-Roman in postscript generation (TimesNewRoman doesn't seems to be known by all printers).</td><td>cs</td></tr>
-<tr><td>15-OCT-2008</td><td>src/convert</td>
 <td>Conversion of .png files to postscript didn't work.</td><td>cs</td></tr>
+<tr><td>15-OCT-2008</td><td>src/convert</td>
+<td>Font TimesNewRoman changed to Times-Roman in postscript generation (TimesNewRoman doesn't seems to be known by all printers).</td><td>cs</td></tr>
 <tr><td>09-OCT-2008</td><td>wb/wb</td>
-<td>New script functions CheckSystemGroup, GetNextFreeUserVid, CheckNewVid, CheckNewVolumeName and GetCurrentVolume.</td><td>cs</td></tr>
+<td>New command 'open database' to open the database for a volume.</td><td>cs</td></tr>
+<tr><td>09-OCT-2008</td><td>wb/script</td>
+<td>New script functions GetNextFreeUserVid, CheckNewVid and CheckNewVolumeName.</td><td>cs</td></tr>
 <tr><td>09-OCT-2008</td><td>wb/wb</td>
 <td>New pages in Configure DirectoryVolume wizard to register a volume and open the database for a volume.</td><td>cs</td></tr>
 <tr><td>09-OCT-2008</td><td>wb/wb</td>
-<td>New command 'open database' to open the database for a volume.</td><td>cs</td></tr>
-<tr><td>09-OCT-2008</td><td>wb/wb</td>
 <td>Qualifier /quiet added to 'save' command to avoid questions when saving directory volume.</td><td>cs</td></tr>
-<tr><td>09-OCT-2008</td><td>wb/script</td>
-<td>New script functions GetNextFreeUserVid, CheckNewVid and CheckNewVolumeName.</td><td>cs</td></tr>
+<tr><td>09-OCT-2008</td><td>wb/wb</td>
+<td>New script functions CheckSystemGroup, GetNextFreeUserVid, CheckNewVid, CheckNewVolumeName and GetCurrentVolume.</td><td>cs</td></tr>
 <tr><td>09-OCT-2008</td><td>xtt/ge</td>
 <td>Gtk images for question, info, error and waring added to the Ge image palette.</td><td>cs</td></tr>
 <tr><td>06-OCT-2008</td><td>xtt/xtt</td>
 <td>In command 'open graph /object' the qualifier /access can be used.</td><td>cs</td></tr>
 <tr><td>26-SEP-2008</td><td>ssabox/rt</td>
 <td>Bugfix for do cards. 16 channels do card couldn't be handled.</td><td>cs</td></tr>
-<tr><td>15-SEP-2008</td><td>xtt/ge</td>
-<td>Bugfix in erase location for annotation text in rotated subgraphs.</td><td>cs</td></tr>
 <tr><td>15-SEP-2008</td><td>src/trend</td>
 <td>Zero Multiple attribute in DsTrend object caused termination of rt_trend.</td><td>cs</td></tr>
-<tr><td>05-SEP-2008</td><td>src/qcom</td>
-<td>Argument -n added to rt_qmon for start without the presence of rt_neth.</td><td>cs</td></tr>
+<tr><td>15-SEP-2008</td><td>xtt/ge</td>
+<td>Bugfix in erase location for annotation text in rotated subgraphs.</td><td>cs</td></tr>
 <tr><td>05-SEP-2008</td><td>src/qcom</td>
 <td>Qcom link without nethandler connection implemented. Configuration attribute in FriendNodeConfig object, Connection.</td><td>cs</td></tr>
 <tr><td>05-SEP-2008</td><td>sev/sev</td>
 <td>New module for Storage Environment.</td><td>cs</td></tr>
 <tr><td>05-SEP-2008</td><td>src/pkg</td>
 <td>New package pwrsev for Storage Environment.</td><td>cs</td></tr>
+<tr><td>05-SEP-2008</td><td>src/qcom</td>
+<td>Argument -n added to rt_qmon for start without the presence of rt_neth.</td><td>cs</td></tr>
 <tr><td>03-SEP-2008</td><td>xtt/ge</td>
 <td>Bugfix in dynamics. A change of value could be undetected if scan function was interrupted by nethandler.</td><td>cs</td></tr>
 <tr><td>03-SEP-2008</td><td>src/gdh</td>
 <td>Error status for subscription caused other subscription to be ignored.</td><td>cs</td></tr>
+<tr><td>26-AUG-2008</td><td>src/plc</td>
+<td>Code for CStoExtXxx was missing, except for Float32.</td><td>cs</td></tr>
 <tr><td>26-AUG-2008</td><td>xtt/ge</td>
 <td>Bit type added to dynamics DigLowColor, DigWarning and DigError.</td><td>cs</td></tr>
 <tr><td>26-AUG-2008</td><td>xtt/ge</td>
 <td>Bugfix in setting of fonttype in attribute editor.</td><td>cs</td></tr>
-<tr><td>26-AUG-2008</td><td>src/plc</td>
-<td>Code for CStoExtXxx was missing, except for Float32.</td><td>cs</td></tr>
+<tr><td>26-JUN-2008</td><td>wb/wb</td>
+<td>authorized_keys file included in distribution.</td><td>cs</td></tr>
 <tr><td>26-JUN-2008</td><td>src/pwrb</td>
 <td>Functionobject GetDataInput added. This makes it possible to define data inputs in a function object class with template plc code.</td><td>cs</td></tr>
 <tr><td>26-JUN-2008</td><td>src/pwrb</td>
 <td>Bit AuthorizedKeysFile added to type DistrComponentMask.</td><td>cs</td></tr>
-<tr><td>26-JUN-2008</td><td>wb/wb</td>
-<td>authorized_keys file included in distribution.</td><td>cs</td></tr>
 <tr><td>24-JUN-2008</td><td>src/co</td>
 <td>pwr_user: command 'login' added. Write access disabled without administrator privilege.</td><td>cs</td></tr>
 <tr><td>24-JUN-2008</td><td>src/pwrb</td>
@@ -147,38 +185,38 @@
 <td>Secure distribution using scp and ssh instead of ftp and rsh implemented.</td><td>cs</td></tr>
 <tr><td>24-JUN-2008</td><td>src/pwrb</td>
 <td>In class NodeConfig, attribute RemoteAccessType added.</td><td>cs</td></tr>
-<tr><td>23-JUN-2008</td><td>java/rt</td>
-<td>Password encryption class added.</td><td>cs</td></tr>
-<tr><td>23-JUN-2008</td><td>src/rtt</td>
-<td>Login with Proview username and password required. Commands 'login' and 'logout' added.</td><td>cs</td></tr>
 <tr><td>23-JUN-2008</td><td>src/rt</td>
 <td>$ClassDef flag RtReadOnly implemented for objects that is not writeable in runtime.</td><td>cs</td></tr>
-<tr><td>23-JUN-2008</td><td>src/co</td>
-<td>New user database format and password encryption changed.</td><td>cs</td></tr>
-<tr><td>23-JUN-2008</td><td>src/pwrs</td>
-<td>System object changed to RtReadOnly.</td><td>cs</td></tr>
-<tr><td>23-JUN-2008</td><td>xtt/xtt</td>
-<td>Login window in xtt added, opened with command 'login', from menu and at startup. Also commands 'show user' and 'logout' added.</td><td>cs</td></tr>
-<tr><td>23-JUN-2008</td><td>xtt/xtt</td>
-<td>New login policy in Xtt: DefaultXttPriv and XttUseOpsysUser in Security object utilized to select user and privilges in xtt.</td><td>cs</td></tr>
 <tr><td>23-JUN-2008</td><td>java/rt</td>
 <td>Default privileges and system group fetched from Security object (DefaultWebPriv and WebSystemGroup).</td><td>cs</td></tr>
 <tr><td>23-JUN-2008</td><td>src/pwrs</td>
 <td>Security object added.</td><td>cs</td></tr>
+<tr><td>23-JUN-2008</td><td>src/pwrs</td>
+<td>System object changed to RtReadOnly.</td><td>cs</td></tr>
+<tr><td>23-JUN-2008</td><td>src/co</td>
+<td>New user database format and password encryption changed.</td><td>cs</td></tr>
+<tr><td>23-JUN-2008</td><td>src/rtt</td>
+<td>Login with Proview username and password required. Commands 'login' and 'logout' added.</td><td>cs</td></tr>
+<tr><td>23-JUN-2008</td><td>xtt/xtt</td>
+<td>New login policy in Xtt: DefaultXttPriv and XttUseOpsysUser in Security object utilized to select user and privilges in xtt.</td><td>cs</td></tr>
+<tr><td>23-JUN-2008</td><td>xtt/xtt</td>
+<td>Login window in xtt added, opened with command 'login', from menu and at startup. Also commands 'show user' and 'logout' added.</td><td>cs</td></tr>
+<tr><td>23-JUN-2008</td><td>java/rt</td>
+<td>Password encryption class added.</td><td>cs</td></tr>
 <tr><td>05-JUN-2008</td><td>src/convert</td>
 <td>Bugfix in enum for bitmask TypeDef, bit 32 was written as signed int (negative)  in generated includefile.</td><td>cs</td></tr>
 <tr><td>04-JUN-2008</td><td>xtt/xtt</td>
 <td>Default filetype added to command 'open fileview' (qualifier /ftype).</td><td>cs</td></tr>
 <tr><td>03-JUN-2008</td><td>src/gdh</td>
 <td>Dynamic array attribute size implemented.</td><td>cs</td></tr>
-<tr><td>03-JUN-2008</td><td>src/init</td>
-<td>Areaobject size is dependent of number of signals, i.e. there is no upper limit in number of signals any more.</td><td>cs</td></tr>
 <tr><td>03-JUN-2008</td><td>xtt/xtt</td>
 <td>Arrays with dynamic size, e.g. areaobjects, can be viewed in xtt.</td><td>cs</td></tr>
-<tr><td>02-JUN-2008</td><td>src/pwrb</td>
-<td>General array objects added: AArray100, DArray100, IArray100, SArray100, AArray500,                            DArray500, IArray500 and SArray500.</td><td>cs</td></tr>
+<tr><td>03-JUN-2008</td><td>src/init</td>
+<td>Areaobject size is dependent of number of signals, i.e. there is no upper limit in number of signals any more.</td><td>cs</td></tr>
 <tr><td>02-JUN-2008</td><td>xtt/web</td>
 <td>LoadArchives attribute in WebHandler change from bitmask to string.</td><td>cs</td></tr>
+<tr><td>02-JUN-2008</td><td>src/pwrb</td>
+<td>General array objects added: AArray100, DArray100, IArray100, SArray100, AArray500,                            DArray500, IArray500 and SArray500.</td><td>cs</td></tr>
 <tr><td>02-JUN-2008</td><td>wb/wb</td>
 <td>Template for application file and .opt file automatically created.</td><td>cs</td></tr>
 <tr><td>02-JUN-2008</td><td>bcomp/bcomp</td>
@@ -187,10 +225,10 @@
 <td>Objectgraph for Mode: MinSet/MaxSet and MinOut/MaxOut used for slider limits and input limits.</td><td>cs</td></tr>
 <tr><td>30-MAY-2008</td><td>wb/wb</td>
 <td>En_us used for local time formats.</td><td>cs</td></tr>
-<tr><td>29-MAY-2008</td><td>xtt/xtt</td>
-<td>Bugfix in display object, didn't work for local mounted volumes,  and attributes in subclasses wasn't selected.</td><td>cs</td></tr>
 <tr><td>29-MAY-2008</td><td>wb/wb</td>
 <td>New command 'create crossreferencefiles' replaces 'create rttfiles'.</td><td>cs</td></tr>
+<tr><td>29-MAY-2008</td><td>xtt/xtt</td>
+<td>Bugfix in display object, didn't work for local mounted volumes,  and attributes in subclasses wasn't selected.</td><td>cs</td></tr>
 <tr><td>28-MAY-2008</td><td>wb/wb</td>
 <td>New crossreference list format.</td><td>cs</td></tr>
 <tr><td>23-MAY-2008</td><td>src/trace</td>
@@ -198,43 +236,43 @@
 <tr><td>14-MAY-2008</td><td>src/co</td>
 <td>'$$' in filenames are replaced by PID.</td><td>cs</td></tr>
 <tr><td>13-MAY-2008</td><td>xtt/ge</td>
-<td>Delete added to menu, accelerator Ctrl+D moved from show grid to delete.</td><td>cs</td></tr>
-<tr><td>13-MAY-2008</td><td>xtt/ge</td>
 <td>Journal file and undo/redo implemented.</td><td>cs</td></tr>
-<tr><td>05-MAY-2008</td><td>xtt/xtt</td>
-<td>Command 'show graph' opens graphs without scrollbar.</td><td>cs</td></tr>
+<tr><td>13-MAY-2008</td><td>xtt/ge</td>
+<td>Delete added to menu, accelerator Ctrl+D moved from show grid to delete.</td><td>cs</td></tr>
 <tr><td>05-MAY-2008</td><td>xtt/brow</td>
 <td>Min and maxvalues for scrollbar adjusted.</td><td>cs</td></tr>
+<tr><td>05-MAY-2008</td><td>xtt/xtt</td>
+<td>Command 'show graph' opens graphs without scrollbar.</td><td>cs</td></tr>
 <tr><td>30-APR-2008</td><td>xtt/ge</td>
 <td>Loaded Subgraphs: 'set all intern' added to menu.</td><td>cs</td></tr>
 <tr><td>30-APR-2008</td><td>src/rt</td>
 <td>Message to transfer a file list added to nethandler protocol.</td><td>cs</td></tr>
 <tr><td>29-APR-2008</td><td>wb/wb</td>
-<td>Default thread object set in PlcPgm object at creation time.</td><td>cs</td></tr>
-<tr><td>29-APR-2008</td><td>wb/wb</td>
-<td>Problems with lost selection when command input is opened fixed.</td><td>cs</td></tr>
+<td>Syntax check in GlobalVolumeList added.</td><td>cs</td></tr>
 <tr><td>29-APR-2008</td><td>xtt/ge</td>
 <td>Problem with initial color palette scrollbar size fixed.</td><td>cs</td></tr>
 <tr><td>29-APR-2008</td><td>wb/wb</td>
-<td>Syntax check in GlobalVolumeList added.</td><td>cs</td></tr>
+<td>Default thread object set in PlcPgm object at creation time.</td><td>cs</td></tr>
+<tr><td>29-APR-2008</td><td>wb/wb</td>
+<td>Problems with lost selection when command input is opened fixed.</td><td>cs</td></tr>
 <tr><td>28-APR-2008</td><td>/.</td>
 <td>Release 4.5.0-5.</td><td>cs</td></tr>
-<tr><td>25-APR-2008</td><td>xtt/xtt</td>
-<td>New commands 'write object' and 'read object'.</td><td>cs</td></tr>
-<tr><td>25-APR-2008</td><td>nmps/wbl</td>
-<td>Plc classes DataFRead and DataFWrite added.</td><td>cs</td></tr>
 <tr><td>25-APR-2008</td><td>xtt/xtt</td>
 <td>New Fileview to read data from file or to save data to file.</td><td>cs</td></tr>
 <tr><td>25-APR-2008</td><td>src/rt_bck</td>
 <td>Increased number of possible backup segments.</td><td>rk</td></tr>
+<tr><td>25-APR-2008</td><td>nmps/wbl</td>
+<td>Plc classes DataFRead and DataFWrite added.</td><td>cs</td></tr>
+<tr><td>25-APR-2008</td><td>xtt/xtt</td>
+<td>New commands 'write object' and 'read object'.</td><td>cs</td></tr>
 <tr><td>18-APR-2008</td><td>wb/wb</td>
 <td>Config file for BerkeleyDb with lk_max_locks and lk_max_objects (db.cnf).</td><td>cs</td></tr>
+<tr><td>14-APR-2008</td><td>src/doc</td>
+<td>Object overview added to Object Reference Manual.</td><td>cs</td></tr>
 <tr><td>14-APR-2008</td><td>wb/wb</td>
 <td>Bugfix in build volume, crossreferences wasn't updated.</td><td>cs</td></tr>
 <tr><td>14-APR-2008</td><td>xtt/ge</td>
 <td>Dynamic DigCommand added.</td><td>cs</td></tr>
-<tr><td>14-APR-2008</td><td>src/doc</td>
-<td>Object overview added to Object Reference Manual.</td><td>cs</td></tr>
 <tr><td>11-APR-2008</td><td>src/rt</td>
 <td>Fixed bug in subc_ActivateList when subscribing from several nodes.</td><td>rk</td></tr>
 <tr><td>08-APR-2008</td><td>xtt/glow</td>
@@ -253,16 +291,16 @@
 <td>Bugfix for unbalanced paranthesis in pdf texts.</td><td>cs</td></tr>
 <tr><td>01-APR-2008</td><td>xtt/xtt</td>
 <td>Bugfix in Jop, java process stopped at termination of xtt.</td><td>cs</td></tr>
-<tr><td>27-MAR-2008</td><td>src/rt_bck</td>
-<td>Backup always on attribute-level instead of object-level.</td><td>rk</td></tr>
 <tr><td>27-MAR-2008</td><td>src/rt</td>
 <td>Changed layout on backup-file.</td><td>rk</td></tr>
+<tr><td>27-MAR-2008</td><td>src/rt_bck</td>
+<td>Backup always on attribute-level instead of object-level.</td><td>rk</td></tr>
 <tr><td>20-MAR-2008</td><td>xtt/ge</td>
 <td>Bugfix in position and size of option menu near lower window border.</td><td>cs</td></tr>
-<tr><td>18-MAR-2008</td><td>abb/-</td>
-<td>ACS800 frequency converter with PPO3 or PPO5 profibus protocol added.</td><td>cs</td></tr>
 <tr><td>18-MAR-2008</td><td>othermanu/-</td>
 <td>Danfoss FC300 frequency converter with PPO3 or PPO5 profibus protocal added.</td><td>cs</td></tr>
+<tr><td>18-MAR-2008</td><td>abb/-</td>
+<td>ACS800 frequency converter with PPO3 or PPO5 profibus protocol added.</td><td>cs</td></tr>
 <tr><td>18-MAR-2008</td><td>wb/wb</td>
 <td>Bugfix in cast. Internal references wasn't updated correctly.</td><td>cs</td></tr>
 <tr><td>17-MAR-2008</td><td>bcomp/bcomp</td>
@@ -275,28 +313,28 @@
 <td>Plc with GetXp or StoXp references to objects in other volumes caused compilation errors.</td><td>cs</td></tr>
 <tr><td>29-FEB-2008</td><td>src/rt</td>
 <td>New generalized i/o-routines for reading and writing to card.</td><td>rk</td></tr>
-<tr><td>29-FEB-2008</td><td>profibus/-</td>
-<td>I/O-handling routines generalized and some routines moved to rt_io_bus.c</td><td>rk</td></tr>
-<tr><td>29-FEB-2008</td><td>src/rt</td>
-<td>New status-messages added for Modbus-I/O.</td><td>rk</td></tr>
 <tr><td>29-FEB-2008</td><td>otherio/modbus</td>
 <td>New I/O-system for Modbus TCP implemented.</td><td>rk</td></tr>
+<tr><td>29-FEB-2008</td><td>src/rt</td>
+<td>New status-messages added for Modbus-I/O.</td><td>rk</td></tr>
+<tr><td>29-FEB-2008</td><td>profibus/-</td>
+<td>I/O-handling routines generalized and some routines moved to rt_io_bus.c</td><td>rk</td></tr>
 <tr><td>27-FEB-2008</td><td>xtt/xtt</td>
 <td>Problems with initial scrollbar settings fixed.</td><td>cs</td></tr>
+<tr><td>26-FEB-2008</td><td>wb/wb</td>
+<td>Popupmenu in palette wasn't implemented in gtk version.</td><td>cs</td></tr>
 <tr><td>26-FEB-2008</td><td>src/help</td>
 <td>New functions in Help window: next and previous topic. Toolbar added.</td><td>cs</td></tr>
 <tr><td>26-FEB-2008</td><td>ssabox/rt</td>
 <td>Read method for co-card changed with double reading of high word (24-bit only).</td><td>cs</td></tr>
-<tr><td>26-FEB-2008</td><td>wb/wb</td>
-<td>Popupmenu in palette wasn't implemented in gtk version.</td><td>cs</td></tr>
-<tr><td>22-FEB-2008</td><td>bcomp/bcomp</td>
-<td>CompModePid: Input limit for setvalue in object graph fetched from MinSet and MaxSet.</td><td>cs</td></tr>
 <tr><td>22-FEB-2008</td><td>wb/wb</td>
 <td>Check that volumeid is in valid range added to directory volume save.</td><td>cs</td></tr>
 <tr><td>22-FEB-2008</td><td>wb/wb</td>
 <td>Spreedsheet editorn: previous value inserted in input field.</td><td>cs</td></tr>
 <tr><td>22-FEB-2008</td><td>wb/wb</td>
 <td>Locale set to us_EN to avoid comma in floatvalues in wb_load files.</td><td>cs</td></tr>
+<tr><td>22-FEB-2008</td><td>bcomp/bcomp</td>
+<td>CompModePid: Input limit for setvalue in object graph fetched from MinSet and MaxSet.</td><td>cs</td></tr>
 <tr><td>06-FEB-2008</td><td>src/statussrv</td>
 <td>Loopback address used for local node.</td><td>cs</td></tr>
 <tr><td>28-JAN-2008</td><td>src/co</td>
@@ -311,32 +349,32 @@
 <td>Subscription initiation optimized in ge graph.</td><td>cs</td></tr>
 <tr><td>22-JAN-2008</td><td>src/pwrb</td>
 <td>Attributes PresMinLimit and PresMaxLimit added to Ii and Io.</td><td>cs</td></tr>
-<tr><td>21-JAN-2008</td><td>xtt/op</td>
-<td>Operator window is popped when new alarm is received.</td><td>cs</td></tr>
 <tr><td>21-JAN-2008</td><td>src/pwrb</td>
 <td>MoreText added to DSup, ASup and CycleSup, and to mh protocol.</td><td>cs</td></tr>
-<tr><td>18-JAN-2008</td><td>src/trace</td>
-<td>Object description viewed as tooltip in trace. Also $PlcMain and $PlcFo translated and viewed in tooltip.</td><td>cs</td></tr>
+<tr><td>21-JAN-2008</td><td>xtt/op</td>
+<td>Operator window is popped when new alarm is received.</td><td>cs</td></tr>
 <tr><td>18-JAN-2008</td><td>xtt/flow</td>
 <td>Tooltip added to flow.</td><td>cs</td></tr>
 <tr><td>18-JAN-2008</td><td>xtt/xtt</td>
 <td>PlcConnect item in popupmenu for connected functionobject wasn't displayed in gtk version.</td><td>cs</td></tr>
-<tr><td>17-JAN-2008</td><td>wb/wb</td>
-<td>Graphmethod 12 added, to read functionobjects drawn in Ge.</td><td>cs</td></tr>
+<tr><td>18-JAN-2008</td><td>src/trace</td>
+<td>Object description viewed as tooltip in trace. Also $PlcMain and $PlcFo translated and viewed in tooltip.</td><td>cs</td></tr>
 <tr><td>17-JAN-2008</td><td>xtt/ge</td>
 <td>Export PlcFo added, drawing of plc function objects in Ge.</td><td>cs</td></tr>
+<tr><td>17-JAN-2008</td><td>wb/wb</td>
+<td>Graphmethod 12 added, to read functionobjects drawn in Ge.</td><td>cs</td></tr>
 <tr><td>16-JAN-2008</td><td>xtt/xtt</td>
 <td>Input of national characters in Ge graph didn't work in gtk version.</td><td>cs</td></tr>
-<tr><td>15-JAN-2008</td><td>xtt/glow</td>
-<td>Bugfix in tooltip position in window objects.</td><td>cs</td></tr>
 <tr><td>15-JAN-2008</td><td>profibus/-</td>
 <td>Reading of Di, Ai and Ii can be disabled by setting ConversionOn in channel object to 0.</td><td>cs</td></tr>
-<tr><td>15-JAN-2008</td><td>xtt/xtt</td>
-<td>Graphs and other files listed in alphabetical order.</td><td>cs</td></tr>
-<tr><td>15-JAN-2008</td><td>bcomp/bcomp</td>
-<td>Bugfix in BaseMotorAggr. Backup on runningtime object didn't work.</td><td>cs</td></tr>
 <tr><td>15-JAN-2008</td><td>wb/wb</td>
 <td>DataName not reset when ASup, DsTrend or DsFast object moved.</td><td>cs</td></tr>
+<tr><td>15-JAN-2008</td><td>bcomp/bcomp</td>
+<td>Bugfix in BaseMotorAggr. Backup on runningtime object didn't work.</td><td>cs</td></tr>
+<tr><td>15-JAN-2008</td><td>xtt/xtt</td>
+<td>Graphs and other files listed in alphabetical order.</td><td>cs</td></tr>
+<tr><td>15-JAN-2008</td><td>xtt/glow</td>
+<td>Bugfix in tooltip position in window objects.</td><td>cs</td></tr>
 <tr><td>14-JAN-2008</td><td>src/doc</td>
 <td>New chapter Class Editor in Designer's Guide.</td><td>cs</td></tr>
 <tr><td>21-DEC-2007</td><td>wb/wb</td>
@@ -370,25 +408,25 @@
 <tr><td>23-NOV-2007</td><td>src/rt</td>
 <td>Bugfix in subc_ActivateList. Subscriptions where not refreshed when remote node restarted. Affects rt_neth_acp.</td><td>rk</td></tr>
 <tr><td>16-NOV-2007</td><td>profibus/-</td>
-<td>Bugfix in Profibus configurator, additional ExtUserPrmDataConst was not handled correctly.</td><td>cs</td></tr>
-<tr><td>16-NOV-2007</td><td>profibus/-</td>
 <td>Bugfix in Profibus configurator, ExtUserPrmData for slave, default values where not set.</td><td>cs</td></tr>
+<tr><td>16-NOV-2007</td><td>profibus/-</td>
+<td>Bugfix in Profibus configurator, additional ExtUserPrmDataConst was not handled correctly.</td><td>cs</td></tr>
 <tr><td>15-NOV-2007</td><td>remote/tcpip</td>
 <td>Fixed several bugs when acting as server.</td><td>rk</td></tr>
-<tr><td>05-NOV-2007</td><td>wb/wb</td>
-<td>Plc plant navigator, objects without children and object attributes can be opened with Shift/Right key.</td><td>cs</td></tr>
 <tr><td>05-NOV-2007</td><td>wb/wb</td>
 <td>Bugfix in plc plant navigator, attribute objects with disable attribute couldn't be opened.</td><td>cs</td></tr>
 <tr><td>05-NOV-2007</td><td>wb/wb</td>
 <td>Symbolic references are not cleared by copy.</td><td>cs</td></tr>
 <tr><td>05-NOV-2007</td><td>wb/wb</td>
+<td>Plc plant navigator, objects without children and object attributes can be opened with Shift/Right key.</td><td>cs</td></tr>
+<tr><td>05-NOV-2007</td><td>wb/wb</td>
 <td>Copy with the ingnore switch, replaces unknown classes with $ClassLost.</td><td>cs</td></tr>
 <tr><td>31-OCT-2007</td><td>bcomp/bcomp</td>
 <td>Bugfix in object graphs for CompPID and CompModePID. Linkage to user and local removed.</td><td>cs</td></tr>
-<tr><td>30-OCT-2007</td><td>bcomp/bcomp</td>
-<td>ConfigureComponent method also viewed for pointed but not selected object.</td><td>cs</td></tr>
 <tr><td>30-OCT-2007</td><td>src/wbl</td>
 <td>Plc classes for bitwise shift, rotate and invert added.</td><td>cs</td></tr>
+<tr><td>30-OCT-2007</td><td>bcomp/bcomp</td>
+<td>ConfigureComponent method also viewed for pointed but not selected object.</td><td>cs</td></tr>
 <tr><td>29-OCT-2007</td><td>src/trend</td>
 <td>DsTrend object attributes with disabled parent wasn't ignored.</td><td>cs</td></tr>
 <tr><td>29-OCT-2007</td><td>src/gdh</td>
@@ -398,19 +436,19 @@
 <tr><td>25-OCT-2007</td><td>wb/wb</td>
 <td>Bugfix in paste/keepoid. Nextoix in volumeobject wasn't updated.</td><td>cs</td></tr>
 <tr><td>19-OCT-2007</td><td>wb/wb</td>
-<td>Bugfix in UpdateClasses, modified object attributes classes wasn't detected if modification date of the main class was later.</td><td>cs</td></tr>
-<tr><td>19-OCT-2007</td><td>wb/wb</td>
 <td>Command 'wb load/noindex' wasn't implemented in V4.</td><td>cs</td></tr>
+<tr><td>19-OCT-2007</td><td>wb/wb</td>
+<td>Bugfix in UpdateClasses, modified object attributes classes wasn't detected if modification date of the main class was later.</td><td>cs</td></tr>
 <tr><td>18-OCT-2007</td><td>xtt/xtt</td>
 <td>Sensitivity setting of method buttons in xtt toolbar delayed to speed up selection with arrow keys.</td><td>cs</td></tr>
 <tr><td>17-OCT-2007</td><td>xtt/flow</td>
 <td>Problems with poor scrolling performance in gtk version fixed.</td><td>cs</td></tr>
 <tr><td>16-OCT-2007</td><td>xtt/ge</td>
 <td>Time format in dynamic Value added: %4t date only and %5t compressed date.</td><td>cs</td></tr>
-<tr><td>15-OCT-2007</td><td>wb/wb</td>
-<td>Bugfix in UpdateClasses, references to attributes in attribute objects wasn't updated.</td><td>cs</td></tr>
 <tr><td>15-OCT-2007</td><td>src/wbl</td>
 <td>Plc classes Demux and IDemux added (demultiplexers).</td><td>cs</td></tr>
+<tr><td>15-OCT-2007</td><td>wb/wb</td>
+<td>Bugfix in UpdateClasses, references to attributes in attribute objects wasn't updated.</td><td>cs</td></tr>
 <tr><td>12-OCT-2007</td><td>wb/plc</td>
 <td>Bugfix, CArea function object inside CArea could segfault.</td><td>cs</td></tr>
 <tr><td>09-OCT-2007</td><td>src/wbl</td>
@@ -427,40 +465,40 @@
 <td>Attribute DisableSup added to most Fo object to suppress alarm messages.</td><td>cs</td></tr>
 <tr><td>26-SEP-2007</td><td>wb/utl</td>
 <td>Listdescriptor search also searches for attribute objects.</td><td>cs</td></tr>
-<tr><td>25-SEP-2007</td><td>src/doc</td>
-<td>Template plc-code for base components viewed as pdf-files in object reference manual.</td><td>cs</td></tr>
 <tr><td>25-SEP-2007</td><td>xtt/flow</td>
 <td>Functionallity to print pdf-files added.</td><td>cs</td></tr>
+<tr><td>25-SEP-2007</td><td>src/doc</td>
+<td>Template plc-code for base components viewed as pdf-files in object reference manual.</td><td>cs</td></tr>
 <tr><td>21-SEP-2007</td><td>src/rt</td>
 <td>Changed qcom synch-mechanism from futex to interprocess mutex/cond-var.</td><td>rk</td></tr>
 <tr><td>21-SEP-2007</td><td>wb/plc</td>
 <td>Change of template plc wasn't always detected at compilation.</td><td>cs</td></tr>
-<tr><td>19-SEP-2007</td><td>wb/wb</td>
-<td>Defaultvalues inserted into template objects when new attribute objects are added to a class.</td><td>cs</td></tr>
 <tr><td>19-SEP-2007</td><td>src/wbl</td>
 <td>New class XyCurve to view a curve of points with x,y coordiantes.</td><td>cs</td></tr>
-<tr><td>18-SEP-2007</td><td>wb/wb</td>
-<td>Lost classes replaced with $ClassLost when reading wb_load file.</td><td>cs</td></tr>
+<tr><td>19-SEP-2007</td><td>wb/wb</td>
+<td>Defaultvalues inserted into template objects when new attribute objects are added to a class.</td><td>cs</td></tr>
 <tr><td>18-SEP-2007</td><td>wb/wb</td>
 <td>More syntax control added to class editor.</td><td>cs</td></tr>
 <tr><td>18-SEP-2007</td><td>src/wbl</td>
 <td>New systemclass $ClassLost to replace lost classes.</td><td>cs</td></tr>
-<tr><td>17-SEP-2007</td><td>java/jop</td>
-<td>Support for XY-curves.</td><td>cs</td></tr>
+<tr><td>18-SEP-2007</td><td>wb/wb</td>
+<td>Lost classes replaced with $ClassLost when reading wb_load file.</td><td>cs</td></tr>
 <tr><td>17-SEP-2007</td><td>wb/plc</td>
 <td>Bugfix, reference connections could not be set in gtk.</td><td>cs</td></tr>
+<tr><td>17-SEP-2007</td><td>java/jop</td>
+<td>Support for XY-curves.</td><td>cs</td></tr>
 <tr><td>17-SEP-2007</td><td>java/rt</td>
 <td>Gdh functions GetObjectInfoFloatArray and GetObjectInfoIntArray added.</td><td>cs</td></tr>
 <tr><td>12-SEP-2007</td><td>xtt/ge</td>
 <td>Component and dynamic for xy-curve added.</td><td>cs</td></tr>
 <tr><td>06-SEP-2007</td><td>src/statussrv</td>
 <td>Functionality to view userstatus added.</td><td>cs</td></tr>
+<tr><td>05-SEP-2007</td><td>wb/wb</td>
+<td>Bugfix in ldh_GetClassListAttrRef, success status was returned though list was empty.</td><td>cs</td></tr>
 <tr><td>05-SEP-2007</td><td>src/doc</td>
 <td>New Guide to I/O Systems.</td><td>cs</td></tr>
 <tr><td>05-SEP-2007</td><td>wb/utl</td>
 <td>Bugfix in listdescriptor. Superclass attributes where not printed.</td><td>cs</td></tr>
-<tr><td>05-SEP-2007</td><td>wb/wb</td>
-<td>Bugfix in ldh_GetClassListAttrRef, success status was returned though list was empty.</td><td>cs</td></tr>
 <tr><td>04-SEP-2007</td><td>xtt/glow</td>
 <td>Property Fix position added to rectangles and polylines.</td><td>cs</td></tr>
 <tr><td>27-AUG-2007</td><td>wb/wtt</td>
@@ -471,26 +509,26 @@
 <td>Mounted volumes wasn't displayed in the Ge plant navigator.</td><td>cs</td></tr>
 <tr><td>22-AUG-2007</td><td>xtt/glow</td>
 <td>Bugfix in text drawing. Minimal text size could cause segfault.</td><td>cs</td></tr>
-<tr><td>21-AUG-2007</td><td>src/convert</td>
-<td>Template with includes inserted at structfile generation.</td><td>cs</td></tr>
 <tr><td>21-AUG-2007</td><td>xtt/xtt</td>
 <td>Console log viewing last page when opened.</td><td>cs</td></tr>
-<tr><td>20-AUG-2007</td><td>xtt/glow</td>
-<td>Problems with the three first colors of the palette as backgroundcolor fixed.</td><td>cs</td></tr>
+<tr><td>21-AUG-2007</td><td>src/convert</td>
+<td>Template with includes inserted at structfile generation.</td><td>cs</td></tr>
 <tr><td>20-AUG-2007</td><td>xtt/glow</td>
 <td>Grid drawing improved.</td><td>cs</td></tr>
-<tr><td>20-JUL-2007</td><td>java/rt</td>
-<td>MhServer didn't terminate at qcom termination message.</td><td>cs</td></tr>
+<tr><td>20-AUG-2007</td><td>xtt/glow</td>
+<td>Problems with the three first colors of the palette as backgroundcolor fixed.</td><td>cs</td></tr>
+<tr><td>20-JUL-2007</td><td>src/co</td>
+<td>Listwidgets: Doubleclick and Enter activates a row.</td><td>cs</td></tr>
 <tr><td>20-JUL-2007</td><td>java/rt</td>
 <td>HistServer didn't listen to qcom termination message.</td><td>cs</td></tr>
 <tr><td>20-JUL-2007</td><td>nmps/celldisp</td>
 <td>Int16 attributes in CellDisp with suffix ##Int16 in attributename.</td><td>cs</td></tr>
-<tr><td>20-JUL-2007</td><td>src/co</td>
-<td>Listwidgets: Doubleclick and Enter activates a row.</td><td>cs</td></tr>
-<tr><td>17-JUL-2007</td><td>wb/plc</td>
-<td>Select next object with Ctrl/Arrow keys. Expand/Compress object moved to Shift/Up and Shift/Down.</td><td>cs</td></tr>
+<tr><td>20-JUL-2007</td><td>java/rt</td>
+<td>MhServer didn't terminate at qcom termination message.</td><td>cs</td></tr>
 <tr><td>17-JUL-2007</td><td>xtt/ge</td>
 <td>Select next object with Ctrl/Arrow keys.</td><td>cs</td></tr>
+<tr><td>17-JUL-2007</td><td>wb/plc</td>
+<td>Select next object with Ctrl/Arrow keys. Expand/Compress object moved to Shift/Up and Shift/Down.</td><td>cs</td></tr>
 <tr><td>15-JUL-2007</td><td>xtt/glow</td>
 <td>Problems in window objects with alternating doublebuffering enabled/disabled fixed.</td><td>cs</td></tr>
 <tr><td>13-JUL-2007</td><td>wb/wb</td>
@@ -499,50 +537,50 @@
 <td>Bugfix in Update Classes. All attribute references wasn't updated.</td><td>cs</td></tr>
 <tr><td>06-JUL-2007</td><td>/.</td>
 <td>Release 4.4.2-1.</td><td>cs</td></tr>
-<tr><td>05-JUL-2007</td><td>xtt/glow</td>
-<td>Bugfix in connections, ConGlue wasn't snapped to grid and connection wasn't drawn when created.</td><td>cs</td></tr>
 <tr><td>05-JUL-2007</td><td>xtt/xtt</td>
 <td>Bugfix in logging, parameters with array index couldn't be restored  from saved entry.</td><td>cs</td></tr>
-<tr><td>04-JUL-2007</td><td>xtt/glow</td>
-<td>Subgraph name size increased from 32 to 80 characters.</td><td>cs</td></tr>
+<tr><td>05-JUL-2007</td><td>xtt/glow</td>
+<td>Bugfix in connections, ConGlue wasn't snapped to grid and connection wasn't drawn when created.</td><td>cs</td></tr>
 <tr><td>04-JUL-2007</td><td>xtt/ge</td>
 <td>Circuitdiagram symbols added.</td><td>cs</td></tr>
+<tr><td>04-JUL-2007</td><td>xtt/glow</td>
+<td>Subgraph name size increased from 32 to 80 characters.</td><td>cs</td></tr>
 <tr><td>29-JUN-2007</td><td>xtt/ge</td>
 <td>New ventilation subgraphs added.</td><td>cs</td></tr>
+<tr><td>29-JUN-2007</td><td>xtt/ge</td>
+<td>New helpentry for subgraphs and help popup menu in subgraph palette.</td><td>cs</td></tr>
 <tr><td>29-JUN-2007</td><td>src/convert</td>
 <td>Generation of xtthelp file from pwg files.</td><td>cs</td></tr>
 <tr><td>29-JUN-2007</td><td>xtt/ge</td>
 <td>New buttons in tools panel for scale double size and half size.</td><td>cs</td></tr>
 <tr><td>29-JUN-2007</td><td>xtt/glow</td>
 <td>Documentation block added to pwg file.</td><td>cs</td></tr>
-<tr><td>29-JUN-2007</td><td>xtt/ge</td>
-<td>New helpentry for subgraphs and help popup menu in subgraph palette.</td><td>cs</td></tr>
 <tr><td>29-JUN-2007</td><td>src/doc</td>
 <td>Subgraph documentation (Graphic Symbol Library) in xtthelp, pdf and html.</td><td>cs</td></tr>
 <tr><td>18-JUN-2007</td><td>wb/wb</td>
 <td>'Copy Selected Tree'->'Before' and 'Last Child' didn't work.</td><td>cs</td></tr>
-<tr><td>15-JUN-2007</td><td>wb/wb</td>
-<td>Bugfix, remaining selection clear event after in palette and plant navigator could cause segfault.</td><td>cs</td></tr>
 <tr><td>15-JUN-2007</td><td>bcomp/bcomp</td>
 <td>New components for filter, damper and three way valve.</td><td>cs</td></tr>
+<tr><td>15-JUN-2007</td><td>wb/wb</td>
+<td>Bugfix, remaining selection clear event after in palette and plant navigator could cause segfault.</td><td>cs</td></tr>
 <tr><td>15-JUN-2007</td><td>xtt/glow</td>
 <td>Bug fix in connection direction for objects both rotated and mirrored.</td><td>cs</td></tr>
 <tr><td>12-JUN-2007</td><td>xtt/glow</td>
 <td>Fixcolor added to polyline properties.</td><td>cs</td></tr>
 <tr><td>05-JUN-2007</td><td>wb/distr</td>
 <td>Bugfix, distribute to specified bootnode didn't work.</td><td>cs</td></tr>
+<tr><td>01-JUN-2007</td><td>profibus/-</td>
+<td>Bugfix, opening Profibus Configurator with empty gsdfile attribute caused segfault.</td><td>cs</td></tr>
 <tr><td>01-JUN-2007</td><td>src/com</td>
 <td>Stub for Xtt helpfile is created when project a is created.</td><td>cs</td></tr>
 <tr><td>01-JUN-2007</td><td>opc/-</td>
 <td>Problems with national characters fixed.</td><td>cs</td></tr>
-<tr><td>01-JUN-2007</td><td>profibus/-</td>
-<td>Bugfix, opening Profibus Configurator with empty gsdfile attribute caused segfault.</td><td>cs</td></tr>
 <tr><td>01-JUN-2007</td><td>opc/-</td>
 <td>Problems with memory leakage fixed.</td><td>cs</td></tr>
-<tr><td>28-MAY-2007</td><td>nmps/bck</td>
-<td>Env variable allowed in backup filename.</td><td>cs</td></tr>
 <tr><td>28-MAY-2007</td><td>wb/plc</td>
 <td>Bugfix, DSup and ASup attribute wasn't updated if the connection was changed.</td><td>cs</td></tr>
+<tr><td>28-MAY-2007</td><td>nmps/bck</td>
+<td>Env variable allowed in backup filename.</td><td>cs</td></tr>
 <tr><td>28-MAY-2007</td><td>remote/logg</td>
 <td>Env variable allowed in remotelogg filename.</td><td>cs</td></tr>
 <tr><td>28-MAY-2007</td><td>wb/wb</td>
@@ -553,34 +591,34 @@
 <td>More c-printf compatible output format implemented.</td><td>cs</td></tr>
 <tr><td>22-MAY-2007</td><td>xtt/glow</td>
 <td>Support for center and right alignment of texts also in java.</td><td>cs</td></tr>
+<tr><td>21-MAY-2007</td><td>src/statussrv</td>
+<td>New soap request to open xtt.</td><td>cs</td></tr>
 <tr><td>21-MAY-2007</td><td>/.</td>
 <td>Release 4.4.1-1.</td><td>cs</td></tr>
 <tr><td>21-MAY-2007</td><td>xtt/statusmon</td>
 <td>Xtt and operator place can be opened from from status monitor.</td><td>cs</td></tr>
-<tr><td>21-MAY-2007</td><td>src/statussrv</td>
-<td>New soap request to open xtt.</td><td>cs</td></tr>
+<tr><td>18-MAY-2007</td><td>ssabox/rt</td>
+<td>Added i/o swap-method to avoid stall during warm restart.</td><td>rk</td></tr>
 <tr><td>18-MAY-2007</td><td>profibus/-</td>
 <td>Added io-method IoAgentSwap to keep driver initialized during warm restart.</td><td>rk</td></tr>
 <tr><td>18-MAY-2007</td><td>src/rt</td>
 <td>Added new i/o swap-method to avoid stall during warm restart.</td><td>rk</td></tr>
-<tr><td>18-MAY-2007</td><td>ssabox/rt</td>
-<td>Added i/o swap-method to avoid stall during warm restart.</td><td>rk</td></tr>
-<tr><td>16-MAY-2007</td><td>wb/wtt</td>
-<td>New tools menu with Runtime Monitor and Supervision Center (gtk only). could be interpreted as attrref to whole object.</td><td>cs</td></tr>
-<tr><td>16-MAY-2007</td><td>src/co</td>
-<td>New Runtime Monitor to start and monitor runtime env on local node.</td><td>cs</td></tr>
 <tr><td>16-MAY-2007</td><td>src/co</td>
 <td>New Status Monitor to supervise status of stations via webservice. </td><td>cs</td></tr>
 <tr><td>16-MAY-2007</td><td>xtt/xtt</td>
 <td>Switch -s in rt_xtt (gtk only): an opplace can be choosen from a list.</td><td>cs</td></tr>
+<tr><td>16-MAY-2007</td><td>src/co</td>
+<td>New Runtime Monitor to start and monitor runtime env on local node.</td><td>cs</td></tr>
+<tr><td>16-MAY-2007</td><td>wb/wtt</td>
+<td>New tools menu with Runtime Monitor and Supervision Center (gtk only). could be interpreted as attrref to whole object.</td><td>cs</td></tr>
 <tr><td>10-MAY-2007</td><td>xtt/flow</td>
 <td>Colored rectangles are still colored at inverse drawing.</td><td>cs</td></tr>
 <tr><td>08-MAY-2007</td><td>src/rt</td>
 <td>Webservice handling system status requests implemented.</td><td>cs</td></tr>
 <tr><td>07-MAY-2007</td><td>xtt/ge</td>
-<td>Problems with national characters in ge text fixed.</td><td>cs</td></tr>
-<tr><td>07-MAY-2007</td><td>xtt/ge</td>
 <td>Support for fonts Times, NC Schoolbook and Courier.</td><td>cs</td></tr>
+<tr><td>07-MAY-2007</td><td>xtt/ge</td>
+<td>Problems with national characters in ge text fixed.</td><td>cs</td></tr>
 <tr><td>04-MAY-2007</td><td>src/co</td>
 <td>Problems with input focus crash for iconified motif windows fixed.</td><td>cs</td></tr>
 <tr><td>03-MAY-2007</td><td>xtt/xtt</td>
@@ -595,38 +633,38 @@
 <td>Changed error handling so that sporadic error are allowed  and does not cause system to halt</td><td>rk</td></tr>
 <tr><td>26-APR-2007</td><td>siemens/rt</td>
 <td>Added IO-method's for Siemens_DiagRepeater.</td><td>rk</td></tr>
-<tr><td>26-APR-2007</td><td>profibus/-</td>
-<td>Added gsd-file si0380a7.gsd, for Siemens Diagnostic Repeater.</td><td>rk</td></tr>
 <tr><td>26-APR-2007</td><td>xtt/glow</td>
 <td>Bugfix in imageobject, image was not always freed when graph was closed.</td><td>cs</td></tr>
 <tr><td>26-APR-2007</td><td>siemens/wbl</td>
 <td>New profibus slave classe for Siemens Diagnostic Repeater, pwr_sClass_Siemens_DiagRepeater.</td><td>rk</td></tr>
+<tr><td>26-APR-2007</td><td>profibus/-</td>
+<td>Added gsd-file si0380a7.gsd, for Siemens Diagnostic Repeater.</td><td>rk</td></tr>
 <tr><td>25-APR-2007</td><td>xtt/ge</td>
 <td>Bit type added in DigColor to view bits in a bitmap.</td><td>cs</td></tr>
+<tr><td>24-APR-2007</td><td>src/wbl</td>
+<td>New plc classes for Get end CSto of attributes in externvolumes. </td><td>cs</td></tr>
 <tr><td>24-APR-2007</td><td>src/rt</td>
 <td>NULL argument for subid in gdh_RefObjectInfo allowed.</td><td>cs</td></tr>
-<tr><td>24-APR-2007</td><td>src/wbl</td>
-<td>New types Int64 and UInt64.</td><td>cs</td></tr>
 <tr><td>24-APR-2007</td><td>opc/-</td>
 <td>Opc XML/DA server and client.</td><td>cs</td></tr>
 <tr><td>24-APR-2007</td><td>src/wbl</td>
-<td>New plc classes for Get end CSto of attributes in externvolumes. </td><td>cs</td></tr>
+<td>New types Int64 and UInt64.</td><td>cs</td></tr>
 <tr><td>19-APR-2007</td><td>wb/wtt</td>
 <td>Script functions GetClassList and GetNextObject added.</td><td>cs</td></tr>
-<tr><td>17-APR-2007</td><td>src/co</td>
-<td>Locale set when language is set.</td><td>cs</td></tr>
 <tr><td>17-APR-2007</td><td>wb/wtt</td>
 <td>Bugfix in plc connect, attribute reference to an object in a mounted voume had incorrect size. </td><td>cs</td></tr>
 <tr><td>17-APR-2007</td><td>src/rt</td>
 <td>Bugfix in mvol_ArefToAttribute, an attribute name was returned for attrref refering whole object.</td><td>cs</td></tr>
+<tr><td>17-APR-2007</td><td>src/co</td>
+<td>Locale set when language is set.</td><td>cs</td></tr>
 <tr><td>02-APR-2007</td><td>xtt/ge</td>
 <td>Dyntype invisible works also for attributes of type Float32.</td><td>cs</td></tr>
+<tr><td>27-MAR-2007</td><td>xtt/ge</td>
+<td>Problems with national characters in ge attribute editor fixed.</td><td>cs</td></tr>
 <tr><td>27-MAR-2007</td><td>xtt/ge</td>
 <td>Bugfix in navigator window, drawing attempt in zero buffer removed.</td><td>cs</td></tr>
 <tr><td>27-MAR-2007</td><td>wb/wb</td>
 <td>wb_motif: Window utility object was deleted before License window was closed.</td><td>cs</td></tr>
-<tr><td>27-MAR-2007</td><td>xtt/ge</td>
-<td>Problems with national characters in ge attribute editor fixed.</td><td>cs</td></tr>
 <tr><td>02-MAR-2007</td><td>wb/wtt</td>
 <td>Bugfix in object editor, Used checkbox affected wrong input in some cases (C Order).</td><td>cs</td></tr>
 <tr><td>01-MAR-2007</td><td>opc/-</td>
@@ -639,96 +677,96 @@
 <td>Bugfix in input focus when value input was closed.</td><td>cs</td></tr>
 <tr><td>19-FEB-2007</td><td>profibus/-</td>
 <td>Bugfix in ExtUserPrmDataConst.</td><td>cs</td></tr>
-<tr><td>09-FEB-2007</td><td>profibus/-</td>
-<td>Bugfix in Ext_User_Prm_Data_Len.</td><td>cs</td></tr>
 <tr><td>09-FEB-2007</td><td>/.</td>
 <td>Release 4.3.0-1.</td><td>cs</td></tr>
+<tr><td>09-FEB-2007</td><td>profibus/-</td>
+<td>Bugfix in Ext_User_Prm_Data_Len.</td><td>cs</td></tr>
 <tr><td>07-FEB-2007</td><td>profibus/-</td>
 <td>Adapted I/O routines to work with new driver for Softing Profiboard. Incorporated driver API from Softing to work with new Softing driver. Added diagnostics infomation to pwr_sClass_Pb_DP_Slave-class.</td><td>rk</td></tr>
 <tr><td>06-FEB-2007</td><td>wb/wb</td>
 <td>Bugfix in volumereferences in loadfiles. Casted attributes wasn't always checked.</td><td>cs</td></tr>
-<tr><td>30-JAN-2007</td><td>src/init</td>
-<td>Process rt_webmonelog (web eventlog server) added to startup.</td><td>cs</td></tr>
-<tr><td>30-JAN-2007</td><td>java/jop</td>
-<td>Default background color in GeTextField changed from Inherit to lightgrey.</td><td>cs</td></tr>
+<tr><td>30-JAN-2007</td><td>xtt/web</td>
+<td>_opwin removed from homepage name. index.html set as defaultname.</td><td>cs</td></tr>
 <tr><td>30-JAN-2007</td><td>java/web</td>
 <td>Button for Eventlog in operators menu added.</td><td>cs</td></tr>
-<tr><td>30-JAN-2007</td><td>bcomp/bcomp</td>
-<td>New components for On/Off burner control, CompOnOffBurner and CompOnOffZone.</td><td>cs</td></tr>
 <tr><td>30-JAN-2007</td><td>src/wbl</td>
 <td>Attribute LoadArchives added to WebHandler with new type WebLoadArchiveMask.</td><td>cs</td></tr>
 <tr><td>30-JAN-2007</td><td>xtt/web</td>
-<td>_opwin removed from homepage name. index.html set as defaultname.</td><td>cs</td></tr>
-<tr><td>30-JAN-2007</td><td>xtt/web</td>
 <td>Possibility to configure which objectgraph jar-files that should be loaded (BaseComponent or ABB).</td><td>cs</td></tr>
+<tr><td>30-JAN-2007</td><td>java/jop</td>
+<td>Default background color in GeTextField changed from Inherit to lightgrey.</td><td>cs</td></tr>
+<tr><td>30-JAN-2007</td><td>src/init</td>
+<td>Process rt_webmonelog (web eventlog server) added to startup.</td><td>cs</td></tr>
+<tr><td>30-JAN-2007</td><td>bcomp/bcomp</td>
+<td>New components for On/Off burner control, CompOnOffBurner and CompOnOffZone.</td><td>cs</td></tr>
 <tr><td>29-JAN-2007</td><td>java/web</td>
 <td>Bugfix in dynamic HostObject in web interface.</td><td>cs</td></tr>
 <tr><td>25-JAN-2007</td><td>xtt/ev</td>
 <td>Problem with double appearence of alarm when communication is bad fixed.</td><td>cs</td></tr>
-<tr><td>24-JAN-2007</td><td>wb/wb</td>
-<td>Click time increated for MB2 (create object) in wtt.</td><td>cs</td></tr>
-<tr><td>24-JAN-2007</td><td>src/io</td>
-<td>Check at io startup if multiple signals are connected to the same channel.</td><td>cs</td></tr>
-<tr><td>24-JAN-2007</td><td>wb/plc</td>
-<td>'Create Object' added to the Plc Editor popupmenu.</td><td>cs</td></tr>
-<tr><td>24-JAN-2007</td><td>src/wbl</td>
-<td>Attribute BuildCmd moved/added to Application and PlcProcess.</td><td>cs</td></tr>
 <tr><td>24-JAN-2007</td><td>wb/wtt</td>
 <td>Application build method for Application and PlcProcess objects. </td><td>cs</td></tr>
+<tr><td>24-JAN-2007</td><td>wb/plc</td>
+<td>'Create Object' added to the Plc Editor popupmenu.</td><td>cs</td></tr>
+<tr><td>24-JAN-2007</td><td>wb/wb</td>
+<td>Click time increated for MB2 (create object) in wtt.</td><td>cs</td></tr>
+<tr><td>24-JAN-2007</td><td>src/wbl</td>
+<td>Attribute BuildCmd moved/added to Application and PlcProcess.</td><td>cs</td></tr>
+<tr><td>24-JAN-2007</td><td>src/io</td>
+<td>Check at io startup if multiple signals are connected to the same channel.</td><td>cs</td></tr>
 <tr><td>23-JAN-2007</td><td>wb/wb</td>
 <td>Connect methods for GetATv, StoAtv, CStoATv, GetDTv etc added.</td><td>cs</td></tr>
-<tr><td>23-JAN-2007</td><td>wb/wb</td>
-<td>Bugfix in trace attribute for GetIpToA.</td><td>cs</td></tr>
 <tr><td>23-JAN-2007</td><td>xtt/xtt</td>
 <td>Bugfix in remtrans table. If multicast object found, object was not displayed. </td><td>cs</td></tr>
+<tr><td>23-JAN-2007</td><td>wb/wb</td>
+<td>Bugfix in trace attribute for GetIpToA.</td><td>cs</td></tr>
 <tr><td>17-JAN-2007</td><td>xtt/ge</td>
 <td>Property EscapeStore for dynamic type ValueInput added.</td><td>cs</td></tr>
-<tr><td>16-JAN-2007</td><td>wb/plc</td>
+<tr><td>16-JAN-2007</td><td>src/trace</td>
 <td>Mouse Scroll events added.</td><td>cs</td></tr>
 <tr><td>16-JAN-2007</td><td>xtt/xtt</td>
 <td>Toolbar with icons for the methods of the selected object added.</td><td>cs</td></tr>
-<tr><td>16-JAN-2007</td><td>src/trace</td>
+<tr><td>16-JAN-2007</td><td>wb/plc</td>
 <td>Mouse Scroll events added.</td><td>cs</td></tr>
 <tr><td>15-JAN-2007</td><td>xtt/curve</td>
 <td>Scroll and zoom with arrow keys and mouse wheel. Scroll buttons in tools.  </td><td>cs</td></tr>
-<tr><td>12-JAN-2007</td><td>xtt/xtt</td>
-<td>Gtk version of xtt.</td><td>cs</td></tr>
+<tr><td>12-JAN-2007</td><td>wb/wb</td>
+<td>Gtk version of wb.</td><td>cs</td></tr>
 <tr><td>12-JAN-2007</td><td>xtt/xtt</td>
 <td>Font size in alarmtexts in operator window can be changed.</td><td>cs</td></tr>
 <tr><td>12-JAN-2007</td><td>xtt/xtt</td>
-<td>Nodename displayed i Xtt title.</td><td>cs</td></tr>
+<td>Gtk version of xtt.</td><td>cs</td></tr>
 <tr><td>12-JAN-2007</td><td>xtt/ge</td>
 <td>Fileview for import of pwg and image files.</td><td>cs</td></tr>
-<tr><td>12-JAN-2007</td><td>wb/wb</td>
-<td>Gtk version of wb.</td><td>cs</td></tr>
 <tr><td>12-JAN-2007</td><td>xtt/xtt</td>
 <td>New syntax for function key definition file (gtk version).</td><td>cs</td></tr>
 <tr><td>12-JAN-2007</td><td>src/trace</td>
 <td>Gtk version of rt_trace. Navigator window inserted in main window.</td><td>cs</td></tr>
+<tr><td>12-JAN-2007</td><td>xtt/xtt</td>
+<td>Nodename displayed i Xtt title.</td><td>cs</td></tr>
 <tr><td>10-OCT-2006</td><td>wb/pkg</td>
 <td>Support for bootnodes added, i.e. copying of package to other  nodes than the actual process or operator station.</td><td>cs</td></tr>
 <tr><td>05-SEP-2006</td><td>src/rt_qmon</td>
 <td>Wait a while for correct scheduler to be set before starting threads.</td><td>rk</td></tr>
-<tr><td>05-SEP-2006</td><td>src/plc</td>
-<td>Wait for all threads to set its priority before changing real and effective user id.</td><td>rk</td></tr>
 <tr><td>05-SEP-2006</td><td>src/rt_tmon</td>
 <td>Established new callback function for glibc malloc memory checks.</td><td>rk</td></tr>
+<tr><td>05-SEP-2006</td><td>src/plc</td>
+<td>Wait for all threads to set its priority before changing real and effective user id.</td><td>rk</td></tr>
 <tr><td>30-AUG-2006</td><td>src/convert</td>
 <td>Attribute changed from enum to mask or v.v. was not converted.</td><td>cs</td></tr>
 <tr><td>22-AUG-2006</td><td>wb/wb</td>
 <td>Performance improved when opening a node, and displaying the packages in the distributor.</td><td>cs</td></tr>
-<tr><td>27-JUL-2006</td><td>wb/plc</td>
-<td>Execute order was not displayed on aarithm objects and other objects with                     graphmethod 2.</td><td>cs</td></tr>
 <tr><td>27-JUL-2006</td><td>bcomp/bcomp</td>
 <td>Defaultvalue for BasePressureSensor.Trend.DataName corrected.</td><td>cs</td></tr>
+<tr><td>27-JUL-2006</td><td>wb/plc</td>
+<td>Execute order was not displayed on aarithm objects and other objects with                     graphmethod 2.</td><td>cs</td></tr>
 <tr><td>25-JUL-2006</td><td>profibus/-</td>
 <td>Byte order dependency added for PRM data in profibus configurator.</td><td>cs</td></tr>
 <tr><td>20-JUL-2006</td><td>src/init</td>
 <td>Try with smaller posix message queue if system does not support big queues.</td><td>rk</td></tr>
-<tr><td>13-JUL-2006</td><td>src/rt</td>
-<td>Bugfix in classcache for large classes.</td><td>rk</td></tr>
 <tr><td>13-JUL-2006</td><td>src/init</td>
 <td>Volume versioncheck for volref removed if volume is not yet loaded.</td><td>rk</td></tr>
+<tr><td>13-JUL-2006</td><td>src/rt</td>
+<td>Bugfix in classcache for large classes.</td><td>rk</td></tr>
 <tr><td>12-JUL-2006</td><td>abb/-</td>
 <td>ABB_ACS800_Slave: IORack bit was missing.</td><td>cs</td></tr>
 <tr><td>11-JUL-2006</td><td>wb/utl</td>
@@ -747,24 +785,24 @@
 <td>New Value, ValueInput and Button subgraphs with Right and Center adjustment.</td><td>cs</td></tr>
 <tr><td>27-JUN-2006</td><td>bcomp/bcomp</td>
 <td>Hysteresis in object graph for BaseSensor and subclasses displayed wrong value.</td><td>cs</td></tr>
-<tr><td>15-JUN-2006</td><td>xtt/xtt</td>
-<td>Object attributes channels and signals displayed in Device table.</td><td>cs</td></tr>
 <tr><td>15-JUN-2006</td><td>wb/plc</td>
 <td>Search string didn't search in AttrRef attributes.</td><td>cs</td></tr>
+<tr><td>15-JUN-2006</td><td>xtt/xtt</td>
+<td>Object attributes channels and signals displayed in Device table.</td><td>cs</td></tr>
 <tr><td>07-JUN-2006</td><td>wb/wb</td>
 <td>Bugfix in wb_name, segment(0) returned invalid name for root objects.</td><td>cs</td></tr>
-<tr><td>30-MAY-2006</td><td>wb/wb</td>
-<td>UpdateClasses also converts the input and output masks in function objects.</td><td>cs</td></tr>
 <tr><td>30-MAY-2006</td><td>wb/wtt</td>
 <td>Bugfix: change text without selecting any text object caused segfault.</td><td>cs</td></tr>
 <tr><td>30-MAY-2006</td><td>bcomp/bcomp</td>
 <td>Local mode added to CompModeDM and BaseMValve.</td><td>cs</td></tr>
-<tr><td>24-MAY-2006</td><td>wb/wtt</td>
-<td>Bugfix in classeditor. Change of classname caused unidentified class of the template object of the class.</td><td>cs</td></tr>
-<tr><td>24-MAY-2006</td><td>xtt/ge</td>
-<td>Property for selected cell color in GrowTable.</td><td>cs</td></tr>
+<tr><td>30-MAY-2006</td><td>wb/wb</td>
+<td>UpdateClasses also converts the input and output masks in function objects.</td><td>cs</td></tr>
 <tr><td>24-MAY-2006</td><td>wb/wb</td>
 <td>StructName in ObjBodyDef inserted in PostCreate method.</td><td>cs</td></tr>
+<tr><td>24-MAY-2006</td><td>xtt/ge</td>
+<td>Property for selected cell color in GrowTable.</td><td>cs</td></tr>
+<tr><td>24-MAY-2006</td><td>wb/wtt</td>
+<td>Bugfix in classeditor. Change of classname caused unidentified class of the template object of the class.</td><td>cs</td></tr>
 <tr><td>23-MAY-2006</td><td>src/pwrb</td>
 <td>New class GetDatap added, to fetch datainputs in template plc.</td><td>cs</td></tr>
 <tr><td>22-MAY-2006</td><td>bcomp/bcomp</td>
@@ -775,56 +813,56 @@
 <td>Update Class added in menu, and new commands: 'update classes' and 'check classes'.</td><td>cs</td></tr>
 <tr><td>19-MAY-2006</td><td>wb/wb</td>
 <td>Update of instance objects when a class is modified (without reload).</td><td>lw</td></tr>
-<tr><td>16-MAY-2006</td><td>src/wbl</td>
-<td>Attribute ManMode added to Mode class, to avoid code in object graph.</td><td>cs</td></tr>
-<tr><td>16-MAY-2006</td><td>xtt/ge</td>
-<td>Object instances can be used in graphs in Window and Folder objects.</td><td>cs</td></tr>
+<tr><td>16-MAY-2006</td><td>xtt/glow</td>
+<td>Owner added to GrowWindow and GrowFolder.</td><td>cs</td></tr>
 <tr><td>16-MAY-2006</td><td>xtt/ge</td>
 <td>Possibility to use local database in DigLowColor, ToggleDig, Slider insensitiv, and Invisible.</td><td>cs</td></tr>
 <tr><td>16-MAY-2006</td><td>xtt/ge</td>
+<td>Object instances can be used in graphs in Window and Folder objects.</td><td>cs</td></tr>
+<tr><td>16-MAY-2006</td><td>xtt/ge</td>
 <td>Bit type added in Invisible to check visibility on bits in a bitmap.</td><td>cs</td></tr>
-<tr><td>16-MAY-2006</td><td>xtt/glow</td>
-<td>Owner added to GrowWindow and GrowFolder.</td><td>cs</td></tr>
+<tr><td>16-MAY-2006</td><td>src/wbl</td>
+<td>Attribute ManMode added to Mode class, to avoid code in object graph.</td><td>cs</td></tr>
 <tr><td>12-MAY-2006</td><td>src/rt</td>
 <td>Conversion between different versions av classes handles conversion from Objid to AttrRef and from AttrRef to Objid.</td><td>cs</td></tr>
-<tr><td>11-MAY-2006</td><td>src/wbl</td>
-<td>Possibility to freeze dbs versions, i.e. minor changes can be made without version mismatch.</td><td>cs</td></tr>
-<tr><td>11-MAY-2006</td><td>xtt/ge</td>
-<td>Bugfix in Ge Open window, null filename could cause empty list.</td><td>cs</td></tr>
 <tr><td>11-MAY-2006</td><td>wb/wtt</td>
 <td>Build Node window is not displayed if there is only one configured  node for the current volume. Submenu on Build removed.</td><td>cs</td></tr>
-<tr><td>09-MAY-2006</td><td>profibus/-</td>
-<td>Added some commentation. Fixed bug in pb_ai and pb_di. 3-byte input where not properly aligned when byte swapping.</td><td>cj</td></tr>
+<tr><td>11-MAY-2006</td><td>xtt/ge</td>
+<td>Bugfix in Ge Open window, null filename could cause empty list.</td><td>cs</td></tr>
+<tr><td>11-MAY-2006</td><td>src/wbl</td>
+<td>Possibility to freeze dbs versions, i.e. minor changes can be made without version mismatch.</td><td>cs</td></tr>
 <tr><td>09-MAY-2006</td><td>bcomp/bcomp</td>
 <td>Attribute DisableAlarm added to CompLimit to make it possible to use the limit supervision in BaseSensor without alarm.</td><td>cs</td></tr>
+<tr><td>09-MAY-2006</td><td>profibus/-</td>
+<td>Added some commentation. Fixed bug in pb_ai and pb_di. 3-byte input where not properly aligned when byte swapping.</td><td>cj</td></tr>
 <tr><td>08-MAY-2006</td><td>wb/wtt</td>
 <td>References in superclass was not displayed in the navigator when option Object Reference or Attribute Reference was selected.</td><td>cs</td></tr>
 <tr><td>05-MAY-2006</td><td>wb/wtt</td>
 <td>Separate ld_node file for each node. Possibility to configure a FriendNode object under a NodeConfig object.</td><td>cs</td></tr>
 <tr><td>04-MAY-2006</td><td>siemens/wbl</td>
 <td>New profibus module classes for ET200M, and slave classes for IM153 and IM155</td><td>cs</td></tr>
-<tr><td>02-MAY-2006</td><td>src/co</td>
-<td>Bugfix in time_Dcomp, 0 was not returned for equal times.</td><td>cs</td></tr>
 <tr><td>02-MAY-2006</td><td>src/pwrb</td>
 <td>New signals for absolute and delta time, and plc objects for time arithmetics added.</td><td>cs</td></tr>
-<tr><td>26-APR-2006</td><td>wb/plc</td>
-<td>Bugfix in dataarithm compilation, space at end of line could cause error.</td><td>cs</td></tr>
+<tr><td>02-MAY-2006</td><td>src/co</td>
+<td>Bugfix in time_Dcomp, 0 was not returned for equal times.</td><td>cs</td></tr>
 <tr><td>26-APR-2006</td><td>wb/plc</td>
 <td>Bugfix in GetData compilation, error when referenced parameter was a type (not a class) not handled.</td><td>cs</td></tr>
+<tr><td>26-APR-2006</td><td>wb/plc</td>
+<td>Bugfix in dataarithm compilation, space at end of line could cause error.</td><td>cs</td></tr>
+<tr><td>31-MAR-2006</td><td>wb/wtt</td>
+<td>Copy with keep references added to wtt menu.</td><td>cs</td></tr>
+<tr><td>31-MAR-2006</td><td>wb/wtt</td>
+<td>Configuration wizard started when entering an empty directoryvolume.</td><td>cs</td></tr>
+<tr><td>31-MAR-2006</td><td>xtt/glow</td>
+<td>Bugfix in annotation input. Insert of new characters might cause segmentation fault.</td><td>cs</td></tr>
 <tr><td>31-MAR-2006</td><td>src/pwrs</td>
 <td>Modified attribute added to RootVolume, SubVolume and SharedVolume.</td><td>cs</td></tr>
 <tr><td>31-MAR-2006</td><td>wb/wtt</td>
 <td>Build methods added. 'Compile', 'create loadfile' and 'create bootfile' replaced by 'build object', 'build volume' and 'build node'. 'build object', 'build volume' and 'build node' also available as wtt commands.</td><td>cs</td></tr>
-<tr><td>31-MAR-2006</td><td>xtt/glow</td>
-<td>Bugfix in annotation input. Insert of new characters might cause segmentation fault.</td><td>cs</td></tr>
-<tr><td>31-MAR-2006</td><td>wb/wtt</td>
-<td>Configuration wizard started when entering an empty directoryvolume.</td><td>cs</td></tr>
-<tr><td>31-MAR-2006</td><td>wb/wtt</td>
-<td>Copy with keep references added to wtt menu.</td><td>cs</td></tr>
-<tr><td>17-MAR-2006</td><td>src/qcom</td>
-<td>Changed interface to qcom_Put. Added attributes msg_id and prio in qcom_sPut structure.</td><td>rk</td></tr>
 <tr><td>17-MAR-2006</td><td>src/qcom</td>
 <td>Replaces old unsent subscriptions with new fresh ones.</td><td>rk</td></tr>
+<tr><td>17-MAR-2006</td><td>src/qcom</td>
+<td>Changed interface to qcom_Put. Added attributes msg_id and prio in qcom_sPut structure.</td><td>rk</td></tr>
 <tr><td>17-MAR-2006</td><td>src/rt_tmon</td>
 <td>Cleaning (zero-ing) of timed out subscription data.</td><td>rk</td></tr>
 <tr><td>07-MAR-2006</td><td>xtt/gedyn</td>
@@ -837,24 +875,24 @@
 <td>Check before creating a toplevel object if class is a valid in the current window.</td><td>cs</td></tr>
 <tr><td>23-FEB-2006</td><td>wb/wnav</td>
 <td>New wizard for configuration of directory volume.</td><td>cs</td></tr>
-<tr><td>22-FEB-2006</td><td>src/xtthelp</td>
-<td>Bugfix, bookmark in xtthelp was case sensitive.</td><td>cs</td></tr>
 <tr><td>22-FEB-2006</td><td>src/convert</td>
 <td>Bookmark inserted for every attribute in class xtthelp.</td><td>cs</td></tr>
+<tr><td>22-FEB-2006</td><td>src/xtthelp</td>
+<td>Bugfix, bookmark in xtthelp was case sensitive.</td><td>cs</td></tr>
 <tr><td>21-FEB-2006</td><td>wb/wnav</td>
 <td>Popupmenu for object with DevBody only could not be opened.</td><td>cs</td></tr>
 <tr><td>21-FEB-2006</td><td>wb/ldh</td>
 <td>Bugfix. Unhandled exception in DeleteObject and DeleteTree if not in edit mode.</td><td>cs</td></tr>
 <tr><td>20-FEB-2006</td><td>src/script</td>
-<td>'delete' statement added to remove external variables.</td><td>cs</td></tr>
-<tr><td>20-FEB-2006</td><td>src/script</td>
 <td>'#' alternative to '!' for comment in script.</td><td>cs</td></tr>
+<tr><td>20-FEB-2006</td><td>wb/script</td>
+<td>New script functions SetAttribute, OpenGraph, CloseGraph,  SetSubwindow and CheckSystemGroup.</td><td>cs</td></tr>
+<tr><td>20-FEB-2006</td><td>src/script</td>
+<td>'delete' statement added to remove external variables.</td><td>cs</td></tr>
 <tr><td>20-FEB-2006</td><td>xtt/ge</td>
 <td>Connect to script extern variables in Value, Invisible, SetDig, ToggleDig, DigShift and OptionMenu.</td><td>cs</td></tr>
 <tr><td>20-FEB-2006</td><td>wb/wnav</td>
 <td>New commands: open graph, delete graph, set subwindow and release subwindow.</td><td>cs</td></tr>
-<tr><td>20-FEB-2006</td><td>wb/script</td>
-<td>New script functions SetAttribute, OpenGraph, CloseGraph,  SetSubwindow and CheckSystemGroup.</td><td>cs</td></tr>
 <tr><td>19-FEB-2006</td><td>xtt/gedyn</td>
 <td>Bugfix in GeValue: string was sometimes updated every scan.</td><td>cs</td></tr>
 <tr><td>19-FEB-2006</td><td>wb/wnav</td>

@@ -169,7 +169,7 @@ class ApplList {
 class WNavGbl {
   public:
     WNavGbl() :
-      priv(0), verify(0), advanced_user(0), all_toplevel(0), bypass(0),
+      priv(0), verify(0), advanced_user(1), all_toplevel(0), bypass(0),
       show_class(1), show_alias(0), show_descrip(1), show_attrref(0), 
       show_attrxref(0), show_objref(0), show_objxref(0), show_truedb(0)
       {

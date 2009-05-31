@@ -562,12 +562,13 @@ void  OpGtk::update_alarm_info()
 int OpGtk::configure( char *opplace_str)
 {
   int 		sts;
-  int		i;
+  unsigned int 	i;
   pwr_tObjid 	opplace;
   pwr_tObjid 	user;
   pwr_sClass_OpPlace *opplace_p;
   pwr_sClass_User *user_p;
   pwr_sAttrRef	attrref;
+  pwr_tTid	tid;
 
   sts = gdh_NameToObjid( opplace_str, &opplace);
   if ( EVEN(sts)) return sts;
@@ -593,28 +594,43 @@ int OpGtk::configure( char *opplace_str)
   if ( EVEN(sts)) return sts;
 
   // Examine Graph objects
-  button_cnt = user_p->NoFastAvail;
-  if ( button_cnt > 15)
-    button_cnt = 15;
-  for ( i = 0; i < button_cnt; i++) {
-    if ( i >= 15)
-      break;
-    memset( &attrref, 0, sizeof(attrref));
+  for ( i = 0; i < sizeof(user_p->FastAvail)/sizeof(user_p->FastAvail[0]); i++) {
+
+    button_aref[i].Objid = pwr_cNOid;
+    if ( cdh_ObjidIsNull( user_p->FastAvail[i].Objid))
+      continue;
+
+    sts = gdh_GetAttrRefTid( &user_p->FastAvail[i], &tid);
+    if ( EVEN(sts))continue;
+
+    if ( tid != pwr_cClass_XttGraph)
+      continue;
+
+     memset( &attrref, 0, sizeof(attrref));
     sts = gdh_ClassAttrToAttrref( pwr_cClass_XttGraph, ".ButtonText", &attrref);
     if ( EVEN(sts)) return sts;
 
     attrref = cdh_ArefAdd( &user_p->FastAvail[i], &attrref);
     sts = gdh_GetObjectInfoAttrref( &attrref, (void *)button_title[i], 
 		sizeof(button_title[0]));
-    if ( EVEN(sts)) 
-      strcpy( button_title[i], "");
+    if ( EVEN(sts)) continue;
 
-    button_objid[i] = attrref.Objid;
+    if ( strcmp( button_title[i], "") == 0) {
+      // Take object name instead
+      sts = gdh_AttrrefToName( &user_p->FastAvail[i], button_title[i], sizeof(button_title[0]), 
+			       cdh_mName_object);
+      if ( EVEN(sts)) continue;
+    }
+
+    button_aref[i] = user_p->FastAvail[i];
   }
 
   // Create the application buttons
   GtkWidget *b[15];
-  for ( i = 0; i < button_cnt; i++) {
+  for ( i = 0; i < sizeof(user_p->FastAvail)/sizeof(user_p->FastAvail[0]); i++) {
+    if ( cdh_ObjidIsNull( button_aref[i].Objid))
+      continue;
+
     char *textutf8 = g_convert( button_title[i], -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
     b[i] = gtk_button_new_with_label(textutf8);
     g_free( textutf8);
@@ -670,7 +686,7 @@ int OpGtk::configure( char *opplace_str)
 
   appl_form = gtk_vbox_new( FALSE, 0);
   GtkWidget *bbox[3];
-  for ( i = 0; i < button_cnt; i++) {
+  for ( i = 0; i < sizeof(user_p->FastAvail)/sizeof(user_p->FastAvail[0]); i++) {
     if ( i == 0) {
       bbox[0] = gtk_hbox_new( FALSE, 0);
       gtk_box_pack_start( GTK_BOX(appl_form), bbox[0], FALSE, FALSE, 0);
@@ -684,12 +700,18 @@ int OpGtk::configure( char *opplace_str)
       gtk_box_pack_start( GTK_BOX(appl_form), bbox[2], FALSE, FALSE, 0);
     }
 
-    if ( i < 5)
-      gtk_box_pack_start( GTK_BOX(bbox[0]), b[i], TRUE, TRUE, 0);
-    else if ( i < 10)
-      gtk_box_pack_start( GTK_BOX(bbox[1]), b[i], TRUE, TRUE, 0);
-    else if ( i < 15)
-      gtk_box_pack_start( GTK_BOX(bbox[2]), b[i], TRUE, TRUE, 0);
+    if ( i < 5) {
+      if ( cdh_ObjidIsNotNull( button_aref[i].Objid))
+	gtk_box_pack_start( GTK_BOX(bbox[0]), b[i], TRUE, TRUE, 0);
+    }
+    else if ( i < 10) {
+      if ( cdh_ObjidIsNotNull( button_aref[i].Objid))
+	gtk_box_pack_start( GTK_BOX(bbox[1]), b[i], TRUE, TRUE, 0);
+    }
+    else if ( i < 15) {
+      if ( cdh_ObjidIsNotNull( button_aref[i].Objid))
+	gtk_box_pack_start( GTK_BOX(bbox[2]), b[i], TRUE, TRUE, 0);
+    }
   }
 
   return XNAV__SUCCESS;

@@ -3701,7 +3701,8 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	for ( i = 0; i < object_cnt; i++) {
 	  if ( grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowNode ||
 	       grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowSlider ||
-	       grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowGroup) {
+	       grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowGroup ||
+	       grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowWindow) {
 	    grow_GetUserData( objectlist[i], (void **)&dyn);
 	    dyn->action( objectlist[i], event);
 
@@ -3845,7 +3846,7 @@ int Graph::set_object_focus( const char *name, int empty)
     return GE__NOACCESS;
 
   if ( action_type & ge_mActionType_InputFocus || action_type & ge_mActionType_ValueInput)
-    grow_SetObjectInputFocus( object, 1);
+    grow_SetObjectInputFocus( object, 1, glow_eEvent_Null);
 
   return GE__SUCCESS;
 }

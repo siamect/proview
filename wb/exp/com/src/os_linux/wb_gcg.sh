@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 #
 # Proview   $Id: wb_gcg.sh,v 1.7 2008-06-02 14:58:42 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.

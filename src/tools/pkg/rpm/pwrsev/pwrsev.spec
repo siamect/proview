@@ -10,11 +10,12 @@
 
 Name: pwrsev
 Summary: Proview/R storage environment
-Version: 4.6.0
-Release: 6
+Version: 4.6.1
+Release: 1
 License: GPL
 BuildArch: i386
 Packager: claes.sjofors@proview.se
+Requires: xorg-x11-fonts-ISO8859-1-100dpi, xorg-x11-fonts-ISO8859-1-75dpi, xorg-x11-fonts-Type1
 Group: Applications/System
 Url: http://www.proview.se
 
@@ -419,11 +420,5 @@ fi
 #%postun
 
 %changelog
-* Mon Nov 10 2008 Claes Sjofors <claes.sjofors@proview.se> 4.6.0-1
-  - Beta release.
-  4.6.0-3 
-  - Sev: Improved error handling.
-  4.6.0-4 
-  - Xtt/Ge: Metric fonts.
-  4.6.0-6
-  - Problem with '.' in tablename fixed.
+* Thu May 28 2009 Claes Sjofors <claes.sjofors@proview.se> 4.6.1-1
+  - Base release.

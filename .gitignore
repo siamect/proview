@@ -1,3 +1,5 @@
 # Ignore editor journal files
 *~
 *#*
+#Ignore wb_load backup
+*.wb_load.*

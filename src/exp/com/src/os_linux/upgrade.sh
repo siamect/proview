@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 #
 # Proview   $Id: upgrade.sh,v 1.17 2008-11-10 08:00:40 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.

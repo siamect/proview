@@ -10,8 +10,8 @@
 
 Name:		pwrdemo46
 Summary: 	Proview/R demo project
-Version:        4.6.0
-Release: 	6
+Version:        4.6.1
+Release: 	1
 License:        GPL
 BuildArch:      i386
 Packager: 	claes.sjofors@proview.se
@@ -109,6 +109,12 @@ sudo -u pwrp $initsh
 rm $initsh
 rm $initpwrc
 
+if [ -e /home/pwrp/Desktop ]; then
+  cp /usr/pwrp/pwrdemo%{ver}/cnf/proviewdemo%{ver}.desktop /home/pwrp/Desktop/
+  chown pwrp:pwrp /home/pwrp/Desktop/proviewdemo%{ver}.desktop
+  chmod a+x /home/pwrp/Desktop/proviewdemo%{ver}.desktop
+fi
+
 %preun
 
 set -e
@@ -122,6 +128,6 @@ fi
 #%postun
 
 %changelog
-* Mon Nov 10 2008 Claes Sjofors <claes.sjofors@proview.se> 4.6.0-1
+* Thu May 28 2009 Claes Sjofors <claes.sjofors@proview.se> 4.6.1-1
 - Base release
  

@@ -477,7 +477,7 @@ int OpMotif::configure( char *opplace_str)
     if ( EVEN(sts)) 
       strcpy( button_title[i], "");
 
-    button_objid[i] = attrref.Objid;
+    button_aref[i] = attrref.Objid;
   }
 
   // Create the application buttons

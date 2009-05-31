@@ -66,6 +66,7 @@ class RtMon {
     void activate_xtt();
     void activate_op();
     static void stop_ok_cb( void *ctx, void *data);
+    static void reset_ok_cb( void *ctx, void *data);
 };
 
 #endif

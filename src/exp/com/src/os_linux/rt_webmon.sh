@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 #
 # Proview   $Id: rt_webmon.sh,v 1.5 2007-10-30 07:48:50 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.

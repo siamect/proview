@@ -3384,6 +3384,9 @@ static char *font_string( int font_idx, int font_type, double size)
   default:
     sprintf( str, "%s %s%f", "Lucida Sans", bold_str, FONT_SCALE * size);
   }
+  for ( char *s = str; *s; s++)
+    if ( *s == ',')
+      *s = '.';
   return str;
 }
 

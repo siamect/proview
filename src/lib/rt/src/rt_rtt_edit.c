@@ -6974,8 +6974,8 @@ RTT_HELP_START\n\
 /* Put the help texts for your menues an pictures here */\n\
 \n\
 RTT_HELP_SUBJ(\"%s\")\n\
-RTT_HELP_INFO(\"Välj ut önskat ämne med piltangenterna och tryck på RETURN\")\n\
-RTT_HELP_TEXT(\"Pwr_rtt visar info om databasen...\")\n\
+RTT_HELP_INFO(\"Select a menu item with the arrow keys and press RETURN\")\n\
+RTT_HELP_TEXT(\"Pwr_rtt shows information about the realtime database.\")\n\
 \n\
 RTT_HELP_END\n",
 	    dtt_programname, dtt_maintitle);

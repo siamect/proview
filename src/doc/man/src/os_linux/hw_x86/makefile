@@ -221,6 +221,7 @@ copy : $(export_pdf) $(export_pdf_en_us) $(export_pdf_sv_se) \
        $(export_gif_exe) $(export_gif_en_us) $(export_gif_sv_se) \
        $(export_png_exe) $(export_png_en_us) $(export_png_sv_se) \
        $(exe_dir)/en_us/wtt_help.dat $(exe_dir)/sv_se/wtt_help.dat \
+       $(exe_dir)/en_us/rtmon_help.dat \
        $(exe_dir)/en_us/man_dg.dat $(exe_dir)/sv_se/man_dg.dat \
        $(doc_dir)/en_us/man_dg_index.html $(doc_dir)/sv_se/man_dg_index.html \
        $(doc_dir)/en_us/man_dg.pdf $(doc_dir)/sv_se/man_dg.pdf \
@@ -265,8 +266,11 @@ $(exe_dir)/en_us/wtt_help.dat : $(pwre_sroot)/doc/man/en_us/wtt_help.dat
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 
-
 $(exe_dir)/sv_se/wtt_help.dat : $(pwre_sroot)/doc/man/sv_se/wtt_help.dat
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
+$(exe_dir)/en_us/rtmon_help.dat : $(pwre_sroot)/doc/man/en_us/rtmon_help.dat
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 

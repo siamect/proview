@@ -1913,7 +1913,7 @@ void GlowCtx::register_inputfocus( GlowArrayElem *object, int focus)
       return;
 
     if ( inputfocus_object)
-      inputfocus_object->set_input_focus( 0);
+      inputfocus_object->set_input_focus( 0, glow_eEvent_InputFocusGained);
 
     inputfocus_object = object;
     if ( event_callback[glow_eEvent_InputFocusGained] ) {

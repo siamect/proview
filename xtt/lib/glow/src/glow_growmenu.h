@@ -172,7 +172,7 @@ class GrowMenu : public GrowRect {
 
   void shift_current_item( int shift);
   int get_current_item( int *item);
-  void set_input_focus( int focus) { input_focus = focus;}
+  void set_input_focus( int focus, glow_eEvent event) { input_focus = focus;}
   int get_input_focus() { return input_focus;}
   void get_submenu_position( int item, double *x, double *y);
   int get_parent( GlowArrayElem **parent);

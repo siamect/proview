@@ -59,7 +59,7 @@ GrowMenu::~GrowMenu()
   }
 
   if ( input_focus && parent_menu)
-    ((GrowMenu *)parent_menu)->set_input_focus( 1);
+    ((GrowMenu *)parent_menu)->set_input_focus( 1, glow_eEvent_Null);
 
   if ( ctx->nodraw) return;
   erase( &ctx->mw);

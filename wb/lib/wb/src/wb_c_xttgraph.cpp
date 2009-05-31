@@ -21,6 +21,7 @@
 
 using namespace std;
 
+#include "co_cdh.h"
 #include "wb_wnav.h"
 #include "wb_pwrb_msg.h"
 #include "wb_build.h"
@@ -67,6 +68,35 @@ static pwr_tStatus Build (
   return build.sts();
 }
 
+static pwr_tStatus PostRename (
+  ldh_tSesContext   Session,
+  pwr_tOid	    Object
+) {
+  pwr_tStatus sts;
+  int size;
+  pwr_tString80 name;
+  char *action;
+
+  sts = ldh_GetObjectPar( Session, Object, "RtBody",
+			"Action", &action, &size); 
+  if ( EVEN(sts)) return sts;
+
+  if ( strcmp( action, "") == 0) {
+    sts = ldh_ObjidToName( Session, Object, ldh_eName_Object, name, sizeof(name), &size);
+    if ( EVEN(sts)) return sts;
+
+    cdh_ToLower( name, name);
+    strcat( name, ".pwg");
+
+    sts = ldh_SetObjectPar( Session, Object, "RtBody", "Action", name,
+			  sizeof(name));
+    if ( EVEN(sts)) return sts;
+  }
+  free( action);
+
+  return PWRB__SUCCESS;
+}
+
 
 /*----------------------------------------------------------------------------*\
   Every method to be exported to the workbench should be registred here.
@@ -75,6 +105,7 @@ static pwr_tStatus Build (
 pwr_dExport pwr_BindMethods(XttGraph) = {
   pwr_BindMethod(OpenGraph),
   pwr_BindMethod(Build),
+  pwr_BindMethod(PostRename),
   pwr_NullMethod
 };
 

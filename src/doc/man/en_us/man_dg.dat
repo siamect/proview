@@ -137,7 +137,7 @@ As this is a guide for designers, we to start with a description of what the des
 control system imply. The description can also work as an introduction to the different 
 concepts that are used in this guide.
 
-A designer's starting point is, of course, the process that is to be controled by the system,
+A designer's starting point is, of course, the process that is to be controlled by the system,
 and the first task is to learn about the process, and to figure out the best way to control
 it: which control loops is needed, which interlockings, how is the startup and shutdown 
 carried out, how is operators and maintainers going to work with the system. This is 
@@ -145,18 +145,18 @@ summed up in a Design specification.
 
 At the same time you have to consider what information about the process the control system
 need to perform its task, i.e. which sensors should be placed in the plant. The control
-system also has to influence the process i varous ways, for example with valves and engines.
-This ends in a Signal list, that is alist of all input and output signals of the system.
+system also has to influence the process i various ways, for example with valves and engines.
+This ends in a Signal list, that is a list of all input and output signals of the system.
 
 At this point the question of which control system is to be used is raised, and on alternative
-is of course Proview. You also has to decide whick I/O-system to use, and how to devide the
+is of course Proview. You also has to decide which I/O-system to use, and how to divide the
 function i different process stations.
 
 <h1>IO-systems
 The task of the I/O-system is to bring signals from the process to the control system, and to
 put out signals to influence the process. The signals are usually digital or analog, but
 there are also other types as integers and counters. You can choose between a rack and card
-system connected to the process station, or a distributed I/O, e.g profibus.
+system connected to the process station, or a distributed I/O, e.g. profibus.
 
 <h1>Configure the system
 When it's time to start configure the system, you first create a new project in the
@@ -171,7 +171,7 @@ to navigate it the object tree.
 
 The object tree is separated in to parts, the plant hierarchy and the node hierarchy.
 The Plant hierarchy reflects the different functions in the plant and in the process, while
-the Node hierarchy reflects the hardware of the control system, with computors, I/O-racks and
+the Node hierarchy reflects the hardware of the control system, with computers, I/O-racks and
 I/O-cards.
 
 When later the control system is started in runtime, a copy of the object tree is created in
@@ -184,8 +184,8 @@ loops is programmed. It is named the PLC program. Also the PLC program is a part
 tree. It is configured by placing specific program objects, PlcPgm, in the Plant hierarchy. 
 When opening a PlcPgm you enter the Plc Editor, in which the graphical programming is preformed.
 Function blocks is created, and connected in a signal flow of digital and analogous signals,
-where the input signals are feched at the left side, transformed in different function blocks,
-and finally stored in ouput signals at the right side.
+where the input signals are fetched at the left side, transformed in different function blocks,
+and finally stored in output signals at the right side.
 
 A complement to the PLC program is application programs, which are written in the c, c++ or
 java language. Applications are written and started as separate programs and connected to
@@ -194,26 +194,26 @@ the realtimedatabase through an API.
 <h1>Simulation
 The realtime database, the PLC program and possible applications kan easily be started in the
 development station. This makes it possible to test the programs in direct connection with
-the programming. You kan even write special simulation programas which reads the output signals,
-simulates the ouputs influence of the process, calculates values of different sensors and puts
+the programming. You can even write special simulation programs which reads the output signals,
+simulates the outputs influence of the process, calculates values of different sensors and puts
 this values in the input signals.
 
-The configuration and programming of the system is then a process, where you altertately
-configure/program and test. The result i carefully debugged programs and a fast and efficiant
-commissioning of the plant. It also result in better programs, and more thoroughly workt
-through functions, beacause the feedback is greater in the create process that the construction
+The configuration and programming of the system is then a process, where you switch between
+configuring/programing and testing. The result i carefully debugged programs and a fast and efficient
+commissioning of the plant. It also result in better programs, and more thoroughly work
+through functions, because the feedback is greater in the create process that the construction
 of a process control system implies.
 
-At the simulation and commissioning it is of greate importance to have access to tools that
-makes it possible to monitor and examine the system, and quickly locacalize possible 
-malfunctions. In Proview this tools is called Xtt. Xtt containts a lot of functions to examine
+At the simulation and commissioning it is of great importance to have access to tools that
+makes it possible to monitor and examine the system, and quickly localize possible 
+malfunctions. In Proview this tools is called Xtt. Xtt contains a lot of functions to examine
 the content of the realtime database, to flow the signal flow, to log fast or slow sequences,
 etc.
 
 <h1>Operator interface
 There are a number of different groups of professionals that shall gain access to the system, 
-operators running the plant on a daily basis, maintaners occasionally correcting som 
-malfuncions, process engineers requesting various process data. All have their demands on the 
+operators running the plant on a daily basis, maintainers occasionally correcting some 
+malfunctions, process engineers requesting various process data. All have their demands on the 
 system interface. Furthermore the limits between the various groups of professionals might be
 fluid, operators that are both operators and maintainers, and perhaps even process engineers.
 This makes high demands on the functionality and flexibility of the operator interface. You
@@ -222,12 +222,12 @@ information of various objects, that i stored in the realtime database, or in di
 systems.
 
 <h1>Process graphics
-Process graphics are build in a grapical editor. The grapics are vector based, which makes all
-graphs and components unlimitede scalable. Components have a preprogrammed dynamic to change
+Process graphics are build in a graphical editor. The graphics are vector based, which makes all
+graphs and components unlimited scalable. Components have a preprogrammed dynamic to change
 color and shape, depending of signals in the realtime database, or to respond to mouse clicks
 and set values in the database. In each component that is sensible to mouse click or input,
 you can state access, and selectively allow or hinder users to influence the system. Process
-graphs can also, besides beeing displayed in the ordinary operator environment, be exported to 
+graphs can also, besides being displayed in the ordinary operator environment, be exported to 
 java, which makes them viewable on the web with all dynamics.
 
 <h1>Supervision
@@ -237,12 +237,12 @@ and which originate alarms and events. The alarms have four priority levels: A, 
 and is diplayed to the operator in the alarm list, the event list and the historical event list.
 
 The alarmlist contains unacknowledged alarms and alarms in alarm state. An alarm normally has
-to be acknowledged before it disapperas from the list. If the alarm state is active, the alarm
+to be acknowledged before it disappears from the list. If the alarm state is active, the alarm
 remains in the list as long as it is active.
 
-Alarm also are registred in the event list, that displays events in a chronological order.
+Alarm also are registered in the event list, that displays events in a chronological order.
 
-The historical eventlist is a database, also registrering event. Here you can search for events,
+The historical eventlist is a database, also registering event. Here you can search for events,
 stating criteria as priority and process part. 
 
 If a plant part is shut down, it is possible to block the alarms, to avoid to distract the
@@ -250,10 +250,10 @@ operator. Blocked plant parts are displayed in the Block list.
 
 <h1>Data Storage
 You often want to follow the change of a signal over time, in the shape of a curve. In Proview
-there are there kinds of funktions for this, DsTrend, DsFast and SevHist.
+there are there kinds of functions for this, DsTrend, DsFast and SevHist.
 
 DsTrend is a trend that is stored in the realtime database. The value of a signal is stored
-continously with an interval of 1 second and upwards. For each curve there is space for about
+continuously with an interval of 1 second and upwards. For each curve there is space for about
 500 samples, so if you choose to store a new sample every second, you have a trend of the
 signal of about 8 minutes.
 
@@ -291,20 +291,20 @@ Object
 
 An object consists of a quantity of data, that in some way defines the state of the object or 
 the properties of the object. The data quantity can be very simple, as for an And-gate, where
-it consists of a boolean value that is true or false. However, a PID controler has a more
+it consists of a boolean value that is true or false. However, a PID controller has a more
 complex quantity of data. It contains gain, integration time, output, force etc. It consists
 of a mix of digital, analogous and integer values. Some values are configured in the development
 environment and some are calculated in runtime.
 
 The quantity of data is called the body of the object. The body is divided in attributes, where
 every attribute has a name and a type. The body of an And-gate consists of the attribute Status
-which is of type Boolean, while the body of a PID controler consists of 47 attributes: ProcVal,
+which is of type Boolean, while the body of a PID controller consists of 47 attributes: ProcVal,
 SetVal, Bias, ForceVal etc.
 
 All PID objects has its quantity of data structured in the same way, you say they are a member
-of the same class. The PID objects are memebers of the PID class, and the And-gates are members
+of the same class. The PID objects are members of the PID class, and the And-gates are members
 of the And class. A class is a kind of model of how objects that belongs to the class appear,
-for example which the attributes are, and the name and type of the attribues.
+for example which the attributes are, and the name and type of the attributes.
 
 Besides a body, an objects also has a header. In the header, the class and identity of the 
 objects is found, and also its relation to other objects. The objects are ordered in a tree
@@ -316,13 +316,13 @@ object.
 Volumes
 When configuring a system, and creating objects, you usually know to which node the objects
 will belong in runtime. You could group the objects after which node they will belong to,
-but a more flexibel grouping is made, so instead you group the objects in volumes. A volume
+but a more flexible grouping is made, so instead you group the objects in volumes. A volume
 is a kind of container for objects. The volume has a name and an identity, and it contains
 a number of objects ordered in a tree structure.
 
 There are a number of different types of volumes, and the first you get into contact with is
 a root volume. When configuring a node, you usually work in a root volume. Every node is
-connected to a root volume, i.e when the node is starting up in runtime, the root volume,
+connected to a root volume, i.e. when the node is starting up in runtime, the root volume,
 and its objects, is loaded into the node. Below is a description of the different types of
 volumes.
 
@@ -349,7 +349,7 @@ and the attributes of the class.
 
 There are two classvolumes that you always include in a Proview system, pwrs and pwrb. pwrs
 contains the system classes, mainly classes used in class definitions. pwrb contains base
-classes, i.e standard classes that is neede to build a process or operator station.
+classes, i.e standard classes that is needed to build a process or operator station.
 
 <h2>DynamicVolume
 A dynamic volume contains dynamic objects, i.e. volatile objects created at runtime. If you
@@ -367,13 +367,13 @@ the system are configured.
 <h1>Volyme Identity
 Each volume has a unic identity, that is written with four numbers, separated with points,
 e.g. "_V0.3.4.23". The prefix _V states that it is a volume identity. To verify that the volume
-identities are unic, there is a global volumelist that contains all volumes. Before creating
-a project, the volumes of the project should be registred in the volume list.
+identities are unique, there is a global volumelist that contains all volumes. Before creating
+a project, the volumes of the project should be registered in the volume list.
 </topic>
 
 <topic> attribute
 Attribute
-The quantity of data for an object is divided into attributes. Each attribut has a name and a
+The quantity of data for an object is divided into attributes. Each attribute has a name and a
 type. Here follows a description of the most common attribute types.
 
 <h2>Boolean
@@ -388,7 +388,7 @@ of other integer types, e.g. Int8, Int16, Int64, UInt8, UInt16, UInt32 and UInt6
 
 <h2>String
 In a string attribute a character string is stored. There are different string types with
-variuos length, e.g. String8, String16, String40, String80, String256.
+various length, e.g. String8, String16, String40, String80, String256.
 
 <h2>Time
 Time contains an absolute time, e.g. 1-MAR-2005 12:35:00.00.
@@ -398,8 +398,8 @@ DeltaTime contains an delta time, e.g. 1:12:22.13 (1 hour, 12 minutes, 22.13 sec
 
 <h2>Enum
 Enum is an enumeration type, used to chose one alternative of several alternatives.
-It can be assigned one integer value, in a serie of integer values, where each value is 
-associated with a name. There are, for example, the enumeration ParityEnum which kan have the
+It can be assigned one integer value, in a series of integer values, where each value is 
+associated with a name. There are, for example, the enumeration ParityEnum which can have the
 values 0 (None), 1 (Odd) or 2 (Even).
 Enum is a basic type and ParityEnum is a derived type.
 
@@ -415,14 +415,14 @@ specified number of elements, and it may also be another object, a so called att
 Class
 
 A Class is a description of how an object that is a member of the class shall look like. An
-object that belong to the class is called an intance. The class defines how the data of the
+object that belong to the class is called an instance. The class defines how the data of the
 instances are structured in attributes of various type, or the graphic representation of objects
 in the PLCeditor or in the operator environment.
 
 Each class has a template object, i.e. an instance of the class that contains default values
 for the attributes of the class.
 
-Proview's basesystem contains about 900 classes. See Object Reference Manaual detailed
+Proview's basesystem contains about 900 classes. See Object Reference Manual detailed
 description. The designer can also create his own classes within a project.
 </topic>
 
@@ -437,7 +437,7 @@ child, ancestor and descendants.
 <topic>object_name
 Object Name
 
-Each object has a name that is unic whithin its siblinghood. The object also has a path name
+Each object has a name that is unique within its sibling family. The object also has a path name
 that is unic within the world. The pathname includes, besides the object name, the volume
 name and the name of all the ancestors, e.g 
 
@@ -461,7 +461,7 @@ An operator station has to display values of signals and attributes that reside 
 of process stations. This is achieved by a mechanism, where an operator station mounts the 
 volumes of the process stations, in its own object tree. A mounting means that you hang an
 object tree of another volume in the own rootvolume. Where in the tree the volumes is hanged,
-is configured wiht a MountObject object. In the MountObject states, which object in the other
+is configured with a MountObject object. In the MountObject states, which object in the other
 volumes that is mounted. The result is, that the MountObject is displayed as the mounted object,
 with the objecttree beneath is. It apparently looks as if the objects belong to the own root
 volume, while they in reality reside in another node.
@@ -475,8 +475,8 @@ way, that the objects have the same pathname in both volumes.
 
 <topic>object_identity
 Object Identity
-An object has an identity that is unic. It consits of the volume identity, and an object index
-that is unic within the volume. An object identity is written for example "_O0.3.4.23:34" where
+An object has an identity that is unique. It consists of the volume identity, and an object index
+that is unique within the volume. An object identity is written for example "_O0.3.4.23:34" where
 0.3.4.23 is the volume identity, and 34 the object index. The prefix _O states that it is an
 object identity.
 </topic>
@@ -542,8 +542,6 @@ Switch: Operating mode 1
 ---------------------------------
 Total number of digital inputs: 1 
 
-Den enda digitala ingång som behövs är för underhållsteknikerns vred. Operatören styr 
-
 <h2>Analog I/O 
 No analog in- or outputs are needed for this task. 
 
@@ -571,11 +569,11 @@ For this we need
 - Two volumes, one for the process station and one for the operator station.
 - We need three users: one developer, one operator and one maintenance technician.
 
-Volumes, projects and users are registred and created in the administrator tool.
+Volumes, projects and users are registered and created in the administrator tool.
 
 <h2>Register volume
 For this project, we need two volumes, one for the process station, and one for the operator
-station. They are root volumes so we can choose an idle volume identity in the intervall
+station. They are root volumes so we can choose an idle volume identity in the interval
 0.1-254.1-254.1-254. We choose 0.1.1.1 to the operator station and 0.1.1.2 to the process
 station, and enter the volume mode in the administator to register these volumes.
 
@@ -583,7 +581,7 @@ station, and enter the volume mode in the administator to register these volumes
 <b>Volume registration
 
 <h2>Create users
-Eric is a developer in the traffec department, an Carl is an operator. They are both involved
+Eric is a developer in the traffic department, an Carl is an operator. They are both involved
 in all the projects at the traffic department, so we create a common systemgroup for all the
 projects and let them share users. We grant Eric developer and system privileges, Carl
 operator privileges and Lisa maintenance privileges.
@@ -592,7 +590,7 @@ operator privileges and Lisa maintenance privileges.
 <b>Created users
 
 <h2>Create Project
-We create the project with the hierarchy name 'trafiic-trafficcross1'.
+We create the project with the hierarchy name 'trafic-trafficcross1'.
 
 <image> dg_fig10.gif
 <b>Created project
@@ -607,7 +605,7 @@ communicating.
 The NodeConfig objects contains
 
 - Nodename
-- ip adress of the node
+- ip address of the node
 
 Below each NodeConfig object there is a RootVolumeLoad object that states the volume to load
 at runtime startup.
@@ -764,7 +762,7 @@ PLC program
 We use the Graphical PLC Editor to create PLC programs. 
 
 However we must first connect the PlcPgm object to a PlcThread object in the node hierarchy.
-This states which timebase the PLC programm is executed on.
+This states which timebase the PLC program is executed on.
 
 <image> dg_fig16.gif
 <b>The Graphical PLC Editor
@@ -879,9 +877,9 @@ volume.
 
 <image> dg_fig23.gif
 
-You can also create a project with a shell command. You tie to the project with the commmand
+You can also create a project with a shell command. You tie to the project with the command
 
-> pwrp set project 'projektname'
+> pwrp set project 'projectname'
 
 The Workbench is opened with the command
 
@@ -925,8 +923,8 @@ It is also possible to display the attributes of an object directly in the confi
 <h2>Configure the nodes
 
 In the lower window, the nodes in the project is configured. You group the nodes by which
-QCOM bus they communicate on. We create two BusConfig objects, one for the produktion nodes
-and one for simutation. In the BusNumber attribute the busnumber is defined.
+QCOM bus they communicate on. We create two BusConfig objects, one for the production nodes
+and one for simulation. In the BusNumber attribute the busnumber is defined.
 
 As children to the BusConfig object, the NodeConfig objects are created, one for each process
 and operator station. When the NodeConfig objects are created, some additional objects are
@@ -966,7 +964,7 @@ volumes are displayed. The next step is to configure a RootVolume.
 <topic>configure_rootvolume
 Configure a Root Volume
 A root volume is opened from the volume selection window. Select the volume and click on the 
-Ok button. This will start the configration editor for the root volume. As for the 
+Ok button. This will start the configuration editor for the root volume. As for the 
 DirectoryVolume it is separated in two windows, but this time, the upper window shows the 
 plant configuration and the lower the node configuration.
 
@@ -997,8 +995,8 @@ The actual value of the signal is defined by the attribute ActualValue.
 At present the following signal objects are available: 
 
 Ai <t>Analog input.
-Ao <t>Analog outupt.
-Av <t>Analogt value.
+Ao <t>Analog output.
+Av <t>Analog value.
 Ii <t>Integer input.
 Io <t>Integer output.
 Iv <t>Integer value.
@@ -1053,12 +1051,12 @@ The configuration of the I/O system is dependent of which type of I/O system you
 has a modular I/O that can handle different types of I/O systems: rack and card systems,
 distributed bussystems, or systems connected with some network.
 
-The modolar I/O is devided in four levels: agent, rack, card and channel.
+The modular I/O is divided in four levels: agent, rack, card and channel.
 
 <b>Rack and Card System
 We will take the PSS9000 as an example of an rack and card I/O. The system consists of analog
 and digital input and output cards that i mounted i racks. The rack i connected via a bus
-cable to a busconvertercard in the computor, that converts the PSS9000 bus to the computors
+cable to a busconvertercard in the computer, that converts the PSS9000 bus to the computers
 PCI bus.
 
 In this case, the agent level is not used, so the $Node object works as an agent. The rack
@@ -1069,7 +1067,7 @@ Ao_Ao4uP, Di_DIX2 and Do_DVDO32. Below a card object, there are placed channel o
 each channel on the card.
 
 Common for the different I/O systems is the channel objects, that defines the input or output
-channels of a card or module. There are som different types of channels.
+channels of a card or module. There are some different types of channels.
 
 ChanDi <t>Digital input.
 ChanDo <t>Digital output.
@@ -1085,7 +1083,7 @@ ChanCo <t>Counter input.
 
 <b>Distributed I/O
 As an example of distributed I/O we choose profibus. In this case, all the four levels is used.
-In the PCI bus of the computor, there is a mastercard the communicates with a number of slaves
+In the PCI bus of the computer, there is a mastercard the communicates with a number of slaves
 on the profibus circuit. The mastercard is configured with a Pb_Profiboard card on the agent
 level. Below this, we find the different slaves configured with Pb_DP_Slave objects. They
 represent the rack level. Below the slave objects there are module objects of type Pb_Ai,
@@ -1096,7 +1094,7 @@ the channels are configured with the channel objects ChanDi, ChanDo etc.
 I/O objects of the card level, often contains the attributes Process and ThreadObject. In 
 Process which process to handle the card is defined.
 
-The card can be handled by the PLC program, that is, reading and writing is made syncroized
+The card can be handled by the PLC program, that is, reading and writing is made synchronized
 with the execution of the PLC. You can also specify a thread in the PLC that should handle the
 card, i.e. which timebase is used to read or write the card (the PlcThread attribute).
 
@@ -1120,8 +1118,8 @@ See MessageHandler i Object Reference Manual <link>messagehandler,"",$pwr_lang/p
 <h2>IOHandler object
 IOHandler configures properties for the I/O handling.
 
-- ReadWriteFlag specifies whether to adress physical hardware or not.
-- IOSimulFlag indicates wether to use the hardware or not.
+- ReadWriteFlag specifies whether to address physical hardware or not.
+- IOSimulFlag indicates whether to use the hardware or not.
 - The timebase for the rt_io process, i.e. the process that handles slower types of I/O cards
   that are not suitable to be handled by the PLC.
 
@@ -1200,12 +1198,12 @@ See User i Object Reference Manual <link>user,"",$pwr_lang/pwrb_xtthelp.dat
 <h2>The Plant Graphics Object - the XttGraph Object 
 In order to be able to show plant graphics which are unique to the project in the operator 
 station, you must configure XttGraph objects. These objects define, for instance, what the 
-files with the plant graphics are called. The objects are refered to in the User object
+files with the plant graphics are called. The objects are referred to in the User object
 FastAvail attribute, and in the DefGraph attribute that is found in $PlantHier and signal
 objects.
 
 When the object is refered in a FastAvail you can use the possibility to execute a Xtt command
-from the XttGraph object. In this way, you can set a signal from a pushbutton in the opeator
+from the XttGraph object. In this way, you can set a signal from a pushbutton in the operator
 window.
 
 - Action. States a Ge graph to open, or an Xtt command to execute.
@@ -1440,7 +1438,7 @@ This is the directory where you place list-files produced during compilation.
 
 <topic> project_lib
 $pwrp_lib
-This is the directory where libraries will be created containg object files belonging to 
+This is the directory where libraries will be created containing object files belonging to 
 a certain volume. You should also place your own libraries here.
 </topic>
 
@@ -1473,7 +1471,7 @@ If you restart simulation logging will be appended to this file. Remove it if yo
 <topic> project_tmp
 $pwrp_tmp
 This directory contains temporary files. These files will be created at certain operations.
-For example if you compile a plc-program with debug-mode the sorce files created for this 
+For example if you compile a plc-program with debug-mode the source files created for this 
 program will be created here.
 </topic>
 
@@ -1573,7 +1571,7 @@ A typical Rt_xtt-file could look something like this:
 <topic> file_xtt_setup
 xtt_setup.rtt_com
 This is file is read by rt_xtt when started and the file is searched from the directory where
-you start rt_xtt. The file configures the appearance of rt_xtt. You can build your own menues
+you start rt_xtt. The file configures the appearance of rt_xtt. You can build your own menus
 and make entries that perform certain commands.
 
 All commands in the file follow standard xtt command syntax. There is a built in help in
@@ -1613,7 +1611,7 @@ In the xtt_setup-file you create one command per line. Comment lines starts with
 <topic> file_ld_appl
 ld_appl_<node>_<bus_no>.txt
 This file controls which applications should start when you start Proview runtime. You can add your
-own applications aswell as turn off one or more of the Proview kernel applications.
+own applications as well as turn off one or more of the Proview kernel applications.
 
 A typical ld_appl-file can look like this:
 
@@ -1823,10 +1821,10 @@ alternative branches.
 
 The example in the figure above shows the sequence for a machine which can manufacture the 
 three products, Red, Green, and Blue. At the point of divergence, point 1 in the figure, you
-choose the disired branch depending on the product to produce. The alternative branches diverge
+choose the desired branch depending on the product to produce. The alternative branches diverge
 from a step, that is followed by one transition condition in each branch. It is the
-constructors task to see that only one of the transition conditions is fullfilled. If several
-are fullfilled, which one that is selected is undefined. At point 2 in the figure, the branches
+constructors task to see that only one of the transition conditions is fulfilled. If several
+are fulfilled, which one that is selected is undefined. At point 2 in the figure, the branches
 are converging to a common step.
 
 <h2>Parallel Sequences
@@ -1839,13 +1837,13 @@ order to do this, parallel sequences are used.
 
 The example in the figure above illustrates the sequence for two machines, which are drilling 
 two holes at the same time and independent of each other. When the transition condition before
-the parallel divergence (point 1 in the figure), is fullfilled, the activity is moved to
+the parallel divergence (point 1 in the figure), is fulfilled, the activity is moved to
 both branches, and the machines start drilling. The drilling is preformed independent of each
 other.
 
 The branches are converging to a transition condition (point 2 in the figure), and when the
 drilling is completed in both machines, i.e. both S12 and S13 are active, and the transition
-condition T17 is fullfulled, the activity is moved to the init step IS2.
+condition T17 is fulfilled, the activity is moved to the init step IS2.
 
 <h2>Step
 <image> dg_fig51.gif
@@ -1912,8 +1910,8 @@ See Feedback Connection <link>plceditor_refman, feedback_connection
 
 <h2>Subsekvens - SubStep
 
-När man skapar komplexa Grafcet program, är det ofta en fördel att använda underfönster,
-och i dessa placera subsekvenser. På det här sättet får man en bättre layout på programmet.
+When you are creating complex Grafcet programs, it is often suitable to use subwindows,
+and to place subsequences in these to get a better layout of the program.
 
 <b>Subsequence
 <image>dg_fig56.gif
@@ -2036,7 +2034,7 @@ limit.
 Before starting to compile, you have to state on which platform (or platforms) the volume of
 the plc should run. Open the volume attributes editor from the navigator menu: 
 'File/Volume Attributes', and enter the OperatingSystem. Note, that more than one operating 
-system can be choosen. The volume can at the same time be run in the production system, in a 
+system can be chosen. The volume can at the same time be run in the production system, in a 
 simulation system and in a educational system, and the systems can have different platforms.
 
 Now, the plcgpm is compiled, by choosing 'File/Build' in the plc editor. Any waring or error 
@@ -2050,10 +2048,10 @@ Call functions from the plc program
 The functionobject programming in the plc editor has its limitations, and some tasks can
 be done much easier and nicer in c-code. c programming can be achieved in CArithm and
 DataArihm where you can put an amount of c-code, but the number of characters are limited
-to 1023, and occationally this is not enough. Then you have two possibilities, to write a
+to 1023, and occasionally this is not enough. Then you have two possibilities, to write a
 detached application, or to call a c-function from a CArithm or DataArithm. The advantage 
 with calling a c-function is that all initialization and linking to objects and attributes 
-are handled by the plc program. The execution of the function is also syncronous with the 
+are handled by the plc program. The execution of the function is also synchronous with the 
 execution lf the plc thread calling the function.  
 
 <h1>Write the code
@@ -2122,7 +2120,7 @@ The function is called from a CArithm or DataArithm.
 <b>Link the plc program
 When the source code of the function was compiled, the object module
 $pwrp_obj/ra_myfunction.o was created. This has to be added to the link command when the
-plc program is built, which is achieved by addning the objectmodule to an option file that
+plc program is built, which is achieved by adding the objectmodule to an option file that
 is input to the linker. The optionfile resides on the directory $pwrp_exe and is named
 plc_'nodename'_'qbus'.opt, for example
 
@@ -2135,7 +2133,7 @@ The following line is inserted into this file
 We kan now build the node and startup Proview runtime.
 
 <b>Debug
-One disadvantage when you leave the graphic programming and call c-functons is that you
+One disadvantage when you leave the graphic programming and call c-functions is that you
 can not use trace any more for debugging. If you suspect some error in the  function code, 
 you occasionally have to start the plc program in debug, set a breakpoint in the function 
 and step forward in the code.
@@ -2157,8 +2155,8 @@ function and let the program continue to execute
 <c>(gdb) b MyFunction
 <c>(gdb) c
 
-When the program enters the function it stops in the debugger, and we kan step (s) and 
-examin the content in variables (x) etc.
+When the program enters the function it stops in the debugger, and we can step (s) and 
+examine the content in variables (x) etc.
 
 If the plc program is terminated immediately after start, you can restart in debug.
 
@@ -2181,7 +2179,7 @@ This chapter is about how to program with components and aggregates.
 A component is one (or a number of) objects that handles a component in the plant. A 
 component can be for example a valve, a contactor, a temperaturesensor or a frequency
 converter. As these components are very common and exist in many different types of plants,
-its a great advantage if we can construct an object that containts all that it needed to
+its a great advantage if we can construct an object that contains all that it needed to
 control and supervise the component, and is that general that it can be used in most
 applications.
 
@@ -2204,21 +2202,21 @@ etc.
 <b>Object orientation
 Proview is an object oriented system, and components and aggregates are a field where 
 the benefits of object orientation are used. In the components, one can see how an object
-is built by other objects, that an attribute, besides from beeing a simple type as a float
+is built by other objects, that an attribute, besides from being a simple type as a float
 or boolean, also can be an object, that in its turn are composed by other objects. An
 attribute that is an object is called an attribute object. It is not quite analogous to
 a free-standing object, as it lacks object head and an object identity, but apart from that
 it contatins all the properties of a free-standing object in terms of methods, object graph 
 etc.
 
-One example of an attrbute object can be seen in the component object of a solenoid valve.
+One example of an attribute object can be seen in the component object of a solenoid valve.
 Here all the signal objects, two Di objects for limit switches, and a Do object for order,
 are placed internally as attribute objects. Thus, we don't have to create these signals
 separately. When the valve object is created, also the signals for the valve are created.
 Another example of attribute objects are a motor aggregate that contains the component
-objects for frequency converer, safetyswitch, motor etc. in the shape of attribute objects. 
+objects for frequency converter, safetyswitch, motor etc. in the shape of attribute objects. 
 
-Another important property in object orientation is inheritage. With inheritage means that
+Another important property in object orientation is inheritance. With inheritance means that
 you can create a subclass derived from an existing class, a superclass. The subclass
 inherits all the properties of the superclass, but has also the possibility to extend
 or modify some of the properties. One example is a component for a temperature sensor that
@@ -2232,7 +2230,7 @@ from the motor control also displays a pump.
 <image> orm_basetempsensor_og.gif
 <b>Fig Object graph for the class BaseTempSensor
 
-Another property that we have introduced is the posibility to disable attributes. The 
+Another property that we have introduced is the possibility to disable attributes. The 
 reason for this is that the component objects has to be as general as possible, to 
 be able to handle all variants of the plant component. A solenoid valve can, for example,
 have a limit switch indicating valve open, but there are also solenoid valves with a
@@ -2282,10 +2280,10 @@ in the 'Cast' alternative get a list of all the available subclasses. By selecti
 subclass, the component is casted to this.
 
 <h1>Pressure switch
-Let's have a look at a relatively simpel component, a pressure switch, to examine how
+Let's have a look at a relatively simple component, a pressure switch, to examine how
 it is built and how to configure it. For pressure switches there is the base component
 BasePressureSwitch, that is a subclass to BaseSupSwitch. As temperature, pressure and 
-limitswithes are quite alike, they have a common superclass. BaseSupSwitch has also a 
+limitswitches are quite alike, they have a common superclass. BaseSupSwitch has also a 
 superclass, Component, that is common for all component classes. The class dependency for
 the pressure switch class can be written
 
@@ -2396,10 +2394,10 @@ The class we use is BaseFcPPO3PumpAggr, and the class dependency for this class 
 <c> Aggregate-BaseFcPPO3MotorAggr-BaseFcPPO3PumpAggr
 
 All aggregates have the superclass Aggregate that corresponds to the Component class for 
-components. The next superclass, BaseFcPPO3MotorAggr contains all the functionallity for
+components. The next superclass, BaseFcPPO3MotorAggr contains all the functionality for
 the control. The pump class BaseFcPPO3PumpAggr extends the motor aggregate with a pump object
 representing the mechanical pump, but this doesn't contain any signal or any additional 
-functionallity. The pump aggregate also has its own object graph and graphical symbol.
+functionality. The pump aggregate also has its own object graph and graphical symbol.
 
 <b>Configuration
 The main object BaseFcPPO3PumpAggr is placed in the plant hierarchy, and the function object,
@@ -2408,7 +2406,7 @@ they are linked together by the Connect function.
  
 The main object has no less than 24 different configuration alternatives to choose between,
 dependent of which of the components Fuse, Contactor, SafetySwitch, StartLock and CircuitBreaker
-are present in the construction. In our case we only have a contactor and a frequence converter
+are present in the construction. In our case we only have a contactor and a frequency converter
 and we the choose the ConfigureComponent alternative CoFc.
 
 Some components in an aggregate can have its own configurations. In this case the contactor
@@ -2419,7 +2417,7 @@ and activates ConfigureComponent/TempSwitch in the popup menu.
 
 The next step is to connect the signal objects to the channel objects. The contactor has a
 Do for order and a Di for feedback that is to be connected to suitable channels in the node 
-hierarchy. The motor has a temperature switch in the shape of a Di that also shoud be 
+hierarchy. The motor has a temperature switch in the shape of a Di that also should be 
 connected. The frequence converter contatins four signals, StatusWordSW (Ii), ActSpeed (Ai), 
 ControlWordCW (Io) and RefSpeed (Ao). These signals are exchanged with the frequency converter 
 via Prifibus with the protocol PPO3. There is a specific Profibus module object for PPO3, 
@@ -2450,7 +2448,7 @@ In the mode object you can configure the modes that applies to the pump in quest
 A Component case study
 
 In this section we are going to use components and aggregates to program the control of 
-the level in a watertank, 
+the level in a water tank, 
 
 <b>Process
 The process we will control is shown in figure 'Level control'. The water is pumped from
@@ -2480,7 +2478,7 @@ The following component object corresponds to the components in the plant:
 <h2>Configuration in the plant hierarchy
 The components are created under the hierarchy LevelControl. Under this we place a PlcPgm
 'Plc' that will contain the code for the control, and a PlcPgm 'Simulate' that will contain
-the code neede for simulation and testing of the program. We also create three Dv objects
+the code needed for simulation and testing of the program. We also create three Dv objects
 to start, stop and reset the control program, Start, Stop and Reset.
 
 <image> dg_fig83.png
@@ -2541,7 +2539,7 @@ upper limit for presentation of the value in LC1.Value.PresMaxLimit to 1. This w
 the range in bars and trends.
 
 <b>Solenoid valve
-The solenoid valve is controled by a digital output and has feedback in the shape of
+The solenoid valve is controlled by a digital output and has feedback in the shape of
 digital inputs for limitswitch open and limitswitch closed.
 
 For the solenoid valve we create a BaseMValve object with the name MV1.
@@ -2605,7 +2603,7 @@ The program is built around a Grafcet sequence with four steps. See Fig Plc prog
 
 The mode object LC1_Mode and the controller LC1_PID requires som additional configuration.
 In the mode object
-- OpMode = Auto to start the controlerl in auto mode.
+- OpMode = Auto to start the controller in auto mode.
 - MaxSet = 1, maximum setpoint value is the height of the tank, 1 m.
 - SetMaxShow = 1, also the hight of the tank.
 - SetEngUnit = m, meter.
@@ -2718,7 +2716,7 @@ right corners in x0,y0 and x1,y1. DoubleBuffered is set to 1 and MB3Action to Po
 <h1>Simulation
 To look at the result of our programming effort, we start the simulation.
 
-When we open the graph, both valves are colored white, which markes that they are closed.
+When we open the graph, both valves are colored white, which marks that they are closed.
 The pump is not started, which is marked with gray color and the the triangle in the pump
 symbol doesn't point in the flow direction. The tank is colored white, i.e. it is empty, and
 the levelsensor flashes red as the level is beneath the LowLow level in the level sensor object.
@@ -2728,7 +2726,7 @@ the step that starts the pump (S0). When the pump is started, it is colored blue
 triangle points in the flow direction. In this step, also the solenoid valve is opened and
 colored blue. When the pump has started, the sequence proceeds to the working step S1.
 
-We set a set value with the slider to aproximatley 0.3 and hopefully the controller starts
+We set a set value with the slider to approximately 0.3 and hopefully the controller starts
 to work. Eventually, some adjustment of the controller parameters are needed, and the controller
 graph is opened by clicking on the controller symbol, which opens the object graph for the
 Mode object. In this, we click on the PID button to open the object graph of the PID object.
@@ -2746,8 +2744,8 @@ the component. with RtNavigator the object is looked up and viewed in the naviga
 Trend a trend curve for the level is displayed and with OpenGraph the object graph is
 opened. The object graph can also be opened by clicking on the symbol.
 
-The upper part of the object graph for components and aggregates have a similar appearence.
-There is a meny where you under 'Methods' can activate the methods of the component. Under
+The upper part of the object graph for components and aggregates have a similar appearance.
+There is a menu where you under 'Methods' can activate the methods of the component. Under
 'Signals' you can see the signals in the component and open the object graph for them. For
 aggregates you can also see the components and open the object graph for them under 
 'Components'. There is also a toolbar with pushbuttons for the methods, and two text fields
@@ -2778,7 +2776,7 @@ The control loop is now out of order and the water flow is adjusted from the sli
 From the simulate graph you can for example influence the simulation of the limit switches.
 If order is 0 and switch closed are not affected, you receive a limit switch alarm and a
 red flashing symbol. At simulation the simulate objects sets the correct values into the
-limitswitches, but this can be overriden from the simulate graph. By pushing 'Manual Control'
+limitswitches, but this can be overridden from the simulate graph. By pushing 'Manual Control'
 the switch is controlled from the graph instead, and by zeroing the limit switch you can
 check that the limitswitch supervision works.
 
@@ -2789,7 +2787,7 @@ check that the limitswitch supervision works.
 
 The object graph for the solenoid valve displays limit switches and order signal
 with indicators. The valve is switched to manual control by clicking on the Man button,
-and can now be manouvred by the Open and Close buttons.
+and can now be maneuvered by the Open and Close buttons.
 
 From the simulate graph you can, as for the control valve, influence the simulation of the
 limitswitches and trigger a switch error alarm.
@@ -2938,7 +2936,7 @@ keepalive-messages. This is set through the attribute UseKeepalive.
 The transport will send a message to the remote port, consisting of header + data.
 MessId in the header is taken from RemTrans.Address[0,1], byte-switched to send as big endian.
 If MaxBuffers in remtrans-object > 0, the message is sent with type "want acknowledge" and is stored
-in the retransmit queue for the remnode. When a correspondning acknowledge message is received the 
+in the retransmit queue for the remnode. When a corresponding acknowledge message is received the 
 message is deleted from the retransmit queue. This is done automatically by the transport process.
 
 <h2>Receiving messages
@@ -2972,7 +2970,7 @@ This documentation expects you to have basic knowledge on BEA Message Queue. In 
 runs on a specific bus. Each node has group-number and can only communicate to other groups on the same bus.
 On each group several queues can be configured.
 
-To be able to start this transport of course the Message Queue sotware need to be runnning. You also need some 
+To be able to start this transport of course the Message Queue software need to be running. You also need some 
 environment variables to be set. These are:
 
 <c>DMQ_BUS_ID
@@ -2987,7 +2985,7 @@ TargetQueue.
 Similarly to UDP and TCP-transports RemTrans. Address[0,1] are used to identify the message. Address[0]
 represent the message-class and Address[1] represent the message-type (according to the BMQ-nomenclature).
 Address[2,3] are used to define what type delivery mode (Address[2]) that should be used and what action should be
-taken when a message cannot be deilvered (Address[3]).
+taken when a message cannot be delivered (Address[3]).
 
 Possible delivery modes are:
 
@@ -3047,7 +3045,7 @@ Serial
 RemoteSerial is an attempt to generalize the using of a simple serial line communication protocols.
 Its useful when we have a one-way sending of messages from some equipment to the control system. 
 You can specify up to eight termination characters in the attribute TermChar[0-7]. 
-These termination characters are used to detect the end of a received message (if a charachter matches
+These termination characters are used to detect the end of a received message (if a character matches
 any of the termination characters). 
 Specify also the settings for the serial link, that is - DevName , Speed , Parity (0 = none, 1 = odd, 
 2 = even), StopBits and DataBits. These could be for example /dev/ttyS0, 9600, 0, 1, 8.
@@ -3126,7 +3124,7 @@ a_d_Error <t> 10 Byte
 The configuration in the node-hierarchy looks like this.
 
 The RemoteConfig-object has to be there. I have added a RemnodeUDP object below this and
-configured address and nodename aswell as the port-numbers to communicate on.
+configured address and nodename as well as the port-numbers to communicate on.
 
 <image> dg_fig70.png
 
@@ -3225,18 +3223,18 @@ the parameters we just add more DataArithm's and continue in the same way.
 Application programming
 
 This chapter is about how to write application programs, i.e. programs in c, c++ or java,
-that attaches Proview. It is assumed that the reader has basic knowlage in the c
+that attaches Proview. It is assumed that the reader has basic knowledge in the c
 programming language.
 
 In many Proview applications, coding everything in the plc editor with function object
 programming works excellent. There are though applications that with graphic programming
-will be unecessary complex, for example advancde models, handling of databases and 
+will be unecessary complex, for example advanced models, handling of databases and 
 materialplanning. In this case you write an application program in c, c++ or java, that
 attaches the realtime database, rtdb. The program reads input data from rtdb, makes its
 calculations, and sets outdata to rtdb, where the data is further processed by the plc program,
 sent to the I/O system and viewed in operator graphs.
 
-We will concentrate on c/c++, as this is the programming languge that i most common in 
+We will concentrate on c/c++, as this is the programming language that i most common in 
 application programming and also has most functionality. The interfaces used are described
 in Programmer's Reference Manual (PRM).
 
@@ -3273,7 +3271,7 @@ c types for all the other Proview types, e.g. pwr_tInt32, pwr_tUInt32, pwr_tStri
 
 <h1>Gdh initialization
 The database is attached with a call to gdh_Init() which takes an idenfifier string for the
-application as an argument. First we include pwr.h that contains the baseic types in Proview
+application as an argument. First we include pwr.h that contains the basic types in Proview
 and rt_gdh.h that contains the API to the database.
 
 <c>#include "pwr.h"
@@ -3290,7 +3288,7 @@ and rt_gdh.h that contains the API to the database.
 <c>}
 
 The function returns a status variable of type pwr_tStatus. An even status implies that
-something is wrong, an odd that the call was a success. The status kan be translated into
+something is wrong, an odd that the call was a success. The status can be translated into
 a string that gives more information about what is wrong. This is achieved with the
 errh interface which is described later.
 
@@ -3357,7 +3355,7 @@ In the init() function the pointer start_ptr is set to point to the value of the
 H1-H2-Start in the database.
 
 <h2>Warning
-Note that pointers in c requires caution. If you use pointer arithmetics or array indices 
+Note that pointers in c requires caution. If you use pointer arithmetics or array indexes 
 its easy to point at wrong position in the database, and to write in wrong position.
 This can give rise to errors that are very hard to find this cause of.
 
@@ -3477,7 +3475,7 @@ To the log functions you send the string that is to be written in the log, e.g.
 
 errh_Error( "Something went wrong");
 
-The string can also work as a format statement contaning %s to format strings, %f for
+The string can also work as a format statement containing %s to format strings, %f for
 float and %d for integer, see printf for more info.
 
 <c>errh_Error( "Number is to high: %d", n);
@@ -3530,14 +3528,14 @@ the object identity for the object as argument.
 
 <h1>Status graph
 The application is viewed in the status graph for the node, if the application has attached
-errh and registred the application object. I will be shown under 'Application' on the row
+errh and registered the application object. I will be shown under 'Application' on the row
 corresponding to the application index. In the graph the status of the application and the
 last/most severe log message are displayed.
 
 <image> dg_fig94.png
-<b>Fig Detail for the status graph displaying status and logg message for the application.
+<b>Fig Detail for the status graph displaying status and log message for the application.
 
-If the process i halted, status is set to timeout. This vill also affect the system status.
+If the process i halted, status is set to timeout. This will also affect the system status.
 
 <image> dg_fig95.png
 <b>Fig The application is halted.
@@ -3662,7 +3660,7 @@ In the file you insert one line for each application that is to be started
 <topic> dg_appl_inievents
 Receive system events
 
-Proview transmitts messages at certain events, e.g. when a soft restart proceeds or when
+Proview transmits messages at certain events, e.g. when a soft restart proceeds or when
 the runtime environment is stopped. An application can listen to these messages, for 
 example to terminate when Proview is terminated. The messages are receive from Qcom. You
 create a Qcom queue and binds this queue to the queue that submits the messages.
@@ -3729,8 +3727,8 @@ to discover new objects of new configurations after a soft restart.
 <c>  }
 <c>}
 
-If you are only interested in stopping the proccess when Proview is taken down, there is
-a more simpel way to kill it. You can put a scripfile, pwrp_stop.sh, on $pwrp_exe where
+If you are only interested in stopping the process when Proview is taken down, there is
+a more simple way to kill it. You can put a scripfile, pwrp_stop.sh, on $pwrp_exe where
 you kill the process.
 
 <c>killall ra_myappl
@@ -3754,7 +3752,7 @@ rt_appl handles this:
 - Handling events for soft restart and termination.
 - Timestamps to avoid timeout.
 
-This exampel shows the application ra_appl subclassing rt_appl.
+This example shows the application ra_appl subclassing rt_appl.
 
 <c>class ra_appl : public rt_appl {
 <c>public:
@@ -3900,11 +3898,11 @@ Finally you call sevcli_close() to disconnect the server node.
 <topic> dg_appl_io
 I/O handling
 
-If an application requires fast and syncronized I/O data it can work directly against the
+If an application requires fast and synchronized I/O data it can work directly against the
 I/O system and call the I/O routines to read and write I/O on its own.
 
 Initialization is done with the function io_init(), to which a process argument is supplied.
-Process identifies which I/O uints (agent, rack or card) are handled by a specific process. 
+Process identifies which I/O units (agent, rack or card) are handled by a specific process. 
 Each I/O object has a Process attribute and if this corresponds to the process sent as 
 argument to io_init(), the unit will be handled by the application. If a card is handled 
 by an application, also the rack and agent of the card have to be handled by the application.
@@ -4070,7 +4068,7 @@ Base objects and subgraphs can be grouped together by selecting them and activat
 <h2>Dynamics
 Subgraphs and groups has dynamic properties, i.e. they can be connected to signals in the 
 runtime database, and change color, position or shape depending on the values of the signals. 
-A subgraph often has default dynamic behaviour, for example an indicator shifts between two 
+A subgraph often has default dynamic behavior, for example an indicator shifts between two 
 colors. You only have to connect the indicator to a digital signal to make it work. This is 
 done by selecting a signal in the plant hierarchy window, and click on the valve with 
 Ctrl/DoubleClick MB1. 
@@ -4091,7 +4089,7 @@ for each group.
 <h2>The Object editor
 Base objects, subgraph objects and groups have properties, that is changed from the object
 editor. The object editor is opened by selecting the object, and activating 
-'Function/Object attributes' in the mnu. By opening the object editor for the pushbutton
+'Function/Object attributes' in the menu. By opening the object editor for the pushbutton
 mentioned above, you can for example enter the text, that is displayed in the button, in the
 attribute 'Text'.
 
@@ -4102,8 +4100,8 @@ The DigError attribute indicates that something is wrong, and if this signal is 
 valve is colored red. The DigLowColor attribute is connected to the open switch of the valve.
 If this signal is false, the valve is colored in the color stated in 'DigLowColor.Color'. Is
 the signal true, it keeps the color given in the editor. The signals of the two attribute is
-inserted by selecting each signal in the plant hierarchy respektively, and clicking with
-Ctrl/Doubleclick MB1 on the attribute row of the attribut. The color 'DigLowColor' is stated
+inserted by selecting each signal in the plant hierarchy respectively, and clicking with
+Ctrl/Doubleclick MB1 on the attribute row of the attribute. The color 'DigLowColor' is stated
 by opening the attribute and selecting one of the 300 colors. The colors has the same order
 as in the color palette, and with a little practice they can be identified by the name.
 
@@ -4198,7 +4196,7 @@ has to be fulfilled
   PWR_BUS_ID to the buss stated in the BusConfig object in the project volume, for example
 <c>  export PWR_BUS_ID=999
 
-The runtime monitorn also requires a StatusMontorConfig object to be configured below
+The runtime monitor also requires a StatusMontorConfig object to be configured below
 the $Node object in the volume to start.
 
 The Runtime Monitor is started from Tools/Runtime Monitor in the menu. There are buttons
@@ -4207,7 +4205,7 @@ colored square, the status of the runtime environment is displayed ('Running' or
 The color indicates the status of the system, red for error status, yellow for warning, 
 and green for OK.
 
-The button 'Restart Runtime' performes a soft restart, and can be used if the runtime
+The button 'Restart Runtime' performs a soft restart, and can be used if the runtime
 is started already. 
 
 </topic>
@@ -4219,23 +4217,23 @@ is started already.
 The Configurator
 
 The configurator is used to navigate in and configure the Workbench.
-The configurator displayes the object in one volume. The objects are usually separated in two
+The configurator displays the object in one volume. The objects are usually separated in two
 windows, a left and a right, and how the separation is done depends on what type of volumes
 is handled.
 
 - For rootvolumes and subvolumes, the plant hierarchy is displayed in the left window, and
   the node hierarchy in the right.
 
-- For the directory volume, volumes are displayed in the left window and busses and nodes in
+- For the directory volume, volumes are displayed in the left window and buses and nodes in
   the right.
 
 - For class volumes, classes are displayed in the left window and types in the right.
 
-From 'View/TwoWindow' you kan choose wether to display two windows or only one. I only one
+From 'View/TwoWindow' you can choose whether to display two windows or only one. I only one
 window is displayed, every second time you activate 'TwoWindow' it will be the upper window
 that is displayed, else it will be the lower window.
 
-From 'Edit/Edit mode' you enter edit mode, and a palette with varoius classes is displayed to
+From 'Edit/Edit mode' you enter edit mode, and a palette with various classes is displayed to
 the left. You can now create new objects, move objects, change values of attributes etc.
 
 <h2>Volume representation
@@ -4248,7 +4246,7 @@ representations of volumes:
   can start the runtime environment, loadfiles are generated from the volumes. The loadfiles
   are read at runtime startup. The db representation i editable.
 
-- wbl, a textfile with extension .wb_load. The classvolujes are stored as wbl, and root and
+- wbl, a textfile with extension .wb_load. The classvolumes are stored as wbl, and root and
   sub volumes can be dumped in a wbl-file, for example when upgrading, and later reloaded. The
   wbl representation is node editable. When editing a class volume you import the wbl
   representation to a mem-represention, and the save it as wbl again.
@@ -4282,9 +4280,9 @@ directory volume is opened, and the other volumes are opened as dbs-volumes.
 
 <h1>Navigate <bookmark>wnav_navigate
 The object of the current volume are displayed in the configurator. The objects are ordered
-in a tree structure, and objects with chidren are displayed with a map, and objects without 
+in a tree structure, and objects with children are displayed with a map, and objects without 
 children with a leaf. For each object is displayed as default, the object name, class and
-possible description (the description is fechted from the Description attribute in the object).
+possible description (the description is fetched from the Description attribute in the object).
 
 By clicking with MB1 on a map, the map is opened and the children of the object are displayed.
 Is the map alread open, it is closed. You can also open a map with a doubleclick anywhere in
@@ -4305,29 +4303,29 @@ icons dependent of type.
   are displayed.
 <image> dg_fig27.gif
 
-- An attribute refering another attribute or object, i.e. of type Objid or AttrRef, is marked
-  with an arrow ponting to a square.
+- An attribute referring another attribute or object, i.e. of type Objid or AttrRef, is marked
+  with an arrow pointing to a square.
 
 - Enumeration types, Enum, is marked with am map and some long narrow rectangles. By clicking
   MB1 on the map the different alternatives of the enumeration are displayed. The alternatives
-  are displayed with checkboxes, and the choosen alternative is marked. You can also 
+  are displayed with checkboxes, and the chosen alternative is marked. You can also 
   Doubleclick MB1 in the attribute row to display the alternatives.
-  attributraden för att se alternativen.
+ 
 <image> dg_fig28.gif
 
-- Mask types, Mask, is marked simular to Enum, an the different bits are displayed with Click
+- Mask types, Mask, is marked similar to Enum, an the different bits are displayed with Click
   MB1 on the map, or Doubleclick MB1 in the attribute row.
 <image> dg_fig29.gif
 
-- Attrbute objects, i.e. attributes that contains the datastructure of an object, is marked
+- Attribute objects, i.e. attributes that contains the datastructure of an object, is marked
   with a square with a double line on the upper side. The attribute object is opened with
   Click MB1 on the square, or Doubleclick MB1 in the attribute row.
 
 En object or attribute is selected with Click MB1 in the object/attribute row (not in the map
-or leaf). With Shift/MB1 you kan select several objects. With Drag MB1 you can also select
+or leaf). With Shift/MB1 you can select several objects. With Drag MB1 you can also select
 several objects.
 
-From an ergonomic point of view, it is often better to navigat from the keyboard. You mainly
+From an ergonomic point of view, it is often better to navigate from the keyboard. You mainly
 use the arrow keys. First you have to set input focus to the window, by clicking on it. Input
 focus between the left and right window is shifted with TAB.
 
@@ -4378,9 +4376,9 @@ a new object identity, and references to the object might be lost. You can use t
 paste/keepoid to keep the identity.
 
 <h2>Copy an object
-You kan copy an object with copy/paste or from the popup menu.
+You can copy an object with copy/paste or from the popup menu.
 
-- copy/paste. Select the object or objects that are to be copiedm and activate 'Edit/Copy'
+- copy/paste. Select the object or objects that are to be copied and activate 'Edit/Copy'
   (Ctrl/C) in the menu. The selected object are now copied to a paste buffer. Select a
   destination object, and activate 'Edit/Paste' (Ctrl/V). The objects in the paste buffer are
   now placed as siblings to the destination objects. If you instead activate 'Edit/Paste Into'
@@ -4390,13 +4388,13 @@ You kan copy an object with copy/paste or from the popup menu.
 - from the popup menu. Select the object or objects that are to be copied, open the popup
   menu from the destination object, and activate 'Copy selected object(s)'. You now have to
   choose where the new objects are to be placed, relative to the destination object, as first
-  or last child, or as next or previous sibling. If the copied objects have acsendants, and
+  or last child, or as next or previous sibling. If the copied objects have ascendants, and
   they also are to be copied, you activate 'Copy selected Tree(s)' instead.
 
 <h2>Change object name
 The name of an object is changed by selecting the object, and activating 'Edit/Rename' 
 (Ctrl/N) in the menu. An input field is opened in the lower region of the configurator, where
-the new name is entered. An object name kan have max 31 characters.
+the new name is entered. An object name can have max 31 characters.
 
 You can also change the name by displaying the object attributes. In edit mode, the object
 name is displayed above the attributes, and is changed in the same way as an attribute.
@@ -4406,7 +4404,7 @@ Select the attribute to be changed, and activate 'Functions/Change value' (Ctrl/
 Enter the new value in the input field. If you want to terminate the input, you activate
 'Change value' again.
 
-Not all attribute are editable. It depends on the function of the attribuet, if it is to be
+Not all attribute are editable. It depends on the function of the attribute, if it is to be
 assigned a value in the development environment or not. Editable attributes are marked with
 an arrow.
 
@@ -4419,7 +4417,7 @@ As 'advanced user' you can open the input field with 'ArrowRight', as a faster a
 
 <h1>Symbol file
 
-The symbolfile is a command-file that is executed att wtt startup.
+The symbolfile is a command-file that is executed at wtt startup.
 It can contain definitions of symbols and other wtt commands.
 Here is some examples of useful commands.
 
@@ -4433,7 +4431,7 @@ Shortcut to somewhere in the database hierarchy:
 <topic>objecteditor_refman
 Object Editor
 
-The quantity of data for an object is devided in attributes. The Object Editor displayes the
+The quantity of data for an object is divided in attributes. The Object Editor displays the
 attributes of an object and value of each attribute. If you are in edit mode, you can also
 change the values of the attributes.
 
@@ -4470,7 +4468,7 @@ or activate 'Functions/Close change value' (Ctrl/T) to terminate.
 
 The Object Editor for plc objects has functions to state which inputs or outputs are to be
 displayed in the function block. You can also choose if digital inputs is to be inverted.
-This i choosen with checkboxes for each attribute respectively ('Used' and 'Inverted'). The
+This i chosen with checkboxes for each attribute respectively ('Used' and 'Inverted'). The
 checkbox for 'Used' can also be changed from the keyboard with 'Shift/ArrowRight', and the
 checkbox for 'Inverted' can be changed with 'Shift/ArrowLeft'.
 
@@ -4487,7 +4485,7 @@ displayed in a table in the editor. In the table. also the values of an attribut
 objects are displayed, and you can easily shift between different attributes.
 
 The Spreadsheet Editor is opened from the configurator: 'Functions/Spreadsheet' in the menu.
-If the configrator is in edit mode, also the Spreadsheet Editor i opened in edit mode.
+If the configurator is in edit mode, also the Spreadsheet Editor i opened in edit mode.
 
 When the spreadsheet editor is started, you first have to state which object are to be 
 displayed, i.e. which class they belong to and under which hierarchy the are placed. This
@@ -4497,28 +4495,28 @@ attribute objects, i.e. objects that reside as attributes in other objects, is t
 <b>Choose class and hierarchy
 <image>dg_fig33.gif
 
-After that you choose which attribut is to be displayed. Select at attribut in the attribute
+After that you choose which attribute is to be displayed. Select an attribute in the attribute
 list and click on 'Ok', or doubleclick on an attribute.
 
 <b>Choose attribute
 <image>dg_fig34.gif
 
-The result is shown in the figure below. Here, the attribute 'Description' was choosen. You
+The result is shown in the figure below. Here, the attribute 'Description' was chosen. You
 can easily view the other attributes in the object by activating 'File/Next Attribute'
 (Ctrl/N) and 'File/Previous Attribute' in the menu.
 
 <b>Spreadsheet Editor
 <image>dg_fig35.gif
 
-<h2>Meny
+<h2>Menu
 File/Select Class     <t><t>State class and hierarchy for the objects that are to be displayed.
 File/Select Attribute <t><t>State which attribute is to be displayed.
 File/Next Attribute   <t><t>Display the next attribute for the object in the table.
-File/Previous Attribut <t><t>Display the previous attribute for the objects in the table.
+File/Previous Attribute <t><t>Display the previous attribute for the objects in the table.
 File/Print            <t><t>Print the table.
 File/Close            <t><t>Close the Spreadsheet Editor.
 
-Functions/Change value <t><t>Open an input field for the sekected object.
+Functions/Change value <t><t>Open an input field for the selected object.
 Functions/Close change value <t><t>Close the input field.
 
 </topic>
@@ -4529,7 +4527,7 @@ Functions/Close change value <t><t>Close the input field.
 Help window
 
 The helpwindow is used to view and navigate in help texts. The help texts can be various
-manuals and guides that comes with Proview, or helptexts witten by the constructor to
+manuals and guides that comes with Proview, or helptexts written by the constructor to
 describe the plant and to give assistance to the operators.
 </topic>
 </chapter>
@@ -4538,7 +4536,7 @@ describe the plant and to give assistance to the operators.
 <topic> messagewindow_refman
 Message window
 
-The message window displayes messages from Proview that are transmitted at various
+The message window displays messages from Proview that are transmitted at various
 operations. The messaged can have five levels of severity, that are marked with different
 colors: 
 
@@ -4558,7 +4556,7 @@ By clicking the arrow, the object is displayed.
 Utilities
 
 The utilities window is a graphic interface to different commands in wtt.
-For more information about the commands, se chapter Commands.
+For more information about the commands, see chapter Commands.
 </topic>
 </chapter>
 
@@ -4581,7 +4579,7 @@ interact with each other and be combined to one net.
 <h2>Start
 The Plc editor is opened from the configurator. Select an object of class PlcPgm and activate
 'Functions/Open Program' (Ctrl/L) in the menu, or activate 'Open Program' in the popupmenu
-for the PlcPgm object. The configurator shoude not be in edit mode.
+for the PlcPgm object. The configurator should not be in edit mode.
 
 <h2>Working mode
 The Plc editor can be in four different modes: View, Edit, Trace and Simulate. The mode
@@ -4600,7 +4598,7 @@ If you want to trace the program you enter the trace mode. This requires that th
 runtime environment is started in the development station. Simulate works as trace, but
 you can also set values to signals.
 
-Trace is nowdays easier and faster performed from Xtt. We recommend that you use PlcTrace in
+Trace is nowadays easier and faster performed from Xtt. We recommend that you use PlcTrace in
 Xtt instead.
 
 <h1>Editing
@@ -4616,18 +4614,18 @@ The Plc editor consist of
 
 <h2>The Palettes
 <b>The Object Palette
-When you start the Plc editor, the funktion object palette is displayed. When creating a
-funktion block in the work area, you choose a class in the palette.
+When you start the Plc editor, the function object palette is displayed. When creating a
+function block in the work area, you choose a class in the palette.
 
 <b>The Connection Palette
-When you create connectinos between objects, the editor chooses a suitible type of connection.
-Though, in some cases the constructor has to influence the choise of connection type. This
+When you create connections between objects, the editor chooses a suitable type of connection.
+Though, in some cases the constructor has to influence the choice of connection type. This
 is done in the connections palette that is displayed by activating 'View/Palette/Connection'
 in the menu. When the palette is closed, by activating 'View/Palette/Object' or 
-'View/Palette/Plant', the editorn is again responsible for choise of connection type.
+'View/Palette/Plant', the editor is again responsible for choice of connection type.
 
 <b>Plant Hierarchy
-You can view the plant hierachy by activating 'View/Palette/Plant' in the menu. When
+You can view the plant hierarchy by activating 'View/Palette/Plant' in the menu. When
 connecting function objects to signals, for example when fetching signal values, it is possible
 to indicate which signal is to be fetched. You can also select the signal in the configurator,
 which in many cases is a smoother alternative.
@@ -4693,7 +4691,7 @@ Objects are selected in the following ways
   object already is selected.
 - by Drag MB1 you can select one or several objects. Objects that has some part within the
   marked rectangle are selected.
-- by pressing the Shift key and Drag MB1 you add the objects in the marked rectanglel to the
+- by pressing the Shift key and Drag MB1 you add the objects in the marked rectangle to the
   selectlist.
 
 Selected objects are drawn with red color.
@@ -4713,7 +4711,7 @@ An output pin and an input pin is connected in the following way
 
 A connections is now created between the objects.
 
-Two inputs is connected in the same way, but som of the connected inputs has to be connected
+Two inputs is connected in the same way, but some of the connected inputs has to be connected
 to an output, and from this output the value is fetched to all the connected inputs.
 
 <b>Data types
@@ -4740,7 +4738,7 @@ be drawn by activating 'View/Reference connection' in the menu.
 <bookmark>feedback_connection
 <b>Execute order
 
-Besides transfering a signal value, the connections also determine the execute order between
+Besides transferring a signal value, the connections also determine the execute order between
 different function blocks. If two objects are connected trough an output and an input, 
 normally the output-object is to be executed before the input-object. But sometimes a feedback
 is needed in the net, and then you face a execute order loop. To determine the execute order
@@ -4752,9 +4750,9 @@ connections. They are drawn with dashed lines.
 <b>Feedback connection
 <image> dg_fig37.gif
 
-Here you can also find the connection type 'ConExecuteOrder'. In som cases you want to control
+Here you can also find the connection type 'ConExecuteOrder'. In some cases you want to control
 the execute order between to function blocks, though they are not connected to each other.
-Then you can draw a ConExecuteOrder between them (between which input or outpu doesn't 
+Then you can draw a ConExecuteOrder between them (between which input or output doesn't 
 matter). The connections is to be drawn from the object that is to execute first, to the object
 that is to execute last. In the figure below, the storage of the attribute 'Temperaturer' is 
 done before the storage of the attribute 'Tjocklek'.
@@ -4768,7 +4766,7 @@ In the left side of the net of function blocks, values of signals and attributes
 The fetching is performed by objects as GetDi, GetDo, GetDv, GetIi etc. Fetching of attribute 
 values is performed by GetDp, GetIp, GetAp and GetSp. These object you find under the folder
 'Signals' in the palette. When an object of this type is created, you has to state which
-signal, or which attribut that is to be fetched. The easiest way to do this, is to select the
+signal, or which attribute that is to be fetched. The easiest way to do this, is to select the
 signal/attribute in the configurator, and click with Ctrl/Doubleclick MB1 on the object.
 The signal/attribute is then displayed in the function block, and if the signal is an input
 signal, the channel of the signal is also displayed.
@@ -4822,22 +4820,22 @@ individual storing or fetching objects.
 However, if you store and fetch the value of an attribute, that is not I/O copied, the
 execute order can be of importance for the function.
 
-The exectute order is determined by the connections between the function blocks. The common
-connections are both signal tranferring and executeorder determining. If you make a feedback
+The execute order is determined by the connections between the function blocks. The common
+connections are both signal transferring and executeorder determining. If you make a feedback
 you then have to choose a connectiontype that is signal transferring, but not executeorder
 determining. The different feedback connections are of this type. Furthermore there is a 
 connections that is executeorder determining but node signal transferring, ConExecuteOrder.
 With this you can control the execute order between different function blocks without
-tranferring any signals values.
+transferring any signals values.
 
 The execute order for the function blocks in a plc window is displayed with
 'View/Show execute order' in the menu. The number displayed for each function block states
 tho order in which they are executed. The objects without a number doesn't have any
 executable code.
 
-The execute order between different PlcPgm is controled by the attriute ExecuteOrder in the
+The execute order between different PlcPgm is controlled by the attribute ExecuteOrder in the
 PlcPgm object. Exectute order determines the order within a thread. Lower values of 
-ExecuteOrder are exectued before higher.
+ExecuteOrder are executed before higher.
 
 <h1>Compile
 Before a plc window can be executed, is has to be compiled. At the same time, a syntax control
@@ -4853,7 +4851,7 @@ compilation succeeded.
 
 The compile is executed from 'File/Build' in the menu.
 
-If you want to check the syntax witout generating any code, you activate 'File/Syntax'. The
+If you want to check the syntax without generating any code, you activate 'File/Syntax'. The
 c compiler is not activated, thus possible c code errors are not detected.
 
 <h1>Cut and Paste
@@ -4901,9 +4899,9 @@ connected to the InitStep object. Draw a connection from the lower pin of the Tr
 and release it in the working space below the Trans object. A Step object is now created there.
 If you draw a connection from the Step objects lower pin, another Trans object is created.
 If you want a branch of the sequence, you draw an additional connection from the lower pin of
-the Step object. Now a step divergens is created with specific StepDiv connections. If you in
+the Step object. Now a step divergence is created with specific StepDiv connections. If you in
 the same manner creates a branch from a Trans object, by drawing to two connections from the
-lower pin, a parellell branch, with TransDiv connections marked with double lines is created.
+lower pin, a parallel branch, with TransDiv connections marked with double lines is created.
 If you draw a connection from the horizontal pin of a Step an Order object is created, and
 so on. As you can see this is a fast way to build complex sequences.
 
@@ -4951,7 +4949,7 @@ View/Reference connections <t><t>Create connections as reference connections.
 View/Grid Size <t><t>Set grid size.
 View/Show Grid <t><t>Show the grid.
 View/Zoom/In <t><t>Zoom in.
-View/Zoom/Out <t><t>Zomm out.
+View/Zoom/Out <t><t>Zoom out.
 View/Zoom/Reset <t><t>Reset to original zoom factor.
 View/Show Execute Order <t><t>Show execute order for the functions objects.
 View/Redraw <t><t>Redraw connections and redraw the window.
@@ -4969,7 +4967,7 @@ Mode/Simulate <t><t>Simulate mode.
 Click MB1 <t><t>Select an object. Click in an empty space will reset the select list.
 Shift/Click MB1 <t><t>Add object to the select list.
 DoubleClick MB1 <t><t>Open object editor.
-Shift+Ctrl/DoubleClick MB1 <t><t>Copy to paset buffer. Click in an object
+Shift+Ctrl/DoubleClick MB1 <t><t>Copy to past buffer. Click in an object
                 <t><t>copies the object, click in empty space copies selected objects.
 Drag MB1 <t><t>On an object: move object or move selected objects.
          <t><t>In empty space: select objects inside the marked rectangle.
@@ -5085,7 +5083,7 @@ Topic
 <ib><topic>
 <i><topic> begin a topic and should be placed in the first position
 <i>of a line. The topic-tag should be followed by the key that
-<i>the help function will search for. All the following lines untill
+<i>the help function will search for. All the following lines until
 <i> a </topic> tag will be displayed as text for the topic.
 
 <i><topic> 'key'
@@ -5145,7 +5143,7 @@ a link, is will be marked with an arrow.
 Index
 <ib><index>
 <i>The <index> tag is a special link that will display an index of
-<i>the helpfile, that is a list of all the topics in alpabetical order.
+<i>the helpfile, that is a list of all the topics in alphabetical order.
 
 <i>'some text' <index>
 </topic>
@@ -5169,7 +5167,7 @@ will be displayed as
 Header2
 <ib><h2>
 <i>The <h2> tag will display a line as a header with bold text surrounded
-<i>by grey lines. The tag should be placed at the beginning of the line. 
+<i>by gray lines. The tag should be placed at the beginning of the line. 
 <i>A header line can't contain any links.
 
 <b>Example
@@ -5221,7 +5219,7 @@ Include
 <i>Includes another helpfile. The <include> tag should not be placed
 <i>inside a topic.
 
-<i><include> 'filname'
+<i><include> 'filename'
 </topic>
 
 <topic> chapter
@@ -5351,7 +5349,7 @@ This chapter describes how to create at user in proview, and how to grant privil
 access for the user.
 
 The increasing availability of Proview system for different type of users, for example via the
-itranet, has resulted in increasing demands of possibilities to limit the possibility for
+intranet, has resulted in increasing demands of possibilities to limit the possibility for
 various users to influence the system. Proview contains a user database, where you define
 the users for different systems, and where you have the possibility to group systems with
 common users. The database is designed to face the demands of increasing access control, and
@@ -5384,7 +5382,7 @@ describe the connection between different system groups, and to introduce herita
 system groups. The systemgroups lower in the hierarchy, can inherit attributes and users from
 systemgroups higher in the hierarchy.
 
-If a systemgroup will inherit users or not, is determined by the attribut UserInherit. If
+If a systemgroup will inherit users or not, is determined by the attribute UserInherit. If
 the attribute is set, the systemgroup will inherit all users from its parent usergroup.
 Also the users the parent has inherited from its parent, are inherited. A systemgroup can
 override an inherited user by defining the username in its own systemgroup.
@@ -5412,7 +5410,7 @@ regards the construction of operators graphics, to control which input fields an
 a user can influence.
 
 A username can be connected to several system groups, but from the database point of view,
-they are different users, with unic passwords and privileges. They just happen to have the
+they are different users, with unique passwords and privileges. They just happen to have the
 same username.
 
 <h2>Privileges
@@ -5461,11 +5459,11 @@ Proview user database V1.0.0
 <c>. . . . . . amanda     Operator4 (512)
 
 Look at the example above. This is a listing of an user database. To the left, you see the
-system groups, and the number of ponts marks their level in the hierarchy. In the same row
+system groups, and the number of points marks their level in the hierarchy. In the same row
 the attribute of the system group is written. Under each systemgroup, its users with
 privileges is found. Thus the systemgroup ssab has the users sysansv, skiftel and 55.
 
-The systemgroup sasb.hql.bl1 has the attribut UserInherit, which results in that it inherits
+The systemgroup sasb.hql.bl1 has the attribute UserInherit, which results in that it inherits
 users from its parent. Also the parent ssab.hql has UserInherit, i.e. ssab.hql.bl1 also
 inherits from ssab. The users of ssab.hql.bl1 is then, sysansv, skiftel, anna 55 and 
 carlgustav. Here the user 55 of sasb.hql.bl1 overrides the user 55 of ssab.
@@ -5481,7 +5479,7 @@ all its ancestors is missing.
 
 A system with the systemgroup ssab.vwx.n2 will inherit users from the systemgroup ssab,
 i.e. sysansv, skifel and 55. All systemgroups don't have to be present in the database, the
-existance of an ancestor is enough. The ones that are not found are supposed to have the
+existence of an ancestor is enough. The ones that are not found are supposed to have the
 attribute UserInherit.
 </topic>
 
@@ -5491,7 +5489,7 @@ Login
 This sections desribes how Login and access control works in different proview environments.
 
 <h1>Development environment
-When starting the configurator, a login window is opened where you kan state username and
+When starting the configurator, a login window is opened where you can state username and
 password. You can also give the username and password as arguments to the workbench if you
 want to avoid the login procedure. To open the configurator, you need the privilege DevRead,
 and to enter edit mode, you ned DevWrite. To edit in the plc editor, you ned DevPlc.
@@ -5499,7 +5497,7 @@ and to enter edit mode, you ned DevWrite. To edit in the plc editor, you ned Dev
 <h1>Operator environment
 When the operator environment is started with an OpPlace as argument, the user is fetched from
 the UserName attribute in the corresponding User object. To make modifications in the 
-databas from the runtime navigator, the privilege RtWrite is required. In the process graphics
+database from the runtime navigator, the privilege RtWrite is required. In the process graphics
 there are pushbuttons, sliders etc. from which you influence the database. These objects have
 an access attribute, that determines which privileges are required to activate the object.
 These privileges are matched to the users privileges, and if he isn't granted any of them,
@@ -5712,13 +5710,13 @@ The material can be moved between NMps cells to indicate the position of a mater
 plant.
 
 <h2>Plc function object
-A function object used in plc programming, constists of a class that defines the input and
+A function object used in plc programming, consists of a class that defines the input and
 output pins of the function object, and possible internal attributes. This type of objects
 also consists of code that are executed by the plc program. You can choose to create the code
 as plc code or c code.
 
 <h2>Components
-A component object reflecs a component in the plant, and is often divided into two or three
+A component object reflects a component in the plant, and is often divided into two or three
 different classes, a main object, a function object and a bus object, possibly also a 
 simulate object. The main object is placed in the plant hierarchy and contains the signals 
 that are connected to the component, in addition to other configuration data. A function 
@@ -5737,7 +5735,7 @@ in a general fashion to cover a large number of components. Often, you create a 
 is adapted to a specific component, and that, for example, contains a link to a data sheet, 
 helptext etc. for this component. By creating a subclass of a basecomponent you inherit all
 the methods and attributes from this, but you also has the possibility to increase the
-functionallity with more attributes and more plc-code.
+functionality with more attributes and more plc-code.
 
 <h2>Aggregates
 An aggregate reflects a plant part the contains a number of components. In this case, you can
@@ -5765,11 +5763,11 @@ object of a plant part.
 <topic>ced_databasestructure
 Database structure
 <h1>Object
-In the chapter Database structure a descripton of how objects are construced. Now there is
-reason to go a little futher in the subject.
+In the chapter Database structure a description of how objects are constructed. Now there is
+reason to go a little further in the subject.
 
-An object constist of an object head and an object body. The object head contains information
-about the object name, class and relation to other objects. The object body contatins the data
+An object consists of an object head and an object body. The object head contains information
+about the object name, class and relation to other objects. The object body contains the data
 of the object.
 
 <h2>Object header
@@ -5810,14 +5808,14 @@ devbody for example contains graphical data for the plc editor.
 Class description
 
 The layout of an object body is described in the class description of the object. Here you
-also find methods and other properties of the class. The class desciption is built of
+also find methods and other properties of the class. The class description is built of
 specific class definition objects that reside in a class volume. The class volume has a strict
 syntax of how to build the class descriptions. A presentation of the the different objects
 that is a part of the class description follows here.
 
 <h2>Class volume
 Class descriptions reside in a specific type of volume, a class volume. These can contain
-two hierarchies, one hierachy with class descriptions, and one with type descriptions.
+two hierarchies, one hierarchy with class descriptions, and one with type descriptions.
 
 <h2>$ClassHier
 The class descriptions are found under the root object 'Class' of type $ClassHier. Below
@@ -5829,7 +5827,7 @@ name of the class. Below the $ClassDef, the following objects can be located
 
 - an $ObjBodyDef object, 'RtBody', that describes the runtime body.
 - an $ObjBodyDef object, 'DevBody', that describes the body in the development environment.
-- a Template object, i.e. an object of the current class that contatains default values for 
+- a Template object, i.e. an object of the current class that contains default values for 
   instance objects of the class.
 - one or several body objects that contains data for a specific function.
 - a PlcTemplate object, that can be opened by the plc editor, and that contains plc code for
@@ -5840,7 +5838,7 @@ name of the class. Below the $ClassDef, the following objects can be located
 
 <h2>$ObjBodyDef
 An $ObjBodyDef object can either have the name 'RtBody', and then describe the runtime body,
-or the name 'DevBody' and describe thte development body. The attribute 'StructName' contains
+or the name 'DevBody' and describe the development body. The attribute 'StructName' contains
 the name of the c-struct of the class in the include file that is generated for the volume.
 Below the $ObjBodyDef object, one attribute object for each attribute in the object body is
 located. $Attribute object are used for data objects, and $Input, $Intern and $Output for plc 
@@ -5883,8 +5881,8 @@ $Output describes an output pin in a function object. The same datatypes is vali
 $Output as for an $Input.
 
 <h2>$Buffer
-$Buffer specifies an attribut that contatins data of a certain size that only a single function
-is able to interpret. The data is described by a class, but ar not viewable in for example 
+$Buffer specifies an attribute that contains data of a certain size that only a single function
+is able to interpret. The data is described by a class, but are not viewable in for example 
 xtt. PlcNode, that is found in all plc objects, is an example of a $Buffer. Here you find
 graphic information that is only of interest for the plc editor.
 
@@ -5894,8 +5892,8 @@ for all instances of the class. One example of a class body object is $GraphPlcN
 reside in all plc classes. $GraphPlcNode contains data for code generation and graphic layout
 of the function object.
 
-<h1>Menues
-Menu object are used to define popupmenues for objects in the development environment and in
+<h1>Menus
+Menu object are used to define popupmenus for objects in the development environment and in
 the operator environment. $Menu defines a popupmenu in the development environment and 
 $RtMenu i the operator environment. Below the menu object, menu alternatives are defined by
 $MenuButton objects, and submenues with $MenuCascade objects. The menu objects are placed
@@ -5906,13 +5904,13 @@ operator environment. There is for the moment no possibility to do this from a p
 has to be done from the Proview source code.
 
 <h2>$Menu
-$Menu objects describe popup menues in the development environment. The object name specifies
+$Menu objects describe popup menus in the development environment. The object name specifies
 the function, the first part states the tool (Navigator/Configurator). The five last letters
 states during witch conditions the menu is present, dependent on which objects are selected 
 or pointed at.
 
 <c>char 1: P stands for pointed, i.e. the object at which the pointer points.
-<c>char 2: states what should be pointed at: 'o' an object, 'a' an attibute, 
+<c>char 2: states what should be pointed at: 'o' an object, 'a' an attribute, 
 <c>        'c' a class in the palette.
 <c>char 3: 's' stands for selected, i.e. the object that is selected.
 <c>char 4: states what the selected object should be: 'o' an object, 
@@ -5920,14 +5918,14 @@ or pointed at.
 <c>char 5: states if selected and pointed should be the same object: 
 <c>        's' same object, 'n' different objects.
 
-Example ConfiguratorPosos: 'Po' the poitner points at an object, 'so' one object is selected,
+Example ConfiguratorPosos: 'Po' the pointer points at an object, 'so' one object is selected,
 's' the object the pointer points at and the selected object is the same object.
 
 <h2>$RtMenu
-The menu objects that describes popup menues in the operator environment.
+The menu objects that describes popup menus in the operator environment.
 
 <h2>$MenuButton
-Deifines a menu alternative in a popup menu.
+Defines a menu alternative in a popup menu.
 
 </topic>
 
@@ -5935,7 +5933,7 @@ Deifines a menu alternative in a popup menu.
 Type description
 
 Type descriptions, as class descriptions, reside in a class volume. They are placed in a
-separate hierarchy under a $TypeHier object. Types are devided into two categories, base types
+separate hierarchy under a $TypeHier object. Types are divided into two categories, base types
 and derived types.
 
 <h2>Base types
@@ -5956,7 +5954,7 @@ object has $Type and $TypeDef objects as children.
 Description of a base type. This object is reserved for the system volume pwrs.
 
 <b>$TypeDef
-Description of a derived type. The attribute 'TypeRef' contaitns the base type. The most
+Description of a derived type. The attribute 'TypeRef' contains the base type. The most
 common usage are strings and texts with specific size, and enumeration types and bitmasks.
 
 To define an enumeration type, the basetype should be $Enum. Below the $TypeDef object, texts
@@ -5968,10 +5966,10 @@ one alternative.
 To define bitmasks the basetype $Mask is used. Below the $TypeDef object, texts are defined
 for different bits by $Bit objects. When the attribute is given a value, the texts are 
 displayed with checkboxes, as for enumeration types. For bitmasks, several alternatives can
-be choosen.
+be chosen.
 
 <b>$Value
-Defines a value in an enumeration type. The value corresponds to a text, that is viewd in
+Defines a value in an enumeration type. The value corresponds to a text, that is viewed in
 the configuration and in xtt when the attribute is opened. I the includefile for the volume,
 an enum declaration is created, that can be used in c-code.
 
@@ -5998,7 +5996,7 @@ Create classes
 Create a class volume
 
 The classdefinition objects reside in a classvolume, and first the classvolume has to be 
-registred and created.
+registered and created.
 
 The registration is made in the global volume list which is opened from 
 File/Open/GlobalVolumeList in the navigator menu. Here you create a VolumeReg object with
@@ -6078,7 +6076,7 @@ The term attribute objects refers to attributes that are described by a data str
 reason to do this, can be that you want to gather data under on map, or that the datastructure
 is repeated, and in this case you create an attribute object array.
 
-The datas structure of the attribute is defined in a separate class. The class should only
+The data structure of the attribute is defined in a separate class. The class should only
 contain a runtime body, and can not have a development body.
 
 The attribute object is defined by an $Attribute object. In TypeRef the class describing the 
@@ -6088,7 +6086,7 @@ You can also create an array, by setting the Array bit in Flags, and state the n
 elements in Elements.
 
 Attribute objects can also contain attributes that are attribute objects. The number of levels
-are limitied to 20, and the total attribute name is limited to 255 characters.
+are limited to 20, and the total attribute name is limited to 255 characters.
 
 An attribute in an attribute objects is referred to with point as delimiter, i.e. the 
 attribute Description in the attribute object Pump in object o, is referred to with the name
@@ -6123,7 +6121,7 @@ Function object classes
 
 Function objects are used in the plc editor to program the plc program. A function object is
 also described by a class, usually a bit more complex than a data class. It defines, in
-addition to the data sturcture, the graphic layout with inputs and outputs, and the code that 
+addition to the data structure, the graphic layout with inputs and outputs, and the code that 
 is to be generated for the plc program.
 
 The code can be defined either by c-code, or by graphical programming in the plc editor.
@@ -6143,7 +6141,7 @@ the object and activate 'Configure-CCodeFo' from the popupmenu of the object. No
 created
 
 - a RtBody object.
-- a DevBody object with a PlcNode object that defines a buffer for grapic information in
+- a DevBody object with a PlcNode object that defines a buffer for graphic information in
   the instances.
 - a GraphPlcNode object that contains information for graphic and code generation for the
   class.
@@ -6226,7 +6224,7 @@ In2, one intern attribute Factor, and an output Out, all of type Float32.
 <c>  pwr_tFloat32           Out;
 <c>} pwr_sClass_MyFo;
 
-Note that each input consist of two elements, a poniter with the suffix 'P', and en element
+Note that each input consist of two elements, a pointer with the suffix 'P', and en element
 that can be given a value if the input is not connected. If the input is connected, the 
 pointer element will point to the output it is connected to, otherwise it will point to the
 value element. Therefore, in the c-code, you should use the pointer element to fetch the 
@@ -6288,7 +6286,7 @@ Values of inputs, intern attributes, and also outputs, are fetched in the code w
 GetIp, GetAp or GetSp objects. You connect the  objects to attributes in the class by 
 selecting the attribute in the Template object for the class, and activate the 'Connect' 
 method for the Get object. A symbolic reference $PlcFo is put into the Get object. This will
-later be exechanged to a reference to the current instance, when the code for the instance is
+later be exchanged to a reference to the current instance, when the code for the instance is
 compiled.
 
 Calculated values are stored in outputs or intern attributes with StoDp, StoIp etc. These are
@@ -6324,8 +6322,8 @@ Components
 
 A component is an object, or a number of objects, that handles a component i the plant. It
 could be a valve, a motor, a frequency converter etc. The idea behind the component concept
-is that by creating one object (or a number of objects) you get all the functionallity 
-required to control the component: an object contaning data and signals, a function object
+is that by creating one object (or a number of objects) you get all the functionality 
+required to control the component: an object containing data and signals, a function object
 with code to control the component, an object graph for HMI, a simulation object, I/O objects
 to configure bus communication etc.
 
@@ -6362,7 +6360,7 @@ All the input and output signals that is attached to the component should be pla
 main object. Di, Ii, Ai, Do, Io, Ao or Co object are inserted as attribute objects. When
 creating instances of the component, the signals has to be connected to channel objects. For
 profibus, for example, you can create a module object, that contains the channels, and 
-preconnect the signales in the main object to these channels. For each instance, you then
+preconnect the signals in the main object to these channels. For each instance, you then
 don't have to connect every channel individually, but can make on single connection between
 main object and module object.
 
@@ -6433,13 +6431,13 @@ DisableAttr bit in Flags is set.
 <b>Attribute with disable function
 
 <b>Cast
-Component classes are often built in a relativly flexible way to minimize the number of 
+Component classes are often built in a relatively flexible way to minimize the number of 
 variants. Often you create a baseclass that make use of the DisableAttr function to be able
 to cover a number of different configurations. In the example above a solenoid valve class 
 can cover four different configurations by setting DisableAttr on the switch signals. You also
 create subclasses that are adapted to specific valves. For example, a Durholt 100.103 doesn't
 contain any switches, and an subclass is created where both switches are disabled in the
-Template object. You also set other adaptions in the Template object as a link to a datasheet.
+Template object. You also set other adaptations in the Template object as a link to a datasheet.
 The result is a subclass that can be used for Durholt valves without any configurations for
 each instance.
 
@@ -6447,7 +6445,7 @@ If we now build a general aggregate, containing a solenoid valve, and want to be
 the subclasses that exist for the solenoid valve, we use the Cast function. With the Cast 
 function, an attribute object can be casted as a subclass of the original class, given that
 the subclass has the same size. When an attribute object is casted, defaultvalues, and thus
-configurations, are fetched from the subclass. Also classname and methods are feched from the
+configurations, are fetched from the subclass. Also classname and methods are fetched from the
 subclass.
 
 The cast function for an attribute is entered in the following way:
@@ -6493,7 +6491,7 @@ and in the attribute FilterName '$Object-ConfigureComponentFilter'. You should a
 arguments to the method i MethodArguments. MethodArguments[0] contains a bitmask, that decide
 which attributes will be disabled in the current menu alternative. Each attribute, that is
 possible to disable is represented by a bit, and bit order corresponds to the attribute order
-in the object. MethodArguments[1] contains the graphic represententation, see below.
+in the object. MethodArguments[1] contains the graphic representation, see below.
 
 If we look at the solenoid valve, we have two attributes that can be disabled, SwitchClosed
 and SwitchOpen. In the bitmask in MethodArguments[0] SwitchClosed corresponds to the first
@@ -6592,7 +6590,7 @@ can also create $Intern objects, but this type av data are usually stored in the
 Note that the order of attribute objects should be $Input, $Intern, $Output.
 
 The code is created by opening the plc editor for the Code object. In the code, you fetch
-values from an input, by selecting the input attribut in the template object for the 
+values from an input, by selecting the input attribute in the template object for the 
 functionobject in the navigator, and activate the connect function. Output are stored in a 
 similar way. When data should be fetched or stored in the main object, you select the attribute
 in the template object of the main object. References to the function object are viewed in the
@@ -6687,7 +6685,7 @@ In, for example, Profibus you can create module objects, where the channels are 
 dataarea that is received and sent on the bus. If the signals in a component, is handled by
 a module object, you can store symbolic references to the channel objects in the signal
 objects. Then you only have to do one IoConnection between the component and the module object, 
-you don't have to connect each signal separateley. The symbolic references are stored in the 
+you don't have to connect each signal separately. The symbolic references are stored in the 
 template object of the template object of component, by connecting the signals in the template
 object to the channels in the template object of the I/O module. The symbolic references are
 of type $IoConnect, and are converted to real references at initialization of the I/O handling
@@ -6709,7 +6707,7 @@ you exchange the object name with '$object'. Object graph for objects in the bas
 drawn with the following guidelines.
 
 <b> Menu
-There should be a menu with the pulldown menues File, Methods, Signals and Help.
+There should be a menu with the pulldown menus File, Methods, Signals and Help.
 
 File should have the entries
 
@@ -6818,7 +6816,7 @@ The filetype is .dbs, e.g the loadfile for the volume CVolMerk1 is $pwrp_load/cv
 
 The time when the loadfile is created is stored in the file. Furthermore the version of other
 classvolumes that the loadfile is dependent on are stored. At runtime startup, there is a check
-that the current versions in the system coincide with the versions registred in the loadfile.
+that the current versions in the system coincide with the versions registered in the loadfile.
 If any version doesn't coincide, you get the message 'Version mismatch' and the startup is
 aborted.
 
@@ -6851,7 +6849,7 @@ Documentation of classes
 
 For $ClassDef and $Attribute objects, there is a documentation block, that is filled in from
 the object editor. The documentations block, together with the class description, is used
-when classdocumentation is generatated to xtthelp or html format.
+when classdocumentation is generated to xtthelp or html format.
 
 The documentation block for the $ClassDef object should contain a description of the class, 
 and the documentation block for the $Attribute object a description of the attribute.
@@ -6914,7 +6912,7 @@ co_convert
 If you also want to be able to display the code of plc-objects, you have to add aref tags
 in the c or h file of the code, and convert it with
 
-<c>co_convert -sv -d $pwrp_web/ 'filnamn'
+<c>co_convert -sv -d $pwrp_web/ 'filename'
 </topic>
 
 <topic> docblock classdef
@@ -7174,9 +7172,9 @@ The registration is done by the administrator:
 
 - Start the administrator with the command 'pwra’
 - Enter volume mode from the menu 'File/Open/GlobalVolumeList'.
-- Login as administartor.
+- Login as administrator.
 - Enter edit mode from the menu 'Edit/Edit mode'.
-  Volumes are registred by objects of class VolumeReg, that is dislayed in the palette to
+  Volumes are registered by objects of class VolumeReg, that is displayed in the palette to
   the left. In the palette, there is also the $Hier class, that can be used to order the
   VolumeReg objects in a tree structure.
 - Create a VolumeReg object, open the object and enter volumename (equals objectname),
@@ -7229,7 +7227,7 @@ Create the project in the administrator:
 <h2>Project name
 A project has a project name that identifies the project in the development environment. It is 
 similar the system name that identifies the project in the runtime environment, but it 
-doesn’t have to be the same. Actually a system can have several projects in the development 
+doesn't have to be the same. Actually a system can have several projects in the development 
 environment. When upgrading or making a major modification of the system, it is advisable to 
 take a copy of the project and keep the currently running version of the system available for 
 minor corrections. The copy is then created under a new project name, though it has the same 
@@ -7273,7 +7271,7 @@ port number of the opc_server is set to 80, the URI for the web service is on no
 <c>http://mynode
 
 If a web server is present, this normally has allocated the port 80, and another port has to be
-choosen for the opc_sever. If port 8080 is choosen, the URI will be
+chosen for the opc_sever. If port 8080 is chosen, the URI will be
 
 <c>http://mynode:8080
 
@@ -7568,7 +7566,7 @@ Create a card with channels.
 		<t>di3301, di3302... If there is more than one channel
 		<t>channelname has to contain a '#' sign.
 
-/chanidentity	<t>Identiy of the channel. Will be inserted into the Identity-
+/chanidentity	<t>Identity of the channel. Will be inserted into the Identity-
 		<t>attribute of the channel.
 
 /chandescripton	<t>Channel description. Will be inserted into the Description-
@@ -8385,7 +8383,7 @@ Show all volumes in the database.
 <TOPIC> sort <style> function
 Command   sort
 
-Sort the children of an object in alpabetical order, or in class order.
+Sort the children of an object in alphabetical order, or in class order.
 If no parent is given, the children of the selected objects will be sorted.
 
 <B>wtt> sort /parent= [/class] [/signals]
@@ -8393,7 +8391,7 @@ If no parent is given, the children of the selected objects will be sorted.
 /parent		<t>Parent to the objects that will be sorted.
 /class		<t>Sort in class order.
 /signals	<t>Sort signal and plcpgm objects in class order,
-		<t>and other objects in alpabetical order.
+		<t>and other objects in alphabetical order.
 </TOPIC>
 
 <TOPIC> two <style> function
@@ -8427,7 +8425,7 @@ Dump the volume or a part of the volume to text file.
 /nofocode       <t>Don't write plc code for functionobjects with template
                 <t>code. This will reduce the size of the dumpfile. New
                 <t>code will be copied when the plc is compiled.
-/keepname       <t>Write extern references by name instead of indentity string.
+/keepname       <t>Write extern references by name instead of identity string.
 /noindex        <t>Don't write object index in the dumpfile.
 </TOPIC>
 
@@ -8700,10 +8698,10 @@ over the execution to the caller and return the supplied value.
 <TOPIC> if-else-endif <style> function
 if-else-endif
 
-The lines between a if-endif statment will be executed if the expression
-in the if-statment is true. The expression should be surrounded by parentheses.
+The lines between a if-endif statement will be executed if the expression
+in the if-statement is true. The expression should be surrounded by parentheses.
 If an else statement is found between the if and endif the lines between else
-and endif will be executed if the if-exepression is false.
+and endif will be executed if the if-expression is false.
 
 <b>Example
 
@@ -8721,8 +8719,8 @@ and endif will be executed if the if-exepression is false.
 <TOPIC> while-endwhile <style> function
 while-endwhile
 
-The lines between a while-endwhile statment will be executed as long as the
-expression in the while-statment is true. The expression should be surrounded
+The lines between a while-endwhile statement will be executed as long as the
+expression in the while-statement is true. The expression should be surrounded
 by parentheses.
 
 <b>Example
@@ -8735,8 +8733,8 @@ by parentheses.
 <TOPIC> for-endfor <style> function
 for-endfor
 
-The lines between a for-endfor statment will be executed as long as the
-middle expression in the for-statment is true. The for expression consists
+The lines between a for-endfor statement will be executed as long as the
+middle expression in the for-statement is true. The for expression consists
 of three expression, delimited by semicolon and surrounded by parentheses.
 The first expression will be executed the before the first loop, the third
 will be executed after every loop, the middle is executed before every loop
@@ -8867,7 +8865,7 @@ Returns number of printed characters.
 
 <b>Arguments
 
-int 			<t>file		<t>File id retured by fopen.
+int 			<t>file		<t>File id returned by fopen.
 string 			<t>format	<t>Format.
 arbitrary type		<t>arg1		<t>Value argument. Optional. Can be int,
 			<t>		<t>float or string.

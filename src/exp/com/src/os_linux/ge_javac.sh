@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 #
 # Proview   $Id: ge_javac.sh,v 1.5 2006-06-14 10:42:48 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.

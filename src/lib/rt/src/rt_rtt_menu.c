@@ -2178,7 +2178,7 @@ int	rtt_menu_draw_title( menu_ctx	ctx)
 	char		*infoline;
 	int		sts;
 	char		default_infoline[] = 
-"RETURN down in hier  PF1 show obj   PF2 debug     PF3 change value   PF4 back";
+" RETURN down | Ctrl/A open | Ctrl/T debug | Ctrl/E change value | Ctrl/R back";
 
 	/* Print the title */
 	y = 1;

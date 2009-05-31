@@ -871,7 +871,7 @@ class GrowNode : public GlowNode {
 
   //! Set or reset input focus.
   /*! \param focus	if 1 focus is set, else focus is reset. */
-  void set_input_focus( int focus);
+  void set_input_focus( int focus, glow_eEvent event);
 
   //! Open an annotation for input.
   /*! \param num	Annotation number. */

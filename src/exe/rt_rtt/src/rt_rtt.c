@@ -23,16 +23,16 @@
 RTT_HELP_START
 
 RTT_HELP_SUBJ("PWR_RTT")
-RTT_HELP_INFO("  Välj ut önskat ämne med piltangenterna och tryck på RETURN")
+RTT_HELP_INFO("      Select subject with the arrow keys and press RETURN")
 RTT_HELP_TEXT( "\
-	Pwr_rtt visar info om databasen.\n\r\n\r\
-OBJECT HIERARCHY	Visar anläggings och node hierarkin.\n\r\
-ALARM LIST		Visar larmlistan.\n\r\
-EVENTLIST		Visar händelselistan.\n\r\
-EXIT			Avsluta.")
+	rt_rtt show info about the realtime database.\n\r\n\r\
+OBJECT HIERARCHY	Show the Plant and Node hierarchy.\n\r\
+ALARM LIST		Show the alarm list.\n\r\
+EVENTLIST		Show the event list.\n\r\
+EXIT			Terminate.")
 
 RTT_HELP_SUBJ("RTT ALARM LIST")
-RTT_HELP_INFO("  PF1 visa objekt                   PF3 kvittera           PF4 återgå")
+RTT_HELP_INFO("  Ctrl/A Open object             Ctrl/E Acknowledge    Ctrl/R Back   ")
 RTT_HELP_TEXT( "\
 	Alarmlist visar larmlistan.\n\r\n\r\
 	** 	markerar att larmet är aktivt.\n\r\
@@ -44,7 +44,7 @@ RTT_HELP_TEXT( "\
 	Gå ur larmlistan med PF4")
 
 RTT_HELP_SUBJ("RTT EVENT LIST")
-RTT_HELP_INFO("                                                       PF4 återgå")
+RTT_HELP_INFO("                                                   Ctrl/R Back   ")
 RTT_HELP_TEXT( "\
 	Eventlist visar händelselistan.\n\r\n\r\
 	*A,*B,C,D eller I anger larmets prioritet.\n\r\

@@ -708,6 +708,7 @@ int wb_utl::print_plc_hier (
   int		from;
   int		from_found;
   FILE 		*plclink;
+  int 		plclink_open = 0;
 
   /* Get class */
   class_vect[0] = pwr_cClass_plc;
@@ -749,6 +750,7 @@ int wb_utl::print_plc_hier (
     dcli_translate_filename( fname, fname);
 
     plclink = fopen( fname, "w");
+    plclink_open = 1;
     fprintf( plclink, "<html>\n  <head>\n    <title>Plc code</title>\n  <style type=\"text/css\">\n\
 h2 {font-family: sans-serif; font-size: 16pt; font-weight: bold; color: #5263aa; text-align: left; text-decoration: none;}\n\
 a:link {font-family: sans-serif; font-size: 11pt; font-weight: bold; color: #5263aa; text-align: left; text-decoration: none;}\n\
@@ -795,7 +797,7 @@ a:hover {font-family: sans-serif; font-size: 11pt; font-weight: bold; color: #35
   }
   utl_objidlist_free( plcpgmlist);
   
-  if ( plclink) {
+  if ( plclink_open) {
     fprintf( plclink, "  </body>\n</html>\n");
     fclose( plclink);
   }

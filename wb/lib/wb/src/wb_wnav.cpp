@@ -1605,6 +1605,31 @@ int WNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 		wnav->set_attr_value( item_attr->node, item_attr->objid, str);
 	      break;
 	    }
+	    if ( item_attr->type_id == pwr_eType_AttrRef) {
+
+	      if ( wnav->get_global_select_cb)
+		sts = (wnav->get_global_select_cb)( wnav->parent_ctx, &sel_list, 
+					      &sel_is_attr, &sel_cnt);
+	      if ( sel_cnt > 1) {
+		wnav->message( 'E', "Select one object"); 
+		break;
+	      }
+	      else if ( sel_cnt) {
+		char *namep;
+
+		sts = ldh_AttrRefToName( wnav->ldhses, &sel_list[0], ldh_eName_VolPath, &namep, 
+					 &size);
+		if ( EVEN(sts)) return sts;
+
+		strncpy( str, namep, sizeof(str));
+	      }
+	      else {
+		sts = wnav->get_selection( str, sizeof(str));
+	      }
+	      if ( ODD(sts))
+		wnav->set_attr_value( item_attr->node, item_attr->objid, str);
+	      break;
+	    }
 	  }
 	  default:
 	    ;

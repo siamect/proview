@@ -629,15 +629,18 @@ int GrowWindow::event_handler( GlowWind *w, glow_eEvent event, int x, int y, dou
   return sts;
 }
 
-void GrowWindow::set_input_focus( int focus)
+void GrowWindow::set_input_focus( int focus, glow_eEvent event)
 {
   if ( focus && !input_focus) {
     input_focus = 1;
     ctx->register_inputfocus( this, 1);
+
+    if ( event == glow_eEvent_InputFocusInit)
+      window_ctx->inputfocus_init_event();
   }
   else if ( !focus && input_focus) {
     if ( window_ctx->inputfocus_object)
-      window_ctx->inputfocus_object->set_input_focus(0);
+      window_ctx->inputfocus_object->set_input_focus(0, event);
     input_focus = 0;
     ctx->register_inputfocus( this, 0);
   }
@@ -871,6 +874,9 @@ void GrowWindow::new_ctx()
     trace_init();
     trace_scan();
   }
+
+  if ( input_focus)
+    window_ctx->inputfocus_init_event();
 }
 
 void GrowWindow::redraw_cb( void *o)

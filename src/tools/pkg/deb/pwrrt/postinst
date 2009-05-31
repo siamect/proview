@@ -62,12 +62,12 @@ else
     mkdir /home/pwrp
     cp /usr/pwrrt/cnf/user/.bashrc /home/pwrp
     cp /usr/pwrrt/cnf/user/.bash_profile /home/pwrp
-    cp /usr/pwrrt/cnf/user/.mwmrc /home/pwrp
+#    cp /usr/pwrrt/cnf/user/.mwmrc /home/pwrp
     cp /usr/pwrrt/cnf/user/.rtt_start /home/pwrp
     chmod a+x /home/pwrp/.rtt_start
     cp /usr/pwrrt/cnf/user/.xtt_start /home/pwrp
     chmod a+x /home/pwrp/.xtt_start
-    cp /usr/pwrrt/cnf/user/.xsession /home/pwrp
+#    cp /usr/pwrrt/cnf/user/.xsession /home/pwrp
 
     chown -R pwrp /home/pwrp
     chgrp -R pwrp /home/pwrp
@@ -92,12 +92,12 @@ else
     mkdir /home/skiftel
     cp /usr/pwrrt/cnf/user/.bashrc /home/skiftel
     cp /usr/pwrrt/cnf/user/.bash_profile /home/skiftel
-    cp /usr/pwrrt/cnf/user/.mwmrc /home/skiftel
+#    cp /usr/pwrrt/cnf/user/.mwmrc /home/skiftel
     cp /usr/pwrrt/cnf/user/.rtt_start /home/skiftel
     chmod a+x /home/skiftel/.rtt_start
     cp /usr/pwrrt/cnf/user/.xtt_start /home/skiftel
     chmod a+x /home/skiftel/.xtt_start
-    cp /usr/pwrrt/cnf/user/.xsession /home/skiftel
+#    cp /usr/pwrrt/cnf/user/.xsession /home/skiftel
 
     chown -R pwrp /home/skiftel
     chgrp -R pwrp /home/skiftel
@@ -121,12 +121,12 @@ if getent passwd b55 > /dev/null; then
     mkdir /home/b55
     cp /usr/pwrrt/cnf/op/.bashrc /home/b55
     cp /usr/pwrrt/cnf/op/.bash_profile /home/b55
-    cp /usr/pwrrt/cnf/op/.mwmrc /home/b55
+#    cp /usr/pwrrt/cnf/op/.mwmrc /home/b55
     cp /usr/pwrrt/cnf/op/.rtt_start /home/b55
     chmod a+x /home/b55/.rtt_start
     cp /usr/pwrrt/cnf/op/.xtt_start /home/b55
     chmod a+x /home/b55/.xtt_start
-    cp /usr/pwrrt/cnf/op/.xsession /home/b55
+#    cp /usr/pwrrt/cnf/op/.xsession /home/b55
 
     chown -R b55 /home/b55
     chgrp -R pwrp /home/b55
@@ -151,12 +151,12 @@ if getent passwd b66 > /dev/null; then
     mkdir /home/b66
     cp /usr/pwrrt/cnf/op/.bashrc /home/b66
     cp /usr/pwrrt/cnf/op/.bash_profile /home/b66
-    cp /usr/pwrrt/cnf/op/.mwmrc /home/b66
+#    cp /usr/pwrrt/cnf/op/.mwmrc /home/b66
     cp /usr/pwrrt/cnf/op/.rtt_start /home/b66
     chmod a+x /home/b66/.rtt_start
     cp /usr/pwrrt/cnf/op/.xtt_start /home/b66
     chmod a+x /home/b66/.xtt_start
-    cp /usr/pwrrt/cnf/op/.xsession /home/b66
+#    cp /usr/pwrrt/cnf/op/.xsession /home/b66
 
     chown -R b66 /home/b66
     chgrp -R pwrp /home/b66

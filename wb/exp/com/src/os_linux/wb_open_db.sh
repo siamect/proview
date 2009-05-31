@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # Proview   $Id: wb_open_db.sh,v 1.3 2008-10-09 08:31:42 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.

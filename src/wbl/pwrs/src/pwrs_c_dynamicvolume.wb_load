@@ -22,7 +22,7 @@ SObject pwrs:Class
 !/**
 !  @Version 1.0
 !  @Group Volumes
-!  A dynamic volume only exist in runtime, and contains objects that is
+!  A dynamic volume only exist in runtime, and contains objects that are
 !  created and deleted in runtime.
 !
 !  A dynamic volume is configured by a CreateVolume object, normally

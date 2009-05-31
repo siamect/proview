@@ -191,7 +191,7 @@ class GlowArrayElem {
     virtual void convert( glow_eConvert version) {};
     virtual void set_rootnode( void *node) {};
     virtual void set_linetype( glow_eLineType type) {};
-    virtual void set_input_focus( int focus) {};
+    virtual void set_input_focus( int focus, glow_eEvent event) {};
     virtual int get_java_name( char *name) { return 0;}
     virtual void export_flow( GlowExportFlow *ef) {};
 

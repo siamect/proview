@@ -611,8 +611,8 @@ int	rtt_view(	menu_ctx	parent_ctx,
 	    else
 	      sprintf( pagestr, "%d-%d(%d)", start_i+1, end_i, ctx->buffrow_count);
 	    sprintf( str, 
-"                                                    |%12s | PF4 back", pagestr);
-	    strncpy( &str[1], title, min( strlen( title), 52));
+"                                                 |%12s | Ctrl/R back", pagestr);
+	    strncpy( &str[1], title, min( strlen( title), 49));
 	    r_print( "%80s", str);
 	    rtt_char_inverse_end();
 	    

@@ -10,11 +10,12 @@
 
 Name: pwrrt
 Summary: Proview/R runtime environment
-Version: 4.6.0
-Release: 6
+Version: 4.6.1
+Release: 1
 License: GPL
 BuildArch: i386
 Packager: claes.sjofors@proview.se
+Requires: xorg-x11-fonts-ISO8859-1-100dpi, xorg-x11-fonts-ISO8859-1-75dpi, xorg-x11-fonts-Type1
 Group: Applications/System
 Url: http://www.proview.se
 
@@ -486,20 +487,5 @@ fi
 #%postun
 
 %changelog
-* Mon Nov 10 2008 Claes Sjofors <claes.sjofors@proview.se> 4.6.0-1
+* Thu May 28 2009 Claes Sjofors <claes.sjofors@proview.se> 4.6.1-1
   - Base release.
-  4.6.0-2 
-  - Ge: functions for color gradients added.
-  4.6.0-3 
-  - Sev: Improved error handling.
-  4.6.0-4 
-  - Xtt/Ge: Metric fonts.
-  4.6.0-5
-  - Wb, Xtt: Problem with insensitive radiobuttons fixed.
-  4.6.0-6
-  - Bugfix in alarmlist acknowledge. 
-  - Operator window: Alarmtext containg an ampersand was displayed a a blank link.
-  - Home button in help window added.
-  - Ge: problem with soiled texts fixed.
-  - Ge: problem with scaled optionmenu fixed.
-  - Usbio: bugfix for mixed Ai and Di/Do on port B.

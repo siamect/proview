@@ -79,10 +79,12 @@ body#mainmenu {
                 background-color: #ffffff;
 }
 h2#mainmenu {
-                font-family: serif;
+                font-family: Arial, Verdana;
+/*                font-family: serif;*/
                 font-size: 100%;
                 font-weight: bold;
-                color: #5a759a;
+/*                color: #5a759a;*/
+                color: #000000;
                 margin-top: 6px;
                 margin-bottom: 2px;
                 margin-left: 2px;
@@ -103,32 +105,33 @@ td#mainmenu {
                   /* border-style: solid ridge; */
                 }
 a#mainmenu:link {
-                font-family:   sans-serif;
+                font-family: Arial, Verdana;
                 font-size: 10pt;
-                color: #5263aa;
+                color: #324288;
                 text-align: left;
                 }
 a#mainmenu:visited {
-                font-family:   sans-serif;
+                font-family: Arial, Verdana;
                 font-size: 10pt;
-                color: #5263aa;
+                color: #324288;
+/*                color: #5263aa;*/
                 text-align: left;
                 }
 a#mainmenu:hover {
                 color: #3561ff;
                 }
 a#mainmenulink:link {
-                font-family:  sans-serif;
+                font-family: Arial, Verdana;
                 font-size: 8pt;
                 font-weight: normal; 
-                color: #5263aa;
+                color: #324288;
                 text-align: left;
                 }
 a#mainmenulink:visited {
-                font-family:  sans-serif;
+                font-family: Arial, Verdana;
                 font-size: 8pt;
                 font-weight: normal; 
-                color: #5263aa;
+                color: #324288;
                 text-align: left;
                 }
 a#mainmenulink:hover {

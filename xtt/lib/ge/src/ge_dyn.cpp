@@ -4236,7 +4236,7 @@ int GeValueInput::action( grow_tObject object, glow_tEvent event)
     break;
   case glow_eEvent_MB1Click:
     if ( !(dyn->total_action_type & ge_mActionType_InputFocus)) {
-	grow_SetObjectInputFocus( object, 1);
+	grow_SetObjectInputFocus( object, 1, event->event);
 	dyn->graph->set_inputfocus( 1);
     }
     break;
@@ -4246,7 +4246,7 @@ int GeValueInput::action( grow_tObject object, glow_tEvent event)
     sts = change_value( object, event->annot_input.text);
     if ( ODD(sts)) {
       grow_CloseAnnotationInput( object, 1);
-      grow_SetObjectInputFocus( object, 0);
+      grow_SetObjectInputFocus( object, 0, event->event);
       if ( dyn->total_action_type & ge_mActionType_InputFocus)
 	// Trigger a tab event, this is ugly but it works...
 	event->event = glow_eEvent_Key_Tab;
@@ -11253,12 +11253,12 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
 
   switch ( event->event) {
   case glow_eEvent_MB1Click:
-    grow_SetObjectInputFocus( object, 1);
+    grow_SetObjectInputFocus( object, 1, event->event);
     dyn->graph->set_inputfocus( 1);
     break;
   case glow_eEvent_InputFocusInit:
     if ( initial_focus & ge_mInputFocus_InitialFocus)
-      grow_SetObjectInputFocus( object, 1);
+      grow_SetObjectInputFocus( object, 1, event->event);
     break;
   case glow_eEvent_Key_Right:
     if ( event->object.object_type != glow_eObjectType_NoObject) {
@@ -11285,14 +11285,14 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
       }
 
       if ( found)
-	grow_SetObjectInputFocus( next, 1);
+	grow_SetObjectInputFocus( next, 1, event->event);
       else
- 	grow_SetObjectInputFocus( object, 0);
+ 	grow_SetObjectInputFocus( object, 0, event->event);
     }
     else {
       // No current object with input focus, check initial mask
       if ( initial_focus & ge_mInputFocus_FirstHorizontal)
- 	grow_SetObjectInputFocus( object, 1);
+ 	grow_SetObjectInputFocus( object, 1, event->event);
     }
     break;
   case glow_eEvent_Key_Left:
@@ -11337,15 +11337,15 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
 	GeDyn 	*prev_dyn;
 	grow_GetUserData( prev, (void **)&prev_dyn);
 	if ( prev_dyn->total_action_type & ge_mActionType_InputFocus)		
-	  grow_SetObjectInputFocus( prev, 1);
+	  grow_SetObjectInputFocus( prev, 1, event->event);
 	else
-	  grow_SetObjectInputFocus( object, 0);
+	  grow_SetObjectInputFocus( object, 0, event->event);
       }
     }
     else {
       // No current object with input focus, check initial mask
       if ( initial_focus & ge_mInputFocus_LastHorizontal)
- 	grow_SetObjectInputFocus( object, 1);
+ 	grow_SetObjectInputFocus( object, 1, event->event);
     }
     break;
 
@@ -11374,14 +11374,14 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
       }
       
       if ( found)
-	grow_SetObjectInputFocus( next, 1);
+	grow_SetObjectInputFocus( next, 1, event->event);
       else
-	grow_SetObjectInputFocus( object, 0);
+	grow_SetObjectInputFocus( object, 0, event->event);
     }
     else {
       // No current object with input focus, check initial mask
       if ( initial_focus & ge_mInputFocus_FirstVertical)
- 	grow_SetObjectInputFocus( object, 1);
+ 	grow_SetObjectInputFocus( object, 1, event->event);
     }
     break;
   case glow_eEvent_Key_Up:
@@ -11427,15 +11427,15 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
 	GeDyn 	*prev_dyn;
 	grow_GetUserData( prev, (void **)&prev_dyn);
 	if ( prev_dyn->total_action_type & ge_mActionType_InputFocus)		
-	  grow_SetObjectInputFocus( prev, 1);
+	  grow_SetObjectInputFocus( prev, 1, event->event);
 	else
-	  grow_SetObjectInputFocus( object, 0);
+	  grow_SetObjectInputFocus( object, 0, event->event);
       }    
     }
     else {
       // No current object with input focus, check initial mask
       if ( initial_focus & ge_mInputFocus_LastVertical)
- 	grow_SetObjectInputFocus( object, 1);
+ 	grow_SetObjectInputFocus( object, 1, event->event);
     }
     break;
 
@@ -11453,7 +11453,7 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
 	}
       }
       if ( found) {
-	grow_SetObjectInputFocus( next, 1);
+	grow_SetObjectInputFocus( next, 1, event->event);
 
 	// Mark this object as previous tab
 	if ( grow_GetObjectType( next) == glow_eObjectType_GrowNode ||
@@ -11470,12 +11470,12 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
 	}
       }
       else
-	grow_SetObjectInputFocus( object, 0);
+	grow_SetObjectInputFocus( object, 0, event->event);
     }
     else {
       // No current object with input focus, check initial mask
       if ( initial_focus & ge_mInputFocus_FirstTab)
- 	grow_SetObjectInputFocus( object, 1);
+ 	grow_SetObjectInputFocus( object, 1, event->event);
     }
     break;
 
@@ -11485,16 +11485,16 @@ int GeInputFocus::action( grow_tObject object, glow_tEvent event)
 	GeDyn 	*prev_dyn;
 	grow_GetUserData( prev_tab, (void **)&prev_dyn);
 	if ( prev_dyn->total_action_type & ge_mActionType_InputFocus)
-	  grow_SetObjectInputFocus( prev_tab, 1);
+	  grow_SetObjectInputFocus( prev_tab, 1, event->event);
 	else
-	  grow_SetObjectInputFocus( object, 0);
+	  grow_SetObjectInputFocus( object, 0, event->event);
       }
     }
     break;
 
   case glow_eEvent_Key_Escape:
     if ( event->object.object_type != glow_eObjectType_NoObject) {
-      grow_SetObjectInputFocus( object, 0);
+      grow_SetObjectInputFocus( object, 0, event->event);
     }
     break;
 

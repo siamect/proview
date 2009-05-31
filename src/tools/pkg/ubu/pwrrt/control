@@ -1,26 +1,12 @@
 Package: pwrrt
-Version: 4.6.0-6
+Version: 4.6.1-1
 Section: base
 Priority: optional
 Architecture: i386
 Depends: libc6 (>= 2.8~20080505-0ubuntu7), libgtk2.0-0 (>= 2.14.4-0ubuntu1), libasound2 (>= 1.0.17-0ubuntu4), libdb4.7 (>=4.7.25-3)
+Depends: libc6 (>= 2.9-4ubuntu6), libgtk2.0-0 (>= 2.16.1-0ubuntu2), libasound2 (>= 1.0.18-1ubuntu9), libdb4.7 (>=4.7.25-6ubuntu1), libdb4.7++ (>=4.7.25-6ubuntu1)
 Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46
 Maintainer: Proview <postmaster@proview.se>
 Description:
  Proview runtime environment
- 4.6.0-1 Base release
- 4.6.0-2
-  - Ge color gradients added.
- 4.6.0-3
-  - Sev: error handling improved.
- 4.6.0-4
-  - Metric fonts in Ge and Xtt.
- 4.6.0-5
-  - Wb, Xtt: Problem with insensitive radiobuttons fixed.
- 4.6.0-6
-  - Bugfix in alarmlist acknowledge. 
-  - Operator window: Alarmtext containg an ampersand was displayed a a blank link.
-  - Home button in help window added.
-  - Ge: problem with soiled texts fixed.
-  - Ge: problem with scaled optionmenu fixed.
-  - Usbio: bugfix for mixed Ai and Di/Do on port B.
+ 4.6.1-1 Base release

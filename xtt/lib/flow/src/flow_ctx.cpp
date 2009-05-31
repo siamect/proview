@@ -790,7 +790,7 @@ void FlowCtx::find_grid( double x, double y, double *x_grid, double *y_grid)
 
 int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
 {
-  int sts;
+  int sts = 0;
   int i;
   FlowCtx	*ctx;
   int node_move_event = 0;

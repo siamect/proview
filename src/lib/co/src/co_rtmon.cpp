@@ -63,7 +63,7 @@ RtMon::~RtMon()
 void RtMon::activate_help()
 {
   if ( help_cb)
-    (help_cb)( parent_ctx, "runtime monitor");
+    (help_cb)( parent_ctx, "index /helpfile=\"$pwr_lang/rtmon_help.dat\"");
 }
 
 void RtMon::activate_start()
@@ -101,10 +101,24 @@ void RtMon::stop_ok_cb( void *ctx, void *data)
 
 void RtMon::activate_reset()
 {
-  char cmd[] = "source pwr_stop.sh";
+  char nodename[40];
+  char text[80] = "Do you want to reset Runtime Environment on ";
+  pwr_tStatus sts;
+
+  syi_NodeName( &sts, nodename, sizeof(nodename));
+  strcat( text, nodename);
+
+  wow->DisplayQuestion( this, "Reset Runtime", text, reset_ok_cb, 0, 0);
+}
+
+
+void RtMon::reset_ok_cb( void *ctx, void *data)
+{
+  char cmd[] = ". pwr_stop.sh";
 
   system( cmd);
 }
+
 
 void RtMon::activate_xtt()
 {

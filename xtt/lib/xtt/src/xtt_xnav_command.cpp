@@ -2728,6 +2728,15 @@ static int	xnav_open_func(	void		*client_data,
       xnav->op->ack_last_cb = xnav_op_ack_last_cb;
       if ( closebutton)
 	xnav->op->add_close_button();
+      strcpy( xnav->opplace_name, opplace_str);
+
+      // Load eventlist
+      if ( xnav->ev) {
+	delete ((XNav *)xnav)->ev;
+	((XNav *)xnav)->ev = NULL;
+      }
+
+      xnav->load_ev_from_opplace();
     }
     else
     {

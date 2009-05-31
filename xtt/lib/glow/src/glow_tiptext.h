@@ -48,7 +48,8 @@ class GlowTipText {
   /*!
     \param gctx		Glow context.
   */
-  GlowTipText( GrowCtx *gctx) : ctx(gctx), active(false), timer_id(0), text_size(2) {}
+  GlowTipText( GrowCtx *gctx) : ctx(gctx), text_object(0), active(false), timer_id(0), 
+    text_size(2) {}
 
   //! Destructor
   /*! Removes the timer if it is set.

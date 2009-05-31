@@ -532,6 +532,11 @@ void WttGtk::set_edit_show()
 
 void WttGtk::set_twowindows( int two, int display_wnav, int display_wnavnode)
 {
+  if ( disable_w2) {
+    display_wnav = 1;
+    display_wnavnode = 0;
+    two = 0;
+  }
   if ( display_wnav || display_wnavnode) {
     if ( display_wnav && ! wnav_mapped) {
       g_object_set( wnav_brow_widget, "visible", TRUE, NULL);
@@ -1808,8 +1813,8 @@ WttGtk::WttGtk(
   set_focus_disabled(0), disfocus_timerid(0), selection_timerid(0), avoid_deadlock(0),
   clock_cursor(0), realized(0)
 {
-  const int	window_width = 900;
-  const int    	window_height = 800;
+  int		window_width = 900;
+  int    	window_height = 800;
   // int    	palette_width = 220;
   pwr_tStatus	sts;
   char 		title[80];
@@ -1821,7 +1826,6 @@ WttGtk::WttGtk(
   char		layout_palette[80];
   char		title_w1[40];
   char		title_w2[40];
-  int		hide_wnavnode = 0;
   pwr_tFileName fname;
 
   if ( wbctx && volid) {
@@ -1862,23 +1866,25 @@ WttGtk::WttGtk(
     switch( volclass) {
     case pwr_eClass_DirectoryVolume:
       wb_type = wb_eType_Directory;
-      sprintf( title, "PwR Navigator Directory %s", name);
+      sprintf( title, "PwR Directory,   %s", name);
       strcpy( layout_w1, "ProjectNavigatorW1");
       strcpy( layout_w2, "ProjectNavigatorW2");
       strcpy( layout_palette, "ProjectNavigatorPalette");
       strcpy( title_w1, "Volume Configuration");
       strcpy( title_w2, "Node Configuration");
+      window_width = 900;
+      window_height = 400;
       break;
     case pwr_eClass_ClassVolume:
     case pwr_eClass_DetachedClassVolume:
       if ( ldh_VolRepType( ldhses) == ldh_eVolRep_Mem ||
 	   ldh_VolRepType( ldhses) == ldh_eVolRep_Ced) {
 	wb_type = wb_eType_ClassEditor;
-	sprintf( title, "PwR ClassEditor Volume %s, %s", volname, name);
+	sprintf( title, "PwR ClassEditor %s,   %s", volname, name);
       }
       else {
 	wb_type = wb_eType_Class;
-	sprintf( title, "PwR Navigator Volume %s, %s", volname, name);
+	sprintf( title, "PwR %s,   %s", volname, name);
       }
       strcpy( layout_w1, "ClassNavigatorW1");
       strcpy( layout_w2, "ClassNavigatorW2");
@@ -1893,8 +1899,10 @@ WttGtk::WttGtk(
       strcpy( layout_palette, "NavigatorPalette");
       strcpy( title_w1, "Plant Configuration");
       strcpy( title_w2, "Node Configuration");
-      sprintf( title, "PwR Navigator Buffer %s, %s", volname, name);
-      hide_wnavnode = 1;
+      sprintf( title, "PwR Buffer %s,   %s", volname, name);
+      window_width = 500;
+      window_height = 400;
+      disable_w2 = 1;
       break;
     case pwr_eClass_ExternVolume: {
       switch ( volid) {
@@ -1906,7 +1914,9 @@ WttGtk::WttGtk(
 	strcpy( title_w1, "Project List");
 	strcpy( title_w2, "");
 	sprintf( title, "PwR Project List");
-	hide_wnavnode = 1;
+	window_width = 500;
+	window_height = 400;
+	disable_w2 = 1;
 	break;
       case ldh_cGlobalVolumeListVolume:
 	wb_type = wb_eType_ExternVolume;
@@ -1916,7 +1926,9 @@ WttGtk::WttGtk(
 	strcpy( title_w1, "Global Volume List");
 	strcpy( title_w2, "");
 	sprintf( title, "PwR Global Volume List");
-	hide_wnavnode = 1;
+	window_width = 500;
+	window_height = 400;
+	disable_w2 = 1;
 	break;
       case ldh_cUserDatabaseVolume:
 	wb_type = wb_eType_ExternVolume;
@@ -1926,7 +1938,9 @@ WttGtk::WttGtk(
 	strcpy( title_w1, "User Database");
 	strcpy( title_w2, "");
 	sprintf( title, "PwR User Database");
-	hide_wnavnode = 1;
+	window_width = 500;
+	window_height = 400;
+	disable_w2 = 1;
 	break;
       default:
 	wb_type = wb_eType_ExternVolume;
@@ -1935,7 +1949,7 @@ WttGtk::WttGtk(
 	strcpy( layout_palette, "NavigatorPalette");
 	strcpy( title_w1, "Plant Configuration");
 	strcpy( title_w2, "Node Configuration");
-	sprintf( title, "PwR Navigator Volume %s, %s", volname, name);
+	sprintf( title, "PwR %s,   %s", volname, name);
       }
       break;
     }
@@ -1946,7 +1960,7 @@ WttGtk::WttGtk(
       strcpy( layout_palette, "NavigatorPalette");
       strcpy( title_w1, "Plant Configuration");
       strcpy( title_w2, "Node Configuration");
-      sprintf( title, "PwR Navigator Volume %s, %s", volname, name);
+      sprintf( title, "PwR %s,   %s", volname, name);
     }
   }
   else {
@@ -2692,6 +2706,9 @@ WttGtk::WttGtk(
   gtk_widget_show_all( toplevel);
   realized = 1;
 
+  if ( disable_w2)
+    wnavnode_mapped = 0;
+
   if ( !wnav_mapped)
     g_object_set( wnav_brow_widget, "visible", FALSE, NULL);
   if ( !wnavnode_mapped)
@@ -2732,6 +2749,8 @@ WttGtk::WttGtk(
       }
     }
   }
+  if ( wnav->gbl.advanced_user)
+    g_object_set( tools_set_advuser, "visible", FALSE, NULL);
 
   menu_setup();
   *status = 1;

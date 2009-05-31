@@ -128,3 +128,8 @@
 090306 cs  plc       Default include in ra_plc_user.h added. 
 090507 cs  adm       In projectlist, the project name in a ProjectReg is changed, also the path is changed.
 090507 cs  wb        Bugfix in directory wizard, for nodenames containing '-' NodeConfig object was not configured correctly.
+090515 cs  wtt       Ctrl/Doubleclick MB1 to insert selected object into an objid attribute also works on attrref attributes.
+090515 cs  wtt       Popup menu on attributes. Methods HelpClass, InsertSelectedObject and ChangeValue added.
+090515 cs  wtt       Bugfix in ConnectGraph method for PlantHier objects.
+090518 cs  wb        Wb method PostRename added and implemented for XttGraph and ProjectReg objects.
+090518 cs  wb        Advanced user set as default in wb.

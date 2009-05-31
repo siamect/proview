@@ -827,7 +827,7 @@ wb_dbs::importDbody(pwr_tOid oid, size_t size, void *body)
   }
 
   if (oep->dbody.size == 0) {
-    if (size != 0) printf("error dbody size %ld %s\n", size, cdh_ObjidToString(0,oid,0));
+    if (size != 0) printf("error dbody size %zd %s\n", size, cdh_ObjidToString(0,oid,0));
     return true;
   }
 
@@ -885,7 +885,7 @@ wb_dbs::importRbody(pwr_tOid oid, size_t size, void *body)
     getAliasServer(oep, body);
   
   if (oep->rbody.size == 0) {
-    if (size != 0) printf("error rbody size %ld %s\n", size, cdh_ObjidToString(0,oid,0));
+    if (size != 0) printf("error rbody size %zd %s\n", size, cdh_ObjidToString(0,oid,0));
     return true;
   }
     

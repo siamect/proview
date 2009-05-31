@@ -67,37 +67,7 @@
 
 pwr_dImport pwr_BindClasses(System);
 pwr_dImport pwr_BindClasses(Base);
-#if NOT_YET_IMPLEMENTED
-static ldh_sMenuItem ldh_lMenuItem[100];
 
-static int ldh_gLog_a = 0;
-static int ldh_gLog_b = 0;
-static int ldh_gLog_c = 0;
-
-static struct {
-  pwr_tString32 Name;
-  ldh_eUtility Value;
-} ldh_lUtility[] = {
-  {"__",		ldh_eUtility__},
-  {"Navigator",		ldh_eUtility_Navigator},
-  {"Configurator",	ldh_eUtility_Configurator},
-  {"-",			ldh_eUtility_}
-};
-
-static struct {
-  pwr_tString32 Name;
-  pwr_tChar Char;
-  ldh_eMenuSet Value;
-} ldh_lMenuSet[] = {
-  {"__",		'\0', ldh_eMenuSet__},
-  {"Attribute",		'a',  ldh_eMenuSet_Attribute},
-  {"Class",		'c',  ldh_eMenuSet_Class},
-  {"Many",		'm',  ldh_eMenuSet_Many},
-  {"None",		'n',  ldh_eMenuSet_None},
-  {"Object",		'o',  ldh_eMenuSet_Object},
-  {"-",			'\0', ldh_eMenuSet_}
-};
-#endif
 /*
   Open a db volume.
 */

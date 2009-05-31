@@ -1569,14 +1569,12 @@ ItemMenu::ItemMenu( XNavBrow *brow, const char *item_name,
 
 int ItemMenu::open_children( XNavBrow *brow, double x, double y)
 {
-  int		action_open;
+  int		action_open = 0;
 
   if ( !is_root)
   {
     if ( !brow_IsOpen( node))
       action_open = 1;
-    else 
-      action_open = 0;
   }
   if ( action_open || is_root)
   {

@@ -348,8 +348,9 @@ extern "C" {
   //! Set or reset input focus to a node or group.
   /*!
     \param node		Node or group to set focus to.
-    \param focus	if 1 input focus is set, else focus is reset. */
-  void grow_SetObjectInputFocus( grow_tNode node, int focus);
+    \param focus	if 1 input focus is set, else focus is reset.
+    \param event	The type of event for the input focus change. */
+  void grow_SetObjectInputFocus( grow_tNode node, int focus, glow_eEvent event);
 
   //! Set the text of an annotation in a GrowNode object.
   /*!
