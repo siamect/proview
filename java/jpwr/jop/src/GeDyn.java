@@ -71,6 +71,7 @@ public class GeDyn {
     public static final int mActionType_CloseGraph     	= 1 << 18;
     public static final int mActionType_PulldownMenu    = 1 << 19;
     public static final int mActionType_OptionMenu     	= 1 << 20;
+    public static final int mActionType_SetValue     	= 1 << 21;
 
     public static final int eAnimSequence_Cycle		= 1;
     public static final int eAnimSequence_Dig		= 2;

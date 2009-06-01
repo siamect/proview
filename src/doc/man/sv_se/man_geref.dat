@@ -2226,6 +2226,7 @@ SetDig    <t>Boolean    <t>Sätter värdet på en signal till true vid Klick MB1. <
 ResetDig  <t>Boolean    <t>Sätter värdet på en signal till false vid Klick MB1. <link>GeDynResetDig
 ToggleDig <t>Boolean    <t>Ändrar värdet på en signal vid Klick MB1. <link>GeDynToggleDig
 StoDig    <t>Boolean    <t>Sätter värdet på en signal så länge knappen är intryckt. <link>GeDynStoDig
+SetValue    <t>Float, Int, String  <t>Sätter vardet på en signal till ett angivet värde. <link>GeDynSetValue
 Command   <t>-          <t>Exekverar ett xtt-kommando vid Klick MB1. <link>GeDynCommand
 CommandDoubleClick <t>- <t>Exekverar ett xtt-kommando vid Dubbelklick MB1. <link>GeDynCommandDoubleClick
 Confirm   <t>-          <t>Verifiering innan aktionen utförs. <link>GeDynConfirm
@@ -2298,6 +2299,20 @@ Sätter värdet på en digital signal till ett så länge knappen är intryckt.
 <b>Attribut <t><t>Beskrivning
 StoDig.Attribute <t><t>Signal i rtdb av typen Boolean som sätts vid Klick 
                  <t><t>MB1 på objektet.
+</topic>
+
+<topic>GeDynSetValue <style>function
+SetValue
+
+Sätter värdet på en signal till ett angivet värde.
+Genom att använda flera instanser kan man sätta värden i flera attribute på
+samma knapp.
+
+<b>Attribut <t><t>Beskrivning
+SetValue.Attribute <t><t>Signal i rtdb av typen Float32, Int32, 
+                   <t><t>UInt32, Int16, UInt16, Int8, UInt8 eller String,
+                   <t><t>som sätt vid Klick MB1 på objektet.
+SetValue.Value     <t><t>Värdet som sätts.
 </topic>
 
 <topic>GeDynCommand <style>function

@@ -424,6 +424,8 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GePulldownMenu((const GePulldownMenu&) *elem); break;
     case ge_mActionType_OptionMenu:
       e = new GeOptionMenu((const GeOptionMenu&) *elem); break;
+    case ge_mActionType_SetValue:
+      e = new GeSetValue((const GeSetValue&) *elem); break;
     default: ;
     }
     if ( e)
@@ -513,6 +515,7 @@ void GeDyn::open( ifstream& fp)
       case ge_eSave_CloseGraph: e = (GeDynElem *) new GeCloseGraph(this); break;
       case ge_eSave_PulldownMenu: e = (GeDynElem *) new GePulldownMenu(this); break;
       case ge_eSave_OptionMenu: e = (GeDynElem *) new GeOptionMenu(this); break;
+      case ge_eSave_SetValue: e = (GeDynElem *) new GeSetValue(this); break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeDyn:open syntax error" << endl;
@@ -1128,6 +1131,9 @@ GeDynElem *GeDyn::create_action_element( int mask, int instance)
   case ge_mActionType_OptionMenu:
     e = (GeDynElem *) new GeOptionMenu(this);
     break;
+  case ge_mActionType_SetValue:
+    e = (GeDynElem *) new GeSetValue(this, (ge_mInstance)instance);
+    break;
   default: ;
   }
   return e;
@@ -1289,6 +1295,9 @@ GeDynElem *GeDyn::copy_element( GeDynElem& x)
       break;
     case ge_mActionType_OptionMenu:
       e = (GeDynElem *) new GeOptionMenu((GeOptionMenu&) x);
+      break;
+    case ge_mActionType_SetValue:
+      e = (GeDynElem *) new GeSetValue((GeSetValue&) x);
       break;
     default: ;
     }
@@ -14098,6 +14107,184 @@ int GeAnalogText::export_java( grow_tObject object, ofstream& fp, bool first, ch
     b_mask = b_mask << 1;
   }
   fp << endl << "      })" << endl;
+  return 1;
+}
+
+void GeSetValue::get_attributes( attr_sItem *attrinfo, int *item_count)
+{
+  int i = *item_count;
+
+  if ( instance == ge_mInstance_1) {
+    strcpy( attrinfo[i].name, "SetValue.Attribute");
+    attrinfo[i].value = attribute;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( attribute);
+
+    strcpy( attrinfo[i].name, "SetValue.Value");
+    attrinfo[i].value = value;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( value);
+
+    strcpy( attrinfo[i].name, "SetValue.Instances");
+    attrinfo[i].value = &instance_mask;
+    attrinfo[i].type = ge_eAttrType_InstanceMask;
+    attrinfo[i++].size = sizeof( instance_mask);
+  }
+  else {
+    // Get instance number
+    int inst = 1;
+    unsigned int m = instance;
+    while( m > 1) {
+      m = m >> 1;
+      inst++;
+    }
+
+    sprintf( attrinfo[i].name, "SetValue%d.Attribute", inst);
+    attrinfo[i].value = attribute;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( attribute);
+
+    sprintf( attrinfo[i].name, "SetValue%d.Value", inst);
+    attrinfo[i].value = value;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( value);
+  }
+
+  dyn->display_access = true;
+  *item_count = i;
+}
+
+void GeSetValue::set_attribute( grow_tObject object, const char *attr_name, int *cnt)
+{
+  (*cnt)--;
+  if ( *cnt == 0) {
+    char msg[200];
+
+    strncpy( attribute, attr_name, sizeof( attribute));
+    if ( instance == ge_mInstance_1)
+      sprintf( msg, "SetValue.Attribute = %s", attr_name);
+    else
+      sprintf( msg, "SetValue%d.Attribute = %s", GeDyn::instance_to_number( instance),
+	       attr_name);
+    dyn->graph->message( 'I', msg);
+  }
+}
+
+void GeSetValue::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
+void GeSetValue::save( ofstream& fp)
+{
+  fp << int(ge_eSave_SetValue) << endl;
+  fp << int(ge_eSave_SetValue_attribute) << FSPACE << attribute << endl;
+  fp << int(ge_eSave_SetValue_value) << FSPACE << value << endl;
+  fp << int(ge_eSave_SetValue_instance) << FSPACE << int(instance) << endl;
+  fp << int(ge_eSave_SetValue_instance_mask) << FSPACE << int(instance_mask) << endl;
+  fp << int(ge_eSave_End) << endl;
+}
+
+void GeSetValue::open( ifstream& fp)
+{
+  int		type;
+  int 		end_found = 0;
+  char		dummy[40];
+  int		tmp;
+
+  for (;;)
+  {
+    fp >> type;
+    switch( type) {
+      case ge_eSave_SetValue: break;
+      case ge_eSave_SetValue_attribute:
+        fp.get();
+        fp.getline( attribute, sizeof(attribute));
+        break;
+      case ge_eSave_SetValue_value:
+        fp.get();
+        fp.getline( value, sizeof(value));
+        break;
+      case ge_eSave_SetValue_instance: fp >> tmp; instance = (ge_mInstance)tmp; break;
+      case ge_eSave_SetValue_instance_mask: fp >> tmp; instance_mask = (ge_mInstance)tmp; break;
+      case ge_eSave_End: end_found = 1; break;
+      default:
+        cout << "GeSetValue:open syntax error" << endl;
+        fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
+  }  
+}
+
+int GeSetValue::action( grow_tObject object, glow_tEvent event)
+{
+  if ( !dyn->graph->is_authorized( dyn->access))
+    return 1;
+
+  switch ( event->event) {
+  case glow_eEvent_MB1Down:
+    grow_SetClickSensitivity( dyn->graph->grow->ctx, glow_mSensitivity_MB1Click);
+    grow_SetObjectColorInverse( object, 1);
+    break;
+  case glow_eEvent_MB1Up:
+    grow_SetObjectColorInverse( object, 0);
+    break;
+  case glow_eEvent_Key_Return:
+  case glow_eEvent_MB1Click: {
+    int			sts;
+    pwr_tAName         	parsed_name;
+    int			inverted;
+    int			attr_type, attr_size;
+    graph_eDatabase 	db;
+    char		buf[200];
+    
+    if ( dyn->total_action_type & ge_mActionType_Confirm)
+      break;
+
+    db = dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, 
+				      &attr_size);
+
+    sts = graph_attr_string_to_value( attr_type, value,
+				      (void *)&buf, sizeof( buf), sizeof(buf));
+    if ( EVEN(sts)) {
+      printf("SetValue error: %s\n", attribute);
+      return 1;
+    }
+
+    switch ( db) {
+    case graph_eDatabase_Local: {
+
+      sts = dyn->graph->localdb_set_value( parsed_name, buf, attr_size);
+      if ( EVEN(sts)) printf("SetValue error: %s\n", attribute);
+      break;
+    }
+    case graph_eDatabase_Gdh:
+      sts = gdh_SetObjectInfo( parsed_name, buf, attr_size);
+      if ( EVEN(sts)) printf("SetValue error: %s\n", attribute);
+      break;
+    case graph_eDatabase_Ccm: {
+      sts = dyn->graph->ccm_set_variable( parsed_name, attr_type, buf);
+      if ( EVEN(sts)) printf("SetValue error: %s\n", attribute);
+      break;
+    }
+    default:
+      ;
+    }
+    break;
+  }
+  default: ;    
+  }
+  return 1;
+}
+
+int GeSetValue::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
+{
+  if ( first)
+    fp << "      ";
+  else
+    fp << "      ,";
+  fp << "new GeDynSetValue(" << var_name << ".dd, \"" << attribute << "\",\"" << value << "\")" << endl;
   return 1;
 }
 

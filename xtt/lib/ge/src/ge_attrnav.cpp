@@ -131,6 +131,7 @@ static attrnav_sEnumElement elem_action_type[] = {
 	{ (int) ge_mActionType_ResetDig		, "ResetDig"},
 	{ (int) ge_mActionType_ToggleDig	, "ToggleDig"},
 	{ (int) ge_mActionType_StoDig		, "StoDig"},
+	{ (int) ge_mActionType_SetValue		, "SetValue"},
 	{ (int) ge_mActionType_Command		, "Command"},
 	{ (int) ge_mActionType_CommandDoubleClick , "CommandDoubleClick"},
 	{ (int) ge_mActionType_Help		, "Help"},
