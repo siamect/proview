@@ -143,6 +143,7 @@
     ge_eDynPrio_OptionMenu,
     ge_eDynPrio_InputFocus,
     ge_eDynPrio_DigCommand,
+    ge_eDynPrio_SetValue,
 
     // This should always be last
     ge_eDynPrio_CloseGraph = 10000
@@ -206,7 +207,8 @@
     ge_mActionType_InputFocus	= 1 << 17,
     ge_mActionType_CloseGraph	= 1 << 18,
     ge_mActionType_PulldownMenu	= 1 << 19,
-    ge_mActionType_OptionMenu = 1 << 20
+    ge_mActionType_OptionMenu 	= 1 << 20,
+    ge_mActionType_SetValue 	= 1 << 21
   } ge_mActionType;
 
   //! Instances. A bitmask where each bit represents an instance.
@@ -299,6 +301,7 @@
     ge_eSave_CloseGraph			= 67,
     ge_eSave_PulldownMenu      		= 68,
     ge_eSave_OptionMenu      		= 69,
+    ge_eSave_SetValue			= 70,
     ge_eSave_End		       	= 99,
     ge_eSave_Dyn_dyn_type	       	= 100,
     ge_eSave_Dyn_action_type	       	= 101,
@@ -611,7 +614,11 @@
     ge_eSave_OptionMenu_items_enum29	= 6962,
     ge_eSave_OptionMenu_items_enum30	= 6963,
     ge_eSave_OptionMenu_items_enum31	= 6964,
-    ge_eSave_OptionMenu_attribute	= 6965
+    ge_eSave_OptionMenu_attribute	= 6965,
+    ge_eSave_SetValue_attribute		= 7000,
+    ge_eSave_SetValue_value		= 7001,
+    ge_eSave_SetValue_instance		= 7002,
+    ge_eSave_SetValue_instance_mask     = 7003
   } ge_eSave;
 
 
@@ -2427,6 +2434,30 @@ class GeAnalogText : public GeOptionMenu {
   void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 };
+
+//! Set a value
+class GeSetValue : public GeDynElem {
+ public:
+  pwr_tAName attribute;
+  pwr_tString80 value;
+
+  GeSetValue( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
+    GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_SetValue, ge_eDynPrio_SetValue)
+    { strcpy( attribute, ""); strcpy( value, ""); instance = e_instance;}
+  GeSetValue( const GeSetValue& x) : 
+    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    { strcpy( attribute, x.attribute); strcpy( value, x.value);
+    instance = x.instance, instance_mask = x.instance_mask;}
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  int action( grow_tObject object, glow_tEvent event);
+  void set_attribute( grow_tObject object, const char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
+  int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
+
+};
+
 
 /*@}*/
 #endif

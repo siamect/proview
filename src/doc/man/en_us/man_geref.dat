@@ -2248,6 +2248,7 @@ SetDig    <t>Boolean    <t>Set the value of a signal to true with Click MB1. <li
 ResetDig  <t>Boolean    <t>Set the value of a signal to false with Click MB1. <link>GeDynResetDig
 ToggleDig <t>Boolean    <t>Change the value of a signal with Click MB1. <link>GeDynToggleDig
 StoDig    <t>Boolean    <t>Set the value of a signal as long as the button is pressed. <link>GeDynStoDig
+SetValue  <t>Int, Float, String  <t>Set the value of a signal to a specified value. <link>GeDynSetValue
 Command   <t>-          <t>Execute a xtt command with Click MB1. <link>GeDynCommand
 CommandDoubleClick <t>- <t>Execute a xtt command with Doubleclick MB1. <link>GeDynCommandDoubleClick
 Confirm   <t>-          <t>Confirm before the action is executed. <link>GeDynConfirm
@@ -2319,6 +2320,20 @@ Set the value of a digital signal to 1 for as long the the button is pressed.
 <b>Attribute <t><t>Description
 StoDig.Attribute <t><t>Signal in rtdb of type Boolean that is set
                  <t><t>1 as long as the button is pressed.
+</topic>
+
+<topic>GeDynSetValue <style>function
+SetValue
+
+Set the value of a signal to specified value.
+By using several instances, values can be set into several attributes
+with the same button.
+
+<b>Attribute <t><t>Description
+SetValue.Attribute <t><t>Signal in rtdb of type Float32, Int32, 
+                   <t><t>UInt32, Int16, UInt16, Int8, UInt8 or String,
+                   <t><t>that it set with Click MB1 on the object.
+SetValue.Value     <t><t>The value that is set.
 </topic>
 
 <topic>GeDynCommand <style>function
