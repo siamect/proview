@@ -101,7 +101,7 @@ extern "C" {
 
 #define IS_LINUX(os) ((os & pwr_mOpSys_PPC_LINUX) \
 		     || (os & pwr_mOpSys_X86_LINUX) \
-		     || (os & pwr_mOpSys_AXP_LINUX))
+		     || (os & pwr_mOpSys_X86_64_LINUX))
 
 #define IS_UNIX(os) (IS_LINUX(os) || IS_LYNX(os))
 
@@ -843,8 +843,8 @@ static pwr_tStatus gcg_get_build_host(
 	  strcpy(logname, "pwr_build_host_ppc_linux");
 	else if (os & pwr_mOpSys_X86_LINUX)
 	  strcpy(logname, "pwr_build_host_x86_linux");
-	else if (os & pwr_mOpSys_AXP_LINUX)
-	  strcpy(logname, "pwr_build_host_axp_linux");
+	else if (os & pwr_mOpSys_X86_64_LINUX)
+	  strcpy(logname, "pwr_build_host_x86_64_linux");
 	else
 	  return GSX__NOBUILDHOST;
 
@@ -5171,9 +5171,9 @@ int	gcg_comp_rtnode(
 	    strcpy( os_str, "X86_LINUX"); /* Not used */
 	    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
 	    break;
-	  case pwr_mOpSys_AXP_LINUX:
+	  case pwr_mOpSys_X86_64_LINUX:
 	    strcpy( objdir, "xxx");
-	    strcpy( os_str, "AXP_LINUX"); /* Not used */
+	    strcpy( os_str, "X86_64_LINUX"); /* Not used */
 	    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
 	    break;
 	  default:
@@ -5398,7 +5398,7 @@ int	gcg_comp_rtnode(
 	          break;
 	        case pwr_mOpSys_PPC_LINUX:
 	        case pwr_mOpSys_X86_LINUX:
-	        case pwr_mOpSys_AXP_LINUX:
+	        case pwr_mOpSys_X86_64_LINUX:
 	        case pwr_mOpSys_X86_LYNX:
 	        case pwr_mOpSys_PPC_LYNX:
 	          l += sprintf( &plclib_frozen[l], "%s%s ", PLCLIB_FROZEN_LINK_UNIX,

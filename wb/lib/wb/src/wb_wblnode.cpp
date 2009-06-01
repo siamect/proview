@@ -34,7 +34,7 @@
 #include "wb_treeimport.h"
 
 #define wblAlign(size) (((size) + 3) & ~3)
-#if defined(__x86_64__)
+#if defined(HW_X86_64)
 #define wblAlign8(offs) (((offs) + 7) & ~7)
 #else
 #define wblAlign8(offs) (offs)

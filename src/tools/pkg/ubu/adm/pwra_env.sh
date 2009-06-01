@@ -116,9 +116,10 @@ EOF
 
 pwra_parse ()
 {
-  platform="x86_linux"
+  machine=`eval uname -m`
+  platform=$machine"_linux"
   os="os_linux"
-  hw="hw_x86"
+  hw="hw_"$machine
   #mysql_socket="--socket /var/lib/mysql/mysql.sock"
 
   local cmd

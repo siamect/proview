@@ -384,7 +384,7 @@ int CnvWblToH::attribute_exec()
   char alignstr[40];
   char alignstr_filler[40];
 
-#if defined(__x86_64__)
+#if defined(HW_X86_64)
   strcpy( alignstr, " __attribute__ ((aligned(4)))");
   strcpy( alignstr_filler, " __attribute__ ((aligned(1)))");
 #else

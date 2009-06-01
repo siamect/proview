@@ -254,9 +254,10 @@ let OpSys_PPC_LYNX=4
 let OpSys_X86_LYNX=5
 let OpSys_PPC_LINUX=6
 let OpSys_X86_LINUX=7
-let OpSys__High=8
+let OpSys_X86_64_LINUX=8
+let OpSys__High=9
 
-vOpSys="vax_eln,vax_vms,axp_vms,ppc_lynx,x86_lynx,ppc_linux,x86_linux"
+vOpSys="vax_eln,vax_vms,axp_vms,ppc_lynx,x86_lynx,ppc_linux,x86_linux,x86_64_linux"
 
 let FileType__Low=-1
 let FileType_Process=0
@@ -302,7 +303,7 @@ fi
 OsStr="`echo $vOpSys| cut -f $OpSys -d ,`"
 let FileTypeIdx=$FileType+1
 
-if [ $OpSys -eq $OpSys_PPC_LINUX ] || [ $OpSys -eq $OpSys_X86_LINUX ]; 
+if [ $OpSys -eq $OpSys_PPC_LINUX ] || [ $OpSys -eq $OpSys_X86_LINUX ] || [ $OpSys -eq $OpSys_X86_64_LINUX ]; 
 then
 
   pwrp_gc="$pwrp_tmp"
