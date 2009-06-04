@@ -432,7 +432,7 @@ HistGtk::HistGtk( void *hist_parent_ctx,
 			    strlen(buf), &pos);
   gtk_widget_set_sensitive( start_time_entry_w, FALSE);
 
-  sts = clock_gettime(CLOCK_REALTIME, &StopTime);
+  sts = time_GetTime( &StopTime);
   sts = AdjustForDayBreak( this, &StopTime, &StartTime);
 
   StopTime = StartTime;

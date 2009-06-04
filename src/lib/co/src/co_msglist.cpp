@@ -557,7 +557,7 @@ ItemMsg::ItemMsg( MsgList *item_msglist, const char *item_name,
   }
 
   brow_SetAnnotation( node, 0, type_str, strlen(type_str));
-  clock_gettime( CLOCK_REALTIME, &time);
+  time_GetTime( &time);
   time_AtoAscii( &time, time_eFormat_ComprDateAndTime, time_str, 
 	sizeof(time_str));
   time_str[17] = 0;

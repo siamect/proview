@@ -58,7 +58,7 @@ wb_dbs::wb_dbs(wb_vrep *v) :
   memset(m_sect, 0, sizeof(m_sect));
     
 
-  clock_gettime(CLOCK_REALTIME, &m_volume.time);
+  time_GetTime(&m_volume.time);
 
   m_v = v;
     

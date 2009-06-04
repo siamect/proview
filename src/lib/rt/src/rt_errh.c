@@ -57,13 +57,11 @@
 # include <descrip.h>
 # include <starlet.h>
 # include <jpidef.h>
-# include "co_time.h"
-#elif defined(OS_ELN)
-# include "co_time.h"
 #endif
 
 #include "pwr_msg.h"
 #include "co_msg.h"
+#include "co_time.h"
 #include "rt_errh.h"
 #include "pwr_class.h"
 #include "rt_gdh.h"
@@ -654,7 +652,7 @@ static char *
 get_header (char severity, char *s)
 {
   sPid pid;
-  struct timespec time;
+  pwr_tTime time;
   struct tm tp, *t;
 
   if (!initDone)
@@ -665,7 +663,7 @@ get_header (char severity, char *s)
     return s;
   }
 
-  clock_gettime(CLOCK_REALTIME, &time);
+  time_GetTime(&time);
 
   get_pid(&pid);
 
@@ -676,7 +674,8 @@ get_header (char severity, char *s)
   t = &tp;
   s += sprintf(s, " % 4d,% 4d ", (int)PIDGET(pid), (int)pthread_self());
 # elif defined OS_LINUX
-  localtime_r(&time.tv_sec, &tp);
+  time_t sec = time.tv_sec;
+  localtime_r(&sec, &tp);
   t = &tp;
   s += sprintf(s, " %8d ", pid);
 # elif defined OS_VMS 

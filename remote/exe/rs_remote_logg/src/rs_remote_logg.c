@@ -324,7 +324,7 @@ static int	logg_get_filename(
 #if defined OS_LYNX || defined OS_LINUX
 	  /* Get current time to use as "version number" */
 
-          clock_gettime( CLOCK_REALTIME, &time);
+          time_GetTime( &time);
 	  time_AtoAscii( &time, time_eFormat_ComprDateAndTime, timestr, 
 			sizeof(timestr));
 	  comp_timestr[0] = '.';
@@ -385,7 +385,7 @@ static pwr_tStatus	logg_open_file( logg_t_loggconf_list	*conflist_ptr,
 	if (conflist_ptr->outfile != NULL)
 	{
 	  /* Write a file header */
-          clock_gettime( CLOCK_REALTIME, &time);
+          time_GetTime( &time);
 	  time_AtoAscii( &time, time_eFormat_DateAndTime, timestr, 
 		sizeof(timestr));
 	  csts = fprintf( conflist_ptr->outfile,

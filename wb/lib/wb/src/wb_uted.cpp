@@ -406,7 +406,7 @@ void WUted::get_filename( char *filename)
   int 	val;
   pwr_tTime	time;
 
-  clock_gettime(CLOCK_REALTIME, &time);
+  time_GetTime( &time);
   srand( time.tv_sec);
   val = rand();
   sprintf( filename, "pwrp_tmp:uted_batch_%d.com", val);

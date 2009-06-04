@@ -400,7 +400,7 @@ static int	nmpstrans_alarm_send(
 	mh_msg.EventFlags = mh_mEventFlags_Returned |
 			 mh_mEventFlags_NoObject | 
 			 mh_mEventFlags_Bell;
-	clock_gettime( CLOCK_REALTIME, &mh_msg.EventTime);
+	time_GetTime( &mh_msg.EventTime);
 
 	mh_msg.SupObject = pwr_cNObjid;
 	mh_msg.Outunit = pwr_cNObjid;
@@ -497,7 +497,7 @@ static pwr_tStatus translist_insert(
 			sizeof((*translist_ptr)->Key));
 	(*translist_ptr)->Userdata = userdata;
 	(*translist_ptr)->TimeoutTime = timeout_time;
-	clock_gettime( CLOCK_REALTIME, &(*translist_ptr)->InsertTime);
+	time_GetTime( &(*translist_ptr)->InsertTime);
 
 	return NMPS__SUCCESS;
 }
@@ -598,7 +598,7 @@ static pwr_tStatus	translist_timeout_check(
 	int			found;
 	pwr_tTime		current_time;
 
-	clock_gettime( CLOCK_REALTIME, &current_time);
+	time_GetTime( &current_time);
 
 	/* Loop through the list */
 	found = 0;

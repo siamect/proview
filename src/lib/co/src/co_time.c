@@ -475,13 +475,17 @@ time_DtoAscii (
   min  = div(hour.rem, 60);
 
   if (day.quot) {
-    if (hundreds)
-      sprintf(tmpStr, "%d %d:%02d:%02d.%02d", day.quot, hour.quot, min.quot, min.rem, dt->tv_nsec/10000000);
+    if (hundreds) {
+      long int nsec = dt->tv_nsec/10000000;
+      sprintf(tmpStr, "%d %d:%02d:%02d.%02ld", day.quot, hour.quot, min.quot, min.rem, nsec);
+    }
     else
       sprintf(tmpStr, "%d %d:%02d:%02d", day.quot, hour.quot, min.quot, min.rem);
   } else {
-    if (hundreds)
-      sprintf(tmpStr, "%d:%02d:%02d.%02d", hour.quot, min.quot, min.rem, dt->tv_nsec/10000000);
+    if (hundreds) {
+      long int nsec = dt->tv_nsec/10000000;
+      sprintf(tmpStr, "%d:%02d:%02d.%02ld", hour.quot, min.quot, min.rem, nsec);
+    }
     else
       sprintf(tmpStr, "%d:%02d:%02d", hour.quot, min.quot, min.rem);
   }
@@ -514,13 +518,14 @@ time_AtoAscii (
 
   if (ts == NULL)
   {
-    clock_gettime(CLOCK_REALTIME, &time);
+    time_GetTime(&time);
     tp = &time;
   }
   else
     tp = ts;
 
-  tmpTm = localtime(&tp->tv_sec);
+  time_t sec = tp->tv_sec;
+  tmpTm = localtime(&sec);
   if (EVEN(time_TmToAscii(tmpTm, format, buf, bufsize)))
     return TIME__RANGE;
 
@@ -834,7 +839,7 @@ time_AtoFormAscii (
   pwr_tTime time, *tp;
 
   if (ts == NULL) {
-    clock_gettime(CLOCK_REALTIME, &time);
+    time_GetTime(&time);
     tp = &time;
   } else {
     tp = ts;
@@ -843,8 +848,9 @@ time_AtoFormAscii (
   switch (formType) {
   case GB:
   case SWE:
-  default:
-    tmpTm = localtime(&tp->tv_sec);
+  default: {
+    time_t sec = tp->tv_sec;
+    tmpTm = localtime(&sec);
 
     switch (dissolution) {
     case HUNDRED:
@@ -864,6 +870,7 @@ time_AtoFormAscii (
       strftime(buf, bufsize, "%Y-%m-%d %H:%M:%S", tmpTm);
       break;
     }
+  }
   }
 }
 
@@ -998,9 +1005,36 @@ void time_Sleep( float time)
 	ker$wait_any( NULL, NULL, &l_time);
 #elif defined(OS_LYNX) || defined (OS_LINUX)
 	pwr_tDeltaTime	p_time;
+	struct timespec ts;
 
 	time_FloatToD( &p_time, time);
-	nanosleep( (pwr_tTime *)&p_time, NULL);
+	ts.tv_sec = p_time.tv_sec;
+	ts.tv_nsec = p_time.tv_nsec;
+	nanosleep( &ts, NULL);
 #endif
+}
+
+int time_GetTime( pwr_tTime *ts)
+{
+  struct timespec t;
+  int sts;
+  
+  sts = clock_gettime( CLOCK_REALTIME, &t);
+
+  ts->tv_sec = t.tv_sec;
+  ts->tv_nsec = t.tv_nsec;
+  return sts;
+}
+
+int time_GetTimeMonotonic( pwr_tTime *ts)
+{
+  struct timespec t;
+  int sts;
+  
+  sts = clock_gettime( CLOCK_MONOTONIC, &t);
+
+  ts->tv_sec = t.tv_sec;
+  ts->tv_nsec = t.tv_nsec;
+  return sts;
 }
 

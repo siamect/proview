@@ -13072,11 +13072,11 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
   case glow_eEvent_InputFocusGained:
     if ( menu_object)
       break;
-    clock_gettime( CLOCK_REALTIME, &focus_gained_time);
+    time_GetTime( &focus_gained_time);
   case glow_eEvent_MB1Click:
     if ( event->event == glow_eEvent_MB1Click) {
       pwr_tTime now;
-      clock_gettime( CLOCK_REALTIME, &now);
+      time_GetTime( &now);
       if ( abs(now.tv_sec - focus_gained_time.tv_sec) < 2)
 	break;
     }
@@ -13817,12 +13817,12 @@ int GeOptionMenu::action( grow_tObject object, glow_tEvent event)
   case glow_eEvent_InputFocusGained:
     if ( menu_object)
       break;
-    clock_gettime( CLOCK_REALTIME, &focus_gained_time);
+    time_GetTime( &focus_gained_time);
     break;
   case glow_eEvent_MB1Click:
     // if ( event->event == glow_eEvent_MB1Click) {
     //  pwr_tTime now;
-    //  clock_gettime( CLOCK_REALTIME, &now);
+    //  time_GetTime( &now);
     //  if ( abs(now.tv_sec - focus_gained_time.tv_sec) < 2)
     //	break;
     //}

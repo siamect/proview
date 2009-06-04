@@ -524,7 +524,7 @@ cdh_AttrValueToString (
     sprintf(sval, "%d", *(pwr_tInt32 *) Value);
     break;
   case pwr_eType_Int64:
-    sprintf(sval, "%lld", *(pwr_tInt64 *) Value);
+    sprintf(sval, pwr_dFormatInt64, *(pwr_tInt64 *) Value);
     break;
   case pwr_eType_UInt8:
     sprintf(sval, "%u", *(pwr_tUInt8 *) Value);
@@ -536,7 +536,7 @@ cdh_AttrValueToString (
     sprintf(sval, "%u", *(pwr_tUInt32 *) Value);
     break;
   case pwr_eType_UInt64:
-    sprintf(sval, "%llu", *(pwr_tUInt64 *) Value);
+    sprintf(sval, pwr_dFormatUInt64, *(pwr_tUInt64 *) Value);
     break;
   case pwr_eType_Time:
     if (ODD(time_AtoAscii(Value, time_eFormat_DateAndTime, timbuf, sizeof(timbuf)))) {
@@ -702,7 +702,7 @@ cdh_StringToAttrValue (
 
   case pwr_eType_Int64:
     if (*String != '\0') {
-      if ( sscanf( String, "%lld", &i64val) != 1)
+      if ( sscanf( String, pwr_dFormatInt64, &i64val) != 1)
       {
 	sts = CDH__INVINT32;
 	break;
@@ -756,7 +756,7 @@ cdh_StringToAttrValue (
 
   case pwr_eType_UInt64:
     if (*String != '\0') {
-      if ( sscanf( String, "%llu", &ui64val) != 1)
+      if ( sscanf( String, pwr_dFormatUInt64, &ui64val) != 1)
       {
 	sts = CDH__INVUINT32;
 	break;
@@ -2613,8 +2613,8 @@ pwr_sAttrRef cdh_ArefToCastAref( pwr_sAttrRef *arp)
 
   cast_aref = *arp;
   if ( arp->Flags.b.DisableAttr)
-    cast_aref.Offset -= sizeof(pwr_tDisableAttr);
-  cast_aref.Offset -= sizeof(pwr_tCastId);
+    cast_aref.Offset -= pwr_cAlignLW;
+  cast_aref.Offset -= pwr_cAlignLW;
   cast_aref.Size = sizeof(pwr_tCastId);
   cast_aref.Flags.b.ObjectAttr = 0;  
   cast_aref.Flags.b.CastAttr = 0;  
@@ -2627,7 +2627,7 @@ pwr_sAttrRef cdh_ArefToDisableAref( pwr_sAttrRef *arp)
   pwr_sAttrRef dis_aref;
 
   dis_aref = *arp;
-  dis_aref.Offset -= sizeof(pwr_tDisableAttr);
+  dis_aref.Offset -= pwr_cAlignLW;
   dis_aref.Size = sizeof(pwr_tDisableAttr);
   dis_aref.Flags.b.ObjectAttr = 0;  
   dis_aref.Flags.b.CastAttr = 0;  

@@ -748,7 +748,7 @@ qdb_CreateDb (
     np->sa.sin_family = AF_INET;  
     np->sa.sin_addr.s_addr = htonl(INADDR_ANY);
     np->sa.sin_port = htons(55000 + qdb->g->bus);  
-    clock_gettime(CLOCK_REALTIME, &time);
+    time_GetTime(&time);
     np->birth = time.tv_sec;
 
     qdb->no_node = qdb_AddNode(sts, 0, qdb_mAdd_failIfAdded);

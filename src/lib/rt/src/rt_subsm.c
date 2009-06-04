@@ -370,7 +370,7 @@ subsm_SendBuffer (
 	}
 	cp->old = FALSE;
 	cp->count++;
-	clock_gettime(CLOCK_REALTIME, &cp->lastupdate);
+	time_GetTime(&cp->lastupdate);
 	sp->count++;
       }
     } else {
@@ -418,7 +418,7 @@ subsm_SendBuffer (
     bp->sts = sts;
   }
 
-  if (ODD(sts)) clock_gettime(CLOCK_REALTIME, &bp->lastupdate);
+  if (ODD(sts)) time_GetTime(&bp->lastupdate);
 
   return YES;
 }

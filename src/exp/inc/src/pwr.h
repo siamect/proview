@@ -91,6 +91,23 @@ extern "C" {
 #define pwr_Bit(b) (1<<b)
 #define pwr_SetByte(byte, val) (val<<(byte<<3))
 
+#if defined(OS_LINUX)
+# if defined(HW_X86_64)
+#  define pwr_cAlignW 4
+#  define pwr_cAlignLW 8
+# else
+#  define pwr_cAlignW 4
+#  define pwr_cAlignLW 4
+# endif
+# define pwr_ealign_w __attribute__ ((aligned(4)))
+# define pwr_ealign_lw __attribute__ ((aligned(8)))
+#else
+# define pwr_cAlignW 4
+# define pwr_cAlignLW 4
+# define pwr_ealign_w
+# define pwr_ealign_lw
+#endif
+
 /* PROVIEW/R types  */
 
 #define pwr_cSizObjName		31
@@ -156,7 +173,11 @@ typedef struct {
   int          high;
 } __pwr_tInt64;
 #if defined OS_LINUX
+# if defined HW_X86_64
+typedef long int pwr_tInt64;
+# else
 typedef long long int pwr_tInt64;
+# endif
 #else
 typedef __pwr_tInt64 pwr_tInt64;
 #endif
@@ -171,7 +192,11 @@ typedef struct {
 } __pwr_tUInt64;
 
 #if defined OS_LINUX
+# if defined HW_X86_64
+typedef unsigned long int pwr_tUInt64;
+# else
 typedef unsigned long long int pwr_tUInt64;
+# endif
 #else
 typedef __pwr_tUInt64 pwr_tUInt64;
 #endif
@@ -316,16 +341,19 @@ typedef union {
 /*_*
   @aref time Time
 */
-typedef struct timespec pwr_tTime;	//!< Abolute time type.
-
+// typedef struct timespec pwr_tTime;	//!< Abolute time type.
+typedef struct {
+  pwr_tInt64 tv_sec;
+  pwr_tInt64 tv_nsec;
+} pwr_tTime;
 
 //! Delta time type.
 /*_*
   @aref deltatime DeltaTime
 */
 typedef struct {
-  int tv_sec;		//!< Seconds.
-  int tv_nsec;		//!< Nano seconds.
+  pwr_tInt64 tv_sec;
+  pwr_tInt64 tv_nsec;
 } pwr_tDeltaTime;
 
 /*_*
@@ -696,6 +724,13 @@ static const pwr_tDeltaTime pwr_cNDeltaTime = {0, 0};	//!< Zero deltatime consta
 			#a,__FILE__,__LINE__),exit(EXIT_FAILURE)))
 #endif
 
+#if defined OS_LINUX && defined HW_X86_64
+# define pwr_dFormatUInt64 "%lu"
+# define pwr_dFormatInt64 "%ld"
+#else
+# define pwr_dFormatUInt64 "%llu"
+# define pwr_dFormatInt64 "%lld"
+#endif
 /*@}*/
 
 #if defined __cplusplus

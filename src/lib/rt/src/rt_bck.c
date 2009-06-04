@@ -127,7 +127,7 @@ void bck_ForceBackup (
 
   if (context != NULL) {
     t = malloc (sizeof *t);
-    clock_gettime (CLOCK_REALTIME, t);
+    time_GetTime(t);
     *context = t;
   }
 
@@ -218,7 +218,7 @@ pwr_tUInt32 bck_WaitBackup (
  * Pick up argument information
  */
 
-  if (context == NULL) clock_gettime (CLOCK_REALTIME, &t);
+  if (context == NULL) time_GetTime(&t);
   else {
     t = *(pwr_tTime *)context;
     free (context);

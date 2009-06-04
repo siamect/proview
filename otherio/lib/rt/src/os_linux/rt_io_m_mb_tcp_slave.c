@@ -63,7 +63,7 @@ static int connect_slave( io_sRackLocal *local, io_sRack *rp)
   fd_set fdw;				/* For select call */
   struct timeval tv;
 
-  clock_gettime(CLOCK_MONOTONIC, &local->last_try_connect_time);
+  time_GetTimeMonotonic( &local->last_try_connect_time);
 
   op = (pwr_sClass_Modbus_TCP_Slave *) rp->op;
 
@@ -760,7 +760,7 @@ static pwr_tStatus IoRackRead (
   if (sp->Status == MB__CONNDOWN && sp->DisableSlave != 1) {
     /* Reconnect */
 
-    clock_gettime(CLOCK_MONOTONIC, &now);
+    time_GetTimeMonotonic( &now);
     time_Adiff(&dt, &now, &local->last_try_connect_time);
     if (dt.tv_sec >= (1 << MIN(sp->ReconnectCount, 6))) {
       sts = connect_slave(local, rp);

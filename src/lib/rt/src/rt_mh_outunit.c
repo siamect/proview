@@ -298,7 +298,7 @@ mh_OutunitConnect (
   l.head.platform.hw = myNode.hw;
 
   l.head.source = mh_eSource_Outunit;
-  clock_gettime(CLOCK_REALTIME, &l.head.birthTime);
+  time_GetTime(&l.head.birthTime);
   l.head.outunit = outunit;
   sts = gdh_GetNodeIndex(&l.head.nix);
   if (EVEN(sts)) return sts;

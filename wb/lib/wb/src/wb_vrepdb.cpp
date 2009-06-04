@@ -367,7 +367,7 @@ wb_orep *wb_vrepdb::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destina
       oid = m_db->new_oid(txn);
 
     wb_db_ohead o(m_db, txn, orep->oid());
-    clock_gettime(CLOCK_REALTIME, &time);
+    time_GetTime( &time);
 
     if (o.rbSize()) {
       o.rbTime(time);
@@ -473,7 +473,7 @@ wb_orep* wb_vrepdb::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination 
      
     wb_db_ohead o(m_db, oid);
 
-    clock_gettime(CLOCK_REALTIME, &time);
+    time_GetTime( &time);
 
     o.cid(cdef.cid());
     if (name)
@@ -722,7 +722,7 @@ bool wb_vrepdb::writeAttribute(pwr_tStatus *sts, wb_orep *orp, pwr_eBix bix, siz
     m_ohead.get(m_db->m_txn, orp->oid());
     *sts = LDH__SUCCESS;
     pwr_tTime time;
-    clock_gettime(CLOCK_REALTIME, &time);
+    time_GetTime( &time);
 
     switch (bix) {
     case pwr_eBix_rt:
@@ -833,7 +833,7 @@ bool wb_vrepdb::writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
     m_ohead.get(m_db->m_txn, o->oid());
     *sts = LDH__SUCCESS;
     pwr_tTime time;
-    clock_gettime(CLOCK_REALTIME, &time);
+    time_GetTime( &time);
 
     switch (bix) {
     case pwr_eBix_rt:
@@ -1511,7 +1511,7 @@ bool wb_vrepdb::importPasteObject(pwr_tOid doid, ldh_eDest destcode,
     m_oid_th = tree_CreateTable(&sts, sizeof(pwr_tOid), offsetof(sOentry, o_oid), sizeof(sOentry), 1000, tree_Comp_oid);
     m_poep = (sOentry *)tree_Insert(&sts, m_oid_th, &poid);
 
-    clock_gettime(CLOCK_REALTIME, &oTime);
+    time_GetTime( &oTime);
 
     memset(&m_destination, 0, sizeof(m_destination));
 
@@ -1598,7 +1598,7 @@ bool wb_vrepdb::importPaste()
   pwr_tStatus sts;
   pwr_tTime oTime;
 
-  clock_gettime(CLOCK_REALTIME, &oTime);
+  time_GetTime( &oTime);
 
   sOentry *oep = (sOentry*)tree_Minimum(&sts, m_oid_th);
   while (oep) {
@@ -2229,7 +2229,7 @@ wb_vrepdb::updateObject(pwr_tOid oid, pwr_tCid cid)
     free(dp);
   
   pwr_tTime time;
-  clock_gettime(CLOCK_REALTIME, &time);
+  time_GetTime( &time);
 
   if (rbody) {
     rc = rb.put(m_db->m_txn, 0, rsize, rbody);

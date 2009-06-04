@@ -1152,7 +1152,7 @@ static pwr_tStatus	nmpsbck_open_file( 	bck_ctx	bckctx)
 	    if (bckctx->bckfile1 != NULL)
 	    {
 	      /* Write a file header */
-	      clock_gettime( CLOCK_REALTIME, &fileheader.creationtime);
+	      time_GetTime( &fileheader.creationtime);
 	      fileheader.version = NMPS_BCK_FILEVERSION;
 	      csts = fwrite( &fileheader, sizeof( fileheader), 1,
 				bckctx->bckfile1);
@@ -1213,7 +1213,7 @@ static pwr_tStatus	nmpsbck_open_file( 	bck_ctx	bckctx)
 	    if (bckctx->bckfile2 != NULL) 
 	    {
 	      /* Write a file header */
-	      clock_gettime( CLOCK_REALTIME, &fileheader.creationtime);
+	      time_GetTime( &fileheader.creationtime);
 	      fileheader.version = NMPS_BCK_FILEVERSION;
 	      csts = fwrite( &fileheader, sizeof( fileheader), 1,
 				bckctx->bckfile2);
@@ -1268,7 +1268,7 @@ static pwr_tStatus	nmpsbck_write( bck_ctx	bckctx)
 	else
 	  bckfile = bckctx->bckfile2;
 
-	clock_gettime( CLOCK_REALTIME, &recordheader.time);
+	time_GetTime( &recordheader.time);
 	strcpy( recordheader.type, HEADERTYPE_RECORDSTART);
 
 	if ( !bckctx->increment)
@@ -1304,7 +1304,7 @@ static pwr_tStatus	nmpsbck_write( bck_ctx	bckctx)
 	if (csts == 0) goto bck_write_error;
 
 	/* Write record end header */
-	clock_gettime( CLOCK_REALTIME, &recordheader.time);
+	time_GetTime( &recordheader.time);
 	strcpy( recordheader.type, HEADERTYPE_RECORDEND);
 	csts = fwrite( &recordheader, sizeof( recordheader), 1, bckfile);
 	if (csts == 0) goto bck_write_error;
@@ -1322,12 +1322,12 @@ static pwr_tStatus	nmpsbck_write( bck_ctx	bckctx)
 	if ( bckctx->increment)
 	{
 	  bckctx->bckconfig->IncrementLoopCount++;
-	  clock_gettime( CLOCK_REALTIME, &bckctx->bckconfig->LastIncrementBackup);
+	  time_GetTime( &bckctx->bckconfig->LastIncrementBackup);
 	}
 	else
 	{
 	  bckctx->bckconfig->FullLoopCount++;
-	  clock_gettime( CLOCK_REALTIME, &bckctx->bckconfig->LastFullBackup);
+	  time_GetTime( &bckctx->bckconfig->LastFullBackup);
 	}
 
 	return NMPS__SUCCESS;

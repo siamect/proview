@@ -90,7 +90,7 @@ static void ASup_exec_io (
   ) {
     if (o->Action) o->Action = FALSE;
     if (o->ReturnCheck) {
-      clock_gettime(CLOCK_REALTIME, &o->ReturnTime);
+      time_GetTime(&o->ReturnTime);
       o->ReturnCheck = FALSE;
       o->ReturnSend = TRUE;
     }
@@ -130,7 +130,7 @@ static void ASup_exec_io (
           o->TimerFlag = TRUE;
         }
 
-	clock_gettime(CLOCK_REALTIME, &o->DetectTime);
+	time_GetTime(&o->DetectTime);
 	o->DetectCheck = FALSE;
       }
       if (!o->TimerFlag) {
@@ -165,7 +165,7 @@ static void DSup_exec_io (
   if (In != o->CtrlPosition) {				
     if (o->Action) o->Action = FALSE;			
     if (o->ReturnCheck) {				
-      clock_gettime(CLOCK_REALTIME, &o->ReturnTime);			
+      time_GetTime(&o->ReturnTime);			
       o->ReturnCheck = FALSE;				
       o->ReturnSend = TRUE;				
     }							
@@ -203,7 +203,7 @@ static void DSup_exec_io (
           o->TimerFlag = TRUE;
         }
 
-	clock_gettime(CLOCK_REALTIME, &o->DetectTime);			
+	time_GetTime(&o->DetectTime);			
 	o->DetectCheck = FALSE;				
       }							
       if (!o->TimerFlag) {				
@@ -641,7 +641,7 @@ static void ASup_exec_io_serial (
   ) {
     if (o->Action) o->Action = FALSE;
     if (o->ReturnCheck) {
-      clock_gettime(CLOCK_REALTIME, &o->ReturnTime);
+      time_GetTime(&o->ReturnTime);
       o->ReturnCheck = FALSE;
       o->ReturnSend = TRUE;
     }
@@ -680,7 +680,7 @@ static void ASup_exec_io_serial (
           o->TimerFlag = TRUE;
         }
 
-	clock_gettime(CLOCK_REALTIME, &o->DetectTime);
+	time_GetTime(&o->DetectTime);
 	o->DetectCheck = FALSE;
       }
       if (!o->TimerFlag) {
@@ -712,7 +712,7 @@ static void DSup_exec_io_serial (
   if (In != o->CtrlPosition) {
     if (o->Action) o->Action = FALSE;
     if (o->ReturnCheck) {
-      clock_gettime(CLOCK_REALTIME, &o->ReturnTime);
+      time_GetTime(&o->ReturnTime);
       o->ReturnCheck = FALSE;
       o->ReturnSend = TRUE;
     }
@@ -750,7 +750,7 @@ static void DSup_exec_io_serial (
           o->TimerFlag = TRUE;
         }
 
-	clock_gettime(CLOCK_REALTIME, &o->DetectTime);
+	time_GetTime(&o->DetectTime);
 	o->DetectCheck = FALSE;
       }
       if (!o->TimerFlag) {

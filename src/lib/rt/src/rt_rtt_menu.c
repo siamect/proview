@@ -9926,12 +9926,15 @@ int	rtt_sleep(
 	int		i;
 	int		num;
 	pwr_tDeltaTime	p_time;
+	struct timespec ts;
 
 	time_FloatToD( &p_time, 0.001 *rtt_scantime);
+	ts.tv_sec = p_time.tv_sec;
+	ts.tv_nsec = p_time.tv_nsec;
 	num = (1.0 / rtt_scantime + FLT_EPSILON) * time;
 	for ( i = 0; i < num; i++)
 	{
-	  nanosleep( (pwr_tTime *)&p_time, NULL);
+	  nanosleep( &ts, NULL);
 	  rtt_scan( ctx);
 	}
 	

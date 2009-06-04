@@ -25,6 +25,7 @@
 #include "pwr.h"
 #include "pwr_class.h"
 #include "co_dcli.h"
+#include "co_time.h"
 #include "db_cxx.h"
 #include "wb_ldh.h"
 #include "wb_ldh_msg.h"
@@ -1361,7 +1362,7 @@ bool wb_db::importRbody(pwr_tOid oid, size_t size, void *body)
   wb_db_rbody b(this, oid, size, body);
   wb_db_ohead oh(this, oid);
   pwr_tTime time;
-  clock_gettime(CLOCK_REALTIME, &time);
+  time_GetTime(&time);
   oh.get(m_txn);
   oh.rbTime(time);
   oh.put(m_txn);
@@ -1374,7 +1375,7 @@ bool wb_db::importDbody(pwr_tOid oid, size_t size, void *body)
   wb_db_dbody b(this, oid, size, body);
   wb_db_ohead oh(this, oid);
   pwr_tTime time;
-  clock_gettime(CLOCK_REALTIME, &time);
+  time_GetTime(&time);
   oh.get(m_txn);
   oh.dbTime(time);
   oh.put(m_txn);

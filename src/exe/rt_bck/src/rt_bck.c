@@ -675,7 +675,7 @@ bck_file_process (
         errh_Info("BACKUP created new backupfile %s", dapgetname(&tmpstr));
 
 	memset(&filehead, 0, sizeof filehead);
-	clock_gettime(CLOCK_REALTIME, &filehead.creationtime);
+	time_GetTime(&filehead.creationtime);
 	filehead.version = BCK_FILE_VERSION;
 	LOCK;
 	gdh_GetNodeIndex(&filehead.nodidx);
@@ -699,7 +699,7 @@ bck_file_process (
       
         errh_Info("BACKUP created new backupfile %s", FGETNAME);
 	memset(&filehead, 0, sizeof filehead);
-	clock_gettime(CLOCK_REALTIME, &filehead.creationtime);
+	time_GetTime(&filehead.creationtime);
 	filehead.version = BCK_FILE_VERSION;
 
 	LOCK;
@@ -760,7 +760,7 @@ bck_file_process (
 
       filehead.curdata [c] = filepos;
       filehead.cursize [c] = wrtblk->cyclehead.length;
-      clock_gettime(CLOCK_REALTIME, &filehead.updatetime [c]);
+      time_GetTime(&filehead.updatetime [c]);
 
 #ifdef seekbug
       dapsts = dapwrite(0, &filehead, sizeof filehead);
@@ -1097,7 +1097,7 @@ void bck_list_build (
   memset(blhp, 0, sizeof *blhp);
 
   blhp->first = NULL;
-  clock_gettime(CLOCK_REALTIME, &blhp->cyclehead.objtime);
+  time_GetTime(&blhp->cyclehead.objtime);
   blhp->cyclehead.cycle = cycle;
   blhp->cyclehead.length = sizeof(bck_t_cycleheader);
   *list = blhp;
@@ -1226,7 +1226,7 @@ void *bck_coll_process (
     {
       unsigned long t = 0;
       struct tm	*tmpTm;
-      clock_gettime(CLOCK_REALTIME, &abstime);
+      time_GetTime(&abstime);
       time_Aadd(&abstime, &abstime, &delta);
       tmpTm = localtime(&t);
       abstime.tv_sec += tmpTm->tm_gmtoff;
@@ -1239,7 +1239,7 @@ void *bck_coll_process (
     clock_gettime(CLOCK_REALTIME, &abstime);
     time_Aadd(&abstime, &abstime, &delta);
 #else
-    clock_gettime(CLOCK_REALTIME, &abstime);
+    time_GetTime( &abstime);
     time_Aadd(&abstime, &abstime, &delta);
 #endif
 
@@ -1247,7 +1247,10 @@ void *bck_coll_process (
     check4a(sts4a,"pthread_mutex_lock(&frcactmtx)");
 
     if (!frcact [cycle]) {
-      sts4a = pthread_cond_timedwait(&frcactevt, &frcactmtx, &abstime);
+      struct timespec ts;
+      ts.tv_sec = abstime.tv_sec;
+      ts.tv_nsec = abstime.tv_nsec;
+      sts4a = pthread_cond_timedwait(&frcactevt, &frcactmtx, &ts);
 
       /* I get all kinds of funny errors from cond_timedwait, though it seems
          to work (VMS 5.5-2). The error check is just commented out... /CH

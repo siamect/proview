@@ -686,7 +686,7 @@ bool wb_print_wbl::printValue (wb_volume& v,
       sprintf(sval, "%d", *(pwr_tInt32 *) val);
     break;
   case pwr_eType_Int64:
-    sprintf(sval, "%lld", *(pwr_tInt64 *) val);
+    sprintf(sval, pwr_dFormatInt64, *(pwr_tInt64 *) val);
     break;
   case pwr_eType_UInt8:
     sprintf(sval, "%u", *(pwr_tUInt8 *) val);
@@ -699,7 +699,7 @@ bool wb_print_wbl::printValue (wb_volume& v,
     sprintf(sval, "%u", *(pwr_tUInt32 *) val);
     break;
   case pwr_eType_UInt64:
-    sprintf(sval, "%llu", *(pwr_tUInt64 *) val);
+    sprintf(sval, pwr_dFormatUInt64, *(pwr_tUInt64 *) val);
     break;
   case pwr_eType_Mask:
     sprintf(sval, "%u", *(pwr_tUInt32 *) val);

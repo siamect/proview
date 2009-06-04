@@ -39,11 +39,10 @@
 #include "wb_palfile.h"
 #include "wb_recix.h"
 #include "pwr_baseclasses.h"
+#include "co_time.h"
 #include "co_msgwindow.h"
-
-extern "C" {
 #include "co_dcli.h"
-}
+
 
 wb_vrepmem::wb_vrepmem( wb_erep *erep, pwr_tVid vid) :
   wb_vrep(vid), m_erep(erep), m_merep(erep->merep()), root_object(0), volume_object(0),
@@ -521,7 +520,7 @@ bool wb_vrepmem::writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, size
   pwr_tTime time;
 
   *sts = LDH__SUCCESS;
-  clock_gettime(CLOCK_REALTIME, &time);
+  time_GetTime( &time);
 
     
   mem_object *n = ((wb_orepmem *) o)->memobject();
@@ -587,7 +586,7 @@ bool wb_vrepmem::writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
   pwr_tTime time;
 
   *sts = LDH__SUCCESS;
-  clock_gettime(CLOCK_REALTIME, &time);
+  time_GetTime( &time);
     
   mem_object *n = ((wb_orepmem *) o)->memobject();
 
@@ -699,7 +698,7 @@ wb_orep *wb_vrepmem::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination
   pwr_tOix soix;
   pwr_tTime time;
 
-  clock_gettime(CLOCK_REALTIME, &time);
+  time_GetTime( &time);
 
   if ( d.oid().oix == 0) {
     dest = root_object;
@@ -857,7 +856,7 @@ wb_orep *wb_vrepmem::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destin
   char name_str[32];
   pwr_tTime time;
 
-  clock_gettime(CLOCK_REALTIME, &time);
+  time_GetTime( &time);
 
   if ( cdh_ObjidIsNull( d.oid())) {
     dest = root_object;
@@ -991,7 +990,7 @@ bool wb_vrepmem::moveObject(pwr_tStatus *sts, wb_orep *orep, wb_destination &d)
   ldh_eDest code = d.code();
   pwr_tTime time;
 
-  clock_gettime(CLOCK_REALTIME, &time);
+  time_GetTime( &time);
 
   if ( cdh_ObjidIsEqual( d.oid(), orep->oid()))
     return false;
@@ -1151,7 +1150,7 @@ bool wb_vrepmem::renameObject(pwr_tStatus *sts, wb_orep *orep, wb_name &name)
 {
   pwr_tTime time;
 
-  clock_gettime(CLOCK_REALTIME, &time);
+  time_GetTime( &time);
 
   mem_object *memo = ((wb_orepmem *)orep)->memobject();
   if ( !memo) return false;
@@ -1506,7 +1505,7 @@ bool wb_vrepmem::importPasteObject(pwr_tOid destination, ldh_eDest destcode,
   pwr_tStatus sts;
   pwr_tTime time;
 
-  clock_gettime(CLOCK_REALTIME, &time);
+  time_GetTime( &time);
 
   mem_object *memo = new mem_object();
   strcpy( memo->m_name, name);
@@ -2049,7 +2048,7 @@ void wb_vrepmem::classeditorDeleteObject( mem_object *memo)
 
     pwr_tTime time;
 
-    clock_gettime(CLOCK_REALTIME, &time);
+    time_GetTime( &time);
     memo->fth->m_ohtime = time;
     break;
   }

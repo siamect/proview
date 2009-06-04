@@ -131,7 +131,7 @@ qos_WaitQue (
   qdb_Unlock;
 
   if (tmo != qcom_cTmoEternal) {
-    clock_gettime(CLOCK_REALTIME, &atime);
+    time_GetTime(&atime);
     time_MsToD(&dtime, tmo);
     time_Aadd(&atime, &atime, &dtime);
     ok = pthread_cond_timedwait(&qp->lock.cond, &qp->lock.mutex, (struct timespec *) &atime);

@@ -255,11 +255,12 @@ pwr_tStatus time_AtoOPCAscii (pwr_tTime *tp, char *buf, int bufsize)
    int        tzone;
 
    if ( !tp) {
-     clock_gettime( CLOCK_REALTIME, &t);
+     time_GetTime( &t);
      tp = &t;
    }
   
-   tmpTm = localtime(&tp->tv_sec);
+   time_t sec = tp->tv_sec;
+   tmpTm = localtime(&sec);
    tzone = tmpTm->tm_gmtoff / 3600;
    strftime(buf, bufsize, "%Y-%m-%dT%H:%M:%S", tmpTm);
 
@@ -966,19 +967,27 @@ bool opc_convert_opctype_to_pwrtype(void *bufp, int size, xsd__anyType *value, p
       snprintf((char *)bufp, size, "%f", ((xsd__double *) value)->__item);
       break;
     case opc_eDataType_long:
-      snprintf((char *)bufp, size, "%lli", ((xsd__long *) value)->__item);
+#if defined (HW_X86_64)
+      snprintf((char *)bufp, size, "%ld", ((xsd__long *) value)->__item);
+#else
+      snprintf((char *)bufp, size, "%lld", ((xsd__long *) value)->__item);
+#endif
       break;
     case opc_eDataType_int:
-      snprintf((char *)bufp, size, "%i", ((xsd__int *) value)->__item);
+      snprintf((char *)bufp, size, "%d", ((xsd__int *) value)->__item);
       break;
     case opc_eDataType_short:
-      snprintf((char *)bufp, size, "%hi", ((xsd__short *) value)->__item);
+      snprintf((char *)bufp, size, "%hd", ((xsd__short *) value)->__item);
       break;
     case opc_eDataType_byte:
-      snprintf((char *)bufp, size, "%hhi", ((xsd__byte *) value)->__item);
+      snprintf((char *)bufp, size, "%hhd", ((xsd__byte *) value)->__item);
       break;
     case opc_eDataType_unsignedLong:
+#if defined (HW_X86_64)
+      snprintf((char *)bufp, size, "%lu", ((xsd__unsignedLong *) value)->__item);
+#else
       snprintf((char *)bufp, size, "%llu", ((xsd__unsignedLong *) value)->__item);
+#endif
       break;
     case opc_eDataType_unsignedInt:
       snprintf((char *)bufp, size, "%u", ((xsd__unsignedInt *) value)->__item);
@@ -1069,17 +1078,17 @@ bool opc_convert_pwrtype_to_opctype(void *bufin, void *bufout, int size, int opc
 	  snprintf((char *)bufout, size, "%c", *(pwr_tChar *) bufin );
           break;
         case pwr_eType_Int8:
-	  snprintf((char *)bufout, size, "%hhi", *(pwr_tChar *) bufin );
+	  snprintf((char *)bufout, size, "%hhd", *(pwr_tChar *) bufin );
           break;
         case pwr_eType_Int16:
-	  snprintf((char *)bufout, size, "%hi", *(pwr_tInt16 *) bufin );
+	  snprintf((char *)bufout, size, "%hd", *(pwr_tInt16 *) bufin );
           break;
         case pwr_eType_Int32:
         case pwr_eType_Boolean:
-	  snprintf((char *)bufout, size, "%i", *(pwr_tInt32 *) bufin );
+	  snprintf((char *)bufout, size, "%d", *(pwr_tInt32 *) bufin );
           break;
         case pwr_eType_Int64:
-	  snprintf((char *)bufout, size, "%lli", *(pwr_tInt64 *) bufin );
+	  snprintf((char *)bufout, size, pwr_dFormatInt64, *(pwr_tInt64 *) bufin );
           break;
         case pwr_eType_UInt8:
 	  snprintf((char *)bufout, size, "%hhu", *(pwr_tUInt8 *) bufin );
@@ -1095,7 +1104,7 @@ bool opc_convert_pwrtype_to_opctype(void *bufin, void *bufout, int size, int opc
 	  snprintf((char *)bufout, size, "%u", *(pwr_tInt32 *) bufin );
           break;
         case pwr_eType_UInt64:
-	  snprintf((char *)bufout, size, "%llu", *(pwr_tInt64 *) bufin );
+	  snprintf((char *)bufout, size, pwr_dFormatUInt64, *(pwr_tInt64 *) bufin );
           break;
         case pwr_eType_String:
 	  if ( bufout != bufin)

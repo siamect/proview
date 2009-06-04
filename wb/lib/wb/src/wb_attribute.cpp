@@ -591,9 +591,9 @@ void wb_attribute::castId( pwr_tCastId *castid)
 {
   size_t offset;
   if (m_flags & PWR_MASK_DISABLEATTR)
-    offset = m_offset - sizeof(pwr_tDisableAttr) - sizeof(pwr_tCastId);
+    offset = m_offset - 2 * pwr_cAlignLW;
   else
-    offset = m_offset - sizeof(pwr_tCastId);
+    offset = m_offset - pwr_cAlignLW;
   m_orep->vrep()->readAttribute( &m_sts, m_orep, m_bix, offset, 
 				 sizeof(pwr_tCastId), castid);
 }    
@@ -604,7 +604,7 @@ pwr_tDisableAttr wb_attribute::disabled()
 
   if (m_flags & PWR_MASK_DISABLEATTR) {
     m_orep->vrep()->readAttribute( &m_sts, m_orep, m_bix, 
-				   m_offset - sizeof(pwr_tDisableAttr),
+				   m_offset - pwr_cAlignLW,
 				   sizeof(pwr_tDisableAttr), &disabled);
   }
   else

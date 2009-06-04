@@ -805,7 +805,7 @@ nodeUp (
   
 
   np->upcnt++;
-  clock_gettime(CLOCK_REALTIME, &np->timeup);
+  time_GetTime(&np->timeup);
   errh_Info("Established contact with %s (%s)",
     np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
 
@@ -1280,7 +1280,7 @@ linkEvent (
       sendIdAck2(np);
       np->linkstate = net_eState_up;
       np->upcnt++;
-      clock_gettime(CLOCK_REALTIME, &np->timeup);
+      time_GetTime(&np->timeup);
       errh_Info("Established contact with %s (%s)",
 	np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
       sendVolumes(np, pool_cNRef); 
@@ -1307,7 +1307,7 @@ linkEvent (
       sendIdAck2(np);
       np->linkstate = net_eState_up;
       np->upcnt++;
-      clock_gettime(CLOCK_REALTIME, &np->timeup);
+      time_GetTime(&np->timeup);
       errh_Info("Established contact with %s (%s)",
 	np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
       sendVolumes(np, pool_cNRef);
@@ -1315,7 +1315,7 @@ linkEvent (
     case net_eEvent_idAck2:
       np->linkstate = net_eState_up;
       np->upcnt++;
-      clock_gettime(CLOCK_REALTIME, &np->timeup);
+      time_GetTime(&np->timeup);
       errh_Info("Established contact with %s (%s)",
 	np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
       sendVolumes(np, pool_cNRef);

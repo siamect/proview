@@ -29,6 +29,7 @@
 #include "co_time.h"
 #include "co_ccm.h"
 #include "co_cdh.h"
+#include "co_syi.h"
 #include "co_api_user.h"
 #include "wb_utl_api.h"
 #include "wb_trv.h"
@@ -1107,6 +1108,24 @@ static int wccm_stringtoobjectname_func(
   return 1;
 }
 
+static int wccm_gethardware_func( 
+  void *filectx,
+  ccm_s_arg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  float *return_float, 
+  int *return_int, 
+  char *return_string)
+{
+  if ( arg_count != 0)
+    return CCM__ARGMISM;
+
+  strcpy( return_string, syi_Hardware());
+  *return_decl = CCM_DECL_STRING;
+  
+  return 1;
+}
+
 
 /*************************************************************************
 *
@@ -1178,6 +1197,8 @@ int	wccm_register(
     sts = ccm_register_function( "GetCurrentVolume", wccm_getcurrentvolume_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "StringToObjectName", wccm_stringtoobjectname_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetHardware", wccm_gethardware_func);
     if ( EVEN(sts)) return sts;
 
     sts = ccm_create_external_var( "cmd_status", CCM_DECL_INT, 0, 1, 

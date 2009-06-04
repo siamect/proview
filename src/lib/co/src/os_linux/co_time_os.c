@@ -139,7 +139,7 @@ time_Uptime (
 
   // pwr_Assert(tp->tv_sec >= 0 && tp->tv_nsec >= 0);
 
-  clock_gettime( CLOCK_REALTIME, &current_time);
+  time_GetTime( &current_time);
   if ( !boot_time.tv_sec) {
     time_Asub( &boot_time, &current_time, &uptime_tics);
     *tp = uptime_tics;
@@ -201,7 +201,7 @@ time_Os (
   if (tp == NULL)
     tp = &os_time;
 
-  clock_gettime(CLOCK_REALTIME, tp);
+  time_GetTime(tp);
 
   return tp;
 }

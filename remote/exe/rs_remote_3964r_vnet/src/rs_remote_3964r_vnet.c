@@ -684,7 +684,7 @@ static unsigned int ReceiveHandler()
         }
         else{
           memcpy(&remtrans->datap[common_offset], c_buf, data_size);
-	  clock_gettime( CLOCK_REALTIME, &remtrans->objp->TransTime);
+	  time_GetTime(&remtrans->objp->TransTime);
           remtrans->objp->TransCount++;
           remtrans->objp->DataValid = TRUE;
           remtrans->objp->LastSts = STATUS_OK;

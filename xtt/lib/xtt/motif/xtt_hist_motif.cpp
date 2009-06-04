@@ -418,7 +418,7 @@ void HistMotif::stop_time_entry_cr( Widget w, Hist *histOP, XmAnyCallbackStruct 
   pwr_tTime StopTime;
   pwr_tTime StartTime;
 
-  Sts = clock_gettime(CLOCK_REALTIME, &StopTime);
+  Sts = time_GetTime( &StopTime);
   Sts = AdjustForDayBreak(histOP, &StopTime, &StartTime);
 
   StopTime = StartTime;

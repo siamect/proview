@@ -149,7 +149,7 @@ int main (int argc, char **argv)
 
   /* If even sts, just wait for init message */
 
-  clock_gettime(CLOCK_REALTIME, &LastScan);
+  time_GetTime(&LastScan);
   ScanDeltaTime.tv_sec =  ScanTime;
   ScanDeltaTime.tv_nsec = 0;
 
@@ -158,7 +158,7 @@ int main (int argc, char **argv)
 
   for (;;) {
 
-    clock_gettime(CLOCK_REALTIME, &CurrentTime);
+    time_GetTime(&CurrentTime);
     time_Aadd(&NextScan, &LastScan, &ScanDeltaTime);
     if (time_Acomp(&CurrentTime, &NextScan) < 0) { 
       time_Adiff(&WaitTime, &NextScan, &CurrentTime);
@@ -376,7 +376,7 @@ StoreData (
 
     if(Trend->NextWriteIndex[Trend->WriteBuffer] == 0) {
       Trend->BufferStatus[Trend->WriteBuffer] = 1;
-      clock_gettime(CLOCK_REALTIME, &Trend->BufferTime[Trend->WriteBuffer]);
+      time_GetTime(&Trend->BufferTime[Trend->WriteBuffer]);
     }    
 
     if(Trend->NextMultiple == 0) {

@@ -373,7 +373,7 @@ pwr_tInt32 RemTrans_Cyclic(	remnode_item	*remnode,
 	    remtrans->time_since_send  = 0;
             if (ODD(SendSts)) {
               RemTransP->TransCount++;
-	      clock_gettime( CLOCK_REALTIME, &RemTransP->TransTime);
+	      time_GetTime(&RemTransP->TransTime);
               RemTransP->LastSts = STATUS_OK;
             }	/* END Send OK */
           }	/* END Try to send */
@@ -397,7 +397,7 @@ pwr_tInt32 RemTrans_Cyclic(	remnode_item	*remnode,
                   nextp->next = (struct rem_t_transbuff *) buffp;
                 }	/* END New buffer last in queue */
                 RemTransP->TransCount++;
-	        clock_gettime( CLOCK_REALTIME, &RemTransP->TransTime);
+	        time_GetTime(&RemTransP->TransTime);
                 RemTransP->LastSts = STATUS_BUFF;
               }		/* END  Create new bufer */
               else {
@@ -447,7 +447,7 @@ pwr_tInt32 RemTrans_Receive(	remtrans_item	*remtrans,
 
   RemTransP = remtrans->objp;		/* Get remtrans object */
   RemTransP->TransCount++;
-  clock_gettime( CLOCK_REALTIME, &RemTransP->TransTime);
+  time_GetTime(&RemTransP->TransTime);
 
   if ((unsigned int) size > RemTransP->MaxLength) {	/* Too big trans */
     RemTransP->ErrCount++;

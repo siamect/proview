@@ -1223,7 +1223,7 @@ link_connect (
     lp->np->name, cdh_NodeIdToString(NULL, lp->np->nid, 0, 0));
   qdb_ScopeLock {
     lp->np->birth = sp->head.birth;
-    clock_gettime(CLOCK_REALTIME, &lp->np->timeup);
+    time_GetTime(&lp->np->timeup);
     lp->np->flags.b.connected = 1;
     lp->np->flags.b.active = 1;
     set_link_info(lp, (qdb_sLinkInfo *)sp->buff);

@@ -528,7 +528,7 @@ static pwr_tStatus	nmpsmir_data_handler( mir_ctx	mirctx)
 	nmpsmir_t_bckremoved		*bckremoved_ptr;
 	nmpsmir_t_bckremoved		*bckremoved_next_ptr;
 
-	clock_gettime( CLOCK_REALTIME, &current_time);
+	time_GetTime( &current_time);
 
 	/* Loop trough the dataobject database and copy the objects */
 	mirctx->DataObjectCount = 0;
@@ -1986,7 +1986,7 @@ static pwr_tStatus	nmpsmir_cellmir_handler( mir_ctx	mirctx)
 				&bckremlist_ptr);
 	          if (ODD(sts))
 	          {
-	            clock_gettime( CLOCK_REALTIME, &bckremlist_ptr->remove_time);
+	            time_GetTime( &bckremlist_ptr->remove_time);
 	            bckremlist_ptr->collect_cell = cellmir_ptr->collect_cell;
 	            bckremlist_ptr->release_time = cellmir_ptr->cell->ReleaseTime;
 	          }
@@ -1997,7 +1997,7 @@ static pwr_tStatus	nmpsmir_cellmir_handler( mir_ctx	mirctx)
 	      else
 	      {
 	        datalist_ptr->removed = 1;
-	        clock_gettime( CLOCK_REALTIME, &datalist_ptr->remove_time);
+	        time_GetTime( &datalist_ptr->remove_time);
 	      }
 	    }
 	  }

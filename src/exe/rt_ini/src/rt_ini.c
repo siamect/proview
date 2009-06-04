@@ -443,7 +443,7 @@ restart (
   if (cp->PlcProcess != NULL) {
     char time[24];
 
-    clock_gettime(CLOCK_REALTIME, &cp->PlcProcess->LastChgTime);
+    time_GetTime(&cp->PlcProcess->LastChgTime);
     time_Dsub(&cp->PlcProcess->StallTime, &cp->PlcProcess->StartTime, &cp->PlcProcess->StopTime);
     time_DtoAscii(&cp->PlcProcess->StallTime, 1, time, sizeof(time));
     cp->log.put.type.s = 2;

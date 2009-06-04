@@ -6235,9 +6235,9 @@ static int utl_set_parameter (
 	    case pwr_eType_Int64:
 	    {
 	      p_Int64 = (pwr_tInt64 *)object_element;
-	      sprintf( logstrptr + strlen(logstr), "( %lld ) ", *p_Int64);
-	      sscanf( valuestr, "%lld", p_Int64);
-	      sprintf( logstrptr + strlen(logstr), "%lld", *p_Int64);
+	      sprintf( logstrptr + strlen(logstr), "( " pwr_dFormatInt64 " ) ", *p_Int64);
+	      sscanf( valuestr, pwr_dFormatInt64, p_Int64);
+	      sprintf( logstrptr + strlen(logstr), pwr_dFormatInt64, *p_Int64);
 	      break;
 	    }
 	    case pwr_eType_UInt8:
@@ -6278,9 +6278,9 @@ static int utl_set_parameter (
 	    case pwr_eType_UInt64:
 	    {
 	      p_UInt64 = (pwr_tUInt64 *)object_element;
-	      sprintf( logstrptr + strlen(logstr), "( %llu ) ", *p_UInt64);
-	      sscanf( valuestr, "%lld", p_UInt64);
-	      sprintf( logstrptr + strlen(logstr), "%llu", *p_UInt64);
+	      sprintf( logstrptr + strlen(logstr), "( " pwr_dFormatUInt64 " ) ", *p_UInt64);
+	      sscanf( valuestr, pwr_dFormatUInt64, p_UInt64);
+	      sprintf( logstrptr + strlen(logstr), pwr_dFormatUInt64, *p_UInt64);
 	      break;
 	    }
 	    case pwr_eType_String:
@@ -9283,7 +9283,7 @@ static int utl_list_get_parvalue (
             case pwr_eType_Int64:
             {
               p_Int64 = (pwr_tInt64 *)object_element;
-              sprintf( text + strlen(text), "%lld", *p_Int64);
+              sprintf( text + strlen(text), pwr_dFormatInt64, *p_Int64);
               break;
             }
             case pwr_eType_UInt8:
@@ -9309,7 +9309,7 @@ static int utl_list_get_parvalue (
             case pwr_eType_UInt64:
             {
               p_UInt64 = (pwr_tUInt64 *)object_element;
-              sprintf( text + strlen(text), "%llu", *p_UInt64);
+              sprintf( text + strlen(text), pwr_dFormatUInt64, *p_UInt64);
               break;
             }
             case pwr_eType_String:
@@ -9772,7 +9772,7 @@ int utl_get_filename (
 	int 	val;
 	pwr_tTime time;
 
-	clock_gettime(CLOCK_REALTIME, &time);
+	time_GetTime( &time);
 	srand( time.tv_sec);
 	val = rand();
 	sprintf( filename, "pwrp_tmp:foe_%x.lis", val);

@@ -1186,7 +1186,7 @@ int vldh_wind_save (
     wind->hw.status = VLDH_LOAD;
 
     /* Store the modification time */
-    clock_gettime(CLOCK_REALTIME, &time);
+    time_GetTime( &time);
     sts = ldh_SetObjectPar( wind->hw.ldhses, wind->lw.oid,
 			    "DevBody", "Modified", (char *)&time, sizeof( time)); 
   }

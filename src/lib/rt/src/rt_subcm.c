@@ -71,7 +71,7 @@ subcm_CheckTimeout ()
 
   gdbroot->db->tmocnt++;  /* Statistics */
 
-  clock_gettime(CLOCK_REALTIME, &curtim);
+  time_GetTime( &curtim);
 
   /* Calculate # of remote object clients to process this time */
 
@@ -130,7 +130,7 @@ subcm_Data (
   int                   rsize;
   
 
-  clock_gettime(CLOCK_REALTIME, &curtim);
+  time_GetTime( &curtim);
 
   gdb_AssumeUnlocked;
 

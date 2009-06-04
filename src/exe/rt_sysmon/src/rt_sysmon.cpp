@@ -357,7 +357,7 @@ int rt_sysmon::alarm_send( pwr_tOid  oid,
   mh_msg.EventFlags = (mh_mEventFlags)(mh_mEventFlags_Returned |
     mh_mEventFlags_NoObject | 
     mh_mEventFlags_Bell);
-  clock_gettime( CLOCK_REALTIME, &mh_msg.EventTime);
+  time_GetTime( &mh_msg.EventTime);
 
   mh_msg.SupObject = pwr_cNObjid;
   mh_msg.Outunit = pwr_cNObjid;

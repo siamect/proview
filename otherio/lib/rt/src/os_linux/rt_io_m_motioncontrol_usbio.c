@@ -73,7 +73,7 @@ static int usbio_reconnect( io_tCtx ctx,
   int i;
   int status;
 
-  clock_gettime(CLOCK_REALTIME, &time);
+  time_GetTime( &time);
 
   time_Adiff( &diff, &time, &local->ConnectRetry);
   if ( time_DToFloat( 0, &diff) > 1.0) {

@@ -1376,38 +1376,39 @@ int	gcg_print_inputs(
 	      }
 	      else
 	      { 
-	        switch ( *(nocontype + i))
-	        {
-	          case GCG_BOOLEAN :
-	            IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
-		 	"%d",
-			(nocondef + i)->bo);
-	            break;
-	          case GCG_INT32 :
-	            IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
-		 	"%d",
-			(nocondef + i)->bo);
-	            break;
-	          case GCG_FLOAT:
-	            IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
-		 	"%f",
-			(nocondef + i)->fl);
-	            break;
-	          case GCG_STRING:
-	            IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
-		 	"\"%s\"",
-			(nocondef + i)->str);
-	            break;
-	          case GCG_ATIME:
-	            IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
-		 	"{%ld,%ld}",
-			(long int)(nocondef + i)->atime.tv_sec, (nocondef + i)->atime.tv_nsec);
-	            break;
-	          case GCG_DTIME:
-	            IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
-		 	"{%d,%d}",
-			(nocondef + i)->dtime.tv_sec, (nocondef + i)->dtime.tv_nsec);
-	            break;
+	        switch ( *(nocontype + i)) {
+		case GCG_BOOLEAN :
+		  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+				 "%d",
+				 (nocondef + i)->bo);
+		  break;
+		case GCG_INT32 :
+		  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+				 "%d",
+				 (nocondef + i)->bo);
+		  break;
+		case GCG_FLOAT:
+		  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+				 "%f",
+				 (nocondef + i)->fl);
+		  break;
+		case GCG_STRING:
+		  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+				 "\"%s\"",
+				 (nocondef + i)->str);
+		  break;
+		case GCG_ATIME:
+		  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+				 "{%ld,%ld}",
+				 (long int)(nocondef + i)->atime.tv_sec, 
+				 (long int)(nocondef + i)->atime.tv_nsec);
+		  break;
+		case GCG_DTIME:
+		  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+				 "{%ld,%ld}",
+				 (long int)(nocondef + i)->dtime.tv_sec, 
+				 (long int)(nocondef + i)->dtime.tv_nsec);
+		  break;
 	        }
 	      }
 	      first_par = 0;
@@ -6161,7 +6162,7 @@ int	gcg_comp_m1( vldh_t_wind wind,
             pwr_tTime time;
 
             /* Store compile time for the window */
-	    clock_gettime(CLOCK_REALTIME, &time);
+	    time_GetTime( &time);
 	    sts = ldh_SetObjectPar( wind->hw.ldhses, wind->lw.oid,
 		"DevBody", "Compiled", (char *)&time, sizeof( time)); 
 

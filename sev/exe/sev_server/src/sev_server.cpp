@@ -314,14 +314,14 @@ int sev_server::mainloop()
   qid.qix = sev_eProcSevServer;
 
   time_FloatToD( &garco_interval, sev_cGarbageInterval);
-  clock_gettime( CLOCK_REALTIME, &currenttime);
+  time_GetTime( &currenttime);
   time_Aadd( &next_garco, &currenttime, &garco_interval);
 
   for (;;) {
     memset( &get, 0, sizeof(get));
     mp = qcom_Get(&sts, &qid, &get, tmo);
 
-    clock_gettime( CLOCK_REALTIME, &currenttime);
+    time_GetTime( &currenttime);
     if ( time_Acomp( &currenttime, &next_garco) == 1) {
       garbage_collector();
       time_Aadd( &next_garco, &next_garco, &garco_interval);
@@ -505,7 +505,7 @@ void sev_server::garbage_collector()
 {
   pwr_tTime currenttime, limit;
 
-  clock_gettime( CLOCK_REALTIME, &currenttime);
+  time_GetTime( &currenttime);
   
   for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
     if ( m_db->m_items[i].deleted)

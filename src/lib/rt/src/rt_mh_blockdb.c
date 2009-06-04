@@ -92,7 +92,7 @@ mh_BlockDbOpen (
 #endif
       Log(msg);
     } else {
-      clock_gettime(CLOCK_REALTIME, &hp->OpenTime);
+      time_GetTime(&hp->OpenTime);
       if (size != NULL) *size = hp->SegSize;
       if (hp->Version == mh_cBlockFileVersion)
 	return(dp);
@@ -120,8 +120,8 @@ mh_BlockDbOpen (
     Log(msg);
 
     memset(hp, 0, sizeof(*hp));
-    clock_gettime(CLOCK_REALTIME, &hp->CreationTime);
-    clock_gettime(CLOCK_REALTIME, &hp->OpenTime);
+    time_GetTime(&hp->CreationTime);
+    time_GetTime(&hp->OpenTime);
     hp->Version = mh_cBlockFileVersion;
 
     /* Write a file header */
@@ -172,7 +172,7 @@ mh_BlockDbGet (
   register mh_sBlockDbHead *hp = &dp->Head;
   char msg[512];
 
-  clock_gettime(CLOCK_REALTIME, &hp->GetTime);
+  time_GetTime(&hp->GetTime);
   hp->GetCount++;
 
   if (fseek(dp->File, hp->SectPos, SEEK_SET) != 0) goto error;
@@ -222,7 +222,7 @@ mh_BlockDbPut (
   DiffSize = Head.SectSize - Head.SegSize;
 
   /* statistics */
-  clock_gettime(CLOCK_REALTIME, &Head.PutTime);
+  time_GetTime(&Head.PutTime);
   Head.PutCount++;
   if (Head.FreeSize > Head.MaxFreeSize)
     Head.MaxFreeSize = Head.FreeSize;

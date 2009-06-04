@@ -183,7 +183,7 @@ void fastobject::scan()
       p->LastIndex = 0;
       p->New = 0;
       p->TriggIndex = fast_cNoTrigg;
-      clock_gettime( CLOCK_REALTIME, &prepare_time);
+      time_GetTime( &prepare_time);
       first = 1;
       scan_cnt = 0;
     }
@@ -195,7 +195,7 @@ void fastobject::scan()
 	p->FirstIndex = 0;
 	p->LastIndex = 0;
 	p->New = 0;
-	clock_gettime( CLOCK_REALTIME, &prepare_time);
+	time_GetTime( &prepare_time);
 	scan_cnt = 0;
       }
       else {
@@ -210,7 +210,7 @@ void fastobject::scan()
 	else
 	  stop_index = p->TriggIndex + p->NoOfPoints - points_before;
       }
-      clock_gettime( CLOCK_REALTIME, &p->TriggTime);
+      time_GetTime( &p->TriggTime);
       p->TriggMan = 0;
     }
     if ( p->Function & fast_mFunction_LevelTrigg &&
@@ -224,7 +224,7 @@ void fastobject::scan()
 	p->FirstIndex = 0;
 	p->LastIndex = 0;
 	p->New = 0;
-	clock_gettime( CLOCK_REALTIME, &prepare_time);
+	time_GetTime( &prepare_time);
 	scan_cnt = 0;
       }
       else {
@@ -239,7 +239,7 @@ void fastobject::scan()
 	else
 	  stop_index = p->TriggIndex + p->NoOfPoints - points_before;
       }
-      clock_gettime( CLOCK_REALTIME, &p->TriggTime);
+      time_GetTime( &p->TriggTime);
     }
   }
 
@@ -268,7 +268,7 @@ void fastobject::scan()
     
 
     // Store time
-    clock_gettime( CLOCK_REALTIME, &now);
+    time_GetTime( &now);
     time_Adiff( &diff, &now, &prepare_time);
     time_DToFloat( &fdiff, &diff);
     ((pwr_tFloat32 *)time_buffer)[current_index] = fdiff;

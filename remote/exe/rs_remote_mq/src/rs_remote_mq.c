@@ -51,6 +51,7 @@
 #include "pwr_class.h"
 #include "pwr_systemclasses.h"
 #include "rt_gdh.h"
+#include "co_time.h"
 #include "co_cdh.h"
 #include "rt_errh.h"
 #include "pwr_baseclasses.h"
@@ -374,7 +375,7 @@ if (debug) printf("Before remtrans_init\n");
   
   /* Set (re)start time in remnode object */
   
-  clock_gettime(CLOCK_REALTIME, &rn_mq->RestartTime);
+  time_GetTime(&rn_mq->RestartTime);
   
   /* Loop forever */
 

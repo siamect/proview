@@ -375,22 +375,25 @@ endl;
 int CnvWblToH::attribute_exec()
 {
   int i;
-  int fill;
-  int size;
-  int elements;
   char type_name[80];
   char pgmname[80];
   int sts;
   char alignstr[40];
-  char alignstr_filler[40];
 
-#if defined(HW_X86_64)
-  strcpy( alignstr, " __attribute__ ((aligned(4)))");
-  strcpy( alignstr_filler, " __attribute__ ((aligned(1)))");
-#else
-  strcpy( alignstr, "");
-  strcpy( alignstr_filler, "");
-#endif
+  if ( ctx->rw->attr_pointer ||
+       ctx->rw->attr_isclass ||
+       strcmp( CnvCtx::low(ctx->rw->attr_type), "input") == 0 ||
+       strcmp( CnvCtx::low(ctx->rw->attr_type), "buffer") == 0 ||
+       strcmp( CnvCtx::low(ctx->rw->attr_typeref), "int64") == 0 ||
+       strcmp( CnvCtx::low(ctx->rw->attr_typeref), "uint64") == 0 ||
+       strcmp( CnvCtx::low(ctx->rw->attr_typeref), "float64") == 0 ||
+       strcmp( CnvCtx::low(ctx->rw->attr_typeref), "time") == 0 ||
+       strcmp( CnvCtx::low(ctx->rw->attr_typeref), "deltatime") == 0 ||
+       strcmp( CnvCtx::low(ctx->rw->attr_typeref), "castid") == 0 ||
+       strcmp( CnvCtx::low(ctx->rw->attr_typeref), "disableattr") == 0)
+    strcpy( alignstr, " pwr_ealign_lw");
+  else
+    strcpy( alignstr, " pwr_ealign_w");
 
   if ( strcmp( CnvCtx::low( ctx->rw->body_name), "rtbody") == 0 &&
        ctx->rw->class_devonly)
@@ -617,6 +620,12 @@ int CnvWblToH::attribute_exec()
       cstruc->f << pgmname << alignstr << ";" << endl;
   }
 
+#if 0
+  int fill;
+  int size;
+  int elements;
+  char alignstr_filler[40];
+
   if ( ctx->rw->attr_pointer)
     size = 4;
   else if ( strcmp( CnvCtx::low(ctx->rw->attr_typeref), "uint8") == 0 ||
@@ -670,6 +679,7 @@ int CnvWblToH::attribute_exec()
     }
     struct_filler_cnt++;
   }
+#endif
   attr_count++;
   return 1;
 }

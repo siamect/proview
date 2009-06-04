@@ -311,7 +311,7 @@ addNode (
     np->os = node->os;
     np->hw = node->hw;
     np->upcnt++;
-    clock_gettime( CLOCK_REALTIME, &np->timeup);
+    time_GetTime( &np->timeup);
     co_SetFormat(&np->fm, node->bo, node->ft);
 
     gdbroot->my_node = np;

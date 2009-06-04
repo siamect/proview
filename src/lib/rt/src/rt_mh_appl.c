@@ -184,7 +184,7 @@ mh_ApplConnect (
   lAppl.head.xdr = FALSE; /* To local handler only */
   lAppl.head.ver = mh_cVersion;
   lAppl.head.source = mh_eSource_Application;
-  clock_gettime(CLOCK_REALTIME, &lAppl.head.birthTime);
+  time_GetTime(&lAppl.head.birthTime);
   lAppl.head.qid = qid;
   lAppl.head.aid = applObject;
   lAppl.handler.nid = qid.nid;

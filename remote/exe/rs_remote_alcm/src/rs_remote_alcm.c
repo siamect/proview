@@ -59,6 +59,7 @@
 #include <fcntl.h>
 #include <netinet/in.h>
 
+#include "co_time.h"
 #include "rt_errh.h"
 #include "rt_pwr_msg.h"
 #include "rt_aproc.h"
@@ -529,7 +530,7 @@ unsigned short int Receive()
 	    {
 	      memcpy(&remtrans->datap[common_offset], csp, 
 	      	msg_size-sizeof(eth_header)-sizeof(alcm_header));
-	      clock_gettime( CLOCK_REALTIME, &remtrans->objp->TransTime);
+	      time_GetTime(&remtrans->objp->TransTime);
 	      remtrans->objp->TransCount++;
 	      remtrans->objp->DataValid = TRUE;
 	      remtrans->objp->LastSts = STATUS_OK;
@@ -706,7 +707,7 @@ int main(int argc, char *argv[]) {
 
   // Set (re)start time in all remnode objects
   
-  clock_gettime(CLOCK_REALTIME, &tmptime);
+  time_GetTime(&tmptime);
   rn = rnl;
   while (rn) {
     rn_local = (remnode_alcm *) rn->local;

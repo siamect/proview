@@ -109,7 +109,7 @@ time_GetUpTime (
 
   pwr_Assert(tp->tv_sec >= 0 && tp->tv_nsec >= 0);
 #elif defined(OS_LYNX) || defined(OS_LINUX)
-  clock_gettime(CLOCK_REALTIME, (pwr_tTime *) tp);
+  time_GetTime( (pwr_tTime *) tp);
 #endif
 
   return tp;

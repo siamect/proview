@@ -637,7 +637,7 @@ createVolume(
   if (vp == NULL)
     return NULL;
 
-  clock_gettime(CLOCK_REALTIME, &time);
+  time_GetTime( &time);
   vp = gdb_LoadVolume(&lsts, cvid, vname, pwr_eClass_ClassVolume, 
                       gdbroot->my_node->nid, time, gdb_mLoad_build, 
                       &gdbroot->my_node->fm);

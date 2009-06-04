@@ -136,7 +136,7 @@ opcsrv_client *opc_server::find_client( int sid)
   if ( it == opcsrv->m_clientlist.end())
     return 0;
   else {
-    clock_gettime( CLOCK_REALTIME, &it->second.m_last_time);
+    time_GetTime( &it->second.m_last_time);
     return &it->second;
   }
 }
@@ -148,7 +148,7 @@ opcsrv_client *opc_server::new_client( int sid)
   m_clientlist[sid] = client;
   m_clientlist[sid].access = get_access( sid);
   m_clientlist[sid].m_multi_threaded = false;
-  clock_gettime( CLOCK_REALTIME, &m_clientlist[sid].m_last_time);
+  time_GetTime( &m_clientlist[sid].m_last_time);
 
   //fprintf( stderr, "New client IP=%d.%d.%d.%d\n",
   //	   (sid>>24)&0xFF,(sid>>16)&0xFF,(sid>>8)&0xFF,sid&0xFF);
@@ -237,7 +237,7 @@ int main()
   pthread_t 	thread;
   sts = pthread_create( &thread, NULL, opcsrv_cyclic, NULL);
 
-  clock_gettime( CLOCK_REALTIME, &opcsrv->m_start_time);
+  time_GetTime( &opcsrv->m_start_time);
 
   errh_SetStatus( PWR__SRUN);
 
@@ -317,7 +317,7 @@ static void *opcsrv_cyclic( void *arg)
 
   for (;;) {
 
-    clock_gettime( CLOCK_REALTIME, &current_time);
+    time_GetTime( &current_time);
     aproc_TimeStamp();
 
     get.maxSize = sizeof(mp);
@@ -371,7 +371,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetStatus(struct soap *soap,
   default: ;
   }
 
-  clock_gettime( CLOCK_REALTIME, &current_time);
+  time_GetTime( &current_time);
 
   s0__GetStatusResponse->GetStatusResult = soap_new_s0__ReplyBase( soap, -1);
   s0__GetStatusResponse->GetStatusResult->RcvTime.assign( opc_datetime(0));
@@ -931,14 +931,24 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap* soap,
     pwr_tTime current_time, next_time;
 
     if ( min_hold > FLT_EPSILON) {
-      clock_gettime( CLOCK_REALTIME, &current_time);
+      time_GetTime( &current_time);
       time_Aadd( &next_time, &current_time, &dmin_hold);
       if ( time_Acomp( &next_time, &hold_time) == -1)
 	next_time = hold_time;
-      pthread_cond_timedwait( &cond, &mutex, &next_time);
+
+      struct timespec next_time_ts;
+      next_time_ts.tv_sec = next_time.tv_sec;
+      next_time_ts.tv_nsec = next_time.tv_nsec;
+
+      pthread_cond_timedwait( &cond, &mutex, &next_time_ts);
     }
-    else
-      pthread_cond_timedwait( &cond, &mutex, &hold_time);
+    else {
+      struct timespec hold_time_ts;
+      hold_time_ts.tv_sec = hold_time.tv_sec;
+      hold_time_ts.tv_nsec = hold_time.tv_nsec;
+
+      pthread_cond_timedwait( &cond, &mutex, &hold_time_ts);
+    }
   }
 
   if ( has_waittime) {
@@ -970,9 +980,14 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap* soap,
       pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
       pwr_tTime current_time, next_time;
       
-      clock_gettime( CLOCK_REALTIME, &current_time);
+      time_GetTime( &current_time);
       time_Aadd( &next_time, &current_time, &dwait_scan);
-      pthread_cond_timedwait( &cond, &mutex, &next_time);
+
+      struct timespec next_time_ts;
+      next_time_ts.tv_sec = next_time.tv_sec;
+      next_time_ts.tv_nsec = next_time.tv_nsec;
+
+      pthread_cond_timedwait( &cond, &mutex, &next_time_ts);
     }
   }
 
@@ -1055,7 +1070,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionCancel(struct soap* soap,
     return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
 
 
-  clock_gettime( CLOCK_REALTIME, &client->m_last_time);
+  time_GetTime( &client->m_last_time);
 
   sublist_iterator it = 
     client->m_sublist.find( *s0__SubscriptionCancel->ServerSubHandle);
@@ -1453,7 +1468,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
     return opcsrv->fault( soap, opc_eResultCode_E_ACCESS_DENIED);
   }
 
-  clock_gettime( CLOCK_REALTIME, &current_time);
+  time_GetTime( &current_time);
 
   if ( s0__Browse->MaxElementsReturned) {
     has_max_elem = true;

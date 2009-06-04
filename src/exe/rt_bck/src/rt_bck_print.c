@@ -112,7 +112,7 @@ static void  attrvalue_to_string( int type_id, void *value_ptr,
     case pwr_eType_Int64:
     {
       if ( !format)
-        *len = sprintf( str, "%lld", *(pwr_tInt64 *)value_ptr);
+        *len = sprintf( str, pwr_dFormatInt64, *(pwr_tInt64 *)value_ptr);
       else
         *len = sprintf( str, format, *(pwr_tInt64 *)value_ptr);
       break;
@@ -146,7 +146,7 @@ static void  attrvalue_to_string( int type_id, void *value_ptr,
     case pwr_eType_UInt64:
     {
       if ( !format)
-        *len = sprintf( str, "%llu", *(pwr_tUInt64 *)value_ptr);
+        *len = sprintf( str, pwr_dFormatUInt64, *(pwr_tUInt64 *)value_ptr);
       else
         *len = sprintf( str, format, *(pwr_tUInt64 *)value_ptr);
       break;

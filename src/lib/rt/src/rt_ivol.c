@@ -295,7 +295,7 @@ mountVolume (
     break;
   case pwr_eClass_CreateVolume:
     soid.vid = ((pwr_sCreateVolume *)p)->Volume;
-    clock_gettime(CLOCK_REALTIME, &time);
+    time_GetTime(&time);
     vp = gdb_LoadVolume(sts, soid.vid, op->g.f.name.orig,
                         pwr_eClass_DynamicVolume, gdbroot->db->nid, 
                         time, gdb_mLoad_build, co_GetOwnFormat(&fm));
@@ -395,7 +395,7 @@ ivol_BuildNode (
   sys_vid.v.vid_3 = cdh_eVid3_local;
   sys_oid.vid	  = sys_vid.pwr;
   sys_oid.oix	  = pwr_cNObjectIx;
-  clock_gettime(CLOCK_REALTIME, &time);
+  time_GetTime(&time);
 
   vp = gdb_LoadVolume(sts, sys_vid.pwr, "", pwr_eClass_SystemVolume, gdbroot->db->nid, 
                       time, gdb_mLoad_build, co_GetOwnFormat(&fm));

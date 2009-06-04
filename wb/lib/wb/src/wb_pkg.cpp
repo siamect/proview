@@ -528,7 +528,7 @@ void pkg_node::fetchFiles( bool distribute)
 
   pwr_tTime time;
   char time_str[32];
-  clock_gettime(CLOCK_REALTIME, &time);
+  time_GetTime( &time);
   time_AtoAscii( &time, time_eFormat_DateAndTime, time_str, sizeof(time_str));
   
   ofd << 

@@ -25,6 +25,7 @@
 #include <errno.h>
 #include "pwr.h"
 #include "pwr_class.h"
+#include "co_time.h"
 #include "co_dcli.h"
 #include "co_syi.h"
 #include "wb_ldh.h"
@@ -553,7 +554,7 @@ bool wb_dbms::importRbody(pwr_tOid oid, size_t size, void *body)
   wb_dbms_rbody b(this, oid, size, body);
   wb_dbms_ohead oh(this, oid);
   pwr_tTime time;
-  clock_gettime(CLOCK_REALTIME, &time);
+  time_GetTime( &time);
   oh.get(m_txn);
   oh.rbTime(time);
   oh.upd(m_txn);
@@ -566,7 +567,7 @@ bool wb_dbms::importDbody(pwr_tOid oid, size_t size, void *body)
   wb_dbms_dbody b(this, oid, size, body);
   wb_dbms_ohead oh(this, oid);
   pwr_tTime time;
-  clock_gettime(CLOCK_REALTIME, &time);
+  time_GetTime( &time);
   oh.get(m_txn);
   oh.dbTime(time);
   oh.upd(m_txn);
@@ -1512,7 +1513,7 @@ int wb_dbms_rbody::upd(wb_dbms_txn *txn, size_t offset, size_t size, void *p)
     return rc;
 
   if (m_data.size() < size + offset)
-    printf("*** rbody::upd(offset %d, size %d, oix %d), size: %d\n", offset, size, m_oid.oix, m_data.size());
+    printf("*** rbody::upd(offset %zd, size %zd, oix %d), size: %zd\n", offset, size, m_oid.oix, m_data.size());
 
   memcpy(m_db->m_buf + offset, p, size);  
   
@@ -1532,7 +1533,7 @@ int wb_dbms_rbody::get(wb_dbms_txn *txn, size_t offset, size_t size, void *p)
   
   assert(sizeof(m_db->m_buf) >= size + offset);
   if (m_data.size() < size + offset)
-    printf("*** rbody::get(offset %d, size %d, oix %d), size: %d\n", offset, size, m_oid.oix, m_data.size());
+    printf("*** rbody::get(offset %zd, size %zd, oix %d), size: %zd\n", offset, size, m_oid.oix, m_data.size());
   
   
   memcpy(p, m_db->m_buf + offset, size);
@@ -1639,7 +1640,7 @@ int wb_dbms_dbody::upd(wb_dbms_txn *txn, size_t offset, size_t size, void *p)
   if (rc)
     return rc;
   if (m_data.size() < size + offset)
-    printf("*** dbody::upd(offset %d, size %d, oix %d), size: %d\n", offset, size, m_oid.oix, m_data.size());
+    printf("*** dbody::upd(offset %zd, size %zd, oix %d), size: %zd\n", offset, size, m_oid.oix, m_data.size());
 
   memcpy(m_db->m_buf + offset, p, size);  
   
@@ -1659,7 +1660,7 @@ int wb_dbms_dbody::get(wb_dbms_txn *txn, size_t offset, size_t size, void *p)
   
   assert(sizeof(m_db->m_buf) >= size + offset);
   if (m_data.size() < size + offset)
-    printf("*** dbody::get(offset %d, size %d, oix %d), size: %d\n", offset, size, m_oid.oix, m_data.size());
+    printf("*** dbody::get(offset %zd, size %zd, oix %d), size: %zd\n", offset, size, m_oid.oix, m_data.size());
   
   memcpy(p, m_db->m_buf + offset, size);
 

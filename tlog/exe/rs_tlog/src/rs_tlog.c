@@ -270,9 +270,12 @@ static pwr_tUInt32 tlog_sleep( float time)
 	ker$wait_any( NULL, NULL, &l_time);
 #else
         pwr_tDeltaTime  p_time;
+	struct timespec p_time_ts;
 
         time_FloatToD( &p_time, time);
-        nanosleep( (pwr_tTime *)&p_time, NULL);
+	p_time_ts.tv_sec = p_time.tv_sec;
+	p_time_ts.tv_nsec = p_time.tv_nsec;
+        nanosleep( &p_time_ts, NULL);
 #endif
 	return TLOG__SUCCESS;
 }

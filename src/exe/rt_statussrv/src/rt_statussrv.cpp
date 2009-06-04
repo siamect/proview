@@ -234,7 +234,7 @@ static void *statussrv_cyclic( void *arg)
 
   for (;;) {
 
-    clock_gettime( CLOCK_REALTIME, &current_time);
+    time_GetTime( &current_time);
     aproc_TimeStamp();
 
     get.maxSize = sizeof(mp);
@@ -277,7 +277,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetStatus(struct soap *soap,
   char msg[200];
   char timstr[40];
 
-  clock_gettime( CLOCK_REALTIME, &current_time);
+  time_GetTime( &current_time);
 
   if ( s0__GetStatus->ClientRequestHandle) {
     s0__GetStatusResponse->ClientRequestHandle = soap_new_std__string( soap, -1);

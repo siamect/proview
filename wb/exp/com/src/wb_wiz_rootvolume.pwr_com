@@ -53,12 +53,15 @@ main()
   string nname;
   string oname;
   string current_node;
+  string hw;
 
   verify(0);
 
   rv_nodehierroot = get_pwr_config( "defaultNodeHierRoot");
   rv_opop = get_pwr_config( "defaultOpOp");
   rv_opmaintenance = get_pwr_config( "defaultOpMaintenance");
+
+  hw = GetHardware();
 
   if ( ! EditMode())
     MessageDialog("Error", "Enter edit mode before starting wizard");
@@ -129,7 +132,11 @@ page_4:
 
   # Create objects
   str1 = volume + ":";
-  set attr/name='str1'/attr=OperatingSystem/value=64/nolog/noconf
+  if ( hw == "x86_64")
+    set attr/name='str1'/attr=OperatingSystem/value=128/nolog/noconf
+  else
+    set attr/name='str1'/attr=OperatingSystem/value=64/nolog/noconf
+  endif
 
   if ( rv_nodehierroot != "")
     create object/name="'rv_nodehierroot'"/dest=""/class=$NodeHier

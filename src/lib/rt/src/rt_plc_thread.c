@@ -170,7 +170,7 @@ plc_thread (
 
   pwrb_PlcThread_Zero(tp);
 
-  clock_gettime(CLOCK_MONOTONIC, &tp->sync_time);
+  time_GetTimeMonotonic(&tp->sync_time);
 
   tp->ActualScanTime = tp->f_scan_time;
 
@@ -202,8 +202,8 @@ scan (
   int		delay_action = 0;
   
 //  time_Uptime(&sts, &tp->before_scan, NULL);  
-  clock_gettime(CLOCK_MONOTONIC, &tp->before_scan);
-  clock_gettime(CLOCK_REALTIME, &tp->before_scan_abs);
+  time_GetTimeMonotonic(&tp->before_scan);
+  time_GetTime(&tp->before_scan_abs);
   pp->Node->SystemTime = tp->before_scan_abs;
 
   if (tp->loops > 0) {
@@ -256,11 +256,11 @@ scan (
   if ( tp->first_scan)
     tp->first_scan = 0;
 
-  clock_gettime(CLOCK_MONOTONIC, &tp->after_scan);
+  time_GetTimeMonotonic(&tp->after_scan);
 /*  if (sts == TIME__CLKCHANGE) {
     tp->after_scan = tp->before_scan;
   }*/
-  clock_gettime(CLOCK_REALTIME, &tp->after_scan_abs);
+  time_GetTime(&tp->after_scan_abs);
   if (tp->log)
     pwrb_PlcThread_Exec(tp);
 
@@ -276,7 +276,7 @@ scan (
 
       if (tp->csup_lh != NULL) {
 	pwr_tTime now;
-	clock_gettime(CLOCK_REALTIME, &now);
+	time_GetTime(&now);
 	delay_action = csup_Exec(&sts, tp->csup_lh, (pwr_tDeltaTime *) &tp->sync_time, (pwr_tDeltaTime *) &tp->after_scan, &now);
 	if (delay_action == 2) {
 	  pp->IOHandler->IOReadWriteFlag = FALSE;
@@ -297,7 +297,10 @@ scan (
        * END REMARK
        */
 //      phase = (int)que_Get(&sts, &tp->q_in, &delta, NULL);
-      clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &tp->sync_time, NULL);
+      struct timespec ts;
+      ts.tv_sec = tp->sync_time.tv_sec;
+      ts.tv_nsec = tp->sync_time.tv_nsec;
+      clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &ts, NULL);
       
 #endif
       if (phase > 0) {

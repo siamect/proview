@@ -81,7 +81,7 @@ void RunTimeCounterFo_exec( plc_sThread		*tp,
     co->TripRunTime.tv_sec = co->TripRunTime.tv_nsec = 0;
     co->TripTime.tv_sec = co->TripTime.tv_nsec = 0;
 
-    clock_gettime(CLOCK_REALTIME, &co->ResetTime);
+    time_GetTime( &co->ResetTime);
     co->TripReset = 0;
   }
   /* Update Calendar time */
@@ -96,7 +96,7 @@ void RunTimeCounterFo_exec( plc_sThread		*tp,
       o->Start = 1;
       co->TotalNOfStarts++;
       co->TripNOfStarts++;
-      clock_gettime(CLOCK_REALTIME, &co->StartTime);
+      time_GetTime( &co->StartTime);
     } /* End if new start */
     /* Update Running Time */
     time_Dadd( &co->TripRunTime, &co->TripRunTime, &TimeSince);

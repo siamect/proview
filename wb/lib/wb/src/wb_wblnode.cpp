@@ -33,12 +33,8 @@
 #include "wb_name.h"
 #include "wb_treeimport.h"
 
-#define wblAlign(size) (((size) + 3) & ~3)
-#if defined(HW_X86_64)
-#define wblAlign8(offs) (((offs) + 7) & ~7)
-#else
-#define wblAlign8(offs) (offs)
-#endif
+#define wblAlignW(size) (((size) + (pwr_cAlignW-1)) & ~(pwr_cAlignW-1))
+#define wblAlignLW(size) (((size) + (pwr_cAlignLW-1)) & ~(pwr_cAlignLW-1))
 
 struct wb_wblvocabTokenTypes tokens;
 
@@ -926,6 +922,8 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
     }
     elements = 1;
     type = (pwr_eType) o->a.tid;
+    // Align attribute objects on longword
+    *boffset = wblAlignLW(*boffset);
   }
   else {
     if ( !m_vrep->getTypeInfo( o->a.tid, &type, &size, &elements)) {
@@ -935,12 +933,24 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
       return;
     }
   }
+  
+  if ( o->a.tid == pwr_eType_Time || 
+       o->a.tid == pwr_eType_DeltaTime ||
+       o->a.tid == pwr_eType_Int64 ||
+       o->a.tid == pwr_eType_UInt64 ||
+       o->a.tid == pwr_eType_Float64 ||
+       o->a.tid == pwr_eType_CastId ||
+       o->a.tid == pwr_eType_DisableAttr) {
+    // Align on longword
+    *boffset = wblAlignLW(*boffset);
+  }
   if ( o->a.type == 0)
     o->a.type = ((pwr_sParam *)o->rbody)->Info.Type = type;
 
   if ( o->a.flags & pwr_mAdef_pointer) {
     size = sizeof( void *);
-    *boffset = wblAlign8(*boffset);
+    // Align pointers on longword
+    *boffset = wblAlignLW(*boffset);
   }
   if ( o->a.flags & pwr_mAdef_array) {
     size *= o->a.elements;
@@ -949,16 +959,19 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
     strncpy( ((pwr_sParam *)o->rbody)->Info.PgmName, wb_name::unatName( name()),
 	     sizeof( ((pwr_sParam *)o->rbody)->Info.PgmName));
   }
+  if ( cdh_NoCaseStrcmp( o->cname, "$Buffer") == 0) {
+    *boffset += sizeof( void *) + wblAlignLW( o->a.size);
+  }
   if ( cdh_NoCaseStrcmp( o->cname, "$Input") == 0) {
     o->a.size = ((pwr_sParam *)o->rbody)->Info.Size = size;
-    *boffset = wblAlign8( *boffset);
+    *boffset = wblAlignLW( *boffset);
     o->a.offset = ((pwr_sParam *)o->rbody)->Info.Offset = *boffset + sizeof( void *);
-    *boffset += sizeof( void *) + wblAlign( o->a.size);
+    *boffset += sizeof( void *) + wblAlignW( o->a.size);
   }
   else {
     o->a.size = ((pwr_sParam *)o->rbody)->Info.Size = size;
     o->a.offset = ((pwr_sParam *)o->rbody)->Info.Offset = *boffset;
-    *boffset += wblAlign( o->a.size);
+    *boffset += wblAlignW( o->a.size);
   }
   ((pwr_sParam *)o->rbody)->Info.ParamIndex = *bindex;
   (*bindex)++;

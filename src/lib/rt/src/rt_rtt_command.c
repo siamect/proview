@@ -11582,7 +11582,7 @@ static int	rtt_qual_to_time( 	char 		*in_str,
 	if ( !strcmp( in_str, "") ||
 	     !strncmp( in_str, "TODAY", strlen(in_str)))
 	{
-	  clock_gettime( CLOCK_REALTIME, &current_time);
+	  time_GetTime( &current_time);
 	  time_AtoAscii( &current_time, time_eFormat_DateAndTime,
 			timstr, sizeof(timstr));
 	  timstr[12] = 0;
@@ -11591,7 +11591,7 @@ static int	rtt_qual_to_time( 	char 		*in_str,
 	}
 	else if ( !strncmp( in_str, "YESTERDAY", strlen(in_str)))
 	{
-	  clock_gettime( CLOCK_REALTIME, &current_time);
+	  time_GetTime( &current_time);
 	  time_AtoAscii( &current_time, time_eFormat_DateAndTime,
 			timstr, sizeof(timstr));
 	  timstr[12] = 0;
@@ -11615,7 +11615,7 @@ static int	rtt_qual_to_time( 	char 		*in_str,
 	  else
 	  {
 	    /* No date is supplied, add current date as default */
-	    clock_gettime( CLOCK_REALTIME, &current_time);
+	    time_GetTime( &current_time);
 	    time_AtoAscii( &current_time, time_eFormat_DateAndTime,
 			timstr, sizeof(timstr));
 	    timstr[12] = 0;

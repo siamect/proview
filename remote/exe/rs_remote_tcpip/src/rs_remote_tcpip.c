@@ -50,6 +50,7 @@
 #include "pwr_systemclasses.h"
 #include "rt_gdh.h"
 #include "co_cdh.h"
+#include "co_time.h"
 #include "rt_errh.h"
 #include "pwr_baseclasses.h"
 #include "pwr_remoteclasses.h"
@@ -746,7 +747,7 @@ int main(int argc, char *argv[])
 
   /* Set (re)start time in remnode object */
   
-  clock_gettime(CLOCK_REALTIME, &rn_tcp->RestartTime);
+  time_GetTime(&rn_tcp->RestartTime);
   
   /* Store remtrans objects objid in remnode_tcp object */
   remtrans = rn.remtrans;

@@ -559,7 +559,7 @@ int main ()
   /* Init Handler head */
 
   l.head.ver = mh_cVersion;
-  clock_gettime(CLOCK_REALTIME, &l.head.birthTime);
+  time_GetTime(&l.head.birthTime);
   l.head.source = mh_eSource_Handler;
 
   l.head.nix = l.head.qid.nid;
@@ -1030,7 +1030,7 @@ applReturn (
     return;
   }
 
-  clock_gettime(CLOCK_REALTIME, &aap->returnTime);
+  time_GetTime(&aap->returnTime);
   strncpy(aap->returnText, ip->ReturnText, sizeof(pwr_tString80));
   aap->returnType = ip->ReturnType;
   ep = eventListInsert(aap->returnType, NULL, ap);
@@ -1111,7 +1111,7 @@ aSup_exec (
   ) {
     if (o->Action) o->Action = FALSE;
     if (o->ReturnCheck) {
-      clock_gettime(CLOCK_REALTIME, &o->ReturnTime);
+      time_GetTime(&o->ReturnTime);
       o->ReturnCheck = FALSE;
       o->ReturnSend = TRUE;
     }
@@ -1127,7 +1127,7 @@ aSup_exec (
       if (o->DetectCheck) {
         o->ActualValue = In;
         timerIn(sp, (sTimer *)&o->TimerFlag);
-        clock_gettime(CLOCK_REALTIME, &o->DetectTime);
+        time_GetTime(&o->DetectTime);
         o->DetectCheck = FALSE;
       }
       if (!o->TimerFlag) {
@@ -1210,7 +1210,7 @@ cSup_exec (
   int diff;
 
 //  time_Uptime(NULL, &dnow, NULL);
-  clock_gettime(CLOCK_MONOTONIC, &dnow);
+  time_GetTimeMonotonic(&dnow);
   nextLimit.tv_nsec = o->NextLimit.tv_nsec;
   nextLimit.tv_sec = o->NextLimit.tv_sec;
   o->DetectCount++;
@@ -1224,7 +1224,7 @@ cSup_exec (
 	if (o->Delayed) {
 	  o->DetectTime = o->DelayedTime;
 	} else {
-	  clock_gettime(CLOCK_REALTIME, &o->DetectTime);
+	  time_GetTime(&o->DetectTime);
 	}
 	o->DetectCheck = FALSE;
       }
@@ -1245,7 +1245,7 @@ cSup_exec (
       if (o->Timely) {
 	o->ReturnTime = o->TimelyTime;
       } else {
-	clock_gettime(CLOCK_REALTIME, &o->ReturnTime);
+	time_GetTime(&o->ReturnTime);
       }
       o->ReturnCheck = FALSE;
       o->ReturnSend = TRUE;
@@ -1270,7 +1270,7 @@ dSup_exec (
   if (In != o->CtrlPosition) {
     if (o->Action) o->Action = FALSE;
     if (o->ReturnCheck) {
-      clock_gettime(CLOCK_REALTIME, &o->ReturnTime);
+      time_GetTime(&o->ReturnTime);
       o->ReturnCheck = FALSE;
       o->ReturnSend = TRUE;
     }
@@ -1286,7 +1286,7 @@ dSup_exec (
       if (o->DetectCheck) {
         o->ActualValue = In;
         timerIn(sp, (sTimer *)&o->TimerFlag);
-        clock_gettime(CLOCK_REALTIME, &o->DetectTime);
+        time_GetTime(&o->DetectTime);
         o->DetectCheck = FALSE;
       }
       if (!o->TimerFlag) {
@@ -1523,7 +1523,7 @@ formatApplEvent (
   case mh_eEvent_Cancel:
     rp = &up->ret;
     ip->Id.Idx = aap->link.returnIdx;
-    clock_gettime(CLOCK_REALTIME, &ip->EventTime);
+    time_GetTime(&ip->EventTime);
     if (aap->link.event == mh_eEvent_Alarm)
       ip->EventPrio = aap->message.EventPrio;
     strncpy(rp->EventText, text, sizeof(rp->EventText));
@@ -1640,7 +1640,7 @@ formatSupEvent (
     ip->Id.Idx = sp->link.returnIdx;
     if (sp->link.event == mh_eEvent_Alarm)
       ip->EventPrio = sup->EventPriority;
-    clock_gettime(CLOCK_REALTIME, &ip->EventTime);
+    time_GetTime(&ip->EventTime);
     strncpy(rp->EventText, text, sizeof(rp->EventText));
     rp->TargetId.Idx = sp->link.idx;
     rp->TargetId.Nix = l.head.nix;
@@ -2293,7 +2293,7 @@ handlerEvent (
     ip->Object = l.emonObject;
     ip->EventFlags = eventFlags;
     ip->EventPrio = eventPrio;
-    clock_gettime(CLOCK_REALTIME, &ip->EventTime);
+    time_GetTime(&ip->EventTime);
     strncpy(ip->EventName, l.emonName, sizeof(ip->EventName) - 1);
     ip->EventType = eventType;
     strncpy(ip->EventText, eventText, sizeof(ip->EventText) - 1);
@@ -2323,7 +2323,7 @@ handlerEvent (
     if ((hp->link.status.Event.Status & mh_mEventStatus_NotRet) == 0)
       return; /* already returned */
 
-    clock_gettime(CLOCK_REALTIME, &hp->returnTime);
+    time_GetTime(&hp->returnTime);
     hp->returnType = mh_eEvent_Return;
     strncpy(hp->returnText, eventText, sizeof(ip->EventText) - 1);
     ep = eventListInsert(eventType, NULL, (sActive*) hp);
@@ -3053,13 +3053,13 @@ outunitAck (
   case mh_eSource_Scanner:
     sp = (sSupActive*) ap;
     sp->sup->AckOutunit = op->outunit;  /* Update ack outunit in sup object */
-    clock_gettime(CLOCK_REALTIME, &sp->sup->AckTime);       /* Update ack time in sup object */
+    time_GetTime(&sp->sup->AckTime);       /* Update ack time in sup object */
     break;
   case mh_eSource_Application:
   case mh_eSource_Handler:
     aap = (sApplActive*) ap;
     aap->ackOutunit = op->outunit;
-    clock_gettime(CLOCK_REALTIME, &aap->ackTime);
+    time_GetTime(&aap->ackTime);
     break;
   default:
     errh_Error("outunitAck, programming error, source: %d", ap->source);
@@ -3153,7 +3153,7 @@ outunitBlock (
   switch (bp->link.event) {
   case mh_eEvent_Block:
     bp->outunitBlock = *ip;
-    clock_gettime(CLOCK_REALTIME, &bp->outunitBlock.time);      /* Update block time */
+    time_GetTime(&bp->outunitBlock.time);      /* Update block time */
     bp->link.status.Event.Prio = (pwr_tUInt8) ip->prio;
     bp->link.status.Event.Status = mh_mEventStatus_Block;
     bp->targetId.Nix = l.head.nix;
@@ -3162,13 +3162,13 @@ outunitBlock (
   case mh_eEvent_Reblock:
     bp->outunitUnblock = bp->outunitBlock;
     bp->outunitBlock = *ip;
-    clock_gettime(CLOCK_REALTIME, &bp->outunitBlock.time);      /* Update block time */
+    time_GetTime(&bp->outunitBlock.time);      /* Update block time */
     bp->link.status.Event.Prio = (pwr_tUInt8) ip->prio;
     bp->link.status.Event.Status = mh_mEventStatus_Block;
     break;
   case mh_eEvent_Unblock:
     bp->outunitUnblock = *ip;
-    clock_gettime(CLOCK_REALTIME, &bp->outunitUnblock.time);   /* Update unblock time */
+    time_GetTime(&bp->outunitUnblock.time);   /* Update unblock time */
     bp->link.status.All = 0;
     break;
   default:
@@ -3320,7 +3320,7 @@ procDown (
 #define SET_TIMEOUT              \
   if (l.timerActive) {               \
     tmo = l.timerTime * 1000.; /* Milli seconds */ \
-    clock_gettime(CLOCK_REALTIME, &curTime);    \
+    time_GetTime(&curTime);    \
     time_Aadd(&next_tmo, &curTime, &l.timerTimeDelta); \
   } else                \
     tmo = qcom_cTmoEternal;
@@ -3357,7 +3357,7 @@ receive (
         continue;
       }
 
-      clock_gettime(CLOCK_REALTIME, &curTime);
+      time_GetTime(&curTime);
       if (time_Acomp(&curTime, &next_tmo) > 0) {
         timeOut();
         SET_TIMEOUT

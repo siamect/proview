@@ -69,7 +69,7 @@ void RunningTime_exec(
 	  object->TripHours = 0;
 	  object->TripSeconds = 0.0;
 
-	  clock_gettime(CLOCK_REALTIME, &object->ResetTime);
+	  time_GetTime( &object->ResetTime);
 	  object->TripReset = 0;
 	}
 /* Update Calendar time */
@@ -96,7 +96,7 @@ void RunningTime_exec(
 	    object->Start = 1;
 	    object->TotalNOfStarts++;
 	    object->TripNOfStarts++;
-	    clock_gettime(CLOCK_REALTIME, &object->StartTime);
+	    time_GetTime( &object->StartTime);
 	  } /* End if new start */
 /* Update Running Time */
 	  object->TripRunSeconds += TimeSince;

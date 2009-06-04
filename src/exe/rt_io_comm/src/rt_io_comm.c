@@ -121,7 +121,7 @@ int main (int argc, char **argv)
       cycle.tv_sec = f;
       cycle.tv_nsec = (ihp->CycleTimeBus - f) * 1.0e9;
       cycle.tv_nsec++;
-      clock_gettime(CLOCK_MONOTONIC, &next);
+      time_GetTimeMonotonic(&next);
       time_Aadd(NULL, &next, &cycle);
     }
 
@@ -139,8 +139,8 @@ int main (int argc, char **argv)
       }
       io_ScanSupLst( io_ctx->SupCtx);
 
-      clock_gettime(CLOCK_REALTIME, &now);
-      clock_gettime(CLOCK_MONOTONIC, &after);
+      time_GetTime(&now);
+      time_GetTimeMonotonic(&after);
       next = after;
       time_Aadd(NULL, &next, &cycle);
       delay_action = csup_Exec(&sts, csup_lh, (pwr_tDeltaTime *) &next,

@@ -382,16 +382,19 @@ thread_CondTimedWait (
   {
     pwr_tTime now;
     pwr_tTime then;
+    struct timespec then_ts;
 
     cp->f = 0;
 
     if (time == NULL)
       return thread_CondWait(cp, mp);
 
-    clock_gettime(CLOCK_REALTIME, &now);
+    time_GetTime(&now);
     time_Aadd(&then, &now, time);
+    then_ts.tv_sec = then.tv_sec;
+    then_ts.tv_nsec = then.tv_nsec;
 
-    return errno_Status(pthread_cond_timedwait(&cp->c, mp, &then));
+    return errno_Status(pthread_cond_timedwait(&cp->c, mp, &then_ts));
 
   }
 #elif defined OS_VMS
@@ -500,17 +503,20 @@ thread_Wait (
 
 #elif defined OS_LYNX || defined OS_LINUX
 
-    pwr_tTime rmt;
-    pwr_tDeltaTime ttime = {9999999, 0};
+    struct timespec rmt;
+    struct timespec ttime = {9999999, 0};
+    struct timespec ts;
 
     if (tp == &time) {
       int i;
       for ( i = 0; i < 100; i++)
-        sts = errno_Pstatus(nanosleep((pwr_tTime *) &ttime, &rmt));
+        sts = errno_Pstatus(nanosleep(&ttime, &rmt));
     }
-    else
-      sts = errno_Pstatus(nanosleep((pwr_tTime *)tp, &rmt));
-
+    else {
+      ts.tv_sec = tp->tv_sec;
+      ts.tv_nsec = tp->tv_nsec;
+      sts = errno_Pstatus(nanosleep(&ts, &rmt));
+    }
 #else
 # error Not defined for this platform
 #endif

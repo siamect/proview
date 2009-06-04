@@ -67,7 +67,7 @@ pwrs_Node_Exec (
     return;
 
   system_severity = errh_Severity( np->SystemStatus);
-  clock_gettime( CLOCK_REALTIME, &current_time);
+  time_GetTime( &current_time);
   for ( i = 0; i < sizeof(np->ProcStatus)/sizeof(np->ProcStatus[0]); i++) {
     if ( np->ProcStatus[i] != 0 && timeout[i] != 0.0) {
       time_Adiff( &diff, &current_time, &np->ProcTimeStamp[i]);
@@ -123,7 +123,7 @@ pwrs_Node_SupEmon (
     return;
 
   if ( np->ProcStatus[i] != 0 && np->ProcStatus[i] != PWR__PTIMEOUT) {
-    clock_gettime( CLOCK_REALTIME, &current_time);
+    time_GetTime( &current_time);
     time_Adiff( &diff, &current_time, &np->ProcTimeStamp[i]);
 
     if ( time_DToFloat( 0, &diff) > timeout) {

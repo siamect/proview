@@ -142,3 +142,13 @@ pwr_tStatus syi_UserName( char *user, int len)
   strncpy( user, p, len);
   return 1;
 }
+
+const char *syi_Hardware()
+{
+#if defined HW_X86_64
+  static const char hw[] = "x86_64";
+#else
+  static const char hw[] = "x86";
+#endif
+  return hw;
+}

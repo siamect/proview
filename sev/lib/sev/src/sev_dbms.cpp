@@ -516,13 +516,13 @@ int sev_dbms::store_item( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char 
   char timestr[40];
   pwr_tTime creatime;
 
-  clock_gettime( CLOCK_REALTIME, &creatime);
+  time_GetTime( &creatime);
   time_AtoAscii( &creatime, time_eFormat_NumDateAndTime, timestr, sizeof(timestr));
   timestr[19] = 0;
 
   sprintf( query, "insert into items (id,tablename,vid,oix,oname,aname,uptime,cretime,storagetime,vtype,vsize,description,unit,scantime,deadband,options) "
-	   "values (0,'%s',%d,%d,'%s','%s','%s','%s',%d,%d,%d,'%s','%s',%f,%f,%d);",
-	   tablename, oid.vid, oid.oix, oname, aname, timestr, timestr, storagetime.tv_sec, vtype, 
+	   "values (0,'%s',%d,%d,'%s','%s','%s','%s',%ld,%d,%d,'%s','%s',%f,%f,%d);",
+	   tablename, oid.vid, oid.oix, oname, aname, timestr, timestr, (long int)storagetime.tv_sec, vtype, 
 	   vsize, description, unit, scantime, deadband, options);
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
@@ -762,35 +762,35 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
 	// Posix time, high resolution
 	switch( m_items[item_idx].attr[attr_idx].type) {
 	case pwr_eType_String:
-	  sprintf( query, "insert into %s (time, ntime, value) values (%lu,%lu,'%s')",
+	  sprintf( query, "insert into %s (time, ntime, value) values (%ld,%ld,'%s')",
 		   oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), 
-		   time.tv_sec, time.tv_nsec, bufstr);
+		   (long int)time.tv_sec, (long int)time.tv_nsec, bufstr);
 	  break;
 	default:
 	  if ( m_items[item_idx].options & pwr_mSevOptionsMask_UseDeadBand)
-	    sprintf( query, "insert into %s (time, ntime, value, jump) values (%lu,%lu,%s,%d)",
+	    sprintf( query, "insert into %s (time, ntime, value, jump) values (%ld,%ld,%s,%d)",
 		     oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), 
-		     time.tv_sec, time.tv_nsec, bufstr, set_jump);
+		     (long int)time.tv_sec, (long int)time.tv_nsec, bufstr, set_jump);
 	  else
-	    sprintf( query, "insert into %s (time, ntime, value) values (%lu,%lu,%s)",
+	    sprintf( query, "insert into %s (time, ntime, value) values (%ld,%ld,%s)",
 		     oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), 
-		     time.tv_sec, time.tv_nsec, bufstr);
+		     (long int)time.tv_sec, (long int)time.tv_nsec, bufstr);
 	}
       }
       else {
 	// Posix time, low resolution
 	switch( m_items[item_idx].attr[attr_idx].type) {
 	case pwr_eType_String:
-	  sprintf( query, "insert into %s (time, value) values (%lu,'%s')",
-		   oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), time.tv_sec, bufstr);
+	  sprintf( query, "insert into %s (time, value) values (%ld,'%s')",
+		   oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), (long int)time.tv_sec, bufstr);
 	  break;
 	default:
 	  if ( m_items[item_idx].options & pwr_mSevOptionsMask_UseDeadBand)
-	    sprintf( query, "insert into %s (time, value, jump) values (%lu,%s,%d)",
-		     oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), time.tv_sec, bufstr, set_jump);
+	    sprintf( query, "insert into %s (time, value, jump) values (%ld,%s,%d)",
+		     oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), (long int)time.tv_sec, bufstr, set_jump);
 	  else
-	    sprintf( query, "insert into %s (time, value) values (%lu,%s)",
-		     oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), time.tv_sec, bufstr);
+	    sprintf( query, "insert into %s (time, value) values (%ld,%s)",
+		     oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), (long int)time.tv_sec, bufstr);
 	}
       }
     }
@@ -799,19 +799,19 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
 	// Sql time, high resolution
 	switch( m_items[item_idx].attr[attr_idx].type) {
 	case pwr_eType_String:
-	  sprintf( query, "insert into %s (time, ntime, value) values ('%s',%lu,'%s')",
+	  sprintf( query, "insert into %s (time, ntime, value) values ('%s',%ld,'%s')",
 		   oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), 
-		   timstr, time.tv_nsec, bufstr);
+		   timstr, (long int)time.tv_nsec, bufstr);
 	  break;
 	default:
 	  if ( m_items[item_idx].options & pwr_mSevOptionsMask_UseDeadBand)
-	    sprintf( query, "insert into %s (time, ntime, value, jump) values ('%s',%lu,%s,%d)",
+	    sprintf( query, "insert into %s (time, ntime, value, jump) values ('%s',%ld,%s,%d)",
 		     oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), 
-		     timstr, time.tv_nsec, bufstr, set_jump);
+		     timstr, (long int)time.tv_nsec, bufstr, set_jump);
 	  else
-	    sprintf( query, "insert into %s (time, ntime, value) values ('%s',%lu,%s)",
+	    sprintf( query, "insert into %s (time, ntime, value) values ('%s',%ld,%s)",
 		     oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), 
-		     timstr, time.tv_nsec, bufstr);
+		     timstr, (long int)time.tv_nsec, bufstr);
 	}
       }
       else {
@@ -844,23 +844,23 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
     if ( m_items[item_idx].options & pwr_mSevOptionsMask_PosixTime) {
       if ( m_items[item_idx].options & pwr_mSevOptionsMask_HighTimeResolution) {
 	// Posix time, high resolution
-	sprintf( query, "update %s set time = %lu, ntime = %lu where id = %d",
+	sprintf( query, "update %s set time = %ld, ntime = %ld where id = %d",
 		 oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), 
-		 time.tv_sec, time.tv_nsec, m_items[item_idx].last_id);
+		 (long int)time.tv_sec, (long int)time.tv_nsec, m_items[item_idx].last_id);
       }
       else {
 	// Posix time, low resolution
-	sprintf( query, "update %s set time = %lu where id = %d",
-		 oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), time.tv_sec, 
+	sprintf( query, "update %s set time = %ld where id = %d",
+		 oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), (long int)time.tv_sec, 
 		 m_items[item_idx].last_id);
       }
     }
     else {
       if ( m_items[item_idx].options & pwr_mSevOptionsMask_HighTimeResolution) {
 	// Sql time, high resolution
-	sprintf( query, "update %s set time = '%s', ntime = %lu where id = %d",
+	sprintf( query, "update %s set time = '%s', ntime = %ld where id = %d",
 		 oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), 
-		 timstr, time.tv_nsec, m_items[item_idx].last_id);
+		 timstr, (long int)time.tv_nsec, m_items[item_idx].last_id);
       }
       else {
 	// Sql time, low resolution
@@ -1022,14 +1022,14 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
     if ( starttime && endtime) {
       if ( div == 1) {
 	if ( options & pwr_mSevOptionsMask_PosixTime)
-	  sprintf( where_part, "where time >= %lu and time <= %lu", starttime->tv_sec, endtime->tv_sec);
+	  sprintf( where_part, "where time >= %ld and time <= %ld", (long int)starttime->tv_sec, (long int)endtime->tv_sec);
 	else
 	  sprintf( where_part, "where time >= '%s' and time <= '%s'", starttimstr, endtimstr);
       }
       else {
 	if ( options & pwr_mSevOptionsMask_PosixTime)
-	  sprintf( where_part, "where (id %% %d = 0 %s) and time >= %lu and time <= %lu", 
-		   div, jumpstr, starttime->tv_sec, endtime->tv_sec);
+	  sprintf( where_part, "where (id %% %d = 0 %s) and time >= %ld and time <= %ld", 
+		   div, jumpstr, (long int)starttime->tv_sec, (long int)endtime->tv_sec);
 	else
 	  sprintf( where_part, "where (id %% %d = 0 %s) and time >= '%s' and time <= '%s'", 
 		   div, jumpstr, starttimstr, endtimstr);
@@ -1038,13 +1038,13 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
     else if ( starttime) {
       if ( div == 1) {
 	if ( options & pwr_mSevOptionsMask_PosixTime)
-	  sprintf( where_part, "where time >= %lu", starttime->tv_sec);
+	  sprintf( where_part, "where time >= %ld", (long int)starttime->tv_sec);
 	else
 	  sprintf( where_part, "where time >= '%s'", starttimstr);
       }
       else {
 	if ( options & pwr_mSevOptionsMask_PosixTime)
-	  sprintf( where_part, "where (id %% %d = 0 %s) and time >= %lu", div, jumpstr, starttime->tv_sec);
+	  sprintf( where_part, "where (id %% %d = 0 %s) and time >= %ld", div, jumpstr, (long int)starttime->tv_sec);
       else
 	sprintf( where_part, "where (id %% %d = 0 %s) and time >= '%s'", div, jumpstr, starttimstr);
       }
@@ -1052,13 +1052,13 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
     else if ( endtime) {
       if ( div == 1) {
 	if ( options & pwr_mSevOptionsMask_PosixTime)
-	  sprintf( where_part, "where time <= %lu", endtime->tv_sec);
+	  sprintf( where_part, "where time <= %ld", (long int)endtime->tv_sec);
 	else
 	  sprintf( where_part, "where time <= '%s'", endtimstr);
       }
       else {
 	if ( options & pwr_mSevOptionsMask_PosixTime)
-	  sprintf( where_part, "where (id %% %d = 0 %s) and time <= %lu", div, jumpstr, endtime->tv_sec);
+	  sprintf( where_part, "where (id %% %d = 0 %s) and time <= %ld", div, jumpstr, (long int)endtime->tv_sec);
 	else
 	  sprintf( where_part, "where (id %% %d = 0 %s) and time <= '%s'", div, jumpstr, endtimstr);
       }
@@ -1074,19 +1074,19 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
     // Not read optimized
     if ( starttime && endtime) {
       if ( options & pwr_mSevOptionsMask_PosixTime)
-	sprintf( where_part, "where time >= %lu and time <= %lu", starttime->tv_sec, endtime->tv_sec);
+	sprintf( where_part, "where time >= %ld and time <= %ld", (long int)starttime->tv_sec, (long int)endtime->tv_sec);
       else
 	sprintf( where_part, "where time >= '%s' and time <= '%s'", starttimstr, endtimstr);
     }
     else if ( starttime) {
       if ( options & pwr_mSevOptionsMask_PosixTime)
-	sprintf( where_part, "where time >= %lu", starttime->tv_sec);
+	sprintf( where_part, "where time >= %ld", (long int)starttime->tv_sec);
       else
 	sprintf( where_part, "where time >= '%s'", starttimstr);
     }
     else if ( endtime) {
       if ( options & pwr_mSevOptionsMask_PosixTime)
-	sprintf( where_part, "where time <= %lu", endtime->tv_sec);
+	sprintf( where_part, "where time <= %ld", (long int)endtime->tv_sec);
       else
 	sprintf( where_part, "where time <= '%s'", endtimstr);
     }
@@ -1223,7 +1223,7 @@ int sev_dbms::check_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *ana
   char timestr[40];
   pwr_tTime uptime;
 
-  clock_gettime( CLOCK_REALTIME, &uptime);
+  time_GetTime( &uptime);
   time_AtoAscii( &uptime, time_eFormat_NumDateAndTime, timestr, sizeof(timestr));
   timestr[19] = 0;
 
@@ -1237,7 +1237,7 @@ int sev_dbms::check_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *ana
 
       sprintf( query, "update items set ");
       if ( storagetime.tv_sec != m_items[i].storagetime.tv_sec)
-	sprintf( &query[strlen(query)], "storagetime=%d,", storagetime.tv_sec);
+	sprintf( &query[strlen(query)], "storagetime=%ld,", (long int)storagetime.tv_sec);
       if ( strcmp( oname, m_items[i].oname) != 0)
 	sprintf( &query[strlen(query)], "oname=\'%s\',", oname);
       if ( type != m_items[i].attr[0].type)
@@ -1285,7 +1285,7 @@ int sev_dbms::add_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname
   item.oid = oid;
   strncpy( item.oname, oname, sizeof(item.oname));
   strncpy( item.attr[0].aname, aname, sizeof(item.attr[0].aname));
-  clock_gettime( CLOCK_REALTIME, &item.creatime);
+  time_GetTime( &item.creatime);
   item.modtime = item.creatime;
   item.storagetime = storagetime;
   item.attr[0].type = type;
@@ -1339,8 +1339,8 @@ int sev_dbms::delete_old_data( pwr_tStatus *sts, pwr_tOid oid, char *aname,
   timstr[19] = 0;
 
   if ( options & pwr_mSevOptionsMask_PosixTime)
-    sprintf( query, "delete from %s where time < %lu;",
-	     oid_to_table(oid, aname), limit.tv_sec);
+    sprintf( query, "delete from %s where time < %ld;",
+	     oid_to_table(oid, aname), (long int)limit.tv_sec);
   else
     sprintf( query, "delete from %s where time < '%s';",
 	     oid_to_table(oid, aname), timstr);

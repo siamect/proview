@@ -145,13 +145,15 @@ main()
   string tmp_fname="$pwrp_tmp/wtmp.txt";
   int found;
   string oname;	
-
+  string hw;
 
   verify(0);
 
   dv_system_group = get_pwr_config( "defaultSystemGroup");
   dv_prd_qbus = get_pwr_config( "defaultProductionQbus");
   dv_sim_qbus = get_pwr_config( "defaultSimulationQbus");
+
+  hw = GetHardware();
 
   if ( ! EditMode())
     MessageDialog("Error", "Enter edit mode before starting wizard");
@@ -540,7 +542,11 @@ page_4:
     attr = name + ".NodeName";
     SetAttribute( attr, node_name[i]);
     attr = name + ".OperatingSystem";
-    SetAttribute( attr, 64);
+    if ( hw == "x86_64")
+      SetAttribute( attr, 128);
+    else
+      SetAttribute( attr, 64);
+    endif
     attr = name + ".Address";
     SetAttribute( attr, node_ip[i]);
     if ( !node_disdistr[i])

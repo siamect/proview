@@ -140,7 +140,7 @@ void Hist::today_cb()
   pwr_tTime StartTime;
   pwr_tTime StopTime;
 
-  Sts = clock_gettime(CLOCK_REALTIME, &StopTime);
+  Sts = time_GetTime( &StopTime);
   Sts = AdjustForDayBreak( this, &StopTime, &StartTime);
 
   StopTime = StartTime;
@@ -158,7 +158,7 @@ void Hist::yesterday_cb()
   pwr_tTime StartTime;
   pwr_tTime StopTime;
 
-  Sts = clock_gettime(CLOCK_REALTIME, &StopTime);
+  Sts = time_GetTime( &StopTime);
   Sts = AdjustForDayBreak( this, &StopTime, &StartTime);
 
   if ( time_Acomp( &StartTime, &StopTime) > 0)
@@ -177,7 +177,7 @@ void Hist::thisw_cb()
   pwr_tTime StartTime;
   pwr_tTime StopTime;
 
-  Sts = clock_gettime(CLOCK_REALTIME, &CurrTime);
+  Sts = time_GetTime( &CurrTime);
 
   Sts = GoBackWeek( CurrTime, &StartTime, &StopTime);
 
@@ -194,7 +194,7 @@ void Hist::lastw_cb()
   pwr_tTime StartTime;
   pwr_tTime StopTime;
 
-  Sts = clock_gettime(CLOCK_REALTIME, &CurrTime);
+  Sts = time_GetTime( &CurrTime);
 
   Sts = GoBackWeek( CurrTime, &StartTime, &StopTime);
 
@@ -209,7 +209,7 @@ void Hist::thism_cb()
   pwr_tTime StartTime;
   pwr_tTime StopTime;
 
-  Sts = clock_gettime(CLOCK_REALTIME, &CurrTime);
+  Sts = time_GetTime( &CurrTime);
 
   Sts = GoBackMonth( CurrTime, &StartTime, &StopTime);
 
@@ -227,7 +227,7 @@ void Hist::lastm_cb()
   pwr_tTime StartTime;
   pwr_tTime StopTime;
 
-  Sts = clock_gettime(CLOCK_REALTIME, &CurrTime);
+  Sts = time_GetTime( &CurrTime);
 
   Sts = GoBackMonth( CurrTime, &StartTime, &StopTime);
 
@@ -243,7 +243,7 @@ void Hist::all_cb()
 
   time_AsciiToA(timestr, &StartTime);
     
-  Sts = clock_gettime(CLOCK_REALTIME, &StopTime);
+  Sts = time_GetTime( &StopTime);
 
   StopTime.tv_sec += ONEDAY;
   
@@ -259,7 +259,7 @@ void Hist::time_cb()
 
   time_AsciiToA(timestr, &StartTime);
     
-  Sts = clock_gettime(CLOCK_REALTIME, &StopTime);
+  Sts = time_GetTime( &StopTime);
 
   SetListTime( StartTime, StopTime, SENS);
 
@@ -832,7 +832,8 @@ int  Hist::GoBackMonth( pwr_tTime TimeIn, pwr_tTime *FromTime,
 
     /* Get the time in and blank time values. */
 
-    Tm = localtime(&TimeIn.tv_sec);
+    time_t sec = TimeIn.tv_sec;
+    Tm = localtime(&sec);
 
     /* Get number of days in the previous month. */
     if (Tm->tm_mon == 0)
@@ -913,7 +914,8 @@ int Hist::GoBackWeek( pwr_tTime TimeIn, pwr_tTime *FromTime,
     int		Days;
     pwr_tTime   Time;
 
-    Tm = localtime(&TimeIn.tv_sec);
+    time_t sec = TimeIn.tv_sec;
+    Tm = localtime(&sec);
     if (Tm->tm_wday == 0) /* Sunday */
 	Days = 13;
     else

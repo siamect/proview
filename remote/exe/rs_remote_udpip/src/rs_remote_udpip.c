@@ -54,6 +54,7 @@
 #include "pwr_class.h"
 #include "pwr_systemclasses.h"
 #include "rt_gdh.h"
+#include "co_time.h"
 #include "co_cdh.h"
 #include "rt_errh.h"
 #include "pwr_baseclasses.h"
@@ -633,7 +634,7 @@ int main(int argc, char *argv[])
   
   /* Set (re)start time in remnode object */
   
-  clock_gettime(CLOCK_REALTIME, &rn_udp->RestartTime);
+  time_GetTime(&rn_udp->RestartTime);
   
   /* Loop forever */
 

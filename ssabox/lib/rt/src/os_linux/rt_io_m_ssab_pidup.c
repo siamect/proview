@@ -29,6 +29,7 @@
 
 #include "pwr.h"
 #include "co_cdh.h"
+#include "co_time.h"
 #include "rt_gdh.h"
 #include "rt_errh.h"
 #include "pwr_baseclasses.h"
@@ -299,7 +300,7 @@ static pwr_tStatus IoCardRead (
 
       if ( sts == -1) {
         /* Increase error count and check error limits */
-        clock_gettime(CLOCK_REALTIME, &now);
+        time_GetTime(&now);
 
         if (op->ErrorCount > op->ErrorSoftLimit) {
           /* Ignore if some time has expired */
@@ -504,7 +505,7 @@ static pwr_tStatus IoCardWrite (
 
       if ( sts == -1) {
         /* Increase error count and check error limits */
-        clock_gettime(CLOCK_REALTIME, &now);
+        time_GetTime(&now);
 
         if (op->ErrorCount > op->ErrorSoftLimit) {
           /* Ignore if some time has expired */
@@ -553,7 +554,7 @@ static pwr_tStatus IoCardWrite (
 
       if ( sts == -1) {
         /* Increase error count and check error limits */
-        clock_gettime(CLOCK_REALTIME, &now);
+        time_GetTime(&now);
 
         if (op->ErrorCount > op->ErrorSoftLimit) {
           /* Ignore if some time has expired */

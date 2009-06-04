@@ -71,7 +71,7 @@ pwr_tStatus aproc_TimeStamp()
     if ( EVEN(sts)) return sts;
   }
 
-  clock_gettime( CLOCK_REALTIME, &t);
+  time_GetTime( &t);
   proc_np->ProcTimeStamp[anix-1] = t;
   return PROC__SUCCESS;
 }

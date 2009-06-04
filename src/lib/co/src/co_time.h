@@ -153,7 +153,10 @@ pwr_tDeltaTime *  time_ClockToD (pwr_tStatus*, pwr_tDeltaTime*, time_tClock);
 time_tOs *    time_AtoOs  (pwr_tStatus*, time_tOs*, pwr_tTime*);
 time_tOs *    time_DtoOs  (pwr_tStatus*, time_tOs*, pwr_tDeltaTime*);
 pwr_tDeltaTime *  time_ZeroD  (pwr_tDeltaTime*);
-void 			time_Sleep	(float time);
+void 	       	time_Sleep	(float time);
+int 	      time_GetTime (pwr_tTime *ts);
+int 	      time_GetTimeMonotonic (pwr_tTime *ts);
+
 
 #if defined(OS_ELN)
 int     eln_clock_gettime (clockid_t, struct timespec*);

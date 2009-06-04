@@ -1014,14 +1014,14 @@ void ini_UpdateSystemInfo ( ini_sContext *cp, int boot)
   if ( boot) {
     cp->np->BootVersion = cp->node.rtVersion;
     cp->np->BootPlcVersion = cp->node.plcVersion;
-    clock_gettime(CLOCK_REALTIME, &cp->np->BootTime);
+    time_GetTime(&cp->np->BootTime);
   }
   cp->np->CurrentVersion = cp->node.rtVersion;
   cp->np->CurrentPlcVersion = cp->node.plcVersion;
 
   if ( !boot) {
     cp->np->Restarts++;
-    clock_gettime(CLOCK_REALTIME, &cp->np->RestartTime);
+    time_GetTime(&cp->np->RestartTime);
   }
 }
 

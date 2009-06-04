@@ -1313,7 +1313,7 @@ void	*rtt_logging_logproc( void *arg)
 	char_cnt = 0;
 	first_scan = 1;
 
-        clock_gettime( CLOCK_REALTIME, &nextime);
+        time_GetTime( &nextime);
 
 	entry_ptr->starttime = nextime;
 
@@ -1445,7 +1445,7 @@ void	*rtt_logging_logproc( void *arg)
 	        sys$waitfr( entry_ptr->event_flag);
 #endif
 #if defined OS_LYNX || defined OS_LINUX
-	        clock_gettime( CLOCK_REALTIME, &time);
+	        time_GetTime( &time);
 	        time_Adiff( &wait_time, &nextime, &time);
                 nanosleep( (struct timespec *) &wait_time, NULL);
 #endif
@@ -1454,7 +1454,7 @@ void	*rtt_logging_logproc( void *arg)
 	    }
 	  }
 
-	  clock_gettime( CLOCK_REALTIME, &time);
+	  time_GetTime( &time);
 	  switch ( entry_ptr->logg_type)
 	  {
 	    case RTT_LOGG_CONT:
@@ -1850,7 +1850,7 @@ void	*rtt_logging_logproc( void *arg)
 	    pthread_exit( (void *) 1);
 #endif
 	  }
-          clock_gettime( CLOCK_REALTIME, &time);
+          time_GetTime( &time);
 	  while( time_Acomp( &time, &nextime) > 0)
 	  {
 	    /* To late for next lap, skip it */

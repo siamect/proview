@@ -22,6 +22,7 @@
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"
 #include "co_cdh.h"
+#include "co_time.h"
 #include "co_error.h"
 #include "rt_gdh.h"
 #include "rt_qcom.h"
@@ -315,7 +316,7 @@ int rt_sevhistmon::send_data()
     put.data = msg;
 
     msg->Type = sev_eMsgType_HistDataStore;
-    clock_gettime( CLOCK_REALTIME, &msg->Time);
+    time_GetTime( &msg->Time);
 
     dp = (sev_sHistData *) &msg->Data;
     for ( unsigned int j = 0; j < m_hs[i].sevhistlist.size(); j++) {

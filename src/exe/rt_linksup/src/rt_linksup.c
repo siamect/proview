@@ -177,7 +177,7 @@ static void detect (
   if (o->LinkUp) {
     if (o->Action) o->Action = FALSE;
     if (o->ReturnCheck) {
-      clock_gettime(CLOCK_REALTIME, &o->ReturnTime);
+      time_GetTime(&o->ReturnTime);
       o->ReturnCheck = FALSE;
       o->ReturnSend = TRUE;
     }
@@ -197,7 +197,7 @@ static void detect (
 	  }
 	  o->TimerFlag = TRUE;
 	}
-	clock_gettime(CLOCK_REALTIME, &o->DetectTime);
+	time_GetTime(&o->DetectTime);
 	o->DetectCheck = FALSE;
       }
       if (!o->TimerFlag) {
@@ -415,7 +415,7 @@ scan_nodes ()
   pwr_tDeltaTime Delta;
   pwr_tBoolean LinkUp;
 
-  clock_gettime(CLOCK_REALTIME, &CurrentTime);
+  time_GetTime(&CurrentTime);
 
   for (nl = LstFir(&node_l); nl != LstEnd(&node_l); nl = LstNex(nl)) {
     sNode *np = LstObj(nl);

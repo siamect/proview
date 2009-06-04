@@ -17,6 +17,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  **/
 
+#include "co_time.h"
 #include "wb_session.h"
 #include "wb_error.h"
 #include "wb_ldh_msg.h"
@@ -1048,7 +1049,7 @@ bool wb_session::commit()
   pwr_tOid oid = pwr_cNOid;
   pwr_tTime time;
 
-  clock_gettime(CLOCK_REALTIME, &time);
+  time_GetTime( &time);
   oid.vid = m_vrep->vid();
 
   wb_orep *orep = m_vrep->object( &m_sts, oid); 

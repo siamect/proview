@@ -1333,7 +1333,7 @@ gdh_GetSubscriptionOldness (
       if (status      != NULL) *status = cp->sts;
     } else if (rid.r.vid_3 == cdh_eVid3_dlid) {
       if (old	      != NULL) *old = FALSE;
-      if (lastupdate  != NULL) clock_gettime(CLOCK_REALTIME, lastupdate);
+      if (lastupdate  != NULL) time_GetTime( lastupdate);
       if (status      != NULL) *status = GDH__SUCCESS;
     } else {
       sts = GDH__WEIRD;

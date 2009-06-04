@@ -228,7 +228,7 @@ int	rtt_alarm_send(
 	mh_msg.EventFlags = mh_mEventFlags_Returned |
 			 mh_mEventFlags_NoObject | 
 			 mh_mEventFlags_Bell;
-	clock_gettime( CLOCK_REALTIME, &mh_msg.EventTime);
+	time_GetTime( &mh_msg.EventTime);
 	mh_msg.SupObject = pwr_cNObjid;
 	mh_msg.Outunit = pwr_cNObjid;
 	strcpy ( mh_msg.EventName , "Message from RTT");
@@ -2076,7 +2076,7 @@ int	rtt_alarmlog_start( char *filename)
 	  return RTT__HOLDCOMMAND;
 	}
 
-	clock_gettime( CLOCK_REALTIME, &time);
+	time_GetTime( &time);
 	time_AtoAscii( &time, time_eFormat_DateAndTime, timestr, 
 			sizeof(timestr));
 	fprintf( rtt_alarmlog_file, "Rtt event log list started at %s\n\n", 
@@ -2111,7 +2111,7 @@ int	rtt_alarmlog_stop()
 	}	
 	
 	
-	clock_gettime( CLOCK_REALTIME, &time);
+	time_GetTime( &time);
 	time_AtoAscii( &time, time_eFormat_DateAndTime, timestr, 
 			sizeof(timestr));
 	fprintf( rtt_alarmlog_file, "\nRtt event log list stopped at %s\n", 

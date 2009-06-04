@@ -30,6 +30,7 @@
 #include "pwr.h"
 #include "rt_errh.h"
 #include "co_cdh.h"
+#include "co_time.h"
 #include "rt_gdh.h"
 #include "pwr_baseclasses.h"
 #include "pwr_basecomponentclasses.h"
@@ -270,7 +271,7 @@ static pwr_tStatus IoCardWrite (
         }
 #endif
         /* Increase error count and check error limits */
-        clock_gettime(CLOCK_REALTIME, &now);
+        time_GetTime( &now);
 
         if (op->ErrorCount > op->ErrorSoftLimit) {
           /* Ignore if some time has expired */
