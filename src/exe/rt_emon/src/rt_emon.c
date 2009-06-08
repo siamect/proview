@@ -213,46 +213,45 @@ struct s_SaveBlock {
 };
 
 struct s_Timer {	
-  pwr_tBoolean          TimerFlag;
-/*  struct sTimer	*TimerNext; */
-  pwr_tBoolean          *TimerNext;
-  pwr_tUInt32           TimerCount;
-  pwr_tBoolean          *TimerDO;
-  pwr_tFloat32          TimerTime;
-  pwr_tBoolean          TimerDODum;
-  pwr_tObjid            TimerObjDId;
-  pwr_tInt32            TimerAcc;
-  pwr_tFloat32          TimerMin;
-  pwr_tFloat32          TimerMax;
+  pwr_tBoolean          TimerFlag pwr_dAlignW;
+  pwr_tBoolean          *TimerNext pwr_dAlignLW;
+  pwr_tUInt32           TimerCount pwr_dAlignW;
+  pwr_tBoolean          *TimerDO pwr_dAlignLW;
+  pwr_tFloat32          TimerTime pwr_dAlignW;
+  pwr_tBoolean          TimerDODum pwr_dAlignW;
+  pwr_tObjid            TimerObjDId pwr_dAlignW;
+  pwr_tInt32            TimerAcc pwr_dAlignW;
+  pwr_tFloat32          TimerMin pwr_dAlignW;
+  pwr_tFloat32          TimerMax pwr_dAlignW;
 };
 
 struct s_Sup {
-  pwr_tBoolean    *ControlP;
-  pwr_tBoolean    Control;
-  pwr_tBoolean    Action;
-  pwr_tBoolean    Acked;
-  pwr_tBoolean    Blocked;
-  pwr_tString80	  Description;
-  pwr_tBoolean    DetectOn;
-  pwr_tString80   DetectText;
-  pwr_tString80   ReturnText; 
-  mh_eEvent	  EventType;
-  mh_eEventPrio   EventPriority;
-  mh_mEventFlags  EventFlags;
-  pwr_tAttrRef	  Sound;
-  pwr_tText256	  MoreText;
+  pwr_tBoolean    *ControlP pwr_dAlignLW;
+  pwr_tBoolean    Control pwr_dAlignLW;
+  pwr_tBoolean    Action pwr_dAlignW;
+  pwr_tBoolean    Acked pwr_dAlignW;
+  pwr_tBoolean    Blocked pwr_dAlignW;
+  pwr_tString80	  Description pwr_dAlignW;
+  pwr_tBoolean    DetectOn pwr_dAlignW;
+  pwr_tString80   DetectText pwr_dAlignW;
+  pwr_tString80   ReturnText pwr_dAlignW; 
+  mh_eEvent	  EventType pwr_dAlignW;
+  mh_eEventPrio   EventPriority pwr_dAlignW;
+  mh_mEventFlags  EventFlags pwr_dAlignW;
+  pwr_tAttrRef	  Sound pwr_dAlignW;
+  pwr_tText256	  MoreText pwr_dAlignW;
   /* Internal attributes */
-  pwr_sAttrRef    Attribute;
-  mh_uEventInfo   AlarmStatus;
-  pwr_tBoolean    AlarmCheck;
-  pwr_tBoolean    DetectCheck;
-  pwr_tBoolean    DetectSend;
-  pwr_tTime	  DetectTime;
-  pwr_tBoolean    ReturnCheck;
-  pwr_tBoolean    ReturnSend;
-  pwr_tTime	  ReturnTime;
-  pwr_tTime	  AckTime;
-  pwr_tObjid	  AckOutunit;
+  pwr_sAttrRef    Attribute pwr_dAlignW;
+  mh_uEventInfo   AlarmStatus pwr_dAlignW;
+  pwr_tBoolean    AlarmCheck pwr_dAlignW;
+  pwr_tBoolean    DetectCheck pwr_dAlignW;
+  pwr_tBoolean    DetectSend pwr_dAlignW;
+  pwr_tTime	  DetectTime pwr_dAlignLW;
+  pwr_tBoolean    ReturnCheck pwr_dAlignW;
+  pwr_tBoolean    ReturnSend pwr_dAlignW;
+  pwr_tTime	  ReturnTime pwr_dAlignLW;
+  pwr_tTime	  AckTime pwr_dAlignLW;
+  pwr_tObjid	  AckOutunit pwr_dAlignW;
 };
 
 struct s_SupActive {

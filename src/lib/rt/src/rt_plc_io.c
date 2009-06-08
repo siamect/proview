@@ -17,11 +17,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifdef OS_ELN
-#include stdio
-#else
 #include <stdio.h>
-#endif
+#include <malloc.h>
 
 #include "pwr.h"
 #include "pwr_baseclasses.h"
@@ -198,7 +195,7 @@ void dibcd_exec (
   int           i;      /* Loop index*/
   int           j;      /* Loop index*/
   int           res;    /* Result */
-  int           offset; /* Offset to next pointer */
+  ptrdiff_t     offset; /* Offset to next pointer */
   char          *ptr;   /* Pointer to pointer */
   pwr_tBoolean  *p2;    /* Pointer to digin */
   pwr_tBoolean  err;    /* Error flag */
@@ -283,7 +280,7 @@ void gray_exec (
   pwr_tBoolean  in;     /* Digital in after invert */
   pwr_tBoolean  odd;    /* Convert flag */
   int		sum;    /* Convert sum */
-  int		offset; /* Offset to next pointer */
+  ptrdiff_t    	offset; /* Offset to next pointer */
   char		*ptr;   /* Pointer to ptr to digin */
   pwr_tBoolean  *p2;    /* Pointer to digin */
 

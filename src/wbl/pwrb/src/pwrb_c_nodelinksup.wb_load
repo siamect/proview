@@ -307,6 +307,16 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Optional text supplying more information about the event.
+      !  The more text can for example contain actions to be made when an alarm is detected.
+      !*/
+      Object MoreText $Attribute 42
+        Body SysBody
+          Attr PgmName = "MoreText"
+          Attr TypeRef = "pwrs:Type-$Text256"
+        EndBody
+      EndObject
+      !/**
       !  Attribute is filled in by the server process to the 
       !  NodeLinkSup object itself.
       !*/

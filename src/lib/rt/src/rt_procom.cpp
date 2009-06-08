@@ -827,7 +827,7 @@ sendVolumes (
     mp->g[0].name = oname;
     mp->g[0].cid = pwr_eClass_ExternVolume;
     mp->g[0].nid = gdbroot->my_node->nid;
-    mp->g[0].time = pwr_cNTime;
+    mp->g[0].time = net_cNTime;
     msgtype = net_eMsg_volumes;
   }
   

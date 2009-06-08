@@ -97,16 +97,18 @@ extern "C" {
 #  define pwr_cAlignLW 8
 # else
 #  define pwr_cAlignW 4
-#  define pwr_cAlignLW 4
+#  define pwr_cAlignLW 8
 # endif
-# define pwr_ealign_w __attribute__ ((aligned(4)))
-# define pwr_ealign_lw __attribute__ ((aligned(8)))
+# define pwr_dAlignW __attribute__ ((aligned(4)))
+# define pwr_dAlignLW __attribute__ ((aligned(8)))
 #else
 # define pwr_cAlignW 4
 # define pwr_cAlignLW 4
-# define pwr_ealign_w
-# define pwr_ealign_lw
+# define pwr_dAlignW
+# define pwr_dAlignLW
 #endif
+#define pwr_AlignW(offs) (((offs) + (pwr_cAlignW-1)) & ~(pwr_cAlignW-1))
+#define pwr_AlignLW(offs) (((offs) + (pwr_cAlignLW-1)) & ~(pwr_cAlignLW-1))
 
 /* PROVIEW/R types  */
 

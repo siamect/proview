@@ -427,8 +427,8 @@ xdr_pwr_tSubid(XDR *xdrs, pwr_tSubid *objp)
 bool_t
 xdr_pwr_tTime(XDR *xdrs, pwr_tTime *objp)
 {
-  if (!xdr_int(xdrs, (int *)&objp->tv_sec)) return FALSE;
-  if (!xdr_int(xdrs, (int *)&objp->tv_nsec)) return FALSE;
+  if (!xdr_pwr_tInt64(xdrs, &objp->tv_sec)) return FALSE;
+  if (!xdr_pwr_tInt64(xdrs, &objp->tv_nsec)) return FALSE;
 
   return TRUE;
 }
@@ -437,8 +437,8 @@ xdr_pwr_tTime(XDR *xdrs, pwr_tTime *objp)
 bool_t
 xdr_pwr_tDeltaTime(XDR *xdrs, pwr_tDeltaTime *objp)
 {
-  if (!xdr_int(xdrs, &objp->tv_sec)) return FALSE;
-  if (!xdr_int(xdrs, &objp->tv_nsec)) return FALSE;
+  if (!xdr_pwr_tInt64(xdrs, &objp->tv_sec)) return FALSE;
+  if (!xdr_pwr_tInt64(xdrs, &objp->tv_nsec)) return FALSE;
 
   return TRUE;
 }

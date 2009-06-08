@@ -867,6 +867,11 @@ struct net_sRenameObject {
   cdh_sFamily		f;		/* Used for Rename */
 };
 
+/* For compatibility with < 4.7 versions. Should be replaced by a pwr_tTime. */
+struct net_sTime {
+  unsigned int 		tv_sec;
+  unsigned int 		tv_nsec;
+};
 
 /* net_sGvolume for Neth Ver > 7 */
 struct net_sGvolume {
@@ -876,7 +881,7 @@ struct net_sGvolume {
   pwr_tClassId		cid;		/* Class of volume. */
   pwr_tNodeId		nid;		/* Node id of owner of volume,
 					   pwr_cNNodeId if shared or class volume.  */
-  pwr_tTime		time;           /* Currently only used for Class volumes. 
+  net_sTime		time;           /* Currently only used for Class volumes. 
                                          * Added in Neth version 8 */
 };
 
@@ -1025,7 +1030,7 @@ struct net_sGattribute {
 
 
 struct net_sGclass {
-  pwr_tTime		time; 	/**< Time of last change */
+  net_sTime		time; 	/**< Time of last change */
   pwr_tBitMask		dbsFlags;
   net_sGobject		co;
   pwr_sClassDef		cb;
@@ -1151,7 +1156,7 @@ struct net_sCattribute {
 
 struct  net_sCclass {
   pwr_tClassId		cid; 	/**< Class Id */
-  pwr_tTime		time; 	/**< Time of last change */
+  net_sTime		time; 	/**< Time of last change */
   pwr_tUInt32		size;	/**< Size of objects body  */
   pwr_tUInt32		acount;	/**< # of attributes  */
 };
@@ -1162,7 +1167,7 @@ struct net_sGetCclass {
   net_sMessage		hdr;
   pwr_tUInt32		ver; /**< see net_sMessage for comment */
   pwr_tClassId	       	cid;
-  pwr_tTime		time;
+  net_sTime		time;
   pwr_tUInt32 		aidx; /**< Starting attribute index */ 
 };
 
@@ -1396,6 +1401,10 @@ struct net_sFileList {
 %  const char	*name
 %);
 %
+%static const net_sTime      net_cNTime      = {0, 0};
+%
+%pwr_tTime net_NetTimeToTime( const net_sTime *nt);
+%net_sTime net_TimeToNetTime( const pwr_tTime *t);
 %
 %#endif
 %

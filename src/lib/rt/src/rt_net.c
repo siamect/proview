@@ -744,3 +744,22 @@ net_Connect (
 
   return ok;
 }
+
+
+pwr_tTime net_NetTimeToTime( const net_sTime *nt)
+{
+  pwr_tTime t;
+  t.tv_sec = nt->tv_sec;
+  t.tv_nsec = nt->tv_nsec;
+
+  return t;
+}
+
+net_sTime net_TimeToNetTime( const pwr_tTime *t)
+{
+  net_sTime nt;
+  nt.tv_sec = t->tv_sec;
+  nt.tv_nsec = t->tv_nsec;
+
+  return nt;
+}

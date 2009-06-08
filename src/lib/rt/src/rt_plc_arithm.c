@@ -25,6 +25,7 @@
 #include <limits.h>
 #include <math.h>
 #include <float.h>
+#include <malloc.h>
 
 #include "pwr.h"
 #include "pwr_baseclasses.h"
@@ -47,7 +48,7 @@ void sum_exec(
 #define sumsize 8
 	char    *charp;
         float	**ptr;          /* Pointer to ptr to input */
-	static int offset = sizeof( object->In1) + sizeof( object->In1P); 
+	static ptrdiff_t offset = (char *)&object->In2 - (char *)&object->In1;
 				/* Offset to next input */
         int     i;              /* Loopindex */
         float   sum;            /* Result */
@@ -87,7 +88,7 @@ void maxmin_exec(
         float   minval;            /* Lowest value */
         float   maxval;            /* Highest value */
         int     i;              /* Loopcounter */
-	static int offset = sizeof( object->In1) + sizeof( object->In1P); /* Offset to next input */
+	static ptrdiff_t offset = (char *)&object->In2 - (char *)&object->In1; /* Offset to next input */
         char    *charp;
         float   **ptr;          /* Pointer to ptr to digin */
 
@@ -844,7 +845,7 @@ void IAdd_exec(
   pwr_sClass_IAdd	*o)
 {
 #define IADD_SIZE 8
-  static int 	offset = sizeof(o->In1) + sizeof(o->In1P);
+  static ptrdiff_t offset = (char *)&o->In2 - (char *)&o->In1;
   int     	i;
   pwr_tInt32	**inp = &o->In1P;
   pwr_tInt32   	sum = 0;
@@ -866,7 +867,7 @@ void IMul_exec(
   pwr_sClass_IMul	*o)
 {
 #define IMUL_SIZE 8
-  static int 	offset = sizeof(o->In1) + sizeof(o->In1P);
+  static ptrdiff_t offset = (char *)&o->In2 - (char *)&o->In1;
   int     	i;
   pwr_tInt32	**inp = &o->In1P;
   pwr_tInt32   	result = **inp;
@@ -912,7 +913,7 @@ void IMax_exec(
   pwr_sClass_IMax	*o)
 {
 #define IMAX_SIZE 8
-  static int 	offset = sizeof(o->In1) + sizeof(o->In1P);
+  static ptrdiff_t offset = (char *)&o->In2 - (char *)&o->In1;
   int     	i;
   pwr_tInt32	**inp = &o->In1P;
   pwr_tInt32   	result = INT_MIN;
@@ -934,7 +935,7 @@ void IMin_exec(
   pwr_sClass_IMin	*o)
 {
 #define IMIN_SIZE 8
-  static int 	offset = sizeof(o->In1) + sizeof(o->In1P);
+  static ptrdiff_t offset = (char *)&o->In2 - (char *)&o->In1;
   int     	i;
   pwr_tInt32	**inp = &o->In1P;
   pwr_tInt32   	result = INT_MAX;
@@ -1006,7 +1007,7 @@ void IMux_exec(
   pwr_sClass_IMux	*o)
 {
 #define IMUX_SIZE 24
-  static int 	offset = sizeof(o->In0) + sizeof(o->In0P);
+  static ptrdiff_t offset = (char *)&o->In1 - (char *)&o->In0;
   int     	idx;
   pwr_tInt32	**inp = &o->In0P;
 
@@ -1025,7 +1026,7 @@ void Mux_exec(
   pwr_sClass_Mux	*o)
 {
 #define MUX_SIZE 24
-  static int 	offset = sizeof(o->In0) + sizeof(o->In0P);
+  static ptrdiff_t offset = (char *)&o->In1 - (char *)&o->In0;
   int     	idx;
   pwr_tFloat32	**inp = &o->In0P;
 
@@ -1088,7 +1089,7 @@ void Add_exec(
   pwr_sClass_Add	*o)
 {
 #define ADD_SIZE 8
-  static int 	offset = sizeof(o->In1) + sizeof(o->In1P);
+  static ptrdiff_t offset = (char *)&o->In2 - (char *)&o->In1;
   int     	i;
   pwr_tFloat32	**inp = &o->In1P;
   pwr_tFloat32  sum = 0;
@@ -1110,7 +1111,7 @@ void Mul_exec(
   pwr_sClass_Mul	*o)
 {
 #define MUL_SIZE 8
-  static int 	offset = sizeof(o->In1) + sizeof(o->In1P);
+  static ptrdiff_t offset = (char *)&o->In2 - (char *)&o->In1;
   int     	i;
   pwr_tFloat32	**inp = &o->In1P;
   pwr_tFloat32  result = **inp;
@@ -1153,7 +1154,7 @@ void Max_exec(
   pwr_sClass_Max	*o)
 {
 #define AMAX_SIZE 8
-  static int 	offset = sizeof(o->In1) + sizeof(o->In1P);
+  static ptrdiff_t offset = (char *)&o->In2 - (char *)&o->In1;
   int     	i;
   pwr_tFloat32	**inp = &o->In1P;
   pwr_tFloat32  result = -1E37;
@@ -1175,7 +1176,7 @@ void Min_exec(
   pwr_sClass_Min	*o)
 {
 #define AMIN_SIZE 8
-  static int 	offset = sizeof(o->In1) + sizeof(o->In1P);
+  static ptrdiff_t offset = (char *)&o->In2 - (char *)&o->In1;
   int     	i;
   pwr_tFloat32	**inp = &o->In1P;
   pwr_tFloat32  result = 1E37;

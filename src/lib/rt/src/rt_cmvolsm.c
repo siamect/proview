@@ -62,6 +62,7 @@ cmvolsm_GetCclass (
   const int		maxacnt = ((net_cSizeLarge - sizeof(*rmp)) / sizeof(rmp->attr[0])) + 1;  
   int			maxaidx;
   int			acnt;
+  pwr_tTime		mp_time;
 
   gdb_AssumeUnlocked;
 
@@ -72,7 +73,8 @@ cmvolsm_GetCclass (
       break;
     
     cop = pool_Address(NULL, gdbroot->pool, cp->cor);
-    if (time_Acomp(&mp->time, &cop->u.n.time) == 0) {
+    mp_time = net_NetTimeToTime(&mp->time);
+    if (time_Acomp(&mp_time, &cop->u.n.time) == 0) {
       equal = TRUE;
       size = sizeof(*rmp);
     } else {
@@ -102,7 +104,7 @@ cmvolsm_GetCclass (
     }    
 
     rmp->cclass.cid = mp->cid;
-    rmp->cclass.time = cop->u.n.time;
+    rmp->cclass.time = net_TimeToNetTime(&cop->u.n.time);
     rmp->cclass.size = cp->size;
     rmp->cclass.acount = cp->acount;
 
@@ -204,7 +206,7 @@ cmvolsm_GetGclass (
     rmp->ver = net_cVersion;
     
     strcpy(rmp->vname, vp->g.name.orig);
-    rmp->gclass.time = cop->u.n.time;
+    rmp->gclass.time = net_TimeToNetTime(&cop->u.n.time);
     rmp->gclass.co = cop->g;
     rmp->gclass.dbsFlags = cop->u.n.lflags.m;
 

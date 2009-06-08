@@ -391,9 +391,9 @@ int CnvWblToH::attribute_exec()
        strcmp( CnvCtx::low(ctx->rw->attr_typeref), "deltatime") == 0 ||
        strcmp( CnvCtx::low(ctx->rw->attr_typeref), "castid") == 0 ||
        strcmp( CnvCtx::low(ctx->rw->attr_typeref), "disableattr") == 0)
-    strcpy( alignstr, " pwr_ealign_lw");
+    strcpy( alignstr, " pwr_dAlignLW");
   else
-    strcpy( alignstr, " pwr_ealign_w");
+    strcpy( alignstr, " pwr_dAlignW");
 
   if ( strcmp( CnvCtx::low( ctx->rw->body_name), "rtbody") == 0 &&
        ctx->rw->class_devonly)

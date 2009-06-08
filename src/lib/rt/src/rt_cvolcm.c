@@ -62,14 +62,15 @@ cvolcm_AddClassVolume(
 
   ccvp->key.nid = vp->nid;
   ccvp->key.vid = vp->vid;
-  ccvp->time = vp->time;
+  ccvp->time = net_NetTimeToTime(&vp->time);
   
   cvp = hash_Search(sts, gdbroot->vid_ht, &vp->vid);
   if (cvp == NULL) /* This volume doesn't exist locally, but we may create it later on */
     ccvp->equalClasses = 0;
-  else
-    ccvp->equalClasses = time_Acomp(&ccvp->time, &cvp->g.time) == 0 ? 1 : 0;
-
+  else {
+    pwr_tTime t = net_NetTimeToTime( &cvp->g.time);
+    ccvp->equalClasses = time_Acomp(&ccvp->time, &t) == 0 ? 1 : 0;
+  }
   
   ccvp = hash_Insert(sts, gdbroot->ccvol_ht, ccvp);
   if (ccvp == NULL) errh_Bugcheck(GDH__WEIRD, "adding cached class volume");

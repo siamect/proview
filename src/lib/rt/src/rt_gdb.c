@@ -1008,7 +1008,7 @@ gdb_LoadVolume (
   sprintf(string, "adding volume: %s (%s)", cdh_VolumeIdToString(NULL, vid, 0, 0), name);
   if (vp == NULL) errh_Bugcheck(*sts, string);
 
-  vp->g.time = time;
+  vp->g.time = net_TimeToNetTime(&time);
   
 
   /* Local flags.  */

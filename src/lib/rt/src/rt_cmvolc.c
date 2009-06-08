@@ -227,7 +227,7 @@ cmvolc_GetCachedClass (
       tgt.qix = net_cProcHandler;
       smp->ver = net_cVersion;
       smp->cid = ccKey.cid;
-      smp->time = time;
+      smp->time = net_TimeToNetTime(&time);
       smp->aidx = nextIdx;
     
       rmp = net_Request(sts, &tgt, &put, NULL, net_eMsg_getCclassR, 0, 0);
@@ -258,7 +258,7 @@ cmvolc_GetCachedClass (
           ccp->time = time;
         } else {
           ccp->size = rmp->cclass.size;
-          ccp->time = rmp->cclass.time;
+          ccp->time = net_NetTimeToTime(&rmp->cclass.time);
         }
       }
     
@@ -366,7 +366,7 @@ cmvolc_GetNonExistingClass (
   net_sGattribute	*gap;
   net_sGclass		*gcp;  
   pwr_tObjid		poid;
-
+  pwr_tTime		gcp_time;
 
   gdb_AssumeLocked;
 
@@ -431,20 +431,21 @@ cmvolc_GetNonExistingClass (
     poid.vid = cvid;
     poid.oix = 1; /* ClassHier object is the father */
     
-    cop = createObject(sts, vp, &gcp->co, &gcp->time, gcp->dbsFlags, 
+    gcp_time = net_NetTimeToTime(&gcp->time);
+    cop = createObject(sts, vp, &gcp->co, &gcp_time, gcp->dbsFlags, 
                        &gcp->cb, sizeof(gcp->cb), poid);
     if (cop == NULL)
       goto cleanup;
     
 
-    bop = createObject(&lsts, vp, &gcp->bo, &gcp->time, 0,
+    bop = createObject(&lsts, vp, &gcp->bo, &gcp_time, 0,
                        &gcp->bb, sizeof(gcp->bb), cop->g.oid);
     if (bop == NULL)
       errh_Bugcheck(lsts, "cmvolc_GetNonExistingClass, load sys body failed");
     
     
     for (i = j = 0, gap = msgs[0]->attr; i < gcp->acount; i++, gap++) {
-      aop = createObject(&lsts, vp, &gap->ao, &gcp->time, 0, 
+      aop = createObject(&lsts, vp, &gap->ao, &gcp_time, 0, 
                          &gap->ab, sizeof(gap->ab), bop->g.oid);
       if (aop == NULL)
         errh_Bugcheck(lsts, "cmvolc_GetNonExistingClass, load attribute failed");

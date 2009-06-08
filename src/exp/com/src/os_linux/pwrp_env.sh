@@ -1508,6 +1508,9 @@ pwrp_env ()
 pwrc_parse ()
 {
   machine=`eval uname -m`
+  if [ $machine != "x86_64" ]; then
+    machine="x86"
+  fi
   platform=$machine"_linux"
   os="os_linux"
   hw="hw_"$machine

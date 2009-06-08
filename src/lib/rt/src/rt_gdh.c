@@ -3615,7 +3615,7 @@ gdh_GetVolumeInfo(
       info->isCached = vp->l.flags.b.isCached ? 1 : 0;
       info->isLoaded = vp->l.flags.b.isLoaded ? 1 : 0;
       info->isMounted = vp->l.flags.b.isMounted ? 1 : 0;
-      info->time = vp->g.time;
+      info->time = net_NetTimeToTime(&vp->g.time);
       info->cid = vp->g.cid;
       info->nid = vp->g.nid;
       strcpy( info->name, vp->g.name.orig);
