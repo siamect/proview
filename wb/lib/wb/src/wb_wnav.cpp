@@ -123,7 +123,7 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
     break;
   }
   case pwr_eType_Int64: {
-    if ( sscanf( value_str, "%lld", (long long int *)buffer_ptr) != 1)
+    if ( sscanf( value_str, pwr_dFormatInt64, (pwr_tUInt64 *)buffer_ptr) != 1)
       return WNAV__INPUT_SYNTAX;
     break;
   }
@@ -137,28 +137,28 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
     break;
   }
   case pwr_eType_UInt16: {
-    if ( sscanf( value_str, "%hu", (unsigned short *)buffer_ptr) != 1)
+    if ( sscanf( value_str, "%hu", (pwr_tUInt16 *)buffer_ptr) != 1)
       return WNAV__INPUT_SYNTAX;
     break;
   }
   case pwr_eType_UInt32:
   case pwr_eType_DisableAttr: {
-    if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
+    if ( sscanf( value_str, "%u", (pwr_tDisableAttr *)buffer_ptr) != 1)
       return WNAV__INPUT_SYNTAX;
     break;
   }
   case pwr_eType_UInt64: {
-    if ( sscanf( value_str, "%llu", (unsigned long long *)buffer_ptr) != 1)
+    if ( sscanf( value_str, pwr_dFormatUInt64, (pwr_tUInt64 *)buffer_ptr) != 1)
       return WNAV__INPUT_SYNTAX;
     break;
   }
   case pwr_eType_Enum: {
-    if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
+    if ( sscanf( value_str, "%d", (pwr_tEnum *)buffer_ptr) != 1)
       return WNAV__INPUT_SYNTAX;
     break;
   }
   case pwr_eType_Mask: {
-    if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
+    if ( sscanf( value_str, "%u", (pwr_tMask *)buffer_ptr) != 1)
       return WNAV__INPUT_SYNTAX;
     break;
   }
@@ -310,27 +310,27 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id, void *value
       *len = strlen( str);
     }
     else
-      *len = sprintf( str, "%f", *(float *)value_ptr);
+      *len = sprintf( str, "%f", *(pwr_tFloat32 *)value_ptr);
     *buff = str;
     break;
   }
   case pwr_eType_Float64: {
-    *len = sprintf( str, "%f", *(double *)value_ptr);
+    *len = sprintf( str, "%f", *(pwr_tFloat64 *)value_ptr);
     *buff = str;
     break;
   }
   case pwr_eType_Char: {
-    *len = sprintf( str, "%c", *(char *)value_ptr);
+    *len = sprintf( str, "%c", *(pwr_tChar *)value_ptr);
     *buff = str;
     break;
   }
   case pwr_eType_Int8: {
-    *len = sprintf( str, "%d", *(char *)value_ptr);
+    *len = sprintf( str, "%d", *(pwr_tInt8 *)value_ptr);
     *buff = str;
     break;
   }
   case pwr_eType_Int16: {
-    *len = sprintf( str, "%hd", *(short *)value_ptr);
+    *len = sprintf( str, "%hd", *(pwr_tInt16 *)value_ptr);
     *buff = str;
     break;
   }
@@ -344,43 +344,43 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id, void *value
       *len = strlen( str);
     }
     else
-    *len = sprintf( str, "%d", *(int *)value_ptr);
+    *len = sprintf( str, "%d", *(pwr_tInt32 *)value_ptr);
     *buff = str;
     break;
   }
   case pwr_eType_Int64: {
-    *len = sprintf( str, "%lld", *(long long int *)value_ptr);
+    *len = sprintf( str, pwr_dFormatInt64, *(pwr_tInt64 *)value_ptr);
     *buff = str;
     break;
   }
   case pwr_eType_UInt8: {
-    *len = sprintf( str, "%u", *(unsigned char *)value_ptr);
+    *len = sprintf( str, "%u", *(pwr_tUInt8 *)value_ptr);
     *buff = str;
     break;
   }
   case pwr_eType_UInt16: {
-    *len = sprintf( str, "%hu", *(unsigned short *)value_ptr);
+    *len = sprintf( str, "%hu", *(pwr_tUInt16 *)value_ptr);
     *buff = str;
     break;
   }
   case pwr_eType_UInt32:
   case pwr_eType_DisableAttr: {
-    *len = sprintf( str, "%u", *(unsigned int *)value_ptr);
+    *len = sprintf( str, "%u", *(pwr_tUInt32 *)value_ptr);
     *buff = str;
     break;
   }
   case pwr_eType_UInt64: {
-    *len = sprintf( str, "%llu", *(unsigned long long int *)value_ptr);
+    *len = sprintf( str, pwr_dFormatUInt64, *(pwr_tUInt64 *)value_ptr);
     *buff = str;
     break;
   }
   case pwr_eType_Enum: {
-    *len = sprintf( str, "%d", *(unsigned int *)value_ptr);
+    *len = sprintf( str, "%d", *(pwr_tEnum *)value_ptr);
     *buff = str;
     break;
   }
   case pwr_eType_Mask: {
-    *len = sprintf( str, "%d", *(unsigned int *)value_ptr);
+    *len = sprintf( str, "%u", *(pwr_tMask *)value_ptr);
     *buff = str;
     break;
   }

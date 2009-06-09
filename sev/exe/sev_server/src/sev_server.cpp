@@ -238,9 +238,12 @@ int sev_server::send_itemlist( qcom_sQid tgt)
       continue;
     ((sev_sMsgHistItems *)put.data)->Items[idx].oid = m_db->m_items[i].oid;
     strcpy( ((sev_sMsgHistItems *)put.data)->Items[idx].oname, m_db->m_items[i].oname);
-    ((sev_sMsgHistItems *)put.data)->Items[idx].storagetime = m_db->m_items[i].storagetime;
-    ((sev_sMsgHistItems *)put.data)->Items[idx].creatime = m_db->m_items[i].creatime;
-    ((sev_sMsgHistItems *)put.data)->Items[idx].modtime = m_db->m_items[i].modtime;
+    ((sev_sMsgHistItems *)put.data)->Items[idx].storagetime = 
+      net_DeltaTimeToNetTime(&m_db->m_items[i].storagetime);
+    ((sev_sMsgHistItems *)put.data)->Items[idx].creatime = 
+      net_TimeToNetTime( &m_db->m_items[i].creatime);
+    ((sev_sMsgHistItems *)put.data)->Items[idx].modtime = 
+      net_TimeToNetTime( &m_db->m_items[i].modtime);
     strcpy( ((sev_sMsgHistItems *)put.data)->Items[idx].description, m_db->m_items[i].description);
     strcpy( ((sev_sMsgHistItems *)put.data)->Items[idx].attr[0].aname, m_db->m_items[i].attr[0].aname);
     ((sev_sMsgHistItems *)put.data)->Items[idx].attrnum = m_db->m_items[i].attrnum;
@@ -372,6 +375,7 @@ int sev_server::mainloop()
 int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
 {
   unsigned int idx;
+  pwr_tDeltaTime storagetime;
   int item_cnt = (size - sizeof(sev_sMsgHistItems)) / sizeof(sev_sHistItem) + 1;
 
   if ( item_cnt <= 0)
@@ -392,12 +396,13 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
       msg->Items[i].options |= pwr_mSevOptionsMask_ReadOptimized;
 
     // printf( "Received: %s.%s\n", msg->Items[i].oname, msg->Items[i].attr[0].aname);
+    storagetime = net_NetTimeToDeltaTime( &msg->Items[i].storagetime);
     if ( !m_db->check_item( &m_sts, msg->Items[i].oid, msg->Items[i].oname, msg->Items[i].attr[0].aname,
-			    msg->Items[i].storagetime, msg->Items[i].attr[0].type, msg->Items[i].attr[0].size, 
+			    storagetime, msg->Items[i].attr[0].type, msg->Items[i].attr[0].size, 
 			    msg->Items[i].description, msg->Items[i].attr[0].unit, msg->Items[i].scantime, 
 			    msg->Items[i].deadband, msg->Items[i].options, &idx)) {
       m_db->add_item( &m_sts, msg->Items[i].oid, msg->Items[i].oname, msg->Items[i].attr[0].aname,
-		      msg->Items[i].storagetime, msg->Items[i].attr[0].type, msg->Items[i].attr[0].size, 
+		      storagetime, msg->Items[i].attr[0].type, msg->Items[i].attr[0].size, 
 		      msg->Items[i].description, msg->Items[i].attr[0].unit, msg->Items[i].scantime, 
 		      msg->Items[i].deadband, msg->Items[i].options, &idx);
       if ( EVEN(m_sts)) return m_sts;
@@ -421,6 +426,7 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
 int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size)
 {
   sev_sHistData *dp = (sev_sHistData *)&msg->Data;
+  pwr_tTime time;
 
   while ( (char *)dp - (char *)msg < (int)size) {
     sev_refid sevid(dp->sevid);
@@ -431,7 +437,8 @@ int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size)
     }
     unsigned int idx = it->second;
 
-    m_db->store_value( &m_sts, idx, 0, msg->Time, &dp->data, dp->size);
+    time = net_NetTimeToTime( &msg->Time);
+    m_db->store_value( &m_sts, idx, 0, time, &dp->data, dp->size);
 
     dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
   }
@@ -448,6 +455,7 @@ int sev_server::send_histdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *rmsg, 
   int msize;
   qcom_sPut	put;
   pwr_tStatus	sts, lsts;
+  pwr_tTime	starttime, endtime;
   
   sev_item_key item_key( rmsg->Oid, rmsg->AName);
   iterator_item_key it = m_item_key.find( item_key);
@@ -460,10 +468,12 @@ int sev_server::send_histdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *rmsg, 
   if ( ODD(m_sts)) {
     idx = it->second;
 
+    starttime = net_NetTimeToTime( &rmsg->StartTime);
+    endtime = net_NetTimeToTime( &rmsg->EndTime);
     m_db->get_values( &m_sts, rmsg->Oid, m_db->m_items[idx].options, m_db->m_items[idx].deadband, 
 		      rmsg->AName, m_db->m_items[idx].attr[0].type, m_db->m_items[idx].attr[0].size, 
 		      m_db->m_items[idx].scantime,
-		      &rmsg->StartTime, &rmsg->EndTime, rmsg->NumPoints, &tbuf,  &vbuf, &rows);
+		      &starttime, &endtime, rmsg->NumPoints, &tbuf,  &vbuf, &rows);
   }
   if ( ODD(m_sts))
     msize = rows * ( sizeof(pwr_tTime) + m_db->m_items[idx].attr[0].size) + sizeof(*msg) - sizeof(msg->Data);

@@ -36,18 +36,17 @@
 # include "rt_gdh.h"
 #endif
 
-typedef	struct plc_sTimertag {	
-  pwr_tBoolean                        TimerFlag;
-/*  struct plc_sTimertag	*TimerNext; */
-  pwr_tBoolean                        *TimerNext;
-  pwr_tUInt32                         TimerCount;
-  pwr_tBoolean                        *TimerDO;
-  pwr_tFloat32                        TimerTime;
-  pwr_tBoolean                        TimerDODum;
-  pwr_tObjid                          TimerObjDId;
-  pwr_tInt32                          TimerAcc;
-  pwr_tFloat32                        TimerMin;
-  pwr_tFloat32                        TimerMax;
+typedef	struct {	
+  pwr_tBoolean                        TimerFlag pwr_dAlignW;
+  pwr_tBoolean                        *TimerNext pwr_dAlignLW;
+  pwr_tUInt32                         TimerCount pwr_dAlignLW;
+  pwr_tBoolean                        *TimerDO pwr_dAlignLW;
+  pwr_tFloat32                        TimerTime pwr_dAlignLW;
+  pwr_tBoolean                        TimerDODum pwr_dAlignW;
+  pwr_tObjid                          TimerObjDId pwr_dAlignW;
+  pwr_tInt32                          TimerAcc pwr_dAlignW;
+  pwr_tFloat32                        TimerMin pwr_dAlignW;
+  pwr_tFloat32                        TimerMax pwr_dAlignW;
 } plc_sTimer;
 
 #define PTRREL(r, p) \

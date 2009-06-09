@@ -21,6 +21,7 @@
 #define rt_sev_net_h
 
 #include "pwr.h"
+#include "rt_net.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -53,9 +54,9 @@ typedef struct {
 typedef struct {
   pwr_tOid oid;
   pwr_tOName oname;
-  pwr_tDeltaTime storagetime;
-  pwr_tTime creatime;
-  pwr_tTime modtime;
+  net_sTime storagetime;
+  net_sTime creatime;
+  net_sTime modtime;
   pwr_tRefId sevid;
   pwr_tString80 description;
   pwr_tFloat32 scantime;
@@ -86,7 +87,7 @@ typedef struct {
 
 typedef struct {
   sev_eMsgType         Type;
-  pwr_tTime	       Time;
+  net_sTime	       Time;
   int	       	       Data[1];	
 } sev_sMsgHistDataStore;
 
@@ -94,8 +95,8 @@ typedef struct {
   sev_eMsgType         Type;
   pwr_tOid	       Oid;
   pwr_tOName	       AName;
-  pwr_tTime	       StartTime;
-  pwr_tTime	       EndTime;
+  net_sTime	       StartTime;
+  net_sTime	       EndTime;
   int		       NumPoints;
 } sev_sMsgHistDataGetRequest;
 

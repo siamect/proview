@@ -3126,7 +3126,7 @@ void ItemPnParValue::value_changed( GsdmlAttrNav *attrnav, char *value_str)
     break;
   }
   case gsdml_eValueDataType_Integer64: {
-    long long int val = *(long long int *)buf;
+    pwr_tInt64 val = *(pwr_tInt64 *)buf;
     if ( strcmp( value_ref->Body.AllowedValues, "") != 0) {
       gsdml_SValuelist *vl = new gsdml_SValuelist( value_ref->Body.AllowedValues);
       if ( ODD(vl->sts())) {
@@ -3186,7 +3186,7 @@ void ItemPnParValue::value_changed( GsdmlAttrNav *attrnav, char *value_str)
     break;
   }
   case gsdml_eValueDataType_Unsigned64: {
-    unsigned long long val = *(unsigned long long *)buf;
+    pwr_tUInt64 val = *(pwr_tUInt64 *)buf;
     if ( strcmp( value_ref->Body.AllowedValues, "") != 0) {
       gsdml_Valuelist *vl = new gsdml_Valuelist( value_ref->Body.AllowedValues);
       if ( ODD(vl->sts())) {

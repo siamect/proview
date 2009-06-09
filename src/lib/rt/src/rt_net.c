@@ -763,3 +763,24 @@ net_sTime net_TimeToNetTime( const pwr_tTime *t)
 
   return nt;
 }
+
+
+/* Note! Only for positive deltatimes */
+pwr_tDeltaTime net_NetTimeToDeltaTime( const net_sTime *nt)
+{
+  pwr_tDeltaTime t;
+  t.tv_sec = nt->tv_sec;
+  t.tv_nsec = nt->tv_nsec;
+
+  return t;
+}
+
+/* Note! Only for positive deltatimes */
+net_sTime net_DeltaTimeToNetTime( const pwr_tDeltaTime *t)
+{
+  net_sTime nt;
+  nt.tv_sec = t->tv_sec;
+  nt.tv_nsec = t->tv_nsec;
+
+  return nt;
+}

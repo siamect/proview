@@ -27,6 +27,7 @@
 #include "co_dcli.h"
 #include "co_time.h"
 #include "co_api.h"
+#include "co_tree.h"
 #include "co_msg.h"
 #include "co_cdh_msg.h"
 #include "rt_gdh_msg.h"
@@ -42,6 +43,16 @@ typedef struct {
   int		Size;
 } gdh_sSuffixTable;
 
+typedef struct {
+  tree_sNode 	node;
+  int 		jid;
+  void 		*p;
+  pwr_tRefId 	refid;
+} sJid;
+
+static tree_sTable *jid_table = 0;
+static int jid_next = 1;
+
 static int gdh_ExtractNameSuffix(	char   *Name,
                           		char   **Suffix);
 static void  gdh_TranslateSuffixToClassData (
@@ -54,6 +65,9 @@ static int gdh_StringToAttr( char *str_value, char *buffer_p, int buffer_size,
 static void  gdh_AttrToString( int type_id, void *value_ptr,
         char *str, int size, int *len, char *format);
 static void gdh_ConvertUTFstring( char *out, char *in);
+static int gdh_JidToPointer( int id, void **p);
+static int gdh_JidStore( void *p, pwr_tRefId r, int *id);
+static int gdh_JidRemove( pwr_tRefId r);
 	
 JNIEXPORT jint JNICALL Java_jpwr_rt_Gdh_init
   (JNIEnv *env, jclass obj)
@@ -226,16 +240,25 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_setObjectInfoString
 JNIEXPORT jfloat JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoFloat
   (JNIEnv *env, jclass obj, jint id)
 {
-  pwr_tFloat32 value;
+  pwr_tStatus sts;
+  pwr_tFloat32 *p;
   
-  value = *(float *)id;
-  return (jfloat) value;
+  sts = gdh_JidToPointer( id, (void **)&p);
+  if ( EVEN(sts)) return (jfloat) 0;
+
+  return (jfloat) *p;
 }
 
 JNIEXPORT jboolean JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoBoolean
   (JNIEnv *env, jclass obj, jint id)
 {
-  if ( *(pwr_tBoolean *)id)
+  pwr_tStatus sts;
+  pwr_tBoolean *p;
+
+  sts = gdh_JidToPointer( id, (void **)&p);
+  if ( EVEN(sts)) return 0;
+
+  if ( *p)
     return 1;
   else
     return 0;
@@ -244,10 +267,13 @@ JNIEXPORT jboolean JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoBoolean
 JNIEXPORT jint JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoInt
   (JNIEnv *env, jclass obj, jint id)
 {
-  pwr_tInt32 value;
+  pwr_tStatus sts;
+  pwr_tInt32 *p;
 
-  value = *(pwr_tInt32 *)id;
-  return (jint) value;
+  sts = gdh_JidToPointer( id, (void **)&p);
+  if ( EVEN(sts)) return 0;
+
+  return (jint) *p;
 }
 
 JNIEXPORT jstring JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoString
@@ -255,12 +281,17 @@ JNIEXPORT jstring JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoString
 {
   jstring jvalue;
   pwr_tTypeId typeid;
+  pwr_tStatus sts;
+  char *p;
+
+  sts = gdh_JidToPointer( id, (void **)&p);
+  if ( EVEN(sts)) return 0;
   
   typeid = (pwr_tTypeId) jtypeid;
   if ( typeid == 0 || typeid == pwr_eType_String)
   {
     /* String is default */
-    jvalue = (*env)->NewStringUTF( env, (char *)id);
+    jvalue = (*env)->NewStringUTF( env, p);
     return jvalue;
   }
   else
@@ -268,7 +299,7 @@ JNIEXPORT jstring JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoString
     char buffer[256];
     int len;
     
-    gdh_AttrToString( typeid, (void *)id, buffer, sizeof(buffer), 
+    gdh_AttrToString( typeid, (void *)p, buffer, sizeof(buffer), 
     	&len, NULL);
     jvalue = (*env)->NewStringUTF( env, buffer);
     return jvalue;
@@ -279,13 +310,19 @@ JNIEXPORT jfloatArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoFloatArray
   (JNIEnv *env, jclass obj, jint id, jint size)
 {
   jfloatArray jfloatArr = (*env)->NewFloatArray(env, size);
-  if(jfloatArr == NULL || ((float *)id == NULL) )
+  pwr_tStatus sts;
+  float *p;
+
+  sts = gdh_JidToPointer( id, (void **)&p);
+  if ( EVEN(sts)) return 0;
+
+  if(jfloatArr == NULL || p == NULL)
   {
     //something very weird has happen
     return (jfloatArray)NULL;
   }
 
-  (*env)->SetFloatArrayRegion(env, jfloatArr, 0, size, (jfloat *)id);
+  (*env)->SetFloatArrayRegion(env, jfloatArr, 0, size, (jfloat *)p);
 
   return jfloatArr;
 }
@@ -295,13 +332,20 @@ JNIEXPORT jbooleanArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoBooleanArray
   (JNIEnv *env, jclass obj, jint id, jint size)
 {
   jbooleanArray jbooleanArr = (*env)->NewBooleanArray(env, size);
-  if(jbooleanArr == NULL || ((pwr_tBoolean *)id == NULL) )
+  pwr_tStatus sts;
+  pwr_tBoolean *p;
+
+  sts = gdh_JidToPointer( id, (void **)&p);
+  if ( EVEN(sts)) return 0;
+  
+
+  if(jbooleanArr == NULL || p == NULL)
   {
     //something very weird has happen
     return (jbooleanArray)NULL;
   }
 
-  (*env)->SetBooleanArrayRegion(env, jbooleanArr, 0, size, (jboolean *)id);
+  (*env)->SetBooleanArrayRegion(env, jbooleanArr, 0, size, (jboolean *)p);
 
   return jbooleanArr;
 }
@@ -311,13 +355,19 @@ JNIEXPORT jintArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoIntArray
   (JNIEnv *env, jclass obj, jint id, jint size)
 {
   jintArray jintArr = (*env)->NewIntArray(env, size);
-  if(jintArr == NULL || ((pwr_tInt32 *)id == NULL) )
+  pwr_tStatus sts;
+  pwr_tInt32 *p;
+
+  sts = gdh_JidToPointer( id, (void **)&p);
+  if ( EVEN(sts)) return 0;
+  
+  if(jintArr == NULL || p == NULL)
   {
     //something very weird has happen
     return (jintArray)NULL;
   }
 
-  (*env)->SetIntArrayRegion(env, jintArr, 0, size, (jint *)id);
+  (*env)->SetIntArrayRegion(env, jintArr, 0, size, (jint *)p);
 
   return jintArr;
 
@@ -330,7 +380,11 @@ JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoStringArray
   pwr_tTypeId typeid;
   jobjectArray jobjectArr;
   int i = 0;
+  pwr_tStatus sts;
+  char *p;
 
+  sts = gdh_JidToPointer( id, (void **)&p);
+  if ( EVEN(sts)) return 0;
 
   //find the class for String[]
   jclass strArrCls = (*env)->FindClass(env, "java/lang/String");
@@ -350,7 +404,7 @@ JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoStringArray
     //put the result in an objectarray of Strings
     for(i=0;i<elements;i++)
     {
-      (*env)->SetObjectArrayElement(env, jobjectArr, i, (*env)->NewStringUTF( env, (char *)id));
+      (*env)->SetObjectArrayElement(env, jobjectArr, i, (*env)->NewStringUTF( env, p));
       id += size;
     }
   }
@@ -379,7 +433,7 @@ JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoStringArray
     //put the result in an objectarray of Strings
     for(i=0;i<elements;i++)
     {
-      gdh_AttrToString( typeid, (void *)id, buffer, sizeof(buffer), 
+      gdh_AttrToString( typeid, (void *)p, buffer, sizeof(buffer), 
       	                &len, NULL);
 
       (*env)->SetObjectArrayElement(env, jobjectArr, i, (*env)->NewStringUTF( env, (char *)buffer));
@@ -467,7 +521,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_refObjectInfo
 
   if ( ODD(sts))
   {
-    id = (jint) attr_p;
+    gdh_JidStore( attr_p, subid, (int *) &id);
     rix = (jint) subid.rix;
     nid = (jint) subid.nid;
     refid_obj = (*env)->NewObject( env, PwrtRefId_id, PwrtRefId_cid, 
@@ -509,6 +563,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_unrefObjectInfo
   refid.rix = (*env)->CallIntMethod( env, refid_obj, pwrtRefId_getRix);
   refid.nid = (*env)->CallIntMethod( env, refid_obj, pwrtRefId_getNid);
 
+  sts = gdh_JidRemove( refid);
   sts = gdh_UnrefObjectInfo( refid);
   jsts = (jint) sts;
   return_obj = (*env)->NewObject( env, pwrtStatus_id,
@@ -1708,7 +1763,7 @@ static int gdh_StringToAttr( char *str_value, char *buffer_p, int buffer_size,
         return GDH__BADARG;
       break;
     case pwr_eType_Int64:
-      if ( sscanf( str_value, "%lld", (pwr_tInt64 *)buffer_p) != 1)
+      if ( sscanf( str_value, pwr_dFormatInt64, (pwr_tInt64 *)buffer_p) != 1)
         return GDH__BADARG;
       break;
     case pwr_eType_UInt8:
@@ -1734,7 +1789,7 @@ static int gdh_StringToAttr( char *str_value, char *buffer_p, int buffer_size,
         return GDH__BADARG;
       break;
     case pwr_eType_UInt64:
-      if ( sscanf( str_value, "%llu", (pwr_tUInt64 *)buffer_p) != 1)
+      if ( sscanf( str_value, pwr_dFormatUInt64, (pwr_tUInt64 *)buffer_p) != 1)
         return GDH__BADARG;
       break;
     case pwr_eType_String:
@@ -1903,7 +1958,7 @@ static void gdh_AttrToString( int type_id, void *value_ptr,
     case pwr_eType_Int64:
     {
       if ( !format)
-        *len = sprintf( str, "%lld", *(pwr_tInt64 *)value_ptr);
+        *len = sprintf( str, pwr_dFormatInt64, *(pwr_tInt64 *)value_ptr);
       else
         *len = sprintf( str, format, *(pwr_tInt64 *)value_ptr);
       break;
@@ -1939,7 +1994,7 @@ static void gdh_AttrToString( int type_id, void *value_ptr,
     case pwr_eType_UInt64:
     {
       if ( !format)
-        *len = sprintf( str, "%llu", *(pwr_tUInt64 *)value_ptr);
+        *len = sprintf( str, pwr_dFormatUInt64, *(pwr_tUInt64 *)value_ptr);
       else
         *len = sprintf( str, format, *(pwr_tUInt64 *)value_ptr);
       break;
@@ -2520,7 +2575,6 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getSuperClass
   }
 
   cid = (pwr_tCid) classid;
-  printf( "cdh_GetSuperClass objid: %d\n", (int)objid_obj);
 
   if ( objid_obj != 0) {
     objid.oix = (*env)->CallIntMethod( env, objid_obj, pwrtObjid_getOix);
@@ -2688,6 +2742,66 @@ JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Gdh_getObjectBodyDef
   return (jobjectArray)NULL;
 }
 
+static int gdh_JidToPointer( int id, void **p)
+{
+#if defined OS_LINUX && defined HW_X86_64
+  pwr_tStatus sts;
+  sJid *jp;
 
+  jp = tree_Find( &sts, jid_table, &id);
+  if ( !jp) return 0;
 
+  *p = jp->p;
+  return 1;
+#else
+  *p = (void *)id;
+  return 1;
+#endif
+}
+
+static int gdh_JidStore( void *p, pwr_tRefId r, int *id)
+{
+#if defined OS_LINUX && defined HW_X86_64
+  sJid *jp;
+  pwr_tStatus sts;
+
+  if ( !jid_table) {
+    jid_table = tree_CreateTable( &sts, sizeof(int), offsetof(sJid, jid),
+				  sizeof(sJid), 10, tree_Comp_int32);
+    if ( EVEN(sts)) return sts;
+  }
+
+  *id = jid_next++;
+  jp = tree_Insert(&sts, jid_table, id);
+  if ( !jp) return sts;
+
+  jp->p = p;
+  jp->refid = r;
+
+  printf( "Jid store: %d\n", *id);
+  return 1;
+#else
+  *id = (int)p;
+  return 1;
+#endif
+}
+
+static int gdh_JidRemove( pwr_tRefId r)
+{
+#if defined OS_LINUX && defined HW_X86_64
+  sJid *jp;
+  pwr_tStatus sts;
+
+  for (jp = tree_Minimum( &sts, jid_table); jp != NULL; jp = tree_Successor( &sts, jid_table, jp)) { 
+    if ( jp->refid.nid == r.nid && jp->refid.rix == r.rix) {
+      printf( "Jid remove: %d\n", jp->jid);
+      tree_Remove( &sts, jid_table, jp);
+      return 1;
+    }
+  }
+  return 0;
+#else
+  return 1;
+#endif
+}
 

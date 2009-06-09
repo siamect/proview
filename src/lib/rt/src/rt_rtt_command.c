@@ -9224,7 +9224,7 @@ static int	rtt_set_parameter(
 	  }
 	  case pwr_eType_Int64:
 	  {
-	    if ( sscanf( value_str, "%lld", (pwr_tInt64 *)buffer_ptr) != 1)
+	    if ( sscanf( value_str, pwr_dFormatInt64, (pwr_tInt64 *)buffer_ptr) != 1)
 	      value_syntax_error = 1;
 	    break;
 	  }
@@ -9255,7 +9255,7 @@ static int	rtt_set_parameter(
 	  }
 	  case pwr_eType_UInt64:
 	  {
-	    if ( sscanf( value_str, "%llu", (pwr_tUInt64 *)buffer_ptr) != 1)
+	    if ( sscanf( value_str, pwr_dFormatUInt64, (pwr_tUInt64 *)buffer_ptr) != 1)
 	      value_syntax_error = 1;
 	    break;
 	  }
@@ -10135,7 +10135,7 @@ static int	rtt_print_restore_item_upd(
 	  }
 	  case pwr_eType_Int64:
 	  {
-	    fprintf( outfile,  "%lld\n", *(pwr_tInt64 *)value_ptr);
+	    fprintf( outfile,  pwr_dFormatInt64 "\n", *(pwr_tInt64 *)value_ptr);
 	    break;
 	  }
 	  case pwr_eType_UInt8:
@@ -10155,7 +10155,7 @@ static int	rtt_print_restore_item_upd(
 	  }
 	  case pwr_eType_UInt64:
 	  {
-	    fprintf( outfile,  "%llu\n", *(pwr_tUInt64 *)value_ptr);
+	    fprintf( outfile,  pwr_dFormatUInt64 "\n", *(pwr_tUInt64 *)value_ptr);
 	    break;
 	  }
 	  case pwr_eType_String:
@@ -10298,7 +10298,7 @@ static int	rtt_print_item_upd(
 	    }
 	    case pwr_eType_Int64:
 	    {
-	      fprintf( outfile,  "%lld\n", *(pwr_tInt64 *)value_ptr);
+	      fprintf( outfile,  pwr_dFormatInt64 "\n", *(pwr_tInt64 *)value_ptr);
 	      break;
 	    }
 	    case pwr_eType_UInt8:
@@ -10318,7 +10318,7 @@ static int	rtt_print_item_upd(
 	    }
 	    case pwr_eType_UInt64:
 	    {
-	      fprintf( outfile,  "%llu\n", *(pwr_tUInt64 *)value_ptr);
+	      fprintf( outfile,  pwr_dFormatUInt64 "\n", *(pwr_tUInt64 *)value_ptr);
 	      break;
 	    }
 	    case pwr_eType_String:

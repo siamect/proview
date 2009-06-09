@@ -159,11 +159,11 @@ int sevcli_get_itemlist( pwr_tStatus *sts, sevcli_tCtx ctx, sevcli_sHistItem **l
   for ( i = 0; i < item_cnt; i++) {
     lp[i].oid = rmsg->Items[i].oid;
     strncpy( lp[i].oname, rmsg->Items[i].oname, sizeof(lp[0].oname));
-    lp[i].storagetime = rmsg->Items[i].storagetime;
+    lp[i].storagetime = net_NetTimeToDeltaTime( &rmsg->Items[i].storagetime);
     lp[i].deadband = rmsg->Items[i].deadband;
     lp[i].options = rmsg->Items[i].options;
-    lp[i].creatime = rmsg->Items[i].creatime;
-    lp[i].modtime = rmsg->Items[i].modtime;
+    lp[i].creatime = net_NetTimeToTime( &rmsg->Items[i].creatime);
+    lp[i].modtime = net_NetTimeToTime( &rmsg->Items[i].modtime);
     strncpy( lp[i].description, rmsg->Items[i].description, sizeof(lp[0].description));
     lp[i].scantime = rmsg->Items[i].scantime;
     lp[i].attrnum = 1;
@@ -213,8 +213,8 @@ int sevcli_get_itemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid,
   msg->Type = sev_eMsgType_HistDataGetRequest;
   msg->Oid = oid;
   strncpy( msg->AName, aname, sizeof(msg->AName));
-  msg->StartTime = starttime;
-  msg->EndTime = endtime;
+  msg->StartTime = net_TimeToNetTime( &starttime);
+  msg->EndTime = net_TimeToNetTime( &endtime);
   msg->NumPoints = numpoints;
 
   if ( !qcom_Put( sts, &tgt, &put)) {

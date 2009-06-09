@@ -104,7 +104,7 @@ time_Uptime (
 {
   pwr_tDeltaTime time;
   unsigned long tics;
-  static unsigned long long tics_64;
+  static pwr_tUInt64 tics_64;
   struct tms buff;
   static int tics_per_sec = 0;
   static pwr_tTime boot_time = {0,0};
@@ -131,11 +131,11 @@ time_Uptime (
     msb_flips++;
   old_high_bit = high_bit;
 
-  tics_64  = ((unsigned long long) msb_flips << 32) | tics;
-  uptime_s = lldiv(tics_64, (long long) tics_per_sec);
+  tics_64  = ((pwr_tUInt64) msb_flips << 32) | tics;
+  uptime_s = lldiv(tics_64, (pwr_tInt64) tics_per_sec);
   
-  uptime_tics.tv_sec  = (unsigned long) uptime_s.quot;
-  uptime_tics.tv_nsec = ((unsigned long) uptime_s.rem) * (1000000000 / tics_per_sec);
+  uptime_tics.tv_sec  = (pwr_tInt64) uptime_s.quot;
+  uptime_tics.tv_nsec = ((pwr_tUInt64) uptime_s.rem) * (1000000000 / tics_per_sec);
 
   // pwr_Assert(tp->tv_sec >= 0 && tp->tv_nsec >= 0);
 

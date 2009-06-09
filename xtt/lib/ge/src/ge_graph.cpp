@@ -4848,7 +4848,7 @@ int  graph_attr_string_to_value( int type_id, const char *value_str,
     }
     case pwr_eType_Int64:
     {
-      if ( sscanf( value_str, "%lld", (pwr_tInt64 *)buffer_ptr) != 1)
+      if ( sscanf( value_str, pwr_dFormatInt64, (pwr_tInt64 *)buffer_ptr) != 1)
         return GE__INPUT_SYNTAX;
       break;
     }
@@ -4878,7 +4878,7 @@ int  graph_attr_string_to_value( int type_id, const char *value_str,
     }
     case pwr_eType_UInt64:
     {
-      if ( sscanf( value_str, "%llu", (pwr_tUInt64 *)buffer_ptr) != 1)
+      if ( sscanf( value_str, pwr_dFormatUInt64, (pwr_tUInt64 *)buffer_ptr) != 1)
         return GE__INPUT_SYNTAX;
       break;
     }

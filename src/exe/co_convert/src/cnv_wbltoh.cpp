@@ -178,6 +178,7 @@ int CnvWblToH::body_exec()
   char struct_name[80];
 
   attr_count = 0;
+  attr_next_alignlw = 0;
 
   if ( strcmp( CnvCtx::low( ctx->rw->body_name), "devbody") == 0) {
     if ( ctx->hpp)
@@ -380,7 +381,8 @@ int CnvWblToH::attribute_exec()
   int sts;
   char alignstr[40];
 
-  if ( ctx->rw->attr_pointer ||
+  if ( attr_next_alignlw || 
+       ctx->rw->attr_pointer ||
        ctx->rw->attr_isclass ||
        strcmp( CnvCtx::low(ctx->rw->attr_type), "input") == 0 ||
        strcmp( CnvCtx::low(ctx->rw->attr_type), "buffer") == 0 ||
@@ -395,7 +397,15 @@ int CnvWblToH::attribute_exec()
   else
     strcpy( alignstr, " pwr_dAlignW");
 
-  if ( strcmp( CnvCtx::low( ctx->rw->body_name), "rtbody") == 0 &&
+  if ( ctx->rw->attr_pointer ||
+       strcmp( CnvCtx::low(ctx->rw->attr_typeref), "castid") == 0 ||
+       strcmp( CnvCtx::low(ctx->rw->attr_typeref), "disableattr") == 0)
+    // Align next attribute on longword
+    attr_next_alignlw = 1;
+  else
+    attr_next_alignlw = 0;
+ 
+ if ( strcmp( CnvCtx::low( ctx->rw->body_name), "rtbody") == 0 &&
        ctx->rw->class_devonly)
     return 1;
 

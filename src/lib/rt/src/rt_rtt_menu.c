@@ -5272,7 +5272,7 @@ static int	rtt_print_value(
 	    }
 	    case pwr_eType_Int64:
 	    {
-	      r_print( "%lld", *(pwr_tInt64 *)value_ptr);
+	      r_print( pwr_dFormatInt64, *(pwr_tInt64 *)value_ptr);
 	      break;
 	    }
 	    case pwr_eType_UInt8:
@@ -5294,7 +5294,7 @@ static int	rtt_print_value(
 	    }
 	    case pwr_eType_UInt64:
 	    {
-	      r_print( "%llu", *(pwr_tUInt64 *)value_ptr);
+	      r_print( pwr_dFormatUInt64, *(pwr_tUInt64 *)value_ptr);
 	      break;
 	    }
 	    case pwr_eType_String:
@@ -5781,9 +5781,13 @@ static int	rtt_edit_print_value(
 	    case pwr_eType_Int64:
 	    {
 	      if ( menu_ptr->characters > 0)
+#if defined OS_LINUX && defined HW_X86_64
+	        r_print( "%*ld", menu_ptr->characters, *(pwr_tInt64 *)menu_ptr->value_ptr);
+#else
 	        r_print( "%*lld", menu_ptr->characters, *(pwr_tInt64 *)menu_ptr->value_ptr);
+#endif
 	      else
-	        r_print( "%lld", *(pwr_tInt64 *)menu_ptr->value_ptr);
+	        r_print( pwr_dFormatInt64, *(pwr_tInt64 *)menu_ptr->value_ptr);
 	      break;
 	    }
 	    case pwr_eType_UInt8:
@@ -5818,10 +5822,13 @@ static int	rtt_edit_print_value(
 	    case pwr_eType_UInt64:
 	    {
 	      if ( menu_ptr->characters > 0)
-	        r_print( "%*lld", menu_ptr->characters, 
-			*(pwr_tUInt64 *)menu_ptr->value_ptr);
+#if defined OS_LINUX && defined HW_X86_64
+	        r_print( "%*lu", menu_ptr->characters, *(pwr_tUInt64 *)menu_ptr->value_ptr);
+#else
+	        r_print( "%*llu", menu_ptr->characters, *(pwr_tUInt64 *)menu_ptr->value_ptr);
+#endif
 	      else
-	        r_print( "%lld", *(pwr_tUInt64 *)menu_ptr->value_ptr);
+	        r_print( pwr_dFormatUInt64, *(pwr_tUInt64 *)menu_ptr->value_ptr);
 	      break;
 	    }
 	    case pwr_eType_String:
@@ -7553,7 +7560,7 @@ static int	rtt_set_value(
 	  case pwr_eType_Int64:
 	  {
 	    size = sizeof(pwr_tInt64);
-	    if ( sscanf( value_str, "%lld", (pwr_tInt64 *)buffer_ptr) != 1)
+	    if ( sscanf( value_str, pwr_dFormatInt64, (pwr_tInt64 *)buffer_ptr) != 1)
 	      return RTT__INPUT_SYNTAX;
 	    if ( (menu_ptr->maxlimit != 0.0) || (menu_ptr->minlimit != 0.0))
 	    {
@@ -7627,7 +7634,7 @@ static int	rtt_set_value(
 	  case pwr_eType_UInt64:
 	  {
 	    size = sizeof(pwr_tUInt64);
-	    if ( sscanf( value_str, "%llu", (pwr_tUInt64 *)buffer_ptr) != 1)
+	    if ( sscanf( value_str, pwr_dFormatUInt64, (pwr_tUInt64 *)buffer_ptr) != 1)
 	      return RTT__INPUT_SYNTAX;
 	    if ( (menu_ptr->maxlimit != 0.0) || (menu_ptr->minlimit != 0.0))
 	    {

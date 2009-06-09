@@ -295,6 +295,7 @@ int rt_sevhistmon::send_data()
   sev_sMsgHistDataStore *msg;
   sev_sHistData *dp;
   int		stime;
+  pwr_tTime	current_time;
   pwr_tStatus   conf_sts = SEV__SUCCESS;
 
   for ( unsigned int i = 0; i < m_hs.size(); i++) {
@@ -316,7 +317,8 @@ int rt_sevhistmon::send_data()
     put.data = msg;
 
     msg->Type = sev_eMsgType_HistDataStore;
-    time_GetTime( &msg->Time);
+    time_GetTime( &current_time);
+    msg->Time = net_TimeToNetTime( &current_time);
 
     dp = (sev_sHistData *) &msg->Data;
     for ( unsigned int j = 0; j < m_hs[i].sevhistlist.size(); j++) {
@@ -489,7 +491,8 @@ int rt_sevhistmon::send_itemlist( pwr_tNid nid)
 	*s = 0;
 	strcpy( ((sev_sMsgHistItems *)put.data)->Items[k].oname, aname);
 	strcpy( ((sev_sMsgHistItems *)put.data)->Items[k].attr[0].aname, s + 1);
-	((sev_sMsgHistItems *)put.data)->Items[k].storagetime = m_hs[i].sevhistlist[j].storagetime;
+	((sev_sMsgHistItems *)put.data)->Items[k].storagetime = 
+	  net_DeltaTimeToNetTime( &m_hs[i].sevhistlist[j].storagetime);
 	((sev_sMsgHistItems *)put.data)->Items[k].deadband = m_hs[i].sevhistlist[j].deadband;
 	((sev_sMsgHistItems *)put.data)->Items[k].options = m_hs[i].sevhistlist[j].options;
 	((sev_sMsgHistItems *)put.data)->Items[k].attr[0].type = m_hs[i].sevhistlist[j].type;

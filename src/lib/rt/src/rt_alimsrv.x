@@ -1,4 +1,4 @@
-#ifdef RPC_HDR
+ #ifdef RPC_HDR
 %/* 
 % * Proview   $Id: rt_alimsrv.x,v 1.2 2005-09-01 14:57:55 claes Exp $
 % * Copyright (C) 2005 SSAB Oxelösund AB.
@@ -85,7 +85,7 @@ struct alimsrv_sDSupAlim {
 %
 %struct alimsrv_sSupObjEntry {
 %  pwr_tObjid	 	SupObjid pwr_dPacked;
-%  alimsrv_uSupAlim 	SupData	 pwr_dPacked;
+%  alimsrv_uSupAlim 	SupData;
 %};
 %typedef struct alimsrv_sSupObjEntry  alimsrv_sSupObjEntry;
 %
@@ -101,7 +101,7 @@ struct alimsrv_sDSupAlim {
 %  pwr_sAttrRef		SupAttr		pwr_dPacked;
 %  pwr_tInt32	    	NoOfSupObjs	pwr_dPacked;
 %  pwr_tUInt32	    	SupClass	pwr_dPacked;
-%  alimsrv_sSupObjEntry SupList[1]	pwr_dPacked;
+%  alimsrv_sSupObjEntry SupList[1];
 %};
 %typedef struct alimsrv_sAttrSupList alimsrv_sAttrSupList;
 %
@@ -117,7 +117,7 @@ struct alimsrv_sDSupAlim {
 %struct alimsrv_sSupDataBuf {
 %  pwr_tBoolean 	Xdr		pwr_dPacked;
 %  pwr_tUInt32		NoOfSupAttr	pwr_dPacked;
-%  alimsrv_sAttrSupList  AttrSupList[1]	pwr_dPacked;
+%  alimsrv_sAttrSupList  AttrSupList[1];
 %};
 %typedef struct alimsrv_sSupDataBuf alimsrv_sSupDataBuf;
 %

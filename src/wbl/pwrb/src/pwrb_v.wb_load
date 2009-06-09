@@ -20,6 +20,6 @@
 !
 Volume pwrb pwr_eClass_ClassVolume 0.0.0.2
   Body SysBody
-    Attr DvVersion = 1
+    Attr DvVersion = 2
   EndBody
 EndVolume

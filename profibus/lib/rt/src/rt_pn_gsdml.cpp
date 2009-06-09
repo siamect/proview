@@ -1520,7 +1520,7 @@ int pn_gsdml::datavalue_to_string( gsdml_eValueDataType datatype, void *value,
     snprintf( str, strsize, "%g", *(float *)value);
     break;
   case gsdml_eValueDataType_Integer64: {
-    long long v;
+    pwr_tInt64 v;
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
     if ( byte_order == pwr_eByteOrderingEnum_LittleEndian)
       memcpy( &v, value, sizeof(v));
@@ -1552,11 +1552,11 @@ int pn_gsdml::datavalue_to_string( gsdml_eValueDataType datatype, void *value,
       memcpy( &v, b, sizeof(v));
     }
 #endif
-    snprintf( str, strsize, "%lld", v);
+    snprintf( str, strsize, pwr_dFormatInt64, v);
     break;
   }
   case gsdml_eValueDataType_Unsigned64: {
-    unsigned long long v;
+    pwr_tUInt64 v;
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
     if ( byte_order == pwr_eByteOrderingEnum_LittleEndian)
       memcpy( &v, value, sizeof(v));
@@ -1588,7 +1588,7 @@ int pn_gsdml::datavalue_to_string( gsdml_eValueDataType datatype, void *value,
       memcpy( &v, b, sizeof(v));
     }
 #endif
-    snprintf( str, strsize, "%llu", v);
+    snprintf( str, strsize, pwr_dFormatUInt64, v);
     break;
   }
   case gsdml_eValueDataType_Float64:
@@ -1757,8 +1757,8 @@ int pn_gsdml::string_to_datavalue( gsdml_eValueDataType datatype, void *value,
       return PB__SYNTAX;
     break;
   case gsdml_eValueDataType_Integer64: {
-    long long v;
-    if ( sscanf( str, "%lld", &v) != 1)
+    pwr_tInt64 v;
+    if ( sscanf( str, pwr_dFormatInt64, &v) != 1)
       return PB__SYNTAX;
 
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
@@ -1795,8 +1795,8 @@ int pn_gsdml::string_to_datavalue( gsdml_eValueDataType datatype, void *value,
     break;
   }
   case gsdml_eValueDataType_Unsigned64: {
-    unsigned long long v;
-    if ( sscanf( str, "%llu", &v) != 1)
+    pwr_tUInt64 v;
+    if ( sscanf( str, pwr_dFormatUInt64, &v) != 1)
       return PB__SYNTAX;
 
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)

@@ -1799,8 +1799,18 @@ bool wb_vrepced::buildClass( pwr_tStatus *sts, wb_orep *co)
 	  }
 	  
 	  if ( ao->cid() == pwr_eClass_Input) {
-	    offset += sizeof(pwr_tFloat32*);
+	    offset = pwr_AlignLW( offset) + pwr_cAlignLW;
 	  }
+	  if ( cdh_tidIsCid( typeref) ||
+	       flags & PWR_MASK_POINTER ||
+	       typeref == pwr_eType_Time || 
+	       typeref == pwr_eType_DeltaTime ||
+	       typeref == pwr_eType_Int64 ||
+	       typeref == pwr_eType_UInt64 ||
+	       typeref == pwr_eType_Float64 ||
+	       typeref == pwr_eType_CastId ||
+	       typeref == pwr_eType_DisableAttr)
+	    offset = pwr_AlignLW( offset);
 
 	  // Store data in Attribute object
 	  m_vrep->writeAttribute( sts, ao, pwr_eBix_sys, offsetof( pwr_sParam, Info.Flags),
@@ -1827,16 +1837,15 @@ bool wb_vrepced::buildClass( pwr_tStatus *sts, wb_orep *co)
 				  sizeof(type), &type);
 	  if ( EVEN(*sts)) return false;
 
-	  int filler;
-	  if ( size/elements < 4) {
-	    filler = 4 - (size % 4);
-	    if ( filler == 4)
-	      filler = 0;
-	  }
+	  // Alignment for next attribute
+	  offset += size;
+	  if ( flags & PWR_MASK_POINTER ||
+	       typeref == pwr_eType_CastId ||
+	       typeref == pwr_eType_DisableAttr)
+	    offset = pwr_AlignLW( offset);
 	  else
-	    filler = 0;
+	    offset = pwr_AlignW( offset);
 
-	  offset += (size + filler);
 	  paramindex++;
 	  break;
 	}
@@ -1955,6 +1964,8 @@ bool wb_vrepced::buildClass( pwr_tStatus *sts, wb_orep *co)
 	  type = cd->cid();
 	  size = elements * cd->size( pwr_eBix_rt);
 	  delete cd;
+
+	  offset = pwr_AlignLW( offset);
 	  
 	  // Store data in Attribute object
 	  m_vrep->writeAttribute( sts, ao, pwr_eBix_sys, offsetof( pwr_sBuffer, Info.Flags),

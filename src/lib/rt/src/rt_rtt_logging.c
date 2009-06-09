@@ -1509,10 +1509,10 @@ void	*rtt_logging_logproc( void *arg)
 	              char_cnt += log_print( entry_ptr, "	%d", *(pwr_tUInt32 *)value_ptr);
 	              break;
 	            case pwr_eType_Int64:
-	              char_cnt += log_print( entry_ptr, "	%lld", *(pwr_tInt64 *)value_ptr);
+	              char_cnt += log_print( entry_ptr, "	" pwr_dFormatInt64, *(pwr_tInt64 *)value_ptr);
 	              break;
 	            case pwr_eType_UInt64:
-	              char_cnt += log_print( entry_ptr, "	%llu", *(pwr_tUInt64 *)value_ptr);
+	              char_cnt += log_print( entry_ptr, "	" pwr_dFormatUInt64, *(pwr_tUInt64 *)value_ptr);
 	              break;
 	            case pwr_eType_Objid:
 	              objid = *(pwr_tObjid *)value_ptr;
@@ -1739,7 +1739,7 @@ void	*rtt_logging_logproc( void *arg)
 	                log_print( entry_ptr, "%s", &time_str);
 	                log_print( entry_ptr, "	%s",  
 				&(entry_ptr->parameterstr[i]));
-	                log_print( entry_ptr, "	%lld\n", *(pwr_tInt64 *)value_ptr);
+	                log_print( entry_ptr, "	" pwr_dFormatUInt64 "\n", *(pwr_tInt64 *)value_ptr);
 	                *(pwr_tInt64 *)old_value_ptr = 
 				*(pwr_tInt64 *)value_ptr;
 	              }

@@ -35,7 +35,7 @@ class CnvReadWbl;
 class CnvWblToH : public CnvWblTo {
  public:
   CnvWblToH( CnvCtx *cnv_ctx) : ctx(cnv_ctx), struct_class_open(0),
-    struct_filler_cnt(0), attr_count(0) {}
+    struct_filler_cnt(0), attr_count(0), attr_next_alignlw(0) {}
   virtual ~CnvWblToH() {}
 
   CnvCtx      *ctx;
@@ -49,6 +49,7 @@ class CnvWblToH : public CnvWblTo {
   unsigned int	struct_vid_0;
   unsigned int	struct_vid_1;
   int		attr_count;
+  int		attr_next_alignlw;
   
   int init( char *first);
   int close();

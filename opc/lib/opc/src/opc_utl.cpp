@@ -1484,36 +1484,36 @@ bool opc_convert_pwrtype_to_opctype(void *bufin, void *bufout, int size, int opc
     case opc_eDataType_long:
       switch (pwr_type) {
         case pwr_eType_Float32:
-	  (*(long long *) bufout) = (long long) (*(pwr_tFloat32 *) bufin);
+	  (*(pwr_tInt64 *) bufout) = (pwr_tInt64) (*(pwr_tFloat32 *) bufin);
 	  break;
         case pwr_eType_Float64:
-	  (*(long long *) bufout) = (long long) (*(pwr_tFloat64 *) bufin);
+	  (*(pwr_tInt64 *) bufout) = (pwr_tInt64) (*(pwr_tFloat64 *) bufin);
 	  break;
         case pwr_eType_Char:
         case pwr_eType_Int8:
-	  (*(long long *) bufout) = (long long) (*(pwr_tChar *) bufin);
+	  (*(pwr_tInt64 *) bufout) = (pwr_tInt64) (*(pwr_tChar *) bufin);
 	  break;
         case pwr_eType_Int16:
-	  (*(long long *) bufout) = (long long) (*(pwr_tInt16 *) bufin);
+	  (*(pwr_tInt64 *) bufout) = (pwr_tInt64) (*(pwr_tInt16 *) bufin);
 	  break;
         case pwr_eType_Int32:
         case pwr_eType_Boolean:
-	  (*(long long *) bufout) = (long long) (*(pwr_tInt32 *) bufin);
+	  (*(pwr_tInt64 *) bufout) = (pwr_tInt64) (*(pwr_tInt32 *) bufin);
 	  break;
         case pwr_eType_Int64:
-	  (*(long long *) bufout) = (long long) (*(pwr_tInt64 *) bufin);
+	  (*(pwr_tInt64 *) bufout) = (pwr_tInt64) (*(pwr_tInt64 *) bufin);
 	  break;
         case pwr_eType_UInt8:
-	  (*(long long *) bufout) = (long long) (*(pwr_tUInt8 *) bufin);
+	  (*(pwr_tInt64 *) bufout) = (pwr_tInt64) (*(pwr_tUInt8 *) bufin);
 	  break;
         case pwr_eType_UInt16:
-	  (*(long long *) bufout) = (long long) (*(pwr_tUInt16 *) bufin);
+	  (*(pwr_tInt64 *) bufout) = (pwr_tInt64) (*(pwr_tUInt16 *) bufin);
 	  break;
         case pwr_eType_UInt32:
-	  (*(long long *) bufout) = (long long) (*(pwr_tUInt32 *) bufin);
+	  (*(pwr_tInt64 *) bufout) = (pwr_tInt64) (*(pwr_tUInt32 *) bufin);
 	  break;
         case pwr_eType_UInt64:
-	  (*(long long *) bufout) = (long long) (*(pwr_tUInt64 *) bufin);
+	  (*(pwr_tInt64 *) bufout) = (pwr_tInt64) (*(pwr_tUInt64 *) bufin);
 	  break;
         case pwr_eType_String:
         case pwr_eType_Time:
@@ -1524,36 +1524,36 @@ bool opc_convert_pwrtype_to_opctype(void *bufin, void *bufout, int size, int opc
     case opc_eDataType_unsignedLong:
       switch (pwr_type) {
         case pwr_eType_Float32:
-	  (*(unsigned long long *) bufout) = (unsigned long long) (*(pwr_tFloat32 *) bufin);
+	  (*(pwr_tUInt64 *) bufout) = (pwr_tUInt64) (*(pwr_tFloat32 *) bufin);
 	  break;
         case pwr_eType_Float64:
-	  (*(unsigned long long *) bufout) = (unsigned long long) (*(pwr_tFloat64 *) bufin);
+	  (*(pwr_tUInt64 *) bufout) = (pwr_tUInt64) (*(pwr_tFloat64 *) bufin);
 	  break;
         case pwr_eType_Char:
         case pwr_eType_Int8:
-	  (*(unsigned long long *) bufout) = (unsigned long long) (*(pwr_tChar *) bufin);
+	  (*(pwr_tUInt64 *) bufout) = (pwr_tUInt64) (*(pwr_tChar *) bufin);
 	  break;
         case pwr_eType_Int16:
-	  (*(unsigned long long *) bufout) = (unsigned long long) (*(pwr_tInt16 *) bufin);
+	  (*(pwr_tUInt64 *) bufout) = (pwr_tUInt64) (*(pwr_tInt16 *) bufin);
 	  break;
         case pwr_eType_Int32:
         case pwr_eType_Boolean:
-	  (*(unsigned long long *) bufout) = (unsigned long long) (*(pwr_tInt32 *) bufin);
+	  (*(pwr_tUInt64 *) bufout) = (pwr_tUInt64) (*(pwr_tInt32 *) bufin);
 	  break;
         case pwr_eType_Int64:
-	  (*(unsigned long long *) bufout) = (unsigned long long) (*(pwr_tInt64 *) bufin);
+	  (*(pwr_tUInt64 *) bufout) = (pwr_tUInt64) (*(pwr_tInt64 *) bufin);
 	  break;
         case pwr_eType_UInt8:
-	  (*(unsigned long long *) bufout) = (unsigned long long) (*(pwr_tUInt8 *) bufin);
+	  (*(pwr_tUInt64 *) bufout) = (pwr_tUInt64) (*(pwr_tUInt8 *) bufin);
 	  break;
         case pwr_eType_UInt16:
-	  (*(unsigned long long *) bufout) = (unsigned long long) (*(pwr_tUInt16 *) bufin);
+	  (*(pwr_tUInt64 *) bufout) = (pwr_tUInt64) (*(pwr_tUInt16 *) bufin);
 	  break;
         case pwr_eType_UInt32:
-	  (*(unsigned long long *) bufout) = (unsigned long long) (*(pwr_tUInt32 *) bufin);
+	  (*(pwr_tUInt64 *) bufout) = (pwr_tUInt64) (*(pwr_tUInt32 *) bufin);
 	  break;
         case pwr_eType_UInt64:
-	  (*(unsigned long long *) bufout) = (unsigned long long) (*(pwr_tUInt64 *) bufin);
+	  (*(pwr_tUInt64 *) bufout) = (pwr_tUInt64) (*(pwr_tUInt64 *) bufin);
 	  break;
         case pwr_eType_String:
         case pwr_eType_Time:

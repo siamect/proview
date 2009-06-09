@@ -957,7 +957,7 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
 	     sizeof( ((pwr_sParam *)o->rbody)->Info.PgmName));
   }
   if ( cdh_NoCaseStrcmp( o->cname, "$Buffer") == 0) {
-    *boffset += sizeof( void *) + pwr_AlignLW( o->a.size);
+    *boffset = pwr_AlignLW( *boffset);
   }
   if ( cdh_NoCaseStrcmp( o->cname, "$Input") == 0) {
     o->a.size = ((pwr_sParam *)o->rbody)->Info.Size = size;
@@ -969,6 +969,12 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
     o->a.size = ((pwr_sParam *)o->rbody)->Info.Size = size;
     o->a.offset = ((pwr_sParam *)o->rbody)->Info.Offset = *boffset;
     *boffset += pwr_AlignW( o->a.size);
+  }
+  if ( o->a.flags & pwr_mAdef_pointer ||
+       o->a.tid == pwr_eType_CastId ||
+       o->a.tid == pwr_eType_DisableAttr) {
+    // Align next attribute on longword
+    *boffset = pwr_AlignLW(*boffset);
   }
   ((pwr_sParam *)o->rbody)->Info.ParamIndex = *bindex;
   (*bindex)++;
@@ -1046,9 +1052,9 @@ void wb_wblnode::buildBuffer( ref_wblnode classdef, ref_wblnode objbodydef,
   }
 
   o->a.size = ((pwr_sBuffer *)o->rbody)->Info.Size = o->a.elements * rsize;
-  o->a.offset = ((pwr_sBuffer *)o->rbody)->Info.Offset = *boffset;
+  o->a.offset = ((pwr_sBuffer *)o->rbody)->Info.Offset = pwr_AlignLW( *boffset);
   ((pwr_sBuffer *)o->rbody)->Info.ParamIndex = *bindex;
-  *boffset += o->a.size;
+  *boffset += pwr_AlignW(o->a.size);
   (*bindex)++;
 }
 
