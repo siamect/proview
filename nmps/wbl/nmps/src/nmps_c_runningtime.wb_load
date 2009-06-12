@@ -286,6 +286,7 @@ SObject NMps:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_PRIVATE
           Attr Flags |= PWR_MASK_POINTER
         EndBody
       EndObject

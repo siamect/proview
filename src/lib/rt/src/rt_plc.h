@@ -57,6 +57,9 @@
 #endif
 
 
+
+static const unsigned int pwr_cInputOffset = pwr_AlignLW(sizeof(void*)) + pwr_AlignLW(sizeof(pwr_tBoolean));
+
 typedef struct plc_sProcess plc_sProcess;
 typedef struct plc_sThread plc_sThread;
 typedef struct plc_sDlink plc_sDlink;

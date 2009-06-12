@@ -59,7 +59,8 @@ protected:
   void printAttribute(wb_volume& v, 
                       wb_attribute& attr, 
                       wb_attribute& tattr, ///< template attribute
-                      wb_adef& adef);
+                      wb_adef& adef,
+		      int force);
 
   void printBody(wb_volume& v, 
                  wb_object& o,

@@ -86,7 +86,7 @@
    #define CALLBACK
    #define INVALID_HANDLE_VALUE ((HANDLE) NULL)
    #define  getch()             getchar()
-   typedef int   HANDLE;
+   typedef long int   HANDLE;
    typedef unsigned long   DWORD;
    #ifdef PB_API_FUNC_NOT_USED
       #undef  CALL_CONV

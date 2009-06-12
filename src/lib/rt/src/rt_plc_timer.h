@@ -37,7 +37,7 @@
 #endif
 
 typedef	struct {	
-  pwr_tBoolean                        TimerFlag pwr_dAlignW;
+  pwr_tBoolean                        TimerFlag pwr_dAlignLW;
   pwr_tBoolean                        *TimerNext pwr_dAlignLW;
   pwr_tUInt32                         TimerCount pwr_dAlignLW;
   pwr_tBoolean                        *TimerDO pwr_dAlignLW;

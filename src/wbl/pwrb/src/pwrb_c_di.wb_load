@@ -103,6 +103,7 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr Flags |= PWR_MASK_POINTER
           Attr Flags |= PWR_MASK_STATE
+	  Attr Size = 4
         EndBody
       EndObject
       !/**

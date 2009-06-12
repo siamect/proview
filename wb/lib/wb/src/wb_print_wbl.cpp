@@ -66,10 +66,12 @@ wb_print_wbl::~wb_print_wbl()
 void wb_print_wbl::printAttribute(wb_volume& v, 
                                   wb_attribute& attr, 
                                   wb_attribute& tattr, ///< template 
-                                  wb_adef& adef)
+                                  wb_adef& adef, 
+				  int force)
 {
-  if (adef.flags() & PWR_MASK_POINTER || 
-      adef.flags() & PWR_MASK_NOWBL)
+  if ( !force &&
+       (adef.flags() & PWR_MASK_POINTER || 
+	adef.flags() & PWR_MASK_NOWBL))
     return;
 
   if (attr.isClass() && adef.cid() == pwr_eClass_Buffer)
@@ -109,6 +111,7 @@ void wb_print_wbl::printBody(wb_volume& v,
   wb_attribute tattr;
   const char* bname;
   char timestr[40] = " ";
+  int force = 0;
     
   wb_bdef bdef = cdef.bdef(bix);
     
@@ -150,11 +153,19 @@ void wb_print_wbl::printBody(wb_volume& v,
 
   indent(1) << "Body " << bdef.name() << timestr << endl;
   for (adef = bdef.adef(); adef; adef = adef.next()) {
+    if ( cdef.cid() == pwr_eClass_Param && strcmp( adef.name(), "Size") == 0) {
+      // Print Size for Pointers that is not private
+      wb_attribute flags_attr = o.attribute(bname, "Flags");
+      pwr_tMask *flagsp = (pwr_tMask *)flags_attr.value();
+      if (*flagsp & PWR_MASK_POINTER && !(*flagsp & PWR_MASK_PRIVATE))
+	force = 1;
+    }
+
     attr = o.attribute(bname, adef.name());
     tattr = templ.attribute(bname, adef.name());
     //    if (tattr == attr)
     //  continue;
-    printAttribute(v, attr, tattr, adef);
+    printAttribute(v, attr, tattr, adef, force);
   }
 
   indent(-1) << "EndBody" << endl;
@@ -227,7 +238,7 @@ void wb_print_wbl::printBuffer(wb_volume& v,
     
     while (1) {
       tattr2 = templ.attribute(bname, adef2.name());
-      printAttribute(v, attr2, tattr2, adef2);
+      printAttribute(v, attr2, tattr2, adef2, 0);
 
       if (!(adef2 = adef2.next()))
         break;
@@ -282,7 +293,7 @@ void wb_print_wbl::printClass(wb_volume& v,
 
       adef2 = bdef.adef( attr2.attrName()); 
       
-      printAttribute(v, attr2, tattr2, adef2);
+      printAttribute(v, attr2, tattr2, adef2, 0);
     
       attr2 = attr2.after();
       tattr2 = tattr2.after();
@@ -335,7 +346,7 @@ void wb_print_wbl::printClass(wb_volume& v,
     
     while (1) {
       tattr2 = templ.attribute(bname, adef2.name());
-      printAttribute(v, attr2, tattr2, adef2);
+      printAttribute(v, attr2, tattr2, adef2, 0);
 
       if (!(adef2 = adef2.next()))
         break;
@@ -362,7 +373,7 @@ void wb_print_wbl::printClass(wb_volume& v,
 
       attr2
       tattr2 = templ.attribute(bname, adef2.name());
-      printAttribute(v, attr2, tattr2, adef2);
+      printAttribute(v, attr2, tattr2, adef2, 0);
 
       if (!(adef2 = adef2.next()))
         break;

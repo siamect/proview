@@ -195,7 +195,6 @@ void dibcd_exec (
   int           i;      /* Loop index*/
   int           j;      /* Loop index*/
   int           res;    /* Result */
-  ptrdiff_t     offset; /* Offset to next pointer */
   char          *ptr;   /* Pointer to pointer */
   pwr_tBoolean  *p2;    /* Pointer to digin */
   pwr_tBoolean  err;    /* Error flag */
@@ -203,9 +202,7 @@ void dibcd_exec (
   /* Initialize */
   res = 0;
   err = FALSE;
-  offset = (char *)&object->BCD1P - (char *)&object->BCD0P;
-  ptr = (char *)&object->BCD0P;
-  ptr += (DIBCDSIZE -1) * offset;
+  ptr = (char *)&object->BCD0P + (DIBCDSIZE -1) * pwr_cInputOffset;
 
   /* Double loop for convert */
   for ( i = 0; i < (DIBCDSIZE / 4); i++) {
@@ -214,7 +211,7 @@ void dibcd_exec (
       val += val;                         /* Mult 2 */
       p2 = *(pwr_tBoolean **)ptr;                 /* Pointer to input */
       if (*p2 != object->Inv) val++;    /* Signal till ? */
-      ptr -= offset;                      /* Pointer to next pointer */
+      ptr -= pwr_cInputOffset;                      /* Pointer to next pointer */
     }
     if ( val > 9 ) err = TRUE;
     res = 10 * res + val;
@@ -280,16 +277,13 @@ void gray_exec (
   pwr_tBoolean  in;     /* Digital in after invert */
   pwr_tBoolean  odd;    /* Convert flag */
   int		sum;    /* Convert sum */
-  ptrdiff_t    	offset; /* Offset to next pointer */
   char		*ptr;   /* Pointer to ptr to digin */
   pwr_tBoolean  *p2;    /* Pointer to digin */
 
   /* Init */
   odd = 0;
   sum = 0;
-  offset = (char *)&object->Din1P - (char *)&object->Din0P;
-  ptr = (char *)&object->Din0P;
-  ptr += (GRAYSIZE - 1) * offset;
+  ptr = (char *)&object->Din0P + (GRAYSIZE - 1) * pwr_cInputOffset;
 
   /* Graycode convert loop */
   for (i = 0; i < GRAYSIZE; i++) {
@@ -298,7 +292,7 @@ void gray_exec (
     in = (*p2 != object->Inv);    /* Invert ? */
     odd = in ? !odd : odd;        /* Odd up to now ? */
     sum += odd;                   /* Inc if odd input */
-    ptr -= offset;
+    ptr -= pwr_cInputOffset;
   }
 
   /* Result */

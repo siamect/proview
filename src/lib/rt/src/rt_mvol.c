@@ -704,7 +704,11 @@ mvol_LinkClass (
     printf("---   %s, idx: %d, mof: %d\n", aop->g.f.name.orig, i, cp->attr[i].moffset);
 #endif
     pwr_Assert(i == count);
-    if (count > 0) pwr_Assert(cp->attr[i-1].moffset < cp->attr[i].moffset);
+    if (count > 0) {
+      if ( !(cp->attr[i-1].moffset < cp->attr[i].moffset))
+	printf("---   Class: %s, Attribute: %s\n", cop->g.f.name.orig, aop->g.f.name.orig);
+      pwr_Assert(cp->attr[i-1].moffset < cp->attr[i].moffset);
+    }
   }
 
   pwr_Assert(count == cp->acount);

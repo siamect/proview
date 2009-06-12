@@ -179,6 +179,7 @@ SObject pwrb:Class
       Object OpenP $Intern 8 
         Body SysBody
           Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_PRIVATE
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_INVISIBLE
@@ -188,6 +189,7 @@ SObject pwrb:Class
       Object CloseP $Intern 9 
         Body SysBody
           Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_PRIVATE
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_INVISIBLE

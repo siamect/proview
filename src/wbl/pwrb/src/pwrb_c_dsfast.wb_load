@@ -180,6 +180,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_PRIVATE
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
@@ -238,6 +239,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_PRIVATE
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_INVISIBLE
         EndBody

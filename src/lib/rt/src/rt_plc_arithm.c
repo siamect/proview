@@ -46,12 +46,9 @@ void sum_exec(
   pwr_sClass_sum	*object)
 {
 #define sumsize 8
-	char    *charp;
-        float	**ptr;          /* Pointer to ptr to input */
-	static ptrdiff_t offset = (char *)&object->In2 - (char *)&object->In1;
-				/* Offset to next input */
-        int     i;              /* Loopindex */
-        float   sum;            /* Result */
+        pwr_tFloat32	**ptr;          /* Pointer to ptr to input */
+        int     i;              	/* Loopindex */
+        float   sum;            	/* Result */
 /* Initialize */
         sum = object->Const;
         ptr = &object->In1P;
@@ -61,9 +58,7 @@ void sum_exec(
           if ( *ptr != NULL )
             sum += **ptr * object->FVect[i];
 
-          charp = (char *) ptr;
-          charp += offset;
-          ptr = (float **)charp;
+	  ptr = (pwr_tFloat32 **)((char *)ptr + pwr_cInputOffset);
         }
 /* Result */
         object->ActVal = sum;
@@ -88,8 +83,6 @@ void maxmin_exec(
         float   minval;            /* Lowest value */
         float   maxval;            /* Highest value */
         int     i;              /* Loopcounter */
-	static ptrdiff_t offset = (char *)&object->In2 - (char *)&object->In1; /* Offset to next input */
-        char    *charp;
         float   **ptr;          /* Pointer to ptr to digin */
 
 /* Initialize */
@@ -104,9 +97,7 @@ void maxmin_exec(
 	    if ( **ptr > maxval) maxval = **ptr;
 	    if ( **ptr < minval) minval = **ptr;
           }
-          charp = (char *) ptr;
-          charp += offset;
-          ptr = (float **)charp;
+	  ptr = (pwr_tFloat32 **)((char *)ptr + pwr_cInputOffset);
         }
 /* Set Output */
         object->MaxVal = maxval;
@@ -594,8 +585,8 @@ void DtoMask_exec(
     *d = **dp;
     if ( *d)
       val |= m;
-    d += 2;
-    dp += 2;
+    d = (pwr_tBoolean *)((char *)d + pwr_cInputOffset);
+    dp = (pwr_tBoolean **)((char *)dp + pwr_cInputOffset);
     m = m << 1;
   }
   object->Mask = val;
@@ -649,8 +640,8 @@ void DtoEnum_exec(
       val = object->EnumValues[i];
       break;
     }
-    d += 2;
-    dp += 2;
+    d = (pwr_tBoolean *)((char *)d + pwr_cInputOffset);
+    dp = (pwr_tBoolean **)((char *)dp + pwr_cInputOffset);
   }
   object->Enum = val;
 }
@@ -845,7 +836,6 @@ void IAdd_exec(
   pwr_sClass_IAdd	*o)
 {
 #define IADD_SIZE 8
-  static ptrdiff_t offset = (char *)&o->In2 - (char *)&o->In1;
   int     	i;
   pwr_tInt32	**inp = &o->In1P;
   pwr_tInt32   	sum = 0;
@@ -853,7 +843,7 @@ void IAdd_exec(
   for ( i = 0; i < IADD_SIZE; i++) {
     sum += **inp;
     
-    inp = (pwr_tInt32 **)((char *)inp + offset);
+    inp = (pwr_tInt32 **)((char *)inp + pwr_cInputOffset);
   }
   o->ActVal = sum;
 }
@@ -867,13 +857,12 @@ void IMul_exec(
   pwr_sClass_IMul	*o)
 {
 #define IMUL_SIZE 8
-  static ptrdiff_t offset = (char *)&o->In2 - (char *)&o->In1;
   int     	i;
   pwr_tInt32	**inp = &o->In1P;
   pwr_tInt32   	result = **inp;
 
   for ( i = 1; i < IMUL_SIZE; i++) {
-    inp = (pwr_tInt32 **)((char *)inp + offset);
+    inp = (pwr_tInt32 **)((char *)inp + pwr_cInputOffset);
     result *= **inp;    
   }
   o->ActVal = result;
@@ -913,7 +902,6 @@ void IMax_exec(
   pwr_sClass_IMax	*o)
 {
 #define IMAX_SIZE 8
-  static ptrdiff_t offset = (char *)&o->In2 - (char *)&o->In1;
   int     	i;
   pwr_tInt32	**inp = &o->In1P;
   pwr_tInt32   	result = INT_MIN;
@@ -921,7 +909,7 @@ void IMax_exec(
   for ( i = 0; i < IMAX_SIZE; i++) {
     if ( **inp > result)
       result = **inp;    
-    inp = (pwr_tInt32 **)((char *)inp + offset);
+    inp = (pwr_tInt32 **)((char *)inp + pwr_cInputOffset);
   }
   o->ActVal = result;
 }
@@ -935,7 +923,6 @@ void IMin_exec(
   pwr_sClass_IMin	*o)
 {
 #define IMIN_SIZE 8
-  static ptrdiff_t offset = (char *)&o->In2 - (char *)&o->In1;
   int     	i;
   pwr_tInt32	**inp = &o->In1P;
   pwr_tInt32   	result = INT_MAX;
@@ -943,7 +930,7 @@ void IMin_exec(
   for ( i = 0; i < IMIN_SIZE; i++) {
     if ( **inp < result)
       result = **inp;
-    inp = (pwr_tInt32 **)((char *)inp + offset);
+    inp = (pwr_tInt32 **)((char *)inp + pwr_cInputOffset);
   }
   o->ActVal = result;
 }
@@ -1007,13 +994,12 @@ void IMux_exec(
   pwr_sClass_IMux	*o)
 {
 #define IMUX_SIZE 24
-  static ptrdiff_t offset = (char *)&o->In1 - (char *)&o->In0;
   int     	idx;
   pwr_tInt32	**inp = &o->In0P;
 
   idx = o->Index = *o->IndexP;
   idx = idx < 0 ? 0 : ( idx > IMUX_SIZE - 1 ? IMUX_SIZE - 1 : idx);
-  inp = (pwr_tInt32 **)((char *)inp + idx * offset);
+  inp = (pwr_tInt32 **)((char *)inp + idx * pwr_cInputOffset);
   o->ActVal = **inp;
 }
 
@@ -1026,13 +1012,12 @@ void Mux_exec(
   pwr_sClass_Mux	*o)
 {
 #define MUX_SIZE 24
-  static ptrdiff_t offset = (char *)&o->In1 - (char *)&o->In0;
   int     	idx;
   pwr_tFloat32	**inp = &o->In0P;
 
   idx = o->Index = *o->IndexP;
   idx = idx < 0 ? 0 : ( idx > MUX_SIZE - 1 ? MUX_SIZE - 1 : idx);
-  inp = (pwr_tFloat32 **)((char *)inp + idx * offset);
+  inp = (pwr_tFloat32 **)((char *)inp + idx * pwr_cInputOffset);
   o->ActVal = **inp;
 }
 
@@ -1089,7 +1074,6 @@ void Add_exec(
   pwr_sClass_Add	*o)
 {
 #define ADD_SIZE 8
-  static ptrdiff_t offset = (char *)&o->In2 - (char *)&o->In1;
   int     	i;
   pwr_tFloat32	**inp = &o->In1P;
   pwr_tFloat32  sum = 0;
@@ -1097,7 +1081,7 @@ void Add_exec(
   for ( i = 0; i < ADD_SIZE; i++) {
     sum += **inp;
     
-    inp = (pwr_tFloat32 **)((char *)inp + offset);
+    inp = (pwr_tFloat32 **)((char *)inp + pwr_cInputOffset);
   }
   o->ActVal = sum;
 }
@@ -1111,13 +1095,12 @@ void Mul_exec(
   pwr_sClass_Mul	*o)
 {
 #define MUL_SIZE 8
-  static ptrdiff_t offset = (char *)&o->In2 - (char *)&o->In1;
   int     	i;
   pwr_tFloat32	**inp = &o->In1P;
   pwr_tFloat32  result = **inp;
 
   for ( i = 1; i < MUL_SIZE; i++) {
-    inp = (pwr_tFloat32 **)((char *)inp + offset);
+    inp = (pwr_tFloat32 **)((char *)inp + pwr_cInputOffset);
     result *= **inp;
   }
   o->ActVal = result;
@@ -1154,7 +1137,6 @@ void Max_exec(
   pwr_sClass_Max	*o)
 {
 #define AMAX_SIZE 8
-  static ptrdiff_t offset = (char *)&o->In2 - (char *)&o->In1;
   int     	i;
   pwr_tFloat32	**inp = &o->In1P;
   pwr_tFloat32  result = -1E37;
@@ -1162,7 +1144,7 @@ void Max_exec(
   for ( i = 0; i < AMAX_SIZE; i++) {
     if ( **inp > result)
       result = **inp;    
-    inp = (pwr_tFloat32 **)((char *)inp + offset);
+    inp = (pwr_tFloat32 **)((char *)inp + pwr_cInputOffset);
   }
   o->ActVal = result;
 }
@@ -1176,7 +1158,6 @@ void Min_exec(
   pwr_sClass_Min	*o)
 {
 #define AMIN_SIZE 8
-  static ptrdiff_t offset = (char *)&o->In2 - (char *)&o->In1;
   int     	i;
   pwr_tFloat32	**inp = &o->In1P;
   pwr_tFloat32  result = 1E37;
@@ -1184,7 +1165,7 @@ void Min_exec(
   for ( i = 0; i < AMIN_SIZE; i++) {
     if ( **inp < result)
       result = **inp;
-    inp = (pwr_tFloat32 **)((char *)inp + offset);
+    inp = (pwr_tFloat32 **)((char *)inp + pwr_cInputOffset);
   }
   o->ActVal = result;
 }

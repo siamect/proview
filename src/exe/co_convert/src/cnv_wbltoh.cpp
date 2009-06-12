@@ -373,6 +373,16 @@ endl;
   return 1;
 }
 
+//
+// Alignment rules for gcc on x86_64:
+// Pointer long, double, pointer or struct that contains long, double or pointer:
+// aligned on 8 byte.
+//
+// Struct that contains long, double or pointer: next element aligned on 8 bytes.
+//
+//
+//
+
 int CnvWblToH::attribute_exec()
 {
   int i;
@@ -392,12 +402,15 @@ int CnvWblToH::attribute_exec()
        strcmp( CnvCtx::low(ctx->rw->attr_typeref), "time") == 0 ||
        strcmp( CnvCtx::low(ctx->rw->attr_typeref), "deltatime") == 0 ||
        strcmp( CnvCtx::low(ctx->rw->attr_typeref), "castid") == 0 ||
-       strcmp( CnvCtx::low(ctx->rw->attr_typeref), "disableattr") == 0)
+       strcmp( CnvCtx::low(ctx->rw->attr_typeref), "disableattr") == 0 ||
+       strcmp( ctx->rw->attr_name, "TimerFlag") == 0)
     strcpy( alignstr, " pwr_dAlignLW");
   else
     strcpy( alignstr, " pwr_dAlignW");
 
-  if ( ctx->rw->attr_pointer ||
+  if ( ctx->rw->attr_isclass ||
+       strcmp( CnvCtx::low(ctx->rw->attr_type), "buffer") == 0 ||
+       ctx->rw->attr_pointer ||
        strcmp( CnvCtx::low(ctx->rw->attr_typeref), "castid") == 0 ||
        strcmp( CnvCtx::low(ctx->rw->attr_typeref), "disableattr") == 0)
     // Align next attribute on longword

@@ -937,7 +937,8 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
        o->a.tid == pwr_eType_UInt64 ||
        o->a.tid == pwr_eType_Float64 ||
        o->a.tid == pwr_eType_CastId ||
-       o->a.tid == pwr_eType_DisableAttr) {
+       o->a.tid == pwr_eType_DisableAttr ||
+       strcmp( name(), "TimerFlag") == 0) {
     // Align on longword
     *boffset = pwr_AlignLW(*boffset);
   }
@@ -966,11 +967,18 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
     *boffset += pwr_AlignW( o->a.size);
   }
   else {
-    o->a.size = ((pwr_sParam *)o->rbody)->Info.Size = size;
     o->a.offset = ((pwr_sParam *)o->rbody)->Info.Offset = *boffset;
-    *boffset += pwr_AlignW( o->a.size);
+    if ( o->a.flags & pwr_mAdef_pointer && !(o->a.flags & pwr_mAdef_private)) {
+      // Size contains the size if the pointed entity
+      *boffset += pwr_cAlignLW;
+    }
+    else {
+      o->a.size = ((pwr_sParam *)o->rbody)->Info.Size = size;
+      *boffset += pwr_AlignW( o->a.size);
+    }
   }
-  if ( o->a.flags & pwr_mAdef_pointer ||
+  if ( cdh_tidIsCid( o->a.tid) ||
+       o->a.flags & pwr_mAdef_pointer ||
        o->a.tid == pwr_eType_CastId ||
        o->a.tid == pwr_eType_DisableAttr) {
     // Align next attribute on longword
@@ -1051,10 +1059,11 @@ void wb_wblnode::buildBuffer( ref_wblnode classdef, ref_wblnode objbodydef,
     return;
   }
 
+  *boffset = pwr_AlignLW( *boffset);
   o->a.size = ((pwr_sBuffer *)o->rbody)->Info.Size = o->a.elements * rsize;
-  o->a.offset = ((pwr_sBuffer *)o->rbody)->Info.Offset = pwr_AlignLW( *boffset);
+  o->a.offset = ((pwr_sBuffer *)o->rbody)->Info.Offset = *boffset;
   ((pwr_sBuffer *)o->rbody)->Info.ParamIndex = *bindex;
-  *boffset += pwr_AlignW(o->a.size);
+  *boffset += pwr_AlignLW( o->a.size);
   (*bindex)++;
 }
 

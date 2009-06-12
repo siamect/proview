@@ -1809,7 +1809,8 @@ bool wb_vrepced::buildClass( pwr_tStatus *sts, wb_orep *co)
 	       typeref == pwr_eType_UInt64 ||
 	       typeref == pwr_eType_Float64 ||
 	       typeref == pwr_eType_CastId ||
-	       typeref == pwr_eType_DisableAttr)
+	       typeref == pwr_eType_DisableAttr ||
+	       strcmp( ao->name(), "TimerFlag") == 0)
 	    offset = pwr_AlignLW( offset);
 
 	  // Store data in Attribute object
@@ -1838,8 +1839,13 @@ bool wb_vrepced::buildClass( pwr_tStatus *sts, wb_orep *co)
 	  if ( EVEN(*sts)) return false;
 
 	  // Alignment for next attribute
-	  offset += size;
-	  if ( flags & PWR_MASK_POINTER ||
+	  if ( flags & PWR_MASK_POINTER && !(flags & PWR_MASK_PRIVATE))
+	    offset += pwr_cAlignLW;
+	  else
+	    offset += size;
+
+	  if ( cdh_tidIsCid( typeref) ||
+	       flags & PWR_MASK_POINTER ||
 	       typeref == pwr_eType_CastId ||
 	       typeref == pwr_eType_DisableAttr)
 	    offset = pwr_AlignLW( offset);
@@ -1917,7 +1923,7 @@ bool wb_vrepced::buildClass( pwr_tStatus *sts, wb_orep *co)
 				  sizeof(type), &type);
 	  if ( EVEN(*sts)) return false;
 
-	  offset += size;
+	  offset += pwr_AlignW( size);
 	  paramindex++;
 	  break;
 	}
@@ -1992,7 +1998,7 @@ bool wb_vrepced::buildClass( pwr_tStatus *sts, wb_orep *co)
 				  sizeof(type), &type);
 	  if ( EVEN(*sts)) return false;
 
-	  offset += size;
+	  offset += pwr_AlignLW( size);
 	  paramindex++;
 	  break;
 	}
@@ -2364,6 +2370,7 @@ void wb_vrepced::printStructFile( bool hpp)
   pwr_tFileName filename;
   pwr_tFileName fname, incname;
   char *s;
+  char alignstr[40];
 
   if ( hpp)
     sprintf( filename, "$pwrp_inc/pwr_%sclasses.hpp", m_vrep->name());
@@ -2517,7 +2524,9 @@ void wb_vrepced::printStructFile( bool hpp)
 	      pwr_tObjName pgmname;
 	      pwr_eBix bix = cdh_oixToBix( o_bdef->oid().oix);
 	      char structstype[3];
+#if 0
 	      int struct_filler_cnt = 0;
+#endif
 
 	      m_vrep->readBody( &sts, o_bdef, pwr_eBix_sys, &bdef_body);
 	      if ( EVEN(sts)) throw wb_error(sts);
@@ -2554,6 +2563,7 @@ void wb_vrepced::printStructFile( bool hpp)
 	      }
 
 	      bool attr_found = false;
+	      int attr_next_alignlw = 0;
 	      for ( o_adef = o_bdef->first( &sts); ODD(sts);) {
 		o_adef->ref();
 
@@ -2604,6 +2614,34 @@ void wb_vrepced::printStructFile( bool hpp)
 		    throw wb_error(sts);
 		  }
 
+		  if ( attr_next_alignlw || 
+		       adef_body.Info.Flags & PWR_MASK_POINTER ||
+		       adef_body.Info.Flags & PWR_MASK_CLASS ||
+		       o_adef->cid() == pwr_eClass_Input ||
+		       o_adef->cid() == pwr_eClass_Buffer ||
+		       adef_body.TypeRef == pwr_eType_Int64 ||
+		       adef_body.TypeRef == pwr_eType_UInt64 ||
+		       adef_body.TypeRef == pwr_eType_Float64 ||
+		       adef_body.TypeRef == pwr_eType_Time ||
+		       adef_body.TypeRef == pwr_eType_DeltaTime ||
+		       adef_body.TypeRef == pwr_eType_CastId ||
+		       adef_body.TypeRef == pwr_eType_DisableAttr ||
+		       adef_body.TypeRef == pwr_eType_Int64 ||
+		       strcmp( o_adef->name(), "TimerFlag") == 0)
+		    strcpy( alignstr, " pwr_dAlignLW");
+		  else
+		    strcpy( alignstr, " pwr_dAlignW");
+		  
+		  if ( adef_body.Info.Flags & PWR_MASK_CLASS ||
+		       adef_body.Info.Flags & PWR_MASK_POINTER ||
+		       o_adef->cid() == pwr_eClass_Buffer ||
+		       adef_body.TypeRef == pwr_eType_CastId ||
+		       adef_body.TypeRef == pwr_eType_DisableAttr)
+		    // Align next attribute on longword
+		    attr_next_alignlw = 1;
+		  else
+		    attr_next_alignlw = 0;
+
 		  
 		  bool super_attr = false;
 		  if ( hpp && adef_body.Info.ParamIndex == 0) {
@@ -2626,16 +2664,17 @@ void wb_vrepced::printStructFile( bool hpp)
 		    if ( o_adef->cid() == pwr_eClass_Input)
 		      fp << "  " << attr_typeref_pgmname << 
 			fill( fp, 35-strlen(attr_typeref_pgmname)) << " " << pointertype << 
-			"*" << attr_pgmname << "P;"  << endl;
+			"*" << attr_pgmname << "P" << alignstr << ";"  << endl;
 		    fp << "  " << attr_typeref_pgmname << 
 		      fill( fp, 35-strlen(attr_typeref_pgmname)) << " " << pointertype << 
 		      attr_pgmname;
 
 		    if ( adef_body.Info.Elements > 1)
-		      fp << "[" << adef_body.Info.Elements << "];" << endl;
+		      fp << "[" << adef_body.Info.Elements << "]" << alignstr << ";" << endl;
 		    else
-		      fp << ";" << endl;
+		      fp << alignstr << ";" << endl;
 
+#if 0
 		    int filler;
 		    if ( adef_body.Info.Size < 4) {
 		      filler = 4 - ((adef_body.Info.Elements * adef_body.Info.Size) % 4);
@@ -2656,6 +2695,7 @@ void wb_vrepced::printStructFile( bool hpp)
 		      }
 		      struct_filler_cnt++;
 		    }
+#endif
 		  }
 
 		  break;
@@ -2665,6 +2705,8 @@ void wb_vrepced::printStructFile( bool hpp)
 		  pwr_tObjName attr_pgmname;
 		  pwr_tObjName attr_typeref_pgmname;
 
+		  strcpy( alignstr, " pwr_dAlignLW");
+		  attr_next_alignlw = 1;
 
 		  m_vrep->readBody( &sts, o_adef, pwr_eBix_sys, &adef_body);
 		  if ( EVEN(sts)) throw wb_error(sts);
@@ -2690,15 +2732,21 @@ void wb_vrepced::printStructFile( bool hpp)
 
 
 		  if ( adef_body.Info.Elements > 1)
-		    fp << "[" << adef_body.Info.Elements << "];" << endl;
+		    fp << "[" << adef_body.Info.Elements << "]" << alignstr << ";" << endl;
 		  else
-		    fp << ";" << endl;
+		    fp << alignstr << ";" << endl;
 
 		  break;
 		}
 		case pwr_eClass_ObjXRef: {
 		  pwr_sObjXRef adef_body;
 		  pwr_tObjName attr_pgmname;
+
+		  if ( attr_next_alignlw)
+		    strcpy( alignstr, " pwr_dAlignLW");
+		  else
+		    strcpy( alignstr, " pwr_dAlignW");
+		  attr_next_alignlw = 0;
 
 		  m_vrep->readBody( &sts, o_adef, pwr_eBix_sys, &adef_body);
 		  if ( EVEN(sts)) throw wb_error(sts);
@@ -2716,15 +2764,21 @@ void wb_vrepced::printStructFile( bool hpp)
 		    fill( fp, 35-strlen("pwr_tOid")) << " " << attr_pgmname;
 
 		  if ( adef_body.Info.Elements > 1)
-		    fp << "[" << adef_body.Info.Elements << "];" << endl;
+		    fp << "[" << adef_body.Info.Elements << "]" << alignstr << ";" << endl;
 		  else
-		    fp << ";" << endl;
+		    fp << alignstr << ";" << endl;
 
 		  break;
 		}
 		case pwr_eClass_AttrXRef: {
 		  pwr_sAttrXRef adef_body;
 		  pwr_tObjName attr_pgmname;
+
+		  if ( attr_next_alignlw)
+		    strcpy( alignstr, " pwr_dAlignLW");
+		  else
+		    strcpy( alignstr, " pwr_dAlignW");
+		  attr_next_alignlw = 0;
 
 
 		  m_vrep->readBody( &sts, o_adef, pwr_eBix_sys, &adef_body);
@@ -2743,9 +2797,9 @@ void wb_vrepced::printStructFile( bool hpp)
 		    fill( fp, 35-strlen("pwr_tAttrRef")) << " " << attr_pgmname;
 
 		  if ( adef_body.Info.Elements > 1)
-		    fp << "[" << adef_body.Info.Elements << "];" << endl;
+		    fp << "[" << adef_body.Info.Elements << "]" << alignstr << ";" << endl;
 		  else
-		    fp << ";" << endl;
+		    fp << alignstr << ";" << endl;
 
 		  break;
 		}

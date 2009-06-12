@@ -20,7 +20,7 @@
 !
 SObject pwrs:Type
 !/**
-!  @Version 1.0
+!  @Version 2.0
 !  @Code pwr.h
 !  @Group BasicTypes,Types
 !  Absolute time. Basic type.
@@ -33,7 +33,7 @@ SObject pwrs:Type
   Object $Time pwr_eClass_Type pwr_eTix_Time
     Body SysBody
      Attr Type = pwr_eType_Time
-     Attr Size = 8
+     Attr Size = 16
     EndBody
   EndObject
 EndSObject

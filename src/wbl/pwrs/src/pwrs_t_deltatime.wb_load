@@ -20,7 +20,7 @@
 !
 SObject pwrs:Type
 !/**
-!  @Version 1.0
+!  @Version 2.0
 !  @Code pwr.h
 !  @Group BasicTypes,Types
 !  Delta time. Basic type.
@@ -34,7 +34,7 @@ SObject pwrs:Type
   Object $DeltaTime pwr_eClass_Type pwr_eTix_DeltaTime
     Body SysBody
      Attr Type = pwr_eType_DeltaTime
-     Attr Size = 8
+     Attr Size = 16
     EndBody
   EndObject
 EndSObject
