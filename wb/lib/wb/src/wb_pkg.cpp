@@ -179,7 +179,7 @@ void wb_pkg::readConfig()
 	if ( plcname[0] != 0) {
 	  char dir[80];
 	
-	  sprintf( dir, "$pwrp_root/%s/exe/", cdh_OpSysToStr( n.opsys()));
+	  sprintf( dir, "$pwrp_root/bld/%s/exe/", cdh_OpSysToStr( n.opsys()));
 	  sprintf( fname, "%s%s", dir, plcname); 
 	  pkg_pattern pplc( fname, "", 'W');
 	  n.push_back( pplc);
@@ -229,12 +229,13 @@ void wb_pkg::readConfig()
 	    n.push_back( rttcrrcode);
 
 	    // RttPlc-file
+#if 0
 	    strcpy( dir, "$pwrp_load/");
 	    sprintf( fname, "%s" load_cNameRttPlc,
 		dir, vid.v.vid_3, vid.v.vid_2, vid.v.vid_1, vid.v.vid_0);
 	    pkg_pattern rttplc( fname);
 	    n.push_back( rttplc);
-
+#endif
 	  }
 	}
 

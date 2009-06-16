@@ -90,10 +90,10 @@ extern "C" {
 /* Filename of process includefile */
 #define PROCINC "rt_plc_proc.h"
 
-#define GCDIR 		"pwrp_root:[common.tmp]"
+#define GCDIR 		"$pwrp_tmp/"
 #define GCEXT ".gc"
 
-#define DATDIR 		"pwrp_root:[common.load]"
+#define DATDIR 		"$pwrp_load/"
 #define DATEXT ".dat"
 
 #define IS_LYNX(os) ((os & pwr_mOpSys_PPC_LYNX) \

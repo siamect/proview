@@ -2107,24 +2107,24 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		fprintf( file, "appl %s W $pwrp_src/%s/pwr_user2.dat:$pwra_db/pwr_user2.dat $pwra_db/pwr_user2.dat\n",
 			 nodename_ptr, nodename_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_ApplFile)
-		fprintf( file, "appl %s W "load_cNameAppl"\n",
-			 nodename_ptr, "$pwrp_load/", nodename_ptr, *bus_number_ptr);
+		fprintf( file, "appl %s W "load_cNameAppl" $pwrp_load/\n",
+			 nodename_ptr, "$pwrp_cnf/", nodename_ptr, *bus_number_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_PwrpAliasFile)
-		fprintf( file, "appl %s W $pwrp_load/pwrp_alias.dat $pwrp_load/pwrp_alias.dat\n", 
-		     nodename_ptr);
+		fprintf( file, "appl %s W $pwrp_cnf/%s/pwrp_alias.dat:$pwrp_cnf/pwrp_alias.dat $pwrp_load/pwrp_alias.dat\n", 
+			 nodename_ptr, nodename_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_IncludeFiles)
 		fprintf( file, "appl %s W $pwrp_inc/*.h\n", nodename_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_GraphFiles)
 		fprintf( file, "appl %s W $pwrp_exe/*.pwg\n", nodename_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_XttHelpFile)
-		fprintf( file, "appl %s W $pwrp_src/%s/xtt_help.dat:$pwrp_exe/xtt_help.dat $pwrp_exe/xtt_help.dat\n", 
+		fprintf( file, "appl %s W $pwrp_cnf/%s/xtt_help.dat:$pwrp_cnf/xtt_help.dat $pwrp_exe/xtt_help.dat\n", 
 			 nodename_ptr, nodename_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_XttResourceFile)
-		fprintf( file, "appl %s W $pwrp_src/%s/Rt_xtt:$pwrp_pop/Rt_xtt /home/b55/Rt_xtt\n", 
-			 nodename_ptr, nodename_ptr);
+		fprintf( file, "appl %s W $pwrp_cnf/%s/b55/Rt_xtt:$pwrp_cnf/%s/Rt_xtt:$pwrp_cnf/Rt_xtt /home/b55/Rt_xtt\n", 
+			 nodename_ptr, nodename_ptr, nodename_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_XttSetupFile)
-		fprintf( file, "appl %s W $pwrp_src/%s/xtt_setup.rtt_com:$pwrp_pop/xtt_setup.rtt_com /home/b55/xtt_setup.rtt_com\n", 
-			 nodename_ptr, nodename_ptr);
+		fprintf( file, "appl %s W $pwrp_cnf/%s/b55/xtt_setup.rtt_com:$pwrp_cnf/%s/xtt_setup.rtt_com:$pwrp_cnf/xtt_setup.rtt_com /home/b55/xtt_setup.rtt_com\n",
+			 nodename_ptr, nodename_ptr, nodename_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_FlowFiles)
 		fprintf( file, "appl %s W $pwrp_load/*.flw\n", nodename_ptr);
 	      if ( *components_ptr & pwr_mDistrComponentMask_RHostsFile)
@@ -2724,7 +2724,7 @@ pwr_tStatus lfu_check_appl_file( char *nodename, int bus_number)
   pwr_tFileName fname;
   pwr_tTime t;
 
-  sprintf( fname, load_cNameAppl, load_cDirectory, nodename, bus_number);
+  sprintf( fname, load_cNameAppl, "$pwrp_cnf/", nodename, bus_number);
   dcli_translate_filename( fname, fname);
 
   if ( ODD(dcli_file_time( fname, &t)))

@@ -23,6 +23,7 @@
 #include "co_msgwindow.h"
 #include "co_dcli.h"
 #include "co_time.h"
+#include "co_syi.h"
 #include "rt_load.h"
 #include "wb_foe_msg.h"
 #include "wb_pwrb_msg.h"
@@ -85,6 +86,8 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
   int bussid = -1;
   int rebuild = 1;
   pwr_tStatus status;
+  char currentnode[80];
+  pwr_tStatus sumsts;
 
   printf( "Build node %s\n", nodename);
 
@@ -141,18 +144,127 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
       }
     }
   }
+
   if ( opt.force || opt.manual || rebuild)
     m_sts = lfu_create_bootfile( nodename, (lfu_t_volumelist *)volumelist, volumecnt,
 				 opt.debug);
   else
     m_sts = PWRB__NOBUILT;
 
-  if ( m_sts != PWRB__NOBUILT) {
+
+  sumsts = m_sts;
+
+  syi_NodeName( &m_sts, currentnode, sizeof(currentnode));
+
+  if ( cdh_NoCaseStrcmp( nodename, currentnode) == 0) {
+    pwr_tFileName src_fname, dest_fname;
+    pwr_tCmd	cmd;
+    pwr_tTime	dest_time, src_time;
+
+
+    // Copy xtt_help.dat from $pwrp_cnf to $pwrp_exe
+    sprintf( src_fname, "$pwrp_cnf/%s/xtt_help.dat", nodename);
+    dcli_translate_filename( src_fname, src_fname);
+    m_sts = dcli_file_time( src_fname, &src_time);
+    if ( evenSts()) {
+      strcpy( src_fname, "$pwrp_cnf/xtt_help.dat");
+      dcli_translate_filename( src_fname, src_fname);
+      m_sts = dcli_file_time( src_fname, &src_time);
+      if ( evenSts()) {
+	char msg[200];
+	sprintf( msg, "File is missing $pwrp_cnf/xtt_help.dat");
+	MsgWindow::message('E', msg, msgw_ePop_Yes);
+      }
+    }
+
+    if ( oddSts()) {
+      strcpy( dest_fname, "$pwrp_exe/xtt_help.dat");
+      dcli_translate_filename( dest_fname, dest_fname);
+      m_sts = dcli_file_time( dest_fname, &dest_time);
+      if ( opt.force || evenSts() || src_time.tv_sec > dest_time.tv_sec) {
+	sprintf( cmd, "cp %s %s", src_fname, dest_fname);
+	system( cmd);
+	sprintf( cmd, "Build:    Copy %s -> $pwrp_exe", src_fname);
+	MsgWindow::message( 'I', cmd, msgw_ePop_No);
+	m_sts = PWRB__SUCCESS;
+      }
+      else
+	m_sts = PWRB__NOBUILT;
+    }  
+    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+      sumsts = m_sts;
+
+    // Copy pwrp_alias.dat from $pwrp_cnf to $pwrp_load
+    sprintf( src_fname, "$pwrp_cnf/%s/pwrp_alias.dat", nodename);
+    dcli_translate_filename( src_fname, src_fname);
+    m_sts = dcli_file_time( src_fname, &src_time);
+    if ( evenSts()) {
+      strcpy( src_fname, "$pwrp_cnf/pwrp_alias.dat");
+      dcli_translate_filename( src_fname, src_fname);
+      m_sts = dcli_file_time( src_fname, &src_time);
+    }
+    
+    if ( oddSts()) {
+      strcpy( dest_fname, "$pwrp_load/pwrp_alias.dat");
+      dcli_translate_filename( dest_fname, dest_fname);
+      m_sts = dcli_file_time( dest_fname, &dest_time);
+      if ( opt.force || evenSts() || src_time.tv_sec > dest_time.tv_sec) {
+	sprintf( cmd, "cp %s %s", src_fname, dest_fname);
+	system( cmd);
+	sprintf( cmd, "Build:    Copy %s -> $pwrp_load", src_fname);
+	MsgWindow::message( 'I', cmd, msgw_ePop_No);
+	m_sts = PWRB__SUCCESS;
+      }
+      else
+	m_sts = PWRB__NOBUILT;
+    }
+    else
+      m_sts = PWRB__NOBUILT;
+
+    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+      sumsts = m_sts;
+
+    // Copy ld_appl_...txt from $pwrp_cnf to $pwrp_exe
+    sprintf( src_fname, load_cNameAppl, "$pwrp_cnf", nodename, bussid);
+    dcli_translate_filename( src_fname, src_fname);
+    m_sts = dcli_file_time( src_fname, &src_time);
+    if ( evenSts()) {
+      char dir[80];
+      strcpy( dir, "$pwrp_cnf/");
+      sprintf( src_fname, load_cNameAppl, dir, nodename, bussid);
+      dcli_translate_filename( src_fname, src_fname);
+      m_sts = dcli_file_time( src_fname, &src_time);
+    }
+
+    if ( oddSts()) {
+      sprintf( dest_fname, load_cNameAppl, "$pwrp_exe/", nodename, bussid);
+      dcli_translate_filename( dest_fname, dest_fname);
+      m_sts = dcli_file_time( dest_fname, &dest_time);
+      if ( opt.force || evenSts() || src_time.tv_sec > dest_time.tv_sec) {
+	sprintf( cmd, "cp %s %s", src_fname, dest_fname);
+	system( cmd);
+	sprintf( cmd, "Build:    %s -> $pwrp_exe", src_fname);
+	MsgWindow::message( 'I', cmd, msgw_ePop_No);
+	m_sts = PWRB__SUCCESS;
+      }
+      else
+	m_sts = PWRB__NOBUILT;
+    }
+    else
+      m_sts = PWRB__NOBUILT;
+
+    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+      sumsts = m_sts;
+  }
+
+  if ( sumsts != PWRB__NOBUILT) {
     char msg[200];
 
     sprintf( msg, "Build:    Node     %s", nodename);
     MsgWindow::message('I', msg, msgw_ePop_No);
   }
+
+  m_sts = sumsts;
 }
 
 void wb_build::volume()

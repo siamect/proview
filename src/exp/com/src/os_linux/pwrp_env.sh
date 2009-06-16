@@ -471,6 +471,7 @@ pwrc_create_func()
   local proot
   local bname
   local pname
+  local platforms="x86_linux x86_64_linux"
   let argc=$#
 
   cmd="project"
@@ -536,33 +537,39 @@ pwrc_create_func()
 	return
       fi
     fi
-    mkdir $proot/login
-    mkdir $proot/common
-    mkdir $proot/common/src
-    mkdir $proot/common/src/pop
-    mkdir $proot/common/src/rtt
-    mkdir $proot/common/src/rttbld
-    mkdir $proot/common/src/tlog
-    mkdir $proot/common/load
-    mkdir $proot/common/db
-    mkdir $proot/common/inc
-    mkdir $proot/common/tmp
-    mkdir $proot/common/web
-    mkdir $proot/common/log
-    mkdir $proot/common/doc
-    mkdir $proot/$platform
-    mkdir $proot/$platform/exe
-    mkdir $proot/$platform/lib
-    mkdir $proot/$platform/obj
-    mkdir $proot/$platform/lis
+    mkdir $proot/bld
+    mkdir $proot/src
+    mkdir $proot/src/pop
+    mkdir $proot/src/rtt
+    mkdir $proot/src/tlog
+    mkdir $proot/src/login
+    mkdir $proot/src/db
+    mkdir $proot/src/doc
+    mkdir $proot/src/cnf
+    mkdir $proot/src/appl
+    mkdir $proot/bld/common
+    mkdir $proot/bld/common/load
+    mkdir $proot/bld/common/inc
+    mkdir $proot/bld/common/tmp
+    mkdir $proot/bld/common/web
+    mkdir $proot/bld/common/log
+    mkdir $proot/bld/common/rttbld
+    for pl in $platforms
+    do
+      mkdir $proot/bld/$pl
+      mkdir $proot/bld/$pl/exe
+      mkdir $proot/bld/$pl/lib
+      mkdir $proot/bld/$pl/obj
+      mkdir $proot/bld/$pl/lis
+    done
 
     # Create project info file
-    sysinfo="$proot/login/sysinfo.txt"
+    sysinfo="$proot/src/login/sysinfo.txt"
     echo "Revision history" >> $sysinfo
     echo "`date +%F`	$USER	Project created" >> $sysinfo
 
     # Create local setup script
-    cat > $proot/login/login.sh << EOF
+    cat > $proot/src/login/login.sh << EOF
 #! /bin/bash
 #
 #  Local setup 
@@ -570,7 +577,7 @@ pwrc_create_func()
 # Printer command for plc documents
 #export pwr_foe_gre_print="lpr -P lp1"
 
-if [ -e "$pwrp_login/sysinfo.txt" ]; then
+if [ -e "\$pwrp_login/sysinfo.txt" ]; then
   echo "-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_"
   echo "Welcome to"
   echo "\`\$pwr_exe/pwrp_env.sh show project\`"
@@ -580,10 +587,10 @@ if [ -e "$pwrp_login/sysinfo.txt" ]; then
 fi
 EOF
 
-    chmod a+x $proot/login/login.sh
+    chmod a+x $proot/src/login/login.sh
 
     # Create a xtt_help.dat
-    cat > $proot/$platform/exe/xtt_help.dat << EOF
+    cat > $proot/src/cnf/xtt_help.dat << EOF
 <topic> index
 
 <image> pwr_logga.gif
@@ -849,24 +856,26 @@ pwrc_set_func()
     fi
 
     export pwrp_root=$proot
-    export pwrp_login=$pwrp_root/login
-    export pwrp_src=$pwrp_root/common/src
-    export pwrp_pop=$pwrp_root/common/src/pop
-    export pwrp_rtt=$pwrp_root/common/src/rtt
-    export pwrp_rttbld=$pwrp_root/common/src/rttbld
-    export pwrp_tlog=$pwrp_root/common/src/tlog
-    export pwrp_load=$pwrp_root/common/load
-    export pwrp_db=$pwrp_root/common/db
-    export pwrp_inc=$pwrp_root/common/inc
+    export pwrp_login=$pwrp_root/src/login
+    export pwrp_src=$pwrp_root/src
+    export pwrp_pop=$pwrp_root/src/pop
+    export pwrp_rtt=$pwrp_root/src/rtt
+    export pwrp_appl=$pwrp_root/src/appl
+    export pwrp_doc=$pwrp_root/src/doc
+    export pwrp_db=$pwrp_root/src/db
+    export pwrp_cnf=$pwrp_root/src/cnf
+    export pwrp_tlog=$pwrp_root/src/tlog
+    export pwrp_rttbld=$pwrp_root/bld/common/rttbld
+    export pwrp_load=$pwrp_root/bld/common/load
+    export pwrp_inc=$pwrp_root/bld/common/inc
+    export pwrp_tmp=$pwrp_root/bld/common/tmp
+    export pwrp_web=$pwrp_root/bld/common/web
+    export pwrp_log=$pwrp_root/bld/common/log
+    export pwrp_exe=$pwrp_root/bld/$platform/exe
+    export pwrp_lib=$pwrp_root/bld/$platform/lib
+    export pwrp_obj=$pwrp_root/bld/$platform/obj
+    export pwrp_lis=$pwrp_root/bld/$platform/lis
     export pwrp_cmn=$pwrp_root
-    export pwrp_tmp=$pwrp_root/common/tmp
-    export pwrp_web=$pwrp_root/common/web
-    export pwrp_log=$pwrp_root/common/log
-    export pwrp_doc=$pwrp_root/common/doc
-    export pwrp_exe=$pwrp_root/$platform/exe
-    export pwrp_lib=$pwrp_root/$platform/lib
-    export pwrp_obj=$pwrp_root/$platform/obj
-    export pwrp_lis=$pwrp_root/$platform/lis
 
     export PATH=$PATH:$pwrp_exe
     export CDPATH=
