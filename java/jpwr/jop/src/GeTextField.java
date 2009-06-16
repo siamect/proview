@@ -164,6 +164,7 @@ public class GeTextField extends JTextField implements GeComponentIfc,
   public void setShadow( int shadow) {}
   public void tsetBorderColor( int borderColor) {}
   public void tsetTextColor( int borderColor) {}
+  public void setTextColor( int borderColor) {}
   public void setColorInverse( int colorInverse) {} 
   public void resetFillColor() { 
     fillColor = originalFillColor;
