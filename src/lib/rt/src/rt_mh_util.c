@@ -356,7 +356,7 @@ mh_UtilStartScanSup (
 
   head.xdr	= FALSE;
   head.ver	= mh_cVersion;
-  sts = time_GetTime(&head.birthTime);
+  sts = net_GetTime(&head.birthTime);
   head.qid	= source;
   co_GetOwnPlatform(&head.platform);
   head.source	= mh_eSource_Pcm;
@@ -388,7 +388,7 @@ mh_UtilStopScanSup (
 
   head.xdr = FALSE;
   head.ver = mh_cVersion;
-  sts = time_GetTime(&head.birthTime);
+  sts = net_GetTime(&head.birthTime);
   head.qid = source;
   co_GetOwnPlatform(&head.platform);
   head.source = mh_eSource_Pcm;

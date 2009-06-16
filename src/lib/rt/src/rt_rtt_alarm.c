@@ -1322,7 +1322,7 @@ static int	rtt_menu_alarm_list_add(
 	menu_ptr->arg2 = arg2;
 	menu_ptr->arg3 = arg3;
 	menu_ptr->arg4 = arg4;
-        menu_ptr->time = EventP->Info.EventTime; 
+        menu_ptr->time = net_NetTimeToTime( &EventP->Info.EventTime); 
         strncpy( menu_ptr->eventname, EventP->Info.EventName,
 			sizeof( menu_ptr->eventname));
         strncpy( menu_ptr->eventtext, EventP->Msg.EventText, 80); 

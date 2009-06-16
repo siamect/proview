@@ -298,7 +298,7 @@ mh_OutunitConnect (
   l.head.platform.hw = myNode.hw;
 
   l.head.source = mh_eSource_Outunit;
-  time_GetTime(&l.head.birthTime);
+  net_GetTime(&l.head.birthTime);
   l.head.outunit = outunit;
   sts = gdh_GetNodeIndex(&l.head.nix);
   if (EVEN(sts)) return sts;
@@ -926,7 +926,7 @@ isValidHandler (
   if (hl == LstEnd(&l.handler_l))  {
     /* Handler not known, make it known */
     hp = (sHandler*) calloc(1, sizeof(*hp));
-    hp->birthTime = p->birthTime;
+    hp->birthTime = net_NetTimeToTime( &p->birthTime);
     hp->qid = p->qid;
     hp->aid = *aid;
     hp->platform = p->platform;
@@ -941,7 +941,7 @@ isValidHandler (
 
     if (memcmp(&hp->birthTime, &p->birthTime, sizeof(hp->birthTime)) != 0) {
       /* Different times, i.e. the handler is restarted */
-      hp->birthTime = p->birthTime;
+      hp->birthTime = net_NetTimeToTime( &p->birthTime);
       hp->qid = p->qid;
       hp->aid = *aid;
       ackListDestroy(hp);

@@ -558,7 +558,7 @@ int main ()
   /* Init Handler head */
 
   l.head.ver = mh_cVersion;
-  time_GetTime(&l.head.birthTime);
+  net_GetTime( &l.head.birthTime);
   l.head.source = mh_eSource_Handler;
 
   l.head.nix = l.head.qid.nid;
@@ -1494,7 +1494,7 @@ formatApplEvent (
   case mh_eEvent_Info:
     mp = &up->message;
     ip->Id.Idx = aap->link.idx;
-    ip->EventTime = aap->message.EventTime;
+    ip->EventTime = net_TimeToNetTime( &aap->message.EventTime);
     if (aap->link.event == mh_eEvent_Alarm)
       ip->EventPrio = aap->message.EventPrio;
     strncpy(mp->EventText, aap->message.EventText, sizeof(mp->EventText));
@@ -1507,13 +1507,13 @@ formatApplEvent (
   case mh_eEvent_Ack:
     acp = &up->ack;
     ip->Id.Idx = aap->link.ackIdx;
-    ip->EventTime = aap->ackTime;
+    ip->EventTime = net_TimeToNetTime( &aap->ackTime);
     if (aap->link.event == mh_eEvent_Alarm)
       ip->EventPrio = aap->message.EventPrio;
     acp->TargetId.Nix = l.head.nix;
     acp->TargetId.BirthTime = l.head.birthTime;
     acp->TargetId.Idx = aap->link.idx;
-    acp->DetectTime = aap->message.EventTime;
+    acp->DetectTime = net_TimeToNetTime( &aap->message.EventTime);
     acp->Outunit = aap->ackOutunit;
     acp->SupInfo.SupType = aap->message.SupInfo.SupType;
     memcpy(&acp->SupInfo, &aap->message.SupInfo, sizeof(mh_uSupInfo));
@@ -1522,14 +1522,14 @@ formatApplEvent (
   case mh_eEvent_Cancel:
     rp = &up->ret;
     ip->Id.Idx = aap->link.returnIdx;
-    time_GetTime(&ip->EventTime);
+    net_GetTime(&ip->EventTime);
     if (aap->link.event == mh_eEvent_Alarm)
       ip->EventPrio = aap->message.EventPrio;
     strncpy(rp->EventText, text, sizeof(rp->EventText));
     rp->TargetId.Nix = l.head.nix;
     rp->TargetId.BirthTime = l.head.birthTime;
     rp->TargetId.Idx = aap->link.idx;
-    rp->DetectTime = aap->message.EventTime;
+    rp->DetectTime = net_TimeToNetTime( &aap->message.EventTime);
     rp->SupInfo.SupType = aap->message.SupInfo.SupType;
     memcpy(&rp->SupInfo, &aap->message.SupInfo, sizeof(mh_uSupInfo));
     *size = sizeof(mh_sReturn);
@@ -1537,14 +1537,14 @@ formatApplEvent (
   case mh_eEvent_Return:
     rp = &up->ret;
     ip->Id.Idx = aap->link.returnIdx;
-    ip->EventTime = aap->returnTime;
+    ip->EventTime = net_TimeToNetTime( &aap->returnTime);
     if (aap->link.event == mh_eEvent_Alarm)
       ip->EventPrio = aap->message.EventPrio;
     strncpy(rp->EventText, aap->returnText, sizeof(rp->EventText));
     rp->TargetId.Nix = l.head.nix;
     rp->TargetId.BirthTime = l.head.birthTime;
     rp->TargetId.Idx = aap->link.idx;
-    rp->DetectTime = aap->message.EventTime;
+    rp->DetectTime = net_TimeToNetTime( &aap->message.EventTime);
     rp->SupInfo.SupType = aap->message.SupInfo.SupType;
     memcpy(&rp->SupInfo, &aap->message.SupInfo, sizeof(mh_uSupInfo));
     *size = sizeof(mh_sReturn);
@@ -1584,7 +1584,7 @@ formatSupEvent (
   case mh_eEvent_Info:
     mp = &up->message;
     ip->Id.Idx = sp->link.idx;
-    ip->EventTime = sup->DetectTime;
+    ip->EventTime = net_TimeToNetTime( &sup->DetectTime);
     strncpy(mp->EventText, sup->DetectText, sizeof(mp->EventText));
     if (sp->link.event == mh_eEvent_Alarm)
       ip->EventPrio = sup->EventPriority;
@@ -1603,27 +1603,27 @@ formatSupEvent (
   case mh_eEvent_Ack:
     acp = &up->ack;
     ip->Id.Idx = sp->link.ackIdx;
-    ip->EventTime = sup->AckTime;
+    ip->EventTime = net_TimeToNetTime( &sup->AckTime);
     if (sp->link.event == mh_eEvent_Alarm)
       ip->EventPrio = sup->EventPriority;
     acp->TargetId.Idx = sp->link.idx;
     acp->TargetId.Nix = l.head.nix;
     acp->TargetId.BirthTime = l.head.birthTime;
-    acp->DetectTime = sup->DetectTime;
+    acp->DetectTime = net_TimeToNetTime( &sup->DetectTime);
     acp->Outunit = sup->AckOutunit;
     *size = sizeof(mh_sAck);
     break;
   case mh_eEvent_Return:
     rp = &up->ret;
     ip->Id.Idx = sp->link.returnIdx;
-    ip->EventTime = sup->ReturnTime;
+    ip->EventTime = net_TimeToNetTime( &sup->ReturnTime);
     if (sp->link.event == mh_eEvent_Alarm)
       ip->EventPrio = sup->EventPriority;
     strncpy(rp->EventText, sup->ReturnText, sizeof(rp->EventText));
     rp->TargetId.Idx = sp->link.idx;
     rp->TargetId.Nix = l.head.nix;
     rp->TargetId.BirthTime = l.head.birthTime;
-    rp->DetectTime = sup->DetectTime;
+    rp->DetectTime = net_TimeToNetTime( &sup->DetectTime);
     rp->SupInfo.SupType = sp->supType;
 #if 1
     if (sp->supInfoSize > sizeof(rp->SupInfo.mh_uSupInfo_u)) {
@@ -1639,12 +1639,12 @@ formatSupEvent (
     ip->Id.Idx = sp->link.returnIdx;
     if (sp->link.event == mh_eEvent_Alarm)
       ip->EventPrio = sup->EventPriority;
-    time_GetTime(&ip->EventTime);
+    net_GetTime(&ip->EventTime);
     strncpy(rp->EventText, text, sizeof(rp->EventText));
     rp->TargetId.Idx = sp->link.idx;
     rp->TargetId.Nix = l.head.nix;
     rp->TargetId.BirthTime = l.head.birthTime;
-    rp->DetectTime = sup->DetectTime;
+    rp->DetectTime = net_TimeToNetTime( &sup->DetectTime);
     rp->SupInfo.SupType = sp->supType;
 #if 1
     if (sp->supInfoSize > sizeof(rp->SupInfo.mh_uSupInfo_u)) {
@@ -2832,7 +2832,7 @@ isValidApplication (
     ap->link.qid = hp->qid;
     ap->link.aid = *aid; /* QCOM ApplId */
     ap->link.platform = hp->platform;
-    ap->birthTime = hp->birthTime;
+    ap->birthTime = net_NetTimeToTime( &hp->birthTime);
     ap->aid = hp->aid;
     ap->state = mh_eApplState_New;
     /* Insert in application list */
@@ -2849,7 +2849,7 @@ isValidApplication (
       ap->link.qid = hp->qid;
       ap->link.aid = *aid; /* QCOM ApplId */
       ap->link.platform = hp->platform;
-      ap->birthTime = hp->birthTime;
+      ap->birthTime = net_NetTimeToTime( &hp->birthTime);
       ap->aid = hp->aid;
       ap->state = mh_eApplState_Restarted;
     }
@@ -2895,7 +2895,7 @@ isValidOutunit (
     op->link.aid = *aid; /* QCOM ApplId */
     op->link.platform = hp->platform;
     op->link.nix = hp->nix;
-    op->birthTime = hp->birthTime;
+    op->birthTime = net_NetTimeToTime( &hp->birthTime);
     op->outunit = hp->outunit;
     /* Insert in outunit list */
     LstIns(&l.outunit_l, op, outunit_l);   
@@ -2913,7 +2913,7 @@ isValidOutunit (
       op->link.aid = *aid; /* QCOM ApplId */
       op->link.platform = hp->platform;
       op->link.nix = hp->nix;
-      op->birthTime = hp->birthTime;
+      op->birthTime = net_NetTimeToTime( &hp->birthTime);
       op->outunit = hp->outunit;
       op->selGen = 0;
       op->eventGen = 0;
@@ -3152,7 +3152,7 @@ outunitBlock (
   switch (bp->link.event) {
   case mh_eEvent_Block:
     bp->outunitBlock = *ip;
-    time_GetTime(&bp->outunitBlock.time);      /* Update block time */
+    net_GetTime(&bp->outunitBlock.time);      /* Update block time */
     bp->link.status.Event.Prio = (pwr_tUInt8) ip->prio;
     bp->link.status.Event.Status = mh_mEventStatus_Block;
     bp->targetId.Nix = l.head.nix;
@@ -3161,13 +3161,13 @@ outunitBlock (
   case mh_eEvent_Reblock:
     bp->outunitUnblock = bp->outunitBlock;
     bp->outunitBlock = *ip;
-    time_GetTime(&bp->outunitBlock.time);      /* Update block time */
+    net_GetTime(&bp->outunitBlock.time);      /* Update block time */
     bp->link.status.Event.Prio = (pwr_tUInt8) ip->prio;
     bp->link.status.Event.Status = mh_mEventStatus_Block;
     break;
   case mh_eEvent_Unblock:
     bp->outunitUnblock = *ip;
-    time_GetTime(&bp->outunitUnblock.time);   /* Update unblock time */
+    net_GetTime(&bp->outunitUnblock.time);   /* Update unblock time */
     bp->link.status.All = 0;
     break;
   default:

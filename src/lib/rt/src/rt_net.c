@@ -784,3 +784,15 @@ net_sTime net_DeltaTimeToNetTime( const pwr_tDeltaTime *t)
 
   return nt;
 }
+
+int net_GetTime( net_sTime *nt)
+{
+  int sts;
+  pwr_tTime t;
+
+  sts = time_GetTime( &t);
+  
+  nt->tv_sec = t.tv_sec;
+  nt->tv_nsec = t.tv_nsec;
+  return sts;
+}

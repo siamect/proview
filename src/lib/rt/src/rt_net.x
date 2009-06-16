@@ -1407,6 +1407,8 @@ struct net_sFileList {
 %net_sTime net_TimeToNetTime( const pwr_tTime *t);
 %pwr_tDeltaTime net_NetTimeToDeltaTime( const net_sTime *nt);
 %net_sTime net_DeltaTimeToNetTime( const pwr_tDeltaTime *t);
+%net_sTime net_DeltaTimeToNetTime( const pwr_tDeltaTime *t);
+%int net_GetTime( net_sTime *nt);
 %
 %#endif
 %

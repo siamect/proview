@@ -29,6 +29,10 @@
 %# include "co_xdr.h"
 %#endif
 %
+%#ifndef rt_net_h
+%#include "rt_net.h"
+%#endif
+%
 %#ifndef rt_mh_h
 %# include "rt_mh.h"
 %#endif
@@ -294,7 +298,7 @@ struct mh_sHead {
   co_sPlatform		platform;
   pwr_tUInt32		ver; 
   mh_eSource		source;
-  pwr_tTime		birthTime;
+  net_sTime		birthTime;
   mh_eMsg		type;
   qcom_sQid		qid;
   pwr_tNodeIndex	nix;
@@ -317,7 +321,7 @@ struct mh_sOutunitBlock {
   pwr_tObjid		object;
   pwr_tObjid		outunit;
   mh_eEventPrio		prio;
-  pwr_tTime		time;
+  net_sTime		time;
 };
 
 struct mh_sSelL {
@@ -327,7 +331,7 @@ struct mh_sSelL {
 
 struct mh_sEventId {
   pwr_tNodeIndex	Nix;
-  pwr_tTime		BirthTime;
+  net_sTime		BirthTime;
   pwr_tUInt32		Idx;
 };
 
@@ -337,7 +341,7 @@ struct mh_sMsgInfo {
   pwr_tObjid		Outunit;
   pwr_tObjid		SupObject;
   mh_mEventFlags	EventFlags;
-  pwr_tTime		EventTime;
+  net_sTime		EventTime;
   pwr_tString80		EventName;
   mh_eEvent		EventType;
   mh_eEventPrio		EventPrio;
@@ -346,7 +350,7 @@ struct mh_sMsgInfo {
 struct mh_sAck {
   mh_sMsgInfo		Info;
   mh_sEventId		TargetId;
-  pwr_tTime		DetectTime;
+  net_sTime		DetectTime;
   pwr_tObjid		Outunit;
   mh_uSupInfo		SupInfo;
 };
@@ -354,7 +358,7 @@ struct mh_sAck {
 struct mh_sBlock {
   mh_sMsgInfo		Info;
   mh_sEventId		TargetId;
-  pwr_tTime		DetectTime;
+  net_sTime		DetectTime;
   pwr_tObjid		Outunit;
   mh_mEventStatus	Status;
 };
@@ -372,7 +376,7 @@ struct mh_sReturn {
   mh_sMsgInfo		Info;
   pwr_tString80		EventText;
   mh_sEventId		TargetId;
-  pwr_tTime		DetectTime;
+  net_sTime		DetectTime;
   mh_uSupInfo		SupInfo;
 };
 

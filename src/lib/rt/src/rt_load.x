@@ -23,9 +23,6 @@
 %
 %/* rt_load.h -- load data files
 %
-%   PROVIEW/R
-%   Copyright (C) 1993-1997, 99 by Mandator AB.
-%
 %   This file defines the data structures needed to create and read
 %   load data files.  */
 %
@@ -33,18 +30,18 @@
 %# include "co_xdr.h"
 %#endif
 %
-%#define load_cLffVersionStr	"V2.3.1"
+%#define load_cLffVersionStr	"V4.7.0"
 %
 %#if defined OS_VMS || defined OS_ELN
 %# define	load_cNameDirectory	"pwrp_load:"
 %# define	load_cDirectory		"pwrp_load:"
 %# define	load_cNamePlc		"%splc_%s_%04d_%05d.exe"
 %
-%# define	load_cNameBootList	"pwrp_root:[common.db]pwrp_cnf_bootlist.dat"
-%# define	load_cNameVolumeList	"pwrp_root:[common.db]pwrp_cnf_volumelist.dat"
-%# define	load_cNamePlcVersion	"pwrp_root:[common.db]pwrp_cnf_plcvers_%s.dat"
-%# define	load_cNameDistribute	"pwrp_root:[common.db]pwrp_cnf_distribute.dat"
-%# define	load_cNameSysObject	"pwrp_root:[common.db]pwrp_cnf_sysobject.dat"
+%# define	load_cNameBootList	"pwrp_root:[src.db]pwrp_cnf_bootlist.dat"
+%# define	load_cNameVolumeList	"pwrp_root:[src.db]pwrp_cnf_volumelist.dat"
+%# define	load_cNamePlcVersion	"pwrp_root:[src.db]pwrp_cnf_plcvers_%s.dat"
+%# define	load_cNameDistribute	"pwrp_root:[src.db]pwrp_cnf_distribute.dat"
+%# define	load_cNameSysObject	"pwrp_root:[src.db]pwrp_cnf_sysobject.dat"
 %# define	load_cNameGblVolumeList	"pwra_db:pwr_volumelist.dat"
 %# define       load_cNameRttCrr         "rtt_crr_%03.3d_%03.3d_%03.3d_%03.3d.dat"
 %# define       load_cNameRttCrrObj      "rtt_crro_%03.3d_%03.3d_%03.3d_%03.3d.dat"
@@ -57,20 +54,20 @@
 %# define	load_cDirectory		"$pwrp_load/"
 %# define	load_cNamePlc		"%splc_%s_%04d_%05d"
 %
-%# define	load_cNameBootList	"$pwrp_root/common/db/pwrp_cnf_bootlist.dat"
-%# define	load_cNameVolumeList	"$pwrp_root/common/db/pwrp_cnf_volumelist.dat"
-%# define	load_cNamePlcVersion	"$pwrp_root/common/db/pwrp_cnf_plcvers_%s.dat"
-%# define	load_cNameDistribute	"$pwrp_root/common/db/pwrp_cnf_distribute.dat"
-%# define	load_cNameSysObject	"$pwrp_root/common/db/pwrp_cnf_sysobject.dat"
-%# define	load_cNameFilePath	"$pwrp_root/common/db/pwrp_cnf_dirlist.dat"
-%# define	load_cNameLocalWb	 "$pwrp_root/common/db/wb.wb_load"
+%# define	load_cNameBootList	"$pwrp_root/src/db/pwrp_cnf_bootlist.dat"
+%# define	load_cNameVolumeList	"$pwrp_root/src/db/pwrp_cnf_volumelist.dat"
+%# define	load_cNamePlcVersion	"$pwrp_root/src/db/pwrp_cnf_plcvers_%s.dat"
+%# define	load_cNameDistribute	"$pwrp_root/src/db/pwrp_cnf_distribute.dat"
+%# define	load_cNameSysObject	"$pwrp_root/src/db/pwrp_cnf_sysobject.dat"
+%# define	load_cNameFilePath	"$pwrp_root/src/db/pwrp_cnf_dirlist.dat"
+%# define	load_cNameLocalWb	"$pwrp_root/src/db/wb.wb_load"
 %# define	load_cNameGblVolumeList	"$pwra_db/pwr_volumelist.dat"
 %# define	load_cNameCmnVolumeList	"pwr_volumelist.dat"
-%# define       load_cNameRttCrr         "rtt_crr_%3.3d_%3.3d_%3.3d_%3.3d.dat"
-%# define       load_cNameRttCrrObj      "rtt_crro_%3.3d_%3.3d_%3.3d_%3.3d.dat"
-%# define       load_cNameRttCrrCode     "rtt_crrc_%3.3d_%3.3d_%3.3d_%3.3d.dat"
-%# define       load_cNameRttPlc         "rtt_plc_%3.3d_%3.3d_%3.3d_%3.3d.dat"
-%# define       load_cNamePkg            "pwrp_pkg_%s_%04d.tgz"
+%# define       load_cNameRttCrr        "rtt_crr_%3.3d_%3.3d_%3.3d_%3.3d.dat"
+%# define       load_cNameRttCrrObj     "rtt_crro_%3.3d_%3.3d_%3.3d_%3.3d.dat"
+%# define       load_cNameRttCrrCode    "rtt_crrc_%3.3d_%3.3d_%3.3d_%3.3d.dat"
+%# define       load_cNameRttPlc        "rtt_plc_%3.3d_%3.3d_%3.3d_%3.3d.dat"
+%# define       load_cNamePkg           "pwrp_pkg_%s_%04d.tgz"
 %#endif
 %
 %
