@@ -50,8 +50,10 @@ typedef struct {
   pwr_tRefId 	refid;
 } sJid;
 
+#if defined OS_LINUX && defined HW_X86_64
 static tree_sTable *jid_table = 0;
 static int jid_next = 1;
+#endif
 
 static int gdh_ExtractNameSuffix(	char   *Name,
                           		char   **Suffix);

@@ -235,7 +235,7 @@ Insert (
   memset(&data, 0, sizeof(data));
   
   eventKey.Id = ip->Id;
-  eventKey.EventTime = ip->EventTime;
+  eventKey.EventTime = net_NetTimeToTime( &ip->EventTime);
   
   /* copy the data do the DBT-structs*/
   key.data = (void *)&eventKey;
@@ -426,7 +426,7 @@ CopyEvent (
   sp = malloc(sizeof(sEvent));
 
   sp->EventType = ip->EventType;
-  sp->EventTime = ip->EventTime;
+  sp->EventTime = net_NetTimeToTime( &ip->EventTime);
 
   switch (ip->EventType) {
   case mh_eEvent_Alarm:

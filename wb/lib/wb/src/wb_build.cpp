@@ -87,6 +87,7 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
   int rebuild = 1;
   pwr_tStatus status;
   char currentnode[80];
+  char node[80];
   pwr_tStatus sumsts;
 
   printf( "Build node %s\n", nodename);
@@ -118,6 +119,7 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
 	  if ( EVEN(status)) {
 	    rebuild = 1;
 	  }	 
+	  strcpy( node, vlist[i].p2);
 	}
       
 	if ( vlist[i].volume_id == m_session.vid()) {
@@ -156,14 +158,14 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
 
   syi_NodeName( &m_sts, currentnode, sizeof(currentnode));
 
-  if ( cdh_NoCaseStrcmp( nodename, currentnode) == 0) {
+  if ( cdh_NoCaseStrcmp( node, currentnode) == 0) {
     pwr_tFileName src_fname, dest_fname;
     pwr_tCmd	cmd;
     pwr_tTime	dest_time, src_time;
 
 
     // Copy xtt_help.dat from $pwrp_cnf to $pwrp_exe
-    sprintf( src_fname, "$pwrp_cnf/%s/xtt_help.dat", nodename);
+    sprintf( src_fname, "$pwrp_cnf/%s/xtt_help.dat", node);
     dcli_translate_filename( src_fname, src_fname);
     m_sts = dcli_file_time( src_fname, &src_time);
     if ( evenSts()) {
@@ -195,7 +197,7 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
       sumsts = m_sts;
 
     // Copy pwrp_alias.dat from $pwrp_cnf to $pwrp_load
-    sprintf( src_fname, "$pwrp_cnf/%s/pwrp_alias.dat", nodename);
+    sprintf( src_fname, "$pwrp_cnf/%s/pwrp_alias.dat", node);
     dcli_translate_filename( src_fname, src_fname);
     m_sts = dcli_file_time( src_fname, &src_time);
     if ( evenSts()) {
@@ -224,26 +226,26 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
     if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
       sumsts = m_sts;
 
-    // Copy ld_appl_...txt from $pwrp_cnf to $pwrp_exe
-    sprintf( src_fname, load_cNameAppl, "$pwrp_cnf", nodename, bussid);
+    // Copy ld_appl_...txt from $pwrp_cnf to $pwrp_load
+    sprintf( src_fname, load_cNameAppl, "$pwrp_cnf", node, bussid);
     dcli_translate_filename( src_fname, src_fname);
     m_sts = dcli_file_time( src_fname, &src_time);
     if ( evenSts()) {
       char dir[80];
       strcpy( dir, "$pwrp_cnf/");
-      sprintf( src_fname, load_cNameAppl, dir, nodename, bussid);
+      sprintf( src_fname, load_cNameAppl, dir, node, bussid);
       dcli_translate_filename( src_fname, src_fname);
       m_sts = dcli_file_time( src_fname, &src_time);
     }
 
     if ( oddSts()) {
-      sprintf( dest_fname, load_cNameAppl, "$pwrp_exe/", nodename, bussid);
+      sprintf( dest_fname, load_cNameAppl, "$pwrp_load/", node, bussid);
       dcli_translate_filename( dest_fname, dest_fname);
       m_sts = dcli_file_time( dest_fname, &dest_time);
       if ( opt.force || evenSts() || src_time.tv_sec > dest_time.tv_sec) {
 	sprintf( cmd, "cp %s %s", src_fname, dest_fname);
 	system( cmd);
-	sprintf( cmd, "Build:    %s -> $pwrp_exe", src_fname);
+	sprintf( cmd, "Build:    %s -> $pwrp_load", src_fname);
 	MsgWindow::message( 'I', cmd, msgw_ePop_No);
 	m_sts = PWRB__SUCCESS;
       }

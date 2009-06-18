@@ -276,19 +276,19 @@ struct s_SupActive {
 };
 
 struct s_ASup {
-  pwr_tFloat32    *InP;
-  pwr_tFloat32    In;
-  sSup	  Sup;
-  mh_sASupInfo    Info;
-  sTimer	  Timer;
+  pwr_tFloat32    *InP  pwr_dAlignLW;
+  pwr_tFloat32    In    pwr_dAlignLW;
+  sSup	  	  Sup   pwr_dAlignLW;
+  mh_sASupInfo    Info  pwr_dAlignW;
+  sTimer	  Timer pwr_dAlignLW;
 };
 
 struct s_DSup {
-  pwr_tBoolean    *InP;
-  pwr_tBoolean    In;
-  sSup	  Sup;
-  mh_sDSupInfo    Info;
-  sTimer	  Timer;
+  pwr_tBoolean    *InP   pwr_dAlignLW;
+  pwr_tBoolean    In     pwr_dAlignLW;
+  sSup	  	  Sup	 pwr_dAlignLW;
+  mh_sDSupInfo    Info   pwr_dAlignW;
+  sTimer	  Timer  pwr_dAlignLW;
 };
 
 struct s_ApplActive {
@@ -2843,7 +2843,7 @@ isValidApplication (
   } else {
     ap = LstObj(al);
 
-    if (memcmp(&ap->birthTime, &hp->birthTime, sizeof(ap->birthTime)) != 0) {
+    if (ap->birthTime.tv_sec != hp->birthTime.tv_sec) {
       /* Different times, i.e. the application is restarted */
       ap->link.source = mh_eSource_Application;
       ap->link.qid = hp->qid;
@@ -2906,7 +2906,7 @@ isValidOutunit (
   } else {
     op = LstObj(ol);
 
-    if (memcmp(&op->birthTime, &hp->birthTime, sizeof(op->birthTime)) != 0) {
+    if (op->birthTime.tv_sec != hp->birthTime.tv_sec) {
       /* Different times, i.e. the outunit is restarted */
       op->link.source = mh_eSource_Outunit;
       op->link.qid = hp->qid;

@@ -391,7 +391,7 @@ void CompOnOffBurnerFo_exec( plc_sThread		*tp,
   pwr_tFloat32 Cnt;
 
   zono = (pwr_sClass_CompOnOffZoneFo *)
-    ((char *)o->InP - sizeof(pwr_tAttrRef) - 24);
+    ((char *)o->InP - (sizeof(pwr_sClass_CompOnOffZoneFo) - pwr_AlignLW(sizeof(pwr_tFloat32))));
   zonco = (pwr_sClass_CompOnOffZone *)zono->PlcConnectP;
 
   if ( !co || !zonco)

@@ -74,7 +74,7 @@
   ) {							\
     if (o->Action) o->Action = FALSE;			\
     if (o->ReturnCheck) {				\
-      clock_gettime(CLOCK_REALTIME, &o->ReturnTime);	\
+      time_GetTime(&o->ReturnTime);	\
       o->ReturnCheck = FALSE;				\
       o->ReturnSend = TRUE;				\
     }							\
@@ -90,7 +90,7 @@
       if (o->DetectCheck) {				\
 	o->ActualValue = In;				\
 	timer_in(tp, o);				\
-	clock_gettime(CLOCK_REALTIME, &o->DetectTime);	\
+	time_GetTime(&o->DetectTime);			\
 	o->DetectCheck = FALSE;				\
       }							\
       if (!o->TimerFlag) {				\
@@ -135,7 +135,7 @@
   if (In != o->CtrlPosition) {				\
     if (o->Action) o->Action = FALSE;			\
     if (o->ReturnCheck) {				\
-      clock_gettime(CLOCK_REALTIME, &o->ReturnTime);	\
+      time_GetTime( &o->ReturnTime);			\
       o->ReturnCheck = FALSE;				\
       o->ReturnSend = TRUE;				\
     }							\
@@ -149,7 +149,7 @@
       if (o->DetectCheck) {				\
 	o->ActualValue = In;				\
 	timer_in(tp, o);				\
-	clock_gettime(CLOCK_REALTIME, &o->DetectTime);	\
+        time_GetTime(&o->DetectTime);	\
 	o->DetectCheck = FALSE;				\
       }							\
       if (!o->TimerFlag) {				\

@@ -76,6 +76,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Mh_outunitAck
   jfieldID idx_fid;
   jfieldID birthTime_fid;
   jclass mhrsEventId_class;
+  pwr_tTime t;
 
   jclass pwrtStatus_id = NULL;
   static jmethodID pwrtStatus_cid = NULL;
@@ -145,7 +146,8 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Mh_outunitAck
     sts = -1;//out of memory
   }
   
-  time_AsciiToA(str_copy, &eventId.BirthTime);
+  t = net_NetTimeToTime( &eventId.BirthTime);
+  time_AsciiToA(str_copy, &t);
   
   sts = mh_OutunitAck(&eventId);
   (*env)->ReleaseStringUTFChars(env,jstr,str_copy);
@@ -319,9 +321,9 @@ pwr_tStatus ev_mh_ack_bc( mh_sAck *MsgP)
   char birthTime_str[40];
   pwr_tObjid objid = MsgP->Info.SupObject;
   
-  pwr_tTime time = MsgP->Info.EventTime;
-  pwr_tTime birthTime = MsgP->Info.Id.BirthTime;
-  pwr_tTime targetBirthTime = MsgP->TargetId.BirthTime;
+  pwr_tTime time = net_NetTimeToTime( &MsgP->Info.EventTime);
+  pwr_tTime birthTime = net_NetTimeToTime( &MsgP->Info.Id.BirthTime);
+  pwr_tTime targetBirthTime = net_NetTimeToTime( &MsgP->TargetId.BirthTime);
   
   //hämta enviormentpekaren
   (*jvm)->AttachCurrentThread(jvm,(void **)&env,NULL);
@@ -406,9 +408,9 @@ pwr_tStatus ev_mh_return_bc( mh_sReturn *MsgP)
   char birthTime_str[40];
   
   pwr_tObjid objid = MsgP->Info.Object;
-  pwr_tTime time = MsgP->Info.EventTime;
-  pwr_tTime birthTime = MsgP->Info.Id.BirthTime;
-  pwr_tTime targetBirthTime = MsgP->TargetId.BirthTime;
+  pwr_tTime time = net_NetTimeToTime( &MsgP->Info.EventTime);
+  pwr_tTime birthTime = net_NetTimeToTime( &MsgP->Info.Id.BirthTime);
+  pwr_tTime targetBirthTime = net_NetTimeToTime( &MsgP->TargetId.BirthTime);
   
   //hämta enviormentpekaren
   (*jvm)->AttachCurrentThread(jvm,(void **)&env,NULL);
@@ -491,8 +493,8 @@ pwr_tStatus ev_mh_alarm_bc( mh_sMessage *MsgP)
   char birthTime_str[40];
   
   pwr_tObjid objid = MsgP->Info.Object;
-  pwr_tTime time = MsgP->Info.EventTime;
-  pwr_tTime birthTime = MsgP->Info.Id.BirthTime;
+  pwr_tTime time = net_NetTimeToTime( &MsgP->Info.EventTime);
+  pwr_tTime birthTime = net_NetTimeToTime( &MsgP->Info.Id.BirthTime);
   
   //hämta enviormentpekaren
   (*jvm)->AttachCurrentThread(jvm,(void **)&env,NULL);
@@ -569,8 +571,8 @@ pwr_tStatus ev_mh_info_bc( mh_sMessage *MsgP)
   char birthTime_str[40];
   
   pwr_tObjid objid = MsgP->Info.Object;
-  pwr_tTime time = MsgP->Info.EventTime;
-  pwr_tTime birthTime = MsgP->Info.Id.BirthTime;
+  pwr_tTime time = net_NetTimeToTime( &MsgP->Info.EventTime);
+  pwr_tTime birthTime = net_NetTimeToTime( &MsgP->Info.Id.BirthTime);
   
   //hämta enviormentpekaren
   (*jvm)->AttachCurrentThread(jvm,(void **)&env,NULL);

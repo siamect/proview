@@ -939,7 +939,7 @@ isValidHandler (
   } else {
     hp = LstObj(hl);
 
-    if (memcmp(&hp->birthTime, &p->birthTime, sizeof(hp->birthTime)) != 0) {
+    if ( hp->birthTime.tv_sec != p->birthTime.tv_sec) {
       /* Different times, i.e. the handler is restarted */
       hp->birthTime = net_NetTimeToTime( &p->birthTime);
       hp->qid = p->qid;

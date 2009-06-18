@@ -530,8 +530,8 @@ jobject convertAlarmOrInfoToMhrEvent( mh_sMessage *MsgP)
   char birthTime_str[40];
   
   pwr_tObjid objid = MsgP->Info.Object;
-  pwr_tTime time = MsgP->Info.EventTime;
-  pwr_tTime birthTime = MsgP->Info.Id.BirthTime;
+  pwr_tTime time = net_NetTimeToTime( &MsgP->Info.EventTime);
+  pwr_tTime birthTime = net_NetTimeToTime( &MsgP->Info.Id.BirthTime);
   
   //hämta enviormentpekaren
   jvm->AttachCurrentThread((void **)&env,NULL);
@@ -618,9 +618,9 @@ jobject convertReturnToMhrEvent( mh_sReturn *MsgP)
   char birthTime_str[40];
   
   pwr_tObjid objid = MsgP->Info.Object;
-  pwr_tTime time = MsgP->Info.EventTime;
-  pwr_tTime birthTime = MsgP->Info.Id.BirthTime;
-  pwr_tTime targetBirthTime = MsgP->TargetId.BirthTime;
+  pwr_tTime time = net_NetTimeToTime( &MsgP->Info.EventTime);
+  pwr_tTime birthTime = net_NetTimeToTime( &MsgP->Info.Id.BirthTime);
+  pwr_tTime targetBirthTime = net_NetTimeToTime( &MsgP->TargetId.BirthTime);
   
   //hämta enviormentpekaren
   jvm->AttachCurrentThread((void **)&env,NULL);
@@ -710,9 +710,9 @@ jobject convertAckToMhrEvent( mh_sAck *MsgP)
   char birthTime_str[40];
   pwr_tObjid objid = MsgP->Info.SupObject;
   
-  pwr_tTime time = MsgP->Info.EventTime;
-  pwr_tTime birthTime = MsgP->Info.Id.BirthTime;
-  pwr_tTime targetBirthTime = MsgP->TargetId.BirthTime;
+  pwr_tTime time = net_NetTimeToTime( &MsgP->Info.EventTime);
+  pwr_tTime birthTime = net_NetTimeToTime( &MsgP->Info.Id.BirthTime);
+  pwr_tTime targetBirthTime = net_NetTimeToTime( &MsgP->TargetId.BirthTime);
   
   //hämta enviormentpekaren
   jvm->AttachCurrentThread((void **)&env,NULL);

@@ -1064,9 +1064,11 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         !  A pointer to the status word in the profibus module object.
         !*/
         Object IoStatus $Attribute 38 03-OCT-2007 10:47:30.26
-          Body SysBody 08-OCT-2007 13:05:34.49
+          Body SysBody 16-JUN-2009 17:16:40.60
             Attr PgmName = "IoStatus"
+            Attr Size = 4
             Attr Flags = 1041
+            Attr ParamIndex = 48
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
         EndObject
@@ -11349,7 +11351,7 @@ XS : activa alarms
           EndObject
           Object GetIpPtr27 GetIpPtr 1258 04-OCT-2007 13:18:38.36
             Body RtBody 04-OCT-2007 13:18:55.87
-              Attr IpPtrObject = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001.IoStatus"
+              Attr IpPtrObject = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001"
             EndBody
             Body DevBody 12-OCT-2007 16:51:57.96
               Buffer PlcNode
@@ -14884,7 +14886,7 @@ else
           EndObject
           Object StoIpPtr3 StoIpPtr 1324 05-OCT-2007 10:52:49.91
             Body RtBody 05-OCT-2007 10:53:15.22
-              Attr IpPtrObject = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001.IoStatus"
+              Attr IpPtrObject = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001"
             EndBody
             Body DevBody 11-OCT-2007 17:14:19.59
               Buffer PlcNode
@@ -24063,9 +24065,11 @@ Eurotherm TC3001 Aggregate
           EndBody
         EndObject
         Object IoStatus $Attribute 36 26-MAR-2007 09:07:46.99
-          Body SysBody 26-MAR-2007 09:08:20.20
+          Body SysBody 16-JUN-2009 17:22:48.85
             Attr PgmName = "IoStatus"
+            Attr Size = 4
             Attr Flags = 1
+            Attr ParamIndex = 40
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
         EndObject
@@ -24461,9 +24465,11 @@ Eurotherm TC3001 Aggregate
           EndBody
         EndObject
         Object IoStatus $Attribute 44 30-MAR-2007 14:36:26.29
-          Body SysBody 30-MAR-2007 14:36:26.29
+          Body SysBody 16-JUN-2009 17:23:25.33
             Attr PgmName = "IoStatus"
+            Attr Size = 4
             Attr Flags = 1
+            Attr ParamIndex = 48
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
         EndObject

@@ -413,7 +413,7 @@ void EvList::event_info( mh_sMessage *msg)
     return;
 
   if ( type != ev_eType_HistList ) {
-    sts = get_destination( event->Info.EventTime, (void **)&dest);
+    sts = get_destination( net_NetTimeToTime( &event->Info.EventTime), (void **)&dest);
     if ( EVEN(sts)) {
       dest_code = flow_eDest_IntoLast;
       dest_node = NULL;
@@ -429,12 +429,12 @@ void EvList::event_info( mh_sMessage *msg)
   }
 
   new ItemAlarm( this, "Alarm",
-	event->Info.EventTime, event->Msg.EventText,
-	event->Info.EventName, event->Info.EventFlags,
-	event->Info.EventPrio, event->Info.Id,
-	event->Info.Object, &event->Msg.EventSound, 
-	event->Msg.EventMoreText, msg->Status, 
-        evlist_eEventType_Info, dest_node, dest_code);
+		 net_NetTimeToTime( &event->Info.EventTime), event->Msg.EventText,
+		 event->Info.EventName, event->Info.EventFlags,
+		 event->Info.EventPrio, event->Info.Id,
+		 event->Info.Object, &event->Msg.EventSound, 
+		 event->Msg.EventMoreText, msg->Status, 
+		 evlist_eEventType_Info, dest_node, dest_code);
   size++;
 }
 
@@ -458,7 +458,7 @@ void EvList::event_alarm( mh_sMessage *msg)
       return;      
   }
   if ( type != ev_eType_HistList ) {
-    sts = get_destination( event->Info.EventTime, (void **)&dest);
+    sts = get_destination( net_NetTimeToTime( &event->Info.EventTime), (void **)&dest);
     if ( EVEN(sts)) {
       dest_code = flow_eDest_IntoLast;
       dest_node = NULL;
@@ -474,12 +474,12 @@ void EvList::event_alarm( mh_sMessage *msg)
   }
 
   new ItemAlarm( this, "Alarm",
-	event->Info.EventTime, event->Msg.EventText,
-	event->Info.EventName, event->Info.EventFlags,
-	event->Info.EventPrio, event->Info.Id,
-	event->Info.Object, &event->Msg.EventSound, 
-        event->Msg.EventMoreText, msg->Status, 
-	evlist_eEventType_Alarm, dest_node, dest_code);
+		 net_NetTimeToTime( &event->Info.EventTime), event->Msg.EventText,
+		 event->Info.EventName, event->Info.EventFlags,
+		 event->Info.EventPrio, event->Info.Id,
+		 event->Info.Object, &event->Msg.EventSound, 
+		 event->Msg.EventMoreText, msg->Status, 
+		 evlist_eEventType_Alarm, dest_node, dest_code);
   size++;
 }
 
@@ -504,7 +504,7 @@ void EvList::event_block( mh_sBlock *msg)
 	brow_DeleteNode( brow->ctx, item->node);
 	size--;
       }
-      sts = get_destination( event->Info.EventTime, (void **)&dest);
+      sts = get_destination( net_NetTimeToTime( &event->Info.EventTime), (void **)&dest);
       if ( EVEN(sts)) {
 	dest_code = flow_eDest_IntoLast;
 	dest_node = NULL;
@@ -523,7 +523,7 @@ void EvList::event_block( mh_sBlock *msg)
 	strcpy( text, "Unknown");
       
       new ItemAlarm( this, "Alarm",
-		     event->Info.EventTime, event->Info.EventName,
+		     net_NetTimeToTime( &event->Info.EventTime), event->Info.EventName,
 		     text, event->Info.EventFlags,
 		     event->Info.EventPrio, event->Info.Id,
 		     event->Info.Object, 0, 0, 0, evlist_eEventType_Block,
@@ -579,7 +579,7 @@ void EvList::event_block( mh_sBlock *msg)
     dest_node = NULL;
 
     ItemAlarm *item = new ItemAlarm( this, "Alarm",
-				     event->Info.EventTime, text, 
+				     net_NetTimeToTime( &event->Info.EventTime), text, 
 				     event->Info.EventName, event->Info.EventFlags,
 				     event->Info.EventPrio, event->Info.Id,
 				     event->Info.Object, 0, 0, 0, evlist_eEventType_Block,
@@ -649,7 +649,7 @@ void EvList::event_ack( mh_sAck *msg)
 
   if ( type == ev_eType_EventList || type == ev_eType_HistList) {
     if(type == ev_eType_EventList) {
-      sts = get_destination( event->Info.EventTime, (void **)&dest);
+      sts = get_destination( net_NetTimeToTime( &event->Info.EventTime), (void **)&dest);
       if ( EVEN(sts)) {
         dest_code = flow_eDest_IntoLast;
         dest_node = NULL;
@@ -664,7 +664,7 @@ void EvList::event_ack( mh_sAck *msg)
       dest_node = NULL;
     }
     new ItemAlarm( this, "Alarm",
-	event->Info.EventTime, "",
+		   net_NetTimeToTime( &event->Info.EventTime), "",
 	event->Info.EventName, event->Info.EventFlags,
 	event->Info.EventPrio, event->Info.Id,
 	event->Info.Object, 0, 0, 0, evlist_eEventType_Ack,
@@ -712,7 +712,7 @@ void EvList::event_return( mh_sReturn *msg)
 
   if ( type == ev_eType_EventList || type == ev_eType_HistList) {
     if(type == ev_eType_EventList) {
-      sts = get_destination( event->Info.EventTime, (void **)&dest);
+      sts = get_destination( net_NetTimeToTime( &event->Info.EventTime), (void **)&dest);
       if ( EVEN(sts)) {
         dest_code = flow_eDest_IntoLast;
         dest_node = NULL;
@@ -727,11 +727,11 @@ void EvList::event_return( mh_sReturn *msg)
       dest_node = NULL;
     }
     new ItemAlarm( this, "Alarm",
-	event->Info.EventTime, event->Msg.EventText,
-	event->Info.EventName, event->Info.EventFlags,
-	event->Info.EventPrio, event->Info.Id,
-	event->Info.Object, 0, 0, 0, evlist_eEventType_Return,
-	dest_node, dest_code);
+		   net_NetTimeToTime( &event->Info.EventTime), event->Msg.EventText,
+		   event->Info.EventName, event->Info.EventFlags,
+		   event->Info.EventPrio, event->Info.Id,
+		   event->Info.Object, 0, 0, 0, evlist_eEventType_Return,
+		   dest_node, dest_code);
     size++;
   }
 
