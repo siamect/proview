@@ -761,6 +761,7 @@ static pwr_tStatus tlog_mh_info_bc( mh_sMessage *MsgP)
 {
 	int		sts;
 	ala_uEvent	*EventP;
+	pwr_tTime	eventtime;
 
 	EventP = (ala_uEvent *) MsgP ; 
 
@@ -768,13 +769,14 @@ static pwr_tStatus tlog_mh_info_bc( mh_sMessage *MsgP)
         if ((MsgP->Status & mh_mEventStatus_NotAck) ||
             (MsgP->Status & mh_mEventStatus_NotRet))
 	{
+	  eventtime = net_NetTimeToTime( &EventP->Info.EventTime);
 	  sts = tlog_loglist_add( &filectx, 
 		  pwr_cNObjid,
 		  tlog_logtype_Info,
 		  &EventP->Msg.EventText, 
 		  NULL,
 		  &EventP->Info.EventName, 
-		  &EventP->Info.EventTime,
+		  &eventtime,
 		  &log_list, &log_count, &log_alloc);
 	  if ( EVEN(sts)) return sts;
 
@@ -800,6 +802,7 @@ static pwr_tStatus tlog_mh_alarm_bc( mh_sMessage *MsgP)
 	int		sts;
 	ala_uEvent	*EventP;
 	tlog_e_logtype	logtype;
+	pwr_tTime	eventtime;
 
 	EventP = (ala_uEvent *) MsgP ; 
 
@@ -815,13 +818,14 @@ static pwr_tStatus tlog_mh_alarm_bc( mh_sMessage *MsgP)
 	    case mh_eEventPrio_D: logtype = tlog_logtype_AlarmD; break;
 	    default: logtype = 0;
 	  }
+	  eventtime = net_NetTimeToTime( &EventP->Info.EventTime);
 	  sts = tlog_loglist_add( &filectx, 
 		  pwr_cNObjid,
 		  logtype,
 		  &EventP->Msg.EventText, 
 		  NULL,
 		  &EventP->Info.EventName, 
-		  &EventP->Info.EventTime,
+		  &eventtime,
 		  &log_list, &log_count, &log_alloc);
 	  if ( EVEN(sts)) return sts;
 
