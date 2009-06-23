@@ -935,8 +935,8 @@ struct pwr_s_PlcConnection {
   pwr_tUInt32		dest_point	pwr_dAlignW;
   pwr_tObjid		dest_oid	pwr_dAlignW;
   pwr_tUInt32		point_count	pwr_dAlignW;
-  pwr_sPoint		point[PWR_BREAKPOINTS_MAX]	pwr_dAlignW;
-  pwr_tObjid		woid		pwr_dAlignW;
+  pwr_sPoint		point[PWR_BREAKPOINTS_MAX]	pwr_dAlignLW;
+  pwr_tObjid		woid		pwr_dAlignLW;
 };
 
 struct pwr_s_GraphPlcProgram {
