@@ -51,7 +51,9 @@
 #include "rt_pool.h"
 
 /* Convert bytesize to size expressed in pool_sEntry units.  */
-#define entryUnits(size) (((size)+sizeof(pool_sEntry)-1)>>pool_cOffsAlign)
+#define pool_Align(offs) (((offs) + (pool_cDataSize-1)) & ~(pool_cDataSize-1))
+#define entryUnits(size) (pool_Align(size)/pool_cDataSize)
+#define entryPAdd(ep,offs) ((pool_sEntry *)((char *)ep + offs))
 
 #define cEntryMark (4711)
 
@@ -94,7 +96,7 @@ static pool_sSegment *
 newSegment (
   pwr_tStatus		*sts,
   pool_sHead		*php,
-  pwr_tUInt32		size		/* Requested size in pool_sEntry units */
+  size_t		size		/* Requested size in pool_sEntry units */
 );
 
 static pwr_tBoolean
@@ -122,18 +124,18 @@ allocLookaside (
   pool_sSegment		*psp = &php->seg[lp->seg];
   
   
-  ep = psp->base + lp->next;
+  ep = entryPAdd(psp->base, lp->next * pool_cDataSize);
   lp->next = ep->next;
   
   pr.m = pool_cNRef;
   pr.b.seg = psp->seg;
-  pr.b.offs = (pool_sData *)(ep+1) - (pool_sData *)psp->base;
-  pwr_Assert(entryUnits(lp->size) + 1 == ep->size);
+  pr.b.offs = (pool_tOffset)((char *)ep + sizeof(pool_sEntry) - (char *)psp->base);
+  pwr_Assert(entryUnits(lp->size + sizeof(pool_sEntry)) == ep->size);
   ep->next = pr.m;
   psp->gpsp->alloccnt++;
 
-  memset(ep+1, 0, (ep->size-1)<<pool_cOffsAlign);
-  return (void *)(ep+1);
+  memset( entryPAdd( ep, sizeof(pool_sEntry)), 0, ep->size*pool_cDataSize - sizeof(pool_sEntry));
+  return (void *)entryPAdd( ep, sizeof(pool_sEntry));
 }
 
 static pwr_tBoolean
@@ -223,13 +225,13 @@ freeItem (
   pr.m = ep->next;
 
   /* Fill returned entry with with the bit pattern '01010101'...  */
-  memset(ep+1, 85, (ep->size-1)<<pool_cOffsAlign);
+  memset( entryPAdd(ep, sizeof(pool_sEntry)), 85, ep->size*pool_cDataSize - sizeof(pool_sEntry));
 
   /* Setup pointers */
 
   gphp = php->gphp;
   seg = pr.b.seg;
-  offs = entryUnits(pr.b.offs) - 1;
+  offs = entryUnits(pr.b.offs - sizeof(pool_sEntry));
   psp = &php->seg[seg];
   gpsp = &gphp->seg[seg];
 
@@ -258,14 +260,14 @@ freeItem (
   prevp = &gpsp->freeroot;
   while (prevp->next != pool_cNOffset) {
     if (offs < prevp->next) break;		/* found */
-    prevp = psp->base + prevp->next;		/* try next */
+    prevp = (pool_sEntry *)((char *)psp->base + prevp->next * pool_cDataSize); /* try next */
   } /* While more free entries */
 
   /* Here prevp points to the entry after which insertion should be done
      NOTE. Prevp can point to the header or to the last fragment!  */
 
   ep->next = prevp->next;
-  prevp->next = ep - psp->base;
+  prevp->next = ((char *)ep - (char *)psp->base)/pool_cDataSize;
   gpsp->fragcnt++;
   gpsp->fragsize += ep->size;
   gpsp->alloccnt--;
@@ -280,9 +282,9 @@ freeItem (
   /* Join with succeeding/preceeding fragment? */
 
   do {
-    tmpp = psp->base + prevp->next;
+    tmpp = (pool_sEntry *)((char *)psp->base + prevp->next * pool_cDataSize);
 
-    if ((prevp + prevp->size) == tmpp) {
+    if (entryPAdd(prevp, prevp->size * pool_cDataSize) == tmpp) {
       prevp->size += tmpp->size;
       prevp->next = tmpp->next;
       /* Fill recovered list info with the bit pattern '01010101'...  */
@@ -346,7 +348,7 @@ static pool_sSegment *
 newSegment (
   pwr_tStatus		*sts,
   pool_sHead		*php,
-  pwr_tUInt32		size		/* Requested size in pool_sEntry units */
+  size_t		size		/* Requested size in pool_sEntry units */
 )
 {
   pool_sGhead		*gphp;
@@ -445,7 +447,7 @@ pool_Address (
     if (psp == NULL) errh_ReturnOrBugcheck(NULL, sts, lsts, "");
 
     if (prf.b.offs < gpsp->size) {
-      return (pool_sData *)psp->base + prf.b.offs;
+      return (pool_sData *)((char *)psp->base + prf.b.offs);
     }
   }
 
@@ -500,7 +502,7 @@ pool_Alloc (
       return allocLookaside(sts, php, &gphp->la[3]);
   }
 
-  esize = entryUnits(size) + 1;	 /* Add space for header */
+  esize = entryUnits(size + sizeof(pool_sEntry));	 /* Add space for header */
 
   /* Find a segment where there is room.  */
 
@@ -539,7 +541,7 @@ pool_Alloc (
   ep = NULL;
   prevp = &gpsp->freeroot;
   while (prevp->next != pool_cNOffset) {
-    tmpp = psp->base + prevp->next;
+    tmpp = (pool_sEntry *)((char *)psp->base + prevp->next * pool_cDataSize);
     if (tmpp->size >= esize) {	/* Found */
       ep = tmpp;
       break;
@@ -560,18 +562,20 @@ pool_Alloc (
 
   tmpsize = ep->size;
 
-  if (ep->size == esize) {	/* Entry fits exactly */
+  if (ep->size == esize || 
+      (ep->size - esize > 0 && 
+       (ep->size - esize) * pool_cDataSize < sizeof(pool_sEntry))) {	/* Entry fits exactly */
     prevp->next = ep->next;
     --gpsp->fragcnt;
   }
   else {	/* Entry is to big, split it */
-    prevp->next += esize;
-    tmpp = psp->base + prevp->next;
+    prevp->next = prevp->next + esize;
+    tmpp = (pool_sEntry *)((char *)psp->base + prevp->next * pool_cDataSize);
     tmpp->next = ep->next;
     tmpp->size = ep->size - esize;
     ep->size = esize;
   }
-  memset(ep+1, 0, (esize-1)<<pool_cOffsAlign);
+  memset( entryPAdd(ep, sizeof(pool_sEntry)), 0, esize*pool_cDataSize - sizeof(pool_sEntry));
   ep->next = cEntryMark;
 
   gpsp->alloccnt++;
@@ -586,7 +590,7 @@ pool_Alloc (
       gpsp->fragmaxcnt = 1;
       prevp = &gpsp->freeroot;
       while (prevp->next != pool_cNOffset) {
-	tmpp = psp->base + prevp->next;
+	tmpp = (pool_sEntry *)((char *)psp->base + prevp->next * pool_cDataSize);
 	if (tmpp->size >= gpsp->fragmax) {
 	  if (tmpp->size == gpsp->fragmax) gpsp->fragmaxcnt++;
 	  else {
@@ -601,10 +605,10 @@ pool_Alloc (
 
   pr.m = pool_cNRef;
   pr.b.seg = psp->seg;
-  pr.b.offs = (pool_sData *)(ep+1) - (pool_sData *)psp->base;
+  pr.b.offs = (pool_tOffset)((char *)ep + sizeof(pool_sEntry) - (char *)psp->base);
   ep->next = pr.m;
 
-  return (void *)(ep+1);
+  return (void *)(entryPAdd(ep, sizeof(pool_sEntry)));
 }
 
 pwr_tBoolean
@@ -645,7 +649,7 @@ pool_AllocLookasideSegment (
   /* Allocate the section */
 
   if (gpsp->generation == 0) {
-    esize = entryUnits(size) + 1;   /* Add space for entry header.  */
+    esize = entryUnits(size + sizeof(pool_sEntry));   /* Add space for entry header.  */
     psp = newSegment(sts, php, count * esize);
     if (psp == NULL) return NO;
     gpsp = psp->gpsp;
@@ -657,7 +661,7 @@ pool_AllocLookasideSegment (
     gphp->la[gphp->la_idx].size = size;
     gphp->la_idx++;
     for (i = 0, offs = 0; i < count - 1; i++) {
-      ep = psp->base + offs;
+      ep = (pool_sEntry *)((char *)psp->base + offs * pool_cDataSize);
       ep->size = esize;
       offs += esize;
       ep->next = offs;
@@ -725,8 +729,8 @@ pool_Create (
   pwr_tStatus		*sts,
   pool_sHead		*php,
   char			*name,
-  pwr_tUInt32		initsize,
-  pwr_tUInt32		extendsize
+  size_t		initsize,
+  size_t		extendsize
 )
 {
   pwr_tStatus		lsts;
@@ -737,8 +741,8 @@ pool_Create (
   pool_sGhead		*gphp;
   pool_sHead		*lphp = NULL;
   sect_sHead		*shp;
-  pwr_tUInt32		alloc_size = 0;
-  pwr_tUInt32		alloced_size = 0;
+  size_t		alloc_size = 0;
+  size_t		alloced_size = 0;
 
   if (php == NULL) php = lphp = (pool_sHead *) calloc(1, sizeof(*lphp));
   if (php == NULL)
@@ -867,7 +871,7 @@ pool_Free (
 
   ep = (pool_sEntry *) p;
 
-  ep -= 1;		/* Back to the header */
+  ep = entryPAdd( ep, -sizeof(pool_sEntry));		/* Back to the header */
 
   if (p != pool_Address(&lsts, php, ep->next))
     errh_ReturnOrBugcheck(NO, sts, POOL__NOMARK, "");
@@ -895,7 +899,7 @@ pool_FreeReference (
 
   ep = (pool_sEntry *) pool_Address(&lsts, php, r);
 
-  ep -= 1;		/* Back to the header */
+  ep = entryPAdd( ep, -sizeof(pool_sEntry));		/* Back to the header */
 
   if (r != ep->next)
     errh_ReturnOrBugcheck(NO, sts, POOL__NOMARK, "");
@@ -944,7 +948,7 @@ pool_InPool (
 
     pr.m = 0;
     pr.b.seg = psp->seg;
-    pr.b.offs = (pool_sData *)adrs - (pool_sData *)psp->base;
+    pr.b.offs = (char *)adrs - (char *)psp->base;
     if (pr.b.offs + size >= gpsp->size) break;
     return pr.m;
   }
@@ -969,7 +973,7 @@ pool_ItemReference (
 )
 {
   pwr_tStatus		lsts;
-  pool_sEntry		*pep = (pool_sEntry *)p - 1;
+  pool_sEntry		*pep = entryPAdd(p, -sizeof(pool_sEntry));
 
   if (p == pool_Address(&lsts, php, pep->next))
     return pep->next;
@@ -990,7 +994,7 @@ pool_Qalloc (
 
   head = pool_Alloc(sts, php, sizeof(*head));
   
-  head->flink = head->blink = head->self = (((pool_sEntry *)head) - 1)->next;
+  head->flink = head->blink = head->self = ((pool_sEntry *)entryPAdd(head,-sizeof(pool_sEntry)))->next;
 
   return head;
 }
@@ -1401,7 +1405,7 @@ pool_RefAlloc (
   ep = pool_Alloc(sts, php, size);
   if (ep == NULL) return pool_cNRef;
 
-  return (--ep)->next;
+  return entryPAdd(ep, -sizeof(pool_sEntry))->next;
 }
 
 /* Translate a virtual address to a pool reference.
@@ -1445,7 +1449,7 @@ pool_Reference (
 
     pr.m = 0;
     pr.b.seg = psp->seg;
-    pr.b.offs = (pool_sData *)adrs - (pool_sData *)psp->base;
+    pr.b.offs = (char *)adrs - (char *)psp->base;
     return pr.m;
   }
 

@@ -32,14 +32,28 @@
    and a maximum segment size of (1<<24) which is 16 Mb. Hence, the max
    size of any pool is 256*16 Mbyte = 4 Gbyte!  */
 
+#if defined OS_LINUX && defined HW_X86_64
+typedef pwr_tInt64	pool_tRef;
+
+#define	pool_cSegBits	10			/* Bits in segidx field */
+#define	pool_cOffsBits	54			/* Bits in offset field */
+
+#define	pool_cOffsAlign	3			/* Entry alignment */
+#define pool_cOffsGranul	0		/* Entry granularity */
+
+#else
+typedef pwr_tInt32	pool_tRef;
+
 #define	pool_cSegBits	8			/* Bits in segidx field */
 #define	pool_cOffsBits	24			/* Bits in offset field */
 
 #define	pool_cOffsAlign	3			/* Entry alignment */
 #define pool_cOffsGranul	0		/* Entry granularity */
+#endif
+
 #define	pool_cSegs	(1<<pool_cSegBits)	/* Max number of segments in one directory.  */
 
-#define	pool_cMaxSize	(1<<(pool_cOffsBits + pool_cOffsGranul))
+#define	pool_cMaxSize	((pool_tRef)1<<(pool_cOffsBits + pool_cOffsGranul))
 #define	pool_cMaxOffs	(pool_cMaxSize-1)
 						/* max size of a segment */
 
@@ -50,7 +64,6 @@
     that the lowest possible valid offset in any segment (as the
     user sees it) is 1!  */
 
-typedef ptrdiff_t	pool_tRef;
 #define	pool_cNRef	(pool_tRef)0
 
 typedef struct {
@@ -62,6 +75,15 @@ typedef struct {
 #define pool_QisUnlinked(a) ((a)->self == (a)->flink && (a)->self == (a)->blink)
 
 /* Internal interpretation of a pool_tRef */
+#if defined OS_LINUX && defined HW_X86_64
+typedef union {
+  struct { pwr_Endian_4 (
+    unsigned long int offs : pool_cOffsBits;,	/* offset in section, in quadwords */
+    unsigned long int seg  : pool_cSegBits;,,	/*  */
+  ) } b;
+  pool_tRef		m;
+} pool_uRefBits;
+#else
 typedef union {
   struct { pwr_Endian_4 (
     pwr_Bits( offs,	pool_cOffsBits),	/* offset in section, in quadwords */
@@ -69,14 +91,15 @@ typedef union {
   ) } b;
   pool_tRef		m;
 } pool_uRefBits;
-
+#endif
 typedef void *pool_tHead;
 
 typedef	struct {
   char			filler[1<<pool_cOffsGranul];
 } pool_sData;
 
-typedef pwr_tInt32	pool_tOffset;		/* Segment offset, in pool_sData units */
+static const int pool_cDataSize = 8;
+typedef ptrdiff_t	pool_tOffset;		/* Segment offset, in pool_sData units */
 #define pool_cNOffset	(pool_tOffset)-1	/* where -1=>NULL */
 
 
@@ -84,7 +107,7 @@ typedef pwr_tInt32	pool_tOffset;		/* Segment offset, in pool_sData units */
 
 typedef struct {
   pool_tOffset		next;		/* Next entry if free list, or mark */
-  pwr_tUInt32		size;		/* Size of entry, in pool_sData units */
+  size_t		size;		/* Size of entry, in pool_sData units */
 } pool_sEntry;
 
 typedef enum {
@@ -153,7 +176,7 @@ void		*pool_Address (pwr_tStatus*, pool_sHead*, pool_tRef);
 void		*pool_Alloc (pwr_tStatus*, pool_sHead*, pwr_tUInt32);
 pwr_tBoolean	pool_AllocLookasideSegment (pwr_tStatus*, pool_sHead*, pwr_tUInt32, pwr_tUInt32);
 void		*pool_AllocNamedSegment (pwr_tStatus*, pool_sHead*, pwr_tUInt32, char*);
-pool_sHead	*pool_Create (pwr_tStatus*, pool_sHead*, char*, pwr_tUInt32, pwr_tUInt32);
+pool_sHead	*pool_Create (pwr_tStatus*, pool_sHead*, char*, size_t, size_t);
 void		pool_Dump (pwr_tStatus*, pool_sHead*);
 pwr_tBoolean	pool_Free (pwr_tStatus*, pool_sHead*, void*);
 pwr_tBoolean	pool_FreeReference (pwr_tStatus*, pool_sHead*, pool_tRef);
