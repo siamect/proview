@@ -546,6 +546,9 @@ RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObji
 		    G_CALLBACK(activate_trace), this);
 
   GtkWidget *mode_simulate = gtk_radio_menu_item_new_with_mnemonic( mode_group, "_Simulate");
+  gtk_widget_add_accelerator( mode_simulate, "activate", accel_g,
+  			      's', GdkModifierType(GDK_CONTROL_MASK | GDK_SHIFT_MASK), 
+  			      GTK_ACCEL_VISIBLE);
   g_signal_connect( mode_simulate, "activate", 
 		    G_CALLBACK(activate_simulate), this);
 
