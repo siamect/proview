@@ -1268,7 +1268,9 @@ ItemAlarm::ItemAlarm( EvList *item_evlist, const char *item_name, pwr_tTime item
     if ( ODD(sts))
     {
       brow_DeleteNode( evlist->brow->ctx, last_node);
-      evlist->size--;
+
+      // Note! This ItemAlarm might be deleted by now if node == last_node
+      item_evlist->size--;
     }
   }
 }
