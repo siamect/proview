@@ -461,7 +461,7 @@ EvGtk::EvGtk( void *ev_parent_ctx,
 
   // Blk Window
   {
-    char *titleutf8 = g_convert( ala_name, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+    char *titleutf8 = g_convert( blk_name, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
 
     parent_wid_blk = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 						 "default-height", blk_height,
