@@ -134,3 +134,5 @@
 090518 cs  xtt       Advanced user set as default, not set with option -d.
 090519 cs  ge        Bugfix in fonts for language se_sv.
 090601 cs  ge        New action: SetValue to set a specified value into an attribute.
+090625 cs  xtt       Bugfix in eventlist, adding event in a full list could cause segfault.
+090625 cs  xtt       Blocklist window title was wrong.

@@ -434,7 +434,8 @@ void EvList::event_info( mh_sMessage *msg)
 		 event->Info.EventPrio, event->Info.Id,
 		 event->Info.Object, &event->Msg.EventSound, 
 		 event->Msg.EventMoreText, msg->Status, 
-		 evlist_eEventType_Info, dest_node, dest_code);
+		 evlist_eEventType_Info, dest_node, dest_code, &sts);
+  if ( EVEN(sts)) return;
   size++;
 }
 
@@ -479,7 +480,8 @@ void EvList::event_alarm( mh_sMessage *msg)
 		 event->Info.EventPrio, event->Info.Id,
 		 event->Info.Object, &event->Msg.EventSound, 
 		 event->Msg.EventMoreText, msg->Status, 
-		 evlist_eEventType_Alarm, dest_node, dest_code);
+		 evlist_eEventType_Alarm, dest_node, dest_code, &sts);
+  if ( EVEN(sts)) return;
   size++;
 }
 
@@ -527,7 +529,8 @@ void EvList::event_block( mh_sBlock *msg)
 		     text, event->Info.EventFlags,
 		     event->Info.EventPrio, event->Info.Id,
 		     event->Info.Object, 0, 0, 0, evlist_eEventType_Block,
-		     dest_node, dest_code);
+		     dest_node, dest_code, &sts);
+      if ( EVEN(sts)) return;
       size++;
       break;
     }
@@ -583,7 +586,8 @@ void EvList::event_block( mh_sBlock *msg)
 				     event->Info.EventName, event->Info.EventFlags,
 				     event->Info.EventPrio, event->Info.Id,
 				     event->Info.Object, 0, 0, 0, evlist_eEventType_Block,
-				     dest_node, dest_code);
+				     dest_node, dest_code, &sts);
+    if ( EVEN(sts)) return;
 
     switch( msg->Info.EventType) {
     case mh_eEvent_Block:
@@ -668,7 +672,8 @@ void EvList::event_ack( mh_sAck *msg)
 	event->Info.EventName, event->Info.EventFlags,
 	event->Info.EventPrio, event->Info.Id,
 	event->Info.Object, 0, 0, 0, evlist_eEventType_Ack,
-	dest_node, dest_code);
+	dest_node, dest_code, &sts);
+    if ( EVEN(sts)) return;
     size++;
   }
   
@@ -731,7 +736,8 @@ void EvList::event_return( mh_sReturn *msg)
 		   event->Info.EventName, event->Info.EventFlags,
 		   event->Info.EventPrio, event->Info.Id,
 		   event->Info.Object, 0, 0, 0, evlist_eEventType_Return,
-		   dest_node, dest_code);
+		   dest_node, dest_code, &sts);
+    if ( EVEN(sts)) return;
     size++;
   }
 
@@ -1206,7 +1212,7 @@ ItemAlarm::ItemAlarm( EvList *item_evlist, const char *item_name, pwr_tTime item
 	unsigned long item_eventprio, mh_sEventId item_eventid,
 	pwr_tObjid item_object, pwr_tAttrRef *item_eventsound, char *item_eventmoretext,
 	unsigned long item_status, evlist_eEventType item_event_type,
-	brow_tNode dest, flow_eDest dest_code):
+	brow_tNode dest, flow_eDest dest_code, int *rsts):
 	event_type(item_event_type), evlist(item_evlist), time(item_time), 
 	eventflags(item_eventflags), eventprio(item_eventprio),
 	eventid(item_eventid), object(item_object), status(item_status)
@@ -1214,6 +1220,7 @@ ItemAlarm::ItemAlarm( EvList *item_evlist, const char *item_name, pwr_tTime item
   type = evlist_eItemType_Alarm;
   brow_tNodeClass 	nc;
 
+  *rsts = 1;
   strcpy( name, item_name);
   strncpy( eventtext, Lng::translate( item_eventtext), sizeof(eventtext));
   eventtext[sizeof(eventtext)-1] = 0;
@@ -1267,6 +1274,10 @@ ItemAlarm::ItemAlarm( EvList *item_evlist, const char *item_name, pwr_tTime item
     sts = brow_GetLast( evlist->brow->ctx, &last_node);
     if ( ODD(sts))
     {
+      if ( node == last_node)
+	// I'm deleting myself
+	*rsts = 0;
+
       brow_DeleteNode( evlist->brow->ctx, last_node);
 
       // Note! This ItemAlarm might be deleted by now if node == last_node

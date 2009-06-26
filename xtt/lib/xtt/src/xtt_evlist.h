@@ -206,7 +206,7 @@ class ItemAlarm {
 	pwr_tObjid item_object, pwr_tAttrRef *item_eventsound, 
         char *item_eventmoretext,unsigned long item_status,
 	evlist_eEventType item_event_type,
-	brow_tNode dest, flow_eDest dest_code);
+	brow_tNode dest, flow_eDest dest_code, int *rsts);
     evlist_eItemType	type;
     evlist_eEventType	event_type;
     EvList		*evlist;
