@@ -923,7 +923,11 @@ static void	*xtt_logproc( void *arg)
 #if defined OS_LYNX || defined OS_LINUX
 	        time_GetTime( &time);
 	        time_Adiff( &wait_time, &nextime, &time);
-                nanosleep( (struct timespec *) &wait_time, NULL);
+
+		struct timespec wait_time_ts;
+		wait_time_ts.tv_sec = wait_time.tv_sec;
+		wait_time_ts.tv_nsec = wait_time.tv_nsec;
+                nanosleep( &wait_time_ts, NULL);
 #endif
 	        continue;
 	      }
@@ -1337,7 +1341,11 @@ static void	*xtt_logproc( void *arg)
 #endif
 #if defined OS_LYNX || defined OS_LINUX
 	  time_Adiff( &wait_time, &nextime, &time);
-          nanosleep( (struct timespec *) &wait_time, NULL);
+
+	  struct timespec wait_time_ts;
+	  wait_time_ts.tv_sec = wait_time.tv_sec;
+	  wait_time_ts.tv_nsec = wait_time.tv_nsec;
+          nanosleep( &wait_time_ts, NULL);
 #endif
 
 	}
