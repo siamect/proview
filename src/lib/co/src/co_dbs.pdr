@@ -26,9 +26,18 @@
 %#endif
 %
 %/* co_dbs.h -- database snapshot files
-%
 %   This file defines the data structures needed to create and read
 %   dbs data files.
+%
+%   Note ! 
+%   The data sturctures has to be equally align on different platforms.
+%   To ensure this filler elements has to be inserted (the pdr compiler doesn't 
+%   accept __attribute__((aligned(())).
+%   For example 
+%   - 64 bit words has to be aligned on 8 byte boundary.
+%   - data structure containing a 64 bit word has to be aligned on 8 byte boundary. 
+%   - element after data structure containing 64 bit word has to be aligned on 8 byte boundary.
+%   Note that pwr_tTime is a data structure with 64 bit words.
 %
 %
 %    +====================================================+
@@ -171,7 +180,7 @@
 %#define dbs_cSectBits 5
 %#define dbs_cOffsBits 27
 %
-%typedef ptrdiff_t dbs_tRef;
+%typedef pwr_tUInt32 dbs_tRef;
 %#define pdr_dbs_tRef(PDR, objp) pdr_pwr_tUInt32(PDR, (pwr_tBitMask *)objp)
 %
 %#define dbs_cNref (dbs_tRef)0
@@ -449,6 +458,7 @@ struct dbs_sObject {
     pwr_tOid        poid;       /**< object identifier of parent */
     pwr_tObjName    name;       /**< name of object */
     pwr_tObjName    normname;   /**< normalized object name. */
+    pwr_tUInt32     filler;
     pwr_tTime       time;       /**< time of last change in object header */
     pwr_tOid        soid;       /**< object identifier of server object. */
     pwr_tOid        boid;       /**< object identifier of sibling object before this object. */
