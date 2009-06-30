@@ -28,6 +28,7 @@
 #include "wb_vrepdb.h"
 #include "wb_vrepdbms.h"
 #include "wb_vrepced.h"
+#include "wb_vrepmem.h"
 #include "wb_vrepref.h"
 #include "wb_vrepext.h"
 #include "wb_cdrep.h"
@@ -545,6 +546,7 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
       *status = LDH__PROJCONFIG;
 
       // Load directory volume
+#if 0
       strcpy( vname, "$pwrp_db/directory.db");
       dcli_translate_filename( vname, vname);
 
@@ -554,6 +556,19 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
 	wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
 	vrepdb->name("directory");
 	addDb( &sts, vrepdb);
+	MsgWindow::message( 'I', "Directory database opened", vname);
+      }
+#endif
+      strcpy( vname, "$pwrp_db/directory.wb_load");
+      dcli_translate_filename( vname, vname);
+
+      sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
+      dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
+      if ( ODD(sts)) {
+	wb_vrepmem *vrepmem = new wb_vrepmem( this);
+	vrepmem->loadWbl( vname, &sts);
+	vrepmem->name("directory");
+	addDb( &sts, vrepmem);
 	MsgWindow::message( 'I', "Directory database opened", vname);
       }
 
@@ -819,6 +834,7 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
   if ( !db || (db && cdh_NoCaseStrcmp( "directory", db) == 0)) {
     char uname[80];
 
+#if 0
     strcpy( vname, "$pwrp_db/directory.db");
     dcli_translate_filename( vname, vname);
 
@@ -857,6 +873,48 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
     wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
     vrepdb->name("directory");
     addDb( &sts, vrepdb);
+    MsgWindow::message( 'I', "Database opened", vname);
+
+#endif
+    strcpy( vname, "$pwrp_db/directory.wb_load");
+    dcli_translate_filename( vname, vname);
+
+    sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
+    dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
+    if ( EVEN(sts)) {
+      *status = LDH__PROJCONFIG;
+      return;
+    }
+    if ( wb_dblock::is_locked(vname, uname)) {
+      char msg[120];
+
+      sprintf( msg, "Database directory is locked by user %s", uname);
+      MsgWindow::message( 'E', msg, msgw_ePop_No);
+
+      CoWow *wow = MsgWindow::get_wow();
+      if ( wow) {
+	int res = wow->CreateModalDialog( "Database Locked", msg, "Exit", 0, "Remove lock", "$pwr_exe/wtt_padlock.png");
+	switch( res) {
+	case wow_eModalDialogReturn_NYI:
+	case wow_eModalDialogReturn_Button2:
+	case wow_eModalDialogReturn_Button1:
+	case wow_eModalDialogReturn_Deleted:
+	  exit(0);
+	case wow_eModalDialogReturn_Button3:
+	  // Remove lock
+	  wb_dblock::dbunlock(vname);
+	  break;
+	}    
+      }
+      else
+	exit(0);
+    }
+      
+
+    wb_vrepmem *vrepmem = new wb_vrepmem( this);
+    vrepmem->loadWbl( vname, &sts);
+    vrepmem->name("directory");
+    addDb( &sts, vrepmem);
     MsgWindow::message( 'I', "Database opened", vname);
   }
 

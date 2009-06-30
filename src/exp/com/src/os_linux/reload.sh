@@ -118,7 +118,7 @@ reload_renamedb()
     return
   fi
 
-  reload_continue "Pass copy rename old database"
+  reload_continue "Pass rename old database"
 
   for cdb in $databases; do
     reload_save_file $pwrp_db/$cdb.db
@@ -340,7 +340,6 @@ usage()
     dumpdb       Dump database to textfile \$pwrp_db/'volume'.wb_dmp
     classvolumes Create structfiles and loadfiles for classvolumes
     renamedb     Rename the old database
-    dirvolume    Load directory volume
     loaddb       Load the dump into the new database
     compile      Compile all plcprograms in the database
     createload   Create new loadfiles.
@@ -379,7 +378,7 @@ echo ""
 echo "-- Reloading volume $databases"
 echo ""
 
-passes="dumpdb classvolumes renamedb dirvolume loaddb compile createload createboot"
+passes="dumpdb classvolumes renamedb loaddb compile createload createboot"
 echo "Pass: $passes"
 echo ""
 echo -n "Enter start pass [dumpdb] > "
