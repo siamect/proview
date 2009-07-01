@@ -266,8 +266,12 @@ wb_orep* wb_vrepdbms::object(pwr_tStatus *sts)
     oid.oix = pwr_cNOix;
 
     m_ohead.get(m_db->m_txn, oid);
-    if ( cdh_ObjidIsNotNull( m_ohead.foid()))
-      m_ohead.get(m_db->m_txn, m_ohead.foid());
+    if ( cdh_ObjidIsNull( m_ohead.foid())) {
+      *sts = LDH__NOSUCHOBJ;
+      return 0;      
+    }
+      
+    m_ohead.get(m_db->m_txn, m_ohead.foid());
 
     return new (this) wb_orepdbms(&m_ohead.m_o);
   }
