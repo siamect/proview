@@ -245,7 +245,6 @@ OsMaskToOpSys $OsMask # Convert Bitmask to index
 # Local symbols
 #
 
-
 let OpSys__Low=0
 let OpSys_VAX_ELN=1
 let OpSys_VAX_VMS=2
@@ -289,8 +288,14 @@ fi
 #
 # Check OpSys
 #
-# How can we find out if this is a ppc or x86 host?
-#
+# Current opsys
+machine=`eval uname -m`
+if [ $machine = "x86_64" ]; then
+  CurrentOpSys=$OpSys_X86_64_LINUX
+else
+  CurrentOpSys=$OpSys_X86_LINUX
+fi
+
 #
 # Check FileType
 #
@@ -303,19 +308,49 @@ fi
 OsStr="`echo $vOpSys| cut -f $OpSys -d ,`"
 let FileTypeIdx=$FileType+1
 
-if [ $OpSys -eq $OpSys_PPC_LINUX ] || [ $OpSys -eq $OpSys_X86_LINUX ] || [ $OpSys -eq $OpSys_X86_64_LINUX ]; 
-then
-
+if [ $OpSys -eq $OpSys_PPC_LINUX ]; then
   pwrp_gc="$pwrp_tmp"
 
 # Suppress all warnings, -x
-  cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_LINUX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp -I$pwrp_cmn/common/inc"
+  cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_LINUX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
 
   FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
 
 # Execute build command
   Compile$FileTypeStr
   exit $gcg_status
+
+elif [ $OpSys -eq $OpSys_X86_LINUX ]; then
+  pwrp_gc="$pwrp_tmp"
+
+# Suppress all warnings, -x
+  if [ $CurrentOpSys -eq $OpSys ]; then
+     cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_LINUX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
+
+     FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
+
+# Execute build command
+     Compile$FileTypeStr
+     exit $gcg_status
+  elif [ $CurrentOpSys -eq $OpSys_X86_64_LINUX ]; then
+      echo "-- Not built for x86_linux"
+  fi
+
+elif [ $OpSys -eq $OpSys_X86_64_LINUX ]; then
+  pwrp_gc="$pwrp_tmp"
+
+# Suppress all warnings, -x
+  if [ $CurrentOpSys -eq $OpSys ]; then
+      cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_LINUX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
+
+      FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
+
+# Execute build command
+      Compile$FileTypeStr
+      exit $gcg_status
+  elif [ $CurrentOpSys -eq $OpSys_X86_LINUX ]; then
+      echo "-- Not built for x86_64_linux"
+  fi
 
 elif [ $OpSys -eq $OpSys_AXP_VMS ]; then
 

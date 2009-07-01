@@ -133,3 +133,5 @@
 090515 cs  wtt       Bugfix in ConnectGraph method for PlantHier objects.
 090518 cs  wb        Wb method PostRename added and implemented for XttGraph and ProjectReg objects.
 090518 cs  wb        Advanced user set as default in wb.
+090630 cs  wb        Directory database changed from BerkeleyDb to wb_load format.
+090701 cs  plc       Env variable PWR_EXT_INC added to plc compile command. Replaces pwrp_cmn.
