@@ -35,21 +35,21 @@ class wb_name;
 
 typedef struct {
   pwr_tOid        oid;        /**< object identifier */
-  pwr_tCid        cid;        /**< class identifier */
-  pwr_tOid        poid;       /**< object identifier of parent */
-  pwr_tObjName    name;       /**< name of object */
-  pwr_tObjName    normname;   /**< normalized object name. */
-  pwr_tTime       time;       /**< time of last change in object header */
-  pwr_tOid        boid;       /**< object before this object. */
-  pwr_tOid        aoid;       /**< object after this object. */
-  pwr_tOid        foid;       /**< first child object. */
-  pwr_tOid        loid;       /**< last child object. */
+  pwr_tCid        cid pwr_dAlignW;        /**< class identifier */
+  pwr_tOid        poid pwr_dAlignW;       /**< object identifier of parent */
+  pwr_tObjName    name pwr_dAlignW;       /**< name of object */
+  pwr_tObjName    normname pwr_dAlignW;   /**< normalized object name. */
+  pwr_tTime       time pwr_dAlignLW;       /**< time of last change in object header */
+  pwr_tOid        boid pwr_dAlignLW;       /**< object before this object. */
+  pwr_tOid        aoid pwr_dAlignW;       /**< object after this object. */
+  pwr_tOid        foid pwr_dAlignW;       /**< first child object. */
+  pwr_tOid        loid pwr_dAlignW;       /**< last child object. */
 
   pwr_mClassDef   flags;
   struct {
     pwr_tTime       time;
-    size_t          size;
-  } body[2];    /**< bodies */
+    pwr_tUInt64     size;
+  } body[2] pwr_dAlignLW;    /**< bodies */
 } dbms_sObject;
 
 typedef struct 
