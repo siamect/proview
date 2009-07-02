@@ -962,13 +962,15 @@ void opc_provider::subAssociateBuffer( co_procom *pcom, void **buff, int oix, in
 	opcprv_sub sub;
 
 	server_state->RequestCnt++;
-	sub.handle = *subscribe_response.ServerSubHandle;
-	sub.oix = oix;
-	m_sublist[sid.rix] = sub;
+	if ( subscribe_response.ServerSubHandle) {
+	  sub.handle = *subscribe_response.ServerSubHandle;
+	  sub.oix = oix;
+	  m_sublist[sid.rix] = sub;
 
-	if ( subscribe_response.RItemList && subscribe_response.RItemList->Items.size()) {
-	  for ( int i = 0; i < (int)subscribe_response.RItemList->Items.size(); i++) {
-	    // subscribe_response.RItemList->Items[i]->ItemValue...
+	  if ( subscribe_response.RItemList && subscribe_response.RItemList->Items.size()) {
+	    for ( int i = 0; i < (int)subscribe_response.RItemList->Items.size(); i++) {
+	      // subscribe_response.RItemList->Items[i]->ItemValue...
+	    }
 	  }
 	}
       }
