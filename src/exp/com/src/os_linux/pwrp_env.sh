@@ -597,7 +597,7 @@ EOF
 
 <h1>Welcome to $pname
 <h2>Description
-Edit file \$pwrp_exe/xtt_help.dat to write this description.
+Edit file \$pwrp_cnf/xtt_help.dat to write this description.
 </topic>
 
 <include> \$pwr_lang/profibus_xtthelp.dat
