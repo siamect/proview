@@ -58,7 +58,7 @@
 /* Data structure for one dataobjekt in a NMpsCell and NMpsSelectCell */
 typedef struct {
 	pwr_tFloat32	*DataP;
-	pwr_tObjid	Data_ObjId pwr_dAlignW;
+	pwr_tObjid	Data_ObjId pwr_dAlignLW;
 	pwr_tBoolean	Data_Front pwr_dAlignW;
 	pwr_tBoolean	Data_Back pwr_dAlignW;
 	gdh_tDlid	Data_Dlid pwr_dAlignW;	

@@ -2948,7 +2948,7 @@ void DataFWrite_exec( plc_sThread		*tp,
     o->Error = 0;
 
   if ( *o->ConditionP && !o->CondOld) {
-    pwr_tAttrRef aref = cdh_ObjidToAref( *(pwr_tOid *)((char *)o->DataP + 4));
+    pwr_tAttrRef aref = cdh_ObjidToAref( *(pwr_tOid *)((char *)o->DataP + pwr_cAlignLW));
 
     o->WriteStatus = gdh_FWriteObject( *o->FileNameP, &aref);
     if ( EVEN(o->WriteStatus))
@@ -2972,7 +2972,7 @@ void DataFRead_exec( plc_sThread		*tp,
     o->Error = 0;
 
   if ( *o->ConditionP && !o->CondOld) {
-    pwr_tAttrRef aref = cdh_ObjidToAref( *(pwr_tOid *)((char *)o->DataP + 4));
+    pwr_tAttrRef aref = cdh_ObjidToAref( *(pwr_tOid *)((char *)o->DataP + pwr_cAlignLW));
 
     o->ReadStatus = gdh_FReadObject( *o->FileNameP, &aref);
     if ( EVEN(o->ReadStatus))
