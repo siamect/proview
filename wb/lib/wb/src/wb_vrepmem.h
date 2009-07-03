@@ -237,7 +237,9 @@ class wb_vrepmem : public wb_vrep, public wb_import
 public:
   wb_vrepmem( wb_erep *erep) : 
     m_erep(erep), m_merep(erep->merep()), m_nRef(0), root_object(0), 
-    volume_object(0), m_nextOix(0) {}
+    volume_object(0), m_nextOix(0), m_source_vid(0), m_classeditor(false),
+    m_ignore(false) 
+      { strcpy( m_filename, "");}
 
   wb_vrepmem( wb_erep *erep, pwr_tVid vid);
   ~wb_vrepmem();
