@@ -86,19 +86,24 @@ void wb_vrepmem::loadWbl( const char *filename, pwr_tStatus *sts, bool reload)
     return;
   }
 
-  // Insert vrepwbl in local merep to interprete the Template objects
-  if ( m_merep == m_erep->merep())
-    m_merep = new wb_merep( *m_erep->merep(), this);
+  if ( vrep->cid() == pwr_eClass_ClassVolume) {
+    // Start the class editor
 
-  wb_mvrep *mvrep = m_merep->volume( sts, vrep->vid());
-  if ( ODD(*sts))
-    m_merep->removeDbs( sts, mvrep);
+    // Insert vrepwbl in local merep to interprete the Template objects
+    if ( m_merep == m_erep->merep())
+      m_merep = new wb_merep( *m_erep->merep(), this);
 
-  m_merep->addDbs( sts, (wb_mvrep *)vrep);
+    wb_mvrep *mvrep = m_merep->volume( sts, vrep->vid());
+    if ( ODD(*sts))
+      m_merep->removeDbs( sts, mvrep);
 
-  // Change merep in ref volumes
-  m_erep->setRefMerep( m_merep);
+    m_merep->addDbs( sts, (wb_mvrep *)vrep);
 
+    // Change merep in ref volumes
+    m_erep->setRefMerep( m_merep);
+
+    m_classeditor = true;
+  }
   vrep->ref();
   m_vid = vrep->vid();
   strcpy( m_filename, filename);
@@ -107,7 +112,6 @@ void wb_vrepmem::loadWbl( const char *filename, pwr_tStatus *sts, bool reload)
   importVolume( *vrep);
   vrep->unref();
 
-  m_classeditor = true;
   *sts = LDH__SUCCESS;
 }
 
@@ -1941,12 +1945,13 @@ bool wb_vrepmem::commit(pwr_tStatus *sts)
     return false;
   }
 
-  printPaletteFile();
+  if ( m_classeditor) {
+    printPaletteFile();
 
-  // Reload to get new template objects
-  clear();
-  loadWbl( m_filename, sts, true);
-
+    // Reload to get new template objects
+    clear();
+    loadWbl( m_filename, sts, true);
+  }
   return true;
 }
 
