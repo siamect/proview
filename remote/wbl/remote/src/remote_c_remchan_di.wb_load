@@ -71,6 +71,7 @@ SObject Remote:Class
           Attr Flags |= PWR_MASK_POINTER
           Attr Flags |= PWR_MASK_NOEDIT
           Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Size = 4
         EndBody
       EndObject
       !

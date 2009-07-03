@@ -70,7 +70,7 @@ SObject Remote:Class
       !
       Object Direction $Attribute 4
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr TypeRef = "Remote:Type-TransDirectionEnum"
         EndBody
       EndObject
       !
