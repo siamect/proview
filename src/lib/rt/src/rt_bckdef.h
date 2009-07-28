@@ -58,11 +58,12 @@
      header area. The routines bck_falloc and bck_ffree are used
      to allocate and free areas in this section.  */
 
-#define	BCK_FILE_VERSION	6
+#define	BCK_FILE_VERSION	7
 
 typedef struct {
 
 	pwr_tInt32	version;	/* File layout version */
+        pwr_tInt32      fill; 
 	pwr_tTime	creationtime;	/* Time when file was created */
 	pwr_tTime	updatetime [2];	/* Time when header was last updated */
 	pwr_tInt32	curdata [2];	/* backup data 0 for fast cycle, and */
