@@ -596,7 +596,7 @@ bck_file_process (
 {
   BCK_WRTBLK_STRUCT *wrtblk;
   pwr_tUInt32 filepos;
-  pwr_tUInt32 actpos;	/* Actual file position */
+  long actpos;	/* Actual file position */
   pwr_tUInt32 c;
   pwr_tUInt32 csts;
   pwr_tUInt32 cnt;
