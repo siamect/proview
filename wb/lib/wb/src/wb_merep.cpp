@@ -310,7 +310,9 @@ wb_cdrep *wb_merep::cdrep( pwr_tStatus *sts, const wb_orep& o)
     return 0;
   }
   *sts = LDH__SUCCESS;
-  return it->second->cdrep( o);
+  wb_cdrep *cd = it->second->cdrep( o);
+  cd->merep( this);
+  return cd;
 }
 
 wb_cdrep *wb_merep::cdrep( pwr_tStatus *sts, pwr_tCid cid)
@@ -322,7 +324,9 @@ wb_cdrep *wb_merep::cdrep( pwr_tStatus *sts, pwr_tCid cid)
   }
   try {
     *sts = LDH__SUCCESS;
-    return it->second->cdrep( cid);
+    wb_cdrep *cd = it->second->cdrep( cid);
+    cd->merep( this);
+    return cd;
   }
   catch ( wb_error& e) {
     *sts = e.sts();
@@ -339,6 +343,7 @@ wb_cdrep *wb_merep::cdrep( pwr_tStatus *sts, wb_name name)
     if ( EVEN( *sts)) return 0;
     try {
       cdrep = new wb_cdrep( mvrep, name);
+      cdrep->merep( this);
       *sts = LDH__SUCCESS;
       return cdrep;
     }
@@ -351,6 +356,7 @@ wb_cdrep *wb_merep::cdrep( pwr_tStatus *sts, wb_name name)
     for ( mvrep_iterator it = m_mvrepdbs.begin(); it != m_mvrepdbs.end(); it++) {
       try {
         cdrep = new wb_cdrep( it->second, name);
+	cdrep->merep( this);
         *sts = LDH__SUCCESS;
         return cdrep;
       }

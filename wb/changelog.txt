@@ -135,3 +135,4 @@
 090518 cs  wb        Advanced user set as default in wb.
 090630 cs  wb        Directory database changed from BerkeleyDb to wb_load format.
 090701 cs  plc       Env variable PWR_EXT_INC added to plc compile command. Replaces pwrp_cmn.
+090803 cs  wb        Bugfix in loading wbload file with objects containing object attributes.

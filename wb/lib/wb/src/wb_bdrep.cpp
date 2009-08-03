@@ -37,12 +37,12 @@ wb_bdrep *wb_bdrep::ref()
   return this;
 }
 
-wb_bdrep::wb_bdrep(wb_orep& o) : m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS)
+wb_bdrep::wb_bdrep(wb_orep& o) : m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS), m_merep(0)
 {
   m_orep->ref();
 }
 
-wb_bdrep::wb_bdrep( wb_adrep *adrep) : m_nRef(0)
+wb_bdrep::wb_bdrep( wb_adrep *adrep) : m_nRef(0), m_merep(0)
 {
   pwr_tStatus sts;
   m_orep = adrep->m_orep->parent( &sts);
@@ -196,7 +196,11 @@ wb_adrep *wb_bdrep::adrep( pwr_tStatus *sts, const char *aname)
     }
 
     if ( (i != n.attributes() - 1) && adrep->isClass()) {
-      wb_cdrep *cd = m_orep->vrep()->merep()->cdrep( sts, adrep->subClass());
+      wb_cdrep *cd;
+      if ( m_merep)
+	cd = m_merep->cdrep( sts, adrep->subClass());
+      else
+	cd = m_orep->vrep()->merep()->cdrep( sts, adrep->subClass());
       if ( EVEN(*sts)) return 0;
 
       if ( bd != this)

@@ -38,6 +38,7 @@ class wb_cdrep
   int m_nRef;
   wb_orep *m_orep;
   pwr_tStatus m_sts;
+  wb_merep *m_merep;
 
 public:
   wb_cdrep();
@@ -92,6 +93,7 @@ public:
   pwr_tStatus sts() { return m_sts;}
   ldh_eVolRep vtype() const;
   bool renameClass( pwr_tStatus *sts, wb_name &name);
+  void merep( wb_merep *me) { m_merep = me;}
 };
 
 #endif

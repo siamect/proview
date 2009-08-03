@@ -64,7 +64,7 @@ wb_cdrep *wb_cdrep::ref()
   return this;
 }
 
-wb_cdrep::wb_cdrep() : m_nRef(0), m_orep(0), m_sts(LDH__NOCLASS)
+wb_cdrep::wb_cdrep() : m_nRef(0), m_orep(0), m_sts(LDH__NOCLASS), m_merep(0)
 {
 }
 
@@ -74,7 +74,7 @@ wb_cdrep::~wb_cdrep()
     m_orep->unref();
 }
 
-wb_cdrep::wb_cdrep( wb_mvrep *mvrep, pwr_tCid cid) : m_nRef(0), m_orep(0)
+wb_cdrep::wb_cdrep( wb_mvrep *mvrep, pwr_tCid cid) : m_nRef(0), m_orep(0), m_merep(0)
 {
   pwr_tOid oid = cdh_ClassIdToObjid( cid);
   m_orep = mvrep->object( &m_sts, oid);
@@ -84,7 +84,7 @@ wb_cdrep::wb_cdrep( wb_mvrep *mvrep, pwr_tCid cid) : m_nRef(0), m_orep(0)
   m_sts = LDH__SUCCESS;
 }
 
-wb_cdrep::wb_cdrep( wb_mvrep *mvrep, wb_name name) : m_nRef(0), m_orep(0)
+wb_cdrep::wb_cdrep( wb_mvrep *mvrep, wb_name name) : m_nRef(0), m_orep(0), m_merep(0)
 {
   char str[80];
   strcpy( str, "Class-");
@@ -97,7 +97,7 @@ wb_cdrep::wb_cdrep( wb_mvrep *mvrep, wb_name name) : m_nRef(0), m_orep(0)
   m_sts = LDH__SUCCESS;
 }
 
-wb_cdrep::wb_cdrep( wb_mvrep *mvrep, const wb_orep& o) : m_nRef(0), m_orep(0)
+wb_cdrep::wb_cdrep( wb_mvrep *mvrep, const wb_orep& o) : m_nRef(0), m_orep(0), m_merep(0)
 {
   pwr_tOid oid = cdh_ClassIdToObjid( o.cid());
   m_orep = mvrep->object( &m_sts, oid);
@@ -107,7 +107,7 @@ wb_cdrep::wb_cdrep( wb_mvrep *mvrep, const wb_orep& o) : m_nRef(0), m_orep(0)
   m_sts = LDH__SUCCESS;
 }
 
-wb_cdrep::wb_cdrep( const wb_orep& o) : m_nRef(0), m_orep(0)
+wb_cdrep::wb_cdrep( const wb_orep& o) : m_nRef(0), m_orep(0), m_merep(0)
 {
   pwr_tStatus sts;
   
@@ -120,7 +120,7 @@ wb_cdrep::wb_cdrep( const wb_orep& o) : m_nRef(0), m_orep(0)
   }
 }
 
-wb_cdrep::wb_cdrep( wb_adrep *adrep) : m_nRef(0)
+wb_cdrep::wb_cdrep( wb_adrep *adrep) : m_nRef(0), m_merep(0)
 {
   pwr_tStatus sts;
   wb_orep *orep = adrep->m_orep->parent( &sts);
@@ -140,6 +140,7 @@ wb_bdrep *wb_cdrep::bdrep( pwr_tStatus *sts, const char *bname)
   if ( EVEN(*sts))
     return 0;
   wb_bdrep *bdrep = new wb_bdrep( *orep);
+  bdrep->merep( m_merep);
   return bdrep;
 }
 
@@ -151,6 +152,7 @@ wb_bdrep *wb_cdrep::bdrep( pwr_tStatus *sts, pwr_eBix bix)
     if ( orep->cid() == pwr_eClass_ObjBodyDef &&
          cdh_oixToBix( orep->oid().oix) ==  bix) {
       wb_bdrep *bdrep = new wb_bdrep( *orep);
+      bdrep->merep( m_merep);
       return bdrep;
     }
     old = orep;
@@ -874,7 +876,11 @@ void wb_cdrep::updateTemplateSubClass( wb_adrep *subattr, char *body, pwr_tOid o
 {
   pwr_tStatus sts;
   pwr_tCid cid = subattr->subClass();
-  wb_cdrep *cdrep = m_orep->vrep()->merep()->cdrep( &sts, cid);
+  wb_cdrep *cdrep;
+  if ( m_merep)
+    cdrep = m_merep->cdrep( &sts, cid);
+  else 
+    cdrep = m_orep->vrep()->merep()->cdrep( &sts, cid);
   if ( EVEN(sts)) throw wb_error(sts);
   wb_bdrep *bdrep = cdrep->bdrep( &sts, pwr_eBix_rt);
   if ( EVEN(sts)) throw wb_error(sts);
