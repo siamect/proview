@@ -196,6 +196,8 @@ ini_SetAttribute (
 	  sts = ini_datafile_get_next( codeword, (char **)&data_ptr, &elements);
 	  if ( EVEN(sts)) break;
 
+	  if ( elements == 3 && strcmp( data_ptr[2], "") == 0)
+	    elements = 2;
 	  if ( elements != 2)
 	  {
 	    if ( elements > 2)
