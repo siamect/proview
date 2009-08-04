@@ -53,6 +53,7 @@ qos_WaitQueOld (
 )
 {
   pwr_tDeltaTime	dtime;
+  struct timespec	dtime_ts;
   sigset_t		newset;
   siginfo_t		info;
   int			ok;
@@ -76,7 +77,11 @@ qos_WaitQueOld (
   qdb_Unlock;
 
     if (tmo != qcom_cTmoEternal) {
-      ok = sigtimedwait(&newset, &info, (struct timespec *)time_MsToD(&dtime, tmo));  
+      time_MsToD(&dtime, tmo);
+      dtime_ts.tv_sec = dtime.tv_sec;
+      dtime_ts.tv_nsec = dtime.tv_nsec;
+     
+      ok = sigtimedwait(&newset, &info, &dtime_ts);  
     } else {
       for (;;) {
         ok = sigwaitinfo(&newset, &info);
@@ -114,6 +119,7 @@ qos_WaitQue (
 {
   pwr_tDeltaTime	dtime;
   pwr_tTime             atime;
+  struct timespec       atime_ts;
   int			ok;
   pwr_tBoolean		signal = FALSE;
   pwr_dStatus		(sts, status, QCOM__SUCCESS);
@@ -134,7 +140,10 @@ qos_WaitQue (
     time_GetTime(&atime);
     time_MsToD(&dtime, tmo);
     time_Aadd(&atime, &atime, &dtime);
-    ok = pthread_cond_timedwait(&qp->lock.cond, &qp->lock.mutex, (struct timespec *) &atime);
+    atime_ts.tv_sec = atime.tv_sec;
+    atime_ts.tv_nsec = atime.tv_nsec;
+
+    ok = pthread_cond_timedwait(&qp->lock.cond, &qp->lock.mutex, &atime_ts);
   } else {
     ok = pthread_cond_wait(&qp->lock.cond, &qp->lock.mutex);
   }

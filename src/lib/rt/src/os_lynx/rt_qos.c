@@ -50,6 +50,7 @@ qos_WaitQue (
 )
 {
   pwr_tDeltaTime	dtime;
+  struct timespec	dtime_ts;
   sigset_t		newset;
   sigset_t		oldset;
   siginfo_t		info;
@@ -73,7 +74,10 @@ qos_WaitQue (
   qdb_Unlock;
 
     if (tmo != qcom_cTmoEternal) {
-      ok = sigtimedwait(&newset, &info, (struct timespec *)time_MsToD(&dtime, tmo));  
+      time_MsToD(&dtime, tmo);
+      dtime_ts.tv_sec = dtime.tv_sec;
+      dtime_ts.tv_nsec = dtime.tv_nsec;
+      ok = sigtimedwait(&newset, &info, &dtime_ts);  
     } else {
       ok = sigwaitinfo(&newset, &info);
     }

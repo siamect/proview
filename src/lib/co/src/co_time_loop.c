@@ -185,7 +185,12 @@ time_LoopWait (
 #endif
   }
 #elif defined(OS_LYNX) || defined(OS_LINUX)
-  nanosleep( (struct timespec *) &wait_time, NULL);
+  {
+    struct timespec wait_time_ts;
+    wait_time_ts.tv_sec = wait_time.tv_sec;
+    wait_time_ts.tv_nsec = wait_time.tv_nsec;
+    nanosleep( &wait_time_ts, NULL);
+  }
 #endif
   ls->PreviousTime = t;
   return 1;
