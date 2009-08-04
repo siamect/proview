@@ -305,6 +305,10 @@ void pkg_node::checkVolume( char *filename)
   sts = lfu_GetVolume( filename, vol_name, &vol_vid, &vol_cid, &vol_time);
   if ( EVEN(sts)) throw wb_error(sts);
 
+  if ( vol_cid == pwr_eClass_DetachedClassVolume)
+    // No check
+    return;
+
   found = false;
   for ( int i = 0; i < (int)m_volumelist.size(); i++) {
     if ( m_volumelist[i].m_vid == vol_vid) {
