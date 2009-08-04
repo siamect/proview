@@ -55,7 +55,7 @@ void DpCollect_exec(
 	for (  i = 0; i < object->MaxIndex; i++)
 	{
 	  InP = (pwr_tBoolean **) ((char *) &object->DpIn1P +
-		i * (sizeof(object->DpIn1) + sizeof(object->DpIn1P)));
+		i * pwr_cInputOffset);
 	  object->Dp[i] = **InP;
 	}
 }
@@ -73,7 +73,7 @@ void ApCollect_exec(
 	for (  i = 0; i < object->MaxIndex; i++)
 	{
 	  InP = (pwr_tFloat32 **) ((char *) &object->ApIn1P +
-		i * (sizeof(object->ApIn1) + sizeof(object->ApIn1P)));
+		i * pwr_cInputOffset);
 	  object->Ap[i] = **InP;
 	}
 }
@@ -91,7 +91,7 @@ void IpCollect_exec(
 	for (  i = 0; i < object->MaxIndex; i++)
 	{
 	  InP = (pwr_tInt32 **) ((char *) &object->IpIn1P +
-		i * (sizeof(object->IpIn1) + sizeof(object->IpIn1P)));
+		i * pwr_cInputOffset);
 	  object->Ip[i] = **InP;
 	}
 }
@@ -145,7 +145,7 @@ void DataCollect_exec(
 	for (  i = 0; i < object->MaxIndex; i++)
 	{
 	  InP = (plc_t_DataInfoBrief **) ((char *) &object->DataIn1P +
-		i * (sizeof(object->DataIn1) + sizeof(object->DataIn1P)));
+		i * pwr_cInputOffset);
 	  object->DataP[i] = (*InP)->DataP;
 	  object->DataObjId[i] = (*InP)->Data_ObjId;
 	}
