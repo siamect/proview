@@ -7232,9 +7232,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
         !  Queue of warning and error messages.
         !*/
         Object messageQ $Intern 180 16-JAN-2006 11:27:48.46
-          Body SysBody 16-JAN-2006 11:27:48.46
+          Body SysBody 30-JUL-2009 14:12:31.18
             Attr PgmName = "messageQ"
-            Attr Flags = 3091
+            Attr Flags = 68627
             Attr Elements = 2
             Attr TypeRef = "pwrs:Type-$Char"
           EndBody
@@ -7635,9 +7635,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! Pointer to the reference list / queue. 
         !*/
         Object RefListp $Intern 157 25-JAN-2006 14:57:10.82
-          Body SysBody 25-JAN-2006 14:57:10.82
+          Body SysBody 30-JUL-2009 14:19:54.21
             Attr PgmName = "RefListp"
-            Attr Flags = 3089
+            Attr Flags = 68625
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
