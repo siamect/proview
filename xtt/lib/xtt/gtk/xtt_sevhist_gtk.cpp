@@ -67,6 +67,7 @@ XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
   curve->help_cb = sevhist_help_cb;
   curve->higher_res_cb = sevhist_higher_res_cb;
   curve->lower_res_cb = sevhist_lower_res_cb;
+  curve->enable_resolution_buttons();
 
   wow = new CoWowGtk( parent_widget);
   timerid = wow->timer_new();

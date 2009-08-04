@@ -145,6 +145,7 @@ class GeCurve {
     virtual void resize() {}
     virtual void open_minmax( int idx) {}
     virtual void axis_set_width( int width) {}  
+    virtual void enable_resolution_buttons() {}
     void set_inputfocus() {}
 
     int read_file( char *filename);

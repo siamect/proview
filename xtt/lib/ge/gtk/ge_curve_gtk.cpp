@@ -200,6 +200,12 @@ void GeCurveGtk::activate_minmax_cancel( GtkWidget *w, gpointer data)
   g_object_set( ((GeCurveGtk *)curve)->minmax_widget, "visible", FALSE, NULL);
 }
 
+void GeCurveGtk::enable_resolution_buttons()
+{
+  g_object_set( tools_higher_res, "visible", TRUE, NULL);
+  g_object_set( tools_lower_res, "visible", TRUE, NULL);
+}
+
 void GeCurveGtk::pop()
 {
   gtk_window_present( GTK_WINDOW(toplevel));
@@ -478,16 +484,16 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   g_object_set( tools_page_right, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_page_right, CoWowGtk::translate_utf8("Page right"), "");
 
-  GtkWidget *tools_higher_res = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/ge_redo.png");
+  tools_higher_res = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_up.png");
   gtk_container_add( GTK_CONTAINER(tools_higher_res), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_higher_res, "clicked", G_CALLBACK(activate_higher_res), this);
   g_object_set( tools_higher_res, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_higher_res, CoWowGtk::translate_utf8("Higer resolution"), "");
 
-  GtkWidget *tools_lower_res = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/ge_undo.png");
+  tools_lower_res = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_down.png");
   gtk_container_add( GTK_CONTAINER(tools_lower_res), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_lower_res, "clicked", G_CALLBACK(activate_lower_res), this);
@@ -530,6 +536,8 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
 
   gtk_paned_set_position( GTK_PANED(vpaned1), names_height);
   gtk_paned_set_position( GTK_PANED(vpaned2), window_height - names_height - nav_height - 50);
+  g_object_set( tools_higher_res, "visible", FALSE, NULL);
+  g_object_set( tools_lower_res, "visible", FALSE, NULL);
 
   wow = new CoWowGtk( toplevel);
 }

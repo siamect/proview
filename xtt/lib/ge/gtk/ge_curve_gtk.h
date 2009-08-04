@@ -47,6 +47,8 @@ class GeCurveGtk : public GeCurve {
     GtkWidget   *minmax_widget;
     GtkWidget   *minmax_textmin_widget;
     GtkWidget   *minmax_textmax_widget;
+    GtkWidget   *tools_higher_res;
+    GtkWidget   *tools_lower_res;
     CoWowFocusTimerGtk focustimer;
 
     void pop();
@@ -56,6 +58,7 @@ class GeCurveGtk : public GeCurve {
     void axis_set_width( int width);
     void create_minmax_dialog();
     void set_inputfocus();
+    void enable_resolution_buttons();
 
     ~GeCurveGtk();
 
