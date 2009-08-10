@@ -1115,7 +1115,31 @@ wb_vrep *wb_erep::createVolume(pwr_tStatus *sts, pwr_tVid vid, pwr_tCid cid,
 {
   pwr_tFileName vname;
 
-  if ( type == ldh_eVolRep_Db || cid == pwr_eClass_DirectoryVolume) {
+  if ( cid == pwr_eClass_DirectoryVolume) {
+    vrep_iterator it = m_vrepdb.find( vid);
+    if ( it != m_vrepdb.end()) {
+      *sts = LDH__VOLIDALREXI;
+      return 0;
+    }
+
+    strcpy( vname, "$pwrp_db/directory.wb_load");
+    dcli_translate_filename( vname, vname);
+
+    ofstream ofd( vname);
+    ofd << "Volume directory $DirectoryVolume 254.254.254.253" << endl <<
+      "EndVolume" << endl;    
+    ofd.close();
+
+    MsgWindow::message( 'I', "Database created", vname);
+
+    wb_vrepmem *vrepmem = new wb_vrepmem( this);
+    vrepmem->loadWbl( vname, sts);
+    vrepmem->name("directory");
+    if ( add)
+      addDb( sts, vrepmem);
+    return vrepmem;
+  }
+  else if ( type == ldh_eVolRep_Db) {
     sprintf( vname, "$pwrp_db/%s.db", cdh_Low(name));
     dcli_translate_filename( vname, vname);
     
