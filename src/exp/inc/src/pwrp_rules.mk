@@ -15,7 +15,7 @@ cxxflags 	:= $(cflags) -Wno-deprecated
 f77flags	:= 
 linkflags	:= -g -L/usr/local/lib -L$(pwr_lib) -L$(pwrp_lib) -lrt
 csetos		:= -DOS_LINUX=1 -DOS=linux -DHW_X86=1 -DHW=x86
-cinc		:= -I$(pwr_inc) -I$(pwrp_inc) -I$(pwrp_cmn)/common/inc -I/usr/local/include -I/usr/X11R6/include -I$(jdk)/include -I$(jdk)/include/linux
+cinc		:= -I$(pwr_inc) -I$(pwrp_inc) $(PWR_EXT_INC) -I/usr/local/include -I/usr/X11R6/include -I$(jdk)/include -I$(jdk)/include/linux
 f77inc		:= -I$(pwr_inc) -I$(pwrp_inc)
 
 .SUFFIXES:
