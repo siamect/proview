@@ -706,10 +706,10 @@ wb_orep *wb_vrepmem::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination
 
   if ( d.oid().oix == 0) {
     dest = root_object;
-    if ( code == ldh_eDest_After)
-      code = ldh_eDest_IntoLast;
-    if ( code == ldh_eDest_Before)
-      code = ldh_eDest_IntoFirst;
+    if ( code == ldh_eDest_IntoLast)
+      code = ldh_eDest_After;
+    if ( code == ldh_eDest_IntoFirst)
+      code = ldh_eDest_Before;
   }
   else {
     dest = findObject( d.oid().oix);
