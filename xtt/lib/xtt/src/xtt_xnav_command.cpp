@@ -3833,6 +3833,7 @@ static int	xnav_create_func( void		*client_data,
   {
     char text_str[80];
     char destination_str[80];
+    char *destination_p = destination_str;
     char command_str[80];
     char pixmap_str[80];
     menu_ePixmap pixmap;
@@ -3859,6 +3860,8 @@ static int	xnav_create_func( void		*client_data,
       xnav->message('E',"Enter destination");
       return XNAV__HOLDCOMMAND;
     }
+    if ( strcmp( destination_str, "") == 0)
+      destination_p = 0;
     if ( ODD( dcli_get_qualifier( "/COMMAND", command_str, sizeof(command_str))))
       item_type = xnav_eItemType_Command;
     if ( ODD( dcli_get_qualifier( "/MENU", 0, 0)))
@@ -3892,7 +3895,7 @@ static int	xnav_create_func( void		*client_data,
       pixmap = menu_ePixmap_Map;
 
     sts = xnav->menu_tree_insert( text_str, item_type, command_str, pixmap,
-		destination_str, dest_code, &menu_item);
+		destination_p, dest_code, &menu_item);
     if ( EVEN(sts))
       xnav->message('E',"Destination not found");
 

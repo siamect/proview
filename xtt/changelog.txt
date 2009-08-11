@@ -136,3 +136,4 @@
 090601 cs  ge        New action: SetValue to set a specified value into an attribute.
 090625 cs  xtt       Bugfix in eventlist, adding event in a full list could cause segfault.
 090625 cs  xtt       Blocklist window title was wrong.
+090811 cs  xtt       Command 'create item' with null destination creaets item on toplevel.
