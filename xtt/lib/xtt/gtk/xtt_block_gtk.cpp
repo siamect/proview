@@ -148,11 +148,17 @@ BlockGtk::BlockGtk( void *b_parent_ctx,
 
   CoWowGtk::SetWindowIcon( toplevel);
 
-  toggleA = gtk_check_button_new_with_label( "A Alarm");
-  toggleB = gtk_check_button_new_with_label( "B Alarm");
-  toggleC = gtk_check_button_new_with_label( "C Alarm");
-  toggleD = gtk_check_button_new_with_label( "D Alarm");
-  toggleNo = gtk_check_button_new_with_label( "No Blocking");
+  GSList *bl_group = NULL;
+  toggleA = gtk_radio_button_new_with_label( bl_group, "A Alarm");
+  bl_group = gtk_radio_button_get_group( GTK_RADIO_BUTTON(toggleA));
+  toggleB = gtk_radio_button_new_with_label( bl_group, "B Alarm");
+  bl_group = gtk_radio_button_get_group( GTK_RADIO_BUTTON(toggleB));
+  toggleC = gtk_radio_button_new_with_label( bl_group, "C Alarm");
+  bl_group = gtk_radio_button_get_group( GTK_RADIO_BUTTON(toggleC));
+  toggleD = gtk_radio_button_new_with_label( bl_group, "D Alarm");
+  bl_group = gtk_radio_button_get_group( GTK_RADIO_BUTTON(toggleD));
+  toggleNo = gtk_radio_button_new_with_label( bl_group, "No Blocking");
+  bl_group = gtk_radio_button_get_group( GTK_RADIO_BUTTON(toggleNo));
 
   GtkWidget *toggle_vbox = gtk_vbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(toggle_vbox), toggleA, FALSE, FALSE, 7);
