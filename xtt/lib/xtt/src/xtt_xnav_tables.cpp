@@ -276,6 +276,7 @@ int XNav::show_nethandler()
       // Os
       switch ( np->hw) {
         case co_eHW_x86: strcpy( t.elem[t.elem_cnt].fix_str, "x86"); break;
+        case co_eHW_x86_64: strcpy( t.elem[t.elem_cnt].fix_str, "x86_64"); break;
         case co_eHW_68k: strcpy( t.elem[t.elem_cnt].fix_str, "68k"); break;
         case co_eHW_VAX: strcpy( t.elem[t.elem_cnt].fix_str, "VAX"); break;
         case co_eHW_Alpha: strcpy( t.elem[t.elem_cnt].fix_str, "AXP"); break;
@@ -289,6 +290,7 @@ int XNav::show_nethandler()
         case co_eOS_ELN: strcat( t.elem[t.elem_cnt].fix_str, "_ELN"); break;
         default: ;
       }
+      t.elem[t.elem_cnt].fix_str[11] = 0;
       t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
 
       if (np == gdbroot->my_node)

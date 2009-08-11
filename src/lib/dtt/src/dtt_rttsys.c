@@ -1069,6 +1069,7 @@ int RTTSYS_SHOW_NODES( 	menu_ctx	ctx,
             /* Hw */
 	    switch ( np->hw) {
 	      case co_eHW_x86: strcpy( menu_ptr->value_ptr, "x86"); break;
+	      case co_eHW_x86_64: strcpy( menu_ptr->value_ptr, "x86_64"); break;
 	      case co_eHW_68k: strcpy( menu_ptr->value_ptr, "68k"); break;
 	      case co_eHW_VAX: strcpy( menu_ptr->value_ptr, "VAX"); break;
 	      case co_eHW_Alpha: strcpy( menu_ptr->value_ptr, "AXP"); break;
@@ -1233,6 +1234,7 @@ int RTTSYS_SHOW_NODES( 	menu_ctx	ctx,
             /* Hw */
 	    switch ( np->hw) {
 	      case co_eHW_x86: strcpy( menu_ptr->value_ptr, "x86"); break;
+	      case co_eHW_x86_64: strcpy( menu_ptr->value_ptr, "x86_64"); break;
 	      case co_eHW_68k: strcpy( menu_ptr->value_ptr, "68k"); break;
 	      case co_eHW_VAX: strcpy( menu_ptr->value_ptr, "VAX"); break;
 	      case co_eHW_Alpha: strcpy( menu_ptr->value_ptr, "AXP"); break;
@@ -11765,6 +11767,7 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
             /* Hw */
 	    switch ( np->hw) {
 	      case co_eHW_x86: strcpy( menu_ptr->value_ptr, "x86"); break;
+	      case co_eHW_x86_64: strcpy( menu_ptr->value_ptr, "x86_64"); break;
 	      case co_eHW_68k: strcpy( menu_ptr->value_ptr, "68k"); break;
 	      case co_eHW_VAX: strcpy( menu_ptr->value_ptr, "VAX"); break;
 	      case co_eHW_Alpha: strcpy( menu_ptr->value_ptr, "AXP"); break;
@@ -11924,6 +11927,7 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
             /* Hw */
 	    switch ( np->hw) {
 	      case co_eHW_x86: strcpy( menu_ptr->value_ptr, "x86"); break;
+	      case co_eHW_x86_64: strcpy( menu_ptr->value_ptr, "x86_64"); break;
 	      case co_eHW_68k: strcpy( menu_ptr->value_ptr, "68k"); break;
 	      case co_eHW_VAX: strcpy( menu_ptr->value_ptr, "VAX"); break;
 	      case co_eHW_Alpha: strcpy( menu_ptr->value_ptr, "AXP"); break;

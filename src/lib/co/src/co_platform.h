@@ -111,11 +111,14 @@ typedef enum {
   co_eHW_VAX,
   co_eHW_Alpha,
   co_eHW_PPC,
+  co_eHW_x86_64,
   co_eHW_
 } co_eHW;
 
 #if defined(HW_X86) 
 #   define co_dHostHW co_eHW_x86
+#elif defined(HW_X86_64) 
+#   define co_dHostHW co_eHW_x86_64
 #elif defined(HW_VAX) 
 #   define co_dHostHW co_eHW_VAX
 #elif defined(HW_AXP) 
