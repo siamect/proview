@@ -161,7 +161,7 @@ int	dcli_parse( 	const char *string,
 	      {
 	        parsechar_found = 1;
 	        /* Next token */
-	        if ( col > 0 || nullstr)	
+	        if ( col > 0 || nullstr || (col == 0 && *char_ptr == ','))	
 	        {
 	          *(outstr + row * max_cols + col) = '\0';
 	          row++;
