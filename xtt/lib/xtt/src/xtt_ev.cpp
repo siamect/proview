@@ -27,6 +27,7 @@
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_dcli.h"
+#include "co_wow.h"
 #include "pwr_baseclasses.h"
 #include "rt_gdh.h"
 #include "rt_mh.h"
@@ -180,43 +181,47 @@ void Ev::eve_activate_ack_last()
 void Ev::eve_activate_help()
 {
   if ( help_cb)
-    (help_cb)( parent_ctx, "eventlist");
+    (help_cb)( parent_ctx, "opg_eventlist");
 }
 
 void Ev::eve_activate_helpevent()
 {
   char	eventname[80];
   int 	sts;
+  ItemAlarm *item;
 
   if ( help_cb) {
-    sts = ev->eve->get_selected_event( eventname);
-    if( ODD(sts))
-      (help_cb)( parent_ctx, eventname);
+    sts = ev->eve->get_selected_event( eventname, &item);
+    if( ODD(sts)) {
+      wow->DisplayText( eventname, item->eventmoretext);
+    }
   }
 }
 
 void Ev::ala_activate_help()
 {
   if ( help_cb)
-    (help_cb)( parent_ctx, "alarmlist");
+    (help_cb)( parent_ctx, "opg_alarmlist");
 }
 
 void Ev::ala_activate_helpevent()
 {
   char	eventname[80];
   int 	sts;
+  ItemAlarm *item;
 
   if ( help_cb) {
-    sts = ala->get_selected_event( eventname);
-    if( ODD(sts))
-      (help_cb)( parent_ctx, eventname);
+    sts = ala->get_selected_event( eventname, &item);
+    if( ODD(sts)) {
+      wow->DisplayText( eventname, item->eventmoretext);
+    }
   }
 }
 
 void Ev::blk_activate_help()
 {
   if ( help_cb)
-    (help_cb)( parent_ctx, "blocklist");
+    (help_cb)( parent_ctx, "opg_blocklist");
 }
 
 int	Ev::get_alarm_info( evlist_sAlarmInfo *info)

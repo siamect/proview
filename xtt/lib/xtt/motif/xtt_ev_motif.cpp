@@ -296,6 +296,8 @@ EvMotif::EvMotif( void *ev_parent_ctx,
   flow_AddCloseVMProtocolCb( parent_wid_blk, 
 	(XtCallbackProc)blk_activate_exit, this);
 
+  wow = new CoWowMotif( toplevel_ala);
+
   // Store this for the mh callbacks
   ev = this;
 

@@ -220,7 +220,7 @@ HistGtk::HistGtk( void *hist_parent_ctx,
   gtk_widget_add_accelerator( help_help, "activate", accel_g,
 			      'h', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
-  GtkWidget *help_helpevent = gtk_check_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("Help Selected Event"));
+  GtkWidget *help_helpevent = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("Help Selected Event"));
   g_signal_connect( help_helpevent, "activate", 
 		    G_CALLBACK(activate_helpevent), this);
 
@@ -452,6 +452,8 @@ HistGtk::HistGtk( void *hist_parent_ctx,
     this->eventName_str = name_str;
     get_hist_list();
   }
+
+  wow = new CoWowGtk( parent_wid_hist);
 
   *status = 1;
 }

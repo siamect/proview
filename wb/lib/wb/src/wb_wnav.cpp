@@ -3081,6 +3081,9 @@ void WNav::refresh()
 
 void WNav::select_object( brow_tObject object)
 {
+  if ( !object_exist( object))
+    return;
+
   if ( set_focus_cb)
     (set_focus_cb)( parent_ctx, this);
 

@@ -6749,6 +6749,8 @@ static void xnav_op_help_cb( void *ctx, const char *key)
 
   sts = CoXHelp::dhelp( key, "", navh_eHelpFile_Project, NULL, 0);
   if ( EVEN(sts))
+    sts = CoXHelp::dhelp( key, "", navh_eHelpFile_Base, NULL, 0);
+  if ( EVEN(sts))
     xnav->message( 'E', "Unable to find topic");
   else
     xnav->message( ' ', null_str);

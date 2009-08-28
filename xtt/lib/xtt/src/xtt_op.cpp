@@ -143,6 +143,12 @@ void Op::activate_help()
     help_cb( parent_ctx, "index");
 }
 
+void Op::activate_help_overview()
+{
+  if ( help_cb)
+    help_cb( parent_ctx, "overview");
+}
+
 void Op::jop_command_cb( void *op, char *command)
 {
   if ( ((Op *)op)->command_cb)

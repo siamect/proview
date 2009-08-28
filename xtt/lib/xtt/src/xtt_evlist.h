@@ -50,6 +50,8 @@
 #include "flow_browapi.h"
 #endif
 
+class ItemAlarm;
+
 #define ALARM_INFO_A_SIZE  5
 #define ALARM_INFO_B_SIZE  2
 #define ALARM_INFO_C_SIZE  2
@@ -188,7 +190,7 @@ class EvList {
     void set_hide_text( int value);
     int get_alarm_info( evlist_sAlarmInfo *info);
     int get_last_not_acked_prio( mh_sEventId **id, unsigned long type, unsigned long prio);
-    int get_selected_event( char *eventname);
+    int get_selected_event( char *eventname, ItemAlarm **item);
     int get_destination( pwr_tTime time, void **dest);
     void block_remove();
     void print( char *filename);

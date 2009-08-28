@@ -458,6 +458,16 @@ void XttGtk::activate_help_project( GtkWidget *w, gpointer data)
   xtt->activate_help_project();
 }
 
+void XttGtk::activate_help_navigator( GtkWidget *w, gpointer data)
+{
+  Xtt *xtt = (Xtt *)data;
+
+  if ( !xtt->xnav->is_authorized())
+    return;
+
+  xtt->activate_help_navigator();
+}
+
 void XttGtk::activate_help_proview( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
@@ -817,6 +827,10 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   gtk_widget_add_accelerator( help_overview, "activate", accel_g,
 			      'h', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
+  GtkWidget *help_navigator = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Navigator"));
+  g_signal_connect( help_navigator, "activate", 
+		    G_CALLBACK(XttGtk::activate_help_navigator), this);
+
   GtkWidget *help_project = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Project"));
   g_signal_connect( help_project, "activate", 
 		    G_CALLBACK(XttGtk::activate_help_project), this);
@@ -827,6 +841,7 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
 
   GtkMenu *help_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(help_menu), help_overview);
+  gtk_menu_shell_append(GTK_MENU_SHELL(help_menu), help_navigator);
   gtk_menu_shell_append(GTK_MENU_SHELL(help_menu), help_project);
   gtk_menu_shell_append(GTK_MENU_SHELL(help_menu), help_proview);
 

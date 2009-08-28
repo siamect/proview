@@ -443,6 +443,11 @@ void Xtt::activate_help_project()
   CoXHelp::dhelp("index", "", navh_eHelpFile_Project, NULL, 0);
 }
 
+void Xtt::activate_help_navigator()
+{
+  CoXHelp::dhelp("opg_navigator", "", navh_eHelpFile_Other, "$pwr_lang/man_opg.dat", 0);
+}
+
 void Xtt::activate_help_proview()
 {
   CoXHelp::dhelp( "version", "", navh_eHelpFile_Other, "$pwr_exe/xtt_version_help.dat", 0);

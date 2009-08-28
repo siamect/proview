@@ -36,6 +36,7 @@ using namespace std;
 extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
+#include "co_wow.h"
 #include "pwr_baseclasses.h"
 #include "rt_gdh.h"
 #include "rt_mh.h"
@@ -119,18 +120,20 @@ void Hist::activate_print()
 void Hist::activate_help()
 {
   if ( help_cb)
-    (help_cb)( parent_ctx, "histlist");
+    (help_cb)( parent_ctx, "opg_eventlog");
 }
 
 void Hist::activate_helpevent()
 {
   char	eventname[80];
   int 	sts;
+  ItemAlarm *item;
 
   if ( help_cb) {
-    sts = hist->get_selected_event( eventname);
-    if( ODD(sts))
-      (help_cb)( parent_ctx, eventname);
+    sts = hist->get_selected_event( eventname, &item);
+    if( ODD(sts)) {
+      wow->DisplayText( eventname, item->eventmoretext);
+    }
   }
 }
 

@@ -211,7 +211,7 @@ void XttFast::fast_help_cb( void *ctx)
   XttFast *fast = (XttFast *) ctx;
 
   if ( fast->help_cb)
-    (fast->help_cb)( fast->xnav, "fastwindow");
+    (fast->help_cb)( fast->xnav, "opg_fastcurves");
 }
 
 void XttFast::fast_scan( void *data)

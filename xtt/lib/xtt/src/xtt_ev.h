@@ -30,6 +30,8 @@
 # include "xtt_evlist.h"
 #endif
 
+class CoWow;
+
 typedef struct {
   char Object[120];
   char Alias[8];
@@ -77,6 +79,7 @@ class Ev {
     int			ala_size;
     int			blk_size;
     ev_sAlias		alias_list[20];
+    CoWow		*wow;
     static Ev		*ev;
 
     virtual void map_eve() {}

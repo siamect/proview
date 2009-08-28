@@ -95,6 +95,7 @@ class XttGtk : public Xtt {
     static void activate_zoom_out( GtkWidget *w, gpointer data);
     static void activate_zoom_reset( GtkWidget *w, gpointer data);
     static void activate_help( GtkWidget *w, gpointer data);
+    static void activate_help_navigator( GtkWidget *w, gpointer data);
     static void activate_help_project( GtkWidget *w, gpointer data);
     static void activate_help_proview( GtkWidget *w, gpointer data);
     static void activate_back( GtkWidget *w, gpointer data);

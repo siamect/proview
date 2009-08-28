@@ -39,6 +39,8 @@ extern "C" {
 #endif
 #define ERROR_TIME_CONVERT  -99
 
+class CoWow;
+
 class Hist {
   public:
     Hist( void *hist_parent_ctx,
@@ -80,6 +82,7 @@ class Hist {
     bool		eventType_Unblock;
     bool		eventType_Reblock;
     bool		eventType_CancelBlock;
+    CoWow		*wow;
     
     void		get_hist_list();
     pwr_tStatus 	hist_add_ack_mess( mh_sAck *MsgP);

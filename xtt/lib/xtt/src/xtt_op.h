@@ -80,6 +80,7 @@ class Op {
   void activate_eventlog();
   void activate_navigator();
   void activate_help();
+  void activate_help_overview();
 
   static void jop_command_cb( void *op, char *command);
 };

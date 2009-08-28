@@ -597,7 +597,7 @@ void RtTrace::activate_view()
 void RtTrace::activate_help()
 {
   if ( help_cb)
-    (help_cb)(this, "trace");
+    (help_cb)(this, "opg_trace");
 }
 
 void RtTrace::activate_helpplc()

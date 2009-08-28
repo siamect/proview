@@ -106,6 +106,7 @@ class Xtt {
     void activate_zoom_in();
     void activate_zoom_out();
     void activate_help();
+    void activate_help_navigator();
     void activate_help_project();
     void activate_help_proview();
     void activate_method( char *method, char *filter);

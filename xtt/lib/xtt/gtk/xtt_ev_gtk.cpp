@@ -257,7 +257,7 @@ EvGtk::EvGtk( void *ev_parent_ctx,
     gtk_widget_add_accelerator( help_help, "activate", accel_g,
 				'h', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
-    GtkWidget *help_helpevent = gtk_check_menu_item_new_with_mnemonic( 
+    GtkWidget *help_helpevent = gtk_menu_item_new_with_mnemonic( 
                 CoWowGtk::translate_utf8("Help Selected Event"));
     g_signal_connect( help_helpevent, "activate", 
 		      G_CALLBACK(eve_activate_helpevent), this);
@@ -430,7 +430,7 @@ EvGtk::EvGtk( void *ev_parent_ctx,
     gtk_widget_add_accelerator( help_help, "activate", accel_g,
 				'h', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
-    GtkWidget *help_helpevent = gtk_check_menu_item_new_with_mnemonic( 
+    GtkWidget *help_helpevent = gtk_menu_item_new_with_mnemonic( 
                                          CoWowGtk::translate_utf8("Help Selected Event"));
     g_signal_connect( help_helpevent, "activate", 
 		      G_CALLBACK(ala_activate_helpevent), this);
@@ -634,6 +634,8 @@ EvGtk::EvGtk( void *ev_parent_ctx,
     gtk_widget_show_all( parent_wid_blk);
     g_object_set( parent_wid_blk, "visible", FALSE, NULL);
   }
+
+  wow = new CoWowGtk( parent_wid_ala);
 
   sts = outunit_connect( user);
   if ( EVEN(sts))

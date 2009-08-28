@@ -281,7 +281,7 @@ OpGtk::OpGtk( void *op_parent_ctx,
   GtkWidget *tools_help = gtk_button_new();
   gtk_container_add( GTK_CONTAINER(tools_help), 
 	  gtk_image_new_from_stock( "gtk-help", GTK_ICON_SIZE_SMALL_TOOLBAR));
-  g_signal_connect(tools_help, "clicked", G_CALLBACK(activate_help), this);
+  g_signal_connect(tools_help, "clicked", G_CALLBACK(activate_help_overview), this);
   gtk_toolbar_append_widget( GTK_TOOLBAR(tools), tools_help, "Help", "");
 
   GtkWidget *tools_navigator = gtk_button_new();
@@ -864,6 +864,13 @@ void OpGtk::activate_help( GtkWidget *w, gpointer data)
   Op *op = (Op*)data;
 
   op->activate_help();
+}
+
+void OpGtk::activate_help_overview( GtkWidget *w, gpointer data)
+{
+  Op *op = (Op*)data;
+
+  op->activate_help_overview();
 }
 
 void OpGtk::activate_appl1( GtkWidget *w, gpointer data)

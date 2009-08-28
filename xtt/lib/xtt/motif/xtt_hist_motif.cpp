@@ -246,7 +246,8 @@ HistMotif::HistMotif( void *hist_parent_ctx,
       this->get_hist_list();
     }
   }
-   
+
+  wow = new CoWowMotif( parent_wid_hist);   
 
 }
 

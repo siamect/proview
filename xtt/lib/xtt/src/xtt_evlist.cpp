@@ -1738,22 +1738,21 @@ void EvList::ack( mh_sEventId *id)
   }
 }
 
-int EvList::get_selected_event( char *eventname)
+int EvList::get_selected_event( char *eventname, ItemAlarm **item)
 {
   brow_tNode	*node_list;
   int		node_count;
-  ItemAlarm	*item;
 
   brow_GetSelectedNodes( brow->ctx, &node_list, &node_count);
   if ( !node_count)
     return 0;
 
-  brow_GetUserData( node_list[0], (void **)&item);
+  brow_GetUserData( node_list[0], (void **)item);
   free( node_list);
-  switch( item->type)
+  switch( (*item)->type)
   {
     case evlist_eItemType_Alarm:
-      strcpy( eventname, item->eventname);
+      strcpy( eventname, (*item)->eventname);
       break;
     default:
       return 0;

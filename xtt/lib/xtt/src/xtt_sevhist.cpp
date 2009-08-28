@@ -240,7 +240,7 @@ void XttSevHist::sevhist_help_cb( void *ctx)
   XttSevHist *sevhist = (XttSevHist *) ctx;
 
   if ( sevhist->help_cb)
-    (sevhist->help_cb)( sevhist->xnav, "sevhistwindow");
+    (sevhist->help_cb)( sevhist->xnav, "opg_history");
 }
 
 void XttSevHist::sevhist_scan( void *data)

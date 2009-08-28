@@ -273,7 +273,7 @@ void XttTrend::trend_help_cb( void *ctx)
   XttTrend *trend = (XttTrend *) ctx;
 
   if ( trend->help_cb)
-    (trend->help_cb)( trend->xnav, "trendwindow");
+    (trend->help_cb)( trend->xnav, "opg_trend");
 }
 
 void XttTrend::trend_scan( void *data)

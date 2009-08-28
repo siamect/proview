@@ -78,6 +78,7 @@ class OpGtk : public Op {
   static void activate_eventlog( GtkWidget *w, gpointer data);
   static void activate_navigator( GtkWidget *w, gpointer data);
   static void activate_help( GtkWidget *w, gpointer data);
+  static void activate_help_overview( GtkWidget *w, gpointer data);
   static void activate_appl1( GtkWidget *w, gpointer data);
   static void activate_appl2( GtkWidget *w, gpointer data);
   static void activate_appl3( GtkWidget *w, gpointer data);
