@@ -154,6 +154,7 @@ void cnv_image_pixel_iter( cnv_tImImage image,
   int 		rgb_width;
   int		rowstride;
   int		n_channels;
+  unsigned char null_rgb[4] = {0,0,0,0};
    
   rgb = gdk_pixbuf_get_pixels( (GdkPixbuf *)image);
   rgb_height = gdk_pixbuf_get_height( (GdkPixbuf *)image);
@@ -165,8 +166,12 @@ void cnv_image_pixel_iter( cnv_tImImage image,
   for ( int j = 0; j < rgb_height; j++) {
     rgb = rgb_row;
     for ( int i = 0; i < rgb_width; i++) {
-      if ( n_channels >= 4 && *(rgb+3))
-	(pixel_cb) ( userdata, fp, rgb);
+      if ( n_channels >= 4) {
+	if ( *(rgb+3))
+	  (pixel_cb) ( userdata, fp, rgb);
+	else
+	  (pixel_cb) ( userdata, fp, null_rgb);
+      }
       else if ( n_channels == 3)
 	(pixel_cb) ( userdata, fp, rgb);
       rgb += n_channels;
