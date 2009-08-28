@@ -78,6 +78,7 @@ class CoWow {
 				void (* questionbox_cancel) ( void *, void *),
 				void *data) {}
   virtual void DisplayError( const char *title, const char *text) {}
+  virtual void DisplayText( const char *title, const char *text) {}
   virtual void *CreateList( const char *title, const char *texts,
 			    void (action_cb)( void *, char *),
 			    void (cancel_cb)( void *),

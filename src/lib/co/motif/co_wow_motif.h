@@ -91,6 +91,7 @@ class CoWowMotif : public CoWow {
 				void (* questionbox_cancel) ( void *, void *),
 				void *data);
   void DisplayError( const char *title, const char *text);
+  void DisplayText( const char *title, const char *text) {}
   void *CreateList( const char *title, const char *texts,
 		    void (action_cb)( void *, char *),
 		    void (cancel_cb)( void *),

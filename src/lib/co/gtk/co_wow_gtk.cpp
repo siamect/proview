@@ -178,6 +178,37 @@ void CoWowGtk::DisplayError( const char *title, const char *text)
 
 /************************************************************************
 *
+* Description: Create a text window.
+*
+*************************************************************************/
+
+static void displaytext_ok_cb( GtkWidget *w, gint arg1, gpointer data)
+{
+  gtk_widget_destroy( w);
+}
+
+void CoWowGtk::DisplayText( const char *title, const char *text)
+{
+  GtkWidget *parent = m_parent;
+  if ( parent) {
+    while( !GTK_IS_WINDOW(parent))
+      parent = gtk_widget_get_parent( parent);
+  }
+
+  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  GtkWidget *dialog = gtk_message_dialog_new( GTK_WINDOW(parent),
+					      GTK_DIALOG_DESTROY_WITH_PARENT, 
+					      GTK_MESSAGE_OTHER,
+					      GTK_BUTTONS_CLOSE, textutf8);
+  g_free( textutf8);
+  g_signal_connect( dialog, "response", 
+ 		    G_CALLBACK(displaytext_ok_cb), NULL);
+  gtk_window_set_title( GTK_WINDOW(dialog), title);
+  gtk_widget_show_all( dialog);
+}
+
+/************************************************************************
+*
 * Description: Create a window with a scrolled list and Ok and Cancel
 *              buttons.
 *
