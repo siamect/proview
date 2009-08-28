@@ -46,7 +46,7 @@
 // #include "flow_browwidget_motif.h"
 #endif
 
-#define xhelp_cFile_BaseXtt "$pwr_exe/xtt_help.dat"
+#define xhelp_cFile_BaseXtt "$pwr_lang/xtt_help.dat"
 #define xhelp_cFile_BaseWtt "$pwr_lang/wtt_help.dat"
 #define xhelp_cFile_Project "$pwrp_exe/xtt_help.dat"
 #define XHELPNAV_BROW_MAX	25
