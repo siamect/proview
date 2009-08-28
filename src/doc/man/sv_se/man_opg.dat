@@ -1,0 +1,3126 @@
+
+<topic> __DocumentTitlePage
+
+<image> pwr_logga.gif
+
+
+
+
+
+
+<h1> Handbok för
+<h1> Operatörer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<hr>
+2009-08-04
+Version 4.7.0	
+<hr>
+</topic>
+
+<topic> __DocumentInfoPage
+
+
+Copyright 2009 SSAB Oxelösund AB
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+Texts.
+
+
+
+</topic>
+
+<option> printdisable
+<topic> index
+Operatörshandbok
+
+<image> pwr_logga.gif
+
+<h1>Operatörshandbok
+
+Introduktion <link> opg_introduction
+Allmänt om Proview <link> opg_proview
+Operatörsplatsen <link> opg_opplace
+Larm och händelser <link> opg_events
+Kurvor <link> opg_curves
+Hjälp <link> opg_help
+Navigatör <link> opg_navigator
+Plc trace <link> opg_trace
+Setup-skript <link> opg_setupfile
+Användare och privilegier <link> opg_security
+Funktionstangenter <link> opg_functionkeys
+Xtt kommandon <link> help command
+Script <link> script
+Index	<index>
+</topic>
+<option> printenable
+
+<chapter>
+<topic> opg_introduction
+Inledning
+
+Proview Handbok för Operatörer är främst avsedd för personer som kommer i kontakt med gående
+proviewsystem i sitt dagliga arbete. Det kan vara
+
+- operatörer som övervakar och sköter en process.
+- underhållspersonal som felsöker anläggningen.
+- processutvecklare som hämtar information om processen.
+- systemansvariga som underhåller och felsöker systemet.
+
+Funktioner för alla dessa grupper finns tillgängliga i den ordinare operatörsmiljön, och vem
+som tillhör in viss grupp bestäms av de privilegier som en viss användare är tilldelad. 
+
+</topic>
+</chapter>
+
+<chapter>
+<topic> opg_proview
+Allmänt om Proview
+
+<h1>Vad är Proview
+Proview är ett modernt, kraftfullt och generellt processtyrsystem. Det innehåller alla de
+funktioner som normalt behövs för för att styra och övervaka en process: sekvensstyrning, 
+reglering, datainsamling, kommunikation, larmhantering, HMI/SCADA, historisk datalagring mm.
+
+Proview är ett distribuerat system, dvs det består av ett antal datorer (noder) förbundna
+i ett nätverk. Noderna kan vara av typen processtation, operatörsstation eller 
+lagringsstation.
+
+<option> printdisable
+<b>Stationer <link>opg_stations
+<b>Objekt <link>opg_object
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic> opg_stations
+Stationer
+
+<h2>Processtation
+En processtation samlar in mätdata från olika givare i processen, det kan vara analoga 
+mätdata som temperaturen, flöden, nivåer eller digital mätdata från t ex fotoceller eller 
+tryckvakter. I processtationen exekveras ett styrprogram, som utifrån mätdata beräknar
+styrdata för processen och skickas ut till motorer och ställdon som in sin tur påverkar 
+processen.
+
+Processtationer innehåller ofta en speciell hårdvara för att läsa in måtvärden och ställa ut
+styrdata, men detta kan även ske över nätverket mha protokoll som Modbus/TCP eller Profinet.
+
+<h2>Operatörstation
+Operatörsstationens uppgift är att svara för gränssnittet mellan operatör och process. 
+Operatören övervakar processen genom processbilder, som visar läget i processen genom
+att data presenteras i form av staplar, kurvor, indikatorer mm. Operatören kan påverka
+processen t ex genom att mata in data, eller trycka på knappar i processbilden. 
+
+
+<h2>Lagringsstation
+Vissa mätdata måste lagras för att man ska kunna se förändringar och trender, eller för att
+man ska kunna gå tillbaka och analysera läget i processen vid en viss tidpunkt. Lagringtiden
+kan varier från någon timme till flera år. Lagringen sker på lagringsstationer, som har
+tillräckligt med diskutrymme för att kunna lagra data under lång tid, och som även har
+backupfunktioner så att data inte förloras vid t ex ett diskhaveri.
+
+Man brukar även tala om nivå 2 system, dvs system av överordnad karaktär som innehåller
+t ex materialplaneringsfunktioner, tunga beräkningar och liknande. Dessa ingår i kategorin
+processtationer.
+
+<h2>Utvecklingsstation
+På nätverket kan även finnas utvecklingstationer, på vilka process- operatörs- och 
+lagringstationerna konfigureras och programmeras. På utvecklingsstationerna finns det verktyg
+för att rita processbilder, programmera sekvenser, logikscheman och reglerkretsar, mm. Efter 
+en ändring i konfigureringen för en station, laddas det nya konfigureringen ner till
+stationen via nätverket.
+
+<image>opg_fig1.png
+<b>Fig Komponenter i ett Proview system
+</topic>
+
+<topic>opg_object
+Objekt
+
+<h1>Objektträd
+Ett centralt begrepp i Proview är objekt. Givare, ventiler, motorer, regulatorer etc, 
+representeras av objekt i en databas. Objekten är ordnade i en trädsstruktur där olika
+hierarkinivåer i trädet motsvarar delar i anläggningen och processen. Om vi betraktar en ugn
+kan den översta nivån representera ugnen. Ugnen består av 4 värningszoner som var och en 
+representas av objekt på nästa nivå i trädet. Varje zon består av två värmeelement och två 
+temperaturgivare som finns ytterligare en nivå ner. Här finns även några objekt som inte 
+har någon fysisk motsvarighet i anläggningen, en temperatur regulator och ett styrprogram 
+för zonen.
+
+<image>opg_fig2.png
+<b>Fig Ugn med 4 zoner
+
+<image>opg_fig3.png
+<b>Fig Objekt träd för ugnen
+
+Notera att många objekt har ett ganska kryptiskt namn som följer en beteckningsstandard, men
+till varje objekt finns en utförligare beskrivning som ofta visas tillsammans med objektet.
+
+Låt oss titta lite närmare på ett objekt, t ex ett av temperaturgivarobjekten. Objektet
+visas i en översiktsbild med objektets grafiska symbol, en trekant med bokstaven T.
+
+<image>opg_fig4.png
+<b>Fig Grafisk symbol för temperaturgivare
+
+<h2>Objektsbild
+Om man klickar på symbolen öppnas objektets objektsbild. Från objektsbilden kan man se 
+objekts egenskaper. Det mest interessanta för en temperaturgivare är naturligtvis den 
+uppmätta temperaturen, som visas både i siffror och i form av en stapel (termometer), Se 
+'Fig Objektsbild för temperaturgivare' nedan. Temperaturgivar-objektet innehåller även fyra 
+larmgränser, höghög, hög, låg och låglåg. Nivån på larmgränserna kan sättas från 
+objektsbilden, och man kan även lägga in hysteres på dem. Med hjälp av checkboxar kan man 
+också avaktivera larmgränser.
+
+<image>opg_fig5.png
+<b>Fig Objektsbild för temperaturgivare
+
+<h2>Metoder
+I överkanten på objektsbilden finns ett antal tryckknappar som aktiverar objektets metoder.
+Mha av metoderna kan man hämta upp all information som finns om objektet i styrsystemet.
+Metoderna kan även aktiveras från objektbildens meny, eller genom att högerklicka på den
+grafiska symbolen i översiktbilden, då en popupmeny med metoderna visas. Faktum är att var 
+man än stöter på objektet, i larmlistor, i bilder, i plc koden etc, kan man genom att 
+högerklicka på objektet öppna popupmenyn med objektets metoder. Här följer en lista på olika
+metoder, men vilka som är aktuella för ett specifikt objekt beror på vilken typ av objekt det
+är, och hur det är konfigurerat.
+
+<b>Metod <t>Beskrivning
+Objekt Bild <t>Öppna Objektsbilden.
+Trend <t>Visa en trendkurva.
+Historik <t>Hämta historiska data från en lagringsstation och visa i en kurva.
+Historisk lista <t>Visa historisk lista med larm och händelser för objektet.
+Blockera händelser <t>Blockera larm och händlelser.
+Hjälp <t>Visa en hjälptext för objektet.
+Notera <t>Skriv in en anteckning för objektet. Anteckningen visas i objektsbilden.
+Öppna objekt <t>Visa objektets datainnehåll.
+RtNavigatör <t>Visa objektet i objektsträdet.
+Korsreferenser <t>Visa var objektet förekommer i plc-kod och bilder.
+Hjälp klass <t>Visa hjälp för den här objekttypen.
+Datablad <t>Visa databladet för den komponent i anläggningen som objektet motsvarar.
+Kopplingsschema <t>Visa elektriskt kopplingschema för objektet.
+
+</topic>
+</headerlevel>
+</chapter>
+
+<chapter>
+<topic>opg_opplace
+Operatörsplatsen
+
+<b>Starta operatörsmiljön <link>opg_startop
+<b>Operatörsfönstret <link>opg_opwindow
+</topic>
+
+<headerlevel>
+<topic> opg_startop
+Starta operatörsmiljön
+
+Vanligtvis är inloggingen av arbetsstationen konfigurerad så att operatörsmiljön startar
+automatiskt. Vid starten anges ett opertöraplatsobjekt där operatörsplatsens egenskaper 
+finns konfigurerade.
+
+Ibland vill man starta på annat sätt, t ex från ett terminalfönster.
+
+Operatörsmiljön startas med programmet rt_xtt, och man anger ett OpPlace objekt som 
+argument. Kommandot för att starta med OpPlace objektet Nodes-OpgNode-b55 är
+
+<c>> rt_xtt Nodes-OpgNode-b55
+
+Det finns även ett antal optioner som man kan skicka med som argument
+
+-l <t>Språk. Ett av följande språk anges:
+   <t>en_us engelska (default).
+   <t>sv_se svenska.
+   <t>de_de tyska.
+   <t>fr_fr franska.
+
+-q <t>Fönstret med licenstexten visas ej vid uppstart.
+-c <t>Knapp för att stänga operatörsmiljön visas i operatörsfönstret.
+-u <t>Startar med ett opplace objekt med samma namn som den linuxanvändare 
+   <t>man är inloggad som.
+-s <t>Visar en lista på tillgängliga operatörsplatsobjekt.
+
+</topic>
+
+<topic>opg_opwindow
+Operatörsfönstret
+
+<image>opg_fig6.png
+<b>Fig Operatörsfönster
+
+Operatörsfönstret lägger sig längst upp på bildskärmen och saknar titelrad och knappar för
+att ikonisera och ta bort fönstret. Det är uppdelat i tre delar, till vänster visas aktuella
+larm och meddelanden, i mitten finns knappar för olika basfunktioner, och till vänster
+kappar som är konfigurerade för just den här operatörsplatsen.
+
+<h2>Larm och meddelanden
+I vänstra delen av operatörsfönstret visas larm och meddelanden. 
+
+Larmen är uppdelade i fyra prioritetsnivåer A, B, C och D, där A har högst prioritet och D 
+lägst. A-larm är röd-makerade, B-larm gul, C-larm blå och D-larm violett. Dessutom finns
+kategorin Info meddelande som markeras med grönt.
+
+I det övre fältet visas de senaste okvitterade A-larmen. Beroende på operatörsfönstrets
+storlek i höjdled, visas 2 till 5 larm. Här finns även en knapp markerad med en bock för 
+att kvittera A-larm.
+
+I den undre fältet visas de senaste okvitterade B, C och D-larmen, samt info meddelanden.
+Dessa larm visas i prioritetsordning snarare än tidsordning, dvs om det finns okvitterade
+B-larm visas det senaste av dessa. Endast om det inte finns några okvitterade B-larm visas
+eventuella C-larm etc. Även här finns en kvittensknapp, som man kvitterar B, C, D-larmen och
+info meddelandena med.
+
+Ett larm är rådande om larmvillkoret fortfarande är uppfyllt. Detta markeras med en 
+varningstriangel före larmtexten.
+
+<h2>Knappar för att öppna basfunktioner
+På översta raden finns ett antal ikoner. De två första ökar eller minskar storleken på
+larmtexten. Den tredje öppnar hjälpfönstret med projektets hjälptexter. Den fjärde öppnar
+navigatorn, och den femte stänger operatörsfönstret.
+
+Under finns ett antal knappar:
+
+- Larmlista <t>Öppnar larmlistan med rådande eller okvitterade larm. <link>opg_alarmlist
+- Händelselista <t>Öppnar händelselistan, en lista på de senaste larmen och händelserna <link>opg_eventlist
+- Händelselogg <t>Öppnar händelseloggen, där man kan visa lagrade händelser. <link>opg_eventlog
+- Hjälp <t>Visar projektets hjälptexter.
+
+För att se de undre knapparna måste man ändra storlek på fönstret. Detta görs med knapparna
+med uppåtpil och nedåtpil. Större storlek på fönstret gör även att man kan se fler A-larm.
+
+<h2>Funktionsknappar
+Till höger finns ett antal knappar som kan användas för att öppna bilder eller exekvera
+olika order eller kommandon. Hur knapparna används beror på operatörsplatsens konfigurering.
+
+</topic>
+</chapter>
+
+<chapter>
+<topic>opg_events
+Larm och händelser
+
+<option> printdisable
+Allmänt om larm och händelser <link>opg_events_general
+Larmlista <t><t>Visar aktuella larm<link>opg_alarmlist
+Händelselista <t><t>Visar senaste tidens larm och händelser <link> opg_eventlist
+Händelselogg <t><t>Sökning av larm och händelser i händelsedatabasen. <link> opg_eventlog
+Blockeringslista <t><t>Visar blockerade objekt och hierarkier. <link> opg_blocklist
+Blockera larm <link> opg_blockingwindow
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic>opg_events_general
+Allmänt om larm och händelser
+
+<h1>Larm
+Larm skickas ut till operatören när någonting inträffar som operatören måste uppmärksamma.
+Det kan t ex vara en temperatur som går över en gräns, eller att man har matat in ett
+felaktigt värde i en bild. I Proview finns speciella övervakningsobjekt som övervakar
+signaler och genererar larm.
+
+Larm visas i larmlistan.<link>opg_alarmlist
+
+<h2>Prioritet
+Larmen är grupperade i fyra prioritetsnivåer, A, B, C och D, där A har högst prioritet och
+D lägst. Hur man använder prioriteterna beror på hur system är konfigurerat. Det är vanligt
+att larmprioriteterna används på följande sätt.
+
+A-larm markeras med rött. De har högst prioritet och markerar att ett allvarlig fel i 
+anäggningen har inträffat som omgående bör åtgärdas. Ofta innebär det att driften av 
+anläggningen stoppas och inte kan startas så länge larmen är rådande.
+
+B-larm markeras med gult. De har lite lägre prioritet och innebär ett fel som snarast bör
+åtgärdas, men att driften kan fortsätta ytterligar en tid.
+
+C-larm markeras med blått och D-larm med lila. De markerar mindre fel som inte ar akuta.
+I många system är det tillräckligt med två larmnivåer, och man använder då enbart A och
+B-larm.
+
+<h2>Larmtext
+Larm innehåller en text, som visas i larm och händelselistor. Denna text är enradig och
+maximalt 80 tecken lång. Det finns även utrymme för en längre text, en mertext, som t ex 
+kan innehålla ytterligare förklaring till larmets orsaker eller hur det bör åtgärdas. 
+Mertexten visas i larm och händelselista om man placerar markören på larmtexten.
+
+<h2>Kvittering
+Ett larm måste kvitteras av operatören. Så länge larmet är okvitterat, ligger det kvar i
+larmlistan och ger upphov till en ljudsignal. Om ett larm visas på flera operatörsplatser
+räcker det med att larmet kvitteras från en av operatörsplatserna.
+
+<h2>Blockering
+Om ett larm inte relevant under en period, kan man blockera detta. Man kan t ex blockera
+larmen från en anläggningsdel som är tagen ur drift. Blockeringen kan ske för ett enskilt
+larmobjekt, eller för en hierarki. Blockering är en metod för ett objekt, och utförs från 
+ett blockeringsfönster som kan öppnas från popupmenyn för objektet. För att en användare
+ska kunna blockera måste han ha privilegiet RtEvents.
+
+Blockerade objekt visas i en blockeringslista. <link>opg_blocklist
+
+<h2>Meddelanden
+Info-meddelanden är en grupp som har samma funktion som larm. De har lägre prioritet
+än larm och markeras med grönt.
+
+<h1>Händelser
+En händelse genereras på samma sätt som larm, med hjälp av övervakningsobjekt. Även larm
+genererar händelser. Aktivering av ett larm räknas som en händelse, och även när larm 
+tillståndet försvinner och när larmet kvitteras.
+
+Händelserna lagras i en händelselista, som innehåller de senaste händelserna. De lagras
+också i en händelselogg, där man kan gå tillbaka och titta på händelser en tid tillbaka, 
+och även se statistik på händelser. För händelseloggen finns en sökfunktion, där man kan 
+söka på händelser med olika sökbegrepp, t ex tid, händelsetyp eller händelsetext.
+
+<h2>Urvalslista
+Operatörsplatsen har en urvalslista innehåller en lista på anläggningsdelar i objektsträdet. 
+Enbart larm som tillhör dessa anläggningsdelar kommer att visas i larm och händelslistan,
+övriga larm och händelser filtreras bort.
+
+</topic>
+
+<topic>opg_alarmlist
+Larmlista
+
+<image>opg_fig7.png
+<b>Fig Larmlista
+
+Larmlistan öppnas genom genom att aktivera knappen "Larmlista" i operatörfönstret. Man kan
+också öppna larmlistan från menyn i navigatorn, Alarm/Alarm List, och med xtt kommandot
+'show alarmlist'.
+
+I larmlistan visas rådande och okvitterade larm. Okvitterade larm markeras med en klocka 
+och rådande med en varningstriangel. Endast larm från de anläggningsdelar som är angivna
+i urvalslistan visas.
+
+Mertexten för att larm visas om man placerar markören på larmtexten.
+
+Larm kan kvitteras genom att aktivera Functions/Acknowledge (Ctrl+K) i menyn.
+
+Om man högerklickar på en larmtext, visas metoderna för larmobjektet. Det gör att man enkelt
+kan visa objektsbilden eller se var i plckoden larmet genereras.
+
+<image>opg_fig10.png
+<b>Fig Larmtext
+</topic>
+
+<topic>opg_eventlist
+Händelselista
+
+<image>opg_fig8.png
+<b>Fig Händelselista
+
+Händelselistan öppnas från knappen "Händelselista" i operatörsfönstret. Man kan även starta
+den från menyn i navigatorn eller med xtt kommandot 'show eventlist'.
+
+Händelser från de anläggningsdelar som finns angivna i urvalslistan visas i händelselistan.
+Antalet händelser konfigureras i User objektet, och när den maximala antalet händelser är
+uppnått, kastas gamla händelser när nya anländer.
+
+För varje händelse visas
+- Färgindikering för larm prioritet.
+- Händelse typ.
+- Händelse tid.
+- Händelse text.
+- Händelse objekt (objekt/signal namn).
+
+Mertexten för en händelse visas när markören placeras på händelsetexten.
+Om man högerklickar på en händelsetext, visas metoderna för händelseobjektet. Det gör att 
+man enkelt kan visa objektsbilden eller se var i koden händelsen genereras.
+
+</topic>
+
+<topic>opg_eventlog
+Händelselogg
+
+Händelselistan är av begränsad längd och visar endast de senaste händelserna. Alla händelser
+lagras emellertid in en databas. Med den historiska händelselistan, eller händelseloggen, är
+det möjligt att titta på händelser för en tid tillbaka.
+
+Eftersom antalet lagrade händelser ofta uppgår till fler tusen, söker man efter de händelser
+man är intresserad av med olika sökvillkor. De händelser som passar in på sökvillkoren visas
+i en lista.
+
+<h1>Sökvillkor
+<h2>Tid
+På översta raden kan man ange ett tidsintervall för sökningen. Ställ in önskat intervall
+med optionmenyn till höger. Väljer man 'Time' anger man starttid och stoptid i 
+inmatningsfälten.
+
+<h2>Händelsetyp
+Här kan man markera händlestyper. Om ingen type är markerad, tas alla typer med i sökningen.
+- Active <t>Händelsen att ett larm aktiveras.
+- Message <t>Ett info meddelande.
+- Return <t>Ett larm återgår från att ha varit rådande.
+- Ack <t>Ett larm kvitteras.
+
+<h2>Prioritet
+Här kan man markera att man vill söka på larm med en viss prioritet. Om ingen prioritet
+anges utförs sökningen på alla prioriteter.
+
+<h2>Händelsenamn
+Namn på det objekt som händelsen är kopplad till. I namnet kan ingå wildcard (*), t ex
+F1-Z1* söker på alla event under hierakin F1-Z1. Om inte något objektsnamn anges, söks på 
+alla objekt.
+
+<h2>Händelsetext
+Sökning på händelsetexten (vanligtvis DetectText). Wildcard kan ingå (*). Om igen taxt
+anges söks på alla texter.
+
+När sökvillkoren är inmatade, trycker man på 'Search' knappen, varvid sökningen genomförs,
+och resultatet presenteras i listan i undre delen av fönstret.
+
+<image>opg_fig9.png
+<b>Fig Händelselogg
+
+I listan över händelser presenteras händelsen med 
+
+- Prioritet <t>Prioriteten markeras med färg och bokstav.
+- Händelsetyp <t>Active markeras med utropstecken, Return med ett överkorsat utropstecken,
+              <t>och Ack med en bock.
+- Händletext
+- Händelsenamn
+
+Om man högerklickar på en rad visas metoderna för händelsenamnsobjektet.
+</topic>
+
+<topic>opg_blocklist
+Blockeringslista
+
+<image>opg_fig12.png
+<b>Fig Blockeringslista
+
+Listan över blockerade larm öppnas från menyn i navigatören, Alarm/Blocked Alarms, eller
+med xtt kommandot 'show blocklist'.
+
+För varje blockerat objekt visas:
+- Färgindikering som markerar den prioritetsnivå som har blockerats.
+- Objektsnamn.
+- Användare som har utfört blockeringen.
+
+En blockering tas bort genom att blockeringen markeras och Functions/Remove Blocking i menyn
+aktiveras.
+
+Blockering av larm sker genom 'Block Events' metoden för ett objekt. <link>opg_blockingwindow
+
+
+</topic>
+
+<topic>opg_blockingwindow
+Blockera larm
+
+<image>opg_fig11.png
+<b>Fig Dialog för larmblockering
+
+Larmbockering aktiveras genom 'Block Events' metoden, dvs från popup-menyn för ett objekt, 
+eller med xtt kommandot 'eventlist block'.
+
+Fönstret används för att blockera larm för ett objekt. Alla larm med den specificerade 
+prioriteten, och med lägre prioritet, blockeras för objektet och underliggande objekt.
+
+Prioriteten specificeras med radio-knappar. Man kan även ta bort en blockering med
+knappen 'No Blocking'.
+
+Endast användare med privilegiet 'RtEvent' eller 'System' är auktoriserade att blockera 
+larm.
+</topic>
+
+</headerlevel>
+</chapter>
+
+<chapter>
+<topic> opg_curves
+Kurvor
+
+<option> printdisable
+Trendkurvor <link> opg_trends
+Snabbkurvor <link> opg_fast
+Process historik <link> opg_history
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic> opg_trends
+Trendkurvor
+
+Trendkurvor öppnas med 'Trend' metoden i t ex popumenyn för ett objekt. De kan även
+öppnas med Xtt kommandot 'open trend'. Trendkurvor konfigureras med DsTrend objekt, och
+om flera kurvor ska visas i samma kurvfönster, med PlotGroup objekt.
+
+En trendkurva är en signal, t ex av typen temperatur, tryck eller flöde, vars värde lagras
+med ett visst tidsintervall. En trendkurva har plats för 478 värden, och hur lång tid 
+tillbaka värdena kan lagras beror på hur ofta lagringen sker. Med ett nytt värde per sekund
+kan ca 8 minuter lagras, med nytt värde varje minut blir det ca 8 timmar. Värdena lagras
+i RAM-minnet och vid en omstart försvinner alla lagrade data.
+
+Trendkurvorna visas i ett kurvfönster. Ett kurvfönster kan visa upp till 20 olika kurvor.
+
+<image> opg_fig31.png
+<b>Fig Trendkurvor
+
+I kurvfönstrets övre del visas en tabell över de kurvor som visas. Första kolumnen är en
+färgmarkering för att identifiera den korresponderande kurvan. 
+
+Beskrivning av kolumner i tabellen
+
+View <t>En checkbox med vilken man kan välja om en kurva ska visas eller inte.
+Cursor <t>Visar värdet för kurvan vid den tidpunk där cursorn är placerad.
+Mark <t>Visar värdet för kurvan vid den tidpunkt där markören är placerad.
+Unit <t>Visar enhet för kurvan.
+Scale <t>Från 'Scale' kan man ställa in skal-området i y-led (Scale för raden Time axis
+      <t>ställer om i x-led).
+Attribute <t>Anger det attribut som trendkurvan visar.
+
+<h2>Navigering
+Verktygspanelen innehåller knappar för att zooma in och ut, och för att flytta visningen
+åt vänster eller höger. 
+
+Man kan även navigera med navigationsrutan i fönstrets undre del. Den del av kurvan som 
+visas markera med en svart fyrkant. Genom att dra med MB1 kan man flytta den i x-led, och
+genom att dra med mittenknappen, kan man zooma in eller ut.
+
+Navigering med tangenbordet sker med pil tangenterna. Pil upp och ner ändrar zoomningsgraden
+och pil vänster och höger flyttar visningen åt höger resp vänster.
+</topic>
+
+<topic> opg_fastcurves
+Snabbkurvor
+
+Snabbkurvor öppnas med 'Fast' metoden i t ex popumenyn för ett objekt. De kan även
+öppnas med Xtt kommandot 'open fast'. Snabbkurvor konfigureras med DsFastCurve objekt, och
+om flera kurvor ska visas i samma kurvfönster, med PlotGroup objekt.
+
+Snabbkurvor används  för att visa snabba förlopp under en kortare tidsperiod. På en 
+triggsignal startas lagringen av signalens värde och lagringen pågår under en tid. När
+förloppet är avlutat visas kurvan upp i kurvfönstret, och ligger kvar där tills 
+triggsignalen sätts och aktiverar en ny inspelning av förloppet.
+
+Snabbkurvorna visas i ett kurvfönster. Ett kurvfönster kan visa upp till 20 olika kurvor.
+
+<image> opg_fig37.png
+<b>Fig Snabbkurva
+
+</topic>
+
+<topic> opg_history
+Process historik
+
+Process historik öppnas med 'History' metoden i t ex popumenyn för ett objekt. De kan även
+öppnas med Xtt kommandot 'open history'. Historiken konfigureras med SevHist objekt.
+
+Process historik innebär att värdet på en signal, t ex av typen temperatur, tryck eller 
+flöde, vars värde lagras i en databas med en viss frekvens och under en viss tid.
+Historiken kan sträcka sig över flera år och antal mätvärden för en signal kan uppgå till
+flera miljoner.
+
+<image> opg_fig34.png
+<b>Fig Process historik
+
+I kurvfönstrets övre del visas en tabell över de kurvor som visas. Första kolumnen är en
+färgmarkering för att identifiera den korresponderande kurvan.
+
+Beskrivning av kolumner i tabellen
+
+View <t>En checkbox med vilken man kan välja om en kurva ska visas eller inte.
+Cursor <t>Visar värdet för kurvan vid den tidpunk där cursorn är placerad.
+Mark <t>Visar värdet för kurvan vid den tidpunkt där markören är placerad.
+Unit <t>Visar enhet för kurvan.
+Scale <t>Från 'Scale' kan man ställa in skal-området i y-led (Scale för raden Time axis
+      <t>ställer om i x-led).
+Attribute <t>Anger det attribut som historik-kurvan visar.
+
+<h2>Navigering
+Verktygspanelen innehåller knappar för att zooma in och ut, och för att flytta visningen
+åt vänster eller höger. 
+
+Man kan även navigera med navigationsrutan i fönstrets undre del. Den del av kurvan som 
+visas markera med en svart fyrkant. Genom att dra med MB1 kan man flytta den i x-led, och
+genom att dra med mittenknappen, kan man zooma in eller ut.
+
+Navigering med tangenbordet sker med pil tangenterna. Pil upp och ner ändra zoomningsgraden
+och pil vänster och höger flyttar visningen åt höger resp vänster.
+
+<h2>Upplösning
+Eftersom antalet mätvärden för ett attribut kan uppgå till flera miljoner, hämtar man bara
+upp ett urval av värden. När man först öppnar kurvan, visas hela tidsintervallet med några
+hundra punkter. För att få högre upplösning använder man knapparna med pil upp och pil ner
+i verkygspanelen. Pil upp zoomar in och ökar upplösningen i det tidsintervall som visas, dvs
+man läser in nya punkter i ett snävare tidsintervall med högre upplösning. Pil ner zoomar ut
+med minskad upplösning.
+
+</topic>
+</headerlevel>
+</chapter>
+
+<chapter>
+<topic> opg_help
+Hjälpfönstret
+
+<h1>Att få hjälp
+Hjälpfunktionen kan öppnas på följande sätt
+
+<h2>Operatörsfönstret
+I operaörsfönstrets mitt-del finns en hjälpknapp som visar hjälptexter för projektet.
+
+<h2>Navigatorns meny
+Menyentryt Help/Overview ger hjälp om Proview och operatörsmiljön. Help/Project ger hjälp
+om projektet.
+
+<h2>Kommando
+En hjälptext öppnas med xtt-kommandot 'help'. Till help skickar man det ämne man är 
+intresserad av. Kommandot help help visar t ex hur man använder help.
+
+<h2>Objektsmetoder
+För objekt finns det två metoder som ger hjälp,
+- Help, visar hjälp för objektet eller anläggningsdelen.
+- Help Class, visar information om objektets klass.
+
+<h2>Hjälp och infoknappar i processbilder
+Trycknappar i bilder kan kopplas till hjälptexter. Dessa är ofta markerade med ett 
+frågetecken eller ett 'I'.
+<image> opg_fig36.png
+<b>Fig Hjälpknappar
+
+<h1>Navigera i hjälptexten
+Rader med länkar markeras med en pil i radens vänsterkant.
+Först raden är en länk till föregående ämne.
+
+<h2>Navigera från tangentbordet
+PageUp och PageDown används för att scrolla upp och ner i texten. 
+Man följer länkar genom att välja ut raden med länken med Pil-upp och Pil-ner, och sedan
+trycka på Pil-höger.
+Med Pil-vänster återgår man till föregående sida.
+
+Med Ctrl+N går man till nästa avsnitt, och med Ctrl+P till föregående avsnitt.
+Ctrl+A återgår till startsidan.
+
+<h2>Navigera med musen
+För att följa en länk klickar man på pilen, eller dubbelklickar på raden.
+Genom att klicka på pilen på första raden återgår man till föregående sida.
+
+<image> opg_fig35.png
+<b>Fig Hjälpfönstret
+
+</topic>
+</chapter>
+
+<chapter>
+<topic> opg_navigator
+Navigatör
+
+Navigatören, ävan kallad Xtt, startas från knappen "Navigator" i operatörsfönstret. Den 
+kan även startas som ett separat program, oberoende av operatörsmiljön. Det görs ofta vid
+felsökning eller underhåll av systemet. Man startar då från ett terminalfönster.
+
+<image> opg_fig14.png
+<b>Fig Menyn i navigatorn
+
+Figuren ovan visar menyn i navigatorn. Den översta mappen, "This Project" är konfigurerbar 
+och kan innehålla en mapstruktur som är specifik för projektet (ofta saknas den helt). 
+Övriga mappar är standard, 
+
+Database <t><t>Visar objektsträdet och objekten i databasen <link>opg_nav_database
+Alarm / Alarm List <t><t>Öppnar larmlistan. <link>opg_alarmlist
+Alarm / Event List <t><t>Öppnar händleselistan. <link>opg_eventlist
+Alarm / Blocked Alarms <t><t>Visar listan över blockerade larm. <link>opg_blocklist
+Alarm / Historical List <t><t>Visar händelseloggen.<link>opg_eventlog
+Store <t><t>Visar sparade samlingsbilder.
+System / Nethandler / Link <t><t>Visar länkar till andra Proview system. <link>opg_nav_link
+System / Nethandler / Subscription Client <t><t>Visar prenumerationer (client). <link>opg_nav_subcli
+System / Nethandler / Subscription Server <t><t>Visar prenumerationer (server). <link>opg_nav_subsrv
+System / Communication / RemNode <t><t>Visar remote kommunikation (noder) <link>opg_nav_remnode
+System / Communication / RemTrans <t><t>Visar remote kommunikation (transar) <link>opg_nav_remtrans
+System / Device <t><t>Visar I/O enheter <link>opg_nav_device
+System / PlcThread <t><t>Visar Plc trådar <link>opg_nav_thread
+System / PlcPgm <t><t>Visar PlcPgm. <link>opg_nav_plcpgm
+System / Logging <t><t>Dialog för att starta logging av data. <link>opg_nav_logging
+System / System Messages <t><t>Visar systemmeddelanden. <link>opg_nav_systemmsg
+System / System Status <t><t>Visar systemstatus for noden.<link>opg_nav_systemsts
+System / Nodes <t><t>Visar statusbild för noder. <link>opg_nav_nodes
+System / Volumes <t><t>Visar laddade volymer. <link>opg_nav_volumes
+Close <t><t>Stänger navigatorn.
+
+<h1>Navigera
+<h2>Navigera från tangenbordet
+Det mest ergonomiska sättet att navigera i mapstrukturen är att använda piltangenterna.
+Med Pil-Upp och Pil-Ned väljer man ut en map eller ett löv. Med Pil-Höger öppnar man en 
+mapp och med Pil-Vänster stänger man. 
+
+Ett objekt i databasen öppnar man med Shift Pil-Höger, dvs man trycker först ner Shift-
+tangenten och håller den nedtryckt medan man trycker på Pil-Höger. Om objektet inte har
+några barn räcker det att trycka på Pil-Höger.
+
+Har man privilegiet RtWrite kan man ändra värden i attribut i databasen. Genom att öppna ett
+objekt, välja ut attributet och trycka på Pil-Höger öppnas ett inmatningsfält där man
+kan mata in ett nytt värde. 
+
+<h2>Navigera med musen
+Man naturligvis även navigera med musen. En mapp öppnas genom att man klickar på mappen
+(eller dubbelklickar på texten). Sedan stänger man genom att återigen klicka på mappen.
+
+Ett objekt i databasen öppnas genom att trycka in Shift och klicka på mappen/lövet för 
+objektet.
+
+<h1>Kommandon
+Med Functions/Command, Ctrl+B, öppnar man en kommando-prompt på nedersta raden i navigatorn.
+Härifrån kan man mata in kommandon och exekvera skript. Tillgängliga kommandon finns
+beskrivna i kapitlet Kommandon och script i kapitlet Script
+
+<option> printdisable
+Kommandon <link>help command
+Script <link> script
+<option> printenable
+
+<h1>Samlingsbild
+Men Functions/Collect/Show, Ctrl+N, tittar man på insamlade objekt och attribut. Vid 
+felsökning vill man ofta titta på ett antal olika attribut från olika objekt samtidigt. 
+Genom att gå runt i objekts-trädet och samla in attribut med Functions/Collect/Insert, 
+Ctrl+V, och sedan aktivera Functions/Collect/Show visas dessa attribut gemensamt på en sida.
+
+Om man vill spara samlingsbilden till en senare session, görs det med 'save' kommandot.
+För att spara en samlingsbild under namnet 'mycollection' skriver man kommandot
+
+<c>> save/collect mycollection
+
+<image> opg_fig15.png
+<b>Fig Samlingsbild som lagras med namnet 'mycollection'
+
+Bilden kommer att återfinnas under 'Store' mappen, och kan även återskapas med kommandot
+
+<c>> @mycollection
+
+</topic>
+
+<headerlevel>
+<topic> opg_nav_database
+Database
+
+<image> opg_fig13.png
+<b>Fig Objektträdet i navigatorn
+
+Under mappen 'Database' visas objektträdet. Här kan man navigera i objektsträdet, öppna
+objekt och titta på innehållet i olika attribut i objektet. Om man har priviligier kan man
+även ändra på attributvärden.
+
+Högerklickar man på ett objekt öppnas en popupmeny med objektets metoder. Knappar för att
+aktivera objektets metoder finns även på den undre verkygspanelen i navigatören. Endast
+metoder som är relevanta för ett objekt är tryckkänsliga. 
+
+<image> opg_fig16.png
+<b>Fig Metoderna kan aktiveras både från verktygspanelen och popupmenyn
+</topic>
+
+<topic> opg_nav_link
+System / Nethandler / Link
+Mappen 'System / Nethandler / Link' visar länkar till andra Proview-stationer. Även den egna
+noden finns med i listan.
+
+I figuren nedan kan man se att den lokala noden aristotle, har kontakt med noden pwrutv.
+
+<image> opg_fig17.png
+<b>Fig Länkar till andra noder
+
+Beskrivning av kolumnerna i bilden
+
+Node <t>Nodnamn.
+Os <t>Operativsystem och hårdvara för noden.
+Link <t>Status för länken. Kan vara Up, Active, Connected, Down eller Local.
+UpCount <t>Antal gånger länken till noden har etablerats.
+TimeUp <t>Tid för senaste etablering av länken till noden.
+
+</topic>
+
+<topic> opg_nav_subcli
+System / Nethandler / Subscription Client
+
+Bilden visar prenumerationer som den aktuella stationen har lagt upp på andra stationer.
+
+När en operatörstation visar data från processtationer i en processbild, läggs det upp
+en prenumeration på varje data som visas. Det innebär att processtationerna med jämna
+mellanrum skickar nya data till operatörsstationen, som då uppdaterar processbilden med
+dessa data.
+
+Om man har ett fält i en processbild som inte uppdateras, kan man gå in Subsciption Client 
+tabellen och se om prenumationen finns med och om den uppdateras. Varje gång nya data tas 
+emot för en prenumeration räknas 'Count' upp och i 'Time' läggs tidpunken in.
+
+På första raden, i 'Uknown', kan man se antalet prenumerationer där attributet är okänt.
+Det kan vara prenumerationer på en station som ännu inte är i drift, men det kan också
+vara prenumerationer som är felstavade, eller på objekt som inte längre existerar.
+
+<image> opg_fig19.png
+<b>Fig Klient prenumerationer
+
+Beskrivning av kolumnerna
+
+Subid <t>Identitet på prenumerationen.
+Time <t>Senaste ankomsttid för prenumerationsdata.
+Count <t>Antal gånger data har mottagits.
+Node <t>Nod som skickar data för prenumerationen.
+Size <t>Storlek i bytes på prenumerations-data.
+Attribute <t>Det attribut i databasen som prenumerationen gäller.
+</topic>
+
+<topic> opg_nav_subsrv
+System / Nethandler / Subscription Server
+
+Bilden visar prenumerationer som andra stationer har lagt upp på den aktuella noden, dvs
+prenumertioner som skickas cykliskt från den aktuella noden till andra noder, vanligtvis
+från processtationer till opertörsstationer.
+
+<image> opg_fig18.png
+<b>Fig Server prenumerationer
+
+Beskriving av kolumnerna
+
+Subid <t>Identitet på prenumerationen.
+Count <t>Antal gånger data har skickats.
+Node <t>Nod till vilken data för prenumerationen skickas.
+Size <t>Storlek i bytes på prenumerations-data.
+Offset <t>Offset i det objekt som data hämtas ifrån.
+Attribute <t>Det attribut i databasen som prenumerationen gäller.
+
+</topic>
+
+<topic> opg_nav_remnode
+System / Communication / RemNode
+
+Visar en lista noder som den aktuella noden kommunicerar med mha Remote.
+
+Remote är en funktion för att skicka data mellan noder. Noder som man vill kommunicera med
+konfigureras med RemNode objekt, och olika transaktioner som ska utbytas mellan noderna
+konfigureras med RemTrans objekt. Ett antal olika protokoll för datautbytet finns inlagt,
+Modbus, MQ, Serial, TCP, UDP, 3964R och ALCM.
+
+<image> opg_fig20.png
+<b>Fig Lista på RemNoder
+
+Beskrivning på kolumnerna
+
+RemNode <t>Namn på RemNode objektet, endast de två sista namnleden visas.
+Type <t>Typ av kommunikation, Modbus, MQ, Serial, TCP, UDP, 3964R eller ALCM.
+Description <t>Beskrivning.
+
+Genom att välja ut en nod och trycka Pil-Höger visas RemTrans-objekten för noden (det 
+går  även att klicka på mappen).
+Med Shift/Pil-Höger öppnas RemNode objektet.
+
+</topic>
+
+<topic> opg_nav_remtrans
+System / Communication / RemTrans
+
+Visar en lista på samtliga RemTrans objekt.
+
+Ett RemTrans objekt specificerar en transaktion som skickas mellan två noder mha Remote
+funktionen. Transaktionen innebär att man skickar eller tar emot data. 
+
+
+<image> opg_fig21.png
+<b>Fig Lista på RemTrans-objekt
+
+Beskrivning på kolumnerna
+
+RemTrans <t>Namn på RemTrans objektet, endast sista namnledet visas.
+DataValid <t>Anger att data finns som ännu ej har skickas (vid sändning) eller 
+	<t>tagits hand om (vid mottagning).
+Direction <t>Riktning på transaktionen, Snd (sändning) eller Rcv (mottagning).
+TransCnt <t>Antal sända eller mottagna transaktioner.
+TransTime <t>Tidpunkt för senaste transaktionen.
+ErrCount <t>Antal misslyckade transaktioner.
+LastSts <t>Status för senaste transaktionen.
+
+Genom att välja ut en transaktion och trycka Pil-Höger visas innehållet i transaktionen (det 
+går  även att klicka på mappen). Om attributet StructFile är ifyllt med den include fil
+som innehåller datastrukturen för transaktionen, visas datainnehållet i klartext.
+Med Shift/Pil-Höger öppnas RemTrans-objektet.
+</topic>
+
+<topic> opg_nav_device
+System / Device
+
+Visar lista med I/O enheter.
+
+I/O systemet i Proview är indelat i fyra nivåer, agent, rack, kort och kanal. 
+I Device listan visas alla kort-objekt.
+
+<image> opg_fig22.png
+<b>Fig Lista över I/O enheter
+
+Bekrivning av kolumnerna
+
+Device <t>Namn på kort-objektet. De två sista namnleden visas.
+Class <t>Kortobjektets klass.
+ErrorCount <t>Felräknare.
+Process <t>Process som hanterar kortet. 1: plc, 2 io_comm.
+PlcThread <t>Plctråd som hanterar kortet.
+Address <t>Adress som är konfigurerad för kortet.
+
+Genom att välja ut ett enhet och trycka Pil-Höger visas kanalerna för enheten (det går
+även att klicka på lövet).
+
+</topic>
+
+<topic> opg_nav_thread
+System / PlcThread
+
+Visar lista på trådar i plc-programmet. 
+
+Olika Plc program går med olika prioritet och med olika cykeltid. De är kopplade till
+PlcThread objekt som bestämmer prioritet och cykeltid för exekveringen.
+
+<image> opg_fig23.png
+<b>Fig Lista på plc trådar
+
+Beskrivning av kolumner
+
+PlcThread <t>Namn på trådobjektet.
+Prio <t>Trådens prioritet.
+LoopCnt <t>Räknare för antal cykler sedan start av Proview.
+ScanTime <t>Konfigurerad cykeltid.
+Mean <t>Medelvärde på uppmätt cykeltid.
+Coverage <t>Exekveringstiden för tråden i förhållande till cykeltiden i procent.
+Count 1/8 <t>Antal cykler där exekveringstiden är mindre än 1/8 av cykeltiden.
+Count 1/4 <t>Antal cykler där exekveringstiden är mindre än 1/4 av cykeltiden och
+          <t>större än 1/8.
+Count 1/2 <t>Antal cykler där exekveringstiden är mindre än 1/2 av cykeltiden och
+          <t>större än 1/4.
+Count 1/1 <t>Antal cykler där exekveringstiden är mindre än cykeltiden och
+          <t>större än 1/2 cykeltiden.
+</topic>
+
+<topic> opg_nav_plcpgm
+System / PlcPgm
+
+Visar en lista på alla PlcPgm objekt.
+
+Ett PlcPgm objekt omfattar plc-kod som styr en anläggningsdel, eller utför andra typer av 
+beräkningar. PlcPgm objektet är kopplade till ett tråd objekt som bestämmer prioritet och 
+cykeltid.
+
+<image> opg_fig24.png
+<b>Fig Lista på PlcPgm objekt
+
+Beskrivning av kolumner
+
+PlcPgm <t>Namn på PlcPgm objektet.
+PlcThread <t>Plc tråd som objektet är kopplat till.
+Description <t>Beskrivning.
+
+PlcTrace för ett PlcPgm öppnas genom att välja ut PlcPgm objektet och trycka på Ctrl+L.
+Med Pil-Höger visas all fönster i Plc-programmet.
+
+</topic>
+
+<topic> opg_nav_logging
+System / Logging
+
+Med loggnings-funktionen kan man logga signaler och värden i databasen på en text-fil.
+Innehållet i textfilen kan visas i ett kurvfönster, eller läsas in i ett kalkyl-program, 
+t ex Excel or Calc.
+
+Upp till 100 attribut kan loggas i en loggfil, och det finns 10 st entry som var och en
+hanterar en loggfil.
+
+Att starta en loggning går till på följande sätt.
+
+- Samla ihop de attribut som ska loggas i samlingsbilden, t ex genom att leta upp attributen
+  i databasen och trycka på Ctrl+V.
+
+- Kontrollera med Ctrl+N att rätt attribut finns i samlingsbilden.
+
+<image> opg_fig25.png
+<b>Fig Attribut insamlade i samlingsbilden
+
+- Öppna Logging entry 1 (System / Logging / Logging Entry 1).
+
+- Klicka på 'Insert' knappen. Attributen överförs nu från samlingsbilden till listan på
+  attribut i loggentry bilden.
+
+- Ange loggtid i ms, och ev annat filnamn.
+
+- Starta loggningen genom att klicka på 'Start' knappen.
+
+<image> opg_fig26.png
+<b>Fig Loggentry med loggningen started
+
+- När loggningen är klar klickar man på 'Stop' knappen. Observera att man inte får terminera
+  navigatorn under tid loggningen pågår. Däremot kan man lämna loggentry-sidan.
+
+- Titta på loggresultatet i kurvform genom att aktivera 'ShowFile'.
+
+<image> opg_fig27.png
+<b>Fig Loggingen i kurvform
+
+Loggningen kan vara av två typer, antingen loggas värdet av attributen kontinuerligt med
+en viss frekvens (kontinuerlig loggning), eller loggas ett attribut varje gång dess värde
+ändras (händelsestyrd loggning).
+
+<h2>Kontinuerlig loggning
+Värdet av attributen i entryt loggas vid varje cykel. På filen skrivs dessutom tiden
+sedan loggningen startades. Filen kan visas i Xtt's kurvfönster med 'ShowFile' eller
+läsas in i ett kalkylprogram.
+
+<h2>Händelsestyrd logging
+Ett attribut i entryt loggas om värdet av attributet har ändrats.
+I loggfilen skrivs tiden för ändringen och det nya värdet. Denna typ av loggning kan inte
+visas med 'ShowFile'.
+
+<h2>Buffer
+Loggningen sker först internt i en buffer. När bufferten är full töms den på fil. Vid
+snabba tidskritiska förlopp kan det vara lämpligt att öka bufferstorleken för att undvika
+att störningar som kan uppstå när bufferten skrivs på fil.
+
+<h2>Villkorlig loggning
+I 'ConditionParameter' kan man ange ett digitalt attribut som styr loggningen. Loggning
+sker enbart om ConditionParameter är sann.
+
+<h2>Lagra
+Logg konfigureringen kan sparas med 'Store' knappen, för att återskapas vid ett senare
+tillfälle med 'Restore' knappen.
+
+</topic>
+
+<topic> opg_nav_systemmsg
+System / System Messages
+
+Proivew's systemlogg innehåller informations-, varnings- och felmeddelande som skrivs ut
+av systemets olika serverprocesser. Även applikationer kan skriva på systemloggen genom
+att använda errh gränssnittet. 
+
+Meddelandena i loggfilen har olika grad av allvar, som makeras med en bokstav och färg:
+
+F <t>rött <t>Fatal, är den allvarligaste formen av felmeddelande.
+E <t>rött <t>Error, är ett felmeddelande. 
+W <t>gult <t>Warning, är ett varningsmeddelande.
+I <t>grönt<t>Information, är ett informations meddelande.
+S <t>grönt <t>Success, är ett meddelande om en framgångsrikt utförd aktivitet.
+
+Dessutom markeras uppstart av Proview med en gulfärgad rad.
+
+Framför allt ska man vara uppmärksam på röda meddelanden som innebär att någonting är 
+fel i systemet.
+
+<image> opg_fig28.png
+<b>Fig Systemloggen
+</topic>
+
+<topic> opg_nav_systemsts
+System / System Status
+
+System status visar en lista på noder i systemet, och genom att öppna en nod visas 
+statusbilden för noden. 
+
+Det mest intressanta in bilden är SystemStatus. Detta är en indikation på hur systemet mår.
+Om SystemStatus är grön, mår systemet bra, om den är gul eller röd, är någonting fel i
+systemet.
+
+Färgmarkeringarna har samma betydelse som i Systemloggen ovan, dvs
+
+F <t>blinkande rött <t>Fatal, är den allvarligaste formen av felstatus.
+E <t>rött <t>Error, markerar felstatus. 
+W <t>gult <t>Warning, markerar varnings-status.
+I <t>grönt<t>Information, är ett informations status.
+S <t>grönt <t>Success, innebär all allt är ok.
+  <t>grått <t>Null status, funktionen är inte aktiverad.
+
+Status för systemet är en summastatus av status för system- och applikations-processer. Under
+systemstatus finns en lista på dessa processer, och här visas även status för dem. Dessutom
+visas processernas senaste eller allvarligaste meddelande i systemloggen.
+
+Om systemstatus t ex är gul, innebär det att någon system eller applikations process har gul
+status. Förhoppningsvis kan man genom att läsa status texten och titta på systemloggen
+lista ut vad felet är.
+
+<image> opg_fig29.png
+<b>Fig Statusbild för noden
+
+Här följer en beskrivning på del olika system processerna som finns med i statusbilden.
+
+rt_ini <t>Initiering <t>Uppstarts process som drar igång systemet. Hanterar även systemloggen.
+rt_qmon <t>QCom monitorn <t>Sköter kommunikation med andra noder.
+rt_neth <t>Näthanteraren <t> Hanterar utbyte av databas information mellan noder.
+rt_neth_acp <t><t>Hjälp process till näthanteraren.
+rt_io <t>I/O <t>Process för I/O hantering som är asynkron med Plc programmet.
+rt_tmon <t>Timer monitorn <t>Hanterar sändning av prenumerationsdata.
+rt_emon <t>Event monitorn <t>Hanterar larm och händelser.
+rt_bck <t>Backup process <t>Hantera backup av attribut och objekt.
+rt_linksup <t>Link supervision <t>Övervakning av länkar till andra noder.
+rt_trend <t>Trend process <t>Hanterar lagring av trendkurvor.
+rt_fast  <t>Fast process <t>Hanterar lagring av snabbkurvor.
+rt_elog <t>Event logg <t>Hanterar logging av händelser.
+rt_webmon <t>Web monitorn <t>Förser webgränssnitten med databasinformation.
+rt_webmonmh <t>Web mh monitor <t>Förser webgränssnittet med larm och händelser.
+rt_sysmon <t>System monitor <t>Övervakar systemet.
+plc <t>Plc processen <t>Hanterar I/O och exekverar plc-koden.
+rs_remote <t>Remote processen <t>Hanterar remote kommunikation.
+opc_server <t>Opc server process.
+rt_statussrv <t>Status server <t>Webservice för runtime monitorn och övervakningscentralen.
+
+</topic>
+
+<topic> opg_nav_volumes
+System / Volumes
+
+Visar laddade volymer.
+För varje volym visas namn, klass, version och en bokstavskombination LCM där L står för
+loaded, C för cached och M för mounted.
+
+<image> opg_fig30.png
+<b>Fig Laddade volymer
+</topic>
+</headerlevel>
+</chapter>
+
+<chapter>
+<topic> opg_trace
+Plc trace
+
+Plc trace används för att studera och felsöka plc-koden. 
+Trace öppnas med metoden 'Open Plc', eller via en korsreferens i plc-koden.
+Man kan även öppna genom att välja ut ett PlcPgm objekt in navigatorn och aktivera
+'Functions/OpenProgram' (Ctrl+L) i menyn.
+
+Till höger finns ett navigationsfönster, där det visade områden är markerat med en fyrkant.
+Genom att flytta fyrkanten genom att dra med MB1 flyttar man det visade området. Man kan
+även zooma genom att dra med mittenknappen. 
+
+Digitala objekt med hög status markeras med rött i koden.
+
+<image> opg_fig32.png
+<b>Fig Plc Trace
+
+Man kan titta på värdet på analoga och digitala utgångar genom att skapa s k analys-noder
+som visar värdet på utgången. Dessa skapas genom att dra med mittenknappen från utgången.
+
+En uppsättning analysnoder kan sparas och återskapas med 'File/Save Trace' och 
+'File/Restore Trace' i menyn.
+
+Genom att högerklicka på ett objekt visas metoderna för objektet. En mycket användbar 
+metod i det här sammanhanget är korsreferenser. Korsreferenserna visas även om man
+dubbelklickar på ett objekt.
+
+<h1>Korsreferenser
+
+Korsreferenserna är en lista på var ett objekt eller attribut förekommer i koden och i 
+processbilder. Om referensen innebär en läsning av värdet, markeras detta med en bok, om
+det innebär en skrivning av värdet, markeras det med en penna. Läsning kan vara att värdet
+visas i en bild eller hämtas upp i plckoden med ett Get objekt i koden. Skrivning kan ske 
+med en trycknapp i en bild eller med ett Set eller Sto objekt i koden.
+
+<image> opg_fig33.png
+<b>Fig Korsreferenser
+
+Genom att högerklicka på korsreferensen kan man öppna plc't eller process-grafen som 
+referensen pekar på. På plc referenser kan man även dubbelklicka. När Plc Trace öppnas
+är referensen makerad och centrerad.
+
+<h1>Felsökning med Plc Trace och Korsreferenser
+Plc trace och korsreferenser är ett mycket effektivt sätt att felsöka på. 
+En felsökning utgår ofta från ett larm eller en felindikering i en process bild. Genom att
+aktivera metoderna 'Crossreferences' eller 'Open Plc' letar man upp det eller de ställen
+i koden där objektet skrivs. Genom att analysera koden sluter man sig till vilken signal
+som saknas, tar upp korsreferenserna för denna och öppnar Plc Trace där denna skrivs. På
+detta sätt kan man nästla sig bakåt i koden för att slutligen hitta orsaken.
+
+<h1>Simulering
+Vid simulering, dvs när man testkör ett system utan I/O system, kan man sätta över Plc Trace
+i simuleringsmod, med Mode/Simulate i menyn. I simuleringsmod kan man toggla digitala 
+signaler genom att klicka med Ctrl/Shift MB1 på dem i Plc Trace fönstret.
+
+</topic>
+</chapter>
+
+<chapter>
+<topic> opg_setupfile
+Setup-skript
+
+En setup-fil kan skapas på hemma-katalogen med namnet
+
+<c>xtt_setup.rtt_com
+
+Den kommer att exekveras när operatörsmiljön (eller rt_xtt) startas, och kan 
+innehålla script satser och xtt kommandon.
+
+Här är några exempel på användbara kommandon.
+
+<b>Öppna en graf
+
+<c>   open graph my_graph
+
+<b>Skapa en underhålls meny i navigatören
+
+<c>   create item/text="Maintenance"/menu/destination="DataBase"/before <LINK> create item
+<c>   create item/text="My graph"/command="open graph my_graph"/pixmap=graph
+<c>           /dest=Maintenance/first
+
+<b>Ta bort menyalternativ ur navigatörens standardmeny
+
+<c>   delete item /name=exit <LINK> delete item
+<c>   delete item /name=system-nethandler
+
+<b>Kortkommando för hieraki i databasen
+
+<c>   define rb9 "show children /name=hql-rb9" <LINK> define
+
+<b>Kortkommando for en graf
+
+<c>   define my_graph "open graph my_graph"
+</topic>
+
+<headerlevel>
+<topic> opg_symbol
+Symbol
+
+En xtt symbol kan användas som kortkommando eller som variabel i ett
+kommando. Om symbolen används som variabel i ett kommando ska den omgärdas
+av apostrofer.
+
+Symboler skapas med define kommandot. <link> define
+
+Exempel på en symbol använd som ett kortkommando
+
+<c>xtt> define p1 "show child/name=hql-hvk-pumpar-pump1"
+<c>xtt> p1
+
+Exempel på en symbol använd som en variabel
+
+<c>xtt> define p1 hql-hvk-pumpar-StartPump1
+<c>xtt> open trace 'p1'
+
+</topic>
+</headerlevel>
+</chapter>
+
+<chapter>
+<topic> opg_security
+Användare och privilegier
+
+Proview innehåller ett system med användare som tilldelas privilegier. För att utföra vissa 
+saker krävs privilegier, och endast om användaren har dessa privilegier tillåts han att 
+utföra dem.
+
+Följande privilegier används i operatörsmiljön:
+
+RtRead	<t>Läsrättigheter i runtime.
+RtWrite <t>Skrivrättigheter i runtime. Gör att man kan ändra värden på attribut från
+        <t>navigatören.
+RtEvents <t>Privilegium för att hantera larm och händelser.
+System  <t>System. Ger behörighet till det mesta.
+Maintenance <t>Privilegium för underhållspersonal.
+Process <t>Privilegium för process tekniker.
+Instrument <t>Privilegium för instrument tekniker.
+Operator1 <t>Privilegium för operatör.
+Operator2 <t>Privilegium för operatör.
+Operator3 <t>Privilegium för operatör.
+Operator4 <t>Privilegium för operatör.
+Operator5 <t>Privilegium för operatör.
+Operator6 <t>Privilegium för operatör.
+Operator7 <t>Privilegium för operatör.
+Operator8 <t>Privilegium för operatör.
+Operator9 <t>Privilegium för operatör.
+Operator10 <t>Privilegium för operatör.
+
+<h1>Användare 
+När operatörsmiljön eller Xtt startas, loggar man antingen in som en användare, eller så
+tilldelas man default privilegier som defineras i Security objektet.
+
+Om uppstarten av operatörsmiljön sker med ett operatörsplats-objekt hämtas användare från
+User objektets UserName attribut. Om användare saknas eller är ogiltig öppnas 
+inloggings-fönstret och man måste logga in med användarnamn och passerord.
+
+Om Xtt startas utan OpPlace objekt, hämtas privileger från Security-objektets DefaultXttPriv
+attribut. Om där inte finns några privilegier som ger läsrättigheter, öppnas inloggings-
+fönstret.
+
+<b>Navigatören
+För att göra förändringar i databasen från navigatören krävs RtWrite eller System. Detta 
+gäller även kommandot 'set parameter'.
+
+<b>Plc Trace
+För att kunna göra ändringar från Plc Trace i simuleringsmod krävs RtWrite eller System.
+
+<b>Objektsbilder
+Generellt för objektsbilder krävs det RtWrite eller System för att göra ändringar i
+databasen från dem. Det finns några undantag. I ChanAi och ChanAo har även Instrument 
+behörighet att ändra signalområden, och att sätta en Ao i test-mod. I PID och Mode-bilderna 
+har Process behörighet att ändra förutom RtWrite och System. I Mode-bilden kan man dessutom 
+styra behörigheten genom att öppna bilden med kommandot 'open graph' och använda /access 
+funktionen.
+
+<b>Processbilder
+I Processbilder väljer konstruktören för varje inmatningsfält och trycknapp vilka
+privilegier som krävs för att göra en ändring.
+</topic>
+</chapter>
+
+<chapter>
+<topic> opg_functionkeys
+Funktionstangenter
+
+Man kan använda funktionstangenterna för att snabbt ta upp bilder eller påverka objekt
+i databasen.
+
+<h1>Funktionsanrop
+Följande funktioner kan anropas när en funktionstangen trycks ner.
+
+<h2>SetDig()
+Sätter ett attribut av typen Boolean. Namnet på attributet ges som argument.
+
+<h2>ResDig()
+Återställer ett attribut av typen Boolean. Namnet på attributet ges som argument.
+
+<h2>ToggleDig()
+Togglar värdet på attribut av typen Boolean. Namnet på attributet ges som argument.
+
+<h2>Command()
+Exekverar ett xtt-kommando. Kommandot ges som argument.
+
+<h1>Setup-fil
+Kopplingen mellan tangenter och  funktionerna läggs i filen Rt_xtt på inloggningskatalogen. 
+I filen skrivs en rad för varje tangent. På raden skrivs
+- eventuella modifierare (Shift, Control eller Alt).
+- <Key> följt av namnet på tangenten, t ex <Key>F7 eller <Key>m.
+- ett kolon föjt av funktionen som ska anropas med argument.
+
+Ett '#' tecken först på raden anger en kommentar.
+
+<b>Exempel
+
+<c>#
+<c># Configuration of Global function keys
+<c>     <Key>F5: Command(event ack /prio=A)
+<c>     <Key>F6: Command(event ack /prio=NOA)
+<c>     <Key>F7: Command(show alarm)
+<c>     <Key>F8: Command(show event)
+<c>     <Key>F9: Command(close all/except=navigator)
+<c>     Shift Control <Key>m: SetDig(F1-Start.ActualValue)
+<c>     Shift Control <Key>n: SetDig(F1-Stop.ActualValue)
+<c>     Shift Alt <Key>n: SetDig(F1-Reset.ActualValue)
+
+</topic>
+</chapter>
+
+<chapter>
+<TOPIC> help command
+Xtt kommandon
+
+add parameter<t>Addera ett attribut till en bild <LINK> add parameter
+add menu    <t>Addera ett menyalternativ till en xtt meny <LINK> add menu
+collect     <t>Addera ett attribut till samlingsbilden <LINK> collect
+call method <t>Anropa en xtt metod för ett objekt <LINK> call method
+check method <t>Kontrollera om en xtt metod är relevant för ett objekt <LINK> check method
+collect show<t>Visa samlingsbilden		<LINK> collect show
+collect clear<t>Töm samlingsbilden		<LINK> collect clear
+close alarmlist <t>Stäng larmlistan		<LINK> close alarmlist
+close eventlist <t>Stäng händleslistan		<LINK> close eventlist
+close graph <t>Stäng en graf			<LINK> close graph
+close navigator <t>Stäng navigatorn		<LINK> close navigator
+create item <t>Skapa ett menyalternativ		<LINK> create item
+crossreference<t>Visa korsreferenser		<LINK> crossreference
+exit        <t>Stäng xtt			<LINK> exit
+define      <t>Definiera en symbol		<LINK> define
+delete item <t>Ta bort ett menyalternativ	<LINK> delete item
+help        <t>Visa hjälp			<LINK> help
+login       <t>Inloggning av användare		<LINK> login
+logout      <t>Utloggning av änvändare		<LINK> logout
+logging     <t>Logga attribut till fil		<LINK> logging
+open graph  <t>Öppna en graf			<LINK> open graph
+open jgraph <t>Öppna en java graf		<LINK> open jgraph
+open fileview <t>Öppna en fileview		<LINK> open fileview
+open trend  <t>Öppna en trendkurva		<LINK> open trend
+open operatorwindow<t>Öppna operatörsfönstret 	<LINK> open operatorwindow
+read object <t>Läs innehållet av ett objekt från fil <LINK> read object
+search	<t>Leta efter objekt eller sträng 	<LINK> search
+set advanceduser<t>Sätt avancerad användare	<LINK> set advanceduser
+set folder	<t>Aktivera en flik i ett flikfönster.  <LINK> set folder
+set parameter<t>Sätt värdet på ett attribut  	<LINK> set parameter
+setup       <t>Xtt konfigurering		<LINK> setup
+show version<t>Visa xtt version			<LINK> show version
+show symbol <t>Visa en symbol			<LINK> show symbol
+show plcpgm <t>Visa PlcPgm objekt		<LINK> show plcpgm
+show plcthreads<t>Visa PlcThread objekt		<LINK> show plcthreads
+show links  <t>Visa länkar			<LINK> show links
+show logfiles<t>Visa xtt loggfiler		<LINK> show logfiles
+show subsrv <t>Visa prenumerations servern	<LINK> show subsrv
+show subcli <t>Visa prenumerations klienten	<LINK> show subcli
+show device <t>Visa I/O enheter			<LINK> show device
+show remnode<t>Visa RemNode objekt		<LINK> show remnode
+show remtrans<t>Visa RemTrans objekt		<LINK> show remtrans
+show database<t>Visa runtime databasen		<LINK> show database
+show file  <t>Visa filer			<LINK> show file
+show graph <t>Visa graf-filer			<LINK> show graph
+show time  <t>Visa aktuell tid			<LINK> show time
+show default<t>Visa default katalog		<LINK> show default
+show children<t>Visa ett objekts barn 		<LINK> show children
+show object<t>Visa innehållet i ett objekt	<LINK> show object
+show objid <t>Visa ett objekts identitet	<LINK> show objid
+show parameter<t>Visa ett objektsattribut	<LINK> show parameter
+show logging<t>Vissa ett loggingentry		<LINK> show logging
+show eventlist<t>Visa händlselistan		<LINK> show eventlist
+show alarmlist<t>Visa larmlistan		<LINK> show alarmlist
+show user  <t>Visa nuvarande användare		<LINK> show user
+sound      <t>Spela upp ett ljud definerat av ett ljudobjekt <LINK> sound
+store      <t>Lagra en lista på attribut in en fil <LINK> store
+write object <t>Skriv innehållet i ett objekt till en fil <LINK> write object
+</TOPIC>	
+
+<headerlevel>
+<TOPIC> call method <style> function
+Kommando   call method
+
+Anropa en xtt metod för ett objekt.
+Xtt metoder aktiveras normalt från objektets popupmeny. Det här
+är ett alternativt sätt att anropa en metod, t ex från en kommando 
+trycknapp i en Ge graf.
+
+<B>xtt> call method /method= /object=
+
+/method=	<t>Namnet på metodet, dvs attributet ButtonName
+		<t>i definitionen av metoden.
+/object=	<t>Namn på objektet.
+</TOPIC>
+
+<TOPIC> check method <style> function
+Kommando   check method
+
+Anropa en xtt-metods filterfunktion för ett objekt.
+Filterfunktionen används för att avgöra om en metod knapp ska visas
+eller ej. Detta kommando kan användas för att göra en metod knapp
+okänslig i en Ge graf. Det returnerar filter-värdet till anroparen.
+Kommandot kan endast användas i en Ge graf.
+
+<B>xtt> check method /method= /object=
+
+/method=	<t>Namnet på metodet, dvs attributet ButtonName
+		<t>i definitionen av metoden.
+/object=	<t>Namn på objektet.
+</TOPIC>
+
+<TOPIC> add parameter <style> function
+Kommando   add parameter
+
+Addera ett attribut till listan av attribut, och visa attributets
+värde.
+
+En lista på attribut skapas med kommandot 'show parameter', och 
+fler attribut kan adderas till listan med 'add parameter'.
+
+Objekt som matchar specificerad klass, namn och hierarki visas i listan.
+
+<B>xtt> add parameter /parameter= /name= /class= /hierarchy=
+
+/parameter=	<t>Namn på attributete som ska visas.
+/name=		<t>Namn på objektet, Wildcard är tillåtet.
+/class=		<t>Visar objekt av angiven klass.
+/hierarchy=	<t>Visar objekt under angivet objekt i hierarkin.
+
+<H2>Se även
+show parameter <LINK> show parameter
+</TOPIC>
+
+<TOPIC> show parameter <style> function
+Kommando   show parameter
+
+Skapa en ny lista, addera attribut till listan, och visa värdet på 
+attributet.
+Fler attribut kan adderas till listan med 'add parameter'.
+
+Objekt som matchar klass, namn och hierarki beskrivninegen visas på
+skärmen.
+
+<B>xtt> show parameter /parameter= /name= /class= /hierarchy=
+
+/parameter=	<t>Namn på attributete som ska visas.
+/name=		<t>Namn på objektet, Wildcard är tillåtet.
+/class=		<t>Visar objekt av angiven klass.
+/hierarchy=	<t>Visar objekt under angivet objekt i hierarkin.
+
+<H2>Se även
+add parameter <LINK> add parameter
+</TOPIC>
+
+<TOPIC> set parameter <style> function
+Kommando   set parameter
+
+Sätt värdet på ett attribut.
+
+<B>xtt> set parameter /name= /value=
+
+/name=		<t>Namn på attributet.
+/value=		<t>Värde som ska sättas på attributet.
+/bypass=	<t>Gå förbi behörighetsrestriktioner.
+</TOPIC>
+
+<TOPIC> set folder <style> function
+Kommando   set folder
+
+Aktivera en flik i ett flikfönster objekt.
+
+<B>xtt> set folder 'graphname' /name= /index=
+
+/name=		<t>Namn på filkfönster objektet.
+/index=		<t>Index på filken som ska aktiveras. Indexeringen startar från 0.
+</TOPIC>
+
+<TOPIC> add menu <style> function
+Kommando   add menu
+
+Addera ett menyalternativ till xtt's meny-hierarki.
+Menyn placeras sist i menyn. Menyalternativet kan användas för
+att exekvera ett xtt kommando eller visa attributen för ett objekt.
+
+<B>xtt> add menu /text= /command=
+<B>xtt> add menu /text= /object=
+
+/text<t>Text för menyalternativet.
+/command<t>Xtt som exekveras när menyalternativet aktiveras.
+/object<t>Objekt som visas när menyalternativet aktiveras.
+
+<H2>Se även
+create item <LINK> create item
+delete item <LINK> delete item
+</TOPIC>
+
+<TOPIC> collect <style> function
+Kommando   collect
+
+Addera ett attribut till samlingsbilden.
+Om namnet inte anges adderas det utvalda objektet.
+
+<B>xtt> collect
+<B>xtt> collect /name=
+
+/name<t>Namn på attributet.
+
+Exempel
+
+xtt> collect /name=hql-hvk-Start.ActualValue
+
+<H2>Se även
+collect show <LINK> collect show
+collect clear <LINK> collect clear
+</TOPIC>
+
+<TOPIC> collect show <style> function
+Kommando   collect show
+
+Visa samlingsbilden.
+
+<B>xtt> collect show
+
+<H2>Se även
+collect <LINK> collect
+collect clear <LINK> collect clear
+</TOPIC>
+
+<TOPIC> collect clear <style> function
+Kommando   collect clear
+
+Töm samlingsbilden.
+
+<B>xtt> collect clear
+
+<H2>Se även
+collect <LINK> collect
+collect show <LINK> collect show
+</TOPIC>
+
+<TOPIC> create item <style> function
+Kommando   create item
+
+Skapa ett menyalternativ i xtt's meny hierarki.
+Menyalternativet kan användas för att exekvera ett
+xtt kommando, eller för att öppna en meny.
+
+<B>xtt> create item /text= /command= /pixmap= /destination= /after /before /firstchild /lastchild
+<B>xtt> create item /text= /menu /destination= /after /before /firstchild /lastchild
+
+/text<t>Text på menyalternativet.
+/command<t>Xtt kommando som exekveras när menyalternativet aktiveras.
+/menu	<t>När menyalternativet aktiveras öppnas en meny.
+/destination<t>Destinations meny. Kan vara förälder eller syskon. Om destination
+        <t>är en null-sträng skapas menyalternativet på topnivån.
+/after	<t>Placerar menyalternativet som syskon efter destinationen.
+/before	<t>Placerar menyalternativet som syskon före destinationen.
+/firstchild<t>Placerar menyalternativet som första barn till destinationen.
+/lastchild<t>Placerar menyalternativet som sista barn till destinationen.
+/pixmap <t>Pixmap för menyalternativet: 'map', 'leaf', 'graph', 'list' eller 'script'.
+
+Exempel
+
+xtt> create item /text="Motor1"/dest=Maintenance-Motors/command="open graph motor1"/first
+
+<H2>Se även
+add menu <LINK> add menu
+delete item <LINK> delete item
+</TOPIC>
+
+<TOPIC> crossreference <style> function
+Kommando   crossreference
+
+Visar korsreferenser.
+Korsreferenser kan visas för 
+- Signaler.
+- Objektreferenser med GetData.
+- Referenser i Ge grafer.
+- c-funktioner eller strängar som förekommer koden i CArithm eller 
+  DataArithm objekt.
+
+Om det inte anges några kvalifierare visas korsreferenser för det utvalda
+objektet.
+
+<B>xtt> crossreference
+<B>xtt> crossreference /name=
+<B>xtt> crossreference /function= [/brief]
+<B>xtt> crossreference /string= [/brief]
+
+/name 	<t>Namn på ett objekt.
+/function<t>Namn på en c-funktion anropad i en CArithm eller DataArithm.
+/string	<t>Sträng som letas efter i koden för CArithm och DataArithm objekt. 
+
+Exempel
+
+xtt> cross /name=hql-hvk-Start
+xtt> cross /function="CreateHvkObject"
+</TOPIC>
+
+<TOPIC> exit <style> function
+Kommando   exit
+
+Stäng xtt.
+
+<B>xtt> exit
+</TOPIC>
+
+<TOPIC> define <style> function
+Kommando define
+
+Definiera en symbol.
+
+<B>xtt> define 'symbolname' 'text'
+
+<h2>Se även
+symbol <LINK> symbol
+show symbol <LINK> show symbol
+symbolfile <LINK> symbolfile
+</TOPIC>	
+
+<TOPIC> delete item <style> function
+Kommando   delete item
+
+Ta bort ett menyalternativ.
+Menyalternativet kan vara skapat av användaren, eller tilhöra xtt's
+standardmeny.
+
+<B>xtt> delete item /name=
+
+/name<t>Namn på menyalternativet.
+
+Exempel
+
+xtt> delete item /name=exit
+
+<H2>Se även
+add menu <LINK> add menu
+create item <LINK> create item
+</TOPIC>
+
+<TOPIC> help <style> function
+Kommando   help
+
+Visar hjälp-information för ett ämne.
+Hjälp-informationen letas upp i en hjälp fil. Filen kan vara
+bas-hjälpfilen, projekt-hjälpfilen eller någon anna hjälpfil.
+
+Om ingen hjälpfil anges letas efter ämnet i bas- och projekt-
+hjälpfilerna.
+
+<B>xtt> help 'subject' [/popnavigator] [/bookmark=] [/helpfile=]
+<B>                       [/returncommand=][/width=][/height=]
+
+/popnavigator	<t>Hjälpfönstret läggs ovanpå övriga fönster och ges input focus.
+                <t>Detta kan användas när kommandot ges i en Ge graf.
+/bookmark	<t>Nammet på ett bokmärke inom ett ämne. Visningen kommer att
+                <t>placeras på bokmärket.
+/helpfile	<t>En hjälpfil som innehåller information om angivet ämne.
+/returncommand	<t>Ett kommando som exekveras vid retur från hjälpämnet.
+/width		<t>Önskad bredd på hjälpfönstret.
+/height		<t>Önskad höjd på hjälpfönstret.
+
+<H2>Se även
+helpfile <LINK> helpfile
+</TOPIC>
+
+<TOPIC> login <style> function
+Kommando   login
+
+Inloggning med användare och passerord. Användarens priviligier kommer
+att hämtas från användardatabasen. Dessa avgör användarens behörighet.
+
+<B>xtt> login 'username' 'password'
+
+<H2>Se även
+logout <LINK> logout
+show user <LINK> show user
+</TOPIC>
+
+<TOPIC> logout <style> function
+Kommando   logout
+
+Loggar ut en användare, och återgår till den ursprungliga användaren.
+
+<B>xtt> logout
+
+<H2>Se även
+login <LINK> login
+show user <LINK> show user
+</TOPIC>
+
+<TOPIC> open graph <style> function
+Kommando   open graph
+
+Öppna en Ge graf. Grafen kan anges men en pwg-fil eller med ett
+XttGraph objekt.
+
+<B>xtt> open graph 'filename' /width= /height= /scrollbar /menu /navigator
+<B>                           /instance= /focus= /inputempty
+<B>xtt> open graph /object= /focus= /inputempty
+
+/width	<t>Bredd i pixel.
+/height	<t>Höjd i pixel.
+/scrollbar<t>Fönstret skapas med skrollister.
+/menu	<t>Fönstret skapas med en meny.
+/navigator<t>En navigationsfönster öppnas.
+/object	<t>Ett XttGraph-objekt. Om namnsträngen börjar med '*', ersätts * med
+        <t>nodenamnet.
+/instance <t>Öppnar objektsbilden för det objekt som anges i instance.
+/focus  <t>Namn på ett inmatnings objekt. Objektet kommer att ges input focus
+        <t>när grafen öppnas.
+/inputempty <t>Texten i inmatningsfältet töms.
+</TOPIC>
+
+<TOPIC> open jgraph <style> function
+Kommando   open jgraph
+
+Öppna en java frame. Java frame'en kan vara exporterad från Ge eller editerad
+i t ex JBuilder.
+
+<B>xtt> open jgraph 'name'
+</TOPIC>
+
+<TOPIC> open fileview <style> function
+Kommando   open fileview
+
+Öppnar en fileview som viar filer som matchar det specifierade mönstret.
+Fileview'en kan startas i 'Open File' eller 'Save File' mod, dvs för att
+öppna eller spara filer.
+
+I öppnings mod, väljs en fil ut och det utvalda filnamnet skrivs till ett
+sträng attribut i databasen (target). Samtidigt sätts ett digitalt attribut
+(trigger) för att indikera att öppningen ska utföras. Själva öppningen av
+filen kan utföras av ett DataFRead objekt i plc programmet, men måste
+programmeras av användaren.
+
+I spara mod. kan en fil väljas ut, men man kan även mata in ett filnamn. 
+Filnamnet skrivs till ett strängattribut och en digital signal sätts. Själva
+spara funktionen kan utföras med ett DataFWrite objekt från plc programmet.
+
+<B>xtt> open fileview /file= /target= /trigger= /type=save [/ftype=]
+<B>xtt> open fileview /file= /target= /trigger= /type=open
+
+/file   <t>Mönster för filnamn, innehållande wildcard '*', för filer som ska
+        <t>visas i fileview'en.
+/ftype  <t>Default filtyp. Om ett angivet filnamn (is spara mod) inte innehåller
+        <t>filtyp, adderas den defaulta filtypen till filnamnet.
+/target <t>Strängattribut där det utvalda eller inmatade filnamnet ska lagras.
+/trigger <t>Boolean attribut som sätt för att indikera att öppna eller spara ska
+        <t>utföras.
+/type   <t>'save' eller 'open'
+
+<b>Exempel
+open fileview /file="$pwrp_load/*.txt"/ftype="txt"/target=P1-Sv.ActualValue/trigger=P1-Dv.ActualValue/type=save
+
+</TOPIC>
+
+<TOPIC> open trace <style> function
+Kommando   open trace
+
+Öppna Plc Trace för ett plcfönster. Om namn inte anges öppnas trace för 
+det utvalda PlcPgm dller PlcWindow objektet.
+
+<B>xtt> open trace [/name=] [/center=]
+
+/name	<t>PlcPgm eller PlcWindow.
+/center <t>Objekt i plc-fönstret som ska centeras och makeras.
+	<t>Ange sista segmentet av namnet.
+
+Exempel
+
+xtt> open trace /name=hql-hvk-flow /center=Pid0
+</TOPIC>
+
+<TOPIC> open trend <style> function
+Kommando   open trend
+
+Öppnar kurvfönstret för ett DsTrend eller PlotGroup objekt.
+
+<B>xtt> open trend [/name=] [/title=]
+
+/name	<t>DsTrend eller PlotGroup. Kan vara en lista av DsTrend-objekt separerade
+        <t>med komma-tecket.
+/title  <t>Titel på kurvfönsret.
+
+Exempel
+
+xtt> open trend /name=hql-hvk-flow-Trend,hql-hvk-temperature-Trend
+</TOPIC>
+
+<TOPIC> open operatorwindow <style> function
+Kommando   open operatorwindow
+
+Öppna operatörsfönstret.
+
+<B>xtt> open operatorwindow 'opplace-object'
+</TOPIC>
+
+<TOPIC> close graph <style> function
+Kommando   close graph
+
+Stäng en Ge graf. Grafen kan anges som en pwg-fil eller med ett XttGraph objekt.
+
+<B>xtt> close graph 'filename' /instance=
+<B>xtt> close graph /object=
+
+/object	<t>Ett XttGraph-objekt. Om namnsträngen börjar med '*', ersätts * med
+        <t>nodeobjektet.
+/instance <t>Stänger objektsbilden för angiven instans.
+</TOPIC>
+
+<TOPIC> close alarmlist <style> function
+Kommando   close alarmlist
+
+Stänger larmlistan.
+
+<B>xtt> close alarmlist
+
+</TOPIC>
+
+<TOPIC> close eventlist <style> function
+Kommando   close eventlist
+
+Stänger händleselistan.
+
+<B>xtt> close eventlist
+
+</TOPIC>
+
+<TOPIC> close navigator <style> function
+Kommando   close navigator
+
+Stänger navigatören.
+
+<B>xtt> close navigator
+
+</TOPIC>
+
+<TOPIC> search <style> function
+Kommando   search
+
+Letar efter ett objektsnamn eller en sträng.
+
+<B>xtt> search 'object'
+<B>xtt> search /regularexpression 'expression'
+<B>xtt> search /next
+</TOPIC>
+
+<TOPIC> read object <style> function
+Kommando   read object
+
+Läs innehållet i ett objekt från ej fil.
+Läser innehållet i en fil, vanligvis skapad med kommandot 'write object',
+och lägger in data i det specificerade objektet.
+
+<B>xtt> read object /object= /file=
+
+/object <t>Namn på objektet.
+/file   <t>Namn på fil att läsa från.
+</TOPIC>
+
+<TOPIC> set advanceduser <style> function
+Kommando   set advanceduser
+
+Sätt eller återställ advanced user.
+
+<B>xtt> set advanceduser
+<B>xtt> set noadvanceduser
+
+<H2>Se även
+advanced user <LINK> advanced user
+</TOPIC>
+
+<TOPIC> setup <style> function
+Xtt setup
+Unställning av xtt egenskaper.
+
+ConfigureObject	<t><t>RttConfigure objekt.
+DefaultDirectory<t><t>Default filkatalog för kommandofiler.
+Scantime	<t><t>Scantid för att updatera värden.
+AlarmMessage	<t><t>Visa semaste larm på Xtt's meddelanderad.
+AlarmBeep	<t><t>Ge ljudsignal om det finns okvitterade larm.
+AlarmReturn	<t><t>Visa retur händelser i händelselistan.
+AlarmAck	<t><t>Visa kvittens händelser i händleslistan.
+SymbolFilename	<t><t>Symbolfil.		<LINK> symbolfile
+Verify		<t><t>Sätt verifiering vid exekvering av kommandofiler.
+AdvancedUser	<t><t>Användaren är avancerad. <LINK> advanced user
+</TOPIC>
+
+<TOPIC> show version <style> function
+Kommando   show version
+
+Visa xtt version.
+
+<B>xtt> show version
+</TOPIC>
+
+<TOPIC> show symbol <style> function
+Kommando   show symbol
+
+Visa en symbol, eller alla symboler.
+
+<B>xtt> show symbol 'symbol'<t>	<t>Visa symbol 'symbol'
+<B>xtt> show symbol<t>		<t>Visa alla symboler
+
+<h2>Se även
+define <LINK> define
+symbol <LINK> symbol
+</TOPIC>
+
+<TOPIC> show plcpgm <style> function
+Kommando   show plcpgm
+
+Lista alla PlcPgm objekt is systemet.
+
+<B>xtt> show plcpgm
+</TOPIC>
+
+<TOPIC> show plcthreads <style> function
+Kommando   show plcthreads
+
+Visa alla PlcThread objekt.
+PlcThread objekt innehåller information och statistic för 
+plc-trådarna.
+
+<B>xtt> show plcthreads
+</TOPIC>
+
+<TOPIC> show links <style> function
+Kommando   show links
+
+Visa länkar till andra Proview system.
+
+<B>xtt> show links
+</TOPIC>
+
+<TOPIC> show logfiles <style> function
+Kommando   show logfiles
+
+Visa xtt logg-filer på arbetskatalogen.
+En logg-fil skapas med logging funktionen i rtt och xtt och
+har filtypen .rtt_log.
+
+En loggfil öppnas med dubbel-klick, eller genom att välja ut filen
+och trycka på return.
+
+<B>xtt> show logfiles
+</TOPIC>
+
+<TOPIC> show alarmlist <style> function
+Kommando   show alarmlist
+
+Öppna larmlistan.
+
+<B>xtt> show alarmlist
+</TOPIC>
+
+<TOPIC> show eventlist <style> function
+Kommando   show eventlist
+
+Öppna händleslistan.
+
+<B>xtt> show eventlist
+</TOPIC>
+
+<TOPIC> show user <style> function
+Kommando   show user
+
+Visa nuvarande användare med privilegier.
+
+<B>xtt> show user
+</TOPIC>
+
+<TOPIC> sound <style> function
+Kommando   sound
+
+Spela upp ett ljud definerat med ett Sound eller 
+SoundSequence objekt.
+
+<B>xtt> sound 'object'
+
+</TOPIC>
+
+<TOPIC> store <style> function
+Kommando   store
+
+Lagra en attributlista till en skriptfil, eller lagra symboltabellen
+till en script-fil.
+Den genererade script-filen kan exekveras från kommando prompten
+med @'filnamn'. Den återfinns även bland script-filer i menyn under
+'Store'.
+
+Om /collect används, återskapas attributlistan som en samlingsbild.
+
+<B>xtt> store 'filename' [/collect]
+<B>xtt> store 'filename' /symbols
+
+/collect <t>Listan återskapas som en samlingsbild.
+/symbols <t>Den nuvarande symboltabellen lagras.
+
+</TOPIC>
+
+<TOPIC> show logging <style> function
+Kommando   show logging
+
+Visar ett logging entry.
+
+<B>xtt> show logging /entry=
+</TOPIC>
+
+<TOPIC> logging <style> function
+Kommando   logging
+
+Ett antal kommandon för att hantera logging funktionen i Xtt.
+
+logging start		<LINK> logging start
+logging stop		<LINK> logging stop
+logging set		<LINK> logging set
+logging show		<LINK> logging show
+logging store		<LINK> logging store
+
+</TOPIC>
+
+<TOPIC> write object <style> function
+Kommando   write object
+
+Skriv innehållet i ett objekt till en fil.
+
+<B>xtt> write object /object= /file=
+
+/object <t>Namn på objektet.
+/file   <t>Namn på fil att skriva till.
+</TOPIC>
+
+
+</headerlevel>
+</chapter>
+
+//
+// Script
+//
+
+<chapter>
+<TOPIC> script
+Xtt script
+
+execute script		<LINK> execute script
+datatypes		<LINK> datatypes
+datatype conversions	<LINK> datatype conversions
+variable declarations	<LINK> variable declarations
+operators		<LINK> operators
+main-endmain		<LINK> main-endmain
+function-endfunction	<LINK> function-endfunction
+if-else-endif		<LINK> if-else-endif
+while-endwhile		<LINK> while-endwhile
+for-endfor		<LINK> for-endfor
+break			<LINK> break
+continue		<LINK> continue
+goto			<LINK> goto
+include			<LINK> include
+printf()		<LINK> printf()
+scanf()			<LINK> scanf()
+fprintf()		<LINK> fprintf()
+fgets()			<LINK> fgets()
+fopen()			<LINK> fopen()
+fclose()		<LINK> fclose()
+exit()			<LINK> exit()
+verify()		<LINK> verify()
+time()			<LINK> time()
+edit()			<LINK> edit()
+extract()		<LINK> extract()
+element()		<LINK> element()
+toupper()		<LINK> toupper()
+tolower()		<LINK> tolower()
+translate_filename()	<LINK> translate_filename()
+xtt-commands		<LINK> xtt-commands
+GetAttribute()		<LINK> getattribute()
+GetChild()		<LINK> getchild()
+GetParent()		<LINK> getparent()
+GetNextSibling()	<LINK> getnextsibling()
+GetClassList()		<LINK> getclasslist()
+GetNextObject()		<LINK> getnextobject()
+GetObjectClass()	<LINK> getobjectclass()
+GetNodeObject()		<LINK> getnodeobject()
+GetRootList()		<LINK> getrootlist()
+CutObjectName()		<LINK> cutobjectname()
+MessageError()		<LINK> messageerror()
+MessageInfo()		<LINK> messageinfo()
+GetCurrentText()	<LINK> getcurrenttext()
+GetCurrentObject()	<LINK> getcurrentobject()
+</TOPIC>
+
+<headerlevel>
+<TOPIC> execute script
+Exekvera ett script
+
+En script-fil exekveras från kommando-raden med kommandot
+
+xtt> @'filename'
+
+</TOPIC>
+
+<TOPIC> datatypes
+Datatyper
+
+Datatyperna är float, int och string.
+
+int	<t>heltals värde.
+float	<t>32-bitars flyttals värde.
+string	<t>textsträng, 80 tecken lång (null terminerad).
+
+Det finns tre olika tabeller som en variabel kan deklareras i: local, global
+och extern. En lokal variabel är känd inom en funktion, en global är känd
+i alla funktioner inom en fil, en extern är känd i alla filer som exekveras
+i en session.
+</TOPIC>
+
+<TOPIC> datatype conversions
+Datatyps konvertering
+
+Om ett uttryck består av variabler och funktioner med olika datatyper kommer
+variablerna att konverteras med företräde string, float, int. Om två operander
+har typerna float och string, eller int och string, kommer resultatet att bli
+string. Vid en tilldelning, kommer värdet av ett uttryck att konverteras till
+typen för den tilldelade variabeln. Detta gäller även om resultatet är en sträng
+och variablerna är av type float och int.
+
+<b>Exempel
+
+<c>string  str;
+<c>int     i = 35;
+<c>str = "Luthor" + i;
+The value in str will be "Luthor35".
+
+<c>float   f;
+<c>string  str = "3.14";
+<c>int     i = 159;
+<c>f = str + i;
+The value in f will be 3.14159.
+</TOPIC>
+
+<TOPIC> variable declarations
+Variabel deklarationer
+
+En variabel måste deklareras innan den avänds.
+En deklaration består av
+- tabellen (global eller extern, om local ska inte tabellen anges)
+- datatypen (int, float eller string)
+- variabelnamn (känsligt för stora och små bokstäver)
+- antal element, om variabeln är en vektor
+- likameds tecken följt av initierings värde, om det utelämnas är 
+  intitialvärdet 0 eller en null-sträng
+- semikolon.
+
+En extern variabel bör tas bort (med delete) när den inte längre används.
+
+<b>Exempel
+
+int             i;
+float           flow = 33.4;
+string          str = "Hello";
+extern int      jakob;
+global float	ferdinand = 1234;
+</TOPIC>
+
+<TOPIC> operators
+Operatorer
+
+Operatorerna har samma funktion som i c, med vissa begränsningar. Alla
+operatorer är inte implementerade. Vissa operatorer (+,=,==) kan även
+operera på string variabler. Prioriteten för operatorer är densamma som i c.
+
+Operator	<t>Beskrivning		<t>Datatyper
++		<t>plus			<t>int, float, string
+-		<t>minus			<t>int, float
+*		<t>multiplikation		<t>int, float
+/		<t>division			<t>int, float
+++	 	<t>inkrement, postfix only.	<t>int, float
+--	 	<t>dekrement, postfix only	<t>int, float
+>>	 	<t>bitar höger-skift		<t>int
+<<	 	<t>bitar vänster-skift		<t>int
+<		<t>mindre än			<t>int, float
+>		<t>större än			<t>int, float
+<=	 	<t>mindre eller lika med	<t>int, float
+>=	 	<t>större eller lika med	<t>int, float
+==	 	<t>lika med			<t>int, float, string
+!=	 	<t>ej lika med			<t>int, float, string
+&		<t>bitvis och			<t>int
+|		<t>bitvis eller			<t>int
+&&	 	<t>logisk och			<t>int
+||	 	<t>logisk eller			<t>int
+!		<t>logisk not			<t>int
+=		<t>tilldelning			<t>int, float, string
++=	 	<t>addera och tilldela		<t>int, float
+-=	 	<t>minus och tilldela		<t>int, float
+&=	 	<t>logisk och och tilldelning	<t>int
+|=	 	<t>logisk eller och tilldelning	<t>int
+</TOPIC>
+
+<TOPIC> main-endmain <style> function
+main-endmain
+
+main och endmain satserna kontrollerar var exekveringen börjar och slutar.
+Om det inte finns några main och endmain satser, startar exekveringen i
+början på filen, och slutar i slutet på filen.
+
+<b>Exempel
+
+<c>main()
+<c>  int a;
+
+<c>  a = p1 + 5;
+<c>  printf( "a = %d", a);
+<c>endmain
+</TOPIC>
+
+<TOPIC> function-endfunction <style> function
+function-endfunction
+
+En funktions deklaration består av
+- datatypen för funktionens retur värde
+- namnet på funktionen
+- en argumentlista separerade med kommatecken och omgiven av parenteser.
+  Argumentlistan innehåller typdeklaration och namn på varje argument.
+
+Argumenten som skickas med vid anropet kommer att konverteras till den typ
+som är deklarerad i argumentlistan. Om ett argument ändrar värde inne i 
+funktionen, kommer det nya värdet att överföras till anroparen. På detta
+sätt blir de möjlig att returnera andra värden än retur värdet för funktionen.
+En funktion kan innehålla en eller flera return statser. Return satsen kommer
+att flytta över exekveringen till anroparen och returnera det angivna värdet.
+
+<b>Exempel
+
+<c>function float calculate_flow(float a, float b)
+<c>  float c;
+<c>  c = a + b;
+<c>  return c;
+<c>endfunction
+
+...
+<c>flow = korr * calculate_flow( v, 35.2);
+</TOPIC>
+
+<TOPIC> if-else-endif <style> function
+if-else-endif
+
+Raderna mellan en if-endif stats exekveras om uttrycket i if-statsen är sant.
+Uttrycket ska omges av parenteser. Om en else sats hittas mellan if och endif,
+kommer raderna mellan else och endif att exekveras när uttrycket är falskt.
+
+<b>Exempel
+
+<c>if ( i < 10 && i > 5)
+<c>  a = b + c;
+<c>endif
+
+<c>if ( i < 10)
+<c>  a = b + c;
+<c>else
+<c>  a = b - c;
+<c>endif
+</TOPIC>
+
+<TOPIC> while-endwhile <style> function
+while-endwhile
+
+Raderna mellan en while-endwhile sats exekveras så länge uttrycket i
+while-satsen är sant. Uttrycket ska omges av parentser.
+
+<b>Exempel
+
+<c>while ( i < 10)
+<c>  i++;
+<c>endwhile
+</TOPIC>
+
+<TOPIC> for-endfor <style> function
+for-endfor
+
+Raderna mellan en for-endfor sats exekveras så länge mitten-uttrycket i 
+for-satsen är sant. for-satsen består av tre uttryck, avgränsade med semicolon
+och omgivna av parenteser. Det första uttrycket exekveras före den första
+loopen, det tredje exekveras efter varje loop, och det i mittne exekveras
+före varje loop, och om det är sant, gör ytterligare ett varv, annars lämnas
+loopen.
+
+<b>Exempel
+
+<c>for ( i = 0; i < 10; i++)
+<c>  a += b;
+<c>endfor
+</TOPIC>
+
+<TOPIC> break <style> function
+break
+
+En break sats kommer att söka efter nästa endwhile eller endfor sats
+och försätta exekveringen på raden efter denna.
+
+<b>Exempel
+
+<c>for ( i = 0; i < 10; i++)
+<c>  a += b;
+<c>  if ( a > 100)
+<c>    break;
+<c>endfor
+</TOPIC>
+
+<TOPIC> continue <style> function
+continue
+
+En continue sats kommera att söka efter närmast föregående while eller
+for sats och forsätta att utföra loopen.
+
+<b>Exempel
+
+<c>for ( i = 0; i < 10; i++)
+<c>  b = my_function(i);
+<c>  if ( b > 100)
+<c>    continue;
+<c>  a += b;
+<c>endfor
+</TOPIC>
+
+<TOPIC> goto <style> function
+goto
+
+En goto sats orsakar ett hopp i exekveringen till en rad som är
+definierad med en label. Label raden avslutas med ett kolon.
+
+<b>Exempel
+
+<c>  b = attribute("MOTOR-ON.ActualValue", sts);
+<c>  if (!sts)
+<c>    goto some_error; 
+<c>  ...
+<c>some_error:
+<c>  say("Something went wrong!");
+</TOPIC>
+
+<TOPIC> include <style> function
+include
+
+En script include-fil xom innehåller funktioner kan inkluderas med
+#include satsen. Default filtyp för filen är '.rtt_com'.
+
+<b>Exempel
+
+<c>#include <my_functions>
+</TOPIC>
+
+<TOPIC> printf() <style> function
+printf()
+
+int printf( string format [, (arbitrary type) arg1, (arbitrary type) arg2])
+
+<b>Beskrivning
+
+Formaterad utskrift. C-syntax. Format argument och inget, ett eller två
+värde argument. 
+Returnerar antal utskrivna tecken.
+
+<b>Argument
+
+string 			<t>format	<t>Format.
+godtycklig typ		<t>arg1		<t>Värde argument. Valfritt, Kan vara int,
+			<t>		<t>float eller string.
+godtycklig typ		<t>arg2		<t>Värde argument. Valfritt. Kan vara int,
+			<t>		<t>float eller string.
+
+<b>Exempel
+
+<c>  printf( "Watch out!");
+<c>  printf( "a = %d", a);
+<c>  printf( "a = %d och str = %s", a, str);
+</TOPIC>
+
+<TOPIC> scanf() <style> function
+scanf()
+
+int scanf( string format , (godtycklig typ) arg1)
+
+<b>Beskrivning
+
+Formaterad inmatning. C-syntax.
+Returnerar antal inlästa tecken.
+
+<b>Argument
+
+string 			<t>format	<t>Format.
+godtycklig typ		<t>arg1		<t>Värde argument. Returnerat. Kan vara int,
+			<t>		<t>float eller string.
+
+<b>Exempel
+
+<c>  scanf( "%d", i);
+</TOPIC>
+
+<TOPIC> fprintf() <style> function
+fprintf()
+
+int fprintf( int file, string format [, (godtycklig typ) arg1,
+	(godtycklig typ) arg2])
+
+<b>Beskrivning
+
+Formaterad utskrift på fil. C-syntax. Format argument och inget, ett eller två
+värde argument.
+Returnerarn antal utskrivna tecken.
+
+<b>Argument
+
+int 			<t>file		<t>Fil id returnerat av fopen.
+string 			<t>format	<t>Format.
+godtycklig typ		<t>arg1		<t>Värde argument. Valfritt. Kan vara int,
+			<t>		<t>float eller string.
+godtycklig typ		<t>arg2		<t>Värde argument. Valfritt. Kan vara int,
+			<t>		<t>float eller string.
+
+<b>Exempel
+
+<c>  int outfile;
+<c>  outfile = fopen( "my_file.txt", "w");
+<c>  if (!outfile)
+<c>    exit();
+<c>  fprintf( outfile, "Some text");
+<c>  fprintf( outfile, "a = %d", a);
+<c>  fclose( outfile);
+</TOPIC>
+
+<TOPIC> fgets() <style> function
+fgets()
+
+int fgets( string str, int file)
+
+<b>Beskrivning
+
+Läser en rad från en angiven fil.
+Returnerar noll vid filslut.
+
+<b>Argument
+
+string 		<t>str		<t>Läst rad. Returnerad. 
+int		<t>file		<t>Fil id returnerad av fopen.
+
+<b>Exempel
+
+<c>  file = fopen("some_file.txt","r");
+<c>  while( fgets( str, file))
+<c>    say( str);
+<c>  endwhile
+<c>  fclose( file);
+</TOPIC>
+
+<TOPIC> fopen() <style> function
+fopen()
+
+int fopen( string filespec, string mode)
+
+<b>Beskrivning
+
+Öppnar en fil för att läsa eller skriva.
+Returnerar en fil identitet, Om filen inte kunde öppnas, returneras noll.
+
+<b>Argument
+
+string 		<t>filespec	<t>Namn på filen. 
+string		<t>mode		<t>Access mod
+
+<b>Exempel
+
+<c>  int infile;
+<c>  int outfile;
+
+<c>  infile = fopen("some_file.txt","r");
+<c>  outfile = fopen("another_file.txt","w");
+<c>  ...
+<c>  fclose( infile);
+<c>  fclose( outfile);
+</TOPIC>
+
+<TOPIC> fclose() <style> function
+fclose()
+
+int fclose( int file)
+
+<b>Beskrivning
+
+Stänger en öppnad fil.
+
+<b>Argument
+
+int		<t>file		<t>fil-id returnerad av fopen.
+
+<b>Exempel
+
+<c>  int infile;
+<c>  infile = fopen("some_file.txt","r");
+<c>  ...
+<c>  fclose( infile);
+</TOPIC>
+
+<TOPIC> exit() <style> function
+exit()
+
+int exit()
+
+<b>Beskrivning
+
+Avslutar exekveringen av en fil.
+
+<b>Exempel
+
+<c>  exit();
+</TOPIC>
+
+<TOPIC> verify() <style> function
+verify()
+
+int verify( [int mode])
+
+<b>Beskrivning
+
+Sätter eller visar verifikatione mod. Om verifiering är till, visas alla 
+exekverade rader på skärmen.
+Returnerar nuvarande verifikations mod.
+
+<b>Argument
+
+int		<t>mode		<t>verifikaion till (1) eller från (0). Valfri.
+
+<b>Exempel
+
+<c>  verify(1);
+</TOPIC>
+
+<TOPIC> time() <style> function
+time()
+
+string time()
+
+<b>Beskrivning
+
+Returnerar nuvarande tid i strängformat.
+
+<b>Exempel
+
+<c>  string t;
+<c>  t = time();
+</TOPIC>
+<TOPIC> edit() <style> function
+edit()
+
+string edit( string str)
+
+<b>Beskrivning
+
+Tar bort inledande och avslutande blanktecken och tabbar, och ersätter flera
+tabbar och blanktecken med ett blanktecken.
+Returnerar den editerade stängen.
+
+<b>Argument
+
+string		<t>str		<t>sträng som ska editeras.
+
+<b>Exempel
+
+<c>  collapsed_str = edit(str);
+</TOPIC>
+
+<TOPIC> extract() <style> function
+extract()
+
+string extract( int start, int length, string str)
+
+<b>Beskrivning
+
+Extraherar de angivna tecknen från angiven sträng.
+Returnerar de extraherade tecknen som en sträng.
+
+<b>Argument
+
+int		<t>start	<t>start positionen för första tecknet.
+				<t><t>Första tecknet har position 1.
+int		<t>length	<t>antalet tecken som ska extraheras.
+string		<t>str		<t>sträng som tecknen ska extraheras från.
+
+<b>Exempel
+
+<c>  extracted_str = extract( 5, 7, str);
+</TOPIC>
+
+<TOPIC> element() <style> function
+element()
+
+string element( int number, string delimiter, string str)
+
+<b>Beskrivning
+
+Extraherar ett element från et sträng av element.
+Returnerar det extraherade elementet.
+
+<b>Argument
+
+int		<t>number	<t>elementets nummer.
+string		<t>delimiter	<t>avgränsnings tecken.
+string		<t>str		<t>sträng med element.
+
+<b>Exempel
+
+<c>  string str = "mary, lisa, anna, john";
+<c>  string elem1;
+<c>  elem1 = elment( 1, ",", str);
+</TOPIC>
+
+<TOPIC> toupper() <style> function
+toupper()
+
+string toupper( string str)
+
+<b>Beskrivning
+
+Konverterar en sträng till stora bokstäver.
+
+<b>Argument
+
+string		<t>str		<t>sträng som ska konverteras.
+
+<b>Returns
+string				<t><t>sträng med stora bokstäver.
+
+<b>Exempel
+
+<c>  string str1 = "Buster Wilson";
+<c>  string str2;
+<c>  str2 = toupper( str);
+</TOPIC>
+
+<TOPIC> tolower() <style> function
+toupper()
+
+string tolower( string str)
+
+<b>Beskrivning
+
+Konverterar en sträng till små bokstäver.
+
+<b>Argument
+
+string		<t>str		<t>sträng som ska konverteras.
+
+<b>Returns
+string				<t><t>sträng med små bokstäver.
+
+<b>Exempel
+
+<c>  string str1 = "Buster Wilson";
+<c>  string str2;
+<c>  str2 = tolower( str);
+</TOPIC>
+
+<TOPIC> translate_filename() <style> function
+translate_filename()
+
+string translate_filename( string fname)
+
+<b>Beskrivning
+
+Byter ut omgivnings variabler i ett filnamn.
+
+<b>Argument
+
+string		<t>fname	<t>A filnamn.
+
+<b>Returns
+string				<t><t>Sträng med utbytta omgivningsvariabler.
+
+<b>Exempel
+
+<c>  string fname1 = "$pwrp_db/a.wb_load";
+<c>  string fname2;
+<c>  fname2 = translate_filename( fname1);
+</TOPIC>
+
+<TOPIC> xtt-commands <style> function
+Xtt kommandon
+
+Alla xtt kommandon finns tillgängliga i script koden. En xtt-kommando rad
+ska INTE avslutas med semikolon. Variabler kan substitueras i kommandot
+genom add omges av apostrofer.
+
+<b>Exempel
+
+<c>  string name = "PUMP-VALVE-Open.ActualValue";
+<c>  float  value = 2.2;
+<c>  set parameter/name='name'/value='value'
+
+<b>Exempel
+
+<c>  string name;
+<c>  string parname;
+<c>  int j;
+<c>  int i;
+<c>  for ( i = 0; i < 3; i++)
+<c>    parname = "vkv-test-obj" + (i+1);
+<c>    create obj/name='parname'
+<c>    for ( j = 0; j < 3; j++)
+<c>      name = parname + "-obj" + (j+1);
+<c>      create obj/name='name'
+<c>    endfor
+<c>  endfor
+</TOPIC>
+
+<TOPIC> getattribute() <style> function
+GetAttribute()
+
+(variable type) GetAttribute( string name [, int status])
+
+<b>Beskrivning
+
+Hämta värdet för angivet attribut. Typen av det returnerade värdet beror
+på typen av attributet. Attributet kommer att konverteras till int, float
+eller string.
+
+<b>Argument
+
+string		<t>name		<t>namn på attributet som ska hämtas.
+int		<t>status	<t>status för operationen. Returnerad. Om noll
+		<t>		<t>kunde inte attributet hämtas. Valfritt.
+<b>Exempel
+
+<c>  int alarm;
+<c>  int sts;
+
+<c>  alarm = GetAttribute("Roller-Motor-Alarm.ActualValue");
+<c>  on = GetAttribute("Roller-Motor-On.ActualValue", sts);
+<c>  if ( !sts)
+<c>    say("Could not find motor on attribute!");
+</TOPIC>
+
+<TOPIC> getchild() <style> function
+GetChild()
+
+string GetChild( string name)
+
+<b>Beskrivning
+
+Hämta första barnet till ett objekt. Nästföljande barn kan hämtas med
+GetNextSibling().
+Returnerar namnet på barnet. Om det inte finns något barn, returneras en
+null-sträng.
+
+<b>Argument
+
+string		<t>name		<t>objektets namn.
+
+<b>Exempel
+
+<c>  string child;
+
+<c>  child = GetChild("Roller-Motor");
+</TOPIC>
+
+<TOPIC> getparent() <style> function
+GetParent()
+
+string GetParent( string name)
+
+<b>Beskrivning
+
+Hämta föräldern till ett objekt.
+Returnerar förälderns namn. Om det inte finns någon förälder returneras
+en null-sträng.
+
+<b>Argument
+
+string		<t>name		<t>objektets namn.
+
+<b>Exempel
+
+<c>  string parent;
+
+<c>  parent = GetChild("Roller-Motor");
+</TOPIC>
+
+<TOPIC> getnextsibling() <style> function
+GetNextSibling()
+
+string GetNextSibling( string name)
+
+<b>Beskrivning
+
+Hämtar nästa syskon till ett objekt.
+Returnerar namnet på syskonet. Om det inte finns något nästa systkon
+returneras en null-sträng.
+
+<b>Argument
+
+string		<t>name		<t>objektets namn.
+
+<b>Exempel
+
+<c> string name;
+<c> int not_first;
+
+<c> name = GetChild("Rt");
+<c> not_first = 0;
+<c> while ( name != "")
+<c>   if ( !not_first)
+<c>     create menu/title="The Rt objects"/text="'name'"/object="'name'"
+<c>   else
+<c>     add menu/text="'name'"/object="'name'"
+<c>   endif
+<c>   not_first = 1;
+<c>   name = GetNextSibling(nname);
+<c> endwhile
+<c> if ( !not_first )
+<c>   MessageError("No objects found");
+</TOPIC>
+
+<TOPIC> getclasslist() <style> function
+GetClassList()
+
+string GetClassList( string class)
+
+<b>Beskrivning
+
+Hämta första objektet av angiven klass. Nästa objekt av klassen kan
+hämtas med GetNextObject().
+Returnerar namnet på första objektet. Om det inte finns några instanser
+av klassen returneras en null-sträng.
+
+<b>Argument
+
+string		<t>name		<t>namn på klassen.
+
+<b>Exempel
+
+<c>  string name;
+
+<c>  name = GetClassList("Dv");
+</TOPIC>
+
+<TOPIC> getnextobject() <style> function
+GetNextObject()
+
+string GetNextObject( string name)
+
+<b>Beskrivning
+
+Hämta nästa objekt i klasslistan.
+Returnerar namnet på objektet. Om det inte finns något nästa objekt
+returneras en null-sträng.
+
+<b>Argument
+
+string		<t>name		<t>objektets namn.
+
+<b>Exempel
+
+<c>  string name;
+
+<c>  name = GetClassList("Di");
+<c>  while ( name != "")
+<c>    printf("Di object found: %s", name);
+<c>    name = GetNextObject(name);
+<c>  endwhile
+</TOPIC>
+
+<TOPIC> getobjectclass() <style> function
+GetObjectClass()
+
+string GetObjectClass( string name)
+
+<b>Beskrivning
+
+Hämta klassen för ett objekt.
+Returnerar klassens namn.
+
+<b>Argument
+
+string		<t>name		<t>objektets namn.
+
+<b>Exempel
+
+<c>  string class;
+
+<c>  class = GetObjectClass("Motor-Enable");
+</TOPIC>
+
+<TOPIC> getnodeobject() <style> function
+GetNodeObject()
+
+string GetNodeObject()
+
+<b>Beskrivning
+
+Hämta nod objektet.
+Returnerar namnet på nod objektet.
+
+<b>Exempel
+
+<c>  string node;
+<c>  node = GetNodeObject();
+</TOPIC>
+
+<TOPIC> getrootlist() <style> function
+GetRootList()
+
+string GetRootList()
+
+<b>Beskrivning
+
+Hämta första objektet i rot listan.
+Returnerar namnet på rotobjektet. Nästa objekt i rotlistan kan hämtas med
+GetNextSibling().
+
+<b>Exempel
+
+<c>  string name;
+
+<c>  name = GetRootList();
+<c>  while( name != "")
+<c>    printf( "Root object found: %s", name);
+<c>    name = GetNextSibling(name);
+<c>  endwhile
+</TOPIC>
+
+<TOPIC> cutobjectname() <style> function
+CutObjectName()
+
+string CutObjectName( string name, int segments)
+
+<b>Beskrivning
+
+Kapa av de första segmenten av ett objektsnamn.
+Returnerar de sista segmenten av ett objektsnamn. Antalet segment som 
+returneras specificeras i det andra argumentet.
+
+<b>Argument
+
+string		<t>name		<t>Objektsnamn med path.
+int		<t>segments	<t>Antalet namnsegment som ska returneras.
+
+<b>Exempel
+
+<c>  string path_name;
+<c>  string object_name;
+
+<c>  path_name = GetChild("Rt-Motor");
+<c>  object_name = CutObjectName( path_name, 1);
+</TOPIC>
+
+<TOPIC> messageerror() <style> function
+MessageError()
+
+string MessageError( string message)
+
+<b>Beskrivning
+
+Skriv ett xtt felmeddelande på skärmen.
+
+<b>Exempel
+
+<c>  MessageError("Something went wrong");
+</TOPIC>
+
+<TOPIC> messageinfo() <style> function
+MessageInfo()
+
+string MessageInfo( string message)
+
+<b>Beskrivning
+
+Skriv ett xtt info meddelande på skärmen.
+
+<b>Exempel
+
+<c>  MessageInfo("Everything is all right so far");
+</TOPIC>
+
+<TOPIC> getcurrenttext() <style> function
+GetCurrentText()
+
+string GetCurrentText()
+
+<b>Beskrivning
+
+Hämta texten på det utvalde menyalternativet.
+
+<b>Exempel
+
+<c>  string text;
+
+<c>  text = GetCurrentText();
+</TOPIC>
+
+<TOPIC> getcurrentobject() <style> function
+GetCurrentObject()
+
+string GetCurrentObject()
+
+<b>Beskrivning
+
+Hämta utvalt objekt. Om inte något objekt är utval
+returneras en null-sträng.
+
+<b>Exempel
+
+<c>  string object;
+
+<c>  object = GetCurrentObject();
+</TOPIC>
+</headerlevel>
+</chapter>
+

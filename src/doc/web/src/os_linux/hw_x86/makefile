@@ -46,6 +46,15 @@ en_us_html_sources := $(sort \
              ) \
            )
 
+html_sources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(pwre_sroot)/doc/web/src, \
+                 $(wildcard $(dir)/*.html) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
 sv_se_html_sources := $(sort \
              $(foreach file, \
                $(foreach dir, \
@@ -57,12 +66,13 @@ sv_se_html_sources := $(sort \
 
 export_gif := $(addprefix $(doc_dir)/,$(gif_sources))
 export_js := $(addprefix $(doc_dir)/,$(js_sources))
+export_html := $(addprefix $(doc_dir)/,$(html_sources))
 export_html_en_us := $(addprefix $(doc_dir)/en_us/,$(en_us_html_sources))
 export_html_sv_se := $(addprefix $(doc_dir)/sv_se/,$(sv_se_html_sources))
 clean_pwg := $(patsubst %.pwg,clean_%.pwg,$(sources))
 clean_html := $(patsubst %.html,clean_%.html,$(sources))
 clean_html := $(patsubst %.js,clean_%.js,$(sources))
-export_doc := $(export_gif) $(export_js) $(export_html_en_us) $(export_html_sv_se)
+export_doc := $(export_gif) $(export_js) $(export_html) $(export_html_en_us) $(export_html_sv_se)
 clean_ge := $(clean_gif) $(clean_html)
 .SUFFIXES:
 
@@ -94,6 +104,10 @@ $(clean_js) : clean_%.js : %.js
 $(doc_dir)/pcss.css : ../../pcss.css
 	@ echo "copy $(source) $(target)"
 	@ cp $(source) $(target)
+
+$(doc_dir)/%.html : $(pwre_sroot)/doc/web/src/%.html
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
 
 $(doc_dir)/en_us/%.html : $(pwre_sroot)/doc/web/en_us/%.html
 	@ $(log_h_h)

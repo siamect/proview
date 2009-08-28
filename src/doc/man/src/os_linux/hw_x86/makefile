@@ -221,11 +221,16 @@ copy : $(export_pdf) $(export_pdf_en_us) $(export_pdf_sv_se) \
        $(export_gif_exe) $(export_gif_en_us) $(export_gif_sv_se) \
        $(export_png_exe) $(export_png_en_us) $(export_png_sv_se) \
        $(exe_dir)/en_us/wtt_help.dat $(exe_dir)/sv_se/wtt_help.dat \
+       $(exe_dir)/en_us/xtt_help.dat $(exe_dir)/sv_se/xtt_help.dat \
        $(exe_dir)/en_us/rtmon_help.dat \
        $(exe_dir)/en_us/man_dg.dat $(exe_dir)/sv_se/man_dg.dat \
        $(doc_dir)/en_us/man_dg_index.html $(doc_dir)/sv_se/man_dg_index.html \
        $(doc_dir)/en_us/man_dg.pdf $(doc_dir)/sv_se/man_dg.pdf \
        $(doc_dir)/en_us/man_dg.ps $(doc_dir)/sv_se/man_dg.ps \
+       $(exe_dir)/en_us/man_opg.dat $(exe_dir)/sv_se/man_opg.dat \
+       $(doc_dir)/en_us/man_opg_index.html $(doc_dir)/sv_se/man_opg_index.html \
+       $(doc_dir)/en_us/man_opg.pdf $(doc_dir)/sv_se/man_opg.pdf \
+       $(doc_dir)/en_us/man_opg.ps $(doc_dir)/sv_se/man_opg.ps \
        $(exe_dir)/en_us/man_geref.dat $(exe_dir)/sv_se/man_geref.dat \
        $(doc_dir)/en_us/man_geref_index.html $(doc_dir)/sv_se/man_geref_index.html \
        $(doc_dir)/en_us/man_geref.pdf $(doc_dir)/sv_se/man_geref.pdf \
@@ -270,6 +275,14 @@ $(exe_dir)/sv_se/wtt_help.dat : $(pwre_sroot)/doc/man/sv_se/wtt_help.dat
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 
+$(exe_dir)/en_us/xtt_help.dat : $(pwre_sroot)/doc/man/en_us/xtt_help.dat
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
+$(exe_dir)/sv_se/xtt_help.dat : $(pwre_sroot)/doc/man/sv_se/xtt_help.dat
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
 $(exe_dir)/en_us/rtmon_help.dat : $(pwre_sroot)/doc/man/en_us/rtmon_help.dat
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
@@ -282,17 +295,13 @@ $(exe_dir)/sv_se/man_dg.dat : $(pwre_sroot)/doc/man/sv_se/man_dg.dat
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 
-$(exe_dir)/man_subgraph.dat : $(pwre_sroot)/doc/man/en_us/man_subgraph.dat
-	@ $(log_h_h)
-	@ $(cp) $(cpflags) $(source) $(target)
+$(doc_dir)/sv_se/man_dg_index.html : $(pwre_sroot)/doc/man/sv_se/man_dg.dat
+	@ echo "Generating html for sv_se/man_dg"
+	@ co_convert -t -l sv_se -d $(doc_dir)/sv_se $(source)
 
 $(doc_dir)/en_us/man_dg_index.html : $(pwre_sroot)/doc/man/en_us/man_dg.dat
 	@ echo "Generating html for en_us/man_dg"
 	@ co_convert -t -d $(doc_dir)/en_us $(source)
-
-$(doc_dir)/sv_se/man_dg_index.html : $(pwre_sroot)/doc/man/sv_se/man_dg.dat
-	@ echo "Generating html for sv_se/man_dg"
-	@ co_convert -t -l sv_se -d $(doc_dir)/sv_se $(source)
 
 $(doc_dir)/en_us/man_dg.pdf : $(pwre_sroot)/doc/man/en_us/man_dg.dat
 	@ echo "Generating pdf for en_us/man_dg"
@@ -306,6 +315,46 @@ $(doc_dir)/en_us/man_dg.ps : $(pwre_sroot)/doc/man/en_us/man_dg.dat
 	@ echo "Generating postscript for en_us/man_dg"
 	@ co_convert -n -d $(doc_dir)/en_us $(source)
 
+$(doc_dir)/sv_se/man_dg.ps : $(pwre_sroot)/doc/man/sv_se/man_dg.dat
+	@ echo "Generating postscript for sv_se/man_dg"
+	@ co_convert -n -d $(doc_dir)/sv_se $(source)
+
+$(exe_dir)/en_us/man_opg.dat : $(pwre_sroot)/doc/man/en_us/man_opg.dat
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
+$(exe_dir)/sv_se/man_opg.dat : $(pwre_sroot)/doc/man/sv_se/man_opg.dat
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
+$(doc_dir)/en_us/man_opg_index.html : $(pwre_sroot)/doc/man/en_us/man_opg.dat
+	@ echo "Generating html for en_us/man_opg"
+	@ co_convert -t -d $(doc_dir)/en_us $(source)
+
+$(doc_dir)/sv_se/man_opg_index.html : $(pwre_sroot)/doc/man/sv_se/man_opg.dat
+	@ echo "Generating html for sv_se/man_opg"
+	@ co_convert -t -l sv_se -d $(doc_dir)/sv_se $(source)
+
+$(doc_dir)/en_us/man_opg.pdf : $(pwre_sroot)/doc/man/en_us/man_opg.dat
+	@ echo "Generating pdf for en_us/man_opg"
+	@ co_convert -f -d $(doc_dir)/en_us $(source)
+
+$(doc_dir)/sv_se/man_opg.pdf : $(pwre_sroot)/doc/man/sv_se/man_opg.dat
+	@ echo "Generating pdf for sv_se/man_opg"
+	@ co_convert -f -l sv_se -d $(doc_dir)/sv_se $(source)
+
+$(doc_dir)/en_us/man_opg.ps : $(pwre_sroot)/doc/man/en_us/man_opg.dat
+	@ echo "Generating postscript for en_us/man_opg"
+	@ co_convert -n -d $(doc_dir)/en_us $(source)
+
+$(doc_dir)/sv_se/man_opg.ps : $(pwre_sroot)/doc/man/sv_se/man_opg.dat
+	@ echo "Generating postscript for sv_se/man_opg"
+	@ co_convert -n -d $(doc_dir)/sv_se $(source)
+
+$(exe_dir)/man_subgraph.dat : $(pwre_sroot)/doc/man/en_us/man_subgraph.dat
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
 $(exe_dir)/en_us/man_geref.dat : $(pwre_sroot)/doc/man/en_us/man_geref.dat
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
@@ -313,10 +362,6 @@ $(exe_dir)/en_us/man_geref.dat : $(pwre_sroot)/doc/man/en_us/man_geref.dat
 $(exe_dir)/sv_se/man_geref.dat : $(pwre_sroot)/doc/man/sv_se/man_geref.dat
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
-
-$(doc_dir)/sv_se/man_dg.ps : $(pwre_sroot)/doc/man/sv_se/man_dg.dat
-	@ echo "Generating postscript for sv_se/man_dg"
-	@ co_convert -n -d $(doc_dir)/sv_se $(source)
 
 $(doc_dir)/en_us/man_geref_index.html : $(pwre_sroot)/doc/man/en_us/man_geref.dat
 	@ echo "Generating html for en_us/man_geref"
