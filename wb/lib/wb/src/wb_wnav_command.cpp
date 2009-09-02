@@ -1363,7 +1363,7 @@ static int	wnav_set_func(	void		*client_data,
     if ( ODD( dcli_get_qualifier( "/WIDTH", arg2_str, sizeof(arg2_str))))
     {
       nr = sscanf( arg2_str, "%d", &width);
-      if ( nr != 1)
+      if ( nr != 1 || width == 0)
       {
         wnav->message('E',"Syntax error");
         return WNAV__SYNTAX;
@@ -1373,7 +1373,7 @@ static int	wnav_set_func(	void		*client_data,
     if ( ODD( dcli_get_qualifier( "/HEIGHT", arg2_str, sizeof(arg2_str))))
     {
       nr = sscanf( arg2_str, "%d", &height);
-      if ( nr != 1)
+      if ( nr != 1 || height == 0)
       {
         wnav->message('E',"Syntax error");
         return WNAV__SYNTAX;
