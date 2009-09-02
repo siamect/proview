@@ -101,6 +101,7 @@ E 1.1.95 "Händelselista"
 E 1.1.96 "Händelselogg"
 E 1.1.97 "Verifiera"
 E 1.1.98 "Söksträng"
+E 1.1.99 "Historik"
 #
 # Logging entry
 E 1.2.1 "Aktiv"
@@ -209,6 +210,25 @@ E 1.11.5 "finns redan"
 E 1.11.6 "Vill du ersätta den"
 E 1.11.7 "Öppna fil"
 E 1.11.8 "Spara fil"
+#
+# Trace
+E 1.12.1 "Skriv ut _Utvalda Dokument"
+E 1.12.2 "Spara _Trace"
+E 1.12.3 "_Återskapa Trace"
+E 1.12.4 "_Töm Trace"
+E 1.12.5 "_Öppna Objekt"
+E 1.12.6 "Öppna _Underfönster"
+E 1.12.7 "_Visa objekt i Navigatorn"
+E 1.12.8 "V_isa korsreferenser"
+E 1.12.9 "Ö_ppna Objektsbild"
+E 1.12.10 "_Samlingsbild Addera"
+E 1.12.11 "_ScanTid"
+E 1.12.12 "V_isa"
+E 1.12.13 "_Trace"
+E 1.12.14 "_Simulera"
+E 1.12.15 "_Mod"
+E 1.12.16 "Om _Trace"
+E 1.12.17 "Om _PlcPgm"
 #
 # Postscript printing
 E 2.1.1 "Innehåll"

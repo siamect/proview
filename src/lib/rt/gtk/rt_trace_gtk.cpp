@@ -367,23 +367,23 @@ RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObji
 
   // File Entry
   // Submenu Print
-  GtkWidget *file_print = gtk_menu_item_new_with_mnemonic( "_Print");
+  GtkWidget *file_print = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Print"));
   g_signal_connect( file_print, "activate", 
 		    G_CALLBACK(activate_print), this);
 
-  GtkWidget *file_print_select = gtk_menu_item_new_with_mnemonic( "Print _Selected Documents");
+  GtkWidget *file_print_select = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("Print _Selected Documents"));
   g_signal_connect( file_print_select, "activate", 
 		    G_CALLBACK(activate_printselect), this);
 
-  GtkWidget *file_savetrace = gtk_menu_item_new_with_mnemonic( "Save _Trace");
+  GtkWidget *file_savetrace = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("Save _Trace"));
   g_signal_connect( file_savetrace, "activate", 
 		    G_CALLBACK(activate_savetrace), this);
 
-  GtkWidget *file_restoretrace = gtk_menu_item_new_with_mnemonic( "_Restore Trace");
+  GtkWidget *file_restoretrace = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Restore Trace"));
   g_signal_connect( file_restoretrace, "activate", 
 		    G_CALLBACK(activate_restoretrace), this);
 
-  GtkWidget *file_cleartrace = gtk_menu_item_new_with_mnemonic( "C_lear Trace");
+  GtkWidget *file_cleartrace = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("C_lear Trace"));
   g_signal_connect( file_cleartrace, "activate", 
 		    G_CALLBACK(activate_cleartrace), this);
 
@@ -398,47 +398,47 @@ RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObji
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_cleartrace);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 
-  GtkWidget *file = gtk_menu_item_new_with_mnemonic("_File");
+  GtkWidget *file = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_File"));
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), file);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(file), GTK_WIDGET(file_menu));
 
   // Functions Entry
-  GtkWidget *functions_open_object = gtk_menu_item_new_with_mnemonic( "_Open Object");
+  GtkWidget *functions_open_object = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Open Object"));
   g_signal_connect( functions_open_object, "activate", 
 		    G_CALLBACK(activate_open_object), this);
   gtk_widget_add_accelerator( functions_open_object, "activate", accel_g,
   			      'a', GdkModifierType(GDK_CONTROL_MASK), 
   			      GTK_ACCEL_VISIBLE);
 
-  GtkWidget *functions_open_subwindow = gtk_menu_item_new_with_mnemonic( "Open S_ubwindow");
+  GtkWidget *functions_open_subwindow = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("Open S_ubwindow"));
   g_signal_connect( functions_open_subwindow, "activate", 
 		    G_CALLBACK(activate_open_subwindow), this);
   gtk_widget_add_accelerator( functions_open_subwindow, "activate", accel_g,
   			      'l', GdkModifierType(GDK_CONTROL_MASK), 
   			      GTK_ACCEL_VISIBLE);
 
-  GtkWidget *functions_display_object = gtk_menu_item_new_with_mnemonic( "_Display object in Navigator");
+  GtkWidget *functions_display_object = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Display object in Navigator"));
   g_signal_connect( functions_display_object, "activate", 
 		    G_CALLBACK(activate_display_object), this);
   gtk_widget_add_accelerator( functions_display_object, "activate", accel_g,
   			      'd', GdkModifierType(GDK_CONTROL_MASK), 
   			      GTK_ACCEL_VISIBLE);
 
-  GtkWidget *functions_show_cross = gtk_menu_item_new_with_mnemonic( "_Show Crossreferences");
+  GtkWidget *functions_show_cross = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Show Crossreferences"));
   g_signal_connect( functions_show_cross, "activate", 
 		    G_CALLBACK(activate_show_cross), this);
   gtk_widget_add_accelerator( functions_show_cross, "activate", accel_g,
   			      'r', GdkModifierType(GDK_CONTROL_MASK), 
   			      GTK_ACCEL_VISIBLE);
 
-  GtkWidget *functions_open_classgraph = gtk_menu_item_new_with_mnemonic( "_Open ClassGraph");
+  GtkWidget *functions_open_classgraph = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Open ObjectGraph"));
   g_signal_connect( functions_open_classgraph, "activate", 
 		    G_CALLBACK(activate_open_classgraph), this);
   gtk_widget_add_accelerator( functions_open_classgraph, "activate", accel_g,
   			      'g', GdkModifierType(GDK_CONTROL_MASK), 
   			      GTK_ACCEL_VISIBLE);
 
-  GtkWidget *functions_collect_insert = gtk_menu_item_new_with_mnemonic( "_Collect Insert");
+  GtkWidget *functions_collect_insert = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Collect Insert"));
   g_signal_connect( functions_collect_insert, "activate", 
 		    G_CALLBACK(activate_collect_insert), this);
   gtk_widget_add_accelerator( functions_collect_insert, "activate", accel_g,
@@ -453,7 +453,7 @@ RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObji
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_open_classgraph);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_collect_insert);
 
-  GtkWidget *functions = gtk_menu_item_new_with_mnemonic("_Functions");
+  GtkWidget *functions = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Functions"));
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), functions);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions), GTK_WIDGET(functions_menu));
 
@@ -512,7 +512,7 @@ RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObji
   g_signal_connect( view_scantime5, "activate", 
 		    G_CALLBACK(activate_scantime5), this);
 
-  GtkWidget *view_sc = gtk_menu_item_new_with_mnemonic( "_ScanTime");
+  GtkWidget *view_sc = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_ScanTime"));
   GtkMenu *view_sc_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_sc_menu), view_scantime1);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_sc_menu), view_scantime2);
@@ -529,23 +529,23 @@ RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObji
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_reset);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_sc);
 
-  GtkWidget *view = gtk_menu_item_new_with_mnemonic("_View");
+  GtkWidget *view = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_View"));
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), view);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(view), GTK_WIDGET(view_menu));
 
   // Mode entry
   GSList *mode_group = NULL;
-  GtkWidget *mode_view = gtk_radio_menu_item_new_with_mnemonic( mode_group, "_View");
+  GtkWidget *mode_view = gtk_radio_menu_item_new_with_mnemonic( mode_group, CoWowGtk::translate_utf8("V_iew"));
   mode_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(mode_view));
   g_signal_connect( mode_view, "activate", 
 		    G_CALLBACK(activate_view), this);
 
-  GtkWidget *mode_trace = gtk_radio_menu_item_new_with_mnemonic( mode_group, "_Trace");
+  GtkWidget *mode_trace = gtk_radio_menu_item_new_with_mnemonic( mode_group, CoWowGtk::translate_utf8("_Trace"));
   mode_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(mode_trace));
   g_signal_connect( mode_trace, "activate", 
 		    G_CALLBACK(activate_trace), this);
 
-  GtkWidget *mode_simulate = gtk_radio_menu_item_new_with_mnemonic( mode_group, "_Simulate");
+  GtkWidget *mode_simulate = gtk_radio_menu_item_new_with_mnemonic( mode_group, CoWowGtk::translate_utf8("_Simulate"));
   gtk_widget_add_accelerator( mode_simulate, "activate", accel_g,
   			      's', GdkModifierType(GDK_CONTROL_MASK | GDK_SHIFT_MASK), 
   			      GTK_ACCEL_VISIBLE);
@@ -557,19 +557,19 @@ RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObji
   gtk_menu_shell_append(GTK_MENU_SHELL(mode_menu), mode_trace);
   gtk_menu_shell_append(GTK_MENU_SHELL(mode_menu), mode_simulate);
 
-  GtkWidget *mode = gtk_menu_item_new_with_mnemonic("_Mode");
+  GtkWidget *mode = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Mode"));
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), mode);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(mode), GTK_WIDGET(mode_menu));
 
   // Menu Help
-  GtkWidget *help_help = gtk_image_menu_item_new_with_mnemonic("On _Trace");
+  GtkWidget *help_help = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("On _Trace"));
   gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(help_help), 
 				 gtk_image_new_from_stock( "gtk-help", GTK_ICON_SIZE_MENU));
   g_signal_connect(help_help, "activate", G_CALLBACK(activate_help), this);
   gtk_widget_add_accelerator( help_help, "activate", accel_g,
 			      'h', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
-  GtkWidget *help_plcpgm = gtk_check_menu_item_new_with_mnemonic( "On _PlcPgm");
+  GtkWidget *help_plcpgm = gtk_check_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("On _PlcPgm"));
   g_signal_connect( help_plcpgm, "activate", 
 		    G_CALLBACK(activate_helpplc), this);
 
@@ -577,7 +577,7 @@ RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObji
   gtk_menu_shell_append(GTK_MENU_SHELL(help_menu), help_help);
   gtk_menu_shell_append(GTK_MENU_SHELL(help_menu), help_plcpgm);
 
-  GtkWidget *help = gtk_menu_item_new_with_mnemonic("_Help");
+  GtkWidget *help = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Help"));
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), help);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(help), GTK_WIDGET(help_menu));
 

@@ -101,6 +101,7 @@ E 1.1.95 "Eventlist"
 E 1.1.96 "Eventlog"
 E 1.1.97 "Confirm"
 E 1.1.98 "Search string"
+E 1.1.99 "History"
 #
 # Logging entry
 E 1.2.1 "Active"
@@ -209,6 +210,25 @@ E 1.11.5 "already exists"
 E 1.11.6 "Do you want to replace it"
 E 1.11.7 "Open File"
 E 1.11.8 "Save File"
+#
+# Trace
+E 1.12.1 "Print _Selected Documents"
+E 1.12.2 "Save _Trace"
+E 1.12.3 "_Restore Trace"
+E 1.12.4 "C_lear Trace"
+E 1.12.5 "_Open Object"
+E 1.12.6 "Open S_ubwindow"
+E 1.12.7 "_Display object in Navigator"
+E 1.12.8 "_Show Crossreferences"
+E 1.12.9 "_Open ObjectGraph"
+E 1.12.10 "_Collect Insert"
+E 1.12.11 "_ScanTime"
+E 1.12.12 "V_iew"
+E 1.12.13 "_Trace"
+E 1.12.14 "_Simulate"
+E 1.12.15 "_Mode"
+E 1.12.16 "On _Trace"
+E 1.12.17 "On _PlcPgm"
 #
 # Postscript printing
 E 2.1.1 "Contents"
