@@ -139,9 +139,9 @@ SObject pwrb:Class
         Attr StructName = "drive"
       EndBody
       !/**
-      !  Specifies START/STOP request at operational mode AUTO.
-      !  FALSE means STOP request. The transition FALSE -> TRUE
-      !  means START request.
+      !  Specifies START request at operational mode AUTO.
+      !  The transition FALSE -> TRUE means START request.
+      !  If AutoNoStop is not used, FALSE means STOP request.
       !*/
       Object AutoStart $Input 1 
         Body SysBody
@@ -153,6 +153,11 @@ SObject pwrb:Class
           Attr GraphName = "sta"
         EndBody
       EndObject
+      !/**
+      !  Specifies STOP request at operational mode AUTO.
+      !  FALSE means STOP request. 
+      !  If not connnected, AutoStart is used to stop.
+      !*/
       Object AutoNoStop $Input 2 
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE

@@ -4210,8 +4210,15 @@ nivåvakter. Skulle en manöverpulpet för "på platsen körning" anslutas, gäller i
 driftläge LOCAL enbart förreglingen mot termisk utlösning. 
 
 <attr>AutoStart 
-Anger i driftläge AUTO en START/STOPP begäran. FALSE betyder STOPP- 
-begäran. övergången FALSE --> TRUE innebär START-begäran. 
+Anger i driftläge AUTO en START begäran. Övergången FALSE --> TRUE innebär 
+START-begäran. 
+Om AutoNoStop inte används, innebär FALSE en STOPP-begäran.
+</attr>
+
+<attr>AutoNoStop
+Anger i driftläge AUTO en STOPP begäran. FALSE betyder STOPP- 
+begäran. 
+Om ej kopplad, används AutoStart för STOPP-begäran.
 </attr>
 
 <attr>Local 
