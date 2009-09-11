@@ -455,17 +455,12 @@ int	rtt_gdh_init()
 
 static int	rtt_rttconfig()
 {
-	pwr_tClassId	class;
 	pwr_tObjid	objid;
-	pwr_tObjid	node;
 	pwr_tOName     	hiername;
-	pwr_tAName     	parname;
 	int		found;
 	int		sts;
-	char		*s;
-	pwr_tBoolean	boolean_val;
-	pwr_tFloat32	float32_val;
 	pwr_tFileName  	filename;
+	pwr_sClass_OpPlace *opplace_p;
 
 	if ( rtt_ConfigureObject[0])
 	{
@@ -475,114 +470,38 @@ static int	rtt_rttconfig()
 	}
 	else
 	{
-	  /* Try to find a RttConfig object for the node */
-	  sts = gdh_GetNodeObject ( 0, &node);
-	  if ( EVEN(sts)) return sts;
+	  // Look for default opplace
+	  pwr_tOid oid;
+	  pwr_tOName name;
 
-	  /* Look for a RttConfig object as a child to the node object 
-	     with the name RttConfig */
 	  found = 0;
-	  sts = gdh_GetChild( node, &objid);
-	  while ( ODD(sts))
-	  {
-	    sts = gdh_GetObjectClass( objid, &class);
-	    if ( EVEN(sts)) return sts;
-	    if ( class == pwr_cClass_RttConfig)
-	    {
-	      sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
-	      if (EVEN(sts)) return sts;
-	      if ( (s = strrchr( hiername, '-')))
-	        s++;
-	      else
-	        s = hiername; 
-	      rtt_toupper( s, s);
-	      if ( !strcmp( s, "RTTCONFIG"))
-	      {
-	        found = 1;
-	        break;
-	      }
-	    }	    
-	    sts = gdh_GetNextSibling ( objid, &objid);
+	  for ( sts = gdh_GetClassList( pwr_cClass_OpPlace, &oid); 
+		ODD(sts);
+		sts = gdh_GetNextObject( oid, &oid)) {
+	    sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_object);
+	    if ( ODD(sts) && cdh_NoCaseStrcmp( name, "opdefault") == 0) {
+	      sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mNName);
+	      if ( EVEN(sts)) exit(sts);
+
+	      strncpy( rtt_ConfigureObject, name, sizeof(rtt_ConfigureObject));
+	      found = 1;
+	      break;
+	    }
 	  }
 	  if ( found == 0)
 	    return RTT__OBJNOTFOUND;
-
-	  sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
-	  if (EVEN(sts)) return sts;
-
-	  strcpy( rtt_ConfigureObject, hiername);
 	}
 
-	/* DefaultVMSNode */
-	strcpy( parname, hiername);
-	strcat( parname, ".DefaultVMSNode");
-	sts = gdh_GetObjectInfo ( parname, rtt_DefaultVMSNode, 
-		sizeof( rtt_DefaultVMSNode)); 
+	sts = gdh_NameToPointer( rtt_ConfigureObject, (void **)&opplace_p);
+	if ( EVEN(sts)) return sts;
 
-	/* rtt_UserObject */
-	strcpy( parname, hiername);
-	strcat( parname, ".UserObject");
-	sts = gdh_GetObjectInfo ( parname, &rtt_UserObject,
-		sizeof( rtt_UserObject));
+	sts = gdh_NameToObjid( rtt_ConfigureObject, &rtt_UserObject);
+	if ( EVEN(sts)) return sts;
 
-	/* AlarmAutoLoad */
-	strcpy( parname, hiername);
-	strcat( parname, ".AlarmAutoLoad");
-	sts = gdh_GetObjectInfo ( parname, &rtt_AlarmAutoLoad, 
-		sizeof( rtt_AlarmAutoLoad)); 
-
-	/* AlarmMessage */
-	strcpy( parname, hiername);
-	strcat( parname, ".AlarmMessage");
-	sts = gdh_GetObjectInfo ( parname, &rtt_AlarmMessage, 
-		sizeof( rtt_AlarmMessage)); 
-
-	/* AlarmBeep */
-	strcpy( parname, hiername);
-	strcat( parname, ".AlarmBeep");
-	sts = gdh_GetObjectInfo ( parname, &rtt_AlarmBeep, 
-		sizeof( rtt_AlarmBeep)); 
-
-	/* AlarmReturn */
-	strcpy( parname, hiername);
-	strcat( parname, ".AlarmReturn");
-	sts = gdh_GetObjectInfo ( parname, &rtt_AlarmReturn, 
-		sizeof( rtt_AlarmReturn)); 
-
-	/* AlarmAck */
-	strcpy( parname, hiername);
-	strcat( parname, ".AlarmAck");
-	sts = gdh_GetObjectInfo ( parname, &rtt_AlarmAck, 
-		sizeof( rtt_AlarmAck)); 
-
-	/* DescriptionOff */
-	strcpy( parname, hiername);
-	strcat( parname, ".DescriptionOff");
-	sts = gdh_GetObjectInfo ( parname, &boolean_val, 
-		sizeof( boolean_val)); 
-	rtt_description_on = !boolean_val;
-
-	/* DefaultDirectory */
-	strcpy( parname, hiername);
-	strcat( parname, ".DefaultDirectory");
-	sts = gdh_GetObjectInfo ( parname, rtt_default_directory, 
-		sizeof( rtt_default_directory)); 
-	if ( EVEN(sts)) strcpy( rtt_default_directory, "");
-
-	/* ScanTime */
-	strcpy( parname, hiername);
-	strcat( parname, ".ScanTime");
-	sts = gdh_GetObjectInfo ( parname, &float32_val, 
-		sizeof( float32_val)); 
-	if (ODD(sts) && float32_val != 0)
-	  rtt_scantime = float32_val;
-
-	/* SymbolFileName */
-	strcpy( parname, hiername);
-	strcat( parname, ".SymbolFileName");
-	sts = gdh_GetObjectInfo ( parname, rtt_symbolfilename,
-		sizeof( rtt_symbolfilename)); 
-	if ( EVEN(sts)) strcpy( rtt_symbolfilename, "");
+	rtt_AlarmBeep = opplace_p->AlarmBell;
+	rtt_AlarmReturn = (opplace_p->EventListEvents & pwr_mEventListMask_AlarmReturn) != 0;
+	rtt_AlarmAck = (opplace_p->EventListEvents & pwr_mEventListMask_AlarmAck) != 0;
+	strncpy( rtt_symbolfilename, opplace_p->SetupScript, sizeof(rtt_symbolfilename));
 
 	/* Execute the symbolfile */
 	if ( strcmp(rtt_symbolfilename, "") != 0)

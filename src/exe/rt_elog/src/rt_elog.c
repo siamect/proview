@@ -179,7 +179,8 @@ main ()
 {
   pwr_tUInt32 sts;
   mh_sMsgInfo ip;
-  pwr_tObjid oid;
+  pwr_tOid oid;
+  pwr_tAttrRef aref;
 
   errh_Init("pwr_elog", errh_eAnix_elog);
 
@@ -196,9 +197,10 @@ main ()
 
   oid.vid = lHelCB.Nid;
   oid.oix = pwr_cNVolumeId;
+  aref = cdh_ObjidToAref( oid);
 
   sts = mh_OutunitConnect(
-    oid, 
+    &aref, 
     mh_eOutunitType_Logger, 
     mh_mOutunitFlags_ReadWait, 
     (mh_cbOutunitAck)Insert, 

@@ -271,6 +271,11 @@ mh_OutunitConnect (
       l.pSelL = (void *)&((pwr_sClass_User*) p)->SelectList[0];
       l.SelectListIsUpdated = (pwr_tBoolean *)&((pwr_sClass_User*) p)->SelectListIsUpdated;
       break;
+    case pwr_cClass_OpPlace:
+      type = mh_eOutunitType_Operator;
+      l.pSelL = (void *)&((pwr_sClass_OpPlace*) p)->SelectList[0];
+      l.SelectListIsUpdated = (pwr_tBoolean *)&((pwr_sClass_OpPlace*) p)->SelectListIsUpdated;
+      break;
     case pwr_cClass_EventPrinter:
       type = mh_eOutunitType_Printer;
       l.pSelL = (void *)&((pwr_sClass_EventPrinter*) p)->SelectList[0];
