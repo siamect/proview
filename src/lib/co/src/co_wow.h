@@ -43,6 +43,12 @@ typedef enum {
   wow_eModalDialogReturn_Deleted
 } wow_eMotalDialogReturn;
 
+typedef enum {
+  wow_ePixmap_No,
+  wow_ePixmap_Graph,
+  wow_ePixmap__
+} wow_ePixmap;
+
 class CoWowWidget {
 };
 
@@ -94,6 +100,9 @@ class CoWow {
   virtual int DisplayWarranty() { return 0;}
   virtual void DisplayLicense() {} 
   virtual CoWowTimer *timer_new() { return 0;}
+  virtual pwr_tStatus CreateMenuItem( const char *name, void *menu, int pixmap, int append, void *w) { return 0;}
+  virtual pwr_tStatus DeleteMenuItem( const char *name, void *menu) { return 0;}
+
 };
 
 #endif
