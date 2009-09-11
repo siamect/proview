@@ -81,13 +81,14 @@ EvGtk::EvGtk( void *ev_parent_ctx,
 	      int display_return,
 	      int display_ack,
 	      int ev_beep,
+	      pwr_tMask ev_pop_mask,
 	      pwr_tStatus *status) :
   Ev( ev_parent_ctx, eve_name, ala_name, blk_name, ev_user, display_ala, display_eve,
-      display_blk, display_return, display_ack, ev_beep, status),
+      display_blk, display_return, display_ack, ev_beep, ev_pop_mask, status),
   parent_wid(ev_parent_wid), parent_wid_eve(NULL), parent_wid_ala(NULL)
 {
   pwr_tStatus sts;
-  pwr_sClass_User *userobject_ptr;
+  pwr_sClass_OpPlace *userobject_ptr;
   const int eve_width = 700;
   const int eve_height = 600;
   const int ala_width = 700;

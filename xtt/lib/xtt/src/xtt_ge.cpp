@@ -23,6 +23,7 @@
 #include <stdlib.h>
 
 #include "glow.h"
+#include "xtt_xnav.h"
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
 #include "co_cdh.h"
@@ -33,7 +34,6 @@
 #include "co_lng.h"
 #include "xtt_ge.h"
 #include "ge_graph.h"
-#include "xtt_xnav.h"
 
 void XttGe::graph_init_cb( void *client_data)
 {

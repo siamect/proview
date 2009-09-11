@@ -34,6 +34,7 @@
 #include "co_time.h"
 #include "co_dcli.h"
 #include "co_lng.h"
+#include "co_syi.h"
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
@@ -453,15 +454,18 @@ void Xtt::activate_help_proview()
   CoXHelp::dhelp( "version", "", navh_eHelpFile_Other, "$pwr_exe/xtt_version_help.dat", 0);
 }
 
-Xtt::Xtt( int argc, char *argv[], int *return_sts) :
+Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
   root_item(0), input_open(0), command_open(0), india_ok_cb(0), queid(qcom_cNQid), quiet(0), attach_audio(0), select_opplace(0), op_close_button(0), no_advanceduser(0)
 {
   pwr_tStatus	sts;
   int		i;
-  int	opplace_found = 0;
-  pwr_tObjid op_objid;
-  qcom_sQattr qAttr;
-  qcom_sQid qini;
+  int		opplace_found = 0;
+  pwr_tObjid 	op_objid;
+  qcom_sQattr 	qAttr;
+  qcom_sQid 	qini;
+  char		language[20] = "";
+  static char 	display[80];
+  static char   display_opt[20] = "--display";
 
   strcpy( opplace_str, "");
   hot_xtt = this;
@@ -493,25 +497,23 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
   }
 
   // Set language
-  for ( i = 1; i < argc; i++) {
-    if ( strcmp( argv[i], "-l") == 0 && i + 1 < argc)
-      Lng::set( argv[i+1]);
-    else if ( strcmp( argv[i], "-q") == 0) {
-      CoWow::HideWarranty();
+  for ( i = 1; i < *argc; i++) {
+    if ( strcmp( (*argv)[i], "-l") == 0 && i + 1 < *argc)
+      strncpy( language, (*argv)[i+1], sizeof(language));
+    else if ( strcmp( (*argv)[i], "-q") == 0)
       quiet = 1;
-    }
-    else if ( strcmp( argv[i], "-a") == 0)
+    else if ( strcmp( (*argv)[i], "-a") == 0)
       attach_audio = 1;
-    else if ( strcmp( argv[i], "-s") == 0)
+    else if ( strcmp( (*argv)[i], "-s") == 0)
       select_opplace = 1;
-    else if ( strcmp( argv[i], "-c") == 0)
+    else if ( strcmp( (*argv)[i], "-c") == 0)
       op_close_button = 1;
-    else if ( strcmp( argv[i], "-d") == 0)
+    else if ( strcmp( (*argv)[i], "-d") == 0)
       no_advanceduser = 1;
-    else if ( strcmp( argv[i], "-u") == 0 && i + 1 < argc) {
+    else if ( strcmp( (*argv)[i], "-u") == 0 && i + 1 < *argc) {
       char oname[80];
 
-      strcpy( opplace_str, argv[i+1]);
+      strcpy( opplace_str, (*argv)[i+1]);
 
       sts = gdh_GetClassList( pwr_cClass_OpPlace, &op_objid);
       while (ODD(sts)) {
@@ -530,11 +532,11 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
     }
   }
 
-  if ( !opplace_found && argc >= 2 && strncmp( argv[1], "-", 1) != 0) {
+  if ( !opplace_found && *argc >= 2 && strncmp( (*argv)[1], "-", 1) != 0) {
     pwr_tClassId op_class;
 
     // First argument is opplace object
-    strcpy( opplace_str, argv[1]);
+    strcpy( opplace_str, (*argv)[1]);
 
     sts = gdh_NameToObjid( opplace_str, &op_objid);
     if ( EVEN(sts)) {
@@ -552,6 +554,82 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
 
     opplace_found = 1;
   }
+  else {
+    // Look for default opplace
+    pwr_tOid oid;
+    pwr_tOName name;
+
+    for ( sts = gdh_GetClassList( pwr_cClass_OpPlace, &oid); 
+	  ODD(sts);
+	  sts = gdh_GetNextObject( oid, &oid)) {
+      sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_object);
+      if ( ODD(sts) && cdh_NoCaseStrcmp( name, "opdefault") == 0) {
+	sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mNName);
+	if ( EVEN(sts)) exit(sts);
+
+	strcpy( opplace_str, name);
+	opplace_found = 1;
+	break;
+      }
+    }
+  }
+
+  if ( opplace_found) {
+    pwr_sClass_OpPlace *opp;
+    char opsys_user[40];
+
+    sts = gdh_NameToPointer( opplace_str, (void **)&opp);
+    if ( EVEN(sts)) exit(sts);
+    
+    if ( strcmp( opp->DedicatedOpsysUser, "") != 0) {
+      sts = syi_UserName( opsys_user, sizeof(opsys_user));
+      if ( EVEN(sts)) exit(sts);
+
+      if ( strcmp( opp->DedicatedOpsysUser, opsys_user) != 0) {
+	printf( "Operator place is dedicated for another user\n");
+	exit(0);
+      }
+    }
+
+    if ( strcmp( language, "") == 0) {
+      switch ( opp->Language) {
+      case pwr_eLanguageEnum_Swedish:
+	strcpy( language, "sv_se");
+	break;
+      case pwr_eLanguageEnum_German:
+	strcpy( language, "de_de");
+	break;
+      case pwr_eLanguageEnum_French:
+	strcpy( language, "fr_fr");
+	break;
+      default:
+	strcpy( language, "");
+      }
+    }
+    if ( strcmp( opp->Display, "") != 0) {
+      strncpy( display, opp->Display, sizeof(display));
+      char **argv1 = (char **)calloc( *argc + 3, sizeof(*argv1));
+      for ( int i = 0; i < *argc; i++)
+	argv1[i] = (*argv)[i];
+      argv1[*argc] = display_opt;
+      argv1[*argc+1] = display;
+      argv1[*argc+2] = 0;
+      (*argc) += 2;
+      *argv = argv1;
+    }
+    if ( opp->OpWindLayout & pwr_mOpWindLayoutMask_HideLicenceWindow)
+      quiet = 1;
+
+    if ( opp->AttachAudio)
+      attach_audio = 1;
+  }
+
+  if ( quiet)
+    CoWow::HideWarranty();
+
+  if ( strcmp( language, "") != 0)
+    Lng::set( language);
+
 }
 
 void Xtt::opplace_selected_cb( void *ctx, char *text)

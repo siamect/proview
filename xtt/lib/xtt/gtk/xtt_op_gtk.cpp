@@ -261,65 +261,277 @@ OpGtk::OpGtk( void *op_parent_ctx,
   gtk_box_pack_start( GTK_BOX(vbox_ala), gtk_hseparator_new(), FALSE, FALSE, 2);
   gtk_box_pack_end( GTK_BOX(vbox_ala), hbox_b, FALSE, FALSE, 0);
 
+  // Menu
+  // Accelerators
+  GtkAccelGroup *accel_g = (GtkAccelGroup *) g_object_new(GTK_TYPE_ACCEL_GROUP, NULL);
+  gtk_window_add_accel_group(GTK_WINDOW(toplevel), accel_g);
+
+  menu_bar = (GtkMenuBar *) g_object_new(GTK_TYPE_MENU_BAR, NULL);
+
+  // Functions entry
+  // Submenu Alarm
+
+  GtkWidget *functions_alarm_alarmlist = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_AlarmList"));
+  dcli_translate_filename( fname, "$pwr_exe/xtt_alarmlist.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_alarm_alarmlist), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect( functions_alarm_alarmlist, "activate", 
+		    G_CALLBACK(activate_alarmlist), this);
+
+  GtkWidget *functions_alarm_eventlist = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_EventList"));
+  dcli_translate_filename( fname, "$pwr_exe/xtt_eventlist.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_alarm_eventlist), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect( functions_alarm_eventlist, "activate", 
+		    G_CALLBACK(activate_eventlist), this);
+
+  GtkWidget *functions_alarm_eventlog = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("Event_Log"));
+  dcli_translate_filename( fname, "$pwr_exe/xtt_eventlog.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_alarm_eventlog), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect( functions_alarm_eventlog, "activate", 
+		    G_CALLBACK(activate_eventlog), this);
+
+  GtkWidget *functions_alarm_blocklist = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_BlockList"));
+  dcli_translate_filename( fname, "$pwr_exe/xtt_blocklist.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_alarm_blocklist), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect( functions_alarm_blocklist, "activate", 
+		    G_CALLBACK(activate_blocklist), this);
+
+  GtkWidget *functions_alarm = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Alarm"));
+  GtkMenu *functions_alarm_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_alarm_menu), functions_alarm_alarmlist);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_alarm_menu), functions_alarm_eventlist);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_alarm_menu), functions_alarm_eventlog);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_alarm_menu), functions_alarm_blocklist);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions_alarm),
+			    GTK_WIDGET(functions_alarm_menu));
+  // End Alarm submenu
+
+  // Submenu Curves
+  GtkWidget *functions_curves_trend = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Trends"));
+  dcli_translate_filename( fname, "$pwr_exe/xtt_meth_trend.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_curves_trend), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect( functions_curves_trend, "activate", 
+		    G_CALLBACK(activate_trend), this);
+
+  GtkWidget *functions_curves_fast = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Fast"));
+  dcli_translate_filename( fname, "$pwr_exe/xtt_meth_fast.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_curves_fast), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect( functions_curves_fast, "activate", 
+		    G_CALLBACK(activate_fast), this);
+
+  GtkWidget *functions_curves_history = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Process History"));
+  g_signal_connect( functions_curves_history, "activate", 
+		    G_CALLBACK(activate_history), this);
+
+
+  GtkWidget *functions_curves = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Curves"));
+  GtkMenu *functions_curves_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_curves_menu), functions_curves_trend);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_curves_menu), functions_curves_fast);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_curves_menu), functions_curves_history);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions_curves),
+			    GTK_WIDGET(functions_curves_menu));
+  // End Curves submenu
+
+  // Submenu View
+  GtkWidget *functions_view_incr = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Larger Text"));
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_in.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_view_incr), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect( functions_view_incr, "activate", 
+		    G_CALLBACK(activate_zoom_in), this);
+
+  GtkWidget *functions_view_decr = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Smaller Text"));
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_out.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_view_decr), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect( functions_view_decr, "activate", 
+		    G_CALLBACK(activate_zoom_out), this);
+
+  GtkWidget *functions_view = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_View"));
+  GtkMenu *functions_view_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_view_menu), functions_view_incr);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_view_menu), functions_view_decr);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions_view),
+			    GTK_WIDGET(functions_view_menu));
+  // End View submenu
+
+  // Submenu User
+  GtkWidget *functions_user_switch = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("S_witch User"));
+  g_signal_connect( functions_user_switch, "activate", 
+		    G_CALLBACK(activate_switch_user), this);
+
+  GtkWidget *functions_user_show = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Show User"));
+  g_signal_connect( functions_user_show, "activate", 
+		    G_CALLBACK(activate_show_user), this);
+
+  GtkWidget *functions_user_logout = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Return"));
+  g_signal_connect( functions_user_logout, "activate", 
+		    G_CALLBACK(activate_logout), this);
+
+  GtkWidget *functions_user = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_User"));
+  GtkMenu *functions_user_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_user_menu), functions_user_switch);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_user_menu), functions_user_show);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_user_menu), functions_user_logout);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions_user),
+			    GTK_WIDGET(functions_user_menu));
+  // End User submenu
+
+  GtkWidget *functions_navigator = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Navigator"));
+  dcli_translate_filename( fname, "$pwr_exe/xtt_navigator.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_navigator), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect( functions_navigator, "activate", 
+		    G_CALLBACK(activate_navigator), this);
+  gtk_widget_add_accelerator( functions_navigator, "activate", accel_g,
+			      'd', GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
+
+  GtkWidget *functions_graph = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Process Graphics"));
+  dcli_translate_filename( fname, "$pwr_exe/wtt_ge.png"); //TODO
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_graph), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect( functions_graph, "activate", 
+		    G_CALLBACK(activate_graph), this);
+  gtk_widget_add_accelerator( functions_graph, "activate", accel_g,
+			      'g', GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
+
+  // Submenu Help
+  GtkWidget *functions_help_project = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Project"));
+  dcli_translate_filename( fname, "$pwr_exe/xtt_help.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_help_project), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect( functions_help_project, "activate", 
+		    G_CALLBACK(activate_help), this);
+
+  GtkWidget *functions_help_overview = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Overview"));
+  g_signal_connect( functions_help_overview, "activate", 
+		    G_CALLBACK(activate_help_overview), this);
+
+  GtkWidget *functions_help_opwin = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_OperatorWindow"));
+  g_signal_connect( functions_help_opwin, "activate", 
+		    G_CALLBACK(activate_help_opwin), this);
+
+  GtkWidget *functions_help_proview = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_About Proview"));
+  g_signal_connect( functions_help_proview, "activate", 
+		    G_CALLBACK(activate_help_proview), this);
+
+
+  GtkWidget *functions_help = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Help"));
+  GtkMenu *functions_help_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_help_menu), functions_help_project);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_help_menu), functions_help_overview);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_help_menu), functions_help_opwin);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_help_menu), functions_help_proview);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions_help),
+			    GTK_WIDGET(functions_help_menu));
+  // End Help submenu
+
+  GtkWidget *functions_close = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Close"));
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions_close), 
+				 gtk_image_new_from_stock( "gtk-close", GTK_ICON_SIZE_MENU));
+
+  g_signal_connect(functions_close, "activate", G_CALLBACK(activate_exit), this);
+  gtk_widget_add_accelerator( functions_close, "activate", accel_g,
+			      'w', GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
+
+  GtkMenu *functions_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_alarm);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_curves);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_graph);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_navigator);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_view);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_user);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_help);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_close);
+
+  GtkWidget *functions = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Functions"));
+  dcli_translate_filename( fname, "$pwr_exe/xtt_down.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(functions), 
+				 gtk_image_new_from_file( fname));
+
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), functions);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions), GTK_WIDGET(functions_menu));
+
+
   // Toolbar
   GtkWidget *tools = (GtkWidget *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
+  GtkWidget *tools2 = (GtkWidget *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
 
   GtkWidget *tools_zoom_in = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_in.png");
   gtk_container_add( GTK_CONTAINER(tools_zoom_in), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_in, "clicked", G_CALLBACK(activate_zoom_in), this);
-  gtk_toolbar_append_widget( GTK_TOOLBAR(tools), tools_zoom_in, "Zoom in", "");
+  gtk_toolbar_append_widget( GTK_TOOLBAR(tools), tools_zoom_in, CoWowGtk::translate_utf8("Larger Text"), "");
 
   GtkWidget *tools_zoom_out = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_out.png");
   gtk_container_add( GTK_CONTAINER(tools_zoom_out), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_out, "clicked", G_CALLBACK(activate_zoom_out), this);
-  gtk_toolbar_append_widget( GTK_TOOLBAR(tools), tools_zoom_out, "Zoom out", "");
+  gtk_toolbar_append_widget( GTK_TOOLBAR(tools), tools_zoom_out, CoWowGtk::translate_utf8("Smaller Text"), "");
 
   GtkWidget *tools_help = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_help.png");
   gtk_container_add( GTK_CONTAINER(tools_help), 
-	  gtk_image_new_from_stock( "gtk-help", GTK_ICON_SIZE_SMALL_TOOLBAR));
-  g_signal_connect(tools_help, "clicked", G_CALLBACK(activate_help_overview), this);
-  gtk_toolbar_append_widget( GTK_TOOLBAR(tools), tools_help, "Help", "");
+	  gtk_image_new_from_file( fname));
+  g_signal_connect(tools_help, "clicked", G_CALLBACK(activate_help), this);
+  gtk_toolbar_append_widget( GTK_TOOLBAR(tools), tools_help, CoWowGtk::translate_utf8("Help"), "");
+
+  tools_close = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_close.png");
+  gtk_container_add( GTK_CONTAINER(tools_close), 
+	  gtk_image_new_from_file( fname));
+  g_signal_connect(tools_close, "clicked", G_CALLBACK(activate_exit), this);
+  gtk_toolbar_append_widget( GTK_TOOLBAR(tools), tools_close, CoWowGtk::translate_utf8("Close"), "");
+
+  GtkWidget *tools_alarmlist = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_alarmlist.png");
+  gtk_container_add( GTK_CONTAINER(tools_alarmlist), 
+	  gtk_image_new_from_file( fname));
+  g_signal_connect(tools_alarmlist, "clicked", G_CALLBACK(activate_alarmlist), this);
+  gtk_toolbar_append_widget( GTK_TOOLBAR(tools2), tools_alarmlist, CoWowGtk::translate_utf8("AlarmList"), "");
+
+  GtkWidget *tools_eventlist = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_eventlist.png");
+  gtk_container_add( GTK_CONTAINER(tools_eventlist), 
+	  gtk_image_new_from_file( fname));
+  g_signal_connect(tools_eventlist, "clicked", G_CALLBACK(activate_eventlist), this);
+  gtk_toolbar_append_widget( GTK_TOOLBAR(tools2), tools_eventlist, CoWowGtk::translate_utf8("EventList"), "");
+
+  GtkWidget *tools_eventlog = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_eventlog.png");
+  gtk_container_add( GTK_CONTAINER(tools_eventlog), 
+	  gtk_image_new_from_file( fname));
+  g_signal_connect(tools_eventlog, "clicked", G_CALLBACK(activate_eventlog), this);
+  gtk_toolbar_append_widget( GTK_TOOLBAR(tools2), tools_eventlog, CoWowGtk::translate_utf8("EventLog"), "");
+
+  GtkWidget *tools_blocklist = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_blocklist.png");
+  gtk_container_add( GTK_CONTAINER(tools_blocklist), 
+	  gtk_image_new_from_file( fname));
+  g_signal_connect(tools_blocklist, "clicked", G_CALLBACK(activate_blocklist), this);
+  gtk_toolbar_append_widget( GTK_TOOLBAR(tools2), tools_blocklist, CoWowGtk::translate_utf8("Blocked Alarms"), "");
 
   GtkWidget *tools_navigator = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_navigator.png");
   gtk_container_add( GTK_CONTAINER( tools_navigator), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_navigator, "clicked", G_CALLBACK(activate_navigator), this);
-  gtk_toolbar_append_widget( GTK_TOOLBAR(tools), tools_navigator, "Open Navigator", "");
-
-  tools_close = gtk_button_new();
-  gtk_container_add( GTK_CONTAINER(tools_close), 
-	  gtk_image_new_from_stock( "gtk-close", GTK_ICON_SIZE_SMALL_TOOLBAR));
-  g_signal_connect(tools_close, "clicked", G_CALLBACK(activate_exit), this);
-  gtk_toolbar_append_widget( GTK_TOOLBAR(tools), tools_close, "Close", "");
+  gtk_toolbar_append_widget( GTK_TOOLBAR(tools2), tools_navigator, CoWowGtk::translate_utf8("Navigator"), "");
 
   // System pushbuttons
-  GtkWidget *alarmlist_button = gtk_button_new_with_label( CoWowGtk::translate_utf8("Alarmlist"));
-  gtk_widget_set_size_request( alarmlist_button, 90, 25);
-  g_signal_connect( alarmlist_button, "clicked", G_CALLBACK(activate_alarmlist), this);
-
-  GtkWidget *eventlist_button = gtk_button_new_with_label( CoWowGtk::translate_utf8("Eventlist"));
-  gtk_widget_set_size_request( eventlist_button, 90, 25);
-  g_signal_connect( eventlist_button, "clicked", G_CALLBACK(activate_eventlist), this);
-
-  eventlog_button = gtk_button_new_with_label( CoWowGtk::translate_utf8("Eventlog"));
-  gtk_widget_set_size_request( eventlog_button, 90, 25);
-  g_signal_connect( eventlog_button, "clicked", G_CALLBACK(activate_eventlog), this);
-
-  help_button = gtk_button_new_with_label( CoWowGtk::translate_utf8("Help"));
-  gtk_widget_set_size_request( help_button, 90, 25);
-  g_signal_connect( help_button, "clicked", G_CALLBACK(activate_help), this);
 
   GtkWidget *sysbutton_box = gtk_vbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(sysbutton_box), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(sysbutton_box), GTK_WIDGET(tools), FALSE, FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(sysbutton_box), alarmlist_button, FALSE, FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(sysbutton_box), eventlist_button, FALSE, FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(sysbutton_box), eventlog_button, FALSE, FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(sysbutton_box), help_button, FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(sysbutton_box), GTK_WIDGET(tools2), FALSE, FALSE, 0);
   gtk_widget_set_size_request( sysbutton_box, 160, -1);
 
   // Main window
@@ -356,10 +568,18 @@ OpGtk::OpGtk( void *op_parent_ctx,
   g_object_set( aalarm_box[3], "visible", FALSE, NULL);
   g_object_set( aalarm_box[4], "visible", FALSE, NULL);
   g_object_set( balarm_box, "visible", FALSE, NULL);
-  g_object_set( help_button, "visible", FALSE, NULL);
-  g_object_set( eventlog_button, "visible", FALSE, NULL);
+  // g_object_set( help_button, "visible", FALSE, NULL);
+  // g_object_set( eventlog_button, "visible", FALSE, NULL);
   g_object_set( decr_button, "visible", FALSE, NULL);
   g_object_set( tools_close, "visible", FALSE, NULL);
+
+  if ( a_height == 5)
+    activate_aalarm_decr( 0, this);
+  if ( a_height == 4) {
+    // g_object_set( decr_button, "visible", TRUE, NULL);
+    activate_aalarm_decr( 0, this);
+    activate_aalarm_decr( 0, this);
+  }
 
   int width, height;
   GdkWindow *rootwindow = gtk_widget_get_root_window( toplevel);
@@ -401,6 +621,27 @@ void OpGtk::map()
 void OpGtk::add_close_button()
 {
   g_object_set( tools_close, "visible", TRUE, NULL);
+}
+
+
+int OpGtk::create_menu_item( const char *name, int pixmap, int append, const char *cmd)
+{
+  GtkWidget *w;
+  int sts;
+
+  sts = wow->CreateMenuItem( name, (void *) menu_bar, pixmap, append, (void *)&w);
+  if ( EVEN(sts)) return sts;
+
+  OpCmd opcmd( w, cmd);
+  cmd_vect.push_back(opcmd);
+  g_signal_connect(w, "activate", G_CALLBACK(activate_cmd_menu_item), this);
+
+  return 1;
+}
+
+int OpGtk::delete_menu_item( const char *name)
+{
+  return wow->DeleteMenuItem( "Functions-View", (void *) menu_bar);
 }
 
 void  OpGtk::update_alarm_info()
@@ -564,9 +805,7 @@ int OpGtk::configure( char *opplace_str)
   int 		sts;
   unsigned int 	i;
   pwr_tObjid 	opplace;
-  pwr_tObjid 	user;
   pwr_sClass_OpPlace *opplace_p;
-  pwr_sClass_User *user_p;
   pwr_sAttrRef	attrref;
   pwr_tTid	tid;
 
@@ -576,31 +815,18 @@ int OpGtk::configure( char *opplace_str)
   sts = gdh_ObjidToPointer( opplace, (void **) &opplace_p);
   if ( EVEN(sts)) return sts;
 
-  // Fix 
-  if ( strncmp( opplace_p->OpWinProgram, "Jop", 3) == 0)
+  if ( opplace_p->StartJavaProcess)
     start_jop = 1;
 
-  // Find matching user object
-  sts = gdh_GetClassList( pwr_cClass_User, &user);
-  while ( ODD (sts)) {
-
-    sts = gdh_ObjidToPointer( user, (void **) &user_p);
-    if ( EVEN(sts)) return sts;
-
-    if ( user_p->OpNumber == opplace_p->OpNumber)
-      break;
-    sts = gdh_GetNextObject( user, &user);
-  }
-  if ( EVEN(sts)) return sts;
 
   // Examine Graph objects
-  for ( i = 0; i < sizeof(user_p->FastAvail)/sizeof(user_p->FastAvail[0]); i++) {
+  for ( i = 0; i < sizeof(opplace_p->FastAvail)/sizeof(opplace_p->FastAvail[0]); i++) {
 
     button_aref[i].Objid = pwr_cNOid;
-    if ( cdh_ObjidIsNull( user_p->FastAvail[i].Objid))
+    if ( cdh_ObjidIsNull( opplace_p->FastAvail[i].Objid))
       continue;
 
-    sts = gdh_GetAttrRefTid( &user_p->FastAvail[i], &tid);
+    sts = gdh_GetAttrRefTid( &opplace_p->FastAvail[i], &tid);
     if ( EVEN(sts))continue;
 
     if ( tid != pwr_cClass_XttGraph)
@@ -610,24 +836,24 @@ int OpGtk::configure( char *opplace_str)
     sts = gdh_ClassAttrToAttrref( pwr_cClass_XttGraph, ".ButtonText", &attrref);
     if ( EVEN(sts)) return sts;
 
-    attrref = cdh_ArefAdd( &user_p->FastAvail[i], &attrref);
+    attrref = cdh_ArefAdd( &opplace_p->FastAvail[i], &attrref);
     sts = gdh_GetObjectInfoAttrref( &attrref, (void *)button_title[i], 
 		sizeof(button_title[0]));
     if ( EVEN(sts)) continue;
 
     if ( strcmp( button_title[i], "") == 0) {
       // Take object name instead
-      sts = gdh_AttrrefToName( &user_p->FastAvail[i], button_title[i], sizeof(button_title[0]), 
+      sts = gdh_AttrrefToName( &opplace_p->FastAvail[i], button_title[i], sizeof(button_title[0]), 
 			       cdh_mName_object);
       if ( EVEN(sts)) continue;
     }
 
-    button_aref[i] = user_p->FastAvail[i];
+    button_aref[i] = opplace_p->FastAvail[i];
   }
 
   // Create the application buttons
-  GtkWidget *b[15];
-  for ( i = 0; i < sizeof(user_p->FastAvail)/sizeof(user_p->FastAvail[0]); i++) {
+  GtkWidget *b[25];
+  for ( i = 0; i < sizeof(opplace_p->FastAvail)/sizeof(opplace_p->FastAvail[0]); i++) {
     if ( cdh_ObjidIsNull( button_aref[i].Objid))
       continue;
 
@@ -681,36 +907,85 @@ int OpGtk::configure( char *opplace_str)
     case 14:
       g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl15), this);
       break;
+    case 15:
+      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl16), this);
+      break;
+    case 16:
+      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl17), this);
+      break;
+    case 17:
+      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl18), this);
+      break;
+    case 18:
+      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl19), this);
+      break;
+    case 19:
+      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl20), this);
+      break;
+    case 20:
+      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl21), this);
+      break;
+    case 21:
+      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl22), this);
+      break;
+    case 22:
+      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl23), this);
+      break;
+    case 23:
+      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl24), this);
+      break;
+    case 24:
+      g_signal_connect( b[i], "clicked", G_CALLBACK(activate_appl25), this);
+      break;
     }
   }
 
   appl_form = gtk_vbox_new( FALSE, 0);
-  GtkWidget *bbox[3];
-  for ( i = 0; i < sizeof(user_p->FastAvail)/sizeof(user_p->FastAvail[0]); i++) {
+  for ( i = 0; i < sizeof(opplace_p->FastAvail)/sizeof(opplace_p->FastAvail[0]); i++) {
     if ( i == 0) {
-      bbox[0] = gtk_hbox_new( FALSE, 0);
-      gtk_box_pack_start( GTK_BOX(appl_form), bbox[0], FALSE, FALSE, 0);
+      funcbox[0] = gtk_hbox_new( FALSE, 0);
+      gtk_box_pack_start( GTK_BOX(appl_form), funcbox[0], FALSE, FALSE, 0);
     }
     else if ( i == 4) {      
-      bbox[1] = gtk_hbox_new( FALSE, 0);
-      gtk_box_pack_start( GTK_BOX(appl_form), bbox[1], FALSE, FALSE, 0);
+      funcbox[1] = gtk_hbox_new( FALSE, 0);
+      gtk_box_pack_start( GTK_BOX(appl_form), funcbox[1], FALSE, FALSE, 0);
     }
     else if ( i == 9) {
-      bbox[2] = gtk_hbox_new( FALSE, 0);
-      gtk_box_pack_start( GTK_BOX(appl_form), bbox[2], FALSE, FALSE, 0);
+      funcbox[2] = gtk_hbox_new( FALSE, 0);
+      gtk_box_pack_start( GTK_BOX(appl_form), funcbox[2], FALSE, FALSE, 0);
+    }
+    else if ( i == 14) {
+      funcbox[3] = gtk_hbox_new( FALSE, 0);
+      gtk_box_pack_start( GTK_BOX(appl_form), funcbox[3], FALSE, FALSE, 0);
+    }
+    else if ( i == 19) {
+      funcbox[4] = gtk_hbox_new( FALSE, 0);
+      gtk_box_pack_start( GTK_BOX(appl_form), funcbox[4], FALSE, FALSE, 0);
     }
 
     if ( i < 5) {
       if ( cdh_ObjidIsNotNull( button_aref[i].Objid))
-	gtk_box_pack_start( GTK_BOX(bbox[0]), b[i], TRUE, TRUE, 0);
+	gtk_box_pack_start( GTK_BOX(funcbox[0]), b[i], TRUE, TRUE, 0);
     }
     else if ( i < 10) {
       if ( cdh_ObjidIsNotNull( button_aref[i].Objid))
-	gtk_box_pack_start( GTK_BOX(bbox[1]), b[i], TRUE, TRUE, 0);
+	gtk_box_pack_start( GTK_BOX(funcbox[1]), b[i], TRUE, TRUE, 0);
     }
     else if ( i < 15) {
       if ( cdh_ObjidIsNotNull( button_aref[i].Objid))
-	gtk_box_pack_start( GTK_BOX(bbox[2]), b[i], TRUE, TRUE, 0);
+	gtk_box_pack_start( GTK_BOX(funcbox[2]), b[i], TRUE, TRUE, 0);
+    }
+    else if ( i < 20) {
+      if ( cdh_ObjidIsNotNull( button_aref[i].Objid)) {
+	gtk_box_pack_start( GTK_BOX(funcbox[3]), b[i], TRUE, TRUE, 0);
+	a_height = 4;
+      }
+    }
+    else if ( i < 25) {
+      if ( cdh_ObjidIsNotNull( button_aref[i].Objid)) {
+	gtk_box_pack_start( GTK_BOX(funcbox[4]), b[i], TRUE, TRUE, 0);
+	a_height = 5;
+      }
     }
   }
 
@@ -777,10 +1052,10 @@ void OpGtk::activate_aalarm_incr( GtkWidget *w, gpointer data)
     g_object_set( op->decr_button, "visible", TRUE, NULL);
   }
   else if ( op->a_height == 4) {
-    g_object_set( op->eventlog_button, "visible", TRUE, NULL);
+    g_object_set( op->funcbox[3], "visible", TRUE, NULL);
   }
   else if ( op->a_height == 5) {
-    g_object_set( op->help_button, "visible", TRUE, NULL);
+    g_object_set( op->funcbox[4], "visible", TRUE, NULL);
   }
   for ( int i = 2; i < 5; i++) {
     if ( i < op->a_height) {
@@ -815,10 +1090,10 @@ void OpGtk::activate_aalarm_decr( GtkWidget *w, gpointer data)
     g_object_set( op->decr_button, "visible", FALSE, NULL);
   }
   else if ( op->a_height == 3) {
-    g_object_set( op->eventlog_button, "visible", FALSE, NULL);
+    g_object_set( op->funcbox[3], "visible", FALSE, NULL);
   }
   else if ( op->a_height == 4) {
-    g_object_set( op->help_button, "visible", FALSE, NULL);
+    g_object_set( op->funcbox[4], "visible", FALSE, NULL);
   }
   for ( int i = 2; i < 5; i++) {
     if ( i >= op->a_height) {
@@ -852,6 +1127,13 @@ void OpGtk::activate_eventlog( GtkWidget *w, gpointer data)
   op->activate_eventlog();
 }
 
+void OpGtk::activate_blocklist( GtkWidget *w, gpointer data)
+{
+  Op *op = (Op*)data;
+
+  op->activate_blocklist();
+}
+
 void OpGtk::activate_navigator( GtkWidget *w, gpointer data)
 {
   Op *op = (Op*)data;
@@ -871,6 +1153,83 @@ void OpGtk::activate_help_overview( GtkWidget *w, gpointer data)
   Op *op = (Op*)data;
 
   op->activate_help_overview();
+}
+
+void OpGtk::activate_help_opwin( GtkWidget *w, gpointer data)
+{
+  Op *op = (Op*)data;
+
+  op->activate_help_opwin();
+}
+
+void OpGtk::activate_help_proview( GtkWidget *w, gpointer data)
+{
+  Op *op = (Op*)data;
+
+  op->activate_help_proview();
+}
+
+void OpGtk::activate_trend( GtkWidget *w, gpointer data)
+{
+  Op *op = (Op*)data;
+
+  op->activate_trend();
+}
+
+void OpGtk::activate_fast( GtkWidget *w, gpointer data)
+{
+  Op *op = (Op*)data;
+
+  op->activate_fast();
+}
+
+void OpGtk::activate_history( GtkWidget *w, gpointer data)
+{
+  Op *op = (Op*)data;
+
+  op->activate_history();
+}
+
+void OpGtk::activate_graph( GtkWidget *w, gpointer data)
+{
+  Op *op = (Op*)data;
+
+  op->activate_graph();
+}
+
+void OpGtk::activate_switch_user( GtkWidget *w, gpointer data)
+{
+  Op *op = (Op*)data;
+
+  op->activate_switch_user();
+}
+
+void OpGtk::activate_show_user( GtkWidget *w, gpointer data)
+{
+  Op *op = (Op*)data;
+
+  op->activate_show_user();
+}
+
+void OpGtk::activate_logout( GtkWidget *w, gpointer data)
+{
+  Op *op = (Op*)data;
+
+  op->activate_logout();
+}
+
+void OpGtk::activate_cmd_menu_item( GtkWidget *w, gpointer data)
+{
+  Op *op = (Op*)data;
+  pwr_tCmd cmd;
+  int sts;
+
+  sts = ((OpGtk *)op)->get_cmd( w, cmd);
+  if ( ODD(sts)) {
+    op->activate_cmd_menu_item( cmd);
+    if ( op->command_cb)
+      op->command_cb( op->parent_ctx, cmd);
+  }
 }
 
 void OpGtk::activate_appl1( GtkWidget *w, gpointer data)
@@ -978,4 +1337,83 @@ void OpGtk::activate_appl15( GtkWidget *w, gpointer data)
   op->appl_action(14);
 }
 
+void OpGtk::activate_appl16( GtkWidget *w, gpointer data)
+{
+  Op *op = (Op*)data;
 
+  op->appl_action(15);
+}
+
+void OpGtk::activate_appl17( GtkWidget *w, gpointer data)
+{
+  Op *op = (Op*)data;
+
+  op->appl_action(16);
+}
+
+void OpGtk::activate_appl18( GtkWidget *w, gpointer data)
+{
+  Op *op = (Op*)data;
+
+  op->appl_action(17);
+}
+
+void OpGtk::activate_appl19( GtkWidget *w, gpointer data)
+{
+  Op *op = (Op*)data;
+
+  op->appl_action(18);
+}
+
+void OpGtk::activate_appl20( GtkWidget *w, gpointer data)
+{
+  Op *op = (Op*)data;
+
+  op->appl_action(19);
+}
+
+void OpGtk::activate_appl21( GtkWidget *w, gpointer data)
+{
+  Op *op = (Op*)data;
+
+  op->appl_action(20);
+}
+
+void OpGtk::activate_appl22( GtkWidget *w, gpointer data)
+{
+  Op *op = (Op*)data;
+
+  op->appl_action(21);
+}
+
+void OpGtk::activate_appl23( GtkWidget *w, gpointer data)
+{
+  Op *op = (Op*)data;
+
+  op->appl_action(22);
+}
+
+void OpGtk::activate_appl24( GtkWidget *w, gpointer data)
+{
+  Op *op = (Op*)data;
+
+  op->appl_action(23);
+}
+
+void OpGtk::activate_appl25( GtkWidget *w, gpointer data)
+{
+  Op *op = (Op*)data;
+
+  op->appl_action(24);
+}
+
+int OpGtk::get_cmd( GtkWidget *w, char *cmd)
+{
+  for ( unsigned int i = 0; i < cmd_vect.size(); i++) {
+    if ( w == cmd_vect[i].w) {
+      strcpy( cmd, cmd_vect[i].cmd);
+      return 1;	
+    }
+  }
+  return 0;
+}

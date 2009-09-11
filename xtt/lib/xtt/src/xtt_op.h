@@ -45,8 +45,8 @@ class Op {
   void 		*parent_ctx;
   unsigned long	balarm_prio;
   unsigned long	balarm_type;
-  char		button_title[20][80];
-  pwr_tAttrRef  button_aref[20];
+  char		button_title[25][80];
+  pwr_tAttrRef  button_aref[25];
   int	       	button_cnt;
   int	       	start_jop;
   Jop	       	*jop;
@@ -67,6 +67,8 @@ class Op {
   virtual int 	configure( char *opplace_str) {return 0;}
   virtual void 	update_alarm_info() {}
   virtual void  add_close_button() {}
+  virtual int   create_menu_item( const char *name, int pixmap, int append, const char *cmd) { return 0;}
+  virtual int   delete_menu_item( const char *name) { return 0;}
 
   void	set_jop_qid( int qix) { if ( jop) jop->set_jop_qid( qix);};
   void	scan();
@@ -78,9 +80,20 @@ class Op {
   void activate_alarmlist();
   void activate_eventlist();
   void activate_eventlog();
+  void activate_blocklist();
   void activate_navigator();
+  void activate_trend();
+  void activate_fast();
+  void activate_history();
+  void activate_graph();
   void activate_help();
   void activate_help_overview();
+  void activate_help_opwin();
+  void activate_help_proview();
+  void activate_switch_user();
+  void activate_show_user();
+  void activate_logout();
+  void activate_cmd_menu_item( char *cmd);
 
   static void jop_command_cb( void *op, char *command);
 };

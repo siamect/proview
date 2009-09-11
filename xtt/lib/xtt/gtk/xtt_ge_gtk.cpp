@@ -27,6 +27,7 @@ typedef void *Widget;
 
 #include "glow.h"
 
+#include "xtt_xnav.h"
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
 #include "co_cdh.h"
@@ -39,7 +40,6 @@ typedef void *Widget;
 #include "co_lng.h"
 #include "xtt_ge_gtk.h"
 #include "ge_graph_gtk.h"
-#include "xtt_xnav.h"
 
 gboolean XttGeGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data)
 {

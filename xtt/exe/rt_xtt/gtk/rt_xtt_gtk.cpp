@@ -555,8 +555,6 @@ int main(  int argc, char *argv[])
 {
   int sts;
 
-  gtk_init( &argc, &argv);
-
   setlocale( LC_TIME, "en_US");
 
   new XttGtk( argc, argv, &sts);
@@ -585,7 +583,7 @@ static void destroy_event( GtkWidget *w, gpointer data)
 }
 
 XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
-  Xtt( argc, argv, return_sts)
+  Xtt( &argc, &argv, return_sts)
 {
   const int	window_width = 400;
   const int    	window_height = 700;
@@ -593,6 +591,8 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   pwr_tFileName fname;
   char		title[120] = "Xtt ";
   char		nodename[80];
+
+  gtk_init( &argc, &argv);
 
   syi_NodeName( &sts, nodename, sizeof(nodename));
   if ( ODD(sts))

@@ -1068,7 +1068,7 @@ XNav::XNav(
 	brow_cnt(0), TraceList(NULL), trace_started(0),
 	message_cb(NULL), close_cb(NULL), map_cb(NULL), change_value_cb(NULL),
 	set_dimension_cb(NULL), selection_changed_cb(0), ccm_func_registred(0), verify(0),
-	menu_tree(NULL), ev(0), op(0), clog(0), closing_down(0),
+	menu_tree(NULL), ev(0), op(0), clog(0), closing_down(0), opplace_p(0),
 	base_priv(pwr_mPrv_System), priv(pwr_mPrv_System), displayed(0),
         current_logging_index(-1), search_last_found(0), search_compiled(0), 
 	attach_audio(0), audio(0), op_close_button(xn_op_close_button), cologin(0), scctx(0)
@@ -2761,18 +2761,15 @@ int	XNav::setup()
   brow_SetNodraw( brow->ctx);
   new ItemHeader( brow, "Title", "Setup",  NULL, flow_eDest_IntoLast);
 
-  new ItemLocal( brow, "ConfigureObject", "setup_configureObject", 
-        pwr_eType_String, sizeof( gbl.ConfigureObject), 0, 0, 1,
-	(void *) gbl.ConfigureObject, NULL, flow_eDest_IntoLast);
+  new ItemLocal( brow, "OpPlace", "setup_opPlace", 
+        pwr_eType_String, sizeof( gbl.OpPlace), 0, 0, 1,
+	(void *) gbl.OpPlace, NULL, flow_eDest_IntoLast);
   new ItemLocal( brow, "DefaultDirectory", "setup_defaultdirectory", 
 	pwr_eType_String, sizeof( gbl.default_directory), 0, 0, 0,
 	(void *) gbl.default_directory, NULL, flow_eDest_IntoLast);
   new ItemLocal( brow, "Scantime", "setup_scantime", 
 	pwr_eType_Float64, sizeof( gbl.scantime), 0.010, 10, 0,
 	(void *) &gbl.scantime, NULL, flow_eDest_IntoLast);
-  new ItemLocal( brow, "AlarmMessage", "setup_alarmmessage",
-        pwr_eType_Boolean, sizeof( gbl.AlarmMessage), 0, 1, 0,
-	(void *) &gbl.AlarmMessage, NULL, flow_eDest_IntoLast);
   new ItemLocal( brow, "AlarmBeep", "setup_alarmbeep",
 	pwr_eType_Boolean, sizeof( gbl.AlarmBeep), 0, 1, 0,
 	(void *) &gbl.AlarmBeep, NULL, flow_eDest_IntoLast);
@@ -2782,9 +2779,15 @@ int	XNav::setup()
   new ItemLocal( brow, "AlarmAck", "setup_alarmack", 
 	pwr_eType_Boolean, sizeof( gbl.AlarmAck), 0, 1, 0,
 	(void *) &gbl.AlarmAck, NULL, flow_eDest_IntoLast);
-  new ItemLocal( brow, "SymbolFilename", "setup_symbolfilename", 
-	pwr_eType_String, sizeof(gbl.symbolfilename), 0, 0, 0,
-	(void *) gbl.symbolfilename, NULL, flow_eDest_IntoLast);
+  new ItemLocal( brow, "HideOperatorWindow", "setup_hideopwind", 
+	pwr_eType_Boolean, sizeof( gbl.hide_opwind), 0, 1, 0,
+	(void *) &gbl.hide_opwind, NULL, flow_eDest_IntoLast);
+  new ItemLocal( brow, "HideStatusBar", "setup_hidestatusbar", 
+	pwr_eType_Boolean, sizeof( gbl.hide_statusbar), 0, 1, 0,
+	(void *) &gbl.hide_statusbar, NULL, flow_eDest_IntoLast);
+  new ItemLocal( brow, "SetupScript", "setup_setupscript", 
+	pwr_eType_String, sizeof(gbl.setupscript), 0, 0, 0,
+	(void *) gbl.setupscript, NULL, flow_eDest_IntoLast);
   new ItemLocal( brow, "Verify", "setup_verify", 
 	pwr_eType_Int32, sizeof( gbl.verify), 0, 1, 0,
 	(void *) &gbl.verify, NULL, flow_eDest_IntoLast);
@@ -2883,132 +2886,44 @@ int	XNav::show_logging( int index)
   return XNAV__SUCCESS;
 }
 
-int	XNavGbl::symbolfile_exec( void *xnav)
+int	XNavGbl::setupscript_exec( XNav *xnav)
 {
   char cmd[80];
 
-  if ( strcmp( symbolfilename, "") == 0)
-    strcpy( symbolfilename, "$HOME/xtt_setup");
+  if ( strcmp( setupscript, "") == 0)
+    strcpy( setupscript, "$HOME/xtt_setup");
 
   strcpy( cmd, "@");
-  strcat( cmd, symbolfilename);
-  ((XNav *)xnav)->command( cmd);
+  strcat( cmd, setupscript);
+  xnav->command( cmd);
 
   return XNAV__SUCCESS;
 }
 
-int	XNavGbl::load_config( void *xnav)
+int	XNavGbl::load_config( XNav *xnav)
 {
-  pwr_tClassId	classid;
-  pwr_tObjid	objid;
-  pwr_tObjid	node;
-  pwr_tOName   	config_name;
-  pwr_tAName   	parname;
-  int		found;
   int		sts;
-  char		*s;
-  pwr_tFloat32	float32_val;
 
-  if ( ConfigureObject[0])
-  {
-    strcpy( config_name, ConfigureObject);
-    sts = gdh_NameToObjid ( config_name, &objid);
-    if ( EVEN(sts)) return sts;
-  }
-  else
-  {
-    /* Try to find a RttConfig object for the node */
-    sts = gdh_GetNodeObject ( 0, &node);
-    if ( EVEN(sts)) return sts;
+  if ( strcmp( xnav->opplace_name, "") == 0)
+    return 0;
 
-    /* Look for a RttConfig object as a child to the node object 
-       with the name RttConfig */
-    found = 0;
-    sts = gdh_GetChild( node, &objid);
-    while ( ODD(sts))
-    {
-      sts = gdh_GetObjectClass( objid, &classid);
-      if ( EVEN(sts)) return sts;
-      if ( classid == pwr_cClass_RttConfig)
-      {
-        sts = gdh_ObjidToName ( objid, config_name, sizeof(config_name), cdh_mNName);
-        if (EVEN(sts)) return sts;
-        if ( (s = strrchr( config_name, '-')))
-          s++;
-        else
-          s = config_name; 
-        cdh_ToUpper( s, s);
-        if ( !strcmp( s, "RTTCONFIG"))
-        {
-          found = 1;
-          break;
-        }
-      }	    
-      sts = gdh_GetNextSibling ( objid, &objid);
-    }
-    if ( found == 0)
-      return XNAV__OBJNOTFOUND;
+  strcpy( OpPlace, xnav->opplace_name);
 
-    sts = gdh_ObjidToName ( objid, config_name, sizeof(config_name), cdh_mNName);
-    if (EVEN(sts)) return sts;
+  sts = gdh_NameToPointer( xnav->opplace_name, (void **)&xnav->opplace_p);
+  if ( EVEN(sts)) return sts;
 
-    strcpy( ConfigureObject, config_name);
-  }
+  sts = gdh_NameToObjid( xnav->opplace_name, &xnav->gbl.OpObject);
+  if ( EVEN(sts)) return sts;
 
-  /* rtt_UserObject */
-  strcpy( parname, config_name);
-  strcat( parname, ".UserObject");
-  sts = gdh_GetObjectInfo ( parname, &UserObject, sizeof( UserObject));
 
-  /* AlarmAutoLoad */
-  strcpy( parname, config_name);
-  strcat( parname, ".AlarmAutoLoad");
-  sts = gdh_GetObjectInfo ( parname, &AlarmAutoLoad, 
-		sizeof( AlarmAutoLoad)); 
-
-  /* AlarmMessage */
-  strcpy( parname, config_name);
-  strcat( parname, ".AlarmMessage");
-  sts = gdh_GetObjectInfo ( parname, &AlarmMessage, sizeof( AlarmMessage)); 
-
-  /* AlarmBeep */
-  strcpy( parname, config_name);
-  strcat( parname, ".AlarmBeep");
-  sts = gdh_GetObjectInfo ( parname, &AlarmBeep, sizeof( AlarmBeep)); 
-
-  /* AlarmReturn */
-  strcpy( parname, config_name);
-  strcat( parname, ".AlarmReturn");
-  sts = gdh_GetObjectInfo ( parname, &AlarmReturn, sizeof( AlarmReturn)); 
-
-  /* AlarmAck */
-  strcpy( parname, config_name);
-  strcat( parname, ".AlarmAck");
-  sts = gdh_GetObjectInfo ( parname, &AlarmAck, sizeof( AlarmAck)); 
-
-  /* DefaultDirectory */
-  strcpy( parname, config_name);
-  strcat( parname, ".DefaultDirectory");
-  sts = gdh_GetObjectInfo ( parname, default_directory, 
-		sizeof( default_directory)); 
-  if ( EVEN(sts)) strcpy( default_directory, "");
-
-  /* ScanTime */
-  strcpy( parname, config_name);
-  strcat( parname, ".ScanTime");
-  sts = gdh_GetObjectInfo ( parname, &float32_val, 
-		sizeof( float32_val)); 
-  if (ODD(sts) && float32_val != 0)
-    scantime = float32_val;
-
-  /* SymbolFileName */
-  strcpy( parname, config_name);
-  strcat( parname, ".SymbolFileName");
-  sts = gdh_GetObjectInfo ( parname, symbolfilename,
-		sizeof( symbolfilename)); 
-  if ( EVEN(sts))
-    strcpy( symbolfilename, "");
-  dcli_trim( symbolfilename, symbolfilename);
+  AlarmBeep = xnav->opplace_p->AlarmBell;
+  AlarmReturn = (xnav->opplace_p->EventListEvents & pwr_mEventListMask_AlarmReturn) != 0;
+  AlarmAck = (xnav->opplace_p->EventListEvents & pwr_mEventListMask_AlarmAck) != 0;
+  hide_opwind = (xnav->opplace_p->OpWindLayout & pwr_mOpWindLayoutMask_HideOperatorWindow) != 0;
+  hide_statusbar = (xnav->opplace_p->OpWindLayout & pwr_mOpWindLayoutMask_HideStatusBar) != 0;
+  op_wind_pop = xnav->opplace_p->OpWindPop;
+  strcpy( setupscript, xnav->opplace_p->SetupScript);
+  dcli_trim( setupscript, setupscript);
 
   return XNAV__SUCCESS;
 }
@@ -3457,78 +3372,48 @@ int XNav::init_brow_base_cb( FlowCtx *fctx, void *client_data)
   brow_CreateSecondaryCtx( xnav->brow_stack[0]->ctx, &secondary_ctx,
 			   init_brow_collect_cb, (void *)xnav, flow_eCtxType_Brow);
 
-  // Execute the symbolfile
-  xnav->gbl.symbolfile_exec( xnav);
-
   // Start operator window
   if ( strcmp( xnav->opplace_name, "") != 0)
   {
     pwr_tCmd cmd;
-    strcpy( cmd, "open op ");
-    strcat( cmd, xnav->opplace_name);
-    if ( xnav->op_close_button)
-      strcat( cmd, " /closebutton");
-    xnav->command( cmd);
 
-    xnav->load_ev_from_opplace();
+    if ( !xnav->gbl.hide_opwind) {
+      strcpy( cmd, "open op ");
+      strcat( cmd, xnav->opplace_name);
+      if ( xnav->op_close_button || 
+	   !(xnav->opplace_p->OpWindLayout & pwr_mOpWindLayoutMask_HideCloseButton))
+	strcat( cmd, " /closebutton");
+      xnav->command( cmd);
+
+      xnav->load_ev_from_opplace();
+    }
     xnav->login_from_opplace();
   }
   else
     xnav->login();
+
+  // Execute the setup script
+  xnav->gbl.setupscript_exec( xnav);
 
   return 1;
 }
 
 int XNav::load_ev_from_opplace()
 {
-  int	user_found = 0;
-  pwr_sClass_OpPlace *op_p;
-  pwr_sClass_User *user_p;
-  pwr_tObjid user_objid;
-  int sts;
+  char cmd[100];
 
-  // Find the corresponding User-object
-    
-  sts = gdh_NameToPointer( opplace_name, (void **) &op_p);
-  if ( EVEN(sts)) return sts;
-
-  sts = gdh_GetClassList( pwr_cClass_User, &user_objid);
-  while ( ODD(sts))
-  {
-    sts = gdh_ObjidToPointer( user_objid, (void **)&user_p);
-    if ( EVEN(sts)) return sts;
-
-    if ( user_p->OpNumber == op_p->OpNumber)
-    {
-      user_found = 1;
-      break;
-    }
-    sts = gdh_GetNextObject( user_objid, &user_objid);
-  }
-
-  if ( user_found )
-  {
-    char cmd[100];
-
-    gbl.UserObject = user_objid;
-    strcpy( cmd, "eventlist load");
-    command( cmd);
-    return XNAV__SUCCESS;
-  }
-  return 0;
+  strcpy( cmd, "eventlist load");
+  command( cmd);
+  return XNAV__SUCCESS;
 }
 
 int XNav::login_from_opplace()
 {
-  pwr_sClass_User *user_p;
   int sts;
   unsigned int privilege;
   char	systemgroup[80];
   pwr_sSecurity sec;
   char username[80];
-
-  sts = gdh_ObjidToPointer( gbl.UserObject, (void **) &user_p);
-  if ( EVEN(sts)) return sts;
 
   sts = gdh_GetObjectInfo ( "pwrNode-System.SystemGroup", &systemgroup, 
 		sizeof(systemgroup));
@@ -3541,7 +3426,7 @@ int XNav::login_from_opplace()
   if ( ODD(sts) && sec.XttUseOpsysUser)
     syi_UserName( username, sizeof(username));
   else
-    strcpy( username, user_p->UserName);
+    strcpy( username, opplace_p->UserName);
 
   sts = user_GetUserPriv( systemgroup, username, &privilege);
   if ( EVEN(sts)) {

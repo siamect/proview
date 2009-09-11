@@ -30,6 +30,10 @@ extern "C" {
 # include "pwr.h"
 #endif
 
+#ifndef pwr_baseclasses_h
+#include "pwr_baseclasses.h"
+#endif
+
 #ifndef co_regex_h
 # include "co_regex.h"
 #endif
@@ -179,6 +183,9 @@ typedef enum {
 	applist_eType_Fast
 } applist_eType;
 
+
+class XNav;
+
 class ApplListElem {
   public:
     ApplListElem( applist_eType al_type, void *al_ctx, pwr_sAttrRef *al_arp,
@@ -211,53 +218,41 @@ class ApplList {
 class XNavGbl {
   public:
     XNavGbl() :
-      priv(0), UserObject(pwr_cNObjid), AlarmAutoLoad(0), AlarmMessage(0),
-      AlarmBeep(0), AlarmReturn(0), AlarmAck(0), gdh_started(1),
+      priv(0), OpObject(pwr_cNObjid),
+      AlarmBeep(0), AlarmReturn(0), AlarmAck(0), hide_opwind(0), hide_statusbar(0), 
+      op_wind_pop(0), gdh_started(1),
       verify(0), scantime(0.5), signal_test_mode(0), advanced_user(1), show_truedb(0),
       show_allattr(0), no_graph_ratio(0)
       { 
 	strcpy( version, xnav_cVersion); strcpy( time, "");
-	strcpy( ConfigureObject, ""); strcpy( AlarmLastMessage, "");
-	strcpy( AlarmText1, ""); strcpy( AlarmText2, ""); strcpy( AlarmText3, ""); 
-	strcpy( AlarmText4, ""); strcpy( AlarmText5, ""); 
-	strcpy( platform, ""); strcpy( os, ""); strcpy( hw, "");
-	strcpy( node, ""); strcpy( sys, ""); strcpy( default_directory, "");
-	strcpy( symbolfilename, "");
+	strcpy( OpPlace, "");
+	strcpy( default_directory, "");
+	strcpy( setupscript, "");
       };
     char		version[10];
     char		time[80];
     unsigned long	priv;
-    char		ConfigureObject[80];
-    pwr_tObjid		UserObject;
-    int			AlarmAutoLoad;
-    int			AlarmMessage;
+    pwr_tOName		OpPlace;
+    pwr_tObjid		OpObject;
     int			AlarmBeep;
     int			AlarmReturn;
     int			AlarmAck;
+    int			hide_opwind;
+    int			hide_statusbar;
+    pwr_tMask		op_wind_pop;
     int 		gdh_started;
-    char		AlarmLastMessage[80];
-    char		AlarmText1[80];
-    char		AlarmText2[80];
-    char		AlarmText3[80];
-    char		AlarmText4[80];
-    char		AlarmText5[80];
-    char		platform[20];
-    char		os[20];
-    char		hw[20];
     int			verify;
-    char		node[20];
-    char		sys[20];
     char		default_directory[80];
     double		scantime;
-    char		symbolfilename[80];
+    pwr_tFileName      	setupscript;
     int			signal_test_mode;
     int			advanced_user;
     int			show_truedb;
     int			show_allattr;
     int			no_graph_ratio;
 
-    int			load_config( void *xnav);
-    int			symbolfile_exec( void *xnav);
+    int			load_config( XNav *xnav);
+    int			setupscript_exec( XNav *xnav);
 };
 
 class XNav {
@@ -300,6 +295,7 @@ class XNav {
     CLog		*clog;
     int			closing_down;
     pwr_tOName		opplace_name;
+    pwr_sClass_OpPlace	*opplace_p;
     char		base_user[80];
     char		user[80];
     unsigned int	base_priv;
@@ -333,7 +329,7 @@ class XNav {
     virtual Ev *ev_new( char *eve_name, char *ala_name, char *blk_name,
 			pwr_tObjid ev_user, int display_ala, int display_eve,
 			int display_blk, int display_return, int display_ack,
-			int ev_beep, pwr_tStatus *status) { return 0;}
+			int ev_beep, pwr_tMask ev_pop_mask, pwr_tStatus *status) { return 0;}
     virtual Hist *hist_new( char *title, pwr_tOid oid, pwr_tStatus *sts) {return 0;}
     virtual Block *block_new( pwr_tAttrRef *arp, char *name, unsigned int priv,
 		      pwr_tStatus *sts) {return 0;}

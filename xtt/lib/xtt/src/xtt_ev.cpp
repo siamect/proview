@@ -53,13 +53,14 @@ Ev::Ev( void *ev_parent_ctx,
 	int display_return,
 	int display_ack,
 	int ev_beep,
+	pwr_tMask ev_pop_mask,
 	pwr_tStatus *status) :
   parent_ctx(ev_parent_ctx),
   user(ev_user), eve_display_ack(display_ack), 
   eve_display_return(display_return),
   start_trace_cb(NULL), display_in_xnav_cb(NULL), update_info_cb(NULL),
   help_cb(NULL), popup_menu_cb(0), sound_cb(0), eve(NULL), ala(NULL),
-  connected(0), ala_displayed(0), eve_displayed(0), beep(ev_beep)
+  connected(0), ala_displayed(0), eve_displayed(0), beep(ev_beep), pop_mask(ev_pop_mask)
 {
 }
 
@@ -309,8 +310,7 @@ void Ev::create_aliaslist( void *up)
   int i, j;
   int alias_size;
   ev_sAlias dum;
-  pwr_sClass_User *userp = (pwr_sClass_User *)up;
-
+  pwr_sClass_OpPlace *userp = (pwr_sClass_OpPlace *)up;
   int listsize = MIN( sizeof(userp->SelectList)/sizeof(userp->SelectList[0]),
 		      sizeof(alias_list)/sizeof(alias_list[0]));
 						    
@@ -398,9 +398,31 @@ pwr_tStatus Ev::mh_alarm_bc( mh_sMessage *MsgP)
   ev->ala->event_alarm( MsgP);
   if ( ev->update_info_cb)
     ev->update_info_cb( ev->parent_ctx);
-  if ( ev->pop_cb)
-    ev->pop_cb( ev->parent_ctx);
+  if ( ev->pop_cb) {
+    int pop = 0;
 
+    switch ( ((mh_sMsgInfo *)MsgP)->EventPrio) {
+    case mh_eEventPrio_A:
+      if ( ev->pop_mask & pwr_mOpWindPopMask_Aalarm)
+	pop = 1;
+      break;
+    case mh_eEventPrio_B:
+      if ( ev->pop_mask & pwr_mOpWindPopMask_Balarm)
+	pop = 1;
+      break;
+    case mh_eEventPrio_C:
+      if ( ev->pop_mask & pwr_mOpWindPopMask_Calarm)
+	pop = 1;
+      break;
+    case mh_eEventPrio_D:
+      if ( ev->pop_mask & pwr_mOpWindPopMask_Dalarm)
+	pop = 1;
+      break;
+    default: ;
+    }
+    if ( pop)
+      ev->pop_cb( ev->parent_ctx);
+  }
   return 1;
 }
 
@@ -427,6 +449,9 @@ pwr_tStatus Ev::mh_info_bc( mh_sMessage *MsgP)
   ev->ala->event_info( MsgP);
   if ( ev->update_info_cb)
     ev->update_info_cb( ev->parent_ctx);
+  if ( ev->pop_mask & pwr_mOpWindPopMask_InfoMsg)
+    ev->pop_cb( ev->parent_ctx);
+
   return 1;
 }
 

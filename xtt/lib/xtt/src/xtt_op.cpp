@@ -32,6 +32,7 @@
 #include "rt_mh_outunit.h"
 #include "co_wow.h"
 #include "co_lng.h"
+#include "co_xhelp.h"
 #include "xtt_op.h"
 #include "rt_xnav_msg.h"
 
@@ -131,10 +132,75 @@ void Op::activate_eventlog()
     command_cb( parent_ctx, cmd);
 }
 
+void Op::activate_blocklist()
+{
+  char cmd[20] = "show blocklist";
+  if ( command_cb)
+    command_cb( parent_ctx, cmd);
+}
+
+void Op::activate_trend()
+{
+  char cmd[200] = "show objectlist/class=dstrend/title=\"Trend List\"";
+
+  if ( command_cb)
+    command_cb( parent_ctx, cmd);
+}
+
+void Op::activate_fast()
+{
+  char cmd[200] = "show objectlist/class=dsfastcurve/title=\"Fast Curve List\"";
+
+  if ( command_cb)
+    command_cb( parent_ctx, cmd);
+}
+
+void Op::activate_history()
+{
+  char cmd[200] = "show objectlist/class=sevhist/title=\"Process History List\"";
+  if ( command_cb)
+    command_cb( parent_ctx, cmd);
+}
+
+void Op::activate_graph()
+{
+  char cmd[200] = "show objectlist/class=xttgraph/title=\"Process Graphic List\"";
+
+  if ( command_cb)
+    command_cb( parent_ctx, cmd);
+}
+
 void Op::activate_navigator()
 {
   if ( map_cb)
     map_cb( parent_ctx);
+}
+
+void Op::activate_switch_user()
+{
+  char cmd[200] ="login";
+  if ( command_cb)
+    command_cb( parent_ctx, cmd);
+}
+
+void Op::activate_show_user()
+{
+  char cmd[200] ="show user/window";
+  if ( command_cb)
+    command_cb( parent_ctx, cmd);
+}
+
+void Op::activate_logout()
+{
+  char cmd[200] ="logout /messagewindow";
+  if ( command_cb)
+    command_cb( parent_ctx, cmd);
+}
+
+void Op::activate_cmd_menu_item( char *cmd)
+{
+  if ( command_cb)
+    command_cb( parent_ctx, cmd);
 }
 
 void Op::activate_help()
@@ -147,6 +213,16 @@ void Op::activate_help_overview()
 {
   if ( help_cb)
     help_cb( parent_ctx, "overview");
+}
+
+void Op::activate_help_opwin()
+{
+  CoXHelp::dhelp("opg_opwindow", "", navh_eHelpFile_Other, "$pwr_lang/man_opg.dat", 0);
+}
+
+void Op::activate_help_proview()
+{
+  CoXHelp::dhelp( "version", "", navh_eHelpFile_Other, "$pwr_exe/xtt_version_help.dat", 0);
 }
 
 void Op::jop_command_cb( void *op, char *command)

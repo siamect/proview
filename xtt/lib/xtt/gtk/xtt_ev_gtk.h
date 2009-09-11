@@ -41,6 +41,7 @@ class EvGtk : public Ev {
 	int display_return,
 	int display_ack,
 	int ev_beep,
+	pwr_tMask ev_pop_mask,
 	pwr_tStatus *status);
     ~EvGtk();
 

@@ -56,10 +56,10 @@ CLogGtk::CLogGtk( void *clog_parent_ctx,
 {
 
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
-			   "default-height", 800,
-			   "default-width", 1000,
-			   "title", clog_name,
-			   NULL);
+					 "default-height", 800,
+					 "default-width", 1000,
+					 "title", CoWowGtk::translate_utf8(clog_name),
+					 NULL);
 
   g_signal_connect( toplevel, "delete_event", G_CALLBACK(delete_event), this);
   g_signal_connect( toplevel, "destroy", G_CALLBACK(destroy_event), this);
@@ -156,7 +156,7 @@ CLogGtk::CLogGtk( void *clog_parent_ctx,
 
 
   // Menu Help
-  GtkWidget *help_help = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Help on ConsoleLog"));
+  GtkWidget *help_help = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Help on System Messages"));
   gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(help_help), 
 				 gtk_image_new_from_stock( "gtk-help", GTK_ICON_SIZE_MENU));
   g_signal_connect(help_help, "activate", G_CALLBACK(activate_help), this);

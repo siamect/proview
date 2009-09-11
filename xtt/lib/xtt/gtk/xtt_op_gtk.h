@@ -30,6 +30,17 @@
 # include "co_wow_gtk.h"
 #endif
 
+#include <vector>
+
+class OpCmd {
+ public:
+  GtkWidget *w;
+  pwr_tCmd  cmd;
+
+  OpCmd( GtkWidget *widget, const char *command) : w(widget)
+    { strncpy( cmd, command, sizeof(cmd));}
+};
+
 class OpGtk : public Op {
  public:
   OpGtk( void *op_parent_ctx,
@@ -51,20 +62,24 @@ class OpGtk : public Op {
   GtkWidget		*balarm_ebox;
   GtkWidget		*balarm_mark;
   GtkWidget		*appl_form;
-  GtkWidget		*eventlog_button;
-  GtkWidget		*help_button;
   GtkWidget		*decr_button;
   GtkWidget		*tools_close;
+  GtkWidget		*funcbox[5];
+  GtkMenuBar		*menu_bar;
   int			a_height;
   int			a_exist[5];
   int			a_active[5];
   int			text_size;
   CoWowFocusTimerGtk 	poptimer;
+  vector<OpCmd> cmd_vect;
 
   void	map();
   int 	configure( char *opplace_str);
   void 	update_alarm_info();
   void  add_close_button();
+  int   get_cmd( GtkWidget *w, char *cmd);
+  int   create_menu_item( const char *name, int pixmap, int append, const char *cmd);
+  int   delete_menu_item( const char *name);
 
   static void activate_exit( GtkWidget *w, gpointer data);
   static void activate_aalarm_ack( GtkWidget *w, gpointer data);
@@ -76,9 +91,20 @@ class OpGtk : public Op {
   static void activate_alarmlist( GtkWidget *w, gpointer data);
   static void activate_eventlist( GtkWidget *w, gpointer data);
   static void activate_eventlog( GtkWidget *w, gpointer data);
+  static void activate_blocklist( GtkWidget *w, gpointer data);
   static void activate_navigator( GtkWidget *w, gpointer data);
   static void activate_help( GtkWidget *w, gpointer data);
   static void activate_help_overview( GtkWidget *w, gpointer data);
+  static void activate_help_opwin( GtkWidget *w, gpointer data);
+  static void activate_help_proview( GtkWidget *w, gpointer data);
+  static void activate_trend( GtkWidget *w, gpointer data);
+  static void activate_fast( GtkWidget *w, gpointer data);
+  static void activate_history( GtkWidget *w, gpointer data);
+  static void activate_switch_user( GtkWidget *w, gpointer data);
+  static void activate_show_user( GtkWidget *w, gpointer data);
+  static void activate_logout( GtkWidget *w, gpointer data);
+  static void activate_cmd_menu_item( GtkWidget *w, gpointer data);
+  static void activate_graph( GtkWidget *w, gpointer data);
   static void activate_appl1( GtkWidget *w, gpointer data);
   static void activate_appl2( GtkWidget *w, gpointer data);
   static void activate_appl3( GtkWidget *w, gpointer data);
@@ -94,6 +120,16 @@ class OpGtk : public Op {
   static void activate_appl13( GtkWidget *w, gpointer data);
   static void activate_appl14( GtkWidget *w, gpointer data);
   static void activate_appl15( GtkWidget *w, gpointer data);
+  static void activate_appl16( GtkWidget *w, gpointer data);
+  static void activate_appl17( GtkWidget *w, gpointer data);
+  static void activate_appl18( GtkWidget *w, gpointer data);
+  static void activate_appl19( GtkWidget *w, gpointer data);
+  static void activate_appl20( GtkWidget *w, gpointer data);
+  static void activate_appl21( GtkWidget *w, gpointer data);
+  static void activate_appl22( GtkWidget *w, gpointer data);
+  static void activate_appl23( GtkWidget *w, gpointer data);
+  static void activate_appl24( GtkWidget *w, gpointer data);
+  static void activate_appl25( GtkWidget *w, gpointer data);
 };
 
 #endif

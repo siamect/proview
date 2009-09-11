@@ -98,6 +98,12 @@ typedef struct {
   char title[256];
 } xnav_sHistList;
 
+typedef struct {
+  pwr_tCid cid;
+  XNav *xnav;
+  char title[256];
+} xnav_sObjectList;
+
 
 #define IF_NOGDH_RETURN \
 if ( !xnav->gbl.gdh_started)\
@@ -150,6 +156,8 @@ static void xnav_xao_close_cb( void *ctx, XAttOne *xao);
 static void xnav_clog_close_cb( void *ctx);
 static void xnav_open_shist_cb( void *ctx, char *text);
 static void xnav_open_shist_cancel_cb( void *ctx);
+static void xnav_show_objectlist_cb( void *ctx, char *text);
+static void xnav_show_objectlist_cancel_cb( void *ctx);
 
 static int	xnav_help_func(		void		*client_data,
 					void		*client_flag);
@@ -209,10 +217,10 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"SHOW",
 			&xnav_show_func,
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/CLASS", 
-				"/HIERARCHY", "/PARAMETER" , "/OBJID", 
-				"/FILE", "/LOCAL", "/INITSTEP", 
-				"/MAXOBJECTS", "/VOLUME", "/ALL", "/TYPE", 
-				"/OPTION", "/ENTRY", "/NEW", ""}
+			  "/HIERARCHY", "/PARAMETER" , "/OBJID", 
+			  "/FILE", "/LOCAL", "/INITSTEP", 
+			  "/MAXOBJECTS", "/VOLUME", "/ALL", "/TYPE", 
+			  "/OPTION", "/ENTRY", "/NEW", "/TITLE", "/WINDOW", ""}
 		},
 		{
 			"OPEN",
@@ -281,7 +289,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 		{
 			"LOGOUT",
 			&xnav_logout_func,
-			{ ""}
+			{ "/MESSAGEWINDOW", ""}
 		},
 		{
 			"LOGIN",
@@ -613,15 +621,19 @@ static int	xnav_logout_func(	void		*client_data,
   XNav *xnav = (XNav *)client_data;
   char	msg[80];
 	
-  if ( strcmp( xnav->base_user, "") == 0)
-  {
+  int window = ODD( dcli_get_qualifier( "/MESSAGEWINDOW", 0, 0));
+
+  if ( strcmp( xnav->base_user, "") == 0) {
     sprintf( msg, "User %s logged out", xnav->user);
     xnav->message('I', msg);
+    if ( window)
+      xnav->wow->DisplayText( "Logout", msg);
   }
-  else
-  {
+  else {
     sprintf( msg, "Returned to user %s", xnav->base_user);
     xnav->message('I', msg);
+    if ( window)
+      xnav->wow->DisplayText( "User Return", msg);
   }
   strcpy( xnav->user, xnav->base_user);
   xnav->priv = xnav->base_priv;
@@ -1647,8 +1659,8 @@ static int	xnav_show_func(	void		*client_data,
       strcpy( event_title, Lng::translate( "Event List"));
       strcpy( block_title, Lng::translate( "Blocked Alarms"));
       xnav->ev = xnav->ev_new(  event_title, alarm_title, block_title, 
-				xnav->gbl.UserObject, 0, 1, 0, xnav->gbl.AlarmReturn,
-				xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, &sts);
+				xnav->gbl.OpObject, 0, 1, 0, xnav->gbl.AlarmReturn,
+				xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, xnav->gbl.op_wind_pop, &sts);
       if ( EVEN(sts))
       {
         delete xnav->ev;
@@ -1714,8 +1726,8 @@ static int	xnav_show_func(	void		*client_data,
       strcpy( event_title, Lng::translate( "Event List"));
       strcpy( block_title, Lng::translate( "Blocked Alarms"));
       xnav->ev = xnav->ev_new( event_title, alarm_title, block_title,
-			       xnav->gbl.UserObject, 1, 0, 0, xnav->gbl.AlarmReturn,
-			       xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, &sts);
+			       xnav->gbl.OpObject, 1, 0, 0, xnav->gbl.AlarmReturn,
+			       xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, xnav->gbl.op_wind_pop, &sts);
       if ( EVEN(sts))
       {
         delete xnav->ev;
@@ -1745,8 +1757,8 @@ static int	xnav_show_func(	void		*client_data,
       strcpy( event_title, Lng::translate( "Event List"));
       strcpy( block_title, Lng::translate( "Blocked Alarms"));
       xnav->ev = xnav->ev_new( event_title, alarm_title, block_title,
-			       xnav->gbl.UserObject, 0, 0, 1, xnav->gbl.AlarmReturn,
-			       xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, &sts);
+			       xnav->gbl.OpObject, 0, 0, 1, xnav->gbl.AlarmReturn,
+			       xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, xnav->gbl.op_wind_pop, &sts);
       if ( EVEN(sts))
       {
         delete xnav->ev;
@@ -1767,20 +1779,38 @@ static int	xnav_show_func(	void		*client_data,
   }
   else if ( strncmp( arg1_str, "USER", strlen( arg1_str)) == 0)
   {
-    char msg[120];
+    char msg[256];
     char priv_str[80];
+
+    int window = ODD( dcli_get_qualifier( "/WINDOW", 0, 0));
 
     if ( strcmp( xnav->user, "") == 0)
     {
       user_RtPrivToString( xnav->priv, priv_str, sizeof(priv_str));
-      sprintf( msg, "Not logged in (%s)", priv_str);
-      xnav->message('I', msg);
+      if ( window) {
+	sprintf( msg, "Current User:   Not logged in\n\nPrivileges:   %s)", priv_str);
+	xnav->wow->DisplayText( "User", msg);
+      }
+      else {
+	sprintf( msg, "Not logged in (%s)", priv_str);
+	xnav->message('I', msg);
+      }
     }
     else
     {
       user_RtPrivToString( xnav->priv, priv_str, sizeof(priv_str));
-      sprintf( msg, "User %s (%s)", xnav->user, priv_str);
-      xnav->message('I', msg);
+      if ( window) {
+	sprintf( msg, "Current User:   %s\n\nPrivileges:   %s", xnav->user, priv_str);
+	if ( strcmp( xnav->base_user, "") != 0 && strcmp( xnav->base_user, xnav->user) != 0) {
+	  strcat( msg, "\n\nOriginal User:   ");
+	  strcat( msg, xnav->base_user);
+	}
+	xnav->wow->DisplayText( "User", msg);
+      }
+      else {
+	sprintf( msg, "User %s (%s)", xnav->user, priv_str);
+	xnav->message('I', msg);
+      }
     }
   }
   else if ( strncmp( arg1_str, "VOLUMES", strlen( arg1_str)) == 0)
@@ -1901,6 +1931,64 @@ static int	xnav_show_func(	void		*client_data,
     /* Command is "SHOW METHODS" */
     xnav->print_methods();
   }
+  else if ( strncmp( arg1_str, "OBJECTLIST", strlen( arg1_str)) == 0)
+  {
+    // Command is "SHOW OBJECTLIST"    
+    pwr_tAttrRef aref;
+    int cnt = 0;
+    pwr_tObjName class_str;
+    char title_str[80];
+    pwr_tString80 *names;
+    xnav_sObjectList *ctx;
+    pwr_tCid cid;
+
+    if ( EVEN( dcli_get_qualifier( "/CLASS", class_str, sizeof(class_str)))) {
+      xnav->message('E', "Class is missing");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    sts = gdh_ClassNameToId( class_str, &cid);
+    if ( EVEN(sts)) {
+      xnav->message('E', "Unknown class");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    for ( sts = gdh_GetClassListAttrRef( cid, &aref);
+	  ODD(sts);
+	  sts = gdh_GetNextAttrRef( cid, &aref, &aref)) {
+      cnt++;
+    }
+    names = (pwr_tString80 *)calloc( cnt, sizeof(pwr_tString80));
+
+    int idx = 0;
+    for ( sts = gdh_GetClassListAttrRef( cid, &aref);
+	  ODD(sts);
+	  sts = gdh_GetNextAttrRef( cid, &aref, &aref)) {
+      sts = gdh_AttrrefToName( &aref, names[idx], sizeof(names[0]),
+				     cdh_mName_volumeStrict);
+      if ( EVEN(sts)) continue;
+
+      idx++;
+      if ( idx > cnt)
+	break;
+    }
+
+    if ( EVEN( dcli_get_qualifier( "/TITLE", title_str, sizeof(title_str)))) {
+      sts = gdh_ObjidToName( cdh_ClassIdToObjid( cid), title_str, sizeof(title_str),
+			     cdh_mName_object);
+      if ( EVEN(sts)) return sts;
+
+      strcat( title_str, Lng::translate(" List"));
+    }
+
+    ctx = (xnav_sObjectList *) calloc( 1, sizeof(xnav_sObjectList));
+    ctx->cid = cid;
+    ctx->xnav = xnav;
+
+    xnav->wow->CreateList( title_str, (char *)names, xnav_show_objectlist_cb, 
+			   xnav_show_objectlist_cancel_cb, ctx);
+    free( names);
+  }
   else
   {
     /* This might be a system picture */
@@ -1937,8 +2025,8 @@ static int	xnav_eventlist_func(	void		*client_data,
       strcpy( event_title, Lng::translate( "Event List"));
       strcpy( block_title, Lng::translate( "Blocked Alarms"));
       xnav->ev = xnav->ev_new( event_title, alarm_title, block_title,
-			       xnav->gbl.UserObject, 0, 0, 0, xnav->gbl.AlarmReturn,
-			       xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, &sts);
+			       xnav->gbl.OpObject, 0, 0, 0, xnav->gbl.AlarmReturn,
+			       xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, xnav->gbl.op_wind_pop, &sts);
       if ( EVEN(sts))
       {
         delete xnav->ev;
@@ -3324,7 +3412,7 @@ static int	xnav_open_func(	void		*client_data,
     if ( xnav->clog)
       xnav->clog->pop();
     else {
-      xnav->clog = xnav->clog_new( "Console log", &sts);
+      xnav->clog = xnav->clog_new( "System Messages", &sts);
       if ( EVEN(sts)) {
         delete xnav->clog;
         xnav->op = 0;
@@ -3901,6 +3989,49 @@ static int	xnav_create_func( void		*client_data,
 
     return XNAV__SUCCESS;	
   }
+  else if ( strncmp( arg1_str, "OPMENUITEM", strlen( arg1_str)) == 0)
+  {
+    char name_str[80];
+    pwr_tCmd command_str;
+    char pixmap_str[80];
+    int pixmap;
+    int append = 1;
+
+    // Command is "CREATE OPMENUITEM"
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str)))) {
+      if ( name_str[0] == '/') {
+        xnav->message('E', "Syntax error");
+        return XNAV__HOLDCOMMAND;
+      }
+    }
+    else if ( EVEN( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str)))) {
+      xnav->message('E',"Enter name");
+      return XNAV__HOLDCOMMAND;
+    }
+    if ( EVEN( dcli_get_qualifier( "/COMMAND", command_str, sizeof(command_str)))) {
+      xnav->message('E',"Enter name");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    if ( ODD( dcli_get_qualifier( "/PIXMAP", pixmap_str, sizeof(pixmap_str)))) {
+      if ( strcmp( pixmap_str, "GRAPH") == 0)
+	pixmap = wow_ePixmap_Graph;
+      else
+	pixmap = wow_ePixmap_No;
+    }
+    else
+      pixmap = wow_ePixmap_No;
+
+    if ( ODD( dcli_get_qualifier( "/BEFORE", 0, 0)))
+      append = 0;
+
+    if ( xnav->op) {
+      sts = xnav->op->create_menu_item( name_str, pixmap, append, command_str);
+      if ( EVEN(sts))
+	xnav->message('E',"Unable to create op menu item");
+    }
+    return XNAV__SUCCESS;	
+  }
   else if ( strncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0)
   {
     // Command is "CREATE OBJECT"
@@ -3973,6 +4104,29 @@ static int	xnav_delete_func( void		*client_data,
     if ( EVEN(sts))
       xnav->message('E',"Item not found");
 
+    return XNAV__SUCCESS;	
+  }
+  else if ( strncmp( arg1_str, "OPMENUITEM", strlen( arg1_str)) == 0)
+  {
+    char name_str[80];
+
+    // Command is "DELETE OPMENUITEM"
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str)))) {
+      if ( name_str[0] == '/') {
+        xnav->message('E', "Syntax error");
+        return XNAV__HOLDCOMMAND;
+      }
+    }
+    else if ( EVEN( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str)))) {
+      xnav->message('E',"Enter name");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    if ( xnav->op) {
+      sts = xnav->op->delete_menu_item( name_str);
+      if ( EVEN(sts))
+	xnav->message('E',"Unable to delete op menu item");
+    }
     return XNAV__SUCCESS;	
   }
   else if ( strncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0)
@@ -4089,10 +4243,10 @@ static int	xnav_store_func(	void		*client_data,
           /* Assume that this is the filestring */
           file_ptr = file_str;
         else
-          file_ptr = xnav->gbl.symbolfilename;
+          file_ptr = xnav->gbl.setupscript;
       }
       else
-        file_ptr = xnav->gbl.symbolfilename;
+        file_ptr = xnav->gbl.setupscript;
 
       dcli_get_defaultfilename( file_ptr, filename, ".rtt_com");
       sts = dcli_store_symbols( filename);
@@ -7030,6 +7184,39 @@ static void xnav_open_shist_cb( void *ctx, char *text)
 }
 
 static void xnav_open_shist_cancel_cb( void *ctx)
+{
+  free( ctx);
+}
+
+static void xnav_show_objectlist_cb( void *ctx, char *text)
+{
+  XNav *xnav = ((xnav_sObjectList *)ctx)->xnav;
+  pwr_tCid cid = ((xnav_sObjectList *)ctx)->cid;
+  pwr_tCmd cmd;
+
+  free( ctx);
+  
+  switch ( cid) {
+  case pwr_cClass_DsTrend:
+    sprintf( cmd, "open trend/name=%s/title=\"%s\"", text, text);
+    break;
+  case pwr_cClass_DsFastCurve:
+    sprintf( cmd, "open fast/name=%s/title=\"%s\"", text, text);
+    break;
+  case pwr_cClass_SevHist:
+    sprintf( cmd, "open history/name=%s/title=\"%s\"", text, text);
+    break;
+  case pwr_cClass_XttGraph:
+    sprintf( cmd, "open graph/object=%s", text);
+    break;
+  default:
+    sprintf( cmd, "open graph/class/instance=%s", text);
+  }
+
+  xnav->command( cmd);
+}
+
+static void xnav_show_objectlist_cancel_cb( void *ctx)
 {
   free( ctx);
 }

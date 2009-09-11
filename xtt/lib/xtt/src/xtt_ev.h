@@ -51,6 +51,7 @@ class Ev {
 	int display_return,
 	int display_ack,
 	int ev_beep,
+	pwr_tMask ev_pop_mask,
 	pwr_tStatus *status);
     virtual ~Ev();
 
@@ -81,6 +82,7 @@ class Ev {
     ev_sAlias		alias_list[20];
     CoWow		*wow;
     static Ev		*ev;
+    pwr_tMask		pop_mask;
 
     virtual void map_eve() {}
     virtual void map_ala() {}

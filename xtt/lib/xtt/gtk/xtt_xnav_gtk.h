@@ -51,7 +51,7 @@ class XNavGtk : public XNav {
     Ev *ev_new( char *eve_name, char *ala_name, char *blk_name,
 		pwr_tObjid ev_user, int display_ala, int display_eve,
 		int display_blk, int display_return, int display_ack,
-		int ev_beep, pwr_tStatus *status);
+		int ev_beep, pwr_tMask ev_pop_mask, pwr_tStatus *status);
     Hist *hist_new( char *title, pwr_tOid oid, pwr_tStatus *sts);
     Block *block_new( pwr_tAttrRef *arp, char *name, unsigned int priv,
 		      pwr_tStatus *sts);

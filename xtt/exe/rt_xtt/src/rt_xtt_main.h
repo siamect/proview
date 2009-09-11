@@ -67,7 +67,7 @@ class Xtt {
     int		op_close_button;
     int		no_advanceduser;
 
-    Xtt( int argc, char *argv[], int *return_sts);
+    Xtt( int *argc, char **argv[], int *return_sts);
     virtual ~Xtt() {}
     virtual void message( char severity, const char *msg) {}
     virtual void open_input_dialog( const char *text, const char *title,

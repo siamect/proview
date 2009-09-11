@@ -421,9 +421,7 @@ int OpMotif::configure( char *opplace_str)
   int 		sts;
   int		i;
   pwr_tObjid 	opplace;
-  pwr_tObjid 	user;
   pwr_sClass_OpPlace *opplace_p;
-  pwr_sClass_User *user_p;
   pwr_sAttrRef	attrref;
   XmFontList    fontlist;
   XmFontListEntry entry;
@@ -434,23 +432,8 @@ int OpMotif::configure( char *opplace_str)
   sts = gdh_ObjidToPointer( opplace, (void **) &opplace_p);
   if ( EVEN(sts)) return sts;
 
-  // Fix 
-  if ( strncmp( opplace_p->OpWinProgram, "Jop", 3) == 0)
+  if ( opplace_p->StartJavaProcess)
     start_jop = 1;
-
-  // Find matching user object
-  sts = gdh_GetClassList( pwr_cClass_User, &user);
-  while ( ODD (sts))
-  {
-
-    sts = gdh_ObjidToPointer( user, (void **) &user_p);
-    if ( EVEN(sts)) return sts;
-
-    if ( user_p->OpNumber == opplace_p->OpNumber)
-      break;
-    sts = gdh_GetNextObject( user, &user);
-  }
-  if ( EVEN(sts)) return sts;
 
   // Load font
   entry = XmFontListEntryCreate( (char*) "tag1", XmFONT_IS_FONT, 
@@ -460,10 +443,7 @@ int OpMotif::configure( char *opplace_str)
   XtFree( (char *)entry);
 
   // Examine Graph objects
-  button_cnt = user_p->NoFastAvail;
-  if ( button_cnt > 15)
-    button_cnt = 15;
-  for ( i = 0; i < button_cnt; i++)
+  for ( i = 0; i < 15; i++)
   {
     if ( i >= 15)
       break;
@@ -471,19 +451,28 @@ int OpMotif::configure( char *opplace_str)
     sts = gdh_ClassAttrToAttrref( pwr_cClass_XttGraph, ".ButtonText", &attrref);
     if ( EVEN(sts)) return sts;
 
-    attrref = cdh_ArefAdd( &user_p->FastAvail[i], &attrref);
-    sts = gdh_GetObjectInfoAttrref( &attrref, (void *)button_title[i], 
-		sizeof(button_title[0]));
-    if ( EVEN(sts)) 
-      strcpy( button_title[i], "");
+    if ( cdh_ObjidIsNotNull( opplace_p->FastAvail[i].Objid)) {
 
-    button_aref[i] = attrref.Objid;
+      attrref = cdh_ArefAdd( &opplace_p->FastAvail[i], &attrref);
+      sts = gdh_GetObjectInfoAttrref( &attrref, (void *)button_title[i], 
+				      sizeof(button_title[0]));
+      if ( ODD(sts)) 
+	button_aref[i] = attrref.Objid;
+      else
+	button_aref[i] = pwr_cNOid;
+    }
+    else 
+      button_aref[i] = pwr_cNOid;      
   }
 
   // Create the application buttons
   for ( i = 0; i < button_cnt; i++)
   {
     Widget b[15];
+
+    if ( cdh_ObjidIsNull( button_aref[i]))
+      continue;	 
+
     switch ( i)
     {
       case 0:
