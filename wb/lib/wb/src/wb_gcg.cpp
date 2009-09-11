@@ -572,6 +572,9 @@ static int gcg_check_attrref(
     vldh_t_node node, 
     const char *attr);
 
+static int gcg_is_in_focode( 
+    gcg_ctx gcgctx, 
+    vldh_t_node node);
 
 /*_Methods defined for this module_______________________________________*/
 
@@ -6534,6 +6537,7 @@ int	gcg_comp_m8( gcg_ctx gcgctx, vldh_t_node node)
 	pwr_sAttrRef		*attrref_ptr;
 	ldh_tSesContext 	ldhses;
 	pwr_tClassId		cid;
+	pwr_tDisableAttr	disabled;
 
 	ldhses = (node->hn.wind)->hw.ldhses;  
 	
@@ -6564,6 +6568,13 @@ int	gcg_comp_m8( gcg_ctx gcgctx, vldh_t_node node)
 	if ( EVEN(sts)) {
 	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	  return GSX__NEXTNODE;
+	}
+
+	/* Check if disabled */
+	if ( attrref.Flags.b.ObjectAttr && attrref.Flags.b.DisableAttr) {
+	  sts = ldh_AttributeDisabled( ldhses, &attrref, &disabled);
+	  if ( ODD(sts) && disabled && !gcg_is_in_focode( gcgctx, node))
+	    gcg_error_msg( gcgctx, GSX__DISABLED, node);
 	}
 
 	/* Check that the class of the referenced object is correct */
@@ -7862,6 +7873,7 @@ int	gcg_comp_m11( gcg_ctx gcgctx, vldh_t_node node)
 	gcg_t_nocondef		nocondef[2];
 	unsigned long		nocontype[2];
 	char			*name;
+	pwr_tDisableAttr	disabled;
 
 	nocondef[1].bo = 1;
 	nocontype[1] = GCG_BOOLEAN;
@@ -8031,6 +8043,13 @@ int	gcg_comp_m11( gcg_ctx gcgctx, vldh_t_node node)
 	  nocontype[0] = GCG_DTIME;
 	}    
 	free(nocondef_ptr);
+
+	/* Check if disabled */
+	if ( refattrref.Flags.b.ObjectAttr && refattrref.Flags.b.DisableAttr) {
+	  sts = ldh_AttributeDisabled( ldhses, &refattrref, &disabled);
+	  if ( ODD(sts) && disabled && !gcg_is_in_focode( gcgctx, node))
+	    gcg_error_msg( gcgctx, GSX__DISABLED, node);
+	}
 
         if ( cid == pwr_cClass_Sv ||
 	     cid == pwr_cClass_ATv ||
@@ -16066,5 +16085,31 @@ static int gcg_check_attrref( gcg_ctx gcgctx, vldh_t_node node, const char *attr
   return GSX__SUCCESS;
 }
 
+static int gcg_is_in_focode( gcg_ctx gcgctx, vldh_t_node node)
+{
+  pwr_tStatus sts;
+  pwr_tOid parent;
+  pwr_tCid cid;
+  pwr_tClassId		bodyclass;
+  pwr_sGraphPlcNode 	*graphbody;
+  int 			size;
 
+  sts = ldh_GetParent( gcgctx->ldhses, node->ln.oid, &parent);
+  while ( ODD(sts)) {
+    sts = ldh_GetObjectClass( gcgctx->ldhses, parent, &cid);
+    if ( EVEN(sts)) return 0;
+
+    if ( cid == pwr_cClass_plc)
+      break;
+
+    sts = ldh_GetClassBody( gcgctx->ldhses, cid, 
+			   "GraphPlcNode", &bodyclass, 
+			   (char **)&graphbody, &size);
+    if ( ODD(sts) && graphbody->compmethod == 58)
+      return 1;
+
+    sts = ldh_GetParent( gcgctx->ldhses, parent, &parent);
+  }
+  return 0;
+}
 
