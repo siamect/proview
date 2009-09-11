@@ -1491,6 +1491,7 @@ int WGre::flow_cb( FlowCtx *ctx, flow_tEvent event)
 
     if ( flow_GetPasteActive( ctx)) {
       flow_PasteStop( ctx);
+      flow_MoveSelectedNodes( ctx, 0, 0, 1);
       return 1;
     }
 
