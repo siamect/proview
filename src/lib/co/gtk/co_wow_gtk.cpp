@@ -28,6 +28,7 @@
 #include "pwr.h"
 #include "co_wow_gtk.h"
 #include "co_dcli.h"
+#include "co_cdh.h"
 #include "co_api.h"
 #include "co_lng.h"
 
@@ -329,7 +330,7 @@ void *CoWowGtk::CreateList (
   ctx->toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 					      "default-height", 400,
 					      "default-width", 200,
-					      "title", title,
+					      "title", translate_utf8(title),
 					      "window-position", GTK_WIN_POS_CENTER,
 					      NULL);
 
@@ -1049,7 +1050,143 @@ int CoWowGtk::CreateModalDialog( const char *title, const char *text, const char
   return status;
 }
 
+pwr_tStatus CoWowGtk::CreateMenuItem( const char *name, void *menu, int pixmap, int append, void *w)
+{
+  char name_array[10][40];
+  int name_cnt;
+  char label[80];
+  GtkWidget *child;
+  pwr_tFileName fname;
+  
+  name_cnt = dcli_parse( name, "-", "",
+			 (char *) name_array, sizeof( name_array)/sizeof( name_array[0]), 
+			 sizeof( name_array[0]), 0);
+  if ( !name_cnt) return 0;
 
+  if ( name_cnt == 1) {
+    if ( pixmap == wow_ePixmap_No || pixmap >= wow_ePixmap__)
+      *(GtkWidget **)w = gtk_menu_item_new_with_label( translate_utf8(name_array[0]));    
+    else {
+      *(GtkWidget **)w = gtk_image_menu_item_new_with_label( translate_utf8(name_array[0]));
+      switch ( pixmap) {
+      case wow_ePixmap_Graph:
+	dcli_translate_filename( fname, "$pwr_exe/wtt_ge.png");
+	break;
+      default:
+	dcli_translate_filename( fname, "$pwr_exe/wtt_ge.png");
+      }
+      gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(*(GtkWidget **)w), 
+				     gtk_image_new_from_file( fname));
+    }
+    if ( append)
+      gtk_menu_shell_append(GTK_MENU_SHELL(menu), *(GtkWidget **)w);
+    else
+      gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), *(GtkWidget **)w);
+    gtk_widget_show( GTK_WIDGET(*(GtkWidget **)w));
+  }
+  else {
+    // Find or create the parent menues
+    GtkContainer *parent = (GtkContainer *)menu;
+
+    for ( int i = 0; i < name_cnt; i++) {
+      GList *chlist = gtk_container_get_children( GTK_CONTAINER(parent));
+
+      int found = 0;
+      for( GList *ch = chlist; ch; ch = ch->next) {
+	GtkWidget *labelw = gtk_bin_get_child( GTK_BIN(ch->data));			   
+	strncpy( label, (char *)gtk_label_get_text( GTK_LABEL(labelw)), sizeof(label)); 
+	if ( cdh_NoCaseStrcmp( label, name_array[i]) == 0) {
+	  child = GTK_WIDGET(ch->data);
+	  found = 1;
+	  break;
+	}
+      }
+      if ( !found) {
+	// Create the menu item
+	GtkWidget *item;
+	if ( i == name_cnt - 1 && pixmap != wow_ePixmap_No && pixmap <= wow_ePixmap__) {
+	  item = gtk_image_menu_item_new_with_label( translate_utf8(name_array[i]));
+	  switch ( pixmap) {
+	  case wow_ePixmap_Graph:
+	    dcli_translate_filename( fname, "$pwr_exe/wtt_ge.png");
+	    break;
+	  default:
+	    dcli_translate_filename( fname, "$pwr_exe/wtt_ge.png");
+	  }
+	  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(item), 
+					 gtk_image_new_from_file( fname));
+	}
+	else
+	  item = gtk_menu_item_new_with_label( translate_utf8(name_array[i]));    
+
+	if ( append)
+	  gtk_menu_shell_append(GTK_MENU_SHELL(parent), item);
+	else
+	  gtk_menu_shell_prepend(GTK_MENU_SHELL(parent), item);
+	gtk_widget_show( GTK_WIDGET(item));
+	if ( i != name_cnt - 1) {
+	  GtkMenu *submenu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+	  gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), GTK_WIDGET(submenu));
+	  parent = GTK_CONTAINER(submenu);
+	  gtk_widget_show( GTK_WIDGET(submenu));
+	}
+	else 
+	  parent = (GtkContainer *)item;
+      }
+      else
+	parent = (GtkContainer *)gtk_menu_item_get_submenu(GTK_MENU_ITEM(child));
+
+      if ( !parent) return 0;
+	
+      g_list_free( chlist);
+    }
+    *(GtkContainer **)w = parent;
+  }
+  return 1;
+}
+
+pwr_tStatus CoWowGtk::DeleteMenuItem( const char *name, void *menu)
+{
+  char name_array[10][40];
+  int name_cnt;
+  char label[80];
+  GtkWidget *child;
+
+  name_cnt = dcli_parse( name, "-", "",
+			 (char *) name_array, sizeof( name_array)/sizeof( name_array[0]), 
+			 sizeof( name_array[0]), 0);
+  if ( !name_cnt) return 0;
+
+  // Find the parent menues
+  GtkContainer *parent = (GtkContainer *)menu;
+
+  for ( int i = 0; i < name_cnt; i++) {
+    GList *chlist = gtk_container_get_children( GTK_CONTAINER(parent));
+
+    int found = 0;
+    for( GList *ch = chlist; ch; ch = ch->next) {
+      GtkWidget *labelw = gtk_bin_get_child( GTK_BIN(ch->data));			   
+      strncpy( label, (char *)gtk_label_get_text( GTK_LABEL(labelw)), sizeof(label)); 
+      if ( cdh_NoCaseStrcmp( label, name_array[i]) == 0) {
+	child = GTK_WIDGET(ch->data);
+	found = 1;
+	break;
+      }
+    }
+    if ( !found)
+      return 0;
+
+    if ( i == name_cnt - 1)
+      gtk_widget_destroy( child);
+    else
+      parent = (GtkContainer *)gtk_menu_item_get_submenu(GTK_MENU_ITEM(child));
+
+    if ( !parent) return 0;
+	
+    g_list_free( chlist);
+  }
+  return 1;
+}
 
 
 

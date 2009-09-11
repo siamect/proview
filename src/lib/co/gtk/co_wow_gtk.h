@@ -108,6 +108,8 @@ class CoWowGtk : public CoWow {
 			 const char *button3, const char *image);
   int DisplayWarranty();
   void DisplayLicense();
+  pwr_tStatus CreateMenuItem( const char *name, void *menu, int pixmap, int append, void *w);
+  pwr_tStatus DeleteMenuItem( const char *name, void *menu);
   CoWowTimer *timer_new();
   void SetParent( GtkWidget *parent) { m_parent = parent;}
 
