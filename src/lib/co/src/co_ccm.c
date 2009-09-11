@@ -33,6 +33,7 @@
 #include "co_dcli.h"
 #include "co_cnf.h"
 #include "co_syi.h"
+#include "co_api.h"
 
 #define r_toupper(c) (((c) >= 'a' && (c) <= 'z') ? (c) & 0xDF : (c))
 #define r_tolower(c) (((c) >= 'A' && (c) <= 'Z') ? (c) | 0x20 : (c))
@@ -373,6 +374,8 @@ static int ccm_func_get_pwr_config( void *filectx, ccm_s_arg *arg_list, int arg_
 	float *return_float, int *return_int, char *return_string);
 static int ccm_func_get_node_name( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl, 
 	float *return_float, int *return_int, char *return_string);
+static int ccm_func_get_language( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl, 
+	float *return_float, int *return_int, char *return_string);
 
 #define CCM_SYSFUNC_MAX	100
 
@@ -403,6 +406,7 @@ static s_sysfunc	ccm_sysfunc[CCM_SYSFUNC_MAX] = {
 		{"translate_filename", 	&ccm_func_translate_filename},
 		{"get_pwr_config",  &ccm_func_get_pwr_config},
 		{"get_node_name",  &ccm_func_get_node_name},
+		{"get_language",  &ccm_func_get_language},
 		{"", 		0}};
 
 /************* TEST *********************/
@@ -4907,6 +4911,24 @@ static int ccm_func_get_pwr_config(
   }
   else
     strcpy( return_string, "");
+  *return_decl = K_DECL_STRING;
+  return 1;
+}
+
+static int ccm_func_get_language( 
+  void *filectx,
+  ccm_s_arg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  float *return_float, 
+  int *return_int, 
+  char *return_string)
+{
+  if ( arg_count != 0)
+    return CCM__ARGMISM;
+
+  strncpy( return_string, lng_get_language_str(), K_STRING_SIZE);
+  return_string[K_STRING_SIZE-1] = 0;
   *return_decl = K_DECL_STRING;
   return 1;
 }
