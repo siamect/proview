@@ -23,6 +23,8 @@ SObject pwrb:Class
 !  @Version 2.0
 !  @Group Operator,NodeConfiguration
 !  @Summary Configures a user category of an operator station
+!  <h2>Obsolete from V4.7.0
+!
 !  Configures a user category of an operator station.
 !  
 !  Configures a user category below the OpPlace

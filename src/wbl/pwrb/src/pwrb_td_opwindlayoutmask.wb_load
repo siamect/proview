@@ -1,0 +1,82 @@
+! 
+!  Proview   $Id$
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_opwindlayoutmask.wb_load -- Defines the mask type OpWindLayoutMask
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Bitmask for layout of operator window.
+!
+! @b See also
+!  @classlink OpPlace pwrb_opplace.html
+!*/
+  Object OpWindLayoutMask $TypeDef 50
+    Body SysBody
+      Attr Type = pwr_eType_Mask
+      Attr Size = 4
+      Attr TypeRef = "pwrs:Type-$Mask"
+      Attr Elements = 1
+    EndBody
+    !/**
+    !  Hide Operator Window.
+    !*/
+    Object HideOperatorWindow $Bit
+     Body SysBody
+       Attr PgmName = "HideOperatorWindow"
+       Attr Text = "HideOperatorWindow"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  Hide Licence Window.
+    !*/
+    Object HideLicenceWindow $Bit
+     Body SysBody
+       Attr PgmName = "HideLicenceWindow"
+       Attr Text = "HideLicenceWindow"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !  Hide Status bar.
+    !*/
+    Object HideStatusBar $Bit
+     Body SysBody
+       Attr PgmName = "HideStatusBar"
+       Attr Text = "HideStatusBar"
+       Attr Value = 4
+     EndBody
+    EndObject
+    !/**
+    !  Close button.
+    !*/
+    Object HideCloseButton $Bit
+     Body SysBody
+       Attr PgmName = "HideCloseButton"
+       Attr Text = "HideCloseButton"
+       Attr Value = 8
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+

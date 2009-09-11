@@ -22,7 +22,7 @@ SObject pwrb:Type
 !/**
 !  @Version 1.0
 !  @Group Types
-!  Enumeration for yes no.
+!  Enumeration for yes/no.
 !*/
   Object YesNoEnum $TypeDef 44
     Body SysBody
