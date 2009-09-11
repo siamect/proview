@@ -127,8 +127,20 @@ static pwr_tStatus Connect (
 		mb.MethodArguments[0], (char *) &ip->Selected[0].Objid, sizeof(ip->Selected[0].Objid));
   else {
     // Assume RtBody or SysBody
-    sts = ldh_GetAttrRef(ip->PointedSession, ip->Pointed.Objid,
-			 mb.MethodArguments[0], &PattrRef);
+    char *aname_p;
+    pwr_tAName aname;
+    int size;
+
+    sts = ldh_AttrRefToName( ip->PointedSession, &ip->Pointed, ldh_eName_ArefVol, &aname_p, &size);
+    if ( EVEN(sts)) return 0;
+ 
+    strncpy( aname, aname_p, sizeof(aname));
+    strcat( aname, ".");
+    strcat( aname, mb.MethodArguments[0]);
+
+    sts = ldh_NameToAttrRef( ip->PointedSession, aname, &PattrRef);
+    //sts = ldh_GetAttrRef(ip->PointedSession, ip->Pointed.Objid,
+    //		 mb.MethodArguments[0], &PattrRef);
     if (ODD(sts))
       sts = ldh_WriteAttribute(ip->PointedSession, &PattrRef, &ip->Selected[0].Objid,
 			     sizeof(pwr_tObjid));
