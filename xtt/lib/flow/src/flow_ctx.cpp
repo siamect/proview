@@ -957,7 +957,8 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
     case flow_eEvent_MB2DoubleClickShiftCtrl:
     case flow_eEvent_MB3Click:
     case flow_eEvent_MB3Press:
-      if ( event == event_select_conpoint)
+      if ( event == event_select_conpoint ||
+	   event == event_move_node)
 	break;
       tiptext->remove();
       sts = 0;
