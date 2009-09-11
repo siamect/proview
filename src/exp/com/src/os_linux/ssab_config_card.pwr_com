@@ -50,46 +50,34 @@ function int ssab_create_signal( string rname, string resname, string chname, st
   chnr_str = extract( 5, 2, chname);
 
   cnam=rname + "-" + cname;
-  if ( !ObjectExist( cnam))
+  if (!ObjectExist(cnam))
 !   Create the rack and reservhierarchy if not created
     ssab_create_object( rname, "Rack_SSAB");
     ssab_create_object( resname, "$PlantHier");
 
 !   The card didn't exist, create it
     if ( type == "DI")
-      cardclass = "Di_DIX2";
+      cardclass = "Ssab_DI32D";
       channels = 32;
     endif
     if ( type == "DO")
-      cardclass = "Do_HVDO32";
+      cardclass = "Ssab_DO32DKS";
       channels = 32;
     endif
     if ( type == "AI")
-      cardclass = "Ai_AI32uP";
-      channels = 32;
+      cardclass = "Ssab_AI16uP";
+      channels = 16;
     endif
     if ( type == "AO")
-      cardclass = "Ao_AO8uP";
+      cardclass = "Ssab_AO8uP";
       channels = 8;
     endif
     if ( type == "CO")
-      cardclass = "Co_CO4uP";
+      cardclass = "Ssab_Co4uP";
       channels = 4;
     endif
 !   Create the card
-    conf card/rack='rname'/cardname='cname'/cardclass='cardclass'/channelname=#/chanidentity='cname'#
-    set attr/noco/name='rname'-'cname'/attr=ErrorSoftLimit/value=15
-    set attr/noco/name='rname'-'cname'/attr=ErrorHardLimit/value=50
-    set attr/noco/name='rname'-'cname'/attr=DevName/value='cname'
-
-!   Change the name of the channels to offset 01
-    for ( i = channels - 1; i >= 0; i--)
-      cnam = rname + "-" + cname;
-      sprintf( oldname, "%s-%02.2d", cnam, i);
-      j = i + 1;
-      sprintf( newname, "%02.2d", j);
-      move object/source='oldname'/rename='newname'
-    endfor
+    create object/dest="'rname'"/class='cardclass'/name="'cname'"
 
 !   Create signalobjects in reserv hierarchy
     for ( i = 1; i < channels + 1; i++)
@@ -100,15 +88,11 @@ function int ssab_create_signal( string rname, string resname, string chname, st
 !   Connect channels and signals
     for ( i = 1; i < channels + 1; i++)
       sprintf( rnam, "Reserv_%s%02.2d", cname, i);
-      sprintf( chnam, "%02.2d", i);
-      set attr/noco/name='resname'-'rnam'/attr=SigChanCon/value='rname'-'cname'-'chnam'
-      set attr/noco/name='rname'-'cname'-'chnam'/attr=SigChanCon/value='resname'-'rnam'
+      sprintf( chnam, "Ch%02.2d", i);
+      set attr/noco/name='resname'-'rnam'/attr=SigChanCon/value='rname'-'cname'.'chnam'
     endfor
   endif
 
-! Set description and identity in channel
-  set attr/noco/name='rname'-'cname'-'chnr_str'/attr=Description/value="'chan_descr'"
-  set attr/noco/name='rname'-'cname'-'chnr_str'/attr=Identity/value="'chan_ident'"
 
 ! Set description in signal
   sprintf( rnam, "Reserv_%s%s", cname, chnr_str);
@@ -146,7 +130,6 @@ function int  ssab_create_object( string name, string class)
     object = name;
     parent = "";
   endif
-
   if ( !ObjectExist( name))
     if ( parent != "")
       ssab_create_object( parent, class);
