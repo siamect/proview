@@ -130,7 +130,7 @@ but this can also be performed over the network with protocols as Modbus/TCP and
 The operator stations is the interface between the operator and the process. The operator
 supervises the process with the help of process graphs, displaying the state of the process
 by presenting data in the shape of bars, curves, indicators etc. The operator can influence
-the process, for example by entering data in input fields or pushing buttons in the process
+the process, for example by entering data into input fields or pushing buttons in the process
 graph.
 
 <h2>Storage station
@@ -143,7 +143,7 @@ functions.
 <h2>Development station
 There can also be development stations on the network, where process, operator and storage
 stations are configured and programmed. On the development stations there are tools to draw
-process graphs, program sequences, logical schemas and control loops etc. When the 
+process graphs, program sequences, logical schemas, control loops etc. When the 
 configuration is modified for a station, the new configuration is distributed to the station
 via the network.
 
@@ -182,7 +182,7 @@ triangle with the letter T.
 
 <h2>Object graph
 If you click on the symbol the object graph of the object is opened. From the object graph
-you can se the properties or the object. The most interesting for a temperature sensor is
+you can se the properties of the object. The most interesting for a temperature sensor is
 of course the measured temperature, that is viewed both in figures and as a bar 
 (thermometer), see 'Fig Object graph for temperature sensor' below. The temperature sensor
 object also contains four alarm limits, highhigh, high, low and lowlow. The level of the
@@ -196,9 +196,9 @@ boxes you can also disable the alarm limits.
 In the upper edge of the object graph there are a number of pushbuttons that activates the
 methods of the object. By the methods you can reach all the information there is on the
 objects in the control system. The methods can also be activated from the menu in the 
-objects graph, or by rightclicking on graphical symbol in the overview graph, opening a 
+objects graph, or by rightclicking on the graphical symbol in the overview graph, opening a 
 popup menu with the methods. Actually, wherever you find the object, in alarm lists, 
-process graphs, in the plc code etc. you can by right clicking on the object open the popup
+process graphs, in the plc code etc, you can by right clicking on the object open the popup
 menu with the methods or the object. Here follows a list of different methods, but which
 methods are relevant for a specific object, depends on the type of object and how it is
 configured.
@@ -213,7 +213,7 @@ Help <t>View a help text for the object.
 Note <t>Write a note for the object. The note is viewed in the object graph.
 Open Object <t>Show the content of the object.
 RtNavigator <t>Show the object in the object tree.
-Crossreferences <t>Show were the object is references in the plc code an graphs.
+Crossreferences <t>Show were the object is references in the plc code and process graphs.
 Help Class <t>View help for this object type.
 Datasheet <t>Show the datasheet for the component in the plant that corresponds
           <t>to the object.
@@ -227,8 +227,10 @@ CircuitDiagram <t>Show the circuit diagram for the object.
 <topic>opg_opplace
 Operator place
 
+<option> printdisable
 <b>Start the operator environment <link>opg_startop
 <b>Operator window <link>opg_opwindow
+<option> printenable
 </topic>
 
 <headerlevel>
@@ -236,7 +238,7 @@ Operator place
 Start the operator environment
 
 Usually the operator environment will be started automatically at login of the workstation.
-In the login configuration a operator place object is added to the starting command. In
+In the login configuration, a operator place object is added to the starting command. In
 the operator place object the properties of the operator place are configured.
 
 At times though, you may want to start another way, for example from a terminal window.
@@ -280,7 +282,7 @@ priority and D the lowest. A alarms are marked red, B alarms yellow, C alarm blu
 alarm violet. Further more there is the category Info messages that are marked with green.
 
 In the upper field, the latest unacknowledged A alarm are displayed. Dependent on the height
-of the operator window, 2 to 5 alarm is viewed. There are also a button marked with a tick
+of the operator window, 2 to 5 alarms are viewed. There is also a button marked with a tick
 to acknowledge A alarms.
 
 In the lower field the latest unacknowledged B, C, D alarms, and info messages are viewed.
@@ -292,26 +294,50 @@ button to acknowledge the B, C, D alarms and the info messaged.
 An alarm is prevailing if the alarm condition still is fulfilled. This is marked with a
 warning triangle to the left of the alarm text.
 
-<h2>Pushbuttons to open base function.
-On the top row there are a number of icons, The two first will increase or decrease the 
-size of the alarm text. The third opens the help window with the helptexts of the project.
-The fourth opens the navigator, and the fifth closes the operator window (this button is
-optional).
+<h2>Menu and pushbuttons to open base function
+In the middle part of the operator window there are a meny and some buttons to open
+basefunctions.
 
-Beheath threre are a number of buttons:
+<b>Menu
+Below is a description of the menu items in the Functions menu.
 
-- Alarmlist <t>Open the alarm list with prevailing and unacknowledged alarm. <link>opg_alarmlist
-- Eventlist <t>Open the event list, a list of the latest alarms and events.<link>opg_eventlist
-- Eventlog <t>Open the event log, where you can display stored events. <link>opg_eventlog
-- Help <t>Show the help text of the project.
+Functions/Alarm/AlarmList <t><t>Open the alarm list with prevailing and unacknowledged alarm. <link>opg_alarmlist
+Functions/Alarm/EventList <t><t>Open the event list, a list of the latest alarms and events. <link>opg_eventlist
+Functions/Alarm/EventLog <t><t>Open the event log, where you can display stored events. <link>opg_eventlog
+Functions/Alarm/BlockList <t><t>Open the list of blocked alarms. <link>opg_blocklist
+Functions/Curves/Trends <t><t>Display a list of all trendcurves. <link>opg_trends
+Functions/Curves/Fast <t><t>Display a list of all fastcurves. <link>opg_fastcurves
+Functions/Curves/Process History <t><t>Display a list of process history. <link>opg_history
+Functions/Process Graphics <t><t>Display a list of all process graphs, defined by
+                          <t><t>XttGraph objects.
+Functions/Navigator <t><t>Open the navigator. <link>opg_navigator
+Functions/View/Zoom in<t><t>Increase the text size in the alarmtext.
+Functions/View/Zoom out<t><t>Decrease the text size in the alarmtext.
+Functions/User/Switch User <t><t>Open the login window to login as another user.
+Functions/User/Show User <t><t>Show the current user.
+Functions/User/Return <t><t>Return to the original user.
+Functions/Help/Project <t><t>Show helptexts for the project.
+Functions/Help/Overview <t><t>Show an overview of helptexts.
+Functions/Help/Operator Window <t><t>Display help on the operator window.
+Functions/Help/About Proview <t><t>Display Proview into, for example version of install package.
+Functions/Close <t><t>Close down the operator place.
 
-To se the lower buttons you have to change the size of the window. This is performed by the
-pushbuttons with arrow up and arrow down. Larger window size will also display some more
-A alarms.
+<b>Pushbuttons
+Below the menu there is a toolpanel with a number of pushbuttons that works as shortcuts to
+menu items:
+
+- zoom in and out.
+- show helptexts for the project.
+- close.
+- show alarmlist.
+- show eventlist.
+- show eventlog.
+- show list of blocked alarms.
+- open the navigator.
 
 <h2>Function buttons
 To the right there are a number of pushbuttons that are used to open process graphs or 
-execute various orders or command. How these buttons are used depends of the configuration
+execute various orders or commands. How these buttons are used depends of the configuration
 of the operator place.
 
 </topic>
@@ -373,23 +399,23 @@ operator places it is enough for one of the operators to acknowledges the alarm.
 <h2>Blocking
 If an alarm is not relevant during a period, it is possible to block the alarm. You can, 
 for example, block the alarms for a part of the plant that is not in production. The
-blocking can be preformed on a separate alarm object, or for a hierarchy. Blocking is a
-method of an object, and preformed from a blocking window that is opened from the popup
+blocking can be performed on a separate alarm object, or for a hierarchy. Blocking is a
+method of an object, and performed from a blocking window that is opened from the popup
 menu for the object. Only users that are granted the privilege RtEvents are allowed
 to block alarms.
 
 Blocked objects are displayed in a blocklist. <link>opg_blocklist
 
 <h2>Messages
-Info messages is a group that has the same functionality as alarms. They have lower
-priority than alarms and is marked with green.
+Info messages are a group that has the same functionality as alarms. They have lower
+priority than alarms and are marked with green.
 
 <h1>Events
 An event is generated in the same way as alarms, by supervision objects. Also alarms 
 generates events. Activation of an alarm is counted as an event, and also are the return 
 of the alarm state and the acknowledgement of the alarm.
 
-Events are stored in en eventlist, that contains the latest events. They are also stored
+Events are stored in an eventlist, that contains the latest events. They are also stored
 in the event log, where you can go back and look at events for some period of time, and 
 also see event statistics. For the eventlog there is a search dialog, where you can search
 for events with certain search criteria, for example time, eventtype  or eventname.
@@ -464,14 +490,17 @@ are interested in with different search criteria. The events matching the search
 diplayed in a list.
 
 <h1>Search criteria
+The event log dialog is viewed in figure 'Eventlog' below.
+
 <h2>Time
-On the upper row you can specify a time interval or the search. State requested interval
-with the optionsmenu to the right. If you select 'Time' the time interval i inserted into
+On the upper row you can specify a time interval of the search. State requested interval
+with the optionsmenu to the right. If you select 'Time' the time interval is inserted into
 the input fields.
 
 <h2>Eventtype
 An eventtype is specified. If no type is selected, all types are present in the search.
-- Active <t>The event that an alarm is activated.
+
+- Active <t>An alarm is activated.
 - Message <t>An info message.
 - Return <t>An alarm returns from active state.
 - Ack <t>En alarm is acknowledged.
@@ -503,7 +532,7 @@ In the list of events an event is displayed with
 - Eventtext
 - Eventname
 
-If you rightclick on a row the methods of the eventname objects are displayed.
+If you rightclick on a row the methods of the eventname object are displayed.
 </topic>
 
 <topic>opg_blocklist
@@ -523,7 +552,7 @@ For each blocked objects are displayed:
 A blocking is removed by selecting the blocking and activating Functions/Remove Blocking in 
 the menu.
 
-Alarm blocking is preformed by the 'Block Events' method for en object. <link>opg_blockingwindow
+Alarm blocking is performed by the 'Block Events' method for en object. <link>opg_blockingwindow
 
 
 </topic>
@@ -534,7 +563,7 @@ Alarm blocking
 <image>opg_fig11.png
 <b>Fig Dialog for alarm blocking
 
-Alarm blocking are activated by that 'Block Events' method, i.e. from the popup menu for an
+Alarm blocking is activated by the 'Block Events' method, i.e. from the popup menu for an
 object, or with the xtt command 'eventlist block'.
 
 The window is used to block alarms for an object. All alarms with the specified priority,
@@ -581,24 +610,24 @@ curves.
 <image> opg_fig31.png
 <b>Fig Trendcurves
 
-In the upper part of the curve window views a table over the curves. The first column is
+The upper part of the curve window views a table over the curves. The first column is
 a color indication to identify the corresponding curve.
 
 Description of columns in the table
 
 View <t>A checkbox from which you can choose to view or hide the curve.
 Cursor <t>Shows the curve value where the cursor is placed.
-Mark <t>Shows the curve value where the marker i placed.
+Mark <t>Shows the curve value where the marker is placed.
 Unit <t>Displays the unit of the curve.
-Scale <t>From 'Scale' you can change the scale i y direction (Scale on
-      <t>the Time axis row changes i x direction).
+Scale <t>From 'Scale' you can change the scale in y direction (Scale on
+      <t>the Time axis row changes in x direction).
 Attribute <t>States the attribute of the trend curve.
 
 <h2>Navigation
 The tool panel contains buttons to zoom and move the view to the left or to the right.
 
-You can also navigate with tne navigation window in the lower part of the window. The part
-of the curve that is displayed is marked with a black square. With drag MB1 you kan move
+You can also navigate with the navigation window in the lower part of the window. The part
+of the curve that is displayed, is marked with a black square. With drag MB1 you kan move
 the view in x direction, and by dragging the middle button you can zoom in and out.
 
 Navigation from the keyboard is accomplished with the arrow keys. With arrow up and down
@@ -658,8 +687,8 @@ Attribute <t>States the attribute of the trend curve.
 <h2>Navigation
 The tool panel contains buttons to zoom and move the view to the left or to the right.
 
-You can also navigate with tne navigation window in the lower part of the window. The part
-of the curve that is displayed is marked with a black square. With drag MB1 you kan move
+You can also navigate with the navigation window in the lower part of the window. The part
+of the curve that is displayed, is marked with a black square. With drag MB1 you kan move
 the view in x direction, and by dragging the middle button you can zoom in and out.
 
 Navigation from the keyboard is accomplished with the arrow keys. With arrow up and down
@@ -714,7 +743,7 @@ The first row is a link to the previous topic.
 
 <h2>Navigate from the keyboard
 With PageUp and PageDown you can scroll up and down in the text.
-Links are followed by selecting the link row with the arrow up and down buttons, and the
+Links are followed by selecting the link row with the arrow up and down keys, and then
 press arrow right.
 Arrow left returns to the previous page.
 
@@ -738,7 +767,7 @@ Navigator
 The navigator, also called Xtt, is started from the 'Navigator' button in the operator 
 window. It can also be started as a separate program, independent of the operator 
 environment. This is useful at maintenance or troubleshooting of the system. You then start
-from a terminal window.
+from a terminal window, see section 3.1.
 
 <image> opg_fig14.png
 <b>Fig The navigator menu
@@ -747,19 +776,19 @@ The figure above shows the navigator menu. The upper map, 'This Project' in conf
 and can contain a map structure that is specific for the project, and by default it is
 missing. The other maps though are always present.
 
-Database <t><t>Shows the object tree and the objects in the database<link>opg_nav_database
+Database <t><t>Shows the object tree and the objects in the database.<link>opg_nav_database
 Alarm / Alarm List <t><t>Opens the alarm list. <link>opg_alarmlist
 Alarm / Event List <t><t>Opens the event list. <link>opg_eventlist
 Alarm / Blocked Alarms <t><t>Shows the list of blocked alarms. <link>opg_blocklist
 Alarm / Historical List <t><t>Shows the event log.<link>opg_eventlog
-Store <t><t>Shows stored collection pictures.
+Store <t><t>Shows stored collection views.
 System / Nethandler / Link <t><t>Shows links to other Proview systems. <link>opg_nav_link
 System / Nethandler / Subscription Client <t><t>Shows subscriptions (client). <link>opg_nav_subcli
 System / Nethandler / Subscription Server <t><t>Shows subscriptions (server). <link>opg_nav_subsrv
-System / Communication / RemNode <t><t>Shows remote communication (nodes) <link>opg_nav_remnode
-System / Communication / RemTrans <t><t>Shows remote communication (transactions) <link>opg_nav_remtrans
-System / Device <t><t>Shows I/O devices <link>opg_nav_device
-System / PlcThread <t><t>Shows Plc threads <link>opg_nav_thread
+System / Communication / RemNode <t><t>Shows remote communication (nodes). <link>opg_nav_remnode
+System / Communication / RemTrans <t><t>Shows remote communication (transactions). <link>opg_nav_remtrans
+System / Device <t><t>Shows I/O devices. <link>opg_nav_device
+System / PlcThread <t><t>Shows Plc threads. <link>opg_nav_thread
 System / PlcPgm <t><t>Shows PlcPgm objects. <link>opg_nav_plcpgm
 System / Logging <t><t>Dialog to start logging of data. <link>opg_nav_logging
 System / System Messages <t><t>Views system messages. <link>opg_nav_systemmsg
@@ -803,7 +832,7 @@ Script <link> script
 By Functions/Collect/Show, Ctrl+N, you look at collected objects and attributes. At trouble
 shooting you often need to look at a number of different attributes simultaneously. By
 traversing the object tree and collecting attributes with Functions/Collect/Insert, Ctrl+V, 
-and the activating Functions/Collect/Show these attributes are viewed on one page.
+and then activating Functions/Collect/Show these attributes are viewed on one page.
 
 A collection view can be saved to a later session by the 'save' command. To save a collection
 view with the name 'mycollection' you write the command
@@ -865,12 +894,12 @@ System / Nethandler / Subscription Client
 Shows the subscriptions the current node has to other stations.
 
 When an operator station displays data from process stations in an process graph, a 
-subscription on each data viewed in th graph is created. This implies that the process
+subscription on each data viewed in the graph is created. This implies that the process
 stations at regular intervals sends new data to the operator stations, which updates the
 process graph with the new data.
 
 If there is a field in a process graph that is not updated. you can enter the Subscription
-Client table to see if the subscription i present and if it is updated. Each time new data
+Client table to see if the subscription is present and if it is updated. Each time new data
 arrives for a subscription, 'Count' increments and the time is inserted in 'Time'.
 
 In 'Unknown' on the top row, you can see the number of subscriptions where the attribute
@@ -1025,7 +1054,7 @@ System / PlcPgm
 
 Displays a list of all PlcPgm objects.
 
-A PlcPgm object contains plc code controlling plant part, or executing other types of
+A PlcPgm object contains plc code controlling a plant part, or executing other types of
 calculations. The PlcPgm object is connected to a thread object specifying the priority
 and cycletime.
 
@@ -1048,7 +1077,7 @@ System / Logging
 
 With the logging function it is possible to log signals and values in the database to
 a text file. The content of the textfile can be viewed in a curve window, or imported
-to for example Calc or Excel.
+into for example Calc or Excel.
 
 Maximum 100 attributes can be logged in one logfile, and there are 10 entries, where each 
 entry handles one logfile.
@@ -1056,7 +1085,7 @@ entry handles one logfile.
 
 Start the logging
 
-- Collect the attributes that it to be logged, into the collection view, for example by
+- Collect the attributes that are to be logged, into the collection view, for example by
   finding and selecting the attributes in the database and press Ctrl+V.
 
 - Check with Ctrl+N that the correct attributes are present in the collection view.
@@ -1085,14 +1114,14 @@ leave the loggentry page.
 <image> opg_fig27.png
 <b>Fig Logging viewed as a curve
 
-There are two types of logging. Either it value of the attributes are logged continuously
-with a certain frequency (continuous logging), or an attributes is logged every time its
+There are two types of logging. Either the value of the attributes are logged continuously
+with a certain frequency (continuous logging), or an attribute is logged every time its
 value is changed (event triggered logging).
 
 <h2>Continuous logging
-The values of the attributes in the entry are logged every cycle. In the file also the time
+The values of the attributes in the entry are logged every cycle. In the file, also the time
 since the logging started is written. The file can be viewed in the Xtt curve window
-from 'ShowFile' or imported to a spreadsheet program.
+from 'ShowFile' or imported into a spreadsheet program.
 
 <h2>Event triggered logging
 An attribute in the entry is logged if the value of the attribute is changed. Into the
@@ -1159,7 +1188,7 @@ S <t>green <t>Success.
 The system status is a summary status for the system and application processes. Below
 system status there is a list of all these processes, and the status for each process
 is displayed. Furthermore is the latest or most severe system message in the system log
-from the processes displayed.
+from the processes are displayed.
 
 If the system status is for example yellow, this implies that some system or application
 process has a yellow status. Usually by reading the status text and look in the system log
@@ -1167,10 +1196,10 @@ is is possible to figure out what the error is.
 
 rt_ini <t>Initialization <t>Startup process starting the system. Also handles the system log.
 rt_qmon <t>QCom monitor <t>Handles the communication with other nodes.
-rt_neth <t>Nethandler <t> Handles exchanged of database information between nodes.
+rt_neth <t>Nethandler <t>Handles exchanged of database information between nodes.
 rt_neth_acp <t><t>Utility process for the nethandler.
 rt_io <t>I/O <t>Process for I/O handling that is asynchronous with the plc program.
-rt_tmon <t>Timer monitor <t>Handles sending or subscriptions.
+rt_tmon <t>Timer monitor <t>Handles sending of subscriptions.
 rt_emon <t>Event monitor <t>Handles alarms and events.
 rt_bck <t>Backup process <t>Handles backup of attributes and objects.
 rt_linksup <t>Link supervision <t>Supervision of links to other nodes.
@@ -1219,7 +1248,7 @@ Digital objects with height status are marked with red in the code.
 <b>Fig Plc Trace
 
 You can look at the value of analog or digital outputs by creating so called analyze nodes.
-They are created by dragging with the middle button from the output.
+They are created by dragging with the middle button from the output pin.
 
 A set of analyze nodes can be stored and restored by 'File/Save Trace' and 
 'File/Restore Trace' in the menu.
@@ -1240,8 +1269,8 @@ in a graph or a Set or Sto object in the plc code.
 <b>Fig Crossreferences
 
 By rightclicking on the crossreference, the plc or process graph the reference is pointing
-at is opened. On plc references you can open with doubleclick. When Plc Trace is opened
-the reference is marked and centered.
+at is opened. On plc references you can open PlcTrace with doubleclick. When Plc Trace is 
+opened the reference is marked and centered.
 
 <h1>Debugging with Plc Trace and Crossreferences
 
@@ -1286,7 +1315,7 @@ Here are some examples of useable commands.
 
 <b>Remove menu items from the standarde menu of the navigator
 
-<c>   delete item /name=exit <LINK> delete item
+<c>   delete item /name=close <LINK> delete item
 <c>   delete item /name=system-nethandler
 
 <b>Short command for an hierarchy in the database
@@ -1376,7 +1405,7 @@ Generally the privileges RtWrite or System are required to make changes in the d
 from an object graph. There are though some exceptions. In ChanAi and ChanAo also 
 Instrument has authority to change signal ranges, and to set an Ao in test mode. In the
 PID and Mode graphs, Process are authorized to change beside RtWrite and System. In the 
-Mode graph you can further more control the authority by opening the graph with the
+Mode graph you can furthermore control the authority by opening the graph with the
 command 'open graph' and use the /access option.
 
 <b>Process graphs
@@ -1396,19 +1425,19 @@ database.
 The following functions can be called when an function key is pressed.
 
 <h2>SetDig()
-Sets an attribute of type Boolean. The name of the attribute are specified as argument.
+Sets an attribute of type Boolean. The name of the attribute is specified as argument.
 
 <h2>ResDig()
-Resets an attribute of type Boolean. The name of the attribute are specified as argument.
+Resets an attribute of type Boolean. The name of the attribute is specified as argument.
 
 <h2>ToggleDig()
-Toggles an attribute of type Boolean. The name of the attribute are specified as argument.
+Toggles an attribute of type Boolean. The name of the attribute is specified as argument.
 
 <h2>Command()
 Executes a Xtt command. The command is specified as an argument.
 
 <h1>Setup file
-The connection between the keys and the functions are specified in the file Rt_Xtt on the
+The connection between the keys and the functions is specified in the file Rt_Xtt on the
 login directory. In the file there are one row for each key. On the row i written
 - Possible modifiers (Shift, Control or Alt).
 - <Key> followed by the name of the key, e.g. <Key>F7 or <Key>m.

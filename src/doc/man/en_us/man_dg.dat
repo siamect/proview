@@ -1252,7 +1252,7 @@ For example $pwrp_exe for the directory <project_root>/bld/x86_linux/exe.
 <topic> source_tree
 The source tree
 The source tree contains all the files that is the projects sources and configuration files.
-Yhe top level only contains subdirectories and no source or configuration files. In the
+The top level only contains subdirectories and no source or configuration files. In the
 following the contents and purpose of the subdirectories is described.
 
 <option> printdisable
@@ -1289,7 +1289,7 @@ login.sh is script that is ran when you go to the project. It can be used to set
 project-specific environment variables and alikes.
 
 sysinfo.txt is a text-file which will be printed in the terminal-window when you come to the
-project.
+project. Information of what is going on or what is done in the project can be put here.
 </topic>
 
 <topic> project_db
@@ -1311,7 +1311,7 @@ thus will be:
 
 <topic> project_pop
 $pwrp_pop
-This is the directory where the the pictures developed with the ge-editor will be stored
+This is the directory where the pictures developed with the ge-editor will be stored
 (fileend *.pwg). Finished files should be copied to the exe-directory in the build-tree
 ($pwrp_exe). Also xtt-helpfiles should be developed here and copied to the
 $pwrp_exe-directory.
@@ -1484,7 +1484,7 @@ will always be searched in this directory. If you have other header-files to inc
 them in this one.
 The master for all these include files should be kept in the source tree and copied here.
 
-Header-files for userclasses wil be created here when you build a classvolume. If you have
+Header-files for userclasses will be created here when you build a classvolume. If you have
 documented your classes, a help-file will also be created. The files are named:
 
 <c>pwr_<classvoumename>classes.h
@@ -1575,8 +1575,8 @@ you start rt_xtt. The file configures the appearance of rt_xtt. You can build yo
 and make entries that perform certain commands.
 
 All commands in the file follow standard xtt command syntax. There is a built in help in
-rt_xtt which explain most of the commands. To view this help type <ctrl>-b when in xtt to open the command
-line and write help. Navigate through the commands to understand them.
+rt_xtt which explain most of the commands. To view this help type <ctrl>-b when in xtt to open 
+the command line and write help. Navigate through the commands to understand them.
 
 When you start rt_xtt there is by default some menues where the first one is named Database.
 If for example you would like to create a menu on top (before) this then use this command:
@@ -1591,8 +1591,9 @@ To create an entry that performs a command below the VVS menu use this command:
 
 <c>create item/text="Graph P1"/command="open graph/object=$Node-pics-h4_proc1"\ 
 <c>       /pixmap=graph/dest=Maintenance-VVS/lastchild
-The pixmap qualifier defines the appearance (icon) of this entry. Without this qualifier the icon will be a leaf.
-The command opens a graph defined by a XttGraph-object in the node hierarchy.
+
+The pixmap qualifier defines the appearance (icon) of this entry. Without this qualifier the 
+icon will be a leaf. The command opens a graph defined by a XttGraph-object in the node hierarchy.
 
 The result will look like this:
 
@@ -1663,9 +1664,8 @@ opt-file you need to include these. A default opt-file would look like:
 
 <c>$pwr_obj/rt_io_user.o -lpwr_rt -lpwr_usbio_dummy
 
-If you don't have any io-methods of your own (see "Guide to I/O-systems") then you can
-skip the first one (rt_io_user). Add your own libraries at will.
-
+Add your own libraries at will. The syntax to use is the sytax for ld (The GNU linker). Proview 
+will create a template option file .opt_template that can be renamed to .opt and used as a template.
 </topic>
 
 <topic> file_pwrp_alias
@@ -1713,7 +1713,7 @@ To set all plc-programs to scan-off use this line:
 <c><nodename>_setval plcscan = off
 
 Turn a plc-program on by finding the corresponding WindowPlc-object (child to PlcPgm-object) and
-set the attribute ScanOff to 1. Observe that there might be subwindows in this program
+set the attribute ScanOff to 0. Observe that there might be subwindows in this program
 that also need to be turned on.
 </topic>
 
@@ -2601,6 +2601,9 @@ The program is built around a Grafcet sequence with four steps. See Fig Plc prog
    sorder Ord0, thus stopping the pump. Then the sequence returns to the resting position
    IS0.
 
+The Grafcet sequence also requires a reset object, the Reset Dv, to be inserted in the
+ResetObject attribute of the PlcPgm.
+
 The mode object LC1_Mode and the controller LC1_PID requires som additional configuration.
 In the mode object
 - OpMode = Auto to start the controller in auto mode.
@@ -2841,7 +2844,7 @@ An example <link> an_example
 <headerlevel>
 <topic>comm_introduction
 Introduction
-There are some different classes/components/objects that are used to handle the communication.
+There are some different classes and objects that are used to handle the communication.
 
 <h2>RemoteConfig
 Required to have any remote communication at all. Without this no remotehandler is started.
@@ -3183,7 +3186,7 @@ file is automatically included when you compile the plc-code. The structures loo
 I have a plc program named Comm. In this program I have placed one RemTransSend-object and one
 RemTransRcv-object. These objects are found below the "Other"-hierarchy in the plc-editor palette.
 To the RemTransSend-object I have connected the RemTrans that I want to send. In this case the
-d_a_ReuestData-message. The message will be sent when the Dv-signal "RequestData" is set. Similarly 
+d_a_RequestData-message. The message will be sent when the Dv-signal "RequestData" is set. Similarly 
 I have to the RemTransRcv-object connected the a_d_Data-message which will be the answer 
 to my request.
 
@@ -8437,6 +8440,7 @@ Load the database or from wb_load-file or dbs-file.
 <B>wtt> wb load /loadfile=
 
 /loadfile	<t>Name of file. Can be of type .wb_load, .wb_dmp or .dbs.
+/noindex        <t>Ignore object indexes in the dumpfile and create new object identities.
 
 </TOPIC>
 
@@ -9066,7 +9070,7 @@ string		<t>str		<t>string of elements.
 
 <c>  string str = "mary, lisa, anna, john";
 <c>  string elem1;
-<c>  elem1 = elment( 1, ",", str);
+<c>  elem1 = element( 1, ",", str);
 </TOPIC>
 
 <TOPIC> toupper() <style> function

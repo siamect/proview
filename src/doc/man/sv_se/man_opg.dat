@@ -229,8 +229,10 @@ Kopplingsschema <t>Visa elektriskt kopplingschema för objektet.
 <topic>opg_opplace
 Operatörsplatsen
 
+<option> printdisable
 <b>Starta operatörsmiljön <link>opg_startop
 <b>Operatörsfönstret <link>opg_opwindow
+<option> printenable
 </topic>
 
 <headerlevel>
@@ -272,8 +274,8 @@ Operatörsfönstret
 
 Operatörsfönstret lägger sig längst upp på bildskärmen och saknar titelrad och knappar för
 att ikonisera och ta bort fönstret. Det är uppdelat i tre delar, till vänster visas aktuella
-larm och meddelanden, i mitten finns knappar för olika basfunktioner, och till vänster
-kappar som är konfigurerade för just den här operatörsplatsen.
+larm och meddelanden, i mitten finns en meny och knappar för olika basfunktioner, och till 
+vänster knappar som är konfigurerade för just den här operatörsplatsen.
 
 <h2>Larm och meddelanden
 I vänstra delen av operatörsfönstret visas larm och meddelanden. 
@@ -295,20 +297,44 @@ info meddelandena med.
 Ett larm är rådande om larmvillkoret fortfarande är uppfyllt. Detta markeras med en 
 varningstriangel före larmtexten.
 
-<h2>Knappar för att öppna basfunktioner
-På översta raden finns ett antal ikoner. De två första ökar eller minskar storleken på
-larmtexten. Den tredje öppnar hjälpfönstret med projektets hjälptexter. Den fjärde öppnar
-navigatorn, och den femte stänger operatörsfönstret.
+<h2>Meny och knappar för att öppna basfunktioner
+I mittendelen av operatörfönstret finns en meny, och knappar för att öppna basfunktioner.
 
-Under finns ett antal knappar:
+<b>Meny
+Här följer en beskrivning på de olika menyalternativen i Functions menyn.
 
-- Larmlista <t>Öppnar larmlistan med rådande eller okvitterade larm. <link>opg_alarmlist
-- Händelselista <t>Öppnar händelselistan, en lista på de senaste larmen och händelserna <link>opg_eventlist
-- Händelselogg <t>Öppnar händelseloggen, där man kan visa lagrade händelser. <link>opg_eventlog
-- Hjälp <t>Visar projektets hjälptexter.
+Functions/Alarm/AlarmList <t><t>Öppnar larmlistan med rådande eller okvitterade larm. <link>opg_alarmlist
+Functions/Alarm/EventList <t><t>Öppnar händelselistan, en lista på de senaste larmen och händelserna. <link>opg_eventlist
+Functions/Alarm/EventLog <t><t>Öppnar händelseloggen, där man kan visa lagrade händelser. <link>opg_eventlog
+Functions/Alarm/BlockList <t><t>Öppnar listan över blockerade larm. <link>opg_blocklist
+Functions/Curves/Trends <t><t>Visar en lista på alla trendkurvor. <link>opg_trends
+Functions/Curves/Fast <t><t>Visar en lista på alla snabbkurvor. <link>opg_fastcurves
+Functions/Curves/Process History <t><t>Visar en lista på process historik kurvor. <link>opg_history
+Functions/Process Graphics <t><t>Visar en lista på alla processbilder som är definierade med
+                          <t><t>ett XttGraph objekt.
+Functions/Navigator <t><t>Öppnar navigatorn. <link>opg_navigator
+Functions/View/Zoom in<t><t>Ökar textstorleken i larmtexterna.
+Functions/View/Zoom out<t><t>Minskar textstorleken i larmtexterna.
+Functions/User/Switch User <t><t>Öppnar inloggningsfönster för inloggning som annan användare.
+Functions/User/Show User <t><t>Visar den användare som är inloggad.
+Functions/User/Return <t><t>Återgår till den ursprungliga användaren.
+Functions/Help/Project <t><t>Visar hjälptexter för projektet.
+Functions/Help/Overview <t><t>Visar en översikt över hjälptexter.
+Functions/Help/Operator Window <t><t>Visar hjälp för operatörsfönstret.
+Functions/Help/About Proview <t><t>Visar info om Proview, t ex version av installat paket.
+Functions/Close <t><t>Stänger ner operatörsplatsen.
 
-För att se de undre knapparna måste man ändra storlek på fönstret. Detta görs med knapparna
-med uppåtpil och nedåtpil. Större storlek på fönstret gör även att man kan se fler A-larm.
+<b>Trycknappar
+Under menyn finns en verkygspanel med ett antal tryckknappar som fungerar som genvägar till
+menyalternativ: 
+- zooma in och ut.
+- visa hjälptexten för projektet.
+- avslutas.
+- visa larmlista.
+- visa händelselista.
+- visa händelselog.
+- visa lista över blockerade larm.
+- öppna navigatorn.
 
 <h2>Funktionsknappar
 Till höger finns ett antal knappar som kan användas för att öppna bilder eller exekvera
@@ -463,6 +489,8 @@ man är intresserad av med olika sökvillkor. De händelser som passar in på sökvil
 i en lista.
 
 <h1>Sökvillkor
+Dialogen för händelseloggen visas i figuren Händelselogg nedan.
+
 <h2>Tid
 På översta raden kan man ange ett tidsintervall för sökningen. Ställ in önskat intervall
 med optionmenyn till höger. Väljer man 'Time' anger man starttid och stoptid i 
@@ -555,7 +583,7 @@ Kurvor
 
 <option> printdisable
 Trendkurvor <link> opg_trends
-Snabbkurvor <link> opg_fast
+Snabbkurvor <link> opg_fastcurves
 Process historik <link> opg_history
 <option> printenable
 </topic>

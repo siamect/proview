@@ -480,15 +480,6 @@ objektsidentitet.
 </chapter>
 
 <chapter>
-<topic>development environment
-Utvecklingsmiljön
-
-Konfigureringen av ett Proview system sker på en utvecklingsstation. På denna installerar man
-Proview's utvecklingsmiljö.
-</topic>
-</chapter>
-
-<chapter>
 <topic>case_study
 En fallstudie
 
@@ -851,553 +842,6 @@ Skapa processbilder.
 </chapter>
 
 <chapter>
-<topic>communication
-Communication
-
-The Remote concept in Proview is a way to standardize the methods of communication with other
-systems. It describes a number of transport programs and Proview objects used to implement
-a variety of different communication protocols and to handle incoming and outgoing messages.
-Remote is designed to use different transport protocols such as TCP/IP or BEA Message Queue,
-and different hardware media such as ethernet or serial lines.
-The main purpose of Remote is to provide the programmer with an interface to communication.
-
-<option> printdisable
-Introduction <link> comm_introduction
-Protocols <link> protocols
-An example <link> an_example
-<option> printenable
-</topic>
-
-<headerlevel>
-<topic>comm_introduction
-Introduction
-There are some different classes/components/objects that are used to handle the communication.
-
-<h2>RemoteConfig
-Required to have any remote communication at all. Without this no remtehandler is started.
-Place one object in the node-hierarchy.
-
-<h2>RemNode
-Defines a link of some type to a remote node over a specific protocol. 
-Several different protocols are supported and there is one specific class for each protocol.
-The supported protocols are:
-
-TCP/IP
-UDP/IP
-MQ (BEA Message Queue)
-ALCM (an old Digital protocol, supported for historical reasons)
-Serial
-Modbus/RTU Serial
-3964R (serial protocol from Siemens)
-
-Configuration of each protocol is described further down.
-Place RemNode-objects below the RemoteConfig-object.
-
-<h2>RemTrans
-Generic class that defines a specific message to or from a specific remote node on a
-specific protocol. Should be placed below the RemNode-object. The size of a message to be sent 
-is specified in the RemTrans-object. The data however to be sent resides in a buffer that is
-configured as a child to the remtrans-object. When a message is to be sent data of the length
-specified in the remtrans-object is fetched from the buffer. Sometimes however a header of some
-length is added to the message.
-
-<h2>Buffer
-Defining the send- and/or receive data area for each message. Exists in different sizes.
-Should be placed below a RemTrans-object. The buffer must be of at least the size of the
-message that will be received or sent. If size is not enough message will be cut in the end.
-
-<h2>RemTransSend 
-Function object used in a plc-program for sending messages.
-
-<h2>RemTransRcv
-Function object used in a plc-program for receiving messages.
-
-</topic>
-
-<topic> protocols
-Protocols
-Which protocol to use is defined by the type of Remnode-object you configure. For each configured 
-Remnode-object a transport job is started. That is, a program to handle the specific protocol is
-started as a process. This process will handle all RemTrans-object that is configured as children
-to the Remnode-object. 
-
-<option> printdisable
-UDP <link> udp_ip
-TCP <link> tcp_ip
-BEA Message Queue <link> bea_mq
-Serial <link> serial
-3964-R <link> 3964r
-<option> printenable
-</topic>
-
-<headerlevel>
-<topic> udp_ip
-UDP
-UDP uses socket communication without connection (datagram), compared to TCP wich is a connected protocol.
-In the RemnodeUDP-object you specify the name and ip-address of the node to communicate with
-aswell as the port-numbers for both ends. The local port-numer need to be unique on your node
-not to conflict with other communications.
-
-As default all messages is sent with a special header that is not included in the user data buffer.
-This header is added at the beginning of the message. The purpose for the header is to give information
-about the message that is sent. This helps identify what type of message is received and to wich buffer
-the data will be unpacked. The header looks like:
-
-<c>char       RemId1;  /* STX (Hex 02) */
-<c>char       RemId2;  /* ETB (Hex 0F) in data message without acknowledge 
-<c>                       ENQ (Hex 05) in data message with acknowledge 
-<c>                       ACK (Hex 06) in acknowledge message */
-<c>short int  Length;  /* Number of bytes in message including this header */
-<c>short int  MessId1; /* Message identity part 1 */
-<c>short int  MessId2; /* Message identity part 2 */
- 
-All of the integers in the header will be sent as big endian values, that is most significant byte first
-in the datagram. The user data is the responsibility of the user to switch, if he wants integers to be sent
-with big endian. VAX, Alpha and Intel (x86) all uses little endian! To send messages without headers the
-attribute DisableHeader should be set to TRUE. When communicating between two Proview-systems the header
-should be kept on. MessId1 and MessId2 is fetched from attributes RemTrans.Address[0] and RemTrans.Address[1].
-Through the header it is also possible to request an acknowledge of a sent message. If there is no
-acknowledge the message will be resent with a cyclicity specified by the RetransmitTime-attribute in the
-remtrans-object.
-
-Since UDP/IP is a connectionless protocol there is a possibility to watch the connection using
-keepalive-messages. This is set through the attribute UseKeepalive.
-
-<h2>Sending messages
-The transport will send a message to the remote port, consisting of header + data.
-MessId in the header is taken from RemTrans.Address[0,1], byte-switched to send as big endian.
-If MaxBuffers in remtrans-object > 0, the message is sent with type "want acknowledge" and is stored
-in the retransmit queue for the remnode. When a correspondning acknowledge message is received the 
-message is deleted from the retransmit queue. This is done automatically by the transport process.
-
-<h2>Receiving messages
-When we receive a buffer, first we check the header to see that this is a correct RemTrans message.
-Then we search for RemTrans.Address[0,1] that matches the byte-switched MessId. If the data object for 
-this message is big enough to contain the message, the message will be stored, and the 
-DataValid flag will be set.
-If the Remnode is marked to be used without header (DisableHeader-attribute set) then a RemTrans marked as a
-receiving remtrans with a enough large buffer will be searched.
-
-</topic>
-
-<topic> tcp_ip
-TCP
-RemnodeTCP is configured in much the same way as RemnodeUDP. The big (only) difference is that TCP is
-a connected protocol which acts in client/server fashion. Thus you have to either connect to a 
-remote socket (act like a client) or await a connection (act like a server). When acting like a server
-only one client will be accepted. The ConnectionMode-attribute in the remnode-object defines if you are
-a client or a server. Setting it to zero (default) means client and setting it to one means server. 
-
-</topic>
-
-<topic> bea_mq
-MQ
-RemnodeMQ is a transport for sending messages on BEA Message Queue (BMQ). It requires you to have
-BEA Message Queue installed on your node. This message queue is good for safely delivering messages 
-to a remote node even if it is not up at the moment you send your message. Vice versa, 
-messages will safely be delivered to you.
-
-This documentation expects you to have basic knowledge on BEA Message Queue. In basic the communication 
-runs on a specific bus. Each node has group-number and can only communicate to other groups on the same bus.
-On each group several queues can be configured.
-
-To be able to start this transport of course the Message Queue sotware need to be runnning. You also need some 
-environment variables to be set. These are:
-
-<c>DMQ_BUS_ID
-<c>DMQ_GROUP_ID
-<c>DMQ_GROUPNAME
-
-In the RemnodeMQ-object you configure on which BMQ-queue to recieve messages in the attribute MyQueue.
-You also configure the remote nodes group-number and queue to send to in the attributes TargetGroup and
-TargetQueue.
-
-<h2>Sending messages
-Similarly to UDP and TCP-transports RemTrans. Address[0,1] are used to identify the message. Address[0]
-represent the message-class and Address[1] represent the message-type (according to the BMQ-nomenclature).
-Address[2,3] are used to define what type delivery mode (Address[2]) that should be used and what action should be
-taken when a message cannot be deilvered (Address[3]).
-
-Possible delivery modes are:
-
-<c>PDEL_MODE_WF_SAF 25
-<c>PDEL_MODE_WF_DQF 26
-<c>PDEL_MODE_WF_NET 27
-<c>PDEL_MODE_WF_RCM 28
-<c>PDEL_MODE_WF_MEM 29
-<c>PDEL_MODE_AK_SAF 30
-<c>PDEL_MODE_AK_DQF 31
-<c>PDEL_MODE_AK_NET 32
-<c>PDEL_MODE_AK_RCM 33
-<c>PDEL_MODE_AK_MEM 34
-<c>PDEL_MODE_NN_SAF 35
-<c>PDEL_MODE_NN_DQF 36
-<c>PDEL_MODE_NN_NET 37
-<c>PDEL_MODE_NN_RCM 38
-<c>PDEL_MODE_NN_MEM 39
-<c>PDEL_MODE_WF_DEQ 40
-<c>PDEL_MODE_AK_DEQ 41
-<c>PDEL_MODE_WF_CONF 42
-<c>PDEL_MODE_AK_CONF 43
-<c>PDEL_MODE_WF_ACK 44
-<c>PDEL_MODE_AK_ACK 45
-
-and possible actions are:
-
-PDEL_UMA_RTS 1
-PDEL_UMA_DLJ 2
-PDEL_UMA_DLQ 3
-PDEL_UMA_SAF 4
-PDEL_UMA_DISC 5
-PDEL_UMA_DISCL 6
-
-Not all combinations are possible (see BEA Message Queue documentation for more information).
-
-Recommended combinations are,
-
-for safe delivery of message
-Address[2] = 26
-Address[3] = 4
-
-and for discarding the message if it cannot be delivered
-Address[2] = 39
-Address[3] = 5
-
-If Address[2,3] are both set to zero a default setting will be used. The default is to discard the 
-message if it cannot be delivered.
-
-<h2>Receiving messages
-Address[0,1] are used to identify the message. Address[0] represent the message-class and Address[1]
-represent the message-type (according to the BMQ-nomenclature).
-</topic>
-
-<topic> serial
-Serial
-RemoteSerial is an attempt to generalize the using of a simple serial line communication protocols.
-Its useful when we have a one-way sending of messages from some equipment to the control system. 
-You can specify up to eight termination characters in the attribute TermChar[0-7]. 
-These termination characters are used to detect the end of a received message (if a charachter matches
-any of the termination characters). 
-Specify also the settings for the serial link, that is - DevName , Speed , Parity (0 = none, 1 = odd, 
-2 = even), StopBits and DataBits. These could be for example /dev/ttyS0, 9600, 0, 1, 8.
-
-</topic>
-
-<topic> 3964r
-3964-R
-3964R is a simple serial line communication protocol that is developed by Siemens. 
-
-You specify the settings for the serial link as with RemnodeSerial, except for that there are no stp bits
-to specify. You must also specify the character timeout (the maximum time between received characters)
-in the attribute CharTimeout. The AckTimeout-attribute specifies the time to wait for an answer.
-
-Messages will be sent straight on without any header. ACK, NAK, DLE and BCC is handled according to 
-the 3964R protocol.
-
-<h2>Receiving messages
-There can be only one RemTrans object for receive-messages because of the lack of header 
-in this protocol. Every received message will be put in the first found RemTrans-object below 
-the RemNode-object. If the data object for this message is big enough to contain the message, 
-the message will be stored, and the DataValid flag will be set.
-
-<h2>Sending messages
-The transport will send a 3964R message to the serial without adding any header.
-If we don't have contact with the other node the message will be buffered, 
-if there are still free buffers for this message. 
-</topic>
-
-<topic> modbus-serial
-Modbus Serial
-The format of MODBUS that is implemented is RTU. For identification of messages we use the fields 
-known as slave address and function code in the MODBUS header. The RemTrans.Address[0] and [1] 
-defines these fields in the Proview environment. Se MODBUS specifications documents for more information.
-
-Modbus Serial is not yet implemented as an I/O-system in Proview. You have to configure the messages
-yourself by using RemnodeModbus and specifying RemTrans-object for the various operations you
-want to perform. Modbus works in a request/reply manner so for each operation you want to perform
-you specify one RemTrans-object for sending and one for receiving. Except for the Modbus-header of the
-message and the checksum handling you have to specify the content of the message to send in the
-send-buffer. In the same way you must decode the content of a received message yourself.
-
-Modbus TCP is implemented as an I/O-system in Proview. See more information about this in the document
-"Guide to I/O-systems". With Modbus TCP you don't have to care about the encoding of the messages.
-
-<h2>Receiving messages
-When we receive a buffer, we search for RemTrans.Address[0] and [1] that matches the fields 
-slave adress and function code in the message header. 
-If the data object for this message is big enough to contain the message, the message will be stored, 
-and the DataValid flag will be set.
-
-<h2>Sending messages
-Messages will be sent using the contents of RemTrans.Address[0] and [1] as the fields 
-slave address and function code in the message header.
-
-</topic>
-
-</headerlevel>
-
-<topic> an_example
-An example
-To show how to work with the classes that are briefly described above we will start with a little
-example. The classes are described in more detail below.
-
-In our example we have one Proview-system communicating with an other node via UDP/IP. We will
-send a few messages in both directions. My node is named 'dumle' and the remote node is named
-'asterix'.
-
-The messages we will send is:
-
-d_a_RequestData <t> 4 Byte
-d_a_Report <t> 20 Byte
-
-and the messages we will receive is:
-
-a_d_Data <t> 365 Byte (as an answer to the d_a_RequestData-message)
-a_d_Error <t> 10 Byte
-
-The configuration in the node-hierarchy looks like this.
-
-The RemoteConfig-object has to be there. I have added a RemnodeUDP object below this and
-configured address and nodename aswell as the port-numbers to communicate on.
-
-<image> dg_fig70.png
-
-Below the RemnodeUDP-object I have added four RemTrans-objects, one for each message. In the
-remrans-objects I have configured the direction (send or receive). Numbered the addresses so I can
-distinguish between the messages and set the sizes on the sending messages.
-
-<image> dg_fig71.png
-
-Below the remtrans-objects I have put the data-buffers. For the smaller messages I have chosen the
-small Buff256-buffer. The Data-message is larger and I have therefor chosen the Buff1440-buffer for
-this message.
-
-<image> dg_fig72.png
-
-<h2>The data structures
-The data structures for the messages are defined in the file ra_plc_user.h in $pwrp_inc-directory. This
-file is automatically included when you compile the plc-code. The structures look like:
-
-<c>typedef struct {
-<c>  pwr_tUInt32  Id;
-<c>} d_a_RequestData;
-<c>
-<c>#define pwr_sClass_d_a_RequestData d_a_RequestData
-<c>
-<c>typedef struct {
-<c>  pwr_tUInt32   Id;
-<c>  pwr_tFloat32  data_1;
-<c>  pwr_tInt32    data_2;
-<c>  pwr_tInt32    data_3;
-<c>  pwr_tInt32    data_4;
-<c>} d_a_Report;
-<c>
-<c>#define pwr_sClass_d_a_Report d_a_Report
-<c>
-<c>typedef struct {
-<c>  pwr_tUInt32   Id;
-<c>  pwr_tFloat32  data_1;
-<c>  ...
-<c>  ...
-<c>  pwr_tInt32    data_xx;
-<c>} a_d_Data;
-<c>
-<c>#define pwr_sClass_a_d_Data a_d_Data
-<c>
-<c>typedef struct {
-<c>  pwr_tUInt32   Id;
-<c>  pwr_tInt32    func_no;
-<c>  pwr_tInt16    err_code;
-<c>} a_d_Data;
-<c>
-<c>#define pwr_sClass_a_d_Error a_d_Error
-
-<h2>The plc code
-
-I have a plc program named Comm. In this program I have placed one RemTransSend-object and one
-RemTransRcv-object. These objects are found below the "Other"-hierarchy in the plc-editor palette.
-To the RemTransSend-object I have connected the RemTrans that I want to send. In this case the
-d_a_ReuestData-message. The message will be sent when the Dv-signal "RequestData" is set. Similarly 
-I have to the RemTransRcv-object connected the a_d_Data-message which will be the answer 
-to my request.
-
-<image> dg_fig73.png
-
-Both the RemTransSend and the RemTransRcv-objects have a subwindow. For the RemTransSend this subwindow 
-will be executed when there is a flank on the snd-pin. When the subwindow has been executed the
-DataValid-attribute of the connected RemTrans-object is set. The transport job for this Remnode 
-sends the message and sets the DataValid-flag to zero.
-
-For the RemTransRcv the subwindow will be executed when the DataValid-attribute in the connected 
-RemTrans-object is set. When the transport job for this Remnode receives a message it fills the
-data buffer with the received data and then sets the DataValid-flag. 
-After execution the flag will be reset.
-
-<h2>Send subwindow
-In the send subwindow we fill in the data in the send-buffer. The send-buffer for the message to send
-is connected to a DataArithm. The special 'classdef'-syntax casts Da1 to be a pointer to a
-d_a_RequestData-struct (or actually it will cast this pointer to a pwr_sClass_d_a_RequestData,
-therefor the define-statement as described above).
-
-<image> dg_fig74.png
-
-<h2>Receive subwindow
-In the receive subwindow unpack the data received in the receive-buffer. The recieve buffer
-is connected to a DataArithm. Again we use the classdef-statement to cast the Da1-pointer.
-We unpack the data to the output pins of the DataArithm. If one DataArithm is not enough to unpack
-the parameters we just add more DataArithm's and continue in the same way. 
-
-<image> dg_fig75.png
-
-</topic>
-
-</chapter>
-
-<chapter>
-<topic>administrator
-Administration
-
-<option> printdisable
-Skapa användare <link> adm_user
-Registrera volymer <link> register_volumes
-Skapa projekt <link> create_project
-<option> printenable
-</topic>
-
-<topic> adm_user
-Användare
-För att få tillgång till Proview's utvecklings och runtime miljöer måste man logga in med
-användarnamn och passerord. Användare konfigureras i en användardatabas och tilldelas
-privilegier som bestämmer användarens behörighet att göra ändringar i systemet.
-
-System som delar samma användare är grupperade i en systemgrupp, och utgående från
-systemgruppen definieras användarna. Man kan bygga en hierarki av systemgrupper där 
-barngrupper ärver användare av sin förälder, och ytterligare användare kan definieras för
-varje barn.
-
-Ett system kopplas till en systemgrupp med attributet SystemGroup i $System objektet.
-Notationen för en systemgrupp i en hierarki namnet av gruppen med förfäder åtskilda av en
-punkt, t ex 'Main.West.F1'.
-
-I exemplet nedan är Eric ansvarig för alla system i anläggningen, och definierad på den
-översta nivån i hierakin. Nils arbetar med den västra delen av anläggningen definieras i 
-systemgruppen 'West'. Carl, slutligen, arbetar med system i F1 delen av anläggningen. Alla
-systemgrupperna har attributet UserInherit, vilket gör att de ärver användare av sin 
-förälder.
-
-<image> dg_fig22.gif
-
-Användare och systemgrupper skapas i administratören.
-
-- Starta administratören med kommandot 'pwra'.
-- Gå in i Användardatabasen från menyn, 'File/Open/UserDatabase'.
-- Logga in med login kommandot. Öppna kommando-prompten från menyn, 'Functions/Command' och
-  skriv 'login /adm' på kommandoraden. Om systemgruppen 'administrator' finns definierad måste man
-  dessutom addera användarnamn och passerord för en användare definierad i administrator-
-  systemgruppen.
-- Gå in i edit mod från menyn, 'Edit/Edit mode'.
-  Systemgrupper och användare representeras av objekt av klasserna SystemGroupReg resp UserReg
-  som visas i paletten till vänster. Objekt skapas genom att man väljer en klass i paletten,
-  och därefter klickar med MB2 (mittenknappen) i det högra fönstret. Objekten läggs i en 
-  trädstruktur och klickar man på mappen/lövet på ett existerande objekt läggs det nya objeket 
-  som första barn, om kan klicka till höger om mappen/lövet läggs det som syskon.
-- Skapa en systemgrupp genom att markera 'SystemGroupReg' i paletten till vänster, och klicka
-  med MB2 (mittenknappen) i det högra fönstret. Öppna SystemGroupReg objektet och ange namn och
-  attribut för systemgruppen. Ange fullständigt hierarkinamn, t ex 'Main.West'.
-- Skapa en användare genom att markera 'UserReg' i paletten och klicka med MB2 på mappen/lövet
-  till det SystemGroupReg objekt som UserReg objektet ska ligga under. Öppna UserReg objektet
-  och ange anvädarnamn, passerord och privilegier för användaren.
-- Spara.
-- Logga ut med kommandot 'logout'.
-
-Användardatabasen ligger på katalogen $pwra_db.
-
-</topic>
-
-<topic>register_volumes
-Registrera volymer
-
-Alla volymer i ett nätvärk måste ha ett unikt volymsnamn och volymsidentitet. För att
-säkerställa detta registreras alla volymer i en global volymslista.
-
-Registreringen görs från administratören:
-
-- Starta administratören med kommandot 'pwra'.
-- Gå in i Globala Volymslistan från menyn, 'File/Open/GlobalVolumeList'.
-- Logga in som administratör.
-- Gå in i editerings läge, 'Edit/Edit mode' i menyn.
-  Volymer registreras mha objekt av klassen VolumeReg som visas i paletten till vänster.
-  I paletten finns även $Hier klassen, med vilken man kan ordna VolumeReg objekten 
-  hierarktiskt.
-- Skapa ett VolumeReg objekt, öppna objektet och ange volymsnamn (= objektsnamn), 
-  volymsidentitet och projekt.
-- Spara.
-- Logga ut med 'logout'-kommandot.
-
-<h2>Volymsnamn
-Namn på volymen, ska vara unikt och får ha max 31 tecken.
-
-<h2>Volymsidentitet
-Volymsidentiteten är ett 32-bitar ord specificerat på formen v1.v2.v3.v4, där v1, v2, v3
-och v4 är nummer i intervallet 0-255. Beroende på volymens klass, kan numren väljas i olika
-intervall.
-
-Rotvolymer           <t>0.1-254.1-254-1.254
-Användarklassvolymer <t>0.0.2-254.1-254
-
-Directory volymen har alltid identiteten 254.254.254.253.
-
-</topic>
-
-<topic>create_project
-Skapa projekt
-
-Ett projekt är ett antal noder och volymer som delar samma utvecklingsmiljö. Vanligtvis
-består den av några process- och operatörsstationer som styr en del av anläggningen, men
-det finns inga begränsningar för storleken av ett projekt. Man kan välja att ha varje nod
-i var sitt projekt, eller samtliga noder i ett projekt.
-
-- Alla noder i ett projekt (på samma kommunikationsbuss) har länk öppen mellan varandra
-  genom näthanteraren.
-- Alla volymer och noder delar samma filkatalogsträd.
-- Alla noder måste uppgraderas till ny Proview version samtidigt.
-
-En vanlig storlek är 1-10 noder i ett projekt. För många noder ökar nätverksbelastninge och
-försvårar uppgradering av projektet.
-
-Skapa ett projekt i administratören:
-
-- Starta administratören med kommandot 'pwra'.
-- Projektlistan visas när man startar administratören. Den kan även öppnas från menyn 
-  (File/Open/ProjectList).
-- Logga in som administratör.
-- Gå in i edit mode från meny, 'Edit/Edit mode'.
-  Projekt representeras av objekt av klassen ProjectReg, som visas i paletten till vänster.
-  ProjectReg objekten kan ordnas i hierakier mha $Hier objekt.
-- Skapa ett ProjectReg objekt och ange projektnamn, basversion, filkatalog och beskrivning.
-- Projektet skapas när man sparar, efter att en verifiering har gjorts. Spara och logga ut.
-
-<h2>Projektnamn
-Ett projekt har ett projektnamn som identifierar projektet i utvecklingsmiljön. Jämför 
-systemnamnet som definierar projektet i runtimemiljön. Projektnamn och systemnamn är ofta
-lika, men behöver inte vara det. Ett system kan faktiska ha många projekt i 
-utvecklingsmiljön. När man uppgraderar, eller gör större förändringar i systemet, tar man
-lämpligen en kopia av projektet och sparar den gående versionen av systemet för att kunna
-göra mindra ändringar. Kopian skapas under ett nytt projektnamn men den har samma 
-systemnamn.
-
-<h2>Base
-Proview ett är flerversions system, dvs olika versioner av Proview kan installeras i samma
-utvecklingsmiljö, och projekt med olika version kan existera i samma utvecklingsmiljö.
-Ett projekt pekar på en bas, t ex V3.4 eller V4.0, när ett projekt skapas väljer man
-vilket bas projektet ska peka på.
-
-<h2>Path
-Projektet består av ett filkatalogsträd där databaser, källkodsfiler, arkiv mm lagras.
-Path är rot katalogen till det här trädet.
-
-</topic>
-</chapter>
 
 <chapter>
 <topic>configure_directoryvolume
@@ -1744,6 +1188,515 @@ Se XttGraph i Objektshandboken <link>xttgraph,"",$pwr_lang/pwrb_xtthelp.dat
 </chapter>
 
 <chapter>
+<topic>project_structure
+Navigera i projektet
+
+Det här kapitlet beskriver projektstrukturen och förklarar avsikten med olika filkataloger.
+Kapitlet beskriver även en del filer som kan användas för att konfigurera olika funktioner
+i projektet.
+
+Filkatalogstrukturen är uppdelad i två grenar, en som innehåller alla källkodsfiler som
+projektet består av, och en som är byggträdet där alla filer läggs när projektet byggs.
+<option> printdisable
+Introduktion<link> proj_introduction
+Källkodsträdet <link> source_tree
+Byggträdet <link> build_tree
+Speciella filer <link> special_files
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic>proj_introduction
+Introduktion
+Figuren nedan visar filkatalogstrukturen för ett projekt.
+
+<image> dg_psfig1.png
+
+Katalogstrukturen är ny i Proview V4.7. Orsaken till detta är att mer särskilja källkods/
+konfigureringsfiler och gerenerade filer i projektet. Idén är att att allt som finns i
+byggträdet ska kunna återskapas från källkodsträdet.
+
+Alla filkataloger har en omgivningsvariabel definerad för att men enkelt ska kunna nå
+kataloger inom projektet. Variablerna är definierade med
+
+<c> $pwrp_<directory>
+
+Till exempel $pwrp_exe för katalogen <project_root>/bld/x86_linux/exe.
+</topic>
+
+<topic> source_tree
+Källkodsträdet
+Källkodsträdet innehåller alla filer som utgör projektets källkod och konfigureringsfiler.
+Topnivån innehåller enbart två underkataloger och inga källkods eller konfigureringsfiler. 
+Nedan beskrivs innehållet och funktionen för underkatalogerna.
+
+<option> printdisable
+Login-katalogen
+$pwrp_login <link> project_login
+
+Databas-katalogen
+$pwrp_db <link> project_db
+
+Grafik-katalogen
+$pwrp_pop <link> project_pop
+
+Applikations-katalogen
+The application directory
+$pwrp_appl <link> project_appl
+
+Dokumentations-katalogen
+$pwrp_doc <link> project_doc
+
+Konfigurations-katalogen
+$pwrp_cnf <link> project_cnf
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic> project_login
+$pwrp_login
+Den här katalogen är startpunkten när man förflyttar sig till ett projekt med 'sdf'-
+kommandot. Här finns två filer av intresse.
+
+<c>login.sh
+<c>sysinfo.txt
+
+login.sh är ett script som körs när man går till projektet. Det kan användas för att
+sätta upp projekt-specifika omgivningsvariabler och liknande.
+
+sysinfo.txt är en text-fil som kommer att skrivas ut i terminal-fönstret när man kommer
+till projektet. Här kan man upplysa om vad som pågår eller är gjort i projektet.
+</topic>
+
+<topic> project_db
+$pwrp_db
+Det här är katalogen där databasen med alla lokala volymer ligger (inklusive direktory-
+volymen där projektet är konfigurerat). Varje databas ligger i egen underkatalog. Det här
+gäller om man väljer att skapa databaserna som BerkeleyDB databaser. Om man istället
+väljer att använda mysql-databaser, skapas databaserna på mysql servern. 
+
+I den här katalogen ligger också filerna för användar-definierade klasser. De är textfiler
+av typen .wb_load. En användarklassvolym har vanligen ett namn liknande den rotvolym som
+använder klasserna. Om rotvolymer heter VolMyProject kallas klassvolymen CVolMyProject
+(notera att detta är konvention och inte bindande). Namnet på filen blir:
+
+<c>cvolmyproject.wb_load
+</topic>
+
+<topic> project_pop
+$pwrp_pop
+Det här är katalogen där processbilderna skapade med ge-editorn sparas (filtyp .pwg). 
+Färdiga filer kopieras till exe-katalogen i byggträdet ($pwrp_exe). Även xtt-hälpfiler
+utvecklas här och kopieras till $pwrp_exe katalogen.
+
+Bilder som har ett motsvarande XttGraph objekt i nodhierarkin i rotvolymen, kommer
+automatiskt att bli kopierade till $pwrp_exe katalogen när volymen byggs.
+</topic>
+
+<topic> project_appl
+$pwrp_appl
+I den här katalogen lägger man källkod for projektets applikationer, och även kod som 
+ska länkas med plc-programmet.
+
+En fil av speciellt intressen som ska finnas här är
+
+<c>ra_plc_user.h-file
+
+Den här filen kommer att inkluderas när plc-koden kompileras. Den är dock inkluderad från
+en katalog i byggträdet (<project_root>/bld/common/inc).
+
+Alla header filer som ligger här eller på underkataloger, och som ska inkluderas av
+plc-programmet måste distributeras till $pwrp_inc katalogen (<project_root>/bld/common/inc).
+
+Om man har någon mindre funktion som man enbart länkar med plc-programmet och inte används
+någon annanstans, placerar men koden i filen
+
+<c>ra_plc_user.c
+</topic>
+
+<topic> project_doc
+$pwrp_doc
+Det här är platsen att lägga dokumentation som hör till projektet. Det kan vara egenhändigt
+producerad dokumentation eller till exempel datablad för komponenter i anläggningen som 
+kanske ska distribueras till operatörsstationerna.
+
+</topic>
+
+<topic> project_cnf
+$pwrp_cnf
+Katalogen innehåller alla konfigurationsfiler i projektet. Vissa konfigureringsfiler är
+gemensamma för hela projektet, och de är placerade här. Vissa är specifika för varje nod
+i projektet. Man skapar då en underkatalog för varje nod som har specifika konfigurations-
+filer. Ibland är en fil unik för en speciell användare. I detta fall kan man även skapa
+en underkatalog i nod-katalogen för den användaren.
+
+Filer som läggs här är:
+
+Konfigurering av globala funktionstangenter.
+<c>Rt_xtt
+
+Konfigurering av menuer och kortkommandon i rt_xtt.
+<c>xtt_setup.rtt_com
+
+Startupfil för Proview.
+<c>ld_appl_<nodename>_<bus_no>.txt
+
+Fil för att ange bibliotek som länkas med plc-programmet.
+<c>plc_<nodename>_<bus_no>.opt
+
+Fil för att sätta initialvärden vid Proview uppstart.
+<c>pwrp_alias.dat
+
+Alla ovanstående filer beskrivs närmare längre fram.
+</topic>
+
+</headerlevel>
+
+<topic> build_tree
+Byggträdet
+Byggträdet innehåller alla filer som produceras när man bygger volymer och noder. Källkoden
+ligger däremot i källkodsträdet. Idén är att byggträdet i princip ska kunna tas bort och
+återskapas från källkodsträdet.
+
+<option> printdisable
+Exe katalogen
+$pwrp_exe <link> project_exe
+
+Katalog för objektsfiler
+$pwrp_obj <link> project_obj
+
+Katalog för list-filer
+$pwrp_lis <link> project_lis
+
+Biblioteks katalog
+$pwrp_lib <link> project_lib
+
+Laddfils katalog
+$pwrp_load <link> project_load
+
+Loggfils katalog
+$pwrp_log <link> project_log
+
+Katalog för temporära filer
+$pwrp_tmp <link> project_tmp
+
+Katalog för include-filer
+$pwrp_inc <link> project_inc
+
+Katalog för web-filer
+$pwrp_web <link> project_web
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic> project_exe
+$pwrp_exe
+Detta är katalogen där exe-filer för plc program skapas. Plc-program namnges:
+
+<c>plc_<nodename>_<bus_no>_<version_no>
+
+Om man har applikationsprogram i projektet ska även exe-filerna för dem ligga här.
+</topic>
+
+<topic> project_obj
+$pwrp_obj
+På den här katalogen läggs alla objektsfiler som skapas vid kompilering. Objektsfiler 
+för plc-programmen läggs här automatiskt. En objektsfil för ett PlcPgm objekt i 
+anläggningshierarkin namnges efter objektets identitet.
+
+Objektsfiler för all annan kod ska också placeras här.
+</topic>
+
+<topic> project_lis
+$pwrp_lis
+Här placeras list-filer som produceras vid kompilering.
+</topic>
+
+<topic> project_lib
+$pwrp_lib
+På den här katalogen skapas bibliotek som innehåller objektsfiler för en viss volym. Man
+ska även placera andra bibliotek här.
+</topic>
+
+<topic> project_load
+$pwrp_load
+Det här är katalogen där laddata-filer för projektets volymer skapas. Laddata-filen namnges:
+
+<c><volumename>.dbs 
+</topic>
+
+Här läggs även filer som skaöas när man editerar plc-programmet. De innehåller all information
+som behövs för att visa plc-programmet grafiskt och för att köra plc trace. De här filerna
+är av filtyp .flw och kallas flow-filer.
+
+Filer för korsreferens-funktionen läggs också här. De börjar med bokstäverna "rtt".
+Korsreferens-filerna skapas manuellt från "Utilities"-funktionen i Navigatorn, eller genom att
+sätta CrossReferences i Options/Settings/Build.
+
+<topic> project_log
+$pwrp_log
+Den här katalogen innehåller log-filer som skapas vid simulering av projektet. Proview's
+systemlogg-fil heter
+
+<c>pwr_<nodename>.log
+
+Om man startar om simuleringen, kommer loggningen att adderas till filen. Ta bort filen om 
+gammal loggningen ska rensas bort.
+</topic>
+
+<topic> project_tmp
+$pwrp_tmp
+Katalog för temporär-filer. De här filerna skapas vid vissa operatoner, till exempel när
+ett plc-program kompileras i debug-mod. Då lagras källkods-filerna här för att sedan kunna 
+användas av debuggern.
+</topic>
+
+<topic> project_inc
+$pwrp_inc
+Det här katalogen innehåller include-filer som inkluderas vid bygge av plc-program.
+En fil kallad
+<c>ra_plc_user.h
+letas alltid efter i denna katalog. Om man har andra header-filer som inkluderas, ska de
+inkluderas i ra_plc_user.h. Källkoden till include-filerna ska ligga i källkodsträden och
+kopieras därifrån till $pwrp_inc.
+
+Header-filer för användarklasser skapas här när man bygger en klassvolym. Om man dokumenterar
+klasserna, kommera även en hjälp-fil att skapas. Filerna namnges:
+
+<c>pwr_<classvoumename>classes.h
+<c>pwr_<classvoumename>classes.hpp
+<c><classvoumename>_xtthelp.dat
+<c><classvolumename>.html
+
+</topic>
+
+<topic> project_web
+$pwrp_web
+Katalogen innehåller alla filer för web-gränssnittet. Till exempel xtt-hjälpfiler konverterade
+till html-filer. Också när man skapar en java-bild från en ge-graf läggs java-klassen här.
+</topic>
+
+</headerlevel>
+
+<topic> project_special_files
+Speciella filer
+Här beskrivs speciella filer som används för olika typer av konfigurering, eller som är av 
+annat intresse, och är förlagda någonstans i projekt-trädet. De är alla nämna tidigare i det 
+här kapitlet.
+
+<option> printdisable
+Konfigurering av Globala funktionstangenter.
+Rt_xtt <link> file_rt_xtt
+
+Konfigurering av menuer och snabbkommandon i rt_xtt.
+xtt_setup.rtt_com <link> file_rt_xtt
+
+Startupfil för Proview.
+ld_appl_<nodename>_<bus_no>.txt <link> file_ld_appl
+
+Fil för att ange vilka bibliotek som ska länkas med plc-programmet.
+plc_<nodename>_<bus_no>.opt <link> file_plc_opt
+
+Fil för att ange initialvärden vid Proview startup.
+pwrp_alias.dat <link> file_pwrp_alias
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic> file_rt_xtt
+Rt_xtt
+Den här filen läses in vid start av rt_xtt, och hämtas från katalogen varifrån rt_xtt startas.
+Filen konfigurerar tangenter för att utföra olika typer av kommandon.
+
+Giltiga kommandon är:
+
+<c>Command     // Exekverar ett xtt kommando.
+<c>SetDig      // Sätter en digital signal till TRUE.
+<c>ToggleDig   // Toggla värdet på en digital signal.
+<c>ResetDig    // Återställer en digital signal till FALSE.
+
+För att koppla en tangent till ett kommando måste man först definera tangenten och sedan
+kommandot. Ett exempel för att koppla tangenttryckningen <Ctrl>F5 till ett kommando som
+kvitterar A-larm:
+
+<c>Control <Key>F5: Command(event ack /prio=A)
+
+En typisk Rt_xtt fil kan se ut så här:
+
+<c>#
+<c># Function key definition file
+<c>#
+<c>Control <Key>F5: Command(event ack /prio=A)
+<c>Control <Key>F6: Command(event ack /prio=NOA) # ack non A-alarms 
+<c>Control <Key>F7: Command(show alarm)          # open alarm list
+<c>Control <Key>F8: Command(show event)          # open event list
+<c># Below opens a graph defined by a XttGraph-object in the node hierarchy.
+<c># The $Node-expression will be replaced by the node-object on this node.
+<c># This makes the Rt_xtt-file work on different nodes.
+<c>Alt <Key>F12: Command(open graph /object=$Node-Pictures-rkt_overview)
+<c># Below opens a graph defined by a XttGraph-object in the node hierarchy.
+<c># The /focus-syntax sets focus on a object in the graph named NewPlate
+<c>Control <Key>F9: Command(open graph /object=*-Pictures-rkt_platepic/focus="NewPlate")
+<c>Control <Key>F10: Command(open graph /object=*-Bilder-rkt_cells/focus="Check_no")
+<c># Below closes all open graphs except rkt_overview.
+<c>Control <Key>F11: Command(close all/except=rkt_overview)
+<c>Shift <Key>F1: SetDig(VWX-RKT-RB-DS-OnOffMan_1_2.ActualValue)
+<c>Shift <Key>F6: ResetDig(VWX-RKT-RI-RP-CalcPrePos.ActualValue)
+<c>Shift Control <Key>v: ToggleDig(VWX-RKT-COM-VWXSVR-BlockOrder_RKT.ActualValue)
+
+</topic>
+<topic> file_xtt_setup
+xtt_setup.rtt_com
+Den här filen läses in vid start av rt_xtt. Filen läses från den katalog man startar rt_xtt från,
+Med hjälp av den kan man konfigurera egna menyer och koppla menyalternativ till att utföra
+speciella kommandon.
+
+Alla kommandon i filen följer syntaxen för xtt script och kommandon. Se Operatörshandboken för mer
+info om script och kommandon.
+
+När man startar rt_xtt finns som default en meny med alternativet Databas överst. Om man, till
+exempel, vill skapa en meny ovanför denna är kommandot:
+
+<c>create item/text="Maintenance"/menu/dest=DataBase/before
+
+För att skapa en undermeny (första barnet) till denna används kommandot:
+
+<c>create item/text="VVS"/menu/dest=Maintenance/firstchild
+
+För att skapa ett menyalternativ som utför ett kommando under VVS menyn används kommandot:
+
+<c>create item/text="Graph P1"/command="open graph/object=$Node-pics-h4_proc1"\ 
+<c>       /pixmap=graph/dest=Maintenance-VVS/lastchild
+
+Pixmap kvalifieraren anger att en speciell ikon används för menyalternativet. Utan denna blir ikonen
+en löv. Kommandot öppnar en graf definierad med ett XttGraph objekt i nodhierarkin.
+
+Resultatet ser ut så här:
+
+<image> dg_psfig2.png
+
+Förutom att bygga menyer, kan man även definera symboler (genvägar) som kan användas som kommandon.
+Symbolen matas in på kommando-raden och kommandot definierat av symbolen exekveras.
+Nedan defineras symbolen 'h4' som öppnar en graf:
+
+<c>define h4 "open graph /object=*-pics-h4_process1"
+
+I xtt_setup-filen lägger man in ett kommando per rad. Kommentars-rader inleds med ett utropstecken.
+</topic>
+
+<topic> file_ld_appl
+ld_appl_<node>_<bus_no>.txt
+
+I den här filen anges de applikationer som ska startas vid start av Proview runtime. Man kan addera
+egna appikationer, men även stänga av en eller flera av Proview's system-processer.
+
+En typisk ld_appl-fil kan se ut så här:
+
+<c># Startup file for PROVIEW/R
+<c>#
+<c># id,   name,   load/noload run/norun,  file,   prio,   debug/nodebug,  "arg" 
+<c>#pwr_neth,      , noload, norun, , 5, debug, ""
+<c>#pwr_plc,       , noload, norun, ,  , debug, ""
+<c>#pwr_alim,      , noload, norun, , 5, debug, ""
+<c>#pwr_emon,      , noload, norun, , 5, nodebug, ""
+<c>#pwr_tmon,      , noload, norun, , 5, debug, ""
+<c>#pwr_qmon,      , noload, norun, , 19, debug, ""
+<c>#pwr_nacp,      , noload, norun, , 5, debug, ""
+<c>#pwr_bck,       , noload, norun, , 5, debug, ""
+<c>#pwr_io,         , noload, norun, , 5, debug, ""
+<c>#pwr_linksup,   , noload, norun, , 5, debug, ""
+<c>#pwr_trend,     , noload, norun, , 5, debug, ""
+<c>#pwr_fast,       , noload, norun, , 5, debug, ""
+<c>#pwr_remh,       , noload, norun, , 5, debug, ""
+<c>pwr_remlog,       , noload, norun, , 5, debug, ""
+<c>#pwr_sysmon,       , noload, norun, , 5, debug, ""
+<c>#pwr_elog,       , noload, norun, , 5, debug, ""
+<c>pwr_webmon,       , noload, norun, , 5, debug, ""
+<c>pwr_webmonmh,       , noload, norun, , 5, debug, ""
+<c>pwr_webmonelog,       , noload, norun, , 5, debug, ""
+<c>#pwr_opc_server,       , noload, norun, , 5, debug, ""
+<c>#pwr_sevhistmon,       , noload, norun, , 5, debug, ""
+<c>#pwr_sev_server,       , noload, norun, , 5, debug, ""
+<c>#rs_nmps_bck, rs_nmps_bck, noload, run, rs_nmps_bck, 12, nodebug, ""
+<c>ra_utl_track, ra_utl_track, noload, run, ra_utl_track, 12, nodebug, ""
+
+'#' teckenet innebär att raden är bortkommenterad. Nästan alla Proview's systemprocesser är
+bortkommenterade eftersom vi vill att de ska starta (de är markerade med 'norun'). Om vi tar 
+bort #-tecknet kommer denna systemprocess ej att startas. I ovanstående exempel har 
+vi inte något web-gränssnitt och startar därför inte de processer som hanterar detta 
+(pwr_webmon, pwr_webmonmh och pwr_webmonelog).
+
+På den sista raden finns en applikation som tillhör projektet och ska startas vid Proview start.
+Prioriteten är satt till 12 som är något under prioriteten för Proview's systemprocesser som
+har mellan 17 och 19.
+</topic>
+
+<topic> file_plc_opt
+plc_<node>_<bus_no>.opt
+Den är filen (om den existerar) används för att addera bibliotek och objektsmoduler vid
+länkningen av plc-programmet. Några bibliotek och objektsmoduler måste finnas med, och
+en default option-fil ska se ut så här:
+
+<c>$pwr_obj/rt_io_user.o -lpwr_rt -lpwr_usbio_dummy
+
+Till detta adderas de bibliotek och moduler som behövs. Syntaxen är den som gäller för ld 
+(The GNU linker). Proview genererar en template option-fil .opt_template som kan användas som
+mall.
+
+</topic>
+
+<topic> file_pwrp_alias
+pwrp_alias.dat
+Fil för att sätta initialvärden vid Proview start.
+
+Det finns några olika sätt att sätta värden med pwrp_alias-filen.
+Samma fil används för alla noder i projktet. Varje rad ska inledas med följande uttryck:
+
+<c><nodename>_setval
+
+De olika sätten att sätta värden beskrivs nedan:
+
+1. Sätta värde på ett attribut
+
+<c><nodename>_setval <attribute_name> = <value>
+
+Exempel
+
+<c>bslds1_setval bsl-ds1-par-maxtemp.actualvalue = 70.0
+
+Med denna syntax kommer värdet att sättas före backup'en har laddads, och före plc-programmet
+har startat. Det betyder att om värdet backas upp är det backupvärdet som gäller.
+
+Om man vill vara säker på att datasättningen kommer att ha effekt används denna syntax:
+
+<c><nodename>_setvalp <attribute_name> = <value> 
+
+I det har fallet utförs datasättningen efter backup-filens laddning och plcprogrammets start.
+
+2. Sätta simulerings-mod
+
+Att sätta simulerings-mod innebär att I/O inte hanteras. Man kan skriva simulerings-program
+för att sätta lämpliga värdet på ingångs I/O. Addera den här raden till filen:
+
+<c><nodename>_setval plcsim = yes
+
+3. Stäng av exekveringen av alla plc-program vid startup
+
+För att sätta scan-off på alla plc-program används den här raden:
+
+<c><nodename>_setval plcscan = off
+
+Exekveringen på ett PlcPgm kan sedan sättas på genom att sätta ScanOff attributet i WindowPlc 
+objektet (ligger som barn till PlcPgm-objektet) till 0. Observera att eventuella underfönster
+också kan behöva startas.
+</topic>
+
+
+</headerlevel>
+
+</chapter>
+
+<chapter>
 <topic>plc_programming
 Grafisk PLC programmering
 
@@ -2054,6 +2007,1974 @@ simulerings-system och i ett utbildnings-system, och alla kan ha olika plattform
 Nu kompileras plcprogrammet genom att välja 'File/Build' i plceditorns meny. Eventuella
 fel och varningar visas i meddelandefönstret.
 </topic>
+</chapter>
+
+<chapter>
+<topic> dg_plc_functions
+Anropa funktioner från plc programmet
+
+Den funktions-blocks programmering som plc-programmet utgörs av har sina begränsningar, och
+vissa saker kan göras mycket enklare och snyggare med c-kod. För detta finns funktionsblocken
+CArithm och DataArithm där man kan lägga in en viss mängd c-kod, men antal tecken är 1023, och 
+ibland räcker det inte till. Då har man två möjligheter, att skriva en fristående applikation, 
+vilket finns beskrivet i kapitlet Applikationsprogrammering, eller att anropa en c-funktion 
+från en CArithm eller DataArithm. Fördelen med att anropa en funktion är att all initiering och 
+knytning till objekt sköts av plc-programmet. Dessutom  sker anropen synkront med exekveringen 
+av den plc-tråd som anropar funktionen.
+
+<h1>Skriva koden
+Koden läggs i en c-fil, som läggs någonstans under $pwrp_src. Vi skapar filen 
+$pwrp_src/ra_myfunction.c och lägger in funktionen MyFunction() som utför en enkel beräkning.
+
+<c>#include "pwr.h"
+<c>#include "ra_plc_user.h"
+
+<c>void MyFunction( pwr_tBoolean cond, pwr_tFloat32 in1, pwr_tFloat32 in2, 
+<c>                 pwr_tFloat32 *out)
+<c>{
+<c>  if ( cond)
+<c>    *out = in1 * in2;
+<c>  else
+<c>    *out = in1 + in2;
+<c>}
+
+<h1>Prototypdeklaration
+I includefilen ra_plc_user.h läggs en prototypdeklaration av funktionen. 
+
+<c>void MyFunction( pwr_tBoolean cond, pwr_tFloat32 in1, pwr_tFloat32 in2, 
+<c>                 pwr_tFloat32 *out);
+
+ra_plc_user.h includeras av plc-programmet, och funktionen kan därmed anropas från CArithm 
+eller DataArithm objekt. Man bör även includera ra_plc_user.h i funktions-koden för att få en 
+kontroll på att anropet stämmer.
+
+ra_plc_user bör ligga på $pwrp_src och kopieras till $pwrp_inc varifrån den inkluderas av plc't
+och funktions-kod.
+
+<h1>Kompilera koden
+c-filen kompileras, till exempel med hjälp av make. Nedan visas en makefile som kompilerar
+ra_myfunction.cpp och lägger resultatet, objektsmodulen ra_myfunction.o på $pwrp_obj.
+Notera att även ett beroende på ra_plc_user.h har lagts in så att denna kommer att kopiera 
+från $pwrp_src till $pwrp_inc.
+
+
+<c>ra_myfunction_top : ra_myfunction
+
+<c>include $(pwr_exe)/pwrp_rules.mk
+
+<c>ra_myfunction_modules : \ 
+<c>		$(pwrp_inc)/ra_plc_user.h \ 
+<c>		$(pwrp_obj)/ra_myfunction.o
+
+<c>ra_myfunction : ra_myfunction_modules
+<c>	@ echo "ra_myfunction built"
+
+<c>#
+<c># Modules
+<c>#
+
+<c>$(pwrp_inc)/ra_plc_user.h : $(pwrp_src)/ra_plc_user.h
+
+<c>$(pwrp_obj)/ra_myfunction.o : $(pwrp_src)/ra_myfunction.c \ 
+<c>                              $(pwrp_inc)/ra_plc_user.h
+
+
+<h1>Anrop från plc-programmet
+Anropet av funktionen sker från ett CArithm, DataArithm, AArithm eller DArithm objekt. 
+
+<image>dg_fig97.png
+<b>Fig Anrop av funktion från plc-koden
+
+<b>Länka plc-programmet
+Vid kompileringen skapades objektsmodulen $pwrp_obj/ra_myfunction.o. Denna måste länkas med
+när plcprogrammet byggs, och det sker genom att objektsmodulen läggs in i en option fil som
+skickas med som indata till länkaren. Optionfilen ligger på $pwrp_exe och har namnet
+plc_'nodename'_'qbus'.opt, t ex
+
+<c>$pwrp_exe/plc_mynode_0999.opt
+
+I denna läggs följande rad in
+
+<c>$pwr_obj/rt_io_user.o $pwrp_obj/ra_myfunction.o -lpwr_rt -lpwr_usbio_dummy
+
+Vi kan nu bygga noden och starta Proview runtime.
+
+<h1>Debug
+En nackdel när man lämnar den grafiska programmeringen och anropar c-funktioner är att man 
+inte längre kan följa förloppet i trace. Om man misstänker att det är något fel i koden är 
+ofta bästa sättet att starta plc-programmet i debug, sätta en brytpunkt i funktionen, och
+stega sig fram i koden.
+
+Först bygger man plc-programmet med debug genom att från konfiguratören öppna Options/Setting 
+i menyn och aktivera Build/Debug, och sedan bygga noden.
+
+Därefter man startar Proview runtime och knyter upp debuggern, gdb, mot plcprocessen genom 
+att skicka med pid för processen till gdb med -p. pid kan man se med 'ps x'
+
+<c>> ps x
+<c>...
+<c>5473 pts/0    Sl     0:18 plc_mynode_0999_00003
+
+5473 är pid för plcprogrammet och vi startar debuggern, sätter en brytpunkt i funktionen
+och låter programmet exekvera vidare
+
+<c>> gdb -p 5473 plc_mynode_0999_00003
+<c>(gdb) b MyFunction
+<c>(gdb) c
+
+När programmet går in i funktionen fastnar det i debuggern och vi kan stega (s) och titta på
+innehållet i variabler (x) mm.
+
+Om plcprogrammet terminerar direkt efter start, kan man starta om det i debug.
+
+<c>> gdb plc_mynode_0999_00003
+
+Det går också bra att döda den gående plc-processen och starta en ny i debug
+
+<c>> killall plc_mynode_0999_00003
+<c>> gdb plc_mynode_0999_00003
+
+</topic>
+</chapter>
+
+<chapter>
+<topic>dg_components
+Komponenter och Aggregat
+
+Det här kapitlet handlar om hur man programmerar med hjälp av komponenter och aggregat.
+
+
+En komponent är ett (eller att antal objekt) som hanterar en komponent i anläggningen. En
+komponent kan var t ex en ventil, en kontaktor, en temperaturgivare eller en frekvensomformare.
+Eftersom det här är komponenter som förekommer i många olika typer av anläggningar är det idé
+att försöka göra ett objekt som innehåller allt som behövs för att styra och kontrollera 
+komponenten, och som är så generellt att det kan användas i de flesta anläggningar.
+
+En komponent i Proview kan vara uppdelat på ett antal objekt: 
+- ett huvudobjekt som innehåller konfigureringsdata och data som behövs vid övervakning och 
+  drift av komponenten. Det innehåller även signal-objekten för komponenten.
+- ett funktionsobjekt som läggs in i plcprogrammet och som innehåller koden för att styra 
+  komponenten.
+- ett I/O objekt som definierar eventuell kommunikation med t ex en profibus modul.
+- ett simuleringsobjekt för att enkelt kunna testa och simulera systemet.
+
+Dessutom ingår en objektbild, dokumentation, ev trendkurvor mm.
+
+Aggregat är en större del i anläggningen än en komponent, och innehåller ett antal komponenter.
+Ett aggregat kan t ex vara en pumpstyrning, som består av komponenterna pump, motor, kontaktor
+och säkerhetsbrytare. I övrigt är aggregatet uppbyggt som en komponent med huvudobjekt,
+funktionsobjekt, simuleringsobjekt, objektsbild, dokumentation mm.
+
+<b>Objektsorientering
+Proview är ett objektsorienterat system, och komponenter och aggregat är ett område där man
+utnyttjar objektsorienteringens egenskaper fullt ut. I komponenter kan man 
+se hur man bygger upp objekt av andra objekt, att ett attribut förutom att vara en enkel typ 
+som  en float eller en integer, även kan vara ett objekt som i sin tur består av andra objekt.
+Ett  attribut som är ett objekt kallas för ett attributobjekt. Det är inte riktigt analog med 
+ett fristående objekt eftersom det inte har något objektshuvud och inte någon egen 
+objektsidentitet, men i övrigt innehåller det alla egenskaper som ett fristående objekt har
+i form av metoder, objektbilder mm. 
+
+Ett exempel på attributobjekt kan vi se i komponentobjektet för en magnetventil. Här ligger 
+signalobjekten, två Di objekt för gränslägen och ett Do objekt för styrsignal för att 
+öppna ventilen, intern i objektet som  attributobjekt. Vi behöver alltså inte skapa signalerna
+separat, utan i och med att ventilobjektet är skapat, har vi även skapat signalerna för detta
+objekt. Ett annat exempel på attributobjekt är ett motoraggregat som innehåller komponentobjekt 
+för frekvensomformare, säkerhetbrytare, motor mm i form av attributobjekt.
+
+
+En annan viktig egenskap inom objektsorienteringen är arv. Med arv menas att man kan skapa 
+en subklass utgående från en existerande klass, en superklass. Subklassen som ärver alla
+egenskaper från superklassen, men man har möjlighet att lägga till eller förändra en del 
+egenskaper. Ett exempel på detta är en komponent för en temperaturgivare som är en subklass
+till ett generellt givarobjekt för analoga givare. Den ända skilladen mellan temperatur-
+givarklassen och dess superklass är objektsbilden, där givarvärdet presenteras i form av en
+termometer i stället för en stapel. Ett annat exempel är ett pumpaggregat som subklassar ett
+motoraggregat. Pumpaggregatet har utökats med ett pump objekt och har även modifierade 
+objektsbilder som förutom motorstyrningen även visar en pump.
+
+<image> orm_basetempsensor_og.gif
+<b>Fig Objektsbild för subklassen BaseTempSensor med superklassen BaseSensor
+
+En annan egenskap som vi har infört är möjligheten att sätta attribut ur funktion. Orsaken till
+detta är att komponentobjekten måste göras så generella att de täcker in alla varianter av
+den komponent i anläggningen de ska styra. En magnetventil kan t ex ha ett gränsläge som 
+markerar att ventilen är öppen, men det finns även ventiler med gränslägen som markerar stängd 
+ventil, eller ventiler med båda gränslägena eller ventiler helt utan gränslägen. Man skulle
+naturligvis ha kunna göra fyra olika komponentklasser, en för varje gränslägesvariant, men 
+problemen uppstår när man vill bygga aggregat av komponenterna. Antalet varianter av ett
+aggregat blir snart ohanterbart om man ska täcka in alla olika varianter av delkomponenterna.
+Om vi t ex ska göra ett aggregat som innehåller fyra magnetventiler och varje ventil kan 
+finnas i fyra varianter, blir det 64 varianter av aggregatet. Vill vi dessutom bygga ett 
+aggregat som innehåller fyra ventilaggregat är vi uppe i 4096 olika klasser. Lösningen är att 
+bygga en ventilkomponent med båda gränslägena, där man sedan genom en konfigurering kan sätta 
+attributen för ett eller för båda gränslägena ur funktion, så den kan hantera alla fyra 
+gränslägesvarianterna. I det här fallet är det attributobjekt av klassen Di som sätts ur 
+funktion, vilket innebär att de inte visas i navigatören och ignoreras av I/O hanteringen. 
+Dessutom tas det hänsyn till detta i koden för ventilkomponenten och i objektsbilder. 
+Konfigureringen gör i konfiguratören från popupmenyn där man under 'ConfigureComponent' kan 
+välja en konfigurerring av de olika alternativ som finns.
+
+<image> dg_fig76.png
+<b>Fig ConfigureComponent metoden för en BaseMValve. 
+
+<h2>Baskomponenter
+Proview innehåller ett antal komponent och aggregat objekt för vanliga element i en anläggning,
+t ex temperaturgivare, tryckgivare, tryckvakt, magnetventil, filter, motorstyrningar och
+fläktstyrningar. De finns samlade i klassvolymen BaseComponent. En baskomponent kan användas
+rakt av, och det är nog det vanligaste sättet att använda dem, men tanken är också att man 
+utgående från basklasserna skapar klasser och bygger upp bibliotek med för de specifika
+komponenter man använder i sina anläggningar.
+
+För magnetventiler finns basklassen BaseMValve. Har man en magnetventil av typen 
+Durholt 100.103 skapar man en subklass med BaseMValve som superklass, Durholt_Valve_100_103, 
+och lägger in den konfigurering som gäller för just den här ventilen, dessutom lägger man in 
+en länk till datablad och fyller i Specification attributet så att man kan identifiera och 
+beställa reservdelar till ventilen. När man använder ett Durholt_Valve_100_103 objekt behöver 
+man sedan inte göra så mycket konfigureringar och anpassningar eftersom detta är gjort redan 
+i klassen. På det här sättet kan man bygga upp komponentbibliotek för de olika typer av 
+komponenter som man använder i sina anläggningar. 
+
+Ett problem uppstår när man använder aggregat. Aggregaten innehåller baskomponenter från 
+BaseComponent och finns det specifica subklasser för komponenterna, vill man kunna använda 
+dessa även i aggregaten. Lösningen på problemet är Cast (forma) funktionen. En baskomponent 
+i ett aggregat kan castas till en subklass, under förutsättning att subklassen har samma 
+storlek, dvs att subklassen inte har utökats med nya attribut. Castningen innebär att 
+komponenten hämtar initialvärden, konfigureringar, metoder, objektbilder mm från subklassen, 
+dvs i alla lägen uppträder som den subklass den är castade till. Castningen utförs från 
+popupmenyn i konfiguratören, där man i 'Cast' alternativet får upp en lista på de subklasser 
+som finns att välja på. Genom att välja en subclass castar man komponenten till denna.
+
+<h1>Tryckvakt
+Låt oss titta på en relativt enkel komponent, en tryckvakt, för att se hur den är uppbyggd och 
+hur man konfigurerar den. För tryckvakter finns baskomponenten BasePressureSwitch, som är en 
+subklass till BaseSupSwitch. Eftersom temperatur-, tryck-, och nivåvakter är väldigt lika ur 
+övervakningssynpunkt har de en gemensam superklass. BaseSupSwitch har i sin tur en superklass, 
+Component, som är gemensam för all komponentklasser. Klassberoende för tryckvaktsklassen blir 
+med andra ord
+
+<c>Component-BaseSubSwitch-BasePressureSwitch
+
+<b>Component klassen
+Component innehåller attributen Description, Specification, HelpTopic, DataSheet, CircuitDiagram, 
+Note och Photo som alltså finns i alla komponenter. I Description finns plats för en kort 
+beskrivning, i Specification lägger man in modelltypen för den komponent det är frågan om, de 
+övriga används för att konfigurera motsvarande metoder i operatörsmiljön.
+
+<b>BaseSubSwitch
+Från superklassen BaseSupSwitch ärvs attributen Switch, AlarmStatus, AlarmText, Delay,
+SupDisabled och PlcConnect.
+
+- Switch är Di objektet för tryckgivaren. Detta måste kopplas till
+  ett kanalobjekt i nodehierarkin.
+- AlarmStatus visar larmstatus i runtime.
+- AlarmText innehåller larmtexten för det larm som skickas vi larmstatus. Larmtexten har 
+  defaultvärdet "Pressure switch, ", men kan naturnligvis bytas ut mot någonting annat.
+  Observera att om defaulttexten behålls, kommer denna att översättas om man väljer att 
+  annat språk. Lägger man in en annan text, sker ingen översättning.
+- Delay anger larmets fördröjning i sekunder, (default 0 sekunder).
+- SupDisabled indikerar att larmet är undertryckt.
+- PlcConnect är koppling till funktionsobjekt i plc-koden.
+
+Till huvudobjektet BaseSupSwitch, finns det ett funktionsobjekt BaseSupSwitchFo, och
+även detta ärvs av tryckvakskomponenten.
+
+<b>BasePressureSwitch
+BasePressureSwitch har inte några attribut utöver de som har ärvts från superklasserna. Det
+som är unikt för BasePressureSwitch är den grafiska symbolen, 
+Components/BaseComponent/PressureSwitch, och objeksbilden, där switch-symbolen innehåller 
+ett P som markerar tryck.
+
+
+<b>Konfigurering
+Vi öppnar konfiguratören och lägger in huvudobjektet, BasePressureSwitch, i anläggning-
+hierarkin. I ett lämpligt PlcPgm lägger vi in funktionsobjektet BaseSupSwitchFo och
+kopplar detta till huvudobjektet med connect-funktionen. Välj ut huvudobjektet och klicka med
+Shift/Dubbelklick MB1 på funktionsobjektet. Funktionsobjektet innehåller koden för komponenten,
+som för en BaseSupSwitch är ett larm skickas vid larmtillstånd.
+
+<image> dg_fig77.png
+<b>Fig Huvudobjekt med tillhörande funktionsobjekt
+
+Tryckvakten ska visas för operatören i en Ge bild. Vi öppnar Ge-bilden och hämtar subgrafen 
+BaseComponent/SupSwitch från paletten. Subgrafen är anpassad till till en BaseSupSwitch, så
+det ända vi behöver göra är att koppla den till huvudobjektet. Välj ut huvudobjektet i 
+planthierarkin och klicka med Shift/Dubbelklick MB1 på subgrafen.
+
+<image> dg_fig78.png
+<b>Fig Grafisk symbol, popupmeny med metoder och objeksbild
+
+Det här räcker för att göra komponenten funktionsduglig. Sedan kan man naturligvis forsätta
+att konfigura metodattributen med hjälptexter och länkar till fotografier, elschemor och 
+datablad.
+
+<h1>Reglerventil
+Nu ska vi titta närmare på en lite mer omfattande komponent, BaseCValve, som styr en 
+reglerventil. Till skillnad från tryckvakten ovan, måste man använda ConfigureComponent för
+att konfigurerar objektet, dessutom finns det ett simuleringsobjekt som används för att
+testa systemet.
+
+Antag att vi har en reglerventil, som styrs med en analog utsignal, och som ger positionen 
+tillbaka i en analog ingång. Här kan vi använda en BaseCValve. Den har den analoga utsignalen 
+'Order' och den analoga insignalen 'Position', dvs de signaler som vi efterfrågar. Dessutom 
+finns två digitala insignaler för gränsläge öppen och gränsläge stängd, men dessa kan 
+elimineras med hjälp av  konfigurering.
+
+<b>Konfigurering
+Vi lägger in huvudobjektet BaseCValve i planthierarkin och funktionsobjektet BaseCValveFo i
+ett PlcPgm, och kopplar ihop dem med Connect funktionen. Funktionsobjektet har en orderingång
+som vi kopplar till ett PID objekt. Vi måste även ange att vår ventil inte har några gränslägen,
+och det gör vi genom att välja 'ConfigureComponent/PositionNoSwitches' i popupmenyn för
+huvudobjektet. När vi nu öppnar huvudobjektet, och i detta Actuator objektet, ska vi hitta
+en Position signal, men inga gränslägessignaler.
+
+<image> dg_fig79.png
+<b>Fig Huvudobjekt med funktionsobjekt
+
+<image> dg_fig81.png
+<b>Fig ConfigureComponent alternativet PositionNoSwiches
+
+Vi lägger även in subgrafen BaseComponent/CValve i en Ge-bild och kopplar denna till 
+huvudobjektet.
+
+Nu vill vi även kunna simulera ventilen, för att se att den fungerar som vi har tänkt. För 
+simulering finns funktionsobjektet BaseCValveSim som vi lägger i ett speciellt PlcPgm för
+simulering, eftersom det inte ska exekvera i driftsystemet. Funktionsobjektet kopplas till
+huvudobjektet med Connect-funktionen.
+
+<image> dg_fig80.png
+<b>Fig Simuleringsobjekt för reglerventilen
+
+Konfigureringen är klar och efter att ha byggt simuleringsnoden kan vi testköra och titta på
+resultatet.
+
+<h1>Pumpstyrning
+Nästa exempel är ett aggregat, en pumpstyrning med en frekvensomformare som kommunicerar via
+Profibus med protokollet PPO3. Vi kommer att se hur ett komponentobjekt i aggregatet, förutom 
+huvudobjekt, funktionsobjekt och simuleringobjekt, även omfattar I/O objekt för att hämta och 
+skicka data via profibus.
+
+Klassen vi använder är BaseFcPPO3PumpAggr, och om vi tittar på klassberoendet är det
+
+<c> Aggregate-BaseFcPPO3MotorAggr-BaseFcPPO3PumpAggr
+
+Alla aggregat har superklassen Aggregate som motsvarar Component classen för komponenter. Nästa
+superklass, BaseFcPPO3MotorAggr innehåller all funktionalititet för styrningen. Själva pump
+klassen BaseFcPPO3PumpAggr utökar motoraggregatet med ett pumpobjekt som representerar den
+mekaniska pumpen, men som inte innehåller några signaler eller någon ytterligare funktionalitet.
+Dessutom har pumpaggregats klassen en egen objektbild och en egen grafisk symbol.
+
+<b>Konfigurering
+Huvudobjektet BaseFcPPO3PumpAggr läggs i anläggningshierarkin och funktionsobjektet (som ärvts
+från motoraggregatet) BaseFcPPO3MotorAggrFo läggs i ett PlcPgm, och de båda kopplas ihop med
+Connect funktionen. 
+
+Huvudobjektet har inte mindre än 24 olika konfigureringar att välja mellan, beroende på 
+vilka av komponenterna Fuse, Contactor, SafetySwich, StartLock och CircuitBreaker som finns med
+i konstruktionen. I vårt fall har vi bara en kontaktor och en frekvensomformare och väljer
+alternativet ConfigureComponent/CoFc.
+
+En del komponenter i ett aggregat kan ha egna konfigureringar. I det har fallet kan kontaktorn
+och motorn konfigureras individuellt. Vår kontaktor har två signaler, en Do för order och en Di
+för feedback, och det stämmer med default konfigurationen, så denna behöver vi inte ändra på.
+Motorn däremot har ett motorskydd i form av en temperaturvakt, därför väljer vi ut motor
+komponenten och aktiverar ConfigureComponent/TempSwitch i popupmenyn. 
+
+Nästa steg är att koppla ihop signalobjekt med kanalobjekt. Kontaktorn innehåller en Do och en 
+Di för order resp feedback som kopplas till lämpliga kanalobjekt i nodehierarkin. Motorn,
+har en temperaturvakt i form av en Di som också ska kopplas. Frekvensomformaren innehåller 
+fyra signaler, StatusWordSW (Ii), ActSpeed (Ai), ControlWordCW (Io) och RefSpeed (Ao). Dessa
+signaler utbyts med frekvensomformaren via Profibus med protokollet PPO3. Det finns ett 
+speciellt Profibus modulobjekt för PPO3, BaseFcPPO3PbModule, innehåller kanaler för PPO3
+kommunikation. Modulen konfigureras mha Profibus konfiguratorn (see Guide to I/O System),
+och kopplas ihop med FreqencyConverter komponenten i pumpaggregatet. Eftersom komponentobjektet 
+och modulobjektet är anpassade till varandra, behöver man inte koppla signal för signal, utan
+man kopplar component med modul istället. Genom att välja ut modulobjektet och aktivera 
+ConnectIo i popupmenyn for FrequencyConverter komponenten är kopplingen gjord.
+
+Vi lägger även in subgrafen Components/BaseComponents/FcPPO3PumpAggr i en översiktsbild
+och kopplar denna till huvudobjektet. Vidare lägger vi in ett simuleringsobjekt 
+BaseFcPPO3MotorAggrSim i ett speciellt simulerings PlcPgm, och kopplar detta till huvudobjektet.
+
+<b>Mode
+PumpAggregatet innehåller ett Mode objekt där man konfigurerar varifrån pumpen styrs. Det
+innehåller moderna Auto, Manuel och Local med följande betydelse:
+
+- Auto: pumpen styrs av plc-programmet.
+- Manuell: pumpen styrs av operatören från objektsbilden.
+- Lokal: pumpen styrs från en pulpet.
+
+I Mode objektet kan man konfigurera vilka moder som är aktuella för den här pumpen.
+</topic>
+
+<headerlevel>
+<topic> dg_compcasestudy
+En Component fallstudie 
+
+I det här avsnittet ska vi programmera en reglering av nivån i en vattentank, mha komponenter
+och aggregat.
+
+<b>Process
+Processen vi ska styra ser vi i figur 'Nivåreglering'. Vattnet pumpas från en reservoar till
+en tank. Vår uppgift är att reglera nivån i tanken. Till hjälp har vi en nivå-givare och en
+reglerventil. I systemet finns även en returledning med en magnetventil som alltid är öppen
+under regleringen. Vi noterar att tanken är 1 meter hög, vilket kommer att återspeglas i 
+diverse olika min och max värden vid konfigureringen.
+
+<image> dg_fig82.png
+<b>Fig Nivågreglering
+
+Vi kan identifiera följande komponenter: 
+- en kontaktorstyrd pump, med effektbrytare, kontaktor, motorskydd och säkerhetsbrytare.
+- en reglerventil med två gränslägen för öppen och stängd.
+- en nivågivare.
+- en magnetventil med två gränslägen för öppen och stängd ventil.
+
+Följande komponentobjekt motsvarar komponenterna i anläggningen:
+
+- Pump <t><t>BasePumpAggr
+- Reglerventil <t><t>BaseCValve
+- Nivågivare <t><t>BaseLevelSensor
+- Magnetventil <t><t>BaseMValve
+
+<h2>Konfigurering i planthierarkin
+Komponenterna läggs under hierakin LevelControl. Under detta lägger vi ett PlcPgm 'Plc' som 
+ska innehålla koden för styrningen, ett PlcPgm 'Simulate' som ska innehålla den kod som 
+behövs för att vi ska kunna simulera och testa programmet. Vi skapar även tre Dv objekt
+för starta, stoppa och återställa reglerprogrammet (Start, Stop och Reset).
+
+<image> dg_fig83.png
+<b>Fig Plant configuration
+
+<b>Pump
+Pumpstyrningen består av
+- en effektbrytare med en Di.
+- en kontaktor med en Do för order, och en Di för kontaktorsvar.
+- ett motorskydd med en Di.
+- en säkerhetsbrytare med en Di.
+- en motor utan några signaler.
+
+För pumpen skapas ett BasePumpAggr objekt men namet P1. 
+
+Det ConfigureComponent alternativ som motsvara konstruktionen är CbCoOrSs (CircuitBreaker, 
+Contactor, Order, SafetySwitch) och vi väljer ut P1 och aktiverar detta alternativ i
+ConfigureComponent från popupmenyn.
+
+<image> dg_fig86.png
+<b>Fig Pump configuration
+
+Komponenterna Contactor och Motor har egna konfigurationer så även för dessa måste vi aktivera
+ConfigureComponent. Vi väljer ut Contactor och väljer ConfigureComponent/OrderFeedback eftersom
+vi både har en signal for order och en för kontaktorsvar. För Motor objektet väljer vi
+ConfigureComponent/NoTempSwichOrSensor eftersom motorn saknar signaler.
+
+Alla signaler som finns i pumpaggregatet ska kopplas till kanalobjekt i nodhierarkin. Vi letar
+upp följande signalobjekt och kopplar dem lämpliga kanaler:
+
+P1.Contactor.Order 		<t><t>Do order till kontaktorn.
+P1.Contactor.Feedback 		<t><t>Di kontaktorsvar.
+P1.CircuitBreaker.NotTripped 	<t><t>Di effektbrytare ej utlöst.
+P1.SafetySwitch.On 		<t><t>Di säkerhetsbrytare till.
+P1.OverloadRelay.Overload 	<t><t>Di överlastningsrelä utlöst.
+
+
+<b>Reglerventil
+Reglerventilen har ett ställdon som styrs med en analog utsignal, och gränslägesgivare för
+öppen och stängd ventil.
+
+Vi skapar ett BaseCValve objekt med namnet CV1. ConfigureComponent alternativet som passar
+in på vår konstruktion är TwoSwitches. 
+
+Följande signaler kopplar vi till lämpliga kanaler i nodhierarkin:
+
+CV1.Actuator.Order 		<t><t>Ao för styrsignal.
+CV1.Actuator.SwitchOpen 	<t><t>Di för gränsläge öppen.
+CV1.Actuator.SwitchClosed 	<t><t>Di för gränsläge stängd.
+
+<b>Nivågivare
+För nivågivaren skapar vi ett BaseLevelSensor objekt men namnet LC1. Denna har inte någon
+ConfigureComponent metod, men det finns en del annat att konfigurera.
+
+Givarobjektet har larmgränser för HögHög, Hög, Låg och LågLåg och dessa sätts i attributen
+LC1.LimitHH.Limit, LC1.LimitH.Limit, LC1.LimitL.Limit och LC1.LimitLL.Limit. Vi sätter även
+övre gränsen för visning av värdet i LC1.Value.PresMaxLimit till 1. Detta påverkar området 
+för stapeldiagram och trendkurvor.
+
+<b>Magnetventil
+Magnetventilen styrs av en digital utsignal och har feeback i form av digitala insignaler
+för gränsläge stängd och gränsläge öppen.
+
+För magnetventilen skapar vi ett BaseMValve objekt med nament MV1. 
+
+I ConfigureComponent väljer vi TwoSwitches som motsvarar den aktuella konfigurationen med
+de båda gränslägena.
+
+Signaler som ska kopplas till kanaler i noderhierarkin är:
+
+MV1.Order 		<t><t>Do för order att öppna ventilen.
+MV1.SwitchOpen 		<t><t>Di för gränsläge öppen.
+MV1.SwitchClosed 	<t><t>Di för gränsläge stängd.
+
+<h1>Plcprogram
+Nästa steg är att skriva plcprogrammet för nivåstyrningen. Här ska funktionsobjekten för
+komponenterna ingå:
+
+- BaseMotorAggrFo för pumpen P1.
+- BaseCValveFo för reglerventilen CV1.
+- BaseMValveFo för magnetventilen MV1.
+- BaseSensorFo för nivågivaren LC1.
+
+Vi lägger ut funktionsobjekten och kopplar dem till respektive huvudobjekt, genom att välja
+ut huvudobjektet och aktivera Connect i popupmenyn för funktionsobjektet.
+
+Vi kommer även att använda en PID regulator för att styra nivån i tanken. Regulatorn har
+värdet från nivågivaren som ärvärde, och lägger ut utsignalen till reglerventilen, som då
+kommer att anpassa inflödet i tanket så att rätt nivå uppnås. Regulatorn skapas med 
+funktionsobjekten Mode och PID. 
+
+Programmet byggs upp kring en Grafcet sekvens med fyra steg. Se Fig Plc program
+
+1. Initialsteget IS0 är viloläget när pumpen är avstängd och alla ventiler stängda.
+
+2. När Start Dv'n sätts från en knapp i operatörsbilden, aktiveras steg S0. Här 
+   startas pumpen genom att sordern Ord0 kopplas till startingången på funktionsobjektet
+   för pumpen P1. När pumpen har startat sätts On utgången på pumpobjektet, och 
+   aktiviteten flyttas till nästa steg S1. Observera att sordern Ord0 fortsätter att
+   vara aktiv, dvs pumpen är igång, tills man gör reset i steg S2.
+
+   Från fel-utgången Err på pumpobjektet sätter vi Reset Dv'n. Reset är inlagd som 
+   ResetObject i PlcPgm objektet, vilket gör att alla sekvenser i PlcPgm'et kommer
+   att återställas när Reset sätts, vilket medför att pumpen och regleringen stängs av 
+   och sekvensen återgår till vilotillståndet i IS0.
+
+3. S1 är driftsteget, där regulatorn är till, och reglerar nivån i tanken.
+   Så länge S1 är inaktivt, sätts force-ingången på mode objektet och regulatorn har
+   0 som utsignal. När steget blir aktivt, hämtar regulatorn ärvärdet från utgången från
+   givarobjektet LC1, börvärdet sätt i modeobjektet LC1_Mode.SetVal från operatörsbilden,
+   och utsignalen är kopplad till reglerventilens order-ingång.
+   Ordern Ord1 är även kopplade till magnetventilens order-ingång och öppnar denna.
+
+4. Steg S1 är aktivt tills Stop Dv'n sätt från en knapp i operatörsbilden. När steget
+   lämnas tvångstyrs regulatorn igen och reglerventilen stänger. Även magnetventilen stängs.
+   Steget S2 passeras som hastigast och gör reset på sordern Ord0, dvs stoppar pumpen. 
+   Därefter återgår sevensen till viloläget IS0.
+
+Mode objektet LC1_Mode och regulatorn LC1_PID kräver lite ytterligare konfigurering. 
+I modeobjektet sätts 
+- OpMode = Auto så att regulatorn startar i auto-mod.
+- MaxSet = 1, max börvärde är höjden på tanken, 1m.
+- SetMaxShow = 1, också höjden på tanken.
+- SetEngUnit = m, meter.
+- PidObjDid = LevelControl-Plc-W-LC1_PID, namnet på PID objektet.
+
+I PID objektet sätts
+- PidAlg = PID
+- Gain = 100
+- IntTime = 10
+- MaxGain = 200
+- SetMaxShow = 1
+- SetEngUnit = m
+- ModeObjDid = LevelControl-Plc-W-LC1_Mode, namet på mode objektet.
+
+<image> dg_fig84.png
+<b>Fig Plc program
+
+<h1>Simulerings program
+Simuleringsprogrammet är till för att kunna testa alla funktioner i programmet, larmhantering 
+och operatörbilderna före idrifttagningen. Man kan även använda det för utbildning och
+demonstration.
+
+Simulerings-koden läggs i ett separat program 'Simulate' , som inte ska exekvera i 
+driftsystemet. I detta läggs simuleringsobjekt för komponenterna:
+
+- BaseMotorAggrSim för pumpen P1.
+- BaseCValveSim för reglerventilen CV1.
+- BaseValveSim för magnetventilen MV1.
+- BaseSensorSim för nivågivaren LC1.
+
+Funktionsobjekten kopplas till huvudobjekten, genom att välja ut huvudobjektet och aktivera
+Connect i popmenyn för funktionsobjeket. 
+
+Simuleringsobjekten för pumpen, reglerventilen och magnetventilen har inte några in eller 
+utgångar utan arbetar uteslutande mot data i huvudobjektet, där de läser utgångssignaler och
+sätter lämpliga värden på ingångssignaler. Simuleringsobjekten har även en objektsbild, där
+man kan påverka simuleringen och framkalla olika felfall för att se att felen hanteras på 
+ett kontrollerat sätt och att operatören informeras via processbilder och larmhantering.
+
+Simuleringsobjektet för nivågivaren har däremot en ingång, och här måste vi beräkna en
+simulerad nivå i tanken. En ändring i nivån bestäms av infödet - utflödet dividerat med
+tankens area. Vi antar att inflödet är proportionellt mot order utgången till
+reglerventilen (CV1.Actuator.Order), och drar ifrån utflöde genom magnetventilen när denna
+är öppen. Inflödet accumuleras i CArithm'ens OA1 utgång, som skickas vidare till simulerings
+objektet för nivågivaren LC1. I LC1 adderas även lite brus till signalen för att få ett mer
+realistiskt utseende, genom att LC1.RandomCurve sätts till 1, och LC1.RandomAmplitude till 0.1.
+
+<image> dg_fig85.png
+<b>Fig Simuleringsprogram
+
+<h1>Processbild
+Operatörsbilden för nivåstyrningen ritas i Ge, och här används de grafiska symbolerna för
+komponenterna som finns i Ge paletten:
+
+- Component/BaseComponent/PumpAggr för pumpen.
+- Component/BaseComponent/CValve för reglerventilen.
+- Component/BaseComponent/MValve för magnetventilen.
+- Component/BaseComponent/LevelSensor för nivågivaren.
+
+Symbolerna har en dynamiken HostObject, som innebär att de har en förprogrammerad dynamik 
+som är kopplad till olika attribut i objektet. Man behöver endast lägga in objektsnamnet 
+på huvudobjektet HostObject.Object, eller koppla dem genom välja ut huvudobjektet och klicka 
+med Dubbelklick Ctrl/MB1 på symbolen. 
+
+I default dynamiken ingår inte att objektsbilden öppnas när att klicka på symbolen, vi 
+adderar denna funktion genom att öppna objektattribut editorn för symbolen och lägga till 
+OpenGraph i action (om man inte anger något OpenGraph.GraphObject objekt öppnas objektbilden).
+
+Vi konstruerar också en tank, mha en fyrkant och två halva ellipser, som vi sätter fill 
+och gradient på och även grupperar. På gruppen sätts dynamik FillLevel och 
+FillLevel.Attribute kopplas till värdet för nivågivaren, dvs 
+LevelControl-LC1.Value.ActualValue. Min och max värdet för FillLevel anges till 0 och 1.
+
+Till vänster om tanken läggs en slider för att enkelt kunna ställa in börvärdet för nivån.
+Den består av en Slider/SliderBackground3 och en Slider/Slider3. Slidern kopplas till
+börvärdet i mode objektet LC1_Mode, dvs LevelControl-Plc-W-LC1_Mode.SetVal. Min och maxvärde 
+för slidern sätts till 0 och 1.
+
+För börvärdet skapas också ett inmatningsfält 'SetValue' som kopplas till samma värde som 
+slidern ovan. Ärvärdet för nivån visas i value fältet 'Level' och kopplas till värdet för 
+nivågivaren.
+
+Regulatorsymbolen hämtas från Process/PID_Controller i paletten. Den har ingen dynamik som
+default, men vi vill att objektsbilden för mode objektet ska öppnas när man klickar på den,
+så vi lägger in Action Command med kommandot 
+
+<c>open graph /class/instance=LevelControl-Plc-W-LC1_Mode
+
+Tryckknapparna för Start och Stop är av typen Buttons/SmallButton. SmallButton har ToggleDig
+som default action, men vi vill ha SetDig istället eftersom Start resp Stop signalerna 
+återställs av plcprogrammet. Vi tar bort Inherit i Actions för att undvika ToggleDig och 
+lägger dit SetDig i stället, och kopplar till Start resp Stop Dv'n.
+
+Trendkurvan hämtas från Analog/Trend i paletten. I denna ska ärvärdet och börvärdet visas, dvs
+- Trend.Attribute1 sätts till LevelControl-LC1.Value.ActualValue (värdet för nivågivaren).
+- Trend.Attribute2 sätts till LevelControl-Plc-W-LC1_Mode.SetVal (börvärdet i mode objektet).
+
+Slutligen ritas lite rör och linjer och bilden är klar.
+Vi går även in i File/Graph attributes och lägger in koordinaterna för övre vänstra och 
+under högra hörnen i x0,y0 och x1,y1. DoubleBuffered sätt till ett och MB3Action till 
+PopupMenu.
+
+<image> dg_fig87.png
+<b>Fig Graphic editor
+
+<h1>Simulering
+För att se resultatet av vår programmering startar vi upp simuleringen.
+
+När vi öppnar bilden är de båda ventilerna färgade vita, vilket markerar att de är stängda.
+Pumpen är inte startad, vilket markeras med grå färg och att trekanten i pumpsymbolen inte
+pekar i strömningsriktningen. Tanken är vitfärgad, dvs tom, och nivågivaren blinkar ilsket
+rött eftersom nivån ligger under LowLow nivån i nivågivarobjektet.
+
+Genom att trycka på startknappen lämnar vi vilosteget i Grafcet sekvensen, och aktiverar
+steget som startar pumpen (S0). När pumpen har startats färgas den blå och trekanten pekar 
+i strömningens riktning. I det här steget öppnas även magnetventilen som färgas blå. Så snart 
+pumpen har startat övergår sekvensen till driftsteget S1.
+
+Vi lägger in ett börvärde med slidern på ca 0.3 och förhoppningsvis börjar regulatorn att
+arbeta. Det är möjligt att det behövs lite intrimning av regulatorn, och regulatorbilden
+får vi upp genom att klicka på regulator symbolen, som öppnar objektsbilden för Mode
+objektet. I denna klickar vi på PID knappen som öppnar objektbilden för PID objektet. Här
+kan vi trimma på förstärkning (Kp) och integrationstid (Ti).
+
+<image> dg_fig92.png
+<b>Fig Object graph mode and PID object.
+
+Låt oss titta lite på vad vi kan göra med komponenterna i bilden.
+
+<b>Nivågivare
+Om vi högerklickar på nivågivaren får vi upp en popupmeny med de metoder som är 
+definierade för givaren. Med OpenPlc öppnar vi plc trace för komponentens funktionsobjekt,
+med RtNavigator letas objektet upp i navigatören, med Trend visas en trendkurva för
+nivån, med OpenGraph öppnas objektsbilden. Objektsbilden kan även öppnas genom att
+klicka på symbolen.
+
+Den övre delen av objektsbilden för komponenter och aggregat har ett likartat utseende.
+Där finns en meny där man under 'Methods' kan aktivera metoderna för komponenten. Under
+'Signals' kan man se vilka signaler som finns i komponenten och öppna objektbilden för dem.
+För aggregat kan man även se ingående komponenter och öppna objektsbilden för dessa under
+'Components'. Det finns också en vertygspanel med knappar för metoderna, och två textfält
+som visar Description och Specification för komponenten. På den nedersta raden i bilden 
+visas ett Note meddelande om något sådant är inlagt (detta läggs in med Note metoden).
+
+I övrigt visas i nivågivarbilden nivån, i sifferform och i stapelform, och de larmnivåer
+som finns konfigurerade. Larmnivåerna kan ställas in med sliders och kan även aktiveras
+eller inaktiveras med checkboxar.
+
+Längst upp till höger i bilden finns en knapp markerad med 'S'. Den är bara synlig om man kör 
+simulerat (IOSimulFlag i IOHandler objektet är satt) och med den öppnar man simuleringsbilden.
+Från simuleringsbilden kan man påverka den simulerade signalen. Vi har redan konfigurerat
+Random med amplituden 0.01, man kan även superponera en sinuskurva eller sågtandskurva på
+signalen.
+
+<image> dg_fig88.png
+<b>Fig Object graph for the levelsensor and simulate graph
+
+<b>Reglerventil
+
+Objektsbilden för reglerventilen har indikatorer för gränslägena och visar ordern som 
+läggs ut till ventilen i stapelform. 
+
+Vi kan ta över ventilen i manuell mod, dvs istället för att regulatorns utsignal läggs 
+ut till ventilen, ställs ventilläget in med slidern 'Manual'. Regleringen är nu satt
+ur spel och vattenflödet styrs mha slidern.
+
+Från simuleringsbilden kan man t ex påverka simuleringen av gränslägena. Om Order är 0
+och inte gränsläge stängd är påverkad får man ett gränslägesfel med larm och rödblinkande
+symbol. Vid simulering ser simuleringsobjektet till att ställa in gränslägena rätt, men
+detta kan överridas från simuleringsbilden. Genom att trycka på 'Manual Control' styrs
+gränsläget från bilden istället, och genom att ta ner gränslägessignalen kan man testa
+att gränslägesövervakningen fungerar.
+
+<image> dg_fig89.png
+<b>Fig Object graph for the controlvalve and simulate graph
+
+<b>Magnetventil
+
+Objektbilden för magnetventilen visar gränslägen och order signal med indikatorer.
+Ventilen tas över i manuel mode genom att klicka på Man knappen, och kan nu manövreras
+med Open och Close knapparna.
+
+I simuleringsbilden kan man liksom för reglerventilen påverka simuleringen av gränslägena
+och framkalla larm för gränslägesfel.
+
+<image> dg_fig91.png
+<b>Fig Object graph for the solenoidvalve and simulate graph
+
+<b>Pump
+
+Objektsbilden för pumpen visar en schematisk skiss över de ingående komponenterna, och
+även en status indikator för varje komponent. Genom att klicka på en komponent öppnar man
+objektsbilden för denna.
+
+Med 'Man' knappen kan man ta över pumpen i manuell mod och starta och stoppa pumpen från 
+Start och Stop knapparna i bilden.
+
+I simuleringsbilden kan olika händelser man simuleras. 
+- 'SafetySwich on' simulerar att någon sätter på säkerhetsbrytaren. Det medför att pumpen 
+  stängs av, pumpsymbolen färgas gul, och att Err utgången på funktionsobjektet sätts. Denna 
+  har vi kopplat till Reset Dv'n som återställer sekvensen och stänger av regleringen.
+- 'CircuitBreaker tripped' simulerar att effektbrytaren löser ut.
+- 'Contacor feeback lost' simulerar att kontaktorsvaret tappas.
+- 'OverloadRelay tripped' simulerar att överlastningsrelät löser.
+
+<image> dg_fig90.png
+<b>Fig Object graph for the pump and simulate graph
+
+</topic>
+</headerlevel>
+</chapter>
+
+<chapter>
+<topic>communication
+Kommunikation
+
+Remote-konceptet i Proview är ett sätt att standardisera kommuniktionen med andra system.
+Det utgörs av ett antal transport program och Proview objekt som används för att 
+implementera ett antal olika kommunikations-protokoll och hantera inkommande och utgående
+meddedanden. Remote är designat för att använda olika transport protokoll som TCP/IP eller
+BEA Message Queue, och olika hårdvara som t ex ethernet eller seriella linjer.
+Det grundläggande syftet med Remote är att förse programmeraren med ett gränsnitt för
+kommunikation.
+
+<option> printdisable
+Introduktion <link> comm_introduction
+Protokoll <link> protocols
+Ett exempel <link> an_example
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic>comm_introduction
+Introduktion
+Ett antal olika klasser och objekt används för att hantera kommunikation.
+
+<h2>RemoteConfig
+Krävs för att någon remote kommunikation ska vara möjlig. Utan detta objekt startas inte
+remotehandlern. Ett RemoteConfig objekt placeras i nod-hierarkin.
+
+<h2>RemNode
+Definierar en länk till en remote nod av någon typ med ett specifikt protokoll.
+Flera olika protokoll supportas and det finns en specifik klass för varje protokoll.
+Det supportade protokollen är:
+
+TCP/IP
+UDP/IP
+MQ (BEA Message Queue)
+ALCM (ett Digital protokoll, modell äldre, supportas av historiska skäl)
+Serial
+Modbus/RTU Serial
+3964R (seriellt protokoll från Siemens)
+
+Konfigurationen av varje protokoll beskrivs längre ner.
+RemNode-objekt placeras under RemoteConfig-objektet.
+
+<h2>RemTrans
+Generell klass som denfinierar ett specifikt meddelande till en från en viss nod på
+ett visst protokoll. Ska placeras under ett RemNode-objekt. Storleken på det meddelande
+som ska skickas anges i RemTrans-objektet. Det data som ska sändas läggs i ett 
+buffer-objekt som läggs som barn till RemTrans-objektet. När ett meddelande ska skickas 
+hämtas data med den specifierade längden från buffer-objektet. I vissa fall adderas också 
+en header till meddelandet.
+
+<h2>Buffer
+Definierar dataarean för sändning resp mottagning för ett meddelande. Buffer-objekt finns i
+olika storlekar, och ska placeras under RemTrans-objektet. Buffer-objektet måste var av
+minst den storlek som det meddelandet som ska skickas eller tas emot har. Om storleken
+inte räcker till kommer meddelandet att huggas av.
+
+<h2>RemTransSend 
+Funktions-objekt som används i plc-program för att skicka meddelanden.
+
+<h2>RemTransRcv
+Funktions-objekt som används i plc-program för att ta emot meddelanden.
+</topic>
+
+<topic> protocols
+Protokoll
+Protokollet specifieras med den typ av RemNode-objekt som används vid konfigureringen. För
+varje RemNode objekt som är konfigurerat, startas en transport process, dvs ett program som
+hanterar det valda protokollet. Processen kommer att hantera alla de RemTrans objekt som 
+ligger som barn till RemNode-objektet.
+
+<option> printdisable
+UDP <link> udp_ip
+TCP <link> tcp_ip
+BEA Message Queue <link> bea_mq
+Serial <link> serial
+3964-R <link> 3964r
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic> udp_ip
+UDP
+UDP använder socket kommunikation utan länk (datagram), till skillnad från TCP som ett länkat
+protokoll. I RemNodeUDP-objektet anges ip-adressen till den nod man ska kommunicera med och 
+port-nummer in båda ändarna. Det lokala port-numret måste vara unikt på noden.
+
+Meddelanden sänds med en speciell header som adderas till data bufferten. Headern läggs i början
+på meddelandet. Headern innehåller information om det sända meddelandet, och används för att
+adressera meddelandet till rätt buffer-objekt. Headern ser ut så här:
+
+<c>char       RemId1;  /* STX (Hex 02) */
+<c>char       RemId2;  /* ETB (Hex 0F) in data message without acknowledge 
+<c>                       ENQ (Hex 05) in data message with acknowledge 
+<c>                       ACK (Hex 06) in acknowledge message */
+<c>short int  Length;  /* Number of bytes in message including this header */
+<c>short int  MessId1; /* Message identity part 1 */
+<c>short int  MessId2; /* Message identity part 2 */
+ 
+Alla heltal i headern kommer skickas som big endian, dvs den mest signifikanta byten först. I
+användardelen av meddelandet är det konstruktörens ansvar att konverterar mellan big och 
+little endian när detta behövs. Det går även att sända meddelanden utan header genom att sätta
+attributet DisableHeader till TRUE. Vid kommunikation mellan två Proview system ska headern 
+finnas med. MessId1 och MessId2 hämtas från attributen RemTrans.Address[0] och 
+RemTrans.Address[1]. Mha headern kan man även ange att kvittens ska skickas på meddelandet. Om
+kvittensen uteblir, upprepas sändningen av meddelandet cykliskt med det tid som ligger i
+RemTrans-objekts RetransmitTime attribut.
+
+Eftersom UDP/IP är ett länk-fritt protokoll finns funktionen att övervaka kopplingen med
+keepalive-meddelanden. Detta anges med attributet UseKeepAlive.
+
+<h2>Skicka meddelanden
+Transporten kommer att skicka meddelanden till remote-porten, som består av header + data.
+MessId i headern hämtas från RemTrans.Address[0,1], byte-switchade och sända som big endian.
+Om MaxBuffer i remtrans-objektet > 0, sänds meddelandet med kvittens och lagras i 
+återsändnings-kön för remnoden. När kvittensen tas emot, tas meddelandet bort ur 
+återsändnings-kön. Detta utförs automatiskt av transport processen.
+
+<h2>Ta emot meddelanden
+När ett meddelande tas emot, kontrolleras först headern för att se att det är ett korrekt
+RemTrans meddelande. Sedan letar man upp det RemTrans-objekt med Address[0,1] som matchar det
+byte-switchade MessId-värdet. Om buffer-objektet är tillräckligt stort för meddelandet, lagras
+meddelandet där, och DataValid flaggan sätts. Om RemNode objekete har markerats för att 
+användas utan header (DisableHeader-attributet är satt), letas efter en RemTrans, angiven som 
+mottagare, med tillräckligt stort buffer-objekt.
+
+</topic>
+
+<topic> tcp_ip
+TCP
+RemnodeTCP konfigureras i stort sett som RemnodeUDP. Den stora (enda) skillnaden är att TCP
+är ett länk protokoll som agerar enligt klient/server modell. Alltså måste man antingen koppla
+upp mot en remote socket som klient, eller vänta på en uppkoppling som server. När man 
+agerar som server, kommer enbart en klient att accepteras. ConnectionMode attributet i 
+RemNode-objektet avgör om man är klient eller server. 0 (default värdet) anger klient och
+1 anger server.
+
+</topic>
+
+<topic> bea_mq
+MQ
+RemnodeMQ är en transport för att skicka meddelanden med BEA Message Queue (BMQ). Det krävs att
+BEA Message Queue är installerad på noden. BMQ är ett säkert sätt att skicka meddelanden till
+andra noder även om noden momentant inte är uppe, och även för att säkerställa att meddelanden 
+levereras säkert till noden själv.
+
+Det här avsnittet kräver grundläggande kunskap om BEA Message Queue. Kortfattat kan man säga att
+kommunikationen går på en speciell bus, där varje nod har ett grupp-nummer och kan enbart
+kommunicera med andra grupper på samma bus. På varje grupp kan flera köer konfigureras.
+
+För att kunna starta transporten måste naturligvis Message Queue vara startad. 
+Man måste även sätta några omgivningsvariabler. Dessa är:
+
+<c>DMQ_BUS_ID
+<c>DMQ_GROUP_ID
+<c>DMQ_GROUPNAME
+
+I RemnodeMQ-objektet konfigurerar man vilken BMQ-kö som tar emot meddelanden i attributet MyQueue.
+Man konfigurerar även remote-nodens grupp-nummer och kö i attributen TargetGroup och TargetQueue.
+
+<h2>Skicka meddelanden
+I likhet med UDP och TCP-transporterna används RemTrans.Address[0,1] till att identifiera meddelanden.
+Address[0] representerar meddelande klass och Address[1] meddelandetyp (enligt BMQ nomenklatur).
+Address[2,3] används för att definiera vilken typ av leverans-mod (Address[2]) som ska användas och
+vad som ska göras om meddelandet inte kan levereras (Address[3]).
+
+Möjliga leverans-moder är:
+
+<c>PDEL_MODE_WF_SAF 25
+<c>PDEL_MODE_WF_DQF 26
+<c>PDEL_MODE_WF_NET 27
+<c>PDEL_MODE_WF_RCM 28
+<c>PDEL_MODE_WF_MEM 29
+<c>PDEL_MODE_AK_SAF 30
+<c>PDEL_MODE_AK_DQF 31
+<c>PDEL_MODE_AK_NET 32
+<c>PDEL_MODE_AK_RCM 33
+<c>PDEL_MODE_AK_MEM 34
+<c>PDEL_MODE_NN_SAF 35
+<c>PDEL_MODE_NN_DQF 36
+<c>PDEL_MODE_NN_NET 37
+<c>PDEL_MODE_NN_RCM 38
+<c>PDEL_MODE_NN_MEM 39
+<c>PDEL_MODE_WF_DEQ 40
+<c>PDEL_MODE_AK_DEQ 41
+<c>PDEL_MODE_WF_CONF 42
+<c>PDEL_MODE_AK_CONF 43
+<c>PDEL_MODE_WF_ACK 44
+<c>PDEL_MODE_AK_ACK 45
+
+och möjliga alternativ om meddelandet inte kan levereras:
+
+PDEL_UMA_RTS 1
+PDEL_UMA_DLJ 2
+PDEL_UMA_DLQ 3
+PDEL_UMA_SAF 4
+PDEL_UMA_DISC 5
+PDEL_UMA_DISCL 6
+
+Alla kombinationer är inte tillåtna (se BEA Message Queue dokumentationen för mer info).
+
+
+Följande kombinationer rekommenderas,
+
+för säker leverans av meddelanden
+Address[2] = 26
+Address[3] = 4
+
+och för att kasta meddelanden som inte kan levereras
+Address[2] = 39
+Address[3] = 5
+
+Om Address[2,3] båda har satts till 0 kommer en default uppsättning att användas, som kastar
+meddelanden som inte kan levereras.
+
+<h2>Ta emot meddelanden
+Address[0,1] används för att idenfiera meddelandet. Address[0] representerar meddelande-klassen 
+och Address[1] meddelande-typen (enligt BMQ-nomenkatur).
+</topic>
+
+<topic> serial
+Seriell
+RemoteSerial är ett försök för generall användning av enkla seriella kommunikations-protokoll.
+Det är användbart när man har en envägs sändning av meddelanden från någon typ av utrustning
+till styrsystemet. Man kan specifiera upp till åtta terminierings tecken i attributet
+TermChar[0-7]. Terminerings-tecknen används för att detektera slutet på ett mottaget
+meddelande (dvs ett tecken matchar något av terminieringstecken). Specificera också inställningen
+för den seriella porten, dvs DevName, Speed, Parity (0 = ingen, 1 = udda, 2 = jämn), StopBits
+och DataBits. De kan t ex vara /dev/ttyS0, 9600, 0, 1, 8.
+</topic>
+
+<topic> 3964r
+3964-R
+3964R är ett enkelt seriellt kommunikations-protokoll utvecklat av Siemens.
+
+Man specificerar inställningen för den serialla porten med RemnodeSerial, med undantag för stop
+bitar. Man måste även ange tecken timeout (maximal tid mellan ankomna tecken) i attributet
+CharTimeout. I AckTimeout attributet anges tiden man väntar för ett svar. 
+
+Meddelandne skickas rak på utan header. ACK, NAK, DLE och BCC hanteras enligt 3965R protokollet.
+
+<h2>Ta emot meddelanden
+Det kan endast finnas ett RemTrans objekt för mottagning pga att det saknas header i 
+protokollet. Varje mottaget meddelande läggs i första bästa RemTrans objekt under RemNode
+objektet. Om buffer objektet är tillräckligt stort för meddelandet lagras meddelandet i 
+buffer-objektet och DataValid flaggan sätts.
+
+<h2>Skicka meddelanden
+Transporten sänder 3964R meddelanden utan att addera någon header.
+Om man inte har kontakt med den andra noden kommer meddelandet att buffras, förutsatt att det
+finns fria buffrar för meddelandet.
+</topic>
+
+<topic> modbus-serial
+Modbus Serial
+MODBUS formatet som är implementerat är RTU. För att identifiera meddelanden används fälten för
+slav-adress och funktions-kod i MODBUS headern. I RemTrans[0] och [1] anges dessa värden i 
+Proview världen. Se MODBUS specifikationen för mer info.
+
+Modbus Serial är ännu inte implementerat som ett I/O system i Proview. Man måste konfigurera
+meddelandena genom att använda RemnodeModbus och specifiera RemTrans-objekt för de olika
+operationerna man vill utföra. Modbus arbetar i en fråga/svara mod så att för varje operation
+som ska utföras, specifieras ett RemTrans-objekt för sändning och ett för mottagning.
+Modbus-headern i meddelandet och checksummehanteringen görs automatisk, men man måste specifiera 
+innehållet i meddelandet för inläggning till sänd-bufferten. På samma sätt måste man avkoda
+innehållet i mottagna meddelanden.
+
+Modbus TCP är implementerat som ett I/O system i Proview, Se mer information om detta i
+dokumentet "Guide to I/O Systems". Med Modbus TCP behöver man inte hantera avkodning av 
+meddeladen.
+
+<h2>Ta emot meddelanden
+När ett meddelande tas emot, letas efter den RemTrans med Address[0] och [1] som matchar fälten
+för slav-adress och funktions-kod i meddelandets header. Om buffer-objektet är tillräckligt
+stort, lagra meddelandet och DataValid flaggan sätts.
+
+<h2>Skicka meddelanden
+Meddelanden som sänds använder innehållet i RemTrans.Address[0] och [1} för fälten för
+slav-adress och funktions-kod i meddelandets header.
+</topic>
+</headerlevel>
+
+<topic> an_example
+Ett exempel
+För att visa hur man arbetar med de klasser som översikligt beskrivits ovan, startar vi med 
+ett litet exempel. Klasserna beskrivs med detaljerat nedan.
+
+I vårt exempel har vi ett Proview system som kommunicerar med en annan nod via UDP/IP. Vi vill
+skicka ett antal meddelanden i båda riktningarna. Min nod heter 'dumle' och remote noden heter
+'asterix'.
+
+Meddelanden vi ska sända är:
+
+d_a_RequestData <t> 4 Byte
+d_a_Report <t> 20 Byte
+
+och meddelanden som vi ska ta emot:
+
+a_d_Data <t> 365 Byte (as an answer to the d_a_RequestData-message)
+a_d_Error <t> 10 Byte
+
+Konfigurationen i nod-hierakin ser ut så här.
+
+Under RemoteConfig-objektet ligger ett RemnodeUPD objekt, där IP-address, nodnamn och
+port-nummer är konfigurerade.
+
+<image> dg_fig70.png
+
+Under RemnodeUPD-objeketet ligger fyra RemTrans objekt, ett för varje meddelande. I remtrans-
+objekten har riktningen (send eller receive) konfigurerats. Adresserna är numrerade för att
+kunna särskilja meddelandena, och meddelandenas storlek är angiven.
+
+<image> dg_fig71.png
+
+Under remtrans-objektet ligger buffer-objektet. För de mindre meddelandena används Buff256 objekt.
+Data meddelandet är större och använder ett Buff1440 objekt.
+
+<image> dg_fig72.png
+
+<h2>Data-strukturen
+Data-strukturen för meddelandena är definierad i filen ra_plc_user.n i $pwrp_inc katalogen. Den
+här filen inkluderas automatiskt vid kompilering av plc-koden. Data-strukturen ser ut så här:
+
+<c>typedef struct {
+<c>  pwr_tUInt32  Id;
+<c>} d_a_RequestData;
+<c>
+<c>#define pwr_sClass_d_a_RequestData d_a_RequestData
+<c>
+<c>typedef struct {
+<c>  pwr_tUInt32   Id;
+<c>  pwr_tFloat32  data_1;
+<c>  pwr_tInt32    data_2;
+<c>  pwr_tInt32    data_3;
+<c>  pwr_tInt32    data_4;
+<c>} d_a_Report;
+<c>
+<c>#define pwr_sClass_d_a_Report d_a_Report
+<c>
+<c>typedef struct {
+<c>  pwr_tUInt32   Id;
+<c>  pwr_tFloat32  data_1;
+<c>  ...
+<c>  ...
+<c>  pwr_tInt32    data_xx;
+<c>} a_d_Data;
+<c>
+<c>#define pwr_sClass_a_d_Data a_d_Data
+<c>
+<c>typedef struct {
+<c>  pwr_tUInt32   Id;
+<c>  pwr_tInt32    func_no;
+<c>  pwr_tInt16    err_code;
+<c>} a_d_Data;
+<c>
+<c>#define pwr_sClass_a_d_Error a_d_Error
+
+<h2>Plc-koden
+
+Koden ligger i ett PlcPgm med namnet Comm. I programmet finns ett RemTransSend-objekt och
+ett RemTransRcv objekt. Dess objekt återfinns under mappen 'Other' i paletten i plc-editorn.
+Till RemTransSend-objektet kopplas den RemTrans som ska sändas. I det här fallet
+d_a_RequestData meddelandet. Meddelandet sänds när Dv-signalen "RequestData" sätts. På samma
+sätt är a_d_Data meddelandet kopplat till RemTransRcv-objektet som tar emot svarsmeddelandet
+på request meddelandet.
+
+<image> dg_fig73.png
+
+Både RemTransSend och RemTransRcv-objekten har underfönster. För RemTransSend, kommer 
+underfönstret att exekveras vid en positiv flank på snd-ingången. När underfönstret har
+exekverats, sätts DataValid attributet i det kopplade RemTrans-objektet, och transport-processen
+för den aktuella Remnoden skickar iväg meddelandet och sätter DataValid till 0.
+
+För RemTransRcv exekveras underfönstret när DataValid attributet i det kopplade RemTrans-objektet
+sätts. När transport-processen för den aktuella Remnoden tar emot ett meddelande, fyller den i
+buffer-objektet med meddelandet och sätter DataValid flaggan. När underfönstret har exekverat
+återställs DataValid flaggan.
+
+<h2>Underfönstret för sändning
+I send underfönstret fyller man i data för sänd-bufferten. Buffer-objektet för meddelandet kopplas
+till en DataArithm. Den speciella 'classdef'-syntaxen castar Da1 till en pekare till en
+d_a_RequestData struct (eller närmare bestämt till en pekare till pwr_sClass_d_a_RequestData,
+därför finns define-satsen för denna i inkludefilen ovan).
+
+<image> dg_fig74.png
+
+<h2>Underfönstret för mottagning
+I mottagnings-underfönstret packas det mottagna meddelandet upp. Buffer-objektet för mottagningen
+kopplas till en DataArithm. Återigen använder vi classdef-satsen för att casta Da1 pekaren.
+Data packas upp och läggs på DataArithm-objektets utgångar. Om inte utgångarna för en DataArithm
+räcker till adderar man flera DataArithm-objekt och fortsätter på samma sätt.
+
+<image> dg_fig75.png
+
+</topic>
+</chapter>
+
+<chapter>
+<topic> dg_application
+Applikationsprogrammering
+
+Det här kapitlet handlar om hur man skriver applikations program, dvs program i c, c++ eller
+java som knyter upp sig mot Proview. Det förutsätts all läsaren har grundkunskaper i dessa
+språk.
+
+För många tillämningar går det utmärkt att koda all styrning grafisk med hjälp av plceditorn.
+Men det finns även tillämpningar som med grafisk programmering blir onödigt komplexa som t ex
+avancerade modeller, databashantering och materialstyning. Man skriver då ett applikationsprogram
+i c, c++ eller java som knyter upp sig mot realtids databasen rtdb. Programmet läser indata från
+rtdb, gör sina beräkningar och sätter utdata i rtdb där det t ex vidareprocessas av 
+plc-programmet, skickas ut till I/O systemet och visas upp i operatörsbilder.
+
+c++ är det programmeringsspråk som är vanligast vid applikations programmering och även mest
+utbyggt, vi kommer därför att koncentrera oss på detta. De funktioner som används finns närmare 
+beskrivna i Programmer's Reference Manual (PRM).
+
+<option> printdisable
+Knyta upp sig mot realtidsdatabasen och hantera objekt och data. <link> dg_appl_gdh
+Skriva på konsolloggen. <link> dg_appl_errh
+Start av applikation. <link> dg_appl_file
+Hantera systemhändelser. <link> dg_appl_inievents
+Basklass för applikationer rt_appl. <link> dg_appl_rtappl
+Skicka meddelanden och larm. <link> dg_appl_mh
+Kommunicera med andra processer via Qcom. <link> dg_appl_qcom
+Hämta data from lagrings stationer. <link> dg_appl_sev
+Läsning och skrivning mot I/O systemet. <link> dg_appl_io
+Bygga en applikation med make. <link> dg_appl_build
+Java applikationer. <link> dg_appl_java
+<option> printenable
+</topic>
+
+<headerlevel>
+
+<topic> dg_appl_gdh
+Knyta upp sig mot databasen och hantera objekt och data
+
+Vi börjar med att skriva ett enkelt c++ program som knyter upp sig mot realtidsdatabasen och
+länkar sig mot några objekt.
+
+cpp-filen bör ligga på $pwrp_src katalogen, eller på på någon underkatalog till denna. Vi skapar
+katalogen $pwrp_src/myappl och editerar filen ra_myappl.cpp.
+
+<h1>Datatyper
+I include-filen pwr.h finns de grundläggande datatyperna i Proview definierade. De vanligaste
+är pwr_tBoolean som används för digitala signaler och pwr_tFloat32 för analoga signaler, men 
+där finns även c-typer för alla andra Proview-typer, t ex pwr_tInt32, pwr_tUInt32, pwr_tString80 
+etc.
+
+<h1>Initiering av gdh
+Uppknytningen mot databasen görs med anropet gdh_Init() där man skickar med en sträng som 
+identifierar applikationen. Först inkluderar vi pwr.h som innehåller grundtyperna i Proview
+och rt_gdh.h som innehåller grånssnittet mot realtidsdatabasen.
+
+<c>#include "pwr.h"
+<c>#include "rt_gdh.h"
+
+<c>int main() {
+<c>  pwr_tStatus sts;
+
+<c>  sts = gdh_Init( "ra_myappl");
+<c>  if ( EVEN(sts)) {
+<c>    cout << "gdh_Init failure " << sts << endl;
+<c>    exit(0);
+<c>  }
+<c>}
+
+Funktionen returnerar en status variabel av typen pwr_tStatus. En jämn status innebär att 
+något är fel, udda att anropet gick bra. Status kan även översättas till en sträng som ger 
+mer information om vad som är fel, vilket beskrivs närmare längre fram.
+
+<h1>Läsa och skriva värden
+Om vi vill skriva och läsa ett attribut i ett object kan man använda funktionerna 
+gdh_SetObjectInfo() och gdh_GetObjectInfo().  
+
+En läsning resp skrivning av Dv'n H1-H2-Start kan se ut så här. Notera att värdet av Dv'n 
+ligger i attributet ActualValue
+
+<c>pwr_tBoolean value;
+
+<c>sts = gdh_GetObjectInfo( "H1-H2-Start.ActualValue", &value, sizeof(value));
+<c>if (ODD(sts)) {
+<c>  value = !value;
+<c>  sts = gdh_SetObjectInfo( "H1-H2-Start.ActualValue", &value, sizeof(value));
+<c>}
+
+<h1>Direktlänka mot attribut
+Ofta är ligger applikationsprogram i en oändlig loop och övervakar attribut i databasen
+och reagerar på vissa förändringar. Då är det bättre att direktlänka sig mot attributet,
+dvs skaffa en pekare. Det gör man med gdh_RefObjectInfo(). Ofta delar man upp programmet 
+i en init() funktion som direktlänkar till attribut, en scan() funktion som som
+innehåller övervakning och styrfunktioner, och en close() funktion tar ner direktlänkningarna.
+
+<c>class ra_myappl {
+<c>  pwr_tBoolean *start_ptr;
+<c>  pwr_tRefId dlid;
+<c> public:
+<c>  ra_myappl() {}
+<c>  void init();
+<c>  void scan();
+<c>  void close();
+<c> };
+
+<c>void ra_myappl::init()
+<c>{
+<c>  sts = gdh_RefObectInfo( "H1-H2-Start.ActualValue", &start_ptr, &dlid, 
+<c>                          sizeof(*start_ptr));
+<c>  if ( EVEN(sts)) exit(0);
+<c>}
+
+<c>void ra_myappl::scan()
+<c>{
+<c>  for (;;) {
+<c>    if ( *start_ptr) {
+<c>      // Do something...
+<c>      cout << "Starting" << endl;
+	
+<c>      *start_ptr = 0;
+
+<c>    }
+<c>    sleep(1);
+<c>  }
+<c>}
+
+<c>void ra_myappl::close()
+<c>{
+<c>  gdh_UnrefObjectInfo( &dlid);
+<c>}
+
+I init() funktionen fylls pekaren start_ptr i så att den pekar på värdet för Dv'n H1-H2-Start
+i databasen. 
+
+<h2>Varning !
+Notera att pekare i c kräver varsam hantering. Om man använder pekar-aritmetik eller indexerar 
+i vektorer är det lätt hänt att man pekar fel och skriver på fel ställe i databasen. Detta kan 
+ge upphov till fel som är svåra att hitta orsaken till.
+
+<h1>Direktlänka mot objekt
+gdh_RefObjectInfo() kan förutom att direktlänka mot enskilda attribut, också direklänka mot 
+objekt och attributobjekt.
+
+Antag att vi vill fylla i punkter i en kurva och visa upp i en bild. Vi vill direktlänka till
+objektet H1-H2-Curve som är av klassen XyCurve. Includefilen pwr_baseclasses.hpp innehåller
+en c++ klass, pwr_Class_XyCurve, för objektet.
+
+<c>#include <math.h>
+<c>#include "pwr.h"
+<c>#include "pwr_baseclasses.hpp"
+<c>#include "rt_gdh.h"
+
+<c>class ra_myappl {
+<c>  pwr_Class_XyCurve *curve_ptr;
+<c>  pwr_tRefId dlid;
+<c> public:
+<c>  ra_myappl() {}
+<c>  void init();
+<c>  void scan();
+<c>  void close();
+<c> };
+
+<c>void ra_myappl::init()
+<c>{
+<c>  pwr_tStatus sts;
+<c>  pwr_tOName name = "H1-H2-Curve";
+
+<c>  // Connect to database
+<c>  sts = gdh_Init( "ra_myappl");
+<c>  if ( EVEN(sts)) exit(0);
+
+<c>  // Direct link to curve object
+<c>  sts = gdh_RefObjectInfo( name, (void **)&curve_ptr, &dlid, sizeof(*curve_ptr));
+<c>  if ( EVEN(sts)) exit(0);
+<c>}
+
+<c>void ra_myappl::scan()
+<c>{
+<c>  for ( unsigned int i = 0;;i++) {
+<c>    if ( i % 5 == 0) {
+<c>      // Calculate x and y coordinates for a sine curve every fifth second
+<c>      for ( int j = 0; j < 100; j++) {
+<c>        curve_ptr->XValue[j] = j;
+<c>        curve_ptr->YValue[j] = 50 + 50 * sin( 2.0 *  M_PI * (j + i) / 100);
+<c>      }
+<c>      // Indicate new curve to graph
+<c>      curve_ptr->Update = 1;
+<c>    }
+<c>    else if ( i % 5 == 2)
+<c>      curve_ptr->Update = 0;
+<c>    sleep(1);
+<c>    if ( i > 360)
+<c>      i = 0;
+<c>  }
+<c>}
+
+<c>void ra_myappl::close()
+<c>{
+<c>  gdh_UnrefObjectInfo( dlid);
+<c>}
+
+
+<c>int main()
+<c>{
+<c>  ra_myappl myappl;
+
+<c>  myappl.init();
+<c>  myappl.scan();
+<c>  myappl.close();
+<c>}
+
+Programmet kompileras och länkas med
+
+<c>> g++ -g -c  ra_myappl.cpp -o $pwrp_obj/ra_myappl.o -I$pwr_inc -DOS_LINUX=1 
+<c>      -DOS=linux -DHW_X86=1 -DHW=x86
+<c>> g++ -g -o $pwrp_exe/ra_myappl $pwrp_obj/ra_myappl.o $pwr_obj/pwr_msg_rt.o 
+<c>      -L$pwr_lib -lpwr_rt -lpwr_co -lpwr_msg_dummy -lrt
+
+Senare ska vi se hur man använder make för att kompilera och länka.
+
+Om vi öppnar objektsbilden för H1-H2-Curve objektet kan vi studera resultatet.
+
+<image> dg_fig93.png
+<b>Fig Objektbild for kurvobjektet
+
+</topic>
+
+<topic> dg_appl_errh
+Konsollogg
+
+<h1>Logga på konsolloggen
+<h2>Konsollog
+Konsolloggen innehåller diverse loggning från systemprocesser. Om systemet går orent bör man 
+titta på för att se om någon process loggar felmeddelanden. Den ligger som en textfil på
+$pwrp_log, pwr_'nodename'.log, men kan även öppnas från med rt_xtt från  System/SystemMessages. 
+Loggningarna har fem allvarlighetsnivåer fatalt, fel, varning, info och succé. Fatal och fel är 
+rödfärgade, varning gulfärgad och info och succé grönfärgade.
+
+Även applikationer kan skriva på konsollogen. Först initierar man konsollogen med errh_Init(),
+sedan kan man skriva meddelanden av olika allvarlighetsgrad med errh_Fatal(), errh_Error(),
+errh_Warning(), errh_Info() och errh_Success().
+
+errh_Init() anropas före gdh_Init() och har som argument ett namn på applikationen samt ett
+applikationsindex som anges med errh_eAnix_Appl1, errh_eAnix_Appl2 etc. Varje applikation ska 
+ha ett unikt applikationsindex inom noden.
+
+<c>#include "rt_errh.h"
+
+<c>sts = errh_Init( "ra_myappl", errh_eAnix_Appl1);
+
+Till logg funktionerna skickar man den sträng som ska skriva ut i loggen, t ex
+
+errh_Error( "Something went wrong");
+
+Strängen kan även fungera som formatsats som kan innehålla %s för att formatera strängar, %f
+för flyttal och %d för heltal, se printf för mer info.
+
+<c>errh_Error( "Number is to high: %d", n);
+
+Formatet %m översätter en statuskod till motsvarande text
+
+<c>catch ( co_error e) {
+<c>  errh_Error( "Error status: %m", e.sts());
+<c>}
+
+<h1>Applikations status
+Varje applikation har ett statusord i $Node objektet. Det ligger i attributet ProcStatus[]
+i elementet applikationsindex + 20. Detta ska återspegla applikationens tillstånd och 
+sätts av applikationen själv med med funktionen errh_SetStatus().
+
+<c>errh_SetStatus( PWR__ARUN);
+
+PWR__ARUN är definierad i rt_pwr_msg.h och länkad till texten "Application running".
+
+Andra användbara status är
+
+PWR__APPLSTARTUP "Application starting up"  (info)
+PWR__APPLRESTART "Application restaring"  (info)
+PWR__APPLTERM    "Application terminated"  (fatal)
+
+I nodobjektet finns en systemstatus som är en slags summa av status för alla serverprocesser
+och applikationsprocesser. I systemstatus läggs den server- eller applikation-status som har
+den högsta allvarlighetsgraden.
+
+<h1>Övervakning
+En applikation som har anropat errh_Init övervakas av systemet. Den ska anropa funktionen
+aproc_TimeStamp() cykliskt, annars sätts applikationsstatus till "Process timeout" (fatal).
+Timeouttiden för applikaioner är 5 s. 
+
+<h1>Applikationobjekt
+Man kan även skapa ett applikationsobjekt för applikationen. Detta läggs under i nodhierkin
+under $Node objektet och är av klassen Application.
+
+Applikationsobjektet registreras med funktionen aproc_RegisterObject() som har 
+objektsidentiteten för objektet som argument.
+
+<c>pwr_tObjid aoid;
+<c>pwr_tOName name = "Nodes-MyNode-ra_myappl";
+
+<c>sts = gdh_NameToObjid( name, &aoid);
+<c>if (EVEN(sts)) throw co_error(sts);
+
+<c>sts = aproc_RegisterObject( aoid);
+<c>if (EVEN(sts)) throw co_error(sts);
+
+<h1>Statusbilden
+Applikationen visas i statusbilden för noden, om applikationen har initierat errh och 
+registrerat applikationsobjektet. Den kommer att visas under 'Application' på den rad som 
+motsvara applikationsindex. I bilden visas status för applikationen och senaste/allvarligaste
+loggmeddelande.
+
+<image> dg_fig94.png
+<b>Fig Detalj ur nodbilden visar status och loggmeddelande för applikationen.
+
+Om processen haltas sätts status till timeout, detta påverkar även systemstatus.
+
+<image> dg_fig95.png
+<b>Fig Applikationen har haltats.
+
+<b>Exempel
+I det här exemplet har vi jobbat vidare med programmet för xy-kurvan ovan, och fört in
+anrop för att sätta applikationsstatus, logga på konsolloggen och registrera 
+applikationsobjektet.
+
+<c>#include <math.h>
+<c>#include <iostream>
+<c>#include "pwr.h"
+<c>#include "pwr_baseclasses.hpp"
+<c>#include "rt_gdh.h"
+<c>#include "rt_errh.h"
+<c>#include "rt_aproc.h"
+<c>#include "rt_pwr_msg.h"
+<c>#include "co_error.h"
+
+<c>class ra_myappl {
+<c>  pwr_Class_XyCurve *curve_ptr;
+<c>  pwr_tRefId dlid;
+<c> public:
+<c>  ra_myappl() {}
+<c>  void init();
+<c>  void scan();
+<c>  void close();
+<c>};
+
+<c>void ra_myappl::init()
+<c>{
+<c>  pwr_tStatus sts;
+<c>  pwr_tOName name = "H1-H2-Curve";
+<c>  pwr_tObjid aoid;
+
+<c>  // Init errh with anix 1
+<c>  sts = errh_Init( "ra_myappl", errh_eAnix_appl1);
+<c>  if ( EVEN(sts)) throw co_error(sts);
+
+<c>  // Write message to consolelog and set application status
+<c>  errh_Info( "I feel fine");
+<c>  errh_SetStatus( PWR__APPLSTARTUP);
+
+<c>  // Connect to database
+<c>  sts = gdh_Init( "ra_myappl");
+<c>  if ( EVEN(sts)) throw co_error(sts);
+ 
+<c>  // Register application object
+<c>  sts = gdh_NameToObjid( "Nodes-Saturnus7-ra_myappl", &aoid);
+<c>  if ( EVEN(sts)) throw co_error(sts);
+
+<c>  aproc_RegisterObject( aoid);
+
+<c>  // Directlink to curve object
+<c>  sts = gdh_RefObjectInfo( name, (void **)&curve_ptr, &dlid, sizeof(*curve_ptr));
+<c>  if ( EVEN(sts)) throw co_error(sts);
+
+<c>  errh_SetStatus( PWR__ARUN);
+<c>}
+
+<c>void ra_myappl::scan()
+<c>{
+<c>  for ( unsigned int i = 0;;i++) {
+<c>    // Notify that we are still alive
+<c>    aproc_TimeStamp();
+<c>
+<c>    if ( i % 5 == 0) {
+<c>      for ( int j = 0; j < 100; j++) {
+<c>        curve_ptr->XValue[j] = j;
+<c>        curve_ptr->YValue[j] = 50 + 50 * sin( 2.0 *  M_PI * (j + i) / 100);
+<c>      }
+<c>      curve_ptr->Update = 1;
+<c>    }
+<c>    else if ( i % 5 == 2)
+<c>      curve_ptr->Update = 0;
+<c>    sleep(1);
+<c>    if ( i > 360)
+<c>      i = 0;
+<c>  }
+<c>}
+
+<c>void ra_myappl::close()
+<c>{
+<c>  gdh_UnrefObjectInfo( dlid);
+<c>}
+
+
+<c>int main()
+<c>{
+<c>  ra_myappl myappl;
+
+<c>  try {
+<c>    myappl.init();
+<c>  }
+<c>  catch ( co_error e) {
+<c>    errh_Fatal( "ra_myappl terminated, %m", e.sts());
+<c>    errh_SetStatus( PWR__APPLTERM);
+<c>    exit(0);
+<c>  }
+<c>  myappl.scan();
+<c>  myappl.close();
+<c>}
+
+</topic>
+
+<topic> dg_appl_file
+Start av applikation
+
+En applikation som ska startas vid uppstart av Proview runtime läggs in i applikationsfilen.
+Det ligger på $pwrp_load och har namnet ld_app_'nodename'_'qbus'.txt, t ex
+
+<c>$pwrp_load/ld_app_mynode_999.txt
+
+I filen lägger man en rad för varje applikation som ska startas
+
+<c># id       name      [no]load [no]run file       prio  [no]debug  "arg"
+<c>ra_myappl, ra_myappl, noload,  run,   ra_myappl, 12,   nodebug,   ""
+
+</topic>
+
+<topic> dg_appl_inievents
+Ta emot systemhändelser
+
+Proview skickar ut medelanden vi olika händelser, t ex, när en mjuk omstart pågår eller
+om runtimmiljön stoppas. En applikation kan avlyssna dessa händelser, för att t ex terminera
+när Proview stoppas. Avlyssningen sker via Qcom. Man skapar en Qcom kö, och knyter denna
+kö till den kö som meddelandena sänds ut på.
+
+<c>#include "rt_qcom.h"
+<c>#include "rt_ini_event.h"
+<c>#include "rt_qcom_msg.h"
+
+<c>qcom_sQid qid = qcom_cNQid;
+<c>qcom_sQid qini;
+<c>qcom_sQattr qAttr;
+
+<c>if ( !qcom_Init(&sts, 0, "ra_myappl")) {
+<c>  throw co_error(sts);
+
+<c>// Create a queue to receive stop and restart events
+<c>qAttr.type = qcom_eQtype_private;
+<c>qAttr.quota = 100;
+<c>if ( !qcom_CreateQ(&sts, &qid, &qAttr, "events"))
+<c>  throw co_error(sts);
+
+<c>// Bind to init event queue
+<c>qini = qcom_cQini;
+<c>if ( !qcom_Bind(&sts, qid, &qini))
+<c>  throw co_error(sts);
+
+I varje scan läser man av kön med qcom_Get() för att se om något meddelande har kommit. Man 
+kan även passa på att använda timeouten i qcom_Get() för att vänta till nästa scan.
+I exemplet nedan hanterar man dels terminate meddelandet, men även oldPlcStop och swapDone
+som markerar början och slutet på en mjuk omstart. Det behöver man enbart göra om man vill att 
+applikationen ska kunna upptäcka nya objekt eller konfigureringar vid en mjuk omstart.
+
+<c>int tmo = 1000;
+<c>char mp[2000];
+<c>qcom_sGet get;
+<c>int swap = 0;
+
+<c>for (;;) {
+<c>  get.maxSize = sizeof(mp);
+<c>  get.data = mp;
+<c>  qcom_Get( &sts, &qid, &get, tmo);
+<c>  if (sts == QCOM__TMO || sts == QCOM__QEMPTY) {
+<c>    if ( !swap)
+<c>      // Do the normal thing
+<c>      scan();
+<c>  } 
+<c>  else {
+<c>    // Ini event received
+<c>    ini_mEvent  new_event;
+<c>    qcom_sEvent *ep = (qcom_sEvent*) get.data;
+
+<c>    new_event.m  = ep->mask;
+<c>    if (new_event.b.oldPlcStop && !swap) {
+<c>      errh_SetStatus( PWR__APPLRESTART);
+<c>      swap = 1;
+<c>      close();
+<c>    } else if (new_event.b.swapDone && swap) {
+<c>      swap = 0;
+<c>      open();
+<c>      errh_SetStatus( PWR__ARUN);
+<c>    } else if (new_event.b.terminate) {
+<c>      exit(0);
+<c>    }
+<c>  }
+<c>}
+
+Om man endast är intresserad av att stoppa processen när Proview tas ner, finns det ett
+enklare sätt att ta död på den. Man kan lägga en scriptfile pwrp_stop.sh på $pwrp_exe där 
+man gör kill på processen. 
+
+<c>killall ra_myappl
+
+</topic>
+
+<topic> dg_appl_rtappl
+Basklass för applikationer rt_appl
+
+Basklassen rt_appl innehåller mycket av de initieringar och övervakning av händelser som
+är beskrivet ovan. Genom att subklassa rt_appl behöver man inte lägga in någon kod för detta
+utan det utförs av rt_appl. rt_appl innehåller tre virtuella funktioner som ska implementeras
+av subklassen, open(), close() och scan(). open() används vid initieringen för att direktlänka 
+mot attribut och objekt, scan() blir anropad cykliskt med angiven scantid, och i close() tar 
+man ner direktlänkningarna.
+
+rt_appl gör följande:
+
+- Initiera gdh, errh och qcom.
+- Sätter applikationsstatus vid uppstart och omstart.
+- Hanterar händelser för mjuk omstart och terminiering.
+- Tidstämplar för undvika timeout.
+
+I exemplet nedan kan vi se applikationen ra_appl som subklassar rt_appl.
+
+<c>class ra_appl : public rt_appl {
+<c>public:
+<c> ra_appl() : rt_appl( "ra_appl", errh_eAnix_appl1) {}
+<c> void open();
+<c> void close();
+<c> void scan();
+<c>};
+
+<c>void ra_appl::open()
+<c>{
+<c> // Link to database objects
+<c>}
+
+<c>void ra_appl::close()
+<c>{
+<c> // Unlink to database objects
+<c>}
+
+<c>void ra_appl::scan()
+<c>{
+<c> // Do something
+<c>}
+
+<c>int main()
+<c>{
+<c> ra_appl appl;
+
+<c> appl.init();
+<c> appl.register_appl( "Nodes-MyNode-MyAppl");
+
+<c> appl.mainloop();
+<c>}
+
+
+</topic>
+
+<topic> dg_appl_mh
+Skicka larm och meddelanden
+
+Från en applikation kan man även skicka larm och meddelanden till operatörens larm och 
+händelselista. Först måste man knyta upp sig mot eventmonitorn med mh_ApplConnect(). Vi
+skickar med objektidentiteten för applikationsobjektet som första argument.
+
+<c>#include "rt_mh_appl.h"
+<c>
+<c>pwr_tUInt32 num;
+<c>sts = mh_ApplConnect( aoid, mh_mApplFlags(0), "", mh_eEvent_Info, mh_eEventPrio_A,
+<c>			mh_mEventFlags_Bell, "", &num);
+<c>  if (EVEN(sts)) throw co_error(sts);
+
+Därefter kan vi skicka larm med mh_ApplMessage().
+
+<c>mh_sApplMessage msg;
+<c>pwr_tUInt32 msgid;
+
+<c>memset( &msg, 0, sizeof(msg));
+<c>msg.EventFlags = mh_mEventFlags(mh_mEventFlags_Returned | 
+<c>				  mh_mEventFlags_NoObject | 
+<c>				  mh_mEventFlags_Bell);
+<c>clock_gettime( CLOCK_REALTIME, &msg.EventTime);
+<c>strcpy( msg.EventName, "Message from ra_myappl");
+<c>strcpy( msg.EventText, "I'm up and running now !");
+<c>msg.EventType = mh_eEvent_Alarm;
+<c>msg.EventPrio = mh_eEventPrio_B;
+
+<c>sts = mh_ApplMessage( &msgid, &msg);
+<c>if (EVEN(sts)) throw co_error(sts);    
+
+<image> dg_fig96.png
+<b>Fig Larmet i larmlistan
+</topic>
+
+<topic> dg_appl_qcom
+Kommunicera med andra processer
+
+Proview's protokoll för kommunikation mellan processer kan med fördel användas även av
+applikationer. Kommunikation kan ske 
+
+- mellan processer inom samma nod.
+- mellan processer på olika noder som tillhör samma projekt.
+- mellan processer på noder som tillhör olika projekt, om projekten tillhör samma Qcom bus. I
+  det här fallet måste noderna konfigureras med FriendNodeConfig objekt där Connection sätt 
+  till QcomOnly.
+
+Läs mer om Qcom i Qcom Reference Guide.
+</topic>
+
+<topic> dg_appl_sev
+Hämta data från lagringsstation
+
+Data som finns lagrat på en Proview lagringsstation kan hämtas med klient gränssnittet sevcli.
+Först initierar man sevcli med sevcli_init() och anger vilken lagringsstation man ska hämta
+data ifrån med sevcli_set_servernode().
+
+<c>sevcli_tCtx sevctx;
+<c>char server_node[40] = "MyStorageStation";
+
+<c>if ( !sevcli_init( &sts, &sevctx))
+<c>  throw co_error(sts);
+
+<c>if ( !sevcli_set_servernode( &sts, sevctx, server_node))
+<c>  throw co_error(sts);
+
+Därefter kan man hämta data med sevcli_get_itemdata(). Data identifieras med objektsidentitet
+och attribut, dessutom anger man tidsintervall för det data som ska hämtas, och max antal
+punkter.
+
+<c>pwr_tTime *time_buf;
+<c>void *value_buf;
+<c>pwr_tTime from = pwr_cNTime;
+<c>pwr_tTime to = pwr_cNTime;
+<c>int rows;
+<c>pwr_eType vtype;
+<c>unsigned int vsize;
+<c>pwr_tOName name = "H1-H2-Temperature";
+<c>pwr_tOName aname = "ActualValue";
+<c>pwr_tObjid oid;
+<c>char timstr[40];
+
+<c>sts = gdh_NameToObjid( name, &oid);
+<c>if (EVEN(sts)) throw co_error(sts);
+
+<c>if ( !sevcli_get_itemdata( &sts, sevctx, oid, aname, from, to, 1000, &time_buf, &value_buf,
+<c>                           &rows, &vtype, &vsize))
+<c>  throw co_error(sts);
+
+<c>for ( int i = 0; i < rows; i++) {
+<c>  time_AtoAscii( &time_buf[i], time_eFormat_DateAndTime, timstr, sizeof(timstr));
+<c>
+<c>  cout << timstr << " " << ((pwr_tFloat32 *)value_buf)[i] << endl;
+<c>}
+
+<c>free( time_buf);
+<c>free( value_buf);
+
+Slutligen anropar man sevcli_close() för att koppla ner anslutningen mot servernoden.
+
+<c>sevcli_close( &sts, sevctx);
+
+</topic>
+
+<topic> dg_appl_io
+I/O hantering
+
+Har man stora krav på snabbhet och synkronisering kan en applikation arbeta direkt mot 
+I/O systemet och själv läsa in och ställa ut data.
+
+Initieringen sker med funktionen io_init() till vilken man bl a skickar argumentet process.
+Process identifierar vilka io-enheter (agent, rack eller kort) som ska hanteras av en 
+viss process. Varje io-objekt har ett Process attribut som är en bitmask, och om detta
+överensstämmer med det som skickas som argument till io_init, kommer enheten att hanteras
+av applikationen.  Om ett kort hanteras av en applikation måste även det rack och den agent 
+som kortet tillhör, hanteras av applikationen. 
+
+Eftersom Process-attributet är en bitmask kan en enhet hanteras av flera processer, genom att 
+flera bitar sätts. Om man t ex har flera kort i ett rack, och vissa kort hanteras av
+plc-processen och vissa av en applikation, måste rack-enheten hanteras av både plc't och 
+applikationen. Hur och om det fungerar att låta en enhet hanteras av flera processer beror 
+på hur io-metoderna är skrivna. För Profibus t ex, kan man inte dela upp hanteringen av slavar
+på olika processer.
+
+<c>#include rt_io_base.h
+
+<c>io_tCtx io_ctx;
+
+<c>sts = io_init( io_mProcess_User, pwr_cNOid, &io_ctx, 0, scantime);
+<c>if ( EVEN(sts)) {
+<c>  errh_Error( "Io init error: %m", sts);
+<c>  throw co_error(sts);
+<c>}
+
+Läsning sker med io_read() som läser data från io-enheterna och lägger ut i värdena i de
+signaler som hör till enheten. Lämpligtvis direktlänkar sig applikationen mot dessa signaler
+och även mot signalerna för utenheterna som skrivs med funktionen  io_write(). 
+
+<c>sts = io_read( io_ctx);
+
+<c>sts = io_write( io_ctx);
+
+</topic>
+
+<topic> dg_appl_build
+Bygga en applikation
+
+En c++ applikation måste kompileras och länkas, och man kan använda make för detta. Proview
+har en regelfil $pwr_exe/pwrp_rules.mk som bl a innehåller regler för kompilering.
+
+En make fil för applikationen ra_myappl på katalogen $pwrp_src/myappl kan se ut på så här
+($pwrp_src/myappl/makefile): 
+
+<c>ra_myappl_top : ra_myappl
+
+<c>include $(pwr_exe)/pwrp_rules.mk
+
+<c>ra_myappl_modules : \ 
+		$(pwrp_obj)/ra_myappl.o \ 
+		$(pwrp_exe)/ra_myappl
+
+<c>ra_myappl : ra_myappl_modules
+	@ echo "ra_myappl built"
+
+<c>#
+<c># Modules
+<c>#
+
+<c>$(pwrp_obj)/ra_myappl.o : $(pwrp_src)/myappl/ra_myappl.cpp \ 
+<c>                          $(pwrp_src)/myappl/ra_myappl.h
+
+<c>$(pwrp_exe)/ra_myappl : $(pwrp_obj)/ra_myappl.o
+<c>	@ echo "Link $(tname)"
+<c>	@ $(ldxx) $(linkflags) -o $(target) $(source) -lpwr_rt -lpwr_co \ 
+<c>		-lpwr_msg_dummy -lrpcsvc -lpthread -lm -lrt
+
+Makefilen kan exekveras genom att man ställer sig på den aktuella katalogen och skriver make
+
+<c>make
+
+Man kan även lägga in byggkommandot i Application objektet för applikationen i attributet
+BuildCmd. I det här fallet blir byggkommandot
+
+<c>make -f $pwrp_src/myappl/makefile
+
+Det här kommandot exekveras då i samband med att nod byggs från konfiguratören. På det här 
+sättet kan man försäkra sig om att alla applikationer uppdateras när nod byggs om.
+
+</topic>
+
+<topic> dg_appl_java
+Java applikationer
+
+En del API finns även för java i form av klasserna Gdh, Errh och Qcom. Här följer en exempel
+på en java applikation som knyter upp sig mot realtidsdatabasen och läser resp skriver ett
+värde i den.
+
+<c>import jpwr.rt.*;
+
+<c>public class MyJappl {
+<c>  public MyJappl() {
+<c>    Gdh gdh = new Gdh( null);
+
+<c>    CdhrBoolean rb = gdh.getObjectInfoBoolean( "H1-H2-Start.ActualValue");
+
+<c>    PwrtStatus rsts = gdh.setObjectInfo( "H1-H1-Start.ActualValue", 
+<c>					    !rb.value);
+<c>  }
+
+<c>  //Main method
+<c>  public static void main(String[] args) {
+<c>    new MyJappl();
+<c>  }
+<c>}
+
+För att kompilera och exekvera måste man lägga in $pwr_lib/pwr_rt.jar och arbetskatalogen i 
+CLASSPATH, samt $pwr_exe i LD_LIBRARY_PATH
+
+<c>> export CLASSPATH=$pwr_lib/pwr_rt.jar:$pwrp_src/myjappl
+<c>> export LD_LIBRARY_PATH=$pwr_exe
+
+Kompilera med 
+<c>> javac MyJappl.java
+
+och kör med
+<c>> java MyJappl
+
+För auto-start skapar man ett script som exporterar CLASSPATH och LD_LIBRARY_PATH, och starar
+java-applikationen. Scriptet läggs in i appl-filen på samma sätt som en c-applikation.
+
+</topic>
+
+</headerlevel>
+</headerlevel>
 </chapter>
 
 <chapter>
@@ -5079,6 +7000,151 @@ inte hanteras vid konverteringen.
 
 </chapter>
 
+<topic>administrator
+Administration
+
+<option> printdisable
+Skapa användare <link> adm_user
+Registrera volymer <link> register_volumes
+Skapa projekt <link> create_project
+<option> printenable
+</topic>
+
+<topic> adm_user
+Användare
+För att få tillgång till Proview's utvecklings och runtime miljöer måste man logga in med
+användarnamn och passerord. Användare konfigureras i en användardatabas och tilldelas
+privilegier som bestämmer användarens behörighet att göra ändringar i systemet.
+
+System som delar samma användare är grupperade i en systemgrupp, och utgående från
+systemgruppen definieras användarna. Man kan bygga en hierarki av systemgrupper där 
+barngrupper ärver användare av sin förälder, och ytterligare användare kan definieras för
+varje barn.
+
+Ett system kopplas till en systemgrupp med attributet SystemGroup i $System objektet.
+Notationen för en systemgrupp i en hierarki namnet av gruppen med förfäder åtskilda av en
+punkt, t ex 'Main.West.F1'.
+
+I exemplet nedan är Eric ansvarig för alla system i anläggningen, och definierad på den
+översta nivån i hierakin. Nils arbetar med den västra delen av anläggningen definieras i 
+systemgruppen 'West'. Carl, slutligen, arbetar med system i F1 delen av anläggningen. Alla
+systemgrupperna har attributet UserInherit, vilket gör att de ärver användare av sin 
+förälder.
+
+<image> dg_fig22.gif
+
+Användare och systemgrupper skapas i administratören.
+
+- Starta administratören med kommandot 'pwra'.
+- Gå in i Användardatabasen från menyn, 'File/Open/UserDatabase'.
+- Logga in med login kommandot. Öppna kommando-prompten från menyn, 'Functions/Command' och
+  skriv 'login /adm' på kommandoraden. Om systemgruppen 'administrator' finns definierad måste man
+  dessutom addera användarnamn och passerord för en användare definierad i administrator-
+  systemgruppen.
+- Gå in i edit mod från menyn, 'Edit/Edit mode'.
+  Systemgrupper och användare representeras av objekt av klasserna SystemGroupReg resp UserReg
+  som visas i paletten till vänster. Objekt skapas genom att man väljer en klass i paletten,
+  och därefter klickar med MB2 (mittenknappen) i det högra fönstret. Objekten läggs i en 
+  trädstruktur och klickar man på mappen/lövet på ett existerande objekt läggs det nya objeket 
+  som första barn, om kan klicka till höger om mappen/lövet läggs det som syskon.
+- Skapa en systemgrupp genom att markera 'SystemGroupReg' i paletten till vänster, och klicka
+  med MB2 (mittenknappen) i det högra fönstret. Öppna SystemGroupReg objektet och ange namn och
+  attribut för systemgruppen. Ange fullständigt hierarkinamn, t ex 'Main.West'.
+- Skapa en användare genom att markera 'UserReg' i paletten och klicka med MB2 på mappen/lövet
+  till det SystemGroupReg objekt som UserReg objektet ska ligga under. Öppna UserReg objektet
+  och ange anvädarnamn, passerord och privilegier för användaren.
+- Spara.
+- Logga ut med kommandot 'logout'.
+
+Användardatabasen ligger på katalogen $pwra_db.
+
+</topic>
+
+<topic>register_volumes
+Registrera volymer
+
+Alla volymer i ett nätvärk måste ha ett unikt volymsnamn och volymsidentitet. För att
+säkerställa detta registreras alla volymer i en global volymslista.
+
+Registreringen görs från administratören:
+
+- Starta administratören med kommandot 'pwra'.
+- Gå in i Globala Volymslistan från menyn, 'File/Open/GlobalVolumeList'.
+- Logga in som administratör.
+- Gå in i editerings läge, 'Edit/Edit mode' i menyn.
+  Volymer registreras mha objekt av klassen VolumeReg som visas i paletten till vänster.
+  I paletten finns även $Hier klassen, med vilken man kan ordna VolumeReg objekten 
+  hierarktiskt.
+- Skapa ett VolumeReg objekt, öppna objektet och ange volymsnamn (= objektsnamn), 
+  volymsidentitet och projekt.
+- Spara.
+- Logga ut med 'logout'-kommandot.
+
+<h2>Volymsnamn
+Namn på volymen, ska vara unikt och får ha max 31 tecken.
+
+<h2>Volymsidentitet
+Volymsidentiteten är ett 32-bitar ord specificerat på formen v1.v2.v3.v4, där v1, v2, v3
+och v4 är nummer i intervallet 0-255. Beroende på volymens klass, kan numren väljas i olika
+intervall.
+
+Rotvolymer           <t>0.1-254.1-254-1.254
+Användarklassvolymer <t>0.0.2-254.1-254
+
+Directory volymen har alltid identiteten 254.254.254.253.
+
+</topic>
+
+<topic>create_project
+Skapa projekt
+
+Ett projekt är ett antal noder och volymer som delar samma utvecklingsmiljö. Vanligtvis
+består den av några process- och operatörsstationer som styr en del av anläggningen, men
+det finns inga begränsningar för storleken av ett projekt. Man kan välja att ha varje nod
+i var sitt projekt, eller samtliga noder i ett projekt.
+
+- Alla noder i ett projekt (på samma kommunikationsbuss) har länk öppen mellan varandra
+  genom näthanteraren.
+- Alla volymer och noder delar samma filkatalogsträd.
+- Alla noder måste uppgraderas till ny Proview version samtidigt.
+
+En vanlig storlek är 1-10 noder i ett projekt. För många noder ökar nätverksbelastninge och
+försvårar uppgradering av projektet.
+
+Skapa ett projekt i administratören:
+
+- Starta administratören med kommandot 'pwra'.
+- Projektlistan visas när man startar administratören. Den kan även öppnas från menyn 
+  (File/Open/ProjectList).
+- Logga in som administratör.
+- Gå in i edit mode från meny, 'Edit/Edit mode'.
+  Projekt representeras av objekt av klassen ProjectReg, som visas i paletten till vänster.
+  ProjectReg objekten kan ordnas i hierakier mha $Hier objekt.
+- Skapa ett ProjectReg objekt och ange projektnamn, basversion, filkatalog och beskrivning.
+- Projektet skapas när man sparar, efter att en verifiering har gjorts. Spara och logga ut.
+
+<h2>Projektnamn
+Ett projekt har ett projektnamn som identifierar projektet i utvecklingsmiljön. Jämför 
+systemnamnet som definierar projektet i runtimemiljön. Projektnamn och systemnamn är ofta
+lika, men behöver inte vara det. Ett system kan faktiska ha många projekt i 
+utvecklingsmiljön. När man uppgraderar, eller gör större förändringar i systemet, tar man
+lämpligen en kopia av projektet och sparar den gående versionen av systemet för att kunna
+göra mindra ändringar. Kopian skapas under ett nytt projektnamn men den har samma 
+systemnamn.
+
+<h2>Base
+Proview ett är flerversions system, dvs olika versioner av Proview kan installeras i samma
+utvecklingsmiljö, och projekt med olika version kan existera i samma utvecklingsmiljö.
+Ett projekt pekar på en bas, t ex V3.4 eller V4.0, när ett projekt skapas väljer man
+vilket bas projektet ska peka på.
+
+<h2>Path
+Projektet består av ett filkatalogsträd där databaser, källkodsfiler, arkiv mm lagras.
+Path är rot katalogen till det här trädet.
+
+</topic>
+</chapter>
+
 <chapter>
 <topic>opc_intro
 OPC
@@ -6251,6 +8317,7 @@ Ladda databasen från wb_load-fil eller dbs-fil.
 <B>wtt> wb load /loadfile=
 
 /loadfile	<t>Filnamn. Kan vara av typ .wb_load, .wb_dmp eller .dbs.
+/noindex        <t>Ignorera object index i dumfilen och skapa nya objektsidentiteter.
 
 </TOPIC>
 
@@ -6670,7 +8737,7 @@ int fprintf( int file, string format [, (godtycklig typ) arg1,
 
 <b>Beskrivning
 
-Formaterad utskrift på fil. C-sytax. Format argument och inget, ett eller två
+Formaterad utskrift på fil. C-syntax. Format argument och inget, ett eller två
 värde argument.
 Returnerarn antal utskrivna tecken.
 
