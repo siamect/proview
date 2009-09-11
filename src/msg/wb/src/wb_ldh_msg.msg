@@ -131,3 +131,4 @@ confirm		<Confirm required>					/info
 db		<Database error>					/error
 noserver	<Server not configured>					/error
 lockstolen	<Database lock is stolen>				/error
+maxwblfiles     <Max number of wb_load files exceeded>			/error

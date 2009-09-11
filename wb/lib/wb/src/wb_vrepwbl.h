@@ -31,7 +31,7 @@
 #include "wb_erep.h"
 #include "wb_attrname.h"
 
-#define WBL_FILEMAX 500
+#define WBL_FILEMAX 1000
 
 class wb_orepwbl;
 

@@ -1339,7 +1339,7 @@ int wb_vrepwbl::load_files( const char *file_spec)
     }
 
     if ( file_cnt >= WBL_FILEMAX)
-      return 0;
+      return LDH__MAXWBLFILES;
 
     file[file_cnt] = new wb_wblfile();
     file[file_cnt]->lexer = new wb_wbllexer(s);
