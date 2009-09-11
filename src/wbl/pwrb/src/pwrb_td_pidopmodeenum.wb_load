@@ -1,0 +1,69 @@
+! 
+!  Proview   $Id$
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_pidopmodeenum.wb_load -- Defines the enum type PidOpModeEnum
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enumeration for Manual/Auto/Cascade mode in a PID Mode object.
+!
+! @b See also
+!  @classlink Mode pwrb_mode.html
+!*/
+  Object PidOpModeEnum $TypeDef 47
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Enum"
+    EndBody
+    !/**
+    !  Manual mode.
+    !*/
+    Object Manual $Value
+     Body SysBody
+       Attr PgmName = "Manual"
+       Attr Text = "Manual"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  Auto mode.
+    !*/
+    Object Auto $Value
+     Body SysBody
+       Attr PgmName = "Auto"
+       Attr Text = "Auto"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !  Cascade.
+    !*/
+    Object Cascade $Value
+     Body SysBody
+       Attr PgmName = "Cascade"
+       Attr Text = "Cascade"
+       Attr Value = 4
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
