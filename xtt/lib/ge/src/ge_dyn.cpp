@@ -3037,8 +3037,23 @@ int GeInvisible::scan( grow_tObject object)
   switch ( a_typeid) {
   case pwr_eType_Boolean:
   case pwr_eType_Int32:
-  case pwr_eType_UInt32: {
-    pwr_tBoolean val = *p;
+  case pwr_eType_UInt32:
+  case pwr_eType_Int64:
+  case pwr_eType_UInt64: {
+    pwr_tBoolean val;
+
+    switch ( a_typeid) {
+    case pwr_eType_Boolean:
+    case pwr_eType_Int32:
+    case pwr_eType_UInt32:
+      val = *p;
+      break;
+    case pwr_eType_Int64:
+    case pwr_eType_UInt64:
+      val = *(pwr_tUInt64 *)p;
+      break;
+    default: ;
+    }
 
     if ( !first_scan) {
       if ( old_value == val && !dyn->reset_invisible) {
