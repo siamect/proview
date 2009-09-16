@@ -73,6 +73,7 @@ struct s_Node {
   gdh_tDlid		  dlid;
   pwr_tBoolean		  found;
   plc_sTimer		  *timer;
+  pwr_tStatus		  *subvalue;			  
 };
 
 static eListState	list_state = eListState_Init;
@@ -309,10 +310,14 @@ init_node (
     tid.c.bix = 1;
     
     aref.Objid = o->Node;
-    sts = gdh_ClassAttrToAttrref(pwr_eClass_Node, ".CurrentVersion", &aref);
+    sts = gdh_ClassAttrToAttrref(pwr_eClass_Node, ".SystemStatus", &aref);
     sts = gdh_SubRefObjectInfoAttrref(&aref, &o->SubId);
-    if ( EVEN(sts))
+    if ( EVEN(sts)) {
       errh_Error("Couldn't get link to Node object, %m", sts);
+      o->SystemStatus = PWR__NETTIMEOUT;
+    }
+    else
+      gdh_SubAssociateBuffer(o->SubId, (void **)&np->subvalue, sizeof(pwr_tStatus));
   }
 
   return np;
@@ -429,11 +434,13 @@ scan_nodes ()
       time_Aadd(&Timeout, &LastUpdate, &Delta);
       if (time_Acomp(&CurrentTime, &Timeout) < 0) 
 	LinkUp = 1;
+      o->SystemStatus = *np->subvalue;
     }
 
     if (o->LinkUp && !LinkUp) {
       o->LinkUp = 0;
       o->DownTime = CurrentTime;
+      o->SystemStatus = PWR__NETTIMEOUT;
     } else if (!o->LinkUp && LinkUp) {
       o->LinkUp = 1;
       o->UpTime = CurrentTime;

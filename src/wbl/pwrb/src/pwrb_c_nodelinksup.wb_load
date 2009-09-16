@@ -575,6 +575,18 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      ! Contains the system status of the supervised node.
+      ! If the link is down, the status is PWR__NETTIMEOUT.
+      !*/
+      Object SystemStatus $Intern 43 
+        Body SysBody
+          Attr PgmName = "SystemStatus"
+          Attr TypeRef = "pwrs:Type-$Status"
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
       !
       ! End Timer struct
       ! --
