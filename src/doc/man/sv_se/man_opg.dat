@@ -277,6 +277,13 @@ att ikonisera och ta bort fönstret. Det är uppdelat i tre delar, till vänster vi
 larm och meddelanden, i mitten finns en meny och knappar för olika basfunktioner, och till 
 vänster knappar som är konfigurerade för just den här operatörsplatsen.
 
+<h2>Statusfält
+Den översta raden är ett statusfält. Här visas vem som är inloggad och på vilken nod. För
+den aktuella noden, och för alla noder som det finns nod-övervakning på, visas en indikator
+för nodens systemstatus. Grön innebär att allt fungerar som det ska, gult indikerar varning, 
+rött fel och blinkande rött fatalt fel. Om man klickar på en nod öppnas status-bilden för
+noden.
+
 <h2>Larm och meddelanden
 I vänstra delen av operatörsfönstret visas larm och meddelanden. 
 

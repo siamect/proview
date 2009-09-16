@@ -565,6 +565,8 @@ static void xnav_login_success_bc( void *ctx)
   sprintf( msg, "User %s logged in", xnav->user);
   xnav->cologin = 0;
   xnav->message('I', msg);
+  if ( xnav->op)
+    xnav->op->set_title( xnav->user);
 }
 
 static void xnav_login_cancel_bc(void *xnav)
@@ -611,6 +613,8 @@ static int	xnav_login_func(	void		*client_data,
     xnav->priv = priv;
     sprintf( msg, "User %s logged in", arg1_str);
     xnav->message('I', msg);
+    if ( xnav->op)
+      xnav->op->set_title( xnav->user);
   }
   return sts;
 }
@@ -637,6 +641,8 @@ static int	xnav_logout_func(	void		*client_data,
   }
   strcpy( xnav->user, xnav->base_user);
   xnav->priv = xnav->base_priv;
+  if ( xnav->op)
+    xnav->op->set_title( xnav->user);
   return 1;
 }
 
@@ -2817,6 +2823,7 @@ static int	xnav_open_func(	void		*client_data,
       if ( closebutton)
 	xnav->op->add_close_button();
       strcpy( xnav->opplace_name, opplace_str);
+      xnav->op->set_title( xnav->user);
 
       // Load eventlist
       if ( xnav->ev) {

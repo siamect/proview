@@ -22,6 +22,8 @@
 
 /* xtt_op.h -- Operator window in xtt */
 
+#include <vector>
+
 #ifndef pwr_h
 # include "pwr.h"
 #endif
@@ -38,7 +40,35 @@
 # include "xtt_evlist.h"
 #endif
 
+using namespace std;
+
 class CoWow;
+class CoWowTimer;
+class Op;
+
+typedef enum {
+  op_eSupColor_Gray,
+  op_eSupColor_Green,
+  op_eSupColor_Yellow,
+  op_eSupColor_Red,
+  op_eSupColor_Black
+} op_eSupColor;
+
+class OpSup {
+ public:
+  OpSup() : buttonw(0), imagew(0), p(0), old_color(op_eSupColor_Gray), flash(0)
+    { strcpy( node_name, ""); strcpy( object_name, "");}
+  
+  pwr_tOid   	node_oid;
+  pwr_tOName 	object_name;
+  pwr_tObjName 	node_name;
+  void 		*buttonw;
+  void		*imagew;
+  pwr_tStatus	*p;
+  pwr_tRefId	refid;
+  op_eSupColor	old_color;
+  int		flash;
+};
 
 class Op {
  public:
@@ -57,6 +87,9 @@ class Op {
   int 		(*get_alarm_info_cb)( void *, evlist_sAlarmInfo *);
   void 		(*ack_last_cb)( void *, unsigned long, unsigned long);
   CoWow		*wow;
+  pwr_tMask	layout_mask;
+  vector<OpSup> sup_vect;
+  CoWowTimer	*sup_timerid;
 
   Op( void *op_parent_ctx,
       char *opplace,
@@ -69,11 +102,14 @@ class Op {
   virtual void  add_close_button() {}
   virtual int   create_menu_item( const char *name, int pixmap, int append, const char *cmd) { return 0;}
   virtual int   delete_menu_item( const char *name) { return 0;}
+  virtual void  change_sup_color( void *imagew, op_eSupColor color) {}
+  virtual void  set_title( char *user) {}
 
   void	set_jop_qid( int qix) { if ( jop) jop->set_jop_qid( qix);};
   void	scan();
   int 	appl_action( int idx);
   int 	jop_command( char *command);
+  int   sup_init();
   void activate_exit();
   void activate_aalarm_ack();
   void activate_balarm_ack();
@@ -94,8 +130,10 @@ class Op {
   void activate_show_user();
   void activate_logout();
   void activate_cmd_menu_item( char *cmd);
+  void activate_sup_node( void *id);
 
   static void jop_command_cb( void *op, char *command);
+  static void sup_scan( void *data);
 };
 
 #endif

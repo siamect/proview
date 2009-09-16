@@ -71,12 +71,13 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Only if the user has logged in to the operator system
-      !  as this user he has authority to start this operator place.
+      !  List of operator system users, separated by comma.
+      !  Only if the user has logged in to the operator system as
+      !  one of these user he has authority to start this operator place.
       !*/
       Object DedicatedOpsysUser $Attribute 29 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$String32"
+          Attr TypeRef = "pwrs:Type-$String256"
 	  Attr Flags |= PWR_MASK_CONST
         EndBody
       EndObject

@@ -64,8 +64,10 @@ class OpGtk : public Op {
   GtkWidget		*appl_form;
   GtkWidget		*decr_button;
   GtkWidget		*tools_close;
+  GtkWidget		*functions_close;
   GtkWidget		*funcbox[5];
   GtkMenuBar		*menu_bar;
+  GtkWidget		*title_label;
   int			a_height;
   int			a_exist[5];
   int			a_active[5];
@@ -80,6 +82,8 @@ class OpGtk : public Op {
   int   get_cmd( GtkWidget *w, char *cmd);
   int   create_menu_item( const char *name, int pixmap, int append, const char *cmd);
   int   delete_menu_item( const char *name);
+  void  change_sup_color( void *imagew, op_eSupColor color);
+  void  set_title( char *user);
 
   static void activate_exit( GtkWidget *w, gpointer data);
   static void activate_aalarm_ack( GtkWidget *w, gpointer data);
@@ -104,6 +108,7 @@ class OpGtk : public Op {
   static void activate_show_user( GtkWidget *w, gpointer data);
   static void activate_logout( GtkWidget *w, gpointer data);
   static void activate_cmd_menu_item( GtkWidget *w, gpointer data);
+  static void activate_sup_node( GtkWidget *w, gpointer data);
   static void activate_graph( GtkWidget *w, gpointer data);
   static void activate_appl1( GtkWidget *w, gpointer data);
   static void activate_appl2( GtkWidget *w, gpointer data);

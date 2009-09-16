@@ -582,10 +582,25 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
     if ( EVEN(sts)) exit(sts);
     
     if ( strcmp( opp->DedicatedOpsysUser, "") != 0) {
+      int duser_cnt;
+      char duser_array[10][40];
+      int found = 0;
+
       sts = syi_UserName( opsys_user, sizeof(opsys_user));
       if ( EVEN(sts)) exit(sts);
 
-      if ( strcmp( opp->DedicatedOpsysUser, opsys_user) != 0) {
+      duser_cnt = dcli_parse( opp->DedicatedOpsysUser, ",", "",
+			  (char *) duser_array, sizeof( duser_array)/sizeof( duser_array[0]), 
+			  sizeof( duser_array[0]), 0);
+
+      for ( int i = 0; i < duser_cnt; i++) {
+	dcli_trim( duser_array[i], duser_array[i]);
+	if ( strcmp( duser_array[i], opsys_user) == 0) {
+	  found = 1;
+	  break;
+	}
+      }
+      if ( !found) {
 	printf( "Operator place is dedicated for another user\n");
 	exit(0);
       }

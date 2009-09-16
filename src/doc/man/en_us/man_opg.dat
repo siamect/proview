@@ -274,6 +274,13 @@ pushbuttons to iconify and delete the window. It is divided in tree parts, to th
 current alarms and messages are viewed, in the middle there are pushbuttons for some base
 functions, and to the left there are pushbuttons configured for this operator place.
 
+<h2>Status bar
+The top row is a status bar. It shows who is logged in on on which node. For tha current
+node, and for all nodes that there are node supervision configured, an indicator for system 
+status is viewed. Green states that everything is all right, yellow indicates warning, red
+error and flashing red fatal error. If you click on a node, the status graph for the node
+is opened.
+
 <h2>Alarms and messages
 In the left part of the operator window alarm and messages are displayed.
 

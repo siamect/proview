@@ -65,13 +65,33 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  Close button.
+    !  Hide the Close button.
     !*/
     Object HideCloseButton $Bit
      Body SysBody
        Attr PgmName = "HideCloseButton"
        Attr Text = "HideCloseButton"
        Attr Value = 8
+     EndBody
+    EndObject
+    !/**
+    !  Show the alarm time.
+    !*/
+    Object ShowAlarmTime $Bit
+     Body SysBody
+       Attr PgmName = "ShowAlarmTime"
+       Attr Text = "ShowAlarmTime"
+       Attr Value = 16
+     EndBody
+    EndObject
+    !/**
+    !  Show the alarm time.
+    !*/
+    Object ShowAlarmDateAndTime $Bit
+     Body SysBody
+       Attr PgmName = "ShowAlarmDateAndTime"
+       Attr Text = "ShowAlarmDateAndTime"
+       Attr Value = 32
      EndBody
     EndObject
   EndObject

@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <float.h>
+#include <vector>
 
 #include "co_nav_help.h"
 #include "pwr_privilege.h"
@@ -3436,6 +3437,10 @@ int XNav::login_from_opplace()
   strcpy( user, username);
   strcpy( base_user, username);
   priv = base_priv = privilege;
+
+  if (op)
+    op->set_title( user);
+
   return XNAV__SUCCESS;
 }
 

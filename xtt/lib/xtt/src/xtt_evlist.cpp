@@ -1546,6 +1546,7 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
 			   sizeof(info->a_alarm_text[0]));
                   strncpy( info->a_alarm_alias[a_cnt], object_item->alias, 
 			  sizeof(info->a_alarm_alias[0]));
+                  info->a_alarm_time[a_cnt] = object_item->time;
                   info->a_alarm_active[a_cnt] = object_item->status & mh_mEventStatus_NotRet;
                   info->a_alarm_exist[a_cnt] = 1;
                   a_cnt++;
@@ -1557,6 +1558,7 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
 			   sizeof(info->b_alarm_text[0]));
                   strncpy( info->b_alarm_alias[b_cnt], object_item->alias,
 			   sizeof(info->b_alarm_alias[0]));
+                  info->b_alarm_time[b_cnt] = object_item->time;
                   info->b_alarm_active[b_cnt] = object_item->status & mh_mEventStatus_NotRet;
                   info->b_alarm_exist[b_cnt] = 1;
                   b_cnt++;
@@ -1568,6 +1570,7 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
 			   sizeof(info->c_alarm_text[0]));
                   strncpy( info->c_alarm_alias[c_cnt], object_item->alias,
 			   sizeof(info->c_alarm_alias[0]));
+                  info->c_alarm_time[c_cnt] = object_item->time;
                   info->c_alarm_active[c_cnt] = object_item->status & mh_mEventStatus_NotRet;
                   info->c_alarm_exist[c_cnt] = 1;
                   c_cnt++;
@@ -1579,6 +1582,7 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
 			   sizeof(info->d_alarm_text[0]));
                   strncpy( info->d_alarm_alias[d_cnt], object_item->alias,
 			   sizeof(info->d_alarm_alias[0]));
+                  info->d_alarm_time[d_cnt] = object_item->time;
                   info->d_alarm_active[d_cnt] = object_item->status & mh_mEventStatus_NotRet;
                   info->d_alarm_exist[d_cnt] = 1;
                   d_cnt++;
@@ -1598,6 +1602,7 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
 		       sizeof(info->i_alarm_text[0]));
               strncpy( info->i_alarm_alias[i_cnt], object_item->alias,
 		       sizeof(info->i_alarm_alias[0]));
+	      info->i_alarm_time[i_cnt] = object_item->time;
               info->i_alarm_active[i_cnt] = object_item->status & mh_mEventStatus_NotRet;
               info->i_alarm_exist[i_cnt] = 1;
               i_cnt++;

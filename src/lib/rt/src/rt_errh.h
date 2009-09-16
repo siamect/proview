@@ -53,11 +53,11 @@ extern "C" {
          return (((long int)(sts)?((*sts)=(lsts)):(EVEN(lsts)?(errh_Bugcheck(lsts, (str)),(lsts)):(lsts))),a)
 #endif
 
-#define errh_SeveritySuccess(sts) 	((sts) & 7 == 3)
-#define errh_SeverityInfo(sts) 		((sts) & 7 == 1)
-#define errh_SeverityWarning(sts) 	((sts) & 7 == 0)
-#define errh_SeverityError(sts) 	((sts) & 7 == 2)
-#define errh_SeverityFatal(sts) 	((sts) & 7 == 4)
+#define errh_SeveritySuccess(sts) 	(((sts) & 7) == 3)
+#define errh_SeverityInfo(sts) 		(((sts) & 7) == 1)
+#define errh_SeverityWarning(sts) 	(((sts) & 7) == 0)
+#define errh_SeverityError(sts) 	(((sts) & 7) == 2)
+#define errh_SeverityFatal(sts) 	(((sts) & 7) == 4)
 
 typedef enum {
   errh_eSeverity_Null,
