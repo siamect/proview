@@ -555,6 +555,7 @@ usage()
     renamedb       Rename old databases.
     dirvolume      Create directory volume.
     loaddb         Load dumpfiles.
+    cnvobjects     Convert objects in the database.
     compile        Compile all plcprograms in the database
     createload     Create new loadfiles.
     createboot     Create bootfiles for all nodes in the project.
@@ -595,7 +596,7 @@ for db in $tmp; do
   fi
 done
 
-passes="dumpdb directorystructure classvolumes renamedb dirvolume loaddb compile createload createboot"
+passes="dumpdb directorystructure classvolumes renamedb dirvolume loaddb cnvobjects compile createload createboot"
 #echo "Pass: $passes"
 echo ""
 echo -n "Enter start pass [dumpdb] > "

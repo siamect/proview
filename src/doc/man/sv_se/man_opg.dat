@@ -1472,11 +1472,13 @@ close alarmlist <t>Stäng larmlistan		<LINK> close alarmlist
 close eventlist <t>Stäng händleslistan		<LINK> close eventlist
 close graph <t>Stäng en graf			<LINK> close graph
 close navigator <t>Stäng navigatorn		<LINK> close navigator
-create item <t>Skapa ett menyalternativ		<LINK> create item
+create opmenuitem <t>Skapa ett menyalternativ i operatörsfönstret <LINK> create opmenuitem
+create item <t>Skapa ett xtt menyalternativ	<LINK> create item
 crossreference<t>Visa korsreferenser		<LINK> crossreference
 exit        <t>Stäng xtt			<LINK> exit
 define      <t>Definiera en symbol		<LINK> define
-delete item <t>Ta bort ett menyalternativ	<LINK> delete item
+delete opmenuitem <t>Ta bort ett xtt menyalternativ <LINK> delete item
+delete item <t>Ta bort ett menyalternativ i operatörsfönstret <LINK> delete item
 help        <t>Visa hjälp			<LINK> help
 login       <t>Inloggning av användare		<LINK> login
 logout      <t>Utloggning av änvändare		<LINK> logout
@@ -1682,6 +1684,31 @@ collect <LINK> collect
 collect show <LINK> collect show
 </TOPIC>
 
+<TOPIC> create opmenuitem <style> function
+Kommando   create opmenuitem
+
+Skapa ett menyalternativ i operatörsfönstrets meny.
+Menyalternativet kan användas för att exekvera ett xtt kommando.
+
+<B>xtt> create opmenuitem /name= /command= /pixmap=
+
+/name<t>Namn på menyalternativet inklusive namn på ovanliggande menyer.
+     <t>Namnet bör inledas med 'Functions-' eller med dess översättning.
+     <t>För övriga namnled skapas nya undermenyer om de inte redan finns.
+     <t>Ex Functions-MyMenu-MyGraph
+/command<t>Xtt kommando som exekveras när menyalternativet aktiveras.
+/before	<t>Menyalternativet läggs först i menyn.
+/after <t>Menyalternativet läggs sist i menyn.
+/pixmap <t>Pixmap för menyalternativet: 'graph' eller 'curve'.
+
+Exempel
+
+xtt> create opmenuitem /name="Functions-MyMenu-MyGraph"/after/pixmap=graph
+
+<H2>Se även
+delete opmenuitem <LINK> delete opmenuitem
+</TOPIC>
+
 <TOPIC> create item <style> function
 Kommando   create item
 
@@ -1762,11 +1789,30 @@ show symbol <LINK> show symbol
 symbolfile <LINK> symbolfile
 </TOPIC>	
 
+<TOPIC> delete opmenuitem <style> function
+Kommando   delete opmenuitem
+
+Ta bort ett menyalternativ från operatörsfönstrets meny.
+Menyalternativet kan vara skapat av användaren, eller tillhöra
+standardmeny.
+
+<B>xtt> delete opmenuitem /name=
+
+/name<t>Namn på menyalternativet.
+
+Exempel
+
+xtt> delete opmenuitem /name=Functions-Curves
+
+<H2>Se även
+create opmenuitem <LINK> create opmenuitem
+</TOPIC>
+
 <TOPIC> delete item <style> function
 Kommando   delete item
 
-Ta bort ett menyalternativ.
-Menyalternativet kan vara skapat av användaren, eller tilhöra xtt's
+Ta bort ett menyalternativ ur Xtt-menyn.
+Menyalternativet kan vara skapat av användaren, eller tillhöra xtt's
 standardmeny.
 
 <B>xtt> delete item /name=
@@ -2216,6 +2262,7 @@ extract()		<LINK> extract()
 element()		<LINK> element()
 toupper()		<LINK> toupper()
 tolower()		<LINK> tolower()
+get_language()		<LINK> get_language()
 translate_filename()	<LINK> translate_filename()
 xtt-commands		<LINK> xtt-commands
 GetAttribute()		<LINK> getattribute()
@@ -2802,6 +2849,31 @@ string				<t><t>sträng med små bokstäver.
 <c>  string str1 = "Buster Wilson";
 <c>  string str2;
 <c>  str2 = tolower( str);
+</TOPIC>
+
+<TOPIC> get_language() <style> function
+translate_filename()
+
+string get_language()
+
+<b>Beskrivning
+
+Returnerar nuvarande språk.
+
+<b>Returns
+string				<t><t>Aktuellt språk, t ex en_us, sv_se eller de_de.
+
+<b>Exempel
+
+<c>  string lng;
+
+<c>  lng = get_language();
+<c>  if ( lng == "sv_se")
+<c>    create opmenu/name="Funktioner-Bilder-Översikt"/command="open graph overview"
+<c>  endif
+<c>  if ( lng == "en_us")
+<c>    create opmenu/name="Functions-ProcessGraphs-Overview"/command="open graph overview"
+<c>  endif
 </TOPIC>
 
 <TOPIC> translate_filename() <style> function

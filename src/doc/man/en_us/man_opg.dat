@@ -1483,11 +1483,13 @@ close alarmlist <t>Close alarmlist		<LINK> close alarmlist
 close eventlist <t>Close eventlist		<LINK> close eventlist
 close graph <t>Close a graph			<LINK> close graph
 close navigator <t>Close the navigator	<LINK> close navigator
-create item <t>Create a menu item		<LINK> create item
+create item <t>Create a menu item in the Xtt menu <LINK> create item
+create opmenuitem <t>Create a menu item in the operator window menu <LINK> create opmenuitem
 crossreference<t>Show crossreferenses	<LINK> crossreference
 exit        <t>close xtt			<LINK> exit
 define      <t>Define a symbol		<LINK> define
-delete item <t>Delete a menu item		<LINK> delete item
+delete item <t>Delete a menu item in the Xtt menu <LINK> delete item
+delete opmenuitem <t>Delete a menu item in the operator window menu <LINK> delete opmenuitem
 help        <t>Display help			<LINK> help
 login       <t>User login			<LINK> login
 logout      <t>User logout			<LINK> logout
@@ -1695,6 +1697,31 @@ collect <LINK> collect
 collect show <LINK> collect show
 </TOPIC>
 
+<TOPIC> create opmenuitem <style> function
+Command   create opmenuitem
+
+Create a menu item in the operator window menu.
+The action of the item can be either to execute a command.
+
+<B>xtt> create opmenuitem /name= /command= /pixmap=
+
+/name<t>Menu item name, with the name of above menues included.
+     <t>The name should begin with 'Functions-' or its translation.
+     <t>For other name segments submenues are created if they don't already exist.
+     <t>Ex Functions-MyMenu-MyGraph
+/command<t>Xtt command that will be executed with the menu item is activated.
+/before	<t>The menu item is positioned first in the menu.
+/after <t>The menu item is positioned last in the menu.
+/pixmap <t>Pixmap for the menu item: 'graph' eller 'curve'.
+
+Example
+
+xtt> create opmenuitem /name="Functions-MyMenu-MyGraph"/after/pixmap=graph
+
+<H2>related subjects
+delete opmenuitem <LINK> delete opmenuitem
+</TOPIC>
+
 <TOPIC> create item <style> function
 Command   create item
 
@@ -1770,6 +1797,25 @@ symbol <LINK> symbol
 show symbol <LINK> show symbol
 symbolfile <LINK> symbolfile
 </TOPIC>	
+
+<TOPIC> delete opmenuitem <style> function
+Command   delete opmenuitem
+
+Delete a menu item in the operator window menu.
+The menu item can be created by the user or an item of
+the standard configuration.
+
+<B>xtt> delete opmenuitem /name=
+
+/name<t>Name of the menu item.
+
+Example
+
+xtt> delete opmenuitem /name=Functions-Curves
+
+<H2>related subjects
+create opmenuitem <LINK> create opmenuitem
+</TOPIC>
 
 <TOPIC> delete item <style> function
 Command   delete item
@@ -2226,6 +2272,7 @@ extract()		<LINK> extract()
 element()		<LINK> element()
 toupper()		<LINK> toupper()
 tolower()		<LINK> tolower()
+get_language()		<LINK> get_language()
 translate_filename()	<LINK> translate_filename()
 xtt-commands		<LINK> xtt-commands
 GetAttribute()		<LINK> getattribute()
@@ -2812,6 +2859,31 @@ string				<t><t>string in lower case.
 <c>  string str1 = "Buster Wilson";
 <c>  string str2;
 <c>  str2 = tolower( str);
+</TOPIC>
+
+<TOPIC> get_language() <style> function
+translate_filename()
+
+string get_language()
+
+<b>Description
+
+Get the current language.
+
+<b>Returns
+string				<t><t>The current langage, e.g en_us, sv_se, de_de.
+
+<b>Example
+
+<c>  string lng;
+
+<c>  lng = get_language();
+<c>  if ( lng == "sv_se")
+<c>    create opmenu/name="Funktioner-Bilder-Översikt"/command="open graph overview"
+<c>  endif
+<c>  if ( lng == "en_us")
+<c>    create opmenu/name="Functions-ProcessGraphs-Overview"/command="open graph overview"
+<c>  endif
 </TOPIC>
 
 <TOPIC> translate_filename() <style> function

@@ -112,3 +112,11 @@
 090506 cs  pwrb      Bugfix in Max object. Default values were wrong and didn't work for negative input values.
 090519 cs  rtmon     New help file for runtime monitor, and pushbutton for reset runtime.
 090527 cs  doc       Getting Started Guide updated.
+090827 cs  convert   Bugfix in conversion of png-files to ps and pdf.
+090827 cs  doc       New Operator's Guide.
+090827 cs  co        Window to view a text added to wow.
+090902 cs  trace     Translation of menu to swedish.
+090909 cs  script    New scriptfunction get get the current language, get_language().
+090909 cs  plc       New enumeration type for OpMode in PID mode objects.
+090916 cs  wbl       User and RttConfig merged into OpPlace object. User and RttConfig is now obsolete.
+090916 cs  linksup   SystemStatus attribute in NodeLinkSup object contains system status of supervised node.

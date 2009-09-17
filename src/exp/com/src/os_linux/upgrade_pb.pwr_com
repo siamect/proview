@@ -1,4 +1,4 @@
-!** Invisible: Script for converting Profibus objects during upgrading from v3.9 to v4.0.0
+!** Invisible: Script for converting OpPlace and WebHandler objects during upgrading from v4.6 to v4.7.0
 ! 
 !  Proview   $Id: upgrade_pb.pwr_com,v 1.3 2008-11-28 17:15:37 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
@@ -18,87 +18,195 @@
 !  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 !
 !
-! Script for converting Profibus objects during upgrading from v3.9 to v4.0.0
+! Script for converting OpPlace and WebHandler objects during upgrading from V4.6 to V4.7.0,
+! and to remove User and RttConfig objects.
 !
-! Traverse all trees under every $NodeHier root object to find every Pb_DP_Slave object.
-! Attribute ByteOrdering has a new meaning and should be changed, was formerly bitmask.
-! The new ByteOrdering in Pb_DP_Slave object is ONLY ByteOrdering
+! Find all OpPlace objects and move UserName, FastAvail and SelectList from the user object
+! to the opplace object.
+! Replace RttConfig with an OpPlace object named OpDefault.
+! Move SelectList from user object to WebHandler object.
 !
-! Every Pb_Di, Pb_Do, Pb_Ai and Pb_Ao object also has new arguments, Orientation and 
-! NumberRepresentation that should be set according to the old ByteOrdering bitmask.
-! 
-! Pb_Ii and Pb_Io are new objects in v4.0.0 and don't need changing.
-!
-function int convert(string slave)
-  int old;
+
+main
+  string op;
+  string user;
+  string aname;
   int sts;
-  string attr;
-  string child;
-  string class;
-    
-  attr = slave + ".ByteOrdering";
-  old = GetAttribute(attr, sts);
-  
-  if (sts != 0) 
+  int opnumber;
+  int usernumber;
+  int found;
+  string value;
+  int ivalue;
+  int i;
+  string rttconfig;
+  string webhandler;
 
-    child = GetChild(slave);
-    while (child != "")
-      class = GetObjectClass(child);
-      if (class == "Pb_Di" || class == "Pb_Do")
-        if (old & 2)
-          set attr/attr=Orientation/value=16/name='child'/noco	  
-	else
-          set attr/attr=Orientation/value=8/name='child'/noco	  
-	endif
+  verify(1);
+
+  ! For all OpPlace objects
+  op = GetClassList( "OpPlace");
+  while ( op != "")
+
+    aname = op + ".OpNumber";
+    opnumber = GetAttribute( aname, sts);
+    if ( !sts)
+      op = GetNextObject( op);
+      continue;
+    endif
+
+    found = 0;
+    user = GetClassList( "User"); 
+    while ( user != "")
+      aname = user + ".OpNumber";
+      usernumber = GetAttribute( aname, sts);
+
+      if ( usernumber == opnumber)
+        found = 1;
+        break;
       endif
-      if (class == "Pb_Ai" || class == "Pb_Ao")
-        if (old & 4)
-          set attr/attr=NumberRepresentation/value=0/name='child'/noco	  
-	else
-          set attr/attr=NumberRepresentation/value=1/name='child'/noco	  
-	endif
-      endif
-      child = GetNextSibling(child);
+      user = GetNextObject( user);
     endwhile
-    
-    if (old & 1)
-      set attr/attr=ByteOrdering/value=1/name='slave'/noco
-    else
-      set attr/attr=ByteOrdering/value=0/name='slave'/noco   
+
+    if ( !found)
+      printf( "No corresponding User object for %s\n", op);
+      op = GetNextObject( op);
+      continue;
     endif
- 
-    save
+    printf( "Processing %s\n", op);
+
+    aname = user + ".UserName";
+    value = GetAttribute( aname, sts);
+    aname = op + ".UserName";
+    SetAttribute( aname, value);
+
+    for ( i = 0; i < 15; i++)
+      aname = user + ".FastAvail[" + i + "]";
+      value = GetAttribute( aname, sts);
+      if ( value != "" && value != "Undefined attribute")
+        aname = op + ".FastAvail[" + i + "]";
+        SetAttribute( aname, value);
+      endif
+    endfor     
+
+    for ( i = 0; i < 20; i++)
+      aname = user + ".SelectList[" + i + "]";
+      value = GetAttribute( aname, sts);
+      if ( value != "")
+        aname = op + ".EventSelectList[" + i + "]";
+        SetAttribute( aname, value);
+      endif
+    endfor     
+
+    aname = user + ".MaxNoOfAlarms";
+    ivalue = GetAttribute( aname, sts);
+    aname = op + ".MaxNoOfAlarms";
+    SetAttribute( aname, ivalue);
+
+    aname = user + ".MaxNoOfEvents";
+    ivalue = GetAttribute( aname, sts);
+    aname = op + ".MaxNoOfEvents";
+    SetAttribute( aname, ivalue);
+
+    ivalue = 3;
+    aname = op + ".OpWindPop";
+    SetAttribute( aname, ivalue);
+
+    ivalue = 14;
+    aname = op + ".OpWindLayout";
+    SetAttribute( aname, ivalue);
+
+    ivalue = 1;
+    aname = op + ".AlarmBell";
+    SetAttribute( aname, ivalue);
+
+    delete object/name='user'/noconf
+
+    op = GetNextObject( op);
+  endwhile
+
+  ! Create OpDefault
+  op = GetNodeObject();
+  create object/name="OpDefault"/class=opplace/dest='op'/last
+  op = op + "-OpDefault";
+
+  ivalue = 1;
+  aname = op + ".OpWindLayout";
+  SetAttribute( aname, ivalue);
+
+  ! For the RttConfig object
+  rttconfig = GetClassList( "RttConfig");
+  if ( rttconfig != "")
+
+    aname = rttconfig + ".UserObject";
+    user = GetAttribute( aname, sts);
+    if ( user == "" || user == "Undefined attribute")
+      break;
+    endif
+
+    printf( "Processing %s\n", op);
+
+    aname = rttconfig + ".SymbolFileName";
+    value = GetAttribute( aname, sts);
+    aname = op + ".SetupScript";
+    SetAttribute( aname, value);
+
+    for ( i = 0; i < 20; i++)
+      aname = user + ".SelectList[" + i + "]";
+      value = GetAttribute( aname, sts);
+      if ( value != "")
+        aname = op + ".EventSelectList[" + i + "]";
+        SetAttribute( aname, value);
+      endif
+    endfor     
+
+    aname = user + ".MaxNoOfAlarms";
+    ivalue = GetAttribute( aname, sts);
+    aname = op + ".MaxNoOfAlarms";
+    SetAttribute( aname, ivalue);
+
+    aname = user + ".MaxNoOfEvents";
+    ivalue = GetAttribute( aname, sts);
+    aname = op + ".MaxNoOfEvents";
+    SetAttribute( aname, ivalue);
+
+    delete object/name='user'/noconf
+    delete object/name='rttconfig'/noconf
+
   endif
-  
-endfunction
 
-function int traverse(string parent)
-  string child;
-  string class;
-  
-  child = GetChild(parent);
-  while(child != "")
-    class = GetObjectClass(child);
-    if (class == "Pb_DP_Slave")
-      convert(child);
-    else
-      traverse(child);
-    endif
-    child = GetNextSibling(child);
-  endwhile
-  
-endfunction
 
-main()
-  string object;
-  string class;
-  ! 
-  object = GetRootList();
-  while (object != "")
-    class = GetObjectClass(object);
-    if (class == "$NodeHier")
-      traverse(object);
+  ! For the WebHandler object
+  webhandler = GetClassList( "WebHandler");
+  if ( webhandler != "")
+
+    aname = webhandler + ".UserObject";
+    user = GetAttribute( aname, sts);
+    if ( user == "" || user == "Undefined attribute")
+      break;
     endif
-    object = GetNextSibling(object);
-  endwhile
+
+    printf( "Processing %s\n", webhandler);
+
+    for ( i = 0; i < 20; i++)
+      aname = user + ".SelectList[" + i + "]";
+      value = GetAttribute( aname, sts);
+      if ( value != "")
+        aname = webhandler + ".EventSelectList[" + i + "]";
+        SetAttribute( aname, value);
+      endif
+    endfor     
+
+    aname = user + ".MaxNoOfAlarms";
+    ivalue = GetAttribute( aname, sts);
+    aname = webhandler + ".MaxNoOfAlarms";
+    SetAttribute( aname, ivalue);
+
+    aname = user + ".MaxNoOfEvents";
+    ivalue = GetAttribute( aname, sts);
+    aname = webhandler + ".MaxNoOfEvents";
+    SetAttribute( aname, ivalue);
+
+    delete object/name='user'/noconf
+
+  endif
 endmain
