@@ -106,26 +106,6 @@ SObject pwrb:Class
         Attr DefaultVMSNode = ""
       EndBody
     EndObject
-    Object PostCreate $DbCallBack
-      Body SysBody
-        Attr MethodName = "RttConfig-PostCreate"
-      EndBody
-    EndObject
-    Object ConfiguratorPoson $Menu
-      Object Pointed $Menu
-	Object Connect $MenuButton
-	  Body SysBody
-	    Attr ButtonName = "Connect User"
-	    Attr MethodName = "$Objid-Connect"
-	    Attr MethodArguments[0] = "UserObject"
-	    Attr MethodArguments[1] = "User"
-	    Attr FilterName = "$Objid-IsOkConnect"
-	    Attr FilterArguments[0] = "UserObject"
-	    Attr FilterArguments[1] = "User"
-	  EndBody
-	EndObject
-      EndObject
-    EndObject
   EndObject
 EndSObject
 

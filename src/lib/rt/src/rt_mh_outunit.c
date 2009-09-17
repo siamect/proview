@@ -273,8 +273,13 @@ mh_OutunitConnect (
       break;
     case pwr_cClass_OpPlace:
       type = mh_eOutunitType_Operator;
-      l.pSelL = (void *)&((pwr_sClass_OpPlace*) p)->SelectList[0];
+      l.pSelL = (void *)&((pwr_sClass_OpPlace*) p)->EventSelectList[0];
       l.SelectListIsUpdated = (pwr_tBoolean *)&((pwr_sClass_OpPlace*) p)->SelectListIsUpdated;
+      break;
+    case pwr_cClass_WebHandler:
+      type = mh_eOutunitType_Operator;
+      l.pSelL = (void *)&((pwr_sClass_WebHandler*) p)->EventSelectList[0];
+      l.SelectListIsUpdated = NULL;
       break;
     case pwr_cClass_EventPrinter:
       type = mh_eOutunitType_Printer;

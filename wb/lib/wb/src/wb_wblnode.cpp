@@ -309,6 +309,8 @@ static wbl_sSym attr_flags[] =
   ,{ "PWR_MASK_BUFFER",		PWR_MASK_BUFFER }
   ,{ "PWR_MASK_NOWBL",		PWR_MASK_NOWBL }
   ,{ "PWR_MASK_ALWAYSWBL",     	PWR_MASK_ALWAYSWBL }
+  ,{ "PWR_MASK_DISABLEATTR",    PWR_MASK_DISABLEATTR }
+  ,{ "PWR_MASK_RTHIDE",     	PWR_MASK_RTHIDE }
 
   ,{ "pwr_mClassDef_DevOnly",	pwr_mClassDef_DevOnly }
   ,{ "pwr_mClassDef_System",	pwr_mClassDef_System }

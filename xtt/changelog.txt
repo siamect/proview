@@ -136,4 +136,12 @@
 090601 cs  ge        New action: SetValue to set a specified value into an attribute.
 090625 cs  xtt       Bugfix in eventlist, adding event in a full list could cause segfault.
 090625 cs  xtt       Blocklist window title was wrong.
+090810 cs  xtt       Blockwindow: checkbuttons changed to radiobuttons.
 090811 cs  xtt       Command 'create item' with null destination creaets item on toplevel.
+090828 cs  xtt       Help menu links updated to new Operator's Guide.
+090902 cs  ge        Dynamic Invisible works for Int64 and UInt64.
+090902 cs  flow      Bugfix in flow, if two objects overlapped, both were moved by the move event.
+090916 cs  xtt       New operator window layout with menu and status bar.
+090916 cs  xtt       Alarm time viewed in operator window.
+090916 cs  xtt       New xtt command 'show objectlist /class='.
+090916 cs  xtt       New xtt commands 'create opmenuitem' and 'delete opmenuitem' to modify operator window menu..

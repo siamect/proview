@@ -216,11 +216,11 @@ SObject pwrb:Class
       !  A message created by an ASup or DSup object gets the
       !  same identity as the supervised object. Messages
       !  produced in an application by means of mh_ApplMessage
-      !  (see PROVIEW/R Programmer's Reference Manual) get an
+      !  (see Proview Programmer's Reference Manual) get an
       !  identity according to the calling parameter EventName.
       !  
       !  SelectList specifies the hierarchies from which
-      !  messages are to be sent to the user. Up to 8 different
+      !  messages are to be sent to the user. Up to 20 different
       !  hierarchies can be specified. If messages from e.g. a
       !  Watchdog object in a node will be received, then the
       !  name of the node will be specified.
@@ -228,7 +228,7 @@ SObject pwrb:Class
       !  Note! If the SelectList is left blank no message at all is
       !  sent to the user.
       !*/
-      Object SelectList $Attribute 41 
+      Object EventSelectList $Attribute 41 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
           Attr Flags |= PWR_MASK_ARRAY
@@ -254,11 +254,24 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
+      !/**
+      !  Obsolete from V4.7.0.
+      !*/
+      Object OpNumber $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_RTHIDE
+        EndBody
+      EndObject
     EndObject
     Object Template OpPlace
       Body RtBody
         Attr AlarmBell = 1
         Attr BellDelay = 2
+        Attr OpWindPop = 3 
+        Attr MaxNoOfAlarms = 200
+        Attr MaxNoOfEvents = 500
       EndBody
     EndObject
     Object PostCreate $DbCallBack

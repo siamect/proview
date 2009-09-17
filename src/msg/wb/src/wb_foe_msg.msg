@@ -107,6 +107,7 @@ conbackup	<Backup connected to invalid attribute>			/error
 replaced	<Symbol replaced>					/info
 nomodif		<Nothing is modified>					/info
 compileparent	<Compile parent window>					/info
+disabled	<Object is disabled>					/error
 
         .facility       FOE,280 /prefix = FOE__ ! Function object editor
 

@@ -138,11 +138,13 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  User object with data for the alarm and eventlist.
+      !  Obsolete since V4.7.0.
       !*/
       Object UserObject $Attribute 10
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_RTHIDE
         EndBody
       EndObject
       !/**
@@ -180,6 +182,62 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$String256"
         EndBody
       EndObject
+      !/**
+      !  A message created by an ASup or DSup object gets the
+      !  same identity as the supervised object. Messages
+      !  produced in an application by means of mh_ApplMessage
+      !  (see Proview Programmer's Reference Manual) get an
+      !  identity according to the calling parameter EventName.
+      !  
+      !  SelectList specifies the hierarchies from which
+      !  messages are to be sent to the user. Up to 20 different
+      !  hierarchies can be specified. If messages from e.g. a
+      !  Watchdog object in a node will be received, then the
+      !  name of the node will be specified.
+      !  
+      !  Note! If the SelectList is left blank no message at all is
+      !  sent to the user.
+      !*/
+      Object EventSelectList $Attribute 41 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 20
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the maximum number of contemporary alarms in
+      !  the user's alarm list.
+      !  The number should exceed the maximum number of 
+      !  concurrent alarms in the system.
+      !  If the limit is exceeded, alarms might be lost.
+      !*/
+      Object MaxNoOfAlarms $Attribute 38
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the maximum number of contemporary events in
+      !  the user's event list, i.e. the skyline of the events.
+      !  When the number of events exceeds MaxNoOfEvents the
+      !  oldest event disappears from the list.
+      !  To this list events are sent from the message handler
+      !  in respective node. In each node the message handler
+      !  has its own skyline of events (also named MaxNoOfEvents)
+      !  defined by a MessageHandler object. In principle, the
+      !  User object's skyline of events should be selected as å
+      !  MaxNoOfEvents, added up over MaxNoOfEvents in the
+      !  MessageHandler objects in all nodes throughout the
+      !  PROVIEW/R system, or make it simple and assign the
+      !  attribute e.g. 200.
+      !*/
+      Object MaxNoOfEvents $Attribute 39
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags = 0
+        EndBody
+      EndObject
     EndObject
     !
     ! Template for WebHandler
@@ -188,6 +246,8 @@ SObject pwrb:Class
       Body RtBody
         Attr FileName = "index.html"
         Attr MaxConnections = 50
+        Attr MaxNoOfAlarms = 200
+        Attr MaxNoOfEvents = 500
       EndBody
     EndObject
     Object PostCreate $DbCallBack
@@ -246,21 +306,6 @@ SObject pwrb:Class
 	    Attr ButtonName = "Build"
 	    Attr MethodName = "WebHandler-Build"
 	    Attr FilterName = "$Object-BuildFilter"
-	  EndBody
-	EndObject
-      EndObject
-    EndObject
-    Object ConfiguratorPoson $Menu
-      Object Pointed $Menu
-	Object Connect $MenuButton
-	  Body SysBody
-	    Attr ButtonName = "Connect User"
-	    Attr MethodName = "$Objid-Connect"
-	    Attr MethodArguments[0] = "UserObject"
-	    Attr MethodArguments[1] = "User"
-	    Attr FilterName = "$Objid-IsOkConnect"
-	    Attr FilterArguments[0] = "UserObject"
-	    Attr FilterArguments[1] = "User"
 	  EndBody
 	EndObject
       EndObject

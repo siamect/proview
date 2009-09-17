@@ -312,9 +312,7 @@ palette NavigatorPalette
     menu Operator
     {
       class OpPlace
-      class User
       class XttGraph
-      class RttConfig
       class WebBrowserConfig
     }
     class Application

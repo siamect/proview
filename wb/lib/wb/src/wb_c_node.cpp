@@ -47,8 +47,7 @@ static pwr_tStatus PostCreate (
   sts = ldh_ClassNameToId(Session, &cid, "OpPlace");
   sts = ldh_CreateObject(Session, &oid, "Op", cid, Object, ldh_eDest_IntoLast); 
   sts = ldh_CreateObject(Session, &oid, "Maintenance", cid, Object, ldh_eDest_IntoLast); 
-  sts = ldh_ClassNameToId(Session, &cid, "RttConfig");
-  sts = ldh_CreateObject(Session, &oid, "RttConfig", cid, Object, ldh_eDest_IntoLast); 
+  sts = ldh_CreateObject(Session, &oid, "OpDefault", cid, Object, ldh_eDest_IntoLast); 
 
   sts = ldh_ClassNameToId(Session, &cid, "PlcProcess");
   sts = ldh_CreateObject(Session, &oid, "Plc", cid, Object, ldh_eDest_IntoLast); 

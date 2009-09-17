@@ -56,55 +56,7 @@ static pwr_tStatus PostCreate (
   pwr_tOid	    Father,
   pwr_tCid	    Class
 ) {
-  pwr_tOid oid;
-  pwr_tCid cid;
-  pwr_tStatus sts;
-  pwr_tInt32 *number;
-  pwr_tInt32 max_number = 0;
-  int size;
-
-  sts = ldh_ClassNameToId(Session, &cid, "OpPlace");
-  if ( EVEN(sts)) return sts;
-
-  // Get next OpNumber
-  sts = ldh_GetClassList(Session, cid, &oid);
-  while ( ODD(sts)) {
-
-    sts = ldh_GetObjectPar(Session, oid, "RtBody", "OpNumber", (char **)&number,
-			   &size);
-    if ( EVEN(sts)) return sts;
-    if ( *number > max_number)
-      max_number = *number;
-    free( (char *) number);
-    sts = ldh_GetNextObject(Session, oid, &oid);
-  }
-
-  sts = ldh_ClassNameToId(Session, &cid, "User");
-  if ( EVEN(sts)) return sts;
-  sts = ldh_GetClassList(Session, cid, &oid);
-  while ( ODD(sts)) {
-
-    sts = ldh_GetObjectPar(Session, oid, "RtBody", "OpNumber", (char **)&number,
-			   &size);
-    if ( EVEN(sts)) return sts;
-    if ( *number > max_number)
-      max_number = *number;
-    free( (char *) number);
-    sts = ldh_GetNextObject(Session, oid, &oid);
-  }
-  max_number++;
-
-  sts = ldh_CreateObject(Session, &oid, "User", cid, Object, ldh_eDest_IntoLast); 
-  if ( EVEN(sts)) return sts;
-
-  sts = ldh_SetObjectPar(Session, oid, "RtBody", "OpNumber", (char *)&max_number,
-			 sizeof(max_number));
-  if ( EVEN(sts)) return sts;
-
-  sts = ldh_SetObjectPar(Session, Object, "RtBody", "UserObject", (char *)&oid,
-			 sizeof(oid));
-  if ( EVEN(sts)) return sts;
-
+  // Nothing to do from V4.7.0 ...
   return PWRB__SUCCESS;
 }
 
