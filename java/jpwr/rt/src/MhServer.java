@@ -129,39 +129,29 @@ public class MhServer
       maxConnections = 50;
       return 1;
     }
-    CdhrObjid cdhrObjid;
     CdhrString cdhrString;
-    CdhrString cdhrStringUser;
     CdhrInt cdhrMaxCon;
     CdhrInt cdhrMaxAlarms;
     CdhrInt cdhrMaxEvents;
     
-    cdhrObjid = gdh.getClassList(Pwrb.cClass_WebHandler);
-    if(cdhrObjid.evenSts())
+    cdhrWebHandlerObj = gdh.getClassList(Pwrb.cClass_WebHandler);
+    if(cdhrWebHandlerObj.evenSts())
     {
-      errh.info("No WebHandler is configured, GdhServer terminating");
-      return cdhrObjid.getSts();
+      errh.info("No WebHandler is configured, MhServer terminating");
+      return cdhrWebHandlerObj.getSts();
     }
-    cdhrString = gdh.objidToName(cdhrObjid.objid, Cdh.mName_volumeStrict);
+    cdhrString = gdh.objidToName(cdhrWebHandlerObj.objid, Cdh.mName_volumeStrict);
     if(cdhrString.evenSts())
     {
       return cdhrString.getSts();
     }
-    String userObjectString = cdhrString.str + ".UserObject";
-    cdhrStringUser = gdh.getObjectInfoString(userObjectString);
-    cdhrUserObj = gdh.nameToObjid(cdhrStringUser.str);
-    
-    if(cdhrUserObj.evenSts())
-    {
-      return cdhrUserObj.getSts();
-    }
-    String maxAlarmsAttr = cdhrStringUser.str + ".MaxNoOfAlarms";
-    String maxEventsAttr = cdhrStringUser.str + ".MaxNoOfEvents";
+    String maxAlarmsAttr = cdhrString.str + ".MaxNoOfAlarms";
+    String maxEventsAttr = cdhrString.str + ".MaxNoOfEvents";
     String maxConAttr = cdhrString.str + ".MaxConnections";
     cdhrMaxAlarms = gdh.getObjectInfoInt(maxAlarmsAttr);
     cdhrMaxEvents = gdh.getObjectInfoInt(maxEventsAttr);
     cdhrMaxCon = gdh.getObjectInfoInt(maxConAttr);
-    System.out.println( "MaxNoOfAlarms: " + cdhrStringUser.str + " " + cdhrMaxAlarms.value + " " + cdhrMaxAlarms.evenSts());
+    System.out.println( "MaxNoOfAlarms: " + cdhrString.str + " " + cdhrMaxAlarms.value + " " + cdhrMaxAlarms.evenSts());
     if(cdhrMaxCon.evenSts())
     {
       return cdhrMaxCon.getSts();
@@ -204,7 +194,7 @@ public class MhServer
     }
   }
 
-  CdhrObjid cdhrUserObj;
+  CdhrObjid cdhrWebHandlerObj;
 
 
   /**
@@ -244,7 +234,7 @@ public class MhServer
     mhThread = new MhThread[maxConnections];
     mhData = new MhData(maxAlarms, maxEvents);
      
-    PwrtStatus stsM = mh.outunitConnect(cdhrUserObj.objid);
+    PwrtStatus stsM = mh.outunitConnect(cdhrWebHandlerObj.objid);
     if(stsM.evenSts())
     {
       System.out.println("Fel vid outunitConnect");
