@@ -460,10 +460,12 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
   pwr_tStatus	sts;
   int		i;
   int		opplace_found = 0;
+  int		default_opplace = 0;
   pwr_tObjid 	op_objid;
   qcom_sQattr 	qAttr;
   qcom_sQid 	qini;
   char		language[20] = "";
+  pwr_sClass_OpPlace *opp;
   static char 	display[80];
   static char   display_opt[20] = "--display";
 
@@ -569,13 +571,25 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
 
 	strcpy( opplace_str, name);
 	opplace_found = 1;
+	default_opplace = 1;
 	break;
       }
+    }
+    if ( default_opplace) {
+      sts = gdh_NameToPointer( opplace_str, (void **)&opp);
+      if ( EVEN(sts)) exit(sts);
+
+      if ( strcmp( opp->UserName, "") == 0) {
+	// Ignore
+	printf( "** No UserName supplied in default opplace, ignored\n");
+	strcpy( opplace_str, "");
+	opplace_found = 0;
+	default_opplace = 0;
+      }      
     }
   }
 
   if ( opplace_found) {
-    pwr_sClass_OpPlace *opp;
     char opsys_user[40];
 
     sts = gdh_NameToPointer( opplace_str, (void **)&opp);
@@ -601,11 +615,18 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
 	}
       }
       if ( !found) {
-	printf( "Operator place is dedicated for another user\n");
-	exit(0);
+	if ( !default_opplace) {
+	  printf( "Operator place is dedicated for another user\n");
+	  exit(0);
+	}
+	else {
+	  strcpy( opplace_str, "");
+	  opplace_found = 0;
+	}
       }
     }
-
+  }
+  if ( opplace_found) {
     if ( strcmp( language, "") == 0) {
       switch ( opp->Language) {
       case pwr_eLanguageEnum_Swedish:
