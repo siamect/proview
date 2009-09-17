@@ -711,6 +711,10 @@ static int	xnav_set_func(	void		*client_data,
     int	bypass;
 
     bypass = ODD( dcli_get_qualifier( "/BYPASS", 0, 0));
+    if ( bypass) {
+      xnav->message( 'E', "Bypass is obsolete");
+      return XNAV__HOLDCOMMAND;
+    }
 
     if ( EVEN( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
     {
