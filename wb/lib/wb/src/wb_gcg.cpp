@@ -51,6 +51,7 @@
 #include "wb_utl_api.h"
 #include "wb_gcg.h"
 #include "wb_dir.h"
+#include "wb_log.h"
 
 extern "C" {
 #include "wb_foe_dataarithm.h"
@@ -1221,13 +1222,10 @@ int gcg_plcwindow_compile (
 	sts = gcg_comp_m1( wind, codetype, errorcount, 
 			   warningcount, spawn); 
 	if ( EVEN(sts)) return sts;
-/************
-	if ( codetype == 1)
-	{
-	  sts = ldhld_PlcWinModule(wind->hw.ldhses, wind->lw.oid);
-	  if ( EVEN(sts)) return sts;
-	}
-*/
+
+	if ( *errorcount == 0)
+	  wb_log::log( (wb_session *)wind->hw.ldhses, wlog_eCategory_PlcBuild, wind->lw.oid);
+
 	return GSX__SUCCESS;
 }
 

@@ -30,6 +30,7 @@
 #include "co_time.h"
 #include "co_msgwindow.h"
 #include "rt_load.h"
+#include "wb_log.h"
 
 wb_pkg::wb_pkg( char *nodelist, bool distribute, bool config_only)
 {
@@ -565,6 +566,8 @@ void pkg_node::fetchFiles( bool distribute)
   sprintf( cmd, ". %s", pack_fname);
   system( cmd);
 
+  wb_log::log( wlog_eCategory_CreatePackage, m_name, pkg_name);
+
   if ( distribute) {
     // Copy the package
     copyPackage( pkg_name);
@@ -621,6 +624,8 @@ void pkg_node::copyPackage( char *pkg_name)
     char cmd[200];
     sprintf( cmd, ". %s", pack_fname);
     system( cmd);
+
+    wb_log::log( wlog_eCategory_CopyPackage, m_name, pkg_name);
   }
 }
 

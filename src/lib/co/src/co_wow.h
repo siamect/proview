@@ -40,7 +40,8 @@ typedef enum {
   wow_eModalDialogReturn_Button1,
   wow_eModalDialogReturn_Button2,
   wow_eModalDialogReturn_Button3,
-  wow_eModalDialogReturn_Deleted
+  wow_eModalDialogReturn_Deleted,
+  wow_eModalDialogReturn_ReturnPressed
 } wow_eMotalDialogReturn;
 
 typedef enum {
@@ -48,6 +49,11 @@ typedef enum {
   wow_ePixmap_Graph,
   wow_ePixmap__
 } wow_ePixmap;
+
+typedef struct {
+  char input_str[200];
+  int status;
+} wow_sModalInputDialog;
 
 class CoWowWidget {
 };
@@ -96,6 +102,10 @@ class CoWow {
   virtual int CreateModalDialog( const char *title, const char *text, const char *button1, 
 				 const char *button2, const char *button3,
 				 const char *image) { return wow_eModalDialogReturn_NYI;}
+  virtual wow_sModalInputDialog *CreateModalInputDialog( const char *title, const char *text, 
+							 const char *button1, const char *button2, 
+							 const char *button3, const char *image, 
+							 int input_length);
   static int HideWarranty();
   virtual int DisplayWarranty() { return 0;}
   virtual void DisplayLicense() {} 

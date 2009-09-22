@@ -52,6 +52,10 @@
 #define EDIT 3
 
 typedef enum {
+  foe_mOption_EnableComment = 1
+} foe_mOption;
+
+typedef enum {
   foe_eFuncAccess_View		= 1 << 0,
   foe_eFuncAccess_Edit		= 1 << 1
 } foe_eFuncAccess;
@@ -114,6 +118,7 @@ class WFoe : public WUtility {
   int		advanced_user;
   int		ldh_cb_enabled;
   int		classeditor;
+  unsigned int	options;
   static foe_sAttr *attr_pointer;
   static int	attr_count;
   CoWow		*wow;
@@ -126,6 +131,7 @@ class WFoe : public WUtility {
 	ldh_tSesContext ldhsesctx,
 	int f_map_window,
 	ldh_eAccess f_access,
+	unsigned int f_options,
 	pwr_tStatus *sts);
   WFoe( void		*f_parent_ctx,
 	const char     	*f_name,
@@ -138,6 +144,7 @@ class WFoe : public WUtility {
 	int	       	f_map_window,
 	ldh_eAccess    	f_access,
 	foe_eFuncAccess	function_access,
+	unsigned int	f_options,
 	pwr_tStatus 	*sts);
   virtual ~WFoe() {}
 
@@ -160,6 +167,7 @@ class WFoe : public WUtility {
 			       int	       		f_map_window,
 			       ldh_eAccess    	f_access,
 			       foe_eFuncAccess	function_access,
+			       unsigned int	f_options,
 			       pwr_tStatus 	*sts) 
     {return 0;}
   virtual void destroy() {}

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_syi.h,v 1.2 2008-06-24 07:03:42 claes Exp $
+ * Proview   $Id$
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -15,31 +15,27 @@
  * You should have received a copy of the GNU General Public License 
  * along with the program, if not, write to the Free Software 
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
+ **/
 
-/* co_syi.h -- System information */
-/* This module gives information about the system.  */
+#ifndef wb_log_gtk_h
+#define wb_log_gtk_h
 
-#ifndef co_syi_h
-#define co_syi_h
+#include "pwr.h"
+#include "co_log_gtk.h"
+#include "wb_log.h"
 
-#if defined __cplusplus
-extern "C" {
+class wb_log_gtk : public wb_log
+{
+  CoLogGtk *m_log;
+
+ public:
+  wb_log_gtk( GtkWidget *parent) {
+    m_log = new CoLogGtk( parent, wlog_cLogFile);
+    m_log->set_default();
+  }
+  ~wb_log_gtk() { delete m_log;}
+
+};
+
 #endif
 
-char		*syi_BootDisk (pwr_tStatus*, char*, int);
-int		syi_Busid (pwr_tStatus*);
-char		*syi_Ethernet (pwr_tStatus*, char*, int);
-char		*syi_HostName (pwr_tStatus*, char*, int);
-char		*syi_HostSpec (pwr_tStatus*, char*, int);
-char		*syi_NodeName (pwr_tStatus*, char*, int);
-char		*syi_NodeSpec (pwr_tStatus*, char*, int);
-pwr_tBoolean	syi_LocalBoot (pwr_tStatus*);
-pwr_tStatus 	syi_UserName( char *user, int len);
-const char     	*syi_Hardware();
-char 		*syi_ProcessId();
-
-#if defined __cplusplus
-}
-#endif
-#endif

@@ -54,6 +54,7 @@
 #include "wb_gcg.h"
 #include "wb_trv.h"
 #include "wb_lfu.h"
+#include "wb_log.h"
 #include "co_dbs.h"
 #include "co_msgwindow.h"
 #include "co_cnf.h"
@@ -2387,6 +2388,8 @@ int lfu_create_bootfiles (
 	    sts = lfu_create_bootfile( node_array[i], volumelist, volumecount, 
 		debug);
 	    if ( EVEN(sts)) return sts;
+
+	    wb_log::log( wlog_eCategory_NodeBuild, node_array[i], 0);      
 	  }
 	}
 	else if ( allnodes)

@@ -248,7 +248,14 @@ void WNavMotif::create_popup_menu( pwr_tAttrRef aref, int x, int y)
 
 Ge *WNavMotif::ge_new( char *graph_name)
 {
-  GeMotif *ge = new GeMotif( NULL, parent_wid, ldhses, 0, graph_name);
+  unsigned int options;
+
+  if ( gbl.enable_comment)
+    options = ge_mOption_EnableComment;
+  else
+    options = 0;
+
+  GeMotif *ge = new GeMotif( NULL, parent_wid, ldhses, 0, options, graph_name);
   return ge;
 }
 
@@ -424,6 +431,12 @@ int WNavMotif::open_foe( const char *name, pwr_tOid plcpgm,
 {
   pwr_tStatus sts;
   WFoe *foe;
+  unsigned int options;
+
+  if ( gbl.enable_comment)
+    options = foe_mOption_EnableComment;
+  else
+    options = 0;
 
   foe = WFoe::get( plcpgm);
   if ( foe)
@@ -431,7 +444,7 @@ int WNavMotif::open_foe( const char *name, pwr_tOid plcpgm,
   else 
     foe = new WFoeMotif( (void *)parent_ctx, parent_wid, name,
 			 plcpgm, wbctx, ldhses,
-			 map_window, access, &sts);
+			 map_window, access, options, &sts);
   if ( EVEN(sts)) return sts;
 
   if ( cdh_ObjidIsNotNull( oid))

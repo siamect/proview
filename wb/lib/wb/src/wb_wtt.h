@@ -157,6 +157,7 @@ class Wtt : public WUtility {
     int		select_volume;
     int		select_attr;
     int		select_type;
+    int		enable_comment;
     int		show_class;
     int		show_alias;
     int		show_descrip;

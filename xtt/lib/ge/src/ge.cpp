@@ -60,6 +60,7 @@
 #include "ge_msg.h"
 #include "wb_wnav_selformat.h"
 #include "wb_nav.h"
+#include "wb_log.h"
 
 
 void Ge::set_title()
@@ -264,6 +265,9 @@ void Ge::save_graph( Ge *gectx, char *name)
 
     gectx->message( 'I', "SubGraph saved");
   }
+
+  unsigned int opt = (gectx->options & ge_mOption_EnableComment) ? log_mOption_Comment : 0;
+  wb_log::log( wlog_eCategory_GeSave, graphname, 0, opt);
 }
 
 void Ge::save( char *name)
@@ -432,6 +436,7 @@ void Ge::export_gejava( Ge *gectx, char *name)
   char *s;
   int sts;
   char cmd[200];
+  char gname[40];
 
   if ( gectx->graph->is_subgraph()) {
     gectx->message( 'E', "Unable to save subgraph as ge java");
@@ -513,12 +518,19 @@ void Ge::export_gejava( Ge *gectx, char *name)
       }
     }
 
-    if ( gectx->graph->is_javaapplication() && gectx->graph->is_javaapplet())
+    gectx->graph->get_name( gname);
+    if ( gectx->graph->is_javaapplication() && gectx->graph->is_javaapplet()) {
       gectx->message( 'I', "Java frame and applet exported");
-    else if ( gectx->graph->is_javaapplication())
+      wb_log::log( wlog_eCategory_GeExport, gname, 0);
+    }
+    else if ( gectx->graph->is_javaapplication()) {
       gectx->message( 'I', "Java frame exported");
-    else if ( gectx->graph->is_javaapplet())
+      wb_log::log( wlog_eCategory_GeExport, gname, 0);
+    }
+    else if ( gectx->graph->is_javaapplet()) {
       gectx->message( 'I', "Java applet exported");
+      wb_log::log( wlog_eCategory_GeExport, gname, 0);
+    }
     else
       gectx->message( 'I', "This graph is not java frame or applet");
   }
@@ -2015,14 +2027,15 @@ Ge::~Ge()
 
 Ge::Ge( 	void 	*x_parent_ctx, 
 		ldh_tSesContext	x_ldhses,
-		int	x_exit_when_close) :
+		int	x_exit_when_close,
+		unsigned int x_options) :
   parent_ctx(x_parent_ctx), graph(0), subpalette(0),
   subgraphs(0), colorpalette_ctx(0), text_input_open(0), name_input_open(0),
   value_input_open(0), command_open(0), confirm_open(0), yesnodia_open(0), 
   yesnodia_yes_cb(0), yesnodia_no_cb(0), india_ok_cb(0), current_text_object(0),
   current_value_object(0), current_confirm_object(0), ldhses(0), plantctx(0),
   exit_when_close(x_exit_when_close), prev_count(0), focused_component(0),
-  recover_object(0), plant_mapped(0), subpalette_mapped(0)
+  recover_object(0), plant_mapped(0), subpalette_mapped(0), options(x_options)
 {
   strcpy( name, "PwR Ge");
 

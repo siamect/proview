@@ -106,6 +106,10 @@ class CoWowGtk : public CoWow {
 			 wow_eFileSelType file_type);
   int CreateModalDialog( const char *title, const char *text, const char *button1, const char *button2,
 			 const char *button3, const char *image);
+  wow_sModalInputDialog *CreateModalInputDialog( const char *title, const char *text, 
+						 const char *button1, const char *button2, 
+						 const char *button3, const char *image,
+						 int input_length);
   int DisplayWarranty();
   void DisplayLicense();
   pwr_tStatus CreateMenuItem( const char *name, void *menu, int pixmap, int append, void *w);

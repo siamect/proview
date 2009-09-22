@@ -37,6 +37,7 @@
 #include "rt_load.h"
 #include "wb_foe_msg.h"
 #include "wb_pwrb_msg.h"
+#include "wb_log.h"
 
 #include "flow.h"
 #include "flow_browctx.h"
@@ -57,6 +58,7 @@
 #include "co_rtmon_gtk.h"
 #include "co_statusmon_nodelist_gtk.h"
 #include "co_msgwindow.h"
+#include "co_logw_gtk.h"
 #include "wb_wnav_selformat.h"
 #include "wb_pwrs.h"
 #include "wb_build.h"
@@ -635,7 +637,8 @@ void WttGtk::wda_new( pwr_tOid oid)
 
 void WttGtk::ge_new( char *graph_name)
 {
-    new GeGtk( NULL, toplevel, ldhses, 0, graph_name);
+  unsigned int opt = wnavnode->gbl.enable_comment ? ge_mOption_EnableComment : 0;
+  new GeGtk( NULL, toplevel, ldhses, 0, opt, graph_name);
 }
 
 void WttGtk::wcast_new( pwr_tAttrRef aref, pwr_tStatus *sts) 
@@ -952,6 +955,31 @@ void WttGtk::activate_syntax( GtkWidget *w, gpointer data)
 {
   Wtt *wtt = (Wtt *)data;
   wtt->activate_syntax();
+}
+
+void WttGtk::activate_history( GtkWidget *w, gpointer data)
+{
+  Wtt *wtt = (Wtt *)data;
+  pwr_tStatus sts;
+  char categories[3][20];
+  pwr_tObjName vname;
+  pwr_tOid oid;
+  int size;
+  char title[80];
+
+  wb_log::category_to_string( wlog_eCategory_ConfiguratorSave, categories[0]);
+  wb_log::category_to_string( wlog_eCategory_VolumeBuild, categories[1]);
+  strcpy( categories[2], "");
+
+  oid.oix = 0;
+  oid.vid = wtt->volid;
+  sts = ldh_ObjidToName( wtt->ldhses, oid, ldh_eName_Object, vname, sizeof(vname), &size);
+  if ( EVEN(sts)) return;
+  
+  strcpy( title, "History Configurator ");
+  strcat( title, vname);
+  CoLogWGtk *logw = new CoLogWGtk( wtt, ((WttGtk *)wtt)->parent_wid, title, &sts);
+  logw->show( categories, vname);
 }
 
 void WttGtk::activate_find( GtkWidget *w, gpointer data)
@@ -1694,6 +1722,7 @@ void WttGtk::boot_ok_cb(GtkWidget *w, gpointer data)
 void WttGtk::update_options_form()
 {
   // Hierarchies
+  gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(enable_comment_w), enable_comment ? TRUE : FALSE);
   gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(show_plant_w), wnav_mapped ? TRUE : FALSE);
   gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(show_node_w), wnavnode_mapped ? TRUE : FALSE);
 
@@ -1720,6 +1749,7 @@ void WttGtk::update_options_form()
 *************************************************************************/
 void WttGtk::set_options()
 {
+  enable_comment = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(enable_comment_w));
   show_class = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(show_class_w));
   show_alias = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(show_alias_w));
   show_descrip = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(show_descrip_w));
@@ -1732,11 +1762,11 @@ void WttGtk::set_options()
   build_crossref = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(build_crossref_w));
   build_manual = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(build_manual_w));
 
-  wnav->set_options( show_class, show_alias, 
+  wnav->set_options( enable_comment, show_class, show_alias, 
 	show_descrip, show_objref, show_objxref, 
 	show_attrref, show_attrxref, build_force, build_debug,
 	build_crossref, build_manual);
-  wnavnode->set_options( show_class, show_alias, 
+  wnavnode->set_options( enable_comment, show_class, show_alias, 
 	show_descrip, show_objref, show_objxref, 
         show_attrref, show_attrxref, build_force, build_debug,
 	build_crossref, build_manual);
@@ -2051,6 +2081,9 @@ WttGtk::WttGtk(
   GtkWidget *file_syntax = gtk_menu_item_new_with_mnemonic( "S_yntax");
   g_signal_connect(file_syntax, "activate", G_CALLBACK(WttGtk::activate_syntax), this);
 
+  GtkWidget *file_history = gtk_menu_item_new_with_mnemonic( "_History");
+  g_signal_connect(file_history, "activate", G_CALLBACK(WttGtk::activate_history), this);
+
   GtkMenu *file_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_open_volume);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_open);
@@ -2059,6 +2092,7 @@ WttGtk::WttGtk(
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), menu_save_w);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), menu_revert_w);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_syntax);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_history);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 
   GtkWidget *file = gtk_menu_item_new_with_mnemonic("_File");
@@ -2721,7 +2755,7 @@ WttGtk::WttGtk(
   g_object_set( cmd_input, "visible", FALSE, NULL);
   gtk_paned_set_position( GTK_PANED(wnav_paned), window_width / 2);
 
-  wnav->get_options( &show_class, &show_alias, 
+  wnav->get_options( &enable_comment, &show_class, &show_alias, 
 	&show_descrip, &show_objref, &show_objxref, 
 	&show_attrref, &show_attrxref, &build_force, &build_debug,
 	&build_crossref, &build_manual);
@@ -2817,11 +2851,13 @@ void WttGtk::create_options_dialog()
   g_signal_connect( options_form, "delete_event", G_CALLBACK(options_delete_event), this);
 
   GtkWidget *hier_label = gtk_label_new( "Hierarchy");
+  enable_comment_w = gtk_check_button_new_with_label( "Enable Comment");
   show_plant_w = gtk_check_button_new_with_label( "Plant Configuration");
   show_node_w = gtk_check_button_new_with_label( "Node Configuration");
 
   GtkWidget *hier_vbox = gtk_vbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(hier_vbox), hier_label, FALSE, FALSE, 15);
+  gtk_box_pack_start( GTK_BOX(hier_vbox), enable_comment_w, FALSE, FALSE, 7);
   gtk_box_pack_start( GTK_BOX(hier_vbox), show_plant_w, FALSE, FALSE, 7);
   gtk_box_pack_start( GTK_BOX(hier_vbox), show_node_w, FALSE, FALSE, 7);
 

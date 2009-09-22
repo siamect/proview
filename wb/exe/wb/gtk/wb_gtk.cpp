@@ -51,6 +51,7 @@
 #include "co_wow_gtk.h"
 #include "co_user.h"
 #include "wb_wtt_gtk.h"
+#include "wb_log_gtk.h"
 
 #include "wb_erep.h"
 #include "wb_vrepwbl.h"
@@ -208,6 +209,9 @@ WbGtk::WbGtk( int argc, char *argv[]) : mainwindow(0)
 					 NULL);
 
 
+  // Attach to history log
+  new wb_log_gtk( toplevel);
+
   // Create message window
   MsgWindowGtk *msg_window = new MsgWindowGtk( 0, mainwindow, "Workbench messages", &sts);
   msg_window->find_wnav_cb = Wb::find_wnav_cb;
@@ -256,6 +260,8 @@ WbGtk::WbGtk( int argc, char *argv[]) : mainwindow(0)
 
     sprintf( msg, "User %s logged in", CoLogin::username());
     MsgWindow::message( 'I', msg);
+
+    wb_log::log( wlog_eCategory_WbLogin, CoLogin::username(), 0);
 
     strcpy( title, "PwR Development ");
     strcat( title, CoLogin::username());

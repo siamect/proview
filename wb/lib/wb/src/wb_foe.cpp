@@ -54,6 +54,7 @@
 #include "wb_pal.h"
 #include "co_wow.h"
 #include "co_xhelp.h"
+#include "wb_log.h"
 
 #define	BEEP	    putchar( '\7' );
 
@@ -102,8 +103,17 @@ void WFoe::activate_save()
 	
   normal_cursor();
 
-  if ( ODD(sts)) 
+  if ( ODD(sts)) {
+    unsigned int opt;
+    if ( options & foe_mOption_EnableComment)
+      opt = log_mOption_Comment;
+    else
+      opt = 0;
+
+    wb_log::log( (wb_session *)gre->wind->hw.ldhses, wlog_eCategory_PlcSave, 
+		 gre->wind->lw.oid, opt);
     message( "Window saved");
+  }
   else if ( sts == VLDH__PLCNOTSAVED )
     msgbox( "UNABLE TO SAVE \nSave the plcprogram in the hierarchy editor first.");
   else if (EVEN(sts)) {
@@ -1391,6 +1401,16 @@ void WFoe::exit_save( WFoe *foe)
     foe->msgbox( msg);
     return;
   }
+  else {
+    unsigned int opt;
+    if ( foe->options & foe_mOption_EnableComment)
+      opt = log_mOption_Comment;
+    else
+      opt = 0;
+    wb_log::log( (wb_session *)foe->gre->wind->hw.ldhses, wlog_eCategory_PlcSave, 
+		 foe->gre->wind->lw.oid, opt);
+  }
+
   foe->foe_exit();
 }
 
@@ -2470,7 +2490,7 @@ int WFoe::subwindow_create( vldh_t_node object, unsigned long subwindow_nr)
     newfoe = subwindow_new( this, object->hn.name, pwr_cNObjid, 
 			    0, plcobject->hp.ldhsesctx,
 			    object, 0, new_window,
-			    map_window, access, function_access, &sts);
+			    map_window, access, function_access, options, &sts);
     if ( sts == FOE__WINDNOTFOUND) {
       message( "Subwindow does not exist");
       BEEP;
@@ -2495,7 +2515,7 @@ int WFoe::subwindow_create( vldh_t_node object, unsigned long subwindow_nr)
 			    0, plcobject->hp.ldhsesctx, 
 			    object, (subwindow_nr - 1),
 			    new_window, map_window, access,
-			    function_access, &sts);
+			    function_access, options, &sts);
     if ( sts == FOE__WINDNOTFOUND) {
       message( "Subwindow does not exist");
       BEEP;
@@ -2544,6 +2564,7 @@ WFoe::WFoe( void		*f_parent_ctx,
 	    int			f_map_window,
 	    ldh_eAccess		f_access,
 	    foe_eFuncAccess	function_access,
+	    unsigned int	f_options,
 	    pwr_tStatus		*sts) :
   WUtility(wb_eUtility_PlcEditor),
   parent_ctx(f_parent_ctx),
@@ -2552,7 +2573,7 @@ WFoe::WFoe( void		*f_parent_ctx,
   node_palette_managed(0), nav_palette_managed(0), con_drawtype(GOEN_CONDRAW),
   show_execorder(0), searchindex(0), popupmenu_mask(~0), popupmenu_node(0),
   access(f_access), map_window(f_map_window), advanced_user(1), ldh_cb_enabled(0),
-  classeditor(0)
+  classeditor(0), options(f_options)
 {
   strcpy( name, f_name);
 }
@@ -2568,6 +2589,7 @@ WFoe::WFoe( void *f_parent_ctx,
 	    ldh_tSesContext ldhsesctx,
 	    int f_map_window,
 	    ldh_eAccess	f_access,
+	    unsigned int	f_options,
 	    pwr_tStatus *sts) :
   WUtility(wb_eUtility_PlcEditor),
   parent_ctx(f_parent_ctx),
@@ -2576,7 +2598,7 @@ WFoe::WFoe( void *f_parent_ctx,
   node_palette_managed(0), nav_palette_managed(0), con_drawtype(GOEN_CONDRAW),
   show_execorder(0), searchindex(0), popupmenu_mask(~0), popupmenu_node(0),
   access(f_access), map_window(f_map_window), advanced_user(1), ldh_cb_enabled(0),
-  classeditor(0)
+  classeditor(0), options(f_options)
 {
   strcpy( name, f_name);
 }
@@ -3779,8 +3801,16 @@ void WFoe::edit_exit_save( WFoe *foe)
   }
 
   foe->create_flow();
+
+  unsigned int opt;
+  if ( foe->options & foe_mOption_EnableComment)
+    opt = log_mOption_Comment;
+  else
+    opt = 0;
+  wb_log::log( (wb_session *)foe->gre->wind->hw.ldhses, wlog_eCategory_PlcSave, 
+	       foe->gre->wind->lw.oid, opt);
 	
-  /* Change the funktion */
+  /* Change the function */
   switch( foe->wanted_function) {
   case SIMULATE:
     foe->gre->disable_button_events();
@@ -3864,6 +3894,8 @@ int WFoe::redraw_and_save()
 
   sts = create_flow();
   if ( EVEN(sts)) return sts;
+
+  wb_log::log( (wb_session *)gre->wind->hw.ldhses, wlog_eCategory_PlcSave, gre->wind->lw.oid);
 
   return FOE__SUCCESS;
 }

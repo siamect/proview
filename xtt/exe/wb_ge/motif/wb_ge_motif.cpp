@@ -72,6 +72,7 @@ int main( int argc, char *argv[])
   char		graph_name[80];
   char		file[120];
   int		i;
+  unsigned int opt = ge_mOption_EnableComment;
   
 #if !defined OS_VMS
   {
@@ -138,7 +139,7 @@ int main( int argc, char *argv[])
       Ge *gectx;
       pwr_tStatus sts;
 
-      gectx = new GeMotif( NULL, mainwindow, 0, 1, NULL);
+      gectx = new GeMotif( NULL, mainwindow, 0, 1, 0, NULL);
       sts = gectx->command( file);
       if ( EVEN(sts))
 	gectx->message( sts);
@@ -148,11 +149,11 @@ int main( int argc, char *argv[])
 
       // Open graph
       strcpy( graph_name, file);
-      new GeMotif( NULL, mainwindow, 0, 1, graph_name);
+      new GeMotif( NULL, mainwindow, 0, 1, opt, graph_name);
     }
   }
   else
-    new GeMotif( NULL, mainwindow, 0, 1, NULL);
+    new GeMotif( NULL, mainwindow, 0, 1, opt, NULL);
 
   XtRealizeWidget(toplevel);
 

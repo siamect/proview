@@ -952,6 +952,9 @@ char *CoWowGtk::convert_utf8( const char *str)
   return result;
 }
 
+//
+//  Modal Dialog with text and tree buttons
+//
 static void modaldia_button1_cb( GtkWidget *w, gpointer data)
 {
   *(int *)data = wow_eModalDialogReturn_Button1;
@@ -1048,6 +1051,126 @@ int CoWowGtk::CreateModalDialog( const char *title, const char *text, const char
   gtk_widget_destroy( dialog_w);
 
   return status;
+}
+
+//
+//  Modal Dialog with text, inputentry  and three buttons.
+//  The returned data should be freed with free().
+//
+
+static gboolean modaldia_keypress_cb( GtkWidget *w, GdkEvent *event, gpointer data)
+{
+  gboolean sts;
+  guint keysym = event->key.keyval;
+  gchar *text = gtk_editable_get_chars( GTK_EDITABLE(w), 0, -1);
+
+  switch ( keysym) {
+  case GDK_Return:
+  case GDK_KP_Enter:
+  case GDK_Linefeed: {
+    // Terminate
+    *(int *)data = wow_eModalDialogReturn_ReturnPressed;
+    gtk_main_quit();
+    sts = FALSE;
+    break;
+  }
+  default:
+    sts = FALSE;
+  }
+
+  g_free( text);
+  return sts;
+}
+
+wow_sModalInputDialog *CoWowGtk::CreateModalInputDialog( const char *title, const char *text, const char *button1, 
+							 const char *button2, const char *button3,
+							 const char *image, int input_length)
+{
+  int status = 0;
+  GtkWidget *image_w;
+  pwr_tFileName fname;
+
+  // Create a question window
+  GtkWidget *dialog_w = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
+							 "default-height", 150,
+							 "default-width", 800,
+							 "title", title,
+							 "window-position", GTK_WIN_POS_CENTER,
+							 NULL);
+
+  g_signal_connect( dialog_w, "delete_event", G_CALLBACK(modaldia_delete_event), &status);
+  GtkWidget *text_w = gtk_label_new(text);
+
+
+  if ( image) {
+    dcli_translate_filename( fname, image);
+    image_w = gtk_image_new_from_file( fname);
+  }
+  if ( !image) {
+    image_w = (GtkWidget *)g_object_new( GTK_TYPE_IMAGE, 
+				"stock", GTK_STOCK_DIALOG_QUESTION,
+				"icon-size", GTK_ICON_SIZE_DIALOG,
+				"xalign", 0.5,
+				"yalign", 1.0,
+				NULL);
+  }
+
+  GtkWidget *textinput = gtk_entry_new_with_max_length( input_length);
+  g_signal_connect( textinput, "key-press-event", 
+  		    G_CALLBACK(modaldia_keypress_cb), &status);
+
+  GtkWidget *hboxtext = gtk_hbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(hboxtext), image_w, FALSE, FALSE, 15);
+  gtk_box_pack_start( GTK_BOX(hboxtext), text_w, FALSE, FALSE, 15);
+  gtk_box_pack_start( GTK_BOX(hboxtext), textinput, TRUE, TRUE, 15);
+
+  GtkWidget *hboxbuttons = gtk_hbox_new( TRUE, 40);
+
+  if ( button1) {
+    GtkWidget *button1_w = gtk_button_new_with_label( translate_utf8(button1));
+    gtk_widget_set_size_request( button1_w, 90, 28);
+    g_signal_connect( button1_w, "clicked", 
+		      G_CALLBACK(modaldia_button1_cb), &status);
+    gtk_box_pack_start( GTK_BOX(hboxbuttons), button1_w, FALSE, FALSE, 0);
+  }
+  if ( button2) {
+    GtkWidget *button2_w = gtk_button_new_with_label( translate_utf8(button2));
+    gtk_widget_set_size_request( button2_w, 90, 28);
+    g_signal_connect( button2_w, "clicked", 
+		      G_CALLBACK(modaldia_button2_cb), &status);
+    gtk_box_pack_start( GTK_BOX(hboxbuttons), button2_w, FALSE, FALSE, 0);
+  }
+  if ( button3) {
+    GtkWidget *button3_w = gtk_button_new_with_label( translate_utf8(button3));
+    gtk_widget_set_size_request( button3_w, 90, 28);
+    g_signal_connect( button3_w, "clicked", 
+		      G_CALLBACK(modaldia_button3_cb), &status);
+    gtk_box_pack_end( GTK_BOX(hboxbuttons), button3_w, FALSE, FALSE, 0);
+  }
+
+
+  GtkWidget *vbox = gtk_vbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(vbox), hboxtext, TRUE, TRUE, 30);
+  gtk_box_pack_start( GTK_BOX(vbox), gtk_hseparator_new(), FALSE, FALSE, 0);
+  gtk_box_pack_end( GTK_BOX(vbox), hboxbuttons, FALSE, FALSE, 15);
+  gtk_container_add( GTK_CONTAINER(dialog_w), vbox);
+  gtk_widget_show_all( dialog_w);
+
+  gtk_main();
+
+  wow_sModalInputDialog *ret = (wow_sModalInputDialog *) calloc( 1, sizeof(*ret));
+  ret->status = status;
+
+  char *valueutf8 = gtk_editable_get_chars( GTK_EDITABLE(textinput), 0, -1);
+  char *value = g_convert( valueutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+  strncpy( ret->input_str, value, sizeof(ret->input_str));
+  g_free( valueutf8);
+  g_free( value);
+
+
+  gtk_widget_destroy( dialog_w);
+
+  return ret;
 }
 
 pwr_tStatus CoWowGtk::CreateMenuItem( const char *name, void *menu, int pixmap, int append, void *w)

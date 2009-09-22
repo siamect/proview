@@ -2154,6 +2154,9 @@ int	WNav::setup()
   new WItemLocal( this, "Verify", "setup_verify", 
 	pwr_eType_Int32, sizeof( gbl.verify), 0, 1,
 	(void *) &gbl.verify, NULL, flow_eDest_IntoLast);
+  new WItemLocal( this, "EnableComment", "setup_comment", 
+	pwr_eType_Int32, sizeof( gbl.enable_comment), 0, 1,
+	(void *) &gbl.enable_comment, NULL, flow_eDest_IntoLast);
   new WItemLocal( this, "AdvancedUser", "setup_advanceduser", 
 	pwr_eType_Int32, sizeof( gbl.advanced_user), 0, 1,
 	(void *) &gbl.advanced_user, NULL, flow_eDest_IntoLast);
@@ -2225,10 +2228,11 @@ int	WNavGbl::symbolfile_exec( void *wnav)
   return WNAV__SUCCESS;
 }
 
-void WNav::set_options( int sh_class, int sh_alias, int sh_descrip, 
+void WNav::set_options( int ena_comment, int sh_class, int sh_alias, int sh_descrip, 
         int sh_objref, int sh_objxref, int sh_attrref, int sh_attrxref,
 	int bu_force, int bu_debug, int bu_crossref, int bu_manual)
 {
+  gbl.enable_comment = ena_comment;
   gbl.show_class = sh_class;
   gbl.show_alias = sh_alias;
   gbl.show_descrip = sh_descrip;
@@ -2243,10 +2247,11 @@ void WNav::set_options( int sh_class, int sh_alias, int sh_descrip,
   ldh_refresh( pwr_cNObjid);
 }
 
-void WNav::get_options( int *sh_class, int *sh_alias, int *sh_descrip, 
+void WNav::get_options( int *ena_comment, int *sh_class, int *sh_alias, int *sh_descrip, 
 	int *sh_objref, int *sh_objxref, int *sh_attrref, int *sh_attrxref,
 	int *bu_force, int *bu_debug, int *bu_crossref, int *bu_manual)
 {
+  *ena_comment = gbl.enable_comment;
   *sh_class =  gbl.show_class;
   *sh_alias =  gbl.show_alias;
   *sh_descrip =  gbl.show_descrip;
@@ -2276,6 +2281,11 @@ int WNav::save_settnings( ofstream& fp)
     fp << "  set alltoplevel /local" << endl;
   else
     fp << "  set noalltoplevel /local" << endl;
+ 
+  if ( gbl.enable_comment)
+    fp << "  set enablecomment /local" << endl;
+  else
+    fp << "  set noenablecomment /local" << endl;
  
   if ( gbl.show_class)
     fp << "  set showclass /local" << endl;

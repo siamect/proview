@@ -489,6 +489,7 @@ int MsgList::brow_cb( FlowCtx *ctx, flow_tEvent event)
 
       brow_GetUserData( node_list[0], (void **)&item);
       item->find();
+      break;
     }
     case flow_eEvent_MB1DoubleClick:
       switch ( event->object.object_type)

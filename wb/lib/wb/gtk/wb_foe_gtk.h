@@ -115,6 +115,7 @@ class WFoeGtk : public WFoe {
 	      ldh_tSesContext ldhsesctx,
 	      int f_map_window,
 	      ldh_eAccess f_access,
+	      unsigned int f_options,
 	      pwr_tStatus *sts);
   WFoeGtk( void      	*f_parent_ctx,
 	GtkWidget      	*f_parent_wid,
@@ -128,6 +129,7 @@ class WFoeGtk : public WFoe {
 	int	       	f_map_window,
 	ldh_eAccess    	f_access,
 	foe_eFuncAccess	function_access,
+	unsigned int 	f_options,
 	pwr_tStatus 	*sts);
 
   virtual void pop();
@@ -148,6 +150,7 @@ class WFoeGtk : public WFoe {
 			       int	       		f_map_window,
 			       ldh_eAccess    	f_access,
 			       foe_eFuncAccess	function_access,
+			       unsigned int 	f_options,
 			       pwr_tStatus 	*sts);
   virtual void destroy();
   virtual void set_title();
@@ -181,6 +184,7 @@ class WFoeGtk : public WFoe {
   static void activate_quit( GtkWidget *w, gpointer data);
   static void activate_savetrace( GtkWidget *w, gpointer data);
   static void activate_restoretrace( GtkWidget *w, gpointer data);
+  static void activate_history( GtkWidget *w, gpointer data);
   static void activate_print( GtkWidget *w, gpointer data);
   static void activate_printoverv( GtkWidget *w, gpointer data);
   static void activate_printselect( GtkWidget *w, gpointer data);

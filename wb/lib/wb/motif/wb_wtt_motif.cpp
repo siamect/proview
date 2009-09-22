@@ -680,7 +680,8 @@ void WttMotif::wda_new( pwr_tOid oid)
 
 void WttMotif::ge_new( char *graph_name)
 {
-  new GeMotif( NULL, toplevel, ldhses, 0, graph_name);
+  unsigned int opt = wnavnode->gbl.enable_comment ? ge_mOption_EnableComment : 0;
+  new GeMotif( NULL, toplevel, ldhses, 0, opt, graph_name);
 }
 
 void WttMotif::wcast_new( pwr_tAttrRef aref, pwr_tStatus *sts) 

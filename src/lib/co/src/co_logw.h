@@ -1,5 +1,5 @@
-/* 
- * Proview   $Id: co_syi.h,v 1.2 2008-06-24 07:03:42 claes Exp $
+/** 
+ * Proview   $Id$
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -15,31 +15,51 @@
  * You should have received a copy of the GNU General Public License 
  * along with the program, if not, write to the Free Software 
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
+ **/
 
-/* co_syi.h -- System information */
-/* This module gives information about the system.  */
+#ifndef co_logw_h
+#define co_logw_h
 
-#ifndef co_syi_h
-#define co_syi_h
+/* co_glow.h -- History logfile window */
 
-#if defined __cplusplus
-extern "C" {
+#ifndef pwr_h
+# include "pwr.h"
 #endif
 
-char		*syi_BootDisk (pwr_tStatus*, char*, int);
-int		syi_Busid (pwr_tStatus*);
-char		*syi_Ethernet (pwr_tStatus*, char*, int);
-char		*syi_HostName (pwr_tStatus*, char*, int);
-char		*syi_HostSpec (pwr_tStatus*, char*, int);
-char		*syi_NodeName (pwr_tStatus*, char*, int);
-char		*syi_NodeSpec (pwr_tStatus*, char*, int);
-pwr_tBoolean	syi_LocalBoot (pwr_tStatus*);
-pwr_tStatus 	syi_UserName( char *user, int len);
-const char     	*syi_Hardware();
-char 		*syi_ProcessId();
+#ifndef co_logwnav_h
+# include "co_logwnav.h"
+#endif
 
-#if defined __cplusplus
-}
+class CoWow;
+class CoWowFocusTimer;
+
+class CoLogW {
+  public:
+    CoLogW(
+	void *msg_parent_ctx,
+	const char *logw_name,
+	pwr_tStatus *status);
+    virtual ~CoLogW() {}
+
+    void show( char categories[][20], char *item);
+
+    void 		*parent_ctx;
+    char 		name[80];
+    CoLogWNav		*logwnav;
+    int		        displayed;
+    int			size;
+    int			max_size;
+    CoWow		*wow;
+
+};
+
 #endif
-#endif
+
+
+
+
+
+
+
+
+

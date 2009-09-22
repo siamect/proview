@@ -68,6 +68,7 @@ class WttGtk : public Wtt {
     GtkWidget	*cm_add_type;
     GtkWidget	*cm_add_volume;
     GtkWidget	*options_form;
+    GtkWidget	*enable_comment_w;
     GtkWidget	*show_plant_w;
     GtkWidget	*show_node_w;
     GtkWidget	*show_class_w;
@@ -181,6 +182,7 @@ class WttGtk : public Wtt {
     static void activate_save( GtkWidget *w, gpointer data);
     static void activate_revert( GtkWidget *w, gpointer data);
     static void activate_syntax( GtkWidget *w, gpointer data);
+    static void activate_history( GtkWidget *w, gpointer data);
     static void activate_find( GtkWidget *w, gpointer data);
     static void activate_findregex( GtkWidget *w, gpointer data);
     static void activate_findnext( GtkWidget *w, gpointer data);

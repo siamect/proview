@@ -54,6 +54,7 @@
 #include "wb_wnav_selformat.h"
 #include "wb_pwrs.h"
 #include "wb_build.h"
+#include "wb_log.h"
 #include "ge.h"
 
 
@@ -431,6 +432,13 @@ void Wtt::save_cb( void *ctx, int quiet)
     return;
   }
 
+  unsigned int opt;
+  if ( wtt->focused_wnav->gbl.enable_comment)
+    opt = log_mOption_Comment;
+  else
+    opt = 0;
+  wb_log::log( (wb_session *)wtt->ldhses, wlog_eCategory_ConfiguratorSave, wtt->volid, opt);
+
   if ( wtt->wb_type == wb_eType_Directory) {
     sts = lfu_SaveDirectoryVolume( wtt->ldhses, wtt->wnav->wow, quiet);
     if ( EVEN(sts)) {
@@ -687,6 +695,13 @@ int Wtt::set_noedit( wtt_eNoEditMode save, wtt_eNoEditVolMode detach)
       // TODO
       if ( ODD(sts) && wb_type == wb_eType_Directory)
         sts = lfu_SaveDirectoryVolume( ldhses, wnav->wow, 0);
+
+      unsigned int opt;
+      if ( focused_wnav->gbl.enable_comment)
+	opt = log_mOption_Comment;
+      else
+	opt = 0;
+      wb_log::log( (wb_session *)ldhses, wlog_eCategory_ConfiguratorSave, volid, opt);
     }
     else
       sts = ldh_RevertSession( ldhses);

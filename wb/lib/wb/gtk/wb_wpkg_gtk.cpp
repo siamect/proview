@@ -40,6 +40,8 @@
 #include "wb_wnav.h"
 #include "wb_pkg.h"
 #include "wb_error.h"
+#include "wb_log.h"
+#include "co_logw_gtk.h"
 #include "co_xhelp.h"
 
 void WPkgGtk::message( char severity, const char *message)
@@ -128,6 +130,22 @@ void WPkgGtk::activate_help( GtkWidget *w, gpointer data)
   CoXHelp::dhelp( "package window", 0, navh_eHelpFile_Base, 0, true);
 }
 
+void WPkgGtk::activate_history( GtkWidget *w, gpointer data)
+{
+  WPkg *wpkg = (WPkg *)data;
+  pwr_tStatus sts;
+  char categories[3][20];
+  char title[80];
+
+  wb_log::category_to_string( wlog_eCategory_CreatePackage, categories[0]);
+  wb_log::category_to_string( wlog_eCategory_CopyPackage, categories[1]);
+  strcpy( categories[2], "");
+
+  strcpy( title, "Distributor History");
+  CoLogWGtk *logw = new CoLogWGtk( wpkg, ((WPkgGtk *)wpkg)->toplevel, title, &sts);
+  logw->show( categories, 0);
+}
+
 gboolean WPkgGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data)
 {
   WPkgGtk *wpkg = (WPkgGtk *)data;
@@ -199,6 +217,7 @@ WPkgGtk::WPkgGtk(
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 			   "default-height", window_height,
 			   "default-width", window_width,
+			   "title", "Distributor",
 			   NULL);
 
   g_signal_connect( toplevel, "delete_event", G_CALLBACK(delete_event), this);
@@ -213,10 +232,15 @@ WPkgGtk::WPkgGtk(
   GtkMenuBar *menu_bar = (GtkMenuBar *) g_object_new(GTK_TYPE_MENU_BAR, NULL);
 
   // File Entry
+  GtkWidget *file_history = gtk_menu_item_new_with_mnemonic( "_History");
+  g_signal_connect( file_history, "activate", 
+		    G_CALLBACK(WPkgGtk::activate_history), this);
+
   GtkWidget *file_close = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLOSE, accel_g);
   g_signal_connect(file_close, "activate", G_CALLBACK(WPkgGtk::activate_exit), this);
 
   GtkMenu *file_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_history);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 
   GtkWidget *file = gtk_menu_item_new_with_mnemonic("_File");

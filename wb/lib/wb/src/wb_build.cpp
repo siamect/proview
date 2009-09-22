@@ -32,6 +32,7 @@
 #include "wb_name.h"
 #include "wb_lfu.h"
 #include "wb_merep.h"
+#include "wb_log.h"
 
 #include "glow.h"
 #include "glow_growctx.h"
@@ -92,6 +93,7 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
 
   printf( "Build node %s\n", nodename);
 
+  wb_log::push();
 
   if ( !opt.manual) {
     // Check if there is any new dbsfile
@@ -146,10 +148,14 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
       }
     }
   }
+  wb_log::pull();
 
-  if ( opt.force || opt.manual || rebuild)
+  if ( opt.force || opt.manual || rebuild) {
     m_sts = lfu_create_bootfile( nodename, (lfu_t_volumelist *)volumelist, volumecnt,
 				 opt.debug);
+    if ( ODD(m_sts))
+      wb_log::log( wlog_eCategory_NodeBuild, nodename, 0);      
+  }
   else
     m_sts = PWRB__NOBUILT;
 
@@ -297,6 +303,8 @@ void wb_build::rootvolume( pwr_tVid vid)
   pwr_tCmd		cmd;
   char			msg[80];
 
+  wb_log::push();
+
   if ( !opt.manual) {
     // Build all plcpgm
     classlist( pwr_cClass_plc);
@@ -324,6 +332,7 @@ void wb_build::rootvolume( pwr_tVid vid)
     if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
       sumsts = m_sts;
   }
+  wb_log::pull();
 
   // Create loadfiles
   oid.oix = 0;
@@ -367,6 +376,8 @@ void wb_build::rootvolume( pwr_tVid vid)
 
     sprintf( msg, "Build:    Volume   Loadfiles created volume %s", m_session.name());
     MsgWindow::message('I', msg, msgw_ePop_No);
+
+    wb_log::log( &m_session, wlog_eCategory_VolumeBuild, m_session.vid());
 
     sumsts = PWRB__SUCCESS;
   }
@@ -575,6 +586,7 @@ void wb_build::xttgraph( pwr_tOid oid)
   pwr_tFileName src_fname, dest_fname;
   pwr_tCmd	cmd;
   pwr_tString80	action;
+  pwr_tString80	name;
   pwr_tTime	dest_time, src_time;
   int 		check_hierarchy = cdh_ObjidIsNotNull( m_hierarchy);
   int 		hierarchy_found = 0;
@@ -636,6 +648,11 @@ void wb_build::xttgraph( pwr_tOid oid)
       system( cmd);
       sprintf( cmd, "Build:    XttGraph copy $pwrp_pop/%s -> $pwrp_exe", action);
       MsgWindow::message( 'I', cmd, msgw_ePop_No, oid);
+
+      strcpy( name, action);
+      if (( s = strrchr( name, '.')))
+	*s = 0;
+      wb_log::log( wlog_eCategory_GeBuild, name, 0);
       m_sts = PWRB__SUCCESS;
     }
     else

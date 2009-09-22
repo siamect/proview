@@ -1306,8 +1306,9 @@ GeMotif::GeMotif( 	void 	*x_parent_ctx,
 			Widget 	x_parent_widget,
 			ldh_tSesContext	x_ldhses,
 			int	x_exit_when_close,
+			unsigned int x_options,
 			char	*graph_name) :
-  Ge( x_parent_ctx, x_ldhses, x_exit_when_close),
+  Ge( x_parent_ctx, x_ldhses, x_exit_when_close, x_options),
   parent_wid(x_parent_widget), graph_atom(0), text_current_recall(0),
   name_current_recall(0), value_current_recall(0), cmd_current_recall(0)
 {

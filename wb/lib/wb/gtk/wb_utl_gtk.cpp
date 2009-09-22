@@ -48,7 +48,7 @@ int wb_utl_gtk::utl_foe_new( const char *name, pwr_tOid plcpgm,
   *foe = WFoe::get( plcpgm);
   if ( !*foe)
     *foe = new WFoeGtk( 0, widget, name, plcpgm, ldhwbctx, ldhsesctx,
-			map_window, access, &sts);
+			map_window, access, 0, &sts);
   return sts;
 }
 
@@ -66,7 +66,7 @@ int wb_utl_gtk::utl_foe_new_local( WFoe *foe, const char *name, pwr_tOid plcpgm,
     *return_foe = new WFoeGtk( foe, ((WFoeGtk *)foe)->widgets.foe_window,
 			       name, plcpgm, ldhwbctx, ldhsesctx,
 			       nodeobject, windowindex, new_window,
-			       map_window, access, function_access, &sts);
+			       map_window, access, function_access, 0, &sts);
   return sts;
 }
  

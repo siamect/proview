@@ -51,6 +51,10 @@ typedef void *GlowCtx;
 
 /* ge.h -- Simple graphic editor */
 
+typedef enum {
+  ge_mOption_EnableComment = 1
+} ge_mOption;
+
 typedef struct {
     char	name[40];
     char	prev[40];
@@ -91,10 +95,11 @@ class Ge {
   char          recover_name[80];
   int		plant_mapped;
   int		subpalette_mapped;
+  unsigned int	options;
   CoWow		*wow;
 
   Ge( void *parent_ctx,
-      ldh_tSesContext ldhses, int exit_when_close);
+      ldh_tSesContext ldhses, int exit_when_close, unsigned int x_options);
   virtual ~Ge();
   void open( char *name);
   void save( char *name);

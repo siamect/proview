@@ -37,6 +37,7 @@
 #include "wb_foe_msg.h"
 #include "wb_vldh_msg.h"
 #include "wb_vldh.h"
+#include "wb_log.h"
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
@@ -48,6 +49,7 @@
 #include "wb_pal_gtk.h"
 #include "wb_nav_gtk.h"
 #include "co_wow_gtk.h"
+#include "co_logw_gtk.h"
 
 //	Callback from the menu.
 void WFoeGtk::activate_save( GtkWidget *w, gpointer data)
@@ -92,6 +94,29 @@ void WFoeGtk::activate_restoretrace( GtkWidget *w, gpointer data)
   WFoe *foe = (WFoe *)data;
 
   foe->activate_restoretrace();
+}
+
+void WFoeGtk::activate_history( GtkWidget *w, gpointer data)
+{
+  WFoe *foe = (WFoe *)data;
+  pwr_tStatus sts;
+  char categories[3][20];
+  pwr_tOName wname;
+  int size;
+  char title[300];
+
+  wb_log::category_to_string( wlog_eCategory_PlcSave, categories[0]);
+  wb_log::category_to_string( wlog_eCategory_PlcBuild, categories[1]);
+  strcpy( categories[2], "");
+
+  sts = ldh_ObjidToName( foe->gre->wind->hw.ldhses, foe->gre->wind->lw.oid, ldh_eName_VolPath, 
+			 wname, sizeof(wname), &size);
+  if ( EVEN(sts)) return;
+  
+  strcpy( title, "History ");
+  strcat( title, wname);
+  CoLogWGtk *logw = new CoLogWGtk( foe, ((WFoeGtk *)foe)->toplevel, title, &sts);
+  logw->show( categories, wname);
 }
 
 //	Callback from the menu.
@@ -928,12 +953,13 @@ WFoe *WFoeGtk::subwindow_new( void			*f_parent_ctx,
 				int	       		f_map_window,
 				ldh_eAccess    	f_access,
 				foe_eFuncAccess	function_access,
+			        unsigned int 	f_options,
 				pwr_tStatus 	*sts)
 {
   return new WFoeGtk( f_parent_ctx, widgets.foe_window, f_name, plcprogram,
 		      ldhwbctx, ldhsesctx, nodeobject, windowindex,
 		      new_window, f_map_window, f_access, function_access,
-		      sts);
+		      f_options, sts);
 }
 
 
@@ -1007,9 +1033,10 @@ WFoeGtk::WFoeGtk( void		*f_parent_ctx,
 		  int	       	f_map_window,
 		  ldh_eAccess   f_access,
 		  foe_eFuncAccess function_access,
+		  unsigned int  f_options,
 		  pwr_tStatus   *sts) :
   WFoe(f_parent_ctx,f_name,plcprogram,ldhwbctx,ldhsesctx,nodeobject,
-       windowindex,new_window,f_map_window,f_access,function_access,sts),
+       windowindex,new_window,f_map_window,f_access,function_access,f_options,sts),
   parent_wid(f_parent_wid)
 {
 
@@ -1033,9 +1060,10 @@ WFoeGtk::WFoeGtk( void *f_parent_ctx,
 		      ldh_tSesContext ldhsesctx,
 		      int f_map_window,
 		      ldh_eAccess f_access,
+		      unsigned int f_options,
 		      pwr_tStatus *sts) :
   WFoe(f_parent_ctx,f_name,plcprogram,ldhwbctx,ldhsesctx,f_map_window,
-       f_access,sts),
+       f_access,f_options,sts),
   parent_wid(f_parent_wid)
 {
   int		size;
@@ -1185,6 +1213,10 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   g_signal_connect( widgets.restoretrace, "activate", 
 		    G_CALLBACK(WFoeGtk::activate_restoretrace), this);
 
+  GtkWidget *file_history = gtk_menu_item_new_with_mnemonic( "_History");
+  g_signal_connect( file_history, "activate", 
+		    G_CALLBACK(WFoeGtk::activate_history), this);
+
   widgets.exit = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLOSE, accel_g);
   g_signal_connect(widgets.exit, "activate", G_CALLBACK(WFoeGtk::activate_quit), this);
 
@@ -1197,6 +1229,7 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), widgets.winddelete);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), widgets.savetrace);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), widgets.restoretrace);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_history);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), widgets.exit);
 
   GtkWidget *file = gtk_menu_item_new_with_mnemonic("_File");

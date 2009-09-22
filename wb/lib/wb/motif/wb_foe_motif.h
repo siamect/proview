@@ -88,6 +88,7 @@ class WFoeMotif : public WFoe {
 	      ldh_tSesContext ldhsesctx,
 	      int f_map_window,
 	      ldh_eAccess f_access,
+	      unsigned int f_options,
 	      pwr_tStatus *sts);
   WFoeMotif( void      	*f_parent_ctx,
 	Widget		f_parent_wid,
@@ -101,6 +102,7 @@ class WFoeMotif : public WFoe {
 	int	       	f_map_window,
 	ldh_eAccess    	f_access,
 	foe_eFuncAccess	function_access,
+        unsigned int 	f_options,
 	pwr_tStatus 	*sts);
 
   virtual void pop();
@@ -121,6 +123,7 @@ class WFoeMotif : public WFoe {
 			       int	       		f_map_window,
 			       ldh_eAccess    	f_access,
 			       foe_eFuncAccess	function_access,
+			       unsigned int 	f_options,
 			       pwr_tStatus 	*sts);
   virtual void destroy();
   virtual void set_title();

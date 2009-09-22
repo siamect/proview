@@ -31,6 +31,7 @@ typedef void *ldh_tSesContext;
 #include "ge_gtk.h"
 #include "co_lng.h"
 #include "co_xhelp_gtk.h"
+#include "wb_log_gtk.h"
 
 
 /*  Fallback resources  */
@@ -57,6 +58,7 @@ int main( int argc, char *argv[])
   pwr_tFileName file;
   char graph_name[80];
   int sts;
+  unsigned int opt = ge_mOption_EnableComment;
 
   gtk_init( &argc, &argv);
 
@@ -86,13 +88,12 @@ int main( int argc, char *argv[])
 	strcpy( file, argv[i]);
     }
 
-    printf( "Arg: %s\n", file);
     if ( file[0] == '@') {
       // Execute script
       Ge *gectx;
       pwr_tStatus sts;
 
-      gectx = new GeGtk( NULL, toplevel, 0, 1, NULL);
+      gectx = new GeGtk( NULL, toplevel, 0, 1, 0, NULL);
       sts = gectx->command( file);
       if ( EVEN(sts))
 	gectx->message( sts);
@@ -102,14 +103,16 @@ int main( int argc, char *argv[])
 
       // Open graph
       strcpy( graph_name, file);
-      new GeGtk( NULL, mainwindow, 0, 1, graph_name);
+      new GeGtk( NULL, mainwindow, 0, 1, opt, graph_name);
     }
   }
   else
-    new GeGtk( NULL, mainwindow, 0, 1, NULL);
+    new GeGtk( NULL, mainwindow, 0, 1, opt, NULL);
 
   gtk_widget_show_all( toplevel);
   g_object_set( toplevel, "visible", FALSE, NULL);
+
+  new wb_log_gtk( toplevel);
 
   gtk_main();
   return (0);

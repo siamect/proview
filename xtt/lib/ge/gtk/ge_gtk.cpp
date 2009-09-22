@@ -62,7 +62,9 @@
 #include "ge_msg.h"
 #include "wb_wnav_selformat.h"
 #include "co_wow_gtk.h"
+#include "co_logw_gtk.h"
 #include "wb_nav_gtk.h"
+#include "wb_log.h"
 
 
 static GtkWidget *image_button( const char *filename)
@@ -656,6 +658,27 @@ void GeGtk::activate_exit(GtkWidget *w, gpointer gectx)
 void GeGtk::activate_print(GtkWidget *w, gpointer gectx)
 {
   ((Ge *)gectx)->activate_print();
+}
+
+void GeGtk::activate_history( GtkWidget *w, gpointer data)
+{
+  Ge *ge = (Ge *)data;
+  pwr_tStatus sts;
+  char categories[4][20];
+  char title[80];
+  char          name[80];
+
+  ge->graph->get_name( name);
+
+  wb_log::category_to_string( wlog_eCategory_GeSave, categories[0]);
+  wb_log::category_to_string( wlog_eCategory_GeBuild, categories[1]);
+  wb_log::category_to_string( wlog_eCategory_GeExport, categories[2]);
+  strcpy( categories[3], "");
+
+  strcpy( title, "History ");
+  strcat( title, name);
+  CoLogWGtk *logw = new CoLogWGtk( ge, ((GeGtk *)ge)->toplevel, title, &sts);
+  logw->show( categories, name);
 }
 
 void GeGtk::activate_new(GtkWidget *w, gpointer gectx)
@@ -1520,8 +1543,9 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 		GtkWidget *x_parent_widget,
 		ldh_tSesContext	x_ldhses,
 		int	x_exit_when_close,
+		unsigned int x_options,
 		char	*graph_name) :
-  Ge( x_parent_ctx, x_ldhses, x_exit_when_close),
+  Ge( x_parent_ctx, x_ldhses, x_exit_when_close, x_options),
   parent_wid(x_parent_widget), graph_atom(0)
 {
   int		path_cnt;
@@ -1644,6 +1668,10 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 			      'n', GdkModifierType(GDK_CONTROL_MASK | GDK_SHIFT_MASK), 
 			      GTK_ACCEL_VISIBLE);
 
+  GtkWidget *file_history = gtk_menu_item_new_with_mnemonic( "_History");
+  g_signal_connect( file_history, "activate", 
+		    G_CALLBACK(activate_history), this);
+
   GtkWidget *file_print = gtk_image_menu_item_new_from_stock(GTK_STOCK_PRINT, accel_g);
   g_signal_connect(file_print, "activate", G_CALLBACK(activate_print), this);
 
@@ -1663,6 +1691,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_nextpage);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_prevpage);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_creanextpage);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_history);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_print);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 

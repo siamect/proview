@@ -311,7 +311,7 @@ void Ev::create_aliaslist( void *up)
   int alias_size;
   ev_sAlias dum;
   pwr_sClass_OpPlace *userp = (pwr_sClass_OpPlace *)up;
-  int listsize = MIN( sizeof(userp->SelectList)/sizeof(userp->SelectList[0]),
+  int listsize = MIN( sizeof(userp->EventSelectList)/sizeof(userp->EventSelectList[0]),
 		      sizeof(alias_list)/sizeof(alias_list[0]));
 						    
   for ( i = 0, j = 0; i < listsize; i++) {
@@ -319,7 +319,7 @@ void Ev::create_aliaslist( void *up)
     strcpy( alias_list[i].Object, "");
   }
   for ( i = 0, j = 0; i < listsize; i++) {
-    nr = dcli_parse( userp->SelectList[i], " 	", "",
+    nr = dcli_parse( userp->EventSelectList[i], " 	", "",
 	     (char *) alias_array, sizeof( alias_array)/sizeof( alias_array[0]), 
 	     sizeof( alias_array[0]), 0);
     if ( nr < 2)

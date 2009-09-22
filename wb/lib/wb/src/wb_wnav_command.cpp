@@ -1264,6 +1264,20 @@ static int	wnav_set_func(	void		*client_data,
     else
       wnav->gbl.build.manual = 0;
   }
+  else if ( strncmp( arg1_str, "ENABLECOMMENT", strlen( arg1_str)) == 0)
+  {
+    if ( EVEN( dcli_get_qualifier( "/LOCAL", 0, 0)))
+      (wnav->gbl_command_cb)( wnav->parent_ctx, "SET ENABLECOMMENT");
+    else
+      wnav->gbl.enable_comment = 1;
+  }
+  else if ( strncmp( arg1_str, "NOENABLECOMMENT", strlen( arg1_str)) == 0)
+  {
+    if ( EVEN( dcli_get_qualifier( "/LOCAL", 0, 0)))
+      (wnav->gbl_command_cb)( wnav->parent_ctx, "SET NOENABLECOMMENT");
+    else
+      wnav->gbl.enable_comment = 0;
+  }
   else if ( strncmp( arg1_str, "VERIFY", strlen( arg1_str)) == 0)
   {
     if ( wnav->window_type == wnav_eWindowType_No)

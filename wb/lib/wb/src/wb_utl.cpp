@@ -64,6 +64,7 @@
 #include "wb_utl.h"
 #include "wb_utl_api.h"
 #include "wb_dir.h"
+#include "wb_log.h"
 
 #define	UTL_LIST_MAX		5
 #define	UTL_INPUTLIST_MAX	50
@@ -11434,6 +11435,9 @@ int utl_create_loadfiles (
 	    if ( EVEN(sts)) return sts;
 	  }
 	  if ( EVEN(status)) return status;
+
+	  wb_log::log( (wb_session *)ldhses, wlog_eCategory_VolumeBuild, volume_vect[i]);
+
 	}
 	return FOE__SUCCESS;
 

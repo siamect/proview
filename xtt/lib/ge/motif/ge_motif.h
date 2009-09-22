@@ -67,8 +67,8 @@ class GeMotif : public Ge {
 
  public:
   GeMotif( void *parent_ctx, Widget parent_widget,
-      ldh_tSesContext ldhses, int exit_when_close,
-      char *graph_name);
+	   ldh_tSesContext ldhses, int exit_when_close, unsigned int x_options,
+	   char *graph_name);
   ~GeMotif();
 
   virtual void set_title( char *title);

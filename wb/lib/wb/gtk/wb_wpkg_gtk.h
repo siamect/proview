@@ -61,6 +61,7 @@ class WPkgGtk : public WPkg {
     static void activate_dmode_filetime( GtkWidget *w, gpointer data);
     static void activate_dmode_filepath( GtkWidget *w, gpointer data);
     static void activate_exit( GtkWidget *w, gpointer data);
+    static void activate_history( GtkWidget *w, gpointer data);
     static void activate_help( GtkWidget *w, gpointer data);
     static gboolean action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data);
 

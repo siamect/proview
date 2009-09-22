@@ -239,7 +239,14 @@ void WNavGtk::create_popup_menu( pwr_tAttrRef aref, int x, int y)
 
 Ge *WNavGtk::ge_new( char *graph_name)
 {
-  GeGtk *ge = new GeGtk( NULL, toplevel, ldhses, 0, graph_name);
+  unsigned int options;
+
+  if ( gbl.enable_comment)
+    options = ge_mOption_EnableComment;
+  else
+    options = 0;
+
+  GeGtk *ge = new GeGtk( NULL, toplevel, ldhses, 0, options, graph_name);
   return ge;
 }
 
@@ -362,14 +369,20 @@ int WNavGtk::open_foe( const char *name, pwr_tOid plcpgm,
 {
   pwr_tStatus sts;
   WFoe *foe;
+  unsigned int options;
+
+  if ( gbl.enable_comment)
+    options = foe_mOption_EnableComment;
+  else
+    options = 0;
 
   foe = WFoe::get( plcpgm);
   if ( foe)
     foe->pop();
   else 
     foe = new WFoeGtk( (void *)parent_ctx, parent_wid, name,
-			 plcpgm, wbctx, ldhses,
-			 map_window, access, &sts);
+		       plcpgm, wbctx, ldhses,
+		       map_window, access, options, &sts);
   if ( EVEN(sts)) return sts;
 
   if ( cdh_ObjidIsNotNull( oid))

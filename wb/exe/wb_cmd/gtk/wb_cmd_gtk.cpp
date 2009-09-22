@@ -46,12 +46,16 @@
 #include "wb_wnav_msg.h"
 #include "wb_cmdc_gtk.h"
 #include "wb.h"
+#include "wb_log_gtk.h"
 #include "co_msgwindow.h"
 
 CmdGtk::CmdGtk()
 {
   GtkWidget	*w;
   pwr_tStatus	sts;
+
+  // Attach to history log
+  new wb_log_gtk( 0);
 
   wnav = new WNavGtk( (void *)this, (GtkWidget *)0,"","",&w, ldhses, 
 	(wnav_sStartMenu *)0, wnav_eWindowType_No, &sts);

@@ -152,3 +152,11 @@ const char *syi_Hardware()
 #endif
   return hw;
 }
+
+char *syi_ProcessId()
+{
+  static char pidstr[40];
+
+  sprintf( pidstr, "%u", getpid());
+  return pidstr;
+}

@@ -943,11 +943,12 @@ WFoe *WFoeMotif::subwindow_new( void			*f_parent_ctx,
 			   int	       		f_map_window,
 			   ldh_eAccess    	f_access,
 			   foe_eFuncAccess	function_access,
+			   unsigned int 	f_options,
 			   pwr_tStatus 	*sts)
 {
   return new WFoeMotif( f_parent_ctx, widgets.foe_window, f_name, plcprogram,
 			ldhwbctx, ldhsesctx, nodeobject, windowindex,
-			new_window, f_map_window, f_access, function_access,
+			new_window, f_map_window, f_access, function_access, f_options,
 			sts);
 }
 
@@ -1040,9 +1041,10 @@ WFoeMotif::WFoeMotif( void		*f_parent_ctx,
 		      int	       	f_map_window,
 		      ldh_eAccess      	f_access,
 		      foe_eFuncAccess	function_access,
+		      unsigned int 	f_options,
 		      pwr_tStatus      	*sts) :
   WFoe(f_parent_ctx,f_name,plcprogram,ldhwbctx,ldhsesctx,nodeobject,
-       windowindex,new_window,f_map_window,f_access,function_access,sts),
+       windowindex,new_window,f_map_window,f_access,function_access,f_options,sts),
   parent_wid(f_parent_wid), set_focus_disabled(0), focus_timerid(0)
 {
 
@@ -1066,9 +1068,10 @@ WFoeMotif::WFoeMotif( void *f_parent_ctx,
 		      ldh_tSesContext ldhsesctx,
 		      int f_map_window,
 		      ldh_eAccess	f_access,
+		      unsigned int f_options,
 		      pwr_tStatus *sts) :
   WFoe(f_parent_ctx,f_name,plcprogram,ldhwbctx,ldhsesctx,f_map_window,
-       f_access,sts),
+       f_access,f_options,sts),
   parent_wid(f_parent_wid), set_focus_disabled(0), focus_timerid(0)
 {
   int		size;

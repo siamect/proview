@@ -71,8 +71,8 @@ class GeGtk : public Ge {
 
  public:
   GeGtk( void *parent_ctx, GtkWidget *parent_widget,
-      ldh_tSesContext ldhses, int exit_when_close,
-      char *graph_name);
+	 ldh_tSesContext ldhses, int exit_when_close, unsigned int options,
+	 char *graph_name);
   ~GeGtk();
 
   virtual void set_title( char *title);
@@ -157,6 +157,7 @@ class GeGtk : public Ge {
   static void activate_command( GtkWidget *w, gpointer gectx);
   static void activate_exit( GtkWidget *w, gpointer gectx);
   static void activate_print( GtkWidget *w, gpointer gectx);
+  static void activate_history( GtkWidget *w, gpointer gectx);
   static void activate_new( GtkWidget *w, gpointer gectx);
   static void activate_save( GtkWidget *w, gpointer gectx);
   static void activate_save_as( GtkWidget *w, gpointer gectx);
