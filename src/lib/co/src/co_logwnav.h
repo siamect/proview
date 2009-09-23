@@ -65,11 +65,12 @@ class CoLogWNavBrow {
 class CoLogWNav {
   public:
     CoLogWNav(
-	void *ev_parent_ctx);
+	      void *l_parent_ctx, int l_show_item);
     virtual ~CoLogWNav();
 
     void 		*parent_ctx;
     CoLogWNavBrow	*brow;
+    int			show_item;
 
     virtual void set_input_focus() {}
 
@@ -79,7 +80,8 @@ class CoLogWNav {
 
     static int init_brow_cb( FlowCtx *fctx, void *client_data);
     static int brow_cb( FlowCtx *ctx, flow_tEvent event);
-    static void item_cb( void *ctx, pwr_tTime time, char *category, char *comment);
+    static void item_cb( void *ctx, pwr_tTime time, char *category, char *item, 
+			 char *comment);
 };
 
 class ItemLog {

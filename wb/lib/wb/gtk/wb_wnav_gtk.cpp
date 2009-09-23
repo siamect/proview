@@ -47,6 +47,7 @@ extern "C" {
 #include "wb_wnav_item.h"
 #include "co_wow_gtk.h"
 #include "co_login_gtk.h"
+#include "co_logw_gtk.h"
 #include "wb_wge_gtk.h"
 #include "ge_gtk.h"
 #include "wb_wda_gtk.h"
@@ -261,6 +262,29 @@ wb_utl *WNavGtk::utl_new()
 {
   wb_utl_gtk *utl = new wb_utl_gtk( parent_wid);
   return utl;
+}
+
+void WNavGtk::logw_new( char *item, wlog_eCategory *categories, int show_item)
+{
+  char categories_str[10][20];
+  char title[300];
+  pwr_tStatus sts;
+  
+  for ( unsigned int i = 0; i < sizeof(categories_str)/sizeof(categories_str[0]); i++) {
+    if ( categories[i] == wlog_eCategory_) {
+      strcpy( categories_str[i], "");
+      break;
+    }
+    else
+      wb_log::category_to_string( categories[i], categories_str[i]);
+  }
+  strcpy( title, "History ");
+  strcat( title, item);
+  if ( title[strlen(title)-1] == '*')
+    title[strlen(title)-1] = 0;
+
+  CoLogWGtk *logw = new CoLogWGtk( this, parent_wid, title, show_item, &sts);
+  logw->show( categories_str, item);
 }
 
 void WNavGtk::sel_convert_cb( GtkWidget  *w, GtkSelectionData *selection_data,

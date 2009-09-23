@@ -80,7 +80,7 @@ void CoLog::log( const char *category, const char *str, const char *cmt, unsigne
 }
 
 void CoLog::get( char categories[][20], char *item, 
-		 void item_cb( void *, pwr_tTime, char *, char *), void *ctx)
+		 void item_cb( void *, pwr_tTime, char *, char *, char *), void *ctx)
 {
   ifstream fp;
   char line[1024];
@@ -98,7 +98,10 @@ void CoLog::get( char categories[][20], char *item,
     parts = dcli_parse( line, " ", "",
 	     (char *) line_array, sizeof( line_array)/sizeof( line_array[0]), 
 	     sizeof( line_array[0]), 0);
-    if ( item && cdh_NoCaseStrcmp( line_array[5], item) != 0)
+
+    if ( item &&
+	 !(item[strlen(item)-1] == '*' && cdh_NoCaseStrncmp( line_array[5], item, strlen(item)-1) == 0) &&
+	 cdh_NoCaseStrcmp( line_array[5], item) != 0)
       continue;
 
     int found = 0;
@@ -123,9 +126,9 @@ void CoLog::get( char categories[][20], char *item,
       continue;
 
     if ( parts > 6)
-      item_cb( ctx, time, line_array[4], line_array[6]);
+      item_cb( ctx, time, line_array[4], line_array[5], line_array[6]);
     else
-      item_cb( ctx, time, line_array[4], 0);
+      item_cb( ctx, time, line_array[4], line_array[5], 0);
   }
 }
 

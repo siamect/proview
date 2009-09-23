@@ -38,10 +38,11 @@ extern "C" {
 #include "co_logwnav_gtk.h"
 
 CoLogWNavGtk::CoLogWNavGtk (
-	void *ev_parent_ctx,
-	GtkWidget *ev_parent_wid,
+	void *l_parent_ctx,
+	GtkWidget *l_parent_wid,
+	int l_show_item,
 	GtkWidget **w) :
-  CoLogWNav( ev_parent_ctx), parent_wid(ev_parent_wid)
+  CoLogWNav( l_parent_ctx, l_show_item), parent_wid(l_parent_wid)
 {
   form_widget = scrolledbrowwidgetgtk_new(
 	CoLogWNav::init_brow_cb, this, &brow_widget);

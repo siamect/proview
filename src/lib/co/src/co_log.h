@@ -51,7 +51,7 @@ class CoLog
   void set_default() { m_default_log = this;}
   void log( const char *category, const char *str, const char *cmt, unsigned int opt = 0);
   void get( char categories[][20], char *item, 
-	    void item_cb( void *, pwr_tTime, char *, char *), void *ctx);
+	    void item_cb( void *, pwr_tTime, char *, char *, char *), void *ctx);
   void push() { m_level++;}
   void pull() { 
     m_level--; 
@@ -65,7 +65,7 @@ class CoLog
     if ( m_default_log) m_default_log->push();}
   static void dpull() { 
     if ( m_default_log) m_default_log->pull();}
-  static void dget( char categories[][20], char *item, void item_cb( void *, pwr_tTime, char *, char *), void *ctx) { 
+  static void dget( char categories[][20], char *item, void item_cb( void *, pwr_tTime, char *, char *, char *), void *ctx) { 
     if ( m_default_log) m_default_log->get( categories, item, item_cb, ctx);}
 };
 

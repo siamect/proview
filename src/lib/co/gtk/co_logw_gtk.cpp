@@ -50,8 +50,9 @@ CoLogWGtk::CoLogWGtk (
 	void *logw_parent_ctx,
 	GtkWidget *logw_parent_wid,
 	const char *logw_name,
+	int l_show_item,
 	pwr_tStatus *status) :
-  CoLogW( logw_parent_ctx, logw_name, status), parent_wid(logw_parent_wid)
+  CoLogW( logw_parent_ctx, logw_name, l_show_item, status), parent_wid(logw_parent_wid)
 {
   const int	window_width = 800;
   const int    	window_height = 600;
@@ -110,7 +111,7 @@ CoLogWGtk::CoLogWGtk (
   form = gtk_vbox_new( FALSE, 0);
 
   // Create logwnav
-  logwnav = new CoLogWNavGtk( this, form, &nav_widget);
+  logwnav = new CoLogWNavGtk( this, form, l_show_item, &nav_widget);
 
   gtk_box_pack_start( GTK_BOX(form), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(form), GTK_WIDGET(nav_widget), TRUE, TRUE, 0);
@@ -138,7 +139,7 @@ gboolean CoLogWGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer d
 {
   CoLogWGtk *logw = (CoLogWGtk *)data;
 
-  if ( logw && logw->displayed) {
+  if ( logw) {
     if ( logw->focustimer.disabled())
       return FALSE;
 

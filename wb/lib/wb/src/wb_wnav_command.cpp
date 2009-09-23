@@ -72,6 +72,7 @@
 #include "wb_pkg.h"
 #include "wb_build.h"
 #include "wb_wtt.h"
+#include "wb_log.h"
 #include "ge.h"
 #include "wb_utl.h"
 
@@ -255,7 +256,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/FILE", 
 			"/SCROLLBAR", "/WIDTH", "/HEIGHT", "/MENU", 
 			"/NAVIGATOR", "/CENTER", "/OBJECT", "/MODAL", "/INSTANCE", "/TITLE", 
-			"/VOLUME", ""}
+			  "/VOLUME", "/ITEM", "/SHOWITEM", "/CATEGORIES", ""}
 		},
 		{
 			"CLOSE",
@@ -3588,6 +3589,46 @@ static int	wnav_open_func(	void		*client_data,
     else {
       wge->close_cb = wnav_wge_close_cb;
     }
+  }
+  else if ( strncmp( arg1_str, "HISTORY", strlen( arg1_str)) == 0)
+  {
+    char		categoriesstr[80];
+    pwr_tAName		itemstr;
+    int			showitem;
+    char 		cvect[10][20];
+    wlog_eCategory	categories[10];
+    int nr;
+
+    // Command is "OPEN HISTORY" 
+
+    if ( EVEN( dcli_get_qualifier( "/ITEM", itemstr, sizeof(itemstr)))) {
+      wnav->message('E', "Item is missing");
+      return WNAV__SYNTAX;
+    }
+
+    showitem = ODD( dcli_get_qualifier( "/SHOWITEM", 0, 0));
+
+    if ( EVEN( dcli_get_qualifier( "/CATEGORIES", categoriesstr, sizeof(categoriesstr)))) {
+      wnav->message('E', "Categories are missing");
+      return WNAV__SYNTAX;
+    }
+
+      
+    nr = dcli_parse( categoriesstr, ",", "", (char *)cvect, 
+		     sizeof( cvect) / sizeof( cvect[0]), sizeof( cvect[0]), 0);
+    if ( nr == 0) {
+      wnav->message('E',"Syntax error");
+      return WNAV__SYNTAX;
+    }
+    if ( nr > 9)
+      nr = 9;
+
+    for ( int i = 0; i < nr; i++) {
+      wb_log::string_to_category( cvect[i], &categories[i]);
+    }
+    categories[nr] = wlog_eCategory_;
+
+    wnav->logw_new( itemstr, categories, showitem);
   }
   else
   {

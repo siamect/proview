@@ -66,6 +66,10 @@
 #include "wb.h"
 #endif
 
+#ifndef wb_log_h
+#include "wb_log.h"
+#endif
+
 
 #define wnav_cVersion	"X3.3a"
 #define wnav_cScriptDescKey	"!** Description"
@@ -313,6 +317,7 @@ class WNav : public WUtility{
     virtual void wge_modal_loop( WGe *wge) {}
     virtual bool has_window() {return false;}
     virtual wb_utl *utl_new() {return 0;}
+    virtual void logw_new( char *item, wlog_eCategory *categories, int show_item) {}
     virtual CoLogin *login_new( const char *name, const char *groupname,
 				void (* bc_success)( void *), void (* bc_cancel)( void *), 
 				pwr_tStatus *status) { return 0;}

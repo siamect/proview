@@ -74,6 +74,7 @@ class WNavGtk : public WNav {
     void wge_modal_loop( WGe *wge);
     bool has_window() {return parent_wid ? true : false;}
     wb_utl *utl_new();
+    void logw_new( char *item, wlog_eCategory *categories, int show_item);
     CoLogin *login_new( const char *name, const char *groupname,
 			void (* bc_success)( void *), void (* bc_cancel)( void *), pwr_tStatus *status);
 

@@ -677,7 +677,7 @@ void GeGtk::activate_history( GtkWidget *w, gpointer data)
 
   strcpy( title, "History ");
   strcat( title, name);
-  CoLogWGtk *logw = new CoLogWGtk( ge, ((GeGtk *)ge)->toplevel, title, &sts);
+  CoLogWGtk *logw = new CoLogWGtk( ge, ((GeGtk *)ge)->toplevel, title, 0, &sts);
   logw->show( categories, name);
 }
 

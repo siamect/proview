@@ -146,6 +146,15 @@ SObject pwrb:Class
 	    Attr FilterName = "$Object-BuildFilter"
 	  EndBody
 	EndObject
+	Object History $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "History"
+	    Attr MethodName = "$Object-History"
+	    Attr FilterName = "$Object-HistoryFilter"
+	    Attr MethodArguments[0] = "PlcSave"
+	    Attr MethodArguments[1] = "Descendants"
+	  EndBody
+	EndObject
       EndObject
     EndObject
     Object NavigatorPoson $Menu
@@ -161,6 +170,15 @@ SObject pwrb:Class
 	    Attr ButtonName = "Build"
 	    Attr MethodName = "PlcPgm-Build"
 	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
+	Object History $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "History"
+	    Attr MethodName = "$Object-History"
+	    Attr FilterName = "$Object-HistoryFilter"
+	    Attr MethodArguments[0] = "PlcSave"
+	    Attr MethodArguments[1] = "Descendants"
 	  EndBody
 	EndObject
       EndObject
@@ -180,6 +198,15 @@ SObject pwrb:Class
 	    Attr FilterName = "$Object-BuildFilter"
 	  EndBody
 	EndObject
+	Object History $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "History"
+	    Attr MethodName = "$Object-History"
+	    Attr FilterName = "$Object-HistoryFilter"
+	    Attr MethodArguments[0] = "PlcSave"
+	    Attr MethodArguments[1] = "Descendants"
+	  EndBody
+	EndObject
       EndObject
     EndObject
     Object NavigatorPosms $Menu
@@ -197,6 +224,15 @@ SObject pwrb:Class
 	    Attr FilterName = "$Object-BuildFilter"
 	  EndBody
 	EndObject
+	Object History $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "History"
+	    Attr MethodName = "$Object-History"
+	    Attr FilterName = "$Object-HistoryFilter"
+	    Attr MethodArguments[0] = "PlcSave"
+	    Attr MethodArguments[1] = "Descendants"
+	  EndBody
+	EndObject
       EndObject
     EndObject
     Object NavigatorPosmn $Menu
@@ -212,6 +248,15 @@ SObject pwrb:Class
 	    Attr ButtonName = "Build"
 	    Attr MethodName = "PlcPgm-Build"
 	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
+	Object History $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "History"
+	    Attr MethodName = "$Object-History"
+	    Attr FilterName = "$Object-HistoryFilter"
+	    Attr MethodArguments[0] = "PlcSave"
+	    Attr MethodArguments[1] = "Descendants"
 	  EndBody
 	EndObject
       EndObject

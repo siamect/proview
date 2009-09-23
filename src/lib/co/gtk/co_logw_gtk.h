@@ -38,6 +38,7 @@ class CoLogWGtk : public CoLogW {
 	void *msg_parent_ctx,
 	GtkWidget *msg_parent_wid,
 	const char *msg_name,
+	int l_show_item,
 	pwr_tStatus *status);
     ~CoLogWGtk();
 

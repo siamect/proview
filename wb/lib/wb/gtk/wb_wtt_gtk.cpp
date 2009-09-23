@@ -978,7 +978,7 @@ void WttGtk::activate_history( GtkWidget *w, gpointer data)
   
   strcpy( title, "History Configurator ");
   strcat( title, vname);
-  CoLogWGtk *logw = new CoLogWGtk( wtt, ((WttGtk *)wtt)->parent_wid, title, &sts);
+  CoLogWGtk *logw = new CoLogWGtk( wtt, ((WttGtk *)wtt)->parent_wid, title, 0, &sts);
   logw->show( categories, vname);
 }
 

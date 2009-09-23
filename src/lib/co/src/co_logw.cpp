@@ -36,9 +36,10 @@
 CoLogW::CoLogW(
 	void *msg_parent_ctx,
 	const char *logw_name,
+	int l_show_item,
 	pwr_tStatus *status) :
-  parent_ctx(msg_parent_ctx), logwnav(NULL), displayed(0),
-  size(0), max_size(500), wow(0)
+  parent_ctx(msg_parent_ctx), logwnav(NULL),
+  size(0), max_size(500), show_item(l_show_item), wow(0)
 {
   *status = 1;
   strcpy( name, logw_name);

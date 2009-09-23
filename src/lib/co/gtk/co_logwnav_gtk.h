@@ -31,6 +31,7 @@ class CoLogWNavGtk : public CoLogWNav {
     CoLogWNavGtk(
 	void *ev_parent_ctx,
 	GtkWidget *ev_parent_wid,
+	int l_show_item,
 	GtkWidget **w);
     ~CoLogWNavGtk();
 

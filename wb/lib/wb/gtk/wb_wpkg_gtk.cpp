@@ -142,7 +142,7 @@ void WPkgGtk::activate_history( GtkWidget *w, gpointer data)
   strcpy( categories[2], "");
 
   strcpy( title, "Distributor History");
-  CoLogWGtk *logw = new CoLogWGtk( wpkg, ((WPkgGtk *)wpkg)->toplevel, title, &sts);
+  CoLogWGtk *logw = new CoLogWGtk( wpkg, ((WPkgGtk *)wpkg)->toplevel, title, 1, &sts);
   logw->show( categories, 0);
 }
 

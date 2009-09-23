@@ -123,6 +123,9 @@ void CoLogWNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_log, 13, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
+  brow_AddAnnot( nc_log, 30, 0.6, 3,
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
+		1);
   brow_AddFrame( nc_log, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
 
 }
@@ -185,9 +188,8 @@ int CoLogWNav::init_brow_cb( FlowCtx *fctx, void *client_data)
   return 1;
 }
 
-CoLogWNav::CoLogWNav(
-	void *ev_parent_ctx) :
-  parent_ctx(ev_parent_ctx)
+CoLogWNav::CoLogWNav( void *l_parent_ctx, int l_show_item) :
+  parent_ctx(l_parent_ctx), show_item(l_show_item)
 {
 }
 
@@ -396,10 +398,14 @@ ItemLog::ItemLog( CoLogWNav *item_logwnav, const char *item_name,
   time_AtoAscii( &time, time_eFormat_ComprDateAndTime, time_str, 
 	sizeof(time_str));
   time_str[17] = 0;
-  brow_SetAnnotation( node, 0, time_str, strlen(time_str));
-  brow_SetAnnotation( node, 1, category, strlen(category));
+
+  int annot = 0;
+  brow_SetAnnotation( node, annot++, time_str, strlen(time_str));
+  brow_SetAnnotation( node, annot++, category, strlen(category));
+  if ( logwnav->show_item)
+    brow_SetAnnotation( node, annot++, item_name, strlen(item_name));
   if ( item_comment)
-    brow_SetAnnotation( node, 2, item_comment, strlen(item_comment));
+    brow_SetAnnotation( node, annot++, item_comment, strlen(item_comment));
 
   if ( (s = strstr( category, "Save")))
     brow_SetAnnotPixmap( node, 0, logwnav->brow->pixmap_save);
@@ -414,11 +420,12 @@ ItemLog::ItemLog( CoLogWNav *item_logwnav, const char *item_name,
            
 }
 
-void CoLogWNav::item_cb( void *ctx, pwr_tTime time, char *category, char *comment)
+void CoLogWNav::item_cb( void *ctx, pwr_tTime time, char *category, char *item, 
+			 char *comment)
 {
   CoLogWNav *logwnav = (CoLogWNav *)ctx;
 
-  new ItemLog( logwnav, "Log", time, category, comment, 0, flow_eDest_IntoLast);
+  new ItemLog( logwnav, item, time, category, comment, 0, flow_eDest_IntoLast);
 }
 
 void CoLogWNav::show( char categories[][20], char *item)

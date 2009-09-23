@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "pwr.h"
+#include "pwr_baseclasses.h"
 #include "wb_pwrs.h"
 #include "wb_ldh_msg.h"
 #include "wb_ldh.h"
@@ -960,6 +961,74 @@ static pwr_tStatus BuildFilter( ldh_sMenuCall *ip)
     return 0;
 }
 
+//
+// History log
+//
+static pwr_tStatus History( ldh_sMenuCall *ip) 
+{
+  pwr_tStatus sts;
+  pwr_tOName oname;
+  char item[300];
+  int size;
+  pwr_sMenuButton   mb;
+  pwr_tCmd cmd;
+  char categories[80];
+  int showitem = 0;
+  pwr_tCid cid;
+  char *action;
+  char *s;
+
+  sts = ldh_ObjidToName(ip->PointedSession, ip->Pointed.Objid, 
+			ldh_eName_VolPath, oname, sizeof(oname), &size); 
+  if (EVEN(sts)) return sts;
+
+  sts = ldh_GetObjectClass(ip->PointedSession, ip->Pointed.Objid, &cid);
+  if (EVEN(sts)) return sts;
+
+  sts = ldh_ReadObjectBody(ip->PointedSession, ip->ItemList[ip->ChosenItem].MenuObject,
+    "SysBody", &mb, sizeof(pwr_sMenuButton));
+
+  switch ( cid) {
+  case pwr_cClass_XttGraph:
+    // Get action attribute
+    sts = ldh_GetObjectPar( ip->PointedSession, ip->Pointed.Objid, "RtBody",
+			  "Action", &action, &size);
+    if ( EVEN(sts)) return sts;
+    strcpy( item, action);
+    free( action);
+
+    if ( (s = strstr( item, ".pwg")))
+      *s = 0;
+    else
+      return 1;
+
+    strcpy( categories, mb.MethodArguments[0]);
+    showitem = 1;
+    break;
+  default:
+    // Item is object name
+    strcpy( item, oname);
+
+    strcpy( categories, mb.MethodArguments[0]);
+    if (strcmp(mb.MethodArguments[1], "Descendants") == 0) {
+      strcat( item, "*");
+      showitem = 1;
+    }
+  }
+
+  sprintf( cmd, "open history/item=\"%s\"/categories=\"%s\"", item, categories);
+  if ( showitem)
+    strcat( cmd, "/showitem");
+
+  ip->wnav->command( cmd);
+  return 1;
+}
+
+static pwr_tStatus HistoryFilter( ldh_sMenuCall *ip) 
+{
+  return 1;
+}
+
 
 pwr_dExport pwr_BindMethods($Object) = {
   pwr_BindMethod(CreateObject),
@@ -987,6 +1056,8 @@ pwr_dExport pwr_BindMethods($Object) = {
   pwr_BindMethod(ConfigureComponent),
   pwr_BindMethod(ConfigureComponentFilter),
   pwr_BindMethod(BuildFilter),
+  pwr_BindMethod(History),
+  pwr_BindMethod(HistoryFilter),
   pwr_NullMethod
 };
 

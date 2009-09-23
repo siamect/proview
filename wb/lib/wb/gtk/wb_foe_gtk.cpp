@@ -115,7 +115,7 @@ void WFoeGtk::activate_history( GtkWidget *w, gpointer data)
   
   strcpy( title, "History ");
   strcat( title, wname);
-  CoLogWGtk *logw = new CoLogWGtk( foe, ((WFoeGtk *)foe)->toplevel, title, &sts);
+  CoLogWGtk *logw = new CoLogWGtk( foe, ((WFoeGtk *)foe)->toplevel, title, 0, &sts);
   logw->show( categories, wname);
 }
 

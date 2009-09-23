@@ -38,6 +38,7 @@ class CoLogW {
     CoLogW(
 	void *msg_parent_ctx,
 	const char *logw_name,
+	int l_show_item,
 	pwr_tStatus *status);
     virtual ~CoLogW() {}
 
@@ -46,9 +47,9 @@ class CoLogW {
     void 		*parent_ctx;
     char 		name[80];
     CoLogWNav		*logwnav;
-    int		        displayed;
     int			size;
     int			max_size;
+    int			show_item;
     CoWow		*wow;
 
 };
