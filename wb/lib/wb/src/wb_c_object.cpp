@@ -975,7 +975,6 @@ static pwr_tStatus History( ldh_sMenuCall *ip)
   char categories[80];
   int showitem = 0;
   pwr_tCid cid;
-  char *action;
   char *s;
 
   sts = ldh_ObjidToName(ip->PointedSession, ip->Pointed.Objid, 
@@ -989,7 +988,9 @@ static pwr_tStatus History( ldh_sMenuCall *ip)
     "SysBody", &mb, sizeof(pwr_sMenuButton));
 
   switch ( cid) {
-  case pwr_cClass_XttGraph:
+  case pwr_cClass_XttGraph: {
+    char *action;
+
     // Get action attribute
     sts = ldh_GetObjectPar( ip->PointedSession, ip->Pointed.Objid, "RtBody",
 			  "Action", &action, &size);
@@ -1005,6 +1006,37 @@ static pwr_tStatus History( ldh_sMenuCall *ip)
     strcpy( categories, mb.MethodArguments[0]);
     showitem = 1;
     break;
+  }
+  case pwr_cClass_NodeConfig: {
+    char *nodename;
+
+    // Get NodeName attribute
+    sts = ldh_GetObjectPar( ip->PointedSession, ip->Pointed.Objid, "RtBody",
+			  "NodeName", &nodename, &size);
+    if ( EVEN(sts)) return sts;
+    strcpy( item, nodename);
+    free( nodename);
+
+    strcpy( categories, mb.MethodArguments[0]);
+    showitem = 1;
+    break;
+  }
+  case pwr_cClass_RootVolumeConfig:
+  case pwr_cClass_ClassVolumeConfig:
+  case pwr_cClass_SubVolumeConfig:
+  case pwr_cClass_SharedVolumeConfig: {
+    pwr_tObjName vname;
+
+    // Get object name attribute
+    sts = ldh_ObjidToName(ip->PointedSession, ip->Pointed.Objid, 
+			  ldh_eName_Object, vname, sizeof(vname), &size);
+    if ( EVEN(sts)) return sts;
+    strcpy( item, vname);
+
+    strcpy( categories, mb.MethodArguments[0]);
+    showitem = 1;
+    break;
+  }
   default:
     // Item is object name
     strcpy( item, oname);

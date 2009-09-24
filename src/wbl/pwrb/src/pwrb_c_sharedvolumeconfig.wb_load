@@ -67,6 +67,14 @@ SObject pwrb:Class
 	    Attr MethodName = "SharedVolumeConfig-OpenDb"
 	  EndBody
 	EndObject
+	Object History $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "History"
+	    Attr MethodName = "$Object-History"
+	    Attr FilterName = "$Object-HistoryFilter"
+	    Attr MethodArguments[0] = "ConfigSave,VolumeBuild"
+	  EndBody
+	EndObject
       EndObject
     EndObject
     Object NavigatorPoson $Menu
@@ -75,6 +83,14 @@ SObject pwrb:Class
 	  Body SysBody
 	    Attr ButtonName = "Open Db..."
 	    Attr MethodName = "SharedVolumeConfig-OpenDb"
+	  EndBody
+	EndObject
+	Object History $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "History"
+	    Attr MethodName = "$Object-History"
+	    Attr FilterName = "$Object-HistoryFilter"
+	    Attr MethodArguments[0] = "ConfigSave,VolumeBuild"
 	  EndBody
 	EndObject
       EndObject
@@ -87,6 +103,14 @@ SObject pwrb:Class
 	    Attr MethodName = "SharedVolumeConfig-OpenDb"
 	  EndBody
 	EndObject
+	Object History $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "History"
+	    Attr MethodName = "$Object-History"
+	    Attr FilterName = "$Object-HistoryFilter"
+	    Attr MethodArguments[0] = "ConfigSave,VolumeBuild"
+	  EndBody
+	EndObject
       EndObject
     EndObject
     Object NavigatorPosms $Menu
@@ -97,6 +121,14 @@ SObject pwrb:Class
 	    Attr MethodName = "SharedVolumeConfig-OpenDb"
 	  EndBody
 	EndObject
+	Object History $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "History"
+	    Attr MethodName = "$Object-History"
+	    Attr FilterName = "$Object-HistoryFilter"
+	    Attr MethodArguments[0] = "ConfigSave,VolumeBuild"
+	  EndBody
+	EndObject
       EndObject
     EndObject
     Object NavigatorPosmn $Menu
@@ -105,6 +137,14 @@ SObject pwrb:Class
 	  Body SysBody
 	    Attr ButtonName = "Open Db..."
 	    Attr MethodName = "SharedVolumeConfig-OpenDb"
+	  EndBody
+	EndObject
+	Object History $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "History"
+	    Attr MethodName = "$Object-History"
+	    Attr FilterName = "$Object-HistoryFilter"
+	    Attr MethodArguments[0] = "ConfigSave,VolumeBuild"
 	  EndBody
 	EndObject
       EndObject
