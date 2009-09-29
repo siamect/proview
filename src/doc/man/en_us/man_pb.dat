@@ -1,0 +1,96 @@
+
+<topic> __DocumentTitlePage
+
+<image> pwr_logga.gif
+
+
+
+
+
+
+<h1> Operator's Guide
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<hr>
+2009-08-04
+Version 4.7.0	
+<hr>
+</topic>
+
+<topic> __DocumentInfoPage
+
+
+Copyright 2009 SSAB Oxelösund AB
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+Texts.
+
+
+
+</topic>
+
+<option> printdisable
+<topic> index
+Pofinet
+
+<image> pwr_logga.gif
+
+<h1>Profnet
+
+Profinet Viewer <link> profinet_viewer
+</topic>
+<option> printenable
+
+<chapter>
+<topic> profinet_viewer
+Profinet Viewer
+
+The Profinet Viewer dispays a list of the current devices one the Profinet circuit.
+It is also possible to set the name and ip address to a device. 
+
+<h1>Set devicename and ip address
+When a device is exchanged the devicename of the old device has to be set to the new device.
+In some cases the ip address has to be set as well. Also when a device is configured for the 
+first time, the device name and ip address has to be set on the device.
+
+The steps to set the devicename and ip address is:
+
+- Stop Proview runtime environment on the current node.
+- Start the Profinet Viewer.
+- Find the new device in the list of devices.
+- Open the device and enter the new name i DeviceName, by selecting DeviceName and press
+  the Arrow Right Key. An input field is opened where the new name is entered.
+- Enter a new ip address by selecting Ip Address and press the Arrow Right Key. An input field 
+  is opened where the new address is entered.
+- Select the device and activate Function/Set Device Properties in the menu. Now the 
+  new name and ip address is transfered to the node.
+- Activate Functions/Update to update the list and check the settings of the new device.
+
+<h1>Set IP address
+
+
+<image>pb_fig1.png
+<b>Fig The Profinet Viewer
+</topic>
+</chapter>

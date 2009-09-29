@@ -1,0 +1,108 @@
+# Processing file: /home/claes/gsdml/GSDML-V1.0-HirschmannAutomationAndControl-RS20-1600T1T1SDAPPH-20070808.xml
+304 4
+Hirschmann Railswitch
+Hirschmann PROFINET Switch
+# Processing file: /home/claes/gsdml/GSDML-V1.0-Hms-ABSPRT-20060321.xml
+268 1
+Anybus
+Anybus-S PROFINET IO module
+# Processing file: /home/claes/gsdml/GSDML-V1.0-Murrelektronik-Cube67 BN PNIO-20060914.xml
+303 56506
+Cube67
+Cube67 BN-PNIO
+# Processing file: /home/claes/gsdml/GSDML-V1.0-OMRON-GRT1-PNT-20080325.xml
+328 8192
+GRT1-PNT
+Omron PROFINET IO device
+# Processing file: /home/claes/gsdml/GSDML-V1.0-OMRON-GRT1-PNT-20080327.xml
+328 8192
+GRT1-PNT
+Omron PROFINET IO device
+# Processing file: /home/claes/gsdml/GSDML-V1.0-Phoenix Contact-FL IL 24 BK-PN-V1.0-20070306.xml
+176 3
+Inline
+Inline bus coubler for PROFINET IO
+# Processing file: /home/claes/gsdml/GSDML-V1.0-Phoenix Contact-ILB PN 24 DI16 DIO16-2TX-V1.9-20070726.xml
+176 4
+Inline
+Inline Block digital input-/outputmodule for PROFINET IO-Systems
+# Processing file: /home/claes/gsdml/GSDML-V1.0-SEW-DFE12B-20050317.xml
+266 1
+SEW
+Frequency inverter Movidrive B
+# Processing file: /home/claes/gsdml/GSDML-V1.0-Softing-DevKit-20060719.xml
+279 0
+DEVKIT
+Softing PROFINET IO Developers Kit
+# Processing file: /home/claes/gsdml/gsdml-v2.0-beckhoff-BK9103-20061213.xml
+288 9000
+BK Device
+BK products, protection type IP20
+# Processing file: /home/claes/gsdml/GSDML-V2.0-Lenze-9400PN100-20070901.xml
+262 37888
+V9400
+V9400 PROFINET IO Interface
+# Processing file: /home/claes/gsdml/GSDML-V2.0-Lenze-9400PN100Patch-20081210.xml
+262 1024
+V9400
+V9400 PROFINET IO Interface
+# Processing file: /home/claes/gsdml/GSDML-V2.0-Siemens-CP3431Lean-20060711.xml
+42 515
+SIMATIC S7-CP
+Communications processors for SIMATIC S7
+# Processing file: /home/claes/gsdml/GSDML-V2.0-Siemens-IeAsiLink-20060807.xml
+42 1539
+IE/AS-i LINK PN IO
+IE/AS-i LINK PN IO
+# Processing file: /home/claes/gsdml/GSDML-V2.0-Turck-BL67-20070402.xml
+317 1
+TURCK
+BL67-GW Profinet IO
+# Processing file: /home/claes/gsdml/GSDML-V2.1-Murrelektronik-MVK_MPNIO-20080104.xml
+303 55289
+MVK ProfiNet
+ProfiNet IO module, IP67 protection type
+# Processing file: /home/claes/gsdml/GSDML-V2.1-Siemens-002A-SCALANCE_X200-20070416.xml
+42 2561
+SCALANCE X-200
+Switching Devices for Industial Ethernet
+# Processing file: /home/claes/gsdml/gsdml-v2.1-siemens-et200m-20070920.xml
+42 770
+ET 200M
+Finely-graduated modular distributed IO device, protection type IP20
+# Processing file: /home/claes/gsdml/gsdml-v2.1-siemens-et200pro-20071108.xml
+42 773
+ET 200pro
+Modular distributed I/O device, protection type IP65
+# Processing file: /home/claes/gsdml/gsdml-v2.1-siemens-et200s-20070701.xml
+42 769
+ET 200S
+Finely-graduated modular distributed IO device, protection type IP20
+# Processing file: /home/claes/gsdml/gsdml-v2.1-siemens-pnpnioc-20060830.xml
+42 1540
+PN/PN Coupler
+PN/PN Coupler
+# Processing file: /home/claes/gsdml/GSDML-V2.1-Softing-PNIODevKit-20081030.xml
+279 259
+Softing AG PROFINET IO Reference Device
+Portations of Softing's PROFINET IO Device stack to various hardware platforms 
+# Processing file: /home/claes/gsdml/gsdml-v2.1-wago-series750_753-20080520.xml
+285 750
+WAGO-I/O-SYSTEM 750/753
+Finely-graduated modular distributed I/O device, protection type IP20
+# Processing file: /home/claes/gsdml/test.xml
+328 8192
+GRT1-PNT
+
+# Processing file: /home/claes/gsdml/GSDML-V2.0-ABBdrives-RETA02-20070621.xml
+26 1
+ABB RETA-02
+PROFINET IO module RETA-02
+# Processing file: /home/claes/gsdml/GSDML-V1.0-PhoenixContact-FL-SWITCH-MC-16TX-V1.0-20051207.xml
+176 19
+Factory Line
+Managed Switch as Profinet IO Device
+# Processing file: /home/claes/gsdml/t.xml
+42 770
+ET 200M
+Finely-graduated modular distributed IO device, protection type IP20

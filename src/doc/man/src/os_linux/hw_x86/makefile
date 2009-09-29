@@ -235,6 +235,7 @@ copy : $(export_pdf) $(export_pdf_en_us) $(export_pdf_sv_se) \
        $(doc_dir)/en_us/man_geref_index.html $(doc_dir)/sv_se/man_geref_index.html \
        $(doc_dir)/en_us/man_geref.pdf $(doc_dir)/sv_se/man_geref.pdf \
        $(doc_dir)/en_us/man_geref.ps $(doc_dir)/sv_se/man_geref.ps \
+       $(exe_dir)/en_us/man_pb.dat $(exe_dir)/sv_se/man_pb.dat \
        $(exe_dir)/man_subgraph.dat \
        $(doc_dir)/en_us/man_subgraph_index.html \
        $(doc_dir)/en_us/man_subgraph.pdf \
@@ -386,6 +387,14 @@ $(doc_dir)/en_us/man_geref.ps : $(pwre_sroot)/doc/man/en_us/man_geref.dat
 $(doc_dir)/sv_se/man_geref.ps : $(pwre_sroot)/doc/man/sv_se/man_geref.dat
 	@ echo "Generating postscript for sv_se/man_geref"
 	@ co_convert -n -d $(doc_dir)/sv_se $(source)
+
+$(exe_dir)/en_us/man_pb.dat : $(pwre_sroot)/doc/man/en_us/man_pb.dat
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
+$(exe_dir)/sv_se/man_pb.dat : $(pwre_sroot)/doc/man/en_us/man_pb.dat
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
 
 $(exe_dir)/en_us/man_orm.dat : $(pwre_sroot)/doc/man/en_us/man_orm.dat
 	@ $(log_h_h)
