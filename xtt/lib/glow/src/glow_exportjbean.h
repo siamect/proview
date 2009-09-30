@@ -33,7 +33,7 @@ class GlowNodeClass;
 class GlowExportJBean {
   public:
     GlowExportJBean( GlowCtx *glow_ctx, GlowNodeClass *nodeclass = 0) : 
-      ctx(glow_ctx), nc(nodeclass), page(1), func_cnt(0)
+      ctx(glow_ctx), nc(nodeclass), page(1), func_cnt(0), frc_created(0)
     {
       is_nodeclass = (nc != NULL);
     };
@@ -191,6 +191,7 @@ class GlowExportJBean {
     int is_nodeclass;
     int page;
     int func_cnt;
+    int frc_created;
 };
 
 #endif

@@ -145,3 +145,4 @@
 090916 cs  xtt       Alarm time viewed in operator window.
 090916 cs  xtt       New xtt command 'show objectlist /class='.
 090916 cs  xtt       New xtt commands 'create opmenuitem' and 'delete opmenuitem' to modify operator window menu..
+090930 cs  ge        Java compile problems for subgraphs with multiple annotations fixed.

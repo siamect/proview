@@ -228,7 +228,8 @@ void GlowExportJBean::nodeclass( GlowNodeClass *nc, glow_eExportPass pass,
       break;
     case glow_eExportPass_Init:
     {
-      nc->measure_javabean( &dim_x1, &dim_x0, &dim_y1, &dim_y0);
+      frc_created = 0;
+      nc->measure_javabean( &dim_x1, &dim_x0, &dim_y1, &dim_y0);      
 
       if ( page <= 1)
       {
@@ -1370,13 +1371,19 @@ void GlowExportJBean::annot( int x0, int y0, int number,
       char adjustmentstr[200];
       switch ( adjustment) {
       case glow_eAdjustment_Right:
-	fp << 
+	if ( !frc_created) {
+	  frc_created = 1;
+	  fp << 
 "    FontRenderContext frc = g.getFontRenderContext();" << endl;
+	}
 	sprintf( adjustmentstr, "- (float)g.getFont().getStringBounds(annot%d, frc).getWidth()", number);
 	break;
       case glow_eAdjustment_Center:
+	if ( !frc_created) {
+	  frc_created = 1;
 	fp <<
 "    FontRenderContext frc = g.getFontRenderContext();" << endl;
+	}
 	sprintf( adjustmentstr, "- (float)g.getFont().getStringBounds(annot%d, frc).getWidth()/2", number);
 	break;
       default:
