@@ -45,27 +45,40 @@ class NodelistGtk : public Nodelist {
     GtkWidget		*form_nodelist;
     GtkWidget		*nodelistnav_widget;
     GdkCursor  		*clock_cursor;
-    GtkWidget		*india_widget;
-    GtkWidget		*india_label;
-    GtkWidget		*india_label2;
-    GtkWidget		*india_label3;
-    GtkWidget		*india_text;
-    GtkWidget		*india_text2;
-    GtkWidget		*india_text3;
+    GtkWidget		*add_india_widget;
+    GtkWidget		*add_india_label;
+    GtkWidget		*add_india_label2;
+    GtkWidget		*add_india_label3;
+    GtkWidget		*add_india_text;
+    GtkWidget		*add_india_text2;
+    GtkWidget		*add_india_text3;
+    GtkWidget		*mod_india_widget;
+    GtkWidget		*mod_india_label;
+    GtkWidget		*mod_india_label2;
+    GtkWidget		*mod_india_label3;
+    GtkWidget		*mod_india_text;
+    GtkWidget		*mod_india_text2;
+    GtkWidget		*mod_india_text3;
     CoWowFocusTimerGtk  focustimer;
 
     void pop();
     void set_clock_cursor();
     void reset_cursor();
     void free_cursor();
-    void create_input_dialog();
-    void open_input_dialog( const char *text, const char *text2, const char *text3, const char *title,
-			    const char *init_text,
-			    void (*ok_cb)( Nodelist *, char *, char *, char *));
+    void create_add_input_dialog();
+    void create_mod_input_dialog();
+    void open_add_input_dialog( const char *text, const char *text2, const char *text3, 
+				const char *title, const char *init_text,
+				void (*ok_cb)( Nodelist *, char *, char *, char *));
+    void open_mod_input_dialog( const char *text, const char *text2, const char *text3,
+				const char *title, const char *init_text, 
+				const char *init_text2, const char *init_text3,
+				void (*ok_cb)( Nodelist *, char *, char *, char *));
 
     static gboolean action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data);
     static void activate_exit( GtkWidget*w, gpointer data);
     static void activate_add_node( GtkWidget*w, gpointer data);
+    static void activate_modify_node( GtkWidget*w, gpointer data);
     static void activate_remove_node( GtkWidget*w, gpointer data);
     static void activate_open_xtt( GtkWidget*w, gpointer data);
     static void activate_open_opplace( GtkWidget*w, gpointer data);
@@ -85,8 +98,10 @@ class NodelistGtk : public Nodelist {
     static void activate_zoom_out( GtkWidget*w, gpointer data);
     static void activate_zoom_reset( GtkWidget*w, gpointer data);
     static void activate_help( GtkWidget*w, gpointer data);
-    static void activate_india_ok( GtkWidget *w, gpointer data);
-    static void activate_india_cancel( GtkWidget *w, gpointer data);
+    static void activate_add_india_ok( GtkWidget *w, gpointer data);
+    static void activate_add_india_cancel( GtkWidget *w, gpointer data);
+    static void activate_mod_india_ok( GtkWidget *w, gpointer data);
+    static void activate_mod_india_cancel( GtkWidget *w, gpointer data);
     
 };
 

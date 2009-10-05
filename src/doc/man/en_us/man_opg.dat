@@ -69,6 +69,7 @@ Plc Trace <link> opg_trace
 Setup script <link> opg_setupfile
 Users and Privileges <link> opg_security
 Function Keys <link> opg_functionkeys
+Status Monitor <link> opg_statusmonitor
 Xtt Commands <link> help command
 Script <link> script
 Index	<index>
@@ -1464,6 +1465,31 @@ A '#' sign in the first position denotes a comment.
 <c>     Shift Control <Key>m: SetDig(F1-Start.ActualValue)
 <c>     Shift Control <Key>n: SetDig(F1-Stop.ActualValue)
 <c>     Shift Alt <Key>n: SetDig(F1-Reset.ActualValue)
+
+</topic>
+</chapter>
+
+<chapter>
+<topic> opg_statusmonitor
+Status Monitor
+
+The Status Monitor is a tool to supervise and handle process- and operator
+stations. You add nodes that you want to supervise and the statusmonitor views
+status for the node, with color indication and status text.
+
+<image> opg_fig38.png
+<b>Fig The Status Monitor
+
+<h1>Add and remove nodes
+
+<image> opg_fig41.png
+<b>Fig Adding of a node
+
+<image> opg_fig39.png
+<b>Fig Node info
+
+<image> opg_fig40.png
+<b>Fig Process status for a node
 
 </topic>
 </chapter>

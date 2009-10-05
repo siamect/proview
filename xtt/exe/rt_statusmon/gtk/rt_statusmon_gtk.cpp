@@ -25,15 +25,19 @@
 
 #include "pwr.h"
 #include "co_msgwindow.h"
+#include "co_lng.h"
+#include "co_xhelp_gtk.h"
 #include "co_statusmon_nodelist_gtk.h"
 
 static void usage()
 {
   printf("\n\
   Proview Status Monitor\n\n\
-  rt_statusmon [-m 'n']\n\n\
+  rt_statusmon [-m 'n'][-e]\n\n\
   -m 'n'  Mode display UserStatus 'n', where 1 <= n <= 5.\n\
-  $HOME/rt_statusmon.dat : file with reqested nodes\n");
+  -e      Show node description from setup file.\n\
+  -l      Language, e.g. en_us, sv_se, de_de.\n\n\
+  $HOME/rt_statusmon.dat : setup file with requested nodes\n\n");
 }
 
 static void statusmon_close( void *ctx)
@@ -46,12 +50,17 @@ int main( int argc, char *argv[])
   int sts;
   int mode = nodelist_eMode_SystemStatus;
   int view_descr = 0;
+  char		language[20] = "";
 
   if ( argc > 1) {
     for ( int i = 1; i < argc; i++) {
       if ( strcmp( argv[i], "-h") == 0) {
 	usage();
 	exit(0);
+      }
+      else if ( strcmp( argv[i], "-l") == 0 && i + 1 < argc) {
+	strncpy( language, argv[i+1], sizeof(language));
+	Lng::set( language);
       }
       else if ( strcmp( argv[i], "-m") == 0) {
 	if ( argc == i) {
@@ -82,7 +91,10 @@ int main( int argc, char *argv[])
 
   gtk_init( &argc, &argv);
 
-  Nodelist *nl = new NodelistGtk( NULL, NULL, "Status Monitor", mode, view_descr,
+  CoXHelp *xhelp = new CoXHelpGtk( 0, 0, xhelp_eUtility_Xtt, &sts);
+  CoXHelp::set_default( xhelp);
+
+  Nodelist *nl = new NodelistGtk( 0, 0, "Status Monitor", mode, view_descr,
 				  msgw_ePop_No, &sts);
   nl->close_cb = statusmon_close;
   nl->set_scantime(3);

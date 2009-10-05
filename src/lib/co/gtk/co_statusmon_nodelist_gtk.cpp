@@ -55,13 +55,13 @@ NodelistGtk::NodelistGtk( void *nodelist_parent_ctx,
 			  pwr_tStatus *status) :
   Nodelist( nodelist_parent_ctx, nodelist_name, nodelist_mode, 
 	    nodelist_view_node_descr, status), 
-  parent_wid(nodelist_parent_wid), clock_cursor(0), india_widget(0)
+  parent_wid(nodelist_parent_wid), clock_cursor(0), add_india_widget(0)
 {
   pwr_tStatus sts;
 
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
-			   "default-height", 600,
-			   "default-width", 700,
+			   "default-height", 300,
+			   "default-width", 850,
 			   "title", nodelist_name,
 			   NULL);
 
@@ -91,16 +91,27 @@ NodelistGtk::NodelistGtk( void *nodelist_parent_ctx,
   GtkWidget *file_add_node = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Add Node"));
   g_signal_connect(file_add_node, "activate", G_CALLBACK(activate_add_node), this);
 
+  GtkWidget *file_modify_node = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Modify Node"));
+  g_signal_connect(file_modify_node, "activate", G_CALLBACK(activate_modify_node), this);
+
   GtkWidget *file_remove_node = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Remove Node"));
   g_signal_connect(file_remove_node, "activate", G_CALLBACK(activate_remove_node), this);
 
-  GtkWidget *file_open_xtt = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("Open _Runtime Navigator"));
+  pwr_tFileName fname;
+  GtkWidget *file_open_xtt = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("Open Runtime _Navigator"));
+  dcli_translate_filename( fname, "$pwr_exe/xtt_navigator.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(file_open_xtt), gtk_image_new_from_file( fname));
   g_signal_connect(file_open_xtt, "activate", G_CALLBACK(activate_open_xtt), this);
 
-  GtkWidget *file_open_opplace = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Open Operatorplace"));
+  GtkWidget *file_open_opplace = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Open Operatorplace"));
+  dcli_translate_filename( fname, "$pwr_exe/xtt_op.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(file_open_opplace), 
+				 gtk_image_new_from_file( fname));
   g_signal_connect(file_open_opplace, "activate", G_CALLBACK(activate_open_opplace), this);
 
-  GtkWidget *file_open_rtmon = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Open Runtime Monitor"));
+  GtkWidget *file_open_rtmon = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("Open Runtime _Monitor"));
+  dcli_translate_filename( fname, "$pwr_exe/xtt_rtmon.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(file_open_rtmon), gtk_image_new_from_file( fname));
   g_signal_connect(file_open_rtmon, "activate", G_CALLBACK(activate_open_rtmon), this);
 
   GtkWidget *file_save = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Save Configuration"));
@@ -111,6 +122,7 @@ NodelistGtk::NodelistGtk( void *nodelist_parent_ctx,
   GtkMenu *file_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_save);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_add_node);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_modify_node);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_remove_node);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_open_xtt);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_open_opplace);
@@ -275,7 +287,6 @@ NodelistGtk::NodelistGtk( void *nodelist_parent_ctx,
   g_object_set( tools_remove_node, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_remove_node,CoWowGtk::translate_utf8("Remove node"), "");
 
-  pwr_tFileName fname;
   GtkWidget *tools_xtt = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_navigator.png");
   gtk_container_add( GTK_CONTAINER(tools_xtt), 
@@ -301,22 +312,22 @@ NodelistGtk::NodelistGtk( void *nodelist_parent_ctx,
   gtk_toolbar_append_widget( tools, tools_rtmon,CoWowGtk::translate_utf8("Start Runtime Monitor on selected node"), "");
 
   GtkWidget *tools_zoom_in = gtk_button_new();
-  gtk_container_add( GTK_CONTAINER(tools_zoom_in), 
-	  gtk_image_new_from_stock( "gtk-zoom-in", GTK_ICON_SIZE_SMALL_TOOLBAR));
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_in.png");
+  gtk_container_add( GTK_CONTAINER(tools_zoom_in), gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_in, "clicked", G_CALLBACK(activate_zoom_in), this);
   g_object_set( tools_zoom_in, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_zoom_in,CoWowGtk::translate_utf8("Zoom in"), "");
 
   GtkWidget *tools_zoom_out = gtk_button_new();
-  gtk_container_add( GTK_CONTAINER(tools_zoom_out), 
-	  gtk_image_new_from_stock( "gtk-zoom-out", GTK_ICON_SIZE_SMALL_TOOLBAR));
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_out.png");
+  gtk_container_add( GTK_CONTAINER(tools_zoom_out), gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_out, "clicked", G_CALLBACK(activate_zoom_out), this);
   g_object_set( tools_zoom_out, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_zoom_out,CoWowGtk::translate_utf8("Zoom out"), "");
 
   GtkWidget *tools_zoom_reset = gtk_button_new();
-  gtk_container_add( GTK_CONTAINER(tools_zoom_reset), 
-	  gtk_image_new_from_stock( "gtk-zoom-100", GTK_ICON_SIZE_SMALL_TOOLBAR));
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_reset.png");
+  gtk_container_add( GTK_CONTAINER(tools_zoom_reset), gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_reset, "clicked", G_CALLBACK(activate_zoom_reset), this);
   g_object_set( tools_zoom_reset, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_zoom_reset,CoWowGtk::translate_utf8("Zoom reset"), "");
@@ -399,6 +410,13 @@ void NodelistGtk::activate_add_node( GtkWidget *w, gpointer data)
   Nodelist *nodelist = (Nodelist *)data;
 
   nodelist->activate_add_node();
+}
+
+void NodelistGtk::activate_modify_node( GtkWidget *w, gpointer data)
+{
+  Nodelist *nodelist = (Nodelist *)data;
+
+  nodelist->activate_modify_node();
 }
 
 void NodelistGtk::activate_remove_node( GtkWidget *w, gpointer data)
@@ -553,137 +571,281 @@ void NodelistGtk::activate_help( GtkWidget *w, gpointer data)
   nodelist->activate_help();
 }
 
-void NodelistGtk::open_input_dialog( const char *text, const char *text2, const char *text3, 
-				     const char *title, const char *init_text,
-				     void (*ok_cb)( Nodelist *, char *, char *, char *))
+void NodelistGtk::open_add_input_dialog( const char *text, const char *text2, const char *text3, 
+					 const char *title, const char *init_text,
+					 void (*ok_cb)( Nodelist *, char *, char *, char *))
 {
-  create_input_dialog();
+  create_add_input_dialog();
 
-  g_object_set( india_widget, 
+  g_object_set( add_india_widget, 
 		"visible", TRUE, 
 		"title", title,
 		NULL);
 
-  gtk_label_set_text( GTK_LABEL(india_label), text);
-  gtk_label_set_text( GTK_LABEL(india_label2), text2);
-  gtk_label_set_text( GTK_LABEL(india_label3), text3);
+  gtk_label_set_text( GTK_LABEL(add_india_label), text);
+  gtk_label_set_text( GTK_LABEL(add_india_label2), text2);
+  gtk_label_set_text( GTK_LABEL(add_india_label3), text3);
 
   gint pos = 0;
-  gtk_editable_delete_text( GTK_EDITABLE(india_text), 0, -1);
-  gtk_editable_insert_text( GTK_EDITABLE(india_text), init_text, 
+  gtk_editable_delete_text( GTK_EDITABLE(add_india_text), 0, -1);
+  gtk_editable_insert_text( GTK_EDITABLE(add_india_text), init_text, 
 			    strlen(init_text), &pos);
 
-  india_ok_cb = ok_cb;
+  add_india_ok_cb = ok_cb;
 }
 
-void NodelistGtk::activate_india_ok( GtkWidget *w, gpointer data)
+void NodelistGtk::activate_add_india_ok( GtkWidget *w, gpointer data)
 {
   Nodelist *nodelist = (Nodelist *)data;
   char *text, *text2, *text3, *textutf8;
 
-  textutf8 = gtk_editable_get_chars( GTK_EDITABLE(((NodelistGtk *)nodelist)->india_text), 
+  textutf8 = gtk_editable_get_chars( GTK_EDITABLE(((NodelistGtk *)nodelist)->add_india_text), 
 				 0, -1);
   text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
   g_free( textutf8);
 
-  textutf8 = gtk_editable_get_chars( GTK_EDITABLE(((NodelistGtk *)nodelist)->india_text2), 
+  textutf8 = gtk_editable_get_chars( GTK_EDITABLE(((NodelistGtk *)nodelist)->add_india_text2), 
 				 0, -1);
   text2 = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
   g_free( textutf8);
 
-  textutf8 = gtk_editable_get_chars( GTK_EDITABLE(((NodelistGtk *)nodelist)->india_text3), 
+  textutf8 = gtk_editable_get_chars( GTK_EDITABLE(((NodelistGtk *)nodelist)->add_india_text3), 
 				 0, -1);
   text3 = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
   g_free( textutf8);
 
-  g_object_set( ((NodelistGtk *)nodelist)->india_widget, "visible", FALSE, NULL);
+  g_object_set( ((NodelistGtk *)nodelist)->add_india_widget, "visible", FALSE, NULL);
 
-  (nodelist->india_ok_cb)( nodelist, text, text2, text3);
+  (nodelist->add_india_ok_cb)( nodelist, text, text2, text3);
   g_free( text);
+  g_free( text2);
+  g_free( text3);
 }
 
-void NodelistGtk::activate_india_cancel( GtkWidget *w, gpointer data)
+void NodelistGtk::activate_add_india_cancel( GtkWidget *w, gpointer data)
 {
   Nodelist *nodelist = (Nodelist *)data;
 
-  g_object_set( ((NodelistGtk *)nodelist)->india_widget, "visible", FALSE, NULL);
+  g_object_set( ((NodelistGtk *)nodelist)->add_india_widget, "visible", FALSE, NULL);
 }
 
-static gint india_delete_event( GtkWidget *w, GdkEvent *event, gpointer nodelist)
+static gint add_india_delete_event( GtkWidget *w, GdkEvent *event, gpointer nodelist)
 {
-  g_object_set( ((NodelistGtk *)nodelist)->india_widget, "visible", FALSE, NULL);
+  g_object_set( ((NodelistGtk *)nodelist)->add_india_widget, "visible", FALSE, NULL);
   return TRUE;
 }
 
-void NodelistGtk::create_input_dialog()
+void NodelistGtk::create_add_input_dialog()
 {
-  if ( india_widget) {
-    g_object_set( india_widget, "visible", TRUE, NULL);
+  if ( add_india_widget) {
+    g_object_set( add_india_widget, "visible", TRUE, NULL);
     return;
   }
 
   // Create an input dialog
-  india_widget = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
+  add_india_widget = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 					     "default-height", 150,
-					     "default-width", 350,
+					     "default-width", 600,
 					     "title", "Input Dialog",
 					     "window-position", GTK_WIN_POS_CENTER,
 					     NULL);
-  g_signal_connect( india_widget, "delete_event", G_CALLBACK(india_delete_event), this);
-  india_text = gtk_entry_new();
-  g_signal_connect( india_text, "activate", 
-  		    G_CALLBACK(NodelistGtk::activate_india_ok), this);
-  india_text2 = gtk_entry_new();
-  g_signal_connect( india_text2, "activate", 
-  		    G_CALLBACK(NodelistGtk::activate_india_ok), this);
-  india_text3 = gtk_entry_new();
-  g_signal_connect( india_text3, "activate", 
-  		    G_CALLBACK(NodelistGtk::activate_india_ok), this);
-  india_label = gtk_label_new("");
-  india_label2 = gtk_label_new("");
-  india_label3 = gtk_label_new("");
-  GtkWidget *india_image = (GtkWidget *)g_object_new( GTK_TYPE_IMAGE, 
+  g_signal_connect( add_india_widget, "delete_event", G_CALLBACK(add_india_delete_event), this);
+  add_india_text = gtk_entry_new();
+  g_signal_connect( add_india_text, "activate", 
+  		    G_CALLBACK(NodelistGtk::activate_add_india_ok), this);
+  add_india_text2 = gtk_entry_new();
+  g_signal_connect( add_india_text2, "activate", 
+  		    G_CALLBACK(NodelistGtk::activate_add_india_ok), this);
+  add_india_text3 = gtk_entry_new();
+  g_signal_connect( add_india_text3, "activate", 
+  		    G_CALLBACK(NodelistGtk::activate_add_india_ok), this);
+  add_india_label = gtk_label_new("");
+  add_india_label2 = gtk_label_new("");
+  add_india_label3 = gtk_label_new("");
+  GtkWidget *add_india_image = (GtkWidget *)g_object_new( GTK_TYPE_IMAGE, 
 				"stock", GTK_STOCK_DIALOG_QUESTION,
 				"icon-size", GTK_ICON_SIZE_DIALOG,
 				"xalign", 0.5,
 				"yalign", 0.4,
 				NULL);
 
-  GtkWidget *india_ok = gtk_button_new_with_label( "Ok");
-  gtk_widget_set_size_request( india_ok, 70, 25);
-  g_signal_connect( india_ok, "clicked", 
-  		    G_CALLBACK(NodelistGtk::activate_india_ok), this);
-  GtkWidget *india_cancel = gtk_button_new_with_label( "Cancel");
-  gtk_widget_set_size_request( india_cancel, 70, 25);
-  g_signal_connect( india_cancel, "clicked", 
-  		    G_CALLBACK(NodelistGtk::activate_india_cancel), this);
+  GtkWidget *add_india_ok = gtk_button_new_with_label( "Ok");
+  gtk_widget_set_size_request( add_india_ok, 70, 25);
+  g_signal_connect( add_india_ok, "clicked", 
+  		    G_CALLBACK(NodelistGtk::activate_add_india_ok), this);
+  GtkWidget *add_india_cancel = gtk_button_new_with_label( "Cancel");
+  gtk_widget_set_size_request( add_india_cancel, 70, 25);
+  g_signal_connect( add_india_cancel, "clicked", 
+  		    G_CALLBACK(NodelistGtk::activate_add_india_cancel), this);
 
-  GtkWidget *india_vboxtext = gtk_vbox_new( FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(india_vboxtext), india_text, FALSE, FALSE, 12);
-  gtk_box_pack_start( GTK_BOX(india_vboxtext), india_text2, FALSE, FALSE, 12);
-  gtk_box_pack_start( GTK_BOX(india_vboxtext), india_text3, FALSE, FALSE, 12);
+  GtkWidget *add_india_vboxtext = gtk_vbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(add_india_vboxtext), add_india_text, FALSE, FALSE, 12);
+  gtk_box_pack_start( GTK_BOX(add_india_vboxtext), add_india_text2, FALSE, FALSE, 12);
+  gtk_box_pack_start( GTK_BOX(add_india_vboxtext), add_india_text3, FALSE, FALSE, 12);
 
-  GtkWidget *india_vboxlabel = gtk_vbox_new( FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(india_vboxlabel), india_label, FALSE, FALSE, 15);
-  gtk_box_pack_start( GTK_BOX(india_vboxlabel), india_label2, FALSE, FALSE, 15);
-  gtk_box_pack_start( GTK_BOX(india_vboxlabel), india_label3, FALSE, FALSE, 15);
+  GtkWidget *add_india_vboxlabel = gtk_vbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(add_india_vboxlabel), add_india_label, FALSE, FALSE, 15);
+  gtk_box_pack_start( GTK_BOX(add_india_vboxlabel), add_india_label2, FALSE, FALSE, 15);
+  gtk_box_pack_start( GTK_BOX(add_india_vboxlabel), add_india_label3, FALSE, FALSE, 15);
 
-  GtkWidget *india_hboxtext = gtk_hbox_new( FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(india_hboxtext), india_image, FALSE, FALSE, 40);
-  gtk_box_pack_start( GTK_BOX(india_hboxtext), india_vboxlabel, FALSE, FALSE, 15);
-  gtk_box_pack_end( GTK_BOX(india_hboxtext), india_vboxtext, TRUE, TRUE, 30);
+  GtkWidget *add_india_hboxtext = gtk_hbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(add_india_hboxtext), add_india_image, FALSE, FALSE, 40);
+  gtk_box_pack_start( GTK_BOX(add_india_hboxtext), add_india_vboxlabel, FALSE, FALSE, 15);
+  gtk_box_pack_end( GTK_BOX(add_india_hboxtext), add_india_vboxtext, TRUE, TRUE, 30);
 
-  GtkWidget *india_hboxbuttons = gtk_hbox_new( TRUE, 40);
-  gtk_box_pack_start( GTK_BOX(india_hboxbuttons), india_ok, FALSE, FALSE, 0);
-  gtk_box_pack_end( GTK_BOX(india_hboxbuttons), india_cancel, FALSE, FALSE, 0);
+  GtkWidget *add_india_hboxbuttons = gtk_hbox_new( TRUE, 40);
+  gtk_box_pack_start( GTK_BOX(add_india_hboxbuttons), add_india_ok, FALSE, FALSE, 0);
+  gtk_box_pack_end( GTK_BOX(add_india_hboxbuttons), add_india_cancel, FALSE, FALSE, 0);
 
-  GtkWidget *india_vbox = gtk_vbox_new( FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(india_vbox), india_hboxtext, TRUE, TRUE, 30);
-  gtk_box_pack_start( GTK_BOX(india_vbox), gtk_hseparator_new(), FALSE, FALSE, 0);
-  gtk_box_pack_end( GTK_BOX(india_vbox), india_hboxbuttons, FALSE, FALSE, 15);
-  gtk_container_add( GTK_CONTAINER(india_widget), india_vbox);
-  gtk_widget_show_all( india_widget);
-  g_object_set( india_widget, "visible", FALSE, NULL);
+  GtkWidget *add_india_vbox = gtk_vbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(add_india_vbox), add_india_hboxtext, TRUE, TRUE, 30);
+  gtk_box_pack_start( GTK_BOX(add_india_vbox), gtk_hseparator_new(), FALSE, FALSE, 0);
+  gtk_box_pack_end( GTK_BOX(add_india_vbox), add_india_hboxbuttons, FALSE, FALSE, 15);
+  gtk_container_add( GTK_CONTAINER(add_india_widget), add_india_vbox);
+  gtk_widget_show_all( add_india_widget);
+  g_object_set( add_india_widget, "visible", FALSE, NULL);
+}
+
+
+void NodelistGtk::open_mod_input_dialog( const char *text, const char *text2, const char *text3,
+					 const char *title, const char *init_text, 
+					 const char *init_text2, const char *init_text3,
+					 void (*ok_cb)( Nodelist *, char *, char *, char *))
+{
+  create_mod_input_dialog();
+
+  g_object_set( mod_india_widget, 
+		"visible", TRUE, 
+		"title", title,
+		NULL);
+
+  gtk_label_set_text( GTK_LABEL(mod_india_label), CoWowGtk::translate_utf8(text));
+  gtk_label_set_text( GTK_LABEL(mod_india_label2), CoWowGtk::translate_utf8(text2));
+  gtk_label_set_text( GTK_LABEL(mod_india_label3), CoWowGtk::translate_utf8(text3));
+
+  gtk_label_set_text( GTK_LABEL(mod_india_text), CoWowGtk::translate_utf8(init_text));
+
+  gint pos = 0;
+  gtk_editable_delete_text( GTK_EDITABLE(mod_india_text2), 0, -1);
+  gtk_editable_insert_text( GTK_EDITABLE(mod_india_text2), CoWowGtk::convert_utf8(init_text2),
+			    strlen(CoWowGtk::convert_utf8(init_text2)), &pos);
+
+  pos = 0;
+  gtk_editable_delete_text( GTK_EDITABLE(mod_india_text3), 0, -1);
+  gtk_editable_insert_text( GTK_EDITABLE(mod_india_text3), CoWowGtk::convert_utf8(init_text3),
+			    strlen(CoWowGtk::convert_utf8(init_text3)), &pos);
+
+  mod_india_ok_cb = ok_cb;
+}
+
+void NodelistGtk::activate_mod_india_ok( GtkWidget *w, gpointer data)
+{
+  Nodelist *nodelist = (Nodelist *)data;
+  char *text, *text2, *text3, *textutf8;
+
+  textutf8 = (char *)gtk_label_get_text( GTK_LABEL(((NodelistGtk *)nodelist)->mod_india_text));
+  text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+  g_free( textutf8);
+
+  textutf8 = gtk_editable_get_chars( GTK_EDITABLE(((NodelistGtk *)nodelist)->mod_india_text2), 
+				 0, -1);
+  text2 = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+  g_free( textutf8);
+
+  textutf8 = gtk_editable_get_chars( GTK_EDITABLE(((NodelistGtk *)nodelist)->mod_india_text3), 
+				 0, -1);
+  text3 = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+  g_free( textutf8);
+
+  g_object_set( ((NodelistGtk *)nodelist)->mod_india_widget, "visible", FALSE, NULL);
+
+  (nodelist->mod_india_ok_cb)( nodelist, text, text2, text3);
+  g_free( text);
+  g_free( text2);
+  g_free( text3);
+}
+
+void NodelistGtk::activate_mod_india_cancel( GtkWidget *w, gpointer data)
+{
+  Nodelist *nodelist = (Nodelist *)data;
+
+  g_object_set( ((NodelistGtk *)nodelist)->mod_india_widget, "visible", FALSE, NULL);
+}
+
+static gint mod_india_delete_event( GtkWidget *w, GdkEvent *event, gpointer nodelist)
+{
+  g_object_set( ((NodelistGtk *)nodelist)->mod_india_widget, "visible", FALSE, NULL);
+  return TRUE;
+}
+
+void NodelistGtk::create_mod_input_dialog()
+{
+  if ( mod_india_widget) {
+    g_object_set( mod_india_widget, "visible", TRUE, NULL);
+    return;
+  }
+
+  // Create an input dialog
+  mod_india_widget = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
+					     "default-height", 150,
+					     "default-width", 600,
+					     "title", "Input Dialog",
+					     "window-position", GTK_WIN_POS_CENTER,
+					     NULL);
+  g_signal_connect( mod_india_widget, "delete_event", G_CALLBACK(mod_india_delete_event), this);
+
+  mod_india_text = gtk_label_new("");
+  mod_india_text2 = gtk_entry_new();
+  //g_signal_connect( mod_india_text2, "activate", 
+  //		    G_CALLBACK(NodelistGtk::activate_mod_india_ok), this);
+  mod_india_text3 = gtk_entry_new();
+  //g_signal_connect( mod_india_text2, "activate", 
+  //		    G_CALLBACK(NodelistGtk::activate_mod_india_ok), this);
+  mod_india_label = gtk_label_new("");
+  mod_india_label2 = gtk_label_new("");
+  mod_india_label3 = gtk_label_new("");
+  GtkWidget *mod_india_image = (GtkWidget *)g_object_new( GTK_TYPE_IMAGE, 
+				"stock", GTK_STOCK_DIALOG_QUESTION,
+				"icon-size", GTK_ICON_SIZE_DIALOG,
+				"xalign", 0.5,
+				"yalign", 0.4,
+				NULL);
+
+  GtkWidget *mod_india_ok = gtk_button_new_with_label( "Ok");
+  gtk_widget_set_size_request( mod_india_ok, 70, 25);
+  g_signal_connect( mod_india_ok, "clicked", 
+  		    G_CALLBACK(NodelistGtk::activate_mod_india_ok), this);
+  GtkWidget *mod_india_cancel = gtk_button_new_with_label( "Cancel");
+  gtk_widget_set_size_request( mod_india_cancel, 70, 25);
+  g_signal_connect( mod_india_cancel, "clicked", 
+  		    G_CALLBACK(NodelistGtk::activate_mod_india_cancel), this);
+
+  GtkWidget *mod_india_vboxtext = gtk_vbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(mod_india_vboxtext), mod_india_text, FALSE, FALSE, 12);
+  gtk_box_pack_start( GTK_BOX(mod_india_vboxtext), mod_india_text2, FALSE, FALSE, 12);
+  gtk_box_pack_start( GTK_BOX(mod_india_vboxtext), mod_india_text3, FALSE, FALSE, 12);
+
+  GtkWidget *mod_india_vboxlabel = gtk_vbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(mod_india_vboxlabel), mod_india_label, FALSE, FALSE, 15);
+  gtk_box_pack_start( GTK_BOX(mod_india_vboxlabel), mod_india_label2, FALSE, FALSE, 15);
+  gtk_box_pack_start( GTK_BOX(mod_india_vboxlabel), mod_india_label3, FALSE, FALSE, 15);
+
+  GtkWidget *mod_india_hboxtext = gtk_hbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(mod_india_hboxtext), mod_india_image, FALSE, FALSE, 40);
+  gtk_box_pack_start( GTK_BOX(mod_india_hboxtext), mod_india_vboxlabel, FALSE, FALSE, 15);
+  gtk_box_pack_end( GTK_BOX(mod_india_hboxtext), mod_india_vboxtext, TRUE, TRUE, 30);
+
+  GtkWidget *mod_india_hboxbuttons = gtk_hbox_new( TRUE, 40);
+  gtk_box_pack_start( GTK_BOX(mod_india_hboxbuttons), mod_india_ok, FALSE, FALSE, 0);
+  gtk_box_pack_end( GTK_BOX(mod_india_hboxbuttons), mod_india_cancel, FALSE, FALSE, 0);
+
+  GtkWidget *mod_india_vbox = gtk_vbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(mod_india_vbox), mod_india_hboxtext, TRUE, TRUE, 30);
+  gtk_box_pack_start( GTK_BOX(mod_india_vbox), gtk_hseparator_new(), FALSE, FALSE, 0);
+  gtk_box_pack_end( GTK_BOX(mod_india_vbox), mod_india_hboxbuttons, FALSE, FALSE, 15);
+  gtk_container_add( GTK_CONTAINER(mod_india_widget), mod_india_vbox);
+  gtk_widget_show_all( mod_india_widget);
+  g_object_set( mod_india_widget, "visible", FALSE, NULL);
 }
 
 

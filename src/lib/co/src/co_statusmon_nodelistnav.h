@@ -175,7 +175,8 @@ class NodelistNav {
   int select_node( int idx);
   void remove_node( char *name);
   int get_selected_node( char *name);
-  int get_selected_opplace( char *opplace);
+  int get_selected_opplace( char *opplace, char *descr);
+  int set_node_data( char *node_name, char *opplace, char *descr);
   void save();
   void add_node( const char *name, const char *description, const char *opplace);
   void set_msgw_pop( int pop) { msgw_pop = pop;}

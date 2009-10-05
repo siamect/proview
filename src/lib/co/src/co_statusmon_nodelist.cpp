@@ -28,6 +28,7 @@
 #include "co_time.h"
 #include "rt_gdh.h"
 #include "co_syi.h"
+#include "co_xhelp.h"
 
 #include "co_lng.h"
 #include "co_wow.h"
@@ -56,8 +57,8 @@ Nodelist::~Nodelist()
 
 void Nodelist::activate_help()
 {
-  if ( help_cb)
-    (help_cb)( parent_ctx, "consolelog");
+  CoXHelp::dhelp( "opg_statusmonitor", 0, navh_eHelpFile_Other, "$pwr_lang/man_opg.dat", 
+		  true);
 }
 
 void Nodelist::find_node_cb( void *ctx, pwr_tOid oid)
@@ -76,8 +77,37 @@ void Nodelist::add_node_ok( Nodelist *nodelist, char *node_name,
 
 void Nodelist::activate_add_node()
 {
-  open_input_dialog( "Node name", "Description", "Operatorplace", "Add Node", "",
-		     add_node_ok);
+  open_add_input_dialog( "Node name", "Description", "Operatorplace", "Add Node", "",
+			 add_node_ok);
+}
+
+void Nodelist::mod_node_ok( Nodelist *nodelist, char *node_name, 
+			    char *description, char *opplace)
+{
+  nodelist->nodelistnav->set_node_data( node_name, opplace, description);
+}
+
+void Nodelist::activate_modify_node()
+{
+  static char node_name[80];
+  char title[100];
+  int sts;
+  pwr_tOName opplace;
+  char descr[80];
+  
+  sts = nodelistnav->get_selected_node( node_name);
+  if ( EVEN(sts)) {
+    nodelistnav->wow->DisplayError( "Remove Node", "Select a node");
+    return;
+  }
+
+  sts = nodelistnav->get_selected_opplace( opplace, descr);
+  if ( EVEN(sts)) return;
+
+  sprintf( title, "Modify node %s", node_name);
+
+  open_mod_input_dialog( "Node", "Description", "Operatorplace", title, node_name, descr, opplace,
+			 mod_node_ok);
 }
 
 void remove_node_ok( void *ctx, void *data)
@@ -166,7 +196,7 @@ void Nodelist::activate_open_opplace()
     nodelistnav->wow->DisplayError( "Open Xtt", "Select a node");
     return;
   }
-  sts = nodelistnav->get_selected_opplace( opplace);
+  sts = nodelistnav->get_selected_opplace( opplace, 0);
 
   get_display( display);
   statussrv_XttStart( node_name, opplace, "", display, remote_gui);

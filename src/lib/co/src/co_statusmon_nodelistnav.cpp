@@ -40,10 +40,30 @@
 #include "statussrv_utl.h"
 #include "rt_pwr_msg.h"
 
-#include "xnav_bitmap_leaf12.h"
+#include "xnav_bitmap_map8.h"
+#include "xnav_bitmap_map10.h"
 #include "xnav_bitmap_map12.h"
+#include "xnav_bitmap_map14.h"
+#include "xnav_bitmap_map16.h"
+#include "xnav_bitmap_map18.h"
+#include "xnav_bitmap_map20.h"
+#include "xnav_bitmap_map24.h"
+#include "xnav_bitmap_openmap8.h"
+#include "xnav_bitmap_openmap10.h"
 #include "xnav_bitmap_openmap12.h"
+#include "xnav_bitmap_openmap14.h"
+#include "xnav_bitmap_openmap16.h"
+#include "xnav_bitmap_openmap18.h"
+#include "xnav_bitmap_openmap20.h"
+#include "xnav_bitmap_openmap24.h"
+#include "xnav_bitmap_attr8.h"
+#include "xnav_bitmap_attr10.h"
 #include "xnav_bitmap_attr12.h"
+#include "xnav_bitmap_attr14.h"
+#include "xnav_bitmap_attr16.h"
+#include "xnav_bitmap_attr18.h"
+#include "xnav_bitmap_attr20.h"
+#include "xnav_bitmap_attr24.h"
 
 const char NodelistNav::config_file[40] = "$HOME/rt_statusmon.dat";
 
@@ -66,38 +86,98 @@ void NodelistNavBrow::allocate_pixmaps()
   flow_sPixmapData pixmap_data;
   int i;
 
-  for ( i = 0; i < 9; i++) {
-    pixmap_data[i].width =xnav_bitmap_leaf12_width;
-    pixmap_data[i].height =xnav_bitmap_leaf12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_leaf12_bits;
-  }
-
-  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_leaf);
-
-  for ( i = 0; i < 9; i++) {
-    pixmap_data[i].width =xnav_bitmap_map12_width;
-    pixmap_data[i].height =xnav_bitmap_map12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_map12_bits;
-  }
-
+  i = 0;
+  pixmap_data[i].width =xnav_bitmap_map8_width;
+  pixmap_data[i].height =xnav_bitmap_map8_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_map8_bits;
+  pixmap_data[i].width =xnav_bitmap_map10_width;
+  pixmap_data[i].height =xnav_bitmap_map10_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_map10_bits;
+  pixmap_data[i].width =xnav_bitmap_map12_width;
+  pixmap_data[i].height =xnav_bitmap_map12_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_map12_bits;
+  pixmap_data[i].width =xnav_bitmap_map14_width;
+  pixmap_data[i].height =xnav_bitmap_map14_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_map14_bits;
+  pixmap_data[i].width =xnav_bitmap_map16_width;
+  pixmap_data[i].height =xnav_bitmap_map16_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_map16_bits;
+  pixmap_data[i].width =xnav_bitmap_map18_width;
+  pixmap_data[i].height =xnav_bitmap_map18_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_map18_bits;
+  pixmap_data[i].width =xnav_bitmap_map20_width;
+  pixmap_data[i].height =xnav_bitmap_map20_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_map20_bits;
+  pixmap_data[i].width =xnav_bitmap_map20_width;
+  pixmap_data[i].height =xnav_bitmap_map20_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_map20_bits;
+  pixmap_data[i].width =xnav_bitmap_map24_width;
+  pixmap_data[i].height =xnav_bitmap_map24_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_map24_bits;
+  
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_map);
-
-  for ( i = 0; i < 9; i++) {
-    pixmap_data[i].width =xnav_bitmap_openmap12_width;
-    pixmap_data[i].height =xnav_bitmap_openmap12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_openmap12_bits;
-  }
+  
+  i = 0;
+  pixmap_data[i].width =xnav_bitmap_openmap8_width;
+  pixmap_data[i].height =xnav_bitmap_openmap8_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_openmap8_bits;
+  pixmap_data[i].width =xnav_bitmap_openmap10_width;
+  pixmap_data[i].height =xnav_bitmap_openmap10_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_openmap10_bits;
+  pixmap_data[i].width =xnav_bitmap_openmap12_width;
+  pixmap_data[i].height =xnav_bitmap_openmap12_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_openmap12_bits;
+  pixmap_data[i].width =xnav_bitmap_openmap14_width;
+  pixmap_data[i].height =xnav_bitmap_openmap14_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_openmap14_bits;
+  pixmap_data[i].width =xnav_bitmap_openmap16_width;
+  pixmap_data[i].height =xnav_bitmap_openmap16_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_openmap16_bits;
+  pixmap_data[i].width =xnav_bitmap_openmap18_width;
+  pixmap_data[i].height =xnav_bitmap_openmap18_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_openmap18_bits;
+  pixmap_data[i].width =xnav_bitmap_openmap20_width;
+  pixmap_data[i].height =xnav_bitmap_openmap20_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_openmap20_bits;
+  pixmap_data[i].width =xnav_bitmap_openmap20_width;
+  pixmap_data[i].height =xnav_bitmap_openmap20_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_openmap20_bits;
+  pixmap_data[i].width =xnav_bitmap_openmap24_width;
+  pixmap_data[i].height =xnav_bitmap_openmap24_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_openmap24_bits;
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_openmap);
 
-  for ( i = 0; i < 9; i++) {
-    pixmap_data[i].width =xnav_bitmap_attr12_width;
-    pixmap_data[i].height =xnav_bitmap_attr12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_attr12_bits;
-  }
-
+  i = 0;
+  pixmap_data[i].width =xnav_bitmap_attr8_width;
+  pixmap_data[i].height =xnav_bitmap_attr8_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_attr8_bits;
+  pixmap_data[i].width =xnav_bitmap_attr10_width;
+  pixmap_data[i].height =xnav_bitmap_attr10_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_attr10_bits;
+  pixmap_data[i].width =xnav_bitmap_attr12_width;
+  pixmap_data[i].height =xnav_bitmap_attr12_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_attr12_bits;
+  pixmap_data[i].width =xnav_bitmap_attr14_width;
+  pixmap_data[i].height =xnav_bitmap_attr14_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_attr14_bits;
+  pixmap_data[i].width =xnav_bitmap_attr16_width;
+  pixmap_data[i].height =xnav_bitmap_attr16_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_attr16_bits;
+  pixmap_data[i].width =xnav_bitmap_attr18_width;
+  pixmap_data[i].height =xnav_bitmap_attr18_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_attr18_bits;
+  pixmap_data[i].width =xnav_bitmap_attr20_width;
+  pixmap_data[i].height =xnav_bitmap_attr20_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_attr20_bits;
+  pixmap_data[i].width =xnav_bitmap_attr20_width;
+  pixmap_data[i].height =xnav_bitmap_attr20_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_attr20_bits;
+  pixmap_data[i].width =xnav_bitmap_attr24_width;
+  pixmap_data[i].height =xnav_bitmap_attr24_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_attr24_bits;
+  
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_attr);
-
 
 }
 
@@ -110,8 +190,8 @@ void NodelistNavBrow::create_nodeclasses()
 
   // Create common-class
 
-  // Nodeclass for Undefinied message
-  brow_CreateNodeClass( ctx, "Undef", 
+  // Nodeclass for node
+  brow_CreateNodeClass( ctx, "Node", 
 		flow_eNodeGroup_Common, &nc_node);
   brow_AddAnnotPixmap( nc_node, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddFilledRect( nc_node, 1.3, 0.15, 0.4, 0.4, flow_eDrawType_DarkGray);
@@ -122,7 +202,7 @@ void NodelistNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_node, 8, 0.6, 1,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
-  brow_AddAnnot( nc_node, 21, 0.6, 2,
+  brow_AddAnnot( nc_node, 25, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddFrame( nc_node, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
@@ -916,7 +996,7 @@ int NodelistNav::update_nodes()
 
     if ( ODD(sts)) {
       if ( strcmp( node_list[i].item->data.Description, response.Description) != 0 &&
-	   view_node_descr == 0)
+	   view_node_descr == 0 && strcmp( node_list[i].item->node_descr, "") == 0)
 	brow_SetAnnotation( node_list[i].item->node, 1, response.Description, 
 			    strlen(response.Description));
 
@@ -983,7 +1063,7 @@ int NodelistNav::get_selected_node( char *name)
   return 1;
 }
 
-int NodelistNav::get_selected_opplace( char *opplace)
+int NodelistNav::get_selected_opplace( char *opplace, char *descr)
 {
   brow_tNode	*nodelist;
   int		node_count;
@@ -1001,7 +1081,24 @@ int NodelistNav::get_selected_opplace( char *opplace)
 
   for ( int i = 0; i < (int) node_list.size(); i++) {
     if ( node_list[i].item == item) {
-      strcpy( opplace, node_list[i].opplace);
+      if ( opplace)
+	strcpy( opplace, node_list[i].opplace);
+      if ( descr)
+	strcpy( descr, node_list[i].description);
+      return 1;
+    }
+  }
+  return 0;
+}
+
+int NodelistNav::set_node_data( char *node_name, char *opplace, char *descr)
+{
+  for ( int i = 0; i < (int) node_list.size(); i++) {
+    if ( strcmp( node_list[i].node_name, node_name) == 0) {
+      if ( opplace)
+	strncpy( node_list[i].opplace, opplace, sizeof(node_list[i].opplace));
+      if ( descr)
+	strncpy( node_list[i].description, descr, sizeof(node_list[i].description));
       return 1;
     }
   }
@@ -1049,8 +1146,8 @@ void NodelistNav::add_node( const char *name, const char *description, const cha
       return;
     
     NodelistNode node( name);
-    strcpy( node.opplace, opplace);
-    strcpy( node.description, description);
+    strncpy( node.opplace, opplace, sizeof(node.opplace));
+    strncpy( node.description, description, sizeof(node.description));
 
     if ( idx == (int)node_list.size())
       node_list.push_back( node);
@@ -1147,9 +1244,9 @@ ItemNode::ItemNode( NodelistNav *item_nodelistnav, const char *item_name, const 
 		dest, dest_code, (void *) this, 1, &node);
 
   brow_SetAnnotation( node, 0, name, strlen(name));
-  if ( nodelistnav->view_node_descr)
+  if ( nodelistnav->view_node_descr || strcmp( node_descr, "") != 0)
     brow_SetAnnotation( node, 1, node_descr, strlen(node_descr));
-  else
+  else 
     brow_SetAnnotation( node, 1, data.Description, strlen(data.Description));
   brow_SetAnnotPixmap( node, 0, nodelistnav->brow->pixmap_map);
 }

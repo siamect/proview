@@ -48,7 +48,8 @@ class Nodelist {
     int			nodelist_displayed;
     void 		(*help_cb)( void *, const char *);
     void 		(*close_cb)( void *);
-    void 		(*india_ok_cb)( Nodelist *, char *, char *, char *);
+    void 		(*add_india_ok_cb)( Nodelist *, char *, char *, char *);
+    void 		(*mod_india_ok_cb)( Nodelist *, char *, char *, char *);
     CoWow		*wow;
     MsgWindow		*msg_window;
     char		remote_gui[20];
@@ -59,13 +60,18 @@ class Nodelist {
     virtual void set_clock_cursor() {}
     virtual void reset_cursor() {}
     virtual void free_cursor() {}
-    virtual void open_input_dialog( const char *text, const char *text2, const char *text3, 
-				    const char *title, const char *init_text,
-				    void (*ok_cb)( Nodelist *, char *, char *, char *)) {}
-
+    virtual void open_add_input_dialog( const char *text, const char *text2, const char *text3, 
+					const char *title, const char *init_text,
+					void (*ok_cb)( Nodelist *, char *, char *, char *)) {}
+    virtual void open_mod_input_dialog( const char *text, const char *text2,  const char *text3,
+					const char *title, const char *init_text, 
+					const char *init_text2, const char *init_text3,
+					void (*ok_cb)( Nodelist *, char *, char *, char *)) {}
+    
     void set_scantime( float scantime) { nodelistnav->scantime = int(scantime * 1000);}
     void activate_help();
     void activate_add_node();
+    void activate_modify_node();
     void activate_remove_node();
     void activate_open_xtt();
     void activate_open_opplace();
@@ -73,6 +79,8 @@ class Nodelist {
     void activate_save();
     static void find_node_cb( void *ctx, pwr_tOid oid);
     static void add_node_ok( Nodelist *nodelist, char *node_name, char *description,
+			     char *opplace);
+    static void mod_node_ok( Nodelist *nodelist, char *node_name, char *description,
 			     char *opplace);
 };
 

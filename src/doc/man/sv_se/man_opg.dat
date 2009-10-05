@@ -70,6 +70,7 @@ Plc trace <link> opg_trace
 Setup-skript <link> opg_setupfile
 Användare och privilegier <link> opg_security
 Funktionstangenter <link> opg_functionkeys
+Status monitorn <link> opg_statusmonitor
 Xtt kommandon <link> help command
 Script <link> script
 Index	<index>
@@ -1453,6 +1454,53 @@ Ett '#' tecken först på raden anger en kommentar.
 <c>     Shift Control <Key>m: SetDig(F1-Start.ActualValue)
 <c>     Shift Control <Key>n: SetDig(F1-Stop.ActualValue)
 <c>     Shift Alt <Key>n: SetDig(F1-Reset.ActualValue)
+
+</topic>
+</chapter>
+
+<chapter>
+<topic> opg_statusmonitor
+Statusmonitorn
+
+Statusmonitorn är ett verktyg för att övervaka och hantera process- och 
+operatörs-stationer. Man adderar noder som man vill övervaka och statusmonitorn
+visar status for noden i form av en färgmarkering och status-texten.
+
+<image> opg_fig38.png
+<b>Fig Status monitorn
+
+<h1>Addera och ta bort noder
+En nod adderas till statusmonitorn från File/Add Node i meny, eller från plus-tecknet
+i verktygspanelen. En dialog öppnas där nodens namn anges. Man kan även ange en
+beskrivning om man vill ha en annan beskrivning än den i nodens node-objekt.
+Det är även möjlig att ange ett operatörsplats-objekt på noden, man kan då öppna
+denna operatörsplats från menyn eller verkygspanelen. OBS! Ange inte en 
+operatörsplats som redan är i bruk på en operatörsplats. OpPlace objektet ska vara
+av typen 'Underhåll' eller dedicerad för statusmonitorn.
+
+En nod tas bort från statusmonitorn genom att noden väljs ut, och 'File/Remove Node' 
+aktiveras i menyn.
+
+<image> opg_fig41.png
+<b>Fig Addera en nod till monitorn
+
+<h1>Status
+Default är det systemstatus som övervakas. Systemstatus är en summastatus för
+för processerna i systemet, och berättar hur noden mår ur systemets synvinkel.
+I den här moden fungerar statusmonitorn som en övervakning för den systemansvarige.
+
+Man kan även visa applikations-status, dvs en status som sätts av en
+applikation i systemet, och som t ex visar status för processen eller för
+en anläggningsdel. På det här sättet kan statusmonitorn fungera som en slags
+överordnad operatörsplats, där man med hjälp av felstatus indikerar att noden 
+behöver operatörens uppmärksamhet, och operatören sedan kan gå vidare och öppna 
+operatörsplatsen på noden, om situation kräver detta.
+
+<image> opg_fig39.png
+<b>Fig Info om en nod
+
+<image> opg_fig40.png
+<b>Fig Status for processer på noden
 
 </topic>
 </chapter>
