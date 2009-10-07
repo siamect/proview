@@ -162,6 +162,7 @@ gdh_AttrrefToName (
 
   if (ap == NULL && lnametype.b.fallback != cdh_mName_eFallback_strict) {
     sts = GDH__SUCCESS;
+    strcpy( string, "");
     s = cdh_ArefToString(string, arp, 1);
   }
 
