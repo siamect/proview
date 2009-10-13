@@ -732,7 +732,7 @@ void  OpGtk::update_alarm_info()
       time_format = time_eFormat_ComprDateAndTime;
       show_time = 1;
     }
-    else if ( layout_mask & pwr_mOpWindLayoutMask_ShowAlarmDateAndTime) {
+    else if ( layout_mask & pwr_mOpWindLayoutMask_ShowAlarmTime) {
       time_format = time_eFormat_Time;
       show_time = 1;
     }
@@ -1567,6 +1567,8 @@ void OpGtk::change_sup_color( void *imagew, op_eSupColor color)
   case op_eSupColor_Black:
     dcli_translate_filename( fname, "$pwr_exe/xtt_ind_black.png");
     break;
+  default:
+    dcli_translate_filename( fname, "$pwr_exe/xtt_ind_gray.png");
   }
   gtk_image_set_from_file( GTK_IMAGE(image), fname);
 }

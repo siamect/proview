@@ -47,16 +47,18 @@ class CoWowTimer;
 class Op;
 
 typedef enum {
+  op_eSupColor_,
   op_eSupColor_Gray,
   op_eSupColor_Green,
   op_eSupColor_Yellow,
   op_eSupColor_Red,
-  op_eSupColor_Black
+  op_eSupColor_Black,
+  op_eSupColor__
 } op_eSupColor;
 
 class OpSup {
  public:
-  OpSup() : buttonw(0), imagew(0), p(0), old_color(op_eSupColor_Gray), flash(0)
+  OpSup() : buttonw(0), imagew(0), p(0), old_color(op_eSupColor_), flash(0)
     { strcpy( node_name, ""); strcpy( object_name, "");}
   
   pwr_tOid   	node_oid;
