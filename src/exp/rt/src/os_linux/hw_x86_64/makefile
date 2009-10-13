@@ -67,7 +67,7 @@ all : init copy lib
 
 init :
 
-copy : $(load_dir)/pwr_volumelist.dat $(exe_dir)/xtt_help.dat $(exe_dir)/sv_se/pwrb_xtthelp.dat $(exe_dir)/pwr_logga.gif $(export_gif) $(export_gifdoc) $(export_wav)
+copy : $(load_dir)/pwr_volumelist.dat $(exe_dir)/sv_se/pwrb_xtthelp.dat $(exe_dir)/pwr_logga.gif $(export_gif) $(export_gifdoc) $(export_wav)
 
 lib : $(export_obj)
 
