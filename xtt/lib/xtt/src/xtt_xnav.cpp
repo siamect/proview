@@ -1812,12 +1812,22 @@ int XNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 	  (xnav->change_value_cb)( xnav->parent_ctx);
 	break;
       case xnav_eItemType_Enum:
-	if ( xnav->gbl.advanced_user)
+	if ( xnav->gbl.advanced_user) {
+	  if ( !xnav->is_authorized(pwr_mAccess_RtWrite | pwr_mAccess_System)) {
+	    xnav->message('E', "No write access");
+	    break;
+	  }
 	  ((ItemEnum *)item)->set_value();
+	}
 	break;
       case xnav_eItemType_Mask:
-	if ( xnav->gbl.advanced_user)
+	if ( xnav->gbl.advanced_user) {
+	  if ( !xnav->is_authorized(pwr_mAccess_RtWrite | pwr_mAccess_System)) {
+	    xnav->message('E', "No write access");
+	    break;
+	  }
 	  ((ItemMask *)item)->toggle_value();
+	}
 	break;
       default:
 	sts = item->open_children( xnav->brow, 0, 0);
@@ -2022,10 +2032,18 @@ int XNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
           brow_GetUserData( event->object.object, (void **)&item);
           switch( item->type) {
 	  case xnav_eItemType_Enum: 
+	    if ( !xnav->is_authorized(pwr_mAccess_RtWrite | pwr_mAccess_System)) {
+	      xnav->message('E', "No write access");
+	      break;
+	    }
 	    if ( !event->radiobutton.value)
 	      ((ItemEnum *)item)->set_value();
 	    break;
 	  case xnav_eItemType_Mask: 
+	    if ( !xnav->is_authorized(pwr_mAccess_RtWrite | pwr_mAccess_System)) {
+	      xnav->message('E', "No write access");
+	      break;
+	    }
 	    ((ItemMask *)item)->set_value( !event->radiobutton.value);
 	    break;
 	  default:
