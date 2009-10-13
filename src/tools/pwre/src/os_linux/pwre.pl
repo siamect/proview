@@ -602,13 +602,13 @@ sub build_all ()
       _build("lib", "rt", $flavour, "all");
       _build("exp", "rt", "src", "all");
       _build("lib", "msg_dummy", "src", "all");
-      _build("exe", "wb_rtt", "src", "all");
-      _build("lib", "dtt", "src", "all");
       _build("exp", "rt", "src", "all");
       _build("lib", "statussrv", "src", "all");
       _build("exp", "stdsoap2", "src", "all");
     }
     if ( $exe == 1) {
+      _build("exe", "wb_rtt", "src", "all");
+      _build("lib", "dtt", "src", "all");
       _build("exe", "rt*", "src", "all");
       _build("exe", "co*", $flavour, "all");
       _build("exe", "pwr_user", "src", "all");

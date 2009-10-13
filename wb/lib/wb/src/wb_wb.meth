@@ -28,7 +28,6 @@ Io
 XttGraph
 WebGraph
 OpPlace
-RttConfig
 WebHandler
 PlcProcess
 PlcThread
