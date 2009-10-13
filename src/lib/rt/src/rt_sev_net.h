@@ -40,7 +40,9 @@ typedef enum {
   sev_eMsgType_HistDataGetRequest,
   sev_eMsgType_HistDataGet,
   sev_eMsgType_HistItemDelete,
-  sev_eMsgType_HistItemStatus
+  sev_eMsgType_HistItemStatus,
+  sev_eMsgType_ServerStatusRequest,
+  sev_eMsgType_ServerStatus
 } sev_eMsgType;  
 
 typedef struct {
@@ -123,6 +125,11 @@ typedef struct {
   pwr_tOName	       AName;
   pwr_tStatus	       Status;
 } sev_sMsgHistItemStatus;
+
+typedef struct {
+  sev_eMsgType         Type;
+  pwr_tStatus	       Status;
+} sev_sMsgServerStatus;
 
 #ifdef __cplusplus
 }

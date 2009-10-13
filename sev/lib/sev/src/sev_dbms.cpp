@@ -35,6 +35,7 @@
 #include "rt_load.h"
 #include "sev_dbms.h"
 #include "rt_sev_msg.h"
+#include "rt_errh.h"
 
 char sev_dbms_env::m_systemName[40];
 
@@ -833,8 +834,14 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
     }
     int rc = mysql_query( m_env->con(), query);
     if (rc) {
-      printf( "Store value: %s\n", mysql_error(m_env->con()));
+      // printf( "Store value: %s \"%s\"\n", mysql_error(m_env->con()), query);
       *sts = SEV__DBERROR;
+      m_items[item_idx].status = *sts;
+      if ( m_items[item_idx].status != m_items[item_idx].logged_status) {
+	m_items[item_idx].logged_status = m_items[item_idx].status;
+	errh_Error( "Database store error: %s, table: %s object: %s", 
+		    mysql_error(m_env->con()),  m_items[item_idx].tablename, m_items[item_idx].oname);
+      }
       return 0;
     }
     if ( m_items[item_idx].options & pwr_mSevOptionsMask_ReadOptimized)
@@ -872,19 +879,27 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
 
     int rc = mysql_query( m_env->con(), query);
     if (rc) {
-      printf( "Update value: %s\n", mysql_error(m_env->con()));
+      // printf( "Update value: %s\n", mysql_error(m_env->con()));
       *sts = SEV__DBERROR;
+      m_items[item_idx].status = *sts;
+      if ( m_items[item_idx].status != m_items[item_idx].logged_status) {
+	m_items[item_idx].logged_status = m_items[item_idx].status;
+	errh_Error( "Database update error: %s, table: %s object: %s", 
+		    mysql_error(m_env->con()), m_items[item_idx].tablename, m_items[item_idx].oname);
+      }
       return 0;
     }
   }
 
   *sts = SEV__SUCCESS;
+  m_items[item_idx].status = *sts;
+  m_items[item_idx].logged_status = 1;
   return 1;
 }
 
 int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, float deadband, 
 			  char *aname, pwr_eType type, 
-			  unsigned int size, pwr_tFloat32 scantime, 
+			  unsigned int size, pwr_tFloat32 scantime, pwr_tTime *creatime, 
 			  pwr_tTime *starttime, pwr_tTime *endtime, 
 			  int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize)
 {
@@ -941,8 +956,8 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
     timestr_to_time( row[11], &create_time);
     timestr_to_time( row[12], &update_time);
     
-    if ( time_Acomp( &create_time, &stime) == 1)
-      stime = create_time;
+    if ( time_Acomp( creatime, &stime) == 1)
+      stime = *creatime;
       
     if ( time_Acomp( &etime, &update_time) == 1)
       etime = update_time;

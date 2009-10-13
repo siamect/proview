@@ -52,7 +52,7 @@ XttSevHist::XttSevHist( void *parent_ctx,
 		      sevcli_tCtx xn_scctx,
 		      int *sts) :
   xnav(parent_ctx), gcd(0), curve(0), rows(0), vsize(0), timerid(0), close_cb(0), help_cb(0), 
-  first_scan(1), scctx(xn_scctx), oid(xn_oid[0])
+  first_scan(1), scctx(xn_scctx), oid(xn_oid[0]), time_low_old(0), time_high_old(0)
 {
   strncpy( aname, xn_aname[0], sizeof(aname));
     
@@ -207,6 +207,9 @@ void XttSevHist::sevhist_higher_res_cb( void *ctx)
   }
 
   sevhist->get_data( &sts, t_low, t_high);
+
+  sevhist->time_low_old = 0;
+  sevhist->time_high_old = 0;
 }
 
 void XttSevHist::sevhist_lower_res_cb( void *ctx)
@@ -225,6 +228,13 @@ void XttSevHist::sevhist_lower_res_cb( void *ctx)
 		      5 * (sevhist->gcd->max_value_axis[0] - sevhist->gcd->min_value_axis[0]));
   t_high.tv_nsec = 0;
 
+  if ( t_low.tv_sec == sevhist->time_low_old && t_high.tv_sec == sevhist->time_high_old) {
+    t_low.tv_sec = int( sevhist->gcd->min_value_axis[0] -  
+		      25 * (sevhist->gcd->max_value_axis[0] - sevhist->gcd->min_value_axis[0]));
+    t_high.tv_sec = int( sevhist->gcd->max_value_axis[0] +
+		      25 * (sevhist->gcd->max_value_axis[0] - sevhist->gcd->min_value_axis[0]));
+  }
+
   {
     char s1[40], s2[40];
     time_AtoAscii( &t_low, time_eFormat_NumDateAndTime, s1, sizeof(s1));
@@ -233,6 +243,8 @@ void XttSevHist::sevhist_lower_res_cb( void *ctx)
     printf( "Low: %s, High: %s\n", s1, s2);
   }
   sevhist->get_data( &sts, t_low, t_high);
+  sevhist->time_low_old = t_low.tv_sec;
+  sevhist->time_high_old = t_high.tv_sec;
 }
 
 void XttSevHist::sevhist_help_cb( void *ctx)

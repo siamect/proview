@@ -48,9 +48,9 @@ XttTbl::~XttTbl()
 }
 
 XttTbl::XttTbl( void *xn_parent_ctx, sevcli_tCtx xn_sevcli) :
-  parent_ctx(xn_parent_ctx), sevcli(xn_sevcli), command_open(0), close_cb(0),
+  parent_ctx(xn_parent_ctx), sevcli(xn_sevcli), cologin(0), command_open(0), close_cb(0),
   base_priv(pwr_mPrv_System), priv(pwr_mPrv_System), verify(0), ccm_func_registred(0),
-  quiet(0)
+  wow(0), quiet(0)
 {
   char default_priv[80];
 

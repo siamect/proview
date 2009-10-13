@@ -71,6 +71,8 @@ class XttSevHist {
   pwr_tOName	aname;
   pwr_tOid	oid;
   CoWow		*wow;
+  long int	time_low_old;
+  long int	time_high_old;
 
   //! Constructor
   XttSevHist( void *xn_parent_ctx,

@@ -29,8 +29,8 @@
 #include "rt_qcom_msg.h"
 #include "rt_ini_event.h"
 #include "rt_errh.h"
-#include "rt_sevhistmon.h"
 #include "rt_sev_net.h"
+#include "rt_sevhistmon.h"
 #include "rt_sev_msg.h"
 #include "rt_pwr_msg.h"
 
@@ -357,6 +357,12 @@ void rt_sevhistmon::set_status()
 {
   pwr_tStatus sts = m_server_status;
 
+  for ( unsigned int i = 0; i < m_nodes.size(); i++) {
+    if ( m_nodes[i].connected && m_nodes[i].status != 0 &&
+	 errh_Severity( m_nodes[i].status) > errh_Severity( sts)) 
+      sts = m_nodes[i].status;
+  }
+
   for ( unsigned int i = 0; i < m_hs.size(); i++) {
     if ( EVEN( m_hs[i].threadp->Status) &&
 	 errh_Severity( m_hs [i].threadp->Status) > errh_Severity( sts)) {
@@ -436,6 +442,66 @@ bool rt_sevhistmon::send_connect( pwr_tNid nid, pwr_tStatus *sts)
   }    
 
   return ODD(*sts);
+}
+
+bool rt_sevhistmon::send_server_status_request( pwr_tStatus *sts)
+{
+  int		stime;
+  float		scantime = 30;
+  pwr_tStatus	send_sts;
+  
+  *sts = SEV__SUCCESS;
+
+  stime = int(scantime / m_scantime + 0.5);
+  if ( !stime || m_loopcnt % stime != 0)
+    return false;
+
+  for ( unsigned int i = 0; i < m_nodes.size(); i++) {
+    if ( m_nodes[i].connected) {
+      send_server_status_request( m_nodes[i].nid, &send_sts);
+      if ( EVEN(send_sts))
+	*sts = send_sts;
+    }
+  }
+  return true;
+}
+
+bool rt_sevhistmon::send_server_status_request( pwr_tNid nid, pwr_tStatus *sts)
+{
+  sev_sMsgAny 	*msg;
+  qcom_sQid   	tgt;
+  qcom_sPut	put;
+  pwr_tStatus   lsts;  
+
+  tgt.nid = nid;
+  tgt.qix = sev_eProcSevServer;
+    
+  put.reply.nid = m_nodes[0].nid;
+  put.reply.qix = sev_eProcSevClient;
+  put.type.b = (qcom_eBtype) sev_cMsgClass;
+  put.type.s = (qcom_eStype) sev_eMsgType_ServerStatusRequest;
+  put.msg_id = m_msg_id++;
+  put.size = sizeof(*msg);
+  msg = (sev_sMsgAny *) qcom_Alloc(&lsts, put.size);
+  put.data = msg;
+
+  msg->Type = sev_eMsgType_NodeUp;
+
+  if ( !qcom_Put( sts, &tgt, &put)) {
+    qcom_Free( &lsts, put.data);
+  }    
+
+  return ODD(*sts);
+}
+
+void rt_sevhistmon::receive_server_status( sev_sMsgServerStatus *msg, pwr_tNid nid)
+{
+  for ( unsigned int i = 0; i < m_nodes.size(); i++) {
+    if ( nid == m_nodes[i].nid) {
+      m_nodes[i].status = msg->Status;
+      break;
+    }
+  }
 }
 
 int rt_sevhistmon::send_itemlist( pwr_tNid nid)
@@ -560,6 +626,7 @@ int rt_sevhistmon::mainloop()
     if ( sts == QCOM__TMO || !mp) {
       m_loopcnt++;
       send_data();
+      send_server_status_request( &sts);
       continue;
     }
 
@@ -569,6 +636,9 @@ int rt_sevhistmon::mainloop()
       case sev_eMsgType_NodeUp:
       case sev_eMsgType_HistItemsRequest:
 	send_itemlist( get.sender.nid);
+	break;
+      case sev_eMsgType_ServerStatus:
+	receive_server_status( (sev_sMsgServerStatus *) mp, get.sender.nid);
 	break;
       default: ;
       }

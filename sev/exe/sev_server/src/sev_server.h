@@ -68,12 +68,13 @@ class sev_item_key {
 class sev_server {
  public:
 
-  sev_server() : m_msg_id(0) {}
+  sev_server() : m_server_status(0), m_msg_id(0) {}
 
   typedef map<sev_refid, unsigned int>::iterator iterator_refid;
   typedef map<sev_item_key, unsigned int>::iterator iterator_item_key;
 
   pwr_tStatus m_sts;
+  pwr_tStatus m_server_status;
   vector<sev_node> m_nodes;
   map<sev_refid, unsigned int> m_refid;
   map<sev_item_key, unsigned int> m_item_key;
@@ -89,6 +90,7 @@ class sev_server {
   int receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size);
   int send_histdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *msg, unsigned int size);
   int send_itemlist( qcom_sQid tgt);
+  int send_server_status( qcom_sQid tgt);
   int delete_item( qcom_sQid tgt, sev_sMsgHistItemDelete *rmsg);
   void garbage_collector();
 };

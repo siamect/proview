@@ -21,6 +21,7 @@
 
 
 #include "pwr.h"
+#include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_time.h"
 #include "co_error.h"
@@ -39,6 +40,7 @@
 
 #define sev_cGarbageInterval 120
 
+
 int sev_server::init( int noneth)
 {
   qcom_sNode		node;
@@ -50,8 +52,12 @@ int sev_server::init( int noneth)
   pwr_tFileName 	envname;
   char 			socket[200];
 
+  m_server_status = PWR__SRVSTARTUP;
+
   qcom_Init( &m_sts, &aid, "sev_server");
   if ( EVEN(m_sts)) throw co_error(m_sts);
+
+  errh_Init( "sev_server", (errh_eAnix)0);
 
   m_noneth = noneth;
   if (!m_noneth) {
@@ -81,18 +87,20 @@ int sev_server::init( int noneth)
     env->open( envname);
 
     if ( !env->createDb()) {
-      errh_Fatal("Failed to create to database");
+      errh_Fatal("Failed to create to database '%s'", sev_dbms_env::dbName());
       exit(0);
     }
   }
   else {    
     if ( !env->openDb()) {
-      errh_Fatal("Failed to connect to database");
+      errh_Fatal("Failed to connect to database '%s'", sev_dbms_env::dbName());
       exit(0);
     }
   }
   
   m_db = new sev_dbms( env);
+
+  errh_Info("Database opened '%s'", sev_dbms_env::dbName());
 
   m_db->get_items( &m_sts);
 
@@ -153,7 +161,9 @@ int sev_server::connect()
   qcom_sQid   	tgt;
   qcom_sPut	put;
   pwr_tStatus	sts, lsts;
-  
+
+  // Wait for qmon to start
+  sleep(5);
 
   for ( unsigned int i = 0; i < m_nodes.size(); i++) {
     tgt.nid = m_nodes[i].nid;
@@ -173,7 +183,10 @@ int sev_server::connect()
 
     if ( !qcom_Put( &sts, &tgt, &put)) {
       qcom_Free( &sts, put.data);
+      errh_Info( "No connection to %s (%s)", m_nodes[i].name, cdh_NodeIdToString( 0, m_nodes[i].nid, 0, 0));
     }    
+    else
+      errh_Info( "Connect sent to %s (%s)", m_nodes[i].name, cdh_NodeIdToString( 0, m_nodes[i].nid, 0, 0));
   }
 
   return 1;
@@ -274,6 +287,41 @@ int sev_server::send_itemlist( qcom_sQid tgt)
   return 1;
 }
 
+int sev_server::send_server_status( qcom_sQid tgt)
+{
+  qcom_sPut	put;
+  pwr_tStatus	sts, lsts;
+
+  put.size = sizeof(sev_sMsgServerStatus);
+  put.data = qcom_Alloc(&lsts, put.size);
+
+  ((sev_sMsgServerStatus *)put.data)->Type = sev_eMsgType_ServerStatus;
+
+
+  sts = m_server_status;
+
+  for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
+    if ( m_db->m_items[i].deleted || m_db->m_items[i].status == 0)
+      continue;
+    if ( errh_Severity( m_db->m_items[i].status) > errh_Severity( sts))
+      sts = m_db->m_items[i].status;
+  }
+
+  ((sev_sMsgServerStatus *)put.data)->Status = sts;
+
+  put.reply.nid = m_nodes[0].nid;
+  put.reply.qix = sev_eProcSevServer;
+  put.type.b = (qcom_eBtype) sev_cMsgClass;
+  put.type.s = (qcom_eStype) sev_eMsgType_ServerStatus;
+  put.msg_id = m_msg_id++;
+
+  if ( !qcom_Put( &sts, &tgt, &put)) {
+    qcom_Free( &sts, put.data);
+    return 0;
+  }    
+  return 1;
+}
+
 int sev_server::delete_item( qcom_sQid tgt, sev_sMsgHistItemDelete *rmsg)
 {
   qcom_sPut	put;
@@ -320,6 +368,8 @@ int sev_server::mainloop()
   time_GetTime( &currenttime);
   time_Aadd( &next_garco, &currenttime, &garco_interval);
 
+  m_server_status = PWR__SRUN;
+
   for (;;) {
     memset( &get, 0, sizeof(get));
     mp = qcom_Get(&sts, &qid, &get, tmo);
@@ -336,9 +386,11 @@ int sev_server::mainloop()
     case sev_cMsgClass:
       switch ( get.type.s) {
       case sev_eMsgType_NodeUp:
+	errh_Info("Node up %s", cdh_NodeIdToString( 0, get.reply.nid, 0, 0));
 	request_items( get.reply.nid);
 	break;
       case sev_eMsgType_HistItems:
+	errh_Info("Itemlist received %s", cdh_NodeIdToString( 0, get.reply.nid, 0, 0));
 	check_histitems( (sev_sMsgHistItems *) mp, get.size);
 	break;
       case sev_eMsgType_HistDataStore:
@@ -352,6 +404,9 @@ int sev_server::mainloop()
 	break;
       case sev_eMsgType_HistItemDelete:
 	delete_item( get.reply, (sev_sMsgHistItemDelete *) mp);
+	break;
+      case sev_eMsgType_ServerStatusRequest:
+	send_server_status( get.reply);
 	break;
       default: ;
       }
@@ -472,7 +527,7 @@ int sev_server::send_histdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *rmsg, 
     endtime = net_NetTimeToTime( &rmsg->EndTime);
     m_db->get_values( &m_sts, rmsg->Oid, m_db->m_items[idx].options, m_db->m_items[idx].deadband, 
 		      rmsg->AName, m_db->m_items[idx].attr[0].type, m_db->m_items[idx].attr[0].size, 
-		      m_db->m_items[idx].scantime,
+		      m_db->m_items[idx].scantime, &m_db->m_items[idx].creatime,
 		      &starttime, &endtime, rmsg->NumPoints, &tbuf,  &vbuf, &rows);
   }
   if ( ODD(m_sts))

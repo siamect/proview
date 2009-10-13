@@ -117,7 +117,8 @@ class sev_dbms : public sev_db {
   int store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
 		   pwr_tTime time, void *buf, unsigned int size);
   int get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, float deadband, char *aname, 
-		  pwr_eType type, unsigned int size, pwr_tFloat32 scantime, pwr_tTime *starttime, 
+		  pwr_eType type, unsigned int size, pwr_tFloat32 scantime, pwr_tTime *creatime,
+		  pwr_tTime *starttime, 
 		  pwr_tTime *endtime, int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize);
   int delete_old_data( pwr_tStatus *sts, pwr_tOid oid, char *aname, 
 		       pwr_tMask options, pwr_tTime limit);

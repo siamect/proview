@@ -189,7 +189,7 @@ int sevcli_get_itemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid,
   sev_sMsgHistDataGetRequest 	*msg;
   qcom_sQid   	tgt;
   qcom_sPut	put;
-  int tmo = 10000;
+  int tmo = 30000;
   qcom_sGet get;
   pwr_tStatus lsts;
   
@@ -217,12 +217,19 @@ int sevcli_get_itemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid,
   msg->EndTime = net_TimeToNetTime( &endtime);
   msg->NumPoints = numpoints;
 
+  // Empty queue
+  sev_sMsgHistDataGet *rmsg;
+
+  for (;;) {
+    rmsg = (sev_sMsgHistDataGet *) qcom_Get(sts, &ctx->qid, &get, 0);
+    if ( !rmsg)
+      break;
+  }
+
   if ( !qcom_Put( sts, &tgt, &put)) {
     qcom_Free( &lsts, put.data);
     return 0;
   }
-
-  sev_sMsgHistDataGet *rmsg;
 
   memset( &get, 0, sizeof(get));
 

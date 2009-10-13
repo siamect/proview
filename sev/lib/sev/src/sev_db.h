@@ -38,7 +38,8 @@ class sev_attr {
 
 class sev_item {
  public:
-  sev_item() : deadband_active(0), last_id(0), first_storage(1), deleted(0) 
+  sev_item() : deadband_active(0), last_id(0), first_storage(1), status(0), logged_status(0), 
+    deleted(0) 
     { memset( old_value, 0, sizeof(old_value));}
   unsigned int 	id;
   char		tablename[256];
@@ -58,6 +59,8 @@ class sev_item {
   int 		first_storage;
   unsigned int  attrnum;
   sev_attr	attr[1];
+  pwr_tStatus	status;
+  pwr_tStatus   logged_status;
   int deleted;
 };
 
@@ -83,7 +86,7 @@ class sev_db {
 			   pwr_tTime time, void *buf, unsigned int size) { return 0;}
   virtual int get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, float deadband, 
 			  char *aname, pwr_eType type, 
-			  unsigned int size, pwr_tFloat32 scantime,  pwr_tTime *starttime, 
+			  unsigned int size, pwr_tFloat32 scantime, pwr_tTime *creatime, pwr_tTime *starttime, 
 			  pwr_tTime *endtime, int maxsize, pwr_tTime **tbuf, void **vbuf, 
 			  unsigned int *bsize) { return 0;}
   virtual int get_items( pwr_tStatus *sts) { return 0;}

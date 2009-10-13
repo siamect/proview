@@ -58,12 +58,13 @@ class sev_sevhistthread {
 
 class sev_node {
  public:
-  sev_node() : is_server(0), connected(0), ctime(0) {}
+  sev_node() : is_server(0), connected(0), ctime(0), status(0) {}
   pwr_tNid 	nid;
   char 		name[80];
   int		is_server;
   int		connected;
   double       	ctime;
+  pwr_tStatus   status;
 };
 
 class rt_sevhistmon {
@@ -94,6 +95,9 @@ class rt_sevhistmon {
   int connect();
   int retry_connect();
   bool send_connect( pwr_tNid nid, pwr_tStatus *sts);
+  bool send_server_status_request( pwr_tStatus *sts);
+  bool send_server_status_request( pwr_tNid nid, pwr_tStatus *sts);
+  void receive_server_status( sev_sMsgServerStatus *msg, pwr_tNid nid);
   int send_itemlist( pwr_tNid nid);
   int send_data();
 };
