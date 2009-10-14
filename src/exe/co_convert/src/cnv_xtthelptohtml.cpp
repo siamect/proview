@@ -141,6 +141,12 @@ void *CnvXtthelpToHtml::insert( navh_eItemType item_type, const char *text1,
       if ( !cf) 
 	break;
 
+      if ( item_type == navh_eItemType_HelpCode && !in_table) {
+        cf->f << "<CODE>";
+	for ( const char *s = text1; s && *s == ' '; s++)
+	  cf->f << "&nbsp;";
+      }
+
       pwr_tFileName fname;
       if ( strcmp( link, "") != 0) {
 
@@ -193,6 +199,8 @@ void *CnvXtthelpToHtml::insert( navh_eItemType item_type, const char *text1,
           cf->f << "<BR></A>" << endl;
         else
           cf->f << "<BR>" << endl;
+	if ( item_type == navh_eItemType_HelpCode)
+	  cf->f << "</CODE>";
       }
       else {
 	cf->f << "<TR><TD>";

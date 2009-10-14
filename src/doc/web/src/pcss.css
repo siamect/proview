@@ -74,6 +74,8 @@ address         {font-family: Arial, Verdana;
                 font-style: normal;
                 margin-top: 0px;
                 margin-bottom: 0px}
+code            {
+                font-size: 12pt;}
 body#mainmenu {
                 color: #4b6b95;
                 background-color: #ffffff;
