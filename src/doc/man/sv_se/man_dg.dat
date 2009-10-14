@@ -1015,12 +1015,12 @@ I nodhierarkin definieras noderna i Proview systemet.
 <h2>$NodeHier objekt
 $NodeHier objektet används för att gruppera objekt i nodhierarkin. Objektet kan användas för
 att gruppera t exe $Node objekt eller XttGraph objekt.
-Se $NodeHier i Objektshandboken <link>nodehier,"",$pwr_lang/pwrs_xtthelp.dat
+Se $NodeHier i Objektshandboken <classlink>nodehier,"",$pwr_lang/pwrs_xtthelp.dat
 
 <h2>$Node
 För att definiera en nod i systemet används $Node objekt. När $Node objektet skapas, skapas
 dessutom ett antal server- och operatörs-objekt.
-Se $Node i Objektshandboken <link>node,"",$pwr_lang/pwrs_xtthelp.dat
+Se $Node i Objektshandboken <classlink>node,"",$pwr_lang/pwrs_xtthelp.dat
 
 <h2>I/O objekt
 Konfigureringen av I/O systemet är beroende på vilken typ av I/O man använder. Proview har
@@ -1088,7 +1088,7 @@ skickas ett meddelande till de olika utenheter som är intresserade av just det h
 
 I objektet anges t ex hur många händelser som ska lagras i noden. Objektet skapas automatisk
 under ett $Node objekt.
-Se MessageHandler i Objektshandboken <link>messagehandler,"",$pwr_lang/pwrb_xtthelp.dat
+Se MessageHandler i Objektshandboken <classlink>messagehandler,"",$pwr_lang/pwrb_xtthelp.dat
 
 <h2>IOHandler objekt
 IOHandler konfigurerar vissa data för I/O hanteringen.
@@ -1103,7 +1103,7 @@ Om man vill simulera processtationen, t ex på utvecklingsnoden, ska ReadWriteFla
 till 0 och IOSimulFlag till 1.
 
 IOHandler objektet skapas automatiskt samtidigt som ett $Node objekt.
-Se IOHandler i Objektshandboken <link>iohandler,"",$pwr_lang/pwrb_xtthelp.dat
+Se IOHandler i Objektshandboken <classlink>iohandler,"",$pwr_lang/pwrb_xtthelp.dat
 
 <h2>Backup_Conf objekt
 Ibland är det önskvärt att ha backup på ett antal objekt in systemet. Då placeras ett
@@ -1112,7 +1112,7 @@ olika cykler, en snabb och en långsam.
 
 För att ange vilka objekt eller attribut som ska backas upp, använder man Backup objekt.
 Se beskrivning av Backup objekt <link> configure_rootvolume, backup_object
-Se Backup_Conf i Objektshandboken <link>backup_conf,"",$pwr_lang/pwrb_xtthelp.dat
+Se Backup_Conf i Objektshandboken <classlink>backup_conf,"",$pwr_lang/pwrb_xtthelp.dat
 
 <h2>Operatörsplats objekt
 För att definiera en operatörsplats skapas ett objekt av klassen OpPlace under $Node 
@@ -1122,7 +1122,7 @@ Föjande attribut måste ges ett värde:
 - OpNumber är en numrering av operatörsplatsen inom noden. Varje operatörsplats ska ha ett
   unikt nummer.
 
-Se OpPlace i Objektshandboken <link>opplace,"",$pwr_lang/pwrb_xtthelp.dat
+Se OpPlace i Objektshandboken <classlink>opplace,"",$pwr_lang/pwrb_xtthelp.dat
 
 <h2>User objekt
 För operatörsplatsen måste man även skapa ett User objekt. Detta ska ligga som barn till
@@ -1165,7 +1165,7 @@ I FastAvail specificerar man XttGraph objekt som ska kunna startas från tryckkna
 'Operator window'. NoFastAvail specificerar antalet tryckknappar som används. Man kan ha 
 upp till 15 tryckknappar. Oanvända tryckknappar visas ej i Operator Window.
 
-Se User i Objektshandboken <link>user,"",$pwr_lang/pwrb_xtthelp.dat
+Se User i Objektshandboken <classlink>user,"",$pwr_lang/pwrb_xtthelp.dat
 
 <b>Operator Window
 <image> dg_fig45.gif
@@ -1183,7 +1183,7 @@ I XttGraph objektet ska följande attribut fyllas i:
 
 - Action. Här anges en Ge graph, eller ett Xtt kommando.
 
-Se XttGraph i Objektshandboken <link>xttgraph,"",$pwr_lang/pwrb_xtthelp.dat
+Se XttGraph i Objektshandboken <classlink>xttgraph,"",$pwr_lang/pwrb_xtthelp.dat
 </topic>
 </chapter>
 
@@ -1201,7 +1201,7 @@ projektet består av, och en som är byggträdet där alla filer läggs när projektet
 Introduktion<link> proj_introduction
 Källkodsträdet <link> source_tree
 Byggträdet <link> build_tree
-Speciella filer <link> special_files
+Speciella filer <link> proj_special_files
 <option> printenable
 </topic>
 
@@ -2193,7 +2193,7 @@ termometer i stället för en stapel. Ett annat exempel är ett pumpaggregat som su
 motoraggregat. Pumpaggregatet har utökats med ett pump objekt och har även modifierade 
 objektsbilder som förutom motorstyrningen även visar en pump.
 
-<image> orm_basetempsensor_og.gif
+<image> dg_fig98.gif
 <b>Fig Objektsbild för subklassen BaseTempSensor med superklassen BaseSensor
 
 En annan egenskap som vi har infört är möjligheten att sätta attribut ur funktion. Orsaken till
@@ -2852,6 +2852,7 @@ TCP <link> tcp_ip
 BEA Message Queue <link> bea_mq
 Serial <link> serial
 3964-R <link> 3964r
+Modbus Serial <link> modbus_serial
 <option> printenable
 </topic>
 
@@ -3899,11 +3900,11 @@ En make fil för applikationen ra_myappl på katalogen $pwrp_src/myappl kan se ut 
 <c>include $(pwr_exe)/pwrp_rules.mk
 
 <c>ra_myappl_modules : \ 
-		$(pwrp_obj)/ra_myappl.o \ 
-		$(pwrp_exe)/ra_myappl
+<c>		$(pwrp_obj)/ra_myappl.o \ 
+<c>		$(pwrp_exe)/ra_myappl
 
 <c>ra_myappl : ra_myappl_modules
-	@ echo "ra_myappl built"
+<c>	@ echo "ra_myappl built"
 
 <c>#
 <c># Modules
@@ -4077,7 +4078,7 @@ fil. Följande attribut i XttGraph objektet ska ges lämpliga värden:
 
 XttGraph objektet innehåller andra attribut som t ex bestämmer bildfönstrets storlek och läge
 på skärmen. Dessa attribut beskrivs i detalj i objektshanboken.
-Se XttGraph i Objektshandboken <link>xttgraph,"",$pwr_lang/pwrb_xtthelp.dat
+Se XttGraph i Objektshandboken <classlink>xttgraph,"",$pwr_lang/pwrb_xtthelp.dat
 </topic>
 </chapter>
 
@@ -4224,7 +4225,8 @@ laddadafil. Även klassvolymerna är öppnade som laddatafiler.
 Om ingen volym anges som argument när man startar konfiguratören, öppnas direktory volymens 
 databas, och övriga volymer som dbs-volymer.
 
-<h1>Navigera <bookmark>wnav_navigate
+<bookmark>wnav_navigate
+<h1>Navigera 
 I konfiguratören visas objekten i den aktuella volymen. Objekten ligger i en trädstruktur,
 och objekt som har barn visas med en mapp, objekt utan barn med ett löv. För varje objekt
 visas som default, dessutom objektets namn, klass och eventuell beskrivning (beskrivningen
@@ -4360,8 +4362,8 @@ Object). Attribut som är av typen flerradig text, kan endas ändras från objekted
 Som 'advanced user' kan man öppna inmatningsfältet med PilHöger, som ett snabbare alternativ 
 till 'Change value'.
 
-<bookmark>symbolfile
-<h1>Symbol fil
+<bookmark>symbol_file
+<h1>Symbol fil 
 
 Symbol filen är en kommando fil som exekveras vid wtt startup. Det kan innehålla definitioner
 av symboler och andra wtt kommandon. Här följer några exempel på användbara kommandon.
@@ -4382,7 +4384,7 @@ Attributen visas på samma sätt som i konfiguratören, skillnaden är att de visas 
 fönster. 
 
 <h2>Navigera
-Navigering och datasättning sker också pss som i konfiguratören. <link> configurator, wnav_navigate
+Navigering och datasättning sker också pss som i konfiguratören. <link> configurator_refman, wnav_navigate
 
 <h2>Start
 Objektseditorn startas från konfiguratören eller plceditorn. Aktivera OpenObject i 
@@ -7643,7 +7645,7 @@ Definiera en symbol.
 <h2>närliggand ämnen
 symbol <LINK> symbol
 show symbol <LINK> show symbol
-symbolfile <LINK> symbolfile
+symbolfile <LINK> configurator_refman,symbol_file
 </TOPIC>	
 
 <TOPIC> delete object <style> function
@@ -8163,7 +8165,7 @@ Wtt setup
 Setup av wtt egenskaper
 
 DefaultDirectory<t><t>Default filkatalog för script filer.
-SymbolFilename	<t><t>Symbolfil.		<LINK> symbolfile
+SymbolFilename	<t><t>Symbolfil.		<LINK> configurator_refman,symbol_file
 Verify		<t><t>Verifiera exekvering av script.
 AdvancedUser	<t><t>Användaren är avancerad. <LINK> advanced user
 AllToplevel	<t><t>Visa samtliga topnivå objekt.
@@ -8328,7 +8330,7 @@ En wtt symbol kan avändas som ett kort kommando eller som strängsubstitution i e
 Då symbolen används som strängsubstitution ska symbolnamnet omges av enkelfnuttar.
 
 Symboler skapas med 'define' kommandot. <link> define
-Define kommandon kan exekveras av konfiguratörens startupfil. <link> symbolfile
+Define kommandon kan exekveras av konfiguratörens startupfil. <link> configurator_refman,symbol_file
 
 Exempel på symbol som används som kort kommando.
 
@@ -8343,7 +8345,7 @@ Exempel på symbol som används som sträng substitution
 <H2>Närliggande ämnen
 define <LINK> define
 show symbol <LINK> show symbol
-symbolfile <LINK> symbolfile
+symbolfile <LINK> configurator_refman,symbol_file
 </TOPIC>
 
 </chapter>

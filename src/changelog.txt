@@ -122,3 +122,4 @@
 090916 cs  linksup   SystemStatus attribute in NodeLinkSup object contains system status of supervised node.
 091005 cs  gdh       Bugfix in DetachedVolume. Attaching objects on a remote node didn't work.
 091005 cs  statusmon Change node dialog and language support added. Some documentation.
+091014 cs  doc       Links in Designer's Guide updated and code format added in html version.

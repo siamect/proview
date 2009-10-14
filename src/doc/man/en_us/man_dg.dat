@@ -1038,13 +1038,13 @@ their contents specified.
 The node hierarchy object is used to group objects in the Node Configuration. This object is 
 of the $NodeHier class. The object can be used to group for instance $Node objects or XttGraph
 objects. 
-See $NodeHier i Object Reference Manual <link>nodehier,"",$pwr_lang/pwrs_xtthelp.dat
+See $NodeHier i Object Reference Manual <classlink>nodehier,"",$pwr_lang/pwrs_xtthelp.dat
 
 <h2>$Node
 To define the nodes of the system, you use node objects. The node object is of the $Node class.
 When the node object is created, a number of server and operator objects are created.
 
-See $Node i Object Reference Manual <link>node,"",$pwr_lang/pwrs_xtthelp.dat
+See $Node i Object Reference Manual <classlink>node,"",$pwr_lang/pwrs_xtthelp.dat
 
 <h2>I/O Objects
 The configuration of the I/O system is dependent of which type of I/O system you use. Proview
@@ -1113,7 +1113,7 @@ to the outunits that has has interesst of this specific event.
 
 In the object indicates, for example the number of events that is stored in the node. The object
 is automatically create below a $Node object.
-See MessageHandler i Object Reference Manual <link>messagehandler,"",$pwr_lang/pwrb_xtthelp.dat
+See MessageHandler i Object Reference Manual <classlink>messagehandler,"",$pwr_lang/pwrb_xtthelp.dat
 
 <h2>IOHandler object
 IOHandler configures properties for the I/O handling.
@@ -1128,7 +1128,7 @@ set to 0. If you want to simulate the process station, for example on the develo
 ReadWriteFlag is set to 0 and IOSimulFlag is set to 1.
 
 The IOHandler object is created automatically, when creating a $Node object.
-See IOHandler i Object Reference Manual <link>iohandler,"",$pwr_lang/pwrb_xtthelp.dat
+See IOHandler i Object Reference Manual <classlink>iohandler,"",$pwr_lang/pwrb_xtthelp.dat
 
 <h2>Backup_Conf Object - Configuration Object for Backup 
 Sometimes it may be desirable to have a backup of a number of objects in your system. In that 
@@ -1137,7 +1137,7 @@ is carried out with two different cycles, one fast cycle and one slow.
 
 In order to indicate which objects/attributes that should be backed up you use backup objects.
 See description of the Backup object <link> configure_rootvolume, backup_object
-See Backup_Conf in Object Reference Manual <link>backup_conf,"",$pwr_lang/pwrb_xtthelp.dat
+See Backup_Conf in Object Reference Manual <classlink>backup_conf,"",$pwr_lang/pwrb_xtthelp.dat
 
 <h2>Operator Place Object
 To define an operator place you place an object of the OpPlace class under the $Node object.
@@ -1147,7 +1147,7 @@ The following attributes must be given values:
 - OpNumber indicates the number of the operator place. Every operator place in the node
   should be allocated a unique integer. 
 
-See OpPlace i Object Reference Manual <link>opplace,"",$pwr_lang/pwrb_xtthelp.dat
+See OpPlace i Object Reference Manual <classlink>opplace,"",$pwr_lang/pwrb_xtthelp.dat
 
 <h2>User Object
 For each operator place you must define an out unit of the user type (operator). To do this 
@@ -1190,7 +1190,7 @@ possible to start from the graphics buttons of the Operator Window  NoFastAvail 
 the number of graphics buttons to be used. You can have 0- 15 push buttons. Buttons which are 
 not used become invisible.
 
-See User i Object Reference Manual <link>user,"",$pwr_lang/pwrb_xtthelp.dat
+See User i Object Reference Manual <classlink>user,"",$pwr_lang/pwrb_xtthelp.dat
 
 <b>Operator Window
 <image> dg_fig45.gif
@@ -1208,7 +1208,7 @@ window.
 
 - Action. States a Ge graph to open, or an Xtt command to execute.
 
-See XttGraph in Object Reference Manual <link>xttgraph,"",$pwr_lang/pwrb_xtthelp.dat
+See XttGraph in Object Reference Manual <classlink>xttgraph,"",$pwr_lang/pwrb_xtthelp.dat
 </topic>
 </chapter>
 
@@ -1226,7 +1226,7 @@ your project consists of and the other is the build tree where all produced file
 Introduction <link> proj_introduction
 The source tree <link> source_tree
 The build tree <link> build_tree
-Special files <link> special_files
+Special files <link> project_special_files
 <option> printenable
 </topic>
 
@@ -2227,7 +2227,7 @@ example is a pump aggregate derived from a motor aggregate. The pump aggregate i
 extended by a pump attribute object and also has a modified object graph that apart
 from the motor control also displays a pump.
 
-<image> orm_basetempsensor_og.gif
+<image> dg_fig98.gif
 <b>Fig Object graph for the class BaseTempSensor
 
 Another property that we have introduced is the possibility to disable attributes. The 
@@ -2899,6 +2899,7 @@ TCP <link> tcp_ip
 BEA Message Queue <link> bea_mq
 Serial <link> serial
 3964-R <link> 3964r
+Modbus Serial <link> modbus_serial
 <option> printenable
 </topic>
 
@@ -3077,7 +3078,7 @@ If we don't have contact with the other node the message will be buffered,
 if there are still free buffers for this message. 
 </topic>
 
-<topic> modbus-serial
+<topic> modbus_serial
 Modbus Serial
 The format of MODBUS that is implemented is RTU. For identification of messages we use the fields 
 known as slave address and function code in the MODBUS header. The RemTrans.Address[0] and [1] 
@@ -3953,11 +3954,11 @@ like this ($pwrp_src/myappl/makefile):
 <c>include $(pwr_exe)/pwrp_rules.mk
 
 <c>ra_myappl_modules : \ 
-		$(pwrp_obj)/ra_myappl.o \ 
-		$(pwrp_exe)/ra_myappl
+<c>		$(pwrp_obj)/ra_myappl.o \ 
+<c>		$(pwrp_exe)/ra_myappl
 
 <c>ra_myappl : ra_myappl_modules
-	@ echo "ra_myappl built"
+<c>	@ echo "ra_myappl built"
 
 <c>#
 <c># Modules
@@ -4136,7 +4137,7 @@ must be set to appropriate values:
 The XttGraph object contains other attributes which e.g. helps you to customize the position 
 and size of plant graphics. These attributes are described in detail in Proview Objects 
 Reference Manual .
-See XttGraph in Object Reference Manual <link>xttgraph,"",$pwr_lang/pwrb_xtthelp.dat
+See XttGraph in Object Reference Manual <classlink>xttgraph,"",$pwr_lang/pwrb_xtthelp.dat
 </topic>
 </chapter>
 
@@ -4281,7 +4282,8 @@ as a loadfile. Also the class volumes are opened as loadfiles.
 If no volume is given as argument when starting the configurator, the database of the 
 directory volume is opened, and the other volumes are opened as dbs-volumes.
 
-<h1>Navigate <bookmark>wnav_navigate
+<bookmark>wnav_navigate
+<h1>Navigate 
 The object of the current volume are displayed in the configurator. The objects are ordered
 in a tree structure, and objects with children are displayed with a map, and objects without 
 children with a leaf. For each object is displayed as default, the object name, class and
@@ -4418,10 +4420,12 @@ editor.
 As 'advanced user' you can open the input field with 'ArrowRight', as a faster alternative to
 'Change value'.
 
-<h1>Symbol file
+<bookmark> symbol_file
+<h1>Symbol file 
 
 The symbolfile is a command-file that is executed at wtt startup.
 It can contain definitions of symbols and other wtt commands.
+The default filename of the symbolfile is $pwrp_login/wtt_symbols.pwr_com.
 Here is some examples of useful commands.
 
 Shortcut to somewhere in the database hierarchy:
@@ -4442,7 +4446,7 @@ The attributes are displayed in the same way as in the configurator, the main di
 that they are displayed in a separate window.
 
 <h2>Navigate
-Navigation and assignment of values is also done in the same way as in the configurator.<link> configurator, wnav_navigate
+Navigation and assignment of values is also done in the same way as in the configurator.<link> configurator_refman, wnav_navigate
 
 <h2>Start
 The Object Editor is opened from the Configurator or the Plc editor. Activate 'OpenObject' in 
@@ -7751,7 +7755,7 @@ Define a symbol.
 <h2>related subjects
 symbol <LINK> symbol
 show symbol <LINK> show symbol
-symbolfile <LINK> symbolfile
+symbolfile <LINK> configurator_refman,symbol_file
 </TOPIC>	
 
 <TOPIC> delete object <style> function
@@ -8284,7 +8288,7 @@ Wtt setup
 Setup of wtt properies
 
 DefaultDirectory<t><t>Default directory for commandfiles.
-SymbolFilename	<t><t>Symbolfile.		<LINK> symbolfile
+SymbolFilename	<t><t>Symbolfile.		<LINK> configurator_refman,symbol_file
 Verify		<t><t>Verify commandfile execution.
 AdvancedUser	<t><t>User is advanced. <LINK> advanced user
 AllToplevel	<t><t>Display all toplevel objects.
@@ -8452,7 +8456,7 @@ in a command. If the symbol is used as string replacement the symbol-
 name should be surrounded by quotes.
 
 Symbols are created with the define command. <LINK> define
-The define-commands can be executed by the symbolfile. <LINK> symbolfile
+The define-commands can be executed by the symbolfile. <LINK> configurator_refman,symbol_file
 
 Example of symbol used as a short command.
 
@@ -8467,7 +8471,7 @@ Example of symbol used as string replacement
 <H2>related subjects
 define <LINK> define
 show symbol <LINK> show symbol
-symbolfile <LINK> symbolfile
+symbolfile <LINK> configurator_refman,symbol_file
 </TOPIC>
 
 </chapter>
