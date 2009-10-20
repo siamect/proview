@@ -175,7 +175,7 @@ void Wda::open_attr_dialog()
   strcpy( attr_vect[attr_cnt], "");
 
 
-  wow->CreateList( "Attributes", (char *)attr_vect,
+  wow->CreateList( "Attributes", (char *)attr_vect, 80,
 		   set_attr_cb, 0, (void *)this);
 
 }

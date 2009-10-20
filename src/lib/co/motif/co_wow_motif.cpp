@@ -242,11 +242,11 @@ void CoWowMotif::list_ok_cb( Widget w, XtPointer data,
 {
   wow_tListCtx ctx = (wow_tListCtx) data;
   int 		*pos_list, pos_cnt;
-  static char   selected_text[80];
+  static char   selected_text[512];
   
   if ( ctx->action_cb) {
     if (XmListGetSelectedPos( ctx->list, &pos_list, &pos_cnt)) {
-      strcpy( selected_text, ctx->texts + (pos_list[0] - 1) * 80);
+      strcpy( selected_text, ctx->texts + (pos_list[0] - 1) * ctx->textsize);
       (ctx->action_cb)( ctx->parent_ctx, selected_text);
 
       XtFree( (char *)pos_list);
@@ -276,7 +276,7 @@ void CoWowMotif::list_action_cb( Widget w, XtPointer data,
 {
   wow_tListCtx ctx = (wow_tListCtx) data;
   char          *item_str;
-  static char   action_text[80];
+  static char   action_text[512];
   
   if ( cbs->event->type == KeyPress)
     // The ok callback will be called later
@@ -295,7 +295,7 @@ void CoWowMotif::list_action_cb( Widget w, XtPointer data,
   free( ctx);
 }
 
-void *CoWowMotif::CreateList( const char *title, const char *texts,
+void *CoWowMotif::CreateList( const char *title, const char *texts, int textsize,
 			      void (action_cb)( void *, char *),
 			      void (cancel_cb)( void *),
 			      void *parent_ctx,
@@ -412,12 +412,13 @@ void *CoWowMotif::CreateList( const char *title, const char *texts,
     cstr = XmStringCreateSimple( name_p);
     XmListAddItemUnselected( ctx->list, cstr, 0);
     XmStringFree(cstr);	  
-    name_p += 80;
+    name_p += textsize;
     i++;
   }
 
-  ctx->texts = (char *) calloc( i+1, 80);
-  memcpy( ctx->texts, texts, (i+1) * 80); 
+  ctx->texts = (char *) calloc( i+1, textsize);
+  ctx->textsize = textsize;
+  memcpy( ctx->texts, texts, (i+1) * textsize); 
   XtPopup( ctx->toplevel, XtGrabNone);
 
   // Set input focus to the scrolled list widget

@@ -109,7 +109,7 @@ void GeGtk::create_list( const char *title, const char *texts,
 			   void (action_cb)( void *, char *), void *ctx) 
 {
   CoWowGtk wow( toplevel);
-  wow.CreateList( title, texts, action_cb, 0, ctx, 1);
+  wow.CreateList( title, texts, 80, action_cb, 0, ctx, 1);
 }
 
 void GeGtk::subgraphs_new()

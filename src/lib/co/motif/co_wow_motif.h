@@ -32,6 +32,7 @@ typedef struct {
   Widget    toplevel;
   Widget    list;
   char      *texts;
+  int	    textsize;
   void      (* action_cb) ( void *, char *);
   void      (* cancel_cb) ( void *);
   void      *parent_ctx;

@@ -373,20 +373,21 @@ void CLogNav::get_files()
   }
   dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_END);
 
-  sprintf( file_spec, "$pwrp_log/pwr_%s.log.*.gz", nodename);
-  sts = dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_INIT);
-  while ( ODD(sts)) {
+  for ( int i = 1; i < 21; i++) {
+    sprintf( file_spec, "$pwrp_log/pwr_%s.log.%d.gz", nodename, i);
+    sts = dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_INIT);
+    if ( ODD(sts)) {
 
-    stat( found_file, &info);
-    time.tv_sec = info.st_ctime;
+      stat( found_file, &info);
+      time.tv_sec = info.st_ctime;
 
-    CLogFile *cf = new CLogFile( found_file, time);
-    file_list.push_back( *cf);
-    delete cf;
+      CLogFile *cf = new CLogFile( found_file, time);
+      file_list.push_back( *cf);
+      delete cf;
 
-    sts = dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_NEXT);
+    }
+    dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_END);
   }
-  dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_END);
 
 }
 

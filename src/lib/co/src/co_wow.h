@@ -91,7 +91,7 @@ class CoWow {
 				void *data) {}
   virtual void DisplayError( const char *title, const char *text) {}
   virtual void DisplayText( const char *title, const char *text) {}
-  virtual void *CreateList( const char *title, const char *texts,
+  virtual void *CreateList( const char *title, const char *texts, int textsize,
 			    void (action_cb)( void *, char *),
 			    void (cancel_cb)( void *),
 			    void *ctx, 

@@ -91,7 +91,7 @@ pwr_tStatus WCast::open_castlist()
   }
   strcpy( class_vect[class_cnt], "");
 
-  wow->CreateList( name, (char *)class_vect, selected_cb, 0, (void *)this);
+  wow->CreateList( name, (char *)class_vect, 80, selected_cb, 0, (void *)this);
 
   return 1;
 }

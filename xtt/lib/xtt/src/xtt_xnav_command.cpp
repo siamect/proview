@@ -1948,7 +1948,7 @@ static int	xnav_show_func(	void		*client_data,
     int cnt = 0;
     pwr_tObjName class_str;
     char title_str[80];
-    pwr_tString80 *names;
+    pwr_tOName *names;
     xnav_sObjectList *ctx;
     pwr_tCid cid;
 
@@ -1968,14 +1968,14 @@ static int	xnav_show_func(	void		*client_data,
 	  sts = gdh_GetNextAttrRef( cid, &aref, &aref)) {
       cnt++;
     }
-    names = (pwr_tString80 *)calloc( cnt, sizeof(pwr_tString80));
+    names = (pwr_tOName *)calloc( cnt, sizeof(pwr_tOName));
 
     int idx = 0;
     for ( sts = gdh_GetClassListAttrRef( cid, &aref);
 	  ODD(sts);
 	  sts = gdh_GetNextAttrRef( cid, &aref, &aref)) {
       sts = gdh_AttrrefToName( &aref, names[idx], sizeof(names[0]),
-				     cdh_mName_volumeStrict);
+			       cdh_mNName /* cdh_mName_volumeStrict */ );
       if ( EVEN(sts)) continue;
 
       idx++;
@@ -1995,7 +1995,7 @@ static int	xnav_show_func(	void		*client_data,
     ctx->cid = cid;
     ctx->xnav = xnav;
 
-    xnav->wow->CreateList( title_str, (char *)names, xnav_show_objectlist_cb, 
+    xnav->wow->CreateList( title_str, (char *)names, sizeof(names[0]), xnav_show_objectlist_cb, 
 			   xnav_show_objectlist_cancel_cb, ctx);
     free( names);
   }
@@ -3089,7 +3089,8 @@ static int	xnav_open_func(	void		*client_data,
     ctx = (xnav_sHistList *) calloc( 1, sizeof(xnav_sHistList));
     ctx->oid = oid;
     ctx->xnav = xnav;
-    xnav->wow->CreateList( "History List", (char *)cname, xnav_open_shist_cb, xnav_open_shist_cancel_cb, ctx);
+    xnav->wow->CreateList( "History List", (char *)cname, sizeof(cname[0]), xnav_open_shist_cb, 
+			   xnav_open_shist_cancel_cb, ctx);
   }
   else if ( strncmp( arg1_str, "HISTORY", strlen( arg1_str)) == 0)
   {

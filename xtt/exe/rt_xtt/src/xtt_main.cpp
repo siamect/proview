@@ -714,7 +714,7 @@ void Xtt::list_opplace()
   }
   else 
     // Select oplace from list
-    wow->CreateList( "Select Operator Place", (char *)texts, opplace_selected_cb, 0, this);
+    wow->CreateList( "Select Operator Place", (char *)texts, 80, opplace_selected_cb, 0, this);
 }
 
 

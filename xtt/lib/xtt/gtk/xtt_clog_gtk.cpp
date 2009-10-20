@@ -310,7 +310,7 @@ void CLogGtk::activate_select_file( GtkWidget *w, gpointer data)
       strcat( str[i], clog->clognav->file_list[i].name);
 
   }
-  clog->wow->CreateList( "Select File", (char *)str, file_selected_cb, 0, clog);
+  clog->wow->CreateList( "Select File", (char *)str, 80, file_selected_cb, 0, clog);
 
   free( str);
 }

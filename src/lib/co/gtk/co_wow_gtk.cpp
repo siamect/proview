@@ -220,6 +220,7 @@ class WowListCtx {
   GtkWidget    *toplevel;
   GtkWidget    *list;
   char      *texts;
+  int	    textsize;
   void      (* action_cb) ( void *, char *);
   void      (* cancel_cb) ( void *);
   void      *parent_ctx;
@@ -240,7 +241,7 @@ void CoWowGtk::list_apply_cb (
 {
   WowListCtx *ctx = (WowListCtx *) data;
   char		*text;
-  static char   selected_text[80];
+  static char   selected_text[512];
   GtkTreeIter   iter;
   GtkTreeModel  *store;
   
@@ -307,6 +308,7 @@ static gboolean list_delete_event( GtkWidget *w, GdkEvent *event, gpointer data)
 void *CoWowGtk::CreateList (
   const char	    *title,
   const char      *texts,
+  int		textsize,
   void	    (action_cb)( void *, char *),
   void	    (cancel_cb)( void *),
   void	    *parent_ctx,
@@ -345,7 +347,7 @@ void *CoWowGtk::CreateList (
 
     gtk_list_store_append( store, &iter);
     gtk_list_store_set( store, &iter, 0, nameutf8, -1);
-    name_p += 80;
+    name_p += textsize;
     i++;
     g_free( nameutf8);
   }
@@ -409,8 +411,9 @@ void *CoWowGtk::CreateList (
   // GtkTreeSelection *selection = gtk_tree_view_get_selection( GTK_TREE_VIEW(ctx->list));
   // gtk_tree_selection_set_mode( selection, GTK_SELECTION_SINGLE);
 
-  ctx->texts = (char *) calloc( i+1, 80);
-  memcpy( ctx->texts, texts, (i+1) * 80); 
+  ctx->texts = (char *) calloc( i+1, textsize);
+  memcpy( ctx->texts, texts, (i+1) * textsize); 
+  ctx->textsize = textsize;
 
   // Set input focus to the scrolled list widget
   gtk_widget_grab_focus( ctx->list);

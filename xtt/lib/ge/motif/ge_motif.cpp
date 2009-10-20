@@ -78,7 +78,7 @@ void GeMotif::create_list( const char *title, const char *texts,
 			   void (action_cb)( void *, char *), void *ctx) 
 {
   CoWowMotif wow( toplevel);
-  wow.CreateList( title, texts, action_cb, 0, ctx);
+  wow.CreateList( title, texts, 80, action_cb, 0, ctx);
 }
 
 void GeMotif::subgraphs_new()
