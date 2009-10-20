@@ -617,10 +617,10 @@ int WItemBaseObject::open_crossref( WNav *wnav, double x, double y)
       case pwr_cClass_Iv:
       case pwr_cClass_Ii:
       case pwr_cClass_Io:
-        sts = wnav->crr_signal( NULL, name, node);
+        sts = wnav->crr_signal( wnav->brow, wnav->ldhses, NULL, name, node);
         break;
       default:
-        sts = wnav->crr_object( NULL, name, node);
+        sts = wnav->crr_object( wnav->brow, wnav->ldhses, NULL, name, node);
     }
     if ( sts == NAV__OBJECTNOTFOUND)
       wnav->message('E', "Object not found in crossreferens file");
@@ -809,35 +809,35 @@ WItemLocal::WItemLocal( WNav *wnav, const char *item_name, const char *attr,
   brow_SetTraceAttr( node, attr, "", flow_eTraceType_User);
 }
 
-WItemText::WItemText( WNav *wnav, const char *item_name, char *text,
+WItemText::WItemText( WNavBrow *brow, const char *item_name, char *text,
 	brow_tNode dest, flow_eDest dest_code) :
 	WItem( pwr_cNObjid, 0)
 {
   type = wnav_eItemType_Text;
   strcpy( name, item_name);
-  brow_CreateNode( wnav->brow->ctx, "text", wnav->brow->nc_object,
+  brow_CreateNode( brow->ctx, "text", brow->nc_object,
 		dest, dest_code, (void *)this, 1, &node);
   brow_SetAnnotation( node, 0, text, strlen(text));
 }
 
-WItemHeader::WItemHeader( WNav *wnav, const char *item_name, const char *title,
+WItemHeader::WItemHeader( WNavBrow *brow, const char *item_name, const char *title,
 	brow_tNode dest, flow_eDest dest_code) :
 	WItem( pwr_cNObjid, 0)
 {
   type = wnav_eItemType_Header;
   strcpy( name, item_name);
-  brow_CreateNode( wnav->brow->ctx, "header", wnav->brow->nc_header,
+  brow_CreateNode( brow->ctx, "header", brow->nc_header,
 		dest, dest_code, (void *)this, 1, &node);
   brow_SetAnnotation( node, 0, title, strlen(title));
 }
 
-WItemHeaderLarge::WItemHeaderLarge( WNav *wnav, const char *item_name, char *title,
+WItemHeaderLarge::WItemHeaderLarge( WNavBrow *brow, const char *item_name, char *title,
 	brow_tNode dest, flow_eDest dest_code) :
 	WItem( pwr_cNObjid, 0)
 {
   type = wnav_eItemType_HeaderLarge;
   strcpy( name, item_name);
-  brow_CreateNode( wnav->brow->ctx, "header", wnav->brow->nc_headerlarge,
+  brow_CreateNode( brow->ctx, "header", brow->nc_headerlarge,
 		dest, dest_code, (void *)this, 1, &node);
   brow_SetAnnotation( node, 0, title, strlen(title));
 }
@@ -2581,10 +2581,10 @@ int WItemAttrObject::open_crossref( WNav *wnav, double x, double y)
       case pwr_cClass_Iv:
       case pwr_cClass_Ii:
       case pwr_cClass_Io:
-        sts = wnav->crr_signal( NULL, aname, node);
+        sts = wnav->crr_signal( wnav->brow, wnav->ldhses, NULL, aname, node);
         break;
       default:
-        sts = wnav->crr_object( NULL, aname, node);
+        sts = wnav->crr_object( wnav->brow, wnav->ldhses, NULL, aname, node);
     }
     if ( sts == NAV__OBJECTNOTFOUND)
       wnav->message('E', "Object not found in crossreferens file");
@@ -3120,10 +3120,11 @@ int WItemMask::set( int set_value)
   return WNAV__SUCCESS;
 }
 
-WItemCrossref::WItemCrossref( WNav *wnav, char *item_ref_name, 
-	char *item_ref_class, int item_write, brow_tNode dest, 
-	flow_eDest dest_code) :
-	WItem( pwr_cNObjid, 0), write(item_write)
+WItemCrossref::WItemCrossref( WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
+			      char *item_ref_name, 
+			      char *item_ref_class, int item_write, brow_tNode dest, 
+			      flow_eDest dest_code) :
+  WItem( pwr_cNObjid, 0), brow(item_brow), ldhses(item_ldhses), write(item_write)
 {
   int sts;
   char window_name[120];
@@ -3142,21 +3143,21 @@ WItemCrossref::WItemCrossref( WNav *wnav, char *item_ref_name,
 
   strcpy( ref_name, s + 1);
   *s = 0;
-  sts = ldh_NameToObjid( wnav->ldhses, &objid, window_name);
+  sts = ldh_NameToObjid( ldhses, &objid, window_name);
   if ( EVEN(sts)) return;
 
-  brow_CreateNode( wnav->brow->ctx, "crr", wnav->brow->nc_object, 
-		dest, dest_code, (void *) this, 1, &node);
+  brow_CreateNode( brow->ctx, "crr", brow->nc_object, 
+		   dest, dest_code, (void *) this, 1, &node);
 
   if ( write == 1)
-    brow_SetAnnotPixmap( node, 0, wnav->brow->pixmap_crrwrite);
+    brow_SetAnnotPixmap( node, 0, brow->pixmap_crrwrite);
   else if ( write == 2)
   {
-    brow_SetAnnotPixmap( node, 0, wnav->brow->pixmap_crrwrite);
-    brow_SetAnnotPixmap( node, 1, wnav->brow->pixmap_crrread);
+    brow_SetAnnotPixmap( node, 0, brow->pixmap_crrwrite);
+    brow_SetAnnotPixmap( node, 1, brow->pixmap_crrread);
   }
   else
-    brow_SetAnnotPixmap( node, 0, wnav->brow->pixmap_crrread);
+    brow_SetAnnotPixmap( node, 0, brow->pixmap_crrread);
 
   brow_SetAnnotation( node, 0, name, strlen(name));
 

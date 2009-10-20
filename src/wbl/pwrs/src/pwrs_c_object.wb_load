@@ -148,6 +148,12 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-DeleteObject"
 	  EndBody
 	EndObject
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
         Object Help $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help"
@@ -170,6 +176,12 @@ SObject pwrs:Class
 	  Body SysBody
 	    Attr ButtonName = "Open Object..."
 	    Attr MethodName = "$Object-OpenObject"
+	  EndBody
+	EndObject
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
 	  EndBody
 	EndObject
         Object Help $MenuButton
@@ -237,6 +249,12 @@ SObject pwrs:Class
 	  Body SysBody
 	    Attr ButtonName = "Open Object..."
 	    Attr MethodName = "$Object-OpenObject"
+	  EndBody
+	EndObject
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
 	  EndBody
 	EndObject
 	Object Delete $MenuButton
@@ -315,6 +333,12 @@ SObject pwrs:Class
 	  Body SysBody
 	    Attr ButtonName = "Open Object..."
 	    Attr MethodName = "$Object-OpenObject"
+	  EndBody
+	EndObject
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
 	  EndBody
 	EndObject
         Object Help $MenuButton
@@ -466,6 +490,12 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-OpenObject"
 	  EndBody
 	EndObject
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
         Object Help $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help"
@@ -615,6 +645,12 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-OpenObject"
 	  EndBody
 	EndObject
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
         Object Help $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help"
@@ -693,6 +729,12 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-OpenObject"
 	  EndBody
 	EndObject
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
         Object Help $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help"
@@ -715,6 +757,12 @@ SObject pwrs:Class
 	  Body SysBody
 	    Attr ButtonName = "Open Object..."
 	    Attr MethodName = "$Object-OpenObject"
+	  EndBody
+	EndObject
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
 	  EndBody
 	EndObject
         Object Help $MenuButton
@@ -741,6 +789,12 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-OpenObject"
 	  EndBody
 	EndObject
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
         Object Help $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help"
@@ -763,6 +817,12 @@ SObject pwrs:Class
 	  Body SysBody
 	    Attr ButtonName = "Open Object..."
 	    Attr MethodName = "$Object-OpenObject"
+	  EndBody
+	EndObject
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
 	  EndBody
 	EndObject
         Object Help $MenuButton
@@ -789,6 +849,12 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-OpenObject"
 	  EndBody
 	EndObject
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
         Object Help $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help"
@@ -811,6 +877,12 @@ SObject pwrs:Class
 	  Body SysBody
 	    Attr ButtonName = "Open Object..."
 	    Attr MethodName = "$Object-OpenObject"
+	  EndBody
+	EndObject
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
 	  EndBody
 	EndObject
 	Object Cast $MenuButton
@@ -849,6 +921,12 @@ SObject pwrs:Class
 	  Body SysBody
 	    Attr ButtonName = "Open Object..."
 	    Attr MethodName = "$Object-OpenObject"
+	  EndBody
+	EndObject
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
 	  EndBody
 	EndObject
         Object Help $MenuButton

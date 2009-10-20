@@ -47,7 +47,8 @@
 
 void WAttNav::message( char sev, const char *text)
 {
-  (message_cb)( parent_ctx, sev, text);
+  if ( message_cb)
+    (message_cb)( parent_ctx, sev, text);
 }
 
 
@@ -56,6 +57,7 @@ void WAttNav::message( char sev, const char *text)
 //
 WAttNav::WAttNav(
 	void 		*wa_parent_ctx,
+	wattnav_eType   wa_type,
 	const char     	*wa_name,
 	ldh_tSesContext wa_ldhses,
 	pwr_sAttrRef 	wa_aref,
@@ -64,7 +66,7 @@ WAttNav::WAttNav(
 	int		wa_display_objectname,
 	wb_eUtility	wa_utility,
 	pwr_tStatus 	*status) :
-  parent_ctx(wa_parent_ctx),
+  parent_ctx(wa_parent_ctx), type(wa_type),
   ldhses(wa_ldhses), aref(wa_aref), editmode(wa_editmode), 
   advanced_user(wa_advanced_user), 
   display_objectname(wa_display_objectname), bypass(0),
@@ -685,6 +687,48 @@ int WAttNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
   return 1;
 }
 
+int	WAttNav::crossref()
+{
+  int sts;
+  pwr_tAName name;
+  char *namep;
+  pwr_tClassId classid;
+  int size;
+
+  sts = ldh_AttrRefToName ( ldhses, &aref, cdh_mNName, &namep, &size);
+  if ( EVEN(sts)) return sts;
+
+  strcpy( name, namep);
+
+  sts = ldh_GetAttrRefTid( ldhses, &aref, &classid);
+  if ( EVEN(sts)) return sts;
+
+  switch ( classid)
+  {
+    case pwr_cClass_Di:
+    case pwr_cClass_Dv:
+    case pwr_cClass_Do:
+    case pwr_cClass_Po:
+    case pwr_cClass_Av:
+    case pwr_cClass_Ai:
+    case pwr_cClass_Ao:
+    case pwr_cClass_Iv:
+    case pwr_cClass_Ii:
+    case pwr_cClass_Io:
+    case pwr_cClass_Co:
+      sts = WNav::crr_signal( brow, ldhses, NULL, name, NULL);
+      break;
+    default:
+      /* Not a signal */
+      sts = WNav::crr_object( brow, ldhses, NULL, name, NULL);
+      ;
+  }
+  // if ( EVEN(sts))
+  //  xnav->message(' ', XNav::get_message(sts));
+
+  return WATT__SUCCESS;
+}
+
 int	WAttNav::object_attr()
 {
   int	i, j;
@@ -976,7 +1020,16 @@ int WAttNav::init_brow_cb( FlowCtx *fctx, void *client_data)
   wattnav->enable_events();
 
   // Create the root item
-  wattnav->object_attr();
+  switch ( wattnav->type) {
+    case wattnav_eType_Object:
+      wattnav->object_attr();
+      break;
+    case wattnav_eType_CrossRef:
+      wattnav->crossref();
+      break;
+    default:
+      ;
+  }
 
   return 1;
 }

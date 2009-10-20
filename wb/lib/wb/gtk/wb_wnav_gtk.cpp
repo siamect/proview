@@ -53,6 +53,7 @@ extern "C" {
 #include "wb_wda_gtk.h"
 #include "wb_foe_gtk.h"
 #include "wb_utl_gtk.h"
+#include "wb_xcrr_gtk.h"
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
@@ -429,6 +430,11 @@ CoLogin *WNavGtk::login_new( const char		*name,
 			     pwr_tStatus  	*status)
 {
   return new CoLoginGtk( this, parent_wid, name, groupname, bc_success, bc_cancel, status);
+}
+
+WCrr *WNavGtk::wcrr_new( pwr_tAttrRef *aref, pwr_tStatus  *status)
+{
+  return new WCrrGtk( parent_wid, this, ldhses, aref, gbl.advanced_user, status);
 }
 
 void WNavGtk::wge_subwindow_loop( WGe *wge)

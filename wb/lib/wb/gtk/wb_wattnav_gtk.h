@@ -28,6 +28,7 @@ class WAttNavGtk : public WAttNav {
   public:
     WAttNavGtk(
 	void 		*wa_parent_ctx,
+	wattnav_eType   wa_type,
 	GtkWidget      	*wa_parent_wid,
 	const char     	*wa_name,
 	ldh_tSesContext wa_ldhses,

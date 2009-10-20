@@ -2143,7 +2143,7 @@ int	WNav::setup()
 {
   brow_pop( wnav_eBrowType_Setup);
   brow_SetNodraw( brow->ctx);
-  new WItemHeader( this, "Title", "Setup",  NULL, flow_eDest_IntoLast);
+  new WItemHeader( brow, "Title", "Setup",  NULL, flow_eDest_IntoLast);
 
   new WItemLocal( this, "DefaultDirectory", "setup_defaultdirectory", 
 	pwr_eType_String, sizeof( gbl.default_directory), 0, 0,

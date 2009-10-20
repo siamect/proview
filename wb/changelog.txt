@@ -140,3 +140,4 @@
 090902 cs  plc       Compile error for reference to disabled signal (not in template code).
 090909 cs  wb        Bugfix in Connect wb method, couldn't handle array element attributes.
 090909 cs  wb        Limitation of wb_load files in one directory changed from 500 to 1000.
+091020 cs  wb        New crossreference window and method in wtt.

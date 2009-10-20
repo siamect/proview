@@ -3903,23 +3903,27 @@ int GeValue::scan( grow_tObject object)
     else
       first_scan = false;
 
-    switch ( format[1]) {
-    case '1':
-      // Format %1o, write path
-      sts = gdh_AttrrefToName ( &aref, name, sizeof(name), 
-			      cdh_mName_pathStrict);
-      break;
-    case '2':
-      // Format %2o, write volume and path
-      sts = gdh_AttrrefToName ( &aref, name, sizeof(name), 
-			      cdh_mName_volumeStrict);
-      break;
-    default:
-      sts = gdh_AttrrefToName ( &aref, name, sizeof(name), 
-			      cdh_mName_object | cdh_mName_attribute);
-    }
-    if ( EVEN(sts))
+    if ( cdh_ObjidIsNull( aref.Objid))
       strcpy( name, "");
+    else {
+      switch ( format[1]) {
+      case '1':
+	// Format %1o, write path
+	sts = gdh_AttrrefToName ( &aref, name, sizeof(name), 
+				  cdh_mName_pathStrict);
+	break;
+      case '2':
+	// Format %2o, write volume and path
+	sts = gdh_AttrrefToName ( &aref, name, sizeof(name), 
+				  cdh_mName_volumeStrict);
+	break;
+      default:
+	sts = gdh_AttrrefToName ( &aref, name, sizeof(name), 
+				  cdh_mName_object | cdh_mName_attribute);
+      }
+      if ( EVEN(sts))
+	strcpy( name, "");
+    }
     len = sprintf( buf, "%s", name);
     memcpy( &old_value, &aref, MIN(size, (int) sizeof(old_value)));
     break;

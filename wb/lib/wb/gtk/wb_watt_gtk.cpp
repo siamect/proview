@@ -516,7 +516,7 @@ WAttGtk::WAttGtk(
     parent_ctx = ((WNav *)parent_ctx)->parent_ctx;
   utility = ((WUtility *)parent_ctx)->utype;
   
-  wattnav = new WAttNavGtk( (void *)this, pane, "Plant",
+  wattnav = new WAttNavGtk( (void *)this, wattnav_eType_Object, pane, "Plant",
 			      ldhses, aref, wa_editmode, wa_advanced_user,
 			      wa_display_objectname, utility, &brow_widget, &sts);
   ((WAttNav *)wattnav)->message_cb = &WAtt::message_cb;

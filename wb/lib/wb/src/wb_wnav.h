@@ -145,6 +145,7 @@ class Ge;
 class WGe;
 class wb_utl;
 class CoLogin;
+class WCrr;
 
 class ApplListElem {
   public:
@@ -321,6 +322,7 @@ class WNav : public WUtility{
     virtual CoLogin *login_new( const char *name, const char *groupname,
 				void (* bc_success)( void *), void (* bc_cancel)( void *), 
 				pwr_tStatus *status) { return 0;}
+    virtual WCrr *wcrr_new( pwr_tAttrRef *aref, pwr_tStatus  *status) { return 0;}
 
     static int brow_cb( FlowCtx *ctx, flow_tEvent event);
     static int init_brow_base_cb( FlowCtx *fctx, void *client_data);
@@ -418,10 +420,12 @@ class WNav : public WUtility{
     static int check_new_volumename( char *vname);
 
     // Crr module member functions
-    int	crr_signal( char *filename, char *signalname, brow_tNode parent_node);
-    int	crr_object( char *filename, char *objectname, brow_tNode parent_node);
-    int	crr_code( char *filename, char *str, int brief, int func,
-		  int case_sensitive);
+    static int	crr_signal( WNavBrow *brow, ldh_tSesContext ldhses, char *filename, char *signalname, 
+			    brow_tNode parent_node);
+    static int	crr_object( WNavBrow *brow, ldh_tSesContext ldhses, char *filename, char *objectname, 
+			    brow_tNode parent_node);
+    static int	crr_code( WNavBrow *brow, ldh_tSesContext ldhses, char *filename, char *str, int brief, 
+			  int func, int case_sensitive);
     int display_objects( pwr_tCid *cidp, char *name, pwr_tObjid root,
 			 int depth);
     void set_nodraw() { nodraw = 1;}

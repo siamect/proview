@@ -220,6 +220,12 @@ SObject pwrs:Class
     EndObject
     Object ConfiguratorPascn $Menu
       Object Pointed $Menu
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
         Object HelpClass $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help Class"
@@ -231,6 +237,12 @@ SObject pwrs:Class
     EndObject
     Object ConfiguratorPasos $Menu
       Object Pointed $Menu
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
         Object HelpClass $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help Class"
@@ -242,6 +254,12 @@ SObject pwrs:Class
     EndObject
     Object ConfiguratorPasas $Menu
       Object Pointed $Menu
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
         Object HelpClass $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help Class"
@@ -267,6 +285,12 @@ SObject pwrs:Class
 	    Attr FilterName = "$Attribute-InsertSelectedObjectFilter"
 	  EndBody
 	EndObject
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
         Object HelpClass $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help Class"
@@ -285,6 +309,12 @@ SObject pwrs:Class
 	    Attr FilterName = "$Attribute-InsertSelectedObjectFilter"
 	  EndBody
 	EndObject
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
         Object HelpClass $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help Class"
@@ -296,6 +326,12 @@ SObject pwrs:Class
     EndObject
     Object ConfiguratorPasmn $Menu
       Object Pointed $Menu
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
         Object HelpClass $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help Class"
@@ -307,6 +343,12 @@ SObject pwrs:Class
     EndObject
     Object ConfiguratorPasms $Menu
       Object Pointed $Menu
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
         Object HelpClass $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help Class"
@@ -318,6 +360,12 @@ SObject pwrs:Class
     EndObject
     Object NavigatorPasnn $Menu
       Object Pointed $Menu
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
         Object HelpClass $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help Class"
@@ -329,6 +377,12 @@ SObject pwrs:Class
     EndObject
     Object NavigatorPasos $Menu
       Object Pointed $Menu
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
         Object HelpClass $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help Class"
@@ -340,6 +394,12 @@ SObject pwrs:Class
     EndObject
     Object NavigatorPason $Menu
       Object Pointed $Menu
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
         Object HelpClass $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help Class"
@@ -351,6 +411,12 @@ SObject pwrs:Class
     EndObject
     Object NavigatorPasas $Menu
       Object Pointed $Menu
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
         Object HelpClass $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help Class"
@@ -362,6 +428,12 @@ SObject pwrs:Class
     EndObject
     Object NavigatorPasan $Menu
       Object Pointed $Menu
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
         Object HelpClass $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help Class"
@@ -373,6 +445,12 @@ SObject pwrs:Class
     EndObject
     Object NavigatorPasmn $Menu
       Object Pointed $Menu
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
         Object HelpClass $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help Class"
@@ -384,6 +462,12 @@ SObject pwrs:Class
     EndObject
     Object NavigatorPasms $Menu
       Object Pointed $Menu
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
         Object HelpClass $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help Class"
@@ -395,6 +479,12 @@ SObject pwrs:Class
     EndObject
     Object ConfiguratorPxsxx $Menu
       Object Pointed $Menu
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
         Object HelpClass $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help Class"
@@ -406,6 +496,12 @@ SObject pwrs:Class
     EndObject
     Object NavigatorPxsxx $Menu
       Object Pointed $Menu
+	Object Crossreferences $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Crossreferences"
+	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
         Object HelpClass $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help Class"

@@ -48,6 +48,7 @@ extern "C" {
 //
 WAttNavGtk::WAttNavGtk(
 	void 		*wa_parent_ctx,
+	wattnav_eType   wa_type,
 	GtkWidget      	*wa_parent_wid,
 	const char     	*wa_name,
 	ldh_tSesContext wa_ldhses,
@@ -58,7 +59,7 @@ WAttNavGtk::WAttNavGtk(
 	wb_eUtility	wa_utility,
 	GtkWidget      	**w,
 	pwr_tStatus 	*status) :
-  WAttNav(wa_parent_ctx,wa_name,wa_ldhses,wa_aref,wa_editmode,wa_advanced_user,
+  WAttNav(wa_parent_ctx,wa_type,wa_name,wa_ldhses,wa_aref,wa_editmode,wa_advanced_user,
 	  wa_display_objectname,wa_utility,status), parent_wid(wa_parent_wid)
 {
   form_widget = scrolledbrowwidgetgtk_new(

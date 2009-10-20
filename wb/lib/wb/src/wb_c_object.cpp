@@ -1061,6 +1061,31 @@ static pwr_tStatus HistoryFilter( ldh_sMenuCall *ip)
   return 1;
 }
 
+//
+//  Crossreferences
+//
+static pwr_tStatus Crossreferences( ldh_sMenuCall *ip) 
+{
+  pwr_tStatus sts;
+  int size;
+  char *namep;
+  char cmd[600];
+
+  sts = ldh_AttrRefToName( ip->PointedSession, &ip->Pointed, cdh_mNName, 
+			   &namep, &size);
+  if ( EVEN(sts)) return sts;
+
+  sprintf( cmd, "cross/wind/name=%s", namep);
+
+  ip->wnav->command( cmd);
+  return 1;
+}
+
+static pwr_tStatus CrossreferencesFilter( ldh_sMenuCall *ip) 
+{
+  return 1;
+}
+
 
 pwr_dExport pwr_BindMethods($Object) = {
   pwr_BindMethod(CreateObject),
@@ -1090,6 +1115,8 @@ pwr_dExport pwr_BindMethods($Object) = {
   pwr_BindMethod(BuildFilter),
   pwr_BindMethod(History),
   pwr_BindMethod(HistoryFilter),
+  pwr_BindMethod(Crossreferences),
+  pwr_BindMethod(CrossreferencesFilter),
   pwr_NullMethod
 };
 

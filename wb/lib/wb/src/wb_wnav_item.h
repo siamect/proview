@@ -152,19 +152,19 @@ class WItemLocal : public WItem {
 
 class WItemText : public WItem {
   public:
-    WItemText( WNav *wnav, const char *item_name, char *text,
+    WItemText( WNavBrow *brow, const char *item_name, char *text,
 	brow_tNode dest, flow_eDest dest_code);
 };
 
 class WItemHeader : public WItem {
   public:
-    WItemHeader( WNav *wnav, const char *item_name, const char *title,
+    WItemHeader( WNavBrow *brow, const char *item_name, const char *title,
 	brow_tNode dest, flow_eDest dest_code);
 };
 
 class WItemHeaderLarge : public WItem {
   public:
-    WItemHeaderLarge( WNav *wnav, const char *item_name, char *title,
+    WItemHeaderLarge( WNavBrow *brow, const char *item_name, char *title,
 	brow_tNode dest, flow_eDest dest_code);
 };
 
@@ -228,8 +228,12 @@ class WItemFile : public WItem {
 
 class WItemCrossref : public WItem {
   public:
-    WItemCrossref( WNav *wnav, char *item_ref_name, char *item_ref_class, 
+    WItemCrossref( 
+	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
+	char *item_ref_name, char *item_ref_class, 
 	int item_write, brow_tNode dest, flow_eDest dest_code);
+    WNavBrow 		*brow;
+    ldh_tSesContext 	ldhses;
     char		ref_name[32];
     char		ref_class[32];
     int			write;

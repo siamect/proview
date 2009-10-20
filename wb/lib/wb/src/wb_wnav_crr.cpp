@@ -53,27 +53,34 @@
 #define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
 #endif
 
+class CrrCtx {
+public:
+  CrrCtx( WNavBrow *a_brow, ldh_tSesContext a_ldhses) : brow(a_brow), ldhses(a_ldhses) {}
+  WNavBrow 		*brow;
+  ldh_tSesContext 	ldhses;
+}; 
+
 static void wnav_crr_insert_cb( void *ctx, void *parent_node, 
 				navc_eItemType item_type,
 				char *text1, char *text2, int write)
 {
-  if ( parent_node) {
-    WNav *wnav = (WNav *)ctx;
+  if ( 1) {
+    CrrCtx *cctx = (CrrCtx *)ctx;
 
     switch( item_type) {
       case navc_eItemType_Crossref:
-        new WItemCrossref( wnav, text1, text2, 
+        new WItemCrossref( cctx->brow, cctx->ldhses, text1, text2, 
 			write, parent_node, flow_eDest_IntoLast);
         break;
       case navc_eItemType_Header:
-        new WItemHeader( wnav, "crr", text1, parent_node, flow_eDest_IntoLast);
+        new WItemHeader( cctx->brow, "crr", text1, parent_node, flow_eDest_IntoLast);
         break;
       case navc_eItemType_Text:
-        new WItemText( wnav, "crr", text1, parent_node, flow_eDest_IntoLast);
+        new WItemText( cctx->brow, "crr", text1, parent_node, flow_eDest_IntoLast);
         break;
     }
   }
-  else {
+  else { // TODO from pwrc ???
     // Print out crossref info
     switch( item_type) {
       case navc_eItemType_Crossref:
@@ -98,30 +105,32 @@ static void wnav_crr_insert_cb( void *ctx, void *parent_node,
 
 int wnav_crr_name_to_objid_cb( void *ctx, char *name, pwr_tObjid *objid)
 {
-  WNav *wnav = (WNav *)ctx;
+  CrrCtx *cctx = (CrrCtx *)ctx;
 
-  return ldh_NameToObjid( wnav->ldhses, objid, name);
+  return ldh_NameToObjid( cctx->ldhses, objid, name);
 }
 
 int wnav_crr_get_volume_cb( void *ctx, pwr_tVolumeId *volid)
 {
   int sts;
   ldh_sVolumeInfo info;
-  WNav *wnav = (WNav *)ctx;
-  ldh_tVolContext volctx = ldh_SessionToVol( wnav->ldhses);
+  CrrCtx *cctx = (CrrCtx *)ctx;
+  ldh_tVolContext volctx = ldh_SessionToVol( cctx->ldhses);
   sts = ldh_GetVolumeInfo( volctx, &info);
 
   *volid = info.Volume;
   return WNAV__SUCCESS;
 }
 
-int	WNav::crr_signal(
-			char	*filename,
-			char	*signalname,
-			brow_tNode parent_node)
+int	WNav::crr_signal( WNavBrow *brow,
+			  ldh_tSesContext ldhses,
+			  char	*filename,
+			  char	*signalname,
+			  brow_tNode parent_node)
 {
   int sts;
-  NavCrr *navcrr = new NavCrr( this, parent_node);
+  CrrCtx *ctx = new CrrCtx( brow, ldhses);
+  NavCrr *navcrr = new NavCrr( ctx, parent_node);
   navcrr->insert_cb = wnav_crr_insert_cb;
   navcrr->name_to_objid_cb = wnav_crr_name_to_objid_cb;
   navcrr->get_volume_cb = wnav_crr_get_volume_cb;
@@ -129,16 +138,19 @@ int	WNav::crr_signal(
   sts = navcrr->crr_signal( filename, signalname);
 
   delete navcrr;
+  delete ctx;
   return sts;
 }
 
-int	WNav::crr_object(
-			char	*filename,
-			char	*objectname,
-			brow_tNode parent_node)
+int	WNav::crr_object( WNavBrow *brow,
+			  ldh_tSesContext ldhses,
+			  char	*filename,
+			  char	*objectname,
+			  brow_tNode parent_node)
 {
   int sts;
-  NavCrr *navcrr = new NavCrr( this, parent_node);
+  CrrCtx *ctx = new CrrCtx( brow, ldhses);
+  NavCrr *navcrr = new NavCrr( ctx, parent_node);
   navcrr->insert_cb = wnav_crr_insert_cb;
   navcrr->name_to_objid_cb = wnav_crr_name_to_objid_cb;
   navcrr->get_volume_cb = wnav_crr_get_volume_cb;
@@ -146,10 +158,12 @@ int	WNav::crr_object(
   sts = navcrr->crr_object( filename, objectname);
 
   delete navcrr;
+  delete ctx;
   return sts;
 }
 
-int	WNav::crr_code(
+int	WNav::crr_code( WNavBrow *brow,
+			ldh_tSesContext ldhses,
 			char	*filename,
 			char	*str,
 			int	brief,
@@ -157,7 +171,8 @@ int	WNav::crr_code(
 			int	case_sensitive)
 {
   int sts;
-  NavCrr *navcrr = new NavCrr( this, NULL);
+  CrrCtx *ctx = new CrrCtx( brow, ldhses);
+  NavCrr *navcrr = new NavCrr( ctx, NULL);
   navcrr->insert_cb = wnav_crr_insert_cb;
   navcrr->name_to_objid_cb = wnav_crr_name_to_objid_cb;
   navcrr->get_volume_cb = wnav_crr_get_volume_cb;
@@ -165,6 +180,7 @@ int	WNav::crr_code(
   sts = navcrr->crr_code( filename, str, brief, func, case_sensitive);
 
   delete navcrr;
+  delete ctx;
   return sts;
 }
 

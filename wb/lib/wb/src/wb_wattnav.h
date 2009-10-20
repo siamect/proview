@@ -43,10 +43,17 @@
 #define wattnav_cVersion	"X3.3b"
 #define WATTNAV_BROW_MAX	25
 
+typedef enum {
+  wattnav_eType_Object,
+  wattnav_eType_CrossRef
+} wattnav_eType;
+
+
 class WAttNav {
   public:
     WAttNav(
 	void 		*wa_parent_ctx,
+	wattnav_eType   wa_type,
 	const char     	*wa_name,
 	ldh_tSesContext wa_ldhses,
 	pwr_sAttrRef 	wa_aref,
@@ -58,6 +65,7 @@ class WAttNav {
     virtual ~WAttNav();
 
     void 		*parent_ctx;
+    wattnav_eType       type;
     char 		name[80];
     WNavBrow		*brow;
     ldh_tSesContext	ldhses;
@@ -83,6 +91,7 @@ class WAttNav {
     void message( char sev, const char *text);
     void force_trace_scan();
     int object_attr();
+    int	crossref();
     int object_exist( brow_tObject object);
     void redraw();
     void enable_events();

@@ -73,6 +73,7 @@
 #include "wb_build.h"
 #include "wb_wtt.h"
 #include "wb_log.h"
+#include "wb_xcrr.h"
 #include "ge.h"
 #include "wb_utl.h"
 
@@ -404,7 +405,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"CROSSREFERENCE",
 			&wnav_crossref_func,
 			{ "dcli_arg1", "/NAME", "/FILE", "/STRING", "/BRIEF",
-			"/FUNCTION", "/CASE_SENSITIVE", ""}
+			  "/FUNCTION", "/CASE_SENSITIVE", "/WINDOW", ""}
 		},
 		{
 			"DISTRIBUTE",
@@ -4602,6 +4603,10 @@ static int	wnav_crossref_func(	void		*client_data,
   char		func_str[80];
   char		*file_ptr;
   pwr_tOName    name_str;
+  int 		window;
+
+
+  window = ODD( dcli_get_qualifier( "/WINDOW", 0, 0));
 
   if ( ODD( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str))))
     file_ptr = file_str;
@@ -4620,7 +4625,7 @@ static int	wnav_crossref_func(	void		*client_data,
     }
     brief = ODD( dcli_get_qualifier( "/BRIEF", 0, 0));
     case_sens = ODD( dcli_get_qualifier( "/CASE_SENSITIVE", 0, 0));
-    sts = wnav->crr_code( file_ptr, string_str, brief, 0, case_sens);
+    sts = wnav->crr_code( wnav->brow, wnav->ldhses, file_ptr, string_str, brief, 0, case_sens);
     if ( EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
   }
@@ -4632,7 +4637,7 @@ static int	wnav_crossref_func(	void		*client_data,
     brief = ODD( dcli_get_qualifier( "/BRIEF", 0, 0));
     case_sens = ODD( dcli_get_qualifier( "/CASE_SENSITIVE", 0, 0));
 
-    sts = wnav->crr_code( file_ptr, func_str, brief, 1, case_sens);
+    sts = wnav->crr_code( wnav->brow, wnav->ldhses, file_ptr, func_str, brief, 1, case_sens);
     if ( EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
   }
@@ -4652,12 +4657,16 @@ static int	wnav_crossref_func(	void		*client_data,
 	&namep, &size);
     if ( EVEN(sts)) return sts;
 
-    printf( "Crossreferences for %s\n\n", namep);
+    if ( window) {
+      wnav->wcrr_new( &objar, &sts);
+    }
+    else {
+      printf( "Crossreferences for %s\n\n", namep);
 
-    sts = ldh_GetAttrRefTid( wnav->ldhses, &objar, &classid);
-    if ( EVEN(sts)) return sts;
+      sts = ldh_GetAttrRefTid( wnav->ldhses, &objar, &classid);
+      if ( EVEN(sts)) return sts;
 
-    switch ( classid) {
+      switch ( classid) {
       case pwr_cClass_Di:
       case pwr_cClass_Dv:
       case pwr_cClass_Do:
@@ -4672,9 +4681,11 @@ static int	wnav_crossref_func(	void		*client_data,
       case pwr_cClass_Sv:
       case pwr_cClass_ATv:
       case pwr_cClass_DTv:
+        sts = wnav->crr_signal( wnav->brow, wnav->ldhses, NULL, name_str, NULL);
         break;
       default:
-        sts = wnav->crr_object( NULL, name_str, NULL);
+        sts = wnav->crr_object( wnav->brow, wnav->ldhses, NULL, name_str, NULL);
+      }
     }
     if ( EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
@@ -4692,8 +4703,28 @@ static int	wnav_crossref_func(	void		*client_data,
     }
     brow_GetUserData( *node_list, (void **)&item);
 
-    switch( item->type)
-    {
+    if ( window) {
+      pwr_sAttrRef *sel_list;
+      int      	*sel_is_attr;
+      int      	sel_cnt;
+
+      sts = wnav->get_select( &sel_list, &sel_is_attr, &sel_cnt);
+      if ( EVEN(sts)) {
+	wnav->message('E', "Syntax error");
+	return WNAV__SYNTAX;
+      }
+      else if ( sel_cnt != 1) {
+	wnav->message('E', "Select one attribute");
+	return WNAV__SYNTAX;
+      }
+
+      wnav->wcrr_new( &sel_list[0], &sts);
+      if ( EVEN(sts))
+	wnav->message(' ', wnav_get_message(sts));
+    }
+    else {
+
+      switch( item->type) {
       case wnav_eItemType_Object: 
   	sts = ((WItemBaseObject *)item)->open_crossref( wnav, 0, 0);
         break;
@@ -4702,6 +4733,7 @@ static int	wnav_crossref_func(	void		*client_data,
         break;
       default:
         ;
+      }
     }
   }
   return sts;	  
@@ -6074,7 +6106,7 @@ int WNav::show_symbols()
       {
         brow_pop( wnav_eBrowType_Other);
         brow_SetNodraw( brow->ctx);
-        new WItemHeader( this, "Title", "Symbols", NULL, flow_eDest_IntoLast);
+        new WItemHeader( brow, "Title", "Symbols", NULL, flow_eDest_IntoLast);
       }
       new WItemCommand( this, text, NULL,
 		flow_eDest_IntoLast, key, 0, brow->pixmap_symbol);
@@ -6357,7 +6389,7 @@ int	WNav::show_file(
   {
     brow_pop( wnav_eBrowType_Other);
     brow_SetNodraw( brow->ctx);
-    new WItemHeader( this, "Title", title, NULL, flow_eDest_IntoLast);
+    new WItemHeader( brow, "Title", title, NULL, flow_eDest_IntoLast);
     new WItemFile( this, "", text, found_file, file_type, NULL, flow_eDest_IntoLast);
   }
   else
