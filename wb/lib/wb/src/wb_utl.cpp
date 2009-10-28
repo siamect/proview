@@ -11911,6 +11911,14 @@ static int	cross_crosslist_object_insert(
     { pwr_cClass_ExternRef, "DevBody", "Object", CRR_GETFROMOBJECT, CROSSLIST_OBJ},
     { pwr_cClass_reset_so, "DevBody", "OrderObject", CRR_READ, CROSSLIST_OBJ},
     { pwr_cClass_GetData, "DevBody", "DataObject", CRR_REF, CROSSLIST_OBJ},
+    { pwr_cClass_Di, "RtBody", "SigChanCon", CRR_REF, CROSSLIST_OBJ},
+    { pwr_cClass_Do, "RtBody", "SigChanCon", CRR_REF, CROSSLIST_OBJ},
+    { pwr_cClass_Ai, "RtBody", "SigChanCon", CRR_REF, CROSSLIST_OBJ},
+    { pwr_cClass_Ao, "RtBody", "SigChanCon", CRR_REF, CROSSLIST_OBJ},
+    { pwr_cClass_Ii, "RtBody", "SigChanCon", CRR_REF, CROSSLIST_OBJ},
+    { pwr_cClass_Io, "RtBody", "SigChanCon", CRR_REF, CROSSLIST_OBJ},
+    { pwr_cClass_Co, "RtBody", "SigChanCon", CRR_REF, CROSSLIST_OBJ},
+    { pwr_cClass_Po, "RtBody", "SigChanCon", CRR_REF, CROSSLIST_OBJ},
     { 0, }};
 
 	int		sts, size;

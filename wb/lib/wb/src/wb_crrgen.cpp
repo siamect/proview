@@ -125,7 +125,15 @@ static crrgen_tRefList reflist[] = {
     { pwr_cClass_StoDTp, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object, 0},
     { pwr_cClass_CStoDTp, "DevBody", "Object", crrgen_eType_Write, crrgen_eTable_Object, 0},
     { pwr_cClass_reset_so, "DevBody", "OrderObject", crrgen_eType_Read, crrgen_eTable_Object, 1},
-    { pwr_cClass_GetData, "DevBody", "DataObject", crrgen_eType_Ref, crrgen_eTable_Object, 0}};
+    { pwr_cClass_GetData, "DevBody", "DataObject", crrgen_eType_Ref, crrgen_eTable_Object, 0},
+    { pwr_cClass_Di, "RtBody", "SigChanCon", crrgen_eType_Ref, crrgen_eTable_Object, 0},
+    { pwr_cClass_Do, "RtBody", "SigChanCon", crrgen_eType_Ref, crrgen_eTable_Object, 0},
+    { pwr_cClass_Po, "RtBody", "SigChanCon", crrgen_eType_Ref, crrgen_eTable_Object, 0},
+    { pwr_cClass_Ai, "RtBody", "SigChanCon", crrgen_eType_Ref, crrgen_eTable_Object, 0},
+    { pwr_cClass_Ao, "RtBody", "SigChanCon", crrgen_eType_Ref, crrgen_eTable_Object, 0},
+    { pwr_cClass_Ii, "RtBody", "SigChanCon", crrgen_eType_Ref, crrgen_eTable_Object, 0},
+    { pwr_cClass_Io, "RtBody", "SigChanCon", crrgen_eType_Ref, crrgen_eTable_Object, 0},
+    { pwr_cClass_Co, "RtBody", "SigChanCon", crrgen_eType_Ref, crrgen_eTable_Object, 0} };
 
 static crrgen_tRefList codelist[] = {
     { pwr_cClass_dataarithm, "DevBody", "Code", crrgen_eType_, crrgen_eTable_, 0},
