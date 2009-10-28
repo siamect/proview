@@ -2790,6 +2790,12 @@ int	gobj_expand(	WFoe		*foe,
     case pwr_cClass_StoDTv:
     case pwr_cClass_CStoATv:
     case pwr_cClass_CStoDTv:
+    case pwr_cClass_GetATp:
+    case pwr_cClass_GetDTp:
+    case pwr_cClass_StoATp:
+    case pwr_cClass_StoDTp:
+    case pwr_cClass_CStoATp:
+    case pwr_cClass_CStoDTp:
       sts = gobj_expand_m1( foe, node, compress);
       break;
     case pwr_cClass_and:
