@@ -494,17 +494,30 @@ static int add_element( 	t_ctx		ctx,
 	      strcpy( line_elem[i-1], line_elem[i]);
 	    nr--;
 	  }
-	  if ( unsign)
+	  if ( unsign) {
+#if defined OS_LINUX && defined HW_X86_64
+	    type = pwr_eType_UInt64;
+	    size = sizeof(pwr_tInt64);
+#else
 	    type = pwr_eType_UInt32;
-	  else
+	    size = sizeof(pwr_tInt32);
+#endif
+	  }
+	  else {
+#if defined OS_LINUX && defined HW_X86_64
+	    type = pwr_eType_Int64;
+	    size = sizeof(pwr_tInt64);
+#else
 	    type = pwr_eType_Int32;
-	  size = sizeof(pwr_tInt32);
+	    size = sizeof(pwr_tInt32);
+#endif
+	  }
 	}
 	else if ( strcmp( line_elem[0], "short") == 0)
 	{
 	  if ( strcmp( line_elem[1], "int") == 0)
 	  {
-	    for ( i = sizeof( line_elem)/sizeof( line_elem[0]) - 1; i > 0; i-- )
+	    for ( i = 1; i < (int)(sizeof( line_elem)/sizeof( line_elem[0])); i++)
 	      strcpy( line_elem[i-1], line_elem[i]);
 	    nr--;
 	  }
