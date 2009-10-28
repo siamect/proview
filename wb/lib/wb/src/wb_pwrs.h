@@ -83,7 +83,7 @@ typedef pwr_tStatus (* wb_tMethodPostAdopt)  (ldh_tSesContext, pwr_tOid, pwr_tOi
 typedef pwr_tStatus (* wb_tMethodAnteUnadopt)(ldh_tSesContext, pwr_tOid, pwr_tOid, pwr_tCid);
 typedef pwr_tStatus (* wb_tMethodPostUnadopt)(ldh_tSesContext, pwr_tOid, pwr_tOid, pwr_tCid);
 typedef pwr_tStatus (* wb_tMethodPostRename) (ldh_tSesContext, pwr_tOid);
-typedef pwr_tStatus (* wb_tMethodSyntaxCheck)(ldh_tSesContext, pwr_tOid, int *, int *);
+typedef pwr_tStatus (* wb_tMethodSyntaxCheck)(ldh_tSesContext, pwr_tAttrRef, int *, int *);
 
 
 #if defined OS_VMS
@@ -135,7 +135,7 @@ static pwr_tStatus PostUnadopt (
 );
 static pwr_tStatus SyntaxCheck (
   ldh_tSesContext   Session,
-  pwr_tObjid	    Object,    /* object to check */
+  pwr_tAttrRef	    Object,    /* object to check */
   int 		    *ErrorCount, /* accumulated error count */
   int               *WarningCount /* accumulated warning count */ 
 );

@@ -154,6 +154,12 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-Crossreferences"
 	  EndBody
 	EndObject
+	Object PM_SyntaxCheck $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Syntax Check"
+	    Attr MethodName = "$Object-PM_SyntaxCheck"
+	  EndBody
+	EndObject
         Object Help $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help"
@@ -182,6 +188,12 @@ SObject pwrs:Class
 	  Body SysBody
 	    Attr ButtonName = "Crossreferences"
 	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
+	Object PM_SyntaxCheck $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Syntax Check"
+	    Attr MethodName = "$Object-PM_SyntaxCheck"
 	  EndBody
 	EndObject
         Object Help $MenuButton
@@ -255,6 +267,12 @@ SObject pwrs:Class
 	  Body SysBody
 	    Attr ButtonName = "Crossreferences"
 	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
+	Object PM_SyntaxCheck $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Syntax Check"
+	    Attr MethodName = "$Object-PM_SyntaxCheck"
 	  EndBody
 	EndObject
 	Object Delete $MenuButton
@@ -339,6 +357,12 @@ SObject pwrs:Class
 	  Body SysBody
 	    Attr ButtonName = "Crossreferences"
 	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
+	Object PM_SyntaxCheck $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Syntax Check"
+	    Attr MethodName = "$Object-PM_SyntaxCheck"
 	  EndBody
 	EndObject
         Object Help $MenuButton
@@ -496,6 +520,12 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-Crossreferences"
 	  EndBody
 	EndObject
+	Object PM_SyntaxCheck $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Syntax Check"
+	    Attr MethodName = "$Object-PM_SyntaxCheck"
+	  EndBody
+	EndObject
         Object Help $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help"
@@ -649,6 +679,12 @@ SObject pwrs:Class
 	  Body SysBody
 	    Attr ButtonName = "Crossreferences"
 	    Attr MethodName = "$Object-Crossreferences"
+	  EndBody
+	EndObject
+	Object PM_SyntaxCheck $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Syntax Check"
+	    Attr MethodName = "$Object-PM_SyntaxCheck"
 	  EndBody
 	EndObject
         Object Help $MenuButton

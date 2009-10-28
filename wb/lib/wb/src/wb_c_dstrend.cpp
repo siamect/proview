@@ -25,12 +25,13 @@
 #include "wb_pwrb_msg.h"
 #include "pwr_baseclasses.h"
 #include "wb_ldh.h"
+#include "wb_session.h"
+#include "wb_wsx.h"
+#include "wb_pwrb_msg.h"
 
-
-/*----------------------------------------------------------------------------*\
-  
-\*----------------------------------------------------------------------------*/
-
+//
+//  PostCreate
+//
 static pwr_tStatus PostCreate (
   ldh_tSesContext Session,
   pwr_tObjid	  Object,
@@ -64,11 +65,10 @@ static pwr_tStatus PostCreate (
 
   return PWRB__SUCCESS;
 }
-
-/*----------------------------------------------------------------------------*\
-  
-\*----------------------------------------------------------------------------*/
 
+//
+//  PostMove
+//
 static pwr_tStatus PostMove (
   ldh_tSesContext Session,
   pwr_tObjid	  Object,
@@ -100,13 +100,60 @@ static pwr_tStatus PostMove (
 
   return PWRB__SUCCESS;
 }
-
-/*----------------------------------------------------------------------------*\
-  Every method to be exported to the workbench should be registred here.
-\*----------------------------------------------------------------------------*/
+
+//
+//  Syntax check.
+//
+static pwr_tStatus SyntaxCheck (
+  ldh_tSesContext Session,
+  pwr_tAttrRef Object,	      /* current object */
+  int *ErrorCount,	      /* accumulated error count */
+  int *WarningCount	      /* accumulated waring count */
+) {
+
+  // Check DataName
+  wb_session *sp = (wb_session *)Session;
+  pwr_tAttrRef dataname_aref;
+
+  wb_attribute a = sp->attribute( &Object);
+  if ( !a) return a.sts();
+
+  wb_attribute dataname_a( a, 0, "DataName");
+  if (!dataname_a) return dataname_a.sts();
+    
+  dataname_a.value( &dataname_aref);
+  if ( !dataname_a) return dataname_a.sts();
+
+  wb_attribute data_a = sp->attribute( &dataname_aref);
+  if ( !data_a) {
+    wsx_error_msg_str( Session, "Bad DataName reference", Object, 'E', ErrorCount, WarningCount);
+    return PWRB__SUCCESS;
+  }
+  
+  // Check DataName type
+  switch ( data_a.tid()) {
+  case	pwr_eType_Boolean:
+  case	pwr_eType_Float32:
+  case	pwr_eType_Float64:
+  case	pwr_eType_Int8:
+  case	pwr_eType_Int16:
+  case	pwr_eType_Int32:
+  case	pwr_eType_UInt8:
+  case	pwr_eType_UInt16:
+  case	pwr_eType_UInt32:
+    break;
+  default:
+    wsx_error_msg_str( Session, "DataName type not supported", Object, 'E', ErrorCount, WarningCount);
+  }
+  return PWRB__SUCCESS;
+}
+
+
+//  Every method to be exported to the workbench should be registred here.
 
 pwr_dExport pwr_BindMethods(DsTrend) = {
   pwr_BindMethod(PostCreate),
   pwr_BindMethod(PostMove),
+  pwr_BindMethod(SyntaxCheck),
   pwr_NullMethod
 };

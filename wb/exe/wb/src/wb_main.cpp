@@ -133,11 +133,9 @@ void Wb::find_wnav_cb( void *ctx, pwr_tOid oid)
   char projectname[80];
   pwr_tStatus sts;
   Wtt *wtt;
-  printf( "Here in find wnav...\n");
 
   wb->wttlist_find( &sts, oid.vid, &wtt);
   if ( ODD(sts)) {
-    printf( "Wtt Found\n");
     sts = wtt->find( oid);
     wtt->pop();
   }

@@ -35,15 +35,16 @@
 
 static pwr_tStatus SyntaxCheck (
   ldh_tSesContext Session,
-  pwr_tObjid Object,	      /* current object */
+  pwr_tAttrRef Object,	      /* current object */
   int *ErrorCount,	      /* accumulated error count */
   int *WarningCount	      /* accumulated waring count */
 ) {
+#if 0
   pwr_tStatus sts;
 
   sts = wsx_CheckSigChanCon( Session, Object, ErrorCount, WarningCount);
   if (EVEN(sts)) return sts;
-
+#endif
   return PWRB__SUCCESS;
 }
 

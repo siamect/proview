@@ -477,60 +477,138 @@ bool wb_volume::exportTree(wb_volume &import, pwr_tOid oid)
 
 pwr_tStatus wb_volume::syntaxCheck(int *errorcount, int *warningcount)
 {
-  pwr_tStatus sts;
+  pwr_tStatus sts = LDH__SUCCESS;
+  pwr_tStatus osts;
 
-  wb_object o = object();
-  if (o) {
-    sts = syntaxCheckObject(o, errorcount, warningcount);
-    return sts;
+  for ( wb_object o = object(); o; o = o.after()) {
+    if ( o.cid() == pwr_eClass_LibHier)
+      continue;
+    osts = syntaxCheckObject(o, errorcount, warningcount);
+    if ( EVEN(osts))
+      sts = osts;
   }
-  return LDH__SUCCESS;
+  return osts;
+}
+
+pwr_tStatus wb_volume::syntaxCheckAttr(wb_attribute& a, int *errorcount, int *warningcount)
+{
+  pwr_tStatus sts = LDH__SUCCESS;
+  pwr_tStatus asts;
+
+
+  if ( !a.isSuperClass())
+    sts = triggSyntaxCheck(a, errorcount, warningcount);
+
+  // Get any attribute objects
+  wb_cdef cd = cdef(a.tid());
+  if ( !cd) return cd.sts();
+
+  wb_bdef bdef = cd.bdef(pwr_eBix_rt);
+  wb_adef adef;
+  if ( bdef) {
+    for (adef = bdef.adef(); adef; adef = adef.next()) {
+      if ( adef.flags() & PWR_MASK_SUPERCLASS)
+	continue;
+      if ( !(adef.flags() & PWR_MASK_CLASS))
+	continue;
+
+      if ( adef.flags() & PWR_MASK_ARRAY) {
+	for ( int i = 0; i < adef.nElement(); i++) {
+	  wb_attribute attr( a, i, adef.name());
+	  
+	  asts = syntaxCheckAttr( attr, errorcount, warningcount);
+	  if ( EVEN(asts)) sts = asts;
+	}
+      }
+      else {
+	wb_attribute attr( a, 0, adef.name());
+	
+	if ( adef.flags() & PWR_MASK_DISABLEATTR && attr.disabled())
+	  continue;
+
+	asts = syntaxCheckAttr( attr, errorcount, warningcount);
+	if ( EVEN(asts)) sts = asts;
+      }
+    }
+  }
+
+  return sts;
 }
 
 pwr_tStatus wb_volume::syntaxCheckObject(wb_object& o, int *errorcount, int *warningcount)
 {
-  pwr_tStatus sts;
+  pwr_tStatus sts, csts;
   wb_object first, after;
+  wb_attribute a(o.sts(), o);
   
-  sts = triggSyntaxCheck(o, errorcount, warningcount);
+  sts = triggSyntaxCheck(a, errorcount, warningcount);
   if (EVEN(sts)) return sts;
 
-  switch (o.cid()) {
-  case pwr_eClass_LibHier:
-    break;
-  default:
-    first = o.first();
-    if (first) {
-      sts = syntaxCheckObject(first, errorcount, warningcount);
-      if (EVEN(sts)) return sts;
+  // Get any attribute objects
+  wb_cdef cd = cdef(o);
+  if ( !cd) return cd.sts();
+
+  wb_bdef bdef = cd.bdef(pwr_eBix_rt);
+  wb_adef adef;
+  if ( bdef) {
+    for (adef = bdef.adef(); adef; adef = adef.next()) {
+      if ( !(adef.flags() & PWR_MASK_CLASS))
+	continue;
+
+      if ( adef.flags() & PWR_MASK_ARRAY) {
+	for ( int i = 0; i < adef.nElement(); i++) {
+	  wb_attribute a( adef.sts(), o, adef, i);
+	  
+	  csts = syntaxCheckAttr( a, errorcount, warningcount);
+	  if ( EVEN(csts)) sts = csts;
+	}
+      }
+      else {
+	wb_attribute a( adef.sts(), o, adef);
+	
+	if ( adef.flags() & PWR_MASK_DISABLEATTR && a.disabled())
+	  continue;
+
+	csts = syntaxCheckAttr( a, errorcount, warningcount);
+	if ( EVEN(csts)) sts = csts;
+      }
     }
-    after = o.after();
-    if (after) {
-      sts = syntaxCheckObject(after, errorcount, warningcount);
+  }
+
+
+  for ( wb_object c = o.first(); c; c = c.after()) {
+    if ( c.cid() == pwr_eClass_LibHier)
+      continue;
+    csts = syntaxCheckObject(c, errorcount, warningcount);
+    if ( EVEN(csts))
+      sts = csts;
+  }
+
+  return sts;
+}
+
+pwr_tStatus wb_volume::triggSyntaxCheck(wb_attribute& a, int *errorcount, int *warningcount)
+{
+  pwr_tStatus sts;
+  char methodName[80];
+  wb_tMethod method;
+  
+  if ( !cdh_tidIsCid( a.tid()))
+    return 0;
+
+  // Call object method, or inherited method
+  for ( wb_cdef cd = cdef( a.tid()); cd; cd = cd.super()) {
+    sprintf( methodName, "%s-SyntaxCheck", cd.name());
+
+    m_vrep->erep()->method(&sts, methodName, &method);
+    if ( ODD(sts)) {
+      sts = ((wb_tMethodSyntaxCheck) (method))((ldh_tSesContext)this, a.aref(), 
+					       errorcount, warningcount);
       if ( EVEN(sts)) return sts;
+      break;
     }
   }
   return LDH__SUCCESS;
-}
-
-pwr_tStatus wb_volume::triggSyntaxCheck(wb_object& o, int *errorcount, int *warningcount)
-{
-  pwr_tStatus sts;
-  char methodName[] = "SyntaxCheck";
-  wb_tMethod method;
-  
-  // wb_cdrep *cdrep = m_vrep->merep()->cdrep(&sts, o.cid());
-  // if (EVEN(sts)) return sts;
-
-  // cdrep->dbCallBack(&sts, ldh_eDbCallBack_SyntaxCheck, &methodName, 0);
-  // delete cdrep;
-  // if (EVEN(sts)) return LDH__SUCCESS;
-
-  m_vrep->erep()->method(&sts, methodName, &method);
-  if (EVEN(sts)) return LDH__SUCCESS;
-
-  sts = ((wb_tMethodSyntaxCheck) (method))((ldh_tSesContext)this, o.oid(), errorcount, warningcount);
-  return sts;
 }
 
 pwr_tStatus wb_volume::triggAnteAdopt(wb_object& father, pwr_tCid cid)

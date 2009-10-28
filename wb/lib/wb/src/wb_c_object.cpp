@@ -1086,6 +1086,31 @@ static pwr_tStatus CrossreferencesFilter( ldh_sMenuCall *ip)
   return 1;
 }
 
+//
+//  PopupMenu SyntaxCheck
+//
+static pwr_tStatus PM_SyntaxCheck( ldh_sMenuCall *ip) 
+{
+  pwr_tStatus sts;
+  int size;
+  pwr_tOName oname;
+  pwr_tCmd cmd;
+
+  sts = ldh_ObjidToName(ip->PointedSession, ip->Pointed.Objid, 
+			ldh_eName_VolPath, oname, sizeof(oname), &size); 
+  if ( EVEN(sts)) return sts;
+
+  sprintf( cmd, "check syntax/name=%s", oname);
+
+  ip->wnav->command( cmd);
+  return 1;
+}
+
+static pwr_tStatus PM_SyntaxCheckFilter( ldh_sMenuCall *ip) 
+{
+  return 1;
+}
+
 
 pwr_dExport pwr_BindMethods($Object) = {
   pwr_BindMethod(CreateObject),
@@ -1117,6 +1142,8 @@ pwr_dExport pwr_BindMethods($Object) = {
   pwr_BindMethod(HistoryFilter),
   pwr_BindMethod(Crossreferences),
   pwr_BindMethod(CrossreferencesFilter),
+  pwr_BindMethod(PM_SyntaxCheck),
+  pwr_BindMethod(PM_SyntaxCheckFilter),
   pwr_NullMethod
 };
 

@@ -29,11 +29,11 @@
 #include "wb_ldh.h"
 #include "wb_wsx.h"
 #include "wb_wsx_msg.h"
+#include "wb_session.h"
 
-
-/*----------------------------------------------------------------------------*\
-  
-\*----------------------------------------------------------------------------*/
+//
+//  PostCreate
+//
 
 static pwr_tStatus PostCreate (
   ldh_tSesContext Session,
@@ -66,10 +66,10 @@ static pwr_tStatus PostCreate (
 
   return PWRB__SUCCESS;
 }
-
-/*----------------------------------------------------------------------------*\
-  
-\*----------------------------------------------------------------------------*/
+
+//
+//  PostMove
+//
 
 static pwr_tStatus PostMove (
   ldh_tSesContext Session,
@@ -102,80 +102,93 @@ static pwr_tStatus PostMove (
 
   return PWRB__SUCCESS;
 }
-
-/*----------------------------------------------------------------------------*\
-  Syntax check.
-\*----------------------------------------------------------------------------*/
 
+//
+//  Syntax check.
+//
 static pwr_tStatus SyntaxCheck (
   ldh_tSesContext Session,
-  pwr_tObjid Object,	      /* current object */
+  pwr_tAttrRef Object,	      /* current object */
   int *ErrorCount,	      /* accumulated error count */
   int *WarningCount	      /* accumulated waring count */
 ) {
-  pwr_tStatus sts;
-  int size;
-  char Name[255];
-  pwr_sAttrRef Attribute;
-  char *NamePtr;
   char *s;
-  pwr_tClassId cid;
-  
-  /*
-    If DataName is a signal, the attribute has to be ActualValue.
-  */
 
-  sts = ldh_GetObjectPar( Session,
-  			Object,
-			"RtBody",
-			"DataName",
-			(char **)&NamePtr, &size);
-  if ( EVEN(sts)) return sts;
-  strcpy( Name, NamePtr);
-  free( NamePtr);
+  // Check DataName
+  wb_session *sp = (wb_session *)Session;
+  pwr_tAttrRef dataname_aref;
 
-  if ( strcmp( Name, "") == 0)
+  wb_attribute a = sp->attribute( &Object);
+  if ( !a) return a.sts();
+
+  wb_attribute dataname_a( a, 0, "DataName");
+  if (!dataname_a) return dataname_a.sts();
+    
+  dataname_a.value( &dataname_aref);
+  if ( !dataname_a) return dataname_a.sts();
+
+  wb_attribute data_a = sp->attribute( &dataname_aref);
+  if ( !data_a) {
+    wsx_error_msg_str( Session, "Bad DataName reference", Object, 'E', ErrorCount, WarningCount);
     return PWRB__SUCCESS;
+  }
   
-  sts = ldh_NameToAttrRef(Session, Name, &Attribute);
-  if (EVEN(sts)) return PWRB__SUCCESS;
-  
-  sts = ldh_GetObjectClass ( Session, Attribute.Objid, &cid);
-  if ( EVEN(sts)) return sts;
+  // Backup on whole signal objects is not allowed
+  switch ( data_a.tid()) {
+  case pwr_cClass_Do:
+  case pwr_cClass_Dv:
+  case pwr_cClass_Ao:
+  case pwr_cClass_Av:
+  case pwr_cClass_Io:
+  case pwr_cClass_Iv:
+  case pwr_cClass_Po:
+  case pwr_cClass_Co:
+  case pwr_cClass_Di:
+  case pwr_cClass_Ai:
+  case pwr_cClass_Ii:
+    wsx_error_msg( Session, WSX__BCKINVALID, Object, ErrorCount, WarningCount);
+    return PWRB__SUCCESS;
+  default: ;
+  }
 
-  switch ( cid)
-  {
+  // If DataName is a signal, the attribute has to be ActualValue
+  pwr_tAName aname;
+
+  strncpy( aname, data_a.longName().c_str(), sizeof(aname));
+  if (( s = strchr( aname, '.'))) {
+    *s = 0;
+
+    wb_attribute data_aobject = sp->attribute(aname);
+    if ( !data_aobject) return data_aobject.sts();
+
+    switch ( data_aobject.cid()) {
     case pwr_cClass_Do:
     case pwr_cClass_Dv:
     case pwr_cClass_Ao:
     case pwr_cClass_Av:
+    case pwr_cClass_Io:
+    case pwr_cClass_Iv:
     case pwr_cClass_Po:
-      s = strchr( Name, '.');
-      if ( s == 0)
-      {
-        wsx_error_msg( Session, WSX__BCKINVALID, Object, ErrorCount, WarningCount);
-        return PWRB__SUCCESS;
-      }
-      if ( strcmp( s, ".ActualValue") != 0)
-      {
-        wsx_error_msg( Session, WSX__BCKINVALID, Object, ErrorCount, WarningCount);
-        return PWRB__SUCCESS;
-      }
+    case pwr_cClass_Co: {
+      if ( strcmp( s+1, "ActualValue") != 0)
+	wsx_error_msg( Session, WSX__BCKINVALID, Object, ErrorCount, WarningCount);
       break;
-    case pwr_cClass_Co:
+    }
     case pwr_cClass_Di:
     case pwr_cClass_Ai:
+    case pwr_cClass_Ii: {
       wsx_error_msg( Session, WSX__BCKINVALID, Object, ErrorCount, WarningCount);
-      return PWRB__SUCCESS;
       break;
+    }
+    default: ;
+    }
   }
 
   return PWRB__SUCCESS;
 }
-
-/*----------------------------------------------------------------------------*\
-  Every method to be exported to the workbench should be registred here.
-\*----------------------------------------------------------------------------*/
+
+
+//  Every method to be exported to the workbench should be registred here.
 
 pwr_dExport pwr_BindMethods(Backup) = {
   pwr_BindMethod(PostCreate),

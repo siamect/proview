@@ -33,6 +33,7 @@
 #include "flow_browapi.h"
 #include "wb_wnav.h"
 #include "wb_build.h"
+#include "wb_wsx.h"
 #include "co_msgwindow.h"
 
 /*----------------------------------------------------------------------------*\
@@ -52,6 +53,27 @@ static pwr_tStatus Build (
   return build.sts();
 }
 
+//
+// Syntax Check
+//
+static pwr_tStatus SyntaxCheck( ldh_tSesContext Session,
+				pwr_tAttrRef Object,
+				int *ErrorCount,
+				int *WarningCount) 
+{
+  pwr_tStatus sts;
+  pwr_tCid defgraph_class[] = { pwr_cClass_XttGraph, 0};
+  pwr_tCid deftrend_class[] = { pwr_cClass_DsTrend, pwr_cClass_DsFast, pwr_cClass_DsFastCurve,
+				pwr_cClass_PlotGroup, 0};
+
+  sts = wsx_CheckAttrRef( Session, Object, "DefGraph", defgraph_class, 1, ErrorCount, WarningCount);
+  if ( EVEN(sts)) return sts;
+  
+  sts = wsx_CheckAttrRef( Session, Object, "DefTrend", deftrend_class, 1, ErrorCount, WarningCount);
+  if ( EVEN(sts)) return sts;
+
+  return PWRS__SUCCESS;
+}  
 
 /*----------------------------------------------------------------------------*\
   Every method to be exported to the workbench should be registred here.
@@ -59,6 +81,7 @@ static pwr_tStatus Build (
 
 pwr_dExport pwr_BindMethods($PlantHier) = {
   pwr_BindMethod(Build),
+  pwr_BindMethod(SyntaxCheck),
   pwr_NullMethod
 };
 

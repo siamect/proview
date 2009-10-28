@@ -34,3 +34,4 @@ PlcThread
 NodeConfig
 SevNodeConfig
 Application
+FriendNodeConfig

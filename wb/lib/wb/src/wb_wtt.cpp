@@ -433,6 +433,8 @@ void Wtt::save_cb( void *ctx, int quiet)
   }
 
   unsigned int opt;
+  if ( !wtt->focused_wnav)
+    wtt->set_focus_default();
   if ( wtt->focused_wnav->gbl.enable_comment)
     opt = log_mOption_Comment;
   else
@@ -697,6 +699,8 @@ int Wtt::set_noedit( wtt_eNoEditMode save, wtt_eNoEditVolMode detach)
         sts = lfu_SaveDirectoryVolume( ldhses, wnav->wow, 0);
 
       unsigned int opt;
+      if ( !focused_wnav)
+	set_focus_default();
       if ( focused_wnav->gbl.enable_comment)
 	opt = log_mOption_Comment;
       else
@@ -1594,6 +1598,8 @@ void Wtt::activate_buildobject()
 
   message( ' ', "");
 
+  if ( !focused_wnav)
+    set_focus_default();
   strcpy( cmd, "build object");
   if ( focused_wnav->gbl.build.force)
     strcat( cmd, " /force");
@@ -1830,6 +1836,8 @@ void Wtt::activate_buildvolume()
 
   set_clock_cursor();
   wb_build *build = build_new();
+  if ( !focused_wnav)
+    set_focus_default();
   build->opt = focused_wnav->gbl.build;
   build->volume();
   
@@ -1873,6 +1881,8 @@ void Wtt::activate_buildnode()
   }
   if ( found) {
     wb_build *build = build_new();
+    if ( !focused_wnav)
+      set_focus_default();
     build->opt = focused_wnav->gbl.build;
 
     set_clock_cursor();

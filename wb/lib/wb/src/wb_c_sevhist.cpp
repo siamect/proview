@@ -25,6 +25,8 @@
 #include "wb_pwrb_msg.h"
 #include "pwr_baseclasses.h"
 #include "wb_ldh.h"
+#include "wb_session.h"
+#include "wb_wsx.h"
 
 
 /*----------------------------------------------------------------------------*\
@@ -102,13 +104,77 @@ static pwr_tStatus PostMove (
 
   return PWRB__SUCCESS;
 }
-
-/*----------------------------------------------------------------------------*\
-  Every method to be exported to the workbench should be registred here.
-\*----------------------------------------------------------------------------*/
+
+//
+//  Syntax check.
+//
+static pwr_tStatus SyntaxCheck (
+  ldh_tSesContext Session,
+  pwr_tAttrRef Object,	      /* current object */
+  int *ErrorCount,	      /* accumulated error count */
+  int *WarningCount	      /* accumulated waring count */
+) {
+  pwr_tOid thread_oid;
+  wb_session *sp = (wb_session *)Session;
+  pwr_tAttrRef dataname_aref;
+
+  wb_attribute a = sp->attribute( &Object);
+  if ( !a) return a.sts();
+
+  // Check ThreadObject
+  wb_attribute thread_a( a, 0, "ThreadObject");
+  if (!thread_a) return thread_a.sts();
+    
+  thread_a.value( &thread_oid);
+  if ( !thread_a) return thread_a.sts();
+
+  wb_object othread = sp->object( thread_oid);
+  if ( !othread)
+    wsx_error_msg_str( Session, "Bad thread object", Object, 'E', ErrorCount, WarningCount);
+  else if ( othread.cid() != pwr_cClass_SevHistThread)
+    wsx_error_msg_str( Session, "Bad thread object class", Object, 'E', ErrorCount, WarningCount);
+  
+  // Check Attribute
+  wb_attribute dataname_a( a, 0, "Attribute");
+  if (!dataname_a) return dataname_a.sts();
+    
+  dataname_a.value( &dataname_aref);
+  if ( !dataname_a) return dataname_a.sts();
+
+  wb_attribute data_a = sp->attribute( &dataname_aref);
+  if ( !data_a) {
+    wsx_error_msg_str( Session, "Bad Attribute reference", Object, 'E', ErrorCount, WarningCount);
+    return PWRB__SUCCESS;
+  }
+  
+  // Check DataName type
+  switch ( data_a.tid()) {
+  case pwr_eType_Boolean:
+  case pwr_eType_Int64:
+  case pwr_eType_Int32:
+  case pwr_eType_Int16:
+  case pwr_eType_Int8:
+  case pwr_eType_UInt64:
+  case pwr_eType_UInt32:
+  case pwr_eType_UInt16:
+  case pwr_eType_UInt8:
+  case pwr_eType_Float32:
+  case pwr_eType_Float64:
+  case pwr_eType_String:
+  case pwr_eType_Time:
+    break;
+  default:
+    wsx_error_msg_str( Session, "Attribute type not supported", Object, 'E', ErrorCount, WarningCount);
+  }
+  return PWRB__SUCCESS;
+}
+
+
+//  Every method to be exported to the workbench should be registred here.
 
 pwr_dExport pwr_BindMethods(SevHist) = {
   pwr_BindMethod(PostCreate),
   pwr_BindMethod(PostMove),
+  pwr_BindMethod(SyntaxCheck),
   pwr_NullMethod
 };

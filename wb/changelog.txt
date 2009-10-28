@@ -141,3 +141,6 @@
 090909 cs  wb        Bugfix in Connect wb method, couldn't handle array element attributes.
 090909 cs  wb        Limitation of wb_load files in one directory changed from 500 to 1000.
 091020 cs  wb        New crossreference window and method in wtt.
+091020 cs  wb        Expand/Compress in plc editor on GetATp, GetDTp, StoATp etc.
+091021 cs  wb        Crossreferences on channels added.
+091028 cs  wb        Syntax check works again with new check functions, and SyntaxCheck in configurator popup menu.

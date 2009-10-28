@@ -20,10 +20,14 @@
 /* wb_c_sevnodeconfig.c -- work bench methods of the SevNodeConfig class. */
 
 #include <string.h>
+#include "co_dcli.h"
 #include "wb_pwrs.h"
 #include "wb_pwrs_msg.h"
 #include "wb_ldh.h"
 #include "pwr_baseclasses.h"
+#include "wb_session.h"
+#include "wb_wsx.h"
+#include "wb_pwrb_msg.h"
 
 static pwr_tStatus PostCreate (
   ldh_tSesContext   Session,
@@ -53,8 +57,80 @@ static pwr_tStatus PostCreate (
   return PWRS__SUCCESS;
 }
 
+//
+//  Syntax check method
+//
+static pwr_tStatus SyntaxCheck (
+  ldh_tSesContext Session,
+  pwr_tAttrRef Object,	      /* current object */
+  int *ErrorCount,	      /* accumulated error count */
+  int *WarningCount	      /* accumulated waring count */
+) {
+  wb_session *sp = (wb_session *)Session;
+  pwr_tString80 str;
+
+  wb_object o = sp->object( Object.Objid);
+  wb_object p = o.parent();
+  if ( !p || p.cid() != pwr_cClass_BusConfig)
+    wsx_error_msg_str( Session, "Bad parent", Object, 'E', ErrorCount, WarningCount);
+
+  if ( Object.Objid.vid != ldh_cDirectoryVolume)
+    wsx_error_msg_str( Session, "Not a DirectoryVolume", Object, 'E', ErrorCount, WarningCount);
+
+  // Check NodeName
+  wb_attribute a = sp->attribute( Object.Objid, "RtBody", "NodeName");
+  if (!a) return a.sts();
+    
+  a.value( &str);
+  if ( !a) return a.sts();
+
+  dcli_trim( str, str);
+  if ( strcmp( str, "") == 0)
+    wsx_error_msg_str( Session, "NodeName is missing", Object, 'E', ErrorCount, WarningCount);
+
+  // Check OperatingSystem
+  a = sp->attribute( Object.Objid, "RtBody", "OperatingSystem");
+  if (!a) return a.sts();
+    
+  pwr_tEnum opsys;
+  a.value( &opsys);
+  if ( !a) return a.sts();
+
+  if ( opsys <= pwr_mOpSys__ || opsys >= pwr_mOpSys_)
+    wsx_error_msg_str( Session, "Invalid OperatingSystem", Object, 'E', ErrorCount, WarningCount);
+
+  // Check Address
+  a = sp->attribute( Object.Objid, "RtBody", "Address");
+  if (!a) return a.sts();
+    
+  a.value( &str);
+  if ( !a) return a.sts();
+
+  unsigned char adr1, adr2, adr3, adr4;
+  int num;
+  num = sscanf( str, "%hhu.%hhu.%hhu.%hhu", &adr1, &adr2, &adr3, &adr4);
+  if ( num != 4)
+    wsx_error_msg_str( Session, "Syntax error in Address", Object, 'E', ErrorCount, WarningCount);
+  else if ( adr1 == 0 && adr2 == 0 && adr3 == 0 && adr4 == 0)
+    wsx_error_msg_str( Session, "Address is zero", Object, 'E', ErrorCount, WarningCount);
+
+  // Check Volume
+  a = sp->attribute( Object.Objid, "RtBody", "Volume");
+  if (!a) return a.sts();
+    
+  a.value( &str);
+  if ( !a) return a.sts();
+
+  dcli_trim( str, str);
+  if ( strcmp( str, "") == 0)
+    wsx_error_msg_str( Session, "Volume is missing", Object, 'E', ErrorCount, WarningCount);
+
+  return PWRB__SUCCESS;
+}
+
 pwr_dExport pwr_BindMethods(SevNodeConfig) = {
   pwr_BindMethod(PostCreate),
+  pwr_BindMethod(SyntaxCheck),
   pwr_NullMethod
 };
 

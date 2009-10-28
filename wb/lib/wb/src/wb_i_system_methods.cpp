@@ -36,6 +36,8 @@ pwr_dImport pwr_BindMethods($AttrRef);
 pwr_dImport pwr_BindMethods($PlantHier);
 pwr_dImport pwr_BindMethods($NodeHier);
 pwr_dImport pwr_BindMethods($Security);
+pwr_dImport pwr_BindMethods($System);
+pwr_dImport pwr_BindMethods($MountObject);
 
 pwr_dExport pwr_BindClasses(System) = {
   pwr_BindClass($AttrXRef),
@@ -53,5 +55,7 @@ pwr_dExport pwr_BindClasses(System) = {
   pwr_BindClass($PlantHier),
   pwr_BindClass($NodeHier),
   pwr_BindClass($Security),
+  pwr_BindClass($System),
+  pwr_BindClass($MountObject),
   pwr_NullClass
 };

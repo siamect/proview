@@ -35,6 +35,7 @@
 #include "flow_browapi.h"
 #include "wb_wnav.h"
 #include "wb_build.h"
+#include "wb_session.h"
 
 
 /*----------------------------------------------------------------------------*\
@@ -76,59 +77,75 @@ static pwr_tStatus Build (
   Syntax check.
 \*----------------------------------------------------------------------------*/
 
+static bool CheckChildCid( wb_object &o, pwr_tCid cid) 
+{
+  for ( wb_object child = o.first(); child; child = child.after()) {
+    if ( child.cid() == cid) {
+      return true;
+    }
+    if ( CheckChildCid( child, cid))
+      return true;	 
+  }
+  return false;
+}
+
+
 static pwr_tStatus SyntaxCheck (
   ldh_tSesContext Session,
-  pwr_tObjid Object,	      /* current object */
+  pwr_tAttrRef Object,	      /* current object */
   int *ErrorCount,	      /* accumulated error count */
-  int *WarningCount	      /* accumulated waring count */
+  int *WarningCount	      /* accumulated warning count */
 ) {
-  pwr_tStatus sts;
-  pwr_tObjid *ThreadObjectPtr;
-  int size;
-  pwr_tObjid child;
-  pwr_tClassId cid;
+  wb_session *sp = (wb_session *)Session;
+  pwr_tOid thread_oid;
+  pwr_tOid reset_oid;
 
-  /*
-    Check that ScanTime is set to something.
-  */
+  // Check ThreadObject
+  wb_attribute a = sp->attribute( Object.Objid, "RtBody", "ThreadObject");
+  if (!a) return a.sts();
+    
+  a.value( &thread_oid);
+  if ( !a) return a.sts();
 
-  sts = ldh_GetObjectPar( Session,
-  			Object,
-			"RtBody",
-			"ThreadObject",
-			(char **)&ThreadObjectPtr, &size);
-  if ( EVEN(sts)) return sts;
+  wb_object othread = sp->object( thread_oid);
+  if ( !othread)
+    wsx_error_msg_str( Session, "Bad thread object", Object, 'E', ErrorCount, WarningCount);
+  else if ( othread.cid() != pwr_cClass_PlcThread)
+    wsx_error_msg_str( Session, "Bad thread object class", Object, 'E', ErrorCount, WarningCount);
+  
 
+  // Check WindowPlc object
+  bool found = 0;
+  wb_object o = sp->object( Object.Objid);
+  if ( !o) return o.sts();
 
-  sts = ldh_GetObjectClass ( Session, *ThreadObjectPtr, &cid);
-  if ( EVEN(sts))
-    wsx_error_msg( Session, WSX__PLCTHREAD, Object, ErrorCount, WarningCount);
-  else if ( cid != pwr_cClass_PlcThread)
-    wsx_error_msg( Session, WSX__PLCTHREAD, Object, ErrorCount, WarningCount);
-
-  free( (char *)ThreadObjectPtr);
-
-  /*
-    Check that the child is a plcwindow.
-  */
-
-  sts = ldh_GetChild( Session, Object, &child);
-  if (EVEN(sts))
-  {
-    wsx_error_msg( Session, WSX__PLCWIND, Object, ErrorCount, WarningCount);
+  for ( wb_object child = o.first(); child; child = child.after()) {
+    if ( child.cid() == pwr_cClass_windowplc) {
+      found = 1;
+      break;
+    }
   }
-  else
-  {
-    sts = ldh_GetObjectClass( Session, child, &cid);
-    if (EVEN(sts)) return sts;
+  if ( !found)
+    wsx_error_msg_str( Session, "Plc window is not created", Object, 'E', ErrorCount, WarningCount);
 
-    if ( cid != pwr_cClass_windowplc)
-      wsx_error_msg( Session, WSX__PLCCHILD, Object, ErrorCount, WarningCount);
 
-    sts = ldh_GetNextSibling( Session, child, &child);
-    if ( ODD(sts))
-      wsx_error_msg( Session, WSX__PLCCHILD, Object, ErrorCount, WarningCount);
+  // Check ResetObject if there is a grafcet sequence present
+  if ( CheckChildCid( o, pwr_cClass_initstep)) {
+    a = sp->attribute( Object.Objid, "DevBody", "ResetObject");
+    if (!a) return a.sts();
+    
+    a.value( &reset_oid);
+    if ( !a) return a.sts();
+
+    wb_object oreset = sp->object( reset_oid);
+    if ( !oreset)
+      wsx_error_msg_str( Session, "Bad reset object", Object, 'E', ErrorCount, WarningCount);
+    else if ( !(oreset.cid() == pwr_cClass_Dv ||
+		oreset.cid() == pwr_cClass_Di ||
+		oreset.cid() == pwr_cClass_Do))
+      wsx_error_msg_str( Session, "Bad reset object class", Object, 'E', ErrorCount, WarningCount);      
   }
+
   return PWRB__SUCCESS;
 }
 

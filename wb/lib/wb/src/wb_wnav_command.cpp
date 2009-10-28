@@ -426,7 +426,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 		{
 			"CHECK",
 			&wnav_check_func,
-			{ "dcli_arg1", ""}
+			{ "dcli_arg1", "/VOLUME", "/NAME", ""}
 		},
 		{
 			"UPDATE",
@@ -4995,6 +4995,53 @@ static int	wnav_check_func(	void		*client_data,
     wb_volume *v = (wb_volume *) ldh_SessionToVol( wnav->ldhses);
     wb_vrepdb *vrep = (wb_vrepdb *)((wb_vrep *) *v);
     vrep->checkMeta();
+  }
+  if ( strncmp( arg1_str, "SYNTAX", strlen( arg1_str)) == 0) {
+    int errorcount = 0;
+    int warningcount = 0;
+    pwr_tOName namestr;
+
+    if ( ODD( dcli_get_qualifier( "/VOLUME", 0, 0))) {
+
+      wb_volume *v = (wb_volume *) ldh_SessionToVol( wnav->ldhses);
+
+      sts = v->syntaxCheck( &errorcount, &warningcount);
+      if ( EVEN(sts))
+	wnav->message(' ', wnav_get_message(sts));
+      else if ( errorcount || warningcount) {
+	char msg[80];
+	sprintf( msg, "Syntax check, %d errors, %d warnings", errorcount, warningcount);
+	wnav->message( errorcount ? 'E' : 'W', msg);
+      }
+      else
+	wnav->message( 'I', "Successfull syntax check, no errors or warnings found");
+    }
+    else {
+      if ( EVEN( dcli_get_qualifier( "/NAME", namestr, sizeof(namestr)))) {
+	if ( EVEN( dcli_get_qualifier( "dcli_arg2", namestr, sizeof(namestr)))) {
+	  wnav->message('E', "Syntax error");
+	  return WNAV__SYNTAX;
+	}
+      }
+
+      wb_volume *v = (wb_volume *) ldh_SessionToVol( wnav->ldhses);
+      wb_object o = v->object( namestr);
+      if ( !o) {
+	wnav->message(' ', wnav_get_message(o.sts()));
+	return o.sts();
+      }
+      
+      sts = v->syntaxCheckObject( o, &errorcount, &warningcount);
+      if ( EVEN(sts))
+	wnav->message(' ', wnav_get_message(sts));
+      else if ( errorcount || warningcount) {
+	char msg[80];
+	sprintf(msg, "Syntax check, %d errors, %d warnings", errorcount, warningcount);
+	wnav->message( errorcount ? 'E' : 'W', msg);
+      }
+      else
+	wnav->message( 'I', "Successfull syntax check, no errors or warnings found");
+    }
   }
   else {
     wnav->message('E', "Syntax error");

@@ -104,7 +104,8 @@ public:
     
   pwr_tStatus syntaxCheck( int *errorcount, int *warningcount);
   pwr_tStatus syntaxCheckObject( wb_object& o, int *errorcount, int *warningcount);
-  pwr_tStatus triggSyntaxCheck( wb_object& o, int *errorcount, int *warningcount);
+  pwr_tStatus syntaxCheckAttr(wb_attribute& a, int *errorcount, int *warningcount);
+  pwr_tStatus triggSyntaxCheck( wb_attribute& o, int *errorcount, int *warningcount);
   pwr_tStatus triggAnteAdopt( wb_object& o, pwr_tCid cid);
   pwr_tStatus triggAnteCreate( wb_object& father, pwr_tCid cid);
   pwr_tStatus triggAnteMove( wb_object& o, wb_object& father, wb_object& old_father);

@@ -23,6 +23,9 @@
 #include "wb_pwrs.h"
 #include "wb_pwrs_msg.h"
 #include "wb_ldh.h"
+#include "wb_session.h"
+#include "wb_wsx.h"
+#include "wb_pwrb_msg.h"
 
 static pwr_tStatus PostCreate (
   ldh_tSesContext   Session,
@@ -50,8 +53,44 @@ static pwr_tStatus PostCreate (
   return PWRS__SUCCESS;
 }
 
+//
+// SyntaxCheck
+//
+static pwr_tStatus SyntaxCheck (
+  ldh_tSesContext Session,
+  pwr_tAttrRef Object,
+  int *ErrorCount,
+  int *WarningCount
+) {
+  wb_session *sp = (wb_session *)Session;
+  pwr_tString80 selectlist[20];
+
+  wb_attribute a = sp->attribute( &Object);
+  if ( !a) return a.sts();
+
+  // Check Attribute
+  wb_attribute selectlist_a( a, 0, "EventSelectList");
+  if (!selectlist_a) return selectlist_a.sts();
+    
+  selectlist_a.value( selectlist);
+  if ( !selectlist_a) return selectlist_a.sts();
+
+  bool empty = true;
+  for ( unsigned int i = 0; i < sizeof(selectlist)/sizeof(selectlist[0]); i++) {
+    if ( strcmp( selectlist[i], "") != 0) {
+      empty = false;
+      break;
+    }
+  }
+  if ( empty)
+    wsx_error_msg_str( Session, "EventSelectList is empty", Object, 'W', ErrorCount, WarningCount);
+
+  return PWRB__SUCCESS;
+}
+
 pwr_dExport pwr_BindMethods(OpPlace) = {
   pwr_BindMethod(PostCreate),
+  pwr_BindMethod(SyntaxCheck),
   pwr_NullMethod
 };
 

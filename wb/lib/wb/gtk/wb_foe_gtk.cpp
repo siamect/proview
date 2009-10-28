@@ -1187,7 +1187,7 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(file_print),
 			    GTK_WIDGET(file_print_menu));
 
-  widgets.syntax = gtk_menu_item_new_with_mnemonic( "Synta_x");
+  widgets.syntax = gtk_menu_item_new_with_mnemonic( "Synta_x Check");
   g_signal_connect( widgets.syntax, "activate", 
 		    G_CALLBACK(WFoeGtk::activate_syntax), this);
 

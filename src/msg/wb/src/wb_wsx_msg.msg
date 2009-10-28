@@ -27,8 +27,8 @@ success		<successful completion>					/succ
 carddevname	<DevName in card-object is missing>			/error
 carderrsoftlim	<ErrorSoftLimit in card-object is missing>		/error
 carderrhardlim	<ErrorHardLimit in card-object is missing>		/error
-sigchancon	<Error in SigChanCon-object>				/error
-sigchanconclass	<Error in class of SigChanCon-object>			/error
+sigchancon	<Error in connected channel>				/error
+sigchanconclass	<Error in class of connected channel>			/error
 maxchan		<MaxNoOfChannels is out of range>			/error
 numrange	<Number of is out of range>				/error
 numnotunique	<Number is not unique>					/error

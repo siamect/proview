@@ -2078,9 +2078,6 @@ WttGtk::WttGtk(
 							      accel_g);
   g_signal_connect(menu_revert_w, "activate", G_CALLBACK(WttGtk::activate_revert), this);
 
-  GtkWidget *file_syntax = gtk_menu_item_new_with_mnemonic( "S_yntax");
-  g_signal_connect(file_syntax, "activate", G_CALLBACK(WttGtk::activate_syntax), this);
-
   GtkWidget *file_history = gtk_menu_item_new_with_mnemonic( "_History");
   g_signal_connect(file_history, "activate", G_CALLBACK(WttGtk::activate_history), this);
 
@@ -2091,7 +2088,6 @@ WttGtk::WttGtk(
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_print);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), menu_save_w);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), menu_revert_w);
-  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_syntax);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_history);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 
@@ -2369,6 +2365,9 @@ WttGtk::WttGtk(
 			      'r', GdkModifierType(GDK_CONTROL_MASK), 
 			      GTK_ACCEL_VISIBLE);
 
+  GtkWidget *functions_syntax = gtk_menu_item_new_with_mnemonic( "S_yntax Check");
+  g_signal_connect(functions_syntax, "activate", G_CALLBACK(WttGtk::activate_syntax), this);
+
   menu_change_value_w = gtk_menu_item_new_with_mnemonic( "Change _Value");
   g_signal_connect( menu_change_value_w, "activate", 
 		    G_CALLBACK(WttGtk::activate_change_value), this);
@@ -2396,6 +2395,7 @@ WttGtk::WttGtk(
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), menu_classeditor_w);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), menu_updateclasses_w);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_showcrossref);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_syntax);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), menu_change_value_w);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_command);
 

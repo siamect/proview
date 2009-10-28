@@ -22,6 +22,10 @@
 #include "wb_pwrs.h"
 #include "wb_pwrs_msg.h"
 #include "wb_ldh.h"
+#include "wb_wsx.h"
+#include "wb_session.h"
+#include "pwr_baseclasses.h"
+#include "wb_pwrb_msg.h"
 
 static pwr_tStatus PostCreate (
   ldh_tSesContext   Session,
@@ -64,8 +68,68 @@ static pwr_tStatus PostCreate (
   return PWRS__SUCCESS;
 }
 
+static pwr_tStatus SyntaxCheck (
+  ldh_tSesContext Session,
+  pwr_tAttrRef Object,	      /* current object */
+  int *ErrorCount,	      /* accumulated error count */
+  int *WarningCount	      /* accumulated waring count */
+) {
+  wb_session *sp = (wb_session *)Session;
+  pwr_tAttrRef aref;
+  wb_object o;
+
+  // Check Server objects
+
+  // Security object
+  o = sp->object( pwr_eClass_Security);
+  if ( !o) 
+    wsx_error_msg_str( Session, "No Security object found", Object, 'W', ErrorCount, WarningCount);
+    
+  // DsTrend
+  sp->aref( pwr_cClass_DsTrend, &aref);
+  if ( sp->oddSts()) {
+    // Check DsTrendConf
+    o = sp->object( pwr_cClass_DsTrendConf);
+    if ( !o) 
+      wsx_error_msg_str( Session, "No DsTrendConf object found", Object, 'W', ErrorCount, WarningCount);
+  }
+
+  // DsFast
+  sp->aref( pwr_cClass_DsFast, &aref);
+  if ( sp->evenSts())
+    sp->aref( pwr_cClass_DsFastCurve, &aref);
+
+  if ( sp->oddSts()) {
+    // Check DsFastConf
+    o = sp->object( pwr_cClass_DsFastConf);
+    if ( !o)
+      wsx_error_msg_str( Session, "No DsFastConf object found", Object, 'W', ErrorCount, WarningCount);
+  }
+
+  // SevHistMonintor
+  sp->aref( pwr_cClass_SevHist, &aref);
+  if ( sp->oddSts()) {
+    // Check SevHistMonitor
+    o = sp->object( pwr_cClass_SevHistMonitor);
+    if ( !o)
+      wsx_error_msg_str( Session, "No SevHistMonitor object found", Object, 'W', ErrorCount, WarningCount);
+  }
+
+  // Backup_Conf
+  sp->aref( pwr_cClass_Backup, &aref);
+  if ( sp->oddSts()) {
+    // Check Backup_Conf
+    o = sp->object( pwr_cClass_Backup_Conf);
+    if ( !o)
+      wsx_error_msg_str( Session, "No Backup_Conf object found", Object, 'W', ErrorCount, WarningCount);
+  }
+
+  return PWRB__SUCCESS;
+}
+
 pwr_dExport pwr_BindMethods($Node) = {
   pwr_BindMethod(PostCreate),
+  pwr_BindMethod(SyntaxCheck),
   pwr_NullMethod
 };
 

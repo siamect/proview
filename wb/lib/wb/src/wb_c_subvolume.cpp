@@ -30,13 +30,13 @@
 
 static pwr_tStatus SyntaxCheck (
   ldh_tSesContext Session,
-  pwr_tObjid Object,	      /* current object */
+  pwr_tAttrRef Object,	      /* current object */
   int *ErrorCount,	      /* accumulated error count */
   int *WarningCount	      /* accumulated waring count */
 ) {
   pwr_tStatus sts;
 
-  sts = wsx_CheckVolume( Session, Object, ErrorCount, WarningCount);
+  sts = wsx_CheckVolume( Session, Object.Objid, ErrorCount, WarningCount);
   if ( EVEN(sts)) return sts;
 
   return PWRS__SUCCESS;
