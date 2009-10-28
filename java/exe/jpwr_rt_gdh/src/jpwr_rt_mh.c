@@ -259,7 +259,6 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Mh_outunitReceive
   jint 		jsts;
   jobject 	return_obj;
   
-
   pwrtStatus_id = (*env)->FindClass( env, "jpwr/rt/PwrtStatus");
   if(pwrtStatus_id == NULL)
   {
@@ -286,6 +285,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Mh_outunitReceive
   	pwrtStatus_cid, jsts);
 	
   (*env)->DeleteLocalRef(env,pwrtStatus_id);
+
   
   return return_obj;
 }

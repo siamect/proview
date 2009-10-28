@@ -151,7 +151,7 @@ public class MhServer
     cdhrMaxAlarms = gdh.getObjectInfoInt(maxAlarmsAttr);
     cdhrMaxEvents = gdh.getObjectInfoInt(maxEventsAttr);
     cdhrMaxCon = gdh.getObjectInfoInt(maxConAttr);
-    System.out.println( "MaxNoOfAlarms: " + cdhrString.str + " " + cdhrMaxAlarms.value + " " + cdhrMaxAlarms.evenSts());
+    // System.out.println( "MaxNoOfAlarms: " + cdhrString.str + " " + cdhrMaxAlarms.value + " " + cdhrMaxAlarms.evenSts());
     if(cdhrMaxCon.evenSts())
     {
       return cdhrMaxCon.getSts();

@@ -394,7 +394,7 @@ mh_OutunitReceive ()
   XDR		xdrs;
 
   /* If SelectListIsUpdated is set, the outunit will be updated */
-  if (l.type == mh_eOutunitType_Operator && *l.SelectListIsUpdated)
+  if (l.type == mh_eOutunitType_Operator && l.SelectListIsUpdated && *l.SelectListIsUpdated)
   {
     *l.SelectListIsUpdated = 0;
     mh_OutunitUpdate();
