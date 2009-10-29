@@ -38,6 +38,8 @@ typedef enum {
   wlog_eCategory_CreatePackage,
   wlog_eCategory_CopyPackage,
   wlog_eCategory_GeExport,
+  wlog_eCategory_UpdateClasses,
+  wlog_eCategory_WbLoad,
   wlog_eCategory__,
 } wlog_eCategory;
 

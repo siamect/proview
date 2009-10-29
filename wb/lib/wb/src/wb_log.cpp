@@ -102,6 +102,12 @@ void wb_log::category_to_string( wlog_eCategory category, char *str)
   case wlog_eCategory_GeExport:
     strcpy( str, "GeExport");
     break;
+  case wlog_eCategory_UpdateClasses:
+    strcpy( str, "UpdateClasses");
+    break;
+  case wlog_eCategory_WbLoad:
+    strcpy( str, "WbLoad");
+    break;
   default:
     strcpy( str, "");
   }
@@ -131,6 +137,10 @@ void wb_log::string_to_category( char *str, wlog_eCategory *category)
     *category = wlog_eCategory_CopyPackage;
   else if ( strcmp( str, "GeExport") == 0)
     *category = wlog_eCategory_GeExport;
+  else if ( strcmp( str, "UpdateClasses") == 0)
+    *category = wlog_eCategory_UpdateClasses;
+  else if ( strcmp( str, "WbLoad") == 0)
+    *category = wlog_eCategory_WbLoad;
   else
     *category = wlog_eCategory_;
 }

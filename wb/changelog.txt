@@ -144,3 +144,4 @@
 091020 cs  wb        Expand/Compress in plc editor on GetATp, GetDTp, StoATp etc.
 091021 cs  wb        Crossreferences on channels added.
 091028 cs  wb        Syntax check works again with new check functions, and SyntaxCheck in configurator popup menu.
+091030 cs  wb        History log in wb.

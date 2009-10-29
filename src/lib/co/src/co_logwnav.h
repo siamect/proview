@@ -80,20 +80,21 @@ class CoLogWNav {
 
     static int init_brow_cb( FlowCtx *fctx, void *client_data);
     static int brow_cb( FlowCtx *ctx, flow_tEvent event);
-    static void item_cb( void *ctx, pwr_tTime time, char *category, char *item, 
+    static void item_cb( void *ctx, pwr_tTime time, char *category, char *user, char *item, 
 			 char *comment);
 };
 
 class ItemLog {
   public:
     ItemLog( CoLogWNav *logwnav, const char *item_name,
-	     pwr_tTime item_time, char *item_catogory, char *item_comment,
+	     pwr_tTime item_time, char *item_catogory, char *item_user, char *item_comment,
 	     brow_tNode dest, flow_eDest dest_code);
     logwitem_eItemType	type;
     CoLogWNav		*logwnav;
     brow_tNode		node;
     pwr_tTime		time;
     char		category[20];
+    char		user[80];
     char		comment[256];
 
     virtual ~ItemLog() {}
