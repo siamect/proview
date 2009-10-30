@@ -118,11 +118,11 @@ XCrrGtk::XCrrGtk(
   *xa_sts = gdh_AttrrefToName( &objar, title, sizeof(title), cdh_mNName);
   if ( EVEN(*xa_sts)) return;
 
-  toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
-			   "default-height", 420,
-			   "default-width", 600,
-			   "title", title,
-			   NULL);
+  toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW,
+					 "default-height", 420,
+					 "default-width", 600,
+					 "title", CoWowGtk::convert_utf8(title),
+					 NULL);
 
   g_signal_connect( toplevel, "delete_event", G_CALLBACK(delete_event), this);
   g_signal_connect( toplevel, "destroy", G_CALLBACK(destroy_event), this);

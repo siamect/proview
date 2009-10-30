@@ -317,7 +317,7 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 					 "default-height", window_height,
 					 "default-width", window_width,
-					 "title", title,
+					 "title", CoWowGtk::convert_utf8(title),
 					 NULL);
 
   g_signal_connect( toplevel, "delete_event", G_CALLBACK(delete_event), this);
