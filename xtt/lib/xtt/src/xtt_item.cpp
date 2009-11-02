@@ -1393,8 +1393,10 @@ ItemFile::ItemFile( XNavBrow *brow, const char *item_name, const char *text,
 		dest, dest_code, (void *)this, 1, &node);
   if ( file_type == item_eFileType_Script)
     brow_SetAnnotPixmap( node, 0, brow->pixmap_script);
-  else if ( file_type == item_eFileType_Graph)
+  else if ( file_type == item_eFileType_Graph) {
+    strncpy( name, text, sizeof(name));
     brow_SetAnnotPixmap( node, 0, brow->pixmap_graph);
+  }
   else if ( file_type == item_eFileType_RttLog)
     brow_SetAnnotPixmap( node, 0, brow->pixmap_curve);
   else
