@@ -384,6 +384,11 @@ void GeGtk::set_prompt( const char *prompt)
 //
 //  Callbackfunctions from menu entries
 //
+void GeGtk::activate_create_subgraph(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->graph->create_node_floating( 0, 0);
+}
+
 void GeGtk::activate_change_text(GtkWidget *w, gpointer gectx)
 {
   ((Ge *)gectx)->activate_change_text();
@@ -1734,6 +1739,12 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   g_signal_connect( edit_polyline, "activate", 
 		    G_CALLBACK(activate_edit_polyline), this);
 
+  GtkWidget *edit_create_subgraph = gtk_menu_item_new_with_mnemonic( "_Create Subgraph");
+  g_signal_connect( edit_create_subgraph, "activate", 
+		    G_CALLBACK(activate_create_subgraph), this);
+  gtk_widget_add_accelerator( edit_create_subgraph, "activate", accel_g,
+			      'd', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
   GtkWidget *edit_change_text = gtk_menu_item_new_with_mnemonic( "Change _Text");
   g_signal_connect( edit_change_text, "activate", 
 		    G_CALLBACK(activate_change_text), this);
@@ -1759,6 +1770,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_redo);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_rotate);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_polyline);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_create_subgraph);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_change_text);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_change_name);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_command);
@@ -2170,7 +2182,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(view), GTK_WIDGET(view_menu));
 
   // Menu Help
-  GtkWidget *help_help = gtk_image_menu_item_new_from_stock(GTK_STOCK_HELP, accel_g);
+  GtkWidget *help_help = gtk_image_menu_item_new_from_stock(GTK_STOCK_HELP, 0);
   g_signal_connect(help_help, "activate", G_CALLBACK(activate_help), this);
 
   GtkWidget *help_help_subgraph = gtk_menu_item_new_with_mnemonic( "H_elp on Subgraphs");

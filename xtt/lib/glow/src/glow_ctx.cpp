@@ -724,10 +724,11 @@ void GlowCtx::paste_execute()
   {
     a.insert( a_move[i]);
   }
-  if ( application_paste)
+
+  // if ( application_paste)
     a_sel.copy_from_common_objects(a_move);
-  else
-    a_sel.copy_from(a_move);
+    // else
+    //  a_sel.copy_from(a_move);
 
   ur_x = -1e10;
   ll_x = 1e10;

@@ -248,7 +248,11 @@ void grow_CreatePasteNode( grow_tCtx ctx, char *name, grow_tNodeClass nc,
 	double x, double y, void *user_data, grow_tNode *node)
 {
   GlowNode *n1;
-  n1 = new GlowNode( ctx, name, (GlowNodeClass *)nc, x, y, 1);
+
+  if (((GlowNodeClass *)nc)->is_slider())
+    n1 = new GrowSlider( ctx, name, (GlowNodeClass *)nc, x, y);
+  else 
+    n1 = new GrowNode( ctx, name, (GlowNodeClass *)nc, x, y, 1);
   n1->set_user_data( user_data);
   ctx->paste_insert( n1);
   *node = (grow_tNode) n1;
@@ -356,6 +360,12 @@ void grow_PasteClear( grow_tCtx ctx)
 {
   ctx->paste_clear();
 }
+
+int grow_GetPasteActive( grow_tCtx ctx)
+{
+  return ctx->get_paste_active();
+}
+
 
 void grow_CreateRect( grow_tCtx ctx, double x, double y, 
 	double width, double height,

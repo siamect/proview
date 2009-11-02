@@ -1250,6 +1250,8 @@ class Graph {
   */
   void create_axis( grow_tObject *object, double x, double y);
 
+  int create_node_floating( double x, double y);
+  
   //! Set displayed folder in a folder object.
   /*!
     \param name		Object name of folder object.

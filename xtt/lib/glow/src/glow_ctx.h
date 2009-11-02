@@ -290,6 +290,7 @@ class GlowCtx {
     Copies all objects in paste list and inserts them into the context and into the move list.
   */
   void paste_execute();
+  int get_paste_active() { return node_movement_paste_active;}
 
   //! Cut selected objects.
   /*! Clear paste list and move obejcts from select list to the pastelist. Remove them from the context. */
