@@ -313,15 +313,7 @@ void Hist::get_hist_list()
   
   dcli_translate_filename( dbName, DATABASE);
   
-  switch(Lng::lang)
-  {
-    case lng_eLanguage_sv_se:
-      printSearchStr_sv_se();
-      break;
-    default:
-      printSearchStr_en_us();
-      break;
-  }  
+  printSearchStr();
 
   /*create the database if it's not already created*/
   if((ret = db_create(&dataBaseP, NULL, 0)) != 0)
@@ -658,36 +650,36 @@ int Hist::compareStr(char *ev, char *usr)
   return sts;
 }
 
-void Hist::printSearchStr_en_us()
+void Hist::printSearchStr()
 {
   //return;
   bool addAnd = false;
   bool prioPrinted = false;
   int i = 0;
   string searchStr[4];
-  searchStr[0] = " All events";
+  searchStr[0] = Lng::translate(" All events");
   searchStr[1] = "";
   searchStr[2] = "";
   searchStr[3] = "";
 
   if((minTime_str != NULL) && (strlen(minTime_str) > 0) )  
   {
-    searchStr[i] += " From ";
+    searchStr[i] += Lng::translate(" from ");
     searchStr[i] += minTime_str;
     addAnd = true;
   }
   if((maxTime_str != NULL) && (strlen(maxTime_str) > 0) )  
   {
-    searchStr[i] += " To ";
+    searchStr[i] += Lng::translate(" to ");
     searchStr[i] += maxTime_str;
     addAnd = true;
   }
   if(eventPrio_A || eventPrio_B || eventPrio_C || eventPrio_D)
   {
-    if(addAnd) searchStr[i] += " and";
+    if(addAnd) searchStr[i] += Lng::translate(" and");
     i++;
     prioPrinted = true;
-    searchStr[i] += " with prio ";
+    searchStr[i] += Lng::translate(" with prio ");
     if(eventPrio_A)
       searchStr[i] += "A";
     if(eventPrio_B)
@@ -700,115 +692,45 @@ void Hist::printSearchStr_en_us()
    }
   if(eventType_Ack || eventType_Alarm || eventType_Info || eventType_Return)
   {
-    if(addAnd) searchStr[i] += " and";
+    if(addAnd) searchStr[i] += Lng::translate(" and");
     if(!prioPrinted)
       i++;
-    searchStr[i] += " with type ";
-    if(eventType_Ack)
-      searchStr[i] += "Ack ";
-    if(eventType_Alarm)
-      searchStr[i] += "Active ";
-    if(eventType_Info)
-      searchStr[i] += "Info ";
+    searchStr[i] += Lng::translate(" with type ");
+    if(eventType_Ack) {
+      searchStr[i] += Lng::translate("Ack");
+      searchStr[i] += " ";;
+    }
+    if(eventType_Alarm) {
+      searchStr[i] += Lng::translate("Active");
+      searchStr[i] += " ";;
+    }
+    if(eventType_Info) {
+      searchStr[i] += Lng::translate("Info");
+      searchStr[i] += " ";;
+    }
     if(eventType_Return)
-      searchStr[i] += "Return";
+      searchStr[i] += Lng::translate("Return");
     addAnd = true;
   }
   if((eventName_str != NULL) && (strlen(eventName_str) > 0) )  
   {
-    if(addAnd) searchStr[i] += " and";
+    if(addAnd) searchStr[i] += Lng::translate(" and");
     i++;
-    searchStr[i] += " with EventName ";
+    searchStr[i] += Lng::translate(" with EventName ");
     searchStr[i] += eventName_str;
     addAnd = true;
   }
   if((eventText_str != NULL) && (strlen(eventText_str) > 0) )  
   {
-    if(addAnd) searchStr[i] += " and";
+    if(addAnd) searchStr[i] += Lng::translate(" and");
     i++;
-    searchStr[i] += " with EventText ";
+    searchStr[i] += Lng::translate(" with EventText ");
     searchStr[i] += eventText_str;
   }
 
   set_search_string( searchStr[0].c_str(), searchStr[1].c_str(),
 		     searchStr[2].c_str(), searchStr[3].c_str());
 }
-
-void Hist::printSearchStr_sv_se()
-{
-  //return;
-  bool addAnd = false;
-  bool prioPrinted = false;
-  int i = 0;
-  string searchStr[4];
-  searchStr[0] = " Alla händelser";
-  searchStr[1] = "";
-  searchStr[2] = "";
-  searchStr[3] = "";
-  if((minTime_str != NULL) && (strlen(minTime_str) > 0) )  
-  {
-    searchStr[i] += " Från ";
-    searchStr[i] += minTime_str;
-    addAnd = true;
-  }
-  if((maxTime_str != NULL) && (strlen(maxTime_str) > 0) )  
-  {
-    searchStr[i] += " till ";
-    searchStr[i] += maxTime_str;
-    addAnd = true;
-  }
-  if(eventPrio_A || eventPrio_B || eventPrio_C || eventPrio_D)
-  {
-    if(addAnd) searchStr[i] += " och";
-    prioPrinted = true;
-    i++;
-    searchStr[i] += " med prio ";
-    if(eventPrio_A)
-      searchStr[i] += "A";
-    if(eventPrio_B)
-      searchStr[i] += "B";
-    if(eventPrio_C)
-      searchStr[i] += "C";
-    if(eventPrio_D)
-      searchStr[i] += "D";
-    addAnd = true;
-   }
-  if(eventType_Ack || eventType_Alarm || eventType_Info || eventType_Return)
-  {
-    if(addAnd) searchStr[i] += " och";
-    if(!prioPrinted)
-      i++;
-    searchStr[i] += " med typ ";
-    if(eventType_Ack)
-      searchStr[i] += "Kvittens ";
-    if(eventType_Alarm)
-      searchStr[i] += "Aktiv ";
-    if(eventType_Info)
-      searchStr[i] += "Info ";
-    if(eventType_Return)
-      searchStr[i] += "Retur";
-    addAnd = true;
-  }
-  if((eventName_str != NULL) && (strlen(eventName_str) > 0) )  
-  {
-    if(addAnd) searchStr[i] += " och";
-    i++;
-    searchStr[i] += " med Händelsenamn ";
-    searchStr[i] += eventName_str;
-    addAnd = true;
-  }
-  if((eventText_str != NULL) && (strlen(eventText_str) > 0) )  
-  {
-    if(addAnd) searchStr[i] += " och";
-    i++;
-    searchStr[i] += " med händelsetext ";
-    searchStr[i] += eventText_str;
-  }
-  set_search_string( searchStr[0].c_str(), searchStr[1].c_str(),
-		     searchStr[2].c_str(), searchStr[3].c_str());
-}
-
-
 
 
 
