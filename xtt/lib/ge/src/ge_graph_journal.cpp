@@ -335,6 +335,11 @@ int GraphJournal::store( journal_eAction action, grow_tObject o)
        action == journal_eAction_PostPaste ||
        action == journal_eAction_PostRename) {
 
+    if ( current_idx >= (int)poslist.size()) {
+      cerr << "Journal file disorder" << endl;
+      return GE__SUCCESS;
+    }
+
     switch ( action) {
     case journal_eAction_PostPropertiesSelect:
       poslist[current_idx].redo_pos = fp.tellp();
