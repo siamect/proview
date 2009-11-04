@@ -60,6 +60,9 @@ void wb_build::classlist( pwr_tCid cid)
     case pwr_cClass_WebHandler:
       webhandler( o.oid());
       break;
+    case pwr_cClass_WebGraph:
+      webgraph( o.oid());
+      break;
     case pwr_cClass_Application:
       application( o.oid());
       break;
@@ -322,6 +325,12 @@ void wb_build::rootvolume( pwr_tVid vid)
     if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
       sumsts = m_sts;
 
+    // Build all WebGraph
+    classlist( pwr_cClass_WebGraph);
+    if ( evenSts()) return;
+    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+      sumsts = m_sts;
+
     classlist( pwr_cClass_Application);
     if ( evenSts()) return;
     if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
@@ -518,12 +527,12 @@ void wb_build::nodehier( pwr_tOid oid)
   if ( evenSts()) return;
   sumsts = m_sts;
 
-  classlist( pwr_cClass_XttGraph);
+  classlist( pwr_cClass_WebHandler);
   if ( evenSts()) return;
   if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
     sumsts = m_sts;
 
-  classlist( pwr_cClass_WebHandler);
+  classlist( pwr_cClass_WebGraph);
   if ( evenSts()) return;
   if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
     sumsts = m_sts;
@@ -704,6 +713,125 @@ void wb_build::xttgraph( pwr_tOid oid)
 
 	m_sts = PWRB__SUCCESS;
       }
+    }
+  }
+}
+
+void wb_build::webgraph( pwr_tOid oid)
+{
+  pwr_tFileName dest_fname;
+  pwr_tCmd	cmd;
+  pwr_tString80	java_name;
+  pwr_tString80	name;
+  pwr_tTime	dest_time, src_time;
+  int 		check_hierarchy = cdh_ObjidIsNotNull( m_hierarchy);
+  int 		hierarchy_found = 0;
+  int 		is_frame, is_applet;
+  char		jname[80];
+  pwr_tStatus  	fsts;
+  int		jexport;
+  int 		found;
+  pwr_tFileName found_file, file_spec;
+  pwr_tFileName graph_name, dir;
+  char		dev[80], type[80];
+  int		version;
+
+  wb_object o = m_session.object(oid);
+  if ( !o) {
+    m_sts = o.sts();
+    return;
+  }
+
+  // Check that no ancestor is a LibHier
+  for ( wb_object p = o.parent(); p.oddSts(); p = p.parent()) {
+    if ( p.cid() == pwr_eClass_LibHier) {
+      m_sts = PWRB__INLIBHIER;
+      return;
+    }
+    if ( check_hierarchy && cdh_ObjidIsEqual( m_hierarchy, p.oid()))
+      hierarchy_found = 1;
+  }
+
+  if ( check_hierarchy && !hierarchy_found) {
+    m_sts = PWRB__NOBUILT;
+    return;
+  }
+
+  wb_attribute a = m_session.attribute( oid, "RtBody", "Name");
+  if ( !a) {
+    m_sts = a.sts();
+    return;
+  }
+
+  a.value( java_name);
+  if ( !a) {
+    m_sts = a.sts();
+    return;
+  }
+
+  cdh_ToLower( java_name, java_name);
+  java_name[0] = toupper(java_name[0]);
+
+  // Get the .pwg file for this javaname
+  sprintf( name, "$pwrp_pop/%s.pwg", cdh_Low(java_name));
+
+  dcli_translate_filename( name, name);
+  m_sts = dcli_file_time( name, &src_time);
+  if ( evenSts()) {
+    // Search in all pwg files
+    found = 0;
+    strcpy( file_spec, "$pwrp_pop/*.pwg");
+    for ( fsts = dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_INIT);
+	  ODD(fsts);
+	  fsts = dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_NEXT)) {
+
+      fsts = grow_IsJava( found_file, &is_frame, &is_applet, jname);
+      if ( EVEN(fsts)) continue;
+
+      if ( is_frame && strcmp( jname, java_name) == 0) {
+	dcli_parse_filename( found_file, dev, dir, graph_name, type, &version);
+	strcpy( name, found_file);
+	found = 1;
+	break;
+      }      
+    }
+    dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_END);
+
+    if ( !found) {
+      char msg[200];
+      sprintf( msg, "Graph for %s not found", java_name);
+      MsgWindow::message('E', msg, msgw_ePop_Yes, oid);
+      return;
+    }
+  }
+
+  m_sts = dcli_file_time( name, &src_time);
+  if ( evenSts()) return;
+
+  // Check exported java frame
+  jexport = 0;
+  sprintf( dest_fname, "$pwrp_pop/%s.java", java_name);
+  dcli_translate_filename( dest_fname, dest_fname);
+  fsts = dcli_file_time( dest_fname, &dest_time);
+  if ( opt.force || EVEN(fsts) || time_Acomp( &src_time, &dest_time) == 1)
+    jexport = 1;
+
+
+  if ( jexport) {
+    if ( !m_wnav) {
+      sprintf( cmd, "Build:    WebGraph  Unable to export java in this environment %s", java_name);
+      MsgWindow::message('W', cmd, msgw_ePop_No, oid);
+    }
+    else {
+      Ge *gectx = m_wnav->ge_new( graph_name);
+      strcpy( cmd, "export java");
+      gectx->command( cmd);
+      delete gectx;
+
+      sprintf( cmd, "Build:    WebGraph  Export java %s", java_name);
+      MsgWindow::message('I', cmd, msgw_ePop_No, oid);
+      
+      m_sts = PWRB__SUCCESS;
     }
   }
 }

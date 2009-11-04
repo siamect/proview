@@ -44,6 +44,7 @@ class wb_build : public wb_status
   void plcpgm( pwr_tOid oid);
   void xttgraph( pwr_tOid oid);
   void webhandler( pwr_tOid oid);
+  void webgraph( pwr_tOid oid);
   void application( pwr_tOid oid);
 
   wb_build_opt opt;
