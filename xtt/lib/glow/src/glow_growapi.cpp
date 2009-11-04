@@ -1482,6 +1482,11 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].type = glow_eType_Relief;
       attrinfo[i++].size = sizeof( op->relief);
       
+      strcpy( attrinfo[i].name, "fixcolor");
+      attrinfo[i].value_p = &op->fixcolor;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->fixcolor);
+      
       strcpy( attrinfo[i].name, "disable_shadow");
       attrinfo[i].value_p = &op->disable_shadow;
       attrinfo[i].type = glow_eType_Boolean;

@@ -1345,6 +1345,7 @@ typedef enum {
 	glow_eSave_GrowArc_gradient          	= 2418,
 	glow_eSave_GrowArc_gradient_contrast    = 2419,
 	glow_eSave_GrowArc_disable_gradient     = 2420,
+	glow_eSave_GrowArc_fixcolor      	= 2421,
 	glow_eSave_PolyLine_draw_type		= 2500,
 	glow_eSave_PolyLine_line_width		= 2501,
 	glow_eSave_PolyLine_a_points		= 2502,

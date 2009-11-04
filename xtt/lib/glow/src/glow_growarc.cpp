@@ -41,7 +41,7 @@ GrowArc::GrowArc( GrowCtx *glow_ctx, const char *name, double x1, double y1,
   original_fill_drawtype(fill_d_type), fill_drawtype(fill_d_type),
   border(display_border),
   dynamic(0), dynamicsize(0), shadow(display_shadow), shadow_width(5), 
-  relief(glow_eRelief_Up), shadow_contrast(2), disable_shadow(0),
+  relief(glow_eRelief_Up), shadow_contrast(2), disable_shadow(0), fixcolor(0),
   gradient(glow_eGradient_No), gradient_contrast(4), disable_gradient(0)
 { 
   strcpy( n_name, name);
@@ -271,6 +271,7 @@ void GrowArc::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowArc_shadow_contrast) << FSPACE << shadow_contrast << endl;
   fp << int(glow_eSave_GrowArc_relief) << FSPACE << int(relief) << endl;
   fp << int(glow_eSave_GrowArc_disable_shadow) << FSPACE << disable_shadow << endl;
+  fp << int(glow_eSave_GrowArc_fixcolor) << FSPACE << fixcolor << endl;
   fp << int(glow_eSave_GrowArc_gradient) << FSPACE << int(gradient) << endl;
   fp << int(glow_eSave_GrowArc_gradient_contrast) << FSPACE << gradient_contrast << endl;
   fp << int(glow_eSave_GrowArc_disable_gradient) << FSPACE << disable_gradient << endl;
@@ -328,6 +329,7 @@ void GrowArc::open( ifstream& fp)
       case glow_eSave_GrowArc_shadow_contrast: fp >> shadow_contrast; break;
       case glow_eSave_GrowArc_relief: fp >> tmp; relief = (glow_eRelief)tmp; break;
       case glow_eSave_GrowArc_disable_shadow: fp >> disable_shadow; break;
+      case glow_eSave_GrowArc_fixcolor: fp >> fixcolor; break;
       case glow_eSave_GrowArc_gradient: fp >> tmp; gradient = (glow_eGradient)tmp; break;
       case glow_eSave_GrowArc_gradient_contrast: fp >> gradient_contrast; break;
       case glow_eSave_GrowArc_disable_gradient: fp >> disable_gradient; break;
@@ -659,6 +661,8 @@ void GrowArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void 
       return;
     hot = 0;
   }
+  if ( fixcolor)
+    colornode = 0;
 
   if ( node && ((GrowNode *)node)->line_width)
     idx = int( w->zoom_factor_y / w->base_zoom_factor * 
