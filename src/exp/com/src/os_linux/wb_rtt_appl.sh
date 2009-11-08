@@ -77,7 +77,7 @@ then
      $pwrp_lib/${arname_pict} $pwrp_lib/${arname} \
      $ld_opt \
      -lpwr_dtt\
-     -lpwr_rt -lpwr_co -lpwr_msg_dummy -lrpcsvc -lpthread -lm -lposix1b -lrt 
+     -lpwr_rt -lpwr_co -lpwr_flow -lpwr_msg_dummy -lrpcsvc -lpthread -lm -lrt -lcrypt
   fi
 
   if [ $action = "2" ]

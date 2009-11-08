@@ -26,9 +26,9 @@ RTT_HELP_SUBJ("PWR_RTT")
 RTT_HELP_INFO("      Select subject with the arrow keys and press RETURN")
 RTT_HELP_TEXT( "\
 	rt_rtt show info about the realtime database.\n\r\n\r\
-OBJECT HIERARCHY	Show the Plant and Node hierarchy.\n\r\
+DATABASE		Show the Plant and Node hierarchy.\n\r\
 ALARM LIST		Show the alarm list.\n\r\
-EVENTLIST		Show the event list.\n\r\
+EVENT LIST		Show the event list.\n\r\
 EXIT			Terminate.")
 
 RTT_HELP_SUBJ("RTT ALARM LIST")
@@ -90,7 +90,7 @@ RTT_MENU_SYSEDIT_NEW( "LOGGING", 0, &RTTSYS_LOGGING)
 RTT_MENU_END( dtt_menu_m6)
 
 RTT_MAINMENU_START( "PWR_RTT/RTT-'RTT_NODE'-'RTT_SYS'")
-RTT_MENUITEM_OBJECTS( "OBJECT HIERARCHY")
+RTT_MENUITEM_OBJECTS( "DATABASE")
 RTT_MENUITEM_COMMAND( "ALARM LIST", "ALARM SHOW")
 RTT_MENUITEM_COMMAND( "EVENT LIST", "ALARM LIST")
 RTT_MENU_NEW( "SYSTEM", dtt_menu_m6)
