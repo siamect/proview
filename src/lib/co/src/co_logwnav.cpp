@@ -123,7 +123,10 @@ void CoLogWNavBrow::create_nodeclasses()
   brow_AddAnnot( nc_log, 13, 0.6, 2,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
-  brow_AddAnnot( nc_log, 30, 0.6, 3,
+  brow_AddAnnot( nc_log, 18, 0.6, 3,
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
+		0);
+  brow_AddAnnot( nc_log, 35, 0.6, 4,
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		1);
   brow_AddFrame( nc_log, 0, 0, 35, 0.83, flow_eDrawType_LineGray, -1, 1);
@@ -377,8 +380,8 @@ int CoLogWNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 }
 
 ItemLog::ItemLog( CoLogWNav *item_logwnav, const char *item_name,
-		  pwr_tTime item_time, char *item_category, char *item_comment,
-		  brow_tNode dest, flow_eDest dest_code):
+		  pwr_tTime item_time, char *item_category, char *item_user, 
+		  char *item_comment, brow_tNode dest, flow_eDest dest_code):
   logwnav(item_logwnav), time(item_time)
 {
   char time_str[40];
@@ -387,6 +390,7 @@ ItemLog::ItemLog( CoLogWNav *item_logwnav, const char *item_name,
   type = logwitem_eItemType_Log;
 
   strncpy( category, item_category, sizeof(category));
+  strncpy( user, item_user, sizeof(user));
   if ( item_comment)
     strncpy( comment, item_comment, sizeof(comment));
   else
@@ -402,6 +406,7 @@ ItemLog::ItemLog( CoLogWNav *item_logwnav, const char *item_name,
   int annot = 0;
   brow_SetAnnotation( node, annot++, time_str, strlen(time_str));
   brow_SetAnnotation( node, annot++, category, strlen(category));
+  brow_SetAnnotation( node, annot++, user, strlen(user));
   if ( logwnav->show_item)
     brow_SetAnnotation( node, annot++, item_name, strlen(item_name));
   if ( item_comment)
@@ -420,12 +425,12 @@ ItemLog::ItemLog( CoLogWNav *item_logwnav, const char *item_name,
            
 }
 
-void CoLogWNav::item_cb( void *ctx, pwr_tTime time, char *category, char *item, 
+void CoLogWNav::item_cb( void *ctx, pwr_tTime time, char *category, char *user, char *item, 
 			 char *comment)
 {
   CoLogWNav *logwnav = (CoLogWNav *)ctx;
 
-  new ItemLog( logwnav, item, time, category, comment, 0, flow_eDest_IntoLast);
+  new ItemLog( logwnav, item, time, category, user, comment, 0, flow_eDest_IntoLast);
 }
 
 void CoLogWNav::show( char categories[][20], char *item)

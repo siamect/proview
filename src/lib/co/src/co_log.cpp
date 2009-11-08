@@ -35,10 +35,15 @@ CoLog *CoLog::m_default_log = 0;
 void CoLog::log( const char *category, const char *str, const char *cmt, unsigned int opt)
 {
   ofstream fp;
+  pwr_tStatus sts;
   char timstr[40];
+  char username[80];
   char comment[200] = "";
 
   time_AtoAscii( 0, time_eFormat_DateAndTime, timstr, sizeof(timstr));
+  sts = syi_UserName( username, sizeof(username));
+  if ( EVEN(sts))
+    strcpy( username, "Unknown");
 
   if ( cmt)
     strncpy( comment, cmt, sizeof(comment));
@@ -72,6 +77,10 @@ void CoLog::log( const char *category, const char *str, const char *cmt, unsigne
   for ( int i = strlen(category); i < 11; i++)
     fp << " ";
   fp << " ";
+  fp << " " << username;
+  for ( int i = strlen(username); i < 11; i++)
+    fp << " ";
+  fp << " ";
   fp << str;
   if ( strcmp( comment, "") != 0)
     fp << " \"" << comment << "\"";
@@ -80,11 +89,11 @@ void CoLog::log( const char *category, const char *str, const char *cmt, unsigne
 }
 
 void CoLog::get( char categories[][20], char *item, 
-		 void item_cb( void *, pwr_tTime, char *, char *, char *), void *ctx)
+		 void item_cb( void *, pwr_tTime, char *, char *, char *, char *), void *ctx)
 {
   ifstream fp;
   char line[1024];
-  char line_array[7][512];
+  char line_array[8][512];
   int parts;
   int num;
   unsigned int level;
@@ -100,8 +109,8 @@ void CoLog::get( char categories[][20], char *item,
 	     sizeof( line_array[0]), 0);
 
     if ( item &&
-	 !(item[strlen(item)-1] == '*' && cdh_NoCaseStrncmp( line_array[5], item, strlen(item)-1) == 0) &&
-	 cdh_NoCaseStrcmp( line_array[5], item) != 0)
+	 !(item[strlen(item)-1] == '*' && cdh_NoCaseStrncmp( line_array[6], item, strlen(item)-1) == 0) &&
+	 cdh_NoCaseStrcmp( line_array[6], item) != 0)
       continue;
 
     int found = 0;
@@ -125,10 +134,10 @@ void CoLog::get( char categories[][20], char *item,
     if ( EVEN(sts))
       continue;
 
-    if ( parts > 6)
-      item_cb( ctx, time, line_array[4], line_array[5], line_array[6]);
+    if ( parts > 7)
+      item_cb( ctx, time, line_array[4], line_array[5], line_array[6], line_array[7]);
     else
-      item_cb( ctx, time, line_array[4], line_array[5], 0);
+      item_cb( ctx, time, line_array[4], line_array[5], line_array[6], 0);
   }
 }
 
