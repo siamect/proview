@@ -2858,7 +2858,7 @@ int	XNav::show_logging( int index)
   new ItemCommand( brow, Lng::translate("Stop"), 0, NULL,
 		flow_eDest_IntoLast, command, 0, brow->pixmap_action);
 
-  sprintf( command, "logging store/entry=%d/file=rtt_store_logg%d.rtt_com",
+  sprintf( command, "logging store/entry=%d/file=\"rtt_store_logg%d.rtt_com\"",
          entry, entry);
   new ItemCommand( brow, Lng::translate("Store"), 0, NULL,
 		flow_eDest_IntoLast, command, 0, brow->pixmap_action);
