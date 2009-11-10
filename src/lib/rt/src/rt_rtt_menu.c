@@ -457,51 +457,48 @@ static int	rtt_rttconfig()
 {
 	pwr_tObjid	objid;
 	pwr_tOName     	hiername;
-	int		found;
 	int		sts;
 	pwr_tFileName  	filename;
-	pwr_sClass_OpPlace *opplace_p;
+	pwr_sClass_RttConfig *conf_p;
 
-	if ( rtt_ConfigureObject[0])
-	{
+	if ( rtt_ConfigureObject[0]) {
 	  strcpy( hiername, rtt_ConfigureObject);
 	  sts = gdh_NameToObjid ( hiername, &objid);
 	  if ( EVEN(sts)) return sts;
 	}
-	else
-	{
-	  // Look for default opplace
+	else {
+	  // Look for rttconfig object
 	  pwr_tOid oid;
 	  pwr_tOName name;
 
-	  found = 0;
-	  for ( sts = gdh_GetClassList( pwr_cClass_OpPlace, &oid); 
-		ODD(sts);
-		sts = gdh_GetNextObject( oid, &oid)) {
-	    sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_object);
-	    if ( ODD(sts) && cdh_NoCaseStrcmp( name, "opdefault") == 0) {
-	      sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mNName);
-	      if ( EVEN(sts)) exit(sts);
-
-	      strncpy( rtt_ConfigureObject, name, sizeof(rtt_ConfigureObject));
-	      found = 1;
-	      break;
-	    }
-	  }
-	  if ( found == 0)
+	  sts = gdh_GetClassList( pwr_cClass_RttConfig, &oid);
+	  if ( EVEN(sts))
 	    return RTT__OBJNOTFOUND;
+
+	  sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_path | cdh_mName_object);
+	  if ( EVEN(sts)) exit(sts);
+
+	  strncpy( rtt_ConfigureObject, name, sizeof(rtt_ConfigureObject));
 	}
 
-	sts = gdh_NameToPointer( rtt_ConfigureObject, (void **)&opplace_p);
+	sts = gdh_NameToPointer( rtt_ConfigureObject, (void **)&conf_p);
 	if ( EVEN(sts)) return sts;
 
 	sts = gdh_NameToObjid( rtt_ConfigureObject, &rtt_UserObject);
 	if ( EVEN(sts)) return sts;
 
-	rtt_AlarmBeep = opplace_p->AlarmBell;
-	rtt_AlarmReturn = (opplace_p->EventListEvents & pwr_mEventListMask_AlarmReturn) != 0;
-	rtt_AlarmAck = (opplace_p->EventListEvents & pwr_mEventListMask_AlarmAck) != 0;
-	strncpy( rtt_symbolfilename, opplace_p->SetupScript, sizeof(rtt_symbolfilename));
+	rtt_AlarmBeep = conf_p->AlarmBeep;
+	rtt_AlarmReturn = (conf_p->EventListEvents & pwr_mEventListMask_AlarmReturn) != 0;
+	rtt_AlarmAck = (conf_p->EventListEvents & pwr_mEventListMask_AlarmAck) != 0;
+	rtt_AlarmReturn = (conf_p->EventListEvents & pwr_mEventListMask_AlarmReturn) != 0;
+	rtt_AlarmAck = (conf_p->EventListEvents & pwr_mEventListMask_AlarmAck) != 0;
+	rtt_AlarmAutoLoad = conf_p->AlarmAutoLoad;
+	rtt_AlarmMessage = conf_p->AlarmMessage;
+	rtt_description_on = conf_p->DescriptionOff ? 0 : 1;
+	strncpy( rtt_default_directory, conf_p->DefaultDirectory, sizeof(rtt_default_directory));
+	if ( conf_p->ScanTime > 0.1)
+	  rtt_scantime = conf_p->ScanTime;
+	strncpy( rtt_symbolfilename, conf_p->SymbolFileName, sizeof(rtt_symbolfilename));
 
 	/* Execute the symbolfile */
 	if ( strcmp(rtt_symbolfilename, "") != 0)

@@ -281,6 +281,11 @@ mh_OutunitConnect (
       l.pSelL = (void *)&((pwr_sClass_WebHandler*) p)->EventSelectList[0];
       l.SelectListIsUpdated = NULL;
       break;
+    case pwr_cClass_RttConfig:
+      type = mh_eOutunitType_Operator;
+      l.pSelL = (void *)&((pwr_sClass_RttConfig*) p)->EventSelectList[0];
+      l.SelectListIsUpdated = NULL;
+      break;
     case pwr_cClass_EventPrinter:
       type = mh_eOutunitType_Printer;
       l.pSelL = (void *)&((pwr_sClass_EventPrinter*) p)->SelectList[0];
