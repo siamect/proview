@@ -6993,7 +6993,7 @@ int	rtt_hierarchy(
 	int		sts;
 	pwr_tOName     	objname;
 	pwr_tOName     	hiername;
-	char		title[] = "OBJECT HIERARCHY";
+	char		title[] = "DATABASE";
 	pwr_tObjid	objid;
 	rtt_t_menu	*menulist = 0;
 	int		i, j;
@@ -9778,6 +9778,9 @@ int	rtt_scan(
 {
 	int	sts;
 
+	if ( !rtt_gdh_started)
+	  return RTT__SUCCESS;
+  
         /* Check if rt_ini left us a message */
         get.data = NULL;
         qcom_Get(&sts, &my_q, &get, 0);
