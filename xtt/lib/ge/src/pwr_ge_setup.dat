@@ -113,6 +113,8 @@ menu Indicators
   subgraph 	IndSquareTextFront pwr_exe:pwr_indsquaretextfront.pwsg 	48
   subgraph 	IndSquareTextRear pwr_exe:pwr_indsquaretextrear.pwsg 	48
   subgraph 	IndSquareLarge 	pwr_exe:pwr_indsquarelarge.pwsg 	5
+  subgraph 	IndSquareMetalFrame pwr_exe:pwr_indsquaremetalframe.pwsg 5
+  subgraph 	IndRoundMetalFrame pwr_exe:pwr_indroundmetalframe.pwsg 		6
   subgraph 	TrafficLight 	pwr_exe:pwr_trafficlight.pwsg 		36
 }
 menu Values
@@ -158,6 +160,9 @@ menu Pushbuttons
   subgraph 	ButtonResetConfirm pwr_exe:pwr_buttonresetconfirm.pwsg 	7
   subgraph 	ButtonToggleConfirm pwr_exe:pwr_buttontoggleconfirm.pwsg 7
   subgraph 	ButtonCommandConfirm pwr_exe:pwr_buttoncommandconfirm.pwsg 7
+  subgraph 	Button1MetalFrame pwr_exe:pwr_button1metalframe.pwsg	7
+  subgraph 	Button2MetalFrame pwr_exe:pwr_button2metalframe.pwsg	7
+  subgraph 	ButtonRoundMetalFrame pwr_exe:pwr_buttonroundmetalframe.pwsg 92
   subgraph 	ButtonUp 	pwr_exe:pwr_buttonup.pwsg		84
   subgraph 	ButtonDown 	pwr_exe:pwr_buttondown.pwsg		85
   subgraph 	ButtonLeft 	pwr_exe:pwr_buttonleft.pwsg		86
@@ -170,8 +175,10 @@ menu Pushbuttons
   subgraph 	ButtonInfo 	pwr_exe:pwr_buttoninfo.pwsg		93
   subgraph 	ButtonHelp 	pwr_exe:pwr_buttonhelp.pwsg		94
   subgraph	CheckBox	pwr_exe:pwr_checkbox.pwsg		88
+  subgraph	CheckBox2	pwr_exe:pwr_checkbox2.pwsg		88
   subgraph	CheckBoxRelief	pwr_exe:pwr_checkboxrelief.pwsg		91
   subgraph	RadioButton	pwr_exe:pwr_radiobutton.pwsg		89
+  subgraph	RadioButton2	pwr_exe:pwr_radiobutton2.pwsg		89
   subgraph	RadioButtonRelief pwr_exe:pwr_radiobuttonrelief.pwsg	90
   subgraph	NoteButton      pwr_exe:pwr_notebutton.pwsg		96
   menu          MethodButtons
