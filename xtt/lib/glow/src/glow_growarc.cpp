@@ -661,6 +661,19 @@ void GrowArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void 
       return;
     hot = 0;
   }
+  int chot = 0;
+  if ( hot && ctx->environment != glow_eEnv_Development) {
+    if ( ctx->hot_indication == glow_eHotIndication_No)
+	 hot = 0;
+    else if ( ctx->hot_indication == glow_eHotIndication_DarkColor) {
+      chot = hot;
+      hot = 0;
+    }
+    else if ( ctx->hot_indication == glow_eHotIndication_LightColor) {
+      chot = -hot;
+      hot = 0;
+    }
+  }
   if ( fixcolor)
     colornode = 0;
 
@@ -705,18 +718,23 @@ void GrowArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void 
       grad = ((GrowNode *)node)->gradient;
     
     if ( !display_shadow || shadow_width == 0 || angle2 != 360) {
-      if ( grad == glow_eGradient_No || fillcolor == glow_eDrawType_ColorRed)
+      if ( grad == glow_eGradient_No || fillcolor == glow_eDrawType_ColorRed) {
+	if ( chot)
+	  drawtype = GlowColor::shift_drawtype( fillcolor, chot, 0);
+	else
+	  drawtype = fillcolor;
 	ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-			      angle1 - rot, angle2, fillcolor, 0);
+			      angle1 - rot, angle2, drawtype, 0);
+      }
       else {
 	glow_eDrawType f1, f2;
 	if ( gradient_contrast >= 0) {
-	  f2 = GlowColor::shift_drawtype( fillcolor, -gradient_contrast/2, 0);
-	  f1 = GlowColor::shift_drawtype( fillcolor, int(float(gradient_contrast)/2+0.6), 0);
+	  f2 = GlowColor::shift_drawtype( fillcolor, -gradient_contrast/2 + chot, 0);
+	  f1 = GlowColor::shift_drawtype( fillcolor, int(float(gradient_contrast)/2+0.6) + chot, 0);
 	}
 	else {
-	  f2 = GlowColor::shift_drawtype( fillcolor, -int(float(gradient_contrast)/2-0.6), 0);
-	  f1 = GlowColor::shift_drawtype( fillcolor, gradient_contrast/2, 0);
+	  f2 = GlowColor::shift_drawtype( fillcolor, -int(float(gradient_contrast)/2-0.6) + chot, 0);
+	  f1 = GlowColor::shift_drawtype( fillcolor, gradient_contrast/2 + chot, 0);
 	}
 	ctx->gdraw->gradient_fill_arc( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, angle1 - rot, 
 				       angle2, fillcolor, f1, f2, grad);
@@ -731,44 +749,49 @@ void GrowArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void 
       if ( grad == glow_eGradient_No || fillcolor == glow_eDrawType_ColorRed) {
 
 	// Draw light shadow
-	drawtype = ctx->shift_drawtype( fillcolor, -drawtype_incr, (GrowNode *)colornode);
+	drawtype = ctx->shift_drawtype( fillcolor, -drawtype_incr + chot, (GrowNode *)colornode);
       
 	ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
 			      35, 140, drawtype, 0);
 
 	// Draw dark shadow
-	drawtype = ctx->shift_drawtype( fillcolor, drawtype_incr, (GrowNode *)colornode);
+	drawtype = ctx->shift_drawtype( fillcolor, drawtype_incr + chot, (GrowNode *)colornode);
       
 	ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
 			      215, 140, drawtype, 0);
 
 	// Draw medium shadow and body
+	if ( chot)
+	  drawtype = GlowColor::shift_drawtype( fillcolor, chot, 0);
+	else
+	  drawtype = fillcolor;
+
 	ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-			      -5, 40, fillcolor, 0);
+			      -5, 40, drawtype, 0);
 	ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-			      175, 40, fillcolor, 0);
+			      175, 40, drawtype, 0);
 
 	ctx->gdraw->fill_arc( w,  ll_x + ish, ll_y + ish, ur_x - ll_x - 2*ish, ur_y - ll_y - 2*ish,
-			      angle1 - rot, angle2, fillcolor, 0);
+			      angle1 - rot, angle2, drawtype, 0);
       }
       else {
 	glow_eDrawType f1, f2;
 
 	// Draw shadow
-	f1 = ctx->shift_drawtype( fillcolor, -drawtype_incr, (GrowNode *)colornode);
-	f2 = ctx->shift_drawtype( fillcolor, drawtype_incr, (GrowNode *)colornode);
+	f1 = ctx->shift_drawtype( fillcolor, -drawtype_incr + chot, (GrowNode *)colornode);
+	f2 = ctx->shift_drawtype( fillcolor, drawtype_incr + chot, (GrowNode *)colornode);
 
 	ctx->gdraw->gradient_fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
 			      angle1 - rot, angle2, fillcolor, f2, f1, glow_eGradient_DiagonalUpperLeft);
 
 	// Draw circle
 	if ( gradient_contrast >= 0) {
-	  f2 = GlowColor::shift_drawtype( fillcolor, -gradient_contrast/2, 0);
-	  f1 = GlowColor::shift_drawtype( fillcolor, int(float(gradient_contrast)/2+0.6), 0);
+	  f2 = GlowColor::shift_drawtype( fillcolor, -gradient_contrast/2 + chot, 0);
+	  f1 = GlowColor::shift_drawtype( fillcolor, int(float(gradient_contrast)/2+0.6) + chot, 0);
 	}
 	else {
-	  f2 = GlowColor::shift_drawtype( fillcolor, -int(float(gradient_contrast)/2-0.6), 0);
-	  f1 = GlowColor::shift_drawtype( fillcolor, gradient_contrast/2, 0);
+	  f2 = GlowColor::shift_drawtype( fillcolor, -int(float(gradient_contrast)/2-0.6) + chot, 0);
+	  f1 = GlowColor::shift_drawtype( fillcolor, gradient_contrast/2 + chot, 0);
 	}
 	ctx->gdraw->gradient_fill_arc( w,  ll_x + ish, ll_y + ish, ur_x - ll_x - 2*ish, ur_y - ll_y - 2*ish,
 			      angle1 - rot, angle2, fillcolor, f1, f2, grad);
@@ -793,6 +816,9 @@ void GrowArc::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
       return;
     hot = 0;
   }
+  if ( hot && ctx->environment != glow_eEnv_Development &&
+       ctx->hot_indication != glow_eHotIndication_LineWidth)
+    hot = 0;
 
   if ( node && ((GrowNode *)node)->line_width)
     idx = int( w->zoom_factor_y / w->base_zoom_factor * 

@@ -822,6 +822,7 @@ class GlowCtx {
   GlowArrayElem *inputfocus_object; //!< Object that has input focus.
   int is_component;		//!< Ctx is a window component.
   CtxComment *comment;
+  glow_eHotIndication hot_indication; //!< Specification of how hots object should be drawn.
 
   //! Register scrollbar callback function
   /*!

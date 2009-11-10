@@ -80,7 +80,8 @@ typedef enum {
   glow_eType_TextSize,	  	//!< Type is a text size, glow_eTextSize
   glow_eType_Adjustment,  	//!< Type is glow_eAdjustment
   glow_eType_Font,	  	//!< Type is glow_eFont
-  glow_eType_Gradient      	//!< Type is glow_eGradient
+  glow_eType_Gradient,      	//!< Type is glow_eGradient
+  glow_eType_HotIndication     	//!< Type is glow_eHotIndication
 } glow_eType;
 
 //! Type of Ctx class
@@ -371,6 +372,14 @@ typedef enum {
   glow_eGradient_RadialLowerRight
 } glow_eGradient;
 
+
+//! Type of shadow drawn for an object
+typedef enum {
+  glow_eHotIndication_No,   //!< No hot object indication  
+  glow_eHotIndication_LineWidth,  //!< Increased linewidth for hot objects
+  glow_eHotIndication_DarkColor,  //!< Darker color for hot objects
+  glow_eHotIndication_LightColor  //!< Lighter color for hot objects
+} glow_eHotIndication;
 
 //! Color index for a color
 /*! The drawtype is index in an array that contains the gc for colors in the color palette. 
@@ -1079,6 +1088,7 @@ typedef enum {
 	glow_eSave_Ctx_zoom_factor_y	        = 135,
 	glow_eSave_Ctx_nav_zoom_factor_y	= 136,
 	glow_eSave_Ctx_version			= 137,
+	glow_eSave_Ctx_hot_indication  		= 138,
 	glow_eSave_Ctx_comment			= 199,
 	glow_eSave_Array_a			= 200,
 	glow_eSave_NodeClass_nc_name		= 300,

@@ -2820,6 +2820,11 @@ int grow_GetGraphAttrInfo( grow_tCtx ctx, grow_sAttrInfo **info,
   attrinfo[i].type = glow_eType_Boolean;
   attrinfo[i++].size = sizeof( ctx->bitmap_fonts);
       
+  strcpy( attrinfo[i].name, "HotIndication");
+  attrinfo[i].value_p = &ctx->hot_indication;
+  attrinfo[i].type = glow_eType_HotIndication;
+  attrinfo[i++].size = sizeof( ctx->hot_indication);
+      
   attrinfo[i].info_type = grow_eInfoType_End;
   *attr_cnt = i;
   *info = attrinfo;

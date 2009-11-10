@@ -832,6 +832,14 @@ static attrnav_sEnumElement elem_font[] = {
 	{ (int) glow_eFont_Times, "Times"},
 	{ (int) glow_eFont_NewCenturySchoolbook, "New Century Schoolbook"},
 	{ (int) glow_eFont_Courier, "Courier"},
+	{ (int) glow_eFont_LucidaSans, "LucidaSans"},
+	{ 0, ""}};
+
+static attrnav_sEnumElement elem_hot_indication[] = {
+	{ (int) glow_eHotIndication_No, "No"},
+	{ (int) glow_eHotIndication_LineWidth, "LineWidth"},
+	{ (int) glow_eHotIndication_DarkColor, "DarkColor"},
+	{ (int) glow_eHotIndication_LightColor, "LightColor"},
 	{ 0, ""}};
 
 static attrnav_sEnumElement elem_access[] = {
@@ -955,7 +963,8 @@ static attrnav_sEnum enum_types[] = {
 	{ (int) glow_eType_Adjustment, 	(attrnav_sEnumElement *) &elem_adjustment},
 	{ (int) glow_eType_Font, 	(attrnav_sEnumElement *) &elem_font},
 	{ (int) ge_eAttrType_CurveDataType, (attrnav_sEnumElement *) &elem_curve_datatype},
-	{ (int) glow_eType_Gradient, (attrnav_sEnumElement *) &elem_gradient},
+	{ (int) glow_eType_Gradient, 	(attrnav_sEnumElement *) &elem_gradient},
+	{ (int) glow_eType_HotIndication, (attrnav_sEnumElement *) &elem_hot_indication},
 	{ 0, NULL}};
 
 static attrnav_sEnum mask_types[] = {
@@ -1019,6 +1028,7 @@ int  attrnav_attr_string_to_value( int type_id, char *value_str,
     case glow_eType_Relief: 
     case glow_eType_TextSize: 
     case glow_eType_Gradient: 
+    case glow_eType_HotIndication: 
     case ge_eAttrType_DynType:
     case ge_eAttrType_DynTypeTone:
     case ge_eAttrType_ActionType:
@@ -1102,6 +1112,7 @@ void  attrnav_attrvalue_to_string( int type_id, void *value_ptr,
     case glow_eType_Relief:
     case glow_eType_TextSize:
     case glow_eType_Gradient: 
+    case glow_eType_HotIndication: 
     case ge_eAttrType_AnimSequence:
     case ge_eAttrType_LimitType:
     case ge_eAttrType_ScaleType:
@@ -2157,6 +2168,7 @@ ItemLocal::ItemLocal( AttrNav *attrnav, const char *item_name, const char *attr,
     case glow_eType_Relief:
     case glow_eType_TextSize:
     case glow_eType_Gradient: 
+    case glow_eType_HotIndication: 
     case ge_eAttrType_DynType:
     case ge_eAttrType_DynTypeTone:
     case ge_eAttrType_ActionType:

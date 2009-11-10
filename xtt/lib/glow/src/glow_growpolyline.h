@@ -332,7 +332,7 @@ class GrowPolyLine : public GlowPolyLine {
   */
 	
   void calculate_shadow( glow_sShadowInfo **s, int *num, int ish, int highlight, void *colornode,
-			   int exportjava);
+			 int exportjava, int chot);
 
   double	x_right;	//!< Right border of object.
   double	x_left;		//!< Left border of object.
