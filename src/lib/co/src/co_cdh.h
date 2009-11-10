@@ -913,6 +913,12 @@ cdh_ObjidToString (
 );
 
 char *
+cdh_ObjidToFnString (
+  char			*s,
+  pwr_tOid		oid
+);
+
+char *
 cdh_ArefToString (
   char			*s,
   pwr_sAttrRef  *aref,
