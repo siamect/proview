@@ -2380,7 +2380,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_toolbar_append_widget( tools, tools_equid_vert_down, "Set equal distance between objects bottom side vertical", "");
 
   // View Planthierarchy
-  GtkWidget *tools_view_plant = image_button( "$pwr_exe/foe_navpalette.png");
+  GtkWidget *tools_view_plant = image_button( "$pwr_exe/xtt_navigator.png");
   g_signal_connect(tools_view_plant, "clicked", G_CALLBACK(activate_view_plant), this);
   gtk_toolbar_append_widget( tools, tools_view_plant, "View plant hierarchy", "");
 
