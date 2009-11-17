@@ -306,6 +306,7 @@ void GrowTable::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
   text_idx = min( text_idx, DRAW_TYPE_SIZE-1);
   int header_text_idx = int( w->zoom_factor_y / w->base_zoom_factor * (header_text_size +4) - 4);
   header_text_idx = min( header_text_idx, DRAW_TYPE_SIZE-1);
+  double header_tsize = w->zoom_factor_y / w->base_zoom_factor * (8+2*header_text_size);
 
   int ll_x, ll_y, ur_x, ur_y;
   double dx1, dy1, dx2, dy2;
@@ -427,7 +428,7 @@ void GrowTable::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
       if ( header_text_idx >= 0 && strcmp( header_text[i], "") != 0) {
 	ctx->gdraw->text( w, int(x + text_offs), int(y + header_h - 4),
 			  header_text[i], strlen(header_text[i]), header_text_drawtype, header_text_color,
-			  header_text_idx, highlight, 0, font, tsize);
+			  header_text_idx, highlight, 0, font, header_tsize);
       }
       x += column_width[i] * w->zoom_factor_x;
       if ( x > ur_x)
