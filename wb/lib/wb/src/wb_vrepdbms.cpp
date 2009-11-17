@@ -36,7 +36,7 @@
 #include "wb_merep.h"
 #include "wb_attribute.h"
 #include "wb_dblock.h"
-#include "co_msgwindow.h"
+#include "cow_msgwindow.h"
 #include "wb_vrepwbl.h"
 #include "wb_volume.h"
 

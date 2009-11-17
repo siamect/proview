@@ -42,7 +42,7 @@
 
 #include "flow_x.h"
 #include "co_lng.h"
-#include "co_wow_motif.h"
+#include "cow_wow_motif.h"
 #include "xtt_clog.h"
 #include "rt_xnav_msg.h"
 #include "xtt_clog_motif.h"

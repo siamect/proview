@@ -43,7 +43,7 @@
 
 #include "flow_x.h"
 #include "co_lng.h"
-#include "co_mrm_util.h"
+#include "cow_mrm_util.h"
 #include "xtt_evlist_motif.h"
 #include "xtt_ev_motif.h"
 #include "rt_xnav_msg.h"

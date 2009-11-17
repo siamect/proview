@@ -34,7 +34,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <string.h>
-#include "co_msgwindow.h"
+#include "cow_msgwindow.h"
 
 static int compCatt( tree_sTable *tp, tree_sNode *x, tree_sNode *y);
 

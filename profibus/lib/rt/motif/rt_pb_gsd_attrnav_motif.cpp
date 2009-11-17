@@ -26,7 +26,7 @@
 
 #include "co_cdh.h"
 #include "co_time.h"
-#include "co_wow_motif.h"
+#include "cow_wow_motif.h"
 
 #include <Xm/Xm.h>
 #include <Xm/XmP.h>

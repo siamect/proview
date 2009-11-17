@@ -39,7 +39,7 @@
 #include "flow_browapi.h"
 #include "wb_utl.h"
 #include "wb_lfu.h"
-#include "co_login.h"
+#include "cow_login.h"
 #include "wb_wnav.h"
 #include "wb_wnav_item.h"
 #include "wb_pal.h"
@@ -47,7 +47,7 @@
 #include "wb_wnav_msg.h"
 #include "wb_cmdc.h"
 #include "wb.h"
-#include "co_msgwindow.h"
+#include "cow_msgwindow.h"
 
 char Cmd::cmd_volume[80];
 char *Cmd::cmd_volume_p = 0;

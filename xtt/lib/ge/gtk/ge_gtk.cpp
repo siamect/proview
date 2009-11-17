@@ -37,8 +37,8 @@
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_dcli.h"
-#include "co_xhelp.h"
-#include "co_wow_gtk.h"
+#include "cow_xhelp.h"
+#include "cow_wow_gtk.h"
 
 #include "flow.h"
 #include "flow_browctx.h"
@@ -61,8 +61,8 @@
 #include "ge_util.h"
 #include "ge_msg.h"
 #include "wb_wnav_selformat.h"
-#include "co_wow_gtk.h"
-#include "co_logw_gtk.h"
+#include "cow_wow_gtk.h"
+#include "cow_logw_gtk.h"
 #include "wb_nav_gtk.h"
 #include "wb_log.h"
 

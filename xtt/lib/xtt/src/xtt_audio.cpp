@@ -12,7 +12,7 @@
 #include "co_dcli.h"
 #include "pwr_baseclasses.h"
 #include "rt_xnav_msg.h"
-#include "co_wow.h"
+#include "cow_wow.h"
 #include "xtt_audio.h"
 
 #define OSS_BUFFER_SIZE 65536

@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <gtk/gtk.h>
 #include "co_dcli.h"
-#include "co_wow_gtk.h"
+#include "cow_wow_gtk.h"
 #include "xtt_xnav.h"
 #include "xtt_methodtoolbar_gtk.h"
 

@@ -45,11 +45,11 @@
 #include "wb_watt_gtk.h"
 #include "wb_gre_gtk.h"
 #include "wb_foe_gtk.h"
-#include "co_login.h"
+#include "cow_login.h"
 #include "wb_pal_gtk.h"
 #include "wb_nav_gtk.h"
-#include "co_wow_gtk.h"
-#include "co_logw_gtk.h"
+#include "cow_wow_gtk.h"
+#include "cow_logw_gtk.h"
 
 //	Callback from the menu.
 void WFoeGtk::activate_save( GtkWidget *w, gpointer data)

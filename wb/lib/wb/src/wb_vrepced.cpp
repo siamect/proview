@@ -39,7 +39,7 @@
 #include "wb_volume.h"
 #include "wb_palfile.h"
 #include "pwr_baseclasses.h"
-#include "co_msgwindow.h"
+#include "cow_msgwindow.h"
 #include "co_tree.h"
 #include "co_dcli.h"
 #include "co_time.h"

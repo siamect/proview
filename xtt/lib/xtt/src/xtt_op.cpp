@@ -31,9 +31,9 @@
 #include "rt_gdh.h"
 #include "rt_mh.h"
 #include "rt_mh_outunit.h"
-#include "co_wow.h"
+#include "cow_wow.h"
 #include "co_lng.h"
-#include "co_xhelp.h"
+#include "cow_xhelp.h"
 #include "xtt_op.h"
 #include "rt_xnav_msg.h"
 

@@ -9,7 +9,7 @@ link = $(ldxx) $(elinkflags) $(domap) -o $(pwr_exe)/profinet_viewer_gtk \
 	$(pwr_eobj)/rt_io_user.o -L/usr/X11R6/lib \
 	-L/opt/gnome/lib \
 	-lpwr_flow_gtk -lpwr_flow -lpwr_rt_gtk -lpwr_rt \
-	-lpwr_co_gtk -lpwr_co -lpwr_flow_gtk -lpwr_flow \
+	-lpwr_cow_gtk -lpwr_cow -lpwr_co -lpwr_flow_gtk -lpwr_flow \
 	`pkg-config --libs gtk+-2.0` \
 	-lpwr_msg_dummy -lantlr \
 	-lcrypt -lrpcsvc -lpthread -lm -ldb_cxx -lz

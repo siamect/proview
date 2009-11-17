@@ -36,7 +36,7 @@
 #include "co_dcli.h"
 #include "co_time.h"
 #include "wb_wda_msg.h"
-#include "co_wow.h"
+#include "cow_wow.h"
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
@@ -44,7 +44,7 @@
 #include "wb_wdanav.h"
 #include "wb_wtt.h"
 #include "wb_wnav.h"
-#include "co_xhelp.h"
+#include "cow_xhelp.h"
 
 
 void Wda::message_cb( void *wda, char severity, const char *message)

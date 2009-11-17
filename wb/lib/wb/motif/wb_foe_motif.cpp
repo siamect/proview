@@ -50,11 +50,11 @@
 #include "wb_watt_motif.h"
 #include "wb_gre_motif.h"
 #include "wb_foe_motif.h"
-#include "co_login.h"
-#include "co_mrm_util.h"
+#include "cow_login.h"
+#include "cow_mrm_util.h"
 #include "wb_nav_motif.h"
 #include "wb_pal_motif.h"
-#include "co_wow_motif.h"
+#include "cow_wow_motif.h"
 #include "flow_x.h"
 
 #define	BEEP	    putchar( '\7' );

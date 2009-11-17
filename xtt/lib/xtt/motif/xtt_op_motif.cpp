@@ -42,7 +42,7 @@
 #include <X11/Xutil.h>
 
 #include "flow_x.h"
-#include "co_wow_motif.h"
+#include "cow_wow_motif.h"
 #include "co_lng.h"
 #include "xtt_op_motif.h"
 #include "rt_xnav_msg.h"

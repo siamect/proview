@@ -22,7 +22,7 @@
 
 #include "ge_attr.h"
 #include "ge_attrnav_gtk.h"
-#include "co_wow_gtk.h"
+#include "cow_wow_gtk.h"
 
 /* ge_attr.h -- Ge attribute editor */
 

@@ -38,7 +38,7 @@
 #include "pwr_privilege.h"
 
 #include "rt_pb_gsd.h"
-#include "co_xhelp_motif.h"
+#include "cow_xhelp_motif.h"
 #include "rt_pb_gsd_attr_motif.h"
 #include "xtt_c_pb_dp_slave.h"
 

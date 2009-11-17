@@ -23,7 +23,7 @@
 /* rt_pn_gsdml_attr_gtk.h -- Profibus gsd attribute editor */
 
 #include "rt_pn_gsdml_attr.h"
-#include "co_wow_gtk.h"
+#include "cow_wow_gtk.h"
 
 class GsdmlAttrGtk : public GsdmlAttr {
  public:

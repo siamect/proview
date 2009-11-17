@@ -31,8 +31,8 @@
 #include "wb_ldh_msg.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
-#include "co_wow.h"
-#include "co_msgwindow.h"
+#include "cow_wow.h"
+#include "cow_msgwindow.h"
 
 void wb_pvd_gvl::save( pwr_tStatus *sts)
 {

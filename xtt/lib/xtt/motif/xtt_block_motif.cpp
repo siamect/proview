@@ -38,7 +38,7 @@
 #include "flow_x.h"
 #include "xtt_block_motif.h"
 #include "co_lng.h"
-#include "co_wow_motif.h"
+#include "cow_wow_motif.h"
 #include "co_msg.h"
 
 int BlockMotif::execute()

@@ -28,7 +28,7 @@
 #include "co_cdh.h"
 #include "xtt_block_gtk.h"
 #include "co_lng.h"
-#include "co_wow_gtk.h"
+#include "cow_wow_gtk.h"
 #include "co_msg.h"
 
 int BlockGtk::execute()

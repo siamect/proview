@@ -48,7 +48,7 @@ extern "C" {
 #include "wb_wnav.h"
 #include "wb_wnav_brow.h"
 #include "wb_wnav_item.h"
-#include "co_wow_motif.h"
+#include "cow_wow_motif.h"
 
 //
 // Create the navigator widget

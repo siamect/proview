@@ -30,7 +30,7 @@ typedef void *ldh_tSesContext;
 
 #include "ge_gtk.h"
 #include "co_lng.h"
-#include "co_xhelp_gtk.h"
+#include "cow_xhelp_gtk.h"
 #include "wb_log_gtk.h"
 
 

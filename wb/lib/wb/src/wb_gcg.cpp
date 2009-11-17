@@ -39,6 +39,7 @@
 #include "co_utl_batch.h"
 #include "co_msg.h"
 #include "co_api.h"
+#include "cow_api.h"
 #include "wb_foe_msg.h"
 #include "wb_vldh_msg.h"
 #include "wb_ldh_msg.h"

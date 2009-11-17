@@ -35,7 +35,7 @@
 #include "wb_merep.h"
 #include "wb_tdrep.h"
 #include "wb_ldh_msg.h"
-#include "co_msgwindow.h"
+#include "cow_msgwindow.h"
 
 extern "C" {
 #include "co_dcli.h"

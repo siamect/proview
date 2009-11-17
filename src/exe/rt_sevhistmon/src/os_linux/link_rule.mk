@@ -2,8 +2,8 @@ ifndef link_rule_mk
 link_rule_mk := 1
 
 link = $(ldxx) $(elinkflags) $(domap) -o $(export_exe) \
-	$(export_obj) $(objects) $(wb_msg_eobjs) $(rt_msg_eobjs) \
-	$(pwr_eobj)/rt_io_user.o \
+	$(export_obj) $(objects) $(wb_msg_objs) $(rt_msg_objs) \
+	$(pwr_obj)/rt_io_user.o \
 	-lpwr_rt -lpwr_co $(linkmysql)\
 	-lpwr_msg_dummy \
 	-lrpcsvc -lpthread -lm -lrt -ldb_cxx -lz -lcrypt

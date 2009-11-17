@@ -29,10 +29,10 @@
 #include "co_time.h"
 #include "co_dcli.h"
 #include "co_lng.h"
-#include "co_xhelp.h"
+#include "cow_xhelp.h"
 #include "pn_viewer_gtk.h"
 #include "pn_viewernav_gtk.h"
-#include "co_wow_gtk.h"
+#include "cow_wow_gtk.h"
 #include "rt_pb_msg.h"
 
 

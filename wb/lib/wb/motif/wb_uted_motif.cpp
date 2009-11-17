@@ -24,7 +24,7 @@
 #include <string.h>
 #include <string.h>
 
-#include "co_login.h"
+#include "co_wlogin.h"
 
 #include <Xm/Xm.h>
 #include <Mrm/MrmPublic.h>
@@ -39,7 +39,7 @@
 #include "co_time.h"
 #include "co_msg.h"
 #include "co_dcli.h"
-#include "co_xhelp.h"
+#include "co_wxhelp.h"
 #include "wb_ldh.h"
 #include "wb_foe.h"
 #include "wb_foe_msg.h"

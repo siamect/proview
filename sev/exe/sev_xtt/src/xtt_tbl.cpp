@@ -26,9 +26,9 @@
 #include <vector>
 #include "co_cdh.h"
 #include "co_time.h"
-#include "co_xhelp.h"
+#include "cow_xhelp.h"
 #include "co_dcli.h"
-#include "co_wow.h"
+#include "cow_wow.h"
 #include "co_cnf.h"
 
 #include "flow.h"

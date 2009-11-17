@@ -66,8 +66,8 @@
 #include "wb_wda.h"
 #endif
 
-#ifndef co_wow_h
-#include "co_wow.h"
+#ifndef cow_wow_h
+#include "cow_wow.h"
 #endif
 
 class WPkg;

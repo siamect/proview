@@ -39,14 +39,14 @@
 #include "flow_browctx.h"
 #include "flow_browapi.h"
 #include "rt_xtt_main.h"
-#include "rt_trace.h"
+#include "xtt_trace.h"
 #include "xtt_xnav.h"
 #include "xtt_item.h"
 #include "xtt_url.h"
 #include "xtt_methodtoolbar.h"
 #include "co_lng.h"
-#include "co_xhelp.h"
-#include "co_wow.h"
+#include "cow_xhelp.h"
+#include "cow_wow.h"
 #include "rt_xnav_msg.h"
 
 

@@ -57,8 +57,8 @@
 #include "wb_wnav_item.h"
 
 #include "flow_x.h"
-#include "co_wow_motif.h"
-#include "co_login_motif.h"
+#include "cow_wow_motif.h"
+#include "cow_login_motif.h"
 #include "wb_wge_motif.h"
 #include "ge_motif.h"
 #include "wb_utl_motif.h"

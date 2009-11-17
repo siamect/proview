@@ -34,7 +34,7 @@
 #include "wb_wattnav.h"
 #include "wb_wtt.h"
 #include "wb_wnav.h"
-#include "co_xhelp.h"
+#include "cow_xhelp.h"
 
 
 void WAtt::message_cb( void *watt, char severity, const char *message)

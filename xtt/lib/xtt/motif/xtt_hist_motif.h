@@ -28,8 +28,8 @@
 # include "xtt_hist.h"
 #endif
 
-#ifndef co_wow_motif_h
-# include "co_wow_motif.h"
+#ifndef cow_wow_motif_h
+# include "cow_wow_motif.h"
 #endif
 
 class HistMotif : public Hist {

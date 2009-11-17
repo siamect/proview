@@ -40,7 +40,7 @@
 #include "wb_recix.h"
 #include "pwr_baseclasses.h"
 #include "co_time.h"
-#include "co_msgwindow.h"
+#include "cow_msgwindow.h"
 #include "co_dcli.h"
 
 

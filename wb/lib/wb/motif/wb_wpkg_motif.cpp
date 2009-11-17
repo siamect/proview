@@ -36,10 +36,10 @@
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_time.h"
-#include "co_wow_motif.h"
+#include "cow_wow_motif.h"
 #include "flow_x.h"
 #include "wb_pkg_msg.h"
-#include "co_mrm_util.h"
+#include "cow_mrm_util.h"
 
 #include "flow.h"
 #include "flow_browctx.h"
@@ -52,7 +52,7 @@
 #include "wb_wnav.h"
 #include "wb_pkg.h"
 #include "wb_error.h"
-#include "co_xhelp.h"
+#include "cow_xhelp.h"
 
 void WPkgMotif::message( char severity, const char *message)
 {

@@ -45,15 +45,15 @@
 #include "wb_foe.h"
 #include "wb_gsx.h"
 #include "wb_utl_api.h"
-#include "co_login.h"
+#include "cow_login.h"
 #include "wb_tra.h"
 #include "wb_watt.h"
 #include "wb_gobj.h"
 #include "wb_exo.h"
 #include "wb_watt.h"
 #include "wb_pal.h"
-#include "co_wow.h"
-#include "co_xhelp.h"
+#include "cow_wow.h"
+#include "cow_xhelp.h"
 #include "wb_log.h"
 
 #define	BEEP	    putchar( '\7' );

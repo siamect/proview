@@ -44,7 +44,7 @@
 #include "co_time.h"
 #include "flow_x.h"
 #include "wb_watt_msg.h"
-#include "co_mrm_util.h"
+#include "cow_mrm_util.h"
 
 #include "flow.h"
 #include "flow_browctx.h"
@@ -53,7 +53,7 @@
 #include "wb_wattnav_motif.h"
 #include "wb_wtt.h"
 #include "wb_wnav.h"
-#include "co_xhelp.h"
+#include "cow_xhelp.h"
 
 // Static member elements
 char WAttMotif::value_recall[30][160];

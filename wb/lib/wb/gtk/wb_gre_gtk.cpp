@@ -37,7 +37,7 @@
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_dcli.h"
-#include "co_wow_gtk.h"
+#include "cow_wow_gtk.h"
 #include "wb_ldh.h"
 #include "wb_foe_msg.h"
 #include "wb_vldh_msg.h"

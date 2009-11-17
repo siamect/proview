@@ -30,7 +30,7 @@
 
 #include "co_error.h"
 #include "co_lng.h"
-#include "co_xhelp.h"
+#include "cow_xhelp.h"
 #include "pn_viewer_pnac.h"
 #include "pn_viewer.h"
 

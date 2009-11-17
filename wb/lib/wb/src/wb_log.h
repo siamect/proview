@@ -21,7 +21,7 @@
 #define wb_log_h
 
 #include "pwr.h"
-#include "co_log.h"
+#include "cow_log.h"
 
 #define wlog_cLogFile "$pwrp_db/wb_history.log"
 

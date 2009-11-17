@@ -7,9 +7,9 @@ link = $(ldxx) $(elinkflags) $(domap) -o $(pwr_exe)/rt_statusmon_gtk \
 	$(wb_msg_eobjs) $(rt_msg_eobjs) \
          -L/usr/X11R6/lib \
 	-L/opt/gnome/lib \
-	-lpwr_statussrv -lpwr_ge_gtk -lpwr_ge -lpwr_wb_gtk -lpwr_wb -lpwr_wb_gtk -l pwr_wb -lpwr_ge_gtk -lpwr_ge \
-	-lpwr_flow_gtk -lpwr_flow -lpwr_glow_gtk -lpwr_glow -lpwr_rt_gtk -lpwr_rt \
-	-lpwr_co_gtk -lpwr_co -lpwr_rt -lpwr_co -lpwr_flow_gtk -lpwr_flow \
+	-lpwr_statussrv -lpwr_ge_gtk -lpwr_ge -lpwr_ge_gtk -lpwr_ge \
+	-lpwr_flow_gtk -lpwr_flow -lpwr_glow_gtk -lpwr_glow -lpwr_rt \
+	-lpwr_cow_gtk -lpwr_cow -lpwr_co -lpwr_rt -lpwr_co -lpwr_flow_gtk -lpwr_flow \
 	`pkg-config --libs gtk+-2.0` \
 	-lpwr_msg_dummy -lantlr \
 	-lrpcsvc -lpthread -lm -ldb_cxx -lz

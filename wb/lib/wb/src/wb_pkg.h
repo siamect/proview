@@ -25,7 +25,7 @@
 #include <string>
 #include "pwr.h"
 #include "pwr_class.h"
-#include "co_wow.h"
+#include "cow_wow.h"
 #include "wb_lfu.h"
 
 using namespace std;

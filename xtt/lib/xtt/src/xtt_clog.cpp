@@ -30,7 +30,7 @@
 #include "rt_gdh.h"
 
 #include "co_lng.h"
-#include "co_wow.h"
+#include "cow_wow.h"
 #include "xtt_clog.h"
 #include "rt_xnav_msg.h"
 

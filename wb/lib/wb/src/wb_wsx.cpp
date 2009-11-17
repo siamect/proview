@@ -28,7 +28,7 @@
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"
 #include "pwr_systemclasses.h"
-#include "co_msgwindow.h"
+#include "cow_msgwindow.h"
 #include "co_cdh.h"
 #include "co_msg.h"
 #include "wb_ldh.h"

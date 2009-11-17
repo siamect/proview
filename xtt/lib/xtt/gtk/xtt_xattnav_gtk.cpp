@@ -39,7 +39,7 @@
 #include "xtt_xnav_crr.h"
 #include "xtt_item.h"
 #include "pwr_privilege.h"
-#include "co_wow_gtk.h"
+#include "cow_wow_gtk.h"
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))

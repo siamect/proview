@@ -24,7 +24,7 @@
 #include "ge.h"
 #endif
 
-#include "co_wow.h"
+#include "cow_wow.h"
 
 /* ge_gtk.h -- Simple graphic editor */
 class CoWowRecall;

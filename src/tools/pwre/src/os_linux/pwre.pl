@@ -10,6 +10,8 @@
   "build_kernel", "build_kernel:usage_build_kernel",
   "build_all_modules", "build_all_modules:usage_build_all_modules",
   "build_all_wbl", "build_all_wbl:usage_build_all_wbl",
+  "build_rt", "build_rt:usage_build_rt",
+  "build_xtt", "build_xtt:usage_build_xtt",
   "clean_exe_all", "clean_exe_all:usage_clean_exe_all",
   "method_build", "method_build:usage_method_build",
   "copy", 	"copy:usage_copy",
@@ -19,6 +21,7 @@
   "help",	"help:usage_help",
   "list",	"list:usage_list",
   "init",	"init:usage_init",
+  "import",	"import:usage_import",
   "module",	"module:usage_module",
   "merge",	"merge:usage_merge",
   "modify",	"modify:usage_modify",
@@ -223,6 +226,106 @@ sub build_kernel # args: flavour
   _module("rt");
   build_all("exe", $flavour);
   merge();
+}
+
+#
+# build_rt()
+#
+sub build_rt # args: flavour
+{
+  my $flavour = $_[0];
+
+  _module("rt");
+  _build("exp", "inc", "src", "all");
+  _build("exp", "com", "src", "all");
+  _build("tools/exe", "*", "src", "all");
+  merge("exe/tools_cmsg2c");
+  merge("exe/tools_msg2cmsg");
+  merge("exe/tools_pdrgen");
+  _build("msg", "*", "src", "all");
+  _build("lib", "rt", "src", "init copy");
+  _build("lib", "rt", $flavour, "copy");
+  _build("lib", "co", "src", "init copy");
+  _build("lib", "co", $flavour, "copy");
+  _build("lib", "dtt", "src", "init copy");
+  _build("lib", "statussrv", "src", "init copy");
+  _build("lib", "co", "src", "all");
+  _build("lib", "co", $flavour, "all");
+  _build("exe", "co*", "src", "all");
+  _build("exe", "*", "src", "copy");
+  _build("exp", "stdsoap2", "src", "copy");  
+  _build("lib", "rt", "src", "all");
+  _build("lib", "statussrv", "src", "all");
+  _build("lib", "msg_dummy", "src", "init copy lib");
+  _build("exp", "rt", "src", "all");
+  _build("exe", "wb_rtt", "src", "all");
+  _build("lib", "dtt", "src", "all");
+  _build("exp", "stdsoap2", "src", "all");
+  _module("otherio");
+  _build("exp","rt","src","copy");
+  _build("lib","usbio_dummy","src","init lib");
+  merge();
+  _module("rt");
+  _build("exe", "rt*", "src", "all");
+  _build("exe", "co*", $flavour, "all");
+  _build("exe", "pwr_user", "src", "all");
+  merge();
+}
+
+#
+# build_xtt()
+#
+sub build_xtt # args: flavour
+{
+  my $flavour = $_[0];
+
+  _module("xtt");
+  _build("lib", "*", "src", "init copy");
+  _build("lib", "*", $flavour, "copy");
+  _build("exp", "*", "src", "init copy");
+  _build("mmi", "*", "src", "copy");
+  _build("mmi", "*", $flavour, "copy");
+  _build("exe", "*", "src", "copy");
+  _build("lib", "*", "src", "lib");
+  _build("lib", "*", $flavour, "lib");
+  _build("exp", "*", "src", "lib");
+  _build("exe", "rt*", "src", "all");
+  _build("exe", "xtt*", "src", "all");
+  _build("exe", "co*", "src", "all");
+  _build("exe", "rt*", $flavour, "all");
+  _build("exe", "xtt*", $flavour, "all");
+  _build("exe", "co*", $flavour, "all");
+  _build("exe", "pwr*", $flavour, "all");
+  merge();
+}
+
+#
+# import()
+#
+sub import ()
+{
+  my $flavour = $_[0];
+
+  my($vmsinc) = $ENV{"pwre_vmsinc"};
+  if ( $vmsinc ne "" ) {
+    copy();
+
+    _module("rt");
+    merge();
+    _module("bcomp");
+    merge();
+    _module("nmps");
+    merge();
+    _module("opc");
+    merge();
+    _module("profibus");
+    merge();
+    _module("otherio");
+    merge();
+    _module("remote");
+    merge();
+  }
+  
 }
 
 #
@@ -551,16 +654,6 @@ sub build_all ()
   printf("-- Build all\n");
   show();
 
-#  my($tmp);
-#  print("-- Copy include files from VMS [n]? ");
-#  $tmp = <STDIN>;
-#  chomp($tmp);
-
-#  if ($tmp =~ /^[yY]/) {
-#    copy();
-#  }
-
-  
   if ( $module eq "rt") {
     if ( $copy == 1) {
       _build("exp", "inc", "src", "all");
@@ -681,14 +774,14 @@ sub copy ()
   }
 
   my($vmsinc) = $ENV{"pwre_vmsinc"};
-  my($bindir) = $ENV{"pwre_bin"};
+  my($bindir) = $ENV{"pwre_bin"} . "/" . $ENV{"pwre_hw"};
 
   printf("--\n");
-  printf("-- Copy include files from VMS\n");
-  printf("-- Include directory on VMS: %s\n", $vmsinc);
+  printf("-- Copy file from Import root\n");
+  printf("-- Import root: %s\n", $vmsinc);
   printf("--\n");
   
-  system("make -f $bindir/copy_vms_inc.mk") && exit;
+  system("make -f $bindir/import_files.mk") && exit;
 
 }
 
@@ -1089,7 +1182,7 @@ sub get_vars ()
   } else {
     $sroot = $_[1];
   }
-# $vmsinc = 	get_var(" pwr_inc on VMS  [%s]? ", $vmsinc);
+  $vmsinc = 	get_var(" Import root  [%s]? ", $vmsinc);
   if ($_[2] eq "") {
     $broot = 	get_var(" Build root  [%s]? ", $broot);
   } else {
@@ -1149,7 +1242,9 @@ sub show_vars ()
 
   printf("-- Module.........: %s\n", $module);
   printf("-- Source root....: %s\n", $sroot);
-# printf("-- pwr_inc on VMS.: %s\n", $vmsinc);
+  if ( $vmsinc ne "") {
+    printf("-- Import root....: %s\n", $vmsinc);
+  }
   printf("-- Build root.....: %s\n", $broot);
   printf("-- Build type.....: %s\n", $btype);
   printf("-- OS.............: %s\n", $os);
@@ -1198,10 +1293,22 @@ sub usage_build_all_wbl ()
   printf("++ build_all_wbl                 : Builds wbl in all modules\n");
 }
 
+sub usage_build_rt ()
+{
+  printf("++\n");
+  printf("++ build_rt                      : Builds rt module\n");
+}
+
+sub usage_build_xtt ()
+{
+  printf("++\n");
+  printf("++ build_xtt                      : Builds xtt module\n");
+}
+
 sub usage_clean_exe_all ()
 {
   printf("++\n");
-  printf("++ clean_exe_all             : Cleans all exe in all modules\n");
+  printf("++ clean_exe_all                 : Cleans all exe in all modules\n");
 }
 
 sub usage_method_build ()
@@ -1250,6 +1357,12 @@ sub usage_init ()
 {
   printf("++\n");
   printf("++ init 'env'                    : Inits an environment\n");
+}
+
+sub usage_import ()
+{
+  printf("++\n");
+  printf("++ import                        : Import files from import root\n");
 }
 
 sub usage_module ()

@@ -46,11 +46,11 @@
 #include "flow_browapi.h"
 #include "co_lng.h"
 #include "co_error.h"
-#include "co_wow.h"
+#include "cow_wow.h"
 #include "xtt_tbl.h"
 #include "co_dcli_msg.h"
-#include "co_xhelp.h"
-#include "co_login.h"
+#include "cow_xhelp.h"
+#include "cow_login.h"
 
 
 #define XTTTBL__HOLDCOMMAND 21;

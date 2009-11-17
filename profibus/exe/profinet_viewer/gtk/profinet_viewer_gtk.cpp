@@ -28,7 +28,7 @@
 
 #include "co_lng.h"
 #include "co_error.h"
-#include "co_xhelp_gtk.h"
+#include "cow_xhelp_gtk.h"
 #include "pn_viewer_gtk.h"
 
 

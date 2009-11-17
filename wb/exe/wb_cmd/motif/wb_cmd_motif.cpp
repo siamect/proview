@@ -40,7 +40,7 @@
 #include "pwr.h"
 #include "pwr_class.h"
 #include "co_dcli.h"
-#include "co_mrm_util.h"
+#include "cow_mrm_util.h"
 
 #include "ge.h"
 #include "rt_load.h"
@@ -53,7 +53,7 @@
 #include "flow_browapi.h"
 #include "wb_utl.h"
 #include "wb_lfu.h"
-#include "co_login.h"
+#include "cow_login.h"
 #include "wb_wnav_motif.h"
 #include "wb_wnav_item.h"
 #include "wb_pal.h"
@@ -61,7 +61,7 @@
 #include "wb_wnav_msg.h"
 #include "wb_cmdc_motif.h"
 #include "wb.h"
-#include "co_msgwindow.h"
+#include "cow_msgwindow.h"
 
 CmdMotif::CmdMotif()
 {

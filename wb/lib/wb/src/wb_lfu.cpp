@@ -40,7 +40,7 @@
 #include "flow.h"
 #include "flow_ctx.h"
 #include "rt_load.h"
-#include "co_wow.h"
+#include "cow_wow.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_time.h"
@@ -56,7 +56,7 @@
 #include "wb_lfu.h"
 #include "wb_log.h"
 #include "co_dbs.h"
-#include "co_msgwindow.h"
+#include "cow_msgwindow.h"
 #include "co_cnf.h"
 
 #include "wb_env.h"

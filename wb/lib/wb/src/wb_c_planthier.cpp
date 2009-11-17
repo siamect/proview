@@ -34,7 +34,7 @@
 #include "wb_wnav.h"
 #include "wb_build.h"
 #include "wb_wsx.h"
-#include "co_msgwindow.h"
+#include "cow_msgwindow.h"
 
 /*----------------------------------------------------------------------------*\
   Build volume.

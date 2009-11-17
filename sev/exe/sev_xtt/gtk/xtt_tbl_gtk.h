@@ -22,7 +22,7 @@
 
 #include "../src/xtt_tbl.h"
 #include "xtt_tblnav_gtk.h"
-#include "co_wow_gtk.h"
+#include "cow_wow_gtk.h"
 
 /* ge_tbl.h -- Ge tblibute editor */
 

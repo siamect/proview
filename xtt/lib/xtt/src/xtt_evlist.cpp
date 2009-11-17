@@ -26,7 +26,7 @@
 
 #include "pwr.h"
 #include "pwr_baseclasses.h"
-#include "co_wow.h"
+#include "cow_wow.h"
 #include "co_lng.h"
 #include "co_time.h"
 #include "rt_gdh.h"

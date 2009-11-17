@@ -27,9 +27,9 @@
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_dcli.h"
-#include "co_wow_gtk.h"
-#include "co_xhelp_gtk.h"
-#include "co_login_gtk.h"
+#include "cow_wow_gtk.h"
+#include "cow_xhelp_gtk.h"
+#include "cow_login_gtk.h"
 
 #include "flow.h"
 #include "flow_browctx.h"

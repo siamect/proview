@@ -28,7 +28,7 @@
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_time.h"
-#include "co_wow_gtk.h"
+#include "cow_wow_gtk.h"
 #include "wb_watt_msg.h"
 #include "flow.h"
 #include "flow_browctx.h"
@@ -37,7 +37,7 @@
 #include "wb_wattnav_gtk.h"
 #include "wb_wtt.h"
 #include "wb_wnav.h"
-#include "co_xhelp.h"
+#include "cow_xhelp.h"
 
 CoWowRecall WAttGtk::value_recall;
 

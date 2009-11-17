@@ -28,7 +28,7 @@
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_time.h"
-#include "co_wow.h"
+#include "cow_wow.h"
 #include "wb_pkg_msg.h"
 
 #include "flow.h"
@@ -40,7 +40,7 @@
 #include "wb_wnav.h"
 #include "wb_pkg.h"
 #include "wb_error.h"
-#include "co_xhelp.h"
+#include "cow_xhelp.h"
 
 
 

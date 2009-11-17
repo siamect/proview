@@ -32,7 +32,7 @@
 #include "pwr_privilege.h"
 
 #include "rt_pb_gsd.h"
-#include "co_xhelp_gtk.h"
+#include "cow_xhelp_gtk.h"
 #include "rt_pb_gsd_attr_gtk.h"
 #include "xtt_c_pb_dp_slave.h"
 

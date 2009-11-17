@@ -49,7 +49,7 @@ extern "C" {
 extern "C" {
 #include "xtt_hotkey_motif.h"
 #include "co_dcli.h"
-#include "co_mrm_util.h"
+#include "cow_mrm_util.h"
 }
 
 #include "co_lng.h"
@@ -63,8 +63,8 @@ extern "C" {
 #include "xtt_item.h"
 #include "xtt_url.h"
 #include "co_lng.h"
-#include "co_xhelp_motif.h"
-#include "co_wow_motif.h"
+#include "cow_xhelp_motif.h"
+#include "cow_wow_motif.h"
 #include "rt_xnav_msg.h"
 #include "co_syi.h"
 

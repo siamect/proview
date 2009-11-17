@@ -24,8 +24,8 @@
 # include "xtt_ge.h"
 #endif
 
-#ifndef co_wow_gtk_h
-# include "co_wow_gtk.h"
+#ifndef cow_wow_gtk_h
+# include "cow_wow_gtk.h"
 #endif
 
 class XttGeGtk : public XttGe {

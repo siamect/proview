@@ -36,7 +36,7 @@ using namespace std;
 extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
-#include "co_wow.h"
+#include "cow_wow.h"
 #include "pwr_baseclasses.h"
 #include "rt_gdh.h"
 #include "rt_mh.h"

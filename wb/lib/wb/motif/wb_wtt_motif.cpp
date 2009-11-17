@@ -31,7 +31,7 @@ extern "C" {
 #include "pwr_baseclasses.h"
 #include "wb_ldh.h"
 #include "flow_x.h"
-#include "co_wow.h"
+#include "cow_wow.h"
 }
 
 #include <Xm/Xm.h>
@@ -54,7 +54,7 @@ extern "C" {
 #define XK_MISCELLANY
 #include <X11/keysymdef.h>
 
-#include "co_mrm_util.h"
+#include "cow_mrm_util.h"
 #include "wb_utl_api.h"
 #include "wb_lfu.h"
 #include "rt_load.h"
@@ -65,7 +65,7 @@ extern "C" {
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "co_wow_motif.h"
+#include "cow_wow_motif.h"
 #include "wb_wtt.h"
 #include "wb_wnav_motif.h"
 #include "wb_wnav_item.h"
@@ -77,7 +77,7 @@ extern "C" {
 #include "wb_volume.h"
 #include "wb_env.h"
 #include "wb_wpkg_motif.h"
-#include "co_msgwindow.h"
+#include "cow_msgwindow.h"
 #include "wb_wnav_selformat.h"
 #include "wb_pwrs.h"
 #include "wb_build.h"

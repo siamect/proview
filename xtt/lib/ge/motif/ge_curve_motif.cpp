@@ -50,8 +50,8 @@
 #include "co_time.h"
 #include "co_dcli.h"
 #include "flow_x.h"
-#include "co_mrm_util.h"
-#include "co_wow_motif.h"
+#include "cow_mrm_util.h"
+#include "cow_wow_motif.h"
 #include "co_lng.h"
 
 #include "glow_growctx.h"
