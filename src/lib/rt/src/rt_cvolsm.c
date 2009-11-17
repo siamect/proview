@@ -257,6 +257,7 @@ cvolsm_GetObjectInfo (
     np = hash_Search(NULL, gdbroot->nid_ht, &get->sender.nid);
     pwr_Assert(np != NULL);
 
+    memset( &Attribute, 0, sizeof(Attribute));
     ap = vol_ArefToAttribute(&sts, &Attribute, &mp->aref, gdb_mLo_owned, vol_mTrans_alias);
     if (ap == NULL || ap->op == NULL) break;
 
@@ -385,6 +386,8 @@ cvolsm_SetObjectInfo (
     np = hash_Search(NULL, gdbroot->nid_ht, &get->sender.nid);
     pwr_Assert(np != NULL);
 
+    
+    memset( &Attribute, 0, sizeof(Attribute));
     ap = vol_ArefToAttribute(&sts, &Attribute, &mp->aref, gdb_mLo_owned, vol_mTrans_alias);
     if (ap == NULL || ap->op == NULL) break;
 
