@@ -2891,6 +2891,11 @@ static int	xnav_open_func(	void		*client_data,
         }
       }
       strcpy( file_str, xnav->logg[entry-1].logg_filename);
+
+      if ( xnav->logg[entry-1].active) {
+        xnav->message('E', "Logging entry is active");
+	return XNAV__HOLDCOMMAND;
+      }
     }
     else if ( EVEN( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
       if ( EVEN( dcli_get_qualifier( "dcli_arg2", file_str, sizeof(file_str)))) {

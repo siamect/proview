@@ -667,6 +667,10 @@ void GrowLine::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
       return;
     hot = 0;
   }
+  if ( hot && ctx->environment != glow_eEnv_Development &&
+       ctx->hot_indication != glow_eHotIndication_LineWidth)
+    hot = 0;
+
   glow_eDrawType drawtype;
   int idx;
   if ( node && ((GrowNode *)node)->line_width)
@@ -723,6 +727,10 @@ void GrowLine::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
       return;
     hot = 0;
   }
+  if ( hot && ctx->environment != glow_eEnv_Development &&
+       ctx->hot_indication != glow_eHotIndication_LineWidth)
+    hot = 0;
+
   int idx;
   if ( node && ((GrowNode *)node)->line_width)
     idx = int( w->zoom_factor_y / w->base_zoom_factor * 

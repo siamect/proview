@@ -294,6 +294,9 @@ void Graph::delete_select()
   grow_tObject 	*sel_list;
   int		sel_count;
 
+  if ( grow_GetPasteActive( grow->ctx))
+    return;
+
   journal_store( journal_eAction_DeleteSelect, 0);
 
   grow_GetSelectList( grow->ctx, &sel_list, &sel_count);
@@ -2279,6 +2282,9 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
       }
       break;
     case glow_eEvent_MB2DoubleClick:
+      if ( grow_GetPasteActive( graph->grow->ctx))
+	break;
+
       if ( event->object.object_type != glow_eObjectType_NoObject) {
 	graph->journal_store( journal_eAction_DeleteObject, event->object.object);
 
@@ -4682,6 +4688,66 @@ void Graph::create_axis( grow_tObject *object, double x, double y)
   strcpy( info.format, "%3.0f");
   grow_SetAxisInfo( *object, &info);
   grow_Redraw( grow->ctx);
+}
+
+int Graph::create_node_floating( double x, double y)
+{
+  char 		sub_name[80] = "graph";
+  pwr_tFileName filename;
+  char 		name[80];
+  grow_tNodeClass nc;
+  grow_tNode	n1;
+  int		sts;
+  char		dev[80], dir[80], file[80], type[32];
+  int		version;
+  GeDyn        	*dyn;
+  
+  // Create subgraph object
+  sts = (get_current_subgraph_cb)( parent_ctx, sub_name, 
+				   filename);
+  if ( EVEN(sts)) { 
+    message( 'E', "Select a SubGraph");
+    return sts;
+  }
+  dcli_parse_filename( filename, dev, dir, file, type, &version);
+  cdh_ToLower( sub_name, file);
+  if ( strcmp( type, ".pwsg") == 0) {
+    sts = grow_FindNodeClassByName( grow->ctx, sub_name, &nc);
+    if ( EVEN(sts)) {
+      // Load the subgraph
+      grow_OpenSubGraph( grow->ctx, filename);
+    }
+    sts = grow_FindNodeClassByName( grow->ctx, sub_name, &nc);
+    if ( EVEN(sts)) {
+      message( 'E', "Unable to open subgraph");
+      return sts;
+    }
+    
+    grow_GetUserData( nc, (void **)&dyn);
+    if ( !dyn) {
+      // Old version nodeclass without dyn, create dyn
+      GeDyn *dyn = new GeDyn( this);
+      grow_SetUserData( nc, (void *)dyn);
+    }
+
+    sprintf( name, "O%d", grow_IncrNextObjectNameNumber( grow->ctx));
+
+    grow_PasteClear( grow->ctx);
+
+    grow_CreatePasteNode( grow->ctx, name, nc, x, y, NULL, &n1);
+
+    if ( shadow)
+      grow_SetObjectShadow( n1, 1);
+
+    GeDyn *dyn = new GeDyn( this);
+    grow_SetUserData( n1, (void *)dyn);
+    if ( grow_IsSliderClass( nc))
+      dyn->action_type = ge_mActionType( dyn->action_type | ge_mActionType_Slider);
+
+    grow_Paste( grow->ctx);
+    // grow_SetSelectHighlight( grow->ctx);    
+  }
+  return 1;
 }
 
 void Graph::swap( int mode)

@@ -818,29 +818,29 @@ ini_CheckContext (
 
   if (!cp->flags.b.aliasfile)
     sprintf(cp->aliasfile.name, dbs_cNameAlias, cp->dir);
-  cdh_ToLower(cp->aliasfile.name, cp->aliasfile.name);
+  // cdh_ToLower(cp->aliasfile.name, cp->aliasfile.name);
   cp->nodefile.errcount = NULL;
   cp->nodefile.logOpenFail = errh_LogInfo;
 
   if (!cp->flags.b.applfile)
-    sprintf(cp->applfile.name, dbs_cNameAppl, cp->dir, cp->nodename, cp->busid);
-  cdh_ToLower(cp->applfile.name, cp->applfile.name);
+    sprintf(cp->applfile.name, dbs_cNameAppl, cp->dir, cdh_Low(cp->nodename), cp->busid);
+  // cdh_ToLower(cp->applfile.name, cp->applfile.name);
   cp->applfile.errcount = NULL;
   cp->applfile.logOpenFail = errh_LogInfo;
 
   if (!cp->flags.b.bootfile)
-    sprintf(cp->bootfile.name, dbs_cNameBoot, cp->dir, cp->nodename, cp->busid);
-  cdh_ToLower(cp->bootfile.name, cp->bootfile.name);
+    sprintf(cp->bootfile.name, dbs_cNameBoot, cp->dir, cdh_Low(cp->nodename), cp->busid);
+  // cdh_ToLower(cp->bootfile.name, cp->bootfile.name);
   cp->bootfile.errcount = &cp->fatals;
   cp->bootfile.logOpenFail = errh_LogFatal;
 
   if (!cp->flags.b.nodefile)
-    sprintf(cp->nodefile.name, dbs_cNameNode, cp->dir, cp->nodename, cp->busid);
-  cdh_ToLower(cp->nodefile.name, cp->nodefile.name);
+    sprintf(cp->nodefile.name, dbs_cNameNode, cp->dir, cdh_Low(cp->nodename), cp->busid);
+  // cdh_ToLower(cp->nodefile.name, cp->nodefile.name);
   cp->nodefile.errcount = &cp->fatals;
   cp->nodefile.logOpenFail = errh_LogFatal;
 
-  cdh_ToLower(cp->plcfile.name, cp->plcfile.name);
+  // cdh_ToLower(cp->plcfile.name, cp->plcfile.name);
   cp->plcfile.errcount = NULL;
   cp->plcfile.logOpenFail = errh_LogInfo;
 
@@ -1111,11 +1111,11 @@ ini_ReadBootFile (
 
       if (!cp->flags.b.plcfile) {
 #if defined OS_LYNX || defined OS_LINUX
-	sprintf(cp->plcfile.name, dbs_cNamePlc, "", cp->nodename, cp->busid, cp->node.plcVersion);
+	sprintf(cp->plcfile.name, dbs_cNamePlc, "", cdh_Low(cp->nodename), cp->busid, cp->node.plcVersion);
 #elif defined OS_VMS
-	sprintf(cp->plcfile.name, dbs_cNamePlc, "pwrp_exe:", cp->nodename, cp->busid, cp->node.plcVersion);
+	sprintf(cp->plcfile.name, dbs_cNamePlc, "pwrp_exe:", cdh_Low(cp->nodename), cp->busid, cp->node.plcVersion);
 #else
-	sprintf(cp->plcfile.name, dbs_cNamePlc, cp->dir, cp->nodename, cp->busid, cp->node.plcVersion);
+	sprintf(cp->plcfile.name, dbs_cNamePlc, cp->dir, cdhLow(cp->nodename), cp->busid, cp->node.plcVersion);
 #endif
       }
 #if 0
@@ -1130,7 +1130,7 @@ ini_ReadBootFile (
       sprintf(cp->plcfile.name, "%s%s", cp->hostspec, tempname);
 #endif
 #endif
-      cdh_ToLower(cp->plcfile.name, cp->plcfile.name);
+      // cdh_ToLower(cp->plcfile.name, cp->plcfile.name);
       errh_LogInfo(&cp->log, "This node vill run PLC file: %s", cp->plcfile.name);
       break;
     }
@@ -1239,14 +1239,14 @@ ini_IterVolumes (
   lst_sEntry		*vl;
   
   for (vp = lst_Succ(NULL, &cp->vol_lh, &vl); vp != NULL; vp = lst_Succ(NULL, vl, &vl)) {
-    sprintf(vp->filename, dbs_cNameVolume, cp->bdir, vp->name);
-    cdh_ToLower(vp->filename, vp->filename);
+    sprintf(vp->filename, dbs_cNameVolume, cp->bdir, cdh_Low(vp->name));
+    // cdh_ToLower(vp->filename, vp->filename);
 
     dbs_Open(sts, &cp->dbs, vp->filename);
     if (*sts == ERRNO__NOENT) { /* Give pwrp a chance */
-        sprintf(vp->filename, dbs_cNameVolume, cp->dir, vp->name);
-        cdh_ToLower(vp->filename, vp->filename);
-        dbs_Open(sts, &cp->dbs, vp->filename);
+      sprintf(vp->filename, dbs_cNameVolume, cp->dir, cdh_Low(vp->name));
+      //  cdh_ToLower(vp->filename, vp->filename);
+      dbs_Open(sts, &cp->dbs, vp->filename);
     }
 
     if (EVEN(*sts)) {

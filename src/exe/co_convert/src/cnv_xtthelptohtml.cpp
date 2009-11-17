@@ -312,7 +312,7 @@ void *CnvXtthelpToHtml::insert( navh_eItemType item_type, const char *text1,
       if ( !cf) 
 	break;
 
-      cf->f << "<H1>" << text1 << "</H1><BR>" << endl;
+      cf->f << "<H1>" << text1 << "</H1>" << endl;
       return NULL;
     }
     case navh_eItemType_Header:
@@ -322,7 +322,7 @@ void *CnvXtthelpToHtml::insert( navh_eItemType item_type, const char *text1,
 
       if ( bookmark != 0)
 	cf->f << "<A NAME=\"" <<  bookmark << "\">";
-      cf->f << "<H3>" << text1 << "</H3><BR>";
+      cf->f << "<H3>" << text1 << "</H3>";
       if ( bookmark != 0)
 	cf->f << "</A>";
       cf->f << endl;
@@ -335,7 +335,7 @@ void *CnvXtthelpToHtml::insert( navh_eItemType item_type, const char *text1,
 
       if ( bookmark != 0)
 	cf->f << "<A NAME=\"" <<  bookmark << "\">";
-      cf->f << "<H2>" << text1 << "</H2><BR>";
+      cf->f << "<H2>" << text1 << "</H2>";
       if ( bookmark != 0)
 	cf->f << "</A>";
       cf->f << endl;

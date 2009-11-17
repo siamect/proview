@@ -1409,6 +1409,39 @@ cdh_ObjidToString (
     return ls;
   
 }
+//!  Converts a object identifier, 'oid' to a filename string.
+/*!
+    The output string will be in the format:
+
+    xxx_xxx_xxx_xxx_yyyyyyyy
+
+    where xxx are the volume id in decimal form and yyyyyyyy
+    the object index in hex form.
+
+    If 's' is non null the resultant string will be catenated
+    to 's', otherwise the resultant string will be returned.
+*/
+
+char *
+cdh_ObjidToFnString (
+  char			*s,
+  pwr_tOid		oid
+)
+{
+  cdh_uObjid		loid;
+  static char		str[40];
+
+  loid.pwr = oid;
+
+  sprintf( str, "%3.3u_%3.3u_%3.3u_%3.3u_%8.8x", loid.o.vid_3,
+	   loid.o.vid_2, loid.o.vid_1, loid.o.vid_0, loid.o.oix);
+
+  if (s != NULL)
+    return strcat(s, str);
+  else
+    return str;  
+}
+
 
 //!  Converts a volume identifier, 'vid' to a string.
 /*!

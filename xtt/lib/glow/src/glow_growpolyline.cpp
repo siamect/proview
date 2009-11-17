@@ -175,7 +175,7 @@ int GrowPolyLine::shadow_direction()
 }
 
 void GrowPolyLine::calculate_shadow( glow_sShadowInfo **s, int *num, int ish, int highlight, 
-			 void *colornode, int javaexport)
+				     void *colornode, int javaexport, int chot)
 {
   glow_sShadowInfo *sp;
   double x;
@@ -201,10 +201,10 @@ void GrowPolyLine::calculate_shadow( glow_sShadowInfo **s, int *num, int ish, in
     dark_drawtype = (glow_eDrawType) drawtype_incr;
   }
   else {
-    light_drawtype = ctx->shift_drawtype( fillcolor, -drawtype_incr, 
-								      (GrowNode *)colornode);
-    dark_drawtype = ctx->shift_drawtype( fillcolor, drawtype_incr, 
-								     (GrowNode *)colornode);
+    light_drawtype = ctx->shift_drawtype( fillcolor, -drawtype_incr + chot, 
+					  (GrowNode *)colornode);
+    dark_drawtype = ctx->shift_drawtype( fillcolor, drawtype_incr + chot, 
+					 (GrowNode *)colornode);
   }
 
   pos01 = shadow_direction();
@@ -328,6 +328,19 @@ void GrowPolyLine::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, 
       return;
     hot = 0;
   }
+  int chot = 0;
+  if ( hot && ctx->environment != glow_eEnv_Development) {
+    if ( ctx->hot_indication == glow_eHotIndication_No)
+	 hot = 0;
+    else if ( ctx->hot_indication == glow_eHotIndication_DarkColor) {
+      chot = hot;
+      hot = 0;
+    }
+    else if ( ctx->hot_indication == glow_eHotIndication_LightColor) {
+      chot = -hot;
+      hot = 0;
+    }
+  }
   int i;
   glow_eDrawType drawtype;
   int idx;
@@ -377,11 +390,14 @@ void GrowPolyLine::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, 
       drawtype = ctx->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
 		 highlight, (GrowNode *)colornode, 1);
     if ( fill_eq_light && node && ((GrowNode *)node)->shadow)
-      drawtype = ctx->shift_drawtype( drawtype, -shadow_contrast, 
+      drawtype = ctx->shift_drawtype( drawtype, -shadow_contrast + chot, 
 						   (GrowNode *)colornode);
     else if ( fill_eq_shadow && node && ((GrowNode *)node)->shadow)
-      drawtype = ctx->shift_drawtype( drawtype, shadow_contrast, 
-						   (GrowNode *)colornode);
+      drawtype = ctx->shift_drawtype( drawtype, shadow_contrast + chot, 
+				      (GrowNode *)colornode);
+    else if ( chot)
+      drawtype = GlowColor::shift_drawtype( drawtype, chot, 0);
+
     if ( grad == glow_eGradient_No || drawtype == glow_eDrawType_ColorRed)
       ctx->gdraw->fill_polyline( w, points, a_points.a_size, drawtype, 0);
     else {
@@ -417,7 +433,7 @@ void GrowPolyLine::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, 
       min((x_right - x_left)*w->zoom_factor_x, (y_high - y_low)*w->zoom_factor_y) + 0.5);
 
     if ( ish >= 1) {
-      calculate_shadow( &sp, &p_num, ish, highlight, colornode, 0);
+      calculate_shadow( &sp, &p_num, ish, highlight, colornode, 0, chot);
 
       glow_sPointX p[4];
       for ( i = 0; i < p_num - 1; i++) {
@@ -449,6 +465,9 @@ void GrowPolyLine::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
       return;
     hot = 0;
   }
+  if ( hot && ctx->environment != glow_eEnv_Development &&
+       ctx->hot_indication != glow_eHotIndication_LineWidth)
+    hot = 0;
   int i;
   int idx;
   if ( node && ((GrowNode *)node)->line_width)
@@ -1464,7 +1483,7 @@ void GrowPolyLine::export_javabean( GlowTransform *t, void *node,
 	  min((x_right - x_left)*ctx->mw.zoom_factor_x, (y_high - y_low)*ctx->mw.zoom_factor_y) + 0.5);
 
     if ( ish)
-      calculate_shadow( &sp, &p_num, ish, 0, 0, 1);
+      calculate_shadow( &sp, &p_num, ish, 0, 0, 1, 0);
     else
       jshadow = 0;
   }

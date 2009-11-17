@@ -1818,7 +1818,7 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   gtk_toolbar_append_widget( tools, tools_conpalette, "Show Connection palette", "");
 
   GtkWidget *tools_plantpalette = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/foe_navpalette.png");
+  dcli_translate_filename( fname, "$pwr_exe/xtt_navigator.png");
   gtk_container_add( GTK_CONTAINER( tools_plantpalette), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_plantpalette, "clicked", G_CALLBACK(WFoeGtk::activate_palette_plant), this);

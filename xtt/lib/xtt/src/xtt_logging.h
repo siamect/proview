@@ -103,13 +103,8 @@ class XttLogging {
     int start();
     int stop();
     int entry_stop();
-    int remove( char		*parameterstr);
-    int get_parinfo(
-			char		*parameter_name,
-			pwr_sParInfo	*parinfo);
-    int log_print( 
-		const char		*format,
-		... );
+    int remove( char *parameterstr);
+    int log_print( const char *format, ... );
     int print_buffer();
     int close_files();
     int set_prio( int prio) { return 1;};

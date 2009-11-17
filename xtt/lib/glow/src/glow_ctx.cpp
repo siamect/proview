@@ -78,7 +78,8 @@ GlowCtx::GlowCtx( const char *ctx_name, double zoom_fact, int offs_x, int offs_y
     hot_mode(glow_eHotMode_Default), 
     default_hot_mode(glow_eHotMode_SingleObject), hot_found(0),
     userdata_save_callback(0), userdata_open_callback(0), userdata_copy_callback(0),
-    version(GLOW_VERSION), inputfocus_object(0), is_component(0), comment(0)
+    version(GLOW_VERSION), inputfocus_object(0), is_component(0), comment(0),
+    hot_indication(glow_eHotIndication_LightColor)
 { 
   strcpy(name, ctx_name);
   memset( (void *)event_callback, 0, sizeof(event_callback));
@@ -188,6 +189,7 @@ int GlowCtx::save( char *filename, glow_eSaveMode mode)
   fp <<	int(glow_eSave_Ctx_refcon_textsize) << FSPACE << refcon_textsize << endl;
   fp <<	int(glow_eSave_Ctx_refcon_linewidth) << FSPACE << refcon_linewidth << endl;
   fp <<	int(glow_eSave_Ctx_version) << FSPACE << version << endl;
+  fp <<	int(glow_eSave_Ctx_hot_indication) << FSPACE << hot_indication << endl;
   if ( ctx_type == glow_eCtxType_Grow)
   {
     fp << int(glow_eSave_Ctx_grow) << endl;
@@ -265,6 +267,7 @@ int GlowCtx::open( char *filename, glow_eSaveMode mode)
   char		dummy[40];
   int           grow_loaded = 0;
   int           zoom_y_found = 0;
+  int		tmp;
 
   if ( !check_file( filename))
     return GLOW__FILEOPEN;
@@ -324,6 +327,7 @@ int GlowCtx::open( char *filename, glow_eSaveMode mode)
       case glow_eSave_Ctx_refcon_textsize: fp >> refcon_textsize; break;
       case glow_eSave_Ctx_refcon_linewidth: fp >> refcon_linewidth; break;
       case glow_eSave_Ctx_version: fp >> version; break;
+      case glow_eSave_Ctx_hot_indication: fp >> tmp; hot_indication = (glow_eHotIndication)tmp; break;
       case glow_eSave_Ctx_grow:
         ((GrowCtx *)this)->open_grow( fp);
         grow_loaded = 1;
@@ -724,10 +728,11 @@ void GlowCtx::paste_execute()
   {
     a.insert( a_move[i]);
   }
-  if ( application_paste)
+
+  // if ( application_paste)
     a_sel.copy_from_common_objects(a_move);
-  else
-    a_sel.copy_from(a_move);
+    // else
+    //  a_sel.copy_from(a_move);
 
   ur_x = -1e10;
   ll_x = 1e10;

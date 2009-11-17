@@ -146,4 +146,11 @@
 090916 cs  xtt       New xtt command 'show objectlist /class='.
 090916 cs  xtt       New xtt commands 'create opmenuitem' and 'delete opmenuitem' to modify operator window menu..
 090930 cs  ge        Java compile problems for subgraphs with multiple annotations fixed.
-091020 cs  xtt       Buggfix in System Messages, zip-files >= version 10 was not opened in the correct order in next/prev file.
+091020 cs  xtt       Bugfix in System Messages, zip-files >= version 10 was not opened in the correct order in next/prev file.
+091029 cs  xtt       Bugfix in xtt logging, restore on attributes of attributeobject didn't work.
+091029 cs  xtt       Bugfix in xtt logging, if showfile was activate before logging was terminated, xtt could segfault.
+091102 cs  ge        Menu entry to create subgraphs added.
+091102 cs  ge        Menu items for connections changed to radio items.
+091103 cs  xtt       Translation and utf8 conversion of search condition in EventLog window fixed.
+091104 cs  glow      Fixcolor added to arc properties.
+091106 cs  ge        Different ways to show hot object added: linewith, light color, dark color.

@@ -43,7 +43,7 @@ void XttGe::graph_init_cb( void *client_data)
   int		default_height;
   int		sts;
 
-  cdh_ToLower( fname, ge->filename);
+  strncpy( fname, ge->filename, sizeof(fname));
   if ( ! strrchr( fname, '.'))
     strcat( fname, ".pwg");
   ge->graph->open( fname);

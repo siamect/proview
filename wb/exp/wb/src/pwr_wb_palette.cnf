@@ -256,7 +256,7 @@ palette NavigatorPalette
           class Ssab_Co4uP
           class Ssab_DI32D
           class Ssab_DO32DKS
-          class Ssab_DO23DKS_Stall
+          class Ssab_DO32DKS_Stall
         }
       }
       menu Profibus

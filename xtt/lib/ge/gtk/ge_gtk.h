@@ -109,6 +109,7 @@ class GeGtk : public Ge {
   static void create_india_label( GtkWidget *w, gpointer gectx);
   static void create_india_text( GtkWidget *w, gpointer gectx);
 
+  static void activate_create_subgraph(GtkWidget *w, gpointer gectx);
   static void activate_change_text( GtkWidget *w, gpointer gectx);
   static void activate_change_name( GtkWidget *w, gpointer gectx);
   static void activate_preview_start( GtkWidget *w, gpointer gectx);

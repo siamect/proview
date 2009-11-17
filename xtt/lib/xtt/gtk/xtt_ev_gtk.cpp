@@ -85,7 +85,7 @@ EvGtk::EvGtk( void *ev_parent_ctx,
 	      pwr_tStatus *status) :
   Ev( ev_parent_ctx, eve_name, ala_name, blk_name, ev_user, display_ala, display_eve,
       display_blk, display_return, display_ack, ev_beep, ev_pop_mask, status),
-  parent_wid(ev_parent_wid), parent_wid_eve(NULL), parent_wid_ala(NULL)
+  parent_wid(ev_parent_wid), parent_wid_eve(0), parent_wid_ala(0), parent_wid_blk(0)
 {
   pwr_tStatus sts;
   pwr_sClass_OpPlace *userobject_ptr;

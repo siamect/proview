@@ -92,8 +92,7 @@ class Hist {
     pwr_tStatus 	hist_clear_histlist();
     int			check_conditions(sEvent *evp);
     int			compareStr(char *, char *);
-    void		printSearchStr_en_us();
-    void		printSearchStr_sv_se();
+    void		printSearchStr();
 
     virtual void set_num_of_events( int nrOfEvents) {}
     virtual void set_search_string( const char *s1, const char *s2, 

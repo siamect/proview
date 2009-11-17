@@ -26,6 +26,7 @@
 #include "co_time.h"
 #include "co_error.h"
 #include "co_cnf.h"
+#include "co_tree.h"
 #include "rt_qcom.h"
 #include "rt_qcom_msg.h"
 #include "rt_ini_event.h"
@@ -40,6 +41,32 @@
 
 #define sev_cGarbageInterval 120
 
+
+static int sev_comp_item(tree_sTable *tp, tree_sNode *x, tree_sNode *y)
+{
+  sev_sItem *xp = (sev_sItem *) x; 
+  sev_sItem *yp = (sev_sItem *) y;
+  
+  if (xp->key.oid.vid > yp->key.oid.vid)
+    return 1;
+
+  if (xp->key.oid.vid < yp->key.oid.vid)
+    return -1;
+
+  if (xp->key.oid.oix > yp->key.oid.oix)
+    return 1;
+
+  if (xp->key.oid.oix < yp->key.oid.oix)
+    return -1;
+
+  if ( strcmp( xp->key.aname, yp->key.aname) > 0)
+    return 1;
+
+  if ( strcmp( xp->key.aname, yp->key.aname) < 0)
+    return -1;
+
+  return 0;
+}
 
 int sev_server::init( int noneth)
 {
@@ -104,9 +131,16 @@ int sev_server::init( int noneth)
 
   m_db->get_items( &m_sts);
 
+  m_item_key = tree_CreateTable(&sts, sizeof(sev_sItemKey), offsetof(sev_sItem, key), sizeof(sev_sItem), 100, sev_comp_item);
+
   for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
-    sev_item_key items_key( m_db->m_items[i].oid, m_db->m_items[i].attr[0].aname);
-    m_item_key[items_key] = i;
+    sev_sItemKey ik;
+    sev_sItem *ip;
+                  
+    ik.oid = m_db->m_items[i].oid;
+    strcpy( ik.aname, m_db->m_items[i].attr[0].aname);
+    ip = (sev_sItem *) tree_Insert(&sts, m_item_key, &ik);
+    ip->idx = i;
   }
 
   // Create a queue to server
@@ -429,6 +463,7 @@ int sev_server::mainloop()
 
 int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
 {
+  pwr_tStatus sts;
   unsigned int idx;
   pwr_tDeltaTime storagetime;
   int item_cnt = (size - sizeof(sev_sMsgHistItems)) / sizeof(sev_sHistItem) + 1;
@@ -462,8 +497,13 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
 		      msg->Items[i].deadband, msg->Items[i].options, &idx);
       if ( EVEN(m_sts)) return m_sts;
       
-      sev_item_key item_key( msg->Items[i].oid, msg->Items[i].attr[0].aname);
-      m_item_key[item_key] = idx;
+      sev_sItemKey ik;
+      sev_sItem *ip;
+                  
+      ik.oid = msg->Items[i].oid;
+      strcpy( ik.aname, msg->Items[i].attr[0].aname);
+      ip = (sev_sItem *) tree_Insert(&sts, m_item_key, &ik);
+      ip->idx = idx;
     }
 
     m_db->m_items[idx].sevid = msg->Items[i].sevid;
@@ -471,7 +511,15 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
     m_refid[sevid] = idx;
   }
 
-  printf( "----  Node up ----\n");
+#if 0
+  sev_sItem *ip = (sev_sItem *)tree_Minimum(&sts, m_item_key);
+  while ( ip) {
+    printf( "ItemKey: %d,%d  Name %s idx: %d\n", ip->key.oid.vid, ip->key.oid.oix, ip->key.aname, ip->idx);
+
+    ip = (sev_sItem *)tree_Successor(&sts, m_item_key, ip);
+  }
+#endif
+  printf( "----  Node up (%d) ----\n", nid);
   // for ( iterator_refid it = m_refid.begin(); it != m_refid.end(); it++)
     //    printf( "Refid: %d,%d  Name %s\n", it->first.id.nid, it->first.id.rix, m_db->m_items[it->second].oname);
 
@@ -512,16 +560,21 @@ int sev_server::send_histdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *rmsg, 
   pwr_tStatus	sts, lsts;
   pwr_tTime	starttime, endtime;
   
-  sev_item_key item_key( rmsg->Oid, rmsg->AName);
-  iterator_item_key it = m_item_key.find( item_key);
-  if ( it == m_item_key.end())
+  sev_sItemKey ik;
+  sev_sItem *ip;
+                  
+  ik.oid = rmsg->Oid;
+  strcpy( ik.aname, rmsg->AName);
+  ip = (sev_sItem *) tree_Find(&sts, m_item_key, &ik);
+
+  if ( !ip)
     m_sts = SEV__NOSUCHITEM;
   else
     m_sts = SEV__SUCCESS;
   
   int idx = 0;
   if ( ODD(m_sts)) {
-    idx = it->second;
+    idx = ip->idx;
 
     starttime = net_NetTimeToTime( &rmsg->StartTime);
     endtime = net_NetTimeToTime( &rmsg->EndTime);

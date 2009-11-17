@@ -26,7 +26,7 @@ let reload__loaddb=4
 
 let pass__continue=1
 let pass__execute=2
-#v44_root="/data1/pwr/x4-4-4/rls_dbg"
+
 if [ -e /usr/pwr46 ]; then
   v46_root="/usr/pwr46"
 fi
@@ -455,9 +455,7 @@ reload_directorystructure()
   fi
 
 
-  if [ -e $pwrp_load/ld_appl_*.txt ]; then
-    mv $pwrp_load/ld_appl_*.txt $pwrp_cnf/
-  fi
+  mv $pwrp_load/ld_appl_*.txt $pwrp_cnf/ 2> /dev/null
   if [ -e $pwrp_root/bld/x86_linux/exe/xtt_help.dat ]; then
     mv $pwrp_root/bld/x86_linux/exe/xtt_help.dat $pwrp_cnf/
   fi
