@@ -47,37 +47,30 @@ class sev_refid {
   pwr_tRefId id;
 };
 
-class sev_item_key {
- public:
-  sev_item_key( pwr_tOid oid, char *aname) : m_oid(oid) 
-    {
-      strncpy( m_aname, aname, sizeof(m_aname));
-    }
+// Struct for binary tree item
+typedef struct {
+  pwr_tOid oid;
+  pwr_tAName aname;
+} sev_sItemKey;
 
-  bool operator<(const sev_item_key& x) const {
-    if ( m_oid.vid < x.m_oid.vid)
-      return true;
-    if ( m_oid.oix < x.m_oid.oix)
-      return true;
-    return strcmp( m_aname, x.m_aname);
-  }
-  pwr_tOid m_oid;
-  pwr_tAName m_aname;
-};
+typedef struct {
+  tree_sNode  node;
+  sev_sItemKey key;
+  int idx;
+} sev_sItem;
 
 class sev_server {
  public:
 
-  sev_server() : m_server_status(0), m_msg_id(0) {}
+  sev_server() : m_server_status(0), m_item_key(0), m_msg_id(0) {}
 
   typedef map<sev_refid, unsigned int>::iterator iterator_refid;
-  typedef map<sev_item_key, unsigned int>::iterator iterator_item_key;
 
   pwr_tStatus m_sts;
   pwr_tStatus m_server_status;
   vector<sev_node> m_nodes;
   map<sev_refid, unsigned int> m_refid;
-  map<sev_item_key, unsigned int> m_item_key;
+  tree_sTable *m_item_key;
   unsigned int m_msg_id;
   sev_db *m_db;
   int m_noneth;
