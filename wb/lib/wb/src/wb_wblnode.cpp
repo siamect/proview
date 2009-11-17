@@ -2119,6 +2119,12 @@ int wb_wblnode::attrStringToValue( int type_id, char *value_str,
         return 0;
       break;
     }
+    case pwr_eType_Int64: 
+    {
+      if ( sscanf( value_str, pwr_dFormatInt64, ( pwr_tInt64 *)buffer_ptr) != 1)
+	return 0;
+      break;
+    }
     case pwr_eType_UInt8:
     {
       pwr_tUInt8 	i8;
@@ -2142,6 +2148,12 @@ int wb_wblnode::attrStringToValue( int type_id, char *value_str,
     {
       if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
         return 0;
+      break;
+    }
+    case pwr_eType_UInt64: 
+    {
+      if ( sscanf( value_str, pwr_dFormatUInt64, (pwr_tUInt64 *)buffer_ptr) != 1)
+	return 0;
       break;
     }
     case pwr_eType_Text:
