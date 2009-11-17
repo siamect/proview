@@ -426,6 +426,7 @@ menu Grafcet
 }
 menu Layout
 {
+  subgraph 	NamePlate 	pwr_exe:pwr_nameplate.pwsg		8
   subgraph 	FrameThin 	pwr_exe:pwr_framethin.pwsg		8
   subgraph 	FrameMedium 	pwr_exe:pwr_framemedium.pwsg 		8
   subgraph 	FrameThick 	pwr_exe:pwr_framethick.pwsg 		8
