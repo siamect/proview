@@ -51,21 +51,27 @@ rt_modules = \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/ssabox/inc/pwr_ssaboxclasses.hpp \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/telemecanique/inc/pwr_telemecaniqueclasses.h \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/telemecanique/inc/pwr_telemecaniqueclasses.hpp \
-		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/exe/wb_gcg.sh
-
-
-xtt_modules = \
+		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/exe/wb_gcg.sh \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_ldh.h \
+		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_vext.h
+
+
+op_modules = \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_wnav_selformat.h \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_nav.h \
-		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_nav_gtk.h \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_pal.h \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_palfile.h \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_wccm.h \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_log.h \
-		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_log_gtk.h \
-		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_trv.h \
-		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_vext.h
+		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_trv.h
+
+op_gtk_modules = \
+		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_nav_gtk.h \
+		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_log_gtk.h
+
+op_motif_modules = \
+		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_nav_motif.h
+
 
 java_modules = \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/lib/pwr_rt.jar \
@@ -74,16 +80,23 @@ java_modules = \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/lib/pwr_rt_client.jar
 
 
-import_files : $(rt_modules) $(xtt_modules) $(java_modules)
+import_files : $(rt_modules) $(op_modules) $(java_modules) $(op_gtk_modules)
 	@ echo ""
 
 .PHONY: rt
-.PHONY: xtt
+.PHONY: op
 .PHONY: java
 
+_gtk :
 rt : $(rt_modules)
-xtt : $(xtt_modules)
+rt_gtk :
+rt_motif :
+op : $(op_modules)
+op_gtk : $(op_gtk_modules)
+op_motif : $(op_motif_modules)
 java : $(java_modules)
+java_gtk :
+java_motif :
 
 .SUFFIXES: 
 
@@ -207,7 +220,15 @@ $(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/exe/%.sh : $(pwre_vmsinc)/exp/exe/%.sh
 	@ echo Import ${target}
 	@ cp $(source) $(target)
 
-$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/%.h : $(pwre_vmsinc)/exp/inc/%.h
+$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_%_motif.h : $(pwre_croot)/wb/lib/wb/motif/wb_%_motif.h
+	@ echo Import ${target}
+	@ cp $(source) $(target)
+
+$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_%_gtk.h : $(pwre_croot)/wb/lib/wb/gtk/wb_%_gtk.h
+	@ echo Import ${target}
+	@ cp $(source) $(target)
+
+$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_%.h : $(pwre_croot)/wb/lib/wb/src/wb_%.h
 	@ echo Import ${target}
 	@ cp $(source) $(target)
 

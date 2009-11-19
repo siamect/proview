@@ -11,7 +11,6 @@
   "build_all_modules", "build_all_modules:usage_build_all_modules",
   "build_all_wbl", "build_all_wbl:usage_build_all_wbl",
   "ebuild",    "ebuild:usage_ebuild",
-  "build_xtt", "build_xtt:usage_build_xtt",
   "clean_exe_all", "clean_exe_all:usage_clean_exe_all",
   "method_build", "method_build:usage_method_build",
   "copy", 	"copy:usage_copy",
@@ -321,7 +320,7 @@ sub ebuild # args: pass flavour
     merge();
 
   }
-  elsif ( $pass eq "xtt" ) {
+  elsif ( $pass eq "op" ) {
     _module("xtt");
     _build("lib", "*", "src", "init copy");
     _build("lib", "*", $flavour, "copy");
@@ -335,6 +334,7 @@ sub ebuild # args: pass flavour
     _build("exe", "rt*", "src", "all");
     _build("exe", "xtt*", "src", "all");
     _build("exe", "co*", "src", "all");
+    _build("exe", "pwr*", "src", "all");
     _build("exe", "rt*", $flavour, "all");
     _build("exe", "xtt*", $flavour, "all");
     _build("exe", "co*", $flavour, "all");
@@ -345,6 +345,10 @@ sub ebuild # args: pass flavour
     merge();
     _module("profibus");
     _build("mmi", "*", "src", "copy");
+    _build("lib", "cow", "src", "init copy lib");
+    _build("lib", "cow", $flavour, "init copy lib");
+    _build("lib", "xtt", "src", "init copy lib");
+    _build("lib", "xtt", $flavour, "init copy lib");
     merge();
     _module("opc");
     _build("mmi", "*", "src", "copy");
@@ -370,34 +374,9 @@ sub ebuild # args: pass flavour
     _module("telemecanique");
     _build("mmi", "*", "src", "copy");
     merge();
+    method_build( "rt_io_comm", $flavour);
+    method_build( "rt_xtt", $flavour);
   }
-}
-
-#
-# build_xtt()
-#
-sub build_xtt # args: flavour
-{
-  my $flavour = $_[0];
-
-  _module("xtt");
-  _build("lib", "*", "src", "init copy");
-  _build("lib", "*", $flavour, "copy");
-  _build("exp", "*", "src", "init copy");
-  _build("mmi", "*", "src", "copy");
-  _build("mmi", "*", $flavour, "copy");
-  _build("exe", "*", "src", "copy");
-  _build("lib", "*", "src", "lib");
-  _build("lib", "*", $flavour, "lib");
-  _build("exp", "*", "src", "lib");
-  _build("exe", "rt*", "src", "all");
-  _build("exe", "xtt*", "src", "all");
-  _build("exe", "co*", "src", "all");
-  _build("exe", "rt*", $flavour, "all");
-  _build("exe", "xtt*", $flavour, "all");
-  _build("exe", "co*", $flavour, "all");
-  _build("exe", "pwr*", $flavour, "all");
-  merge();
 }
 
 #
@@ -405,11 +384,18 @@ sub build_xtt # args: flavour
 #
 sub import ()
 {
-  my $flavour = $_[0];
+  my $flavour = $_[1];
+  if ( $_[1] eq "motif") {
+    $flavour = "motif";
+  }
+  else {
+    $flavour = "gtk";
+  }
 
   my($vmsinc) = $ENV{"pwre_vmsinc"};
   if ( $vmsinc ne "" ) {
-    copy();
+
+    copy( $_[0], $flavour);
 
     _module("rt");
     merge();
@@ -872,14 +858,24 @@ sub copy ()
 
   my($vmsinc) = $ENV{"pwre_vmsinc"};
   my($bindir) = $ENV{"pwre_bin"} . "/" . $ENV{"pwre_hw"};
+  my($docroot) = $ENV{"pwre_broot"} . "/" . $ENV{"pwre_os"} . "/" . $ENV{"pwre_hw"} . "/exp/doc/";
 
   printf("--\n");
   printf("-- Copy file from Import root\n");
   printf("-- Import root: %s\n", $vmsinc);
   printf("--\n");
   
-  my($cmd) = "make -f $bindir/import_files.mk" . $_[0]; 
-  system("$cmd");
+  if ( $_[0] eq "doc" ) {
+    my($cmd) = "cp -r " . $vmsinc . "/exp/doc/* " . $docroot; 
+    system("$cmd");
+  }
+  else {
+    my($cmd) = "make -f $bindir/import_files.mk" . " " . $_[0]; 
+    system("$cmd");
+
+    my($cmd) = "make -f $bindir/import_files.mk" . " " . $_[0] . "_" . $_[1]; 
+    system("$cmd");
+  }
 }
 
 #
@@ -1393,13 +1389,7 @@ sub usage_build_all_wbl ()
 sub usage_ebuild ()
 {
   printf("++\n");
-  printf("++ ebuild                        : Builds rt module\n");
-}
-
-sub usage_build_xtt ()
-{
-  printf("++\n");
-  printf("++ build_xtt                      : Builds xtt module\n");
+  printf("++ ebuild 'block' 'flavour'       : Builds rt or op block\n");
 }
 
 sub usage_clean_exe_all ()
@@ -1459,7 +1449,7 @@ sub usage_init ()
 sub usage_import ()
 {
   printf("++\n");
-  printf("++ import                        : Import files from import root\n");
+  printf("++ import 'block' ['flavour']    : Import files from import root, block rt, op, java, doc\n");
 }
 
 sub usage_module ()
