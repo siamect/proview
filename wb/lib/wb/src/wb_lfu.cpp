@@ -1273,7 +1273,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  if (EVEN(sts)) return sts;
 
 	  os = *os_ptr;
-	  if ( !(os == pwr_mOpSys_VAX_ELN ||
+	  if ( !(os == pwr_mOpSys_CustomBuild ||
 		 os == pwr_mOpSys_VAX_VMS ||
 		 os == pwr_mOpSys_AXP_VMS ||
 		 os == pwr_mOpSys_PPC_LYNX ||
@@ -2807,6 +2807,7 @@ pwr_tStatus lfu_check_opt_file( char *nodename, int bus_number, pwr_mOpSys opsys
   case pwr_mOpSys_PPC_LINUX:
   case pwr_mOpSys_X86_LINUX:
   case pwr_mOpSys_X86_64_LINUX:
+  case pwr_mOpSys_CustomBuild:
     fp << 
       "$pwr_obj/rt_io_user.o -lpwr_rt -lpwr_usbio_dummy" << endl;
     break;
