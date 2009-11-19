@@ -443,9 +443,10 @@ int OpMotif::configure( char *opplace_str)
   XtFree( (char *)entry);
 
   // Examine Graph objects
-  for ( i = 0; i < 15; i++)
+  int idx = 0;
+  for ( i = 0; i < 25; i++)
   {
-    if ( i >= 15)
+    if ( idx >= 15)
       break;
     memset( &attrref, 0, sizeof(attrref));
     sts = gdh_ClassAttrToAttrref( pwr_cClass_XttGraph, ".ButtonText", &attrref);
@@ -454,23 +455,23 @@ int OpMotif::configure( char *opplace_str)
     if ( cdh_ObjidIsNotNull( opplace_p->FastAvail[i].Objid)) {
 
       attrref = cdh_ArefAdd( &opplace_p->FastAvail[i], &attrref);
-      sts = gdh_GetObjectInfoAttrref( &attrref, (void *)button_title[i], 
+      sts = gdh_GetObjectInfoAttrref( &attrref, (void *)button_title[idx], 
 				      sizeof(button_title[0]));
       if ( ODD(sts)) 
-	button_aref[i] = attrref.Objid;
+	button_aref[idx] = attrref;
       else
-	button_aref[i] = pwr_cNOid;
+	button_aref[idx].Objid = pwr_cNOid;
+      idx++;
     }
-    else 
-      button_aref[i] = pwr_cNOid;      
   }
+  button_cnt = idx;
 
   // Create the application buttons
   for ( i = 0; i < button_cnt; i++)
   {
     Widget b[15];
 
-    if ( cdh_ObjidIsNull( button_aref[i]))
+    if ( cdh_ObjidIsNull( button_aref[i].Objid))
       continue;	 
 
     switch ( i)

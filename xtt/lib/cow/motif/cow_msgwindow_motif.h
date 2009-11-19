@@ -20,10 +20,10 @@
 #ifndef co_msgwindow_motif_h
 #define co_msgwindow_motif_h
 
-/* co_msgwindow_motif.h -- Message window */
+/* cow_msgwindow_motif.h -- Message window */
 
-#ifndef co_msgwindow_h
-# include "co_msgwindow.h"
+#ifndef cow_msgwindow_h
+# include "cow_msgwindow.h"
 #endif
 
 #include <Xm/Xm.h>

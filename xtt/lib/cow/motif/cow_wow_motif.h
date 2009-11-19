@@ -93,7 +93,7 @@ class CoWowMotif : public CoWow {
 				void *data);
   void DisplayError( const char *title, const char *text);
   void DisplayText( const char *title, const char *text) {}
-  void *CreateList( const char *title, const char *texts,
+  void *CreateList( const char *title, const char *texts, int textsize,
 		    void (action_cb)( void *, char *),
 		    void (cancel_cb)( void *),
 		    void *ctx,

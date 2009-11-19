@@ -42,9 +42,9 @@
 #include "cow_wow.h"
 #include "cow_msgwindow.h"
 #include "cow_xhelp.h"
-#include "rt_pn_gsdml.h"
-#include "rt_pn_gsdml_attr.h"
-#include "rt_pn_gsdml_attrnav.h"
+#include "cow_pn_gsdml.h"
+#include "cow_pn_gsdml_attr.h"
+#include "cow_pn_gsdml_attrnav.h"
 #include "wb_c_pndevice.h"
 
 #include "wb_pwrs.h"
