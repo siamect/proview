@@ -3,7 +3,7 @@ import_top : import_files
 source  	= $<
 target  	= $@
 
-import_modules = \
+rt_modules = \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/load/pwrs.dbs \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/load/pwrb.dbs \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/load/rt.dbs \
@@ -51,6 +51,10 @@ import_modules = \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/ssabox/inc/pwr_ssaboxclasses.hpp \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/telemecanique/inc/pwr_telemecaniqueclasses.h \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/telemecanique/inc/pwr_telemecaniqueclasses.hpp \
+		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/exe/wb_gcg.sh
+
+
+xtt_modules = \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_ldh.h \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_wnav_selformat.h \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_nav.h \
@@ -63,8 +67,23 @@ import_modules = \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_trv.h \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_vext.h
 
-import_files : $(import_modules)
+java_modules = \
+		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/lib/pwr_rt.jar \
+		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/lib/pwr_jop.jar \
+		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/lib/pwr_jopc.jar \
+		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/lib/pwr_rt_client.jar
+
+
+import_files : $(rt_modules) $(xtt_modules) $(java_modules)
 	@ echo ""
+
+.PHONY: rt
+.PHONY: xtt
+.PHONY: java
+
+rt : $(rt_modules)
+xtt : $(xtt_modules)
+java : $(java_modules)
 
 .SUFFIXES: 
 
@@ -184,7 +203,15 @@ $(pwre_broot)/$(pwre_os)/$(pwre_hw)/telemecanique/inc/%.hpp : $(pwre_vmsinc)/exp
 	@ echo Import ${target}
 	@ cp $(source) $(target)
 
+$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/exe/%.sh : $(pwre_vmsinc)/exp/exe/%.sh
+	@ echo Import ${target}
+	@ cp $(source) $(target)
+
 $(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/%.h : $(pwre_vmsinc)/exp/inc/%.h
+	@ echo Import ${target}
+	@ cp $(source) $(target)
+
+$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/lib/%.jar : $(pwre_vmsinc)/exp/lib/%.jar
 	@ echo Import ${target}
 	@ cp $(source) $(target)
 

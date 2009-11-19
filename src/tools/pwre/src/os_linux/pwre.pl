@@ -10,7 +10,7 @@
   "build_kernel", "build_kernel:usage_build_kernel",
   "build_all_modules", "build_all_modules:usage_build_all_modules",
   "build_all_wbl", "build_all_wbl:usage_build_all_wbl",
-  "build_rt", "build_rt:usage_build_rt",
+  "ebuild",    "ebuild:usage_ebuild",
   "build_xtt", "build_xtt:usage_build_xtt",
   "clean_exe_all", "clean_exe_all:usage_clean_exe_all",
   "method_build", "method_build:usage_method_build",
@@ -229,47 +229,148 @@ sub build_kernel # args: flavour
 }
 
 #
-# build_rt()
+# ebuild()
 #
-sub build_rt # args: flavour
+sub ebuild # args: pass flavour
 {
-  my $flavour = $_[0];
+  my $pass = $_[0];
+  my $flavour = $_[1];
+  if ( $_[1] eq "motif") {
+    $flavour = "motif";
+  }
+  else {
+    $flavour = "gtk";
+  }
 
-  _module("rt");
-  _build("exp", "inc", "src", "all");
-  _build("exp", "com", "src", "all");
-  _build("tools/exe", "*", "src", "all");
-  merge("exe/tools_cmsg2c");
-  merge("exe/tools_msg2cmsg");
-  merge("exe/tools_pdrgen");
-  _build("msg", "*", "src", "all");
-  _build("lib", "rt", "src", "init copy");
-  _build("lib", "rt", $flavour, "copy");
-  _build("lib", "co", "src", "init copy");
-  _build("lib", "co", $flavour, "copy");
-  _build("lib", "dtt", "src", "init copy");
-  _build("lib", "statussrv", "src", "init copy");
-  _build("lib", "co", "src", "all");
-  _build("lib", "co", $flavour, "all");
-  _build("exe", "co*", "src", "all");
-  _build("exe", "*", "src", "copy");
-  _build("exp", "stdsoap2", "src", "copy");  
-  _build("lib", "rt", "src", "all");
-  _build("lib", "statussrv", "src", "all");
-  _build("lib", "msg_dummy", "src", "init copy lib");
-  _build("exp", "rt", "src", "all");
-  _build("exe", "wb_rtt", "src", "all");
-  _build("lib", "dtt", "src", "all");
-  _build("exp", "stdsoap2", "src", "all");
-  _module("otherio");
-  _build("exp","rt","src","copy");
-  _build("lib","usbio_dummy","src","init lib");
-  merge();
-  _module("rt");
-  _build("exe", "rt*", "src", "all");
-  _build("exe", "co*", $flavour, "all");
-  _build("exe", "pwr_user", "src", "all");
-  merge();
+  if ( $pass eq "rt" ) {
+    _module("rt");
+    _build("exp", "inc", "src", "all");
+    _build("exp", "com", "src", "all");
+    _build("tools/exe", "*", "src", "all");
+    merge("exe/tools_cmsg2c");
+    merge("exe/tools_msg2cmsg");
+    merge("exe/tools_pdrgen");
+    _build("msg", "*", "src", "all");
+    _build("lib", "rt", "src", "init copy");
+    _build("lib", "rt", $flavour, "copy");
+    _build("lib", "co", "src", "init copy");
+    _build("lib", "co", $flavour, "copy");
+    _build("lib", "dtt", "src", "init copy");
+    _build("lib", "statussrv", "src", "init copy");
+    _build("lib", "co", "src", "all");
+    _build("lib", "co", $flavour, "all");
+    _build("exe", "co*", "src", "all");
+    _build("exe", "*", "src", "copy");
+    _build("exp", "stdsoap2", "src", "copy");  
+    _build("lib", "rt", "src", "all");
+    _build("lib", "statussrv", "src", "all");
+    _build("lib", "msg_dummy", "src", "init copy lib");
+    _build("exp", "rt", "src", "all");
+    _build("exe", "wb_rtt", "src", "all");
+    _build("lib", "dtt", "src", "all");
+    _build("exp", "stdsoap2", "src", "all");
+    _module("otherio");
+    _build("exp","rt","src","copy");
+    _build("lib","usbio_dummy","src","init lib");
+    merge();
+    _module("rt");
+    _build("exe", "rt*", "src", "all");
+    _build("exe", "co*", $flavour, "all");
+    _build("exe", "pwr_user", "src", "all");
+    merge();
+    _module("nmps");
+    _build("lib", "nmps", "src", "all");
+    merge();
+    _module("bcomp");
+    _build("lib", "rt", "src", "all");
+    merge();
+    _module("ssabox");
+    _build("lib", "rt", "src", "all");
+    _build("lib", "ssabox", "src", "all");
+    merge();
+    _module("otherio");
+    _build("lib", "rt", "src", "all");
+    merge();
+    _module("remote");
+    _build("lib", "remote", "src", "all");
+    _build("exe", "*", "src", "all");
+    merge();
+    _module("opc");
+    _build("lib", "opc", "src", "all");
+    _build("exe", "*", "src", "all");
+    merge();
+    _module("tlog");
+    _build("lib", "tlog", "src", "all");
+    merge();
+    _module("java");
+    _build("exe", "jpwr_rt_gdh", "src", "all");
+    merge();
+    _module("abb");
+    merge();
+    _module("siemens");
+    merge();
+    _module("othermanu");
+    merge();
+    _module("inor");
+    merge();
+    _module("klocknermoeller");
+    merge();
+    _module("telemecanique");
+    merge();
+    _module("siemens");
+    merge();
+
+  }
+  elsif ( $pass eq "xtt" ) {
+    _module("xtt");
+    _build("lib", "*", "src", "init copy");
+    _build("lib", "*", $flavour, "copy");
+    _build("exp", "*", "src", "init copy");
+    _build("mmi", "*", "src", "copy");
+    _build("mmi", "*", $flavour, "copy");
+    _build("exe", "*", "src", "copy");
+    _build("lib", "*", "src", "lib");
+    _build("lib", "*", $flavour, "lib");
+    _build("exp", "*", "src", "lib");
+    _build("exe", "rt*", "src", "all");
+    _build("exe", "xtt*", "src", "all");
+    _build("exe", "co*", "src", "all");
+    _build("exe", "rt*", $flavour, "all");
+    _build("exe", "xtt*", $flavour, "all");
+    _build("exe", "co*", $flavour, "all");
+    _build("exe", "pwr*", $flavour, "all");
+    merge();
+    _module("bcomp");
+    _build("mmi", "*", "src", "copy");
+    merge();
+    _module("profibus");
+    _build("mmi", "*", "src", "copy");
+    merge();
+    _module("opc");
+    _build("mmi", "*", "src", "copy");
+    merge();
+    _module("othermanu");
+    _build("mmi", "*", "src", "copy");
+    merge();
+    _module("abb");
+    _build("mmi", "*", "src", "copy");
+    merge();
+    _module("inor");
+    _build("mmi", "*", "src", "copy");
+    merge();
+    _module("siemens");
+    _build("mmi", "*", "src", "copy");
+    merge();
+    _module("klocknermoeller");
+    _build("mmi", "*", "src", "copy");
+    merge();
+    _module("ssabox");
+    _build("mmi", "*", "src", "copy");
+    merge();
+    _module("telemecanique");
+    _build("mmi", "*", "src", "copy");
+    merge();
+  }
 }
 
 #
@@ -664,13 +765,10 @@ sub build_all ()
       merge("exe/tools_pdrgen");
       _build("msg", "*", "src", "all");
       _build("lib", "rt", "src", "init copy");
-      _build("lib", "rt", $flavour, "copy");
       _build("lib", "co", "src", "init copy");
-      _build("lib", "co", $flavour, "copy");
       _build("lib", "dtt", "src", "init copy");
       _build("lib", "statussrv", "src", "init copy");
       _build("lib", "co", "src", "all");
-      _build("lib", "co", $flavour, "all");
       _build("exe", "co*", "src", "all");
       _build("wbl", "pwrs", "src", "copy");
       _build("wbl", "pwrb", "src", "copy");
@@ -692,7 +790,6 @@ sub build_all ()
       }
       _module("rt");
       _build("lib", "rt", "src", "all");
-      _build("lib", "rt", $flavour, "all");
       _build("exp", "rt", "src", "all");
       _build("lib", "msg_dummy", "src", "all");
       _build("exp", "rt", "src", "all");
@@ -781,8 +878,8 @@ sub copy ()
   printf("-- Import root: %s\n", $vmsinc);
   printf("--\n");
   
-  system("make -f $bindir/import_files.mk") && exit;
-
+  my($cmd) = "make -f $bindir/import_files.mk" . $_[0]; 
+  system("$cmd");
 }
 
 #
@@ -1293,10 +1390,10 @@ sub usage_build_all_wbl ()
   printf("++ build_all_wbl                 : Builds wbl in all modules\n");
 }
 
-sub usage_build_rt ()
+sub usage_ebuild ()
 {
   printf("++\n");
-  printf("++ build_rt                      : Builds rt module\n");
+  printf("++ ebuild                        : Builds rt module\n");
 }
 
 sub usage_build_xtt ()
