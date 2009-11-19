@@ -230,6 +230,7 @@ x11proto-print-dev
 libxmu-dev
 libxmp-dev
 libxp-dev
+imlib11-dev
 
 build with 
 

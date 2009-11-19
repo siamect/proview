@@ -35,8 +35,8 @@ SObject pwrs:Type
     !*/
     Object VAX_ELN $Value
      Body SysBody
-       Attr PgmName = "VAX_ELN"
-       Attr Text = "VAXELN on VAX"
+       Attr PgmName = "CustomBuild"
+       Attr Text = "CustomBuild"
        Attr Value = 1
      EndBody
     EndObject

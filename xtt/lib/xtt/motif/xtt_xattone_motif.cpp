@@ -28,6 +28,8 @@
 #endif
 
 #include "glow_std.h"
+#include "pwr.h"
+#include "pwr_baseclasses.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,7 +46,7 @@
 #include "co_time.h"
 #include "flow_x.h"
 #include "rt_xnav_msg.h"
-#include "co_mrm_util.h"
+#include "cow_mrm_util.h"
 
 #include "flow.h"
 #include "flow_browctx.h"

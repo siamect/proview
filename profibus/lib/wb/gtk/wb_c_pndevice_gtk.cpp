@@ -43,8 +43,8 @@
 #include "co_dcli.h"
 #include "cow_wow.h"
 #include "cow_xhelp_gtk.h"
-#include "rt_pn_gsdml.h"
-#include "rt_pn_gsdml_attr_gtk.h"
+#include "cow_pn_gsdml.h"
+#include "cow_pn_gsdml_attr_gtk.h"
 #include "wb_c_pndevice.h"
 
 

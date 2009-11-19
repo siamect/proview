@@ -58,7 +58,7 @@ extern "C" {
 #include "flow_browapi.h"
 //#include "flow_browwidget.h"
 #include "rt_xtt_motif.h"
-#include "rt_trace.h"
+#include "xtt_trace.h"
 #include "xtt_xnav_motif.h"
 #include "xtt_item.h"
 #include "xtt_url.h"
@@ -531,7 +531,7 @@ XttMotif::~XttMotif()
 }
 
 XttMotif::XttMotif( int argc, char *argv[], int *return_sts) :
-  Xtt( argc, argv, return_sts),
+  Xtt( &argc, &argv, return_sts),
   cmd_current_recall(0), value_current_recall(0) 
 {
   char		uid_filename[120] = {"xtt.uid"};

@@ -41,8 +41,8 @@
 #include "co_dcli.h"
 #include "cow_wow.h"
 #include "cow_xhelp.h"
-#include "rt_pb_gsd.h"
-#include "rt_pb_gsd_attr.h"
+#include "cow_pb_gsd.h"
+#include "cow_pb_gsd_attr.h"
 #include "wb_c_pb_dp_slave.h"
 
 #include "wb_pwrs.h"

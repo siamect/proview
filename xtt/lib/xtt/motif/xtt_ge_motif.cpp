@@ -18,6 +18,8 @@
  */
 
 #include "glow_std.h"
+#include "pwr.h"
+#include "pwr_baseclasses.h"
 
 #include <stdio.h>
 #include <stdlib.h>

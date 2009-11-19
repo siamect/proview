@@ -1773,11 +1773,11 @@ void WttMotif::set_options()
   build_crossref = XmToggleButtonGetState(build_crossref_w);
   build_manual = XmToggleButtonGetState(build_manual_w);
 
-  wnav->set_options( show_class, show_alias, 
+  wnav->set_options( enable_comment, show_class, show_alias, 
 	show_descrip, show_objref, show_objxref, 
 	show_attrref, show_attrxref, build_force, build_debug,
 	build_crossref, build_manual);
-  wnavnode->set_options( show_class, show_alias, 
+  wnavnode->set_options( enable_comment, show_class, show_alias, 
 	show_descrip, show_objref, show_objxref, 
         show_attrref, show_attrxref, build_force, build_debug,
 	build_crossref, build_manual);
@@ -2298,7 +2298,7 @@ WttMotif::WttMotif(
   flow_AddCloseVMProtocolCb( toplevel, 
 	(XtCallbackProc)activate_exit, this);
 
-  wnav->get_options( &show_class, &show_alias, 
+  wnav->get_options( &enable_comment, &show_class, &show_alias, 
 	&show_descrip, &show_objref, &show_objxref, 
 	&show_attrref, &show_attrxref, &build_force, &build_debug,
 	&build_crossref, &build_manual);

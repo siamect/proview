@@ -606,7 +606,7 @@ typedef pwr_tMask pwr_tOpSys;
 #if 1
 typedef enum {
   pwr_mOpSys__ = 0,
-  pwr_mOpSys_VAX_ELN =  1 << 0,
+  pwr_mOpSys_CustomBuild =  1 << 0,
   pwr_mOpSys_VAX_VMS =  1 << 1,
   pwr_mOpSys_AXP_VMS =  1 << 2,
   pwr_mOpSys_PPC_LYNX = 1 << 3,
@@ -614,7 +614,8 @@ typedef enum {
   pwr_mOpSys_PPC_LINUX = 1 << 5,
   pwr_mOpSys_X86_LINUX = 1 << 6,
   pwr_mOpSys_X86_64_LINUX = 1 << 7,
-  pwr_mOpSys_ = 1 << 8
+  pwr_mOpSys_ = 1 << 8,
+  pwr_mOpSys_VAX_ELN =  1 << 30    /* TODO Remove! */
 } pwr_mOpSys;
 
 #else

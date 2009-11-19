@@ -47,7 +47,7 @@
 
 extern "C" {
 #include "flow_x.h"
-#include "co_mrm_util.h"
+#include "cow_mrm_util.h"
 #include "co_api.h"
 }
 

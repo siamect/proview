@@ -7,7 +7,7 @@ ifeq ($(export_type),exp)
 	$(pwr_eobj)/rt_io_user.o -L/usr/X11R6/lib\
 	-L/opt/gnome/lib \
 	-lpwr_xtt_gtk -lpwr_xtt -lpwr_xtt_gtk -lpwr_xtt -lpwr_ge_gtk -lpwr_ge -lpwr_rt \
-	-lpwr_co_gtk -lpwr_co -lpwr_cow_gtk -lpwr_cow -lpwr_flow_gtk -lpwr_flow -lpwr_glow_gtk -lpwr_glow \
+	-lpwr_co -lpwr_cow_gtk -lpwr_cow -lpwr_flow_gtk -lpwr_flow -lpwr_glow_gtk -lpwr_glow \
 	`pkg-config --libs gtk+-2.0` \
 	-lpwr_msg_dummy \
 	-ldb -lrpcsvc -lpthread -lm -lrt -lcrypt -lasound
@@ -17,7 +17,7 @@ else
 	$(pwr_eobj)/rt_io_user.o -L/usr/X11R6/lib\
 	-L/opt/gnome/lib \
 	-lpwr_xtt_gtk -lpwr_xtt -lpwr_xtt_gtk -lpwr_xtt -lpwr_ge_gtk -lpwr_ge -lpwr_rt \
-	-lpwr_co_gtk -lpwr_co -lpwr_cow_gtk -lpwr_cow -lpwr_flow_gtk -lpwr_flow -lpwr_glow_gtk -lpwr_glow \
+	-lpwr_co -lpwr_cow_gtk -lpwr_cow -lpwr_flow_gtk -lpwr_flow -lpwr_glow_gtk -lpwr_glow \
 	`pkg-config --libs gtk+-2.0` \
 	-lpwr_msg_dummy \
 	-ldb -lrpcsvc -lpthread -lm -lrt -lcrypt -lasound

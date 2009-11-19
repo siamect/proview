@@ -6,7 +6,7 @@ ifeq ($(export_type),exp)
 	$(bld_dir)/rt_xtt_motif.o $(bld_dir)/xtt_main.o $(rt_msg_eobjs) \
 	$(pwr_eobj)/rt_io_user.o -L/usr/X11R6/lib\
 	-L/opt/gnome/lib \
-	-lpwr_xtt_motif -lpwr_xtt -lpwr_xtt_motif -lpwr_xtt -lpwr_ge_motif -lpwr_ge -lpwr_rt_motif -lpwr_rt \
+	-lpwr_xtt_motif -lpwr_xtt -lpwr_xtt_motif -lpwr_xtt -lpwr_ge_motif -lpwr_ge -lpwr_rt \
 	-lpwr_cow_motif -lpwr_cow -lpwr_co -lpwr_flow_motif -lpwr_flow -lpwr_glow_motif -lpwr_glow \
 	-lpwr_msg_dummy -lImlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp\
         -lSM -lICE\
@@ -16,7 +16,7 @@ else
 	$(bld_dir)/rt_xtt_motif.o $(bld_dir)/xtt_main.o $(rt_msg_eobjs) \
 	$(pwr_eobj)/rt_io_user.o -L/usr/X11R6/lib\
 	-L/opt/gnome/lib \
-	-lpwr_xtt_motif -lpwr_xtt -lpwr_xtt_motif -lpwr_xtt -lpwr_ge_motif -lpwr_ge -lpwr_rt_motif -lpwr_rt \
+	-lpwr_xtt_motif -lpwr_xtt -lpwr_xtt_motif -lpwr_xtt -lpwr_ge_motif -lpwr_ge -lpwr_rt \
 	-lpwr_cow_motif -lpwr_cow -lpwr_co -lpwr_flow_motif -lpwr_flow -lpwr_glow_motif -lpwr_glow \
 	-lpwr_msg_dummy -lImlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp\
         -lSM -lICE\

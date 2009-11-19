@@ -34,7 +34,7 @@ typedef void *ldh_tSesContext;
 
 #include "ge_motif.h"
 #include "co_lng.h"
-#include "co_xhelp_motif.h"
+#include "cow_xhelp_motif.h"
 
 
 /*  Fallback resources  */
