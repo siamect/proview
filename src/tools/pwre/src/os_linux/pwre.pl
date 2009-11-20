@@ -232,6 +232,51 @@ sub build_kernel # args: flavour
 #
 sub ebuild # args: pass flavour
 {
+
+  my $fname = $ENV{"pwre_bin"} . "/ebuild.dat";
+  open FILE, $fname or die $!;
+
+  my $build_bcomp = 0;
+  my $build_java = 0;
+  my $build_remote = 0;
+  my $build_nmps = 0;
+  my $build_sev = 0;
+  my $build_opc = 0;
+  my $build_profibus = 0;
+  my $build_otherio = 0;
+  my $build_ssabox = 0;
+  my $build_tlog = 0;
+  my $build_othermanu = 0;
+  my $build_abb = 0;
+  my $build_siemens = 0;
+  my $build_klocknermoeller = 0;
+  my $build_inor = 0;
+  my $build_telemecanique = 0;
+
+  printf( "-- Building modules\n");
+  while ( <FILE>) {
+
+    my @value = split( ' ', $_);
+    if ( $value[0] eq "bcomp" && $value[1] eq "1" ) { $build_bcomp = 1; printf( "--   bcomp\n");}
+    elsif ( $value[0] eq "remote" && $value[1] eq "1" ) { $build_remote = 1; printf( "--   remote\n");}
+    elsif ( $value[0] eq "java" && $value[1] eq "1" ) { $build_java = 1; printf( "--   java\n");}
+    elsif ( $value[0] eq "nmps" && $value[1] eq "1" ) { $build_nmps = 1; printf( "--   nmps\n");}
+    elsif ( $value[0] eq "sev" && $value[1] eq "1" ) { $build_sev = 1; printf( "--   sev\n");}
+    elsif ( $value[0] eq "opc" && $value[1] eq "1" ) { $build_opc = 1; printf( "--   opc\n");}
+    elsif ( $value[0] eq "profibus" && $value[1] eq "1" ) { $build_profibus = 1; printf( "--   profibus\n");}
+    elsif ( $value[0] eq "otherio" && $value[1] eq "1" ) { $build_otherio = 1; printf( "--   otherio\n");}
+    elsif ( $value[0] eq "ssabox" && $value[1] eq "1" ) { $build_ssabox = 1; printf( "--   ssabox\n");}
+    elsif ( $value[0] eq "tlog" && $value[1] eq "1" ) { $build_tlog = 1; printf( "--   tlog\n");}
+    elsif ( $value[0] eq "othermanu" && $value[1] eq "1" ) { $build_othermanu = 1; printf( "--   othermanu\n");}
+    elsif ( $value[0] eq "abb" && $value[1] eq "1" ) { $build_abb = 1; printf( "--   abb\n");}
+    elsif ( $value[0] eq "siemens" && $value[1] eq "1" ) { $build_siemens = 1; printf( "--   siemens\n");}
+    elsif ( $value[0] eq "klocknermoeller" && $value[1] eq "1" ) { $build_klocknermoeller = 1; printf( "--   klocknermoeller\n");}
+    elsif ( $value[0] eq "inor" && $value[1] eq "1" )  { $build_inor = 1; printf( "--   inor \n");}
+    elsif ( $value[0] eq "telemecanique" && $value[1] eq "1" )  { $build_telemecanique = 1; printf( "--   telemecanique\n");}
+  }
+  printf( "\n");
+  close FILE;
+ 
   my $pass = $_[0];
   my $flavour = $_[1];
   if ( $_[1] eq "motif") {
@@ -276,49 +321,85 @@ sub ebuild # args: pass flavour
     _build("exe", "rt*", "src", "all");
     _build("exe", "co*", $flavour, "all");
     _build("exe", "pwr_user", "src", "all");
-    merge();
-    _module("nmps");
-    _build("lib", "nmps", "src", "all");
-    merge();
-    _module("bcomp");
-    _build("lib", "rt", "src", "all");
-    merge();
-    _module("ssabox");
-    _build("lib", "rt", "src", "all");
-    _build("lib", "ssabox", "src", "all");
-    merge();
-    _module("otherio");
-    _build("lib", "rt", "src", "all");
-    merge();
-    _module("remote");
-    _build("lib", "remote", "src", "all");
-    _build("exe", "*", "src", "all");
-    merge();
-    _module("opc");
-    _build("lib", "opc", "src", "all");
-    _build("exe", "*", "src", "all");
-    merge();
-    _module("tlog");
-    _build("lib", "tlog", "src", "all");
-    merge();
-    _module("java");
-    _build("exe", "jpwr_rt_gdh", "src", "all");
-    merge();
-    _module("abb");
-    merge();
-    _module("siemens");
-    merge();
-    _module("othermanu");
-    merge();
-    _module("inor");
-    merge();
-    _module("klocknermoeller");
-    merge();
-    _module("telemecanique");
-    merge();
-    _module("siemens");
-    merge();
-
+    if ( $build_nmps == 1) {
+      merge();
+      _module("nmps");
+      _build("lib", "nmps", "src", "all");
+      merge();
+    }
+    if ( $build_bcomp == 1) {
+      _module("bcomp");
+      _build("lib", "rt", "src", "all");
+      merge();
+    }
+    if ( $build_ssabox == 1) {
+      _module("ssabox");
+      _build("lib", "rt", "src", "all");
+      _build("lib", "ssabox", "src", "all");
+      merge();
+    }
+    if ( $build_otherio == 1) {
+      _module("otherio");
+      _build("lib", "rt", "src", "all");
+      merge();
+    }
+    if ( $build_profibus == 1) {
+      _module("profibus");
+      _build("lib", "rt", "src", "all");
+      merge();
+    }
+    if ( $build_remote == 1) {
+      _module("remote");
+      _build("lib", "remote", "src", "all");
+      _build("exe", "*", "src", "all");
+      merge();
+    }
+    if ( $build_opc == 1) {
+      _module("opc");
+      _build("lib", "opc", "src", "all");
+      _build("exe", "*", "src", "all");
+      merge();
+    }
+    if ( $build_tlog == 1) {
+      _module("tlog");
+      _build("lib", "tlog", "src", "all");
+      merge();
+    }
+    if ( $build_java == 1) {
+      _module("java");
+      _build("exe", "jpwr_rt_gdh", "src", "all");
+      merge();
+    }
+    if ( $build_sev == 1) {
+      _module("sev");
+      _build("lib", "sev", "src", "all");
+      _build("exe", "sev_server", "src", "all");
+      merge();
+    }
+    if ( $build_abb == 1) {
+      _module("abb");
+      merge();
+    }
+    if ( $build_siemens == 1) {
+      _module("siemens");
+      merge();
+    }
+    if ( $build_othermanu == 1) {
+      _module("othermanu");
+      merge();
+    }
+    if ( $build_inor == 1) {
+      _module("inor");
+      merge();
+    }
+    if ( $build_klocknermoeller == 1) {
+      _module("klocknermoeller");
+      merge();
+    }
+    if ( $build_telemecanique == 1) {
+      _module("telemecanique");
+      merge();
+    }
   }
   elsif ( $pass eq "op" ) {
     _module("xtt");
@@ -340,40 +421,71 @@ sub ebuild # args: pass flavour
     _build("exe", "co*", $flavour, "all");
     _build("exe", "pwr*", $flavour, "all");
     merge();
-    _module("bcomp");
-    _build("mmi", "*", "src", "copy");
-    merge();
-    _module("profibus");
-    _build("mmi", "*", "src", "copy");
-    _build("lib", "cow", "src", "init copy lib");
-    _build("lib", "cow", $flavour, "init copy lib");
-    _build("lib", "xtt", "src", "init copy lib");
-    _build("lib", "xtt", $flavour, "init copy lib");
-    merge();
-    _module("opc");
-    _build("mmi", "*", "src", "copy");
-    merge();
-    _module("othermanu");
-    _build("mmi", "*", "src", "copy");
-    merge();
-    _module("abb");
-    _build("mmi", "*", "src", "copy");
-    merge();
-    _module("inor");
-    _build("mmi", "*", "src", "copy");
-    merge();
-    _module("siemens");
-    _build("mmi", "*", "src", "copy");
-    merge();
-    _module("klocknermoeller");
-    _build("mmi", "*", "src", "copy");
-    merge();
-    _module("ssabox");
-    _build("mmi", "*", "src", "copy");
-    merge();
-    _module("telemecanique");
-    _build("mmi", "*", "src", "copy");
-    merge();
+    if ( $build_bcomp == 1) {
+      _module("bcomp");
+      _build("mmi", "*", "src", "copy");
+      merge();
+    }
+    if ( $build_profibus == 1) {
+      _module("profibus");
+      _build("mmi", "*", "src", "copy");
+      _build("lib", "cow", "src", "init copy lib");
+      _build("lib", "cow", $flavour, "init copy lib");
+      _build("lib", "xtt", "src", "init copy lib");
+      _build("lib", "xtt", $flavour, "init copy lib");
+      merge();
+    }
+    if ( $build_opc == 1) {
+      _module("opc");
+      _build("mmi", "*", "src", "copy");
+      merge();
+    }
+    if ( $build_otherio == 1) {
+      _module("otherio");
+      _build("mmi", "*", "src", "copy");
+      merge();
+    }
+    if ( $build_sev == 1) {
+      _module("sev");
+      _build("exe", "sev_xtt", "src", "all");
+      _build("exe", "sev_xtt", $flavour, "all");
+      merge();
+    }
+    if ( $build_othermanu == 1) {
+      _module("othermanu");
+      _build("mmi", "*", "src", "copy");
+      merge();
+    }
+    if ( $build_abb == 1) {
+      _module("abb");
+      _build("mmi", "*", "src", "copy");
+      merge();
+    }
+    if ( $build_inor == 1) {
+      _module("inor");
+      _build("mmi", "*", "src", "copy");
+      merge();
+    }
+    if ( $build_siemens == 1) {
+      _module("siemens");
+      _build("mmi", "*", "src", "copy");
+      merge();
+    }
+    if ( $build_klocknermoeller == 1) {
+      _module("klocknermoeller");
+      _build("mmi", "*", "src", "copy");
+      merge();
+    }
+    if ( $build_ssabox == 1) {
+      _module("ssabox");
+      _build("mmi", "*", "src", "copy");
+      merge();
+    }
+    if ( $build_telemecanique == 1) {
+      _module("telemecanique");
+      _build("mmi", "*", "src", "copy");
+      merge();
+    }
     method_build( "rt_io_comm", $flavour);
     method_build( "rt_xtt", $flavour);
   }
