@@ -2816,6 +2816,49 @@ cdh_StringToObjectName (
   return rs;
 }
 
+//! Create an similar objectname from another object name.
+/*!
+  Converts an object name consisting of a number at the end of the name, The 
+  number is incremented by 1 in the new name. If no number is found error status
+  is returned.
+
+  \param t	Out string.
+  \param s	In string.
+  \return 	Status.
+*/
+pwr_tStatus
+cdh_NextObjectName (
+  char			*t,
+  const char		*s
+)
+{
+  int i;
+  int num;
+  int len = strlen(s);
+  char name[80];
+
+  for ( i = len - 1; i >= 0; i--) {
+    if ( isdigit( s[i]) == 0)
+      break;
+  }
+  if ( i == len - 1)
+    return CDH__NONAME;
+
+  strncpy( name, s, i+1);
+  sscanf( &s[i+1], "%d", &num);
+  num++;
+  if ( s[i+1] == '0')
+    sprintf( &name[i+1], "%0*d", len - i - 1, num);
+  else
+    sprintf( &name[i+1], "%d", num);
+
+  if ( strlen(name) > sizeof(pwr_tObjName) - 1)
+    return CDH__NAMELEN;
+
+  strcpy( t, name);
+  return CDH__SUCCESS;
+}
+
 /*@}*/
 
 

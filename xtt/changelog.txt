@@ -154,3 +154,5 @@
 091103 cs  xtt       Translation and utf8 conversion of search condition in EventLog window fixed.
 091104 cs  glow      Fixcolor added to arc properties.
 091106 cs  ge        Different ways to show hot object added: linewith, light color, dark color.
+091208 cs  xtt       New pixmap for weblink in helpwindow.
+091208 cs  xtt       EventSelectList exended to 40 elements.

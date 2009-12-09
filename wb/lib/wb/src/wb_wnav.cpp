@@ -1785,6 +1785,7 @@ int WNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
       pwr_sAttrRef 	*sel_list;
       int               *sel_is_attr;
       int		sel_cnt;
+      pwr_tOid prev;
 
       if ( wnav->get_global_select_cb)
         (wnav->get_global_select_cb)( wnav->parent_ctx, &sel_list, 
@@ -1827,6 +1828,28 @@ int WNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 				    destcode);
 	    if (EVEN(sts))
 	      wnav->message(' ', wnav_get_message(sts));
+
+	    // Get name from previous sibling
+	    sts = ldh_GetPreviousSibling( wnav->ldhses, objid, &prev);
+	    if ( ODD(sts)) {
+	      pwr_tObjName name;
+	      pwr_tCid prev_cid;
+	      int size;
+
+	      sts = ldh_GetObjectClass( wnav->ldhses, prev, &prev_cid);
+	      if ( EVEN(sts)) break;
+	      
+	      if ( prev_cid == classid) {
+		sts = ldh_ObjidToName( wnav->ldhses, prev, ldh_eName_Object, name, sizeof(name),
+				       &size);
+		if ( EVEN(sts)) break;
+
+		sts = cdh_NextObjectName( name, name);
+		if ( ODD(sts))
+		  sts = ldh_SetObjectName( wnav->ldhses, objid, name);
+	      }
+	    }
+
 	    break;
 	  default:
 	    ;

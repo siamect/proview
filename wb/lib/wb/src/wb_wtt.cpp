@@ -1008,8 +1008,9 @@ void Wtt::activate_copy()
     return;
   }
 
-  if ( sel_cnt == 1)
+  if ( sel_cnt == 1) {
     message( 'I', "Object copied");
+  }
   else
     message( 'I', "Objects copied");
 
@@ -1095,6 +1096,42 @@ void Wtt::activate_paste()
   else
     sts = ldh_Paste( ldhses, sel_list2->Objid, ldh_eDest_After, 0, 0, 0);
   reset_cursor();
+
+  if ( (sel_cnt1 == 1 && sel_is_attr1[0] == 0) ||
+       (sel_cnt2 == 1 && sel_is_attr2[0] == 0)) {
+    pwr_tOid oid;
+    pwr_tOid prev;
+    if ( sel_cnt1)
+      prev = sel_list1[0].Objid;
+    else
+      prev = sel_list2[0].Objid;
+
+    // Get name from previous sibling
+    sts = ldh_GetNextSibling( wnav->ldhses, prev, &oid);
+    if ( ODD(sts)) {
+      pwr_tObjName name;
+      pwr_tCid prev_cid, cid;
+      int size;
+
+      sts = ldh_GetObjectClass( wnav->ldhses, prev, &prev_cid);
+      if ( EVEN(sts)) return;
+	      
+      sts = ldh_GetObjectClass( wnav->ldhses, oid, &cid);
+      if ( EVEN(sts)) return;
+	      
+      if ( prev_cid == cid) {
+	sts = ldh_ObjidToName( wnav->ldhses, prev, ldh_eName_Object, name, sizeof(name),
+				       &size);
+	if ( EVEN(sts)) return;
+
+	sts = cdh_NextObjectName( name, name);
+	if ( ODD(sts))
+	  sts = ldh_SetObjectName( wnav->ldhses, oid, name);
+      }
+    }
+  }
+    
+
   if ( sel_cnt1 > 0)
     free( (char *)sel_list1);
   if ( sel_cnt2 > 0)
@@ -1330,6 +1367,29 @@ void Wtt::activate_creaobj( ldh_eDest dest)
     wnavnode->select_object( oid);
   else
     wnav->select_object( oid);
+
+  // Get name from previous sibling
+  pwr_tOid prev;
+
+  sts = ldh_GetPreviousSibling( wnav->ldhses, oid, &prev);
+  if ( ODD(sts)) {
+    pwr_tObjName name;
+    pwr_tCid prev_cid;
+    int size;
+    
+    sts = ldh_GetObjectClass( wnav->ldhses, prev, &prev_cid);
+    if ( EVEN(sts)) return;
+    
+    if ( prev_cid == cid) {
+      sts = ldh_ObjidToName( wnav->ldhses, prev, ldh_eName_Object, name, sizeof(name),
+			     &size);
+      if ( EVEN(sts)) return;
+
+      sts = cdh_NextObjectName( name, name);
+      if ( ODD(sts))
+	sts = ldh_SetObjectName( wnav->ldhses, oid, name);
+    }
+  }
 
   free( (char *)sel_list);
   free( (char *)sel_is_attr);

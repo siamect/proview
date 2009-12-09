@@ -1039,6 +1039,8 @@ int cdh_TypeToMaxStrSize( pwr_eType type, int attr_size, int attr_elements);
 
 char *cdh_StringToObjectName( char *t, const char *s);
 
+pwr_tStatus cdh_NextObjectName( char *t, const char *s);
+
 /*@}*/
 
 #ifdef __cplusplus
