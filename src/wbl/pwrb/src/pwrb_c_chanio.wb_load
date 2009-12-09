@@ -138,6 +138,11 @@ SObject pwrb:Class
         EndBody
       EndObject
     EndObject
+    Object PostCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "ChanIi-PostCreate"
+      EndBody
+    EndObject
     Object RtXtt $RtMenu
       Object Signal $MenuRef
 	Body SysBody

@@ -58,6 +58,8 @@
 
 #define PB_UDATA_DIAG 		1
 
+#define MB_MAX_CONNECTIONS 	20
+
 typedef pwr_tMask mb_tSendMask;
 
 typedef enum {
@@ -92,6 +94,43 @@ typedef struct {
   short int no_di;
   short int no_do;
 } io_sCardLocal;
+
+typedef struct {
+  pwr_tTime last_req_time;
+  thread_s t;
+  int c_socket;
+  struct sockaddr_in addr;
+  socklen_t addrlen;
+  int occupied;
+} io_sServerConnection;
+
+typedef struct {
+  int initialized;
+  int s;
+  int current_socket;
+  short int trans_id;
+  struct sockaddr_in loc_addr;		/* Remote socket description */
+  int input_size;
+  int output_size;
+  thread_sMutex mutex;
+  io_sServerConnection connections[MB_MAX_CONNECTIONS];
+} io_sServerLocal;
+
+typedef struct {
+  void *input_area;
+  void *output_area;
+  int scancount[IO_MAXCHAN];
+  int trans_id;
+  int input_size;
+  int output_size;
+  int no_di;
+  int no_do;
+  int di_offset;
+  int do_offset;
+  int di_size;
+  int do_size;
+} io_sServerModuleLocal;
+
 
 #pragma pack(1)
 typedef struct
@@ -145,6 +184,14 @@ typedef struct _write_coils_req {
   unsigned  char    reg[250];
 } write_coils_req;
 
+typedef struct _read_dev_id_req {
+  mbap_header  head;
+  unsigned char fc;
+  unsigned char mei_type;
+  unsigned char id_code;
+  unsigned char object_id;
+} read_dev_id_req;
+
 typedef struct _res_write {
   unsigned char         fc;
   short int    addr;
@@ -162,6 +209,45 @@ typedef struct _res_fault {
   unsigned char         fc;
   unsigned char         ec;
 } res_fault;
+
+typedef struct _rsp_fault {
+  mbap_header  		head;
+  unsigned char         fc;
+  unsigned char         ec;
+} rsp_fault;
+
+typedef struct _rsp_read {
+  mbap_header  		head;
+  unsigned char         fc;
+  unsigned char         bc;
+  short int    buf[250];
+} rsp_read;
+
+typedef struct _rsp_write {
+  mbap_header  		head;
+  unsigned char         fc;
+  short int    		addr;
+  short int    		quant;
+} rsp_write;
+
+typedef struct _rsp_single_write {
+  mbap_header  		head;
+  unsigned char         fc;
+  short int    		addr;
+  short int    		value;
+} rsp_single_write;
+
+typedef struct _rsp_dev_id {
+  mbap_header  head;
+  unsigned char fc;
+  unsigned char mei_type;
+  unsigned char id_code;
+  unsigned char conformity_level;
+  unsigned char more_follows;
+  unsigned char next_object_id;
+  unsigned char number_of_objects;
+  unsigned char list[80];
+} rsp_dev_id;
 
 #pragma pack(0)
 

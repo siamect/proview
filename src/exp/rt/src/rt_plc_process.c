@@ -170,6 +170,7 @@ int main (
 
   /* Once threads has set their priority don't run as root */
   
+#if 0
   ruid = getuid();
   
   if (ruid == 0) {
@@ -180,6 +181,7 @@ int main (
   }
   else 
     setreuid(ruid, ruid);
+#endif
 
   qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_newPlcInitDone);
   qcom_WaitAnd(&sts, &pp->eventQ, &qcom_cQini, ini_mEvent_newPlcStart, qcom_cTmoEternal);

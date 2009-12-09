@@ -27,6 +27,7 @@
 #include "pwr_baseclasses.h"
 #include "wb_ldh.h"
 #include "wb_wsx.h"
+#include "wb_session.h"
 
 
 /*----------------------------------------------------------------------------*\
@@ -46,6 +47,65 @@ static pwr_tStatus SyntaxCheck (
 
   return PWRB__SUCCESS;
 }
+
+static pwr_tStatus PostCreate( ldh_tSesContext Session,
+			       pwr_tObjid	  Object,
+			       pwr_tObjid	  Father,
+			       pwr_tClassId	  Class) 
+{
+  wb_session *sp = (wb_session *)Session;
+  int repr_set = 0;
+
+  // Fetch Representation from previous sibling
+  wb_object o = sp->object( Object);
+  if ( !o) return o.sts();
+
+  wb_object before = o.before();
+  if ( before && before.cid() == o.cid()) {
+
+    // Set Representation
+    wb_attribute ba_repr = sp->attribute( before.oid(), "RtBody", "Representation");
+    if ( !ba_repr) return ba_repr.sts();
+
+    pwr_eDataRepEnum repr;
+    ba_repr.value( &repr);
+
+    wb_attribute a_repr = sp->attribute( Object, "RtBody", "Representation");
+    if ( !a_repr) return a_repr.sts();
+
+    try {
+      sp->writeAttribute( a_repr, &repr, sizeof(repr));
+    }
+    catch ( wb_error& e) {
+      return e.sts();
+    }
+    if ( sp->evenSts()) return sp->sts();
+
+    repr_set = 1;
+  }
+
+  if ( !repr_set) {
+    wb_cdef father_cdef = sp->cdef(Class);
+    if ( strcmp( father_cdef.name(), "Modbus_TCP_ServerModule") == 0 ||
+	 strcmp( father_cdef.name(), "Modbus_Module") == 0) {
+      
+      wb_attribute a = sp->attribute( Object, "RtBody", "Representation");
+      if ( !a) return a.sts();
+      
+      pwr_eDataRepEnum value = pwr_eDataRepEnum_Int16;
+      try {
+	sp->writeAttribute( a, &value, sizeof(value));
+      }
+      catch ( wb_error& e) {
+	return e.sts();
+      }
+      if ( sp->evenSts()) return sp->sts();
+    }
+  }
+
+  return PWRB__SUCCESS;
+}
+
 
 /*----------------------------------------------------------------------------*\
   Every method to be exported to the workbench should be registred here.
@@ -53,5 +113,6 @@ static pwr_tStatus SyntaxCheck (
 
 pwr_dExport pwr_BindMethods(ChanIi) = {
   pwr_BindMethod(SyntaxCheck),
+  pwr_BindMethod(PostCreate),
   pwr_NullMethod
 };

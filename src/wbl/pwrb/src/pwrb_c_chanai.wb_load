@@ -273,6 +273,11 @@ SObject pwrb:Class
         Attr SigValueUnit = "V"
       EndBody
     EndObject
+    Object PostCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "ChanIi-PostCreate"
+      EndBody
+    EndObject
     Object Defaults $Object
       Body SysBody
         Attr Name = "%02.2d"
