@@ -50,6 +50,14 @@
 #include "xnav_bitmap_closehelp18.h"
 #include "xnav_bitmap_closehelp20.h"
 #include "xnav_bitmap_closehelp24.h"
+#include "xnav_bitmap_weblink8.h"
+#include "xnav_bitmap_weblink10.h"
+#include "xnav_bitmap_weblink12.h"
+#include "xnav_bitmap_weblink14.h"
+#include "xnav_bitmap_weblink16.h"
+#include "xnav_bitmap_weblink18.h"
+#include "xnav_bitmap_weblink20.h"
+#include "xnav_bitmap_weblink24.h"
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
@@ -69,6 +77,7 @@ void CoXHelpNavBrow::free_pixmaps()
 {
   brow_FreeAnnotPixmap( ctx, pixmap_morehelp);
   brow_FreeAnnotPixmap( ctx, pixmap_closehelp);
+  brow_FreeAnnotPixmap( ctx, pixmap_weblink);
 }
 
 //
@@ -140,6 +149,37 @@ void CoXHelpNavBrow::allocate_pixmaps()
 	  pixmap_data[i++].bits = (char *)xnav_bitmap_closehelp24_bits;
 
 	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_closehelp);
+
+          i = 0;
+	  pixmap_data[i].width =xnav_bitmap_weblink8_width;
+	  pixmap_data[i].height =xnav_bitmap_weblink8_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_weblink8_bits;
+	  pixmap_data[i].width =xnav_bitmap_weblink10_width;
+	  pixmap_data[i].height =xnav_bitmap_weblink10_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_weblink10_bits;
+	  pixmap_data[i].width =xnav_bitmap_weblink12_width;
+	  pixmap_data[i].height =xnav_bitmap_weblink12_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_weblink12_bits;
+	  pixmap_data[i].width =xnav_bitmap_weblink14_width;
+	  pixmap_data[i].height =xnav_bitmap_weblink14_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_weblink14_bits;
+	  pixmap_data[i].width =xnav_bitmap_weblink16_width;
+	  pixmap_data[i].height =xnav_bitmap_weblink16_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_weblink16_bits;
+	  pixmap_data[i].width =xnav_bitmap_weblink18_width;
+	  pixmap_data[i].height =xnav_bitmap_weblink18_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_weblink18_bits;
+	  pixmap_data[i].width =xnav_bitmap_weblink20_width;
+	  pixmap_data[i].height =xnav_bitmap_weblink20_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_weblink20_bits;
+	  pixmap_data[i].width =xnav_bitmap_weblink20_width;
+	  pixmap_data[i].height =xnav_bitmap_weblink20_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_weblink20_bits;
+	  pixmap_data[i].width =xnav_bitmap_weblink24_width;
+	  pixmap_data[i].height =xnav_bitmap_weblink24_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_weblink24_bits;
+
+	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_weblink);
 }
 
 //
@@ -763,7 +803,9 @@ HItemHelpImage::HItemHelpImage( CoXHelpNavBrow *brow, const char *item_name, bro
 
   brow_CreateNode( brow->ctx, "image", nc,
 		dest, dest_code, (void *)this, 1, &node);
-  if ( link[0] != 0)
+  if ( strncmp( link, "$web", 4) == 0)
+    brow_SetAnnotPixmap( node, 0, brow->pixmap_weblink);
+  else if ( link[0] != 0)
     brow_SetAnnotPixmap( node, 0, brow->pixmap_morehelp);
 }
 
@@ -870,7 +912,9 @@ HItemHelp::HItemHelp( CoXHelpNavBrow *brow, const char *item_name, const char *t
     brow_SetAnnotation( node, 1, text2, strlen(text2));
   if ( text3[0] != 0)
     brow_SetAnnotation( node, 2, text3, strlen(text3));
-  if ( link[0] != 0 || index)
+  if ( strncmp( link, "$web", 4) == 0)
+    brow_SetAnnotPixmap( node, 0, brow->pixmap_weblink);
+  else if ( link[0] != 0 || index)
     brow_SetAnnotPixmap( node, 0, brow->pixmap_morehelp);
 }
 
@@ -943,7 +987,9 @@ HItemHelpBold::HItemHelpBold( CoXHelpNavBrow *brow, const char *item_name, const
     brow_SetAnnotation( node, 1, text2, strlen(text2));
   if ( text3[0] != 0)
     brow_SetAnnotation( node, 2, text3, strlen(text3));
-  if ( link[0] != 0 || index)
+  if ( strncmp( link, "$web", 4) == 0)
+    brow_SetAnnotPixmap( node, 0, brow->pixmap_weblink);
+  else if ( link[0] != 0 || index)
     brow_SetAnnotPixmap( node, 0, brow->pixmap_morehelp);
 }
 

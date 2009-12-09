@@ -86,6 +86,7 @@ class CoXHelpNavBrow {
     brow_tNodeClass 	nc_line;
     flow_sAnnotPixmap 	*pixmap_morehelp;
     flow_sAnnotPixmap 	*pixmap_closehelp;
+    flow_sAnnotPixmap 	*pixmap_weblink;
     navh_eHelpFile	current_filetype;
     char		current_key[200];
     pwr_tFileName      	current_filename;
