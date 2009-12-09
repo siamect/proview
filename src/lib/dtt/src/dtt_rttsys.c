@@ -4237,12 +4237,12 @@ int RTTSYS_LOGGING( 	menu_ctx	ctx,
     if ( parameter_ptr == (char *) &LOGGING_TYPE)
     {
       rtt_toupper( LOGGING_TYPE, LOGGING_TYPE);
-      if (strcmp( LOGGING_TYPE, "EVENT") == 0)
+      if (cdh_NoCaseStrcmp( LOGGING_TYPE, "EVENT") == 0)
       {
         strcpy( LOGGING_TYPE, "Event");
 	rtt_loggtable[logging_page].logg_type = RTT_LOGG_MOD;
       }
-      else if (strcmp( LOGGING_TYPE, "CONT") == 0)
+      else if (cdh_NoCaseStrcmp( LOGGING_TYPE, "CONT") == 0)
       {
         strcpy( LOGGING_TYPE, "Cont");
 	rtt_loggtable[logging_page].logg_type = RTT_LOGG_CONT;
@@ -5437,115 +5437,115 @@ int rttsys_start_system_picture(
   int	sts;
 
   /* Start the system picture */
-  if ( strncmp( picture_name, "SYSTEM", strlen( picture_name)) == 0)
+  if ( cdh_NoCaseStrncmp( picture_name, "SYSTEM", strlen( picture_name)) == 0)
   {
     sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "SYSTEM", "SYSTEM", 
 		0, &RTTSYS_SHOW_SYS);
     return sts;
   }
-  else if ( strncmp( picture_name, "PLCPGM", strlen( picture_name)) == 0)
+  else if ( cdh_NoCaseStrncmp( picture_name, "PLCPGM", strlen( picture_name)) == 0)
   {
     sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "PLCPGM", "PLCPGM", 
 		0, &RTTSYS_PLCPGM);
     return sts;
   }
-  else if ( strncmp( picture_name, "GRAFCET", strlen( picture_name)) == 0)
+  else if ( cdh_NoCaseStrncmp( picture_name, "GRAFCET", strlen( picture_name)) == 0)
   {
     sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "GRAFCET", "GRAFCET", 
 		0, &RTTSYS_GRAFCET);
     return sts;
   }
-  else if ( strncmp( picture_name, "DEVICE", strlen( picture_name)) == 0)
+  else if ( cdh_NoCaseStrncmp( picture_name, "DEVICE", strlen( picture_name)) == 0)
   {
     sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "DEVICE", "DEVICE", 
 		0, &RTTSYS_DEVICE);
     return sts;
   }
-  else if ( strncmp( picture_name, "PLCTHREAD", strlen( picture_name)) == 0)
+  else if ( cdh_NoCaseStrncmp( picture_name, "PLCTHREAD", strlen( picture_name)) == 0)
   {
     sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "PLCTHREAD", "PLCTHREAD", 
 		0, &RTTSYS_PLCTHREAD);
     return sts;
   }
-  else if ( strncmp( picture_name, "PID", strlen( picture_name)) == 0)
+  else if ( cdh_NoCaseStrncmp( picture_name, "PID", strlen( picture_name)) == 0)
   {
     sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "PID", "PID", 
 		0, &RTTSYS_PID);
     return sts;
   }
-  else if ( strncmp( picture_name, "LOGGING", strlen( picture_name)) == 0)
+  else if ( cdh_NoCaseStrncmp( picture_name, "LOGGING", strlen( picture_name)) == 0)
   {
     sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "LOGGING", "LOGGING", 
 		0, &RTTSYS_LOGGING);
     return sts;
   }
-  else if ( strncmp( picture_name, "NODES", strlen( picture_name)) == 0)
+  else if ( cdh_NoCaseStrncmp( picture_name, "NODES", strlen( picture_name)) == 0)
   {
     sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "NODES", "NODES", 
 		0, &RTTSYS_SHOW_NODES);
     return sts;
   }
-  else if ( strncmp( picture_name, "SUBCLI", strlen( picture_name)) == 0)
+  else if ( cdh_NoCaseStrncmp( picture_name, "SUBCLI", strlen( picture_name)) == 0)
   {
     sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "SUBCLI", "SUBCLI", 
 		0, &RTTSYS_SHOW_SUBCLI);
     return sts;
   }
-  else if ( strncmp( picture_name, "SUBSRV", strlen( picture_name)) == 0)
+  else if ( cdh_NoCaseStrncmp( picture_name, "SUBSRV", strlen( picture_name)) == 0)
   {
     sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "SUBSRV", "SUBSRV", 
 		0, &RTTSYS_SHOW_SUBSRV);
     return sts;
   }
-  else if ( strncmp( picture_name, "NMPSCELL", strlen( picture_name)) == 0)
+  else if ( cdh_NoCaseStrncmp( picture_name, "NMPSCELL", strlen( picture_name)) == 0)
   {
     sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "NMPSCELL", "NMPSCELL", 
 		0, &RTTSYS_NMPSCELL);
     return sts;
   }
-  else if ( strncmp( picture_name, "REMNODE", strlen( picture_name)) == 0)
+  else if ( cdh_NoCaseStrncmp( picture_name, "REMNODE", strlen( picture_name)) == 0)
   {
     sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "REMNODE", "REMNODE", 
 		0, &RTTSYS_REMNODE);
     return sts;
   }
-  else if ( strncmp( picture_name, "REMTRANS", strlen( picture_name)) == 0)
+  else if ( cdh_NoCaseStrncmp( picture_name, "REMTRANS", strlen( picture_name)) == 0)
   {
     sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "REMTRANS", "REMTRANS", 
 		0, &RTTSYS_REMTRANS);
     return sts;
   }
-  else if ( strncmp( picture_name, "RUNNINGTIME", strlen( picture_name)) == 0)
+  else if ( cdh_NoCaseStrncmp( picture_name, "RUNNINGTIME", strlen( picture_name)) == 0)
   {
     sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "RUNNINGTIME", "RUNNINGTIME", 
 		0, &RTTSYS_RUNNINGTIME);
     return sts;
   }
-  else if ( strncmp( picture_name, "QAPPLICATIONS", strlen( picture_name)) == 0)
+  else if ( cdh_NoCaseStrncmp( picture_name, "QAPPLICATIONS", strlen( picture_name)) == 0)
   {
     sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "QCOM APPLICATIONS", 
 		"QCOM APPLICATIONS", 0, &RTTSYS_QCOM_APPL);
     return sts;
   }
-  else if ( strncmp( picture_name, "QNODES", strlen( picture_name)) == 0)
+  else if ( cdh_NoCaseStrncmp( picture_name, "QNODES", strlen( picture_name)) == 0)
   {
     sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "QCOM NODES", 
 		"QCOM NODES", 0, &RTTSYS_QCOM_NODES);
     return sts;
   }
-  else if ( strncmp( picture_name, "POOLS", strlen( picture_name)) == 0)
+  else if ( cdh_NoCaseStrncmp( picture_name, "POOLS", strlen( picture_name)) == 0)
   {
     sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "POOLS", 
 		"POOLS", 0, &RTTSYS_POOLS);
     return sts;
   }
-  else if ( strncmp( picture_name, "CACHE", strlen( picture_name)) == 0)
+  else if ( cdh_NoCaseStrncmp( picture_name, "CACHE", strlen( picture_name)) == 0)
   {
     sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "CACHE", 
 		"CACHE", 0, &RTTSYS_CACHE);
     return sts;
   }
-  else if ( strncmp( picture_name, "ERROR", strlen( picture_name)) == 0)
+  else if ( cdh_NoCaseStrncmp( picture_name, "ERROR", strlen( picture_name)) == 0)
   {
     rtt_message('I', "Obsolete command, use \"show device\"");
     return RTT__NOPICTURE;
@@ -10589,7 +10589,7 @@ int RTTSYS_REMTRANS( 	menu_ctx	ctx,
       /* Call from system menu, show all objects */
       all = 1;
     }
-    else if ( !strcmp( objectname, "REMTRANS"))
+    else if ( !cdh_NoCaseStrcmp( objectname, "REMTRANS"))
     {
       /* Call from "show remtrans", show all objects */
       all = 1;

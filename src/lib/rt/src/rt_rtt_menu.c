@@ -747,7 +747,7 @@ int	rtt_cli( 	rtt_t_comtbl	*command_table,
 	while ( comtbl_ptr->command[0] != '\0')
 	{
 	  strcpy( command, comtbl_ptr->command);
-	  if ( strcmp( out_str[0], command) == 0)
+	  if ( cdh_NoCaseStrcmp( out_str[0], command) == 0)
 	  {
 	    /* Perfect hit */
 	    func = comtbl_ptr->func;
@@ -758,7 +758,7 @@ int	rtt_cli( 	rtt_t_comtbl	*command_table,
 	  else
 	  {
 	    command[ strlen( out_str[0])] = '\0';
-	    if ( strcmp( out_str[0], command) == 0)
+	    if ( cdh_NoCaseStrcmp( out_str[0], command) == 0)
 	    {
 	      /* Hit */
 	      func = comtbl_ptr->func;
@@ -812,7 +812,7 @@ int	rtt_cli( 	rtt_t_comtbl	*command_table,
 	    {	  
 	      strcpy( qual, current_comtbl->qualifier[j]);
 	      qual[ strlen( value_str[0])] = '\0';
-	      if ( strcmp( qual, value_str[0]) == 0)
+	      if ( cdh_NoCaseStrcmp( qual, value_str[0]) == 0)
 	      {
 	        /* Hit */
 	        strcpy( rtt_qual_str[i-1][0], current_comtbl->qualifier[j]);
@@ -884,7 +884,7 @@ int	rtt_get_qualifier( 	char	*qualifier,
 	found = 0;
 	while ( rtt_qual_str[i][0][0] != '\0')
 	{
-	  if ( strcmp( qualifier, (char *) rtt_qual_str[i]) == 0)
+	  if ( cdh_NoCaseStrcmp( qualifier, (char *) rtt_qual_str[i]) == 0)
 	  {
 	    /* Hit */
 	    strcpy( value, (char *) &rtt_qual_str[i][1]);
@@ -7664,7 +7664,7 @@ static int	rtt_set_value(
 	  }
 	  else
 */
-	  if ( strncmp( menu_ptr->parameter_name, "_A_ ", 4) == 0)
+	  if ( cdh_NoCaseStrncmp( menu_ptr->parameter_name, "_A_ ", 4) == 0)
 	  {
 	    /* Parameter is given as an attref */
 	    sscanf( &menu_ptr->parameter_name[4], "%d %d %d %d",
@@ -7862,13 +7862,13 @@ int	rtt_help(
 	int		sts;
 	char		title[100];
 
-	if ( *subject == '\0' || strncmp( subject, "HELP", strlen(subject)) == 0)
+	if ( *subject == '\0' || cdh_NoCaseStrncmp( subject, "HELP", strlen(subject)) == 0)
 	{
 	  /* No subject is given take help as default */
 	  sts = rtt_help_show_all( parent_ctx, helptext);
 	  return sts;
 	}
-	else if ( *subject == '\0' || strncmp( subject, "SCRIPT", strlen(subject)) == 0)
+	else if ( *subject == '\0' || cdh_NoCaseStrncmp( subject, "SCRIPT", strlen(subject)) == 0)
 	{
 	  /* No subject is given take help as default */
 	  sts = rtt_help_show_all( parent_ctx, rtt_script_helptext);
@@ -7899,7 +7899,7 @@ int	rtt_help(
 	    for ( i = 0; i < subjectnr; i++)
 	    {
 	      rtt_toupper( ht_subj_array[i], ht_subj_array[i]);
-	      if ( strncmp( subj_array[i], ht_subj_array[i], 
+	      if ( cdh_NoCaseStrncmp( subj_array[i], ht_subj_array[i], 
 			strlen( subj_array[i])) != 0)
 	      {
 	        no_match = 1;
@@ -7998,7 +7998,7 @@ static int	rtt_help_getinfoline(
 	    for ( i = 0; i < subjectnr; i++)
 	    {
 	      rtt_toupper( ht_subj_array[i], ht_subj_array[i]);
-	      if ( strncmp( subj_array[i], ht_subj_array[i], 
+	      if ( cdh_NoCaseStrncmp( subj_array[i], ht_subj_array[i], 
 			strlen( subj_array[i])) != 0)
 	      {
 	        no_match = 1;
@@ -10154,8 +10154,8 @@ int	rtt_get_fastkey_type( )
 	if ( (fastkey_menu_ptr + key)->func == &rtt_menu_command)
 	{
 	  strcpy( command, (char *)((fastkey_menu_ptr + key)->arg1));
-	  rtt_toupper( command, command);
-	  if ( !strncmp( command, "SET", 3))
+	  // rtt_toupper( command, command);
+	  if ( !cdh_NoCaseStrncmp( command, "SET", 3))
 	    return RTT__NOPICTURE;
 	}
 	else if ( (fastkey_menu_ptr + key)->func == &rtt_menu_commandhold)

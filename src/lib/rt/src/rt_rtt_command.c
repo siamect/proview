@@ -498,7 +498,7 @@ static int	monitor_func(	menu_ctx	ctx,
 
 	arg1_sts = rtt_get_qualifier( "rtt_arg1", arg1_str);
 
-	if ( strncmp( arg1_str, "GRAFCET", strlen( arg1_str)) == 0)
+	if ( cdh_NoCaseStrncmp( arg1_str, "GRAFCET", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "MONITOR GRAFCET" */
 	  pwr_tObjid	objid;
@@ -565,7 +565,7 @@ static int	show_func(	menu_ctx	ctx,
 
 	arg1_sts = rtt_get_qualifier( "rtt_arg1", arg1_str);
 
-	if ( strncmp( arg1_str, "VERSION", strlen( arg1_str)) == 0)
+	if ( cdh_NoCaseStrncmp( arg1_str, "VERSION", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW VERSION" */
 	  char	message_str[80];
@@ -575,19 +575,19 @@ static int	show_func(	menu_ctx	ctx,
 	  rtt_message('I', message_str);
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "ALARMLIST", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "ALARMLIST", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW ALARMS" */
 	  sts = rtt_cli( rtt_command_table, "ALARM SHOW", (void *) ctx, 0);
 	  return sts;
 	}
-	else if ( strncmp( arg1_str, "EVENTLIST", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "EVENTLIST", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW EVENTLIST" */
 	  sts = rtt_cli( rtt_command_table, "ALARM LIST", (void *) ctx, 0);
 	  return sts;
 	}
-	else if ( strncmp( arg1_str, "FILE", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "FILE", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW FILE" */
 	  char	arg2_str[80];
@@ -618,7 +618,7 @@ static int	show_func(	menu_ctx	ctx,
 	  }
 	  return sts;
 	}
-	else if ( strncmp( arg1_str, "SYMBOL", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "SYMBOL", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW SYMBOL" */
 	  char	arg2_str[80];
@@ -648,7 +648,7 @@ static int	show_func(	menu_ctx	ctx,
 	    return RTT__NOPICTURE;
 	  }
 	}
-	else if ( strncmp( arg1_str, "TIME", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "TIME", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW TIME" */
 	  char	message_str[80];
@@ -658,7 +658,7 @@ static int	show_func(	menu_ctx	ctx,
 	  rtt_message('I', message_str);
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "CLOCK", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "CLOCK", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW CLOCK" */
 	 
@@ -671,7 +671,7 @@ static int	show_func(	menu_ctx	ctx,
 	  return sts;
 #endif
 	}
-	else if ( strncmp( arg1_str, "DEFAULT", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "DEFAULT", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW DEFAULT" */
 	  char	message_str[80];
@@ -680,7 +680,7 @@ static int	show_func(	menu_ctx	ctx,
 	  rtt_message('I', message_str);
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "MENU", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "MENU", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW MENU" */
 	  char	name_str[80];
@@ -704,14 +704,14 @@ static int	show_func(	menu_ctx	ctx,
 	  sts = rtt_show_menu( ctx, name_str);
 	  return sts;
 	}
-	else if ( strncmp( arg1_str, "HIERARCHY", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "HIERARCHY", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW HIERARCHY" */
 	  IF_NOGDH_RETURN;
 	  sts = rtt_hierarchy( ctx, pwr_cNObjid, 0, 0, 0, 0);
 	  return sts;
 	}
-	else if ( strncmp( arg1_str, "CHILDREN", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "CHILDREN", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW CHILDREN" */
 	  char		name_str[80];
@@ -744,7 +744,7 @@ static int	show_func(	menu_ctx	ctx,
 	  sts = rtt_hierarchy_child( ctx, objid, 0, 0, 0, 0);
 	  return sts;
 	}
-	else if ( strncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW OBJECT" */
 	  char	class_str[80];
@@ -881,7 +881,7 @@ static int	show_func(	menu_ctx	ctx,
 	  return sts;
 	}
 
-	else if ( strncmp( arg1_str, "OBJID", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "OBJID", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW OBJID" */
 	  pwr_tOName   	name_str;
@@ -919,7 +919,7 @@ static int	show_func(	menu_ctx	ctx,
 	  return RTT__NOPICTURE;
 	}
 
-	else if ( strncmp( arg1_str, "SIGNALS", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "SIGNALS", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW SIGNALS" */
 	  char		file_str[80];
@@ -1008,7 +1008,7 @@ static int	show_func(	menu_ctx	ctx,
 	  return sts;
 	}
 
-	else if ( strncmp( arg1_str, "STEP", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "STEP", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW STEP" */
 	  char		str[80];
@@ -1101,7 +1101,7 @@ static int	show_func(	menu_ctx	ctx,
 	  return sts;
 	}
 
-	else if ( strncmp( arg1_str, "CLASS", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "CLASS", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW CLASS" */
 	  char	volume_str[80];
@@ -1172,7 +1172,7 @@ static int	show_func(	menu_ctx	ctx,
 #endif
 	}
 
-	else if ( strncmp( arg1_str, "PARAMETER", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "PARAMETER", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW PARAMETER" */
 	  char	parameter_str[80];
@@ -1247,7 +1247,7 @@ static int	show_func(	menu_ctx	ctx,
 		maxobjects); 
 	  return sts; 
 	} 
-	else if ( strncmp( arg1_str, "CONVERSION", strlen( arg1_str)) == 0) 
+	else if ( cdh_NoCaseStrncmp( arg1_str, "CONVERSION", strlen( arg1_str)) == 0) 
 	{ 
 	  int	on = 0;
 	  pwr_tObjid	objid; 
@@ -1278,7 +1278,7 @@ static int	show_func(	menu_ctx	ctx,
 	  sts = rtt_set_conversion( objid, on, 1);
 	  return sts;
 	}
-	else if ( strncmp( arg1_str, "INVERT", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "INVERT", strlen( arg1_str)) == 0)
 	{
 	  int	on = 0;
 	  pwr_tObjid	objid;
@@ -1309,7 +1309,7 @@ static int	show_func(	menu_ctx	ctx,
 	  sts = rtt_set_invert( objid, on, 1);
 	  return sts;
 	}
-	else if ( strncmp( arg1_str, "DOTEST", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "DOTEST", strlen( arg1_str)) == 0)
 	{
 	  int	on = 0;
 	  pwr_tObjid	objid;
@@ -1340,7 +1340,7 @@ static int	show_func(	menu_ctx	ctx,
 	  sts = rtt_set_do_test( objid, on, 1);
 	  return sts;
 	}
-	else if ( strncmp( arg1_str, "TESTVALUE", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "TESTVALUE", strlen( arg1_str)) == 0)
 	{
 	  int	on = 0;
 	  pwr_tObjid	objid;
@@ -1371,7 +1371,7 @@ static int	show_func(	menu_ctx	ctx,
 	  sts = rtt_set_do_testvalue( objid, on, 1);
 	  return sts;
 	}
-	else if ( strncmp( arg1_str, "USER", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "USER", strlen( arg1_str)) == 0)
 	{
 	  char msg[200];
 	  sprintf( msg, "User: %s ", rtt_user);
@@ -1434,7 +1434,7 @@ static int	debug_func(	menu_ctx	ctx,
 	IF_NOGDH_RETURN;
 	arg1_sts = rtt_get_qualifier( "rtt_arg1", arg1_str);
 
-	if ( strncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0)
+	if ( cdh_NoCaseStrncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW OBJECT" */
 	  char	class_str[80];
@@ -1482,7 +1482,7 @@ static int	debug_func(	menu_ctx	ctx,
 			name_ptr, RTT_MENU_CREATE, global);
 	  return sts;
 	}
-	else if ( strncmp( arg1_str, "CHILDREN", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "CHILDREN", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "DEBUG CHILDEN" */
 	  pwr_tOName   	name_str;
@@ -1512,7 +1512,7 @@ static int	debug_func(	menu_ctx	ctx,
 	  return sts;	  
 	}
 
-	else if ( strncmp( arg1_str, "SIGNALS", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "SIGNALS", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "DEBUG SIGNALS" */
 	  char		file_str[80];
@@ -1626,7 +1626,7 @@ static int	add_func(	menu_ctx	ctx,
 
 	arg1_sts = rtt_get_qualifier( "rtt_arg1", arg1_str);
 
-	if ( strncmp( arg1_str, "PARAMETER", strlen( arg1_str)) == 0)
+	if ( cdh_NoCaseStrncmp( arg1_str, "PARAMETER", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "ADD PARAMETER" */
 	  char	parameter_str[80];
@@ -1692,7 +1692,7 @@ static int	add_func(	menu_ctx	ctx,
 	  return sts;
 	}
 
-	if ( strncmp( arg1_str, "DEBUG", strlen( arg1_str)) == 0)
+	if ( cdh_NoCaseStrncmp( arg1_str, "DEBUG", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "ADD DEBUG" */
 	  char	class_str[80];
@@ -1750,7 +1750,7 @@ static int	add_func(	menu_ctx	ctx,
 			global);
 	  return sts;
 	}
-	else if ( strncmp( arg1_str, "MENU", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "MENU", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "ADD MENU" */
 	  int		sts;
@@ -2117,12 +2117,12 @@ static int	collect_func(	menu_ctx	ctx,
 	  sts = rtt_collect_insert( ctx, name_ptr);
 	  return sts;
 	}
-	else if ( strncmp( arg1_str, "SHOW", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "SHOW", strlen( arg1_str)) == 0)
 	{
 	  sts = rtt_collect_show( ctx);
 	  return sts;
 	}
-	else if ( strncmp( arg1_str, "CLEAR", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "CLEAR", strlen( arg1_str)) == 0)
 	{
 	  menu_ctx	dummyctx;
 
@@ -2185,7 +2185,7 @@ static int	logging_func(	menu_ctx	ctx,
 
 	arg1_sts = rtt_get_qualifier( "rtt_arg1", arg1_str);
 
-	if ( strncmp( arg1_str, "SET", strlen( arg1_str)) == 0)
+	if ( cdh_NoCaseStrncmp( arg1_str, "SET", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "LOGGING SET" */
 
@@ -2216,7 +2216,7 @@ static int	logging_func(	menu_ctx	ctx,
 
 	  if ( ODD( rtt_get_qualifier( "/ENTRY", entry_str)))
 	  {
-	    if ( !strcmp( entry_str, "CURRENT"))
+	    if ( !cdh_NoCaseStrcmp( entry_str, "CURRENT"))
 	    {
 	      rtt_toupper( title, ctx->title);
 	      if ( strcmp( title, "LOGGING"))
@@ -2299,9 +2299,9 @@ static int	logging_func(	menu_ctx	ctx,
 
 	  if ( ODD( rtt_get_qualifier( "/TYPE", str)))
 	  {
-	    if ( strncmp( str, "EVENT", strlen( str)) == 0)
+	    if ( cdh_NoCaseStrncmp( str, "EVENT", strlen( str)) == 0)
 	      logg_type = RTT_LOGG_MOD;
-	    else if ( strncmp( str, "CONTINOUS", strlen( str)) == 0)
+	    else if ( cdh_NoCaseStrncmp( str, "CONTINOUS", strlen( str)) == 0)
 	      logg_type = RTT_LOGG_CONT;
 	  }
 	  else
@@ -2350,7 +2350,7 @@ static int	logging_func(	menu_ctx	ctx,
 	  return sts;
 	}
 
-	else if ( strncmp( arg1_str, "CREATE", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "CREATE", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "LOGGING CREATE" */
 
@@ -2451,9 +2451,9 @@ static int	logging_func(	menu_ctx	ctx,
 
 	  if ( ODD( rtt_get_qualifier( "/TYPE", str)))
 	  {
-	    if ( strncmp( str, "EVENT", strlen( str)) == 0)
+	    if ( cdh_NoCaseStrncmp( str, "EVENT", strlen( str)) == 0)
 	      logg_type = RTT_LOGG_MOD;
-	    else if ( strncmp( str, "CONTINOUS", strlen( str)) == 0)
+	    else if ( cdh_NoCaseStrncmp( str, "CONTINOUS", strlen( str)) == 0)
 	      logg_type = RTT_LOGG_CONT;
 	  }
 	  else 
@@ -2497,7 +2497,7 @@ static int	logging_func(	menu_ctx	ctx,
 	  return sts;
 	}
 
-	else if ( strncmp( arg1_str, "DELETE", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "DELETE", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "LOGGING DELETE" */
 
@@ -2531,7 +2531,7 @@ static int	logging_func(	menu_ctx	ctx,
 	  return sts;
 	}
 
-	else if ( strncmp( arg1_str, "START", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "START", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "LOGGING START" */
 
@@ -2558,7 +2558,7 @@ static int	logging_func(	menu_ctx	ctx,
 	  return sts;
 	}
 
-	else if ( strncmp( arg1_str, "STOP", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "STOP", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "LOGGING STOP" */
 
@@ -2584,7 +2584,7 @@ static int	logging_func(	menu_ctx	ctx,
 	  sts = rtt_logging_stop( ctx, entry);
 	  return sts;
 	}
-	else if ( strncmp( arg1_str, "SHOW", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "SHOW", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "LOGGING SHOW" */
 
@@ -2609,7 +2609,7 @@ static int	logging_func(	menu_ctx	ctx,
 	  sts = rtt_logging_show( ctx, entry);
 	  return sts;
 	}
-	else if ( strncmp( arg1_str, "STORE", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "STORE", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "LOGGING STORE" */
 
@@ -2744,7 +2744,7 @@ static int	rtt_get_func(	menu_ctx	ctx,
 
 	arg1_sts = rtt_get_qualifier( "rtt_arg1", arg1_str);
 
-	if ( strncmp( arg1_str, "CLOCK", strlen( arg1_str)) == 0)
+	if ( cdh_NoCaseStrncmp( arg1_str, "CLOCK", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "GET CLOCK" */
 #ifdef OS_VMS
@@ -2857,7 +2857,7 @@ static int	rtt_set_func(	menu_ctx	ctx,
 
 	arg1_sts = rtt_get_qualifier( "rtt_arg1", arg1_str);
 
-	if ( strncmp( arg1_str, "FILE", strlen( arg1_str)) == 0)
+	if ( cdh_NoCaseStrncmp( arg1_str, "FILE", strlen( arg1_str)) == 0)
 	{
 	  char str[80];
 
@@ -2913,19 +2913,19 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	    return RTT__HOLDCOMMAND;
 	  }
 	}
-	else if ( strncmp( arg1_str, "VERIFY", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "VERIFY", strlen( arg1_str)) == 0)
 	{
 	  rtt_verify = 1;
 	  rtt_message('I', "Verify set on");
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "NOVERIFY", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "NOVERIFY", strlen( arg1_str)) == 0)
 	{
 	  rtt_verify = 0;
 	  rtt_message('I', "Verify set off");
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "PWRP_ALIAS", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "PWRP_ALIAS", strlen( arg1_str)) == 0)
 	{
 	  char alias_node[20];
 	  char alias_file[80];
@@ -2962,7 +2962,7 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	  rtt_wait_for_return();
 	  return RTT__SUCCESS;
 	}
-	else if ( strncmp( arg1_str, "PRIORITY", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "PRIORITY", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SET PRIORITY" */
 	  /* Set job priority for the rtt job */
@@ -3006,7 +3006,7 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	    return RTT__HOLDCOMMAND;
 	  }
 	}
-	else if ( strncmp( arg1_str, "TIME", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "TIME", strlen( arg1_str)) == 0)
 	{
 	  char text[80];
 	  pwr_tTime time;
@@ -3051,7 +3051,7 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	  rtt_message('I', text);
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "CLOCK", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "CLOCK", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SET CLOCK" */
 #ifdef OS_VMS
@@ -3071,7 +3071,7 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	  return sts;
 #endif
 	}
-	else if ( strncmp( arg1_str, "DEFAULT", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "DEFAULT", strlen( arg1_str)) == 0)
 	{
 	  if ( ODD( rtt_get_qualifier( "rtt_arg2", arg2_str)))
 	  {
@@ -3095,7 +3095,7 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	    return RTT__HOLDCOMMAND;
 	  }
 	}
-	else if ( strncmp( arg1_str, "PARAMETER", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "PARAMETER", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SET PARAMETER" */
 	  char	name_str[80];
@@ -3126,7 +3126,7 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	  else
 	    return sts;
 	}
-	else if ( strncmp( arg1_str, "RTDB_OFFSET", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "RTDB_OFFSET", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SET RTDB_OFFSET" */
 	  /* Set rtdb_offset for the rtt job */
@@ -3153,12 +3153,12 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	    return RTT__HOLDCOMMAND;
 	  }
 	}
-	else if ( strncmp( arg1_str, "MODE", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "MODE", strlen( arg1_str)) == 0)
 	{
 	  arg1_sts = rtt_get_qualifier( "rtt_arg2", arg2_str);
 
 	  /* Command is "SET MODE" */
-	  if ( strncmp( arg2_str, "ADDRESS", strlen( arg2_str)) == 0)
+	  if ( cdh_NoCaseStrncmp( arg2_str, "ADDRESS", strlen( arg2_str)) == 0)
 	  {
 	    /* Check authorization */
 	    if ( !(rtt_priv & RTT_PRIV_SYS) )
@@ -3169,19 +3169,19 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	    rtt_mode_address = 1;
 	    return RTT__NOPICTURE;
 	  }
-	  else if ( strncmp( arg2_str, "NOADDRESS", strlen( arg2_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg2_str, "NOADDRESS", strlen( arg2_str)) == 0)
 	  {
 	    rtt_mode_address = 0;
 	    return RTT__NOPICTURE;
 	  }
-	  else if ( strcmp( arg2_str, "ACCVIO") == 0)
+	  else if ( cdh_NoCaseStrcmp( arg2_str, "ACCVIO") == 0)
 	  {
 	    char *s = 0;
 
 	    /* Test of exception handler... */
 	    strcpy( s, "The end is close");
 	  }
-	  else if ( strncmp( arg2_str, "DUMP", strlen( arg2_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg2_str, "DUMP", strlen( arg2_str)) == 0)
 	  {
 	    /* Check authorization */
 	    if ( !(rtt_priv & RTT_PRIV_SYS) )
@@ -3192,7 +3192,7 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	    rtt_mode_dump = 1;
 	    return RTT__NOPICTURE;
 	  }
-	  else if ( strncmp( arg2_str, "NODUMP", strlen( arg2_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg2_str, "NODUMP", strlen( arg2_str)) == 0)
 	  {
 	    rtt_mode_dump = 0;
 	    return RTT__NOPICTURE;
@@ -3203,31 +3203,31 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	    return RTT__HOLDCOMMAND;
 	  }
 	}
-	else if ( strncmp( arg1_str, "ALARMMESSAGE", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "ALARMMESSAGE", strlen( arg1_str)) == 0)
 	{
 	  rtt_AlarmMessage = 1;
 	  rtt_message('I', "Alarm message set on");
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "NOALARMMESSAGE", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "NOALARMMESSAGE", strlen( arg1_str)) == 0)
 	{
 	  rtt_AlarmMessage = 0;
 	  rtt_message('I', "Alarm message set off");
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "ALARMBEEP", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "ALARMBEEP", strlen( arg1_str)) == 0)
 	{
 	  rtt_AlarmBeep = 1;
 	  rtt_message('I', "Alarm beep set on");
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "NOALARMBEEP", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "NOALARMBEEP", strlen( arg1_str)) == 0)
 	{
 	  rtt_AlarmBeep = 0;
 	  rtt_message('I', "Alarm beep set off");
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "CONVERSION", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "CONVERSION", strlen( arg1_str)) == 0)
 	{
 	  int	on;
 	  pwr_tObjid	objid;
@@ -3274,7 +3274,7 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	  sts = rtt_set_conversion( objid, on, 0);
 	  return sts;
 	}
-	else if ( strncmp( arg1_str, "INVERT", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "INVERT", strlen( arg1_str)) == 0)
 	{
 	  int	on;
 	  pwr_tObjid	objid;
@@ -3321,7 +3321,7 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	  sts = rtt_set_invert( objid, on, 0);
 	  return sts;
 	}
-	else if ( strncmp( arg1_str, "DOTEST", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "DOTEST", strlen( arg1_str)) == 0)
 	{
 	  int	on;
 	  pwr_tObjid	objid;
@@ -3368,7 +3368,7 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	  sts = rtt_set_do_test( objid, on, 0);
 	  return sts;
 	}
-	else if ( strncmp( arg1_str, "TESTVALUE", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "TESTVALUE", strlen( arg1_str)) == 0)
 	{
 	  int	on;
 	  pwr_tObjid	objid;
@@ -3415,19 +3415,19 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	  sts = rtt_set_do_testvalue( objid, on, 0);
 	  return sts;
 	}
-	else if ( strncmp( arg1_str, "DESCRIPTION", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "DESCRIPTION", strlen( arg1_str)) == 0)
 	{
 	  rtt_description_on = 1;
 	  rtt_message( 'I', "Description set on");
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "NODESCRIPTION", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "NODESCRIPTION", strlen( arg1_str)) == 0)
 	{
 	  rtt_description_on = 0;
 	  rtt_message( 'I', "Description set off");
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "SCANTIME", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "SCANTIME", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SET SCANTIME" */
 	  /* Set rtdb_offset for the rtt job */
@@ -3454,28 +3454,28 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	    return RTT__HOLDCOMMAND;
 	  }
 	}
-	else if ( strncmp( arg1_str, "MESSAGE", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "MESSAGE", strlen( arg1_str)) == 0)
 	{
 	  rtt_message_off = 0;
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "NOMESSAGE", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "NOMESSAGE", strlen( arg1_str)) == 0)
 	{
 	  rtt_message_off = 1;
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "NOREDRAW", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "NOREDRAW", strlen( arg1_str)) == 0)
 	{
 	  rtt_noredraw = 1;
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "DRAW", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "DRAW", strlen( arg1_str)) == 0)
 	{
 	  rtt_quiet = 0;
 	  rtt_noredraw = 1;
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "NODRAW", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "NODRAW", strlen( arg1_str)) == 0)
 	{
 	  rtt_quiet = RTT_QUIET_ALL;
 	  rtt_noredraw = 0;
@@ -3580,7 +3580,7 @@ int	rttcmd_learn_func(	menu_ctx	ctx,
 	
 	arg1_sts = rtt_get_qualifier( "rtt_arg1", arg1_str);
 
-	if ( strncmp( arg1_str, "START", strlen( arg1_str)) == 0)
+	if ( cdh_NoCaseStrncmp( arg1_str, "START", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "LEARN START" */
 
@@ -3600,7 +3600,7 @@ int	rttcmd_learn_func(	menu_ctx	ctx,
 	  rtt_message('I', "Enter key sequence to learn");
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "STOP", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "STOP", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "LEARN STOP" */
 
@@ -3613,7 +3613,7 @@ int	rttcmd_learn_func(	menu_ctx	ctx,
 	  rtt_message('I', "Key sequence stored");
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "RECALL", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "RECALL", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "LEARN RECALL" */
 
@@ -3740,7 +3740,7 @@ static int	alarm_func(	menu_ctx	ctx,
 	IF_NOGDH_RETURN;
 	arg1_sts = rtt_get_qualifier( "rtt_arg1", arg1_str);
 
-	if ( strncmp( arg1_str, "SEND", strlen( arg1_str)) == 0)
+	if ( cdh_NoCaseStrncmp( arg1_str, "SEND", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "ALARM SEND" */
 
@@ -3757,6 +3757,7 @@ static int	alarm_func(	menu_ctx	ctx,
 
 	  if ( ODD( rtt_get_qualifier( "/PRIORITY", prio_str)))
 	  {
+	    rtt_toupper( prio_str, prio_str);
 	    if ( strcmp( prio_str, "A") == 0)
 	      priority = 'A';
 	    else if ( strcmp( prio_str, "B") == 0)
@@ -3785,7 +3786,7 @@ static int	alarm_func(	menu_ctx	ctx,
 	  return RTT__NOPICTURE;
 	}
 
-	else if ( strncmp( arg1_str, "PRINT", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "PRINT", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "ALARM PRINT" */
 
@@ -3814,7 +3815,7 @@ static int	alarm_func(	menu_ctx	ctx,
 	  return sts;
 	}
 
-	else if ( strncmp( arg1_str, "LOG", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "LOG", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "ALARM LOG" */
 
@@ -3843,7 +3844,7 @@ static int	alarm_func(	menu_ctx	ctx,
 	    return RTT__HOLDCOMMAND;
 	  }
 	}
-	else if ( strncmp( arg1_str, "LIST", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "LIST", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "ALARM LIST" */
 
@@ -3926,7 +3927,7 @@ static int	alarm_func(	menu_ctx	ctx,
 	    return RTT__NOPICTURE;
 	  }
 	}
-	else if ( strncmp( arg1_str, "SHOW", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "SHOW", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "ALARM SHOW" */
 
@@ -4007,7 +4008,7 @@ static int	alarm_func(	menu_ctx	ctx,
 	    return RTT__NOPICTURE;
 	  }
 	}
-	else if ( strncmp( arg1_str, "ACKNOWLEDGE", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "ACKNOWLEDGE", strlen( arg1_str)) == 0)
 	{
 	  rtt_alarm_ack( rtt_alarm_ctx);
 	  return RTT__NOPICTURE;
@@ -4043,7 +4044,7 @@ static int	rtt_create_func(	menu_ctx	ctx,
 
 	arg1_sts = rtt_get_qualifier( "rtt_arg1", arg1_str);
 
-	if ( strncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0)
+	if ( cdh_NoCaseStrncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "CREATE OBJECT" */
 
@@ -4075,7 +4076,7 @@ static int	rtt_create_func(	menu_ctx	ctx,
 	  sts = rtt_create_object( ctx, class_str, name_str);
 	  return sts;
 	}
-	else if ( strncmp( arg1_str, "MENU", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "MENU", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "CREATE MENU" */
 	  int		sts;
@@ -4179,7 +4180,7 @@ static int	rtt_delete_func(	menu_ctx	ctx,
 	IF_NOGDH_RETURN;
 	arg1_sts = rtt_get_qualifier( "rtt_arg1", arg1_str);
 
-	if ( strncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0)
+	if ( cdh_NoCaseStrncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "DELETE OBJECT" */
 
@@ -4941,8 +4942,8 @@ int	rtt_get_command(
 			rtt_file_on && rtt_print_command)
 	  {
 	    /* Don't print the print and say commands */
-	    if ( strncmp( command, "PRINT", 5) &&
-		 strncmp( command, "SAY", 3))
+	    if ( cdh_NoCaseStrncmp( command, "PRINT", 5) &&
+		 cdh_NoCaseStrncmp( command, "SAY", 3))
 	      fprintf( rtt_outfile, "%%RTT-I-CMD, %s\n", command);
 	  }
 
@@ -7713,7 +7714,7 @@ static int	rtt_menulist_search(
 	  {
 	    for ( i = 0; i <= (int)(strlen( text) - strlen( searchstr)); i++)
 	    {
-	      if ( strncmp( &text[i], searchstr, strlen(searchstr)) == 0)
+	      if ( cdh_NoCaseStrncmp( &text[i], searchstr, strlen(searchstr)) == 0)
 	      {
 	        /* the string matches */
 	        *foundindex = index;
@@ -8601,7 +8602,7 @@ int	rtt_commandmode_getnext(
 	  if ( sts == CCM__EXTERNFUNC)
 	  {
 	    /* Check if som intern learn commands */
-	    if ( strcmp( rtt_ccmcmd, "NOQUIET") == 0)
+	    if ( cdh_NoCaseStrcmp( rtt_ccmcmd, "NOQUIET") == 0)
 	    {
 	      r_print_buffer();
 	      rtt_quiet = 0;
@@ -8763,41 +8764,41 @@ int	rtt_command_get_input_string(
 	  }
 	  else
 	  {	  
-	    if ( strcmp( command, "K_RETURN") == 0)
+	    if ( cdh_NoCaseStrcmp( command, "K_RETURN") == 0)
 	      *out_terminator = RTT_K_RETURN;
-	    else if ( strcmp( command, "K_PF1") == 0)
+	    else if ( cdh_NoCaseStrcmp( command, "K_PF1") == 0)
 	      *out_terminator = RTT_K_PF1;
-  	    else if ( strcmp( command, "K_PF2") == 0)
+  	    else if ( cdh_NoCaseStrcmp( command, "K_PF2") == 0)
 	      *out_terminator = RTT_K_PF2;
-	    else if ( strcmp( command, "K_PF3") == 0)
+	    else if ( cdh_NoCaseStrcmp( command, "K_PF3") == 0)
 	      *out_terminator = RTT_K_PF3;
-	    else if ( strcmp( command, "K_PF4") == 0)
+	    else if ( cdh_NoCaseStrcmp( command, "K_PF4") == 0)
 	      *out_terminator = RTT_K_PF4;
-	    else if ( strcmp( command, "K_ARROW_UP") == 0)
+	    else if ( cdh_NoCaseStrcmp( command, "K_ARROW_UP") == 0)
 	      *out_terminator = RTT_K_ARROW_UP;
-	    else if ( strcmp( command, "K_ARROW_DOWN") == 0)
+	    else if ( cdh_NoCaseStrcmp( command, "K_ARROW_DOWN") == 0)
 	      *out_terminator = RTT_K_ARROW_DOWN;
-	    else if ( strcmp( command, "K_ARROW_RIGHT") == 0)
+	    else if ( cdh_NoCaseStrcmp( command, "K_ARROW_RIGHT") == 0)
 	      *out_terminator = RTT_K_ARROW_RIGHT;
-	    else if ( strcmp( command, "K_ARROW_LEFT") == 0)
+	    else if ( cdh_NoCaseStrcmp( command, "K_ARROW_LEFT") == 0)
 	      *out_terminator = RTT_K_ARROW_LEFT;
-	    else if ( strcmp( command, "K_PREVIOUS_PAGE") == 0)
+	    else if ( cdh_NoCaseStrcmp( command, "K_PREVIOUS_PAGE") == 0)
 	      *out_terminator = RTT_K_PREVPAGE;
-	    else if ( strcmp( command, "K_NEXT_PAGE") == 0)
+	    else if ( cdh_NoCaseStrcmp( command, "K_NEXT_PAGE") == 0)
 	      *out_terminator = RTT_K_NEXTPAGE;
-	    else if ( strcmp( command, "K_CTRLV") == 0)
+	    else if ( cdh_NoCaseStrcmp( command, "K_CTRLV") == 0)
 	      *out_terminator = RTT_K_CTRLV;
-	    else if ( strcmp( command, "K_DELETE") == 0)
+	    else if ( cdh_NoCaseStrcmp( command, "K_DELETE") == 0)
 	      *out_terminator = RTT_K_DELETE;
-	    else if ( strcmp( command, "K_CTRLN") == 0)
+	    else if ( cdh_NoCaseStrcmp( command, "K_CTRLN") == 0)
 	      *out_terminator = RTT_K_CTRLN;
-	    else if ( strcmp( command, "K_CTRLZ") == 0)
+	    else if ( cdh_NoCaseStrcmp( command, "K_CTRLZ") == 0)
 	      *out_terminator = RTT_K_CTRLZ;
-	    else if ( strcmp( command, "K_CTRLW") == 0)
+	    else if ( cdh_NoCaseStrcmp( command, "K_CTRLW") == 0)
 	      *out_terminator = RTT_K_CTRLW;
-	    else if ( strcmp( command, "K_CTRLL") == 0)
+	    else if ( cdh_NoCaseStrcmp( command, "K_CTRLL") == 0)
 	      *out_terminator = RTT_K_CTRLL;
-	    else if ( strcmp( command, "K_HELP") == 0)
+	    else if ( cdh_NoCaseStrcmp( command, "K_HELP") == 0)
 	      *out_terminator = RTT_K_HELP;
 	    else
 	    {
@@ -8953,8 +8954,8 @@ int	rtt_learn_store( char	*command)
 	nr = rtt_parse( command, " ", "/", (char *)out_str, 
 		sizeof( out_str) / sizeof( out_str[0]), sizeof( out_str[0]), 0);
 	if ( nr == 2 &&
-             strncmp( out_str[0], "LEARN", strlen(out_str[0])) == 0 &&
-	     strncmp( out_str[1], "STOP", strlen(out_str[1])) == 0)
+             cdh_NoCaseStrncmp( out_str[0], "LEARN", strlen(out_str[0])) == 0 &&
+	     cdh_NoCaseStrncmp( out_str[1], "STOP", strlen(out_str[1])) == 0)
 	  return RTT__SUCCESS;
 
 	fprintf( rtt_learn_file, "%s\n", command);
@@ -9774,7 +9775,7 @@ static int	rtt_show_step(
 
 	    if ( hiername != 0)
 	    {
-	      if ( strncmp( hierarchyname, objectname, strlen(hierarchyname)) !=
+	      if ( cdh_NoCaseStrncmp( hierarchyname, objectname, strlen(hierarchyname)) !=
 			0)
 	      {
 	        /* Next object */
@@ -11580,7 +11581,7 @@ static int	rtt_qual_to_time( 	char 		*in_str,
 
 
 	if ( !strcmp( in_str, "") ||
-	     !strncmp( in_str, "TODAY", strlen(in_str)))
+	     !cdh_NoCaseStrncmp( in_str, "TODAY", strlen(in_str)))
 	{
 	  time_GetTime( &current_time);
 	  time_AtoAscii( &current_time, time_eFormat_DateAndTime,
@@ -11589,7 +11590,7 @@ static int	rtt_qual_to_time( 	char 		*in_str,
 	  strcat( timstr, " 00:00:00.00");
 	  sts = time_AsciiToA( timstr, time);
 	}
-	else if ( !strncmp( in_str, "YESTERDAY", strlen(in_str)))
+	else if ( !cdh_NoCaseStrncmp( in_str, "YESTERDAY", strlen(in_str)))
 	{
 	  time_GetTime( &current_time);
 	  time_AtoAscii( &current_time, time_eFormat_DateAndTime,

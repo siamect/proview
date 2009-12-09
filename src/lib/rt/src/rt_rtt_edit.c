@@ -459,7 +459,7 @@ static int	set_func(	edit_ctx	ctx,
 	  rtt_message('E', "Qualifier is missing");
 	  return RTT__NOPICTURE;
 	}
-	if ( strncmp( arg1_str, "FILE", strlen( arg1_str)) == 0)
+	if ( cdh_NoCaseStrncmp( arg1_str, "FILE", strlen( arg1_str)) == 0)
 	{
 	  char str[80];
 
@@ -514,50 +514,50 @@ static int	set_func(	edit_ctx	ctx,
 	    return RTT__HOLDCOMMAND;
 	  }
 	}
-	else if ( strncmp( arg1_str, "VERIFY", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "VERIFY", strlen( arg1_str)) == 0)
 	{
 	  rtt_verify = 1;
 	  rtt_message('I', "Verify set on");
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "NOVERIFY", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "NOVERIFY", strlen( arg1_str)) == 0)
 	{
 	  rtt_verify = 0;
 	  rtt_message('I', "Verify set off");
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "LINE", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "LINE", strlen( arg1_str)) == 0)
 	{
 	  rtt_charset_linedrawing();
 	  CHARSET_LINE(ctx->charset);
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "ASCII", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "ASCII", strlen( arg1_str)) == 0)
 	{
 	  rtt_charset_ascii();
 	  CHARSET_ASCII( ctx->charset);
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "INVERSE", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "INVERSE", strlen( arg1_str)) == 0)
 	{
 	  rtt_char_inverse_start();
 	  CHARSET_INVERSE(ctx->charset);
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "NOINVERSE", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "NOINVERSE", strlen( arg1_str)) == 0)
 	{
 	  rtt_char_inverse_end();
 	  CHARSET_NOINVERSE( ctx->charset);
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "MODE", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "MODE", strlen( arg1_str)) == 0)
 	{
 	  if ( EVEN( rtt_get_qualifier( "rtt_arg2", arg2_str)))
 	  {
 	    rtt_message('E', "Qualifier is missing");
 	    return RTT__NOPICTURE;
 	  }
-	  if ( strncmp( arg2_str, "FORMAT", strlen( arg2_str)) == 0)
+	  if ( cdh_NoCaseStrncmp( arg2_str, "FORMAT", strlen( arg2_str)) == 0)
 	  {
 	    if ( ctx->ctx_type != DTT_CTX_EDIT)
 	    {
@@ -568,7 +568,7 @@ static int	set_func(	edit_ctx	ctx,
 	    ctx->display_mode = DTT_DISPLAY_MODE_FORMAT;
 	    return RTT__SUCCESS;
 	  }
-	  else if ( strncmp( arg2_str, "NUMBER", strlen( arg2_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg2_str, "NUMBER", strlen( arg2_str)) == 0)
 	  {
 	    if ( ctx->ctx_type != DTT_CTX_EDIT)
 	    {
@@ -619,7 +619,7 @@ static int	write_func(	edit_ctx	ctx,
 
 	if ( ODD( rtt_get_qualifier( "rtt_arg1", arg1_str)))
 	{
-	  if ( strncmp( arg1_str, "ITEMS", strlen( arg1_str)) == 0)
+	  if ( cdh_NoCaseStrncmp( arg1_str, "ITEMS", strlen( arg1_str)) == 0)
 	  {
 	    char		outfilename[80];
 	    char		message[120];
@@ -687,7 +687,7 @@ static int	write_func(	edit_ctx	ctx,
 	      }
 	    }
 	  }
-	  else if ( strncmp( arg1_str, "PICTURE", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "PICTURE", strlen( arg1_str)) == 0)
 	  {
 	    if (( ctx->ctx_type == DTT_CTX_EDIT) ||
 		((ctx->parent_ctx != 0) &&
@@ -720,7 +720,7 @@ static int	write_func(	edit_ctx	ctx,
 	        return RTT__NOPICTURE;
 	    }
 	  }
-	  else if ( strncmp( arg1_str, "MENU", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "MENU", strlen( arg1_str)) == 0)
 	  {
 	    int		all;
 
@@ -833,21 +833,21 @@ static int	save_func(	edit_ctx	ctx,
 	  }
 	  else
 	  {
-            if ( strncmp( arg1_str, "VAX_VMS", strlen( arg1_str)) == 0)
+            if ( cdh_NoCaseStrncmp( arg1_str, "VAX_VMS", strlen( arg1_str)) == 0)
 	      opsys = pwr_mOpSys_VAX_VMS;
-	    else if ( strncmp( arg1_str, "VAX_ELN", strlen( arg1_str)) == 0)
+	    else if ( cdh_NoCaseStrncmp( arg1_str, "VAX_ELN", strlen( arg1_str)) == 0)
 	      opsys = pwr_mOpSys_VAX_ELN;
-	    else if ( strncmp( arg1_str, "AXP_VMS", strlen( arg1_str)) == 0)
+	    else if ( cdh_NoCaseStrncmp( arg1_str, "AXP_VMS", strlen( arg1_str)) == 0)
 	      opsys = pwr_mOpSys_AXP_VMS;
-	    else if ( strncmp( arg1_str, "PPC_LYNX", strlen( arg1_str)) == 0)
+	    else if ( cdh_NoCaseStrncmp( arg1_str, "PPC_LYNX", strlen( arg1_str)) == 0)
 	      opsys = pwr_mOpSys_PPC_LYNX;
-	    else if ( strncmp( arg1_str, "X86_LYNX", strlen( arg1_str)) == 0)
+	    else if ( cdh_NoCaseStrncmp( arg1_str, "X86_LYNX", strlen( arg1_str)) == 0)
 	      opsys = pwr_mOpSys_X86_LYNX;
-	    else if ( strncmp( arg1_str, "PPC_LINUX", strlen( arg1_str)) == 0)
+	    else if ( cdh_NoCaseStrncmp( arg1_str, "PPC_LINUX", strlen( arg1_str)) == 0)
 	      opsys = pwr_mOpSys_PPC_LINUX;
-	    else if ( strncmp( arg1_str, "X86_LINUX", strlen( arg1_str)) == 0)
+	    else if ( cdh_NoCaseStrncmp( arg1_str, "X86_LINUX", strlen( arg1_str)) == 0)
  	      opsys = pwr_mOpSys_X86_LINUX;
-	    else if ( strncmp( arg1_str, "X86_64_LINUX", strlen( arg1_str)) == 0)
+	    else if ( cdh_NoCaseStrncmp( arg1_str, "X86_64_LINUX", strlen( arg1_str)) == 0)
  	      opsys = pwr_mOpSys_X86_64_LINUX;
 	    else
 	    {
@@ -889,21 +889,21 @@ static int	save_func(	edit_ctx	ctx,
 	    }
 	    else
 	    {
-              if ( strncmp( arg1_str, "VAX_VMS", strlen( arg1_str)) == 0)
+              if ( cdh_NoCaseStrncmp( arg1_str, "VAX_VMS", strlen( arg1_str)) == 0)
 	        opsys = pwr_mOpSys_VAX_VMS;
-	      else if ( strncmp( arg1_str, "VAX_ELN", strlen( arg1_str)) == 0)
+	      else if ( cdh_NoCaseStrncmp( arg1_str, "VAX_ELN", strlen( arg1_str)) == 0)
 	        opsys = pwr_mOpSys_VAX_ELN;
-	      else if ( strncmp( arg1_str, "AXP_VMS", strlen( arg1_str)) == 0)
+	      else if ( cdh_NoCaseStrncmp( arg1_str, "AXP_VMS", strlen( arg1_str)) == 0)
 	        opsys = pwr_mOpSys_AXP_VMS;
-	      else if ( strncmp( arg1_str, "PPC_LYNX", strlen( arg1_str)) == 0)
+	      else if ( cdh_NoCaseStrncmp( arg1_str, "PPC_LYNX", strlen( arg1_str)) == 0)
 	        opsys = pwr_mOpSys_PPC_LYNX;
-	      else if ( strncmp( arg1_str, "X86_LYNX", strlen( arg1_str)) == 0)
+	      else if ( cdh_NoCaseStrncmp( arg1_str, "X86_LYNX", strlen( arg1_str)) == 0)
 	        opsys = pwr_mOpSys_X86_LYNX;
-	      else if ( strncmp( arg1_str, "PPC_LINUX", strlen( arg1_str)) == 0)
+	      else if ( cdh_NoCaseStrncmp( arg1_str, "PPC_LINUX", strlen( arg1_str)) == 0)
 	        opsys = pwr_mOpSys_PPC_LINUX;
-	      else if ( strncmp( arg1_str, "X86_LINUX", strlen( arg1_str)) == 0)
+	      else if ( cdh_NoCaseStrncmp( arg1_str, "X86_LINUX", strlen( arg1_str)) == 0)
 	        opsys = pwr_mOpSys_X86_LINUX;
-	      else if ( strncmp( arg1_str, "X86_64_LINUX", strlen( arg1_str)) == 0)
+	      else if ( cdh_NoCaseStrncmp( arg1_str, "X86_64_LINUX", strlen( arg1_str)) == 0)
 	        opsys = pwr_mOpSys_X86_64_LINUX;
 	      else
 	      {
@@ -990,21 +990,21 @@ static int	generate_func(	edit_ctx	ctx,
 	}
 	else
 	{
-          if ( strncmp( arg1_str, "VAX_VMS", strlen( arg1_str)) == 0)
+          if ( cdh_NoCaseStrncmp( arg1_str, "VAX_VMS", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_VAX_VMS;
-	  else if ( strncmp( arg1_str, "VAX_ELN", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "VAX_ELN", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_VAX_ELN;
-	  else if ( strncmp( arg1_str, "AXP_VMS", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "AXP_VMS", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_AXP_VMS;
-	  else if ( strncmp( arg1_str, "PPC_LYNX", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "PPC_LYNX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_PPC_LYNX;
-	  else if ( strncmp( arg1_str, "X86_LYNX", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "X86_LYNX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_X86_LYNX;
-	  else if ( strncmp( arg1_str, "PPC_LINUX", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "PPC_LINUX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_PPC_LINUX;
- 	  else if ( strncmp( arg1_str, "X86_LINUX", strlen( arg1_str)) == 0)
+ 	  else if ( cdh_NoCaseStrncmp( arg1_str, "X86_LINUX", strlen( arg1_str)) == 0)
  	    opsys = pwr_mOpSys_X86_LINUX;
-	  else if ( strncmp( arg1_str, "X86_64_LINUX", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "X86_64_LINUX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_X86_64_LINUX;
 	  else
 	  {
@@ -1278,7 +1278,7 @@ static int	dtt_export_func(	edit_ctx	ctx,
 
 	if ( ODD( rtt_get_qualifier( "rtt_arg1", arg1_str)))
 	{
-	  if ( strncmp( arg1_str, "GDHREFLIST", strlen( arg1_str)) == 0)
+	  if ( cdh_NoCaseStrncmp( arg1_str, "GDHREFLIST", strlen( arg1_str)) == 0)
 	  {
 	    /* Command is "EXPORT GDHREFLIST" */
 	    if ( ODD( rtt_get_qualifier( "rtt_arg2", arg2_str)))
@@ -1295,7 +1295,7 @@ static int	dtt_export_func(	edit_ctx	ctx,
 	      return RTT__NOPICTURE;
 	    }
 	  }
-	  else if ( strncmp( arg1_str, "EXTERNREF", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "EXTERNREF", strlen( arg1_str)) == 0)
 	  {
 	    /* Command is "EXPORT EXTERNREF" */
 	    if ( ODD( rtt_get_qualifier( "rtt_arg2", arg2_str)))
@@ -1352,7 +1352,7 @@ static int	dtt_list_func(	edit_ctx	ctx,
 
 	if ( ODD( rtt_get_qualifier( "rtt_arg1", arg1_str)))
 	{
-	  if ( strncmp( arg1_str, "ITEMS", strlen( arg1_str)) == 0)
+	  if ( cdh_NoCaseStrncmp( arg1_str, "ITEMS", strlen( arg1_str)) == 0)
 	  {
 	    /* Command is "LIST ITEMS" */
 	    if ( ODD( rtt_get_qualifier( "/ALL", arg2_str)))
@@ -1448,7 +1448,7 @@ static int	dtt_clear_func(	edit_ctx	ctx,
 
 	if ( ODD( rtt_get_qualifier( "rtt_arg1", arg1_str)))
 	{
-	  if ( strncmp( arg1_str, "ITEMS", strlen( arg1_str)) == 0)
+	  if ( cdh_NoCaseStrncmp( arg1_str, "ITEMS", strlen( arg1_str)) == 0)
 	  {
 	    if ( ctx->ctx_type == DTT_CTX_EDIT)
 	    {
@@ -1463,7 +1463,7 @@ static int	dtt_clear_func(	edit_ctx	ctx,
 	      return RTT__NOPICTURE;
 	    }
 	  }
-	  else if ( strncmp( arg1_str, "PICTURE", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "PICTURE", strlen( arg1_str)) == 0)
 	  {
 	    if ( ctx->ctx_type == DTT_CTX_EDIT)
 	    {
@@ -1729,21 +1729,21 @@ static int	dtt_link_func(	edit_ctx	ctx,
 	}
 	else 
 	{
-          if ( strncmp( arg1_str, "VAX_VMS", strlen( arg1_str)) == 0)
+          if ( cdh_NoCaseStrncmp( arg1_str, "VAX_VMS", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_VAX_VMS;
-	  else if ( strncmp( arg1_str, "VAX_ELN", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "VAX_ELN", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_VAX_ELN;
-	  else if ( strncmp( arg1_str, "AXP_VMS", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "AXP_VMS", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_AXP_VMS;
-	  else if ( strncmp( arg1_str, "PPC_LYNX", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "PPC_LYNX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_PPC_LYNX;
-	  else if ( strncmp( arg1_str, "X86_LYNX", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "X86_LYNX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_X86_LYNX;
-	  else if ( strncmp( arg1_str, "PPC_LINUX", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "PPC_LINUX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_PPC_LINUX;
-	  else if ( strncmp( arg1_str, "X86_LINUX", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "X86_LINUX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_X86_LINUX;
-	  else if ( strncmp( arg1_str, "X86_64_LINUX", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "X86_64_LINUX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_X86_64_LINUX;
 	  else
 	  {
@@ -1833,21 +1833,21 @@ static int	dtt_compile_func(	edit_ctx	ctx,
 	}
 	else 
 	{
-          if ( strncmp( arg1_str, "VAX_VMS", strlen( arg1_str)) == 0)
+          if ( cdh_NoCaseStrncmp( arg1_str, "VAX_VMS", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_VAX_VMS;
-	  else if ( strncmp( arg1_str, "VAX_ELN", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "VAX_ELN", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_VAX_ELN;
-	  else if ( strncmp( arg1_str, "AXP_VMS", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "AXP_VMS", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_AXP_VMS;
-	  else if ( strncmp( arg1_str, "PPC_LYNX", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "PPC_LYNX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_PPC_LYNX;
-	  else if ( strncmp( arg1_str, "X86_LYNX", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "X86_LYNX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_X86_LYNX;
-	  else if ( strncmp( arg1_str, "PPC_LINUX", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "PPC_LINUX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_PPC_LINUX;
-	  else if ( strncmp( arg1_str, "X86_LINUX", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "X86_LINUX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_X86_LINUX;
-	  else if ( strncmp( arg1_str, "X86_64_LINUX", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "X86_64_LINUX", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_X86_64_LINUX;
 	  else
 	  {
@@ -1907,7 +1907,7 @@ static int	dtt_edit_func(	edit_ctx	ctx,
 #endif
 	  system( cmd);
 	}
-	else if ( strncmp( arg1_str, "HELP", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "HELP", strlen( arg1_str)) == 0)
 	{
 	  /* Edit the help file */
 	  dtt_get_menufilename( menuname);
@@ -1919,7 +1919,7 @@ static int	dtt_edit_func(	edit_ctx	ctx,
 #endif
 	  system( cmd);
 	}
-	else if ( strncmp( arg1_str, "FUNCTIONS", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "FUNCTIONS", strlen( arg1_str)) == 0)
 	{
 	  /* Edit the function file */
 #if defined(OS_VMS)
@@ -1989,7 +1989,7 @@ static int	dtt_include_func(	menu_ctx	ctx,
 
 	if ( ODD( rtt_get_qualifier( "rtt_arg1", arg1_str)))
 	{
-	  if ( strncmp( arg1_str, "PICTURE", strlen( arg1_str)) == 0)
+	  if ( cdh_NoCaseStrncmp( arg1_str, "PICTURE", strlen( arg1_str)) == 0)
 	  {
 	    edit_ctx	e_ctx;
 
@@ -2016,7 +2016,7 @@ static int	dtt_include_func(	menu_ctx	ctx,
 	      }
 	    }
 	  }
-	  else if ( strncmp( arg1_str, "ITEMS", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "ITEMS", strlen( arg1_str)) == 0)
 	  {
 	    edit_ctx	e_ctx;
 
@@ -2047,7 +2047,7 @@ static int	dtt_include_func(	menu_ctx	ctx,
 	    sts = dtt_edit_read_items( (edit_ctx) ctx, arg2_str);
 	    return sts;
 	  }
-	  else if ( strncmp( arg1_str, "MENU", strlen( arg1_str)) == 0)
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "MENU", strlen( arg1_str)) == 0)
 	  {
 	    char	filename[80];
 
@@ -2113,7 +2113,7 @@ static int	dtt_undo_func(	menu_ctx	ctx,
 
 	if ( ODD( rtt_get_qualifier( "rtt_arg1", arg1_str)))
 	{
-	  if ( strncmp( arg1_str, "DELETE", strlen( arg1_str)) == 0)
+	  if ( cdh_NoCaseStrncmp( arg1_str, "DELETE", strlen( arg1_str)) == 0)
 	  {
 	    if ( ctx->ctx_type != DTT_CTX_EDIT)
 	    {
@@ -2190,7 +2190,7 @@ static int	dtt_delete_func(	edit_ctx	ctx,
 	    return RTT__NOPICTURE;
 	  }
 	}
-	else if ( strncmp( arg1_str, "ITEM", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "ITEM", strlen( arg1_str)) == 0)
 	{
 	  /* Get the update item */
 	  sts = dtt_get_upd_item( ctx->upd_items, ctx->cursor_x, ctx->cursor_y,
@@ -3144,18 +3144,18 @@ static int	modify_func(	edit_ctx	ctx,
 	  }
 	  if ( ODD( rtt_get_qualifier( "/TYPE", arg1_str)))
 	  {
-	    if ( (strcmp( arg1_str, "UPDATE") == 0) ||
-		(strcmp( arg1_str, "SET") == 0) ||
-		(strcmp( arg1_str, "RESET") == 0) ||
-		(strcmp( arg1_str, "SET_RESET") == 0) ||
-		(strcmp( arg1_str, "TOGGLE") == 0) ||
-		(strcmp( arg1_str, "DUAL_SET") == 0) ||
-		(strcmp( arg1_str, "DUAL_RESET") == 0) ||
-		(strcmp( arg1_str, "DUAL_SET_RESET") == 0) ||
-		(strcmp( arg1_str, "DUAL_TOGGLE") == 0) ||
-		(strcmp( arg1_str, "SET_DUALSET") == 0) ||
-		(strcmp( arg1_str, "TOGGLE_DUALTOGGLE") == 0) ||
-		(strcmp( arg1_str, "COMMAND") == 0))
+	    if ( (cdh_NoCaseStrcmp( arg1_str, "UPDATE") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "SET") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "RESET") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "SET_RESET") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "TOGGLE") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "DUAL_SET") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "DUAL_RESET") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "DUAL_SET_RESET") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "DUAL_TOGGLE") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "SET_DUALSET") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "TOGGLE_DUALTOGGLE") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "COMMAND") == 0))
 	    {
 	      strcpy( item_ptr->type, arg1_str);	 
 	      change++;
@@ -3181,12 +3181,12 @@ static int	modify_func(	edit_ctx	ctx,
 	  }
 	  if ( ODD( rtt_get_qualifier( "/PRIVILEGES", arg1_str)))
 	  {
-	    if ( (strcmp( arg1_str, "OP") == 0) ||
-		(strcmp( arg1_str, "NO") == 0) ||
-		(strcmp( arg1_str, "EL") == 0) ||
-		(strcmp( arg1_str, "PROC") == 0) ||
-		(strcmp( arg1_str, "SYS") == 0) ||
-		(strcmp( arg1_str, "NOOP") == 0))
+	    if ( (cdh_NoCaseStrcmp( arg1_str, "OP") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "NO") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "EL") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "PROC") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "SYS") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "NOOP") == 0))
 	    {
 	      strcpy( item_ptr->priv, arg1_str);	 
 	      change++;
@@ -3200,16 +3200,16 @@ static int	modify_func(	edit_ctx	ctx,
 	  }
 	  if ( ODD( rtt_get_qualifier( "/OUTPUTFLAGS", arg1_str)))
 	  {
-	    if ( (strcmp( arg1_str, "ONOFF") == 0) ||
-		(strcmp( arg1_str, "NO") == 0) ||
-		(strcmp( arg1_str, "TRUEFALSE") == 0) ||
-		(strcmp( arg1_str, "AUTOMAN") == 0) ||
-		(strcmp( arg1_str, "") == 0) ||
-		(strcmp( arg1_str, "BAR") == 0) ||
-		(strcmp( arg1_str, "TEXT") == 0) ||
-                (strcmp( arg1_str, "FLASHTEXT") == 0) ||
-                (strcmp( arg1_str, "FLASH") == 0) ||
-		(strcmp( arg1_str, "OPENCLOSED") == 0))
+	    if ( (cdh_NoCaseStrcmp( arg1_str, "ONOFF") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "NO") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "TRUEFALSE") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "AUTOMAN") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "BAR") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "TEXT") == 0) ||
+                (cdh_NoCaseStrcmp( arg1_str, "FLASHTEXT") == 0) ||
+                (cdh_NoCaseStrcmp( arg1_str, "FLASH") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "OPENCLOSED") == 0))
 	    {
 	      strcpy( item_ptr->outflags, arg1_str);	 
 	      change++;
@@ -3275,10 +3275,10 @@ static int	modify_func(	edit_ctx	ctx,
 	  }
 	  if ( ODD( rtt_get_qualifier( "/DATABASE", arg1_str)))
 	  {
-	    if ( (strcmp( arg1_str, "GDH") == 0) ||
-		(strcmp( arg1_str, "RTT") == 0) ||
-		(strcmp( arg1_str, "RTTSYS") == 0) ||
-		(strcmp( arg1_str, "USER") == 0))
+	    if ( (cdh_NoCaseStrcmp( arg1_str, "GDH") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "RTT") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "RTTSYS") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "USER") == 0))
 	    {
 	      strcpy( item_ptr->database, arg1_str);	 
 	      change++;
@@ -3292,19 +3292,19 @@ static int	modify_func(	edit_ctx	ctx,
 	  }
 	  if ( ODD( rtt_get_qualifier( "/DECLARATION", arg1_str)))
 	  {
-	    if ( (strcmp( arg1_str, "INT") == 0) ||
-		(strcmp( arg1_str, "SHORT") == 0) ||
-		(strcmp( arg1_str, "BOOLEAN") == 0) ||
-		(strcmp( arg1_str, "FLOAT") == 0) ||
-		(strcmp( arg1_str, "STRING") == 0) ||
-		(strcmp( arg1_str, "STRING4") == 0) ||
-		(strcmp( arg1_str, "STRING10") == 0) ||
-		(strcmp( arg1_str, "STRING20") == 0) ||
-		(strcmp( arg1_str, "STRING40") == 0) ||
-		(strcmp( arg1_str, "OBJID") == 0) ||
-		(strcmp( arg1_str, "ATTRREF") == 0) ||
-		(strcmp( arg1_str, "TIME") == 0) ||
-		(strcmp( arg1_str, "CHAR") == 0))
+	    if ( (cdh_NoCaseStrcmp( arg1_str, "INT") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "SHORT") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "BOOLEAN") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "FLOAT") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "STRING") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "STRING4") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "STRING10") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "STRING20") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "STRING40") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "OBJID") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "ATTRREF") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "TIME") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "CHAR") == 0))
 	    {
 	      strcpy( item_ptr->declaration, arg1_str);	 
 	      change++;
@@ -3391,18 +3391,18 @@ static int	modify_func(	edit_ctx	ctx,
 	        return RTT__NOPICTURE;
 	      }  
 	    }	  
-	    if ( (strcmp( arg1_str, "UPDATE") == 0) ||
-		(strcmp( arg1_str, "SET") == 0) ||
-		(strcmp( arg1_str, "RESET") == 0) ||
-		(strcmp( arg1_str, "SET_RESET") == 0) ||
-		(strcmp( arg1_str, "TOGGLE") == 0) ||
-		(strcmp( arg1_str, "DUAL_SET") == 0) ||
-		(strcmp( arg1_str, "DUAL_RESET") == 0) ||
-		(strcmp( arg1_str, "DUAL_SET_RESET") == 0) ||
-		(strcmp( arg1_str, "DUAL_TOGGLE") == 0) ||
-		(strcmp( arg1_str, "SET_DUALSET") == 0) ||
-		(strcmp( arg1_str, "TOGGLE_DUALTOGGLE") == 0) ||
-		(strcmp( arg1_str, "COMMAND") == 0))
+	    if ( (cdh_NoCaseStrcmp( arg1_str, "UPDATE") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "SET") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "RESET") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "SET_RESET") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "TOGGLE") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "DUAL_SET") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "DUAL_RESET") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "DUAL_SET_RESET") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "DUAL_TOGGLE") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "SET_DUALSET") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "TOGGLE_DUALTOGGLE") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "COMMAND") == 0))
 	    {
 	      strcpy( item_ptr->type, arg1_str);	 
 	      sprintf( menu_ptr->text, 
@@ -3458,12 +3458,12 @@ static int	modify_func(	edit_ctx	ctx,
 	        return RTT__NOPICTURE;
 	      }  
 	    }	  
-	    if ( (strcmp( arg1_str, "OP") == 0) ||
-		(strcmp( arg1_str, "NO") == 0) ||
-		(strcmp( arg1_str, "EL") == 0) ||
-		(strcmp( arg1_str, "PROC") == 0) ||
-		(strcmp( arg1_str, "SYS") == 0) ||
-		(strcmp( arg1_str, "NOOP") == 0))
+	    if ( (cdh_NoCaseStrcmp( arg1_str, "OP") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "NO") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "EL") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "PROC") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "SYS") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "NOOP") == 0))
 	    {
 	      strcpy( item_ptr->priv, arg1_str);	 
 	      sprintf( menu_ptr->text, 
@@ -3487,16 +3487,16 @@ static int	modify_func(	edit_ctx	ctx,
 	        return RTT__NOPICTURE;
 	      }  
 	    }	  
-	    if ( (strcmp( arg1_str, "ONOFF") == 0) ||
-		(strcmp( arg1_str, "NO") == 0) ||
-		(strcmp( arg1_str, "TRUEFALSE") == 0) ||
-		(strcmp( arg1_str, "AUTOMAN") == 0) ||
-		(strcmp( arg1_str, "") == 0) ||
-		(strcmp( arg1_str, "BAR") == 0) ||
-		(strcmp( arg1_str, "TEXT") == 0) ||
-                (strcmp( arg1_str, "FLASHTEXT") == 0) ||
-                (strcmp( arg1_str, "FLASH") == 0) ||
-		(strcmp( arg1_str, "OPENCLOSED") == 0))
+	    if ( (cdh_NoCaseStrcmp( arg1_str, "ONOFF") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "NO") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "TRUEFALSE") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "AUTOMAN") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "BAR") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "TEXT") == 0) ||
+                (cdh_NoCaseStrcmp( arg1_str, "FLASHTEXT") == 0) ||
+                (cdh_NoCaseStrcmp( arg1_str, "FLASH") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "OPENCLOSED") == 0))
 	    {
 	      strcpy( item_ptr->outflags, arg1_str);	 
 	      sprintf( menu_ptr->text,  
@@ -3615,10 +3615,10 @@ static int	modify_func(	edit_ctx	ctx,
 	        return RTT__NOPICTURE;
 	      }  
 	    }	  
-	    if ( (strcmp( arg1_str, "GDH") == 0) ||
-		(strcmp( arg1_str, "RTT") == 0) ||
-		(strcmp( arg1_str, "RTTSYS") == 0) ||
-		(strcmp( arg1_str, "USER") == 0))
+	    if ( (cdh_NoCaseStrcmp( arg1_str, "GDH") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "RTT") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "RTTSYS") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "USER") == 0))
 	    {
 	      strcpy( item_ptr->database, arg1_str);	 
 	      sprintf( menu_ptr->text,  
@@ -3642,19 +3642,19 @@ static int	modify_func(	edit_ctx	ctx,
 	        return RTT__NOPICTURE;
 	      }  
 	    }	  
-	    if ( (strcmp( arg1_str, "INT") == 0) ||
-		(strcmp( arg1_str, "SHORT") == 0) ||
-		(strcmp( arg1_str, "BOOLEAN") == 0) ||
-		(strcmp( arg1_str, "FLOAT") == 0) ||
-		(strcmp( arg1_str, "STRING") == 0) ||
-		(strcmp( arg1_str, "STRING4") == 0) ||
-		(strcmp( arg1_str, "STRING10") == 0) ||
-		(strcmp( arg1_str, "STRING20") == 0) ||
-		(strcmp( arg1_str, "STRING40") == 0) ||
-		(strcmp( arg1_str, "OBJID") == 0) ||
-		(strcmp( arg1_str, "ATTRREF") == 0) ||
-		(strcmp( arg1_str, "TIME") == 0) ||
-		(strcmp( arg1_str, "CHAR") == 0))
+	    if ( (cdh_NoCaseStrcmp( arg1_str, "INT") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "SHORT") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "BOOLEAN") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "FLOAT") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "STRING") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "STRING4") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "STRING10") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "STRING20") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "STRING40") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "OBJID") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "ATTRREF") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "TIME") == 0) ||
+		(cdh_NoCaseStrcmp( arg1_str, "CHAR") == 0))
 	    {
 	      strcpy( item_ptr->declaration, arg1_str);	 
 	      sprintf( menu_ptr->text,  
@@ -3912,7 +3912,7 @@ static int	dtt_show_func(	menu_ctx	ctx,
 
 	arg1_sts = rtt_get_qualifier( "rtt_arg1", arg1_str);
 
-	if ( strncmp( arg1_str, "SYMBOL", strlen( arg1_str)) == 0)
+	if ( cdh_NoCaseStrncmp( arg1_str, "SYMBOL", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW SYMBOL" */
 	  char	arg2_str[80];
@@ -3934,7 +3934,7 @@ static int	dtt_show_func(	menu_ctx	ctx,
 	  rtt_message('I', message_str);
 	  return RTT__NOPICTURE;
 	}
-	else if ( strncmp( arg1_str, "TITLEPREFIX", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "TITLEPREFIX", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW TITLEPREFIX" */
 	  char	message_str[80];
@@ -3944,7 +3944,7 @@ static int	dtt_show_func(	menu_ctx	ctx,
 	  return RTT__NOPICTURE;
 	}
 
-	else if ( strncmp( arg1_str, "MENU", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "MENU", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW MENU" */
 	  char	name_str[80];
@@ -3969,13 +3969,13 @@ static int	dtt_show_func(	menu_ctx	ctx,
 	  return sts;
 	}
 
-	else if ( strncmp( arg1_str, "COLLECTION", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "COLLECTION", strlen( arg1_str)) == 0)
 	{
 	  sts = rtt_collect_show( ctx);
 	  return sts;
 	}
 
-	else if ( strncmp( arg1_str, "COMMAND", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "COMMAND", strlen( arg1_str)) == 0)
 	{
 	  /* Show the command string in arg1 */
 	  /* Check that this is a command menu item */
@@ -4003,7 +4003,7 @@ static int	dtt_show_func(	menu_ctx	ctx,
 	  return RTT__NOPICTURE;	
 	}
 
-	else if ( strncmp( arg1_str, "VMS", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "VMS", strlen( arg1_str)) == 0)
 	{
 	  /* Show the command string in arg1 */
 	  /* Check that this is a command menu item */
@@ -4029,7 +4029,7 @@ static int	dtt_show_func(	menu_ctx	ctx,
 	  return RTT__NOPICTURE;	
 	}
 
-	else if ( strncmp( arg1_str, "SYSPICTURE", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "SYSPICTURE", strlen( arg1_str)) == 0)
 	{
 	  /* Show the command string in arg1 */
 	  /* Check that this is a command menu item */
@@ -4052,7 +4052,7 @@ static int	dtt_show_func(	menu_ctx	ctx,
 	  return RTT__NOPICTURE;	
 	}
 
-	else if ( strncmp( arg1_str, "OBJPICTURE", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "OBJPICTURE", strlen( arg1_str)) == 0)
 	{
 	  /* Show the command string in arg1 */
 	  /* Check that this is a command menu item */
@@ -4075,7 +4075,7 @@ static int	dtt_show_func(	menu_ctx	ctx,
 	  return RTT__NOPICTURE;	
 	}
 
-	else if ( strncmp( arg1_str, "FILESPEC", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "FILESPEC", strlen( arg1_str)) == 0)
 	{
 	  /* Show the command string in arg1 */
 	  /* Check that this is a command menu item */
@@ -4098,7 +4098,7 @@ static int	dtt_show_func(	menu_ctx	ctx,
 	  return RTT__NOPICTURE;	
 	}
 
-	else if ( strncmp( arg1_str, "NAME", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "NAME", strlen( arg1_str)) == 0)
 	{
 	  /* Show the command string in arg1 */
 	  /* Check that this is a command menu item */
@@ -4121,7 +4121,7 @@ static int	dtt_show_func(	menu_ctx	ctx,
 	  return RTT__NOPICTURE;	
 	}
 
-	else if ( strncmp( arg1_str, "FUNCTION", strlen( arg1_str)) == 0)
+	else if ( cdh_NoCaseStrncmp( arg1_str, "FUNCTION", strlen( arg1_str)) == 0)
 	{
 	  /* Show the command string in arg1 */
 	  /* Check that this is a function menu item */
@@ -4447,7 +4447,7 @@ static int	dtt_edit_draw_itemlist( edit_ctx	ctx)
 	        if ( item_ptr->text[0] != 0 &&
 		     strcmp( item_ptr->text, "%") != 0)
 	          r_print("%s", &(item_ptr->text));
-	        if ( strcmp( item_ptr->outflags, "NO") != 0 &&
+	        if ( cdh_NoCaseStrcmp( item_ptr->outflags, "NO") != 0 &&
 		     strcmp( item_ptr->text, "%") != 0)
 	          r_print(" ");
 		if ( strcmp( item_ptr->text, "%") == 0 &&
@@ -5298,33 +5298,33 @@ static int	dtt_edit_write( edit_ctx	ctx,
 	    /* text */
 	    fprintf( fout, "{\"%s\",\n", item_ptr->text);
 	    /* first and second function */
-	    if (strcmp( item_ptr->type, "UPDATE") == 0)
+	    if (cdh_NoCaseStrcmp( item_ptr->type, "UPDATE") == 0)
 	      fprintf( fout, "0,0,\n");
-	    else if (strcmp( item_ptr->type, "SET") == 0)
+	    else if (cdh_NoCaseStrcmp( item_ptr->type, "SET") == 0)
 	      fprintf( fout, "&rtt_menu_parameter_set,0,\n");
-	    else if (strcmp( item_ptr->type, "RESET") == 0)
+	    else if (cdh_NoCaseStrcmp( item_ptr->type, "RESET") == 0)
 	      fprintf( fout, "&rtt_menu_parameter_reset,0,\n");
-	    else if (strcmp( item_ptr->type, "SET_RESET") == 0)
+	    else if (cdh_NoCaseStrcmp( item_ptr->type, "SET_RESET") == 0)
 	      fprintf( fout,
 		"&rtt_menu_parameter_set,&rtt_menu_parameter_reset,\n"); 
-	    else if (strcmp( item_ptr->type, "TOGGLE") == 0)
+	    else if (cdh_NoCaseStrcmp( item_ptr->type, "TOGGLE") == 0)
 	      fprintf( fout, "&rtt_menu_parameter_toggle,0,\n");
-	    else if (strcmp( item_ptr->type, "DUAL_SET") == 0)
+	    else if (cdh_NoCaseStrcmp( item_ptr->type, "DUAL_SET") == 0)
 	      fprintf( fout, "&rtt_menu_parameter_dual_set,0,\n");
-	    else if (strcmp( item_ptr->type, "DUAL_RESET") == 0)
+	    else if (cdh_NoCaseStrcmp( item_ptr->type, "DUAL_RESET") == 0)
 	      fprintf( fout, "&rtt_menu_parameter_dual_reset,0,\n");
-	    else if (strcmp( item_ptr->type, "DUAL_SET_RESET") == 0)
+	    else if (cdh_NoCaseStrcmp( item_ptr->type, "DUAL_SET_RESET") == 0)
 	      fprintf( fout,
 		"&rtt_menu_parameter_dual_set,&rtt_menu_parameter_dual_reset,\n"); 
-	    else if (strcmp( item_ptr->type, "DUAL_TOGGLE") == 0)
+	    else if (cdh_NoCaseStrcmp( item_ptr->type, "DUAL_TOGGLE") == 0)
 	      fprintf( fout, "&rtt_menu_parameter_dual_toggle,0,\n");
-	    else if (strcmp( item_ptr->type, "SET_DUALSET") == 0)
+	    else if (cdh_NoCaseStrcmp( item_ptr->type, "SET_DUALSET") == 0)
 	      fprintf( fout,
 		"&rtt_menu_parameter_set,&rtt_menu_parameter_dual_set,\n"); 
-	    else if (strcmp( item_ptr->type, "TOGGLE_DUALTOGGLE") == 0)
+	    else if (cdh_NoCaseStrcmp( item_ptr->type, "TOGGLE_DUALTOGGLE") == 0)
 	      fprintf( fout,
 		"&rtt_menu_parameter_toggle,&rtt_menu_parameter_dual_toggle,\n"); 
-	    else if (strcmp( item_ptr->type, "COMMAND") == 0)
+	    else if (cdh_NoCaseStrcmp( item_ptr->type, "COMMAND") == 0)
 	    {
 	      fprintf( fout, "&rtt_menu_parameter_command,0,\n");
 	      /* Database has to be user and outflags no */
@@ -5344,7 +5344,7 @@ static int	dtt_edit_write( edit_ctx	ctx,
 	    if ( item_ptr->outflags[0] != 0)
 	      fprintf( fout, "| RTT_OUTPUT_%s", item_ptr->outflags);
 	    /* Print inputflags */
-	    if (strcmp( item_ptr->type, "UPDATE") != 0)
+	    if (cdh_NoCaseStrcmp( item_ptr->type, "UPDATE") != 0)
 	      fprintf( fout, "| RTT_MENU_NOINPUT");
 	    fprintf( fout, ",\n");
 	    /* Print koordinates f|r update */
@@ -5365,42 +5365,42 @@ static int	dtt_edit_write( edit_ctx	ctx,
 	    /* Print declaration */	
 	    fprintf( fout, "RTT_DECL_%s},\n", item_ptr->declaration);
 	    
-	    if (( strcmp( item_ptr->database, "RTT") == 0) ||
-	        ( strcmp( item_ptr->database, "RTTSYS") == 0))
+	    if (( cdh_NoCaseStrcmp( item_ptr->database, "RTT") == 0) ||
+	        ( cdh_NoCaseStrcmp( item_ptr->database, "RTTSYS") == 0))
 	    {
-	      if (!( ( strcmp( item_ptr->parameter, "RTT_TIME") == 0) ||
-	      	     ( strcmp( item_ptr->parameter, "RTT_TIME_FULL") == 0) ||
-	      	     ( strcmp( item_ptr->parameter, "RTT_ALARMTEXT1") == 0)||
-	      	     ( strcmp( item_ptr->parameter, "RTT_ALARMTEXT2") == 0)||
-	      	     ( strcmp( item_ptr->parameter, "RTT_ALARMTEXT3") == 0)
+	      if (!( ( cdh_NoCaseStrcmp( item_ptr->parameter, "RTT_TIME") == 0) ||
+	      	     ( cdh_NoCaseStrcmp( item_ptr->parameter, "RTT_TIME_FULL") == 0) ||
+	      	     ( cdh_NoCaseStrcmp( item_ptr->parameter, "RTT_ALARMTEXT1") == 0)||
+	      	     ( cdh_NoCaseStrcmp( item_ptr->parameter, "RTT_ALARMTEXT2") == 0)||
+	      	     ( cdh_NoCaseStrcmp( item_ptr->parameter, "RTT_ALARMTEXT3") == 0)
 			)) 
 	      {
 	        /* Print in rtt database */
-	        if ( strcmp( item_ptr->declaration, "INT") == 0)
+	        if ( cdh_NoCaseStrcmp( item_ptr->declaration, "INT") == 0)
 	          fprintf( fout_db1, "static int %s;\n", item_ptr->parameter);
-	        else if ( strcmp( item_ptr->declaration, "SHORT") == 0)
+	        else if ( cdh_NoCaseStrcmp( item_ptr->declaration, "SHORT") == 0)
 	          fprintf( fout_db1, "static short %s;\n", item_ptr->parameter);
-	        else if ( strcmp( item_ptr->declaration, "FLOAT") == 0)
+	        else if ( cdh_NoCaseStrcmp( item_ptr->declaration, "FLOAT") == 0)
 	          fprintf( fout_db1, "static float %s;\n", item_ptr->parameter);
-	        else if ( strcmp( item_ptr->declaration, "BOOLEAN") == 0)
+	        else if ( cdh_NoCaseStrcmp( item_ptr->declaration, "BOOLEAN") == 0)
 	          fprintf( fout_db1, "static unsigned int %s;\n", item_ptr->parameter);
-	        else if ( strcmp( item_ptr->declaration, "CHAR") == 0)
+	        else if ( cdh_NoCaseStrcmp( item_ptr->declaration, "CHAR") == 0)
 	          fprintf( fout_db1, "static char %s;\n", item_ptr->parameter);
-	        else if ( strcmp( item_ptr->declaration, "STRING") == 0)
+	        else if ( cdh_NoCaseStrcmp( item_ptr->declaration, "STRING") == 0)
 	          fprintf( fout_db1, "static char %s[80];\n", item_ptr->parameter);
-	        else if ( strcmp( item_ptr->declaration, "STRING4") == 0)
+	        else if ( cdh_NoCaseStrcmp( item_ptr->declaration, "STRING4") == 0)
 	          fprintf( fout_db1, "static char %s[4];\n", item_ptr->parameter);
-	        else if ( strcmp( item_ptr->declaration, "STRING10") == 0)
+	        else if ( cdh_NoCaseStrcmp( item_ptr->declaration, "STRING10") == 0)
 	          fprintf( fout_db1, "static char %s[10];\n", item_ptr->parameter);
-	        else if ( strcmp( item_ptr->declaration, "STRING20") == 0)
+	        else if ( cdh_NoCaseStrcmp( item_ptr->declaration, "STRING20") == 0)
 	          fprintf( fout_db1, "static char %s[20];\n", item_ptr->parameter);
-	        else if ( strcmp( item_ptr->declaration, "STRING40") == 0)
+	        else if ( cdh_NoCaseStrcmp( item_ptr->declaration, "STRING40") == 0)
 	          fprintf( fout_db1, "static char %s[40];\n", item_ptr->parameter);
-	        else if ( strcmp( item_ptr->declaration, "OBJID") == 0)
+	        else if ( cdh_NoCaseStrcmp( item_ptr->declaration, "OBJID") == 0)
 	          fprintf( fout_db1, "static pwr_tObjid %s;\n", item_ptr->parameter);
-	        else if ( strcmp( item_ptr->declaration, "ATTRREF") == 0)
+	        else if ( cdh_NoCaseStrcmp( item_ptr->declaration, "ATTRREF") == 0)
 	          fprintf( fout_db1, "static pwr_sAttrRef %s;\n", item_ptr->parameter);
-	        else if ( strcmp( item_ptr->declaration, "TIME") == 0)
+	        else if ( cdh_NoCaseStrcmp( item_ptr->declaration, "TIME") == 0)
 	          fprintf( fout_db1, "static pwr_tTime %s;\n", item_ptr->parameter);
 
 	        fprintf( fout_db2, "{\"%s\", (char *) &%s},\n", item_ptr->parameter, 
@@ -7665,7 +7665,7 @@ static int	dtt_edit_read_one_menu(	FILE		*fin,
 	  sts = dtt_read_line( text, sizeof(text), fin);
 	  if ( EVEN(sts))
 	     break;
-	  if ( strcmp( text, "down") == 0)
+	  if ( cdh_NoCaseStrcmp( text, "down") == 0)
 	  {
 	    /* Down to a submenu */
 	    sts = dtt_edit_read_one_menu( fin, ctx, i);
@@ -7674,11 +7674,11 @@ static int	dtt_edit_read_one_menu(	FILE		*fin,
 	    if ( EVEN(sts))
 	       break;
 	  }
-	  if ( strcmp( text, "up") == 0)
+	  if ( cdh_NoCaseStrcmp( text, "up") == 0)
 	  {
 	    break;
 	  }
-	  if ( strcmp( text, "next") == 0)
+	  if ( cdh_NoCaseStrcmp( text, "next") == 0)
 	  {
 	    sts = dtt_read_line( text, sizeof(text), fin);
 	    if ( EVEN(sts))
@@ -7741,8 +7741,7 @@ int	dtt_start( char		*programname)
 	char		*s;
 
 	strcpy( dtt_programname, programname);	
-	dtt_is_rttsys = (( strcmp( dtt_programname, "RTTSYS") == 0) ||
-	                 ( strcmp( dtt_programname, "rttsys") == 0));
+	dtt_is_rttsys = ( cdh_NoCaseStrcmp( dtt_programname, "RTTSYS") == 0);
 
 
 	/* Figure out the current opsys */
@@ -8389,7 +8388,7 @@ static int	dtt_edit_write_menu_gdhrefs( 	menu_ctx ctx,
 	    gdh_item_found = 0;
 	    while ( item_ptr->number != 0)
 	    {
-	      if ( !strcmp( item_ptr->database, "GDH"))
+	      if ( !cdh_NoCaseStrcmp( item_ptr->database, "GDH"))
 	      {
 	        if ( !gdh_item_found)
 	        {
@@ -8398,7 +8397,7 @@ static int	dtt_edit_write_menu_gdhrefs( 	menu_ctx ctx,
 		}
 	        fprintf( outfile, "%d	%s\n", item_ptr->number, 
 			item_ptr->parameter);
-	        if ( !strncmp( item_ptr->type, "DUAL", 4))
+	        if ( !cdh_NoCaseStrncmp( item_ptr->type, "DUAL", 4))
 	          fprintf( outfile, "%d	%s\n", item_ptr->number, item_ptr->dualparameter);
 	      }
 	      item_ptr++;
@@ -8506,7 +8505,7 @@ static int	dtt_edit_pwrplc_menu_gdhrefs( 	menu_ctx ctx,
 	    gdh_item_found = 0;
 	    while ( item_ptr->number != 0)
 	    {
-	      if ( !strcmp( item_ptr->database, "GDH"))
+	      if ( !cdh_NoCaseStrcmp( item_ptr->database, "GDH"))
 	      {
 	        if ( !gdh_item_found)
 	        {
@@ -8541,9 +8540,9 @@ static int	dtt_edit_pwrplc_menu_gdhrefs( 	menu_ctx ctx,
 		fprintf( outfile, 
 "set attr/noco/name=rttdum-rtt-%s-rttext%d/attr=Description/value=\"%s\"\n",
 		  	objname, *externref_index, description);
-		if ( !(	!strcmp( item_ptr->priv, "NO") ||
+		if ( !(	!cdh_NoCaseStrcmp( item_ptr->priv, "NO") ||
 			!strcmp( item_ptr->text, "%")) &&
-			 strncmp( item_ptr->type, "DUAL", 4))
+			 cdh_NoCaseStrncmp( item_ptr->type, "DUAL", 4))
 		{
 		  fprintf( outfile, 
 "set attr/noco/name=rttdum-rtt-%s-rttext%d/attr=Write/value=1\n",
@@ -8551,7 +8550,7 @@ static int	dtt_edit_pwrplc_menu_gdhrefs( 	menu_ctx ctx,
 		}
 	        (*externref_index)++;
 
-		if ( !strncmp( item_ptr->type, "DUAL", 4))
+		if ( !cdh_NoCaseStrncmp( item_ptr->type, "DUAL", 4))
 	 	{
 		  /* Create extref for dualparameter also */
 	  	  /* Remove attribute from dualparameter */
@@ -9700,7 +9699,7 @@ static int	dtt_edit_include_menue(	menu_ctx	ctx,
 	  sts = dtt_read_line( text, sizeof(text), fin);
 	  if ( EVEN(sts))
 	     break;
-	  if ( strcmp( text, "down") == 0)
+	  if ( cdh_NoCaseStrcmp( text, "down") == 0)
 	  {
 	    /* Down to a submenu */
 	    sts = dtt_edit_include_one_menu( fin, ctx, i);
@@ -9709,11 +9708,11 @@ static int	dtt_edit_include_menue(	menu_ctx	ctx,
 	    if ( EVEN(sts))
 	       break;
 	  }
-	  if ( strcmp( text, "up") == 0)
+	  if ( cdh_NoCaseStrcmp( text, "up") == 0)
 	  {
 	    break;
 	  }
-	  if ( strcmp( text, "next") == 0)
+	  if ( cdh_NoCaseStrcmp( text, "next") == 0)
 	  {
 	       sts = dtt_read_line( text, sizeof(text), fin);
 	    if ( EVEN(sts))
@@ -9931,7 +9930,7 @@ static int	dtt_edit_include_one_menu( 	FILE		*fin,
 	  sts = dtt_read_line( text, sizeof(text), fin);
 	  if ( EVEN(sts))
 	     break;
-	  if ( strcmp( text, "down") == 0)
+	  if ( cdh_NoCaseStrcmp( text, "down") == 0)
 	  {
 	    /* Down to a submenu */
 	    sts = dtt_edit_include_one_menu( fin, ctx, i);
@@ -9940,11 +9939,11 @@ static int	dtt_edit_include_one_menu( 	FILE		*fin,
 	    if ( EVEN(sts))
 	       break;
 	  }
-	  if ( strcmp( text, "up") == 0)
+	  if ( cdh_NoCaseStrcmp( text, "up") == 0)
 	  {
 	    break;
 	  }
-	  if ( strcmp( text, "next") == 0)
+	  if ( cdh_NoCaseStrcmp( text, "next") == 0)
 	  {
 	    sts = dtt_read_line( text, sizeof(text), fin);
 	    if ( EVEN(sts))
@@ -10054,7 +10053,7 @@ static int	dtt_show_menu( 	menu_ctx	ctx,
 	  while ( menu_ptr->text[0])
 	  {
 	    rtt_toupper( title, menu_ptr->text);
-	    if ( !strcmp( title, name_array[i]))
+	    if ( !cdh_NoCaseStrcmp( title, name_array[i]))
 	    {
 	      if ( i < nr -1)
 	      {
@@ -10144,41 +10143,41 @@ static int dtt_command_get_input(
 	  }
 
 	  *out_string = 0;
-	  if ( strcmp( command, "K_RETURN") == 0)
+	  if ( cdh_NoCaseStrcmp( command, "K_RETURN") == 0)
 	    *out_terminator = RTT_K_RETURN;
-	  else if ( strcmp( command, "K_PF1") == 0)
+	  else if ( cdh_NoCaseStrcmp( command, "K_PF1") == 0)
 	    *out_terminator = RTT_K_PF1;
-  	  else if ( strcmp( command, "K_PF2") == 0)
+  	  else if ( cdh_NoCaseStrcmp( command, "K_PF2") == 0)
 	    *out_terminator = RTT_K_PF2;
-	  else if ( strcmp( command, "K_PF3") == 0)
+	  else if ( cdh_NoCaseStrcmp( command, "K_PF3") == 0)
 	    *out_terminator = RTT_K_PF3;
-	  else if ( strcmp( command, "K_PF4") == 0)
+	  else if ( cdh_NoCaseStrcmp( command, "K_PF4") == 0)
 	    *out_terminator = RTT_K_PF4;
-	  else if ( strcmp( command, "K_ARROW_UP") == 0)
+	  else if ( cdh_NoCaseStrcmp( command, "K_ARROW_UP") == 0)
 	    *out_terminator = RTT_K_ARROW_UP;
-	  else if ( strcmp( command, "K_ARROW_DOWN") == 0)
+	  else if ( cdh_NoCaseStrcmp( command, "K_ARROW_DOWN") == 0)
 	    *out_terminator = RTT_K_ARROW_DOWN;
-	  else if ( strcmp( command, "K_ARROW_RIGHT") == 0)
+	  else if ( cdh_NoCaseStrcmp( command, "K_ARROW_RIGHT") == 0)
 	    *out_terminator = RTT_K_ARROW_RIGHT;
-	  else if ( strcmp( command, "K_ARROW_LEFT") == 0)
+	  else if ( cdh_NoCaseStrcmp( command, "K_ARROW_LEFT") == 0)
 	    *out_terminator = RTT_K_ARROW_LEFT;
-	  else if ( strcmp( command, "K_PREVIOUS_PAGE") == 0)
+	  else if ( cdh_NoCaseStrcmp( command, "K_PREVIOUS_PAGE") == 0)
 	    *out_terminator = RTT_K_PREVPAGE;
-	  else if ( strcmp( command, "K_NEXT_PAGE") == 0)
+	  else if ( cdh_NoCaseStrcmp( command, "K_NEXT_PAGE") == 0)
 	    *out_terminator = RTT_K_NEXTPAGE;
-	  else if ( strcmp( command, "K_CTRLV") == 0)
+	  else if ( cdh_NoCaseStrcmp( command, "K_CTRLV") == 0)
 	    *out_terminator = RTT_K_CTRLV;
-	  else if ( strcmp( command, "K_DELETE") == 0)
+	  else if ( cdh_NoCaseStrcmp( command, "K_DELETE") == 0)
 	    *out_terminator = RTT_K_DELETE;
-	  else if ( strcmp( command, "K_CTRLN") == 0)
+	  else if ( cdh_NoCaseStrcmp( command, "K_CTRLN") == 0)
 	    *out_terminator = RTT_K_CTRLN;
-	  else if ( strcmp( command, "K_CTRLZ") == 0)
+	  else if ( cdh_NoCaseStrcmp( command, "K_CTRLZ") == 0)
 	    *out_terminator = RTT_K_CTRLZ;
-	  else if ( strcmp( command, "K_CTRLW") == 0)
+	  else if ( cdh_NoCaseStrcmp( command, "K_CTRLW") == 0)
 	    *out_terminator = RTT_K_CTRLW;
-	  else if ( strcmp( command, "K_HELP") == 0)
+	  else if ( cdh_NoCaseStrcmp( command, "K_HELP") == 0)
 	    *out_terminator = RTT_K_HELP;
-	  else if ( strncmp( command, "K_CHAR ", 7) == 0)
+	  else if ( cdh_NoCaseStrncmp( command, "K_CHAR ", 7) == 0)
 	  {
 	    *out_terminator = RTT_K_MAXLEN;
 	    sscanf( &command[8], "%c", out_string);
@@ -10305,15 +10304,15 @@ static int	dtt_edit_check_items_syntax( 	edit_ctx	picture_ctx,
 
 	    /* Check Parameter */
 	    if ( strcmp( item_ptr->parameter, "") == 0 &&
-		 strcmp( item_ptr->type, "COMMAND") != 0)
+		 cdh_NoCaseStrcmp( item_ptr->type, "COMMAND") != 0)
 	      dtt_edit_print_syntaxerror( item_ptr, "Parameter i missing", 1, &errors, 
 			&warnings);
 
-	    if ( strcmp (item_ptr->parameter, "RTT_ALARMTEXT1") == 0 ||
-	         strcmp (item_ptr->parameter, "RTT_ALARMTEXT2") == 0 ||
-	         strcmp (item_ptr->parameter, "RTT_ALARMTEXT3") == 0 ||
-	         strcmp (item_ptr->parameter, "RTT_ALARMTEXT4") == 0 ||
-	         strcmp (item_ptr->parameter, "RTT_ALARMTEXT5") == 0)
+	    if ( cdh_NoCaseStrcmp (item_ptr->parameter, "RTT_ALARMTEXT1") == 0 ||
+	         cdh_NoCaseStrcmp (item_ptr->parameter, "RTT_ALARMTEXT2") == 0 ||
+	         cdh_NoCaseStrcmp (item_ptr->parameter, "RTT_ALARMTEXT3") == 0 ||
+	         cdh_NoCaseStrcmp (item_ptr->parameter, "RTT_ALARMTEXT4") == 0 ||
+	         cdh_NoCaseStrcmp (item_ptr->parameter, "RTT_ALARMTEXT5") == 0)
 	    {
 	      if ( strcmp (item_ptr->text, "%") != 0)
 	        dtt_edit_print_syntaxerror( item_ptr, "Text should be % in alarmtext entry", 1,
@@ -10324,7 +10323,7 @@ static int	dtt_edit_check_items_syntax( 	edit_ctx	picture_ctx,
 	      strcpy( item_ptr->database, "RTT");
 	      strcpy( item_ptr->declaration, "STRING");
 	    }
-	    if ( strcmp (item_ptr->parameter, "RTT_TIME") == 0)
+	    if ( cdh_NoCaseStrcmp (item_ptr->parameter, "RTT_TIME") == 0)
 	    {
 	      if ( strcmp (item_ptr->text, "%") != 0)
 	        dtt_edit_print_syntaxerror( item_ptr, "Text should be % in time entry", 1, 
@@ -10336,7 +10335,7 @@ static int	dtt_edit_check_items_syntax( 	edit_ctx	picture_ctx,
 	      strcpy( item_ptr->type, "UPDATE");
 	      strcpy( item_ptr->outflags, "");
 	    }
-	    if ( strcmp (item_ptr->parameter, "RTT_TIME_FULL") == 0)
+	    if ( cdh_NoCaseStrcmp (item_ptr->parameter, "RTT_TIME_FULL") == 0)
 	    {
 	      if ( strcmp (item_ptr->text, "%") != 0)
 	        dtt_edit_print_syntaxerror( item_ptr, "Text should be % in time entry", 1, 
@@ -10351,12 +10350,12 @@ static int	dtt_edit_check_items_syntax( 	edit_ctx	picture_ctx,
 	
 
 	    /* Check Parameter */
-	    if ( strcmp( item_ptr->outflags, "TEXT") == 0 &&
+	    if ( cdh_NoCaseStrcmp( item_ptr->outflags, "TEXT") == 0 &&
 		 strcmp( item_ptr->dualparameter, "") == 0)
 	      dtt_edit_print_syntaxerror( item_ptr, "Dualparameter i missing", 1, &errors, 
 			&warnings);
 
-	    if ( strcmp( item_ptr->outflags, "FLASHTEXT") == 0 &&
+	    if ( cdh_NoCaseStrcmp( item_ptr->outflags, "FLASHTEXT") == 0 &&
 		 strcmp( item_ptr->dualparameter, "") == 0)
 	      dtt_edit_print_syntaxerror( item_ptr, "Dualparameter i missing", 1, &errors, 
 			&warnings);
@@ -10370,7 +10369,7 @@ static int	dtt_edit_check_items_syntax( 	edit_ctx	picture_ctx,
 	        item_p++;
 	        continue;
 	      }
-	      if ( strcmp( item_ptr->outflags, "NO") == 0)
+	      if ( cdh_NoCaseStrcmp( item_ptr->outflags, "NO") == 0)
 	        size = strlen( item_ptr->text);
 	      else if ( strcmp( item_ptr->text, "%") == 0)
 	        size = item_ptr->characters;
