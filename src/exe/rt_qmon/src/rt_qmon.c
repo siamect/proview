@@ -443,13 +443,13 @@ main (int argc, char *argv[])
 //  sts = thread_Wait(NULL);	/* Wait forever */
 
   set_status( PWR__SRVTERM);
-  errh_Info("pwr_qmon says: I will soon die, %m", sts);
+  errh_Info("Closing down, %m", sts);
   cancel_links();
   thread_Cancel(&l.import.thread);
   thread_Cancel(&l.export.thread);
 
   qcom_Exit(&sts);
-  errh_Info("pwr_qmon says: I will now die! Goodbye cruel world!");
+  errh_Info("Exiting");
   exit(QCOM__SUCCESS);
 }
 
