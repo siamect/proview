@@ -72,7 +72,7 @@ const char NodelistNav::config_file[40] = "$HOME/rt_statusmon.dat";
 //
 void NodelistNavBrow::free_pixmaps()
 {
-  brow_FreeAnnotPixmap( ctx, pixmap_leaf);
+  // brow_FreeAnnotPixmap( ctx, pixmap_leaf);
   brow_FreeAnnotPixmap( ctx, pixmap_map);
   brow_FreeAnnotPixmap( ctx, pixmap_openmap);
   brow_FreeAnnotPixmap( ctx, pixmap_attr);
