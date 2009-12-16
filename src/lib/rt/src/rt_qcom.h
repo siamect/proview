@@ -98,7 +98,7 @@ typedef enum {
   qcom_eBtype_system,
   qcom_eBtype_qcom,
   qcom_eBtype_event,
-  qcom_eBtype_
+  qcom_eBtype_ = 200
 } qcom_eBtype;
 
 typedef enum {
@@ -109,7 +109,7 @@ typedef enum {
   qcom_eStype_linkStalled,
   qcom_eStype_applConnect,
   qcom_eStype_applDisconnect,
-  qcom_eStype_
+  qcom_eStype_ = 32
 } qcom_eStype;
 
 typedef enum {

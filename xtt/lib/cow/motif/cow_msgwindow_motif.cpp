@@ -94,7 +94,7 @@ MsgWindowMotif::MsgWindowMotif(
 
   // Save the context structure in the widget
   i = 0;
-  XtSetArg(args[i], XmNuserData, (unsigned int) this);i++;
+  XtSetArg(args[i], XmNuserData, (XtPointer) this);i++;
   XtSetArg(args[i], XmNdeleteResponse, XmDO_NOTHING);i++;
 
   dcli_translate_filename( uid_filename, uid_filename);

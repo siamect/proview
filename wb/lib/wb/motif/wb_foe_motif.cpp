@@ -1165,7 +1165,7 @@ pwr_tStatus WFoeMotif::create_window( int x_top,
    */
 
   /* Save the context structure in the widget */
-  XtSetArg (args[0], XmNuserData, (unsigned int) this);
+  XtSetArg (args[0], XmNuserData, (XtPointer) this);
 
   /*
    * Create a new main widget
@@ -1222,7 +1222,7 @@ pwr_tStatus WFoeMotif::create_window( int x_top,
 
   XtSetValues( parent_wid, args, i);
 
-  XtSetArg (args[0], XmNuserData, (unsigned int) this);
+  XtSetArg (args[0], XmNuserData, (XtPointer) this);
 
   /* now that we have a top level we can get the main window */
   sts = MrmFetchWidgetOverride(s_MrmH, (char*) "foe_window", parent_wid ,

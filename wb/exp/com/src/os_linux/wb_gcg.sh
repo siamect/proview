@@ -269,8 +269,6 @@ vFileType="Process,Program,Window,RtNode,Library"
 
 local_setup="pwr_gcg_setup.sh"
 
-echo "OpSys $OsMask" 
-
 if [ -e ${local_setup} ]; then
 #  echo "-- Local setup file used"
   source ${local_setup} ${ProjectRoot} ${SystemName}

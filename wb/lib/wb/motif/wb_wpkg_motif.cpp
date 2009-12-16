@@ -245,7 +245,7 @@ WPkgMotif::WPkgMotif(
 
   // Save the context structure in the widget
   i = 0;
-  XtSetArg (args[i], XmNuserData, (unsigned int) this);i++;
+  XtSetArg (args[i], XmNuserData, (XtPointer) this);i++;
   XtSetArg( args[i], XmNdeleteResponse, XmDO_NOTHING);i++;
 
   sts = MrmOpenHierarchy( 1, &uid_filename_p, NULL, &s_DRMh);

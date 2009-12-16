@@ -221,8 +221,8 @@ int dcli_search_file( 		const char *name ,
 	    wildcard = 1;
 	  else
 	    wildcard = 0;
-          if ( wildcard)
-	    dcli_toupper( pattern, pattern);
+          // if ( wildcard)
+	  //   dcli_toupper( pattern, pattern);
 	}
 
 	if ( new == DCLI_DIR_SEARCH_INIT || new == DCLI_DIR_SEARCH_NEXT)

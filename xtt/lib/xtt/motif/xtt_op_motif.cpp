@@ -121,7 +121,7 @@ OpMotif::OpMotif( void *op_parent_ctx,
   func =  MWM_FUNC_ALL | MWM_FUNC_MINIMIZE | MWM_FUNC_MAXIMIZE;
 
   i = 0;
-  XtSetArg(args[i], XmNuserData, (unsigned int) this);i++;
+  XtSetArg(args[i], XmNuserData, (XtPointer) this);i++;
   XtSetArg(args[i], XmNdeleteResponse, XmDO_NOTHING);i++;
   XtSetArg(args[i],XmNmwmDecorations, decor);i++;
   XtSetArg(args[i],XmNmwmFunctions, func);i++;
@@ -143,7 +143,7 @@ OpMotif::OpMotif( void *op_parent_ctx,
 		topLevelShellWidgetClass, parent_wid, args, i);
 
   i = 0;
-  XtSetArg(args[i], XmNuserData, (unsigned int) this);i++;
+  XtSetArg(args[i], XmNuserData, (XtPointer) this);i++;
 
   sts = MrmFetchWidgetOverride( s_DRMh, (char*) "op_window", parent_wid_op,
 			name, args, i, &toplevel, &dclass);
