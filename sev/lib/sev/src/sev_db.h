@@ -38,9 +38,9 @@ class sev_attr {
 
 class sev_item {
  public:
-  sev_item() : deadband_active(0), last_id(0), first_storage(1), status(0), logged_status(0), 
-    deleted(0) 
-    { memset( old_value, 0, sizeof(old_value));}
+  sev_item() : deadband_active(0), last_id(0), value_size(0), old_value(0), first_storage(1), status(0), logged_status(0), 
+    deleted(0)
+    { /*memset( old_value, 0, sizeof(old_value));*/}
   unsigned int 	id;
   char		tablename[256];
   pwr_tOid	oid;
@@ -55,10 +55,12 @@ class sev_item {
   pwr_tMask	options;
   int		deadband_active;
   unsigned int	last_id;
-  char		old_value[8];
+  //char		old_value[8];
+  unsigned int value_size;
+  void *old_value;
   int 		first_storage;
   unsigned int  attrnum;
-  sev_attr	attr[1];
+  vector<sev_attr>	attr;
   pwr_tStatus	status;
   pwr_tStatus   logged_status;
   int deleted;
@@ -92,5 +94,31 @@ class sev_db {
   virtual int get_items( pwr_tStatus *sts) { return 0;}
   virtual int delete_old_data( pwr_tStatus *sts, pwr_tOid oid, char *aname, 
 			       pwr_tMask options, pwr_tTime limit) { return 0;}
+
+  virtual char *oid_to_table( pwr_tOid oid, char *aname) { return 0;}
+  virtual int check_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
+                         pwr_tDeltaTime storagetime, 
+                         char *description, pwr_tFloat32 scantime, 
+                         pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx) { return 0;}
+  virtual int add_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
+                       pwr_tDeltaTime storagetime,
+                       char *description, pwr_tFloat32 scantime, 
+                       pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx) { return 0;} 
+  virtual int store_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
+                                pwr_tDeltaTime storagetime, char *description, pwr_tFloat32 scantime, pwr_tFloat32 deadband, pwr_tMask options) { return 0;}
+  virtual int add_objectitemattr( pwr_tStatus *sts, char *tablename,  pwr_tOid oid, char *aname, char *oname,
+                                  pwr_eType type, unsigned int size, unsigned int *idx) { return 0;}
+  virtual int get_item( pwr_tStatus *sts, sev_item *item, char *tablename) { return 0;}
+  virtual int get_objectitem( pwr_tStatus *sts, sev_item *item, char *tablename) { return 0;}
+  virtual int get_objectitems( pwr_tStatus *sts) { return 0;}
+  virtual int check_objectitemattr( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *aname, char *oname, 
+																	  pwr_eType type, unsigned int size, unsigned int *idx) { return 0;}
+  virtual int delete_old_objectdata( pwr_tStatus *sts, char *tablename, 
+                                     pwr_tMask options, pwr_tTime limit) { return 0;}
+  virtual int get_objectvalues( pwr_tStatus *sts, sev_item *item,
+                                unsigned int size, pwr_tTime *starttime, pwr_tTime *endtime, 
+                                int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize) { return 0;}
+
+
 };
 #endif

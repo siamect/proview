@@ -42,6 +42,32 @@ class sev_sevhist {
   pwr_tFloat32  scantime;
 };
 
+class sev_sevhistobjectattr {
+ public:
+  pwr_tAttrRef 	aref;
+  pwr_tString80 description;
+  pwr_tString16 unit;
+  pwr_tAName	  aname;
+  pwr_tRefId	  refid;
+  void 		      *datap;
+  pwr_eType	    type;
+  unsigned int	size;
+};
+
+class sev_sevhistobject {
+ public:
+  pwr_tAttrRef 	aref;
+  pwr_tAName	aname;
+  pwr_tDeltaTime storagetime;
+  pwr_tFloat32  deadband;
+  pwr_tMask  	options;
+  pwr_tRefId	  sevid;
+  pwr_tString80 description;
+  pwr_tFloat32  scantime;
+  unsigned int  datasize;
+  vector<sev_sevhistobjectattr> sevhistobjectattrlist;  
+};
+
 class sev_sevhistthread {
  public:
   sev_sevhistthread() : configerror(0) {}
@@ -54,6 +80,7 @@ class sev_sevhistthread {
   pwr_tRefId 	refid;
   int 		configerror;
   vector<sev_sevhist> sevhistlist;  
+  vector<sev_sevhistobject> sevhistobjectlist;  
 };
 
 class sev_node {
@@ -88,6 +115,16 @@ class rt_sevhistmon {
 
   int init();
   int init_objects();
+  int init_sevhistobjects();
+  void insert_sevhistobjectattr(pwr_sAttrRef    *aref,
+                                pwr_tAName      objectname,
+                                int hs_idx,
+                                vector<sev_sevhistobjectattr>    *listP);
+  int get_sevhistobjectattributes (pwr_tAName      objectname,
+                                   vector<sev_sevhistobjectattr> *listP,
+                                   int hs_idx,
+                                   pwr_tBoolean    first);
+  bool correct_histtype(const pwr_eType type);
   int close();
   int close_objects();
   int mainloop();

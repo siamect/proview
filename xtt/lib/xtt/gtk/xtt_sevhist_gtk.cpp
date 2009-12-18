@@ -51,11 +51,12 @@ XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
 			    pwr_tOid *xn_oid,
 			    pwr_tOName *xn_aname,
 			    sevcli_tCtx xn_scctx,
-			    int *sts) :
-  XttSevHist( parent_ctx, name, xn_oid, xn_aname, xn_scctx, sts), parent_widget(parent_wid)
+			    int *sts, bool sevhistobject) :
+  XttSevHist( parent_ctx, name, xn_oid, xn_aname, xn_scctx, sts, sevhistobject), parent_widget(parent_wid)
 {
   char title[250];
-    
+  strncpy(title, name, sizeof(title));
+      
   if ( EVEN(*sts))
     // Error from XttSevHist
     return;

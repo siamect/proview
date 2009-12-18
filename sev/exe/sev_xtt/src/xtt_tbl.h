@@ -55,7 +55,7 @@ class XttTbl {
   int		quiet;
 
   virtual void message( char severity, const char *message) {}
-  virtual XttSevHist *sevhist_new( pwr_tOid oid, char *aname) { return 0;}
+  virtual XttSevHist *sevhist_new( pwr_tOid oid, char *aname, bool sevhistobject) { return 0;}
   virtual CoLogin *login_new( const char       	*wl_name,
 			      const char       	*wl_groupname,
 			      void		(* wl_bc_success)( void *),

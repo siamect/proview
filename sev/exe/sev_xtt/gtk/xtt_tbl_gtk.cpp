@@ -202,7 +202,7 @@ void XttTblGtk::activate_list_layout( GtkWidget *w, gpointer data)
   xtt->tblnav->show_list();
 }
 
-XttSevHist *XttTblGtk::sevhist_new( pwr_tOid oid, char *aname)
+XttSevHist *XttTblGtk::sevhist_new( pwr_tOid oid, char *aname, bool sevhistobject)
 {
   GtkWidget *w;
   pwr_tStatus sts;
@@ -214,7 +214,7 @@ XttSevHist *XttTblGtk::sevhist_new( pwr_tOid oid, char *aname)
   strncpy( anamev[0], aname, sizeof(anamev[0]));
 
   return new XttSevHistGtk( (void *)this, toplevel, "SevHist", &w, oidv, anamev, 
-			   sevcli, &sts);
+			   sevcli, &sts, sevhistobject);
 }
 
 CoLogin *XttTblGtk::login_new( const char      	*name,

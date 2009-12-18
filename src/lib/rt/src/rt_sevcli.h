@@ -76,7 +76,10 @@ int sevcli_get_itemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid,
 			 pwr_tTime **tbuf, void **vbuf, int *rows, 
 			 pwr_eType *vtype, unsigned int *vsize);
 int sevcli_delete_item( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid, char *aname);
-
+int sevcli_get_objectitemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid, char *aname, 
+			 pwr_tTime starttime, pwr_tTime endtime, int numpoints,
+			 pwr_tTime **tbuf, void **vbuf, int *rows,
+			 sevcli_sHistAttr **histattr, int *numattributes);
 
 #ifdef __cplusplus
 }
