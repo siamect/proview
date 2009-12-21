@@ -83,6 +83,10 @@ int XttSevHist::get_data( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to)
   if ( EVEN(*sts))
     return 0;
 
+  if( rows == 0 ) {
+    return 0;
+  }
+
   // Create data for time axis
   gcd = new GeCurveData( curve_eDataType_DsTrend);
 
@@ -184,6 +188,10 @@ int XttSevHist::get_objectdata( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to)
   		       &rows, &histattrbuf, &numAttributes);
   if ( EVEN(*sts))
     return 0;
+
+  if( rows == 0 ) {
+    return 0;
+  }
 
   // Create data for time axis
   gcd = new GeCurveData( curve_eDataType_DsTrend);

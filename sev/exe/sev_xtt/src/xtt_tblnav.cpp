@@ -634,7 +634,6 @@ ItemLocal::ItemLocal( TblNav *tblnav, TblNav_sevhistobject *xitem,
     strcat( aname, ".");
     strcat( aname, item.objectattrlist[0].aname);
   }
-  printf("aname %s\n", aname);
   brow_SetAnnotation( node, 0, aname, strlen(aname));
   brow_SetAnnotation( node, 1, item.description, strlen(item.description));
 }

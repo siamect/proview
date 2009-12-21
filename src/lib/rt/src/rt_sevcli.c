@@ -157,13 +157,11 @@ int sevcli_get_itemlist( pwr_tStatus *sts, sevcli_tCtx ctx, sevcli_sHistItem **l
   int attr_cnt = rmsg->NumAttributes;
   
   unsigned int data_size = (item_cnt * sizeof(sevcli_sHistItem)) + ((attr_cnt - item_cnt) * sizeof(sevcli_sHistAttr));
-  printf("Get size: %d, data size: %d\n", get.size, data_size);
   lp = (sevcli_sHistItem *) malloc( data_size );
   sevcli_sHistItem *lp2 = lp;
 
   sev_sHistItem *itemPtr = ((sev_sMsgHistItems *)rmsg)->Items;
   for ( i = 0; i < item_cnt; i++) {
-    printf("i : %d\n", i);
     lp->oid = itemPtr->oid;
     strncpy( lp->oname, itemPtr->oname, sizeof(lp->oname));
     lp->storagetime = net_NetTimeToDeltaTime( &itemPtr->storagetime);
@@ -348,8 +346,10 @@ int sevcli_get_itemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid,
   }
   
   *sts = rmsg->Status;
-  if ( EVEN(*sts))
+  if ( EVEN(*sts)) {
+    qcom_Free( sts, rmsg);
     return 0;
+  }
 
   int item_cnt = rmsg->NumPoints;
 
@@ -441,9 +441,12 @@ int sevcli_get_objectitemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid, 
   }
   
   *sts = rmsg->Status;
-  if ( EVEN(*sts))
+  if ( EVEN(*sts)) {
+    qcom_Free( sts, rmsg);
     return 0;
+  }
   if( rmsg->NumPoints == 0 ) {
+    qcom_Free( sts, rmsg);
     *sts = 0;
     return 0;
   }

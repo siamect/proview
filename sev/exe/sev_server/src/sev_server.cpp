@@ -711,7 +711,7 @@ int sev_server::send_histdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *rmsg, 
 {
   pwr_tTime *tbuf;
   void *vbuf;
-  unsigned int rows;
+  unsigned int rows = 0;
   sev_sMsgHistDataGet 	*msg;
   int msize;
   qcom_sPut	put;
@@ -731,7 +731,7 @@ int sev_server::send_histdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *rmsg, 
             item.scantime, &item.creatime,
             &starttime, &endtime, rmsg->NumPoints, &tbuf,  &vbuf, &rows);
   }
-  if ( ODD(m_sts))
+  if ( ODD(m_sts) && rows != 0)
     msize = rows * ( sizeof(pwr_tTime) + item.attr[0].size) + sizeof(*msg) - sizeof(msg->Data);
   else
     msize = sizeof(*msg);
@@ -771,7 +771,7 @@ int sev_server::send_objecthistdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *
 {
   pwr_tTime *tbuf;
   void *vbuf;
-  unsigned int rows;
+  unsigned int rows = 0;
   sev_sMsgHistObjectDataGet *msg;
   int msize;
   qcom_sPut	put;
@@ -788,7 +788,7 @@ int sev_server::send_objecthistdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *
   if(ODD(m_sts)) {
     m_db->get_objectvalues(&m_sts, &item, item.value_size, &starttime, &endtime, rmsg->NumPoints, &tbuf,  &vbuf, &rows);
   }
-  if ( ODD(m_sts)) {
+  if ( ODD(m_sts) && rows != 0 ) {
     msize = rows * ( sizeof(pwr_tTime) + item.value_size);
     msize += item.attr.size() * sizeof(msg->Attr);
     msize += sizeof(*msg) - sizeof(msg->Data) - sizeof(msg->Attr);
@@ -812,7 +812,7 @@ int sev_server::send_objecthistdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *
   msg->Status = m_sts;
   msg->NumPoints = 0;
   msg->NumAttributes = 0;
-  if ( ODD(m_sts)) {
+  if ( ODD(m_sts) && rows != 0 ) {
     msg->NumPoints = rows;
     msg->NumAttributes = item.attr.size();
     msg->TotalDataSize = rows * ( sizeof(pwr_tTime) + item.value_size);
