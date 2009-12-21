@@ -34,7 +34,8 @@ class sev_node {
   char 		name[80];
 };
 
-class sev_refid {
+typedef struct {
+#if 0
  public:
   sev_refid( pwr_tRefId rid) : id(rid) {}
   bool operator<(const sev_refid& x) const {
@@ -44,8 +45,11 @@ class sev_refid {
       return true;
     return false;
   }
+#endif
+  tree_sNode  node;
   pwr_tRefId id;
-};
+  int idx;
+} sev_sRefid;
 
 // Struct for binary tree item
 typedef struct {
@@ -62,14 +66,12 @@ typedef struct {
 class sev_server {
  public:
 
-  sev_server() : m_server_status(0), m_item_key(0), m_msg_id(0) {}
-
-  typedef map<sev_refid, unsigned int>::iterator iterator_refid;
+  sev_server() : m_server_status(0), m_refid(0), m_item_key(0), m_msg_id(0) {}
 
   pwr_tStatus m_sts;
   pwr_tStatus m_server_status;
   vector<sev_node> m_nodes;
-  map<sev_refid, unsigned int> m_refid;
+  tree_sTable *m_refid;
   tree_sTable *m_item_key;
   unsigned int m_msg_id;
   sev_db *m_db;
@@ -86,5 +88,6 @@ class sev_server {
   int send_server_status( qcom_sQid tgt);
   int delete_item( qcom_sQid tgt, sev_sMsgHistItemDelete *rmsg);
   void garbage_collector();
+  void garbage_item( int idx);
 };
 #endif

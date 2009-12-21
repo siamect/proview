@@ -40,6 +40,7 @@
 #include "pwr_baseclasses.h"
 
 #define sev_cGarbageInterval 120
+#define sev_cGarbageCycle 86400
 
 
 static int sev_comp_item(tree_sTable *tp, tree_sNode *x, tree_sNode *y)
@@ -63,6 +64,26 @@ static int sev_comp_item(tree_sTable *tp, tree_sNode *x, tree_sNode *y)
     return 1;
 
   if ( strcmp( xp->key.aname, yp->key.aname) < 0)
+    return -1;
+
+  return 0;
+}
+
+static int sev_comp_refid(tree_sTable *tp, tree_sNode *x, tree_sNode *y)
+{
+  sev_sRefid *xp = (sev_sRefid *) x; 
+  sev_sRefid *yp = (sev_sRefid *) y;
+  
+  if (xp->id.nid > yp->id.nid)
+    return 1;
+
+  if (xp->id.nid < yp->id.nid)
+    return -1;
+
+  if (xp->id.rix > yp->id.rix)
+    return 1;
+
+  if (xp->id.rix < yp->id.rix)
     return -1;
 
   return 0;
@@ -131,6 +152,7 @@ int sev_server::init( int noneth)
 
   m_db->get_items( &m_sts);
 
+  m_refid = tree_CreateTable(&sts, sizeof(pwr_tRefId), offsetof(sev_sRefid, id), sizeof(sev_sRefid), 100, sev_comp_refid);
   m_item_key = tree_CreateTable(&sts, sizeof(sev_sItemKey), offsetof(sev_sItem, key), sizeof(sev_sItem), 100, sev_comp_item);
 
   for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
@@ -474,11 +496,17 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
   // Remove all refid's for this node
   pwr_tNid nid = msg->Items[0].sevid.nid;
 
-  for ( iterator_refid it = m_refid.begin(); it != m_refid.end(); it++) {
-    if ( it->first.id.nid == nid)
-      m_refid.erase( it);
+  sev_sRefid *rp = (sev_sRefid *)tree_Minimum(&sts, m_refid);
+  sev_sRefid *succ_rp;
+  while ( rp) {
+    succ_rp = (sev_sRefid *)tree_Successor(&sts, m_refid, rp);
+
+    if ( rp->id.nid == nid) 
+      tree_Remove( &sts, m_refid, &rp->id);
+
+    rp = succ_rp;
   }
-  
+
   for ( int i = 0; i < item_cnt; i++) {
 
     // Deadband requires id variable
@@ -507,8 +535,15 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
     }
 
     m_db->m_items[idx].sevid = msg->Items[i].sevid;
-    sev_refid sevid(msg->Items[i].sevid);
-    m_refid[sevid] = idx;
+
+
+    pwr_tRefId rk;
+    sev_sRefid *rp;
+                  
+    rk = msg->Items[i].sevid;
+    rp = (sev_sRefid *) tree_Insert(&sts, m_refid, &rk);
+    rp->idx = idx;
+
   }
 
 #if 0
@@ -528,17 +563,20 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
 
 int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size)
 {
+  pwr_tStatus sts;
   sev_sHistData *dp = (sev_sHistData *)&msg->Data;
   pwr_tTime time;
 
   while ( (char *)dp - (char *)msg < (int)size) {
-    sev_refid sevid(dp->sevid);
-    iterator_refid it = m_refid.find( sevid);
-    if ( it == m_refid.end()) {
+    sev_sRefid *rp;
+    pwr_tRefId rk = dp->sevid;
+
+    rp = (sev_sRefid *) tree_Find(&sts, m_refid, &rk);
+    if ( !rp) {
       dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
       continue;
     }
-    unsigned int idx = it->second;
+    unsigned int idx = rp->idx;
 
     time = net_NetTimeToTime( &msg->Time);
     m_db->store_value( &m_sts, idx, 0, time, &dp->data, dp->size);
@@ -621,21 +659,56 @@ int sev_server::send_histdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *rmsg, 
 
 void sev_server::garbage_collector()
 {
+  int item_size = m_db->m_items.size();
+  static int current = 0;
+  float items_per_scan;
+  int scan_per_items;
+  static int scan_cnt = 0;
+  int i;
+
+  if ( m_db->m_items.size() == 0)
+    return;
+
+  items_per_scan = ((float)sev_cGarbageInterval) * item_size / sev_cGarbageCycle;
+
+  if ( items_per_scan >= 1) {
+    for ( i = 0; i < (int)items_per_scan; i++) {
+      garbage_item( current);
+      current++;
+      if ( current >= item_size)
+	current = 0;
+    }    
+  }
+  else {
+    scan_per_items = (int)( 1.0 / items_per_scan);
+    scan_cnt++;
+    if ( scan_cnt >= scan_per_items) {
+      scan_cnt = 0;
+
+      garbage_item( current);
+
+      current++;
+      if ( current >= item_size)
+	current = 0;
+    }
+  }
+}
+
+void sev_server::garbage_item( int idx)
+{
   pwr_tTime currenttime, limit;
 
   time_GetTime( &currenttime);
   
-  for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
-    if ( m_db->m_items[i].deleted)
-      continue;
-    if ( m_db->m_items[i].storagetime.tv_sec == 0)
-      continue;
+  if ( m_db->m_items[idx].deleted)
+    return;
+  if ( m_db->m_items[idx].storagetime.tv_sec == 0)
+    return;
 
-    time_Asub( &limit, &currenttime, &m_db->m_items[i].storagetime);
+  time_Asub( &limit, &currenttime, &m_db->m_items[idx].storagetime);
 
-    m_db->delete_old_data( &m_sts, m_db->m_items[i].oid, m_db->m_items[i].attr[0].aname, 
-			   m_db->m_items[i].options, limit);
-  }
+  m_db->delete_old_data( &m_sts, m_db->m_items[idx].oid, m_db->m_items[idx].attr[0].aname, 
+			 m_db->m_items[idx].options, limit);
 }
 
 int main (int argc, char *argv[])
