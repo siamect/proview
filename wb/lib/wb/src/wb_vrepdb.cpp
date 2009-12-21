@@ -357,7 +357,10 @@ wb_orep *wb_vrepdb::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destina
       pwr_tOid woid;
       woid.oix = oix;
       woid.vid = m_vid;
-      oid = m_db->new_oid(txn, woid);
+      if ( !m_no_nix_incr)
+	oid = m_db->new_oid(txn, woid);
+      else
+	oid = woid;
       if ( !oid.oix) {
 	*sts = LDH__BADOBJID;
 	return 0;
@@ -462,7 +465,10 @@ wb_orep* wb_vrepdb::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination 
       pwr_tOid woid;
       woid.oix = oix;
       woid.vid = m_vid;
-      oid = m_db->new_oid(txn, woid);
+      if ( !m_no_nix_incr)
+	oid = m_db->new_oid(txn, woid);
+      else
+	oid = woid;
       if ( !oid.oix) {
 	*sts = LDH__BADOBJID;
 	return 0;
@@ -1138,6 +1144,12 @@ wb_orep *wb_vrepdb::child(pwr_tStatus *sts, const wb_orep *orp, wb_name &name)
 
   try {
     wb_db_name n(m_db, m_db->m_txn, orp->oid(), name);
+    int rc = n.get(m_db->m_txn);
+    if (rc) {
+      *sts = LDH__NOSUCHOBJ;
+      return 0;
+    }
+
     m_ohead.get(m_db->m_txn, n.oid());
     return new (this) wb_orepdb(&m_ohead.m_o);
   }
@@ -1564,7 +1576,10 @@ bool wb_vrepdb::importPasteObject(pwr_tOid doid, ldh_eDest destcode,
   }
 
   if (cdh_ObjidIsNotNull( woid)) {
-    oep->n_oid = m_db->new_oid(m_db->m_txn, woid);
+    if ( !m_no_nix_incr)
+      oep->n_oid = m_db->new_oid(m_db->m_txn, woid);
+    else
+      oep->n_oid = woid;
     if ( !oep->n_oid.oix)
       oep->n_oid = m_db->new_oid(m_db->m_txn);
   }

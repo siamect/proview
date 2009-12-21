@@ -50,14 +50,15 @@ protected:
   pwr_tVid m_vid;
   pwr_tCid m_cid;
   vector<wb_srep*> m_srep;
+  int m_no_nix_incr;
 
 public:
 
   virtual ~wb_vrep() {};
 
-  wb_vrep() : m_vid(pwr_cNVid), m_cid(pwr_cNCid) {}
-  wb_vrep(pwr_tVid vid) : m_vid(vid), m_cid(pwr_cNCid) {}
-  wb_vrep(pwr_tVid vid, pwr_tCid cid) : m_vid(vid), m_cid(cid) {}
+  wb_vrep() : m_vid(pwr_cNVid), m_cid(pwr_cNCid), m_no_nix_incr(0) {}
+  wb_vrep(pwr_tVid vid) : m_vid(vid), m_cid(pwr_cNCid), m_no_nix_incr(0) {}
+  wb_vrep(pwr_tVid vid, pwr_tCid cid) : m_vid(vid), m_cid(cid), m_no_nix_incr(0) {}
 
   virtual void unref() = 0;
   virtual wb_vrep *ref() = 0;
@@ -167,6 +168,7 @@ public:
   void removeSrep( wb_srep *srep);
   wb_srep *srep( pwr_tStatus *sts);
   wb_srep *nextSrep( pwr_tStatus *sts, wb_srep* srep);
+  void noNixIncr( int incr) { m_no_nix_incr = incr;}
 
   virtual const char *fileName() = 0;
   virtual bool time( pwr_tTime *t) { return false;}
