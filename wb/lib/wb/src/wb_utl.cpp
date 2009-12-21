@@ -6673,7 +6673,7 @@ int utl_compile (
 		sts = ldh_GetVidInfo( ldh_SessionToWB( ldhses), vol_id, &volinfo);
 	        if (EVEN(sts)) return sts;
 
-	        if ( volinfo.VolRep == ldh_eVolRep_Db) { // Todo!!!! Handle dbms
+	        if ( volinfo.VolRep == ldh_eVolRep_Db || volinfo.VolRep == ldh_eVolRep_Dbms) { // Todo!!!! Handle dbms
 	          volume_vect[i] = vol_id;
 	          i++;
 	          if ( i > UTL_INPUTLIST_MAX)
