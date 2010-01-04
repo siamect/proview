@@ -20,9 +20,10 @@
 #ifndef rt_rtt_functions_h
 #define rt_rtt_functions_h
 
-/* Module rs_rtt_menu.c */
+/* Module rt_rtt_menu.c */
 
 int	rtt_gdh_init( void);
+int	rtt_qcom_init( void);
 int	rtt_initialize( char	*username,
 			char	*password,
 			char	*commandfile,
@@ -398,7 +399,7 @@ menu_ctx rtt_current_ctx();
 int	rtt_logon_pict( unsigned long *chn,
 			unsigned long *priv);
 
-/* Module rs_rtt_crr.c */
+/* Module rt_rtt_crr.c */
 
 int	rtt_crossref_signal(
 			unsigned long	ctx,
@@ -432,7 +433,7 @@ int	rtt_show_signals(
 			char		*windowname,
 			int		debug);
 
-/* Module rs_rtt_command.c */
+/* Module rt_rtt_command.c */
 
 int	rtt_get_do_test(	pwr_tObjid	objid,
 				int		*on);
@@ -619,7 +620,7 @@ int	rttcmd_learn_func(	menu_ctx	ctx,
 				int		*flag);
 int	rtt_remove_blank( char *out_str, char *in_str);
 
-/* Module rs_rtt_alarm.c */
+/* Module rt_rtt_alarm.c */
 
 int	rtt_alarm_send(
 			char	*alarm_text,
@@ -647,7 +648,7 @@ int	rtt_alarm_ack_last();
 int	rtt_alarmlog_start( char *filename);
 int	rtt_alarmlog_stop();
 
-/* Module rs_rtt_logging.c */
+/* Module rt_rtt_logging.c */
 
 int	rtt_logging_create(
 			menu_ctx	ctx,
@@ -698,7 +699,7 @@ int	rtt_logging_delete(
 			char		*parameterstr);
 int	rtt_logging_close_files();
 
-/* Module rs_rtt_view.c */
+/* Module rt_rtt_view.c */
 
 int	rtt_view(	menu_ctx	parent_ctx,
 			char		*filename, 
@@ -715,7 +716,7 @@ int	rtt_view_buffer(
 			char		*intitle,
 			int		type);
 
-/* Module rs_rtt_os.c */
+/* Module rt_rtt_os.c */
 
 int	rtt_get_nodename( char *nodename, int size);
 char	*rtt_fgetname( FILE *fp, char *name, char *def_name);
@@ -794,7 +795,7 @@ int     rtt_replace_env( char *str, char *newstr);
 int	rtt_get_platform( char *platform);
 int	rtt_get_hw( char *hw);
 
-/* Module rs_rtt_qiomod.c */
+/* Module rt_rtt_qiomod.c */
 
 int qio_assign( char *s, int *chn);
 int qio_set_attr( int *chn);
@@ -806,7 +807,7 @@ int qio_write( int *chn, int tmo, char *buf, int len);
 
 #endif
 
-/* Module rs_rtt_cmdmode.c */
+/* Module rt_rtt_cmdmode.c */
 int	rtt_store_symbols( char	*filename);
 int	rtt_show_symbols( menu_ctx	ctx);
 int	rtt_replace_symbol( char *command, char *newcommand);
@@ -820,7 +821,7 @@ int 	rtt_attribute_func (
   int		*return_int,
   char		*return_string);
 
-/* Module rs_rtt_rtc.c */
+/* Module rt_rtt_rtc.c */
 #ifdef OS_ELN
 int rtt_rtc( int function);
 #endif

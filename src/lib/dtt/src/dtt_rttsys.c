@@ -93,6 +93,13 @@ rtt_message('E',"Rtt is not connected to nethandler");\
 return RTT__NOPICTURE;\
 }
 
+#define IF_NOQCOM_RETURN \
+  if ( !(rtt_gdh_started || rtt_qcom_started))	\
+{\
+rtt_message('E',"Rtt is not connected to qcom or nethandler");\
+return RTT__NOPICTURE;\
+}
+
 /* Type definitions */
 /* RTTSYS_GRAFCET ***/
 typedef struct {
@@ -11086,7 +11093,7 @@ int RTTSYS_QCOM_APPL( 	menu_ctx	ctx,
   pool_sQlink		*al;
   qdb_sAppl		*ap;
 
-  IF_NOGDH_RETURN;
+  IF_NOQCOM_RETURN;
 
   /**********************************************************
   *	The value of a parameter is changed.
@@ -11720,7 +11727,7 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
   qdb_sNode		*np;
   char 			timbuf[32];
 
-  IF_NOGDH_RETURN;
+  IF_NOQCOM_RETURN;
 
   /**********************************************************
   *	The value of a parameter is changed.
@@ -11735,7 +11742,7 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
       k = 0;
       l = 0;
 
-      gdb_ScopeLock {
+      qdb_ScopeLock {
         for (
 	  nl = pool_Qsucc(&sts, &qdb->pool, &qdb->g->node_lh);
 	  nl != &qdb->g->node_lh;
@@ -11814,7 +11821,7 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
           }
           k++;
         }
-      } gdb_ScopeUnlock;
+      } qdb_ScopeUnlock;
 
       for ( i = l; i < QCOM_NODES_PAGESIZE; i++)
       {
@@ -11895,7 +11902,7 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
       k = 0;
       l = 0;
 
-      gdb_ScopeLock {
+      qdb_ScopeLock {
         for (
 	  nl = pool_Qsucc(&sts, &qdb->pool, &qdb->g->node_lh);
 	  nl != &qdb->g->node_lh;
@@ -11974,7 +11981,7 @@ int RTTSYS_QCOM_NODES( 	menu_ctx	ctx,
           }
           k++;
         }
-      } gdb_ScopeUnlock;
+      } qdb_ScopeUnlock;
 
       for ( i = l; i < QCOM_NODES_PAGESIZE; i++)
       {
@@ -12690,7 +12697,7 @@ int RTTSYS_QCOM_NODE( menu_ctx	ctx,
   qdb_sNode		*np;
   static pwr_tNodeId	nid;
 
-  IF_NOGDH_RETURN;
+  IF_NOQCOM_RETURN;
 
   /**********************************************************
   *	The value of a parameter is changed.
@@ -12702,7 +12709,7 @@ int RTTSYS_QCOM_NODE( menu_ctx	ctx,
       menulist = (rtt_t_menu_upd *) ctx->menu;
       menu_ptr = menulist;
 
-      gdb_ScopeLock {
+      qdb_ScopeLock {
         for (
 	  nl = pool_Qsucc(&sts, &qdb->pool, &qdb->g->node_lh);
 	  nl != &qdb->g->node_lh;
@@ -12835,7 +12842,7 @@ int RTTSYS_QCOM_NODE( menu_ctx	ctx,
             break;
           }
         }
-      } gdb_ScopeUnlock;
+      } qdb_ScopeUnlock;
 
       return RTT__SUCCESS;
 
@@ -12873,7 +12880,7 @@ int RTTSYS_QCOM_NODE( menu_ctx	ctx,
       menulist = (rtt_t_menu_upd *) ctx->menu;
       menu_ptr = menulist;
 
-      gdb_ScopeLock {
+      qdb_ScopeLock {
         for (
 	  nl = pool_Qsucc(&sts, &qdb->pool, &qdb->g->node_lh);
 	  nl != &qdb->g->node_lh;
@@ -13006,7 +13013,7 @@ int RTTSYS_QCOM_NODE( menu_ctx	ctx,
             break;
           }
         }
-      } gdb_ScopeUnlock;
+      } qdb_ScopeUnlock;
 
       break;
 

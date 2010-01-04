@@ -399,7 +399,7 @@ int rt_sevhistmon::connect()
     // Check if this node should be connected
     bool found = false;
     for ( unsigned int j = 0; j < m_hs.size(); j++) {
-      if ( m_hs[i].configerror)
+      if ( m_hs[j].configerror)
 	continue;
       if ( cdh_NoCaseStrcmp( m_nodes[i].name, m_hs[j].nodename) == 0) {
 	found = true;
@@ -443,6 +443,7 @@ bool rt_sevhistmon::send_connect( pwr_tNid nid, pwr_tStatus *sts)
 
   return ODD(*sts);
 }
+
 
 bool rt_sevhistmon::send_server_status_request( pwr_tStatus *sts)
 {
@@ -627,6 +628,13 @@ int rt_sevhistmon::mainloop()
       m_loopcnt++;
       send_data();
       send_server_status_request( &sts);
+
+      if ( !m_allconnected) {
+	int reconnect_time = int(20.0 / m_scantime);
+
+	if ( m_loopcnt % reconnect_time == 0)
+	  retry_connect();
+      }
       continue;
     }
 
@@ -679,8 +687,6 @@ int rt_sevhistmon::mainloop()
 
     qcom_Free( &sts, mp);
 
-    if ( !m_allconnected)
-      retry_connect();
   }
 
 }

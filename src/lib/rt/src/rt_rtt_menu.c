@@ -340,6 +340,7 @@ int	rtt_initialize( char	*username,
 {
 	int	sts;
 	int	noneth = 0;
+	int     qcom_only = 0;
 
 	rtt_init_state_table();
 
@@ -347,6 +348,11 @@ int	rtt_initialize( char	*username,
 
 	if ( strcmp( username, "NONETH_SYS") == 0) {
 	  noneth = 1;
+	  rtt_priv = RTT_PRV_SYS;
+	}
+	else if ( strcmp( username, "QCOMONLY") == 0) {
+	  noneth = 1;
+	  qcom_only = 1;
 	  rtt_priv = RTT_PRV_SYS;
 	}
 
@@ -364,6 +370,9 @@ int	rtt_initialize( char	*username,
           if (!qcom_Bind(&sts, &my_q, &qcom_cQini)) {
             exit(-1);
           }
+	}
+	else if ( qcom_only) {
+	  sts = rtt_qcom_init();
 	}
 
 	sts = rtt_recall_create( &rtt_recallbuff);
@@ -438,6 +447,31 @@ int	rtt_gdh_init()
 	rtt_gdh_started = 1;
 
 	return RTT__SUCCESS;
+}
+
+/*************************************************************************
+*
+* Name:		rtt_gdh_init()
+*
+* Type		int
+*
+* Type		Parameter	IOGF	Description
+*
+* Description:
+*	This function initializes gdh for rtt.
+*
+**************************************************************************/
+
+int rtt_qcom_init()
+{
+  pwr_tStatus sts;
+  qcom_sAid aid;
+
+  qcom_Init( &sts, &aid, "rt_rtt");
+  if ( EVEN(sts)) return sts;
+
+  rtt_qcom_started = 1;
+  return RTT__SUCCESS;
 }
 
 /*************************************************************************
