@@ -1278,7 +1278,36 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
           timestr_to_time( row[j++], &(*tbuf)[bcnt]);
       }
 
-      cdh_StringToAttrValue( type, row[j++], ((char *)*vbuf)+ bcnt * size);
+      if(row[j] == 0) {
+        //Null value
+        switch(type) {
+          case pwr_eType_Float32:
+          case pwr_eType_Float64:
+          case pwr_eType_Int8:
+          case pwr_eType_Int16:
+          case pwr_eType_Int32:
+          case pwr_eType_Int64:
+          case pwr_eType_UInt8:
+          case pwr_eType_UInt16:
+          case pwr_eType_UInt32:
+          case pwr_eType_UInt64:
+          case pwr_eType_Mask:
+          case pwr_eType_Enum:
+            cdh_StringToAttrValue( type, "0", ((char *)*vbuf)+ bcnt * size);
+            break;
+          case pwr_eType_Time:
+          case pwr_eType_DeltaTime:
+            //TODO deltatime??
+            cdh_StringToAttrValue( type, "1970-01-01 00:00:00", ((char *)*vbuf)+ bcnt * size);
+            break;
+          default:
+            cdh_StringToAttrValue( type, " ", ((char *)*vbuf)+ bcnt * size);
+            break;
+        }
+        j++;
+      }
+      else
+        cdh_StringToAttrValue( type, row[j++], ((char *)*vbuf)+ bcnt * size);
 
       bcnt++;
       //if ( options & pwr_mSevOptionsMask_HighTimeResolution)
@@ -1326,7 +1355,36 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
           timestr_to_time( row[j++], &(*tbuf)[bcnt]);
       }
 
-      cdh_StringToAttrValue( type, row[j++], ((char *)*vbuf)+ bcnt * size);
+      if(row[j] == 0) {
+        //Null value
+        switch(type) {
+          case pwr_eType_Float32:
+          case pwr_eType_Float64:
+          case pwr_eType_Int8:
+          case pwr_eType_Int16:
+          case pwr_eType_Int32:
+          case pwr_eType_Int64:
+          case pwr_eType_UInt8:
+          case pwr_eType_UInt16:
+          case pwr_eType_UInt32:
+          case pwr_eType_UInt64:
+          case pwr_eType_Mask:
+          case pwr_eType_Enum:
+            cdh_StringToAttrValue( type, "0", ((char *)*vbuf)+ bcnt * size);
+            break;
+          case pwr_eType_Time:
+          case pwr_eType_DeltaTime:
+            //TODO deltatime??
+            cdh_StringToAttrValue( type, "1970-01-01 00:00:00", ((char *)*vbuf)+ bcnt * size);
+            break;
+          default:
+            cdh_StringToAttrValue( type, " ", ((char *)*vbuf)+ bcnt * size);
+            break;
+        }
+        j++;
+      }
+      else
+        cdh_StringToAttrValue( type, row[j++], ((char *)*vbuf)+ bcnt * size);
 
       bcnt++;
       //if ( options & pwr_mSevOptionsMask_HighTimeResolution)
@@ -1344,9 +1402,9 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
 
 
 int sev_dbms::check_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname, 
-			  pwr_tDeltaTime storagetime, pwr_eType type, unsigned int size, 
-			  char *description, char *unit, pwr_tFloat32 scantime, 
-			  pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx)
+                          pwr_tDeltaTime storagetime, pwr_eType type, unsigned int size, 
+                          char *description, char *unit, pwr_tFloat32 scantime, 
+                          pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx)
 {
   char timestr[40];
   pwr_tTime uptime;
@@ -1360,27 +1418,65 @@ int sev_dbms::check_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *ana
       continue;
 
     if ( cdh_ObjidIsEqual( oid, m_items[i].oid) && 
-	 cdh_NoCaseStrcmp( aname, m_items[i].attr[0].aname) == 0) {
-      char query[400];
+         cdh_NoCaseStrcmp( aname, m_items[i].attr[0].aname) == 0) {
+      char query[600];
+
+      if ( type != m_items[i].attr[0].type ||
+           size != m_items[i].attr[0].size)
+      {
+        //Size or type changed what to do?
+        if( !handle_attrchange(sts, m_items[i].tablename, oid, (char *)"value", oname, type, size, i, 0) ) {
+          return 1;
+        }
+      }
 
       sprintf( query, "update items set ");
-      if ( storagetime.tv_sec != m_items[i].storagetime.tv_sec)
-	sprintf( &query[strlen(query)], "storagetime=%ld,", (long int)storagetime.tv_sec);
-      if ( strcmp( oname, m_items[i].oname) != 0)
-	sprintf( &query[strlen(query)], "oname=\'%s\',", oname);
-      if ( type != m_items[i].attr[0].type)
-	sprintf( &query[strlen(query)], "vtype=%d,", type);
-      if ( size != m_items[i].attr[0].size)
-	sprintf( &query[strlen(query)], "size=%d,", size);
+      if ( storagetime.tv_sec != m_items[i].storagetime.tv_sec) {
+        sprintf( &query[strlen(query)], "storagetime=%ld,", (long int)storagetime.tv_sec);
+        m_items[i].storagetime = storagetime;
+      }
+      if ( strcmp( oname, m_items[i].oname) != 0) {
+        sprintf( &query[strlen(query)], "oname=\'%s\',", oname);
+        strncpy(m_items[i].oname , oname, sizeof(m_items[i].oname));
+      }
+      if ( type != m_items[i].attr[0].type) {
+        sprintf( &query[strlen(query)], "vtype=%d,", type);
+        m_items[i].attr[i].type = type;
+      }
+      if ( size != m_items[i].attr[0].size) {
+        sprintf( &query[strlen(query)], "vsize=%d,", size);
+        m_items[i].attr[i].size = size;
+      }
+      if ( scantime != m_items[i].scantime) {
+        sprintf( &query[strlen(query)], "scantime=%.1f,", scantime);
+        m_items[i].scantime = scantime;
+      }
+      if ( deadband != m_items[i].deadband) {
+        sprintf( &query[strlen(query)], "deadband=%.4f,", deadband);
+        m_items[i].deadband = deadband;
+      }
+      if ( strcmp( description, m_items[i].description) != 0) {
+        sprintf( &query[strlen(query)], "description=\'%s\',", description);
+        strncpy(m_items[i].description , description, sizeof(m_items[i].description));
+      }
+      if ( strcmp( unit, m_items[i].attr[0].unit) != 0) {
+        sprintf( &query[strlen(query)], "unit=\'%s\',", unit);
+        strncpy(m_items[i].attr[0].unit, unit, sizeof(m_items[i].attr[0].unit));
+      }
+
       sprintf( &query[strlen(query)], "uptime=\'%s\' ", timestr);
-      sprintf( &query[strlen(query)], "where id=%d;", m_items[i].id);	
+      sprintf( &query[strlen(query)], "where id=%d;", m_items[i].id); 
+
+      //This won't work!! We have to alter the table to be able to change this
+      //m_items[i].options = options;
+
 
       int rc = mysql_query( m_env->con(), query);
       if (rc) {
-	printf( "Store item: %s\n", mysql_error(m_env->con()));
-	*sts = SEV__DBERROR;
-	return 0;
-      }      
+        printf( "Store item: %s\n", mysql_error(m_env->con()));
+        *sts = SEV__DBERROR;
+        return 0;
+      }
       *idx = i;
       *sts = SEV__SUCCESS;
       return 1;
@@ -1532,6 +1628,10 @@ char *sev_dbms::oid_to_table( pwr_tOid oid, char *aname)
   for ( char *s = tbl; *s; s++) {
     if ( *s == '.')
       *s = '_';
+    if ( *s == '[')
+      *s = '$';
+    if ( *s == ']')
+      *s = '$';
   }
   return tbl;
 }
@@ -1767,35 +1867,8 @@ int sev_dbms::check_objectitemattr( pwr_tStatus *sts, char *tablename, pwr_tOid 
     if (cdh_NoCaseStrcmp( aname, item->attr[j].aname) == 0) {
       if (type != item->attr[j].type ||
           size != item->attr[j].size) {
-        //Same name new type or size what to do?
-        //We try to alter the table if it is possible(float->double int->long or little_string->bigger_string probably works).
-        //If we can't alter the table we rename the column and create a new one
-
-        printf("Column:%s in %s has been changed from Type/size %d/%d to %d/%d\n", 
-               aname, tablename, item->attr[j].type, item->attr[j].size, type, size );
-        errh_Warning("Column:%s in %s has been changed from Type/size %d/%d to %d/%d", 
-                     aname, tablename, item->attr[j].type, item->attr[j].size, type, size );
-
-        if (!alter_attrcolumn(sts, tablename, aname, type, size, item->attr[j].type, item->attr[j].size)) {
-          //We were not able to alter the column then we should rename the column and create a new one
-          if (!rename_attrcolumn(sts, tablename, aname, item->attr[j].type, item->attr[j].size)) {
-            //Very very bad this should not happen
-            errh_Error("Could not rename column that has been changed tablename:%s columnname:%s", tablename, aname);
-            //m_items[i].attr[j].status = -1; //TODO Skip this attribute during logging
-            *sts = SEV__DBERROR;
-            return 1;
-          }
-          errh_Warning("Column:%s in %s renamed to:%s_before_xxxx xx:xx:xx", aname, tablename, aname );
-
-          char query[2000];
-          sprintf( query, "alter table %s add `%s` %s;",
-                   tablename, aname, pwrtype_to_type( type, size));
-          int rc = mysql_query( m_env->con(), query);
-          if (rc) {
-            printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
-            *sts = SEV__DBERROR;
-            return 1;
-          }
+        if( !handle_attrchange(sts, tablename, oid, aname,oname,type,size, *idx, j) ) {
+          return 1;
         }
         item->attr[j].type = type;
         item->attr[j].size = size;
@@ -2929,6 +3002,43 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
     mysql_free_result( result);
   }
   *sts = SEV__SUCCESS;
+  return 1;
+}
+
+int sev_dbms::handle_attrchange(pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *aname, char *oname, 
+													  pwr_eType type, unsigned int size, unsigned int item_idx, unsigned int attr_idx)
+{
+  //We try to alter the table if it is possible(float->double int->long or little_string->bigger_string probably works).
+  //If we can't alter the table we rename the column and create a new one
+
+  sev_item *item = &m_items[item_idx];
+
+  printf("Column:%s in %s has been changed from Type/size %d/%d to %d/%d\n", 
+         aname, tablename, item->attr[attr_idx].type, item->attr[attr_idx].size, type, size );
+  errh_Warning("Column:%s in %s has been changed from Type/size %d/%d to %d/%d", 
+               aname, tablename, item->attr[attr_idx].type, item->attr[attr_idx].size, type, size );
+
+  if (!alter_attrcolumn(sts, tablename, aname, type, size, item->attr[attr_idx].type, item->attr[attr_idx].size)) {
+    //We were not able to alter the column then we should rename the column and create a new one
+    if (!rename_attrcolumn(sts, tablename, aname, item->attr[attr_idx].type, item->attr[attr_idx].size)) {
+      //Very very bad this should not happen
+      errh_Error("Could not rename column that has been changed tablename:%s columnname:%s", tablename, aname);
+      //item->attr[attr_idx].status = -1; //TODO Skip this attribute during logging
+      *sts = SEV__DBERROR;
+      return 0;
+    }
+    errh_Warning("Column:%s in %s renamed to:%s_before_xxxx xx:xx:xx", aname, tablename, aname );
+
+    char query[2000];
+    sprintf( query, "alter table %s add `%s` %s;",
+             tablename, aname, pwrtype_to_type( type, size));
+    int rc = mysql_query( m_env->con(), query);
+    if (rc) {
+      printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
+      *sts = SEV__DBERROR;
+      return 0;
+    }
+  }
   return 1;
 }
 

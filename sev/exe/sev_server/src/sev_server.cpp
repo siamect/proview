@@ -42,6 +42,26 @@
 #define sev_cGarbageInterval 120
 #define sev_cGarbageCycle 86400
 
+static int sev_comp_refid(tree_sTable *tp, tree_sNode *x, tree_sNode *y)
+{
+  sev_sRefid *xp = (sev_sRefid *) x; 
+  sev_sRefid *yp = (sev_sRefid *) y;
+  
+  if (xp->id.nid > yp->id.nid)
+    return 1;
+
+  if (xp->id.nid < yp->id.nid)
+    return -1;
+
+  if (xp->id.rix > yp->id.rix)
+    return 1;
+
+  if (xp->id.rix < yp->id.rix)
+    return -1;
+
+  return 0;
+}
+
 int sev_server::init( int noneth)
 {
   qcom_sNode		node;
@@ -110,6 +130,8 @@ int sev_server::init( int noneth)
 
   m_db->get_items( &m_sts);
   m_db->get_objectitems(&m_sts);
+
+  m_refid = tree_CreateTable(&sts, sizeof(pwr_tRefId), offsetof(sev_sRefid, id), sizeof(sev_sRefid), 100, sev_comp_refid);
 
   // Create a queue to server
   qcom_sQattr attr;
@@ -518,12 +540,18 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
 
   // Remove all refid's for this node
   pwr_tNid nid = msg->Items[0].sevid.nid;
+  pwr_tStatus sts;
+  sev_sRefid *rp = (sev_sRefid *)tree_Minimum(&sts, m_refid);
+  sev_sRefid *succ_rp;
+  while ( rp) {
+    succ_rp = (sev_sRefid *)tree_Successor(&sts, m_refid, rp);
 
-  for ( iterator_refid it = m_refid.begin(); it != m_refid.end(); it++) {
-    if ( it->first.id.nid == nid)
-      m_refid.erase( it);
+    if ( rp->id.nid == nid) 
+      tree_Remove( &sts, m_refid, &rp->id);
+
+    rp = succ_rp;
   }
-  
+
   for ( int i = 0; i < item_cnt; i++) {
 
     // Deadband requires id variable
@@ -596,6 +624,7 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
           newattr.elem = 0;
           newattrVec.push_back(newattr);
 
+          bool tableChange = false;
           if ( !m_db->check_objectitemattr( &m_sts, 
                                             tablename, 
                                             buffP->oid, 
@@ -639,8 +668,14 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
           m_db->m_items[idx].old_value = malloc(m_db->m_items[idx].value_size);
 
           m_db->m_items[idx].sevid = buffP->sevid;
-          sev_refid sevid(buffP->sevid);
-          m_refid[sevid] = idx;
+
+          pwr_tRefId rk;
+          sev_sRefid *rp;
+                  
+          rk = buffP->sevid;
+          rp = (sev_sRefid *) tree_Insert(&sts, m_refid, &rk);
+          rp->idx = idx;
+
         }
 
         int numberOfAttributes = buffP->attrnum;
@@ -663,28 +698,33 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
 		      msg->Items[i].deadband, msg->Items[i].options, &idx);
       if ( EVEN(m_sts)) return m_sts;
     }
-    //Create space for the old values used if we have deadband active
-    if ( m_db->m_items[idx].old_value != 0 ) {
-      free(m_db->m_items[idx].old_value);
-      m_db->m_items[idx].old_value = 0;
+    if ( ODD(m_sts) ) {
+      //Create space for the old values used if we have deadband active
+      if ( m_db->m_items[idx].old_value != 0 ) {
+        free(m_db->m_items[idx].old_value);
+        m_db->m_items[idx].old_value = 0;
+      }
+      m_db->m_items[idx].value_size = msg->Items[i].attr[0].size;
+      m_db->m_items[idx].old_value = malloc(m_db->m_items[idx].value_size);
+  
+      //If node is coming up again we do not want deadband to be active due to init of old_value
+      m_db->m_items[idx].deadband_active = 0;
+      m_db->m_items[idx].first_storage = 1;
+  
+      m_db->m_items[idx].sevid = msg->Items[i].sevid;
+  
+      pwr_tRefId rk;
+      sev_sRefid *rp;
+                    
+      rk = msg->Items[i].sevid;
+      rp = (sev_sRefid *) tree_Insert(&sts, m_refid, &rk);
+      rp->idx = idx;
     }
-    m_db->m_items[idx].value_size = msg->Items[i].attr[0].size;
-    m_db->m_items[idx].old_value = malloc(m_db->m_items[idx].value_size);
-
-    //If node is coming up again we do not want deadband to be active due to init of old_value
-    m_db->m_items[idx].deadband_active = 0;
-    m_db->m_items[idx].first_storage = 1;
-
-    m_db->m_items[idx].sevid = msg->Items[i].sevid;
-    sev_refid sevid(msg->Items[i].sevid);
-    m_refid[sevid] = idx;
   }
   printf( "----  Node up (%d) ----\n", nid);
-  for ( iterator_refid it = m_refid.begin(); it != m_refid.end(); it++)
-    printf( "Refid: %d,%d  Idx: %d Name %s\n", it->first.id.nid, it->first.id.rix, it->second, m_db->m_items[it->second].oname);
   return 1;
 }
-
+/*
 int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size)
 {
   sev_sHistData *dp = (sev_sHistData *)&msg->Data;
@@ -704,6 +744,31 @@ int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size)
   }
   return 1;
 }
+*/
+int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size)
+{
+  pwr_tStatus sts;
+  sev_sHistData *dp = (sev_sHistData *)&msg->Data;
+  pwr_tTime time;
+
+  while ( (char *)dp - (char *)msg < (int)size) {
+    sev_sRefid *rp;
+    pwr_tRefId rk = dp->sevid;
+
+    rp = (sev_sRefid *) tree_Find(&sts, m_refid, &rk);
+    if ( !rp) {
+      dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
+      continue;
+    }
+    unsigned int idx = rp->idx;
+    time = net_NetTimeToTime( &msg->Time);
+    m_db->store_value( &m_sts, idx, 0, time, &dp->data, dp->size);
+
+    dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
+  }
+  return 1;
+}
+
 
 
 

@@ -172,6 +172,8 @@ class sev_dbms : public sev_db {
   int get_objectvalues( pwr_tStatus *sts, sev_item *item, unsigned int size, pwr_tTime *starttime, pwr_tTime *endtime, 
 			                  int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize);
   pwr_tUInt64 get_minFromIntegerColumn( char *tablename, char *colname );
+  int handle_attrchange(pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *aname, char *oname, 
+                        pwr_eType type, unsigned int size, unsigned int item_idx, unsigned int attr_idx);
 };
 #endif
 #endif
