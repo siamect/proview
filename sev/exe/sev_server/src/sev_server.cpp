@@ -585,6 +585,7 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
 
         storagetime = net_NetTimeToDeltaTime( &buffP->storagetime );
         sprintf( tablename, "obj_%s",  m_db->oid_to_table( buffP->oid, attributeName) );
+        bool newobject = false;
         if ( !m_db->check_objectitem( &m_sts, 
                                       tablename, 
                                       buffP->oid, 
@@ -608,12 +609,14 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
                                 buffP->options, 
                                 &idx);
           if ( EVEN(m_sts)) return m_sts;
+          newobject = true;
         }
 
         vector<sev_attr> oldattrVec = m_db->m_items[idx].attr;
         vector<sev_attr> newattrVec;
         m_db->m_items[idx].value_size = 0;
         //Check if any new attributes is found if so add column
+        bool tableChange = false;
         for(size_t j = 0; j < buffP->attrnum; j++) {
           //printf( "Received: %s.%s\n", buffP->oname, buffP->attr[j].aname);
           sev_attr newattr;
@@ -624,7 +627,6 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
           newattr.elem = 0;
           newattrVec.push_back(newattr);
 
-          bool tableChange = false;
           if ( !m_db->check_objectitemattr( &m_sts, 
                                             tablename, 
                                             buffP->oid, 
@@ -633,22 +635,23 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
                                             buffP->attr[j].type, 
                                             buffP->attr[j].size, 
                                             &idx) ) {
-            m_db->add_objectitemattr( &m_sts, 
-                                      tablename, 
-                                      buffP->oid, 
-                                      buffP->attr[j].aname, 
-                                      buffP->oname, 
-                                      buffP->attr[j].type, 
-                                      buffP->attr[j].size, 
-                                      &idx);
-            if ( EVEN(m_sts)) return m_sts;
+            tableChange = true;
           }
         }
+
 
         //Be sure that we have the correct attribute order. Use the list from the client
         m_db->m_items[idx].attr.clear();
         m_db->m_items[idx].attr = newattrVec;
         m_db->m_items[idx].attrnum = newattrVec.size();
+
+        if(tableChange) {
+          //Either an attribute has changed type or size or we have a new attribute
+          //rename the table to something and create a new one.
+          //this is the only way to do this without hanging the server for several minutes
+          m_db->handle_objectchange(&m_sts, tablename, idx, newobject);
+
+        }
 
         //If node is coming up again we do not want deadband to be active due to init of old_value
         m_db->m_items[idx].deadband_active = 0;
@@ -675,7 +678,6 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
           rk = buffP->sevid;
           rp = (sev_sRefid *) tree_Insert(&sts, m_refid, &rk);
           rp->idx = idx;
-
         }
 
         int numberOfAttributes = buffP->attrnum;

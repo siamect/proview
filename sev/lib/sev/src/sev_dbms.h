@@ -149,10 +149,7 @@ class sev_dbms : public sev_db {
   int store_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
       pwr_tDeltaTime storagetime, char *description, pwr_tFloat32 scantime, 
       pwr_tFloat32 deadband, pwr_tMask options);
-  int create_objecttable( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *aname,
-			                    pwr_tMask options, float deadband);
-  int add_objectitemattr( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *aname, char *oname, 
-                          pwr_eType type, unsigned int size, unsigned int *idx);
+  int create_objecttable( pwr_tStatus *sts, char *tablename, pwr_tMask options, float deadband);
   int store_objectvalue( pwr_tStatus *sts, int item_idx, int attr_idx,
                              pwr_tTime time, void *buf,  void *oldbuf, unsigned int size);
   int get_item( pwr_tStatus *sts, sev_item *item, char *tablename);
@@ -161,19 +158,15 @@ class sev_dbms : public sev_db {
   int get_objectitemattributes( pwr_tStatus *sts, sev_item *item, char *tablename);
   int check_objectitemattr( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *aname, char *oname, 
 																	pwr_eType type, unsigned int size, unsigned int *idx);
-  int get_nextattridx( pwr_tStatus *sts, char *tablename );
   int delete_old_objectdata( pwr_tStatus *sts, char *tablename, 
                              pwr_tMask options, pwr_tTime limit);
-  int alter_attrcolumn(pwr_tStatus *sts, char *tablename, char *aname, pwr_eType newtype, unsigned int newsize, pwr_eType oldtype, unsigned int oldsize);
-  int rename_attrcolumn(pwr_tStatus *sts, char *tablename, char *aname, pwr_eType type, unsigned int size);
-  int remove_objectitemattr( pwr_tStatus *sts, char *tablename, char *aname);
-  int update_objectitemattr( pwr_tStatus *sts, char *tablename, char *aname, pwr_eType type, unsigned int size);
   int check_deadband(pwr_eType type, unsigned int size, pwr_tFloat32 deadband, void *value, void *oldvalue);
   int get_objectvalues( pwr_tStatus *sts, sev_item *item, unsigned int size, pwr_tTime *starttime, pwr_tTime *endtime, 
 			                  int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize);
   pwr_tUInt64 get_minFromIntegerColumn( char *tablename, char *colname );
-  int handle_attrchange(pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *aname, char *oname, 
-                        pwr_eType type, unsigned int size, unsigned int item_idx, unsigned int attr_idx);
+  pwr_tUInt64 get_maxFromIntegerColumn( char *tablename, char *colname );
+  int handle_itemchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx);
+  int handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx, bool newObject);
 };
 #endif
 #endif

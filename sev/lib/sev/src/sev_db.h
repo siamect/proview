@@ -106,8 +106,6 @@ class sev_db {
                        pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx) { return 0;} 
   virtual int store_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
                                 pwr_tDeltaTime storagetime, char *description, pwr_tFloat32 scantime, pwr_tFloat32 deadband, pwr_tMask options) { return 0;}
-  virtual int add_objectitemattr( pwr_tStatus *sts, char *tablename,  pwr_tOid oid, char *aname, char *oname,
-                                  pwr_eType type, unsigned int size, unsigned int *idx) { return 0;}
   virtual int get_item( pwr_tStatus *sts, sev_item *item, char *tablename) { return 0;}
   virtual int get_objectitem( pwr_tStatus *sts, sev_item *item, char *tablename) { return 0;}
   virtual int get_objectitems( pwr_tStatus *sts) { return 0;}
@@ -118,6 +116,7 @@ class sev_db {
   virtual int get_objectvalues( pwr_tStatus *sts, sev_item *item,
                                 unsigned int size, pwr_tTime *starttime, pwr_tTime *endtime, 
                                 int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize) { return 0;}
+  virtual int handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx, bool newObject) { return 0;}
 
 
 };

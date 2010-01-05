@@ -1421,13 +1421,11 @@ int sev_dbms::check_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *ana
          cdh_NoCaseStrcmp( aname, m_items[i].attr[0].aname) == 0) {
       char query[600];
 
+      bool itemdefchange = false;
       if ( type != m_items[i].attr[0].type ||
            size != m_items[i].attr[0].size)
       {
-        //Size or type changed what to do?
-        if( !handle_attrchange(sts, m_items[i].tablename, oid, (char *)"value", oname, type, size, i, 0) ) {
-          return 1;
-        }
+        itemdefchange = true;
       }
 
       sprintf( query, "update items set ");
@@ -1476,6 +1474,12 @@ int sev_dbms::check_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *ana
         printf( "Store item: %s\n", mysql_error(m_env->con()));
         *sts = SEV__DBERROR;
         return 0;
+      }
+
+      if(itemdefchange) {
+        if( !handle_itemchange(sts, m_items[i].tablename, i) ) {
+          return 1;
+        }
       }
       *idx = i;
       *sts = SEV__SUCCESS;
@@ -1754,7 +1758,7 @@ int sev_dbms::add_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, c
 	      scantime, deadband, options);
   if ( EVEN(*sts)) return 0;
   
-  create_objecttable( sts, tablename, oid, aname, options, deadband);
+  create_objecttable( sts, tablename, options, deadband);
   if ( EVEN(*sts)) return 0;
 
   *sts = SEV__SUCCESS;
@@ -1803,7 +1807,7 @@ int sev_dbms::store_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid,
   return 1;
 }
 
-int sev_dbms::create_objecttable( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *aname, pwr_tMask options, float deadband)
+int sev_dbms::create_objecttable( pwr_tStatus *sts, char *tablename, pwr_tMask options, float deadband)
 {
   char query[2000];
 	char timeformatstr[80];
@@ -1856,6 +1860,7 @@ int sev_dbms::create_objecttable( pwr_tStatus *sts, char *tablename, pwr_tOid oi
     *sts = SEV__DBERROR;
     return 0;
   }
+  *sts = SEV__SUCCESS;
   return 1;
 }
 
@@ -1867,106 +1872,25 @@ int sev_dbms::check_objectitemattr( pwr_tStatus *sts, char *tablename, pwr_tOid 
     if (cdh_NoCaseStrcmp( aname, item->attr[j].aname) == 0) {
       if (type != item->attr[j].type ||
           size != item->attr[j].size) {
+
+        *sts = SEV__NOSUCHITEM;
+        return 0;
+        /*
         if( !handle_attrchange(sts, tablename, oid, aname,oname,type,size, *idx, j) ) {
           return 1;
         }
         item->attr[j].type = type;
         item->attr[j].size = size;
         update_objectitemattr(sts, tablename, aname, type, size);
+        */
       }
       *sts = SEV__SUCCESS;
       return 1;
     }
+
   }
   *sts = SEV__NOSUCHITEM;
   return 0;
-}
-
-
-int sev_dbms::add_objectitemattr( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *aname, char *oname, 
-																	pwr_eType type, unsigned int size, unsigned int *idx)
-{
-	char query[2000];
-
-	sprintf( query, "alter table %s add `%s` %s;",
-		 tablename, aname, pwrtype_to_type( type, size));
-
-	//printf( "%s: %s\n", __FUNCTION__ ,query);
-
-	int rc = mysql_query( m_env->con(), query);
-	if (rc) {
-		printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
-		*sts = SEV__DBERROR;
-		return 0;
-	}
-
-  int aidx = get_nextattridx(sts, tablename);
-
-  sprintf( query, "insert into objectitemattributes (tablename, attributename, attributeidx, attributetype, attributesize) "
-                  "values('%s', '%s', %d, %d, %d)", tablename, aname, aidx, type, size);
-
-
-  //printf( "%s: %s\n", __FUNCTION__ ,query);
-  rc = mysql_query( m_env->con(), query);
-  if (rc) {
-    printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
-    *sts = SEV__DBERROR;
-    return 0;
-  }
-
-  sev_attr newattr;
-  strncpy( newattr.aname, aname, sizeof(newattr.aname));
-  newattr.type = type;
-  newattr.size = size;
-  newattr.elem = 0;
-  m_items[*idx].attr.push_back(newattr);
-  m_items[*idx].attrnum = m_items[*idx].attr.size();
-
-  *sts = SEV__SUCCESS;
-	return 1;
-}
-
-int sev_dbms::get_nextattridx( pwr_tStatus *sts, char *tablename )
-{
-	char query[2000];
-
-  sprintf( query, "select max(attributeidx) from objectitemattributes where tablename='%s'", tablename);
-
-  //printf( "%s: %s\n", __FUNCTION__ ,query);
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
-    printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
-    *sts = SEV__DBERROR;
-    return 0;
-  }
-  MYSQL_ROW row;
-  MYSQL_RES *result = mysql_store_result( m_env->con());
-  if ( !result) {
-    printf( "GetValues Result Error\n");
-    *sts = SEV__DBERROR;
-    return 0;
-  }
-
-  int rows = mysql_num_rows( result);
-
-  if(rows > 1) {
-    printf( "Duplicate items Error\n");
-    *sts = SEV__DBERROR;
-    mysql_free_result( result);
-    return 0;
-  }
-  int attridx = -1;
-  for ( int i = 0; i < rows; i++) {
-    row = mysql_fetch_row( result);
-    if (!row) break;
-    if(row[0] != NULL) {
-      attridx = atoi( row[0]);
-    }
-  }
-  mysql_free_result( result);
-
-  *sts = SEV__SUCCESS;
-  return attridx+1;
 }
 
 pwr_tUInt64 sev_dbms::get_minFromIntegerColumn( char *tablename, char *colname )
@@ -1974,6 +1898,38 @@ pwr_tUInt64 sev_dbms::get_minFromIntegerColumn( char *tablename, char *colname )
 	char query[2000];
   pwr_tUInt64 retVal = 0;
   sprintf( query, "select min(`%s`) from %s", colname, tablename);
+
+  //printf( "%s: %s\n", __FUNCTION__ ,query);
+  int rc = mysql_query( m_env->con(), query);
+  if (rc) {
+    printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
+    return 0;
+  }
+  MYSQL_RES *result = mysql_store_result( m_env->con());
+  if ( !result) {
+    printf( "GetValues Result Error\n");
+    return retVal;
+  }
+
+  int rows = mysql_num_rows( result);
+  if(rows <= 0) {
+    mysql_free_result( result);
+    return retVal;
+  }
+  MYSQL_ROW row;
+  row = mysql_fetch_row( result);
+  if(row[0] != NULL) {
+    retVal = strtoull(row[0], 0, 10);
+  }
+  mysql_free_result( result);
+  return retVal;
+}
+
+pwr_tUInt64 sev_dbms::get_maxFromIntegerColumn( char *tablename, char *colname )
+{
+	char query[2000];
+  pwr_tUInt64 retVal = 0;
+  sprintf( query, "select max(`%s`) from %s", colname, tablename);
 
   //printf( "%s: %s\n", __FUNCTION__ ,query);
   int rc = mysql_query( m_env->con(), query);
@@ -2461,68 +2417,6 @@ int sev_dbms::delete_old_objectdata( pwr_tStatus *sts, char *tablename,
   return 1;  
 }
 
-int sev_dbms::alter_attrcolumn(pwr_tStatus *sts, char *tablename, char *aname, 
-                               pwr_eType newtype, unsigned int newsize, 
-                               pwr_eType oldtype, unsigned int oldsize)
-{
-  //TODO
-  return 0;
-}
-int sev_dbms::rename_attrcolumn(pwr_tStatus *sts, char *tablename, char *aname, pwr_eType type, unsigned int size)
-{
-  char query[2000];
-  char newname[500];
-  char timestr[40];
-  pwr_tTime uptime;
-
-  time_GetTime( &uptime);
-  time_AtoAscii( &uptime, time_eFormat_NumDateAndTime, timestr, sizeof(timestr));
-  timestr[19] = 0;
-  
-
-  sprintf(newname, "%s_before_%s", aname, timestr);
-  sprintf(query, "alter table %s change `%s` `%s` %s", tablename, aname, newname, pwrtype_to_type(type, size));
-
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
-    printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
-    *sts = SEV__DBERROR;
-    return 0;
-  }
-  return 1;
-}
-int sev_dbms::remove_objectitemattr( pwr_tStatus *sts, char *tablename, char *aname)
-{
-	char query[2000];
-
-  sprintf( query, "delete from objectitemattributes where tablename = '%s' and attributename = '%s'", tablename, aname);
-
-  //printf( "%s: %s\n", __FUNCTION__ ,query);
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
-    printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
-    *sts = SEV__DBERROR;
-    return 0;
-  }
-	return 1;
-}
-
-int sev_dbms::update_objectitemattr( pwr_tStatus *sts, char *tablename, char *aname, pwr_eType type, unsigned int size)
-{
-	char query[2000];
-
-  sprintf( query, "update objectitemattributes set attributetype=%d, attributesize=%d where tablename = '%s' and attributename = '%s'", 
-           type, size, tablename, aname);
-
-  //printf( "%s: %s\n", __FUNCTION__ ,query);
-  int rc = mysql_query( m_env->con(), query);
-  if (rc) {
-    printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
-    *sts = SEV__DBERROR;
-    return 0;
-  }
-	return 1;
-}
 
 int sev_dbms::check_deadband(pwr_eType type, unsigned int size, pwr_tFloat32 deadband, void *value, void *oldvalue)
 {
@@ -3005,42 +2899,156 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
   return 1;
 }
 
-int sev_dbms::handle_attrchange(pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *aname, char *oname, 
-													  pwr_eType type, unsigned int size, unsigned int item_idx, unsigned int attr_idx)
+int sev_dbms::handle_itemchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx)
 {
-  //We try to alter the table if it is possible(float->double int->long or little_string->bigger_string probably works).
-  //If we can't alter the table we rename the column and create a new one
+
+  char timestr[40];
+  pwr_tTime uptime;
+
+  time_GetTime( &uptime);
+  time_AtoAscii( &uptime, time_eFormat_NumDateAndTime, timestr, sizeof(timestr));
+  timestr[19] = 0;
+
+  // Replace ':' '-' and ' ' in timestr with '_'
+  for ( char *s = timestr; *s; s++) {
+    if ( *s == ':')
+      *s = '_';
+    if ( *s == ' ')
+      *s = '_';
+    if ( *s == '-')
+      *s = '_';
+  }
+
+  char newTableName[64];
+  snprintf(newTableName, sizeof(newTableName), "%s_%s", tablename, timestr);
+
+  printf("Recreating table %s due to attribute definition changes, old table saved to %s \n", tablename, newTableName);
+  errh_Warning("Recreating table %s due to attribute definition changes, old table saved to %s", tablename, newTableName);
+
+  char query[600];
+  sprintf(query, "RENAME TABLE %s to %s", tablename, newTableName);
+  int rc = mysql_query( m_env->con(), query);
+  if (rc) {
+    printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
+    *sts = SEV__DBERROR;
+    return 0;
+  }
 
   sev_item *item = &m_items[item_idx];
 
-  printf("Column:%s in %s has been changed from Type/size %d/%d to %d/%d\n", 
-         aname, tablename, item->attr[attr_idx].type, item->attr[attr_idx].size, type, size );
-  errh_Warning("Column:%s in %s has been changed from Type/size %d/%d to %d/%d", 
-               aname, tablename, item->attr[attr_idx].type, item->attr[attr_idx].size, type, size );
+  create_table( sts, item->oid, item->attr[0].aname, item->attr[0].type, item->attr[0].size, item->options, item->deadband);
+  if ( EVEN(*sts)) return 0;
 
-  if (!alter_attrcolumn(sts, tablename, aname, type, size, item->attr[attr_idx].type, item->attr[attr_idx].size)) {
-    //We were not able to alter the column then we should rename the column and create a new one
-    if (!rename_attrcolumn(sts, tablename, aname, item->attr[attr_idx].type, item->attr[attr_idx].size)) {
-      //Very very bad this should not happen
-      errh_Error("Could not rename column that has been changed tablename:%s columnname:%s", tablename, aname);
-      //item->attr[attr_idx].status = -1; //TODO Skip this attribute during logging
+  if(item->options & pwr_mSevOptionsMask_ReadOptimized ) {
+    //If we set increment to same value as in the old table we can easily move the data from the old table to the new one
+    pwr_tUInt64 autoIncrValue = get_maxFromIntegerColumn(newTableName, (char*)"id");
+    if(autoIncrValue) 
+      autoIncrValue++;
+    sprintf(query, "ALTER TABLE %s AUTO_INCREMENT = %llu", tablename, autoIncrValue);
+    rc = mysql_query( m_env->con(), query);
+    if (rc) {
+      printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
       *sts = SEV__DBERROR;
       return 0;
     }
-    errh_Warning("Column:%s in %s renamed to:%s_before_xxxx xx:xx:xx", aname, tablename, aname );
+  }
 
-    char query[2000];
-    sprintf( query, "alter table %s add `%s` %s;",
-             tablename, aname, pwrtype_to_type( type, size));
-    int rc = mysql_query( m_env->con(), query);
+  *sts = SEV__SUCCESS;
+  return 1;
+}
+
+
+
+int sev_dbms::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx, bool newObject)
+{
+  char newTableName[64];
+  char query[600];
+  int rc;
+
+  if(!newObject) {
+    char timestr[40];
+    pwr_tTime uptime;
+  
+    time_GetTime( &uptime);
+    time_AtoAscii( &uptime, time_eFormat_NumDateAndTime, timestr, sizeof(timestr));
+    timestr[19] = 0;
+  
+    // Replace ':' '-' and ' ' in timestr with '_'
+    for ( char *s = timestr; *s; s++) {
+      if ( *s == ':')
+        *s = '_';
+      if ( *s == ' ')
+        *s = '_';
+      if ( *s == '-')
+        *s = '_';
+    }
+  
+    snprintf(newTableName, sizeof(newTableName), "%s_%s", tablename, timestr);
+  
+    printf("Recreating table %s due to attribute definition changes, old table saved to %s \n", tablename, newTableName);
+    errh_Warning("Recreating table %s due to attribute definition changes, old table saved to %s", tablename, newTableName);
+  
+    sprintf(query, "RENAME TABLE %s to %s", tablename, newTableName);
+    rc = mysql_query( m_env->con(), query);
+    if (rc) {
+      printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
+      *sts = SEV__DBERROR;
+      return 0;
+    }
+  }
+
+  sev_item *item = &m_items[item_idx];
+
+  create_objecttable( sts, tablename, item->options, item->deadband);
+  if ( EVEN(*sts)) return 0;
+
+  if(!newObject) {
+    if(item->options & pwr_mSevOptionsMask_ReadOptimized ) {
+      //If we set increment to same value as in the old table we can easily move the data from the old table to the new one
+      pwr_tUInt64 autoIncrValue = get_maxFromIntegerColumn(newTableName, (char*)"sev__id");
+      if(autoIncrValue) 
+        autoIncrValue++;
+      sprintf(query, "ALTER TABLE %s AUTO_INCREMENT = %llu", tablename, autoIncrValue);
+      rc = mysql_query( m_env->con(), query);
+      if (rc) {
+        printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
+        *sts = SEV__DBERROR;
+        return 0;
+      }
+    }
+  
+    sprintf(query, "delete from objectitemattributes where tablename = '%s'", tablename);
+    rc = mysql_query( m_env->con(), query);
+    if (rc) {
+      printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
+      *sts = SEV__DBERROR;
+      return 0;
+    }
+  }
+
+  for(size_t i = 0; i < item->attr.size(); i++) {
+    sprintf( query, "alter table %s add `%s` %s;", tablename, item->attr[i].aname, pwrtype_to_type( item->attr[i].type, item->attr[i].size));
+    rc = mysql_query( m_env->con(), query);
+    if (rc) {
+      printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
+      *sts = SEV__DBERROR;
+      return 0;
+    }
+    int aidx = i;
+    sprintf( query, "insert into objectitemattributes (tablename, attributename, attributeidx, attributetype, attributesize) "
+                    "values('%s', '%s', %d, %d, %d)", tablename, item->attr[i].aname, aidx, item->attr[i].type, item->attr[i].size);
+    rc = mysql_query( m_env->con(), query);
     if (rc) {
       printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
       *sts = SEV__DBERROR;
       return 0;
     }
   }
+  *sts = SEV__SUCCESS;
   return 1;
 }
+
+
 
 sev_dbms::~sev_dbms()
 {
