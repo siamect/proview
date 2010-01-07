@@ -180,6 +180,7 @@ int sev_dbms_env::open(const char *v_host, const char *v_user, const char *v_pas
     
   MYSQL *con = mysql_real_connect(m_con, host(), user(), passwd(), dbName(), port(), socket(), 0);
   if (con == 0) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf("Failed to connect to database: Error: %s\n", mysql_error(m_con));
     return 1;
   }
@@ -189,6 +190,7 @@ int sev_dbms_env::open(const char *v_host, const char *v_user, const char *v_pas
   sprintf(sql, "use %s", dbName());
   int rc = mysql_query(m_con, sql);
   if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf("%s\n", mysql_error(m_con));
     printf("%s\n", sql);
     return rc;
@@ -223,6 +225,7 @@ MYSQL *sev_dbms_env::createDb(void)
   MYSQL *con = mysql_real_connect(m_con, host(), user(), passwd(), 0, port(), socket(), 0);
   // printf("Tried to connect to database, con %x: Status: %s\n", (int)con, mysql_error(m_con));
   if (con == 0) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf("Failed to connect to database: Error: %s\n", mysql_error(m_con));
     return 0;
   }
@@ -232,6 +235,7 @@ MYSQL *sev_dbms_env::createDb(void)
   sprintf(query, "create database %s", dbName());
   int rc = mysql_query(m_con, query);
   if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf("%s\n", mysql_error(m_con));
     printf("%s\n", query);
     return 0;
@@ -240,6 +244,7 @@ MYSQL *sev_dbms_env::createDb(void)
   sprintf(query, "use %s", dbName());
   rc = mysql_query(m_con, query);
   if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf("%s\n", mysql_error(m_con));
     printf("%s\n", query);
     return 0;
@@ -284,12 +289,14 @@ int sev_dbms_env::checkAndUpdateVersion(unsigned int version)
     MYSQL_RES *result = mysql_store_result( m_con);
   
     if ( !result) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
       printf( "selecting sev_version Error\n");
       return 0;
     }
   
     row = mysql_fetch_row( result);
     if (!row) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
       printf( "selecting sev_version Error\n");
       return 0;
     }
@@ -310,7 +317,10 @@ int sev_dbms_env::checkAndUpdateVersion(unsigned int version)
     char query[100];
     sprintf( query, "update sev_version set version = %d", version);
     rc = mysql_query( m_con, query);
-    if (rc) printf( "Update sev_version: %s\n", mysql_error(m_con));
+    if (rc) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
+      printf( "Update sev_version: %s\n", mysql_error(m_con));
+    }
   }
   return 1;
 }
@@ -322,11 +332,17 @@ int sev_dbms_env::updateDB_to_SevVersion2(void)
   sprintf( query, "create table sev_version ("
      "version int unsigned not null primary key);");
   int rc = mysql_query( m_con, query);
-  if (rc) printf( "Create sev_version table: %s\n", mysql_error(m_con));
+  if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "Create sev_version table: %s\n", mysql_error(m_con));
+  }
 
   sprintf( query, "insert into sev_version (version) values(2)");
   rc = mysql_query( m_con, query);
-  if (rc) printf( "Insert into table sev_version: %s\n", mysql_error(m_con));
+  if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "Insert into table sev_version: %s\n", mysql_error(m_con));
+  }
 
 
 	sprintf( query, "create table objectitems ("
@@ -345,7 +361,10 @@ int sev_dbms_env::updateDB_to_SevVersion2(void)
 		 "description varchar(80));");
 
 	rc = mysql_query( m_con, query);
-	if (rc) printf( "Create objectitems table: %s\n", mysql_error(m_con));
+	if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "Create objectitems table: %s\n", mysql_error(m_con));
+  }
 
   sprintf( query, "create table objectitemattributes ("
      "tablename varchar(255) not null,"
@@ -356,7 +375,10 @@ int sev_dbms_env::updateDB_to_SevVersion2(void)
      "PRIMARY KEY(tablename, attributename));");
 
   rc = mysql_query( m_con, query);
-  if (rc) printf( "Create objectitemattributes table: %s\n", mysql_error(m_con));
+  if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "Create objectitemattributes table: %s\n", mysql_error(m_con));
+  }
 
   return 1;
 }
@@ -369,6 +391,7 @@ MYSQL *sev_dbms_env::openDb()
   MYSQL *con = mysql_real_connect(m_con, host(), user(), passwd(), dbName(), port(), socket(), 0);
   // printf("Tried to connect to database, con %x: Status: %s\n", (int)con, mysql_error(m_con));
   if (con == 0) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf("Failed to connect to database: Error: %s\n", mysql_error(m_con));
     return 0;
   }
@@ -399,6 +422,7 @@ int sev_dbms_env::create()
     
     fp = fopen(name, "w+b");
     if (fp == NULL) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
       printf("** Cannot open file: %s, %s\n", name, strerror(errno));
       return errno;
     }
@@ -441,6 +465,7 @@ int sev_dbms_env::open(void)
 
   FILE *fp = fopen(buf, "r");
   if (fp == NULL) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf("** Cannot open file: %s, %s\n", buf, strerror(errno));
     return errno;
   }
@@ -482,6 +507,7 @@ int sev_dbms_env::open(void)
       socket(valp);
     }
     else {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
       printf("Unknown connection parameter! : %s\n", var);
     }
   }
@@ -519,6 +545,7 @@ int sev_dbms_env::get_systemname()
   dcli_translate_filename( fname, fname);
   file = fopen( fname, "r");
   if ( file == 0) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf("** Warning, systemname not found\n");
     return 0;
   }
@@ -582,6 +609,7 @@ int sev_dbms::create_table( pwr_tStatus *sts, pwr_tOid oid, char *aname, pwr_eTy
 
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "Create table: %s\n", mysql_error(m_env->con()));
     *sts = SEV__DBERROR;
     return 0;
@@ -598,6 +626,7 @@ int sev_dbms::delete_table( pwr_tStatus *sts, pwr_tOid oid, char *aname)
 
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "Delete table: %s\n", mysql_error(m_env->con()));
     *sts = SEV__DBERROR;
     return 0;
@@ -624,6 +653,7 @@ int sev_dbms::store_item( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char 
 	   vsize, description, unit, scantime, deadband, options);
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "Store item: %s\n", mysql_error(m_env->con()));
     *sts = SEV__DBERROR;
     return 0;
@@ -641,6 +671,7 @@ int sev_dbms::remove_item( pwr_tStatus *sts, pwr_tOid oid, char *aname)
 	   oid.vid, oid.oix, aname);
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "Remove item: %s\n", mysql_error(m_env->con()));
     *sts = SEV__DBERROR;
     return 0;
@@ -660,6 +691,7 @@ int sev_dbms::get_items( pwr_tStatus *sts)
 
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "Get Items: %s\n", mysql_error(m_env->con()));
     *sts = SEV__DBERROR;
     return 0;
@@ -668,6 +700,7 @@ int sev_dbms::get_items( pwr_tStatus *sts)
   MYSQL_ROW row;
   MYSQL_RES *result = mysql_store_result( m_env->con());
   if ( !result) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "GetValues Result Error\n");
     *sts = SEV__DBERROR;
     return 0;
@@ -719,6 +752,7 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
 {
   if(size != m_items[item_idx].value_size) {
     //Something is seriously wrong
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf("%s expected size:%d recevied size:%d ERROR!!\n", __FUNCTION__, m_items[item_idx].value_size, size);
     *sts = SEV__DBERROR;
     return 0;
@@ -851,8 +885,10 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
                m_items[item_idx].tablename, 
                m_items[item_idx].last_id);
       int rc = mysql_query( m_env->con(), query);
-      if (rc)
+      if (rc) {
+        printf("In %s row %d:\n", __FILE__, __LINE__);
         printf( "Update jump: %s\n", mysql_error(m_env->con()));
+      }
     }
   }
   else {
@@ -1043,6 +1079,7 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
 
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "GetValues Query Error\n");
     *sts = SEV__DBERROR;
     return 0;
@@ -1052,6 +1089,7 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
   MYSQL_RES *result = mysql_store_result( m_env->con());
 
   if ( !result) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "GetValues Status Result Error\n");
     *sts = SEV__DBERROR;
     return 0;
@@ -1059,6 +1097,7 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
 
   row = mysql_fetch_row( result);
   if (!row) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "GetValues Status Result Error\n");
     *sts = SEV__DBERROR;
     return 0;
@@ -1227,6 +1266,7 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
 
   rc = mysql_query( m_env->con(), query);
   if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "Get Values: %s\n", mysql_error(m_env->con()));
     *sts = SEV__DBERROR;
     return 0;
@@ -1234,6 +1274,7 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
 
   result = mysql_store_result( m_env->con());
   if ( !result) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "GetValues Result Error\n");
     *sts = SEV__DBERROR;
     return 0;
@@ -1471,6 +1512,7 @@ int sev_dbms::check_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *ana
 
       int rc = mysql_query( m_env->con(), query);
       if (rc) {
+        printf("In %s row %d:\n", __FILE__, __LINE__);
         printf( "Store item: %s\n", mysql_error(m_env->con()));
         *sts = SEV__DBERROR;
         return 0;
@@ -1589,6 +1631,7 @@ int sev_dbms::delete_old_data( pwr_tStatus *sts, pwr_tOid oid, char *aname,
   }
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "Delete old data: %s\n", mysql_error(m_env->con()));
     *sts = SEV__DBERROR;
     return 0;
@@ -1727,6 +1770,7 @@ int sev_dbms::check_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid,
 
       int rc = mysql_query( m_env->con(), query);
       if (rc) {
+        printf("In %s row %d:\n", __FILE__, __LINE__);
         printf( "%s : %s\n", __FUNCTION__, mysql_error(m_env->con()));
         *sts = SEV__DBERROR;
         return 0;
@@ -1798,7 +1842,8 @@ int sev_dbms::store_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid,
 	   tablename, oid.vid, oid.oix, oname, aname, timestr, timestr, (long int)storagetime.tv_sec, description, scantime, deadband, options);
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
-    printf( "Store item: %s\n", mysql_error(m_env->con()));
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
     *sts = SEV__DBERROR;
     return 0;
   }
@@ -1856,6 +1901,7 @@ int sev_dbms::create_objecttable( pwr_tStatus *sts, char *tablename, pwr_tMask o
 
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "%s: %s\n", __FUNCTION__ ,mysql_error(m_env->con()));
     *sts = SEV__DBERROR;
     return 0;
@@ -1902,12 +1948,14 @@ pwr_tUInt64 sev_dbms::get_minFromIntegerColumn( char *tablename, char *colname )
   //printf( "%s: %s\n", __FUNCTION__ ,query);
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
     return 0;
   }
   MYSQL_RES *result = mysql_store_result( m_env->con());
   if ( !result) {
-    printf( "GetValues Result Error\n");
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s Result Error\n", __FUNCTION__);
     return retVal;
   }
 
@@ -1934,12 +1982,14 @@ pwr_tUInt64 sev_dbms::get_maxFromIntegerColumn( char *tablename, char *colname )
   //printf( "%s: %s\n", __FUNCTION__ ,query);
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
     return 0;
   }
   MYSQL_RES *result = mysql_store_result( m_env->con());
   if ( !result) {
-    printf( "GetValues Result Error\n");
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s Result Error\n", __FUNCTION__);
     return retVal;
   }
 
@@ -2111,15 +2161,18 @@ int sev_dbms::store_objectvalue( pwr_tStatus *sts, int item_idx, int attr_idx,
              m_items[item_idx].tablename, 
              m_items[item_idx].last_id);
     int rc = mysql_query( m_env->con(), query);
-    if (rc)
+    if (rc) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
       printf( "Update jump: %s\n", mysql_error(m_env->con()));
+    }
   }
 
   //printf( "Store_objectvalue: %s\n", queryOStr.str().c_str());
 
   int rc = mysql_query( m_env->con(), queryOStr.str().c_str());
   if (rc) {
-    printf( "Update value: %s\n", mysql_error(m_env->con()));
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
     printf( "Error in: %s\n", queryOStr.str().c_str());
 
     *sts = SEV__DBERROR;
@@ -2153,6 +2206,7 @@ int sev_dbms::get_item( pwr_tStatus *sts, sev_item *item, char *tablename)
 
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
     *sts = SEV__DBERROR;
     return 0;
@@ -2161,20 +2215,23 @@ int sev_dbms::get_item( pwr_tStatus *sts, sev_item *item, char *tablename)
   MYSQL_ROW row;
   MYSQL_RES *result = mysql_store_result( m_env->con());
   if ( !result) {
-    printf( "GetValues Result Error\n");
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s Result Error\n", __FUNCTION__);
     *sts = SEV__DBERROR;
     return 0;
   }
   int rows = mysql_num_rows( result);
 
   if(rows > 1) {
-    printf( "Duplicate items Error\n");
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s Duplicate items Error\n", __FUNCTION__);
     *sts = SEV__DBERROR;
     mysql_free_result( result);
     return 0;
   }
   if(rows == 0) {
-    printf( "No item Error\n");
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s No item Error\n", __FUNCTION__);
     *sts = SEV__DBERROR;
     mysql_free_result( result);
     return 0;
@@ -2223,6 +2280,7 @@ int sev_dbms::get_objectitem( pwr_tStatus *sts, sev_item *item, char *tablename)
 
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
     *sts = SEV__DBERROR;
     return 0;
@@ -2231,22 +2289,25 @@ int sev_dbms::get_objectitem( pwr_tStatus *sts, sev_item *item, char *tablename)
   MYSQL_ROW row;
   MYSQL_RES *result = mysql_store_result( m_env->con());
   if ( !result) {
-    printf( "get_objectitem Result Error\n");
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s Result Error\n", __FUNCTION__);
     *sts = SEV__DBERROR;
     return 0;
   }
   int rows = mysql_num_rows( result);
   if(!rows) {
     mysql_free_result( result);
-    printf( "get_objectitem Row Error\n");
-    printf( "get_objectitem: %s\n", query);
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s Row Error\n", __FUNCTION__);
+    printf( "%s: %s\n", __FUNCTION__, query);
     *sts = SEV__DBERROR;
     return 0;
   }
   row = mysql_fetch_row( result);
   if (!row) {
     mysql_free_result( result);
-    printf( "get_objectitem Row Error\n");
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s Row Error\n", __FUNCTION__);
     *sts = SEV__DBERROR;
     return 0;
   }
@@ -2286,7 +2347,8 @@ int sev_dbms::get_objectitems( pwr_tStatus *sts)
 
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
-    printf( "Get ObjectItems: %s\n", mysql_error(m_env->con()));
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
     *sts = SEV__DBERROR;
     return 0;
   }
@@ -2294,7 +2356,8 @@ int sev_dbms::get_objectitems( pwr_tStatus *sts)
   MYSQL_ROW row;
   MYSQL_RES *result = mysql_store_result( m_env->con());
   if ( !result) {
-    printf( "GetObjectItems Result Error\n");
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s Result Error\n", __FUNCTION__);
     *sts = SEV__DBERROR;
     return 0;
   }
@@ -2343,7 +2406,8 @@ int sev_dbms::get_objectitemattributes( pwr_tStatus *sts, sev_item *item, char *
 
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
-    printf( "Get ObjectItemAttr: %s\n", mysql_error(m_env->con()));
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
     *sts = SEV__DBERROR;
     return 0;
   }
@@ -2351,7 +2415,8 @@ int sev_dbms::get_objectitemattributes( pwr_tStatus *sts, sev_item *item, char *
   MYSQL_ROW row;
   MYSQL_RES *result = mysql_store_result( m_env->con());
   if ( !result) {
-    printf( "GetObjectItemAttr Result Error\n");
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s: Result Error\n", __FUNCTION__);
     *sts = SEV__DBERROR;
     return 0;
   }
@@ -2408,7 +2473,8 @@ int sev_dbms::delete_old_objectdata( pwr_tStatus *sts, char *tablename,
 
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
-    printf( "Delete old object data: %s\n", mysql_error(m_env->con()));
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
     *sts = SEV__DBERROR;
     return 0;
   }
@@ -2517,7 +2583,8 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
 
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
-    printf( "GetValues Query Error\n");
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s Query Error\n", __FUNCTION__);
     *sts = SEV__DBERROR;
     return 0;
   }
@@ -2526,14 +2593,16 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
   MYSQL_RES *result = mysql_store_result( m_env->con());
 
   if ( !result) {
-    printf( "GetValues Status Result Error\n");
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s Status Result Error\n", __FUNCTION__);
     *sts = SEV__DBERROR;
     return 0;
   }
 
   row = mysql_fetch_row( result);
   if (!row) {
-    printf( "GetValues Status Result Error\n");
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s Status Result Error\n", __FUNCTION__);
     *sts = SEV__DBERROR;
     return 0;
   }
@@ -2715,21 +2784,27 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
   queryStr.append(" order by ");
   queryStr.append(orderby_part);
 
+  errh_Info("Before query in get_objectvalues");
   printf("%s: %s\n", __FUNCTION__, queryStr.c_str());
 
   rc = mysql_query( m_env->con(), queryStr.c_str());
   if (rc) {
-    printf( "Get Values: %s\n", mysql_error(m_env->con()));
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
     *sts = SEV__DBERROR;
     return 0;
   }
+  errh_Info("After query in get_objectvalues");
 
   result = mysql_store_result( m_env->con());
   if ( !result) {
-    printf( "GetValues Result Error\n");
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s Result Error\n", __FUNCTION__);
     *sts = SEV__DBERROR;
     return 0;
   }
+  errh_Info("After store result in get_objectvalues");
+
   int rows = mysql_num_rows( result);
   int bufrows = rows;
 
@@ -2895,6 +2970,8 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
     *bsize = bcnt;
     mysql_free_result( result);
   }
+  errh_Info("After copying values in get_objectvalues");
+
   *sts = SEV__SUCCESS;
   return 1;
 }
@@ -2929,6 +3006,7 @@ int sev_dbms::handle_itemchange(pwr_tStatus *sts, char *tablename, unsigned int 
   sprintf(query, "RENAME TABLE %s to %s", tablename, newTableName);
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
     printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
     *sts = SEV__DBERROR;
     return 0;
@@ -2947,6 +3025,7 @@ int sev_dbms::handle_itemchange(pwr_tStatus *sts, char *tablename, unsigned int 
     sprintf(query, "ALTER TABLE %s AUTO_INCREMENT = %llu", tablename, autoIncrValue);
     rc = mysql_query( m_env->con(), query);
     if (rc) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
       printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
       *sts = SEV__DBERROR;
       return 0;
@@ -2991,6 +3070,7 @@ int sev_dbms::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned in
     sprintf(query, "RENAME TABLE %s to %s", tablename, newTableName);
     rc = mysql_query( m_env->con(), query);
     if (rc) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
       printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
       *sts = SEV__DBERROR;
       return 0;
@@ -3011,6 +3091,7 @@ int sev_dbms::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned in
       sprintf(query, "ALTER TABLE %s AUTO_INCREMENT = %llu", tablename, autoIncrValue);
       rc = mysql_query( m_env->con(), query);
       if (rc) {
+        printf("In %s row %d:\n", __FILE__, __LINE__);
         printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
         *sts = SEV__DBERROR;
         return 0;
@@ -3020,6 +3101,7 @@ int sev_dbms::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned in
     sprintf(query, "delete from objectitemattributes where tablename = '%s'", tablename);
     rc = mysql_query( m_env->con(), query);
     if (rc) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
       printf( "%s: %s\n", __FUNCTION__, mysql_error(m_env->con()));
       *sts = SEV__DBERROR;
       return 0;
@@ -3030,6 +3112,7 @@ int sev_dbms::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned in
     sprintf( query, "alter table %s add `%s` %s;", tablename, item->attr[i].aname, pwrtype_to_type( item->attr[i].type, item->attr[i].size));
     rc = mysql_query( m_env->con(), query);
     if (rc) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
       printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
       *sts = SEV__DBERROR;
       return 0;
@@ -3039,6 +3122,7 @@ int sev_dbms::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned in
                     "values('%s', '%s', %d, %d, %d)", tablename, item->attr[i].aname, aidx, item->attr[i].type, item->attr[i].size);
     rc = mysql_query( m_env->con(), query);
     if (rc) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
       printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
       *sts = SEV__DBERROR;
       return 0;

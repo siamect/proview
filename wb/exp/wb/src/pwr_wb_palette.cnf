@@ -53,6 +53,7 @@ palette NavigatorPalette
       class DsFastCurve
       class DsTrend
       class SevHist
+      class SevHistObject
     }
     menu Supervision
     {
