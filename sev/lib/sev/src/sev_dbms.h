@@ -103,6 +103,8 @@ class sev_dbms_env
 class sev_dbms : public sev_db {
  public:
 
+  static const unsigned int constMaxColNameLength = 64;
+
   sev_dbms_env *m_env;
 
   sev_dbms( sev_dbms_env *env) : m_env(env) {}
@@ -122,14 +124,14 @@ class sev_dbms : public sev_db {
 		  pwr_eType type, unsigned int size, pwr_tFloat32 scantime, pwr_tTime *creatime,
 		  pwr_tTime *starttime, 
 		  pwr_tTime *endtime, int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize);
-  int delete_old_data( pwr_tStatus *sts, pwr_tOid oid, char *aname, 
+  int delete_old_data( pwr_tStatus *sts, char *tablename, 
 		       pwr_tMask options, pwr_tTime limit);
   int delete_item( pwr_tStatus *sts, pwr_tOid oid, char *aname);
 
   int get_items( pwr_tStatus *sts);
-  int create_table( pwr_tStatus *sts, pwr_tOid oid, char *aname, pwr_eType type, unsigned int size,
+  int create_table( pwr_tStatus *sts, char *tablename, pwr_eType type, unsigned int size,
 		    pwr_tMask options, float deadband);
-  int delete_table( pwr_tStatus *sts, pwr_tOid oid, char *aname);
+  int delete_table( pwr_tStatus *sts, char *tablename);
   int store_item( pwr_tStatus *sts, char *tabelname, pwr_tOid oid, char *oname, char *aname, 
 		  pwr_tDeltaTime storagetime, pwr_eType vtype, unsigned int vsize, 
 		  char *description, char *unit, pwr_tFloat32 scantime, 
@@ -152,8 +154,8 @@ class sev_dbms : public sev_db {
   int create_objecttable( pwr_tStatus *sts, char *tablename, pwr_tMask options, float deadband);
   int store_objectvalue( pwr_tStatus *sts, int item_idx, int attr_idx,
                              pwr_tTime time, void *buf,  void *oldbuf, unsigned int size);
-  int get_item( pwr_tStatus *sts, sev_item *item, char *tablename);
-  int get_objectitem( pwr_tStatus *sts, sev_item *item, char *tablename);
+  int get_item( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename);
+  int get_objectitem( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename);
   int get_objectitems( pwr_tStatus *sts);
   int get_objectitemattributes( pwr_tStatus *sts, sev_item *item, char *tablename);
   int check_objectitemattr( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *aname, char *oname, 
@@ -165,8 +167,19 @@ class sev_dbms : public sev_db {
 			                  int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize);
   pwr_tUInt64 get_minFromIntegerColumn( char *tablename, char *colname );
   pwr_tUInt64 get_maxFromIntegerColumn( char *tablename, char *colname );
+  pwr_tUInt64 get_nextAutoIncrement( char *tablename );
   int handle_itemchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx);
   int handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx, bool newObject);
+  inline char* create_colName(unsigned int index, char *attributename) {
+    static char colName[constMaxColNameLength];
+    strncpy(colName, attributename, constMaxColNameLength);
+    if(strlen(attributename) > constMaxColNameLength)
+    {
+      colName[constMaxColNameLength-5] = 0;
+      snprintf(&colName[strlen(colName)], 5, "_%d", index);
+    }
+    return colName;
+  }
 };
 #endif
 #endif

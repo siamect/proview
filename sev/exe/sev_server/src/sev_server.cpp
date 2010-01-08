@@ -318,73 +318,6 @@ int sev_server::send_itemlist( qcom_sQid tgt)
   }    
   return 1;
 }
-/*
-int sev_server::send_itemlist( qcom_sQid tgt)
-{
-  int item_cnt = 0;
-  qcom_sPut	put;
-  pwr_tStatus	sts, lsts;
-  int		size;
-
-  for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
-    if ( m_db->m_items[i].deleted)
-      continue;
-    item_cnt++;
-  }
-
-  if ( !item_cnt)
-    return 1;
-
-  size = sizeof(sev_sMsgHistItems) + (item_cnt - 1) * sizeof(sev_sHistItem);
-  
-  put.size = size;
-  put.data = qcom_Alloc(&lsts, put.size);
-
-  ((sev_sMsgHistItems *)put.data)->Type = sev_eMsgType_HistItems;
-
-  ((sev_sMsgHistItems *)put.data)->NumItems = item_cnt;
-  int idx = 0;
-  for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
-    if ( m_db->m_items[i].deleted)
-      continue;
-    ((sev_sMsgHistItems *)put.data)->Items[idx].oid = m_db->m_items[i].oid;
-    strcpy( ((sev_sMsgHistItems *)put.data)->Items[idx].oname, m_db->m_items[i].oname);
-    ((sev_sMsgHistItems *)put.data)->Items[idx].storagetime = 
-      net_DeltaTimeToNetTime(&m_db->m_items[i].storagetime);
-    ((sev_sMsgHistItems *)put.data)->Items[idx].creatime = 
-      net_TimeToNetTime( &m_db->m_items[i].creatime);
-    ((sev_sMsgHistItems *)put.data)->Items[idx].modtime = 
-      net_TimeToNetTime( &m_db->m_items[i].modtime);
-    strcpy( ((sev_sMsgHistItems *)put.data)->Items[idx].description, m_db->m_items[i].description);
-    strcpy( ((sev_sMsgHistItems *)put.data)->Items[idx].attr[0].aname, m_db->m_items[i].attr[0].aname);
-    ((sev_sMsgHistItems *)put.data)->Items[idx].attrnum = m_db->m_items[i].attrnum;
-    ((sev_sMsgHistItems *)put.data)->Items[idx].attr[0].type = m_db->m_items[i].attr[0].type;
-    ((sev_sMsgHistItems *)put.data)->Items[idx].attr[0].size = m_db->m_items[i].attr[0].size;
-    strcpy( ((sev_sMsgHistItems *)put.data)->Items[idx].attr[0].unit, m_db->m_items[i].attr[0].unit);
-    ((sev_sMsgHistItems *)put.data)->Items[idx].scantime = m_db->m_items[i].scantime;
-    ((sev_sMsgHistItems *)put.data)->Items[idx].deadband = m_db->m_items[i].deadband;
-    ((sev_sMsgHistItems *)put.data)->Items[idx].options = m_db->m_items[i].options;
-    idx++;
-  }
-  
-  if ( !item_cnt)
-    ((sev_sMsgHistItems *)put.data)->Status = SEV__NOITEMS;
-  else
-    ((sev_sMsgHistItems *)put.data)->Status = SEV__SUCCESS;
-
-  put.reply.nid = m_nodes[0].nid;
-  put.reply.qix = sev_eProcSevServer;
-  put.type.b = (qcom_eBtype) sev_cMsgClass;
-  put.type.s = (qcom_eStype) sev_eMsgType_HistItems;
-  put.msg_id = m_msg_id++;
-
-  if ( !qcom_Put( &sts, &tgt, &put)) {
-    qcom_Free( &sts, put.data);
-    return 0;
-  }    
-  return 1;
-}
-*/
 
 int sev_server::send_server_status( qcom_sQid tgt)
 {
@@ -584,7 +517,7 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
           attributeName[0] = '\0';
 
         storagetime = net_NetTimeToDeltaTime( &buffP->storagetime );
-        sprintf( tablename, "obj_%s",  m_db->oid_to_table( buffP->oid, attributeName) );
+        sprintf( tablename, "HiaHia"); //Dummy-name, real name created in add_objectitem
         bool newobject = false;
         if ( !m_db->check_objectitem( &m_sts, 
                                       tablename, 
@@ -650,7 +583,6 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
           //rename the table to something and create a new one.
           //this is the only way to do this without hanging the server for several minutes
           m_db->handle_objectchange(&m_sts, tablename, idx, newobject);
-
         }
 
         //If node is coming up again we do not want deadband to be active due to init of old_value
@@ -700,6 +632,7 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
 		      msg->Items[i].deadband, msg->Items[i].options, &idx);
       if ( EVEN(m_sts)) return m_sts;
     }
+
     if ( ODD(m_sts) ) {
       //Create space for the old values used if we have deadband active
       if ( m_db->m_items[idx].old_value != 0 ) {
@@ -788,10 +721,8 @@ int sev_server::send_histdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *rmsg, 
   starttime = net_NetTimeToTime( &rmsg->StartTime);
   endtime = net_NetTimeToTime( &rmsg->EndTime);
   sev_item item;
-  char tablename[500];
-  strcpy( tablename, m_db->oid_to_table( rmsg->Oid, rmsg->AName) );
 
-  m_db->get_item(&m_sts, &item, tablename);
+  m_db->get_item(&m_sts, &item, rmsg->Oid, rmsg->AName);
   if(ODD(m_sts)) {
     m_db->get_values( &m_sts, rmsg->Oid, item.options, item.deadband, 
             rmsg->AName, item.attr[0].type, item.attr[0].size, 
@@ -848,10 +779,8 @@ int sev_server::send_objecthistdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *
   starttime = net_NetTimeToTime( &rmsg->StartTime);
   endtime = net_NetTimeToTime( &rmsg->EndTime);
   sev_item item;
-  char tablename[500];
-  sprintf( tablename, "obj_%s",  m_db->oid_to_table( rmsg->Oid, rmsg->AName) );
 
-  m_db->get_objectitem(&m_sts, &item, tablename);
+  m_db->get_objectitem(&m_sts, &item, rmsg->Oid, rmsg->AName);
   if(ODD(m_sts)) {
     m_db->get_objectvalues(&m_sts, &item, item.value_size, &starttime, &endtime, rmsg->NumPoints, &tbuf,  &vbuf, &rows);
   }
@@ -959,7 +888,7 @@ void sev_server::garbage_item( int idx)
                                  m_db->m_items[idx].options, limit);
   }
   else {
-    m_db->delete_old_data( &m_sts, m_db->m_items[idx].oid, m_db->m_items[idx].attr[0].aname, 
+    m_db->delete_old_data( &m_sts, m_db->m_items[idx].tablename, 
          m_db->m_items[idx].options, limit);
   }
 }

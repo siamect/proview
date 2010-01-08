@@ -559,7 +559,7 @@ int sev_dbms_env::get_systemname()
   return 1;
 }
 
-int sev_dbms::create_table( pwr_tStatus *sts, pwr_tOid oid, char *aname, pwr_eType type, 
+int sev_dbms::create_table( pwr_tStatus *sts, char *tablename, pwr_eType type, 
 			    unsigned int size, pwr_tMask options, float deadband)
 {
   char query[200];
@@ -605,7 +605,7 @@ int sev_dbms::create_table( pwr_tStatus *sts, pwr_tOid oid, char *aname, pwr_eTy
 
   sprintf( query, "create table %s ( %s"
 	   "%s, value %s %s, index (time));",
-	   oid_to_table(oid, aname), readoptstr, timeformatstr, pwrtype_to_type( type, size), jumpstr);
+	   tablename, readoptstr, timeformatstr, pwrtype_to_type( type, size), jumpstr);
 
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
@@ -617,12 +617,11 @@ int sev_dbms::create_table( pwr_tStatus *sts, pwr_tOid oid, char *aname, pwr_eTy
   return 1;
 }
 
-int sev_dbms::delete_table( pwr_tStatus *sts, pwr_tOid oid, char *aname)
+int sev_dbms::delete_table( pwr_tStatus *sts, char *tablename)
 {
   char query[200];
 
-  sprintf( query, "drop table %s;", 
-	   oid_to_table(oid, aname));
+  sprintf( query, "drop table %s;", tablename);
 
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
@@ -647,6 +646,21 @@ int sev_dbms::store_item( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char 
   time_AtoAscii( &creatime, time_eFormat_NumDateAndTime, timestr, sizeof(timestr));
   timestr[19] = 0;
 
+  unsigned int next_id = get_nextAutoIncrement((char*)"items");
+/*
+  char volName[32];
+  strncpy(volName, oname, sizeof(volName));
+  for ( char *s = volName; *s; s++) {
+    if ( *s == ':') {
+      *s = 0;
+      break;
+    }
+  }
+  sprintf(tablename, "%s_%d", volName, next_id);
+*/
+
+  sprintf(tablename, "%s_%d", oid_to_table(oid, (char*)""), next_id);
+  
   sprintf( query, "insert into items (id,tablename,vid,oix,oname,aname,uptime,cretime,storagetime,vtype,vsize,description,unit,scantime,deadband,options) "
 	   "values (0,'%s',%d,%d,'%s','%s','%s','%s',%ld,%d,%d,'%s','%s',%f,%f,%d);",
 	   tablename, oid.vid, oid.oix, oname, aname, timestr, timestr, (long int)storagetime.tv_sec, vtype, 
@@ -913,17 +927,17 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
         switch ( m_items[item_idx].attr[attr_idx].type) {
           case pwr_eType_String:
             sprintf( query, "insert into %s (time, ntime, %s) values (%ld,%ld,'%s')",
-                     oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), colname,
+                     m_items[item_idx].tablename, colname,
                      (long int)time.tv_sec, (long int)time.tv_nsec, bufstr);
             break;
           default:
             if ( m_items[item_idx].options & pwr_mSevOptionsMask_UseDeadBand)
               sprintf( query, "insert into %s (time, ntime, %s, jump) values (%ld,%ld,%s,%d)",
-                       oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), colname,
+                       m_items[item_idx].tablename, colname,
                        (long int)time.tv_sec, (long int)time.tv_nsec, bufstr, set_jump);
             else
               sprintf( query, "insert into %s (time, ntime, %s) values (%ld,%ld,%s)",
-                       oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), colname,
+                       m_items[item_idx].tablename, colname,
                        (long int)time.tv_sec, (long int)time.tv_nsec, bufstr);
         }
       }
@@ -932,15 +946,15 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
         switch ( m_items[item_idx].attr[attr_idx].type) {
           case pwr_eType_String:
             sprintf( query, "insert into %s (time, %s) values (%ld,'%s')",
-                     oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), colname, (long int)time.tv_sec, bufstr);
+                     m_items[item_idx].tablename, colname, (long int)time.tv_sec, bufstr);
             break;
           default:
             if ( m_items[item_idx].options & pwr_mSevOptionsMask_UseDeadBand)
               sprintf( query, "insert into %s (time, %s, jump) values (%ld,%s,%d)",
-                       oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), colname, (long int)time.tv_sec, bufstr, set_jump);
+                       m_items[item_idx].tablename, colname, (long int)time.tv_sec, bufstr, set_jump);
             else
               sprintf( query, "insert into %s (time, %s) values (%ld,%s)",
-                       oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), colname, (long int)time.tv_sec, bufstr);
+                       m_items[item_idx].tablename, colname, (long int)time.tv_sec, bufstr);
         }
       }
     }
@@ -950,17 +964,17 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
         switch ( m_items[item_idx].attr[attr_idx].type) {
           case pwr_eType_String:
             sprintf( query, "insert into %s (time, ntime, %s) values ('%s',%ld,'%s')",
-                     oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), colname, 
+                     m_items[item_idx].tablename, colname, 
                      timstr, (long int)time.tv_nsec, bufstr);
             break;
           default:
             if ( m_items[item_idx].options & pwr_mSevOptionsMask_UseDeadBand)
               sprintf( query, "insert into %s (time, ntime, %s, jump) values ('%s',%ld,%s,%d)",
-                       oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), colname, 
+                       m_items[item_idx].tablename, colname, 
                        timstr, (long int)time.tv_nsec, bufstr, set_jump);
             else
               sprintf( query, "insert into %s (time, ntime, %s) values ('%s',%ld,%s)",
-                       oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), colname, 
+                       m_items[item_idx].tablename, colname, 
                        timstr, (long int)time.tv_nsec, bufstr);
         }
       }
@@ -969,15 +983,15 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
         switch ( m_items[item_idx].attr[attr_idx].type) {
           case pwr_eType_String:
             sprintf( query, "insert into %s (time, %s) values ('%s','%s')",
-                     oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), colname, timstr, bufstr);
+                     m_items[item_idx].tablename, colname, timstr, bufstr);
             break;
           default:
             if ( m_items[item_idx].options & pwr_mSevOptionsMask_UseDeadBand)
               sprintf( query, "insert into %s (time, %s, jump) values ('%s',%s,%d)",
-                       oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), colname, timstr, bufstr, set_jump);
+                       m_items[item_idx].tablename, colname, timstr, bufstr, set_jump);
             else
               sprintf( query, "insert into %s (time, %s) values ('%s',%s)",
-                       oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), colname, timstr, bufstr);
+                       m_items[item_idx].tablename, colname, timstr, bufstr);
         }
       }
     }
@@ -1001,13 +1015,13 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
       if ( m_items[item_idx].options & pwr_mSevOptionsMask_HighTimeResolution) {
         // Posix time, high resolution
         sprintf( query, "update %s set time = %ld, ntime = %ld where id = %d",
-                 oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), 
+                 m_items[item_idx].tablename, 
                  (long int)time.tv_sec, (long int)time.tv_nsec, m_items[item_idx].last_id);
       }
       else {
         // Posix time, low resolution
         sprintf( query, "update %s set time = %ld where id = %d",
-                 oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), (long int)time.tv_sec, 
+                 m_items[item_idx].tablename, (long int)time.tv_sec, 
                  m_items[item_idx].last_id);
       }
     }
@@ -1015,13 +1029,13 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
       if ( m_items[item_idx].options & pwr_mSevOptionsMask_HighTimeResolution) {
         // Sql time, high resolution
         sprintf( query, "update %s set time = '%s', ntime = %ld where id = %d",
-                 oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), 
+                 m_items[item_idx].tablename, 
                  timstr, (long int)time.tv_nsec, m_items[item_idx].last_id);
       }
       else {
         // Sql time, low resolution
         sprintf( query, "update %s set time = '%s' where id = %d",
-                 oid_to_table(m_items[item_idx].oid, m_items[item_idx].attr[attr_idx].aname), timstr, 
+                 m_items[item_idx].tablename, timstr, 
                  m_items[item_idx].last_id);
       }
     }
@@ -1052,6 +1066,13 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
 			  pwr_tTime *starttime, pwr_tTime *endtime, 
 			  int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize)
 {
+  sev_item item;
+  get_item(sts, &item, oid, aname);
+  if(EVEN(*sts)) {
+    return 0;
+  }
+
+
   char query[200];
   char starttimstr[40];
   char endtimstr[40];
@@ -1075,7 +1096,7 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
     etime = *endtime;
 
   // Get number of rows
-  sprintf( query, "show table status where name = '%s';", oid_to_table(oid, aname));
+  sprintf( query, "show table status where name = '%s';", item.tablename);
 
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
@@ -1262,7 +1283,7 @@ int sev_dbms::get_values( pwr_tStatus *sts, pwr_tOid oid, pwr_tMask options, flo
   }  
 
   sprintf( query, "select %s from %s %s order by %s",
-           column_part, oid_to_table(oid, aname), where_part, orderby_part);
+           column_part, item.tablename, where_part, orderby_part);
 
   rc = mysql_query( m_env->con(), query);
   if (rc) {
@@ -1539,13 +1560,11 @@ int sev_dbms::add_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname
 {
   char tablename[256];
 
-  strcpy( tablename, oid_to_table( oid, aname));
-	  
   store_item( sts, tablename, oid, oname, aname, storagetime, type, size, description, unit,
 	      scantime, deadband, options);
   if ( EVEN(*sts)) return 0;
   
-  create_table( sts, oid, aname, type, size, options, deadband);
+  create_table( sts, tablename, type, size, options, deadband);
   if ( EVEN(*sts)) return 0;
 
   sev_item item;
@@ -1577,30 +1596,32 @@ int sev_dbms::add_item( pwr_tStatus *sts, pwr_tOid oid, char *oname, char *aname
 
 int sev_dbms::delete_item( pwr_tStatus *sts, pwr_tOid oid, char *aname)
 {
-  char tablename[256];
+  sev_item item;
+  get_item(sts, &item, oid, aname);
+  if(EVEN(*sts)) {
+    return 0;
+  }
 
-  strcpy( tablename, oid_to_table( oid, aname));
-	  
   remove_item( sts, oid, aname);
   
   if ( ODD(*sts))
-    delete_table( sts, oid, aname);
+    delete_table( sts, item.tablename);
 
   if ( ODD(*sts)) {
     for ( int i = 0; i < (int)m_items.size(); i++) {
       if ( m_items[i].deleted)
-	continue;
+        continue;
       if ( cdh_ObjidIsEqual( m_items[i].oid, oid) &&
-	   cdh_NoCaseStrcmp( m_items[i].attr[0].aname, aname) == 0) {
-	m_items[i].deleted = 1;
-	break;
+           cdh_NoCaseStrcmp( m_items[i].attr[0].aname, aname) == 0) {
+        m_items[i].deleted = 1;
+        break;
       }
     }
   }
   return 1;
 }
 
-int sev_dbms::delete_old_data( pwr_tStatus *sts, pwr_tOid oid, char *aname, 
+int sev_dbms::delete_old_data( pwr_tStatus *sts, char *tablename, 
 			       pwr_tMask options, pwr_tTime limit)
 {
   char query[300];
@@ -1613,21 +1634,21 @@ int sev_dbms::delete_old_data( pwr_tStatus *sts, pwr_tOid oid, char *aname,
 
   if(options & pwr_mSevOptionsMask_ReadOptimized) {
     pwr_tUInt64 nbRowsToClean = 2000;
-    nbRowsToClean += get_minFromIntegerColumn(oid_to_table(oid, aname), (char *)"id");
+    nbRowsToClean += get_minFromIntegerColumn(tablename, (char *)"id");
     if ( options & pwr_mSevOptionsMask_PosixTime)
       sprintf( query, "delete from %s where id < %llu and time < %ld;",
-         oid_to_table(oid, aname), nbRowsToClean, (long int)limit.tv_sec);
+         tablename, nbRowsToClean, (long int)limit.tv_sec);
     else
       sprintf( query, "delete from %s where id < %llu and time < '%s';",
-         oid_to_table(oid, aname), nbRowsToClean, timstr);
+         tablename, nbRowsToClean, timstr);
   }
   else {
     if ( options & pwr_mSevOptionsMask_PosixTime)
       sprintf( query, "delete from %s where time < %ld;",
-         oid_to_table(oid, aname), (long int)limit.tv_sec);
+         tablename, (long int)limit.tv_sec);
     else
       sprintf( query, "delete from %s where time < '%s';",
-         oid_to_table(oid, aname), timstr);
+         tablename, timstr);
   }
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
@@ -1782,6 +1803,8 @@ int sev_dbms::check_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid,
       //This won't work!! We have to alter the table to be able to change this
       //m_items[i].options = options;
 
+      strcpy(tablename, m_items[i].tablename);
+
       *idx = i;
       *sts = SEV__SUCCESS;
       return 1;
@@ -1836,6 +1859,21 @@ int sev_dbms::store_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid,
   time_GetTime( &creatime);
   time_AtoAscii( &creatime, time_eFormat_NumDateAndTime, timestr, sizeof(timestr));
   timestr[19] = 0;
+
+  unsigned int next_id = get_nextAutoIncrement((char*)"objectitems");
+/*
+  char volName[32];
+  strncpy(volName, oname, sizeof(volName));
+  for ( char *s = volName; *s; s++) {
+    if ( *s == ':') {
+      *s = 0;
+      break;
+    }
+  }
+
+  sprintf(tablename, "obj_%s_%d", volName, next_id);
+*/
+  sprintf(tablename, "obj_%s_%d", oid_to_table(oid, (char*)""), next_id);
 
   sprintf( query, "insert into objectitems (id,tablename,vid,oix,oname,aname,uptime,cretime,storagetime,description,scantime,deadband,options) "
 	   "values (0,'%s',%d,%d,'%s','%s','%s','%s',%ld,'%s',%f,%f,%d);",
@@ -2007,6 +2045,40 @@ pwr_tUInt64 sev_dbms::get_maxFromIntegerColumn( char *tablename, char *colname )
   return retVal;
 }
 
+pwr_tUInt64 sev_dbms::get_nextAutoIncrement( char *tablename )
+{
+	char query[200];
+  pwr_tUInt64 retVal = 0;
+  sprintf( query, "SELECT Auto_increment FROM information_schema.tables WHERE table_name='%s'", tablename);
+
+  //printf( "%s: %s\n", __FUNCTION__ ,query);
+  int rc = mysql_query( m_env->con(), query);
+  if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
+    return 0;
+  }
+  MYSQL_RES *result = mysql_store_result( m_env->con());
+  if ( !result) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s Result Error\n", __FUNCTION__);
+    return retVal;
+  }
+
+  int rows = mysql_num_rows( result);
+  if(rows <= 0) {
+    mysql_free_result( result);
+    return retVal;
+  }
+  MYSQL_ROW row;
+  row = mysql_fetch_row( result);
+  if(row[0] != NULL) {
+    retVal = strtoull(row[0], 0, 10);
+  }
+  mysql_free_result( result);
+  return retVal;
+}
+
 
 int sev_dbms::store_objectvalue( pwr_tStatus *sts, int item_idx, int attr_idx,
                            pwr_tTime time, void *buf, void *oldbuf, unsigned int size)
@@ -2084,10 +2156,13 @@ int sev_dbms::store_objectvalue( pwr_tStatus *sts, int item_idx, int attr_idx,
         valuesStr.append(bufstr);
         valuesStr.append("',");
       }
-  
-      colsStr.append("`");
-      colsStr.append(m_items[item_idx].attr[i].aname);
-      colsStr.append("`,");
+      char colNameStr[80];     
+      sprintf(colNameStr, "`%s`,", create_colName(i, m_items[item_idx].attr[i].aname));
+      colsStr.append(colNameStr);
+
+//      colsStr.append("`");
+//      colsStr.append(m_items[item_idx].attr[i].aname);
+//      colsStr.append("`,");
   
       buf = (char*)buf + m_items[item_idx].attr[i].size;
     }
@@ -2197,12 +2272,12 @@ int sev_dbms::store_objectvalue( pwr_tStatus *sts, int item_idx, int attr_idx,
   return 1;
 }
 
-int sev_dbms::get_item( pwr_tStatus *sts, sev_item *item, char *tablename)
+int sev_dbms::get_item( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename)
 {
   char query[300];
 
   sprintf( query, "select id,tablename,vid,oix,oname,aname,uptime,cretime,storagetime,vtype,vsize,description,unit,scantime,deadband,options "
-	   "from items where tablename='%s'", tablename);
+	   "from items where vid=%d and oix=%d and aname='%s'", oid.vid, oid.oix, attributename);
 
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
@@ -2271,12 +2346,12 @@ int sev_dbms::get_item( pwr_tStatus *sts, sev_item *item, char *tablename)
   return 1;
 }
 
-int sev_dbms::get_objectitem( pwr_tStatus *sts, sev_item *item, char *tablename)
+int sev_dbms::get_objectitem( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename)
 {
   char query[300];
 
   sprintf( query, "select id,tablename,vid,oix,oname,aname,uptime,cretime,storagetime,description,scantime,deadband,options "
-     "from objectitems where tablename='%s'", tablename);
+     "from objectitems where vid=%d and oix=%d and aname='%s'", oid.vid, oid.oix, attributename);
 
   int rc = mysql_query( m_env->con(), query);
   if (rc) {
@@ -2674,10 +2749,13 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
   else {
     colsStr.append("sev__time, ");
   }
+  char colName[64];
   for(size_t i = 0; i < item->attr.size(); i++) {
-    colsStr.append("`");
-    colsStr.append(item->attr[i].aname);
-    colsStr.append("`,");
+    sprintf(colName, "`col_%d`,", i);
+    colsStr.append(colName);
+//    colsStr.append("`");
+//    colsStr.append(item->attr[i].aname);
+//    colsStr.append("`,");
   }
   //remove last ,
   colsStr.resize(colsStr.length()-1);
@@ -3014,7 +3092,7 @@ int sev_dbms::handle_itemchange(pwr_tStatus *sts, char *tablename, unsigned int 
 
   sev_item *item = &m_items[item_idx];
 
-  create_table( sts, item->oid, item->attr[0].aname, item->attr[0].type, item->attr[0].size, item->options, item->deadband);
+  create_table( sts, item->tablename, item->attr[0].type, item->attr[0].size, item->options, item->deadband);
   if ( EVEN(*sts)) return 0;
 
   if(item->options & pwr_mSevOptionsMask_ReadOptimized ) {
@@ -3044,14 +3122,16 @@ int sev_dbms::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned in
   char query[600];
   int rc;
 
-  if(!newObject) {
+  sev_item *item = &m_items[item_idx];
+
+  if (!newObject) {
     char timestr[40];
     pwr_tTime uptime;
-  
+
     time_GetTime( &uptime);
     time_AtoAscii( &uptime, time_eFormat_NumDateAndTime, timestr, sizeof(timestr));
     timestr[19] = 0;
-  
+
     // Replace ':' '-' and ' ' in timestr with '_'
     for ( char *s = timestr; *s; s++) {
       if ( *s == ':')
@@ -3061,12 +3141,12 @@ int sev_dbms::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned in
       if ( *s == '-')
         *s = '_';
     }
-  
+
     snprintf(newTableName, sizeof(newTableName), "%s_%s", tablename, timestr);
-  
+
     printf("Recreating table %s due to attribute definition changes, old table saved to %s \n", tablename, newTableName);
     errh_Warning("Recreating table %s due to attribute definition changes, old table saved to %s", tablename, newTableName);
-  
+
     sprintf(query, "RENAME TABLE %s to %s", tablename, newTableName);
     rc = mysql_query( m_env->con(), query);
     if (rc) {
@@ -3075,18 +3155,15 @@ int sev_dbms::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned in
       *sts = SEV__DBERROR;
       return 0;
     }
-  }
 
-  sev_item *item = &m_items[item_idx];
 
-  create_objecttable( sts, tablename, item->options, item->deadband);
-  if ( EVEN(*sts)) return 0;
+    create_objecttable( sts, tablename, item->options, item->deadband);
+    if ( EVEN(*sts)) return 0;
 
-  if(!newObject) {
-    if(item->options & pwr_mSevOptionsMask_ReadOptimized ) {
+    if (item->options & pwr_mSevOptionsMask_ReadOptimized ) {
       //If we set increment to same value as in the old table we can easily move the data from the old table to the new one
       pwr_tUInt64 autoIncrValue = get_maxFromIntegerColumn(newTableName, (char*)"sev__id");
-      if(autoIncrValue) 
+      if (autoIncrValue)
         autoIncrValue++;
       sprintf(query, "ALTER TABLE %s AUTO_INCREMENT = %llu", tablename, autoIncrValue);
       rc = mysql_query( m_env->con(), query);
@@ -3097,7 +3174,7 @@ int sev_dbms::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned in
         return 0;
       }
     }
-  
+
     sprintf(query, "delete from objectitemattributes where tablename = '%s'", tablename);
     rc = mysql_query( m_env->con(), query);
     if (rc) {
@@ -3108,8 +3185,11 @@ int sev_dbms::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned in
     }
   }
 
-  for(size_t i = 0; i < item->attr.size(); i++) {
-    sprintf( query, "alter table %s add `%s` %s;", tablename, item->attr[i].aname, pwrtype_to_type( item->attr[i].type, item->attr[i].size));
+  for (size_t i = 0; i < item->attr.size(); i++) {
+    char colName[64];
+    strncpy(colName, create_colName(i, item->attr[i].aname), sizeof(colName));
+    //sprintf(colName, "col_%d", i);
+    sprintf( query, "alter table %s add `%s` %s;", tablename, colName, pwrtype_to_type( item->attr[i].type, item->attr[i].size));
     rc = mysql_query( m_env->con(), query);
     if (rc) {
       printf("In %s row %d:\n", __FILE__, __LINE__);
@@ -3119,7 +3199,7 @@ int sev_dbms::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned in
     }
     int aidx = i;
     sprintf( query, "insert into objectitemattributes (tablename, attributename, attributeidx, attributetype, attributesize) "
-                    "values('%s', '%s', %d, %d, %d)", tablename, item->attr[i].aname, aidx, item->attr[i].type, item->attr[i].size);
+             "values('%s', '%s', %d, %d, %d)", tablename, item->attr[i].aname, aidx, item->attr[i].type, item->attr[i].size);
     rc = mysql_query( m_env->con(), query);
     if (rc) {
       printf("In %s row %d:\n", __FILE__, __LINE__);

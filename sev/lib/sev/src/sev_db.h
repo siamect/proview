@@ -92,7 +92,7 @@ class sev_db {
 			  pwr_tTime *endtime, int maxsize, pwr_tTime **tbuf, void **vbuf, 
 			  unsigned int *bsize) { return 0;}
   virtual int get_items( pwr_tStatus *sts) { return 0;}
-  virtual int delete_old_data( pwr_tStatus *sts, pwr_tOid oid, char *aname, 
+  virtual int delete_old_data( pwr_tStatus *sts, char *tablename, 
 			       pwr_tMask options, pwr_tTime limit) { return 0;}
 
   virtual char *oid_to_table( pwr_tOid oid, char *aname) { return 0;}
@@ -106,8 +106,8 @@ class sev_db {
                        pwr_tFloat32 deadband, pwr_tMask options, unsigned int *idx) { return 0;} 
   virtual int store_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
                                 pwr_tDeltaTime storagetime, char *description, pwr_tFloat32 scantime, pwr_tFloat32 deadband, pwr_tMask options) { return 0;}
-  virtual int get_item( pwr_tStatus *sts, sev_item *item, char *tablename) { return 0;}
-  virtual int get_objectitem( pwr_tStatus *sts, sev_item *item, char *tablename) { return 0;}
+  virtual int get_item( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename) { return 0;}
+  virtual int get_objectitem( pwr_tStatus *sts, sev_item *item, pwr_tOid oid, char *attributename) { return 0;}
   virtual int get_objectitems( pwr_tStatus *sts) { return 0;}
   virtual int check_objectitemattr( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *aname, char *oname, 
 																	  pwr_eType type, unsigned int size, unsigned int *idx) { return 0;}
