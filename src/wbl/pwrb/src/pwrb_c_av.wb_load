@@ -181,6 +181,18 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  @Summary A photograph of the plant.
+      !  A photograph of the plant.
+      !  A URL to a photo of the equipment.
+      !  The photo can be displayed from the popup menu for this object.
+      !*/
+      Object Photo $Attribute 16
+        Body SysBody
+          Attr PgmName = "Photo"
+          Attr TypeRef = "pwrs:Type-$URL"
+        EndBody
+      EndObject
+      !/**
       !  @Summary A note of the current status of the object.
       !  A note of the current status of the object.
       !  Notes are used to exchange information between operators. It is handled 
