@@ -154,8 +154,20 @@ SObject pwrb:Class
       !  attribute. This will disable the CircuitDiagram method for this object, and
       !  for any child with empty CircuitDiagram attribute.
       !*/
-      Object CircuitDiagram $Attribute 9
+      Object CircuitDiagram $Attribute 18
         Body SysBody
+          Attr TypeRef = "pwrs:Type-$URL"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary A photograph of the plant.
+      !  A photograph of the plant.
+      !  A URL to a photo of the equipment.
+      !  The photo can be displayed from the popup menu for this object.
+      !*/
+      Object Photo $Attribute 17
+        Body SysBody
+          Attr PgmName = "Photo"
           Attr TypeRef = "pwrs:Type-$URL"
         EndBody
       EndObject

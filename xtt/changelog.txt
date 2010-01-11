@@ -156,3 +156,4 @@
 091106 cs  ge        Different ways to show hot object added: linewith, light color, dark color.
 091208 cs  xtt       New pixmap for weblink in helpwindow.
 091208 cs  xtt       EventSelectList exended to 40 elements.
+100111 cs  xtt       Method Photo added to xtt toolbar.

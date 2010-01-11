@@ -32,7 +32,7 @@ typedef struct {
 
 class XttMethodToolbar {
  public:
-  static const int m_size = 14;
+  static const int m_size = 15;
   static xtt_sMethodButton m_data[m_size];
   XNav *m_xnav;
 
