@@ -62,6 +62,26 @@ static int sev_comp_refid(tree_sTable *tp, tree_sNode *x, tree_sNode *y)
   return 0;
 }
 
+static int sev_comp_refid(tree_sTable *tp, tree_sNode *x, tree_sNode *y)
+{
+  sev_sRefid *xp = (sev_sRefid *) x; 
+  sev_sRefid *yp = (sev_sRefid *) y;
+  
+  if (xp->id.nid > yp->id.nid)
+    return 1;
+
+  if (xp->id.nid < yp->id.nid)
+    return -1;
+
+  if (xp->id.rix > yp->id.rix)
+    return 1;
+
+  if (xp->id.rix < yp->id.rix)
+    return -1;
+
+  return 0;
+}
+
 int sev_server::init( int noneth)
 {
   qcom_sNode		node;
@@ -478,10 +498,8 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
   sev_sRefid *succ_rp;
   while ( rp) {
     succ_rp = (sev_sRefid *)tree_Successor(&sts, m_refid, rp);
-
     if ( rp->id.nid == nid) 
       tree_Remove( &sts, m_refid, &rp->id);
-
     rp = succ_rp;
   }
 
@@ -632,7 +650,6 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
 		      msg->Items[i].deadband, msg->Items[i].options, &idx);
       if ( EVEN(m_sts)) return m_sts;
     }
-
     if ( ODD(m_sts) ) {
       //Create space for the old values used if we have deadband active
       if ( m_db->m_items[idx].old_value != 0 ) {
@@ -676,6 +693,7 @@ int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size)
       continue;
     }
     unsigned int idx = rp->idx;
+
     time = net_NetTimeToTime( &msg->Time);
     m_db->store_value( &m_sts, idx, 0, time, &dp->data, dp->size);
 
@@ -850,8 +868,7 @@ void sev_server::garbage_item( int idx)
 {
   pwr_tTime currenttime, limit;
 
-  //clock_gettime( CLOCK_REALTIME, &currenttime);
-  time_GetTime( &currenttime);
+  clock_gettime( CLOCK_REALTIME, &currenttime);
 
   if ( m_db->m_items[idx].deleted)
     return;

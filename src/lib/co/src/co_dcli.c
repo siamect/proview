@@ -313,7 +313,7 @@ int	dcli_cli( 	dcli_tCmdTable	*command_table,
 	while ( comtbl_ptr->command[0] != '\0')
 	{
 	  strcpy( command, comtbl_ptr->command);
-	  if ( strcmp( out_str[0], command) == 0)
+	  if ( cdh_NoCaseStrcmp( out_str[0], command) == 0)
 	  {
 	    /* Perfect hit */
 	    func = comtbl_ptr->func;
@@ -324,7 +324,7 @@ int	dcli_cli( 	dcli_tCmdTable	*command_table,
 	  else
 	  {
 	    command[ strlen( out_str[0])] = '\0';
-	    if ( strcmp( out_str[0], command) == 0)
+	    if ( cdh_NoCaseStrcmp( out_str[0], command) == 0)
 	    {
 	      /* Hit */
 	      func = comtbl_ptr->func;
@@ -378,7 +378,7 @@ int	dcli_cli( 	dcli_tCmdTable	*command_table,
 	    {	  
 	      strcpy( qual, current_comtbl->qualifier[j]);
 	      qual[ strlen( value_str[0])] = '\0';
-	      if ( strcmp( qual, value_str[0]) == 0)
+	      if ( cdh_NoCaseStrcmp( qual, value_str[0]) == 0)
 	      {
 	        /* Hit */
 	        strcpy( dcli_qual_str[i-1][0], current_comtbl->qualifier[j]);
@@ -390,7 +390,7 @@ int	dcli_cli( 	dcli_tCmdTable	*command_table,
 	  if ( hitnr == 0 || is_arg)
 	  {
 	    /* This might be a argument, look for a argument */
-	    if ( strncmp( current_comtbl->qualifier[arg_count], 
+	    if ( cdh_NoCaseStrncmp( current_comtbl->qualifier[arg_count], 
 			"dcli_arg", 7) == 0)
 	    {	  
 	      sprintf( dcli_qual_str[i-1][0], "dcli_arg%d", arg_count+1);	
@@ -451,7 +451,7 @@ int	dcli_get_qualifier( 	const char *qualifier,
 	found = 0;
 	while ( dcli_qual_str[i][0][0] != '\0')
 	{
-	  if ( strcmp( qualifier, (char *) dcli_qual_str[i]) == 0)
+	  if ( cdh_NoCaseStrcmp( qualifier, (char *) dcli_qual_str[i]) == 0)
 	  {
 	    /* Hit */
             if ( value) {
@@ -614,7 +614,8 @@ int	dcli_replace_symbol( char *command, char *newcommand, int newsize)
 	      size = (long int) s - (long int) u;
 	      strncpy( symbol, u, size);
 	      symbol[size] = 0;
-	      cdh_ToUpper( upper_symbol, symbol);
+	      // cdh_ToUpper( upper_symbol, symbol);
+	      strcpy( upper_symbol, symbol);
 	      sts = dcli_get_symbol( upper_symbol, value);
 	      if ( EVEN(sts))
 	      {
@@ -700,7 +701,7 @@ int	dcli_get_symbol( char *key, char *value)
 
 	for ( i = 0; i < dcli_symboltable_count; i++)
 	{
-	  if ( !strcmp( dcli_symboltable[i].key, key))
+	  if ( !cdh_NoCaseStrcmp( dcli_symboltable[i].key, key))
 	  {
 	    strcpy( value, dcli_symboltable[i].value);
 	    return DCLI__SUCCESS;
@@ -739,13 +740,13 @@ int	dcli_get_symbol_cmd( char *key, char *value)
 	found = 0;
 	for ( i = 0; i < dcli_symboltable_count; i++)
 	{
-	  if ( !strcmp( dcli_symboltable[i].key, key))
+	  if ( !cdh_NoCaseStrcmp( dcli_symboltable[i].key, key))
 	  {
 	    /* Perfect match */
 	    strcpy( value, dcli_symboltable[i].value);
 	    return DCLI__SUCCESS;
 	  }
-	  else if ( !strncmp( dcli_symboltable[i].key, key, strlen(key)))
+	  else if ( !cdh_NoCaseStrncmp( dcli_symboltable[i].key, key, strlen(key)))
 	  {
 	    if ( found)
 	      return DCLI__SYMBOL_AMBIG;
@@ -938,12 +939,12 @@ int	dcli_define_symbol( char *key, char *arg1, char *arg2, char *arg3)
 	  return DCLI__SYMVALTOLONG;
 	}
 
-	cdh_ToUpper( value, value);
+	// cdh_ToUpper( value, value);
 	/* Look if the symbol exists */
 
 	for ( i = 0; i < dcli_symboltable_count; i++)
   	{
-	  if ( !strcmp( dcli_symboltable[i].key, key))
+	  if ( !cdh_NoCaseStrcmp( dcli_symboltable[i].key, key))
 	  {
 	    strcpy( dcli_symboltable[i].value, value);
 	    return DCLI__SUCCESS;
@@ -1125,14 +1126,15 @@ int dcli_wildcard(	char	*wildname,
 	char	upper_name[400];
 
 	/* Convert to upper case */
-	cdh_ToUpper( upper_name, name);
+	// cdh_ToUpper( upper_name, name);
+	strcpy( upper_name, name);
 
 	t = wildname;
 	u = upper_name;
 	s = strchr( t, '*');
 	if ( s == 0)
 	{
-	  if (strcmp( t, u) == 0)
+	  if (cdh_NoCaseStrcmp( t, u) == 0)
 	    return 0;
 	  else 
 	    return 1;
@@ -1143,7 +1145,7 @@ int dcli_wildcard(	char	*wildname,
 	{
 	  strncpy ( checkstr, t, len);
 	  checkstr[len] = '\0';
-	  if ( strncmp ( checkstr, u, len) != 0)
+	  if ( cdh_NoCaseStrncmp ( checkstr, u, len) != 0)
 	    return 1;
 	  u += len;
 	}	  
@@ -1167,7 +1169,7 @@ int dcli_wildcard(	char	*wildname,
 	}
 	strcpy ( checkstr, t);
 	u = u + strlen(u) - strlen (checkstr);
-	if ( strcmp ( checkstr, u ) != 0)
+	if ( cdh_NoCaseStrcmp ( checkstr, u ) != 0)
 	      return 1;
 
 	return 0;

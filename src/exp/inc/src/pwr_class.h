@@ -1090,42 +1090,42 @@ struct pwr_s_RootVolume {
   pwr_tString80		Description;
   pwr_tObjectIx		NextOix		pwr_dAlignW;
   pwr_tProjVersion	RtVersion	pwr_dAlignW;
-  pwr_tTime		RtCreTime	pwr_dAlignW;
+  pwr_tTime		RtCreTime	pwr_dAlignLW;
   pwr_tString16		RtCreator	pwr_dAlignW;
   pwr_tUInt32		RtCardinality	pwr_dAlignW;
   pwr_tUInt32		RtBodySize	pwr_dAlignW;
   pwr_mOpSys		OperatingSystem	pwr_dAlignW;
-  pwr_tTime		Modified	pwr_dAlignW;
+  pwr_tTime		Modified	pwr_dAlignLW;
 };
 
 struct pwr_s_SubVolume {
   pwr_tString80		Description;
   pwr_tObjectIx		NextOix		pwr_dAlignW;
   pwr_tProjVersion	RtVersion	pwr_dAlignW;
-  pwr_tTime		RtCreTime	pwr_dAlignW;
+  pwr_tTime		RtCreTime	pwr_dAlignLW;
   pwr_tString16		RtCreator	pwr_dAlignW;
   pwr_tUInt32		RtCardinality	pwr_dAlignW;
   pwr_tUInt32		RtBodySize	pwr_dAlignW;
   pwr_mOpSys		OperatingSystem	pwr_dAlignW;
-  pwr_tTime		Modified	pwr_dAlignW;
+  pwr_tTime		Modified	pwr_dAlignLW;
 };
 
 struct pwr_s_SharedVolume {
   pwr_tString80		Description;
   pwr_tObjectIx		NextOix		pwr_dAlignW;
   pwr_tProjVersion	RtVersion	pwr_dAlignW;
-  pwr_tTime		RtCreTime	pwr_dAlignW;
+  pwr_tTime		RtCreTime	pwr_dAlignLW;
   pwr_tString16		RtCreator	pwr_dAlignW;
   pwr_tUInt32		RtCardinality	pwr_dAlignW;
   pwr_tUInt32		RtBodySize	pwr_dAlignW;
-  pwr_tTime		Modified	pwr_dAlignW;
+  pwr_tTime		Modified	pwr_dAlignLW;
 };
 
 struct pwr_s_DynamicVolume {
   pwr_tString80		Description;
   pwr_tObjectIx		NextOix		pwr_dAlignW;
   pwr_tProjVersion	RtVersion	pwr_dAlignW;
-  pwr_tTime		RtCreTime	pwr_dAlignW;
+  pwr_tTime		RtCreTime	pwr_dAlignLW;
   pwr_tString16		RtCreator	pwr_dAlignW;
   pwr_tUInt32		RtCardinality	pwr_dAlignW;
   pwr_tUInt32		RtBodySize	pwr_dAlignW;
@@ -1135,7 +1135,7 @@ struct pwr_s_SystemVolume {
   pwr_tString80		Description;
   pwr_tObjectIx		NextOix		pwr_dAlignW;
   pwr_tProjVersion	RtVersion	pwr_dAlignW;
-  pwr_tTime		RtCreTime	pwr_dAlignW;
+  pwr_tTime		RtCreTime	pwr_dAlignLW;
   pwr_tString16		RtCreator	pwr_dAlignW;
   pwr_tUInt32		RtCardinality	pwr_dAlignW;
   pwr_tUInt32		RtBodySize	pwr_dAlignW;
@@ -1145,7 +1145,7 @@ struct pwr_s_ClassVolume {
   pwr_tString80		Description;
   pwr_tObjectIx		NextOix		pwr_dAlignW;
   pwr_tProjVersion	RtVersion	pwr_dAlignW;
-  pwr_tTime		RtCreTime	pwr_dAlignW;
+  pwr_tTime		RtCreTime	pwr_dAlignLW;
   pwr_tString16		RtCreator	pwr_dAlignW;
   pwr_tUInt32		RtCardinality	pwr_dAlignW;
   pwr_tUInt32		RtBodySize	pwr_dAlignW;
@@ -1158,7 +1158,7 @@ struct pwr_s_WorkBenchVolume {
   pwr_tString80		Description;
   pwr_tObjectIx		NextOix		pwr_dAlignW;
   pwr_tProjVersion	RtVersion	pwr_dAlignW;
-  pwr_tTime		RtCreTime	pwr_dAlignW;
+  pwr_tTime		RtCreTime	pwr_dAlignLW;
   pwr_tString16		RtCreator	pwr_dAlignW;
   pwr_tUInt32		RtCardinality	pwr_dAlignW;
   pwr_tUInt32		RtBodySize	pwr_dAlignW;
@@ -1168,7 +1168,7 @@ struct pwr_s_DirectoryVolume {
   pwr_tString80		Description;
   pwr_tObjectIx		NextOix		pwr_dAlignW;
   pwr_tProjVersion	RtVersion	pwr_dAlignW;
-  pwr_tTime		RtCreTime	pwr_dAlignW;
+  pwr_tTime		RtCreTime	pwr_dAlignLW;
   pwr_tString16		RtCreator	pwr_dAlignW;
   pwr_tUInt32		RtCardinality	pwr_dAlignW;
   pwr_tUInt32		RtBodySize	pwr_dAlignW;

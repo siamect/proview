@@ -147,7 +147,7 @@ SubGraphsMotif::SubGraphsMotif(
   strcpy( title, "Loaded SubGraphs");
 
   // Save the context structure in the widget
-  XtSetArg (args[0], XmNuserData, (unsigned int) this);
+  XtSetArg (args[0], XmNuserData, (XtPointer) this);
 
   sts = MrmOpenHierarchy( 1, &uid_filename_p, NULL, &s_DRMh);
   if (sts != MrmSUCCESS) printf("can't open %s\n", uid_filename);

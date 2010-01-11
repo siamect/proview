@@ -261,6 +261,11 @@ SObject pwrb:Class
         Attr Name = "%02.2d"
       EndBody
     EndObject
+    Object PostCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "ChanIi-PostCreate"
+      EndBody
+    EndObject
     Object ConfiguratorPcsnn $Menu
       Object Pointed $Menu
 	Object SetDefaults $MenuButton

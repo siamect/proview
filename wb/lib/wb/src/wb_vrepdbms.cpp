@@ -364,7 +364,10 @@ wb_orep *wb_vrepdbms::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_desti
       pwr_tOid woid;
       woid.oix = oix;
       woid.vid = m_vid;
-      oid = m_db->new_oid(txn, woid);
+      if ( !m_no_nix_incr)
+	oid = m_db->new_oid(txn, woid);
+      else
+	oid = woid;
       if ( !oid.oix) {
 	*sts = LDH__BADOBJID;
 	return 0;
@@ -469,7 +472,10 @@ wb_orep* wb_vrepdbms::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destinatio
       pwr_tOid woid;
       woid.oix = oix;
       woid.vid = m_vid;
-      oid = m_db->new_oid(txn, woid);
+      if ( !m_no_nix_incr)
+	oid = m_db->new_oid(txn, woid);
+      else
+	oid = woid;
       if ( !oid.oix) {
 	*sts = LDH__BADOBJID;
 	return 0;
@@ -1569,7 +1575,10 @@ bool wb_vrepdbms::importPasteObject(pwr_tOid doid, ldh_eDest destcode,
   }
 
   if (cdh_ObjidIsNotNull( woid)) {
-    oep->n_oid = m_db->new_oid(m_db->m_txn, woid);
+    if ( !m_no_nix_incr)
+      oep->n_oid = m_db->new_oid(m_db->m_txn, woid);
+    else
+      oep->n_oid = woid;
     if ( !oep->n_oid.oix)
       oep->n_oid = m_db->new_oid(m_db->m_txn);
   }

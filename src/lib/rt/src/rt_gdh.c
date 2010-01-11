@@ -4178,6 +4178,8 @@ static pwr_tStatus gdh_FWriteObjectR( FILE *fp, char *ap, char *aname, pwr_tAttr
       }
     }
   }
+  free( bd);
+
   return GDH__SUCCESS;
 }
 

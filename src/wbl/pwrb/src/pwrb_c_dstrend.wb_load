@@ -142,7 +142,7 @@ SObject pwrb:Class
       !*/
       Object DataType $Attribute 5 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$UInt8"
+          Attr TypeRef = "pwrs:Type-$UInt32"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_INVISIBLE
         EndBody

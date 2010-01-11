@@ -592,7 +592,7 @@ pwr_tStatus wb_session::getMenu( ldh_sMenuCall *ip)
     if ( EVEN(sts)) return sts;
 
     wb_orep *o = m_vrep->erep()->object( &sts, Menu);
-    if ( EVEN(sts)) return sts;
+    if ( EVEN(sts)) break;
     o->ref();
 
     Object = o->oid();

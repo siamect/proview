@@ -125,3 +125,5 @@
 091014 cs  doc       Links in Designer's Guide updated and code format added in html version.
 091020 cs  co        wow_CreateList now with variable text size.
 091111 cs  gdh       Bugfix in nethandler SetObjectInfo and GetObjectInfo.
+091209 cs  co        Command line interpreter, command not converted to upper case any more.
+091211 cs  rtt       rt_rtt runable on sev station to show qcom nodes and qcom applications.

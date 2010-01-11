@@ -1,8 +1,8 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X60"
-    Attr NextCix = "_X6"
-    Attr NextTix[0] = "_X4"
+    Attr NextOix = "_X77"
+    Attr NextCix = "_X8"
+    Attr NextTix[0] = "_X5"
   EndBody
   Object Type $TypeHier 1 15-NOV-2007 14:35:37.90
     Object MotionControl_StatusEnum $TypeDef 1 15-NOV-2007 14:36:24.17
@@ -176,6 +176,13 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr Value = 5
         EndBody
       EndObject
+      Object WriteSingleRegister $Value 77 04-DEC-2009 16:09:01.59
+        Body SysBody 04-DEC-2009 16:09:09.77
+          Attr Text = "WriteSingleRegister"
+          Attr PgmName = "WriteSingleRegister"
+          Attr Value = 6
+        EndBody
+      EndObject
       Object WriteMultipleCoils $Value 36 07-FEB-2008 15:57:24.44
         Body SysBody 07-FEB-2008 15:57:51.21
           Attr Text = "WriteMultipleCoils"
@@ -235,6 +242,60 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr Text = "StatusUnknown"
           Attr PgmName = "StatusUnknown"
           Attr Value = 5
+        EndBody
+      EndObject
+    EndObject
+    Object ModbusSever_StatusEnum $TypeDef 4 25-NOV-2009 11:10:38.85
+      Body SysBody 25-NOV-2009 11:07:36.39
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+      EndBody
+      Object OK $Value 70 25-NOV-2009 11:07:36.39
+        Body SysBody 25-NOV-2009 11:07:36.39
+          Attr Text = "OK"
+          Attr PgmName = "OK"
+        EndBody
+      EndObject
+      Object IllegalFunctionCode $Value 71 25-NOV-2009 11:08:32.76
+        Body SysBody 25-NOV-2009 11:08:35.79
+          Attr Text = "IllegalFunctionCode"
+          Attr PgmName = "IllegalFunctionCode"
+          Attr Value = 1
+        EndBody
+      EndObject
+      Object IllegalDataAddress $Value 72 25-NOV-2009 11:07:36.39
+        Body SysBody 25-NOV-2009 11:07:36.39
+          Attr Text = "IllegalDataAddress"
+          Attr PgmName = "IllegalDataAddress"
+          Attr Value = 2
+        EndBody
+      EndObject
+      Object IllegalDataValue $Value 73 25-NOV-2009 11:07:36.39
+        Body SysBody 25-NOV-2009 11:07:36.39
+          Attr Text = "IllegalDataValue"
+          Attr PgmName = "IllegalDataValue"
+          Attr Value = 3
+        EndBody
+      EndObject
+      Object ServerFailure $Value 74 25-NOV-2009 11:08:55.88
+        Body SysBody 25-NOV-2009 11:08:58.05
+          Attr Text = "ServerFailure"
+          Attr PgmName = "ServerFailure"
+          Attr Value = 4
+        EndBody
+      EndObject
+      Object Acknowledge $Value 75 25-NOV-2009 11:09:36.94
+        Body SysBody 25-NOV-2009 11:09:39.43
+          Attr Text = "Acknowledge"
+          Attr PgmName = "Acknowledge"
+          Attr Value = 5
+        EndBody
+      EndObject
+      Object SeverBusy $Value 76 25-NOV-2009 11:09:52.33
+        Body SysBody 25-NOV-2009 11:09:58.88
+          Attr Text = "SeverBusy"
+          Attr PgmName = "SeverBusy"
+          Attr Value = 6
         EndBody
       EndObject
     EndObject
@@ -505,7 +566,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Object RtBody $ObjBodyDef 1 08-FEB-2008 10:26:36.84
         Body SysBody 08-FEB-2008 10:26:36.85
           Attr StructName = "Modbus_TCP_Slave"
-          Attr NextAix = "_X19"
+          Attr NextAix = "_X20"
         EndBody
         !/**
         ! Description of slave
@@ -531,8 +592,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
         ! Status of the slave. Shows if tcp-link to slave is up or not.
         !*/
         Object Status $Attribute 3 08-FEB-2008 10:29:48.44
-          Body SysBody 08-FEB-2008 10:30:23.06
+          Body SysBody 04-DEC-2009 17:14:32.80
             Attr PgmName = "Status"
+            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
         EndObject
@@ -572,6 +634,13 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$String32"
           EndBody
         EndObject
+        Object Port $Attribute 19 04-DEC-2009 17:22:45.73
+          Body SysBody 04-DEC-2009 17:23:01.72
+            Attr PgmName = "Port"
+            Attr Flags = 16777216
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
         !/**
         ! @Summary Flag that disables the slave.
         ! Flag that disables the initialization of the slave, if initialized turns off i/o-handling.
@@ -588,8 +657,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
         ! When ErrorCount reaches the ErrorLimit all inputs are reset to zero.
         !*/
         Object ErrorCount $Attribute 7 08-FEB-2008 10:50:15.18
-          Body SysBody 08-FEB-2008 10:55:49.84
+          Body SysBody 04-DEC-2009 17:14:50.70
             Attr PgmName = "ErrorCount"
+            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
@@ -612,8 +682,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
         ! try to reconnect at this cylicity.
         !*/
         Object ReconnectCount $Attribute 9 08-FEB-2008 10:56:12.51
-          Body SysBody 08-FEB-2008 10:56:17.20
+          Body SysBody 04-DEC-2009 17:15:01.53
             Attr PgmName = "ReconnectCount"
+            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
@@ -657,8 +728,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
         ! Received number of messages from slave.
         !*/
         Object RX_packets $Attribute 11 08-FEB-2008 10:57:16.79
-          Body SysBody 08-FEB-2008 10:57:21.35
+          Body SysBody 04-DEC-2009 17:15:16.28
             Attr PgmName = "RX_packets"
+            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -667,8 +739,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
         ! Sent number of messages to slave.
         !*/
         Object TX_packets $Attribute 12 08-FEB-2008 10:57:31.03
-          Body SysBody 08-FEB-2008 10:57:34.53
+          Body SysBody 04-DEC-2009 17:15:24.38
             Attr PgmName = "TX_packets"
+            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -765,7 +838,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  the number of registers you want to read. The represenation on the ChanIi should 
     !  be set to UInt16 or Int16. ChanAi and ChanDi is also applicable. In case of ChanDi the
     !  representation should be set to Bit16.
-    !
+    ! 
     !  @b WriteSingleCoil (FC 5)
     !  This function code is used to write to one single coil.
     !  Typically the output data area is defined by one ChanDo's which represent
@@ -850,19 +923,10 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
-        !/**
-        ! @Summary Status of the module.
-        ! Status of the module. The status can be any of:
-        ! OK
-        ! IllegalFunction
-        ! IllegalDataAddress
-        ! IllegalDataValue
-        ! SlaveServiceFailure
-        ! Unknown
-        !*/
         Object Status $Attribute 7 08-FEB-2008 11:20:34.93
-          Body SysBody 08-FEB-2008 11:31:11.41
+          Body SysBody 04-DEC-2009 17:15:47.85
             Attr PgmName = "Status"
+            Attr Flags = 1040
             Attr TypeRef = "OtherIO:Type-ModbusModule_StatusEnum"
           EndBody
         EndObject
@@ -1029,6 +1093,346 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Object Template Modbus_Master 2149023744 01-JAN-1970 01:00:00.00
         Body RtBody 05-SEP-2008 11:07:48.32
           Attr Process = 1
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Server object for Modbus TCP I/O.
+    !  Server object for Modbus TCP I/O.
+    ! 	
+    !  The defines a Modbus/TCP server, i.e. makes it possible to act as a slave
+    !  in the communication with a Modbus/TCP master. 
+    !
+    !  The Server object is placed in the node hierarchy under the node object.
+    !
+    !  @classlink Modbus_TCP_ServerModule otherio_modbus_tcp_servermodule.html
+    !*/
+    Object Modbus_TCP_Server $ClassDef 6 25-NOV-2009 10:32:40.64
+      Body SysBody 25-NOV-2009 10:30:31.66
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 8272
+      EndBody
+      Object RtBody $ObjBodyDef 1 25-NOV-2009 10:30:31.66
+        Body SysBody 25-NOV-2009 10:32:51.18
+          Attr StructName = "Modbus_TCP_Server"
+          Attr NextAix = "_X39"
+        EndBody
+	!/**
+	! Description of the object.
+	!*/
+        Object Description $Attribute 19 25-NOV-2009 10:30:31.66
+          Body SysBody 25-NOV-2009 10:30:31.66
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+	!/**
+	! Datasheet URL.
+	!*/
+        Object DataSheet $Attribute 20 25-NOV-2009 10:30:31.66
+          Body SysBody 25-NOV-2009 10:30:31.66
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+	!/**
+	! Current status of the server.
+	!*/
+        Object Status $Attribute 21 25-NOV-2009 10:30:31.66
+          Body SysBody 04-DEC-2009 17:14:06.15
+            Attr PgmName = "Status"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Process that handles the card. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the server.
+        ! 
+        ! 1: The server is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The server is read by the rt_io_comm process.
+        ! 4: The server is handled by an application program.
+        !*/
+        Object Process $Attribute 22 25-NOV-2009 10:30:31.66
+          Body SysBody 25-NOV-2009 10:30:31.66
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Plc thread that handles the server.
+        ! The PlcThread object of the plc thread that handles the server.
+        ! The server is read with the scantime of the thread.
+        !*/
+        Object ThreadObject $Attribute 23 25-NOV-2009 10:30:31.66
+          Body SysBody 25-NOV-2009 10:30:31.66
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Optional port number.
+        ! Optional port number.
+        ! By default the server listens to the Modbus TCP port 502.
+	! If another port should be used for the communication, it can be
+	! specified here.
+        !*/
+        Object Port $Attribute 38 04-DEC-2009 16:56:46.71
+          Body SysBody 04-DEC-2009 16:56:55.46
+            Attr PgmName = "Port"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! If Yes, the server is disabled.
+	!*/
+        Object DisableServer $Attribute 25 25-NOV-2009 10:33:08.29
+          Body SysBody 25-NOV-2009 10:33:10.93
+            Attr PgmName = "DisableServer"
+            Attr TypeRef = "pwrb:Type-YesNoEnum"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Error count of the server.
+        ! ErrorCount will increase every cycle if status is not MB__NORMAL.
+        ! When ErrorCount reaches the ErrorLimit all inputs are reset to zero.
+        !*/
+        Object ErrorCount $Attribute 26 25-NOV-2009 10:30:31.66
+          Body SysBody 04-DEC-2009 16:55:35.20
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Error limit of the server.
+        ! ErrorCount will increase every cycle if status is not MB__NORMAL.
+        ! When ErrorCount reaches the ErrorLimit all inputs are reset to zero.
+        !*/
+        Object ErrorLimit $Attribute 27 25-NOV-2009 10:30:31.66
+          Body SysBody 25-NOV-2009 10:30:31.66
+            Attr PgmName = "ErrorLimit"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Number of current connections.
+        !*/
+        Object Connections $Attribute 31 25-NOV-2009 11:03:25.72
+          Body SysBody 25-NOV-2009 11:04:00.16
+            Attr PgmName = "Connections"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Received number of messages for the server.
+        !*/
+        Object RX_packets $Attribute 32 25-NOV-2009 10:30:31.66
+          Body SysBody 04-DEC-2009 16:55:52.73
+            Attr PgmName = "RX_packets"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Sent number of messages from the server.
+        !*/
+        Object TX_packets $Attribute 33 25-NOV-2009 10:30:31.66
+          Body SysBody 04-DEC-2009 16:56:00.02
+            Attr PgmName = "TX_packets"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Input area.
+        ! Area where alla input data is stored.
+        !*/
+        Object Inputs $Attribute 36 27-NOV-2009 09:42:27.83
+          Body SysBody 27-NOV-2009 09:42:46.12
+            Attr PgmName = "Inputs"
+            Attr Flags = 3090
+            Attr Elements = 256
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Ouput area.
+        ! Area where alla output data is stored.
+        !*/
+        Object Outputs $Attribute 37 27-NOV-2009 09:42:27.83
+          Body SysBody 27-NOV-2009 09:43:03.16
+            Attr PgmName = "Outputs"
+            Attr Flags = 3090
+            Attr Elements = 256
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 61 25-NOV-2009 10:30:31.66
+        Object IoRackInit $Method 62 25-NOV-2009 10:30:31.66
+          Body SysBody 25-NOV-2009 10:34:14.57
+            Attr MethodName = "Modbus_TCP_Server-IoRackInit"
+          EndBody
+        EndObject
+        Object IoRackClose $Method 63 25-NOV-2009 10:30:31.66
+          Body SysBody 25-NOV-2009 10:34:23.88
+            Attr MethodName = "Modbus_TCP_Server-IoRackClose"
+          EndBody
+        EndObject
+        Object IoRackRead $Method 64 25-NOV-2009 10:30:31.66
+          Body SysBody 25-NOV-2009 10:34:31.89
+            Attr MethodName = "Modbus_TCP_Server-IoRackRead"
+          EndBody
+        EndObject
+        Object IoRackWrite $Method 65 25-NOV-2009 10:30:31.66
+          Body SysBody 25-NOV-2009 10:34:39.46
+            Attr MethodName = "Modbus_TCP_Server-IoRackWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Modbus_TCP_Server 2149285888 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Server Moduöe object for Modbus TCP I/O.
+    !  Server Module object for Modbus TCP I/O.
+    ! 	
+    !  The Module object is placed as a child to a Modbus_TCP_Server object
+    !  and is the father of channel objects that define the input and
+    !  output area for the module.
+    ! 
+    !  @classlink Modbus_TCP_Server otherio_modbus_tcp_server.html
+    !*/
+    Object Modbus_TCP_ServerModule $ClassDef 7 25-NOV-2009 11:05:45.82
+      Body SysBody 25-NOV-2009 11:05:23.49
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 25-NOV-2009 11:05:23.49
+        Body SysBody 25-NOV-2009 11:06:00.66
+          Attr StructName = "Modbus_TCP_ServerModule"
+          Attr NextAix = "_X21"
+        EndBody
+	!/**
+	! Description of the object.
+	!*/
+        Object Description $Attribute 11 25-NOV-2009 11:05:23.49
+          Body SysBody 25-NOV-2009 11:05:23.49
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+	!/**
+	! @Summary Address for reading registers.
+	! Address for reading with function code ReadHoldingRegisters.
+        ! The value defines the starting address for the input channels
+        ! of class ChanIi and ChanAi.
+        !
+	! Note that the address for ReadDiscreteInputs and ReadCoils are 
+	! not affected by the ReadAddress.
+	!*/
+        Object ReadAddress $Attribute 12 04-DEC-2009 16:53:13.17
+          Body SysBody 04-DEC-2009 16:53:32.47
+            Attr PgmName = "ReadAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+	!/**
+	! @Summary Address for writing registers.
+	! Address for reading with function code WriteMultipleRegisters and
+        ! WriteSingleRegister.
+        ! The value defines the starting address for the output channels
+        ! of class ChanIo and ChanAo.
+	!
+	! Note that the address for WriteSingleCoil and WriteMultipleCoils 
+        ! are not affected by the WriteAddress.
+	!*/
+        Object WriteAddress $Attribute 13 04-DEC-2009 16:53:43.87
+          Body SysBody 04-DEC-2009 16:53:45.81
+            Attr PgmName = "WriteAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Unit id.
+        ! Identification of the modbus unit to communicate with. It is typically 
+	! only used if communicating with a tpc gateway that is connected to a 
+	! Modbus serial line with possibly several units. Usually this has no 
+	! meaning and should be set to zero (0).   
+        !*/
+        Object UnitId $Attribute 14 25-NOV-2009 11:05:23.49
+          Body SysBody 25-NOV-2009 11:05:23.49
+            Attr PgmName = "UnitId"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Module status.
+        !*/
+        Object Status $Attribute 15 25-NOV-2009 11:05:23.49
+          Body SysBody 04-DEC-2009 17:13:22.55
+            Attr PgmName = "Status"
+            Attr Flags = 1040
+            Attr TypeRef = "OtherIO:Type-ModbusSever_StatusEnum"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Process that handles the module. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the module.
+        ! 
+        ! 1: The module is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The module is read by the rt_io_comm process.
+        ! 4: The module is handled by an application program.
+        !*/
+        Object Process $Attribute 18 25-NOV-2009 11:05:23.49
+          Body SysBody 25-NOV-2009 11:05:23.49
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Plc thread that handles the module.
+        ! The PlcThread object of the plc thread that handles the module.
+        ! The master is read with the scantime of the thread.
+        !*/
+        Object ThreadObject $Attribute 19 25-NOV-2009 11:05:23.49
+          Body SysBody 25-NOV-2009 11:05:23.49
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 66 25-NOV-2009 11:05:23.49
+        Object IoCardInit $Method 67 25-NOV-2009 11:05:23.49
+          Body SysBody 25-NOV-2009 11:14:04.41
+            Attr MethodName = "Modbus_TCP_ServerModule-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 68 25-NOV-2009 11:05:23.49
+          Body SysBody 25-NOV-2009 11:14:15.11
+            Attr MethodName = "Modbus_TCP_ServerModule-IoCardRead"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 69 25-NOV-2009 11:05:23.49
+          Body SysBody 25-NOV-2009 11:14:21.27
+            Attr MethodName = "Modbus_TCP_ServerModule-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Modbus_TCP_ServerModule 2149548032 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
         EndBody
       EndObject
     EndObject

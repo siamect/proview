@@ -86,7 +86,7 @@ export_png := $(addprefix $(exe_dir)/, $(png_sources))
 
 $(exe_dir)/%.uid : %.uil
 	@ $(log_uil_uid)
-	@ export -n LANG; uil -o $(target) $(source)
+	@ export LANG; uil -o $(target) $(source)
 
 clean_uid := $(patsubst %.uil,clean_%.uid,$(uil_sources))
 clean_c_pwg := $(patsubst %.pwg,clean_%.pwg,$(pwg_c_sources))

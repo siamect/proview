@@ -57,14 +57,12 @@ class sev_server {
   //TODO should this really be in this file?
   static const unsigned int constSevVersion = 2;
 
-  sev_server() : m_server_status(0), m_msg_id(0) {}
+  sev_server() : m_server_status(0), m_refid(0), m_msg_id(0) {}
 
   pwr_tStatus m_sts;
   pwr_tStatus m_server_status;
   vector<sev_node> m_nodes;
-
   tree_sTable *m_refid;
-
   unsigned int m_msg_id;
   sev_db *m_db;
   int m_noneth;

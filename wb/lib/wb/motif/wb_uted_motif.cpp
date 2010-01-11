@@ -656,7 +656,7 @@ WUtedMotif::WUtedMotif( void	       	*wu_parent_ctx,
   /* set initialization values in context */
 
   /* Save the context structure in the widget */
-  XtSetArg (args[0], XmNuserData, (unsigned int) this);
+  XtSetArg (args[0], XmNuserData, (XtPointer) this);
 
   /*
    * Create a new widget

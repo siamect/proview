@@ -339,7 +339,7 @@ RtTraceMotif::RtTraceMotif( void *tr_parent_ctx, Widget tr_parent_wid, pwr_tObji
 		topLevelShellWidgetClass, parent_wid, args, 0);
 
   /* Save the context structure in the widget */
-  XtSetArg (args[0], XmNuserData, (unsigned int) this);
+  XtSetArg (args[0], XmNuserData, (XtPointer) this);
 
   sts = MrmOpenHierarchy( 1, &uid_filename_p, NULL, &s_DRMh);
   if (sts != MrmSUCCESS) printf("can't open %s\n", uid_filename);

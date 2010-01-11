@@ -360,7 +360,7 @@ XttGeMotif::XttGeMotif( Widget xg_parent_wid, void *xg_parent_ctx, const char *x
 
   // Save the context structure in the widget
   i = 0;
-  XtSetArg(args[i], XmNuserData, (unsigned int) this);i++;
+  XtSetArg(args[i], XmNuserData, (XtPointer) this);i++;
   XtSetArg(args[i],XmNdeleteResponse, XmDO_NOTHING);i++;
 
   toplevel = XtCreatePopupShell( title, 

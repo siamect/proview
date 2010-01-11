@@ -100,8 +100,7 @@ pwrc_check_project_name()
 #
 # Get the databases in a project
 #
-# Arguments 1: project name
-#           2: project root
+# Arguments 1: project root
 # Returns pwrc_status : 0 Success
 #                   
 #
@@ -109,15 +108,16 @@ pwrc_dblist_read()
 {
   local volume
   local volid
-  local dbid
   local volclass
-  local pname=$1
-  local proot=$2
+  local volcnf
+  local volenum
+  local volserver
   local dbfile
   local db
+  local proot=$1
   let i=0
   let j=0
-  let found=0
+  let k=0
 
   pwrc_status=$pwrc__success
 
@@ -125,38 +125,41 @@ pwrc_dblist_read()
     unset db_array
   fi
 
-  # Add directory db
-  db_array[$i]=$pname"_"$pwr_dbversion
-  i=$i+1
-  
-  dbfile=$proot/common/db/pwrp_cnf_volumelist.dat
+  dbfile=$proot/src/db/pwrp_cnf_volumelist.dat
   if [ ! -e $dbfile ]; then
     echo "Can't find $dbfile"
-    pwrc_status=$pwrc__notconfigured
     return
   fi
 
-  while read volume volid dbid volclass; do
+  while read volume volid volclass volcnf volenum volserver; do
     if [ -n "$volume" ] && [ "${volume:0:1}" != "!" ]; then      
-      db=$pname"_"$dbid"_"$pwr_dbversion
-
-      # Check that the db is not already inserted
-      found=0
-      j=0
-      while [ "${db_array[$j]}" != "" ]; do
-        if [ "${db_array[$j]}" == $db ]; then
-          found=1
-          break;
+      if [ $volcnf == "cnf" ]; then
+        if [ $volclass == "ClassVolume" ]; then
+          if [ $volenum -eq 0 ]; then
+            wbl_array[$k]=`eval echo $volume | tr "[:upper:]" "[:lower:]"`
+            k=$k+1            
+          elif [ $volenum -eq 1 ]; then
+            db_array[$i]=`eval echo $volume | tr "[:upper:]" "[:lower:]"`
+            i=$i+1
+          elif [ $volenum -eq 2 ]; then
+            dbms_array[$j]=`eval echo $volume | tr "[:upper:]" "[:lower:]"`
+            dbms_server_array[$j]=$volserver
+            j=$j+1
+          fi
+        else
+          if [ $volenum -eq 0 ]; then
+            db_array[$i]=`eval echo $volume | tr "[:upper:]" "[:lower:]"`
+            i=$i+1
+          elif [ $volenum -eq 1 ]; then
+            dbms_array[$j]=`eval echo $volume | tr "[:upper:]" "[:lower:]"`
+            dbms_server_array[$j]=$volserver
+            j=$j+1
+          fi
         fi
-        j=$j+1
-      done
-      
-      if [ $found -eq 0 ]; then
-        db_array[$i]=$db
-        i=$i+1
       fi
     fi
   done < $dbfile
+
 }
 
 
@@ -351,7 +354,7 @@ pwrc_prlist_add()
   let i=0
   
   shift
-  echo "Adding project $1"
+  echo "-- Adding project $1 to ProjectList"
 
   # Check if project exist
   pwrc_prlist_get_index $1
@@ -630,7 +633,7 @@ EOF
       return
     fi
     pwrc_prlist_add $@
-    pwrc_prlist_write
+    # pwrc_prlist_write
     if [ $pwrc_status -ne $pwrc__success ]; then
       return
     fi
@@ -688,7 +691,7 @@ pwrc_add_func()
     if [ $pwrc_status -ne $pwrc__success ]; then
       return
     fi
-    pwrc_prlist_write
+    # pwrc_prlist_write
     if [ $pwrc_status -ne $pwrc__success ]; then
       return
     fi
@@ -729,7 +732,7 @@ pwrc_delete_func()
 
 
     proot=${root_array[$pwrc_current_index]}
-    pwrc_dblist_read $pname $proot
+    pwrc_dblist_read $proot
     
     if [ -z $confirm ] || [ $confirm != "noconfirm" ]; then
       echo "Delete project will"
@@ -743,9 +746,25 @@ pwrc_delete_func()
       fi
     fi
 
+    # Delete mysql databases
+    pwrc_dblist_read $proot
+
+    i=0
+    while [ "${dbms_array[$i]}" != "" ]; do
+      dbname="pwrp_"$pname"__"${dbms_array[$i]}
+
+      if mysqladmin -h ${dbms_server_array[$i]} -upwrp drop $dbname -f
+      then
+        echo "-- Mysql database $dbname deleted"
+      else
+        echo "** Unable to delete mysql database $dbname"
+      fi
+      i=$i+1
+    done
+
     if [ ! -e "$proot" ]; then
       # Project root doesn't exist, remove from projectlist only
-      echo "Warning: Project root not found"
+      echo "** Warning: Project root not found"
     else
     
       if [ ! -w "$proot" ]; then
@@ -757,15 +776,15 @@ pwrc_delete_func()
       # Delete project directory tree
       if rm -R $proot
       then
-        echo "Project root deleted"
+        echo "-- Project tree deleted"
       else
         if rmdir $proot
         then
-          echo "Project root deleted"
+          echo "-- Project root deleted"
         else
-          echo "Unable to delete project root"
+          echo "** Unable to delete project root"
 	  pwrc_status=$pwrc__rootdelete
-        return
+          return
 	fi
       fi
 
@@ -773,11 +792,12 @@ pwrc_delete_func()
 
     pwrc_prlist_delete $2
     if [ $pwrc_status -eq $pwrc__success ]; then
-      echo "Project $2 removed from projectlist"
-      pwrc_prlist_write
+      echo "-- Project $2 removed from projectlist"
+      # pwrc_prlist_write
     else
-      echo "Something went wrong..."
+      echo "** Something went wrong..."
     fi    
+
     return
   fi
   
@@ -806,9 +826,9 @@ pwrc_delete_func()
     pwrc_prlist_base_delete $2
     if [ $pwrc_status -eq $pwrc__success ]; then
       echo "Base $2 removed from projectlist"
-      pwrc_prlist_write
+      # pwrc_prlist_write
     else
-      echo "Something went wrong..."
+      echo "** Something went wrong..."
     fi    
     return
   fi
@@ -1210,6 +1230,57 @@ pwrc_modify_func()
       return
     fi
 
+    if [ $modify_name -eq 1 ]; then
+
+      # Rename mysql databases
+      pwrc_prlist_read
+      if [ $pwrc_status -ne $pwrc__success ]; then
+        return
+      fi
+      pwrc_prlist_get_index $pname
+      if [ $pwrc_status -ne $pwrc__success ]; then
+        echo "** No such project '$pname'"
+        return
+      fi
+
+      proot=${root_array[$pwrc_current_index]}
+      pwrc_dblist_read $proot
+
+      i=0
+      while [ "${dbms_array[$i]}" != "" ]; do
+        dbname="pwrp_"$pname"__"${dbms_array[$i]}
+        new_dbname="pwrp_"$new_pname"__"${dbms_array[$i]}
+
+        if mysqladmin -h ${dbms_server_array[$i]} -upwrp create $new_dbname
+        then
+          if mysqldump -h ${dbms_server_array[$i]} -upwrp $dbname | mysql -h ${dbms_server_array[$i]} -upwrp -D $new_dbname
+          then
+	    echo "-- Mysql database copied from $dbname to $new_dbname"
+            if mysqladmin -h ${dbms_server_array[$i]} -upwrp drop $dbname -f
+	    then
+              echo "-- Mysql database $dbname deleted"
+            else     
+	      echo "** Unable to delete mysql database from $dbname"
+            fi
+          else
+	    echo "** Unable to copy mysql database from $dbname to $new_dbname"
+	    pwrc_status=$pwrc__mysqldbcopy
+            return
+          fi
+        else
+          echo "** Unable to create mysql database $new_dbname"
+	  pwrc_status=$pwrc__mysqldbcopy
+	  return
+        fi
+        i=$i+1
+      done
+
+      name_array[$pwrc_current_index]=$new_pname
+      if [ $pwrc_status -ne $pwrc__success ]; then
+        return
+      fi
+    fi
+
     if [ $modify_root -eq 1 ]; then    
       # Check that new root doesn't exist
       if [ -e "$root" ]; then
@@ -1249,69 +1320,12 @@ pwrc_modify_func()
     fi
 
     if [ $something_modified -eq 1 ]; then
-      pwrc_prlist_write      
+      # pwrc_prlist_write      
       if [ $pwrc_status -ne $pwrc__success ]; then
         return
       fi
     fi
 
-    if [ $modify_name -eq 1 ]; then
-      # This can only be done on mysql server
-      if [ ! -z "$pwrp_mysql_server" ]; then
-        node="`eval uname -n`"
-
-        if [ $node != $pwrp_mysql_server ]; then
-          echo "Error: current host is not mysql server ($pwrp_mysql_server)"
-          pwrc_status=$pwrc__notmysqlsrv
-          return
-        fi
-      fi
-
-      # Get location for mysql database    
-      datadir=`eval mysqladmin $mysql_socket variables| grep datadir | awk '{ print $4 }'`
-      datadir=${datadir%/}
-
-      if [ -z $datadir ]; then
-        echo "Error: Can't get database directory from mysql"
-        pwrc_status=$pwrc__datadir
-        return
-      fi
-
-      # Get databases in from-project
-      pwrc_dblist_read $pname ${root_array[$pwrc_current_index]}
-      pwrc_status=$pwrc__success
-    
-      # Check that the databases can be found and that the new doesn't exist
-      i=0
-      while [ "${db_array[$i]}" != "" ]; do      
-        if [ ! -e $datadir/${db_array[$i]} ]; then
-          echo "Error: Can't find database ${db_array[$i]}"
-          pwrc_status=$pwrc__nodb
-          return
-        fi
-
-        i=$i+1
-      done
-    
-      # Rename databases
-      i=0
-      while [ "${db_array[$i]}" != "" ]; do
-        dbname=$new_pname${db_array[$i]#$pname}
-        if wb_cp -rename $datadir/${db_array[$i]} $datadir/$dbname
-        then
-	  echo "Database $datadir/${db_array[$i]} -> $datadir/$dbname"
-        else
-	  echo "Error copying mysql database '$datadir/${db_array[$i]}'"
-          pwrc_status=$pwrc__mysqldbrena
-        fi
-        i=$i+1
-      done
-      name_array[$pwrc_current_index]=$new_pname
-      pwrc_prlist_write
-      if [ $pwrc_status -ne $pwrc__success ]; then
-        return
-      fi
-    fi
     pwrc_status=$pwrc__success
   else
     echo "Unknown command"
@@ -1421,21 +1435,44 @@ pwrc_copy_func()
     fi
 
     # Copy directory tree
+    echo "-- Copying project tree..."
     if cp -R $from_proot $to_proot
     then
-      echo "Project directory tree copied"
+      echo "-- Project tree copied"
     else
-      echo "Unable to copy directory tree"
+      echo "** Unable to copy directory tree"
       pwrc_status=$pwrc__copy
       return
     fi
     
     # Add new project into project list
     pwrc_prlist_add dummy $to_pname ${base_array[pwrc_current_index]} $to_proot $to_phier ${desc_array[pwrc_current_index]} "(Copy of $from_pname)"
-    pwrc_prlist_write
+    # pwrc_prlist_write
     if [ $pwrc_status -ne $pwrc__success ]; then
       return
     fi
+
+    # Copy mysql databases
+    pwrc_dblist_read $from_proot
+
+    i=0
+    while [ "${dbms_array[$i]}" != "" ]; do
+      to_dbname="pwrp_"$to_pname"__"${dbms_array[$i]}
+      from_dbname="pwrp_"$from_pname"__"${dbms_array[$i]}
+
+      if mysqladmin -h ${dbms_server_array[$i]} -upwrp create $to_dbname
+      then 
+        if mysqldump -h ${dbms_server_array[$i]} -upwrp $from_dbname | mysql -h ${dbms_server_array[$i]} -upwrp -D $to_dbname
+        then
+	  echo "-- Mysql database copied from $from_dbname to $to_dbname"
+        else     
+	  echo "** Unable to copy mysql database from $from_dbname to $to_dbname"
+        fi
+      else
+	echo "** Unable to create mysql database $to_dbname"
+      fi
+      i=$i+1
+    done
 
     pwrc_status=$pwrc__success    
   else

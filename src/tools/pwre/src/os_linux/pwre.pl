@@ -971,6 +971,7 @@ sub copy ()
   my($vmsinc) = $ENV{"pwre_vmsinc"};
   my($bindir) = $ENV{"pwre_bin"} . "/" . $ENV{"pwre_hw"};
   my($docroot) = $ENV{"pwre_broot"} . "/" . $ENV{"pwre_os"} . "/" . $ENV{"pwre_hw"} . "/exp/doc/";
+  my($exproot) = $ENV{"pwre_broot"} . "/" . $ENV{"pwre_os"} . "/" . $ENV{"pwre_hw"};
 
   printf("--\n");
   printf("-- Copy file from Import root\n");
@@ -979,6 +980,10 @@ sub copy ()
   
   if ( $_[0] eq "doc" ) {
     my($cmd) = "cp -r " . $vmsinc . "/exp/doc/* " . $docroot; 
+    system("$cmd");
+  }
+  elsif ( $_[0] eq "dbs" ) {
+    my($cmd) = "$bindir/import_dbs.sh " . $vmsinc . " " . $exproot; 
     system("$cmd");
   }
   else {
@@ -1414,7 +1419,7 @@ sub get_vars ()
     $desc = $_[6];
   }
 
-  $varstr = join(":", ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc));
+  $varstr = join(";", ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc));
 
 }
 
@@ -1435,7 +1440,7 @@ sub get_var()
 sub read_vars ()
 {
   $varstr = $envdb{$label};
-  ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc)  =  split(/:/, $varstr);
+  ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc)  =  split(/;/, $varstr);
   @vars = ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc);
 }
 
@@ -1561,7 +1566,7 @@ sub usage_init ()
 sub usage_import ()
 {
   printf("++\n");
-  printf("++ import 'block' ['flavour']    : Import files from import root, block rt, op, java, doc\n");
+  printf("++ import 'block' ['flavour']    : Import files from import root, block dbs, rt, op, java, doc\n");
 }
 
 sub usage_module ()

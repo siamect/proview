@@ -1361,7 +1361,7 @@ void ItemAlarm::update_text()
     time_str[17] = 0;
   brow_SetAnnotation( node, 1, time_str, strlen(time_str));
 
-  switch ( type)
+  switch ( event_type)
   {
     case evlist_eEventType_Info:
     case evlist_eEventType_Alarm:

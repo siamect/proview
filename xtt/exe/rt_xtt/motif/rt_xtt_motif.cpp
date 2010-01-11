@@ -619,7 +619,7 @@ XttMotif::XttMotif( int argc, char *argv[], int *return_sts) :
  
   // Save the context structure in the widget
   i = 0;
-  XtSetArg( args[i], XmNuserData, (unsigned int) this);i++;
+  XtSetArg( args[i], XmNuserData, (XtPointer) this);i++;
 
   sts = MrmOpenHierarchy( 1, &uid_filename_p, NULL, &s_DRMh);
   if (sts != MrmSUCCESS) printf("can't open %s\n", uid_filename);

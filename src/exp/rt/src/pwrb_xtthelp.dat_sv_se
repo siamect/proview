@@ -469,7 +469,7 @@ Datatyper<link> datatyper
 </topic> **********
 <topic> Ai
 Ai
-Engelsk text<link> Ai, ””, $pwr_exe/pwrb_xtthelp.dat
+Engelsk text<link> Ai, "", $pwr_exe/pwrb_xtthelp.dat
 
 Analog ingång. 
 
@@ -18034,7 +18034,7 @@ Boolean
 <b>Float32
 32-bitars float
 Om konvertering till String eller Ascii anges format i tredje argumenet (c-
-sytax, t ex ”%8.2f”).
+sytax, t ex "%8.2f").
 <b>Float64
 64-bitars float
 <b>String
@@ -18540,17 +18540,17 @@ Nytt!
 <h1>Objekt Referens Manual (ORM) ver 1.2 
 
 Objektbeskrivning har tillkommit för att kunna visa Svensk hjälp text i XTT 
-(trace) för underhåll (elektriker) mm och bygger på ”PROVIEW/R Objekt 
-handbok” dokument version: v2.0.
+(trace) för underhåll (elektriker) mm och bygger på "PROVIEW/R Objekt 
+handbok" dokument version: v2.0.
 
 <b>Gör så här vid revidering
-Spara filen som ”doc” och som ”txt” och kopiera den till utvecklingsdisken för 
-proview. D.v.s. denna fil ”orm_objekt_v??.doc” kopieras till Proview system 
-katalog/fil ”$pwr_exe/sv_se/pwrb_xtthelp.dat”.
+Spara filen som "doc" och som "txt" och kopiera den till utvecklingsdisken för 
+proview. D.v.s. denna fil "orm_objekt_v??.doc" kopieras till Proview system 
+katalog/fil "$pwr_exe/sv_se/pwrb_xtthelp.dat".
 
-När man sparar denna DOC fil i Word för Proview ”sparar man som” och 
-anger filformatet ”txt” och bocka för ”infoga radbrytningar” i popup fönstret 
-som dyker upp när man sparar. Glöm inte sen att ändra filen ”txt” till ”dat”.
+När man sparar denna DOC fil i Word för Proview "sparar man som" och 
+anger filformatet "txt" och bocka för "infoga radbrytningar" i popup fönstret 
+som dyker upp när man sparar. Glöm inte sen att ändra filen "txt" till "dat".
 
 -------------------------------------------------------------------------
 <h1>Revision v1.0
@@ -18865,7 +18865,7 @@ Drive, valve, pos
 Simulering
 Dokumentera
 
-Länkarna (objekten) nedan leder till den ’stora’ beskrivningen om objektets 
+Länkarna (objekten) nedan leder till den "stora" beskrivningen om objektets 
 funktion och alla attribut.
 
 <h1>Konfiguration
@@ -19343,7 +19343,7 @@ Objekt för att visa värdet på några viktiga PLC program attribut.
 <topic> Nmps_info
 PROVIEW/R SSAB NMPS objekt
 
-NMPS objekten är hämtade ur ”NMPS Användarhandledning av”.
+NMPS objekten är hämtade ur "NMPS Användarhandledning av".
 
 Revision:<t>97-11-04<t>Claes Sjöfors
 Version:<t>V2.7-1
@@ -19369,7 +19369,7 @@ NMPS objekt<link>pwrb_sv_se, meny_nmps
 <topic> IO_info
 PROVIEW/R SSAB IO objekt
 
-Objekten är hämtade ur ”PSS9000 IO objektsbeskrivning”
+Objekten är hämtade ur "PSS9000 IO objektsbeskrivning"
 
 Revision:<t>01-02-16<t>Claes Sjöfors
 Version:<t>V3.3A

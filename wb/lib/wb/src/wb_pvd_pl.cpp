@@ -107,6 +107,7 @@ void wb_pvd_pl::writeAttribute( co_procom *pcom, pwr_tOix oix, unsigned int offs
 	strncpy( (char *)((unsigned long)m_list[oix].body + (unsigned long)path_offset), path, 
 		sizeof(body.Path));
       }
+      m_list[oix].flags |= pl_mFlags_PathModified;
     }
     else if ( offset == (unsigned int)((char *)&body.Path - (char *)&body)) {
       m_list[oix].flags |= pl_mFlags_PathModified;
@@ -363,7 +364,6 @@ void wb_pvd_pl::process_list( pwr_tStatus *sts)
 
       if ( m_list[i].flags & procom_obj_mFlags_Deleted &&
 	   !(m_list[i].flags & procom_obj_mFlags_Created)) {
-	printf( "Project deleted %s\n", longname(i));
 
 	sprintf( cmd, "pwrp_env.sh delete project %s noconfirm",
 		 body->Project);
@@ -378,7 +378,7 @@ void wb_pvd_pl::process_list( pwr_tStatus *sts)
       else if ( m_list[i].flags & procom_obj_mFlags_Created &&
 	   !(m_list[i].flags & procom_obj_mFlags_Deleted)) {
 	if ( strcmp( body->CopyFrom, "") == 0) {
-	  printf( "Project created %s\n", longname(i));
+	  printf( "-- Project created %s\n", longname(i));
 
 	  sprintf( cmd, "wb_pvd_pl.sh create project %s %s %s \"%s\" \"%s\"",
 		   body->Project, body->Version, body->Path, longname(m_list[i].oix), 
@@ -394,7 +394,6 @@ void wb_pvd_pl::process_list( pwr_tStatus *sts)
 	else {
 	  sprintf( cmd, "pwrp_env.sh copy project %s %s %s %s noconfirm",
 		     body->CopyFrom, body->Project, body->Path, longname(m_list[i].oix));
-	  printf( "%s\n", cmd);
 	  csts = system( cmd);      
 	  if ( (csts >>= 8) != 0) {
 	    sprintf( msg, "%s, in object %s", pwrp_status_to_string(csts), 
@@ -409,11 +408,25 @@ void wb_pvd_pl::process_list( pwr_tStatus *sts)
 	pwr_sClass_ProjectReg *origbody = (pwr_sClass_ProjectReg *)m_list[i].userdata;
 
 	if ( m_list[i].flags & pl_mFlags_ProjectModified) {
-	  printf( "Project modified %s\n", longname(i));
+	  printf( "-- Project modified %s\n", longname(i));
+	}
+	if ( m_list[i].flags & pl_mFlags_ProjectModified &&
+	     strcmp( body->Project, origbody->Project) != 0) {
+	  printf( "-- Project Name modified %s\n", longname(i));
+
+	  sprintf( cmd, "pwrp_env.sh modify project %s -n %s", origbody->Project, 
+		   body->Project);
+	  csts = system( cmd);      
+	  if ( (csts >>= 8) != 0) {
+	    sprintf( msg, "%s, in object %s", pwrp_status_to_string(csts), 
+		     longname(m_list[i].oix));
+	    MsgWindow::message('E', msg, msgw_ePop_Yes);
+	    return;
+	  }
 	}
 	if ( m_list[i].flags & pl_mFlags_PathModified &&
 	     strcmp( body->Path, origbody->Path) != 0) {
-	  printf( "Path modified %s\n", longname(i));
+	  printf( "-- Project Path modified %s\n", longname(i));
 
 	  sprintf( cmd, "pwrp_env.sh modify project %s -r %s", origbody->Project, 
 		   body->Path);

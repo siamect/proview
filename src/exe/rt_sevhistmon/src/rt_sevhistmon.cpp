@@ -757,6 +757,7 @@ bool rt_sevhistmon::send_connect( pwr_tNid nid, pwr_tStatus *sts)
   return ODD(*sts);
 }
 
+
 bool rt_sevhistmon::send_server_status_request( pwr_tStatus *sts)
 {
   int   stime;
@@ -1003,6 +1004,13 @@ int rt_sevhistmon::mainloop()
       m_loopcnt++;
       send_data();
       send_server_status_request( &sts);
+
+      if ( !m_allconnected) {
+	int reconnect_time = int(20.0 / m_scantime);
+
+	if ( m_loopcnt % reconnect_time == 0)
+	  retry_connect();
+      }
       continue;
     }
 
@@ -1059,8 +1067,6 @@ int rt_sevhistmon::mainloop()
 
     qcom_Free( &sts, mp);
 
-    if ( !m_allconnected)
-      retry_connect();
   }
 
 }
