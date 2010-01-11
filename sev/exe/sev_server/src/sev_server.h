@@ -59,12 +59,9 @@ class sev_server {
 
   sev_server() : m_server_status(0), m_msg_id(0) {}
 
-//  typedef map<sev_refid, unsigned int>::iterator iterator_refid;
-
   pwr_tStatus m_sts;
   pwr_tStatus m_server_status;
   vector<sev_node> m_nodes;
-//  map<sev_refid, unsigned int> m_refid;
 
   tree_sTable *m_refid;
 

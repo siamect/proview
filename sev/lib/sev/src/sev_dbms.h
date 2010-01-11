@@ -68,7 +68,8 @@ class sev_dbms_env
 	   const char *dbName, unsigned int port, const char *socket);
 
   int checkAndUpdateVersion(unsigned int version);
-  int updateDB_to_SevVersion2(void);
+  int updateDBToSevVersion2(void);
+  int createSevVersion2Tables(void);
   MYSQL *createDb(void);
   MYSQL *openDb(void);
   bool exists() { return m_exists;}    
@@ -125,7 +126,7 @@ class sev_dbms : public sev_db {
 		  pwr_tTime *starttime, 
 		  pwr_tTime *endtime, int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize);
   int delete_old_data( pwr_tStatus *sts, char *tablename, 
-		       pwr_tMask options, pwr_tTime limit);
+		       pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle);
   int delete_item( pwr_tStatus *sts, pwr_tOid oid, char *aname);
 
   int get_items( pwr_tStatus *sts);
@@ -137,7 +138,7 @@ class sev_dbms : public sev_db {
 		  char *description, char *unit, pwr_tFloat32 scantime, 
 		  pwr_tFloat32 deadband, pwr_tMask options);
   int remove_item( pwr_tStatus *sts, pwr_tOid oid, char *aname);
-  char *oid_to_table( pwr_tOid oid, char *aname);
+  static char *oid_to_table( pwr_tOid oid, char *aname);
   char *pwrtype_to_type( pwr_eType type, unsigned int size);
   static int timestr_to_time( char *tstr, pwr_tTime *ts);
   int check_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
@@ -161,7 +162,7 @@ class sev_dbms : public sev_db {
   int check_objectitemattr( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *aname, char *oname, 
 																	pwr_eType type, unsigned int size, unsigned int *idx);
   int delete_old_objectdata( pwr_tStatus *sts, char *tablename, 
-                             pwr_tMask options, pwr_tTime limit);
+                             pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle);
   int check_deadband(pwr_eType type, unsigned int size, pwr_tFloat32 deadband, void *value, void *oldvalue);
   int get_objectvalues( pwr_tStatus *sts, sev_item *item, unsigned int size, pwr_tTime *starttime, pwr_tTime *endtime, 
 			                  int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize);

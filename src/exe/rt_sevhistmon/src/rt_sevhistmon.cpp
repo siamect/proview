@@ -961,6 +961,7 @@ int rt_sevhistmon::send_itemlist( pwr_tNid nid)
   put.msg_id = m_msg_id++;
 
   if ( !qcom_Put( &sts, &tgt, &put)) {
+    printf("rt_sevhistmon: ItemList send ERROR sts:%d\n", sts);
     qcom_Free( &sts, put.data);
     return 0;
   }
@@ -980,6 +981,7 @@ int rt_sevhistmon::send_itemlist( pwr_tNid nid)
       set_status();
     }
   }
+  printf("rt_sevhistmon: ItemList sent\n");
   return 1;
 }
 
@@ -1008,7 +1010,11 @@ int rt_sevhistmon::mainloop()
       case sev_cMsgClass:
         switch ( get.type.s) {
           case sev_eMsgType_NodeUp:
+            printf("rt_sevhistmon: Node up recevied\n");
+            send_itemlist( get.sender.nid);
+            break;
           case sev_eMsgType_HistItemsRequest:
+            printf("rt_sevhistmon: HistitemsRequest recevied\n");
             send_itemlist( get.sender.nid);
             break;
           case sev_eMsgType_ServerStatus:

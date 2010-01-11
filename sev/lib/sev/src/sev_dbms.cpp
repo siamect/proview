@@ -271,7 +271,7 @@ MYSQL *sev_dbms_env::createDb(void)
   rc = mysql_query( m_con, query);
   if (rc) printf( "Create items table: %s\n", mysql_error(m_con));
 
-  updateDB_to_SevVersion2();
+  createSevVersion2Tables();
 
   return con;
 }
@@ -310,7 +310,7 @@ int sev_dbms_env::checkAndUpdateVersion(unsigned int version)
   //add code for new versions here
   if(old_version < 2 ) {
     printf("Updating database tables to sev version 2\n");
-    updateDB_to_SevVersion2();
+    updateDBToSevVersion2();
   }
 
   if(old_version != version) {
@@ -325,7 +325,70 @@ int sev_dbms_env::checkAndUpdateVersion(unsigned int version)
   return 1;
 }
 
-int sev_dbms_env::updateDB_to_SevVersion2(void)
+int sev_dbms_env::updateDBToSevVersion2(void)
+{
+  createSevVersion2Tables();
+
+  int rc;
+  char query[300];
+
+  sprintf( query, "select id,tablename,vid,oix from items order by id");
+
+  rc = mysql_query( con(), query);
+  if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s: %s\n", __FUNCTION__, mysql_error(con()));
+    return 0;
+  }
+
+  MYSQL_ROW row;
+  MYSQL_RES *result = mysql_store_result( con());
+  if ( !result) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "GetValues Result Error\n");
+    return 0;
+  }
+  int rows = mysql_num_rows( result);
+
+  vector<sev_item> itemsVec;
+  for ( int i = 0; i < rows; i++) {
+    sev_item item;
+    row = mysql_fetch_row( result);
+    if (!row) break;
+    item.id = atoi( row[0]);
+    strncpy( item.tablename, row[1], sizeof(item.tablename));
+    item.oid.vid = strtoul( row[2], 0, 10);
+    item.oid.oix = strtoul( row[3], 0, 10);
+    itemsVec.push_back( item);
+  }
+  mysql_free_result( result);
+
+  char newTableName[256];
+  for(size_t i=0; i < itemsVec.size(); i++) {
+    sprintf(newTableName, "%s_%d", sev_dbms::oid_to_table(itemsVec[i].oid, (char*)""), itemsVec[i].id);
+
+    printf("UPDATE TO SEV_VERSION 2: Renaming table %s to %s \n", itemsVec[i].tablename, newTableName);
+    errh_Info("UPDATE TO SEV_VERSION 2: Renaming table %s to %s", itemsVec[i].tablename, newTableName);
+
+    sprintf(query, "RENAME TABLE %s to %s", itemsVec[i].tablename, newTableName);
+    rc = mysql_query( con(), query);
+    if (rc) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
+      printf( "%s: %s\n", __FUNCTION__, mysql_error(con()));
+      return 0;
+    }
+
+    sprintf(query, "update items set tablename='%s' where id=%d", newTableName, itemsVec[i].id);
+    rc = mysql_query( con(), query);
+    if (rc) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
+      printf( "%s: %s\n", __FUNCTION__, mysql_error(con()));
+      return 0;
+    }
+  }
+  return 1;
+}
+int sev_dbms_env::createSevVersion2Tables(void)
 {
   char query[400];
 
@@ -1622,7 +1685,7 @@ int sev_dbms::delete_item( pwr_tStatus *sts, pwr_tOid oid, char *aname)
 }
 
 int sev_dbms::delete_old_data( pwr_tStatus *sts, char *tablename, 
-			       pwr_tMask options, pwr_tTime limit)
+			       pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle)
 {
   char query[300];
   char timstr[40];
@@ -1633,7 +1696,13 @@ int sev_dbms::delete_old_data( pwr_tStatus *sts, char *tablename,
 
 
   if(options & pwr_mSevOptionsMask_ReadOptimized) {
-    pwr_tUInt64 nbRowsToClean = 2000;
+    //TODO Change 86400 to sev_cGarbageCycle
+    //We scan trough as many rows that we write between two garbage cycles plus some extra rows
+    //to be sure that the table not grows to much.
+    pwr_tUInt64 nbRowsToClean = 86400*2; //default value
+    if(scantime > 0.0)
+      nbRowsToClean = (pwr_tUInt64)((garbagecycle/scantime) + 10000.0);
+
     nbRowsToClean += get_minFromIntegerColumn(tablename, (char *)"id");
     if ( options & pwr_mSevOptionsMask_PosixTime)
       sprintf( query, "delete from %s where id < %llu and time < %ld;",
@@ -2517,7 +2586,7 @@ int sev_dbms::get_objectitemattributes( pwr_tStatus *sts, sev_item *item, char *
 }
 
 int sev_dbms::delete_old_objectdata( pwr_tStatus *sts, char *tablename, 
-			                               pwr_tMask options, pwr_tTime limit)
+			                               pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle)
 {
   char query[300];
   char timstr[40];
@@ -2528,7 +2597,12 @@ int sev_dbms::delete_old_objectdata( pwr_tStatus *sts, char *tablename,
 
 
   if(options & pwr_mSevOptionsMask_ReadOptimized) {
-    pwr_tUInt64 nbRowsToClean = 2000;
+    //We scan trough as many rows that we write between two garbage cycles plus some extra rows
+    //to be sure that the table not grows to much.
+    pwr_tUInt64 nbRowsToClean = 86400*2; //default value
+    if(scantime > 0.0)
+      nbRowsToClean = (pwr_tUInt64)((garbagecycle/scantime) + 10000.0);
+
     nbRowsToClean += get_minFromIntegerColumn(tablename, (char *)"sev__id");
     if ( options & pwr_mSevOptionsMask_PosixTime)
       sprintf( query, "delete from %s where sev__id < %llu and sev__time < %ld;",

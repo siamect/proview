@@ -93,9 +93,8 @@ class sev_db {
 			  unsigned int *bsize) { return 0;}
   virtual int get_items( pwr_tStatus *sts) { return 0;}
   virtual int delete_old_data( pwr_tStatus *sts, char *tablename, 
-			       pwr_tMask options, pwr_tTime limit) { return 0;}
+			       pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle) { return 0;}
 
-  virtual char *oid_to_table( pwr_tOid oid, char *aname) { return 0;}
   virtual int check_objectitem( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *oname, char *aname, 
                          pwr_tDeltaTime storagetime, 
                          char *description, pwr_tFloat32 scantime, 
@@ -112,7 +111,7 @@ class sev_db {
   virtual int check_objectitemattr( pwr_tStatus *sts, char *tablename, pwr_tOid oid, char *aname, char *oname, 
 																	  pwr_eType type, unsigned int size, unsigned int *idx) { return 0;}
   virtual int delete_old_objectdata( pwr_tStatus *sts, char *tablename, 
-                                     pwr_tMask options, pwr_tTime limit) { return 0;}
+                                     pwr_tMask options, pwr_tTime limit, pwr_tFloat32 scantime, pwr_tFloat32 garbagecycle) { return 0;}
   virtual int get_objectvalues( pwr_tStatus *sts, sev_item *item,
                                 unsigned int size, pwr_tTime *starttime, pwr_tTime *endtime, 
                                 int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize) { return 0;}

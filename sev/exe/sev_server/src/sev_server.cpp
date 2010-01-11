@@ -659,27 +659,7 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
   printf( "----  Node up (%d) ----\n", nid);
   return 1;
 }
-/*
-int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size)
-{
-  sev_sHistData *dp = (sev_sHistData *)&msg->Data;
-  pwr_tTime time;
 
-  while ( (char *)dp - (char *)msg < (int)size) {
-    sev_refid sevid(dp->sevid);
-    iterator_refid it = m_refid.find( sevid);
-    if ( it == m_refid.end()) {
-      dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
-      continue;
-    }
-    unsigned int idx = it->second;
-    time = net_NetTimeToTime( &msg->Time);
-    m_db->store_value( &m_sts, idx, 0, time, &dp->data, dp->size);
-    dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
-  }
-  return 1;
-}
-*/
 int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size)
 {
   pwr_tStatus sts;
@@ -703,9 +683,6 @@ int sev_server::receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size)
   }
   return 1;
 }
-
-
-
 
 int sev_server::send_histdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *rmsg, unsigned int size)
 {
@@ -885,11 +862,11 @@ void sev_server::garbage_item( int idx)
 
   if( m_db->m_items[idx].attrnum > 1 ) {
     m_db->delete_old_objectdata( &m_sts, m_db->m_items[idx].tablename, 
-                                 m_db->m_items[idx].options, limit);
+                                 m_db->m_items[idx].options, limit, m_db->m_items[idx].scantime, (float)sev_cGarbageCycle);
   }
   else {
     m_db->delete_old_data( &m_sts, m_db->m_items[idx].tablename, 
-         m_db->m_items[idx].options, limit);
+         m_db->m_items[idx].options, limit, m_db->m_items[idx].scantime, (float)sev_cGarbageCycle);
   }
 }
 
