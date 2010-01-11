@@ -3655,7 +3655,6 @@ int utl_set_object_parameter (
 	pwr_tClassId	*classp;
 	pwr_tObjid	hierobjdid;
 	char		*s;
-	pwr_tObjid  	objdid;
 	char		*t;
 	char		elementstr[20];
 	int		element;
@@ -3744,7 +3743,7 @@ int utl_set_object_parameter (
 	  {
 	    /* Print this object */
 	    /* Get objdid for the object */
-	    sts = ldh_NameToObjid( ldhses, &objdid, name);
+	    sts = ldh_NameToAttrRef( ldhses, name, &aref);
 	    if ( EVEN(sts))
 	    {
 	      return FOE__OBJECT;
@@ -3763,7 +3762,6 @@ int utl_set_object_parameter (
 	    IF_OUT u_subheader( utlctx, "Name", name);
 	    IF_OUT u_row( utlctx);
 
-	    aref = cdh_ObjidToAref( objdid);
 	    sts = utl_set_parameter( &aref, ldhses, parameter, 
 				     valuestr, element, 
 				     utlctx);
@@ -6048,8 +6046,6 @@ static int utl_set_parameter (
   static char	yes_or_no[200];	
   int		sts, size, k;
   int		parsize;
-  pwr_tClassId	cid;
-  pwr_tOName     	hier_name;
   char		*object_par;
   char		*object_element;
   int		elements;
@@ -6087,15 +6083,10 @@ static int utl_set_parameter (
   	static $DESCRIPTOR ( yon_desc , yes_or_no );
 #endif
 
-	sts = ldh_ObjidToName( ldhses, 
-	           	objid, ldh_eName_Hierarchy,
-  		        hier_name, sizeof( hier_name), &size);
+	sts = ldh_AttrRefToName( ldhses, arp, cdh_mNName, &np, &size);
   	if ( EVEN(sts)) return sts;
 
-	/* Get the class of the object */
-	sts = ldh_GetObjectClass( ldhses, objid, &cid);
-
-	strcpy( aname, hier_name);
+	strcpy( aname, np);
 	strcat( aname, ".");
 	strcat( aname, parameter);
 
