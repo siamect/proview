@@ -177,11 +177,12 @@ void wb_pkg::readConfig()
 
 	// Add plc
 	if ( plcname[0] != 0) {
-	  char dir[80];
+	  pwr_tFileName dir;
 	
 	  sprintf( dir, "$pwrp_root/bld/%s/exe/", cdh_OpSysToStr( n.opsys()));
 	  sprintf( fname, "%s%s", dir, plcname); 
-	  pkg_pattern pplc( fname, "", 'W');
+	  sprintf( dir, "$pwrp_root/%s/exe/", cdh_OpSysToStr( n.opsys()));
+	  pkg_pattern pplc( fname, dir, 'W');
 	  n.push_back( pplc);
 	}
 
