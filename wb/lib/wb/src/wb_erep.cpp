@@ -55,6 +55,12 @@ extern "C" {
 pwr_dImport pwr_BindClasses(System);
 pwr_dImport pwr_BindClasses(Base);
 
+typedef enum {
+  eDbType_db,
+  eDbType_dbms,
+  eDbType_wbl
+} eDbType;
+
 wb_erep::wb_erep( unsigned int options) : m_nRef(0), m_dir_cnt(0), m_volatile_idx(0), m_buffer_max(10),
 					  m_ref_merep_occupied(false), m_options( options)
 {
@@ -535,6 +541,11 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
   pwr_tStatus sts;
   wb_vrepdbs *vrep;
   int vol_cnt = 0;
+  eDbType db_type;
+  int is_classvolume = 0;
+  int load_externvolume;
+  int load_dbs;
+  int load_db;
 
   strcpy( fname, load_cNameVolumeList);
   dcli_translate_filename( fname, fname);
@@ -546,19 +557,6 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
       *status = LDH__PROJCONFIG;
 
       // Load directory volume
-#if 0
-      strcpy( vname, "$pwrp_db/directory.db");
-      dcli_translate_filename( vname, vname);
-
-      sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
-      dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
-      if ( ODD(sts)) {
-	wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
-	vrepdb->name("directory");
-	addDb( &sts, vrepdb);
-	MsgWindow::message( 'I', "Directory database opened", vname);
-      }
-#endif
       strcpy( vname, "$pwrp_db/directory.wb_load");
       dcli_translate_filename( vname, vname);
 
@@ -590,201 +588,133 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
 
       cdh_StringToVolumeId( vol_array[1], &vid);
 
-      if ( cdh_NoCaseStrcmp( vol_array[2], "ExternVolume") == 0) {
-	if ( j == 1) {
-	  if ( nr != 6)
-	    cout << "Syntax error in file: " << fname << endl;
-
-	  // Load extern volume for this volume
-	  cdh_ToLower( vol_array[0], vol_array[0]);
-	  
-	  try {
-	    wb_vrepext *vrepext = new wb_vrepext( this, vid, vol_array[0], vol_array[4]);
-	    addExtern( &sts, vrepext);
-	    MsgWindow::message( 'O', "Volume loaded", vname);
-	    vol_cnt++;
-	  }
-	  catch ( wb_error& e) {
-	    MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
-	  }
-	}
-      }
+      // Find out what to do with this volume
+      load_externvolume = 0;
+      load_dbs = 0;
+      load_db = 0;
+      if ( cdh_NoCaseStrcmp( vol_array[2], "ExternVolume") == 0 && j == 1)
+	load_externvolume = 1;
       else if ( cdh_NoCaseStrcmp( vol_array[2], "ClassVolume") == 0 ||
 		cdh_NoCaseStrcmp( vol_array[2], "DetachedClassVolume") == 0 ||
 		strcmp( vol_array[3], "load") == 0) {
-	if ( j == 0) {
-	  if ( nr < 4)
-	    cout << "Syntax error in file: " << fname << endl;
-	  
-	  // Load dbs for this volume
-	  cdh_ToLower( vol_array[0], vol_array[0]);
-	  
-	  if ( strcmp( vol_array[3], "cnf") == 0) {
-	    // Configured in this project, load from pwrp_load
-	    strcpy( vname, "$pwrp_load/");
-	    strcat( vname, vol_array[0]);
-	    strcat( vname, ".dbs");
-	    dcli_translate_filename( vname, vname);
-
-	    // Load...
-	    try {
-	      vrep = new wb_vrepdbs( this, vname);
-	      vrep->load();
-	      addDbs( &sts, vrep);
-	      MsgWindow::message( 'O', "Volume loaded from snapshot file", vname);
-	      vol_cnt++;
-	    }
-	    catch ( wb_error& e) {
-	      if ( m_options & ldh_mWbOption_IgnoreDLoadError)
-	        MsgWindow::message( 'I', "Unable to open volume snapshot file", vname);
-	      else
-		MsgWindow::message( 'E', "Unable to open volume snapshot file", vname, e.what().c_str());
-	    }
-	    if ( nr >= 5 && vol_array[4][0] == '1') {
-	      // BerkelyDb class volume
-	      strcpy( vname, "$pwrp_db/");
-	      strcat( vname, vol_array[0]);
-	      strcat( vname, ".db");
-	      dcli_translate_filename( vname, vname);
-	      
-	      wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
-	      
-	      wb_vrepced *vrepced = new wb_vrepced( this, vrepdb);
-	      vrepced->name(vol_array[0]);
-	      addDb( &sts, vrepced);
-	      MsgWindow::message( 'I', "Classvolume Database opened", vname);
-	      vol_cnt++;
-	    }
-	  }
-	  else {
-	    // Imported loadfile
-	    bool found = false;
-	    for ( i = 0; i < m_dir_cnt; i++) {
-	      strcpy( vname, m_dir_list[i]);
-	      strcat( vname, vol_array[0]);
-	      strcat( vname, ".dbs");
-	      sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
-	      dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
-	      if ( ODD(sts)) {
-		// Load...
-		found = true;
-		try {
-		  vrep = new wb_vrepdbs( this, vname);
-		  vrep->load();
-		  // vrep->name( vol_array[0]);
-		  addDbs( &sts, vrep);
-		  MsgWindow::message( 'O', "Volume loaded from snapshot file", vname);
-		}
-		catch ( wb_error& e) {
-		  if ( m_options & ldh_mWbOption_IgnoreDLoadError)
-		    MsgWindow::message( 'I', "Unable to open volume snapshot file", vname);
-		  else
-		    MsgWindow::message( 'E', "Unable to open volume snapshot file", vname, e.what().c_str());
-		}
-		break;
-	      }
-	    }
-	    if ( !found)
-	      MsgWindow::message( 'E', "Volume snapshotfile not found", vname);
-	  }
+	if ( j == 0)
+	  load_dbs = 1;
+	if ( ((cdh_NoCaseStrcmp( vol_array[2], "ClassVolume") == 0 ||
+	       cdh_NoCaseStrcmp( vol_array[2], "DetachedClassVolume") == 0) &&
+	      ( strcmp( vol_array[3], "cnf") == 0 && 
+		db && cdh_NoCaseStrcmp( db, vol_array[0]) == 0 ))) {
+	  if ( j == 1)
+	    load_db = 1;
 	}
       }
-      else {
-	if ( j == 1) {
-	  // Load db for this volume
-	  char uname[80];
+      else if ( j == 1)
+	load_db = 1;
 
-	  if ( nr < 4)
-	    cout << "Syntax error in file: " << fname << endl;
 
-	  if ( db) {
-	    // If db is specified, load only specified db, load as dbs instead
-	    if ( cdh_NoCaseStrcmp( vol_array[0], db) != 0) {
-	      cdh_ToLower( vol_array[0], vol_array[0]);
-	      strcpy( vname, "$pwrp_load/");
-	      strcat( vname, vol_array[0]);
-	      strcat( vname, ".dbs");
-	      sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
-	      dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
-	      if ( ODD(sts)) {
-		// Load...
-		try {
-		  vrep = new wb_vrepdbs( this, found_file);
-		  vrep->load();
-		  // vrep->name( vol_array[0]);
-		  addDbs( &sts, vrep);
-		  MsgWindow::message( 'O', "Volume loaded from snapshot file", vname);
-		}
-		catch ( wb_error& e) {
-		  if ( m_options & ldh_mWbOption_IgnoreDLoadError)
-		    MsgWindow::message( 'I', "Unable to open volume snapshot file", vname);
-		  else
-		    MsgWindow::message( 'E', "Unable to open volume snapshot file", vname, e.what().c_str());
-		}
-	      }
-	      continue;
-	    }
-	  }
-	  strcpy( vname, "$pwrp_db/");
-	  strcat( vname, vol_array[0]);
-	  cdh_ToLower( vname, vname);
-	  if ( nr >= 5 && vol_array[4][0] == '1')
-	    strcat( vname, ".dbms");
-	  else
-	    strcat( vname, ".db");
-	  dcli_translate_filename( vname, vname);
+      if ( load_externvolume) {
+	if ( nr != 6)
+	  cout << "Syntax error in file: " << fname << endl;
 
-	  sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
-	  dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
-	  if ( EVEN(sts)) {
-	    MsgWindow::message( 'E', "Database not found", vname);
-	  }
-	  else {
-	    int open_loadfile = 0;
-
-	    if ( wb_dblock::is_locked(vname, uname)) {
-	      char msg[120];
-
-	      sprintf( msg, "Database %s is locked by user %s", vol_array[0], uname);
-	      MsgWindow::message( 'E', msg, msgw_ePop_No);
-
-	      if ( ! MsgWindow::has_window())
-		exit(0);
-
-	      CoWow *wow = MsgWindow::get_wow();
-	      int res = wow->CreateModalDialog( "Database Locked", msg, "Exit", "Enter loadfile", "Remove lock", 
-						"$pwr_exe/wtt_padlock.png");
-	      switch( res) {
-	      case wow_eModalDialogReturn_Button1:
-	      case wow_eModalDialogReturn_Deleted:
-		exit(0);
-	      case wow_eModalDialogReturn_Button3:
-		// Remove lock
-		wb_dblock::dbunlock(vname);
-		break;
-	      case wow_eModalDialogReturn_NYI:
-	      case wow_eModalDialogReturn_Button2:
-		// Enter loadfile
-		open_loadfile = 1;
-		break;
-	      }
-
-	    }
-
-	    if ( open_loadfile) {
-	      // Open dbs
-	      cdh_ToLower( vol_array[0], vol_array[0]);
-	      strcpy( vname, "$pwrp_load/");
-	      strcat( vname, vol_array[0]);
-	      strcat( vname, ".dbs");
-	      dcli_translate_filename( vname, vname);
+	// Load extern volume for this volume
+	cdh_ToLower( vol_array[0], vol_array[0]);
 	  
+	try {
+	  wb_vrepext *vrepext = new wb_vrepext( this, vid, vol_array[0], vol_array[4]);
+	  addExtern( &sts, vrepext);
+	  MsgWindow::message( 'O', "Volume loaded", vname);
+	  vol_cnt++;
+	}
+	catch ( wb_error& e) {
+	  MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
+	}
+      }
+
+      if ( load_dbs) {
+	if ( nr < 4)
+	  cout << "Syntax error in file: " << fname << endl;
+	  
+	// Load dbs for this volume
+	cdh_ToLower( vol_array[0], vol_array[0]);
+	  
+	if ( strcmp( vol_array[3], "cnf") == 0) {
+	  // Configured in this project, load from pwrp_load
+	  strcpy( vname, "$pwrp_load/");
+	  strcat( vname, vol_array[0]);
+	  strcat( vname, ".dbs");
+	  dcli_translate_filename( vname, vname);
+	  
+	  // Load...
+	  try {
+	    vrep = new wb_vrepdbs( this, vname);
+	    vrep->load();
+	    addDbs( &sts, vrep);
+	    MsgWindow::message( 'O', "Volume loaded from snapshot file", vname);
+	    vol_cnt++;
+	  }
+	  catch ( wb_error& e) {
+	    if ( m_options & ldh_mWbOption_IgnoreDLoadError)
+	      MsgWindow::message( 'I', "Unable to open volume snapshot file", vname);
+	    else
+	      MsgWindow::message( 'E', "Unable to open volume snapshot file", vname, e.what().c_str());
+	  }
+	}
+	else {
+	  // Imported loadfile
+	  bool found = false;
+	  for ( i = 0; i < m_dir_cnt; i++) {
+	    strcpy( vname, m_dir_list[i]);
+	    strcat( vname, vol_array[0]);
+	    strcat( vname, ".dbs");
+	    sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
+	    dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
+	    if ( ODD(sts)) {
+	      // Load...
+	      found = true;
 	      try {
 		vrep = new wb_vrepdbs( this, vname);
 		vrep->load();
+		// vrep->name( vol_array[0]);
 		addDbs( &sts, vrep);
-		MsgWindow::message( 'I', "Volume loaded from snapshot file", vname);
-		vol_cnt++;
+		MsgWindow::message( 'O', "Volume loaded from snapshot file", vname);
+	      }
+	      catch ( wb_error& e) {
+		if ( m_options & ldh_mWbOption_IgnoreDLoadError)
+		  MsgWindow::message( 'I', "Unable to open volume snapshot file", vname);
+		else
+		  MsgWindow::message( 'E', "Unable to open volume snapshot file", vname, e.what().c_str());
+	      }
+	      break;
+	    }
+	  }
+	  if ( !found)
+	    MsgWindow::message( 'E', "Volume snapshotfile not found", vname);
+	}
+      }
+      if ( load_db) {
+
+	// Load db for this volume
+	char uname[80];
+
+	if ( nr < 4)
+	  cout << "Syntax error in file: " << fname << endl;
+
+	if ( db) {
+	  // If db is specified, load only specified db, load as dbs instead
+	  if ( cdh_NoCaseStrcmp( vol_array[0], db) != 0) {
+	    cdh_ToLower( vol_array[0], vol_array[0]);
+	    strcpy( vname, "$pwrp_load/");
+	    strcat( vname, vol_array[0]);
+	    strcat( vname, ".dbs");
+	    sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
+	    dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
+	    if ( ODD(sts)) {
+	      // Load...
+	      try {
+		vrep = new wb_vrepdbs( this, found_file);
+		vrep->load();
+		// vrep->name( vol_array[0]);
+		addDbs( &sts, vrep);
+		MsgWindow::message( 'O', "Volume loaded from snapshot file", vname);
 	      }
 	      catch ( wb_error& e) {
 		if ( m_options & ldh_mWbOption_IgnoreDLoadError)
@@ -793,16 +723,131 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
 		  MsgWindow::message( 'E', "Unable to open volume snapshot file", vname, e.what().c_str());
 	      }
 	    }
-	    else {
-	      // Open db
-	      if ( nr >= 5 && vol_array[4][0] == '1') {
+	    continue;
+	  }
+	}
+	strcpy( vname, "$pwrp_db/");
+	strcat( vname, vol_array[0]);
+	cdh_ToLower( vname, vname);
+	if ( cdh_NoCaseStrcmp( vol_array[2], "ClassVolume") == 0) {
+	  is_classvolume = 1;
+	  if ( nr >= 5 && vol_array[4][0] == '2')
+	    db_type = eDbType_dbms;
+	  else if ( nr >= 5 && vol_array[4][0] == '1')
+	    db_type = eDbType_db;
+	  else
+	    db_type = eDbType_wbl;
+	}
+	else {
+	  if ( nr >= 5 && vol_array[4][0] == '1')
+	    db_type = eDbType_dbms;
+	  else
+	    db_type = eDbType_db;
+	}
+	switch ( db_type) {
+	case eDbType_dbms:
+	  strcat( vname, ".dbms");
+	  break;
+	case eDbType_db:
+	  strcat( vname, ".db");
+	  break;
+	default:
+	  strcat( vname, ".dbxx");
+	}
+	dcli_translate_filename( vname, vname);
+
+	sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
+	dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
+	if ( EVEN(sts)) {
+	  MsgWindow::message( 'E', "Database not found", vname);
+	}
+	else {
+	  int open_loadfile = 0;
+
+	  if ( wb_dblock::is_locked(vname, uname)) {
+	    char msg[120];
+
+	    sprintf( msg, "Database %s is locked by user %s", vol_array[0], uname);
+	    MsgWindow::message( 'E', msg, msgw_ePop_No);
+
+	    if ( ! MsgWindow::has_window())
+	      exit(0);
+
+	    CoWow *wow = MsgWindow::get_wow();
+	    int res = wow->CreateModalDialog( "Database Locked", msg, "Exit", "Enter loadfile", "Remove lock", 
+					      "$pwr_exe/wtt_padlock.png");
+	    switch( res) {
+	    case wow_eModalDialogReturn_Button1:
+	    case wow_eModalDialogReturn_Deleted:
+	      exit(0);
+	    case wow_eModalDialogReturn_Button3:
+	      // Remove lock
+	      wb_dblock::dbunlock(vname);
+	      break;
+	    case wow_eModalDialogReturn_NYI:
+	    case wow_eModalDialogReturn_Button2:
+	      // Enter loadfile
+	      open_loadfile = 1;
+	      break;
+	    }
+	    
+	  }
+
+	  if ( open_loadfile) {
+	    // Open dbs
+	    cdh_ToLower( vol_array[0], vol_array[0]);
+	    strcpy( vname, "$pwrp_load/");
+	    strcat( vname, vol_array[0]);
+	    strcat( vname, ".dbs");
+	    dcli_translate_filename( vname, vname);
+	    
+	    try {
+	      vrep = new wb_vrepdbs( this, vname);
+	      vrep->load();
+	      addDbs( &sts, vrep);
+	      MsgWindow::message( 'I', "Volume loaded from snapshot file", vname);
+	      vol_cnt++;
+	    }
+	    catch ( wb_error& e) {
+	      if ( m_options & ldh_mWbOption_IgnoreDLoadError)
+		MsgWindow::message( 'I', "Unable to open volume snapshot file", vname);
+	      else
+		MsgWindow::message( 'E', "Unable to open volume snapshot file", vname, e.what().c_str());
+	    }
+	  }
+	  else {
+	    // Open db
+
+	    if ( nr >= 5 && db_type == eDbType_dbms) {
 #if defined PWRE_CONF_MYSQL
+	      if ( is_classvolume) {
+		wb_vrepdbms *vrepdbms = new wb_vrepdbms( this, vname);
+	    
+		wb_vrepced *vrepced = new wb_vrepced( this, vrepdbms);
+		vrepced->name(vol_array[0]);
+		addDb( &sts, vrepced);
+		MsgWindow::message( 'I', "Classvolume Database opened", vname);
+		vol_cnt++;
+		
+	      }
+	      else {
 		wb_vrepdbms *vrepdbms = new wb_vrepdbms( this, vname);
 		vrepdbms->name(vol_array[0]);
 		addDb( &sts, vrepdbms);
 		MsgWindow::message( 'I', "Database opened", vname);
 		vol_cnt++;
+	      }
 #endif
+	    }
+	    else {
+	      if ( is_classvolume) {
+		wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
+	    
+		wb_vrepced *vrepced = new wb_vrepced( this, vrepdb);
+		vrepced->name(vol_array[0]);
+		addDb( &sts, vrepced);
+		MsgWindow::message( 'I', "Classvolume Database opened", vname);
+		vol_cnt++;
 	      }
 	      else {
 		wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
@@ -834,48 +879,6 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
   if ( !db || (db && cdh_NoCaseStrcmp( "directory", db) == 0)) {
     char uname[80];
 
-#if 0
-    strcpy( vname, "$pwrp_db/directory.db");
-    dcli_translate_filename( vname, vname);
-
-    sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
-    dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
-    if ( EVEN(sts)) {
-      *status = LDH__PROJCONFIG;
-      return;
-    }
-    if ( wb_dblock::is_locked(vname, uname)) {
-      char msg[120];
-
-      sprintf( msg, "Database directory.db is locked by user %s", uname);
-      MsgWindow::message( 'E', msg, msgw_ePop_No);
-
-      CoWow *wow = MsgWindow::get_wow();
-      if ( wow) {
-	int res = wow->CreateModalDialog( "Database Locked", msg, "Exit", 0, "Remove lock", "$pwr_exe/wtt_padlock.png");
-	switch( res) {
-	case wow_eModalDialogReturn_NYI:
-	case wow_eModalDialogReturn_Button2:
-	case wow_eModalDialogReturn_Button1:
-	case wow_eModalDialogReturn_Deleted:
-	  exit(0);
-	case wow_eModalDialogReturn_Button3:
-	  // Remove lock
-	  wb_dblock::dbunlock(vname);
-	  break;
-	}    
-      }
-      else
-	exit(0);
-    }
-      
-
-    wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
-    vrepdb->name("directory");
-    addDb( &sts, vrepdb);
-    MsgWindow::message( 'I', "Database opened", vname);
-
-#endif
     strcpy( vname, "$pwrp_db/directory.wb_load");
     dcli_translate_filename( vname, vname);
 

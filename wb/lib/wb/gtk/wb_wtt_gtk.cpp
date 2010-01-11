@@ -2765,7 +2765,7 @@ WttGtk::WttGtk(
     wnavnode->volume_attached( wbctx, ldhses, 0);
   }
 
-  if ( wb_type == wb_eType_Directory || wb_type == wb_eType_Volume) {
+  if ( (wb_type == wb_eType_Directory || wb_type == wb_eType_Volume) && ldhses) {
     // Start configuration wizard if volume is empty
     pwr_tOid oid;
 

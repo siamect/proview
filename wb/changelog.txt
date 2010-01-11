@@ -151,3 +151,4 @@
 091209 cs  wb        ConnectAttribute method added to SevHist.
 091218 cs  wb        Bugfix for next cix and next oix in ced.
 091218 cs  wb        Bugfix in wb_vrepdb:child().
+100111 cs  wb        Mysql classvolume databases.

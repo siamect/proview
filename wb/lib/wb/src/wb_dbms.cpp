@@ -1501,6 +1501,15 @@ int wb_dbms_rbody::ins(wb_dbms_txn *txn)
   return m_db->m_t_rbody->ins(txn, &m_key, &m_data);
 }
 
+int wb_dbms_rbody::ins(wb_dbms_txn *txn, size_t offset, size_t size, void *p)
+{
+  m_data.bSize(size);
+  m_data.size(size);
+  m_data.data(p);
+
+  return m_db->m_t_rbody->ins(txn, &m_key, &m_data);
+}
+
 int wb_dbms_rbody::upd(wb_dbms_txn *txn, size_t offset, size_t size, void *p)
 {
   m_data.size(sizeof(m_db->m_buf));
@@ -1537,6 +1546,7 @@ int wb_dbms_rbody::get(wb_dbms_txn *txn, size_t offset, size_t size, void *p)
   
   
   memcpy(p, m_db->m_buf + offset, size);
+  m_size = m_data.size();
 
   return 0;
 }
@@ -1630,6 +1640,15 @@ int wb_dbms_dbody::ins(wb_dbms_txn *txn)
   return m_db->m_t_dbody->ins(txn, &m_key, &m_data);
 }
 
+int wb_dbms_dbody::ins(wb_dbms_txn *txn, size_t offset, size_t size, void *p)
+{
+  m_data.bSize(size);
+  m_data.size(size);
+  m_data.data(p);
+
+  return m_db->m_t_rbody->ins(txn, &m_key, &m_data);
+}
+
 int wb_dbms_dbody::upd(wb_dbms_txn *txn, size_t offset, size_t size, void *p)
 {
   m_data.size(sizeof(m_db->m_buf));
@@ -1663,6 +1682,7 @@ int wb_dbms_dbody::get(wb_dbms_txn *txn, size_t offset, size_t size, void *p)
     printf("*** dbody::get(offset %zd, size %zd, oix %d), size: %zd\n", offset, size, m_oid.oix, m_data.size());
   
   memcpy(p, m_db->m_buf + offset, size);
+  m_size = m_data.size();
 
   return 0;
 }

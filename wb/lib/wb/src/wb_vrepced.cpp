@@ -2558,7 +2558,7 @@ void wb_vrepced::printStructFile( bool hpp)
 	      if ( !body_found) {
 		fp <<
 		  "#ifndef pwr_cClass_" << pgmname << endl <<
-		  "#define pwr_cClass_" << pgmname << " " << o_cdef->cid() << "UL" << endl << endl;
+		  "#define pwr_cClass_" << pgmname << " " << cdh_ClassObjidToId( o_cdef->oid()) << "UL" << endl << endl;
 		body_found = true;
 	      }
 

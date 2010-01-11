@@ -300,7 +300,7 @@ wb_orep* wb_vrepdbms::object(pwr_tStatus *sts, pwr_tOid oid)
   }
   catch (wb_dbms_error &e) {
     *sts = LDH__NOSUCHOBJ;
-    printf("vrepdbms: %s\n", e.what().c_str());
+    // printf("vrepdbms: %s\n", e.what().c_str());
     return 0;
   }
 }
@@ -329,7 +329,7 @@ wb_orep* wb_vrepdbms::object(pwr_tStatus *sts, wb_name &name)
   }
   catch (wb_dbms_error &e) {
     *sts = LDH__NOSUCHOBJ;
-    printf("vrepdbms: %s\n", e.what().c_str());
+    // printf("vrepdbms: %s\n", e.what().c_str());
     return 0;
   }
 }
@@ -344,7 +344,7 @@ wb_orep* wb_vrepdbms::object(pwr_tStatus *sts, const wb_orep *parent, wb_name &n
   }
   catch (wb_dbms_error &e) {
     *sts = LDH__NOSUCHOBJ;
-    printf("vrepdbms: %s\n", e.what().c_str());
+    // printf("vrepdbms: %s\n", e.what().c_str());
     return 0;
   }
 }
@@ -706,7 +706,6 @@ bool wb_vrepdbms::renameObject(pwr_tStatus *sts, wb_orep *orp, wb_name &name)
     n.name(name);
     rc = n.ins(txn);
     if (rc) {
-      printf("wb_vrepdbms::renameObject, n.ins rc %d\n", rc);
       *sts = LDH__NAMALREXI;
       txn->abort();
       m_ohead.clear();
@@ -721,9 +720,9 @@ bool wb_vrepdbms::renameObject(pwr_tStatus *sts, wb_orep *orp, wb_name &name)
   }
   catch (wb_dbms_error &e) {
     txn->subAbort();
-    printf("wb_vrepdbms::renameObject, exception %s\n", e.what().c_str());
+    // printf("wb_vrepdbms::renameObject, exception %s\n", e.what().c_str());
     m_ohead.clear();
-    *sts = LDH__DBERROR;
+    *sts = LDH__NAMALREXI;
     return false;
   }
 }
@@ -2239,7 +2238,12 @@ wb_vrepdbms::updateObject(pwr_tOid oid, pwr_tCid cid)
   time_GetTime( &time);
 
   if (rbody) {
-    rc = rb.upd(m_db->m_txn, 0, rsize, rbody);
+    if ( rsize != rb.m_size) {
+      rc = rb.del(m_db->m_txn);
+      rc = rb.ins(m_db->m_txn, 0, rsize, rbody);
+    }
+    else
+      rc = rb.upd(m_db->m_txn, 0, rsize, rbody);
     if (rc)
       printf("wb_vrepdbms:writeBody rb.upd rc %d\n", rc);
     rc = 0;
@@ -2249,7 +2253,12 @@ wb_vrepdbms::updateObject(pwr_tOid oid, pwr_tCid cid)
 
   }
   if (dbody) {
-    rc = db.upd(m_db->m_txn, 0, dsize, dbody);
+    if ( dsize != db.m_size) {
+      rc = db.del(m_db->m_txn);
+      rc = db.ins(m_db->m_txn, 0, dsize, dbody);
+    }
+    else
+      rc = db.upd(m_db->m_txn, 0, dsize, dbody);
     if (rc)
       printf("wb_vrepdbms:writeBody db.upd rc %d\n", rc);
     free(dbody);

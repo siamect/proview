@@ -886,8 +886,10 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 				"Database", (char **) &dbenum, &size);
 	      if ( EVEN(sts)) return sts;
 
-	      if (( cdh_isClassVolumeClass(cid) && *dbenum == 2) ||
-		  ( !cdh_isClassVolumeClass(cid) && *dbenum == 1)) {
+	      if (( (cid == pwr_cClass_ClassVolumeConfig || 
+		     cid == pwr_cClass_DetachedClassVolumeConfig) && *dbenum == 2) ||
+		  ( !(cid == pwr_cClass_ClassVolumeConfig || 
+		      cid == pwr_cClass_DetachedClassVolumeConfig) && *dbenum == 1)) {
 		sts = ldh_GetObjectPar( ldhses, envobjid, "RtBody",
 					"Server", (char **) &server, &size);
 		if ( EVEN(sts)) return sts;
@@ -2635,6 +2637,8 @@ pwr_tStatus lfu_GetVolumeCnf( char *name, pwr_tVid *vid, pwr_tCid *cid, ldh_eVol
 	  *volrep = ldh_eVolRep_Dbms;
 	  if ( nr > 5)
 	    strcpy( server, vol_array[5]);
+	  else
+	    strcpy( server, "");
 	}
       }
       break;
@@ -2648,6 +2652,8 @@ pwr_tStatus lfu_GetVolumeCnf( char *name, pwr_tVid *vid, pwr_tCid *cid, ldh_eVol
 	  *volrep = ldh_eVolRep_Dbms;
 	  if ( nr > 5)
 	    strcpy( server, vol_array[5]);
+	  else
+	    strcpy( server, "");
 	}
       }
       break;
