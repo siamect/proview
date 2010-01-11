@@ -2823,17 +2823,13 @@ int sev_dbms::get_objectvalues( pwr_tStatus *sts, sev_item *item,
   else {
     colsStr.append("sev__time, ");
   }
-  char colName[64];
+  char colNameStr[80];     
   for(size_t i = 0; i < item->attr.size(); i++) {
-    sprintf(colName, "`col_%d`,", i);
-    colsStr.append(colName);
-//    colsStr.append("`");
-//    colsStr.append(item->attr[i].aname);
-//    colsStr.append("`,");
+    sprintf(colNameStr, "`%s`,", create_colName(i, item->attr[i].aname));
+    colsStr.append(colNameStr);
   }
   //remove last ,
   colsStr.resize(colsStr.length()-1);
-
 
   if ( item->options & pwr_mSevOptionsMask_UseDeadBand)
     strcpy( jumpstr, "or sev__jump = 1");
