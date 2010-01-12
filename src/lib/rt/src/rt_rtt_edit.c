@@ -100,9 +100,9 @@ static	long int       	dtt_current_index = 2;
 static 	int		dtt_is_rttsys;
 static	int		dtt_opsys = 0;
 static	int		dtt_current_opsys;
-static	char		dtt_source_dir[80];
-static	char		dtt_build_dir[80];
-static	char		dtt_exe_dir[80];
+static	pwr_tFileName  	dtt_source_dir;
+static	pwr_tFileName  	dtt_build_dir;
+static	pwr_tFileName  	dtt_exe_dir;
 
 /*_Local function prototypes_____________________________________________*/
 
@@ -613,15 +613,15 @@ static int	write_func(	edit_ctx	ctx,
 	int		sts;
 	char		arg1_str[80];
 	char		arg2_str[80];
-	char		filename[80];
-	char		menu_filename[80];
+	pwr_tFileName  	filename;
+	pwr_tFileName  	menu_filename;
 	int		messages;
 
 	if ( ODD( rtt_get_qualifier( "rtt_arg1", arg1_str)))
 	{
 	  if ( strncmp( arg1_str, "ITEMS", strlen( arg1_str)) == 0)
 	  {
-	    char		outfilename[80];
+	    pwr_tFileName      	outfilename;
 	    char		message[120];
 	    FILE		*outfile;
 
@@ -817,8 +817,8 @@ static int	save_func(	edit_ctx	ctx,
 {
 	int		sts;
 	char		arg1_str[80];
-	char		filename[80];
-	char		menu_filename[80];
+	pwr_tFileName  	filename;
+	pwr_tFileName  	menu_filename;
 	int		messages;
 	int		opsys;
 	int		nocompile;
@@ -977,7 +977,7 @@ static int	generate_func(	edit_ctx	ctx,
 {
 	int		sts;
 	char		arg1_str[80];
-	char		filename[80];
+	pwr_tFileName  	filename;
 	char		*s, *t;
 	char		index_str[10];
 	int		index;
@@ -1179,8 +1179,8 @@ static int	dtt_exit_func(	edit_ctx	ctx,
 				int		flag)
 {
 	int		sts;
-	char		filename[80];
-	char		menu_filename[80];
+	pwr_tFileName  	filename;
+	pwr_tFileName  	menu_filename;
 	int		messages;
 
 	if (( ctx->ctx_type == DTT_CTX_EDIT) || 
@@ -1346,7 +1346,7 @@ static int	dtt_list_func(	edit_ctx	ctx,
 	int		sts;
 	char		arg1_str[80];
 	char		arg2_str[80];
-	char		outfilename[80];
+	pwr_tFileName  	outfilename;
 	char		message[120];
 	FILE		*outfile;
 
@@ -1890,9 +1890,9 @@ static int	dtt_edit_func(	edit_ctx	ctx,
 				int		flag)
 {
 	char		arg1_str[80];
-	char		filename[80];
+	pwr_tFileName  	filename;
 	char		menuname[80];
-	char	cmd[100];
+	pwr_tCmd	cmd;
 
 	if ( EVEN( rtt_get_qualifier( "rtt_arg1", arg1_str)))
 	{
@@ -2049,7 +2049,7 @@ static int	dtt_include_func(	menu_ctx	ctx,
 	  }
 	  else if ( strncmp( arg1_str, "MENU", strlen( arg1_str)) == 0)
 	  {
-	    char	filename[80];
+	    pwr_tFileName	filename;
 
   	    /* Check that this is not an edit context */
 	    if ( ctx->ctx_type == DTT_CTX_EDIT)
@@ -4830,7 +4830,7 @@ int	dtt_edit_new( 	menu_ctx	parent_ctx,
 	unsigned long	option;
 	char		input_str[80];
 	int		maxlen = 1;
-	char		filename[80];
+	pwr_tFileName  	filename;
 	unsigned char	c;
 	rtt_t_menu	*menu_ptr;
 	char		*title;
@@ -5132,8 +5132,8 @@ static int	dtt_edit_write( edit_ctx	ctx,
 	int		i, j, k;
 	char		*char_ptr;
 	dtt_item	item_ptr;
-	char		fname[200];
-	char		fnamebld[200];
+	pwr_tFileName  	fname;
+	pwr_tFileName  	fnamebld;
 	char		picture_name[80];
 	int		x, y;
 	int		error_count;
@@ -5444,7 +5444,7 @@ static int	dtt_edit_read( 	edit_ctx	ctx,
 {
 	FILE		*fin;
 	char		*s;
-	char		filename[80];
+	pwr_tFileName  	filename;
 	int		sts;
 	char		line[200];
 	int		i, j;
@@ -5553,7 +5553,7 @@ static int	dtt_edit_read_v27( 	edit_ctx	ctx,
 {
 	FILE		*fin;
 	char		*s;
-	char		filename[80];
+	pwr_tFileName  	filename;
 	dtt_t_upd_item 	item_buffer;
 	dtt_item	item_ptr;
 	int		sts;
@@ -6897,11 +6897,11 @@ static int	dtt_edit_save_menues(	char		*filename,
 	FILE		*fout_db2;
 	FILE		*fout_decl;
 	FILE		*fout_hlp = 0;
-	char		fname[200];
-	char		fnamebld_noext[200];
-	char		fname_noext[200];
-	char		cmd[200];
-	char		tmpstr[80];
+	pwr_tFileName  	fname;
+	pwr_tFileName  	fnamebld_noext;
+	pwr_tFileName  	fname_noext;
+	pwr_tCmd       	cmd;
+	pwr_tFileName  	tmpstr;
 	int		nocompile = 0;
 
 	if ( dtt_is_rttsys && !generate_only)
@@ -7065,9 +7065,9 @@ static int	dtt_edit_save_one_menu(	FILE		*fout,
 	char		picture_name[80];	
 	char		menu_name[80];	
 	char		item_menu_name[80];	
-	char		fname[200];
+	pwr_tFileName  	fname;
 	FILE		*fout_test = 0;
-	char		tmpstr[200];
+	pwr_tFileName  	tmpstr;
 
 	menu_ptr = ctx->menu;
 
@@ -7415,7 +7415,7 @@ static int	dtt_edit_read_menues(	char		*filename)
 	int		sts;
 	FILE		*fin;
 	char		*s;
-	char		fname[200];
+	pwr_tFileName  	fname;
 	char		line[80];
 
 	sprintf( fname, "%s%s.dtt_m", dtt_source_dir, filename);
@@ -7734,8 +7734,8 @@ static int	dtt_get_menu_name(	int		index,
 
 int	dtt_start( char		*programname)
 {
-	int	sts;
-	char	filename[80];
+	int		sts;
+	pwr_tFileName	filename;
 	rtt_t_menu	*menulist;
 	char		first_item[80];
 	char		*s;
@@ -7992,7 +7992,7 @@ static int dtt_cc(	int	opsys,
 static int dtt_compile_picture( char	*filename,
 				int	opsys)
 { 
-	char	cmd[200];
+	pwr_tCmd	cmd;
 	char	msg[80];
 	int	os;
 
@@ -8316,7 +8316,7 @@ static int	dtt_edit_write_gdhrefs( char *filename)
 {
 	FILE	*outfile;
 	int	sts;
-	char	outfilename[80];
+	pwr_tFileName	outfilename;
 	char	message[80];
 
 	/* Open file */
@@ -8347,7 +8347,7 @@ static int	dtt_edit_write_menu_gdhrefs( 	menu_ctx ctx,
 	int	sts;
 	rtt_t_menu	*menu_ptr;
 	edit_ctx	picture_ctx;
-	char		picturefilename[80];
+	pwr_tFileName  	picturefilename;
 	char		*title;
 	dtt_item 	item_ptr;
 	int		gdh_item_found;
@@ -8413,7 +8413,7 @@ static int	dtt_edit_pwrplc_gdhrefs( char *filename)
 	FILE	*outfile;
 	int	sts;
 	int	externref_index;
-	char	outfilename[80];
+	pwr_tFileName	outfilename;
 	char	message[80];
 
 	externref_index = 0;
@@ -8460,7 +8460,7 @@ static int	dtt_edit_pwrplc_menu_gdhrefs( 	menu_ctx ctx,
 	int	sts;
 	rtt_t_menu	*menu_ptr;
 	edit_ctx	picture_ctx;
-	char		picturefilename[80];
+	pwr_tFileName  	picturefilename;
 	char		*title;
 	dtt_item 	item_ptr;
 	int		gdh_item_found;
@@ -8594,7 +8594,7 @@ static int	dtt_edit_list_items_all( char *filename)
 {
 	FILE	*outfile;
 	int	sts;
-	char	outfilename[80];
+	pwr_tFileName	outfilename;
 	char	message[80];
 
 	/* Open file */
@@ -8625,7 +8625,7 @@ static int	dtt_edit_list_items_picture( 	menu_ctx ctx,
 	int	sts;
 	rtt_t_menu	*menu_ptr;
 	edit_ctx	picture_ctx;
-	char		picturefilename[80];
+	pwr_tFileName  	picturefilename;
 	char		*title;
 
 	menu_ptr = ctx->menu;
@@ -9166,7 +9166,7 @@ static int	dtt_edit_save_all( 	int	generate_only,
 					int 	opsys)
 {
 	int	sts;
-	char	filename[80];
+	pwr_tFileName	filename;
 
 	/* Save all pictures */
 	sts = dtt_edit_process_menues( &dtt_edit_save_picture,
@@ -9207,8 +9207,8 @@ static int	dtt_edit_convert_picture( 	menu_ctx ctx,
 					int dum4)
 {
 	int	sts;
-	char	picturefilename[80];
-	char	menufilename[80];
+	pwr_tFileName	picturefilename;
+	pwr_tFileName	menufilename;
 	rtt_t_menu	*menu_ptr;
 	edit_ctx	picture_ctx;
 	char		*title;
@@ -9287,8 +9287,8 @@ static int	dtt_edit_save_picture( 	menu_ctx ctx,
 					int nocompile)
 {
 	int	sts;
-	char	picturefilename[80];
-	char	menufilename[80];
+	pwr_tFileName	picturefilename;
+	pwr_tFileName	menufilename;
 	rtt_t_menu	*menu_ptr;
 	edit_ctx	picture_ctx;
 	char		*title;
