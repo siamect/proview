@@ -42,39 +42,19 @@ SObject pwrb:Class
       !
       ! Parameter Description
       !
-      Object DefaultVMSNode $Attribute 1
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$String40"
-        EndBody
-      EndObject
-      Object UserObject $Attribute 2
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$Objid"
-        EndBody
-      EndObject
       Object AlarmAutoLoad $Attribute 3
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$UInt8"
+          Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
       Object AlarmMessage $Attribute 4
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$UInt8"
+          Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
       Object AlarmBeep $Attribute 5
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$UInt8"
-        EndBody
-      EndObject
-      Object AlarmReturn $Attribute 6
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$UInt8"
-        EndBody
-      EndObject
-      Object AlarmAck $Attribute 7
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$UInt8"
+          Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
       Object DescriptionOff $Attribute 8
@@ -97,13 +77,78 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
+      !/**
+      !  Specifies the maximum number of contemporary alarms in
+      !  the user's alarm list.
+      !  The number should exceed the maximum number of 
+      !  concurrent alarms in the system.
+      !  If the limit is exceeded, alarms might be lost.
+      !*/
+      Object MaxNoOfAlarms $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the maximum number of contemporary events in
+      !  the user's event list, i.e. the skyline of the events.
+      !  When the number of events exceeds MaxNoOfEvents the
+      !  oldest event disappears from the list.
+      !  To this list events are sent from the message handler
+      !  in respective node. In each node the message handler
+      !  has its own skyline of events (also named MaxNoOfEvents)
+      !  defined by a MessageHandler object. In principle, the
+      !  User object's skyline of events should be selected as å
+      !  MaxNoOfEvents, added up over MaxNoOfEvents in the
+      !  MessageHandler objects in all nodes throughout the
+      !  PROVIEW/R system, or make it simple and assign the
+      !  attribute e.g. 200.
+      !*/
+      Object MaxNoOfEvents $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      !  A message created by an ASup or DSup object gets the
+      !  same identity as the supervised object. Messages
+      !  produced in an application by means of mh_ApplMessage
+      !  (see Proview Programmer's Reference Manual) get an
+      !  identity according to the calling parameter EventName.
+      !  
+      !  SelectList specifies the hierarchies from which
+      !  messages are to be sent to the user. Up to 20 different
+      !  hierarchies can be specified. If messages from e.g. a
+      !  Watchdog object in a node will be received, then the
+      !  name of the node will be specified.
+      !  
+      !  Note! If the SelectList is left blank no message at all is
+      !  sent to the user.
+      !*/
+      Object EventSelectList $Attribute 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 40
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the type of events viewed in the eventlist.
+      !*/
+      Object EventListEvents $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-EventListMask"
+        EndBody
+      EndObject
     EndObject
     !
     ! Template for RttConfig
     !
     Object Template RttConfig
       Body RtBody
-        Attr DefaultVMSNode = ""
+        Attr MaxNoOfAlarms = 200
+        Attr MaxNoOfEvents = 500
       EndBody
     EndObject
   EndObject

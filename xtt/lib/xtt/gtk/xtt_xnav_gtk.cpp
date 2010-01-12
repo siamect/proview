@@ -46,12 +46,12 @@ typedef void *Widget;
 #include "glow_growapi.h"
 #include "glow_curvectx.h"
 
-#include "rt_trace_gtk.h"
+#include "xtt_trace_gtk.h"
 #include "co_lng.h"
 #include "co_error.h"
-#include "co_xhelp.h"
-#include "co_wow_gtk.h"
-#include "co_login_gtk.h"
+#include "cow_xhelp.h"
+#include "cow_wow_gtk.h"
+#include "cow_login_gtk.h"
 #include "xtt_xnav_gtk.h"
 #include "xtt_item.h"
 #include "xtt_menu.h"
@@ -221,11 +221,11 @@ XttTrend *XNavGtk::xtttrend_new( char *name, pwr_tAttrRef *objar, pwr_tAttrRef *
 }
 
 XttSevHist *XNavGtk::xttsevhist_new( char *name, pwr_tOid *oid, pwr_tOName *aname,
-				   sevcli_tCtx scctx, pwr_tStatus *sts)
+				   sevcli_tCtx scctx, pwr_tStatus *sts, bool sevhistobject)
 {
   GtkWidget *w;
 
-  return new XttSevHistGtk( this, parent_wid, name, &w, oid, aname, scctx, sts);
+  return new XttSevHistGtk( this, parent_wid, name, &w, oid, aname, scctx, sts, sevhistobject);
 }
 
 XttFast *XNavGtk::xttfast_new( char *name, pwr_tAttrRef *objar, pwr_tStatus *sts)

@@ -29,7 +29,7 @@
 #include "rt_gdh_msg.h"
 #include "co_cdh.h"
 #include "co_time.h"
-#include "co_wow_gtk.h"
+#include "cow_wow_gtk.h"
 #include "rt_xnav_msg.h"
 #include "flow.h"
 #include "flow_browctx.h"

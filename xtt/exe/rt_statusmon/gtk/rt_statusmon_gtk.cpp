@@ -24,10 +24,10 @@
 #include <gtk/gtk.h>
 
 #include "pwr.h"
-#include "co_msgwindow.h"
+#include "cow_msgwindow.h"
 #include "co_lng.h"
-#include "co_xhelp_gtk.h"
-#include "co_statusmon_nodelist_gtk.h"
+#include "cow_xhelp_gtk.h"
+#include "cow_statusmon_nodelist_gtk.h"
 
 static void usage()
 {

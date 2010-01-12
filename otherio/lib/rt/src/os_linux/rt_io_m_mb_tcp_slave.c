@@ -19,7 +19,6 @@
 
 /* rt_io_m_pb_dp_slave.c -- io methods for a profibus DP slave */
 
-#pragma pack(1)
 
 #include <stdio.h>
 #include <string.h>
@@ -62,12 +61,14 @@ static int connect_slave( io_sRackLocal *local, io_sRack *rp)
   fd_set fdr;				/* For select call */
   fd_set fdw;				/* For select call */
   struct timeval tv;
+  unsigned short port;
 
   time_GetTimeMonotonic( &local->last_try_connect_time);
 
   op = (pwr_sClass_Modbus_TCP_Slave *) rp->op;
 
   /* Create socket, store in local struct */
+  port = op->Port == 0 ? 502 : op->Port;
   
   local->s = socket(AF_INET, SOCK_STREAM, 0);
   if (local->s < 0) { 
@@ -84,7 +85,7 @@ static int connect_slave( io_sRackLocal *local, io_sRack *rp)
   /* Initialize remote address structure */
 
   local->rem_addr.sin_family = AF_INET;
-  local->rem_addr.sin_port = htons(502);
+  local->rem_addr.sin_port = htons(port);
   local->rem_addr.sin_addr.s_addr = inet_addr((char *) &(op->Address));
   
   /* Connect to remote address */
@@ -139,7 +140,7 @@ pwr_tStatus mb_recv_data(io_sRackLocal *local,
   pwr_tCid cid;
   unsigned char fc;
   short int trans_id;
-  short int size_of_msg = 0;
+  short int size_of_msg;
   
   /* Receive answer */
 
@@ -153,10 +154,18 @@ pwr_tStatus mb_recv_data(io_sRackLocal *local,
     FD_SET(local->s, &fdw);
     FD_SET(local->s, &fde);
 
+    size_of_msg = 0;
     tv.tv_sec = 0;
     tv.tv_usec = 0;
 
     sts = select(32, &fdr, &fdw, &fde, &tv);
+
+    if (sts < 0) {
+      sp->Status = MB__CONNLOST;
+      close(local->s);
+      errh_Error( "Connection lost to modbus slave, %s", rp->Name);
+      return IO__SUCCESS;
+    }
     
     if (!(FD_ISSET(local->s, &fdw))) {
       sp->Status = MB__CONNDOWN;
@@ -182,6 +191,7 @@ pwr_tStatus mb_recv_data(io_sRackLocal *local,
 
     if (sts < 0) {
       sp->Status = MB__CONNLOST;
+      close(local->s);
       errh_Error( "Connection lost to modbus slave, %s", rp->Name);
       return IO__SUCCESS;
     }
@@ -201,6 +211,7 @@ pwr_tStatus mb_recv_data(io_sRackLocal *local,
 
       if (data_size < 0) {
         sp->Status = MB__CONNLOST;
+	close(local->s);
 	errh_Error( "Connection lost to modbus slave, %s", rp->Name);
 	return IO__SUCCESS;
       }
@@ -341,9 +352,7 @@ pwr_tStatus mb_send_data(io_sRackLocal *local,
         if (!mp->Continous && !mp->SendOp) {
 	  break;
 	}
-	
-	mp->SendOp = FALSE;
-	
+		
         local_card = cardp->Local;
 
         if (mask & mb_mSendMask_ReadReq) {
@@ -351,6 +360,8 @@ pwr_tStatus mb_send_data(io_sRackLocal *local,
 	    case pwr_eModbus_FCEnum_ReadCoils:
 	    case pwr_eModbus_FCEnum_ReadDiscreteInputs: {
 	      read_req rr;
+
+	      mp->SendOp = FALSE;
 
 	      local->trans_id++;
 	      local_card->trans_id = local->trans_id;
@@ -361,7 +372,8 @@ pwr_tStatus mb_send_data(io_sRackLocal *local,
               rr.head.unit_id = mp->UnitId;
               rr.fc = mp->FunctionCode;
               rr.addr = htons(mp->Address);
-              rr.quant = ntohs(local_card->input_size * 8);
+              rr.quant = htons(local_card->no_di);
+	      //              rr.quant = ntohs(local_card->input_size * 8);
 
 	      sts = send(local->s, &rr, sizeof(read_req), MSG_DONTWAIT);
 	      if (sts < 0) {
@@ -379,6 +391,8 @@ pwr_tStatus mb_send_data(io_sRackLocal *local,
 	    case pwr_eModbus_FCEnum_ReadHoldingRegisters:
 	    case pwr_eModbus_FCEnum_ReadInputRegisters: {
 	      read_req rr;
+
+	      mp->SendOp = FALSE;
 
 	      local->trans_id++;
 	      local_card->trans_id = local->trans_id;
@@ -411,6 +425,8 @@ pwr_tStatus mb_send_data(io_sRackLocal *local,
 	    case pwr_eModbus_FCEnum_WriteSingleCoil: {
 	      write_single_req wsr;
 
+	      mp->SendOp = FALSE;
+
 	      local->trans_id++;
 	      local_card->trans_id = local->trans_id;
 
@@ -426,6 +442,10 @@ pwr_tStatus mb_send_data(io_sRackLocal *local,
 		else wsr.value = 0;
 	      } else if (local_card->output_size == 2) {
                 if (*(short int *)local_card->output_area)
+		  wsr.value = ntohs(0xFF00);
+		else wsr.value = 0;
+	      } else if (local_card->output_size == 1) {
+                if (*(char *)local_card->output_area)
 		  wsr.value = ntohs(0xFF00);
 		else wsr.value = 0;
 	      } else wsr.value = 0;
@@ -445,6 +465,8 @@ pwr_tStatus mb_send_data(io_sRackLocal *local,
 	    case pwr_eModbus_FCEnum_WriteMultipleCoils: {
 	      write_coils_req wcr;
 
+	      mp->SendOp = FALSE;
+
 	      local->trans_id++;
 	      local_card->trans_id = local->trans_id;
 
@@ -455,7 +477,8 @@ pwr_tStatus mb_send_data(io_sRackLocal *local,
               wcr.head.unit_id = mp->UnitId;
               wcr.fc = mp->FunctionCode;
               wcr.addr = htons(mp->Address);
-              wcr.quant = ntohs((local_card->output_size) * 8);
+              wcr.quant = htons(local_card->no_do);
+	      //              wcr.quant = ntohs((local_card->output_size) * 8);
 	      wcr.bc = local_card->output_size;
 	      memcpy(wcr.reg, local_card->output_area, local_card->output_size);
 
@@ -473,6 +496,8 @@ pwr_tStatus mb_send_data(io_sRackLocal *local,
 
 	    case pwr_eModbus_FCEnum_WriteMultipleRegisters: {
 	      write_reg_req wrr;
+
+	      mp->SendOp = FALSE;
 
 	      local->trans_id++;
 	      local_card->trans_id = local->trans_id;
@@ -539,6 +564,8 @@ static pwr_tStatus IoRackInit (
   short output_counter;
   short card_input_counter;
   short card_output_counter;
+  short no_di;
+  short no_do;
   pwr_sClass_Modbus_TCP_Slave *op;
   pwr_sClass_Modbus_Module *mp;
   char name[196];
@@ -596,6 +623,8 @@ static pwr_tStatus IoRackInit (
     card_output_counter = 0;
     latent_input_counter = 0;
     latent_output_counter = 0;
+    no_di = 0;
+    no_do = 0;
 
     /* From v4.1.3 we can have subclasses, find the super class */
     
@@ -648,6 +677,7 @@ static pwr_tStatus IoRackInit (
 	      if (chan_di->Representation == pwr_eDataRepEnum_Bit32)
 	        chanp->mask = swap32((unsigned short) chanp->mask);
 	      if (chan_di->Number == 0) latent_input_counter = GetChanSize(chan_di->Representation);
+	      no_di++;
 //	      printf("Di channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_di->Number, chanp->offset);
 	      break;
 	  
@@ -696,6 +726,7 @@ static pwr_tStatus IoRackInit (
 	      if (chan_do->Representation == pwr_eDataRepEnum_Bit32)
 	        chanp->mask = swap32((unsigned short) chanp->mask);
 	      if (chan_do->Number == 0) latent_output_counter = GetChanSize(chan_do->Representation);
+	      no_do++;
 //	      printf("Do channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_do->Number, chanp->offset);
 	      break;
 	  
@@ -727,6 +758,8 @@ static pwr_tStatus IoRackInit (
 
     local_card->input_size = card_input_counter + latent_input_counter;
     local_card->output_size = card_output_counter + latent_output_counter;
+    local_card->no_di = no_di;
+    local_card->no_do = no_do;
 
     cardp = cardp->next;
   }
@@ -757,7 +790,7 @@ static pwr_tStatus IoRackRead (
   
   sp = (pwr_sClass_Modbus_TCP_Slave *) rp->op;
 
-  if (sp->Status == MB__CONNDOWN && sp->DisableSlave != 1) {
+  if (((sp->Status == MB__CONNDOWN) || (sp->Status == MB__CONNLOST)) && sp->DisableSlave != 1) {
     /* Reconnect */
 
     time_GetTimeMonotonic( &now);

@@ -48,7 +48,7 @@ extern "C" {
 #include "wb_wnav.h"
 #include "wb_wnav_brow.h"
 #include "wb_wnav_item.h"
-#include "co_wow_motif.h"
+#include "cow_wow_motif.h"
 
 //
 // Create the navigator widget
@@ -65,8 +65,8 @@ WAttNavMotif::WAttNavMotif(
 	wb_eUtility	wa_utility,
 	Widget 		*w,
 	pwr_tStatus 	*status) :
-  WAttNav(wa_parent_ctx,wa_name,wa_ldhses,wa_aref,wa_editmode,wa_advanced_user,
-	  wa_display_objectname,wa_utility,status), parent_wid(wa_parent_wid)
+  WAttNav(wa_parent_ctx,wattnav_eType_Object,wa_name,wa_ldhses,wa_aref,wa_editmode,
+	  wa_advanced_user,wa_display_objectname,wa_utility,status), parent_wid(wa_parent_wid)
 {
   form_widget = ScrolledBrowCreate( parent_wid, name, NULL, 0, 
 	WAttNav::init_brow_cb, this, (Widget *)&brow_widget);

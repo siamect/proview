@@ -41,11 +41,10 @@ SObject pwrb:Class
         Attr StructName = "WebGraph"
       EndBody
       !/**
-      !  @Summary Name of the graph.
-      !  Name of the graph. This is Ge name of the graph.
-      !  Every graph-applet that is displayed, opens a link to the GdhSever
-      !  process. If MaxConnections is exceeded, the connect request will
-      !  be rejected.
+      !  @Summary The JavaName of the graph.
+      !  The JavaName of the graph. When a Ge graph is exported to java it
+      !  is exported with a java classname. By default it is the same as the
+      !  graph name, but with block letter in the first character.
       !*/
       Object Name $Attribute 1 
         Body SysBody
@@ -92,6 +91,13 @@ SObject pwrb:Class
 	    Attr MethodName = "WebGraph-OpenGraph"
 	  EndBody
 	EndObject
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "WebGraph-Build"
+	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
       EndObject
     EndObject
     Object NavigatorPoson $Menu
@@ -100,6 +106,13 @@ SObject pwrb:Class
 	  Body SysBody
 	    Attr ButtonName = "Open Ge..."
 	    Attr MethodName = "WebGraph-OpenGraph"
+	  EndBody
+	EndObject
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "WebGraph-Build"
+	    Attr FilterName = "$Object-BuildFilter"
 	  EndBody
 	EndObject
       EndObject
@@ -112,6 +125,13 @@ SObject pwrb:Class
 	    Attr MethodName = "WebGraph-OpenGraph"
 	  EndBody
 	EndObject
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "WebGraph-Build"
+	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
       EndObject
     EndObject
     Object NavigatorPosms $Menu
@@ -122,6 +142,13 @@ SObject pwrb:Class
 	    Attr MethodName = "WebGraph-OpenGraph"
 	  EndBody
 	EndObject
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "WebGraph-Build"
+	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
       EndObject
     EndObject
     Object NavigatorPosmn $Menu
@@ -130,6 +157,13 @@ SObject pwrb:Class
 	  Body SysBody
 	    Attr ButtonName = "Open Ge..."
 	    Attr MethodName = "WebGraph-OpenGraph"
+	  EndBody
+	EndObject
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "WebGraph-Build"
+	    Attr FilterName = "$Object-BuildFilter"
 	  EndBody
 	EndObject
       EndObject

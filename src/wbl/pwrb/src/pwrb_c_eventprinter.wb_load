@@ -81,7 +81,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
           Attr Flags |= PWR_MASK_ARRAY
-          Attr Elements = 10
+          Attr Elements = 40
         EndBody
       EndObject
     EndObject

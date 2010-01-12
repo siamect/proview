@@ -273,6 +273,7 @@ class GrowArc : public GlowArc {
   glow_eRelief 	relief;		//!< Type of relief.
   int 		shadow_contrast; //!< Shadow contrast.
   int		disable_shadow;	//!< Disable shadow, even if parent node has shadow.
+  int		fixcolor;	//!< Color independent of node color.
   glow_eGradient gradient;      //!< Type of gradient.
   int		gradient_contrast; //!< Gradient contrast.
   int		disable_gradient; //!< Disable gradient, even if parent node has gradient.

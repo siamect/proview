@@ -32,7 +32,7 @@
 #include "flow_browctx.h"
 #include "flow_browapi.h"
 #include "wb_wtt.h"
-#include "co_msgwindow.h"
+#include "cow_msgwindow.h"
 #include "wb_lfu.h"
 
 

@@ -136,9 +136,10 @@ int XttLogging::logging_set(
 	int		i, sts;
 	int		found, par_index;
 	char		buffer[8];
-	pwr_sParInfo	parinfo;
 	char		msg[80];
 	int		type_error;
+	pwr_tTypeId	atype;
+	unsigned int	asize, aoffset, aelem;
 	
 	if ( active )	
 	{
@@ -203,15 +204,15 @@ int XttLogging::logging_set(
 	    return XNAV__HOLDCOMMAND;
 	  }
 
-	  sts = get_parinfo( parameter, &parinfo);
+	  sts = gdh_GetAttributeCharacteristics( parameter, &atype, &asize, &aoffset, &aelem);
 	  if (EVEN(sts))
 	  {
 	    message('E',"Parameter doesn't exist");
 	    return XNAV__HOLDCOMMAND;
 	  }
 	  strcpy ( parameterstr[ par_index], parameter); 
-	  parameter_type[ par_index] = parinfo.Type; 	  
-	  parameter_size[ par_index] = parinfo.Size/parinfo.Elements;
+	  parameter_type[ par_index] = atype; 	  
+	  parameter_size[ par_index] = asize/aelem;
 	}
 
 	if ( condition != NULL)
@@ -694,7 +695,7 @@ int XttLogging::entry_stop()
 	int		sts;
 	
 	/* This will stop the subprocess */
-	active = 0;
+	// active = 0;
 	stop_logg = 1;
 
 	/* Unref from gdh */
@@ -1314,6 +1315,7 @@ static void	*xtt_logproc( void *arg)
 
 	  if ( !logg->active || logg->stop_logg)
 	  {
+	    logg->active = 0;
 	    logg->entry_stop();
 	    logg->print_buffer();
 	    if ( logg->logg_file)
@@ -1355,92 +1357,6 @@ static void	*xtt_logproc( void *arg)
 	// return NULL;
 }
 
-
-/*************************************************************************
-*
-* Name:		get_parinfo()
-*
-* Type		int
-*
-* Type		Parameter	IOGF	Description
-*
-* Description:
-*	Get parameter info.
-*
-**************************************************************************/
-
-int  XttLogging::get_parinfo(
-			char		*parameter_name,
-			pwr_sParInfo	*parinfo)
-{
-	pwr_tAName     	hiername;
-	char		parname[80];
-	pwr_tOName     	name_array[2];
-	int		nr;
-	int		sts;
-	pwr_tObjid	objid;
-	pwr_tObjid	parameter;
-	pwr_tClassId	classid;
-	pwr_tAName     	objname;
-	pwr_tObjName   	classname;
-	char 		*s;
-
-	/* Get object name */
-	/* Parse the parameter name into a object and a parameter name */
-	nr = dcli_parse( parameter_name, ".", "",
-		(char *)name_array, 
-		sizeof( name_array)/sizeof( name_array[0]), 
-		sizeof( name_array[0]), 0);
-	if ( nr < 2)
-	  return XNAV__OBJECTNOTFOUND;
-
-	strcpy( objname, name_array[0]);
-	strcpy( parname, name_array[1]);
-
-	/* Get objid */
-	sts = gdh_NameToObjid ( objname, &objid);
-	if ( EVEN(sts)) return sts;
-
-	/* Get class name */	
-	sts = gdh_GetObjectClass ( objid, &classid);
-	if ( EVEN(sts)) return sts;
-
-	sts = gdh_ObjidToName ( cdh_ClassIdToObjid(classid), classname, 
-            sizeof(classname), cdh_mName_object);
-	if ( EVEN(sts)) return sts;
-
-	/* Get objid of rtbody */
-	sts = gdh_ObjidToName ( cdh_ClassIdToObjid(classid), hiername, 
-			sizeof(hiername), cdh_mName_volumeStrict);
-	if ( EVEN(sts)) return sts;
-	strcat( hiername, "-RtBody");
-	sts = gdh_NameToObjid ( hiername, &parameter);
-	if ( EVEN(sts)) 
-	{
-	  /* Try with sysbody */
-	  sts = gdh_ObjidToName ( cdh_ClassIdToObjid(classid), hiername,
-                        sizeof(hiername), cdh_mName_volumeStrict);
-	  if ( EVEN(sts)) return sts;
-	  strcat( hiername, "-SysBody");
-	  sts = gdh_NameToObjid ( hiername, &parameter);
-	  if ( EVEN(sts)) 
-	  {
-	    message('E', "Unable to open object");	  
-	    return 0;
-	  }
-	}
-
-	if ( (s = strrchr( parname, '[')))
-	  *s = 0;
-
-	strcat( hiername, "-");
-	strcat( hiername, parname);
-
-	sts = gdh_GetObjectInfo ( hiername, parinfo, sizeof( *parinfo)); 
-	if (EVEN(sts)) return sts;
-
-	return XNAV__SUCCESS;
-}
 
 /*************************************************************************
 *

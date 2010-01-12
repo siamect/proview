@@ -41,7 +41,7 @@ main
   string rttconfig;
   string webhandler;
 
-  verify(1);
+  !verify(1);
 
   ! For all OpPlace objects
   op = GetClassList( "OpPlace");
@@ -209,4 +209,7 @@ main
     delete object/name='user'/noconf
 
   endif
+
+  save
+
 endmain

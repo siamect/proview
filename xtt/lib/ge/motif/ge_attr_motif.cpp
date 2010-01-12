@@ -34,7 +34,7 @@
 
 #include "co_cdh.h"
 #include "co_time.h"
-#include "co_mrm_util.h"
+#include "cow_mrm_util.h"
 #include "flow_x.h"
 
 #include "flow.h"
@@ -421,7 +421,7 @@ AttrMotif::AttrMotif( Widget a_parent_wid,
   reglist[0].value = (caddr_t) this;
 
   // Save the context structure in the widget
-  XtSetArg (args[0], XmNuserData, (unsigned int) this);
+  XtSetArg (args[0], XmNuserData, (XtPointer) this);
 
   sts = MrmOpenHierarchy( 1, &uid_filename_p, NULL, &s_DRMh);
   if (sts != MrmSUCCESS) printf("can't open %s\n", uid_filename);

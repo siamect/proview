@@ -34,7 +34,8 @@ class sev_node {
   char 		name[80];
 };
 
-class sev_refid {
+typedef struct {
+#if 0
  public:
   sev_refid( pwr_tRefId rid) : id(rid) {}
   bool operator<(const sev_refid& x) const {
@@ -44,40 +45,24 @@ class sev_refid {
       return true;
     return false;
   }
+#endif
+  tree_sNode  node;
   pwr_tRefId id;
-};
-
-class sev_item_key {
- public:
-  sev_item_key( pwr_tOid oid, char *aname) : m_oid(oid) 
-    {
-      strncpy( m_aname, aname, sizeof(m_aname));
-    }
-
-  bool operator<(const sev_item_key& x) const {
-    if ( m_oid.vid < x.m_oid.vid)
-      return true;
-    if ( m_oid.oix < x.m_oid.oix)
-      return true;
-    return strcmp( m_aname, x.m_aname);
-  }
-  pwr_tOid m_oid;
-  pwr_tAName m_aname;
-};
+  int idx;
+} sev_sRefid;
 
 class sev_server {
  public:
 
-  sev_server() : m_server_status(0), m_msg_id(0) {}
+  //TODO should this really be in this file?
+  static const unsigned int constSevVersion = 2;
 
-  typedef map<sev_refid, unsigned int>::iterator iterator_refid;
-  typedef map<sev_item_key, unsigned int>::iterator iterator_item_key;
+  sev_server() : m_server_status(0), m_refid(0), m_msg_id(0) {}
 
   pwr_tStatus m_sts;
   pwr_tStatus m_server_status;
   vector<sev_node> m_nodes;
-  map<sev_refid, unsigned int> m_refid;
-  map<sev_item_key, unsigned int> m_item_key;
+  tree_sTable *m_refid;
   unsigned int m_msg_id;
   sev_db *m_db;
   int m_noneth;
@@ -89,9 +74,11 @@ class sev_server {
   int check_histitems( sev_sMsgHistItems *msg, unsigned int size);
   int receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size);
   int send_histdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *msg, unsigned int size);
+  int send_objecthistdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *rmsg, unsigned int size);
   int send_itemlist( qcom_sQid tgt);
   int send_server_status( qcom_sQid tgt);
   int delete_item( qcom_sQid tgt, sev_sMsgHistItemDelete *rmsg);
   void garbage_collector();
+  void garbage_item( int idx);
 };
 #endif

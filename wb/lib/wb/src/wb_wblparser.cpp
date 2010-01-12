@@ -5,7 +5,7 @@
 #include <antlr/ASTFactory.hpp>
 #line 14 "wb_wblparser.g"
 
-#include "co_msgwindow.h"
+#include "cow_msgwindow.h"
 int wblparser_error_cnt = 0;
 
 void wb_wblparser::reportError(const RecognitionException& ex)

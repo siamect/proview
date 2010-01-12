@@ -26,9 +26,9 @@
 #include <vector>
 #include "co_cdh.h"
 #include "co_time.h"
-#include "co_xhelp.h"
+#include "cow_xhelp.h"
 #include "co_dcli.h"
-#include "co_wow.h"
+#include "cow_wow.h"
 #include "co_cnf.h"
 
 #include "flow.h"
@@ -120,24 +120,41 @@ void XttTbl::activate_print()
 
 void XttTbl::activate_opensevhist()
 {
-  sevcli_sHistItem *hi;
-
+//  sevcli_sHistItem *hi;
+  TblNav_sevhistobject *hi;
   if ( !tblnav->get_select( &hi)) {
     message( 'E', "Select an storage item");
     return;
   }
 
-  sevhist_new( hi->oid, hi->attr[0].aname);
+  bool sevhistobject = hi->attrnum > 1;
+  if( !sevhistobject ) {
+    sevhist_new( hi->oid, hi->objectattrlist[0].aname, sevhistobject);
+  }
+  else {
+    char *s;
+    pwr_tAName aname;
+    s = strchr( hi->oname, '.');
+    if ( !s) {
+      //It is a complete object
+      aname[0] = '\0';
+    }
+    else {  
+      strcpy( aname, s+1);
+    }
+    sevhist_new( hi->oid, aname, sevhistobject);
+  }
 }
 
 void XttTbl::delete_item_yes( void *ctx, void *data)
 {
   XttTbl *tbl = (XttTbl *)ctx;
-  sevcli_sHistItem *hi = (sevcli_sHistItem *)data;
+//  sevcli_sHistItem *hi = (sevcli_sHistItem *)data;
+  TblNav_sevhistobject *hi = (TblNav_sevhistobject *)data;
   pwr_tStatus sts;
 
   printf("Deleting %s\n", hi->oname);
-  sevcli_delete_item( &sts, tbl->sevcli, hi->oid, hi->attr[0].aname);
+  sevcli_delete_item( &sts, tbl->sevcli, hi->oid, hi->objectattrlist[0].aname);
   if ( EVEN(sts)) {
     tbl->message( 'E', "Delete error");
     return;
@@ -149,7 +166,8 @@ void XttTbl::delete_item_yes( void *ctx, void *data)
 
 void XttTbl::activate_delete_item()
 {
-  sevcli_sHistItem *hi;
+  //sevcli_sHistItem *hi;
+  TblNav_sevhistobject *hi;
   char msg[300];
 
   if ( !tblnav->get_select( &hi)) {
@@ -157,7 +175,7 @@ void XttTbl::activate_delete_item()
     return;
   }
 
-  sprintf( msg, "Do you really wan't to delete all stored data for item\n\n%s.%s\n", hi->oname, hi->attr[0].aname);
+  sprintf( msg, "Do you really wan't to delete all stored data for item\n\n%s.%s\n", hi->oname, hi->objectattrlist[0].aname);
 
   wow->DisplayQuestion( this, "Confirm Delete Item", msg, delete_item_yes, 0, hi);
 }

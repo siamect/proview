@@ -48,9 +48,9 @@
 #include "co_time.h"
 #include "co_dcli.h"
 #include "flow_x.h"
-#include "co_mrm_util.h"
-#include "co_xhelp.h"
-#include "co_wow_motif.h"
+#include "cow_mrm_util.h"
+#include "cow_xhelp.h"
+#include "cow_wow_motif.h"
 
 #include "flow.h"
 #include "flow_browctx.h"
@@ -1513,7 +1513,7 @@ GeMotif::GeMotif( 	void 	*x_parent_ctx,
 						actions, XtNumber(actions));
  
   // Save the context structure in the widget
-  XtSetArg (args[0], XmNuserData, (unsigned int) this);
+  XtSetArg (args[0], XmNuserData, (XtPointer) this);
 
   sts = MrmOpenHierarchy( 1, &uid_filename_p, NULL, &s_DRMh);
   if (sts != MrmSUCCESS) printf("can't open %s\n", uid_filename);

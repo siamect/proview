@@ -47,8 +47,8 @@
 #include "co_time.h"
 #include "flow_x.h"
 #include "wb_wda_msg.h"
-#include "co_mrm_util.h"
-#include "co_wow_motif.h"
+#include "cow_mrm_util.h"
+#include "cow_wow_motif.h"
 
 #include "flow.h"
 #include "flow_browctx.h"
@@ -57,7 +57,7 @@
 #include "wb_wdanav_motif.h"
 #include "wb_wtt.h"
 #include "wb_wnav.h"
-#include "co_xhelp.h"
+#include "cow_xhelp.h"
 
 
 // Static member elements
@@ -587,7 +587,7 @@ WdaMotif::WdaMotif(
   reglist[0].value = (caddr_t) this;
 
   // Save the context structure in the widget
-  XtSetArg (args[0], XmNuserData, (unsigned int) this);
+  XtSetArg (args[0], XmNuserData, (XtPointer) this);
 
   sts = MrmOpenHierarchy( 1, &uid_filename_p, NULL, &s_DRMh);
   if (sts != MrmSUCCESS) printf("can't open %s\n", uid_filename);

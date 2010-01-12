@@ -37,8 +37,8 @@
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_dcli.h"
-#include "co_xhelp.h"
-#include "co_wow_gtk.h"
+#include "cow_xhelp.h"
+#include "cow_wow_gtk.h"
 
 #include "flow.h"
 #include "flow_browctx.h"
@@ -61,8 +61,8 @@
 #include "ge_util.h"
 #include "ge_msg.h"
 #include "wb_wnav_selformat.h"
-#include "co_wow_gtk.h"
-#include "co_logw_gtk.h"
+#include "cow_wow_gtk.h"
+#include "cow_logw_gtk.h"
 #include "wb_nav_gtk.h"
 #include "wb_log.h"
 
@@ -384,6 +384,11 @@ void GeGtk::set_prompt( const char *prompt)
 //
 //  Callbackfunctions from menu entries
 //
+void GeGtk::activate_create_subgraph(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->graph->create_node_floating( 0, 0);
+}
+
 void GeGtk::activate_change_text(GtkWidget *w, gpointer gectx)
 {
   ((Ge *)gectx)->activate_change_text();
@@ -1734,6 +1739,12 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   g_signal_connect( edit_polyline, "activate", 
 		    G_CALLBACK(activate_edit_polyline), this);
 
+  GtkWidget *edit_create_subgraph = gtk_menu_item_new_with_mnemonic( "_Create Subgraph");
+  g_signal_connect( edit_create_subgraph, "activate", 
+		    G_CALLBACK(activate_create_subgraph), this);
+  gtk_widget_add_accelerator( edit_create_subgraph, "activate", accel_g,
+			      'd', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
   GtkWidget *edit_change_text = gtk_menu_item_new_with_mnemonic( "Change _Text");
   g_signal_connect( edit_change_text, "activate", 
 		    G_CALLBACK(activate_change_text), this);
@@ -1759,6 +1770,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_redo);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_rotate);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_polyline);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_create_subgraph);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_change_text);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_change_name);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_command);
@@ -2016,23 +2028,29 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 
   // Menu Connections
   // Submenu Conpoint Direction
-  GtkWidget *cons_condir_center = gtk_check_menu_item_new_with_mnemonic( "_Center");
+  GSList *radio_group = NULL;
+  GtkWidget *cons_condir_center = gtk_radio_menu_item_new_with_mnemonic( radio_group, "_Center");
+  radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(cons_condir_center));
   g_signal_connect( cons_condir_center, "activate", 
 		    G_CALLBACK(activate_condir_center), this);
 
-  GtkWidget *cons_condir_left = gtk_check_menu_item_new_with_mnemonic( "_Left");
+  GtkWidget *cons_condir_left = gtk_radio_menu_item_new_with_mnemonic( radio_group, "_Left");
+  radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(cons_condir_left));
   g_signal_connect( cons_condir_left, "activate", 
 		    G_CALLBACK(activate_condir_left), this);
 
-  GtkWidget *cons_condir_right = gtk_check_menu_item_new_with_mnemonic( "_Right");
+  GtkWidget *cons_condir_right = gtk_radio_menu_item_new_with_mnemonic( radio_group, "_Right");
+  radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(cons_condir_right));
   g_signal_connect( cons_condir_right, "activate", 
 		    G_CALLBACK(activate_condir_right), this);
 
-  GtkWidget *cons_condir_up = gtk_check_menu_item_new_with_mnemonic( "_Up");
+  GtkWidget *cons_condir_up = gtk_radio_menu_item_new_with_mnemonic( radio_group, "_Up");
+  radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(cons_condir_up));
   g_signal_connect( cons_condir_up, "activate",
 		    G_CALLBACK(activate_condir_up), this);
 
-  GtkWidget *cons_condir_down = gtk_check_menu_item_new_with_mnemonic( "_Down");
+  GtkWidget *cons_condir_down = gtk_radio_menu_item_new_with_mnemonic( radio_group, "_Down");
+  radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(cons_condir_down));
   g_signal_connect( cons_condir_down, "activate", 
 		    G_CALLBACK(activate_condir_down), this);
 
@@ -2046,11 +2064,14 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(cons_condir),GTK_WIDGET(cons_condir_menu));
 
   // Submenu Corners
-  GtkWidget *cons_corners_right = gtk_check_menu_item_new_with_mnemonic( "_Right");
+  radio_group = 0;
+  GtkWidget *cons_corners_right = gtk_radio_menu_item_new_with_mnemonic( radio_group, "_Right");
+  radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(cons_corners_right));
   g_signal_connect( cons_corners_right, "activate",
 		    G_CALLBACK(activate_concorner_right), this);
 
-  GtkWidget *cons_corners_rounded = gtk_check_menu_item_new_with_mnemonic( "R_ounded");
+  GtkWidget *cons_corners_rounded = gtk_radio_menu_item_new_with_mnemonic( radio_group, "R_ounded");
+  radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(cons_corners_rounded));
   g_signal_connect( cons_corners_rounded, "activate",
 		    G_CALLBACK(activate_concorner_rounded), this);
 
@@ -2061,19 +2082,25 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(cons_corners),GTK_WIDGET(cons_corners_menu));
 
   // Submenu Corner Round Amount
-  GtkWidget *cons_round_amount_1 = gtk_check_menu_item_new_with_mnemonic( "0.2");
+  radio_group = 0;
+  GtkWidget *cons_round_amount_1 = gtk_radio_menu_item_new_with_mnemonic( radio_group, "0.2");
+  radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(cons_round_amount_1));
   g_signal_connect( cons_round_amount_1, "activate",
 		    G_CALLBACK(activate_round_amount_1), this);
-  GtkWidget *cons_round_amount_2 = gtk_check_menu_item_new_with_mnemonic( "0.5");
+  GtkWidget *cons_round_amount_2 = gtk_radio_menu_item_new_with_mnemonic( radio_group, "0.5");
+  radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(cons_round_amount_2));
   g_signal_connect( cons_round_amount_2, "activate",
 		    G_CALLBACK(activate_round_amount_2), this);
-  GtkWidget *cons_round_amount_3 = gtk_check_menu_item_new_with_mnemonic( "1.0");
+  GtkWidget *cons_round_amount_3 = gtk_radio_menu_item_new_with_mnemonic( radio_group, "1.0");
+  radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(cons_round_amount_3));
   g_signal_connect( cons_round_amount_3, "activate",
 		    G_CALLBACK(activate_round_amount_3), this);
-  GtkWidget *cons_round_amount_4 = gtk_check_menu_item_new_with_mnemonic( "2.0");
+  GtkWidget *cons_round_amount_4 = gtk_radio_menu_item_new_with_mnemonic( radio_group, "2.0");
+  radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(cons_round_amount_4));
   g_signal_connect( cons_round_amount_4, "activate",
 		    G_CALLBACK(activate_round_amount_4), this);
-  GtkWidget *cons_round_amount_5 = gtk_check_menu_item_new_with_mnemonic( "4.0");
+  GtkWidget *cons_round_amount_5 = gtk_radio_menu_item_new_with_mnemonic( radio_group, "4.0");
+  radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(cons_round_amount_5));
   g_signal_connect( cons_round_amount_5, "activate",
 		    G_CALLBACK(activate_round_amount_5), this);
 
@@ -2087,25 +2114,33 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(cons_round_amount),GTK_WIDGET(cons_round_amount_menu));
 
   // Submenu Connections Type
-  GtkWidget *cons_type_straight = gtk_check_menu_item_new_with_mnemonic( "_Straight");
+  radio_group = 0;
+  GtkWidget *cons_type_straight = gtk_radio_menu_item_new_with_mnemonic( radio_group, "_Straight");
+  radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(cons_type_straight));
   g_signal_connect( cons_type_straight, "activate",
 		    G_CALLBACK(activate_contype_straight), this);
-  GtkWidget *cons_type_routed = gtk_check_menu_item_new_with_mnemonic( "_Routed");
+  GtkWidget *cons_type_routed = gtk_radio_menu_item_new_with_mnemonic( radio_group, "_Routed");
+  radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(cons_type_routed));
   g_signal_connect( cons_type_routed, "activate",
 		    G_CALLBACK(activate_contype_routed), this);
-  GtkWidget *cons_type_straightonearrow = gtk_check_menu_item_new_with_mnemonic( "Straight _One Arrow");
+  GtkWidget *cons_type_straightonearrow = gtk_radio_menu_item_new_with_mnemonic( radio_group, "Straight _One Arrow");
+  radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(cons_type_straightonearrow));
   g_signal_connect( cons_type_straightonearrow, "activate",
 		    G_CALLBACK(activate_contype_stronearr), this);
-  GtkWidget *cons_type_stepdiv = gtk_check_menu_item_new_with_mnemonic( "St_ep Diverge");
+  GtkWidget *cons_type_stepdiv = gtk_radio_menu_item_new_with_mnemonic( radio_group, "St_ep Diverge");
+  radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(cons_type_stepdiv));
   g_signal_connect( cons_type_stepdiv, "activate",
 		    G_CALLBACK(activate_contype_stepdiv), this);
-  GtkWidget *cons_type_stepconv = gtk_check_menu_item_new_with_mnemonic( "Ste_p Converge");
+  GtkWidget *cons_type_stepconv = gtk_radio_menu_item_new_with_mnemonic( radio_group, "Ste_p Converge");
+  radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(cons_type_stepconv));
   g_signal_connect( cons_type_stepdiv, "activate",
 		    G_CALLBACK(activate_contype_stepdiv), this);
-  GtkWidget *cons_type_transdiv = gtk_check_menu_item_new_with_mnemonic( "_Trans Diverge");
+  GtkWidget *cons_type_transdiv = gtk_radio_menu_item_new_with_mnemonic( radio_group, "_Trans Diverge");
+  radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(cons_type_transdiv));
   g_signal_connect( cons_type_transdiv, "activate",
 		    G_CALLBACK(activate_contype_transdiv), this);
-  GtkWidget *cons_type_transconv = gtk_check_menu_item_new_with_mnemonic( "Tr_ans Converge");
+  GtkWidget *cons_type_transconv = gtk_radio_menu_item_new_with_mnemonic( radio_group, "Tr_ans Converge");
+  radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(cons_type_transconv));
   g_signal_connect( cons_type_transconv, "activate",
 		    G_CALLBACK(activate_contype_transconv), this);
 
@@ -2170,7 +2205,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(view), GTK_WIDGET(view_menu));
 
   // Menu Help
-  GtkWidget *help_help = gtk_image_menu_item_new_from_stock(GTK_STOCK_HELP, accel_g);
+  GtkWidget *help_help = gtk_image_menu_item_new_from_stock(GTK_STOCK_HELP, 0);
   g_signal_connect(help_help, "activate", G_CALLBACK(activate_help), this);
 
   GtkWidget *help_help_subgraph = gtk_menu_item_new_with_mnemonic( "H_elp on Subgraphs");
@@ -2345,7 +2380,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_toolbar_append_widget( tools, tools_equid_vert_down, "Set equal distance between objects bottom side vertical", "");
 
   // View Planthierarchy
-  GtkWidget *tools_view_plant = image_button( "$pwr_exe/foe_navpalette.png");
+  GtkWidget *tools_view_plant = image_button( "$pwr_exe/xtt_navigator.png");
   g_signal_connect(tools_view_plant, "clicked", G_CALLBACK(activate_view_plant), this);
   gtk_toolbar_append_widget( tools, tools_view_plant, "View plant hierarchy", "");
 
@@ -2962,8 +2997,6 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 
   gtk_widget_show_all( toplevel);
 
-  // gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM(cons_type_routed), TRUE);
-
   gtk_paned_set_position( GTK_PANED(hpaned), window_width - palette_width);
   gtk_paned_set_position( GTK_PANED(vpaned1), window_height - 380);
   gtk_paned_set_position( GTK_PANED(vpaned2), window_height - 290);
@@ -3125,5 +3158,8 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   ge_get_systemname( systemname);
   graph->set_systemname( systemname);
 
+  gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM(cons_type_routed), TRUE);
+  gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM(cons_round_amount_2), TRUE );
+  gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM(cons_corners_rounded), TRUE );
 }
 

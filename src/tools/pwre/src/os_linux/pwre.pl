@@ -10,6 +10,7 @@
   "build_kernel", "build_kernel:usage_build_kernel",
   "build_all_modules", "build_all_modules:usage_build_all_modules",
   "build_all_wbl", "build_all_wbl:usage_build_all_wbl",
+  "ebuild",    "ebuild:usage_ebuild",
   "clean_exe_all", "clean_exe_all:usage_clean_exe_all",
   "method_build", "method_build:usage_method_build",
   "copy", 	"copy:usage_copy",
@@ -19,6 +20,7 @@
   "help",	"help:usage_help",
   "list",	"list:usage_list",
   "init",	"init:usage_init",
+  "import",	"import:usage_import",
   "module",	"module:usage_module",
   "merge",	"merge:usage_merge",
   "modify",	"modify:usage_modify",
@@ -223,6 +225,306 @@ sub build_kernel # args: flavour
   _module("rt");
   build_all("exe", $flavour);
   merge();
+}
+
+#
+# ebuild()
+#
+sub ebuild # args: pass flavour
+{
+
+  my $fname = $ENV{"pwre_bin"} . "/ebuild.dat";
+  open FILE, $fname or die $!;
+
+  my $build_bcomp = 0;
+  my $build_java = 0;
+  my $build_remote = 0;
+  my $build_nmps = 0;
+  my $build_sev = 0;
+  my $build_opc = 0;
+  my $build_profibus = 0;
+  my $build_otherio = 0;
+  my $build_ssabox = 0;
+  my $build_tlog = 0;
+  my $build_othermanu = 0;
+  my $build_abb = 0;
+  my $build_siemens = 0;
+  my $build_klocknermoeller = 0;
+  my $build_inor = 0;
+  my $build_telemecanique = 0;
+
+  printf( "-- Building modules\n");
+  while ( <FILE>) {
+
+    my @value = split( ' ', $_);
+    if ( $value[0] eq "bcomp" && $value[1] eq "1" ) { $build_bcomp = 1; printf( "--   bcomp\n");}
+    elsif ( $value[0] eq "remote" && $value[1] eq "1" ) { $build_remote = 1; printf( "--   remote\n");}
+    elsif ( $value[0] eq "java" && $value[1] eq "1" ) { $build_java = 1; printf( "--   java\n");}
+    elsif ( $value[0] eq "nmps" && $value[1] eq "1" ) { $build_nmps = 1; printf( "--   nmps\n");}
+    elsif ( $value[0] eq "sev" && $value[1] eq "1" ) { $build_sev = 1; printf( "--   sev\n");}
+    elsif ( $value[0] eq "opc" && $value[1] eq "1" ) { $build_opc = 1; printf( "--   opc\n");}
+    elsif ( $value[0] eq "profibus" && $value[1] eq "1" ) { $build_profibus = 1; printf( "--   profibus\n");}
+    elsif ( $value[0] eq "otherio" && $value[1] eq "1" ) { $build_otherio = 1; printf( "--   otherio\n");}
+    elsif ( $value[0] eq "ssabox" && $value[1] eq "1" ) { $build_ssabox = 1; printf( "--   ssabox\n");}
+    elsif ( $value[0] eq "tlog" && $value[1] eq "1" ) { $build_tlog = 1; printf( "--   tlog\n");}
+    elsif ( $value[0] eq "othermanu" && $value[1] eq "1" ) { $build_othermanu = 1; printf( "--   othermanu\n");}
+    elsif ( $value[0] eq "abb" && $value[1] eq "1" ) { $build_abb = 1; printf( "--   abb\n");}
+    elsif ( $value[0] eq "siemens" && $value[1] eq "1" ) { $build_siemens = 1; printf( "--   siemens\n");}
+    elsif ( $value[0] eq "klocknermoeller" && $value[1] eq "1" ) { $build_klocknermoeller = 1; printf( "--   klocknermoeller\n");}
+    elsif ( $value[0] eq "inor" && $value[1] eq "1" )  { $build_inor = 1; printf( "--   inor \n");}
+    elsif ( $value[0] eq "telemecanique" && $value[1] eq "1" )  { $build_telemecanique = 1; printf( "--   telemecanique\n");}
+  }
+  printf( "\n");
+  close FILE;
+ 
+  my $pass = $_[0];
+  my $flavour = $_[1];
+  if ( $_[1] eq "motif") {
+    $flavour = "motif";
+  }
+  else {
+    $flavour = "gtk";
+  }
+
+  if ( $pass eq "rt" ) {
+    _module("rt");
+    _build("exp", "inc", "src", "all");
+    _build("exp", "com", "src", "all");
+    _build("tools/exe", "*", "src", "all");
+    merge("exe/tools_cmsg2c");
+    merge("exe/tools_msg2cmsg");
+    merge("exe/tools_pdrgen");
+    _build("msg", "*", "src", "all");
+    _build("lib", "rt", "src", "init copy");
+    _build("lib", "rt", $flavour, "copy");
+    _build("lib", "co", "src", "init copy");
+    _build("lib", "co", $flavour, "copy");
+    _build("lib", "dtt", "src", "init copy");
+    _build("lib", "statussrv", "src", "init copy");
+    _build("lib", "co", "src", "all");
+    _build("lib", "co", $flavour, "all");
+    _build("exe", "co*", "src", "all");
+    _build("exe", "*", "src", "copy");
+    _build("exp", "stdsoap2", "src", "copy");  
+    _build("lib", "rt", "src", "all");
+    _build("lib", "statussrv", "src", "all");
+    _build("lib", "msg_dummy", "src", "init copy lib");
+    _build("exp", "rt", "src", "all");
+    _build("exe", "wb_rtt", "src", "all");
+    _build("lib", "dtt", "src", "all");
+    _build("exp", "stdsoap2", "src", "all");
+    _module("otherio");
+    _build("exp","rt","src","copy");
+    _build("lib","usbio_dummy","src","init lib");
+    merge();
+    _module("rt");
+    _build("exe", "rt*", "src", "all");
+    _build("exe", "co*", $flavour, "all");
+    _build("exe", "pwr_user", "src", "all");
+    if ( $build_nmps == 1) {
+      merge();
+      _module("nmps");
+      _build("lib", "nmps", "src", "all");
+      merge();
+    }
+    if ( $build_bcomp == 1) {
+      _module("bcomp");
+      _build("lib", "rt", "src", "all");
+      merge();
+    }
+    if ( $build_ssabox == 1) {
+      _module("ssabox");
+      _build("lib", "rt", "src", "all");
+      _build("lib", "ssabox", "src", "all");
+      merge();
+    }
+    if ( $build_otherio == 1) {
+      _module("otherio");
+      _build("lib", "rt", "src", "all");
+      merge();
+    }
+    if ( $build_profibus == 1) {
+      _module("profibus");
+      _build("lib", "rt", "src", "all");
+      merge();
+    }
+    if ( $build_remote == 1) {
+      _module("remote");
+      _build("lib", "remote", "src", "all");
+      _build("exe", "*", "src", "all");
+      merge();
+    }
+    if ( $build_opc == 1) {
+      _module("opc");
+      _build("lib", "opc", "src", "all");
+      _build("exe", "*", "src", "all");
+      merge();
+    }
+    if ( $build_tlog == 1) {
+      _module("tlog");
+      _build("lib", "tlog", "src", "all");
+      merge();
+    }
+    if ( $build_java == 1) {
+      _module("java");
+      _build("exe", "jpwr_rt_gdh", "src", "all");
+      merge();
+    }
+    if ( $build_sev == 1) {
+      _module("sev");
+      _build("lib", "sev", "src", "all");
+      _build("exe", "sev_server", "src", "all");
+      merge();
+    }
+    if ( $build_abb == 1) {
+      _module("abb");
+      merge();
+    }
+    if ( $build_siemens == 1) {
+      _module("siemens");
+      merge();
+    }
+    if ( $build_othermanu == 1) {
+      _module("othermanu");
+      merge();
+    }
+    if ( $build_inor == 1) {
+      _module("inor");
+      merge();
+    }
+    if ( $build_klocknermoeller == 1) {
+      _module("klocknermoeller");
+      merge();
+    }
+    if ( $build_telemecanique == 1) {
+      _module("telemecanique");
+      merge();
+    }
+  }
+  elsif ( $pass eq "op" ) {
+    _module("xtt");
+    _build("lib", "*", "src", "init copy");
+    _build("lib", "*", $flavour, "copy");
+    _build("exp", "*", "src", "init copy");
+    _build("mmi", "*", "src", "copy");
+    _build("mmi", "*", $flavour, "copy");
+    _build("exe", "*", "src", "copy");
+    _build("lib", "*", "src", "lib");
+    _build("lib", "*", $flavour, "lib");
+    _build("exp", "*", "src", "lib");
+    _build("exe", "rt*", "src", "all");
+    _build("exe", "xtt*", "src", "all");
+    _build("exe", "co*", "src", "all");
+    _build("exe", "pwr*", "src", "all");
+    _build("exe", "rt*", $flavour, "all");
+    _build("exe", "xtt*", $flavour, "all");
+    _build("exe", "co*", $flavour, "all");
+    _build("exe", "pwr*", $flavour, "all");
+    merge();
+    if ( $build_bcomp == 1) {
+      _module("bcomp");
+      _build("mmi", "*", "src", "copy");
+      merge();
+    }
+    if ( $build_profibus == 1) {
+      _module("profibus");
+      _build("mmi", "*", "src", "copy");
+      _build("lib", "cow", "src", "init copy lib");
+      _build("lib", "cow", $flavour, "init copy lib");
+      _build("lib", "xtt", "src", "init copy lib");
+      _build("lib", "xtt", $flavour, "init copy lib");
+      merge();
+    }
+    if ( $build_opc == 1) {
+      _module("opc");
+      _build("mmi", "*", "src", "copy");
+      merge();
+    }
+    if ( $build_otherio == 1) {
+      _module("otherio");
+      _build("mmi", "*", "src", "copy");
+      merge();
+    }
+    if ( $build_sev == 1) {
+      _module("sev");
+      _build("exe", "sev_xtt", "src", "all");
+      _build("exe", "sev_xtt", $flavour, "all");
+      merge();
+    }
+    if ( $build_othermanu == 1) {
+      _module("othermanu");
+      _build("mmi", "*", "src", "copy");
+      merge();
+    }
+    if ( $build_abb == 1) {
+      _module("abb");
+      _build("mmi", "*", "src", "copy");
+      merge();
+    }
+    if ( $build_inor == 1) {
+      _module("inor");
+      _build("mmi", "*", "src", "copy");
+      merge();
+    }
+    if ( $build_siemens == 1) {
+      _module("siemens");
+      _build("mmi", "*", "src", "copy");
+      merge();
+    }
+    if ( $build_klocknermoeller == 1) {
+      _module("klocknermoeller");
+      _build("mmi", "*", "src", "copy");
+      merge();
+    }
+    if ( $build_ssabox == 1) {
+      _module("ssabox");
+      _build("mmi", "*", "src", "copy");
+      merge();
+    }
+    if ( $build_telemecanique == 1) {
+      _module("telemecanique");
+      _build("mmi", "*", "src", "copy");
+      merge();
+    }
+    method_build( "rt_io_comm", $flavour);
+    method_build( "rt_xtt", $flavour);
+  }
+}
+
+#
+# import()
+#
+sub import ()
+{
+  my $flavour = $_[1];
+  if ( $_[1] eq "motif") {
+    $flavour = "motif";
+  }
+  else {
+    $flavour = "gtk";
+  }
+
+  my($vmsinc) = $ENV{"pwre_vmsinc"};
+  if ( $vmsinc ne "" ) {
+
+    copy( $_[0], $flavour);
+
+    _module("rt");
+    merge();
+    _module("bcomp");
+    merge();
+    _module("nmps");
+    merge();
+    _module("opc");
+    merge();
+    _module("profibus");
+    merge();
+    _module("otherio");
+    merge();
+    _module("remote");
+    merge();
+  }
+  
 }
 
 #
@@ -551,16 +853,6 @@ sub build_all ()
   printf("-- Build all\n");
   show();
 
-#  my($tmp);
-#  print("-- Copy include files from VMS [n]? ");
-#  $tmp = <STDIN>;
-#  chomp($tmp);
-
-#  if ($tmp =~ /^[yY]/) {
-#    copy();
-#  }
-
-  
   if ( $module eq "rt") {
     if ( $copy == 1) {
       _build("exp", "inc", "src", "all");
@@ -571,13 +863,10 @@ sub build_all ()
       merge("exe/tools_pdrgen");
       _build("msg", "*", "src", "all");
       _build("lib", "rt", "src", "init copy");
-      _build("lib", "rt", $flavour, "copy");
       _build("lib", "co", "src", "init copy");
-      _build("lib", "co", $flavour, "copy");
       _build("lib", "dtt", "src", "init copy");
       _build("lib", "statussrv", "src", "init copy");
       _build("lib", "co", "src", "all");
-      _build("lib", "co", $flavour, "all");
       _build("exe", "co*", "src", "all");
       _build("wbl", "pwrs", "src", "copy");
       _build("wbl", "pwrb", "src", "copy");
@@ -599,7 +888,6 @@ sub build_all ()
       }
       _module("rt");
       _build("lib", "rt", "src", "all");
-      _build("lib", "rt", $flavour, "all");
       _build("exp", "rt", "src", "all");
       _build("lib", "msg_dummy", "src", "all");
       _build("exp", "rt", "src", "all");
@@ -681,15 +969,30 @@ sub copy ()
   }
 
   my($vmsinc) = $ENV{"pwre_vmsinc"};
-  my($bindir) = $ENV{"pwre_bin"};
+  my($bindir) = $ENV{"pwre_bin"} . "/" . $ENV{"pwre_hw"};
+  my($docroot) = $ENV{"pwre_broot"} . "/" . $ENV{"pwre_os"} . "/" . $ENV{"pwre_hw"} . "/exp/doc/";
+  my($exproot) = $ENV{"pwre_broot"} . "/" . $ENV{"pwre_os"} . "/" . $ENV{"pwre_hw"};
 
   printf("--\n");
-  printf("-- Copy include files from VMS\n");
-  printf("-- Include directory on VMS: %s\n", $vmsinc);
+  printf("-- Copy file from Import root\n");
+  printf("-- Import root: %s\n", $vmsinc);
   printf("--\n");
   
-  system("make -f $bindir/copy_vms_inc.mk") && exit;
+  if ( $_[0] eq "doc" ) {
+    my($cmd) = "cp -r " . $vmsinc . "/exp/doc/* " . $docroot; 
+    system("$cmd");
+  }
+  elsif ( $_[0] eq "dbs" ) {
+    my($cmd) = "$bindir/import_dbs.sh " . $vmsinc . " " . $exproot; 
+    system("$cmd");
+  }
+  else {
+    my($cmd) = "make -f $bindir/import_files.mk" . " " . $_[0]; 
+    system("$cmd");
 
+    my($cmd) = "make -f $bindir/import_files.mk" . " " . $_[0] . "_" . $_[1]; 
+    system("$cmd");
+  }
 }
 
 #
@@ -1089,7 +1392,7 @@ sub get_vars ()
   } else {
     $sroot = $_[1];
   }
-# $vmsinc = 	get_var(" pwr_inc on VMS  [%s]? ", $vmsinc);
+  $vmsinc = 	get_var(" Import root  [%s]? ", $vmsinc);
   if ($_[2] eq "") {
     $broot = 	get_var(" Build root  [%s]? ", $broot);
   } else {
@@ -1116,7 +1419,7 @@ sub get_vars ()
     $desc = $_[6];
   }
 
-  $varstr = join(":", ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc));
+  $varstr = join(";", ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc));
 
 }
 
@@ -1137,7 +1440,7 @@ sub get_var()
 sub read_vars ()
 {
   $varstr = $envdb{$label};
-  ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc)  =  split(/:/, $varstr);
+  ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc)  =  split(/;/, $varstr);
   @vars = ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc);
 }
 
@@ -1149,7 +1452,9 @@ sub show_vars ()
 
   printf("-- Module.........: %s\n", $module);
   printf("-- Source root....: %s\n", $sroot);
-# printf("-- pwr_inc on VMS.: %s\n", $vmsinc);
+  if ( $vmsinc ne "") {
+    printf("-- Import root....: %s\n", $vmsinc);
+  }
   printf("-- Build root.....: %s\n", $broot);
   printf("-- Build type.....: %s\n", $btype);
   printf("-- OS.............: %s\n", $os);
@@ -1198,10 +1503,16 @@ sub usage_build_all_wbl ()
   printf("++ build_all_wbl                 : Builds wbl in all modules\n");
 }
 
+sub usage_ebuild ()
+{
+  printf("++\n");
+  printf("++ ebuild 'block' 'flavour'       : Builds rt or op block\n");
+}
+
 sub usage_clean_exe_all ()
 {
   printf("++\n");
-  printf("++ clean_exe_all             : Cleans all exe in all modules\n");
+  printf("++ clean_exe_all                 : Cleans all exe in all modules\n");
 }
 
 sub usage_method_build ()
@@ -1250,6 +1561,12 @@ sub usage_init ()
 {
   printf("++\n");
   printf("++ init 'env'                    : Inits an environment\n");
+}
+
+sub usage_import ()
+{
+  printf("++\n");
+  printf("++ import 'block' ['flavour']    : Import files from import root, block dbs, rt, op, java, doc\n");
 }
 
 sub usage_module ()

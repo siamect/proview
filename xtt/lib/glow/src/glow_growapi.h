@@ -459,6 +459,7 @@ extern "C" {
   //! Clear the paste list.
   /*! \param ctx		Grow context. */
   void grow_PasteClear( grow_tCtx ctx);
+  int grow_GetPasteActive( grow_tCtx ctx);
 
   void grow_CreateRect( grow_tCtx ctx, double x, double y, 
 	double width, double height,

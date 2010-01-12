@@ -29,7 +29,7 @@
 #include "rt_gdh_msg.h"
 #include "co_cdh.h"
 #include "co_time.h"
-#include "co_wow.h"
+#include "cow_wow.h"
 #include "rt_sev_msg.h"
 
 #include "flow.h"
@@ -50,12 +50,13 @@ XttSevHist::XttSevHist( void *parent_ctx,
 		      pwr_tOid *xn_oid,
 		      pwr_tOName *xn_aname,
 		      sevcli_tCtx xn_scctx,
-		      int *sts) :
+		      int *sts,
+          bool sevhistobject) :
   xnav(parent_ctx), gcd(0), curve(0), rows(0), vsize(0), timerid(0), close_cb(0), help_cb(0), 
-  first_scan(1), scctx(xn_scctx), oid(xn_oid[0]), time_low_old(0), time_high_old(0)
+  first_scan(1), scctx(xn_scctx), oid(xn_oid[0]), time_low_old(0), time_high_old(0), sevhistobject(sevhistobject)
 {
   strncpy( aname, xn_aname[0], sizeof(aname));
-    
+
   get_data( sts, pwr_cNTime, pwr_cNTime);
   if ( EVEN(*sts)) return;
 
@@ -70,6 +71,9 @@ XttSevHist::~XttSevHist()
 
 int XttSevHist::get_data( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to)
 {
+  if( sevhistobject ) {
+    return get_objectdata(sts, from, to);
+  }
   pwr_tTime *tbuf;
   void *vbuf;
   pwr_tDeltaTime trange;
@@ -78,6 +82,10 @@ int XttSevHist::get_data( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to)
   		       &rows, &vtype, &vsize);
   if ( EVEN(*sts))
     return 0;
+
+  if( rows == 0 ) {
+    return 0;
+  }
 
   // Create data for time axis
   gcd = new GeCurveData( curve_eDataType_DsTrend);
@@ -166,6 +174,155 @@ int XttSevHist::get_data( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to)
   *sts = SEV__SUCCESS;
   return 1;
 }
+
+int XttSevHist::get_objectdata( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to)
+{
+  pwr_tTime *tbuf;
+  void *vbuf;
+  sevcli_sHistAttr *histattrbuf;
+  int numAttributes;
+
+  pwr_tDeltaTime trange;
+
+  sevcli_get_objectitemdata( sts, scctx, oid, aname, from, to, 1000, &tbuf, &vbuf,
+  		       &rows, &histattrbuf, &numAttributes);
+  if ( EVEN(*sts))
+    return 0;
+
+  if( rows == 0 ) {
+    return 0;
+  }
+
+  // Create data for time axis
+  gcd = new GeCurveData( curve_eDataType_DsTrend);
+
+  gcd->data[0] = (double *) calloc( 1, 8 * rows);
+  for ( int i = 0; i < rows; i++)
+    gcd->data[0][i] = (double)tbuf[i].tv_sec + (double)1e-9 * tbuf[i].tv_nsec;
+
+  strcpy( gcd->name[0], "Time");
+  gcd->axis_type[0] = curve_eAxis_x;
+  strcpy( gcd->format[0], "%10t");
+
+  //todo linesize bör vi kunna få från sevcli_get_objectitemdata
+  int linesize = 0;
+  for( int i = 0; i < numAttributes; i++) {
+    linesize += histattrbuf[i].size;
+  }
+  void *dataptr = vbuf;
+  int tmp = 0;
+  gcd->cols = 1;
+  for( int i = 0; i < numAttributes; i++) {
+
+    switch ( histattrbuf[i].type ) {
+    case pwr_eType_Int64:
+    case pwr_eType_Int32:
+    case pwr_eType_Int16:
+    case pwr_eType_Int8:
+    case pwr_eType_UInt64:
+    case pwr_eType_UInt32:
+    case pwr_eType_UInt16:
+    case pwr_eType_UInt8:
+    case pwr_eType_Float32:
+    case pwr_eType_Float64:
+    case pwr_eType_Boolean:
+      break;
+    default: 
+      tmp += histattrbuf[i].size;
+      continue;
+    }
+
+    if( gcd->cols >= CURVE_MAX_COLS ) {
+      printf("To many columns for curve class max:%d\n", CURVE_MAX_COLS);
+      break;
+    }
+
+    gcd->cols++;
+
+    strcpy( gcd->name[gcd->cols-1], histattrbuf[i].aname);
+    gcd->data[gcd->cols-1] = (double *) calloc( 1, 8 * rows);
+    gcd->axis_type[gcd->cols-1] = curve_eAxis_y;
+
+    dataptr = (char *)vbuf + tmp;
+    //tmp += histattrbuf[i].size;
+    for ( int j = 0; j < rows; j++) {
+      //dataptr = (char *)dataptr + linesize*j;
+      dataptr = ((char *)vbuf)+ j * linesize + tmp;
+      switch ( histattrbuf[i].type ) {
+      case pwr_eType_Int64:
+        gcd->data[gcd->cols-1][j] = *(pwr_tInt64 *)dataptr;
+        break;
+      case pwr_eType_Int32:
+        gcd->data[gcd->cols-1][j] = *(pwr_tInt32 *)dataptr;
+        break;
+      case pwr_eType_Int16:
+        gcd->data[gcd->cols-1][j] = *(pwr_tInt16 *)dataptr;
+        break;
+      case pwr_eType_Int8:
+        gcd->data[gcd->cols-1][j] = *(pwr_tInt8 *)dataptr;
+        break;
+      case pwr_eType_UInt64:
+        gcd->data[gcd->cols-1][j] = *(pwr_tUInt64 *)dataptr;
+        break;
+      case pwr_eType_UInt32:
+        gcd->data[gcd->cols-1][j] = *(pwr_tUInt32 *)dataptr;
+        break;
+      case pwr_eType_UInt16:
+        gcd->data[gcd->cols-1][j] = *(pwr_tUInt16 *)dataptr;
+        break;
+      case pwr_eType_UInt8:
+        gcd->data[gcd->cols-1][j] = *(pwr_tUInt8 *)dataptr;
+        break;
+      case pwr_eType_Float32:
+        gcd->data[gcd->cols-1][j] = *(pwr_tFloat32 *)dataptr;
+        break;
+      case pwr_eType_Float64:
+        gcd->data[gcd->cols-1][j] = *(pwr_tFloat64 *)dataptr;
+        break;
+      case pwr_eType_Boolean:
+        gcd->data[gcd->cols-1][j] = *(pwr_tBoolean *)dataptr;
+        break;
+      default: 
+        *sts = SEV__CURVETYPE;
+        return 0;
+      }
+    }
+    tmp += histattrbuf[i].size;
+  }
+  free( tbuf);
+  free( vbuf);
+  free( histattrbuf);
+
+
+  
+  gcd->rows = rows;
+
+  gcd->get_borders();
+  gcd->get_default_axis();
+
+  if ( to.tv_sec != 0 && from.tv_sec != 0) {
+    time_Adiff( &trange, &to, &from);
+    if ( time_DToFloat( 0, &trange) < 600)
+      strcpy( gcd->format[0], "%10t");
+    else
+      strcpy( gcd->format[0], "%11t");
+  }
+  else
+    strcpy( gcd->format[0], "%11t");
+    
+
+  gcd->select_color( 0);
+
+  if ( curve) {
+    curve->set_curvedata( gcd);  // This will free the old gcd 
+    curve->configure_curves();
+    curve->configure_axes();
+    curve->redraw();
+  }
+  *sts = SEV__SUCCESS;
+  return 1;
+}
+
 
 void XttSevHist::pop()
 {

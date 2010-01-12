@@ -39,6 +39,7 @@
 #include "co_utl_batch.h"
 #include "co_msg.h"
 #include "co_api.h"
+#include "cow_api.h"
 #include "wb_foe_msg.h"
 #include "wb_vldh_msg.h"
 #include "wb_ldh_msg.h"
@@ -102,7 +103,8 @@ extern "C" {
 
 #define IS_LINUX(os) ((os & pwr_mOpSys_PPC_LINUX) \
 		     || (os & pwr_mOpSys_X86_LINUX) \
-		     || (os & pwr_mOpSys_X86_64_LINUX))
+		     || (os & pwr_mOpSys_X86_64_LINUX) \
+		     || (os & pwr_mOpSys_CustomBuild))
 
 #define IS_UNIX(os) (IS_LINUX(os) || IS_LYNX(os))
 
@@ -849,6 +851,8 @@ static pwr_tStatus gcg_get_build_host(
 	  strcpy(logname, "pwr_build_host_x86_linux");
 	else if (os & pwr_mOpSys_X86_64_LINUX)
 	  strcpy(logname, "pwr_build_host_x86_64_linux");
+	else if (os & pwr_mOpSys_CustomBuild)
+	  strcpy(logname, "pwr_build_host_custom_build");
 	else
 	  return GSX__NOBUILDHOST;
 
@@ -5178,6 +5182,11 @@ int	gcg_comp_rtnode(
 	    strcpy( os_str, "X86_64_LINUX"); /* Not used */
 	    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
 	    break;
+	  case pwr_mOpSys_CustomBuild:
+	    strcpy( objdir, "xxx");
+	    strcpy( os_str, "CustomBuild"); /* Not used */
+	    max_no_timebase = GCG_MAX_NO_TIMEBASE_LINUX;
+	    break;
 	  default:
 	    return GSX__UNKNOPSYS;
 	}
@@ -5403,6 +5412,7 @@ int	gcg_comp_rtnode(
 	        case pwr_mOpSys_X86_64_LINUX:
 	        case pwr_mOpSys_X86_LYNX:
 	        case pwr_mOpSys_PPC_LYNX:
+	        case pwr_mOpSys_CustomBuild:
 	          l += sprintf( &plclib_frozen[l], "%s%s ", PLCLIB_FROZEN_LINK_UNIX,
 			vldh_VolumeIdToStr( *volumelist_ptr));
 	          break;

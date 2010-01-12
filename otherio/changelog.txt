@@ -3,5 +3,6 @@
 071220 cs  usbio     Methods and objects for MotionControl USB I/O added.
 080229 rk  modbus    New I/O-system for Modbus TCP implemented.
 081016 rk  modbus    Added class Modbus_Master.
-081016 rk  modbus    Added moore functionality.
+081016 rk  modbus    Added more functionality.
 090301 cs  usbio     Bugfix for Ai on port B. If Ai and Di/Do were mixed the Ai didn't work.
+091208 cs  modbus    Modbus TCP Server implemented.

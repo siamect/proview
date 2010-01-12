@@ -49,7 +49,7 @@ extern "C" {
 extern "C" {
 #include "xtt_hotkey_motif.h"
 #include "co_dcli.h"
-#include "co_mrm_util.h"
+#include "cow_mrm_util.h"
 }
 
 #include "co_lng.h"
@@ -58,13 +58,13 @@ extern "C" {
 #include "flow_browapi.h"
 //#include "flow_browwidget.h"
 #include "rt_xtt_motif.h"
-#include "rt_trace.h"
+#include "xtt_trace.h"
 #include "xtt_xnav_motif.h"
 #include "xtt_item.h"
 #include "xtt_url.h"
 #include "co_lng.h"
-#include "co_xhelp_motif.h"
-#include "co_wow_motif.h"
+#include "cow_xhelp_motif.h"
+#include "cow_wow_motif.h"
 #include "rt_xnav_msg.h"
 #include "co_syi.h"
 
@@ -531,7 +531,7 @@ XttMotif::~XttMotif()
 }
 
 XttMotif::XttMotif( int argc, char *argv[], int *return_sts) :
-  Xtt( argc, argv, return_sts),
+  Xtt( &argc, &argv, return_sts),
   cmd_current_recall(0), value_current_recall(0) 
 {
   char		uid_filename[120] = {"xtt.uid"};
@@ -619,7 +619,7 @@ XttMotif::XttMotif( int argc, char *argv[], int *return_sts) :
  
   // Save the context structure in the widget
   i = 0;
-  XtSetArg( args[i], XmNuserData, (unsigned int) this);i++;
+  XtSetArg( args[i], XmNuserData, (XtPointer) this);i++;
 
   sts = MrmOpenHierarchy( 1, &uid_filename_p, NULL, &s_DRMh);
   if (sts != MrmSUCCESS) printf("can't open %s\n", uid_filename);

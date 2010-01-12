@@ -42,7 +42,7 @@
 
 #include "flow_x.h"
 #include "co_lng.h"
-#include "co_wow_motif.h"
+#include "cow_wow_motif.h"
 #include "xtt_clog.h"
 #include "rt_xnav_msg.h"
 #include "xtt_clog_motif.h"
@@ -106,7 +106,7 @@ CLogMotif::CLogMotif( void *clog_parent_ctx,
 
   // Save the context structure in the widget
   i = 0;
-  XtSetArg(args[i], XmNuserData, (unsigned int) this);i++;
+  XtSetArg(args[i], XmNuserData, (XtPointer) this);i++;
   XtSetArg(args[i], XmNdeleteResponse, XmDO_NOTHING);i++;
 
   sts = MrmOpenHierarchy( 1, &uid_filename_p, NULL, &s_DRMh);

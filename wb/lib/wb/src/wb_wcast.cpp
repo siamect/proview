@@ -29,7 +29,7 @@
 #include "co_dcli.h"
 #include "pwr_baseclasses.h"
 #include "wb_ldh.h"
-#include "co_wow.h"
+#include "cow_wow.h"
 #include "wb_erep.h"
 #include "wb_session.h"
 #include "wb_attribute.h"

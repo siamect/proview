@@ -27,7 +27,7 @@
 #endif
 
 #include <gtk/gtk.h>
-#include "co_wow_gtk.h"
+#include "cow_wow_gtk.h"
 
 class WttGtk : public Wtt {
   public:

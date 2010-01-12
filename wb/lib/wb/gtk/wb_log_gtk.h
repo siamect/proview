@@ -21,7 +21,7 @@
 #define wb_log_gtk_h
 
 #include "pwr.h"
-#include "co_log_gtk.h"
+#include "cow_log_gtk.h"
 #include "wb_log.h"
 
 class wb_log_gtk : public wb_log

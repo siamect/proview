@@ -246,7 +246,7 @@ OsMaskToOpSys $OsMask # Convert Bitmask to index
 #
 
 let OpSys__Low=0
-let OpSys_VAX_ELN=1
+let OpSys_CustomBuild=1
 let OpSys_VAX_VMS=2
 let OpSys_AXP_VMS=3
 let OpSys_PPC_LYNX=4
@@ -256,7 +256,7 @@ let OpSys_X86_LINUX=7
 let OpSys_X86_64_LINUX=8
 let OpSys__High=9
 
-vOpSys="vax_eln,vax_vms,axp_vms,ppc_lynx,x86_lynx,ppc_linux,x86_linux,x86_64_linux"
+vOpSys="custombuild,vax_vms,axp_vms,ppc_lynx,x86_lynx,ppc_linux,x86_linux,x86_64_linux"
 
 let FileType__Low=-1
 let FileType_Process=0
@@ -362,16 +362,20 @@ elif [ $OpSys -eq $OpSys_VAX_VMS ]; then
   rsh $pwr_build_host_vax_vms @pwr_exe:wb_gcg \"$1\" \"$2\" \"$3\" \"$4\" \"$5\" \"$6\" \"$7\" \"$pwrp_root\"
   exit $?
 
-elif [ $OpSys -eq $OpSys_VAX_ELN ]; then
-
-  rsh $pwr_build_host_vax_eln @pwr_exe:wb_gcg \"$1\" \"$2\" \"$3\" \"$4\" \"$5\" \"$6\" \"$7\" \"$pwrp_root\"
-  exit $?
-
 elif [ $OpSys -eq $OpSys_X86_LYNX ]; then
 
   MyRsh $pwr_build_host_x86_lynx '$pwr_exe/wb_gcg.sh' \"$1\" \"$2\" \"$3\" \"$4\" \"$5\" \"$6\" \"$7\" \"$pwrp_root\"
   exit $gcg_status
 
+elif [ $OpSys -eq $OpSys_CustomBuild ]; then
+
+  if [ -e $pwrp_exe/custom_build.sh ]; then
+    $pwrp_exe/custom_build.sh "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$pwrp_root"
+    exit $gcg_status
+  else
+    echo "Create \$pwrp_exe/custom_build.sh to build this volume"
+    exit $gcg_status
+  fi
 else
   echo "Unknown operating system: $OpSys"
   exit -1

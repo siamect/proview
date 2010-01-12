@@ -145,3 +145,9 @@
 091021 cs  wb        Crossreferences on channels added.
 091028 cs  wb        Syntax check works again with new check functions, and SyntaxCheck in configurator popup menu.
 091030 cs  wb        History log in wb.
+091104 cs  wb        Build method for WebGraph objects added.
+091208 cs  wb        PostCreate methods for Channels added to set default number and representation.
+091208 cs  wb        Default name for created objects in wtt fetched from name of previous sibling.
+091209 cs  wb        ConnectAttribute method added to SevHist.
+091218 cs  wb        Bugfix for next cix and next oix in ced.
+091218 cs  wb        Bugfix in wb_vrepdb:child().

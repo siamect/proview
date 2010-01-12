@@ -45,9 +45,9 @@ extern "C" {
 
 #include "wb_wnav_gtk.h"
 #include "wb_wnav_item.h"
-#include "co_wow_gtk.h"
-#include "co_login_gtk.h"
-#include "co_logw_gtk.h"
+#include "cow_wow_gtk.h"
+#include "cow_login_gtk.h"
+#include "cow_logw_gtk.h"
 #include "wb_wge_gtk.h"
 #include "ge_gtk.h"
 #include "wb_wda_gtk.h"

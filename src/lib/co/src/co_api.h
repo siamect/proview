@@ -32,14 +32,6 @@ typedef enum {
 	} navc_eItemType;
 #endif
 
-#if !defined co_msgwindow_h
-typedef enum {
-  msgw_ePop_No,
-  msgw_ePop_Yes,
-  msgw_ePop_Default
-} msgw_ePop;
-#endif
-
 #if !defined co_nav_help_h
 typedef enum {
 	navh_eHelpFile_,
@@ -54,23 +46,6 @@ char *lng_translate( const char *str);
 void lng_set( char *str);
 char *lng_get_language_str();
 
-int crr_signal( void *parent_ctx, char *signalname,
-		void (*insert_cb)( void *, void *, navc_eItemType, char *, char *, int),
-		int (*name_to_objid_cb)( void *, char *, pwr_tObjid *),
-		int (*get_volume_cb)( void *, pwr_tVolumeId *));
-int crr_object( void *parent_ctx, char *objectname,
-		void (*insert_cb)( void *, void *, navc_eItemType, char *, char *, int),
-		int (*name_to_objid_cb)( void *, char *, pwr_tObjid *),
-		int (*get_volume_cb)( void *, pwr_tVolumeId *));
-
-void msgw_message( int severity, const char *text, msgw_ePop pop);
-void msgw_message_sts( pwr_tStatus sts, const char *text1, const char *text2);
-void msgw_message_object( pwr_tStatus sts, const char *text1, const char *text2, pwr_tOid oid);
-void msgw_message_plcobject( pwr_tStatus sts, const char *text1, const char *text2, pwr_tOid oid);
-void msgw_set_nodraw();
-void msgw_reset_nodraw();
-int xhelp_help( char *key, char *help_bookmark, navh_eHelpFile file_type,
-		char *file_name, int strict);
 int crr_signal( void *parent_ctx, char *signalname,
 		void (*insert_cb)( void *, void *, navc_eItemType, char *, char *, int),
 		int (*name_to_objid_cb)( void *, char *, pwr_tObjid *),

@@ -24,11 +24,10 @@
 #include "wb_error.h"
 #include "wb_erep.h"
 
-#include "co_msgwindow.h"
+#include "cow_msgwindow.h"
 #include "co_dcli.h"
 #include "co_cdh.h"
 #include "co_time.h"
-#include "co_msgwindow.h"
 #include "rt_load.h"
 #include "wb_log.h"
 

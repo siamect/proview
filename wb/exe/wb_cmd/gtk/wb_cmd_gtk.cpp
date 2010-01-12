@@ -38,7 +38,7 @@
 #include "flow_browapi.h"
 #include "wb_utl.h"
 #include "wb_lfu.h"
-#include "co_login.h"
+#include "cow_login.h"
 #include "wb_wnav_gtk.h"
 #include "wb_wnav_item.h"
 #include "wb_pal.h"
@@ -47,7 +47,7 @@
 #include "wb_cmdc_gtk.h"
 #include "wb.h"
 #include "wb_log_gtk.h"
-#include "co_msgwindow.h"
+#include "cow_msgwindow.h"
 
 CmdGtk::CmdGtk()
 {

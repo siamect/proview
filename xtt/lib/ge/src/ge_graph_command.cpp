@@ -222,7 +222,7 @@ static int	graph_show_func(void		*client_data,
 
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if ( strncmp( arg1_str, "VERSION", strlen( arg1_str)) == 0)
+  if ( cdh_NoCaseStrncmp( arg1_str, "VERSION", strlen( arg1_str)) == 0)
   {
     // Command is "SHOW VERSION"
     char	message_str[80];	 
@@ -363,39 +363,39 @@ static int	graph_set_func(	void		*client_data,
 	
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if ( strncmp( arg1_str, "VERIFY", strlen( arg1_str)) == 0)
+  if ( cdh_NoCaseStrncmp( arg1_str, "VERIFY", strlen( arg1_str)) == 0)
   {
     graph->verify = 1;
   }
-  else if ( strncmp( arg1_str, "NOVERIFY", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "NOVERIFY", strlen( arg1_str)) == 0)
   {
     graph->verify = 0;
   }
-  else if ( strncmp( arg1_str, "FILL", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "FILL", strlen( arg1_str)) == 0)
   {
     graph->set_fill( 1);
   }
-  else if ( strncmp( arg1_str, "NOFILL", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "NOFILL", strlen( arg1_str)) == 0)
   {
     graph->set_fill( 0);
   }
-  else if ( strncmp( arg1_str, "BORDER", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "BORDER", strlen( arg1_str)) == 0)
   {
     graph->set_border( 1);
   }
-  else if ( strncmp( arg1_str, "NOBORDER", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "NOBORDER", strlen( arg1_str)) == 0)
   {
     graph->set_border( 0);
   }
-  else if ( strncmp( arg1_str, "GRID", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "GRID", strlen( arg1_str)) == 0)
   {
     graph->set_grid( 1);
   }
-  else if ( strncmp( arg1_str, "NOGRID", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "NOGRID", strlen( arg1_str)) == 0)
   {
     graph->set_grid( 0);
   }
-  else if ( strncmp( arg1_str, "LINEWIDTH", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "LINEWIDTH", strlen( arg1_str)) == 0)
   {
     char	arg2_str[80];
     int		line_width;
@@ -420,7 +420,7 @@ static int	graph_set_func(	void		*client_data,
 
     graph->set_linewidth( line_width);
   }
-  else if ( strncmp( arg1_str, "GRIDSIZE", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "GRIDSIZE", strlen( arg1_str)) == 0)
   {
     char	arg2_str[80];
     float	grid_size;
@@ -440,7 +440,7 @@ static int	graph_set_func(	void		*client_data,
 
     graph->set_gridsize( double(grid_size));
   }
-  else if ( strncmp( arg1_str, "TEXTSIZE", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "TEXTSIZE", strlen( arg1_str)) == 0)
   {
     char	arg2_str[80];
     int		text_size, size;
@@ -471,15 +471,15 @@ static int	graph_set_func(	void		*client_data,
     }
     graph->set_textsize( size);
   }
-  else if ( strncmp( arg1_str, "BOLD", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "BOLD", strlen( arg1_str)) == 0)
   {
     graph->set_textbold( 1);
   }
-  else if ( strncmp( arg1_str, "NOBOLD", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "NOBOLD", strlen( arg1_str)) == 0)
   {
     graph->set_textbold( 0);
   }
-  else if ( strncmp( arg1_str, "BACKGROUNDCOLOR", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "BACKGROUNDCOLOR", strlen( arg1_str)) == 0)
   {
     char	arg2_str[80];
     int value;
@@ -505,7 +505,7 @@ static int	graph_set_func(	void		*client_data,
       grow_SetBackgroundColor( graph->grow->ctx, (glow_eDrawType) value);
     }
   }
-  else if ( strncmp( arg1_str, "FILLCOLOR", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "FILLCOLOR", strlen( arg1_str)) == 0)
   {
     char	arg2_str[80];
     glow_eDrawType fill_color, border_color, text_color;
@@ -533,7 +533,7 @@ static int	graph_set_func(	void		*client_data,
     fill_color = (glow_eDrawType) value;
     (graph->set_current_colors_cb)( graph->parent_ctx, fill_color, border_color, text_color);
   }
-  else if ( strncmp( arg1_str, "BORDERCOLOR", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "BORDERCOLOR", strlen( arg1_str)) == 0)
   {
     char	arg2_str[80];
     glow_eDrawType fill_color, border_color, text_color;
@@ -561,7 +561,7 @@ static int	graph_set_func(	void		*client_data,
     border_color = (glow_eDrawType) value;
     (graph->set_current_colors_cb)( graph->parent_ctx, fill_color, border_color, text_color);
   }
-  else if ( strncmp( arg1_str, "TEXTCOLOR", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "TEXTCOLOR", strlen( arg1_str)) == 0)
   {
     char	arg2_str[80];
     glow_eDrawType fill_color, border_color, text_color;
@@ -589,14 +589,14 @@ static int	graph_set_func(	void		*client_data,
     text_color = (glow_eDrawType) value;
     (graph->set_current_colors_cb)( graph->parent_ctx, fill_color, border_color, text_color);
   }
-  else if ( strncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0)
   {
     char	arg2_str[80];
     int		arg2_sts;
 	
     arg2_sts = dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str));
 
-    if ( strncmp( arg2_str, "FILLCOLOR", strlen( arg2_str)) == 0)
+    if ( cdh_NoCaseStrncmp( arg2_str, "FILLCOLOR", strlen( arg2_str)) == 0)
     {
       char	arg3_str[80];
       int	sts;
@@ -637,7 +637,7 @@ static int	graph_set_func(	void		*client_data,
 
       grow_SelectRemove( graph->grow->ctx, graph->current_cmd_object);
     }
-    else if ( strncmp( arg2_str, "COLORTONE", strlen( arg2_str)) == 0)
+    else if ( cdh_NoCaseStrncmp( arg2_str, "COLORTONE", strlen( arg2_str)) == 0)
     {
       char	arg3_str[80];
       int	sts;
@@ -678,7 +678,7 @@ static int	graph_set_func(	void		*client_data,
 
       grow_SelectRemove( graph->grow->ctx, graph->current_cmd_object);
     }
-    else if ( strncmp( arg2_str, "COLORLIGHTNESS", strlen( arg2_str)) == 0)
+    else if ( cdh_NoCaseStrncmp( arg2_str, "COLORLIGHTNESS", strlen( arg2_str)) == 0)
     {
       char	arg3_str[80];
       int	sts;
@@ -714,7 +714,7 @@ static int	graph_set_func(	void		*client_data,
 
       grow_SelectRemove( graph->grow->ctx, graph->current_cmd_object);
     }
-    else if ( strncmp( arg2_str, "COLORINTENSITY", strlen( arg2_str)) == 0)
+    else if ( cdh_NoCaseStrncmp( arg2_str, "COLORINTENSITY", strlen( arg2_str)) == 0)
     {
       char	arg3_str[80];
       int	sts;
@@ -750,7 +750,7 @@ static int	graph_set_func(	void		*client_data,
 
       grow_SelectRemove( graph->grow->ctx, graph->current_cmd_object);
     }
-    else if ( strncmp( arg2_str, "COLORSHIFT", strlen( arg2_str)) == 0)
+    else if ( cdh_NoCaseStrncmp( arg2_str, "COLORSHIFT", strlen( arg2_str)) == 0)
     {
       char	arg3_str[80];
       int	sts;
@@ -786,7 +786,7 @@ static int	graph_set_func(	void		*client_data,
 
       grow_SelectRemove( graph->grow->ctx, graph->current_cmd_object);
     }
-    else if ( strncmp( arg2_str, "TRACETYPE", strlen( arg2_str)) == 0)
+    else if ( cdh_NoCaseStrncmp( arg2_str, "TRACETYPE", strlen( arg2_str)) == 0)
     {
       char	arg3_str[80];
       int	sts;
@@ -821,7 +821,7 @@ static int	graph_set_func(	void		*client_data,
       trace_data->attr_type = (glow_eTraceType) value;
       grow_SetTraceAttr( graph->current_cmd_object, trace_data);
     }
-    else if ( strncmp( arg2_str, "TRACECOLOR", strlen( arg2_str)) == 0)
+    else if ( cdh_NoCaseStrncmp( arg2_str, "TRACECOLOR", strlen( arg2_str)) == 0)
     {
       char	arg3_str[80];
       int	sts;
@@ -861,7 +861,7 @@ static int	graph_set_func(	void		*client_data,
       trace_data->color = (glow_eDrawType) value;
       grow_SetTraceAttr( graph->current_cmd_object, trace_data);
     }
-    else if ( strncmp( arg2_str, "TRACECOLOR2", strlen( arg2_str)) == 0)
+    else if ( cdh_NoCaseStrncmp( arg2_str, "TRACECOLOR2", strlen( arg2_str)) == 0)
     {
       char	arg3_str[80];
       int	sts;
@@ -901,7 +901,7 @@ static int	graph_set_func(	void		*client_data,
       trace_data->color2 = (glow_eDrawType) value;
       grow_SetTraceAttr( graph->current_cmd_object, trace_data);
     }
-    else if ( strncmp( arg2_str, "ACCESS", strlen( arg2_str)) == 0)
+    else if ( cdh_NoCaseStrncmp( arg2_str, "ACCESS", strlen( arg2_str)) == 0)
     {
       char	arg3_str[80];
       int	sts;
@@ -936,7 +936,7 @@ static int	graph_set_func(	void		*client_data,
       trace_data->access = (glow_mAccess) value;
       grow_SetTraceAttr( graph->current_cmd_object, trace_data);
     }
-    else if ( strncmp( arg2_str, "ATTRIBUTES", strlen( arg2_str)) == 0)
+    else if ( cdh_NoCaseStrncmp( arg2_str, "ATTRIBUTES", strlen( arg2_str)) == 0)
     {
       char	arg3_str[80];
       char	arg4_str[80];
@@ -980,8 +980,9 @@ static int	graph_set_func(	void		*client_data,
       item_p = itemlist;
       for ( i = 0; i < item_cnt; i++)
       {
-        cdh_ToUpper( attr_name, item_p->name);
-        if ( strcmp( arg3_str, attr_name) == 0)
+        // cdh_ToUpper( attr_name, item_p->name);
+	strcpy( attr_name, item_p->name);
+        if ( cdh_NoCaseStrcmp( arg3_str, attr_name) == 0)
         {
           found = 1;
           break;
@@ -1032,7 +1033,7 @@ static int	graph_set_func(	void		*client_data,
 	(grow_sAttrInfo *)client_data);
 
     }
-    else if ( strncmp( arg2_str, "ATTR1", strlen( arg2_str)) == 0)
+    else if ( cdh_NoCaseStrncmp( arg2_str, "ATTR1", strlen( arg2_str)) == 0)
     {
       char	arg3_str[80];
 
@@ -1054,7 +1055,7 @@ static int	graph_set_func(	void		*client_data,
       }
       graph->connect( graph->current_cmd_object, arg3_str, 0);
     }
-    else if ( strncmp( arg2_str, "ATTR2", strlen( arg2_str)) == 0)
+    else if ( cdh_NoCaseStrncmp( arg2_str, "ATTR2", strlen( arg2_str)) == 0)
     {
       char	arg3_str[80];
 
@@ -1076,7 +1077,7 @@ static int	graph_set_func(	void		*client_data,
       }
       graph->connect( graph->current_cmd_object, arg3_str, 1);
     }
-    else if ( strncmp( arg2_str, "ANNOTATION", strlen( arg2_str)) == 0)
+    else if ( cdh_NoCaseStrncmp( arg2_str, "ANNOTATION", strlen( arg2_str)) == 0)
     {
       char	arg3_str[80];
 
@@ -1105,7 +1106,7 @@ static int	graph_set_func(	void		*client_data,
       return GE__SYNTAX;
     }
   }
-  else if ( strncmp( arg1_str, "GRAPHATTRIBUTES", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "GRAPHATTRIBUTES", strlen( arg1_str)) == 0)
   {
     char	arg2_str[80];
     char	arg3_str[80];
@@ -1162,8 +1163,9 @@ static int	graph_set_func(	void		*client_data,
       }
       for ( i = 0; i < grow_info_cnt; i++)
       {
-        cdh_ToUpper( attr_name, grow_info_p->name);
-        if ( strcmp( arg2_str, attr_name) == 0)
+        // cdh_ToUpper( attr_name, grow_info_p->name);
+	strcpy( attr_name, grow_info_p->name);
+        if ( cdh_NoCaseStrcmp( arg2_str, attr_name) == 0)
         {
           found = 1;
           break;
@@ -1225,7 +1227,7 @@ static int	graph_set_func(	void		*client_data,
     if ( grow_info)
       grow_FreeGraphAttrInfo( grow_info);
   }
-  else if ( strncmp( arg1_str, "EXTERN", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "EXTERN", strlen( arg1_str)) == 0)
   {
     char	arg2_str[80];
     int		sts;
@@ -1235,7 +1237,7 @@ static int	graph_set_func(	void		*client_data,
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
     }
-    cdh_ToLower( arg2_str, arg2_str);
+    // cdh_ToLower( arg2_str, arg2_str);
     sts = grow_FindNodeClassByName( graph->grow->ctx, arg2_str, &nodeclass);
     if ( EVEN(sts)) {
       graph->message('E', "Subgraph not found");
@@ -1244,7 +1246,7 @@ static int	graph_set_func(	void		*client_data,
 
     grow_SetNodeClassExtern( nodeclass, 1);
   }
-  else if ( strncmp( arg1_str, "INTERN", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "INTERN", strlen( arg1_str)) == 0)
   {
     char	arg2_str[80];
     int		sts;
@@ -1254,7 +1256,7 @@ static int	graph_set_func(	void		*client_data,
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
     }
-    cdh_ToLower( arg2_str, arg2_str);
+    // cdh_ToLower( arg2_str, arg2_str);
     sts = grow_FindNodeClassByName( graph->grow->ctx, arg2_str, &nodeclass);
     if ( EVEN(sts)) {
       graph->message('E', "Subgraph not found");
@@ -1263,7 +1265,7 @@ static int	graph_set_func(	void		*client_data,
 
     grow_SetNodeClassExtern( nodeclass, 0);
   }
-  else if ( strncmp( arg1_str, "JAVAPATH", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "JAVAPATH", strlen( arg1_str)) == 0)
   {
     char	arg2_str[80];
 
@@ -1271,11 +1273,11 @@ static int	graph_set_func(	void		*client_data,
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
     }
-    cdh_ToLower( arg2_str, arg2_str);
+    // cdh_ToLower( arg2_str, arg2_str);
 
     strcpy( graph->java_path, arg2_str);
   }
-  else if ( strncmp( arg1_str, "JAVAPACKAGE", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "JAVAPACKAGE", strlen( arg1_str)) == 0)
   {
     char	arg2_str[80];
 
@@ -1283,7 +1285,7 @@ static int	graph_set_func(	void		*client_data,
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
     }
-    cdh_ToLower( arg2_str, arg2_str);
+    // cdh_ToLower( arg2_str, arg2_str);
 
     strcpy( graph->java_package, arg2_str);
   }
@@ -1305,7 +1307,7 @@ static int	graph_add_func( void		*client_data,
 	
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if ( strncmp( arg1_str, "POLYLINE", strlen( arg1_str)) == 0)
+  if ( cdh_NoCaseStrncmp( arg1_str, "POLYLINE", strlen( arg1_str)) == 0)
   {
     char str[80];
     int sts;
@@ -1376,7 +1378,7 @@ static int	graph_rotate_func( void		*client_data,
 	
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if ( strncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0)
+  if ( cdh_NoCaseStrncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0)
   {
     char str[80];
     int sts;
@@ -1425,12 +1427,12 @@ static int	graph_flip_func( void		*client_data,
 	
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if ( strncmp( arg1_str, "HORIZONTAL", strlen( arg1_str)) == 0)
+  if ( cdh_NoCaseStrncmp( arg1_str, "HORIZONTAL", strlen( arg1_str)) == 0)
   {
     grow_FlipSelectedObjects( graph->grow->ctx, glow_eFlipDirection_Horizontal);
     grow_SetModified( graph->grow->ctx, 1);
   }
-  else if ( strncmp( arg1_str, "VERTICAL", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "VERTICAL", strlen( arg1_str)) == 0)
   {
     grow_FlipSelectedObjects( graph->grow->ctx, glow_eFlipDirection_Vertical);
     grow_SetModified( graph->grow->ctx, 1);
@@ -1454,12 +1456,12 @@ static int	graph_select_func(	void		*client_data,
 	
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if ( strncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0)
+  if ( cdh_NoCaseStrncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0)
   {
     grow_SetHighlight( graph->current_cmd_object, 1);
     grow_SelectInsert( graph->grow->ctx, graph->current_cmd_object);
   }
-  else if ( strncmp( arg1_str, "CLEAR", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "CLEAR", strlen( arg1_str)) == 0)
   {
     grow_SelectClear( graph->grow->ctx);
   }
@@ -1480,7 +1482,7 @@ static int	graph_export_func(	void		*client_data,
 	
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if ( strncmp( arg1_str, "JAVA", strlen( arg1_str)) == 0)
+  if ( cdh_NoCaseStrncmp( arg1_str, "JAVA", strlen( arg1_str)) == 0)
   {
     char filename[120];
     char name[80];
@@ -1585,7 +1587,7 @@ static int	graph_export_func(	void		*client_data,
 	  strcpy( filename, "$pwrp_web/");
 	  strcat( filename, framename);
 	  strcat( filename, ".html");
-	  cdh_ToLower( filename, filename);
+	  // cdh_ToLower( filename, filename);
 
 	  sts = graph->export_gejava( filename, framename, 0, 1);
 	  if ( EVEN(sts)) {
@@ -1641,7 +1643,7 @@ static int	graph_scale_func( void		*client_data,
 	
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if ( strncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0)
+  if ( cdh_NoCaseStrncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0)
   {
     char str[80];
     int sts;
@@ -1732,7 +1734,7 @@ static int	graph_move_func( void		*client_data,
 	
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if ( strncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0)
+  if ( cdh_NoCaseStrncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0)
   {
     char str[80];
     int sts;
@@ -1792,7 +1794,7 @@ static int	graph_create_func( void		*client_data,
 	
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if ( strncmp( arg1_str, "RECTANGLE", strlen( arg1_str)) == 0)
+  if ( cdh_NoCaseStrncmp( arg1_str, "RECTANGLE", strlen( arg1_str)) == 0)
   {
     char str[80];
     int sts;
@@ -1858,7 +1860,7 @@ static int	graph_create_func( void		*client_data,
 	    graph->get_fill_drawtype(), NULL, &graph->current_cmd_object);
     grow_SetModified( graph->grow->ctx, 1);
   }
-  else if ( strncmp( arg1_str, "ARC", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "ARC", strlen( arg1_str)) == 0)
   {
     char str[80];
     int sts;
@@ -1949,7 +1951,7 @@ static int	graph_create_func( void		*client_data,
 	&graph->current_cmd_object);
     grow_SetModified( graph->grow->ctx, 1);
   }
-  else if ( strncmp( arg1_str, "LINE", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "LINE", strlen( arg1_str)) == 0)
   {
     char str[80];
     int sts;
@@ -2014,7 +2016,7 @@ static int	graph_create_func( void		*client_data,
 	&graph->current_cmd_object);
     grow_SetModified( graph->grow->ctx, 1);
   }
-  else if ( strncmp( arg1_str, "POLYLINE", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "POLYLINE", strlen( arg1_str)) == 0)
   {
     char str[80];
     int sts;
@@ -2097,7 +2099,7 @@ static int	graph_create_func( void		*client_data,
 
     grow_SetModified( graph->grow->ctx, 1);
   }
-  else if ( strncmp( arg1_str, "TEXT", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "TEXT", strlen( arg1_str)) == 0)
   {
     char str[80];
     char text_str[80];
@@ -2161,7 +2163,7 @@ static int	graph_create_func( void		*client_data,
 			 NULL, &graph->current_cmd_object);
     grow_SetModified( graph->grow->ctx, 1);
   }
-  else if ( strncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0)
+  else if ( cdh_NoCaseStrncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0)
   {
     char	str[80];
     int 	sts;
@@ -2244,7 +2246,7 @@ static int	graph_create_func( void		*client_data,
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
     }
-    cdh_ToLower( subgraph_str, subgraph_str);
+    // cdh_ToLower( subgraph_str, subgraph_str);
     
     sts = grow_FindNodeClassByName( graph->grow->ctx, 
 		subgraph_str, &nc);
@@ -2308,7 +2310,7 @@ static int	graph_convert_func( void	*client_data,
   int	arg1_sts;
 	
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
-  if ( strncmp( arg1_str, "V45", strlen( arg1_str)) == 0) {
+  if ( cdh_NoCaseStrncmp( arg1_str, "V45", strlen( arg1_str)) == 0) {
     char name[40];
     char msg[80];
     int sts;
@@ -2344,7 +2346,7 @@ static int	graph_replace_func( void	*client_data,
 	
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
-  if ( strncmp( arg1_str, "ATTRIBUTE", strlen( arg1_str)) == 0)
+  if ( cdh_NoCaseStrncmp( arg1_str, "ATTRIBUTE", strlen( arg1_str)) == 0)
   {
     grow_tObject 	*sel_list;
     int			sel_count;
@@ -2449,9 +2451,9 @@ int Graph::command( char* input_str)
   if ( input_str[0] == '@')
   {
     /* Read command file */
-    char *s;
-    if ( (s = strchr( input_str, ' ')))
-      dcli_toupper( s, s);
+    // char *s;
+    // if ( (s = strchr( input_str, ' ')))
+    //   dcli_toupper( s, s);
     sts = dcli_replace_symbol( input_str, command, sizeof(command));
     if ( EVEN(sts)) return sts;
 
@@ -2465,7 +2467,7 @@ int Graph::command( char* input_str)
     return DCLI__SUCCESS;
   }
 
-  dcli_toupper( input_str, input_str);
+  // dcli_toupper( input_str, input_str);
   sts = dcli_replace_symbol( input_str, command, sizeof(command));
   if ( EVEN(sts)) return sts;
 

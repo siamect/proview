@@ -28,7 +28,7 @@
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_time.h"
-#include "co_wow_gtk.h"
+#include "cow_wow_gtk.h"
 #include "wb_pkg_msg.h"
 
 #include "flow.h"
@@ -41,8 +41,8 @@
 #include "wb_pkg.h"
 #include "wb_error.h"
 #include "wb_log.h"
-#include "co_logw_gtk.h"
-#include "co_xhelp.h"
+#include "cow_logw_gtk.h"
+#include "cow_xhelp.h"
 
 void WPkgGtk::message( char severity, const char *message)
 {

@@ -24,8 +24,8 @@
 #include "wb_ldh.h"
 #endif
 
-#ifndef co_wow_h
-#include "co_wow.h"
+#ifndef cow_wow_h
+#include "cow_wow.h"
 #endif
 
 #ifdef __cplusplus

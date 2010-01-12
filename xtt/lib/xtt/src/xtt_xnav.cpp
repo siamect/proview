@@ -44,8 +44,8 @@
 #include "flow_browapi.h"
 #include "co_lng.h"
 #include "co_error.h"
-#include "co_xhelp.h"
-#include "co_wow.h"
+#include "cow_xhelp.h"
+#include "cow_wow.h"
 #include "xtt_xnav.h"
 #include "xtt_item.h"
 #include "xtt_menu.h"
@@ -55,7 +55,7 @@
 #include "xtt_ev.h"
 #include "xtt_op.h"
 #include "xtt_audio.h"
-#include "rt_trace.h"
+#include "xtt_trace.h"
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
@@ -2858,7 +2858,7 @@ int	XNav::show_logging( int index)
   new ItemCommand( brow, Lng::translate("Stop"), 0, NULL,
 		flow_eDest_IntoLast, command, 0, brow->pixmap_action);
 
-  sprintf( command, "logging store/entry=%d/file=rtt_store_logg%d.rtt_com",
+  sprintf( command, "logging store/entry=%d/file=\"rtt_store_logg%d.rtt_com\"",
          entry, entry);
   new ItemCommand( brow, Lng::translate("Store"), 0, NULL,
 		flow_eDest_IntoLast, command, 0, brow->pixmap_action);

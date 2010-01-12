@@ -50,11 +50,11 @@
 #include "wb_watt_motif.h"
 #include "wb_gre_motif.h"
 #include "wb_foe_motif.h"
-#include "co_login.h"
-#include "co_mrm_util.h"
+#include "cow_login.h"
+#include "cow_mrm_util.h"
 #include "wb_nav_motif.h"
 #include "wb_pal_motif.h"
-#include "co_wow_motif.h"
+#include "cow_wow_motif.h"
 #include "flow_x.h"
 
 #define	BEEP	    putchar( '\7' );
@@ -1165,7 +1165,7 @@ pwr_tStatus WFoeMotif::create_window( int x_top,
    */
 
   /* Save the context structure in the widget */
-  XtSetArg (args[0], XmNuserData, (unsigned int) this);
+  XtSetArg (args[0], XmNuserData, (XtPointer) this);
 
   /*
    * Create a new main widget
@@ -1222,7 +1222,7 @@ pwr_tStatus WFoeMotif::create_window( int x_top,
 
   XtSetValues( parent_wid, args, i);
 
-  XtSetArg (args[0], XmNuserData, (unsigned int) this);
+  XtSetArg (args[0], XmNuserData, (XtPointer) this);
 
   /* now that we have a top level we can get the main window */
   sts = MrmFetchWidgetOverride(s_MrmH, (char*) "foe_window", parent_wid ,

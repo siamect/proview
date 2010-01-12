@@ -152,6 +152,102 @@ int sevcli_get_itemlist( pwr_tStatus *sts, sevcli_tCtx ctx, sevcli_sHistItem **l
   if ( EVEN(*sts))
     return 0;
 
+  //int item_cnt = (get.size - sizeof(sev_sMsgHistItems)) / sizeof(sev_sHistItem) + 1;
+  int item_cnt = rmsg->NumItems;
+  int attr_cnt = rmsg->NumAttributes;
+  
+  unsigned int data_size = (item_cnt * sizeof(sevcli_sHistItem)) + ((attr_cnt - item_cnt) * sizeof(sevcli_sHistAttr));
+  lp = (sevcli_sHistItem *) malloc( data_size );
+  sevcli_sHistItem *lp2 = lp;
+
+  sev_sHistItem *itemPtr = ((sev_sMsgHistItems *)rmsg)->Items;
+  for ( i = 0; i < item_cnt; i++) {
+    lp->oid = itemPtr->oid;
+    strncpy( lp->oname, itemPtr->oname, sizeof(lp->oname));
+    lp->storagetime = net_NetTimeToDeltaTime( &itemPtr->storagetime);
+    lp->deadband = itemPtr->deadband;
+    lp->options = itemPtr->options;
+    lp->creatime = net_NetTimeToTime( &itemPtr->creatime);
+    lp->modtime = net_NetTimeToTime( &itemPtr->modtime);
+    strncpy( lp->description, itemPtr->description, sizeof(lp->description));
+    lp->scantime = itemPtr->scantime;
+
+    lp->attrnum = itemPtr->attrnum;
+    size_t j=0;
+    for( j=0; j < lp->attrnum; j++ ) {
+      lp->attr[j].type = itemPtr->attr[j].type;
+      lp->attr[j].size = itemPtr->attr[j].size;
+      strncpy( lp->attr[j].aname, itemPtr->attr[j].aname, sizeof(lp->attr[0].aname));
+      strncpy( lp->attr[j].unit, itemPtr->attr[j].unit, sizeof(lp->attr[0].unit));
+    }
+    itemPtr = (sev_sHistItem *)&itemPtr->attr[j];
+    lp = (sevcli_sHistItem *)&lp->attr[j];
+  }
+
+  qcom_Free( sts, rmsg);
+
+  *cnt = item_cnt;
+  *list = lp2;
+  *sts = SEV__SUCCESS;
+  return 1;
+}
+/*
+int sevcli_get_itemlist( pwr_tStatus *sts, sevcli_tCtx ctx, sevcli_sHistItem **list, 
+			 unsigned int *cnt)
+{
+  sev_sMsgAny 	*msg;
+  qcom_sQid   	tgt;
+  qcom_sPut	put;
+  pwr_tStatus	lsts;
+  int tmo = 1000;
+  qcom_sGet get;
+  sevcli_sHistItem *lp;
+  int i;
+  
+  if ( ctx->server)
+    tgt.nid = ctx->server;
+  else
+    tgt.nid = ctx->qid.nid;
+  tgt.qix = sev_eProcSevServer;
+    
+
+  put.reply = ctx->qid;
+  put.type.b = (qcom_eBtype) sev_cMsgClass;
+  put.type.s = (qcom_eStype) sev_eMsgType_HistItemsRequest;
+  put.msg_id = ctx->msg_id++;
+  put.size = sizeof(*msg);
+  msg = (sev_sMsgAny *) qcom_Alloc( sts, put.size);
+
+  put.data = msg;
+
+  msg->Type = sev_eMsgType_HistItemsRequest;
+
+  if ( !qcom_Put( sts, &tgt, &put)) {
+    qcom_Free( &lsts, put.data);
+    return 0;
+  }
+
+  sev_sMsgHistItems *rmsg;
+
+  memset( &get, 0, sizeof(get));
+
+  for (;;) {
+    rmsg = (sev_sMsgHistItems *) qcom_Get( sts, &ctx->qid, &get, tmo);
+    if ( *sts == QCOM__TMO || !rmsg) {
+      return 0;
+    }
+
+    if ( get.type.b == sev_cMsgClass && 
+	 get.type.s == (qcom_eStype) sev_eMsgType_HistItems)
+      break;
+
+    qcom_Free( sts, rmsg);
+  }
+  
+  *sts = rmsg->Status;
+  if ( EVEN(*sts))
+    return 0;
+
   int item_cnt = (get.size - sizeof(sev_sMsgHistItems)) / sizeof(sev_sHistItem) + 1;
 
   lp = (sevcli_sHistItem *) calloc( item_cnt, sizeof(sevcli_sHistItem));
@@ -180,6 +276,7 @@ int sevcli_get_itemlist( pwr_tStatus *sts, sevcli_tCtx ctx, sevcli_sHistItem **l
   *sts = SEV__SUCCESS;
   return 1;
 }
+*/
 
 int sevcli_get_itemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid, 
 			 char *aname, pwr_tTime starttime, pwr_tTime endtime, int numpoints,
@@ -220,6 +317,7 @@ int sevcli_get_itemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid,
   // Empty queue
   sev_sMsgHistDataGet *rmsg;
 
+  memset( &get, 0, sizeof(get));
   for (;;) {
     rmsg = (sev_sMsgHistDataGet *) qcom_Get(sts, &ctx->qid, &get, 0);
     if ( !rmsg)
@@ -248,8 +346,10 @@ int sevcli_get_itemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid,
   }
   
   *sts = rmsg->Status;
-  if ( EVEN(*sts))
+  if ( EVEN(*sts)) {
+    qcom_Free( sts, rmsg);
     return 0;
+  }
 
   int item_cnt = rmsg->NumPoints;
 
@@ -267,6 +367,119 @@ int sevcli_get_itemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid,
   *sts = SEV__SUCCESS;
   return 1;
 }
+
+
+int sevcli_get_objectitemdata( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid, char *aname,
+			 pwr_tTime starttime, pwr_tTime endtime, int numpoints,
+			 pwr_tTime **tbuf, void **vbuf, int *rows,
+			 sevcli_sHistAttr **histattr, int *numattributes)
+{
+  sev_sMsgHistDataGetRequest 	*msg;
+  qcom_sQid   	tgt;
+  qcom_sPut	put;
+  int tmo = 30000;
+  qcom_sGet get;
+  pwr_tStatus lsts;
+  
+  if ( ctx->server)
+    tgt.nid = ctx->server;
+  else
+    tgt.nid = ctx->qid.nid;
+  tgt.qix = sev_eProcSevServer;
+    
+
+  put.reply = ctx->qid;
+  put.type.b = (qcom_eBtype) sev_cMsgClass;
+  put.type.s = (qcom_eStype) sev_eMsgType_HistObjectDataGetRequest;
+  put.msg_id = ctx->msg_id++;
+  put.size = sizeof(*msg);
+  msg = (sev_sMsgHistDataGetRequest *) qcom_Alloc( sts, put.size);
+  
+
+  put.data = msg;
+
+  msg->Type = sev_eMsgType_HistObjectDataGetRequest;
+  msg->Oid = oid;
+  strncpy( msg->AName, aname, sizeof(msg->AName));
+  msg->StartTime = net_TimeToNetTime( &starttime);
+  msg->EndTime = net_TimeToNetTime( &endtime);
+  msg->NumPoints = numpoints;
+
+  // Empty queue
+  sev_sMsgHistObjectDataGet *rmsg;
+
+  memset(&get, 0, sizeof(get));
+
+  for (;;) {
+    rmsg = (sev_sMsgHistObjectDataGet *) qcom_Get(sts, &ctx->qid, &get, 0);
+    if ( !rmsg)
+      break;
+  }
+
+  if ( !qcom_Put( sts, &tgt, &put)) {
+    qcom_Free( &lsts, put.data);
+    *sts = 0;
+    return 0;
+  }
+
+  memset( &get, 0, sizeof(get));
+
+  for (;;) {
+    rmsg = (sev_sMsgHistObjectDataGet *) qcom_Get(sts, &ctx->qid, &get, tmo);
+    if ( *sts == QCOM__TMO || !rmsg) {
+      *sts = 0;
+      return 0;
+    }
+
+    if ( get.type.b == sev_cMsgClass && 
+         get.type.s == (qcom_eStype) sev_eMsgType_HistObjectDataGet &&
+         cdh_ObjidIsEqual( oid, rmsg->Oid) &&
+         cdh_NoCaseStrcmp( aname, rmsg->AName) == 0)
+      break;
+
+    qcom_Free( sts, rmsg);
+  }
+  
+  *sts = rmsg->Status;
+  if ( EVEN(*sts)) {
+    qcom_Free( sts, rmsg);
+    return 0;
+  }
+  if( rmsg->NumPoints == 0 ) {
+    qcom_Free( sts, rmsg);
+    *sts = 0;
+    return 0;
+  }
+
+  *numattributes = rmsg->NumAttributes;
+  int item_cnt = rmsg->NumPoints;
+  unsigned int timebufsize = item_cnt * sizeof(pwr_tTime);
+  unsigned int databufsize = rmsg->TotalDataSize - timebufsize;
+  *tbuf = malloc( timebufsize);
+  *vbuf = malloc( databufsize );
+  sevcli_sHistAttr *attrptr;
+  attrptr = calloc( rmsg->NumAttributes, sizeof(sevcli_sHistAttr) );
+
+  int attrCount = rmsg->NumAttributes;
+  void *ptr = &rmsg->Attr[attrCount];
+  memcpy( *tbuf, ptr, item_cnt * sizeof(pwr_tTime));
+  memcpy( *vbuf, (char *)ptr + item_cnt * sizeof(pwr_tTime), databufsize );
+  *rows = item_cnt;
+
+  int i = 0;
+  for( i = 0; i < rmsg->NumAttributes; i++ ) {
+    strncpy(attrptr[i].aname, rmsg->Attr[i].aname, sizeof(attrptr[0].aname));
+    attrptr[i].type = rmsg->Attr[i].type;
+    attrptr[i].size = rmsg->Attr[i].size;
+  }
+  *histattr = attrptr;
+  
+  qcom_Free( sts, rmsg);
+
+  *sts = SEV__SUCCESS;
+  return 1;
+}
+
 
 int sevcli_delete_item( pwr_tStatus *sts, sevcli_tCtx ctx, pwr_tOid oid, char *aname)
 {

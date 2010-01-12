@@ -42,7 +42,9 @@ typedef enum {
   sev_eMsgType_HistItemDelete,
   sev_eMsgType_HistItemStatus,
   sev_eMsgType_ServerStatusRequest,
-  sev_eMsgType_ServerStatus
+  sev_eMsgType_ServerStatus,
+  sev_eMsgType_HistObjectDataGetRequest,
+  sev_eMsgType_HistObjectDataGet
 } sev_eMsgType;  
 
 typedef struct {
@@ -83,7 +85,9 @@ typedef struct {
 
 typedef struct {
   sev_eMsgType         Type;
-  pwr_tStatus	       Status;
+  pwr_tStatus	         Status;
+  unsigned int         NumItems;
+  unsigned int         NumAttributes;
   sev_sHistItem	       Items[1];
 } sev_sMsgHistItems;
 
@@ -112,6 +116,18 @@ typedef struct {
   unsigned int	       VSize;
   int	       	       Data[1];	
 } sev_sMsgHistDataGet;
+
+typedef struct {
+  sev_eMsgType  Type;
+  pwr_tOid	    Oid;
+  pwr_tOName	       AName;
+  pwr_tStatus	  Status;
+  int		        NumPoints;
+  int		        NumAttributes;
+  unsigned int  TotalDataSize;
+  sev_sHistAttr Attr[1];
+  int	       	  Data[1];	
+} sev_sMsgHistObjectDataGet;
 
 typedef struct {
   sev_eMsgType         Type;

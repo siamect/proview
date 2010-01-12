@@ -33,7 +33,7 @@
 #include "flow_browapi.h"
 #include "wb_wnav.h"
 #include "wb_build.h"
-#include "co_msgwindow.h"
+#include "cow_msgwindow.h"
 
 /*----------------------------------------------------------------------------*\
   Build NodeHier.

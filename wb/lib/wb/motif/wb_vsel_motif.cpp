@@ -48,12 +48,12 @@
 #include "wb_foe.h"
 #include "wb_utl_api.h"
 #include "wb_lfu.h"
-#include "co_login.h"
+#include "cow_login.h"
 #include "co_login_msg.h"
 #include "wb_foe_msg.h"
 #include "wb_ldh_msg.h"
-#include "co_msgwindow.h"
-#include "co_wow_motif.h"
+#include "cow_msgwindow.h"
+#include "cow_wow_motif.h"
 #include "wb_vsel_motif.h"
 
 #define	BEEP	    putchar( '\7' );
@@ -362,7 +362,7 @@ WVselMotif::WVselMotif (
   // set initialization values in context */
 
   // Save the context structure in the widget */
-  XtSetArg (args[0], XmNuserData, (unsigned int) this);
+  XtSetArg (args[0], XmNuserData, (XtPointer) this);
 
   /*
    * Create a new widget

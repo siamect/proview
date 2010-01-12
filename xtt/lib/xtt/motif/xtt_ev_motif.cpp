@@ -43,7 +43,7 @@
 
 #include "flow_x.h"
 #include "co_lng.h"
-#include "co_mrm_util.h"
+#include "cow_mrm_util.h"
 #include "xtt_evlist_motif.h"
 #include "xtt_ev_motif.h"
 #include "rt_xnav_msg.h"
@@ -171,7 +171,7 @@ EvMotif::EvMotif( void *ev_parent_ctx,
 
   // Save the context structure in the widget
   i = 0;
-  XtSetArg(args[i], XmNuserData, (unsigned int) this);i++;
+  XtSetArg(args[i], XmNuserData, (XtPointer) this);i++;
   XtSetArg(args[i], XmNdeleteResponse, XmDO_NOTHING);i++;
 
   sts = MrmOpenHierarchy( 1, &uid_filename_p, NULL, &s_DRMh);

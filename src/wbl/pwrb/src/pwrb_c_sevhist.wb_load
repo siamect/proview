@@ -42,6 +42,7 @@ SObject pwrb:Class
 !  below the current signal object.
 !  
 ! @b See also
+!  @classlink SevHistObject pwrb_sevhistobject.html
 !  @classlink SevHistThread pwrb_sevhistthread.html
 !  @classlink SevHistMonitor pwrb_sevhistmonitor.html
 !  @classlink SevHistServer pwrb_sevhistserver.html
@@ -128,6 +129,19 @@ SObject pwrb:Class
       Body SysBody
         Attr MethodName = "SevHist-PostMove"
       EndBody
+    EndObject
+    Object ConfiguratorPosan $Menu
+      Object Pointed $Menu
+	Object ConnectAttribute $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Connect Attribute"
+	    Attr MethodName = "$Object-ConnectAttribute"
+	    Attr MethodArguments[0] = "Attribute"
+	    Attr FilterName = "$Object-ConnectAttributeFilter"
+	    Attr FilterArguments[0] = "Attribute"
+	  EndBody
+	EndObject
+      EndObject
     EndObject
     Object ConfiguratorPoson $Menu
       Object Pointed $Menu

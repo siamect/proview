@@ -41,8 +41,8 @@
 #include "wb_utl_api.h"
 #include "wb_lfu.h"
 #include "wb_ldh_msg.h"
-#include "co_msgwindow.h"
-#include "co_wow.h"
+#include "cow_msgwindow.h"
+#include "cow_wow.h"
 #include "co_cnf.h"
 
 extern "C" {

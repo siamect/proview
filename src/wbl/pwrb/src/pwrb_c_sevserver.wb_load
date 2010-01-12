@@ -37,6 +37,7 @@ SObject pwrb:Class
 !  @classlink SevHistThread pwrb_sevhistthread.html
 !  @classlink SevHistMonitor pwrb_sevhistmonitor.html
 !  @classlink SevHist pwrb_sevhist.html
+!  @classlink SevHistObject pwrb_sevhistobject.html
 !*/
   Object SevServer $ClassDef 535 
     Body SysBody

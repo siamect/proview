@@ -340,6 +340,7 @@ int	rtt_initialize( char	*username,
 {
 	int	sts;
 	int	noneth = 0;
+	int     qcom_only = 0;
 
 	rtt_init_state_table();
 
@@ -347,6 +348,11 @@ int	rtt_initialize( char	*username,
 
 	if ( strcmp( username, "NONETH_SYS") == 0) {
 	  noneth = 1;
+	  rtt_priv = RTT_PRV_SYS;
+	}
+	else if ( strcmp( username, "QCOMONLY") == 0) {
+	  noneth = 1;
+	  qcom_only = 1;
 	  rtt_priv = RTT_PRV_SYS;
 	}
 
@@ -364,6 +370,9 @@ int	rtt_initialize( char	*username,
           if (!qcom_Bind(&sts, &my_q, &qcom_cQini)) {
             exit(-1);
           }
+	}
+	else if ( qcom_only) {
+	  sts = rtt_qcom_init();
 	}
 
 	sts = rtt_recall_create( &rtt_recallbuff);
@@ -442,6 +451,31 @@ int	rtt_gdh_init()
 
 /*************************************************************************
 *
+* Name:		rtt_gdh_init()
+*
+* Type		int
+*
+* Type		Parameter	IOGF	Description
+*
+* Description:
+*	This function initializes gdh for rtt.
+*
+**************************************************************************/
+
+int rtt_qcom_init()
+{
+  pwr_tStatus sts;
+  qcom_sAid aid;
+
+  qcom_Init( &sts, &aid, "rt_rtt");
+  if ( EVEN(sts)) return sts;
+
+  rtt_qcom_started = 1;
+  return RTT__SUCCESS;
+}
+
+/*************************************************************************
+*
 * Name:		rtt_configure()
 *
 * Type		int
@@ -457,51 +491,48 @@ static int	rtt_rttconfig()
 {
 	pwr_tObjid	objid;
 	pwr_tOName     	hiername;
-	int		found;
 	int		sts;
 	pwr_tFileName  	filename;
-	pwr_sClass_OpPlace *opplace_p;
+	pwr_sClass_RttConfig *conf_p;
 
-	if ( rtt_ConfigureObject[0])
-	{
+	if ( rtt_ConfigureObject[0]) {
 	  strcpy( hiername, rtt_ConfigureObject);
 	  sts = gdh_NameToObjid ( hiername, &objid);
 	  if ( EVEN(sts)) return sts;
 	}
-	else
-	{
-	  // Look for default opplace
+	else {
+	  // Look for rttconfig object
 	  pwr_tOid oid;
 	  pwr_tOName name;
 
-	  found = 0;
-	  for ( sts = gdh_GetClassList( pwr_cClass_OpPlace, &oid); 
-		ODD(sts);
-		sts = gdh_GetNextObject( oid, &oid)) {
-	    sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_object);
-	    if ( ODD(sts) && cdh_NoCaseStrcmp( name, "opdefault") == 0) {
-	      sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mNName);
-	      if ( EVEN(sts)) exit(sts);
-
-	      strncpy( rtt_ConfigureObject, name, sizeof(rtt_ConfigureObject));
-	      found = 1;
-	      break;
-	    }
-	  }
-	  if ( found == 0)
+	  sts = gdh_GetClassList( pwr_cClass_RttConfig, &oid);
+	  if ( EVEN(sts))
 	    return RTT__OBJNOTFOUND;
+
+	  sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_path | cdh_mName_object);
+	  if ( EVEN(sts)) exit(sts);
+
+	  strncpy( rtt_ConfigureObject, name, sizeof(rtt_ConfigureObject));
 	}
 
-	sts = gdh_NameToPointer( rtt_ConfigureObject, (void **)&opplace_p);
+	sts = gdh_NameToPointer( rtt_ConfigureObject, (void **)&conf_p);
 	if ( EVEN(sts)) return sts;
 
 	sts = gdh_NameToObjid( rtt_ConfigureObject, &rtt_UserObject);
 	if ( EVEN(sts)) return sts;
 
-	rtt_AlarmBeep = opplace_p->AlarmBell;
-	rtt_AlarmReturn = (opplace_p->EventListEvents & pwr_mEventListMask_AlarmReturn) != 0;
-	rtt_AlarmAck = (opplace_p->EventListEvents & pwr_mEventListMask_AlarmAck) != 0;
-	strncpy( rtt_symbolfilename, opplace_p->SetupScript, sizeof(rtt_symbolfilename));
+	rtt_AlarmBeep = conf_p->AlarmBeep;
+	rtt_AlarmReturn = (conf_p->EventListEvents & pwr_mEventListMask_AlarmReturn) != 0;
+	rtt_AlarmAck = (conf_p->EventListEvents & pwr_mEventListMask_AlarmAck) != 0;
+	rtt_AlarmReturn = (conf_p->EventListEvents & pwr_mEventListMask_AlarmReturn) != 0;
+	rtt_AlarmAck = (conf_p->EventListEvents & pwr_mEventListMask_AlarmAck) != 0;
+	rtt_AlarmAutoLoad = conf_p->AlarmAutoLoad;
+	rtt_AlarmMessage = conf_p->AlarmMessage;
+	rtt_description_on = conf_p->DescriptionOff ? 0 : 1;
+	strncpy( rtt_default_directory, conf_p->DefaultDirectory, sizeof(rtt_default_directory));
+	if ( conf_p->ScanTime > 0.1)
+	  rtt_scantime = conf_p->ScanTime;
+	strncpy( rtt_symbolfilename, conf_p->SymbolFileName, sizeof(rtt_symbolfilename));
 
 	/* Execute the symbolfile */
 	if ( strcmp(rtt_symbolfilename, "") != 0)
@@ -750,7 +781,7 @@ int	rtt_cli( 	rtt_t_comtbl	*command_table,
 	while ( comtbl_ptr->command[0] != '\0')
 	{
 	  strcpy( command, comtbl_ptr->command);
-	  if ( strcmp( out_str[0], command) == 0)
+	  if ( cdh_NoCaseStrcmp( out_str[0], command) == 0)
 	  {
 	    /* Perfect hit */
 	    func = comtbl_ptr->func;
@@ -761,7 +792,7 @@ int	rtt_cli( 	rtt_t_comtbl	*command_table,
 	  else
 	  {
 	    command[ strlen( out_str[0])] = '\0';
-	    if ( strcmp( out_str[0], command) == 0)
+	    if ( cdh_NoCaseStrcmp( out_str[0], command) == 0)
 	    {
 	      /* Hit */
 	      func = comtbl_ptr->func;
@@ -815,7 +846,7 @@ int	rtt_cli( 	rtt_t_comtbl	*command_table,
 	    {	  
 	      strcpy( qual, current_comtbl->qualifier[j]);
 	      qual[ strlen( value_str[0])] = '\0';
-	      if ( strcmp( qual, value_str[0]) == 0)
+	      if ( cdh_NoCaseStrcmp( qual, value_str[0]) == 0)
 	      {
 	        /* Hit */
 	        strcpy( rtt_qual_str[i-1][0], current_comtbl->qualifier[j]);
@@ -887,7 +918,7 @@ int	rtt_get_qualifier( 	char	*qualifier,
 	found = 0;
 	while ( rtt_qual_str[i][0][0] != '\0')
 	{
-	  if ( strcmp( qualifier, (char *) rtt_qual_str[i]) == 0)
+	  if ( cdh_NoCaseStrcmp( qualifier, (char *) rtt_qual_str[i]) == 0)
 	  {
 	    /* Hit */
 	    strcpy( value, (char *) &rtt_qual_str[i][1]);
@@ -7667,7 +7698,7 @@ static int	rtt_set_value(
 	  }
 	  else
 */
-	  if ( strncmp( menu_ptr->parameter_name, "_A_ ", 4) == 0)
+	  if ( cdh_NoCaseStrncmp( menu_ptr->parameter_name, "_A_ ", 4) == 0)
 	  {
 	    /* Parameter is given as an attref */
 	    sscanf( &menu_ptr->parameter_name[4], "%d %d %d %d",
@@ -7865,13 +7896,13 @@ int	rtt_help(
 	int		sts;
 	char		title[100];
 
-	if ( *subject == '\0' || strncmp( subject, "HELP", strlen(subject)) == 0)
+	if ( *subject == '\0' || cdh_NoCaseStrncmp( subject, "HELP", strlen(subject)) == 0)
 	{
 	  /* No subject is given take help as default */
 	  sts = rtt_help_show_all( parent_ctx, helptext);
 	  return sts;
 	}
-	else if ( *subject == '\0' || strncmp( subject, "SCRIPT", strlen(subject)) == 0)
+	else if ( *subject == '\0' || cdh_NoCaseStrncmp( subject, "SCRIPT", strlen(subject)) == 0)
 	{
 	  /* No subject is given take help as default */
 	  sts = rtt_help_show_all( parent_ctx, rtt_script_helptext);
@@ -7902,7 +7933,7 @@ int	rtt_help(
 	    for ( i = 0; i < subjectnr; i++)
 	    {
 	      rtt_toupper( ht_subj_array[i], ht_subj_array[i]);
-	      if ( strncmp( subj_array[i], ht_subj_array[i], 
+	      if ( cdh_NoCaseStrncmp( subj_array[i], ht_subj_array[i], 
 			strlen( subj_array[i])) != 0)
 	      {
 	        no_match = 1;
@@ -8001,7 +8032,7 @@ static int	rtt_help_getinfoline(
 	    for ( i = 0; i < subjectnr; i++)
 	    {
 	      rtt_toupper( ht_subj_array[i], ht_subj_array[i]);
-	      if ( strncmp( subj_array[i], ht_subj_array[i], 
+	      if ( cdh_NoCaseStrncmp( subj_array[i], ht_subj_array[i], 
 			strlen( subj_array[i])) != 0)
 	      {
 	        no_match = 1;
@@ -10157,8 +10188,8 @@ int	rtt_get_fastkey_type( )
 	if ( (fastkey_menu_ptr + key)->func == &rtt_menu_command)
 	{
 	  strcpy( command, (char *)((fastkey_menu_ptr + key)->arg1));
-	  rtt_toupper( command, command);
-	  if ( !strncmp( command, "SET", 3))
+	  // rtt_toupper( command, command);
+	  if ( !cdh_NoCaseStrncmp( command, "SET", 3))
 	    return RTT__NOPICTURE;
 	}
 	else if ( (fastkey_menu_ptr + key)->func == &rtt_menu_commandhold)

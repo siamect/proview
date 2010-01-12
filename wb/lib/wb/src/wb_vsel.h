@@ -30,8 +30,8 @@
 #include "wb.h"
 #endif
 
-#ifndef co_wow_h
-#include "co_wow.h"
+#ifndef cow_wow_h
+#include "cow_wow.h"
 #endif
 
 #define VSEL_MAX_VOLUMES 200

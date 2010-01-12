@@ -42,7 +42,7 @@
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_time.h"
-#include "co_mrm_util.h"
+#include "cow_mrm_util.h"
 
 #include "glow_growctx.h"
 #include "glow_growapi.h"
@@ -355,7 +355,7 @@ WGeMotif::WGeMotif( Widget wge_parent_wid, void *wge_parent_ctx, char *wge_name,
 
   // Save the context structure in the widget
   i = 0;
-  XtSetArg(args[i], XmNuserData, (unsigned int) this);i++;
+  XtSetArg(args[i], XmNuserData, (XtPointer) this);i++;
   XtSetArg(args[i],XmNdeleteResponse, XmDO_NOTHING);i++;
 
   toplevel = XtCreatePopupShell( title, 

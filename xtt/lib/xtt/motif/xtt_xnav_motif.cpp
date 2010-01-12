@@ -66,13 +66,13 @@ extern "C" {
 #include "glow_curvectx.h"
 
 #include "flow_x.h"
-#include "rt_trace_motif.h"
-#include "co_mrm_util.h"
+#include "xtt_trace_motif.h"
+#include "cow_mrm_util.h"
 #include "co_lng.h"
 #include "co_error.h"
-#include "co_xhelp.h"
-#include "co_wow_motif.h"
-#include "co_login_motif.h"
+#include "cow_xhelp.h"
+#include "cow_wow_motif.h"
+#include "cow_login_motif.h"
 #include "xtt_xnav_motif.h"
 #include "xtt_item.h"
 #include "xtt_menu.h"
@@ -220,11 +220,11 @@ XCrr *XNavMotif::xcrr_new( pwr_tAttrRef *arp, int advanced_user, pwr_tStatus *st
 Ev *XNavMotif::ev_new( char *eve_name, char *ala_name, char *blk_name,
 		      pwr_tObjid ev_user, int display_ala, int display_eve,
 		      int display_blk, int display_return, int display_ack,
-		      int ev_beep, pwr_tStatus *status)
+		      int ev_beep, pwr_tMask ev_pop_mask, pwr_tStatus *status)
 {
   return new EvMotif( this, parent_wid, eve_name, ala_name, blk_name,
 		      ev_user, display_ala, display_eve, display_blk,
-		      display_return, display_ack, ev_beep, status);
+		      display_return, display_ack, ev_beep, ev_pop_mask, status);
 }
 
 Hist *XNavMotif::hist_new( char *title, pwr_tOid oid, pwr_tStatus *sts)

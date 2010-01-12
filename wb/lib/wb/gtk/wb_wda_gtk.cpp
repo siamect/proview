@@ -36,8 +36,8 @@
 #include "wb_wdanav_gtk.h"
 #include "wb_wtt.h"
 #include "wb_wnav.h"
-#include "co_xhelp.h"
-#include "co_wow_gtk.h"
+#include "cow_xhelp.h"
+#include "cow_wow_gtk.h"
 
 CoWowRecall WdaGtk::value_recall;
 

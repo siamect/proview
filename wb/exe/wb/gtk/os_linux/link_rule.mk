@@ -7,9 +7,9 @@ ifeq ($(export_type),exp)
 	$(pwr_eobj)/rt_io_user.o $(pwr_obj)/wb_procom.o $(pwr_eobj)/stdsoap2.o \
 	-L/usr/X11R6/lib -L/usr/local/BerkeleyDB.4.0/lib \
 	-L/opt/gnome/lib \
-	-lpwr_wb_gtk -lpwr_wb -lpwr_wb_gtk -lpwr_wb -lpwr_rt_gtk -lpwr_rt \
-        -lpwr_ge_gtk -lpwr_ge \
-	-lpwr_flow_gtk -lpwr_flow -lpwr_glow_gtk -lpwr_glow -lpwr_co_gtk -lpwr_co -lpwr_rt -lpwr_statussrv \
+	-lpwr_wb_gtk -lpwr_wb -lpwr_wb_gtk -lpwr_wb -lpwr_rt \
+        -lpwr_ge_gtk -lpwr_ge -lpwr_flow_gtk -lpwr_flow -lpwr_glow_gtk -lpwr_glow \
+	-lpwr_cow_gtk -lpwr_cow -lpwr_co -lpwr_rt -lpwr_statussrv \
 	`pkg-config --libs gtk+-2.0` \
 	-lpwr_msg_dummy -lantlr \
 	-lrpcsvc -lpthread -lm -ldb_cxx -lz -lcrypt $(linkmysql)
@@ -19,8 +19,9 @@ else
 	$(pwr_eobj)/rt_io_user.o $(pwr_obj)/wb_procom.o $(pwr_eobj)/stdsoap2.o \
 	-L/usr/X11R6/lib -L/usr/local/BerkeleyDB.4.0/lib \
 	-L/opt/gnome/lib \
-	-lpwr_wb_gtk -lpwr_wb -lpwr_rt_gtk -lpwr_rt -lpwr_ge_gtk -lpwr_ge \
-	-lpwr_flow_gtk -lpwr_flow -lpwr_glow_gtk -lpwr_glow -lpwr_co_gtk -lpwr_co -lpwr_statussrv -lpwr_rt\
+	-lpwr_wb_gtk -lpwr_wb -lpwr_rt -lpwr_ge_gtk -lpwr_ge \
+	-lpwr_flow_gtk -lpwr_flow -lpwr_glow_gtk -lpwr_glow -lpwr_cow_gtk -lpwr_cow \
+	-lpwr_co -lpwr_statussrv -lpwr_rt\
 	`pkg-config --libs gtk+-2.0` \
 	-lpwr_msg_dummy -lantlr \
 	-lrpcsvc -lpthread -lm -ldb_cxx -lz -lcrypt $(linkmysql)

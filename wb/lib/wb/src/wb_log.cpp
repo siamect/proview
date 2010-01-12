@@ -24,7 +24,7 @@
 
 #include "pwr.h"
 #include "co_time.h"
-#include "co_log.h"
+#include "cow_log.h"
 #include "co_time.h"
 #include "wb_session.h"
 #include "wb_object.h"

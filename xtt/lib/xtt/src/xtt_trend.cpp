@@ -28,7 +28,7 @@
 #include "rt_gdh_msg.h"
 #include "co_cdh.h"
 #include "co_time.h"
-#include "co_wow.h"
+#include "cow_wow.h"
 #include "rt_xnav_msg.h"
 
 #include "flow.h"

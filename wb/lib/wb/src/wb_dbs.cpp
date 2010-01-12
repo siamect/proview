@@ -69,7 +69,7 @@ wb_dbs::wb_dbs(wb_vrep *v) :
   //@todo strcpy(m_volume.className, m_ohp->chp->db.name.data);
   m_volume.dvVersion = getDvVersion( m_v);
  
-  sprintf(m_fileName, dbs_cNameVolume, dbs_cDirectory, m_v->name());
+  sprintf(m_fileName, dbs_cNameVolume, dbs_cDirectory, cdh_Low(m_v->name()));
   dcli_translate_filename(m_fileName, m_fileName);
 
   m_oid_th = tree_CreateTable(&sts, sizeof(pwr_tOid), offsetof(sOentry, o.oid),
@@ -437,8 +437,6 @@ wb_dbs::openFile()
   pwr_tStatus sts;
   int ret;  
 
-  cdh_ToLower(m_fileName, m_fileName);
-    
   m_fp = fopen(m_fileName, "w+b");
   if (m_fp == NULL) {
     printf("** Cannot open file: %s\n", m_fileName);

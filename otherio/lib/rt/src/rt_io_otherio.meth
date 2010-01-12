@@ -3,3 +3,5 @@ MotionControl_USBIO
 Modbus_TCP_Slave
 Modbus_Module
 Modbus_Master
+Modbus_TCP_Server
+Modbus_TCP_ServerModule

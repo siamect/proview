@@ -29,8 +29,9 @@
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_api.h"
+#include "co_msg.h"
+#include "cow_login.h"
 #include "wb_wtt.h"
-#include "co_login.h"
 
 static pwr_tStatus CopyObject (
   ldh_sMenuCall *ip
@@ -1111,6 +1112,67 @@ static pwr_tStatus PM_SyntaxCheckFilter( ldh_sMenuCall *ip)
   return 1;
 }
 
+/*----------------------------------------------------------------------------*\
+  To connect an object to an attribute
+\*----------------------------------------------------------------------------*/
+
+static pwr_tStatus ConnectAttribute (
+  ldh_sMenuCall *ip
+) {
+  pwr_tStatus	    	sts;
+  pwr_sMenuButton   	mb;
+  pwr_sAttrRef	    	PattrRef;
+
+
+  sts = ldh_ReadObjectBody(ip->PointedSession,
+    ip->ItemList[ip->ChosenItem].MenuObject,
+    "SysBody", &mb, sizeof(pwr_sMenuButton));
+  if (EVEN(sts)) return sts;
+
+  // Assume RtBody or SysBody
+  char *aname_p;
+  pwr_tAName aname;
+  int size;
+
+  sts = ldh_AttrRefToName( ip->PointedSession, &ip->Pointed, ldh_eName_ArefVol, &aname_p, &size);
+  if ( EVEN(sts)) return 0;
+ 
+  strncpy( aname, aname_p, sizeof(aname));
+  strcat( aname, ".");
+  strcat( aname, mb.MethodArguments[0]);
+
+  sts = ldh_NameToAttrRef( ip->PointedSession, aname, &PattrRef);
+  if (ODD(sts))
+    sts = ldh_WriteAttribute(ip->PointedSession, &PattrRef, &ip->Selected[0],
+			     sizeof(pwr_tAttrRef));
+
+  if ( ip->message_cb) {
+    char msg[200];
+    
+    if ( ODD(sts)) {
+      pwr_tOName name;
+
+      sts = ldh_AttrRefToName( ip->PointedSession, &ip->Selected[0], ldh_eName_Hierarchy, 
+			       &aname_p, &size);
+      if ( ODD(sts))
+	strncpy( name, aname_p, sizeof(name));
+      else
+	cdh_ObjidToString( name, ip->Selected[0].Objid, 1);
+      sprintf( msg, "%s connected to:   %s", mb.MethodArguments[0], name);
+      ip->wtt->message( 'I', msg);
+    }
+    else {
+      msg_GetMsg( sts, msg, sizeof(msg));
+      ip->wtt->message( 'E', msg);
+    }
+  }
+  return LDH__SUCCESS;
+}
+
+static pwr_tStatus ConnectAttributeFilter( ldh_sMenuCall *ip) 
+{
+  return 1;
+}
 
 pwr_dExport pwr_BindMethods($Object) = {
   pwr_BindMethod(CreateObject),
@@ -1144,6 +1206,8 @@ pwr_dExport pwr_BindMethods($Object) = {
   pwr_BindMethod(CrossreferencesFilter),
   pwr_BindMethod(PM_SyntaxCheck),
   pwr_BindMethod(PM_SyntaxCheckFilter),
+  pwr_BindMethod(ConnectAttribute),
+  pwr_BindMethod(ConnectAttributeFilter),
   pwr_NullMethod
 };
 

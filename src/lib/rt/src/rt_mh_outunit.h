@@ -40,7 +40,7 @@
 extern "C" {
 #endif
 
-#define mh_cSelLSize 20
+#define mh_cSelLSize 40
 
 typedef pwr_tUInt32 mh_mOutunitFlags;
 

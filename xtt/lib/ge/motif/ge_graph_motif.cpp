@@ -47,7 +47,7 @@ extern "C" {
 
 #include "ge_graph_motif.h"
 #include "ge_attr_motif.h"
-#include "co_wow_motif.h"
+#include "cow_wow_motif.h"
 
 GraphMotif::GraphMotif(
 	void *xn_parent_ctx,

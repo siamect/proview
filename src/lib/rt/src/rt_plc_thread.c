@@ -29,6 +29,8 @@
 #if defined(OS_LINUX)
 # include <pwd.h>
 # include <signal.h>
+# include <linux/capability.h>
+# include <sys/types.h>
 #endif
 
 #include "pwr.h"
@@ -98,23 +100,6 @@ plc_thread (
   phase = (long int)que_Get(&sts, &tp->q_in, NULL, NULL);
   pwr_Assert(phase == 2);
 
-  /* Once thread's has set it's priority don't run as root */
-
-#if defined(OS_LINUX)
-  struct passwd *pwd;
-  
-  ruid = getuid();
-  
-  if (ruid == 0) {
-    pwd = getpwnam("pwrp");
-    if (pwd != NULL) {
-      setreuid(pwd->pw_uid, pwd->pw_uid);
-    }
-  }
-  else 
-    setreuid(ruid, ruid);
-#endif
-
   /* Phase 2.  */
 
   tp->init(2, tp);
@@ -132,6 +117,24 @@ plc_thread (
     errh_Error("Failed to inititalize io, %m", sts);
     errh_SetStatus( PLC__ERRINITIO);
   }
+
+  /* Once thread's has set it's priority don't run as root */
+
+#if defined(OS_LINUX)
+  struct passwd *pwd;
+  
+  ruid = getuid();
+  
+  if (ruid == 0) {
+    pwd = getpwnam("pwrp");
+    if (pwd != NULL) {
+      setreuid(pwd->pw_uid, pwd->pw_uid);
+    }
+  }
+  else 
+    setreuid(ruid, ruid);
+#endif
+
 
   tp->init(0, tp);
   

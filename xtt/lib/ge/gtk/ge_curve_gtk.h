@@ -26,7 +26,7 @@
 #include "ge_curve.h"
 #endif
 
-#include "co_wow_gtk.h"
+#include "cow_wow_gtk.h"
 
 class GeCurveGtk : public GeCurve {
   public:

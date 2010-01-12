@@ -36,7 +36,7 @@ using namespace std;
 
 #include "co_cdh.h"
 #include "co_time.h"
-#include "co_wow_gtk.h"
+#include "cow_wow_gtk.h"
 #include "pwr_baseclasses.h"
 #include "rt_gdh.h"
 #include "rt_mh.h"
@@ -678,10 +678,10 @@ void HistGtk::set_search_string( const char *s1, const char *s2,
 			      const char *s3, const char *s4)
 {
 
-  gtk_label_set_text( GTK_LABEL(this->search_string_lbl_w), s1);
-  gtk_label_set_text( GTK_LABEL(this->search_string2_lbl_w), s2);
-  gtk_label_set_text( GTK_LABEL(this->search_string3_lbl_w), s3);
-  gtk_label_set_text( GTK_LABEL(this->search_string4_lbl_w), s4);
+  gtk_label_set_text( GTK_LABEL(this->search_string_lbl_w), CoWowGtk::convert_utf8(s1));
+  gtk_label_set_text( GTK_LABEL(this->search_string2_lbl_w), CoWowGtk::convert_utf8(s2));
+  gtk_label_set_text( GTK_LABEL(this->search_string3_lbl_w), CoWowGtk::convert_utf8(s3));
+  gtk_label_set_text( GTK_LABEL(this->search_string4_lbl_w), CoWowGtk::convert_utf8(s4));
 }
 
 

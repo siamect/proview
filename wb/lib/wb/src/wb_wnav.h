@@ -54,12 +54,12 @@
 #include "wb_build_opt.h"
 #endif
 
-#ifndef co_wow_h
-# include "co_wow.h"
+#ifndef cow_wow_h
+# include "cow_wow.h"
 #endif
 
-//#ifndef co_xhelp_h
-//#include "co_xhelp.h"
+//#ifndef cow_xhelp_h
+//#include "cow_xhelp.h"
 //#endif
 
 #ifndef wb_h

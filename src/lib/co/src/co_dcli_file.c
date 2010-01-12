@@ -128,7 +128,7 @@ int	dcli_get_defaultfilename(
   }
 
 #if defined(OS_LYNX) || defined(OS_LINUX)
-  cdh_ToLower( outname, outname);
+  // cdh_ToLower( outname, outname);
 #endif
   return DCLI__SUCCESS;
 }

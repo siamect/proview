@@ -29,7 +29,7 @@
 #include "rt_gdh.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
-#include "co_wow.h"
+#include "cow_wow.h"
 #include "co_lng.h"
 
 
@@ -422,7 +422,7 @@ static pwr_tStatus OpenHistory( xmenu_sMenuCall *ip)
   sts = gdh_GetAttrRefTid( objar, &classid);
   if ( EVEN(sts)) return sts;
 
-  if ( classid == pwr_cClass_SevHist || classid == pwr_cClass_PlotGroup) {
+  if ( classid == pwr_cClass_SevHist || classid == pwr_cClass_SevHistObject || classid == pwr_cClass_PlotGroup) {
     sts = gdh_AttrrefToName( &ip->Pointed, name, sizeof(name),
 			cdh_mName_volumeStrict);
     if ( EVEN(sts)) return sts;
@@ -444,7 +444,7 @@ static pwr_tStatus OpenHistory( xmenu_sMenuCall *ip)
     // Default XttGraph found
     sts = gdh_GetAttrRefTid( &defhist, &classid);
     if ( ODD(sts) &&
-         (classid == pwr_cClass_SevHist || classid == pwr_cClass_PlotGroup)) {
+         (classid == pwr_cClass_SevHist || classid == pwr_cClass_SevHistObject || classid == pwr_cClass_PlotGroup)) {
 
       sts = gdh_AttrrefToName( &defhist, name, sizeof(name),
 			cdh_mName_volumeStrict);
@@ -467,7 +467,7 @@ static pwr_tStatus OpenHistory( xmenu_sMenuCall *ip)
     sts = gdh_GetObjectClass( oid, &classid);
     if ( EVEN(sts)) return sts;
     
-    if ( classid == pwr_cClass_SevHist) {
+    if ( classid == pwr_cClass_SevHist || classid == pwr_cClass_SevHistObject) {
       found++;
       if ( found == 1)
 	child = oid;
@@ -516,7 +516,7 @@ static pwr_tStatus OpenHistoryFilter( xmenu_sMenuCall *ip)
   sts = gdh_GetAttrRefTid( objar, &classid);
   if ( EVEN(sts)) return sts;
 
-  if ( classid == pwr_cClass_SevHist || classid == pwr_cClass_PlotGroup) {
+  if ( classid == pwr_cClass_SevHist || classid == pwr_cClass_SevHistObject || classid == pwr_cClass_PlotGroup) {
     return XNAV__SUCCESS;
   }
 
@@ -531,7 +531,7 @@ static pwr_tStatus OpenHistoryFilter( xmenu_sMenuCall *ip)
     // Default XttGraph found
     sts = gdh_GetAttrRefTid( &defhist, &classid);
     if ( ODD(sts) &&
-         (classid == pwr_cClass_SevHist || classid == pwr_cClass_PlotGroup))
+         (classid == pwr_cClass_SevHist || classid == pwr_cClass_SevHistObject || classid == pwr_cClass_PlotGroup))
       return XNAV__SUCCESS;
   }
 
@@ -544,7 +544,7 @@ static pwr_tStatus OpenHistoryFilter( xmenu_sMenuCall *ip)
     sts = gdh_GetObjectClass( child, &classid);
     if ( EVEN(sts)) return sts;
 
-    if ( classid == pwr_cClass_SevHist)
+    if ( classid == pwr_cClass_SevHist || classid == pwr_cClass_SevHistObject)
       return XNAV__SUCCESS;
 
     sts = gdh_GetNextSibling( child, &child);

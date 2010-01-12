@@ -41,10 +41,10 @@
 #include "co_msg.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
-#include "co_wow.h"
-#include "co_xhelp_gtk.h"
-#include "rt_pb_gsd.h"
-#include "rt_pb_gsd_attr_gtk.h"
+#include "cow_wow.h"
+#include "cow_xhelp_gtk.h"
+#include "cow_pb_gsd.h"
+#include "cow_pb_gsd_attr_gtk.h"
 #include "wb_c_pb_dp_slave.h"
 
 

@@ -1409,6 +1409,39 @@ cdh_ObjidToString (
     return ls;
   
 }
+//!  Converts a object identifier, 'oid' to a filename string.
+/*!
+    The output string will be in the format:
+
+    xxx_xxx_xxx_xxx_yyyyyyyy
+
+    where xxx are the volume id in decimal form and yyyyyyyy
+    the object index in hex form.
+
+    If 's' is non null the resultant string will be catenated
+    to 's', otherwise the resultant string will be returned.
+*/
+
+char *
+cdh_ObjidToFnString (
+  char			*s,
+  pwr_tOid		oid
+)
+{
+  cdh_uObjid		loid;
+  static char		str[40];
+
+  loid.pwr = oid;
+
+  sprintf( str, "%3.3u_%3.3u_%3.3u_%3.3u_%8.8x", loid.o.vid_3,
+	   loid.o.vid_2, loid.o.vid_1, loid.o.vid_0, loid.o.oix);
+
+  if (s != NULL)
+    return strcat(s, str);
+  else
+    return str;  
+}
+
 
 //!  Converts a volume identifier, 'vid' to a string.
 /*!
@@ -2781,6 +2814,49 @@ cdh_StringToObjectName (
   *t = *s1;  /* Copy the null byte.  */
 
   return rs;
+}
+
+//! Create an similar objectname from another object name.
+/*!
+  Converts an object name consisting of a number at the end of the name, The 
+  number is incremented by 1 in the new name. If no number is found error status
+  is returned.
+
+  \param t	Out string.
+  \param s	In string.
+  \return 	Status.
+*/
+pwr_tStatus
+cdh_NextObjectName (
+  char			*t,
+  const char		*s
+)
+{
+  int i;
+  int num;
+  int len = strlen(s);
+  char name[80];
+
+  for ( i = len - 1; i >= 0; i--) {
+    if ( isdigit( s[i]) == 0)
+      break;
+  }
+  if ( i == len - 1)
+    return CDH__NONAME;
+
+  strncpy( name, s, i+1);
+  sscanf( &s[i+1], "%d", &num);
+  num++;
+  if ( s[i+1] == '0')
+    sprintf( &name[i+1], "%0*d", len - i - 1, num);
+  else
+    sprintf( &name[i+1], "%d", num);
+
+  if ( strlen(name) > sizeof(pwr_tObjName) - 1)
+    return CDH__NAMELEN;
+
+  strcpy( t, name);
+  return CDH__SUCCESS;
 }
 
 /*@}*/

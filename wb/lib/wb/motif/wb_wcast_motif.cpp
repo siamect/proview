@@ -30,7 +30,7 @@
 #include "pwr_baseclasses.h"
 #include "wb_ldh.h"
 #include "flow_x.h"
-#include "co_wow_motif.h"
+#include "cow_wow_motif.h"
 
 #include <Xm/Xm.h>
 #include <Xm/XmP.h>

@@ -39,7 +39,7 @@
 #include "wb_volume.h"
 #include "wb_palfile.h"
 #include "pwr_baseclasses.h"
-#include "co_msgwindow.h"
+#include "cow_msgwindow.h"
 #include "co_tree.h"
 #include "co_dcli.h"
 #include "co_time.h"
@@ -106,7 +106,11 @@ wb_orep *wb_vrepced::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination
     strcpy( name_str, name.object());
 
   wb_name n( name_str);
+  if ( soix)
+    m_vrep->noNixIncr( 1);
   wb_orep *o = m_vrep->createObject( sts, cdef, d, n, soix);
+  if ( soix)
+    m_vrep->noNixIncr( 0);
   if ( ODD(*sts))
     setFlagsNewAttribute( sts, o);
 
@@ -141,7 +145,11 @@ wb_orep *wb_vrepced::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destin
 
   wb_name n( name_str);
 
+  if ( soix)
+    m_vrep->noNixIncr( 1);
   wb_orep *o = m_vrep->copyObject( sts, orep, d, n, soix);
+  if ( soix)
+    m_vrep->noNixIncr( 0);
   if ( ODD(*sts))
     setFlagsNewAttribute( sts, o);
 
@@ -652,8 +660,14 @@ bool wb_vrepced::importPasteObject(pwr_tOid destination, ldh_eDest destcode,
   if ( po)
     po->unref();
 
-  return m_vrep->importPasteObject( destination, destcode, keepoid, oid, cid, poid, boid, 
+  if ( woidl.oix != oid.oix)
+    m_vrep->noNixIncr( 1);
+  bool rsts = m_vrep->importPasteObject( destination, destcode, keepoid, oid, cid, poid, boid, 
 				    name, flags, rbSize, dbSize, rbody, dbody, woidl, roid);
+  if ( woidl.oix != oid.oix)
+    m_vrep->noNixIncr( 0);
+
+  return rsts;
 }
 
 bool wb_vrepced::classeditorCheck( ldh_eDest dest_code, wb_orep *dest, pwr_tCid cid,
@@ -782,7 +796,7 @@ bool wb_vrepced::classeditorCheck( ldh_eDest dest_code, wb_orep *dest, pwr_tCid 
   }
   case pwr_eClass_ClassDef: {
     // Child to ClassHier, oix from cix
-    pwr_tOix cix;
+    pwr_tOix cix = 0;
     if ( !fth || fth->cid() != pwr_eClass_ClassHier) {
       if ( fth)
 	fth->unref();
@@ -819,7 +833,7 @@ bool wb_vrepced::classeditorCheck( ldh_eDest dest_code, wb_orep *dest, pwr_tCid 
 
   case pwr_eClass_TypeDef: {
     // Child to TypeHier, oix from tix
-    pwr_tOix tix;
+    pwr_tOix tix = 0;
     if ( !fth || fth->cid() != pwr_eClass_TypeHier) {
       if ( fth)
 	fth->unref();
@@ -951,7 +965,7 @@ bool wb_vrepced::classeditorCheck( ldh_eDest dest_code, wb_orep *dest, pwr_tCid 
       return false;
     }
 
-    pwr_tOix aix;
+    pwr_tOix aix = 0;
     nextAix( sts, fth, &aix);
     if ( EVEN(*sts)) return false;
 

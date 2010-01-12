@@ -24,7 +24,7 @@
 
 #include "pwr.h"
 #include "rt_gdh.h"
-#include "co_wow_gtk.h"
+#include "cow_wow_gtk.h"
 #include "co_lng.h"
 #include "xtt_fileview_gtk.h"
 #include "xtt_xnav.h"

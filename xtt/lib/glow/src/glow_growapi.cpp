@@ -248,7 +248,11 @@ void grow_CreatePasteNode( grow_tCtx ctx, char *name, grow_tNodeClass nc,
 	double x, double y, void *user_data, grow_tNode *node)
 {
   GlowNode *n1;
-  n1 = new GlowNode( ctx, name, (GlowNodeClass *)nc, x, y, 1);
+
+  if (((GlowNodeClass *)nc)->is_slider())
+    n1 = new GrowSlider( ctx, name, (GlowNodeClass *)nc, x, y);
+  else 
+    n1 = new GrowNode( ctx, name, (GlowNodeClass *)nc, x, y, 1);
   n1->set_user_data( user_data);
   ctx->paste_insert( n1);
   *node = (grow_tNode) n1;
@@ -356,6 +360,12 @@ void grow_PasteClear( grow_tCtx ctx)
 {
   ctx->paste_clear();
 }
+
+int grow_GetPasteActive( grow_tCtx ctx)
+{
+  return ctx->get_paste_active();
+}
+
 
 void grow_CreateRect( grow_tCtx ctx, double x, double y, 
 	double width, double height,
@@ -1471,6 +1481,11 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].value_p = &op->relief;
       attrinfo[i].type = glow_eType_Relief;
       attrinfo[i++].size = sizeof( op->relief);
+      
+      strcpy( attrinfo[i].name, "fixcolor");
+      attrinfo[i].value_p = &op->fixcolor;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->fixcolor);
       
       strcpy( attrinfo[i].name, "disable_shadow");
       attrinfo[i].value_p = &op->disable_shadow;
@@ -2804,6 +2819,11 @@ int grow_GetGraphAttrInfo( grow_tCtx ctx, grow_sAttrInfo **info,
   attrinfo[i].value_p = &ctx->bitmap_fonts;
   attrinfo[i].type = glow_eType_Boolean;
   attrinfo[i++].size = sizeof( ctx->bitmap_fonts);
+      
+  strcpy( attrinfo[i].name, "HotIndication");
+  attrinfo[i].value_p = &ctx->hot_indication;
+  attrinfo[i].type = glow_eType_HotIndication;
+  attrinfo[i++].size = sizeof( ctx->hot_indication);
       
   attrinfo[i].info_type = grow_eInfoType_End;
   *attr_cnt = i;

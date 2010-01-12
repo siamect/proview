@@ -28,6 +28,7 @@
 #include "wb_pwrb_msg.h"
 #include "wb_wsx.h"
 #include "wb_wsx_msg.h"
+#include "wb_build.h"
 #include "co_cdh.h"
 
 
@@ -55,6 +56,20 @@ static pwr_tStatus OpenGraph (
   return 1;
 }
 
+static pwr_tStatus Build (
+  ldh_sMenuCall *ip
+)
+{
+  wb_build build( *(wb_session *)ip->PointedSession, ip->wnav);
+
+  build.opt = ip->wnav->gbl.build;
+  build.webgraph( ip->Pointed.Objid);
+
+  if ( build.sts() == PWRB__NOBUILT)
+    ip->wnav->message( 'I', "Nothing to build");
+  return build.sts();
+}
+
 
 /*----------------------------------------------------------------------------*\
   Every method to be exported to the workbench should be registred here.
@@ -62,6 +77,7 @@ static pwr_tStatus OpenGraph (
 
 pwr_dExport pwr_BindMethods(WebGraph) = {
   pwr_BindMethod(OpenGraph),
+  pwr_BindMethod(Build),
   pwr_NullMethod
 };
 

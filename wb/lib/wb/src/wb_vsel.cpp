@@ -41,12 +41,12 @@
 #include "wb_foe.h"
 #include "wb_utl_api.h"
 #include "wb_lfu.h"
-#include "co_wow.h"
-#include "co_login.h"
+#include "cow_wow.h"
+#include "cow_login.h"
 #include "co_login_msg.h"
 #include "wb_foe_msg.h"
 #include "wb_ldh_msg.h"
-#include "co_msgwindow.h"
+#include "cow_msgwindow.h"
 
 #define	BEEP	    putchar( '\7' );
 

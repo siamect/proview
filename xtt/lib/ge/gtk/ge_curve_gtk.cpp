@@ -42,7 +42,7 @@
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_dcli.h"
-#include "co_wow_gtk.h"
+#include "cow_wow_gtk.h"
 #include "co_lng.h"
 
 #include "glow_growctx.h"
@@ -317,7 +317,7 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 					 "default-height", window_height,
 					 "default-width", window_width,
-					 "title", title,
+					 "title", CoWowGtk::convert_utf8(title),
 					 NULL);
 
   g_signal_connect( toplevel, "delete_event", G_CALLBACK(delete_event), this);
@@ -335,8 +335,7 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   GtkWidget *file_refresh = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Refresh"));
   g_signal_connect( file_refresh, "activate", 
 		    G_CALLBACK(activate_configure), this);
-  gtk_widget_add_accelerator( file_refresh, "activate", accel_g,
-			      'r', GdkModifierType(GDK_CONTROL_MASK), 
+  gtk_widget_add_accelerator( file_refresh, "activate", accel_g, 'r', GdkModifierType(GDK_CONTROL_MASK), 
 			      GTK_ACCEL_VISIBLE);
 
   GtkWidget *file_print = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Print"));
@@ -348,6 +347,8 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(file_close), 
 				 gtk_image_new_from_stock( "gtk-close", GTK_ICON_SIZE_MENU));
   g_signal_connect(file_close, "activate", G_CALLBACK(activate_exit), this);
+  gtk_widget_add_accelerator( file_close, "activate", accel_g,'w', GdkModifierType(GDK_CONTROL_MASK), 
+			      GTK_ACCEL_VISIBLE);
 
   GtkMenu *file_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_refresh);
