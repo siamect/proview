@@ -62,26 +62,6 @@ static int sev_comp_refid(tree_sTable *tp, tree_sNode *x, tree_sNode *y)
   return 0;
 }
 
-static int sev_comp_refid(tree_sTable *tp, tree_sNode *x, tree_sNode *y)
-{
-  sev_sRefid *xp = (sev_sRefid *) x; 
-  sev_sRefid *yp = (sev_sRefid *) y;
-  
-  if (xp->id.nid > yp->id.nid)
-    return 1;
-
-  if (xp->id.nid < yp->id.nid)
-    return -1;
-
-  if (xp->id.rix > yp->id.rix)
-    return 1;
-
-  if (xp->id.rix < yp->id.rix)
-    return -1;
-
-  return 0;
-}
-
 int sev_server::init( int noneth)
 {
   qcom_sNode		node;
@@ -868,7 +848,7 @@ void sev_server::garbage_item( int idx)
 {
   pwr_tTime currenttime, limit;
 
-  clock_gettime( CLOCK_REALTIME, &currenttime);
+  time_GetTime(&currenttime);
 
   if ( m_db->m_items[idx].deleted)
     return;
