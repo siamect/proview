@@ -53,7 +53,6 @@
 #include "wb_pwrb_msg.h"
 #include "rt_pb_msg.h"
 #include "wb_wnav.h"
-#include "wb_wsx.h"
 
 using namespace std;
 
@@ -813,26 +812,5 @@ pwr_tStatus pndevice_init( device_sCtx *ctx)
   return 1;
 }
 
-//
-//  Syntax check.
-//
-
-static pwr_tStatus SyntaxCheck (
-  ldh_tSesContext Session,
-  pwr_tAttrRef Object,	      /* current object */
-  int *ErrorCount,	      /* accumulated error count */
-  int *WarningCount	      /* accumulated waring count */
-) {
-  return wsx_CheckIoDevice( Session, Object, ErrorCount, WarningCount, wsx_mCardOption_None);
-}
-
-//
-//  Every method to be exported to the workbench should be registred here.
-//
-
-pwr_dExport pwr_BindMethods(PnDevice) = {
-  pwr_BindMethod(SyntaxCheck),
-  pwr_NullMethod
-};
 
 

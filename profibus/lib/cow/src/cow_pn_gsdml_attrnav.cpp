@@ -451,7 +451,7 @@ GsdmlAttrNav::GsdmlAttrNav(
   parent_ctx(xn_parent_ctx),
   gsdml(xn_gsdml), edit_mode(xn_edit_mode), trace_started(0),
   message_cb(0), change_value_cb(0), device_num(0), device_item(0), 
-  device_confirm_active(0), device_read(0), viewio(0), time_ratio(0)
+  device_confirm_active(0), device_read(0), viewio(0), time_ratio(1), send_clock(32)
 {
   strcpy( name, xn_name);
 
@@ -1017,6 +1017,9 @@ int GsdmlAttrNav::trace_connect_bc( brow_tObject object, char *name, char *attr,
     case attrnav_eItemType_PnEnumTimeRatio:
       *p = ((ItemPnEnumTimeRatio *)base_item)->value_p;
       break;
+    case attrnav_eItemType_PnEnumSendClock:
+      *p = ((ItemPnEnumSendClock *)base_item)->value_p;
+      break;
     case attrnav_eItemType_PnParEnum:
     case attrnav_eItemType_PnParEnumBit:
     case attrnav_eItemType_PnParValue:
@@ -1368,11 +1371,10 @@ int GsdmlAttrNav::save( const char *filename)
     dev_data.iocr_data.push_back( iod);
   }
 
-  // TODO
   dev_data.iocr_data[0]->type = 1; // Input ?
   dev_data.iocr_data[0]->properties = 1; // Class 1
-  dev_data.iocr_data[0]->send_clock_factor = 32; // 1 ms
-  dev_data.iocr_data[0]->reduction_ratio = time_ratio; // send_time = 8 * 31.2 us * send_clock_factor
+  dev_data.iocr_data[0]->send_clock_factor = send_clock;
+  dev_data.iocr_data[0]->reduction_ratio = time_ratio; // send_time = 8 * 31.2 us * send_clock
   dev_data.iocr_data[0]->api = 0;
 
   dev_data.iocr_data[1]->type = 2; // Output ?
@@ -1558,6 +1560,7 @@ int GsdmlAttrNav::open( const char *filename)
   device_num = dev_data.device_num;
   gsdml->byte_order = dev_data.byte_order;
   time_ratio = dev_data.iocr_data[0]->reduction_ratio;
+  send_clock = dev_data.iocr_data[0]->send_clock_factor;
   if ( device_num > 0) {
     if ( device_num > gsdml->ApplicationProcess->DeviceAccessPointList->
 	 DeviceAccessPointItem.size()) {
@@ -1677,6 +1680,9 @@ int ItemPn::close( GsdmlAttrNav *attrnav, double x, double y)
       switch ( type) {
       case attrnav_eItemType_PnDevice:
       case attrnav_eItemType_PnParEnum:
+      case attrnav_eItemType_PnEnumByteOrder:
+      case attrnav_eItemType_PnEnumTimeRatio:
+      case attrnav_eItemType_PnEnumSendClock:
       case attrnav_eItemType_PnModuleType:
       case attrnav_eItemType_PnModuleClass:
 	brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_attrenum);
@@ -2375,12 +2381,14 @@ int ItemPnNetwork::open_children( GsdmlAttrNav *attrnav, double x, double y)
 		    p, 0, node, flow_eDest_IntoLast);
 
     if ( attrnav->device_item && attrnav->device_item->SystemDefinedSubmoduleList &&
-	 attrnav->device_item->SystemDefinedSubmoduleList->InterfaceSubmoduleItem &&
-	 attrnav->device_item->SystemDefinedSubmoduleList->InterfaceSubmoduleItem->ApplicationRelations &&
-	 attrnav->device_item->SystemDefinedSubmoduleList->InterfaceSubmoduleItem->ApplicationRelations->
-	 TimingProperties) {
+	 attrnav->device_item->SystemDefinedSubmoduleList->InterfaceSubmoduleItem) {
+      p = (void *) &attrnav->send_clock;
+      new ItemPnEnumSendClock( attrnav, "SendClock", 
+			       attrnav->device_item->SystemDefinedSubmoduleList->InterfaceSubmoduleItem,
+			       p, node, flow_eDest_IntoLast);
+
       p = (void *) &attrnav->time_ratio;
-      new ItemPnEnumTimeRatio( attrnav, "TimeRatio", 
+      new ItemPnEnumTimeRatio( attrnav, "ReductionRatio", 
 			       attrnav->device_item->SystemDefinedSubmoduleList->InterfaceSubmoduleItem,
 			       p, node, flow_eDest_IntoLast);
     }
@@ -3905,6 +3913,15 @@ ItemPnEnumTimeRatio::ItemPnEnumTimeRatio( GsdmlAttrNav *attrnav, const char *ite
   type = attrnav_eItemType_PnEnumTimeRatio;
   strcpy( name, item_name);
 
+  if ( interfacesubmodule->ApplicationRelations &&
+       interfacesubmodule->ApplicationRelations->TimingProperties &&
+       strcmp( interfacesubmodule->ApplicationRelations->TimingProperties->Body.ReductionRatio.str,
+	       "") != 0)
+    strncpy( valuelist_str, interfacesubmodule->ApplicationRelations->TimingProperties->Body.ReductionRatio.str,
+	     sizeof(valuelist_str));
+  else
+    strcpy( valuelist_str, "1 2 4 8 16 32 64 128 256 512");
+
   brow_CreateNode( attrnav->brow->ctx, item_name, attrnav->brow->nc_attr, 
 		   dest, dest_code, (void *) this, 1, &node);
 
@@ -3936,14 +3953,10 @@ int ItemPnEnumTimeRatio::open_children( GsdmlAttrNav *attrnav, double x, double 
     int				found;
 
     found = 0;
-    if ( strcmp( interfacesubmodule->ApplicationRelations->TimingProperties->Body.ReductionRatio.str,
-		 "") == 0)
-      return 1;
 
     brow_SetNodraw( attrnav->brow->ctx);
 
-    gsdml_Valuelist *vl = new gsdml_Valuelist( interfacesubmodule->ApplicationRelations->TimingProperties->
-					       Body.ReductionRatio.str);
+    gsdml_Valuelist *vl = new gsdml_Valuelist( valuelist_str);
     gsdml_ValuelistIterator iter( vl);
 
     for ( unsigned int j = iter.begin(); j != iter.end(); j = iter.next()) {
@@ -3975,15 +3988,11 @@ int ItemPnEnumTimeRatio::scan( GsdmlAttrNav *attrnav, void *p)
   else {
     if ( *(int *)p == 0) {
       // Set initial value
-      if ( strcmp( interfacesubmodule->ApplicationRelations->TimingProperties->Body.ReductionRatio.str,
-		   "") != 0) {
-	gsdml_Valuelist *vl = new gsdml_Valuelist( interfacesubmodule->ApplicationRelations->
-						   TimingProperties->Body.ReductionRatio.str);
-	gsdml_ValuelistIterator iter( vl);
+      gsdml_Valuelist *vl = new gsdml_Valuelist( valuelist_str);
+      gsdml_ValuelistIterator iter( vl);
 	
-	*(int *)p = iter.begin();
-	delete vl;
-      }
+      *(int *)p = iter.begin();
+      delete vl;
     }
     first_scan = 0;
   }
@@ -3995,3 +4004,105 @@ int ItemPnEnumTimeRatio::scan( GsdmlAttrNav *attrnav, void *p)
 
   return 1;
 }
+
+
+ItemPnEnumSendClock::ItemPnEnumSendClock( GsdmlAttrNav *attrnav, const char *item_name, 
+					  gsdml_InterfaceSubmoduleItem *item_interfacesubmodule,
+					  void *attr_value_p, brow_tNode dest, flow_eDest dest_code) :
+  interfacesubmodule(item_interfacesubmodule), value_p(attr_value_p), first_scan(1), old_value(0)
+{
+  type = attrnav_eItemType_PnEnumSendClock;
+  strcpy( name, item_name);
+
+  if ( interfacesubmodule->ApplicationRelations &&
+       interfacesubmodule->ApplicationRelations->TimingProperties &&
+       strcmp( interfacesubmodule->ApplicationRelations->TimingProperties->Body.SendClock.str,
+	       "") != 0)
+    strncpy( valuelist_str, interfacesubmodule->ApplicationRelations->TimingProperties->Body.SendClock.str,
+	     sizeof( valuelist_str));
+  else
+    strcpy( valuelist_str, "1 2 4 8 16 32 64 128");
+
+  brow_CreateNode( attrnav->brow->ctx, item_name, attrnav->brow->nc_attr, 
+		   dest, dest_code, (void *) this, 1, &node);
+
+  brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_attrenum);
+
+  brow_SetAnnotation( node, 0, item_name, strlen(item_name));
+  brow_SetTraceAttr( node, name, "", flow_eTraceType_User);
+}
+
+int ItemPnEnumSendClock::open_children( GsdmlAttrNav *attrnav, double x, double y)
+{
+  double	node_x, node_y;
+
+  brow_GetNodePosition( node, &node_x, &node_y);
+
+  if ( brow_IsOpen( node)) {
+    // Close
+    brow_SetNodraw( attrnav->brow->ctx);
+    brow_CloseNode( attrnav->brow->ctx, node);
+    if ( brow_IsOpen( node) & attrnav_mOpen_Attributes)
+      brow_RemoveAnnotPixmap( node, 1);
+    if ( brow_IsOpen( node) & attrnav_mOpen_Children)
+      brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_attrenum);
+    brow_ResetOpen( node, attrnav_mOpen_All);
+    brow_ResetNodraw( attrnav->brow->ctx);
+    brow_Redraw( attrnav->brow->ctx, node_y);
+  }
+  else {
+    int				found;
+
+    found = 0;
+
+    brow_SetNodraw( attrnav->brow->ctx);
+
+    gsdml_Valuelist *vl = new gsdml_Valuelist( valuelist_str);
+    gsdml_ValuelistIterator iter( vl);
+
+    for ( unsigned int j = iter.begin(); j != iter.end(); j = iter.next()) {
+      char enumtext[20];
+      sprintf( enumtext, "%d", j);
+		
+      new ItemPnEnumValue( attrnav, enumtext, j, pwr_eType_UInt32, 
+			   this->value_p, node, flow_eDest_IntoLast);
+    }
+    delete vl;
+
+    brow_SetOpen( node, attrnav_mOpen_Children);
+    brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_openmap);
+    brow_ResetNodraw( attrnav->brow->ctx);
+    brow_Redraw( attrnav->brow->ctx, node_y);
+  }
+  return 1;
+}
+
+int ItemPnEnumSendClock::scan( GsdmlAttrNav *attrnav, void *p)
+{
+  char buf[80];
+
+  if ( !first_scan) {
+    if ( old_value == *(int *)p)
+      // No change since last time
+      return 1;
+  }
+  else {
+    if ( *(int *)p == 0) {
+      // Set initial value
+      gsdml_Valuelist *vl = new gsdml_Valuelist( valuelist_str);
+      gsdml_ValuelistIterator iter( vl);
+      
+      *(int *)p = iter.begin();
+      delete vl;
+    }
+    first_scan = 0;
+  }
+  
+  sprintf( buf, "%d", *(int *)p);
+  
+  brow_SetAnnotation( node, 1, buf, strlen(buf));
+  old_value = *(int *)p;
+
+  return 1;
+}
+

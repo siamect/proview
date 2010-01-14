@@ -82,7 +82,8 @@ typedef enum {
  	attrnav_eItemType_PnDataItem,
  	attrnav_eItemType_PnBitDataItem,
 	attrnav_eItemType_PnEnumByteOrder,
-	attrnav_eItemType_PnEnumTimeRatio
+	attrnav_eItemType_PnEnumTimeRatio,
+	attrnav_eItemType_PnEnumSendClock
 	} attrnav_eItemType;
 
 typedef enum {
@@ -147,6 +148,7 @@ class GsdmlAttrNav {
     int			device_read;
     int			viewio;
     unsigned int 	time_ratio;
+    unsigned int 	send_clock;
     
     GsdmlAttrNav(
 	void *xn_parent_ctx,
@@ -564,8 +566,27 @@ class ItemPnEnumTimeRatio : public ItemPn {
 
   gsdml_InterfaceSubmoduleItem *interfacesubmodule;
   void		*value_p;
+  char		valuelist_str[200];
   int 		first_scan;
-  int 	    old_value;
+  int 	    	old_value;
+
+  int open_children( GsdmlAttrNav *attrnav, double x, double y);
+  int scan( GsdmlAttrNav *attrnav, void *p);
+};
+
+//! Item for send clock.
+class ItemPnEnumSendClock : public ItemPn {
+ public:
+  ItemPnEnumSendClock( GsdmlAttrNav *attrnav, const char *item_name, 
+		       gsdml_InterfaceSubmoduleItem *item_interfacesubmodule,
+		       void *attr_value_p, brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPnEnumSendClock() {}
+
+  gsdml_InterfaceSubmoduleItem *interfacesubmodule;
+  void		*value_p;
+  char		valuelist_str[200];
+  int 		first_scan;
+  int 	    	old_value;
 
   int open_children( GsdmlAttrNav *attrnav, double x, double y);
   int scan( GsdmlAttrNav *attrnav, void *p);
