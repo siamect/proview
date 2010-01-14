@@ -80,7 +80,7 @@ int CnvWblToXtthelp::class_exec()
   char prefix[80];
   int lng_sts = 1;
 
-  if ( Lng::current() != lng_eLanguage_en_us)
+  if ( Lng::current() != lng_eLanguage_en_US)
     lng_sts = ctx->rw->read_lng( ctx->rw->class_name, 0);
 
   strcpy( full_class_name, ctx->rw->volume_name);
@@ -221,7 +221,7 @@ int CnvWblToXtthelp::attribute_exec()
        strcmp( ctx->rw->attr_typeref, "DisableAttr") == 0)
     return 1;
     
-  if ( Lng::current() != lng_eLanguage_en_us)
+  if ( Lng::current() != lng_eLanguage_en_US)
     lng_sts = ctx->rw->read_lng( ctx->rw->class_name, ctx->rw->attr_name);
 
   fp_tmp <<

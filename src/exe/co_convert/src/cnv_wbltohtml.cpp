@@ -431,7 +431,7 @@ int CnvWblToHtml::class_exec()
 
   cdp_created = false;
 
-  if ( Lng::current() != lng_eLanguage_en_us)
+  if ( Lng::current() != lng_eLanguage_en_US)
     lng_sts = ctx->rw->read_lng( ctx->rw->class_name, 0);
 
   time_AtoAscii( 0, time_eFormat_DateAndTime, timestr, sizeof(timestr));
@@ -825,7 +825,7 @@ int CnvWblToHtml::attribute_exec()
        strcmp( ctx->rw->attr_typeref, "DisableAttr") == 0)
     return 1;
     
-  if ( Lng::current() != lng_eLanguage_en_us)
+  if ( Lng::current() != lng_eLanguage_en_US)
     lng_sts = ctx->rw->read_lng( ctx->rw->class_name, ctx->rw->attr_name);
 
   if ( strncmp( ctx->rw->attr_typeref, "pwr_eClass_", 11)  == 0) {
@@ -982,7 +982,7 @@ int CnvWblToHtml::bit_exec()
   char txt[200];
   int lng_sts = 1;
 
-  if ( Lng::current() != lng_eLanguage_en_us)
+  if ( Lng::current() != lng_eLanguage_en_US)
     lng_sts = ctx->rw->read_lng( ctx->rw->typedef_name, ctx->rw->bit_name);
 
   // Summary
@@ -1086,7 +1086,7 @@ int CnvWblToHtml::typedef_exec()
   char code_aref[200];
   int lng_sts = 1;
 
-  if ( Lng::current() != lng_eLanguage_en_us)
+  if ( Lng::current() != lng_eLanguage_en_US)
     lng_sts = ctx->rw->read_lng( ctx->rw->typedef_name, 0);
 
   strcpy( ctx->rw->class_name, ctx->rw->typedef_name);

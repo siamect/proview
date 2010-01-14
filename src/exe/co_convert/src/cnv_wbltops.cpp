@@ -99,7 +99,7 @@ int CnvWblToPs::class_exec()
   char txt[256];
   int lng_sts = 1;
 
-  if ( Lng::current() != lng_eLanguage_en_us)
+  if ( Lng::current() != lng_eLanguage_en_US)
     lng_sts = ctx->rw->read_lng( ctx->rw->class_name, 0);
 
   strcpy( full_class_name, ctx->rw->volume_name);
@@ -231,7 +231,7 @@ int CnvWblToPs::attribute_exec()
        strcmp( ctx->rw->attr_typeref, "DisableAttr") == 0)
     return 1;
     
-  if ( Lng::current() != lng_eLanguage_en_us)
+  if ( Lng::current() != lng_eLanguage_en_US)
     lng_sts = ctx->rw->read_lng( ctx->rw->class_name, ctx->rw->attr_name);
 
   tops.print_h3( ctx->rw->attr_name);
@@ -295,7 +295,7 @@ int CnvWblToPs::typedef_exec()
   char txt[256];
   int lng_sts = 1;
 
-  if ( Lng::current() != lng_eLanguage_en_us)
+  if ( Lng::current() != lng_eLanguage_en_US)
     lng_sts = ctx->rw->read_lng( ctx->rw->typedef_name, 0);
 
   strcpy( full_class_name, ctx->rw->volume_name);
@@ -413,7 +413,7 @@ int CnvWblToPs::bit_exec()
   char txt[200];
   int lng_sts = 1;
 
-  if ( Lng::current() != lng_eLanguage_en_us)
+  if ( Lng::current() != lng_eLanguage_en_US)
     lng_sts = ctx->rw->read_lng( ctx->rw->typedef_name, ctx->rw->bit_name);
 
   tops.print_h3( ctx->rw->bit_name);

@@ -156,7 +156,7 @@ void CnvClassDep::print_html_classtable( int idx)
 
   if ( parent_cnt == 0 && classlist[idx].fch == 0) {
     switch( Lng::current()) {
-    case lng_eLanguage_sv_se:
+    case lng_eLanguage_sv_SE:
       fp << "Det finns ingen superklass eller kända subklasser till klass " << classlist[idx].name << "." << endl;
       break;
     default:
@@ -165,7 +165,7 @@ void CnvClassDep::print_html_classtable( int idx)
   }
   else {
     switch( Lng::current()) {
-    case lng_eLanguage_sv_se:
+    case lng_eLanguage_sv_SE:
       fp << "<h2>Klassträd " << classlist[idx].name << "</h2>" << endl;
       break;
     default:
