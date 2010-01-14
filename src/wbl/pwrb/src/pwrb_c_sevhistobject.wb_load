@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_sevhist.wb_load,v 1.2 2008-09-18 15:02:48 claes Exp $
+!  Proview   $Id: pwrb_c_sevhistobject.wb_load,v 1.2 2009-11-24 16:06:00 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -16,45 +16,40 @@
 !  along with the program, if not, write to the Free Software 
 !  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 !
-!  pwrb_c_sevhist.wb_load -- Defines the class SevHist.
+!  pwrb_c_sevhistobject.wb_load -- Defines the class SevHistObject.
 !
 SObject pwrb:Class
 !/**
 !  @Version 2.0
 !  @Group PlantConfiguration,SevHist
-!  @Summary Configures historical data storage for a value.
-!  Configures historical data storage for a scalar
-!  quantity or element in a one-dimensional vector. (Datastorage
+!  @Summary Configures historical data storage for an objects all attribute values.
+!  Configures historical data storage for x scalar
+!  quantitites or elements in x number of one-dimensional vectors. (Datastorage
 !  History).
 !  
 !  In a relational database, data resides in
 !  two-dimensional tables known as relations. A relation
 !  consist of rows and columns.
 !  
-!  The SevHist object specifies which quantity is to be
+!  The SevHistObject object specifies which quantity is to be
 !  stored and in which relation. Up to three different
 !  relations can be specified.
 
-!  Hints
-!  
-!  If the storage concern signal values SevHist is
-!  configured in the development environment often direct
-!  below the current signal object.
 !  
 ! @b See also
-!  @classlink SevHistObject pwrb_sevhistobject.html
+!  @classlink SevHist pwrb_sevhist.html
 !  @classlink SevHistThread pwrb_sevhistthread.html
 !  @classlink SevHistMonitor pwrb_sevhistmonitor.html
 !  @classlink SevHistServer pwrb_sevhistserver.html
 !*/
-  Object SevHist $ClassDef 106 
+  Object SevHistObject $ClassDef 539 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_Standard
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "SevHist"
+        Attr StructName = "SevHistObject"
       EndBody
       !/**
       !  Optional desription.
@@ -65,10 +60,10 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Specifies the complete name of the attribute whose
-      !  value is to be stored. 
+      !  Specifies the complete name of the object whose
+      !  attribute values is to be stored. 
       !*/
-      Object Attribute $Attribute 2 
+      Object Object $Attribute 2 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$AttrRef"
         EndBody
@@ -114,7 +109,7 @@ SObject pwrb:Class
         EndBody
       EndObject
     EndObject
-    Object Template SevHist
+    Object Template SevHistObject
       Body RtBody
         Attr DeadBand = 0.0
 	Attr Options = 4
@@ -129,19 +124,6 @@ SObject pwrb:Class
       Body SysBody
         Attr MethodName = "SevHist-PostMove"
       EndBody
-    EndObject
-    Object ConfiguratorPosan $Menu
-      Object Pointed $Menu
-	Object ConnectAttribute $MenuButton
-	  Body SysBody
-	    Attr ButtonName = "Connect Attribute"
-	    Attr MethodName = "$Object-ConnectAttribute"
-	    Attr MethodArguments[0] = "Attribute"
-	    Attr FilterName = "$Object-ConnectAttributeFilter"
-	    Attr FilterArguments[0] = "Attribute"
-	  EndBody
-	EndObject
-      EndObject
     EndObject
     Object ConfiguratorPoson $Menu
       Object Pointed $Menu

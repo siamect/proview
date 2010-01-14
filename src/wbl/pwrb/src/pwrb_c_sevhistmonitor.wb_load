@@ -33,6 +33,7 @@ SObject pwrb:Class
 ! @b See also
 !  @classlink SevHistThread pwrb_sevhistthread.html
 !  @classlink SevHist pwrb_sevhist.html
+!  @classlink SevHistObject pwrb_sevhistobject.html
 !  @classlink SevHistServer pwrb_sevhistserver.html
 !*/
   Object SevHistMonitor $ClassDef 534 

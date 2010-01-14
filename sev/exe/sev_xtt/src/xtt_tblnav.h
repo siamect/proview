@@ -63,6 +63,30 @@ typedef enum {
   tblnav_mOpen_Attributes = 1 << 1
 } tblnav_mOpen;
 
+class TblNav_sevhistobjectattr {
+ public:
+  pwr_tAName	aname;
+  pwr_eType	type;
+  unsigned int	size;
+  unsigned int  elem;
+  pwr_tString16 unit;
+};
+
+class TblNav_sevhistobject {
+ public:
+  pwr_tOid 	oid;
+  pwr_tAName	oname;
+  pwr_tDeltaTime storagetime;
+  pwr_tTime	creatime;
+  pwr_tTime	modtime;
+  pwr_tString80 description;
+  pwr_tFloat32  scantime;
+  pwr_tFloat32  deadband;
+  pwr_tMask  	options;
+  unsigned int  attrnum;
+  vector<TblNav_sevhistobjectattr> objectattrlist;  
+};
+
 
 class TblTreeNode {
 public:
@@ -73,7 +97,7 @@ public:
   int fws;
   int bws;
   char sname[80];
-  sevcli_sHistItem *item;
+  TblNav_sevhistobject *item;
   int deleted;
 };
 
@@ -100,6 +124,7 @@ class TblNavBrow {
 };
 
 
+
 //! The navigation area of the attribute editor.
 class TblNav {
   public:
@@ -112,6 +137,7 @@ class TblNav {
     void 		*parent_ctx;
     TblNavBrow		*brow;
     sevcli_sHistItem  	*itemlist;
+    vector<TblNav_sevhistobject> sevhistobjectlist;
     int			item_cnt;
     void 		(*message_cb)( void *, char, const char *);
     int 		(*is_authorized_cb)( void *, unsigned int, int);
@@ -122,14 +148,16 @@ class TblNav {
     int is_authorized( unsigned int access = pwr_mAccess_AllSev, int msg = 1);
     int	create_items();
     void build_tree();
-    int get_select( sevcli_sHistItem **hi);
+    int get_select( TblNav_sevhistobject **hi);
     void get_zoom( double *zoom_factor);
     void zoom( double zoom_factor);
     void unzoom();
     void show_tree();
     void show_list();
-    void delete_item( sevcli_sHistItem *hi);
-
+    void delete_item( TblNav_sevhistobject *hi);
+    void create_objectlist(	sevcli_sHistItem  *xn_itemlist,
+	                          int xn_item_cnt,
+	                          pwr_tStatus *status);
     virtual void message( char sev, const char *text);
     virtual void set_inputfocus() {}
     static int init_brow_cb( FlowCtx *fctx, void *client_data);
@@ -146,10 +174,13 @@ class ItemBase {
 //! Item for a normal attribute.
 class ItemLocal : public ItemBase {
  public:
-  ItemLocal( TblNav *tblnav, sevcli_sHistItem *item, brow_tNode dest, flow_eDest dest_code);
+//  ItemLocal( TblNav *tblnav, sevcli_sHistItem *item, brow_tNode dest, flow_eDest dest_code);
+  ItemLocal( TblNav *tblnav, TblNav_sevhistobject *item, brow_tNode dest, flow_eDest dest_code);
+
   virtual ~ItemLocal() {}
   
-  sevcli_sHistItem 	item;
+//  sevcli_sHistItem 	item;
+  TblNav_sevhistobject item;
   brow_tNode		node;
 
   int			open_attributes( TblNav *tblnav, double x, double y);
@@ -161,14 +192,15 @@ class ItemLocalAttr : public ItemBase {
   ItemLocalAttr( TblNav *tblnav, const char *iname, char *ivalue, brow_tNode dest, flow_eDest dest_code);
   virtual ~ItemLocalAttr() {}
   
-  sevcli_sHistItem 	item;
+  TblNav_sevhistobject item;
+  //sevcli_sHistItem 	item;
   brow_tNode		node;
 };
 
 //! Item for a normal attribute.
 class ItemTreeLocal : public ItemLocal {
  public:
-  ItemTreeLocal( TblNav *tblnav, sevcli_sHistItem *item, int index, brow_tNode dest, flow_eDest dest_code);
+  ItemTreeLocal( TblNav *tblnav, TblNav_sevhistobject *item, int index, brow_tNode dest, flow_eDest dest_code);
   virtual ~ItemTreeLocal() {}
   
   int			idx;

@@ -221,11 +221,11 @@ XttTrend *XNavGtk::xtttrend_new( char *name, pwr_tAttrRef *objar, pwr_tAttrRef *
 }
 
 XttSevHist *XNavGtk::xttsevhist_new( char *name, pwr_tOid *oid, pwr_tOName *aname,
-				   sevcli_tCtx scctx, pwr_tStatus *sts)
+				   sevcli_tCtx scctx, pwr_tStatus *sts, bool sevhistobject)
 {
   GtkWidget *w;
 
-  return new XttSevHistGtk( this, parent_wid, name, &w, oid, aname, scctx, sts);
+  return new XttSevHistGtk( this, parent_wid, name, &w, oid, aname, scctx, sts, sevhistobject);
 }
 
 XttFast *XNavGtk::xttfast_new( char *name, pwr_tAttrRef *objar, pwr_tStatus *sts)

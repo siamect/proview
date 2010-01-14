@@ -3120,6 +3120,7 @@ static int	xnav_open_func(	void		*client_data,
     pwr_tAttrRef aref;
     pwr_tAName aname;
     char *s;
+    bool sevHistObjectFound = false;
 
     // Command is "OPEN HISTORY"
 
@@ -3175,11 +3176,14 @@ static int	xnav_open_func(	void		*client_data,
       if (EVEN(sts)) return sts;
 
       switch ( classid) {
-        case pwr_cClass_SevHist:
-          break;
+				case pwr_cClass_SevHist:
+					break;
+				case pwr_cClass_SevHistObject:
+					sevHistObjectFound = true;
+					break;
         case pwr_cClass_PlotGroup:
-	  xnav->message('E', "Not yet implemented");
-	  return XNAV__HOLDCOMMAND;
+          xnav->message('E', "Not yet implemented");
+          return XNAV__HOLDCOMMAND;
         default:
           xnav->message('E', "Error in object class");
           return XNAV__HOLDCOMMAND;
@@ -3187,25 +3191,49 @@ static int	xnav_open_func(	void		*client_data,
       if ( plotgroup_found)
         break;
 
-      sts = gdh_ArefANameToAref( &sevhist_aref, "Attribute", &attr_aref);
-      if ( EVEN(sts)) return sts;
+			if( sevHistObjectFound ) {
+        sts = gdh_ArefANameToAref( &sevhist_aref, "Object", &attr_aref);
+        if ( EVEN(sts)) return sts;
 
-      sts = gdh_GetObjectInfoAttrref( &attr_aref, &aref, sizeof(aref));
-      if ( EVEN(sts)) return sts;
-      
-      sts = gdh_AttrrefToName( &aref, aname, sizeof(aname), cdh_mNName);
-      if ( EVEN(sts)) {
-	xnav->message('E', "Error in SevHist configuration");
-	return XNAV__HOLDCOMMAND;
+        sts = gdh_GetObjectInfoAttrref( &attr_aref, &aref, sizeof(aref));
+        if ( EVEN(sts)) return sts;
+
+        sts = gdh_AttrrefToName( &aref, aname, sizeof(aname), cdh_mNName);
+        if ( EVEN(sts)) {
+          xnav->message('E', "Error in SevHist configuration");
+          return XNAV__HOLDCOMMAND;
+        }
+        s = strchr( aname, '.');
+        if ( !s) {
+          //It is a complete object
+          anamev[i][0] = '\0';
+        }
+        else {  
+          strcpy( anamev[i], s+1);
+        }
+        oidv[i] = aref.Objid;
       }
-      s = strchr( aname, '.');
-      if ( !s) {
-	xnav->message('E', "Error in SevHist configuration");
-	return XNAV__HOLDCOMMAND;
+      else {
+        sts = gdh_ArefANameToAref( &sevhist_aref, "Attribute", &attr_aref);
+        if ( EVEN(sts)) return sts;
+  
+        sts = gdh_GetObjectInfoAttrref( &attr_aref, &aref, sizeof(aref));
+        if ( EVEN(sts)) return sts;
+  
+        sts = gdh_AttrrefToName( &aref, aname, sizeof(aname), cdh_mNName);
+        if ( EVEN(sts)) {
+          xnav->message('E', "Error in SevHist configuration");
+          return XNAV__HOLDCOMMAND;
+        }
+        s = strchr( aname, '.');
+        if ( !s) {
+          xnav->message('E', "Error in SevHist configuration");
+          return XNAV__HOLDCOMMAND;
+        }
+  
+        strcpy( anamev[i], s+1);
+        oidv[i] = aref.Objid;
       }
-	   
-      strcpy( anamev[i], s+1);
-      oidv[i] = aref.Objid;
 
       // Get server and connect to server
       sts = gdh_ArefANameToAref( &sevhist_aref, "ThreadObject", &attr_aref);
@@ -3217,19 +3245,19 @@ static int	xnav_open_func(	void		*client_data,
       histthread_aref = cdh_ObjidToAref( histthread_oid);
       sts = gdh_ArefANameToAref( &histthread_aref, "ServerNode", &attr_aref);
       if ( EVEN(sts)) {
-	xnav->message('E', "Error in SevHist configuration");
-	return XNAV__HOLDCOMMAND;
+        xnav->message('E', "Error in SevHist configuration");
+        return XNAV__HOLDCOMMAND;
       }
-      
+
       sts = gdh_GetObjectInfoAttrref( &attr_aref, server_node, sizeof(server_node));
       if ( EVEN(sts)) return sts;
-      
+
       if ( !xnav->scctx) {
-	sevcli_init( &sts, &xnav->scctx);
-	if ( EVEN(sts)) return sts;
+        sevcli_init( &sts, &xnav->scctx);
+        if ( EVEN(sts)) return sts;
       }
       sevcli_set_servernode( &sts, xnav->scctx, server_node);
-      if ( EVEN(sts)) return sts;      
+      if ( EVEN(sts)) return sts;
     }
     oidv[i] = pwr_cNOid;    
 
@@ -3251,10 +3279,16 @@ static int	xnav_open_func(	void		*client_data,
       xnav->message('E', "Not yet implemented");
       return XNAV__HOLDCOMMAND;      
     }
+    else if( sevHistObjectFound ) {
+      hist = xnav->xttsevhist_new( title_str, oidv, anamev, xnav->scctx, &sts, true);
+      if ( ODD(sts)) {
+        hist->help_cb = xnav_sevhist_help_cb;
+      }
+    }
     else {
       hist = xnav->xttsevhist_new( title_str, oidv, anamev, xnav->scctx, &sts);
       if ( ODD(sts)) {
-	hist->help_cb = xnav_sevhist_help_cb;
+        hist->help_cb = xnav_sevhist_help_cb;
       }
     }
   }

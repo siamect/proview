@@ -51,28 +51,18 @@ typedef struct {
   int idx;
 } sev_sRefid;
 
-// Struct for binary tree item
-typedef struct {
-  pwr_tOid oid;
-  pwr_tAName aname;
-} sev_sItemKey;
-
-typedef struct {
-  tree_sNode  node;
-  sev_sItemKey key;
-  int idx;
-} sev_sItem;
-
 class sev_server {
  public:
 
-  sev_server() : m_server_status(0), m_refid(0), m_item_key(0), m_msg_id(0) {}
+  //TODO should this really be in this file?
+  static const unsigned int constSevVersion = 2;
+
+  sev_server() : m_server_status(0), m_refid(0), m_msg_id(0) {}
 
   pwr_tStatus m_sts;
   pwr_tStatus m_server_status;
   vector<sev_node> m_nodes;
   tree_sTable *m_refid;
-  tree_sTable *m_item_key;
   unsigned int m_msg_id;
   sev_db *m_db;
   int m_noneth;
@@ -84,6 +74,7 @@ class sev_server {
   int check_histitems( sev_sMsgHistItems *msg, unsigned int size);
   int receive_histdata( sev_sMsgHistDataStore *msg, unsigned int size);
   int send_histdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *msg, unsigned int size);
+  int send_objecthistdata( qcom_sQid tgt, sev_sMsgHistDataGetRequest *rmsg, unsigned int size);
   int send_itemlist( qcom_sQid tgt);
   int send_server_status( qcom_sQid tgt);
   int delete_item( qcom_sQid tgt, sev_sMsgHistItemDelete *rmsg);

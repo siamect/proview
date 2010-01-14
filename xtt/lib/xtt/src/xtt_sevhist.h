@@ -73,6 +73,7 @@ class XttSevHist {
   CoWow		*wow;
   long int	time_low_old;
   long int	time_high_old;
+  bool    sevhistobject;  //!< Indicates that it is a SevHistObject
 
   //! Constructor
   XttSevHist( void *xn_parent_ctx,
@@ -80,7 +81,7 @@ class XttSevHist {
 	     pwr_tOid* xn_oid,
 	     pwr_tOName *xn_aname,
 	     sevcli_tCtx xn_scctx,
-	     int *sts);
+	     int *sts, bool sevhistobject);
 
   //! Destructor
   virtual ~XttSevHist();
@@ -88,6 +89,7 @@ class XttSevHist {
   //! Pop sevhist window.
   void pop();
   int get_data( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to);
+  int get_objectdata( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to);
 
   static void sevhist_close_cb( void *ctx);
   static void sevhist_higher_res_cb( void *ctx);

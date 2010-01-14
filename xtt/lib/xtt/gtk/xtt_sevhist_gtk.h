@@ -37,7 +37,8 @@ class XttSevHistGtk : public XttSevHist {
 		pwr_tOid *xn_oid,
 		pwr_tOName *xn_aname,
 		sevcli_tCtx xn_scctx,
-		int *sts);
+		int *sts,
+    bool sevhistobject);
   ~XttSevHistGtk();
 };
 
