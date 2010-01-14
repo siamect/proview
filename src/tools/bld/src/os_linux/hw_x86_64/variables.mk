@@ -101,10 +101,18 @@ else
   linkmysql     :=
 endif
 
+ifeq ($(pwre_conf_gtk),1)
+  cgtk        := -DPWRE_CONF_GTK=1
+  linkgtk     := `pkg-config --libs gtk+-2.0`
+else
+  cgtk        :=
+  linkgtk     :=
+endif
+
 log_done	=
 csetos		:= -DOS_LINUX=1 -DOS=linux -D_LINUX -DHW_X86_64=1 -DHW=x86_64
 cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) -I/usr/X11R6/include -I$(jdk)/include -I$(jdk)/include/linux \
-`pkg-config --cflags gtk+-2.0` -DPREFIX=\"/usr/local\" -DSYSCONFDIR=\"/etc\" -DDATADIR=\"/usr/share\" -DLIBDIR=\"/usr/lib\" $(cmysql)
+`pkg-config --cflags gtk+-2.0` -DPREFIX=\"/usr/local\" -DSYSCONFDIR=\"/etc\" -DDATADIR=\"/usr/share\" -DLIBDIR=\"/usr/lib\" $(cmysql) $(cgtk)
 rm		:= rm
 cp		:= cp
 cpflags		:= 

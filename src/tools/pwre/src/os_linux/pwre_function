@@ -151,6 +151,12 @@ set_env()
 	else
 	  export pwre_conf_mysql=0
         fi
+# Gtk
+	if [ -e /usr/lib/libgtk-x11-2.0.so ]; then
+          export pwre_conf_gtk=1
+	else
+	  export pwre_conf_gtk=0
+        fi
 }
 
 pwre_get_variables()

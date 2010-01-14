@@ -29,9 +29,9 @@
 
 using namespace std;
 
-#define PWRE_GTK 1
+//#define PWRE_CONF_GTK 1
 
-#if defined PWRE_GTK
+#if defined PWRE_CONF_GTK
 
 # include <gdk/gdk.h>
 # include <gdk-pixbuf/gdk-pixbuf.h>
@@ -66,7 +66,7 @@ static Display *display = 0;
 
 int cnv_get_image( char *fname, cnv_tImImage *image, cnv_tPixmap *pixmap)
 {
-#if defined PWRE_GTK
+#if defined PWRE_CONF_GTK
   if ( !gdk_init_done) {
     gdk_init( 0, 0);
     gdk_init_done = 1;
@@ -93,7 +93,7 @@ int cnv_get_image( char *fname, cnv_tImImage *image, cnv_tPixmap *pixmap)
 
 void cnv_free_image( cnv_tImImage image, cnv_tPixmap pixmap)
 {
-#if defined PWRE_GTK
+#if defined PWRE_CONF_GTK
   gdk_pixbuf_unref( (GdkPixbuf *) image);
 
 #elif defined PWRE_IMLIB
@@ -105,7 +105,7 @@ void cnv_free_image( cnv_tImImage image, cnv_tPixmap pixmap)
 
 void cnv_print_image( cnv_tImImage image, char *filename)
 {
-#if defined PWRE_GTK
+#if defined PWRE_CONF_GTK
   char *s;
   char type[20];
   GError *error = NULL;
@@ -128,19 +128,23 @@ void cnv_print_image( cnv_tImImage image, char *filename)
 
 int cnv_image_width( cnv_tImImage image) 
 {
-#if defined PWRE_GTK
+#if defined PWRE_CONF_GTK
   return gdk_pixbuf_get_width( (GdkPixbuf *)image);
 #elif defined  PWRE_IMLIB
   return ((ImlibImage *)image)->rgb_width;
+#else
+  return 0;
 #endif
 }
 
 int cnv_image_height( cnv_tImImage image)
 {
-#if defined PWRE_GTK
+#if defined PWRE_CONF_GTK
   return gdk_pixbuf_get_height( (GdkPixbuf *)image);
 #elif defined  PWRE_IMLIB
   return ((ImlibImage *)image)->rgb_height;
+#else
+  return 0;
 #endif
 }
 
@@ -148,7 +152,7 @@ void cnv_image_pixel_iter( cnv_tImImage image,
 			   void (* pixel_cb)(void *, ofstream&, unsigned char *), 
 			   void *userdata, ofstream& fp)
 {
-#if defined PWRE_GTK
+#if defined PWRE_CONF_GTK
   unsigned char *rgb, *rgb_row;
   int 		rgb_height;
   int 		rgb_width;
