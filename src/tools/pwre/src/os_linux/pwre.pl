@@ -328,6 +328,8 @@ sub ebuild # args: pass flavour
       merge();
     }
     if ( $build_bcomp == 1) {
+      _module("profibus");
+      merge();
       _module("bcomp");
       _build("lib", "rt", "src", "all");
       merge();
@@ -990,7 +992,15 @@ sub copy ()
     my($cmd) = "make -f $bindir/import_files.mk" . " " . $_[0]; 
     system("$cmd");
 
-    my($cmd) = "make -f $bindir/import_files.mk" . " " . $_[0] . "_" . $_[1]; 
+    my $flavour = $_[1];
+    if ( $_[1] eq "motif") {
+      $flavour = "motif";
+    }
+    else {
+      $flavour = "gtk";
+    }
+
+    my($cmd) = "make -f $bindir/import_files.mk" . " " . $_[0] . "_" . $flavour; 
     system("$cmd");
   }
 }
