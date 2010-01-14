@@ -58,7 +58,7 @@ int xnav_open_URL( pwr_tURL url)
   if ( strncmp( url, "$pwr_lang/", 10) == 0) {
     // If file in $pwr_lang, check if file exist, else take en_us
 
-    if ( Lng::current() != lng_eLanguage_en_us) {
+    if ( Lng::current() != lng_eLanguage_en_US) {
       pwr_tURL testurl;
       pwr_tTime t;
       

@@ -24,12 +24,149 @@
 
 #include "pwr.h"
  
-extern "C" {
 #include "co_dcli.h"
-}
+#include "co_cdh.h"
 #include "co_lng.h"
 
-lng_eLanguage Lng::lang = lng_eLanguage_en_us;
+// Note, this is matched with lng_eLanguage
+static char lng_cLanguageStr[lng_eLanguage__][6] = {
+  "",
+  "af_ZA",
+  "ar_AE",
+  "ar_BH",
+  "ar_DZ",
+  "ar_EG",
+  "ar_IN",
+  "ar_IQ",
+  "ar_JO",
+  "ar_KW",
+  "ar_LB",
+  "ar_LY",
+  "ar_MA",
+  "ar_OM",
+  "ar_QA",
+  "ar_SA",
+  "ar_SD",
+  "ar_SY",
+  "ar_TN",
+  "ar_YE",
+  "be_BY",
+  "bg_BG",
+  "br_FR",
+  "bs_BA",
+  "ca_ES",
+  "cs_CZ",
+  "cy_GB",
+  "da_DK",
+  "de_AT",
+  "de_BE",
+  "de_CH",
+  "de_DE",
+  "de_LU",
+  "el_GR",
+  "en_AU",
+  "en_BW",
+  "en_CA",
+  "en_DK",
+  "en_GB",
+  "en_HK",
+  "en_IE",
+  "en_IN",
+  "en_NZ",
+  "en_PH",
+  "en_SG",
+  "en_US",
+  "en_ZA",
+  "en_ZW",
+  "es_AR",
+  "es_BO",
+  "es_CL",
+  "es_CO",
+  "es_CR",
+  "es_DO",
+  "es_EC",
+  "es_ES",
+  "es_GT",
+  "es_HN",
+  "es_MX",
+  "es_NI",
+  "es_PA",
+  "es_PE",
+  "es_PR",
+  "es_PY",
+  "es_SV",
+  "es_US",
+  "es_UY",
+  "es_VE",
+  "et_EE",
+  "eu_ES",
+  "fa_IR",
+  "fi_FI",
+  "fo_FO",
+  "fr_BE",
+  "fr_CA",
+  "fr_CH",
+  "fr_FR",
+  "fr_LU",
+  "ga_IE",
+  "gl_ES",
+  "gv_GB",
+  "he_IL",
+  "hi_IN",
+  "hr_HR",
+  "hu_HU",
+  "id_ID",
+  "is_IS",
+  "it_CH",
+  "it_IT",
+  "iw_IL",
+  "ja_JP",
+  "ka_GE",
+  "kl_GL",
+  "ko_KR",
+  "kw_GB",
+  "lt_LT",
+  "lv_LV",
+  "mi_NZ",
+  "mk_MK",
+  "mr_IN",
+  "ms_MY",
+  "mt_MT",
+  "nl_BE",
+  "nl_NL",
+  "nn_NO",
+  "no_NO",
+  "oc_FR",
+  "pl_PL",
+  "pt_BR",
+  "pt_PT",
+  "ro_RO",
+  "ru_RU",
+  "ru_UA",
+  "se_NO",
+  "sk_SK",
+  "sl_SI",
+  "sq_AL",
+  "sr_YU",
+  "sv_FI",
+  "sv_SE",
+  "ta_IN",
+  "te_IN",
+  "tg_TJ",
+  "th_TH",
+  "tl_PH",
+  "tr_TR",
+  "uk_UA",
+  "ur_PK",
+  "uz_UZ",
+  "vi_VN",
+  "wa_BE",
+  "yi_US",
+  "zh_CN",
+  "zh_HK",
+  "zh_TW"};
+
+lng_eLanguage Lng::lang = lng_eLanguage_en_US;
 tree_sTable *Lng::tree = 0;
 
 char *Lng::get_language_str()
@@ -39,55 +176,38 @@ char *Lng::get_language_str()
 
 lng_eLanguage Lng::str_to_lang( char *str)
 {
-  if ( strcmp( str, "en_us") == 0)
-    return lng_eLanguage_en_us;
-  if ( strcmp( str, "sv_se") == 0)
-    return lng_eLanguage_sv_se;
-  if ( strcmp( str, "de_de") == 0)
-    return lng_eLanguage_de_de;
-  if ( strcmp( str, "fr_fr") == 0)
-    return lng_eLanguage_fr_fr;
+  for ( int i = 1; i < lng_eLanguage__; i++) {
+    if ( cdh_NoCaseStrcmp( lng_cLanguageStr[i], str) == 0)
+      return (lng_eLanguage) i;
+  }
 
+  // Not found
   return lng_eLanguage_;
 }
 
+// Convert language enum to lower case string
 char *Lng::lang_to_str( lng_eLanguage language)
-{
+{  
   static char result[20];
 
-  switch( language) {
-    case lng_eLanguage_sv_se:
-      strcpy( result, "sv_se");
-      break;
-    case lng_eLanguage_de_de:
-      strcpy( result, "de_de");
-      break;
-    case lng_eLanguage_fr_fr:
-      strcpy( result, "fr_fr");
-      break;
-    default:
-      strcpy( result, "en_us");
-  }
+  if ( language >= lng_eLanguage__ || language <= 0)
+    strcpy( result, "");
+  else
+    strcpy( result, cdh_Low( lng_cLanguageStr[language]));
+
   return result;
 }
 
+// Convert language enum to string
 char *Lng::lang_to_locale( lng_eLanguage language)
 {
   static char result[20];
 
-  switch( language) {
-    case lng_eLanguage_sv_se:
-      strcpy( result, "sv_SE");
-      break;
-    case lng_eLanguage_de_de:
-      strcpy( result, "de_DE");
-      break;
-    case lng_eLanguage_fr_fr:
-      strcpy( result, "fr_FR");
-      break;
-    default:
-      strcpy( result, "en_US");
-  }
+  if ( language >= lng_eLanguage__ || language <= 0)
+    strcpy( result, "");
+  else
+    strcpy( result, lng_cLanguageStr[language]);
+
   return result;
 }
 
@@ -119,7 +239,7 @@ char *Lng::translate( const char *text)
   int sts;
   char *in_p;
 
-  if ( lang == lng_eLanguage_en_us || tree == 0) {
+  if ( lang == lng_eLanguage_en_US || tree == 0) {
     // No translation is needed
     strncpy( result, text, sizeof(result));
     result[sizeof(result)-1] = 0;
@@ -171,7 +291,7 @@ int Lng::translate( char *text, char *out)
   int sts;
   char *in_p;
 
-  if ( lang == lng_eLanguage_en_us || tree == 0) {
+  if ( lang == lng_eLanguage_en_US || tree == 0) {
     // No translation is needed
     return 0;
   }
@@ -381,28 +501,53 @@ void Lng::get_uid( char *in, char *out)
 
 void Lng::set( char *language) 
 { 
-  lng_eLanguage l = str_to_lang( language);
-  if ( l != lng_eLanguage_)
-    set( l);
+  pwr_tStatus sts;
 
+  lng_eLanguage l = str_to_lang( language);
+  if ( l != lng_eLanguage_) {
+    sts = set( l);
+    if ( EVEN(sts)) return;
+  }
   setlocale( LC_ALL, lang_to_locale( l));
 }
 
-void Lng::set( lng_eLanguage language) 
+pwr_tStatus Lng::set( lng_eLanguage language) 
 { 
   if ( lang == language)
-    return;
+    return 1;
 
-  lang = language;
-  if ( lang == lng_eLanguage_en_us)
+  if ( language == lng_eLanguage_en_US) {
+    lang = language;
     unload();
-  else
+  }
+  else {
+    if ( !is_installed( language))
+      return 0;
+    lang = language;
     read();
+  }
 
   setlocale( LC_ALL, lang_to_locale( lang));
+  return 1;
 }
 
+bool Lng::is_installed( lng_eLanguage language)
+{
+  pwr_tFileName fname;
+  pwr_tFileName found_file;
+  pwr_tStatus sts;
 
+  strcpy( fname, "$pwr_exe/");
+  strcat( fname, lang_to_str( language));
+  strcat( fname, "/xtt_lng.dat");
+
+  dcli_translate_filename( fname, fname);
+
+  sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
+  dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
+  if ( ODD(sts)) return true;
+  return false;
+}
 
 
 

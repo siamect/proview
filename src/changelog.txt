@@ -127,4 +127,6 @@
 091111 cs  gdh       Bugfix in nethandler SetObjectInfo and GetObjectInfo.
 091209 cs  co        Command line interpreter, command not converted to upper case any more.
 091211 cs  rtt       rt_rtt runable on sev station to show qcom nodes and qcom applications.
+091211 cs  pwre      Format of pwre database changed. Delimiter character changed from : to ;.
 100111 cs  pwrb      Attribute (and method) Photo added to signal objects.
+100111 cs  co        Set language is prepared for all languages and checks if language is installed.
