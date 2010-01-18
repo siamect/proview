@@ -1089,6 +1089,7 @@ typedef enum {
 	glow_eSave_Ctx_nav_zoom_factor_y	= 136,
 	glow_eSave_Ctx_version			= 137,
 	glow_eSave_Ctx_hot_indication  		= 138,
+	glow_eSave_Ctx_tiptext_size  		= 139,
 	glow_eSave_Ctx_comment			= 199,
 	glow_eSave_Array_a			= 200,
 	glow_eSave_NodeClass_nc_name		= 300,

@@ -48,8 +48,8 @@ class GlowTipText {
   /*!
     \param gctx		Glow context.
   */
-  GlowTipText( GrowCtx *gctx) : ctx(gctx), text_object(0), active(false), timer_id(0), 
-    text_size(2) {}
+  GlowTipText( GrowCtx *gctx, int tsize) : ctx(gctx), text_object(0), active(false), timer_id(0), 
+    text_size(tsize) {}
 
   //! Destructor
   /*! Removes the timer if it is set.
@@ -67,6 +67,12 @@ class GlowTipText {
   bool active;		//!< Tip text is active, i.e. timer is running or text is displayed.
   void *timer_id;	//!< Timer id.
   int  text_size;	//!< Text size.
+
+  //! Set text size.
+  /*!
+    \param tsize	Text size.
+  */
+  void set_size( int tsize) { text_size = tsize;}
 
   //! Activate tooltip.
   /*!

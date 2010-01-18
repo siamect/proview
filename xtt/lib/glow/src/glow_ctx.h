@@ -823,6 +823,7 @@ class GlowCtx {
   int is_component;		//!< Ctx is a window component.
   CtxComment *comment;
   glow_eHotIndication hot_indication; //!< Specification of how hots object should be drawn.
+  int tiptext_size;		//!< Size of tooltip text
 
   //! Register scrollbar callback function
   /*!

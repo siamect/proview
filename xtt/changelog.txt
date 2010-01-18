@@ -157,3 +157,4 @@
 091208 cs  xtt       New pixmap for weblink in helpwindow.
 091208 cs  xtt       EventSelectList exended to 40 elements.
 100111 cs  xtt       Method Photo added to xtt toolbar.
+100118 cs  ge        Possibility to configure the tooltip size in Ge graphs.

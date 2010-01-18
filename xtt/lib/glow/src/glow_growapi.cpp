@@ -2825,6 +2825,11 @@ int grow_GetGraphAttrInfo( grow_tCtx ctx, grow_sAttrInfo **info,
   attrinfo[i].type = glow_eType_HotIndication;
   attrinfo[i++].size = sizeof( ctx->hot_indication);
       
+  strcpy( attrinfo[i].name, "TooltipTextsize");
+  attrinfo[i].value_p = &ctx->tiptext_size;
+  attrinfo[i].type = glow_eType_TextSize;
+  attrinfo[i++].size = sizeof( ctx->tiptext_size);
+      
   attrinfo[i].info_type = grow_eInfoType_End;
   *attr_cnt = i;
   *info = attrinfo;
