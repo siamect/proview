@@ -239,6 +239,7 @@ class WFoeGtk : public WFoe {
   static void activate_palette_con( GtkWidget *w, gpointer data);
   static void activate_palette_object( GtkWidget *w, gpointer data);
   static void activate_palette_plant( GtkWidget *w, gpointer data);
+  static void activate_confeedback( GtkWidget *w, gpointer data);
   static void activate_refcon( GtkWidget *w, gpointer data);
   static void activate_showexeord( GtkWidget *w, gpointer data);
   static void activate_plcattribute( GtkWidget *w, gpointer data);

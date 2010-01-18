@@ -1600,6 +1600,15 @@ void WFoe::gre_con_created( WGre *gre, double x, double y,
   foe->error_msg( *sts);
   if ( EVEN(*sts)) return;
 
+  if ( foe->use_feedback_con) {
+    // Change to corresponding feedback connection
+
+    if ( con_class == pwr_cClass_ConDigital)
+      con_class = pwr_cClass_ConFeedbackDigital;
+    else if ( con_class == pwr_cClass_ConAnalog)
+      con_class = pwr_cClass_ConFeedbackAnalog;
+  }
+
   if ( user_class)
     con_class = user_class;
 
@@ -2573,7 +2582,7 @@ WFoe::WFoe( void		*f_parent_ctx,
   node_palette_managed(0), nav_palette_managed(0), con_drawtype(GOEN_CONDRAW),
   show_execorder(0), searchindex(0), popupmenu_mask(~0), popupmenu_node(0),
   access(f_access), map_window(f_map_window), advanced_user(1), ldh_cb_enabled(0),
-  classeditor(0), options(f_options)
+  classeditor(0), options(f_options), use_feedback_con(0)
 {
   strcpy( name, f_name);
 }
@@ -2598,7 +2607,7 @@ WFoe::WFoe( void *f_parent_ctx,
   node_palette_managed(0), nav_palette_managed(0), con_drawtype(GOEN_CONDRAW),
   show_execorder(0), searchindex(0), popupmenu_mask(~0), popupmenu_node(0),
   access(f_access), map_window(f_map_window), advanced_user(1), ldh_cb_enabled(0),
-  classeditor(0), options(f_options)
+  classeditor(0), options(f_options), use_feedback_con(0)
 {
   strcpy( name, f_name);
 }

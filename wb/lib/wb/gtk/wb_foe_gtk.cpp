@@ -515,6 +515,14 @@ void WFoeGtk::activate_palette_object( GtkWidget *w, gpointer data)
   foe->node_palctx->set_inputfocus( set);
 }
 
+void WFoeGtk::activate_confeedback( GtkWidget *w, gpointer data)
+{
+  WFoeGtk *foe = (WFoeGtk *)data;
+
+  int set = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(w));
+  ((WFoe *)foe)->activate_confeedback( set);
+}
+
 //
 //	Callback from the menu.
 //	Display or hide the connection palette.
@@ -1824,6 +1832,15 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   g_signal_connect(tools_plantpalette, "clicked", G_CALLBACK(WFoeGtk::activate_palette_plant), this);
   g_object_set( tools_plantpalette, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_plantpalette, "Show Plant Hierarchy", "");
+
+  // Feedback connection checkbutton
+  GtkWidget *tools_confeedback = gtk_toggle_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/foe_confeedback.png");
+  gtk_container_add( GTK_CONTAINER(tools_confeedback), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_confeedback, "clicked", G_CALLBACK(activate_confeedback), this);
+  g_object_set( tools_confeedback, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_confeedback, "Feedback connection", "");
 
   // Statusbar and cmd input
   GtkWidget *statusbar = gtk_hbox_new( FALSE, 0);

@@ -119,6 +119,7 @@ class WFoe : public WUtility {
   int		ldh_cb_enabled;
   int		classeditor;
   unsigned int	options;
+  int		use_feedback_con;
   static foe_sAttr *attr_pointer;
   static int	attr_count;
   CoWow		*wow;
@@ -245,6 +246,7 @@ class WFoe : public WUtility {
   void activate_view_togg( int set);
   void activate_edit_togg( int set);
   void activate_conpoint_lock();
+  void activate_confeedback( int set) { use_feedback_con = set;}
 
   void function_setup();
   int register_callbacks();
