@@ -1646,7 +1646,7 @@ int wb_dbms_dbody::ins(wb_dbms_txn *txn, size_t offset, size_t size, void *p)
   m_data.size(size);
   m_data.data(p);
 
-  return m_db->m_t_rbody->ins(txn, &m_key, &m_data);
+  return m_db->m_t_dbody->ins(txn, &m_key, &m_data);
 }
 
 int wb_dbms_dbody::upd(wb_dbms_txn *txn, size_t offset, size_t size, void *p)
