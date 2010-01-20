@@ -92,6 +92,7 @@ int GsdmlSlotData::print( ofstream& fp)
 {
   fp <<
     "  <Slot ModuleEnumNumber=\"" << module_enum_number << "\"" << endl <<
+    "        ModuleIdentNumber=\"" << module_ident_number << "\"" << endl <<
     "        ModuleClass=\"" << module_class << "\"" << endl <<
     "        ModuleText=\"" << module_text << "\"" << endl <<
     "        SlotNumber=\"" << slot_number << "\" >" << endl;
@@ -421,6 +422,8 @@ int GsdmlDataReader::tag_attribute( const char *name, const char *value)
 
     if ( strcmp( name, "ModuleEnumNumber") == 0)
       sscanf( value, "%d", &sd->module_enum_number);
+    else if ( strcmp( name, "ModuleIdentNumber") == 0)
+      sscanf( value, "%u", &sd->module_ident_number);
     else if ( strcmp( name, "ModuleClass") == 0)
       sscanf( value, "%u", &sd->module_class);
     else if ( strcmp( name, "ModuleText") == 0)

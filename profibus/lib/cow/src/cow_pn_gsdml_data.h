@@ -93,6 +93,7 @@ class GsdmlSlotData {
     slot_number(0), slot_idx(0)
     { module_text[0]=0;}
   unsigned int module_enum_number;
+  unsigned int module_ident_number;
   pwr_tCid module_class;
   pwr_tOid module_oid;
   char module_text[160];

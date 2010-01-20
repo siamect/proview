@@ -1361,6 +1361,24 @@ int GsdmlAttrNav::save( const char *filename)
   strncpy( dev_data.version, gsdml->ProfileHeader->Body.ProfileRevision, sizeof(dev_data.version));
   dev_data.byte_order = gsdml->byte_order;
 
+  // Store ModuleIdentNumber
+  gsdml_UseableModules *um = device_item->UseableModules;
+
+  for ( unsigned int i = 0; i < dev_data.slot_data.size(); i++) {
+    if ( i == 0) {
+      dev_data.slot_data[i]->module_ident_number = device_item->Body.ModuleIdentNumber;
+    }
+    else {
+      if ( dev_data.slot_data[i]->module_enum_number != 0) {
+	gsdml_ModuleItem *mi = (gsdml_ModuleItem *)um->
+	  ModuleItemRef[dev_data.slot_data[i]->module_enum_number-1]->Body.ModuleItemTarget.p;
+	dev_data.slot_data[i]->module_ident_number = mi->Body.ModuleIdentNumber;
+      }
+      else
+	dev_data.slot_data[i]->module_ident_number = 0;
+    }
+  }
+
   // Create IOCR data
   if ( dev_data.iocr_data.size() < 1) {
     GsdmlIOCRData *iod = new GsdmlIOCRData();
