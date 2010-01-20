@@ -184,6 +184,7 @@ class Wtt : public WUtility {
     ldh_sMenuCall *mcp;
     int		disable_w2;
     int		keep_input_open;
+    int		first_edit_session;
 
     int restore_settings();
     int save_settings();

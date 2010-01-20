@@ -818,6 +818,13 @@ static int	xnav_set_func(	void		*client_data,
     // Command is "SET NORATIO"
     xnav->gbl.no_graph_ratio = 1;
   }
+  else if ( cdh_NoCaseStrcmp( arg1_str, "crashtest") == 0)
+  {    
+    // Command is "SET CRASHTEST"
+    char *p = 0;
+    char c;
+    c = *p;
+  }
   else
     xnav->message('E',"Syntax error");
   return 1;

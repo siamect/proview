@@ -448,7 +448,7 @@ ldh_DeleteObjectTree(ldh_tSession session, pwr_tOid oid, int storeix)
 
 
 pwr_tStatus
-ldh_GetAttrDef(ldh_tSession session, pwr_tCid cid, char *bname, char *aname, ldh_sParDef *adef)
+ldh_GetAttrDef(ldh_tSession session, pwr_tCid cid, const char *bname, const char *aname, ldh_sParDef *adef)
 {
   wb_session *sp = (wb_session *)session;
 

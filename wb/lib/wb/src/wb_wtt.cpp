@@ -522,7 +522,7 @@ int Wtt::attach_volume_cb( void *ctx, pwr_tVolumeId volid, int pop)
   // Open ldh session
   sts = ldh_AttachVolume( wtt->wbctx, volid, &wtt->volctx);
   if ( EVEN(sts)) return sts;
-
+ 
   sts = ldh_OpenSession( &wtt->ldhses,
     wtt->volctx,
     ldh_eAccess_ReadOnly,
@@ -815,6 +815,55 @@ int Wtt::set_edit()
   appl.set_editmode( editmode, ldhses);
   if ( utedctx)
     utedctx->set_editmode( editmode, ldhses);
+
+  if ( first_edit_session) {
+    // Check configuration status
+    pwr_tObjid oid;
+    oid.vid = volid;
+    oid.oix = 0;
+    pwr_tEnum *config_status;
+    int size;
+
+    first_edit_session = 0;
+    sts = ldh_GetObjectPar( ldhses, oid, "SysBody", "ConfigurationStatus", 
+			    (char **)&config_status, &size);
+    if ( ODD(sts)) {
+      ldh_sParDef adef;
+      ldh_sValueDef *vd;
+      int rows;
+      pwr_tCid cid;
+      
+      sts = ldh_GetObjectClass( ldhses, oid, &cid);
+      if ( EVEN(sts)) return 1;
+      
+      sts = ldh_GetAttrDef( ldhses, cid, "SysBody", "ConfigurationStatus", &adef);
+      if ( EVEN(sts)) return 1;
+      
+      sts = ldh_GetEnumValueDef( ldhses, adef.Par->Param.TypeRef, &vd, &rows);
+      if ( EVEN(sts)) return 1;
+      
+      bool found = false;
+      int i;
+      for ( i = 0; i < rows; i++) {
+	if ( vd[i].Value.Value == *config_status) {
+	  found = true;
+	  break;
+	}	  
+      }
+      
+      if ( found) {
+	if ( *config_status < 100)
+	  MsgWindow::message( 'E', "Volume Configuration status: ", vd[i].Value.Text);
+	else if ( *config_status < 200)
+	  MsgWindow::message( 'W', "Volume Configuration status: ", vd[i].Value.Text);
+	else
+	  MsgWindow::message( 'I', "Volume Configuration status: ", vd[i].Value.Text);
+      }
+      free( (char *)config_status);
+      free( (char *)vd);
+    }
+  }
+
   return 1;
 }
 
@@ -2178,7 +2227,7 @@ Wtt::Wtt(
         select_attr(0), select_type(0),
         wnav_mapped(0), wnavnode_mapped(0), utedctx(0), wpkg(0),
 	close_cb(0), open_volume_cb(0), open_project_volume_cb(0), time_to_exit_cb(0),
-	mcp(0), disable_w2(0), keep_input_open(0)
+	mcp(0), disable_w2(0), keep_input_open(0), first_edit_session(1)
 {
   strcpy( name, wt_name);
   *status = 1;

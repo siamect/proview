@@ -622,8 +622,8 @@ pwr_tStatus ldh_EvalObject (
 pwr_tStatus ldh_GetAttrDef (
   ldh_tSession Session,
   pwr_tClassId Class,
-  char *BodyName,
-  char *AttrName,
+  const char *BodyName,
+  const char *AttrName,
   ldh_sParDef *AttrDef
 );
 pwr_tStatus ldh_GetAttrRef (

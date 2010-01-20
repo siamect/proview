@@ -597,6 +597,11 @@ struct pwr_s_ParInfo {
 */
 typedef pwr_tMask pwr_tPrivMask;
 
+/*_*
+  @aref configstatusenum ConfigStatusEnum
+*/
+typedef pwr_tEnum pwr_tConfigStatusEnum;
+
 /* Operating system.  */
 /*_*
   @aref opsys OpSys
@@ -1015,6 +1020,7 @@ struct pwr_s_PlantHier {
   pwr_tURL            	DataSheet	pwr_dAlignW;
   pwr_tURL            	CircuitDiagram	pwr_dAlignW;
   pwr_tURL            	Photo		pwr_dAlignW;
+  pwr_tConfigStatusEnum	ConfigurationStatus pwr_dAlignW;
 };
 
 /* Node defining classes.  */
@@ -1037,7 +1043,7 @@ struct pwr_s_Node {
   pwr_tUInt32		Restarts	pwr_dAlignW;
   pwr_tTime		RestartTime	pwr_dAlignLW;
   pwr_tDeltaTime	RestartStallTime pwr_dAlignLW;
-  pwr_tTime		SystemTime	pwr_dAlignW;
+  pwr_tTime		SystemTime	pwr_dAlignLW;
   pwr_tNetStatus	SystemStatus	pwr_dAlignW;  
   pwr_tStatus		ProcStatus[40]	pwr_dAlignW;
   pwr_tStatus		ProcMsgSeverity[40] pwr_dAlignW;
@@ -1081,10 +1087,10 @@ struct pwr_s_LibHier {
   pwr_tString80	Description;
 };
 
-struct pwr_s_NodeHier
-    {
-    pwr_tString80	Description;
-    };
+struct pwr_s_NodeHier {
+  pwr_tString80		Description	pwr_dAlignW;
+  pwr_tConfigStatusEnum	ConfigurationStatus pwr_dAlignW;
+};
 
 struct pwr_s_RootVolume {
   pwr_tString80		Description;
@@ -1096,6 +1102,7 @@ struct pwr_s_RootVolume {
   pwr_tUInt32		RtBodySize	pwr_dAlignW;
   pwr_mOpSys		OperatingSystem	pwr_dAlignW;
   pwr_tTime		Modified	pwr_dAlignLW;
+  pwr_tConfigStatusEnum	ConfigurationStatus pwr_dAlignW;
 };
 
 struct pwr_s_SubVolume {
@@ -1108,6 +1115,7 @@ struct pwr_s_SubVolume {
   pwr_tUInt32		RtBodySize	pwr_dAlignW;
   pwr_mOpSys		OperatingSystem	pwr_dAlignW;
   pwr_tTime		Modified	pwr_dAlignLW;
+  pwr_tConfigStatusEnum	ConfigurationStatus pwr_dAlignW;
 };
 
 struct pwr_s_SharedVolume {
@@ -1119,6 +1127,7 @@ struct pwr_s_SharedVolume {
   pwr_tUInt32		RtCardinality	pwr_dAlignW;
   pwr_tUInt32		RtBodySize	pwr_dAlignW;
   pwr_tTime		Modified	pwr_dAlignLW;
+  pwr_tConfigStatusEnum	ConfigurationStatus pwr_dAlignW;
 };
 
 struct pwr_s_DynamicVolume {
@@ -1152,6 +1161,7 @@ struct pwr_s_ClassVolume {
   pwr_tObjectIx		NextCix		pwr_dAlignW;	/* Next free class index.  */
   pwr_tObjectIx		NextTix[pwr_cMaxTyg + 1]  pwr_dAlignW;	/* Next free type index.  */
   pwr_tUInt32		DvVersion	pwr_dAlignW;
+  pwr_tConfigStatusEnum	ConfigurationStatus pwr_dAlignW;
 };
 
 struct pwr_s_WorkBenchVolume {

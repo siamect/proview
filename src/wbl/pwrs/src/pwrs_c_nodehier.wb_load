@@ -71,6 +71,20 @@ SObject pwrs:Class
           Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
+      !/**
+      !  @Summary Configuration status.
+      !  Configuration status.
+      !  Status in the development environment for an hierarchy, 
+      !  plcprogram or process graph, set by the designer to indicate
+      !  the current state. If a status is set for an object, it is 
+      !  marked red, yellow or green in the configurator. Also the 
+      !  status text if viewed surrounded by angel brackets.
+      !*/
+      Object ConfigurationStatus $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ConfigStatusEnum"
+        EndBody
+      EndObject
     EndObject
     Object NavigatorPosnn $Menu
       Object Pointed $Menu

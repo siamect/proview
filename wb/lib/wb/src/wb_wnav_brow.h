@@ -57,6 +57,9 @@ class WNavBrow {
     void		*userdata;
     brow_tNodeClass 	nc_object;
     brow_tNodeClass 	nc_multiobject;
+    brow_tNodeClass 	nc_multiobject_red;
+    brow_tNodeClass 	nc_multiobject_yellow;
+    brow_tNodeClass 	nc_multiobject_green;
     brow_tNodeClass 	nc_attr;
     brow_tNodeClass 	nc_attr_full;
     brow_tNodeClass 	nc_attr_input;

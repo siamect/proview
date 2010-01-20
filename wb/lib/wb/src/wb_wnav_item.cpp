@@ -72,11 +72,15 @@ WItemObject::WItemObject( WNav *wnav, pwr_tObjid item_objid,
   char	segname[120];
   pwr_tObjid child;
   pwr_tClassId classid;
+  pwr_tEnum *config_status;
   char	*descr;
+  char  descr_str[200];
   int	size;
   int	next_annot, next_pixmap;
   ldh_sRefInfo	ref_info;
   char	buf[80];
+  brow_tNodeClass nc;
+  pwr_tObjName body;
 
   type = wnav_eItemType_Object;
 
@@ -87,8 +91,76 @@ WItemObject::WItemObject( WNav *wnav, pwr_tObjid item_objid,
     sts = ldh_GetObjectClass( wnav->ldhses, objid, &classid);
     sts = ldh_ObjidToName( wnav->ldhses, objid, ldh_eName_Object, 
 	segname, sizeof(segname), &size);
-    brow_CreateNode( wnav->brow->ctx, segname, wnav->brow->nc_multiobject, 
-		dest, dest_code, (void *) this, 1, &node);
+
+    // Get ConfigStatus
+    for ( int i = 0; i < 3; i++) {
+      switch ( i) {
+      case 0:
+	strcpy( body, "DevBody");
+	break;
+      case 1:
+	strcpy( body, "SysBody");
+	break;
+      case 2:
+	strcpy( body, "RtBody");
+	break;
+      }	
+      sts = ldh_GetObjectPar( wnav->ldhses, objid, body, "ConfigurationStatus",
+			      (char **)&config_status, &size);
+      if ( ODD(sts)) break;
+    }
+    if ( EVEN(sts)) {
+      nc = wnav->brow->nc_multiobject;
+      strcpy( descr_str, "");
+    }
+    else {
+      // Evaluate config status
+      if ( *config_status == 0) {
+	nc = wnav->brow->nc_multiobject;
+	strcpy( descr_str, "");
+      }
+      else {
+	// Get enum text
+	ldh_sParDef adef;
+	ldh_sValueDef *vd;
+	int rows;
+
+	sts = ldh_GetAttrDef( wnav->ldhses, classid, body, "ConfigurationStatus", &adef);
+	if ( EVEN(sts)) return;
+
+	sts = ldh_GetEnumValueDef( wnav->ldhses, adef.Par->Param.TypeRef, &vd, &rows);
+	if ( EVEN(sts)) return;
+
+	bool found = false;
+	int i;
+	for ( i = 0; i < rows; i++) {
+	  if ( vd[i].Value.Value == *config_status) {
+	    found = true;
+	    break;
+	  }	  
+	}
+	
+	if ( found) {
+	  if ( *config_status < 100)
+	    nc = wnav->brow->nc_multiobject_red;
+	  else if ( *config_status < 200)
+	    nc = wnav->brow->nc_multiobject_yellow;
+	  else 
+	    nc = wnav->brow->nc_multiobject_green
+;
+	  sprintf( descr_str, "<%s> ", vd[i].Value.Text);
+	}
+	else {
+	  nc = wnav->brow->nc_multiobject_red;
+	  strcpy( descr_str, "<Unknown status>  ");
+	}
+	free( (char *)vd);
+      }
+      free((char *) config_status);
+    }
+
+    brow_CreateNode( wnav->brow->ctx, segname, nc, dest, dest_code, (void *) this, 
+		     1, &node);
 
     // Set pixmap
     sts = ldh_GetChildMnt( wnav->ldhses, objid, &child);
@@ -132,9 +204,11 @@ WItemObject::WItemObject( WNav *wnav, pwr_tObjid item_objid,
 		&descr, &size);
       if ( ODD(sts))
       {
-        brow_SetAnnotation( node, next_annot++, descr, strlen(descr));
+	strcat( descr_str, descr);
         free( descr);
       }
+      if ( strcmp( descr_str, "") != 0)
+	brow_SetAnnotation( node, next_annot++, descr_str, strlen(descr_str));
     }
     if ( wnav->gbl.show_alias && classid == pwr_eClass_Alias)
     {
