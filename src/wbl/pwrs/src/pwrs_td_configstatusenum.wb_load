@@ -1,0 +1,201 @@
+! 
+!  Proview   $Id$
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_td_configstatusenum.wb_load -- Defines the enum type ConfigStatus
+!
+SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enumeration for configuration status.
+!*/
+  Object $ConfigStatusEnum $TypeDef 23
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Enum"
+      Attr PgmName = "ConfigStatusEnum"
+    EndBody
+    !/**
+    !  None.
+    !*/
+    Object None $Value
+     Body SysBody
+       Attr PgmName = "None"
+       Attr Text = "None"
+       Attr Value = 0
+     EndBody
+    EndObject
+    !/**
+    !  Note.
+    !*/
+    Object Note $Value
+     Body SysBody
+       Attr PgmName = "Note"
+       Attr Text = "Note"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  See Below.
+    !*/
+    Object SeeBelow $Value
+     Body SysBody
+       Attr PgmName = "SeeBelow"
+       Attr Text = "See below"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !  Work In Progress.
+    !*/
+    Object WorkInProgress $Value
+     Body SysBody
+       Attr PgmName = "WorkInProgress"
+       Attr Text = "Work in progress"
+       Attr Value = 3
+     EndBody
+    EndObject
+    !/**
+    !  Untested.
+    !*/
+    Object Untested $Value
+     Body SysBody
+       Attr PgmName = "Untested"
+       Attr Text = "Untested"
+       Attr Value = 4
+     EndBody
+    EndObject
+    !/**
+    !  Not Built.
+    !*/
+    Object NotBuilt $Value
+     Body SysBody
+       Attr PgmName = "NotBuilt"
+       Attr Text = "Not built"
+       Attr Value = 5
+     EndBody
+    EndObject
+    !/**
+    !  Todo.
+    !*/
+    Object Todo $Value
+     Body SysBody
+       Attr PgmName = "Todo"
+       Attr Text = "Todo"
+       Attr Value = 6
+     EndBody
+    EndObject
+    !/**
+    !  Not Yet Configured.
+    !*/
+    Object NotYetConfigured $Value
+     Body SysBody
+       Attr PgmName = "NotYetConfigured"
+       Attr Text = "Not yet configured"
+       Attr Value = 7
+     EndBody
+    EndObject
+    !/**
+    !  Not Yet Implemented.
+    !*/
+    Object NotYetImplemented $Value
+     Body SysBody
+       Attr PgmName = "NotYetImplemented"
+       Attr Text = "Not yet implemented"
+       Attr Value = 8
+     EndBody
+    EndObject
+    !/**
+    !  UncompiledModifications.
+    !*/
+    Object UncompiledModifiections $Value
+     Body SysBody
+       Attr PgmName = "UncompiledModifications"
+       Attr Text = "Uncompiled modifications"
+       Attr Value = 9
+     EndBody
+    EndObject
+    !/**
+    !  Warning.
+    !*/
+    Object Warning $Value
+     Body SysBody
+       Attr PgmName = "Warning"
+       Attr Text = "Warning"
+       Attr Value = 100
+     EndBody
+    EndObject
+    !/**
+    !  NotYetTrimmed.
+    !*/
+    Object NotYetTrimmed $Value
+     Body SysBody
+       Attr PgmName = "NotYetTrimmed"
+       Attr Text = "Not yet trimmed"
+       Attr Value = 101
+     EndBody
+    EndObject
+    !/**
+    !  Ready.
+    !*/
+    Object Ready $Value
+     Body SysBody
+       Attr PgmName = "Ready"
+       Attr Text = "Ready"
+       Attr Value = 200
+     EndBody
+    EndObject
+    !/**
+    !  Success.
+    !*/
+    Object Success $Value
+     Body SysBody
+       Attr PgmName = "Success"
+       Attr Text = "Success"
+       Attr Value = 201
+     EndBody
+    EndObject
+    !/**
+    !  Implemented.
+    !*/
+    Object Implemented $Value
+     Body SysBody
+       Attr PgmName = "Implemented"
+       Attr Text = "Implemented"
+       Attr Value = 202
+     EndBody
+    EndObject
+    !/**
+    !  Debugged.
+    !*/
+    Object Debugged $Value
+     Body SysBody
+       Attr PgmName = "Debugged"
+       Attr Text = "Debugged"
+       Attr Value = 203
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+
+
+
+
