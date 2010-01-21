@@ -116,10 +116,12 @@ class WGre {
   vldh_t_node		last_selected;
   vldh_t_node		last_cp_selected;
   int			last_cp_selected_num;
+  vldh_t_node		floating_node;
 
   /* Callbacks */
   void (*gre_setup_window)(WGre *);
   void (*gre_node_created)(WGre *, unsigned long, float, float);
+  void (*gre_node_floating_created)(WGre *, vldh_t_node);
   void (*gre_con_created)(WGre *, double, double, vldh_t_node, unsigned long, vldh_t_node,  unsigned long, int, int *);
   void (*gre_node_moved)(WGre *);
   void (*gre_delete)(WGre *, void *, unsigned long);
@@ -179,6 +181,7 @@ class WGre {
   int setup_backcalls (
 	void (*setup_window_bc)(WGre *),
 	void (*node_created_bc)(WGre *, unsigned long, float, float),
+	void (*node_floating_created_bc)(WGre *, vldh_t_node),
 	void (*con_created_bc)(WGre *, double, double, vldh_t_node, unsigned long, vldh_t_node, unsigned long, int, int *),
 	void (*node_moved_bc)(WGre *),
 	void (*delete_bc)(WGre *, void *, unsigned long),
@@ -217,6 +220,7 @@ class WGre {
 				  unsigned long new_output_mask,
 				  int *point_array, int *point_count);
   int node_update( vldh_t_node object);
+  int node_update_floating( vldh_t_node object);
   void zoom( float zoom);
   void unzoom();
   int zoom_absolute( float absolute_zoom, int expand, float *realized_zoom);

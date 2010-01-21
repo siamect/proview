@@ -98,6 +98,8 @@ void flow_ResetSelectInverse( flow_tCtx ctx);
 void flow_SelectInsert( flow_tCtx ctx, flow_tObject object);
 void flow_SelectRemove( flow_tCtx ctx, flow_tObject object);
 void flow_SelectClear( flow_tCtx ctx);
+void flow_PasteInsert( flow_tCtx ctx, flow_tObject object);
+void flow_PasteRemove( flow_tCtx ctx, flow_tObject object);
 void flow_ConPointSelectInsert( flow_tCtx ctx, flow_tObject object, int num);
 void flow_ConPointSelectClear( flow_tCtx ctx);
 void flow_GetSelectedNodes( flow_tCtx ctx, flow_tNode **nodes, int *num);

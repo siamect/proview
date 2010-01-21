@@ -128,6 +128,16 @@ void flow_SelectClear( flow_tCtx ctx)
   ctx->select_clear();
 }
 
+void flow_PasteInsert( flow_tCtx ctx, flow_tObject object)
+{
+  ctx->paste_insert( (FlowArrayElem *)object);
+}
+
+void flow_PasteRemove( flow_tCtx ctx, flow_tObject object)
+{
+  ctx->paste_remove( (FlowArrayElem *)object);
+}
+
 void flow_ConPointSelectInsert( flow_tCtx ctx, flow_tObject object, int num)
 {
   ctx->conpoint_select( (FlowArrayElem *)object, num);

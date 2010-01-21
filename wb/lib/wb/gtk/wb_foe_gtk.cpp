@@ -523,6 +523,41 @@ void WFoeGtk::activate_confeedback( GtkWidget *w, gpointer data)
   ((WFoe *)foe)->activate_confeedback( set);
 }
 
+void WFoeGtk::activate_singlelinetext( GtkWidget *w, gpointer data)
+{
+  WFoe *foe = (WFoe *)data;
+
+  foe->activate_createobject_cid( pwr_cClass_Text, 0);
+}
+
+void WFoeGtk::activate_bodytext( GtkWidget *w, gpointer data)
+{
+  WFoe *foe = (WFoe *)data;
+
+  foe->activate_createobject_cid( pwr_cClass_BodyText, 0);
+}
+
+void WFoeGtk::activate_textheader( GtkWidget *w, gpointer data)
+{
+  WFoe *foe = (WFoe *)data;
+
+  foe->activate_createobject_cid( pwr_cClass_Head, 0);
+}
+
+void WFoeGtk::activate_document( GtkWidget *w, gpointer data)
+{
+  WFoe *foe = (WFoe *)data;
+
+  foe->activate_createobject_cid( pwr_cClass_Document, 0);
+}
+
+void WFoeGtk::activate_document_landscape( GtkWidget *w, gpointer data)
+{
+  WFoe *foe = (WFoe *)data;
+
+  foe->activate_createobject_cid( pwr_cClass_Document, 1);
+}
+
 //
 //	Callback from the menu.
 //	Display or hide the connection palette.
@@ -1666,7 +1701,10 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   g_signal_connect( view_showexeord, "activate", 
 		    G_CALLBACK(WFoeGtk::activate_showexeord), this);
 
-  widgets.redraw = gtk_menu_item_new_with_mnemonic( "R_edraw");
+  widgets.redraw = gtk_image_menu_item_new_with_mnemonic( "R_edraw");
+  dcli_translate_filename( fname, "$pwr_exe/foe_redraw.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(widgets.redraw), 
+				 gtk_image_new_from_file( fname));
   g_signal_connect( widgets.redraw, "activate", 
 		    G_CALLBACK(WFoeGtk::activate_redraw), this);
 
@@ -1762,6 +1800,13 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   g_object_set( widgets.tools_save, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, widgets.tools_save, "Save", "");
 
+  GtkWidget *tools_print = gtk_button_new();
+  gtk_container_add( GTK_CONTAINER( tools_print), 
+	  gtk_image_new_from_stock( "gtk-print", GTK_ICON_SIZE_SMALL_TOOLBAR));
+  g_signal_connect(tools_print, "clicked", G_CALLBACK(WFoeGtk::activate_print), this);
+  g_object_set( tools_print, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_print, "Print documents", "");
+
   GtkWidget *tools_edit = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/foe_edit.png");
   gtk_container_add( GTK_CONTAINER( tools_edit), 
@@ -1833,14 +1878,68 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   g_object_set( tools_plantpalette, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_plantpalette, "Show Plant Hierarchy", "");
 
-  // Feedback connection checkbutton
-  GtkWidget *tools_confeedback = gtk_toggle_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/foe_confeedback.png");
-  gtk_container_add( GTK_CONTAINER(tools_confeedback), 
+  // Redraw pushbutton
+  widgets.tools_redraw = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/foe_redraw.png");
+  gtk_container_add( GTK_CONTAINER( widgets.tools_redraw), 
 		     gtk_image_new_from_file( fname));
-  g_signal_connect(tools_confeedback, "clicked", G_CALLBACK(activate_confeedback), this);
-  g_object_set( tools_confeedback, "can-focus", FALSE, NULL);
-  gtk_toolbar_append_widget( tools, tools_confeedback, "Feedback connection", "");
+  g_signal_connect(widgets.tools_redraw, "clicked", G_CALLBACK(WFoeGtk::activate_redraw), this);
+  g_object_set( widgets.tools_redraw, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, widgets.tools_redraw, "Redraw", "");
+
+  // Feedback connection checkbutton
+  widgets.tools_confeedback = gtk_toggle_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/foe_confeedback.png");
+  gtk_container_add( GTK_CONTAINER(widgets.tools_confeedback), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(widgets.tools_confeedback, "clicked", G_CALLBACK(activate_confeedback), this);
+  g_object_set( widgets.tools_confeedback, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, widgets.tools_confeedback, "Feedback connection", "");
+
+  // Singlelinetext button
+  widgets.tools_singlelinetext = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/foe_singlelinetext.png");
+  gtk_container_add( GTK_CONTAINER( widgets.tools_singlelinetext), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(widgets.tools_singlelinetext, "clicked", G_CALLBACK(WFoeGtk::activate_singlelinetext), this);
+  g_object_set( widgets.tools_singlelinetext, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, widgets.tools_singlelinetext, "Single line text", "");
+
+  // Bodytext button
+  widgets.tools_bodytext = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/foe_bodytext.png");
+  gtk_container_add( GTK_CONTAINER( widgets.tools_bodytext), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(widgets.tools_bodytext, "clicked", G_CALLBACK(WFoeGtk::activate_bodytext), this);
+  g_object_set( widgets.tools_bodytext, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, widgets.tools_bodytext, "Multi line text", "");
+
+  // Textheader button
+  widgets.tools_textheader = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/foe_textheader.png");
+  gtk_container_add( GTK_CONTAINER( widgets.tools_textheader), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(widgets.tools_textheader, "clicked", G_CALLBACK(WFoeGtk::activate_textheader), this);
+  g_object_set( widgets.tools_textheader, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, widgets.tools_textheader, "Text header", "");
+
+  // Document button
+  widgets.tools_document = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/foe_document.png");
+  gtk_container_add( GTK_CONTAINER( widgets.tools_document), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(widgets.tools_document, "clicked", G_CALLBACK(WFoeGtk::activate_document), this);
+  g_object_set( widgets.tools_document, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, widgets.tools_document, "Document portrait", "");
+
+  // Document_Landscape button
+  widgets.tools_document_landscape = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/foe_document_landscape.png");
+  gtk_container_add( GTK_CONTAINER( widgets.tools_document_landscape), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(widgets.tools_document_landscape, "clicked", G_CALLBACK(WFoeGtk::activate_document_landscape), this);
+  g_object_set( widgets.tools_document_landscape, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, widgets.tools_document_landscape, "Document landscape", "");
 
   // Statusbar and cmd input
   GtkWidget *statusbar = gtk_hbox_new( FALSE, 0);
@@ -2208,6 +2307,13 @@ int WFoeGtk::edit_set_entries()
     gtk_widget_set_sensitive( widgets.compress,TRUE);
     gtk_widget_set_sensitive( widgets.tools_save,TRUE);
     gtk_widget_set_sensitive( widgets.tools_build,TRUE);
+    gtk_widget_set_sensitive( widgets.tools_redraw,TRUE);
+    gtk_widget_set_sensitive( widgets.tools_confeedback,TRUE);
+    gtk_widget_set_sensitive( widgets.tools_singlelinetext,TRUE);
+    gtk_widget_set_sensitive( widgets.tools_bodytext,TRUE);
+    gtk_widget_set_sensitive( widgets.tools_textheader,TRUE);
+    gtk_widget_set_sensitive( widgets.tools_document,TRUE);
+    gtk_widget_set_sensitive( widgets.tools_document_landscape,TRUE);
     gtk_widget_set_sensitive( widgets.select_addnextright,TRUE);
     gtk_widget_set_sensitive( widgets.select_addnextleft,TRUE);
     gtk_widget_set_sensitive( widgets.select_addnextup,TRUE);
@@ -2247,6 +2353,13 @@ int WFoeGtk::edit_set_entries()
     gtk_widget_set_sensitive( widgets.compress,TRUE);
     gtk_widget_set_sensitive( widgets.tools_save,TRUE);
     gtk_widget_set_sensitive( widgets.tools_build,FALSE);
+    gtk_widget_set_sensitive( widgets.tools_redraw,TRUE);
+    gtk_widget_set_sensitive( widgets.tools_confeedback,TRUE);
+    gtk_widget_set_sensitive( widgets.tools_singlelinetext,TRUE);
+    gtk_widget_set_sensitive( widgets.tools_bodytext,TRUE);
+    gtk_widget_set_sensitive( widgets.tools_textheader,TRUE);
+    gtk_widget_set_sensitive( widgets.tools_document,TRUE);
+    gtk_widget_set_sensitive( widgets.tools_document_landscape,TRUE);
     gtk_widget_set_sensitive( widgets.select_addnextright,TRUE);
     gtk_widget_set_sensitive( widgets.select_addnextleft,TRUE);
     gtk_widget_set_sensitive( widgets.select_addnextup,TRUE);
@@ -2291,6 +2404,13 @@ int WFoeGtk::view_set_entries()
   gtk_widget_set_sensitive( widgets.expand,FALSE);
   gtk_widget_set_sensitive( widgets.compress,FALSE);
   gtk_widget_set_sensitive( widgets.tools_save,FALSE);
+  gtk_widget_set_sensitive( widgets.tools_redraw,FALSE);
+  gtk_widget_set_sensitive( widgets.tools_confeedback,FALSE);
+  gtk_widget_set_sensitive( widgets.tools_singlelinetext,FALSE);
+  gtk_widget_set_sensitive( widgets.tools_bodytext,FALSE);
+  gtk_widget_set_sensitive( widgets.tools_textheader,FALSE);
+  gtk_widget_set_sensitive( widgets.tools_document,FALSE);
+  gtk_widget_set_sensitive( widgets.tools_document_landscape,FALSE);
   gtk_widget_set_sensitive( widgets.tools_build,FALSE);
   gtk_widget_set_sensitive( widgets.select_addnextright,FALSE);
   gtk_widget_set_sensitive( widgets.select_addnextleft,FALSE);

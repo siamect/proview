@@ -676,6 +676,60 @@ void WFoe::activate_createobject( float x, float y)
   gre_node_created( gre, 0, x, y);
 }
 
+void WFoe::activate_createobject_cid( pwr_tCid cid, int option) 
+{
+  vldh_t_node node;
+  pwr_tStatus sts;
+  ldh_tSesContext		ldhses;
+
+
+  if ( function != EDIT)
+    return;
+
+  gre->pending_paste_stop();
+
+  disable_ldh_cb();
+  sts = gre->create_node_floating( cid, 0, 0, &node);
+  enable_ldh_cb();
+  if ( EVEN(sts)) {
+    error_msg( sts);
+    return;
+  }
+
+  ldhses = (node->hn.wind)->hw.ldhses;
+
+  switch ( cid) {
+  case pwr_cClass_Document: {
+    pwr_tEnum doc_size = pwr_eDocumentSizeEnum_A3;
+    pwr_tEnum doc_orient = pwr_eDocumentOrientEnum_Landscape;
+    
+    disable_ldh_cb();
+    sts = ldh_SetObjectPar( ldhses, node->ln.oid, "DevBody",
+			    "DocumentSize", (char *) &doc_size, sizeof(doc_size));
+    if ( option == 1)
+      sts = ldh_SetObjectPar( ldhses, node->ln.oid, "DevBody",
+			      "DocumentOrientation", (char *) &doc_orient, sizeof(doc_orient));
+    enable_ldh_cb();
+    sts = gre->node_update_floating( node);
+    break;
+  }
+  case pwr_cClass_Text: {
+    pwr_tEnum text_attr = pwr_eTextAttrEnum_Small;
+    pwr_tEnum frame_attr = pwr_eFrameAttrEnum_No;
+    
+    disable_ldh_cb();
+    sts = ldh_SetObjectPar( ldhses, node->ln.oid, "DevBody",
+			    "TextAttribute", (char *) &text_attr, sizeof(text_attr));
+    sts = ldh_SetObjectPar( ldhses, node->ln.oid, "DevBody",
+			    "FrameAttribute", (char *) &frame_attr, sizeof(frame_attr));
+    enable_ldh_cb();
+    sts = gre->node_update_floating( node);
+    break;
+  }
+  default: ;      
+  }
+}
+
 //
 //	Callback from the menu.
 //	Deletes the selected nodes and connections.
@@ -1493,7 +1547,30 @@ void WFoe::gre_node_created( WGre *gre, unsigned long current_node_type,
     ((WFoe *)gre->parent_ctx)->attr_create(node);
     sts = attrlist_get_by_node( node, (void **)&watt);
     if ( EVEN(sts)) return;
-    sts = watt->open_changevalue( "Text");
+    sts = watt->open_changevalue( "Text", 1);
+    break;
+  default:
+    ;
+  }
+}
+
+void WFoe::gre_node_floating_created( WGre *gre, vldh_t_node node)
+{
+  WFoe	  	     	*foe;
+  WAtt	                *watt;
+  int			sts;
+
+  foe = (WFoe *)gre->parent_ctx;
+
+  switch ( node->ln.cid) {
+  case pwr_cClass_Text:
+  case pwr_cClass_BodyText:
+  case pwr_cClass_Head:
+  case pwr_cClass_Title:
+    ((WFoe *)gre->parent_ctx)->attr_create(node);
+    sts = attrlist_get_by_node( node, (void **)&watt);
+    if ( EVEN(sts)) return;
+    sts = watt->open_changevalue( "Text", 1);
     break;
   default:
     ;
@@ -2964,6 +3041,7 @@ int WFoe::view_setup()
 
   sts = gre->setup_backcalls( gre_setup_window,
 				 gre_node_created,
+				 gre_node_floating_created,
 				 gre_con_created,
 				 gre_node_moved,
 				 gre_delete,
@@ -3002,6 +3080,7 @@ int WFoe::edit_setup()
   /* setup the backcalls from gre */
   sts = gre->setup_backcalls( gre_setup_window,
 				 gre_node_created,
+				 gre_node_floating_created,
 				 gre_con_created,
 				 gre_node_moved,
 				 gre_delete,

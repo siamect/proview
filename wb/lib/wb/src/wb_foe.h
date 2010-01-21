@@ -210,6 +210,7 @@ class WFoe : public WUtility {
   void activate_delete();
   void activate_delete_confirm();
   void activate_createobject( float x, float y);
+  void activate_createobject_cid( pwr_tCid cid, int option);
   void activate_changetext();
   void activate_cut();
   void activate_copy();
@@ -309,6 +310,7 @@ class WFoe : public WUtility {
   static void gre_setup_window( WGre *gre);
   static void gre_node_created( WGre *gre, unsigned long current_node_type,
 				float x, float y);
+  static void gre_node_floating_created( WGre *gre, vldh_t_node node);
   static void gre_node_moved( WGre *gre);
   static void gre_node_selected( WGre *gre);
   static void gre_con_selected( WGre *gre);

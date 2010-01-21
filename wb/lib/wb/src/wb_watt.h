@@ -66,6 +66,7 @@ class WAtt {
     brow_tObject input_node;
     char	input_name[80];
     wb_eUtility	utility;
+    int		pending_close;
 
     virtual void message( char severity, const char *message) {}
     virtual void set_prompt( const char *prompt) {}
@@ -74,7 +75,7 @@ class WAtt {
     virtual void pop() {}
 
     void set_editmode( int editmode, ldh_tSesContext ldhses);
-    int open_changevalue( const char *name);
+    int open_changevalue( const char *name, int close = 0);
     static void message_cb( void *watt, char severity, const char *message);
     static void change_value_cb( void *watt);
 

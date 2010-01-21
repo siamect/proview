@@ -81,6 +81,13 @@ struct s_widgets {
   GtkWidget	*view_plantpal;
   GtkWidget	*tools_save;
   GtkWidget	*tools_build;
+  GtkWidget	*tools_redraw;
+  GtkWidget	*tools_singlelinetext;
+  GtkWidget	*tools_bodytext;
+  GtkWidget	*tools_textheader;
+  GtkWidget	*tools_document;
+  GtkWidget	*tools_document_landscape;
+  GtkWidget	*tools_confeedback;
   GtkWidget	*lockconpoint;
   GtkWidget	*move_right;
   GtkWidget	*move_left;
@@ -240,6 +247,11 @@ class WFoeGtk : public WFoe {
   static void activate_palette_object( GtkWidget *w, gpointer data);
   static void activate_palette_plant( GtkWidget *w, gpointer data);
   static void activate_confeedback( GtkWidget *w, gpointer data);
+  static void activate_singlelinetext( GtkWidget *w, gpointer data);
+  static void activate_bodytext( GtkWidget *w, gpointer data);
+  static void activate_textheader( GtkWidget *w, gpointer data);
+  static void activate_document( GtkWidget *w, gpointer data);
+  static void activate_document_landscape( GtkWidget *w, gpointer data);
   static void activate_refcon( GtkWidget *w, gpointer data);
   static void activate_showexeord( GtkWidget *w, gpointer data);
   static void activate_plcattribute( GtkWidget *w, gpointer data);

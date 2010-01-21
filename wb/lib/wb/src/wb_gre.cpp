@@ -1442,6 +1442,12 @@ int WGre::flow_cb( FlowCtx *ctx, flow_tEvent event)
       vldh_nodemodified( vnode);
 
       (gre->gre_node_moved) (gre);
+
+      if ( gre->floating_node && vnode == gre->floating_node) {
+	if ( gre->gre_node_floating_created)
+	  (gre->gre_node_floating_created) ( gre, vnode);
+	gre->floating_node = 0;
+      }
       break;
     case flow_eObjectType_Con:
       flow_GetUserData( event->object.object, (void **) &vcon);
@@ -1679,7 +1685,8 @@ WGre::WGre( void *wg_parent_ctx,
   conref_nodetypeid(0), display_nodetypeid(0),
   sel_node_count(0), del_node_count(0), del_con_count(0), searchrect_node_id(0), popupmenu_mode(0),
   trace_started(0), trace_analyse_nc(0), trace_con_cc(0),
-  trace_changenode(0), conpoint_locked(0), last_selected(0), last_cp_selected(0), last_cp_selected_num(0)
+  trace_changenode(0), conpoint_locked(0), last_selected(0), last_cp_selected(0), last_cp_selected_num(0),
+  floating_node(0)
 {
 }
 
@@ -2035,6 +2042,7 @@ int WGre::view_setup()
 int WGre::setup_backcalls (
 	void (*setup_window_bc)(WGre *),
 	void (*node_created_bc)(WGre *, unsigned long, float, float),
+	void (*node_floating_created_bc)(WGre *, vldh_t_node),
 	void (*con_created_bc)(WGre *, double, double, vldh_t_node, unsigned long, vldh_t_node, unsigned long, int, int *),
 	void (*node_moved_bc)(WGre *),
 	void (*delete_bc)(WGre *, void *, unsigned long),
@@ -2056,6 +2064,7 @@ int WGre::setup_backcalls (
   /* Fill in callback addresses */
   gre_setup_window = setup_window_bc;
   gre_node_created = node_created_bc;
+  gre_node_floating_created = node_floating_created_bc;
   gre_con_created = con_created_bc;
   gre_node_moved = node_moved_bc;
   gre_delete = delete_bc;
@@ -2189,6 +2198,8 @@ int WGre::create_node_floating( pwr_tClassId cid, float x, float y, vldh_t_node 
 
   if ( flow_FindSelectedObject( flow_ctx, node_object->hn.node_id))
     visible = 1;
+
+  floating_node = node_object;
 
   if ( !visible)
     flow_SetNodraw( flow_ctx);
@@ -2571,6 +2582,19 @@ pwr_tStatus WGre::node_update_points( vldh_t_node node,
 //	- the inversemask i changed, inputs are inverted or reinverted.
 //	- data affekting the annotaions is changed.
 //
+int WGre::node_update_floating( vldh_t_node object)
+{
+  int sts;
+
+  flow_SetNodraw( flow_ctx);
+  flow_PasteRemove( flow_ctx, object->hn.node_id);
+  sts = node_update( object);
+  flow_PasteInsert( flow_ctx, object->hn.node_id);
+  flow_ResetNodraw( flow_ctx);
+
+  return sts;
+}
+
 int WGre::node_update( vldh_t_node object)
 {
   flow_tNodeClass	node_class = 0;

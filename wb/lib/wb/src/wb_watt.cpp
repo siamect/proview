@@ -54,9 +54,11 @@ void WAtt::set_editmode( int editmode, ldh_tSesContext ldhses)
   ((WAttNav *)wattnav)->set_editmode( editmode, ldhses);
 }
 
-int WAtt::open_changevalue( const char *name)
+int WAtt::open_changevalue( const char *name, int close)
 {
   int sts;
+
+  pending_close = close;
 
   sts = ((WAttNav*)wattnav)->select_by_name( name);
   if ( EVEN(sts)) return sts;
@@ -79,7 +81,7 @@ WAtt::WAtt(
  	parent_ctx(wa_parent_ctx), 
 	ldhses(wa_ldhses), aref(wa_aref), editmode(wa_editmode), 
 	input_open(0), input_multiline(0), 
-	close_cb(0), redraw_cb(0), client_data(0)
+	close_cb(0), redraw_cb(0), client_data(0), pending_close(0)
 {
 }
 

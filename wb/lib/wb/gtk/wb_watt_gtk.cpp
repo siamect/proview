@@ -303,6 +303,12 @@ void WAttGtk::change_value_close()
 
       wattnav->set_inputfocus();
     }
+    if ( pending_close) {
+      if ( close_cb)
+	(close_cb)( this);
+      else
+	delete this;
+    }
   }
 }
 
@@ -330,6 +336,13 @@ void WAttGtk::activate_cmd_input( GtkWidget *w, gpointer data)
       (watt->redraw_cb)( watt);
   }
   g_free( text);
+
+  if ( watt->pending_close) {
+    if ( watt->close_cb)
+      (watt->close_cb)( watt);
+    else
+      delete watt;
+  }
 }
 
 void WAttGtk::activate_cmd_scrolled_ok( GtkWidget *w, gpointer data)
@@ -368,6 +381,13 @@ void WAttGtk::activate_cmd_scrolled_ok( GtkWidget *w, gpointer data)
     ((WAttNav *)watt->wattnav)->redraw();
     ((WAttNav *)watt->wattnav)->set_inputfocus();
     g_free( text);
+
+    if ( watt->pending_close) {
+      if ( watt->close_cb)
+	(watt->close_cb)( watt);
+      else
+	delete watt;
+    }
   }
 }
 
