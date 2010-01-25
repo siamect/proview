@@ -801,6 +801,7 @@ void wb_build::webgraph( pwr_tOid oid)
       char msg[200];
       sprintf( msg, "Graph for %s not found", java_name);
       MsgWindow::message('E', msg, msgw_ePop_Yes, oid);
+      m_sts = PWRB__NOBUILT;
       return;
     }
   }
