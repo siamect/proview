@@ -828,39 +828,41 @@ int Wtt::set_edit()
     sts = ldh_GetObjectPar( ldhses, oid, "SysBody", "ConfigurationStatus", 
 			    (char **)&config_status, &size);
     if ( ODD(sts)) {
-      ldh_sParDef adef;
-      ldh_sValueDef *vd;
-      int rows;
-      pwr_tCid cid;
+      if ( *config_status != 0) {
+	ldh_sParDef adef;
+	ldh_sValueDef *vd;
+	int rows;
+	pwr_tCid cid;
       
-      sts = ldh_GetObjectClass( ldhses, oid, &cid);
-      if ( EVEN(sts)) return 1;
+	sts = ldh_GetObjectClass( ldhses, oid, &cid);
+	if ( EVEN(sts)) return 1;
       
-      sts = ldh_GetAttrDef( ldhses, cid, "SysBody", "ConfigurationStatus", &adef);
-      if ( EVEN(sts)) return 1;
+	sts = ldh_GetAttrDef( ldhses, cid, "SysBody", "ConfigurationStatus", &adef);
+	if ( EVEN(sts)) return 1;
       
-      sts = ldh_GetEnumValueDef( ldhses, adef.Par->Param.TypeRef, &vd, &rows);
-      if ( EVEN(sts)) return 1;
+	sts = ldh_GetEnumValueDef( ldhses, adef.Par->Param.TypeRef, &vd, &rows);
+	if ( EVEN(sts)) return 1;
       
-      bool found = false;
-      int i;
-      for ( i = 0; i < rows; i++) {
-	if ( vd[i].Value.Value == *config_status) {
-	  found = true;
-	  break;
-	}	  
-      }
-      
-      if ( found) {
-	if ( *config_status < 100)
-	  MsgWindow::message( 'E', "Volume Configuration status: ", vd[i].Value.Text);
-	else if ( *config_status < 200)
-	  MsgWindow::message( 'W', "Volume Configuration status: ", vd[i].Value.Text);
-	else
-	  MsgWindow::message( 'I', "Volume Configuration status: ", vd[i].Value.Text);
+	bool found = false;
+	int i;
+	for ( i = 0; i < rows; i++) {
+	  if ( vd[i].Value.Value == *config_status) {
+	    found = true;
+	    break;
+	  }	  
+	}
+	
+	if ( found) {
+	  if ( *config_status < 100)
+	    MsgWindow::message( 'E', "Volume Configuration status: ", vd[i].Value.Text);
+	  else if ( *config_status < 200)
+	    MsgWindow::message( 'W', "Volume Configuration status: ", vd[i].Value.Text);
+	  else
+	    MsgWindow::message( 'I', "Volume Configuration status: ", vd[i].Value.Text);
+	}
+	free( (char *)vd);
       }
       free( (char *)config_status);
-      free( (char *)vd);
     }
   }
 
