@@ -578,6 +578,8 @@ static int gcg_check_attrref(
 static int gcg_is_in_focode( 
     gcg_ctx gcgctx, 
     vldh_t_node node);
+
+
 
 /*_Methods defined for this module_______________________________________*/
 
@@ -8880,6 +8882,7 @@ int	gcg_comp_m25( gcg_ctx gcgctx, vldh_t_node node)
 	ldh_sParDef 		output_bodydef;
 	pwr_sAttrRef 		*a_ptr;
 	pwr_sAttrRef 		aref;
+	pwr_tBoolean		*lock_ptr;
 	int 			keep = 0;
 	int			size;
 	gcg_t_nocondef		nocondef[2];
@@ -8945,17 +8948,14 @@ int	gcg_comp_m25( gcg_ctx gcgctx, vldh_t_node node)
 		  if ( EVEN(sts)) return sts;
 		}
 		else {
-#if 0		  
-		  // Removed 2007-05-28 cs, Attribute is not updated if connection is changed !!
-		  pwr_tOid 		parent;
-		  sts = ldh_GetParent( gcgctx->ldhses, aref.Objid, &parent);
+		  // Check if attribute is locked
+		  sts = ldh_GetObjectPar( gcgctx->ldhses, node->ln.oid, "DevBody",
+					  "LockAttribute", (char **)&lock_ptr, &size); 
 		  if ( ODD(sts)) {
-		    if ( !gcg_is_window( gcgctx, parent)) {
-		      /* Keep this attribute */
+		    if ( *lock_ptr)
 		      keep = 1;
-		    }
+		    free( (char *)lock_ptr);
 		  }
-#endif
 		}
 	      }
 	      if ( !keep) {
@@ -15902,7 +15902,7 @@ static pwr_tStatus gcg_replace_ref( gcg_ctx gcgctx, pwr_sAttrRef *attrref,
   return GSX__SUCCESS;
 }
 
-#if 0 // Not used any mord
+#if 0 // Not used any more
 static int gcg_is_window( gcg_ctx gcgctx, pwr_tOid oid)
 {
   pwr_sPlcWindow *windbuffer;
@@ -15920,7 +15920,6 @@ static int gcg_is_window( gcg_ctx gcgctx, pwr_tOid oid)
   return 0;
 }
 #endif
-
 
 /*************************************************************************
 *

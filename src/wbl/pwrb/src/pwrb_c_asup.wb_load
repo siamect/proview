@@ -676,6 +676,17 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      !  'Attribute' is assigned a value that should not be changed.
+      !  Normally the 'Attribute' value is fetched from the object connected 
+      !  to the In input pin. If LockAttribute is set, and Attribute is 
+      !  assigned a value, this value will not be changed by the compiler.
+      !*/
+      Object LockAttribute $Intern 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
       Object PlcNode $Buffer 2 
         Body SysBody
           Attr Class = pwr_eClass_PlcNode
