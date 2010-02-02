@@ -27,8 +27,9 @@
 #include "xtt_xnav.h"
 #include "xtt_methodtoolbar_gtk.h"
 
-XttMethodToolbarGtk::XttMethodToolbarGtk( XNav *xnav) :
-  XttMethodToolbar(xnav), m_timerid(0)
+XttMethodToolbarGtk::XttMethodToolbarGtk( void *parent_ctx, void *xnav, unsigned int method_mask,
+					  const char *tooltip_suffix) :
+  XttMethodToolbar( parent_ctx, xnav, method_mask, tooltip_suffix), m_timerid(0)
 {
   for ( int i = 0; i < m_size; i++) {
     m_cb[i].mt = this;
@@ -47,26 +48,27 @@ void XttMethodToolbarGtk::activate_button( GtkWidget *w, gpointer data)
   XttMethodToolbarGtk *mt = ((xtt_sMethodButtonCb *)data)->mt;
   int idx = ((xtt_sMethodButtonCb *)data)->idx;
 
-  int		sts;
+  int		sts = 0;
   int		is_attr;
   pwr_sAttrRef	aref;
   xmenu_eItemType menu_type;
 
-  sts = mt->m_xnav->get_select( &aref, &is_attr);
+  if ( mt->get_select_cb)
+    sts = (mt->get_select_cb)( mt->m_parent_ctx, &aref, &is_attr);
 
-  if ( aref.Flags.b.Object)
-    menu_type = xmenu_eItemType_Object;
-  else if ( aref.Flags.b.ObjectAttr)
-    menu_type = xmenu_eItemType_AttrObject;
-  else
-    menu_type = xmenu_eItemType_Attribute;
-
-  if ( ODD(sts))
+  if ( ODD(sts)) {
+    if ( aref.Flags.b.Object)
+      menu_type = xmenu_eItemType_Object;
+    else if ( aref.Flags.b.ObjectAttr)
+      menu_type = xmenu_eItemType_AttrObject;
+    else
+      menu_type = xmenu_eItemType_Attribute;
+    
     mt->m_xnav->call_method( mt->m_data[idx].method, mt->m_data[idx].filter, aref,
 			     menu_type,
 			     xmenu_mUtility_XNav,
 			     mt->m_xnav->priv, 0);
-  
+  }  
 }
 
 GtkWidget *XttMethodToolbarGtk::build()
@@ -77,15 +79,21 @@ GtkWidget *XttMethodToolbarGtk::build()
   m_toolbar_w = (GtkWidget *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
 
   for ( int i = 0; i < m_size; i++) {
-    m_button_w[i] = gtk_button_new();
-    dcli_translate_filename( fname, m_data[i].image);
-    gtk_container_add( GTK_CONTAINER(m_button_w[i]), 
-		       gtk_image_new_from_file( fname));
-    g_signal_connect( m_button_w[i], "clicked", G_CALLBACK(activate_button), &m_cb[i]);
-    g_object_set( m_button_w[i], "can-focus", FALSE, NULL);
-    gtk_toolbar_append_widget( GTK_TOOLBAR(m_toolbar_w), m_button_w[i], CoWowGtk::translate_utf8( m_data[i].tooltip), "");
-  }
+    if ( m_method_mask & (1 << i)) {
+      char tooltip[200];
 
+      strcpy( tooltip, m_data[i].tooltip);
+      strcat( tooltip, m_tooltip_suffix);
+
+      m_button_w[i] = gtk_button_new();
+      dcli_translate_filename( fname, m_data[i].image);
+      gtk_container_add( GTK_CONTAINER(m_button_w[i]), 
+			 gtk_image_new_from_file( fname));
+      g_signal_connect( m_button_w[i], "clicked", G_CALLBACK(activate_button), &m_cb[i]);
+      g_object_set( m_button_w[i], "can-focus", FALSE, NULL);
+      gtk_toolbar_append_widget( GTK_TOOLBAR(m_toolbar_w), m_button_w[i], CoWowGtk::translate_utf8( tooltip), "");
+    }
+  }
   return m_toolbar_w;
 }
 
@@ -111,13 +119,16 @@ void XttMethodToolbarGtk::set_current_sensitive()
   int		is_attr;
   pwr_sAttrRef	aref;
   xmenu_eItemType menu_type;
-  pwr_tStatus 	sts;
+  pwr_tStatus 	sts = 0;
   
-  sts = m_xnav->get_select( &aref, &is_attr);
+  if ( get_select_cb)
+    sts = (get_select_cb)( m_parent_ctx, &aref, &is_attr);
   if ( EVEN(sts)) {
     // Nothing selected
-    for ( int i = 0; i < m_size; i++)
-      gtk_widget_set_sensitive( m_button_w[i], FALSE);      
+    for ( int i = 0; i < m_size; i++) {
+      if ( m_method_mask & (1 << i))
+	gtk_widget_set_sensitive( m_button_w[i], FALSE);      
+    }
   }
   else {
     gdh_sVolumeInfo info;
@@ -127,8 +138,10 @@ void XttMethodToolbarGtk::set_current_sensitive()
     if ( EVEN(sts)) return;
 
     if ( info.cid == pwr_eClass_ExternVolume) {
-      for ( int i = 0; i < m_size; i++)
-	gtk_widget_set_sensitive( m_button_w[i], FALSE);      
+      for ( int i = 0; i < m_size; i++) {
+	if ( m_method_mask & (1 << i))
+	  gtk_widget_set_sensitive( m_button_w[i], FALSE);      
+      }
       return;
     }
 
@@ -140,12 +153,14 @@ void XttMethodToolbarGtk::set_current_sensitive()
       menu_type = xmenu_eItemType_Attribute;
     
     for ( int i = 0; i < m_size; i++) {
-      sts = m_xnav->check_object_methodfilter( aref, menu_type, xmenu_mUtility_XNav,
-					       m_xnav->priv, m_data[i].name);
-      if ( ODD(sts)) 
-	gtk_widget_set_sensitive( m_button_w[i], TRUE);
-      else
-	gtk_widget_set_sensitive( m_button_w[i], FALSE);
+      if ( m_method_mask & (1 << i)) {
+	sts = m_xnav->check_object_methodfilter( aref, menu_type, xmenu_mUtility_XNav,
+						 m_xnav->priv, m_data[i].name);
+	if ( ODD(sts)) 
+	  gtk_widget_set_sensitive( m_button_w[i], TRUE);
+	else
+	  gtk_widget_set_sensitive( m_button_w[i], FALSE);
+      }
     }
   }
 }

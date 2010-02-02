@@ -2941,6 +2941,7 @@ int	XNavGbl::load_config( XNav *xnav)
   hide_opwind = (xnav->opplace_p->OpWindLayout & pwr_mOpWindLayoutMask_HideOperatorWindow) != 0;
   hide_statusbar = (xnav->opplace_p->OpWindLayout & pwr_mOpWindLayoutMask_HideStatusBar) != 0;
   op_wind_pop = xnav->opplace_p->OpWindPop;
+  op_wind_eventname_seg = xnav->opplace_p->OpWindEventNameSegments;
   strcpy( setupscript, xnav->opplace_p->SetupScript);
   dcli_trim( setupscript, setupscript);
 

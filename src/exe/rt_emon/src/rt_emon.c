@@ -132,11 +132,11 @@ struct s_Active {
   pwr_tUInt32		returnIdx;	/* Event index of return message */
   pwr_tUInt32		ackIdx;		/* Event index of ack message */
   mh_eSource		source;		/* Originator of alarm */
-  pwr_tObjid		object;		/* Object associated with alarm */
-  pwr_tObjid		supObject;	/* Supervisor object */
+  pwr_tAttrRef		object;		/* Object associated with alarm */
+  pwr_tAttrRef		supObject;	/* Supervisor object */
   pwr_tObjid		outunit;	/* Optional outunit destination */
-  pwr_tOName		objName;
-  pwr_tOName		eventName;
+  pwr_tAName		objName;
+  pwr_tAName		eventName;
   mh_mEventFlags	eventFlags;
   mh_uEventInfo		status;
   mh_eEvent		event;
@@ -182,8 +182,8 @@ struct s_Event {
   pwr_tUInt32	  idx;    
   LstHead(sActive)	activeIdx_l;
   pwr_tObjid	  outunit;
-  pwr_tObjid	  object;
-  pwr_tOName	  objName;
+  pwr_tAttrRef	  object;
+  pwr_tAName	  objName;
   mh_eEvent	  event;
   pwr_tUInt32	  msgSize;
   pwr_tBoolean	  local;
@@ -401,6 +401,7 @@ static struct sLocal	l;
 
 /* Local function definitions */
 
+static void 		msgToV3( mh_eEvent type, uEvent *up);
 static sActive		*activeListGet(pwr_tUInt32);
 static void		activeListInsert(sActive*, sEvent*, mh_eSource);
 static void		activeListRemove(sActive*);
@@ -442,7 +443,7 @@ static void		handlerListFree(sApplActive*);
 static void		getHandlerObject();
 static void		initBlockList();
 static void		initNodeDb();
-static pwr_tStatus	initSupActiveCB(pwr_tObjid, pwr_tClassId, sSupActive**, pwr_tBoolean, pwr_tBoolean);
+static pwr_tStatus	initSupActiveCB(pwr_tAttrRef*, pwr_tClassId, sSupActive**, pwr_tBoolean, pwr_tBoolean);
 static pwr_tStatus	initSupList();
 static pwr_tStatus	initSupListClass(pwr_tClassId);
 static pwr_tBoolean	isForOutunit(sOutunit*, pwr_tObjid, pwr_tObjid, pwr_tString80, mh_mEventFlags, pwr_tBoolean);
@@ -473,7 +474,7 @@ static pwr_tBoolean	sendEventToOutunit(sOutunit*, sEventTab*);
 static pwr_tStatus	sendMessage(mh_eMsg, qcom_sQid*, co_sPlatform*, void*, pwr_tUInt32);
 static pwr_tStatus	sendToOutunit(sOutunit*, mh_eMsg, int, void*, int);
 static void		setTimerActive(int, pwr_tBoolean);
-static sSupActive	*supListGet(pwr_tObjid);
+static sSupActive	*supListGet(pwr_tAttrRef*);
 static void		timeOut();
 static void		timerIn(sSupActive*, sTimer*);
 static void		updateAlarm(sActive*, sEvent*);
@@ -867,7 +868,7 @@ applMessage (
   mh_sApplMessage *ip = (mh_sApplMessage*) (hp + 1);
   sEvent *ep;
   sApplActive *aap;
-  pwr_tOName ObjName;
+  pwr_tAName ObjName;
 
   switch (ap->state) {
   case mh_eApplState_Connected:
@@ -903,8 +904,8 @@ applMessage (
   }
 
   aap->link.source = mh_eSource_Application;
-  aap->link.object = ip->Object;
-  aap->link.supObject = ip->SupObject;
+  aap->link.object = cdh_ObjidToAref(ip->Object);
+  aap->link.supObject = cdh_ObjidToAref(ip->SupObject);
   aap->link.outunit = ip->Outunit;
   strncpy(aap->link.objName, ObjName, sizeof(aap->link.objName));
   cdh_ToUpper(aap->link.objName, NULL);
@@ -1483,10 +1484,7 @@ formatApplEvent (
 
   ip->Id.Nix = l.head.nix;
   ip->Id.BirthTime = l.head.birthTime;
-  ip->Object = aap->link.object;
-  ip->SupObject = aap->link.supObject;
   ip->EventFlags = aap->link.eventFlags;
-  strncpy(ip->EventName, aap->link.eventName, sizeof(ip->EventName));
   ip->EventType = event;
 
   switch (event) {
@@ -1502,7 +1500,11 @@ formatApplEvent (
     memcpy(&mp->SupInfo, &aap->message.SupInfo, sizeof(mh_uSupInfo));
     mp->EventSound = aap->link.eventSound;
     strncpy(mp->EventMoreText, aap->message.EventMoreText, sizeof(mp->EventMoreText));
+    mp->Object = aap->link.object;
+    mp->SupObject = aap->link.supObject;
+    strncpy(mp->EventName, aap->link.eventName, sizeof(mp->EventName));
     *size = sizeof(mh_sMessage);
+
     break;
   case mh_eEvent_Ack:
     acp = &up->ack;
@@ -1517,7 +1519,11 @@ formatApplEvent (
     acp->Outunit = aap->ackOutunit;
     acp->SupInfo.SupType = aap->message.SupInfo.SupType;
     memcpy(&acp->SupInfo, &aap->message.SupInfo, sizeof(mh_uSupInfo));
+    acp->Object = aap->link.object;
+    acp->SupObject = aap->link.supObject;
+    strncpy(acp->EventName, aap->link.eventName, sizeof(acp->EventName));
     *size = sizeof(mh_sAck);
+
     break;
   case mh_eEvent_Cancel:
     rp = &up->ret;
@@ -1532,7 +1538,11 @@ formatApplEvent (
     rp->DetectTime = net_TimeToNetTime( &aap->message.EventTime);
     rp->SupInfo.SupType = aap->message.SupInfo.SupType;
     memcpy(&rp->SupInfo, &aap->message.SupInfo, sizeof(mh_uSupInfo));
+    rp->Object = aap->link.object;
+    rp->SupObject = aap->link.supObject;
+    strncpy(rp->EventName, aap->link.eventName, sizeof(rp->EventName));
     *size = sizeof(mh_sReturn);
+
     break;
   case mh_eEvent_Return:
     rp = &up->ret;
@@ -1547,7 +1557,11 @@ formatApplEvent (
     rp->DetectTime = net_TimeToNetTime( &aap->message.EventTime);
     rp->SupInfo.SupType = aap->message.SupInfo.SupType;
     memcpy(&rp->SupInfo, &aap->message.SupInfo, sizeof(mh_uSupInfo));
+    rp->Object = aap->link.object;
+    rp->SupObject = aap->link.supObject;
+    strncpy(rp->EventName, aap->link.eventName, sizeof(rp->EventName));
     *size = sizeof(mh_sReturn);
+
     break;
   default:
     errh_Error("formatApplEvent, program error, event: %d", event);
@@ -1572,10 +1586,7 @@ formatSupEvent (
 
   ip->Id.Nix = l.head.nix;
   ip->Id.BirthTime = l.head.birthTime;
-  ip->Object = sp->link.object;
-  ip->SupObject = sp->link.supObject;
   ip->EventFlags = sp->link.eventFlags;
-  strncpy(ip->EventName, sp->link.eventName, sizeof(ip->EventName));
   ip->EventType = event;
   sup = sp->sup;
 
@@ -1597,8 +1608,12 @@ formatSupEvent (
 #endif
     mp->EventSound = sp->link.eventSound;
     strncpy(mp->EventMoreText, sup->MoreText, sizeof(mp->EventMoreText));
+    mp->Object = sp->link.object;
+    mp->SupObject = sp->link.supObject;
+    strncpy(mp->EventName, sp->link.eventName, sizeof(mp->EventName));
     memcpy(&mp->SupInfo.mh_uSupInfo_u, sp->supInfoP, sp->supInfoSize);
     *size = sizeof(mh_sMessage);
+
     break;
   case mh_eEvent_Ack:
     acp = &up->ack;
@@ -1611,7 +1626,11 @@ formatSupEvent (
     acp->TargetId.BirthTime = l.head.birthTime;
     acp->DetectTime = net_TimeToNetTime( &sup->DetectTime);
     acp->Outunit = sup->AckOutunit;
+    acp->Object = sp->link.object;
+    acp->SupObject = sp->link.supObject;
+    strncpy(acp->EventName, sp->link.eventName, sizeof(acp->EventName));
     *size = sizeof(mh_sAck);
+
     break;
   case mh_eEvent_Return:
     rp = &up->ret;
@@ -1631,8 +1650,12 @@ formatSupEvent (
       sp->supInfoSize = sizeof(rp->SupInfo.mh_uSupInfo_u);
     }
 #endif
+    rp->Object = sp->link.object;
+    rp->SupObject = sp->link.supObject;
+    strncpy(rp->EventName, sp->link.eventName, sizeof(rp->EventName));
     memcpy(&rp->SupInfo.mh_uSupInfo_u, sp->supInfoP, sp->supInfoSize);
     *size = sizeof(mh_sReturn);
+
     break;
   case mh_eEvent_Cancel:
     rp = &up->ret;
@@ -1646,6 +1669,9 @@ formatSupEvent (
     rp->TargetId.BirthTime = l.head.birthTime;
     rp->DetectTime = net_TimeToNetTime( &sup->DetectTime);
     rp->SupInfo.SupType = sp->supType;
+    rp->Object = sp->link.object;
+    rp->SupObject = sp->link.supObject;
+    strncpy(rp->EventName, sp->link.eventName, sizeof(rp->EventName));
 #if 1
     if (sp->supInfoSize > sizeof(rp->SupInfo.mh_uSupInfo_u)) {
       errh_Error("formatSupEvent, program error, size: %d", sp->supInfoSize);
@@ -1659,6 +1685,8 @@ formatSupEvent (
     errh_Error("formatSupEvent, program error, event: %d", event);
     break;
   }
+
+  msgToV3( event, up);
 }
 
 static void
@@ -1675,9 +1703,7 @@ formatOutunitEvent (
 
   ip->Id.Nix = l.head.nix;
   ip->Id.BirthTime = l.head.birthTime;
-  ip->Object = bp->link.object;
   ip->EventFlags = bp->link.eventFlags;
-  strncpy(ip->EventName, bp->link.eventName, sizeof(ip->EventName));
   ip->EventType = event;
   bmp->Status = bp->link.status.Event.Status;
 
@@ -1687,6 +1713,8 @@ formatOutunitEvent (
     ip->EventPrio = bp->outunitBlock.prio;
     ip->Id.Idx = bp->link.idx;
     bmp->Outunit = bp->outunitBlock.outunit;
+    bmp->Object = bp->link.object;
+    strncpy(bmp->EventName, bp->link.eventName, sizeof(bmp->EventName));
     *size = sizeof(mh_sBlock);
     break;
   case mh_eEvent_Unblock:
@@ -1698,6 +1726,8 @@ formatOutunitEvent (
     bmp->TargetId.BirthTime = l.head.birthTime;
     bmp->Outunit = bp->outunitUnblock.outunit;
     bmp->DetectTime = bp->outunitBlock.time;
+    bmp->Object = bp->link.object;
+    strncpy(bmp->EventName, bp->link.eventName, sizeof(bmp->EventName));
     *size = sizeof(mh_sBlock);
     break;
   case mh_eEvent_Reblock:
@@ -1709,12 +1739,15 @@ formatOutunitEvent (
     bmp->TargetId.BirthTime = l.head.birthTime;
     bmp->Outunit = bp->outunitBlock.outunit;
     bmp->DetectTime = bp->outunitUnblock.time;
+    bmp->Object = bp->link.object;
+    strncpy(bmp->EventName, bp->link.eventName, sizeof(bmp->EventName));
     *size = sizeof(mh_sBlock);
     break;
   default:
     errh_Error("formatOutUnitEvent, program error, event: %d", event);
     break;
   }
+  msgToV3( event, up);
 }
 
 static void
@@ -2059,7 +2092,7 @@ getAgent (
 {
   pwr_tStatus sts;
   pwr_tClassId cid;
-  pwr_tObjid Parent = sap->link.supObject;
+  pwr_tObjid Parent = sap->link.supObject.Objid;
 
   while (TRUE) {
     sts = gdh_GetParent(Parent, &Parent);
@@ -2299,7 +2332,7 @@ handlerEvent (
 
     hp->link.local = local;
     hp->link.source = mh_eSource_Handler;
-    hp->link.object = ip->Object;
+    hp->link.object = cdh_ObjidToAref(ip->Object);
     strncpy(hp->link.objName, ip->EventName, sizeof(hp->link.objName));
     cdh_ToUpper(hp->link.objName, NULL);
     strncpy(hp->link.eventName, ip->EventName, sizeof(hp->link.eventName));
@@ -2451,7 +2484,7 @@ initBlockList ()
     bp->link.event = mh_eEvent_Block;
     bp->link.eventFlags = mh_mEventFlags_Force;
     bp->link.source = mh_eSource_Outunit;
-    bp->link.object = sp->outunitBlock.object;
+    bp->link.object = cdh_ObjidToAref(sp->outunitBlock.object);
     sts = gdh_ObjidToName(sp->outunitBlock.object, bp->link.objName,
       sizeof(bp->link.objName), cdh_mNName);
     if (EVEN(sts)) {
@@ -2501,7 +2534,7 @@ initNodeDb ()
 
 static pwr_tStatus
 initSupActiveCB (
-  pwr_tObjid SupObject,
+  pwr_tAttrRef *SupObject,
   pwr_tClassId cid,
   sSupActive **spp,
   pwr_tBoolean Allocate,
@@ -2513,41 +2546,30 @@ initSupActiveCB (
   sDSup *dsp;
   pwr_sClass_NodeLinkSup *nlsp;
   pwr_sClass_CycleSup *csp;
-  pwr_tObjid Object;
+  pwr_tAttrRef Object;
   sSupActive *sp;
-  pwr_sAttrRef aref; 
   gdh_tDlid Dlid;
   pwr_tBoolean IsAlias = 0;
 
-  sts = gdh_IsAlias(SupObject, &IsAlias);
+  sts = gdh_IsAlias(SupObject->Objid, &IsAlias);
   if (IsAlias)
     return 2;
 
   /* Get pointer to supervisory object */
-  if (cid == pwr_cClass_ASup) {
-    aref.Objid = SupObject;
-    aref.Offset = 0;
-    aref.Size = sizeof(pwr_sClass_ASup);
-    aref.Flags.m = 0;       
-    sts = gdh_DLRefObjectInfoAttrref(&aref, (pwr_tAddress *)&asp, &Dlid);
-  } else if (cid == pwr_cClass_DSup) {
-    aref.Objid = SupObject;
-    aref.Offset = 0;
-    aref.Size = sizeof(pwr_sClass_DSup);
-    aref.Flags.m = 0;       
-    sts = gdh_DLRefObjectInfoAttrref(&aref, (pwr_tAddress *)&dsp, &Dlid);
-  } else if (cid == pwr_cClass_NodeLinkSup) {
-    aref.Objid = SupObject;
-    aref.Offset = 0;
-    aref.Size = sizeof(pwr_sClass_NodeLinkSup);
-    aref.Flags.m = 0;
-    sts = gdh_DLRefObjectInfoAttrref(&aref, (pwr_tAddress *)&nlsp, &Dlid);
-  } else if (cid == pwr_cClass_CycleSup) {
-    aref.Objid = SupObject;
-    aref.Offset = 0;
-    aref.Size = sizeof(pwr_sClass_CycleSup);
-    aref.Flags.m = 0;
-    sts = gdh_DLRefObjectInfoAttrref(&aref, (pwr_tAddress *)&csp, &Dlid);
+  switch ( cid) {
+  case pwr_cClass_ASup:
+    sts = gdh_DLRefObjectInfoAttrref(SupObject, (pwr_tAddress *)&asp, &Dlid);
+    break;
+  case pwr_cClass_DSup:
+    sts = gdh_DLRefObjectInfoAttrref(SupObject, (pwr_tAddress *)&dsp, &Dlid);
+    break;
+  case pwr_cClass_NodeLinkSup:
+    sts = gdh_DLRefObjectInfoAttrref(SupObject, (pwr_tAddress *)&nlsp, &Dlid);
+    break;
+  case pwr_cClass_CycleSup:
+    sts = gdh_DLRefObjectInfoAttrref(SupObject, (pwr_tAddress *)&csp, &Dlid);
+    break;
+  default: return 2;
   }
 
   if (EVEN(sts)) {
@@ -2555,16 +2577,24 @@ initSupActiveCB (
     return sts;
   }
 
-  /* Get objid of supervised object */
-  if (cid == pwr_cClass_ASup)
-    Object = asp->Sup.Attribute.Objid;  
-  else if (cid == pwr_cClass_DSup)
-    Object = dsp->Sup.Attribute.Objid;
-  else if (cid == pwr_cClass_NodeLinkSup)
-    Object = SupObject;
-  else if (cid == pwr_cClass_CycleSup)
-    Object = SupObject;
-
+  /* Get attrref of supervised object */
+  
+  switch ( cid) {
+  case pwr_cClass_ASup:
+    Object = asp->Sup.Attribute;  
+    break;
+  case pwr_cClass_DSup:
+    Object = dsp->Sup.Attribute;
+    break;
+  case pwr_cClass_NodeLinkSup:
+    Object = *SupObject;
+    break;
+  case pwr_cClass_CycleSup:
+    Object = *SupObject;
+    break;
+  default: ;
+  }
+    
   /* Allocate and initiate supervisor control block */
   if (Allocate) {
     sp = (sSupActive*) calloc(1, sizeof(sSupActive));
@@ -2577,9 +2607,10 @@ initSupActiveCB (
 
   sp->link.source = mh_eSource_Scanner;
   sp->link.object = Object;
-  sp->link.supObject = SupObject;
+  sp->link.supObject = *SupObject;
   sp->link.objName[0] = '\0';
-  sts = gdh_ObjidToName(Object, sp->link.objName, sizeof(sp->link.objName), cdh_mNName);
+
+  sts = gdh_AttrrefToName(&Object, sp->link.objName, sizeof(sp->link.objName), cdh_mNName);
   if (EVEN(sts))
     errh_Error("Couldn't get name for supervised object\n%m", sts);
   strncpy(sp->link.eventName, sp->link.objName, sizeof(sp->link.eventName));
@@ -2621,7 +2652,7 @@ initSupActiveCB (
     sp->supInfoSize = 0;
     sp->supInfoP = NULL;
     sp->link.eventSound = nlsp->Sound; 
-    sp->attribute.Objid = Object;
+    sp->attribute = Object;
     sp->attribute.Offset = pwr_Offset(nlsp, LinkUp);
     sp->attribute.Size = sizeof(nlsp->LinkUp);
     sp->attribute.Flags.m = 0;
@@ -2637,7 +2668,7 @@ initSupActiveCB (
     sp->supInfoSize = 0;
     sp->supInfoP = NULL;
     sp->link.eventSound = csp->Sound; 
-    sp->attribute.Objid = Object;
+    sp->attribute = Object;
     sp->attribute.Offset = pwr_Offset(csp, DelayLimit);
     sp->attribute.Size = sizeof(csp->DelayLimit);
     sp->attribute.Flags.m = 0;
@@ -2723,7 +2754,7 @@ initSupListClass(
   LstLink(sSupActive) *sl;
   LstLink(sSupActive) *dl;
   sSupActive *sp;
-  pwr_tObjid oid;
+  pwr_tAttrRef aref;
 
   sl = LstEnd(&l.sup_l);
   dl = LstEnd(&l.detect_l);
@@ -2731,14 +2762,14 @@ initSupListClass(
   /* Loop trough objects in class list.  */
 
   for (
-    sts = gdh_GetClassList(cid, &oid);
+    sts = gdh_GetClassListAttrRef(cid, &aref);
     ODD(sts);
-    sts = gdh_GetNextObject(oid, &oid)
+    sts = gdh_GetNextAttrRef(cid, &aref, &aref)
   ) {
-    if ( oid.vid < cdh_cUserVolMin)
+    if ( aref.Objid.vid < cdh_cUserVolMin)
       continue;
 
-    sts = initSupActiveCB(oid, cid, &sp, 1, 1);
+    sts = initSupActiveCB(&aref, cid, &sp, 1, 1);
     if (ODD(sts)) {
       sl = LstIns(sl, sp, sup_l);
       l.emon->BlockMaxCount++;
@@ -2807,7 +2838,8 @@ isValidApplication (
   sAppl *ap;
   LstLink(sAppl) *al;
 
-  if (hp->ver != mh_cVersion) {
+  if (!(hp->ver == mh_cVersion || 
+	(mh_cVersion == 4 && hp->ver == 3)))  {  /* V4 is compatible with V3 */
     /* Different versions, not yet implemented */
     errh_Info("isValidApplication: Received a Message with different version");
     Reply->Sts = MH__VERSION;
@@ -2871,7 +2903,8 @@ isValidOutunit (
   sOutunit *op;
   LstLink(sOutunit) *ol;
 
-  if (hp->ver != mh_cVersion) {
+  if (!(hp->ver == mh_cVersion || 
+	(mh_cVersion == 4 && hp->ver == 3)))  {  /* V4 is compatible with V3 */
     /* Different versions, not yet implemented */
     errh_Info("isValidOutunit: Received a Message with different version");
     return FALSE;
@@ -3101,7 +3134,7 @@ outunitBlock (
   sendToOutunit(op, mh_eMsg_Sync, 0, NULL, 0);
 
   for (bl = LstFir(&l.block_l); bl != LstEnd(&l.block_l); bl = LstNex(bl))
-    if (cdh_ObjidIsEqual(ip->object, LstObj(bl)->link.object))
+    if (cdh_ObjidIsEqual(ip->object, LstObj(bl)->link.object.Objid))
       bp = LstObj(bl);
 
   if (bp == NULL) {
@@ -3124,7 +3157,7 @@ outunitBlock (
     bp->link.event = mh_eEvent_Block;
     bp->link.eventFlags = mh_mEventFlags_Force;
     bp->link.source = mh_eSource_Outunit;
-    bp->link.object = ip->object;
+    bp->link.object = cdh_ObjidToAref(ip->object);
     sts = gdh_ObjidToName(ip->object, bp->link.objName,
       sizeof(bp->link.objName), cdh_mNName);
     if (EVEN(sts)) {
@@ -3435,7 +3468,7 @@ reInitSupListClass(
   LstLink(sSupActive) *sl;
   LstLink(sSupActive) *dl;
   sSupActive *sp;
-  pwr_tObjid oid;
+  pwr_tAttrRef aref;
 
   dl = LstEnd(&l.detect_l);
   sl = LstEnd(&l.sup_l);
@@ -3443,15 +3476,15 @@ reInitSupListClass(
   /* Loop through objects in class list.  */
 
   for (
-    sts = gdh_GetClassList(cid, &oid);
+    sts = gdh_GetClassListAttrRef(cid, &aref);
     ODD(sts);
-    sts = gdh_GetNextObject(oid, &oid)
+    sts = gdh_GetNextAttrRef(cid, &aref, &aref)
   ) {
-    if ( oid.vid < cdh_cUserVolMin)
+    if ( aref.Objid.vid < cdh_cUserVolMin)
       continue;
 
-    if ((sp = supListGet(oid)) == NULL) {
-      sts = initSupActiveCB(oid, cid, &sp, 1, 1);
+    if ((sp = supListGet(&aref)) == NULL) {
+      sts = initSupActiveCB(&aref, cid, &sp, 1, 1);
       if (ODD(sts)) {
         sl = LstIns(sl, sp, sup_l);
         l.emon->BlockMaxCount++;
@@ -3591,7 +3624,7 @@ scanSupList ()
   for (sl = LstFir(&l.sup_l); sl != LstEnd(&l.sup_l); sl = LstNex(sl)) {
     sp = LstObj(sl);
     if (l.newBlock) {
-      sts = gdh_GetAlarmInfo(sp->link.object, NULL, NULL, NULL, NULL,
+      sts = gdh_GetAlarmInfo(sp->link.object.Objid, NULL, NULL, NULL, NULL,
         &AlarmVisibility.All);
       if (sp->alarmVisibility.All != AlarmVisibility.All) {
         if (sp->sup->EventPriority <= AlarmVisibility.Event.Prio) {
@@ -3683,10 +3716,10 @@ sendEventListToOutunit (
     etp = tree_Successor(&sts, l.eventTab, etp)
   ) {
     if ((ep = etp->ep) != NULL) {
-      if (isForOutunit(op, ep->outunit, ep->object, ep->objName, ep->msg.info.EventFlags, ep->local))
+      if (isForOutunit(op, ep->outunit, ep->object.Objid, ep->objName, ep->msg.info.EventFlags, ep->local))
 	break;
     } else if ((ap = etp->ap) != NULL) {
-      if (isForOutunit(op, ap->outunit, ap->object, ap->objName, ap->eventFlags, ap->local))
+      if (isForOutunit(op, ap->outunit, ap->object.Objid, ap->objName, ap->eventFlags, ap->local))
 	break;
     } else {
       errh_Error("ap == NULL && ep == NULL");
@@ -3842,7 +3875,7 @@ setTimerActive(
 
 static sSupActive *
 supListGet (
-  pwr_tObjid oid
+  pwr_tAttrRef *arp
 )
 {
   LstLink(sSupActive) *sl;
@@ -3850,7 +3883,7 @@ supListGet (
   for (sl = LstFir(&l.sup_l); sl != LstEnd(&l.sup_l); sl = LstNex(sl)) {
     sSupActive *sp = LstObj(sl);
 
-    if (cdh_ObjidIsEqual(sp->link.supObject, oid)) 
+    if (cdh_ArefIsEqual(&sp->link.supObject, arp)) 
       return sp;
   }
 
@@ -4036,19 +4069,19 @@ updateAlarmInfo (
   LstLink(sActive) *al;
   mh_uEventInfo maxAlarm;
 
-  if (cdh_ObjidIsEqual(iap->object,pwr_cNObjid)) /* No object associated with this alarm */
+  if (cdh_ObjidIsEqual(iap->object.Objid,pwr_cNObjid)) /* No object associated with this alarm */
     return;
 
   /* Search alarm list for ocurrence of object */
   maxAlarm.All = 0;
   for (al = LstFir(&l.active_l); al != LstEnd(&l.active_l) ; al = LstNex(al)) {
     ap = LstObj(al);
-    if (cdh_ObjidIsEqual(iap->object, ap->object))
+    if (cdh_ArefIsEqual(&iap->object, &ap->object))
       if (ap->event == mh_eEvent_Alarm)
         maxAlarm.All = MAX(maxAlarm.All, ap->status.All);
   }
 
-  gdh_SetAlarmLevel(iap->object, maxAlarm.All);
+  gdh_SetAlarmLevel(iap->object.Objid, maxAlarm.All);
 }
 
 static void
@@ -4069,11 +4102,11 @@ updateSupActive (
   /* Get pointer to supervisory object */
 
   if (sp->supType == mh_eSupType_Analog) {
-    sts = gdh_ObjidToPointer(sp->link.supObject, (pwr_tAddress *)&asp);
+    sts = gdh_AttrRefToPointer(&sp->link.supObject, (pwr_tAddress *)&asp);
     sup =  &asp->Sup;
     cid = pwr_cClass_ASup;
   } else if (sp->supType == mh_eSupType_Digital) {
-    sts = gdh_ObjidToPointer(sp->link.supObject, (pwr_tAddress *)&dsp);
+    sts = gdh_AttrRefToPointer(&sp->link.supObject, (pwr_tAddress *)&dsp);
     sup = &dsp->Sup;
     cid = pwr_cClass_DSup;
   } else if (sp->supType == mh_eSupType_Link) {
@@ -4100,7 +4133,7 @@ updateSupActive (
   if (sp->agent == mh_eAgent_MH)
     gdh_DLUnrefObjectInfo(sp->attrDlid);
   agent = sp->agent;
-  initSupActiveCB(sp->link.supObject, cid, &sp, 0, newAttribute);
+  initSupActiveCB(&sp->link.supObject, cid, &sp, 0, newAttribute);
   sp->found = TRUE;
   if (sp->agent != agent) {
     if (sp->agent == mh_eAgent_MH) {
@@ -4116,5 +4149,42 @@ updateSupActive (
         l.emon->EventLastIdx--;
       }
     }
+  }
+}
+
+
+static void msgToV3( mh_eEvent type, uEvent *up)
+{
+  switch ( type) {
+  case mh_eEvent_Alarm:
+  case mh_eEvent_Info: {
+    mh_sMessage *mp = &up->message;
+
+    mp->Info.Object_V3 = mp->Object.Objid;
+    mp->Info.SupObject_V3 = mp->SupObject.Objid;
+    strncpy( mp->Info.EventName_V3, mp->EventName, sizeof(mp->Info.EventName_V3));
+    mp->Info.EventName_V3[sizeof(mp->Info.EventName_V3)-1] = 0;
+    break;
+  }
+  case mh_eEvent_Ack: {
+    mh_sAck *mp = &up->ack;
+
+    mp->Info.Object_V3 = mp->Object.Objid;
+    mp->Info.SupObject_V3 = mp->SupObject.Objid;
+    strncpy( mp->Info.EventName_V3, mp->EventName, sizeof(mp->Info.EventName_V3));
+    mp->Info.EventName_V3[sizeof(mp->Info.EventName_V3)-1] = 0;
+    break;
+  }
+  case mh_eEvent_Return:
+  case mh_eEvent_Cancel: {
+    mh_sReturn *mp = &up->ret;
+    
+    mp->Info.Object_V3 = mp->Object.Objid;
+    mp->Info.SupObject_V3 = mp->SupObject.Objid;
+    strncpy( mp->Info.EventName_V3, mp->EventName, sizeof(mp->Info.EventName_V3));
+    mp->Info.EventName_V3[sizeof(mp->Info.EventName_V3)-1] = 0;
+    break;
+  }
+  default: ;
   }
 }

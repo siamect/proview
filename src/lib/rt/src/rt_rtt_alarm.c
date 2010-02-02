@@ -1323,15 +1323,21 @@ static int	rtt_menu_alarm_list_add(
 	menu_ptr->arg3 = arg3;
 	menu_ptr->arg4 = arg4;
         menu_ptr->time = net_NetTimeToTime( &EventP->Info.EventTime); 
-        strncpy( menu_ptr->eventname, EventP->Info.EventName,
-			sizeof( menu_ptr->eventname));
+	switch ( EventP->Info.EventType) {
+	case mh_eEvent_Alarm:
+	  strncpy( menu_ptr->eventname, EventP->Msg.EventName,
+		   sizeof( menu_ptr->eventname));
+	  menu_ptr->object = EventP->Msg.Object.Objid;
+	  break;
+	default: ;
+	}
+	menu_ptr->eventname[sizeof(menu_ptr->eventname)-1] = 0;
         strncpy( menu_ptr->eventtext, EventP->Msg.EventText, 80); 
         menu_ptr->eventflags = EventP->Info.EventFlags;
 	menu_ptr->type = type;
 	menu_ptr->eventprio = MsgP->Info.EventPrio;
 	memcpy ( &menu_ptr->eventid , &EventP->Info.Id,
 			sizeof(EventP->Info.Id));
-	menu_ptr->object = EventP->Info.Object;
 	menu_ptr->status = MsgP->Status;
 
 	(*index)++;

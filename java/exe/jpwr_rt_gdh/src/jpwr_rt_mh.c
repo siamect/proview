@@ -319,7 +319,7 @@ pwr_tStatus ev_mh_ack_bc( mh_sAck *MsgP)
   jint oix, vid;
   char time_str[40];
   char birthTime_str[40];
-  pwr_tObjid objid = MsgP->Info.SupObject;
+  pwr_tObjid objid = MsgP->SupObject.Objid;
   
   pwr_tTime time = net_NetTimeToTime( &MsgP->Info.EventTime);
   pwr_tTime birthTime = net_NetTimeToTime( &MsgP->Info.Id.BirthTime);
@@ -348,7 +348,7 @@ pwr_tStatus ev_mh_ack_bc( mh_sAck *MsgP)
   
   //gör om till Java-strängar
   jevText = (*env)->NewStringUTF( env, " "); //eventText används inte vid ack
-  jevName = (*env)->NewStringUTF( env, MsgP->Info.EventName);
+  jevName = (*env)->NewStringUTF( env, MsgP->EventName);
   jevTime = (*env)->NewStringUTF( env, time_str);
   jevBirthTime = (*env)->NewStringUTF( env, birthTime_str);
   jevTargetBirthTime = (*env)->NewStringUTF( env, targetBirthTime_str);
@@ -407,7 +407,7 @@ pwr_tStatus ev_mh_return_bc( mh_sReturn *MsgP)
   
   char birthTime_str[40];
   
-  pwr_tObjid objid = MsgP->Info.Object;
+  pwr_tObjid objid = MsgP->Object.Objid;
   pwr_tTime time = net_NetTimeToTime( &MsgP->Info.EventTime);
   pwr_tTime birthTime = net_NetTimeToTime( &MsgP->Info.Id.BirthTime);
   pwr_tTime targetBirthTime = net_NetTimeToTime( &MsgP->TargetId.BirthTime);
@@ -432,7 +432,7 @@ pwr_tStatus ev_mh_return_bc( mh_sReturn *MsgP)
   
   //gör om till Java-strängar
   jevText = (*env)->NewStringUTF( env, MsgP->EventText);
-  jevName = (*env)->NewStringUTF( env, MsgP->Info.EventName);
+  jevName = (*env)->NewStringUTF( env, MsgP->EventName);
   jevTime = (*env)->NewStringUTF( env, time_str);
   jevBirthTime = (*env)->NewStringUTF( env, birthTime_str);
   jevTargetBirthTime = (*env)->NewStringUTF( env, targetBirthTime_str);
@@ -492,7 +492,7 @@ pwr_tStatus ev_mh_alarm_bc( mh_sMessage *MsgP)
   
   char birthTime_str[40];
   
-  pwr_tObjid objid = MsgP->Info.Object;
+  pwr_tObjid objid = MsgP->Object.Objid;
   pwr_tTime time = net_NetTimeToTime( &MsgP->Info.EventTime);
   pwr_tTime birthTime = net_NetTimeToTime( &MsgP->Info.Id.BirthTime);
   
@@ -515,7 +515,7 @@ pwr_tStatus ev_mh_alarm_bc( mh_sMessage *MsgP)
   
   //gör om till Java-strängar
   jevText = (*env)->NewStringUTF( env, MsgP->EventText);
-  jevName = (*env)->NewStringUTF( env, MsgP->Info.EventName);
+  jevName = (*env)->NewStringUTF( env, MsgP->EventName);
   jevTime = (*env)->NewStringUTF( env, time_str);
   jevBirthTime = (*env)->NewStringUTF( env, birthTime_str);
 
@@ -570,7 +570,7 @@ pwr_tStatus ev_mh_info_bc( mh_sMessage *MsgP)
   
   char birthTime_str[40];
   
-  pwr_tObjid objid = MsgP->Info.Object;
+  pwr_tObjid objid = MsgP->Object.Objid;
   pwr_tTime time = net_NetTimeToTime( &MsgP->Info.EventTime);
   pwr_tTime birthTime = net_NetTimeToTime( &MsgP->Info.Id.BirthTime);
   
@@ -593,7 +593,7 @@ pwr_tStatus ev_mh_info_bc( mh_sMessage *MsgP)
   
   //gör om till Java-strängar
   jevText = (*env)->NewStringUTF( env, MsgP->EventText);
-  jevName = (*env)->NewStringUTF( env, MsgP->Info.EventName);
+  jevName = (*env)->NewStringUTF( env, MsgP->EventName);
   jevTime = (*env)->NewStringUTF( env, time_str);
   jevBirthTime = (*env)->NewStringUTF( env, birthTime_str);
 

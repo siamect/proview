@@ -158,3 +158,8 @@
 091208 cs  xtt       EventSelectList exended to 40 elements.
 100111 cs  xtt       Method Photo added to xtt toolbar.
 100118 cs  ge        Possibility to configure the tooltip size in Ge graphs.
+100129 cs  xtt       Event name added to alarm text in operator window.
+100129 cs  xtt       Methods navigator and history added to method toolbar, which also can be used for other components than xtt.
+100129 cs  xtt       Toolbar added to alarm and event window. Method buttons for both event object and sup object.
+100201 cs  ge        StoDo works with slider objects.
+100201 cs  xtt       Commands 'open graph /class/parent' and 'check isattribute' added button in object graphs to open parent object graph.

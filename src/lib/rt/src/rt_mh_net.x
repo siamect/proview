@@ -42,7 +42,7 @@
 %#endif
 %
 %#define mh_cMsgClass      	201
-%#define mh_cVersion		3
+%#define mh_cVersion		4
 %#define mh_cProcHandler	111
 %#define mh_cProcAllHandlers	qcom_cQmhAllHandlers
 %#define mh_cProcAllOutunits	qcom_cQmhAllOutunits
@@ -337,12 +337,12 @@ struct mh_sEventId {
 
 struct mh_sMsgInfo {
   mh_sEventId		Id;
-  pwr_tObjid		Object;
+  pwr_tObjid		Object_V3;
   pwr_tObjid		Outunit;
-  pwr_tObjid		SupObject;
+  pwr_tObjid		SupObject_V3;
   mh_mEventFlags	EventFlags;
   net_sTime		EventTime;
-  pwr_tString80		EventName;
+  pwr_tString80		EventName_V3;
   mh_eEvent		EventType;
   mh_eEventPrio		EventPrio;
 };
@@ -353,6 +353,9 @@ struct mh_sAck {
   net_sTime		DetectTime;
   pwr_tObjid		Outunit;
   mh_uSupInfo		SupInfo;
+  pwr_sAttrRef		Object;
+  pwr_sAttrRef	 	SupObject;
+  pwr_tAName		EventName;
 };
 
 struct mh_sBlock {
@@ -361,6 +364,9 @@ struct mh_sBlock {
   net_sTime		DetectTime;
   pwr_tObjid		Outunit;
   mh_mEventStatus	Status;
+  pwr_sAttrRef		Object;
+  pwr_sAttrRef	 	SupObject;
+  pwr_tAName		EventName;
 };
 
 struct mh_sMessage {
@@ -370,6 +376,9 @@ struct mh_sMessage {
   mh_uSupInfo		SupInfo;
   pwr_sAttrRef		EventSound;
   pwr_tString256	EventMoreText;
+  pwr_sAttrRef		Object;
+  pwr_sAttrRef	 	SupObject;
+  pwr_tAName		EventName;
 };
 
 struct mh_sReturn {
@@ -378,6 +387,9 @@ struct mh_sReturn {
   mh_sEventId		TargetId;
   net_sTime		DetectTime;
   mh_uSupInfo		SupInfo;
+  pwr_sAttrRef		Object;
+  pwr_sAttrRef	 	SupObject;
+  pwr_tAName		EventName;
 };
 
 #ifdef RPC_HDR

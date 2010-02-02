@@ -538,20 +538,24 @@ int Hist::check_conditions(sEvent *evp)
   mh_sMsgInfo *msgInfop = NULL;
   mh_sMessage *mp = NULL;
   mh_sReturn  *rp = NULL;
+  char *eventNamep;
   
   switch (evp->EventType) 
   {
     case mh_eEvent_Alarm:
     case mh_eEvent_Info:
       msgInfop = &(evp->Mess.message.Info);
+      eventNamep = evp->Mess.message.EventName;
       mp = &(evp->Mess.message);
       break;
     case mh_eEvent_Ack:
       msgInfop = &(evp->Mess.ack.Info);
+      eventNamep = evp->Mess.ack.EventName;
       break;
     case mh_eEvent_Cancel:
     case mh_eEvent_Return:
       msgInfop = &(evp->Mess.ret.Info);
+      eventNamep = evp->Mess.ret.EventName;
       rp = &(evp->Mess.ret);
       break;
     case mh_eEvent_Block:
@@ -559,6 +563,7 @@ int Hist::check_conditions(sEvent *evp)
     case mh_eEvent_Reblock:
     case mh_eEvent_CancelBlock:
       msgInfop = &(evp->Mess.block.Info);
+      eventNamep = evp->Mess.block.EventName;
       break;
     default:
       return 2;
@@ -593,7 +598,7 @@ int Hist::check_conditions(sEvent *evp)
   //compare the EventName
   if(eventName_str != NULL && (strlen(eventName_str) != 0) )
   {
-    if( EVEN( compareStr(msgInfop->EventName, eventName_str) ) )
+    if( EVEN( compareStr(eventNamep, eventName_str) ) )
       return 2;
   }
   if(eventText_str != NULL && (strlen(eventText_str) != 0) )

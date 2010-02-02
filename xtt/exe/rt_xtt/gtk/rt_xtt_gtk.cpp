@@ -892,7 +892,7 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   gtk_toolbar_append_widget( tools, tools_zoom_reset,CoWowGtk::translate_utf8("Zoom reset"), "");
 
   // Toolbar
-  methodtoolbar = new XttMethodToolbarGtk(0);
+  methodtoolbar = new XttMethodToolbarGtk(0, 0, ~mt_mMethod_RtNavigator, "");
   GtkToolbar *tools2 = (GtkToolbar *) ((XttMethodToolbarGtk *)methodtoolbar)->build();
 
   // Statusbar and cmd input
@@ -927,6 +927,8 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   xnav->attach_audio = attach_audio;
 
   methodtoolbar->m_xnav = xnav;
+  methodtoolbar->m_parent_ctx = xnav;
+  methodtoolbar->get_select_cb = xnav_get_select;
 
   GtkWidget *vbox = gtk_vbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);

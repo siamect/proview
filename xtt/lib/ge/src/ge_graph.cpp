@@ -3408,6 +3408,7 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
       if ( !graph->current_mb1_down)
         break;
       if ( grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowNode ||
+           grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowSlider ||
            grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowGroup ||
            grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowWindow ||
            grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowTrend ||

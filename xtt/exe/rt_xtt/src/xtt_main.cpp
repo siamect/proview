@@ -717,6 +717,10 @@ void Xtt::list_opplace()
     wow->CreateList( "Select Operator Place", (char *)texts, 80, opplace_selected_cb, 0, this);
 }
 
+int Xtt::xnav_get_select( void *ctx, pwr_tAttrRef *attrref, int *is_attr)
+{
+  return ((XNav *)ctx)->get_select( attrref, is_attr);
+}
 
 
 

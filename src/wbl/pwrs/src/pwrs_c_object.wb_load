@@ -1191,6 +1191,13 @@ SObject pwrs:Class
 	  Attr FilterName = "$Object-OpenObjectFilter"
 	EndBody
       EndObject
+      Object OpenTrace $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Open Plc"
+	  Attr MethodName = "$Object-OpenTrace"
+	  Attr FilterName = "$Object-OpenTraceFilter"
+	EndBody
+      EndObject
       Object RtNavigator $MenuButton
 	Body SysBody
 	  Attr ButtonName = "RtNavigator"

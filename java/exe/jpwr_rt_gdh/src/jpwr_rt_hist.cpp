@@ -389,6 +389,7 @@ int check_conditions(sEvent *evp, HistQuery *query)
   mh_sMsgInfo *msgInfop = NULL;
   mh_sMessage *mp = NULL;
   mh_sReturn  *rp = NULL;
+  char *event_name_p;
   
   switch (evp->EventType) 
   {
@@ -396,13 +397,16 @@ int check_conditions(sEvent *evp, HistQuery *query)
     case mh_eEvent_Info:
       msgInfop = &(evp->Mess.message.Info);
       mp = &(evp->Mess.message);
+      event_name_p = evp->Mess.message.EventName;
       break;
     case mh_eEvent_Ack:
       msgInfop = &(evp->Mess.ack.Info);
+      event_name_p = evp->Mess.ack.EventName;
       break;
     case mh_eEvent_Cancel:
     case mh_eEvent_Return:
       msgInfop = &(evp->Mess.ret.Info);
+      event_name_p = evp->Mess.ret.EventName;
       rp = &(evp->Mess.ret);
       break;
     case mh_eEvent_Block:
@@ -410,6 +414,7 @@ int check_conditions(sEvent *evp, HistQuery *query)
     case mh_eEvent_Reblock:
     case mh_eEvent_CancelBlock:
       msgInfop = &(evp->Mess.block.Info);
+      event_name_p = evp->Mess.block.EventName;
       break;
     default:
       return 2;
@@ -444,7 +449,7 @@ int check_conditions(sEvent *evp, HistQuery *query)
   //compare the EventName
   if(query->eventName_str != NULL && (strlen(query->eventName_str) != 0) )
   {
-    if( EVEN( compareStr(msgInfop->EventName, query->eventName_str) ) )
+    if( EVEN( compareStr(event_name_p, query->eventName_str) ) )
       return 2;
   }
   if(query->eventText_str != NULL && (strlen(query->eventText_str) != 0) )
@@ -529,7 +534,7 @@ jobject convertAlarmOrInfoToMhrEvent( mh_sMessage *MsgP)
   
   char birthTime_str[40];
   
-  pwr_tObjid objid = MsgP->Info.Object;
+  pwr_tObjid objid = MsgP->Object.Objid;
   pwr_tTime time = net_NetTimeToTime( &MsgP->Info.EventTime);
   pwr_tTime birthTime = net_NetTimeToTime( &MsgP->Info.Id.BirthTime);
   
@@ -552,7 +557,7 @@ jobject convertAlarmOrInfoToMhrEvent( mh_sMessage *MsgP)
   
   //gör om till Java-strängar
   jevText = env->NewStringUTF( MsgP->EventText);
-  jevName = env->NewStringUTF( MsgP->Info.EventName);
+  jevName = env->NewStringUTF( MsgP->EventName);
   jevTime = env->NewStringUTF( time_str);
   jevBirthTime = env->NewStringUTF( birthTime_str);
 
@@ -617,7 +622,7 @@ jobject convertReturnToMhrEvent( mh_sReturn *MsgP)
   
   char birthTime_str[40];
   
-  pwr_tObjid objid = MsgP->Info.Object;
+  pwr_tObjid objid = MsgP->Object.Objid;
   pwr_tTime time = net_NetTimeToTime( &MsgP->Info.EventTime);
   pwr_tTime birthTime = net_NetTimeToTime( &MsgP->Info.Id.BirthTime);
   pwr_tTime targetBirthTime = net_NetTimeToTime( &MsgP->TargetId.BirthTime);
@@ -642,7 +647,7 @@ jobject convertReturnToMhrEvent( mh_sReturn *MsgP)
   
   //gör om till Java-strängar
   jevText = env->NewStringUTF( MsgP->EventText);
-  jevName = env->NewStringUTF( MsgP->Info.EventName);
+  jevName = env->NewStringUTF( MsgP->EventName);
   jevTime = env->NewStringUTF( time_str);
   jevBirthTime = env->NewStringUTF( birthTime_str);
   jevTargetBirthTime = env->NewStringUTF( targetBirthTime_str);
@@ -708,7 +713,7 @@ jobject convertAckToMhrEvent( mh_sAck *MsgP)
   jint oix, vid;
   char time_str[40];
   char birthTime_str[40];
-  pwr_tObjid objid = MsgP->Info.SupObject;
+  pwr_tObjid objid = MsgP->SupObject.Objid;
   
   pwr_tTime time = net_NetTimeToTime( &MsgP->Info.EventTime);
   pwr_tTime birthTime = net_NetTimeToTime( &MsgP->Info.Id.BirthTime);
@@ -737,7 +742,7 @@ jobject convertAckToMhrEvent( mh_sAck *MsgP)
   
   //gör om till Java-strängar
   jevText = env->NewStringUTF( " "); //eventText används inte vid ack
-  jevName = env->NewStringUTF( MsgP->Info.EventName);
+  jevName = env->NewStringUTF( MsgP->EventName);
   jevTime = env->NewStringUTF( time_str);
   jevBirthTime = env->NewStringUTF( birthTime_str);
   jevTargetBirthTime = env->NewStringUTF( targetBirthTime_str);

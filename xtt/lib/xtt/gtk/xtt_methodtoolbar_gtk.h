@@ -36,7 +36,8 @@ class XttMethodToolbarGtk : public  XttMethodToolbar {
   xtt_sMethodButtonCb m_cb[m_size];
   gint 	    m_timerid;
 
-  XttMethodToolbarGtk( XNav *xnav);
+  XttMethodToolbarGtk( void *parent_ctx, void *xnav, unsigned int method_mask, 
+		       const char *tooltip_suffix);
   ~XttMethodToolbarGtk();
   GtkWidget *build();
   void set_sensitive();

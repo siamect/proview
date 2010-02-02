@@ -38,6 +38,7 @@ class EvListMotif : public EvList {
 	Widget	ev_parent_wid,
 	ev_eType ev_type,
 	int ev_size,
+	int ev_eventname_seg,
 	Widget *w);
     ~EvListMotif();
 

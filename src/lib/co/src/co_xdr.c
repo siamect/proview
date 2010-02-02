@@ -491,6 +491,12 @@ xdr_pwr_tPathName(XDR *xdrs, pwr_tPathName *objp)
   PWR_XDR_BYTES(xdrs, objp, sizeof(*objp));
 }
 
+bool_t
+xdr_pwr_tAName(XDR *xdrs, pwr_tAName *objp)
+{
+  PWR_XDR_BYTES(xdrs, objp, sizeof(*objp));
+}
+
 
 bool_t
 xdr_pwr_tFullName(XDR *xdrs, pwr_tFullName *objp)

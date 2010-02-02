@@ -61,9 +61,10 @@ EvMotif::EvMotif( void *ev_parent_ctx,
 		  int display_ack,
 		  int ev_beep,
 		  pwr_tMask ev_pop_mask,
+		  int ev_eventname_seg,
 		  pwr_tStatus *status) :
   Ev( ev_parent_ctx, eve_name, ala_name, blk_name, ev_user, display_ala, display_eve,
-      display_blk, display_return, display_ack, ev_beep, ev_pop_mask, status),
+      display_blk, display_return, display_ack, ev_beep, ev_pop_mask, ev_eventname_seg, status),
   parent_wid(ev_parent_wid), parent_wid_eve(NULL), parent_wid_ala(NULL)
 {
   char		uid_filename[120] = {"xtt_eve.uid"};
@@ -246,20 +247,20 @@ EvMotif::EvMotif( void *ev_parent_ctx,
   XtManageChild( toplevel_blk);
 
   // Create ala and eve...
-  eve = new EvListMotif( this, form_eve, ev_eType_EventList, eve_size, &eve_widget);
+  eve = new EvListMotif( this, form_eve, ev_eType_EventList, eve_size, eventname_seg, &eve_widget);
   eve->start_trace_cb = &eve_start_trace_cb;
   eve->display_in_xnav_cb = &eve_display_in_xnav_cb;
   eve->name_to_alias_cb = &ev_name_to_alias_cb;
   eve->popup_menu_cb = &ev_popup_menu_cb;
 
-  ala = new EvListMotif( this, form_ala, ev_eType_AlarmList, ala_size, &ala_widget);
+  ala = new EvListMotif( this, form_ala, ev_eType_AlarmList, ala_size, eventname_seg, &ala_widget);
   ala->start_trace_cb = &ala_start_trace_cb;
   ala->display_in_xnav_cb = &ala_display_in_xnav_cb;
   ala->name_to_alias_cb = &ev_name_to_alias_cb;
   ala->popup_menu_cb = &ev_popup_menu_cb;
   ala->sound_cb = &ev_sound_cb;
 
-  blk = new EvListMotif( this, form_blk, ev_eType_BlockList, blk_size, &blk_widget);
+  blk = new EvListMotif( this, form_blk, ev_eType_BlockList, blk_size, eventname_seg, &blk_widget);
   blk->start_trace_cb = &blk_start_trace_cb;
   blk->display_in_xnav_cb = &blk_display_in_xnav_cb;
   blk->popup_menu_cb = &ev_popup_menu_cb;

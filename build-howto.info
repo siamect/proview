@@ -228,7 +228,7 @@ libxt-dev
 libmotif-dev
 x11proto-print-dev
 libxmu-dev
-libxmp-dev
+libxpm-dev
 libxp-dev
 imlib11-dev
 

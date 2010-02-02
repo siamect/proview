@@ -196,6 +196,9 @@ bool_t
 xdr_pwr_tPathName(XDR *xdrs, pwr_tPathName *objp);
 
 bool_t
+xdr_pwr_tAName(XDR *xdrs, pwr_tAName *objp);
+
+bool_t
 xdr_pwr_tFullName(XDR *xdrs, pwr_tFullName *objp);
 
 bool_t

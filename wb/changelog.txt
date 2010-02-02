@@ -154,3 +154,4 @@
 100111 cs  wb        Mysql classvolume databases.
 100118 cs  plc       Toggle button in plc editor for feedback connections.
 100120 cs  wb        Functionality to view configuration status added.
+100121 cs  plc       Toolbar buttons in plc editor to create texts and documents and to redraw.

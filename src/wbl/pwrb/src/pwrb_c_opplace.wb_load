@@ -144,9 +144,18 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Specifies the number of segments of the eventname shown in the
+      !  operator window alarm text. If zero, the eventname is not displayed.
+      !*/
+      Object OpWindEventNameSegments $Attribute 35
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
       !  The bell is activated when unacknowledged alarms are present.
       !*/
-      Object AlarmBell $Attribute 35
+      Object AlarmBell $Attribute 36
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
@@ -155,7 +164,7 @@ SObject pwrb:Class
       !  Specifies, in milliseconds, the delay between two
       !  consecutive beeps, two acoustic signals.
       !*/
-      Object BellDelay $Attribute 36
+      Object BellDelay $Attribute 37
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
@@ -163,7 +172,7 @@ SObject pwrb:Class
       !/**
       !  Attach audio hardware.
       !*/
-      Object AttachAudio $Attribute 37
+      Object AttachAudio $Attribute 38
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
@@ -175,7 +184,7 @@ SObject pwrb:Class
       !  concurrent alarms in the system.
       !  If the limit is exceeded, alarms might be lost.
       !*/
-      Object MaxNoOfAlarms $Attribute 38
+      Object MaxNoOfAlarms $Attribute 39
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
@@ -195,7 +204,7 @@ SObject pwrb:Class
       !  PROVIEW/R system, or make it simple and assign the
       !  attribute e.g. 200.
       !*/
-      Object MaxNoOfEvents $Attribute 39
+      Object MaxNoOfEvents $Attribute 40
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
           Attr Flags = 0
@@ -205,7 +214,7 @@ SObject pwrb:Class
       !  If the selectlist is modified, this attribute has to be set to notify the
       !  modification.
       !*/
-      Object SelectListIsUpdated $Attribute 40
+      Object SelectListIsUpdated $Attribute 41
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr Flags |= PWR_MASK_STATE
@@ -228,7 +237,7 @@ SObject pwrb:Class
       !  Note! If the SelectList is left blank no message at all is
       !  sent to the user.
       !*/
-      Object EventSelectList $Attribute 41 
+      Object EventSelectList $Attribute 42
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
           Attr Flags |= PWR_MASK_ARRAY
@@ -238,7 +247,7 @@ SObject pwrb:Class
       !/**
       !  Specifies the type of events viewed in the eventlist.
       !*/
-      Object EventListEvents $Attribute 42 
+      Object EventListEvents $Attribute 43 
         Body SysBody
           Attr TypeRef = "pwrb:Type-EventListMask"
         EndBody
@@ -249,7 +258,7 @@ SObject pwrb:Class
       !  login directory for the user. If another scriptfile
       !  should be used, this file is specified here.
       !*/
-      Object SetupScript $Attribute 43
+      Object SetupScript $Attribute 44
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
         EndBody

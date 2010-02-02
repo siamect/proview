@@ -141,7 +141,8 @@ class EvList {
   public:
     EvList( void *ev_parent_ctx,
 	    ev_eType ev_type,
-	    int ev_size);
+	    int ev_size,
+	    int ev_eventname_seg);
     virtual ~EvList();
 
     void 		*parent_ctx;
@@ -158,6 +159,7 @@ class EvList {
 					  unsigned long, char *, int x, int y);
     char		*(*name_to_alias_cb)( void *, char *);
     int			(*sound_cb)( void *, pwr_tAttrRef *);
+    void       		(*selection_changed_cb)( void *);
     double		acc_beep_time;
     double		beep_interval;
     pwr_tAttrRef	aalarm_sound;
@@ -165,6 +167,7 @@ class EvList {
     pwr_tAttrRef	calarm_sound;
     pwr_tAttrRef	dalarm_sound;
     pwr_tAttrRef	info_sound;
+    int			eventname_seg;
 
     virtual void set_input_focus() {}
     virtual void bell() {}
@@ -202,6 +205,8 @@ class EvList {
 
     static int init_brow_cb( FlowCtx *fctx, void *client_data);
     static int brow_cb( FlowCtx *ctx, flow_tEvent event);
+    static int get_select( void *ctx, pwr_tAttrRef *attrref, int *is_attr);
+    static int get_select_supobject( void *ctx, pwr_tAttrRef *attrref, int *is_attr);
 
 };
 
@@ -210,9 +215,9 @@ class ItemAlarm {
     ItemAlarm( EvList *evlist, const char *item_name, pwr_tTime item_time,
 	const char *item_eventtext, char *item_eventname, int item_eventflags,
 	unsigned long item_eventprio, mh_sEventId item_eventid,
-	pwr_tObjid item_object, pwr_tAttrRef *item_eventsound, 
+	pwr_tAttrRef *item_object, pwr_tAttrRef *item_eventsound, 
         char *item_eventmoretext,unsigned long item_status,
-	evlist_eEventType item_event_type,
+        evlist_eEventType item_event_type, pwr_tAttrRef *item_supobject,
 	brow_tNode dest, flow_eDest dest_code, int *rsts);
     evlist_eItemType	type;
     evlist_eEventType	event_type;
@@ -221,15 +226,16 @@ class ItemAlarm {
     char	 	name[40];
     pwr_tTime		time;
     char		eventtext[80];
-    char		eventname[80];
+    pwr_tAName		eventname;
     int			eventflags;
     unsigned long	eventprio;
     mh_sEventId		eventid;
-    pwr_tObjid		object;
+    pwr_tAttrRef       	object;
     unsigned long	status;
     char		alias[40];
     pwr_tAttrRef	eventsound;
     pwr_tText256        eventmoretext;
+    pwr_tAttrRef       	supobject;
 
     void	update_text();
 };

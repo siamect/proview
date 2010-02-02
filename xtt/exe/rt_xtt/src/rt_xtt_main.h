@@ -92,6 +92,7 @@ class Xtt {
     static void close_ok( void *ctx, void *data);
     static void change_value( void *ctx);
     static void selection_changed( void *ctx);
+    static int xnav_get_select( void *ctx, pwr_tAttrRef *attrref, int *is_attr);
     
     void activate_print();
     void activate_find();

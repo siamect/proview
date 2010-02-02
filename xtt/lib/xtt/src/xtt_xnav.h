@@ -220,7 +220,7 @@ class XNavGbl {
     XNavGbl() :
       priv(0), OpObject(pwr_cNObjid),
       AlarmBeep(0), AlarmReturn(0), AlarmAck(0), hide_opwind(0), hide_statusbar(0), 
-      op_wind_pop(0), gdh_started(1),
+      op_wind_pop(0), op_wind_eventname_seg(0), gdh_started(1),
       verify(0), scantime(0.5), signal_test_mode(0), advanced_user(1), show_truedb(0),
       show_allattr(0), no_graph_ratio(0)
       { 
@@ -240,6 +240,7 @@ class XNavGbl {
     int			hide_opwind;
     int			hide_statusbar;
     pwr_tMask		op_wind_pop;
+    int			op_wind_eventname_seg;
     int 		gdh_started;
     int			verify;
     char		default_directory[80];
@@ -329,7 +330,7 @@ class XNav {
     virtual Ev *ev_new( char *eve_name, char *ala_name, char *blk_name,
 			pwr_tObjid ev_user, int display_ala, int display_eve,
 			int display_blk, int display_return, int display_ack,
-			int ev_beep, pwr_tMask ev_pop_mask, pwr_tStatus *status) { return 0;}
+			int ev_beep, pwr_tMask ev_pop_mask, int ev_eventname_seg, pwr_tStatus *status) { return 0;}
     virtual Hist *hist_new( char *title, pwr_tOid oid, pwr_tStatus *sts) {return 0;}
     virtual Block *block_new( pwr_tAttrRef *arp, char *name, unsigned int priv,
 		      pwr_tStatus *sts) {return 0;}

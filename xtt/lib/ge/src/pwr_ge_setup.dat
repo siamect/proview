@@ -198,6 +198,7 @@ menu Pushbuttons
     subgraph 	MbRtNavigator 	pwr_exe:pwr_mbrtnavigator.pwsg		83
     subgraph 	MbTrend	 	pwr_exe:pwr_mbtrend.pwsg		83
     subgraph 	MbSimulate 	pwr_exe:pwr_mbsimulate.pwsg		83
+    subgraph 	MbUp	 	pwr_exe:pwr_mbup.pwsg			83
   }
 }
 menu Sliders

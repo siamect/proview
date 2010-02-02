@@ -58,8 +58,9 @@ EvListMotif::EvListMotif( void *ev_parent_ctx,
 			  Widget	ev_parent_wid,
 			  ev_eType ev_type, 
 			  int ev_size,
+			  int ev_eventname_seg,
 			  Widget *w) :
-  EvList( ev_parent_ctx, ev_type, ev_size), parent_wid(ev_parent_wid)
+  EvList( ev_parent_ctx, ev_type, ev_size, ev_eventname_seg), parent_wid(ev_parent_wid)
 {
   form_widget = ScrolledBrowCreate( parent_wid, (char*) "EvList", NULL, 0, 
 				    init_brow_cb, this, (Widget *)&brow_widget);

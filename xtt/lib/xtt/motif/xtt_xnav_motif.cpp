@@ -218,13 +218,14 @@ XCrr *XNavMotif::xcrr_new( pwr_tAttrRef *arp, int advanced_user, pwr_tStatus *st
 }
 
 Ev *XNavMotif::ev_new( char *eve_name, char *ala_name, char *blk_name,
-		      pwr_tObjid ev_user, int display_ala, int display_eve,
-		      int display_blk, int display_return, int display_ack,
-		      int ev_beep, pwr_tMask ev_pop_mask, pwr_tStatus *status)
+		       pwr_tObjid ev_user, int display_ala, int display_eve,
+		       int display_blk, int display_return, int display_ack,
+		       int ev_beep, pwr_tMask ev_pop_mask, int ev_eventname_seg,
+		       pwr_tStatus *status)
 {
   return new EvMotif( this, parent_wid, eve_name, ala_name, blk_name,
 		      ev_user, display_ala, display_eve, display_blk,
-		      display_return, display_ack, ev_beep, ev_pop_mask, status);
+		      display_return, display_ack, ev_beep, ev_pop_mask, ev_eventname_seg, status);
 }
 
 Hist *XNavMotif::hist_new( char *title, pwr_tOid oid, pwr_tStatus *sts)

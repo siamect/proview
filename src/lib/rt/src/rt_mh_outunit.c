@@ -116,6 +116,7 @@ static sContext l;
 
 /* Local function prototypes */
 
+static void msgFromV3( mh_sHead *hp);
 static void ackListDelete(sHandler*, sAck*);
 static void ackListDestroy(sHandler*);
 static void ackListInsert(sHandler*, pwr_tUInt32);
@@ -712,6 +713,9 @@ fromHandler (
   if (!isValidHandler(p, aid, &hp))
     return;
 
+  if ( p->ver == 3)
+    msgFromV3( p);
+
   switch (p->type) {
   case mh_eMsg_Event:
     handlerEvent(hp, p);
@@ -923,7 +927,8 @@ isValidHandler (
   sHandler *hp;
   LstLink(sHandler) *hl;
 
-  if (p->ver != mh_cVersion) {
+  if (!(p->ver == mh_cVersion || 
+	(mh_cVersion == 4 && p->ver == 3)))  {  /* V4 is compatible with V3 */
     /* Different versions, not yet implemented */
     errh_Warning("Received a Message with different version: %d != %d", p->ver, mh_cVersion);
     *h = NULL;
@@ -1107,4 +1112,57 @@ sendToHandler (
   errh_Error("sendToHandler failed\n%m", sts);
 
   return sts;
+}
+
+static void msgFromV3( mh_sHead *hp)
+{
+
+  switch ( hp->type) {
+  case mh_eMsg_Event: {
+    mh_sMsgInfo *ip = (mh_sMsgInfo*) (hp + 1);
+
+    switch (ip->EventType) {
+    case mh_eEvent_Ack: {
+      mh_sAck *mp = (mh_sAck *)ip;
+
+      mp->Object = cdh_ObjidToAref( ip->Object_V3);
+      mp->SupObject = cdh_ObjidToAref( ip->SupObject_V3);
+      strncpy( mp->EventName, ip->EventName_V3, sizeof(mp->EventName));
+      break;
+    }
+    case mh_eEvent_Info:
+    case mh_eEvent_Alarm: {
+      mh_sMessage *mp = (mh_sMessage *)ip;
+
+      mp->Object = cdh_ObjidToAref( ip->Object_V3);
+      mp->SupObject = cdh_ObjidToAref( ip->SupObject_V3);
+      strncpy( mp->EventName, ip->EventName_V3, sizeof(mp->EventName));
+      break;
+    }
+    case mh_eEvent_Block:
+    case mh_eEvent_Unblock:
+    case mh_eEvent_Reblock:
+    case mh_eEvent_CancelBlock: {
+      mh_sBlock *mp = (mh_sBlock *)ip;
+
+      mp->Object = cdh_ObjidToAref( ip->Object_V3);
+      mp->SupObject = cdh_ObjidToAref( ip->SupObject_V3);
+      strncpy( mp->EventName, ip->EventName_V3, sizeof(mp->EventName));
+      break;
+    }
+    case mh_eEvent_Return:
+    case mh_eEvent_Cancel: {
+      mh_sReturn *mp = (mh_sReturn *)ip;
+
+      mp->Object = cdh_ObjidToAref( ip->Object_V3);
+      mp->SupObject = cdh_ObjidToAref( ip->SupObject_V3);
+      strncpy( mp->EventName, ip->EventName_V3, sizeof(mp->EventName));
+      break;
+    }
+    default: ;
+    }
+    break;
+  }
+  default: ;
+  }
 }

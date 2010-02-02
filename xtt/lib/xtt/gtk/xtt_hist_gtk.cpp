@@ -403,7 +403,7 @@ HistGtk::HistGtk( void *hist_parent_ctx,
   GtkWidget *hist_pane = gtk_vpaned_new();
 
   // Create hist
-  hist = new EvListGtk( this, hist_pane, ev_eType_HistList, hist_size, &hist_widget);
+  hist = new EvListGtk( this, hist_pane, ev_eType_HistList, hist_size, 0, &hist_widget);
   hist->start_trace_cb = &hist_start_trace_cb;
   hist->display_in_xnav_cb = &hist_display_in_xnav_cb;
   hist->popup_menu_cb = &hist_popup_menu_cb;

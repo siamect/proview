@@ -37,6 +37,7 @@
 #include "co_lng.h"
 #include "xtt_evlist_gtk.h"
 #include "xtt_ev_gtk.h"
+#include "xtt_methodtoolbar_gtk.h"
 #include "rt_xnav_msg.h"
 
 static gint eve_delete_event( GtkWidget *w, GdkEvent *event, gpointer data)
@@ -82,13 +83,15 @@ EvGtk::EvGtk( void *ev_parent_ctx,
 	      int display_ack,
 	      int ev_beep,
 	      pwr_tMask ev_pop_mask,
+	      int ev_eventname_seg,
 	      pwr_tStatus *status) :
   Ev( ev_parent_ctx, eve_name, ala_name, blk_name, ev_user, display_ala, display_eve,
-      display_blk, display_return, display_ack, ev_beep, ev_pop_mask, status),
+      display_blk, display_return, display_ack, ev_beep, ev_pop_mask, ev_eventname_seg, status),
   parent_wid(ev_parent_wid), parent_wid_eve(0), parent_wid_ala(0), parent_wid_blk(0)
 {
   pwr_tStatus sts;
   pwr_sClass_OpPlace *userobject_ptr;
+  pwr_tFileName fname;
   const int eve_width = 700;
   const int eve_height = 600;
   const int ala_width = 700;
@@ -187,7 +190,7 @@ EvGtk::EvGtk( void *ev_parent_ctx,
 				GTK_ACCEL_VISIBLE);
 
     GtkMenu *func_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
-    gtk_menu_shell_append(GTK_MENU_SHELL(func_menu), functions_ack_last);
+    // gtk_menu_shell_append(GTK_MENU_SHELL(func_menu), functions_ack_last);
     gtk_menu_shell_append(GTK_MENU_SHELL(func_menu), functions_open_plc);
     gtk_menu_shell_append(GTK_MENU_SHELL(func_menu), functions_display_object);
 
@@ -271,19 +274,70 @@ EvGtk::EvGtk( void *ev_parent_ctx,
     gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), help);
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(help), GTK_WIDGET(help_menu));
 
-
     // Create eve evlist
-    eve = new EvListGtk( this, eve_vbox, ev_eType_EventList, eve_size, &eve_widget);
+    eve = new EvListGtk( this, eve_vbox, ev_eType_EventList, eve_size, eventname_seg, &eve_widget);
     eve->start_trace_cb = &eve_start_trace_cb;
     eve->display_in_xnav_cb = &eve_display_in_xnav_cb;
     eve->name_to_alias_cb = &ev_name_to_alias_cb;
     eve->popup_menu_cb = &ev_popup_menu_cb;
+    eve->selection_changed_cb = &eve_selection_changed_cb;
+
+    // Toolbar
+    GtkToolbar *tools = (GtkToolbar *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
+
+    GtkWidget *tools_zoom_in = gtk_button_new();
+    dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_in.png");
+    gtk_container_add( GTK_CONTAINER(tools_zoom_in), 
+		       gtk_image_new_from_file( fname));
+    g_signal_connect(tools_zoom_in, "clicked", G_CALLBACK(eve_activate_zoom_in), this);
+    g_object_set( tools_zoom_in, "can-focus", FALSE, NULL);
+    gtk_toolbar_append_widget( tools, tools_zoom_in,CoWowGtk::translate_utf8("Zoom in"), "");
+
+    GtkWidget *tools_zoom_out = gtk_button_new();
+    dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_out.png");
+    gtk_container_add( GTK_CONTAINER(tools_zoom_out), 
+		       gtk_image_new_from_file( fname));
+    g_signal_connect(tools_zoom_out, "clicked", G_CALLBACK(eve_activate_zoom_out), this);
+    g_object_set( tools_zoom_out, "can-focus", FALSE, NULL);
+    gtk_toolbar_append_widget( tools, tools_zoom_out,CoWowGtk::translate_utf8("Zoom out"), "");
+    
+    GtkWidget *tools_zoom_reset = gtk_button_new();
+    dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_reset.png");
+    gtk_container_add( GTK_CONTAINER(tools_zoom_reset), 
+		       gtk_image_new_from_file( fname));
+    g_signal_connect(tools_zoom_reset, "clicked", G_CALLBACK(eve_activate_zoom_reset), this);
+    g_object_set( tools_zoom_reset, "can-focus", FALSE, NULL);
+    gtk_toolbar_append_widget( tools, tools_zoom_reset,CoWowGtk::translate_utf8("Zoom reset"), "");
+    
+    eve_methodtoolbar = new XttMethodToolbarGtk(0, 0, ~0, "");
+    GtkToolbar *tools_meth = (GtkToolbar *) ((XttMethodToolbarGtk *)eve_methodtoolbar)->build();
+    eve_methodtoolbar->m_xnav = (XNav *)parent_ctx;
+    eve_methodtoolbar->m_parent_ctx = eve;
+    eve_methodtoolbar->get_select_cb = eve->get_select;
+
+    eve_sup_methodtoolbar = new XttMethodToolbarGtk(0, 0, mt_mMethod_OpenPlc | mt_mMethod_RtNavigator, 
+						    "for supervisory object");
+    GtkToolbar *tools_sup = (GtkToolbar *) ((XttMethodToolbarGtk *)eve_sup_methodtoolbar)->build();
+    eve_sup_methodtoolbar->m_xnav = (XNav *)parent_ctx;
+    eve_sup_methodtoolbar->m_parent_ctx = eve;
+    eve_sup_methodtoolbar->get_select_cb = eve->get_select_supobject;
+
+    GtkWidget *eve_toolsbox = gtk_hbox_new( FALSE, 0);
+    gtk_box_pack_start( GTK_BOX(eve_toolsbox), GTK_WIDGET(tools), FALSE, FALSE, 0);
+    gtk_box_pack_start( GTK_BOX(eve_toolsbox), GTK_WIDGET(gtk_separator_tool_item_new()), FALSE, FALSE, 4);
+    gtk_box_pack_start( GTK_BOX(eve_toolsbox), GTK_WIDGET(tools_sup), FALSE, FALSE, 0);
+    gtk_box_pack_start( GTK_BOX(eve_toolsbox), GTK_WIDGET(gtk_separator_tool_item_new()), FALSE, FALSE, 4);
+    gtk_box_pack_start( GTK_BOX(eve_toolsbox), GTK_WIDGET(tools_meth), FALSE, FALSE, 0);
 
     gtk_box_pack_start( GTK_BOX(eve_vbox), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
+    gtk_box_pack_start( GTK_BOX(eve_vbox), GTK_WIDGET(eve_toolsbox), FALSE, FALSE, 0);
     gtk_box_pack_end( GTK_BOX(eve_vbox), GTK_WIDGET(eve_widget), TRUE, TRUE, 0);
 
     gtk_container_add( GTK_CONTAINER(parent_wid_eve), eve_vbox);
     // gtk_widget_show_all( parent_wid_eve);
+
+    eve_methodtoolbar->set_sensitive();
+    eve_sup_methodtoolbar->set_sensitive();
   }
 
   // Ala Window
@@ -444,20 +498,79 @@ EvGtk::EvGtk( void *ev_parent_ctx,
     gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), help);
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(help), GTK_WIDGET(help_menu));
 
-
     // Create ala evlist
-    ala = new EvListGtk( this, ala_vbox, ev_eType_AlarmList, ala_size, &ala_widget);
+    ala = new EvListGtk( this, ala_vbox, ev_eType_AlarmList, ala_size, eventname_seg, &ala_widget);
     ala->start_trace_cb = &ala_start_trace_cb;
     ala->display_in_xnav_cb = &ala_display_in_xnav_cb;
     ala->name_to_alias_cb = &ev_name_to_alias_cb;
     ala->popup_menu_cb = &ev_popup_menu_cb;
     ala->sound_cb = &ev_sound_cb;
+    ala->selection_changed_cb = &ala_selection_changed_cb;
+
+    // Toolbar
+    GtkToolbar *tools = (GtkToolbar *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
+
+    GtkWidget *tools_ack = gtk_button_new();
+    dcli_translate_filename( fname, "$pwr_exe/xtt_acknowledge.png");
+    gtk_container_add( GTK_CONTAINER( tools_ack), gtk_image_new_from_file( fname));
+    g_signal_connect(tools_ack, "clicked", G_CALLBACK(ala_activate_ack_last), this);
+    g_object_set( tools_ack, "can-focus", FALSE, NULL);
+    gtk_toolbar_append_widget( tools, tools_ack, CoWowGtk::translate_utf8("Acknowledge"), "");
+    
+    GtkWidget *tools_zoom_in = gtk_button_new();
+    dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_in.png");
+    gtk_container_add( GTK_CONTAINER(tools_zoom_in), 
+		       gtk_image_new_from_file( fname));
+    g_signal_connect(tools_zoom_in, "clicked", G_CALLBACK(ala_activate_zoom_in), this);
+    g_object_set( tools_zoom_in, "can-focus", FALSE, NULL);
+    gtk_toolbar_append_widget( tools, tools_zoom_in,CoWowGtk::translate_utf8("Zoom in"), "");
+
+    GtkWidget *tools_zoom_out = gtk_button_new();
+    dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_out.png");
+    gtk_container_add( GTK_CONTAINER(tools_zoom_out), 
+		       gtk_image_new_from_file( fname));
+    g_signal_connect(tools_zoom_out, "clicked", G_CALLBACK(ala_activate_zoom_out), this);
+    g_object_set( tools_zoom_out, "can-focus", FALSE, NULL);
+    gtk_toolbar_append_widget( tools, tools_zoom_out,CoWowGtk::translate_utf8("Zoom out"), "");
+    
+    GtkWidget *tools_zoom_reset = gtk_button_new();
+    dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_reset.png");
+    gtk_container_add( GTK_CONTAINER(tools_zoom_reset), 
+		       gtk_image_new_from_file( fname));
+    g_signal_connect(tools_zoom_reset, "clicked", G_CALLBACK(ala_activate_zoom_reset), this);
+    g_object_set( tools_zoom_reset, "can-focus", FALSE, NULL);
+    gtk_toolbar_append_widget( tools, tools_zoom_reset,CoWowGtk::translate_utf8("Zoom reset"), "");
+    
+    ala_methodtoolbar = new XttMethodToolbarGtk(0, 0, ~0, "");
+    GtkToolbar *tools_meth = (GtkToolbar *) ((XttMethodToolbarGtk *)ala_methodtoolbar)->build();
+
+    ala_methodtoolbar->m_xnav = (XNav *)parent_ctx;
+    ala_methodtoolbar->m_parent_ctx = ala;
+    ala_methodtoolbar->get_select_cb = ala->get_select;
+
+    ala_sup_methodtoolbar = new XttMethodToolbarGtk(0, 0, mt_mMethod_OpenPlc | mt_mMethod_RtNavigator, 
+						    " for supervisory object");
+    GtkToolbar *tools_sup = (GtkToolbar *) ((XttMethodToolbarGtk *)ala_sup_methodtoolbar)->build();
+    ala_sup_methodtoolbar->m_xnav = (XNav *)parent_ctx;
+    ala_sup_methodtoolbar->m_parent_ctx = ala;
+    ala_sup_methodtoolbar->get_select_cb = ala->get_select_supobject;
+
+    GtkWidget *ala_toolsbox = gtk_hbox_new( FALSE, 0);
+    gtk_box_pack_start( GTK_BOX(ala_toolsbox), GTK_WIDGET(tools), FALSE, FALSE, 0);
+    gtk_box_pack_start( GTK_BOX(ala_toolsbox), GTK_WIDGET(gtk_separator_tool_item_new()), FALSE, FALSE, 4);
+    gtk_box_pack_start( GTK_BOX(ala_toolsbox), GTK_WIDGET(tools_sup), FALSE, FALSE, 0);
+    gtk_box_pack_start( GTK_BOX(ala_toolsbox), GTK_WIDGET(gtk_separator_tool_item_new()), FALSE, FALSE, 4);
+    gtk_box_pack_start( GTK_BOX(ala_toolsbox), GTK_WIDGET(tools_meth), FALSE, FALSE, 0);
 
     gtk_box_pack_start( GTK_BOX(ala_vbox), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
+    gtk_box_pack_start( GTK_BOX(ala_vbox), GTK_WIDGET(ala_toolsbox), FALSE, FALSE, 0);
     gtk_box_pack_end( GTK_BOX(ala_vbox), GTK_WIDGET(ala_widget), TRUE, TRUE, 0);
 
     gtk_container_add( GTK_CONTAINER(parent_wid_ala), ala_vbox);
     // gtk_widget_show_all( parent_wid_ala);
+
+    ala_methodtoolbar->set_sensitive();
+    ala_sup_methodtoolbar->set_sensitive();
   }
 
   // Blk Window
@@ -593,7 +706,7 @@ EvGtk::EvGtk( void *ev_parent_ctx,
 
 
     // Create blk evlist
-    blk = new EvListGtk( this, blk_vbox, ev_eType_BlockList, blk_size, &blk_widget);
+    blk = new EvListGtk( this, blk_vbox, ev_eType_BlockList, blk_size, eventname_seg, &blk_widget);
     blk->start_trace_cb = &blk_start_trace_cb;
     blk->display_in_xnav_cb = &blk_display_in_xnav_cb;
     blk->name_to_alias_cb = &ev_name_to_alias_cb;

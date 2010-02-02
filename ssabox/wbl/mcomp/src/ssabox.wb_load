@@ -192,7 +192,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Body RtBody 25-JAN-2006 14:55:38.69
           Attr Super.Super.Specification = "SSAB SafetySwitch"
           Attr Super.Super.DataSheet = "$pwr_lang/dsh/ssab_safetyswitch.pdf"
-          Attr Super.AlarmText = "Safety switch is not on, "
+          Attr Super.AlarmText = "Safety switch is not on"
         EndBody
       EndObject
     EndObject

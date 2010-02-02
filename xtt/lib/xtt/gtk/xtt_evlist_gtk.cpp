@@ -43,8 +43,9 @@ EvListGtk::EvListGtk( void *ev_parent_ctx,
 		      GtkWidget *ev_parent_wid,
 		      ev_eType ev_type, 
 		      int ev_size,
+		      int ev_eventname_seg,
 		      GtkWidget **w) :
-  EvList( ev_parent_ctx, ev_type, ev_size), parent_wid(ev_parent_wid)
+  EvList( ev_parent_ctx, ev_type, ev_size, ev_eventname_seg), parent_wid(ev_parent_wid)
 {
   form_widget = scrolledbrowwidgetgtk_new( init_brow_cb, this, &brow_widget);
 

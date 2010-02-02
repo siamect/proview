@@ -213,9 +213,9 @@ static pwr_tUInt32 tlog_loglist_add(
 		tlog_t_filectx 		*filectx,
 		pwr_tObjid		objid,
 		tlog_e_logtype		logtype,
-		pwr_tString80		*logtext,
+		const char	       	*logtext,
 		pwr_sAttrRef		*attribute,
-		pwr_tString80		*attrname,
+		const char	       	*attrname,
 		pwr_tTime		*logtime,
 		tlog_t_loglist		**loglist,
 		int			*loglist_count,
@@ -773,9 +773,9 @@ static pwr_tStatus tlog_mh_info_bc( mh_sMessage *MsgP)
 	  sts = tlog_loglist_add( &filectx, 
 		  pwr_cNObjid,
 		  tlog_logtype_Info,
-		  &EventP->Msg.EventText, 
+		  EventP->Msg.EventText, 
 		  NULL,
-		  &EventP->Info.EventName, 
+		  EventP->Msg.EventName, 
 		  &eventtime,
 		  &log_list, &log_count, &log_alloc);
 	  if ( EVEN(sts)) return sts;
@@ -822,9 +822,9 @@ static pwr_tStatus tlog_mh_alarm_bc( mh_sMessage *MsgP)
 	  sts = tlog_loglist_add( &filectx, 
 		  pwr_cNObjid,
 		  logtype,
-		  &EventP->Msg.EventText, 
+		  EventP->Msg.EventText, 
 		  NULL,
-		  &EventP->Info.EventName, 
+		  EventP->Msg.EventName, 
 		  &eventtime,
 		  &log_list, &log_count, &log_alloc);
 	  if ( EVEN(sts)) return sts;
@@ -1092,9 +1092,9 @@ static pwr_tUInt32 tlog_loglist_add(
 		tlog_t_filectx 		*filectx,
 		pwr_tObjid		objid,
 		tlog_e_logtype		logtype,
-		pwr_tString80		*logtext,
+		const char	       	*logtext,
 		pwr_sAttrRef		*attribute,
-		pwr_tString80		*attrname,
+	        const char	       	*attrname,
 		pwr_tTime		*logtime,
 		tlog_t_loglist		**loglist,
 		int			*loglist_count,
@@ -1145,7 +1145,7 @@ static pwr_tUInt32 tlog_loglist_add(
 	loglist_ptr = *loglist + *loglist_count;
 	loglist_ptr->logtype = logtype;
 	loglist_ptr->objid = objid;
-	strcpy( loglist_ptr->logtext, (char *) logtext);
+	strncpy( loglist_ptr->logtext, (char *) logtext, sizeof(loglist_ptr->logtext));
 	if ( attribute != NULL)
 	{
 /*	  sts = gdh_AttrrefToName ( attribute, loglist_ptr->attrname, 
@@ -1162,7 +1162,7 @@ static pwr_tUInt32 tlog_loglist_add(
 	  }
 	}
 	else
-	  strcpy( loglist_ptr->attrname, (char *) attrname);
+	  strncpy( loglist_ptr->attrname, (char *) attrname, sizeof(loglist_ptr->attrname));
 
 	memcpy( &loglist_ptr->logtime, logtime, sizeof( pwr_tTime));
 	time_Adiff( &loglist_ptr->diftime, logtime, &filectx->open_time);
@@ -1722,9 +1722,9 @@ int main( int argc, char **argv)
 		    sts = tlog_loglist_add( &filectx,
 		  	list_ptr->objid,
 		  	tlog_logtype_Modify,
-		  	(pwr_tString80 *) "TLogModify selectlist active",
+		  	"TLogModify selectlist active",
 		  	NULL,
-		  	(pwr_tString80 *) name,
+		  	name,
 			&((pwr_sClass_TLogModify *)
 				(list_ptr->object_ptr))->ModifyTime,
 		  	&log_list, &log_count, &log_alloc);
@@ -1747,9 +1747,9 @@ int main( int argc, char **argv)
 		    sts = tlog_loglist_add( &filectx,
 		  	list_ptr->objid,
 		  	tlog_logtype_UnModify,
-		  	(pwr_tString80 *) "TLogModify selectlist inactive", 
+		  	"TLogModify selectlist inactive", 
 		  	NULL,
-		  	(pwr_tString80 *) name, 
+		  	name, 
 			&((pwr_sClass_TLogModify *)
 				(list_ptr->object_ptr))->UnModifyTime, 
 		  	&log_list, &log_count, &log_alloc);
@@ -1773,9 +1773,9 @@ int main( int argc, char **argv)
 	        sts = tlog_loglist_add( &filectx, 
 		  list_ptr->objid,
 		  tlog_logtype_ExecOn,
-		  (pwr_tString80 *) "Execution all PlcPgms set on",
+		  "Execution all PlcPgms set on",
 		  NULL, 
-		  (pwr_tString80 *) name, 
+		  name, 
 		  &((pwr_sClass_TLogExecAllOn *)(list_ptr->object_ptr))->LogTime, 
 		  &log_list, &log_count, &log_alloc);
 	        if (EVEN(sts)) LogAndExit( sts);
@@ -1797,9 +1797,9 @@ int main( int argc, char **argv)
 	        sts = tlog_loglist_add( &filectx, 
 		  list_ptr->objid,
 		  tlog_logtype_ExecOff,
-		  (pwr_tString80 *) "Execution all PlcPgms set off",
+		  "Execution all PlcPgms set off",
 		  NULL, 
-		  (pwr_tString80 *) name, 
+		  name, 
 		  &((pwr_sClass_TLogExecAllOff *)(list_ptr->object_ptr))->LogTime, 
 		  &log_list, &log_count, &log_alloc);
 	        if (EVEN(sts)) LogAndExit( sts);
@@ -1824,7 +1824,7 @@ int main( int argc, char **argv)
 	          sts = tlog_loglist_add( &filectx, 
 		  	list_ptr->objid,
 		  	tlog_logtype_DtLogUp,
-		  	(pwr_tString80 *) ((pwr_sClass_DtLog *)(list_ptr->object_ptr))->UpText, 
+		  	((pwr_sClass_DtLog *)(list_ptr->object_ptr))->UpText, 
 		  	&((pwr_sClass_DtLog *)(list_ptr->object_ptr))->Attribute,
 		  	NULL, 
 		  	&((pwr_sClass_DtLog *)(list_ptr->object_ptr))->UpTime, 
@@ -1841,7 +1841,7 @@ int main( int argc, char **argv)
 	          sts = tlog_loglist_add( &filectx, 
 		  	list_ptr->objid,
 		  	tlog_logtype_DtLogDown,
-		  	(pwr_tString80 *) ((pwr_sClass_DtLog *)(list_ptr->object_ptr))->DownText, 
+		  	((pwr_sClass_DtLog *)(list_ptr->object_ptr))->DownText, 
 		  	&((pwr_sClass_DtLog *)(list_ptr->object_ptr))->Attribute,
 		  	NULL, 
 		  	&((pwr_sClass_DtLog *)(list_ptr->object_ptr))->DownTime, 
@@ -1865,7 +1865,7 @@ int main( int argc, char **argv)
 	          sts = tlog_loglist_add( &filectx, 
 		  	list_ptr->objid,
 		  	tlog_logtype_AtLogUp,
-		  	(pwr_tString80 *) ((pwr_sClass_AtLog *)(list_ptr->object_ptr))->UpText, 
+		  	((pwr_sClass_AtLog *)(list_ptr->object_ptr))->UpText, 
 		  	&((pwr_sClass_AtLog *)(list_ptr->object_ptr))->Attribute,
 		  	NULL, 
 		  	&((pwr_sClass_AtLog *)(list_ptr->object_ptr))->UpTime, 
@@ -1882,7 +1882,7 @@ int main( int argc, char **argv)
 	          sts = tlog_loglist_add( &filectx, 
 		  	list_ptr->objid,
 		  	tlog_logtype_AtLogDown,
-		  	(pwr_tString80 *) ((pwr_sClass_AtLog *)(list_ptr->object_ptr))->DownText, 
+		  	((pwr_sClass_AtLog *)(list_ptr->object_ptr))->DownText, 
 		  	&((pwr_sClass_AtLog *)(list_ptr->object_ptr))->Attribute,
 		  	NULL, 
 		  	&((pwr_sClass_AtLog *)(list_ptr->object_ptr))->DownTime, 
@@ -1907,7 +1907,7 @@ int main( int argc, char **argv)
 	        sts = tlog_loglist_add( &filectx, 
 		    list_ptr->objid,
 		    tlog_logtype_CAtLog,
-		    (pwr_tString80 *) text,
+		    text,
 		    &((pwr_sClass_CAtLog *)(list_ptr->object_ptr))->Attribute,
 		    NULL, 
 		    &((pwr_sClass_CAtLog *)(list_ptr->object_ptr))->LogTime, 
@@ -1930,7 +1930,7 @@ int main( int argc, char **argv)
 	        sts = tlog_loglist_add( &filectx, 
 		    list_ptr->objid,
 		    tlog_logtype_CDtLog,
-		    (pwr_tString80 *) text,
+		    text,
 		    &((pwr_sClass_CDtLog *)(list_ptr->object_ptr))->Attribute,
 		    NULL, 
 		    &((pwr_sClass_CDtLog *)(list_ptr->object_ptr))->LogTime, 
@@ -1959,7 +1959,7 @@ int main( int argc, char **argv)
 	        sts = tlog_loglist_add( &filectx, 
 		    list_ptr->objid,
 		    tlog_logtype_COtLog,
-		    (pwr_tString80 *) text,
+		    text,
 		    &((pwr_sClass_COtLog *)(list_ptr->object_ptr))->Attribute,
 		    NULL, 
 		    &((pwr_sClass_COtLog *)(list_ptr->object_ptr))->LogTime, 
@@ -1983,7 +1983,7 @@ int main( int argc, char **argv)
 	        sts = tlog_loglist_add( &filectx, 
 		    list_ptr->objid,
 		    tlog_logtype_ChgAtLog,
-		    (pwr_tString80 *) text,
+		    text,
 		    &((pwr_sClass_ChgAtLog *)(list_ptr->object_ptr))->Attribute,
 		    NULL, 
 		    &((pwr_sClass_ChgAtLog *)(list_ptr->object_ptr))->LogTime, 
@@ -2013,7 +2013,7 @@ int main( int argc, char **argv)
 	        sts = tlog_loglist_add( &filectx, 
 		    list_ptr->objid,
 		    tlog_logtype_ChgOtLog,
-		    (pwr_tString80 *) text,
+		    text,
 		    &((pwr_sClass_ChgOtLog *)(list_ptr->object_ptr))->Attribute,
 		    NULL, 
 		    &((pwr_sClass_ChgOtLog *)(list_ptr->object_ptr))->LogTime, 
@@ -2037,9 +2037,9 @@ int main( int argc, char **argv)
 	        sts = tlog_loglist_add( &filectx,
 		  	filectx.objid,
 		  	tlog_logtype_Close,
-		  	(pwr_tString80 *) "File closed",
+		  	"File closed",
 		  	NULL,
-		  	(pwr_tString80 *) "", 
+		  	"", 
 			&filectx.object_ptr->CloseTime,
 		  	&log_list, &log_count, &log_alloc);
 	        if (EVEN(sts)) LogAndExit( sts);

@@ -31,6 +31,7 @@
 #endif
 
 class CoWow;
+class XttMethodToolbar;
 
 typedef struct {
   char Object[120];
@@ -52,6 +53,7 @@ class Ev {
 	int display_ack,
 	int ev_beep,
 	pwr_tMask ev_pop_mask,
+	int ev_eventname_seg,
 	pwr_tStatus *status);
     virtual ~Ev();
 
@@ -83,6 +85,11 @@ class Ev {
     CoWow		*wow;
     static Ev		*ev;
     pwr_tMask		pop_mask;
+    int			eventname_seg;
+    XttMethodToolbar 	*eve_methodtoolbar;
+    XttMethodToolbar 	*ala_methodtoolbar;
+    XttMethodToolbar 	*eve_sup_methodtoolbar;
+    XttMethodToolbar 	*ala_sup_methodtoolbar;
 
     virtual void map_eve() {}
     virtual void map_ala() {}
@@ -124,6 +131,8 @@ class Ev {
 				  unsigned long item_type, unsigned long utility,
 				  char *arg, int x, int y);
     static int ev_sound_cb( void *ctx, pwr_tAttrRef *attrref);
+    static void eve_selection_changed_cb( void *ctx);
+    static void ala_selection_changed_cb( void *ctx);
     static pwr_tStatus mh_ack_bc( mh_sAck *MsgP);
     static pwr_tStatus mh_return_bc( mh_sReturn *MsgP);
     static pwr_tStatus mh_alarm_bc( mh_sMessage *MsgP);

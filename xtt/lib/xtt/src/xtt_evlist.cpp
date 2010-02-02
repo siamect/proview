@@ -35,17 +35,53 @@
 #include "flow_browapi.h"
 #include "xtt_evlist.h"
 #include "xtt_menu.h"
+#include "xtt_methodtoolbar.h"
 
 #include "xnav_bitmap_leaf12.h"
 #include "xnav_bitmap_map12.h"
 #include "xnav_bitmap_openmap12.h"
 #include "xnav_bitmap_attr12.h"
 #include "xnav_bitmap_attrarra12.h"
+#include "xnav_bitmap_ack8.h"
+#include "xnav_bitmap_ack10.h"
 #include "xnav_bitmap_ack12.h"
+#include "xnav_bitmap_ack14.h"
+#include "xnav_bitmap_ack16.h"
+#include "xnav_bitmap_ack18.h"
+#include "xnav_bitmap_ack20.h"
+#include "xnav_bitmap_ack24.h"
+#include "xnav_bitmap_alarm8.h"
+#include "xnav_bitmap_alarm10.h"
 #include "xnav_bitmap_alarm12.h"
+#include "xnav_bitmap_alarm14.h"
+#include "xnav_bitmap_alarm16.h"
+#include "xnav_bitmap_alarm18.h"
+#include "xnav_bitmap_alarm20.h"
+#include "xnav_bitmap_alarm24.h"
+#include "xnav_bitmap_eventalarm8.h"
+#include "xnav_bitmap_eventalarm10.h"
 #include "xnav_bitmap_eventalarm12.h"
+#include "xnav_bitmap_eventalarm14.h"
+#include "xnav_bitmap_eventalarm16.h"
+#include "xnav_bitmap_eventalarm18.h"
+#include "xnav_bitmap_eventalarm20.h"
+#include "xnav_bitmap_eventalarm24.h"
+#include "xnav_bitmap_eventacked8.h"
+#include "xnav_bitmap_eventacked10.h"
 #include "xnav_bitmap_eventacked12.h"
+#include "xnav_bitmap_eventacked14.h"
+#include "xnav_bitmap_eventacked16.h"
+#include "xnav_bitmap_eventacked18.h"
+#include "xnav_bitmap_eventacked20.h"
+#include "xnav_bitmap_eventacked24.h"
+#include "xnav_bitmap_eventreturn8.h"
+#include "xnav_bitmap_eventreturn10.h"
 #include "xnav_bitmap_eventreturn12.h"
+#include "xnav_bitmap_eventreturn14.h"
+#include "xnav_bitmap_eventreturn16.h"
+#include "xnav_bitmap_eventreturn18.h"
+#include "xnav_bitmap_eventreturn20.h"
+#include "xnav_bitmap_eventreturn24.h"
 #include "xnav_bitmap_blockr_12.h"
 #include "xnav_bitmap_blockl_12.h"
 
@@ -56,6 +92,7 @@ union alau_Event
     mh_sAck	Ack;
     mh_sMessage Msg;
     mh_sReturn  Return;
+    mh_sBlock   Block;
 };
 
 
@@ -125,43 +162,160 @@ void EvListBrow::allocate_pixmaps()
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_attrarray);
 
-  for ( i = 0; i < 9; i++) {
-    pixmap_data[i].width =xnav_bitmap_alarm12_width;
-    pixmap_data[i].height =xnav_bitmap_alarm12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_alarm12_bits;
-  }
+  i = 0;
+  pixmap_data[i].width =xnav_bitmap_alarm8_width;
+  pixmap_data[i].height =xnav_bitmap_alarm8_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_alarm8_bits;
+  pixmap_data[i].width =xnav_bitmap_alarm10_width;
+  pixmap_data[i].height =xnav_bitmap_alarm10_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_alarm10_bits;
+  pixmap_data[i].width =xnav_bitmap_alarm12_width;
+  pixmap_data[i].height =xnav_bitmap_alarm12_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_alarm12_bits;
+  pixmap_data[i].width =xnav_bitmap_alarm14_width;
+  pixmap_data[i].height =xnav_bitmap_alarm14_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_alarm14_bits;
+  pixmap_data[i].width =xnav_bitmap_alarm16_width;
+  pixmap_data[i].height =xnav_bitmap_alarm16_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_alarm16_bits;
+  pixmap_data[i].width =xnav_bitmap_alarm18_width;
+  pixmap_data[i].height =xnav_bitmap_alarm18_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_alarm18_bits;
+  pixmap_data[i].width =xnav_bitmap_alarm20_width;
+  pixmap_data[i].height =xnav_bitmap_alarm20_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_alarm20_bits;
+  pixmap_data[i].width =xnav_bitmap_alarm20_width;
+  pixmap_data[i].height =xnav_bitmap_alarm20_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_alarm20_bits;
+  pixmap_data[i].width =xnav_bitmap_alarm24_width;
+  pixmap_data[i].height =xnav_bitmap_alarm24_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_alarm24_bits;
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_alarm);
 
-  for ( i = 0; i < 9; i++) {
-    pixmap_data[i].width =xnav_bitmap_ack12_width;
-    pixmap_data[i].height =xnav_bitmap_ack12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_ack12_bits;
-  }
+  i = 0;
+  pixmap_data[i].width =xnav_bitmap_ack8_width;
+  pixmap_data[i].height =xnav_bitmap_ack8_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_ack8_bits;
+  pixmap_data[i].width =xnav_bitmap_ack10_width;
+  pixmap_data[i].height =xnav_bitmap_ack10_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_ack10_bits;
+  pixmap_data[i].width =xnav_bitmap_ack12_width;
+  pixmap_data[i].height =xnav_bitmap_ack12_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_ack12_bits;
+  pixmap_data[i].width =xnav_bitmap_ack14_width;
+  pixmap_data[i].height =xnav_bitmap_ack14_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_ack14_bits;
+  pixmap_data[i].width =xnav_bitmap_ack16_width;
+  pixmap_data[i].height =xnav_bitmap_ack16_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_ack16_bits;
+  pixmap_data[i].width =xnav_bitmap_ack18_width;
+  pixmap_data[i].height =xnav_bitmap_ack18_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_ack18_bits;
+  pixmap_data[i].width =xnav_bitmap_ack20_width;
+  pixmap_data[i].height =xnav_bitmap_ack20_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_ack20_bits;
+  pixmap_data[i].width =xnav_bitmap_ack20_width;
+  pixmap_data[i].height =xnav_bitmap_ack20_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_ack20_bits;
+  pixmap_data[i].width =xnav_bitmap_ack24_width;
+  pixmap_data[i].height =xnav_bitmap_ack24_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_ack24_bits;
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_ack);
 
-  for ( i = 0; i < 9; i++) {
-    pixmap_data[i].width =xnav_bitmap_eventalarm12_width;
-    pixmap_data[i].height =xnav_bitmap_eventalarm12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_eventalarm12_bits;
-  }
+  i = 0;
+  pixmap_data[i].width =xnav_bitmap_eventalarm8_width;
+  pixmap_data[i].height =xnav_bitmap_eventalarm8_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventalarm8_bits;
+  pixmap_data[i].width =xnav_bitmap_eventalarm10_width;
+  pixmap_data[i].height =xnav_bitmap_eventalarm10_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventalarm10_bits;
+  pixmap_data[i].width =xnav_bitmap_eventalarm12_width;
+  pixmap_data[i].height =xnav_bitmap_eventalarm12_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventalarm12_bits;
+  pixmap_data[i].width =xnav_bitmap_eventalarm14_width;
+  pixmap_data[i].height =xnav_bitmap_eventalarm14_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventalarm14_bits;
+  pixmap_data[i].width =xnav_bitmap_eventalarm16_width;
+  pixmap_data[i].height =xnav_bitmap_eventalarm16_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventalarm16_bits;
+  pixmap_data[i].width =xnav_bitmap_eventalarm18_width;
+  pixmap_data[i].height =xnav_bitmap_eventalarm18_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventalarm18_bits;
+  pixmap_data[i].width =xnav_bitmap_eventalarm20_width;
+  pixmap_data[i].height =xnav_bitmap_eventalarm20_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventalarm20_bits;
+  pixmap_data[i].width =xnav_bitmap_eventalarm20_width;
+  pixmap_data[i].height =xnav_bitmap_eventalarm20_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventalarm20_bits;
+  pixmap_data[i].width =xnav_bitmap_eventalarm24_width;
+  pixmap_data[i].height =xnav_bitmap_eventalarm24_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventalarm24_bits;
+
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_eventalarm);
 
-  for ( i = 0; i < 9; i++) {
-    pixmap_data[i].width =xnav_bitmap_eventacked12_width;
-    pixmap_data[i].height =xnav_bitmap_eventacked12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_eventacked12_bits;
-  }
+  i = 0;
+  pixmap_data[i].width =xnav_bitmap_eventacked8_width;
+  pixmap_data[i].height =xnav_bitmap_eventacked8_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventacked8_bits;
+  pixmap_data[i].width =xnav_bitmap_eventacked10_width;
+  pixmap_data[i].height =xnav_bitmap_eventacked10_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventacked10_bits;
+  pixmap_data[i].width =xnav_bitmap_eventacked12_width;
+  pixmap_data[i].height =xnav_bitmap_eventacked12_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventacked12_bits;
+  pixmap_data[i].width =xnav_bitmap_eventacked14_width;
+  pixmap_data[i].height =xnav_bitmap_eventacked14_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventacked14_bits;
+  pixmap_data[i].width =xnav_bitmap_eventacked16_width;
+  pixmap_data[i].height =xnav_bitmap_eventacked16_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventacked16_bits;
+  pixmap_data[i].width =xnav_bitmap_eventacked18_width;
+  pixmap_data[i].height =xnav_bitmap_eventacked18_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventacked18_bits;
+  pixmap_data[i].width =xnav_bitmap_eventacked20_width;
+  pixmap_data[i].height =xnav_bitmap_eventacked20_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventacked20_bits;
+  pixmap_data[i].width =xnav_bitmap_eventacked20_width;
+  pixmap_data[i].height =xnav_bitmap_eventacked20_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventacked20_bits;
+  pixmap_data[i].width =xnav_bitmap_eventacked24_width;
+  pixmap_data[i].height =xnav_bitmap_eventacked24_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventacked24_bits;
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_eventacked);
 
-  for ( i = 0; i < 9; i++) {
-    pixmap_data[i].width =xnav_bitmap_eventreturn12_width;
-    pixmap_data[i].height =xnav_bitmap_eventreturn12_height;
-    pixmap_data[i].bits = (char *)xnav_bitmap_eventreturn12_bits;
-  }
+  i = 0;
+  pixmap_data[i].width =xnav_bitmap_eventreturn8_width;
+  pixmap_data[i].height =xnav_bitmap_eventreturn8_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventreturn8_bits;
+  pixmap_data[i].width =xnav_bitmap_eventreturn10_width;
+  pixmap_data[i].height =xnav_bitmap_eventreturn10_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventreturn10_bits;
+  pixmap_data[i].width =xnav_bitmap_eventreturn12_width;
+  pixmap_data[i].height =xnav_bitmap_eventreturn12_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventreturn12_bits;
+  pixmap_data[i].width =xnav_bitmap_eventreturn14_width;
+  pixmap_data[i].height =xnav_bitmap_eventreturn14_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventreturn14_bits;
+  pixmap_data[i].width =xnav_bitmap_eventreturn16_width;
+  pixmap_data[i].height =xnav_bitmap_eventreturn16_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventreturn16_bits;
+  pixmap_data[i].width =xnav_bitmap_eventreturn18_width;
+  pixmap_data[i].height =xnav_bitmap_eventreturn18_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventreturn18_bits;
+  pixmap_data[i].width =xnav_bitmap_eventreturn20_width;
+  pixmap_data[i].height =xnav_bitmap_eventreturn20_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventreturn20_bits;
+  pixmap_data[i].width =xnav_bitmap_eventreturn20_width;
+  pixmap_data[i].height =xnav_bitmap_eventreturn20_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventreturn20_bits;
+  pixmap_data[i].width =xnav_bitmap_eventreturn24_width;
+  pixmap_data[i].height =xnav_bitmap_eventreturn24_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_eventreturn24_bits;
+
 
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_eventreturn);
 
@@ -339,13 +493,14 @@ int EvList::init_brow_cb( FlowCtx *fctx, void *client_data)
 EvList::EvList(
 	void *ev_parent_ctx,
 	ev_eType ev_type, 
-	int ev_size) :
+	int ev_size,
+	int ev_eventname_seg) :
   parent_ctx(ev_parent_ctx),
   type(ev_type), size(0), max_size(ev_size), display_hundredth(0),
   hide_object(0), hide_text(0),
   start_trace_cb(0), display_in_xnav_cb(0), name_to_alias_cb(0), 
-  sound_cb(0), acc_beep_time(0),
-  beep_interval(4)
+  sound_cb(0), selection_changed_cb(0), acc_beep_time(0),
+  beep_interval(4), eventname_seg(ev_eventname_seg)
 {
   if ( max_size <= 0) {
     switch ( type) {
@@ -430,11 +585,11 @@ void EvList::event_info( mh_sMessage *msg)
 
   new ItemAlarm( this, "Alarm",
 		 net_NetTimeToTime( &event->Info.EventTime), event->Msg.EventText,
-		 event->Info.EventName, event->Info.EventFlags,
+		 event->Msg.EventName, event->Info.EventFlags,
 		 event->Info.EventPrio, event->Info.Id,
-		 event->Info.Object, &event->Msg.EventSound, 
+		 &event->Msg.Object, &event->Msg.EventSound, 
 		 event->Msg.EventMoreText, msg->Status, 
-		 evlist_eEventType_Info, dest_node, dest_code, &sts);
+		 evlist_eEventType_Info, &event->Msg.SupObject, dest_node, dest_code, &sts);
   if ( EVEN(sts)) return;
   size++;
 }
@@ -476,11 +631,11 @@ void EvList::event_alarm( mh_sMessage *msg)
 
   new ItemAlarm( this, "Alarm",
 		 net_NetTimeToTime( &event->Info.EventTime), event->Msg.EventText,
-		 event->Info.EventName, event->Info.EventFlags,
+		 event->Msg.EventName, event->Info.EventFlags,
 		 event->Info.EventPrio, event->Info.Id,
-		 event->Info.Object, &event->Msg.EventSound, 
+		 &event->Msg.Object, &event->Msg.EventSound, 
 		 event->Msg.EventMoreText, msg->Status, 
-		 evlist_eEventType_Alarm, dest_node, dest_code, &sts);
+		 evlist_eEventType_Alarm, &event->Msg.SupObject, dest_node, dest_code, &sts);
   if ( EVEN(sts)) return;
   size++;
 }
@@ -502,7 +657,7 @@ void EvList::event_block( mh_sBlock *msg)
       char name[80];
       char text[100];
 
-      if ( oid_to_item( msg->Info.Object, (void **)&item)) {
+      if ( oid_to_item( msg->Object.Objid, (void **)&item)) {
 	brow_DeleteNode( brow->ctx, item->node);
 	size--;
       }
@@ -525,11 +680,11 @@ void EvList::event_block( mh_sBlock *msg)
 	strcpy( text, "Unknown");
       
       new ItemAlarm( this, "Alarm",
-		     net_NetTimeToTime( &event->Info.EventTime), event->Info.EventName,
+		     net_NetTimeToTime( &event->Info.EventTime), event->Block.EventName,
 		     text, event->Info.EventFlags,
 		     event->Info.EventPrio, event->Info.Id,
-		     event->Info.Object, 0, 0, 0, evlist_eEventType_Block,
-		     dest_node, dest_code, &sts);
+		     &event->Block.Object, 0, 0, 0, evlist_eEventType_Block,
+		     &event->Block.SupObject, dest_node, dest_code, &sts);
       if ( EVEN(sts)) return;
       size++;
       break;
@@ -538,7 +693,7 @@ void EvList::event_block( mh_sBlock *msg)
     case mh_eEvent_Unblock: {
       ItemAlarm 	*item;
       
-      if ( !oid_to_item( msg->Info.Object, (void **)&item))
+      if ( !oid_to_item( msg->Object.Objid, (void **)&item))
 	break;
       
       brow_DeleteNode( brow->ctx, item->node);
@@ -583,10 +738,10 @@ void EvList::event_block( mh_sBlock *msg)
 
     ItemAlarm *item = new ItemAlarm( this, "Alarm",
 				     net_NetTimeToTime( &event->Info.EventTime), text, 
-				     event->Info.EventName, event->Info.EventFlags,
+				     event->Block.EventName, event->Info.EventFlags,
 				     event->Info.EventPrio, event->Info.Id,
-				     event->Info.Object, 0, 0, 0, evlist_eEventType_Block,
-				     dest_node, dest_code, &sts);
+				     &event->Block.Object, 0, 0, 0, evlist_eEventType_Block,
+				     &event->Block.SupObject, dest_node, dest_code, &sts);
     if ( EVEN(sts)) return;
 
     switch( msg->Info.EventType) {
@@ -621,7 +776,7 @@ void EvList::block_remove()
 
     switch( item->type) {
     case evlist_eItemType_Alarm:
-      sts = mh_OutunitBlock( item->object, prio);
+      sts = mh_OutunitBlock( item->object.Objid, prio);
       break;
     default: ;
     }
@@ -669,10 +824,10 @@ void EvList::event_ack( mh_sAck *msg)
     }
     new ItemAlarm( this, "Alarm",
 		   net_NetTimeToTime( &event->Info.EventTime), "",
-	event->Info.EventName, event->Info.EventFlags,
+	event->Ack.EventName, event->Info.EventFlags,
 	event->Info.EventPrio, event->Info.Id,
-	event->Info.Object, 0, 0, 0, evlist_eEventType_Ack,
-	dest_node, dest_code, &sts);
+	&event->Ack.Object, 0, 0, 0, evlist_eEventType_Ack,
+	&event->Ack.SupObject, dest_node, dest_code, &sts);
     if ( EVEN(sts)) return;
     size++;
   }
@@ -733,10 +888,10 @@ void EvList::event_return( mh_sReturn *msg)
     }
     new ItemAlarm( this, "Alarm",
 		   net_NetTimeToTime( &event->Info.EventTime), event->Msg.EventText,
-		   event->Info.EventName, event->Info.EventFlags,
+		   event->Return.EventName, event->Info.EventFlags,
 		   event->Info.EventPrio, event->Info.Id,
-		   event->Info.Object, 0, 0, 0, evlist_eEventType_Return,
-		   dest_node, dest_code, &sts);
+		   &event->Return.Object, 0, 0, 0, evlist_eEventType_Return,
+		   &event->Return.SupObject, dest_node, dest_code, &sts);
     if ( EVEN(sts)) return;
     size++;
   }
@@ -897,7 +1052,7 @@ void EvList::start_trace()
   {
     case evlist_eItemType_Alarm:
       
-      sts = gdh_GetParent( item->object, &parent);
+      sts = gdh_GetParent( item->object.Objid, &parent);
       if ( EVEN(sts)) return;
       
       sts = gdh_GetObjectClass( parent, &classid);
@@ -909,7 +1064,7 @@ void EvList::start_trace()
               classid == pwr_cClass_windowsubstep))
         return;
 
-      sts = gdh_ObjidToName( item->object, 
+      sts = gdh_ObjidToName( item->object.Objid, 
 	    	name, sizeof(name), cdh_mName_object);
       if ( EVEN(sts)) return;
 
@@ -927,7 +1082,6 @@ void EvList::display_in_xnav()
   brow_tNode	*node_list;
   int		node_count;
   ItemAlarm	*item;
-  pwr_sAttrRef	aref;
 
   brow_GetSelectedNodes( brow->ctx, &node_list, &node_count);
   if ( !node_count)
@@ -939,11 +1093,10 @@ void EvList::display_in_xnav()
   switch( item->type)
   {
     case evlist_eItemType_Alarm:
-      if ( cdh_ObjidIsNull( item->object))
+      if ( cdh_ObjidIsNull( item->object.Objid))
         return;
       if ( display_in_xnav_cb) {
-	aref = cdh_ObjidToAref( item->object);
-        (display_in_xnav_cb)( parent_ctx, &aref);
+        (display_in_xnav_cb)( parent_ctx, &item->object);
       }
       break;
     default:
@@ -1002,6 +1155,8 @@ int EvList::brow_cb( FlowCtx *ctx, flow_tEvent event)
         brow_CenterObject( evlist->brow->ctx, object, 0.25);
       if ( node_count)
         free( node_list);
+      if ( evlist->selection_changed_cb)
+	(evlist->selection_changed_cb)( evlist->parent_ctx);
       break;
     }
     case flow_eEvent_Key_Down:
@@ -1037,6 +1192,8 @@ int EvList::brow_cb( FlowCtx *ctx, flow_tEvent event)
         brow_CenterObject( evlist->brow->ctx, object, 0.75);
       if ( node_count)
         free( node_list);
+      if ( evlist->selection_changed_cb)
+	(evlist->selection_changed_cb)( evlist->parent_ctx);
       break;
     }
     case flow_eEvent_SelectClear:
@@ -1057,6 +1214,8 @@ int EvList::brow_cb( FlowCtx *ctx, flow_tEvent event)
             brow_SetInverse( event->object.object, 1);
             brow_SelectInsert( evlist->brow->ctx, event->object.object);
           }
+	  if ( evlist->selection_changed_cb)
+	    (evlist->selection_changed_cb)( evlist->parent_ctx);
           break;
         default:
           brow_SelectClear( evlist->brow->ctx);
@@ -1078,12 +1237,47 @@ int EvList::brow_cb( FlowCtx *ctx, flow_tEvent event)
         case flow_eObjectType_Node:
           if ( evlist->popup_menu_cb) {
             brow_GetUserData( event->object.object, (void **)&item);
-            if ( cdh_ObjidIsNotNull( item->object)) {
-              pwr_sAttrRef attrref = cdh_ObjidToAref( item->object);
-	      evlist->popup_position( event->any.x_pixel + 8, event->any.y_pixel, &x, &y);
-              (evlist->popup_menu_cb)( evlist->parent_ctx, attrref,
-		     (unsigned long)xmenu_eItemType_Object, 
-		     (unsigned long)xmenu_mUtility_EventList, NULL, x, y);
+	    if ( event->any.x < 2 ) {
+	      // Popup menu methods for sup object
+	      if ( cdh_ObjidIsNotNull( item->supobject.Objid)) {
+		evlist->popup_position( event->any.x_pixel + 8, event->any.y_pixel, &x, &y);
+		(evlist->popup_menu_cb)( evlist->parent_ctx, item->supobject,
+					 (unsigned long)xmenu_eItemType_Object, 
+					 (unsigned long)xmenu_mUtility_EventList, NULL, x, y);
+	      }
+	    }
+	    else {
+	      // Popup menu methods for eventname object
+	      if ( cdh_ObjidIsNotNull( item->object.Objid)) {
+		pwr_tAttrRef aref;
+		pwr_tObjName cname;
+		pwr_tStatus sts;
+		pwr_tCid cid;
+
+		// Show menu for parent object for some attribute objects instead
+		sts = gdh_GetAttrRefTid( &item->object, &cid);
+		if ( EVEN(sts)) break;
+
+		sts = gdh_ObjidToName( cdh_ClassIdToObjid(cid), cname, sizeof(cname), 
+				       cdh_mName_object);
+		if ( ODD(sts)) {
+		  if ( strncmp( cname, "CompMode", 8) == 0) {
+		    // Take parent object level
+		    sts = gdh_AttrArefToObjectAref( &item->object, &aref);
+		    if ( EVEN(sts)) 
+		      aref = item->object;
+		  }
+		  else
+		    aref = item->object;
+		}
+		else 
+		  aref = item->object;
+
+		evlist->popup_position( event->any.x_pixel + 8, event->any.y_pixel, &x, &y);
+		(evlist->popup_menu_cb)( evlist->parent_ctx, aref,
+					 (unsigned long)xmenu_eItemType_Object, 
+					 (unsigned long)xmenu_mUtility_EventList, NULL, x, y);
+	      }
             }
           }
           break;
@@ -1210,12 +1404,12 @@ int EvList::brow_cb( FlowCtx *ctx, flow_tEvent event)
 ItemAlarm::ItemAlarm( EvList *item_evlist, const char *item_name, pwr_tTime item_time,
 	const char *item_eventtext, char *item_eventname, int item_eventflags,
 	unsigned long item_eventprio, mh_sEventId item_eventid,
-	pwr_tObjid item_object, pwr_tAttrRef *item_eventsound, char *item_eventmoretext,
-	unsigned long item_status, evlist_eEventType item_event_type,
+	pwr_tAttrRef *item_object, pwr_tAttrRef *item_eventsound, char *item_eventmoretext,
+        unsigned long item_status, evlist_eEventType item_event_type, pwr_tAttrRef *item_supobject,
 	brow_tNode dest, flow_eDest dest_code, int *rsts):
 	event_type(item_event_type), evlist(item_evlist), time(item_time), 
 	eventflags(item_eventflags), eventprio(item_eventprio),
-	eventid(item_eventid), object(item_object), status(item_status)
+	eventid(item_eventid), object(*item_object), status(item_status), supobject(*item_supobject)
 {
   type = evlist_eItemType_Alarm;
   brow_tNodeClass 	nc;
@@ -1536,14 +1730,27 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
 
             if ( object_item->status & mh_mEventStatus_NotAck) 
             {
+	      // Compose the alarmtext from eventtext and eventname
+	      char eventtext[600];
+
+	      strcpy( eventtext, object_item->eventtext);
+	      if ( eventname_seg &&
+		   !( strcmp( object_item->eventname, "") == 0 || 
+		      strstr( object_item->eventname, "-W-") != 0)) {
+		strcat( eventtext, ", ");
+		cdh_CutNameSegments( &eventtext[strlen(eventtext)], object_item->eventname,
+				     eventname_seg);
+	      }
+
               info->alarms_notacked++;
               switch( object_item->eventprio)
               {
                 case mh_eEventPrio_A:
                   if ( a_cnt >= ALARM_INFO_A_SIZE)
                     break;
-                  strncpy( info->a_alarm_text[a_cnt], object_item->eventtext, 
+                  strncpy( info->a_alarm_text[a_cnt], eventtext, 
 			   sizeof(info->a_alarm_text[0]));
+		  info->a_alarm_text[a_cnt][sizeof(info->a_alarm_text[0])-1] = 0;
                   strncpy( info->a_alarm_alias[a_cnt], object_item->alias, 
 			  sizeof(info->a_alarm_alias[0]));
                   info->a_alarm_time[a_cnt] = object_item->time;
@@ -1554,8 +1761,9 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
                 case mh_eEventPrio_B:
                   if ( b_cnt >= ALARM_INFO_B_SIZE)
                     break;
-                  strncpy( info->b_alarm_text[b_cnt], object_item->eventtext,
+                  strncpy( info->b_alarm_text[b_cnt], eventtext,
 			   sizeof(info->b_alarm_text[0]));
+		  info->b_alarm_text[b_cnt][sizeof(info->b_alarm_text[0])-1] = 0;
                   strncpy( info->b_alarm_alias[b_cnt], object_item->alias,
 			   sizeof(info->b_alarm_alias[0]));
                   info->b_alarm_time[b_cnt] = object_item->time;
@@ -1566,8 +1774,9 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
                 case mh_eEventPrio_C:
                   if ( c_cnt >= ALARM_INFO_C_SIZE)
                     break;
-                  strncpy( info->c_alarm_text[c_cnt], object_item->eventtext,
+                  strncpy( info->c_alarm_text[c_cnt], eventtext,
 			   sizeof(info->c_alarm_text[0]));
+		  info->c_alarm_text[c_cnt][sizeof(info->c_alarm_text[0])-1] = 0;
                   strncpy( info->c_alarm_alias[c_cnt], object_item->alias,
 			   sizeof(info->c_alarm_alias[0]));
                   info->c_alarm_time[c_cnt] = object_item->time;
@@ -1578,8 +1787,9 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
                 case mh_eEventPrio_D:
                   if ( d_cnt >= ALARM_INFO_D_SIZE)
                     break;
-                  strncpy( info->d_alarm_text[d_cnt], object_item->eventtext,
+                  strncpy( info->d_alarm_text[d_cnt], eventtext,
 			   sizeof(info->d_alarm_text[0]));
+		  info->d_alarm_text[d_cnt][sizeof(info->d_alarm_text[0])-1] = 0;
                   strncpy( info->d_alarm_alias[d_cnt], object_item->alias,
 			   sizeof(info->d_alarm_alias[0]));
                   info->d_alarm_time[d_cnt] = object_item->time;
@@ -1710,7 +1920,7 @@ int EvList::oid_to_item( pwr_tOid oid, void **item)
     brow_GetUserData( object_list[i], (void **)&object_item);
     switch( object_item->type) {
     case evlist_eItemType_Alarm:
-      if ( cdh_ObjidIsEqual( object_item->object, oid)) {
+      if ( cdh_ObjidIsEqual( object_item->object.Objid, oid)) {
 	*item = (void *)object_item;
 	return 1;
       }
@@ -1790,5 +2000,37 @@ int EvList::get_destination( pwr_tTime time, void **dest)
     }
   }
   return 0;
+}
+
+int EvList::get_select( void *ctx, pwr_tAttrRef *attrref, int *is_attr)
+{
+  EvList *ev = (EvList *)ctx;
+  pwr_tStatus sts;
+  ItemAlarm *item;
+  pwr_tAName eventname;
+
+  sts = ev->get_selected_event( eventname, &item);
+  if ( EVEN(sts)) return sts;
+
+  *attrref = item->object;
+  *is_attr = item->object.Flags.b.Object ? 1 : 0;
+
+  return sts;
+}
+
+int EvList::get_select_supobject( void *ctx, pwr_tAttrRef *attrref, int *is_attr)
+{
+  EvList *ev = (EvList *)ctx;
+  pwr_tStatus sts;
+  ItemAlarm *item;
+  pwr_tAName eventname;
+
+  sts = ev->get_selected_event( eventname, &item);
+  if ( EVEN(sts)) return sts;
+
+  *attrref = item->supobject;
+  *is_attr = item->supobject.Flags.b.Object ? 1 : 0;
+
+  return sts;
 }
 

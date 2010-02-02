@@ -37,12 +37,63 @@
 #include "wb_session.h"
 #include "wb_object.h"
 #include "pwr_baseclasses.h"
+#include "pwr_basecomponentclasses.h"
+#include "pwr_abbclasses.h"
+
+typedef struct {
+  pwr_tCid cid;
+  pwr_tObjName attr[10];
+} upg_sCnvAlarm;
+
+static upg_sCnvAlarm upg_alatext[] = {
+  {pwr_cClass_CompModeA, {"AlarmNotReadyM", "AlarmNotReadyA", "Alarm1LocalMod", "Alarm2LocalMod", "AlarmNotManOrd", "", "", "", "", ""}},
+  {pwr_cClass_CompModeAM, {"AlarmLocalMode", "", "", "", "", "", "", "", "", ""}},
+  {pwr_cClass_CompModeD, {"AlarmNotReadyM", "AlarmNotReadyA", "Alarm1LocalMod", "Alarm2LocalMod", "AlarmNotManOrd", "", "", "", "", ""}},
+  {pwr_cClass_CompModeD2, {"AlarmNotReadyM", "AlarmNotReadyA", "Alarm1LocalMod", "Alarm2LocalMod", "AlarmNotManOrd", "AlarmOrderTimeOut", "", "", "", ""}},
+  {pwr_cClass_CompLimit, {"AlarmText", "", "", "", "", "", "", "", "", ""}},
+  {pwr_cClass_BaseSupSwitch, {"AlarmText", "", "", "", "", "", "", "", "", ""}},
+  {pwr_cClass_BaseTempSwitch, {"AlarmText", "", "", "", "", "", "", "", "", ""}},
+  {pwr_cClass_BaseCircuitBreaker, {"AlarmText", "", "", "", "", "", "", "", "", ""}},
+  {pwr_cClass_BaseActuatorA, {"DiffAlarmText", "SwitchAlarmText", "", "", "", "", "", "", "", ""}},
+  {pwr_cClass_BaseActuatorIncrDecr, {"SwitchAlarmText", "", "", "", "", "", "", "", "", ""}},
+  {pwr_cClass_BaseContactor, {"AlarmText", "", "", "", "", "", "", "", "", ""}},
+  {pwr_cClass_BaseLevelSwitch, {"AlarmText", "", "", "", "", "", "", "", "", ""}},
+  {pwr_cClass_BasePressureSwitch, {"AlarmText", "", "", "", "", "", "", "", "", ""}},
+  {pwr_cClass_BaseFilter, {"AlarmText", "", "", "", "", "", "", "", "", ""}},
+  {pwr_cClass_BaseMValve, {"SwitchAlarmText", "", "", "", "", "", "", "", "", ""}},
+  {pwr_cClass_BaseMDamper, {"SwitchAlarmText", "", "", "", "", "", "", "", "", ""}},
+  {pwr_cClass_BaseM3WayValve, {"SwitchAlarmText", "", "", "", "", "", "", "", "", ""}},
+  {pwr_cClass_BaseOverloadRelay, {"AlarmText", "", "", "", "", "", "", "", "", ""}},
+  {pwr_cClass_BaseSafetySwitch, {"AlarmText", "", "", "", "", "", "", "", "", ""}},
+  {pwr_cClass_BaseFcPPO5, {"AlarmTripped", "AlarmWarning", "AlarmError", "", "", "", "", "", "", ""}},
+  {pwr_cClass_BaseFcPPO3, {"AlarmTripped", "AlarmWarning", "AlarmError", "", "", "", "", "", "", ""}},
+  {pwr_cClass_BaseFcPPO5MotorAggr, {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
+  {pwr_cClass_BaseFcPPO5FanAggr, {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
+  {pwr_cClass_BaseFcPPO5PumpAggr, {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
+  {pwr_cClass_BaseFcPPO3MotorAggr, {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
+  {pwr_cClass_BaseFcPPO3FanAggr, {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
+  {pwr_cClass_BaseFcPPO3PumpAggr, {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
+  {pwr_cClass_ABB_CircuitBreaker_MS116, {"AlarmText", "", "", "", "", "", "", "", "", ""}},
+  {pwr_cClass_ABB_ACS800_1, {"AlarmLocalMod", "AlarmTripped", "AlarmFanOld", "AlarmWarning", "AlarmError", "", "", "", "", ""}},
+  {pwr_cClass_ABB_ACC800, {"AlarmLocalMod", "AlarmWarning", "AlarmError", "AlarmTorqFault", "AlarmBrakeFault", "AlarmTorqProvFault", "", "", "", ""}},
+  {pwr_cClass_ABB_ACS800MotorAggr, {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
+  {pwr_cClass_ABB_ACS800PumpAggr, {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
+  {pwr_cClass_ABB_ACS800FanAggr, {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
+  {pwr_cClass_ABB_Converter_ACS800_PPO3, {"AlarmTripped", "AlarmWarning", "AlarmError", "", "", "", "", "", "", ""}},
+  {pwr_cClass_ABB_Sensor_Pb_PA, {"AlarmTextTransmError", "AlarmTextTransmWarning", "", "", "", "", "", "", "", ""}},
+  {pwr_cClass_ABB_TempSensor_TF12, {"AlarmTextTransmError", "AlarmTextTransmWarning", "", "", "", "", "", "", "", ""}},
+  {pwr_cClass_ABB_PressureSensor_265GS, {"AlarmTextTransmError", "AlarmTextTransmWarning", "", "", "", "", "", "", "", ""}},
+   {pwr_cClass_ABB_DiffPressureSensor_265DS, {"AlarmTextTransmError", "AlarmTextTransmWarning", "", "", "", "", "", "", "", ""}},
+   {pwr_cClass_ABB_FlowSensor_FXE4000, {"AlarmTextTransmError", "AlarmTextTransmWarning", "", "", "", "", "", "", "", ""}}};
+
+
 
 static void usage()
 {
   printf( "\nUsage: wb_upgrade -v 'volumename'\n\n");
 }
 
+#if 0
 static void process( wb_session& session, wb_object& o)
 {
   pwr_sPlcNode plcnode;
@@ -75,6 +126,7 @@ static void process( wb_session& session, wb_object& o)
     process( session, c);
   }
 }
+#endif
 
 int main( int argc, char *argv[])
 {
@@ -121,10 +173,61 @@ int main( int argc, char *argv[])
     exit(0);
   }
 
+#if 0
   wb_object o;
   for ( o = session.object(); o.oddSts(); o = o.after()) {
     process( session, o);
   }
+#endif
+
+
+  // Replace alarmtexts with tailing ", "
+  pwr_tAttrRef aref;
+  pwr_tString80 text;
+  
+  for ( unsigned int i = 0; i < sizeof(upg_alatext)/sizeof(upg_alatext[0]); i++) {
+    for ( session.aref( upg_alatext[i].cid, &aref);
+	  session.oddSts();
+	  session.nextAref( upg_alatext[i].cid, &aref, &aref)) {
+
+      for ( unsigned int j = 0; j < sizeof(upg_alatext[0].attr)/sizeof(upg_alatext[0].attr[0]); j++) {
+	if ( strcmp( upg_alatext[i].attr[j], "") == 0)
+	  break;
+
+	try {
+	  wb_attribute a = session.attribute(&aref);
+	  if (!a) continue;
+
+	  wb_attribute a_attr( a, 0, upg_alatext[i].attr[j]);
+	  if ( a_attr.evenSts())
+	    continue;
+	  
+	  a_attr.value( text);
+	  if ( a_attr.evenSts())
+	    continue;
+
+	  bool mod = false;
+	  if ( text[strlen(text)-2] == ',' && text[strlen(text)-1] == ' ') {
+	    text[strlen(text)-2] = 0;
+	    mod = true;
+	  }
+	  else if ( text[strlen(text)-3] == ',' && text[strlen(text)-2] == ' '&& text[strlen(text)-1] == ' ') {
+	    text[strlen(text)-3] = 0;
+	    mod = true;
+	  }
+
+	  if ( mod) {
+	    session.writeAttribute( a_attr, text, sizeof( text));
+	    printf( "Updating text \"%s\"\n", text);
+	  }
+	}
+	catch ( wb_error& e) {
+	  continue;
+	}
+      }      
+    }
+  }
+
   session.commit();
 }
 

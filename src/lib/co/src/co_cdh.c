@@ -2859,6 +2859,43 @@ cdh_NextObjectName (
   return CDH__SUCCESS;
 }
 
+//! Cut the leading segments of an object name.
+/*!
+  Cut the leading segments of the name, and return the specified 
+  number of segments.
+
+  \param outname	Out string.
+  \param name		In string.
+*/
+void cdh_CutNameSegments (
+  char	*outname,
+  char	*name,
+  int	segments
+)
+{
+  char	*s[20];
+  int	i, j, last_i;
+
+  for( i = 0; i < segments; i++) {
+    s[i] = strrchr( name, '-');
+    if ( s[i] == 0) {
+      last_i = i;
+      break;
+    }
+    *s[i] = '+';
+    last_i = i;
+  }
+  for ( j = 0; j <= last_i; j++) {
+    if ( s[j] != 0)
+      *s[j] = '-';
+  }
+  if ( s[last_i] == 0)
+    strcpy( outname, name);
+  else
+    strcpy( outname, s[last_i] + 1);
+}
+
+
 /*@}*/
 
 

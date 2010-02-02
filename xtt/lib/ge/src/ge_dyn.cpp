@@ -9381,6 +9381,7 @@ int GePopupMenu::action( grow_tObject object, glow_tEvent event)
       int	       	attr_type, attr_size;
       char            	*s;
       pwr_sAttrRef    	attrref;
+      pwr_tOid		oid;
 
       dyn->parse_attr_name( ref_object, parsed_name, &inverted,
 				   &attr_type, &attr_size);
@@ -9397,9 +9398,10 @@ int GePopupMenu::action( grow_tObject object, glow_tEvent event)
 	if ( (s = strrchr( parsed_name, '.')))
 	  *s = 0;
 	
-	memset( &attrref, 0, sizeof(attrref));
-	sts = gdh_NameToObjid( parsed_name, &attrref.Objid);
+	sts = gdh_NameToObjid( parsed_name, &oid);
 	if ( EVEN(sts)) break;
+
+	attrref = cdh_ObjidToAref( oid);
       }
       (dyn->graph->call_method_cb)(dyn->graph->parent_ctx,
 				   method, filter, attrref, 

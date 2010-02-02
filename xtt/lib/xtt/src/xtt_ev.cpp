@@ -36,6 +36,7 @@
 
 #include "co_lng.h"
 #include "xtt_ev.h"
+#include "xtt_methodtoolbar.h"
 #include "rt_xnav_msg.h"
 
 // Static pointer to Ev for mh callbacks
@@ -54,13 +55,15 @@ Ev::Ev( void *ev_parent_ctx,
 	int display_ack,
 	int ev_beep,
 	pwr_tMask ev_pop_mask,
+	int ev_eventname_seg,
 	pwr_tStatus *status) :
   parent_ctx(ev_parent_ctx),
   user(ev_user), eve_display_ack(display_ack), 
   eve_display_return(display_return),
   start_trace_cb(NULL), display_in_xnav_cb(NULL), update_info_cb(NULL),
   help_cb(NULL), popup_menu_cb(0), sound_cb(0), eve(NULL), ala(NULL),
-  connected(0), ala_displayed(0), eve_displayed(0), beep(ev_beep), pop_mask(ev_pop_mask)
+  connected(0), ala_displayed(0), eve_displayed(0), beep(ev_beep), pop_mask(ev_pop_mask), 
+  eventname_seg(ev_eventname_seg)
 {
 }
 
@@ -104,6 +107,18 @@ int Ev::ev_sound_cb( void *ctx, pwr_tAttrRef *attrref)
   if ( ((Ev *)ctx)->sound_cb)
     return (((Ev *)ctx)->sound_cb) ( ((Ev *)ctx)->parent_ctx, attrref);
   return 0;
+}
+
+void Ev::eve_selection_changed_cb( void *ctx)
+{
+  ((Ev *)ctx)->eve_methodtoolbar->set_sensitive();
+  ((Ev *)ctx)->eve_sup_methodtoolbar->set_sensitive();
+}
+
+void Ev::ala_selection_changed_cb( void *ctx)
+{
+  ((Ev *)ctx)->ala_methodtoolbar->set_sensitive();
+  ((Ev *)ctx)->ala_sup_methodtoolbar->set_sensitive();
 }
 
 char *Ev::ev_name_to_alias_cb( void *ctx, char *name)

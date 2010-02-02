@@ -1041,6 +1041,8 @@ char *cdh_StringToObjectName( char *t, const char *s);
 
 pwr_tStatus cdh_NextObjectName( char *t, const char *s);
 
+void cdh_CutNameSegments( char *outname, char *name, int segments);
+
 /*@}*/
 
 #ifdef __cplusplus

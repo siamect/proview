@@ -33,6 +33,7 @@ class EvListGtk : public EvList {
 	GtkWidget *ev_parent_wid,
 	ev_eType ev_type,
 	int ev_size,
+	int ev_evenname_seg,
 	GtkWidget **w);
     ~EvListGtk();
 
