@@ -436,6 +436,9 @@ mvol_ArefToAttribute (
 	idx = (arp->Offset - offset) / (acp->attr[i].size / acp->attr[i].elem);
       break;
     }
+    if ( arp->Size == 0 && arp->Flags.b.ObjectAttr && offset == arp->Offset && 
+	 acp->attr[i].flags.b.isclass)
+      break;
     if ( acp->attr[i].size == arp->Size)
       break;
     if ( acp->attr[i].flags.b.array) {
