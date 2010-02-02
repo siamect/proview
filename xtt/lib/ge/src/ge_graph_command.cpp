@@ -91,6 +91,8 @@ static int	graph_export_func( void		*client_data,
 				void		*client_flag);
 static int	graph_replace_func( void	*client_data,
 				void		*client_flag);
+static int	graph_disable_func(void		*client_data,
+				   void		*client_flag);
 static int	graph_convert_func( void	*client_data,
 				void		*client_flag);
 
@@ -198,6 +200,11 @@ dcli_tCmdTable	graph_command_table[] = {
 		{
 			"EXPORT",
 			&graph_export_func,
+			{"dcli_arg1", ""}
+		},
+		{
+			"DISABLE",
+			&graph_disable_func,
 			{"dcli_arg1", ""}
 		},
 		{"",}};
@@ -2330,6 +2337,29 @@ static int	graph_convert_func( void	*client_data,
     grow_SetModified( graph->grow->ctx, 1);
   }
   else {
+    graph->message('E', "Syntax error");
+    return GE__SYNTAX;
+  }
+  return GE__SUCCESS;
+}
+
+static int	graph_disable_func(	void		*client_data,
+					void		*client_flag)
+{
+  Graph *graph = (Graph *)client_data;
+
+  char	arg1_str[80];
+  int	arg1_sts;
+	
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+
+  if ( cdh_NoCaseStrncmp( arg1_str, "LOG", strlen( arg1_str)) == 0)
+  {
+    graph->disable_log = 1;
+    graph->message( 'I', "Log disabled");
+  }
+  else
+  {
     graph->message('E', "Syntax error");
     return GE__SYNTAX;
   }

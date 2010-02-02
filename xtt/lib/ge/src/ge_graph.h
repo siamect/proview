@@ -506,6 +506,7 @@ class Graph {
   char			java_path[80];		//!< Path for generated java code for baseclasses
   char			java_package[80];      	//!< Package for generated java code for baseclasses
   vector<GraphRef>      reflist;		//!< List with stored references
+  int			disable_log;		//!< Disable wb log window
 
   //! Print to postscript file.
   /*! \param filename	Name of postscript file. */

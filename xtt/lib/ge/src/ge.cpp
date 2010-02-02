@@ -267,7 +267,8 @@ void Ge::save_graph( Ge *gectx, char *name)
   }
 
   unsigned int opt = (gectx->options & ge_mOption_EnableComment) ? log_mOption_Comment : 0;
-  wb_log::log( wlog_eCategory_GeSave, graphname, 0, opt);
+  if ( !gectx->graph->disable_log)
+    wb_log::log( wlog_eCategory_GeSave, graphname, 0, opt);
 }
 
 void Ge::save( char *name)
@@ -521,15 +522,18 @@ void Ge::export_gejava( Ge *gectx, char *name)
     gectx->graph->get_name( gname);
     if ( gectx->graph->is_javaapplication() && gectx->graph->is_javaapplet()) {
       gectx->message( 'I', "Java frame and applet exported");
-      wb_log::log( wlog_eCategory_GeExport, gname, 0);
+      if ( !gectx->graph->disable_log)
+	wb_log::log( wlog_eCategory_GeExport, gname, 0);
     }
     else if ( gectx->graph->is_javaapplication()) {
       gectx->message( 'I', "Java frame exported");
-      wb_log::log( wlog_eCategory_GeExport, gname, 0);
+      if ( !gectx->graph->disable_log)
+	wb_log::log( wlog_eCategory_GeExport, gname, 0);
     }
     else if ( gectx->graph->is_javaapplet()) {
       gectx->message( 'I', "Java applet exported");
-      wb_log::log( wlog_eCategory_GeExport, gname, 0);
+      if ( !gectx->graph->disable_log)
+	wb_log::log( wlog_eCategory_GeExport, gname, 0);
     }
     else
       gectx->message( 'I', "This graph is not java frame or applet");
