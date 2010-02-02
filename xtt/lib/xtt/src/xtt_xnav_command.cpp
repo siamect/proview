@@ -229,7 +229,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"/SCROLLBAR", "/WIDTH", "/HEIGHT", "/MENU", 
 			"/NAVIGATOR", "/CENTER", "/OBJECT", "/NEW", 
 			"/INSTANCE", "/COLLECT", "/FOCUS", "/INPUTEMPTY", 
-                        "/ENTRY", "/TITLE", "/ACCESS", "/CLASSGRAPH", "/BYPASS", 
+			"/ENTRY", "/TITLE", "/ACCESS", "/CLASSGRAPH", "/PARENT", "/BYPASS", 
 			"/CLOSEBUTTON", "/TARGET", "/TRIGGER", "/TYPE", "/FTYPE", ""}
 		},
 		{
@@ -1677,7 +1677,8 @@ static int	xnav_show_func(	void		*client_data,
       strcpy( block_title, Lng::translate( "Blocked Alarms"));
       xnav->ev = xnav->ev_new(  event_title, alarm_title, block_title, 
 				xnav->gbl.OpObject, 0, 1, 0, xnav->gbl.AlarmReturn,
-				xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, xnav->gbl.op_wind_pop, &sts);
+				xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, xnav->gbl.op_wind_pop, 
+				xnav->gbl.op_wind_eventname_seg, &sts);
       if ( EVEN(sts))
       {
         delete xnav->ev;
@@ -1744,7 +1745,8 @@ static int	xnav_show_func(	void		*client_data,
       strcpy( block_title, Lng::translate( "Blocked Alarms"));
       xnav->ev = xnav->ev_new( event_title, alarm_title, block_title,
 			       xnav->gbl.OpObject, 1, 0, 0, xnav->gbl.AlarmReturn,
-			       xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, xnav->gbl.op_wind_pop, &sts);
+			       xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, xnav->gbl.op_wind_pop, 
+			       xnav->gbl.op_wind_eventname_seg, &sts);
       if ( EVEN(sts))
       {
         delete xnav->ev;
@@ -1775,7 +1777,8 @@ static int	xnav_show_func(	void		*client_data,
       strcpy( block_title, Lng::translate( "Blocked Alarms"));
       xnav->ev = xnav->ev_new( event_title, alarm_title, block_title,
 			       xnav->gbl.OpObject, 0, 0, 1, xnav->gbl.AlarmReturn,
-			       xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, xnav->gbl.op_wind_pop, &sts);
+			       xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, xnav->gbl.op_wind_pop, 
+			       xnav->gbl.op_wind_eventname_seg, &sts);
       if ( EVEN(sts))
       {
         delete xnav->ev;
@@ -2043,7 +2046,8 @@ static int	xnav_eventlist_func(	void		*client_data,
       strcpy( block_title, Lng::translate( "Blocked Alarms"));
       xnav->ev = xnav->ev_new( event_title, alarm_title, block_title,
 			       xnav->gbl.OpObject, 0, 0, 0, xnav->gbl.AlarmReturn,
-			       xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, xnav->gbl.op_wind_pop, &sts);
+			       xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, xnav->gbl.op_wind_pop, 
+			       xnav->gbl.op_wind_eventname_seg, &sts);
       if ( EVEN(sts))
       {
         delete xnav->ev;
@@ -2415,7 +2419,10 @@ static int	xnav_open_func(	void		*client_data,
     pwr_tAName	instance_str;
     char	*instance_p;
     int		classgraph;
+    int		parent;
     pwr_tStatus sts;
+
+    parent = ODD( dcli_get_qualifier( "/PARENT", 0, 0));
 
     if ( ODD( dcli_get_qualifier( "/INSTANCE", instance_str, sizeof(instance_str)))) {
       instance_p = instance_str;
@@ -2473,6 +2480,14 @@ static int	xnav_open_func(	void		*client_data,
 	  xnav->message('E', "Instance object not found");
 	  return XNAV__HOLDCOMMAND;
 	}
+      }
+      if ( parent) {
+	// Replace instance object with parent object attribute
+	char *s;
+	if ( (s = strrchr( instance_str, '.')))
+	  *s = 0;
+	else if ( (s = strrchr( instance_str, '-')))
+	  *s = 0;
       }
     }
     else
@@ -5037,6 +5052,21 @@ static int	xnav_check_func( void		*client_data,
     sts = xnav->check_object_methodfilter( aref, menu_type, xmenu_mUtility_XNav,
 					   xnav->priv, method_str);
     return sts;
+  }
+  if ( cdh_NoCaseStrncmp( arg1_str, "ISATTRIBUTE", strlen( arg1_str)) == 0)
+  {
+    // Command is "CHECK ISATTRIBUTE"
+    pwr_tAName	object_str;
+
+    if ( EVEN( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
+      xnav->message('E', "Enter object");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    if ( strrchr( object_str, '.'))
+      return 1;
+    else
+      return 0;
   }
   else
     xnav->message('E',"Syntax error");
