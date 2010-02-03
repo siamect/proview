@@ -12126,28 +12126,16 @@ pwr_exe:
 102 65532
 103 0
 3
-300 $object.LimitHH.Status##Boolean
+300 $object.IndError##Boolean
 301 176
-302 8
-303 1
-99
-3
-300 $object.LimitLL.Status##Boolean
-301 176
-302 4
-303 1
-99
-3
-300 $object.LimitH.Status##Boolean
-301 114
 302 2
 303 1
 99
 3
-300 $object.LimitL.Status##Boolean
+300 $object.IndWarning##Boolean
 301 114
 302 1
-303 15
+303 3
 99
 99
 99
