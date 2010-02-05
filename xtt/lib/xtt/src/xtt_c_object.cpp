@@ -836,8 +836,6 @@ static pwr_tStatus OpenGraph( xmenu_sMenuCall *ip)
       if ( EVEN(sts)) return sts;
 
       if ( classid == pwr_cClass_XttGraph) {
-        printf( "DefGraph found\n");
- 
         sts = gdh_AttrrefToName( &defgraph, name, sizeof(name), cdh_mNName);
         strcpy( cmd, "ope gra/obj=");
         strcat( cmd, name);
@@ -846,11 +844,12 @@ static pwr_tStatus OpenGraph( xmenu_sMenuCall *ip)
       }
     }
 
-    if ( !objar->Flags.b.Object)
-      break;
-
-    sts = gdh_GetParent( aref.Objid, &objid);
-    aref = cdh_ObjidToAref( objid);
+    if ( aref.Flags.b.Object) {
+      sts = gdh_GetParent( aref.Objid, &objid);
+      aref = cdh_ObjidToAref( objid);
+    }
+    else
+      sts = gdh_AttrArefToObjectAref( &aref, &aref);
   }
 
   return XNAV__SUCCESS;
@@ -914,11 +913,13 @@ static pwr_tStatus OpenGraphFilter( xmenu_sMenuCall *ip)
         return XNAV__SUCCESS;
       }
     }
-    if ( !objar->Flags.b.Object)
-      break;
 
-    sts = gdh_GetParent( aref.Objid, &objid);
-    aref = cdh_ObjidToAref( objid);
+    if ( aref.Flags.b.Object) {
+      sts = gdh_GetParent( aref.Objid, &objid);
+      aref = cdh_ObjidToAref( objid);
+    }
+    else
+      sts = gdh_AttrArefToObjectAref( &aref, &aref);
   }
 
   return XNAV__INVISIBLE;
