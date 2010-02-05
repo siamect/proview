@@ -452,7 +452,9 @@ menu Other
   subgraph 	VideoCamera	pwr_exe:pwr_videocamera.pwsg 		41
   subgraph 	ConGlue		pwr_conglue.component 			10
   subgraph 	MenuBar		pwr_exe:pwr_menubar.pwsg 		32
+  subgraph 	MenuBar2	pwr_exe:pwr_menubar2.pwsg 		32
   subgraph 	PulldownMenu	pwr_exe:pwr_pulldownmenu.pwsg 		33
+  subgraph 	PulldownMenu2	pwr_exe:pwr_pulldownmenu2.pwsg 		33
   subgraph 	PwrLogotype	pwr_exe:pwr_logga.pwsg 			10
   subgraph 	OptionMenu	pwr_exe:pwr_optionmenu.pwsg 		31
   subgraph 	Window		pwr_window.component 			29

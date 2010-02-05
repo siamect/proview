@@ -325,9 +325,9 @@ EvGtk::EvGtk( void *ev_parent_ctx,
     GtkWidget *eve_toolsbox = gtk_hbox_new( FALSE, 0);
     gtk_box_pack_start( GTK_BOX(eve_toolsbox), GTK_WIDGET(tools), FALSE, FALSE, 0);
     gtk_box_pack_start( GTK_BOX(eve_toolsbox), GTK_WIDGET(gtk_separator_tool_item_new()), FALSE, FALSE, 4);
-    gtk_box_pack_start( GTK_BOX(eve_toolsbox), GTK_WIDGET(tools_sup), FALSE, FALSE, 0);
-    gtk_box_pack_start( GTK_BOX(eve_toolsbox), GTK_WIDGET(gtk_separator_tool_item_new()), FALSE, FALSE, 4);
     gtk_box_pack_start( GTK_BOX(eve_toolsbox), GTK_WIDGET(tools_meth), FALSE, FALSE, 0);
+    gtk_box_pack_start( GTK_BOX(eve_toolsbox), GTK_WIDGET(gtk_separator_tool_item_new()), FALSE, FALSE, 4);
+    gtk_box_pack_start( GTK_BOX(eve_toolsbox), GTK_WIDGET(tools_sup), FALSE, FALSE, 0);
 
     gtk_box_pack_start( GTK_BOX(eve_vbox), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
     gtk_box_pack_start( GTK_BOX(eve_vbox), GTK_WIDGET(eve_toolsbox), FALSE, FALSE, 0);

@@ -82,6 +82,8 @@ MsgWindowGtk::MsgWindowGtk (
   gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(file_close), 
 				 gtk_image_new_from_stock( "gtk-close", GTK_ICON_SIZE_MENU));
   g_signal_connect(file_close, "activate", G_CALLBACK(MsgWindowGtk::activate_exit), this);
+  gtk_widget_add_accelerator( file_close, "activate", accel_g,
+			      'w', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
   GtkMenu *file_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_clear);

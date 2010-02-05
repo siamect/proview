@@ -279,6 +279,7 @@ SObject pwrb:Class
         Attr AlarmBell = 1
         Attr BellDelay = 2
         Attr OpWindPop = 3 
+	Attr OpWindEventNameSegments = 2
         Attr MaxNoOfAlarms = 200
         Attr MaxNoOfEvents = 500
       EndBody
