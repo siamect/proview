@@ -504,7 +504,7 @@ static int	graph_set_func(	void		*client_data,
         graph->message('E', "Syntax error");
         return GE__SYNTAX;
       }
-      if ( value < 0 || value > 99)
+      if ( value < 0 || value > 299)
       {
           graph->message('E', "Syntax error");
           return GE__SYNTAX;
