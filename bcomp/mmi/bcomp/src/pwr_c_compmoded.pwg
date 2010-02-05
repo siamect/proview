@@ -29,19 +29,19 @@
 101 20
 102 -68
 103 -90
-104 3.89525
-136 3.89525
+104 3.7377
+136 3.7377
 105 100
-106 -13
-107 -17
+106 -12
+107 -16
 108 17.9354
 109 2.8
 110 8.62662
 111 1.2
 116 0
 117 0
-118 131
-119 118
+118 126
+119 113
 120 1
 121 Claes context
 122 0
@@ -7110,7 +7110,7 @@ pwr_exe:
 102 65535
 103 0
 68
-6800 8191
+6800 6081
 6801 Help
 6833
 1
@@ -7126,91 +7126,6 @@ pwr_exe:
 99
 55
 5500 call method/method="Help"/object=$object
-99
-99
-6802 Note
-6834
-1
-100 129
-101 65
-102 65532
-103 0
-9
-900 $cmd(check method/method="Note"/object=$object)
-901 0
-902 1
-903 1
-99
-55
-5500 call method/method="Note"/object=$object
-99
-99
-6803 Trend
-6835
-1
-100 129
-101 65
-102 65532
-103 0
-9
-900 $cmd(check method/method="Trend"/object=$object)
-901 0
-902 1
-903 1
-99
-55
-5500 call method/method="Trend"/object=$object
-99
-99
-6804 Fast
-6836
-1
-100 129
-101 65
-102 65532
-103 0
-9
-900 $cmd(check method/method="Fast"/object=$object)
-901 0
-902 1
-903 1
-99
-55
-5500 call method/method="Fast"/object=$object
-99
-99
-6805 Photo
-6837
-1
-100 129
-101 65
-102 65532
-103 0
-9
-900 $cmd(check method/method="Photo"/object=$object)
-901 0
-902 1
-903 1
-99
-55
-5500 call method/method="Photo"/object=$object
-99
-99
-6806 DataSheet
-6838
-1
-100 129
-101 65
-102 65532
-103 0
-9
-900 $cmd(check method/method="DataSheet"/object=$object)
-901 0
-902 1
-903 1
-99
-55
-5500 call method/method="DataSheet"/object=$object
 99
 99
 6807 Hist Event...
@@ -7296,23 +7211,6 @@ pwr_exe:
 99
 55
 5500 call method/method="Open Plc"/object=$object
-99
-99
-6812 CircuitDiagram
-6844
-1
-100 129
-101 65
-102 65532
-103 0
-9
-900 $cmd(check method/method="CircuitDiagram"/object=$object)
-901 0
-902 1
-903 1
-99
-55
-5500 call method/method="CircuitDiagram"/object=$object
 99
 99
 6813 Help Class
@@ -7477,7 +7375,7 @@ pwr_exe:
 2
 30
 3004 O188
-3000 5.97641
+3000 5.77641
 3001 4.32641
 3002 12.7394
 3003 12.0394
@@ -7541,7 +7439,7 @@ pwr_exe:
 99
 30
 3004 O189
-3000 11.1108
+3000 10.9108
 3001 9.56084
 3002 5.94641
 3003 5.24641
@@ -7860,7 +7758,7 @@ pwr_exe:
 2
 30
 3004 O190
-3000 6.77641
+3000 6.72641
 3001 4.92641
 3002 11.6394
 3003 10.9394

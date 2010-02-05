@@ -139,38 +139,37 @@ main
 
     aname = rttconfig + ".UserObject";
     user = GetAttribute( aname, sts);
-    if ( user == "" || user == "Undefined attribute")
-      break;
-    endif
+    if ( user != "" && user != "Undefined attribute")
 
-    printf( "Processing %s\n", op);
+      printf( "Processing %s\n", op);
 
-    aname = rttconfig + ".SymbolFileName";
-    value = GetAttribute( aname, sts);
-    aname = op + ".SetupScript";
-    SetAttribute( aname, value);
-
-    for ( i = 0; i < 20; i++)
-      aname = user + ".SelectList[" + i + "]";
+      aname = rttconfig + ".SymbolFileName";
       value = GetAttribute( aname, sts);
-      if ( value != "")
-        aname = op + ".EventSelectList[" + i + "]";
-        SetAttribute( aname, value);
-      endif
-    endfor     
+      aname = op + ".SetupScript";
+      SetAttribute( aname, value);
 
-    aname = user + ".MaxNoOfAlarms";
-    ivalue = GetAttribute( aname, sts);
-    aname = op + ".MaxNoOfAlarms";
-    SetAttribute( aname, ivalue);
+      for ( i = 0; i < 20; i++)
+        aname = user + ".SelectList[" + i + "]";
+        value = GetAttribute( aname, sts);
+        if ( value != "")
+          aname = op + ".EventSelectList[" + i + "]";
+          SetAttribute( aname, value);
+        endif
+      endfor     
 
-    aname = user + ".MaxNoOfEvents";
-    ivalue = GetAttribute( aname, sts);
-    aname = op + ".MaxNoOfEvents";
-    SetAttribute( aname, ivalue);
+      aname = user + ".MaxNoOfAlarms";
+      ivalue = GetAttribute( aname, sts);
+      aname = op + ".MaxNoOfAlarms";
+      SetAttribute( aname, ivalue);
 
-    delete object/name='user'/noconf
-    delete object/name='rttconfig'/noconf
+      aname = user + ".MaxNoOfEvents";
+      ivalue = GetAttribute( aname, sts);
+      aname = op + ".MaxNoOfEvents";
+      SetAttribute( aname, ivalue);
+
+      delete object/name='user'/noconf
+      delete object/name='rttconfig'/noconf
+    endif
 
   endif
 
@@ -181,33 +180,32 @@ main
 
     aname = webhandler + ".UserObject";
     user = GetAttribute( aname, sts);
-    if ( user == "" || user == "Undefined attribute")
-      break;
+    if ( user != "" && user != "Undefined attribute")
+
+      printf( "Processing %s\n", webhandler);
+
+      for ( i = 0; i < 20; i++)
+        aname = user + ".SelectList[" + i + "]";
+        value = GetAttribute( aname, sts);
+        if ( value != "")
+          aname = webhandler + ".EventSelectList[" + i + "]";
+          SetAttribute( aname, value);
+        endif
+      endfor     
+
+      aname = user + ".MaxNoOfAlarms";
+      ivalue = GetAttribute( aname, sts);
+      aname = webhandler + ".MaxNoOfAlarms";
+      SetAttribute( aname, ivalue);
+
+      aname = user + ".MaxNoOfEvents";
+      ivalue = GetAttribute( aname, sts);
+      aname = webhandler + ".MaxNoOfEvents";
+      SetAttribute( aname, ivalue);
+
+      delete object/name='user'/noconf
+
     endif
-
-    printf( "Processing %s\n", webhandler);
-
-    for ( i = 0; i < 20; i++)
-      aname = user + ".SelectList[" + i + "]";
-      value = GetAttribute( aname, sts);
-      if ( value != "")
-        aname = webhandler + ".EventSelectList[" + i + "]";
-        SetAttribute( aname, value);
-      endif
-    endfor     
-
-    aname = user + ".MaxNoOfAlarms";
-    ivalue = GetAttribute( aname, sts);
-    aname = webhandler + ".MaxNoOfAlarms";
-    SetAttribute( aname, ivalue);
-
-    aname = user + ".MaxNoOfEvents";
-    ivalue = GetAttribute( aname, sts);
-    aname = webhandler + ".MaxNoOfEvents";
-    SetAttribute( aname, ivalue);
-
-    delete object/name='user'/noconf
-
   endif
 
   save
