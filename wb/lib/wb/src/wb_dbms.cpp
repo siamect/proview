@@ -1012,7 +1012,7 @@ wb_dbms_info::wb_dbms_info(wb_dbms *db) :
 void wb_dbms_info::get(wb_dbms_txn *txn)
 {
   int index = 1;
-  int ret;
+  int ret = 0;
   wb_dbms_qe key(&index, sizeof(index));
   wb_dbms_qe data(&m_volume, sizeof(m_volume));
 

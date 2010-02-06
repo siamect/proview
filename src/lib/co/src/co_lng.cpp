@@ -258,7 +258,7 @@ char *Lng::translate( const char *text)
     case 'B': {
       char *s = strrchr( record->transl, ',');
       if ( s) {
-	char *t = strrchr( text, ',');
+	const char *t = strrchr( text, ',');
 	if ( t) {
 	  long int len = (unsigned long)s - (unsigned long)record->transl + 1;
 	  strncpy( result, record->transl, len);

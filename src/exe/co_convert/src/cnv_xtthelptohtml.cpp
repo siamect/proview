@@ -161,7 +161,7 @@ void *CnvXtthelpToHtml::insert( navh_eItemType item_type, const char *text1,
 
 	  // Get prefix from file
 	  strcpy( fname, "./orm/");
-	  s = strrchr( file_name, '/');
+	  s = (char *)strrchr( file_name, '/');
 	  if ( s)
 	    strcat( fname, s+1);
 	  s = strchr( fname, '_');
@@ -245,7 +245,7 @@ void *CnvXtthelpToHtml::insert( navh_eItemType item_type, const char *text1,
 
 	  // Get prefix from file
 	  strcpy( fname, "./orm/");
-	  s = strrchr( file_name, '/');
+	  s = (char *)strrchr( file_name, '/');
 	  if ( s)
 	    strcat( fname, s+1);
 	  s = strchr( fname, '_');

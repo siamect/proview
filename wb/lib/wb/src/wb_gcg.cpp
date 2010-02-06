@@ -840,7 +840,7 @@ static pwr_tStatus gcg_get_build_host(
     int bufsize
 )
 {
-	int sts;
+	int sts = GSX__SUCCESS;
 	char logname[32];
 
 	if (os & pwr_mOpSys_PPC_LYNX)

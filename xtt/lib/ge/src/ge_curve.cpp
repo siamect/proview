@@ -1568,11 +1568,13 @@ void GeCurveData::scale( int axis_type, int value_type,
     break;
   case curve_eTimeFormat_HourMinute:
     // Hour and minute format
+    format_int = abs(n) + 1;
     strcpy( format, "%2t");
     *axis_width = 0.65 * format_int + 0.4;
     break;
   case curve_eTimeFormat_DayHour:
     // Days and hour format
+    format_int = abs(n) + 1;
     strcpy( format, "%3t");
     *axis_width = 0.65 * format_int + 0.4;
     break;

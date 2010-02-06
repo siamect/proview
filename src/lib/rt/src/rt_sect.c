@@ -345,6 +345,8 @@ sect_Free (
   ker$delete(&lsts, shp->area);
 #elif defined(OS_VMS)
   lsts = sys$deltva(shp->sectadr, NULL, 0);
+#elif defined(OS_LINUX)
+  lsts = 1; /* TODO ? */
 #endif
 
   if (ODD(lsts))
