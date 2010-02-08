@@ -279,7 +279,7 @@ mvol_AnameToAttribute (
       if ( i != pn->nAttribute - 1) {
 	if ( pn->hasIndex[i])
 	  offset += pn->index[i] * ap->adef->Info.Size / ap->adef->Info.Elements;
-	if ( !ap->adef->Info.Flags & PWR_MASK_CLASS) pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+	if ( !(ap->adef->Info.Flags & PWR_MASK_CLASS)) pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
 
         tid = ap->adef->TypeRef;
 	acp = hash_Search(sts, gdbroot->cid_ht, &ap->adef->TypeRef);

@@ -476,7 +476,7 @@ static int	wnav_help_func(		void		*client_data,
   char	bookmark_str[80];
   char	key[80];
   int	pop;
-  int   strict;
+  int   strict = 0;
 	
 
   if ( ODD( dcli_get_qualifier( "/INDEX", file_str, sizeof(file_str))))
@@ -4067,7 +4067,7 @@ static int	wnav_create_func( void		*client_data,
     char		from_str[120];
     char		*fromstr_ptr;
     int			sts;
-    int			templ;
+    int			templ = 0;
 
     if ( !wnav->editmode) {
       wnav->message('E', "Not in edit mode");

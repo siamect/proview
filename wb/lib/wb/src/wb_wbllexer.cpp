@@ -1,4 +1,5 @@
 /* $ANTLR 2.7.6 (20060211): "wb_wbllexer.g" -> "wb_wbllexer.cpp"$ */
+#include <stdio.h>
 #include "wb_wbllexer.hpp"
 #include <antlr/CharBuffer.hpp>
 #include <antlr/TokenStreamException.hpp>

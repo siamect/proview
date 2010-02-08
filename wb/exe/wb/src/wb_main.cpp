@@ -336,7 +336,7 @@ void Wb::wtt_open_volume( void *wttctx, wb_eType type, const char *filename, wow
 	wb_volume *vol = new wb_volume(mem);
 
 	// Display filename i title, without path
-        char *name_p;
+        const char *name_p;
 	if ( (name_p = strrchr( filename, '/')))
 	  name_p++;
 	else

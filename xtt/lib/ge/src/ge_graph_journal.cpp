@@ -64,7 +64,7 @@ static char *gname( const char *name)
   static char n[80];
   char *s;
 
-  if ( (s = strrchr( name, '/')))
+  if ( (s = (char *)strrchr( name, '/')))
     strncpy( n, s+1, sizeof(n));
   else
     strncpy( n, name, sizeof(n));
