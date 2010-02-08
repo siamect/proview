@@ -537,6 +537,7 @@ bool Lng::is_installed( lng_eLanguage language)
   pwr_tFileName found_file;
   pwr_tStatus sts;
 
+  
   strcpy( fname, "$pwr_exe/");
   strcat( fname, lang_to_str( language));
   strcat( fname, "/xtt_lng.dat");
@@ -546,6 +547,18 @@ bool Lng::is_installed( lng_eLanguage language)
   sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
   dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
   if ( ODD(sts)) return true;
+
+  // Try $pwr_eexe also 
+  strcpy( fname, "$pwr_eexe/");
+  strcat( fname, lang_to_str( language));
+  strcat( fname, "/xtt_lng.dat");
+
+  dcli_translate_filename( fname, fname);
+
+  sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
+  dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
+  if ( ODD(sts)) return true;
+
   return false;
 }
 
