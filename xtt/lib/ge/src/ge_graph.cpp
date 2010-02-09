@@ -4494,13 +4494,18 @@ int Graph::ref_object_info_all()
     gdh_SetSubscriptionDefaults( dt, tmo);
 
     sts = gdh_RefObjectInfoList( refcnt, oref, refid);
-    if ( EVEN(sts)) return sts;
+    if ( EVEN(sts)) {
+      printf( "** Link error for local object\n");
+    }
 
     refcnt = 0;
     for ( unsigned int i = 0; i < reflist.size(); i++) {
       if ( reflist[i].m_cycle == cycle[j]) {
 	*reflist[i].m_data = oref[refcnt].adrs;
 	*reflist[i].m_id = refid[refcnt];
+	if ( EVEN(sts) && cdh_RefIdIsNull( refid[refcnt]))
+	  printf( "**    %s\n", reflist[i].m_name);
+	     
 	refcnt++;
       }
     }
@@ -4908,6 +4913,7 @@ int  graph_attr_string_to_value( int type_id, const char *value_str,
       break;
     }
     case pwr_eType_Int32:
+    case pwr_eType_Enum:
     {
       if ( sscanf( value_str, "%d", (int *)buffer_ptr) != 1)
         return GE__INPUT_SYNTAX;
@@ -4937,7 +4943,6 @@ int  graph_attr_string_to_value( int type_id, const char *value_str,
     }
     case pwr_eType_UInt32:
     case pwr_eType_Mask:
-    case pwr_eType_Enum:
     {
       if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
         return GE__INPUT_SYNTAX;

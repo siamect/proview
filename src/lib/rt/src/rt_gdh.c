@@ -3115,7 +3115,7 @@ gdh_RefObjectInfoList (
 					      If supplied as NULL, it is ignored.  */
 )
 {
-  pwr_tStatus		sts = GDH__SUCCESS;
+  pwr_tStatus		sts, rsts = GDH__SUCCESS;
   pwr_tUInt32		i;
   OBJREF_STRUCT		*objrefp;
   pwr_tSubid		*subidarr;
@@ -3148,7 +3148,11 @@ gdh_RefObjectInfoList (
   for (i=0; i < n; i++, objrefp++) {
     sts = gdh_NameToAttrref(pwr_cNObjid, objrefp->fullname, &aref);
     if (EVEN (sts)) {
-      dl = FALSE;
+      gdh_GetObjectLocation(aref.Objid, &dl);
+      if ( dl) {
+	rsts = sts;
+	continue;
+      }
     } else {
       gdh_GetObjectLocation(aref.Objid, &dl);
     }
@@ -3191,7 +3195,7 @@ gdh_RefObjectInfoList (
   free(isattrref);
   free(object);
 
-  return GDH__SUCCESS;
+  return rsts;
 }
 
 /**
