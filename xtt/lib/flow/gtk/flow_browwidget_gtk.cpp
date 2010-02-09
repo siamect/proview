@@ -311,7 +311,8 @@ static void browwidgetgtk_realize( GtkWidget *widget)
     GDK_BUTTON_MOTION_MASK |
     GDK_ENTER_NOTIFY_MASK |
     GDK_LEAVE_NOTIFY_MASK | 
-    GDK_SCROLL_MASK;
+    GDK_SCROLL_MASK |
+    GDK_STRUCTURE_MASK;
   attr.visual = gtk_widget_get_visual( widget);
   attr.colormap = gtk_widget_get_colormap( widget);
 

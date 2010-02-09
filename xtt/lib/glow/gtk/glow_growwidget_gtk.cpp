@@ -324,7 +324,8 @@ static void growwidgetgtk_realize( GtkWidget *widget)
     GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK |
     GDK_BUTTON_MOTION_MASK |
     GDK_ENTER_NOTIFY_MASK |
-    GDK_LEAVE_NOTIFY_MASK;
+    GDK_LEAVE_NOTIFY_MASK |
+    GDK_STRUCTURE_MASK;
   attr.visual = gtk_widget_get_visual( widget);
   attr.colormap = gtk_widget_get_colormap( widget);
 
