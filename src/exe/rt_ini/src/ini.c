@@ -2362,32 +2362,32 @@ create_active_io ()
   sts = gdh_CreateObject("pwrNode-active-io-iv", pwr_cClass_IvArea,
     iv_cnt * sizeof(((pwr_sClass_IvArea*)0)->Value[0]),
     &oid, pwr_cNObjid, 0, pwr_cNObjid);
-  sts = gdh_CreateObject("pwrNode-active-io-dv_init", pwr_cClass_IvArea,
-    dv_cnt * sizeof(((pwr_sClass_IvArea*)0)->Value[0]),
+  sts = gdh_CreateObject("pwrNode-active-io-dv_init", pwr_cClass_InitArea,
+    dv_cnt * sizeof(((pwr_sClass_InitArea*)0)->Value[0]),
     &oid, pwr_cNObjid, 0, pwr_cNObjid);
-  sts = gdh_CreateObject("pwrNode-active-io-av_init", pwr_cClass_IvArea,
-    av_cnt * sizeof(((pwr_sClass_IvArea*)0)->Value[0]),
+  sts = gdh_CreateObject("pwrNode-active-io-av_init", pwr_cClass_InitArea,
+    av_cnt * sizeof(((pwr_sClass_InitArea*)0)->Value[0]),
     &oid, pwr_cNObjid, 0, pwr_cNObjid);
-  sts = gdh_CreateObject("pwrNode-active-io-iv_init", pwr_cClass_IvArea,
-    iv_cnt * sizeof(((pwr_sClass_IvArea*)0)->Value[0]),
+  sts = gdh_CreateObject("pwrNode-active-io-iv_init", pwr_cClass_InitArea,
+    iv_cnt * sizeof(((pwr_sClass_InitArea*)0)->Value[0]),
     &oid, pwr_cNObjid, 0, pwr_cNObjid);
-  sts = gdh_CreateObject("pwrNode-active-io-ai_init", pwr_cClass_IvArea,
-    ai_cnt * sizeof(((pwr_sClass_IvArea*)0)->Value[0]),
+  sts = gdh_CreateObject("pwrNode-active-io-ai_init", pwr_cClass_InitArea,
+    ai_cnt * sizeof(((pwr_sClass_InitArea*)0)->Value[0]),
     &oid, pwr_cNObjid, 0, pwr_cNObjid);
-  sts = gdh_CreateObject("pwrNode-active-io-ao_init", pwr_cClass_IvArea,
-    ao_cnt * sizeof(((pwr_sClass_IvArea*)0)->Value[0]),
+  sts = gdh_CreateObject("pwrNode-active-io-ao_init", pwr_cClass_InitArea,
+    ao_cnt * sizeof(((pwr_sClass_InitArea*)0)->Value[0]),
     &oid, pwr_cNObjid, 0, pwr_cNObjid);
-  sts = gdh_CreateObject("pwrNode-active-io-di_init", pwr_cClass_IvArea,
-    di_cnt * sizeof(((pwr_sClass_IvArea*)0)->Value[0]),
+  sts = gdh_CreateObject("pwrNode-active-io-di_init", pwr_cClass_InitArea,
+    di_cnt * sizeof(((pwr_sClass_InitArea*)0)->Value[0]),
     &oid, pwr_cNObjid, 0, pwr_cNObjid);
-  sts = gdh_CreateObject("pwrNode-active-io-do_init", pwr_cClass_IvArea,
-    do_cnt * sizeof(((pwr_sClass_IvArea*)0)->Value[0]),
+  sts = gdh_CreateObject("pwrNode-active-io-do_init", pwr_cClass_InitArea,
+    do_cnt * sizeof(((pwr_sClass_InitArea*)0)->Value[0]),
     &oid, pwr_cNObjid, 0, pwr_cNObjid);
-  sts = gdh_CreateObject("pwrNode-active-io-ii_init", pwr_cClass_IvArea,
-    ii_cnt * sizeof(((pwr_sClass_IvArea*)0)->Value[0]),
+  sts = gdh_CreateObject("pwrNode-active-io-ii_init", pwr_cClass_InitArea,
+    ii_cnt * sizeof(((pwr_sClass_InitArea*)0)->Value[0]),
     &oid, pwr_cNObjid, 0, pwr_cNObjid);
-  sts = gdh_CreateObject("pwrNode-active-io-io_init", pwr_cClass_IvArea,
-    io_cnt * sizeof(((pwr_sClass_IvArea*)0)->Value[0]),
+  sts = gdh_CreateObject("pwrNode-active-io-io_init", pwr_cClass_InitArea,
+    io_cnt * sizeof(((pwr_sClass_InitArea*)0)->Value[0]),
     &oid, pwr_cNObjid, 0, pwr_cNObjid);
 }
 

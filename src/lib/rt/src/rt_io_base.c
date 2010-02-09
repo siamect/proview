@@ -211,7 +211,7 @@ pwr_tStatus io_init_ai_signals(
   pwr_tAName   			buf;
   pwr_tUInt32			sig_count = 0;
   pwr_tClassId			class;
-  pwr_sClass_IvArea		*iarea_op;
+  pwr_sClass_InitArea		*iarea_op;
 
   /* Get pointer to area-object */
   sts = gdh_NameToObjid( "pwrNode-active-io-ai", &area_objid);
@@ -315,7 +315,7 @@ pwr_tStatus io_init_ao_signals(
   pwr_tAName   			buf;
   pwr_tUInt32			sig_count = 0;
   pwr_tClassId			class;
-  pwr_sClass_IvArea		*iarea_op;
+  pwr_sClass_InitArea		*iarea_op;
 
   /* Get pointer to area-object */
   sts = gdh_NameToObjid( "pwrNode-active-io-ao", &area_objid);
@@ -409,7 +409,7 @@ pwr_tStatus io_init_di_signals(
   pwr_tAName		       	buf;
   pwr_tUInt32			sig_count = 0;
   pwr_tClassId			class;
-  pwr_sClass_IvArea		*iarea_op;
+  pwr_sClass_InitArea		*iarea_op;
 
   /* Get pointer to area-object */
   sts = gdh_NameToObjid( "pwrNode-active-io-di", &area_objid);
@@ -504,7 +504,7 @@ pwr_tStatus io_init_do_signals(
   pwr_tAName   			buf;
   pwr_tUInt32			sig_count = 0;
   pwr_tClassId			class;
-  pwr_sClass_IvArea		*iarea_op;
+  pwr_sClass_InitArea		*iarea_op;
 
   /* Get pointer to area-object */
   sts = gdh_NameToObjid( "pwrNode-active-io-do", &area_objid);
@@ -737,7 +737,7 @@ io_init_av_signals (
   pwr_tStatus			sts;
   pwr_tFloat32			*p;
   pwr_tInt32			av_count = 0;	
-  pwr_sClass_IvArea		*iarea_op;
+  pwr_sClass_InitArea		*iarea_op;
 
  
   /* Get pointer to area-object */
@@ -805,7 +805,7 @@ io_init_dv_signals (
   pwr_tStatus		    sts;
   pwr_tBoolean		    *p;
   pwr_tInt32		    dv_count=0;
-  pwr_sClass_IvArea	    *iarea_op;
+  pwr_sClass_InitArea	    *iarea_op;
  
   /* Get pointer to area-object */
   sts = gdh_NameToObjid( "pwrNode-active-io-dv", &area_objid);
@@ -874,7 +874,7 @@ pwr_tStatus io_init_ii_signals(
   pwr_tAName   			buf;
   pwr_tUInt32			sig_count = 0;
   pwr_tClassId			class;
-  pwr_sClass_IvArea		*iarea_op;
+  pwr_sClass_InitArea		*iarea_op;
 
   // Get pointer to area-object
   sts = gdh_NameToObjid( "pwrNode-active-io-ii", &area_objid);
@@ -970,7 +970,7 @@ pwr_tStatus io_init_io_signals(
   pwr_tAName   			buf;
   pwr_tUInt32			sig_count = 0;
   pwr_tClassId			class;
-  pwr_sClass_IvArea		*iarea_op;
+  pwr_sClass_InitArea		*iarea_op;
 
   // Get pointer to area-object
   sts = gdh_NameToObjid( "pwrNode-active-io-io", &area_objid);
@@ -1064,7 +1064,7 @@ io_init_iv_signals (
   pwr_tStatus		    sts;
   pwr_tInt32		    *p;
   pwr_tInt32		    iv_count=0;
-  pwr_sClass_IvArea	    *iarea_op;
+  pwr_sClass_InitArea	    *iarea_op;
  
   /* Get pointer to area-object */
   sts = gdh_NameToObjid( "pwrNode-active-io-iv", &area_objid);

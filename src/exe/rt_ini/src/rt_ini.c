@@ -845,9 +845,9 @@ load_backup ()
   pwr_sClass_AvArea		*avp;
   pwr_sClass_DvArea		*dvp;
   pwr_sClass_IvArea		*ivp;
-  pwr_sClass_IvArea		*iavp;
-  pwr_sClass_IvArea		*idvp;
-  pwr_sClass_IvArea		*iivp;
+  pwr_sClass_InitArea		*iavp;
+  pwr_sClass_InitArea		*idvp;
+  pwr_sClass_InitArea		*iivp;
   pwr_tStatus			sts;
   int				i;
   pwr_sClass_IOHandler		*iop;

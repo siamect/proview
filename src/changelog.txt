@@ -131,3 +131,6 @@
 100111 cs  pwrb      Attribute (and method) Photo added to signal objects.
 100111 cs  co        Set language is prepared for all languages and checks if language is installed.
 100129 cs  emon      Event object and sup object changed from objid to attrref. Increased size of eventname.  
+100209 cs  wbl       New class InitArea for the initial value area objects.
+100209 cs  gdh       gdh_RefObjectInfoList returns error status for invalid local attribute.
+100202 cs  errh      Log message sent via qcom, null termination was lost.
