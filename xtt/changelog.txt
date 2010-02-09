@@ -163,3 +163,6 @@
 100129 cs  xtt       Toolbar added to alarm and event window. Method buttons for both event object and sup object.
 100201 cs  ge        StoDo works with slider objects.
 100201 cs  xtt       Commands 'open graph /class/parent' and 'check isattribute' added button in object graphs to open parent object graph.
+100209 cs  xtt       Error message for invalid local attributes in Ge graphs.
+100209 cs  ge        Command 'set attr/bypass' replaced by action SetValue in object graphs.
+100209 cs  ge        PID object graph, indicator for Inverse didn't work.
