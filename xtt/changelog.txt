@@ -166,3 +166,5 @@
 100209 cs  xtt       Error message for invalid local attributes in Ge graphs.
 100209 cs  ge        Command 'set attr/bypass' replaced by action SetValue in object graphs.
 100209 cs  ge        PID object graph, indicator for Inverse didn't work.
+100216 cs  xtt       Command 'close graph', qualifier /classgraph added.
+100216 cs  xtt       Command 'wait' added.

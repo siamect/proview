@@ -501,6 +501,7 @@ class XNav {
     int create_object( char *classname, char *name);
     int delete_object( char *name);
     void print_methods();
+    static pwr_tStatus get_instance_classgraph( char *instance_str, pwr_tFileName filename);
 
     // Table module member functions
     int show_plcthreads();

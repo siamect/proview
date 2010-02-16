@@ -211,6 +211,8 @@ static int	xnav_write_func(       	void		*client_data,
 					void		*client_flag);
 static int	xnav_read_func(       	void		*client_data,
 					void		*client_flag);
+static int	xnav_wait_func(       	void		*client_data,
+					void		*client_flag);
 
 dcli_tCmdTable	xnav_command_table[] = {
 		{
@@ -226,25 +228,25 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"OPEN",
 			&xnav_open_func,
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/FILE", 
-			"/SCROLLBAR", "/WIDTH", "/HEIGHT", "/MENU", 
-			"/NAVIGATOR", "/CENTER", "/OBJECT", "/NEW", 
-			"/INSTANCE", "/COLLECT", "/FOCUS", "/INPUTEMPTY", 
-			"/ENTRY", "/TITLE", "/ACCESS", "/CLASSGRAPH", "/PARENT", "/BYPASS", 
-			"/CLOSEBUTTON", "/TARGET", "/TRIGGER", "/TYPE", "/FTYPE", ""}
+			  "/SCROLLBAR", "/WIDTH", "/HEIGHT", "/MENU", 
+			  "/NAVIGATOR", "/CENTER", "/OBJECT", "/NEW", 
+			  "/INSTANCE", "/COLLECT", "/FOCUS", "/INPUTEMPTY", 
+			  "/ENTRY", "/TITLE", "/ACCESS", "/CLASSGRAPH", "/PARENT", "/BYPASS", 
+			  "/CLOSEBUTTON", "/TARGET", "/TRIGGER", "/TYPE", "/FTYPE", ""}
 		},
 		{
 			"CLOSE",
 			&xnav_close_func,
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/OBJECT",
-			"/INSTANCE", "/ALL", "/EXCEPT", ""}
+			  "/INSTANCE", "/CLASSGRAPH", "/ALL", "/EXCEPT", ""}
 		},
 		{
 			"CREATE",
 			&xnav_create_func,
 			{ "dcli_arg1", "/TEXT", "/MENU", "/DESTINATION",
-			"/COMMAND", "/AFTER", "/BEFORE", "/FIRSTCHILD", 
+			  "/COMMAND", "/AFTER", "/BEFORE", "/FIRSTCHILD", 
 			  "/LASTCHILD", "/CLASS", "/NAME", "/PIXMAP", 
-			""}
+			  ""}
 		},
 		{
 			"DELETE",
@@ -282,9 +284,9 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"HELP",
 			&xnav_help_func,
 			{ "dcli_arg1", "dcli_arg2", "dcli_arg3", "dcli_arg4",
-			"/HELPFILE", "/POPNAVIGATOR", "/BOOKMARK", 
-			"/INDEX", "/BASE", "/RETURNCOMMAND", "/WIDTH",
-			"/HEIGHT", "/VERSION", ""}
+			  "/HELPFILE", "/POPNAVIGATOR", "/BOOKMARK", 
+			  "/INDEX", "/BASE", "/RETURNCOMMAND", "/WIDTH",
+			  "/HEIGHT", "/VERSION", ""}
 		},
 		{
 			"LOGOUT",
@@ -305,13 +307,13 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"CROSSREFERENCE",
 			&xnav_crossref_func,
 			{ "dcli_arg1", "/NAME", "/FILE", "/STRING", "/BRIEF",
-			"/FUNCTION", "/CASE_SENSITIVE", "/WINDOW", ""}
+			  "/FUNCTION", "/CASE_SENSITIVE", "/WINDOW", ""}
 		},
 		{
 			"SET",
 			&xnav_set_func,
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/VALUE",
-			"/BYPASS", "/INDEX", "/SOURCE", ""}
+			  "/BYPASS", "/INDEX", "/SOURCE", ""}
 		},
 		{
 			"SETUP",
@@ -337,10 +339,10 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"LOGGING",
 			&xnav_logging_func,
 			{ "dcli_arg1", "dcli_arg2", "/FILE", "/TIME", "/ENTRY",
-			"/TYPE", "/PARAMETER", "/CONDITION", "/INSERT", 
-			"/BUFFER_SIZE", "/PRIORITY", "/STOP", "/NOSTOP", 
-			"/CREATE", "/ALL", "/LINE_SIZE", "/SHORTNAME", 
-			"/NOSHORTNAME", ""}
+			  "/TYPE", "/PARAMETER", "/CONDITION", "/INSERT", 
+			  "/BUFFER_SIZE", "/PRIORITY", "/STOP", "/NOSTOP", 
+			  "/CREATE", "/ALL", "/LINE_SIZE", "/SHORTNAME", 
+			  "/NOSHORTNAME", ""}
 		},
 		{
 			"CALL",
@@ -373,6 +375,11 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"READ",
 			&xnav_read_func,
 			{ "dcli_arg1", "/OBJECT", "/FILE", ""}
+		},
+		{
+			"WAIT",
+			&xnav_wait_func,
+			{ "dcli_arg1", "/TIME", ""}
 		},
 		{"",}};
 
@@ -2570,8 +2577,6 @@ static int	xnav_open_func(	void		*client_data,
       pwr_tFileName fname;
       int  use_default_access;
       unsigned int access;
-      pwr_tAName aname;
-      pwr_tEnum graph_conf;
 
       // Command is "OPEN GRAPH" without graph object
       scrollbar =  ODD( dcli_get_qualifier( "/SCROLLBAR", 0, 0));
@@ -2615,77 +2620,16 @@ static int	xnav_open_func(	void		*client_data,
       else {
 	if ( classgraph) {
 	  // Get file from class of instance object
-	  pwr_sAttrRef aref;
-	  pwr_tObjName cname;
 	  pwr_tCid cid;
-	  pwr_tFileName found_file;
 	  
 	  if ( !instance_p) {
 	    xnav->message('E',"Enter instance object");
 	    return XNAV__HOLDCOMMAND;
 	  }
 
-	  sts = gdh_NameToAttrref( pwr_cNObjid, instance_p, &aref);
+	  sts = XNav::get_instance_classgraph( instance_p, file_str);
 	  if ( EVEN(sts)) {
-	    xnav->message('E',"Instance object not found");
-	    return XNAV__HOLDCOMMAND;
-	  }
-	  sts = gdh_GetAttrRefTid( &aref, &cid);
-	  while ( ODD(sts)) {
-	    // Try all superclasses
-	    sts = gdh_ObjidToName( cdh_ClassIdToObjid( cid), cname, sizeof(cname),
-				   cdh_mName_object);
-	    if ( EVEN(sts)) return sts;
-
-	    cdh_ToLower( cname, cname);
-	    if ( cdh_CidToVid(cid) < cdh_cUserClassVolMin ||
-		 (cdh_CidToVid(cid) >= cdh_cManufactClassVolMin &&
-		  cdh_CidToVid(cid) <= cdh_cManufactClassVolMax)) {
-	      if ( cname[0] == '$')
-		sprintf( file_str, "pwr_c_%s", &cname[1]);
-	      else
-		sprintf( file_str, "pwr_c_%s", cname);
-	    }
-	    else
-	      strcpy( file_str, cname);
-
-	    // Get base class graphs on $pwr_exe
-	    cdh_ToLower( fname, file_str);
-	    if ( instance_p && 
-		 (cdh_NoCaseStrncmp( fname, "pwr_c_", 6) == 0 || 
-		  cdh_NoCaseStrncmp( fname, "pwr_c_", 6) == 0)) {
-	      strcpy( fname, "$pwr_exe/");
-	      strcat( fname, file_str);
-	      strcpy( file_str, fname);
-	    }
-	    else {
-	      strcpy( fname, "$pwrp_exe/");
-	      strcat( fname, file_str);
-	      strcpy( file_str, fname);
-	    }
-
-	    // Add any GraphConfiguration to filename
-	    strcpy( aname, instance_p);
-	    strcat( aname, ".GraphConfiguration");
-	    sts = gdh_GetObjectInfo( aname, &graph_conf, sizeof(graph_conf));
-	    if ( ODD(sts)) {
-	      if ( graph_conf != 0) {
-		char gc[12];
-		sprintf( gc, "%d", graph_conf);
-		strcat( fname, gc);
-	      }
-	      strcpy( file_str, fname);
-	    }
-
-	    strcat( fname, ".pwg");
-	    sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
-	    dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
-	    if ( ODD(sts)) break;
-
-	    sts = gdh_GetSuperClass( cid, &cid, aref.Objid);
-	  }
-	  if ( EVEN(sts)) {
-	    xnav->message('E',"No classgraph found");
+	    xnav->message('E', XNav::get_message(sts));
 	    return XNAV__HOLDCOMMAND;
 	  }
 
@@ -3583,11 +3527,22 @@ static int	xnav_close_func(	void		*client_data,
     pwr_tAName	object_str;
     pwr_tAName	instance_str;
     char	*instance_p;
+    int		classgraph;
 
     if ( ODD( dcli_get_qualifier( "/INSTANCE", instance_str, sizeof(instance_str))))
       instance_p = instance_str;
     else
       instance_p = 0;
+
+    if (  ODD( dcli_get_qualifier( "/CLASSGRAPH", 0, 0))) {
+      classgraph = 1;
+      if ( !instance_p) {
+	xnav->message('E', "Instance is missing");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else
+      classgraph = 0;
 
     if ( ODD( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str))))
     {
@@ -3635,29 +3590,42 @@ static int	xnav_close_func(	void		*client_data,
       char fname[80];
 
       // Command is "CLOSE GRAPH"
-      if ( ODD( dcli_get_qualifier( "dcli_arg2", file_str, sizeof(file_str))))
-      {
-        if ( file_str[0] == '/')
-        {
+      if ( ODD( dcli_get_qualifier( "dcli_arg2", file_str, sizeof(file_str)))) {
+        if ( file_str[0] == '/') {
           xnav->message('E', "Syntax error");
           return XNAV__HOLDCOMMAND;
         }
       }
-      else if ( EVEN( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str))))
-      {
+      else if ( classgraph) {
+	// Get file from class of instance object
+	pwr_tStatus sts;
+	
+	if ( !instance_p) {
+	  xnav->message('E',"Enter instance object");
+	  return XNAV__HOLDCOMMAND;
+	}
+	
+	sts = XNav::get_instance_classgraph( instance_p, file_str);
+	if ( EVEN(sts)) {
+	  xnav->message('E', XNav::get_message(sts));
+	  return XNAV__HOLDCOMMAND;
+	}
+      }
+      else if ( ODD( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
+	// Get base class graphs on $pwr_exe
+	if ( instance_p && 
+	     (cdh_NoCaseStrncmp( fname, "pwr_c_", 6) == 0 || 
+	      cdh_NoCaseStrncmp( fname, "pwr_t_", 6) == 0)) {
+	  strcpy( fname, "$pwr_exe/");
+	  strcat( fname, file_str);
+	  strcpy( file_str, fname);
+	}  
+      }
+      else {
         xnav->message('E',"Enter file");
         return XNAV__HOLDCOMMAND;
       }
 
-      // Get base class graphs on $pwr_exe
-      // cdh_ToUpper( fname, file_str);
-      if ( instance_p && 
-           (cdh_NoCaseStrncmp( fname, "pwr_c_", 6) == 0 || 
-            cdh_NoCaseStrncmp( fname, "pwr_t_", 6) == 0)) {
-	strcpy( fname, "$pwr_exe/");
-        strcat( fname, file_str);
-        strcpy( file_str, fname);
-      }  
 
       xnav->close_graph( file_str, instance_p);
       return XNAV__SUCCESS;	
@@ -5313,6 +5281,33 @@ static int	xnav_read_func(void		*client_data,
     xnav->message('E',"Syntax error");
     return XNAV__HOLDCOMMAND;
   }
+
+  return XNAV__SUCCESS;	
+}
+
+static int	xnav_wait_func(void		*client_data,
+			       void		*client_flag)
+{
+  XNav *xnav = (XNav *)client_data;
+
+  char  time_str[80];
+  float ftime;
+  int sts;
+
+  if ( EVEN( dcli_get_qualifier( "/TIME", time_str, sizeof(time_str)))) {
+    if ( EVEN( dcli_get_qualifier( "dcli_arg1", time_str, sizeof(time_str)))) {
+      xnav->message('E', "Time is missing");
+      return XNAV__HOLDCOMMAND;
+    }
+  }
+
+  sts = sscanf( time_str, "%f", &ftime);
+  if ( sts != 1) {
+    xnav->message('E', "Time syntax error");
+    return XNAV__HOLDCOMMAND;
+  }
+
+  xnav->wow->Wait( ftime);
 
   return XNAV__SUCCESS;	
 }
@@ -7311,3 +7306,76 @@ static void xnav_show_objectlist_cancel_cb( void *ctx)
 }
 
 
+pwr_tStatus XNav::get_instance_classgraph( char *instance_str, pwr_tFileName filename)
+{
+  // Get file from class of instance object
+  pwr_tStatus sts;
+  pwr_sAttrRef aref;
+  pwr_tObjName cname;
+  pwr_tCid cid;
+  pwr_tFileName found_file, fname, file_str;
+  pwr_tAName aname;
+  pwr_tEnum graph_conf;
+	  
+  sts = gdh_NameToAttrref( pwr_cNObjid, instance_str, &aref);
+  if ( EVEN(sts)) return sts;
+
+  sts = gdh_GetAttrRefTid( &aref, &cid);
+  while ( ODD(sts)) {
+    // Try all superclasses
+    sts = gdh_ObjidToName( cdh_ClassIdToObjid( cid), cname, sizeof(cname),
+			   cdh_mName_object);
+    if ( EVEN(sts)) return sts;
+
+    cdh_ToLower( cname, cname);
+    if ( cdh_CidToVid(cid) < cdh_cUserClassVolMin ||
+	 (cdh_CidToVid(cid) >= cdh_cManufactClassVolMin &&
+	  cdh_CidToVid(cid) <= cdh_cManufactClassVolMax)) {
+      if ( cname[0] == '$')
+	sprintf( file_str, "pwr_c_%s", &cname[1]);
+      else
+	sprintf( file_str, "pwr_c_%s", cname);
+    }
+    else
+      strcpy( file_str, cname);
+
+    // Get base class graphs on $pwr_exe
+    cdh_ToLower( fname, file_str);
+    if ( (cdh_NoCaseStrncmp( fname, "pwr_c_", 6) == 0 || 
+	  cdh_NoCaseStrncmp( fname, "pwr_c_", 6) == 0)) {
+      strcpy( fname, "$pwr_exe/");
+      strcat( fname, file_str);
+      strcpy( file_str, fname);
+    }
+    else {
+      strcpy( fname, "$pwrp_exe/");
+      strcat( fname, file_str);
+      strcpy( file_str, fname);
+    }
+    
+    // Add any GraphConfiguration to filename
+    strcpy( aname, instance_str);
+    strcat( aname, ".GraphConfiguration");
+    sts = gdh_GetObjectInfo( aname, &graph_conf, sizeof(graph_conf));
+    if ( ODD(sts)) {
+      if ( graph_conf != 0) {
+	char gc[12];
+	sprintf( gc, "%d", graph_conf);
+	strcat( fname, gc);
+      }
+      strcpy( file_str, fname);
+    }
+    
+    strcat( fname, ".pwg");
+    sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
+    dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
+    if ( ODD(sts)) break;
+    
+    sts = gdh_GetSuperClass( cid, &cid, aref.Objid);
+  }
+  if ( EVEN(sts)) 
+    return XNAV__NOCLASSGRAPH;
+
+  strcpy( filename, fname);
+  return XNAV__SUCCESS;
+}

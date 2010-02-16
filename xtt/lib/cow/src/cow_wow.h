@@ -106,13 +106,14 @@ class CoWow {
 							 const char *button1, const char *button2, 
 							 const char *button3, const char *image, 
 							 int input_length) { return 0;}
+  virtual void Wait( float time) {}
+
   static int HideWarranty();
   virtual int DisplayWarranty() { return 0;}
   virtual void DisplayLicense() {} 
   virtual CoWowTimer *timer_new() { return 0;}
   virtual pwr_tStatus CreateMenuItem( const char *name, void *menu, int pixmap, int append, void *w) { return 0;}
   virtual pwr_tStatus DeleteMenuItem( const char *name, void *menu) { return 0;}
-
 };
 
 #endif

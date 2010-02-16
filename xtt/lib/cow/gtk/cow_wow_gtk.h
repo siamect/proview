@@ -87,9 +87,10 @@ class CoWowTimerGtk : public CoWowTimer {
 class CoWowGtk : public CoWow {
  public:
   GtkWidget *m_parent;
+  gint m_wait_timerid;
 
-  CoWowGtk( GtkWidget *parent) : m_parent(parent) {}
-  ~CoWowGtk() {}
+  CoWowGtk( GtkWidget *parent) : m_parent(parent), m_wait_timerid(0) {}
+  ~CoWowGtk();
   void DisplayQuestion( void *ctx, const char *title, const char *text,
 			void (* questionbox_ok) ( void *, void *),
 			void (* questionbox_cancel) ( void *, void *),
@@ -116,6 +117,7 @@ class CoWowGtk : public CoWow {
   pwr_tStatus DeleteMenuItem( const char *name, void *menu);
   CoWowTimer *timer_new();
   void SetParent( GtkWidget *parent) { m_parent = parent;}
+  void Wait( float time);
 
   static void PopupPosition( GtkWidget *parent, int x_event, int y_event, int *x, int *y);
   static void GetAtoms( GdkAtom *graph_atom, GdkAtom *objid_atom, GdkAtom *attrref_atom);
@@ -140,6 +142,8 @@ class CoWowGtk : public CoWow {
   static void list_apply_cb( GtkWidget *w, gpointer data);
   static void list_ok_cb( GtkWidget *w, gpointer data);
   static void list_cancel_cb( GtkWidget *w, gpointer data);
+  static gboolean wait_cb( void *data);
+
 };
 
 #endif
