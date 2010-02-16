@@ -690,8 +690,8 @@ cdh_StringToAttrValue (
   case pwr_eType_Int32:
     if (*String != '\0') {
       i32val = strtol(String, &endp, 0);
-      if (errno == ERANGE || *endp != '\0' || i32val > LONG_MAX ||
-	i32val < LONG_MIN
+      if (errno == ERANGE || *endp != '\0' || i32val > INT_MAX ||
+	i32val < INT_MIN
       ) {
 	sts = CDH__INVINT32;
 	break;
