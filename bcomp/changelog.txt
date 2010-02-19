@@ -18,3 +18,4 @@
 080602 cs  bcomp      Objectgraph for CompMode: MinSet/MaxSet and MinOut/MaxOut used for slider limits and input limits.
 081028 cs  bcomp      Components BaseActuatorIncrDecr and BaseValveIncrDecr added.
 100128 cs  bcomp      Adding of main object name to alarm texts removed. Comma removed from alarmtexts.
+100216 cs  bcomp      Backup added to BasePositSensor.

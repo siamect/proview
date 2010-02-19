@@ -29,19 +29,19 @@
 101 20
 102 36
 103 8
-104 3.0552
-136 3.0552
+104 3.39074
+136 3.39074
 105 100
-106 5
+106 6
 107 1
-108 29.1512
+108 29.4519
 109 2.8
 110 35.4956
 111 1.2
 116 0
 117 0
-118 108
-119 119
+118 114
+119 103
 120 1
 121 Claes context
 122 0
@@ -15756,7 +15756,7 @@ pwr_exe:
 102 65532
 103 0
 9
-900 $object.Mode.OpAutoOnly##Boolean
+900 $object.Actuator.Mode.OpAutoOnly##Boolean
 901 0
 902 1
 903 1
@@ -16344,7 +16344,7 @@ pwr_exe:
 102 65532
 103 0
 9
-900 $object.Mode.OpAutoOnly##Boolean
+900 $object.Actuator.Mode.OpAutoOnly##Boolean
 901 0
 902 1
 903 1
