@@ -125,7 +125,8 @@ XNavGtk::~XNavGtk()
 
   for ( int i = 0; i < brow_cnt; i++) {
     brow_stack[i]->free_pixmaps();
-    brow_DeleteSecondaryCtx( brow_stack[i]->ctx);
+    if ( i != 0)
+      brow_DeleteSecondaryCtx( brow_stack[i]->ctx);
     delete brow_stack[i];
   }
   collect_brow->free_pixmaps();

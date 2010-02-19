@@ -66,6 +66,7 @@ struct _GrowWidgetGtk {
   gint 		scroll_timerid;
   glow_sScroll  scroll_data;
   int           scroll_configure;
+  int		destroyed;
 };
 
 struct _GrowWidgetGtkClass {
@@ -269,10 +270,14 @@ static void growwidgetgtk_destroy( GtkObject *object)
 {
   GrowWidgetGtk *grow = (GrowWidgetGtk *)object;
 
-  if ( grow->scroll_timerid)
-    g_source_remove( grow->scroll_timerid);
-  if ( grow->is_navigator && grow->grow_ctx) {
-    ((GrowCtx *)grow->grow_ctx)->no_nav = 1;
+  if ( !grow->destroyed) {
+    if ( grow->scroll_timerid)
+      g_source_remove( grow->scroll_timerid);
+    if ( grow->is_navigator && grow->grow_ctx)
+      ((GrowCtx *)grow->grow_ctx)->no_nav = 1;
+    else
+      delete (GlowDrawGtk *)grow->draw_ctx;
+    grow->destroyed = 1;
   }
   GTK_OBJECT_CLASS( growwidgetgtk_parent_class)->destroy( object);
 }
@@ -388,6 +393,7 @@ GtkWidget *growwidgetgtk_new(
   w->client_data = client_data;
   w->scroll_h = 0;
   w->scroll_v = 0;
+  w->destroyed = 0;
   return (GtkWidget *) w;  
 }
 

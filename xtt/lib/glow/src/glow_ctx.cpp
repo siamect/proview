@@ -131,6 +131,7 @@ void GlowCtx::delete_all()
     remove( element);
     select_remove( element);
     move_remove( element);
+    object_deleted( element);
     delete element;
     i--;
   }
