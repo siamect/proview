@@ -268,6 +268,7 @@ subcm_Data (
 #if 0
     errh_Info("Removed %d subscriptions", rp->count - 1);
 #endif
+    pool_Free(NULL, gdbroot->pool, rp);
   }
 }
 
