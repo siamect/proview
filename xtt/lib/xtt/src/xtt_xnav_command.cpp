@@ -3845,6 +3845,47 @@ static int	xnav_close_func(	void		*client_data,
         xnav->ev->unmap_eve();
     }
   }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "TRACE", strlen( arg1_str)) == 0) {
+    RtTrace 	*tractx;
+    pwr_tOName  name_str;
+    pwr_tStatus	sts;
+    pwr_tCid cid;
+    pwr_tOid	window_oid, oid;
+
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str)))) {
+      if ( EVEN( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str)))) {
+
+	if ( EVEN( xnav->get_current_object( &oid, name_str, sizeof( name_str), 
+					     cdh_mName_path | cdh_mName_object | 
+					     cdh_mName_attribute))) {
+	  xnav->message('E', "Enter name or select an object");
+	  return XNAV__SUCCESS;
+	}
+      }
+    }
+
+    sts = gdh_NameToObjid( name_str, &oid);
+    if ( EVEN(sts)) {
+      xnav->message('E', "No such object");
+      return XNAV__SUCCESS;
+    }
+
+    sts = gdh_GetObjectClass( oid, &cid);
+    if ( EVEN(sts)) return sts;
+
+    if ( cid == pwr_cClass_plc) {
+      // Take the first child
+      sts = gdh_GetChild( oid, &window_oid);
+      if ( EVEN(sts)) return sts;
+    }
+    else
+      window_oid = oid;
+
+    if ( xnav->appl.find( applist_eType_Trace, window_oid, (void **) &tractx)) {
+      xnav->appl.remove( (void *)tractx);
+      delete tractx;
+    }
+  }
   else
     xnav->message('E',"Syntax error");
 
