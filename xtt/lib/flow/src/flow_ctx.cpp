@@ -92,11 +92,27 @@ FlowCtx::FlowCtx( const char *ctx_name, double zoom_fact, int offs_x, int offs_y
 
 FlowCtx::~FlowCtx()
 {
+  FlowArrayElem *element;
+
   delete tiptext;
   set_nodraw();
   a_sel.clear();
   move_clear();
   paste_clear();
+  delete_all();
+
+  for ( int i = 0; i < a_nc.a_size; i++) {
+    element = a_nc.a[i];
+    a_nc.remove( element);
+    delete  element;
+    i--;
+  }
+  for ( int i = 0; i < a_cc.a_size; i++) {
+    element = a_cc.a[i];
+    a_cc.remove( element);
+    delete element;
+    i--;
+  }
 }
 
 void FlowCtx::delete_all()

@@ -156,7 +156,8 @@ Graph::Graph(
 	border_color(1), fill_color(1), fill(0), border(1), shadow(0),
 	grid_size_x(1), grid_size_y(1), con_type(glow_eConType_Routed),
 	con_corner(glow_eCorner_Rounded),
-	conpoint_direction(glow_eDirection_Center),
+	conpoint_direction(glow_eDirection_Center), 
+	current_polyline(0), current_slider(0),
 	trace_started(0), gdh_init_done(xn_gdh_init_done), arglist_cnt(0),
 	corner_round_amount(0.5), mode(graph_mode), scan_time(0.5),
 	fast_scan_time(0.5), animation_scan_time(0.5), closing_down(0),
@@ -4782,6 +4783,7 @@ void Graph::swap( int mode)
 static void graph_free_dyn( grow_tObject object)
 {
   if ( grow_GetObjectType( object) == glow_eObjectType_GrowNode ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowSlider ||
        grow_GetObjectType( object) == glow_eObjectType_GrowGroup ||
        grow_GetObjectType( object) == glow_eObjectType_GrowWindow ||
        grow_GetObjectType( object) == glow_eObjectType_GrowTrend ||

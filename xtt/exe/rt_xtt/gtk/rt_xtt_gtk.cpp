@@ -501,6 +501,7 @@ void XttGtk::activate_india_ok( GtkWidget *w, gpointer data)
   g_object_set( ((XttGtk *)xtt)->india_widget, "visible", FALSE, NULL);
 
   (xtt->india_ok_cb)( xtt, text);
+  g_free( text);
 }
 void XttGtk::activate_india_cancel( GtkWidget *w, gpointer data)
 {
@@ -549,6 +550,7 @@ void XttGtk::valchanged_cmd_input( GtkWidget *w, gpointer data)
     xtt->command_open = 0;
     xtt->xnav->set_inputfocus();
   }
+  g_free( text);
 }
 
 int main(  int argc, char *argv[])

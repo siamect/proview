@@ -84,6 +84,8 @@ FlowNode::~FlowNode()
   {
     if ( annotv_inputmode[i])
       close_annotation_input( i);
+    if ( annotsize[i] > 0)
+      free( annotv[i]);
   }
   ctx->object_deleted( this);
   if ( ctx->nodraw) return;

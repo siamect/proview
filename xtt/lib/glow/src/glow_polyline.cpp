@@ -118,6 +118,8 @@ void GlowPolyLine::open( ifstream& fp)
     if ( end_found)
       break;
   }
+  if ( points)
+    free((char *)points);
   points = (glow_sPointX *) calloc( a_points.a_size, sizeof(glow_sPointX));
 }
 

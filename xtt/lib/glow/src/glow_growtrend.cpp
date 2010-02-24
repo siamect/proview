@@ -78,9 +78,10 @@ GrowTrend::GrowTrend( GrowCtx *glow_ctx, const char *name, double x, double y,
 
 GrowTrend::~GrowTrend()
 {
-  if ( ctx->nodraw) return;
-  erase( &ctx->mw);
-  erase( &ctx->navw);
+  if ( !ctx->nodraw) {
+    erase( &ctx->mw);
+    erase( &ctx->navw);
+  }
   for ( int i = 0; i < curve_cnt; i++)
     delete curve[i];
 }

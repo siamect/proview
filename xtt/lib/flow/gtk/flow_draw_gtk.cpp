@@ -143,6 +143,8 @@ static int flow_create_gc( FlowDrawGtk *draw_ctx, GdkWindow *window)
   GdkGCValues 		xgcv;
   int			i;
 
+  memset( &xgcv, 0, sizeof(xgcv));
+
   /* Inverse gc */
   xgcv.background = draw_ctx->foreground;
   xgcv.foreground = draw_ctx->background;

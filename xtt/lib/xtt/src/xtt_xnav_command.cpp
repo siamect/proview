@@ -2620,6 +2620,7 @@ static int	xnav_open_func(	void		*client_data,
       else {
 	if ( classgraph) {
 	  // Get file from class of instance object
+	  pwr_tAttrRef aref;
 	  pwr_tCid cid;
 	  
 	  if ( !instance_p) {
@@ -2632,6 +2633,12 @@ static int	xnav_open_func(	void		*client_data,
 	    xnav->message('E', XNav::get_message(sts));
 	    return XNAV__HOLDCOMMAND;
 	  }
+
+	  sts = gdh_NameToAttrref( pwr_cNObjid, instance_p, &aref);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = gdh_GetAttrRefTid( &aref, &cid);
+	  if ( EVEN(sts)) return sts;
 
 	  switch ( cid) {
 	  case pwr_cClass_NMpsCell:
