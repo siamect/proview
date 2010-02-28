@@ -24,7 +24,7 @@
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
-#if defined OS_LINUX || defined OS_LYNX
+#if defined OS_LINUX || defined OS_LYNX || defined OS_MACOS
 #include <sys/types.h>
 #include <sys/stat.h>
 #endif
@@ -35,10 +35,10 @@
 #include "glow_draw.h"
 
 
-#if defined IMLIB
+//#if defined IMLIB
 static int rgb_tone( unsigned char *x0, unsigned char *y0, unsigned char *z0, int tone);
 static int rgb_shift( unsigned char *x0, unsigned char *y0, unsigned char *z0, int shift);
-#endif
+//#endif
 
 extern "C" {
 #include "co_dcli.h"
@@ -1255,7 +1255,7 @@ void GrowImage::pixel_cb( void *data, unsigned char *rgb)
 }
 
 
-#if defined IMLIB
+//#if defined IMLIB
 static int rgb_tone( unsigned char *x0, unsigned char *y0, unsigned char *z0, int tone)
 {
   int a1, b2;
@@ -1342,9 +1342,9 @@ static int rgb_tone( unsigned char *x0, unsigned char *y0, unsigned char *z0, in
   }
   return 1;
 }
-#endif
+//#endif
 
-#if defined IMLIB
+//#if defined IMLIB
 static int rgb_shift( unsigned char *x0, unsigned char *y0, unsigned char *z0, int shift)
 {
   unsigned char x, y, z;
@@ -1666,7 +1666,7 @@ static int rgb_shift( unsigned char *x0, unsigned char *y0, unsigned char *z0, i
   *z0 = z;
   return 1;
 }
-#endif
+//#endif
 
 int grow_image_to_pixmap( GrowCtx *ctx, char *imagefile, 
 	    int width, int height, glow_tPixmap *pixmap, glow_tImImage *image, int *w, int *h)

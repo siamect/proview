@@ -47,7 +47,7 @@
 # include <starlet.h>
 # include <rms.h>
 # include <descrip.h>
-#elif defined(OS_LYNX) || defined(OS_LINUX)
+#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS)
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -182,7 +182,7 @@ int dcli_search_file( 		const char *name ,
 	  eln$directory_close( &dir_file, &sts);
 
 	return sts;
-#elif defined(OS_LYNX) || defined(OS_LINUX)
+#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS)
 
 	static DIR *directory;
 	static char pattern[200];
@@ -262,8 +262,10 @@ int dcli_search_file( 		const char *name ,
 	    return DCLI__SUCCESS;
 	}
 
-	if ( new == DCLI_DIR_SEARCH_END)
-	  closedir( directory);
+	if ( new == DCLI_DIR_SEARCH_END) {
+	  if ( directory)
+	    closedir( directory);
+	}
 
 	return DCLI__SUCCESS;
 #else
@@ -475,7 +477,7 @@ int	dcli_parse_filename( 	const char *filename,
 	strcpy( type, ltype);
 	return 1;
 
-#elif defined(OS_LYNX) || defined(OS_LINUX)
+#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS)
 
 	char	*s;
 	char	ldev[200];

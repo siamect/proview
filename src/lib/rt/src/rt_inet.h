@@ -43,7 +43,7 @@ struct arpreq {
 
 #else
 # include <sys/ioctl.h>
-# if defined(OS_LINUX)
+# if defined(OS_LINUX) || defined OS_MACOS
 #  include <sys/socket.h>
 # else
 #  include <socket.h>

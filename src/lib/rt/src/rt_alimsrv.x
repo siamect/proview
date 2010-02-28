@@ -1,4 +1,4 @@
- #ifdef RPC_HDR
+#ifdef RPC_HDR
 %/* 
 % * Proview   $Id: rt_alimsrv.x,v 1.2 2005-09-01 14:57:55 claes Exp $
 % * Copyright (C) 2005 SSAB Oxelösund AB.

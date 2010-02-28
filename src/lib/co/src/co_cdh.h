@@ -65,7 +65,7 @@ extern "C" {
 #define cdh_cMaxBix		   7
 #define cdh_cMaxTix		2047
 #define cdh_cMaxTyg		   1
-#define cdh_cMaxOix	   ULONG_MAX
+#define cdh_cMaxOix	    UINT_MAX
 
 typedef enum {
   cdh_eVid3_local = 1,

@@ -22,6 +22,7 @@
 
 /* xtt_audio.h -- soundcard bell routines.
 */
+#if defined PWRE_CONF_ALSA
 
 #include <iostream>
 #include <alsa/asoundlib.h>
@@ -86,5 +87,21 @@ class XttAudio
     static void audio_write( void *data);
     static void audio_stop( void *data);
 };
+
+#else
+// Dummy for platforms without ALSA
+class CoWow;
+
+class XttAudio
+{
+  public:
+    static int audio_ok;
+    XttAudio( CoWow *a_wow, const char *OSS_device="/dev/dsp", const char *ALSA_device="plughw:0,0") {}
+    ~XttAudio() {}
+    int init(char *OSS_device="/dev/dsp", char *ALSA_device="plughw:0,0") { return 1;}
+    int beep( pwr_tAttrRef *arp) { return 1;}
+};
+
+#endif
 
 #endif

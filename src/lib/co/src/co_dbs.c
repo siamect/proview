@@ -178,7 +178,7 @@ dbs_Open(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename)
     return ep;
 }
 
-#if defined(OS_LINUX) || defined(OS_LYNX)
+#if defined(OS_LINUX) || defined(OS_LYNX) || defined(OS_MACOS)
 
 static pwr_tBoolean
 checkQ(const dbs_sVenv *vep, dbs_sQlink *item)

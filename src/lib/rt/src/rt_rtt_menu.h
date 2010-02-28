@@ -46,7 +46,7 @@
 
 #define NULLOI {0,0}
 
-#if defined(OS_LYNX) || defined(OS_LINUX)
+#if defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS)
 # define VAXC$ESTABLISH( t)	{}
 #endif
 

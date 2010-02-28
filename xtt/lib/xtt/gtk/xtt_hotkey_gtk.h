@@ -20,6 +20,8 @@
 #ifndef	xtt_hotkey_gtk_h
 #define	xtt_hotkey_gtk_h
 
+#if defined OS_LINUX
+
 #include <vector>
 #include "pwr.h"
 
@@ -77,5 +79,21 @@ class XttHotkey {
   static int event_handler( GdkXEvent *xevent, gpointer data);
 };
 
+#else
+// Dummy for other platforms than OS_LINUX
+
+class XttHotkey {
+ public:
+  // pwr_tFileName m_filename;
+  // vector<HotkeyAction> m_actions;
+  // vector<HotkeyKey> m_keys;
+  XttHotkey( const char *filename) {}
+  ~XttHotkey() {}
+  void register_action( const char *name, void (* action)(char *,void *), void *userdata) {}
+  //  int read_file() 
+  //  int grab_key( int keysym, int modifier);
+  static int event_handler( GdkXEvent *xevent, gpointer data) { return 1;}
+};
+#endif
 
 #endif

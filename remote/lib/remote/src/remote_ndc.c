@@ -19,6 +19,8 @@
 
 /* remote_ndc.c -- Network data conversion.  */
 
+#include <string.h>
+
 #include "pwr.h"
 #include "pwr_class.h"
 #include "rt_gdh_msg.h"

@@ -22,7 +22,7 @@
 
 /* xtt_hist_gtk.h -- Historical event window in xtt */
 
-#if defined OS_LINUX
+#if defined OS_LINUX || defined OS_MACOS
 
 #ifndef xtt_hist_h
 # include "xtt_hist.h"
@@ -98,21 +98,20 @@ class HistGtk : public Hist {
 
 #else
 // Dummy for other platforms then OS_LINUX
-class Hist {
+class HistGtk {
   public:
-    Hist(
-	void *hist_parent_ctx,
-	Widget	hist_parent_wid,
-	char *hist_name, pwr_tObjid objid,
-	pwr_tStatus *status) : parent_ctx(hist_parent_ctx) {}
-    void 		*parent_ctx;
-    void 		(*close_cb)( void *);
-    void 		(*start_trace_cb)( void *, pwr_tObjid, char *);
-    void 		(*display_in_xnav_cb)( void *, pwr_tObjid);
-    void 		(*update_info_cb)( void *);
-    void 		(*help_cb)( void *, char *);
-    void 		(*popup_menu_cb)( void *, pwr_sAttrRef, unsigned long,
-					  unsigned long, char *, Widget * );
+  HistGtk( void *hist_parent_ctx,
+	   GtkWidget *hist_parent_wid,
+	   char *hist_name, pwr_tObjid objid,
+	   pwr_tStatus *status) {}
+  ~HistGtk() {}
+  void 		(*close_cb)( void *) {}
+  void 		(*start_trace_cb)( void *, pwr_tObjid, char *) {}
+  void 		(*display_in_xnav_cb)( void *, pwr_tObjid) {}
+  void 		(*update_info_cb)( void *) {}
+  void 		(*help_cb)( void *, char *) {}
+  void 		(*popup_menu_cb)( void *, pwr_sAttrRef, unsigned long,
+				  unsigned long, char *, Widget * ) {}
 };
 
 #endif

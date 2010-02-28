@@ -33,6 +33,12 @@
 # include <sys/types.h>
 #endif
 
+#if defined OS_MACOS
+# include <pwd.h>
+# include <signal.h>
+# include <sys/types.h>
+#endif
+
 #include "pwr.h"
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"
@@ -120,7 +126,7 @@ plc_thread (
 
   /* Once thread's has set it's priority don't run as root */
 
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) || defined OS_MACOS
   struct passwd *pwd;
   
   ruid = getuid();
@@ -289,6 +295,11 @@ scan (
 
 #if defined OS_LYNX && USE_RT_TIMER
       sem_wait(&tp->ScanSem);
+#elif defined OS_MACOS
+      struct timespec ts;
+      ts.tv_sec = tp->sync_time.tv_sec;
+      ts.tv_nsec = tp->sync_time.tv_nsec;
+      nanosleep(&ts, NULL);
 #else
       /* REMARK 
        * que_Get makes use of pthread_cond_timedwait.

@@ -29,6 +29,9 @@
 
 /*_Include filer_________________________________________________________*/
 
+#if defined OS_LINUX || defined OS_MACOS
+#include <string.h>
+#endif
 #ifdef OS_VMS
 #include <stdio.h>
 #include <stdlib.h>

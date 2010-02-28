@@ -21,6 +21,10 @@
 %#ifndef rt_net_h
 %#define rt_net_h
 %
+%#if defined __cplusplus
+%extern "C" {
+%#endif
+%
 %#ifndef pwr_h
 %#include "pwr.h"
 %#endif
@@ -1412,4 +1416,7 @@ struct net_sFileList {
 %
 %#endif
 %
+%#if defined __cplusplus
+%}
+%#endif
 #endif

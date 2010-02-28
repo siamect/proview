@@ -37,7 +37,7 @@ typedef struct {
 } pwr_sClassBinding;
 
 /* Base methods */
-#if defined (__DECC) || defined (OS_LYNX)  || defined (OS_LINUX)
+#if defined (__DECC) || defined (OS_LYNX)  || defined (OS_LINUX) || defined OS_MACOS
 # define pwr_BindIoMethods(Class) pwr_sMethodBinding pwr_g ## Class ## _IoMethods[]
 # define pwr_BindIoClasses(Type) pwr_sClassBinding pwr_g ## Type ## _IoClassMethods[]
 # define pwr_BindIoClass(Class) {#Class, (void *)pwr_g ## Class ## _IoMethods}
@@ -50,7 +50,7 @@ typedef struct {
 #endif
 
 /* User methods */
-#if defined (__DECC) || defined (OS_LYNX) || defined(OS_LINUX)
+#if defined (__DECC) || defined (OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS
 #define pwr_BindIoUserMethods(Class) pwr_sMethodBinding pwr_g ## Class ## _IoUserMethods[]
 #define pwr_BindIoUserClasses(Type) pwr_sClassBinding pwr_g ## Type ## _IoUserClassMethods[]
 #define pwr_BindIoUserClass(Class) {#Class, (void *)pwr_g ## Class ## _IoUserMethods}

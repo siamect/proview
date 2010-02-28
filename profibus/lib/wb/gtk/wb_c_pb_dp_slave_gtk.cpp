@@ -54,6 +54,7 @@
 #include "wb_pwrb_msg.h"
 #include "rt_pb_msg.h"
 #include "wb_wnav.h"
+#include "wb_wsx.h"
 
 using namespace std;
 
@@ -102,6 +103,19 @@ static pwr_tStatus ConfigureFilter (
   return 1;
 }
 
+//
+//  Syntax check.
+//
+
+static pwr_tStatus SyntaxCheck (
+  ldh_tSesContext Session,
+  pwr_tAttrRef Object,	      /* current object */
+  int *ErrorCount,	      /* accumulated error count */
+  int *WarningCount	      /* accumulated waring count */
+) {
+  return wsx_CheckIoDevice( Session, Object, ErrorCount, WarningCount, wsx_mCardOption_None);
+}
+
 
 /*----------------------------------------------------------------------------*\
   Every method to be exported to the workbench should be registred here.
@@ -110,6 +124,7 @@ static pwr_tStatus ConfigureFilter (
 pwr_dExport pwr_BindMethods(Pb_DP_Slave) = {
   pwr_BindMethod(Configure),
   pwr_BindMethod(ConfigureFilter),
+  pwr_BindMethod(SyntaxCheck),
   pwr_NullMethod
 };
 

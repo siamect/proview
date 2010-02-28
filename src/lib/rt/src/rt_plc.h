@@ -23,7 +23,7 @@
 #if defined OS_LYNX
 # include <pthread.h>
 # include <semaphore.h>
-#elif defined OS_LINUX
+#elif defined OS_LINUX || defined OS_MACOS
 # include <pthread.h>
 # include "rt_semaphore.h"
 #endif

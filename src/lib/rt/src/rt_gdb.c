@@ -31,7 +31,7 @@
 
 #if defined (OS_LYNX)
 # include <sys/mman.h>
-#elif	defined(OS_LINUX)
+#elif	defined(OS_LINUX) || defined OS_MACOS
 # include <sys/file.h>
 # include <sys/stat.h>
 # include <sys/ipc.h>
@@ -186,7 +186,7 @@ mapLocalDb (
 )
 {
 
-#if defined OS_LYNX || defined OS_LINUX
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
   pthread_mutexattr_t	mattr;
 #endif
 
@@ -198,7 +198,7 @@ mapLocalDb (
 #ifdef	OS_ELN
   ELN$CREATE_MUTEX(gdbroot->thread_lock, NULL);
 
-#elif defined(OS_LINUX) || defined(OS_LYNX) && !defined(PWR_LYNX_30)
+#elif defined(OS_LINUX) || defined(OS_MACOS) || defined(OS_LYNX) && !defined(PWR_LYNX_30)
   pthread_mutexattr_init(&mattr);
   if (pthread_mutex_init(&gdbroot->thread_lock, &mattr) == -1) {
     perror("mapLocalDb: pthread_mutex_init, ");
@@ -281,7 +281,7 @@ mapLocalDb (
   return gdbroot;  
 }
 
-#if defined OS_LYNX || defined OS_LINUX
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
 /*
  * A fix which unlinks all segments for the given name.
  * I don't know where to put this routine, maybe it fits better in rt_pool.c.
@@ -646,7 +646,7 @@ gdb_CreateDb (
 
   evaluateInit(ip);
 
-#if defined OS_LYNX || defined OS_LINUX
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
   unlinkPool(gdb_cNamePool);
   unlinkPool(gdb_cNameRtdb);
 #endif
@@ -876,7 +876,7 @@ gdb_UnlinkDb ()
   int    shm_id;
   struct shmid_ds   ds;
 
-#if defined OS_LYNX || defined OS_LINUX
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
 
   /* Unlink pool. */
 

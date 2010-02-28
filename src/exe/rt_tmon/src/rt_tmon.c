@@ -30,7 +30,7 @@
 # include <stddef.h>
 # include <stdlib.h>
 # include <string.h>
-# include <mcheck.h>
+// # include <mcheck.h>
 #endif
 
 #ifdef OS_VMS
@@ -198,6 +198,7 @@ static void
 toggleWrapped (
 );
 
+#if 0
 static void
 memCheck (
   enum mcheck_status sts
@@ -214,6 +215,7 @@ memCheck (
     i_sts = sts;
   }
 }
+#endif
 
 #if 0
 time_tClock
@@ -250,7 +252,7 @@ main (
   qcom_sGet	        get;
   int                   tmo_ms = 0;
 
-  mcheck(memCheck);
+  // mcheck(memCheck);
   
   init();
 
@@ -272,7 +274,7 @@ main (
       tmo_ms = 0;
     }
 
-#ifdef OS_LINUX
+#ifdef OS_LINUX || defined OS_MACOS
     get.data = NULL;
     qcom_Get(&sts, &my_q, &get, tmo_ms);
     if (sts != QCOM__TMO && sts != QCOM__QEMPTY) {
@@ -696,7 +698,7 @@ waitClock (
     ker$wait_any(&sts, NULL, vmstime);
 # endif
 
-#elif defined OS_LYNX || defined OS_LINUX
+#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
 //    pwr_tTime  rmt;
 //    pwr_tTime  wait;
     static int tics_per_sec = 0;

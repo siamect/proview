@@ -43,6 +43,7 @@
 /*_Include files_________________________________________________________*/
 #include <stdio.h>
 #include <errno.h>
+#include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <sys/time.h>

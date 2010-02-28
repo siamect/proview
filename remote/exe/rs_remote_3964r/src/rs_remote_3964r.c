@@ -59,7 +59,9 @@
 #include <sys/types.h>
 //#include <uio.h>
 #include <termios.h>
+#if defined OS_LINUX
 #include <termio.h>
+#endif
 #include <sgtty.h>
 #include <sys/ioctl.h>
 

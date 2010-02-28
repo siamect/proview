@@ -1,6 +1,9 @@
 /* xtt_audio.cpp -- soundcard bell routines.
    PROVIEW/R
 */
+
+#if defined PWRE_CONF_ALSA
+
 #include <iostream>
 #include <math.h>
 #include <rt_errh.h>
@@ -790,4 +793,10 @@ void XttAudio::MakeSquare(short *buffer, int buffersize, double time, double sta
   }
 }
 
+#else
 
+#include "pwr.h"
+#include "xtt_audio.h"
+
+int XttAudio::audio_ok=0;
+#endif

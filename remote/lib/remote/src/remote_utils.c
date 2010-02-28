@@ -32,7 +32,9 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <termios.h>
+#if defined OS_LINUS
 #include <termio.h>
+#endif
 #include <sgtty.h>
 #include <sys/ioctl.h>
 #include "remote_utils.h"
@@ -88,7 +90,9 @@ int RemUtils_InitSerialDev(char *device, int speed, int databits, int stopbits, 
 
   /* hastighetsval */
 
+#if defined OS_LINUX
   tty_attributes.c_cflag &= ~CBAUD;  //maska bort all hastighet
+#endif
   switch(speed)
   {
     case 300:

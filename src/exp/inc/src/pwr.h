@@ -33,7 +33,7 @@
 # include <stdio.h>
 # include <time.h>
 # include <lib$routines.h>
-#elif defined(OS_LYNX) || defined(OS_LINUX)
+#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS)
 # include <stdio.h>
 # include <stdlib.h>  /* EXIT_FAILURE */
 # include <time.h>
@@ -91,7 +91,7 @@ extern "C" {
 #define pwr_Bit(b) (1<<b)
 #define pwr_SetByte(byte, val) (val<<(byte<<3))
 
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) || defined(OS_MACOS)
 # if defined(HW_X86_64)
 #  define pwr_cAlignW 4
 #  define pwr_cAlignLW 8
@@ -174,7 +174,7 @@ typedef struct {
   unsigned int low;
   int          high;
 } __pwr_tInt64;
-#if defined OS_LINUX
+#if defined OS_LINUX || defined OS_MACOS
 # if defined HW_X86_64
 typedef long int pwr_tInt64;
 # else
@@ -193,7 +193,7 @@ typedef struct {
   unsigned int high;
 } __pwr_tUInt64;
 
-#if defined OS_LINUX
+#if defined OS_LINUX || defined OS_MACOS
 # if defined HW_X86_64
 typedef unsigned long int pwr_tUInt64;
 # else
@@ -726,7 +726,7 @@ static const pwr_tDeltaTime pwr_cNDeltaTime = {0, 0};	//!< Zero deltatime consta
 			#a,__FILE__,__LINE__),exit(EXIT_FAILURE)))
 #endif
 
-#if defined OS_LINUX && defined HW_X86_64
+#if (defined OS_LINUX || defined OS_MACOS) && defined HW_X86_64
 # define pwr_dFormatUInt64 "%lu"
 # define pwr_dFormatInt64 "%ld"
 #else

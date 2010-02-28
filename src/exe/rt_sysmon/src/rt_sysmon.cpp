@@ -22,7 +22,10 @@
 # define _GNU_SOURCE
 #endif
 
+#if defined OS_LINUX
 #include <sys/vfs.h>
+#endif
+
 #include <stdlib.h>
 #include <math.h>
 #include <float.h>
@@ -274,6 +277,7 @@ int main()
 
 void disksup_object::exec()
 {
+#if defined OS_LINUX
   struct statfs buf;
   int sts;
 
@@ -314,6 +318,7 @@ void disksup_object::exec()
   }
   else
     o->Status = SMON__SUCCESS;
+#endif
 }
 
 

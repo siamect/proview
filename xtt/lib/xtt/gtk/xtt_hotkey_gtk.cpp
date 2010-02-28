@@ -40,6 +40,7 @@
     <Key>F10 			: SetDig( Test-Dv2.ActualValue)
     <Key>F12 			: Command ( open graph gtest)
  */
+#if defined OS_LINUX
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -216,3 +217,4 @@ int XttHotkey::grab_key( int keysym, int modifier)
   return 1;
 }
 
+#endif

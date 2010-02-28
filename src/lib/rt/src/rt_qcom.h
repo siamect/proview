@@ -42,7 +42,7 @@
 #ifdef	OS_ELN
 # include $vaxelnc
 # include $mutex
-#elif defined OS_LYNX || defined OS_LINUX
+#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
 # include <pthread.h>
 #endif
 

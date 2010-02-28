@@ -983,16 +983,16 @@ static void printstat(DbEnv *ep, const char *s)
   printf("  maxnlockers..: %d\n", lp->st_maxnlockers);
   printf("  nobjects.....: %d\n", lp->st_nobjects);
   printf("  maxnobjects..: %d\n", lp->st_maxnobjects);
-  printf("  nrequests....: %d\n", lp->st_nrequests);
-  printf("  nreleases....: %d\n", lp->st_nreleases);
+  printf("  nrequests....: %u\n", (unsigned int)lp->st_nrequests);
+  printf("  nreleases....: %u\n", (unsigned int)lp->st_nreleases);
 #if DB_VERSION_MAJOR == 4 && DB_VERSION_MINOR == 0    
   printf("  nnowaits.....: %d\n", lp->st_nnowaits);
   printf("  nconflicts...: %d\n", lp->st_nconflicts);
 #endif
-  printf("  ndeadlocks...: %d\n", lp->st_ndeadlocks);
+  printf("  ndeadlocks...: %u\n", (unsigned int)lp->st_ndeadlocks);
   printf("  regsize......: %zd\n", lp->st_regsize);
-  printf("  region_wait..: %d\n", lp->st_region_wait);
-  printf("  region_nowait: %d\n", lp->st_region_nowait);
+  printf("  region_wait..: %u\n", (unsigned int)lp->st_region_wait);
+  printf("  region_nowait: %u\n", (unsigned int)lp->st_region_nowait);
   printf("\n");
 }
 

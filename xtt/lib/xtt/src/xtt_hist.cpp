@@ -23,7 +23,7 @@
    Last modification: 030217
 */
 
-#if defined OS_LINUX
+#if defined OS_LINUX || defined OS_MACOS
 
 using namespace std;
 
@@ -626,7 +626,7 @@ int Hist::compareStr(char *ev, char *usr)
 {
   int sts;
   int startPos = 0;
-  unsigned int endPos = 0;
+  unsigned long endPos = 0;
   char *str1;
   sts = dcli_toupper(usr,usr);
   if(ODD(sts))

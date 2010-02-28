@@ -37,7 +37,7 @@
 # include <ctype.h>
 #endif
 
-#if defined(OS_LYNX) || defined(OS_LINUX)
+#if defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS)
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
@@ -49,6 +49,9 @@
 # if defined(OS_LINUX)
 #   include <time.h>
 #   include <mqueue.h>
+# elif defined(OS_MACOS)
+#   include <sys/msg.h>
+#   include <sys/ipc.h>
 # elif defined(OS_LYNX)
 #   include <mqueue.h>
 # endif
@@ -120,6 +123,13 @@ typedef struct {
   static mqd_t mqid = (mqd_t)-1;
   static unsigned int prio = 0;
   static int mq_send_errno = 0;
+#elif defined OS_MACOS
+
+  typedef pid_t sPid;
+
+  static int mqid = -1;
+// static unsigned int prio = 0;
+  static int mq_send_errno = 0;
 #endif
 
 static const char *indentStr = "  ";
@@ -138,7 +148,7 @@ static void errh_send (char*, char, pwr_tStatus, errh_eMsgType);
 static void log_message (errh_sLog*, char, const char*, va_list);
 static int msg_vsprintf (char *, const char *, aa_list, va_list);
 
-#if defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_ELN)
+#if defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined(OS_ELN)
  static size_t errh_strnlen (const char*, size_t);
 #else
 #define errh_strnlen strnlen
@@ -545,6 +555,25 @@ openLog ()
       return;
     }
   }
+#elif defined OS_MACOS
+  if (mqid == (key_t)-1) {
+    char name[64];
+    char *busid = getenv(pwr_dEnvBusId);
+    key_t key;
+
+    sprintf(name, "%s_%s", LOG_QUEUE_NAME, busid ? busid : "");  
+    key = ftok(name, 'm');
+
+    mqid = msgget( key, IPC_CREAT | 0660);
+    if (mqid == -1) {
+      char string[256];
+      char *s;
+
+      s = errh_Message(string, 'E', "Open message queue, msgget(%s)\n%s", name, strerror(errno));
+      printf("%s\n", s);
+      return;
+    }
+  }
 #endif
 }
 
@@ -625,7 +654,7 @@ get_pid (sPid *pid)
 
   return pid;
 }
-#elif defined OS_LYNX || defined OS_LINUX
+#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
 static char *
 get_name (char *name, int size)
 {
@@ -673,7 +702,7 @@ get_header (char severity, char *s)
   localtime_r(&tp, &time.tv_sec);
   t = &tp;
   s += sprintf(s, " % 4d,% 4d ", (int)PIDGET(pid), (int)pthread_self());
-# elif defined OS_LINUX
+# elif defined OS_LINUX || defined OS_MACOS
   time_t sec = time.tv_sec;
   localtime_r(&sec, &tp);
   t = &tp;
@@ -939,7 +968,7 @@ repeat:
 
 
 
-#if defined(OS_LYNX)  || defined(OS_LINUX) || defined(OS_ELN)
+#if defined(OS_LYNX)  || defined(OS_LINUX) || defined(OS_MACOS) || defined(OS_ELN)
 /* Different strlen function, returns len OR count,
    whatever comes true first.  */
 
@@ -1095,6 +1124,42 @@ errh_send (char *s, char severity, pwr_tStatus sts, errh_eMsgType message_type)
       if ( mq_send_errno != errno) {
 	mq_send_errno = errno;
 	perror("mq_send");
+      }
+    }
+  } else if (s) {
+    puts(s);
+    return;
+  }
+
+#elif defined OS_MACOS
+
+  int len;
+  if (mqid != -1) {
+    errh_sMsg msg;
+
+    switch ( message_type) {
+    case errh_eMsgType_Log:
+      strncpy( msg.str, s, LOG_MAX_MSG_SIZE);
+      msg.str[LOG_MAX_MSG_SIZE-1] = 0;
+      msg.message_type = message_type;
+      msg.severity = severity;
+      msg.sts = sts;
+      msg.anix = errh_anix;
+      len = sizeof(msg) - sizeof(msg.message_type) - sizeof(msg.str) + strlen(msg.str) + 1;
+      break;
+    case errh_eMsgType_Status:
+      msg.message_type = message_type;
+      msg.sts = sts;
+      msg.anix = errh_anix;
+      len = sizeof(msg) - sizeof(msg.message_type) - sizeof(msg.str);
+      break;
+    }
+    // if ( prio == 0)
+    //  prio = sysconf(_SC_MQ_PRIO_MAX) - 1;
+    if (msgsnd(mqid, (char *)&msg, MIN(len, LOG_MAX_MSG_SIZE - 1), 0) == -1) {
+      if ( mq_send_errno != errno) {
+	mq_send_errno = errno;
+	perror("msgsnd");
       }
     }
   } else if (s) {

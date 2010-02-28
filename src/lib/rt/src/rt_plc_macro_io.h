@@ -705,7 +705,7 @@
   Int64toI
   @aref int64toi Int64toI
 */
-#if defined OS_LINUX
+#if defined OS_LINUX || defined OS_MACOS
 #define Int64toI_exec(obj,in) \
   obj->ActVal = in;
 #else
@@ -717,7 +717,7 @@
   ItoInt64t
   @aref itoint64 ItoInt64
 */
-#if defined OS_LINUX
+#if defined OS_LINUX || defined OS_MACOS
 #define ItoInt64_exec(obj,in) \
   obj->ActVal = in;
 #else
@@ -730,7 +730,7 @@
   UInt64toI
   @aref uint64toi UInt64toI
 */
-#if defined OS_LINUX
+#if defined OS_LINUX || defined OS_MACOS
 #define UInt64toI_exec(obj,in) \
   obj->ActVal = in;
 #else
@@ -742,7 +742,7 @@
   ItoUInt64
   @aref itouint64toi ItoUInt64
 */
-#if defined OS_LINUX
+#if defined OS_LINUX || defined OS_MACOS
 #define ItoUInt64_exec(obj,in) \
   obj->ActVal = in;
 #else

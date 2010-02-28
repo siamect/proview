@@ -25,7 +25,7 @@
 #include <limits.h>
 #include <math.h>
 #include <float.h>
-#include <malloc.h>
+#include <string.h>
 
 #include "pwr.h"
 #include "pwr_baseclasses.h"

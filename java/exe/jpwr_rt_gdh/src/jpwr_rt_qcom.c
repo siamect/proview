@@ -17,6 +17,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <string.h>
+
 #include "jpwr_rt_qcom.h"
 #include "pwr.h"
 #include "rt_qcom.h"

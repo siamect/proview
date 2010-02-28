@@ -27,7 +27,7 @@
 #include <unistd.h>
 #if defined OS_LYNX
 # define LOG_QUEUE_NAME "/pwrlogqueue"
-#elif defined OS_LINUX
+#elif defined OS_LINUX || defined OS_MACOS
 # if defined _POSIX_MESSAGE_PASSING
 #  define LOG_QUEUE_NAME "/pwrlogqueue"
 # else
@@ -45,7 +45,7 @@ void		errl_Init	(const char *termname,
 void		errl_SetTerm	(const char *termname);
 void		errl_SetFile	(const char *filename);
 
-#if defined OS_LINUX
+#if defined OS_LINUX || OS_MACOS
 void		errl_Unlink	();
 #endif
 

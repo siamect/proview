@@ -66,7 +66,7 @@
 # define gdh_Lock	ELN$LOCK_MUTEX(gdbroot->thread_lock); gdb_Lock
 # define gdh_Unlock	gdb_Unlock; ELN$UNLOCK_MUTEX(gdbroot->thread_lock)
 
-#elif defined (OS_LYNX) || defined(OS_LINUX)
+#elif defined (OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS
 # define gdh_Lock	pthread_mutex_lock(&gdbroot->thread_lock); gdb_Lock
 # define gdh_Unlock	gdb_Unlock; pthread_mutex_unlock(&gdbroot->thread_lock)
 

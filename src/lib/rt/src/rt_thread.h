@@ -22,7 +22,7 @@
 
 #include "pwr.h"
 
-#if defined OS_VMS || defined OS_LYNX || defined OS_LINUX
+#if defined OS_VMS || defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
 #include <pthread.h>
 
 typedef pthread_t	thread_s;

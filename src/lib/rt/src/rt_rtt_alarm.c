@@ -58,7 +58,7 @@
 #include "rt_rtt_functions.h"
 #include "rt_rtt_msg.h"
 
-#if defined OS_LINUX
+#if defined OS_LINUX || defined OS_MACOS
 # include <time.h>
 #endif
 

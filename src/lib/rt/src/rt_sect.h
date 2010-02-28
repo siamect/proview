@@ -33,7 +33,7 @@
 
   typedef sem_t sect_sMutex;
 
-#elif defined OS_LINUX
+#elif defined OS_LINUX || defined OS_MACOS
 # include "rt_semaphore.h"
 
   typedef sem_t sect_sMutex;
@@ -88,7 +88,7 @@ typedef union {
     sect_mHead		flags;
   } sect_sHead;
 
-#elif defined OS_LYNX || defined OS_LINUX
+#elif defined OS_LYNX || defined OS_LINUX || OS_MACOS
   typedef struct { 
     void		*base;		/* Virtual address of section.  */
     size_t		size;

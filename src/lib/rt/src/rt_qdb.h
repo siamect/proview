@@ -34,7 +34,7 @@
 # include $mutex
 # include unistd
 # include socket
-#elif defined OS_LINUX
+#elif defined OS_LINUX || defined OS_MACOS
 # include <unistd.h>
 # include <sys/socket.h>
 #else
@@ -42,7 +42,7 @@
 # include <socket.h>
 #endif
 
-#if defined OS_LYNX || defined OS_LINUX
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
 # include <netinet/in.h>
 # include <pthread.h>
 # include <signal.h>
@@ -131,6 +131,13 @@ static const qcom_sQid qdb_cQmonitor	= {qdb_cImonitor, 0};
 #  define	qdb_cNameDbLock		"/tmp/pwr_qdb_lock"
 
 #  define	qdb_cSigMsg		SIGRTMIN
+#elif defined OS_MACOS
+#  define	qdb_cNameDatabase	"/tmp/pwr_qdb"
+
+#  define	qdb_cNamePool		"/tmp/pwr_qpool"
+#  define	qdb_cNameDbLock		"/tmp/pwr_qdb_lock"
+
+#  define	qdb_cSigMsg		SIGUSR1
 #endif
 
 #define qdb_cMin_nodes		10
@@ -469,7 +476,7 @@ typedef struct {
     int			waiting;
   } qdb_sQlock;
 
-#elif defined OS_LYNX || defined OS_LINUX
+#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
 
   typedef struct {
     int			pid;

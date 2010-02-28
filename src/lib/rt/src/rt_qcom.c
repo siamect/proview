@@ -57,7 +57,7 @@ exitHandler()
   qcom_Exit(NULL);
 }
 
-#if defined OS_LINUX || defined OS_LYNX
+#if defined OS_LINUX || defined OS_LYNX || defined OS_MACOS
 
 static void
 sigHandler()
@@ -547,7 +547,7 @@ qcom_Init (
   pwr_tBoolean	added = 0;
 #ifdef OS_ELN
   FUNCTION_DESCRIPTOR   f_dsc;
-#elif defined OS_LINUX || defined OS_LYNX
+#elif defined OS_LINUX || defined OS_LYNX || defined OS_MACOS
   struct sigaction sa;
   sigset_t         ss;
 #endif
@@ -612,7 +612,7 @@ qcom_Init (
 
   eln$declare_exit_handler(&f_dsc, NULL);
 
-#elif defined OS_LINUX || defined OS_LYNX
+#elif defined OS_LINUX || defined OS_LYNX || defined OS_MACOS
   atexit(exitHandler);
   sa.sa_handler = sigHandler;
   sa.sa_flags = 0;

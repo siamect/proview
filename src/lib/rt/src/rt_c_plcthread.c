@@ -30,7 +30,7 @@
 # include <string.h>
 #endif
 
-#if defined OS_LYNX || defined OS_LINUX
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
 # include <pthread.h>
 #endif
 

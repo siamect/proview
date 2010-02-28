@@ -1086,7 +1086,7 @@ char	*dcli_pwr_dir( const char *dir)
 #if defined(OS_VMS)
 	strcpy( pwr_dir, dir);
 	strcat( pwr_dir, ":");
-#elif defined(OS_LYNX) || defined(OS_LINUX)
+#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS
 	if ( (s = getenv( dir)) == NULL)
 	  strcpy( pwr_dir, "");
         else

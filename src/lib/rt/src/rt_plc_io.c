@@ -18,7 +18,7 @@
  */
 
 #include <stdio.h>
-#include <malloc.h>
+#include <string.h>
 
 #include "pwr.h"
 #include "pwr_baseclasses.h"

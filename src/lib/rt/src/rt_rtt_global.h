@@ -140,6 +140,8 @@ char				rtt_os[20] = "eln";
 char				rtt_os[20] = "lynx";
 #elif defined OS_LINUX
 char				rtt_os[20] = "linux";
+#elif defined OS_MACOS
+char				rtt_os[20] = "macos";
 #endif
 int				rtt_verify = 0;
 int				rtt_file_on = 0;

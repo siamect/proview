@@ -49,7 +49,7 @@
 %# define       load_cNameRttPlc         "rtt_plc_%03.3d_%03.3d_%03.3d_%03.3d.dat"
 
 %
-%#elif defined OS_LYNX || defined OS_LINUX
+%#elif defined OS_LYNX || defined OS_LINUX || OS_MACOS
 %# define	load_cNameDirectory	"pwrp_load"
 %# define	load_cDirectory		"$pwrp_load/"
 %# define	load_cNamePlc		"%splc_%s_%04d_%05d"

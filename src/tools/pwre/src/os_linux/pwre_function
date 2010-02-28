@@ -157,6 +157,8 @@ set_env()
 	else
 	  export pwre_conf_gtk=0
         fi
+
+	export pwre_conf_alsa=1
 }
 
 pwre_get_variables()

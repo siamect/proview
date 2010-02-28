@@ -37,7 +37,7 @@
 # if defined uint32
 #  undefine uint32
 # endif
-#elif defined(OS_LYNX) || defined(OS_LINUX)
+#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS
 # include <stdio.h>
 # include <stddef.h>
 # include <string.h>
@@ -69,7 +69,7 @@
 
   static MUTEX		l_mutex;
 
-#elif defined (OS_LYNX) || defined(OS_LINUX)
+#elif defined (OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS
 # define NET_LOCK	pthread_mutex_lock(&l_mutex)
 # define NET_UNLOCK	pthread_mutex_unlock(&l_mutex)
 
@@ -709,7 +709,7 @@ net_Connect (
 
   /* Initialize. This routine should be called exactly once... */
 
-#if defined OS_LYNX || defined OS_LINUX
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
   {
     pthread_mutexattr_t mattr;
 

@@ -788,7 +788,7 @@ int	rtteln_get_job_proc(
 		float		*proc_cputim_p,
 		int		max_proc,
 		int		*proc_count);
-#elif defined OS_LYNX || defined OS_LINUX
+#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
 int     rtt_replace_env( char *str, char *newstr);
 #endif
 

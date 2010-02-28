@@ -495,7 +495,7 @@ static int add_element( 	t_ctx		ctx,
 	    nr--;
 	  }
 	  if ( unsign) {
-#if defined OS_LINUX && defined HW_X86_64
+#if (defined OS_LINUX || defined OS_MACOS) && defined HW_X86_64
 	    type = pwr_eType_UInt64;
 	    size = sizeof(pwr_tInt64);
 #else
@@ -504,7 +504,7 @@ static int add_element( 	t_ctx		ctx,
 #endif
 	  }
 	  else {
-#if defined OS_LINUX && defined HW_X86_64
+#if (defined OS_LINUX || defined OS_MACOS) && defined HW_X86_64
 	    type = pwr_eType_Int64;
 	    size = sizeof(pwr_tInt64);
 #else

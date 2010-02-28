@@ -138,7 +138,7 @@ qini_ParseFile (
 #if defined(OS_VMS) 
     if (naddr.s_addr == (in_addr_t)-1) {
 #else
-    if (naddr.s_addr == (unsigned long)-1) {
+    if (naddr.s_addr == (unsigned int)-1) {
 #endif
       errh_Error("error in line, <network address>, skip to next line.\n>> %s", s);
       (*errors)++;

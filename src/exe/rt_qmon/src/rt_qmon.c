@@ -31,7 +31,7 @@
 # include <errno.h>
 # include <unistd.h>
 # include <sched.h>
-# if defined OS_LINUX
+# if defined OS_LINUX || defined OS_MACOS
 #   include <sys/uio.h>
 #   include <sys/socket.h>
 # else
@@ -349,7 +349,8 @@ main (int argc, char *argv[])
     noneth = 1;
 
   /* Wait for scheduler to be set */
-  
+#if defined OS_LINUX  
+
   pid = getpid();
 
   while ((sched_getscheduler(pid) == SCHED_OTHER) &&
@@ -357,6 +358,7 @@ main (int argc, char *argv[])
     sleep(1);
     count++;
   }
+#endif
   
   errh_Init("pwr_qmon", errh_eAnix_qmon);
   errh_SetStatus( PWR__SRVSTARTUP);

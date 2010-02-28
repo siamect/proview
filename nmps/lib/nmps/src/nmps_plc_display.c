@@ -17,7 +17,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#if defined(OS_VMS) || defined(OS_LYNX) || defined(OS_LINUX)
+#if defined(OS_VMS) || defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS
 #include <stdio.h>
 #include <float.h>
 #include <string.h>

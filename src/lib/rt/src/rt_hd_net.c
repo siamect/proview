@@ -19,6 +19,7 @@
 
 /* rt_hd_net.c -- HD net routines */
 
+#include <string.h>
 #include "rt_hd_net.h"
 #include "rt_hd_msg.h"
 #include "rt_qcom.h"

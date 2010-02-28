@@ -43,7 +43,7 @@
 #include <lib$routines.h>
 #endif
 
-#if defined OS_LYNX || defined OS_LINUX
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

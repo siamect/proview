@@ -165,7 +165,7 @@ typedef struct {
 #  define BCK_ACTIVATE	BCK_EFC		/* Forced activation flag */
 #  define BCK_WRITE_DONE (BCK_EFC+1)	/* write done flag */
 
-#elif defined (OS_LYNX) || defined(OS_LINUX)
+#elif defined (OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS)
 
 #  define SIG_BCK_FORCE (SIGRTMIN + 1)        /* forced activation sig  */
 #  define SIG_BCK_WRITE_DONE (SIGRTMIN + 2)   /* backup done            */

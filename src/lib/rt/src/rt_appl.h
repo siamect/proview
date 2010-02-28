@@ -20,6 +20,7 @@
 #ifndef rt_appl_h
 #define rt_appl_h
 
+#include <string.h>
 #include "pwr.h"
 #include "rt_qcom.h"
 #include "rt_errh.h"

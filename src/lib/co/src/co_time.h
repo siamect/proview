@@ -36,7 +36,7 @@ extern "C" {
    time_AtoFormAscii replaces co_TimeToAsc and
    time_FormAsciiToA replaces co_AscToTime from Comator Lib. */
 
-#if defined OS_LINUX
+#if defined OS_LINUX || defined OS_MACOS
 # include <time.h>
 #endif
 
@@ -44,7 +44,7 @@ typedef unsigned int time_tClock;
 #if defined OS_VMS || defined OS_ELN
  typedef pwr_tVaxTime time_tOs;
  typedef pwr_tVaxTime time_tOsDelta;
-#elif defined OS_LYNX || defined OS_LINUX
+#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
  typedef pwr_tTime time_tOs;
  typedef pwr_tDeltaTime time_tOsDelta;
 #else
@@ -80,9 +80,10 @@ typedef enum {
 #define HUNDRED   1
 #define MINUTE    2
 
-#if defined(OS_VMS) || defined(OS_ELN)
+#if defined(OS_VMS) || defined(OS_ELN) || defined(OS_MACOS)
 
 # define CLOCK_REALTIME 1
+# define CLOCK_MONOTONIC 2
   typedef int clockid_t;
 
   int

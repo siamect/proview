@@ -40,7 +40,7 @@ extern "C" {
 # if defined OS_ELN || defined OS_VMS
 #   define errh_Bugcheck(sts, str) \
 	(errh_Fatal("pwr bugcheck: <%s>, in file %s, at line %d\n", (str),__FILE__,__LINE__),(lib$signal(sts)))
-# elif defined OS_LYNX || defined OS_LINUX
+# elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
 #   define errh_Bugcheck(sts, str) \
 	(errh_Fatal("pwr bugcheck: <%s>, in file %s, at line %d\n%m", (str),__FILE__,__LINE__, sts),(exit(sts)))
 # else

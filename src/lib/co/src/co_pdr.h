@@ -24,6 +24,8 @@
 #include <types.h>
 #elif defined OS_ELN
 #include <rpc/rpc.h>
+#elif defined OS_MACOS
+#include <sys/types.h>
 #endif
 
 #ifdef __cplusplus

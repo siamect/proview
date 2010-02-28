@@ -57,7 +57,7 @@
 # include <stdlib.h>
 # include <pthread.h>
 #endif
-#if defined OS_LINUX
+#if defined OS_LINUX || defined OS_MACOS
 # include <time.h>
 #endif
 
@@ -1082,7 +1082,7 @@ int	rtt_logging_start(
 	ker$create_process( &sts, &(entry_ptr->process_id), 
 		&rtt_logging_logproc, &psts, entry_ptr);
         if ( EVEN(sts)) return sts;
-#elif defined(OS_VMS) || defined(OS_LINUX) || defined(OS_LYNX) && !defined(PWR_LYNX_30)
+#elif defined(OS_VMS) || defined(OS_LINUX) || defined OS_MACOS || defined(OS_LYNX) && !defined(PWR_LYNX_30)
 	sts = pthread_create (
 		&entry_ptr->thread,
 		NULL,				/* attr */
@@ -1303,7 +1303,7 @@ void	*rtt_logging_logproc( void *arg)
 #ifdef OS_VMS
  	pwr_tVaxTime 	vmstime;
 #endif
-#if defined(OS_VMS) || defined(OS_LYNX) || defined(OS_LINUX)
+#if defined(OS_VMS) || defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS
 	rtt_t_loggtable	*entry_ptr;
 
 	entry_ptr = (rtt_t_loggtable *) arg;
@@ -1444,7 +1444,7 @@ void	*rtt_logging_logproc( void *arg)
 	        sys$setimr( entry_ptr->event_flag, &vmstime, 0, 0, 0);
 	        sys$waitfr( entry_ptr->event_flag);
 #endif
-#if defined OS_LYNX || defined OS_LINUX
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
 	        time_GetTime( &time);
 	        time_Adiff( &wait_time, &nextime, &time);
 
@@ -1849,7 +1849,7 @@ void	*rtt_logging_logproc( void *arg)
 #ifdef OS_ELN
 	    ker$exit(NULL,RTT__SUCCESS);
 #endif
-#if defined(OS_VMS) || defined(OS_LYNX) || defined(OS_LINUX)
+#if defined(OS_VMS) || defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS
 /*	    sts = pthread_detach( &entry_ptr->thread); */
 	    pthread_exit( (void *) 1);
 #endif
@@ -1872,7 +1872,7 @@ void	*rtt_logging_logproc( void *arg)
 	  time_PwrToVms( &nextime, &vmstime);
 	  ker$wait_any( NULL, NULL, &vmstime);
 #endif
-#if defined OS_LYNX || defined OS_LINUX
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
 	  time_Adiff( &wait_time, &nextime, &time);
 
 	  struct timespec wait_time_ts;
@@ -1885,7 +1885,7 @@ void	*rtt_logging_logproc( void *arg)
 #ifdef OS_ELN
 	ker$exit(NULL,KER$_BAD_STATE);
 #endif
-#if defined(OS_VMS) || defined(OS_LYNX) || defined(OS_LINUX)
+#if defined(OS_VMS) || defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS
 	pthread_exit(0);
 #endif
 	return NULL;

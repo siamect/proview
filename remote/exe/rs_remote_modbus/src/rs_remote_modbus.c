@@ -52,7 +52,9 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <termios.h>
-#include <termio.h>
+#if defined OS_LINUX
+# include <termio.h>
+#endif
 #include <sgtty.h>
 #include <sys/ioctl.h>
 
@@ -292,7 +294,7 @@ static unsigned int Receive()
 
       if ( !search_remtrans )
       {
-        sts = RemTrans_Receive(remtrans, &telegram[2], data_size-4);     
+        sts = RemTrans_Receive(remtrans, (char *)&telegram[2], data_size-4);     
         if ( EVEN(sts) )
         {
           remtrans->objp->ErrCount++;
@@ -322,8 +324,8 @@ int main(int argc, char *argv[])
 {
 
   unsigned int sts;			/* Status from function calls etc. */
-  unsigned char id[32];
-  unsigned char pname[32];
+  char id[32];
+  char pname[32];
   remtrans_item *remtrans;
   int i;
 

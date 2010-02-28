@@ -1790,7 +1790,7 @@ fromApplication (
     break;
   }
 
-#if defined(OS_LINUX) 
+#if defined(OS_LINUX) || defined(OS_MACOS)
   nanosleep(&hold, NULL);
 #endif
 
@@ -2428,7 +2428,7 @@ initBlockList ()
   pwr_tNodeIndex nix;
   int i;
 
-#if defined OS_LYNX || defined OS_LINUX
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
   char *env = getenv("pwrp_load"); 
   hostspec[0] = '\0'; /* Prevent warnings from gcc */
 

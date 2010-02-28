@@ -19,6 +19,8 @@
 
 #include <vector>
 #include <stdlib.h>
+#include "pwr.h"
+#include "pwr_class.h"
 #include "glow_std.h"
 #include "flow.h"
 #include "flow_browctx.h"

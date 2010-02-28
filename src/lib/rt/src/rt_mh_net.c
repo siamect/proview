@@ -19,6 +19,7 @@
 
 /* rt_mh_net.c -- MH net routines */
 
+#include <string.h>
 #include "rt_mh_msg.h"
 #include "rt_mh_net.h"
 #include "rt_qcom.h"

@@ -25,7 +25,7 @@
 #if defined OS_VMS
 # include <stdio.h>
 # include <stdlib.h>
-#elif defined OS_LYNX || defined OS_LINUX
+#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
 # include <stdio.h>
 # include <stdlib.h>
 # include <signal.h>
@@ -33,6 +33,7 @@
 # include <unistd.h>
 # include <time.h>
 # include <signal.h>
+# include <string.h>
 #endif
 
 #include "pwr.h"

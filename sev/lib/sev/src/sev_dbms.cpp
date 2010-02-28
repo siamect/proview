@@ -3295,4 +3295,7 @@ sev_dbms::~sev_dbms()
   }
 }
 
+#else
+extern int no_sev_dbms;
+int no_sev_dbms = 0;
 #endif

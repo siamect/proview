@@ -39,6 +39,8 @@
 # define pwrv_cOpSys              "LynxOS"
 #elif defined OS_LINUX
 # define pwrv_cOpSys              "Linux"
+#elif defined OS_MACOS
+# define pwrv_cOpSys              "Mac OS"
 #elif defined OS_WNT
 # define pwrv_cOpSys              "Windows NT"
 #else

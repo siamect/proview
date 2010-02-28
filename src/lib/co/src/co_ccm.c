@@ -3992,7 +3992,7 @@ static int ccm_func_printf(
       arg_p = arg_p->next;
     }
   }
-#if defined OS_LYNX || defined OS_LINUX
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
   fflush( stdout);
 #endif
   *return_decl = K_DECL_INT;
@@ -4082,7 +4082,7 @@ static int ccm_func_ask(
     return CCM__VARTYPE;
 
   printf("%s", arg_list->value_string);
-#if defined OS_LYNX || defined OS_LINUX
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
   fflush( stdout);
 #endif
 
