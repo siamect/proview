@@ -267,6 +267,7 @@ static char *dyn_mask_to_bits( unsigned int value, int noofbits)
   return str;
 }
 
+
 // Replace " to \"
 char *GeDyn::cmd_cnv( char *instr)
 {
@@ -433,6 +434,16 @@ GeDyn::GeDyn( const GeDyn& x) :
   }
 
   // update_elements();
+}
+
+GeDyn::~GeDyn()
+{
+  GeDynElem *elem, *next;
+
+  for ( elem = elements; elem; elem = next) {
+    next = elem->next;
+    delete elem;
+  }
 }
 
 void GeDyn::save( ofstream& fp)

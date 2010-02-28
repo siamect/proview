@@ -1525,7 +1525,7 @@ RtTrace::RtTrace( void *tr_parent_ctx, pwr_tObjid tr_objid,
   trace_con_cc(0), trace_started(0), trace_timerid(0), trace_changenode(0),
   objid(pwr_cNObjid), scan_time(0.5), close_cb(0), help_cb(0), subwindow_cb(0),
   display_object_cb(0), collect_insert_cb(0), is_authorized_cb(0), popup_menu_cb(0),
-  call_method_cb(0), trace_list(0), version(0), m_has_host(0)
+  call_method_cb(0), trace_list(0), version(0), m_has_host(0), wow(0)
 {
 }
 #endif

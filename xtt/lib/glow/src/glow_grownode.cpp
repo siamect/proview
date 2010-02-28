@@ -84,6 +84,10 @@ GrowNode::~GrowNode()
   if ( hot)
     ctx->gdraw->set_cursor( &ctx->mw, glow_eDrawCursor_Normal);
 //  delete nc;
+  for ( int i = 0; i < 10; i++) {
+    if ( annotsize[i] > 0)
+      free( annotv[i]);
+  }
 }
 
 void GrowNode::copy_from( const GrowNode& n) 

@@ -44,6 +44,13 @@ typedef struct {
 } wow_sSelection;
 
 
+CoWowGtk::~CoWowGtk()
+{
+  if ( m_wait_timerid)
+    g_source_remove( m_wait_timerid);
+  
+}
+
 void CoWowGtk::question_ok_cb( GtkWidget *w, gpointer data)
 {
   wow_t_question_cb *cbdata = (wow_t_question_cb *) data;
@@ -735,6 +742,7 @@ CoWowTimerGtk::~CoWowTimerGtk()
 {
   if ( m_timerid)
     g_source_remove( m_timerid);
+  
 }
 
 void CoWowTimerGtk::add( int time, void (* callback)(void *data), void *data)
@@ -1313,6 +1321,23 @@ pwr_tStatus CoWowGtk::DeleteMenuItem( const char *name, void *menu)
   }
   return 1;
 }
+
+
+gboolean CoWowGtk::wait_cb( void *data)
+{
+  ((CoWowGtk *)data)->m_wait_timerid = 0;
+
+  gtk_main_quit();
+  return FALSE;
+}
+
+
+void CoWowGtk::Wait( float time)
+{
+  m_wait_timerid = g_timeout_add( int(time * 1000), wait_cb, this); 
+  gtk_main();
+}
+
 
 
 

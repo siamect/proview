@@ -236,6 +236,11 @@ RtTraceGtk::~RtTraceGtk()
   /* Destroy the widgets */
   if ( toplevel)
     gtk_widget_destroy( toplevel);
+
+  if ( wow)
+    delete wow;
+  if ( trace_timerid)
+    delete trace_timerid;
 }
 
 void RtTraceGtk::pop()

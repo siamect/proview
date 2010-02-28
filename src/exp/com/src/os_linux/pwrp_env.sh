@@ -615,6 +615,13 @@ Edit file \$pwrp_cnf/xtt_help.dat to write this description.
 
 EOF
 
+    # Create an empty directory database
+    echo "Creating directory database"
+    cat > $proot/src/db/directory.wb_load << EOF
+Volume directory \$DirectoryVolume 254.254.254.253
+EndVolume
+EOF
+
     # Set ownership to user and group pwrp
     user_pwrp=`eval cat /etc/passwd | grep "\bpwrp:"`
     #if [ ! -z "$user_pwrp" ]; then
@@ -627,25 +634,7 @@ EOF
       chmod -R g+w $proot/
     fi
 
-    # Insert in projectlist
-    pwrc_prlist_read
-    if [ $pwrc_status -ne $pwrc__success ]; then
-      return
-    fi
-    pwrc_prlist_add $@
-    # pwrc_prlist_write
-    if [ $pwrc_status -ne $pwrc__success ]; then
-      return
-    fi
-
-    pwrc_set_func "project" $pname
-    if [ $pwrc_status -ne $pwrc__success ]; then
-      return
-    fi
-
-    # Create an empty directory database
-    echo "Creating directory database"
-    wb_cmd create volume/directory
+    pwrc_status=$pwrc__success
     return
   fi
   

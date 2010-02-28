@@ -15151,7 +15151,7 @@ pwr_exe:
 102 65532
 103 0
 9
-900 $object.Mode.OpAutoOnly##Boolean
+900 $object.Actuator.Mode.OpAutoOnly##Boolean
 901 0
 902 1
 903 1
@@ -15739,7 +15739,7 @@ pwr_exe:
 102 65532
 103 0
 9
-900 $object.Mode.OpAutoOnly##Boolean
+900 $object.Actuator.Mode.OpAutoOnly##Boolean
 901 0
 902 1
 903 1

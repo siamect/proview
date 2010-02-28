@@ -666,6 +666,8 @@ class GeDyn {
   //! Copy constructor.
   GeDyn( const GeDyn& x); 
 
+  ~GeDyn();
+
   //! Get list of attributes.
   /*!
     \param object	Object.

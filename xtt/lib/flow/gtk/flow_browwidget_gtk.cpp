@@ -64,6 +64,7 @@ struct _BrowWidgetGtk {
   gint 		scroll_timerid;
   flow_sScroll  scroll_data;
   int           scroll_configure;
+  int		destroyed;
 };
 
 struct _BrowWidgetGtkClass {
@@ -349,8 +350,14 @@ static void browwidgetgtk_destroy( GtkObject *object)
 {
   BrowWidgetGtk *brow = (BrowWidgetGtk *)object;
 
-  if ( brow->scroll_timerid)
-    g_source_remove( brow->scroll_timerid);
+  if ( !brow->destroyed) {
+    if ( brow->scroll_timerid)
+      g_source_remove( brow->scroll_timerid);
+    if ( !brow->is_navigator)
+      delete (FlowDrawGtk *)brow->draw_ctx;
+
+    brow->destroyed = 1;
+  }
 
   GTK_OBJECT_CLASS( browwidgetgtk_parent_class)->destroy( object);
 }
@@ -383,6 +390,7 @@ GtkWidget *browwidgetgtk_new(
   w->client_data = client_data;
   w->scroll_h = 0;
   w->scroll_v = 0;
+  w->destroyed = 0;
   return (GtkWidget *) w;  
 }
 

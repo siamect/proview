@@ -9307,7 +9307,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Temp.Unit##String16
+1200 $object.Value.Unit##String16
 1201 %s
 1202 1
 1203 1

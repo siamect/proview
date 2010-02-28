@@ -281,6 +281,8 @@ static int glow_create_gc( GlowDrawGtk *draw_ctx, GdkWindow *window)
   draw_sColor 		*color_array, *color_p;
   int 			size, sts;
 
+  memset( &xgcv, 0, sizeof(xgcv));
+
   /* Inverse gc */
   xgcv.background = glow_allocate_named_color( draw_ctx, "black");
   xgcv.foreground = draw_ctx->background;
@@ -3184,6 +3186,7 @@ int GlowDrawGtk::gradient_fill_rect( GlowWind *wind, int x, int y, int w, int h,
 
     if ( ww->clip_on)
       reset_cairo_clip( ww, cr);
+    cairo_pattern_destroy(pat);
     cairo_destroy(cr);
   }
   return 1;
@@ -3238,6 +3241,7 @@ int GlowDrawGtk::gradient_fill_rectrounded( GlowWind *wind, int x, int y, int w,
 
     if ( ww->clip_on)
       reset_cairo_clip( ww, cr);
+    cairo_pattern_destroy(pat);
     cairo_destroy(cr);
   }
   return 1;
@@ -3292,6 +3296,7 @@ int GlowDrawGtk::gradient_fill_arc( GlowWind *wind, int x, int y, int w, int h,
 
     if ( ww->clip_on)
       reset_cairo_clip( ww, cr);
+    cairo_pattern_destroy(pat);
     cairo_destroy(cr);
   }
   return 1;
@@ -3348,6 +3353,7 @@ int GlowDrawGtk::gradient_fill_polyline( GlowWind *wind, glow_sPointX *points, i
 
     if ( ww->clip_on)
       reset_cairo_clip( ww, cr);
+    cairo_pattern_destroy(pat);
     cairo_destroy(cr);
   }
 
