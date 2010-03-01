@@ -20,8 +20,6 @@
 /* rt_io_m_pb_ai.c
    PROVIEW/R	*/
 
-#pragma pack(1)
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

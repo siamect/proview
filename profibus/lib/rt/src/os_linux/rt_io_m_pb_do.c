@@ -20,8 +20,6 @@
 /* rt_io_m_pb_do.c
    PROVIEW/R	*/
 
-#pragma pack(1)
-
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>

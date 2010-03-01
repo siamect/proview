@@ -17,8 +17,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#pragma pack(1)
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

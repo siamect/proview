@@ -48,8 +48,6 @@ The code refers to some documents provided by Hilscher, the documents are:
 
 #define BOARD_INIT_ERROR -1
 
-#pragma pack(1)
-
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
