@@ -16,7 +16,7 @@
 !  along with the program, if not, write to the Free Software 
 !  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 !
-!  pwrb_td_configstatusenum.wb_load -- Defines the enum type ConfigStatus
+!  pwrs_td_configstatusenum.wb_load -- Defines the enum type ConfigStatus
 !
 SObject pwrs:Type
 !/**
@@ -60,13 +60,43 @@ SObject pwrs:Type
      EndBody
     EndObject
     !/**
+    !  Design Phase.
+    !*/
+    Object PhaseDesign $Value
+     Body SysBody
+       Attr PgmName = "DesignPhase"
+       Attr Text = "Design Phase"
+       Attr Value = 3
+     EndBody
+    EndObject
+    !/**
+    !  Coding Phase.
+    !*/
+    Object CodingPhase $Value
+     Body SysBody
+       Attr PgmName = "CodingPhase"
+       Attr Text = "Coding Phase"
+       Attr Value = 4
+     EndBody
+    EndObject
+    !/**
+    !  Testing Phase.
+    !*/
+    Object TestingPhase $Value
+     Body SysBody
+       Attr PgmName = "TestingPhase"
+       Attr Text = "Testing Phase"
+       Attr Value = 5
+     EndBody
+    EndObject
+    !/**
     !  Work In Progress.
     !*/
     Object WorkInProgress $Value
      Body SysBody
        Attr PgmName = "WorkInProgress"
        Attr Text = "Work in progress"
-       Attr Value = 3
+       Attr Value = 6
      EndBody
     EndObject
     !/**
@@ -76,7 +106,7 @@ SObject pwrs:Type
      Body SysBody
        Attr PgmName = "Untested"
        Attr Text = "Untested"
-       Attr Value = 4
+       Attr Value = 7
      EndBody
     EndObject
     !/**
@@ -86,7 +116,7 @@ SObject pwrs:Type
      Body SysBody
        Attr PgmName = "NotBuilt"
        Attr Text = "Not built"
-       Attr Value = 5
+       Attr Value = 8
      EndBody
     EndObject
     !/**
@@ -96,7 +126,7 @@ SObject pwrs:Type
      Body SysBody
        Attr PgmName = "Todo"
        Attr Text = "Todo"
-       Attr Value = 6
+       Attr Value = 9
      EndBody
     EndObject
     !/**
@@ -106,7 +136,7 @@ SObject pwrs:Type
      Body SysBody
        Attr PgmName = "NotYetConfigured"
        Attr Text = "Not yet configured"
-       Attr Value = 7
+       Attr Value = 10
      EndBody
     EndObject
     !/**
@@ -116,7 +146,7 @@ SObject pwrs:Type
      Body SysBody
        Attr PgmName = "NotYetImplemented"
        Attr Text = "Not yet implemented"
-       Attr Value = 8
+       Attr Value = 11
      EndBody
     EndObject
     !/**
@@ -126,7 +156,7 @@ SObject pwrs:Type
      Body SysBody
        Attr PgmName = "UncompiledModifications"
        Attr Text = "Uncompiled modifications"
-       Attr Value = 9
+       Attr Value = 12
      EndBody
     EndObject
     !/**
