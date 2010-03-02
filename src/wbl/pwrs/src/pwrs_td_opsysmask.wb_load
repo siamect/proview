@@ -104,13 +104,23 @@ SObject pwrs:Type
      EndBody
     EndObject
     !/**
-    !  Operating system is Linux on x86
+    !  Operating system is Linux on x86_64
     !*/
     Object X86_64_LINUX $Bit
      Body SysBody
        Attr PgmName = "X86_64_LINUX"
        Attr Text = "Linux on x86_64"
        Attr Value = 128
+     EndBody
+    EndObject
+    !/**
+    !  Operating system is Mac OS X on x86_64
+    !*/
+    Object X86_64_MACOS $Bit
+     Body SysBody
+       Attr PgmName = "X86_64_MACOS"
+       Attr Text = "Mac OS X on x86_64"
+       Attr Value = 256
      EndBody
     EndObject
   EndObject

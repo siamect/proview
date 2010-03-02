@@ -1282,7 +1282,8 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		 os == pwr_mOpSys_X86_LYNX ||
 		 os == pwr_mOpSys_PPC_LINUX ||
 		 os == pwr_mOpSys_X86_LINUX ||
-		 os == pwr_mOpSys_X86_64_LINUX)) {
+		 os == pwr_mOpSys_X86_64_LINUX ||
+		 os == pwr_mOpSys_X86_64_MACOS )) {
 	    char msg[200];
 	    sprintf( msg, "Error in NodeConfig object '%s', OperatingSystem is not valid", nodeconfig_name);
 	    MsgWindow::message( 'E', msg, msgw_ePop_Default);
@@ -2813,6 +2814,7 @@ pwr_tStatus lfu_check_opt_file( char *nodename, int bus_number, pwr_mOpSys opsys
   case pwr_mOpSys_PPC_LINUX:
   case pwr_mOpSys_X86_LINUX:
   case pwr_mOpSys_X86_64_LINUX:
+  case pwr_mOpSys_X86_64_MACOS:
   case pwr_mOpSys_CustomBuild:
     fp << 
       "$pwr_obj/rt_io_user.o -lpwr_rt -lpwr_usbio_dummy" << endl;

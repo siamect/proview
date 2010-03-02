@@ -111,7 +111,7 @@ endif
 
 log_done	=
 csetos		:= -DOS_MACOS=1 -DOS=macos -D_MACOS -DHW_X86_64=1 -DHW=x86_64
-cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) -I/usr/X11R6/include -I/System/Library/Frameworks/JavaVM.framework/Headers -I$(jdk)/include/macos \
+cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) -I/sw/include -I/System/Library/Frameworks/JavaVM.framework/Headers -I$(jdk)/include/macos \
 `pkg-config --cflags gtk+-2.0` -I$(db)/include -DPREFIX=\"/usr/local\" -DSYSCONFDIR=\"/etc\" -DDATADIR=\"/usr/share\" -DLIBDIR=\"/usr/lib\" $(cmysql) $(cgtk)
 rm		:= rm
 cp		:= cp

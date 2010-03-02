@@ -474,7 +474,7 @@ pwrc_create_func()
   local proot
   local bname
   local pname
-  local platforms="x86_linux x86_64_linux"
+  local platforms="x86_linux x86_64_linux x86_64_macos"
   let argc=$#
 
   cmd="project"
@@ -1542,13 +1542,20 @@ pwrp_env ()
 
 pwrc_parse ()
 {
+  unamestr=`eval uname`
   machine=`eval uname -m`
-  if [ $machine != "x86_64" ]; then
-    machine="x86"
+  if [ $unamestr == "Darwin" ]; then
+    os="os_macos"
+    hw="hw_x86_64"
+    platform="x86_64_macos"
+  else
+    if [ $machine != "x86_64" ]; then
+      machine="x86"
+    fi
+    platform=$machine"_linux"
+    os="os_linux"  
+    hw="hw_"$machine
   fi
-  platform=$machine"_linux"
-  os="os_linux"
-  hw="hw_"$machine
 
   local cmd
 

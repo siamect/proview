@@ -304,7 +304,7 @@ ini_sProc *ini_ProcInsert (
   if (file != NULL && file[0] != '\0' && strcmp(file, "\"\"")) {
     if (pp->proc.file != NULL) free(pp->proc.file);
       pp->proc.file = strsav(file);
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) || defined OS_MACOS
       s = getenv("pwr_exe");
       sprintf(buf, "%s/%s", s, file);
       ret = stat(buf, &f_stat);
@@ -373,7 +373,7 @@ void ini_ProcPrio (
     return;
   
   if (pp->flags.b.run) {
-#if defined(OS_LINUX)
+#if defined(OS_LINUX) || defined OS_MACOS
     if (!(pp->flags.b.plc)) {
       sprintf(set, "rt_prio -rp %d %d", pp->proc.p_prio, pp->proc.pid);
       system(set);
@@ -512,7 +512,7 @@ ini_ProcWait (
 
   pwr_dStatus(sts, status, INI__SUCCESS);
 
-#if defined OS_LYNX || defined OS_LINUX
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
   for (;;) {
     int status;
 

@@ -19,6 +19,7 @@
  */
 
 #include <map>
+#include <sys/socket.h>
 #include <net/if.h>
 #include <net/if_arp.h>
 #include <pthread.h>

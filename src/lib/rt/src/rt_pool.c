@@ -378,7 +378,7 @@ newSegment (
 
   /* Allocate the section */
 
-  segName(name, gphp->name, gphp->generation),
+  segName(name, gphp->name, gphp->generation);
 
   shp = sect_Alloc(sts, &created, &psp->sect, size << pool_cOffsAlign, name);
   if (shp == NULL) return NULL;

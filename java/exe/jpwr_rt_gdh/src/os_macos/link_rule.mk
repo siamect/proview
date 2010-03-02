@@ -5,6 +5,7 @@ link =	g++ -dynamiclib -DHW_X86_64 -DOS_MACOS \
 	-L${pwr_elib} \
 	-L${pwr_lib} \
 	-L${db}/lib \
+	-L/sw/lib \
 	${pwre_broot}/${pwre_target}/bld/lib/co/*.o \
 	$(rt_msg_eobjs) \
 	${pwre_broot}/${pwre_target}/bld/lib/msg_dummy/msg_dummy_qcom.o \

@@ -160,7 +160,6 @@ CompileWindow()
 
 CompileRtNode()
 {
-
 #link option file exists and is not empty
   if [ -s $pwrp_exe/$FileName.opt ]; then
 
@@ -177,7 +176,7 @@ CompileRtNode()
     $Libs \
     $ld_opt \
     $pwr_obj/pwr_msg_rt.o $pwr_obj/pwr_msg_co.o \
-    -lrt -lpwr_remote -lpwr_nmps -lpwr_rt -lpwr_co -lrpcsvc -lpwr_msg_dummy -lpthread -lm
+    -lpwr_remote -lpwr_nmps -lpwr_rt -lpwr_co -lrpcsvc -lpwr_msg_dummy -lpthread -lm
   then
     echo "-- Plc program linked for $OsStr $say_linkdebug node $FileName" 
     gcg_status=$gcg__success
@@ -254,7 +253,8 @@ let OpSys_X86_LYNX=5
 let OpSys_PPC_LINUX=6
 let OpSys_X86_LINUX=7
 let OpSys_X86_64_LINUX=8
-let OpSys__High=9
+let OpSys_X86_64_MACOS=9
+let OpSys__High=10
 
 vOpSys="custombuild,vax_vms,axp_vms,ppc_lynx,x86_lynx,ppc_linux,x86_linux,x86_64_linux"
 
@@ -289,11 +289,16 @@ fi
 # Check OpSys
 #
 # Current opsys
+unamestr=`eval uname`
 machine=`eval uname -m`
-if [ $machine = "x86_64" ]; then
-  CurrentOpSys=$OpSys_X86_64_LINUX
+if [ $unamestr == "Darwin" ]; then
+  CurrentOpSys=$OpSys_X86_64_MACOS
 else
-  CurrentOpSys=$OpSys_X86_LINUX
+  if [ $machine = "x86_64" ]; then
+    CurrentOpSys=$OpSys_X86_64_LINUX
+  else
+    CurrentOpSys=$OpSys_X86_LINUX
+  fi
 fi
 
 #
@@ -350,6 +355,20 @@ elif [ $OpSys -eq $OpSys_X86_64_LINUX ]; then
       exit $gcg_status
   elif [ $CurrentOpSys -eq $OpSys_X86_LINUX ]; then
       echo "-- Not built for x86_64_linux"
+  fi
+
+elif [ $OpSys -eq $OpSys_X86_64_MACOS ]; then
+  pwrp_gc="$pwrp_tmp"
+
+# Suppress all warnings, -x
+  if [ $CurrentOpSys -eq $OpSys ]; then
+      cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_MACOS -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
+
+      FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
+
+# Execute build command
+      Compile$FileTypeStr
+      exit $gcg_status
   fi
 
 elif [ $OpSys -eq $OpSys_AXP_VMS ]; then

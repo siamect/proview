@@ -474,7 +474,7 @@ pwrc_create_func()
   local proot
   local bname
   local pname
-  local platforms="x86_linux x86_64_linux"
+  local platforms="x86_linux x86_64_linux x86_64_macos"
   let argc=$#
 
   cmd="project"
@@ -615,6 +615,13 @@ Edit file \$pwrp_cnf/xtt_help.dat to write this description.
 
 EOF
 
+    # Create an empty directory database
+    echo "Creating directory database"
+    cat > $proot/src/db/directory.wb_load << EOF
+Volume directory \$DirectoryVolume 254.254.254.253
+EndVolume
+EOF
+
     # Set ownership to user and group pwrp
     user_pwrp=`eval cat /etc/passwd | grep "\bpwrp:"`
     #if [ ! -z "$user_pwrp" ]; then
@@ -627,25 +634,7 @@ EOF
       chmod -R g+w $proot/
     fi
 
-    # Insert in projectlist
-    pwrc_prlist_read
-    if [ $pwrc_status -ne $pwrc__success ]; then
-      return
-    fi
-    pwrc_prlist_add $@
-    # pwrc_prlist_write
-    if [ $pwrc_status -ne $pwrc__success ]; then
-      return
-    fi
-
-    pwrc_set_func "project" $pname
-    if [ $pwrc_status -ne $pwrc__success ]; then
-      return
-    fi
-
-    # Create an empty directory database
-    echo "Creating directory database"
-    wb_cmd create volume/directory
+    pwrc_status=$pwrc__success
     return
   fi
   
@@ -1553,13 +1542,20 @@ pwrp_env ()
 
 pwrc_parse ()
 {
+  unamestr=`eval uname`
   machine=`eval uname -m`
-  if [ $machine != "x86_64" ]; then
-    machine="x86"
+  if [ $unamestr == "Darwin" ]; then
+    os="os_macos"
+    hw="hw_x86_64"
+    platform="x86_64_macos"
+  else
+    if [ $machine != "x86_64" ]; then
+      machine="x86"
+    fi
+    platform=$machine"_linux"
+    os="os_linux"  
+    hw="hw_"$machine
   fi
-  platform=$machine"_linux"
-  os="os_linux"
-  hw="hw_"$machine
 
   local cmd
 

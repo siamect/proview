@@ -42,7 +42,7 @@
 #include "rt_qdb.h"
 #include "rt_pool.h"
 #include "rt_hash.h"
-#include "rt_futex.h"
+//#include "rt_futex.h"
 
 
 #if 0
