@@ -185,6 +185,25 @@
 #define DtEqual_exec(obj,t1,t2) \
   obj->Status = (time_Dcomp( &t1, &t2) == 0);
 
+/*_*
+  LOCALTIME
+  @aref localtime LocalTime
+*/
+#define LocalTime_exec(obj,t) \
+{\
+  struct tm tm; \
+  time_t time = t.tv_sec; \
+\
+  localtime_r( &t, &tm); \
+  obj->Second = tm.tm_sec; \
+  obj->Minute = tm.tm_min; \
+  obj->Hour = tm.tm_hour; \
+  obj->MDay = tm.tm_mday; \
+  obj->Month = tm.tm_mon; \
+  obj->Year = tm.tm_year; \
+  obj->WDay = tm.tm_wday; \
+  obj->YDay = tm.tm_yday; \
+}
 
 
 

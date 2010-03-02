@@ -3148,10 +3148,24 @@ gdh_RefObjectInfoList (
   for (i=0; i < n; i++, objrefp++) {
     sts = gdh_NameToAttrref(pwr_cNObjid, objrefp->fullname, &aref);
     if (EVEN (sts)) {
-      gdh_GetObjectLocation(aref.Objid, &dl);
-      if ( dl) {
-	rsts = sts;
-	continue;
+      pwr_tAName an;
+      pwr_tOid oid;
+      char *s;
+
+      dl = 0;
+
+      /* Check if this is an erroneous local attribute */
+      strcpy( an, objrefp->fullname);
+      if ( (s = strchr( an, '.'))) {
+	*s = 0;
+	sts = gdh_NameToObjid( an, &oid);
+	if ( ODD(sts)) {
+	  gdh_GetObjectLocation(oid, &dl);
+	  if ( dl) {
+	    rsts = sts;
+	    continue;
+	  }
+	}
       }
     } else {
       gdh_GetObjectLocation(aref.Objid, &dl);

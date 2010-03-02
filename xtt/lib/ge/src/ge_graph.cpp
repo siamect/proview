@@ -4355,11 +4355,11 @@ int Graph::ccm_get_variable( char *name, int type, void *data)
   case pwr_eType_Int32:
   case pwr_eType_Boolean:
     ccm_type = CCM_DECL_INT;
-    sts = ccm_get_external_var( name, ccm_type, 0, (int *)data, 0);
+    sts = ccm_get_external_var( name, ccm_type, 0, (ccm_tInt *)data, 0);
     return sts;
   case pwr_eType_Float32:
     ccm_type = CCM_DECL_FLOAT;
-    sts = ccm_get_external_var( name, ccm_type, (float *)data, 0, 0);
+    sts = ccm_get_external_var( name, ccm_type, (ccm_tFloat *)data, 0, 0);
     return sts;
   case pwr_eType_String:
     ccm_type = CCM_DECL_STRING;

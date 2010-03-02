@@ -19,8 +19,6 @@
 
 /* rt_io_m_pb_dp_slave.c -- io methods for a profibus DP slave */
 
-#pragma pack(1)
-
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>

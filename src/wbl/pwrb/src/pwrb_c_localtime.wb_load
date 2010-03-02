@@ -1,0 +1,197 @@
+! 
+!  Proview   $Id$
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_c_localtime.wb_load -- Defines the class LocalTime.
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_time.h
+!  @Group Plc,PlcTime
+!  @Summary Convert an absolute time to second, minute, hour, month, day of month etc.
+!  Convert an absolute time to seconds, minutes, hours, month, year, day of month, 
+!  day of week and day of year.
+!  @image orm_localtime_fo.gif
+!
+!  The available outputs are:
+!
+!  Second   The  number of seconds after the minute, normally in the range 0
+!           to 59, but can be up to 60 to allow for leap seconds.
+!  Minute   The number of minutes after the hour, in the range 0 to 59.
+!  Hour     The number of hours past midnight, in the range 0 to 23.
+!  MDay     The day of the month, in the range 1 to 31.
+!  Month    The number of months since January, in the range 0 to 11.
+!  Year     The number of years since 1900.
+!  WDay     The number of days since Sunday, in the range 0 to 6
+!  YDay     The number of days since January 1, in the range 0 to 365.
+!
+!  This is a function object interface to the posix function localtime().
+!*/
+  Object LocalTime $ClassDef 541
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+         Attr StructName = "LocalTime"
+      EndBody
+      !/**
+      !  @Summary Absolute time.
+      !  The absolute time that is to be converted.
+      !*/
+      Object Time $Input 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOREMOVE
+          Attr GraphName = "Time"
+        EndBody
+      EndObject
+      !/**
+      !  The  number of seconds after the minute, normally in the range 0
+      !  to 59, but can be up to 60 to allow for leap seconds.
+      !*/
+      Object Second $Output 2 
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Sec"
+        EndBody
+      EndObject
+      !/**
+      !  The number of minutes after the hour, in the range 0 to 59.
+      !*/
+      Object Minute $Output 3 
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Min"
+        EndBody
+      EndObject
+      !/**
+      !  The number of hours past midnight, in the range 0 to 23.
+      !*/
+      Object Hour $Output 4 
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Hour"
+        EndBody
+      EndObject
+      !/**
+      !  The day of the month, in the range 1 to 31.
+      !*/
+      Object MDay $Output 5
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "MDay"
+        EndBody
+      EndObject
+      !/**
+      !  The number of months since January, in the range 0 to 11.
+      !*/
+      Object Month $Output 6 
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Mon"
+        EndBody
+      EndObject
+      !/**
+      !  The number of years since 1900.
+      !*/
+      Object Year $Output 7 
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Year"
+        EndBody
+      EndObject
+      !/**
+      !  The day of week.
+      !  The number of days since Sunday, in the range 0 to 6.
+      !*/
+      Object WDay $Output 8 
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "WDay"
+        EndBody
+      EndObject
+      !/**
+      !  The day of year.
+      !  The number of days since January 1, in the range 0 to 365.
+      !*/
+      Object YDay $Output 9 
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "YDay"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 1
+        Attr parameters[1] = 0
+        Attr parameters[2] = 8
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 255
+        Attr segname_annotation = 1
+        Attr compmethod = 5
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "LocalTime"
+        Attr graphname = "LocalTime"
+      EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+

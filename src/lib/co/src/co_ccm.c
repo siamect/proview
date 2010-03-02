@@ -150,49 +150,49 @@
 
 
 
-typedef struct s_line_ {
+typedef struct ccm_sLine_ {
 	char			line[K_LINE_SIZE];
 	int			row;
 	int			type;
-	struct s_line_		*next;
-	struct s_line_		*prev;
-} s_line;
+	struct ccm_sLine_		*next;
+	struct ccm_sLine_		*prev;
+} ccm_sLine;
 
 typedef struct s_intvar_ {
 	char			name[32];
-	int			*value;
+	ccm_tInt       		*value;
 	int			elements;
 	int			array;
 	struct s_intvar_	*next;
-} ccm_s_intvar;
+} ccm_sIntvar;
 
 typedef struct s_floatvar_ {
 	char			name[32];
-	float			*value;
+	ccm_tFloat     		*value;
 	int			elements;
 	int			array;
 	struct s_floatvar_	*next;
-} ccm_s_floatvar;
+} ccm_sFloatvar;
 
 typedef struct s_stringvar_ {
 	char			name[32];
-	char			*value;
+	char    		*value;
 	int			elements;
 	int			array;
 	struct s_stringvar_	*next;
-} ccm_s_stringvar;
+} ccm_sStringvar;
 
-typedef struct s_operand_ {
+typedef struct ccm_sOperand_ {
 	int			type;
 	char			name[100];
 	int			value_decl;
-	int			value_int;
-	float			value_float;
-	char			value_string[K_STRING_SIZE];
+	ccm_tInt       		value_int;
+	ccm_tFloat	       	value_float;
+	ccm_tString    		value_string;
 	int			result_decl;
-	int			result_int;
-	float			result_float;
-	char			result_string[K_STRING_SIZE];
+	ccm_tInt       		result_int;
+	ccm_tFloat     		result_float;
+	ccm_tString	       	result_string;
 	int			result_done;
 	int			operator;
 	int			local_type;
@@ -200,21 +200,21 @@ typedef struct s_operand_ {
 	int			prio;
 	int			parlevel;
 	int			done;
-	struct s_operand_	*next;
-	struct s_operand_	*prev;
-	} s_operand;
+	struct ccm_sOperand_	*next;
+	struct ccm_sOperand_	*prev;
+	} ccm_sOperand;
 
-typedef struct s_func_ {
-	char		name[32];
-	int		decl;
-	s_line		*start_line;
-	s_line		*end_line;
-	struct s_func_	*next;
-	} s_func;
+typedef struct ccm_sFunc_ {
+	char			name[32];
+	int			decl;
+	ccm_sLine		*start_line;
+	ccm_sLine		*end_line;
+	struct ccm_sFunc_	*next;
+	} ccm_sFunc;
 
 typedef struct {
-	s_line		*main_start_line;
-	s_line		*main_end_line;
+	ccm_sLine      	*main_start_line;
+	ccm_sLine      	*main_end_line;
 	int		verify;
 	int		current_row;
 	int		error_row;
@@ -223,23 +223,23 @@ typedef struct {
 	int		(* externcmd_func) ( char *, void *);
 	int		(* deffilename_func) ( char *, char *, void *);
 	int		(* errormessage_func) ( char *, int, void *);
-	s_func		*func_list;
-	ccm_s_intvar	*gblint_list;
-	ccm_s_floatvar	*gblfloat_list;
-	ccm_s_stringvar	*gblstring_list;
-	s_line		*line_list;
+	ccm_sFunc      	*func_list;
+	ccm_sIntvar	*gblint_list;
+	ccm_sFloatvar	*gblfloat_list;
+	ccm_sStringvar	*gblstring_list;
+	ccm_sLine      	*line_list;
 	void		*main_funcctx;
 	int		extfunc_return_mode;
 	char		extfunc_line[256];
 	char		last_fgets[1024];
-	ccm_s_arg	*main_arg_list;
+	ccm_sArg	*main_arg_list;
 	int		main_arg_count;
   	void		*client_data;
-	} *ccm_t_file_ctx;
+	} *ccm_tFileCtx;
 
 typedef struct {
 	char		line[256];
-	ccm_t_file_ctx	filectx;
+	ccm_tFileCtx	filectx;
 	int		pos;
 	int		delim_pos;
 	int		state;
@@ -248,138 +248,138 @@ typedef struct {
 	int		num_neg;
 	char		msg[80];
 	int		last_type;
-	s_operand	*curr_operand;
-	s_operand	*list;
-	} *t_row_ctx;
+	ccm_sOperand	*curr_operand;
+	ccm_sOperand	*list;
+	} *ccm_tRowCtx;
 
 typedef struct {
 	char		msg[80];
-	ccm_t_file_ctx	filectx;
-	ccm_s_intvar	*locint_list;
-	ccm_s_floatvar	*locfloat_list;
-	ccm_s_stringvar	*locstring_list;
-	s_operand	*list;
-	s_line		*current_line;
+	ccm_tFileCtx	filectx;
+	ccm_sIntvar	*locint_list;
+	ccm_sFloatvar	*locfloat_list;
+	ccm_sStringvar	*locstring_list;
+	ccm_sOperand	*list;
+	ccm_sLine      	*current_line;
 	int		is_main;
 	int		for_init;
-	ccm_s_arg		*arg_list;
+	ccm_sArg       	*arg_list;
 	int		arg_count;
-	} *t_func_ctx;
+	} *ccm_tFuncCtx;
 
 typedef struct {
 	char		name[32];
-	int 		(* sysfunc) ( void *, ccm_s_arg *, int, int *, float *,
-			  int *, char *);
-	} s_sysfunc;
+	int 		(* sysfunc) ( void *, ccm_sArg *, int, int *, ccm_tFloat *,
+				      ccm_tInt *, char *);
+	} ccm_sSysFunc;
 
 static  int		ccm_testmode = 0;
 
-ccm_s_intvar	*extint_list = 0;
-ccm_s_floatvar	*extfloat_list = 0;
-ccm_s_stringvar	*extstring_list = 0;
+ccm_sIntvar	*extint_list = 0;
+ccm_sFloatvar	*extfloat_list = 0;
+ccm_sStringvar	*extstring_list = 0;
 
 static int ctable[256];
 static int ptable[256];
 
 static int ccm_element( char *element, int num, char *str, char delim);
 static int ccm_getvar( 
-  t_func_ctx		ctx,
+  ccm_tFuncCtx		ctx,
   const char	       	*name,
   int			*decl,
-  float			*value_float,
-  int			*value_int,
-  char			*value_string);
+  ccm_tFloat	       	*value_float,
+  ccm_tInt     		*value_int,
+  char  		*value_string);
 static int ccm_setvar( 
-  t_func_ctx	ctx,
+  ccm_tFuncCtx	ctx,
   const char   	*name,
   int		decl,
-  float		value_float,
-  int		value_int,
-  char		*value_string);
+  ccm_tFloat   	value_float,
+  ccm_tInt     	value_int,
+  char  	*value_string);
 static int ccm_createvar(
-  const char	       	*name,
+  const char   		*name,
   int			decl,
-  float			value_float,
-  int			value_int,
-  char			*value_string,
-  ccm_s_intvar		**intlist,
-  ccm_s_floatvar	**floatlist,
-  ccm_s_stringvar	**stringlist
+  ccm_tFloat	       	value_float,
+  ccm_tInt     		value_int,
+  char  		*value_string,
+  ccm_sIntvar		**int_list,
+  ccm_sFloatvar		**float_list,
+  ccm_sStringvar	**string_list
 );
 static int ccm_deletevar(
   const char	       	*name,
-  ccm_s_intvar		**intlist,
-  ccm_s_floatvar	**floatlist,
-  ccm_s_stringvar	**stringlist
+  ccm_sIntvar		**intlist,
+  ccm_sFloatvar		**floatlist,
+  ccm_sStringvar	**stringlist
 );
 static int ccm_function_exec( 
-  ccm_t_file_ctx		ctx,
+  ccm_tFileCtx		ctx,
   char		*name,
-  ccm_s_arg		*arg_list,
+  ccm_sArg		*arg_list,
   int		arg_count,
   int		*return_decl,
-  float		*return_float,
-  int		*return_int,
-  char		*return_string,
+  ccm_tFloat   	*return_float,
+  ccm_tInt     	*return_int,
+  char  	*return_string,
   int		resume);
-static int ccm_func_printf( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl,
-  float *return_float, int *return_int, char *return_string);
-static int ccm_func_say( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl,
-  float *return_float, int *return_int, char *return_string);
-static int ccm_func_scanf( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl,
-  float *return_float, int *return_int, char *return_string);
-static int ccm_func_ask( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl,
-  float *return_float, int *return_int, char *return_string);
-static int ccm_func_fprintf( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl,
-  float *return_float, int *return_int, char *return_string);
-static int ccm_func_sprintf( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl,
-  float *return_float, int *return_int, char *return_string);
-static int ccm_func_fgets( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl,
-  float *return_float, int *return_int, char *return_string);
-static int ccm_func_fopen( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl,
-  float *return_float, int *return_int, char *return_string);
-static int ccm_func_fclose( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl,
-  float *return_float, int *return_int, char *return_string);
-static int ccm_func_exit( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl,
-  float *return_float, int *return_int, char *return_string);
-static int ccm_func_element( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl,
-  float *return_float, int *return_int, char *return_string);
-static int ccm_func_felement( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl,
-  float *return_float, int *return_int, char *return_string);
-static int ccm_func_extract( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl, 
-	float *return_float, int *return_int, char *return_string);
-static int ccm_func_edit( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl, 
-	float *return_float, int *return_int, char *return_string);
-static int ccm_func_verify( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl, 
-	float *return_float, int *return_int, char *return_string);
-static int ccm_func_time( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl, 
-	float *return_float, int *return_int, char *return_string);
-static int ccm_func_system( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl, 
-	float *return_float, int *return_int, char *return_string);
-static int ccm_func_strlen( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl, 
-	float *return_float, int *return_int, char *return_string);
-static int ccm_func_strchr( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl, 
-	float *return_float, int *return_int, char *return_string);
-static int ccm_func_strrchr( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl, 
-	float *return_float, int *return_int, char *return_string);
-static int ccm_func_strstr( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl, 
-	float *return_float, int *return_int, char *return_string);
-static int ccm_func_toupper( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl, 
-	float *return_float, int *return_int, char *return_string);
-static int ccm_func_tolower( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl, 
-	float *return_float, int *return_int, char *return_string);
-static int ccm_func_translate_filename( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl, 
-	float *return_float, int *return_int, char *return_string);
-static int ccm_func_get_pwr_config( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl, 
-	float *return_float, int *return_int, char *return_string);
-static int ccm_func_get_node_name( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl, 
-	float *return_float, int *return_int, char *return_string);
-static int ccm_func_get_language( void *filectx, ccm_s_arg *arg_list, int arg_count, int *return_decl, 
-	float *return_float, int *return_int, char *return_string);
+static int ccm_func_printf( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl,
+  ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_say( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl,
+  ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_scanf( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl,
+  ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_ask( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl,
+  ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_fprintf( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl,
+  ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_sprintf( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl,
+  ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_fgets( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl,
+  ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_fopen( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl,
+  ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_fclose( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl,
+  ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_exit( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl,
+  ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_element( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl,
+  ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_felement( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl,
+  ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_extract( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl, 
+	ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_edit( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl, 
+	ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_verify( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl, 
+	ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_time( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl, 
+	ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_system( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl, 
+	ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_strlen( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl, 
+	ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_strchr( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl, 
+	ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_strrchr( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl, 
+	ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_strstr( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl, 
+	ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_toupper( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl, 
+	ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_tolower( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl, 
+	ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_translate_filename( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl, 
+	ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_get_pwr_config( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl, 
+	ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_get_node_name( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl, 
+	ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
+static int ccm_func_get_language( void *filectx, ccm_sArg *arg_list, int arg_count, int *return_decl, 
+	ccm_tFloat *return_float, ccm_tInt *return_int, char *return_string);
 
 #define CCM_SYSFUNC_MAX	100
 
-static s_sysfunc	ccm_sysfunc[CCM_SYSFUNC_MAX] = {
+static ccm_sSysFunc	ccm_sysfunc[CCM_SYSFUNC_MAX] = {
 		{"printf", 	&ccm_func_printf},
 		{"scanf", 	&ccm_func_scanf},
 		{"ask", 	&ccm_func_ask},
@@ -659,7 +659,7 @@ int	ccm_remove_blank( char *out_str, char *in_str)
 
 
 int ccm_varname_parse( 
-	t_func_ctx	funcctx,
+	ccm_tFuncCtx	funcctx,
 	const char 	*name, 
 	char	*varname,
 	int	*array,
@@ -670,9 +670,9 @@ int ccm_varname_parse(
 	char	vname[80];
 	int	len;
 	int	value_decl;
-	int	value_int;
-	float	value_float;
-	char	value_string[K_STRING_SIZE];
+	ccm_tInt	value_int;
+	ccm_tFloat	value_float;
+	ccm_tString	value_string;
 	int	sts;
 
 	/* Check index in parameter */
@@ -720,11 +720,11 @@ int ccm_varname_parse(
 
 int ccm_register_function( 
 	const char 	*name,
-	int 	(* sysfunc) ( void *, ccm_s_arg *, int, int *, float *,
-			  int *, char *)
+	int 	(* sysfunc) ( void *, ccm_sArg *, int, int *, ccm_tFloat *,
+			  ccm_tInt *, char *)
 )
 {
-  s_sysfunc	*sysfunc_p;
+  ccm_sSysFunc	*sysfunc_p;
   int		i;
 
   i = 0;
@@ -743,7 +743,7 @@ int ccm_register_function(
   return 1;
 }
 
-void ccm_float_to_string( char *string, float f)
+void ccm_float_to_string( char *string, ccm_tFloat f)
 {
   int		i;
 
@@ -766,7 +766,7 @@ void ccm_float_to_string( char *string, float f)
     sprintf( string, "%f", f);
 }
 
-static void ccm_print_error( ccm_t_file_ctx filectx, int sts)
+static void ccm_print_error( ccm_tFileCtx filectx, int sts)
 {
   char	text[80];
 
@@ -806,7 +806,7 @@ static void ccm_print_error( ccm_t_file_ctx filectx, int sts)
   (filectx->errormessage_func)( text, 0, filectx->client_data);
 }
 
-static int	ccm_replace_symbol( t_func_ctx funcctx, char *command, char *newcommand)
+static int	ccm_replace_symbol( ccm_tFuncCtx funcctx, char *command, char *newcommand)
 {
 	char	*s;
 	char	*t;
@@ -819,9 +819,9 @@ static int	ccm_replace_symbol( t_func_ctx funcctx, char *command, char *newcomma
 	char	new[160];
 	int	ignore_symbolmode;
 	int	value_decl;
-	int	value_int;
-	float	value_float;
-	char	value_string[K_STRING_SIZE];
+	ccm_tInt	value_int;
+	ccm_tFloat	value_float;
+	ccm_tString	value_string;
 
 	symbolmode = 0;
 	ignore_symbolmode = 0;
@@ -849,7 +849,7 @@ static int	ccm_replace_symbol( t_func_ctx funcctx, char *command, char *newcomma
 	      size = (long int) s - (long int) u;
 	      strncpy( symbol, u, size);
 	      symbol[size] = 0;
-              sts = ccm_getvar( funcctx, symbol, &value_decl, &value_float, 
+              sts = ccm_getvar( funcctx, symbol, &value_decl, &value_float,
 			&value_int, value_string);
 	      if ( EVEN(sts))
 	      {
@@ -866,7 +866,7 @@ static int	ccm_replace_symbol( t_func_ctx funcctx, char *command, char *newcomma
 	        if ( value_decl == K_DECL_FLOAT)
 	          ccm_float_to_string( value, value_float);
 	        else if ( value_decl == K_DECL_INT)
-	          sprintf( value, "%d", value_int);
+	          sprintf( value, ccm_cIntFormat, value_int);
 	        else
 	          strcpy( value, value_string);
 	        /* Symbol found */
@@ -1048,10 +1048,10 @@ static void init_ctable( void)
 	ctable['\\'] = K_ACTION_BACKSLASH;
 }
 
-static void set_operand_parlevel( t_row_ctx rowctx)
+static void set_operand_parlevel( ccm_tRowCtx rowctx)
 {
-  s_operand 	*curr_operand;
-  s_operand 	*operand;
+  ccm_sOperand 	*curr_operand;
+  ccm_sOperand 	*operand;
   
   if ( rowctx->curr_operand == NULL)
     return;
@@ -1064,10 +1064,10 @@ static void set_operand_parlevel( t_row_ctx rowctx)
 
 }
 
-static void set_operand_parlevel_down( t_row_ctx rowctx)
+static void set_operand_parlevel_down( ccm_tRowCtx rowctx)
 {
-  s_operand 	*curr_operand;
-  s_operand 	*operand;
+  ccm_sOperand 	*curr_operand;
+  ccm_sOperand 	*operand;
   
   curr_operand = rowctx->curr_operand;
   operand = curr_operand->prev;
@@ -1088,10 +1088,10 @@ static void set_operand_parlevel_down( t_row_ctx rowctx)
   }
 }
 
-static void set_operand_parlevel_up( t_row_ctx rowctx)
+static void set_operand_parlevel_up( ccm_tRowCtx rowctx)
 {
-  s_operand 	*curr_operand;
-  s_operand 	*operand;
+  ccm_sOperand 	*curr_operand;
+  ccm_sOperand 	*operand;
   
   curr_operand = rowctx->curr_operand;
   operand = curr_operand->prev;
@@ -1104,10 +1104,10 @@ static void set_operand_parlevel_up( t_row_ctx rowctx)
   curr_operand->parlevel = operand->parlevel + 1;
 }
 
-static void create_no_operand( t_row_ctx rowctx)
+static void create_no_operand( ccm_tRowCtx rowctx)
 {
-  s_operand 	*operand_p;
-  s_operand 	*prev_operand;
+  ccm_sOperand 	*operand_p;
+  ccm_sOperand 	*prev_operand;
  
   operand_p = calloc( 1, sizeof(*operand_p));
 
@@ -1127,10 +1127,10 @@ static void create_no_operand( t_row_ctx rowctx)
   operand_p->type = K_OPERAND_NO;
 }
 
-static int operand_found( t_row_ctx rowctx)
+static int operand_found( ccm_tRowCtx rowctx)
 {
-  s_operand 	*operand_p;
-  s_operand 	*prev_operand;
+  ccm_sOperand 	*operand_p;
+  ccm_sOperand 	*prev_operand;
   int		nr;
   char		upname[80];
  
@@ -1234,7 +1234,7 @@ static int operand_found( t_row_ctx rowctx)
     }
     else
     {
-      nr = sscanf( operand_p->name, "%d", &operand_p->value_int);
+      nr = sscanf( operand_p->name, ccm_cIntFormat, &operand_p->value_int);
       operand_p->value_decl = K_DECL_INT;
       if ( rowctx->num_neg)
         operand_p->value_int = -operand_p->value_int;
@@ -1278,10 +1278,10 @@ static int operand_found( t_row_ctx rowctx)
   return CCM__SUCCESS;
 }
 
-static void function_found( t_row_ctx rowctx)
+static void function_found( ccm_tRowCtx rowctx)
 {
-  s_operand 	*operand_p;
-  s_operand 	*prev_operand;
+  ccm_sOperand 	*operand_p;
+  ccm_sOperand 	*prev_operand;
  
   operand_p = calloc( 1, sizeof(*operand_p));
 
@@ -1307,10 +1307,10 @@ static void function_found( t_row_ctx rowctx)
 
 }
 
-void ccm_free_list(  s_operand *list)
+void ccm_free_list(  ccm_sOperand *list)
 {
-  s_operand	*op;
-  s_operand	*next;
+  ccm_sOperand	*op;
+  ccm_sOperand	*next;
 
   for ( op = list; op; op = next)
   {
@@ -1320,11 +1320,11 @@ void ccm_free_list(  s_operand *list)
 }
 
 int	ccm_create_list( 
-  ccm_t_file_ctx filectx,
+  ccm_tFileCtx filectx,
   char *line,
-  s_operand **list)
+  ccm_sOperand **list)
 {
-  t_row_ctx rowctx;
+  ccm_tRowCtx rowctx;
   char		msg[80];
   int		sts;
 
@@ -1944,19 +1944,19 @@ int	ccm_create_list(
 }
 
 int ccm_operate_exec(
-  t_func_ctx	funcctx,
-  s_operand 	*op,
-  s_operand 	*next)
+  ccm_tFuncCtx	funcctx,
+  ccm_sOperand 	*op,
+  ccm_sOperand 	*next)
 {
   int	next_decl;
-  int	next_int;
-  float	next_float;
-  char	next_string[K_STRING_SIZE];
-  char	tmp_str[K_STRING_SIZE];
+  ccm_tInt	next_int;
+  ccm_tFloat	next_float;
+  ccm_tString	next_string;
+  ccm_tString	tmp_str;
   int	sts;
-  s_operand 	*op_arg;
-  ccm_s_arg		*arg_list;
-  ccm_s_arg		*arg_p, *a_p, *next_arg;
+  ccm_sOperand 	*op_arg;
+  ccm_sArg		*arg_list;
+  ccm_sArg		*arg_p, *a_p, *next_arg;
   int		arg_count;
   int		exit_function_found;
 
@@ -2019,7 +2019,7 @@ int ccm_operate_exec(
 		&op_arg->value_float, &op_arg->value_int, op_arg->value_string);
           if ( EVEN(sts)) return sts;
         }
-        arg_p = calloc( 1, sizeof( ccm_s_arg));
+        arg_p = calloc( 1, sizeof( ccm_sArg));
         if ( op_arg->value_decl == K_DECL_INT)
           arg_p->value_int = op_arg->value_int;
         else if ( op_arg->value_decl == K_DECL_FLOAT)
@@ -2194,7 +2194,7 @@ int ccm_operate_exec(
         else if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_STRING)
         {
           sprintf( next->result_string + strlen(next->result_string), 
- 		"%d", op->result_int);
+ 		ccm_cIntFormat, op->result_int);
           strncat( next->result_string, next_string, K_STRING_SIZE);
           next->result_string[K_STRING_SIZE-1] = 0;
           next->result_decl = K_DECL_STRING;
@@ -2203,7 +2203,7 @@ int ccm_operate_exec(
         {
           strcpy( next->result_string, op->result_string);
           sprintf( next->result_string + strlen(next->result_string), 
-		"%d", next_int);
+		ccm_cIntFormat, next_int);
           next->result_decl = K_DECL_STRING;
         }
         else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_STRING)
@@ -2254,7 +2254,7 @@ int ccm_operate_exec(
         else if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_STRING)
         {
           sprintf( next->result_string + strlen(next->result_string), 
- 		"%d", op->result_int);
+ 		ccm_cIntFormat, op->result_int);
           strncat( next->result_string, next_string, K_STRING_SIZE);
           next->result_string[K_STRING_SIZE-1] = 0;
           next->result_decl = K_DECL_STRING;
@@ -2263,7 +2263,7 @@ int ccm_operate_exec(
         {
           strcpy( next->result_string, op->result_string);
           sprintf( next->result_string + strlen(next->result_string), 
-		"%d", next_int);
+		ccm_cIntFormat, next_int);
           next->result_decl = K_DECL_STRING;
         }
         else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_STRING)
@@ -2619,7 +2619,7 @@ int ccm_operate_exec(
     next->result_done = 1;
     if ( ccm_testmode)
       printf(
-"     Processing \"%s\"	\"%s\"	decl: %d, float: %f, int: %d str: \"%s\"\n", 
+"     Processing \"%s\"	\"%s\"	decl: %d, float: %f, int: " ccm_cIntFormat " str: \"%s\"\n", 
 			op->name, next->name, 
 			next->result_decl, next->result_float, 
 			next->result_int, next->result_string);
@@ -2659,17 +2659,17 @@ int ccm_operate_exec(
 }
 
 int	ccm_execute_list( 
-  t_func_ctx	funcctx,
-  s_operand *list,
+  ccm_tFuncCtx	funcctx,
+  ccm_sOperand *list,
   int	*result_decl,
-  float	*result_float,
-  int	*result_int,
-  char	*result_string
+  ccm_tFloat	*result_float,
+  ccm_tInt	*result_int,
+  char		*result_string
 )
 {
   int		sts;
-  s_operand	*op;
-  s_operand	*bp;
+  ccm_sOperand	*op;
+  ccm_sOperand	*bp;
   int		exit_func_found;
 
 
@@ -2811,17 +2811,17 @@ int	ccm_execute_list(
 }
 
 int ccm_line_exec( 
-  t_func_ctx	funcctx,
-  char *line, 
-  int	*result_decl,
-  float	*result_float,
-  int	*result_int,
-  char	*result_string
+  ccm_tFuncCtx	funcctx,
+  char 		*line, 
+  int		*result_decl,
+  ccm_tFloat	*result_float,
+  ccm_tInt	*result_int,
+  char		*result_string
 )
 {
   int		sts;
-  s_operand	*list;
-  s_operand	*op;
+  ccm_sOperand	*list;
+  ccm_sOperand	*op;
 
   sts = ccm_create_list( funcctx->filectx, line, &list);
   if ( EVEN(sts)) return sts;
@@ -2846,14 +2846,14 @@ int ccm_line_exec(
 
 
 static void ccm_free_varlists(
-  ccm_s_intvar		*int_list,
-  ccm_s_floatvar	*float_list,
-  ccm_s_stringvar	*string_list
+  ccm_sIntvar		*int_list,
+  ccm_sFloatvar		*float_list,
+  ccm_sStringvar	*string_list
 )
 {
-  ccm_s_intvar		*int_p,  *next_int;
-  ccm_s_floatvar	*float_p, *next_float;
-  ccm_s_stringvar	*string_p, *next_string;
+  ccm_sIntvar		*int_p,  *next_int;
+  ccm_sFloatvar		*float_p, *next_float;
+  ccm_sStringvar	*string_p, *next_string;
 
   for ( int_p = int_list; int_p; int_p = next_int)
   {
@@ -2876,19 +2876,19 @@ static void ccm_free_varlists(
 }
 
 static int ccm_getvar( 
-  t_func_ctx		funcctx,
+  ccm_tFuncCtx		funcctx,
   const char	       	*name,
   int			*decl,
-  float			*value_float,
-  int			*value_int,
-  char			*value_string)
+  ccm_tFloat	       	*value_float,
+  ccm_tInt	       	*value_int,
+  char		       	*value_string)
 {
-  ccm_s_intvar		*int_p;
-  ccm_s_floatvar	*float_p;
-  ccm_s_stringvar	*string_p;
-  ccm_s_intvar		*int_list;
-  ccm_s_floatvar	*float_list;
-  ccm_s_stringvar	*string_list;
+  ccm_sIntvar		*int_p;
+  ccm_sFloatvar	*float_p;
+  ccm_sStringvar	*string_p;
+  ccm_sIntvar		*int_list;
+  ccm_sFloatvar	*float_list;
+  ccm_sStringvar	*string_list;
   int			found;
   int			i;
   int			sts;
@@ -2994,19 +2994,19 @@ static int ccm_getvar(
 }
 
 static int ccm_setvar( 
-  t_func_ctx	funcctx,
+  ccm_tFuncCtx	funcctx,
   const char   	*name,
   int		decl,
-  float		value_float,
-  int		value_int,
-  char		*value_string)
+  ccm_tFloat   	value_float,
+  ccm_tInt     	value_int,
+  char  	*value_string)
 {
-  ccm_s_intvar		*int_p;
-  ccm_s_floatvar	*float_p;
-  ccm_s_stringvar	*string_p;
-  ccm_s_intvar		*int_list;
-  ccm_s_floatvar	*float_list;
-  ccm_s_stringvar	*string_list;
+  ccm_sIntvar		*int_p;
+  ccm_sFloatvar	*float_p;
+  ccm_sStringvar	*string_p;
+  ccm_sIntvar		*int_list;
+  ccm_sFloatvar	*float_list;
+  ccm_sStringvar	*string_list;
   int			found;
   int			nr;
   float			f_var;
@@ -3071,7 +3071,7 @@ static int ccm_setvar(
         }
         else
         {
-          nr = sscanf( value_string, "%d", int_p->value + element);
+          nr = sscanf( value_string, ccm_cIntFormat, int_p->value + element);
 	  if ( nr != 1)
 	    return CCM__VARTYPE;
         }
@@ -3125,7 +3125,7 @@ static int ccm_setvar(
             return CCM__ARRAYBOUNDS;
 
           if ( decl == K_DECL_INT)
-            sprintf( string_p->value + element*K_STRING_SIZE, "%d", value_int);
+            sprintf( string_p->value + element*K_STRING_SIZE, ccm_cIntFormat, value_int);
           else if ( decl == K_DECL_FLOAT)
 	    ccm_float_to_string( string_p->value + element*K_STRING_SIZE, value_float);
           else
@@ -3144,16 +3144,16 @@ static int ccm_setvar(
 int ccm_set_external_var( 
   const char   	*name,
   int		decl,
-  float		value_float,
-  int		value_int,
-  char		*value_string)
+  ccm_tFloat   	value_float,
+  ccm_tInt     	value_int,
+  char  	*value_string)
 {
-  ccm_s_intvar		*int_p;
-  ccm_s_floatvar	*float_p;
-  ccm_s_stringvar	*string_p;
-  ccm_s_intvar		*int_list;
-  ccm_s_floatvar	*float_list;
-  ccm_s_stringvar	*string_list;
+  ccm_sIntvar		*int_p;
+  ccm_sFloatvar	*float_p;
+  ccm_sStringvar	*string_p;
+  ccm_sIntvar		*int_list;
+  ccm_sFloatvar	*float_list;
+  ccm_sStringvar	*string_list;
   int			found;
   int			sts;
   int			array;
@@ -3220,16 +3220,16 @@ int ccm_set_external_var(
 int ccm_get_external_var( 
   const char   	*name,
   int		decl,
-  float		*value_float,
-  int		*value_int,
-  char		*value_string)
+  ccm_tFloat   	*value_float,
+  ccm_tInt     	*value_int,
+  char  	*value_string)
 {
-  ccm_s_intvar		*int_p;
-  ccm_s_floatvar	*float_p;
-  ccm_s_stringvar	*string_p;
-  ccm_s_intvar		*int_list;
-  ccm_s_floatvar	*float_list;
-  ccm_s_stringvar	*string_list;
+  ccm_sIntvar		*int_p;
+  ccm_sFloatvar	*float_p;
+  ccm_sStringvar	*string_p;
+  ccm_sIntvar		*int_list;
+  ccm_sFloatvar	*float_list;
+  ccm_sStringvar	*string_list;
   int			found;
   int			sts;
   int			array;
@@ -3298,12 +3298,12 @@ int ccm_ref_external_var(
   int		decl,
   void		**valuep)
 {
-  ccm_s_intvar		*int_p;
-  ccm_s_floatvar	*float_p;
-  ccm_s_stringvar	*string_p;
-  ccm_s_intvar		*int_list;
-  ccm_s_floatvar	*float_list;
-  ccm_s_stringvar	*string_list;
+  ccm_sIntvar		*int_p;
+  ccm_sFloatvar	*float_p;
+  ccm_sStringvar	*string_p;
+  ccm_sIntvar		*int_list;
+  ccm_sFloatvar	*float_list;
+  ccm_sStringvar	*string_list;
   int			found;
   int			sts;
   int			array;
@@ -3371,17 +3371,17 @@ int ccm_ref_external_var(
 static int ccm_createvar(
   const char   		*name,
   int			decl,
-  float			value_float,
-  int			value_int,
-  char			*value_string,
-  ccm_s_intvar		**int_list,
-  ccm_s_floatvar	**float_list,
-  ccm_s_stringvar	**string_list
+  ccm_tFloat	       	value_float,
+  ccm_tInt     		value_int,
+  char  		*value_string,
+  ccm_sIntvar		**int_list,
+  ccm_sFloatvar		**float_list,
+  ccm_sStringvar	**string_list
 )
 {
-  ccm_s_intvar		*int_p;
-  ccm_s_floatvar	*float_p;
-  ccm_s_stringvar	*string_p;
+  ccm_sIntvar		*int_p;
+  ccm_sFloatvar		*float_p;
+  ccm_sStringvar	*string_p;
   int			array;
   int			elements;
   char			varname[80];
@@ -3399,7 +3399,7 @@ static int ccm_createvar(
 	return CCM__VARALREXIST;
     }
 
-    int_p = calloc( 1, sizeof(ccm_s_intvar));
+    int_p = calloc( 1, sizeof(ccm_sIntvar));
     strcpy( int_p->name, varname);
     int_p->value = calloc( elements, sizeof(int));
     if ( !array)
@@ -3417,7 +3417,7 @@ static int ccm_createvar(
 	return CCM__VARALREXIST;
     }
 
-    float_p = calloc( 1, sizeof(ccm_s_floatvar));
+    float_p = calloc( 1, sizeof(ccm_sFloatvar));
     strcpy( float_p->name, varname);
     float_p->value = calloc( elements, sizeof(float));
     if ( !array)
@@ -3435,7 +3435,7 @@ static int ccm_createvar(
 	return CCM__VARALREXIST;
     }
 
-    string_p = calloc( 1, sizeof(ccm_s_stringvar));
+    string_p = calloc( 1, sizeof(ccm_sStringvar));
     strcpy( string_p->name, varname);
     string_p->value = calloc( elements, K_STRING_SIZE);
     if ( !array && value_string != NULL)
@@ -3450,14 +3450,14 @@ static int ccm_createvar(
 
 static int ccm_deletevar(
   const char	       	*name,
-  ccm_s_intvar		**int_list,
-  ccm_s_floatvar	**float_list,
-  ccm_s_stringvar	**string_list
+  ccm_sIntvar		**int_list,
+  ccm_sFloatvar		**float_list,
+  ccm_sStringvar	**string_list
 )
 {
-  ccm_s_intvar		*int_p, *int_prev;
-  ccm_s_floatvar	*float_p, *float_prev;
-  ccm_s_stringvar	*string_p, *string_prev;
+  ccm_sIntvar		*int_p, *int_prev;
+  ccm_sFloatvar		*float_p, *float_prev;
+  ccm_sStringvar	*string_p, *string_prev;
   int			array;
   int			elements;
   char			varname[80];
@@ -3529,9 +3529,9 @@ static int ccm_deletevar(
 int ccm_create_external_var(
   const char	       	*name,
   int			decl,
-  float			value_float,
-  int			value_int,
-  char			*value_string
+  ccm_tFloat	       	value_float,
+  ccm_tInt	       	value_int,
+  char  		*value_string
 )
 {
   int	sts;
@@ -3545,25 +3545,25 @@ int ccm_create_external_var(
 
 int ccm_delete_external_var(
   const char	       	*name,
-  float			value_float,
-  int			value_int,
-  char			*value_string
+  ccm_tFloat   		value_float,
+  ccm_tInt	       	value_int,
+  char  		*value_string
 )
 {
   return ccm_deletevar( name, &extint_list, &extfloat_list, &extstring_list);
 }
 
 static int	ccm_read_file(
-		ccm_t_file_ctx	filectx,
+		ccm_tFileCtx	filectx,
 		char		*filename,
-		s_line		**line_list)
+		ccm_sLine      	**line_list)
 {
   char		str[K_LINE_SIZE+40];
   char		str2[K_LINE_SIZE+40];
   FILE 		*infile;
   char		*rsts = 0;
-  s_line 	*line_p;
-  s_line 	*line_list_p;
+  ccm_sLine 	*line_p;
+  ccm_sLine 	*line_list_p;
   int		sts;
   char		*s, *se;
   int		row;
@@ -3642,7 +3642,7 @@ static int	ccm_read_file(
       continue;
     }
 
-    line_p = calloc( 1, sizeof(s_line));
+    line_p = calloc( 1, sizeof(ccm_sLine));
     strcpy( line_p->line, str);
     line_p->row = row;
     if ( line_list_p == NULL)    
@@ -3658,17 +3658,17 @@ static int	ccm_read_file(
   return 1;
 }
 
-static int ccm_init_filectx( 	ccm_t_file_ctx	filectx)
+static int ccm_init_filectx( 	ccm_tFileCtx	filectx)
 {
-  s_line 	*line_p;
-  s_line 	*l_p;
+  ccm_sLine 	*line_p;
+  ccm_sLine 	*l_p;
   char		out_str[5][32];
   int		in_function;
   int		func_found;
   int		main_start_found;
   int		main_end_found;
   int		nr;
-  s_func	*func_p;
+  ccm_sFunc	*func_p;
   char		*s;
   int		ok;
 
@@ -3699,7 +3699,7 @@ static int ccm_init_filectx( 	ccm_t_file_ctx	filectx)
         return CCM__SYNTAX;
       }
 
-      func_p = calloc( 1, sizeof( s_func));
+      func_p = calloc( 1, sizeof( ccm_sFunc));
       strcpy( func_p->name, out_str[2]);
       func_p->start_line = line_p;
       if ( strcmp( out_str[1], "int") == 0)
@@ -3865,7 +3865,7 @@ static int ccm_init_filectx( 	ccm_t_file_ctx	filectx)
     /* No main and no function found, insert mainstart first and main end last
        in list */
     for ( line_p = filectx->line_list; line_p->next; line_p = line_p->next) ;
-    l_p = calloc( 1, sizeof(s_line));
+    l_p = calloc( 1, sizeof(ccm_sLine));
     filectx->main_end_line = l_p;
     l_p->type = K_LINE_ENDMAIN;
     l_p->row = line_p->row;
@@ -3873,7 +3873,7 @@ static int ccm_init_filectx( 	ccm_t_file_ctx	filectx)
     line_p->next = l_p;
     main_end_found = 1;
 
-    l_p = calloc( 1, sizeof(s_line));
+    l_p = calloc( 1, sizeof(ccm_sLine));
     filectx->main_start_line = l_p;
     l_p->type = K_LINE_MAIN;
     l_p->row = 1;
@@ -3893,9 +3893,9 @@ static int ccm_init_filectx( 	ccm_t_file_ctx	filectx)
   return 1;
 }
 
-static void ccm_free_filectx( 	ccm_t_file_ctx	filectx)
+static void ccm_free_filectx( 	ccm_tFileCtx	filectx)
 {
-  s_line 	*line_p, *next_line;
+  ccm_sLine 	*line_p, *next_line;
 
   for ( line_p = filectx->line_list; line_p; line_p = next_line)
   {
@@ -3911,14 +3911,14 @@ static void ccm_free_filectx( 	ccm_t_file_ctx	filectx)
 
 static int ccm_func_printf( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg	*arg_p;
+  ccm_sArg	*arg_p;
   char	format[K_STRING_SIZE];
   char	frm[K_STRING_SIZE];
   int	sts;
@@ -4002,14 +4002,14 @@ static int ccm_func_printf(
 
 static int ccm_func_say( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg	*arg_p;
+  ccm_sArg	*arg_p;
   int	sts;
 
   if ( arg_count != 1)
@@ -4033,14 +4033,14 @@ static int ccm_func_say(
 
 static int ccm_func_scanf( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg	*arg_p;
+  ccm_sArg	*arg_p;
   char	format[K_STRING_SIZE];
   int	sts;
 
@@ -4066,14 +4066,14 @@ static int ccm_func_scanf(
 
 static int ccm_func_ask(
   void *filectx,
-  ccm_s_arg *arg_list,
+  ccm_sArg *arg_list,
   int arg_count,
   int *return_decl,
-  float *return_float,
-  int *return_int,
+  ccm_tFloat *return_float,
+  ccm_tInt *return_int,
   char *return_string)
 {
-  ccm_s_arg *arg_p;
+  ccm_sArg *arg_p;
   int   sts;
 
   if ( arg_count != 2)
@@ -4103,14 +4103,14 @@ static int ccm_func_ask(
 
 static int ccm_func_fprintf( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg	*arg_p1, *arg_p2, *arg_p;
+  ccm_sArg	*arg_p1, *arg_p2, *arg_p;
   char	format[K_STRING_SIZE];
   char	frm[K_STRING_SIZE];
   int	sts;
@@ -4237,14 +4237,14 @@ static int ccm_func_fprintf(
 
 static int ccm_func_sprintf( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg	*arg_p1, *arg_p2, *arg_p;
+  ccm_sArg	*arg_p1, *arg_p2, *arg_p;
   char	format[K_STRING_SIZE];
   char	frm[K_STRING_SIZE];
   int	sts;
@@ -4374,14 +4374,14 @@ static int ccm_func_sprintf(
 
 static int ccm_func_fgets( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg	*arg_p1, *arg_p2;
+  ccm_sArg	*arg_p1, *arg_p2;
   FILE	*file;
   char	*rsts = 0;
 
@@ -4394,13 +4394,13 @@ static int ccm_func_fgets(
   if ( arg_p1->value_decl != K_DECL_STRING)
     return CCM__VARTYPE;
   file = (FILE *) arg_p2->value_int;
-  rsts = fgets( ((ccm_t_file_ctx)filectx)->last_fgets, 
-	sizeof(((ccm_t_file_ctx)filectx)->last_fgets), file);
+  rsts = fgets( ((ccm_tFileCtx)filectx)->last_fgets, 
+	sizeof(((ccm_tFileCtx)filectx)->last_fgets), file);
   if ( rsts != NULL)
   {
-    if ( ((ccm_t_file_ctx)filectx)->last_fgets[strlen(((ccm_t_file_ctx)filectx)->last_fgets)-1] == 10)
-      ((ccm_t_file_ctx)filectx)->last_fgets[ strlen(((ccm_t_file_ctx)filectx)->last_fgets)-1] = 0;
-    strncpy( arg_p1->value_string, ((ccm_t_file_ctx)filectx)->last_fgets, K_STRING_SIZE);
+    if ( ((ccm_tFileCtx)filectx)->last_fgets[strlen(((ccm_tFileCtx)filectx)->last_fgets)-1] == 10)
+      ((ccm_tFileCtx)filectx)->last_fgets[ strlen(((ccm_tFileCtx)filectx)->last_fgets)-1] = 0;
+    strncpy( arg_p1->value_string, ((ccm_tFileCtx)filectx)->last_fgets, K_STRING_SIZE);
     arg_p1->value_string[K_STRING_SIZE-1] = 0;
     arg_p1->value_returned = 1;
     arg_p1->var_decl = arg_p1->value_decl;
@@ -4414,14 +4414,14 @@ static int ccm_func_fgets(
 
 static int ccm_func_element( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg	*arg_p1, *arg_p2, *arg_p3;
+  ccm_sArg	*arg_p1, *arg_p2, *arg_p3;
 
   if ( arg_count != 3)
     return CCM__ARGMISM;
@@ -4444,14 +4444,14 @@ static int ccm_func_element(
 
 static int ccm_func_felement( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg	*arg_p1, *arg_p2;
+  ccm_sArg	*arg_p1, *arg_p2;
 
   if ( arg_count != 2)
     return CCM__ARGMISM;
@@ -4463,21 +4463,21 @@ static int ccm_func_felement(
     return CCM__VARTYPE;
 
   ccm_element( return_string, arg_p1->value_int, 
-	((ccm_t_file_ctx)filectx)->last_fgets, arg_p2->value_string[0]);
+	((ccm_tFileCtx)filectx)->last_fgets, arg_p2->value_string[0]);
   *return_decl = K_DECL_STRING;
   return 1;
 }
 
 static int ccm_func_extract( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg	*arg_p1, *arg_p2, *arg_p3;
+  ccm_sArg	*arg_p1, *arg_p2, *arg_p3;
 
   if ( arg_count != 3)
     return CCM__ARGMISM;
@@ -4508,14 +4508,14 @@ static int ccm_func_extract(
 
 static int ccm_func_edit( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg	*arg_p1;
+  ccm_sArg	*arg_p1;
   char	*s, *t, *last_no_space;
   int	first_elm, first_space;
 
@@ -4560,14 +4560,14 @@ static int ccm_func_edit(
 
 static int ccm_func_fopen( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg	*arg_p1, *arg_p2;
+  ccm_sArg	*arg_p1, *arg_p2;
   FILE	*file;
   char filename[120];
 
@@ -4588,14 +4588,14 @@ static int ccm_func_fopen(
 
 static int ccm_func_fclose( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg	*arg_p1;
+  ccm_sArg	*arg_p1;
   int	sts;
   FILE	*file;
 
@@ -4613,11 +4613,11 @@ static int ccm_func_fclose(
 
 static int ccm_func_exit( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
 
@@ -4632,27 +4632,27 @@ static int ccm_func_exit(
 
 static int ccm_func_verify( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
 
   if ( arg_count == 0)
   {
-    *return_int = ((ccm_t_file_ctx)filectx)->verify;
+    *return_int = ((ccm_tFileCtx)filectx)->verify;
     *return_decl = K_DECL_INT;
   }
   else if ( arg_list->value_decl == K_DECL_INT)
   {
     if ( arg_list->value_int)
-      ((ccm_t_file_ctx)filectx)->verify = 1;
+      ((ccm_tFileCtx)filectx)->verify = 1;
     else
-      ((ccm_t_file_ctx)filectx)->verify = 0;
+      ((ccm_tFileCtx)filectx)->verify = 0;
 
-    *return_int = ((ccm_t_file_ctx)filectx)->verify;
+    *return_int = ((ccm_tFileCtx)filectx)->verify;
     *return_decl = K_DECL_INT;
   }
   else
@@ -4664,11 +4664,11 @@ static int ccm_func_verify(
 
 static int ccm_func_time( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int	sts;
@@ -4692,11 +4692,11 @@ static int ccm_func_time(
 
 static int ccm_func_system( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int	sts;
@@ -4718,11 +4718,11 @@ static int ccm_func_system(
 
 static int ccm_func_strlen( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
 
@@ -4738,14 +4738,14 @@ static int ccm_func_strlen(
 
 static int ccm_func_strchr( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg *arg_p2; 
+  ccm_sArg *arg_p2; 
   char 	*s;
 
   if ( arg_count != 2)
@@ -4768,14 +4768,14 @@ static int ccm_func_strchr(
 
 static int ccm_func_strrchr( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg *arg_p2; 
+  ccm_sArg *arg_p2; 
   char 	*s;
 
   if ( arg_count != 2)
@@ -4798,14 +4798,14 @@ static int ccm_func_strrchr(
 
 static int ccm_func_strstr( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg *arg_p2; 
+  ccm_sArg *arg_p2; 
   char 	*s;
 
   if ( arg_count != 2)
@@ -4828,11 +4828,11 @@ static int ccm_func_strstr(
 
 static int ccm_func_toupper( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
 
@@ -4848,11 +4848,11 @@ static int ccm_func_toupper(
 
 static int ccm_func_tolower( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
 
@@ -4868,11 +4868,11 @@ static int ccm_func_tolower(
 
 static int ccm_func_translate_filename( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   char fname[200];
@@ -4891,11 +4891,11 @@ static int ccm_func_translate_filename(
 
 static int ccm_func_get_pwr_config( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   char value[512];
@@ -4917,11 +4917,11 @@ static int ccm_func_get_pwr_config(
 
 static int ccm_func_get_language( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   if ( arg_count != 0)
@@ -4935,11 +4935,11 @@ static int ccm_func_get_language(
 
 static int ccm_func_get_node_name( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   char name[80];
@@ -4977,48 +4977,48 @@ static int ccm_extract_parenthes_expr( char *expr, char *line)
 }
 
 static int ccm_function_exec( 
-  ccm_t_file_ctx		filectx,
+  ccm_tFileCtx		filectx,
   char		*name,
-  ccm_s_arg		*arg_list,
+  ccm_sArg		*arg_list,
   int		arg_count,
   int		*return_decl,
-  float		*return_float,
-  int		*return_int,
+  ccm_tFloat   	*return_float,
+  ccm_tInt     	*return_int,
   char		*return_string,
   int		resume)
 {
   int		return_found;
   int		decl;
-  int		int_val;
-  float		float_val;
-  char		string_val[K_STRING_SIZE];
+  ccm_tInt     	int_val;
+  ccm_tFloat   	float_val;
+  ccm_tString  	string_val;
   int		i;
-  s_line 	*line_p;
-  s_line 	*l_p;
+  ccm_sLine 	*line_p;
+  ccm_sLine 	*l_p;
   int		sts;
-  s_line	*start_line;
-  s_line	*end_line;
+  ccm_sLine	*start_line;
+  ccm_sLine	*end_line;
   int		main_found;
   int		found;
-  s_func	*func_p;
+  ccm_sFunc	*func_p;
   char		arg_str[20][32];
   char		elm_str[4][K_LINE_SIZE];
-  ccm_s_arg		*arg_p;
+  ccm_sArg     	*arg_p;
   int		nr;
   char		expr[K_LINE_SIZE];
-  t_func_ctx	funcctx;
+  ccm_tFuncCtx	funcctx;
   int		if_level;
   int		while_level;
   int		for_level;
   char		arg_name[8];
-  s_sysfunc	*sysfunc_p;
+  ccm_sSysFunc	*sysfunc_p;
   char		label[80];
   char		goto_label[80];
 
   if ( resume)
   {
     funcctx = filectx->main_funcctx;
-    start_line = ((t_func_ctx)(filectx->main_funcctx))->current_line->next;
+    start_line = ((ccm_tFuncCtx)(filectx->main_funcctx))->current_line->next;
     end_line = filectx->main_end_line;
   }
   else
@@ -5570,7 +5570,7 @@ static int ccm_function_exec(
           }
           if ( EVEN(sts)) return sts;
           if ( ccm_testmode)
-            printf( "%s\n decl: %d, float: %f, int: %d str: %s\n", line_p->line, decl,
+            printf( "%s\n decl: %d, float: %f, int: " ccm_cIntFormat " str: %s\n", line_p->line, decl,
        	  float_val, int_val, string_val);
 
           if ( sts == CCM__EXITFUNC)
@@ -5658,15 +5658,15 @@ int ccm_file_exec(
 )
 {
   int		decl;
-  int		int_val;
-  float		float_val;
+  ccm_tInt     	int_val;
+  ccm_tFloat   	float_val;
   int		i;
-  char  	string_val[K_STRING_SIZE];
+  ccm_tString  	string_val;
   int		sts;
-  ccm_t_file_ctx filectx;
+  ccm_tFileCtx filectx;
   char		elm_str[9][K_LINE_SIZE];
   int		nr;
-  ccm_s_arg	*arg_list, *arg_p, *a_p, *next_arg;
+  ccm_sArg	*arg_list, *arg_p, *a_p, *next_arg;
   int		arg_count;
 
   if ( resume)
@@ -5686,7 +5686,7 @@ int ccm_file_exec(
     arg_list = 0;
     for ( i = 1; i < nr; i++)
     {
-      arg_p = calloc( 1, sizeof( ccm_s_arg));
+      arg_p = calloc( 1, sizeof( ccm_sArg));
       strcpy( arg_p->value_string, elm_str[i]);
       arg_p->value_decl = K_DECL_STRING;
       if ( arg_list == 0)

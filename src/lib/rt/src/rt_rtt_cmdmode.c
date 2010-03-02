@@ -697,8 +697,8 @@ static int	rtt_symbol_to_float( float *float_value, char *value)
 int rtt_attribute_func ( 
   char		*name,
   int		*return_decl,
-  float		*return_float,
-  int		*return_int,
+  ccm_tFloat   	*return_float,
+  ccm_tInt	*return_int,
   char		*return_string
 )
 {
@@ -712,9 +712,9 @@ int rtt_attribute_func (
 	char		*t;
 	int		len;
 	int		decl;
-	int		int_val;
-	float		float_val;
-	char		string_val[80];
+	ccm_tInt       	int_val;
+	ccm_tFloat     	float_val;
+	ccm_tString    	string_val;
 	pwr_sAttrRef	attrref;
 	pwr_tTypeId	attrtype;
 	unsigned int	attrsize, attroffs, attrelem;
@@ -912,9 +912,9 @@ static int	rtt_get_attr_value(
 			char		*value)
 {
 	int	sts;
-	int	return_int;
-	float	return_float;
-	char	return_string[80];
+	ccm_tInt	return_int;
+	ccm_tFloat	return_float;
+	ccm_tString	return_string;
 	int	decl;
 
 	sts = rtt_attribute_func( attrname, &decl, &return_float, &return_int,
@@ -924,7 +924,7 @@ static int	rtt_get_attr_value(
 	switch ( decl)
 	{
 	  case CCM_DECL_INT:
-	    sprintf( value, "%d", return_int);
+	    sprintf( value, ccm_cIntFormat, return_int);
 	    break;
 
 	  case CCM_DECL_FLOAT:
@@ -932,12 +932,12 @@ static int	rtt_get_attr_value(
 	    if ( fabs( return_float - floor( return_float)) <= FLT_EPSILON)
 	    {
 	      return_int = return_float + FLT_EPSILON;
-	      sprintf( value, "%d", return_int);
+	      sprintf( value, ccm_cIntFormat, return_int);
 	    }
 	    else if ( fabs( return_float - floor( return_float) + 1) <= FLT_EPSILON)
 	    {
 	      return_int = return_float + FLT_EPSILON;
-	      sprintf( value, "%d", return_int);
+	      sprintf( value, ccm_cIntFormat, return_int);
 	    }
 	    else
 	      sprintf( value, "%f", return_float);

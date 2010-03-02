@@ -877,6 +877,7 @@ palette PlcEditorPalette
       class GetATv
       class GetDTp
       class GetDTv
+      class LocalTime
       class StoATp
       class StoATv
       class StoDTp
