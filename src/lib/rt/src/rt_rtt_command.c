@@ -7753,14 +7753,14 @@ static int	rtt_deffilename_func( char *outfile, char *infile, void *client_data)
 
 static int rtt_getinput_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg 		*arg_p, *arg_p2, *arg_p3; 
+  ccm_sArg 		*arg_p, *arg_p2, *arg_p3; 
   int			maxlen = 79;
   char			input_str[80];
   int			sts;
@@ -7843,14 +7843,14 @@ static int rtt_getinput_func(
 
 static int rtt_placecursor_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg 	*arg_p2; 
+  ccm_sArg 	*arg_p2; 
 
   if ( arg_count != 2)
     return CCM__ARGMISM;
@@ -7873,11 +7873,11 @@ static int rtt_placecursor_func(
 
 static int rtt_lineerase_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
 
@@ -7895,11 +7895,11 @@ static int rtt_lineerase_func(
 
 static int rtt_getcurrenttitle_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   menu_ctx	ctx;
@@ -7926,11 +7926,11 @@ static int rtt_getcurrenttitle_func(
 
 static int rtt_getcurrenttext_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   menu_ctx		ctx;
@@ -7979,11 +7979,11 @@ static int rtt_getcurrenttext_func(
 
 static int rtt_getcurrentobject_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   menu_ctx		ctx;
@@ -8015,11 +8015,11 @@ static int rtt_getcurrentobject_func(
 
 static int rtt_getchild_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -8051,11 +8051,11 @@ static int rtt_getchild_func(
 
 static int rtt_getparent_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -8087,11 +8087,11 @@ static int rtt_getparent_func(
 
 static int rtt_getnextsibling_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -8123,11 +8123,11 @@ static int rtt_getnextsibling_func(
 
 static int rtt_getclasslist_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -8159,11 +8159,11 @@ static int rtt_getclasslist_func(
 
 static int rtt_getrootlist_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -8188,11 +8188,11 @@ static int rtt_getrootlist_func(
 
 static int rtt_getnodeobject_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -8217,11 +8217,11 @@ static int rtt_getnodeobject_func(
 
 static int rtt_getnextobject_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -8254,11 +8254,11 @@ static int rtt_getnextobject_func(
 
 static int rtt_getobjectclass_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -8286,11 +8286,11 @@ static int rtt_getobjectclass_func(
 
 static int rtt_messageerror_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
 
@@ -8310,11 +8310,11 @@ static int rtt_messageerror_func(
 
 static int rtt_messageinfo_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
 
@@ -8334,14 +8334,14 @@ static int rtt_messageinfo_func(
 
 static int rtt_cutobjectname_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg 	*arg_p2; 
+  ccm_sArg 	*arg_p2; 
 
   if ( arg_count != 2)
     return CCM__ARGMISM;
@@ -8363,19 +8363,19 @@ static int rtt_cutobjectname_func(
 
 static int rtt_getattribute_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg	*arg_p2;
+  ccm_sArg	*arg_p2;
   int	sts;
   int	value_decl;
-  int	value_int;
-  float	value_float;
-  char	value_string[80];
+  ccm_tInt	value_int;
+  ccm_tFloat	value_float;
+  ccm_tString	value_string;
 
   if ( !(arg_count == 2 || arg_count == 1))
     return CCM__ARGMISM;

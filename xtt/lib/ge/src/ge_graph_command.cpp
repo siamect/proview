@@ -2536,18 +2536,18 @@ int Graph::command( char* input_str)
 
 static int graph_gettextextent_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg 	*arg_p2; 	// Textsize
-  ccm_s_arg 	*arg_p3; 	// Bold
-  ccm_s_arg 	*arg_p4; 	// Width
-  ccm_s_arg 	*arg_p5; 	// Height
-  ccm_s_arg 	*arg_p6; 	// Descent
+  ccm_sArg 	*arg_p2; 	// Textsize
+  ccm_sArg 	*arg_p3; 	// Bold
+  ccm_sArg 	*arg_p4; 	// Width
+  ccm_sArg 	*arg_p5; 	// Height
+  ccm_sArg 	*arg_p6; 	// Descent
   Graph		*graph;
   glow_eDrawType draw_type;
   double	z_width, z_height, z_descent;
@@ -2618,11 +2618,11 @@ static int graph_gettextextent_func(
 
 static int graph_selectadd_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   Graph		*graph;
@@ -2641,11 +2641,11 @@ static int graph_selectadd_func(
 
 static int graph_getcurrentobject_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   Graph		*graph;
@@ -2663,11 +2663,11 @@ static int graph_getcurrentobject_func(
 
 static int graph_setextern_func(
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   Graph		*graph;
@@ -2698,11 +2698,11 @@ static int graph_setextern_func(
 
 static int graph_setintern_func(
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   Graph		*graph;

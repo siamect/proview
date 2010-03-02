@@ -5305,11 +5305,11 @@ int WNav::command( char* input_str)
 
 static int wnav_getcurrenttext_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   WNav *wnav;
@@ -5342,11 +5342,11 @@ static int wnav_getcurrenttext_func(
 
 static int wnav_getcurrentobject_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   WNav			*wnav;
@@ -5384,11 +5384,11 @@ static int wnav_getcurrentobject_func(
 
 static int wnav_getcurrentvolume_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   WNav			*wnav;
@@ -5428,11 +5428,11 @@ static int wnav_getcurrentvolume_func(
 
 static int wnav_messageerror_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   WNav *wnav;
@@ -5454,11 +5454,11 @@ static int wnav_messageerror_func(
 
 static int wnav_messageinfo_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   WNav *wnav;
@@ -5480,11 +5480,11 @@ static int wnav_messageinfo_func(
 
 static int wnav_isw1_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   WNav *wnav;
@@ -5503,11 +5503,11 @@ static int wnav_isw1_func(
 
 static int wnav_isw2_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   WNav *wnav;
@@ -5526,11 +5526,11 @@ static int wnav_isw2_func(
 
 static int wnav_editmode_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   WNav *wnav;
@@ -5549,15 +5549,15 @@ static int wnav_editmode_func(
 
 static int wnav_setdialogsize_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   WNav *wnav;
-  ccm_s_arg *arg_p2, *arg_p3, *arg_p4; 
+  ccm_sArg *arg_p2, *arg_p3, *arg_p4; 
 
   if ( arg_count != 4)
     return CCM__ARGMISM;
@@ -5588,15 +5588,15 @@ static int wnav_setdialogsize_func(
 
 static int wnav_messagedialog_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   WNav *wnav;
-  ccm_s_arg *arg_p2; 
+  ccm_sArg *arg_p2; 
 
   if ( arg_count != 2)
     return CCM__ARGMISM;
@@ -5622,15 +5622,15 @@ static int wnav_messagedialog_func(
 
 static int wnav_confirmdialog_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   WNav *wnav;
-  ccm_s_arg *arg_p2, *arg_p3; 
+  ccm_sArg *arg_p2, *arg_p3; 
   int sts;
   int cancel;
   char str[80];
@@ -5712,15 +5712,15 @@ static int wnav_confirmdialog_func(
 
 static int wnav_continuedialog_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   WNav *wnav;
-  ccm_s_arg *arg_p2; 
+  ccm_sArg *arg_p2; 
   int sts;
   char str[80];
 
@@ -5756,15 +5756,15 @@ static int wnav_continuedialog_func(
 
 static int wnav_promptdialog_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   WNav *wnav;
-  ccm_s_arg *arg_p2, *arg_p3; 
+  ccm_sArg *arg_p2, *arg_p3; 
   int sts;
   char *value;
   char str[80];
@@ -5806,16 +5806,16 @@ static int wnav_promptdialog_func(
 
 static int wnav_opengraph_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   WNav *wnav;
-  ccm_s_arg *arg_p2; 
-  ccm_s_arg *arg_p3; 
+  ccm_sArg *arg_p2; 
+  ccm_sArg *arg_p3; 
   int sts;
   pwr_tCmd cmd;
 
@@ -5857,11 +5857,11 @@ static int wnav_opengraph_func(
 
 static int wnav_closegraph_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   WNav *wnav;
@@ -5891,17 +5891,17 @@ static int wnav_closegraph_func(
 
 static int wnav_setsubwindow_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   WNav *wnav;
-  ccm_s_arg *arg_p2; 
-  ccm_s_arg *arg_p3; 
-  ccm_s_arg *arg_p4; 
+  ccm_sArg *arg_p2; 
+  ccm_sArg *arg_p3; 
+  ccm_sArg *arg_p4; 
   int sts;
   pwr_tCmd cmd;
 

@@ -52,8 +52,8 @@ int (* wccm_get_ldhsession_cb)( void *, ldh_tSesContext *);
 static int wccm_attribute_func ( 
   char		*name,
   int		*return_decl,
-  float		*return_float,
-  int		*return_int,
+  ccm_tFloat   	*return_float,
+  ccm_tInt     	*return_int,
   char		*return_string
 );
 static int wccm_cut_segments (
@@ -104,19 +104,19 @@ int wccm_get_wbctx( ldh_tWBContext *wbctx)
 
 static int wccm_getattribute_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg	*arg_p2;
+  ccm_sArg	*arg_p2;
   int	sts;
   int	value_decl;
-  int	value_int;
-  float	value_float;
-  char	value_string[80];
+  ccm_tInt	value_int;
+  ccm_tFloat	value_float;
+  ccm_tString	value_string;
 
   if ( !(arg_count == 2 || arg_count == 1))
     return CCM__ARGMISM;
@@ -169,11 +169,11 @@ static int wccm_getattribute_func(
 
 static int wccm_getchild_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -216,11 +216,11 @@ static int wccm_getchild_func(
 
 static int wccm_getparent_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -264,11 +264,11 @@ static int wccm_getparent_func(
 
 static int wccm_getnextsibling_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -312,11 +312,11 @@ static int wccm_getnextsibling_func(
 
 static int wccm_getclasslist_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -360,11 +360,11 @@ static int wccm_getclasslist_func(
 
 static int wccm_getnextobject_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -408,11 +408,11 @@ static int wccm_getnextobject_func(
 
 static int wccm_getclasslistattrref_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -454,11 +454,11 @@ static int wccm_getclasslistattrref_func(
 
 static int wccm_getnextattrref_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -468,7 +468,7 @@ static int wccm_getnextattrref_func(
   int		size;
   ldh_tSesContext ldhses;
   pwr_tCid	cid;
-  ccm_s_arg 	*arg_p2; 
+  ccm_sArg 	*arg_p2; 
 
   sts = wccm_get_ldhses( &ldhses);
   if ( EVEN(sts))
@@ -509,11 +509,11 @@ static int wccm_getnextattrref_func(
 
 static int wccm_getrootlist_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -549,11 +549,11 @@ static int wccm_getrootlist_func(
 
 static int wccm_getobjectclass_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -596,11 +596,11 @@ static int wccm_getobjectclass_func(
 
 static int wccm_objectexist_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -630,11 +630,11 @@ static int wccm_objectexist_func(
 
 static int wccm_getvolumelist_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -670,11 +670,11 @@ static int wccm_getvolumelist_func(
 
 static int wccm_getnextvolume_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -718,11 +718,11 @@ static int wccm_getnextvolume_func(
 
 static int wccm_getvolumeclass_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -765,14 +765,14 @@ static int wccm_getvolumeclass_func(
 
 static int wccm_cutobjectname_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg 	*arg_p2; 
+  ccm_sArg 	*arg_p2; 
 
   if ( arg_count != 2)
     return CCM__ARGMISM;
@@ -794,11 +794,11 @@ static int wccm_cutobjectname_func(
 
 static int wccm_getnodeobject_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -843,11 +843,11 @@ static int wccm_getnodeobject_func(
 
 static int wccm_getprojectname_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -868,14 +868,14 @@ static int wccm_getprojectname_func(
 
 static int wccm_setattribute_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg *arg_p2; 
+  ccm_sArg *arg_p2; 
   int sts;
   char buf[400];
   pwr_tAName name;
@@ -926,11 +926,11 @@ static int wccm_setattribute_func(
 
 static int wccm_checksystemgroup_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int sts;
@@ -950,11 +950,11 @@ static int wccm_checksystemgroup_func(
 
 static int wccm_getnextfreeuservid_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -985,11 +985,11 @@ static int wccm_getnextfreeuservid_func(
 
 static int wccm_checknewvid_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -1013,11 +1013,11 @@ static int wccm_checknewvid_func(
 
 static int wccm_checknewvolumename_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -1041,11 +1041,11 @@ static int wccm_checknewvolumename_func(
 
 static int wccm_getcurrentvolume_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -1088,11 +1088,11 @@ static int wccm_getcurrentvolume_func(
 
 static int wccm_stringtoobjectname_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   if ( arg_count != 1)
@@ -1110,11 +1110,11 @@ static int wccm_stringtoobjectname_func(
 
 static int wccm_gethardware_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   if ( arg_count != 0)
@@ -1251,8 +1251,8 @@ void	wccm_set_status( pwr_tStatus	sts)
 static int wccm_attribute_func ( 
   char		*name,
   int		*return_decl,
-  float		*return_float,
-  int		*return_int,
+  ccm_tFloat   	*return_float,
+  ccm_tInt     	*return_int,
   char		*return_string
 )
 {

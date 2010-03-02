@@ -20,6 +20,8 @@
 #ifndef rt_rtt_functions_h
 #define rt_rtt_functions_h
 
+#include "co_ccm.h"
+
 /* Module rt_rtt_menu.c */
 
 int	rtt_gdh_init( void);
@@ -817,8 +819,8 @@ int	rtt_define_symbol( char *key, char *arg1, char *arg2, char *arg3);
 int 	rtt_attribute_func ( 
   char		*name,
   int		*return_decl,
-  float		*return_float,
-  int		*return_int,
+  ccm_tFloat   	*return_float,
+  ccm_tInt     	*return_int,
   char		*return_string);
 
 /* Module rt_rtt_rtc.c */

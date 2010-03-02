@@ -33,25 +33,31 @@ extern "C" {
 
 #define K_STRING_SIZE	400
 
+typedef long int ccm_tInt;
+typedef float ccm_tFloat;
+typedef char ccm_tString[K_STRING_SIZE]; 
+
+#define ccm_cIntFormat "%ld"
+
 typedef struct s_arg_ {
 	char			value_name[80];
 	int			value_decl;
-	long int	       	value_int;
-	float			value_float;
-	char			value_string[K_STRING_SIZE];
+	ccm_tInt	       	value_int;
+	ccm_tFloat     		value_float;
+	ccm_tString    		value_string;
 	int			value_type;
 	int			var_decl;
 	char			var_name[32];
 	long int	       	value_returned;
 	struct s_arg_		*next;
-} ccm_s_arg;
+} ccm_sArg;
 
 
 
 int ccm_register_function( 
 	const char 	*name,
-	int 	(* sysfunc) ( void *, ccm_s_arg *, int, int *, float *,
-			  int *, char *)
+	int 	(* sysfunc) ( void *, ccm_sArg *, int, int *, ccm_tFloat *,
+			  ccm_tInt *, char *)
 );
 
 int ccm_file_exec(
@@ -72,32 +78,32 @@ int ccm_file_exec(
 int ccm_create_external_var(
   const char	       	*name,
   int			decl,
-  float			value_float,
-  int			value_int,
-  char			*value_string
+  ccm_tFloat	       	value_float,
+  ccm_tInt	       	value_int,
+  char		       	*value_string
 );
 
 int ccm_delete_external_var(
   const char	       	*name,
-  float			value_float,
-  int			value_int,
-  char			*value_string
+  ccm_tFloat	       	value_float,
+  ccm_tInt	       	value_int,
+  char		       	*value_string
 );
 
 int ccm_set_external_var(
   const char   		*name,
   int			decl,
-  float			value_float,
-  int			value_int,
-  char			*value_string
+  ccm_tFloat	       	value_float,
+  ccm_tInt	       	value_int,
+  char		       	*value_string
 );
 
 int ccm_get_external_var(
   const char	       	*name,
   int			decl,
-  float			*value_float,
-  int			*value_int,
-  char			*value_string
+  ccm_tFloat	       	*value_float,
+  ccm_tInt	       	*value_int,
+  char  		*value_string
 );
 
 int ccm_ref_external_var(

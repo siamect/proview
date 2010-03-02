@@ -133,8 +133,8 @@ static int xnav_ge_is_authorized_cb( void *xnav, unsigned int access);
 static int xnav_attribute_func ( 
   char		*name,
   int		*return_decl,
-  float		*return_float,
-  int		*return_int,
+  ccm_tFloat   	*return_float,
+  ccm_tInt     	*return_int,
   char		*return_string);
 static int xnav_ge_command_cb( XttGe *gectx, char *command);
 static void xnav_ge_close_cb( XttGe *gectx);
@@ -5472,11 +5472,11 @@ int XNav::command( char* input_str)
 
 static int xnav_getcurrenttext_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   XNav *xnav;
@@ -5505,11 +5505,11 @@ static int xnav_getcurrenttext_func(
 
 static int xnav_getcurrentobject_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   XNav			*xnav;
@@ -5536,11 +5536,11 @@ static int xnav_getcurrentobject_func(
 
 static int xnav_getchild_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -5572,11 +5572,11 @@ static int xnav_getchild_func(
 
 static int xnav_getparent_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -5608,11 +5608,11 @@ static int xnav_getparent_func(
 
 static int xnav_getnextsibling_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -5644,11 +5644,11 @@ static int xnav_getnextsibling_func(
 
 static int xnav_getclasslist_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -5680,11 +5680,11 @@ static int xnav_getclasslist_func(
 
 static int xnav_getrootlist_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -5709,11 +5709,11 @@ static int xnav_getrootlist_func(
 
 static int xnav_getnodeobject_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -5738,11 +5738,11 @@ static int xnav_getnodeobject_func(
 
 static int xnav_getnextobject_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -5775,11 +5775,11 @@ static int xnav_getnextobject_func(
 
 static int xnav_getobjectclass_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   int		sts;
@@ -5810,11 +5810,11 @@ static int xnav_getobjectclass_func(
 
 static int xnav_messageerror_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   XNav *xnav;
@@ -5836,11 +5836,11 @@ static int xnav_messageerror_func(
 
 static int xnav_messageinfo_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
   XNav *xnav;
@@ -5862,14 +5862,14 @@ static int xnav_messageinfo_func(
 
 static int xnav_cutobjectname_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg 	*arg_p2; 
+  ccm_sArg 	*arg_p2; 
 
   if ( arg_count != 2)
     return CCM__ARGMISM;
@@ -5891,19 +5891,19 @@ static int xnav_cutobjectname_func(
 
 static int xnav_getattribute_func( 
   void *filectx,
-  ccm_s_arg *arg_list, 
+  ccm_sArg *arg_list, 
   int arg_count,
   int *return_decl, 
-  float *return_float, 
-  int *return_int, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
   char *return_string)
 {
-  ccm_s_arg	*arg_p2;
+  ccm_sArg	*arg_p2;
   int	sts;
   int	value_decl;
-  int	value_int;
-  float	value_float;
-  char	value_string[80];
+  ccm_tInt	value_int;
+  ccm_tFloat	value_float;
+  ccm_tString	value_string;
 
   if ( !(arg_count == 2 || arg_count == 1))
     return CCM__ARGMISM;
@@ -6093,8 +6093,8 @@ int xnav_cut_segments (
 static int xnav_attribute_func ( 
   char		*name,
   int		*return_decl,
-  float		*return_float,
-  int		*return_int,
+  ccm_tFloat   	*return_float,
+  ccm_tInt     	*return_int,
   char		*return_string
 )
 {
@@ -6107,9 +6107,9 @@ static int xnav_attribute_func (
 	char		*t;
 	int		len;
 	int		decl;
-	int		int_val;
-	float		float_val;
-	char		string_val[80];
+	ccm_tInt       	int_val;
+	ccm_tFloat     	float_val;
+	ccm_tString    	string_val;
 	pwr_sAttrRef	attrref;
 	pwr_tTypeId	attrtype;
 	unsigned int	attrsize, attroffs, attrelem;
