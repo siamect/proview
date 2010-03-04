@@ -3401,7 +3401,7 @@ static int ccm_createvar(
 
     int_p = calloc( 1, sizeof(ccm_sIntvar));
     strcpy( int_p->name, varname);
-    int_p->value = calloc( elements, sizeof(int));
+    int_p->value = calloc( elements, sizeof(ccm_tInt));
     if ( !array)
       *(int_p->value) = value_int;
     int_p->elements = elements;
@@ -3419,7 +3419,7 @@ static int ccm_createvar(
 
     float_p = calloc( 1, sizeof(ccm_sFloatvar));
     strcpy( float_p->name, varname);
-    float_p->value = calloc( elements, sizeof(float));
+    float_p->value = calloc( elements, sizeof(ccm_tFloat));
     if ( !array)
       *(float_p->value) = value_float;
     float_p->elements = elements;
@@ -3437,9 +3437,9 @@ static int ccm_createvar(
 
     string_p = calloc( 1, sizeof(ccm_sStringvar));
     strcpy( string_p->name, varname);
-    string_p->value = calloc( elements, K_STRING_SIZE);
+    string_p->value = calloc( elements, sizeof(ccm_tString));
     if ( !array && value_string != NULL)
-      strncpy( string_p->value, value_string, K_STRING_SIZE);
+      strncpy( string_p->value, value_string, sizeof(ccm_tString));
     string_p->elements = elements;
     string_p->array = array;
     string_p->next = *string_list;
