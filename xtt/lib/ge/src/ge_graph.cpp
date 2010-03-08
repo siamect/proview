@@ -3730,12 +3730,20 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
     }
 
     case glow_eEvent_Key_CtrlAscii: {
+      if ( event->key.ascii == 23) {
+	// Ctrl W, close graph
+	if ( graph->close_cb) {
+	  (graph->close_cb)( graph->parent_ctx);
+	  return GLOW__TERMINATED;
+	}
+      }
       if ( event->object.object_type != glow_eObjectType_NoObject) {
 	GeDyn *dyn;
 
 	grow_GetUserData( event->object.object, (void **)&dyn);
 	dyn->action( event->object.object, event);
       }
+      break;
     }
 
     case glow_eEvent_MenuActivated:
