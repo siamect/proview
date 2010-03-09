@@ -63,7 +63,7 @@ static pwr_tStatus SyntaxCheck (
   int *WarningCount
 ) {
   wb_session *sp = (wb_session *)Session;
-  pwr_tString80 selectlist[20];
+  pwr_tString80 selectlist[40];
 
   wb_attribute a = sp->attribute( &Object);
   if ( !a) return a.sts();
