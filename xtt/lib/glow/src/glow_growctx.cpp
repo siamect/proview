@@ -1923,6 +1923,53 @@ void GrowCtx::save_grow( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_End) << endl;
 }
 
+void GrowCtx::save_meta( ofstream& fp, glow_eSaveMode mode)
+{
+  int default_width = int( (x1 - x0) * mw.zoom_factor_x);
+  int default_height = int( (y1 - y0) * mw.zoom_factor_x);
+  fp << "0! DefaultWidth " << default_width << endl;
+  fp << "0! DefaultHeight " << default_height << endl;
+}
+
+int GrowCtx::get_dimension( char *filename, int *width, int *height)
+{
+  char		fname[120];
+  char		line[200];
+  bool		width_found = false;
+  bool		height_found = false;
+  int		num;
+  ifstream	fp;
+
+  dcli_translate_filename( fname, filename);
+
+  if ( !check_file( fname))
+    return GLOW__FILEOPEN;
+
+  fp.open( fname);
+  if ( !fp)
+    return GLOW__FILEOPEN;
+
+  while (fp.getline( line, sizeof(line))) {
+    if ( strncmp( line, "0! ", 3) != 0)
+      break;
+    if ( strncmp( &line[3], "DefaultWidth", 12) == 0) {
+      num = sscanf( &line[16], "%d", width);
+      if ( num == 1)
+	width_found = true;
+    }
+    else if ( strncmp( &line[3], "DefaultHeight", 13) == 0) {
+      sscanf( &line[17], "%d", height);
+      if ( num == 1)
+	height_found = true;
+    }
+  }
+  fp.close();
+
+  if ( width_found && height_found)
+    return 1;
+  return 0;
+}
+
 void GrowCtx::open_grow( ifstream& fp)
 {
   int		type;

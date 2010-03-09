@@ -453,6 +453,22 @@ void Graph::get_filename( char *inname, char *outname)
   dcli_translate_filename( outname, fname);
 }
 
+void Graph::get_filename( char *inname, const char *def_path, char *outname)
+{
+  pwr_tFileName fname;
+
+  // Add default directory
+  if ( !strchr( inname, ':') && !strchr( inname, '/'))
+  {
+    strcpy( fname, def_path);
+    strcat( fname, inname);
+  }
+  else
+    strcpy( fname, inname);
+  dcli_get_defaultfilename( fname, fname, ".pwg");
+  dcli_translate_filename( outname, fname);
+}
+
 //
 //  Save
 //
@@ -4786,6 +4802,15 @@ void Graph::swap( int mode)
       trace_scan( this);
     }
   }
+}
+
+int Graph::get_dimension( char *filename, const char *def_path, 
+				 int *width, int *height)
+{ 
+  pwr_tFileName fname;
+
+  get_filename( filename, def_path, fname);
+  return grow_GetDimension( fname, width, height);
 }
 
 static void graph_free_dyn( grow_tObject object)

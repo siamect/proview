@@ -168,3 +168,5 @@
 100209 cs  ge        PID object graph, indicator for Inverse didn't work.
 100216 cs  xtt       Command 'close graph', qualifier /classgraph added.
 100216 cs  xtt       Command 'wait' added.
+100305 cs  ge        Keystroke Ctrl+W can be used to close a Ge graph.
+100309 cs  ge        Graph width and height stored in the beginning of the .pwg file to create the window with the correct size.

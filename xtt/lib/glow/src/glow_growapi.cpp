@@ -4655,6 +4655,11 @@ void grow_ObjectRead( grow_tCtx ctx, ifstream& fp, grow_tObject *object)
   ctx->read_object( fp, (GlowArrayElem **)object);
 }
 
+int grow_GetDimension( char *filename, int *width, int *height)
+{
+  return GrowCtx::get_dimension( filename, width, height);
+}
+
 
 /*@}*/
 

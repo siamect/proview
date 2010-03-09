@@ -1006,6 +1006,7 @@ typedef enum {
   All tags for all classes are defined here.
 */
 typedef enum {
+	glow_eSave_Comment	       		= 0,
 	glow_eSave_Ctx				= 1,
 	glow_eSave_Array			= 2,
 	glow_eSave_NodeClass			= 3,

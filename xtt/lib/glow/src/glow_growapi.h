@@ -2966,6 +2966,7 @@ extern "C" {
   void grow_ObjectSave( grow_tObject object, ofstream& fp, glow_eSaveMode mode);
   void grow_ObjectOpen( grow_tObject object, ifstream& fp);
   void grow_ObjectRead( grow_tCtx ctx, ifstream& fp, grow_tObject *object);
+  int grow_GetDimension( char *filename, int *width, int *height);
 
 /*@}*/
 #if defined __cplusplus
