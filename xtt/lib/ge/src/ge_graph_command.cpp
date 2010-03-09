@@ -124,7 +124,7 @@ dcli_tCmdTable	graph_command_table[] = {
 			"SET",
 			&graph_set_func,
 			{ "dcli_arg1", "dcli_arg2", "dcli_arg3", "dcli_arg4",
-			"/ON", "/OFF",
+			"/ON", "/OFF", "/RESET",
 			""}
 		},
 		{
@@ -1295,6 +1295,16 @@ static int	graph_set_func(	void		*client_data,
     // cdh_ToLower( arg2_str, arg2_str);
 
     strcpy( graph->java_package, arg2_str);
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "ZOOM", strlen( arg1_str)) == 0)
+  {
+    if ( ODD( dcli_get_qualifier( "/RESET", 0, 0))) {
+      grow_UnZoom( graph->grow->ctx);
+    }
+    else {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+    }
   }
   else
   {
