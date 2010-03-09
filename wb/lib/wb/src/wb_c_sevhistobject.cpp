@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_sevhist.cpp,v 1.1 2008-09-18 15:01:13 claes Exp $
+ * Proview   $Id$
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,7 +17,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  **/
 
-/* wb_c_sevhist.c -- work bench methods of the SevHist class. */
+/* wb_c_sevhistobject.cpp -- work bench methods of the SevHistObject class. */
 
 #include <string.h>
 #include "wb_pwrs.h"
@@ -40,33 +40,9 @@ static pwr_tStatus PostCreate (
   pwr_tClassId	  Class
 ) {
   pwr_tStatus sts;
-  int size;
-  pwr_tAName Name;
-  pwr_sAttrRef Attribute;
   pwr_tOid oid;
   pwr_tOid toid;
-  int cnt = 0;
-
-  
-  /*
-    If father of SevHist has an "ActualValue" attribute, then make this SevHist
-    refer to this attribute.
-  */
-
-  sts = ldh_ObjidToName(Session, Father, ldh_eName_Hierarchy, Name,
-    sizeof(Name), &size);
-  if (EVEN(sts)) return PWRB__SUCCESS;
-
-  strcat(Name, ".ActualValue");
-
-  sts = ldh_NameToAttrRef(Session, Name, &Attribute);
-  if (EVEN(sts)) {
-    memset(&Attribute, 0, sizeof(Attribute));
-  }
-
-  sts = ldh_SetObjectPar(Session, Object, "RtBody", "Attribute", (char *)&Attribute,
-    sizeof(Attribute));
-  if (EVEN(sts)) return PWRB__SUCCESS;
+  int cnt = 0;  
 
   // Insert a thread object
   sts = ldh_GetClassList( Session, pwr_cClass_SevHistThread, &oid);
@@ -83,44 +59,6 @@ static pwr_tStatus PostCreate (
   }
   return PWRB__SUCCESS;
 }
-
-/*----------------------------------------------------------------------------*\
-  
-\*----------------------------------------------------------------------------*/
-
-static pwr_tStatus PostMove (
-  ldh_tSesContext Session,
-  pwr_tObjid	  Object,
-  pwr_tObjid	  Father,
-  pwr_tClassId	  Class
-) {
-  pwr_tStatus sts;
-  int size;
-  pwr_tAName Name;
-  pwr_sAttrRef Attribute;
-  
-  /*
-    If father of SevHist has an "ActualValue" attribute, then make this ASup
-    refer to this attribute.
-  */
-
-  sts = ldh_ObjidToName(Session, Father, ldh_eName_Hierarchy, Name,
-    sizeof(Name), &size);
-  if (EVEN(sts)) return PWRB__SUCCESS;
-
-  strcat(Name, ".ActualValue");
-
-  sts = ldh_NameToAttrRef(Session, Name, &Attribute);
-  if (EVEN(sts)) {
-    memset(&Attribute, 0, sizeof(Attribute));
-  }
-
-  sts = ldh_SetObjectPar(Session, Object, "RtBody", "Attribute", (char *)&Attribute,
-    sizeof(Attribute));
-  if (EVEN(sts)) return PWRB__SUCCESS;
-
-  return PWRB__SUCCESS;
-}
 
 //
 //  Syntax check.
@@ -133,7 +71,6 @@ static pwr_tStatus SyntaxCheck (
 ) {
   pwr_tOid thread_oid;
   wb_session *sp = (wb_session *)Session;
-  pwr_tAttrRef dataname_aref;
 
   wb_attribute a = sp->attribute( &Object);
   if ( !a) return a.sts();
@@ -151,47 +88,14 @@ static pwr_tStatus SyntaxCheck (
   else if ( othread.cid() != pwr_cClass_SevHistThread)
     wsx_error_msg_str( Session, "Bad thread object class", Object, 'E', ErrorCount, WarningCount);
   
-  // Check Attribute
-  wb_attribute dataname_a( a, 0, "Attribute");
-  if (!dataname_a) return dataname_a.sts();
-    
-  dataname_a.value( &dataname_aref);
-  if ( !dataname_a) return dataname_a.sts();
-
-  wb_attribute data_a = sp->attribute( &dataname_aref);
-  if ( !data_a) {
-    wsx_error_msg_str( Session, "Bad Attribute reference", Object, 'E', ErrorCount, WarningCount);
-    return PWRB__SUCCESS;
-  }
-  
-  // Check DataName type
-  switch ( data_a.tid()) {
-  case pwr_eType_Boolean:
-  case pwr_eType_Int64:
-  case pwr_eType_Int32:
-  case pwr_eType_Int16:
-  case pwr_eType_Int8:
-  case pwr_eType_UInt64:
-  case pwr_eType_UInt32:
-  case pwr_eType_UInt16:
-  case pwr_eType_UInt8:
-  case pwr_eType_Float32:
-  case pwr_eType_Float64:
-  case pwr_eType_String:
-  case pwr_eType_Time:
-    break;
-  default:
-    wsx_error_msg_str( Session, "Attribute type not supported", Object, 'E', ErrorCount, WarningCount);
-  }
   return PWRB__SUCCESS;
 }
 
 
 //  Every method to be exported to the workbench should be registred here.
 
-pwr_dExport pwr_BindMethods(SevHist) = {
+pwr_dExport pwr_BindMethods(SevHistObject) = {
   pwr_BindMethod(PostCreate),
-  pwr_BindMethod(PostMove),
   pwr_BindMethod(SyntaxCheck),
   pwr_NullMethod
 };
