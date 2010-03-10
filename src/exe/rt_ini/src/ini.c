@@ -1967,15 +1967,15 @@ ini_ProcPrio (
 )  
 {
 
-  char    set[100];
-  
   pwr_dStatus(sts, status, INI__SUCCESS);
 
   if (pp->flags.b.running) 
     return;
   
   if (pp->flags.b.run) {
-#if defined(OS_LINUX) || defined(OS_MACOS)
+#if defined(OS_LINUX)
+    char    set[100];
+  
     if (!(pp->flags.b.plc)) {
       sprintf(set, "rt_prio -rp %d %d", pp->proc.p_prio, pp->proc.pid);
       system(set);

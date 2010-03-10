@@ -146,6 +146,7 @@ main()
   int found;
   string oname;	
   string hw;
+  string os;
 
   verify(0);
 
@@ -154,6 +155,7 @@ main()
   dv_sim_qbus = get_pwr_config( "defaultSimulationQbus");
 
   hw = GetHardware();
+  os = GetOpSys();
 
   if ( ! EditMode())
     MessageDialog("Error", "Enter edit mode before starting wizard");
@@ -542,11 +544,17 @@ page_4:
     attr = name + ".NodeName";
     SetAttribute( attr, node_name[i]);
     attr = name + ".OperatingSystem";
-    if ( hw == "x86_64")
-      SetAttribute( attr, 128);
-    else
-      SetAttribute( attr, 64);
+    if ( os == "Linux")
+      if ( hw == "x86_64")
+        SetAttribute( attr, 128);
+      else
+        SetAttribute( attr, 64);
+      endif
     endif
+    if ( os == "MacOS")
+      SetAttribute( attr, 256);
+    endif
+  
     attr = name + ".Address";
     SetAttribute( attr, node_ip[i]);
     if ( !node_disdistr[i])

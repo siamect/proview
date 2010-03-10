@@ -153,6 +153,18 @@ const char *syi_Hardware()
   return hw;
 }
 
+const char *syi_OpSys()
+{
+#if defined OS_LINUX
+  static const char opsys[] = "Linux";
+#elif defined OS_MACOS
+  static const char opsys[] = "MacOS";
+#else
+  static const char opsys[] = "Unknown";
+#endif
+  return opsys;
+}
+
 char *syi_ProcessId()
 {
   static char pidstr[40];

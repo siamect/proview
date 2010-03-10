@@ -113,6 +113,7 @@ qos_WaitQueOld (
 #endif
 
 
+#if 0
 pwr_tBoolean
 qos_WaitQue (
   pwr_tStatus		*status,
@@ -164,6 +165,68 @@ qos_WaitQue (
 
   return signal;
 }
+#endif
+
+pwr_tBoolean
+qos_WaitQue (
+  pwr_tStatus		*status,
+  qdb_sQue		*qp,
+  int			tmo
+)
+{
+  struct timespec ts;
+  int remaining_time = tmo;
+  int delta = 100;
+	
+  ts.tv_sec = 0;
+
+  qdb_AssumeLocked;
+
+  qp->lock.waiting = TRUE;
+
+  qdb_Unlock;
+
+  if ( tmo == -1) {
+    ts.tv_nsec = delta * 1000000;
+
+    while (1) {
+
+      if ( !qp->lock.waiting) {
+        *status = QCOM__SUCCESS;
+        qdb_Lock;
+        return 1;
+      }
+      nanosleep( &ts, 0);
+    }
+  }
+  else {
+    while (1) {
+
+      if ( !qp->lock.waiting) {
+        *status = QCOM__SUCCESS;
+        qdb_Lock;
+        return 1;
+      }
+
+      if ( !remaining_time) {
+        /* Timeout */
+        *status = QCOM__TMO;
+        qdb_Lock;
+        return 0;
+      }
+      if ( remaining_time <= delta) {
+        ts.tv_nsec = remaining_time * 1000000;  
+        remaining_time = 0;
+      }
+      else {
+        ts.tv_nsec = delta * 1000000;
+        remaining_time -= delta;
+      }
+      nanosleep( &ts, 0);
+    }
+  }
+  return 0;
+}
 
 
 #if 0
@@ -204,6 +267,19 @@ qos_SignalQue (
 {
   pwr_dStatus	(sts, status, QCOM__SUCCESS);
 
+  qp->lock.waiting = FALSE;
+  return TRUE;
+}
+
+#if 0
+pwr_tStatus
+qos_SignalQue (
+  pwr_tStatus	*status,
+  qdb_sQue	*qp
+)
+{
+  pwr_dStatus	(sts, status, QCOM__SUCCESS);
+
   qdb_AssumeLocked;
 
   pthread_mutex_lock(&qp->lock.mutex);
@@ -216,6 +292,7 @@ qos_SignalQue (
 
   return TRUE;
 }
+#endif
 
 
 qdb_sQlock *

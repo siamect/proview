@@ -297,8 +297,8 @@ scan (
       sem_wait(&tp->ScanSem);
 #elif defined OS_MACOS
       struct timespec ts;
-      ts.tv_sec = tp->sync_time.tv_sec;
-      ts.tv_nsec = tp->sync_time.tv_nsec;
+      ts.tv_sec = delta.tv_sec;
+      ts.tv_nsec = delta.tv_nsec;
       nanosleep(&ts, NULL);
 #else
       /* REMARK 

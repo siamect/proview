@@ -1108,6 +1108,24 @@ static int wccm_stringtoobjectname_func(
   return 1;
 }
 
+static int wccm_getopsys_func( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  if ( arg_count != 0)
+    return CCM__ARGMISM;
+
+  strcpy( return_string, syi_OpSys());
+  *return_decl = CCM_DECL_STRING;
+  
+  return 1;
+}
+
 static int wccm_gethardware_func( 
   void *filectx,
   ccm_sArg *arg_list, 
@@ -1199,6 +1217,8 @@ int	wccm_register(
     sts = ccm_register_function( "StringToObjectName", wccm_stringtoobjectname_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "GetHardware", wccm_gethardware_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetOpSys", wccm_getopsys_func);
     if ( EVEN(sts)) return sts;
 
     sts = ccm_create_external_var( "cmd_status", CCM_DECL_INT, 0, 1, 

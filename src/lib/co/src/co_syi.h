@@ -37,6 +37,7 @@ char		*syi_NodeSpec (pwr_tStatus*, char*, int);
 pwr_tBoolean	syi_LocalBoot (pwr_tStatus*);
 pwr_tStatus 	syi_UserName( char *user, int len);
 const char     	*syi_Hardware();
+const char 	*syi_OpSys();
 char 		*syi_ProcessId();
 
 #if defined __cplusplus

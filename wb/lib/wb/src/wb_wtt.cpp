@@ -772,7 +772,7 @@ int Wtt::set_edit()
   case ldh_cUserDatabaseVolume:
     // Privilege Administrator required
     if ( !(CoLogin::privilege() & pwr_mPrv_Administrator)) {
-      message( 'E', "User is not authorized to administrate");
+      message( 'E', "User is not authorized to administrate. Login with command \"login/adm\"");
       return 1;
     }
     break;
@@ -951,7 +951,7 @@ void Wtt::activate_print()
   dcli_translate_filename( filename, filename);
   focused_wnav->print( filename);
 
-#if defined OS_LINUX
+#if defined OS_LINUX || defined OS_MACOS
   sprintf( cmd, "wb_gre_print.sh %s", filename); 
   sts = system( cmd);
 #endif

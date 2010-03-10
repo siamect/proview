@@ -1258,8 +1258,10 @@ qdb_AddQue (
   pthread_condattr_setpshared(&condattr, PTHREAD_PROCESS_SHARED);
   pthread_mutexattr_init(&mutexattr);
   pthread_mutexattr_setpshared(&mutexattr, PTHREAD_PROCESS_SHARED);
-  pthread_mutex_init(&qp->lock.mutex, &mutexattr);
-  pthread_cond_init(&qp->lock.cond, &condattr);
+  if ( pthread_mutex_init(&qp->lock.mutex, &mutexattr) != 0)
+    errh_Error("pthread_mutex_init, errno %d", errno);
+  if ( pthread_cond_init(&qp->lock.cond, &condattr) != 0)
+    errh_Error("pthread_cond_init, errno %d", errno);
   
   qp = hash_Insert(sts, &qdb->qix_ht, qp);
     

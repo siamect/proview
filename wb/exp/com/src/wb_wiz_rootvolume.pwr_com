@@ -54,6 +54,7 @@ main()
   string oname;
   string current_node;
   string hw;
+  string os;
 
   verify(0);
 
@@ -62,6 +63,7 @@ main()
   rv_opmaintenance = get_pwr_config( "defaultOpMaintenance");
 
   hw = GetHardware();
+  os = GetOpSys();
 
   if ( ! EditMode())
     MessageDialog("Error", "Enter edit mode before starting wizard");
@@ -132,10 +134,15 @@ page_4:
 
   # Create objects
   str1 = volume + ":";
-  if ( hw == "x86_64")
-    set attr/name='str1'/attr=OperatingSystem/value=128/nolog/noconf
-  else
-    set attr/name='str1'/attr=OperatingSystem/value=64/nolog/noconf
+  if ( os == "Linux")
+    if ( hw == "x86_64")
+      set attr/name='str1'/attr=OperatingSystem/value=128/nolog/noconf
+    else
+      set attr/name='str1'/attr=OperatingSystem/value=64/nolog/noconf
+    endif
+  endif
+  if ( os == "MacOS")
+    set attr/name='str1'/attr=OperatingSystem/value=256/nolog/noconf
   endif
 
   if ( rv_nodehierroot != "")
