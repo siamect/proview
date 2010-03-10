@@ -3658,6 +3658,11 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	sts = dyn->action( event->object.object, event);
 	if ( sts == GLOW__TERMINATED)
 	  return sts;
+	else if ( sts == GLOW__SUBTERMINATED) {
+	  if ( ctx_popped) 
+	    graph->grow->push();
+	  return sts;
+	}
       }
       break;
     }
@@ -3916,7 +3921,9 @@ int Graph::set_subwindow_source( const char *name, char *source)
 
   if ( ctx != grow->ctx)
     grow->pop(ctx);
-  return sts;
+
+  return GLOW__SUBTERMINATED;
+  // return sts;
 }
 
 int Graph::sound( pwr_tAttrRef *aref)

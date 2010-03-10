@@ -1531,7 +1531,8 @@ int GeDyn::action( grow_tObject object, glow_tEvent event)
 
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
     sts = elem->action( object, event);
-    if ( sts == GE__NO_PROPAGATE || sts == GLOW__TERMINATED)
+    if ( sts == GE__NO_PROPAGATE || sts == GLOW__TERMINATED ||
+	 sts == GLOW__SUBTERMINATED)
       return sts;
   }
   return 1;
@@ -10215,9 +10216,11 @@ int GeCommand::action( grow_tObject object, glow_tEvent event)
 
     if ( dyn->graph->command_cb) {
       char cmd[400];
+      int sts;
 
       dyn->graph->get_command( command, cmd, dyn);
-      (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+      sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+      return sts;
     }
     break;
   default: ;    
