@@ -453,6 +453,22 @@ void Graph::get_filename( char *inname, char *outname)
   dcli_translate_filename( outname, fname);
 }
 
+void Graph::get_filename( char *inname, const char *def_path, char *outname)
+{
+  pwr_tFileName fname;
+
+  // Add default directory
+  if ( !strchr( inname, ':') && !strchr( inname, '/'))
+  {
+    strcpy( fname, def_path);
+    strcat( fname, inname);
+  }
+  else
+    strcpy( fname, inname);
+  dcli_get_defaultfilename( fname, fname, ".pwg");
+  dcli_translate_filename( outname, fname);
+}
+
 //
 //  Save
 //
@@ -3642,6 +3658,11 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	sts = dyn->action( event->object.object, event);
 	if ( sts == GLOW__TERMINATED)
 	  return sts;
+	else if ( sts == GLOW__SUBTERMINATED) {
+	  if ( ctx_popped) 
+	    graph->grow->push();
+	  return sts;
+	}
       }
       break;
     }
@@ -3730,12 +3751,20 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
     }
 
     case glow_eEvent_Key_CtrlAscii: {
+      if ( event->key.ascii == 23) {
+	// Ctrl W, close graph
+	if ( graph->close_cb) {
+	  (graph->close_cb)( graph->parent_ctx);
+	  return GLOW__TERMINATED;
+	}
+      }
       if ( event->object.object_type != glow_eObjectType_NoObject) {
 	GeDyn *dyn;
 
 	grow_GetUserData( event->object.object, (void **)&dyn);
 	dyn->action( event->object.object, event);
       }
+      break;
     }
 
     case glow_eEvent_MenuActivated:
@@ -3892,7 +3921,9 @@ int Graph::set_subwindow_source( const char *name, char *source)
 
   if ( ctx != grow->ctx)
     grow->pop(ctx);
-  return sts;
+
+  return GLOW__SUBTERMINATED;
+  // return sts;
 }
 
 int Graph::sound( pwr_tAttrRef *aref)
@@ -4778,6 +4809,15 @@ void Graph::swap( int mode)
       trace_scan( this);
     }
   }
+}
+
+int Graph::get_dimension( char *filename, const char *def_path, 
+				 int *width, int *height)
+{ 
+  pwr_tFileName fname;
+
+  get_filename( filename, def_path, fname);
+  return grow_GetDimension( fname, width, height);
 }
 
 static void graph_free_dyn( grow_tObject object)

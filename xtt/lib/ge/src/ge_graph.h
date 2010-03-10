@@ -1383,6 +1383,9 @@ class Graph {
  int create_node( const char *node_name, const char *subgraph_str, double x1, double y1, 
 		     double x2, double y2, grow_tNode *node);
 
+ static void get_filename( char *inname, const char *def_path, char *outname);
+ static int get_dimension( char *filename, const char *def_path, int *width, int *height);
+
 
  //
  // Web module
@@ -1421,6 +1424,7 @@ class Graph {
  /*! Stop trace (if started), delete open attribute editors, free local database, delete grow and
    destroy the widget.
  */
+
  virtual ~Graph();
 };
 

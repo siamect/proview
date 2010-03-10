@@ -80,6 +80,12 @@ FlowNode::~FlowNode()
   if ( ctx->trace_started)
     trace_close();
 
+  ctx->object_deleted( this);
+  if ( ctx->nodraw) return;
+
+  erase();
+  nav_erase();
+
   for ( int i = 0; i < 10; i++)
   {
     if ( annotv_inputmode[i])
@@ -87,11 +93,6 @@ FlowNode::~FlowNode()
     if ( annotsize[i] > 0)
       free( annotv[i]);
   }
-  ctx->object_deleted( this);
-  if ( ctx->nodraw) return;
-
-  erase();
-  nav_erase();
 
   ctx->set_defered_redraw();
   ctx->delete_node_cons( this);

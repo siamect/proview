@@ -1705,10 +1705,10 @@ int sev_dbms::delete_old_data( pwr_tStatus *sts, char *tablename,
 
     nbRowsToClean += get_minFromIntegerColumn(tablename, (char *)"id");
     if ( options & pwr_mSevOptionsMask_PosixTime)
-      sprintf( query, "delete from %s where id < %llu and time < %ld;",
+      sprintf( query, "delete from %s where id < " pwr_dFormatUInt64 " and time < %ld;",
          tablename, nbRowsToClean, (long int)limit.tv_sec);
     else
-      sprintf( query, "delete from %s where id < %llu and time < '%s';",
+      sprintf( query, "delete from %s where id < " pwr_dFormatUInt64 " and time < '%s';",
          tablename, nbRowsToClean, timstr);
   }
   else {
@@ -2605,10 +2605,10 @@ int sev_dbms::delete_old_objectdata( pwr_tStatus *sts, char *tablename,
 
     nbRowsToClean += get_minFromIntegerColumn(tablename, (char *)"sev__id");
     if ( options & pwr_mSevOptionsMask_PosixTime)
-      sprintf( query, "delete from %s where sev__id < %llu and sev__time < %ld;",
+      sprintf( query, "delete from %s where sev__id < " pwr_dFormatUInt64 " and sev__time < %ld;",
          tablename, nbRowsToClean, (long int)limit.tv_sec);
     else
-      sprintf( query, "delete from %s where sev__id < %llu and sev__time < '%s';",
+      sprintf( query, "delete from %s where sev__id < " pwr_dFormatUInt64 " and sev__time < '%s';",
          tablename, nbRowsToClean, timstr);
   }
   else {
@@ -3170,7 +3170,7 @@ int sev_dbms::handle_itemchange(pwr_tStatus *sts, char *tablename, unsigned int 
     pwr_tUInt64 autoIncrValue = get_maxFromIntegerColumn(newTableName, (char*)"id");
     if(autoIncrValue) 
       autoIncrValue++;
-    sprintf(query, "ALTER TABLE %s AUTO_INCREMENT = %llu", tablename, autoIncrValue);
+    sprintf(query, "ALTER TABLE %s AUTO_INCREMENT = " pwr_dFormatUInt64, tablename, autoIncrValue);
     rc = mysql_query( m_env->con(), query);
     if (rc) {
       printf("In %s row %d:\n", __FILE__, __LINE__);
@@ -3235,7 +3235,7 @@ int sev_dbms::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned in
       pwr_tUInt64 autoIncrValue = get_maxFromIntegerColumn(newTableName, (char*)"sev__id");
       if (autoIncrValue)
         autoIncrValue++;
-      sprintf(query, "ALTER TABLE %s AUTO_INCREMENT = %llu", tablename, autoIncrValue);
+      sprintf(query, "ALTER TABLE %s AUTO_INCREMENT = " pwr_dFormatUInt64, tablename, autoIncrValue);
       rc = mysql_query( m_env->con(), query);
       if (rc) {
         printf("In %s row %d:\n", __FILE__, __LINE__);

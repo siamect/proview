@@ -205,6 +205,9 @@ class GrowCtx : public GlowCtx {
   /*! \param fp		Input file. */
   void open_grow( ifstream& fp);
 
+  void save_meta( ofstream& fp, glow_eSaveMode mode);
+
+
   //! Find an object by name.
   /*!
     \param name		Name of object.
@@ -833,6 +836,7 @@ class GrowCtx : public GlowCtx {
 
   void pop( GlowArrayElem *element) { a.pop( element);}
 
+  static int get_dimension( char *filename, int *width, int *heigth);
 
 
   char		name[40];		//!< Name of the context.

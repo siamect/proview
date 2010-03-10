@@ -43,6 +43,10 @@ static pwr_tStatus PostCreate (
   int size;
   pwr_tAName Name;
   pwr_sAttrRef Attribute;
+  pwr_tOid oid;
+  pwr_tOid toid;
+  int cnt = 0;
+
   
   /*
     If father of SevHist has an "ActualValue" attribute, then make this SevHist
@@ -64,6 +68,19 @@ static pwr_tStatus PostCreate (
     sizeof(Attribute));
   if (EVEN(sts)) return PWRB__SUCCESS;
 
+  // Insert a thread object
+  sts = ldh_GetClassList( Session, pwr_cClass_SevHistThread, &oid);
+  while ( ODD(sts)) {
+    cnt++;
+    toid = oid;
+    sts = ldh_GetNextObject( Session, oid, &oid);
+  }
+
+  if ( cnt > 0) {
+    sts = ldh_SetObjectPar( Session, Object, "RtBody", "ThreadObject", (char *)&toid,
+			 sizeof(toid));
+    if ( EVEN(sts)) return sts;
+  }
   return PWRB__SUCCESS;
 }
 

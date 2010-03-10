@@ -1,0 +1,120 @@
+#
+#  Script to export all classgraphs to java
+#
+#
+#
+
+function int process( string graph)
+  string subgraph = "pwr_smallbuttoncenter";
+  printf( "-- Processing %s...\n", graph);
+  open 'graph'
+#  SetExtern( "pwr_motorman");
+#  save
+#  open 'graph'
+#  SetIntern( "pwr_motorman");
+#  save
+  set zoom/reset
+  save
+endfunction
+
+main()
+
+   disable log
+
+   process( "pwr_c_abb_acc800.pwg");
+   process( "pwr_c_abb_acs800_1param.pwg");
+   process( "pwr_c_abb_acs800_1.pwg");
+   process( "pwr_c_abb_acs800_1sim.pwg");
+   process( "pwr_c_abb_acs800fanaggr10.pwg");
+   process( "pwr_c_abb_acs800fanaggr11.pwg");
+   process( "pwr_c_abb_acs800fanaggr12.pwg");
+   process( "pwr_c_abb_acs800fanaggr13.pwg");
+   process( "pwr_c_abb_acs800fanaggr14.pwg");
+   process( "pwr_c_abb_acs800fanaggr15.pwg");
+   process( "pwr_c_abb_acs800fanaggr16.pwg");
+   process( "pwr_c_abb_acs800fanaggr17.pwg");
+   process( "pwr_c_abb_acs800fanaggr18.pwg");
+   process( "pwr_c_abb_acs800fanaggr19.pwg");
+   process( "pwr_c_abb_acs800fanaggr1.pwg");
+   process( "pwr_c_abb_acs800fanaggr20.pwg");
+   process( "pwr_c_abb_acs800fanaggr21.pwg");
+   process( "pwr_c_abb_acs800fanaggr22.pwg");
+   process( "pwr_c_abb_acs800fanaggr23.pwg");
+   process( "pwr_c_abb_acs800fanaggr2.pwg");
+   process( "pwr_c_abb_acs800fanaggr3.pwg");
+   process( "pwr_c_abb_acs800fanaggr4.pwg");
+   process( "pwr_c_abb_acs800fanaggr5.pwg");
+   process( "pwr_c_abb_acs800fanaggr6.pwg");
+   process( "pwr_c_abb_acs800fanaggr7.pwg");
+   process( "pwr_c_abb_acs800fanaggr8.pwg");
+   process( "pwr_c_abb_acs800fanaggr9.pwg");
+   process( "pwr_c_abb_acs800fanaggr.pwg");
+   process( "pwr_c_abb_acs800motoraggr10.pwg");
+   process( "pwr_c_abb_acs800motoraggr11.pwg");
+   process( "pwr_c_abb_acs800motoraggr12.pwg");
+   process( "pwr_c_abb_acs800motoraggr13.pwg");
+   process( "pwr_c_abb_acs800motoraggr14.pwg");
+   process( "pwr_c_abb_acs800motoraggr15.pwg");
+   process( "pwr_c_abb_acs800motoraggr16.pwg");
+   process( "pwr_c_abb_acs800motoraggr17.pwg");
+   process( "pwr_c_abb_acs800motoraggr18.pwg");
+   process( "pwr_c_abb_acs800motoraggr19.pwg");
+   process( "pwr_c_abb_acs800motoraggr1.pwg");
+   process( "pwr_c_abb_acs800motoraggr20.pwg");
+   process( "pwr_c_abb_acs800motoraggr21.pwg");
+   process( "pwr_c_abb_acs800motoraggr22.pwg");
+   process( "pwr_c_abb_acs800motoraggr23.pwg");
+   process( "pwr_c_abb_acs800motoraggr2.pwg");
+   process( "pwr_c_abb_acs800motoraggr3.pwg");
+   process( "pwr_c_abb_acs800motoraggr4.pwg");
+   process( "pwr_c_abb_acs800motoraggr5.pwg");
+   process( "pwr_c_abb_acs800motoraggr6.pwg");
+   process( "pwr_c_abb_acs800motoraggr7.pwg");
+   process( "pwr_c_abb_acs800motoraggr8.pwg");
+   process( "pwr_c_abb_acs800motoraggr9.pwg");
+   process( "pwr_c_abb_acs800motoraggr.pwg");
+   process( "pwr_c_abb_acs800motoraggrsim.pwg");
+   process( "pwr_c_abb_acs800pump1.pwg");
+   process( "pwr_c_abb_acs800pump2.pwg");
+   process( "pwr_c_abb_acs800pumpaggr10.pwg");
+   process( "pwr_c_abb_acs800pumpaggr11.pwg");
+   process( "pwr_c_abb_acs800pumpaggr12.pwg");
+   process( "pwr_c_abb_acs800pumpaggr13.pwg");
+   process( "pwr_c_abb_acs800pumpaggr14.pwg");
+   process( "pwr_c_abb_acs800pumpaggr15.pwg");
+   process( "pwr_c_abb_acs800pumpaggr16.pwg");
+   process( "pwr_c_abb_acs800pumpaggr17.pwg");
+   process( "pwr_c_abb_acs800pumpaggr18.pwg");
+   process( "pwr_c_abb_acs800pumpaggr19.pwg");
+   process( "pwr_c_abb_acs800pumpaggr1.pwg");
+   process( "pwr_c_abb_acs800pumpaggr20.pwg");
+   process( "pwr_c_abb_acs800pumpaggr21.pwg");
+   process( "pwr_c_abb_acs800pumpaggr22.pwg");
+   process( "pwr_c_abb_acs800pumpaggr23.pwg");
+   process( "pwr_c_abb_acs800pumpaggr2.pwg");
+   process( "pwr_c_abb_acs800pumpaggr3.pwg");
+   process( "pwr_c_abb_acs800pumpaggr4.pwg");
+   process( "pwr_c_abb_acs800pumpaggr5.pwg");
+   process( "pwr_c_abb_acs800pumpaggr6.pwg");
+   process( "pwr_c_abb_acs800pumpaggr7.pwg");
+   process( "pwr_c_abb_acs800pumpaggr8.pwg");
+   process( "pwr_c_abb_acs800pumpaggr9.pwg");
+   process( "pwr_c_abb_acs800pumpaggr.pwg");
+   process( "pwr_c_abb_diffpressuresensor_265ds1.pwg");
+   process( "pwr_c_abb_diffpressuresensor_265ds2.pwg");
+   process( "pwr_c_abb_diffpressuresensor_265ds.pwg");
+   process( "pwr_c_abb_flowsensor_fxe40001.pwg");
+   process( "pwr_c_abb_flowsensor_fxe40002.pwg");
+   process( "pwr_c_abb_flowsensor_fxe4000.pwg");
+   process( "pwr_c_abb_pressuresensor_265gs1.pwg");
+   process( "pwr_c_abb_pressuresensor_265gs2.pwg");
+   process( "pwr_c_abb_pressuresensor_265gs.pwg");
+   process( "pwr_c_abb_tempsensor_tf121.pwg");
+   process( "pwr_c_abb_tempsensor_tf122.pwg");
+   process( "pwr_c_abb_tempsensor_tf12.pwg");
+
+endmain
+
+
+
+

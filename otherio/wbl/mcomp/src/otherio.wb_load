@@ -637,7 +637,6 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object Port $Attribute 19 04-DEC-2009 17:22:45.73
           Body SysBody 04-DEC-2009 17:23:01.72
             Attr PgmName = "Port"
-            Attr Flags = 16777216
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -1104,9 +1103,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
     ! 	
     !  The defines a Modbus/TCP server, i.e. makes it possible to act as a slave
     !  in the communication with a Modbus/TCP master. 
-    !
+    ! 
     !  The Server object is placed in the node hierarchy under the node object.
-    !
+    ! 
     !  @classlink Modbus_TCP_ServerModule otherio_modbus_tcp_servermodule.html
     !*/
     Object Modbus_TCP_Server $ClassDef 6 25-NOV-2009 10:32:40.64
@@ -1120,27 +1119,27 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr StructName = "Modbus_TCP_Server"
           Attr NextAix = "_X39"
         EndBody
-	!/**
-	! Description of the object.
-	!*/
+        !/**
+        ! Description of the object.
+        !*/
         Object Description $Attribute 19 25-NOV-2009 10:30:31.66
           Body SysBody 25-NOV-2009 10:30:31.66
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
-	!/**
-	! Datasheet URL.
-	!*/
+        !/**
+        ! Datasheet URL.
+        !*/
         Object DataSheet $Attribute 20 25-NOV-2009 10:30:31.66
           Body SysBody 25-NOV-2009 10:30:31.66
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
-	!/**
-	! Current status of the server.
-	!*/
+        !/**
+        ! Current status of the server.
+        !*/
         Object Status $Attribute 21 25-NOV-2009 10:30:31.66
           Body SysBody 04-DEC-2009 17:14:06.15
             Attr PgmName = "Status"
@@ -1178,8 +1177,8 @@ Volume OtherIO $ClassVolume 0.0.250.10
         ! @Summary Optional port number.
         ! Optional port number.
         ! By default the server listens to the Modbus TCP port 502.
-	! If another port should be used for the communication, it can be
-	! specified here.
+        ! If another port should be used for the communication, it can be
+        ! specified here.
         !*/
         Object Port $Attribute 38 04-DEC-2009 16:56:46.71
           Body SysBody 04-DEC-2009 16:56:55.46
@@ -1189,7 +1188,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
         !/**
         ! If Yes, the server is disabled.
-	!*/
+        !*/
         Object DisableServer $Attribute 25 25-NOV-2009 10:33:08.29
           Body SysBody 25-NOV-2009 10:33:10.93
             Attr PgmName = "DisableServer"
@@ -1297,7 +1296,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
       EndObject
       Object Template Modbus_TCP_Server 2149285888 01-JAN-1970 01:00:00.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 03-MAR-2010 16:51:13.57
+          Attr Process = 1
+          Attr ErrorLimit = 50
         EndBody
       EndObject
     EndObject
@@ -1324,40 +1325,40 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr StructName = "Modbus_TCP_ServerModule"
           Attr NextAix = "_X21"
         EndBody
-	!/**
-	! Description of the object.
-	!*/
+        !/**
+        ! Description of the object.
+        !*/
         Object Description $Attribute 11 25-NOV-2009 11:05:23.49
           Body SysBody 25-NOV-2009 11:05:23.49
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
-	!/**
-	! @Summary Address for reading registers.
-	! Address for reading with function code ReadHoldingRegisters.
+        !/**
+        ! @Summary Address for reading registers.
+        ! Address for reading with function code ReadHoldingRegisters.
         ! The value defines the starting address for the input channels
         ! of class ChanIi and ChanAi.
-        !
-	! Note that the address for ReadDiscreteInputs and ReadCoils are 
-	! not affected by the ReadAddress.
-	!*/
+        ! 
+        ! Note that the address for ReadDiscreteInputs and ReadCoils are 
+        ! not affected by the ReadAddress.
+        !*/
         Object ReadAddress $Attribute 12 04-DEC-2009 16:53:13.17
           Body SysBody 04-DEC-2009 16:53:32.47
             Attr PgmName = "ReadAddress"
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
-	!/**
-	! @Summary Address for writing registers.
-	! Address for reading with function code WriteMultipleRegisters and
+        !/**
+        ! @Summary Address for writing registers.
+        ! Address for reading with function code WriteMultipleRegisters and
         ! WriteSingleRegister.
         ! The value defines the starting address for the output channels
         ! of class ChanIo and ChanAo.
-	!
-	! Note that the address for WriteSingleCoil and WriteMultipleCoils 
+        ! 
+        ! Note that the address for WriteSingleCoil and WriteMultipleCoils 
         ! are not affected by the WriteAddress.
-	!*/
+        !*/
         Object WriteAddress $Attribute 13 04-DEC-2009 16:53:43.87
           Body SysBody 04-DEC-2009 16:53:45.81
             Attr PgmName = "WriteAddress"
@@ -1367,9 +1368,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
         !/**
         ! @Summary Unit id.
         ! Identification of the modbus unit to communicate with. It is typically 
-	! only used if communicating with a tpc gateway that is connected to a 
-	! Modbus serial line with possibly several units. Usually this has no 
-	! meaning and should be set to zero (0).   
+        ! only used if communicating with a tpc gateway that is connected to a 
+        ! Modbus serial line with possibly several units. Usually this has no 
+        ! meaning and should be set to zero (0).   
         !*/
         Object UnitId $Attribute 14 25-NOV-2009 11:05:23.49
           Body SysBody 25-NOV-2009 11:05:23.49
@@ -1432,7 +1433,8 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
       EndObject
       Object Template Modbus_TCP_ServerModule 2149548032 01-JAN-1970 01:00:00.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 03-MAR-2010 16:49:58.18
+          Attr Process = 1
         EndBody
       EndObject
     EndObject

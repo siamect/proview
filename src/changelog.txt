@@ -134,4 +134,5 @@
 100209 cs  wbl       New class InitArea for the initial value area objects.
 100209 cs  gdh       gdh_RefObjectInfoList returns error status for invalid local attribute.
 100202 cs  errh      Log message sent via qcom, null termination was lost.
-100226 cs  pwrb      Class LocalTime added.  
+100226 cs  pwrb      Class LocalTime added.
+100304 cs  script    Script type int change from int to long int.  

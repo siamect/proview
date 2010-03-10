@@ -660,7 +660,7 @@ class GeDyn {
     reset_color(false), ignore_invisible(false), reset_invisible(false),
     dyn_type(ge_mDynType_Inherit), total_dyn_type(ge_mDynType_Inherit), 
     action_type(ge_mActionType_Inherit), total_action_type(ge_mActionType_Inherit),
-    access(glow_mAccess_AllRt), cycle(glow_eCycle_Inherit), attr_editor( d_attr_editor)
+    access(glow_mAccess_RtDefault), cycle(glow_eCycle_Inherit), attr_editor( d_attr_editor)
     {}
 
   //! Copy constructor.

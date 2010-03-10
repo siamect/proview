@@ -280,8 +280,14 @@ palette NavigatorPalette
       }
       menu Modbus_TCP 
       {
+	class Modbus_Master
         class Modbus_TCP_Slave
         class Modbus_Module
+	menu Server
+	{
+	  class Modbus_TCP_Server
+          class Modbus_TCP_ServerModule
+	}
       }
       menu MotionControl_USBIO
       {
@@ -315,6 +321,7 @@ palette NavigatorPalette
       class OpPlace
       class XttGraph
       class WebBrowserConfig
+      class WebGraph
     }
     class Application
     class PlotGroup

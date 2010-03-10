@@ -87,8 +87,6 @@ static pwr_tStatus IoCardRead (
   pwr_sClass_Modbus_TCP_ServerModule *op;
   pwr_sClass_Modbus_TCP_Server *server;
 
- printf( "Module: Read method\n");
-
   op = (pwr_sClass_Modbus_TCP_ServerModule *) cp->op;
   local = (io_sServerModuleLocal *) cp->Local;
   server = (pwr_sClass_Modbus_TCP_Server *) rp->op;
@@ -123,8 +121,6 @@ static pwr_tStatus IoCardWrite (
   io_sServerLocal *local_server;
   pwr_sClass_Modbus_TCP_ServerModule *op;  
   pwr_sClass_Modbus_TCP_Server *server;
-
-  printf( "Module: Write method\n");
 
   op = (pwr_sClass_Modbus_TCP_ServerModule *) cp->op;
   local = (io_sServerModuleLocal *) cp->Local;

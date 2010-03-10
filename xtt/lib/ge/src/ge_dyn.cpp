@@ -1531,7 +1531,8 @@ int GeDyn::action( grow_tObject object, glow_tEvent event)
 
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
     sts = elem->action( object, event);
-    if ( sts == GE__NO_PROPAGATE || sts == GLOW__TERMINATED)
+    if ( sts == GE__NO_PROPAGATE || sts == GLOW__TERMINATED ||
+	 sts == GLOW__SUBTERMINATED)
       return sts;
   }
   return 1;
@@ -4642,23 +4643,33 @@ void GeAnalogColor::set_attribute( grow_tObject object, const char *attr_name, i
 {
   (*cnt)--;
   if ( *cnt == 0) {
+    GeDynElem	*elem;
+    GeAnalogColor *e;
+    bool found = false;
+
+    // Set attribute for instance 1
+    if ( instance == ge_mInstance_1)
+      e = this;
+    else {
+      for ( elem = dyn->elements; elem; elem = elem->next) {
+	if ( elem->dyn_type == ge_mDynType_AnalogColor &&
+	     elem->instance == ge_mInstance_1) {
+	  found = true;
+	  break;
+	}
+      }
+      if ( !found)
+	return;
+      e =  (GeAnalogColor *)elem;
+    }
+
     char msg[200];
 
-    strncpy( attribute, attr_name, sizeof( attribute));
-    if ( instance == ge_mInstance_1) {
-      if ( dyn->total_dyn_type & ge_mDynType_Tone)
-	sprintf( msg, "AnalogTone.Attribute = %s", attr_name);
-      else
-	sprintf( msg, "AnalogColor.Attribute = %s", attr_name);
-    }
-    else {
-      if ( dyn->total_dyn_type & ge_mDynType_Tone)
-	sprintf( msg, "AnalogTone%d.Attribute = %s", GeDyn::instance_to_number( instance),
-	       attr_name);
-      else
-	sprintf( msg, "AnalogColor%d.Attribute = %s", GeDyn::instance_to_number( instance),
-	       attr_name);
-    }
+    strncpy( e->attribute, attr_name, sizeof( attribute));
+    if ( dyn->total_dyn_type & ge_mDynType_Tone)
+      sprintf( msg, "AnalogTone.Attribute = %s", attr_name);
+    else
+      sprintf( msg, "AnalogColor.Attribute = %s", attr_name);
     dyn->graph->message( 'I', msg);
   }
 }
@@ -10205,9 +10216,11 @@ int GeCommand::action( grow_tObject object, glow_tEvent event)
 
     if ( dyn->graph->command_cb) {
       char cmd[400];
+      int sts;
 
       dyn->graph->get_command( command, cmd, dyn);
-      (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+      sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
+      return sts;
     }
     break;
   default: ;    

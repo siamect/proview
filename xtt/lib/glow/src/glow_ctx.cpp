@@ -152,6 +152,9 @@ int GlowCtx::save( char *filename, glow_eSaveMode mode)
 
   version = GLOW_VERSION;
 
+  if ( ctx_type == glow_eCtxType_Grow)
+    ((GrowCtx *)this)->save_meta( fp, mode);
+
   save_comment( fp);
 
   fp << int(glow_eSave_Ctx) << endl;
@@ -346,6 +349,9 @@ int GlowCtx::open( char *filename, glow_eSaveMode mode)
 	open_comment( fp);
 	break;
       case glow_eSave_End: end_found = 1; break;
+      case glow_eSave_Comment:
+        fp.getline( dummy, sizeof(dummy));
+	break;
       default:
         cout << "Ctx:open syntax error" << endl;
         fp.getline( dummy, sizeof(dummy));

@@ -19,3 +19,5 @@
 081028 cs  bcomp      Components BaseActuatorIncrDecr and BaseValveIncrDecr added.
 100128 cs  bcomp      Adding of main object name to alarm texts removed. Comma removed from alarmtexts.
 100216 cs  bcomp      Backup added to BasePositSensor.
+100304 cs  bcomp      Off2 and Off3 inputs added to BaseFcPPO3Fo and BaseFcPPO5Fc.
+100309 cs  bcomp      ForceMan input added to CompModeDFo.

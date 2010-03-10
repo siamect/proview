@@ -117,12 +117,7 @@ SObject pwrb:Class
     EndObject
     Object PostCreate $DbCallBack
       Body SysBody
-        Attr MethodName = "SevHist-PostCreate"
-      EndBody
-    EndObject
-    Object PostMove $DbCallBack
-      Body SysBody
-        Attr MethodName = "SevHist-PostMove"
+        Attr MethodName = "SevHistObject-PostCreate"
       EndBody
     EndObject
     Object ConfiguratorPoson $Menu

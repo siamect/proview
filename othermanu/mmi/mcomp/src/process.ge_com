@@ -1,0 +1,39 @@
+#
+#  Script to export all classgraphs to java
+#
+#
+#
+
+function int process( string graph)
+  string subgraph = "pwr_smallbuttoncenter";
+  printf( "-- Processing %s...\n", graph);
+  open 'graph'
+  #SetExtern( "pwr_mbblockevents");
+  #save
+  #open 'graph'
+  #SetIntern( "pwr_mbblockevents");
+  set zoom/reset
+  save
+endfunction
+
+main()
+
+   disable log
+
+    process( "pwr_c_eurotherm_tc3001aggr1.pwg");
+    process( "pwr_c_eurotherm_tc3001aggr2.pwg");
+    process( "pwr_c_eurotherm_tc3001aggr3.pwg");
+    process( "pwr_c_eurotherm_tc3001aggr.pwg");
+    process( "pwr_c_eurotherm_tc3001aggrsim.pwg");
+    process( "pwr_c_eurotherm_tc3001_param.pwg");
+    process( "pwr_c_eurotherm_tc3001.pwg");
+    process( "pwr_c_eurotherm_tc3001sim.pwg");
+    process( "pwr_c_sew_movidrive_1.pwg");
+    process( "pwr_c_sew_movidrive_1sim.pwg");
+
+
+endmain
+
+
+
+

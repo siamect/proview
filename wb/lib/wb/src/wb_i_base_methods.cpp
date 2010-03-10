@@ -58,6 +58,8 @@ pwr_dImport pwr_BindMethods(NodeConfig);
 pwr_dImport pwr_BindMethods(SevNodeConfig);
 pwr_dImport pwr_BindMethods(Application);
 pwr_dImport pwr_BindMethods(FriendNodeConfig);
+pwr_dImport pwr_BindMethods(SevHistThread);
+pwr_dImport pwr_BindMethods(SevHistObject);
 
 pwr_dExport pwr_BindClasses(Base) = {
   pwr_BindClass(ASup),
@@ -97,6 +99,8 @@ pwr_dExport pwr_BindClasses(Base) = {
   pwr_BindClass(SevNodeConfig),
   pwr_BindClass(Application),
   pwr_BindClass(FriendNodeConfig),
+  pwr_BindClass(SevHistThread),
+  pwr_BindClass(SevHistObject),
   pwr_NullClass
 };
 

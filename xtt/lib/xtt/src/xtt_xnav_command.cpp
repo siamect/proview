@@ -806,7 +806,7 @@ static int	xnav_set_func(	void		*client_data,
       xnav->message('E', "Graph is not open");
       return XNAV__HOLDCOMMAND; 	
     }
-    gectx->set_subwindow_source( object_str, source_str);
+    return gectx->set_subwindow_source( object_str, source_str);
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "LANGUAGE", strlen( arg1_str)) == 0)
   {    

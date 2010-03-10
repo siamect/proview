@@ -25,13 +25,13 @@
 #include "pwr_privilege.h"
 
 typedef pwr_mAccess glow_mAccess;
-#define glow_mAccess_AllRt pwr_mAccess_AllRt
+#define glow_mAccess_RtDefault pwr_mAccess_RtDefault
 
 class GlowTraceData {
   public:
     GlowTraceData() : attr_type(glow_eTraceType_Boolean),
 	color(glow_eDrawType_Inherit), color2(glow_eDrawType_Inherit),
-        p(NULL), access(glow_mAccess_AllRt), cycle(glow_eCycle_Inherit)
+        p(NULL), access(glow_mAccess_RtDefault), cycle(glow_eCycle_Inherit)
 	{
 	  strcpy( data[0], "");
 	  strcpy( data[1], "");

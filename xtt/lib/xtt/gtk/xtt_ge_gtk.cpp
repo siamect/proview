@@ -266,6 +266,13 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, const char *x
     window_width = xg_width;
     window_height = xg_height;
   }
+  else {
+    sts = Graph::get_dimension( filename, "pwrp_exe:", &window_width, &window_height);
+    if ( EVEN(sts)) {
+      window_width = 600;
+      window_height = 500;
+    }
+  }
   cdh_StrncpyCutOff( title, name, sizeof(title), 1);
   char *titleutf8 = g_convert( title, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
 

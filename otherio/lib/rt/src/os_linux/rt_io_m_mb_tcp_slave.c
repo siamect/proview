@@ -303,6 +303,7 @@ pwr_tStatus mb_recv_data(io_sRackLocal *local,
 
 	          case pwr_eModbus_FCEnum_WriteMultipleCoils:
 	          case pwr_eModbus_FCEnum_WriteMultipleRegisters:
+	          case pwr_eModbus_FCEnum_WriteSingleRegister:
 	            // Nothing good to do here
 	            break;
 	        }
@@ -512,6 +513,33 @@ pwr_tStatus mb_send_data(io_sRackLocal *local,
               wrr.quant = ntohs((local_card->output_size) / 2);
 	      wrr.bc = local_card->output_size;
 	      memcpy(wrr.reg, local_card->output_area, local_card->output_size);
+
+	      sts = send(local->s, &wrr, ntohs(wrr.head.length) + 6, MSG_DONTWAIT);
+	      if (sts < 0) {
+                sp->Status = MB__CONNDOWN;
+                close(local->s);
+                errh_Error( "Connection down to modbus slave, %s", rp->Name);
+                return IO__SUCCESS;
+              }
+	      sp->TX_packets++;
+	      local->expected_msgs++;
+	      break;
+	    }
+	    case pwr_eModbus_FCEnum_WriteSingleRegister: {
+	      write_single_req wrr;
+
+	      mp->SendOp = FALSE;
+
+	      local->trans_id++;
+	      local_card->trans_id = local->trans_id;
+
+              wrr.head.trans_id = htons(local->trans_id);
+              wrr.head.proto_id = 0;
+              wrr.head.length = htons(sizeof(wrr) - 6);
+              wrr.head.unit_id = mp->UnitId;
+              wrr.fc = mp->FunctionCode;
+              wrr.addr = htons(mp->Address);
+	      memcpy(&wrr.value, local_card->output_area, sizeof(wrr.value));
 
 	      sts = send(local->s, &wrr, ntohs(wrr.head.length) + 6, MSG_DONTWAIT);
 	      if (sts < 0) {

@@ -87,6 +87,21 @@ typedef enum {
 				  pwr_mPrv_Operator8 |
 				  pwr_mPrv_Operator9 |
 				  pwr_mPrv_Operator10,
+  pwr_mAccess_RtDefault		= pwr_mPrv_System |
+				  pwr_mPrv_Maintenance |
+				  pwr_mPrv_Process |
+				  pwr_mPrv_Instrument |
+				  pwr_mPrv_RtEvents |
+				  pwr_mPrv_Operator1 |
+				  pwr_mPrv_Operator2 |
+				  pwr_mPrv_Operator3 |
+				  pwr_mPrv_Operator4 |
+				  pwr_mPrv_Operator5 |
+				  pwr_mPrv_Operator6 |
+				  pwr_mPrv_Operator7 |
+				  pwr_mPrv_Operator8 |
+				  pwr_mPrv_Operator9 |
+				  pwr_mPrv_Operator10,
   pwr_mAccess_AllOperators	= pwr_mPrv_Operator1 |
 				  pwr_mPrv_Operator2 |
 				  pwr_mPrv_Operator3 |
