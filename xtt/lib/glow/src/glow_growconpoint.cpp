@@ -243,6 +243,12 @@ void GrowConPoint::open( ifstream& fp)
   char		dummy[40];
 
   for (;;) {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GrowConPoint: \"%d %s\"\n", type, dummy);      
+    }
+
     fp >> type;
     switch( type) {
       case glow_eSave_GrowConPoint: break;

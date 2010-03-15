@@ -52,6 +52,12 @@ void GlowAnnot::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GlowAnnot: \"%d %s\"\n", type, dummy);      
+    }
+
     fp >> type;
     switch( type) {
       case glow_eSave_Annot: break;

@@ -68,6 +68,12 @@ void GlowArc::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GlowArc: \"%d %s\"\n", type, dummy);      
+    }
+
     fp >> type;
     switch( type) {
       case glow_eSave_Arc: break;

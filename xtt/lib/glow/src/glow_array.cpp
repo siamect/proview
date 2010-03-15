@@ -843,6 +843,12 @@ void GlowArray::open( GrowCtx *ctx, ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GlowArray: \"%d %s\"\n", type, dummy);      
+    }
+
     fp >> type;
     switch( type) {
       case glow_eSave_Array: break;

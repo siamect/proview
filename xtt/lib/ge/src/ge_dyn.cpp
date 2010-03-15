@@ -471,7 +471,14 @@ void GeDyn::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeDyn: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     e = 0;
     switch( type) {
       case ge_eSave_Dyn: break;
@@ -1722,7 +1729,14 @@ void GeDigLowColor::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeDigLowColor: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_DigLowColor: break;
       case ge_eSave_DigLowColor_attribute:
@@ -2040,7 +2054,14 @@ void GeDigColor::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeDigColor: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_DigColor: break;
       case ge_eSave_DigColor_attribute:
@@ -2268,7 +2289,14 @@ void GeDigWarning::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeDigWarning: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_DigWarning: break;
       case ge_eSave_DigWarning_attribute:
@@ -2469,7 +2497,14 @@ void GeDigError::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeDigError: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_DigError: break;
       case ge_eSave_DigError_attribute:
@@ -2716,7 +2751,14 @@ void GeDigFlash::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeDigFlash: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_DigFlash: break;
       case ge_eSave_DigFlash_attribute:
@@ -2944,7 +2986,14 @@ void GeInvisible::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeInvisible: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_Invisible: break;
       case ge_eSave_Invisible_attribute:
@@ -3253,7 +3302,14 @@ void GeDigBorder::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeDigBorder: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_DigBorder: break;
       case ge_eSave_DigBorder_attribute:
@@ -3440,7 +3496,14 @@ void GeDigText::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeDigText: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_DigText: break;
       case ge_eSave_DigText_attribute:
@@ -3651,7 +3714,14 @@ void GeValue::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeValue: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_Value: break;
       case ge_eSave_Value_attribute:
@@ -4213,7 +4283,14 @@ void GeValueInput::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeValueInput: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_ValueInput: break;
       case ge_eSave_ValueInput_min_value: fp >> min_value; break;
@@ -4726,7 +4803,14 @@ void GeAnalogColor::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeAnalogcolor: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_AnalogColor: break;
       case ge_eSave_AnalogColor_attribute:
@@ -5017,7 +5101,14 @@ void GeRotate::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeRotate: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_Rotate: break;
       case ge_eSave_Rotate_attribute:
@@ -5242,7 +5333,14 @@ void GeMove::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeMove: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_Move: break;
       case ge_eSave_Move_move_x_attribute:
@@ -5566,7 +5664,14 @@ void GeAnalogShift::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeAnalogShift: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_AnalogShift: break;
       case ge_eSave_AnalogShift_attribute:
@@ -5730,7 +5835,14 @@ void GeDigShift::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeDigShift: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_DigShift: break;
       case ge_eSave_DigShift_attribute:
@@ -5872,7 +5984,14 @@ void GeAnimation::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeAnimation: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_Animation: break;
       case ge_eSave_Animation_attribute:
@@ -6074,7 +6193,14 @@ void GeVideo::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeVideo: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_Video: break;
       case ge_eSave_End: end_found = 1; break;
@@ -6170,7 +6296,14 @@ void GeBar::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeBar: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_Bar: break;
       case ge_eSave_Bar_attribute:
@@ -6405,7 +6538,14 @@ void GeTrend::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeTrend: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_Trend: break;
       case ge_eSave_Trend_attribute1:
@@ -6881,7 +7021,14 @@ void GeXY_Curve::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeXY_Curve: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_XY_Curve: break;
       case ge_eSave_XY_Curve_x_attr:
@@ -7522,7 +7669,14 @@ void GeTable::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeTable: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_Table: break;
       case ge_eSave_Table_attribute1:
@@ -8306,7 +8460,14 @@ void GeStatusColor::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeStatusColor: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_StatusColor: break;
       case ge_eSave_StatusColor_attribute:
@@ -8530,7 +8691,14 @@ void GeHostObject::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeHostObject: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_HostObject: break;
       case ge_eSave_HostObject_object:
@@ -8672,7 +8840,14 @@ void GeDigSound::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeDigSound: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_DigSound: break;
       case ge_eSave_DigSound_attribute:
@@ -8857,7 +9032,14 @@ void GeFillLevel::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeFillLevel: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_FillLevel: break;
       case ge_eSave_FillLevel_attribute:
@@ -9138,7 +9320,14 @@ void GeDigCommand::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeDigCommand: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_DigCommand: break;
       case ge_eSave_DigCommand_attribute:
@@ -9288,7 +9477,14 @@ void GePopupMenu::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GePopupMenu: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_PopupMenu: break;
       case ge_eSave_PopupMenu_ref_object:
@@ -9532,7 +9728,14 @@ void GeSetDig::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeSetDig: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_SetDig: break;
       case ge_eSave_SetDig_attribute:
@@ -9733,7 +9936,14 @@ void GeResetDig::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeResetDig: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_ResetDig: break;
       case ge_eSave_ResetDig_attribute:
@@ -9886,7 +10096,14 @@ void GeToggleDig::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeToggleDig: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_ToggleDig: break;
       case ge_eSave_ToggleDig_attribute:
@@ -10073,7 +10290,14 @@ void GeStoDig::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeStoDig: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_StoDig: break;
       case ge_eSave_StoDig_attribute:
@@ -10179,7 +10403,14 @@ void GeCommand::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeCommand: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_Command: break;
       case ge_eSave_Command_command:
@@ -10282,7 +10513,14 @@ void GeCommandDoubleClick::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeCommandDoubleClick: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_CommandDC: break;
       case ge_eSave_CommandDC_command:
@@ -10354,7 +10592,14 @@ void GeConfirm::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeConfirm: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_Confirm: break;
       case ge_eSave_Confirm_text:
@@ -10468,7 +10713,14 @@ void GeIncrAnalog::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeIncrAnalog: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_IncrAnalog: break;
       case ge_eSave_IncrAnalog_attribute:
@@ -10608,7 +10860,14 @@ void GeRadioButton::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeRadioButton: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_RadioButton: break;
       case ge_eSave_RadioButton_attribute:
@@ -10804,7 +11063,14 @@ void GeTipText::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeTipText: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_TipText: break;
       case ge_eSave_TipText_text:
@@ -10909,7 +11175,14 @@ void GeHelp::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeHelp: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_Help: break;
       case ge_eSave_Help_topic:
@@ -11041,7 +11314,14 @@ void GeOpenGraph::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeOpenGraph: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_OpenGraph: break;
       case ge_eSave_OpenGraph_graph_object:
@@ -11165,7 +11445,14 @@ void GeOpenURL::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeOpenURL: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_OpenURL: break;
       case ge_eSave_OpenURL_url:
@@ -11273,7 +11560,14 @@ void GeInputFocus::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeInputFocus: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_InputFocus: break;
       case ge_eSave_InputFocus_initial_focus: fp >> initial_focus; break;
@@ -11579,7 +11873,14 @@ void GeCloseGraph::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeCloseGraph: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_CloseGraph: break;
       case ge_eSave_End: end_found = 1; break;
@@ -11696,7 +11997,14 @@ void GeSlider::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeSlider: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_Slider: break;
       case ge_eSave_Slider_attribute:
@@ -12181,7 +12489,14 @@ void GeFastCurve::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeFastCurve: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_FastCurve: break;
       case ge_eSave_FastCurve_fast_object:
@@ -12584,7 +12899,14 @@ void GePulldownMenu::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GePulldownMenu: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_PulldownMenu: break;
       case ge_eSave_PulldownMenu_button_mask: fp >> tmp; button_mask = (ge_mInstance)tmp; break;
@@ -13507,7 +13829,14 @@ void GeOptionMenu::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeOptionMenu: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_OptionMenu: break;
       case ge_eSave_OptionMenu_attribute:
@@ -14106,7 +14435,14 @@ void GeAnalogText::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeAnalogText: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_AnalogText: break;
       case ge_eSave_AnalogText_super:
@@ -14239,7 +14575,14 @@ void GeSetValue::open( ifstream& fp)
 
   for (;;)
   {
+    if ( !fp.good()) {
+      fp.clear();
+      fp.getline( dummy, sizeof(dummy));
+      printf( "** Read error GeSetValue: \"%d %s\"\n", type, dummy);
+    }
+
     fp >> type;
+
     switch( type) {
       case ge_eSave_SetValue: break;
       case ge_eSave_SetValue_attribute:
