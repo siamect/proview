@@ -869,7 +869,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Object RtBody $ObjBodyDef 1 08-FEB-2008 11:15:54.62
         Body SysBody 08-FEB-2008 11:15:54.63
           Attr StructName = "Modbus_Module"
-          Attr NextAix = "_X11"
+          Attr NextAix = "_X12"
         EndBody
         !/**
         ! Description of module
@@ -977,6 +977,19 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
+        !/**
+        ! Specifies, in relation to the scantime of the thread, how
+        ! often the module is handled. If ScanInterval i 1, the module
+        ! is handled every scan. If ScanInterval is for example 10, it
+        ! is handled every 10'th scan, i.e. the scantime for the module
+        ! will be ScanInterval times the scantime of the thread.
+        !*/
+        Object ScanInterval $Attribute 11 16-MAR-2010 08:26:01.30
+          Body SysBody 16-MAR-2010 08:26:09.35
+            Attr PgmName = "ScanInterval"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
       EndObject
       Object IoMethods $RtMethod 45 08-FEB-2008 11:16:05.05
         Object IoCardInit $Method 46 08-FEB-2008 11:17:19.82
@@ -996,9 +1009,10 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
       EndObject
       Object Template Modbus_Module 2148761600 01-JAN-1970 01:00:00.00
-        Body RtBody 08-SEP-2008 15:15:31.38
+        Body RtBody 16-MAR-2010 08:26:27.97
           Attr Continous = 1
           Attr Process = 1
+          Attr ScanInterval = 1
         EndBody
       EndObject
     EndObject
