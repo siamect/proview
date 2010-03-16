@@ -1,12 +1,12 @@
 Volume Profibus $ClassVolume 0.0.250.7 
   Body SysBody 05-SEP-2005 17:51:40.00
-    Attr NextOix = "_X161"
+    Attr NextOix = "_X173"
     Attr NextCix = "_X18"
-    Attr NextTix[0] = "_X7"
+    Attr NextTix[0] = "_X9"
   EndBody
   Object Type $TypeHier 55 16-JAN-2006 10:07:43.21
     Object PbNumberRepEnum $TypeDef 1 16-JAN-2006 10:08:18.34
-      Body SysBody 16-JAN-2006 10:08:18.34
+      Body SysBody 12-JAN-2010 16:40:55.20
         Attr TypeRef = "pwrs:Type-$Enum"
         Attr Elements = 1
         Attr PgmName = "PbNumberRep"
@@ -219,7 +219,7 @@ Volume Profibus $ClassVolume 0.0.250.7
       EndObject
     EndObject
     Object PbStationStatus3Mask $TypeDef 6 07-FEB-2007 13:43:47.63
-      Body SysBody 07-FEB-2007 13:43:36.51
+      Body SysBody 12-JAN-2010 16:40:46.24
         Attr TypeRef = "pwrs:Type-$Mask"
         Attr Elements = 1
       EndBody
@@ -228,6 +228,100 @@ Volume Profibus $ClassVolume 0.0.250.7
           Attr Text = "ExternalDiagOverflow"
           Attr PgmName = "ExternalDiagOverflow"
           Attr Value = 128
+        EndBody
+      EndObject
+    EndObject
+    Object PnDeviceStateEnum $TypeDef 7 12-JAN-2010 16:40:33.70
+      Body SysBody 12-JAN-2010 17:03:16.21
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+      EndBody
+      Object Deactivated $Value 162 12-JAN-2010 16:42:06.94
+        Body SysBody 12-JAN-2010 16:42:14.35
+          Attr Text = "Deactivated"
+          Attr PgmName = "Deactivated"
+        EndBody
+      EndObject
+      Object FindDevice $Value 163 12-JAN-2010 16:42:36.65
+        Body SysBody 12-JAN-2010 16:42:57.09
+          Attr Text = "Find device"
+          Attr PgmName = "FindDevice"
+          Attr Value = 1
+        EndBody
+      EndObject
+      Object ConnEstablishment $Value 164 12-JAN-2010 16:43:32.07
+        Body SysBody 12-JAN-2010 16:43:49.80
+          Attr Text = "Connection Establishment"
+          Attr PgmName = "ConnEstablishment"
+          Attr Value = 2
+        EndBody
+      EndObject
+      Object Connected $Value 165 12-JAN-2010 16:43:56.62
+        Body SysBody 12-JAN-2010 16:44:02.24
+          Attr Text = "Connected"
+          Attr PgmName = "Connected"
+          Attr Value = 4
+        EndBody
+      EndObject
+      Object ConnError $Value 166 12-JAN-2010 16:44:11.98
+        Body SysBody 12-JAN-2010 16:45:15.48
+          Attr Text = "Connection error"
+          Attr PgmName = "ConnError"
+          Attr Value = 16
+        EndBody
+      EndObject
+      Object WriteError $Value 167 12-JAN-2010 16:45:31.21
+        Body SysBody 12-JAN-2010 16:45:43.54
+          Attr Text = "Write error"
+          Attr PgmName = "WriteError"
+          Attr Value = 32
+        EndBody
+      EndObject
+      Object ControlError $Value 168 12-JAN-2010 16:45:59.69
+        Body SysBody 12-JAN-2010 16:46:35.28
+          Attr Text = "Control error"
+          Attr PgmName = "ControlError"
+          Attr Value = 64
+        EndBody
+      EndObject
+      Object ClosePending $Value 169 12-JAN-2010 16:47:33.64
+        Body SysBody 12-JAN-2010 16:47:56.51
+          Attr Text = "Close pending"
+          Attr PgmName = "ClosePending"
+          Attr Value = 128
+        EndBody
+      EndObject
+    EndObject
+    Object PnModuleStateEnum $TypeDef 8 12-JAN-2010 17:13:25.79
+      Body SysBody 12-JAN-2010 17:03:21.67
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+      EndBody
+      Object NoModule $Value 170 12-JAN-2010 17:03:55.28
+        Body SysBody 12-JAN-2010 17:04:01.80
+          Attr Text = "No module"
+          Attr PgmName = "NoModule"
+        EndBody
+      EndObject
+      Object WrongModule $Value 171 12-JAN-2010 17:04:12.60
+        Body SysBody 12-JAN-2010 17:04:20.63
+          Attr Text = "Wrong module"
+          Attr PgmName = "WrongModule"
+          Attr Value = 1
+        EndBody
+      EndObject
+      Object ProperModule $Value 172 12-JAN-2010 17:04:38.01
+        Body SysBody 12-JAN-2010 17:04:50.05
+          Attr Text = "Proper module"
+          Attr PgmName = "ProperModule"
+          Attr Value = 2
+        EndBody
+      EndObject
+      Object SubstituteModule $Value 173 12-JAN-2010 17:05:04.68
+        Body SysBody 12-JAN-2010 17:05:12.68
+          Attr Text = "Substitute module"
+          Attr PgmName = "SubstituteModule"
+          Attr Value = 3
         EndBody
       EndObject
     EndObject
@@ -1103,7 +1197,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         ! Default profibus diagnostic information.
         !*/
         Object StationStatus1 $Attribute 41 07-FEB-2007 13:48:02.19
-          Body SysBody 07-FEB-2007 13:49:30.74
+          Body SysBody 12-JAN-2010 17:12:51.61
             Attr PgmName = "StationStatus1"
             Attr Flags = 3072
             Attr TypeRef = "Profibus:Type-PbStationStatus1Mask"
@@ -2396,7 +2490,7 @@ Volume Profibus $ClassVolume 0.0.250.7
       Object RtBody $ObjBodyDef 1 21-APR-2009 13:41:08.17
         Body SysBody 21-APR-2009 13:41:08.17
           Attr StructName = "PnDevice"
-          Attr NextAix = "_X97"
+          Attr NextAix = "_X102"
         EndBody
         Object Description $Attribute 87 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
@@ -2455,8 +2549,43 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         Object ErrorHardLimit $Attribute 96 21-APR-2009 13:41:08.17
-          Body SysBody 21-APR-2009 13:41:08.17
+          Body SysBody 12-JAN-2010 17:07:13.74
             Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object State $Attribute 97 12-JAN-2010 17:06:58.08
+          Body SysBody 12-JAN-2010 17:09:22.26
+            Attr PgmName = "State"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object NoDiffModules $Attribute 98 12-JAN-2010 17:09:39.73
+          Body SysBody 12-JAN-2010 17:09:56.44
+            Attr PgmName = "NoDiffModules"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrSlotNumber $Attribute 99 12-JAN-2010 17:10:25.95
+          Body SysBody 12-JAN-2010 17:10:28.22
+            Attr PgmName = "ErrSlotNumber"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrModuleState $Attribute 100 12-JAN-2010 17:11:23.49
+          Body SysBody 12-JAN-2010 17:13:58.39
+            Attr PgmName = "ErrModuleState"
+            Attr Flags = 3072
+            Attr TypeRef = "Profibus:Type-PnModuleStateEnum"
+          EndBody
+        EndObject
+        Object PhysIdentNumber $Attribute 101 12-JAN-2010 17:14:23.50
+          Body SysBody 12-JAN-2010 17:14:45.08
+            Attr PgmName = "PhysIdentNumber"
+            Attr Flags = 3072
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
