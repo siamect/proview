@@ -89,6 +89,17 @@ static pwr_tStatus IoCardRead (
   local = (io_sCardLocal *) cp->Local;
   slave = (pwr_sClass_Modbus_TCP_Slave *) rp->op;
 
+  if ( op->ScanInterval > 1) {
+    local->has_read_method = 1;
+    if ( local->interval_cnt != 0) {
+      local->interval_cnt++;
+      if ( local->interval_cnt >= op->ScanInterval)
+        local->interval_cnt = 0;
+      return IO__SUCCESS;
+    }
+    local->interval_cnt++;
+  }
+
   if (slave->Status == MB__NORMAL) { 
     io_card_read(ctx, rp, cp, local->input_area, NULL,  pwr_eByteOrderingEnum_BigEndian, pwr_eFloatRepEnum_FloatIntel);  
   }
@@ -111,6 +122,20 @@ static pwr_tStatus IoCardWrite (
   pwr_sClass_Modbus_Module *op;
   
   pwr_sClass_Modbus_TCP_Slave *slave;
+
+  if ( op->ScanInterval > 1) {
+    if ( !local->has_read_method) {
+      if ( local->interval_cnt != 0) {
+	local->interval_cnt++;
+	if ( local->interval_cnt >= op->ScanInterval)
+	  local->interval_cnt = 0;
+	return IO__SUCCESS;
+      }
+      local->interval_cnt++;
+    }
+    else if ( local->interval_cnt != 1)
+      return IO__SUCCESS;
+  }
 
   op = (pwr_sClass_Modbus_Module *) cp->op;
   local = (io_sCardLocal *) cp->Local;

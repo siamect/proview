@@ -93,6 +93,8 @@ typedef struct {
   int output_size;
   short int no_di;
   short int no_do;
+  int interval_cnt;
+  int has_read_method;
 } io_sCardLocal;
 
 typedef struct {
