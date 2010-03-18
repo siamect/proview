@@ -54,7 +54,7 @@ ename=$ver$hw
 desc=$verl
 
 
-pwre add $ename $root/src $root/rls $btype $os $hw "$desc"
+pwre add $ename $root/src \"\" $root/rls $btype $os $hw "$desc"
 pwre init $ename
 
 # Build
