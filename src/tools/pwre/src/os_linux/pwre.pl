@@ -1402,31 +1402,35 @@ sub get_vars ()
   } else {
     $sroot = $_[1];
   }
-  $vmsinc = 	get_var(" Import root  [%s]? ", $vmsinc);
   if ($_[2] eq "") {
-    $broot = 	get_var(" Build root  [%s]? ", $broot);
+    $vmsinc = 	get_var(" Import root  [%s]? ", $vmsinc);
   } else {
-    $broot = $_[2];
+    $vmsinc = $_[2];
   }
   if ($_[3] eq "") {
-    $btype = 	get_var(" Build type  [%s]? ", $btype);
+    $broot = 	get_var(" Build root  [%s]? ", $broot);
   } else {
-    $btype = $_[3];
+    $broot = $_[3];
   }
   if ($_[4] eq "") {
-    $os =    	get_var(" OS          [%s]? ", $os);
+    $btype = 	get_var(" Build type  [%s]? ", $btype);
   } else {
-    $os = $_[4];
+    $btype = $_[4];
   }
   if ($_[5] eq "") {
-    $hw =    	get_var(" Hardware    [%s]? ", $hw);
+    $os =    	get_var(" OS          [%s]? ", $os);
   } else {
-    $hw = $_[5];
+    $os = $_[5];
   }
   if ($_[6] eq "") {
+    $hw =    	get_var(" Hardware    [%s]? ", $hw);
+  } else {
+    $hw = $_[6];
+  }
+  if ($_[7] eq "") {
     $desc =  	get_var(" Description [%s]? ", $desc);
   } else {
-    $desc = $_[6];
+    $desc = $_[7];
   }
 
   $varstr = join(";", ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc));
