@@ -527,7 +527,7 @@ if [ "$1" != "" ]; then
   while [ "${db_array[$i]}" != "" ]; do
     if [ $1 == ${db_array[$i]} ]; then
       arg_found=1
-      arg_idx=i
+      arg_idx=$i
       arg_db=1
       databases=${db_array[$i]}
       break
@@ -538,7 +538,7 @@ if [ "$1" != "" ]; then
   while [ "${dbms_array[$i]}" != "" ]; do
     if [ $1 == ${dbms_array[$i]} ]; then
       arg_found=1
-      arg_idx=i
+      arg_idx=$i
       arg_dbms=1
       databases=${dbms_array[$i]}
       break
@@ -549,7 +549,7 @@ if [ "$1" != "" ]; then
   while [ "${wbl_array[$i]}" != "" ]; do
     if [ $1 == ${wbl_array[$i]} ]; then
       arg_found=1
-      arg_idx=1
+      arg_idx=$i
       arg_wbl=1
       break
     fi
