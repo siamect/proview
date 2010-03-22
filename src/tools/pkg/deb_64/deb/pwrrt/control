@@ -1,0 +1,11 @@
+Package: pwrrt
+Version: 4.6.1-1
+Section: base
+Priority: optional
+Architecture: i386
+Depends: libc6 (>= 2.7-18), libgtk2.0-0 (>= 2.12.12-1~lenny1), libasound2 (>= 1.0.16-2), libdb4.6 (>=4.6.21-11)
+Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46
+Maintainer: Proview <postmaster@proview.se>
+Description:
+ Proview runtime environment
+ 4.6.1-1 Base release

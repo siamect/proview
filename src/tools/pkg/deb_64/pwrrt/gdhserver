@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+# Startscript för PWR av Ulf Ljungdahl
+#
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/jdk1.3/bin/java
+
+. /etc/pwrp_profile
+
+
+gdh_start()
+{
+  export LD_LIBRARY_PATH=$pwr_exe
+  export CLASSPATH=$pwr_lib/pwr_rt.jar:$pwr_lib/pwr_jop.jar
+  sleep 5
+  sudo -u pwrp $pwr_exe/rt_webmon.sh &
+  sleep 2
+  sudo -u pwrp $pwr_exe/rt_webmonmh.sh &
+  #su pwrp <java jpwr.rt.GdhServer &
+  
+  #sudo -u pwrp java jpwr.rt.GdhServer &
+}
+
+gdh_stop()
+{
+  kill -9 `ps ax | grep "java" | awk '{ print $1}'`
+}
+
+case "$1"
+  in
+    start)
+	echo "Startar GDH server..."
+	
+	#if [ 'test -x ps aux | grep plc | grep -v grep' ]
+	#  then
+	#    echo "PWR kör, stoppar det först.."
+	#    pwr_stop
+	#  fi
+	gdh_start    
+	echo "Klar."
+      ;;
+    stop)
+	echo "Stoppar GDH server..."
+	gdh_stop
+	echo "Klar"
+      ;;
+    restart)
+	echo "Startar om GDH server."
+	echo "Stoppar det först."
+	gdh_stop
+	sleep 1
+	echo "Startar igen."
+	gdh_start
+	echo "Klar."
+	;;
+    *)
+	echo "Usage:{start|stop|restart}" >&2
+	#echo "Ingen parameter angiven, startar PWR"
+	#$0 start
+        exit 1
+	;;
+  esac
+
+exit 0
+
+
+

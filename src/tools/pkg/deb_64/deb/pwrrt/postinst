@@ -1,0 +1,384 @@
+#!/bin/bash
+set -e
+if [ "$pwrrt_xtrace" != "" ]; then
+  set -o xtrace
+fi
+
+# Automatically added by dh_installdocs
+if [ "$1" = "configure" ]; then
+        if [ -d /usr/doc -a ! -e /usr/doc/pwrtest -a -d /usr/share/doc/pwrtest ]; then
+                ln -sf ../share/doc/pwrtest /usr/doc/pwrtest
+        fi
+fi
+# End automatically added section
+
+proot="/pwrp"
+aroot="/usr/pwrp/adm"
+
+# Create users...
+new_user=0
+
+if getent group pwrp > /dev/null; then
+  echo "-- group pwrp already exist"
+else
+  if groupadd pwrp; then
+    echo "-- group pwrp added"
+  fi
+fi
+
+if getent group b55 > /dev/null; then
+  echo "-- group b55 already exist"
+else
+  if groupadd b55; then
+    echo "-- group b55 added"
+  fi
+fi
+
+if getent group b66 > /dev/null; then
+  echo "-- group b66 already exist"
+else
+  if groupadd b66; then
+    echo "-- group b66 added"
+  fi
+fi
+
+if getent group skiftel > /dev/null; then
+  echo "-- group skiftel already exist"
+else
+  if groupadd skiftel; then
+    echo "-- group skiftel added"
+  fi
+fi
+
+if getent passwd pwrp > /dev/null; then
+  echo "-- user pwrp already exist"
+else
+  new_user=1
+
+  if useradd -s /bin/bash -p aaupl/kQs1p3U -g pwrp -G b55,b66,skiftel -d /home/pwrp pwrp; then
+    echo "-- user pwrp added"
+  fi
+  if [ ! -e /home/pwrp ]; then
+    mkdir /home/pwrp
+    cp /usr/pwrrt/cnf/user/.bashrc /home/pwrp
+    cp /usr/pwrrt/cnf/user/.bash_profile /home/pwrp
+#    cp /usr/pwrrt/cnf/user/.mwmrc /home/pwrp
+    cp /usr/pwrrt/cnf/user/.rtt_start /home/pwrp
+    chmod a+x /home/pwrp/.rtt_start
+    cp /usr/pwrrt/cnf/user/.xtt_start /home/pwrp
+    chmod a+x /home/pwrp/.xtt_start
+#    cp /usr/pwrrt/cnf/user/.xsession /home/pwrp
+
+    chown -R pwrp /home/pwrp
+    chgrp -R pwrp /home/pwrp
+  fi
+
+  # Add to group dialout
+  if getent group dialout > /dev/null; then
+    usermod -a -G dialout pwrp
+  fi
+fi
+
+if getent passwd skiftel > /dev/null; then
+  echo "-- user skiftel already exist"
+else
+  new_user=1
+
+  if useradd -s /bin/bash -p aa6NzxS/aBgP6 -g skiftel -G pwrp -d /home/skiftel skiftel; then
+    echo "-- user skiftel added"
+  fi
+
+  if [ ! -e /home/skiftel ]; then
+    mkdir /home/skiftel
+    cp /usr/pwrrt/cnf/user/.bashrc /home/skiftel
+    cp /usr/pwrrt/cnf/user/.bash_profile /home/skiftel
+#    cp /usr/pwrrt/cnf/user/.mwmrc /home/skiftel
+    cp /usr/pwrrt/cnf/user/.rtt_start /home/skiftel
+    chmod a+x /home/skiftel/.rtt_start
+    cp /usr/pwrrt/cnf/user/.xtt_start /home/skiftel
+    chmod a+x /home/skiftel/.xtt_start
+#    cp /usr/pwrrt/cnf/user/.xsession /home/skiftel
+
+    chown -R pwrp /home/skiftel
+    chgrp -R pwrp /home/skiftel
+  fi
+fi
+
+if getent passwd b55 > /dev/null; then
+  new_user=1
+
+  # Check if group audio exist
+  if getent group audio > /dev/null; then
+    groups="pwrp,audio"
+  else
+    groups="pwrp"
+  fi
+
+  if useradd -s /bin/bash -p aaQPClsglxJP6 -g b55 -G $groups -d /home/b55 b55; then
+    echo "-- user b55 added"
+  fi
+  if [ ! -e /home/b55 ]; then
+    mkdir /home/b55
+    cp /usr/pwrrt/cnf/op/.bashrc /home/b55
+    cp /usr/pwrrt/cnf/op/.bash_profile /home/b55
+#    cp /usr/pwrrt/cnf/op/.mwmrc /home/b55
+    cp /usr/pwrrt/cnf/op/.rtt_start /home/b55
+    chmod a+x /home/b55/.rtt_start
+    cp /usr/pwrrt/cnf/op/.xtt_start /home/b55
+    chmod a+x /home/b55/.xtt_start
+#    cp /usr/pwrrt/cnf/op/.xsession /home/b55
+
+    chown -R b55 /home/b55
+    chgrp -R pwrp /home/b55
+    chmod g+rwx /home/b55
+  fi
+fi
+
+if getent passwd b66 > /dev/null; then
+  new_user=1
+
+  # Check if group audio exist
+  if getent group audio > /dev/null; then
+    groups="pwrp,audio"
+  else
+    groups="pwrp"
+  fi
+
+  if useradd -s /bin/bash -p aae.nHgHbfUpw -g b66 -G $groups -d /home/b66 b66; then
+    echo "-- user b66 added"
+  fi
+  if [ ! -e /home/b66 ]; then
+    mkdir /home/b66
+    cp /usr/pwrrt/cnf/op/.bashrc /home/b66
+    cp /usr/pwrrt/cnf/op/.bash_profile /home/b66
+#    cp /usr/pwrrt/cnf/op/.mwmrc /home/b66
+    cp /usr/pwrrt/cnf/op/.rtt_start /home/b66
+    chmod a+x /home/b66/.rtt_start
+    cp /usr/pwrrt/cnf/op/.xtt_start /home/b66
+    chmod a+x /home/b66/.xtt_start
+#    cp /usr/pwrrt/cnf/op/.xsession /home/b66
+
+    chown -R b66 /home/b66
+    chgrp -R pwrp /home/b66
+    chmod g+rwx /home/b66
+  fi
+fi
+
+chown -R pwrp /usr/pwrrt
+chgrp -R pwrp /usr/pwrrt
+
+chmod u+s /usr/pwrrt/exe/rt_ini
+chmod u+s /usr/pwrrt/exe/rt_rtt
+#chmod u+s /usr/pwrrt/exe/rt_xtt
+chmod u+s /usr/pwrrt/exe/rt_bck
+chmod u+s /usr/pwrrt/exe/rt_gdhget
+chown root /usr/pwrrt/exe/rs_remote_alcm
+chmod u+s /usr/pwrrt/exe/rs_remote_alcm
+if getent group dialout > /dev/null; then
+  chgrp dialout /usr/pwrrt/exe/rs_remote_serial
+  chmod ug+s /usr/pwrrt/exe/rs_remote_serial
+  chgrp dialout /usr/pwrrt/exe/rs_remote_3964r
+  chmod ug+s /usr/pwrrt/exe/rs_remote_3964r
+fi
+chown root /usr/pwrrt/exe/rt_prio
+chmod u+s /usr/pwrrt/exe/rt_prio
+chown root /usr/pwrrt/exe/rt_mozilla
+chmod u+s /usr/pwrrt/exe/rt_mozilla
+
+# Copy configuration files
+new_cnf=0
+if [ ! -e /etc/proview.cnf ]; then
+  cp /usr/pwrrt/cnf/proview.cnf /etc
+  new_cnf=1
+fi
+
+# Add pwrp_profile to profile
+if ! grep -q "/etc/pwrp_profile\b" /etc/profile; then
+  cat >> /etc/profile <<-EOF
+	if [ -e /etc/pwrp_profile ]; then
+	  source /etc/pwrp_profile
+	fi
+EOF
+fi
+
+# Create startup link
+set +e
+checklink=`eval ls /etc/rc2.d/S90pwr 2>/dev/null`
+set -e
+if [ "$checklink" != "" ]; then
+  rm /etc/rc2.d/S90pwr
+fi
+ln -s /etc/init.d/pwr /etc/rc2.d/S90pwr
+
+set +e
+checklink=`eval ls /etc/rc2.d/S91gdhserver 2>/dev/null`
+set -e
+if [ "$checklink" != "" ]; then
+  rm /etc/rc2.d/S91gdhserver
+fi
+# Obsolete
+#ln -s /etc/init.d/gdhserver /etc/rc2.d/S91gdhserver
+
+# Create project
+new_project=0
+if [ ! -e $proot ]; then
+  new_project=1
+
+  mkdir $proot
+  mkdir $proot/common
+  mkdir $proot/common/inc
+  mkdir $proot/common/load
+  mkdir $proot/common/log
+  mkdir $proot/common/loghist
+  mkdir $proot/common/db
+  mkdir $proot/common/web
+  mkdir $proot/x86_linux
+  mkdir $proot/x86_linux/exe
+  mkdir $proot/x86_linux/lib
+  mkdir $proot/x86_linux/obj
+  mkdir $proot/x86_linux/lis
+
+  chown -R pwrp $proot
+  chgrp -R pwrp $proot
+  
+fi
+
+if [ ! -e $aroot/db ]; then
+  mkdir -p $aroot/db
+  chown -R pwrp $aroot
+fi
+
+# Copy jar-files to web directory
+if [ -e /etc/proview.cnf ]; then
+  set +e
+  web_dir=`eval cat /etc/proview.cnf | grep "\\bwebDirectory\\b" | awk '{print $2}'`
+  set -e
+
+  if [ -e "$web_dir" ]; then
+    cp /usr/pwrrt/lib/pwr_rt_client.jar $web_dir
+    chown pwrp $web_dir/pwr_rt_client.jar
+    cp /usr/pwrrt/lib/pwr_jop.jar $web_dir
+    chown pwrp $web_dir/pwr_jop.jar
+    cp /usr/pwrrt/lib/pwr_jopc.jar $web_dir
+    chown pwrp $web_dir/pwr_jopc.jar
+  fi
+fi
+
+#
+# Add proview web directories to Apache
+#
+if [ -e /etc/apache2/apache2.conf ]; then
+  if ! egrep -q "Alias[ ]+/pwrp_web/" /etc/apache2/apache2.conf; then
+    cat >> /etc/apache2/apache2.conf <<-EOF
+
+	#
+	# Proview alias pwrp_web, added by Proview installation
+	#
+	Alias /pwrp_web/ /pwrp/common/web/
+
+	<Directory /pwrp/common/web>
+	    Options Indexes MultiViews
+	    AllowOverride None
+	    Order allow,deny
+	    Allow from all
+	</Directory>
+EOF
+  fi
+
+  if ! egrep -q "Alias[ ]+/pwrp_log/" /etc/apache2/apache2.conf; then
+    cat >> /etc/apache2/apache2.conf <<-EOF
+
+	#
+	# Proview alias pwrp_log, added by Proview installation
+	#
+	Alias /pwrp_log/ /pwrp/common/log/
+
+	<Directory /pwrp/common/log>
+	    Options Indexes MultiViews
+	    AllowOverride None
+	    Order allow,deny
+	    Allow from all
+	</Directory>
+EOF
+  fi
+
+
+  if ! egrep -q "Alias[ ]+/pwr_doc/" /etc/apache2/apache2.conf; then
+    cat >> /etc/apache2/apache2.conf <<-EOF
+
+	#
+	# Proview alias pwr_doc, added by Proview installation
+	#
+	Alias /pwr_doc/ /usr/pwrrt/doc/
+
+	<Directory /usr/pwrrt/doc>
+	    Options Indexes MultiViews
+	    AllowOverride None
+	    Order allow,deny
+	    Allow from all
+	</Directory>
+EOF
+  fi
+fi
+
+#
+# Set owner on preinstalled I/O systems
+#
+if [ -e /lib/udev/devices/qbus ]; then
+  chown pwrp:pwrp /lib/udev/devices/qbus
+fi
+if [ -e /lib/udev/devices/pbus1 ]; then
+  chown pwrp:pwrp /lib/udev/devices/pbus1
+fi
+if [ -e /lib/udev/devices/pbus2 ]; then
+  chown pwrp:pwrp /lib/udev/devices/pbus2
+fi
+
+
+changes=0
+if [ $new_user -eq 1 ]; then
+  changes=1
+elif [ $new_cnf -eq 1 ]; then
+  changes=1
+elif [ $new_project -eq 1 ]; then
+  changes=1
+fi
+
+if [ $changes -ne 0 ]; then
+  echo ""
+  echo ""
+  echo "***********************************************************"
+  echo "  Don't forget to do this :"
+  echo ""
+fi
+
+if [ $new_cnf -eq 1 ]; then
+  echo "-- Enter QcomBusId in /etc/proview.cnf"
+fi
+
+#if [ $new_user -eq 1 ]; then
+#  echo "-- Enter OpPlace object as argument to rt_xtt in /home/b55/.xtt_start"
+#fi
+
+if [ $new_project -eq 1 ]; then
+  nodename=`eval uname -n`
+  echo "-- Create file /home/pwrp/.rhosts"
+  echo "-- Distribute project to $nodename"
+fi
+
+if [ $changes -ne 0 ]; then
+  echo ""
+  echo "***********************************************************"
+  echo ""
+fi
+
+
+
+
+
+
+
+
+
+
+
