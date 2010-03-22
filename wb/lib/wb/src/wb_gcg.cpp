@@ -15795,8 +15795,8 @@ static int	gcg_check_ra_plc_user(
 	  fprintf( checkfile, "#include \"pwr_nmpsclasses.h\"\n");
 	  fprintf( checkfile, "#include \"pwr_remoteclasses.h\"\n");
 	  fprintf( checkfile, "#include \"pwr_profibusclasses.h\"\n");
-	  fprintf( checkfile, "#include \"pwr_otherioclasses.h\"\n");
 	  fprintf( checkfile, "#include \"pwr_basecomponentclasses.h\"\n");
+	  fprintf( checkfile, "#include \"pwr_otherioclasses.h\"\n");
 	  fprintf( checkfile, "#include \"pwr_siemensclasses.h\"\n");
 	  fprintf( checkfile, "#include \"pwr_abbclasses.h\"\n\n");
 	  fclose( checkfile);
