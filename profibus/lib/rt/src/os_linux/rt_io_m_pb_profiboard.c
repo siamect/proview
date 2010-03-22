@@ -30,12 +30,14 @@
 
 #include "keywords.h"
 
+#pragma pack(1)
 #include "pb_type.h"
 #include "pb_conf.h"
 #include "pb_if.h"
 #include "pb_err.h"
 #include "pb_fmb.h"
 #include "pb_dp.h"
+#pragma pack(0)
 
 #include "rt_io_pb_locals.h"
 
@@ -225,7 +227,7 @@ static short dp_download_bus(T_PROFI_DEVICE_HANDLE *hDevice,
   T_PROFI_SERVICE_DESCR    con_ind_sdb;
   INT16                    result;              /* !!! local result variable !!! */
 
-  sdb.comm_ref = 0;
+  sdb.comm_ref = 0; 
   sdb.layer = DP;
   sdb.service = DP_DOWNLOAD_LOC;
   sdb.primitive = REQ;
