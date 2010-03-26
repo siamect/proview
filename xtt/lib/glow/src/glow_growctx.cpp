@@ -1965,7 +1965,7 @@ int GrowCtx::get_dimension( char *filename, int *width, int *height)
   }
   fp.close();
 
-  if ( width_found && height_found)
+  if ( width_found && height_found && *width != 0 && *height != 0)
     return 1;
   return 0;
 }

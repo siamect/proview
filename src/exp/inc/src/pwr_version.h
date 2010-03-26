@@ -65,12 +65,12 @@
 # define SET_VERSION(a, b, c, d)  ((pwr_tVersion)((a << 24) + (a << 16) + (a << 8) + a))		  
 #endif
 
-#define pwrv_cBuildTimeStr       "09-MAY-2009 12:00:00"
+#define pwrv_cBuildTimeStr       "26-MAR-2010 12:00:00"
 
 #define pwrv_cPwrVersionStr      "V4.7.0"
 #define pwrv_cPwrVersion         SET_VERSION('V', 4, 7, 0)
 
 #define pwrv_cWbdbVersionShortStr "V47"
-#define pwrv_cPwrCopyright	 "Copyright (C) 2005-2009 SSAB Oxelösund"
+#define pwrv_cPwrCopyright	 "Copyright (C) 2005-2010 SSAB Oxelösund"
 
 #endif
