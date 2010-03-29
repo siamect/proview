@@ -1,0 +1,11 @@
+Package: pwrsev
+Version: 4.7.0-1
+Section: base
+Priority: optional
+Architecture: amd64
+Depends: libc6 (>= 2.10.1-0ubuntu16), libgtk2.0-0 (>= 2.18.3-1ubuntu2.2), libasound2 (>= 1.0.20-3ubuntu6.1), libdb4.7 (>=4.7.25-7ubuntu2), libmysqlclient15off (>= 5.1.30really5.0.83-0ubuntu3)
+Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47
+Maintainer: Proview <postmaster@proview.se>
+Description:
+ Proview storage environment
+ 4.7.0-1 Base release

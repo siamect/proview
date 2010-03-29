@@ -8,9 +8,9 @@
 #
 
 
-Name: pwr46
+Name: pwr47
 Summary: Proview/R development and runtime environment
-Version: 4.6.1
+Version: 4.7.0
 Release: 1
 License: GPL
 BuildArch: i386
@@ -200,5 +200,5 @@ fi
 #%postun
 
 %changelog
-* Thu May 28 2009 Claes Sjofors <claes.sjofors@proview.se> 4.6.1-1
+* Thu Mar 23 2010 Claes Sjofors <claes.sjofors@proview.se> 4.7.0-1
   - Base release.
