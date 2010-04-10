@@ -57,6 +57,10 @@ int main(  int argc, char *argv[])
   pwr_tFileName incdir;
   pwr_tFileName cfile;
   pwr_tFileName ofile;
+  char pwre_cc[80];
+  char pwre_cxx[80];
+  char pwre_ar[80];
+  char *s;
 #if defined OS_LINUX
   char dos[] = "OS_LINUX";
 #elif defined OS_MACOS
@@ -66,6 +70,20 @@ int main(  int argc, char *argv[])
     usage();
     exit(1);
   }
+
+  if ( (s = getenv( "pwre_cc")))
+    strncpy( pwre_cc, s, sizeof(pwre_cc));
+  else
+    strcpy( pwre_cc, "gcc");
+  if ( (s = getenv( "pwre_cxx")))
+    strncpy( pwre_cxx, s, sizeof(pwre_cxx));
+  else
+    strcpy( pwre_cxx, "g++");
+  if ( (s = getenv( "pwre_ar")))
+    strncpy( pwre_ar, s, sizeof(pwre_ar));
+  else
+    strcpy( pwre_ar, "ar");
+
 
   if ( strcmp( argv[1], "io_base") == 0)
     mtype = merge_eMtype_IoBase;
@@ -177,14 +195,14 @@ int main(  int argc, char *argv[])
   dcli_translate_filename( incdir, "$pwr_einc");
   switch ( mtype) {
   case merge_eMtype_WbBase:
-    sprintf( cmd, "g++ -c -I%s -D%s -o %s %s", incdir, dos, ofile, cfile);
+    sprintf( cmd, "%s -c -I%s -D%s -o %s %s", pwre_cxx, incdir, dos, ofile, cfile);
     break;
   default:
-    sprintf( cmd, "gcc -c -I%s -D%s -o %s %s", incdir, dos, ofile, cfile);
+    sprintf( cmd, "%s -c -I%s -D%s -o %s %s", pwre_cc, incdir, dos, ofile, cfile);
   }
   // printf( "co_merge: %s\n", cmd);
   system( cmd);
-  sprintf( cmd, "ar r %s %s", outfile, ofile);
+  sprintf( cmd, "%s r %s %s", pwre_ar, outfile, ofile);
   // printf( "co_merge: %s\n", cmd);
   system(cmd);
   sprintf( cmd, "rm %s", ofile);

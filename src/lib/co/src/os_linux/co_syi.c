@@ -147,6 +147,8 @@ const char *syi_Hardware()
 {
 #if defined HW_X86_64
   static const char hw[] = "x86_64";
+#elif defined HW_ARM
+  static const char hw[] = "ARM";
 #else
   static const char hw[] = "x86";
 #endif
