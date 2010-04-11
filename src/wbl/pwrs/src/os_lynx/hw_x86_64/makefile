@@ -45,17 +45,17 @@ realclean : clean clean_pwrs_xtthelp clean_pwrs_html clean_systemclasses
 
 $(inc_dir)/pwr_systemclasses.h :
 	@ echo "Generating struct files for pwrs classes..."
-	@ co_convert -s -d $(inc_dir) "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
+	@ $(co_convert) -s -d $(inc_dir) "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
 
 $(doc_dir)/pwrs_allclasses.html :
 	@ echo "Generating html files for pwrs classes..."
-	@ co_convert -w -d $(doc_dir) "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
+	@ $(co_convert) -w -d $(doc_dir) "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
 	@ echo "Generating html files for pwrs structs..."
-	@ co_convert -c -d $(doc_dir) $(inc_dir)/pwr_systemclasses.h
+	@ $(co_convert) -c -d $(doc_dir) $(inc_dir)/pwr_systemclasses.h
 
 $(exe_dir)/pwrs_xtthelp.dat :
 	@ echo "Generating xtt help files for pwrs classes"
-	@ co_convert -x -d $(exe_dir) "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
+	@ $(co_convert) -x -d $(exe_dir) "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
 
 #$(export_wbl) : $(cnf_dir)/%.wb_vers : %.wb_load
 #       @ write sys$$output "Exporting $< ..."

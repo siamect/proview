@@ -284,23 +284,23 @@ $(exe_dir)/man_subgraph.dat : $(pwre_sroot)/doc/man/en_us/man_subgraph.dat
 
 $(doc_dir)/en_us/man_dg_index.html : $(pwre_sroot)/doc/man/en_us/man_dg.dat
 	@ echo "Generating html for en_us/man_dg"
-	@ co_convert -t -d $(doc_dir)/en_us $(source)
+	@ $(co_convert) -t -d $(doc_dir)/en_us $(source)
 
 $(doc_dir)/sv_se/man_dg_index.html : $(pwre_sroot)/doc/man/sv_se/man_dg.dat
 	@ echo "Generating html for sv_se/man_dg"
-	@ co_convert -t -l sv_se -d $(doc_dir)/sv_se $(source)
+	@ $(co_convert) -t -l sv_se -d $(doc_dir)/sv_se $(source)
 
 $(doc_dir)/en_us/man_dg.pdf : $(pwre_sroot)/doc/man/en_us/man_dg.dat
 	@ echo "Generating pdf for en_us/man_dg"
-	@ co_convert -f -d $(doc_dir)/en_us $(source)
+	@ $(co_convert) -f -d $(doc_dir)/en_us $(source)
 
 $(doc_dir)/sv_se/man_dg.pdf : $(pwre_sroot)/doc/man/sv_se/man_dg.dat
 	@ echo "Generating pdf for sv_se/man_dg"
-	@ co_convert -f -l sv_se -d $(doc_dir)/sv_se $(source)
+	@ $(co_convert) -f -l sv_se -d $(doc_dir)/sv_se $(source)
 
 $(doc_dir)/en_us/man_dg.ps : $(pwre_sroot)/doc/man/en_us/man_dg.dat
 	@ echo "Generating postscript for en_us/man_dg"
-	@ co_convert -n -d $(doc_dir)/en_us $(source)
+	@ $(co_convert) -n -d $(doc_dir)/en_us $(source)
 
 $(exe_dir)/en_us/man_geref.dat : $(pwre_sroot)/doc/man/en_us/man_geref.dat
 	@ $(log_h_h)
@@ -312,31 +312,31 @@ $(exe_dir)/sv_se/man_geref.dat : $(pwre_sroot)/doc/man/sv_se/man_geref.dat
 
 $(doc_dir)/sv_se/man_dg.ps : $(pwre_sroot)/doc/man/sv_se/man_dg.dat
 	@ echo "Generating postscript for sv_se/man_dg"
-	@ co_convert -n -d $(doc_dir)/sv_se $(source)
+	@ $(co_convert) -n -d $(doc_dir)/sv_se $(source)
 
 $(doc_dir)/en_us/man_geref_index.html : $(pwre_sroot)/doc/man/en_us/man_geref.dat
 	@ echo "Generating html for en_us/man_geref"
-	@ co_convert -t -d $(doc_dir)/en_us $(source)
+	@ $(co_convert) -t -d $(doc_dir)/en_us $(source)
 
 $(doc_dir)/sv_se/man_geref_index.html : $(pwre_sroot)/doc/man/sv_se/man_geref.dat
 	@ echo "Generating html for sv_se/man_geref"
-	@ co_convert -t -l sv_se -d $(doc_dir)/sv_se $(source)
+	@ $(co_convert) -t -l sv_se -d $(doc_dir)/sv_se $(source)
 
 $(doc_dir)/en_us/man_geref.pdf : $(pwre_sroot)/doc/man/en_us/man_geref.dat
 	@ echo "Generating pdf for en_us/man_geref"
-	@ co_convert -f -d $(doc_dir)/en_us $(source)
+	@ $(co_convert) -f -d $(doc_dir)/en_us $(source)
 
 $(doc_dir)/sv_se/man_geref.pdf : $(pwre_sroot)/doc/man/sv_se/man_geref.dat
 	@ echo "Generating pdf for sv_se/man_geref"
-	@ co_convert -f -l sv_se -d $(doc_dir)/sv_se $(source)
+	@ $(co_convert) -f -l sv_se -d $(doc_dir)/sv_se $(source)
 
 $(doc_dir)/en_us/man_geref.ps : $(pwre_sroot)/doc/man/en_us/man_geref.dat
 	@ echo "Generating postscript for en_us/man_geref"
-	@ co_convert -n -d $(doc_dir)/en_us $(source)
+	@ $(co_convert) -n -d $(doc_dir)/en_us $(source)
 
 $(doc_dir)/sv_se/man_geref.ps : $(pwre_sroot)/doc/man/sv_se/man_geref.dat
 	@ echo "Generating postscript for sv_se/man_geref"
-	@ co_convert -n -d $(doc_dir)/sv_se $(source)
+	@ $(co_convert) -n -d $(doc_dir)/sv_se $(source)
 
 $(exe_dir)/en_us/man_orm.dat : $(pwre_sroot)/doc/man/en_us/man_orm.dat
 	@ $(log_h_h)
@@ -348,19 +348,19 @@ $(exe_dir)/sv_se/man_orm.dat : $(pwre_sroot)/doc/man/sv_se/man_orm.dat
 
 $(doc_dir)/en_us/man_orm_index.html : $(pwre_sroot)/doc/man/en_us/man_orm.dat
 	@ echo "Generating html for en_us/man_orm"
-	@ co_convert -t -d $(doc_dir)/en_us $(source)
+	@ $(co_convert) -t -d $(doc_dir)/en_us $(source)
 
 $(doc_dir)/sv_se/man_orm_index.html : $(pwre_sroot)/doc/man/sv_se/man_orm.dat
 	@ echo "Generating html for sv_se/man_orm"
-	@ co_convert -t -l sv_se -d $(doc_dir)/sv_se $(source)
+	@ $(co_convert) -t -l sv_se -d $(doc_dir)/sv_se $(source)
 
 $(doc_dir)/en_us/man_subgraph_index.html : $(pwre_sroot)/doc/man/en_us/man_subgraph.dat
 	@ echo "Generating html for en_us/man_subgraph"
-	@ co_convert -t -d $(doc_dir)/en_us $(source)
+	@ $(co_convert) -t -d $(doc_dir)/en_us $(source)
 
 $(doc_dir)/en_us/man_subgraph.pdf : $(pwre_sroot)/doc/man/en_us/man_subgraph.dat
 	@ echo "Generating pdf for en_us/man_subgraph"
-	@ co_convert -f -d $(doc_dir)/en_us $(source)
+	@ $(co_convert) -f -d $(doc_dir)/en_us $(source)
 
 $(exe_dir)/en_us/man_exlib.dat : $(pwre_sroot)/doc/man/en_us/man_exlib.dat
 	@ $(log_h_h)
@@ -368,15 +368,15 @@ $(exe_dir)/en_us/man_exlib.dat : $(pwre_sroot)/doc/man/en_us/man_exlib.dat
 
 $(doc_dir)/en_us/man_exlib.ps : $(pwre_sroot)/doc/man/en_us/man_exlib.dat
 	@ echo "Generating postscript for en_us/man_exlib"
-	@ co_convert -n -d $(doc_dir)/en_us $(source)
+	@ $(co_convert) -n -d $(doc_dir)/en_us $(source)
 
 $(doc_dir)/en_us/man_exlib_index.html : $(pwre_sroot)/doc/man/en_us/man_exlib.dat
 	@ echo "Generating html for en_us/man_exlib"
-	@ co_convert -t -d $(doc_dir)/en_us $(source)
+	@ $(co_convert) -t -d $(doc_dir)/en_us $(source)
 
 $(doc_dir)/en_us/man_exlib.pdf : $(pwre_sroot)/doc/man/en_us/man_exlib.dat
 	@ echo "Generating pdf for en_us/man_exlib"
-	@ co_convert -f -d $(doc_dir)/en_us $(source)
+	@ $(co_convert) -f -d $(doc_dir)/en_us $(source)
 
 
 # implicit rules, docbook-related, added by jonas_h 2006-04-nn

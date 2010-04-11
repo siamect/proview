@@ -4,6 +4,6 @@ link_rule_mk := 1
 link = $(ldxx) $(linkflags) $(domap) -o $(export_exe) $(export_obj) \
 	$(objects) -L/usr/X11R6/lib -L/opt/gnome/lib -lpwr_co \
 	$(linkgtk) \
-	-lX11 -lm
+	-lX11 -lm; cp $(export_exe) $(eexe_dir)/
 
 endif

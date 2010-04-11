@@ -170,7 +170,7 @@ CompileRtNode()
     ld_opt="`eval echo $pwrobj/rt_io_user.o -lpwr_rt -lpwr_usbio_dummy`"
   fi
 
-  if $cxx $link_debug -L/lib/thread -L$pwrp_lib -L$pwrp_cmn/arm_linux/lib -L$pwrlib \
+  if $ldxx $link_debug -L/lib/thread -L$pwrp_lib -L$pwrp_cmn/arm_linux/lib -L$pwrlib \
     -o $pwrp_exe/$OutFile \
     $pwrobj/rt_plc_process.o \
     $pwrp_obj/${FileName}.o \
@@ -268,11 +268,24 @@ let FileType_Library=4
 let FileType__High=5
 vFileType="Process,Program,Window,RtNode,Library"
 
-ar=arm-linux-gnueabi-ar
-cc=arm-linux-gnueabi-gcc-4.3
-cxx=arm-linux-gnueabi-g++-4.3
-ldxx=arm-linux-gnueabi-g++-4.3
-
+if [ -z "$pwre_cc" ]; then
+ cc=gcc
+else
+ cc=$pwre_cc
+fi
+if [ -z "$pwre_cxx" ]; then
+ cxx=g++
+ ldxx=g++
+else
+ cxx=$pwre_cxx
+ ldxx=$pwre_cxx
+fi
+if [ -z "$pwre_ar" ]; then
+ ar=ar
+else
+ ar=$pwre_ar
+fi
+  
 pwrinc=$pwrb_root/os_linux/hw_arm/exp/inc
 pwrobj=$pwrb_root/os_linux/hw_arm/exp/obj
 pwrlib=$pwrb_root/os_linux/hw_arm/exp/lib

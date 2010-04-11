@@ -52,12 +52,6 @@ rt_modules = \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/telemecanique/inc/pwr_telemecaniqueclasses.h \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/telemecanique/inc/pwr_telemecaniqueclasses.hpp \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/exe/wb_gcg.sh \
-		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/rt/exe/tools_msg2cmsg \
-		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/rt/exe/tools_cmsg2c \
-		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/rt/exe/tools_pdrgen \
-		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/rt/exe/co_convert \
-		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/rt/exe/co_merge \
-		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/rt/exe/wb_rtt \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_ldh.h \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/inc/wb_vext.h
 
@@ -222,31 +216,7 @@ $(pwre_broot)/$(pwre_os)/$(pwre_hw)/telemecanique/inc/%.hpp : $(pwre_vmsinc)/exp
 	@ echo Import ${target}
 	@ cp $(source) $(target)
 
-$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/exe/%.sh : $(pwre_vmsinc)/exp/exe/%.sh
-	@ echo Import ${target}
-	@ cp $(source) $(target)
-
-$(pwre_broot)/$(pwre_os)/$(pwre_hw)/rt/exe/tools_msg2cmsg : $(pwre_vmsinc)/exp/exe/tools_msg2cmsg
-	@ echo Import ${target}
-	@ cp $(source) $(target)
-
-$(pwre_broot)/$(pwre_os)/$(pwre_hw)/rt/exe/tools_cmsg2c : $(pwre_vmsinc)/exp/exe/tools_cmsg2c
-	@ echo Import ${target}
-	@ cp $(source) $(target)
-
-$(pwre_broot)/$(pwre_os)/$(pwre_hw)/rt/exe/tools_pdrgen : $(pwre_vmsinc)/exp/exe/tools_pdrgen
-	@ echo Import ${target}
-	@ cp $(source) $(target)
-
-$(pwre_broot)/$(pwre_os)/$(pwre_hw)/rt/exe/co_convert : $(pwre_vmsinc)/exp/exe/co_convert
-	@ echo Import ${target}
-	@ cp $(source) $(target)
-
-$(pwre_broot)/$(pwre_os)/$(pwre_hw)/rt/exe/co_merge : $(pwre_vmsinc)/exp/exe/co_merge
-	@ echo Import ${target}
-	@ cp $(source) $(target)
-
-$(pwre_broot)/$(pwre_os)/$(pwre_hw)/rt/exe/wb_rtt : $(pwre_vmsinc)/exp/exe/wb_rtt
+$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/exe/wb_gcg.sh : $(pwre_croot)/wb/exp/com/src/os_linux/hw_arm/wb_gcg.sh
 	@ echo Import ${target}
 	@ cp $(source) $(target)
 

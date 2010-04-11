@@ -19,17 +19,17 @@ endif
 
 $(bld_dir)/%.cmsg $(inc_dir)/%.h: %.msg
 	@ $(log_msg_h)
-	@ $(msg2cmsg) $(source) $(bld_dir)/$(tname).cmsg $(inc_dir)/$(tname).h
+	@ $(tools_msg2cmsg) $(source) $(bld_dir)/$(tname).cmsg $(inc_dir)/$(tname).h
 
 
 $(obj_dir)/%.cmsg $(inc_dir)/%.h : %.msg
 	@ $(log_msg_h)
-	@ $(msg2cmsg) $(source) $(obj_dir)/$(tname).cmsg $(inc_dir)/$(tname).h
+	@ $(tools_msg2cmsg) $(source) $(obj_dir)/$(tname).cmsg $(inc_dir)/$(tname).h
 
 
 $(obj_dir)/%.o : $(obj_dir)/%.cmsg
 	@ $(log_cmsg_obj)
-	@ $(pwr_exe)/tools_cmsg2c -b $(comp_name) $(source) $(tmp_dir)/$(sname).c 
+	@ $(tools_cmsg2c) -b $(comp_name) $(source) $(tmp_dir)/$(sname).c 
 	@ $(cc) $(cflags) $(csetos) $(cinc) $(cobj) $(tmp_dir)/$(sname).c
 
 
@@ -150,12 +150,12 @@ $(inc_dir)/%.h : %.pdr
 	@ if [ -e $(target) ]; then \
 		$(rm) $(target); \
 	fi
-	@ tools_pdrgen -h -o $(target) $(source)
+	@ $(tools_pdrgen) -h -o $(target) $(source)
 
 
 $(bld_dir)/%_pdr.o : %.pdr
 	@ $(log_x_lib)
-	@ tools_pdrgen -c -o $(bld_dir)/$(sname)_pdr.c $(source)
+	@ $(tools_pdrgen) -c -o $(bld_dir)/$(sname)_pdr.c $(source)
 ifeq ($(nodep),)
 	@ $(SHELL) -ec '$(cc) -MM $(cinc) $(csetos) $(bld_dir)/$(sname)_pdr.c \
 	  | sed '\''s|$*_pdr\.o[ ]*|$(bld_dir)/&|g'\'' \

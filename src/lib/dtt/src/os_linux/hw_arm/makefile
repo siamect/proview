@@ -181,11 +181,11 @@ endif
 
 $(export_lib)(%.o) : %.dtt
 	@ echo "Generate $(sname)"
-	@ $(pwr_exe)/wb_rtt rttsys generate/id=$(sname) arm_linux
+	@ $(wb_rtt) rttsys generate/id=$(sname) arm_linux
 
 $(bld_dir)/%.c : %.dtt_m
 	@ echo "Generate menu"
-	@ $(pwr_exe)/wb_rtt rttsys generate/menu arm_linux
+	@ $(wb_rtt) rttsys generate/menu arm_linux
 
 -include $(source_dependencies)
 
