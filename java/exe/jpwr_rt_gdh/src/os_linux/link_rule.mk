@@ -1,7 +1,7 @@
 ifndef link_rule_mk
 link_rule_mk := 1
 
-link =	g++ -shared -DHW_X86 -DOS_LINUX \
+link =	$(ldxx) -shared -DHW_X86 -DOS_LINUX \
 	-L${pwr_elib} \
 	-L${pwr_lib} \
 	${pwre_broot}/${pwre_target}/bld/lib/co/*.o \

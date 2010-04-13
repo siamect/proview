@@ -211,7 +211,7 @@ dlinux_sfloat (
   return TRUE;
 }    
 
-#elif defined(OS_LINUX) && (defined(HW_X86) || defined(HW_X86_64))
+#elif defined(OS_LINUX) && (defined(HW_X86) || defined(HW_X86_64) || defined(HW_ARM))
 
 static pwr_tBoolean
 dlinux_sfloat (

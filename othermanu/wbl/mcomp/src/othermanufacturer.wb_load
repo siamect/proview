@@ -14476,10 +14476,11 @@ else
         EndObject
       EndObject
       Object Template Eurotherm_TC3001Aggr 2157150208 01-JAN-1970 01:00:00.00
-        Body RtBody 16-OCT-2007 11:31:05.55
+        Body RtBody 23-MAR-2010 16:49:08.68
           Attr CircuitBreaker.AlarmText = "Circuit breaker tripped"
           Attr Contactor.Super.Specification = "Contactor"
           Attr Contactor.Order.Description = "Energize contactor"
+          Attr Contactor.DisableOffControl = 1
           Attr Contactor.Feedback.Description = "Contactor is energized"
           Attr Contactor.FbTimeLimit = 1.000000e+00
           Attr Contactor.AlarmText = "Contactor feedback lost"
@@ -21647,9 +21648,10 @@ Eurotherm TC3001 Aggregate
         EndObject
       EndObject
       Object Template Omron_Contactor_J7KN 2148761600 06-OCT-2005 09:28:20.00
-        Body RtBody 06-OCT-2005 09:46:18.17
+        Body RtBody 23-MAR-2010 16:48:42.31
           Attr Super.Super.Specification = "Omron motor contactor J7KN"
           Attr Super.Super.DataSheet = "$pwr_lang/dsh/omron_contactor_j7kn.pdf"
+          Attr Super.DisableOffControl = 1
           Attr Super.FbTimeLimit = 1.000000e+00
           Attr Super.AlarmText = "Feedback contactor lost"
         EndBody

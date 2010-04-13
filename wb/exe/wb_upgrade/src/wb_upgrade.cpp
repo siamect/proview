@@ -64,8 +64,8 @@ static upg_sCnvAlarm upg_alatext[] = {
   {"BaseComponent:Class-BaseM3WayValve", {"SwitchAlarmText", "", "", "", "", "", "", "", "", ""}},
   {"BaseComponent:Class-BaseOverloadRelay", {"AlarmText", "", "", "", "", "", "", "", "", ""}},
   {"BaseComponent:Class-BaseSafetySwitch", {"AlarmText", "", "", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseFcPPO5", {"AlarmTripped", "AlarmWarning", "AlarmError", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseFcPPO3", {"AlarmTripped", "AlarmWarning", "AlarmError", "", "", "", "", "", "", ""}},
+  {"BaseComponent:Class-BaseFcPPO5", {"AlarmTripped", "AlarmWarning", "AlarmError", "AlarmConnection", "", "", "", "", "", ""}},
+  {"BaseComponent:Class-BaseFcPPO3", {"AlarmTripped", "AlarmWarning", "AlarmError", "AlarmConnection", "", "", "", "", "", ""}},
   {"BaseComponent:Class-BaseFcPPO5MotorAggr", {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
   {"BaseComponent:Class-BaseFcPPO5FanAggr", {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
   {"BaseComponent:Class-BaseFcPPO5PumpAggr", {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
@@ -73,7 +73,7 @@ static upg_sCnvAlarm upg_alatext[] = {
   {"BaseComponent:Class-BaseFcPPO3FanAggr", {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
   {"BaseComponent:Class-BaseFcPPO3PumpAggr", {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
   {"ABB:Class-ABB_CircuitBreaker_MS116", {"AlarmText", "", "", "", "", "", "", "", "", ""}},
-  {"ABB:Class-ABB_ACS800_1", {"AlarmLocalMod", "AlarmTripped", "AlarmFanOld", "AlarmWarning", "AlarmError", "", "", "", "", ""}},
+  {"ABB:Class-ABB_ACS800_1", {"AlarmLocalMod", "AlarmTripped", "AlarmFanOld", "AlarmWarning", "AlarmError", "AlarmConnection", "", "", "", ""}},
   {"ABB:Class-ABB_ACC800", {"AlarmLocalMod", "AlarmWarning", "AlarmError", "AlarmTorqFault", "AlarmBrakeFault", "AlarmTorqProvFault", "", "", "", ""}},
   {"ABB:Class-ABB_ACS800MotorAggr", {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
   {"ABB:Class-ABB_ACS800PumpAggr", {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
@@ -222,6 +222,9 @@ int main( int argc, char *argv[])
 	  else if ( text[strlen(text)-3] == ',' && text[strlen(text)-2] == ' '&& text[strlen(text)-1] == ' ') {
 	    text[strlen(text)-3] = 0;
 	    mod = true;
+	  }
+	  else if ( strlen(text) == 0 && strcmp( upg_alatext[i].attr[j], "AlarmConnection") == 0) {
+	    strcpy( text, "No connection");
 	  }
 
 	  if ( mod) {

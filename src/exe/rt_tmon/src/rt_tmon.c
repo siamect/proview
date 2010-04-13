@@ -274,7 +274,7 @@ main (
       tmo_ms = 0;
     }
 
-#ifdef OS_LINUX || defined OS_MACOS
+#if defined OS_LINUX || defined OS_MACOS
     get.data = NULL;
     qcom_Get(&sts, &my_q, &get, tmo_ms);
     if (sts != QCOM__TMO && sts != QCOM__QEMPTY) {

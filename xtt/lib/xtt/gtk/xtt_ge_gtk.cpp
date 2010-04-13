@@ -216,6 +216,8 @@ XttGeGtk::~XttGeGtk()
 {
   if ( close_cb)
     (close_cb)( this);
+  if ( confirm_widget)
+    gtk_widget_destroy( confirm_widget);
   if ( nav_shell)
     gtk_widget_destroy( nav_shell);
   delete graph;

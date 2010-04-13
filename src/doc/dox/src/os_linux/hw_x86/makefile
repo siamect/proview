@@ -40,7 +40,7 @@ $(clean_html) : clean_%.html : %.html
 
 $(doc_dir)/dox/index.html : ../../doxygen.dx
 	@ echo "doxygen documentation $(source) $(target)"
-	@ doxygen
+	@ doxygen 2> /dev/null 
 
 
 

@@ -148,6 +148,11 @@ sub build () # args: branch, subbranch, flavour, phase
     exit 1;
   }
 
+  use DB_File;
+  tie(%envdb, "DB_File", $dbname, O_CREAT|O_RDWR, 0644) || die "++ can't tie $dbname!";
+
+  read_vars();
+
   my($branch) = $_[0];
   if (!defined($branch)) {
     usage_build();
@@ -232,6 +237,10 @@ sub build_kernel # args: flavour
 #
 sub ebuild # args: pass flavour
 {
+  use DB_File;
+  tie(%envdb, "DB_File", $dbname, O_CREAT|O_RDWR, 0644) || die "++ can't tie $dbname!";
+
+  read_vars();
 
   my $fname = $ENV{"pwre_bin"} . "/ebuild.dat";
   open FILE, $fname or die $!;
@@ -1196,7 +1205,6 @@ sub tags ()
 #
 sub _build () # args: branch, subbranch, flavour, phase
 {
-
 
   my($branch) = $_[0];
   if (!defined($branch)) {

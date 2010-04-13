@@ -69,6 +69,16 @@ SObject pwrb:Type
        Attr Value = 3
      EndBody
     EndObject
+    !/**
+    !  Chinese.
+    !*/
+    Object Chinese $Value
+     Body SysBody
+       Attr PgmName = "Chinese"
+       Attr Text = "Chinese"
+       Attr Value = 4
+     EndBody
+    EndObject
   EndObject
 EndSObject
 

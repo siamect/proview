@@ -42,6 +42,12 @@ fromroot=$1
 toroot=$2
 file=$3
 
+if [ -z "$pwre_host_exe" ]; then
+  co_merge="co_merge"
+else
+  co_merge=$pwre_host_exe/co_merge
+fi
+
 if [ "$file" != "" ]; then
   # Merge only this file
   merge_dir_func $toroot $fromroot $file
@@ -78,19 +84,19 @@ else
   methodfile=$pwr_inc/rt_io_$pwre_module.meth
   if [ -e $methodfile ]; then
     echo "-- Merge io methods"
-    co_merge io_base $pwr_einc/rt_io_\*.meth $pwr_elib/libpwr_rt.a
+    $co_merge io_base $pwr_einc/rt_io_\*.meth $pwr_elib/libpwr_rt.a
   fi
   # Merge wb methods
   methodfile=$pwr_inc/wb_$pwre_module.meth
   if [ -e $methodfile ]; then
     echo "-- Merge wb methods"
-    co_merge wb_base $pwr_einc/wb_\*.meth $pwr_elib/libpwr_wb.a
+    $co_merge wb_base $pwr_einc/wb_\*.meth $pwr_elib/libpwr_wb.a
   fi
   # Merge xtt methods
   methodfile=$pwr_inc/xtt_$pwre_module.meth
   if [ -e $methodfile ]; then
     echo "-- Merge xtt methods"
-    co_merge xtt_base $pwr_einc/xtt_\*.meth $pwr_elib/libpwr_xtt.a
+    $co_merge xtt_base $pwr_einc/xtt_\*.meth $pwr_elib/libpwr_xtt.a
   fi
 fi
 

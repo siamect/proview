@@ -52,44 +52,44 @@ $(load_dir)/pwrb.dbs :
 
 $(inc_dir)/pwr_baseclasses.h :
 	@ echo "Generating struct files for pwrb classes..."
-	@ co_convert -so -d $(inc_dir) "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
+	@ $(co_convert) -so -d $(inc_dir) "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
 
 $(inc_dir)/pwr_baseclasses.hpp :
 	@ echo "Generating hpp files for pwrb classes..."
-	@ co_convert -po -d $(inc_dir) "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
+	@ $(co_convert) -po -d $(inc_dir) "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
 
 $(doc_dir)/en_us/orm/pwrb_allclasses.html :
 	@ echo "Generating html files for pwrb classes en_us..."
-	@ co_convert -w -d $(doc_dir)/en_us/orm -g $(pwre_sroot)/wbl/pwrb/src/cnv_setup.dat "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
+	@ $(co_convert) -w -d $(doc_dir)/en_us/orm -g $(pwre_sroot)/wbl/pwrb/src/cnv_setup.dat "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
 	@ echo "Generating html files for pwrb structs en_us..."
-	@ co_convert -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_baseclasses.h
-	@ co_convert -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_baseclasses.hpp
+	@ $(co_convert) -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_baseclasses.h
+	@ $(co_convert) -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_baseclasses.hpp
 	@ echo "Generating html files for pwrb code en_us..."
-	@ co_convert -c -d $(doc_dir)/en_us/orm "$(pwre_sroot)/lib/rt/src/rt_plc_macro_*.h"
-	@ co_convert -c -d $(doc_dir)/en_us/orm "$(pwre_sroot)/lib/rt/src/rt_plc_*.c"
-	@ co_convert -c -d $(doc_dir)/en_us/orm "$(pwre_sroot)/lib/rt/src/rt_c_*.c"
-	@ co_convert -c -d $(doc_dir)/en_us/orm "$(pwre_sroot)/lib/rt/src/rt_csup.c"
+	@ $(co_convert) -c -d $(doc_dir)/en_us/orm "$(pwre_sroot)/lib/rt/src/rt_plc_macro_*.h"
+	@ $(co_convert) -c -d $(doc_dir)/en_us/orm "$(pwre_sroot)/lib/rt/src/rt_plc_*.c"
+	@ $(co_convert) -c -d $(doc_dir)/en_us/orm "$(pwre_sroot)/lib/rt/src/rt_c_*.c"
+	@ $(co_convert) -c -d $(doc_dir)/en_us/orm "$(pwre_sroot)/lib/rt/src/rt_csup.c"
 	@ echo "Generating html files for pwrb classes sv_se..."
-	@ co_convert -w -l sv_se -d $(doc_dir)/sv_se/orm -g $(pwre_sroot)/wbl/pwrb/src/cnv_setup.dat "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
+	@ $(co_convert) -w -l sv_se -d $(doc_dir)/sv_se/orm -g $(pwre_sroot)/wbl/pwrb/src/cnv_setup.dat "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
 	@ echo "Generating html files for pwrb structs sv_se..."
-	@ co_convert -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_baseclasses.h
-	@ co_convert -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_baseclasses.hpp
+	@ $(co_convert) -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_baseclasses.h
+	@ $(co_convert) -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_baseclasses.hpp
 	@ echo "Generating html files for pwrb code sv_se..."
-	@ co_convert -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rt/src/rt_plc_macro_*.h"
-	@ co_convert -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rt/src/rt_plc_*.c"
-	@ co_convert -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rt/src/rt_c_*.c"
-	@ co_convert -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rt/src/rt_csup.c"
+	@ $(co_convert) -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rt/src/rt_plc_macro_*.h"
+	@ $(co_convert) -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rt/src/rt_plc_*.c"
+	@ $(co_convert) -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rt/src/rt_c_*.c"
+	@ $(co_convert) -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rt/src/rt_csup.c"
 	@ echo "Generating postscript file for pwrb classes..."
-	@ co_convert -q -d $(doc_dir)/en_us "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
-	@ co_convert -q -l sv_se -d $(doc_dir)/sv_se "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
+	@ $(co_convert) -q -d $(doc_dir)/en_us "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
+	@ $(co_convert) -q -l sv_se -d $(doc_dir)/sv_se "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
 
 $(exe_dir)/en_us/pwrb_xtthelp.dat :
 	@ echo "Generating xtt help files for pwrb classes en_us"
-	@ co_convert -x -d $(exe_dir)/en_us "$(pwre_sroot)/wbl/pwrb/src/pwrb_c_*.wb_load"
+	@ $(co_convert) -x -d $(exe_dir)/en_us "$(pwre_sroot)/wbl/pwrb/src/pwrb_c_*.wb_load"
 
 $(exe_dir)/sv_se/pwrb_xtthelp.dat :
 	@ echo "Generating xtt help files for pwrb classes sv_se"
-	@ co_convert -x -l sv_se -d $(exe_dir)/sv_se "$(pwre_sroot)/wbl/pwrb/src/pwrb_c_*.wb_load"
+	@ $(co_convert) -x -l sv_se -d $(exe_dir)/sv_se "$(pwre_sroot)/wbl/pwrb/src/pwrb_c_*.wb_load"
 
 #$(export_wbl) : $(cnf_dir)/%.wb_vers : %.wb_load
 #       @ write sys$$output "Exporting $< ..."

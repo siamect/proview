@@ -556,6 +556,31 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
 
     opplace_found = 1;
   }
+  else if ( select_opplace) {
+    // Check if there is only one single opplace
+    pwr_tOName fullname;
+    pwr_tObjName name;
+    pwr_tStatus sts;
+    pwr_tOid oid;
+
+
+    int i = 0;
+    for ( sts = gdh_GetClassList( pwr_cClass_OpPlace, &oid); 
+	  ODD(sts);
+	  sts = gdh_GetNextObject( oid, &oid)) {
+      sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_object);
+      if ( EVEN(sts) || cdh_NoCaseStrcmp( name, "opdefault") == 0) 
+	continue;
+      sts = gdh_ObjidToName( oid, fullname, sizeof(fullname), cdh_mNName);
+      if ( EVEN(sts)) continue;    
+
+      i++;
+    }
+    if ( i == 1) {
+      strcpy( opplace_str, fullname);
+      opplace_found = 1;
+    }
+  }
   else {
     // Look for default opplace
     pwr_tOid oid;
@@ -681,9 +706,11 @@ void Xtt::opplace_selected_cb( void *ctx, char *text)
 
 void Xtt::list_opplace()
 {
-  char texts[20][80];
+  pwr_tOName texts[20];
+  pwr_tObjName name;
   pwr_tStatus sts;
   pwr_tOid oid;
+
 
   int i = 0;
   for ( sts = gdh_GetClassList( pwr_cClass_OpPlace, &oid); 
@@ -692,6 +719,10 @@ void Xtt::list_opplace()
     sts = gdh_ObjidToName( oid, texts[i], sizeof(texts[0]), cdh_mNName);
     if ( EVEN(sts)) continue;
     
+    sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_object);
+    if ( EVEN(sts) || cdh_NoCaseStrcmp( name, "opdefault") == 0) 
+      continue;
+
     i++;
     if ( i == (int)(sizeof(texts)/sizeof(texts[0]) - 2))
       break;
@@ -714,7 +745,7 @@ void Xtt::list_opplace()
   }
   else 
     // Select oplace from list
-    wow->CreateList( "Select Operator Place", (char *)texts, 80, opplace_selected_cb, 0, this);
+    wow->CreateList( "Select Operator Place", (char *)texts, sizeof(pwr_tOName), opplace_selected_cb, 0, this);
 }
 
 int Xtt::xnav_get_select( void *ctx, pwr_tAttrRef *attrref, int *is_attr)

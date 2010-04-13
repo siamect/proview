@@ -1012,6 +1012,8 @@ static int	generate_func(	edit_ctx	ctx,
 	    opsys = pwr_mOpSys_X86_64_LINUX;
 	  else if ( cdh_NoCaseStrncmp( arg1_str, "X86_64_MACOS", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_X86_64_MACOS;
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "ARM_LINUX", strlen( arg1_str)) == 0)
+	    opsys = pwr_mOpSys_ARM_LINUX;
 	  else
 	  {
 	    rtt_message('E', "Unknown platform");
@@ -1753,6 +1755,8 @@ static int	dtt_link_func(	edit_ctx	ctx,
 	    opsys = pwr_mOpSys_X86_64_MACOS;
 	  else if ( cdh_NoCaseStrncmp( arg1_str, "X86_64_MACOS", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_X86_64_MACOS;
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "ARM_LINUX", strlen( arg1_str)) == 0)
+	    opsys = pwr_mOpSys_ARM_LINUX;
 	  else
 	  {
 	    rtt_message('E', "Unknown platform");
@@ -1859,6 +1863,8 @@ static int	dtt_compile_func(	edit_ctx	ctx,
 	    opsys = pwr_mOpSys_X86_64_LINUX;
 	  else if ( cdh_NoCaseStrncmp( arg1_str, "X86_64_MACOS", strlen( arg1_str)) == 0)
 	    opsys = pwr_mOpSys_X86_64_MACOS;
+	  else if ( cdh_NoCaseStrncmp( arg1_str, "ARM_LINUX", strlen( arg1_str)) == 0)
+	    opsys = pwr_mOpSys_ARM_LINUX;
 	  else
 	  {
 	    rtt_message('E', "Unknown platform");
@@ -7793,12 +7799,16 @@ int	dtt_start( char		*programname)
 #elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS
 	if ( dtt_is_rttsys)
 	{
+	  pwr_tFileName dir;
+	  char *s1;
+
 	  if ( (s = getenv( "pwre_sroot")) == NULL)
 	  {
 	    printf( "** Rtt source directory pwrp_rtt is not defined\n");
 	    dtt_exit_now(0);
 	  }
 	  sprintf( dtt_source_dir, "%s/lib/dtt/src/", s);
+#if 0
 	  if ( (s = getenv( "pwre_broot")) == NULL)
 	  {
 	    printf( "** Rtt build directory pwrp_rttbld is not defined\n");
@@ -7806,12 +7816,22 @@ int	dtt_start( char		*programname)
 	  }
 	  sprintf( dtt_build_dir, "%s/os_%s/hw_%s/bld/lib/dtt/", s, rtt_os,
 		rtt_hw);
+#endif
 	  if ( (s = getenv( "pwr_exe")) == NULL)
 	  {
 	    printf( "** Rtt execute directory pwr_exe is not defined\n");
 	    dtt_exit_now(0);
 	  }
 	  sprintf( dtt_exe_dir, "%s/", s);
+	  strcpy( dir, s);
+	  s1 = strrchr( dir, '/');
+	  if ( s1)
+	    *s1 = 0;
+	  s1 = strrchr( dir, '/');
+	  if ( s1)
+	    *s1 = 0;
+	  strcat( dir, "/bld/lib/dtt/");
+	  strcpy( dtt_build_dir, dir);
 	}
 	else
 	{
@@ -10589,6 +10609,7 @@ static char *dtt_opsys_to_name( int opsys)
 	  case pwr_mOpSys_X86_LINUX: strcpy( name, "X86_LINUX"); break;
 	  case pwr_mOpSys_X86_64_LINUX: strcpy( name, "X86_64_LINUX"); break;
 	  case pwr_mOpSys_X86_64_MACOS: strcpy( name, "X86_64_MACOS"); break;
+	  case pwr_mOpSys_ARM_LINUX: strcpy( name, "ARM_LINUX"); break;
 	  default: strcpy( name, "Unknwn");
 	}
 	return name;

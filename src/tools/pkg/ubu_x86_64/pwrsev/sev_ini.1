@@ -1,0 +1,77 @@
+.TH sev_ini "1" "April 2005" "Proview" "Proview Manual"
+.SH NAME
+sev_ini - start or stop the Proview storage environment
+.SH SYNOPSIS
+.B sev_ini 
+[\fIOPTION\fR]
+.SH DESCRIPTION
+Startup process for the Proview storage environment.
+.SH OPTIONS
+.HP
+\fB\-a\fR
+.IP
+Application file. The application file defines the application processes for
+the node. The default name is $pwrp_load/ld_appl_'node'_'busid'.txt, where node is
+the nodename and busid is the QCOM bus id, for example
+
+$pwrp_load/ld_appl_vwxn1t_507.txt
+
+.HP
+\fB\-c\fR
+.IP
+Console file. The output of log messages to the console device can be redirected with
+the -c option.
+
+.HP
+\fB\-d\fR
+.IP
+Load file directory. Default is $pwrp_load.
+.HP
+\fB\-e\fR
+.IP
+Ignore errors.
+.HP
+\fB\-f\fR
+.IP
+Ignore fatal errors.
+.HP
+\fB\-h\fR
+.IP
+Print help.
+.HP
+\fB\-i\fR
+.IP
+Interactive. Print error messages to terminal.
+.HP
+\fB\-n\fR
+.IP
+Node name.
+.HP
+\fB\-q\fR
+.IP
+QCOM bus id.
+.HP
+\fB\-s\fR
+.IP
+Stop Proview.
+.HP
+\fB\-v\fR
+.IP
+Verbose.
+.HP
+\fB\-w\fR
+.IP
+Ignore warnings.
+.HP
+\fB\-?\fR
+.IP
+Print help.
+
+.SH FILES
+/etc/pwrp_profile
+
+The Proview system wide configuration file.
+
+.SH "SEE ALSO"
+.BR pwrsev(1)
+

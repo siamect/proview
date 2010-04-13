@@ -145,8 +145,6 @@ int main (
   pwr_tStatus	sts;
   int		event;
   plc_sProcess	*pp;
-  uid_t         ruid;
-  struct passwd *pwd;
 /*
   struct rlimit rlim;
   int i;
@@ -171,6 +169,9 @@ int main (
   /* Once threads has set their priority don't run as root */
   
 #if 0
+  uid_t         ruid;
+  struct passwd *pwd;
+
   ruid = getuid();
   
   if (ruid == 0) {
