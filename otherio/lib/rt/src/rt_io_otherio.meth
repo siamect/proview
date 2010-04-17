@@ -5,3 +5,5 @@ Modbus_Module
 Modbus_Master
 Modbus_TCP_Server
 Modbus_TCP_ServerModule
+GPIO
+GPIO_Module
