@@ -24,7 +24,7 @@ pkg_install_func ()
 
   if [ $1 == ${1##*/} ]; then
     # Add path
-    pkg="/home/pwrp/$1"
+    pkg="$HOME/$1"
   else
     pkg=$1
   fi
@@ -61,7 +61,7 @@ pkg_list_func ()
     # Extract datfile from package
     if [ $1 == ${1##*/} ]; then
       # Add path
-      pkg="/home/pwrp/$1"
+      pkg="$HOME/$1"
     else
       pkg=$1
     fi
@@ -114,7 +114,7 @@ pkg_listfiles_func ()
     # Extract datfile from package
     if [ $1 == ${1##*/} ]; then
       # Add path
-      pkg="/home/pwrp/$1"
+      pkg="$HOME/$1"
     else
       pkg=$1
     fi
@@ -185,7 +185,7 @@ pkg_brief_func ()
     do
       if [ $file == ${file##*/} ]; then
         # Add path
-        pkg="/home/pwrp/$file"
+        pkg="$HOME/$file"
       else
         pkg=$file
       fi
@@ -229,11 +229,11 @@ pkg_brief_func ()
 pkg_dir_func()
 {
   if [ -z $1 ]; then
-    allpkg=`ls /home/pwrp/pwrp_pkg_*.tgz`
+    allpkg=`ls $HOME/pwrp_pkg_*.tgz`
   else
     if [ $1 == ${1##*/} ]; then
       # Add path
-      pattern="/home/pwrp/*$1*"
+      pattern="$HOME/*$1*"
     elif [ ${1:0:1} == "/" ]; then
       pattern=$1*
     else
@@ -252,11 +252,11 @@ pkg_dir_func()
 pkg_dirbrief_func()
 {
   if [ -z "$1" ]; then
-    allpkg=`ls /home/pwrp/pwrp_pkg_*.tgz`
+    allpkg=`ls $HOME/pwrp_pkg_*.tgz`
   else
     if [ "$1" == "${1##*/}" ]; then
       # Add path
-      pattern="/home/pwrp/*$1*"
+      pattern="$HOME/*$1*"
     elif [ ${1:0:1} == "/" ]; then
       pattern=$1*
     else

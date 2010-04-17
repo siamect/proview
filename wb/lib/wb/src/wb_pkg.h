@@ -115,16 +115,33 @@ class pkg_node {
   bool m_valid;
   int m_errors;
   int m_warnings;
+  char m_user[80];
 
  public:
   pkg_node( char *name): m_opsys(pwr_mOpSys__), m_bus(0),
     m_dstatus(0), m_valid(false), m_errors(0), m_warnings(0)
-    { strcpy( m_name, name); strcpy( m_bootnode, "-");}
+    { 
+      strncpy( m_name, name, sizeof(m_name));
+      strcpy( m_user, "pwrp");
+      strcpy( m_bootnode, "-");
+    }
   pkg_node( char *name, pwr_mOpSys opsys, int bus, 
 	    pwr_tMask dstatus, char *bootnode) :
     m_opsys(opsys), m_bus(bus), m_dstatus(dstatus),
     m_valid(true), m_errors(0), m_warnings(0)
-    { strcpy( m_name, name); strcpy( m_bootnode, bootnode);}
+    { 
+      char *s;
+      strncpy( m_user, bootnode, sizeof(m_user));
+      if ( (s = strchr( m_user, '@'))) {
+	*s = 0;
+	strncpy( m_bootnode, s+1, sizeof(m_bootnode));
+      }
+      else {
+	strcpy( m_user, "pwrp");
+	strcpy( m_bootnode, bootnode);
+      }
+      strncpy( m_name, name, sizeof(m_name));
+    }
   char *name() { return m_name;}
   pwr_mOpSys opsys() { return m_opsys;}
   int bus() { return m_bus;}
@@ -134,7 +151,18 @@ class pkg_node {
   void setOpsys( pwr_mOpSys opsys) { m_opsys = opsys;}
   void setBus( int bus) { m_bus = bus;}
   void setDStatus( pwr_tMask dstatus) { m_dstatus = dstatus;} 
-  void setBootnode( char *bootnode) { strcpy( m_bootnode, bootnode);} 
+  void setBootnode( char *bootnode) { 
+    char *s;
+    strncpy( m_user, bootnode, sizeof(m_user));
+    if ( (s = strchr( m_user, '@'))) {
+      *s = 0;
+      strncpy( m_bootnode, s+1, sizeof(m_bootnode));
+    }
+    else {
+      strcpy( m_user, "pwrp");
+      strcpy( m_bootnode, bootnode);
+    }
+  } 
   void setValid() { m_valid = true;}
   void push_back( pkg_pattern& pattern) { 
     pattern.node( this);
