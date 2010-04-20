@@ -129,8 +129,20 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
 			       io_sCard	*cp)
 {
   io_sLocalGPIO_Module *local = (io_sLocalGPIO_Module *)cp->Local;
+  pwr_sClass_GPIO_Module *op = (pwr_sClass_GPIO_Module *)cp->op;
   int i;
   char str[20];
+
+  if ( op->ScanInterval > 1) {
+    local->has_read_method = 1;
+    if ( local->interval_cnt != 0) {
+      local->interval_cnt++;
+      if ( local->interval_cnt >= op->ScanInterval)
+        local->interval_cnt = 0;
+      return IO__SUCCESS;
+    }
+    local->interval_cnt++;
+  }
 
   for ( i = 0; i < GPIO_MAX_CHANNELS; i++) {
     if ( cp->chanlist[i].cop) {
@@ -157,7 +169,22 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
 			       io_sCard	*cp)
 {
   io_sLocalGPIO_Module *local = (io_sLocalGPIO_Module *)cp->Local;
+  pwr_sClass_GPIO_Module *op = (pwr_sClass_GPIO_Module *)cp->op;
   int i;
+
+  if ( op->ScanInterval > 1) {
+    if ( !local->has_read_method) {
+      if ( local->interval_cnt != 0) {
+	local->interval_cnt++;
+	if ( local->interval_cnt >= op->ScanInterval)
+	  local->interval_cnt = 0;
+	return IO__SUCCESS;
+      }
+      local->interval_cnt++;
+    }
+    else if ( local->interval_cnt != 1)
+      return IO__SUCCESS;
+  }
 
   for ( i = 0; i < GPIO_MAX_CHANNELS; i++) {
     if ( cp->chanlist[i].cop) {
