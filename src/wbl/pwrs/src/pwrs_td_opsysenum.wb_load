@@ -120,5 +120,15 @@ SObject pwrs:Type
        Attr Value = 256
      EndBody
     EndObject
+    !/**
+    !  Operating system is Linux on ARM
+    !*/
+    Object ARM_LINUX $Value
+     Body SysBody
+       Attr PgmName = "ARM_LINUX"
+       Attr Text = "Linux on ARM"
+       Attr Value = 512
+     EndBody
+    EndObject
   EndObject
 EndSObject

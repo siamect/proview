@@ -62,7 +62,7 @@ void wb_pkg::readConfig()
 {
   char fname[200];
   char line[200];
-  char line_item[6][80];
+  char line_item[7][80];
   int num;
   int sts;
 
@@ -85,8 +85,9 @@ void wb_pkg::readConfig()
       int bus;
       pwr_tMask dstatus;
       char bootnode[80];
+      pwr_tString80 custom_platform;
 
-      if ( !(num == 5 || num == 6))
+      if ( num != 7)
 	throw wb_error_str("File corrupt " load_cNameDistribute);
 
       sts = sscanf( line_item[2], "%d", (int *)&opsys);
@@ -101,13 +102,11 @@ void wb_pkg::readConfig()
       if ( sts != 1)
 	throw wb_error_str("File corrupt " load_cNameDistribute);
 
-      if ( num == 6)
-	strcpy( bootnode, line_item[5]);
-      else
-	strcpy( bootnode, "-");
+      strcpy( bootnode, line_item[5]);
+      strcpy( custom_platform, line_item[6]);
 	
       if ( m_allnodes) {
-	pkg_node node( line_item[1], opsys, bus, dstatus, bootnode);
+	pkg_node node( line_item[1], opsys, bus, dstatus, bootnode, custom_platform);
 	m_nodelist.push_back( node);
       }
       else {
@@ -119,6 +118,7 @@ void wb_pkg::readConfig()
 	    m_nodelist[i].setBus( bus);
 	    m_nodelist[i].setDStatus( dstatus);
 	    m_nodelist[i].setBootnode( bootnode);
+	    m_nodelist[i].setCustomPlatform( custom_platform);
 	    m_nodelist[i].setValid();
 	    break;
 	  }
@@ -179,9 +179,13 @@ void wb_pkg::readConfig()
 	if ( plcname[0] != 0) {
 	  pwr_tFileName dir;
 	
-	  sprintf( dir, "$pwrp_root/bld/%s/exe/", cdh_OpSysToStr( n.opsys()));
+	  if ( n.opsys() == pwr_mOpSys_CustomBuild && 
+	       strcmp( n.customPlatform(), "-") != 0)
+	    sprintf( dir, "$pwrp_root/bld/%s/exe/", n.customPlatform());
+	  else
+	    sprintf( dir, "$pwrp_root/bld/%s/exe/", cdh_OpSysToStr( n.opsys()));
 	  sprintf( fname, "%s%s", dir, plcname); 
-	  sprintf( dir, "$pwrp_root/%s/exe/", cdh_OpSysToStr( n.opsys()));
+	  sprintf( dir, "$pwrp_exe/");
 	  pkg_pattern pplc( fname, dir, 'W');
 	  n.push_back( pplc);
 	}

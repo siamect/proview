@@ -116,6 +116,7 @@ class pkg_node {
   int m_errors;
   int m_warnings;
   char m_user[80];
+  char m_custom_platform[80];
 
  public:
   pkg_node( char *name): m_opsys(pwr_mOpSys__), m_bus(0),
@@ -124,9 +125,10 @@ class pkg_node {
       strncpy( m_name, name, sizeof(m_name));
       strcpy( m_user, "pwrp");
       strcpy( m_bootnode, "-");
+      strcpy( m_custom_platform, "-");
     }
   pkg_node( char *name, pwr_mOpSys opsys, int bus, 
-	    pwr_tMask dstatus, char *bootnode) :
+	    pwr_tMask dstatus, char *bootnode, char *custom_platform) :
     m_opsys(opsys), m_bus(bus), m_dstatus(dstatus),
     m_valid(true), m_errors(0), m_warnings(0)
     { 
@@ -141,12 +143,14 @@ class pkg_node {
 	strcpy( m_bootnode, bootnode);
       }
       strncpy( m_name, name, sizeof(m_name));
+      strncpy( m_custom_platform, custom_platform, sizeof(m_custom_platform));
     }
   char *name() { return m_name;}
   pwr_mOpSys opsys() { return m_opsys;}
   int bus() { return m_bus;}
   pwr_tMask dstatus() { return m_dstatus;}
   char *bootnode() { return m_bootnode;}
+  char *customPlatform() { return m_custom_platform;}
   bool valid() { return m_valid;}
   void setOpsys( pwr_mOpSys opsys) { m_opsys = opsys;}
   void setBus( int bus) { m_bus = bus;}
@@ -163,6 +167,9 @@ class pkg_node {
       strcpy( m_bootnode, bootnode);
     }
   } 
+  void setCustomPlatform( char *custom_platform) {
+    strncpy( m_custom_platform, custom_platform, sizeof(m_custom_platform));
+  }
   void setValid() { m_valid = true;}
   void push_back( pkg_pattern& pattern) { 
     pattern.node( this);
