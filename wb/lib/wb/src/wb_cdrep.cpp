@@ -554,7 +554,7 @@ void wb_cdrep::convertSubClass( pwr_tCid cid, wb_merep *merep,
   pwr_tStatus sts;
   wb_cdrep *cdrep_source = merep->cdrep( &sts, cid);
   if ( EVEN(sts)) throw wb_error(sts);
-  wb_cdrep *cdrep_target = m_orep->vrep()->merep()->cdrep( &sts, cid);
+  wb_cdrep *cdrep_target = m_merep->cdrep( &sts, cid);
   if ( EVEN(sts)) return;
 
   pwr_eBix bix = pwr_eBix_rt;
