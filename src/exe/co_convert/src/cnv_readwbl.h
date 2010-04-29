@@ -133,6 +133,7 @@ class CnvReadWbl {
     char		attr_elements[80];
     int			attr_elem;
     char		attr_pgmname[80];
+    char		attr_graphname[80];
     char		volume_name[80];
     char		class_id[80];
     char		class_name[80];
