@@ -3,33 +3,32 @@
 <class> BaseActuatorAGCEnum
  @Version
  @Author je
- @summary Konfigurationsval för BaseActuatorA
- BaseActuatorAGCEnum hanterar konfigurationsvalet för komponent BaseActuatorA, dvs valet
- styr vilka komponenter som ska ingå i ställdonet.
+ @Summary Uppräkningstyp för layout av objektsbild BaseActuatorA
+ Uppräkningstyp för layout av objektsbild BaseActuatorA.
 
  <attr> TwoSwitches
-  Ställdon med gränslägen öppen och stängt.   
+  Ställdon med gränslägen öppen och stängd.
  </attr>
  <attr> SwitchOpen
-  Ställdon med gränsläge öppet.
+  Ställdon med gränsläge öppen.
  </attr>
  <attr> SwitchClosed
-  Ställdon med gränsläge stängt.   
+  Ställdon med gränsläge stängd.   
  </attr>
  <attr> NoSwitches
-  Ställdon utan positionssensor och utan gränslägen öppen och stängt.   
+  Ställdon utan positionssensor och utan gränslägen öppen och stängd.
  </attr>
  <attr> PositionTwoSwitches
-  Ställdon med positionssensor och gränslägen öppen stängt.   
+  Ställdon med positionssensor och gränslägen öppen och stängd.   
  </attr>
  <attr> PositionSwitchOpen
-  Ställdon med positionssensor och gränsläge öppet men inte stängt.
+  Ställdon med positionssensor och gränsläge öppen men inte stängd.
  </attr>
  <attr> PositionSwitchClosed
-  Ställdon med positionssensor och gränsläge stängt men inte öppet.   
+  Ställdon med positionssensor och gränsläge stängd men inte öppen.   
  </attr>
  <attr> PositionNoSwitches
-  Ställdon med positionssensor och inga gränslägen öppet eller stängt.   
+  Ställdon med positionssensor och inga gränslägen öppen eller stängd.   
  </attr>
  
 </class>
@@ -39,21 +38,20 @@
 <class> BaseMValveGCEnum
  @Version
  @Author je
- @summary Konfigurationsval för BaseMValve
- BaseMValveCEnum hanterar konfigurationsvalet för komponent BaseMValve, dvs valet
- styr vilka komponenter som ska ingå i magnetventilen.
+ @Summary Uppräkningstyp för layout av objektsbild BaseMValve
+ Uppräkningstyp för layout av objektsbild BaseMValve.
 
  <attr> TwoSwitches
-  Ventil med gränslägen öppen och stängt.
+  Ventil med gränslägen öppen och stängd.
  </attr>
  <attr> SwitchOpen
-  Ventil med gränsläge öppet.
+  Ventil med gränsläge öppen.
  </attr>
  <attr> SwitchClosed
-  Ventil med gränsläge stängt.   
+  Ventil med gränsläge stängd.   
  </attr>
  <attr> NoSwitches
-  Ventil utan gränslägen öppen och stängt.   
+  Ventil utan gränslägen öppen och stängd.   
  </attr>
  
 </class>
@@ -63,21 +61,20 @@
 <class> BaseManValveGCEnum
  @Version
  @Author je
- @summary Konfigurationsval för BaseManValve
- BaseManValveCEnum hanterar konfigurationsvalet för komponent BaseManValve, dvs valet
- styr vilka komponenter som ska ingå i handventilen.
+ @Summary Uppräkningstyp för layout av objektsbild BaseManValve
+ Uppräkningstyp för layout av objektsbild BaseManValve.
 
  <attr> TwoSwitches
-  Handventil med gränslägen öppen och stängt.
+  Handventil med gränslägen öppen och stängd.
  </attr>
  <attr> SwitchOpen
-  Handventil med gränsläge öppet.
+  Handventil med gränsläge öppen.
  </attr>
  <attr> SwitchClosed
-  Handventil med gränsläge stängt.   
+  Handventil med gränsläge stängd.   
  </attr>
  <attr> NoSwitches
-  Handventil utan gränslägen öppen och stängt.   
+  Handventil utan gränslägen öppen och stängd.   
  </attr>
  
 </class>
@@ -87,9 +84,8 @@
 <class> BaseContactorGCEnum
  @Version
  @Author je
- @summary Konfigurationsval för BaseContactor
- BaseContactorEnum hanterar konfigurationsvalet för komponent BaseContactor, dvs valet
- styr vilka IO signaler som ska ingå i kontaktorn.
+ @Summary Uppräkningstyp för layout av objektsbild BaseContactor
+ Uppräkningstyp för layout av objektsbild BaseContactor.
 
  <attr> OrderFeedback
   Kontaktor med orderutgång och driftsvar (feedback).
@@ -111,9 +107,8 @@
 <class> BaseMotorGCEnum
  @Version
  @Author je
- @summary Konfigurationsval för BaseMotor
- BaseMotorGCEnum hanterar konfigurationsvalet för komponent BaseMotor, dvs valet
- styr vilka IO signaler som ska ingå i motorn.
+ @Summary Uppräkningstyp för layout av objektsbild BaseMotor
+ Uppräkningstyp för layout av objektsbild BaseMotor.
 
  <attr> TempSwitch
   Motor med digital temperaturövervakning, dvs termostatkontakt.
@@ -132,9 +127,8 @@
 <class> CompModeAGCEnum
  @Version
  @Author je
- @summary Konfigurationsval för CompModeA
- CompModeAGCEnum hanterar konfigurationsvalet för komponent CompModeA, dvs valet
- styr vilken text knappar får i objektsbilden där CompModeA objektet ingår.
+ @Summary Uppräkningstyp för layout av objektsbild CompModeA
+ Uppräkningstyp för layout av objektsbild CompModeA.
 
  <attr> StartStop
   Objektsbild med knappar Start/Stop.   
@@ -150,9 +144,8 @@
 <class> CompModeDGCEnum
  @Version
  @Author je
- @summary Konfigurationsval för CompModeD
- CompModeDGCEnum hanterar konfigurationsvalet för komponent CompModeD, dvs valet
- styr vilken text knappar får i objektsbilden där CompModeD objektet ingår.
+ @Summary Uppräkningstyp för layout av objektsbild CompModeD
+ Uppräkningstyp för layout av objektsbild CompModeD.
 
  <attr> StartStop
   Objektsbild med knappar Start/Stop.   
@@ -168,9 +161,8 @@
 <class> CompModeD2GCEnum
  @Version
  @Author je
- @summary Konfigurationsval för CompModeD2
- CompModeD2GCEnum hanterar konfigurationsvalet för komponent CompModeD2, dvs valet
- styr vilken text knappar får i objektsbilden där CompModeD2 objektet ingår.
+ @Summary Uppräkningstyp för layout av objektsbild CompModeD2
+ Uppräkningstyp för layout av objektsbild CompModeD2.
 
  <attr> IncrDecr
   Objektsbild med knappar Öka/Minska, incr/decr.   
@@ -271,9 +263,8 @@
 <class> BaseDirValveGCEnum
  @Version
  @Author je
- @summary Konfigurationsval för BaseDirValve
- BaseDirValveGCEnum hanterar konfigurationsvalet för komponent BaseDirValve, dvs texten
- på knappar i objektsbilden för BaseDirValve.
+ @Summary Uppräkningstyp för layout av objektsbild BaseDirValve
+ Uppräkningstyp för layout av objektsbild BaseDirValve.
 
  <attr> IncrDecr
   Objektsbild med knappar Öka/Minska, incr/decr.   
@@ -296,53 +287,52 @@
 <class>  BaseMotorAggrGCEnum
  @Version
  @Author je
- @summary Konfigurationsval för BaseMotorAggr
- BaseMotorAggrGCEnum hanterar konfigurationsvalet för komponent BaseMotorAggr, dvs valet
- styr vilka komponenter som ska ingå i aggregatet.
+ @Summary Uppräkningstyp för layout av objektsbild BaseMotorAggr
+ Uppräkningstyp för layout av objektsbild BaseMotorAggr.
  
  Möjliga komponenter:
-  
-  -Curciutbreaker       Effektbrytare (MCCB)
+
+  -Circuitbreaker       Effektbrytare (MCCB)
   -Contactor            Kontaktor
   -OverloadRelay        Överströmsskydd (motorskydd)
   -Safetyswitch         Säkerhetsbrytare  
   -Fuse                 Säkring  
  
  <attr> CbCoOrSs
-  Komponents: Curciutbreaker, Contactor, Overloadrelay, Safetyswitch.   
+  Components: Curcuitbreaker, Contactor, Overloadrelay, Safetyswitch.   
  </attr>
  <attr> CbCoSs
-  Komponents: Curciutbreaker, Contactor, Safetyswitch.   
+  Components: Circuitbreaker, Contactor, Safetyswitch.   
  </attr>
  <attr> CbCoOr
-  Komponents: Curciutbreaker, Contactor, Overloadrelay.   
+  Components: Circuitbreaker, Contactor, Overloadrelay.   
  </attr>
  <attr> CbCo
-  Komponents: Curciutbreaker, Contactor.   
+  Components: Circuitbreaker, Contactor.   
  </attr>
  <attr> CoOrSs
-  Komponents: Curciutbreaker, Overloadrelay, Safetyswitch.   
+  Components: Circuitbreaker, Overloadrelay, Safetyswitch.   
  </attr>
  <attr> CoOr
-  Komponents: Contactor, Overloadrelay.   
+  Components: Contactor, Overloadrelay.   
  </attr>
  <attr> CoSs
-  Komponents: Contactor, Safetyswitch.   
+  Components: Contactor, Safetyswitch.   
  </attr>
  <attr> Co
-  Komponents: Contactor.   
+  Components: Contactor.   
  </attr>
  <attr> FuCoOrSs
-  Komponents: Fuse, Contactor, Overloadrelay, Safetyswitch.   
+  Components: Fuse, Contactor, Overloadrelay, Safetyswitch.   
  </attr>
  <attr> FuCoOr
-  Komponents: Fuse, Contactor, Overloadrelay.   
+  Components: Fuse, Contactor, Overloadrelay.   
  </attr>
  <attr> FuCoSs
-  Komponents: Fuse, Contactor, Safetyswitch.   
+  Components: Fuse, Contactor, Safetyswitch.   
  </attr>
  <attr> FuCo
-  Komponents: Fuse, Contactor.   
+  Components: Fuse, Contactor.   
  </attr>
 
 </class>
@@ -352,164 +342,163 @@
 <class>  BaseMotorIncrDecrAggrGCEnum
  @Version
  @Author je
- @summary Konfigurationsval för BaseMotorIncrDecrAggr
- BaseMotorIncrDecrAggrGCEnum hanterar konfigurationsvalet för komponent BaseMotorIncrDecrAggr.
- Dvs valet styr vilka komponenter som ska ingå i aggregatet och texten på knappar i objektsbilden.
+ @Summary Uppräkningstyp för layout av objektsbild BaseMotorIncrDecrAggr
+ Uppräkningstyp för layout av objektsbild BaseMotorIncrDecrAggr.
 
  Möjliga komponenter:
   
-  -Curciutbreaker       Effektbrytare (MCCB)
+  -Circuitbreaker       Effektbrytare (MCCB)
   -Contactor            Kontaktor
   -OverloadRelay        Överströmsskydd (motorskydd)
   -Safetyswitch         Säkerhetsbrytare  
   -Fuse                 Säkring 
  
  <attr> CbCoOrSs
-  Komponents with button incr/decr: Curciutbreaker, Contactor, Overloadrelay, Safetyswitch.   
+  Components with button incr/decr: Circuitbreaker, Contactor, Overloadrelay, Safetyswitch.   
  </attr>
  <attr> CbCoSs
-  Komponents with button incr/decr: Curciutbreaker, Contactor, Safetyswitch.   
+  Components with button incr/decr: Circuitbreaker, Contactor, Safetyswitch.   
  </attr>
  <attr> CbCoOr
-  Komponents with button incr/decr: Curciutbreaker, Contactor, Overloadrelay.   
+  Components with button incr/decr: Circuitbreaker, Contactor, Overloadrelay.   
  </attr>
  <attr> CbCo
-  Komponents with button incr/decr: Curciutbreaker, Contactor.   
+  Components with button incr/decr: Circuitbreaker, Contactor.   
  </attr>
  <attr> CoOrSs
-  Komponents with button incr/decr: Curciutbreaker, Overloadrelay, Safetyswitch.   
+  Components with button incr/decr: Circuitbreaker, Overloadrelay, Safetyswitch.   
  </attr>
  <attr> CoOr
-  Komponents with button incr/decr: Contactor, Overloadrelay.   
+  Components with button incr/decr: Contactor, Overloadrelay.   
  </attr>
  <attr> CoSs
-  Komponents with button incr/decr: Contactor, Safetyswitch.   
+  Components with button incr/decr: Contactor, Safetyswitch.   
  </attr>
  <attr> Co
-  Komponents with button incr/decr: Contactor.   
+  Components with button incr/decr: Contactor.   
  </attr>
  <attr> FuCoOrSs
-  Komponents with button incr/decr: Fuse, Contactor, Overloadrelay, Safetyswitch.   
+  Components with button incr/decr: Fuse, Contactor, Overloadrelay, Safetyswitch.   
  </attr>
  <attr> FuCoOr
-  Komponents with button incr/decr: Fuse, Contactor, Overloadrelay.   
+  Components with button incr/decr: Fuse, Contactor, Overloadrelay.   
  </attr>
  <attr> FuCoSs
-  Komponents with button incr/decr: Fuse, Contactor, Safetyswitch.   
+  Components with button incr/decr: Fuse, Contactor, Safetyswitch.   
  </attr>
  <attr> FuCo
-  Komponents with button incr/decr: Fuse, Contactor.   
+  Components with button incr/decr: Fuse, Contactor.   
  </attr>
 
  <attr> CbCoOrSs_ForwBack
-  Komponents with button forw/back: Curciutbreaker, Contactor, Overloadrelay, Safetyswitch.   
+  Components with button forw/back: Circuitbreaker, Contactor, Overloadrelay, Safetyswitch.   
  </attr>
  <attr> CbCoSs_ForwBack
-  Komponents with button forw/back: Curciutbreaker, Contactor, Safetyswitch.   
+  Components with button forw/back: Circuitbreaker, Contactor, Safetyswitch.   
  </attr>
  <attr> CbCoOr_ForwBack
-  Komponents with button forw/back: Curciutbreaker, Contactor, Overloadrelay.   
+  Components with button forw/back: Circuitbreaker, Contactor, Overloadrelay.   
  </attr>
  <attr> CbCo_ForwBack
-  Komponents with button forw/back: Curciutbreaker, Contactor.   
+  Components with button forw/back: Circuitbreaker, Contactor.   
  </attr>
  <attr> CoOrSs_ForwBack
-  Komponents with button forw/back: Curciutbreaker, Overloadrelay, Safetyswitch.   
+  Components with button forw/back: Circuitbreaker, Overloadrelay, Safetyswitch.   
  </attr>
  <attr> CoOr_ForwBack
-  Komponents with button forw/back: Contactor, Overloadrelay.   
+  Components with button forw/back: Contactor, Overloadrelay.   
  </attr>
  <attr> CoSs_ForwBack
-  Komponents with button forw/back: Contactor, Safetyswitch.   
+  Components with button forw/back: Contactor, Safetyswitch.   
  </attr>
  <attr> Co_ForwBack
-  Komponents with button forw/back: Contactor.   
+  Components with button forw/back: Contactor.   
  </attr>
  <attr> FuCoOrSs_ForwBack
-  Komponents with button forw/back: Fuse, Contactor, Overloadrelay, Safetyswitch.   
+  Components with button forw/back: Fuse, Contactor, Overloadrelay, Safetyswitch.   
  </attr>
  <attr> FuCoOr_ForwBack
-  Komponents with button forw/back: Fuse, Contactor, Overloadrelay.   
+  Components with button forw/back: Fuse, Contactor, Overloadrelay.   
  </attr>
  <attr> FuCoSs_ForwBack
-  Komponents with button forw/back: Fuse, Contactor, Safetyswitch.   
+  Components with button forw/back: Fuse, Contactor, Safetyswitch.   
  </attr>
  <attr> FuCo_ForwBack
-  Komponents with button forw/back: Fuse, Contactor.   
+  Components with button forw/back: Fuse, Contactor.   
  </attr
 
  <attr> CbCoOrSs_UpDown
-  Komponents with button up/down: Curciutbreaker, Contactor, Overloadrelay, Safetyswitch.   
+  Components with button up/down: Circuitbreaker, Contactor, Overloadrelay, Safetyswitch.   
  </attr>
  <attr> CbCoSs_UpDown
-  Komponents with button up/down: Curciutbreaker, Contactor, Safetyswitch.   
+  Components with button up/down: Circuitbreaker, Contactor, Safetyswitch.   
  </attr>
  <attr> CbCoOr_UpDown
-  Komponents with button up/down: Curciutbreaker, Contactor, Overloadrelay.   
+  Components with button up/down: Circuitbreaker, Contactor, Overloadrelay.   
  </attr>
  <attr> CbCo_UpDown
-  Komponents with button up/down: Curciutbreaker, Contactor.   
+  Components with button up/down: Circuitbreaker, Contactor.   
  </attr>
  <attr> CoOrSs_UpDown
-  Komponents with button up/down: Curciutbreaker, Overloadrelay, Safetyswitch.   
+  Components with button up/down: Circuitbreaker, Overloadrelay, Safetyswitch.   
  </attr>
  <attr> CoOr_UpDown
-  Komponents with button up/down: Contactor, Overloadrelay.   
+  Components with button up/down: Contactor, Overloadrelay.   
  </attr>
  <attr> CoSs_UpDown
-  Komponents with button up/down: Contactor, Safetyswitch.   
+  Components with button up/down: Contactor, Safetyswitch.   
  </attr>
  <attr> Co_UpDown
-  Komponents with button up/down: Contactor.   
+  Components with button up/down: Contactor.   
  </attr>
  <attr> FuCoOrSs_UpDown
-  Komponents with button up/down: Fuse, Contactor, Overloadrelay, Safetyswitch.   
+  Components with button up/down: Fuse, Contactor, Overloadrelay, Safetyswitch.   
  </attr>
  <attr> FuCoOr_UpDown
-  Komponents with button up/down: Fuse, Contactor, Overloadrelay.   
+  Components with button up/down: Fuse, Contactor, Overloadrelay.   
  </attr>
  <attr> FuCoSs_UpDown
-  Komponents with button up/down: Fuse, Contactor, Safetyswitch.   
+  Components with button up/down: Fuse, Contactor, Safetyswitch.   
  </attr>
  <attr> FuCo_UpDown
-  Komponents with button up/down: Fuse, Contactor.   
+  Components with button up/down: Fuse, Contactor.   
  </attr
 
  <attr> CbCoOrSs_OpenClose
-  Komponents with button open/close: Curciutbreaker, Contactor, Overloadrelay, Safetyswitch.   
+  Components with button open/close: Circuitbreaker, Contactor, Overloadrelay, Safetyswitch.   
  </attr>
  <attr> CbCoSs_OpenClose
-  Komponents with button open/close: Curciutbreaker, Contactor, Safetyswitch.   
+  Components with button open/close: Circuitbreaker, Contactor, Safetyswitch.   
  </attr>
  <attr> CbCoOr_OpenClose
-  Komponents with button open/close: Curciutbreaker, Contactor, Overloadrelay.   
+  Components with button open/close: Circuitbreaker, Contactor, Overloadrelay.   
  </attr>
  <attr> CbCo_OpenClose
-  Komponents with button open/close: Curciutbreaker, Contactor.   
+  Components with button open/close: Circuitbreaker, Contactor.   
  </attr>
  <attr> CoOrSs_OpenClose
-  Komponents with button open/close: Curciutbreaker, Overloadrelay, Safetyswitch.   
+  Components with button open/close: Circuitbreaker, Overloadrelay, Safetyswitch.   
  </attr>
  <attr> CoOr_OpenClose
-  Komponents with button open/close: Contactor, Overloadrelay.   
+  Components with button open/close: Contactor, Overloadrelay.   
  </attr>
  <attr> CoSs_OpenClose
-  Komponents with button open/close: Contactor, Safetyswitch.   
+  Components with button open/close: Contactor, Safetyswitch.   
  </attr>
  <attr> Co_OpenClose
-  Komponents with button open/close: Contactor.   
+  Components with button open/close: Contactor.   
  </attr>
  <attr> FuCoOrSs_OpenClose
-  Komponents with button open/close: Fuse, Contactor, Overloadrelay, Safetyswitch.   
+  Components with button open/close: Fuse, Contactor, Overloadrelay, Safetyswitch.   
  </attr>
  <attr> FuCoOr_OpenClose
-  Komponents with button open/close: Fuse, Contactor, Overloadrelay.   
+  Components with button open/close: Fuse, Contactor, Overloadrelay.   
  </attr>
  <attr> FuCoSs_OpenClose
-  Komponents with button open/close: Fuse, Contactor, Safetyswitch.   
+  Components with button open/close: Fuse, Contactor, Safetyswitch.   
  </attr>
  <attr> FuCo_OpenClose
-  Komponents with button open/close: Fuse, Contactor.   
+  Components with button open/close: Fuse, Contactor.   
  </attr
 
 </class>
@@ -526,84 +515,84 @@
  
  Möjliga komponenter:
   
-  -Curciutbreaker       Effektbrytare (MCCB)
+  -Circuitbreaker       Effektbrytare (MCCB)
   -Contactor            Kontaktor
-  -Frequensyconverter   Frekvensomriktare
+  -Frequencyconverter   Frekvensomriktare
   -Safetyswitch         Säkerhetsbrytare i huvudkretsen  
   -Safetylock           Startspärr (ej i huvudkretsen)  
   -Fuse                 Säkring (supersnabba för frekvensomriktare) 
  
  <attr> CbCoFcSs
-  Komponents: Curciutbreaker, Contactor, Frequensyconverter, Safetyswitch.   
+  Components: Circuitbreaker, Contactor, Frequencyconverter, Safetyswitch.   
  </attr>
  <attr> CbCoFcSl
-  Komponents: Curciutbreaker, Contactor, Frequensyconverter, Safetylock.   
+  Components: Circuitbreaker, Contactor, Frequencyconverter, Safetylock.   
  </attr>
  <attr> CbCoFC
-  Komponents: Curciutbreaker, Contactor, Frequensyconverter.   
+  Components: Circuitbreaker, Contactor, Frequencyconverter.   
  </attr>
  <attr> CbFcSs
-  Komponents: Curciutbreaker, Frequensyconverter, Contactor.   
+  Components: Circuitbreaker, Frequencyconverter, Contactor.   
  </attr>
  <attr> CbFcSl
-  Komponents: Curciutbreaker, Frequensyconverter, Safetylock.   
+  Components: Circuitbreaker, Frequencyconverter, Safetylock.   
  </attr>
  <attr> CbFc
-  Komponents: Curciutbreaker, Frequensyconverter.   
+  Components: Circuitbreaker, Frequencyconverter.   
  </attr>
  <attr> CoFcSs
-  Komponents: Contactor, Frequensyconverter, Safetyswitch.   
+  Components: Contactor, Frequencyconverter, Safetyswitch.   
  </attr>
  <attr> CoFcSl
-  Komponents: Contactor, Frequensyconverter, Safetylock.   
+  Components: Contactor, Frequencyconverter, Safetylock.   
  </attr>
  <attr> CoFc
-  Komponents: Contactor, Frequensyconverter.   
+  Components: Contactor, Frequencyconverter.   
  </attr>
  <attr> FcSs
-  Komponents: Frequensyconverter, Safetyswitch.   
+  Components: Frequencyconverter, Safetyswitch.   
  </attr>
  <attr> FcSl
-  Komponents: Frequensyconverter, Safetylock.   
+  Components: Frequencyconverter, Safetylock.   
  </attr>
  <attr> Fc
-  Komponents: Frequensyconverter.   
+  Components: Frequencyconverter.   
  </attr>
  <attr> FuCbCoFcSs
-  Komponents: Fuse, Curciutbreaker, Contactor, Frequensyconverter, Safetyswitch.   
+  Components: Fuse, Circuitbreaker, Contactor, Frequencyconverter, Safetyswitch.   
  </attr>
  <attr> FuCbCoFcSl
-  Komponents: Fuse, Curciutbreaker, Contactor, Frequensyconverter, Safetylock.   
+  Components: Fuse, Circuitbreaker, Contactor, Frequencyconverter, Safetylock.   
  </attr>
  <attr> FuCbCoFC
-  Komponents: Fuse, Curciutbreaker, Contactor, Frequensyconverter.   
+  Components: Fuse, Circuitbreaker, Contactor, Frequencyconverter.   
  </attr>
  <attr> FuCbFcSs
-  Komponents: Fuse, Curciutbreaker, Frequensyconverter, Contactor.   
+  Components: Fuse, Circuitbreaker, Frequencyconverter, Contactor.   
  </attr>
  <attr> FuCbFcSl
-  Komponents: Fuse, Curciutbreaker, Frequensyconverter, Safetylock.   
+  Components: Fuse, Circuitbreaker, Frequencyconverter, Safetylock.   
  </attr>
  <attr> FuCbFc
-  Komponents: Fuse, Curciutbreaker, Frequensyconverter.   
+  Components: Fuse, Circuitbreaker, Frequencyconverter.   
  </attr>
  <attr> FuCoFcSs
-  Komponents: Fuse, Contactor, Frequensyconverter, Safetyswitch.   
+  Components: Fuse, Contactor, Frequencyconverter, Safetyswitch.   
  </attr>
  <attr> FuCoFcSl
-  Komponents: Fuse, Contactor, Frequensyconverter, Safetylock.   
+  Components: Fuse, Contactor, Frequencyconverter, Safetylock.   
  </attr>
  <attr> FuCoFc
-  Komponents: Fuse, Contactor, Frequensyconverter.   
+  Components: Fuse, Contactor, Frequencyconverter.   
  </attr>
  <attr> FuFcSs
-  Komponents: Fuse, Frequensyconverter, Safetyswitch.   
+  Components: Fuse, Frequencyconverter, Safetyswitch.   
  </attr>
  <attr> FuFcSl
-  Komponents: Fuse, Frequensyconverter, Safetylock.   
+  Components: Fuse, Frequencyconverter, Safetylock.   
  </attr>
  <attr> FuFc
-  Komponents: Fuse, Frequensyconverter.   
+  Components: Fuse, Frequencyconverter.   
  </attr>
 
 </class>
@@ -755,7 +744,7 @@
  <class> BaseMotor
  @Version
  @Author cs/je
- @summary Basklass för en motor med en analog eller digital temp.sensor
+ @summary Basklass för en motor med en analog eller digital tempsensor
  @b Motor
  BaseMotor objektet innehåller temperaturövervakning med en larmutgång, en objektsbild och
  attribut för de vanligaste metoderna som man bör dokumentera sin motor med.
@@ -805,8 +794,7 @@
  För simulering använder man funktionsobjektet BaseMotorSim.
 
  @b Se även
- @classlink BaseTempSwitch basecomponent_basetempswitch.html
- @classlink BaseTempSensor basecomponent_basetempsensor.html 
+
  <attr>Super 
  Superklass, klicka på länk Component för mer beskrivning om objektattributet. 
  </attr>
@@ -831,7 +819,6 @@
   Inställning om temp.indikatorer ska visas (1:a) i objektsbilden eller inte (0:a).
  </attr>
  <attr>SupDisabled 
- [dis]
  Anger om larmövervakning kopplas bort (1:a) eller inte (0:a). Styrs via ingång "dis" på
  PLC funktionsobjektet. OBS! Att färgstyrning i bilder INTE påverkas eller attributen
  IndError, IndWarning.
@@ -859,12 +846,10 @@
  
  @b Se även
  <attr>DisableSup 
-  [dis]
   Ingång som anger om larmövervakning ska kopplats bort (1:a) eller inte (0:a). OBS! Att både larm
   och larmutgångar kopplas bort vid valet TempSensor. Vid valet tempSwitch kopplas bara larmet bort!
  </attr>
  <attr> OverTemp
-  [ote]
    Utgången går hög när A-larm råder (HH temp temp.sensor eller temp.vakt larmar)
  </attr>
  <attr> PlcConnect
@@ -925,8 +910,7 @@
  För simulering använder man funktionsobjektet BaseElHeaterSim.
 
  @b Se även
- @classlink BaseTempSwitch basecomponent_basetempswitch.html
- @classlink BaseTempSensor basecomponent_basetempsensor.html 
+
  <attr>Super 
  Superklass, klicka på länk Component för mer beskrivning om objektattributet. 
  </attr>
@@ -951,7 +935,6 @@
   Inställning om temp.indikatorer ska visas (1:a) i objektsbilden eller inte (0:a).
  </attr>
  <attr>SupDisabled 
- [dis]
  Anger om larmövervakning kopplas bort (1:a) eller inte (0:a). Styrs via ingång "dis" på
  PLC funktionsobjektet. OBS! Att färgstyrning i bilder INTE påverkas eller attributen
  IndError, IndWarning.
@@ -979,12 +962,10 @@
  
  @b Se även
  <attr>DisableSup 
-  [dis]
   Ingång som anger om larmövervakning ska kopplats bort (1:a) eller inte (0:a). OBS! Att både larm
   och larmutgångar kopplas bort vid valet TempSensor. Vid valet tempSwitch kopplas bara larmet bort!
  </attr>
  <attr> OverTemp
-  [ote]
    Utgången går hög när A-larm råder (HH temp temp.sensor eller temp.vakt larmar)
  </attr>
  <attr> PlcConnect
@@ -998,11 +979,32 @@
 <class> CompModeD
  @Version
  @Author je
- @summary Auto/Man/Lokal mod, 1 digital utgång
- Mod objektet CompModeD hanteras en digital orderutgång och en manöverbild med
+ @Summary Mod objekt för komponent med en digital order-utgång
+ Mod objektet CompModeD hanterar en digital orderutgång och en manöverbild med
  start/stopp och Auto/Man knappar för att styra en drift. CompModeD används bl.a
  i objektet BaseMotorAggr (motor, pump och fläktstyrning).
  
+  Modobjektet hanterar många moder som kan behöva sin förklaring. Det tänkta styrda
+  objektet (driften) kan vara i fjärr mod eller lokal mod:
+
+  - Lokal mod          Driften styrs från en manöverlåda/pulpet placerad vid driften.
+
+  - Fjärr mod          Driften styrs från styrsystemet, av operatören från objektsbilden eller av
+                       plcprogrammet.
+
+  Den lokala moden har högre prioritet framför fjärr mod. 
+
+  Objektets modhantering innehåller en extern och en intern mod:
+
+  - Extern mod         Objektets inbyggda auto/man logik används ej, dvs
+                       auto/man hanteras av Plc kod som behöver programmeras.
+
+  - Intern mod         Objektet styr driften via inbyggda auto/man logiken.
+
+
+ Väljer man att manuellt styra driften via inbyggda koden kan man koppla bort auto/man
+ mod och då kallas moden endast för intern mod (endast manuellt).
+
  Körsätt som kan konfigureras:
  
  1 Fjärr mod auto/man  Driftens auto/manuell mod styrs av knappar i bilden.
@@ -1046,7 +1048,7 @@
   
 
  @h1 Konfigurering
- Mod objekt CompModeD hanteras en orderutgång som kan konfigureras på många sätt och
+ Mod objekt CompModeD hanterar en orderutgång som kan konfigureras på många sätt och
  innehåller funktioner:
  
  -Felhantering för manövrering (5 larm).
@@ -1204,37 +1206,37 @@
   Gömmer knappar man/auto i objektbilden.
 </attr>
 <attr> ManOrdHide
-  Gömmer knappar Incr, Decr och stoppknappen i objektbilden.
+  Gömmer knappar Start/Stopp i objektbilden.
 </attr>
 <attr> ExternOrdHide
   Gömmer indikator Extern i objektbilden.
 </attr>
 <attr> OpIntOnly
-  Konfiguerar funktionsobjektet att tillhandahålla endast manuell mod, dvs auto/man
+  Konfiguerar objektet att tillhandahålla endast manuell mod, dvs auto/man
   knappar i bild tas bort och ingångar för extern styrning görs verkningslösa. 
 </attr>
 <attr> OpNoLocal
-  Konfiguerar funktionsobjektet att INTE tillhandahålla lokal mod, dvs indikering
+  Konfiguerar objektet att INTE tillhandahålla lokal mod, dvs indikering
   lokal i bild tas bort och ingångar för lokal styrning görs verkningslösa.
 </attr>
 <attr> OpNoAutoToMan
-  Konfiguerar funktionsobjektet att INTE vid låg signal på ingång Ready automatisk
+  Konfiguerar objektet att INTE vid låg signal på ingång Ready automatisk
   återgå till manuell mod. OBS! Detta kan medföra risk för återstart när Ready går
   hög igen.
 </attr>
 <attr> OpExtOnly
-  Konfiguerar funktionsobjektet att INTE tillhandahålla manuell styrning och
+  Konfiguerar objektet att INTE tillhandahålla manuell styrning och
   mod hantering, dvs alla knappar i bilden tas bort och mod hanteringen görs
   verkningslös.
 </attr>
 <attr> OpExtAndIntMan
-  Konfiguerar funktionsobjektet att INTE tillhandahålla mod hantering auto/man, dvs
+  Konfiguerar objektet att INTE tillhandahålla mod hantering auto/man, dvs
   knappar auto/man i bilden tas bort och och mod styrs via ingång ExtControl. När
   ExtControl är låg dimmas INTE knapparna Start/Stopp i bilden och signal AutoMod går
   låg, dvs manuell mod. 
 </attr>
 <attr> OpDisableLocalAlarm
-  Konfiguerar funktionsobjektet att inte larma när lokal mod blir aktiverad.
+  Konfiguerar objektet att inte larma när lokal mod blir aktiverad.
 </attr>
 <attr> ManStart
   Styrs av funktionsobjektet och går hög när manuell startorder aktiveras.
@@ -1281,14 +1283,7 @@
  Objektet tar hand om mod hantering auto/man/lokal och övervakar drift med en digital utgång.
 
  @b Se även
-<attr> Description
-  @summary Textfält synlig i XTT som beskriver objektet lite mer än namnet på objektet
-  Objekt innehållande styrning av EN digital utgång i olika körsätt auto, manuell och lokalt samt
-  en objektsbild för manövrering och statusvisning. 
-</attr>
-
 <attr> ExtControl
-  [eco]
   Används för att styra mod auto/man när man konfigurerat objektets attribut OpExtAndIntMan till 1.
   dvs om ExtControl är 0 är det man mod och om 1 är det auto mod (extern mod styrning).
 
@@ -1296,29 +1291,23 @@
   knappar men inte använder auto/man mod. Inga auto/man knappar syns i objektsbilden.
 </attr>
 <attr> ExtStart
-  [est]
   Ingång för att styra order utgången i automatik mod (extern).
 </attr>
 <attr> LocalMode 	
-  [loc]
    Ingången ställer objektets mod i lokal mod (prio 1) vilket innebär att alla andra moder kopplas bort.
 </attr>
 <attr> LocalStart 	
-  [lst]
   Ingång för att styra order utgången i lokal mod
 </attr>
 <attr> Ready 	
-  [rdy]
   Förreglingsingång, ska vara sann annars tas orderutgången ner i alla moder. Dessutom tvingas
   auto mod till man mod om inte objektattributet OpNoAutoToMan är 1.
 </attr>
 <attr> Feedback 	
-  [fb]
   Används för återkoppling av order, dvs kontaktorsvar. Indikering vid startknapp blir grön i
   objektsbilden om signalen är sann.
 </attr>
 <attr> ForceMan 	
-  [fom]
   Ingång som tvingar interna Auto/Man mod att inta man mod. Används INTE när objektets mod
   styrs externt, dvs när objektets inställningsattribut OpExtOnly=1 eller OpExtAndIntMan=1.
   
@@ -1326,22 +1315,18 @@
   så inte kontaktorn ligger och pulsar när beordring i auto ligger hög.
 </attr>
 <attr>PulseControl 
- [pco]
  Ingång som hanterar start i manuell mod, dvs återställer order om feedback saknas. Används
  exempelvis när man har en pulsstyrd kontaktor som arbetar ihop med detta objekt. Se objekt
  BaseContactor eller BaseMotorAggr för mer info.
 </attr>
 <attr> Order 	
-  [ord]
   Objektets orderutgång start.
 </attr>
 <attr> AutoMode 	
-  [aut]
   Utgång sann om objektet är i automatik mod, falsk är det manuell mod.
 </attr>
 <attr> ManStop 	
-  [mst]
-  Utgång sann ett programvarv när operatör trycker på stopppknappen OpManStop om manuell mod
+  Utgång sann ett programvarv när operatör trycker på stoppknappen OpManStop om manuell mod
   är aktiv, Används ihop med en kontaktor som har pulsfunktion så att en frånpuls kan genereras
   oavsett status på modobjektets orderutgång Order.
 </attr>
@@ -1356,7 +1341,7 @@
 <class> CompModeDM
  @Version
  @Author je
- @summary Enkel Auto/Man/lokal mod, manuell Öppna/Stäng, 1 digital utgång
+ @summary Enkel Auto/Man/Lokal mod, manuell Öppna/Stäng, 1 digital utgång
  Mod objektet CompModeDM hanteras en digital orderutgång och en manöverbild med
  Öppna/Stäng, Auto/Man knappar och lokalindikator för att styra en drift. CompModeDM
  används bl.a i objektet BaseMValve.
@@ -1377,13 +1362,12 @@
   
  - Knappar Man/Auto väljer mod vid fjärrstyrning
 
- - OBS att det inte finns någon lokal mod indikatorn som visar gult när lokal styrning pågår,
-   men Öppna/stäng knappar dimmas. Styrning via Auto/man mod förreglas.
+ - I lokal mod förreglas styrning via Auto/Man och Öppna/Stäng knappar dimmas. Det finns
+   ingen indikator som visar att lokal mod är aktiv.
 
  - Dimmade Öppna/Stäng knappar betyder att auto mod gäller eller lokal mod är aktiverad.
    
- - Indikatorer Öppna/Stäng visar status på "OpRefMan. OBS! Att detta inte är utgången, dvs
-   indikatorerna visar bara status på manuell order och inte auto order.
+ - Indikatorer Öppna/Stäng visar status på orderutgången enbart vid manuell körning. 
 
  @h1 Konfigurering
  Mod objekt CompModeDM  hanteras en digital orderutgång som innehåller funktioner:
@@ -1396,14 +1380,14 @@
  -1 Ingång RefAuto från funktionsobjektet och intern auto/man mod.
  -2 Ingång RefAuto från funktionsobjektet och extern auto/man mod.
  -3 Knapp Öppna/Stäng från bilden i manuell mod.
- -4 Ingång LokalOrder från funktionsobjektet och LocalMode.
+ -4 Ingång LocalOrder från funktionsobjektet och LocalMode.
 
  @b Styrning av mod från objektsbild
  @image orm_compmodedm_og.gif
  
- Bilden ovan visar en konfiguration där nästa alla objektets används. Operatören väljer
- manuell eller auto mod via knapparna Man/Auto. I auto styrs utgången OutRef av
- funktionsobjektets ingång RefAuto.
+ Bilden ovan visar en konfiguration där nästa alla objektets funktioner används. 
+ Operatören väljer manuell eller auto mod via knapparna Man/Auto. I auto styrs 
+ utgången OutRef av funktionsobjektets ingång RefAuto.
  
  @b Ingen styrning från objektsbild
  @image orm_compmodedm_extern_only.gif
@@ -1426,13 +1410,6 @@
  Skapa ett funktionsobjekt i PLC editorn och koppla till objektet i planthierarkin.
  
  @b Se även
- @classlink BaseMValve basecomponent_basemvalve.html 
-<attr> Description
-  @summary Textfält synlig i XTT som beskriver objektet lite mer än namnet på objektet
-  Objekt innehållande en objektsbild för styrning av en digital utgång i Auto/manuellt,
-  Öppna/Stäng. 
-</attr>
-
 <attr> OpAuto
   Påverkas normalt via knapp Auto i objektsbild, nollställs alltid.
   Funktionen på knappen i bilden är "SetDig".
@@ -1460,7 +1437,7 @@
 </attr>
 <attr> OpRefMan
   Påverkas normalt via knappar Öppna/Stäng i objektsbild. Funktionen på knappar i
-  bilden är "SetDig" och "resetDig".
+  bilden är "SetDig" och "ResetDig".
 </attr>
 <attr> OpManDimmed
   Dimmar knappar Öppna/Stäng i objektbilden. Detta händer när objektet är i auto mod
@@ -1494,32 +1471,21 @@
  Objektet tar hand om mod hantering auto/man/lokal med en digital utgång.
 
  @b Se även
-<attr> Description
-  @summary Textfält synlig i XTT som beskriver objektet lite mer än namnet på objektet
-  Objekt innehållande styrning av EN digital utgång i olika körsätt auto, manuell och lokalt
-  samt en objektsbild för manövrering och statusvisning. 
-</attr>
-
 <attr> RefAuto
-  [rea]
   Ingång för att styra OutRef utgången (öppna) i automatik mod.  
 </attr>
 <attr> Ready 	
-  [rdy]
   Förreglingsingång, ska vara sann annars tas orderutgång ner i ALLA moder.
   OBS att ingen påverkan av moder görs, dvs auto går inte över i manuellt om
   ready går låg.
 </attr>
 <attr> LocalMode 	
-  [loc]
    Ingången ställer objektets mod i lokal mod (prio 1) vilket innebär att alla andra moder kopplas bort.
 </attr>
 <attr> LocalOrder 	
-  [lor]
   Ingång för att styra order utgången i lokal mod
 </attr>
 <attr> OutRef 	
-  [ref]
   Objektets OutRef utgång (öppna).
 </attr>
 <attr> PlcConnect
@@ -1736,39 +1702,31 @@
   Funktionen på knappen i bilden är "SetDig".  
 </attr>
 <attr> LocalMode
- [loc]
   Normalt en omkopplare i lokal manöverlåda, påverkas via ingång i funktionsobjektet.
   Denna mod gäller före alla andra.
 </attr>
 <attr> LocalIncr
- [lin]
   Normalt en tryckknapp i lokal manöverlåda, påverkas via ingång i funktionsobjektet.
 </attr>
 <attr> LocalDecr
- [lde]
   Normalt en tryckknapp i lokal manöverlåda, påverkas via ingång i funktionsobjektet.
 </attr>
 <attr> Ready
-  [rdy]
   Förregling av drift via ingång i funktionsobjektet som förreglar start i alla moder
   om inte signalen är hög. Gör också att auto mod återgår till manuell mod, detta beteende
   kan kopplas bort.
 </attr>
 <attr> FeedBackIncr
-  [fbi]
    Kontaktorsvaret för öka, påverkas via ingång i funktionsobjektet.
 </attr>
 <attr> FeedBackDecr
-  [fbd]
   Kontaktorsvaret för minska, påverkas via ingång i funktionsobjektet.
 </attr>
 <attr> LimitSwitchDecr
- [sde]
   Stoppgränsläge för öka, påverkas via ingång i funktionsobjektet. OBS! lokal mod
   förreglas inte av gränsläget.
 </attr>
 <attr> LimitSwitchIncr
-  [sin]
   Stoppgränsläge för minska, påverkas via ingång i funktionsobjektet. OBS! lokal mod
   förreglas inte av gränsläget.
 </attr>
@@ -1781,15 +1739,12 @@
   uteblir när tid OrderTimeLimit löpt ut vid Order Incr.
 </attr>
 <attr> OrderIncr
-  [oin]
   Orderutgång i funktionsobjektet som går hög när driften ska öka.
 </attr>
 <attr> OrderDecr
-  [ode]
   Orderutgång i funktionsobjektet som går hög när driften ska minska.
 </attr>
 <attr> AutoMode
-  [aut]
   Är hög när aktuell mod är Auto, styrs normalt av funktionsobjektet och knapp i bild.
   Påverkas av ingång ExtControl i funktionsobjektet om konfigurationen OpExtAndIntMan är 1.
 </attr>
@@ -1911,14 +1866,7 @@
  Objektet tar hand om mod hantering auto/man/lokal och övervakar drift med två digitala utgångar.
 
  @b Se även
-<attr> Description
-  @summary Textfält synlig i XTT som beskriver objektet lite mer än namnet på objektet
-  Objekt innehållande styrning av TVÅ digitala utgångar i olika körsätt auto, manuell och lokalt samt
-  en objektsbild för manövrering och statusvisning. Manuella knapparna i objektsbilden kan
-  konfigureras att visa Öka/minska (default), Upp/Ned, Fram,Back och Öppna/Stäng. 
-</attr>
 <attr> ExtControl
-  [eco]
   Används för att styra mod auto/man när man konfigurerat objektets attribut OpExtAndIntMan till 1.
   dvs om ExtControl är 0 är det man mod och om 1 är det auto mod (extern mod styrning).
 
@@ -1926,15 +1874,12 @@
   knappar men inte använder auto/man mod. Inga auto/man knappar syns i objektsbilden.
 </attr>
 <attr> ExtIncr
-  [ein]
   Ingång för att styra orderIncr utgången (öka) i automatik mod (extern).  
 </attr>
 <attr> ExtDecr
-  [ede]
   Ingång för att styra orderDecr utgången (minska) i automatik mod (extern).
 </attr>
 <attr> LocalMode 	
-  [loc]
   Ingången ställer objektets mod i lokal mod (prio 1) vilket innebär att alla andra moder kopplas bort.
   Dvs ingångar LocalIncr, LocalDecr styr. 
    
@@ -1944,59 +1889,47 @@
   Lokal mod går att välja bort via attribut OpNoLocal vilket gömmer lokalindikator i bilder mm.  
 </attr>
 <attr> LocalIncr	
-  [lin]
   Ingång för att styra orderIncr utgången (öka) i lokal mod.
 </attr>
 <attr> LocalDecr	
-  [lde]
   Ingång för att styra orderDecr utgången (minska) i lokal mod.
 </attr>
 <attr> Ready 	
-  [rdy]
   Förreglingsingång, ska vara sann annars tas orderutgångar ner i ALLA moder. Dessutom tvingas
   auto mod till manuell mod om inte objektattributet OpNoAutoToMan är 1.
 </attr>
 <attr> FeedbackIncr 	
-  [fbi]
   Används för återkoppling av orderIncr (kontaktorsvar). Indikering vid ökaknapp blir grön i
   objektsbilden om signalen är sann.
 </attr>
 <attr> FeedbackDecr 	
-  [fbd]
   Används för återkoppling av orderDecr (kontaktorsvar). Indikering vid minskaknapp blir grön i
   objektsbilden om signalen är sann.
 </attr>
 <attr> LimitSwitchIncr 	
-  [sin]
   Används som ingång för stoppgränsläge för utgången orderIncr (öka, upp, fram, öppna).
   Sann/hög signal tar ner OrderIncr.
   </attr>
 <attr> LimitSwitchDecr 	
-  [sde]
   Används som ingång för stoppgränsläge för utgången orderDecr (minska, ner, back, stäng).
   Sann/hög signal tar ner OrderDecr.
   </attr>
 <attr> ForceMan 	
-  [fom]
   Ingång som tvingar interna Auto/Man mod att inta man mod. Används inte när objektets mod
   styrs externt, dvs när objektets inställningsattribut OpExtOnly=1 eller OpExtAndIntMan=1.
 </attr>
 <attr> OrderIncr 	
-  [oin]
   Objektets orderIncr utgång (öka, upp, fram, öppna).
 </attr>
 <attr> OrderDecr 	
-  [ode]
   Objektets orderDecr utgång (minska, ner, back, stäng).
 </attr>
 <attr> AutoMode 	
-  [aut]
   Utgång sann om objektet är i automatik mod, falsk betyder manuell mod.
 </attr>
 <attr> Error 	
-  [err]
   Utgång blir sann om objektets maxtid OrderTimeLimit löper ut. Om lokal mod
-  används bör utgången återställe en aktiverad lokal styrning på ingångarna
+  används bör utgången återställa en aktiverad lokal styrning på ingångarna
   LocalDecr och  LocalIncr för att förhindra oönskad återstart.
 </attr>
 <attr> PlcConnect
@@ -2039,7 +1972,7 @@
    bara status på manuell order och inte auto.
 
  @h1 Konfigurering
- Mod objekt CompModeD2M  hanteras två digitala orderutgångar som innehåller funktioner:
+ Mod objekt CompModeD2M hanteras två digitala orderutgångar som innehåller funktioner:
 
  -Öka och minska order eller Upp/Ner, Fram/Back och Öppna/Stäng.
  -Dimmar knappar i objektsbild så felmanövrering undviks.
@@ -2095,12 +2028,6 @@
  @b Se även
   @classlink BaseDirValve basecomponent_basedirvalve.html 
   @classlink CompModeD2 basecomponent_compmoded2.html 
-<attr> Description
-  @summary Textfält synlig i XTT som beskriver objektet lite mer än namnet på objektet
-  Objekt innehållande en objektsbild för styrning av två digitala utgångar i Auto/manuellt
-  Öka/Minska, Upp/Ner och Fram/Back. 
-</attr>
-
 <attr> OpAuto
   Påverkas normalt via knapp Auto i objektsbild, nollställs alltid.
   Funktionen på knappen i bilden är "SetDig".
@@ -2169,25 +2096,20 @@
 </attr>
 
 <attr> OrderAutoIncr
-  [ainc]
   Ingång för att styra OutOrderIncr utgången (öka) i automatik mod.  
 </attr>
 <attr> OrderAutoDecr
-  [adec]
   Ingång för att styra OutOrderDecr utgången (minska) i automatik mod.
 </attr>
 <attr> Ready 	
-  [rdy]
   Förreglingsingång, ska vara sann annars tas orderutgångar ner i ALLA moder.
   OBS att ingen påverkan av moder görs, dvs auto går inte över i manuellt om
   ready går låg.
 </attr>
 <attr> OutOrderIncr 	
-  [oinc]
   Objektets OutOrderIncr utgång (öka, upp, fram, öppna).
 </attr>
 <attr> OutOrderDecr 	
-  [odec]
   Objektets OutOrderDecr utgång (minska, ner, back, stäng).
 </attr>
 <attr> PlcConnect
@@ -2240,7 +2162,7 @@
 
  - Lokal mod indikatorn visar gult när lokal styrning pågår. Start, stopp knappar
    dimmas. Styrning via Auto/man mod förreglas. Indikatorn visas inte i bilden om
-   attribut OpNoLacal är 1.   
+   attribut OpNoLocal är 1.   
 
  - Indikator Extern som kan ses i denna bild (ej nu) visar "mod status" när auto/man mod inte
    styrs/används i objektet. Inga auto/man knappar visas i bilden.
@@ -2299,7 +2221,7 @@
  Detta konfigurationsalternativ är enda gången som ingång ExtControl har betydelse för
  funktionen.
 
- Genom att sätta OpIntOnly till 1 koplas även den externa styrningen bort, dvs ingångar
+ Genom att sätta OpIntOnly till 1 kopplas även den externa styrningen bort, dvs ingångar
  ExtStart och AutoRef görs verkningslösa.
 
  @b Styrning av mod från PLC programmet och ingen manuell styrning från bild 
@@ -2349,7 +2271,6 @@
  Skapa ett funktionsobjekt i PLC editorn och koppla till objektet i planthierarkin.
  
  @b Se även
- @classlink BaseCompModeAM basecomponent_compmodeam.html
  @classlink BaseFcPPO3MotorAggr basecomponent_basefcppo3motoraggr.html 
 <attr> Description
   @summary Textfält synlig i XTT som beskriver objektet lite mer än namnet på objektet
@@ -2446,7 +2367,7 @@
   låg, dvs manuell mod. 
 </attr>
 <attr> OpNoUpdateManRef
-  Konfiguerar att ingen uppdatering OpRefMan gör i automtik, dvs OpRefMan skrivs inte
+  Konfiguerar att ingen uppdatering OpRefMan gör i automatik, dvs OpRefMan skrivs inte
   över av PLC programmet i automatik utan beter sig som ett fast värde. 
 </attr>
 <attr> OpRefMan
@@ -2509,15 +2430,7 @@
  och en digital utgång.
 
  @b Se även
-<attr> Description
-  @summary Textfält synlig i XTT som beskriver objektet lite mer än namnet på objektet
-  Objekt innehållande styrning av en digital utgång och en analog i olika körsätt auto,
-  manuell och lokalt samt en objektsbild för manövrering och statusvisning. Manuella
-  knapparna i objektsbilden kan konfigureras att visa Start/Stopp (default) och Till/Från. 
-</attr>
-
 <attr> ExtControl
-  [eco]
   Används för att styra mod auto/man när man konfigurerat objektets attribut OpExtAndIntMan till 1.
   dvs om ExtControl är 0 är det man mod och om 1 är det auto mod (extern mod styrning).
 
@@ -2525,45 +2438,35 @@
   knappar men inte använder auto/man mod. Inga auto/man knappar syns i objektsbilden.
 </attr>
 <attr> ExtStart
-  [est]
   Ingång för att styra Order utgången i automatik mod (extern).  
 </attr>
 <attr> LocalMode 	
-  [loc]
    Ingången ställer objektets mod i lokal mod (prio 1) vilket innebär att alla andra moder kopplas bort.
 </attr>
 <attr> LocalStart	
-  [lst]
   Ingång för att styra Order utgången i lokal mod.
 </attr>
 <attr> Ready 	
-  [rdy]
   Förreglingsingång, ska vara sann annars tas orderutgång ner i ALLA moder. Dessutom tvingas
   auto mod till manuell mod om inte objektattributet OpNoAutoToMan är 1.
 </attr>
 <attr> Feedback 	
-  [fb]
   Används för återkoppling av order (driftsvar). Indikering vid startknapp blir grön i
   objektsbilden om signalen är sann.
 </attr>
 <attr> RefAuto 	
-  [REA]
   Objektets ingång för den analoga styrreferensen som gäller i automatik mod.
 </attr>
 <attr> RefLoc 	
-  [REL]
   Objektets ingång för den analoga styrreferensen som gäller i lokal mod.
 </attr>
 <attr> Order 	
-  [ord]
   Objektets digitala utgång (starta driften).
 </attr>
 <attr> OutRef 	
-  [REF]
   Objektets analoga referensutgång. Tvingas till noll om Order utgången är 0. 
 </attr>
 <attr> AutoMode 	
-  [aut]
   Utgång sann om objektets fjärrstyrning är i automatik mod, falsk betyder manuell mod.
 </attr>
 <attr> PlcConnect
@@ -2589,7 +2492,7 @@
    Lokal mod styrning hanteras INTE av detta objekt förutom indikering i bilder.
    Ett larm kan också genereras när lokal mod aktiveras "utifrån".   
 
-   Används i objekten BaseCvalve (reglerventil), BaseCDamper(spjällventil) och
+   Används i objekten BaseCValve (reglerventil), BaseCDamper(spjällventil) och
    BasePropValve (proportionalventil).
    
    Närbesläktat objekt med en "extra" digital signal och start/stopp knappar heter
@@ -2645,7 +2548,7 @@
  Bilden visar när både auto/man mod och referensbörvärde i manuell mod styrs utanför
  objektet. Denna konfiguration fås genom att sätta OpAutoOnly till 1. Styrning av
  utgången sker endast via AutoRef ingången. Denna konfiguration används främst i
- ventilobjekt typ BaseCvalve när man inte vill ha auto/man styrning i objektet.
+ ventilobjekt typ BaseCValve när man inte vill ha auto/man styrning i objektet.
  
  Attributet OpNoLocal är 0 och därför visas den lokala indikatorn i bilden.
    
@@ -2660,7 +2563,7 @@
  
  @b Se även
  @classlink BaseCompModeA basecomponent_compmodea.html 
- @classlink BaseCvalve basecomponent_basecvalve.html 
+ @classlink BaseCValve basecomponent_basecvalve.html 
  @classlink BaseCDamper basecomponent_basecdamper.html 
  @classlink BasePropValve basecomponent_basepropvalve.html    
 <attr> Description
@@ -2743,15 +2646,12 @@
 </attr>
 
 <attr> RefAuto 	
-  [REA]
   Objektets ingång för den analoga styrreferensen som gäller i automatik mod.
 </attr>
 <attr> LocalMode 	
-  [loc]
   Indikator lokal i tillhörande objektsbild visar gult om ingången är hög.
 </attr>
 <attr> OutRef 	
-  [REF]
   Objektets analoga referensutgång. 
 </attr>
 <attr> PlcConnect
@@ -2993,31 +2893,26 @@ Skapa ett funktionsobjekt i PLC editorn och koppla till objektet i planthierarki
  
 @b Se även
 <attr>ProcVal 
-[PV]
-Ärverdessignal som kopplas in till PLC funktionsobjektet (PROCess VALue). 
+Ärvärdessignal som kopplas in till PLC funktionsobjektet (PROCess VALue). 
 </attr>
 
 <attr>SetVal 
-[SV]
 Börvärdessignal som kopplas in till PLC funktionsobjektet (SETpoint VALue). Denna
 ingång hämtar oftast signalen från en utgång på det associerade Mode-objektet. 
 </attr>
 
 <attr>Bias 
-[BIS]
 Framkopplingsvärde ( 'feed forward value') som kopplas in till PLC funktionsobjektet.
 Attributet kan ändras från Pid - objektets MERbild. 
 </attr>
 
 <attr>ForcVal 
-[FOV]
 Tvångsstyrningsvärdet som kopplas in till PLC funktionsobjektet. Då Force är TRUE sätts
 OutVal = ForcVal . Denna ingång hämtar oftast signalen från en utgång på det
 associerade Mode-objektet.
 </attr>
 
 <attr>Force 
-[for]
 Tvingaorder som kopplas in till PLC funktionsobjektet.
 
 Anger om något av alternativen tvångsstyrning / MANUAL gäller eller inte. 
@@ -3027,7 +2922,6 @@ signalen från en utgång på det associerade Mode-objektet.
 </attr>
 
 <attr>IntOff 
-[iof]
 Avstängning integreringsorder som kopplas in till PLC funktionsobjektet.
 
 Anger om integrationen kopplats bort eller inte. FALSE betyder att 
@@ -3036,7 +2930,6 @@ bort. Attributet kan ändras från Pid-objektets MERbild.
 </attr>
 
 <attr>OutVal 
-[OUT]
 Utgången ifrån PLC funktionsobjektet.
 
 Regulatorns styrsignal. Värdet baseras på algoritmens 'positional form', från 
@@ -3044,7 +2937,6 @@ operatören i läge MANUAL eller på ett s.k. tvångsstyrningsvärde.
 </attr>
 
 <attr>OutChange 
-[OC]
 Utgång ifrån PLC funktionsobjektet.
 
 Regulatorns styrsignal baserad på 'incremental form'. 
@@ -3054,14 +2946,12 @@ dvs. OutVal t - OutVal t-1 .
 </attr>
 
 <attr>ControlDiff 
-[DIF]
 Differensutsignal är/börvärde ifrån PLC funktionsobjektet.
 
 Reglerfelet (= ProcVal - SetVal ). 
 </attr>
 
 <attr>EndMin
-[min]
 Utgång minvärde aktiverat ifrån PLC funktionsobjektet.
 
 Om beräknat värde på OutVal inte tillhör intervallet { MinOut , MaxOut } ska 
@@ -3080,7 +2970,6 @@ också EndHys nedan.
 </attr>
 
 <attr>EndMax 
-[max]
 Utgång maxvärde aktiverat ifrån PLC funktionsobjektet.
 
 Se EndMin
@@ -3374,30 +3263,25 @@ Skapa ett funktionsobjekt i PLC editorn och koppla till objektet CompPID i plant
 
 @b Se även
 <attr>ProcVal 
-[PV]
 Ärvärdet (PROCess VALue). 
 </attr>
 
 <attr>SetVal 
-[SV]
 Börvärdet (SETpoint VALue). Ingången kopplas ofta till motsvarande utgång 
 på det associerade Mode-objektet. 
 </attr>
 
 <attr>Bias 
-[BIS]
 Framkopplingsvärdet ( 'feed forward value'). Attributet kan ändras från Pid - 
 objektets MERbild. 
 </attr>
 
 <attr>ForcVal 
-[FOV]
 Tvångsstyrningsvärdet. Då Force är TRUE sätts OutVal = ForcVal . Ingången 
 kopplas ofta till motsvarande utgång på det associerade Mode-objektet. 
 </attr>
 
 <attr>Force 
-[for]
 Anger om något av alternativen tvångsstyrning / MANUAL gäller eller inte. 
 FALSE betyder att inget av dessa alternativ är förhanden; TRUE innebär att 
 antingen tvångsstyrning eller MANUAL valts. Ingången kopplas ofta till 
@@ -3405,20 +3289,17 @@ motsvarande utgång på det associerade Mode-objektet.
 </attr>
 
 <attr>IntOff 
-[iof]
 Anger om integrationen kopplats bort eller inte. FALSE betyder att 
 integrationstermen ska vara med; TRUE innebär att integrationen kopplats 
 bort. Attributet kan ändras från Pid-objektets MERbild. 
 </attr>
 
 <attr>OutVal 
-[OUT]
 Regulatorns styrsignal. Värdet baseras på algoritmens 'positional form', från 
 operatören i läge MANUAL eller på ett s.k. tvångsstyrningsvärde. 
 </attr>
 
 <attr>OutChange 
-[OC]
 Regulatorns styrsignal baserad på 'incremental form'. 
 
 Attributet avser styrsignalsförändringen mellan två konsekutiva exekveringar; 
@@ -3426,12 +3307,10 @@ dvs. OutVal t - OutVal t-1 .
 </attr>
 
 <attr>ControlDiff 
-[DIF]
 Reglerfelet (= ProcVal - SetVal ). 
 </attr>
 
 <attr>EndMin
-[min]
 Om beräknat värde på OutVal inte tillhör intervallet { MinOut , MaxOut } ska 
 begränsning ske till motsvarande intervallgräns. Attributet anger om sådan 
 begränsning skett vid den senaste exekveringen eller inte. 
@@ -3448,7 +3327,6 @@ också EndHys nedan.
 </attr>
 
 <attr>EndMax 
-[max]
 Se EndMin
 </attr>
 
@@ -3504,34 +3382,28 @@ Skapa ett funktionsobjekt i PLC editorn och koppla till objektet i planthierarki
  
 @b Se även
 <attr>XSetVal 
-[XSV]
 Externt börvärde som kopplas in till PLC funktionsobjektet (kaskadbörvärdet)
 </attr>
 
 <attr>ProcVal 
-[PV]
 Ärvärde som kopplas in till PLC funktionsobjektet
 </attr>
 
 <attr>XForcVal 
-[XFO]
 Externt tvångsstyrningsvärde som kopplas in till PLC funktionsobjektet.
 </attr>
 
 <attr>Forc1 
-[fo1]
 Anger om ovillkorlig tvångsstyrning valts eller inte. Insignal som kopplas till
 PLC funktionsobjektet.
 </attr>
 
 <attr>Forc2 
-[fo2]
 Anger, i läge AUTO och CASCADE, om tvångsstyrning valts eller inte. Insignal som
 kopplas till PLC funktionsobjektet.
 </attr>
 
 <attr>OutVal 
-[OUT]
 Återkopplingssignal som kopplas in till PLC funktionsobjektet.
 
 Då reglerkretsen sätts i läge MANUAL skulle processen få en större eller 
@@ -3545,7 +3417,6 @@ att värdet på OutVal ger 'bumpless transfer'. Detta brukar lösas med en analog
 </attr>
 
 <attr>SetVal 
-[SV]
 Börvärdes utgång ifrån PLC funktionsobjektet.
 
 Anger, i läge AUTO och CASCADE, aktuellt börvärde. Attributet kan i läge 
@@ -3558,7 +3429,6 @@ Ofta ansluts utgången till motsvarande ingång på efterföljande Pid-objekt.
 </attr>
 
 <attr>ForcVal 
-[FOV]
 Tvångstyrningsvärde, utgång ifrån PLC funktionsobjektet.
 
 Normalt ansluts utgången till motsvarande ingång på efterföljande Pid-objekt. 
@@ -3573,7 +3443,6 @@ objektbild.
 </attr>
 
 <attr>Force 
-[for]
 Reglermod i tvingaläge, utgång ifrån PLC funktionsobjektet.
 
 Normalt ansluts utgången till motsvarande ingång på efterföljande Pid - objekt. 
@@ -3586,7 +3455,6 @@ värde.
 </attr>
 
 <attr>AutMode 
-[aut]
 Reglermod i automatik, utgång ifrån PLC funktionsobjektet. 
 
 Anger om reglermod AUTO valts eller inte. FALSE betyder att annan mod 
@@ -3597,7 +3465,6 @@ CASCADE används attributet ofta för ren indikering.
 </attr>
 
 <attr>CascMod 
-[cas]
 Reglermod i kakskamod, utgång ifrån PLC funktionsobjektet.
 
 Anger om reglermod CASCADE valts eller inte. FALSE betyder att annan mod 
@@ -3739,36 +3606,30 @@ Objektet tar hand om mod hantering mm för en PID regulator:
 
 @b Se även
 <attr>XSetVal 
-[XSV]
 Externt börvärde (= Set point Val ue). Attributet används enbart i läge 
 CASCADE och då på så sätt att SetVal = XSetVal . 
 </attr>
 
 <attr>ProcVal 
-[PV]
 Ärvärde (= Proc ess Val ue). Attributet används i Mode objektets objektbild vid 
 visning av ärvärdet. 
 </attr>
 
 <attr>XForcVal 
-[XFO]
 Externt tvångsstyrningsvärde (= Forc ed Val ue). Attributet används enbart vid 
 tvångsstyrning (dvs. Force1 eller Force2 är TRUE) och då på så sätt att 
 ForceVal = XForceVal . 
 </attr>
 
 <attr>Forc1 
-[fo1]
 Anger om ovillkorlig tvångsstyrning valts eller inte.
 </attr>
 
 <attr>Forc2 
-[fo2]
 Anger, i läge AUTO och CASCADE, om tvångsstyrning valts eller inte.
 </attr>
 
 <attr>OutVal 
-[OUT]
 Då reglerkretsen sätts i läge MANUAL skulle processen få en större eller 
 mindre stöt ('bump') om värdet på ForcVal inledningsvis avvek från det 
 aktuella ärvärdet, ProcVal . 
@@ -3780,7 +3641,6 @@ att värdet på OutVal ger 'bumpless transfer'. Detta brukar lösas med en analog
 </attr>
 
 <attr>SetVal 
-[SV]
 Anger, i läge AUTO och CASCADE, aktuellt börvärde. Attributet kan i läge 
 
 - MANUAL och AUTO, ändras från Mode objektets objektbild 
@@ -3791,7 +3651,6 @@ Ofta ansluts utgången till motsvarande ingång på efterföljande Pid-objekt.
 </attr>
 
 <attr>ForcVal 
-[FOV]
 Normalt ansluts utgången till motsvarande ingång på efterföljande Pid-objekt. 
 Värdet på Pid-objektets utgångar OUT och OC kommer att baseras på ForcVal 
 i följande fall: 
@@ -3804,7 +3663,6 @@ objektbild.
 </attr>
 
 <attr>Force 
-[for]
 Normalt ansluts utgången till motsvarande ingång på efterföljande Pid - objekt. 
 
 Attributet anger för Pid-objektet om värdena till utgångarna OUT och OC ska 
@@ -3815,7 +3673,6 @@ värde.
 </attr>
 
 <attr>AutMode 
-[aut]
 Anger om reglermod AUTO valts eller inte. FALSE betyder att annan mod 
 gäller; TRUE innebär att AUTO valts. 
 
@@ -3824,7 +3681,6 @@ CASCADE används attributet ofta för ren indikering.
 </attr>
 
 <attr>CascMode 
-[cas]
 Anger om reglermod CASCADE valts eller inte. FALSE betyder att annan mod 
 gäller; TRUE innebär att CASCADE valts. 
 
@@ -3973,36 +3829,28 @@ Referens till objektet i planthierarkin.
 
  @b Se även
  <attr>DisableSup 
- [dis]
  Ingång som anger om larmövervakning ska kopplats bort (1:a) eller inte (0:a). OBS! Att både larm
  och larmutgångar kopplas bort.
  </attr>
  <attr>Error 
- [err]
  Ingång Error som gör sensor röd i objektsbilden och objektsymbol börjar blinka rött.
  </attr>
  <attr>Warning 
- [warn]
  Ingång Warning som gör sensor gul i objektsbilden och objektsymbol blir gul (fast).
  </attr>
  <attr>Value 
- [VAL]
  Ärvärde utgång Value, dvs ärvärdet på sensorn.
  </attr>
  <attr>HH 
- [HH]
  Utgång, gränsvärde Hög Hög är passerad (A-larm).
  </attr>
  <attr>H 
- [H]
  Utgång, gränsvärde Hög är passerad  (B-larm).
  </attr>
  <attr>L 
- [L]
  Utgång, gränsvärde Låg är passerad (B-larm).
  </attr>
  <attr>LL 
- [LL]
  Utgång, gränsvärde Låg Låg är passerad (A-larm).
  </attr>
  <attr> PlcConnect
@@ -4388,13 +4236,13 @@ Referens till objektet i planthierarkin.
   Detta attribut kan ställs in via objektsbilden.
  </attr>
  <attr>CalPos1
-  Minne kalibreringsvärdet OpCalPos1 när kalibrering Point 1 utfördes.
+  Lagrat värde på kalibreringsvärdet OpCalPos1 när kalibrering Point 1 utfördes.
  </attr>
  <attr>CalValue1
-  Minne på positionsärvärde (Ai signalen) när kalibrering Point 1 utfördes.
+  Lagrat värde på positionsärvärde (Ai signalen) när kalibrering Point 1 utfördes.
  </attr>
  <attr>CalValue2
-  Minne på positionsärvärde (Ai signalen) när kalibrering Point 2 utfördes.
+  Lagrat värde på positionsärvärde (Ai signalen) när kalibrering Point 2 utfördes.
  </attr>
  <attr>Gain
   Beräknad skalningsfaktor när båda kalibreringspunkterna används. Beräknas först när
@@ -4416,7 +4264,7 @@ Referens till objektet i planthierarkin.
   om OpCal1Enable också är vald (1:a).
  </attr>
  <attr>OpCalAccess 
-  Om 1 dimmas knappar Calibrate upp i bild som möjliggör att kalibrera från bilden.
+  Om 1 dimmas knapparna för Calibrate i objeksbilden som möjliggör kalibrering från bilden.
  </attr>
  <attr>OpCalPosAccess 
   Om 1 visas inmatningfält för attributen OpCalPos1 och OpCalPos2 i bild som möjliggör att ändra
@@ -4445,36 +4293,30 @@ Referens till objektet i planthierarkin.
 
  @b Se även
  <attr>CalOrder1 
-  [cal1]
-  Ingång att kalibreringsvärden Point 1 ska beräknas. OBS! Att insignalen bör vara flanktriggad.
+  Ingång att kalibreringsvärden Point 1 ska beräknas. Beräkningen utförs vid 
+  positiv flank på ingången.
  </attr>
  <attr>CalOrder2
-  [cal1]
-  Ingång att kalibreringsvärden Point 2 ska beräknas. OBS! Att insignalen bör vara flanktriggad.
+  Ingång att kalibreringsvärden Point 2 ska beräknas. Beräkningen utförs vid
+  positiv flank på ingången.
  </attr>
  <attr>DisableSup 
-  [dis]
   Ingång som anger om larmövervakning ska kopplats bort (1:a) eller inte (0:a). OBS! Att både larm
   och larmutgångar kopplas bort.
  </attr>
  <attr>Value 
-  [VAL]
   Ärvärde utgång Value, dvs kalibrerade ärvärdet på positions-sensorn.
  </attr>
  <attr>HH 
-  [HH]
   Utgång, gränsvärde Hög Hög är passerad (A-larm).
  </attr>
  <attr>H 
-  [H]
   Utgång, gränsvärde Hög är passerad  (B-larm).
  </attr>
  <attr>L 
-  [L]
   Utgång, gränsvärde Låg är passerad (B-larm).
  </attr>
  <attr>LL 
-  [LL]
   Utgång, gränsvärde Låg Låg är passerad (A-larm).
  </attr>
  <attr> PlcConnect
@@ -4583,12 +4425,10 @@ Referens till objektet i planthierarkin.
  @classlink BaseLevelSwitch basecomponent_baselevelswitch.html 
  @classlink BasePressureSwitch basecomponent_basepressureswitch.html   
 <attr>DisableSup 
- [dis]
  Ingång som anger om larmövervakning ska kopplats bort (1:a) eller inte (0:a). OBS! Att 
  larmutgången INTE kopplas bort.
  </attr>
  <attr>AlarmStatus 
- [ala]
  Larmutgång som är hög vid larm.
  </attr>
  <attr> PlcConnect
@@ -4791,7 +4631,7 @@ Referens till objektet i planthierarkin.
  
  @b Objektsymbol
  Grafiska symbolen för detta objekt är BaseComponent/Filter.
- @image orm_filter_gs.gif
+ @image orm_filter_gs.png
 
  Dynamik:
  
@@ -4850,7 +4690,6 @@ Referens till objektet i planthierarkin.
   Utgång på PLC funktionsobjektet som är hög när larm råder.
  </attr>
  <attr>SupDisabled 
-  [dis]
   Anger om larmövervakning kopplas bort (1:a) eller inte (0:a). Styrs via ingång "dis" på
   PLC funktionsobjektet. OBS! Att larmutgången AlarmStatus och färgstyrning i bilder INTE
   påverkas.
@@ -4874,12 +4713,10 @@ Referens till objektet i planthierarkin.
 
  @b Se även
  <attr>DisableSup 
- [dis]
  Ingång som anger om larmövervakning ska kopplats bort (1:a) eller inte (0:a). OBS! Att 
  larmutgången INTE kopplas bort.
  </attr>
  <attr>AlarmStatus 
- [ala]
  Larmutgång som är hög vid larm.
  </attr>
  <attr> PlcConnect
@@ -5004,13 +4841,13 @@ Referens till objektet i planthierarkin.
  BaseActuatorA objektet hanterar 8 olika alternativ beroende på ställdonets utformning:
 
 
-  1 TwoSwitches            Gränsläge öppet och stängt och ingen analog lägesåterföring/position.
-  2 SwitchOpen             Bara gränsläge öppet och ingen analog lägesåterföring/position.
-  3 SwitchClosed           Bara gränsläge stängt och ingen analog lägesåterföring/position.
+  1 TwoSwitches            Gränsläge öppen och stängd och ingen analog lägesåterföring/position.
+  2 SwitchOpen             Bara gränsläge öppen och ingen analog lägesåterföring/position.
+  3 SwitchClosed           Bara gränsläge stängd och ingen analog lägesåterföring/position.
   4 NoSwitches             Inga gränslägen och ingen analog lägesåterföring/position.
-  5 PositionTwoSwitches    Allt, gränsläge öppet och stängt och analog lägesåterföring/position.
-  6 PositionSwitchOpen     Gränsläge öppet och analog lägesåterföring/position.
-  7 PositionSwitchClosed   Gränsläge stängt och analog lägesåterföring/position.
+  5 PositionTwoSwitches    Allt, gränsläge öppen och stängd och analog lägesåterföring/position.
+  6 PositionSwitchOpen     Gränsläge öppen och analog lägesåterföring/position.
+  7 PositionSwitchClosed   Gränsläge stängd och analog lägesåterföring/position.
   8 PositionNoSwitches     Inga gränslägen men analog lägesåterföring/position.
 
 
@@ -5096,7 +4933,6 @@ Referens till objektet i planthierarkin.
   Uppräkningsattribut för att hålla reda på positioner.
  </attr>
  <attr>SupDisabled 
- [dis]
  Anger om larmövervakning kopplas bort (1:a) eller inte (0:a). Styrs via ingång "dis" på
  PLC funktionsobjektet. OBS! Att färgstyrning i bilder INTE påverkas eller attributen
  IndError, IndWarning.
@@ -5125,29 +4961,24 @@ Referens till objektet i planthierarkin.
  @b Se även
  @classlink CompModeAM basecomponent_compmodeamfo.html 
  <attr>ExtOrder 	
-   [Ord]
    Ingång för den analoga styrreferensen som gäller om INTE objektet är i
    manuell mod. I manuell mod hämtas styrreferensen från OpRefMan.
  </attr>
  <attr>LocalMode 	
-   [loc]
    Ingång för att styra "Lokala" dynamiken i objektsbild/symbol och generera ett B-larm
    att lokalt gäller (går att koppla ur), annars gör den ingenting. 
  </attr>
  <attr>Error 
-   [err]
    Ingång Error (1:a) gör att ventilens objektsymbol börjar blinka rött och ventil indikering
    i objektsbilden röd, dvs denna ingång används när man av någon anledning vill styra dynamiken
    i bilder från funktionsobjektets ingångar.
  </attr>
  <attr>Warning 
-   [warn]
    Ingång Warning (1:a) gör att ventilens objektsymbol och ventil indikering i objektsbilden
    blir gul, dvs denna ingång används när man av någon anledning vill styra dynamiken i bilder
    från funktionsobjektets ingångar.
  </attr>
  <attr>DisableSup 
-   [dis]
    Ingång som anger om larmövervakning kopplas bort (1:a) eller inte (0:a). OBS att färgstyrning
    i bilder INTE påverkas eller status för attributen IndError, IndWarning.
  </attr>
@@ -5192,26 +5023,27 @@ Referens till objektet i planthierarkin.
 
  OBS! Att ovanstående larm inte påverkar mod.
  
- Övervakning tidfel (timeout) när gränslägen används sker via det inbyggda attribut CompModeD2
- objektet där man ställer in gångtiden i attribut OrderTimeLimit. Detta fel påverkar normalt mod
- Auto/Man att inta läget manuellt, dvs. auto återställs automatiskt till manuellt när det blir
+ Övervakning tidfel (timeout) när gränslägen används sker via det inbyggda objektet CompModeD2
+ där man ställer in gångtiden i attribut OrderTimeLimit. Detta fel påverkar normalt mod
+ Auto/Man att inta läget manuellt, dvs auto återställs automatiskt till manuellt när det blir
  fel. Se CompModeD2 objektet för mer info hur man kan välja bort denna funktion.
  
- OBS! När man styr ventilens Auto/man mod externt eller lokalt är det viktigt att "återkoppla"
- till sitt program (återställa order), dvs man bör ta ner styrorder på funktionsobjektets
- ingångar vid fel för att förhindra oönskade återstarter. Använd bl.a attribut ErrorIncr och
- ErrorDecr i CompModeD2 som fångar upp tidfel när gränslägen/Limitswitches är konfigurerade. 
+ Om man väljer att inte använda objektets hantering av moder, utan lägger denna hantering
+ utanför objektet,är det viktigt återställa order vid felstatus, dvs man bör ta ner styrorder 
+ på funktionsobjektets ingångar vid fel för att förhindra oönskade återstarter. Använd bl a 
+ attribut ErrorIncr och ErrorDecr i CompModeD2 som fångar upp tidfel när 
+ gränslägen/Limitswitches är konfigurerade. 
  
  @h1 Konfigurering
  BaseActuatorIncrDecr objektet hanterar 8 olika alternativ beroende på ställdonets utformning:
 
-  1 TwoSwitches            Gränsläge öppet och stängt och ingen analog lägesåterföring/position.
-  2 SwitchOpen             Bara gränsläge öppet och ingen analog lägesåterföring/position.
-  3 SwitchClosed           Bara gränsläge stängt och ingen analog lägesåterföring/position.
+  1 TwoSwitches            Gränsläge öppen och stängd och ingen analog lägesåterföring/position.
+  2 SwitchOpen             Bara gränsläge öppen och ingen analog lägesåterföring/position.
+  3 SwitchClosed           Bara gränsläge stängd och ingen analog lägesåterföring/position.
   4 NoSwitches             Inga gränslägen och ingen analog lägesåterföring/position.
-  5 PositionTwoSwitches    Allt, gränsläge öppet och stängt och analog lägesåterföring/position.
-  6 PositionSwitchOpen     Gränsläge öppet och analog lägesåterföring/position.
-  7 PositionSwitchClosed   Gränsläge stängt och analog lägesåterföring/position.
+  5 PositionTwoSwitches    Allt, gränsläge öppen och stängd och analog lägesåterföring/position.
+  6 PositionSwitchOpen     Gränsläge öppen och analog lägesåterföring/position.
+  7 PositionSwitchClosed   Gränsläge stängd och analog lägesåterföring/position.
   8 PositionNoSwitches     Inga gränslägen men analog lägesåterföring/position.
 
   @b Signaler
@@ -5291,7 +5123,6 @@ Referens till objektet i planthierarkin.
   Uppräkningsattribut för att hålla reda på positioner.
  </attr>
  <attr>SupDisabled 
- [dis]
  Anger om larmövervakning kopplas bort (1:a) eller inte (0:a). Styrs via ingång "dis" på
  PLC funktionsobjektet. OBS! Att färgstyrning i bilder INTE påverkas eller attributen
  IndError, IndWarning.
@@ -5320,7 +5151,6 @@ Referens till objektet i planthierarkin.
  @b Se även
   @classlink CompModeD2 basecomponent_compmoded2.html 
  <attr> ExtControl
-   [eco]
    Används för att styra mod auto/man när man konfigurerat CompModeD2 objektets attribut
    OpExtAndIntMan till 1. dvs om ExtControl är 0 är det man mod och om 1 är det auto
    mod (extern mod styrning).
@@ -5329,17 +5159,16 @@ Referens till objektet i planthierarkin.
    med knappar men inte använder auto/man mod. Inga auto/man knappar syns i objektsbilden.
  </attr>
  <attr> ExtOrderIncr
-   [oin]
-   Ingång för att styra orderIncr utgången (öka) i automatik mod (extern).  
+   Ingång för att styra OrderIncr utgången (öka) när automatik mod är valt i objeksbilden
+   eller när moden styrs via ExtControl.
  </attr>
  <attr> ExtOrderDecr
-   [ode]
-   Ingång för att styra orderDecr utgången (minska) i automatik mod (extern).
+   Ingång för att styra OrderDecr utgången (minska) när automatik mod är valt i objeksbilden
+   eller när moden styrs via ExtControl.
  </attr>
  <attr> LocalMode 	
-   [loc]
-    Ingången ställer objektets mod i lokal mod (prio 1) vilket innebär att alla andra moder kopplas bort.
-    Dvs ingångar LocalIncr, LocalDecr i funktionsobjektet styr ventilen. 
+   Ingången ställer objektets mod i lokal mod (prio 1) vilket innebär att alla andra moder kopplas bort.
+   Dvs ingångar LocalIncr, LocalDecr i funktionsobjektet styr ventilen. 
    
    Ingången styr även dynamiken i objektsbild/symbol och generera ett B-larm att lokalt gäller.
    Larmet går att välja bort via inbyggda CompModeD2 objektets attribut OpDisableLocalAlarm.
@@ -5347,27 +5176,22 @@ Referens till objektet i planthierarkin.
    Lokal mod går att välja bort via inbyggda CompModeD2 objektets attribut OpNoLocal.  
  </attr>
  <attr> LocalIncr	
-  [lin]
   Ingång för att styra orderIncr utgången (öka) i lokal mod.
  </attr>
  <attr> LocalDecr	
-   [lde]
    Ingång för att styra orderDecr utgången (minska) i lokal mod.
  </attr>
  <attr>Error 
-   [err]
    Ingång Error (1:a) gör att ventilens objektsymbol börjar blinka rött och ventil indikering
    i objektsbilden röd, dvs denna ingång används när man av någon anledning vill styra
    dynamiken i bilder från funktionsobjektets ingångar.
  </attr>
  <attr>Warning 
-   [warn]
    Ingång Warning (1:a) gör att ventilens objektsymbol och ventil indikering i objektsbilden
    blir gul, dvs denna ingång används när man av någon anledning vill styra dynamiken i bilder
    från funktionsobjektets ingångar.
  </attr>
  <attr>DisableSup 
-   [dis]
    Ingång som anger om larmövervakning kopplas bort (1:a) eller inte (0:a). OBS att färgstyrning
    i bilder INTE påverkas eller status för attributen IndError, IndWarning.
  </attr>
@@ -5431,13 +5255,13 @@ Referens till objektet i planthierarkin.
  @h1 Konfigurering
  BaseValveIncrDecr objektet hanterar 8 olika alternativ beroende på ställdonets utformning:
 
-  1 TwoSwitches            Gränsläge öppet och stängt och ingen analog lägesåterföring/position.
-  2 SwitchOpen             Bara gränsläge öppet och ingen analog lägesåterföring/position.
-  3 SwitchClosed           Bara gränsläge stängt och ingen analog lägesåterföring/position.
+  1 TwoSwitches            Gränsläge öppen och stängd och ingen analog lägesåterföring/position.
+  2 SwitchOpen             Bara gränsläge öppen och ingen analog lägesåterföring/position.
+  3 SwitchClosed           Bara gränsläge stängd och ingen analog lägesåterföring/position.
   4 NoSwitches             Inga gränslägen och ingen analog lägesåterföring/position.
-  5 PositionTwoSwitches    Allt, gränsläge öppet och stängt och analog lägesåterföring/position.
-  6 PositionSwitchOpen     Gränsläge öppet och analog lägesåterföring/position.
-  7 PositionSwitchClosed   Gränsläge stängt och analog lägesåterföring/position.
+  5 PositionTwoSwitches    Allt, gränsläge öppen och stängd och analog lägesåterföring/position.
+  6 PositionSwitchOpen     Gränsläge öppen och analog lägesåterföring/position.
+  7 PositionSwitchClosed   Gränsläge stängd och analog lägesåterföring/position.
   8 PositionNoSwitches     Inga gränslägen men analog lägesåterföring/position.
 
   @b Signaler
@@ -5502,7 +5326,6 @@ Referens till objektet i planthierarkin.
   @classlink CompModeD2 basecomponent_compmoded2.html
   @classlink BaseActuatorIncrDecr basecomponent_baseactuatorincrdecr.html 
  <attr> ExtControl
-   [eco]
    Används för att styra mod auto/man när man konfigurerat CompModeD2 objektets attribut
    OpExtAndIntMan till 1. dvs om ExtControl är 0 är det man mod och om 1 är det auto
    mod (extern mod styrning).
@@ -5511,15 +5334,12 @@ Referens till objektet i planthierarkin.
    med knappar men inte använder auto/man mod. Inga auto/man knappar syns i objektsbilden.
  </attr>
  <attr> ExtOrderIncr
-   [oin]
    Ingång för att styra orderIncr utgången (öka) i automatik mod (extern).  
  </attr>
  <attr> ExtOrderDecr
-   [ode]
    Ingång för att styra orderDecr utgången (minska) i automatik mod (extern).
  </attr>
  <attr> LocalMode 	
-   [loc]
     Ingången ställer objektets mod i lokal mod (prio 1) vilket innebär att alla andra moder
     kopplas bort. Dvs ingångar LocalIncr, LocalDecr i funktionsobjektet styr ventilen. 
    
@@ -5529,27 +5349,22 @@ Referens till objektet i planthierarkin.
    Lokal mod går att välja bort via inbyggda CompModeD2 objektets attribut OpNoLocal.  
  </attr>
  <attr> LocalIncr	
-  [lin]
   Ingång för att styra orderIncr utgången (öka) i lokal mod.
  </attr>
  <attr> LocalDecr	
-   [lde]
    Ingång för att styra orderDecr utgången (minska) i lokal mod.
  </attr>
  <attr>Error 
-   [err]
    Ingång Error (1:a) gör att ventilens objektsymbol börjar blinka rött och ventil indikering
    i objektsbilden röd, dvs denna ingång används när man av någon anledning vill styra
    dynamiken i bilder från funktionsobjektets ingångar.
  </attr>
  <attr>Warning 
-   [warn]
    Ingång Warning (1:a) gör att ventilens objektsymbol och ventil indikering i objektsbilden
    blir gul, dvs denna ingång används när man av någon anledning vill styra dynamiken i bilder
    från funktionsobjektets ingångar.
  </attr>
  <attr>DisableSup 
-   [dis]
    Ingång som anger om larmövervakning kopplas bort (1:a) eller inte (0:a). OBS att färgstyrning
    i bilder INTE påverkas eller status för attributen IndError, IndWarning i objekt 
    BaseActuatorIncrDecr.
@@ -5620,13 +5435,13 @@ Referens till objektet i planthierarkin.
  @h1 Konfigurering
  BaseCValve objektet hanterar 8 olika alternativ beroende på ställdonets utformning:
 
-  1 TwoSwitches            Gränsläge öppet och stängt och ingen analog lägesåterföring/position.
-  2 SwitchOpen             Bara gränsläge öppet och ingen analog lägesåterföring/position.
-  3 SwitchClosed           Bara gränsläge stängt och ingen analog lägesåterföring/position.
+  1 TwoSwitches            Gränsläge öppen och stängd och ingen analog lägesåterföring/position.
+  2 SwitchOpen             Bara gränsläge öppen och ingen analog lägesåterföring/position.
+  3 SwitchClosed           Bara gränsläge stängd och ingen analog lägesåterföring/position.
   4 NoSwitches             Inga gränslägen och ingen analog lägesåterföring/position.
-  5 PositionTwoSwitches    Allt, gränsläge öppet och stängt och analog lägesåterföring/position.
-  6 PositionSwitchOpen     Gränsläge öppet och analog lägesåterföring/position.
-  7 PositionSwitchClosed   Gränsläge stängt och analog lägesåterföring/position.
+  5 PositionTwoSwitches    Allt, gränsläge öppen och stängd och analog lägesåterföring/position.
+  6 PositionSwitchOpen     Gränsläge öppen och analog lägesåterföring/position.
+  7 PositionSwitchClosed   Gränsläge stängd och analog lägesåterföring/position.
   8 PositionNoSwitches     Inga gränslägen men analog lägesåterföring/position.
 
   @b Signaler
@@ -5694,28 +5509,23 @@ Referens till objektet i planthierarkin.
   @classlink CompModeAM basecomponent_compmodeam.html
   @classlink BaseActuatorA basecomponent_baseactuatora.html 
  <attr> ExtOrder 	
-  [Ord]
   Objektets ingång för den analoga styrreferensen som gäller i automatik mod (externt).
  </attr>
  <attr> LocalMode 	
-   [loc]
    Ingången styr dynamiken i objektsbild/symbol och generera ett B-larm att lokalt gäller.
    OBS att ingången inte påverkar andra moder eller refernsutgången på något sätt. 
  </attr>
  <attr>Error 
-   [err]
    Ingång Error (1:a) gör att ventilens objektsymbol börjar blinka rött och ventil indikering
    i objektsbilden röd, dvs denna ingång används när man av någon anledning vill styra
    dynamiken i bilder från funktionsobjektets ingångar.
  </attr>
  <attr>Warning 
-   [warn]
    Ingång Warning (1:a) gör att ventilens objektsymbol och ventil indikering i objektsbilden
    blir gul, dvs denna ingång används när man av någon anledning vill styra dynamiken i bilder
    från funktionsobjektets ingångar.
  </attr>
  <attr>DisableSup 
-   [dis]
    Ingång som anger om larmövervakning kopplas bort (1:a) eller inte (0:a). OBS att färgstyrning
    i bilder INTE påverkas eller status för attributen IndError, IndWarning i objekt BaseActuatorA.
  </attr>
@@ -5803,7 +5613,6 @@ Referens till objektet i planthierarkin.
  För simulering använder man funktionsobjektet BaseCValveSim.
  
  @b Se även
- @classlink CompModeAM basecomponent_compmodeam.html
  <attr>Super 
  Superklass, klicka på länk BaseCValve för mer beskrivning om BaseC3WayValve objektets attribut mm. 
  </attr>
@@ -5870,13 +5679,13 @@ Referens till objektet i planthierarkin.
  @h1 Konfigurering
  BaseCDamper objektet hanterar 8 olika alternativ beroende på ställdonets utformning:
 
-  1 TwoSwitches            Gränsläge öppet och stängt och ingen analog lägesåterföring/position.
-  2 SwitchOpen             Bara gränsläge öppet och ingen analog lägesåterföring/position.
-  3 SwitchClosed           Bara gränsläge stängt och ingen analog lägesåterföring/position.
+  1 TwoSwitches            Gränsläge öppen och stängd och ingen analog lägesåterföring/position.
+  2 SwitchOpen             Bara gränsläge öppen och ingen analog lägesåterföring/position.
+  3 SwitchClosed           Bara gränsläge stängd och ingen analog lägesåterföring/position.
   4 NoSwitches             Inga gränslägen och ingen analog lägesåterföring/position.
-  5 PositionTwoSwitches    Allt, gränsläge öppet och stängt och analog lägesåterföring/position.
-  6 PositionSwitchOpen     Gränsläge öppet och analog lägesåterföring/position.
-  7 PositionSwitchClosed   Gränsläge stängt och analog lägesåterföring/position.
+  5 PositionTwoSwitches    Allt, gränsläge öppen och stängd och analog lägesåterföring/position.
+  6 PositionSwitchOpen     Gränsläge öppen och analog lägesåterföring/position.
+  7 PositionSwitchClosed   Gränsläge stängd och analog lägesåterföring/position.
   8 PositionNoSwitches     Inga gränslägen men analog lägesåterföring/position.
 
   @b Signaler
@@ -5944,28 +5753,23 @@ Referens till objektet i planthierarkin.
   @classlink CompModeAM basecomponent_compmodeam.html
   @classlink BaseActuatorA basecomponent_baseactuatora.html 
  <attr> ExtOrder 	
-  [Ord]
   Objektets ingång för den analoga styrreferensen som gäller i automatik mod (externt).
  </attr>
  <attr> LocalMode 	
-   [loc]
    Ingången styr dynamiken i objektsbild/symbol och generera ett B-larm att lokalt gäller.
    OBS att ingången inte påverkar andra moder eller refernsutgången på något sätt. 
  </attr>
  <attr>Error 
-   [err]
    Ingång Error (1:a) gör att ventilens objektsymbol börjar blinka rött och ventil indikering
    i objektsbilden röd, dvs denna ingång används när man av någon anledning vill styra
    dynamiken i bilder från funktionsobjektets ingångar.
  </attr>
  <attr>Warning 
-   [warn]
    Ingång Warning (1:a) gör att ventilens objektsymbol och ventil indikering i objektsbilden
    blir gul, dvs denna ingång används när man av någon anledning vill styra dynamiken i bilder
    från funktionsobjektets ingångar.
  </attr>
  <attr>DisableSup 
-   [dis]
    Ingång som anger om larmövervakning kopplas bort (1:a) eller inte (0:a). OBS att färgstyrning
    i bilder INTE påverkas eller status för attributen IndError, IndWarning i objekt BaseActuatorA.
  </attr>
@@ -5996,7 +5800,7 @@ Referens till objektet i planthierarkin.
  Det finns ingen grafisk objektsymbol för detta objekt (endast i objektsbilden).
 
  @b Objektsbild
-  @image orm_basepropevalve_og.gif
+  @image orm_basepropvalve_og.gif
 
  Dynamik för objektsymbol i objektsbilden ovan:
  
@@ -6015,9 +5819,9 @@ Referens till objektet i planthierarkin.
     
     Ingen bokstavsindikering betyder att objektet är i automatik mod (externt styrd). 
 
-  Skalan och staplar "Order" "manual" följer inställningar i attributen PresMaxLimit,
-  PresMinLimit i Order attributet (Ao signalen). Dessa attribut går att ändra tillfälligt
-  online genom att klicka med musen i bilden.  
+ Skalan och staplar "Order" "manual" följer inställningar i attributen PresMaxLimit,
+ PresMinLimit i Order attributet (Ao signalen). Dessa attribut går att ändra tillfälligt
+ online genom att klicka med musen i bilden.  
 
  @b Mod
  Dom olika moder Auto/Manuell som kan förekomma hanteras utav mod objektet CompModeAM,
@@ -6028,10 +5832,9 @@ Referens till objektet i planthierarkin.
  objektet är i lokal mod (går att konfigurera bort).
 
  @h1 Konfigurering
- Ingen konfiguering av detta objekt
 
-  @b Signaler
-  Objektet innehåller en signal som ska kopplas till en I/O kanal:
+ @b Signaler
+ Objektet innehåller en signal som ska kopplas till en I/O kanal:
 
   - Order         Ao
  
@@ -6045,7 +5848,6 @@ Referens till objektet i planthierarkin.
  Inget simuleringsobjekt finns för detta objekt.
 
  @b Se även
- @classlink CompModeAM basecomponent_compmodeam.html
  <attr>Super 
   Superklass, klicka på länk Component för mer beskrivning om objektattributet. 
  </attr>
@@ -6090,11 +5892,9 @@ Referens till objektet i planthierarkin.
   @classlink CompModeAM basecomponent_compmodeam.html
   @classlink BaseActuatorA basecomponent_baseactuatora.html 
  <attr> ExtOrder 	
-  [Ord]
-  Objektets ingång för den analoga styrreferensen som gäller i automatik mod (externt).
+  Objektets ingång för den analoga styrreferensen som gäller i automatik mod.
  </attr>
  <attr> LocalMode 	
-   [loc]
    Ingången styr dynamiken i objektsbild/symbol och generera ett B-larm att lokalt gäller.
    Lokal mod går att välja bort via inbyggda CompModeAM objektets attribut OpNoLocal.
    Larmet går att välja bort via inbyggda CompModeAM objektets attribut OpDisableLocalAlarm.
@@ -6102,13 +5902,11 @@ Referens till objektet i planthierarkin.
    OBS att ingången inte påverkar andra moder eller refernsutgången på något sätt!
  </attr>
  <attr>Error 
-   [err]
    Ingång Error (1:a) gör att ventilens objektsymbol blir röd i objektsbilden , dvs denna
    ingång används när man av någon anledning vill styra dynamiken i bilder från
    funktionsobjektets ingångar.
  </attr>
  <attr>Warning 
-   [warn]
    Ingång Warning (1:a) gör att ventilens objektsymbol blir gul i objektsbilden , dvs denna
    ingång används när man av någon anledning vill styra dynamiken i bilder från
    funktionsobjektets ingångar.
@@ -6129,23 +5927,21 @@ Referens till objektet i planthierarkin.
  BaseMValve objektet hanteras en digital utgång för öppna/stäng och två digitala ingångar
  för ventilens gränslägen samt Auto/Man/lokal mod. Alla ingångar går att konfigurera (välja bort).
  
- Knappar i bilder kan INTE konfigureras för olika händelser, dvs öppna/stäng är det som gäller.
- 
  @b Objektsymbol
  Grafiska symbolen för detta objekt är BaseComponent/MValve eller MValveNoSwitches
  @image orm_mvalve_gs.gif
 
  Dynamik:
  
-  - Originalfärgen när ventilen är öppen om gränsläge finns, annars när den öppnar.
-  - Vit färg när ventilen är stängd om gränslägen finns, annars när den inte öppnar.
-  - Grå färg när ventilen inte är stängd eller öppen om gränslägen finns (mitt i mellan).
-  - Gul färg när det är varning (bl.a lokalt läge). 
+  - Originalfärgen när ventilen är öppen.
+  - Vit färg när ventilen är stängd.
+  - Grå färg när ventilen inget gränsläge är påverkat.
+  - Gul färg när det är varning, till exempel i lokalt mod. 
   - Röd blinkande färg när det är fel.
 
     Aktuell mod visas med bokstäver:
     
-    M    Manuell mod (om inte lokal!)
+    M    Manuell mod
     L    Lokal mod
         
     Ingen bokstavsindikering betyder att objektet är i automatik mod (externt styrd). 
@@ -6168,16 +5964,16 @@ Referens till objektet i planthierarkin.
  Övervakning tidfel (timeout) när gränslägen används ställs in i tidsattributet SwitchAlarmDelay.
  Detta fel påverkar INTE mod.
 
- OBS! När man styr ventilens Auto/man mod externt eller lokalt är det viktigt att "återkoppla"
- till sitt program (återställa order), dvs man bör ta ner styrorder på funktionsobjektets
- ingångar vid fel för att förhindra oönskade rörelser i maskin. 
+ Om man väljer att inte använda objektets hantering av moder, utan lägger denna hantering
+ utanför objektet,är det viktigt återställa order vid felstatus, dvs man bör ta ner styrorder 
+ på funktionsobjektets ingångar vid fel för att förhindra oönskade återstarter.
  
  @h1 Konfigurering
  BaseMValve objektet hanterar 4 olika alternativ för Di signaler gränslägen:
 
-  1 TwoSwitches            Gränsläge öppet och stängt.
-  2 SwitchOpen             Bara gränsläge öppet.
-  3 SwitchClosed           Bara gränsläge stängt.
+  1 TwoSwitches            Gränsläge öppen och stängd.
+  2 SwitchOpen             Bara gränsläge öppen.
+  3 SwitchClosed           Bara gränsläge stängd.
   4 NoSwitches             Inga gränslägen.
 
   OBS! valet NoSwitches innebär att också att objektsymbol MValveNoSwitches ska användas
@@ -6238,7 +6034,6 @@ Referens till objektet i planthierarkin.
   Går hög om B-larm är aktivt, objektsymbol blir gul (fast).
  </attr>
  <attr>ExtInterlock 
- [ilk]
   Förreglingsingång på funktionsobjektet, ska vara falsk annars tas orderutgång ner i
   ALLA moder. OBS att ingen påverkan av moder görs, dvs auto går inte över i manuellt
   om ExtInterlock går hög.
@@ -6247,7 +6042,6 @@ Referens till objektet i planthierarkin.
   Uppräkningsattribut för att hålla reda på positioner.
  </attr>
  <attr>SupDisabled 
- [dis]
  Anger om larmövervakning kopplas bort (1:a) eller inte (0:a). Styrs via ingång "dis" på
  PLC funktionsobjektet. OBS! Att färgstyrning i bilder INTE påverkas eller attributen
  IndError, IndWarning.
@@ -6274,30 +6068,25 @@ Referens till objektet i planthierarkin.
  i planthierarkin.
  
  @b Se även
-  @classlink CompModeAM basecomponent_compmodeam.html 
+  @classlink CompModeDM basecomponent_compmodedm.html 
  <attr> ExtOrder
-   [ord]
-   Ingång för att styra order utgången (öppna) i automatik mod (extern).  
+   Ingång för att styra order utgången (öppna) i automatik mod.  
  </attr>
  <attr>ExtInterlock 
- [ilk]
   Förreglingsingång, ska vara falsk annars tas orderutgång ner i ALLA moder. OBS att ingen
   påverkan av moder görs, dvs auto går inte över i manuellt om ExtInterlock går hög.
  </attr>
  <attr> LocalMode 	
-   [loc]
     Ingången ställer objektets mod i lokal mod (prio 1) vilket innebär att alla andra moder kopplas bort.
     Dvs ingång LocalOrder styr ventilen. 
    
    Ingången styr även dynamiken i objektsbild/symbol och generera ett B-larm att lokalt gäller.
-   Lokal mod går att välja bort via inbyggda CompModeAM objektets attribut OpNoLocal.  
+   LocalUsed måste konfigureras i CompModeDM objektet för att kunna sätta lokal mod.
  </attr>
  <attr> LocalOrder	
-  [lor]
   Ingång för att styra order utgången (öppna) i lokal mod.
  </attr>
  <attr>DisableSup 
-   [dis]
    Ingång som anger om larmövervakning kopplas bort (1:a) eller inte (0:a). OBS att färgstyrning
    i bilder INTE påverkas.
  </attr>
@@ -6317,8 +6106,6 @@ Referens till objektet i planthierarkin.
  BaseM3WayValve objektet hanteras en digital utgång för öppna/stäng och två digitala ingångar
  för ventilens gränslägen samt Auto/Man/lokal mod. Alla ingångar går att konfigurera
  (välja bort).
- 
- Knappar i bilder kan INTE konfigureras för olika händelser, dvs öppna/stäng är det som gäller.
  
  @b Objektsymbol
  Grafiska symbolen för detta objekt är BaseComponent/M3WayValve
@@ -6374,7 +6161,7 @@ Referens till objektet i planthierarkin.
  superklass BaseMValve för mer info.
 
  @b Signaler
- Objektet innehåller signaler som ska kopplas till I/O kanaler, se superklass BaseCValve
+ Objektet innehåller signaler som ska kopplas till I/O kanaler, se superklass BaseMValve
  för mer info.
 
  @b Plc kod
@@ -6404,8 +6191,6 @@ Referens till objektet i planthierarkin.
  BaseMDamper objektet hanteras en digital utgång för öppna/stäng och två digitala ingångar
  för spjällets gränslägen samt Auto/Man/lokal mod. Alla ingångar går att konfigurera
  (välja bort).
- 
- Knappar i bilder kan INTE konfigureras för olika händelser, dvs öppna/stäng är det som gäller.
  
  @b Objektsymbol
  Grafiska symbolen för detta objekt är BaseComponent/MDamper
@@ -6478,8 +6263,8 @@ Referens till objektet i planthierarkin.
 <class> BaseDirValve
  @Version
  @Author cs/je
- @summary Ventil, digital styrning med 2 digitala signaler
- @b Magnetventil (2-lägesstyrd med mittenläge)
+ @summary Riktningsventil, digital styrd med 2 signaler
+ Riktningsventil, 2-lägesstyrd med mittenläge.
  BaseDirValve objektet hanterar två digitala utgångar och Auto/Man mod för att
  styra en ventil med mittenläge (5/3 ventil).
  
@@ -6561,7 +6346,6 @@ Referens till objektet i planthierarkin.
  i objektsbilden.
  </attr>
  <attr>ExtInterlock 
- [ilk]
   Förreglingsingång på funktionsobjektet, ska vara falsk annars tas orderutgång ner i
   ALLA moder. OBS att ingen påverkan av moder görs, dvs auto går inte över i manuellt
   om ExtInterlock går hög.
@@ -6590,15 +6374,12 @@ Referens till objektet i planthierarkin.
  @b Se även
   @classlink CompModeD2M basecomponent_compmoded2m.html
  <attr> ExtOrderIncr
-   [oinc]
-   Ingång för att styra orderIncr utgången (öka) i automatik mod (extern).  
+   Ingång för att styra orderIncr utgången (öka) i automatik mod.  
  </attr>
  <attr> ExtOrderDecr
-   [odec]
-   Ingång för att styra orderDecr utgången (minska) i automatik mod (extern).
+   Ingång för att styra orderDecr utgången (minska) i automatik mod.
  </attr>
  <attr>ExtInterlock 
-   [ilk]
    Förreglingsingång, ska vara falsk annars tas orderutgångar ner i ALLA moder. OBS att ingen
    påverkan av moder görs, dvs auto går inte över i manuellt om ExtInterlock går hög.
    
@@ -6616,10 +6397,10 @@ Referens till objektet i planthierarkin.
 <class> BaseManValve
  @Version
  @Author cs/je
- @summary Handventil, 2 digitala signaler
- @b Handventil 
- BaseManValve objektet hanteras två digitala ingångar för öppet och stängt läge. Ingångar
- går att konfigurera (välja bort).
+ @summary Handventil med två gränslägen.
+ Handventil med två gränslägen.
+ BaseManValve objektet hanterar två digitala ingångar för öppet och stängt läge. 
+ Ingångar går att konfigurera (välja bort).
  
  @b Objektsymbol
  Grafiska symboler för detta objekt är:
@@ -6647,7 +6428,7 @@ Referens till objektet i planthierarkin.
  @b Objektsbild
  @image orm_basemanvalve_og.gif
 
- Om ventilen inte har några gränslägen kan man manuellt i objektbilden välja öppen eller stängt
+ Om ventilen inte har några gränslägen kan man manuellt i objektbilden sätta öppen eller stängt
  läge. För att välja denna funktion ska attribut OpIndication ställas till 1, dessutom ska
  objektsymbolen ManValveNoSwitches användas. 
 
@@ -6661,16 +6442,15 @@ Referens till objektet i planthierarkin.
   
  @b Övervakning och felhantering
  BaseManValve övervakar och genererar larm:
- 
- 
+  
  -Gränslägesfel   Övervakning att inte båda gränslägen är påverkade samtidigt.
 
  @h1 Konfigurering
  BaseManValve objektet hanterar 4 olika alternativ för Di signaler gränslägen:
 
-  1 TwoSwitches            Gränsläge öppet och stängt.
-  2 SwitchOpen             Bara gränsläge öppet.
-  3 SwitchClosed           Bara gränsläge stängt.
+  1 TwoSwitches            Gränsläge öppen och stängd.
+  2 SwitchOpen             Bara gränsläge öppen.
+  3 SwitchClosed           Bara gränsläge stängd.
   4 NoSwitches             Inga gränslägen.
 
   OBS! valet NoSwitches innebär att också att objektsymbol ManValveNoSwitches ska användas
@@ -6757,7 +6537,6 @@ Referens till objektet i planthierarkin.
  @Version
  @Author cs/je
  @Summary Övervakning effektbrytare (MCCB).
- @b Effektbrytare
  Objekt BaseCircuitBreaker hanterar övervakningen och en tillhörande objektsbild för
  en effektbrytare typ MCCB eller liknande.
  
@@ -6768,8 +6547,8 @@ Referens till objektet i planthierarkin.
  brytaren ska larma/aktiveras när ingången går hög får man ändra attributet "InvMask"
  på kanal/kortobjektet för Di signalen.
 
- Man kan hindra larm att aktiveras via ingång DisableSup i PLC funktionsobjektet, OBS!
- att detta INTE påverkar larmutgången Tripped i PLC funktionsobjektet.
+ Man kan hindra larm att aktiveras via ingång DisableSup i PLC funktionsobjektet.
+ Detta påverkar inte larmutgången Tripped i PLC funktionsobjektet.
  
  @b Objektbild
  @image orm_basecircuitbreaker_og.gif
@@ -6780,7 +6559,7 @@ Referens till objektet i planthierarkin.
  Indikator Supervision disabled visar grönt om övervakningen (larm) är bortkopplad.
 
  @b Exempel
- @image orm_component_example1.gif
+ @image orm_component_example1.png
  Bilden visar när en BaseCircuitBreaker används som en huvudbrytare/säkring ihop
  med andra komponenter.
 
@@ -6793,7 +6572,8 @@ Referens till objektet i planthierarkin.
  
  -AlarmText     Larmtext som kan ändras
 
- -Tripped       Larmutgång i PLC funktionsobjektet, status om larm utlöst är aktiverat (1:a) eller inte (0:a)   
+ -Tripped       Larmutgång i PLC funktionsobjektet, status om larm utlöst är 
+                aktiverat (1:a) eller inte (0:a)   
 
  @b Plc kod
  För PLC programmering används funktionsobjektet BaseCircuitBreakerFo.
@@ -6802,7 +6582,9 @@ Referens till objektet i planthierarkin.
  Skapa ett funktionsobjekt i PLC editorn och koppla till objektet i planthierarkin.
 
  @b Simulering
- Inget simuleringsobjekt finns för detta objekt.
+ Det behövs inget simuleringsobjekt för BaseCircuitBreaker, men det finns en
+ simuleringsbild från vilken Tripped signalen kan påverkas.
+ @image orm_basecircuitbreakersim_og.png
  
  @b Se även
  <attr>Super 
@@ -6817,7 +6599,6 @@ Referens till objektet i planthierarkin.
  Larmtext när larmutgång aktiveras (A-larm). Kan kopplas bort via ingång SupDisabled
  på PLC funktionsobjektet.
  <attr>SupDisabled 
- [dis] 
  Anger om larmövervakning kopplas bort (1:a) eller inte (0:a). Styrs via ingång "dis" på
  PLC funktionsobjektet. OBS att larmutgången AlarmStatus och färgstyrning i bilder INTE
  påverkas.
@@ -6842,13 +6623,11 @@ Referens till objektet i planthierarkin.
 
  @b Se även
  <attr>DisableSup 
- [dis]
  Ingång som anger om larmövervakning ska kopplats bort (1:a) eller inte (0:a). OBS! Att 
  larmutgången Tripped INTE kopplas bort.
  </attr>
  <attr>Tripped 
- [trip]
- Larmutgång som är hög vid larm/utlöst brytare.
+ Larmutgång som är hög vid utlöst brytare.
  </attr>
  <attr> PlcConnect
  Referens till objektet i planthierarkin.
@@ -6873,8 +6652,8 @@ Referens till objektet i planthierarkin.
  brytaren ska larma/aktiveras när ingången går hög får man ändra attributet "InvMask"
  på kanal/kortobjektet för Di signalen.
 
- Man kan hindra larm att aktiveras via ingång DisableSup i PLC funktionsobjektet, OBS!
- att detta INTE påverkar utgången On i PLC funktionsobjektet.
+ Man kan hindra larm att aktiveras via ingång DisableSup i PLC funktionsobjektet.
+ Detta påverkar inte utgången On i PLC funktionsobjektet.
  
  @b Objektbild
  @image orm_basesafetyswitch_og.gif
@@ -6885,9 +6664,9 @@ Referens till objektet i planthierarkin.
  Indikator Supervision disabled visar grönt om övervakningen (larm) är bortkopplad.
 
  @b Exempel
- @image orm_component_example1.gif
- Bilden visar där en säkerhetsbrytare används för att koppla bort en frekvensomriktare
- och en elmotor från elanläggningen (personskydd).
+ @image orm_component_example1.png
+ Bilden visar där en säkerhetsbrytare används för att koppla bort en elmotor från 
+ elanläggningen (personskydd).
  
  @h1 Konfiguration
  @b Signal
@@ -6907,7 +6686,9 @@ Referens till objektet i planthierarkin.
  Skapa ett funktionsobjekt i PLC editorn och koppla till objektet i planthierarkin.
 
  @b Simulering
- Inget simuleringsobjekt finns för detta objekt.
+ Det behövs inget simuleringsobjekt för BaseSafetySwitch, men det finns en
+ simuleringsbild från vilken On signalen kan påverkas.
+ @image orm_basesafetyswitchsim_og.png
  
  @b Se även
  <attr>Super 
@@ -6922,7 +6703,6 @@ Referens till objektet i planthierarkin.
  Larmtext när larmutgång aktiveras (A-larm). Kan kopplas bort via ingång SupDisabled
  på PLC funktionsobjektet.
  <attr>SupDisabled 
- [dis] 
  Anger om larmövervakning kopplas bort (1:a) eller inte (0:a). Styrs via ingång "dis" på
  PLC funktionsobjektet. OBS att larmutgången AlarmStatus och färgstyrning i bilder INTE
  påverkas.
@@ -6947,12 +6727,10 @@ Referens till objektet i planthierarkin.
 
  @b Se även
  <attr>DisableSup 
- [dis]
  Ingång som anger om larmövervakning ska kopplats bort (1:a) eller inte (0:a). OBS! Att 
  utgången On INTE kopplas bort.
  </attr>
  <attr>On 
- [on]
  Utgång som är hög vid tillslagen brytare.
  </attr>
  <attr> PlcConnect
@@ -7020,7 +6798,6 @@ Referens till objektet i planthierarkin.
  Larmtext när larmutgång aktiveras (A-larm) vid utlöst skydd. Kan kopplas bort via ingång
  DisabledSup på PLC funktionsobjektet.
  <attr>SupDisabled 
-  [dis]
   Anger om larmövervakning kopplas bort (1:a) eller inte (0:a). Styrs via ingång "dis" på
   PLC funktionsobjektet. OBS! Att larmutgången Overload i PLC funktionsobjektet och färgstyrning
   i bilder INTE påverkas.
@@ -7045,12 +6822,10 @@ Referens till objektet i planthierarkin.
 
  @b Se även
  <attr>DisableSup 
- [dis]
  Ingång som anger om larmövervakning ska kopplats bort (1:a) eller inte (0:a). OBS! Att 
  larmutgången Overload INTE kopplas bort.
  </attr>
  <attr>Overload
- [ol]
  Larmutgång som är hög vid larm/utlöst överström/motorskydd.
  </attr>
  <attr> PlcConnect
@@ -7089,10 +6864,10 @@ Referens till objektet i planthierarkin.
   3 Två utgångar, en med till puls som drar kontaktorn/brytaren och den andra som släpper
     kontaktorn/brytaren om utgången faller (0:a). 
  
- Använder man kontaktorsvar och man inte får/tappar kontaktorsvar genereras ett larm när man använder
- en utgång (alternativ 1 ovan). Man kan hindra larm att aktiveras via ingång DisableSup i PLC
- funktionsobjektet, OBS! Att detta INTE påverkar larmutgången Error i funktionsobjektet. Vill man ha
- larm i alternativ 2 och 3 ovan får man programmera det själv.
+ Använder man kontaktorsvar och man inte får/tappar kontaktorsvar genereras ett larm när man 
+ använder en utgång (alternativ 1 ovan). Man kan hindra larm att aktiveras via ingång 
+ DisableSup i PLC funktionsobjektet, OBS! Att detta INTE påverkar larmutgången Error i 
+ funktionsobjektet. Vill man ha larm i alternativ 2 och 3 ovan får man programmera det själv.
  
  @b Objektbild
  @image orm_basecontactor_og.gif
@@ -7104,14 +6879,14 @@ Referens till objektet i planthierarkin.
  - TimeLimit Visar "TimeOut" tid i sekunder på kontaktorsvaret innan larm aktiveras.
 
  Indikator Order och TimeLimit tas bort ur bilden när man använder två utgångar, dvs när man
- konigurerat kontaktorn TwoOrderFeedback (pulsstyrning).
+ har konfigurerat kontaktorn TwoOrderFeedback (pulsstyrning).
   
  Indikator Feedback blir röd i minst 2s vid fel på kontaktorsvaret.   
 
  @b Exempel komponenter 
- @image orm_component_example1.gif
- Bilden visar en objektsbild när en BaseContactor används som en huvudkontaktor för en frekvensomriktare 
- ihop med andra elektriska komponenter.
+ @image orm_component_example1.png
+ Bilden visar en objektsbild när en BaseContactor används som en huvudkontaktor för en 
+ frekvensomriktare ihop med andra elektriska komponenter.
  
  @h1 Konfiguration
  BaseContactor objektet hanterar 5 olika alternativ:
@@ -7129,7 +6904,7 @@ Referens till objektet i planthierarkin.
   -Di ingång för kontaktorsvar (feedback) måste användas (status visas i bilder mm).
   -Larm kontaktorsvar (feedback) och error utgången i funktionsbobjektet används inte.
   -Frånorder kan konfigureras att vara puls eller inte puls med inverterad funktion.
-  -Indikator order i objektsbilder tas bort. 
+  -Indikator order i objektsbilder tas bort.
   
   Alternativ 5 använder man när kontaktorns elkonstruktionen bygger på till/från puls
   styrning. Dvs när man INTE vill att kontaktorn ska gå ifrån om PLC dör eller styrning
@@ -7251,18 +7026,20 @@ Referens till objektet i planthierarkin.
   
   Funktionen blir alltså med denna kod så här:
   
-   - Pulstyrda PLC Do utgångar för till/från slag som aktiveras av "edge-pulser" på ingångar on och off.
-   - Två olika manöversystem, PLC och tryckknappar direkt i den elektriksa manöverkretsen.
+   - Pulstyrda PLC Do utgångar för till och frånslag som aktiveras av "edge-pulser" på ingångar 
+     on och off.
+   - Två olika manöversystem, PLC och tryckknappar direkt i den elektriska manöverkretsen.
    - Övervakning av kontaktorsvaret när man slagit till kontaktorn via PLC.
-   - Ingen övervakning av kontaktorsvaret när man slagit till kontaktorn via tryckknappen "Button on"
+   - Ingen övervakning av kontaktorsvaret när man slagit till kontaktorn via tryckknappen 
+     "Button on"
   
   Kontaktorn i objekten/aggregaten BaseMotorAggr, BaseFcPPO3MotorAggr, BaseFcPPO5MotorAggr och
-  ABB_ACS800MotorAggr fungerar i princip som denna Plc kod, dvs ingångar on (A i bild) och off (B i bild)
-  "edge-pulserna" i grafen speglar när operatör trycker på knapparna start och stopp i objektsbilden
-  för dessa aggregat.
+  ABB_ACS800MotorAggr fungerar i princip som denna Plc kod, dvs ingångar on (A i bild) och off 
+  (B i bild) "edge-pulserna" i grafen speglar när operatör trycker på knapparna start och stopp 
+  i objektsbilden för dessa aggregat.
   
  @bExempel 4
- Tillpuls och frånslag utan puls:
+ Tillpuls och frånslag utan puls
  @image orm_component_example10.gif
 
   Bilden visar när kontaktorn är konfigurerad med två utgångar och interna attributet OpNoOffPuls är
@@ -7278,7 +7055,7 @@ Referens till objektet i planthierarkin.
   objektet FbTimeOut visar hur detta kan gå till.
     
   Grafen visar vad som händer när kontaktorsvaret försvinner (gul ruta med texten Feedback lost),
-  dvs tiden löper ut och wait objektets utgången går hög som ser till att ingången on på
+  dvs tiden löper ut. Wait objektets utgång går hög, vilket leder till att ingången on på
   funktionsobjektet går låg och därmed går Do OrderOff också låg.
   
  @b Plc kod
@@ -7334,7 +7111,6 @@ Referens till objektet i planthierarkin.
  är vald används inte larmet och funktionen.
 </attr>
  <attr>SupDisabled 
-  [dis]
   Anger om larmövervakning kopplas bort (1:a) eller inte (0:a). Styrs via ingång "dis" på
   PLC funktionsobjektet. OBS! Att färgstyrning i bilder INTE påverkas eller attribut IndError.
  </attr>
@@ -7371,8 +7147,7 @@ Referens till objektet i planthierarkin.
 
  @b Se även
  @classlink BaseMotorAggr basecomponent_basemotoraggr.html
- <attr>on 
-  [on]
+ <attr>On 
   Ingång för att manövrera, slå till kontaktorn normalt eller med puls beroende på
   konfiguration, dvs Do utgången Order som slår till kontaktorn följer denna ingång
   slaviskt eller vid uppflanken ge en tillpuls på 1 sekund om konfigurationen
@@ -7385,8 +7160,7 @@ Referens till objektet i planthierarkin.
   OBS! Att när två Do utgångar används bör man ta hänsyn till kontaktorsvaret i sin kod
   pga Do utgångarna är pulsade. Se exempel i klasshjälpen om objekt BaseContactor.
  </attr>
- <attr>off 
-  [off]
+ <attr>Off 
   Ingång för att manövrera, slå ifrån kontaktorn med puls när man konfigurerat
   TwoOrderFeedback (två Do utgångar), annars har denna ingång ingen betydelse.
    
@@ -7398,23 +7172,19 @@ Referens till objektet i planthierarkin.
   pga Do utgångarna är pulsade. Se exempel i klasshjälpen om objekt BaseContactor.
  </attr>
  <attr>DisableSup 
- [dis]
   Ingång som anger om larmövervakning ska kopplats bort (1:a) eller inte (0:a). OBS! Att 
   larmutgången Error INTE kopplas bort.
  </attr>
  <attr>Feedback 
-  [fb]
   Utgång som är hög när kontaktorn är dragen/till. Finns inget kontaktorsvar konfigurerat används
   Order utgången istället för att sätta status.
  <attr>Error 
-  [err]
   Utgång som blir hög när kontaktorsvaret Feedback uteblir (frånslagsfördröjd i 2s).
   
   OBS! Denna utgång ska användas till att återställa beordring på ingång On för att förhindra
   oönskade återstarter.
  </attr>
  <attr>PulseControl 
-  [pco]
   Utgång som alltid är hög när två Do utgångar är konfigurerade att pulsmanövrera kontaktorn.
   Kan användas i plc koden med ytterligare logik för att ta ner order på styringångar [on] och [off].
   Används bl.a i objekt BaseMotorAggr för att utvärdera vilken konfiguration som är vald och därmed
@@ -7461,11 +7231,11 @@ Referens till objektet i planthierarkin.
  
  @b Exempel
  @image orm_runtimecounter_example1.gif
- Bilden visar ett exempel på vilka vitala attribut i objektet som man bör "backuppa" för
- att hålla reda på drifttiden:
+ Bilden visar ett exempel på vilka vitala attribut i objektet som man bör ta 
+ backup på för att hålla reda på drifttiden
  
   - TotalNOfStarts
-  - TotalRumTime
+  - TotalRunTime
   - TotalTime
  
  @h1 Konfiguration
@@ -7487,7 +7257,7 @@ Referens till objektet i planthierarkin.
   Textfält synlig i XTT som bör beskriva vilket objekt som drifttidsmätningen avser.
  </attr>
  <attr> TripReset
-  Nollställning (1:a) av RunTim tiden för trippräknaren, kan användas oavsett om ingången
+  Nollställning (1:a) av RunTime tiden för trippräknaren, kan användas oavsett om ingången
   "res" på funktionsobjektet används eller inte. TripReset är inte flanktriggad och nollställs
   inte av objektet.
  </attr>
@@ -7507,7 +7277,7 @@ Referens till objektet i planthierarkin.
   Totala tiden som tidräkning pågått. Attributet har ingen backup.
  </attr>
  <attr> TotalUsage
-  Totala drifttiden. Attributet har ingen backup.
+  Totala drifttiden jämförd med totala tiden i procent.
  </attr>
  <attr> TripNOfStarts
   Antalet starter sen senaste återställning av trippräknaren gjorts. Attributet har ingen backup.
@@ -7519,7 +7289,7 @@ Referens till objektet i planthierarkin.
   Totala tripptiden sen senaste återställning av trippräknaren gjorts. Attributet har ingen backup.
  </attr>
  <attr> TripUsage
-  Totala drifttiden i % av tripptiden TripTime. Attributet har ingen backup.
+  Totala drifttiden i % av tripptiden TripTime.
  </attr>
  <attr> OldTripNOfStarts
   Förra gamla antalet starter av trippräknaren. Attributet har ingen backup.
@@ -7531,14 +7301,13 @@ Referens till objektet i planthierarkin.
   Förra gamla totala tripptiden av trippräknaren. Attributet har ingen backup.
  </attr>
  <attr> OldTripUsage
-  Förra gamla totala drifttiden i % av gamla tripptiden TripTime. Attributet har ingen backup.
+  Förra gamla totala drifttiden i % av gamla tripptiden TripTime.
  </attr>
  <attr> Running
-  [sta]
   Anger om driften är startad (1:a) eller inte (0:a), dvs utgången start i funktionsobjektet.
  </attr>
  <attr> AccTripReset
-  Attribut för att hålla reda på resetfunktionen för trippräknaren.
+  Används ej.
  </attr>
  <attr> PlcConnect
   Referens som visar vilket funktionsobjekt objektet har blivit knuten (connected) till.
@@ -7565,18 +7334,15 @@ Referens till objektet i planthierarkin.
 
  @b Se även
  <attr>Running 
-  [run]
   Ingång när driftens gångtid mm räknas upp. OBS! Denna ingång måste ha en signal ansluten för
   att antal starter ska räknas upp (starts). 
  </attr>
  <attr>Reset 
- [res]
   Ingång som nollställer pågående trippmätning så ny kan påbörjas. Ingången är flanktriggad, dvs
   nollställning sker endast på uppflanken. Är denna ingång kopplad dimmas reset knappen i
   objektbilden.
  </attr>
   <attr>Start 
-  [sta]
   Utgång, 1:a när driften är startad och tidräkning "run" sker.  
  </attr>
  <attr> PlcConnect
@@ -7610,7 +7376,7 @@ Referens till objektet i planthierarkin.
  där info om pulsstyrning tas upp utförligare och speciellt exempel 3 under rubrik "Exempel
  styrsätt" som visar principen hur kontaktorn i detta aggregat fungerar vid pulsstyrning.
 
- Knappar i objektsbilden kan göras osynlig genom att konfigurera attribut i inbyggda
+ Knappar i objektsbilden kan göras osynliga genom att konfigurera attribut i inbyggda
  CompModeD objektet, se CompModeD objektet för mer info. OBS! Att tillhörande objektsbilder
  för aggregatet inte stödjer CompModeD olika texter på knappar start/stopp, dvs dessa
  knappar kan endast visa texten start/stopp och ej Till/Från.
@@ -7692,13 +7458,13 @@ Referens till objektet i planthierarkin.
  aktiveras genom att sätta ingång ExtControl till 1 (knappar start/stopp dimmas) och styr
  sedan utgången/kontaktorn via ingång ExtStart.
   
- Denna konfiguration/bild utan auto/man knappar fås genom att konfigurerad aggregatet CbCoSs och
- via det inbyggda modobjektet CompModeD sätta OpExtAndIntMan till 1. 
+ Denna konfiguration utan auto/man knappar fås genom att konfigurera aggregatet CbCoSs och
+ i det inbyggda modobjektet CompModeD sätta OpExtAndIntMan till 1. 
  
  @h1 Konfigurering
  BaseMotorAggr objektet hanterar 12 olika alternativ beroende på den elektriska utformningen:
 
-  - Curciutbreaker       Effektbrytare (MCCB)
+  - Circuitbreaker       Effektbrytare (MCCB)
   - Contactor            Kontaktor  
   - OverloadRelay        Överströmsskydd (motorskydd)
   - Safetyswitch         Säkerhetsbrytare  
@@ -7727,9 +7493,9 @@ Referens till objektet i planthierarkin.
   @b Signaler
   Objektet innehåller signaler som ska kopplas till I/O kanaler.
 
-  - CircuitBreaker.NotTripped     Di (valbart via Disable)
-  - OverloadRelay.Overload        Di (valbart via Disable)
-  - SafetySwitch.On               Di (valbart via Disable)
+  - CircuitBreaker.NotTripped     Di (valbart)
+  - OverloadRelay.Overload        Di (valbart)
+  - SafetySwitch.On               Di (valbart)
   
   - Contactor.Order               Do (valbart via "ConfigureComponent" metoden)
   - Contactor.OrderOff            Do (valbart via "ConfigureComponent" metoden val TwoOrderFeedback)    
@@ -7864,13 +7630,11 @@ Referens till objektet i planthierarkin.
   förregling eller utlöst skydd hindrar start. Indikator Ready i bild blir grön i objektsbilden.
  </attr>
  <attr>ExtInterlock 
-  [ilk]
   Förreglingsingång på funktionsobjektet, ska vara falsk annars tas orderutgång ner i
   ALLA moder. Dessutom tvingas auto mod till man mod om inte objektattributet OpNoAutoToMan
   är 1 i aggregatets modobjekt CompModeD.
  </attr>
  <attr> LocalMode
-  [loc]
   Påverkas via ingång i funktionsobjektet och är normalt en omkopplare i lokal
   manöverlåda. Denna mod gäller före alla andra.
  </attr>
@@ -7905,12 +7669,8 @@ Referens till objektet i planthierarkin.
  </attr>
  <attr>Motor
   Motor med temperaturövervakning, klicka på länk BaseMotor för mer beskrivning om objektattributet.
- 
-  OBS! Att motorkonfiguration med tempsensor/switch inte stöds i aggregatets objektsbilder, dvs
-  temperaturvisning, indikeringar syns ej. 
  </attr>
  <attr>SupDisabled 
-  [dis]
   Anger om larmövervakning kopplas bort (1:a) eller inte (0:a). Styrs via ingång "dis" på
   PLC funktionsobjektet. OBS! Att färgstyrning i bilder INTE påverkas eller attributen
   IndError, IndWarning.
@@ -7940,7 +7700,6 @@ Referens till objektet i planthierarkin.
  @b Se även
   @classlink CompModeD basecomponent_compmoded.html 
  <attr> ExtControl
-   [eco]
    Används för att styra mod auto/man när man konfigurerat CompModeD objektets attribut
    OpExtAndIntMan till 1. dvs om ExtControl är 0 är det man mod och om 1 är det auto
    mod (extern mod styrning).
@@ -7949,16 +7708,13 @@ Referens till objektet i planthierarkin.
    med knappar start/stopp men inte använder auto/man mod. Inga auto/man knappar syns i objektsbilden.
  </attr>
  <attr> ExtStart
-   [est]
    Ingång för att styra kontaktorns order utgången i automatik mod (extern).  
  </attr>
   <attr>ExtInterlock 
-  [ilk]
   Förreglingsingång, ska vara falsk annars tas orderutgång ner i ALLA moder. Dessutom tvingas auto
   mod till man mod om inte objektattributet OpNoAutoToMan är 1 i aggregatets modobjekt CompModeD.
  </attr>
  <attr> LocMode 	
-   [loc]
     Ingången ställer objektets mod i lokal mod (prio 1) vilket innebär att alla andra moder kopplas bort.
     Dvs ingång OpLocStart i funktionsobjektet styr motorn. 
    
@@ -7968,16 +7724,13 @@ Referens till objektet i planthierarkin.
    Lokal mod går att välja bort via inbyggda CompModeD objektets attribut OpNoLocal.  
  </attr>
  <attr> OpLocStart	
-  [lst]
   Ingång för att styra kontaktorns order utgången i lokal mod.
  </attr>
  <attr>ResTrip 
-  [trp]
   Ingång för drifttidmätning som nollställer pågående trippräknare så ny kan påbörjas. Ingången är
   flanktriggad, dvs nollställning sker endast på uppflanken.
  </attr>
  <attr>DisableSup 
-   [dis]
    Ingång som anger om larmövervakning kopplas bort (1:a) eller inte (0:a). OBS att färgstyrning
    i bilder INTE påverkas.
  </attr>
@@ -7985,12 +7738,10 @@ Referens till objektet i planthierarkin.
    Referens till objektet i planthierarkin.
  </attr>
  <attr> On
-   [on]
    Utgång (1:a) när drift är startad, normalt kontaktorsvaret om sådant är konfigurerat annars är det
    kontaktorns (Do) orderutgång som används.
  </attr>
  <attr>Err 
-   [err]
    Utgången går hög när objektet är förreglad eller komponenter larmar/löser ut. Bör användas för att
    återställa beordringar på funktionsobjektets startingångar ExtStart och OpLocalStart för att förhindra
    oönskade återstarter vid fel. 
@@ -8367,7 +8118,7 @@ Referens till objektet i planthierarkin.
 
   Därefter väljs komponentval 1 till 12:  
 
-  - Curciutbreaker       Effektbrytare (MCCB)
+  - Circuitbreaker       Effektbrytare (MCCB)
   - Contactor            Kontaktor  
   - OverloadRelay        Överströmsskydd (motorskydd)
   - Safetyswitch         Säkerhetsbrytare  
@@ -8407,26 +8158,19 @@ Referens till objektet i planthierarkin.
   @b Signaler
   Objektet innehåller signaler som ska kopplas till I/O kanaler.
 
-  - CircuitBreaker.NotTripped     Di (valbart via Disable)
-  - OverloadRelay.Overload        Di (valbart via Disable)
-  - SafetySwitch.On               Di (valbart via Disable)
-  
-  - ContactorIncr.Order           Do (valbart via "ConfigureComponent" metoden) 
-  - ContactorDecr.Order           Do (valbart via "ConfigureComponent" metoden)
-  - ContactorIncr.OrderOff        Do (valbart via "ConfigureComponent" metoden val TwoOrderFeedback, SKA INTE ANVÄNDAS!)    
-  - ContactorDecr.OrderOff        Do (valbart via "ConfigureComponent" metoden val TwoOrderFeedback, SKA INTE ANVÄNDAS!)
-  - ContactorIncr.Feedback        Di (valbart via "ConfigureComponent" metoden) 
-  - ContactorDecr.Feedback        Di (valbart via "ConfigureComponent" metoden)   
-  - Motor.TempSwich.Switch        Di (valbart via "ConfigureComponent" metoden)
-  - Motor.TempSensor.Value        Ai (valbart via "ConfigureComponent" metoden)
+  - CircuitBreaker.NotTripped     Di (valbar)
+  - OverloadRelay.Overload        Di (valbar)
+  - SafetySwitch.On               Di (valbar)
+  - ContactorIncr.Order           Do (valbar)
+  - ContactorDecr.Order           Do (valbar)
+  - ContactorIncr.Feedback        Di (valbar)
+  - ContactorDecr.Feedback        Di (valbar)
+  - Motor.TempSwich.Switch        Di (valbar)
+  - Motor.TempSensor.Value        Ai (valbar)
  
   Ska en ingång inverteras för rätt funktion får man ändra attributet "InvMask" på
   kanal/kortobjektet för Di signalen.
   
-  OBS! Att göra Disable på en IO signal/komponent innebär att man kan få en felaktig
-  objektsbild och därför ska man bara konfigurera/Disable komponenter via
-  "ConfigureComponent" metoden för hela aggregatet. 
- 
   OBS! Att valet där kontaktorn har två styrutgångar med pulsfunktion (TwoOrderFeedback)
   INTE är tänkt att användas i detta objekt för att styra driften.
   
@@ -8549,13 +8293,11 @@ Referens till objektet i planthierarkin.
   förregling eller utlöst skydd hindrar start. Indikator Ready i bild blir grön i objektsbilden.
  </attr>
  <attr>ExtInterlock 
-  [ilk]
   Förreglingsingång på funktionsobjektet, ska vara falsk annars tas orderutgång ner i
   ALLA moder. Dessutom tvingas auto mod till man mod om inte objektattributet OpNoAutoToMan
   är 1 i aggregatets modobjekt CompModeD2.
  </attr>
  <attr> LocalMode
-  [loc]
   Påverkas via ingång i funktionsobjektet och är normalt en omkopplare i lokal
   manöverlåda. Denna mod gäller före alla andra.
  </attr>
@@ -8594,7 +8336,6 @@ Referens till objektet i planthierarkin.
   temperaturvisning, indikeringar syns ej. 
  </attr>
  <attr>SupDisabled 
-  [dis]
   Anger om larmövervakning kopplas bort (1:a) eller inte (0:a). Styrs via ingång "dis" på
   PLC funktionsobjektet. OBS! Att färgstyrning i bilder INTE påverkas eller attributen
   IndError, IndWarning.
@@ -8623,7 +8364,6 @@ Referens till objektet i planthierarkin.
  @b Se även
   @classlink CompModeD2 basecomponent_CompModeD2.html 
  <attr> ExtControl
-   [eco]
    Används för att styra mod auto/man när man konfigurerat CompModeD2 objektets attribut
    OpExtAndIntMan till 1. dvs om ExtControl är 0 är det man mod och om 1 är det auto
    mod (extern mod styrning).
@@ -8632,30 +8372,24 @@ Referens till objektet i planthierarkin.
    knappar (öka/minska mm) men inte använder auto/man mod. Inga auto/man knappar syns i objektsbilden.
  </attr>
  <attr> ExtIncr
-   [ein]
    Ingång för att styra Incr/Öka kontaktorns order utgången i automatik mod (extern).  
  </attr>
  <attr> ExtDecr
-   [ede]
    Ingång för att styra Decr/Minska kontaktorns order utgången i automatik mod (extern).  
  </attr>
   <attr>ExtInterlock 
-  [ilk]
   Förreglingsingång, ska vara falsk annars tas orderutgångar ner i ALLA moder. Dessutom tvingas auto
   mod till man mod om inte objektattributet OpNoAutoToMan är 1 i aggregatets modobjekt CompModeD2.
  </attr>
  <attr> LimitSwitchIncr 	
-  [lsi]
   Används som ingång för stoppgränsläge Incr/Öka (öka, upp, fram, öppna). Sann/hög signal förreglar
   KontaktorIncr.
   </attr>
  <attr> LimitSwitchDecr 	
-  [lsd]
   Används som ingång för stoppgränsläge Decr/Minska (minska, ner, back, stäng). Sann/hög signal förreglar
   KontaktorDecr.
  </attr>
  <attr> LocMode 	
-  [loc]
    Ingången ställer objektets mod i lokal mod (prio 1) vilket innebär att alla andra moder kopplas bort.
    Dvs ingångar OpLocIncr och OpLocalDecr i funktionsobjektet styr motorn. 
    
@@ -8665,20 +8399,16 @@ Referens till objektet i planthierarkin.
   Lokal mod går att välja bort via inbyggda CompModeD2 objektets attribut OpNoLocal.  
  </attr>
  <attr> OpLocalIncr	
-  [lin]
   Ingång för att styra kontaktorns Incr/Öka order utgången i lokal mod.
  </attr>
  <attr> OpLocalDecr	
-  [lde]
   Ingång för att styra kontaktorns Decr/Miska order utgången i lokal mod.
  </attr>
  <attr>ResTrip 
-  [trp]
   Ingång för drifttidmätning som nollställer pågående trippräknare så ny kan påbörjas. Ingången är
   flanktriggad, dvs nollställning sker endast på uppflanken.
  </attr>
  <attr>DisableSup 
-   [dis]
    Ingång som anger om larmövervakning kopplas bort (1:a) eller inte (0:a). OBS att färgstyrning
    i bilder INTE påverkas.
  </attr>
@@ -8686,17 +8416,14 @@ Referens till objektet i planthierarkin.
    Referens till objektet i planthierarkin.
  </attr>
  <attr> OnIncr
-   [oni]
    Utgång (1:a) när drift är startad Incr/Öka, normalt kontaktorsvaret om sådant är konfigurerat annars
    är det incr-kontaktorns (Do) orderutgång som används.
  </attr>
  <attr> OnDecr
-   [ond]
    Utgång (1:a) när drift är startad Decr/Minska, normalt kontaktorsvaret om sådant är konfigurerat annars
    är det decr-kontaktorns (Do) orderutgång som används.
  </attr>
  <attr>Err 
-   [err]
    Utgången går hög när objektet är förreglad eller komponenter larmar/löser ut. Bör användas för att
    återställa beordringar på funktionsobjektets startingångar ExtIncr, ExtDecr, OpLocalDecr och 
    OpLocalIncr för att förhindra oönskade återstarter vid fel. 
@@ -8828,7 +8555,7 @@ Referens till objektet i planthierarkin.
  @h1 Konfigurering
  BaseFcPPO5MotorAggr objektet hanterar 24 olika alternativ beroende på den elektriska utformningen:
 
-  - Curciutbreaker       Effektbrytare (MCCB)
+  - Circuitbreaker       Effektbrytare (MCCB)
   - Contactor            Kontaktor  
   - Frequencyconverter   Frekvensomriktare
   - Safetyswitch         Säkerhetsbrytare, arbetsbrytare (BaseSafetySwitch)  
@@ -8877,22 +8604,18 @@ Referens till objektet i planthierarkin.
   @b Signaler
   Objektet innehåller signaler som ska kopplas till I/O kanaler.
 
-  - CircuitBreaker.NotTripped     Di (valbart via Disable)
-  - SafetySwitch.On               Di (valbart via Disable)
+  - CircuitBreaker.NotTripped     Di (valbart)
+  - SafetySwitch.On               Di (valbart)
 
-  - Contactor.Order               Do (valbart via "ConfigureComponent" metoden) 
-  - Contactor.OrderOff            Do (valbart via "ConfigureComponent" metoden val TwoOrderFeedback)
-  - Contactor.Feedback            Di (valbart via "ConfigureComponent" metoden) 
-  - Motor.TempSwich.Switch        Di (valbart via "ConfigureComponent" metoden)
-  - Motor.TempSensor.Value        Ai (valbart via "ConfigureComponent" metoden)
+  - Contactor.Order               Do (valbart) 
+  - Contactor.OrderOff            Do (valbart)
+  - Contactor.Feedback            Di (valbart) 
+  - Motor.TempSwich.Switch        Di (valbart)
+  - Motor.TempSensor.Value        Ai (valbart)
 
   Ska en ingång inverteras för rätt funktion får man ändra attributet "InvMask" på
   kanal/kortobjektet för Di signalen.
 
-  OBS! Att göra Disable på en IO signal/komponent innebär att man kan få en felaktig
-  objektsbild och därför ska man bara konfigurera/Disable komponenter via
-  "ConfigureComponent" metoden för hela aggregatet.
-  
   Valet där kontaktorn har två styrutgångar med pulsfunktion (TwoOrderFeedback) används
   när en kontaktor har självhållning. Se klasshjälp om BaseContactor för mer info.
  
@@ -9021,7 +8744,7 @@ Referens till objektet i planthierarkin.
  PPO5 protokollets PZD data (prozessdaten) PZD3 och PZD4 måste också konfigureras i omriktaren, dvs:
  
   -PZD3  Ställs in för current/ström i omriktaren
-  -PZD4  Ställs in för Toque/moment i omriktaren 
+  -PZD4  Ställs in för Torque/moment i omriktaren 
   
  Anpassning/skalning mellan Proview och omriktarens IO signaler måste också göras i objekt/profibusmodul
  BaseFcPPO5PbModule kanalobjekten ChanAi och ChanAo för aggregatet, signaler som bör gås igenom är:
@@ -9053,13 +8776,11 @@ Referens till objektet i planthierarkin.
   förregling eller utlöst skydd hindrar start. Indikator Ready i bild blir grön i objektsbilden.
  </attr>
  <attr>ExtInterlock 
-  [ilk]
   Förreglingsingång på funktionsobjektet, ska vara falsk annars tas orderutgång ner i
   ALLA moder. Dessutom tvingas auto mod till man mod om inte objektattributet OpNoAutoToMan
   är 1 i aggregatets modobjekt CompModeA.
  </attr>
  <attr> LocalMode
-  [loc]
   Påverkas via ingång i funktionsobjektet och är normalt en omkopplare i lokal
   manöverlåda. Denna mod gäller före alla andra.
  </attr>
@@ -9072,7 +8793,6 @@ Referens till objektet i planthierarkin.
   Funktionen på knappen i bilden är "SetDig".
  </attr>
  <attr>PowExtInterlock 
-  [pil]
   Förreglingsingång på funktionsobjektet för elkraft, dimmar knappar Till/Från för huvudkontaktorn.
   Ska vara falsk annars tas orderutgång ner i ALLA moder. Dessutom tvingas normalt auto mod till man
   mod. Se mer viktig info om denna signal i hjälpen för tillhörande funktionsobjekt. 
@@ -9132,7 +8852,6 @@ Referens till objektet i planthierarkin.
   Trendobjekt visas enligt trendmetoden, referens till omriktarens PlotGroup objekt.
  </attr>
  <attr>SupDisabled 
-  [dis]
   Anger om larmövervakning kopplas bort (1:a) eller inte (0:a). Styrs via ingång "dis" på
   PLC funktionsobjektet. OBS! Att färgstyrning i bilder INTE påverkas eller attributen
   IndError, IndWarning.
@@ -9163,12 +8882,10 @@ Referens till objektet i planthierarkin.
  @classlink CompModeA basecomponent_compmodea.html 
  @classlink BaseFcPPO5PbModule basecomponent_basefcppo5pbmodule.html
  <attr> RefSpeedExt
-   [REX]
    Analog ingång för hastighetsreferensen till omriktaren i Auto/extern mod. Se Ao kanalobjektet
    O_REF i profibusmodulen BaseFcPPO5PbModule för mer info om skalning/anpassning mot omriktaren.
  </attr>
  <attr> RefSpeedLoc
-   [RLO]
    Analog ingång för hastighetsreferensen till omriktaren i lokal mod. Se Ao kanalobjektet O_REF
    i profibusmodulen BaseFcPPO5PbModule för mer info om skalning/anpassning mot omriktaren.
    
@@ -9176,7 +8893,6 @@ Referens till objektet i planthierarkin.
   vid driften/motor om sådan finns, dvs ingång OpLocStart [lst] aktiverar denna referens.
  </attr>
  <attr>PowerInterlock 
-  [pil]
   Förreglingsingång för elkraft, dimmar knappar Till/Från för huvudkontaktorn. Ska vara falsk
   annars tas orderutgång ner i ALLA moder. Dessutom tvingas auto mod till man mod om
   inte objektattributet OpNoAutoToMan är 1 i aggregatets modobjekt CompModeA.
@@ -9185,7 +8901,6 @@ Referens till objektet i planthierarkin.
   förreglar startsignalen till omriktaren.
  </attr>
  <attr> ExtControl
-   [eco]
    Används för att styra mod auto/man när man konfigurerat CompModeA objektets attribut
    OpExtAndIntMan till 1. dvs om ExtControl är 0 är det man mod och om 1 är det auto
    mod (extern mod styrning).
@@ -9194,17 +8909,14 @@ Referens till objektet i planthierarkin.
    med knappar start/stopp men inte använder auto/man mod. Inga auto/man knappar syns i objektsbilden.
  </attr>
  <attr> ExtStart
-   [est]
    Ingång för att styra kontaktorns order utgången i automatik mod (extern).  
  </attr>
   <attr>ExtInterlock 
-  [ilk]
   Förreglingsingång för startorder, ska vara falsk annars tas orderutgång ner i ALLA moder. Dessutom
   tvingas auto mod till man mod om inte objektattributet OpNoAutoToMan är 1 i aggregatets modobjekt
   CompModeA. Signalen dimmar också start/stopp knappar i objektsbilden.
  </attr>
  <attr> LocMode 	
-   [loc]
     Ingången ställer objektets mod i lokal mod (prio 1) vilket innebär att alla andra moder kopplas bort.
     Dvs ingång OpLocStart i funktionsobjektet styr motorn. 
    
@@ -9214,16 +8926,13 @@ Referens till objektet i planthierarkin.
    Lokal mod går att välja bort via inbyggda CompModeA objektets attribut OpNoLocal.  
  </attr>
  <attr> OpLocStart	
-  [lst]
   Ingång för att styra kontaktorns order utgången i lokal mod.
  </attr>
  <attr>ResTrip 
-  [trp]
   Ingång för drifttidmätning som nollställer pågående trippräknare så ny kan påbörjas. Ingången är
   flanktriggad, dvs nollställning sker endast på uppflanken.
  </attr>
  <attr>DisableSup 
-   [dis]
    Ingång som anger om larmövervakning kopplas bort (1:a) eller inte (0:a). OBS att färgstyrning
    i bilder INTE påverkas.
  </attr>
@@ -9231,11 +8940,9 @@ Referens till objektet i planthierarkin.
    Referens till objektet i planthierarkin.
  </attr>
  <attr> On
-   [on]
    Utgång (1:a) när drift är startad (run), signal från omriktaren statusord SW bit 2.
  </attr>
  <attr>Err 
-   [err]
    Utgången går hög när objektet är förreglad eller komponenter larmar/löser ut. Bör användas för att
    återställa beordringar på funktionsobjektets startingångar ExtStart och OpLocalStart så att oönskade
    återstarter förhindras vid/efter fel.
@@ -9529,10 +9236,10 @@ Referens till objektet i planthierarkin.
  @Version
  @Author cs/je
  @summary Frekvenomriktare, Profibus/dp, PPO5 protokollet
- @b Frekvenomriktare, Profibus/dp kommunikation med PPO5 protokollet 
+ @b Frekvensomriktare, Profibus/dp kommunikation med PPO5 protokollet 
  BaseFcPPO5 objektet hanterar en motor som styrs av en frekvensomriktare via fältbussen
  Profibus/dp genom att kommunicera med standard PPO5 protokollet (Parameter/Process data object).
- Objektet använder PPO5 möjligheter att skriv/läsa av parametrar i omriktaren.
+ Objektet använder PPO5 möjligheter att skriva och läsa av parametrar i omriktaren.
  
  Till detta objekt hör PLC funktionsobjektet BaseFcPPO5Fo och ett Profibus/modulobjekt
  BaseFcPPO5PbModule som beskrivs under rubrik konfiguration nedan samt slavobjekt Pb_DP_Slave.
@@ -9571,7 +9278,7 @@ Referens till objektet i planthierarkin.
      
  Knappar:
  
-  - Knapp More... leder till bild för att läsa/skriva parametrar i omriktaren.
+  - Knapp More... leder till bild för att läsa och skriva parametrar i omriktaren.
   
   - Knapp Reset återställer trippad omriktare om den är konfigurerad för fjärråterställning.
   
@@ -9585,8 +9292,8 @@ Referens till objektet i planthierarkin.
  @b Objektsbild More...
  @image orm_basefcppo5_og_more.gif
 
- Bild som hantera enkel kommunikation för att läsa/skriva parametrar i omriktaren. Se manual för
- omriktaren för möjliga parametrar mm.
+ Bild som hantera enkel kommunikation för att läsa och skriva parametrar i omriktaren. Se manual för
+ omriktaren för möjliga parametrar.
 
  @h1 Konfigurering
  Se rubrik Plc kod, Simulering och Profibus/dp nedan.
@@ -9630,20 +9337,20 @@ Referens till objektet i planthierarkin.
  Övriga knutna lediga IO signaler är: 
 
   - PZD5 till PZD9 är lediga integer insignal (Ii, 16 bit).  
-  - OPZD3 till OPZD6 är lediga analoga utsignaler (Ao, 16 bit).
+  - OPZD3 till OPZD5 är lediga analoga utsignaler (Ao, 16 bit).
+  - OPZD6 är ledig integer utsignal (Io, 16 bit).
 
   Dessa signaler kan användas fritt för PLC programmering t.ex. för att momentbegränsa motorn.
  
  OBS! Att INTE alla data som specificeras i PPO5 protokollet finns tillgänglig i planthierarki objektet
  BaseFcPPO5, dessa är:
  
-  - I_PZD10 är ledig integer insignal (Ii, 16 bit). 
-  - O_PZD7 till O_PZD10 är lediga analoga utsignaler (Ao, 16 bit). 
+  - I_PZD10 är ledig integer input kanal (ChanIi, 16 bit). 
+  - O_PZD7 till O_PZD10 är lediga analoga output kanaler (ChanAo, 16 bit). 
   
   Dessa signaler ligger alltså oknutna i BaseFcPPO5PbModule objektet.
   
  @b Se även
- @classlink BaseFcPPO5Sim basecomponent_basefcppo5sim.html
  <attr> Description
   Textfält synlig i XTT som beskriver objektet lite mer än namnet på objektet
  </attr>
@@ -9836,7 +9543,7 @@ Referens till objektet i planthierarkin.
  <attr> SimConnect
   Referens som visar vilket simulerings-funktionsobjekt objektet har blivit knuten (connected) till.
  </attr>
- <attr>IOconnect
+ <attr>IoConnect
   Referens till profibusmodulen i planthierarkin för signalutbyte med omriktaren.
  </attr>
  <attr>IoStatus
@@ -9860,7 +9567,6 @@ Referens till objektet i planthierarkin.
  @b Se även
  @classlink BaseFcPPO5PbModule basecomponent_basefcppo5pbmodule.html
  <attr>PowerOn 
-  [pwo]
   Ingången ska vara hög när man anser att omriktaren lever, dvs elkraft påslagen (huvudkontaktorsvar).
   Normalt villkor för att larmövervakning kopplas på oavsett omriktarstatus. När signal går hög löper
   en tid PowerUpTime och när denna tid löpt ut bör omriktaren normalt vara startklar. Tiden ställs in
@@ -9871,41 +9577,34 @@ Referens till objektet i planthierarkin.
   med omriktaren är nere/död.
  </attr>
  <attr> Start
-  [sta]
   Ingång för startorder (run) till omriktaren vilket är bit 0 i kontrollordet O_CW, dvs omriktaren bör
   bli "enable operation" för referensen RefSpeed. När signal går hög/låg startar/stoppar motorn normalt
   med ramper inställda i omriktaren. Funktionen kallas för OFF1.
  </attr>
  <attr> RefSpeed
-  [REF]
   Analog ingång för hastighetsreferensen till omriktaren, dvs styrordet O_REF. I denna Ao kanal O_REF
   attribut görs skalning och anpassning mot omriktarens referens.
  </attr>
  <attr> NoOff2
-  [nof2]
   Ingång för stopporder till omriktaren, 0 = stoppa genom att motorn rullar ut (ej ramp). Används normalt ej.
   Funktionen kallas för OFF2.
  </attr>
  <attr> NoOff3
-  [nof3]
   Ingång för nödstoppsorder till omriktaren, 0 = stoppa med ramp (ramptid i omriktare). Används normalt ej.
   Funktionen kallas för OFF3.
  </attr>
  <attr> EnableOperation
-  [eno]
   Ingång för driftfrigivning till omriktaren, 0 = normalt rullar motorn ut. Används normalt ej.
  </attr>
  <attr> PlcConnect
   Referens som visar vilket objekt funktionsobjektet har blivit knuten (connected) till.
  </attr>
  <attr> ReadyRemote
-  [rdy]
   Utgång (1:a) när omriktaren anses uppstartad och status är sådant att startorder från fjärr
   kan ske, dvs tid PowerUpTime löpt ut eller omriktare redo och omriktare ej trippad, ej
   local/intern mod mm.   
  </attr>
  <attr> Run
-  [run]
   Utgång (1:a) när drift är startad (enable run), statusord SW bit 2.
  </attr>
  
@@ -9932,7 +9631,7 @@ Referens till objektet i planthierarkin.
 
  @b Modulobjektet
  @image orm_component_example15.gif
- Bilden, gult område visar de viktigaste IO kanalerna och blått är själva objektmodulen.
+ Gult område visar de viktigaste IO kanalerna och blått är själva objektmodulen.
 
  Proview tolkar/hanterar PPO standardorden (16 bitar) SW och CW som namnats I_SW och O_CW
  i bild ovan enligt följande: 
@@ -9958,7 +9657,7 @@ Referens till objektet i planthierarkin.
 
   Statusord SW: 
   
-  BIT:  PPO NAMN:     PROVIEW TOLKNING AV FUNKTIONEN:
+  BIT:  PPO NAMN:      PROVIEW TOLKNING AV FUNKTIONEN:
   
   0     READY ON       Redo (switch on) om bit är 1.
   1     READY RUN      Driftklar om bit är 1.
@@ -9989,7 +9688,7 @@ Referens till objektet i planthierarkin.
  
  -1 Skapa ett slavobjektet Pb_DP_Slave genom att "klicka in det" under ett Pb_Profiboard objekt.
  
- -2 Ange GSDfile för en ABB omriktare ($pwr/exe/abb_acs_pb_slave.gsd) i attribut GSDfile i Pb_DP_Slave
+ -2 Ange GSDfile för en ABB omriktare ($pwr_exe/abb_acs_pb_slave.gsd) i attribut GSDfile i Pb_DP_Slave
     objektet.   
  
  -3 Välj ut "Module Class" BaseFcPPO5Module via Profibus konfigurator "ConfigureSlave" metoden. Denna
@@ -10407,7 +10106,7 @@ Referens till objektet i planthierarkin.
  @h1 Konfigurering
  BaseFcPPO3MotorAggr objektet hanterar 24 olika alternativ beroende på den elektriska utformningen:
 
-  - Curciutbreaker       Effektbrytare (MCCB)
+  - Circuitbreaker       Effektbrytare (MCCB)
   - Contactor            Kontaktor  
   - Frequencyconverter   Frekvensomriktare
   - Safetyswitch         Säkerhetsbrytare, arbetsbrytare (BaseSafetySwitch)  
@@ -10625,13 +10324,11 @@ Referens till objektet i planthierarkin.
   förregling eller utlöst skydd hindrar start. Indikator Ready i bild blir grön i objektsbilden.
  </attr>
  <attr>ExtInterlock 
-  [ilk]
   Förreglingsingång på funktionsobjektet, ska vara falsk annars tas orderutgång ner i
   ALLA moder. Dessutom tvingas auto mod till man mod om inte objektattributet OpNoAutoToMan
   är 1 i aggregatets modobjekt CompModeA.
  </attr>
  <attr> LocalMode
-  [loc]
   Påverkas via ingång i funktionsobjektet och är normalt en omkopplare i lokal
   manöverlåda. Denna mod gäller före alla andra.
  </attr>
@@ -10644,7 +10341,6 @@ Referens till objektet i planthierarkin.
   Funktionen på knappen i bilden är "SetDig".
  </attr>
  <attr>PowExtInterlock 
-  [pil]
   Förreglingsingång på funktionsobjektet för elkraft, dimmar knappar Till/Från för huvudkontaktorn.
   Ska vara falsk annars tas orderutgång ner i ALLA moder. Dessutom tvingas normalt auto mod till man
   mod. Se mer viktig info om denna signal i hjälpen för tillhörande funktionsobjekt. 
@@ -10704,7 +10400,6 @@ Referens till objektet i planthierarkin.
   Trendobjekt visas enligt trendmetoden, referens till omriktarens PlotGroup objekt.
  </attr>
  <attr>SupDisabled 
-  [dis]
   Anger om larmövervakning kopplas bort (1:a) eller inte (0:a). Styrs via ingång "dis" på
   PLC funktionsobjektet. OBS! Att färgstyrning i bilder INTE påverkas eller attributen
   IndError, IndWarning.
@@ -10735,12 +10430,10 @@ Referens till objektet i planthierarkin.
  @classlink CompModeA basecomponent_compmodea.html 
  @classlink BaseFcPPO3PbModule basecomponent_basefcppo3pbmodule.html
  <attr> RefSpeedExt
-   [REX]
    Analog ingång för hastighetsreferensen till omriktaren i Auto/extern mod. Se Ao kanalobjektet
    O_REF i profibusmodulen BaseFcPPO3PbModule för mer info om skalning/anpassning mot omriktaren.
  </attr>
  <attr> RefSpeedLoc
-   [RLO]
    Analog ingång för hastighetsreferensen till omriktaren i lokal mod. Se Ao kanalobjektet O_REF
    i profibusmodulen BaseFcPPO3PbModule för mer info om skalning/anpassning mot omriktaren.
    
@@ -10748,7 +10441,6 @@ Referens till objektet i planthierarkin.
   vid driften/motor om sådan finns, dvs ingång OpLocStart [lst] aktiverar denna referens.
  </attr>
  <attr>PowerInterlock 
-  [pil]
   Förreglingsingång för elkraft, dimmar knappar Till/Från för huvudkontaktorn. Ska vara falsk
   annars tas orderutgång ner i ALLA moder. Dessutom tvingas auto mod till man mod om
   inte objektattributet OpNoAutoToMan är 1 i aggregatets modobjekt CompModeA.
@@ -10757,7 +10449,6 @@ Referens till objektet i planthierarkin.
   förreglar startsignalen till omriktaren.
  </attr>
  <attr> ExtControl
-   [eco]
    Används för att styra mod auto/man när man konfigurerat CompModeA objektets attribut
    OpExtAndIntMan till 1. dvs om ExtControl är 0 är det man mod och om 1 är det auto
    mod (extern mod styrning).
@@ -10766,17 +10457,14 @@ Referens till objektet i planthierarkin.
    med knappar start/stopp men inte använder auto/man mod. Inga auto/man knappar syns i objektsbilden.
  </attr>
  <attr> ExtStart
-   [est]
    Ingång för att styra kontaktorns order utgången i automatik mod (extern).  
  </attr>
   <attr>ExtInterlock 
-  [ilk]
   Förreglingsingång för startorder, ska vara falsk annars tas orderutgång ner i ALLA moder. Dessutom
   tvingas auto mod till man mod om inte objektattributet OpNoAutoToMan är 1 i aggregatets modobjekt
   CompModeA. Signalen dimmar också start/stopp knappar i objektsbilden.
  </attr>
  <attr> LocMode 	
-   [loc]
     Ingången ställer objektets mod i lokal mod (prio 1) vilket innebär att alla andra moder kopplas bort.
     Dvs ingång OpLocStart i funktionsobjektet styr motorn. 
    
@@ -10786,16 +10474,13 @@ Referens till objektet i planthierarkin.
    Lokal mod går att välja bort via inbyggda CompModeA objektets attribut OpNoLocal.  
  </attr>
  <attr> OpLocStart	
-  [lst]
   Ingång för att styra kontaktorns order utgången i lokal mod.
  </attr>
  <attr>ResTrip 
-  [trp]
   Ingång för drifttidmätning som nollställer pågående trippräknare så ny kan påbörjas. Ingången är
   flanktriggad, dvs nollställning sker endast på uppflanken.
  </attr>
  <attr>DisableSup 
-   [dis]
    Ingång som anger om larmövervakning kopplas bort (1:a) eller inte (0:a). OBS att färgstyrning
    i bilder INTE påverkas.
  </attr>
@@ -10803,11 +10488,9 @@ Referens till objektet i planthierarkin.
    Referens till objektet i planthierarkin.
  </attr>
  <attr> On
-   [on]
    Utgång (1:a) när drift är startad (run), signal från omriktaren statusord SW bit 2.
  </attr>
  <attr>Err 
-   [err]
    Utgången går hög när objektet är förreglad eller komponenter larmar/löser ut. Bör användas för att
    återställa beordringar på funktionsobjektets startingångar ExtStart och OpLocalStart så att oönskade
    återstarter förhindras vid/efter fel. 
@@ -11182,7 +10865,6 @@ Referens till objektet i planthierarkin.
   -I_ACT     Ärvärde  (varvtalsvärde är att föredra)    
  
  @b Se även
- @classlink BaseFcPPO3Sim basecomponent_basefcppo3sim.html
  <attr> Description
   Textfält synlig i XTT som beskriver objektet lite mer än namnet på objektet
  </attr>
@@ -11317,7 +10999,6 @@ Referens till objektet i planthierarkin.
  @b Se även
  @classlink BaseFcPPO3PbModule basecomponent_basefcppo3pbmodule.html
  <attr>PowerOn 
-  [pwo]
   Ingången ska vara hög när man anser att omriktaren lever, dvs elkraft påslagen (huvudkontaktorsvar).
   Normalt villkor för att larmövervakning kopplas på oavsett omriktarstatus. När signal går hög löper
   en tid PowerUpTime och när denna tid löpt ut bör omriktaren normalt vara startklar. Tiden ställs in
@@ -11328,41 +11009,34 @@ Referens till objektet i planthierarkin.
   med omriktaren är nere/död.
  </attr>
  <attr> Start
-  [sta]
   Ingång för startorder (run) till omriktaren vilket är bit 0 i kontrollordet O_CW, dvs omriktaren bör
   bli "enable operation" för referensen RefSpeed. När signal går hög/låg startar/stoppar motorn normalt
   med ramper inställda i omriktaren. Funktionen kallas för OFF1.
  </attr>
  <attr> RefSpeed
-  [REF]
   Analog ingång för hastighetsreferensen till omriktaren, dvs styrordet O_REF. I denna Ao kanal O_REF
   attribut görs skalning och anpassning mot omriktarens referens.
  </attr>
  <attr> NoOff2
-  [nof2]
   Ingång för stopporder till omriktaren, 0 = stoppa genom att motorn rullar ut (ej ramp). Används normalt ej.
   Funktionen kallas för OFF2.
  </attr>
  <attr> NoOff3
-  [nof3]
   Ingång för nödstoppsorder till omriktaren, 0 = stoppa med ramp (ramptid i omriktare). Används normalt ej.
   Funktionen kallas för OFF3.
  </attr>
  <attr> EnableOperation
-  [eno]
   Ingång för driftfrigivning till omriktaren, 0 = normalt rullar motorn ut. Används normalt ej.
  </attr>
  <attr> PlcConnect
   Referens som visar vilket objekt funktionsobjektet har blivit knuten (connected) till.
  </attr>
  <attr> ReadyRemote
-  [rdy]
   Utgång (1:a) när omriktaren anses uppstartad och status är sådant att startorder från fjärr
   kan ske, dvs tid PowerUpTime löpt ut eller omriktare redo och omriktare ej trippad, ej
   local/intern mod mm.   
  </attr>
  <attr> Run
-  [run]
   Utgång (1:a) när drift är startad (enable run), statusord SW bit 2.
  </attr>
  
@@ -11610,7 +11284,6 @@ Referens till objektet i planthierarkin.
 
 @b Se även
 @classlink BaseFcPPO3MotorAggr basecomponent_basefcppo3motoraggr.html
-@classlink Pb_DP_Slave profibus_pb_dp_slave.html
  <attr>Super 
  Superklass, klicka på länk Pb_module för mer beskrivning om objektattributet. 
  </attr>
