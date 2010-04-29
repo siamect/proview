@@ -729,7 +729,8 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
 	strcpy( vname, "$pwrp_db/");
 	strcat( vname, vol_array[0]);
 	cdh_ToLower( vname, vname);
-	if ( cdh_NoCaseStrcmp( vol_array[2], "ClassVolume") == 0) {
+	if ( cdh_NoCaseStrcmp( vol_array[2], "ClassVolume") == 0 ||
+	     cdh_NoCaseStrcmp( vol_array[2], "DetchedClassVolume") == 0) {
 	  is_classvolume = 1;
 	  if ( nr >= 5 && vol_array[4][0] == '2')
 	    db_type = eDbType_dbms;

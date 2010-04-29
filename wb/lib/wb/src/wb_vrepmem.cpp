@@ -86,7 +86,8 @@ void wb_vrepmem::loadWbl( const char *filename, pwr_tStatus *sts, bool reload)
     return;
   }
 
-  if ( vrep->cid() == pwr_eClass_ClassVolume) {
+  if ( vrep->cid() == pwr_eClass_ClassVolume ||
+       vrep->cid() == pwr_eClass_DetachedClassVolume) {
     // Start the class editor
 
     // Insert vrepwbl in local merep to interprete the Template objects
