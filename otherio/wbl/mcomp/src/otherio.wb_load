@@ -1,7 +1,7 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X77"
-    Attr NextCix = "_X8"
+    Attr NextOix = "_X91"
+    Attr NextCix = "_X10"
     Attr NextTix[0] = "_X5"
   EndBody
   Object Type $TypeHier 1 15-NOV-2007 14:35:37.90
@@ -1449,6 +1449,147 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Object Template Modbus_TCP_ServerModule 2149548032 01-JAN-1970 01:00:00.00
         Body RtBody 03-MAR-2010 16:49:58.18
           Attr Process = 1
+        EndBody
+      EndObject
+    EndObject
+    Object GPIO $ClassDef 8 15-APR-2010 21:46:30.11
+      Body SysBody 15-APR-2010 21:46:16.74
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 10320
+      EndBody
+      Object RtBody $ObjBodyDef 1 15-APR-2010 21:46:16.74
+        Body SysBody 15-APR-2010 21:46:39.64
+          Attr StructName = "GPIO"
+          Attr NextAix = "_X17"
+        EndBody
+        Object Description $Attribute 13 15-APR-2010 21:46:16.74
+          Body SysBody 15-APR-2010 21:46:16.74
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Process $Attribute 14 15-APR-2010 21:46:16.74
+          Body SysBody 15-APR-2010 21:54:44.41
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 15 15-APR-2010 21:46:16.74
+          Body SysBody 15-APR-2010 21:46:16.74
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object Status $Attribute 16 15-APR-2010 21:46:16.74
+          Body SysBody 15-APR-2010 21:55:29.27
+            Attr PgmName = "Status"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 78 15-APR-2010 21:46:16.74
+        Object Pointed $Menu 79 15-APR-2010 21:46:16.74
+          Object Connect $MenuButton 80 15-APR-2010 21:46:16.74
+            Body SysBody 15-APR-2010 21:46:16.74
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 89 15-APR-2010 21:52:17.62
+        Object IoRackInit $Method 90 15-APR-2010 21:52:17.62
+          Body SysBody 15-APR-2010 21:52:28.10
+            Attr MethodName = "GPIO-IoRackInit"
+          EndBody
+        EndObject
+        Object IoRackClose $Method 91 15-APR-2010 21:52:17.62
+          Body SysBody 15-APR-2010 21:52:39.12
+            Attr MethodName = "GPIO-IoRackClose"
+          EndBody
+        EndObject
+      EndObject
+      Object Template GPIO 2149810176 01-JAN-1970 01:00:00.00
+        Body RtBody 15-APR-2010 21:57:21.82
+          Attr Process = 1
+        EndBody
+      EndObject
+    EndObject
+    Object GPIO_Module $ClassDef 9 15-APR-2010 21:49:47.13
+      Body SysBody 15-APR-2010 21:46:16.74
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18512
+      EndBody
+      Object RtBody $ObjBodyDef 1 15-APR-2010 21:46:16.74
+        Body SysBody 15-APR-2010 21:52:59.99
+          Attr StructName = "GPIO_Module"
+          Attr NextAix = "_X15"
+        EndBody
+        Object Description $Attribute 10 15-APR-2010 21:53:54.03
+          Body SysBody 15-APR-2010 21:54:16.96
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Process $Attribute 11 15-APR-2010 21:54:37.62
+          Body SysBody 15-APR-2010 21:54:53.56
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 13 15-APR-2010 21:55:05.81
+          Body SysBody 15-APR-2010 21:55:05.81
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object Status $Attribute 12 15-APR-2010 21:55:37.33
+          Body SysBody 15-APR-2010 21:55:45.30
+            Attr PgmName = "Status"
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+        Object ScanInterval $Attribute 14 16-APR-2010 16:09:01.24
+          Body SysBody 16-APR-2010 16:09:02.20
+            Attr PgmName = "ScanInterval"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 84 15-APR-2010 21:46:16.74
+        Object IoCardInit $Method 85 15-APR-2010 21:46:16.74
+          Body SysBody 15-APR-2010 21:55:58.78
+            Attr MethodName = "GPIO_Module-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 86 15-APR-2010 21:46:16.74
+          Body SysBody 15-APR-2010 21:56:07.31
+            Attr MethodName = "GPIO_Module-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 87 15-APR-2010 21:46:16.74
+          Body SysBody 15-APR-2010 21:56:12.67
+            Attr MethodName = "GPIO_Module-IoCardRead"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 88 15-APR-2010 21:46:16.74
+          Body SysBody 15-APR-2010 21:56:18.19
+            Attr MethodName = "GPIO_Module-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template GPIO_Module 2150072320 01-JAN-1970 01:00:00.00
+        Body RtBody 15-APR-2010 21:57:34.91
+          Attr Process = 1
+          Attr Status = 286
         EndBody
       EndObject
     EndObject

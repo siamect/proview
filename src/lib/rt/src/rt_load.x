@@ -68,6 +68,7 @@
 %# define       load_cNameRttCrrCode    "rtt_crrc_%3.3d_%3.3d_%3.3d_%3.3d.dat"
 %# define       load_cNameRttPlc        "rtt_plc_%3.3d_%3.3d_%3.3d_%3.3d.dat"
 %# define       load_cNamePkg           "pwrp_pkg_%s_%04d.tgz"
+%# define       load_cNameCustomBuild   "$pwrp_exe/custom_build.sh"
 %#endif
 %
 %

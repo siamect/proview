@@ -123,5 +123,15 @@ SObject pwrs:Type
        Attr Value = 256
      EndBody
     EndObject
+    !/**
+    !  Operating system is Mac OS X on x86_64
+    !*/
+    Object ARM_LINUX $Bit
+     Body SysBody
+       Attr PgmName = "ARM_X86"
+       Attr Text = "Linux on ARM"
+       Attr Value = 512
+     EndBody
+    EndObject
   EndObject
 EndSObject

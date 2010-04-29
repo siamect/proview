@@ -464,6 +464,7 @@ palette ProjectNavigatorPalette
     class ApplDistribute
     class BusConfig
     class ClassVolumeLoad
+    class CustomBuild
     class Distribute
     class DetachedClassVolumeLoad
     class FriendNodeConfig
