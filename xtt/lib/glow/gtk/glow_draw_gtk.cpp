@@ -467,6 +467,8 @@ static GdkColor glow_allocate_color( GlowDrawGtk *draw_ctx, int rgb_red,
 
 GlowDrawGtk::~GlowDrawGtk()
 {
+  cancel_event_timer( ctx);
+
   ctx->set_nodraw();
   if ( ctx->type() == glow_eCtxType_Grow)
     delete (GrowCtx *)ctx;
