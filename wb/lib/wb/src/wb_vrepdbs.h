@@ -152,7 +152,7 @@ public:
   virtual pwr_tStatus updateMeta() {return 0;}
 
   virtual bool isCommonMeta() const { return false;}
-  virtual bool isMeta() const { return (cid() == pwr_eClass_ClassVolume);}
+  virtual bool isMeta() const { return (cid() == pwr_eClass_ClassVolume || cid()== pwr_eClass_DetachedClassVolume);}
 
 
   virtual bool exportVolume(wb_import &e);
