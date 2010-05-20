@@ -1,7 +1,7 @@
 #!/bin/bash
 
 aroot="/usr/pwrp/adm"
-hw=deb_64
+hw=deb_x86_64
 
 # Get version
 if [ -e $pwr_inc/pwr_version.h ]; then
