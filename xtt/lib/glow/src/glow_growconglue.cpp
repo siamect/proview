@@ -1126,7 +1126,7 @@ void GrowConGlue::export_javabean( GlowTransform *t, void *node,
   if ( lw_up != -1 && lw_down == -1 &&
        lw_right == -1 && lw_left == -1) {
     // Up termination
-    ctx->export_jbean->rect( m_x - idx_up + idx_up/2, m_y, idx_up + 1, ur_y - m_y, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x - idx_up + idx_up/2, m_y, idx_up + 1, ur_y - m_y, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
     if ( shadow) {
       if ( border) {
 	idx_up -= 2;
@@ -1153,7 +1153,7 @@ void GrowConGlue::export_javabean( GlowTransform *t, void *node,
   else if ( lw_up == -1 && lw_down != -1 &&
 	    lw_right == -1 && lw_left == -1) {
     // Down termination
-    ctx->export_jbean->rect( m_x - idx_down + idx_down/2, ll_y, idx_down + 1, m_y - ll_y, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x - idx_down + idx_down/2, ll_y, idx_down + 1, m_y - ll_y, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
     if ( shadow) {
       if ( border) {
 	idx_down -= 2;
@@ -1180,7 +1180,7 @@ void GrowConGlue::export_javabean( GlowTransform *t, void *node,
   else if ( lw_up == -1 && lw_down == -1 &&
 	    lw_right != -1 && lw_left == -1) {
     // Right termination
-    ctx->export_jbean->rect( m_x, m_y - idx_right + idx_right/2, ur_x - m_x, idx_right + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x, m_y - idx_right + idx_right/2, ur_x - m_x, idx_right + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
     if ( shadow) {
       if ( border) {
 	idx_right -= 2;
@@ -1207,7 +1207,7 @@ void GrowConGlue::export_javabean( GlowTransform *t, void *node,
   else if ( lw_up == -1 && lw_down == -1 &&
 	    lw_right == -1 && lw_left != -1) {
     // Left termination
-    ctx->export_jbean->rect( ll_x, m_y - idx_left + idx_left/2, m_x - ll_x, idx_left + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( ll_x, m_y - idx_left + idx_left/2, m_x - ll_x, idx_left + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
     if ( shadow) {
       if ( border) {
 	idx_left -= 2;
@@ -1234,8 +1234,8 @@ void GrowConGlue::export_javabean( GlowTransform *t, void *node,
   else if ( lw_up != -1 && lw_down != -1 &&
 	    lw_right == -1 && lw_left == -1) {
     // Vertical glue
-    ctx->export_jbean->rect( m_x - idx_up + idx_up/2, m_y, idx_up + 1, ur_y - m_y, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
-    ctx->export_jbean->rect( m_x - idx_down + idx_down/2, ll_y, idx_down + 1, m_y - ll_y, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x - idx_up + idx_up/2, m_y, idx_up + 1, ur_y - m_y, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x - idx_down + idx_down/2, ll_y, idx_down + 1, m_y - ll_y, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
 
     if ( shadow) {
       if ( border) {
@@ -1267,8 +1267,8 @@ void GrowConGlue::export_javabean( GlowTransform *t, void *node,
   else if ( lw_left != -1 && lw_right != -1 &&
 	    lw_up == -1 && lw_down == -1) {
     // Horizontal glue
-    ctx->export_jbean->rect( m_x, m_y - idx_right + idx_right/2, ur_x - m_x, idx_right + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
-    ctx->export_jbean->rect( ll_x, m_y - idx_left + idx_left/2, m_x - ll_x, idx_left + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x, m_y - idx_right + idx_right/2, ur_x - m_x, idx_right + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( ll_x, m_y - idx_left + idx_left/2, m_x - ll_x, idx_left + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
     if ( shadow) {
       if ( border) {
 	idx_left -= 2;
@@ -1299,8 +1299,8 @@ void GrowConGlue::export_javabean( GlowTransform *t, void *node,
   else if ( lw_left != -1 && lw_right == -1 &&
 	    lw_up != -1 && lw_down == -1) {
     // Left up corner
-    ctx->export_jbean->rect( m_x - idx_up + idx_up/2, m_y + idx_left/2, idx_up + 1, ur_y -  (m_y + idx_left/2), 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
-    ctx->export_jbean->rect( ll_x, m_y - idx_left + idx_left/2, m_x + idx_up/2 - ll_x + 1, idx_left + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x - idx_up + idx_up/2, m_y + idx_left/2, idx_up + 1, ur_y -  (m_y + idx_left/2), 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( ll_x, m_y - idx_left + idx_left/2, m_x + idx_up/2 - ll_x + 1, idx_left + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
     if ( shadow) {
       if ( border) {
 	idx_left -= 2;
@@ -1327,8 +1327,8 @@ void GrowConGlue::export_javabean( GlowTransform *t, void *node,
   else if ( lw_left == -1 && lw_right != -1 &&
 	    lw_up != -1 && lw_down == -1) {
     // Right up corner
-    ctx->export_jbean->rect( m_x - idx_up + idx_up/2, m_y - idx_right + idx_right/2, idx_up + 1, ur_y -  (m_y - idx_right + idx_right/2), 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
-    ctx->export_jbean->rect( m_x + idx_up/2, m_y - idx_right + idx_right/2, ur_x - (m_x + idx_up/2), idx_right + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x - idx_up + idx_up/2, m_y - idx_right + idx_right/2, idx_up + 1, ur_y -  (m_y - idx_right + idx_right/2), 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x + idx_up/2, m_y - idx_right + idx_right/2, ur_x - (m_x + idx_up/2), idx_right + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
     if ( shadow) {
       if ( border) {
 	idx_right -= 2;
@@ -1355,8 +1355,8 @@ void GrowConGlue::export_javabean( GlowTransform *t, void *node,
   else if ( lw_left == -1 && lw_right != -1 &&
 	    lw_up == -1 && lw_down != -1) {
     // Right down corner
-    ctx->export_jbean->rect( m_x - idx_down + idx_down/2, ll_y, idx_down + 1, m_y - idx_right + idx_right/2 - ll_y, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
-    ctx->export_jbean->rect( m_x - idx_down + idx_down/2, m_y - idx_right + idx_right/2, ur_x - (m_x - idx_down + idx_down/2), idx_right + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x - idx_down + idx_down/2, ll_y, idx_down + 1, m_y - idx_right + idx_right/2 - ll_y, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x - idx_down + idx_down/2, m_y - idx_right + idx_right/2, ur_x - (m_x - idx_down + idx_down/2), idx_right + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
     if ( shadow) {
       if ( border) {
 	idx_right -= 2;
@@ -1383,8 +1383,8 @@ void GrowConGlue::export_javabean( GlowTransform *t, void *node,
   else if ( lw_left != -1 && lw_right == -1 &&
 	    lw_up == -1 && lw_down != -1) {
     // Left down corner
-    ctx->export_jbean->rect( m_x - idx_down + idx_down/2, ll_y, idx_down + 1, m_y + idx_left/2 - ll_y + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
-    ctx->export_jbean->rect( ll_x, m_y - idx_left + idx_left/2, m_x - idx_down + idx_down/2 - ll_x, idx_left + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x - idx_down + idx_down/2, ll_y, idx_down + 1, m_y + idx_left/2 - ll_y + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( ll_x, m_y - idx_left + idx_left/2, m_x - idx_down + idx_down/2 - ll_x, idx_left + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
     if ( shadow) {
       if ( border) {
 	idx_left -= 2;
@@ -1411,9 +1411,9 @@ void GrowConGlue::export_javabean( GlowTransform *t, void *node,
   else if ( lw_left != -1 && lw_right != -1 &&
 	    lw_up == -1 && lw_down != -1) {
     // Left right down threeway
-    ctx->export_jbean->rect( m_x - idx_down + idx_down/2, ll_y, idx_down + 1, m_y - ll_y + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
-    ctx->export_jbean->rect( ll_x, m_y - idx_left + idx_left/2, m_x + idx_down/2 - ll_x, idx_left + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
-    ctx->export_jbean->rect( m_x - idx_down + idx_down/2, m_y - idx_right + idx_right/2, ur_x - (m_x - idx_down + idx_down/2), idx_right + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x - idx_down + idx_down/2, ll_y, idx_down + 1, m_y - ll_y + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( ll_x, m_y - idx_left + idx_left/2, m_x + idx_down/2 - ll_x, idx_left + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x - idx_down + idx_down/2, m_y - idx_right + idx_right/2, ur_x - (m_x - idx_down + idx_down/2), idx_right + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
     if ( shadow) {
       if ( border) {
 	idx_left -= 2;
@@ -1466,9 +1466,9 @@ void GrowConGlue::export_javabean( GlowTransform *t, void *node,
   else if ( lw_left != -1 && lw_right != -1 &&
 	    lw_up != -1 && lw_down == -1) {
     // Left right up threeway
-    ctx->export_jbean->rect( m_x - idx_up + idx_up/2, m_y, idx_up + 1, ur_y - m_y, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
-    ctx->export_jbean->rect( ll_x, m_y - idx_left + idx_left/2, m_x + idx_up/2 - ll_x, idx_left + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
-    ctx->export_jbean->rect( m_x - idx_up + idx_up/2, m_y - idx_right + idx_right/2, ur_x - (m_x - idx_up + idx_up/2), idx_right + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x - idx_up + idx_up/2, m_y, idx_up + 1, ur_y - m_y, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( ll_x, m_y - idx_left + idx_left/2, m_x + idx_up/2 - ll_x, idx_left + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x - idx_up + idx_up/2, m_y - idx_right + idx_right/2, ur_x - (m_x - idx_up + idx_up/2), idx_right + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
     if ( shadow) {
       if ( border) {
 	idx_left -= 2;
@@ -1523,9 +1523,9 @@ void GrowConGlue::export_javabean( GlowTransform *t, void *node,
   else if ( lw_left != -1 && lw_right == -1 &&
 	    lw_up != -1 && lw_down != -1) {
     // Left up down threeway
-    ctx->export_jbean->rect( ll_x, m_y - idx_left + idx_left/2, m_x - ll_x, idx_left + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
-    ctx->export_jbean->rect( m_x - idx_up + idx_up/2, m_y - idx_left + idx_left/2, idx_up + 1, ur_y - (m_y - idx_left + idx_left/2), 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
-    ctx->export_jbean->rect( m_x - idx_down + idx_down/2, ll_y, idx_down + 1, m_y + idx_left/2 - ll_y, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( ll_x, m_y - idx_left + idx_left/2, m_x - ll_x, idx_left + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x - idx_up + idx_up/2, m_y - idx_left + idx_left/2, idx_up + 1, ur_y - (m_y - idx_left + idx_left/2), 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x - idx_down + idx_down/2, ll_y, idx_down + 1, m_y + idx_left/2 - ll_y, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
     if ( shadow) {
       if ( border) {
 	idx_left -= 2;
@@ -1582,9 +1582,9 @@ void GrowConGlue::export_javabean( GlowTransform *t, void *node,
   else if ( lw_left == -1 && lw_right != -1 &&
 	    lw_up != -1 && lw_down != -1) {
     // Right up down threeway
-    ctx->export_jbean->rect( m_x, m_y - idx_right + idx_right/2, ur_x - m_x, idx_right + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
-    ctx->export_jbean->rect( m_x - idx_up + idx_up/2, m_y - idx_right + idx_right/2, idx_up + 1, ur_y - (m_y - idx_right + idx_right/2), 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
-    ctx->export_jbean->rect( m_x - idx_down + idx_down/2, ll_y, idx_down + 1, m_y + idx_right/2 - ll_y, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x, m_y - idx_right + idx_right/2, ur_x - m_x, idx_right + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x - idx_up + idx_up/2, m_y - idx_right + idx_right/2, idx_up + 1, ur_y - (m_y - idx_right + idx_right/2), 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x - idx_down + idx_down/2, ll_y, idx_down + 1, m_y + idx_right/2 - ll_y, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
     if ( shadow) {
       if ( border) {
 	idx_right -= 2;
@@ -1641,10 +1641,10 @@ void GrowConGlue::export_javabean( GlowTransform *t, void *node,
   else if ( lw_left != -1 && lw_right != -1 &&
 	    lw_up != -1 && lw_down != -1) {
     // Right left up down fourway
-    ctx->export_jbean->rect( m_x, m_y - idx_right + idx_right/2, ur_x - m_x, idx_right + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
-    ctx->export_jbean->rect( ll_x, m_y - idx_left + idx_left/2, m_x - ll_x, idx_left + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
-    ctx->export_jbean->rect( m_x - idx_up + idx_up/2, m_y, idx_up + 1, ur_y - m_y, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
-    ctx->export_jbean->rect( m_x - idx_down + idx_down/2, ll_y, idx_down + 1, m_y - ll_y, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x, m_y - idx_right + idx_right/2, ur_x - m_x, idx_right + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( ll_x, m_y - idx_left + idx_left/2, m_x - ll_x, idx_left + 1, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x - idx_up + idx_up/2, m_y, idx_up + 1, ur_y - m_y, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->rect( m_x - idx_down + idx_down/2, ll_y, idx_down + 1, m_y - ll_y, 1, 0, drawtype, glow_eDrawType_No, 0, 0, 0, 0, 0, glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
     if ( shadow) {
       if ( border) {
 	idx_right -= 2;

@@ -178,6 +178,7 @@ Graph::Graph(
   else
     strcpy( object_name, "");
   strcpy( filename, "");
+  strcpy( systemname, "");
 
   // Create journal file
   if ( mode == graph_eMode_Development) {

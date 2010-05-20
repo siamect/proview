@@ -997,6 +997,8 @@ void GrowArc::export_javabean( GlowTransform *t, void *node,
 	glow_eExportPass pass, int *shape_cnt, int node_cnt, int in_nc, ofstream &fp)
 {
   int idx;
+  int gc1, gc2;
+
   if ( node && ((GrowNode *)node)->line_width)
     idx = int( ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * 
 		((GrowNode *)node)->line_width - 1);
@@ -1039,9 +1041,19 @@ void GrowArc::export_javabean( GlowTransform *t, void *node,
   if ( relief == glow_eRelief_Down)
     drawtype_incr = -shadow_contrast;
 
+  if ( gradient_contrast >= 0) {
+    gc1 = gradient_contrast/2;
+    gc2 = -int(float(gradient_contrast)/2+0.6);
+  }
+  else {
+    gc1 = int(float(gradient_contrast)/2-0.6);
+    gc2 = -gradient_contrast/2;
+  }
+
   ctx->export_jbean->arc( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-	angle1 - rot, angle2, fill, border || !fill, fill_drawtype, draw_type,
-	idx, ish, shadow, drawtype_incr, pass, shape_cnt, node_cnt, fp);
+			  angle1 - rot, angle2, fill, border || !fill, fill_drawtype, draw_type,
+			  idx, ish, shadow, drawtype_incr, fixcolor, gradient, gc1, gc2,
+			  pass, shape_cnt, node_cnt, fp);
 }
 
 void GrowArc::flip( double x0, double y0, glow_eFlipDirection dir)

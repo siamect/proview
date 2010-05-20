@@ -182,6 +182,7 @@ public class GeComponent extends JComponent implements GeComponentIfc,
   public int levelColorTone = 0;
   public int levelFillColor = 0;
   public int shadow = 0;
+  public int gradient = 0;
   public boolean visible = true;
   public boolean dimmed = false;
   public void setColorTone( int colorTone) {
@@ -235,6 +236,9 @@ public class GeComponent extends JComponent implements GeComponentIfc,
   }
   public void setShadow( int shadow) {
     this.shadow = shadow;
+  }
+  public void setGradient( int gradient) {
+    this.gradient = gradient;
   }
   public int animationCount = 1;
   public int page = 1;

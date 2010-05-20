@@ -524,6 +524,10 @@ public class GeColor {
     Rgb rgb;
     Color color = null;
 
+    if ( idx == 300)
+      // TODO, should be background color
+      idx = 31;
+
     if ( idx < 4)
       color = new Color( (int)(colorValues[3*idx] * 255),
 		(int)(colorValues[3*idx + 1] * 255),
@@ -614,7 +618,7 @@ public class GeColor {
 
     if ( local_drawtype == 300) {
       // This should be background color TODO...
-      return 33;
+      return 31;
     }
 
     if ( default_color == NO_COLOR && color_tone != NO_TONE) {

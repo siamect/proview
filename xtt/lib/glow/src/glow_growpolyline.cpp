@@ -1447,6 +1447,8 @@ void GrowPolyLine::export_javabean( GlowTransform *t, void *node,
 {
   int i;
   int idx;
+  int gc1, gc2;
+
   if ( node && ((GrowNode *)node)->line_width)
     idx = int( ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * 
 		((GrowNode *)node)->line_width - 1);
@@ -1495,10 +1497,24 @@ void GrowPolyLine::export_javabean( GlowTransform *t, void *node,
   }
   int jborder =  border || !(fill || (!disable_shadow && shadow_width != 0));
 
+  glow_eGradient grad = gradient;
+  if ( disable_gradient)
+    grad = glow_eGradient_No;
+
+  if ( gradient_contrast >= 0) {
+    gc1 = gradient_contrast/2;
+    gc2 = -int(float(gradient_contrast)/2+0.6);
+  }
+  else {
+    gc1 = int(float(gradient_contrast)/2-0.6);
+    gc2 = -gradient_contrast/2;
+  }
+
   ctx->export_jbean->polyline( p, a_points.a_size, fill, jborder,
-		 fill_drawtype, draw_type, fill_eq_border, 
-		 fill_eq_light, fill_eq_shadow, 
-		 idx, jshadow, shadow, shadow_contrast, sp, p_num, pass, shape_cnt, node_cnt, fp);
+			       fill_drawtype, draw_type, fill_eq_border, 
+			       fill_eq_light, fill_eq_shadow, 
+			       idx, jshadow, shadow, shadow_contrast, sp, p_num, fixcolor, 
+			       grad, gc1, gc2, pass, shape_cnt, node_cnt, fp);
   free( (char *) p);
   free( sp);
 }

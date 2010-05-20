@@ -1518,7 +1518,7 @@ void GrowNode::export_javabean( GlowTransform *t, void *node,
   nc->get_java_name( java_name);
   ctx->export_jbean->node( x1, y1, x2, y2, java_name, 
    	draw_type, fill_drawtype, text_drawtype, color_tone, color_lightness,
-	color_intensity, color_shift, line_width, rot, shadow,
+	color_intensity, color_shift, line_width, rot, shadow, gradient,
     	pass, shape_cnt, node_cnt, in_nc, fp);
 }
 
