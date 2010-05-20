@@ -57,6 +57,8 @@ public class FlowNodeClass {
 	case Flow.eSave_NodeClass_group:
 	  group  = new Integer(token.nextToken()).intValue();
 	  break;
+	case Flow.eSave_NodeClass_no_con_obstacle:
+	  break;
 	case Flow.eSave_End:
 	  end = true;
 	  break;

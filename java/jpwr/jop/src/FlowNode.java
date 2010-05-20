@@ -182,6 +182,7 @@ public class FlowNode extends JComponent implements FlowComponent, JopDynamic {
 	case Flow.eSave_Node_obst_x_left:
 	case Flow.eSave_Node_obst_y_high:
 	case Flow.eSave_Node_obst_y_low:
+	case Flow.eSave_Node_trace_inverted:
 	  break;
 	case Flow.eSave_End:
 	  end = true;

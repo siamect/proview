@@ -119,6 +119,7 @@ public class Flow {
     public static final int eSave_NodeClass_nc_name		= 300;
     public static final int eSave_NodeClass_a		        = 301;
     public static final int eSave_NodeClass_group		= 302;
+    public static final int eSave_NodeClass_no_con_obstacle    	= 303;
     public static final int eSave_ConClass_cc_name		= 400;
     public static final int eSave_ConClass_con_type		= 401;
     public static final int eSave_ConClass_corner		= 402;
@@ -166,6 +167,7 @@ public class Flow {
     public static final int eSave_Node_obst_x_left		= 1014;
     public static final int eSave_Node_obst_y_high		= 1015;
     public static final int eSave_Node_obst_y_low		= 1016;
+    public static final int eSave_Node_trace_inverted		= 1017;
     public static final int eSave_Con_x_right		        = 1100;
     public static final int eSave_Con_x_left		        = 1101;
     public static final int eSave_Con_y_high		        = 1102;
