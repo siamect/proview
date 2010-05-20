@@ -1,6 +1,7 @@
 include $(pwre_dir_symbols)
 
 local_java_sources := \
+          JopcBase3wayvalve.java, \
           JopcBaseactuatora1.java, \
           JopcBaseactuatora2.java, \
           JopcBaseactuatora3.java, \
@@ -9,8 +10,36 @@ local_java_sources := \
           JopcBaseactuatora6.java, \
           JopcBaseactuatora7.java, \
           JopcBaseactuatora.java, \
+          JopcBaseactuatorincrdecr1.java, \
+          JopcBaseactuatorincrdecr2.java, \
+          JopcBaseactuatorincrdecr3.java, \
+          JopcBaseactuatorincrdecr4.java, \
+          JopcBaseactuatorincrdecr5.java, \
+          JopcBaseactuatorincrdecr6.java, \
+          JopcBaseactuatorincrdecr7.java, \
+          JopcBaseactuatorincrdecr.java, \
+          JopcBasec3wayvalve1.java, \
+          JopcBasec3wayvalve2.java, \
+          JopcBasec3wayvalve3.java, \
+          JopcBasec3wayvalve4.java, \
+          JopcBasec3wayvalve5.java, \
+          JopcBasec3wayvalve6.java, \
+          JopcBasec3wayvalve7.java, \
+          JopcBasec3wayvalve.java, \
+          JopcBasecdamper1.java, \
+          JopcBasecdamper2.java, \
+          JopcBasecdamper3.java, \
+          JopcBasecdamper4.java, \
+          JopcBasecdamper5.java, \
+          JopcBasecdamper6.java, \
+          JopcBasecdamper7.java, \
+          JopcBasecdamper.java, \
+          JopcBasecdampersim.java, \
           JopcBasecircuitbreaker.java, \
+          JopcBasecircuitbreakersim.java, \
           JopcBasecontactor1.java, \
+          JopcBasecontactor2.java, \
+          JopcBasecontactor3.java, \
           JopcBasecontactor.java, \
           JopcBasecvalve1.java, \
           JopcBasecvalve2.java, \
@@ -20,10 +49,16 @@ local_java_sources := \
           JopcBasecvalve6.java, \
           JopcBasecvalve7.java, \
           JopcBasecvalve.java, \
+          JopcBasecvalvesim.java, \
+          JopcBasedamper.java, \
           JopcBasedirvalve1.java, \
           JopcBasedirvalve2.java, \
           JopcBasedirvalve3.java, \
           JopcBasedirvalve.java, \
+          JopcBaseelheater1.java, \
+          JopcBaseelheater2.java, \
+          JopcBaseelheater.java, \
+          JopcBaseelheatersim.java, \
           JopcBasefanaggr10.java, \
           JopcBasefanaggr11.java, \
           JopcBasefanaggr1.java, \
@@ -37,13 +72,24 @@ local_java_sources := \
           JopcBasefanaggr9.java, \
           JopcBasefanaggr.java, \
           JopcBasefan.java, \
+          JopcBasefilter.java, \
+          JopcBasefiltersim.java, \
           JopcBaseflowsensor.java, \
           JopcBaselevelsensor.java, \
           JopcBaselevelswitch.java, \
+          JopcBasem3wayvalve1.java, \
+          JopcBasem3wayvalve2.java, \
+          JopcBasem3wayvalve3.java, \
+          JopcBasem3wayvalve.java, \
           JopcBasemanvalve1.java, \
           JopcBasemanvalve2.java, \
           JopcBasemanvalve3.java, \
           JopcBasemanvalve.java, \
+          JopcBasemanvalvesim.java, \
+          JopcBasemdamper1.java, \
+          JopcBasemdamper2.java, \
+          JopcBasemdamper3.java, \
+          JopcBasemdamper.java, \
           JopcBasemotor1.java, \
           JopcBasemotor2.java, \
           JopcBasemotoraggr10.java, \
@@ -58,6 +104,7 @@ local_java_sources := \
           JopcBasemotoraggr8.java, \
           JopcBasemotoraggr9.java, \
           JopcBasemotoraggr.java, \
+          JopcBasemotoraggrsim.java, \
           JopcBasemotorincrdecraggr10.java, \
           JopcBasemotorincrdecraggr11.java, \
           JopcBasemotorincrdecraggr12.java, \
@@ -106,12 +153,16 @@ local_java_sources := \
           JopcBasemotorincrdecraggr8.java, \
           JopcBasemotorincrdecraggr9.java, \
           JopcBasemotorincrdecraggr.java, \
+          JopcBasemotorincrdecraggrsim.java, \
           JopcBasemotor.java, \
+          JopcBasemotorsim.java, \
           JopcBasemvalve1.java, \
           JopcBasemvalve2.java, \
           JopcBasemvalve3.java, \
           JopcBasemvalve.java, \
+          JopcBasemvalvesim.java, \
           JopcBaseoverloadrelay.java, \
+          JopcBaseoverloadrelaysim.java, \
           JopcBasepositsensor.java, \
           JopcBasepressuresensor.java, \
           JopcBasepressureswitch.java, \
@@ -130,20 +181,46 @@ local_java_sources := \
           JopcBasepumpaggr.java, \
           JopcBasepump.java, \
           JopcBasesafetyswitch.java, \
+          JopcBasesafetyswitchsim.java, \
           JopcBasesensor.java, \
+          JopcBasesensorsim.java, \
           JopcBasesupswitch.java, \
+          JopcBasesupswitchsim.java, \
           JopcBasetempsensor.java, \
           JopcBasetempswitch.java, \
+          JopcBasevalveincrdecr1.java, \
+          JopcBasevalveincrdecr2.java, \
+          JopcBasevalveincrdecr3.java, \
+          JopcBasevalveincrdecr4.java, \
+          JopcBasevalveincrdecr5.java, \
+          JopcBasevalveincrdecr6.java, \
+          JopcBasevalveincrdecr7.java, \
+          JopcBasevalveincrdecr.java, \
+          JopcBasevalveincrdecrsim.java, \
           JopcBasevalve.java, \
           JopcCircuitbreaker.java, \
-          JopcCompmodeam.java, \
+          JopcCompmodea1.java, \
           JopcCompmodea.java, \
-          JopcCompmoded2m.java, \
+          JopcCompmodeam.java, \
+          JopcCompmoded1.java, \
+          JopcCompmoded21.java, \
+          JopcCompmoded22.java, \
+          JopcCompmoded23.java, \
           JopcCompmoded2.java, \
-          JopcCompmodedm.java, \
+          JopcCompmoded2m1.java, \
+          JopcCompmoded2m2.java, \
+          JopcCompmoded2m3.java, \
+          JopcCompmoded2m.java, \
           JopcCompmoded.java, \
+          JopcCompmodedm.java, \
+          JopcCompmodepid.java, \
+          JopcCompmode_sub.java, \
+          JopcComponoffburner.java, \
+          JopcComponoffzone.java, \
+          JopcComppid.java, \
           JopcContactor.java, \
           JopcRuntimecounter.java
+
 
 -include $(pwre_kroot)/tools/bld/src/$(os_name)/$(hw_name)/$(type_name)_generic.mk
 

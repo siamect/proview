@@ -15,6 +15,7 @@ local_java_sources := \
 	JopUtilityIfc.java \
 	JopUtility.java \
 	JopSession.java \
+	JopMethods.java \
 	JopMethodsMenu.java \
 	JopConfirm.java \
 	JopConfirmDialog.java \
@@ -86,6 +87,7 @@ local_java_sources := \
         JopUtilities.java \
         GeImage.java \
 	GeFrameThin.java \
+	GeGradient.java \
 	Flow.java \
 	FlowCtxInterface.java \
 	FlowCmn.java \
