@@ -38,6 +38,9 @@ public class JopSpider {
   static int op_qcom_nid;
   static Qcom qcom;
   static String systemName;
+  static String methObject;
+  static PwrtAttrRef methAref;
+  static int methClassId;
 
   public JopSpider( int op_qcom_qix) {
     JopSpider.op_qcom_qix = op_qcom_qix;
@@ -80,17 +83,19 @@ System.out.println( "qcom put finished");
   static CliTable[] cliTable = new CliTable[] { 
     new CliTable( "OPEN", new String[] {"cli_arg1", "cli_arg2", "/NAME", 
 	"/FILE", "/SCROLLBAR", "/WIDTH", "/HEIGHT", "/MENU", "/NAVIGATOR", 
-	"/CENTER", "/OBJECT", "/INSTANCE", "/NEW", "/CLASSGRAPH", "/ACCESS"}),
+	"/CENTER", "/OBJECT", "/INSTANCE", "/NEW", "/CLASSGRAPH", "/ACCESS", "/PARENT"}),
     new CliTable( "EXIT", null),
     new CliTable( "HELP", new String[] {"cli_arg1", "cli_arg2", "cli_arg3",
 	"cli_arg4", "/HELPFILE", "/POPNAVIGATOR", "/BOOKMARK", "/INDEX",
         "/BASE", "/RETURNCOMMAND", "/WIDTH", "/HEIGHT", "/VERSION"}),
     new CliTable( "SET", new String[] {"cli_arg1",
     	"/NAME", "/VALUE", "/BYPASS"}),
-    new CliTable( "EXAMPLE", new String[] {"/NAME", "/HIERARCHY"}) 
+    new CliTable( "EXAMPLE", new String[] {"/NAME", "/HIERARCHY"}),
+    new CliTable( "CHECK", new String[] {"cli_arg1", "/METHOD", "/OBJECT"}),
+    new CliTable( "CALL", new String[] {"cli_arg1", "/METHOD", "/OBJECT"}) 
   };
 
-  static void command( JopSession session, String cmd) {
+  static int command( JopSession session, String cmd) {
     boolean local_cmd = false;
     Object root = session.getRoot();
     Gdh gdh = session.getEngine().gdh;
@@ -122,7 +127,7 @@ System.out.println( "qcom put finished");
 
             if ( ! cli.qualifierFound("cli_arg2")) {
 	      System.out.println("Syntax error");
-              return;
+              return 0;
             }
 	    String frameName = cli.getQualValue("cli_arg2");
 	    String instance = cli.getQualValue("/INSTANCE");
@@ -161,7 +166,7 @@ System.out.println( "qcom put finished");
                 if ( objectValue.charAt(0) == '*') {
                   CdhrObjid cdhr_node = gdh.getNodeObject(0);
                   if ( cdhr_node.evenSts())
-                    return;
+                    return 0;
                   CdhrString cdhr_nodestr = gdh.objidToName( cdhr_node.objid, Cdh.mName_volumeStrict);
                   objectName = cdhr_nodestr.str + objectValue.substring(1);
                 }
@@ -172,7 +177,7 @@ System.out.println( "qcom put finished");
                 CdhrString cdhr = gdh.getObjectInfoString( attrName);
                 if ( cdhr.evenSts()) {
 	          System.out.println("Object name error");
-                  return;
+                  return 0;
                 }
                 int idx = cdhr.str.lastIndexOf( ".pwg");
                 if ( idx != -1)
@@ -183,8 +188,7 @@ System.out.println( "qcom put finished");
                     appletName = cdhr.str.substring(0, idx);
 		  else {
 		    // This is a command
-		    command( session, cdhr.str);
-		    return;
+		    return command( session, cdhr.str);
 		  }
 		}
 
@@ -213,11 +217,18 @@ System.out.println( "qcom put finished");
                   if ( cli.qualifierFound("/INSTANCE")) {
 	            instanceValue = cli.getQualValue("/INSTANCE");
 		    classGraph = cli.qualifierFound("/CLASSGRAPH");		      
+		    boolean parent = cli.qualifierFound("/PARENT");
+		    if ( parent) {
+		      int idx = instanceValue.lastIndexOf( '.');
+		      if ( idx != -1 && idx != 0)
+			instanceValue = instanceValue.substring( 0, idx);
+		      System.out.println( "open graph /parent: " + instanceValue);
+		    }
 		  }
 		  if ( !classGraph) {
 		    if ( ! cli.qualifierFound("cli_arg2")) {
 		      System.out.println("Syntax error");
-		      return;
+		      return 0;
 		    }
 		    frameName = cli.getQualValue("cli_arg2").toLowerCase();
 
@@ -231,7 +242,7 @@ System.out.println( "qcom put finished");
 		  String frameName = null;
 		  if ( ! cli.qualifierFound("cli_arg2")) {
 		    System.out.println("Syntax error");
-		    return;
+		    return 0;
 		  }
 		  frameName = cli.getQualValue("cli_arg2").toLowerCase();
 
@@ -239,6 +250,14 @@ System.out.println( "qcom put finished");
 	            String instanceValue = 
 			cli.getQualValue("/INSTANCE").toLowerCase();
                   
+		    boolean parent = cli.qualifierFound("/PARENT");
+		    if ( parent) {
+		      int idx = instanceValue.lastIndexOf( '.');
+		      if ( idx != -1 && idx != 0)
+			instanceValue = instanceValue.substring( 0, idx);
+		      System.out.println( "open graph /parent: " + instanceValue);
+		    }
+
                     String tempFile = frameName + "_" + 
 			instanceValue.replace('å','a').replace('ä','a').replace('ö','o');
 		    PwrtStatus psts = 
@@ -247,7 +266,7 @@ System.out.println( "qcom put finished");
 			   tempFile+".html", instanceValue);
 		    if ( psts.evenSts()) {
 		      System.out.println("createInstanceFile error");
-                      return;
+                      return 0;
 		    }
                     frameName = tempFile;
 		  }
@@ -269,11 +288,19 @@ System.out.println( "qcom put finished");
 	      if ( cli.qualifierFound("/INSTANCE")) {
 	        instanceValue = cli.getQualValue("/INSTANCE");
 		classGraph = cli.qualifierFound("/CLASSGRAPH");		      
+
+		boolean parent = cli.qualifierFound("/PARENT");
+		if ( parent) {
+		  int idx = instanceValue.lastIndexOf( '.');
+		  if ( idx != -1 && idx != 0)
+		    instanceValue = instanceValue.substring( 0, idx);
+		  System.out.println( "open graph /parent: " + instanceValue);
+		}
 	      }
 	      if ( !classGraph) {
 		if ( ! cli.qualifierFound("cli_arg2")) {
 		  System.out.println("Syntax error");
-		  return;
+		  return 0;
 		}
 		frameName = cli.getQualValue("cli_arg2").toLowerCase();
 
@@ -363,13 +390,13 @@ System.out.println( "qcom put finished");
 	        name = cli.getQualValue("/NAME");
               else {
                 System.out.println( "Cmd: name is missing\n");
-                return;
+                return 0;
               }
               if ( cli.qualifierFound("/VALUE"))
 	        value = cli.getQualValue("/VALUE");
               else {
                 System.out.println( "Cmd: value is missing\n");
-                return;
+                return 0;
               }
               boolean bypass = cli.qualifierFound("/BYPASS");
               if ( !bypass ) {
@@ -377,13 +404,13 @@ System.out.println( "qcom put finished");
                 if ( ! gdh.isAuthorized( 
 			     Pwr.mPrv_RtWrite | Pwr.mPrv_System)) {
                   System.out.println( "No authorized");
-                  return;
+                  return 0;
                 }
               }
 
               // Get type of attribute
               GdhrGetAttributeChar ret = gdh.getAttributeChar( name);
-              if ( ret.evenSts()) return;
+              if ( ret.evenSts()) return 0;
 
               if ( ret.typeId == Pwr.eType_Float32) {
                 float setValue = Float.parseFloat( value);
@@ -408,7 +435,7 @@ System.out.println( "qcom put finished");
                 sts = gdh.setObjectInfo( name, value);
               }
               else
-                return;
+                return 0;
 
               if ( sts.evenSts())
                  System.out.println( "setObjectInfoError " + sts);
@@ -416,9 +443,137 @@ System.out.println( "qcom put finished");
           }
         }
       }
+      else if ( command.equals("CHECK")) {
+        if ( cli.qualifierFound("cli_arg1")) {
+
+          String methodstr = "METHOD";
+          String isattributestr = "ISATTRIBUTE";
+          String cli_arg1 = cli.getQualValue("cli_arg1").toUpperCase();
+          if ( methodstr.length() >= cli_arg1.length() &&
+               methodstr.substring(0,cli_arg1.length()).equals(cli_arg1)) {
+            // Command is "CHECK METHOD"
+	    String method;
+	    String object;
+
+            if ( cli.qualifierFound("/METHOD"))
+	      method = cli.getQualValue("/METHOD");
+	    else {
+              System.out.println( "Cmd: Method is missing\n");
+              return 0;
+            }
+
+            if ( cli.qualifierFound("/OBJECT"))
+	      object = cli.getQualValue("/OBJECT");
+	    else {
+              System.out.println( "Cmd: Object is missing\n");
+              return 0;
+	    }
+
+	    if ( methObject == null || object.compareToIgnoreCase( methObject) != 0) {
+	      CdhrAttrRef oret = gdh.nameToAttrRef( object);
+	      if ( oret.evenSts()) return 0;
+
+	      CdhrTypeId cret = gdh.getAttrRefTid( oret.aref);
+	      if ( cret.evenSts()) return 0;
+
+	      methObject = object;
+	      methAref = oret.aref;
+	      methClassId = cret.typeId;
+	    }
+
+	    JopMethods methods = new JopMethods( session, methAref, methObject, methClassId, JopUtility.NO);
+
+	    boolean b = methods.callFilterMethod( method);
+	    System.out.println( "Cmd check method: " + method + " , Object: " + object + ", value: " + b);
+	    if ( b)
+	      return 1;
+	    else 
+	      return 0;
+	  }	
+          else if ( isattributestr.length() >= cli_arg1.length() &&
+		    isattributestr.substring(0,cli_arg1.length()).equals(cli_arg1)) {
+            // Command is "CHECK ISATTRIBUTE"
+	    String method;
+	    String object;
+
+            if ( cli.qualifierFound("/OBJECT"))
+	      object = cli.getQualValue("/OBJECT");
+	    else {
+              System.out.println( "Cmd: Object is missing\n");
+              return 0;
+	    }
+
+	    if ( methObject == null || object.compareToIgnoreCase( methObject) != 0) {
+	      CdhrAttrRef oret = gdh.nameToAttrRef( object);
+	      if ( oret.evenSts()) return 0;
+
+	      CdhrTypeId cret = gdh.getAttrRefTid( oret.aref);
+	      if ( cret.evenSts()) return 0;
+
+	      methObject = object;
+	      methAref = oret.aref;
+	      methClassId = cret.typeId;
+	    }
+
+	    if ( (methAref.flags & PwrtAttrRef.OBJECTATTR) != 0)
+	      return 1;
+	    else 
+	      return 0;
+	  }
+	}
+      }
+      else if ( command.equals("CALL")) {
+        if ( cli.qualifierFound("cli_arg1")) {
+
+          String parameter = "METHOD";
+          String cli_arg1 = cli.getQualValue("cli_arg1").toUpperCase();
+          if ( parameter.length() >= cli_arg1.length() &&
+               parameter.substring(0,cli_arg1.length()).equals(cli_arg1)) {
+            // Command is "CHECK METHOD"
+	    String method;
+	    String object;
+
+            if ( cli.qualifierFound("/METHOD"))
+	      method = cli.getQualValue("/METHOD");
+	    else {
+              System.out.println( "Cmd: Method is missing\n");
+              return 0;
+            }
+
+            if ( cli.qualifierFound("/OBJECT"))
+	      object = cli.getQualValue("/OBJECT");
+	    else {
+              System.out.println( "Cmd: Object is missing\n");
+              return 0;
+	    }
+
+	    if ( methObject == null || object.compareToIgnoreCase( methObject) != 0) {
+	      CdhrAttrRef oret = gdh.nameToAttrRef( object);
+	      if ( oret.evenSts()) return 0;
+
+	      CdhrTypeId cret = gdh.getAttrRefTid( oret.aref);
+	      if ( cret.evenSts()) return 0;
+
+	      methObject = object;
+	      methAref = oret.aref;
+	      methClassId = cret.typeId;
+	    }
+
+	    JopMethods methods = new JopMethods( session, methAref, methObject, methClassId, JopUtility.NO);
+
+
+	    methods.callMethod( method);
+	    System.out.println( "Cmd call method: " + method + " , Object: " + object);
+	    return 1;
+	  }
+
+	}
+      }
     }
-    else
+    else {
       System.out.println( "JopSpider: Parse error " + cli.getStsString());
+      return 0;
+    }
 
     if ( !local_cmd) {
       // Send to xtt
@@ -429,7 +584,7 @@ System.out.println( "qcom put finished");
           System.out.println( "Qcom put error: " + sts.getSts());
       }
     }
-    
+    return 1;
   }
   private class JopSpiderCmd extends Thread {
     JopSession session;

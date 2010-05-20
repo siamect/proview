@@ -168,9 +168,14 @@ public class JopSessionRep implements JopSessionIfc {
 	  if ( coid.objid.vid == 1)
 	    name = "jpwr.jopc.Jopc" + sret.str.substring(1,2).toUpperCase() + 
 	      sret.str.substring(2).toLowerCase() + suffix;
-	  else if ( coid.objid.vid == 10)
-	    name = "jpwr.bcomp.Jopc" + sret.str.substring(0,1).toUpperCase() + 
-	      sret.str.substring(1).toLowerCase() + suffix;
+	  else if ( coid.objid.vid == 10) {
+	    if ( sret.str.startsWith( "BaseFcPPO"))
+	      name = "jpwr.bcompfc.Jopc" + sret.str.substring(0,1).toUpperCase() + 
+		  sret.str.substring(1).toLowerCase() + suffix;
+	    else
+	      name = "jpwr.bcomp.Jopc" + sret.str.substring(0,1).toUpperCase() + 
+		  sret.str.substring(1).toLowerCase() + suffix;
+	  }
 	  else
 	    name = "jpwr.jopc.Jopc" + sret.str.substring(0,1).toUpperCase() + 
 	      sret.str.substring(1).toLowerCase() + suffix;
@@ -228,7 +233,8 @@ public class JopSessionRep implements JopSessionIfc {
       for ( int i = 0; i < frames.size(); i++) {
 	Object o = frames.get(i);
 	PwrtObjid utilityObjid = ((JopUtilityIfc) o).getUtilityObjid();
-	if ( ((JopUtilityIfc) o).getUtilityType() == type &&
+	if ( ((JopUtilityIfc) o).getUtilityType() == type && 
+	     utilityObjid != null &&
 	     utilityObjid.oix == objid.oix && utilityObjid.vid == objid.vid) {
 	  return o;
 	}
@@ -288,8 +294,8 @@ public class JopSessionRep implements JopSessionIfc {
 
   }
 
-  public void executeCommand( String command) {
-    JopSpider.command( session, command);
+  public int executeCommand( String command) {
+    return JopSpider.command( session, command);
   }
 
   public boolean isApplet() {
