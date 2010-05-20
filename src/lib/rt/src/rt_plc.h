@@ -91,15 +91,15 @@ typedef struct {
   IO_AREA(pwr_sClass_IiArea) ii_a;
   IO_AREA(pwr_sClass_IoArea) io_a;
   IO_AREA(pwr_sClass_IvArea) iv_a;
-  IO_AREA(pwr_sClass_IvArea) av_i;
-  IO_AREA(pwr_sClass_IvArea) dv_i;
-  IO_AREA(pwr_sClass_IvArea) iv_i;
-  IO_AREA(pwr_sClass_IvArea) ai_i;
-  IO_AREA(pwr_sClass_IvArea) di_i;
-  IO_AREA(pwr_sClass_IvArea) ii_i;
-  IO_AREA(pwr_sClass_IvArea) ao_i;
-  IO_AREA(pwr_sClass_IvArea) do_i;
-  IO_AREA(pwr_sClass_IvArea) io_i;
+  IO_AREA(pwr_sClass_InitArea) av_i;
+  IO_AREA(pwr_sClass_InitArea) dv_i;
+  IO_AREA(pwr_sClass_InitArea) iv_i;
+  IO_AREA(pwr_sClass_InitArea) ai_i;
+  IO_AREA(pwr_sClass_InitArea) di_i;
+  IO_AREA(pwr_sClass_InitArea) ii_i;
+  IO_AREA(pwr_sClass_InitArea) ao_i;
+  IO_AREA(pwr_sClass_InitArea) do_i;
+  IO_AREA(pwr_sClass_InitArea) io_i;
 } plc_sArea;
 
 #ifndef rt_io_base_h
