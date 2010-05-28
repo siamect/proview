@@ -49,6 +49,9 @@ public class DynamicObj extends TreeObj
    */
   public void setObjectAttributeValue(AttrObj obj)
   {
+    if ( obj.refObj.id == 0)
+      return;
+
     switch (obj.type)
     {
       case Pwr.eType_Float32:

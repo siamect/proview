@@ -56,7 +56,7 @@ public class XttObj extends DynamicObj implements JopDynamic
   /**  Description of the Field */
   public boolean hasChildren = false;
   /**  Description of the Field */
-  public int lengthToSecondCol = 24;
+  public int lengthToSecondCol = 15;
   /**  Description of the Field */
 //  public String name = null;
   /**  Description of the Field */
@@ -367,6 +367,9 @@ public class XttObj extends DynamicObj implements JopDynamic
     for(int i = 0; i < attrVector.size(); i++)
     {
       XttObjAttr obj = (XttObjAttr)attrVector.get(i);
+      if ( obj.refObj == null || obj.refObj.id == 0)
+	continue;
+
       if( ((obj.flags & Pwr.mAdef_array) > 0) &&
           ((obj.flags & Pwr.mAdef_class) <= 0) )
       {

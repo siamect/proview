@@ -133,7 +133,7 @@ public class Gdh {
   public Vector getAllClassAttributes( int classid, PwrtObjid objid_obj )
   //public Vector<CdhrObjAttr> getAllClassAttributes( int classid, PwrtObjid objid_obj )
   {
-      //System.out.println("getAllClassAttributes" + classid + " " + objid_obj.oix + " " + objid_obj.vid);
+    System.out.println("getAllClassAttributes" + classid + " " + objid_obj.oix + " " + objid_obj.vid);
     //CdhrObjid co = this.classIdToObjid(classid);
 
     String name = this.objidToName(objid_obj, Cdh.mName_pathStrict).str;
@@ -141,7 +141,7 @@ public class Gdh {
 
     CdhrClassId cdhrClassId = this.getObjectClass(objid_obj);
 
-    GdhrsAttrDef[] gdhrsAttrDefArr = this.getObjectBodyDef(classid, objid_obj);
+    GdhrsAttrDef[] gdhrsAttrDefArr = this.getObjectBodyDef(classid, new PwrtAttrRef(objid_obj));
 
     //Vector<CdhrObjAttr> v = new Vector<CdhrObjAttr>();
     Vector v = new Vector();
@@ -186,7 +186,7 @@ public class Gdh {
     CdhrAttrRef attrRef = this.nameToAttrRef(name);
     CdhrTypeId cdhrTypeId = this.getAttrRefTid( attrRef.aref );
 
-    GdhrsAttrDef[] gdhrsAttrDefArr = this.getObjectBodyDef(cdhrTypeId.getTypeId(), new PwrtObjid(0,0));
+    GdhrsAttrDef[] gdhrsAttrDefArr = this.getObjectBodyDef(cdhrTypeId.getTypeId(), attrRef.aref);
 
     if(gdhrsAttrDefArr == null)
     {
@@ -436,7 +436,7 @@ public class Gdh {
   public native CdhrString getMsg( int sts);
   public native CdhrString getMsgText( int sts);
   public native CdhrClassId getSuperClass( int classid, PwrtObjid objid);
-  public native GdhrsAttrDef[] getObjectBodyDef(int classid, PwrtObjid objid);
+  public native GdhrsAttrDef[] getObjectBodyDef(int classid, PwrtAttrRef aref);
   //  public native GdhrGetXttObj[] getAllXttChildrenNative(PwrtObjid objid);
 }
 

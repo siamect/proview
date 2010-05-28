@@ -11126,7 +11126,10 @@ int GeTipText::export_java( grow_tObject object, ofstream& fp, bool first, char 
     fp << "      ";
   else
     fp << "      ,";
-  fp << "new GeDynTipText(" << var_name << ".dd, \"" << text << "\")" << endl;
+  if ( grow_GetTranslate( dyn->graph->grow->ctx))
+    fp << "new GeDynTipText(" << var_name << ".dd, JopLang.transl(\"" << text << "\"))" << endl;
+  else
+    fp << "new GeDynTipText(" << var_name << ".dd, \"" << text << "\")" << endl;
   return 1;
 }
 
@@ -13718,8 +13721,12 @@ int GePulldownMenu::export_java( grow_tObject object, ofstream& fp, bool first, 
   fp << "new GeDynPulldownMenu(" << var_name << ".dd, new String[] {" << endl << "        ";
   int b_mask = 1;
   for ( int i = 0; i < 32; i++) {
-    if ( b_mask & button_mask)
-      fp << "\"" << items_text[i] << "\"";
+    if ( b_mask & button_mask) {
+      if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	fp << "JopLang.transl(\"" << items_text[i] << "\")";
+      else
+	fp << "\"" << items_text[i] << "\"";
+    }
     else
       fp << "null";
     if ( i != 31)
@@ -14346,8 +14353,12 @@ int GeOptionMenu::export_java( grow_tObject object, ofstream& fp, bool first, ch
   fp << "new GeDynOptionMenu(" << var_name << ".dd, \"" << attribute << "\", new String[] {" << endl << "        ";
   int b_mask = 1;
   for ( int i = 0; i < 32; i++) {
-    if ( b_mask & button_mask)
-      fp << "\"" << items_text[i] << "\"";
+    if ( b_mask & button_mask) {
+      if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	fp << "JopLang.transl(\"" << items_text[i] << "\")";
+      else
+	fp << "\"" << items_text[i] << "\"";
+    }
     else
       fp << "null";
     if ( i != 31)

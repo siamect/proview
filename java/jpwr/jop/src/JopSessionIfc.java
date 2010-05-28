@@ -25,6 +25,8 @@ public interface JopSessionIfc {
   public void setRoot( Object root);
   public Object getRoot();
   public void setEngine( JopEngine engine);
+  public String getLang();
+  public void setLang( String lang);
   public JopEngine getEngine();
   public void setNavigator( Object navigator);
   public void setAlarmList( Object alarmList);
@@ -34,6 +36,7 @@ public interface JopSessionIfc {
   public void openAlarmList();
   public void openEventLog();
   public void openLogin();
+  public void openLanguage();
   public void openGraphFrame( String name, String instance, boolean scrollbar, boolean classGraph);
   public void openFlowFrame( PwrtObjid oid, String center);
   public void openCrrFrame( String name);
@@ -43,4 +46,5 @@ public interface JopSessionIfc {
   public boolean isOpWindowApplet();
   public void openSearch(String object);
   public void setOpWindowLabelText( String text );
+  public void setOpWindowLanguage( int language );
 }

@@ -36,8 +36,7 @@ import java.applet.Applet;
  *the JButton btnSearch is pressed and currentSearch is then sent to a class
  *in the HistTable result for evaluating the search and updating the table.
  *The GUI is made to support English and Swedish by keeping arrays of all 
- *strings. The integer lang indicates which language to be used, (0=eng
- *1=swe) and all texts on screen is updated at once by calling updateText().
+ *strings.
  */
 
 public class HistSearch extends JFrame implements ActionListener
@@ -48,9 +47,8 @@ public class HistSearch extends JFrame implements ActionListener
     public Object root;
 ;
     
-    /*integers for keeping track of the language setting and the number of 
+    /*integers for keeping track of the number of 
       search results.*/
-    int lang=1;
     int num=0;
     
     JPanel contentPane;
@@ -63,21 +61,13 @@ public class HistSearch extends JFrame implements ActionListener
     JPanel check = new JPanel();
     
     // labels describing different objects in the search interface. 
-    JLabel lblStart = new JLabel("", JLabel.LEFT);
-    JLabel lblStop = new JLabel("", JLabel.LEFT);
-    JLabel lblType = new JLabel("", JLabel.LEFT);
-    JLabel lblPriority = new JLabel("", JLabel.LEFT);
-    JLabel lblName = new JLabel("", JLabel.LEFT);
-    JLabel lblText = new JLabel("", JLabel.LEFT); 
-    JLabel lblNum = new JLabel("",JLabel.LEFT);
-    
-    String[] descStart = {"Start time:","Starttid:"};
-    String[] descStop = {"Stop time:","Stopptid:"};
-    String[] descType = {"Event type:","Händelsetyp:"};
-    String[] descPriority = {"Priority:","Prioritet:"};
-    String[] descName = {"Event name:","Händelsenamn:"};
-    String[] descText = {"Event text:","Händelsetext:"};
-    String[] descStat = {"Statistics", "Statistik"};    
+    JLabel lblStart = new JLabel( JopLang.transl("Start time:"), JLabel.LEFT);
+    JLabel lblStop = new JLabel( JopLang.transl("Stop time:"), JLabel.LEFT);
+    JLabel lblType = new JLabel( JopLang.transl("Event type:"), JLabel.LEFT);
+    JLabel lblPriority = new JLabel( JopLang.transl("Priority:"), JLabel.LEFT);
+    JLabel lblName = new JLabel( JopLang.transl("Event name:"), JLabel.LEFT);
+    JLabel lblText = new JLabel( JopLang.transl("Event text:"), JLabel.LEFT); 
+    JLabel lblNum = new JLabel( JopLang.transl("Statistics"),JLabel.LEFT);
     
     
     // textfields for different parameters in the search interface
@@ -85,40 +75,41 @@ public class HistSearch extends JFrame implements ActionListener
     
     // cbWhen is a combo box giving choices of search intervals     
     
-    String[][] choice = {{"All alarms","This year","This month","This week","Today","Enter dates"},
-             {"Alla alarm","Detta år","Denna månad","Den här veckan","Idag","Egna datum"}};
+    String[] choice = {JopLang.transl("All events"),
+		       JopLang.transl("This Year"), 
+		       JopLang.transl("This Month"),
+		       JopLang.transl("This Week"),
+		       JopLang.transl("Today"),
+		       JopLang.transl("Enter dates")};
     JComboBox cbWhen ;
     
     // type is an array of radiobuttons, one for each type of event
     JCheckBox[] type = new JCheckBox[4];
-    String[][] nameType = {{"Active","Message","Return","Ack"},
-               {"Aktiv","Meddelande","Retur","Kvittens"}};
+    String[] nameType = {JopLang.transl("Active"),
+			   JopLang.transl("Message"),
+			   JopLang.transl("Return"),
+			   JopLang.transl("Ack")};
     
     // priority is an array of checkboxes, one for each priority
     JCheckBox[] priority = new JCheckBox[4];
-    String[] namePriority = {"A-Alarm","B-Alarm","C-Alarm","D-Alarm"};
+    String[] namePriority = { JopLang.transl("A-Alarm"),
+			      JopLang.transl("B-Alarm"),
+			      JopLang.transl("C-Alarm"),
+			      JopLang.transl("D-Alarm")};
     
     // btnSearch is the search button
     JButton btnSearch ;
-    String[] descSearch= {"Search","Sök"};
     
-    // two calendars for start and stop dates       
+    // two calendars for start and stop dates    
     Calendar calStop,calStart;
     
     String defaultDate="YYYY-MM-DD HH:MM:SS";
-    String[] strNum={"Number of events: ","Antal händelser: "};
-    String[] msgStart={"Enter start date and time","Ange startdatum och tid"};
-    String[] msgStop={"Enter stop date and time","Ange stoppdatum och tid"};
-    String[] errorDate={"Dates must be specified on the form YYYY-MM-DD HH:MM:SS \n"+
-            "e.g 1980-09-08 00:00:00", "Datum måste skrivas på formen YYYY-MM-DD HH:MM:SS \n"+
-            "t.ex 1980-09-08 00:00:00"};
+    String strNum=JopLang.transl("Number of Events:") + " ";
+    String msgStart=JopLang.transl("Enter start date and time");
+    String msgStop =JopLang.transl("Enter stop date and time");
     
     /**** Menu + textstrings ****/
-    JMenu fileMenu, langMenu;
-    
-    String[][] menuTitle = {{"File","Language"},{"Arkiv","Språk"}};
-    String[][] fileItems = {{"Copy result to excel","Quit"},{"Kopiera resultat till Excel","Avsluta"}};
-    String[][] langItems = {{"Svenska","English"},{"Svenska","English"}};
+    JMenu fileMenu;
     
     
     //****MIDDLE****        
@@ -134,10 +125,9 @@ public class HistSearch extends JFrame implements ActionListener
     // lblCondition is the label showing the current search conditions.
     JLabel lblCondition = new JLabel("",JLabel.LEFT);
     
-    // lblHead is the label showing the static text "Search condition"      
-    JLabel lblHead = new JLabel("", JLabel.LEFT);
-    String[] descHead = {"<HTML><U>Search condition</U></HTML>",
-			 "<HTML><U>Sökvillkor</U></HTML>"};
+    // lblHead is the label showing the static text "Search Condition"      
+    String descHead = "<HTML><U>" + JopLang.transl("Search Condition") + "</U></HTML>";
+    JLabel lblHead = new JLabel(descHead, JLabel.LEFT);
     
     HistQuery currentSearch;
 
@@ -180,7 +170,7 @@ public class HistSearch extends JFrame implements ActionListener
     }
 
     private void setup(){
-    result =new HistTable(lang,session);
+    result =new HistTable(session);
     /* A mouse listener is added to the alarmTable from here because
        the result of the double click affects components of the HistSearch.
        To add the listener like this avoids compilation order problems.*/
@@ -243,17 +233,17 @@ public class HistSearch extends JFrame implements ActionListener
     addComponentListener(new minSizeListener(this));
     this.setTitle("Hist Search");
     // setup the searchbutton
-    btnSearch= new JButton(descSearch[lang]);
+    btnSearch= new JButton( JopLang.transl("Search"));
     btnSearch.addActionListener(this);
     btnSearch.setActionCommand("search");
     btnSearch.setMnemonic('s');
     // setup the statisticsbutton
-    btnStat= new JButton(descStat[lang]);
+    btnStat= new JButton(JopLang.transl("Statistics"));
     btnStat.setMnemonic('t');
     btnStat.setActionCommand("stat");
     btnStat.addActionListener(this);
     //setup tht combobox.
-    cbWhen=new JComboBox(choice[lang]);
+    cbWhen=new JComboBox(choice);
     cbWhen.addActionListener(this); 
 
     //setup the start and stop dates.
@@ -264,7 +254,6 @@ public class HistSearch extends JFrame implements ActionListener
     checkSetup();
     //make sure all buttons and labels have text.
     menuSetup();
-    updateText();
     place();
     //set comboBox to "thisYear" by deafult. setSelectedItem calls
     //the action listener, so the dates update.
@@ -272,7 +261,7 @@ public class HistSearch extends JFrame implements ActionListener
     updateDate();
     
     
-        }
+    }
     
                 
     
@@ -288,28 +277,22 @@ public class HistSearch extends JFrame implements ActionListener
     }
     
     private void menuSetup(){
-    // set up the menu structure, with language choices.
+    // set up the menu structure.
     this.setJMenuBar (new JMenuBar());
-    fileMenu=new JMenu(menuTitle[lang][0]);
+    fileMenu=new JMenu(JopLang.transl("File"));
     fileMenu.setMnemonic(fileMenu.getText().charAt(0));
-    langMenu=new JMenu(menuTitle[lang][1]);
-    langMenu.setMnemonic(langMenu.getText().charAt(0));
     
-    for(int i=0; i< fileItems.length; i++){
-        JMenuItem item = new JMenuItem(fileItems[lang][i]);
-        item.addActionListener(this);
-        item.setMnemonic(item.getText().charAt(0));
-        fileMenu.add(item);
-    }
+    JMenuItem item = new JMenuItem(JopLang.transl("Export result to Excel"));
+    item.addActionListener(this);
+    item.setMnemonic(item.getText().charAt(0));
+    fileMenu.add(item);
+
+    item = new JMenuItem(JopLang.transl("Close"));
+    item.addActionListener(this);
+    item.setMnemonic(item.getText().charAt(0));
+    fileMenu.add(item);
     
-    for(int i=0; i< langItems.length; i++){
-        JMenuItem item = new JMenuItem(langItems[lang][i]);
-        item.addActionListener(this);
-        item.setMnemonic(item.getText().charAt(0));
-        langMenu.add(item);
-    }
-        this.getJMenuBar().add(fileMenu);
-        this.getJMenuBar().add(langMenu);
+    this.getJMenuBar().add(fileMenu);
     }
     
     
@@ -453,7 +436,7 @@ public class HistSearch extends JFrame implements ActionListener
     //For loop adding the four type checkboxes      with name tags  
     for (int i=0;i<4;i++){
         
-        type[i]=new JCheckBox(nameType[lang][i]);
+        type[i]=new JCheckBox(nameType[i]);
         check.add(type[i]);
                 }
     
@@ -469,51 +452,12 @@ public class HistSearch extends JFrame implements ActionListener
     
     }
     
-    //Update the number of events label in the correct language.
+    //Update the number of events label.
     private void updateNum(){
     num=result.getNrOfResults();
-    lblNum.setText(strNum[lang]+num);
+    lblNum.setText(strNum+num);
     }       
     
-    // All labels are updated in the current language (0 = English, 1 = Swedish)    
-    private void updateText(){
-    
-    // the combo box needs to be relableled according to language
-    // but not during initiation, hence the if statement...
-    if(txStart!=null){
-        cbWhen.removeAllItems();
-        for(int i=0;i<choice[lang].length;i++)
-        cbWhen.addItem(choice[lang][i]);
-    }
-    // the search button needs to be relabeled each time the language changes
-    btnSearch.setText(descSearch[lang]);
-    
-    /*the checkboxes for type needs relabeling aswell. Not the priority checkboxes
-      since there's no difference in language...*/
-    for(int i=0; i<nameType[lang].length;i++){
-        type[i].setText(nameType[lang][i]);
-    }
-    
-    // All labels are updated to show the right language.           
-    lblStart.setText(descStart[lang]);
-    lblStop.setText(descStop[lang]);
-    lblType.setText(descType[lang]);
-    lblPriority.setText(descPriority[lang]);
-    lblName.setText(descName[lang]);
-    lblText.setText(descText[lang]);
-    lblHead.setText(descHead[lang]);
-    updateNum();
-    
-    //Update the text in the menus. Easily done by remaking it...
-    menuSetup();
-    
-    //update the result table headers
-    result.updateLang(lang);
-    
-    //update the btnStat text.
-    btnStat.setText(descStat[lang]);
-    
-    }       
     
     private void updateDate(){
     txStart.setText(dateText(calStart));
@@ -602,13 +546,13 @@ public class HistSearch extends JFrame implements ActionListener
         
                                 //routine for Start time input dialog
            
-        HistDateChooser tempDate = new HistDateChooser(calStart,lang);
-        int buttonPressed = JOptionPane.showOptionDialog(this,tempDate,msgStart[lang],JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,null,null);
+        HistDateChooser tempDate = new HistDateChooser(calStart);
+        int buttonPressed = JOptionPane.showOptionDialog(this,tempDate,msgStart,JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,null,null);
         if (buttonPressed == JOptionPane.OK_OPTION){
             calStart=tempDate.getDate();
             //routine for Stop time input dialog
-            tempDate = new HistDateChooser(calStop,lang);
-            buttonPressed = JOptionPane.showOptionDialog(this,tempDate,msgStop[lang],JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,null,null);
+            tempDate = new HistDateChooser(calStop);
+            buttonPressed = JOptionPane.showOptionDialog(this,tempDate,msgStop,JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,null,null);
             if (buttonPressed == JOptionPane.OK_OPTION){
             calStop=tempDate.getDate();
             }
@@ -657,22 +601,12 @@ public class HistSearch extends JFrame implements ActionListener
        this.dispose();
     }
     
-    if(e.getActionCommand()=="Svenska"){
-        lang=1;
-        updateText();
-    }
-    
-    if(e.getActionCommand()=="English"){
-        lang=0;
-        updateText();
-    }
-    
     }       
 
     private void doSearch(){
     lblCondition.setFont(new Font("SansSerif", Font.PLAIN, 14));
     lblCondition.setForeground(new Color(0x000000));
-    lblCondition.setText(evalSearch(lang));
+    lblCondition.setText(evalSearch());
     lblCondition.validate();
     this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     result.performSearch(root,currentSearch);
@@ -682,12 +616,23 @@ public class HistSearch extends JFrame implements ActionListener
     
     
     // Returns a string showing all search criteria and sets the currentSearch      
-    public String evalSearch(int lang){
+    public String evalSearch(){
     
-    //Useful words in english and swedish.
-    String[][] words ={{"All ", " Active", " Message", " Return", " Acknowlegement", " events"," with"," priority"," name"," text", " from "," to "," or"},
-               {"Alla", " Aktiv", " Meddelande", " Retur", " Kvittens", " händelser"," med"," prioritet"," namn"," text", " fr.o.m. ", " t.o.m. ", " eller"}};
-    String eval="<html>" + words[lang][0];
+	//Useful words in english and swedish.
+	String[] words ={JopLang.transl("All "), 
+			   JopLang.transl(" Active"), 
+			   JopLang.transl(" Message"), 
+			   JopLang.transl(" Return"), 
+			   JopLang.transl(" Acknowlegement"), 
+			   JopLang.transl(" events"),
+			   JopLang.transl(" with"),
+			   JopLang.transl(" priority"),
+			   JopLang.transl(" name"),
+			   JopLang.transl(" text"), 
+			   JopLang.transl(" from "),
+			   JopLang.transl(" to "),
+			   JopLang.transl(" or")};
+    String eval="<html>" + words[0];
     String temp="";
     boolean[] noCheck ={true,true};
     boolean[] typeSelected = {false,false,false,false};
@@ -697,26 +642,26 @@ public class HistSearch extends JFrame implements ActionListener
         if (type[i].isSelected()){
         typeSelected[i]=true;
         if (noCheck[0]) noCheck[0]=false;
-        else eval=eval+words[lang][12];
-        eval=eval + "<b>" +words[lang][i+1] + "</b>";
+        else eval=eval+words[12];
+        eval=eval + "<b>" +words[i+1] + "</b>";
         }
         if (priority[i].isSelected()){
         prioSelected[i]=true;
         if (noCheck[1]) noCheck[1]=false;
-        else temp=temp+words[lang][12];
+        else temp=temp+words[12];
         int charA =(int)'A';
         charA=charA+i;                          
         temp=temp + " <b>" + (char) charA + "</b>";
         }
     }
-    eval= eval + words[lang][5] + " ";
+    eval= eval + words[5] + " ";
     if (temp.length()>0) {
-        eval=eval+ words[lang][6] + temp + words[lang][7] ;
+        eval=eval+ words[6] + temp + words[7] ;
     }
     
-    eval=eval+"<br>"+words[lang][6]+words[lang][8]+" <b>"+txName.getText() +"</b><br>";
-    eval=eval+words[lang][6]+words[lang][9]+" <b>"+txText.getText() +"</b><br>";
-    eval=eval + words[lang][10] + "<b>"+ dateText(calStart)+ "</b>" + words[lang][11]  + "<b>" + dateText(calStop)+"</b> </html>";
+    eval=eval+"<br>"+words[6]+words[8]+" <b>"+txName.getText() +"</b><br>";
+    eval=eval+words[6]+words[9]+" <b>"+txText.getText() +"</b><br>";
+    eval=eval + words[10] + "<b>"+ dateText(calStart)+ "</b>" + words[11]  + "<b>" + dateText(calStop)+"</b> </html>";
     
     String nameFormatted= txName.getText().replace('"','*');
 	String textFormatted= txText.getText().replace('"','*');

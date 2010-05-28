@@ -108,6 +108,8 @@ public class MhFrame extends JFrame
     this.session = session;
     engine = session.getEngine();
     root = session.getRoot();
+    this.setTitle(JopLang.transl("Alarm and Event List"));
+
     init();
   }  
   

@@ -370,7 +370,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getSuperClass
 /*
  * Class:     jpwr_rt_Gdh
  * Method:    getObjectBodyDef
- * Signature: (ILjpwr/rt/PwrtObjid;)[Ljpwr/rt/GdhrsAttrDef;
+ * Signature: (ILjpwr/rt/PwrtAttrRef;)[Ljpwr/rt/GdhrsAttrDef;
  */
 JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Gdh_getObjectBodyDef
   (JNIEnv *, jobject, jint, jobject);

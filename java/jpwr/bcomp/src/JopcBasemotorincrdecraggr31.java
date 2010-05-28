@@ -82,7 +82,7 @@ public class JopcBasemotorincrdecraggr31 extends JopFrame implements JopUtilityI
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä×˜·Dað·Dað·p—uÄo˜·Kž· Cž·xŠµ¿ç¹•·Dað·Dað·x—u Cž·");
+    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
     engine.setAnimationScanTime( 200);
     engine.setScanTime( 500);
     size = new Dimension( 417, 541);
@@ -366,7 +366,7 @@ public class JopcBasemotorincrdecraggr31 extends JopFrame implements JopUtilityI
     pwr_mbopenobject11.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbopenobject11.dd, "$cmd(check method/method=\"Open Object\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbopenobject11.dd, "call method/method=\"Open Object\"/object=$object")
-      ,new GeDynTipText(pwr_mbopenobject11.dd, "Open Object")
+      ,new GeDynTipText(pwr_mbopenobject11.dd, JopLang.transl("Open Object"))
       });
     pwr_mbtrend12.dd.setDynType(129);
     pwr_mbtrend12.dd.setActionType(8256);
@@ -374,7 +374,7 @@ public class JopcBasemotorincrdecraggr31 extends JopFrame implements JopUtilityI
     pwr_mbtrend12.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbtrend12.dd, "$cmd(check method/method=\"Trend\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbtrend12.dd, "call method/method=\"Trend\"/object=$object")
-      ,new GeDynTipText(pwr_mbtrend12.dd, "Trend")
+      ,new GeDynTipText(pwr_mbtrend12.dd, JopLang.transl("Trend"))
       });
     pwr_mbfast13.dd.setDynType(129);
     pwr_mbfast13.dd.setActionType(8256);
@@ -382,7 +382,7 @@ public class JopcBasemotorincrdecraggr31 extends JopFrame implements JopUtilityI
     pwr_mbfast13.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbfast13.dd, "$cmd(check method/method=\"Fast\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbfast13.dd, "call method/method=\"Fast\"/object=$object")
-      ,new GeDynTipText(pwr_mbfast13.dd, "Fast")
+      ,new GeDynTipText(pwr_mbfast13.dd, JopLang.transl("Fast"))
       });
     pwr_mbphoto14.dd.setDynType(129);
     pwr_mbphoto14.dd.setActionType(8256);
@@ -390,7 +390,7 @@ public class JopcBasemotorincrdecraggr31 extends JopFrame implements JopUtilityI
     pwr_mbphoto14.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbphoto14.dd, "$cmd(check method/method=\"Photo\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbphoto14.dd, "call method/method=\"Photo\"/object=$object")
-      ,new GeDynTipText(pwr_mbphoto14.dd, "Photo")
+      ,new GeDynTipText(pwr_mbphoto14.dd, JopLang.transl("Photo"))
       });
     pwr_mbdatasheet15.dd.setDynType(129);
     pwr_mbdatasheet15.dd.setActionType(8256);
@@ -398,7 +398,7 @@ public class JopcBasemotorincrdecraggr31 extends JopFrame implements JopUtilityI
     pwr_mbdatasheet15.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbdatasheet15.dd, "$cmd(check method/method=\"DataSheet\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbdatasheet15.dd, "call method/method=\"DataSheet\"/object=$object")
-      ,new GeDynTipText(pwr_mbdatasheet15.dd, "DataSheet")
+      ,new GeDynTipText(pwr_mbdatasheet15.dd, JopLang.transl("DataSheet"))
       });
     pwr_mbopenplc16.dd.setDynType(129);
     pwr_mbopenplc16.dd.setActionType(8256);
@@ -406,7 +406,7 @@ public class JopcBasemotorincrdecraggr31 extends JopFrame implements JopUtilityI
     pwr_mbopenplc16.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbopenplc16.dd, "$cmd(check method/method=\"Open Plc\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbopenplc16.dd, "call method/method=\"Open Plc\"/object=$object")
-      ,new GeDynTipText(pwr_mbopenplc16.dd, "Open Plc")
+      ,new GeDynTipText(pwr_mbopenplc16.dd, JopLang.transl("Open Plc"))
       });
     pwr_mbcircuitdiagram17.dd.setDynType(129);
     pwr_mbcircuitdiagram17.dd.setActionType(8256);
@@ -414,7 +414,7 @@ public class JopcBasemotorincrdecraggr31 extends JopFrame implements JopUtilityI
     pwr_mbcircuitdiagram17.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbcircuitdiagram17.dd, "$cmd(check method/method=\"CircuitDiagram\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbcircuitdiagram17.dd, "call method/method=\"CircuitDiagram\"/object=$object")
-      ,new GeDynTipText(pwr_mbcircuitdiagram17.dd, "CircuitDiagram")
+      ,new GeDynTipText(pwr_mbcircuitdiagram17.dd, JopLang.transl("CircuitDiagram"))
       });
     pwr_mbrtnavigator18.dd.setDynType(129);
     pwr_mbrtnavigator18.dd.setActionType(8256);
@@ -422,7 +422,7 @@ public class JopcBasemotorincrdecraggr31 extends JopFrame implements JopUtilityI
     pwr_mbrtnavigator18.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbrtnavigator18.dd, "$cmd(check method/method=\"RtNavigator\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbrtnavigator18.dd, "call method/method=\"RtNavigator\"/object=$object")
-      ,new GeDynTipText(pwr_mbrtnavigator18.dd, "RtNavigator")
+      ,new GeDynTipText(pwr_mbrtnavigator18.dd, JopLang.transl("RtNavigator"))
       });
     pwr_mbhelpclass19.dd.setDynType(129);
     pwr_mbhelpclass19.dd.setActionType(8256);
@@ -430,7 +430,7 @@ public class JopcBasemotorincrdecraggr31 extends JopFrame implements JopUtilityI
     pwr_mbhelpclass19.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbhelpclass19.dd, "$cmd(check method/method=\"Help Class\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbhelpclass19.dd, "call method/method=\"Help Class\"/object=$object")
-      ,new GeDynTipText(pwr_mbhelpclass19.dd, "Help Class")
+      ,new GeDynTipText(pwr_mbhelpclass19.dd, JopLang.transl("Help Class"))
       });
     pwr_mbblockevents20.dd.setDynType(129);
     pwr_mbblockevents20.dd.setActionType(8256);
@@ -438,7 +438,7 @@ public class JopcBasemotorincrdecraggr31 extends JopFrame implements JopUtilityI
     pwr_mbblockevents20.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbblockevents20.dd, "$cmd(check method/method=\"Block Events...\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbblockevents20.dd, "call method/method=\"Block Events...\"/object=$object")
-      ,new GeDynTipText(pwr_mbblockevents20.dd, "Block Events")
+      ,new GeDynTipText(pwr_mbblockevents20.dd, JopLang.transl("Block Events"))
       });
     pwr_mbhistevent21.dd.setDynType(129);
     pwr_mbhistevent21.dd.setActionType(8256);
@@ -446,7 +446,7 @@ public class JopcBasemotorincrdecraggr31 extends JopFrame implements JopUtilityI
     pwr_mbhistevent21.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbhistevent21.dd, "$cmd(check method/method=\"Hist Event...\"/object=$object)",0)
       ,new GeDynCommand(pwr_mbhistevent21.dd, "call method/method=\"Hist Event...\"/object=$object")
-      ,new GeDynTipText(pwr_mbhistevent21.dd, "Hist Event")
+      ,new GeDynTipText(pwr_mbhistevent21.dd, JopLang.transl("Hist Event"))
       });
     pwr_mbnote22.dd.setDynType(129);
     pwr_mbnote22.dd.setActionType(8256);
@@ -454,7 +454,7 @@ public class JopcBasemotorincrdecraggr31 extends JopFrame implements JopUtilityI
     pwr_mbnote22.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbnote22.dd, "$cmd(check method/method=\"Note\"/object=$object)",0)
       ,new GeDynCommand(pwr_mbnote22.dd, "call method/method=\"Note\"/object=$object")
-      ,new GeDynTipText(pwr_mbnote22.dd, "Note")
+      ,new GeDynTipText(pwr_mbnote22.dd, JopLang.transl("Note"))
       });
     pwr_mbhelp23.dd.setDynType(128);
     pwr_mbhelp23.dd.setActionType(8256);
@@ -462,7 +462,7 @@ public class JopcBasemotorincrdecraggr31 extends JopFrame implements JopUtilityI
     pwr_mbhelp23.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbhelp23.dd, "$cmd(check method/method=\"Help\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbhelp23.dd, "call method/method=\"Help\"/object=$object")
-      ,new GeDynTipText(pwr_mbhelp23.dd, "Help")
+      ,new GeDynTipText(pwr_mbhelp23.dd, JopLang.transl("Help"))
       });
     pwr_indround24.dd.setDynType(133);
     pwr_indround24.dd.setActionType(0);
@@ -522,7 +522,7 @@ public class JopcBasemotorincrdecraggr31 extends JopFrame implements JopUtilityI
     pwr_pulldownmenu235.dd.setAccess(65535);
     pwr_pulldownmenu235.dd.setElements(new GeDynElemIfc[] {
       new GeDynPulldownMenu(pwr_pulldownmenu235.dd, new String[] {
-        "Print","Close",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
+        JopLang.transl("Print"),JopLang.transl("Close"),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
         new GeDyn[] {
             new GeDyn(pwr_pulldownmenu235,1,65,65535,new GeDynElemIfc[] {
       new GeDynCommand(pwr_pulldownmenu235.dd, "print graph/class/inst=$object")
@@ -539,7 +539,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_pulldownmenu236.dd.setAccess(65532);
     pwr_pulldownmenu236.dd.setElements(new GeDynElemIfc[] {
       new GeDynPulldownMenu(pwr_pulldownmenu236.dd, new String[] {
-        "Help","Help Class",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
+        JopLang.transl("Help"),JopLang.transl("Help Class"),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
         new GeDyn[] {
             new GeDyn(pwr_pulldownmenu236,1,65,65535,new GeDynElemIfc[] {
       new GeDynCommand(pwr_pulldownmenu236.dd, "call method/method=\"Help\"/object=$object")
@@ -556,7 +556,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_pulldownmenu237.dd.setAccess(65535);
     pwr_pulldownmenu237.dd.setElements(new GeDynElemIfc[] {
       new GeDynPulldownMenu(pwr_pulldownmenu237.dd, new String[] {
-        "ContactorIncr.Order Do",null,"ContactorIncr.Feedback Di","ContactorDecr.Order Do","ContactorDecr.Feedback Di",null,null,"Motor.TempSwitch.Switch Di","Motor.TempSensor.Value Ai",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
+        JopLang.transl("ContactorIncr.Order Do"),null,JopLang.transl("ContactorIncr.Feedback Di"),JopLang.transl("ContactorDecr.Order Do"),JopLang.transl("ContactorDecr.Feedback Di"),null,null,JopLang.transl("Motor.TempSwitch.Switch Di"),JopLang.transl("Motor.TempSensor.Value Ai"),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
         new GeDyn[] {
             new GeDyn(pwr_pulldownmenu237,1,65,65535,new GeDynElemIfc[] {
       new GeDynCommand(pwr_pulldownmenu237.dd, "open graph /class /inst=$object.ContactorIncr.Order")
@@ -589,7 +589,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_pulldownmenu238.dd.setAccess(65535);
     pwr_pulldownmenu238.dd.setElements(new GeDynElemIfc[] {
       new GeDynPulldownMenu(pwr_pulldownmenu238.dd, new String[] {
-        "Help","Note","Trend","Fast","Photo","DataSheet","Hist Event...","Block Events...","RtNavigator","Open  Object","Open Plc","CircuitDiagram","Help Class",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
+        JopLang.transl("Help"),JopLang.transl("Note"),JopLang.transl("Trend"),JopLang.transl("Fast"),JopLang.transl("Photo"),JopLang.transl("DataSheet"),JopLang.transl("Hist Event..."),JopLang.transl("Block Events..."),JopLang.transl("RtNavigator"),JopLang.transl("Open  Object"),JopLang.transl("Open Plc"),JopLang.transl("CircuitDiagram"),JopLang.transl("Help Class"),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
         new GeDyn[] {
             new GeDyn(pwr_pulldownmenu238,129,65,65535,new GeDynElemIfc[] {
       new GeDynInvisible(pwr_pulldownmenu238.dd, "$cmd(check method/method=\"Help\"/object=$object)",0)
@@ -652,7 +652,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_pulldownmenu239.dd.setAccess(65535);
     pwr_pulldownmenu239.dd.setElements(new GeDynElemIfc[] {
       new GeDynPulldownMenu(pwr_pulldownmenu239.dd, new String[] {
-        "ContactorIncr",null,"ContactorDecr",null,null,"Motor",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
+        JopLang.transl("ContactorIncr"),null,JopLang.transl("ContactorDecr"),null,null,JopLang.transl("Motor"),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
         new GeDyn[] {
             new GeDyn(pwr_pulldownmenu239,1,65,65535,new GeDynElemIfc[] {
       new GeDynCommand(pwr_pulldownmenu239.dd, "open graph /class /inst=$object.ContactorIncr")
@@ -695,7 +695,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbsimulate46.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbsimulate46.dd, "$cmd(check method/method=\"Simulate\"/object=$object)",0)
       ,new GeDynCommand(pwr_mbsimulate46.dd, "call method/method=\"Simulate\"/object=$object")
-      ,new GeDynTipText(pwr_mbsimulate46.dd, "Open simulate graph")
+      ,new GeDynTipText(pwr_mbsimulate46.dd, JopLang.transl("Open simulate graph"))
       });
     pwr_indsquare47.dd.setDynType(176);
     pwr_indsquare47.dd.setActionType(2);
@@ -839,7 +839,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbup73.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbup73.dd, "$cmd(check isattribute/object=$object)",0)
       ,new GeDynCommand(pwr_mbup73.dd, "open graph/class/parent/instance=$object")
-      ,new GeDynTipText(pwr_mbup73.dd, "Open parent object graph")
+      ,new GeDynTipText(pwr_mbup73.dd, JopLang.transl("Open parent object graph"))
       });
     engine.setFrameReady();
   }
@@ -935,7 +935,7 @@ class LocalPanel extends JPanel {
     new Polygon( new int[] { 246, 245, 245, 246}, new int[] { 216, 215, 271,272}, 4),
     new Polygon( new int[] { 246, 245, 21, 20}, new int[] { 272, 271, 271,272}, 4),
     new Polygon( new int[] { 20, 21, 21, 20}, new int[] { 272, 271, 147,146}, 4),
-    new Polygon( new int[] { 20, 21, -1220087290, -18}, new int[] { 146, 147, -1220087272,0}, 4),
+    new Polygon( new int[] { 20, 21, 140898197, -18}, new int[] { 146, 147, 144132311,0}, 4),
     new Line2D.Float( 136.003F, 270.604F, 136.003F, 165.628F),
     new Rectangle2D.Float(267F, 281F, 1F, 10F),
     new Line2D.Float( 267F, 281F, 267F, 291F),
@@ -1009,27 +1009,27 @@ class LocalPanel extends JPanel {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "Contactors",37, 316);
+    g.drawString( JopLang.transl("Contactors"),37, 316);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "Mode",47, 163);
+    g.drawString( JopLang.transl("Mode"),47, 163);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "Ready",256, 110);
+    g.drawString( JopLang.transl("Ready"),256, 110);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "Interlock",256, 131);
+    g.drawString( JopLang.transl("Interlock"),256, 131);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "Run",259, 259);
+    g.drawString( JopLang.transl("Run"),259, 259);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "Starts",257, 239);
+    g.drawString( JopLang.transl("Starts"),257, 239);
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
@@ -1065,11 +1065,11 @@ class LocalPanel extends JPanel {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "Down",177, 317);
+    g.drawString( JopLang.transl("Down"),177, 317);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "Up",113, 317);
+    g.drawString( JopLang.transl("Up"),113, 317);
     g.setStroke( new BasicStroke(1F, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
     g.setColor(GeColor.getColor(36, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
@@ -1095,11 +1095,11 @@ class LocalPanel extends JPanel {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "Down",167, 207);
+    g.drawString( JopLang.transl("Down"),167, 207);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "Up",167, 184);
+    g.drawString( JopLang.transl("Up"),167, 184);
     g.setStroke( new BasicStroke(1F, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
     g.setColor(GeColor.getColor(2, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
@@ -1163,7 +1163,7 @@ protected class pwr_valuesmall extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -1465,7 +1465,7 @@ protected class pwr_valuelong extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -1762,7 +1762,7 @@ protected class pwr_motor2 extends GeComponent {
     new Polygon( new int[] { 96, 95, 92, 92}, new int[] { 60, 59, 61,62}, 4),
     new Polygon( new int[] { 92, 92, 81, 80}, new int[] { 62, 61, 61,62}, 4),
     new Polygon( new int[] { 80, 81, 81, 80}, new int[] { 62, 61, 15,12}, 4),
-    new Polygon( new int[] { 80, 81, -1220087352, 55}, new int[] { 12, 15, -1220087354,53}, 4),
+    new Polygon( new int[] { 80, 81, -1219706424, 55}, new int[] { 12, 15, -1219706426,53}, 4),
     new Polygon( new int[] { 36, 36, 28, 28, 38, 40, 74, 76, 86, 86, 78, 78, 36}, new int[] {62, 68, 68, 72, 72, 70, 70, 72, 72, 68, 68, 62, 62}, 13),
     new Polygon( new int[] { 24, 22, 20, 20, 22, 24, 24}, new int[] {16, 16, 18, 56, 58, 58, 16}, 7),
     new Rectangle2D.Float(34F, 2F, 20F, 10F),
@@ -1791,7 +1791,7 @@ protected class pwr_motor2 extends GeComponent {
     new Polygon( new int[] { 96, 95, 92, 92}, new int[] { 60, 59, 61,62}, 4),
     new Polygon( new int[] { 92, 92, 81, 80}, new int[] { 62, 61, 61,62}, 4),
     new Polygon( new int[] { 80, 81, 81, 80}, new int[] { 62, 61, 15,12}, 4),
-    new Polygon( new int[] { 80, 81, -1220087352, 55}, new int[] { 12, 15, -1220087354,53}, 4),
+    new Polygon( new int[] { 80, 81, -1219706424, 55}, new int[] { 12, 15, -1219706426,53}, 4),
     new Line2D.Float( 20F, 36F, 2F, 36F),
   };
   public void paintComponent(Graphics g1) {
@@ -4324,7 +4324,7 @@ protected class pwr_smallbuttoncenter extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -6669,7 +6669,7 @@ protected class pwr_pulldownmenu2 extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -7753,7 +7753,7 @@ protected class pwr_motorman extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -8031,7 +8031,7 @@ protected class Grp166_ extends GeComponent {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "Local",2, 13);
+    g.drawString( JopLang.transl("Local"),2, 13);
     }
     if ( rounds == 2)
       g.setClip(null);
@@ -8143,7 +8143,7 @@ protected class Grp173_ extends GeComponent {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "Motor",2, 13);
+    g.drawString( JopLang.transl("Motor"),2, 13);
     }
     if ( rounds == 2)
       g.setClip(null);
@@ -8255,7 +8255,7 @@ protected class Grp190_ extends GeComponent {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "Limit switches",1, 13);
+    g.drawString( JopLang.transl("Limit switches"),1, 13);
     }
     if ( rounds == 2)
       g.setClip(null);
@@ -8367,7 +8367,7 @@ protected class Grp199_ extends GeComponent {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "Extern",2, 13);
+    g.drawString( JopLang.transl("Extern"),2, 13);
     }
     if ( rounds == 2)
       g.setClip(null);

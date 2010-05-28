@@ -2886,7 +2886,14 @@ void GlowExportJBean::text( int x0, int y0, char *text,
 "	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));" << endl <<
       // "    g.setColor(Color.black);" << endl <<
 "    g.setFont(new Font(\"Helvetica\", Font." << bold_str << ", " << 
-	text_size << "));" << endl <<
+	text_size << "));" << endl;
+      if ( ((GrowCtx *)ctx)->translate_on)
+	fp <<
+"    g.drawString( JopLang.transl(\"" << str_cnv( text) << "\")," << 
+	x0 - int(dim_x0) + glow_cJBean_Offset << ", " << 
+	y0 - int(dim_y0) + glow_cJBean_Offset << ");" << endl;
+      else
+	fp <<
 "    g.drawString( \"" << str_cnv( text) << "\"," << 
 	x0 - int(dim_x0) + glow_cJBean_Offset << ", " << 
 	y0 - int(dim_y0) + glow_cJBean_Offset << ");" << endl;
@@ -2966,8 +2973,14 @@ void GlowExportJBean::annot( int x0, int y0, int number,
       }
       fp <<
 "  int annot" << number << "Color = " << int(text_drawtype) << ";" << endl <<
-"  public String getAnnot" << number << "() { return annot" << number << ";}" << endl <<
-"  public void setAnnot" << number << "( String s) { annot" << number << " = s;}" << endl <<
+"  public String getAnnot" << number << "() { return annot" << number << ";}" << endl;
+      if ( ((GrowCtx *)ctx)->translate_on)
+ 	fp <<
+"  public void setAnnot" << number << "( String s) { annot" << number << " = JopLang.transl(s);}" << endl;
+      else
+ 	fp <<
+"  public void setAnnot" << number << "( String s) { annot" << number << " = s;}" << endl;
+      fp <<
 "  public void setAnnot" << number << "Font( Font font) { annot" << number << 
 	"Font = font;}" << endl <<
 "  public Font getAnnot" << number << "Font() { return annot" << number << 

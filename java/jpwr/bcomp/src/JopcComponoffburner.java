@@ -41,7 +41,7 @@ public class JopcComponoffburner extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä×˜·Dað·Dað·p—uÄo˜·Kž· Cž·xŠµ¿ç¹•·Dað·Dað·x—u Cž·");
+    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
     engine.setAnimationScanTime( 200);
     engine.setScanTime( 500);
     size = new Dimension( 409, 280);
@@ -135,7 +135,7 @@ public class JopcComponoffburner extends JopFrame implements JopUtilityIfc {
     pwr_pulldownmenu25.dd.setAccess(65535);
     pwr_pulldownmenu25.dd.setElements(new GeDynElemIfc[] {
       new GeDynPulldownMenu(pwr_pulldownmenu25.dd, new String[] {
-        "Print","Close",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
+        JopLang.transl("Print"),JopLang.transl("Close"),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
         new GeDyn[] {
             new GeDyn(pwr_pulldownmenu25,1,65,65535,new GeDynElemIfc[] {
       new GeDynCommand(pwr_pulldownmenu25.dd, "print graph/class/inst=$object")
@@ -152,7 +152,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_pulldownmenu26.dd.setAccess(65532);
     pwr_pulldownmenu26.dd.setElements(new GeDynElemIfc[] {
       new GeDynPulldownMenu(pwr_pulldownmenu26.dd, new String[] {
-        "Help Class",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
+        JopLang.transl("Help Class"),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
         new GeDyn[] {
             new GeDyn(pwr_pulldownmenu26,1,65,65535,new GeDynElemIfc[] {
       new GeDynCommand(pwr_pulldownmenu26.dd, "call method/method=\"Help Class\"/object=$object")
@@ -363,19 +363,19 @@ class LocalPanel extends JPanel {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "Mode",33, 159);
+    g.drawString( JopLang.transl("Mode"),33, 159);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "Status",36, 99);
+    g.drawString( JopLang.transl("Status"),36, 99);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "Man",180, 159);
+    g.drawString( JopLang.transl("Man"),180, 159);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "Executing",255, 98);
+    g.drawString( JopLang.transl("Executing"),255, 98);
     g.setTransform(save);
   }
   public Dimension getPreferredSize() { return size;}
@@ -676,7 +676,7 @@ protected class pwr_valuelong extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -992,7 +992,7 @@ protected class pwr_smallbuttoncenter extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -1272,7 +1272,7 @@ protected class pwr_pulldownmenu2 extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}

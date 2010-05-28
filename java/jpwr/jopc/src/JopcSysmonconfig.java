@@ -1,6 +1,7 @@
 package jpwr.jopc;
 import jpwr.rt.*;
 import jpwr.jop.*;
+import jpwr.jopc.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.*;
@@ -11,7 +12,7 @@ import java.awt.event.*;
 public class JopcSysmonconfig extends JopFrame implements JopUtilityIfc {
   JPanel contentPane;
   BorderLayout borderLayout1 = new BorderLayout();
-  LocalPanel localPanel = new LocalPanel();
+  public LocalPanel localPanel = new LocalPanel();
   boolean scrollbar = false;
   Dimension size;
   Grp60_	grp60_4;
@@ -58,7 +59,7 @@ public class JopcSysmonconfig extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "");
+    JopSpider.setSystemName( "ä'¢·D±ù·D±ù·p—uÄ¿¡·›§· “§·(q¦¿ç	Ÿ·D±ù·D±ù·x—u “§·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 712, 732);
@@ -532,20 +533,20 @@ class LocalPanel extends JPanel {
     }
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "ScanTime",19, 49);
+    g.setFont(new Font("Helvetica", Font.PLAIN, 12));
+    g.drawString( JopLang.transl("ScanTime"),19, 50);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "Status",18, 72);
+    g.setFont(new Font("Helvetica", Font.PLAIN, 12));
+    g.drawString( JopLang.transl("Status"),18, 73);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "LogMessage",18, 95);
+    g.setFont(new Font("Helvetica", Font.PLAIN, 12));
+    g.drawString( JopLang.transl("LogMessage"),18, 96);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "Description",19, 27);
+    g.setFont(new Font("Helvetica", Font.PLAIN, 12));
+    g.drawString( JopLang.transl("Description"),19, 28);
     g.setTransform(save);
   }
   public Dimension getPreferredSize() { return size;}
@@ -657,8 +658,13 @@ protected class pwr_indsquare extends GeComponent {
     {
     int fcolor = GeColor.getDrawtype(293, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
+    if ( gradient == GeGradient.eGradient_No) {
     g.setColor(GeColor.getColor( fcolor));
     g.fill( shapes[0]);
+    } else {
+    GeGradient.paint( g, gradient,2,-2,2F,2F,13.4831F,14.6067F, false,293, colorTone, colorShift, colorIntensity, colorInverse, fillColor, dimmed);
+    g.fill( shapes[0]);
+    }
     if ( shadow != 0) {
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
@@ -688,7 +694,7 @@ protected class pwr_valuelong extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -791,8 +797,13 @@ protected class pwr_valuelong extends GeComponent {
     {
     int fcolor = GeColor.getDrawtype(41, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
+    if ( gradient == GeGradient.eGradient_No) {
     g.setColor(GeColor.getColor( fcolor));
     g.fill( shapes[0]);
+    } else {
+    GeGradient.paint( g, gradient,2,-2,2F,2F,597.753F,15.7303F, false,41, colorTone, colorShift, colorIntensity, colorInverse, fillColor, dimmed);
+    g.fill( shapes[0]);
+    }
     if ( shadow != 0) {
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
@@ -832,7 +843,7 @@ protected class pwr_valuesmall extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -935,8 +946,13 @@ protected class pwr_valuesmall extends GeComponent {
     {
     int fcolor = GeColor.getDrawtype(41, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
+    if ( gradient == GeGradient.eGradient_No) {
     g.setColor(GeColor.getColor( fcolor));
     g.fill( shapes[0]);
+    } else {
+    GeGradient.paint( g, gradient,2,-2,2F,2F,51.6854F,15.7303F, false,41, colorTone, colorShift, colorIntensity, colorInverse, fillColor, dimmed);
+    g.fill( shapes[0]);
+    }
     if ( shadow != 0) {
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
@@ -4045,7 +4061,10 @@ protected class Grp184_ extends GeComponent {
     return JopUtility.GRAPH;
   }
   public PwrtObjid getUtilityObjid() {
-    return utilityAref.getObjid();
+    if ( utilityAref != null)
+      return utilityAref.getObjid();
+    else
+      return null;
   }
   public PwrtAttrRef getUtilityAttrRef() {
     return utilityAref;

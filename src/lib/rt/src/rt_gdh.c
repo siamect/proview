@@ -3151,6 +3151,7 @@ gdh_RefObjectInfoList (
       pwr_tAName an;
       pwr_tOid oid;
       char *s;
+      pwr_tStatus lsts;
 
       dl = 0;
 
@@ -3158,8 +3159,8 @@ gdh_RefObjectInfoList (
       strcpy( an, objrefp->fullname);
       if ( (s = strchr( an, '.'))) {
 	*s = 0;
-	sts = gdh_NameToObjid( an, &oid);
-	if ( ODD(sts)) {
+	lsts = gdh_NameToObjid( an, &oid);
+	if ( ODD(lsts)) {
 	  gdh_GetObjectLocation(oid, &dl);
 	  if ( dl) {
 	    rsts = sts;

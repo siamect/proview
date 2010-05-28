@@ -92,7 +92,8 @@ System.out.println( "qcom put finished");
     	"/NAME", "/VALUE", "/BYPASS"}),
     new CliTable( "EXAMPLE", new String[] {"/NAME", "/HIERARCHY"}),
     new CliTable( "CHECK", new String[] {"cli_arg1", "/METHOD", "/OBJECT"}),
-    new CliTable( "CALL", new String[] {"cli_arg1", "/METHOD", "/OBJECT"}) 
+    new CliTable( "CALL", new String[] {"cli_arg1", "/METHOD", "/OBJECT"}),
+    new CliTable( "SET", new String[] {"cli_arg1", "dcli_arg2"}) 
   };
 
   static int command( JopSession session, String cmd) {
@@ -321,9 +322,15 @@ System.out.println( "qcom put finished");
                 if ( urlValue.startsWith("pwrb_") ||
 		     urlValue.startsWith("pwrs_") ||
 		     urlValue.startsWith("nmps_") ||
-		     urlValue.startsWith("ssab_"))
+		     urlValue.startsWith("profibus_") ||
+		     urlValue.startsWith("otherio_") ||
+		     urlValue.startsWith("opc_") ||
+		     urlValue.startsWith("basecomponent_") ||
+		     urlValue.startsWith("abb_") ||
+		     urlValue.startsWith("siemens_") ||
+		     urlValue.startsWith("ssabox_"))
 	          // Object reference manual
-		  urlValue = "$pwr_doc/orm/" + urlValue;
+		  urlValue = "$pwr_doc/" + session.getLang() + "/orm/" + urlValue;
 
 	        openURL( session, urlValue, true, null);
 	      }
@@ -359,7 +366,13 @@ System.out.println( "qcom put finished");
 	    if ( fileName.startsWith("pwrb_") ||
 		 fileName.startsWith("pwrs_") ||
 		 fileName.startsWith("nmps_") ||
-		 fileName.startsWith("ssab_"))
+		 fileName.startsWith("profibus_") ||
+		 fileName.startsWith("otherio_") ||
+		 fileName.startsWith("opc_") ||
+		 fileName.startsWith("basecomponent_") ||
+		 fileName.startsWith("abb_") ||
+		 fileName.startsWith("siemens_") ||
+		 fileName.startsWith("ssabox_"))
 	      // Object reference manual
 	      fileName = "$pwr_doc/orm/" + fileName;
 
@@ -564,6 +577,31 @@ System.out.println( "qcom put finished");
 
 	    methods.callMethod( method);
 	    System.out.println( "Cmd call method: " + method + " , Object: " + object);
+	    return 1;
+	  }
+
+	}
+      }
+      else if ( command.equals("SET")) {
+        if ( cli.qualifierFound("cli_arg1")) {
+
+          String parameter = "LANGUAGE";
+          String cli_arg1 = cli.getQualValue("cli_arg1").toUpperCase();
+          if ( parameter.length() >= cli_arg1.length() &&
+               parameter.substring(0,cli_arg1.length()).equals(cli_arg1)) {
+            // Command is "SET LANGUAGE"
+	    String cli_arg2;
+
+            if ( cli.qualifierFound("cli_arg2"))
+	      cli_arg2 = cli.getQualValue("cli_arg2");
+	    else {
+              System.out.println( "Cmd: Language is missing\n");
+              return 0;
+            }
+
+	    JopLang lng = new JopLang(session);
+	    lng.set( cli_arg2);
+	    JopLang.setDefault( lng);
 	    return 1;
 	  }
 

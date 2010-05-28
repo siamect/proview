@@ -74,7 +74,7 @@ public class JopcBasec3wayvalve3 extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä×˜·Dað·Dað·p—uÄo˜·Kž· Cž·xŠµ¿ç¹•·Dað·Dað·x—u Cž·");
+    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 539, 733);
@@ -311,7 +311,7 @@ public class JopcBasec3wayvalve3 extends JopFrame implements JopUtilityIfc {
     pwr_pulldownmenu27.dd.setAccess(65535);
     pwr_pulldownmenu27.dd.setElements(new GeDynElemIfc[] {
       new GeDynPulldownMenu(pwr_pulldownmenu27.dd, new String[] {
-        "Print","Close",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
+        JopLang.transl("Print"),JopLang.transl("Close"),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
         new GeDyn[] {
             new GeDyn(pwr_pulldownmenu27,1,65,65535,new GeDynElemIfc[] {
       new GeDynCommand(pwr_pulldownmenu27.dd, "print graph/class/inst=$object")
@@ -328,7 +328,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_pulldownmenu28.dd.setAccess(65532);
     pwr_pulldownmenu28.dd.setElements(new GeDynElemIfc[] {
       new GeDynPulldownMenu(pwr_pulldownmenu28.dd, new String[] {
-        "Help","Help Class",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
+        JopLang.transl("Help"),JopLang.transl("Help Class"),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
         new GeDyn[] {
             new GeDyn(pwr_pulldownmenu28,1,65,65535,new GeDynElemIfc[] {
       new GeDynCommand(pwr_pulldownmenu28.dd, "call method/method=\"Help\"/object=$object")
@@ -346,7 +346,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbopenobject9.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbopenobject9.dd, "$cmd(check method/method=\"Open Object\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbopenobject9.dd, "call method/method=\"Open Object\"/object=$object")
-      ,new GeDynTipText(pwr_mbopenobject9.dd, "Open Object")
+      ,new GeDynTipText(pwr_mbopenobject9.dd, JopLang.transl("Open Object"))
       });
     pwr_mbtrend10.dd.setDynType(129);
     pwr_mbtrend10.dd.setActionType(8256);
@@ -354,7 +354,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbtrend10.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbtrend10.dd, "$cmd(check method/method=\"Trend\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbtrend10.dd, "call method/method=\"Trend\"/object=$object")
-      ,new GeDynTipText(pwr_mbtrend10.dd, "Trend")
+      ,new GeDynTipText(pwr_mbtrend10.dd, JopLang.transl("Trend"))
       });
     pwr_mbfast11.dd.setDynType(129);
     pwr_mbfast11.dd.setActionType(8256);
@@ -362,7 +362,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbfast11.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbfast11.dd, "$cmd(check method/method=\"Fast\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbfast11.dd, "call method/method=\"Fast\"/object=$object")
-      ,new GeDynTipText(pwr_mbfast11.dd, "Fast")
+      ,new GeDynTipText(pwr_mbfast11.dd, JopLang.transl("Fast"))
       });
     pwr_mbphoto12.dd.setDynType(129);
     pwr_mbphoto12.dd.setActionType(8256);
@@ -370,7 +370,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbphoto12.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbphoto12.dd, "$cmd(check method/method=\"Photo\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbphoto12.dd, "call method/method=\"Photo\"/object=$object")
-      ,new GeDynTipText(pwr_mbphoto12.dd, "Photo")
+      ,new GeDynTipText(pwr_mbphoto12.dd, JopLang.transl("Photo"))
       });
     pwr_mbdatasheet13.dd.setDynType(129);
     pwr_mbdatasheet13.dd.setActionType(8256);
@@ -378,7 +378,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbdatasheet13.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbdatasheet13.dd, "$cmd(check method/method=\"DataSheet\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbdatasheet13.dd, "call method/method=\"DataSheet\"/object=$object")
-      ,new GeDynTipText(pwr_mbdatasheet13.dd, "DataSheet")
+      ,new GeDynTipText(pwr_mbdatasheet13.dd, JopLang.transl("DataSheet"))
       });
     pwr_mbopenplc14.dd.setDynType(129);
     pwr_mbopenplc14.dd.setActionType(8256);
@@ -386,7 +386,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbopenplc14.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbopenplc14.dd, "$cmd(check method/method=\"Open Plc\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbopenplc14.dd, "call method/method=\"Open Plc\"/object=$object")
-      ,new GeDynTipText(pwr_mbopenplc14.dd, "Open Plc")
+      ,new GeDynTipText(pwr_mbopenplc14.dd, JopLang.transl("Open Plc"))
       });
     pwr_mbcircuitdiagram15.dd.setDynType(129);
     pwr_mbcircuitdiagram15.dd.setActionType(8256);
@@ -394,7 +394,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbcircuitdiagram15.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbcircuitdiagram15.dd, "$cmd(check method/method=\"CircuitDiagram\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbcircuitdiagram15.dd, "call method/method=\"CircuitDiagram\"/object=$object")
-      ,new GeDynTipText(pwr_mbcircuitdiagram15.dd, "CircuitDiagram")
+      ,new GeDynTipText(pwr_mbcircuitdiagram15.dd, JopLang.transl("CircuitDiagram"))
       });
     pwr_mbrtnavigator16.dd.setDynType(129);
     pwr_mbrtnavigator16.dd.setActionType(8256);
@@ -402,7 +402,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbrtnavigator16.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbrtnavigator16.dd, "$cmd(check method/method=\"RtNavigator\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbrtnavigator16.dd, "call method/method=\"RtNavigator\"/object=$object")
-      ,new GeDynTipText(pwr_mbrtnavigator16.dd, "RtNavigator")
+      ,new GeDynTipText(pwr_mbrtnavigator16.dd, JopLang.transl("RtNavigator"))
       });
     pwr_mbhelpclass17.dd.setDynType(129);
     pwr_mbhelpclass17.dd.setActionType(8256);
@@ -410,7 +410,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbhelpclass17.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbhelpclass17.dd, "$cmd(check method/method=\"Help Class\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbhelpclass17.dd, "call method/method=\"Help Class\"/object=$object")
-      ,new GeDynTipText(pwr_mbhelpclass17.dd, "Help Class")
+      ,new GeDynTipText(pwr_mbhelpclass17.dd, JopLang.transl("Help Class"))
       });
     pwr_mbblockevents18.dd.setDynType(129);
     pwr_mbblockevents18.dd.setActionType(8256);
@@ -418,7 +418,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbblockevents18.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbblockevents18.dd, "$cmd(check method/method=\"Block Events...\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbblockevents18.dd, "call method/method=\"Block Events...\"/object=$object")
-      ,new GeDynTipText(pwr_mbblockevents18.dd, "Block Events")
+      ,new GeDynTipText(pwr_mbblockevents18.dd, JopLang.transl("Block Events"))
       });
     pwr_mbhistevent19.dd.setDynType(129);
     pwr_mbhistevent19.dd.setActionType(8256);
@@ -426,7 +426,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbhistevent19.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbhistevent19.dd, "$cmd(check method/method=\"Hist Event...\"/object=$object)",0)
       ,new GeDynCommand(pwr_mbhistevent19.dd, "call method/method=\"Hist Event...\"/object=$object")
-      ,new GeDynTipText(pwr_mbhistevent19.dd, "Hist Event")
+      ,new GeDynTipText(pwr_mbhistevent19.dd, JopLang.transl("Hist Event"))
       });
     pwr_mbnote20.dd.setDynType(129);
     pwr_mbnote20.dd.setActionType(8256);
@@ -434,7 +434,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbnote20.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbnote20.dd, "$cmd(check method/method=\"Note\"/object=$object)",0)
       ,new GeDynCommand(pwr_mbnote20.dd, "call method/method=\"Note\"/object=$object")
-      ,new GeDynTipText(pwr_mbnote20.dd, "Note")
+      ,new GeDynTipText(pwr_mbnote20.dd, JopLang.transl("Note"))
       });
     pwr_mbhelp21.dd.setDynType(128);
     pwr_mbhelp21.dd.setActionType(8256);
@@ -442,7 +442,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbhelp21.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbhelp21.dd, "$cmd(check method/method=\"Help\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbhelp21.dd, "call method/method=\"Help\"/object=$object")
-      ,new GeDynTipText(pwr_mbhelp21.dd, "Help")
+      ,new GeDynTipText(pwr_mbhelp21.dd, JopLang.transl("Help"))
       });
     pwr_smallbuttoncenter22.dd.setDynType(128);
     pwr_smallbuttoncenter22.dd.setActionType(64);
@@ -483,7 +483,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_pulldownmenu228.dd.setAccess(65535);
     pwr_pulldownmenu228.dd.setElements(new GeDynElemIfc[] {
       new GeDynPulldownMenu(pwr_pulldownmenu228.dd, new String[] {
-        "Order Ao",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
+        JopLang.transl("Order Ao"),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
         new GeDyn[] {
             new GeDyn(pwr_pulldownmenu228,1,65,65535,new GeDynElemIfc[] {
       new GeDynCommand(pwr_pulldownmenu228.dd, "open graph /class /inst=$object.Actuator.Order")
@@ -497,7 +497,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_pulldownmenu229.dd.setAccess(65535);
     pwr_pulldownmenu229.dd.setElements(new GeDynElemIfc[] {
       new GeDynPulldownMenu(pwr_pulldownmenu229.dd, new String[] {
-        "Help","Note","Trend","Fast","Photo","DataSheet","Hist Event...","Block Events...","RtNavigator","Open  Object","Open Plc","CircuitDiagram","Help Class",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
+        JopLang.transl("Help"),JopLang.transl("Note"),JopLang.transl("Trend"),JopLang.transl("Fast"),JopLang.transl("Photo"),JopLang.transl("DataSheet"),JopLang.transl("Hist Event..."),JopLang.transl("Block Events..."),JopLang.transl("RtNavigator"),JopLang.transl("Open  Object"),JopLang.transl("Open Plc"),JopLang.transl("CircuitDiagram"),JopLang.transl("Help Class"),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
         new GeDyn[] {
             new GeDyn(pwr_pulldownmenu229,129,65,65535,new GeDynElemIfc[] {
       new GeDynInvisible(pwr_pulldownmenu229.dd, "$cmd(check method/method=\"Help\"/object=$object)",0)
@@ -617,7 +617,7 @@ null)
     pwr_mbsimulate47.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbsimulate47.dd, "$cmd(check method/method=\"Simulate\"/object=$object)",0)
       ,new GeDynCommand(pwr_mbsimulate47.dd, "call method/method=\"Simulate\"/object=$object")
-      ,new GeDynTipText(pwr_mbsimulate47.dd, "Open simulate graph")
+      ,new GeDynTipText(pwr_mbsimulate47.dd, JopLang.transl("Open simulate graph"))
       });
     pwr_actuator48.dd.setDynType(1);
     pwr_actuator48.dd.setActionType(66);
@@ -631,7 +631,7 @@ null)
     pwr_pulldownmenu251.dd.setAccess(65535);
     pwr_pulldownmenu251.dd.setElements(new GeDynElemIfc[] {
       new GeDynPulldownMenu(pwr_pulldownmenu251.dd, new String[] {
-        "Actuator","Valve",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
+        JopLang.transl("Actuator"),JopLang.transl("Valve"),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
         new GeDyn[] {
             new GeDyn(pwr_pulldownmenu251,1,65,65535,new GeDynElemIfc[] {
       new GeDynCommand(pwr_pulldownmenu251.dd, "open graph /class /inst=$object.Actuator")
@@ -697,7 +697,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbup62.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbup62.dd, "$cmd(check isattribute/object=$object)",0)
       ,new GeDynCommand(pwr_mbup62.dd, "open graph/class/parent/instance=$object")
-      ,new GeDynTipText(pwr_mbup62.dd, "Open parent object graph")
+      ,new GeDynTipText(pwr_mbup62.dd, JopLang.transl("Open parent object graph"))
       });
     pwr_indsquare64.dd.setDynType(5);
     pwr_indsquare64.dd.setActionType(0);
@@ -890,11 +890,11 @@ class LocalPanel extends JPanel {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "Order",346, 119);
+    g.drawString( JopLang.transl("Order"),346, 119);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "%",300, 165);
+    g.drawString( JopLang.transl("%"),300, 165);
     g.setStroke( new BasicStroke(1F, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
     g.setColor(GeColor.getColor(32, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
@@ -914,15 +914,15 @@ class LocalPanel extends JPanel {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "Mode",38, 324);
+    g.drawString( JopLang.transl("Mode"),38, 324);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "Actuator",98, 500);
+    g.drawString( JopLang.transl("Actuator"),98, 500);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "Valve",98, 601);
+    g.drawString( JopLang.transl("Valve"),98, 601);
     {
     int fcolor = GeColor.getDrawtype(74, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
@@ -984,7 +984,7 @@ class LocalPanel extends JPanel {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 10));
-    g.drawString( "Supervision disabled",37, 272);
+    g.drawString( JopLang.transl("Supervision disabled"),37, 272);
     g.setStroke( new BasicStroke(7F, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
     g.setColor(GeColor.getColor(74, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
@@ -1068,7 +1068,7 @@ protected class pwr_smallbuttoncenter extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -1397,7 +1397,7 @@ protected class pwr_base3wayvalve extends GeComponent {
     new Polygon( new int[] { 16, 17, 17, 16}, new int[] { 54, 55, 58,60}, 4),
     new Polygon( new int[] { 16, 17, 9, 6}, new int[] { 60, 58, 53,54}, 4),
     new Polygon( new int[] { 6, 9, 9, 6}, new int[] { 54, 53, 50,48}, 4),
-    new Polygon( new int[] { 6, 9, 146000347, 59}, new int[] { 48, 50, 144032797,-2}, 4),
+    new Polygon( new int[] { 6, 9, 59, 59}, new int[] { 48, 50, 438,-2}, 4),
     new Polygon( new int[] { 6, 14, 16, 16, 14, 6, 6}, new int[] {34, 38, 36, 42, 42, 38, 34}, 7),
     new Polygon( new int[] { 58, 50, 48, 48, 50, 58, 58}, new int[] {34, 30, 28, 34, 34, 38, 34}, 7),
     new Polygon( new int[] { 48, 42, 42, 40, 38, 38, 42, 42, 46, 48, 48}, new int[] {22, 22, 66, 66, 68, 78, 78, 68, 68, 66, 22}, 11),
@@ -1435,7 +1435,7 @@ protected class pwr_base3wayvalve extends GeComponent {
     new Polygon( new int[] { 46, 47, 43, 42}, new int[] { 20, 23, 23,20}, 4),
     new Polygon( new int[] { 42, 43, 39, 38}, new int[] { 20, 23, 21,18}, 4),
     new Polygon( new int[] { 38, 39, 29, 26}, new int[] { 18, 21, 21,18}, 4),
-    new Polygon( new int[] { 26, 29, -1220087348, 59}, new int[] { 18, 21, -1220087410,-2147483648}, 4),
+    new Polygon( new int[] { 26, 29, -1219706420, 59}, new int[] { 18, 21, -1219706482,-2147483648}, 4),
     new Rectangle2D.Float(2F, 50F, 4F, 8F),
     new Polygon( new int[] { 2, 6, 6, 2, 2, 2}, new int[] { 50, 50, 50, 50, 58, 58}, 6), 
     new Polygon( new int[] { 6, 6, 6, 6, 2, 2}, new int[] { 58, 50, 50, 58, 58, 58}, 6), 
@@ -2139,7 +2139,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 16, 17, 17, 16}, new int[] { 54, 55, 58,60}, 4),
     new Polygon( new int[] { 16, 17, 9, 6}, new int[] { 60, 58, 53,54}, 4),
     new Polygon( new int[] { 6, 9, 9, 6}, new int[] { 54, 53, 50,48}, 4),
-    new Polygon( new int[] { 6, 9, 146000347, 59}, new int[] { 48, 50, 144032797,-2}, 4),
+    new Polygon( new int[] { 6, 9, 145590667, 59}, new int[] { 48, 50, -1219706474,-2}, 4),
     new Polygon( new int[] { 6, 14, 16, 16, 14, 6, 6}, new int[] {34, 38, 36, 42, 42, 38, 34}, 7),
     new Polygon( new int[] { 58, 50, 48, 48, 50, 58, 58}, new int[] {34, 30, 28, 34, 34, 38, 34}, 7),
     new Polygon( new int[] { 48, 42, 42, 40, 38, 38, 42, 42, 46, 48, 48}, new int[] {22, 22, 66, 66, 68, 78, 78, 68, 68, 66, 22}, 11),
@@ -2177,7 +2177,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 46, 47, 43, 42}, new int[] { 20, 23, 23,20}, 4),
     new Polygon( new int[] { 42, 43, 39, 38}, new int[] { 20, 23, 21,18}, 4),
     new Polygon( new int[] { 38, 39, 29, 26}, new int[] { 18, 21, 21,18}, 4),
-    new Polygon( new int[] { 26, 29, -1220087348, 59}, new int[] { 18, 21, -1220087410,-2147483648}, 4),
+    new Polygon( new int[] { 26, 29, -1219706420, 59}, new int[] { 18, 21, -1219706482,-2147483648}, 4),
     new Rectangle2D.Float(2F, 50F, 4F, 8F),
     new Polygon( new int[] { 2, 6, 6, 2, 2, 2}, new int[] { 50, 50, 50, 50, 58, 58}, 6), 
     new Polygon( new int[] { 6, 6, 6, 6, 2, 2}, new int[] { 58, 50, 50, 58, 58, 58}, 6), 
@@ -2274,7 +2274,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 16, 17, 17, 16}, new int[] { 54, 55, 58,60}, 4),
     new Polygon( new int[] { 16, 17, 9, 6}, new int[] { 60, 58, 53,54}, 4),
     new Polygon( new int[] { 6, 9, 9, 6}, new int[] { 54, 53, 50,48}, 4),
-    new Polygon( new int[] { 6, 9, 146000347, 59}, new int[] { 48, 50, 144032797,-2}, 4),
+    new Polygon( new int[] { 6, 9, 145590667, 59}, new int[] { 48, 50, -1219706474,-2}, 4),
     new Polygon( new int[] { 6, 14, 16, 16, 14, 6, 6}, new int[] {34, 38, 36, 42, 42, 38, 34}, 7),
     new Polygon( new int[] { 58, 50, 48, 48, 50, 58, 58}, new int[] {34, 30, 28, 34, 34, 38, 34}, 7),
     new Polygon( new int[] { 48, 42, 42, 40, 38, 38, 42, 42, 46, 48, 48}, new int[] {22, 22, 66, 66, 68, 78, 78, 68, 68, 66, 22}, 11),
@@ -2288,7 +2288,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 42, 43, 48, 46}, new int[] { 68, 67, 67,68}, 4),
     new Polygon( new int[] { 46, 48, 49, 48}, new int[] { 68, 67, 66,66}, 4),
     new Polygon( new int[] { 48, 49, 49, 48}, new int[] { 66, 66, 23,22}, 4),
-    new Polygon( new int[] { 48, 49, 140857091, 59}, new int[] { 22, 23, 145495205,-2}, 4),
+    new Polygon( new int[] { 48, 49, 140893379, 59}, new int[] { 22, 23, 144132309,-2}, 4),
     new Polygon( new int[] { 48, 22, 22, 16, 16, 18, 22, 26, 38, 42, 46, 48}, new int[] {22, 22, 66, 66, 22, 20, 20, 18, 18, 20, 20, 22}, 12),
     new Polygon( new int[] { 48, 45, 22, 22}, new int[] { 22, 20, 20,22}, 4),
     new Polygon( new int[] { 22, 22, 22, 22}, new int[] { 22, 20, 64,66}, 4),
@@ -2301,7 +2301,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 38, 40, 44, 42}, new int[] { 18, 20, 22,20}, 4),
     new Polygon( new int[] { 42, 44, 47, 46}, new int[] { 20, 22, 22,20}, 4),
     new Polygon( new int[] { 46, 47, 45, 48}, new int[] { 20, 22, 20,22}, 4),
-    new Polygon( new int[] { 48, 45, 996, 59}, new int[] { 22, 20, -1220087410,-2147483648}, 4),
+    new Polygon( new int[] { 48, 45, 1124, 59}, new int[] { 22, 20, -1219706482,-2147483648}, 4),
     new Rectangle2D.Float(22F, 68F, 4F, 10F),
     new Polygon( new int[] { 22, 26, 26, 22, 22, 22}, new int[] { 68, 68, 68, 68, 78, 78}, 6), 
     new Polygon( new int[] { 26, 26, 26, 26, 22, 22}, new int[] { 78, 68, 68, 78, 78, 78}, 6), 
@@ -2335,7 +2335,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 46, 47, 43, 42}, new int[] { 20, 23, 23,20}, 4),
     new Polygon( new int[] { 42, 43, 39, 38}, new int[] { 20, 23, 21,18}, 4),
     new Polygon( new int[] { 38, 39, 29, 26}, new int[] { 18, 21, 21,18}, 4),
-    new Polygon( new int[] { 26, 29, -1220087348, 59}, new int[] { 18, 21, -1220087410,-2147483648}, 4),
+    new Polygon( new int[] { 26, 29, -1219706420, 59}, new int[] { 18, 21, -1219706482,-2147483648}, 4),
     new Rectangle2D.Float(2F, 50F, 4F, 8F),
     new Polygon( new int[] { 2, 6, 6, 2, 2, 2}, new int[] { 50, 50, 50, 50, 58, 58}, 6), 
     new Polygon( new int[] { 6, 6, 6, 6, 2, 2}, new int[] { 58, 50, 50, 58, 58, 58}, 6), 
@@ -2387,7 +2387,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 24, 29, 29, 24}, new int[] { 26, 29, 50,45}, 4),
     new Polygon( new int[] { 24, 29, 11, 6}, new int[] { 45, 50, 41,36}, 4),
     new Polygon( new int[] { 6, 11, 11, 6}, new int[] { 36, 41, 50,52}, 4),
-    new Polygon( new int[] { 6, 11, 996, 59}, new int[] { 52, 50, -1220087410,-2147483648}, 4),
+    new Polygon( new int[] { 6, 11, 1124, 59}, new int[] { 52, 50, -1219706482,-2147483648}, 4),
     new Polygon( new int[] { 31, 31, 26, 26, 31, 33, 38, 38, 33, 33, 31}, new int[] {26, 41, 44, 46, 43, 43, 46, 44, 41, 26, 26}, 11),
     new Polygon( new int[] { 31, 34, 34, 31}, new int[] { 26, 27, 42,41}, 4),
     new Polygon( new int[] { 31, 34, 29, 26}, new int[] { 41, 42, 45,44}, 4),
@@ -2399,7 +2399,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 38, 39, 34, 33}, new int[] { 44, 45, 42,41}, 4),
     new Polygon( new int[] { 33, 34, 34, 33}, new int[] { 41, 42, 27,26}, 4),
     new Polygon( new int[] { 33, 34, 34, 31}, new int[] { 26, 27, 27,26}, 4),
-    new Polygon( new int[] { 31, 34, 140857091, 59}, new int[] { 26, 27, 145495205,-2}, 4),
+    new Polygon( new int[] { 31, 34, 140893379, 59}, new int[] { 26, 27, 144132309,-2}, 4),
     new Rectangle2D.Float(24F, 44F, 2F, 18F),
     new Polygon( new int[] { 24, 26, 26, 24, 24, 24}, new int[] { 44, 44, 44, 44, 62, 62}, 6), 
     new Polygon( new int[] { 26, 26, 26, 26, 24, 24}, new int[] { 62, 44, 44, 62, 62, 62}, 6), 
@@ -2459,7 +2459,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 16, 17, 17, 16}, new int[] { 54, 55, 58,60}, 4),
     new Polygon( new int[] { 16, 17, 9, 6}, new int[] { 60, 58, 53,54}, 4),
     new Polygon( new int[] { 6, 9, 9, 6}, new int[] { 54, 53, 50,48}, 4),
-    new Polygon( new int[] { 6, 9, 146000347, 59}, new int[] { 48, 50, 144032797,-2}, 4),
+    new Polygon( new int[] { 6, 9, 145590667, 59}, new int[] { 48, 50, -1219706474,-2}, 4),
     new Polygon( new int[] { 6, 14, 16, 16, 14, 6, 6}, new int[] {34, 38, 36, 42, 42, 38, 34}, 7),
     new Polygon( new int[] { 58, 50, 48, 48, 50, 58, 58}, new int[] {34, 30, 28, 34, 34, 38, 34}, 7),
     new Polygon( new int[] { 48, 42, 42, 40, 38, 38, 42, 42, 46, 48, 48}, new int[] {22, 22, 66, 66, 68, 78, 78, 68, 68, 66, 22}, 11),
@@ -2473,7 +2473,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 42, 43, 48, 46}, new int[] { 68, 67, 67,68}, 4),
     new Polygon( new int[] { 46, 48, 49, 48}, new int[] { 68, 67, 66,66}, 4),
     new Polygon( new int[] { 48, 49, 49, 48}, new int[] { 66, 66, 23,22}, 4),
-    new Polygon( new int[] { 48, 49, 140857091, 59}, new int[] { 22, 23, 145495205,-2}, 4),
+    new Polygon( new int[] { 48, 49, 140893379, 59}, new int[] { 22, 23, 144132309,-2}, 4),
     new Polygon( new int[] { 48, 22, 22, 16, 16, 18, 22, 26, 38, 42, 46, 48}, new int[] {22, 22, 66, 66, 22, 20, 20, 18, 18, 20, 20, 22}, 12),
     new Polygon( new int[] { 48, 45, 22, 22}, new int[] { 22, 20, 20,22}, 4),
     new Polygon( new int[] { 22, 22, 22, 22}, new int[] { 22, 20, 64,66}, 4),
@@ -2486,7 +2486,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 38, 40, 44, 42}, new int[] { 18, 20, 22,20}, 4),
     new Polygon( new int[] { 42, 44, 47, 46}, new int[] { 20, 22, 22,20}, 4),
     new Polygon( new int[] { 46, 47, 45, 48}, new int[] { 20, 22, 20,22}, 4),
-    new Polygon( new int[] { 48, 45, 996, 59}, new int[] { 22, 20, -1220087410,-2147483648}, 4),
+    new Polygon( new int[] { 48, 45, 1124, 59}, new int[] { 22, 20, -1219706482,-2147483648}, 4),
     new Rectangle2D.Float(22F, 68F, 4F, 10F),
     new Polygon( new int[] { 22, 26, 26, 22, 22, 22}, new int[] { 68, 68, 68, 68, 78, 78}, 6), 
     new Polygon( new int[] { 26, 26, 26, 26, 22, 22}, new int[] { 78, 68, 68, 78, 78, 78}, 6), 
@@ -2520,7 +2520,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 46, 47, 43, 42}, new int[] { 20, 23, 23,20}, 4),
     new Polygon( new int[] { 42, 43, 39, 38}, new int[] { 20, 23, 21,18}, 4),
     new Polygon( new int[] { 38, 39, 29, 26}, new int[] { 18, 21, 21,18}, 4),
-    new Polygon( new int[] { 26, 29, -1220087348, 59}, new int[] { 18, 21, -1220087410,-2147483648}, 4),
+    new Polygon( new int[] { 26, 29, -1219706420, 59}, new int[] { 18, 21, -1219706482,-2147483648}, 4),
     new Rectangle2D.Float(2F, 50F, 4F, 8F),
     new Polygon( new int[] { 2, 6, 6, 2, 2, 2}, new int[] { 50, 50, 50, 50, 58, 58}, 6), 
     new Polygon( new int[] { 6, 6, 6, 6, 2, 2}, new int[] { 58, 50, 50, 58, 58, 58}, 6), 
@@ -2572,7 +2572,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 24, 29, 29, 24}, new int[] { 26, 29, 50,45}, 4),
     new Polygon( new int[] { 24, 29, 11, 6}, new int[] { 45, 50, 41,36}, 4),
     new Polygon( new int[] { 6, 11, 11, 6}, new int[] { 36, 41, 50,52}, 4),
-    new Polygon( new int[] { 6, 11, 996, 59}, new int[] { 52, 50, -1220087410,-2147483648}, 4),
+    new Polygon( new int[] { 6, 11, 1124, 59}, new int[] { 52, 50, -1219706482,-2147483648}, 4),
     new Rectangle2D.Float(24F, 26F, 2F, 18F),
     new Polygon( new int[] { 24, 26, 26, 24, 24, 24}, new int[] { 26, 26, 26, 26, 44, 44}, 6), 
     new Polygon( new int[] { 26, 26, 26, 26, 24, 24}, new int[] { 44, 26, 26, 44, 44, 44}, 6), 
@@ -4761,7 +4761,7 @@ protected class pwr_valve3waycontrol2 extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -4772,12 +4772,12 @@ protected class pwr_valve3waycontrol2 extends GeComponent {
     new Polygon( new int[] { 2, 6, 6, 2}, new int[] { 22, 27, 39,42}, 4),
     new Polygon( new int[] { 2, 6, 19, 22}, new int[] { 42, 39, 32,32}, 4),
     new Polygon( new int[] { 22, 19, 6, 2}, new int[] { 32, 32, 27,22}, 4),
-    new Polygon( new int[] { 2, 6, 130, 49}, new int[] { 22, 27, 140893347,27}, 4),
+    new Polygon( new int[] { 2, 6, 530, 49}, new int[] { 22, 27, 140859555,27}, 4),
     new Polygon( new int[] { 42, 42, 22, 42}, new int[] {22, 42, 32, 22}, 4),
     new Polygon( new int[] { 42, 42, 42, 42}, new int[] { 22, 27, 39,42}, 4),
     new Polygon( new int[] { 42, 42, 29, 22}, new int[] { 42, 39, 32,32}, 4),
     new Polygon( new int[] { 22, 29, 42, 42}, new int[] { 32, 32, 27,22}, 4),
-    new Polygon( new int[] { 42, 42, 130, 49}, new int[] { 22, 27, 140893347,27}, 4),
+    new Polygon( new int[] { 42, 42, 530, 49}, new int[] { 22, 27, 140859555,27}, 4),
     new Arc2D.Float(12F, 2F, 20F, 20F, 35F, 140F, Arc2D.PIE),
     new Arc2D.Float(12F, 2F, 20F, 20F, 215F, 140F, Arc2D.PIE),
     new Arc2D.Float(12F, 2F, 20F, 20F, -5F, 40F, Arc2D.PIE),
@@ -4790,7 +4790,7 @@ protected class pwr_valve3waycontrol2 extends GeComponent {
     new Polygon( new int[] { 22, 24, 17, 12}, new int[] { 32, 36, 50,52}, 4),
     new Polygon( new int[] { 12, 17, 31, 32}, new int[] { 52, 50, 50,52}, 4),
     new Polygon( new int[] { 32, 31, 24, 22}, new int[] { 52, 50, 36,32}, 4),
-    new Polygon( new int[] { 22, 24, 130, 49}, new int[] { 32, 36, 140893347,27}, 4),
+    new Polygon( new int[] { 22, 24, 530, 49}, new int[] { 32, 36, 140859555,27}, 4),
     new Line2D.Float( 30F, 48F, 14F, 48F),
     new Line2D.Float( 38F, 40F, 38F, 24F),
   };
@@ -4801,12 +4801,12 @@ protected class pwr_valve3waycontrol2 extends GeComponent {
     new Polygon( new int[] { 2, 6, 6, 2}, new int[] { 22, 27, 39,42}, 4),
     new Polygon( new int[] { 2, 6, 19, 22}, new int[] { 42, 39, 32,32}, 4),
     new Polygon( new int[] { 22, 19, 6, 2}, new int[] { 32, 32, 27,22}, 4),
-    new Polygon( new int[] { 2, 6, 130, 49}, new int[] { 22, 27, 140893347,27}, 4),
+    new Polygon( new int[] { 2, 6, 530, 49}, new int[] { 22, 27, 140859555,27}, 4),
     new Polygon( new int[] { 42, 42, 22, 42}, new int[] {22, 42, 32, 22}, 4),
     new Polygon( new int[] { 42, 42, 42, 42}, new int[] { 22, 27, 39,42}, 4),
     new Polygon( new int[] { 42, 42, 29, 22}, new int[] { 42, 39, 32,32}, 4),
     new Polygon( new int[] { 22, 29, 42, 42}, new int[] { 32, 32, 27,22}, 4),
-    new Polygon( new int[] { 42, 42, 130, 49}, new int[] { 22, 27, 140893347,27}, 4),
+    new Polygon( new int[] { 42, 42, 530, 49}, new int[] { 22, 27, 140859555,27}, 4),
     new Arc2D.Float(12F, 2F, 20F, 20F, 35F, 140F, Arc2D.PIE),
     new Arc2D.Float(12F, 2F, 20F, 20F, 215F, 140F, Arc2D.PIE),
     new Arc2D.Float(12F, 2F, 20F, 20F, -5F, 40F, Arc2D.PIE),
@@ -4819,7 +4819,7 @@ protected class pwr_valve3waycontrol2 extends GeComponent {
     new Polygon( new int[] { 22, 24, 17, 12}, new int[] { 32, 36, 50,52}, 4),
     new Polygon( new int[] { 12, 17, 31, 32}, new int[] { 52, 50, 50,52}, 4),
     new Polygon( new int[] { 32, 31, 24, 22}, new int[] { 52, 50, 36,32}, 4),
-    new Polygon( new int[] { 22, 24, 130, 49}, new int[] { 32, 36, 140893347,27}, 4),
+    new Polygon( new int[] { 22, 24, 530, 49}, new int[] { 32, 36, 140859555,27}, 4),
     new Line2D.Float( 30F, 48F, 14F, 48F),
     new Line2D.Float( 38F, 40F, 38F, 24F),
   };
@@ -4830,12 +4830,12 @@ protected class pwr_valve3waycontrol2 extends GeComponent {
     new Polygon( new int[] { 2, 6, 6, 2}, new int[] { 22, 27, 39,42}, 4),
     new Polygon( new int[] { 2, 6, 19, 22}, new int[] { 42, 39, 32,32}, 4),
     new Polygon( new int[] { 22, 19, 6, 2}, new int[] { 32, 32, 27,22}, 4),
-    new Polygon( new int[] { 2, 6, 130, 49}, new int[] { 22, 27, 140893347,27}, 4),
+    new Polygon( new int[] { 2, 6, 530, 49}, new int[] { 22, 27, 140859555,27}, 4),
     new Polygon( new int[] { 42, 42, 22, 42}, new int[] {22, 42, 32, 22}, 4),
     new Polygon( new int[] { 42, 42, 42, 42}, new int[] { 22, 27, 39,42}, 4),
     new Polygon( new int[] { 42, 42, 29, 22}, new int[] { 42, 39, 32,32}, 4),
     new Polygon( new int[] { 22, 29, 42, 42}, new int[] { 32, 32, 27,22}, 4),
-    new Polygon( new int[] { 42, 42, 130, 49}, new int[] { 22, 27, 140893347,27}, 4),
+    new Polygon( new int[] { 42, 42, 530, 49}, new int[] { 22, 27, 140859555,27}, 4),
     new Arc2D.Float(12F, 2F, 20F, 20F, 35F, 140F, Arc2D.PIE),
     new Arc2D.Float(12F, 2F, 20F, 20F, 215F, 140F, Arc2D.PIE),
     new Arc2D.Float(12F, 2F, 20F, 20F, -5F, 40F, Arc2D.PIE),
@@ -4848,7 +4848,7 @@ protected class pwr_valve3waycontrol2 extends GeComponent {
     new Polygon( new int[] { 22, 24, 17, 12}, new int[] { 32, 36, 50,52}, 4),
     new Polygon( new int[] { 12, 17, 31, 32}, new int[] { 52, 50, 50,52}, 4),
     new Polygon( new int[] { 32, 31, 24, 22}, new int[] { 52, 50, 36,32}, 4),
-    new Polygon( new int[] { 22, 24, 130, 49}, new int[] { 32, 36, 140893347,27}, 4),
+    new Polygon( new int[] { 22, 24, 530, 49}, new int[] { 32, 36, 140859555,27}, 4),
     new Line2D.Float( 30F, 48F, 14F, 48F),
     new Line2D.Float( 38F, 40F, 38F, 24F),
   };
@@ -5818,7 +5818,7 @@ protected class pwr_valuelong extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -5967,7 +5967,7 @@ protected class pwr_valuesmall extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -6969,7 +6969,7 @@ protected class pwr_pulldownmenu2 extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -9552,7 +9552,7 @@ protected class Grp167_ extends GeComponent {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "Manual",2, 13);
+    g.drawString( JopLang.transl("Manual"),2, 13);
     }
     if ( rounds == 2)
       g.setClip(null);
@@ -9664,7 +9664,7 @@ protected class Grp175_ extends GeComponent {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "Local",2, 13);
+    g.drawString( JopLang.transl("Local"),2, 13);
     }
     if ( rounds == 2)
       g.setClip(null);

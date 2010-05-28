@@ -1,6 +1,7 @@
 package jpwr.jopc;
 import jpwr.rt.*;
 import jpwr.jop.*;
+import jpwr.jopc.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.*;
@@ -11,7 +12,7 @@ import java.awt.event.*;
 public class JopcPlcprocess extends JopFrame implements JopUtilityIfc {
   JPanel contentPane;
   BorderLayout borderLayout1 = new BorderLayout();
-  LocalPanel localPanel = new LocalPanel();
+  public LocalPanel localPanel = new LocalPanel();
   boolean scrollbar = false;
   Dimension size;
   Grp60_	grp60_4;
@@ -55,7 +56,7 @@ public class JopcPlcprocess extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "");
+    JopSpider.setSystemName( "ä'¢·D±ù·D±ù·p—uÄ¿¡·›§· “§·(q¦¿ç	Ÿ·D±ù·D±ù·x—u “§·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 712, 660);
@@ -200,14 +201,14 @@ public class JopcPlcprocess extends JopFrame implements JopUtilityIfc {
     grp60_4.dd.setActionType(66);
     grp60_4.dd.setAccess(65535);
     grp60_4.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp60_4.dd, "&$object.PlcTreadObjects[0]")
+      new GeDynPopupMenu(grp60_4.dd, "&$object.PlcThreadObjects[0]")
       ,new GeDynCommand(grp60_4.dd, "open graph/classgraph/instance=&$object.PlcThreadObjects[0]")
       });
     grp65_5.dd.setDynType(0);
     grp65_5.dd.setActionType(66);
     grp65_5.dd.setAccess(65535);
     grp65_5.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp65_5.dd, "&$object.PlcTreadObjects[1]")
+      new GeDynPopupMenu(grp65_5.dd, "&$object.PlcThreadObjects[1]")
       ,new GeDynCommand(grp65_5.dd, "open graph/classgraph/instance=&$object.PlcThreadObjects[1]")
       });
     geTable6.dd.setDynType(16777216);
@@ -219,126 +220,126 @@ public class JopcPlcprocess extends JopFrame implements JopUtilityIfc {
     grp76_7.dd.setActionType(66);
     grp76_7.dd.setAccess(65535);
     grp76_7.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp76_7.dd, "&$object.PlcTreadObjects[2]")
+      new GeDynPopupMenu(grp76_7.dd, "&$object.PlcThreadObjects[2]")
       ,new GeDynCommand(grp76_7.dd, "open graph/classgraph/instance=&$object.PlcThreadObjects[2]")
       });
     grp78_8.dd.setDynType(0);
     grp78_8.dd.setActionType(66);
     grp78_8.dd.setAccess(65535);
     grp78_8.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp78_8.dd, "&$object.PlcTreadObjects[3]")
+      new GeDynPopupMenu(grp78_8.dd, "&$object.PlcThreadObjects[3]")
       ,new GeDynCommand(grp78_8.dd, "open graph/classgraph/instance=&$object.PlcThreadObjects[3]")
       });
     grp80_9.dd.setDynType(0);
     grp80_9.dd.setActionType(66);
     grp80_9.dd.setAccess(65535);
     grp80_9.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp80_9.dd, "&$object.PlcTreadObjects[4]")
+      new GeDynPopupMenu(grp80_9.dd, "&$object.PlcThreadObjects[4]")
       ,new GeDynCommand(grp80_9.dd, "open graph/classgraph/instance=&$object.PlcThreadObjects[4]")
       });
     grp88_10.dd.setDynType(0);
     grp88_10.dd.setActionType(66);
     grp88_10.dd.setAccess(65535);
     grp88_10.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp88_10.dd, "&$object.PlcTreadObjects[5]")
+      new GeDynPopupMenu(grp88_10.dd, "&$object.PlcThreadObjects[5]")
       ,new GeDynCommand(grp88_10.dd, "open graph/classgraph/instance=&$object.PlcThreadObjects[5]")
       });
     grp90_11.dd.setDynType(0);
     grp90_11.dd.setActionType(66);
     grp90_11.dd.setAccess(65535);
     grp90_11.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp90_11.dd, "&$object.PlcTreadObjects[6]")
+      new GeDynPopupMenu(grp90_11.dd, "&$object.PlcThreadObjects[6]")
       ,new GeDynCommand(grp90_11.dd, "open graph/classgraph/instance=&$object.PlcThreadObjects[6]")
       });
     grp92_12.dd.setDynType(0);
     grp92_12.dd.setActionType(66);
     grp92_12.dd.setAccess(65535);
     grp92_12.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp92_12.dd, "&$object.PlcTreadObjects[7]")
+      new GeDynPopupMenu(grp92_12.dd, "&$object.PlcThreadObjects[7]")
       ,new GeDynCommand(grp92_12.dd, "open graph/classgraph/instance=&$object.PlcThreadObjects[7]")
       });
     grp100_13.dd.setDynType(0);
     grp100_13.dd.setActionType(66);
     grp100_13.dd.setAccess(65535);
     grp100_13.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp100_13.dd, "open graph/classgraph/instance=&$object.PlcThreadObjects[8]")
+      new GeDynPopupMenu(grp100_13.dd, "&$object.PlcThreadObjects[8]")
       ,new GeDynCommand(grp100_13.dd, "open graph/classgraph/instance=&$object.PlcThreadObjects[8]")
       });
     grp102_14.dd.setDynType(0);
     grp102_14.dd.setActionType(66);
     grp102_14.dd.setAccess(65535);
     grp102_14.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp102_14.dd, "&$object.PlcTreadObjects[9]")
+      new GeDynPopupMenu(grp102_14.dd, "&$object.PlcThreadObjects[9]")
       ,new GeDynCommand(grp102_14.dd, "open graph/classgraph/instance=&$object.PlcThreadObjects[9]")
       });
     grp104_15.dd.setDynType(0);
     grp104_15.dd.setActionType(66);
     grp104_15.dd.setAccess(65535);
     grp104_15.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp104_15.dd, "&$object.PlcTreadObjects[10]")
+      new GeDynPopupMenu(grp104_15.dd, "&$object.PlcThreadObjects[10]")
       ,new GeDynCommand(grp104_15.dd, "open graph/classgraph/instance=&$object.PlcThreadObjects[10]")
       });
     grp112_16.dd.setDynType(0);
     grp112_16.dd.setActionType(66);
     grp112_16.dd.setAccess(65535);
     grp112_16.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp112_16.dd, "&$object.PlcTreadObjects[11]")
+      new GeDynPopupMenu(grp112_16.dd, "&$object.PlcThreadObjects[11]")
       ,new GeDynCommand(grp112_16.dd, "open graph/classgraph/instance=&$object.PlcThreadObjects[11]")
       });
     grp114_17.dd.setDynType(0);
     grp114_17.dd.setActionType(66);
     grp114_17.dd.setAccess(65535);
     grp114_17.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp114_17.dd, "&$object.PlcTreadObjects[12]")
+      new GeDynPopupMenu(grp114_17.dd, "&$object.PlcThreadObjects[12]")
       ,new GeDynCommand(grp114_17.dd, "open graph/classgraph/instance=&$object.PlcThreadObjects[12]")
       });
     grp116_18.dd.setDynType(0);
     grp116_18.dd.setActionType(66);
     grp116_18.dd.setAccess(65535);
     grp116_18.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp116_18.dd, "&$object.PlcTreadObjects[13]")
+      new GeDynPopupMenu(grp116_18.dd, "&$object.PlcThreadObjects[13]")
       ,new GeDynCommand(grp116_18.dd, "open graph/classgraph/instance=&$object.PlcThreadObjects[13]")
       });
     grp124_19.dd.setDynType(0);
     grp124_19.dd.setActionType(66);
     grp124_19.dd.setAccess(65535);
     grp124_19.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp124_19.dd, "&$object.PlcTreadObjects[14]")
+      new GeDynPopupMenu(grp124_19.dd, "&$object.PlcThreadObjects[14]")
       ,new GeDynCommand(grp124_19.dd, "open graph/classgraph/instance=&$object.PlcThreadObjects[14]")
       });
     grp126_20.dd.setDynType(0);
     grp126_20.dd.setActionType(66);
     grp126_20.dd.setAccess(65535);
     grp126_20.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp126_20.dd, "&$object.PlcTreadObjects[15]")
+      new GeDynPopupMenu(grp126_20.dd, "&$object.PlcThreadObjects[15]")
       ,new GeDynCommand(grp126_20.dd, "open graph/classgraph/instance=&$object.PlcThreadObjects[15]")
       });
     grp128_21.dd.setDynType(0);
     grp128_21.dd.setActionType(66);
     grp128_21.dd.setAccess(65535);
     grp128_21.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp128_21.dd, "&$object.PlcTreadObjects[16]")
+      new GeDynPopupMenu(grp128_21.dd, "&$object.PlcThreadObjects[16]")
       ,new GeDynCommand(grp128_21.dd, "open graph/classgraph/instance=&$object.PlcThreadObjects[16]")
       });
     grp136_22.dd.setDynType(0);
     grp136_22.dd.setActionType(66);
     grp136_22.dd.setAccess(65535);
     grp136_22.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp136_22.dd, "&$object.PlcTreadObjects[17]")
+      new GeDynPopupMenu(grp136_22.dd, "&$object.PlcThreadObjects[17]")
       ,new GeDynCommand(grp136_22.dd, "open graph/classgraph/instance=&$object.PlcThreadObjects[17]")
       });
     grp138_23.dd.setDynType(0);
     grp138_23.dd.setActionType(66);
     grp138_23.dd.setAccess(65535);
     grp138_23.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp138_23.dd, "&$object.PlcTreadObjects[18]")
+      new GeDynPopupMenu(grp138_23.dd, "&$object.PlcThreadObjects[18]")
       ,new GeDynCommand(grp138_23.dd, "open graph/classgraph/instance=&$object.PlcThreadObjects[18]")
       });
     grp150_24.dd.setDynType(0);
     grp150_24.dd.setActionType(66);
     grp150_24.dd.setAccess(65535);
     grp150_24.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp150_24.dd, "&$object.PlcTreadObjects[19]")
+      new GeDynPopupMenu(grp150_24.dd, "&$object.PlcThreadObjects[19]")
       ,new GeDynCommand(grp150_24.dd, "open graph/classgraph/instance=&$object.PlcThreadObjects[19]")
       });
     pwr_indsquare25.dd.setDynType(33554432);
@@ -509,28 +510,28 @@ class LocalPanel extends JPanel {
     }
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "Priority",19, 48);
+    g.setFont(new Font("Helvetica", Font.PLAIN, 12));
+    g.drawString( JopLang.transl("Priority"),18, 47);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "Status",18, 95);
+    g.setFont(new Font("Helvetica", Font.PLAIN, 12));
+    g.drawString( JopLang.transl("Status"),17, 94);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "LogMessage",18, 117);
+    g.setFont(new Font("Helvetica", Font.PLAIN, 12));
+    g.drawString( JopLang.transl("LogMessage"),17, 116);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "BootVersion",18, 72);
+    g.setFont(new Font("Helvetica", Font.PLAIN, 12));
+    g.drawString( JopLang.transl("BootVersion"),17, 71);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "CurrentVersion",265, 72);
+    g.setFont(new Font("Helvetica", Font.PLAIN, 12));
+    g.drawString( JopLang.transl("CurrentVersion"),264, 71);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "Description",19, 28);
+    g.setFont(new Font("Helvetica", Font.PLAIN, 12));
+    g.drawString( JopLang.transl("Description"),18, 27);
     g.setTransform(save);
   }
   public Dimension getPreferredSize() { return size;}
@@ -642,8 +643,13 @@ protected class pwr_indsquare extends GeComponent {
     {
     int fcolor = GeColor.getDrawtype(293, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
+    if ( gradient == GeGradient.eGradient_No) {
     g.setColor(GeColor.getColor( fcolor));
     g.fill( shapes[0]);
+    } else {
+    GeGradient.paint( g, gradient,2,-2,2F,2F,13.4831F,14.6067F, false,293, colorTone, colorShift, colorIntensity, colorInverse, fillColor, dimmed);
+    g.fill( shapes[0]);
+    }
     if ( shadow != 0) {
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
@@ -673,7 +679,7 @@ protected class pwr_valuelong extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -776,8 +782,13 @@ protected class pwr_valuelong extends GeComponent {
     {
     int fcolor = GeColor.getDrawtype(41, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
+    if ( gradient == GeGradient.eGradient_No) {
     g.setColor(GeColor.getColor( fcolor));
     g.fill( shapes[0]);
+    } else {
+    GeGradient.paint( g, gradient,2,-2,2F,2F,597.753F,15.7303F, false,41, colorTone, colorShift, colorIntensity, colorInverse, fillColor, dimmed);
+    g.fill( shapes[0]);
+    }
     if ( shadow != 0) {
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
@@ -817,7 +828,7 @@ protected class pwr_valuesmall extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -920,8 +931,13 @@ protected class pwr_valuesmall extends GeComponent {
     {
     int fcolor = GeColor.getDrawtype(41, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
+    if ( gradient == GeGradient.eGradient_No) {
     g.setColor(GeColor.getColor( fcolor));
     g.fill( shapes[0]);
+    } else {
+    GeGradient.paint( g, gradient,2,-2,2F,2F,51.6854F,15.7303F, false,41, colorTone, colorShift, colorIntensity, colorInverse, fillColor, dimmed);
+    g.fill( shapes[0]);
+    }
     if ( shadow != 0) {
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
@@ -3415,7 +3431,10 @@ protected class Grp150_ extends GeComponent {
     return JopUtility.GRAPH;
   }
   public PwrtObjid getUtilityObjid() {
-    return utilityAref.getObjid();
+    if ( utilityAref != null)
+      return utilityAref.getObjid();
+    else
+      return null;
   }
   public PwrtAttrRef getUtilityAttrRef() {
     return utilityAref;

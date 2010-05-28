@@ -60,6 +60,14 @@ public class JopSession {
     return ((JopSessionIfc) sessionRep).getEngine();
   }
 
+  public void setLang( String lang) {
+    ((JopSessionIfc) sessionRep).setLang( lang);
+  }
+
+  public String getLang() {
+    return ((JopSessionIfc) sessionRep).getLang();
+  }
+
   public Gdh getGdh() {
     return ((JopSessionIfc) sessionRep).getEngine().gdh;
   }
@@ -90,6 +98,10 @@ public class JopSession {
 
   public void openLogin() {
     ((JopSessionIfc) sessionRep).openLogin();
+  }
+
+  public void openLanguage() {
+    ((JopSessionIfc) sessionRep).openLanguage();
   }
 
   public void openGraphFrame( String name, String instance, boolean scrollbar, boolean classGraph) {
@@ -126,6 +138,10 @@ public class JopSession {
 
   public void setOpWindowLabelText( String text ){
     ((JopSessionIfc) sessionRep).setOpWindowLabelText( text);
+  }
+
+  public void setOpWindowLanguage( int language ){
+    ((JopSessionIfc) sessionRep).setOpWindowLanguage( language);
   }
 }
 

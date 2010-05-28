@@ -31,12 +31,11 @@ public class HistStatModel2 extends AbstractTableModel{
     // The List holding the statistics
     //List<MhrEvent> result;  
     List result;  
-    private String[][] names={{"Object", "Duration time" },{"Objekt", "Varaktighet"}};
-    int lang;
+    private String[] names={JopLang.transl("Object"), 
+			    JopLang.transl("Duration time")};
     
     //Constructor
-    public HistStatModel2(MhData m, int l ){
-	lang=l;
+    public HistStatModel2(MhData m){
 	clearData();
         setData(m);
         sortData();
@@ -153,7 +152,7 @@ public class HistStatModel2 extends AbstractTableModel{
     }
     
     public String getColumnName(int i){
-        return names[lang][i];
+        return names[i];
     }
     
     //sortData sorts the result List based on duration (the value of 

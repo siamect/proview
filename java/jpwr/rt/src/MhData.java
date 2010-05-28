@@ -31,9 +31,7 @@ public class MhData
 
   public int maxNrOfAlarms;
   public int maxNrOfEvents;
-  //public Vector<MhrEvent> alarmVec;
   public Vector alarmVec;
-  //public Vector<MhrEvent> eventVec;
   public Vector eventVec;
 
 
@@ -41,9 +39,7 @@ public class MhData
   {
     this.maxNrOfAlarms = maxNrOfAlarms;
     this.maxNrOfEvents = maxNrOfEvents;
-    //this.alarmVec = new Vector<MhrEvent>(maxNrOfAlarms);
     this.alarmVec = new Vector(maxNrOfAlarms);
-    //this.eventVec = new Vector<MhrEvent>(maxNrOfEvents);
     this.eventVec = new Vector(maxNrOfEvents);
   }
   public int getNrOfAlarms()
@@ -62,10 +58,8 @@ public class MhData
   {
     return (MhrEvent)eventVec.get(i);
   }
-  //public void addMessToVectorInSortedOrder(Vector<MhrEvent> v, MhrEvent ev)
   public void addMessToVectorInSortedOrder(Vector v, MhrEvent ev)
   {
-    //ListIterator<MhrEvent> iter = v.listIterator();
     ListIterator iter = v.listIterator();
     MhrEvent vEv;
     while(iter.hasNext())
@@ -102,9 +96,9 @@ public class MhData
     switch (ev.eventType)
     {
       case Mh.mh_eEvent_Alarm:
-        //addera till larm-listan
+        // Add to alarm list
         this.addMessToVectorInSortedOrder(alarmVec, ev);
-        //addera kopia till händelse-listan
+        // Add copy to event list
         this.addMessToVectorInSortedOrder(eventVec, ev.getCopy());
         break;
       case Mh.mh_eEvent_Return:
@@ -114,12 +108,12 @@ public class MhData
           MhrEvent alEv = (MhrEvent)alarmVec.get(i);
           if((ev.targetId.nix == alEv.eventId.nix) && (ev.targetId.idx == alEv.eventId.idx))
           {
-            //larmet är kvitterat och kan tas bort
+            // The alarm is acknowledged and can be removed
             if((alEv.eventStatus & Mh.mh_mEventStatus_NotAck) == 0)
             {
               alarmVec.removeElementAt(i);
             }
-            //annars sätter vi returned biten och visar detta
+            // Set the return bit and display it
             else
             {
               alEv.eventStatus &= ~Mh.mh_mEventStatus_NotRet;
@@ -127,12 +121,10 @@ public class MhData
             break;
           }
         }
-        //skall det läggas till i händelselistan
         if((ev.eventFlags & Mh.mh_mEventFlags_Return) != 0)
         {
-          //addera kopia till händelse-listan
+          // Add copy to event list
 	  this.addMessToVectorInSortedOrder(eventVec, ev.getCopy());
-          //**eventVec.add(0, ev.getCopy());
         }
         break;
       case Mh.mh_eEvent_Ack:
@@ -152,29 +144,24 @@ public class MhData
             break;
           }
         }
-        //skall det läggas till i händelselistan
         if((ev.eventFlags & Mh.mh_mEventFlags_Ack) != 0)
         {
-          //addera kopia till händelse-listan
+          // Add copy to event list
           this.addMessToVectorInSortedOrder(eventVec, ev.getCopy());
-	  //**eventVec.add(0, ev.getCopy());
         }
         break;
       case Mh.mh_eEvent_Info:
-        //addera till larm-listan
+        // Add to alarm list
         if((ev.eventFlags & Mh.mh_mEventFlags_InfoWindow) != 0)
         {
 	  this.addMessToVectorInSortedOrder(alarmVec, ev);
-	  //**alarmVec.add(0, ev);
 	}
-        //addera kopia till händelse-listan
+        // Add copy to event list
         eventVec.add(0, ev.getCopy());
         break;
       case Mh.EventType_ClearAlarmList:
 	 alarmVec.clear();
-	 System.out.println("Rensar larmlistan");
-        //addera kopia till händelse-listan
-        //eventVec.add(0, ev.getCopy());
+	 System.out.println("Clearing alarmlist");
       break;
       
       default:

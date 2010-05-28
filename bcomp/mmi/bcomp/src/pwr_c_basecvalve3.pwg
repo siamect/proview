@@ -17554,7 +17554,7 @@ pwr_exe:
 303 3
 99
 12
-1200 $object.Mode.IndMode##String8
+1200 $object.Actuator.Mode.IndMode##String8
 1201 %s
 1202 1
 1203 1

@@ -49,7 +49,7 @@ public class JopXttFrame extends JFrame
     session = new JopSession( engine, (Object)this);
     root = (Object) this;
     init((PwrtObjid)null);
-
+    setTitle(JopLang.transl("RtNavigator"));
   }
   public JopXttFrame( JopSession session, PwrtObjid oid )
   {
@@ -57,6 +57,7 @@ public class JopXttFrame extends JFrame
     engine = session.getEngine();
     root = session.getRoot();
     init(oid);
+    setTitle(JopLang.transl("RtNavigator"));
   }    
   public void init(PwrtObjid oid)
   {

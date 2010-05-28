@@ -66,6 +66,10 @@ public class JopOpWindowApplet extends JopApplet
     localPanel.setLabelText( text);
   }
 
+  public void setLanguage( int language) {
+    localPanel.setLanguage( language);
+  }
+
   public void init()
   {
     super.init();

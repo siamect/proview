@@ -17,6 +17,7 @@ local_java_sources := \
 	JopSession.java \
 	JopMethods.java \
 	JopMethodsMenu.java \
+	JopLang.java \
 	JopConfirm.java \
 	JopConfirmDialog.java \
 	JopFrame.java \
@@ -78,6 +79,7 @@ local_java_sources := \
 	JopSpiderFrame.java \
 	JopLoginFrame.java \
 	JopLoginApplet.java \
+	JopLanguageFrame.java \
 	GeColorEditor.java \
 	GeColorBrightnessEditor.java \
 	GeColorToneEditor.java \

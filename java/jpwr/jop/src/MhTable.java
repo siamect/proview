@@ -37,7 +37,7 @@ import javax.swing.table.TableColumn;
 /**
  *  Description of the Class
  *
- *@author     claes
+ *@author     JN
  *@created    December 10, 2002
  */
 public class MhTable extends JPanel
@@ -62,22 +62,22 @@ public class MhTable extends JPanel
   JTable alarmTable;
   //Vector alarmData = new Vector();
   JScrollPane scrollPaneAl;
-  String[] columnNamesAlarmTable = {"P",
-    "Kv",
-    "Tid",
-    "Larmtext",
-    "Objekt"};
+  String[] columnNamesAlarmTable = {"",
+				    JopLang.transl("Ack"),
+				    JopLang.transl("Time"),
+				    JopLang.transl("Alarm Text"),
+				    JopLang.transl("Object")};
   //JLabel alarmTableLbl = new JLabel("Larmlista");    
   
   int maxNrOfEvents;
   JTable eventTable;
   //Vector eventData = new Vector();
   JScrollPane scrollPaneEv;
-  String[] columnNamesEventTable = {"P",
-    "Typ",
-    "Tid",
-    "Händelsetext",
-    "Objekt"};
+  String[] columnNamesEventTable = {"",
+				    JopLang.transl("Type"),
+				    JopLang.transl("Time"),
+				    JopLang.transl("Event Text"),
+				    JopLang.transl("Object")};
   //JLabel eventTableLbl = new JLabel("Händelselista");
   Color ALarmColor = Color.red;
   Color BLarmColor = Color.yellow;
@@ -243,14 +243,14 @@ public class MhTable extends JPanel
     }
     catch(UnknownHostException e)
     {
-      System.err.println("Don't know about host: taranis.");
-      mess.setText("FEL: Kan ej identifiera servern");
+      System.err.println("Don't know about host");
+      mess.setText("Error, unable to identify host");
       //System.exit(1);
     }
     catch(IOException e)
     {
       System.err.println("Couldn't get I/O for the connection");
-      mess.setText("FEL: Kan ej skapa I/O");
+      mess.setText("Error: Couldn't get I/O for the connection");
       //System.exit(1);
     }
   }
@@ -351,7 +351,7 @@ public class MhTable extends JPanel
   /**
    *  Description of the Class
    *
-   *@author     claes
+   *@author     JN
    *@created    December 10, 2002
    */
   class AlarmTableModel extends AbstractTableModel
@@ -448,7 +448,7 @@ public class MhTable extends JPanel
         }
         if(col == 3)
         {
-          return ev.eventText;
+	  return JopLang.transl( ev.eventText);
         }
         if(col == 4)
         {
@@ -621,13 +621,13 @@ public class MhTable extends JPanel
   /**
    *  Description of the Class
    *
-   *@author     claes
+   *@author     JN
    *@created    December 10, 2002
    */
   class EventTableModel extends AbstractTableModel
   {
 
-    public final Object[] longValues = {"A", "Kvittens",
+    public final Object[] longValues = {"A", "Acknowledge",
       "10-12-31 12:12:12.98",
       "QWERTYUIOPÅÄÖLK_JHGFDSAZXCVBNM__POÅIUYTRQWERTYUIOPÅÄÖL",
       "QWERTYUIOPÅÄÖLK"};
@@ -712,44 +712,42 @@ public class MhTable extends JPanel
         if(col == 1)
         {
 	  String returnString = " ";
-	  switch (ev.eventType)
-	  {
+	  switch (ev.eventType) {
 	    case Mh.mh_eEvent_Alarm:
-	      returnString = "Larm";
-	    break;
+	      returnString = JopLang.transl("Alarm");
+	      break;
 	    case Mh.mh_eEvent_Ack:
-	      returnString = "Kvittens";
-	    break;
+	      returnString = JopLang.transl("Acknowledge");
+	      break;
 	    case Mh.mh_eEvent_Block:
-	      returnString = "Block";
-	    break;
+	      returnString = JopLang.transl("Block");
+	      break;
 	    case Mh.mh_eEvent_Cancel:
-	      returnString = "Cancel";
-	    break;
+	      returnString = JopLang.transl("Cancel");
+	      break;
 	    case Mh.mh_eEvent_CancelBlock:
-	      returnString = "CancelBlock";
-	    break;
+	      returnString = JopLang.transl("CancelBlock");
+	      break;
 	    case Mh.mh_eEvent_Missing:
-	      returnString = "Missing";
-	    break;
+	      returnString = JopLang.transl("Missing");
+	      break;
 	    case Mh.mh_eEvent_Reblock:
-	      returnString = "Reblock";
-	    break;
+	      returnString = JopLang.transl("Reblock");
+	      break;
 	    case Mh.mh_eEvent_Return:
-	      returnString = "Retur";
-	    break;
+	      returnString = JopLang.transl("Return");
+	      break;
 	    case Mh.mh_eEvent_Unblock:
-	      returnString = "Unblock";
-	    break;
+	      returnString = JopLang.transl("Unblock");
+	      break;
 	    case Mh.mh_eEvent_Info:
-	      returnString = "Info";
-	    break;
+	      returnString = JopLang.transl("Info");
+	      break;
 	    case Mh.mh_eEvent_:
 	      returnString = "?";
-	    break;
+	      break;
 	    default:
 	     returnString = " ";
-	    break;
 	  }
 	  return returnString;
         }
@@ -759,7 +757,7 @@ public class MhTable extends JPanel
         }
         if(col == 3)
         {
-          return ev.eventText;
+	  return JopLang.transl( ev.eventText);
         }
         if(col == 4)
         {
@@ -871,7 +869,7 @@ public class MhTable extends JPanel
   /**
    *  Description of the Class
    *
-   *@author     claes
+   *@author     JN
    *@created    December 10, 2002
    */
   private class MhClientReceiveThread extends Thread
@@ -903,9 +901,8 @@ public class MhTable extends JPanel
       }
       catch(IOException e)
       {
-        System.out.println("IOException vid skapande av strömmar mot server");
-        mess.setText("FEL: Kan ej skapa kontakt med servern");
-	//errh.error("DataStream failed");
+        System.out.println("IOException ObjectOutputStream/ObjectInputStream");
+        mess.setText("Error, can't connect to server");
         return;
       }
       start();
@@ -922,7 +919,7 @@ public class MhTable extends JPanel
         mhData.maxNrOfAlarms = in.readInt();
 	if(mhData.maxNrOfAlarms == -1)
 	{
-	  mess.setText("För många anslutningar, AVSLUTA");
+	  mess.setText("Max number of alarm exceeded, restart");
 	  this.keepRunning = false;
 	}
 	else
@@ -931,14 +928,12 @@ public class MhTable extends JPanel
 	  int nrOfAlarms = in.readInt();
 	  if(nrOfAlarms > 0)
 	  {
-	    //mhData.alarmVec = (Vector<MhrEvent>)in.readObject();
 	    mhData.alarmVec = (Vector)in.readObject();
             ((AlarmTableModel)alarmTable.getModel()).updateTable();
 	  }
 	  int nrOfEvents = in.readInt();
 	  if(nrOfEvents > 0)
 	  {
-	    //mhData.eventVec = (Vector<MhrEvent>)in.readObject();
 	    mhData.eventVec = (Vector)in.readObject();
 	    ((EventTableModel)eventTable.getModel()).updateTable();
 	  }
@@ -954,24 +949,20 @@ public class MhTable extends JPanel
       {
         try
         {
-          //här skall vi ligga och vänta på meddelanden från servern
-          //typ alarm och händelser
-          //System.out.println("Väntar på mess");
+          // Wait for events messages from server.
           MhrEvent ev = (MhrEvent)in.readObject();
-          //System.out.println("Fått mess");
           mhTable.newMess(ev);
-          //Thread.sleep(1);
         }
         catch(ClassNotFoundException e)
         {
-          System.out.println("Exception i mess väntan: " + e.toString());
-	  mess.setText("FEL: Kan ej tolka meddelande från servern");
+          System.out.println("Exception in wait for messages: " + e.toString());
+	  mess.setText("Error, can't interpret message from server");
         }
         catch(Exception e)
         {
-          System.out.println("Exception i mess väntan: " + e.toString());
-          System.out.println("Avslutar");
-          mess.setText("FEL: Fel vid mottagande av meddelande från server, AVSLUTA");
+          System.out.println("Exception in wait for messages: " + e.toString());
+          System.out.println("Terminating");
+          mess.setText("Error in receiving messages from server, restart");
 	  this.keepRunning = false;
         }
       }
@@ -1000,8 +991,8 @@ public class MhTable extends JPanel
       }
       catch(Exception e)
       {
-        System.out.println("Exception vid sändning av meddelande");
-	mess.setText("FEL: Kan ej sända meddelande, AVSLUTA");
+        System.out.println("Exception when sending messages");
+	mess.setText("Error, unable to send message, restart");
       }
     }
   }
@@ -1012,7 +1003,7 @@ public class MhTable extends JPanel
   /**
    *  Description of the Class
    *
-   *@author     claes
+   *@author     JN
    *@created    December 10, 2002
    */
   private class AlarmTableCellRender extends DefaultTableCellRenderer
@@ -1105,7 +1096,7 @@ public class MhTable extends JPanel
   /**
    *  Description of the Class
    *
-   *@author     claes
+   *@author     JN
    *@created    December 10, 2002
    */
   private class EventTableCellRender extends DefaultTableCellRenderer

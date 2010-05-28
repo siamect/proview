@@ -27,6 +27,7 @@ endif
 
 vpath %.java $(hw_source):$(os_source):$(co_source)
 vpath %.gif $(hw_source):$(os_source):$(co_source)
+vpath %.png $(hw_source):$(os_source):$(co_source)
 #VPATH = $(hw_source):$(os_source):$(co_source)
 
 source_dirs = $(hw_source) $(os_source) $(co_source)
@@ -58,6 +59,24 @@ gif_exe_sources := $(sort \
              ) \
            )
 
+png_sources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(source_dirs), \
+                 $(wildcard $(dir)/*.png) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
+png_exe_sources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(source_dirs), \
+                 $(wildcard $(dir)/$(comp_name)_*.png) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
 
 jpwr_name   := pwr_$(comp_name)
 export_lib := $(lib_dir)/$(jpwr_name).jar
@@ -65,8 +84,10 @@ export_lib := $(lib_dir)/$(jpwr_name).jar
 java_classes := $(addsuffix .class, $(basename $(local_java_sources)))
 gif_objects := $(addprefix $(bld_dir)/, $(gif_sources))
 gif_exe_objects := $(addprefix $(exe_dir)/, $(gif_exe_sources))
+png_objects := $(addprefix $(bld_dir)/, $(png_sources))
+png_exe_objects := $(addprefix $(exe_dir)/, $(png_exe_sources))
 java_objects := $(addprefix $(bld_dir)/, $(java_classes))
-objects := $(gif_objects) $(gif_exe_objects) $(java_objects)
+objects := $(gif_objects) $(gif_exe_objects) $(png_objects) $(png_exe_objects) $(java_objects)
 
 source_dependencies := $(notdir $(basename $(sources)))
 source_dependencies := $(addprefix $(bld_dir)/, $(source_dependencies))
@@ -125,8 +146,9 @@ $(export_lib) : $(objects)
 		$(rm) $(export_lib); \
 	  fi
 	@ cd $(pwre_broot)/$(pwre_target)/bld; \
-	echo "Inserting gif files"; \
+	echo "Inserting png and gif files"; \
 	jar cf $(export_lib) jpwr/$(comp_name)/*.gif; \
+	jar uf $(export_lib) jpwr/$(comp_name)/*.png; \
 	find jpwr/$(comp_name) -name "*.class" -exec jar uf $(export_lib) {} \;;
 #	@ jar cvfm $(export_lib) ../../manifest.stub jpwr/$(comp_name)/*.class jpwr/$(comp_name)/*.gif
 

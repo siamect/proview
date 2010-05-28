@@ -322,6 +322,28 @@
       Överföringshastigheten (Baude raten) grupp 52.03 och PPO typen grupp 52.04 ställs in
       automatiskt när kommunikation etableras.
             
+      Om man önskar att en ACS800 ska retarera/rampa på tid (rampa aktivt) och inte frirulla
+      elmotorn när Profibus kommunikationen går ner (dör) krävs vissa speciella inställningar
+      i omriktaren, dessa är (inställningar på engelska):
+      
+      Parameter  Value         Description
+      group  
+       11.02     COMM.CW       Signalkälla (Ext1/2) om vald extern styrplats 
+       16.01     16.08         Driftfrigivning via grupp 16.08
+       16.08     -.003.008.12  Pekare för driftfrigivning
+       21.07     RAMP STOP     Stoppfunktion när driftfrigivning inte råder
+       21.09     OFF3 STOP     Stopptyp när omriktaren förreglas (OFF3 = ramp)
+       30.18     LAST SPEED    Vad som ska hända vid Profibus kom.fel
+       30.19     0.5           Tid i sekeunder innan omriktaren börjar rampa vid kom.fel.
+
+       OBS! Att parameter 30.19 summeras ihop med inställningar WdFact1 och WdFact2 i Proview
+       för att få tiden det tar innan omriktaren börjar retarera vid kom.fel. Se objekt
+       ABB_ACS_Pb_Slave för mer info om WdFact1 och WdFact2.
+       
+       OBS! Att parameter 30.18 konstigt nog ska ställas in på "LAST SPEED" (sent varvtal) för att
+       rampning ska fungera vid kom.fel. 
+
+
       Via "ConfigureSlave" metoden i Proview ska man ställa in följande för en ABB omriktare ACS800:
             
       - PrmUserData Operation mode till till Vendor specific (info från GSD fil)

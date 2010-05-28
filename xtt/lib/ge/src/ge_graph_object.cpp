@@ -713,16 +713,8 @@ static void graph_object_PID_scan( Graph *graph)
     *od->data_out_scan_time_p = double(*od->scan_time_p)/200;
   }
 
-  if ( od->hold_button_p && *od->hold_button_p) {
-    *od->hold_set_p = !*od->hold_set_p;
-    *od->hold_out_p = !*od->hold_out_p;
-    *od->hold_button_p = 0;
-    if ( *od->hold_set_p && od->hold_button_object)
-      grow_SetObjectColorTone( od->hold_button_object, glow_eDrawTone_Yellow);
-    else
-      grow_ResetObjectColorTone( od->hold_button_object);
-  }
-
+  *od->hold_set_p = *od->hold_button_p;
+  *od->hold_out_p = *od->hold_button_p;
 }
 
 static void graph_object_PID_close( Graph *graph)

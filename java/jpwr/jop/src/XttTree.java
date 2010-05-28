@@ -98,17 +98,6 @@ public class XttTree extends JPanel
   Image XttObjAttrArrayIcon;
   Image XttObjAttrArrayElementIcon;
   
-  String[] errMess_SW = {"Fel vid kommunikation med GdhServer",
-                         "Inget objekt markerat",
-			 "Markerat objekt kan ej ändra värde",
-			 " gick ej att tolka som"};
-			 
-  String[] errMess_EN = {"Could not communicate with GdhServer",
-                         "No object selected",
-			 "Selected object can't change value",
-			 " can't be converted to"};
-  String[] errMess;
-			 
   String functions_EN = "Functions";
   String functions_SW = "Funktioner";
   String functions;
@@ -173,7 +162,7 @@ public class XttTree extends JPanel
     this.engine = session.getEngine();
     session.setNavigator( (Object) this);
     this.gdh = engine.gdh;
- 
+
     //construct the messagepanel and add it to the panel
     setLayout(borderLayout1);
     Dimension d = messagePanel.getSize();
@@ -185,51 +174,20 @@ public class XttTree extends JPanel
     messagePanel.add(labelMessage, BorderLayout.CENTER);
     setOpaque(true);
     userPanel.setLayout(new GridBagLayout());
-    
-    //initialize the strings depending on the requested language
-    switch (currentLanguage)
-    {
-      case SWEDISH :
-        functions = functions_SW;
-	language = language_SW;
-	openObject = openObject_SW;
-	changeValue = changeValue_SW;
-	debug = debug_SW;
-	working = working_SW;
-	errMess = errMess_SW;
-	openPlc = openPlc_SW;
-	showCross = showCross_SW;
-	find = find_SW;
-	enterComm=enterComm_SW;
-	
-      break;
-      case ENGLISH :
-        functions = functions_EN;
-	language = language_EN;
-	openObject = openObject_EN;
-	changeValue = changeValue_EN;
-	debug = debug_EN;
-	working = working_EN;
-	errMess = errMess_EN;
-	openPlc = openPlc_EN;
-	showCross = showCross_EN;
-	find = find_EN;
-	enterComm=enterComm_EN;
-      break;
-    }
+
     //get all icons that is to be used in the tree
     XttOpenCloseIcon = JopSpider.getImage(session, "jpwr/jop/xttopencloseicon.gif");
     XttOpenIcon = JopSpider.getImage(session, "jpwr/jop/xttopenicon.gif");
     XttCloseIcon = JopSpider.getImage(session, "jpwr/jop/xttcloseicon.gif");
-    XttClosedLeafIcon = JopSpider.getImage(session, "jpwr/jop/xttclosedleaficon.gif");
-    XttOpenLeafIcon = JopSpider.getImage(session, "jpwr/jop/xttopenleaficon.gif");
-    XttClosedNodeIcon = JopSpider.getImage(session, "jpwr/jop/xttclosednodeicon.gif");
-    XttOpenNodeIcon = JopSpider.getImage(session, "jpwr/jop/xttopennodeicon.gif");
-    XttObjAttrOpenNodeIcon = JopSpider.getImage(session, "jpwr/jop/xttobjattropennodeicon.gif");
-    XttObjAttrIcon = JopSpider.getImage(session, "jpwr/jop/xttobjattricon.gif");
-    XttObjAttrPointerIcon = JopSpider.getImage(session, "jpwr/jop/xttobjattrpointericon.gif");
-    XttObjAttrArrayIcon = JopSpider.getImage(session, "jpwr/jop/xttobjattrarrayicon.gif");
-    XttObjAttrArrayElementIcon = JopSpider.getImage(session, "jpwr/jop/xttobjattrarrayelementicon.gif");
+    XttClosedLeafIcon = JopSpider.getImage(session, "jpwr/jop/xttclosedleaficon.png");
+    XttOpenLeafIcon = JopSpider.getImage(session, "jpwr/jop/xttopenleaficon.png");
+    XttClosedNodeIcon = JopSpider.getImage(session, "jpwr/jop/xttclosednodeicon.png");
+    XttOpenNodeIcon = JopSpider.getImage(session, "jpwr/jop/xttopennodeicon.png");
+    XttObjAttrOpenNodeIcon = JopSpider.getImage(session, "jpwr/jop/xttobjattropennodeicon.png");
+    XttObjAttrIcon = JopSpider.getImage(session, "jpwr/jop/xttobjattricon.png");
+    XttObjAttrPointerIcon = JopSpider.getImage(session, "jpwr/jop/xttobjattrpointericon.png");
+    XttObjAttrArrayIcon = JopSpider.getImage(session, "jpwr/jop/xttobjattrarrayicon.png");
+    XttObjAttrArrayElementIcon = JopSpider.getImage(session, "jpwr/jop/xttobjattrarrayelementicon.png");
 
     //create the JTree component
     rootNode = new DefaultMutableTreeNode("DATABAS");
@@ -250,8 +208,12 @@ public class XttTree extends JPanel
     ImageIcon OpenCloseIcon = new ImageIcon(XttOpenCloseIcon);
     ImageIcon OpenIcon = new ImageIcon(XttOpenIcon);
     ImageIcon CloseIcon = new ImageIcon(XttCloseIcon);
-    tui.setCollapsedIcon(OpenIcon);
-    tui.setExpandedIcon(CloseIcon);
+    // tui.setCollapsedIcon(OpenIcon);
+    // tui.setExpandedIcon(CloseIcon);
+    tui.setCollapsedIcon(null);
+    tui.setExpandedIcon(null);
+    tui.setRightChildIndent(5);
+    tui.setLeftChildIndent(5);
 
     tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
@@ -277,7 +239,7 @@ public class XttTree extends JPanel
     Vector v = gdh.getAllXttSiblings(r.objid);
     if(v == null)
     {
-      Logg.loggToApplet(errMess[0]);
+      Logg.loggToApplet(JopLang.transl("Communication error with GdhServer"));
     }
     else
     {
@@ -516,6 +478,7 @@ public class XttTree extends JPanel
         return;
       }
       //Vector<XttObjAttr> xttObjAttrVec = new Vector<XttObjAttr>();
+      System.out.println( "Size " + v.size());
       Vector xttObjAttrVec = new Vector();
       for(int i = 0; i < v.size(); i++)
       {
@@ -597,14 +560,14 @@ public class XttTree extends JPanel
     //inget objekt är markerat
     if(tp == null)
     {
-      Logg.loggToApplet(errMess[1]);
+      Logg.loggToApplet(JopLang.transl("Select an object"));
       return;
     }
     DefaultMutableTreeNode tn = (DefaultMutableTreeNode)(tp.getLastPathComponent());
     //inget objekt är markerat
     if(tn == null)
     {
-      Logg.loggToApplet(errMess[1]);
+      Logg.loggToApplet(JopLang.transl("Select an object"));
       return;
     }
     Object userObject = tn.getUserObject();
@@ -626,7 +589,7 @@ public class XttTree extends JPanel
     //Markerat objekt kan ej ändra värde
     if(name == null)
     {
-      Logg.loggToApplet(errMess[2]);
+      Logg.loggToApplet(JopLang.transl("Unable to change value on selected object"));
       return;
     }
     Logg.logg("XttTree: Användren vill ändra värde på " + name, 6);
@@ -643,7 +606,7 @@ public class XttTree extends JPanel
         }
         catch(NumberFormatException e)
         {
-          Logg.loggToApplet(valueString + errMess[3] + " float");
+          Logg.loggToApplet(JopLang.transl("Syntax error"));
           return;
         }
 
@@ -668,7 +631,7 @@ public class XttTree extends JPanel
         }
         catch(NumberFormatException e)
         {
-          Logg.loggToApplet(valueString + errMess[3] + " integer");
+	  Logg.loggToApplet(JopLang.transl("Syntax error"));
           return;
         }
 
@@ -690,13 +653,13 @@ public class XttTree extends JPanel
           }
           else
           {
-            Logg.loggToApplet(valueString + errMess[3] + " boolean");
+	    Logg.loggToApplet(JopLang.transl("Syntax error"));
             return;
           }
         }
         catch(NumberFormatException e)
         {
-          Logg.loggToApplet(valueString + errMess[3] + " boolean");
+	  Logg.loggToApplet(JopLang.transl("Syntax error"));
           return;
         }
         break;
@@ -713,7 +676,8 @@ public class XttTree extends JPanel
     }
     if(sts.evenSts())
     {
-      Logg.loggToApplet("Felstatus vid försök att ändra värde på " + name + "till " + valueString);
+      CdhrString sret = gdh.getMsg( sts.getSts());
+      Logg.loggToApplet(sret.str);
     }
   }
 
@@ -1021,6 +985,15 @@ public class XttTree extends JPanel
                                   }
                                 };
 
+  AbstractAction OPENGRAPH =      new AbstractAction("OPENGRAPH")
+                                {
+                                  public void actionPerformed(ActionEvent evt)
+                                  {
+                                    Logg.logg("XttTree: innan openGraph();", 4);
+                                    openGraph();
+                                  }
+                                };
+
   AbstractAction SHOWCROSS =    new AbstractAction("SHOWCROSS")
                                 {
                                   public void actionPerformed(ActionEvent evt)
@@ -1056,20 +1029,6 @@ public class XttTree extends JPanel
                                     Logg.logg("LoggPrio changed to: " + Logg.loggPrio, 0);
                                   }
                                 };
-  AbstractAction LAN_SW =       new AbstractAction("LAN_SW")
-                                {
-                                  public void actionPerformed(ActionEvent evt)
-                                  {
-				    setLanguageSwedish();
-                                  }
-                                };
-  AbstractAction LAN_EN =       new AbstractAction("LAN_EN")
-                                {
-                                  public void actionPerformed(ActionEvent evt)
-                                  {
-				    setLanguageEnglish();
-                                  }
-                                };
   AbstractAction FIND =         new AbstractAction("FIND")
                                 {
                                   public void actionPerformed(ActionEvent evt)
@@ -1078,12 +1037,19 @@ public class XttTree extends JPanel
                                   }
                                 };
 
-    //Mats förändringar: Ny AbstractAction för enterComm
   AbstractAction COMM =         new AbstractAction("COMM")
                                 {
                                   public void actionPerformed(ActionEvent evt)
                                   {
 				    enterComm();
+                                  }
+                                };
+
+  AbstractAction CLOSE =         new AbstractAction("CLOSE")
+                                {
+                                  public void actionPerformed(ActionEvent evt)
+                                  {
+				    close();
                                   }
                                 };
 
@@ -1101,61 +1067,57 @@ public class XttTree extends JPanel
    *@return                Void
    */
 
-    // Mats förändringar: booelan toPopup borttagen.
-    public void newMethod(String name, Action action, String actionName, /*boolean toPopup,*/ int toMenu, String keyStroke)
-  {
-    if(action != null)
-    {
+  // Mats förändringar: booelan toPopup borttagen.
+  public void newMethod(String name, Action action, String actionName, /*boolean toPopup,*/ int toMenu, String keyStroke) {
+    if ( action != null) {
       actionMap.put(actionName, action);
     }
-    if(keyStroke != null)
-    {
+    if ( keyStroke != null) {
       inputMap.put(KeyStroke.getKeyStroke(keyStroke), actionName);
     }
-    /*
-    if(toPopup)
-    {
-      popup.add(menuItem(name, action, null));
-    }
-    */
-    if(toMenu >= 0)
-    {
-      menubar.getMenu(toMenu).add(menuItem(name, action, keyStroke));
+    if ( toMenu >= 0) {
+      menubar.getMenu(toMenu).add(menuItem(JopLang.transl(name), action, keyStroke));
     }
   }
   
 
   /**
-  * Creates all input posibillites that the user can use
+  * Creates all input possibilities that the user can use
   */
   public void createUserInputs()
   {
 
-    JMenu edit = new JMenu(functions);
-    edit.setMnemonic('F');
+    JMenu file = new JMenu(JopLang.transl("File"));
+    file.setMnemonic('F');
+    JMenu edit = new JMenu(JopLang.transl("Edit"));
+    edit.setMnemonic('E');
+    JMenu functions = new JMenu(JopLang.transl("Functions"));
+    functions.setMnemonic('u');
     JMenu languageSel = new JMenu(language);
     languageSel.setMnemonic('S');
 
     // Skapa en menylist och lägg till ovan skapade "panes" i denna.
+    menubar.add(file);
     menubar.add(edit);
+    menubar.add(functions);
     menubar.add(languageSel);
     
     this.getRootPane().setJMenuBar(menubar);
     
-    //Mats förändringar: boolean  toPopup borttagen ny metod för enterComm
     // Create some keystrokes and bind them to an action
-    this.newMethod(openObject, ADDOBJECTINFO, "ADDOBJECTINFO",/* true,*/ 0, "ctrl A");    this.newMethod(openObject, ADDOBJECTINFO, "ADDOBJECTINFO", /*false,*/ -1, "shift RIGHT");
-    this.newMethod("COLLAPSENODE", COLLAPSENODE, "COLLAPSENODE",/* false,*/ -1, "LEFT");
-    this.newMethod(openPlc, OPENPLC, "OPENPLC", /*true,*/ 0, "ctrl L");
-    this.newMethod(showCross, SHOWCROSS, "SHOWCROSS", /*true,*/ 0, "ctrl R");
-    this.newMethod(changeValue, CHANGEVALUE, "CHANGEVALUE", /*true,*/ 0, "ctrl Q");
-    this.newMethod(debug, DEBUG, "DEBUG", /*true,*/ 0, "ctrl RIGHT");
-    this.newMethod(find, FIND, "FIND",/* false,*/ 0, "ctrl F");
-    this.newMethod(swedish, LAN_SW, "LAN_SW",/* false,*/ 1, null);
-    this.newMethod(english, LAN_EN, "LAN_EN", /*false,*/ 1, null);
-    this.newMethod("INCLOG", INCLOG, "INCLOG", /*false,*/ -1, "ctrl O");
-    this.newMethod("DECLOG", DECLOG, "DECLOG", /*false,*/ -1, "ctrl P");
-    this.newMethod(enterComm, COMM,"COMM",0,"ctrl B");
+    this.newMethod("Open Object", ADDOBJECTINFO, "ADDOBJECTINFO", 2, "ctrl A");
+    this.newMethod("Open Object", ADDOBJECTINFO, "ADDOBJECTINFO", -1, "shift RIGHT");
+    this.newMethod("COLLAPSENODE", COLLAPSENODE, "COLLAPSENODE", -1, "LEFT");
+    this.newMethod("Open Plc", OPENPLC, "OPENPLC", 2, "ctrl L");
+    this.newMethod("Open Object Graph", OPENGRAPH, "OPENGRAPH", 2, "ctrl G");
+    this.newMethod("Show Crossreferences", SHOWCROSS, "SHOWCROSS", 2, "ctrl R");
+    this.newMethod("Change Value", CHANGEVALUE, "CHANGEVALUE", 2, "ctrl Q");
+    this.newMethod("Debug", DEBUG, "DEBUG", 2, "ctrl RIGHT");
+    this.newMethod("Search", FIND, "FIND", 1, "ctrl F");
+    this.newMethod("INCLOG", INCLOG, "INCLOG", -1, "ctrl O");
+    this.newMethod("DECLOG", DECLOG, "DECLOG", -1, "ctrl P");
+    this.newMethod("Command", COMM,"COMM",2,"ctrl B");
+    this.newMethod("Close", CLOSE,"CLOSE",0,"ctrl W");
 
     inputMap.setParent(this.tree.getInputMap(JComponent.WHEN_FOCUSED));
     this.tree.setInputMap(JComponent.WHEN_FOCUSED, inputMap);
@@ -1295,6 +1257,9 @@ public class XttTree extends JPanel
     return item;
   }
 
+  public void close() {
+  }
+
   public void showCross()
   {
     TreePath tp = tree.getSelectionPath();
@@ -1307,7 +1272,7 @@ public class XttTree extends JPanel
       String name = obj.fullName;
       if(name == null)
       {
-        Logg.loggToApplet("Inte rätt typ av objekt markerat");
+        Logg.loggToApplet("Select an object or attribute");
         return;
       }
       session.openCrrFrame(name);
@@ -1326,10 +1291,31 @@ public class XttTree extends JPanel
     GetPLCWindowObjRet ret = getPLCWindowObj(tn);
     if(ret.oid == null)
     {
-      Logg.loggToApplet("Inte rätt typ av objekt markerat");
+      Logg.loggToApplet("Unable to open Plc trace for this object");
       return;
     }
     session.openFlowFrame(ret.oid, ret.name);
+  }
+
+  public void openGraph()
+  {
+    TreePath tp = tree.getSelectionPath();
+    if(tp == null) return;
+    DefaultMutableTreeNode tn = (DefaultMutableTreeNode)(tp.getLastPathComponent());
+    if(tn == null) return;
+    try {
+      TreeObj obj = (TreeObj)tn.getUserObject();
+      String name = obj.fullName;
+      if(name == null) {
+        Logg.loggToApplet("Select an object");
+        return;
+      }
+      String cmd = "open graph/class/inst=" + name;
+      session.executeCommand(cmd);
+    }
+    catch(Exception e) {
+      Logg.logg("Error in open graph" + e.toString(),0);
+    }
   }
 
     public PwrtObjid getPLCWindowObjid(DefaultMutableTreeNode tn)
@@ -1421,66 +1407,6 @@ public class XttTree extends JPanel
       PwrtObjid oid = null;
     }
   
-  public void setLanguageSwedish()
-  {
-    this.functions = functions_SW;
-    this.language = language_SW;
-    this.openObject = openObject_SW;
-    this.changeValue = changeValue_SW;
-    this.debug = debug_SW;
-    this.errMess = errMess_SW;
-    this.openPlc = openPlc_SW;
-    this.find = find_SW;
-    this.showCross = showCross_SW;
-    this.enterComm = enterComm_SW;
-    this.currentLanguage = SWEDISH;
-    this.updateMenuLabels();
-  }
-
-  public void setLanguageEnglish()
-  {
-    this.functions = functions_EN;
-    this.language = language_EN;
-    this.openObject = openObject_EN;
-    this.changeValue = changeValue_EN;
-    this.debug = debug_EN;
-    this.errMess = errMess_EN;
-    this.openPlc = openPlc_EN;
-    this.find = find_EN;
-    this.showCross = showCross_EN;
-    this.enterComm = enterComm_EN;
-    this.currentLanguage = ENGLISH;
-    this.updateMenuLabels();
-  }
-  
-  public void updateMenuLabels()
-  {
-    JMenuBar menuBar = this.getRootPane().getJMenuBar();
-
-    JMenu menuFunctions = menuBar.getMenu(0);
-    JMenu menuLan = menuBar.getMenu(1);
-    menuFunctions.setText(functions);
-    menuFunctions.getItem(0).setText(openObject);
-    menuFunctions.getItem(1).setText(openPlc);
-    menuFunctions.getItem(2).setText(showCross);
-    menuFunctions.getItem(3).setText(changeValue);
-    menuFunctions.getItem(4).setText(debug);
-    menuFunctions.getItem(5).setText(find);
-    menuFunctions.getItem(6).setText(enterComm);
-    menuLan.setText(language);
-    menuLan.getItem(0).setText(swedish);
-    menuLan.getItem(1).setText(english);
-    //Mats förändringar: Uppdatering av popup borttagen
-    /*MenuElement[] menuElements = popup.getSubElements();
-	
-    ((JMenuItem)(menuElements[0])).setText(openObject);
-    ((JMenuItem)(menuElements[1])).setText(openPlc);
-    ((JMenuItem)(menuElements[2])).setText(showCross);
-    ((JMenuItem)(menuElements[3])).setText(changeValue);
-    ((JMenuItem)(menuElements[4])).setText(debug);*/
-  }
-
-
 
   public void changeValue()
   {
@@ -1504,7 +1430,7 @@ public class XttTree extends JPanel
     }
     else
     {
-      Logg.loggToApplet("Användare har ej skrivrättigheter");
+      Logg.loggToApplet("Not authorized for this action");
     }
   }
 
@@ -1725,7 +1651,6 @@ public class XttTree extends JPanel
         if(ret_vec == null)
         {
           Logg.logg("XttTree : refObjectInfo_Vector returnerar null", 1);
-          Logg.loggToApplet("XttTree : refObjectInfo_Vector returnerar null INTE BRA programmet kan ha havererat");
           setCursor(defCursor);
 	  return;
         }
@@ -1883,6 +1808,8 @@ public class XttTree extends JPanel
       {
         setIcon(ClosedLeafIcon);
       }
+      setBackgroundSelectionColor(Color.black);
+      setTextSelectionColor(Color.white);
       return this;
     }
   }

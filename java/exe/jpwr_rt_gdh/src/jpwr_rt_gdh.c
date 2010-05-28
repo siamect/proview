@@ -302,7 +302,7 @@ JNIEXPORT jstring JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoString
     int len;
     
     gdh_AttrToString( typeid, (void *)p, buffer, sizeof(buffer), 
-    	&len, NULL);
+			    &len, NULL);
     jvalue = (*env)->NewStringUTF( env, buffer);
     return jvalue;
   }
@@ -519,7 +519,6 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_refObjectInfo
   }
 
   sts = gdh_RefObjectInfo( cstr, &attr_p, &subid, size);
-  (*env)->ReleaseStringUTFChars( env, name, cstr);
 
   if ( ODD(sts))
   {
@@ -531,6 +530,9 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_refObjectInfo
   }
   else
     id = 0;
+
+  printf( "RefObjectInfo: %s, id: %d, sts: %d\n", cstr, id, sts);
+  (*env)->ReleaseStringUTFChars( env, name, cstr);
 
   jsts = (jint) sts;
   //we want the size of each element not the hole object
@@ -2110,6 +2112,10 @@ static void gdh_AttrToString( int type_id, void *value_ptr,
                 *(pwr_tSubid *) value_ptr, 1));
       break;
     }
+    default:
+      *len = 0;
+      strcpy( str, "");    
+      printf( "gdh_AttrToString, unsupported type %d\n", type_id);
   }
 }
 
@@ -2599,7 +2605,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getSuperClass
 }
 
 JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Gdh_getObjectBodyDef
-  (JNIEnv *env, jobject obj, jint classid, jobject objid_obj)
+  (JNIEnv *env, jobject obj, jint classid, jobject aref_obj)
 {
   int		sts,i;
   int j = 0;
@@ -2609,116 +2615,104 @@ JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Gdh_getObjectBodyDef
   jclass                gdhrsAttrDef_id;
   static jmethodID      gdhrsAttrDef_cid = NULL;
 
-  //  jclass 	        cdhrClassId_id;
-  //  static jmethodID 	cdhrClassId_cid;
-
-  jclass 	        pwrtObjid_id;
-  static jmethodID 	pwrtObjid_getOix = NULL;
-  static jmethodID 	pwrtObjid_getVid = NULL;
-  static jmethodID 	pwrtObjid_cid = NULL;
-  pwr_tObjid 	        objid = pwr_cNObjid;
+  jclass 	        pwrtAttrRef_id;
+  static jmethodID 	pwrtAttrRef_getOix = NULL;
+  static jmethodID 	pwrtAttrRef_getVid = NULL;
+  static jmethodID 	pwrtAttrRef_getBody = NULL;
+  static jmethodID 	pwrtAttrRef_getOffset = NULL;
+  static jmethodID 	pwrtAttrRef_getSize = NULL;
+  static jmethodID 	pwrtAttrRef_getFlags = NULL;
+  pwr_tAttrRef 	        aref;
 
   jobjectArray 	        gdhrsAttrDefArr = NULL;
   jobject               gdhrsAttrDef;
   jobject 	        pwrsParInfo;
-  //  jint 		        jsts;
-  pwr_tClassId	        cid;
+  pwr_tClassId	        cid = classid;
 
   gdh_sAttrDef *bd;
   int rows;
-  pwr_sAttrRef aref;
   pwr_sAttrRef aaref;
   pwr_tDisableAttr disabled;
 
-  pwrtObjid_id = (*env)->FindClass( env, "jpwr/rt/PwrtObjid");
-  if(pwrtObjid_cid == NULL || pwrtObjid_getOix == NULL || pwrtObjid_getVid == NULL)
-  {
-    pwrtObjid_cid = (*env)->GetMethodID( env, pwrtObjid_id,
-    	  "<init>", "(II)V");
-    pwrtObjid_getOix = (*env)->GetMethodID( env, pwrtObjid_id, "getOix", "()I");
-    pwrtObjid_getVid = (*env)->GetMethodID( env, pwrtObjid_id, "getVid", "()I");
+  pwrtAttrRef_id = (*env)->FindClass( env, "jpwr/rt/PwrtAttrRef");
+  if( pwrtAttrRef_getOix == NULL || pwrtAttrRef_getVid == NULL) {
+    pwrtAttrRef_getOix = (*env)->GetMethodID( env, pwrtAttrRef_id, "getOix", "()I");
+    pwrtAttrRef_getVid = (*env)->GetMethodID( env, pwrtAttrRef_id, "getVid", "()I");
+    pwrtAttrRef_getBody = (*env)->GetMethodID( env, pwrtAttrRef_id, "getBody", "()I");
+    pwrtAttrRef_getOffset = (*env)->GetMethodID( env, pwrtAttrRef_id, "getOffset", "()I");
+    pwrtAttrRef_getSize = (*env)->GetMethodID( env, pwrtAttrRef_id, "getSize", "()I");
+    pwrtAttrRef_getFlags = (*env)->GetMethodID( env, pwrtAttrRef_id, "getFlags", "()I");
   }
 
   //find the class for PwrsParInfo
   pwrsParInfo_id = (*env)->FindClass(env, "jpwr/rt/PwrsParInfo");
   gdhrsAttrDef_id = (*env)->FindClass(env, "jpwr/rt/GdhrsAttrDef");
-  if(pwrsParInfo_id == NULL || gdhrsAttrDef_id == NULL)
-  {
-    printf("Fel vid FindClass getObjectBodyDef\n");
+  if(pwrsParInfo_id == NULL || gdhrsAttrDef_id == NULL) {
+    printf("Error in FindClass getObjectBodyDef\n");
     return (jobjectArray)NULL;
   }
-  if(pwrsParInfo_cid == NULL)
-  {
+  if(pwrsParInfo_cid == NULL) {
     pwrsParInfo_cid = (*env)->GetMethodID( env, pwrsParInfo_id,
     	  "<init>", "(Ljava/lang/String;IIIIII)V");
   }
-  if(gdhrsAttrDef_cid == NULL)
-  {
+  if(gdhrsAttrDef_cid == NULL) {
     gdhrsAttrDef_cid = (*env)->GetMethodID( env, gdhrsAttrDef_id,
     	  "<init>", "(Ljava/lang/String;IIIILjpwr/rt/PwrsParInfo;I)V");
   }
-  if(pwrsParInfo_cid == NULL || gdhrsAttrDef_cid == NULL)
-  {
-    printf("Fel vid GetMethodId getObjectBodyDef\n");
+  if(pwrsParInfo_cid == NULL || gdhrsAttrDef_cid == NULL) {
+    printf("Error in GetMethodId getObjectBodyDef\n");
     return (jobjectArray)NULL;
   }
-  if ( objid_obj != 0) {
+  if ( aref_obj != 0) {
 
-    
-    objid.oix = (*env)->CallIntMethod( env, objid_obj, pwrtObjid_getOix);
-    objid.vid = (*env)->CallIntMethod( env, objid_obj, pwrtObjid_getVid);
+    aref.Objid.oix = (*env)->CallIntMethod( env, aref_obj, pwrtAttrRef_getOix);
+    aref.Objid.vid = (*env)->CallIntMethod( env, aref_obj, pwrtAttrRef_getVid);
+    aref.Body = (*env)->CallIntMethod( env, aref_obj, pwrtAttrRef_getBody);
+    aref.Offset = (*env)->CallIntMethod( env, aref_obj, pwrtAttrRef_getOffset);
+    aref.Size = (*env)->CallIntMethod( env, aref_obj, pwrtAttrRef_getSize);
+    aref.Flags.m = (*env)->CallIntMethod( env, aref_obj, pwrtAttrRef_getFlags);
+  }
 
-    sts = gdh_GetObjectClass(objid, &cid);
-    if(EVEN(sts))
-    {
-      printf("Fel från GetObjectClass %d\n", sts);
-      //return (jobjectArray)NULL;
-    }
-    
+  sts = gdh_GetObjectBodyDef( cid, &bd, &rows, aref.Objid);
+  if(EVEN(sts)) {
+    printf("Error in gdh_GetObjectBodyDef cid: %d, oid: %d,%d sts: %d\n", cid, aref.Objid.vid, aref.Objid.oix, sts);
+    return (jobjectArray)NULL;
+  }
 
-    sts = gdh_GetObjectBodyDef( cid, &bd, &rows, objid);
-    if(EVEN(sts))
-    {
-      printf("Fel från GetObjectBodyDef %d\n", sts);
-      return (jobjectArray)NULL;
-    }
+  printf("gdh_GetObjectBodyDef cid: %d, oid: %d,%d sts: %d rows: %d\n", cid, aref.Objid.vid, aref.Objid.oix, sts, rows);
 
-    //create a new GdhrsAttrDef[]
-    gdhrsAttrDefArr = (*env)->NewObjectArray(env, (jint)rows, gdhrsAttrDef_id, NULL);
+  //create a new GdhrsAttrDef[]
+  gdhrsAttrDefArr = (*env)->NewObjectArray(env, (jint)rows, gdhrsAttrDef_id, NULL);
 
-    for(i = 0;i < rows;i++)
-    {
-      if ( (bd[i].flags & gdh_mAttrDef_Shadowed) ||
-           (bd[i].attr->Param.Info.Flags & PWR_MASK_RTHIDE) ||
-           (bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL) || 
-	   (bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE) ||
-           (bd[i].attr->Param.Info.Type == pwr_eType_CastId) ||
-	   (bd[i].attr->Param.Info.Type == pwr_eType_DisableAttr) )
+  for(i = 0;i < rows;i++) {
+    if ( (bd[i].flags & gdh_mAttrDef_Shadowed) ||
+	 (bd[i].attr->Param.Info.Flags & PWR_MASK_RTHIDE) ||
+	 (bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL) || 
+	 (bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE) ||
+	 (bd[i].attr->Param.Info.Type == pwr_eType_CastId) ||
+	 (bd[i].attr->Param.Info.Type == pwr_eType_DisableAttr) )
+      continue;
+    if(bd[i].attr->Param.Info.Flags & PWR_MASK_DISABLEATTR) { 
+      sts = gdh_ArefANameToAref( &aref, bd[i].attrName, &aaref);
+      if ( EVEN(sts)) printf("Error in ArefANameToAref %d\n", sts);
+
+
+      sts = gdh_ArefDisabled( &aaref, &disabled);
+      if ( EVEN(sts)) printf("Error in ArefDisabled %d\n", sts);
+      
+      if ( disabled)
 	continue;
-      if(bd[i].attr->Param.Info.Flags & PWR_MASK_DISABLEATTR)
-      { 
-	aref = cdh_ObjidToAref( objid);
+    }
 
-	sts = gdh_ArefANameToAref( &aref, bd[i].attrName, &aaref);
-	if ( EVEN(sts)) printf("Fel från ArefANameToAref %d\n", sts);
-
-
-	sts = gdh_ArefDisabled( &aaref, &disabled);
-	if ( EVEN(sts)) printf("Fel från ArefDisabled %d\n", sts);
-
-	if ( disabled)
-	  continue;
-      }
-
-      pwrsParInfo = (*env)->NewObject( env, pwrsParInfo_id,
-  	                               pwrsParInfo_cid,
-				       NULL,
-				       bd[i].attr->Param.Info.Type,
-				       bd[i].attr->Param.Info.Offset,
-				       bd[i].attr->Param.Info.Size,
-				       bd[i].attr->Param.Info.Flags,
-				       bd[i].attr->Param.Info.Elements,
-				       bd[i].attr->Param.Info.ParamIndex);
+    pwrsParInfo = (*env)->NewObject( env, pwrsParInfo_id,
+				     pwrsParInfo_cid,
+				     NULL,
+				     bd[i].attr->Param.Info.Type,
+				     bd[i].attr->Param.Info.Offset,
+				     bd[i].attr->Param.Info.Size,
+				     bd[i].attr->Param.Info.Flags,
+				     bd[i].attr->Param.Info.Elements,
+				     bd[i].attr->Param.Info.ParamIndex);
 
 
     gdhrsAttrDef = (*env)->NewObject( env, gdhrsAttrDef_id,
@@ -2731,17 +2725,11 @@ JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Gdh_getObjectBodyDef
 				      pwrsParInfo,
 				      (jint)sts);
 
-      (*env)->SetObjectArrayElement(env, gdhrsAttrDefArr, j, gdhrsAttrDef);
-      j++;
-    }
-    free((char *)bd);
-    return gdhrsAttrDefArr;
-
-
+    (*env)->SetObjectArrayElement(env, gdhrsAttrDefArr, j, gdhrsAttrDef);
+    j++;
   }
-
-  printf("Fel i getObjectBodyDef Objid är 0\n");
-  return (jobjectArray)NULL;
+  free((char *)bd);
+  return gdhrsAttrDefArr;
 }
 
 static int gdh_JidToPointer( int id, void **p)

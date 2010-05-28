@@ -59,57 +59,62 @@ public class JopMethodsMenu implements ActionListener, PopupMenuListener,
     JMenuItem item;
 
     if ( methods.openGraphFilter()) {
-      popup.add( item = new JMenuItem( "Graph"));
+	popup.add( item = new JMenuItem( JopLang.transl("Graph")));
       item.addActionListener( this);
     }
 
     if ( methods.openObjectGraphFilter()) {
-      popup.add( item = new JMenuItem( "ObjectGraph"));
+	popup.add( item = new JMenuItem( JopLang.transl("Object Graph")));
       item.addActionListener( this);
     }
 
     if ( methods.helpFilter()) {
-      popup.add( item = new JMenuItem( "Help"));
+	popup.add( item = new JMenuItem( JopLang.transl("Help")));
       item.addActionListener( this);
     }
 
+    if ( methods.photoFilter()) {
+	popup.add( item = new JMenuItem( JopLang.transl("Photo")));
+      item.addActionListener( this);
+    }
+ 
     if ( methods.dataSheetFilter()) {
-      popup.add( item = new JMenuItem( "DataSheet"));
+	popup.add( item = new JMenuItem( JopLang.transl("DataSheet")));
       item.addActionListener( this);
     }
 
     if ( methods.rtNavigatorFilter()) {
-      popup.add( item = new JMenuItem( "Navigator"));
+	popup.add( item = new JMenuItem( JopLang.transl("Navigator")));
       item.addActionListener( this);
     }
 
     if ( methods.openTraceFilter()) {
-      popup.add( item = new JMenuItem( "Open Plc"));
+	popup.add( item = new JMenuItem( JopLang.transl("Open Plc")));
       item.addActionListener( this);
     }
 
     if ( methods.openCrossrefFilter()) {
-      popup.add( item = new JMenuItem( "Crossreferences"));
+	popup.add( item = new JMenuItem( JopLang.transl("Crossreferences")));
       item.addActionListener( this);
     }
 
     if ( methods.helpClassFilter()) {
-      popup.add( item = new JMenuItem( "Class Help"));
+	popup.add( item = new JMenuItem( JopLang.transl("Help Class")));
       item.addActionListener( this);
     }
  
     if ( methods.circuitDiagramFilter()) {
-      popup.add( item = new JMenuItem( "Circuit Diagram"));
+	popup.add( item = new JMenuItem( JopLang.transl("CircuitDiagram")));
       item.addActionListener( this);
     }
  
     if ( methods.histEventFilter()){
-      popup.add(item= new JMenuItem( "Event Log"));
+	popup.add(item= new JMenuItem( JopLang.transl("Hist Event...")));
       item.addActionListener( this);
     }
 
     if ( methods.simulateFilter()){
-      popup.add(item= new JMenuItem( "Simulate"));
+	popup.add(item= new JMenuItem( JopLang.transl("Simulate")));
       item.addActionListener( this);
     }
     popup.addPopupMenuListener( this);
@@ -123,37 +128,40 @@ public class JopMethodsMenu implements ActionListener, PopupMenuListener,
 
   public void actionPerformed( ActionEvent event) {
 
-    if ( event.getActionCommand().equals("Navigator")) {
+    if ( event.getActionCommand().equals(JopLang.transl("Navigator"))) {
       methods.rtNavigator();
     }
-    else if ( event.getActionCommand().equals("Open Plc")) {
+    else if ( event.getActionCommand().equals(JopLang.transl("Open Plc"))) {
       methods.openTrace();
     }
-    else if ( event.getActionCommand().equals("Graph")) {
+    else if ( event.getActionCommand().equals(JopLang.transl("Graph"))) {
       methods.openGraph();
     }
-    else if ( event.getActionCommand().equals("Help")) {
+    else if ( event.getActionCommand().equals(JopLang.transl("Help"))) {
       methods.help();
     }
-    else if ( event.getActionCommand().equals("DataSheet")) {
+    else if ( event.getActionCommand().equals(JopLang.transl("Photo"))) {
+      methods.photo();
+    }
+    else if ( event.getActionCommand().equals(JopLang.transl("DataSheet"))) {
       methods.dataSheet();
     }
-    else if ( event.getActionCommand().equals("Crossreferences")) {
+    else if ( event.getActionCommand().equals(JopLang.transl("Crossreferences"))) {
       methods.openCrossref();
     }
-    else if ( event.getActionCommand().equals("Class Help")) {
+    else if ( event.getActionCommand().equals(JopLang.transl("Help Class"))) {
       methods.helpClass();
     }
-    else if ( event.getActionCommand().equals("Circuit Diagram")) {
+    else if ( event.getActionCommand().equals(JopLang.transl("CircuitDiagram"))) {
       methods.circuitDiagram();
     }
-    else if ( event.getActionCommand().equals("ObjectGraph")) {
+    else if ( event.getActionCommand().equals(JopLang.transl("Object Graph"))) {
       methods.openObjectGraph();
     }
-    else if ( event.getActionCommand().equals("Hist Event")) {
+    else if ( event.getActionCommand().equals(JopLang.transl("Hist Event..."))) {
       methods.histEvent();
     }
-    else if ( event.getActionCommand().equals("Simulate")) {
+    else if ( event.getActionCommand().equals(JopLang.transl("Simulate"))) {
       methods.simulate();
     }
   }  

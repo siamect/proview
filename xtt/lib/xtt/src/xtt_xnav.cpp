@@ -2874,7 +2874,7 @@ int	XNav::show_logging( int index)
   new ItemLocal( brow, Lng::translate("Time (ms)"), "logg_Time", 
 	pwr_eType_Int32, sizeof( logg[0].logg_time), 10, 100000, 0,
 	(void *) &logg[index].logg_time, NULL, flow_eDest_IntoLast);
-  new ItemLocal( brow, Lng::translate("File"), "logg_File", 
+  new ItemLocal( brow, Lng::translate("File "), "logg_File", 
 	pwr_eType_String, sizeof( logg[0].logg_filename), 0, 0, 0,
 	(void *) logg[index].logg_filename, NULL, flow_eDest_IntoLast);
   new ItemLocal( brow, Lng::translate("Type"), "logg_Type",

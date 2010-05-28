@@ -29,6 +29,14 @@ public class JopOpWindow extends JPanel {
   JopEngine en;
   Object root;
   JLabel label = null;
+  String user;
+  OpWindButton langButton;
+  OpWindButton loginButton;
+  OpWindButton logoutButton;
+  OpWindButton alarmButton;
+  OpWindButton navigatorButton;
+  OpWindButton eventLogButton;
+  OpWindButton helpButton;
 
   public JopOpWindow( JopSession session, Object root) {
     // super( BoxLayout.Y_AXIS);
@@ -36,6 +44,11 @@ public class JopOpWindow extends JPanel {
     this.session = session;
     this.root = root;
     en = session.getEngine();
+
+    // Set language
+    JopLang lng = new JopLang(session);
+    lng.set( JopLang.LANGUAGE_sv_SE);
+    JopLang.setDefault(lng);
 
     CdhrObjid oretWebH = en.gdh.getClassList( Pwrb.cClass_WebHandler);
     if ( oretWebH.evenSts()) return;
@@ -63,23 +76,28 @@ public class JopOpWindow extends JPanel {
 
     this.add( new JSeparator());
 
+    label = new JLabel();
+    label.setHorizontalAlignment( SwingConstants.CENTER);
+    this.add( label);
+
+    OpWindButton button;
+    langButton = new OpWindButton( session, "", JopLang.transl("Language"),
+			       OpWindButton.LANGUAGE);
+    this.add( langButton);
+
     s = sret.str + ".EnableLogin";
     CdhrInt iret = en.gdh.getObjectInfoInt( s);
     if ( iret.evenSts()) return;
 
-    label = new JLabel();
-    this.add( label);
-
-    OpWindButton button;
     if ( iret.value != 0) {
 
-      button = new OpWindButton( session, "", "Login",
+      loginButton = new OpWindButton( session, "", JopLang.transl("Login"),
 				 OpWindButton.LOGIN);
-      this.add( button);
+      this.add( loginButton);
 
-      button = new OpWindButton( session, "", "Logout",
+      logoutButton = new OpWindButton( session, "", JopLang.transl("Logout"),
 				 OpWindButton.LOGOUT);
-      this.add( button);
+      this.add( logoutButton);
     }
       
     s = sret.str + ".EnableAlarmList";
@@ -87,9 +105,9 @@ public class JopOpWindow extends JPanel {
     if ( iret.evenSts()) return;
 
     if ( iret.value != 0) {
-      button = new OpWindButton( session, "", "Alarm and Eventlist",
+      alarmButton = new OpWindButton( session, "", JopLang.transl("Alarm and Event List"),
 				 OpWindButton.ALARMLIST);
-      this.add( button);
+      this.add( alarmButton);
     }
       
     s = sret.str + ".EnableEventLog";
@@ -97,9 +115,9 @@ public class JopOpWindow extends JPanel {
     if ( iret.evenSts()) return;
 
     if ( iret.value != 0) {
-      button = new OpWindButton( session, "", "Eventlog",
+      eventLogButton = new OpWindButton( session, "", JopLang.transl("Event Log"),
 				 OpWindButton.EVENTLOG);
-      this.add( button);
+      this.add( eventLogButton);
     }
       
     s = sret.str + ".EnableNavigator";
@@ -107,14 +125,14 @@ public class JopOpWindow extends JPanel {
     if ( iret.evenSts()) return;
 
     if ( iret.value != 0) {
-      button = new OpWindButton( session, "", "Navigator",
+      navigatorButton = new OpWindButton( session, "", JopLang.transl("Navigator"),
 				 OpWindButton.NAVIGATOR);
-      this.add( button);
+      this.add( navigatorButton);
     }
       
-    button = new OpWindButton( session, "", "Help",
+    helpButton = new OpWindButton( session, "", JopLang.transl("Help"),
 			       OpWindButton.HELP);
-    this.add( button);
+    this.add( helpButton);
     button = new OpWindButton( session, "", "Proview",
 			       OpWindButton.PROVIEW);
     this.add( button);
@@ -187,6 +205,7 @@ public class JopOpWindow extends JPanel {
     public static final int EVENTLOG = 7;
     public static final int HELP = 8;
     public static final int PROVIEW = 9;
+    public static final int LANGUAGE = 10;
     JopSession session;
     String action;
     int type;
@@ -238,7 +257,7 @@ public class JopOpWindow extends JPanel {
 	    case PROVIEW:
 	      if ( ! en.gdh.isAuthorized( Pwr.mAccess_AllPwr))
 		break;
-	      session.executeCommand("open url \"$pwr_doc/sv_se/index.html\"");
+	      session.executeCommand("open url \"$pwr_doc/" + session.getLang() + "/index.html\"");
 	      break;
 	    case WEBGRAPH:
 	      if ( ! en.gdh.isAuthorized( Pwr.mAccess_AllPwr))
@@ -250,6 +269,11 @@ public class JopOpWindow extends JPanel {
 		break;
 	      String cmd = "open url \"" + action + "\"";
 	      session.executeCommand( cmd);
+	      break;
+	    case LANGUAGE:
+	      if ( ! en.gdh.isAuthorized( Pwr.mAccess_AllPwr))
+		break;
+	      session.openLanguage();
 	      break;
 	  }
 	  System.out.println( "Action: " + action);
@@ -267,6 +291,25 @@ public class JopOpWindow extends JPanel {
 
   public void setLabelText( String text) {
     label.setText( text);
+  }
+
+  public void setLanguage( int language) {
+    System.out.println( "Opwindow: Set language");
+
+    if ( langButton != null)
+      langButton.setText( JopLang.transl("Language"));
+    if ( loginButton != null)
+      loginButton.setText( JopLang.transl("Login"));
+    if ( logoutButton != null)
+      logoutButton.setText( JopLang.transl("Logout"));
+    if ( alarmButton != null)
+      alarmButton.setText( JopLang.transl("Alarm and Event List"));
+    if ( eventLogButton != null)
+      eventLogButton.setText( JopLang.transl("Event Log"));
+    if ( navigatorButton != null) 
+      navigatorButton.setText( JopLang.transl("Navigator"));
+    if ( helpButton != null) 
+      helpButton.setText( JopLang.transl("Help"));
   }
 }
 

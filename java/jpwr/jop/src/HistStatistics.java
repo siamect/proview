@@ -40,18 +40,18 @@ public class HistStatistics extends JPanel{
     JScrollPane fScroll, eScroll;
     int lang;
 
-    String[][] names = {{"Most frequent alarms","Longest duration"},{"Mest frekventa alarm","Längst varaktighet"}}; 
+    String[] names = {JopLang.transl("Most frequent alarms"),
+		      JopLang.transl("Longest duration")};
     
-    public HistStatistics(MhData m, int l, JopSession s){
+    public HistStatistics(MhData m, JopSession s){
     //Setup and layout. (The only method of this class..)
     session = s;
-    lang=l;
-        this.setLayout(new GridLayout(2,1));
-        JPanel upper = new JPanel();
+    this.setLayout(new GridLayout(2,1));
+    JPanel upper = new JPanel();
     upper.setLayout(new BorderLayout());
-        fModel=new HistStatModel1(m,lang);
-        fTable = new JTable(fModel);
-        fScroll= new JScrollPane(fTable );
+    fModel=new HistStatModel1(m,lang);
+    fTable = new JTable(fModel);
+    fScroll= new JScrollPane(fTable );
     fTable.getColumnModel().getColumn(0).setPreferredWidth(420);
     fTable.getColumnModel().getColumn(1).setPreferredWidth(70);
     //Mouse listener for fTable JopMethodMenu support.
@@ -85,11 +85,11 @@ public class HistStatistics extends JPanel{
         }
         });
     upper.add(fScroll,BorderLayout.CENTER);
-    upper.add(new JLabel(names[lang][0]), BorderLayout.NORTH);
+    upper.add(new JLabel(names[0]), BorderLayout.NORTH);
     upper.add(new JLabel("\n\n") , BorderLayout.SOUTH);
     JPanel lower = new JPanel();
     lower.setLayout(new BorderLayout());
-        eModel=new HistStatModel2(m,lang);
+        eModel=new HistStatModel2(m);
         eTable = new JTable(eModel);
         eScroll= new JScrollPane(eTable );
     eTable.getColumnModel().getColumn(0).setPreferredWidth(420);
@@ -125,7 +125,7 @@ public class HistStatistics extends JPanel{
         }
         });
     lower.add(eScroll,BorderLayout.CENTER);
-    lower.add(new JLabel(names[lang][1]), BorderLayout.NORTH);
+    lower.add(new JLabel(names[1]), BorderLayout.NORTH);
     this.setPreferredSize(new Dimension(600, 500));
         this.add(upper); 
         this.add(lower);

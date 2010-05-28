@@ -70,6 +70,9 @@ public class JopMethods {
     else if ( method.equals("CircuitDiagram")) {
       return circuitDiagramFilter();
     }
+    else if ( method.equals("Photo")) {
+      return photoFilter();
+    }
     else if ( method.equals("ObjectGraph")) {
       return openObjectGraphFilter();
     }
@@ -119,11 +122,14 @@ public class JopMethods {
     else if ( method.equals("Crossreferences")) {
       openCrossref();
     }
-    else if ( method.equals("Class Help")) {
+    else if ( method.equals("Help Class")) {
       helpClass();
     }
     else if ( method.equals("CircuitDiagram")) {
       circuitDiagram();
+    }
+    else if ( method.equals("Photo")) {
+      photo();
     }
     else if ( method.equals("ObjectGraph")) {
       openObjectGraph();
@@ -328,6 +334,24 @@ public class JopMethods {
 
     String cmd = "open url \"" + sret.str + "\"";
     System.out.println( "circuitDiagram: " + cmd);
+    session.executeCommand( cmd);
+  }
+
+  public boolean photoFilter() {
+    String attr = object + ".Photo";
+    CdhrString sret = gdh.getObjectInfoString( attr);
+    if ( sret.evenSts() || sret.str.equals(""))
+      return false;
+
+    return true;
+  }
+  public void photo() {
+    String attr = object + ".Photo";
+    CdhrString sret = gdh.getObjectInfoString( attr);
+    if ( sret.evenSts()) return;
+
+    String cmd = "open url \"" + sret.str + "\"";
+    System.out.println( "photo: " + cmd);
     session.executeCommand( cmd);
   }
 

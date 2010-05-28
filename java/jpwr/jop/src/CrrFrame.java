@@ -61,13 +61,13 @@ public class CrrFrame extends JFrame {
 
   JMenuBar createMenu() {
     menuBar = new JMenuBar();
-    JMenu fileMenu = new JMenu("File");
+    JMenu fileMenu = new JMenu(JopLang.transl("File"));
     fileMenu.setMnemonic('F');
-    MenuAction closeFileAction = new MenuAction("Close");
+    MenuAction closeFileAction = new MenuAction(JopLang.transl("Close"));
 
-    JMenu functionsMenu = new JMenu("Functions");
+    JMenu functionsMenu = new JMenu(JopLang.transl("Functions"));
     fileMenu.setMnemonic('u');
-    MenuAction openPlcFunctionsAction = new MenuAction("Open Plc");
+    MenuAction openPlcFunctionsAction = new MenuAction(JopLang.transl("Open Plc"));
 
     JMenuItem item;
     item = fileMenu.add( closeFileAction);
@@ -89,10 +89,10 @@ public class CrrFrame extends JFrame {
     }
 
     public void actionPerformed( ActionEvent e) {
-      if ( e.getActionCommand().equals("Close")) {
+      if ( e.getActionCommand().equals(JopLang.transl("Close"))) {
 	dispose();
       }
-      else if ( e.getActionCommand().equals("Open Plc")) {
+      else if ( e.getActionCommand().equals(JopLang.transl("Open Plc"))) {
 	int selected[] = crrList.getSelectedIndices();
 	if ( selected.length == 0)
 	  return;
@@ -139,9 +139,9 @@ public class CrrFrame extends JFrame {
       }
       if ( sret.evenSts()) return null;
 
-      Image crrRead = JopSpider.getImage( session, "jpwr/jop/crrread.gif");
-      Image crrWrite = JopSpider.getImage( session, "jpwr/jop/crrwrite.gif");
-      Image crrReadWrite = JopSpider.getImage( session, "jpwr/jop/crrreadwrite.gif");
+      Image crrRead = JopSpider.getImage( session, "jpwr/jop/crrread.png");
+      Image crrWrite = JopSpider.getImage( session, "jpwr/jop/crrwrite.png");
+      Image crrReadWrite = JopSpider.getImage( session, "jpwr/jop/crrreadwrite.png");
       ImageIcon crrReadIcon = new ImageIcon( crrRead);
       ImageIcon crrWriteIcon = new ImageIcon( crrWrite);
       ImageIcon crrReadWriteIcon = new ImageIcon( crrReadWrite);

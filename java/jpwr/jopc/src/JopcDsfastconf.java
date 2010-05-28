@@ -1,6 +1,7 @@
 package jpwr.jopc;
 import jpwr.rt.*;
 import jpwr.jop.*;
+import jpwr.jopc.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.*;
@@ -11,14 +12,14 @@ import java.awt.event.*;
 public class JopcDsfastconf extends JopFrame implements JopUtilityIfc {
   JPanel contentPane;
   BorderLayout borderLayout1 = new BorderLayout();
-  LocalPanel localPanel = new LocalPanel();
+  public LocalPanel localPanel = new LocalPanel();
   boolean scrollbar = false;
   Dimension size;
-  pwr_indsquare	pwr_indsquare1;
-  pwr_indsquare	pwr_indsquare2;
-  pwr_valuesmall	pwr_valuesmall5;
-  pwr_valuelong	pwr_valuelong6;
-  pwr_valuelong	pwr_valuelong7;
+  pwr_valuelong	pwr_valuelong0;
+  pwr_valuelong	pwr_valuelong1;
+  pwr_valuesmall	pwr_valuesmall2;
+  pwr_indsquare	pwr_indsquare5;
+  pwr_indsquare	pwr_indsquare6;
   public JopcDsfastconf( JopSession session, String instance, boolean scrollbar) {
     super( session, instance);
     this.scrollbar = scrollbar;
@@ -31,7 +32,7 @@ public class JopcDsfastconf extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "");
+    JopSpider.setSystemName( "ä'¢·D±ù·D±ù·p—uÄ¿¡·›§· “§·(q¦¿ç	Ÿ·D±ù·D±ù·x—u “§·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 711, 128);
@@ -52,49 +53,49 @@ public class JopcDsfastconf extends JopFrame implements JopUtilityIfc {
       setTitle( engine.getInstance());
     else
       this.setTitle("JopcDsfastconf");
-    pwr_indsquare1 = new pwr_indsquare(session);
-    pwr_indsquare1.setBounds(new Rectangle(132,31,17,18));
-    localPanel.add(pwr_indsquare1, new Proportion(pwr_indsquare1.getBounds(), dsize));
-    pwr_indsquare2 = new pwr_indsquare(session);
-    pwr_indsquare2.setBounds(new Rectangle(132,52,17,18));
-    localPanel.add(pwr_indsquare2, new Proportion(pwr_indsquare2.getBounds(), dsize));
-    pwr_valuesmall5 = new pwr_valuesmall(session);
-    pwr_valuesmall5.setBounds(new Rectangle(131,7,56,19));
-    pwr_valuesmall5.setFillColor(31);
-    pwr_valuesmall5.setBorderColor(33);
-    localPanel.add(pwr_valuesmall5, new Proportion(pwr_valuesmall5.getBounds(), dsize));
-    pwr_valuelong6 = new pwr_valuelong(session);
-    pwr_valuelong6.setBounds(new Rectangle(151,30,535,19));
-    pwr_valuelong6.setBorderColor(33);
-    localPanel.add(pwr_valuelong6, new Proportion(pwr_valuelong6.getBounds(), dsize));
-    pwr_valuelong7 = new pwr_valuelong(session);
-    pwr_valuelong7.setBounds(new Rectangle(151,52,536,19));
-    pwr_valuelong7.setBorderColor(33);
-    localPanel.add(pwr_valuelong7, new Proportion(pwr_valuelong7.getBounds(), dsize));
-    pwr_indsquare1.dd.setDynType(33554432);
-    pwr_indsquare1.dd.setActionType(0);
-    pwr_indsquare1.dd.setElements(new GeDynElemIfc[] {
-      new GeDynStatusColor(pwr_indsquare1.dd, "$node.ProcStatus[11]##status",38)
+    pwr_valuelong0 = new pwr_valuelong(session);
+    pwr_valuelong0.setBounds(new Rectangle(151,52,536,19));
+    pwr_valuelong0.setBorderColor(33);
+    localPanel.add(pwr_valuelong0, new Proportion(pwr_valuelong0.getBounds(), dsize));
+    pwr_valuelong1 = new pwr_valuelong(session);
+    pwr_valuelong1.setBounds(new Rectangle(151,30,535,19));
+    pwr_valuelong1.setBorderColor(33);
+    localPanel.add(pwr_valuelong1, new Proportion(pwr_valuelong1.getBounds(), dsize));
+    pwr_valuesmall2 = new pwr_valuesmall(session);
+    pwr_valuesmall2.setBounds(new Rectangle(131,7,56,19));
+    pwr_valuesmall2.setFillColor(31);
+    pwr_valuesmall2.setBorderColor(33);
+    localPanel.add(pwr_valuesmall2, new Proportion(pwr_valuesmall2.getBounds(), dsize));
+    pwr_indsquare5 = new pwr_indsquare(session);
+    pwr_indsquare5.setBounds(new Rectangle(132,52,17,18));
+    localPanel.add(pwr_indsquare5, new Proportion(pwr_indsquare5.getBounds(), dsize));
+    pwr_indsquare6 = new pwr_indsquare(session);
+    pwr_indsquare6.setBounds(new Rectangle(132,31,17,18));
+    localPanel.add(pwr_indsquare6, new Proportion(pwr_indsquare6.getBounds(), dsize));
+    pwr_valuelong0.dd.setDynType(1025);
+    pwr_valuelong0.dd.setActionType(0);
+    pwr_valuelong0.dd.setElements(new GeDynElemIfc[] {
+      new GeDynValue(pwr_valuelong0.dd, "$node.ProcMessage[11]##String80","%s")
       });
-    pwr_indsquare2.dd.setDynType(33554432);
-    pwr_indsquare2.dd.setActionType(0);
-    pwr_indsquare2.dd.setElements(new GeDynElemIfc[] {
-      new GeDynStatusColor(pwr_indsquare2.dd, "$node.ProcMsgSeverity[11]##status",38)
+    pwr_valuelong1.dd.setDynType(1025);
+    pwr_valuelong1.dd.setActionType(0);
+    pwr_valuelong1.dd.setElements(new GeDynElemIfc[] {
+      new GeDynValue(pwr_valuelong1.dd, "$node.ProcStatus[11]##Status","%1m")
       });
-    pwr_valuesmall5.dd.setDynType(1025);
-    pwr_valuesmall5.dd.setActionType(0);
-    pwr_valuesmall5.dd.setElements(new GeDynElemIfc[] {
-      new GeDynValue(pwr_valuesmall5.dd, "$object.BaseFrequency##Int32","%d")
+    pwr_valuesmall2.dd.setDynType(1025);
+    pwr_valuesmall2.dd.setActionType(0);
+    pwr_valuesmall2.dd.setElements(new GeDynElemIfc[] {
+      new GeDynValue(pwr_valuesmall2.dd, "$object.BaseFrequency##Int32","%d")
       });
-    pwr_valuelong6.dd.setDynType(1025);
-    pwr_valuelong6.dd.setActionType(0);
-    pwr_valuelong6.dd.setElements(new GeDynElemIfc[] {
-      new GeDynValue(pwr_valuelong6.dd, "$node.ProcStatus[11]##Status","%1m")
+    pwr_indsquare5.dd.setDynType(33554432);
+    pwr_indsquare5.dd.setActionType(0);
+    pwr_indsquare5.dd.setElements(new GeDynElemIfc[] {
+      new GeDynStatusColor(pwr_indsquare5.dd, "$node.ProcMsgSeverity[11]##status",38)
       });
-    pwr_valuelong7.dd.setDynType(1025);
-    pwr_valuelong7.dd.setActionType(0);
-    pwr_valuelong7.dd.setElements(new GeDynElemIfc[] {
-      new GeDynValue(pwr_valuelong7.dd, "$node.ProcMessage[11]##String80","%s")
+    pwr_indsquare6.dd.setDynType(33554432);
+    pwr_indsquare6.dd.setActionType(0);
+    pwr_indsquare6.dd.setElements(new GeDynElemIfc[] {
+      new GeDynStatusColor(pwr_indsquare6.dd, "$node.ProcStatus[11]##status",38)
       });
     engine.setFrameReady();
   }
@@ -202,16 +203,16 @@ class LocalPanel extends JPanel {
     AffineTransform save_tmp;
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "Status",14, 44);
+    g.setFont(new Font("Helvetica", Font.PLAIN, 12));
+    g.drawString( JopLang.transl("BaseFrequency"),14, 23);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "LogMessage",14, 67);
+    g.setFont(new Font("Helvetica", Font.PLAIN, 12));
+    g.drawString( JopLang.transl("LogMessage"),14, 68);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "BaseFrequency",14, 22);
+    g.setFont(new Font("Helvetica", Font.PLAIN, 12));
+    g.drawString( JopLang.transl("Status"),14, 45);
     g.setTransform(save);
   }
   public Dimension getPreferredSize() { return size;}
@@ -227,7 +228,7 @@ protected class pwr_valuelong extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -330,8 +331,13 @@ protected class pwr_valuelong extends GeComponent {
     {
     int fcolor = GeColor.getDrawtype(41, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
+    if ( gradient == GeGradient.eGradient_No) {
     g.setColor(GeColor.getColor( fcolor));
     g.fill( shapes[0]);
+    } else {
+    GeGradient.paint( g, gradient,2,-2,2F,2F,604.545F,15.9091F, false,41, colorTone, colorShift, colorIntensity, colorInverse, fillColor, dimmed);
+    g.fill( shapes[0]);
+    }
     if ( shadow != 0) {
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
@@ -467,8 +473,13 @@ protected class pwr_indsquare extends GeComponent {
     {
     int fcolor = GeColor.getDrawtype(293, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
+    if ( gradient == GeGradient.eGradient_No) {
     g.setColor(GeColor.getColor( fcolor));
     g.fill( shapes[0]);
+    } else {
+    GeGradient.paint( g, gradient,2,-2,2F,2F,13.6364F,14.7727F, false,293, colorTone, colorShift, colorIntensity, colorInverse, fillColor, dimmed);
+    g.fill( shapes[0]);
+    }
     if ( shadow != 0) {
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
@@ -498,7 +509,7 @@ protected class pwr_valuesmall extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -601,8 +612,13 @@ protected class pwr_valuesmall extends GeComponent {
     {
     int fcolor = GeColor.getDrawtype(41, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
+    if ( gradient == GeGradient.eGradient_No) {
     g.setColor(GeColor.getColor( fcolor));
     g.fill( shapes[0]);
+    } else {
+    GeGradient.paint( g, gradient,2,-2,2F,2F,52.2727F,15.9091F, false,41, colorTone, colorShift, colorIntensity, colorInverse, fillColor, dimmed);
+    g.fill( shapes[0]);
+    }
     if ( shadow != 0) {
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
@@ -636,7 +652,10 @@ protected class pwr_valuesmall extends GeComponent {
     return JopUtility.GRAPH;
   }
   public PwrtObjid getUtilityObjid() {
-    return utilityAref.getObjid();
+    if ( utilityAref != null)
+      return utilityAref.getObjid();
+    else
+      return null;
   }
   public PwrtAttrRef getUtilityAttrRef() {
     return utilityAref;

@@ -286,9 +286,9 @@ public class GeDyn {
 	     return Pwr.eType_Float32;
 	else if ( suffix.equalsIgnoreCase("Int32"))
 	     return Pwr.eType_Int32;
-	else if ( suffix.substring(0,6).equalsIgnoreCase("String"))
+	else if ( suffix.length() >= 6 && suffix.substring(0,6).equalsIgnoreCase("String"))
 	     return Pwr.eType_String;
-	else if ( suffix.equalsIgnoreCase("UInt32"))
+ 	else if ( suffix.equalsIgnoreCase("UInt32"))
 	     return Pwr.eType_UInt32;
 	else if ( suffix.equalsIgnoreCase("Int16"))
 	     return Pwr.eType_Int16;
@@ -314,6 +314,10 @@ public class GeDyn {
 	     return Pwr.eType_AttrRef;
 	else if ( suffix.equalsIgnoreCase("Bit"))
 	     return GeDyn.eType_Bit;
+ 	else if ( suffix.equalsIgnoreCase("Enum"))
+	     return Pwr.eType_Int32;
+ 	else if ( suffix.equalsIgnoreCase("Mask"))
+	     return Pwr.eType_UInt32;
 	return -1;
     }
     static public int getAttrSize( String s) {

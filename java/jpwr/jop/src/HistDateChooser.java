@@ -26,47 +26,53 @@ import javax.swing.event.*;
 
 public class HistDateChooser extends JPanel implements ActionListener{
         
-        private Calendar date;
+    private Calendar date;
     SpinnerDateModel yearModel;
     private JComboBox month;
-        private JSpinner year, hour, minute, second;
-        private JPanel dayGrid = new JPanel();
-        private JPanel timeGrid = new JPanel();
-        private int selectedDay;
-
-        private int lang =0;
+    private JSpinner year, hour, minute, second;
+    private JPanel dayGrid = new JPanel();
+    private JPanel timeGrid = new JPanel();
+    private int selectedDay;
         
-        private String[][] months = {{"January", "February", "March", "April", "May", "June", "July"
-            ,"August", "September", "October","November", "December"},
-        {"januari", "februari", "mars", "april", "maj", "juni", "juli"
-        ,"augusti", "september", "oktober","november", "december"}};
+    private String[] months = {JopLang.transl("January"), 
+			       JopLang.transl("February"), 
+			       JopLang.transl("March"), 
+			       JopLang.transl("April"), 
+			       JopLang.transl("May"), 
+			       JopLang.transl("June"), 
+			       JopLang.transl("July"),
+			       JopLang.transl("August"), 
+			       JopLang.transl("September"), 
+			       JopLang.transl("October"),
+			       JopLang.transl("November"), 
+			       JopLang.transl("December")};
         
-    private String[][] days = {{"Mon","Tue","Wed","Thu","Fri","Sat","Sun"},
-         {"Mån","Tis","Ons","Tor","Fre","Lör","Sön"}}; 
+    private String[] days = {JopLang.transl("Mon"),
+			     JopLang.transl("Tue"),
+			     JopLang.transl("Wed"),
+			     JopLang.transl("Thu"),
+			     JopLang.transl("Fri"),
+			     JopLang.transl("Sat"),
+			     JopLang.transl("Sun")};
          
-    private String[][] time = {{"Hour","Minute","Second"},{"Timme","Minut","Sekund"}};
+    private String[] time = {JopLang.transl("Hour"),
+			     JopLang.transl("Minute"),
+			     JopLang.transl("Second")};
         
-        public HistDateChooser(){
-                date = Calendar.getInstance();
-                init();
-        }
-        
-    public HistDateChooser(int l){
-        lang=l;
-        date = Calendar.getInstance();
-        init();
+    public HistDateChooser(){
+	date = Calendar.getInstance();
+	init();
     }
-    
-    public HistDateChooser(Calendar Cal,int l){
-        lang=l;
+        
+    public HistDateChooser(Calendar Cal){
         date = (Calendar) Cal.clone();
         init();
     }
         
 
-        private void init(){
+    private void init(){
        selectedDay=date.get(Calendar.DAY_OF_MONTH); 
-       month = new JComboBox(months[lang]);
+       month = new JComboBox(months);
        month.setSelectedIndex(date.get(Calendar.MONTH));
        yearModel = new SpinnerDateModel();
        yearModel.setValue(date.getTime());
@@ -107,7 +113,7 @@ public class HistDateChooser extends JPanel implements ActionListener{
         updateDate();
         dayGrid.removeAll();
         int i;
-        for (i=0;i<7;i++) dayGrid.add(new JLabel(days[lang][i],JLabel.CENTER));
+        for (i=0;i<7;i++) dayGrid.add(new JLabel(days[i],JLabel.CENTER));
         Calendar temp =(Calendar) date.clone();
         temp.set(Calendar.DAY_OF_MONTH,1);
         int startDay = temp.get(Calendar.DAY_OF_WEEK)-Calendar.MONDAY;
@@ -131,7 +137,7 @@ public class HistDateChooser extends JPanel implements ActionListener{
         timeGrid.add(new JLabel(""));
        }
        for (int i=0; i<3; i++){
-        timeGrid.add(new JLabel(time[lang][i],JLabel.CENTER));
+        timeGrid.add(new JLabel(time[i],JLabel.CENTER));
        }
        timeGrid.add(hour);  
        timeGrid.add(minute);  

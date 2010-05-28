@@ -35,15 +35,14 @@ public class JopcBasefilter extends JopFrame implements JopUtilityIfc {
   pwr_smallbuttoncenter	pwr_smallbuttoncenter19;
   pwr_valuelong	pwr_valuelong20;
   pwr_valuelong	pwr_valuelong21;
-  pwr_valuesmall	pwr_valuesmall22;
+  pwr_pulldownmenu2	pwr_pulldownmenu222;
   pwr_pulldownmenu2	pwr_pulldownmenu223;
-  pwr_pulldownmenu2	pwr_pulldownmenu224;
-  pwr_mbsimulate	pwr_mbsimulate25;
-  pwr_indsquare	pwr_indsquare26;
-  JopFilter	jopFilter28;
-  Grp136_	grp136_29;
-  pwr_indsquare	pwr_indsquare31;
-  pwr_mbup	pwr_mbup32;
+  pwr_mbsimulate	pwr_mbsimulate24;
+  pwr_indsquare	pwr_indsquare25;
+  JopFilter	jopFilter27;
+  Grp136_	grp136_28;
+  pwr_indsquare	pwr_indsquare30;
+  pwr_mbup	pwr_mbup31;
   public JopcBasefilter( JopSession session, String instance, boolean scrollbar) {
     super( session, instance);
     this.scrollbar = scrollbar;
@@ -56,7 +55,7 @@ public class JopcBasefilter extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä×˜·Dað·Dað·p—uÄo˜·Kž· Cž·xŠµ¿ç¹•·Dað·Dað·x—u Cž·");
+    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
     engine.setAnimationScanTime( 200);
     engine.setScanTime( 500);
     size = new Dimension( 418, 288);
@@ -157,42 +156,37 @@ public class JopcBasefilter extends JopFrame implements JopUtilityIfc {
     pwr_valuelong21.setFillColor(31);
     pwr_valuelong21.setBorderColor(31);
     localPanel.add(pwr_valuelong21, new Proportion(pwr_valuelong21.getBounds(), dsize));
-    pwr_valuesmall22 = new pwr_valuesmall(session);
-    pwr_valuesmall22.setBounds(new Rectangle(213,114,35,18));
-    pwr_valuesmall22.setFillColor(31);
-    pwr_valuesmall22.setBorderColor(31);
-    localPanel.add(pwr_valuesmall22, new Proportion(pwr_valuesmall22.getBounds(), dsize));
+    pwr_pulldownmenu222 = new pwr_pulldownmenu2(session);
+    pwr_pulldownmenu222.setBounds(new Rectangle(150,0,69,24));
+    pwr_pulldownmenu222.setShadow(1);
+    localPanel.add(pwr_pulldownmenu222, new Proportion(pwr_pulldownmenu222.getBounds(), dsize));
     pwr_pulldownmenu223 = new pwr_pulldownmenu2(session);
-    pwr_pulldownmenu223.setBounds(new Rectangle(150,0,69,24));
+    pwr_pulldownmenu223.setBounds(new Rectangle(69,0,69,24));
     pwr_pulldownmenu223.setShadow(1);
     localPanel.add(pwr_pulldownmenu223, new Proportion(pwr_pulldownmenu223.getBounds(), dsize));
-    pwr_pulldownmenu224 = new pwr_pulldownmenu2(session);
-    pwr_pulldownmenu224.setBounds(new Rectangle(69,0,69,24));
-    pwr_pulldownmenu224.setShadow(1);
-    localPanel.add(pwr_pulldownmenu224, new Proportion(pwr_pulldownmenu224.getBounds(), dsize));
-    pwr_mbsimulate25 = new pwr_mbsimulate(session);
-    pwr_mbsimulate25.setBounds(new Rectangle(381,24,20,20));
-    localPanel.add(pwr_mbsimulate25, new Proportion(pwr_mbsimulate25.getBounds(), dsize));
-    pwr_indsquare26 = new pwr_indsquare(session);
-    pwr_indsquare26.setBounds(new Rectangle(306,127,16,17));
-    pwr_indsquare26.setFillColor(175);
-    pwr_indsquare26.setShadow(1);
-    localPanel.add(pwr_indsquare26, new Proportion(pwr_indsquare26.getBounds(), dsize));
-    jopFilter28 = new JopFilter(session);
-    jopFilter28.setBounds(new Rectangle(85,115,44,44));
-    jopFilter28.setShadow(1);
-    localPanel.add(jopFilter28, new Proportion(jopFilter28.getBounds(), dsize));
-    grp136_29 = new Grp136_(session);
-    grp136_29.setBounds(new Rectangle(207,127,84,18));
-    localPanel.add(grp136_29, new Proportion(grp136_29.getBounds(), dsize));
-    pwr_indsquare31 = new pwr_indsquare(session);
-    pwr_indsquare31.setBounds(new Rectangle(134,204,16,17));
-    pwr_indsquare31.setFillColor(295);
-    pwr_indsquare31.setShadow(1);
-    localPanel.add(pwr_indsquare31, new Proportion(pwr_indsquare31.getBounds(), dsize));
-    pwr_mbup32 = new pwr_mbup(session);
-    pwr_mbup32.setBounds(new Rectangle(360,24,19,20));
-    localPanel.add(pwr_mbup32, new Proportion(pwr_mbup32.getBounds(), dsize));
+    pwr_mbsimulate24 = new pwr_mbsimulate(session);
+    pwr_mbsimulate24.setBounds(new Rectangle(381,24,20,20));
+    localPanel.add(pwr_mbsimulate24, new Proportion(pwr_mbsimulate24.getBounds(), dsize));
+    pwr_indsquare25 = new pwr_indsquare(session);
+    pwr_indsquare25.setBounds(new Rectangle(306,127,16,17));
+    pwr_indsquare25.setFillColor(175);
+    pwr_indsquare25.setShadow(1);
+    localPanel.add(pwr_indsquare25, new Proportion(pwr_indsquare25.getBounds(), dsize));
+    jopFilter27 = new JopFilter(session);
+    jopFilter27.setBounds(new Rectangle(85,115,44,44));
+    jopFilter27.setShadow(1);
+    localPanel.add(jopFilter27, new Proportion(jopFilter27.getBounds(), dsize));
+    grp136_28 = new Grp136_(session);
+    grp136_28.setBounds(new Rectangle(207,127,84,18));
+    localPanel.add(grp136_28, new Proportion(grp136_28.getBounds(), dsize));
+    pwr_indsquare30 = new pwr_indsquare(session);
+    pwr_indsquare30.setBounds(new Rectangle(134,204,16,17));
+    pwr_indsquare30.setFillColor(295);
+    pwr_indsquare30.setShadow(1);
+    localPanel.add(pwr_indsquare30, new Proportion(pwr_indsquare30.getBounds(), dsize));
+    pwr_mbup31 = new pwr_mbup(session);
+    pwr_mbup31.setBounds(new Rectangle(360,24,19,20));
+    localPanel.add(pwr_mbup31, new Proportion(pwr_mbup31.getBounds(), dsize));
     pwr_valuelong2.dd.setDynType(1025);
     pwr_valuelong2.dd.setActionType(0);
     pwr_valuelong2.dd.setElements(new GeDynElemIfc[] {
@@ -205,7 +199,7 @@ public class JopcBasefilter extends JopFrame implements JopUtilityIfc {
     pwr_pulldownmenu24.dd.setAccess(65535);
     pwr_pulldownmenu24.dd.setElements(new GeDynElemIfc[] {
       new GeDynPulldownMenu(pwr_pulldownmenu24.dd, new String[] {
-        "Print","Close",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
+        JopLang.transl("Print"),JopLang.transl("Close"),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
         new GeDyn[] {
             new GeDyn(pwr_pulldownmenu24,1,65,65535,new GeDynElemIfc[] {
       new GeDynCommand(pwr_pulldownmenu24.dd, "print graph/class/inst=$object")
@@ -222,7 +216,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_pulldownmenu25.dd.setAccess(65532);
     pwr_pulldownmenu25.dd.setElements(new GeDynElemIfc[] {
       new GeDynPulldownMenu(pwr_pulldownmenu25.dd, new String[] {
-        "Help","Help Class",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
+        JopLang.transl("Help"),JopLang.transl("Help Class"),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
         new GeDyn[] {
             new GeDyn(pwr_pulldownmenu25,1,65,65535,new GeDynElemIfc[] {
       new GeDynCommand(pwr_pulldownmenu25.dd, "call method/method=\"Help\"/object=$object")
@@ -240,7 +234,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbopenobject6.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbopenobject6.dd, "$cmd(check method/method=\"Open Object\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbopenobject6.dd, "call method/method=\"Open Object\"/object=$object")
-      ,new GeDynTipText(pwr_mbopenobject6.dd, "Open Object")
+      ,new GeDynTipText(pwr_mbopenobject6.dd, JopLang.transl("Open Object"))
       });
     pwr_mbtrend7.dd.setDynType(129);
     pwr_mbtrend7.dd.setActionType(8256);
@@ -248,7 +242,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbtrend7.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbtrend7.dd, "$cmd(check method/method=\"Trend\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbtrend7.dd, "call method/method=\"Trend\"/object=$object")
-      ,new GeDynTipText(pwr_mbtrend7.dd, "Trend")
+      ,new GeDynTipText(pwr_mbtrend7.dd, JopLang.transl("Trend"))
       });
     pwr_mbfast8.dd.setDynType(129);
     pwr_mbfast8.dd.setActionType(8256);
@@ -256,7 +250,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbfast8.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbfast8.dd, "$cmd(check method/method=\"Fast\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbfast8.dd, "call method/method=\"Fast\"/object=$object")
-      ,new GeDynTipText(pwr_mbfast8.dd, "Fast")
+      ,new GeDynTipText(pwr_mbfast8.dd, JopLang.transl("Fast"))
       });
     pwr_mbphoto9.dd.setDynType(129);
     pwr_mbphoto9.dd.setActionType(8256);
@@ -264,7 +258,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbphoto9.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbphoto9.dd, "$cmd(check method/method=\"Photo\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbphoto9.dd, "call method/method=\"Photo\"/object=$object")
-      ,new GeDynTipText(pwr_mbphoto9.dd, "Photo")
+      ,new GeDynTipText(pwr_mbphoto9.dd, JopLang.transl("Photo"))
       });
     pwr_mbdatasheet10.dd.setDynType(129);
     pwr_mbdatasheet10.dd.setActionType(8256);
@@ -272,7 +266,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbdatasheet10.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbdatasheet10.dd, "$cmd(check method/method=\"DataSheet\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbdatasheet10.dd, "call method/method=\"DataSheet\"/object=$object")
-      ,new GeDynTipText(pwr_mbdatasheet10.dd, "DataSheet")
+      ,new GeDynTipText(pwr_mbdatasheet10.dd, JopLang.transl("DataSheet"))
       });
     pwr_mbopenplc11.dd.setDynType(129);
     pwr_mbopenplc11.dd.setActionType(8256);
@@ -280,7 +274,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbopenplc11.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbopenplc11.dd, "$cmd(check method/method=\"Open Plc\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbopenplc11.dd, "call method/method=\"Open Plc\"/object=$object")
-      ,new GeDynTipText(pwr_mbopenplc11.dd, "Open Plc")
+      ,new GeDynTipText(pwr_mbopenplc11.dd, JopLang.transl("Open Plc"))
       });
     pwr_mbcircuitdiagram12.dd.setDynType(129);
     pwr_mbcircuitdiagram12.dd.setActionType(8256);
@@ -288,7 +282,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbcircuitdiagram12.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbcircuitdiagram12.dd, "$cmd(check method/method=\"CircuitDiagram\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbcircuitdiagram12.dd, "call method/method=\"CircuitDiagram\"/object=$object")
-      ,new GeDynTipText(pwr_mbcircuitdiagram12.dd, "CircuitDiagram")
+      ,new GeDynTipText(pwr_mbcircuitdiagram12.dd, JopLang.transl("CircuitDiagram"))
       });
     pwr_mbrtnavigator13.dd.setDynType(129);
     pwr_mbrtnavigator13.dd.setActionType(8256);
@@ -296,7 +290,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbrtnavigator13.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbrtnavigator13.dd, "$cmd(check method/method=\"RtNavigator\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbrtnavigator13.dd, "call method/method=\"RtNavigator\"/object=$object")
-      ,new GeDynTipText(pwr_mbrtnavigator13.dd, "RtNavigator")
+      ,new GeDynTipText(pwr_mbrtnavigator13.dd, JopLang.transl("RtNavigator"))
       });
     pwr_mbhelpclass14.dd.setDynType(129);
     pwr_mbhelpclass14.dd.setActionType(8256);
@@ -304,7 +298,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbhelpclass14.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbhelpclass14.dd, "$cmd(check method/method=\"Help Class\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbhelpclass14.dd, "call method/method=\"Help Class\"/object=$object")
-      ,new GeDynTipText(pwr_mbhelpclass14.dd, "Help Class")
+      ,new GeDynTipText(pwr_mbhelpclass14.dd, JopLang.transl("Help Class"))
       });
     pwr_mbblockevents15.dd.setDynType(129);
     pwr_mbblockevents15.dd.setActionType(8256);
@@ -312,7 +306,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbblockevents15.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbblockevents15.dd, "$cmd(check method/method=\"Block Events...\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbblockevents15.dd, "call method/method=\"Block Events...\"/object=$object")
-      ,new GeDynTipText(pwr_mbblockevents15.dd, "Block Events")
+      ,new GeDynTipText(pwr_mbblockevents15.dd, JopLang.transl("Block Events"))
       });
     pwr_mbhistevent16.dd.setDynType(129);
     pwr_mbhistevent16.dd.setActionType(8256);
@@ -320,7 +314,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbhistevent16.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbhistevent16.dd, "$cmd(check method/method=\"Hist Event...\"/object=$object)",0)
       ,new GeDynCommand(pwr_mbhistevent16.dd, "call method/method=\"Hist Event...\"/object=$object")
-      ,new GeDynTipText(pwr_mbhistevent16.dd, "Hist Event")
+      ,new GeDynTipText(pwr_mbhistevent16.dd, JopLang.transl("Hist Event"))
       });
     pwr_mbnote17.dd.setDynType(129);
     pwr_mbnote17.dd.setActionType(8256);
@@ -328,7 +322,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbnote17.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbnote17.dd, "$cmd(check method/method=\"Note\"/object=$object)",0)
       ,new GeDynCommand(pwr_mbnote17.dd, "call method/method=\"Note\"/object=$object")
-      ,new GeDynTipText(pwr_mbnote17.dd, "Note")
+      ,new GeDynTipText(pwr_mbnote17.dd, JopLang.transl("Note"))
       });
     pwr_mbhelp18.dd.setDynType(128);
     pwr_mbhelp18.dd.setActionType(8256);
@@ -336,7 +330,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_mbhelp18.dd.setElements(new GeDynElemIfc[] {
       new GeDynInvisible(pwr_mbhelp18.dd, "$cmd(check method/method=\"Help\"/object=$object)",1)
       ,new GeDynCommand(pwr_mbhelp18.dd, "call method/method=\"Help\"/object=$object")
-      ,new GeDynTipText(pwr_mbhelp18.dd, "Help")
+      ,new GeDynTipText(pwr_mbhelp18.dd, JopLang.transl("Help"))
       });
     pwr_smallbuttoncenter19.dd.setDynType(128);
     pwr_smallbuttoncenter19.dd.setActionType(64);
@@ -356,125 +350,120 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_valuelong21.dd.setElements(new GeDynElemIfc[] {
       new GeDynValue(pwr_valuelong21.dd, "$object.Note##String80","%s")
       });
-    pwr_valuesmall22.dd.setDynType(1025);
-    pwr_valuesmall22.dd.setActionType(0);
-    pwr_valuesmall22.dd.setElements(new GeDynElemIfc[] {
-      new GeDynValue(pwr_valuesmall22.dd, "$object.Temp.Unit##String16","%s")
+    pwr_pulldownmenu222.dd.setDynType(1);
+    pwr_pulldownmenu222.dd.setActionType(524288);
+    pwr_pulldownmenu222.dd.setAccess(65535);
+    pwr_pulldownmenu222.dd.setElements(new GeDynElemIfc[] {
+      new GeDynPulldownMenu(pwr_pulldownmenu222.dd, new String[] {
+        JopLang.transl("CloggedSwitch Di"),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
+        new GeDyn[] {
+            new GeDyn(pwr_pulldownmenu222,129,65,65535,new GeDynElemIfc[] {
+      new GeDynInvisible(pwr_pulldownmenu222.dd, "$object.DisableCloggedSwitch##Boolean",1)
+      ,new GeDynCommand(pwr_pulldownmenu222.dd, "open graph /class /inst=$object.CloggedSwitch")
+      }),
+null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null
+      })
       });
+    pwr_pulldownmenu222.setAnnot1("Signals");
     pwr_pulldownmenu223.dd.setDynType(1);
     pwr_pulldownmenu223.dd.setActionType(524288);
     pwr_pulldownmenu223.dd.setAccess(65535);
     pwr_pulldownmenu223.dd.setElements(new GeDynElemIfc[] {
       new GeDynPulldownMenu(pwr_pulldownmenu223.dd, new String[] {
-        "CloggedSwitch Di",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
+        JopLang.transl("Help"),JopLang.transl("Note"),JopLang.transl("Trend"),JopLang.transl("Fast"),JopLang.transl("Photo"),JopLang.transl("DataSheet"),JopLang.transl("Hist Event..."),JopLang.transl("Block Events..."),JopLang.transl("RtNavigator"),JopLang.transl("Open  Object"),JopLang.transl("Open Plc"),JopLang.transl("CircuitDiagram"),JopLang.transl("Help Class"),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
         new GeDyn[] {
             new GeDyn(pwr_pulldownmenu223,129,65,65535,new GeDynElemIfc[] {
-      new GeDynInvisible(pwr_pulldownmenu223.dd, "$object.DisableCloggedSwitch##Boolean",1)
-      ,new GeDynCommand(pwr_pulldownmenu223.dd, "open graph /class /inst=$object.CloggedSwitch")
+      new GeDynInvisible(pwr_pulldownmenu223.dd, "$cmd(check method/method=\"Help\"/object=$object)",0)
+      ,new GeDynCommand(pwr_pulldownmenu223.dd, "call method/method=\"Help\"/object=$object")
       }),
-null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null
-      })
-      });
-    pwr_pulldownmenu223.setAnnot1("Signals");
-    pwr_pulldownmenu224.dd.setDynType(1);
-    pwr_pulldownmenu224.dd.setActionType(524288);
-    pwr_pulldownmenu224.dd.setAccess(65535);
-    pwr_pulldownmenu224.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPulldownMenu(pwr_pulldownmenu224.dd, new String[] {
-        "Help","Note","Trend","Fast","Photo","DataSheet","Hist Event...","Block Events...","RtNavigator","Open  Object","Open Plc","CircuitDiagram","Help Class",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
-        new GeDyn[] {
-            new GeDyn(pwr_pulldownmenu224,129,65,65535,new GeDynElemIfc[] {
-      new GeDynInvisible(pwr_pulldownmenu224.dd, "$cmd(check method/method=\"Help\"/object=$object)",0)
-      ,new GeDynCommand(pwr_pulldownmenu224.dd, "call method/method=\"Help\"/object=$object")
+    new GeDyn(pwr_pulldownmenu223,129,65,65532,new GeDynElemIfc[] {
+      new GeDynInvisible(pwr_pulldownmenu223.dd, "$cmd(check method/method=\"Note\"/object=$object)",0)
+      ,new GeDynCommand(pwr_pulldownmenu223.dd, "call method/method=\"Note\"/object=$object")
       }),
-    new GeDyn(pwr_pulldownmenu224,129,65,65532,new GeDynElemIfc[] {
-      new GeDynInvisible(pwr_pulldownmenu224.dd, "$cmd(check method/method=\"Note\"/object=$object)",0)
-      ,new GeDynCommand(pwr_pulldownmenu224.dd, "call method/method=\"Note\"/object=$object")
+    new GeDyn(pwr_pulldownmenu223,129,65,65532,new GeDynElemIfc[] {
+      new GeDynInvisible(pwr_pulldownmenu223.dd, "$cmd(check method/method=\"Trend\"/object=$object)",0)
+      ,new GeDynCommand(pwr_pulldownmenu223.dd, "call method/method=\"Trend\"/object=$object")
       }),
-    new GeDyn(pwr_pulldownmenu224,129,65,65532,new GeDynElemIfc[] {
-      new GeDynInvisible(pwr_pulldownmenu224.dd, "$cmd(check method/method=\"Trend\"/object=$object)",0)
-      ,new GeDynCommand(pwr_pulldownmenu224.dd, "call method/method=\"Trend\"/object=$object")
+    new GeDyn(pwr_pulldownmenu223,129,65,65532,new GeDynElemIfc[] {
+      new GeDynInvisible(pwr_pulldownmenu223.dd, "$cmd(check method/method=\"Fast\"/object=$object)",0)
+      ,new GeDynCommand(pwr_pulldownmenu223.dd, "call method/method=\"Fast\"/object=$object")
       }),
-    new GeDyn(pwr_pulldownmenu224,129,65,65532,new GeDynElemIfc[] {
-      new GeDynInvisible(pwr_pulldownmenu224.dd, "$cmd(check method/method=\"Fast\"/object=$object)",0)
-      ,new GeDynCommand(pwr_pulldownmenu224.dd, "call method/method=\"Fast\"/object=$object")
+    new GeDyn(pwr_pulldownmenu223,129,65,65532,new GeDynElemIfc[] {
+      new GeDynInvisible(pwr_pulldownmenu223.dd, "$cmd(check method/method=\"Photo\"/object=$object)",0)
+      ,new GeDynCommand(pwr_pulldownmenu223.dd, "call method/method=\"Photo\"/object=$object")
       }),
-    new GeDyn(pwr_pulldownmenu224,129,65,65532,new GeDynElemIfc[] {
-      new GeDynInvisible(pwr_pulldownmenu224.dd, "$cmd(check method/method=\"Photo\"/object=$object)",0)
-      ,new GeDynCommand(pwr_pulldownmenu224.dd, "call method/method=\"Photo\"/object=$object")
+    new GeDyn(pwr_pulldownmenu223,129,65,65532,new GeDynElemIfc[] {
+      new GeDynInvisible(pwr_pulldownmenu223.dd, "$cmd(check method/method=\"DataSheet\"/object=$object)",0)
+      ,new GeDynCommand(pwr_pulldownmenu223.dd, "call method/method=\"DataSheet\"/object=$object")
       }),
-    new GeDyn(pwr_pulldownmenu224,129,65,65532,new GeDynElemIfc[] {
-      new GeDynInvisible(pwr_pulldownmenu224.dd, "$cmd(check method/method=\"DataSheet\"/object=$object)",0)
-      ,new GeDynCommand(pwr_pulldownmenu224.dd, "call method/method=\"DataSheet\"/object=$object")
+    new GeDyn(pwr_pulldownmenu223,129,65,65532,new GeDynElemIfc[] {
+      new GeDynInvisible(pwr_pulldownmenu223.dd, "$cmd(check method/method=\"Hist Event...\"/object=$object)",0)
+      ,new GeDynCommand(pwr_pulldownmenu223.dd, "call method/method=\"Hist Event...\"/object=$object")
       }),
-    new GeDyn(pwr_pulldownmenu224,129,65,65532,new GeDynElemIfc[] {
-      new GeDynInvisible(pwr_pulldownmenu224.dd, "$cmd(check method/method=\"Hist Event...\"/object=$object)",0)
-      ,new GeDynCommand(pwr_pulldownmenu224.dd, "call method/method=\"Hist Event...\"/object=$object")
+    new GeDyn(pwr_pulldownmenu223,129,65,65532,new GeDynElemIfc[] {
+      new GeDynInvisible(pwr_pulldownmenu223.dd, "$cmd(check method/method=\"Block Events...\"/object=$object)",0)
+      ,new GeDynCommand(pwr_pulldownmenu223.dd, "call method/method=\"Block Events...\"/object=$object")
       }),
-    new GeDyn(pwr_pulldownmenu224,129,65,65532,new GeDynElemIfc[] {
-      new GeDynInvisible(pwr_pulldownmenu224.dd, "$cmd(check method/method=\"Block Events...\"/object=$object)",0)
-      ,new GeDynCommand(pwr_pulldownmenu224.dd, "call method/method=\"Block Events...\"/object=$object")
+    new GeDyn(pwr_pulldownmenu223,129,65,65532,new GeDynElemIfc[] {
+      new GeDynInvisible(pwr_pulldownmenu223.dd, "$cmd(check method/method=\"RtNavigator\"/object=$object)",0)
+      ,new GeDynCommand(pwr_pulldownmenu223.dd, "call method/method=\"RtNavigator\"/object=$object")
       }),
-    new GeDyn(pwr_pulldownmenu224,129,65,65532,new GeDynElemIfc[] {
-      new GeDynInvisible(pwr_pulldownmenu224.dd, "$cmd(check method/method=\"RtNavigator\"/object=$object)",0)
-      ,new GeDynCommand(pwr_pulldownmenu224.dd, "call method/method=\"RtNavigator\"/object=$object")
+    new GeDyn(pwr_pulldownmenu223,129,65,65532,new GeDynElemIfc[] {
+      new GeDynInvisible(pwr_pulldownmenu223.dd, "$cmd(check method/method=\"Open Object\"/object=$object)",0)
+      ,new GeDynCommand(pwr_pulldownmenu223.dd, "call method/method=\"Open Object\"/object=$object")
       }),
-    new GeDyn(pwr_pulldownmenu224,129,65,65532,new GeDynElemIfc[] {
-      new GeDynInvisible(pwr_pulldownmenu224.dd, "$cmd(check method/method=\"Open Object\"/object=$object)",0)
-      ,new GeDynCommand(pwr_pulldownmenu224.dd, "call method/method=\"Open Object\"/object=$object")
+    new GeDyn(pwr_pulldownmenu223,129,65,65532,new GeDynElemIfc[] {
+      new GeDynInvisible(pwr_pulldownmenu223.dd, "$cmd(check method/method=\"Open Plc\"/object=$object)",0)
+      ,new GeDynCommand(pwr_pulldownmenu223.dd, "call method/method=\"Open Plc\"/object=$object")
       }),
-    new GeDyn(pwr_pulldownmenu224,129,65,65532,new GeDynElemIfc[] {
-      new GeDynInvisible(pwr_pulldownmenu224.dd, "$cmd(check method/method=\"Open Plc\"/object=$object)",0)
-      ,new GeDynCommand(pwr_pulldownmenu224.dd, "call method/method=\"Open Plc\"/object=$object")
+    new GeDyn(pwr_pulldownmenu223,129,65,65532,new GeDynElemIfc[] {
+      new GeDynInvisible(pwr_pulldownmenu223.dd, "$cmd(check method/method=\"CircuitDiagram\"/object=$object)",0)
+      ,new GeDynCommand(pwr_pulldownmenu223.dd, "call method/method=\"CircuitDiagram\"/object=$object")
       }),
-    new GeDyn(pwr_pulldownmenu224,129,65,65532,new GeDynElemIfc[] {
-      new GeDynInvisible(pwr_pulldownmenu224.dd, "$cmd(check method/method=\"CircuitDiagram\"/object=$object)",0)
-      ,new GeDynCommand(pwr_pulldownmenu224.dd, "call method/method=\"CircuitDiagram\"/object=$object")
-      }),
-    new GeDyn(pwr_pulldownmenu224,129,65,65532,new GeDynElemIfc[] {
-      new GeDynInvisible(pwr_pulldownmenu224.dd, "$cmd(check method/method=\"Help Class\"/object=$object)",0)
-      ,new GeDynCommand(pwr_pulldownmenu224.dd, "call method/method=\"Help Class\"/object=$object")
+    new GeDyn(pwr_pulldownmenu223,129,65,65532,new GeDynElemIfc[] {
+      new GeDynInvisible(pwr_pulldownmenu223.dd, "$cmd(check method/method=\"Help Class\"/object=$object)",0)
+      ,new GeDynCommand(pwr_pulldownmenu223.dd, "call method/method=\"Help Class\"/object=$object")
       }),
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null
       })
       });
-    pwr_pulldownmenu224.setAnnot1("Methods");
-    pwr_mbsimulate25.dd.setDynType(129);
-    pwr_mbsimulate25.dd.setActionType(8256);
-    pwr_mbsimulate25.dd.setAccess(65532);
-    pwr_mbsimulate25.dd.setElements(new GeDynElemIfc[] {
-      new GeDynInvisible(pwr_mbsimulate25.dd, "$cmd(check method/method=\"Simulate\"/object=$object)",0)
-      ,new GeDynCommand(pwr_mbsimulate25.dd, "call method/method=\"Simulate\"/object=$object")
-      ,new GeDynTipText(pwr_mbsimulate25.dd, "Open simulate graph")
+    pwr_pulldownmenu223.setAnnot1("Methods");
+    pwr_mbsimulate24.dd.setDynType(129);
+    pwr_mbsimulate24.dd.setActionType(8256);
+    pwr_mbsimulate24.dd.setAccess(65532);
+    pwr_mbsimulate24.dd.setElements(new GeDynElemIfc[] {
+      new GeDynInvisible(pwr_mbsimulate24.dd, "$cmd(check method/method=\"Simulate\"/object=$object)",0)
+      ,new GeDynCommand(pwr_mbsimulate24.dd, "call method/method=\"Simulate\"/object=$object")
+      ,new GeDynTipText(pwr_mbsimulate24.dd, JopLang.transl("Open simulate graph"))
       });
-    pwr_indsquare26.dd.setDynType(133);
-    pwr_indsquare26.dd.setActionType(0);
-    pwr_indsquare26.dd.setElements(new GeDynElemIfc[] {
-      new GeDynInvisible(pwr_indsquare26.dd, "$object.DisableCloggedSwitch##Boolean",0)
-      ,new GeDynDigLowColor(pwr_indsquare26.dd, "$object.AlarmStatus##Boolean",29)
+    pwr_indsquare25.dd.setDynType(133);
+    pwr_indsquare25.dd.setActionType(0);
+    pwr_indsquare25.dd.setElements(new GeDynElemIfc[] {
+      new GeDynInvisible(pwr_indsquare25.dd, "$object.DisableCloggedSwitch##Boolean",0)
+      ,new GeDynDigLowColor(pwr_indsquare25.dd, "$object.AlarmStatus##Boolean",29)
       });
-    jopFilter28.dd.setDynType(16);
-    jopFilter28.dd.setActionType(0);
-    jopFilter28.dd.setElements(new GeDynElemIfc[] {
-      new GeDynDigError(jopFilter28.dd, "$object.AlarmStatus##Boolean")
+    jopFilter27.dd.setDynType(16);
+    jopFilter27.dd.setActionType(0);
+    jopFilter27.dd.setElements(new GeDynElemIfc[] {
+      new GeDynDigError(jopFilter27.dd, "$object.AlarmStatus##Boolean")
       });
-    grp136_29.dd.setDynType(129);
-    grp136_29.dd.setActionType(0);
-    grp136_29.dd.setElements(new GeDynElemIfc[] {
-      new GeDynInvisible(grp136_29.dd, "$object.DisableCloggedSwitch##Boolean",0)
+    grp136_28.dd.setDynType(129);
+    grp136_28.dd.setActionType(0);
+    grp136_28.dd.setElements(new GeDynElemIfc[] {
+      new GeDynInvisible(grp136_28.dd, "$object.DisableCloggedSwitch##Boolean",0)
       });
-    pwr_indsquare31.dd.setDynType(5);
-    pwr_indsquare31.dd.setActionType(0);
-    pwr_indsquare31.dd.setElements(new GeDynElemIfc[] {
-      new GeDynDigLowColor(pwr_indsquare31.dd, "$object.SupDisabled##Boolean",29)
+    pwr_indsquare30.dd.setDynType(5);
+    pwr_indsquare30.dd.setActionType(0);
+    pwr_indsquare30.dd.setElements(new GeDynElemIfc[] {
+      new GeDynDigLowColor(pwr_indsquare30.dd, "$object.SupDisabled##Boolean",29)
       });
-    pwr_mbup32.dd.setDynType(129);
-    pwr_mbup32.dd.setActionType(8256);
-    pwr_mbup32.dd.setAccess(33619967);
-    pwr_mbup32.dd.setElements(new GeDynElemIfc[] {
-      new GeDynInvisible(pwr_mbup32.dd, "$cmd(check isattribute/object=$object)",0)
-      ,new GeDynCommand(pwr_mbup32.dd, "open graph/class/parent/instance=$object")
-      ,new GeDynTipText(pwr_mbup32.dd, "Open parent object graph")
+    pwr_mbup31.dd.setDynType(129);
+    pwr_mbup31.dd.setActionType(8256);
+    pwr_mbup31.dd.setAccess(33619967);
+    pwr_mbup31.dd.setElements(new GeDynElemIfc[] {
+      new GeDynInvisible(pwr_mbup31.dd, "$cmd(check isattribute/object=$object)",0)
+      ,new GeDynCommand(pwr_mbup31.dd, "open graph/class/parent/instance=$object")
+      ,new GeDynTipText(pwr_mbup31.dd, JopLang.transl("Open parent object graph"))
       });
     engine.setFrameReady();
   }
@@ -618,7 +607,7 @@ class LocalPanel extends JPanel {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 10));
-    g.drawString( "Supervision disabled",19, 216);
+    g.drawString( JopLang.transl("Supervision disabled"),19, 216);
     g.setTransform(save);
   }
   public Dimension getPreferredSize() { return size;}
@@ -634,7 +623,7 @@ protected class pwr_smallbuttoncenter extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -914,7 +903,7 @@ protected class pwr_valuelong extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -1053,155 +1042,6 @@ protected class pwr_valuelong extends GeComponent {
   public Dimension getPreferredSize() { return size;}
   public Dimension getMinimumSize() { return size;}
 }
-protected class pwr_valuesmall extends GeComponent {
-  // Dimension size;
-  public pwr_valuesmall( JopSession session)
-  {
-    super( session);
-    size = new Dimension( 50, 18);
-    annot1Font = new Font("Helvetica", Font.BOLD, 10);
-  }
-  int annot1Color = 0;
-  public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
-  public void setAnnot1Font( Font font) { annot1Font = font;}
-  public Font getAnnot1Font() { return annot1Font;}
-  public void setAnnot1Color( int color) { annot1Color = color;}
-  public int original_width = 50;
-  public int original_height = 18;
-  Shape[] shapes = new Shape[] { 
-    new Rectangle2D.Float(2F, 2F, 46F, 14F),
-    new Polygon( new int[] { 2, 48, 47, 3, 3, 2}, new int[] { 2, 2, 3, 3, 15, 16}, 6), 
-    new Polygon( new int[] { 48, 48, 47, 47, 3, 2}, new int[] { 16, 2, 3, 15, 15, 16}, 6), 
-  };
-  public void paintComponent(Graphics g1) {
-    animationCount = 1;
-    if ( !visible)
-      return;
-    Graphics2D g = (Graphics2D) g1;
-    float width = getWidth();
-    float height = getHeight();
-    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-    if ( 45.0 <= rotate && rotate < 135.0) {
-      g.translate( width, 0.0); 
-      g.rotate( Math.PI * rotate/180, 0.0, 0.0);
-      g.transform( AffineTransform.getScaleInstance( height/original_width,
-      		width/original_height));
-    }
-    else if ( 135.0 <= rotate && rotate < 225.0)
-    {
-      g.rotate( Math.PI * rotate/180, width/2, height/2);
-      g.transform( AffineTransform.getScaleInstance( width/original_width,
-      		height/original_height));
-    }
-    else if ( 225.0 <= rotate && rotate < 315.0)
-    {
-      g.translate( -height, 0.0);
-      g.rotate( Math.PI * rotate/180, height, 0.0);
-      g.transform( AffineTransform.getScaleInstance( height/original_width,
-      		width/original_height));
-    }
-    else
-      g.transform( AffineTransform.getScaleInstance( width/original_width,
-      		height/original_height));
-    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
-      g.rotate( Math.PI * dd.rotate/180, 
-
-           (dd.x0 - getX())*original_width/width,
-           (dd.y0 - getY()) * original_height / height);
-    }
-    AffineTransform save = g.getTransform();
-    AffineTransform save_tmp;
-    int rounds = 1;
-    if ( fillLevel != 1F)
-      rounds = 2;
-    int oldColor = 0;
-    for ( int i = 0; i < rounds; i++) {
-      if ( rounds == 2) {
-        switch ( i) {
-        case 0:
-	  if ( levelColorTone != GeColor.COLOR_TONE_NO) {
-	    oldColor = colorTone;
-	    colorTone = levelColorTone;
-	  }
-	  else if ( levelFillColor != GeColor.COLOR_NO) {
-	    oldColor = fillColor;
-	    fillColor = levelFillColor;
-	  }
-	  break;
-        case 1:
-	  if ( levelColorTone != GeColor.COLOR_TONE_NO)
-	    colorTone = oldColor;
-	  else if ( levelFillColor != GeColor.COLOR_NO)
-	    fillColor = oldColor;
-	  break;
-        }
-        switch ( levelDirection) {
-        case Ge.DIRECTION_UP:
-	  if ( i == 0)
-	    g.setClip(new Rectangle2D.Float(0F,fillLevel*original_height+Ge.cJBean_Offset,original_width,original_height));
-	  else
-	    g.setClip(new Rectangle2D.Float(0F,0F,original_width,fillLevel * original_height+Ge.cJBean_Offset));
-	  break;
-	case Ge.DIRECTION_DOWN:
-	  if ( i == 0)
-	    g.setClip(new Rectangle2D.Float(0F,0F,original_width,(1-fillLevel)*original_height+Ge.cJBean_Offset));
-	  else
-	    g.setClip(new Rectangle2D.Float(0F,(1-fillLevel)*original_height+Ge.cJBean_Offset,original_width,original_height));
-	  break;
-	case Ge.DIRECTION_RIGHT:
-	  if ( i == 0)
-	    g.setClip(new Rectangle2D.Float(fillLevel*original_width+Ge.cJBean_Offset,0F,original_width,original_height));
-	  else
-	    g.setClip(new Rectangle2D.Float(0F,0F,fillLevel*width+Ge.cJBean_Offset,height));
-	  break;
-	case Ge.DIRECTION_LEFT:
-	  if ( i == 0)
-	    g.setClip(new Rectangle2D.Float(0F,0F,(1-fillLevel)*original_width+Ge.cJBean_Offset,original_height));
-	  else
-	    g.setClip(new Rectangle2D.Float((1-fillLevel)*original_width+Ge.cJBean_Offset,0F,original_width,original_height));
-	  break;
-	}
-      }
-    {
-    int fcolor = GeColor.getDrawtype(41, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
-    if ( gradient == GeGradient.eGradient_No) {
-    g.setColor(GeColor.getColor( fcolor));
-    g.fill( shapes[0]);
-    } else {
-    GeGradient.paint( g, gradient,2,-2,2F,2F,46F,14F, false,41, colorTone, colorShift, colorIntensity, colorInverse, fillColor, dimmed);
-    g.fill( shapes[0]);
-    }
-    if ( shadow != 0) {
-    g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
-    g.fill( shapes[1]);
-    g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
-    g.fill( shapes[2]);
-    }
-    g.setStroke( new BasicStroke(1F));
-    g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
-    g.draw( shapes[0]);
-    }
-    g.setColor(GeColor.getColor( annot1Color , colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont( annot1Font);
-    save_tmp = g.getTransform();
-    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_OFF);
-    g.transform( AffineTransform.getScaleInstance( original_width/width *
-      		height/original_height, 1));
-    if ( annot1 != null)
-      g.drawString( annot1, 7 * original_height / height * width / original_width, 13F);
-    g.setTransform( save_tmp);
-    }
-    if ( rounds == 2)
-      g.setClip(null);
-    g.setTransform(save);
-  }
-  public Dimension getPreferredSize() { return size;}
-  public Dimension getMinimumSize() { return size;}
-}
 protected class JopFilter extends GeComponent {
   // Dimension size;
   public JopFilter( JopSession session)
@@ -1217,7 +1057,7 @@ protected class JopFilter extends GeComponent {
     new Polygon( new int[] { 2, 5, 22, 22}, new int[] { 22, 22, 39,42}, 4),
     new Polygon( new int[] { 22, 22, 39, 42}, new int[] { 42, 39, 22,22}, 4),
     new Polygon( new int[] { 42, 39, 22, 22}, new int[] { 22, 22, 5,2}, 4),
-    new Polygon( new int[] { 22, 22, 147487542, -33}, new int[] { 2, 5, -1220087428,-28}, 4),
+    new Polygon( new int[] { 22, 22, 147556366, -33}, new int[] { 2, 5, -1219706500,-28}, 4),
     new Line2D.Float( 22F, 42F, 22F, 2F),
   };
   public void paintComponent(Graphics g1) {
@@ -1488,7 +1328,7 @@ protected class pwr_pulldownmenu2 extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -4071,7 +3911,7 @@ protected class Grp136_ extends GeComponent {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "Filter clogged",2, 13);
+    g.drawString( JopLang.transl("Filter clogged"),2, 13);
     }
     if ( rounds == 2)
       g.setClip(null);

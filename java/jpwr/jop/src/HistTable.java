@@ -41,37 +41,27 @@ public class HistTable extends JScrollPane{
     boolean DEBUG=false;
     public EventTableModel atModel;
     public JTable alarmTable;
-    String[][] columnNamesEventTable = {{"P","Type","Time","Description text","Event name"},{"P",
-                                                 "Typ",
-                                                 "Tid",
-                                                 "Händelsetext",
-                                                 "Objekt"}};
+    String[] columnNamesEventTable = {"","Type","Time","Event text","Event name"};
     
-    String[][] excelMess=
-    {
-    {"Copy to Excel","Your search result has been put on the Clipboard.\nOpen a new document in Excel and choose \"Paste\" from the Edit menu\nto create a Worksheet with your search result."},
-    {"Kopiera till Excel","Ditt sökresultat har nu lagrats i Urklipp.\nÖppna ett nytt dokument i Excel och välj \"Klistra in\" i Redigeramenyn\nför att skapa ett Excelark med ditt sökresultat."}
-    };
-    
-    int lang=0;
-    
-    // Language sensitive constructor
-    public HistTable(int l, JopSession s){
-    session = s;
-    lang=l;
-    setup();            
+    String[] excelMess= {JopLang.transl("Export to Excel"),
+			 JopLang.transl("The result is put into the Clipboard. Open a new Excel document and use Paste to insert it.")};
+
+    // Constructor
+    public HistTable(JopSession s){
+	session = s;
+	setup();            
     }
     
     //Layout the HistTable. Add a mouse Listener to the JTable alarmTable
     //and set it up to support JopMethodsMenu.
     private void setup(){
                
-    atModel = new EventTableModel(lang);
+    atModel = new EventTableModel();
     alarmTable = new JTable(atModel);
     alarmTable.setCellEditor(null);
     this.initColumnSizes(alarmTable, atModel);
     alarmTable.getTableHeader().setReorderingAllowed(false);
-    alarmTable.getColumn((Object)columnNamesEventTable[lang][0]).setCellRenderer(new EventTableCellRender());
+    alarmTable.getColumn((Object)columnNamesEventTable[0]).setCellRenderer(new EventTableCellRender());
     
     
     this.setViewportView(alarmTable);
@@ -80,16 +70,6 @@ public class HistTable extends JScrollPane{
     
     ((EventTableModel)alarmTable.getModel()).updateTable(); 
     
-    }
-    
-    //Update the table headers to the correct language.
-    public void updateLang(int l){
-    lang=l;
-    for (int i=0; i<alarmTable.getColumnCount();i++)
-        alarmTable.getColumnModel().getColumn(i).setHeaderValue(columnNamesEventTable[lang][i]);
-    //alarmTable.getTableHeader().resizeAndRepaint();
-    alarmTable.validate();
-    alarmTable.repaint();
     }
     
     /*Get a pointer to the local Clipboard, format a string with all cell
@@ -109,7 +89,7 @@ public class HistTable extends JScrollPane{
     Clipboard cb= Toolkit.getDefaultToolkit().getSystemClipboard();
     StringSelection output = new StringSelection(copybuffer.toString());
     cb.setContents(output, output);
-    JOptionPane.showMessageDialog(this.getParent(),excelMess[lang][1],excelMess[lang][0],JOptionPane.INFORMATION_MESSAGE);
+    JOptionPane.showMessageDialog(this.getParent(),excelMess[1],excelMess[0],JOptionPane.INFORMATION_MESSAGE);
     
         
     }
@@ -174,7 +154,7 @@ public class HistTable extends JScrollPane{
     public void presentStat(){        
 	// Derive interesting statistics from the current searchresult and
         //display it in a JFrame...
-	HistStatistics statistics = new HistStatistics(atModel.mhData,lang,session);
+	HistStatistics statistics = new HistStatistics(atModel.mhData,session);
 	JFrame frame = new JFrame();
         JPanel panel = (JPanel)frame.getContentPane();
         panel.setLayout(new FlowLayout());

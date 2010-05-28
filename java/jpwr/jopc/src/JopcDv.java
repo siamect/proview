@@ -78,15 +78,9 @@ public class JopcDv extends JopcDvGen implements JopDynamic {
 
     boolean holdValue = engine.ldb.getObjectRefInfoBoolean( pHold);
     float scanTime = engine.ldb.getObjectRefInfoFloat( pScanTime);
-    if ( holdValue) {
-      engine.ldb.setObjectInfo( this, "$local.TrendHold##Boolean", false);
-      hold = !hold;
+    if ( hold != holdValue) {
+      hold = holdValue;
       jopTrend2.setHold(hold);
-      if ( hold)
-        jopButtontoggle6.tsetFillColor( GeColor.COLOR_115);
-      else
-        jopButtontoggle6.resetFillColor();
-      jopButtontoggle6.repaintForeground();
     }
     if ( scanTime != scanTimeOld) {
       // TODO

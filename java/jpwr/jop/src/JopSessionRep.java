@@ -32,6 +32,8 @@ public class JopSessionRep implements JopSessionIfc {
   MhFrame alarmList;
   HistSearch eventLog;
   JopLoginFrame login;
+  String lang = "en_us";
+
   //Vector<Object> frames = new Vector<Object>();
   Vector frames = new Vector();
 
@@ -52,6 +54,12 @@ public class JopSessionRep implements JopSessionIfc {
   }
   public JopEngine getEngine() {
     return engine;
+  }
+  public void setLang( String lang) {
+    this.lang = lang;
+  }
+  public String getLang() {
+    return lang;
   }
 
   public void openNavigator( PwrtObjid oid) {
@@ -108,6 +116,11 @@ public class JopSessionRep implements JopSessionIfc {
       login.toFront();
       // login.requestFocus();      // Has no effect... 
     }
+  }
+
+  public void openLanguage() {
+    JopLanguageFrame lang = new JopLanguageFrame( session);
+    lang.setVisible( true);
   }
 
   public void openFlowFrame( PwrtObjid oid, String center) {
@@ -322,6 +335,12 @@ public class JopSessionRep implements JopSessionIfc {
       ((JopOpWindowApplet)root).setLabelText( text);
     else if ( isOpWindowFrame())
       ((JopOpWindowFrame)root).setLabelText( text);
+  }
+  public void setOpWindowLanguage( int language) {
+    if ( isOpWindowApplet())
+      ((JopOpWindowApplet)root).setLanguage( language);
+    else if ( isOpWindowFrame())
+      ((JopOpWindowFrame)root).setLanguage( language);
   }
 }
 

@@ -35,15 +35,9 @@ import jpwr.rt.MhrEvent;
   {     
   
         MhData mhData = new MhData(0,100);  
-        String[][] columnNamesEventTable = {{"Prio","","Time","Description text","Event name"},{"P",
-    "Typ",
-    "Tid",
-    "Händelsetext",
-    "Objekt"}};
+        String[] columnNamesEventTable = {"Prio","","Time","Event Text","Object"};
 
-        int lang;
-
-    public final Object[] longValues = {"A", "Kvittens",
+    public final Object[] longValues = {"A", "Acknowledge",
       "10-12-31 12:12:12.98",
       "QWERTYUIOPÅÄÖLK_JHGFDSAZXCVBNM__POÅIUYTRQWERTYUIOPÅÄÖL",
       "QWERTYUIOPÅÄÖLK"};
@@ -52,12 +46,8 @@ import jpwr.rt.MhrEvent;
     /**
      *  Constructor for the EventTableModel object
      */
-    public EventTableModel() { lang=0; }
+    public EventTableModel() {}
     
-    // constructor with language support
-    public EventTableModel(int l) { lang=l; }
-
-
     /**
      *  Gets the columnCount attribute of the EventTableModel object
      *
@@ -65,7 +55,7 @@ import jpwr.rt.MhrEvent;
      */
     public int getColumnCount()
     {
-      return columnNamesEventTable[lang].length;
+      return columnNamesEventTable.length;
     }
 
 
@@ -88,7 +78,7 @@ import jpwr.rt.MhrEvent;
      */
     public String getColumnName(int col)
     {
-      return (String)columnNamesEventTable[lang][col];
+      return JopLang.transl((String)columnNamesEventTable[col]);
     }
 
 

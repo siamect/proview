@@ -8712,7 +8712,7 @@ pwr_exe:
 102 33619964
 103 0
 3
-300 $object.OverTemp.ActualValue##Boolean
+300 $object.IndError##Boolean
 301 174
 302 1
 303 1

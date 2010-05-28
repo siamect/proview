@@ -38,9 +38,9 @@ public class JopLoginFrame extends JFrame {
   JPanel buttonPanel = new JPanel();
   JPanel messagePanel = new JPanel();
   Dimension size;
-  JLabel labelUser = new JLabel("User");
+  JLabel labelUser = new JLabel(JopLang.transl("User"));
   JTextField textUser = new JTextField(10);
-  JLabel labelPassword = new JLabel("Password");
+  JLabel labelPassword = new JLabel(JopLang.transl("Password"));
   JPasswordField textPassword = new JPasswordField(10);
   JButton buttonOk = new JButton();
   JButton buttonClear = new JButton();
@@ -65,7 +65,7 @@ public class JopLoginFrame extends JFrame {
     contentPane.setOpaque(true);
     contentPane.setBackground(GeColor.getColor(40, GeColor.NO_COLOR));
     this.setSize(size);
-    this.setTitle("Login");
+    this.setTitle(JopLang.transl("Login"));
     gbc.gridy = 0;
     gbc.gridx = 0;
     userPanel.add(labelUser, gbc);
@@ -78,9 +78,9 @@ public class JopLoginFrame extends JFrame {
     gbc.gridy = 1;
     gbc.gridx = 1;
     userPanel.add(textPassword, gbc);
-    buttonOk.setText("Ok");
+    buttonOk.setText(JopLang.transl("Ok"));
     buttonPanel.add(buttonOk);
-    buttonClear.setText("Clear");
+    buttonClear.setText(JopLang.transl("Clear"));
     buttonPanel.add(buttonClear);
     messagePanel.add(labelMessage, BorderLayout.CENTER);
     
@@ -120,15 +120,15 @@ public class JopLoginFrame extends JFrame {
     passwd = JopCrypt.crypt( "aa", passwd);
     int sts = session.getEngine().gdh.login( user, passwd);
     if ( sts % 2 == 0) {
-      JOptionPane.showMessageDialog( this, "User not authorized", 
+      JOptionPane.showMessageDialog( this, JopLang.transl("User not authorized"), 
 		"Login message", JOptionPane.ERROR_MESSAGE);
       labelMessage.setText(" ");
     }
     else {
       textUser.setText("");
       textPassword.setText("");
-      labelMessage.setText( "User " + user + " logged in");
-      session.setOpWindowLabelText( user + " logged in");
+      labelMessage.setText( JopLang.transl("User") + " " + user + " " + JopLang.transl("logged in"));
+      session.setOpWindowLabelText( user + " " + JopLang.transl("logged in"));
       hide();
     }
   }

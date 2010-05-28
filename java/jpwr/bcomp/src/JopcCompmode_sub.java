@@ -59,7 +59,7 @@ public class JopcCompmode_sub extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä×˜·Dað·Dað·p—uÄo˜·Kž· Cž·xŠµ¿ç¹•·Dað·Dað·x—u Cž·");
+    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 307, 338);
@@ -536,7 +536,7 @@ class LocalPanel extends JPanel {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "Mode",13, 23);
+    g.drawString( JopLang.transl("Mode"),13, 23);
     g.setStroke( new BasicStroke(1F, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
     g.setColor(GeColor.getColor(108, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
@@ -544,7 +544,7 @@ class LocalPanel extends JPanel {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "Ext SetValue",13, 147);
+    g.drawString( JopLang.transl("Ext SetValue"),13, 147);
     g.setStroke( new BasicStroke(1F, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
     g.setColor(GeColor.getColor(108, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
@@ -552,11 +552,11 @@ class LocalPanel extends JPanel {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 10));
-    g.drawString( "Proc value",172, 262);
+    g.drawString( JopLang.transl("Proc value"),172, 262);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 10));
-    g.drawString( "Out value",234, 262);
+    g.drawString( JopLang.transl("Out value"),234, 262);
     g.setStroke( new BasicStroke(1F, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
     g.setColor(GeColor.getColor(40, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
@@ -564,11 +564,11 @@ class LocalPanel extends JPanel {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "Force",13, 230);
+    g.drawString( JopLang.transl("Force"),13, 230);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 10));
-    g.drawString( "Set value",110, 262);
+    g.drawString( JopLang.transl("Set value"),110, 262);
     g.setTransform(save);
   }
   public Dimension getPreferredSize() { return size;}
@@ -812,7 +812,7 @@ protected class pwr_valuereliefup extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -977,7 +977,7 @@ protected class pwr_buttoncommand extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -994,7 +994,7 @@ protected class pwr_buttoncommand extends GeComponent {
     new Polygon( new int[] { 94, 93, 95, 100}, new int[] { 8, 8, 6,2}, 4),
     new Polygon( new int[] { 100, 95, 4, 2}, new int[] { 2, 6, 6,2}, 4),
     new Polygon( new int[] { 2, 4, 4, 2}, new int[] { 2, 6, 29,34}, 4),
-    new Polygon( new int[] { 2, 4, -1, -2}, new int[] { 34, 29, 157069068,28}, 4),
+    new Polygon( new int[] { 2, 4, -2, -2}, new int[] { 34, 29, 53,28}, 4),
     new Polygon( new int[] { 2, 8, 94, 94, 100, 100, 2}, new int[] {34, 28, 28, 8, 2, 34, 34}, 7),
     new Polygon( new int[] { 2, 7, 9, 8}, new int[] { 34, 32, 30,28}, 4),
     new Polygon( new int[] { 8, 9, 96, 94}, new int[] { 28, 30, 30,28}, 4),
@@ -1002,7 +1002,7 @@ protected class pwr_buttoncommand extends GeComponent {
     new Polygon( new int[] { 94, 96, 98, 100}, new int[] { 8, 11, 9,2}, 4),
     new Polygon( new int[] { 100, 98, 98, 100}, new int[] { 2, 9, 32,34}, 4),
     new Polygon( new int[] { 100, 98, 7, 2}, new int[] { 34, 32, 32,34}, 4),
-    new Polygon( new int[] { 2, 7, -1, -2}, new int[] { 34, 32, 157069068,28}, 4),
+    new Polygon( new int[] { 2, 7, -2, -2}, new int[] { 34, 32, 53,28}, 4),
     new Rectangle2D.Float(2F, 2F, 97.6689F, 31.8919F),
     new Polygon( new int[] { 2, 100, 98, 4, 4, 2}, new int[] { 2, 2, 4, 4, 32, 34}, 6), 
     new Polygon( new int[] { 100, 100, 98, 98, 4, 2}, new int[] { 34, 2, 4, 32, 32, 34}, 6), 
@@ -1205,7 +1205,7 @@ protected class pwr_valuereliefdown extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -1370,7 +1370,7 @@ protected class pwr_valuesmall extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -1865,7 +1865,7 @@ protected class pwr_smallbuttoncenter extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}

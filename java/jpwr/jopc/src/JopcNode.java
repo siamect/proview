@@ -1,6 +1,7 @@
 package jpwr.jopc;
 import jpwr.rt.*;
 import jpwr.jop.*;
+import jpwr.jopc.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.*;
@@ -11,7 +12,7 @@ import java.awt.event.*;
 public class JopcNode extends JopFrame implements JopUtilityIfc {
   JPanel contentPane;
   BorderLayout borderLayout1 = new BorderLayout();
-  LocalPanel localPanel = new LocalPanel();
+  public LocalPanel localPanel = new LocalPanel();
   boolean scrollbar = false;
   Dimension size;
   pwr_framethin	pwr_framethin3;
@@ -164,14 +165,14 @@ public class JopcNode extends JopFrame implements JopUtilityIfc {
   JopSmallbutton	jopSmallbutton168;
   JopSmallbutton	jopSmallbutton169;
   Grp310_	grp310_170;
-  Grp311_	grp311_171;
-  Grp312_	grp312_172;
-  Grp319_	grp319_179;
+  Grp319_	grp319_177;
+  pwr_indsquare	pwr_indsquare178;
+  pwr_valuelong	pwr_valuelong179;
   pwr_indsquare	pwr_indsquare180;
   pwr_valuelong	pwr_valuelong181;
-  pwr_indsquare	pwr_indsquare182;
-  pwr_valuelong	pwr_valuelong183;
-  Grp330_	grp330_184;
+  Grp330_	grp330_182;
+  Grp331_	grp331_183;
+  Grp333_	grp333_184;
   public JopcNode( JopSession session, String instance, boolean scrollbar) {
     super( session, instance);
     this.scrollbar = scrollbar;
@@ -184,7 +185,7 @@ public class JopcNode extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "");
+    JopSpider.setSystemName( "ä'¢·D±ù·D±ù·p—uÄ¿¡·›§· “§·(q¦¿ç	Ÿ·D±ù·D±ù·x—u “§·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 1012, 899);
@@ -735,32 +736,32 @@ public class JopcNode extends JopFrame implements JopUtilityIfc {
     grp310_170 = new Grp310_(session);
     grp310_170.setBounds(new Rectangle(14,548,130,22));
     localPanel.add(grp310_170, new Proportion(grp310_170.getBounds(), dsize));
-    grp311_171 = new Grp311_(session);
-    grp311_171.setBounds(new Rectangle(14,568,130,22));
-    localPanel.add(grp311_171, new Proportion(grp311_171.getBounds(), dsize));
-    grp312_172 = new Grp312_(session);
-    grp312_172.setBounds(new Rectangle(14,587,130,22));
-    localPanel.add(grp312_172, new Proportion(grp312_172.getBounds(), dsize));
-    grp319_179 = new Grp319_(session);
-    grp319_179.setBounds(new Rectangle(14,489,130,22));
-    localPanel.add(grp319_179, new Proportion(grp319_179.getBounds(), dsize));
+    grp319_177 = new Grp319_(session);
+    grp319_177.setBounds(new Rectangle(14,489,130,22));
+    localPanel.add(grp319_177, new Proportion(grp319_177.getBounds(), dsize));
+    pwr_indsquare178 = new pwr_indsquare(session);
+    pwr_indsquare178.setBounds(new Rectangle(147,510,18,19));
+    localPanel.add(pwr_indsquare178, new Proportion(pwr_indsquare178.getBounds(), dsize));
+    pwr_valuelong179 = new pwr_valuelong(session);
+    pwr_valuelong179.setBounds(new Rectangle(167,509,352,21));
+    pwr_valuelong179.setBorderColor(33);
+    localPanel.add(pwr_valuelong179, new Proportion(pwr_valuelong179.getBounds(), dsize));
     pwr_indsquare180 = new pwr_indsquare(session);
-    pwr_indsquare180.setBounds(new Rectangle(147,510,18,19));
+    pwr_indsquare180.setBounds(new Rectangle(533,510,18,19));
     localPanel.add(pwr_indsquare180, new Proportion(pwr_indsquare180.getBounds(), dsize));
     pwr_valuelong181 = new pwr_valuelong(session);
-    pwr_valuelong181.setBounds(new Rectangle(167,509,352,21));
+    pwr_valuelong181.setBounds(new Rectangle(552,509,428,21));
     pwr_valuelong181.setBorderColor(33);
     localPanel.add(pwr_valuelong181, new Proportion(pwr_valuelong181.getBounds(), dsize));
-    pwr_indsquare182 = new pwr_indsquare(session);
-    pwr_indsquare182.setBounds(new Rectangle(533,510,18,19));
-    localPanel.add(pwr_indsquare182, new Proportion(pwr_indsquare182.getBounds(), dsize));
-    pwr_valuelong183 = new pwr_valuelong(session);
-    pwr_valuelong183.setBounds(new Rectangle(552,509,428,21));
-    pwr_valuelong183.setBorderColor(33);
-    localPanel.add(pwr_valuelong183, new Proportion(pwr_valuelong183.getBounds(), dsize));
-    grp330_184 = new Grp330_(session);
-    grp330_184.setBounds(new Rectangle(14,509,130,22));
-    localPanel.add(grp330_184, new Proportion(grp330_184.getBounds(), dsize));
+    grp330_182 = new Grp330_(session);
+    grp330_182.setBounds(new Rectangle(14,509,130,22));
+    localPanel.add(grp330_182, new Proportion(grp330_182.getBounds(), dsize));
+    grp331_183 = new Grp331_(session);
+    grp331_183.setBounds(new Rectangle(14,568,130,22));
+    localPanel.add(grp331_183, new Proportion(grp331_183.getBounds(), dsize));
+    grp333_184 = new Grp333_(session);
+    grp333_184.setBounds(new Rectangle(14,587,130,22));
+    localPanel.add(grp333_184, new Proportion(grp333_184.getBounds(), dsize));
     pwr_framethin3.dd.setDynType(1);
     pwr_framethin3.dd.setActionType(0);
     pwr_valuelong4.dd.setDynType(1025);
@@ -1423,6 +1424,9 @@ public class JopcNode extends JopFrame implements JopUtilityIfc {
     pwr_indsquare150.dd.setElements(new GeDynElemIfc[] {
       new GeDynStatusColor(pwr_indsquare150.dd, "$object.ProcMsgSeverity[27]##status",38)
       });
+    geInit1();
+  }
+  public void geInit1() {
     pwr_valuelong151.dd.setDynType(1025);
     pwr_valuelong151.dd.setActionType(0);
     pwr_valuelong151.dd.setElements(new GeDynElemIfc[] {
@@ -1545,53 +1549,53 @@ public class JopcNode extends JopFrame implements JopUtilityIfc {
       new GeDynPopupMenu(grp310_170.dd, "&$object.ProcObject[17]")
       ,new GeDynCommand(grp310_170.dd, "open graph/classgraph/instance=&$object.ProcObject[17]")
       });
-    grp311_171.dd.setDynType(0);
-    grp311_171.dd.setActionType(66);
-    grp311_171.dd.setAccess(65535);
-    grp311_171.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp311_171.dd, "&$object.ProcObject[18]")
-      ,new GeDynCommand(grp311_171.dd, "open graph/classgraph/instance=&$object.ProcObject[18]")
+    grp319_177.dd.setDynType(0);
+    grp319_177.dd.setActionType(66);
+    grp319_177.dd.setAccess(65535);
+    grp319_177.dd.setElements(new GeDynElemIfc[] {
+      new GeDynPopupMenu(grp319_177.dd, "&$object.ProcObject[14]")
+      ,new GeDynCommand(grp319_177.dd, "open graph/classgraph/instance=&$object.ProcObject[14]")
       });
-    grp312_172.dd.setDynType(0);
-    grp312_172.dd.setActionType(66);
-    grp312_172.dd.setAccess(65535);
-    grp312_172.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp312_172.dd, "&$object.ProcObject[19]")
-      ,new GeDynCommand(grp312_172.dd, "open graph/classgraph/instance=&$object.ProcObject[19]")
+    pwr_indsquare178.dd.setDynType(33554432);
+    pwr_indsquare178.dd.setActionType(0);
+    pwr_indsquare178.dd.setElements(new GeDynElemIfc[] {
+      new GeDynStatusColor(pwr_indsquare178.dd, "$object.ProcStatus[15]##status",38)
       });
-    grp319_179.dd.setDynType(0);
-    grp319_179.dd.setActionType(66);
-    grp319_179.dd.setAccess(65535);
-    grp319_179.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp319_179.dd, "&$object.ProcObject[14]")
-      ,new GeDynCommand(grp319_179.dd, "open graph/classgraph/instance=&$object.ProcObject[14]")
+    pwr_valuelong179.dd.setDynType(1025);
+    pwr_valuelong179.dd.setActionType(0);
+    pwr_valuelong179.dd.setElements(new GeDynElemIfc[] {
+      new GeDynValue(pwr_valuelong179.dd, "$object.ProcStatus[15]##status","%1m")
       });
     pwr_indsquare180.dd.setDynType(33554432);
     pwr_indsquare180.dd.setActionType(0);
     pwr_indsquare180.dd.setElements(new GeDynElemIfc[] {
-      new GeDynStatusColor(pwr_indsquare180.dd, "$object.ProcStatus[15]##status",38)
+      new GeDynStatusColor(pwr_indsquare180.dd, "$object.ProcMsgSeverity[15]##status",38)
       });
     pwr_valuelong181.dd.setDynType(1025);
     pwr_valuelong181.dd.setActionType(0);
     pwr_valuelong181.dd.setElements(new GeDynElemIfc[] {
-      new GeDynValue(pwr_valuelong181.dd, "$object.ProcStatus[15]##status","%1m")
+      new GeDynValue(pwr_valuelong181.dd, "$object.ProcMessage[15]##string80","%s")
       });
-    pwr_indsquare182.dd.setDynType(33554432);
-    pwr_indsquare182.dd.setActionType(0);
-    pwr_indsquare182.dd.setElements(new GeDynElemIfc[] {
-      new GeDynStatusColor(pwr_indsquare182.dd, "$object.ProcMsgSeverity[15]##status",38)
+    grp330_182.dd.setDynType(0);
+    grp330_182.dd.setActionType(66);
+    grp330_182.dd.setAccess(65535);
+    grp330_182.dd.setElements(new GeDynElemIfc[] {
+      new GeDynPopupMenu(grp330_182.dd, "&$object.ProcObject[15]")
+      ,new GeDynCommand(grp330_182.dd, "open graph/classgraph/instance=&$object.ProcObject[15]")
       });
-    pwr_valuelong183.dd.setDynType(1025);
-    pwr_valuelong183.dd.setActionType(0);
-    pwr_valuelong183.dd.setElements(new GeDynElemIfc[] {
-      new GeDynValue(pwr_valuelong183.dd, "$object.ProcMessage[15]##string80","%s")
+    grp331_183.dd.setDynType(0);
+    grp331_183.dd.setActionType(66);
+    grp331_183.dd.setAccess(65535);
+    grp331_183.dd.setElements(new GeDynElemIfc[] {
+      new GeDynPopupMenu(grp331_183.dd, "&$object.ProcObject[18]")
+      ,new GeDynCommand(grp331_183.dd, "open graph/classgraph/instance=&$object.ProcObject[18]")
       });
-    grp330_184.dd.setDynType(0);
-    grp330_184.dd.setActionType(66);
-    grp330_184.dd.setAccess(65535);
-    grp330_184.dd.setElements(new GeDynElemIfc[] {
-      new GeDynPopupMenu(grp330_184.dd, "&$object.ProcObject[15]")
-      ,new GeDynCommand(grp330_184.dd, "open graph/classgraph/instance=&$object.ProcObject[15]")
+    grp333_184.dd.setDynType(0);
+    grp333_184.dd.setActionType(66);
+    grp333_184.dd.setAccess(65535);
+    grp333_184.dd.setElements(new GeDynElemIfc[] {
+      new GeDynPopupMenu(grp333_184.dd, "&$object.ProcObject[19]")
+      ,new GeDynCommand(grp333_184.dd, "open graph/classgraph/instance=&$object.ProcObject[19]")
       });
     engine.setFrameReady();
   }
@@ -1707,88 +1711,88 @@ class LocalPanel extends JPanel {
     g.draw( shapes[0]);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 18));
-    g.drawString( "Description",20, 31);
+    g.setFont(new Font("Helvetica", Font.PLAIN, 18));
+    g.drawString( JopLang.transl("Description"),21, 32);
+    g.setColor(GeColor.getColor(0, colorTone,
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
+    g.setFont(new Font("Helvetica", Font.PLAIN, 14));
+    g.drawString( JopLang.transl("ErrLogFile"),21, 75);
+    g.setColor(GeColor.getColor(0, colorTone,
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
+    g.setFont(new Font("Helvetica", Font.PLAIN, 14));
+    g.drawString( JopLang.transl("BootTime"),21, 95);
+    g.setColor(GeColor.getColor(0, colorTone,
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
+    g.setFont(new Font("Helvetica", Font.PLAIN, 14));
+    g.drawString( JopLang.transl("BootVersion"),21, 116);
+    g.setColor(GeColor.getColor(0, colorTone,
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
+    g.setFont(new Font("Helvetica", Font.PLAIN, 14));
+    g.drawString( JopLang.transl("BootPlcVersion"),21, 137);
+    g.setColor(GeColor.getColor(0, colorTone,
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
+    g.setFont(new Font("Helvetica", Font.PLAIN, 14));
+    g.drawString( JopLang.transl("RestartTime"),358, 95);
+    g.setColor(GeColor.getColor(0, colorTone,
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
+    g.setFont(new Font("Helvetica", Font.PLAIN, 14));
+    g.drawString( JopLang.transl("CurrentVersion"),358, 116);
+    g.setColor(GeColor.getColor(0, colorTone,
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
+    g.setFont(new Font("Helvetica", Font.PLAIN, 14));
+    g.drawString( JopLang.transl("CurrentPlcVersion"),358, 137);
+    g.setColor(GeColor.getColor(0, colorTone,
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
+    g.setFont(new Font("Helvetica", Font.PLAIN, 14));
+    g.drawString( JopLang.transl("Restarts"),722, 95);
+    g.setColor(GeColor.getColor(0, colorTone,
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
+    g.setFont(new Font("Helvetica", Font.PLAIN, 14));
+    g.drawString( JopLang.transl("RestartStallTime"),722, 116);
+    g.setColor(GeColor.getColor(0, colorTone,
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
+    g.setFont(new Font("Helvetica", Font.PLAIN, 14));
+    g.drawString( JopLang.transl("SystemStatus"),21, 183);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "ErrLogFile",20, 74);
+    g.drawString( JopLang.transl("Process"),21, 208);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "BootTime",20, 94);
+    g.drawString( JopLang.transl("Status"),150, 208);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "BootVersion",20, 115);
+    g.drawString( JopLang.transl("Log message"),536, 208);
+    g.setColor(GeColor.getColor(0, colorTone,
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
+    g.setFont(new Font("Helvetica", Font.PLAIN, 14));
+    g.drawString( JopLang.transl("rt_ini"),29, 231);
+    g.setColor(GeColor.getColor(0, colorTone,
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
+    g.setFont(new Font("Helvetica", Font.PLAIN, 14));
+    g.drawString( JopLang.transl("rt_qmon"),29, 251);
+    g.setColor(GeColor.getColor(0, colorTone,
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
+    g.setFont(new Font("Helvetica", Font.PLAIN, 14));
+    g.drawString( JopLang.transl("rt_neth_acp"),29, 290);
+    g.setColor(GeColor.getColor(0, colorTone,
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
+    g.setFont(new Font("Helvetica", Font.PLAIN, 14));
+    g.drawString( JopLang.transl("rt_tmon"),29, 330);
+    g.setColor(GeColor.getColor(0, colorTone,
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
+    g.setFont(new Font("Helvetica", Font.PLAIN, 14));
+    g.drawString( JopLang.transl("rt_alim"),29, 369);
+    g.setColor(GeColor.getColor(0, colorTone,
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
+    g.setFont(new Font("Helvetica", Font.PLAIN, 14));
+    g.drawString( JopLang.transl("rt_neth"),29, 271);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "BootPlcVersion",20, 136);
-    g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "RestartTime",357, 94);
-    g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "CurrentVersion",357, 115);
-    g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "CurrentPlcVersion",357, 136);
-    g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "Restarts",721, 94);
-    g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "RestartStallTime",721, 115);
-    g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "SystemStatus",20, 182);
-    g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "Process",20, 207);
-    g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "Status",149, 207);
-    g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "Log message",535, 207);
-    g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "rt_ini",28, 230);
-    g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "rt_qmon",28, 250);
-    g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "rt_neth_acp",28, 289);
-    g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "rt_tmon",28, 329);
-    g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "rt_alim",28, 368);
-    g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "rt_neth",28, 270);
-    g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "Application",20, 632);
+    g.drawString( JopLang.transl("Application"),21, 633);
     g.setStroke( new BasicStroke(1F, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
     g.setColor(GeColor.getColor(33, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
@@ -1804,11 +1808,11 @@ class LocalPanel extends JPanel {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "Status",149, 632);
+    g.drawString( JopLang.transl("Status"),150, 633);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "Log message",535, 631);
+    g.drawString( JopLang.transl("Log message"),536, 632);
     g.setTransform(save);
   }
   public Dimension getPreferredSize() { return size;}
@@ -1926,8 +1930,13 @@ protected class pwr_indsquare extends GeComponent {
     {
     int fcolor = GeColor.getDrawtype(293, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
+    if ( gradient == GeGradient.eGradient_No) {
     g.setColor(GeColor.getColor( fcolor));
     g.fill( shapes[0]);
+    } else {
+    GeGradient.paint( g, gradient,2,-2,2F,2F,14.7601F,15.9902F, false,293, colorTone, colorShift, colorIntensity, colorInverse, fillColor, dimmed);
+    g.fill( shapes[0]);
+    }
     if ( shadow != 0) {
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
@@ -1957,7 +1966,7 @@ protected class pwr_valuelong extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -2060,8 +2069,13 @@ protected class pwr_valuelong extends GeComponent {
     {
     int fcolor = GeColor.getDrawtype(41, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
+    if ( gradient == GeGradient.eGradient_No) {
     g.setColor(GeColor.getColor( fcolor));
     g.fill( shapes[0]);
+    } else {
+    GeGradient.paint( g, gradient,2,-2,2F,2F,654.367F,17.2202F, false,41, colorTone, colorShift, colorIntensity, colorInverse, fillColor, dimmed);
+    g.fill( shapes[0]);
+    }
     if ( shadow != 0) {
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
@@ -2101,7 +2115,7 @@ protected class JopSmallbutton extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -2204,8 +2218,13 @@ protected class JopSmallbutton extends GeComponent {
     {
     int fcolor = GeColor.getDrawtype(102, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
+    if ( gradient == GeGradient.eGradient_No) {
     g.setColor(GeColor.getColor( fcolor));
     g.fill( shapes[0]);
+    } else {
+    GeGradient.paint( g, gradient,2,-2,2F,2F,54.1205F,20.9102F, false,102, colorTone, colorShift, colorIntensity, colorInverse, fillColor, dimmed);
+    g.fill( shapes[0]);
+    }
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
@@ -2223,7 +2242,7 @@ protected class JopSmallbutton extends GeComponent {
     g.transform( AffineTransform.getScaleInstance( original_width/width *
       		height/original_height, 1));
     if ( annot1 != null)
-      g.drawString( annot1, 8 * original_height / height * width / original_width, 17F);
+      g.drawString( annot1, 9 * original_height / height * width / original_width, 18F);
     g.setTransform( save_tmp);
     }
     if ( rounds == 2)
@@ -2351,7 +2370,7 @@ protected class Grp110_ extends GeComponent {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "rt_fast",9, 17);
+    g.drawString( JopLang.transl("rt_fast"),10, 17);
     }
     if ( rounds == 2)
       g.setClip(null);
@@ -2478,7 +2497,7 @@ protected class Grp144_ extends GeComponent {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "rt_io",9, 17);
+    g.drawString( JopLang.transl("rt_io"),10, 17);
     }
     if ( rounds == 2)
       g.setClip(null);
@@ -2605,7 +2624,7 @@ protected class Grp146_ extends GeComponent {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "rt_emon",9, 17);
+    g.drawString( JopLang.transl("rt_emon"),10, 17);
     }
     if ( rounds == 2)
       g.setClip(null);
@@ -2732,7 +2751,7 @@ protected class Grp148_ extends GeComponent {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "rt_bck",9, 17);
+    g.drawString( JopLang.transl("rt_bck"),10, 17);
     }
     if ( rounds == 2)
       g.setClip(null);
@@ -2859,7 +2878,7 @@ protected class Grp150_ extends GeComponent {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "rt_linksup",9, 17);
+    g.drawString( JopLang.transl("rt_linksup"),10, 17);
     }
     if ( rounds == 2)
       g.setClip(null);
@@ -2986,7 +3005,7 @@ protected class Grp151_ extends GeComponent {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "rt_trend",9, 17);
+    g.drawString( JopLang.transl("rt_trend"),10, 17);
     }
     if ( rounds == 2)
       g.setClip(null);
@@ -3113,7 +3132,7 @@ protected class Grp152_ extends GeComponent {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "rt_elog",9, 17);
+    g.drawString( JopLang.transl("rt_elog"),10, 17);
     }
     if ( rounds == 2)
       g.setClip(null);
@@ -3127,9 +3146,9 @@ protected class Grp153_ extends GeComponent {
   public Grp153_( JopSession session)
   {
     super( session);
-    size = new Dimension( 91, 22);
+    size = new Dimension( 92, 22);
   }
-  public int original_width = 91;
+  public int original_width = 92;
   public int original_height = 22;
   Shape[] shapes = new Shape[] { 
     new Rectangle2D.Float(2F, 2F, 87.3309F, 18.4502F),
@@ -3240,7 +3259,7 @@ protected class Grp153_ extends GeComponent {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "rt_webmon",9, 17);
+    g.drawString( JopLang.transl("rt_webmon"),10, 17);
     }
     if ( rounds == 2)
       g.setClip(null);
@@ -3367,7 +3386,7 @@ protected class Grp155_ extends GeComponent {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "plc",9, 17);
+    g.drawString( JopLang.transl("plc"),10, 17);
     }
     if ( rounds == 2)
       g.setClip(null);
@@ -3494,261 +3513,7 @@ protected class Grp310_ extends GeComponent {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "rs_remote",13, 17);
-    }
-    if ( rounds == 2)
-      g.setClip(null);
-    g.setTransform(save);
-  }
-  public Dimension getPreferredSize() { return size;}
-  public Dimension getMinimumSize() { return size;}
-}
-protected class Grp311_ extends GeComponent {
-  // Dimension size;
-  public Grp311_( JopSession session)
-  {
-    super( session);
-    size = new Dimension( 130, 22);
-  }
-  public int original_width = 130;
-  public int original_height = 22;
-  Shape[] shapes = new Shape[] { 
-    new Rectangle2D.Float(2F, 2F, 126.034F, 18.4502F),
-    new Polygon( new int[] { 2, 128, 125, 5, 5, 2}, new int[] { 2, 2, 5, 5, 17, 20}, 6), 
-    new Polygon( new int[] { 128, 128, 125, 125, 5, 2}, new int[] { 20, 2, 5, 17, 17, 20}, 6), 
-  };
-  public void paintComponent(Graphics g1) {
-    animationCount = 1;
-    if ( !visible)
-      return;
-    Graphics2D g = (Graphics2D) g1;
-    float width = getWidth();
-    float height = getHeight();
-    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-    if ( 45.0 <= rotate && rotate < 135.0) {
-      g.translate( width, 0.0); 
-      g.rotate( Math.PI * rotate/180, 0.0, 0.0);
-      g.transform( AffineTransform.getScaleInstance( height/original_width,
-      		width/original_height));
-    }
-    else if ( 135.0 <= rotate && rotate < 225.0)
-    {
-      g.rotate( Math.PI * rotate/180, width/2, height/2);
-      g.transform( AffineTransform.getScaleInstance( width/original_width,
-      		height/original_height));
-    }
-    else if ( 225.0 <= rotate && rotate < 315.0)
-    {
-      g.translate( -height, 0.0);
-      g.rotate( Math.PI * rotate/180, height, 0.0);
-      g.transform( AffineTransform.getScaleInstance( height/original_width,
-      		width/original_height));
-    }
-    else
-      g.transform( AffineTransform.getScaleInstance( width/original_width,
-      		height/original_height));
-    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
-      g.rotate( Math.PI * dd.rotate/180, 
-
-           (dd.x0 - getX())*original_width/width,
-           (dd.y0 - getY()) * original_height / height);
-    }
-    AffineTransform save = g.getTransform();
-    AffineTransform save_tmp;
-    int rounds = 1;
-    if ( fillLevel != 1F)
-      rounds = 2;
-    int oldColor = 0;
-    for ( int i = 0; i < rounds; i++) {
-      if ( rounds == 2) {
-        switch ( i) {
-        case 0:
-	  if ( levelColorTone != GeColor.COLOR_TONE_NO) {
-	    oldColor = colorTone;
-	    colorTone = levelColorTone;
-	  }
-	  else if ( levelFillColor != GeColor.COLOR_NO) {
-	    oldColor = fillColor;
-	    fillColor = levelFillColor;
-	  }
-	  break;
-        case 1:
-	  if ( levelColorTone != GeColor.COLOR_TONE_NO)
-	    colorTone = oldColor;
-	  else if ( levelFillColor != GeColor.COLOR_NO)
-	    fillColor = oldColor;
-	  break;
-        }
-        switch ( levelDirection) {
-        case Ge.DIRECTION_UP:
-	  if ( i == 0)
-	    g.setClip(new Rectangle2D.Float(0F,fillLevel*original_height+Ge.cJBean_Offset,original_width,original_height));
-	  else
-	    g.setClip(new Rectangle2D.Float(0F,0F,original_width,fillLevel * original_height+Ge.cJBean_Offset));
-	  break;
-	case Ge.DIRECTION_DOWN:
-	  if ( i == 0)
-	    g.setClip(new Rectangle2D.Float(0F,0F,original_width,(1-fillLevel)*original_height+Ge.cJBean_Offset));
-	  else
-	    g.setClip(new Rectangle2D.Float(0F,(1-fillLevel)*original_height+Ge.cJBean_Offset,original_width,original_height));
-	  break;
-	case Ge.DIRECTION_RIGHT:
-	  if ( i == 0)
-	    g.setClip(new Rectangle2D.Float(fillLevel*original_width+Ge.cJBean_Offset,0F,original_width,original_height));
-	  else
-	    g.setClip(new Rectangle2D.Float(0F,0F,fillLevel*width+Ge.cJBean_Offset,height));
-	  break;
-	case Ge.DIRECTION_LEFT:
-	  if ( i == 0)
-	    g.setClip(new Rectangle2D.Float(0F,0F,(1-fillLevel)*original_width+Ge.cJBean_Offset,original_height));
-	  else
-	    g.setClip(new Rectangle2D.Float((1-fillLevel)*original_width+Ge.cJBean_Offset,0F,original_width,original_height));
-	  break;
-	}
-      }
-    {
-    int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
-    g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
-    g.fill( shapes[1]);
-    g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
-    g.fill( shapes[2]);
-    g.setStroke( new BasicStroke(1F));
-    g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
-    g.draw( shapes[0]);
-    }
-    g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "rs_nmps_bck",13, 17);
-    }
-    if ( rounds == 2)
-      g.setClip(null);
-    g.setTransform(save);
-  }
-  public Dimension getPreferredSize() { return size;}
-  public Dimension getMinimumSize() { return size;}
-}
-protected class Grp312_ extends GeComponent {
-  // Dimension size;
-  public Grp312_( JopSession session)
-  {
-    super( session);
-    size = new Dimension( 130, 22);
-  }
-  public int original_width = 130;
-  public int original_height = 22;
-  Shape[] shapes = new Shape[] { 
-    new Rectangle2D.Float(2F, 2F, 126.034F, 18.4502F),
-    new Polygon( new int[] { 2, 128, 125, 5, 5, 2}, new int[] { 2, 2, 5, 5, 17, 20}, 6), 
-    new Polygon( new int[] { 128, 128, 125, 125, 5, 2}, new int[] { 20, 2, 5, 17, 17, 20}, 6), 
-  };
-  public void paintComponent(Graphics g1) {
-    animationCount = 1;
-    if ( !visible)
-      return;
-    Graphics2D g = (Graphics2D) g1;
-    float width = getWidth();
-    float height = getHeight();
-    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-    if ( 45.0 <= rotate && rotate < 135.0) {
-      g.translate( width, 0.0); 
-      g.rotate( Math.PI * rotate/180, 0.0, 0.0);
-      g.transform( AffineTransform.getScaleInstance( height/original_width,
-      		width/original_height));
-    }
-    else if ( 135.0 <= rotate && rotate < 225.0)
-    {
-      g.rotate( Math.PI * rotate/180, width/2, height/2);
-      g.transform( AffineTransform.getScaleInstance( width/original_width,
-      		height/original_height));
-    }
-    else if ( 225.0 <= rotate && rotate < 315.0)
-    {
-      g.translate( -height, 0.0);
-      g.rotate( Math.PI * rotate/180, height, 0.0);
-      g.transform( AffineTransform.getScaleInstance( height/original_width,
-      		width/original_height));
-    }
-    else
-      g.transform( AffineTransform.getScaleInstance( width/original_width,
-      		height/original_height));
-    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
-      g.rotate( Math.PI * dd.rotate/180, 
-
-           (dd.x0 - getX())*original_width/width,
-           (dd.y0 - getY()) * original_height / height);
-    }
-    AffineTransform save = g.getTransform();
-    AffineTransform save_tmp;
-    int rounds = 1;
-    if ( fillLevel != 1F)
-      rounds = 2;
-    int oldColor = 0;
-    for ( int i = 0; i < rounds; i++) {
-      if ( rounds == 2) {
-        switch ( i) {
-        case 0:
-	  if ( levelColorTone != GeColor.COLOR_TONE_NO) {
-	    oldColor = colorTone;
-	    colorTone = levelColorTone;
-	  }
-	  else if ( levelFillColor != GeColor.COLOR_NO) {
-	    oldColor = fillColor;
-	    fillColor = levelFillColor;
-	  }
-	  break;
-        case 1:
-	  if ( levelColorTone != GeColor.COLOR_TONE_NO)
-	    colorTone = oldColor;
-	  else if ( levelFillColor != GeColor.COLOR_NO)
-	    fillColor = oldColor;
-	  break;
-        }
-        switch ( levelDirection) {
-        case Ge.DIRECTION_UP:
-	  if ( i == 0)
-	    g.setClip(new Rectangle2D.Float(0F,fillLevel*original_height+Ge.cJBean_Offset,original_width,original_height));
-	  else
-	    g.setClip(new Rectangle2D.Float(0F,0F,original_width,fillLevel * original_height+Ge.cJBean_Offset));
-	  break;
-	case Ge.DIRECTION_DOWN:
-	  if ( i == 0)
-	    g.setClip(new Rectangle2D.Float(0F,0F,original_width,(1-fillLevel)*original_height+Ge.cJBean_Offset));
-	  else
-	    g.setClip(new Rectangle2D.Float(0F,(1-fillLevel)*original_height+Ge.cJBean_Offset,original_width,original_height));
-	  break;
-	case Ge.DIRECTION_RIGHT:
-	  if ( i == 0)
-	    g.setClip(new Rectangle2D.Float(fillLevel*original_width+Ge.cJBean_Offset,0F,original_width,original_height));
-	  else
-	    g.setClip(new Rectangle2D.Float(0F,0F,fillLevel*width+Ge.cJBean_Offset,height));
-	  break;
-	case Ge.DIRECTION_LEFT:
-	  if ( i == 0)
-	    g.setClip(new Rectangle2D.Float(0F,0F,(1-fillLevel)*original_width+Ge.cJBean_Offset,original_height));
-	  else
-	    g.setClip(new Rectangle2D.Float((1-fillLevel)*original_width+Ge.cJBean_Offset,0F,original_width,original_height));
-	  break;
-	}
-      }
-    {
-    int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
-    g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
-    g.fill( shapes[1]);
-    g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
-    g.fill( shapes[2]);
-    g.setStroke( new BasicStroke(1F));
-    g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
-    g.draw( shapes[0]);
-    }
-    g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
-    g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "rs_nmps_trans",13, 17);
+    g.drawString( JopLang.transl("rs_remote"),14, 17);
     }
     if ( rounds == 2)
       g.setClip(null);
@@ -3875,7 +3640,7 @@ protected class Grp319_ extends GeComponent {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "rt_webmonmh",13, 17);
+    g.drawString( JopLang.transl("rt_webmonmh"),14, 17);
     }
     if ( rounds == 2)
       g.setClip(null);
@@ -4002,7 +3767,261 @@ protected class Grp330_ extends GeComponent {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "rt_sysmon",13, 17);
+    g.drawString( JopLang.transl("rt_sysmon"),14, 17);
+    }
+    if ( rounds == 2)
+      g.setClip(null);
+    g.setTransform(save);
+  }
+  public Dimension getPreferredSize() { return size;}
+  public Dimension getMinimumSize() { return size;}
+}
+protected class Grp331_ extends GeComponent {
+  // Dimension size;
+  public Grp331_( JopSession session)
+  {
+    super( session);
+    size = new Dimension( 130, 22);
+  }
+  public int original_width = 130;
+  public int original_height = 22;
+  Shape[] shapes = new Shape[] { 
+    new Rectangle2D.Float(2F, 2F, 126.034F, 18.4502F),
+    new Polygon( new int[] { 2, 128, 125, 5, 5, 2}, new int[] { 2, 2, 5, 5, 17, 20}, 6), 
+    new Polygon( new int[] { 128, 128, 125, 125, 5, 2}, new int[] { 20, 2, 5, 17, 17, 20}, 6), 
+  };
+  public void paintComponent(Graphics g1) {
+    animationCount = 1;
+    if ( !visible)
+      return;
+    Graphics2D g = (Graphics2D) g1;
+    float width = getWidth();
+    float height = getHeight();
+    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+    if ( 45.0 <= rotate && rotate < 135.0) {
+      g.translate( width, 0.0); 
+      g.rotate( Math.PI * rotate/180, 0.0, 0.0);
+      g.transform( AffineTransform.getScaleInstance( height/original_width,
+      		width/original_height));
+    }
+    else if ( 135.0 <= rotate && rotate < 225.0)
+    {
+      g.rotate( Math.PI * rotate/180, width/2, height/2);
+      g.transform( AffineTransform.getScaleInstance( width/original_width,
+      		height/original_height));
+    }
+    else if ( 225.0 <= rotate && rotate < 315.0)
+    {
+      g.translate( -height, 0.0);
+      g.rotate( Math.PI * rotate/180, height, 0.0);
+      g.transform( AffineTransform.getScaleInstance( height/original_width,
+      		width/original_height));
+    }
+    else
+      g.transform( AffineTransform.getScaleInstance( width/original_width,
+      		height/original_height));
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
+      g.rotate( Math.PI * dd.rotate/180, 
+
+           (dd.x0 - getX())*original_width/width,
+           (dd.y0 - getY()) * original_height / height);
+    }
+    AffineTransform save = g.getTransform();
+    AffineTransform save_tmp;
+    int rounds = 1;
+    if ( fillLevel != 1F)
+      rounds = 2;
+    int oldColor = 0;
+    for ( int i = 0; i < rounds; i++) {
+      if ( rounds == 2) {
+        switch ( i) {
+        case 0:
+	  if ( levelColorTone != GeColor.COLOR_TONE_NO) {
+	    oldColor = colorTone;
+	    colorTone = levelColorTone;
+	  }
+	  else if ( levelFillColor != GeColor.COLOR_NO) {
+	    oldColor = fillColor;
+	    fillColor = levelFillColor;
+	  }
+	  break;
+        case 1:
+	  if ( levelColorTone != GeColor.COLOR_TONE_NO)
+	    colorTone = oldColor;
+	  else if ( levelFillColor != GeColor.COLOR_NO)
+	    fillColor = oldColor;
+	  break;
+        }
+        switch ( levelDirection) {
+        case Ge.DIRECTION_UP:
+	  if ( i == 0)
+	    g.setClip(new Rectangle2D.Float(0F,fillLevel*original_height+Ge.cJBean_Offset,original_width,original_height));
+	  else
+	    g.setClip(new Rectangle2D.Float(0F,0F,original_width,fillLevel * original_height+Ge.cJBean_Offset));
+	  break;
+	case Ge.DIRECTION_DOWN:
+	  if ( i == 0)
+	    g.setClip(new Rectangle2D.Float(0F,0F,original_width,(1-fillLevel)*original_height+Ge.cJBean_Offset));
+	  else
+	    g.setClip(new Rectangle2D.Float(0F,(1-fillLevel)*original_height+Ge.cJBean_Offset,original_width,original_height));
+	  break;
+	case Ge.DIRECTION_RIGHT:
+	  if ( i == 0)
+	    g.setClip(new Rectangle2D.Float(fillLevel*original_width+Ge.cJBean_Offset,0F,original_width,original_height));
+	  else
+	    g.setClip(new Rectangle2D.Float(0F,0F,fillLevel*width+Ge.cJBean_Offset,height));
+	  break;
+	case Ge.DIRECTION_LEFT:
+	  if ( i == 0)
+	    g.setClip(new Rectangle2D.Float(0F,0F,(1-fillLevel)*original_width+Ge.cJBean_Offset,original_height));
+	  else
+	    g.setClip(new Rectangle2D.Float((1-fillLevel)*original_width+Ge.cJBean_Offset,0F,original_width,original_height));
+	  break;
+	}
+      }
+    {
+    int fcolor = GeColor.getDrawtype(32, colorTone,
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
+    g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
+    g.fill( shapes[1]);
+    g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
+    g.fill( shapes[2]);
+    g.setStroke( new BasicStroke(1F));
+    g.setColor(GeColor.getColor(0, colorTone,
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
+    g.draw( shapes[0]);
+    }
+    g.setColor(GeColor.getColor(0, colorTone,
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
+    g.setFont(new Font("Helvetica", Font.BOLD, 14));
+    g.drawString( JopLang.transl("opc_server"),14, 17);
+    }
+    if ( rounds == 2)
+      g.setClip(null);
+    g.setTransform(save);
+  }
+  public Dimension getPreferredSize() { return size;}
+  public Dimension getMinimumSize() { return size;}
+}
+protected class Grp333_ extends GeComponent {
+  // Dimension size;
+  public Grp333_( JopSession session)
+  {
+    super( session);
+    size = new Dimension( 130, 22);
+  }
+  public int original_width = 130;
+  public int original_height = 22;
+  Shape[] shapes = new Shape[] { 
+    new Rectangle2D.Float(2F, 2F, 126.034F, 18.4502F),
+    new Polygon( new int[] { 2, 128, 125, 5, 5, 2}, new int[] { 2, 2, 5, 5, 17, 20}, 6), 
+    new Polygon( new int[] { 128, 128, 125, 125, 5, 2}, new int[] { 20, 2, 5, 17, 17, 20}, 6), 
+  };
+  public void paintComponent(Graphics g1) {
+    animationCount = 1;
+    if ( !visible)
+      return;
+    Graphics2D g = (Graphics2D) g1;
+    float width = getWidth();
+    float height = getHeight();
+    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+    if ( 45.0 <= rotate && rotate < 135.0) {
+      g.translate( width, 0.0); 
+      g.rotate( Math.PI * rotate/180, 0.0, 0.0);
+      g.transform( AffineTransform.getScaleInstance( height/original_width,
+      		width/original_height));
+    }
+    else if ( 135.0 <= rotate && rotate < 225.0)
+    {
+      g.rotate( Math.PI * rotate/180, width/2, height/2);
+      g.transform( AffineTransform.getScaleInstance( width/original_width,
+      		height/original_height));
+    }
+    else if ( 225.0 <= rotate && rotate < 315.0)
+    {
+      g.translate( -height, 0.0);
+      g.rotate( Math.PI * rotate/180, height, 0.0);
+      g.transform( AffineTransform.getScaleInstance( height/original_width,
+      		width/original_height));
+    }
+    else
+      g.transform( AffineTransform.getScaleInstance( width/original_width,
+      		height/original_height));
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
+      g.rotate( Math.PI * dd.rotate/180, 
+
+           (dd.x0 - getX())*original_width/width,
+           (dd.y0 - getY()) * original_height / height);
+    }
+    AffineTransform save = g.getTransform();
+    AffineTransform save_tmp;
+    int rounds = 1;
+    if ( fillLevel != 1F)
+      rounds = 2;
+    int oldColor = 0;
+    for ( int i = 0; i < rounds; i++) {
+      if ( rounds == 2) {
+        switch ( i) {
+        case 0:
+	  if ( levelColorTone != GeColor.COLOR_TONE_NO) {
+	    oldColor = colorTone;
+	    colorTone = levelColorTone;
+	  }
+	  else if ( levelFillColor != GeColor.COLOR_NO) {
+	    oldColor = fillColor;
+	    fillColor = levelFillColor;
+	  }
+	  break;
+        case 1:
+	  if ( levelColorTone != GeColor.COLOR_TONE_NO)
+	    colorTone = oldColor;
+	  else if ( levelFillColor != GeColor.COLOR_NO)
+	    fillColor = oldColor;
+	  break;
+        }
+        switch ( levelDirection) {
+        case Ge.DIRECTION_UP:
+	  if ( i == 0)
+	    g.setClip(new Rectangle2D.Float(0F,fillLevel*original_height+Ge.cJBean_Offset,original_width,original_height));
+	  else
+	    g.setClip(new Rectangle2D.Float(0F,0F,original_width,fillLevel * original_height+Ge.cJBean_Offset));
+	  break;
+	case Ge.DIRECTION_DOWN:
+	  if ( i == 0)
+	    g.setClip(new Rectangle2D.Float(0F,0F,original_width,(1-fillLevel)*original_height+Ge.cJBean_Offset));
+	  else
+	    g.setClip(new Rectangle2D.Float(0F,(1-fillLevel)*original_height+Ge.cJBean_Offset,original_width,original_height));
+	  break;
+	case Ge.DIRECTION_RIGHT:
+	  if ( i == 0)
+	    g.setClip(new Rectangle2D.Float(fillLevel*original_width+Ge.cJBean_Offset,0F,original_width,original_height));
+	  else
+	    g.setClip(new Rectangle2D.Float(0F,0F,fillLevel*width+Ge.cJBean_Offset,height));
+	  break;
+	case Ge.DIRECTION_LEFT:
+	  if ( i == 0)
+	    g.setClip(new Rectangle2D.Float(0F,0F,(1-fillLevel)*original_width+Ge.cJBean_Offset,original_height));
+	  else
+	    g.setClip(new Rectangle2D.Float((1-fillLevel)*original_width+Ge.cJBean_Offset,0F,original_width,original_height));
+	  break;
+	}
+      }
+    {
+    int fcolor = GeColor.getDrawtype(32, colorTone,
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
+    g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
+    g.fill( shapes[1]);
+    g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
+    g.fill( shapes[2]);
+    g.setStroke( new BasicStroke(1F));
+    g.setColor(GeColor.getColor(0, colorTone,
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
+    g.draw( shapes[0]);
+    }
+    g.setColor(GeColor.getColor(0, colorTone,
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
+    g.setFont(new Font("Helvetica", Font.BOLD, 14));
+    g.drawString( JopLang.transl("rt_statussrv"),14, 17);
     }
     if ( rounds == 2)
       g.setClip(null);
@@ -4015,7 +4034,10 @@ protected class Grp330_ extends GeComponent {
     return JopUtility.GRAPH;
   }
   public PwrtObjid getUtilityObjid() {
-    return utilityAref.getObjid();
+    if ( utilityAref != null)
+      return utilityAref.getObjid();
+    else
+      return null;
   }
   public PwrtAttrRef getUtilityAttrRef() {
     return utilityAref;

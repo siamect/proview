@@ -217,6 +217,7 @@ local_java_sources := \
           JopcCompmode_sub.java, \
           JopcComponoffburner.java, \
           JopcComponoffzone.java, \
+          JopcComppidGen.java, \
           JopcComppid.java, \
           JopcContactor.java, \
           JopcRuntimecounter.java

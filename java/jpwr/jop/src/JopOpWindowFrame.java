@@ -55,6 +55,10 @@ public class JopOpWindowFrame extends JFrame {
     localPanel.setLabelText( text);
   }
 
+  public void setLanguage( int language) {
+    localPanel.setLanguage( language);
+  }
+
   private void init() {
     contentPane = (JPanel) this.getContentPane();
     contentPane.setLayout(borderLayout1);

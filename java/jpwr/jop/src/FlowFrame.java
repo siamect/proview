@@ -115,7 +115,7 @@ public class FlowFrame extends JFrame implements JopUtilityIfc {
     String fname = "pwr_" + b1 + "_" + b2 + "_" + b3 + "_" +
 	b4 + "_" + b5 + ".flw";
 
-    if ( root != null && root instanceof JopApplet) {
+     if ( root != null && root instanceof JopApplet) {
       try {
         URL current = ((JApplet) root).getCodeBase();
         String current_str = current.toString();
@@ -183,21 +183,21 @@ public class FlowFrame extends JFrame implements JopUtilityIfc {
 
   JMenuBar createMenu() {
     JMenuBar lmenuBar = new JMenuBar();
-    JMenu fileMenu = new JMenu("File");
+    JMenu fileMenu = new JMenu(JopLang.transl("File"));
     fileMenu.setMnemonic('F');
-    MenuAction closeFileAction = new MenuAction("Close");
-    MenuAction subWindowFileAction = new MenuAction("Open Subwindow");
+    MenuAction closeFileAction = new MenuAction(JopLang.transl("Close"));
+    MenuAction subWindowFileAction = new MenuAction(JopLang.transl("Open Subwindow"));
 
     lmenuBar = new JMenuBar();
-    JMenu functionsMenu = new JMenu("Functions");
+    JMenu functionsMenu = new JMenu(JopLang.transl("Functions"));
     fileMenu.setMnemonic('u');
-    MenuAction crossrefFunctionsAction = new MenuAction("Show Crossreferences");
+    MenuAction crossrefFunctionsAction = new MenuAction(JopLang.transl("Show Crossreferences"));
 
-    JMenu viewMenu = new JMenu("View");
+    JMenu viewMenu = new JMenu(JopLang.transl("View"));
     fileMenu.setMnemonic('V');
-    MenuAction zoomInViewAction = new MenuAction("Zoom In");
-    MenuAction zoomOutViewAction = new MenuAction("Zoom Out");
-    MenuAction zoomResetViewAction = new MenuAction("Zoom Reset");
+    MenuAction zoomInViewAction = new MenuAction(JopLang.transl("Zoom In"));
+    MenuAction zoomOutViewAction = new MenuAction(JopLang.transl("Zoom Out"));
+    MenuAction zoomResetViewAction = new MenuAction(JopLang.transl("Zoom Reset"));
 
     JMenuItem item;
     item = fileMenu.add( closeFileAction);
@@ -231,12 +231,12 @@ public class FlowFrame extends JFrame implements JopUtilityIfc {
 
     public void actionPerformed( ActionEvent e) {
       System.out.println( "Menu: " + e.getActionCommand());
-      if ( e.getActionCommand().equals("Close")) {
+      if ( e.getActionCommand().equals(JopLang.transl("Close"))) {
 
 	closeFlow();
 	dispose();
       }
-      if ( e.getActionCommand().equals("Show Crossreferences")) {
+      if ( e.getActionCommand().equals(JopLang.transl("Show Crossreferences"))) {
         Object sel = ctx.getSelected();
         if ( sel != null) {
 	  String name = ((FlowComponent) sel).getTraceObject();
@@ -246,7 +246,7 @@ public class FlowFrame extends JFrame implements JopUtilityIfc {
 	}
 	return;
       }
-      else if ( e.getActionCommand().equals("Open Subwindow")) {
+      else if ( e.getActionCommand().equals(JopLang.transl("Open Subwindow"))) {
         Object sel = ctx.getSelected();
         if ( sel != null) {
 	  String name = ((FlowComponent) sel).getTraceObject();
@@ -261,13 +261,13 @@ public class FlowFrame extends JFrame implements JopUtilityIfc {
 	  f.setVisible(true);
         }
       }
-      else if ( e.getActionCommand().equals("Zoom In")) {
+      else if ( e.getActionCommand().equals(JopLang.transl("Zoom In"))) {
 	zoom( 1.2);
       }
-      else if ( e.getActionCommand().equals("Zoom Out")) {
+      else if ( e.getActionCommand().equals(JopLang.transl("Zoom Out"))) {
 	zoom( 1.0 / 1.2);
       }
-      else if ( e.getActionCommand().equals("Zoom Reset")) {
+      else if ( e.getActionCommand().equals(JopLang.transl("Zoom Reset"))) {
 	zoomReset();
       }
     }
