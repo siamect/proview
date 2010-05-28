@@ -1,0 +1,102 @@
+! 
+!  Proview   $Id$
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_c_distribute.wb_load -- Defines the class Distribute.
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Group ProjectConfiguration
+!  @Summary Configures cumstomized build.
+!  Configures custumized build for embedded systems with cross compilation.
+!
+! @b See also
+!  @classlink NodeConfig pwrb_nodeconfig.html
+!  @classlink ApplDistribute pwrb_appldistribute.html
+!*/
+  Object CustomBuild $ClassDef 542 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtAndDevBodies
+    EndBody
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      ! c compiler, e.g arm-linux-gnueabi-gcc.
+      !*/
+      Object cc $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      ! c++ compiler, e.g arm-linux-gnueabi-g++.
+      !*/
+      Object cxx $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      ! archiver, e.g arm-linux-gnueabi-ar.
+      !*/
+      Object ar $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      ! Operating system.
+      !*/
+      Object OperatingSystem $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$OpSysEnum"
+        EndBody
+      EndObject
+      !/**
+      ! Build directories.
+      !*/
+      Object Platform $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      ! Release.
+      !*/
+      Object Release $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+    EndObject
+    Object Template CustomBuild
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+
+
+
+
+
+
+
+

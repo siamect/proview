@@ -1,0 +1,172 @@
+include $(pwre_dir_symbols)
+
+local_java_sources := \
+           JopcBasefcppo3fanaggr10.java, \
+           JopcBasefcppo3fanaggr11.java, \
+           JopcBasefcppo3fanaggr12.java, \
+           JopcBasefcppo3fanaggr13.java, \
+           JopcBasefcppo3fanaggr14.java, \
+           JopcBasefcppo3fanaggr15.java, \
+           JopcBasefcppo3fanaggr16.java, \
+           JopcBasefcppo3fanaggr17.java, \
+           JopcBasefcppo3fanaggr18.java, \
+           JopcBasefcppo3fanaggr19.java, \
+           JopcBasefcppo3fanaggr1.java, \
+           JopcBasefcppo3fanaggr20.java, \
+           JopcBasefcppo3fanaggr21.java, \
+           JopcBasefcppo3fanaggr22.java, \
+           JopcBasefcppo3fanaggr23.java, \
+           JopcBasefcppo3fanaggr2.java, \
+           JopcBasefcppo3fanaggr3.java, \
+           JopcBasefcppo3fanaggr4.java, \
+           JopcBasefcppo3fanaggr5.java, \
+           JopcBasefcppo3fanaggr6.java, \
+           JopcBasefcppo3fanaggr7.java, \
+           JopcBasefcppo3fanaggr8.java, \
+           JopcBasefcppo3fanaggr9.java, \
+           JopcBasefcppo3fanaggr.java, \
+           JopcBasefcppo3.java, \
+           JopcBasefcppo3motoraggr10.java, \
+           JopcBasefcppo3motoraggr11.java, \
+           JopcBasefcppo3motoraggr12.java, \
+           JopcBasefcppo3motoraggr13.java, \
+           JopcBasefcppo3motoraggr14.java, \
+           JopcBasefcppo3motoraggr15.java, \
+           JopcBasefcppo3motoraggr16.java, \
+           JopcBasefcppo3motoraggr17.java, \
+           JopcBasefcppo3motoraggr18.java, \
+           JopcBasefcppo3motoraggr19.java, \
+           JopcBasefcppo3motoraggr1.java, \
+           JopcBasefcppo3motoraggr20.java, \
+           JopcBasefcppo3motoraggr21.java, \
+           JopcBasefcppo3motoraggr22.java, \
+           JopcBasefcppo3motoraggr23.java, \
+           JopcBasefcppo3motoraggr2.java, \
+           JopcBasefcppo3motoraggr3.java, \
+           JopcBasefcppo3motoraggr4.java, \
+           JopcBasefcppo3motoraggr5.java, \
+           JopcBasefcppo3motoraggr6.java, \
+           JopcBasefcppo3motoraggr7.java, \
+           JopcBasefcppo3motoraggr8.java, \
+           JopcBasefcppo3motoraggr9.java, \
+           JopcBasefcppo3motoraggr.java, \
+           JopcBasefcppo3motoraggrsim.java, \
+           JopcBasefcppo3pumpaggr10.java, \
+           JopcBasefcppo3pumpaggr11.java, \
+           JopcBasefcppo3pumpaggr12.java, \
+           JopcBasefcppo3pumpaggr13.java, \
+           JopcBasefcppo3pumpaggr14.java, \
+           JopcBasefcppo3pumpaggr15.java, \
+           JopcBasefcppo3pumpaggr16.java, \
+           JopcBasefcppo3pumpaggr17.java, \
+           JopcBasefcppo3pumpaggr18.java, \
+           JopcBasefcppo3pumpaggr19.java, \
+           JopcBasefcppo3pumpaggr1.java, \
+           JopcBasefcppo3pumpaggr20.java, \
+           JopcBasefcppo3pumpaggr21.java, \
+           JopcBasefcppo3pumpaggr22.java, \
+           JopcBasefcppo3pumpaggr23.java, \
+           JopcBasefcppo3pumpaggr2.java, \
+           JopcBasefcppo3pumpaggr3.java, \
+           JopcBasefcppo3pumpaggr4.java, \
+           JopcBasefcppo3pumpaggr5.java, \
+           JopcBasefcppo3pumpaggr6.java, \
+           JopcBasefcppo3pumpaggr7.java, \
+           JopcBasefcppo3pumpaggr8.java, \
+           JopcBasefcppo3pumpaggr9.java, \
+           JopcBasefcppo3pumpaggr.java, \
+           JopcBasefcppo3sim.java, \
+           JopcBasefcppo5fanaggr10.java, \
+           JopcBasefcppo5fanaggr11.java, \
+           JopcBasefcppo5fanaggr12.java, \
+           JopcBasefcppo5fanaggr13.java, \
+           JopcBasefcppo5fanaggr14.java, \
+           JopcBasefcppo5fanaggr15.java, \
+           JopcBasefcppo5fanaggr16.java, \
+           JopcBasefcppo5fanaggr17.java, \
+           JopcBasefcppo5fanaggr18.java, \
+           JopcBasefcppo5fanaggr19.java, \
+           JopcBasefcppo5fanaggr1.java, \
+           JopcBasefcppo5fanaggr20.java, \
+           JopcBasefcppo5fanaggr21.java, \
+           JopcBasefcppo5fanaggr22.java, \
+           JopcBasefcppo5fanaggr23.java, \
+           JopcBasefcppo5fanaggr2.java, \
+           JopcBasefcppo5fanaggr3.java, \
+           JopcBasefcppo5fanaggr4.java, \
+           JopcBasefcppo5fanaggr5.java, \
+           JopcBasefcppo5fanaggr6.java, \
+           JopcBasefcppo5fanaggr7.java, \
+           JopcBasefcppo5fanaggr8.java, \
+           JopcBasefcppo5fanaggr9.java, \
+           JopcBasefcppo5fanaggr.java, \
+           JopcBasefcppo5.java, \
+           JopcBasefcppo5motoraggr10.java, \
+           JopcBasefcppo5motoraggr11.java, \
+           JopcBasefcppo5motoraggr12.java, \
+           JopcBasefcppo5motoraggr13.java, \
+           JopcBasefcppo5motoraggr14.java, \
+           JopcBasefcppo5motoraggr15.java, \
+           JopcBasefcppo5motoraggr16.java, \
+           JopcBasefcppo5motoraggr17.java, \
+           JopcBasefcppo5motoraggr18.java, \
+           JopcBasefcppo5motoraggr19.java, \
+           JopcBasefcppo5motoraggr1.java, \
+           JopcBasefcppo5motoraggr20.java, \
+           JopcBasefcppo5motoraggr21.java, \
+           JopcBasefcppo5motoraggr22.java, \
+           JopcBasefcppo5motoraggr23.java, \
+           JopcBasefcppo5motoraggr2.java, \
+           JopcBasefcppo5motoraggr3.java, \
+           JopcBasefcppo5motoraggr4.java, \
+           JopcBasefcppo5motoraggr5.java, \
+           JopcBasefcppo5motoraggr6.java, \
+           JopcBasefcppo5motoraggr7.java, \
+           JopcBasefcppo5motoraggr8.java, \
+           JopcBasefcppo5motoraggr9.java, \
+           JopcBasefcppo5motoraggr.java, \
+           JopcBasefcppo5motoraggrsim.java, \
+           JopcBasefcppo5param.java, \
+           JopcBasefcppo5pumpaggr10.java, \
+           JopcBasefcppo5pumpaggr11.java, \
+           JopcBasefcppo5pumpaggr12.java, \
+           JopcBasefcppo5pumpaggr13.java, \
+           JopcBasefcppo5pumpaggr14.java, \
+           JopcBasefcppo5pumpaggr15.java, \
+           JopcBasefcppo5pumpaggr16.java, \
+           JopcBasefcppo5pumpaggr17.java, \
+           JopcBasefcppo5pumpaggr18.java, \
+           JopcBasefcppo5pumpaggr19.java, \
+           JopcBasefcppo5pumpaggr1.java, \
+           JopcBasefcppo5pumpaggr20.java, \
+           JopcBasefcppo5pumpaggr21.java, \
+           JopcBasefcppo5pumpaggr22.java, \
+           JopcBasefcppo5pumpaggr23.java, \
+           JopcBasefcppo5pumpaggr2.java, \
+           JopcBasefcppo5pumpaggr3.java, \
+           JopcBasefcppo5pumpaggr4.java, \
+           JopcBasefcppo5pumpaggr5.java, \
+           JopcBasefcppo5pumpaggr6.java, \
+           JopcBasefcppo5pumpaggr7.java, \
+           JopcBasefcppo5pumpaggr8.java, \
+           JopcBasefcppo5pumpaggr9.java, \
+           JopcBasefcppo5pumpaggr.java, \
+           JopcBasefcppo5sim.java
+
+
+-include $(pwre_kroot)/tools/bld/src/$(os_name)/$(hw_name)/$(type_name)_generic.mk
+
+ifeq ($($(type_name)_generic_mk),)
+ -include $(pwre_kroot)/tools/bld/src/$(os_name)/$(type_name)_generic.mk
+endif
+
+ifeq ($($(type_name)_generic_mk),)
+ include $(pwre_kroot)/tools/bld/src/$(type_name)_generic.mk
+endif
+
+-include ../../special.mk
+-include ../special.mk
+-include special.mk
+
+
+

@@ -37,7 +37,7 @@ public interface JopSessionIfc {
   public void openGraphFrame( String name, String instance, boolean scrollbar, boolean classGraph);
   public void openFlowFrame( PwrtObjid oid, String center);
   public void openCrrFrame( String name);
-  public void executeCommand( String command);
+  public int executeCommand( String command);
   public boolean isApplet();
   public boolean isApplication();
   public boolean isOpWindowApplet();

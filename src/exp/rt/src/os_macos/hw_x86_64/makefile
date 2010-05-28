@@ -90,12 +90,12 @@ $(load_dir)/pwr_volumelist.dat : ../../pwr_volumelist.dat
 $(exe_dir)/xtt_help.dat : xtt_help.dat
 	@ echo "Copying xtt_help.dat"
 	@ $(cp) $(cpflags) $(source) $(target)
-	@ co_convert -t -d $(pwr_doc)/help $(source)
+	@ $(co_convert) -t -d $(pwr_doc)/help $(source)
 
 $(exe_dir)/sv_se/pwrb_xtthelp.dat : ../../pwrb_xtthelp.dat_sv_se
 	@ echo "Copying pwrb_xtthelp.dat sv_se"
 	@ $(cp) $(cpflags) $(source) $(target)
-	@ co_convert -t -d $(pwr_doc)/sv_se $(source)
+	@ $(co_convert) -t -d $(pwr_doc)/sv_se $(source)
 
 $(exe_dir)/pwr_logga.gif : ../../pwr_logga.gif
 	@ echo "Copying pwr_logga.gif"

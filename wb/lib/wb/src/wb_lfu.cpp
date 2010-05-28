@@ -667,6 +667,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   char		fname[200];
   char          path[80];
   int           path_file_created = 0;
+  pwr_tString80 custom_platform;
 
   syntax_error = 0;
   strcpy( null_nodename, "-");
@@ -2056,17 +2057,65 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  if ( !found)  
 	    distr_options = (lfu_mDistrOpt)((int)distr_options | lfu_mDistrOpt_NoRootVolume);
 
-	  fprintf( file, "node %s %s %d %d %s\n",
+	  strcpy( custom_platform, "-");
+
+	  /* Find any CustomBuild for this node */
+	  class_vect[0] = pwr_cClass_CustomBuild;
+	  class_vect[1] = 0;
+	  
+	  objcount = 0;
+	  objlist = 0;
+
+	  sts = trv_create_ctx( &trvctx, ldhses, nodeobjid, class_vect, NULL,
+				NULL);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = trv_object_search( trvctx,
+				   &utl_objidlist_insert, &objlist, 
+				   &objcount, 0, 0, 0);
+	  if ( EVEN (sts)) return sts;
+
+	  sts = trv_delete_ctx( trvctx);
+
+	  for ( obj_ptr = objlist; obj_ptr; obj_ptr = obj_ptr->next) {
+	    applobjid = obj_ptr->objid;
+	    sts = ldh_GetObjectClass( ldhses, applobjid, &ccid);
+	    if ( EVEN(sts)) return sts;
+
+	    switch ( ccid) {
+	    case pwr_cClass_CustomBuild: {
+	      char *platform_p;
+
+	      sts = ldh_ObjidToName( ldhses, applobjid, ldh_eName_Object,
+				     appl_name, sizeof(appl_name), &size);
+	      if ( EVEN(sts)) return sts;
+	      
+	      /* Check Source attribute */
+	      sts = ldh_GetObjectPar( ldhses, applobjid, "DevBody",
+				      "Platform", &platform_p, &size);
+	      if (EVEN(sts)) return sts;
+
+	      if ( strcmp( platform_p, "") != 0)
+		strncpy( custom_platform, platform_p, sizeof(custom_platform));
+	      free( platform_p);
+	      break;
+	    }
+	    default: ;
+	    }
+	  }
+
+	  fprintf( file, "node %s %s %d %d %s %s\n",
 		   nodename_ptr,
 		   os_str,
 		   *bus_number_ptr,
 		   distr_options,
-		   bootnode_ptr);
+		   bootnode_ptr,
+		   custom_platform);
 
 	  /* Find the applications for this node */
 	  class_vect[0] = pwr_cClass_Distribute;
 	  class_vect[1] = pwr_cClass_ApplDistribute;
-	  class_vect[3] = 0;
+	  class_vect[2] = 0;
 	  
 	  objcount = 0;
 	  objlist = 0;
@@ -2276,7 +2325,167 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   system( "purge/nolog " load_cNameDistribute);
 #endif
 
+  // Generate custom_build files
+  for ( wb_object buso = sp->object(); buso; buso = buso.after()) {
+    if ( buso.cid() != pwr_cClass_BusConfig)
+      continue;
 
+    // Get all nodeconfig and friendnodes for this bus
+    for ( wb_object nodeo = buso.first(); nodeo; nodeo = nodeo.after()) {
+      if ( nodeo.cid() != pwr_cClass_NodeConfig)
+	continue;
+
+      for ( wb_object customo = nodeo.first(); customo; customo = customo.after()) {
+	if ( customo.cid() != pwr_cClass_CustomBuild)
+	  continue;
+
+	pwr_tString80 nodename;
+	pwr_tString80 cc;
+	pwr_tString80 cxx;
+	pwr_tString80 ar;
+	pwr_tOpSysEnum opsys;
+	pwr_tString40 platform;
+	pwr_tString40 release;
+	FILE *fp;
+
+	// Get NodeName
+	wb_attribute a = sp->attribute( nodeo.oid(), "RtBody", "NodeName");
+	if ( !a) return a.sts();
+
+	a.value( nodename);
+	if ( !a) return sts;
+
+	// Get attribute cc
+	a = sp->attribute( customo.oid(), "DevBody", "cc");
+	if ( !a) return a.sts();
+
+	a.value( cc);
+	if ( !a) return sts;
+
+	// Get attribute cxx
+	a = sp->attribute( customo.oid(), "DevBody", "cxx");
+	if ( !a) return a.sts();
+
+	a.value( cxx);
+	if ( !a) return sts;
+
+	// Get attribute ar
+	a = sp->attribute( customo.oid(), "DevBody", "ar");
+	if ( !a) return a.sts();
+
+	a.value( ar);
+	if ( !a) return sts;
+
+	// Get attribute OperatingSystem
+	a = sp->attribute( customo.oid(), "DevBody", "OperatingSystem");
+	if ( !a) return a.sts();
+
+	a.value( (void *)&opsys);
+	if ( !a) return sts;
+
+	// Get attribute Platform
+	a = sp->attribute( customo.oid(), "DevBody", "Platform");
+	if ( !a) return a.sts();
+
+	a.value( platform);
+	if ( !a) return sts;
+
+	// Get attribute Release
+	a = sp->attribute( customo.oid(), "DevBody", "Release");
+	if ( !a) return a.sts();
+
+	a.value( release);
+	if ( !a) return sts;
+
+	if ( !strcmp( nodename, "")) {
+	  char msg[200];
+	  sprintf( msg, "Error in NodeConfig object '%s', NodeName is missing\n",
+		   nodeo.longName().c_str());
+	  MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	  syntax_error = 1;
+	}
+
+	if ( !( (strcmp( cc, "") != 0 && strcmp( cxx, "") != 0 && strcmp( ar, "") != 0) ||
+		(strcmp( cc, "") == 0 && strcmp( cxx, "") == 0 && strcmp( ar, "") == 0))) {
+	  char msg[200];
+	  sprintf( msg, "Error in CustomBuild object '%s', all or none of cc, cxx and ar has to be supplied\n",
+		   customo.longName().c_str());
+	  MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	  syntax_error = 1;
+	}
+
+	// Print custom build file
+	if ( !( opsys == pwr_mOpSys_PPC_LINUX ||
+		opsys == pwr_mOpSys_X86_LINUX ||
+		opsys == pwr_mOpSys_ARM_LINUX))
+	  continue;
+
+	sprintf( fname, load_cNameCustomBuild);
+	dcli_translate_filename( fname, fname);
+	fp = fopen( fname, "w");
+	if ( file == 0) {
+	  char msg[200];
+	  sprintf( msg, "Error, Unable to open file %s", fname);
+	  MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	  return LFU__NOFILE;
+	}
+
+	fprintf( fp, "#!/bin/bash\n\n");
+	fprintf( fp, "let OpSys_PPC_LINUX=32\n");
+	fprintf( fp, "let OpSys_X86_LINUX=64\n");
+	fprintf( fp, "let OpSys_ARM_LINUX=256\n\n");
+
+	if ( strcmp( release, "") != 0)
+	  fprintf( fp, "source $pwra_db/pwra_env.sh set base %s\n\n", release);
+
+	if ( strcmp( cc, "") != 0) {
+	  fprintf( fp, "export pwre_cc=%s\n", cc);
+	  fprintf( fp, "export pwre_cxx=%s\n", cxx);
+	  fprintf( fp, "export pwre_ar=%s\n\n", ar);
+	}
+
+	if ( strcmp( platform, "") != 0) {
+	  fprintf( fp, "if [ ! -e $pwrp_root/bld/%s ]; then\n", platform);
+	  fprintf( fp, "  mkdir $pwrp_root/bld/%s\n", platform);
+	  fprintf( fp, "fi\n");
+	  fprintf( fp, "if [ ! -e $pwrp_root/bld/%s/obj ]; then\n", platform);
+	  fprintf( fp, "  mkdir $pwrp_root/bld/%s/obj\n", platform);
+	  fprintf( fp, "fi\n");
+	  fprintf( fp, "if [ ! -e $pwrp_root/bld/%s/lib ]; then\n", platform);
+	  fprintf( fp, "  mkdir $pwrp_root/bld/%s/lib\n", platform);
+	  fprintf( fp, "fi\n");
+	  fprintf( fp, "if [ ! -e $pwrp_root/bld/%s/lis ]; then\n", platform);
+	  fprintf( fp, "  mkdir $pwrp_root/bld/%s/lis\n", platform);
+	  fprintf( fp, "fi\n");
+	  fprintf( fp, "if [ ! -e $pwrp_root/bld/%s/exe ]; then\n", platform);
+	  fprintf( fp, "  mkdir $pwrp_root/bld/%s/exe\n", platform);
+	  fprintf( fp, "fi\n");
+	  fprintf( fp, "export pwrp_obj=$pwrp_root/bld/%s/obj\n", platform);
+	  fprintf( fp, "export pwrp_lib=$pwrp_root/bld/%s/lib\n", platform);
+	  fprintf( fp, "export pwrp_lis=$pwrp_root/bld/%s/lis\n", platform);
+	  fprintf( fp, "export pwrp_exe=$pwrp_root/bld/%s/exe\n\n", platform);
+	}
+
+	switch ( opsys) {
+	case pwr_mOpSys_PPC_LINUX:
+	  fprintf( fp, "$pwrb_root/os_linux/hw_ppc/exp/exe/wb_gcg.sh \"$1\" \"$2\" \"$3\" \"$OpSys_PPC_LINUX\" \"$5\" \"$6\" \"$7\" \"$8\"\n");
+	  break;
+	case pwr_mOpSys_X86_LINUX:
+	  fprintf( fp, "$pwrb_root/os_linux/hw_x86/exp/exe/wb_gcg.sh \"$1\" \"$2\" \"$3\" \"$OpSys_X86_LINUX\" \"$5\" \"$6\" \"$7\" \"$8\"\n");
+	  break;
+	case pwr_mOpSys_ARM_LINUX:
+	  fprintf( fp, "$pwrb_root/os_linux/hw_arm/exp/exe/wb_gcg.sh \"$1\" \"$2\" \"$3\" \"$OpSys_ARM_LINUX\" \"$5\" \"$6\" \"$7\" \"$8\"\n");
+	  break;
+	default: ;
+	}
+	fclose(fp);
+
+	pwr_tCmd cmd;
+	sprintf( cmd, "chmod a+x %s\n", fname);
+	system( cmd);
+      }
+    }
+  }
   if ( volumecount > 0)
     free( (char *)volumelist);
 

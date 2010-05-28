@@ -116,17 +116,44 @@ cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source)
 rm		:= rm
 cp		:= cp
 cpflags		:= 
-ar		:= ar
 arflags		:= r
 obj             := -c -o $(target)
-
-cc              := gcc
-ld		:= gcc
-cxx             := g++
-ldxx		:= g++
 lex             := flex
-msg2cmsg	:= $(eexe_dir)/tools_msg2cmsg
 javac		:= javac
+ifdef pwre_ar
+  ar            := $(pwre_ar)
+else
+  ar            := ar
+endif
+ifdef pwre_cc
+  cc              := $(pwre_cc)
+  ld              := $(pwre_cc)
+else
+  cc              := gcc
+  ld              := gcc
+endif
+ifdef pwre_cxx
+  cxx             := $(pwre_cxx)
+  ldxx            := $(pwre_cxx)
+else
+  cxx             := g++
+  ldxx            := g++
+endif
+ifdef pwre_host_exe
+  tools_msg2cmsg  := $(pwre_host_exe)/tools_msg2cmsg
+  tools_cmsg2c    := $(pwre_host_exe)/tools_cmsg2c
+  tools_pdrgen    := $(pwre_host_exe)/tools_pdrgen
+  wb_rtt          := $(pwre_host_exe)/wb_rtt
+  co_convert      := $(pwre_host_exe)/co_convert
+  co_merge        := $(pwre_host_exe)/co_merge
+else
+  tools_msg2cmsg  := $(eexe_dir)/tools_msg2cmsg
+  tools_cmsg2c    := $(eexe_dir)/tools_cmsg2c
+  tools_pdrgen    := $(eexe_dir)/tools_pdrgen
+  wb_rtt          := $(eexe_dir)/wb_rtt
+  co_convert      := $(eexe_dir)/co_convert
+  co_merge        := $(eexe_dir)/co_merge
+endif
 
 
 #docbook-related, added by jonas_h 2006-04-nn

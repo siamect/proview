@@ -1,0 +1,1800 @@
+#####################################################################################
+
+<class> ABB_ACS800MotorAggrEnum
+ @Version
+ @Author cs/je
+ @summary Konfigurationsval för ABB_ACS800MotorAggr
+ ABB_ACS800MotorAggrEnum hanterar konfigurationsvalet för komponenter där en ABB ACS800
+ frekvensomriktare som kommunicerar (PPO protokollet) via Profibus/dp ingår, dvs valet
+ styr vilka komponenter som ska ingå i aggregatet ihop med frekvensomriktaren.
+ 
+ Möjliga komponenter:
+  
+  -Curciutbreaker       Effektbrytare (MCCB)
+  -Contactor            Kontaktor
+  -Frequensyconverter   Frekvensomriktare
+  -Safetyswitch         Säkerhetsbrytare i huvudkretsen  
+  -Safetylock           Startspärr (ej i huvudkretsen)  
+  -Fuse                 Säkring (supersnabba för frekvensomriktare) 
+ 
+ <attr> CbCoFcSs
+  Komponents: Curciutbreaker, Contactor, Frequensyconverter, Safetyswitch.   
+ </attr>
+ <attr> CbCoFcSl
+  Komponents: Curciutbreaker, Contactor, Frequensyconverter, Safetylock.   
+ </attr>
+ <attr> CbCoFC
+  Komponents: Curciutbreaker, Contactor, Frequensyconverter.   
+ </attr>
+ <attr> CbFcSs
+  Komponents: Curciutbreaker, Frequensyconverter, Contactor.   
+ </attr>
+ <attr> CbFcSl
+  Komponents: Curciutbreaker, Frequensyconverter, Safetylock.   
+ </attr>
+ <attr> CbFc
+  Komponents: Curciutbreaker, Frequensyconverter.   
+ </attr>
+ <attr> CoFcSs
+  Komponents: Contactor, Frequensyconverter, Safetyswitch.   
+ </attr>
+ <attr> CoFcSl
+  Komponents: Contactor, Frequensyconverter, Safetylock.   
+ </attr>
+ <attr> CoFc
+  Komponents: Contactor, Frequensyconverter.   
+ </attr>
+ <attr> FcSs
+  Komponents: Frequensyconverter, Safetyswitch.   
+ </attr>
+ <attr> FcSl
+  Komponents: Frequensyconverter, Safetylock.   
+ </attr>
+ <attr> Fc
+  Komponents: Frequensyconverter.   
+ </attr>
+ <attr> FuCbCoFcSs
+  Komponents: Fuse, Curciutbreaker, Contactor, Frequensyconverter, Safetyswitch.   
+ </attr>
+ <attr> FuCbCoFcSl
+  Komponents: Fuse, Curciutbreaker, Contactor, Frequensyconverter, Safetylock.   
+ </attr>
+ <attr> FuCbCoFC
+  Komponents: Fuse, Curciutbreaker, Contactor, Frequensyconverter.   
+ </attr>
+ <attr> FuCbFcSs
+  Komponents: Fuse, Curciutbreaker, Frequensyconverter, Contactor.   
+ </attr>
+ <attr> FuCbFcSl
+  Komponents: Fuse, Curciutbreaker, Frequensyconverter, Safetylock.   
+ </attr>
+ <attr> FuCbFc
+  Komponents: Fuse, Curciutbreaker, Frequensyconverter.   
+ </attr>
+ <attr> FuCoFcSs
+  Komponents: Fuse, Contactor, Frequensyconverter, Safetyswitch.   
+ </attr>
+ <attr> FuCoFcSl
+  Komponents: Fuse, Contactor, Frequensyconverter, Safetylock.   
+ </attr>
+ <attr> FuCoFc
+  Komponents: Fuse, Contactor, Frequensyconverter.   
+ </attr>
+ <attr> FuFcSs
+  Komponents: Fuse, Frequensyconverter, Safetyswitch.   
+ </attr>
+ <attr> FuFcSl
+  Komponents: Fuse, Frequensyconverter, Safetylock.   
+ </attr>
+ <attr> FuFc
+  Komponents: Fuse, Frequensyconverter.   
+ </attr>
+
+</class>
+
+######################################################################################## 
+
+<class>ABB_ACS_Pb_Slave 
+ @Version
+ @Author je
+ @summary Profibus/dp slavobjekt för ASC800
+ Profibus/dp slavobjekt för en ABB frekvensomriktare ASC800. Objektet innehåller bl.a en
+ sökväg till slavens GSD file som gör det möjligt att konfigurera profibus med
+ "ConfigureSlave" metoden, dvs menyval "ConfigureSlave" via höger musknapp.
+ 
+ @b Slavobjektet
+ @image orm_abb_acs800_example4.gif
+ Bilden, gult område visar grundinställningar (default) som redan är gjorda
+ för detta objekt, blå markeringen är själva objektet som ligger i
+ nodehierarkin under ett Pb_Profiboard objekt.
+ 
+ @h1 Konfigurering
+ För frekvensomriktarens Profibus/dp kommunikation behöver man skapa ett ABB_ACS_Pb_Slave
+ objekt i nodehierarkin under ett Pb_Profiboard objekt. Detta gör att man kan konfigurera
+ profibus och skapa ett tillhörande IO objektmodul ABB_ACS_PPO5.
+ 
+ För att förtydliga hur man konfigurerar används två bilder (skärm dumpar) nedan:
+ 
+ -1 Skapa ett slavobjektet ABB_ACS_Pb_Slave genom att "klicka in det" under ett Pb_Profiboard objekt.
+ 
+ -2 Välj ut "Module Class" ABB_ACS_PPO5 via Profibus konfigurator "ConfigureSlave" metoden. Denna
+    procedur skapar objektet ABB_ACS_PPO5 automatiskt med namnet M1 när man trycker på Ok knappen.
+
+ -3 Via "ConfigureSlave" metoden i Proview ska man kontrollera och ställa in följande för en
+    ABB omriktare ACS800:
+            
+    - PrmUserData Operation mode till till Vendor specific.
+    - Protokoll till PPO5.
+    - ABB_ACS_Pb_Slave objektets attribut ByteOrdering ska vara Big Endian.
+
+    - Cut-Off time bör vara 1 (hanterar vad som händer i omriktaren vid profibusfel).
+
+ -4 Koppla en PLC tråd till attribut ThreadObject i objektet ABB_ACS_PPO5
+    (även ABB_ACS_Pb_Slave ska ha en tråd).
+
+ -5 Slaven/nodens adress ställs in i objekt ABB_ACS_Pb_Slave attribut SlaveAddress direkt eller
+    via "ConfigureSlave" metoden.
+    
+ -6 WdFact1 och WdFact2 definierar tiden i watchdog hanteringen för en profibusslav, dvs tiden
+    innan omriktaren ska lösa ut (trippa) om den är konfigurerad att göra det i omriktaren.
+ 
+    Tiden beräknas så här:
+ 
+      t[ms] = 10 * WdFact1 * WdFact2
+   
+      Exempel, WdFact1 på 10 och WdFact2 på 5 blir watchdogtid på 0,5 sekunder.
+ 
+    Tidsfaktorerna ställs in i objekt Pb_DP_Slave. 
+
+ -7 Koppla därefter modulen till frekvensomriktarobjekt ABB_ACS800_1 i planthierarkin med hjälp av
+    IoConnect funktionen. Detta gör att allt signalutbyte som behövs nu är knutet.
+
+ @b Bild inställningar via "ConfigureSlave" metoden
+ @image orm_abb_acs800_example1.gif
+ Bilden, gult område visar vilka inställningar och val som beskrivs
+ ovan när man konfigurerar slaven via "ConfigureSlave" metoden.
+
+ @b Bild inställningar i objektet
+ @image orm_abb_acs800_example2.gif
+ Bilden, gult område visar vilka inställningar i objektet som
+ beskrivs ovan och som man kan ställa in direkt i objektet utan att
+ använda "ConfigureSlave" metoden. 
+
+ @b Se även
+ <attr>Super 
+  Superklass, klicka på länk Pb_DP_Slave för mer beskrivning om objektattributet. 
+ </attr>
+ 
+ </class>
+
+####################################################################################
+
+<class> ABB_ACS_PPO5
+ @Version
+ @Author je
+ @summary Profibus/dp modul för ABB ACS800 frekvensomriktare med PPO5.
+ @b Profibus/dp PPO5 modul för en ABB frekvensomriktare ASC800
+ ABB_ACS_PPO5 objektet hanterar datautbyte mellan en frekvensomriktare och Proview
+ via Profibus/dp med hjälp av standardprotokollet PPO5 (Parameter/Process data object).
+ 
+ PPO5 protokollet är det PPO alternativ (av 1-5) som innehåller mest alternativ för IO utbyte
+ och funktioner mellan ett styrsystem och en omriktare.
+ 
+ Modulobjektet ABB_ACS_PPO5 ihop med ABB_ACS_Pb_Slave objektet (placerad nodehierarkin)
+ ingår i frekvensomriktarobjekt ABB_ASC800_1 (placerad planthierarkin). Utöver de
+ specificerade/använda IO signaler finns det lediga oknutna signaler som fritt kan användas
+ ihop med objekt ABB_ASC800_1, se attributbeskrivning för mer info.  
+ 
+ Aggregat ABB_ACS800MotorAggr (Fan & Pump också) och ABB_ACS800_1 objekten använder denna
+ IO modul för att kommunicera med en omriktare.
+
+ @b Modulobjektet
+ @image orm_abb_acs800_example3.gif
+ Bilden, gult område visar de viktigaste IO kanalerna och blått är själva objektmodulen.
+
+ Proview tolkar/hanterar PPO standardorden (16 bitar) SW och CW som namnats I_SW och O_CW
+ i bild ovan enligt följande: 
+ 
+  Kontrollord CW: 
+  
+  BIT:  PPO NAMN:     PROVIEW TOLKNING AV FUNKTIONEN:
+  
+  0     OFF1          Start (run) om bit är 1, stoppar med ramp om bit är 0.
+  1     OFF2          Nödstopp om bit är 0, stoppar med frirullning, dvs ingen ramp.
+  2     OFF3          Nödstopp om bit är 0, stoppar med nödstoppsramp inställd i omriktare. 
+  3     ENABLE        Driftfrigivning om bit är 1.
+  4     RAMP ZERO     Rampgeneratorns utsignal tvingas till noll om bit är 0.
+  5     RAMP HOLD     Rampgeneratorns utsignal fryses om bit är 0. 
+  6     RAMP IN-ZERO  Rampgeneratorns insignal tvingas till noll om bit är 0. 
+  7     RESET         Återställning trippad omriktare om bit är 1 (flanktriggad).
+  8     ?             Se PPO protokollet.
+  9     ?             Se PPO protokollet.        
+  10    REMOTE CMD    Begäran om bit är 1 att styrning ska ske via fältbussen (Proview/PLC).
+  11    ?             Se PPO protokollet.
+  12-15 RESERVED      Reserverad för framtid funktion, Se PPO protokollet. 
+
+
+  Statusord SW: 
+  
+  BIT:  PPO NAMN:     PROVIEW TOLKNING AV FUNKTIONEN:
+  
+  0     READY ON       Redo (switch on) om bit är 1.
+  1     READY RUN      Driftklar om bit är 1.
+  2     READY REF      Startad (run) följer styrreferensen om bit är 1.
+  3     TRIPPED        Omriktare trippad (återställning krävs) om bit är 1, drift stoppad.
+  4     OFF2           Nödstopp med frirullning aktiverad om bit är 1.
+  5     OFF3           Nödstopp med stoppramp aktiverad om bit är 1.
+  6     INHIBITED      Driftförreglad bit är 1.
+  7     ALARM          Varningslarm om bit är 1 (stoppar ej drift) 
+  8     AT_SETPOINT    Driftvarvtal uppnått om bit är 1, dvs bör/ärvärde är lika. 
+  10    REMOTE         Om bit är 0 är omriktaren i lokal mod, dvs styrning via Proview/PLC ej tillåten.
+  11    ?              Se PPO protokollet.
+  12    ?              Se PPO protokollet.  
+  13-14 RESERVED       Reserverad för framtid funktion, Se PPO protokollet. 
+  15    ?              Se PPO protokollet. 
+  
+ @h1 Konfigurering
+ Se klasshjälp för ABB_ACS_Pb_Slave objektet där en utförligare beskrivning hur man skapar ett
+ modulobjekt i nodehierarkin och konfigurerar profibus för en ASC800 omriktare.
+ 
+ Koppla därefter modulen till frekvensomriktarobjekt ABB_ACS800_1 i planthierarkin med hjälp av
+ IoConnect funktionen. Detta gör att allt signalutbyte som behövs nu är knutet.
+ 
+ OBS! Glöm inte att ABB_ASC_PPO5 och ABB_ACS_Pb_Slave objekten också ska ha en referens till en
+ plc tråd i attribut ThreadObject.
+
+ @b Inställningar PPO5
+ PPO5 protokollets PZD data (prozessdaten) PZD3 till PZD9 ska också konfigureras i omriktaren för ström
+ och moment, dvs:
+ 
+  -PZD3  Ställs in för current/ström i omriktaren
+  -PZD4  Ställs in för Toque/moment i omriktaren 
+  -PZD5  Ställs in för Felord 1 i omriktaren 
+  -PZD6  Ställs in för Felord 2 i omriktaren 
+  -PZD7  Ställs in för DI6_1 i omriktaren 
+  -PZD8  Ställs in för Alarmord 5 i omriktaren 
+  -PZD9  Ställs in för Statusord 3 i omriktaren 
+ 
+ Anpassning/skalning mellan Proview och omriktarens IO signaler måste också göras i kanalobjekten
+ ChanAi och ChanAo för frekvensomriktaren, dvs signaler i ABB_ACS_PPO5 som bör gås igenom är:
+ 
+  -O_REF     Referens (börvärde i varvtal är att föredra)
+  -I_ACT     Ärvärde  (varvtalsvärde är att föredra)    
+  -I_PZD3    Ström
+  -I_PZD4    Moment
+
+  Se exempel nedan på hur en ABB ASC800 omriktare och Proview kan ställas in.
+  
+ OBS! Att INTE alla data som specificeras i PPO5 protokollet finns tillgänglig i planthierarki
+ objektet ABB_ACS800_1, dessa är:
+ 
+  - I_PZD10 är ledig integer insignal (Ii, 16 bit).
+  - O_PZD3 till O_PZD7 är lediga analoga utsignaler (Ao, 16 bit).
+  - O_PZD8 till O_PZD10 är lediga integer utsignaler (Io, 16 bit).
+  
+  Dessa signaler ligger alltså oknutna i ABB_ACS_PPO5 objektet och kan användas fritt för PLC
+  programmering t.ex. för att momentbegränsa motorn.
+ 
+ @b Exempel inställningar i en omriktare
+ Nedan inställningar visar vilka parametrar som behöver gås igenom för att få ett fungerande
+ signalutbytet mellan Proview ABB_ACS_PPO5 modul och en ABB ACS800 frekvensomriktare. Vissa
+ inställningar har bara med själva omriktaren att göra och är med som ytterligare hjälp för
+ intressanta parametrar att beakta.
+
+     INSTÄLLNINGAR I ACS800 OMRIKTAREN (text på engelska):
+      
+     Parameter  Value      Description
+     group  
+      10.01     COMM.CW     Ext1 start/stop/direction
+      10.03     ?           Rotation of the motor
+      11.02     EXT1        Reference select
+      11.03     COMM.REF    Source for external reference 1
+      11.04     ?           Minimum value for external reference 1
+      11.05     ?           Maximum value for external reference 1
+      16.04     COMM.CW     Source for the fault reset signal "tripped"
+      21.03     RAMP        Motor stop function
+      22.01     ACC/DEC 1   Acceleration and deceleration times
+      22.02     ?           Acc time 1
+      22.03     ?           Dec time 1
+      51.01     Profibus/dp Modultype 
+      51.02     ?           Node adress (via dipswitchar, om switchar är 0 ställs den in här.)
+      51.06     104         PZD3 IN, Current/Ström
+      51.08     105         PZD4 IN, Torque/Moment
+      51.10     305         PZD5 IN, Fault word 1
+      51.12     306         PZD6 IN, Fault word 2
+      51.14     117         PZD7 IN, DI6_1
+      51.16     318         PZD8 IN, Alarm word 5
+      51.18     313         PZD9 IN, Statusword 3
+      
+      98.02     FIELDBUS    Serial communication
+      98.07     ABB Drives  Communication profile 
+     
+      16.01     Ja          Run enable parameter/driftfrigivning
+      20.01     ?           Limits min speed
+      20.02     ?           Limits max speed
+         
+      Exempel parameter PZD4 IN:
+      
+        Parameter PZD4 IN ställs in i parametergrupp 51.08 och ska ställas in till 105,
+        som betyder värde "01.05" som är motorns ärmoment. Dennas signal läses sen av
+        i Proview, ingångskanal I_PZD4.
+      
+      Överföringshastigheten (Baude raten) grupp 52.03 och PPO typen grupp 52.04 ställs in
+      automatiskt när kommunikation etableras.
+            
+      Via "ConfigureSlave" metoden i Proview ska man ställa in följande för en ABB omriktare ACS800:
+            
+      - PrmUserData Operation mode till till Vendor specific (info från GSD fil)
+      - Protokoll till PPO5 (info från GSD fil)
+
+      Proview kanalobjekt ChanAi och ChanAo attribut som styr skalning/anpassning mot
+      omriktarens analoga signaler har en grundinställning (default) som kanske behöver
+      ändras visas här:
+      
+      I_ACT (varvtal/ärvärde)
+
+        Omriktarens  Max/Min varvtal parameter 20.01 och 20.02 bestämmer vad I_ACT ska
+        skalas till. Exempel +/- 1500r/m är inställt i omriktaren vilket ger:  
+
+        - RawValRangeLow         -20000
+        - RawValRangeHigh        +20000
+      
+        - ActValValRangeLow      -1500	(default)
+        - ActValRangeHigh        +1500  (default)
+      
+        Omriktarens varvtalsområde råvärde i omriktaren är alltid +/- 20000.
+      
+
+      I_PZD3 (ström) ÄNDRA INTE!
+           
+        Omriktarens strömområde är 0-1000A.
+
+        - RawValRangeLow         -10000 
+        - RawValRangeHigh        +10000  (betyder 1000A)
+      
+        - ActValValRangeLow      -1000 	
+        - ActValRangeHigh        +1000
+
+        Omriktarens strömområde råvärde i omriktaren är alltid +/- 10000 vilket är 1000.0 Amper
+        (Råvärde RawValRange på 1382 betyder 138,2A).
+
+
+      I_PZD4 (moment) ÄNDRA INTE!
+           
+        Omriktarens momentområde är i procent (råvärde RawValRange på +/- 32768)
+
+        - RawValRangeLow         -32768 
+        - RawValRangeHigh        +32767  (betyder 327.67%)
+      
+        - ActValValRangeLow      -327.68	
+        - ActValRangeHigh        +327.67
+
+        Omriktarens momentområde i manualen är otydlig men dessa inställningar fungerar!!!
+
+
+      O_REF (Referens/börvärde)
+           
+        Omriktarens  referensområde i varvtal parameter 11.04 och 11.05 bestämmer vad O_REF ska
+        skalas till. Exempel +/- 1500r/m referensområde önskas vilket ger:  
+
+        - RawValRangeLow         -20000 
+        - RawValRangeHigh        +20000
+      
+        - ActValValRangeLow      -1500	(default)
+        - ActValRangeHigh        +1500  (default)
+      
+        Omriktarens  varvtalsområdes råvärde i omriktaren är alltid +/- 20000.
+
+
+      Övriga attribut i kanalobjekten som skalar signaler kan lämnas som de är, dvs:
+
+        - SensorSigValRangeLow 	  
+        - SensorSigValRangeHigh
+        - ChannelSigValRangeLow 	
+        - ChannelSigValRangeHigh 	
+      
+      Att ändra/förstå dessa attribut är inte lätt och exemplet nedan visar när O_REF attributet
+      skalas om så en begränsning av max +/- 400r/m kan "nå" omriktaren, dvs om Ao RefSpeed.ActualValue
+      värde överskrider 400 blir omriktarens referens i alla fall bara 400:
+      
+        - ActValValRangeLow      -400   (begränsningen i r/m)
+        - ActValRangeHigh        +400   (begränsningen i r/m)
+        - SensorSigValRangeLow   -20    (1/5 av ChannelSigValRangeLow, dvs procent av 2000r/m)
+        - SensorSigValRangeHigh  +20    (1/5 av ChannelSigValRangeHigh,dvs procent av 2000r/m)
+        - ChannelSigValRangeLow  -100   (procent)	
+        - ChannelSigValRangeHigh +100   (procent)	
+        - RawValRangeLow         -20000 (ska alltid vara -20000)
+        - RawValRangeHigh        +20000 (ska alltid vara +20000)
+
+        Omriktarens min/max parametrar/styrreferens 11.04 och 11.05 är inställda på +/- 2000r/m
+        i detta exempel och ChannelSigValRange och SensorSigValRange attributen ovan är i
+        procent för enkelhetens skull.
+	
+        OBS! Att ställa in Proview på detta sätt är inte att rekomendera, det är bättre att
+        omriktarens inställningar får råda.
+
+	Om startorder OFF1 bit 0 i kontrollordet CW går från hög till låg och hög igen måste
+	motorn rampa ner till noll innan motorn startar/börjar rampa upp igen!
+       
+@b Se även
+@classlink ABB_ACS800MotorAggr abb_abb_acs800motoraggr.html
+ <attr>Super 
+ Superklass, klicka på länk Pb_module för mer beskrivning om objektattributet. 
+ </attr>
+ <attr> I_ID
+  Ingångskanal för parameterläsning ID, se omriktarmanual.
+ </attr>
+ <attr> I_IND
+  Ingångskanal för parameterläsning IND, se omriktarmanual.
+ </attr>
+ <attr> I_VALUE
+  Ingångskanal för parameterläsning VALUE, se omriktarmanual.
+ </attr>
+ <attr> I_SW
+  Fördefinierad ingångskanal statusord SW, se omriktarmanual.
+ </attr>
+ <attr> I_ACT
+  Fördefinierad ingångskanal hastighetsärvärde ACT, se omriktarmanual.
+ </attr>
+ <attr> I_PZD3
+  Odefinierad ingångskanal PZD3 som ska parametreras till ärström i omriktare, se omriktarmanual
+  parameter 51.06 som ska vara inställd på 104.
+ </attr>
+ <attr> I_PZD4
+  Odefinierad ingångskanal PZD4 som ska parametreras till ärmoment i omriktare, se omriktarmanual
+  parameter 51.08 som ska vara inställd på 105.
+ </attr>
+ <attr> I_PZD5
+  Odefinierad ledig ingångskanal PZD5 som ska parametreras till felord 1 i omriktare, se omriktarmanual
+  parameter 51.10 som ska vara inställd på 305.
+ </attr>
+ <attr> I_PZD6
+  Odefinierad ledig ingångskanal PZD6 som ska parametreras till felord 2 i omriktare, se omriktarmanual
+  parameter 51.12 som ska vara inställd på 306.
+ </attr>
+ <attr> I_PZD7
+  Odefinierad ledig ingångskanal PZD7 som ska parametreras till DI6_1 i omriktare, se omriktarmanual
+  parameter 51.14 som ska vara inställd på 117.
+ </attr>
+ <attr> I_PZD8
+  Odefinierad ledig ingångskanal PZD8 som ska parametreras till alarmord 5 i omriktare, se omriktarmanual
+  parameter 51.16 som ska vara inställd på 318.
+ </attr>
+ <attr> I_PZD9
+  Odefinierad ledig ingångskanal PZD9 som ska parametreras till statusord 3 i omriktare, se omriktarmanual
+  parameter 51.18 som ska vara inställd på 313.
+  </attr>
+ <attr> I_PZD10
+  Odefinierad ledig ingångskanal PZD10 som inte används överhuvudtaget i ABB_ACS_PPO5, se omriktarmanual
+  parameter 51.20.
+ </attr>
+ <attr> O_ID
+  Utgångskanal för parameterskrivning ID, se omriktarmanual.
+ </attr>
+ <attr> O_IND
+  Utgångskanal för parameterskrivning IND, se omriktarmanual.
+ </attr>
+ <attr> O_VALUE
+  Utgångskanal för parameterskrivning VALUE, se omriktarmanual.
+ </attr>
+ <attr> O_CW
+  Fördefinierad utgångskanal styr-kontrollord CW, se omriktarmanual.
+ </attr>
+ <attr> O_REF
+  Fördefinierad utgångskanal hastighet/referens börvärde REF, se omriktarmanual.
+ </attr>
+ <attr> O_PZD3
+  Odefinierad ledig utgångskanal PZD3 som inte används överhuvudtaget i ABB_ACS_PPO5, se omriktarmanual.
+ </attr>
+ <attr> O_PZD4
+  Odefinierad ledig utgångskanal PZD4 som inte används överhuvudtaget i ABB_ACS_PPO5, se omriktarmanual.
+ </attr>
+ <attr> O_PZD5
+  Odefinierad ledig utgångskanal PZD5 som inte används överhuvudtaget i ABB_ACS_PPO5, se omriktarmanual.
+ </attr>
+ <attr> O_PZD6
+  Odefinierad ledig utgångskanal PZD6 som inte används överhuvudtaget i ABB_ACS_PPO5, se omriktarmanual.
+ </attr>
+ <attr> O_PZD7
+  Odefinierad ledig utgångskanal PZD7 som inte används överhuvudtaget i ABB_ACS_PPO5, se omriktarmanual.
+ </attr>
+ <attr> O_PZD8
+  Odefinierad ledig utgångskanal PZD8 som inte används överhuvudtaget i ABB_ACS_PPO5, se omriktarmanual.
+ </attr>
+ <attr> O_PZD9
+  Odefinierad ledig utgångskanal PZD9 som inte används överhuvudtaget i ABB_ACS_PPO5, se omriktarmanual.
+ </attr>
+ <attr> O_PZD10
+  Odefinierad ledig utgångskanal PZD10 som inte används överhuvudtaget i ABB_ACS_PPO5, se omriktarmanual.
+ </attr>
+
+</class>
+
+####################################################################################
+
+<class> ABB_ACS800_1
+ @Version
+ @Author je
+ @summary ABB frekvenomriktare ACS800, Profibus/dp, PPO5 protokollet
+ @b ABB frekvenomriktare ASC800, Profibus/dp kommunikation med PPO5 protokollet 
+ ABB_ACS800_1 objektet hanterar en motor som styrs av en ACS800 frekvensomriktare via
+ fältbussen Profibus/dp genom att kommunicera med standard PPO5 protokollet
+ Parameter/Process data object). Objektet använder PPO5 möjligheter att skriv/läsa av
+ parametrar i omriktaren.
+ 
+ Till detta objekt hör PLC funktionsobjektet ABB_ACS800_1Fo, Profibus/modulobjekt ABB_ACS_PPO5
+ och slavobjekt ABB_ACS_Pb_Slave.
+ 
+ Objektet har också en objektsbild som visar status på omriktaren och processvärden i graf och
+ stapelform samt en merbild för att läsa/skriva parametrar. Det finns även ett trendobjekt som
+ visar hastighet, moment och ström i en bild.
+  
+ @b Objektsymbol
+ Det finns ingen symbol för detta objekt.
+
+ @b Objektsbild
+ @image orm_abb_acs800_1_og.gif
+
+ Indikatorer:
+ 
+  - Ready är grön när motorn kan startas.
+  
+  - Run är grön när motorn körs (snurrar).
+ 
+  - Error är röd när omriktaren "felar" och är förreglad att starta.
+
+  - Warning är gul om omriktaren vill varna för något, annars grå. Varningen läses av på
+    omriktarens display.
+   
+  - Local control är gul om omriktaren är ställd för körning via omriktarens displayenhet.
+    Dvs omriktaren tar inte emot styrorder via Profibus, bara lokalt på omriktaren.
+    
+  - Tripped är röd om omriktaren löst ut, Reset knappen bredvid indikatorn återställer
+    omriktaren om den är konfigurerad för fjärråterställning.  
+ 
+  - Bus-com visninsfältet visar status på profibuskommunikationen mellan omriktaren och styrsystemet.
+    
+  - Status bredvid omriktarsymbolen är grön när omriktaren är redo att köras, annars gul.
+    Trippar omriktaren blir den röd. Blinkar grön vid uppstart (elkraft till).
+     
+ Knappar:
+ 
+  - Knapp More... leder till bild för att läsa/skriva parametrar i omriktaren.
+  
+  - Knapp Reset återställer trippad omriktare om den är konfigurerad för fjärråterställning.
+  
+  
+ Frekvensomriktarobjektets Ao signal RefSpeed attribut PresMaxLimit och PresMinLimit anger i bilden
+ speed-grafens visningsområde. Dessa går att ändra genom att klicka på grafen/värdena.
+ 
+ Visningsområde ärvärden för current/ström och torque/moment Ai signaler ActTorque och ActCurrent
+ behandlas på likvärdigt sätt.
+
+ @b Objektsbild More...
+ @image orm_abb_acs800_1_og_more.gif
+ 
+ Bild som hantera enkel kommunikation för att läsa/skriva parametrar i omriktaren. Se manual för
+ omriktaren för möjliga parametrar mm.
+
+ @h1 Konfigurering
+ Se rubrik Plc kod och Profibus/dp nedan.
+      
+ @b Plc kod
+ För PLC programmering används funktionsobjektet ABB_ACS800_1Fo.
+ @image orm_abb_acs800_1fo_fo.gif
+ 
+ Skapa ett funktionsobjekt i PLC editorn och koppla till objektet i planthierarkin.
+
+ @b Simulering
+ För simulering använder man funktionsobjektet ABB_ACS800_1Sim.
+
+ @b Profibus/dp
+ För frekvensomriktarens Profibus/dp kommunikation med protokollet PPO5 ska man använda modulobjektet
+ ABB_ACS_PPO5 och ett slavobjekt ABB_ACS_Pb_Slave.
+ 
+ Se klasshjälp för ABB_ACS_Pb_Slave objektet där en utförligare beskrivning hur man skapar ett
+ modulobjekt i nodehierarkin och konfigurerar profibus för en ASC800 omriktare.
+ 
+ Koppla därefter modulen ABB_ACS_PPO5 i nodehierarkin till objekt ABB_ACS800_1 i planthierarkin med
+ hjälp av IoConnect funktionen.
+
+ @b Inställningar PPO5
+ (se objekt ABB_ACS_PPO5 och ABB_ACS_Pb_Slave för mer info och exempel)
+ 
+ PPO5 protokollets PZD data (prozessdaten) PZD3 till PZD9 ska också konfigureras i omriktaren för ström
+ och moment mm, dvs:
+ 
+  -PZD3  Ställs in för current/ström i omriktaren
+  -PZD4  Ställs in för Toque/moment i omriktaren 
+
+   Dessa signaler är namnsatta i objektet till ActCurrent och ActTorque och kopplade till objektbildens
+   graf och trend som visar moment och strömkurvor.
+
+  -PZD5  Ställs in för Felord 1 i omriktaren 
+  -PZD6  Ställs in för Felord 2 i omriktaren 
+  -PZD7  Ställs in för DI6_1 i omriktaren 
+  -PZD8  Ställs in för Alarmord 5 i omriktaren 
+  -PZD9  Ställs in för Statusord 3 i omriktaren 
+ 
+   
+ Anpassning/skalning mellan Proview och omriktarens IO signaler måste också göras i kanalobjekten
+ ChanAi och ChanAo för frekvensomriktaren, dvs signaler i ABB_ACS_PPO5 som bör gås igenom är:
+ 
+  -O_REF     Referens (börvärde i varvtal är att föredra)
+  -I_ACT     Ärvärde  (varvtalsvärde är att föredra)    
+  -I_PZD3    Ström
+  -I_PZD4    Moment
+ 
+  
+ @b Se även
+ @classlink ABB_ACS_Pb_Slave abb_abb_acs_pb_slave.html
+ @classlink ABB_ACS800_1Sim abb_abb_acs800_1sim.html
+ <attr> Description
+  Textfält synlig i XTT som beskriver objektet lite mer än namnet på objektet
+ </attr>
+ <attr> Specification
+  Textfält synlig i XTT som specificerar frekvensomriktaren
+ </attr>
+ <attr> InIdPar
+  Används vid parameterläsning ID, se omriktarmanual.
+ </attr>
+ <attr> InIndPar
+  Används vid parameterläsning IND, se omriktarmanual.
+ </attr>
+ <attr> InValuePar
+  Används vid parameterläsning VALUE, se omriktarmanual.
+ </attr>
+ <attr> ActSpeed
+  Fördefinierad insignal hastighetsärvärde ACT, se omriktarmanual och objekt ABB_ACS_PPO5.
+ </attr>
+ <attr> ActTorque
+  Insignal I_PZD4 som ska parametreras till ärmoment i omriktare, se omriktarmanual och objekt ABB_ACS_PPO5.
+ </attr>
+ <attr> ActCurrent
+  Insignal I_PZD3 som ska parametreras till ärström i omriktare, se omriktarmanual och objekt ABB_ACS_PPO5.
+ </attr>
+ <attr> StatusWordSW
+  Insignal statusord SW, se omriktarmanual och objekt ABB_ACS_PPO5.
+ </attr>
+ <attr> FaultWord1
+  Insignal I_PZD5 som ska parametreras till felord 1 i omriktare, se omriktarmanual
+  parameter 51.10 som ska vara inställd på 305.
+ </attr>
+ <attr> FaultWord2
+  Insignal I_PZD6 som ska parametreras till felord 2 i omriktare, se omriktarmanual
+  parameter 51.12 som ska vara inställd på 306.
+ </attr>
+ <attr> Di6_1
+  Insignal I_PZD7 som ska parametreras till DI6_1 i omriktare, se omriktarmanual
+  parameter 51.14 som ska vara inställd på 117.
+ </attr>
+ <attr> StatusWordSW3
+  Insignal I_PZD8 som ska parametreras till alarmord 5 i omriktare, se omriktarmanual
+  parameter 51.16 som ska vara inställd på 318.
+ </attr>
+ <attr> AlarmWord5
+  Insignal I_PZD9 som ska parametreras till statusord 3 i omriktare, se omriktarmanual
+  parameter 51.18 som ska vara inställd på 313.
+ <attr> OutIdPar
+  Används vid parameterskrivning ID, se omriktarmanual.
+ </attr>
+ <attr> OutIndPar
+  Används vid parameterskrivning IND, se omriktarmanual.
+ </attr>
+ <attr> OutValuePar
+  Används vid parameterskrivning VALUE, se omriktarmanual.
+ </attr>
+ <attr> ControlWordCW
+  Utsignal styr-kontrollord CW, se omriktarmanual och objekt ABB_ACS_PPO5.
+ </attr>
+ <attr> RefSpeed
+  Utsignal hastighet/referens börvärde REF, se omriktarmanual och objekt ABB_ACS_PPO5.
+ </attr>
+ </attr>
+ <attr>IndWarning 
+  Går hög om omriktaren varnar för något eller den inte är redo för fjärrstyrning.
+ </attr>
+ <attr>IndError 
+  Går hög om omriktaren trippar.
+ </attr>
+ <attr>OpReset 
+  Beordring om återställning vid trippad omriktaren. Påverkas normalt via knapp Reset i objektsbild,
+  nollställs alltid.
+ </attr>
+ <attr>OpWritePar
+  Knapp Write i objektsbild More som beordrar skrivning av parameter i omriktaren, nollställs alltid
+ </attr>
+ <attr>OpReadPar
+  Knapp Read i objektsbild More som beordrar skrivning av parameter i omriktaren, nollställs alltid
+ </attr>
+ <attr>OpBackupPar
+  Knapp Write i objektsbild More för backup/permanenta parametrar som skrivits till omriktaren,
+  nollställs alltid.
+ </attr>
+ <attr>CommOk 
+  Går hög när proview har kontakt/kommunikation med omriktaren via profibus/dp. 
+ </attr>
+ <attr>AlarmOk 
+  Omriktare uppstartad alternativt redo och i fjärrstyrningsmod, dvs att larma är okej.
+ </attr>
+ <attr>PowerStartUp 
+  Omriktare startar upp (tidsfördröjning), styr indikatorer att blinka i objektbild mm. Se
+  attribut PowerUpTime.
+ </attr>
+ <attr>ReadyRemote 
+  Omriktare driftklar och redo för fjärrstyrning via Profibus.
+ </attr>
+ <attr>ConvertReady 
+  Omriktare driftklar, signal/bit i statusordet StatusWordSW.
+ </attr>
+ <attr>ConvertRun 
+  Omriktare startad, signal/bit i statusordet StatusWordSW.
+ </attr>
+ <attr>ConvertTripped 
+  Omriktare utlöst, signal/bit i statusordet StatusWordSW.
+ </attr>
+ <attr>ConvertFault 
+  Omriktare förreglad, signal/bit i statusordet StatusWordSW.
+ </attr>
+ <attr>ConvertWarning 
+  Omriktare i varning, signal/bit i statusordet StatusWordSW.
+ </attr>
+ <attr>ConvertRemote 
+  Omriktare i fjärrstyrningsmod, signal/bit i statusordet StatusWordSW.
+ </attr>
+ <attr>PowerUpTime 
+  Tid i sekunder man anser omriktare tar för att komma igång (boota) vid spänningstillslag.
+ </attr>
+ <attr>RequestPar 
+  Signal för hantering av skriv/läsning parametrar i omriktaren.
+ </attr>
+ <attr>WriteValuePar 
+  Signal för hantering av skriv/läsning parametrar i omriktaren.
+ </attr>
+ <attr>ReadValuePar 
+  Signal för hantering av skriv/läsning parametrar i omriktaren.
+ </attr>
+ <attr>ReadCodePar 
+  Signal för hantering av skriv/läsning parametrar i omriktaren.
+ </attr>
+ <attr>ReadCodeSubPar 
+  Signal för hantering av skriv/läsning parametrar i omriktaren.
+ </attr>
+ <attr>AlarmLocalMod 
+  Larmtext för omriktare i lokal mod.
+ </attr>
+ <attr>AlarmTripped 
+  Larmtext för utlöst omriktare.
+ </attr>
+ <attr>AlarmFanOld
+  Larmtext för intern fläkt i omriktaren att den behöver översyn.
+ </attr>
+ <attr>AlarmWarning
+  Larmtext för omriktare i varningsläge.
+ </attr>
+ <attr>AlarmError
+  Larmtext för omriktare i felläge (trasig).
+ </attr>
+ <attr>AlarmConnection
+  Larmtext för omriktare när kommunikationen är nere.
+ </attr>
+ <attr>DefTrend 
+  Trendobjekt visas enligt trendmetoden, referens till objektets PlotGroup objekt.
+ </attr>
+ <attr> HelpTopic
+  Ämnesreferens till hjälpen för objektet  
+ </attr>
+ <attr> DataSheet
+  URL till datablad för objektet  
+ </attr>
+ <attr> CircuitDiagram
+  URL till elschema för objektet  
+ </attr>
+ <attr> Note
+  Notering (synlig i objektsbild) för objektet  
+ </attr>
+ <attr> Photo
+  URL till ett fotografi för objektet  
+ </attr>
+ <attr>TrendActSpeed 
+  Trendobjekt för ärhastighet (varvtal oftast).
+ </attr>
+ <attr>TrendActTorque 
+  Trendobjekt för ärmoment (vridmoment)
+ </attr>
+ <attr>TrendActCurrent
+  Trendobjekt för ärström.
+ </attr>
+ <attr>TrendRefSpeed 
+  Trendobjekt för börreferens/hastighet (bör varvtal oftast).
+ </attr>
+ <attr>PlotGroup 
+  Trend plottgrupp för signaler som definierats i trendobjekten.
+ </attr>
+ <attr> PlcConnect
+  Referens som visar vilket objekt funktionsobjektet har blivit knuten (connected) till.
+ </attr>
+ <attr> SimConnect
+  Referens som visar vilket simulerings-funktionsobjekt objektet har blivit knuten (connected) till.
+ </attr>
+ <attr>IOconnect
+  Referens till profibusmodulen i planthierarkin för signalutbyte med omriktaren.
+ </attr>
+ <attr>IoStatus
+  Referens till profibusnodens status, dvs om kommunikationen är okej (syns bara i runtime).
+ </attr>
+
+</class>
+
+######################################################################################## 
+
+<class>ABB_ACS800_1Fo 
+ @Version
+ @Author je
+ @summary PLC ABB_ACS800_1Fo för ABB_ACS800_1
+ Funktionsobjekt ABB_ACS800_1Fo för styrning ABB frekvensomriktare ACS800 via Profibus/dp.
+ @image orm_abb_acs800_1fo_fo.gif
+ 
+ Skapa ett funktionsobjekt i PLC editorn och koppla till objektet ABB_ACS800_1 i planthierarkin.
+ 
+ @b Se även
+ @classlink ABB_ACS_Pb_Slave abb_asc_pb_slave.html
+ @classlink ABB_ACS800_1Sim abb_abb_acs800_1sim.html
+ <attr>PowerOn 
+  [pwo]
+  Ingången ska vara hög när man anser att omriktaren lever, dvs elkraft påslagen (huvudkontaktorsvar).
+  Normalt villkor för att larmövervakning kopplas på oavsett omriktarstatus. När signal går hög löper
+  en tid PowerUpTime och när denna tid löpt ut bör omriktaren normalt vara startklar. Tiden ställs in
+  i objektet attribut PowerUpTime (default 15s). När tiden löper (start upp pågår) blinkar
+  omriktarens statusindikeringar i bilder.
+  
+  Det går bra att strunta i denna insignal men då får man inte blink och larm när kommunikationen
+  med omriktaren är nere/död.
+ </attr>
+ <attr> Start
+  [sta]
+  Ingång för startorder (run) till omriktaren vilket är bit 0 i kontrollordet O_CW, dvs omriktaren bör
+  bli "enable operation" för referensen RefSpeed. När signal går hög/låg startar/stoppar motorn normalt
+  med ramper inställda i omriktaren. Funktionen kallas för OFF1.
+ </attr>
+ <attr> RefSpeed
+  [REF]
+  Analog ingång för hastighetsreferensen till omriktaren, dvs styrordet O_REF. I denna Ao kanal O_REF
+  attribut görs skalning och anpassning mot omriktarens referens.
+ </attr>
+ <attr> NoOff2
+  [nof2]
+  Ingång för stopporder till omriktaren, 0 = stoppa genom att motorn rullar ut (ej ramp). Används normalt ej.
+  Funktionen kallas för OFF2.
+ </attr>
+ <attr> NoOff3
+  [nof3]
+  Ingång för nödstoppsorder till omriktaren, 0 = stoppa med ramp (ramptid i omriktare). Används normalt ej.
+  Funktionen kallas för OFF3.
+ </attr>
+ <attr> EnableOperation
+  [eno]
+  Ingång för driftfrigivning till omriktaren, 0 = normalt rullar motorn ut. Används normalt ej.
+ </attr>
+ <attr> PlcConnect
+  Referens som visar vilket objekt funktionsobjektet har blivit knuten (connected) till.
+ </attr>
+ <attr> ReadyRemote
+  [rdy]
+  Utgång (1:a) när omriktaren anses uppstartad och status är sådant att startorder från fjärr
+  kan ske, dvs tid PowerUpTime löpt ut eller omriktare redo och omriktare ej trippad, ej
+  local/intern mod mm.   
+ </attr>
+ <attr> Run
+  [run]
+  Utgång (1:a) när drift är startad (enable run), statusord SW bit 2.
+ </attr>
+ <attr>Err 
+   [err]
+   Utgången går hög när objektet är förreglad eller komponenter larmar/löser ut. Bör användas för att
+   återställa beordringar på funktionsobjektets startingång Start så att oönskade återstarter förhindras vid/efter fel. 
+ </attr>
+ <attr> Di1
+   [di1]
+   Utgång (1:a) när digital ingång 1 på frekvensomriktaren IO enhet RMIO kort är hög.
+ </attr>
+ <attr> Di2
+   [di2]
+   Utgång (1:a) när digital ingång 2 på frekvensomriktaren IO enhet RMIO kort är hög.
+ </attr>
+ <attr> Di3
+   [di3]
+   Utgång (1:a) när digital ingång 3 på frekvensomriktaren IO enhet RMIO kort är hög.
+ </attr>
+ <attr> Di4
+   [di4]
+   Utgång (1:a) när digital ingång 4 på frekvensomriktaren IO enhet RMIO kort är hög.
+ </attr>
+ <attr> Di5
+   [di5]
+   Utgång (1:a) när digital ingång 5 på frekvensomriktaren IO enhet RMIO kort är hög.
+ </attr>
+ <attr> Di6
+   [di6]
+   Utgång (1:a) när digital ingång 6 på frekvensomriktaren IO enhet RMIO kort är hög.
+ </attr>
+ <attr> DiIL
+   [diil]
+   Utgång (1:a) när digital ingång DI IL (interlock) på frekvensomriktaren IO enhet
+   RMIO kort är hög som betyder att INTE elektrisk startblockering gäller, dvs när
+   utgången på funktionsobjektet är 1.
+ </attr>
+ 
+ </class>
+
+####################################################################################
+
+<class> ABB_ACS800MotorAggr
+ @Version
+ @Author je
+ @summary Motoraggregat, ABB frekvensstyrd, Profibus/dp PPO5
+ @b Motoraggregat ABB ACS800 frekvensstyrd, Profibus/dp PPO5 
+ ABB_ACS800MotorAggr objektet hanterar en motor som styrs av en ABB frekvensomriktare ACS800 via
+ fältbussen Profibus/dp genom att kommunicera med standard PPO5 protokollet. En huvudkontaktor
+ (elkraft) kan också ingå/styras från objektet. Genom att använda PPO5 protokollet kan ärvärden
+ för ström och moment läsas av och enklare parametrering göras under drift. 
+ 
+ Aggregatet kan konfigureras med många olika kringkomponenter och körsätten Auto/Man/Lokal mod
+ som också har många olika inställningsalternativ.
+ 
+ Möjliga komponenter förutom motorn och frekvensomriktare:
+  
+ - Effektbrytare (MCCB)
+ - Kontaktor 
+ - Säkerhetsbrytare i huvudkrets eller starspärr i manöverkrets  
+ - Säkring  
+  
+ Kontaktorn kan konfigureras med två utgångar om pulsmanöver start/stopp önskas. Se klasshjälp
+ om BaseContactor där info om pulsstyrning tas upp utförligare och speciellt exempel 3 under
+ rubrik "Exempel styrsätt" som visar principen hur kontaktorn i detta aggregat fungerar vid
+ pulsstyrning.
+ 
+ Knappar i objektsbilden kan göras osynlig genom att konfigurera attribut i inbyggda
+ CompModeA objektet, se CompModeA objektet för mer info. OBS! Att tillhörande objektsbilder
+ för aggregatet inte stödjer CompModeA olika texter på knappar start/stopp, dvs dessa
+ knappar kan endast visa texten start/stopp och ej Till/Från.
+ 
+ Motor i objektsbilden kan konfigureras med temperaturövervakning. Se BaseMotor objektet
+ för mer info. OBS! Att tillhörande objektsbilder för aggregatet inte stödjer visning av
+ BaseMotorns olika temperaturövervakningsalternativ, dvs tempsensor/switch syns inte i bild.
+  
+ Om man vill styra en fläkt eller pump bör man välja ABB_ACS800PumpAggr eller ABB_ACS800FanAggr
+ objekten istället som har anpassade objektsymboler för dessa drifter.
+ 
+ @b Objektsymbol
+ Grafiska symbolen för detta objekt är ABB/ABB_ACS800MotorAggr.
+ @image orm_motoraggr_gs.gif
+
+ Dynamik för symbolen:
+
+  - Grön när motorn är startad (originalfärgen går att ändra).
+  - Grå när motorn är redo men ej startad.
+  - Gul färg när det är varning (säkerhetsbrytare från eller aggregatet förreglad mm). 
+  - Röd färg när det är fel (effektbrytare utlöst mm).
+ 
+    Aktuell mod visas med bokstäver:
+    
+    M    Manuell mod
+    L    Lokal mod
+    LM   Lokal och Manuell mod
+    
+    Ingen bokstavsindikering betyder att objektet är i automatik mod (externt styrd). 
+
+ Objektets metoder (menyval) öppnas med höger musknapp.
+
+ @b Objektsbild
+ @image orm_abb_acs800motoraggr_og.gif
+
+ Indikatorer:
+ 
+  - Ready indikatorn är grön när motorn kan startas.
+
+  - Interlock indikatorn bredvid objektsymbolen är röd när motorn är förreglad att starta,
+    objektsymbol blir gul.
+  
+  - Start indikatorn bredvid startknappen är grön när driften körs (run).
+
+  - Lokal mod indikatorn visar gult när lokal styrning pågår. Start, stopp knappar
+    dimmas. Styrning via Auto/man mod förreglas.
+
+  - Extern indikatorn som kan ses i denna bild (ej nu) visar "mod status" när auto/man mod
+    inte styrs/används i objektet. Inga auto/man knappar visas i bilden.
+
+  - Contactor och indikator bredvid knapp On är grön när kontaktorn är dragen. dvs om
+    driftsvar/feedback är konfigurerat annars är det tillsignal (Do) som styr färgen.
+
+  - Contactor interlock indikatorn är röd när yttre elkraft-förregling är aktiv, knappar
+    för elkraften och start/stopp dimmas, objektsymbol blir gul.
+
+  - Frequencyconverter indikatorn är grön när omriktaren är redo att köras, annars gul.
+    Trippar omriktaren blir den röd. Blinkar grön vid uppstart (elkraft till).
+
+  - Safety switch är grön när säkerhetsbrytaren är tillslagen och gul om frånslagen.
+   (rött hänglås visas när brytaren är frånslagen)
+
+    Övriga indikatorer är normalt gröna men vid fel blir de röda.
+
+    Visninsfält Starts visar antalet gånger som driften har startats och Run visar total tiden
+    driften har varit igång (dagar timmar:minuter:sekunder).
+    
+ Knappar:
+ 
+  - Knappar Auto/Man växlar mod i fjärrstyrning och Start/stoppknappar används för att
+    manuellt styra driften i fjärrstyrning (från bild, ej lokalt vid driften).
+  
+  - Knappen Start har toggelfunktion, dvs man behöver ej trycka på stopp.
+
+  - Knappar Man/Auto väljer mod vid fjärrstyrning
+    
+  - Dimmade Start och Stopp knappar betyder att auto mod gäller (Extern indikator grön).
+   
+  - Syns inga knappar alls är ALLTID Extern indikator grön och auto/man bör visas på
+    annat sätt.
+
+ @b Exempel
+ @image orm_component_example6.gif
+ Bilden visar när auto/man mod styrs av ingång ExtControl i funktionsobjektet. Auto mod
+ aktiveras genom att sätta ingång ExtControl till 1 (knappar start/stopp dimmas) och styr
+ sedan frekvensomriktaren via ingång ExtStart.
+  
+ Denna konfiguration/bild utan auto/man knappar fås genom att konfigurerad aggregatet CbCoFcSl och
+ via det inbyggda modobjektet CompModeA sätta OpExtAndIntMan till 1.
+ 
+ OBS! Att startspärren som används egentligen är en komponent av typen säkerhetsbrytare (BaseSafetSwitch),
+ dvs det är bara objektbilder som skiljer sig åt när man använder startspärr eller säkerhetsbrytare.
+
+ OBS! Att bilden egentligen visar objektsbilden för ett BaseFcPPO5MotorAggr och att detta objekt i princip
+ fungerar och har samma inställningsattribut som en ABB_ACS800MotorAggr.
+ 
+ @h1 Konfigurering
+ ABB_ACS800MotorAggr objektet hanterar 24 olika alternativ beroende på den elektriska utformningen:
+
+  - Curciutbreaker       Effektbrytare (MCCB)
+  - Contactor            Kontaktor  
+  - Frequencyconverter   Frekvensomriktare
+  - Safetyswitch         Säkerhetsbrytare, arbetsbrytare (BaseSafetySwitch)  
+  - Startlock            Startspärr, arbetsbrytare (BaseSafetySwitch)  
+  - Fuse                 Säkring (snabba!)
+
+  1  CbCoFcSs        Circuitbreaker, contactor, frequencyconverter and safetyswitch.
+  2  CbCoFcSl        Circuitbreaker, contactor, frequencyconverter and startlock.
+  3  CbCoFc          Circuitbreaker, contactor and frequencyconverter.
+  4  CbFcSs          Circuitbreaker, frequencyconverter and safetyswitch.
+  5  CbFcSl          Circuitbreaker, frequencyconverter and startlock.
+  6  CbFc            Circuitbreaker and frequencyconverter.
+  7  CoFcSs          Contactor, frequencyconverter and safetyswitch.
+  8  CoFcSl          Contactor, frequencyconverter and startlock.
+  9  CoFc            Contactor and frequencyconverter.
+  10 FcSs            Frequencyconverter and safetyswitch.
+  11 FcSl            Frequencyconverter and startlock.
+  12 Fc              Frequencyconverter.
+  13 FuCbCoFcSs      Fuse, circuitbreaker, contactor, frequencyconverter and safetyswitch.
+  14 FuCbCoFcSl      Fuse, circuitbreaker, contactor, frequencyconverter and startlock.
+  15 FuCbCoFc        Fuse, circuitbreaker, contactor and frequencyconverter.
+  16 FuCbFcSs        Fuse, circuitbreaker, frequencyconverter and safetyswitch.
+  17 FuCbFcSl        Fuse, circuitbreaker, frequencyconverter and startlock.
+  18 FuCbFc          Fuse, circuitbreaker and frequencyconverter.
+  19 FuCoFcSs        Fuse, contactor, frequencyconverter and safetyswitch.
+  20 FuCoFcSl        Fuse, contactor, frequencyconverter and startlock.
+  21 FuCoFc          Fuse, contactor and frequencyconverter.
+  22 FuFcSs          Fuse, Frequencyconverter and safetyswitch.
+  23 FuFcSl          Fuse, Frequencyconverter and startlock.
+  24 FuFc            Fuse, Frequencyconverter.
+  
+
+  OBS! Motorn kan konfigureras med temperaturövervakning (tempswitch, Tempsensor)via
+  "ConfigureComponent" metoden via inbyggda motorobjektet BaseMotor.
+
+  OBS! Använder man temperaturövervakning i motorobjektet ska man vara medveten att denna
+  förregling kopplas bort om funktionsobjektets ingången DisableSup [dis] är 1, dvs motorn
+  kan starta även vid hög temp!
+
+  Inmatningsfält Speed (OpRefMan i CompModeA) max och min värde som operatör kan mata in i
+  objektsbilden styrs av attribut OpMinRefMan och OpMaxRefMan i inbyggda objektet CompModeA.
+    
+  Enheten/texten för Speed värdet man skriver in kan visas/ändras, dvs det är texten i
+  inbyggda objektet ABB_ACS800_1 attribut ActSpeed.Unit som visas i bilden.
+    
+  @b Signaler
+  Objektet innehåller signaler som ska kopplas till I/O kanaler.
+
+  - CircuitBreaker.NotTripped     Di (valbart via Disable)
+  - SafetySwitch.On               Di (valbart via Disable)
+
+  - Contactor.Order               Do (valbart via "ConfigureComponent" metoden) 
+  - Contactor.OrderOff            Do (valbart via "ConfigureComponent" metoden val TwoOrderFeedback)
+  - Contactor.Feedback            Di (valbart via "ConfigureComponent" metoden) 
+  - Motor.TempSwich.Switch        Di (valbart via "ConfigureComponent" metoden)
+  - Motor.TempSensor.Value        Ai (valbart via "ConfigureComponent" metoden)
+
+  Ska en ingång inverteras för rätt funktion får man ändra attributet "InvMask" på
+  kanal/kortobjektet för Di signalen.
+
+  OBS! Att göra Disable på en IO signal/komponent innebär att man kan få en felaktig
+  objektsbild och därför ska man bara konfigurera/Disable komponenter via
+  "ConfigureComponent" metoden för hela aggregatet.
+  
+  Valet där kontaktorn har två styrutgångar med pulsfunktion (TwoOrderFeedback) används
+  när en kontaktor har självhållning. Se klasshjälp om BaseContactor för mer info.
+ 
+ @b Mod
+ Dom olika moder Auto/Manuell/lokal som kan förekomma hanteras utav mod objektet
+ CompModeA.
+ 
+ OBS! Med lokal mod menas INTE omriktarens lokala mod utan avser lokal manöverlåda
+ vid driften/motor om sådan finns.
+ 
+ Modfunktion:
+ 
+ -Felhantering för manövrering (5 larm).
+ -Dimmar knappar i objektsbild så felmanövrering undviks.
+
+ Körsätt som kan konfigureras:
+ 
+ 1 Fjärr mod auto/man  Driftens auto/manuell mod styrs av knappar i bilden.
+ 2 Fjärr mod extern    Driftens auto/manuell mod styrs av "extern" funktion via PLC programmet
+ 3 Fjärr mod extern    Driften styrs som 2, men knappar Start/Stopp kan användas i objektsbilden.
+ 4 Intern mod          Driften styrs endast men knappar Start/Stopp i objektsbilden.
+ 5 Lokal mod           Driften styrs via manöverlåda placerad lokalt vid driften.
+ 
+ Körsätt enligt ovan: (attributen ligger i inbyggda CompModeA objektet)
+ 
+ 1 Är grundinställningen (default).
+ 2 Inga knappar i bild fås genom att sätta attribut OpExtOnly till 1.
+ 3 Är som 2, men Start/Stopp knappar är kvar i bilden, fås genom att sätta attribut OpExtAndIntMan till 1. 
+ 4 Fås genom att sätta attribut OpIntOnly till 1. 
+ 5 Hanteras via funktionsobjektets ingång Local, kan konfigureras bort genom att sätta attribut OpNoLocal till 1. 
+
+ OBS! Endast en åt gången av dessa tre inställningsattribut i CompModeA får ha värdet 1, Är flera
+ satta till 1 samtidigt fungerar inte objektet som tänkt:
+ 
+  -OpExtAndIntMan
+  -OpIntOnly
+  -OpExtOnly
+  
+ Se objekt CompModeA för mer info om hur man konfiguerar moder.
+  
+ OBS! Konfiguerar man CompModeA för extern styrning (inga knappar auto/man) och vid lokal
+ körning bör man använda aggregatets funktionsobjektsutgång Error [err] för att ta ner
+ styrorder så att oönskade återstarter förhindras vid/efter fel.
+ 
+ @b Övervakning och felhantering
+ Aggregatet innehåller en hel del övervakning och larm. Varje komponent har oftast en larmtext
+ som kan ändras, se hjälpen för de inbyggda objekten för mer info. 
+
+ Försöker man påverka objektets olika moder mm och förreglingar är aktiva som ska hindra
+ felmanövrering utgår diverse larm.
+
+ Objektets auto/man mod går över i MAN mod om elkraften försvinner, säkerhetsbrytare frånslagen,
+ skydd löser ut eller omriktaren inte är driftklar för fjärrstyrning, detta för att förhindra oönskade
+ återstarter. Denna funktion går att koppla bort via inbyggda CompModeA objektets inställningsattribut
+ OpNoAutoToMan.
+
+ Ingången PowerInterlock [pil] på funktionsobjektet förreglar manövrering av huvudkontaktorn från
+ bild (knappar dimmas).
+ 
+ Ingången ExtInterlock [ilk] på funktionsobjektet förreglar startorder till omriktaren, knappar
+ Start/Stopp dimmas.
+   
+ Om ingången PowerInterlock [pil] eller ExtInterlock [ilk] på funktionsobjektet är hög förreglas
+ startorder till frekvensomriktare och detta gäller i alla moder. Det normala beteendet när dessa
+ ingångar går höga är att tvinga objektet i manuell mod, vill man ligga kvar i auto mod oavsett
+ dessa ingångar kan man konfigurera detta genom att sätta attributet OpNoAutoToMan till 1 i inbyggda
+ objektet CompModeA.
+
+ OBS! Om inställningsattributet OpNoAutoToMan är satt till 1 är det programmerarens uppgift att
+ använda funktionsobjektets utgång Error [err] för att ta ner styrorder på ingång ExtStart [est]
+ alternativt ta ner ExtControl [eco] om denna används, detta för att förhindra oönskade återstarter
+ vid fel.
+ 
+ OBS! Används lokal mod ska man ta ner manuell styrorder på funktionsobjektets ingång LocalStart
+ [lst] för att förhindra oönskade återstarter vid fel, dvs använd funktionsobjektets utgång Error
+ [err] för detta ändamål, se exempel nedan.
+
+ @b Exempel felhanteringskod
+ @image orm_component_example4.gif
+ Bilden visar ett kodexempel när utgången err i funktionsobjektet används för att återställ lokal
+ start, återställningskoden är gulmarkerad i bilden. OBS! Att kodexemplet är ifrån ett BaseMotorAggr
+ objekt, men principen är densamma för ABB_ACS800MotorAggr.
+ 
+ Lokala manöverlådan innehåller en start-tryckknapp DI24.Ch19, stopp-tryckknapp DI24.Ch20 och en
+ omkopplare med två lägen, DI24.Ch10 för fjärrstyrningsläget och Di24.Ch11 för lokalläget. 
+ 
+ Err utgången påverkar en Dv "Driftklar" som i sin tur återställer den lokala starten SR_R
+ vippa LokStart. Denna kod förhindrar oavsiktlig start från yttre logik efter ett fel i objektet,
+ exempelvis utlöst motorskydd.
+ 
+ OBS! Att denna återställningsfunktion är programmerarens uppgift att koda, dvs utgången err är
+ till för det. Om Auto/Man mod är konfigurerad att styras utanför objektet (ingångar eco, est) bör
+ man också ta hänsyn till err utgången för att förhindra oavsiktlig start efter fel.
+       
+ @b Plc kod
+ För PLC programmering används funktionsobjektet ABB_ACS800MotorAggrFo.
+ @image orm_abb_acs800motoraggrfo_fo.gif
+ 
+ Skapa ett funktionsobjekt i PLC editorn och koppla till objektet i planthierarkin.
+
+ Startorder (via kontrollord ControllWordCW) och analoga referensutgång (RefSpeed) via Profibus till
+ omriktaren styrs av fyra olika körsätt:
+  
+  1 Ingång ExtStart [est] från funktionsobjektet och intern auto/man mod.
+  2 Ingång ExtStart [est] från funktionsobjektet och extern auto/man mod [eco].
+  3 Knappar Start/stopp från objektsbilden i manuell mod.
+  4 Ingång LokalStart [lst]från funktionsobjektet och LocalMode [loc].
+
+  Analoga styrreferensen tas ifrån ingång RefSpeedExt [REX] i auto/extern mod, ingång RefSpeedLoc
+  [RLO] i lokal mod eller internt via bild (OpRefMan) i man mod. Objektet rampar INTE signalen på
+  något sätt och om/när startorder tas ner nollas analoga referensen direkt.
+
+ @b Simulering
+ För simulering använder man funktionsobjektet ABB_ACS800MotorAggrSim.
+
+ @b Profibus/dp
+ För aggregatets Profibus/dp kommunikation med protokollet PPO5 ska man använda modulobjektet
+ ABB_ACS_PPO5. Se ABB_ACS_PPO5 objektet för en mer detaljerad hjälp.
+ 
+ Skapa ett modulobjekt i nodehierarkin under profibus ABB_ACS_Pb_Slave objektet genom att välja ut
+ "Module Class" ABB_ACS_PPO5 via Profibus konfigurator "ConfigureSlave" metoden.
+ 
+ Koppla därefter modulen till aggregatets inbyggda objekt ABB_ACS800_1 (ACS800) med hjälp av connect
+ funktionen.
+
+ INSTÄLLNINGAR PPO5:
+ 
+ PPO5 protokollets PZD data (prozessdaten) PZD3 till PZD9 måste också konfigureras i omriktaren, dvs:
+ 
+  -PZD3  Ställs in för current/ström i omriktaren
+  -PZD4  Ställs in för Toque/moment i omriktaren
+  -PZD5  Ställs in för Felord 1 i omriktaren 
+  -PZD6  Ställs in för Felord 2 i omriktaren 
+  -PZD7  Ställs in för DI6_1 i omriktaren 
+  -PZD8  Ställs in för Alarmord 5 i omriktaren 
+  -PZD9  Ställs in för Statusord 3 i omriktaren 
+  
+ Anpassning/skalning mellan Proview och omriktarens IO signaler måste också göras i objekt/profibusmodul
+ ABB_ACS_PPO5 kanalobjekten ChanAi och ChanAo för aggregatet, signaler som bör gås igenom är:
+ 
+  -O_REF     Referens (börvärde i varvtal är att föredra)
+  -I_ACT     Ärvärde  (varvtalsvärde är att föredra)    
+  -I_PZD3    Ström
+  -I_PZD4    Moment
+ 
+ Inbyggda ABB_ACS800_1 frekvensomriktarobjektets Ao signal RefSpeed attribut PresMaxLimit och
+ PresMinLimit anger objektsbildens speed-grafens visningsområde. Dessa går att ändra under drift
+ genom att klicka på grafen. Ärvärden för ström och moment Ai signaler ActTorque och ActCurrent
+ behandlas på likvärdigt sätt.
+  
+ Se objekt ABB_ACS800_1 för mer info och exempel.
+ 
+ @b Se även
+ @classlink CompModeA basecomponent_compmodea.html
+ @classlink BaseMotor basecomponent_basemotor.html
+ @classlink BaseContactor basecomponent_basecontactor.html
+ <attr>Super 
+ Superklass, klicka på länk Aggregate för mer beskrivning om objektattributet. 
+ </attr>
+ <attr>GraphConfiguration 
+  Attribut för att hålla reda på vilket konfigurationsalternativ (bild) som är valt.
+  (ConfigureComponent method)
+ </attr>
+ <attr>Ready 
+  Attribut (1:a) som visar när aggregatet är redo för start/stopp oavsett mod. Dvs ingen rådande
+  förregling eller utlöst skydd hindrar start. Indikator Ready i bild blir grön i objektsbilden.
+ </attr>
+ <attr>ExtInterlock 
+  [ilk]
+  Förreglingsingång på funktionsobjektet, ska vara falsk annars tas orderutgång ner i
+  ALLA moder. Dessutom tvingas auto mod till man mod om inte objektattributet OpNoAutoToMan
+  är 1 i aggregatets modobjekt CompModeA.
+ </attr>
+ <attr> LocalMode
+  [loc]
+  Påverkas via ingång i funktionsobjektet och är normalt en omkopplare i lokal
+  manöverlåda. Denna mod gäller före alla andra.
+ </attr>
+ <attr> OpPowerOn
+  Beordring huvudkontaktor till, påverkas normalt via knapp On/Till i objektsbild, nollställs alltid.
+  Funktionen på knappen i bilden är "SetDig".
+ </attr>
+ <attr> OpPowerOff
+  Beordring huvudkontaktor från, påverkas normalt via knapp Off/Från i objektsbild, nollställs alltid.
+  Funktionen på knappen i bilden är "SetDig".
+ </attr>
+ <attr>PowExtInterlock 
+  [pil]
+  Förreglingsingång på funktionsobjektet för elkraft, dimmar knappar Till/Från för huvudkontaktorn.
+  Ska vara falsk annars tas orderutgång ner i ALLA moder. Dessutom tvingas normalt auto mod till man
+  mod. Se mer viktig info om denna signal i hjälpen för tillhörande funktionsobjekt. 
+ </attr>
+ <attr>PowOnOffDim 
+  Styr att knappar Till/Från för kontaktor/elkraft att dimmas, går hög när objektet anser det olämpligt
+  att manövrera elkraften, bl.a frånslagen säkerhetsbrytare, övertemp i motor mm. 
+ </attr>
+ <attr>IndWarning 
+  Går hög om ett B-larm är aktivt i aggregatet, objektsymbol blir gul.
+ </attr>
+ <attr>IndError 
+  Går hög om A-larm är aktivt i aggregatet, objektsymbol blir röd.
+ </attr>
+ <attr>RunTimeCounter
+  Drifttidsmätning, klicka på länk RunTimeCounter för mer beskrivning om objektattributet. 
+ </attr>
+ <attr>AlarmTextToOften
+  Larmtext när försök att starta upp (huvudkontaktor) omriktaren sker för ofta (B-larm). Kan kopplas
+  bort via ingång SupDisabled på PLC funktionsobjektet.
+ </attr>
+ <attr>AlarmTextPowOnNotOk
+  Larmtext när tillslag av huvudkontaktor för omriktaren görs och den är förreglad att gå till
+  (B-larm). Kan kopplas bort via ingång SupDisabled på PLC funktionsobjektet.
+ </attr>
+ <attr>AlarmTextStartNoOk
+  Larmtext när starförsök (run) till omriktaren görs och den är förreglad att starta (B-larm).
+  Kan kopplas bort via ingång SupDisabled på PLC funktionsobjektet.
+ </attr>
+ <attr>CircuitBreaker
+  Effektbrytare, klicka på länk BaseCircuitBreaker för mer beskrivning om objektattributet. 
+ </attr>
+ <attr>Contactor
+  Kontaktor, klicka på länk BaseContactor för mer beskrivning om objektattributet. 
+ </attr>
+ <attr>ACS800
+  Frekvensomriktare, klicka på länk ABB_ACS800_1 (Profibus) för mer beskrivning om objektattributet. 
+ </attr>
+ <attr>SafetySwitch
+  Säkerhetsbrytare eller startspärr, klicka på länk BaseSafetySwitch för mer beskrivning om
+  objektattributet. 
+ </attr>
+ <attr>Motor
+  Motor med temperaturövervakning, klicka på länk BaseMotor för mer beskrivning om objektattributet.
+ 
+  OBS! Att motorkonfiguration med tempsensor/switch inte stöds i aggregatets objektsbilder, dvs
+  temperaturvisning, indikeringar syns ej. 
+ </attr>
+ <attr>Mode
+  Mod objekt som hanterar mod Auto/Man/lokal och dynamik i bilder och larm för lokal mod.
+  Se länk CompModeA för mer info.
+  
+  OBS! Att mod konfigurationen med text On/Off på knappar inte stöds i aggregatets 
+  objektsbilder, dvs texten Start/Stopp visas alltid oavsett vilket alternativ som är valt.
+ </attr>
+ <attr>DefTrend 
+  Trendobjekt visas enligt trendmetoden, referens till omriktarens PlotGroup objekt.
+ </attr>
+ <attr>SupDisabled 
+  [dis]
+  Anger om larmövervakning kopplas bort (1:a) eller inte (0:a). Styrs via ingång "dis" på
+  PLC funktionsobjektet. OBS! Att färgstyrning i bilder INTE påverkas eller attributen
+  IndError, IndWarning.
+ </attr>
+ <attr> PlcConnect
+  Referens som visar vilket objekt funktionsobjektet har blivit knuten (connected) till.
+ </attr>
+ <attr> SimConnect
+  Referens som visar vilket simulerings-funktionsobjekt objektet har blivit knuten (connected) till.
+ </attr>
+
+</class>
+
+######################################################################################## 
+
+<class> ABB_ACS800MotorAggrFo 
+ @Version
+ @Author je
+ @summary PLC funktionsobjekt för ABB_ACS800MotorAggr
+ Funktionsobjekt för ABB_ACS800MotorAggr, ABB_ACS800FanAggr och ABB_ACS800PumpAggr.
+ @image orm_abb_acs800motoraggrfo_fo.gif
+ 
+ Skapa ett funktionsobjekt i PLC editorn och koppla till objektet ABB_ACS800MotorAggr
+ alternativt ABB_ACS800FanAggr eller ABB_ACS800PumpAggr i planthierarkin.
+ 
+ @b Se även
+ @classlink CompModeA basecomponent_compmodea.html 
+ @classlink ABB_ACS_PPO5 abb_abb_acs_ppo5.html
+ <attr> RefSpeedExt
+   [REX]
+   Analog ingång för hastighetsreferensen till omriktaren i Auto/extern mod. Se Ao kanalobjektet
+   O_REF i profibusmodulen ABB_ACS_PPO5 för mer info om skalning/anpassning mot omriktaren.
+ </attr>
+ <attr> RefSpeedLoc
+   [RLO]
+   Analog ingång för hastighetsreferensen till omriktaren i lokal mod. Se Ao kanalobjektet O_REF
+   i profibusmodulen ABB_ACS_PPO5 för mer info om skalning/anpassning mot omriktaren.
+   
+  OBS! Med lokal mod menas INTE omriktarens lokala mod utan avser lokal manöverlåda
+  vid driften/motor om sådan finns, dvs ingång OpLocStart [lst] aktiverar denna referens.
+ </attr>
+ <attr>PowerInterlock 
+  [pil]
+  Förreglingsingång för elkraft, dimmar knappar Till/Från för huvudkontaktorn. Ska vara falsk
+  annars tas orderutgång ner i ALLA moder. Dessutom tvingas auto mod till man mod om
+  inte objektattributet OpNoAutoToMan är 1 i aggregatets modobjekt CompModeA.
+  
+  OBS! Att förreglingen INTE hindrar huvudkontaktorns orderutgång utan bara dimmar knappar och
+  förreglar startsignalen till omriktaren.
+ </attr>
+ <attr> ExtControl
+   [eco]
+   Används för att styra mod auto/man när man konfigurerat CompModeA objektets attribut
+   OpExtAndIntMan till 1. dvs om ExtControl är 0 är det man mod och om 1 är det auto
+   mod (extern mod styrning).
+
+   Funktionen/inställningen används alltså när man via objektbilden manuellt vill manövrera
+   med knappar start/stopp men inte använder auto/man mod. Inga auto/man knappar syns i objektsbilden.
+ </attr>
+ <attr> ExtStart
+   [est]
+   Ingång för att styra kontaktorns order utgången i automatik mod (extern).  
+ </attr>
+  <attr>ExtInterlock 
+  [ilk]
+  Förreglingsingång för startorder, ska vara falsk annars tas orderutgång ner i ALLA moder. Dessutom
+  tvingas auto mod till man mod om inte objektattributet OpNoAutoToMan är 1 i aggregatets modobjekt
+  CompModeA. Signalen dimmar också start/stopp knappar i objektsbilden.
+ </attr>
+ <attr> LocMode 	
+   [loc]
+    Ingången ställer objektets mod i lokal mod (prio 1) vilket innebär att alla andra moder kopplas bort.
+    Dvs ingång OpLocStart i funktionsobjektet styr motorn. 
+   
+   Ingången styr även dynamiken i objektsbild/symbol och generera ett B-larm att lokalt gäller.
+   Larmet går att välja bort via inbyggda CompModeA objektets attribut OpDisableLocalAlarm.
+   
+   Lokal mod går att välja bort via inbyggda CompModeA objektets attribut OpNoLocal.  
+ </attr>
+ <attr> OpLocStart	
+  [lst]
+  Ingång för att styra kontaktorns order utgången i lokal mod.
+ </attr>
+ <attr>ResTrip 
+  [trp]
+  Ingång för drifttidmätning som nollställer pågående trippräknare så ny kan påbörjas. Ingången är
+  flanktriggad, dvs nollställning sker endast på uppflanken.
+ </attr>
+ <attr>DisableSup 
+   [dis]
+   Ingång som anger om larmövervakning kopplas bort (1:a) eller inte (0:a). OBS att färgstyrning
+   i bilder INTE påverkas.
+ </attr>
+ <attr> PlcConnect
+   Referens till objektet i planthierarkin.
+ </attr>
+ <attr> On
+   [on]
+   Utgång (1:a) när drift är startad (run), signal från omriktaren statusord SW bit 2.
+ </attr>
+ <attr>Err 
+   [err]
+   Utgången går hög när objektet är förreglad eller komponenter larmar/löser ut. Bör användas för att
+   återställa beordringar på funktionsobjektets startingångar ExtStart och OpLocalStart så att oönskade
+   återstarter förhindras vid/efter fel. 
+ </attr>
+ <attr> Di1
+   [di1]
+   Utgång (1:a) när digital ingång 1 på frekvensomriktaren IO enhet RMIO kort är hög.
+ </attr>
+ <attr> Di2
+   [di2]
+   Utgång (1:a) när digital ingång 2 på frekvensomriktaren IO enhet RMIO kort är hög.
+ </attr>
+ <attr> Di3
+   [di3]
+   Utgång (1:a) när digital ingång 3 på frekvensomriktaren IO enhet RMIO kort är hög.
+ </attr>
+ <attr> Di4
+   [di4]
+   Utgång (1:a) när digital ingång 4 på frekvensomriktaren IO enhet RMIO kort är hög.
+ </attr>
+ <attr> Di5
+   [di5]
+   Utgång (1:a) när digital ingång 5 på frekvensomriktaren IO enhet RMIO kort är hög.
+ </attr>
+ <attr> Di6
+   [di6]
+   Utgång (1:a) när digital ingång 6 på frekvensomriktaren IO enhet RMIO kort är hög.
+ </attr>
+ <attr> DiIL
+   [diil]
+   Utgång (1:a) när digital ingång DI IL (interlock) på frekvensomriktaren IO enhet
+   RMIO kort är hög som betyder att INTE elektrisk startblockering gäller, dvs när
+   utgången på funktionsobjektet är 1.
+ </attr>
+
+ </class>
+
+####################################################################################
+
+<class> ABB_ACS800FanAggr
+ @Version
+ @Author je
+ @summary Fläktaggregat, ABB frekvensstyrd ACS800, Profibus/dp PPO5
+ @b Fläktaggregat ABB frekvensstyrd ACS800, Profibus/dp PPO5
+ ABB_ACS800FanAggr objektet hanterar en fläktmotor som styrs av en frekvensomriktare via fältbussen
+ Profibus/dp genom att kommunicera med standard PPO5 protokollet. En huvudkontaktor (elkraft) kan
+ också ingå/styras från objektet. Genom att använda PPO5 protokollet kan ärvärden för ström och
+ moment läsas av och enklare parametrering göras under drift. 
+ 
+ Aggregatet kan konfigureras med många olika kringkomponenter och körsätten Auto/Man/Lokal mod
+ som också har många olika inställningsalternativ.
+ 
+ Möjliga komponenter förutom motorn och frekvensomriktare:
+  
+ - Effektbrytare (MCCB)
+ - Kontaktor 
+ - Säkerhetsbrytare i huvudkrets eller starspärr i manöverkrets  
+ - Säkring  
+
+ Kontaktorn kan konfigureras med två utgångar om pulsmanöver start/stopp önskas. Se klasshjälp
+ om BaseContactor där info om pulsstyrning tas upp utförligare och speciellt exempel 3 under
+ rubrik "Exempel styrsätt" som visar principen hur kontaktorn i detta aggregat fungerar vid
+ pulsstyrning.
+ 
+ Knappar i objektsbilden kan göras osynlig genom att konfigurera attribut i inbyggda
+ CompModeA objektet, se CompModeA objektet för mer info. OBS! Att tillhörande objektsbilder
+ för aggregatet inte stödjer CompModeA olika texter på knappar start/stopp, dvs dessa
+ knappar kan endast visa texten start/stopp och ej Till/Från.
+ 
+ Motor i objektsbilden kan konfigureras med temperaturövervakning. Se BaseMotor objektet
+ för mer info. OBS! Att tillhörande objektsbilder för aggregatet inte stödjer visning av
+ BaseMotorns olika temperaturövervakningsalternativ, dvs tempsensor/switch syns inte i bild.
+
+ Fläktobjektet är i princip en kopia av ABB_ACS800MotorAggr objektet. Önskas mer info och tips
+ (Plc kod) se hjälp om det objektet.
+   
+ @b Objektsymbol
+ Grafiska symbolen för detta objekt är ABB/ABB_ACS800FanAggr.
+ @image orm_fanaggr_gs.gif
+
+ Dynamik för symbolen:
+
+  - Grön när motorn är startad (originalfärgen går att ändra).
+  - Grå när motorn är redo men ej startad.
+  - Gul färg när det är varning (säkerhetsbrytare från eller aggregatet förreglad mm). 
+  - Röd färg när det är fel (effektbrytare utlöst mm).
+ 
+  - Triangeln i symbolen roterar 90 grader när fläkten är startad. 
+   
+    Aktuell mod visas med bokstäver:
+    
+    M    Manuell mod
+    L    Lokal mod
+    LM   Lokal och Manuell mod
+    
+    Ingen bokstavsindikering betyder att objektet är i automatik mod (externt styrd). 
+
+ Objektets metoder (menyval) öppnas med höger musknapp.
+
+ @b Objektsbild
+ @image orm_abb_acs800fanaggr_og.gif
+
+ Indikatorer:
+ 
+  - Ready indikatorn är grön när motorn kan startas.
+
+  - Interlock indikatorn bredvid objektsymbolen är röd när motorn är förreglad att starta,
+    objektsymbol blir gul.
+  
+  - Start indikatorn bredvid startknappen är grön när driften körs (run).
+
+  - Lokal mod indikatorn visar gult när lokal styrning pågår. Start, stopp knappar
+    dimmas. Styrning via Auto/man mod förreglas.
+
+  - Extern indikatorn som kan ses i denna bild (ej nu) visar "mod status" när auto/man mod
+    inte styrs/används i objektet. Inga auto/man knappar visas i bilden.
+
+  - Contactor och indikator bredvid knapp On är grön när kontaktorn är dragen. dvs om
+    driftsvar/feedback är konfigurerat annars är det tillsignal (Do) som styr färgen.
+
+  - Contactor interlock indikatorn är röd när yttre elkraft-förregling är aktiv, knappar
+    för elkraften och start/stopp dimmas, objektsymbol blir gul.
+
+  - Frequencyconverter indikatorn är grön när omriktaren är redo att köras, annars gul.
+    Trippar omriktaren blir den röd. Blinkar grön vid uppstart (elkraft till).
+
+  - Safety switch är grön när säkerhetsbrytaren är tillslagen och gul om frånslagen.
+   (rött hänglås visas när brytaren är frånslagen)
+
+    Övriga indikatorer är normalt gröna men vid fel blir de röda.
+
+    Visninsfält Starts visar antalet gånger som driften har startats och Run visar total tiden
+    driften har varit igång (dagar timmar:minuter:sekunder).
+    
+ Knappar:
+ 
+  - Knappar Auto/Man växlar mod i fjärrstyrning och Start/stoppknappar används för att
+    manuellt styra driften i fjärrstyrning (från bild, ej lokalt vid driften).
+  
+  - Knappen Start har toggelfunktion, dvs man behöver ej trycka på stopp.
+
+  - Knappar Man/Auto väljer mod vid fjärrstyrning
+    
+  - Dimmade Start och Stopp knappar betyder att auto mod gäller (Extern indikator grön).
+   
+  - Syns inga knappar alls är ALLTID Extern indikator grön och auto/man bör visas på
+    annat sätt.
+
+ @h1 Konfigurering
+
+ ABB_ACS800FanAggr objektet har diverse olika konfigurationer och inställningar som behöver gås igenom:
+ 
+ 
+ - 24 olika komponentalternativ beroende på den elektriska utformningen.
+ 
+ - Objektsbild (inställningar i bilden)
+
+ - Profibus/dp konfiguration (ABB_ACS_PPO5)
+ 
+ - IO signaler (som ska/kan kopplas)
+ 
+ - Övervakning och felhantering (larmtexter mm)
+ 
+ - Mod (körsätt, objekt CompModeA)
+ 
+ - Plc kod (funktionsobjektet ABB_ACS800MotorAggrFo)
+ 
+ Se objektet ABB_ACS800MotorAggr för konfiguration.
+ 
+ @b Se även
+ @classlink CompModeA basecomponent_compmodea.html
+ @classlink BaseMotor basecomponent_basemotor.html
+ @classlink BaseContactor basecomponent_basecontactor.html
+ <attr>Super 
+  Superklass, klicka på länk ABB_ACS800MotorAggr för mer beskrivning om objektattributet. 
+ </attr>
+ <attr>Fan
+  Dokumentation och bild för fläkten (ej motorn), klicka på länk BaseFan för mer
+  beskrivning om objektattributet.
+ </attr>
+
+</class>
+
+####################################################################################
+
+<class> ABB_ACS800PumpAggr
+ @Version
+ @Author je
+ @summary Pumpaggregat, frekvensstyrd, Profibus/dp PPO5
+ @b Pumpaggregat frekvensstyrd, Profibus/dp PPO5
+ ABB_ACS800PumpAggr objektet hanterar en pumpmotor som styrs av en frekvensomriktare via fältbussen
+ Profibus/dp genom att kommunicera med standard PPO5 protokollet. En huvudkontaktor (elkraft) kan
+ också ingå/styras från objektet. Genom att använda PPO5 protokollet kan ärvärden för ström och
+ moment läsas av och enklare parametrering göras under drift. 
+ 
+ Aggregatet kan konfigureras med många olika kringkomponenter och körsätten Auto/Man/Lokal mod
+ som också har många olika inställningsalternativ.
+ 
+ Möjliga komponenter förutom motorn och frekvensomriktare:
+  
+ - Effektbrytare (MCCB)
+ - Kontaktor 
+ - Säkerhetsbrytare i huvudkrets eller starspärr i manöverkrets  
+ - Säkring  
+
+ Kontaktorn kan konfigureras med två utgångar om pulsmanöver start/stopp önskas. Se klasshjälp
+ om BaseContactor där info om pulsstyrning tas upp utförligare och speciellt exempel 3 under
+ rubrik "Exempel styrsätt" som visar principen hur kontaktorn i detta aggregat fungerar vid
+ pulsstyrning.
+ 
+ Knappar i objektsbilden kan göras osynlig genom att konfigurera attribut i inbyggda
+ CompModeA objektet, se CompModeA objektet för mer info. OBS! Att tillhörande objektsbilder
+ för aggregatet inte stödjer CompModeA olika texter på knappar start/stopp, dvs dessa
+ knappar kan endast visa texten start/stopp och ej Till/Från.
+ 
+ Motor i objektsbilden kan konfigureras med temperaturövervakning. Se BaseMotor objektet
+ för mer info. OBS! Att tillhörande objektsbilder för aggregatet inte stödjer visning av
+ BaseMotorns olika temperaturövervakningsalternativ, dvs tempsensor/switch syns inte i bild.
+ 
+ Pumpobjektet är i princip en kopia av ABB_ACS800MotorAggr objektet. Önskas mer info och tips
+ (Plc kod) se hjälp om det objektet.
+   
+ @b Objektsymbol
+ Grafiska symbolen för detta objekt är ABB/ABB_ACS800PumpAggr.
+ @image orm_pumpaggr_gs.gif
+
+ Dynamik för symbolen:
+
+  - Grön när motorn är startad (originalfärgen går att ändra).
+  - Grå när motorn är redo men ej startad.
+  - Gul färg när det är varning (säkerhetsbrytare från eller aggregatet förreglad mm). 
+  - Röd färg när det är fel (effektbrytare utlöst mm).
+ 
+  - Triangeln i symbolen roterar 90 grader när pumpen är startad. 
+   
+    Aktuell mod visas med bokstäver:
+    
+    M    Manuell mod
+    L    Lokal mod
+    LM   Lokal och Manuell mod
+    
+    Ingen bokstavsindikering betyder att objektet är i automatik mod (externt styrd). 
+
+ Objektets metoder (menyval) öppnas med höger musknapp.
+
+ @b Objektsbild
+ @image orm_abb_acs800pumpaggr_og.gif
+
+ Indikatorer:
+ 
+  - Ready indikatorn är grön när motorn kan startas.
+
+  - Interlock indikatorn bredvid objektsymbolen är röd när motorn är förreglad att starta,
+    objektsymbol blir gul.
+  
+  - Start indikatorn bredvid startknappen är grön när driften körs (run).
+
+  - Lokal mod indikatorn visar gult när lokal styrning pågår. Start, stopp knappar
+    dimmas. Styrning via Auto/man mod förreglas.
+
+  - Extern indikatorn som kan ses i denna bild (ej nu) visar "mod status" när auto/man mod
+    inte styrs/används i objektet. Inga auto/man knappar visas i bilden.
+
+  - Contactor och indikator bredvid knapp On är grön när kontaktorn är dragen. dvs om
+    driftsvar/feedback är konfigurerat annars är det tillsignal (Do) som styr färgen.
+
+  - Contactor interlock indikatorn är röd när yttre elkraft-förregling är aktiv, knappar
+    för elkraften och start/stopp dimmas, objektsymbol blir gul.
+
+  - Frequencyconverter indikatorn är grön när omriktaren är redo att köras, annars gul.
+    Trippar omriktaren blir den röd. Blinkar grön vid uppstart (elkraft till).
+
+  - Safety switch är grön när säkerhetsbrytaren är tillslagen och gul om frånslagen.
+   (rött hänglås visas när brytaren är frånslagen)
+
+    Övriga indikatorer är normalt gröna men vid fel blir de röda.
+
+    Visninsfält Starts visar antalet gånger som driften har startats och Run visar total tiden
+    driften har varit igång (dagar timmar:minuter:sekunder).
+    
+ Knappar:
+ 
+  - Knappar Auto/Man växlar mod i fjärrstyrning och Start/stoppknappar används för att
+    manuellt styra driften i fjärrstyrning (från bild, ej lokalt vid driften).
+  
+  - Knappen Start har toggelfunktion, dvs man behöver ej trycka på stopp.
+
+  - Knappar Man/Auto väljer mod vid fjärrstyrning
+    
+  - Dimmade Start och Stopp knappar betyder att auto mod gäller (Extern indikator grön).
+   
+  - Syns inga knappar alls är ALLTID Extern indikator grön och auto/man bör visas på
+    annat sätt.
+
+ @h1 Konfigurering
+
+ ABB_ACS800PumpAggr objektet har diverse olika konfigurationer och inställningar som behöver gås igenom:
+ 
+ 
+ - 24 olika komponentalternativ beroende på den elektriska utformningen.
+ 
+ - Objektsbild (inställningar i bilden)
+
+ - Profibus/dp konfiguration (ABB_ACS_PPO5)
+ 
+ - IO signaler (som ska/kan kopplas)
+
+ - Övervakning och felhantering (larmtexter mm)
+ 
+ - Mod (körsätt, objekt CompModeA)
+ 
+ - Plc kod (funktionsobjektet ABB_ACS800MotorAggrFo)
+ 
+ Se objektet ABB_ACS800MotorAggr för konfiguration.
+ 
+ @b Se även
+ @classlink CompModeA basecomponent_compmodea.html
+ @classlink BaseMotor basecomponent_basemotor.html
+ @classlink BaseContactor basecomponent_basecontactor.html
+ <attr>Super 
+  Superklass, klicka på länk ABB_ACS800MotorAggr för mer beskrivning om objektattributet. 
+ </attr>
+ <attr>Pump
+  Dokumentation och bild för pumpen (ej motorn), klicka på länk BasePump för mer
+  beskrivning om objektattributet.
+ </attr>
+
+</class>
+

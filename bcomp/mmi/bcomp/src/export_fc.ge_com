@@ -1,0 +1,174 @@
+#
+#  Script to export all classgraphs to java
+#
+#
+#
+
+function int process( string graph)
+  open 'graph'
+  printf( "Exporting %s...\n", graph);
+  export java
+endfunction
+
+main()
+
+  set javapath "$pwre_croot/java/jpwr/bcompfc/src"
+  set javapackage "bcompfc"
+
+  process("pwr_c_basefcppo3fanaggr10");
+  process("pwr_c_basefcppo3fanaggr11");
+  process("pwr_c_basefcppo3fanaggr12");
+  process("pwr_c_basefcppo3fanaggr13");
+  process("pwr_c_basefcppo3fanaggr14");
+  process("pwr_c_basefcppo3fanaggr15");
+  process("pwr_c_basefcppo3fanaggr16");
+  process("pwr_c_basefcppo3fanaggr17");
+  process("pwr_c_basefcppo3fanaggr18");
+  process("pwr_c_basefcppo3fanaggr19");
+  process("pwr_c_basefcppo3fanaggr1");
+  process("pwr_c_basefcppo3fanaggr20");
+  process("pwr_c_basefcppo3fanaggr21");
+  process("pwr_c_basefcppo3fanaggr22");
+  process("pwr_c_basefcppo3fanaggr23");
+  process("pwr_c_basefcppo3fanaggr2");
+  process("pwr_c_basefcppo3fanaggr3");
+  process("pwr_c_basefcppo3fanaggr4");
+  process("pwr_c_basefcppo3fanaggr5");
+  process("pwr_c_basefcppo3fanaggr6");
+  process("pwr_c_basefcppo3fanaggr7");
+  process("pwr_c_basefcppo3fanaggr8");
+  process("pwr_c_basefcppo3fanaggr9");
+  process("pwr_c_basefcppo3fanaggr");
+  process("pwr_c_basefcppo3motoraggr10");
+  process("pwr_c_basefcppo3motoraggr11");
+  process("pwr_c_basefcppo3motoraggr12");
+  process("pwr_c_basefcppo3motoraggr13");
+  process("pwr_c_basefcppo3motoraggr14");
+  process("pwr_c_basefcppo3motoraggr15");
+  process("pwr_c_basefcppo3motoraggr16");
+  process("pwr_c_basefcppo3motoraggr17");
+  process("pwr_c_basefcppo3motoraggr18");
+  process("pwr_c_basefcppo3motoraggr19");
+  process("pwr_c_basefcppo3motoraggr1");
+  process("pwr_c_basefcppo3motoraggr20");
+  process("pwr_c_basefcppo3motoraggr21");
+  process("pwr_c_basefcppo3motoraggr22");
+  process("pwr_c_basefcppo3motoraggr23");
+  process("pwr_c_basefcppo3motoraggr2");
+  process("pwr_c_basefcppo3motoraggr3");
+  process("pwr_c_basefcppo3motoraggr4");
+  process("pwr_c_basefcppo3motoraggr5");
+  process("pwr_c_basefcppo3motoraggr6");
+  process("pwr_c_basefcppo3motoraggr7");
+  process("pwr_c_basefcppo3motoraggr8");
+  process("pwr_c_basefcppo3motoraggr9");
+  process("pwr_c_basefcppo3motoraggr");
+  process("pwr_c_basefcppo3motoraggrsim");
+  process("pwr_c_basefcppo3pumpaggr10");
+  process("pwr_c_basefcppo3pumpaggr11");
+  process("pwr_c_basefcppo3pumpaggr12");
+  process("pwr_c_basefcppo3pumpaggr13");
+  process("pwr_c_basefcppo3pumpaggr14");
+  process("pwr_c_basefcppo3pumpaggr15");
+  process("pwr_c_basefcppo3pumpaggr16");
+  process("pwr_c_basefcppo3pumpaggr17");
+  process("pwr_c_basefcppo3pumpaggr18");
+  process("pwr_c_basefcppo3pumpaggr19");
+  process("pwr_c_basefcppo3pumpaggr1");
+  process("pwr_c_basefcppo3pumpaggr20");
+  process("pwr_c_basefcppo3pumpaggr21");
+  process("pwr_c_basefcppo3pumpaggr22");
+  process("pwr_c_basefcppo3pumpaggr23");
+  process("pwr_c_basefcppo3pumpaggr2");
+  process("pwr_c_basefcppo3pumpaggr3");
+  process("pwr_c_basefcppo3pumpaggr4");
+  process("pwr_c_basefcppo3pumpaggr5");
+  process("pwr_c_basefcppo3pumpaggr6");
+  process("pwr_c_basefcppo3pumpaggr7");
+  process("pwr_c_basefcppo3pumpaggr8");
+  process("pwr_c_basefcppo3pumpaggr9");
+  process("pwr_c_basefcppo3pumpaggr");
+  process("pwr_c_basefcppo3");
+  process("pwr_c_basefcppo3sim");
+  process("pwr_c_basefcppo5fanaggr10");
+  process("pwr_c_basefcppo5fanaggr11");
+  process("pwr_c_basefcppo5fanaggr12");
+  process("pwr_c_basefcppo5fanaggr13");
+  process("pwr_c_basefcppo5fanaggr14");
+  process("pwr_c_basefcppo5fanaggr15");
+  process("pwr_c_basefcppo5fanaggr16");
+  process("pwr_c_basefcppo5fanaggr17");
+  process("pwr_c_basefcppo5fanaggr18");
+  process("pwr_c_basefcppo5fanaggr19");
+  process("pwr_c_basefcppo5fanaggr1");
+  process("pwr_c_basefcppo5fanaggr20");
+  process("pwr_c_basefcppo5fanaggr21");
+  process("pwr_c_basefcppo5fanaggr22");
+  process("pwr_c_basefcppo5fanaggr23");
+  process("pwr_c_basefcppo5fanaggr2");
+  process("pwr_c_basefcppo5fanaggr3");
+  process("pwr_c_basefcppo5fanaggr4");
+  process("pwr_c_basefcppo5fanaggr5");
+  process("pwr_c_basefcppo5fanaggr6");
+  process("pwr_c_basefcppo5fanaggr7");
+  process("pwr_c_basefcppo5fanaggr8");
+  process("pwr_c_basefcppo5fanaggr9");
+  process("pwr_c_basefcppo5fanaggr");
+  process("pwr_c_basefcppo5motoraggr10");
+  process("pwr_c_basefcppo5motoraggr11");
+  process("pwr_c_basefcppo5motoraggr12");
+  process("pwr_c_basefcppo5motoraggr13");
+  process("pwr_c_basefcppo5motoraggr14");
+  process("pwr_c_basefcppo5motoraggr15");
+  process("pwr_c_basefcppo5motoraggr16");
+  process("pwr_c_basefcppo5motoraggr17");
+  process("pwr_c_basefcppo5motoraggr18");
+  process("pwr_c_basefcppo5motoraggr19");
+  process("pwr_c_basefcppo5motoraggr1");
+  process("pwr_c_basefcppo5motoraggr20");
+  process("pwr_c_basefcppo5motoraggr21");
+  process("pwr_c_basefcppo5motoraggr22");
+  process("pwr_c_basefcppo5motoraggr23");
+  process("pwr_c_basefcppo5motoraggr2");
+  process("pwr_c_basefcppo5motoraggr3");
+  process("pwr_c_basefcppo5motoraggr4");
+  process("pwr_c_basefcppo5motoraggr5");
+  process("pwr_c_basefcppo5motoraggr6");
+  process("pwr_c_basefcppo5motoraggr7");
+  process("pwr_c_basefcppo5motoraggr8");
+  process("pwr_c_basefcppo5motoraggr9");
+  process("pwr_c_basefcppo5motoraggr");
+  process("pwr_c_basefcppo5motoraggrsim");
+  process("pwr_c_basefcppo5param");
+  process("pwr_c_basefcppo5pumpaggr10");
+  process("pwr_c_basefcppo5pumpaggr11");
+  process("pwr_c_basefcppo5pumpaggr12");
+  process("pwr_c_basefcppo5pumpaggr13");
+  process("pwr_c_basefcppo5pumpaggr14");
+  process("pwr_c_basefcppo5pumpaggr15");
+  process("pwr_c_basefcppo5pumpaggr16");
+  process("pwr_c_basefcppo5pumpaggr17");
+  process("pwr_c_basefcppo5pumpaggr18");
+  process("pwr_c_basefcppo5pumpaggr19");
+  process("pwr_c_basefcppo5pumpaggr1");
+  process("pwr_c_basefcppo5pumpaggr20");
+  process("pwr_c_basefcppo5pumpaggr21");
+  process("pwr_c_basefcppo5pumpaggr22");
+  process("pwr_c_basefcppo5pumpaggr23");
+  process("pwr_c_basefcppo5pumpaggr2");
+  process("pwr_c_basefcppo5pumpaggr3");
+  process("pwr_c_basefcppo5pumpaggr4");
+  process("pwr_c_basefcppo5pumpaggr5");
+  process("pwr_c_basefcppo5pumpaggr6");
+  process("pwr_c_basefcppo5pumpaggr7");
+  process("pwr_c_basefcppo5pumpaggr8");
+  process("pwr_c_basefcppo5pumpaggr9");
+  process("pwr_c_basefcppo5pumpaggr");
+  process("pwr_c_basefcppo5");
+  process("pwr_c_basefcppo5sim");
+
+endmain
+
+
+
+

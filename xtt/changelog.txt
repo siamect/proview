@@ -170,3 +170,4 @@
 100216 cs  xtt       Command 'wait' added.
 100305 cs  ge        Keystroke Ctrl+W can be used to close a Ge graph.
 100309 cs  ge        Graph width and height stored in the beginning of the .pwg file to create the window with the correct size.
+100512 cs  ge        Gradients added in java export.

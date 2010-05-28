@@ -1935,7 +1935,10 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
 "    return JopUtility.GRAPH;" << endl <<
 "  }" << endl <<
 "  public PwrtObjid getUtilityObjid() {" << endl <<
-"    return utilityAref.getObjid();" << endl <<
+"    if ( utilityAref != null)" << endl <<
+"      return utilityAref.getObjid();" << endl <<
+"    else" << endl <<
+"      return null;" << endl <<
 "  }" << endl <<
 "  public PwrtAttrRef getUtilityAttrRef() {" << endl <<
 "    return utilityAref;" << endl <<

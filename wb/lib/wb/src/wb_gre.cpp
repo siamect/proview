@@ -267,10 +267,10 @@ int WGre::get_annotations( vldh_t_node node, char *annot_str,
 	    
 	    if ( cdh_ObjidIsNotNull( last_attrref.Objid)) {
 	      sts = ldh_AttrRefToName( ldhses,
-				       &last_attrref, ldh_eName_Hierarchy,
+				       &last_attrref, cdh_mName_volumeStrict,
 				       &name, &size);
 	      if ( EVEN(sts)) continue;
-	      
+
 	      strcpy( objid_str, name);
 	      strcat( objid_str, ".SigChanCon");
 	      s = strchr( objid_str, '.');

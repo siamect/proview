@@ -224,9 +224,12 @@ int CnvWblToXtthelp::attribute_exec()
   if ( Lng::current() != lng_eLanguage_en_US)
     lng_sts = ctx->rw->read_lng( ctx->rw->class_name, ctx->rw->attr_name);
 
-  fp_tmp <<
-endl <<
+  if ( strcmp( ctx->rw->attr_graphname, "") == 0)
+    fp_tmp << endl <<
 "<H2>" << ctx->rw->attr_name << "<BOOKMARK>" << ctx->rw->attr_name << endl;
+  else 
+    fp_tmp << endl <<
+"<H2>" << ctx->rw->attr_name << "       " << ctx->rw->attr_graphname << "<BOOKMARK>" << ctx->rw->attr_name << endl;
   if ( ctx->rw->attr_array && ctx->rw->attr_pointer)
     fp_tmp <<
 "<B>Array[" << ctx->rw->attr_elements << "] of pointers to " << ctx->rw->attr_typeref << "   ";

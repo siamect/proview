@@ -62,7 +62,7 @@ void wb_pkg::readConfig()
 {
   char fname[200];
   char line[200];
-  char line_item[6][80];
+  char line_item[7][80];
   int num;
   int sts;
 
@@ -85,8 +85,9 @@ void wb_pkg::readConfig()
       int bus;
       pwr_tMask dstatus;
       char bootnode[80];
+      pwr_tString80 custom_platform;
 
-      if ( !(num == 5 || num == 6))
+      if ( num != 7)
 	throw wb_error_str("File corrupt " load_cNameDistribute);
 
       sts = sscanf( line_item[2], "%d", (int *)&opsys);
@@ -101,13 +102,11 @@ void wb_pkg::readConfig()
       if ( sts != 1)
 	throw wb_error_str("File corrupt " load_cNameDistribute);
 
-      if ( num == 6)
-	strcpy( bootnode, line_item[5]);
-      else
-	strcpy( bootnode, "-");
+      strcpy( bootnode, line_item[5]);
+      strcpy( custom_platform, line_item[6]);
 	
       if ( m_allnodes) {
-	pkg_node node( line_item[1], opsys, bus, dstatus, bootnode);
+	pkg_node node( line_item[1], opsys, bus, dstatus, bootnode, custom_platform);
 	m_nodelist.push_back( node);
       }
       else {
@@ -119,6 +118,7 @@ void wb_pkg::readConfig()
 	    m_nodelist[i].setBus( bus);
 	    m_nodelist[i].setDStatus( dstatus);
 	    m_nodelist[i].setBootnode( bootnode);
+	    m_nodelist[i].setCustomPlatform( custom_platform);
 	    m_nodelist[i].setValid();
 	    break;
 	  }
@@ -179,9 +179,13 @@ void wb_pkg::readConfig()
 	if ( plcname[0] != 0) {
 	  pwr_tFileName dir;
 	
-	  sprintf( dir, "$pwrp_root/bld/%s/exe/", cdh_OpSysToStr( n.opsys()));
+	  if ( n.opsys() == pwr_mOpSys_CustomBuild && 
+	       strcmp( n.customPlatform(), "-") != 0)
+	    sprintf( dir, "$pwrp_root/bld/%s/exe/", n.customPlatform());
+	  else
+	    sprintf( dir, "$pwrp_root/bld/%s/exe/", cdh_OpSysToStr( n.opsys()));
 	  sprintf( fname, "%s%s", dir, plcname); 
-	  sprintf( dir, "$pwrp_root/%s/exe/", cdh_OpSysToStr( n.opsys()));
+	  sprintf( dir, "$pwrp_exe/");
 	  pkg_pattern pplc( fname, dir, 'W');
 	  n.push_back( pplc);
 	}
@@ -469,7 +473,7 @@ void pkg_node::fetchFiles( bool distribute)
     of <<
       "cd $pwrp_load" << endl <<
       "ftp -vin " << m_name << " << EOF &>$pwrp_tmp/ftp_" << m_name << ".log" << endl <<
-      "user pwrp pwrp" << endl <<
+      "user " << m_user << " pwrp" << endl <<
       "binary" << endl <<
       "put " << pkg_name << endl <<
       "quit" << endl <<
@@ -485,12 +489,13 @@ void pkg_node::fetchFiles( bool distribute)
     throw wb_error_str("Unable to open file");
   
   ofu << 
+    "dir=$HOME" << endl <<
     "cd /tmp" << endl <<
     "echo \"-- Unpack package " << pkg_name << "\"" << endl <<
-    "tar -xzf /home/pwrp/" << pkg_name << endl <<
+    "tar -xzf $dir/" << pkg_name << endl <<
     "echo \"-- Move files to target directories\"" << endl <<
-    "if [ ! -e /home/pwrp/.ssh ]; then" << endl <<
-    "  mkdir /home/pwrp/.ssh" << endl <<
+    "if [ ! -e $dir/.ssh ]; then" << endl <<
+    "  mkdir $dir/.ssh" << endl <<
     "fi" << endl;
   
   for ( int i = 0; i < (int)m_filelist.size(); i++)
@@ -504,23 +509,41 @@ void pkg_node::fetchFiles( bool distribute)
   // Change owner to root of plc, to make modification of thread prio possible
   ofu <<
     "nname=`eval uname -n`" << endl <<
-    "tst=`eval sudo -l | grep \" ALL\"`" << endl <<
-    "if [ \"$tst\" != \"\" ]; then" << endl <<
-    "  sudo chown root $pwrp_exe/plc_$nname_*" << endl <<
-    "  sudo chmod g+w $pwrp_exe/plc_$nname_*" << endl <<
-    "  sudo chmod u+s $pwrp_exe/plc_$nname_*" << endl <<
+    "if [ \"$USER\" == \"root\" ]; then" << endl <<
+    "  chown root $pwrp_exe/plc_$nname_*" << endl <<
+    "  chmod g+w $pwrp_exe/plc_$nname_*" << endl <<
+    "  chmod u+s $pwrp_exe/plc_$nname_*" << endl <<
+    "else" << endl <<
+    "  tst=`eval sudo -l | grep \" ALL\"`" << endl <<
+    "  if [ \"$tst\" != \"\" ]; then" << endl <<
+    "    sudo chown root $pwrp_exe/plc_$nname_*" << endl <<
+    "    sudo chmod g+w $pwrp_exe/plc_$nname_*" << endl <<
+    "    sudo chmod u+s $pwrp_exe/plc_$nname_*" << endl <<
+    "  fi" << endl <<
     "fi" << endl;
 
   // Group should not have write access to .rhosts file
   ofu <<
-    "if [ \"$tst\" != \"\" ]; then" << endl <<
-    "  if [ -e /home/pwrp/.rhosts ]; then" << endl <<
-    "    sudo chown pwrp /home/pwrp/.rhosts" << endl <<
-    "    sudo chmod g-w /home/pwrp/.rhosts" << endl <<
+    "if [ -e $dir/.rhosts ]; then" << endl <<
+    "  if [ \"$USER\" == \"root\" ]; then" << endl <<
+    "    chown " << m_user << " $dir/.rhosts" << endl <<
+    "    chmod g-w $dir/.rhosts" << endl <<
+    "  else" << endl <<
+    "    if [ \"$tst\" != \"\" ]; then" << endl <<
+    "      sudo chown " << m_user << " $dir/.rhosts" << endl <<
+    "      sudo chmod g-w $dir/.rhosts" << endl <<
+    "    fi" << endl << 
     "  fi" << endl <<
-    "  if [ -e /home/pwrp/.ssh/authorized_keys ]; then" << endl <<
-    "    sudo chown pwrp /home/pwrp/.ssh/authorized_keys" << endl <<
-    "    sudo chmod g-w /home/pwrp/.ssh/authorized_keys" << endl <<
+    "fi" << endl <<
+    "if [ -e $dir/.ssh/authorized_keys ]; then" << endl <<
+    "  if [ \"$USER\" == \"root\" ]; then" << endl <<
+    "    chown " << m_user << " $dir/.ssh/authorized_keys" << endl <<
+    "    chmod g-w $dir/.ssh/authorized_keys" << endl <<
+    "  else" << endl <<
+    "    if [ \"$tst\" != \"\" ]; then" << endl <<
+    "      sudo chown " << m_user << " $dir/.ssh/authorized_keys" << endl <<
+    "      sudo chmod g-w $dir/.ssh/authorized_keys" << endl <<
+    "    fi" << endl << 
     "  fi" << endl <<
     "fi" << endl;
   
@@ -604,19 +627,19 @@ void pkg_node::copyPackage( char *pkg_name)
       of <<
 	"cd $pwrp_load" << endl <<
 	"ftp -vin " << bootnodes[i] << " << EOF &>$pwrp_tmp/ftp_" << bootnodes[i] << ".log" << endl <<
-	"user pwrp pwrp" << endl <<
+	"user " << m_user << " pwrp" << endl <<
 	"binary" << endl <<
 	"put " << pkg_name << endl <<
 	"quit" << endl <<
 	"EOF" << endl <<
-	"rsh -l pwrp " << bootnodes[i] << " \\$pwr_exe/pwr_pkg.sh -i " << pkg_name << endl;
+	"rsh -l " << m_user << " " << bootnodes[i] << " \\$pwr_exe/pwr_pkg.sh -i " << pkg_name << endl;
     }
     else {
       // Use scp and SSH
       of <<
 	"cd $pwrp_load" << endl <<
-	"scp " << pkg_name << " pwrp@" << bootnodes[i] << ":" << endl <<
-	"ssh pwrp@"  << bootnodes[i] << " \\$pwr_exe/pwr_pkg.sh -i " << pkg_name << endl;
+	"scp " << pkg_name << " " << m_user << "@" << bootnodes[i] << ":" << endl <<
+	"ssh " << m_user << "@"  << bootnodes[i] << " \\$pwr_exe/pwr_pkg.sh -i " << pkg_name << endl;
     }
     of.close();
 

@@ -46,10 +46,6 @@
 
 #define NULLOI {0,0}
 
-#if defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS)
-# define VAXC$ESTABLISH( t)	{}
-#endif
-
 #define RTT_HELP_START	\
 extern	rtt_t_helptext	rtt_appl_helptext[];	\
 rtt_t_helptext	rtt_appl_helptext[] = {
@@ -368,7 +364,6 @@ char	username[40];				\
 char	password[40];				\
 char	commandfile[80];			\
 						\
-VAXC$ESTABLISH( rtt_exception);			\
 rtt_args = argc - 1;				\
 for ( i = 0; i < rtt_args; i++)	{		\
   if ( i >= (int)(sizeof(rtt_arg)/sizeof(rtt_arg[0])))	\

@@ -467,6 +467,8 @@ static GdkColor glow_allocate_color( GlowDrawGtk *draw_ctx, int rgb_red,
 
 GlowDrawGtk::~GlowDrawGtk()
 {
+  cancel_event_timer( ctx);
+
   ctx->set_nodraw();
   if ( ctx->type() == glow_eCtxType_Grow)
     delete (GrowCtx *)ctx;
@@ -3437,10 +3439,8 @@ int GlowDrawGtk::text_pango( GlowWind *wind, int x, int y, char *text, int len,
 	continue;
     }
 
-    PangoContext *pctx = gdk_pango_context_get_for_screen( screen);
-    PangoLayout *layout = pango_layout_new( pctx);
     char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
-    pango_layout_set_text( layout, textutf8, -1);
+    PangoLayout *layout = gtk_widget_create_pango_layout( w->toplevel, textutf8);
     g_free( textutf8);
     PangoFontDescription *desc = pango_font_description_from_string( font_string( font_idx, font_type, size));
     pango_layout_set_font_description( layout, desc);
@@ -3452,7 +3452,6 @@ int GlowDrawGtk::text_pango( GlowWind *wind, int x, int y, char *text, int len,
     pango_renderer_draw_layout( pr, layout, PANGO_SCALE * x, PANGO_SCALE * y - (1.0-FONT_DESCENT)*height);
   
     g_object_unref( layout);
-    g_object_unref( pctx);
   }
   gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);
   gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), 0);
@@ -3497,10 +3496,8 @@ int GlowDrawGtk::text_erase_pango( GlowWind *wind, int x, int y, char *text, int
   gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), gcs[gc_type][0]);
   gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), w->window);
 
-  PangoContext *pctx = gdk_pango_context_get_for_screen( screen);
-  PangoLayout *layout = pango_layout_new( pctx);
   char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
-  pango_layout_set_text( layout, textutf8, -1);
+  PangoLayout *layout = gtk_widget_create_pango_layout( w->toplevel, textutf8);
   g_free( textutf8);
   PangoFontDescription *desc = pango_font_description_from_string( font_string( font_idx, font_type, size));
   pango_layout_set_font_description( layout, desc);
@@ -3514,14 +3511,13 @@ int GlowDrawGtk::text_erase_pango( GlowWind *wind, int x, int y, char *text, int
 		      get_gc( this, gc_type, idx), 1, 
 			x, y - (1.0 - FONT_DESCENT) * height / PANGO_SCALE, 
 			width / PANGO_SCALE, height / PANGO_SCALE);
- if ( w->double_buffer_on)
+  if ( w->double_buffer_on)
     gdk_draw_rectangle( w->buffer, 
 			get_gc( this, gc_type, idx), 1, 
 			x, y - (1.0 - FONT_DESCENT) * height / PANGO_SCALE, 
 			width / PANGO_SCALE, height / PANGO_SCALE);
   
   g_object_unref( layout);
-  g_object_unref( pctx);
   gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);
   gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), 0);
 
@@ -3551,10 +3547,8 @@ int GlowDrawGtk::get_text_extent_pango( const char *text, int len,
   gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), gcs[gc_type][0]);
   gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), w->window);
 
-  PangoContext *pctx = gdk_pango_context_get_for_screen( screen);
-  PangoLayout *layout = pango_layout_new( pctx);
-  char *textutf8 = g_convert( text, len, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
-  pango_layout_set_text( layout, textutf8, -1);
+  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  PangoLayout *layout = gtk_widget_create_pango_layout( w->toplevel, textutf8);
   g_free( textutf8);
   PangoFontDescription *desc = pango_font_description_from_string( font_string( font_idx, font_type, size));
   pango_layout_set_font_description( layout, desc);
@@ -3569,7 +3563,6 @@ int GlowDrawGtk::get_text_extent_pango( const char *text, int len,
   *descent = FONT_DESCENT * lheight / PANGO_SCALE;
 
   g_object_unref( layout);
-  g_object_unref( pctx);
   gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), 0);
   gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), 0);
 

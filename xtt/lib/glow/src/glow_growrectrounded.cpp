@@ -1086,6 +1086,7 @@ void GrowRectRounded::export_javabean( GlowTransform *t, void *node,
   if ( !(display_level & ctx->display_level))
     return;
   int idx;
+  int gc1, gc2;
 
   if ( fix_line_width)
   {
@@ -1141,9 +1142,20 @@ void GrowRectRounded::export_javabean( GlowTransform *t, void *node,
   if ( relief == glow_eRelief_Down)
     drawtype_incr = -shadow_contrast;
 
+  if ( gradient_contrast >= 0) {
+    gc1 = gradient_contrast/2;
+    gc2 = -int(float(gradient_contrast)/2+0.6);
+  }
+  else {
+    gc1 = int(float(gradient_contrast)/2-0.6);
+    gc2 = -gradient_contrast/2;
+  }
+
   ctx->export_jbean->rectrounded( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-	fill, border || !fill, fill_drawtype, draw_type, idx, amount, ish, shadow,
-	drawtype_incr, pass, shape_cnt, node_cnt, fp);
+				  fill, border || !fill, fill_drawtype, 
+				  draw_type, idx, amount, ish, shadow,
+				  drawtype_incr, gradient, gc1, gc2, 
+				  pass, shape_cnt, node_cnt, fp);
 
 }
 

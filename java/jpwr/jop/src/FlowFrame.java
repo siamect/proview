@@ -319,9 +319,11 @@ public class FlowFrame extends JFrame implements JopUtilityIfc {
   }  
 
   public void closeFlow() {
-    for ( int i = 0; i < ctx.cmn.a.size(); i++) {
-      Object o = ctx.cmn.a.get(i);
-      engine.remove( o);
+    if ( ctx != null) {
+      for ( int i = 0; i < ctx.cmn.a.size(); i++) {
+        Object o = ctx.cmn.a.get(i);
+        engine.remove( o);
+      }
     }
     session.removeUtility( this);
   }

@@ -672,7 +672,7 @@ endl <<
 "<A NAME=\"" << ctx->rw->body_name << "\"><!-- --></A>" << endl <<
 "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\" WIDTH=\"100%\">" << endl <<
 "<TR BGCOLOR=\"#CCCCFF\" CLASS=\"TableHeadingColor\">" << endl <<
-"<TD COLSPAN=3><FONT SIZE=\"+2\">" << endl <<
+"<TD COLSPAN=4><FONT SIZE=\"+2\">" << endl <<
 "<B>" << ctx->rw->body_name << " attributes</B></FONT>" <<
 "<FONT SIZE=\"+1\"<B>&nbsp;&nbsp;&nbsp;&nbsp; <A HREF=\"" << struct_file << "#" << ctx->rw->class_name << "\">" << struct_name << "</A></B></FONT></TD>" << endl <<
 "</TR>" << endl;
@@ -872,7 +872,14 @@ int CnvWblToHtml::attribute_exec()
 "<CODE>" << ctx->rw->attr_typeref << "</CODE></FONT></A></TD>" << endl;
 
   html_clf->f <<
-"</A><TD><A HREF=\"#" << ctx->rw->attr_name << "\"><CODE><B>" << ctx->rw->attr_name << "</B></CODE></A></TD>" << endl <<
+"</A><TD><A HREF=\"#" << ctx->rw->attr_name << "\"><CODE><B>" << ctx->rw->attr_name << "</B></CODE></A></TD>" << endl;
+  if ( strcmp( ctx->rw->attr_graphname, "") != 0 )
+    html_clf->f <<
+"<TD WIDTH=\"1%\">" << ctx->rw->attr_graphname << "</TD>" << endl;
+  else
+    html_clf->f <<
+"<TD WIDTH=\"1%\">&nbsp;</TD>" << endl;
+  html_clf->f <<
 "<TD>";
   if ( ctx->rw->doc_fresh)
   {
@@ -936,6 +943,10 @@ int CnvWblToHtml::attribute_exec()
   if ( ctx->rw->attr_array)
     fp_tmp <<
 "<DT><CODE><B>Elements</B>&nbsp;&nbsp;" << ctx->rw->attr_elements << "</CODE><DT>" << endl;
+
+  if ( strcmp( ctx->rw->attr_graphname, "") != 0)
+    fp_tmp <<
+"<DT><CODE><B>GraphName</B>&nbsp;" << ctx->rw->attr_graphname << "</CODE><DT>" << endl;
 
   fp_tmp <<
 "<DT><CODE><B>" << Lng::translate("Body") << "</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->body_name << "</CODE><DT>" << endl;

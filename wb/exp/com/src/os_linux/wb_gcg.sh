@@ -170,7 +170,7 @@ CompileRtNode()
     ld_opt="`eval echo $pwr_obj/rt_io_user.o -lpwr_rt -lpwr_usbio_dummy`"
   fi
 
-  if g++ $link_debug -L/lib/thread -L$pwrp_lib -L$pwrp_cmn/x86_linux/lib -L$pwr_lib \
+  if $ldxx $link_debug -L/lib/thread -L$pwrp_lib -L$pwrp_cmn/x86_linux/lib -L$pwr_lib \
     -o $pwrp_exe/$OutFile \
     $pwr_obj/rt_plc_process.o \
     $pwrp_obj/${FileName}.o \
@@ -254,9 +254,10 @@ let OpSys_X86_LYNX=5
 let OpSys_PPC_LINUX=6
 let OpSys_X86_LINUX=7
 let OpSys_X86_64_LINUX=8
-let OpSys__High=9
+let OpSys_ARM_LINUX=9
+let OpSys__High=10
 
-vOpSys="custombuild,vax_vms,axp_vms,ppc_lynx,x86_lynx,ppc_linux,x86_linux,x86_64_linux"
+vOpSys="custombuild,vax_vms,axp_vms,ppc_lynx,x86_lynx,ppc_linux,x86_linux,x86_64_linux,arm_linux"
 
 let FileType__Low=-1
 let FileType_Process=0
@@ -266,6 +267,24 @@ let FileType_RtNode=3
 let FileType_Library=4
 let FileType__High=5
 vFileType="Process,Program,Window,RtNode,Library"
+
+if [ -z "$pwre_cc" ]; then
+ cc=gcc
+else
+ cc=$pwre_cc
+fi
+if [ -z "$pwre_cxx" ]; then
+ cxx=g++
+ ldxx=g++
+else
+ cxx=$pwre_cxx
+ ldxx=$pwre_cxx
+fi
+if [ -z "$pwre_ar" ]; then
+ ar=ar
+else
+ ar=$pwre_ar
+fi
 
 local_setup="pwr_gcg_setup.sh"
 
@@ -312,7 +331,7 @@ if [ $OpSys -eq $OpSys_PPC_LINUX ]; then
   pwrp_gc="$pwrp_tmp"
 
 # Suppress all warnings, -x
-  cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_LINUX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
+  cc_cmd="$cc -c -x c -w $cc_debug -D_REENTRANT -DOS_LINUX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
 
   FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
 
@@ -325,7 +344,7 @@ elif [ $OpSys -eq $OpSys_X86_LINUX ]; then
 
 # Suppress all warnings, -x
   if [ $CurrentOpSys -eq $OpSys ]; then
-     cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_LINUX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
+     cc_cmd="$cc -c -x c -w $cc_debug -D_REENTRANT -DOS_LINUX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
 
      FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
 
@@ -341,7 +360,7 @@ elif [ $OpSys -eq $OpSys_X86_64_LINUX ]; then
 
 # Suppress all warnings, -x
   if [ $CurrentOpSys -eq $OpSys ]; then
-      cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_LINUX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
+      cc_cmd="$cc -c -x c -w $cc_debug -D_REENTRANT -DOS_LINUX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
 
       FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
 

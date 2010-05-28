@@ -44,7 +44,8 @@ class GlowExportJBean {
 	glow_eDrawType fill_drawtype, glow_eDrawType border_drawtype,
 	int fill_eq_border, int fill_eq_light, int fill_eq_shadow, int line_width, 
         int print_shadow, int shadow, int drawtype_incr, glow_sShadowInfo *sp, int sp_num,
-		   glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp);
+	int fixcolor, glow_eGradient gradient, int gc1, int gc2, glow_eExportPass pass, 
+	int *shape_cnt, int node_cnt, ofstream& fp);
     void line( double x1, double y1, double x2, double y2,
 	glow_eDrawType border_drawtype,
 	int line_width, glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp);
@@ -52,18 +53,20 @@ class GlowExportJBean {
 	int fill, int border,
 	glow_eDrawType fill_drawtype, glow_eDrawType border_drawtype,
 	int line_width, double shadow_width, int shadow, 
-	int drawtype_incr, glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp);
+	int drawtype_incr, int fixcolor, glow_eGradient gradient, 
+	int gc1, int gc2, glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp);
     void rectrounded( double x0, double y0, double width, double height,
 	int fill, int border,
 	glow_eDrawType fill_drawtype, glow_eDrawType border_drawtype,
 	int line_width, double roundamount, double shadow_width, int shadow, 
-	int drawtype_incr, glow_eExportPass pass, int *shape_cnt, 
-	int node_cnt, ofstream& fp);
+	int drawtype_incr, glow_eGradient gradient, int gc1, int gc2, 
+	glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp);
     void arc( double x0, double y0, double width, double height,
-	double angle1, double angle2, int fill, int border,
-	glow_eDrawType fill_drawtype, glow_eDrawType border_drawtype,
-	int line_width, double shadow_width, int shadow, 
-	int drawtype_incr, glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp);
+	      double angle1, double angle2, int fill, int border,
+	      glow_eDrawType fill_drawtype, glow_eDrawType border_drawtype,
+	      int line_width, double shadow_width, int shadow, 
+	      int drawtype_incr, int fixcolor, glow_eGradient gradient, int gc1, int gc2,
+	      glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp);
     void text( int x0, int y0, char *text,
 	glow_eDrawType drawtype, glow_eDrawType color_drawtype, int bold,
 	int idx, glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp);
@@ -86,6 +89,7 @@ class GlowExportJBean {
     	int		line_width,
 	double		rotate,
 	int 		shadow,
+	glow_eGradient 	gradient,
 	glow_eExportPass pass, int *shape_cnt, int node_cnt, int in_nc, ofstream& fp);
     void image( double x1, double y1, double x2, double y2,
 	char *filename, int transparent,
@@ -185,7 +189,11 @@ class GlowExportJBean {
     	int		line_width,
 	double		rotate,
         int		shadow,
+	glow_eGradient 	gradient,
 	glow_eExportPass pass, int *shape_cnt, int node_cnt, int in_nc, ofstream& fp);
+    void gradient_paint( glow_eGradient gradient, int gc1, int gc2,
+			 double x0, double y0, double w, double h,
+			 int fixcolor, glow_eDrawType fill_drawtype, ofstream& fp);
     GlowCtx *ctx;
     GlowNodeClass *nc;
     int is_nodeclass;

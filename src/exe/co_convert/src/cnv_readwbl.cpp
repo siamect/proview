@@ -684,6 +684,7 @@ void CnvReadWbl::attribute_init()
   strcpy( attr_typeref, "");
   strcpy( attr_typeref_volume, "");
   strcpy( attr_pgmname, "");
+  strcpy( attr_graphname, "");
   strcpy( attr_elements, "");
   attr_pointer = 0;
   attr_array = 0;
@@ -759,6 +760,9 @@ int CnvReadWbl::attribute_attr( char *name, char *value)
   }
   else if ( strcmp( low( name), "pgmname") == 0) {
     strcpy( attr_pgmname, value);
+  }
+  else if ( strcmp( low( name), "graphname") == 0) {
+    strcpy( attr_graphname, value);
   }
   return 1;
 }

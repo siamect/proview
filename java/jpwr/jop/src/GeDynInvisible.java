@@ -36,6 +36,7 @@ public class GeDynInvisible extends GeDynElem {
   boolean cmd = false;
   boolean valueCmd = false;
   int bitNum;
+  String command;
 
   public GeDynInvisible( GeDyn dyn, String attribute, int dimmed) {
     super( dyn, GeDyn.mDynType_Invisible, GeDyn.mActionType_No);
@@ -48,6 +49,7 @@ public class GeDynInvisible extends GeDynElem {
       if ( attrName.toLowerCase().startsWith("$cmd(")) {
 	cmd = true;
 	valueCmd = false;
+	command = attrName.substring(5, attrName.length()-1);
       }
       else {
         GdhrRefObjectInfo ret = dyn.en.gdh.refObjectInfo( attrName);
@@ -85,10 +87,14 @@ public class GeDynInvisible extends GeDynElem {
   public void scan() {
     if ( cmd) {
       if ( firstScan) {
-        if ( dimmed == 0)
-          dyn.comp.setVisibility( Ge.VISIBILITY_INVISIBLE);
-        else
-          dyn.comp.setVisibility( Ge.VISIBILITY_DIMMED);
+	int sts = Jop.executeCommand( dyn.session, command);
+	System.out.println( "DynInvisible: " + command + ", value: " + sts);
+	if ( sts == 0) {
+          if ( dimmed == 0)
+            dyn.comp.setVisibility( Ge.VISIBILITY_INVISIBLE);
+	  else
+            dyn.comp.setVisibility( Ge.VISIBILITY_DIMMED);
+	}
 	firstScan = false;
       }
       return;
