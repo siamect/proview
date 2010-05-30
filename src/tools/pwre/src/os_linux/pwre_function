@@ -158,6 +158,13 @@ set_env()
 	  export pwre_conf_gtk=0
         fi
 
+# libusb
+	if [ -e /usr/lib/libusb-1.0.so ]; then
+          export pwre_conf_libusb=1
+	else
+	  export pwre_conf_libusb=0
+        fi
+
 	export pwre_conf_alsa=1
 }
 

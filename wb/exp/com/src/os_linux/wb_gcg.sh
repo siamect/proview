@@ -167,7 +167,7 @@ CompileRtNode()
     ld_opt_tmp="`cat $pwrp_exe/$FileName.opt`"
     ld_opt="`eval echo $ld_opt_tmp`"
   else
-    ld_opt="`eval echo $pwr_obj/rt_io_user.o -lpwr_rt -lpwr_usbio_dummy`"
+    ld_opt="`eval echo $pwr_obj/rt_io_user.o -lpwr_rt -lpwr_usbio_dummy -lpwr_usb_dummy`"
   fi
 
   if $ldxx $link_debug -L/lib/thread -L$pwrp_lib -L$pwrp_cmn/x86_linux/lib -L$pwr_lib \
