@@ -1,7 +1,7 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X91"
-    Attr NextCix = "_X10"
+    Attr NextOix = "_X111"
+    Attr NextCix = "_X13"
     Attr NextTix[0] = "_X5"
   EndBody
   Object Type $TypeHier 1 15-NOV-2007 14:35:37.90
@@ -1463,18 +1463,35 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr StructName = "GPIO"
           Attr NextAix = "_X17"
         EndBody
+        !/**
+        ! Optional description.
+        !*/
         Object Description $Attribute 13 15-APR-2010 21:46:16.74
           Body SysBody 15-APR-2010 21:46:16.74
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! @Summary Process that handles the module. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the module.
+        ! 
+        ! 1: The module is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The module is read by the rt_io_comm process.
+        ! 4: The module is handled by an application program.
+        !*/
         Object Process $Attribute 14 15-APR-2010 21:46:16.74
           Body SysBody 15-APR-2010 21:54:44.41
             Attr PgmName = "Process"
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
+        !/**
+        ! @Summary Plc thread that handles the card.
+        ! The PlcThread object of the plc thread that handles the card.
+        ! The card is read with the scantime of the thread.
+        !*/
         Object ThreadObject $Attribute 15 15-APR-2010 21:46:16.74
           Body SysBody 15-APR-2010 21:46:16.74
             Attr PgmName = "ThreadObject"
@@ -1533,18 +1550,35 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr StructName = "GPIO_Module"
           Attr NextAix = "_X15"
         EndBody
+        !/**
+        ! Optional description.
+        !*/
         Object Description $Attribute 10 15-APR-2010 21:53:54.03
           Body SysBody 15-APR-2010 21:54:16.96
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! @Summary Process that handles the module. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the module.
+        ! 
+        ! 1: The module is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The module is read by the rt_io_comm process.
+        ! 4: The module is handled by an application program.
+        !*/
         Object Process $Attribute 11 15-APR-2010 21:54:37.62
           Body SysBody 15-APR-2010 21:54:53.56
             Attr PgmName = "Process"
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
+        !/**
+        ! @Summary Plc thread that handles the card.
+        ! The PlcThread object of the plc thread that handles the card.
+        ! The card is read with the scantime of the thread.
+        !*/
         Object ThreadObject $Attribute 13 15-APR-2010 21:55:05.81
           Body SysBody 15-APR-2010 21:55:05.81
             Attr PgmName = "ThreadObject"
@@ -1590,6 +1624,383 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Body RtBody 15-APR-2010 21:57:34.91
           Attr Process = 1
           Attr Status = 286
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Agent object for USB devices.
+    !  Agent object for USB devices.
+    ! 	
+    !  Agent object for USB devices that is connected by libusb in user space and 
+    !  not by a driver.
+    !*/
+    Object USB_Agent $ClassDef 10 23-MAY-2010 11:38:20.57
+      Body SysBody 23-MAY-2010 11:38:42.06
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 6224
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-MAY-2010 11:38:08.72
+        Body SysBody 23-MAY-2010 11:38:33.38
+          Attr StructName = "USB_Agent"
+          Attr NextAix = "_X21"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 17 23-MAY-2010 11:38:08.72
+          Body SysBody 23-MAY-2010 11:38:08.72
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Process that handles the module. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the module.
+        ! 
+        ! 1: The module is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The module is read by the rt_io_comm process.
+        ! 4: The module is handled by an application program.
+        !*/
+        Object Process $Attribute 18 23-MAY-2010 11:38:08.72
+          Body SysBody 23-MAY-2010 11:38:08.72
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Plc thread that handles the card.
+        ! The PlcThread object of the plc thread that handles the card.
+        ! The card is read with the scantime of the thread.
+        !*/
+        Object ThreadObject $Attribute 19 23-MAY-2010 11:38:08.72
+          Body SysBody 23-MAY-2010 11:38:08.72
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        !/**
+        ! Agent status.
+        !*/
+        Object Status $Attribute 20 23-MAY-2010 11:38:08.72
+          Body SysBody 23-MAY-2010 11:38:08.72
+            Attr PgmName = "Status"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 92 23-MAY-2010 11:38:08.72
+        Object Pointed $Menu 93 23-MAY-2010 11:38:08.72
+          Object Connect $MenuButton 94 23-MAY-2010 11:38:08.72
+            Body SysBody 23-MAY-2010 11:38:08.72
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 95 23-MAY-2010 11:38:08.72
+        Object IoAgentInit $Method 96 23-MAY-2010 11:38:59.12
+          Body SysBody 23-MAY-2010 11:39:14.06
+            Attr MethodName = "USB_Agent-IoAgentInit"
+          EndBody
+        EndObject
+        Object IoAgentClose $Method 97 23-MAY-2010 11:39:27.49
+          Body SysBody 23-MAY-2010 11:40:00.87
+            Attr MethodName = "USB_Agent-IoAgentClose"
+          EndBody
+        EndObject
+      EndObject
+      Object Template USB_Agent 2150334464 01-JAN-1970 01:00:00.00
+        Body RtBody 23-MAY-2010 20:28:40.31
+          Attr Process = 1
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Rack object for USB board Velleman K8055/VM110
+    !  Rack object for USB board Velleman K8055/VM110.
+    !
+    !  The object is configured as a child to an USB_Agent object and
+    !  as a parent to Velleman_K8055_Board objects.
+    !
+    !  @b See also
+    !  @classlink USB_Agent otherio_usb_agent.html
+    !  @classlink Velleman_K8055_Board otherio_velleman_k8055_board.html
+    !*/
+    Object Velleman_K8055 $ClassDef 11 23-MAY-2010 11:43:40.18
+      Body SysBody 23-MAY-2010 11:43:07.03
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 10320
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-MAY-2010 11:43:07.03
+        Body SysBody 23-MAY-2010 11:45:38.50
+          Attr StructName = "Velleman_K8055"
+          Attr NextAix = "_X17"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 13 23-MAY-2010 11:43:07.03
+          Body SysBody 23-MAY-2010 11:43:07.03
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Process that handles the module. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the module.
+        ! 
+        ! 1: The module is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The module is read by the rt_io_comm process.
+        ! 4: The module is handled by an application program.
+        !*/
+        Object Process $Attribute 14 23-MAY-2010 11:43:07.03
+          Body SysBody 23-MAY-2010 11:43:07.03
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Plc thread that handles the card.
+        ! The PlcThread object of the plc thread that handles the card.
+        ! The card is read with the scantime of the thread.
+        !*/
+        Object ThreadObject $Attribute 15 23-MAY-2010 11:43:07.03
+          Body SysBody 23-MAY-2010 11:43:07.03
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        !/**
+        ! Rack status.
+        !*/
+        Object Status $Attribute 16 23-MAY-2010 11:43:07.03
+          Body SysBody 23-MAY-2010 11:45:18.68
+            Attr PgmName = "Status"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 98 23-MAY-2010 11:43:07.03
+        Object Pointed $Menu 99 23-MAY-2010 11:43:07.03
+          Object Connect $MenuButton 100 23-MAY-2010 11:43:07.03
+            Body SysBody 23-MAY-2010 11:43:07.03
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object Template Velleman_K8055 2150596608 01-JAN-1970 01:00:00.00
+        Body RtBody 23-MAY-2010 20:28:30.66
+          Attr Process = 1
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Card object for USB board Velleman K8055/VM110
+    !  Card object for USB board Velleman K8055/VM110.
+    !
+    !  The object is configured as a child to a Velleman_K8055 object.
+    !
+    !  The board has
+    !  - 2 analog input channels.
+    !  - 5 digital input channels.
+    !  - 2 analog output channels.
+    !  - 8 digital output channels.
+    !
+    !  All channel object are specified as internal attributes.
+    !  Only use channels has to be connected to signals.
+    !
+    !  Four boards can be connected to a station. The address of the boards
+    !  are set with jumpers, SK5 and SK6, and also has to be set in the 
+    !  Address attribute. The address is a value between 0 and 3.
+    !
+    !  Address  SK5  SK6
+    !  -----------------
+    !  0        on   on
+    !  1        off  on
+    !  2        on   off
+    !  3        off  off
+    !
+    !  @b See also
+    !  @classlink USB_Agent otherio_usb_agent.html
+    !  @classlink Velleman_K8055 otherio_velleman_k8055.html
+    !*/
+    Object Velleman_K8055_Board $ClassDef 12 23-MAY-2010 11:46:06.66
+      Body SysBody 23-MAY-2010 11:43:07.03
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-MAY-2010 11:47:56.15
+        Body SysBody 23-MAY-2010 11:46:17.24
+          Attr StructName = "Velleman_K8055_Board"
+          Attr NextAix = "_X17"
+        EndBody
+        !/**
+        ! Super class.
+        !*/
+        Object Super $Attribute 10 23-MAY-2010 11:43:07.03
+          Body SysBody 23-MAY-2010 11:43:07.03
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-BaseIOCard"
+          EndBody
+        EndObject
+        !/**
+        ! Board status.
+        !*/
+        Object Status $Attribute 11 23-MAY-2010 11:43:07.03
+          Body SysBody 23-MAY-2010 11:47:51.85
+            Attr PgmName = "Status"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+        !/**
+        ! Array of analog input channels.
+        !*/
+        Object ChAi $Attribute 13 23-MAY-2010 11:51:21.44
+          Body SysBody 23-MAY-2010 11:53:02.11
+            Attr PgmName = "ChAi"
+            Attr Flags = 131074
+            Attr Elements = 2
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        !/**
+        ! Array of digital input channels.
+        !*/
+        Object ChDi $Attribute 14 23-MAY-2010 11:51:27.84
+          Body SysBody 23-MAY-2010 11:53:07.07
+            Attr PgmName = "ChDi"
+            Attr Flags = 131074
+            Attr Elements = 5
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        !/**
+        ! Array of analog output channels.
+        !*/
+        Object ChAo $Attribute 15 23-MAY-2010 11:51:32.07
+          Body SysBody 23-MAY-2010 11:53:13.45
+            Attr PgmName = "ChAo"
+            Attr Flags = 131074
+            Attr Elements = 2
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        !/**
+        ! Array of digital output channels.
+        !*/
+        Object ChDo $Attribute 16 23-MAY-2010 11:51:46.23
+          Body SysBody 23-MAY-2010 11:53:24.70
+            Attr PgmName = "ChDo"
+            Attr Flags = 131074
+            Attr Elements = 8
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 109 23-MAY-2010 11:49:21.57
+        Object Pointed $Menu 110 23-MAY-2010 11:49:21.57
+          Object Connect $MenuButton 111 23-MAY-2010 11:49:21.57
+            Body SysBody 23-MAY-2010 11:49:21.57
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 104 23-MAY-2010 11:43:07.03
+        Object IoCardInit $Method 105 23-MAY-2010 11:43:07.03
+          Body SysBody 23-MAY-2010 11:46:49.51
+            Attr MethodName = "Velleman_K8055_Board-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 106 23-MAY-2010 11:43:07.03
+          Body SysBody 23-MAY-2010 11:47:00.34
+            Attr MethodName = "Velleman_K8055_Board-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 107 23-MAY-2010 11:43:07.03
+          Body SysBody 23-MAY-2010 11:47:07.48
+            Attr MethodName = "Velleman_K8055_Board-IoCardRead"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 108 23-MAY-2010 11:43:07.03
+          Body SysBody 23-MAY-2010 11:47:14.39
+            Attr MethodName = "Velleman_K8055_Board-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Velleman_K8055_Board 2150858752 01-JAN-1970 01:00:00.00
+        Body RtBody 23-MAY-2010 20:33:40.04
+          Attr Super.Process = 1
+          Attr Super.ErrorSoftLimit = 50
+          Attr Super.ErrorHardLimit = 100
+          Attr Super.MaxNoOfChannels = 17
+          Attr ChAi[0].ConversionOn = 1
+          Attr ChAi[0].ScanInterval = 1
+          Attr ChAi[0].RawValRangeHigh = 2.550000e+02
+          Attr ChAi[0].ChannelSigValRangeHigh = 5.000000e+00
+          Attr ChAi[0].SigValueUnit = "V"
+          Attr ChAi[0].SensorPolyType = 1
+          Attr ChAi[0].SensorSigValRangeHigh = 5.000000e+00
+          Attr ChAi[0].ActValRangeHigh = 1.000000e+02
+          Attr ChAi[1].ConversionOn = 1
+          Attr ChAi[1].ScanInterval = 1
+          Attr ChAi[1].RawValRangeHigh = 2.550000e+02
+          Attr ChAi[1].ChannelSigValRangeHigh = 5.000000e+00
+          Attr ChAi[1].SigValueUnit = "V"
+          Attr ChAi[1].SensorPolyType = 1
+          Attr ChAi[1].SensorSigValRangeHigh = 5.000000e+00
+          Attr ChAi[1].ActValRangeHigh = 1.000000e+02
+          Attr ChDi[0].ConversionOn = 1
+          Attr ChDi[1].ConversionOn = 1
+          Attr ChDi[2].ConversionOn = 1
+          Attr ChDi[3].ConversionOn = 1
+          Attr ChDi[4].ConversionOn = 1
+          Attr ChAo[0].OutPolyType = 1
+          Attr ChAo[0].ActValRangeHigh = 1.000000e+02
+          Attr ChAo[0].SensorSigValRangeHigh = 5.000000e+00
+          Attr ChAo[0].SigValueUnit = "V"
+          Attr ChAo[0].ChannelSigValRangeHigh = 5.000000e+00
+          Attr ChAo[0].RawValRangeHigh = 2.550000e+02
+          Attr ChAo[1].OutPolyType = 1
+          Attr ChAo[1].ActValRangeHigh = 1.000000e+02
+          Attr ChAo[1].SensorSigValRangeHigh = 5.000000e+00
+          Attr ChAo[1].SigValueUnit = "V"
+          Attr ChAo[1].ChannelSigValRangeHigh = 5.000000e+00
+          Attr ChAo[1].RawValRangeHigh = 2.550000e+02
         EndBody
       EndObject
     EndObject

@@ -109,10 +109,18 @@ else
   linkgtk     :=
 endif
 
+ifeq ($(pwre_conf_libusb),1)
+  clibusb        := -DPWRE_CONF_LIBUSB=1
+  linklibusb     := -lusb-1.0
+else
+  clibusb        :=
+  linklibusb     :=
+endif
+
 log_done	=
 csetos		:= -DOS_LINUX=1 -DOS=linux -D_LINUX -DHW_X86=1 -DHW=x86
 cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) -I/usr/X11R6/include -I$(jdk)/include -I$(jdk)/include/linux \
-`pkg-config --cflags gtk+-2.0` -DPREFIX=\"/usr/local\" -DSYSCONFDIR=\"/etc\" -DDATADIR=\"/usr/share\" -DLIBDIR=\"/usr/lib\" $(cmysql) $(cgtk)
+`pkg-config --cflags gtk+-2.0` -DPREFIX=\"/usr/local\" -DSYSCONFDIR=\"/etc\" -DDATADIR=\"/usr/share\" -DLIBDIR=\"/usr/lib\" $(cmysql) $(cgtk) $(clibusb)
 rm		:= rm
 cp		:= cp
 cpflags		:= 

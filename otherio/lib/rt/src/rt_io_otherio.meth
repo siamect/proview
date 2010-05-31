@@ -7,3 +7,5 @@ Modbus_TCP_Server
 Modbus_TCP_ServerModule
 GPIO
 GPIO_Module
+USB_Agent
+Velleman_K8055_Board
