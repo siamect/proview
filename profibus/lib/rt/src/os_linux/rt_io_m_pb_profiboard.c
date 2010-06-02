@@ -22,6 +22,7 @@
    The board we use is Profiboard from Softing
 */
 
+
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
@@ -147,8 +148,8 @@ static short fmb_set_configuration(T_PROFI_DEVICE_HANDLE *hDevice,
   data.dp.max_number_slaves = op->MaxNumberSlaves;
   data.dp.max_slave_output_len = op->MaxSlaveOutputLen;
   data.dp.max_slave_input_len = op->MaxSlaveInputLen;
-  data.dp.max_slave_diag_entries = op->MaxNumberSlaves;
-  data.dp.max_slave_diag_len = 244;
+  data.dp.max_slave_diag_entries = op->MaxNumberSlaves * 4;
+  data.dp.max_slave_diag_len = 60;
   data.dp.max_bus_para_len = 1024;
   data.dp.max_slave_para_len = 1024;
 
@@ -227,7 +228,7 @@ static short dp_download_bus(T_PROFI_DEVICE_HANDLE *hDevice,
   T_PROFI_SERVICE_DESCR    con_ind_sdb;
   INT16                    result;              /* !!! local result variable !!! */
 
-  sdb.comm_ref = 0; 
+  sdb.comm_ref = 0;
   sdb.layer = DP;
   sdb.service = DP_DOWNLOAD_LOC;
   sdb.primitive = REQ;
@@ -351,10 +352,10 @@ static pwr_tBoolean dp_get_slave_diag(T_PROFI_DEVICE_HANDLE *hDevice)
 /*----------------------------------------------------------------------------*\
   Get slave diagnostics
 \*----------------------------------------------------------------------------*/
-static void dp_get_slave_diag_con(T_DP_GET_SLAVE_DIAG_CON * get_slave_diag_con_ptr, io_sRack *slave_list) 
+static void dp_get_slave_diag_con(T_DP_GET_SLAVE_DIAG_CON * get_slave_diag_con_ptr, io_sRack *slave_list, char log) 
 {
   T_DP_DIAG_DATA    FAR *diag_data_ptr;
-//  char                     s [128];
+  char                     s [128];
   pwr_sClass_Pb_DP_Slave  *sp;
 
   if (get_slave_diag_con_ptr->diag_data_len >= DP_MIN_SLAVE_DIAG_LEN)
@@ -403,17 +404,19 @@ static void dp_get_slave_diag_con(T_DP_GET_SLAVE_DIAG_CON * get_slave_diag_con_p
       slave_list = slave_list->next;
     }
 
-/*    sprintf (s, "Slave [%3hu] [0x%04hX]: Status = 0x%02hX 0x%02hX 0x%02hX, Master = %3hu, Ext = %hu, Diags = %hu",
-             get_slave_diag_con_ptr->rem_add,
-             swap16 (diag_data_ptr->ident_number),
-             diag_data_ptr->station_status_1,
-             diag_data_ptr->station_status_2,
-             diag_data_ptr->station_status_3,
-             diag_data_ptr->master_add,
-             get_slave_diag_con_ptr->diag_data_len - DP_MIN_SLAVE_DIAG_LEN,
-             get_slave_diag_con_ptr->diag_entries);
-
-    errh_Info( "Profibus DP slave diag - %s", s); */
+    if (log) {
+      sprintf (s, "Slave [%3hu] [0x%04hX]: Status = 0x%02hX 0x%02hX 0x%02hX, Master = %3hu, Ext = %hu, Diags = %hu",
+	       get_slave_diag_con_ptr->rem_add,
+	       swap16 (diag_data_ptr->ident_number),
+	       diag_data_ptr->station_status_1,
+	       diag_data_ptr->station_status_2,
+	       diag_data_ptr->station_status_3,
+	       diag_data_ptr->master_add,
+	       get_slave_diag_con_ptr->diag_data_len - DP_MIN_SLAVE_DIAG_LEN,
+	       get_slave_diag_con_ptr->diag_entries);
+      
+      errh_Info( "Profibus DP slave diag - %s", s);
+    }
 
   } /* diag_data_len */
 
@@ -894,12 +897,17 @@ static pwr_tStatus IoAgentRead (
                 case DP_GET_SLAVE_DIAG: {
                   get_slave_diag_con_ptr = (T_DP_GET_SLAVE_DIAG_CON FAR*) con_ind_buffer;
 
-                  dp_get_slave_diag_con (get_slave_diag_con_ptr, ap->racklist);
+                  dp_get_slave_diag_con (get_slave_diag_con_ptr, ap->racklist, op->Diag[0]);
+                  op->Diag[2]++;
 
-                  local->slave_diag_requested = PB_FALSE;
+                  local->slave_diag_requested = op->Diag[3] = PB_FALSE;
+
+                  if (get_slave_diag_con_ptr->diag_entries < 0) {
+                    errh_Warning( "Profibus - diagnostic circular buffer owerflow.");
+		  }
 
                   if (get_slave_diag_con_ptr->diag_entries) {
-                    local->slave_diag_requested = PB_TRUE;
+                    local->slave_diag_requested = op->Diag[3] = PB_TRUE;
                     dp_get_slave_diag (hDevice);
                   }
                   break;
@@ -983,15 +991,21 @@ static pwr_tStatus IoAgentRead (
                 case DP_GET_SLAVE_DIAG: {
                   get_slave_diag_con_ptr = (T_DP_GET_SLAVE_DIAG_CON FAR*) con_ind_buffer;
 
-                  dp_get_slave_diag_con (get_slave_diag_con_ptr, ap->racklist);
+                  dp_get_slave_diag_con (get_slave_diag_con_ptr, ap->racklist, op->Diag[1]);
 
                   op->Diag[0]++;
+
+                  if (get_slave_diag_con_ptr->diag_entries < 0) {
+                    errh_Warning( "Profibus - diagnostic circular buffer owerflow.");
+		  }
 		  
                   if ( (get_slave_diag_con_ptr->diag_entries) &&
                        (! local->slave_diag_requested              ) ) {
                     if (dp_get_slave_diag(hDevice)) {
-                      local->slave_diag_requested = PB_TRUE;
-                    }
+                      local->slave_diag_requested = op->Diag[3] = PB_TRUE;
+                    } else {
+		      errh_Warning( "Profibus - Request for diag failed.");
+		    }
                   }
 
                   break;
@@ -1011,7 +1025,12 @@ static pwr_tStatus IoAgentRead (
           } /* if IND */
 	} else if (sts != NO_CON_IND_RECEIVED) {
           op->Status = PB__NOTINIT;
+	} else {
+	  if (local->slave_diag_requested) {
+	    errh_Info( "Profibus - Diag re-request");
+            dp_get_slave_diag(hDevice);
 	}
+    }
 
         break;
 
