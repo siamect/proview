@@ -103,6 +103,14 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  A language selection entry will be placed in the menu frame.
+      !*/
+      Object EnableLanguage $Attribute 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
       !  @Summary A login entry will be placed in the menu frame.
       !  A login entry will be placed in the menu frame, that makes it possible
       !  to login as a proview user, and gain privileges to make changes to
@@ -145,6 +153,14 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Objid"
           Attr Flags |= PWR_MASK_INVISIBLE
           Attr Flags |= PWR_MASK_RTHIDE
+        EndBody
+      EndObject
+      !/**
+      !  Specifies default language.
+      !*/
+      Object Language $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-LanguageEnum"
         EndBody
       EndObject
       !/**

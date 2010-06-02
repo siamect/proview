@@ -45,18 +45,27 @@ public class JopOpWindow extends JPanel {
     this.root = root;
     en = session.getEngine();
 
-    // Set language
-    JopLang lng = new JopLang(session);
-    lng.set( JopLang.LANGUAGE_sv_SE);
-    JopLang.setDefault(lng);
-
+    // Get WebHandler object
     CdhrObjid oretWebH = en.gdh.getClassList( Pwrb.cClass_WebHandler);
     if ( oretWebH.evenSts()) return;
 
     CdhrString sret = en.gdh.objidToName( oretWebH.objid, Cdh.mName_volumeStrict);            
     if ( sret.evenSts()) return;
 
-    String s = sret.str + ".Title";
+    // Set language
+    JopLang lng = new JopLang(session);
+
+    String s = sret.str + ".Language";
+    CdhrInt iret = en.gdh.getObjectInfoInt( s);
+    if ( iret.oddSts())
+      lng.set( iret.value);
+
+    JopLang.setDefault(lng);
+
+    if ( root instanceof JFrame)
+      ((JFrame)root).setTitle( JopLang.transl("Operator Window"));
+
+    s = sret.str + ".Title";
     CdhrString srettxt = en.gdh.getObjectInfoString( s);
     if ( srettxt.evenSts()) return;
 
@@ -81,12 +90,19 @@ public class JopOpWindow extends JPanel {
     this.add( label);
 
     OpWindButton button;
-    langButton = new OpWindButton( session, "", JopLang.transl("Language"),
-			       OpWindButton.LANGUAGE);
-    this.add( langButton);
+
+    s = sret.str + ".EnableLanguage";
+    iret = en.gdh.getObjectInfoInt( s);
+    if ( iret.evenSts()) return;
+
+    if ( iret.value != 0) {
+      langButton = new OpWindButton( session, "", JopLang.transl("Language"),
+				     OpWindButton.LANGUAGE);
+      this.add( langButton);
+    }
 
     s = sret.str + ".EnableLogin";
-    CdhrInt iret = en.gdh.getObjectInfoInt( s);
+    iret = en.gdh.getObjectInfoInt( s);
     if ( iret.evenSts()) return;
 
     if ( iret.value != 0) {
@@ -104,7 +120,7 @@ public class JopOpWindow extends JPanel {
     iret = en.gdh.getObjectInfoInt( s);
     if ( iret.evenSts()) return;
 
-    if ( iret.value != 0) {
+    if ( iret.value != 0 && !(root instanceof JFrame)) {
       alarmButton = new OpWindButton( session, "", JopLang.transl("Alarm and Event List"),
 				 OpWindButton.ALARMLIST);
       this.add( alarmButton);
@@ -114,7 +130,7 @@ public class JopOpWindow extends JPanel {
     iret = en.gdh.getObjectInfoInt( s);
     if ( iret.evenSts()) return;
 
-    if ( iret.value != 0) {
+    if ( iret.value != 0 && !(root instanceof JFrame)) {
       eventLogButton = new OpWindButton( session, "", JopLang.transl("Event Log"),
 				 OpWindButton.EVENTLOG);
       this.add( eventLogButton);
@@ -294,7 +310,9 @@ public class JopOpWindow extends JPanel {
   }
 
   public void setLanguage( int language) {
-    System.out.println( "Opwindow: Set language");
+
+    if ( root instanceof JFrame)
+      ((JFrame)root).setTitle( JopLang.transl("Operator Window"));
 
     if ( langButton != null)
       langButton.setText( JopLang.transl("Language"));
