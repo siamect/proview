@@ -76,7 +76,7 @@ public class JopcBasecvalve7 extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 547, 733);
@@ -500,6 +500,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       new GeDynValue(pwr_valueinputreliefup28.dd, "$object.Actuator.Order.PresMaxLimit##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup28.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup28.setAnnot1Font(pwr_valueinputreliefup28.annotFont.deriveFont((float)10));
     pwr_valueinputreliefup29.dd.setDynType(1025);
     pwr_valueinputreliefup29.dd.setActionType(4096);
     pwr_valueinputreliefup29.dd.setAccess(65532);
@@ -507,6 +508,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       new GeDynValue(pwr_valueinputreliefup29.dd, "$object.Actuator.Order.PresMinLimit##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup29.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup29.setAnnot1Font(pwr_valueinputreliefup29.annotFont.deriveFont((float)10));
     pwr_pulldownmenu230.dd.setDynType(1);
     pwr_pulldownmenu230.dd.setActionType(524288);
     pwr_pulldownmenu230.dd.setAccess(65535);
@@ -641,6 +643,7 @@ null)
       ,new GeDynValue(pwr_valueinputsmallrd48.dd, "$object.Actuator.Mode.OpRefMan##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputsmallrd48.dd, 0,0,"$object.Actuator.Mode.OpMinRefMan##Float32","$object.Actuator.Mode.OpMaxRefMan##Float32")
       });
+    pwr_valueinputsmallrd48.setAnnot1Font(pwr_valueinputsmallrd48.annotFont.deriveFont((float)10));
     pwr_indsquare50.dd.setDynType(5);
     pwr_indsquare50.dd.setActionType(0);
     pwr_indsquare50.dd.setElements(new GeDynElemIfc[] {
@@ -6082,12 +6085,12 @@ protected class pwr_valvecontrol2 extends GeComponent {
     new Polygon( new int[] { 2, 6, 6, 2}, new int[] { 22, 27, 40,42}, 4),
     new Polygon( new int[] { 2, 6, 19, 22}, new int[] { 42, 40, 34,32}, 4),
     new Polygon( new int[] { 22, 19, 6, 2}, new int[] { 32, 34, 27,22}, 4),
-    new Polygon( new int[] { 2, 6, 2435, 34}, new int[] { 22, 27, -1219706437,-2147483648}, 4),
+    new Polygon( new int[] { 2, 6, 227, 34}, new int[] { 22, 27, -1219980869,42}, 4),
     new Polygon( new int[] { 42, 42, 22, 42}, new int[] {22, 42, 32, 22}, 4),
     new Polygon( new int[] { 42, 40, 40, 42}, new int[] { 22, 27, 40,42}, 4),
     new Polygon( new int[] { 42, 40, 28, 22}, new int[] { 42, 40, 34,32}, 4),
     new Polygon( new int[] { 22, 28, 40, 42}, new int[] { 32, 34, 27,22}, 4),
-    new Polygon( new int[] { 42, 40, 2435, 34}, new int[] { 22, 27, -1219706437,42}, 4),
+    new Polygon( new int[] { 42, 40, 227, 34}, new int[] { 22, 27, -1219980869,42}, 4),
     new Arc2D.Float(12F, 2F, 20F, 20F, 35F, 140F, Arc2D.PIE),
     new Arc2D.Float(12F, 2F, 20F, 20F, 215F, 140F, Arc2D.PIE),
     new Arc2D.Float(12F, 2F, 20F, 20F, -5F, 40F, Arc2D.PIE),

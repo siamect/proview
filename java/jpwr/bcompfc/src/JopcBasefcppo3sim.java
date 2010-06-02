@@ -45,7 +45,7 @@ public class JopcBasefcppo3sim extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "äÇ–·DQî·DQî·p—uÄ_–·;œ· 3œ·Fï¿ç©“·DQî·DQî·x—u 3œ·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 332, 278);

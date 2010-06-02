@@ -133,11 +133,9 @@ public class Gdh {
   public Vector getAllClassAttributes( int classid, PwrtObjid objid_obj )
   //public Vector<CdhrObjAttr> getAllClassAttributes( int classid, PwrtObjid objid_obj )
   {
-    System.out.println("getAllClassAttributes" + classid + " " + objid_obj.oix + " " + objid_obj.vid);
-    //CdhrObjid co = this.classIdToObjid(classid);
+    //System.out.println("getAllClassAttributes" + classid + " " + objid_obj.oix + " " + objid_obj.vid);
 
     String name = this.objidToName(objid_obj, Cdh.mName_pathStrict).str;
-	  //          fullName = this.attrRefToName( attrRef.aref, Cdh.mName_pathStrict).str;
 
     CdhrClassId cdhrClassId = this.getObjectClass(objid_obj);
 
@@ -181,7 +179,6 @@ public class Gdh {
   //public Vector<CdhrObjAttr> getAllClassAttributes( String name )
   public Vector getAllClassAttributes( String name )
   {
-    System.out.println("getAllClassAttributes" + name);
 
     CdhrAttrRef attrRef = this.nameToAttrRef(name);
     CdhrTypeId cdhrTypeId = this.getAttrRefTid( attrRef.aref );
@@ -317,7 +314,6 @@ public class Gdh {
     Vector v = new Vector();
     
     CdhrObjid classObj;
-    System.out.println("getAllXttChildren");
     
     cdhrObjId = (CdhrObjid)this.getChild(objid);
     while(cdhrObjId.oddSts())
@@ -367,9 +363,9 @@ public class Gdh {
     Vector retVec = new Vector();
     for(int i = 0;i < vec.size();i++)
     {
-	//System.out.println("refObjectInfo_vector: " + (String)vec.get(i));
       GdhrRefObjectInfo ret = this.refObjectInfo( (String)vec.get(i) );
 
+      // System.out.println("refObjectInfo_vector: " + (String)vec.get(i) + " sts: " + ret.sts);
       retVec.add(ret);
     }
     return retVec;

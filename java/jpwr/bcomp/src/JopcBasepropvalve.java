@@ -70,7 +70,7 @@ public class JopcBasepropvalve extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 538, 640);
@@ -450,6 +450,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       new GeDynValue(pwr_valueinputreliefup26.dd, "$object.Order.PresMaxLimit##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup26.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup26.setAnnot1Font(pwr_valueinputreliefup26.annotFont.deriveFont((float)10));
     pwr_valueinputreliefup27.dd.setDynType(1025);
     pwr_valueinputreliefup27.dd.setActionType(4096);
     pwr_valueinputreliefup27.dd.setAccess(65532);
@@ -457,6 +458,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       new GeDynValue(pwr_valueinputreliefup27.dd, "$object.Order.PresMinLimit##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup27.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup27.setAnnot1Font(pwr_valueinputreliefup27.annotFont.deriveFont((float)10));
     pwr_pulldownmenu230.dd.setDynType(1);
     pwr_pulldownmenu230.dd.setActionType(524288);
     pwr_pulldownmenu230.dd.setAccess(65535);
@@ -592,6 +594,7 @@ null)
       ,new GeDynValue(pwr_valueinputsmallrd48.dd, "$object.Mode.OpRefMan##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputsmallrd48.dd, 0,0,"$object.Mode.OpMinRefMan##Float32","$object.Mode.OpMaxRefMan##Float32")
       });
+    pwr_valueinputsmallrd48.setAnnot1Font(pwr_valueinputsmallrd48.annotFont.deriveFont((float)10));
     grp167_49.dd.setDynType(129);
     grp167_49.dd.setActionType(0);
     grp167_49.dd.setElements(new GeDynElemIfc[] {
@@ -4862,12 +4865,12 @@ protected class pwr_valvecontrol2 extends GeComponent {
     new Polygon( new int[] { 2, 6, 6, 2}, new int[] { 22, 27, 39,42}, 4),
     new Polygon( new int[] { 2, 6, 19, 22}, new int[] { 42, 39, 32,32}, 4),
     new Polygon( new int[] { 22, 19, 6, 2}, new int[] { 32, 32, 27,22}, 4),
-    new Polygon( new int[] { 2, 6, 123, 50}, new int[] { 22, 27, 140893347,27}, 4),
+    new Polygon( new int[] { 2, 6, 203, 50}, new int[] { 22, 27, 140891171,27}, 4),
     new Polygon( new int[] { 42, 42, 22, 42}, new int[] {22, 42, 32, 22}, 4),
     new Polygon( new int[] { 42, 42, 42, 42}, new int[] { 22, 27, 39,42}, 4),
     new Polygon( new int[] { 42, 42, 29, 22}, new int[] { 42, 39, 32,32}, 4),
     new Polygon( new int[] { 22, 29, 42, 42}, new int[] { 32, 32, 27,22}, 4),
-    new Polygon( new int[] { 42, 42, 123, 50}, new int[] { 22, 27, 140893347,27}, 4),
+    new Polygon( new int[] { 42, 42, 203, 50}, new int[] { 22, 27, 140891171,27}, 4),
     new Arc2D.Float(12F, 2F, 20F, 20F, 35F, 140F, Arc2D.PIE),
     new Arc2D.Float(12F, 2F, 20F, 20F, 215F, 140F, Arc2D.PIE),
     new Arc2D.Float(12F, 2F, 20F, 20F, -5F, 40F, Arc2D.PIE),
@@ -5336,7 +5339,7 @@ protected class Grp182_ extends GeComponent {
     new Polygon( new int[] { 74, 76, 55, 54}, new int[] { 26, 27, 40,38}, 4),
     new Polygon( new int[] { 54, 55, 27, 26}, new int[] { 38, 40, 40,38}, 4),
     new Polygon( new int[] { 26, 27, 24, 22}, new int[] { 38, 40, 43,42}, 4),
-    new Polygon( new int[] { 22, 24, -1219706789, -309}, new int[] { 42, 43, -1219706762,-282}, 4),
+    new Polygon( new int[] { 22, 24, -1219981221, -309}, new int[] { 42, 43, -1219981194,-282}, 4),
     new Rectangle2D.Float(54F, 8F, 20F, 12F),
     new Polygon( new int[] { 54, 74, 73, 55, 55, 54}, new int[] { 8, 8, 9, 9, 19, 20}, 6), 
     new Polygon( new int[] { 74, 74, 73, 73, 55, 54}, new int[] { 20, 8, 9, 19, 19, 20}, 6), 

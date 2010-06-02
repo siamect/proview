@@ -50,7 +50,7 @@ public class JopcBase3wayvalve extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 418, 382);
@@ -870,7 +870,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 16, 15, 15, 16}, new int[] { 54, 55, 58,60}, 4),
     new Polygon( new int[] { 16, 15, 7, 6}, new int[] { 60, 58, 53,54}, 4),
     new Polygon( new int[] { 6, 7, 7, 6}, new int[] { 54, 53, 50,48}, 4),
-    new Polygon( new int[] { 6, 7, -1219706373, -45}, new int[] { 48, 50, -1219706438,-110}, 4),
+    new Polygon( new int[] { 6, 7, -44, -45}, new int[] { 48, 50, -109,-110}, 4),
     new Polygon( new int[] { 6, 14, 16, 16, 14, 6, 6}, new int[] {34, 38, 36, 42, 42, 38, 34}, 7),
     new Polygon( new int[] { 58, 50, 48, 48, 50, 58, 58}, new int[] {34, 30, 28, 34, 34, 38, 34}, 7),
     new Polygon( new int[] { 48, 42, 42, 40, 38, 38, 42, 42, 46, 48, 48}, new int[] {22, 22, 66, 66, 68, 78, 78, 68, 68, 66, 22}, 11),
@@ -908,7 +908,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 46, 45, 41, 42}, new int[] { 20, 23, 23,20}, 4),
     new Polygon( new int[] { 42, 41, 37, 38}, new int[] { 20, 23, 21,18}, 4),
     new Polygon( new int[] { 38, 37, 27, 26}, new int[] { 18, 21, 21,18}, 4),
-    new Polygon( new int[] { 26, 27, -1219706525, -45}, new int[] { 18, 21, -1219706590,-110}, 4),
+    new Polygon( new int[] { 26, 27, -45, -45}, new int[] { 18, 21, -110,-110}, 4),
     new Rectangle2D.Float(2F, 50F, 4F, 8F),
     new Polygon( new int[] { 2, 6, 6, 2, 2, 2}, new int[] { 50, 50, 50, 50, 58, 58}, 6), 
     new Polygon( new int[] { 6, 6, 6, 6, 2, 2}, new int[] { 58, 50, 50, 58, 58, 58}, 6), 

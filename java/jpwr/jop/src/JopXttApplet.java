@@ -95,7 +95,7 @@ public class JopXttApplet extends JopApplet
     setSize(new Dimension(370, 570));
     URL url = this.getCodeBase();
     Logg.loggTo = Logg.TO_SCREEN;
-    Logg.loggPrio = 1;
+    Logg.loggPrio = 0;
     Logg.logg("JopXttApplet: Före XttTree-skapande", 6);
     this.xttTree = new XttTree( session, url, this);
     this.getContentPane().add(this.xttTree);

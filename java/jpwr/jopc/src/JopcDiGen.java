@@ -54,7 +54,7 @@ public class JopcDiGen extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä'¢·D±ù·D±ù·p—uÄ¿¡·›§· “§·(q¦¿ç	Ÿ·D±ù·D±ù·x—u “§·");
+    JopSpider.setSystemName( "ä·›·DAó·DAó·p—uÄO›·+¡· #¡·xê´¿ç™˜·DAó·DAó·x—u #¡·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 809, 189);
@@ -240,6 +240,7 @@ public class JopcDiGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputmedium10.dd, "$object.ActualValue##Boolean","%d")
       ,new GeDynValueInput(pwr_valueinputmedium10.dd, 0,0,null,null)
       });
+    pwr_valueinputmedium10.setAnnot1Font(pwr_valueinputmedium10.annotFont.deriveFont((float)13.2632));
     pwr_valueinputreliefup11.dd.setDynType(1024);
     pwr_valueinputreliefup11.dd.setActionType(4096);
     pwr_valueinputreliefup11.dd.setAccess(65535);
@@ -247,6 +248,7 @@ public class JopcDiGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputreliefup11.dd, "$local.ScanTime##Float32","%5.0f")
       ,new GeDynValueInput(pwr_valueinputreliefup11.dd, 4,100000,null,null)
       });
+    pwr_valueinputreliefup11.setAnnot1Font(pwr_valueinputreliefup11.annotFont.deriveFont((float)11));
     pwr_mbopenobject12.dd.setDynType(129);
     pwr_mbopenobject12.dd.setActionType(8256);
     pwr_mbopenobject12.dd.setAccess(65532);

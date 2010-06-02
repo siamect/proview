@@ -71,7 +71,7 @@ public class JopcBaseactuatora7 extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 548, 496);
@@ -475,6 +475,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       new GeDynValue(pwr_valueinputreliefup28.dd, "$object.Order.PresMaxLimit##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup28.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup28.setAnnot1Font(pwr_valueinputreliefup28.annotFont.deriveFont((float)10));
     pwr_valueinputreliefup29.dd.setDynType(1025);
     pwr_valueinputreliefup29.dd.setActionType(4096);
     pwr_valueinputreliefup29.dd.setAccess(65532);
@@ -482,6 +483,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       new GeDynValue(pwr_valueinputreliefup29.dd, "$object.Order.PresMinLimit##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup29.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup29.setAnnot1Font(pwr_valueinputreliefup29.annotFont.deriveFont((float)10));
     pwr_pulldownmenu230.dd.setDynType(1);
     pwr_pulldownmenu230.dd.setActionType(524288);
     pwr_pulldownmenu230.dd.setAccess(65535);
@@ -616,6 +618,7 @@ null)
       ,new GeDynValue(pwr_valueinputsmallrd48.dd, "$object.Mode.OpRefMan##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputsmallrd48.dd, 0,0,"$object.Mode.OpMinRefMan##Float32","$object.Mode.OpMaxRefMan##Float32")
       });
+    pwr_valueinputsmallrd48.setAnnot1Font(pwr_valueinputsmallrd48.annotFont.deriveFont((float)10));
     pwr_indsquare50.dd.setDynType(5);
     pwr_indsquare50.dd.setActionType(0);
     pwr_indsquare50.dd.setElements(new GeDynElemIfc[] {

@@ -161,6 +161,8 @@ public class AttrObj extends TreeObj
       case Pwr.eType_UInt64:
       case Pwr.eType_Int32:
       case Pwr.eType_Int64:
+      case Pwr.eType_Enum:
+      case Pwr.eType_Mask:
 
         //s = n + space + this.valueInt;
 	s = n + space + (new Integer( (this.valueInt & 65535) )).intValue();

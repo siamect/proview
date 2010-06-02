@@ -2060,6 +2060,11 @@ int GrowNode::get_annotation_info( int num, int *t_size, glow_eDrawType *t_drawt
   return sts;
 }
 
+int GrowNode::get_annotation_text_size( int num, double *tsize)
+{
+  return nc->get_annotation_text_size( &trf, num, tsize);
+}
+
 void GrowNode::set_visibility( glow_eVis visibility)
 {
   switch( visibility) {

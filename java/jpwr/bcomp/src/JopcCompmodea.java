@@ -57,7 +57,7 @@ public class JopcCompmodea extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 200);
     engine.setScanTime( 500);
     size = new Dimension( 319, 228);
@@ -439,6 +439,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       ,new GeDynValue(pwr_valueinputmediumrd31.dd, "$object.OpRefMan##Float32","%9.3f")
       ,new GeDynValueInput(pwr_valueinputmediumrd31.dd, 0,0,"$object.OpMinRefMan##Float32","$object.OpMaxRefMan##Float32")
       });
+    pwr_valueinputmediumrd31.setAnnot1Font(pwr_valueinputmediumrd31.annotFont.deriveFont((float)14));
     grp225_32.dd.setDynType(129);
     grp225_32.dd.setActionType(0);
     grp225_32.dd.setElements(new GeDynElemIfc[] {

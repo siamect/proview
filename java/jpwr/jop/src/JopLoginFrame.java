@@ -128,8 +128,8 @@ public class JopLoginFrame extends JFrame {
       textUser.setText("");
       textPassword.setText("");
       labelMessage.setText( JopLang.transl("User") + " " + user + " " + JopLang.transl("logged in"));
-      session.setOpWindowLabelText( user + " " + JopLang.transl("logged in"));
-      hide();
+      session.setOpWindowLabelText( JopLang.transl("User") + " " + user + " " + JopLang.transl("logged in"));
+      setVisible(false);
     }
   }
 }

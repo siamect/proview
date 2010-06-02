@@ -59,7 +59,7 @@ public class JopcAiGen extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä'¢·D±ù·D±ù·p—uÄ¿¡·›§· “§·(q¦¿ç	Ÿ·D±ù·D±ù·x—u “§·");
+    JopSpider.setSystemName( "ä·›·DAó·DAó·p—uÄO›·+¡· #¡·xê´¿ç™˜·DAó·DAó·x—u #¡·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 830, 282);
@@ -304,6 +304,7 @@ public class JopcAiGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputreliefup17.dd, "$object.PresMaxLimit##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup17.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup17.setAnnot1Font(pwr_valueinputreliefup17.annotFont.deriveFont((float)11));
     pwr_valueinputreliefup18.dd.setDynType(1024);
     pwr_valueinputreliefup18.dd.setActionType(4096);
     pwr_valueinputreliefup18.dd.setAccess(65535);
@@ -311,6 +312,7 @@ public class JopcAiGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputreliefup18.dd, "$object.PresMinLimit##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup18.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup18.setAnnot1Font(pwr_valueinputreliefup18.annotFont.deriveFont((float)11));
     pwr_valueinputreliefup19.dd.setDynType(1024);
     pwr_valueinputreliefup19.dd.setActionType(4096);
     pwr_valueinputreliefup19.dd.setAccess(65535);
@@ -318,6 +320,7 @@ public class JopcAiGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputreliefup19.dd, "$local.ScanTime##Float32","%5.0f")
       ,new GeDynValueInput(pwr_valueinputreliefup19.dd, 4,100000,null,null)
       });
+    pwr_valueinputreliefup19.setAnnot1Font(pwr_valueinputreliefup19.annotFont.deriveFont((float)11));
     pwr_valueinputmedium20.dd.setDynType(1024);
     pwr_valueinputmedium20.dd.setActionType(4096);
     pwr_valueinputmedium20.dd.setAccess(6);
@@ -325,6 +328,7 @@ public class JopcAiGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputmedium20.dd, "$object.ActualValue##Float32","%10.3f")
       ,new GeDynValueInput(pwr_valueinputmedium20.dd, 0,0,null,null)
       });
+    pwr_valueinputmedium20.setAnnot1Font(pwr_valueinputmedium20.annotFont.deriveFont((float)14));
     pwr_mbopenobject21.dd.setDynType(129);
     pwr_mbopenobject21.dd.setActionType(8256);
     pwr_mbopenobject21.dd.setAccess(65532);

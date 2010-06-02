@@ -422,6 +422,8 @@ extern "C" {
   void grow_SetPasteNodeAnnotation( grow_tNode node, int number, char *text, 
 				    int size);
 
+  int grow_GetAnnotationTextSize( grow_tNode node, int number, double *tsize);
+  
   //! Enable an event, an register a callback function for the event.
   /*!
     \param ctx		Grow context.

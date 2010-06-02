@@ -82,7 +82,7 @@ public class JopcBasevalveincrdecr5 extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 544, 733);
@@ -525,6 +525,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       new GeDynValue(pwr_valueinputreliefup28.dd, "$object.Actuator.Position.PresMaxLimit##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup28.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup28.setAnnot1Font(pwr_valueinputreliefup28.annotFont.deriveFont((float)10));
     pwr_valueinputreliefup29.dd.setDynType(1025);
     pwr_valueinputreliefup29.dd.setActionType(4096);
     pwr_valueinputreliefup29.dd.setAccess(65532);
@@ -532,6 +533,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       new GeDynValue(pwr_valueinputreliefup29.dd, "$object.Actuator.Position.PresMinLimit##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup29.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup29.setAnnot1Font(pwr_valueinputreliefup29.annotFont.deriveFont((float)10));
     pwr_pulldownmenu230.dd.setDynType(1);
     pwr_pulldownmenu230.dd.setActionType(524288);
     pwr_pulldownmenu230.dd.setAccess(65535);
@@ -5864,12 +5866,12 @@ protected class pwr_valvecontrol2 extends GeComponent {
     new Polygon( new int[] { 2, 4, 4, 2}, new int[] { 22, 25, 39,42}, 4),
     new Polygon( new int[] { 2, 4, 18, 22}, new int[] { 42, 39, 32,32}, 4),
     new Polygon( new int[] { 22, 18, 4, 2}, new int[] { 32, 32, 25,22}, 4),
-    new Polygon( new int[] { 2, 4, 26, -6}, new int[] { 22, 25, -33,-33}, 4),
+    new Polygon( new int[] { 2, 4, 58, -6}, new int[] { 22, 25, -1219980889,-33}, 4),
     new Polygon( new int[] { 42, 42, 22, 42}, new int[] {22, 42, 32, 22}, 4),
     new Polygon( new int[] { 42, 40, 40, 42}, new int[] { 22, 25, 39,42}, 4),
     new Polygon( new int[] { 42, 40, 26, 22}, new int[] { 42, 39, 32,32}, 4),
     new Polygon( new int[] { 22, 26, 40, 42}, new int[] { 32, 32, 25,22}, 4),
-    new Polygon( new int[] { 42, 40, 26, -6}, new int[] { 22, 25, -33,-33}, 4),
+    new Polygon( new int[] { 42, 40, 58, -6}, new int[] { 22, 25, -1219980889,-33}, 4),
     new Arc2D.Float(12F, 2F, 20F, 20F, 35F, 140F, Arc2D.PIE),
     new Arc2D.Float(12F, 2F, 20F, 20F, 215F, 140F, Arc2D.PIE),
     new Arc2D.Float(12F, 2F, 20F, 20F, -5F, 40F, Arc2D.PIE),

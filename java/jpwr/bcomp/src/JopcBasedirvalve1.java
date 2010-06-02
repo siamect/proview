@@ -67,7 +67,7 @@ public class JopcBasedirvalve1 extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 200);
     engine.setScanTime( 500);
     size = new Dimension( 539, 476);
@@ -4782,7 +4782,7 @@ protected class Grp198_ extends GeComponent {
     new Polygon( new int[] { 74, 76, 55, 54}, new int[] { 26, 27, 40,38}, 4),
     new Polygon( new int[] { 54, 55, 27, 26}, new int[] { 38, 40, 40,38}, 4),
     new Polygon( new int[] { 26, 27, 24, 22}, new int[] { 38, 40, 43,42}, 4),
-    new Polygon( new int[] { 22, 24, -1219706781, -301}, new int[] { 42, 43, -1219706751,-271}, 4),
+    new Polygon( new int[] { 22, 24, -1219981213, -301}, new int[] { 42, 43, -1219981183,-271}, 4),
     new Rectangle2D.Float(54F, 8F, 20F, 12F),
     new Polygon( new int[] { 54, 74, 73, 55, 55, 54}, new int[] { 8, 8, 9, 9, 19, 20}, 6), 
     new Polygon( new int[] { 74, 74, 73, 73, 55, 54}, new int[] { 20, 8, 9, 19, 19, 20}, 6), 

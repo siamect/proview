@@ -59,7 +59,7 @@ public class JopcCompmodepid extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "‰óù∑D!ı∑D!ı∑póuƒ/ù∑£∑†£∑∏ˇäøÁyö∑D!ı∑D!ı∑xóu†£∑");
+    JopSpider.setSystemName( "‰wö∑DÚ∑DÚ∑póuƒö∑Îü∑†„ü∑((ÚøÁYó∑DÚ∑DÚ∑xóu†„ü∑");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 492, 502);
@@ -356,6 +356,7 @@ public class JopcCompmodepid extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputreliefup40.dd, "$object.SetMaxShow##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup40.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup40.setAnnot1Font(pwr_valueinputreliefup40.annotFont.deriveFont((float)11.1412));
     pwr_valueinputreliefup41.dd.setDynType(1024);
     pwr_valueinputreliefup41.dd.setActionType(4096);
     pwr_valueinputreliefup41.dd.setAccess(-2147483626);
@@ -363,6 +364,7 @@ public class JopcCompmodepid extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputreliefup41.dd, "$object.SetMinShow##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup41.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup41.setAnnot1Font(pwr_valueinputreliefup41.annotFont.deriveFont((float)11.1412));
     pwr_valueinputreliefup42.dd.setDynType(1024);
     pwr_valueinputreliefup42.dd.setActionType(4096);
     pwr_valueinputreliefup42.dd.setAccess(-2147483626);
@@ -370,6 +372,7 @@ public class JopcCompmodepid extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputreliefup42.dd, "$object.OutMaxShow##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup42.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup42.setAnnot1Font(pwr_valueinputreliefup42.annotFont.deriveFont((float)11.1412));
     pwr_valueinputreliefup43.dd.setDynType(1024);
     pwr_valueinputreliefup43.dd.setActionType(4096);
     pwr_valueinputreliefup43.dd.setAccess(-2147483626);
@@ -377,6 +380,7 @@ public class JopcCompmodepid extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputreliefup43.dd, "$object.OutMinShow##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup43.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup43.setAnnot1Font(pwr_valueinputreliefup43.annotFont.deriveFont((float)11.1412));
     pwr_valueinputmedium44.dd.setDynType(1024);
     pwr_valueinputmedium44.dd.setActionType(4096);
     pwr_valueinputmedium44.dd.setAccess(-2147483626);
@@ -384,11 +388,13 @@ public class JopcCompmodepid extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputmedium44.dd, "$object.SetVal##Float32","%10.3f")
       ,new GeDynValueInput(pwr_valueinputmedium44.dd, 0,0,"$object.MinSet##Float32","$object.MaxSet##Float32")
       });
+    pwr_valueinputmedium44.setAnnot1Font(pwr_valueinputmedium44.annotFont.deriveFont((float)14.2979));
     pwr_valueinputmedium45.dd.setDynType(1024);
     pwr_valueinputmedium45.dd.setActionType(0);
     pwr_valueinputmedium45.dd.setElements(new GeDynElemIfc[] {
       new GeDynValue(pwr_valueinputmedium45.dd, "$object.ProcVal##Float32","%10.3f")
       });
+    pwr_valueinputmedium45.setAnnot1Font(pwr_valueinputmedium45.annotFont.deriveFont((float)14.2979));
     pwr_valueinputmedium46.dd.setDynType(1024);
     pwr_valueinputmedium46.dd.setActionType(4096);
     pwr_valueinputmedium46.dd.setAccess(-2147483626);
@@ -396,6 +402,7 @@ public class JopcCompmodepid extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputmedium46.dd, "$object.ForcVal##Float32","%10.3f")
       ,new GeDynValueInput(pwr_valueinputmedium46.dd, 0,0,"$object.MinOut##Float32","$object.MaxOut##Float32")
       });
+    pwr_valueinputmedium46.setAnnot1Font(pwr_valueinputmedium46.annotFont.deriveFont((float)14.2979));
     engine.setFrameReady();
   }
 
@@ -994,7 +1001,7 @@ protected class pwr_buttoncommand extends GeComponent {
     new Polygon( new int[] { 96, 95, 97, 102}, new int[] { 8, 8, 6,2}, 4),
     new Polygon( new int[] { 102, 97, 6, 2}, new int[] { 2, 6, 6,2}, 4),
     new Polygon( new int[] { 2, 6, 6, 2}, new int[] { 2, 6, 31,35}, 4),
-    new Polygon( new int[] { 2, 6, 90, 8}, new int[] { 35, 31, 46,45}, 4),
+    new Polygon( new int[] { 2, 6, 8, 8}, new int[] { 35, 31, 48,45}, 4),
     new Polygon( new int[] { 2, 8, 96, 96, 102, 102, 2}, new int[] {35, 29, 29, 8, 2, 35, 35}, 7),
     new Polygon( new int[] { 2, 8, 9, 8}, new int[] { 35, 35, 33,29}, 4),
     new Polygon( new int[] { 8, 9, 98, 96}, new int[] { 29, 33, 33,29}, 4),
@@ -1002,7 +1009,7 @@ protected class pwr_buttoncommand extends GeComponent {
     new Polygon( new int[] { 96, 98, 100, 102}, new int[] { 8, 11, 9,2}, 4),
     new Polygon( new int[] { 102, 100, 100, 102}, new int[] { 2, 9, 35,35}, 4),
     new Polygon( new int[] { 102, 100, 8, 2}, new int[] { 35, 35, 35,35}, 4),
-    new Polygon( new int[] { 2, 8, 90, 8}, new int[] { 35, 35, 46,45}, 4),
+    new Polygon( new int[] { 2, 8, 8, 8}, new int[] { 35, 35, 48,45}, 4),
     new Rectangle2D.Float(2F, 2F, 100.085F, 32.6809F),
     new Polygon( new int[] { 2, 102, 100, 4, 4, 2}, new int[] { 2, 2, 4, 4, 33, 35}, 6), 
     new Polygon( new int[] { 102, 102, 100, 100, 4, 2}, new int[] { 35, 2, 4, 33, 33, 35}, 6), 

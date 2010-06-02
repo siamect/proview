@@ -38,7 +38,7 @@ public class JopcComponoffzone extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 200);
     engine.setScanTime( 500);
     size = new Dimension( 409, 326);
@@ -171,6 +171,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       new GeDynValue(pwr_valueinputmediumrd11.dd, "$object.PowerMin##Float32","%6.2f")
       ,new GeDynValueInput(pwr_valueinputmediumrd11.dd, 0,99,null,null)
       });
+    pwr_valueinputmediumrd11.setAnnot1Font(pwr_valueinputmediumrd11.annotFont.deriveFont((float)14));
     pwr_valueinputmediumrd13.dd.setDynType(1025);
     pwr_valueinputmediumrd13.dd.setActionType(4096);
     pwr_valueinputmediumrd13.dd.setAccess(33554492);
@@ -178,6 +179,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       new GeDynValue(pwr_valueinputmediumrd13.dd, "$object.PowerMax##Float32","%6.2f")
       ,new GeDynValueInput(pwr_valueinputmediumrd13.dd, 5,100,null,null)
       });
+    pwr_valueinputmediumrd13.setAnnot1Font(pwr_valueinputmediumrd13.annotFont.deriveFont((float)14));
     pwr_valueinputmediumrd15.dd.setDynType(1025);
     pwr_valueinputmediumrd15.dd.setActionType(4096);
     pwr_valueinputmediumrd15.dd.setAccess(33554492);
@@ -185,6 +187,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       new GeDynValue(pwr_valueinputmediumrd15.dd, "$object.BurnerTimeMinOn##Float32","%6.2f")
       ,new GeDynValueInput(pwr_valueinputmediumrd15.dd, 0,0,null,null)
       });
+    pwr_valueinputmediumrd15.setAnnot1Font(pwr_valueinputmediumrd15.annotFont.deriveFont((float)14));
     pwr_valueinputmediumrd17.dd.setDynType(1025);
     pwr_valueinputmediumrd17.dd.setActionType(4096);
     pwr_valueinputmediumrd17.dd.setAccess(33554492);
@@ -192,6 +195,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       new GeDynValue(pwr_valueinputmediumrd17.dd, "$object.BurnerTimeMinOff##Float32","%6.2f")
       ,new GeDynValueInput(pwr_valueinputmediumrd17.dd, 0,0,null,null)
       });
+    pwr_valueinputmediumrd17.setAnnot1Font(pwr_valueinputmediumrd17.annotFont.deriveFont((float)14));
     engine.setFrameReady();
   }
 

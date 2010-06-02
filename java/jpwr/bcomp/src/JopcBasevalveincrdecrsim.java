@@ -49,7 +49,7 @@ public class JopcBasevalveincrdecrsim extends JopFrame implements JopUtilityIfc 
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 432, 311);
@@ -193,6 +193,7 @@ public class JopcBasevalveincrdecrsim extends JopFrame implements JopUtilityIfc 
       new GeDynValue(pwr_valueinputmediumrd5.dd, "$object.ManPositionValue##Float32","%5.2f")
       ,new GeDynValueInput(pwr_valueinputmediumrd5.dd, 0,0,null,null)
       });
+    pwr_valueinputmediumrd5.setAnnot1Font(pwr_valueinputmediumrd5.annotFont.deriveFont((float)13.8679));
     pwr_sliderbackground26.dd.setDynType(524289);
     pwr_sliderbackground26.dd.setActionType(0);
     pwr_slider27.dd.setDynType(1);

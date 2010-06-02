@@ -41,7 +41,7 @@ public class JopcBasefcppo5param extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "äÇ–·DQî·DQî·p—uÄ_–·;œ· 3œ·Fï¿ç©“·DQî·DQî·x—u 3œ·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 414, 378);
@@ -130,7 +130,7 @@ public class JopcBasefcppo5param extends JopFrame implements JopUtilityIfc {
     pwr_pulldownmenu24.dd.setAccess(65535);
     pwr_pulldownmenu24.dd.setElements(new GeDynElemIfc[] {
       new GeDynPulldownMenu(pwr_pulldownmenu24.dd, new String[] {
-        "Print","Close",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
+        JopLang.transl("Print"),JopLang.transl("Close"),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
         new GeDyn[] {
             new GeDyn(pwr_pulldownmenu24,1,65,65535,new GeDynElemIfc[] {
       new GeDynCommand(pwr_pulldownmenu24.dd, "print graph/class/inst=$object")
@@ -147,7 +147,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     pwr_pulldownmenu25.dd.setAccess(65532);
     pwr_pulldownmenu25.dd.setElements(new GeDynElemIfc[] {
       new GeDynPulldownMenu(pwr_pulldownmenu25.dd, new String[] {
-        "Help","Help Class",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
+        JopLang.transl("Help"),JopLang.transl("Help Class"),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
         new GeDyn[] {
             new GeDyn(pwr_pulldownmenu25,1,65,65535,new GeDynElemIfc[] {
       new GeDynCommand(pwr_pulldownmenu25.dd, "call method/method=\"Help\"/object=$object")
@@ -190,6 +190,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       new GeDynValue(pwr_valueinputmediumrd17.dd, "$object.RequestPar##Int32","%d")
       ,new GeDynValueInput(pwr_valueinputmediumrd17.dd, 0,0,null,null)
       });
+    pwr_valueinputmediumrd17.setAnnot1Font(pwr_valueinputmediumrd17.annotFont.deriveFont((float)14));
     pwr_valueinputmediumrd18.dd.setDynType(1025);
     pwr_valueinputmediumrd18.dd.setActionType(4096);
     pwr_valueinputmediumrd18.dd.setAccess(33619964);
@@ -197,6 +198,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       new GeDynValue(pwr_valueinputmediumrd18.dd, "$object.WriteValuePar##Int32","%d")
       ,new GeDynValueInput(pwr_valueinputmediumrd18.dd, 0,0,null,null)
       });
+    pwr_valueinputmediumrd18.setAnnot1Font(pwr_valueinputmediumrd18.annotFont.deriveFont((float)14));
     pwr_valuemedium19.dd.setDynType(1025);
     pwr_valuemedium19.dd.setActionType(0);
     pwr_valuemedium19.dd.setElements(new GeDynElemIfc[] {
@@ -368,15 +370,15 @@ class LocalPanel extends JPanel {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "Parameter",23, 84);
+    g.drawString( JopLang.transl("Parameter"),23, 84);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "Read Value",23, 164);
+    g.drawString( JopLang.transl("Read Value"),23, 164);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "ReturnCode",23, 263);
+    g.drawString( JopLang.transl("ReturnCode"),23, 263);
     {
     int fcolor = GeColor.getDrawtype(33, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
@@ -388,39 +390,39 @@ class LocalPanel extends JPanel {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "Write Value",219, 164);
+    g.drawString( JopLang.transl("Write Value"),219, 164);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "Backup parameter",23, 316);
+    g.drawString( JopLang.transl("Backup parameter"),23, 316);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 14));
-    g.drawString( "Read/Write parameter",18, 43);
+    g.drawString( JopLang.transl("Read/Write parameter"),18, 43);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "CodeSub",219, 263);
+    g.drawString( JopLang.transl("CodeSub"),219, 263);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "Int",166, 164);
+    g.drawString( JopLang.transl("Int"),166, 164);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "UInt",166, 191);
+    g.drawString( JopLang.transl("UInt"),166, 191);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 12));
-    g.drawString( "Bit",166, 217);
+    g.drawString( JopLang.transl("Bit"),166, 217);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 8));
-    g.drawString( "0",148, 233);
+    g.drawString( JopLang.transl("0"),148, 233);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 8));
-    g.drawString( "15",29, 233);
+    g.drawString( JopLang.transl("15"),29, 233);
     g.setTransform(save);
   }
   public Dimension getPreferredSize() { return size;}
@@ -436,7 +438,7 @@ protected class pwr_valuemedium extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -737,7 +739,7 @@ protected class pwr_smallbuttoncenter extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}
@@ -1017,7 +1019,7 @@ protected class pwr_pulldownmenu2 extends GeComponent {
   }
   int annot1Color = 0;
   public String getAnnot1() { return annot1;}
-  public void setAnnot1( String s) { annot1 = s;}
+  public void setAnnot1( String s) { annot1 = JopLang.transl(s);}
   public void setAnnot1Font( Font font) { annot1Font = font;}
   public Font getAnnot1Font() { return annot1Font;}
   public void setAnnot1Color( int color) { annot1Color = color;}

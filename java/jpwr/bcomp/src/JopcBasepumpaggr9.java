@@ -77,7 +77,7 @@ public class JopcBasepumpaggr9 extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 200);
     engine.setScanTime( 500);
     size = new Dimension( 417, 577);
@@ -1034,7 +1034,7 @@ protected class pwr_pump3 extends GeComponent {
     new Polygon( new int[] { 18, 20, 13, 12}, new int[] { 24, 23, 27,28}, 4),
     new Polygon( new int[] { 12, 13, 7, 10}, new int[] { 28, 27, 39,32}, 4),
     new Polygon( new int[] { 10, 7, 9, 6}, new int[] { 32, 39, 36,40}, 4),
-    new Polygon( new int[] { 6, 9, 139, 42}, new int[] { 40, 36, -1219706480,0}, 4),
+    new Polygon( new int[] { 6, 9, 75, 42}, new int[] { 40, 36, -1219980912,-2147483648}, 4),
     new Polygon( new int[] { 6, 10, 18, 52, 56, 58, 58, 64, 64, 62, 56, 14, 8, 6, 6}, new int[] {44, 50, 52, 52, 48, 38, 10, 10, 52, 58, 62, 62, 58, 52, 46}, 15),
     new Polygon( new int[] { 6, 11, 10, 10}, new int[] { 44, 54, 53,50}, 4),
     new Polygon( new int[] { 10, 10, 20, 18}, new int[] { 50, 53, 55,52}, 4),
@@ -1066,7 +1066,7 @@ protected class pwr_pump3 extends GeComponent {
     new Polygon( new int[] { 56, 54, 56, 58}, new int[] { 48, 47, 38,38}, 4),
     new Polygon( new int[] { 58, 56, 56, 58}, new int[] { 38, 38, 12,10}, 4),
     new Polygon( new int[] { 58, 56, 56, 54}, new int[] { 10, 12, 12,10}, 4),
-    new Polygon( new int[] { 54, 56, -1219706437, 42}, new int[] { 10, 12, -1219706480,0}, 4),
+    new Polygon( new int[] { 54, 56, -1219980869, 42}, new int[] { 10, 12, -1219980912,0}, 4),
     new Polygon( new int[] { 6, 44, 44, 64, 64, 62, 56, 14, 8, 6, 6}, new int[] {14, 14, 10, 10, 52, 58, 62, 62, 58, 52, 14}, 11),
     new Polygon( new int[] { 6, 11, 47, 44}, new int[] { 14, 17, 17,14}, 4),
     new Polygon( new int[] { 44, 47, 47, 44}, new int[] { 14, 17, 13,10}, 4),
@@ -1078,7 +1078,7 @@ protected class pwr_pump3 extends GeComponent {
     new Polygon( new int[] { 14, 17, 13, 8}, new int[] { 62, 59, 56,58}, 4),
     new Polygon( new int[] { 8, 13, 11, 6}, new int[] { 58, 56, 52,52}, 4),
     new Polygon( new int[] { 6, 11, 11, 6}, new int[] { 52, 52, 17,14}, 4),
-    new Polygon( new int[] { 6, 11, -1219706437, 42}, new int[] { 14, 17, -1219706480,0}, 4),
+    new Polygon( new int[] { 6, 11, 42, 42}, new int[] { 14, 17, 72,-2147483648}, 4),
     new Polygon( new int[] { 14, 14, 6, 6, 16, 18, 52, 54, 64, 64, 56, 56, 14}, new int[] {62, 68, 68, 72, 72, 70, 70, 72, 72, 68, 68, 62, 62}, 13),
     new Rectangle2D.Float(16F, 62F, 38F, 6F),
     new Rectangle2D.Float(48F, 2F, 12F, 4F),
@@ -4613,7 +4613,7 @@ protected class pwr_motor2 extends GeComponent {
     new Polygon( new int[] { 96, 95, 92, 92}, new int[] { 60, 59, 61,62}, 4),
     new Polygon( new int[] { 92, 92, 81, 80}, new int[] { 62, 61, 61,62}, 4),
     new Polygon( new int[] { 80, 81, 81, 80}, new int[] { 62, 61, 15,12}, 4),
-    new Polygon( new int[] { 80, 81, -1370021287, 60}, new int[] { 12, 15, 65011983,29}, 4),
+    new Polygon( new int[] { 80, 81, -1219980851, 60}, new int[] { 12, 15, -1219980882,29}, 4),
     new Polygon( new int[] { 36, 36, 28, 28, 38, 40, 74, 76, 86, 86, 78, 78, 36}, new int[] {62, 68, 68, 72, 72, 70, 70, 72, 72, 68, 68, 62, 62}, 13),
     new Polygon( new int[] { 24, 22, 20, 20, 22, 24, 24}, new int[] {16, 16, 18, 56, 58, 58, 16}, 7),
     new Rectangle2D.Float(34F, 2F, 20F, 10F),
@@ -4642,7 +4642,7 @@ protected class pwr_motor2 extends GeComponent {
     new Polygon( new int[] { 96, 95, 92, 92}, new int[] { 60, 59, 61,62}, 4),
     new Polygon( new int[] { 92, 92, 81, 80}, new int[] { 62, 61, 61,62}, 4),
     new Polygon( new int[] { 80, 81, 81, 80}, new int[] { 62, 61, 15,12}, 4),
-    new Polygon( new int[] { 80, 81, -1370021287, 60}, new int[] { 12, 15, 65011983,29}, 4),
+    new Polygon( new int[] { 80, 81, -1219980851, 60}, new int[] { 12, 15, -1219980882,29}, 4),
     new Line2D.Float( 20F, 36F, 2F, 36F),
   };
   public void paintComponent(Graphics g1) {

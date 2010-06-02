@@ -66,7 +66,7 @@ public class JopcBasemdamper2 extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 200);
     engine.setScanTime( 500);
     size = new Dimension( 539, 459);
@@ -1911,7 +1911,7 @@ protected class pwr_mdamper extends GeComponent {
     new Polygon( new int[] { 60, 61, 61, 60}, new int[] { 28, 29, 31,32}, 4),
     new Polygon( new int[] { 60, 61, 5, 2}, new int[] { 32, 31, 31,32}, 4),
     new Polygon( new int[] { 2, 5, 5, 2}, new int[] { 32, 31, 29,28}, 4),
-    new Polygon( new int[] { 2, 5, -1219706418, 61}, new int[] { 28, 29, -1219706455,24}, 4),
+    new Polygon( new int[] { 2, 5, -1219980850, 61}, new int[] { 28, 29, -1219980887,24}, 4),
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;

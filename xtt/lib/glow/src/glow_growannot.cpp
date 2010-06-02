@@ -559,3 +559,11 @@ void GrowAnnot::get_annotation_info( void *node, int *t_size, glow_eDrawType *t_
     *t_font = font;
   }
 }
+
+int GrowAnnot::get_text_size( GlowTransform *t, double *tsize)
+{
+  double trf_scale = trf.vertical_scale( t);
+  *tsize = trf_scale * ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (8+2*text_size);
+
+  return 1;
+}

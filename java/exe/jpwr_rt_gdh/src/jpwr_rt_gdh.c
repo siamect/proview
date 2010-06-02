@@ -531,7 +531,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_refObjectInfo
   else
     id = 0;
 
-  printf( "RefObjectInfo: %s, id: %d, sts: %d\n", cstr, id, sts);
+  //printf( "RefObjectInfo: %s, id: %d, sts: %d\n", cstr, id, sts);
   (*env)->ReleaseStringUTFChars( env, name, cstr);
 
   jsts = (jint) sts;
@@ -1144,7 +1144,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getAttrRefTid
   if ( ODD(sts)) {
     jtypeid = (jint)tid;
   }
-  printf( "GetAttrRefTid %d\n", tid);
+  //printf( "GetAttrRefTid %d\n", tid);
   
   jsts = (jint) sts;
   return_obj = (*env)->NewObject( env, cdhrTypeId_id,
@@ -1498,7 +1498,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getObjectInfoObjid
     if ( (s = strrchr( ++s, '[')))
       strcat( cstr, s);
   }
-  printf( "RefObjid: %s\n", cstr);
+  //printf( "RefObjid: %s\n", cstr);
 
   sts = gdh_NameToAttrref( pwr_cNObjid, cstr, &attrref);
   if ( ODD(sts)) {
@@ -1604,9 +1604,7 @@ JNIEXPORT jstring JNICALL Java_jpwr_rt_Gdh_translateFilename
   str = (*env)->GetStringUTFChars( env, filename, 0);
   cstr = (char *)str;
 
-  printf( "translate: %s\n", str);
   sts = dcli_translate_filename( buffer, cstr);
-  printf( "result: %s \n", buffer);
   (*env)->ReleaseStringUTFChars( env, filename, cstr);
 
   jvalue = (*env)->NewStringUTF( env, buffer);
@@ -1952,6 +1950,7 @@ static void gdh_AttrToString( int type_id, void *value_ptr,
       break;
     }
     case pwr_eType_Int32:
+    case pwr_eType_Enum:
     {
       if ( !format)
         *len = sprintf( str, "%d", *(int *)value_ptr);
@@ -1984,7 +1983,6 @@ static void gdh_AttrToString( int type_id, void *value_ptr,
       break;
     }
     case pwr_eType_UInt32:
-    case pwr_eType_Enum:
     case pwr_eType_Mask:
     case pwr_eType_Status:
     case pwr_eType_NetStatus:
@@ -2365,7 +2363,7 @@ static void gdh_crr_insert_cb( void *ctx, void *parent_node,
 	strcat( buf, "2");
 	break;
       }
-      printf( "Insert %s %s\n", text1, text2);
+      // printf( "Insert %s %s\n", text1, text2);
       strcat( buf, text1);
       strcat( buf, "  ");
       strcat( buf, text2);
@@ -2385,7 +2383,7 @@ static int gdh_crr_name_to_objid_cb( void *ctx, char *name, pwr_tObjid *objid)
 {
   int sts;
   sts =  gdh_NameToObjid( name, objid);
-  printf( "name_to_objid_cb: %s %d\n", name, sts);
+  // printf( "name_to_objid_cb: %s %d\n", name, sts);
   return sts;
 }
 
@@ -2427,7 +2425,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_crrObject
   str = (*env)->GetStringUTFChars( env, name, 0);
   cstr = (char *)str;
   gdh_ConvertUTFstring( cstr, cstr);
-  printf( "crrObject name: %s %s\n", str, cstr);
+  // printf( "crrObject name: %s %s\n", str, cstr);
   sts = crr_object( buf, cstr, gdh_crr_insert_cb, gdh_crr_name_to_objid_cb,
 		    gdh_crr_get_volume_cb);
   (*env)->ReleaseStringUTFChars( env, name, cstr);
@@ -2469,7 +2467,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_crrSignal
   str = (*env)->GetStringUTFChars( env, name, 0);
   cstr = (char *)str;
   gdh_ConvertUTFstring( cstr, cstr);
-  printf( "crrObject name: %s %s\n", str, cstr);
+  // printf( "crrObject name: %s %s\n", str, cstr);
   sts = crr_signal( buf, cstr, gdh_crr_insert_cb, gdh_crr_name_to_objid_cb,
 		    gdh_crr_get_volume_cb);
   (*env)->ReleaseStringUTFChars( env, name, cstr);
@@ -2679,7 +2677,7 @@ JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Gdh_getObjectBodyDef
     return (jobjectArray)NULL;
   }
 
-  printf("gdh_GetObjectBodyDef cid: %d, oid: %d,%d sts: %d rows: %d\n", cid, aref.Objid.vid, aref.Objid.oix, sts, rows);
+  // printf("gdh_GetObjectBodyDef cid: %d, oid: %d,%d sts: %d rows: %d\n", cid, aref.Objid.vid, aref.Objid.oix, sts, rows);
 
   //create a new GdhrsAttrDef[]
   gdhrsAttrDefArr = (*env)->NewObjectArray(env, (jint)rows, gdhrsAttrDef_id, NULL);
@@ -2768,7 +2766,7 @@ static int gdh_JidStore( void *p, pwr_tRefId r, int *id)
   jp->p = p;
   jp->refid = r;
 
-  printf( "Jid store: %d\n", *id);
+  // printf( "Jid store: %d\n", *id);
   return 1;
 #else
   *id = (int)p;
@@ -2784,7 +2782,7 @@ static int gdh_JidRemove( pwr_tRefId r)
 
   for (jp = tree_Minimum( &sts, jid_table); jp != NULL; jp = tree_Successor( &sts, jid_table, jp)) { 
     if ( jp->refid.nid == r.nid && jp->refid.rix == r.rix) {
-      printf( "Jid remove: %d\n", jp->jid);
+      // printf( "Jid remove: %d\n", jp->jid);
       tree_Remove( &sts, jid_table, jp);
       return 1;
     }

@@ -88,7 +88,7 @@ public class JopcBasemotorincrdecraggr12 extends JopFrame implements JopUtilityI
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 200);
     engine.setScanTime( 500);
     size = new Dimension( 417, 648);
@@ -1032,7 +1032,7 @@ class LocalPanel extends JPanel {
     new Polygon( new int[] { 246, 245, 245, 246}, new int[] { 216, 215, 271,272}, 4),
     new Polygon( new int[] { 246, 245, 21, 20}, new int[] { 272, 271, 271,272}, 4),
     new Polygon( new int[] { 20, 21, 21, 20}, new int[] { 272, 271, 147,146}, 4),
-    new Polygon( new int[] { 20, 21, 147192722, -141}, new int[] { 146, 147, 147580561,-30}, 4),
+    new Polygon( new int[] { 20, 21, -1219981053, -141}, new int[] { 146, 147, -1219980942,-30}, 4),
     new Line2D.Float( 136.003F, 270.604F, 136.003F, 165.628F),
     new Line2D.Float( 267F, 334F, 267F, 322F),
     new Line2D.Float( 268F, 334F, 268F, 322F),
@@ -1874,7 +1874,7 @@ protected class pwr_motor2 extends GeComponent {
     new Polygon( new int[] { 96, 95, 92, 92}, new int[] { 60, 59, 61,62}, 4),
     new Polygon( new int[] { 92, 92, 81, 80}, new int[] { 62, 61, 61,62}, 4),
     new Polygon( new int[] { 80, 81, 81, 80}, new int[] { 62, 61, 15,12}, 4),
-    new Polygon( new int[] { 80, 81, -1219706547, -67}, new int[] { 12, 15, -1219706456,23}, 4),
+    new Polygon( new int[] { 80, 81, -1219980979, -67}, new int[] { 12, 15, -1219980888,23}, 4),
     new Polygon( new int[] { 36, 36, 28, 28, 38, 40, 74, 76, 86, 86, 78, 78, 36}, new int[] {62, 68, 68, 72, 72, 70, 70, 72, 72, 68, 68, 62, 62}, 13),
     new Polygon( new int[] { 24, 22, 20, 20, 22, 24, 24}, new int[] {16, 16, 18, 56, 58, 58, 16}, 7),
     new Rectangle2D.Float(34F, 2F, 20F, 10F),
@@ -1903,7 +1903,7 @@ protected class pwr_motor2 extends GeComponent {
     new Polygon( new int[] { 96, 95, 92, 92}, new int[] { 60, 59, 61,62}, 4),
     new Polygon( new int[] { 92, 92, 81, 80}, new int[] { 62, 61, 61,62}, 4),
     new Polygon( new int[] { 80, 81, 81, 80}, new int[] { 62, 61, 15,12}, 4),
-    new Polygon( new int[] { 80, 81, -1219706547, -67}, new int[] { 12, 15, -1219706456,23}, 4),
+    new Polygon( new int[] { 80, 81, -1219980979, -67}, new int[] { 12, 15, -1219980888,23}, 4),
     new Line2D.Float( 20F, 36F, 2F, 36F),
   };
   public void paintComponent(Graphics g1) {

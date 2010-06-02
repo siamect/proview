@@ -36,7 +36,7 @@ public class Logg
   /**  Description of the Field */
   public static int TO_SCREEN = 2;
   /**  Description of the Field */
-  public static int loggPrio = 4;
+  public static int loggPrio = 0;
   //public File loggFile;
   /**  Description of the Field */
   public static int loggTo = Logg.NOTHING;

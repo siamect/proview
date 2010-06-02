@@ -53,7 +53,7 @@ public class JopcBasepressureswitch extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 200);
     engine.setScanTime( 500);
     size = new Dimension( 418, 274);
@@ -882,7 +882,7 @@ protected class pwr_switch extends GeComponent {
     new Polygon( new int[] { 12, 12, 5, 2}, new int[] { 22, 18, 4,2}, 4),
     new Polygon( new int[] { 2, 5, 19, 22}, new int[] { 2, 4, 4,2}, 4),
     new Polygon( new int[] { 22, 19, 12, 12}, new int[] { 2, 4, 18,22}, 4),
-    new Polygon( new int[] { 12, 12, 33, -23}, new int[] { 22, 18, 154442687,-8}, 4),
+    new Polygon( new int[] { 12, 12, 65, -2147483648}, new int[] { 22, 18, -8,-8}, 4),
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;

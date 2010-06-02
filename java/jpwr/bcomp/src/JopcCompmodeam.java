@@ -52,7 +52,7 @@ public class JopcCompmodeam extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 314, 220);
@@ -377,6 +377,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       ,new GeDynValue(pwr_valueinputsmallrd24.dd, "$object.OpRefMan##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputsmallrd24.dd, 0,0,"$object.OpMinRefMan##Float32","$object.OpMaxRefMan##Float32")
       });
+    pwr_valueinputsmallrd24.setAnnot1Font(pwr_valueinputsmallrd24.annotFont.deriveFont((float)10));
     pwr_smallbuttoncenter25.dd.setDynType(128);
     pwr_smallbuttoncenter25.dd.setActionType(4);
     pwr_smallbuttoncenter25.dd.setAccess(65532);

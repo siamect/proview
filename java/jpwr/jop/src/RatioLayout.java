@@ -215,7 +215,7 @@ public class RatioLayout implements LayoutManager2 {
 
 	    //Resize the font of JTextFields.
 	    if (comp instanceof JTextField){
-		comp.setFont(comp.getFont().deriveFont((float)(1.0*h*9/10)));
+		comp.setFont(comp.getFont().deriveFont((float)(1.0*h*6/10)));
 
 	       
 	    }

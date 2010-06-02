@@ -324,6 +324,13 @@ void grow_SetPasteNodeAnnotation( grow_tNode node, int number, char *text, int s
     ((GrowNode *)node)->set_annotation( number, text, size, 1);
 }
 
+int grow_GetAnnotationTextSize( grow_tNode node, int number, double *tsize)
+{
+  if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode)
+    return ((GrowNode *)node)->get_annotation_text_size( number, tsize);
+  return 0;
+}
+
 extern "C" void	grow_EnableEvent( GrowCtx *ctx, glow_eEvent event, 
 		glow_eEventType event_type, 
 		int (*event_cb)(GlowCtx *ctx, glow_tEvent event))

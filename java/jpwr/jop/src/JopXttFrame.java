@@ -49,7 +49,7 @@ public class JopXttFrame extends JFrame
     session = new JopSession( engine, (Object)this);
     root = (Object) this;
     init((PwrtObjid)null);
-    setTitle(JopLang.transl("RtNavigator"));
+    setTitle(JopLang.transl("Navigator"));
   }
   public JopXttFrame( JopSession session, PwrtObjid oid )
   {
@@ -57,14 +57,14 @@ public class JopXttFrame extends JFrame
     engine = session.getEngine();
     root = session.getRoot();
     init(oid);
-    setTitle(JopLang.transl("RtNavigator"));
+    setTitle(JopLang.transl("Navigator"));
   }    
   public void init(PwrtObjid oid)
   {
-    setSize(new Dimension(370, 570));
+    setSize(new Dimension(400, 700));
     URL url = null;
     Logg.loggTo = Logg.TO_SCREEN;
-    Logg.loggPrio = 1;
+    Logg.loggPrio = 0;
     Logg.logg("JopXttApplet: Före XttTree-skapande", 6);
     this.xttTree = new XttTree(this.session, url, this);
     this.getContentPane().add(this.xttTree);

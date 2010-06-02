@@ -52,7 +52,7 @@ public class JopcBasesensorsim extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 432, 450);
@@ -254,6 +254,7 @@ public class JopcBasesensorsim extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputmediumrd16.dd, "$object.Value##Float32","%5.2f")
       ,new GeDynValueInput(pwr_valueinputmediumrd16.dd, 0,0,null,null)
       });
+    pwr_valueinputmediumrd16.setAnnot1Font(pwr_valueinputmediumrd16.annotFont.deriveFont((float)13.8679));
     pwr_sliderbackground217.dd.setDynType(524289);
     pwr_sliderbackground217.dd.setActionType(0);
     pwr_slider218.dd.setDynType(1);
@@ -362,6 +363,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       new GeDynValue(pwr_valueinputmediumrd29.dd, "$object.Period##Float32","%5.2f")
       ,new GeDynValueInput(pwr_valueinputmediumrd29.dd, 0,0,null,null)
       });
+    pwr_valueinputmediumrd29.setAnnot1Font(pwr_valueinputmediumrd29.annotFont.deriveFont((float)13.8679));
     pwr_valueinputmediumrd31.dd.setDynType(1025);
     pwr_valueinputmediumrd31.dd.setActionType(4096);
     pwr_valueinputmediumrd31.dd.setAccess(65532);
@@ -369,6 +371,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       new GeDynValue(pwr_valueinputmediumrd31.dd, "$object.Bias##Float32","%5.2f")
       ,new GeDynValueInput(pwr_valueinputmediumrd31.dd, 0,0,null,null)
       });
+    pwr_valueinputmediumrd31.setAnnot1Font(pwr_valueinputmediumrd31.annotFont.deriveFont((float)13.8679));
     pwr_valueinputmediumrd33.dd.setDynType(1025);
     pwr_valueinputmediumrd33.dd.setActionType(4096);
     pwr_valueinputmediumrd33.dd.setAccess(65532);
@@ -376,6 +379,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       new GeDynValue(pwr_valueinputmediumrd33.dd, "$object.SinusAmplitude##Float32","%5.2f")
       ,new GeDynValueInput(pwr_valueinputmediumrd33.dd, 0,0,null,null)
       });
+    pwr_valueinputmediumrd33.setAnnot1Font(pwr_valueinputmediumrd33.annotFont.deriveFont((float)13.8679));
     pwr_valueinputmediumrd34.dd.setDynType(1025);
     pwr_valueinputmediumrd34.dd.setActionType(4096);
     pwr_valueinputmediumrd34.dd.setAccess(65532);
@@ -383,6 +387,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       new GeDynValue(pwr_valueinputmediumrd34.dd, "$object.SawToothedAmplitude##Float32","%5.2f")
       ,new GeDynValueInput(pwr_valueinputmediumrd34.dd, 0,0,null,null)
       });
+    pwr_valueinputmediumrd34.setAnnot1Font(pwr_valueinputmediumrd34.annotFont.deriveFont((float)13.8679));
     pwr_valueinputmediumrd35.dd.setDynType(1025);
     pwr_valueinputmediumrd35.dd.setActionType(4096);
     pwr_valueinputmediumrd35.dd.setAccess(65532);
@@ -390,6 +395,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       new GeDynValue(pwr_valueinputmediumrd35.dd, "$object.RandomAmplitude##Float32","%5.2f")
       ,new GeDynValueInput(pwr_valueinputmediumrd35.dd, 0,0,null,null)
       });
+    pwr_valueinputmediumrd35.setAnnot1Font(pwr_valueinputmediumrd35.annotFont.deriveFont((float)13.8679));
     engine.setFrameReady();
   }
 

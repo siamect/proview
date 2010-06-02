@@ -11,3 +11,9 @@
 080623 cs  rt        Password encryption class added.
 080623 cs  rt        Default privileges and system group fetched from Security object (DefaultWebPriv and WebSystemGroup).
 090129 cs  rt        GdhServer terminated with error status, not 0, is no WebHandler object was found.
+100602 cs  jop       Several bugfixes in Navigator.
+100602 cs  jop       Support color gradients and fix color.
+100602 cs  jop       Support for language translation in web and java interface.
+100602 cs  jop       TextField fontsize adusted.
+100602 cs  jop       Object graphs updated.
+100602 cs  jop       New script, jpwr_opwind.sh, to start java operator window locally.

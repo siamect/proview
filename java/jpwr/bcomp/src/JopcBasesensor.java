@@ -84,7 +84,7 @@ public class JopcBasesensor extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 200);
     engine.setScanTime( 500);
     size = new Dimension( 418, 463);
@@ -556,6 +556,7 @@ null)
       new GeDynValue(pwr_valueinputreliefup31.dd, "$object.Value.PresMaxLimit##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup31.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup31.setAnnot1Font(pwr_valueinputreliefup31.annotFont.deriveFont((float)10));
     pwr_valueinputreliefup32.dd.setDynType(1025);
     pwr_valueinputreliefup32.dd.setActionType(4096);
     pwr_valueinputreliefup32.dd.setAccess(65532);
@@ -563,6 +564,7 @@ null)
       new GeDynValue(pwr_valueinputreliefup32.dd, "$object.Value.PresMinLimit##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup32.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup32.setAnnot1Font(pwr_valueinputreliefup32.annotFont.deriveFont((float)10));
     pwr_valuesmall36.dd.setDynType(1153);
     pwr_valuesmall36.dd.setActionType(4096);
     pwr_valuesmall36.dd.setAccess(52);
@@ -2096,7 +2098,7 @@ protected class pwr_switch extends GeComponent {
     new Polygon( new int[] { 12, 14, 7, 2}, new int[] { 22, 19, 6,2}, 4),
     new Polygon( new int[] { 2, 7, 19, 22}, new int[] { 2, 6, 6,2}, 4),
     new Polygon( new int[] { 22, 19, 14, 12}, new int[] { 2, 6, 19,22}, 4),
-    new Polygon( new int[] { 12, 14, 2065, 16}, new int[] { 22, 19, 22,22}, 4),
+    new Polygon( new int[] { 12, 14, 41, 16}, new int[] { 22, 19, 22,22}, 4),
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;

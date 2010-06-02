@@ -57,6 +57,14 @@ public class GeGradient {
 	float gx1 = 0; 
 	float gy1 = 0;
 	float gr = 0;
+	
+	int fcolor = GeColor.getDrawtype(fillDrawtype, colorTone,colorShift,colorIntensity, 
+					 0, colorInverse, fillColor, dimmed);
+	if ( fcolor == GeColor.COLOR_RED || fcolor == GeColor.COLOR_LINERED || 
+	     fcolor == GeColor.COLOR_YELLOW || fcolor == GeColor.COLOR_6) {
+	  g.setColor( GeColor.getColor(fcolor));
+	  return;
+	}
 
 	switch ( gradient) {
 	case eGradient_HorizontalUp:

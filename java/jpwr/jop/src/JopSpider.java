@@ -27,6 +27,7 @@ import java.net.*;
 import java.applet.*;
 import java.util.*;
 import jpwr.rt.*;
+import java.awt.event.*;
 
 public class JopSpider {
   int qcom_qix;
@@ -335,6 +336,9 @@ System.out.println( "qcom put finished");
 	        openURL( session, urlValue, true, null);
 	      }
 	    } 
+	    else if ( root instanceof JFrame) {
+	      System.out.println( "Not yet implemented");
+	    }
 	  }
 	  else {
 	    System.out.println( "Unknown command");

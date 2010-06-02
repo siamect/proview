@@ -55,7 +55,7 @@ public class JopcBasefilter extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 200);
     engine.setScanTime( 500);
     size = new Dimension( 418, 288);
@@ -1057,7 +1057,7 @@ protected class JopFilter extends GeComponent {
     new Polygon( new int[] { 2, 5, 22, 22}, new int[] { 22, 22, 39,42}, 4),
     new Polygon( new int[] { 22, 22, 39, 42}, new int[] { 42, 39, 22,22}, 4),
     new Polygon( new int[] { 42, 39, 22, 22}, new int[] { 22, 22, 5,2}, 4),
-    new Polygon( new int[] { 22, 22, 147556366, -33}, new int[] { 2, 5, -1219706500,-28}, 4),
+    new Polygon( new int[] { 22, 22, 148994094, -33}, new int[] { 2, 5, -1219980924,-28}, 4),
     new Line2D.Float( 22F, 42F, 22F, 2F),
   };
   public void paintComponent(Graphics g1) {

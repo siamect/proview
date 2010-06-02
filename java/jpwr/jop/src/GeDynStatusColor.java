@@ -141,12 +141,12 @@ public class GeDynStatusColor extends GeDynElem {
 	dyn.comp.tsetFillColor( GeColor.COLOR_6);
 	break;
       case ERROR:
-	dyn.comp.tsetFillColor( GeColor.COLOR_RED);
+	dyn.comp.tsetFillColor( GeColor.COLOR_LINERED);
 	break;
       case FATAL:
 	on = !on;
 	if ( on)
-	  dyn.comp.tsetFillColor( GeColor.COLOR_RED);
+	  dyn.comp.tsetFillColor( GeColor.COLOR_LINERED);
 	else
 	  dyn.comp.tsetFillColor( nostatusColor);
 	break;

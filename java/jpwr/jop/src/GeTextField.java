@@ -25,6 +25,7 @@ import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.Timer;
+import javax.swing.border.*;
 
 public class GeTextField extends JTextField implements GeComponentIfc, 
 			       JopDynamic, JopConfirm, ActionListener
@@ -48,6 +49,7 @@ public class GeTextField extends JTextField implements GeComponentIfc,
     this.session = session;
     dd.setSession( session);
     size = new Dimension( 102, 36);
+    setBorder( BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
     timer.start();
   }
 

@@ -395,6 +395,7 @@ E 1.17.1 "Open Subwindow"
 E 1.17.2 "Zoom In"
 E 1.17.3 "Zoom Out"
 E 1.17.4 "Zoom Reset"
+E 1.17.5 "Operator Window"
 #
 # Postscript printing
 E 2.1.1 "Contents"

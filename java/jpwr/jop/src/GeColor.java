@@ -108,7 +108,7 @@ public class GeColor {
   public static final int COLOR_TONE_MAX = 81;
 
   public static final int COLOR_BLACK = 0;
-  public static final int COLOR_RED = 1;
+  public static final int COLOR_LINERED = 1;
   public static final int COLOR_GRAY = 2;
 
   public static final int COLOR_1 = 0;
@@ -414,6 +414,8 @@ public class GeColor {
   public static final int COLOR_LINEERASE = 300;
   public static final int COLOR_INHERIT = 9999;
   public static final int COLOR_NO = 10000;
+  public static final int COLOR_RED = 177;
+  public static final int COLOR_YELLOW = 115;
 
   static final double colorValues[] = {
 0, 		0, 		0,		// 4 Black

@@ -55,7 +55,7 @@ public class JopcBaseelheater extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 200);
     engine.setScanTime( 500);
     size = new Dimension( 419, 258);
@@ -1078,7 +1078,7 @@ protected class pwr_elheater3 extends GeComponent {
     new Polygon( new int[] { 22, 22, 42, 42}, new int[] { 8, 7, 9,10}, 4),
     new Polygon( new int[] { 42, 42, 61, 62}, new int[] { 10, 9, 9,10}, 4),
     new Polygon( new int[] { 62, 61, 61, 62}, new int[] { 10, 9, 7,6}, 4),
-    new Polygon( new int[] { 62, 61, -15, -56}, new int[] { 6, 7, -1219706523,-43}, 4),
+    new Polygon( new int[] { 62, 61, 8, -56}, new int[] { 6, 7, 148554868,-43}, 4),
     new Rectangle2D.Float(61F, 2F, 21F, 20F),
     new Polygon( new int[] { 61, 82, 82, 61, 61}, new int[] {2, 2, 6, 6, 2}, 5),
     new Polygon( new int[] { 61, 82, 82, 61, 61}, new int[] {18, 18, 22, 22, 18}, 5),

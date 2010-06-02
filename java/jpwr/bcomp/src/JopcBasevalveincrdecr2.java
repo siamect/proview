@@ -76,7 +76,7 @@ public class JopcBasevalveincrdecr2 extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 544, 733);
@@ -5450,12 +5450,12 @@ protected class pwr_valvecontrol2 extends GeComponent {
     new Polygon( new int[] { 2, 4, 4, 2}, new int[] { 22, 27, 39,42}, 4),
     new Polygon( new int[] { 2, 4, 17, 22}, new int[] { 42, 39, 34,32}, 4),
     new Polygon( new int[] { 22, 17, 4, 2}, new int[] { 32, 34, 27,22}, 4),
-    new Polygon( new int[] { 2, 4, 306, -6}, new int[] { 22, 27, -1219706441,38}, 4),
+    new Polygon( new int[] { 2, 4, 18, -6}, new int[] { 22, 27, 154302446,38}, 4),
     new Polygon( new int[] { 42, 42, 22, 42}, new int[] {22, 42, 32, 22}, 4),
     new Polygon( new int[] { 42, 40, 40, 42}, new int[] { 22, 27, 39,42}, 4),
     new Polygon( new int[] { 42, 40, 27, 22}, new int[] { 42, 39, 34,32}, 4),
     new Polygon( new int[] { 22, 27, 40, 42}, new int[] { 32, 34, 27,22}, 4),
-    new Polygon( new int[] { 42, 40, 306, -6}, new int[] { 22, 27, -1219706441,38}, 4),
+    new Polygon( new int[] { 42, 40, 18, -6}, new int[] { 22, 27, 154302446,38}, 4),
     new Arc2D.Float(12F, 2F, 20F, 20F, 35F, 140F, Arc2D.PIE),
     new Arc2D.Float(12F, 2F, 20F, 20F, 215F, 140F, Arc2D.PIE),
     new Arc2D.Float(12F, 2F, 20F, 20F, -5F, 40F, Arc2D.PIE),

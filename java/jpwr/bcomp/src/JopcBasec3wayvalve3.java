@@ -74,7 +74,7 @@ public class JopcBasec3wayvalve3 extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 539, 733);
@@ -471,6 +471,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       new GeDynValue(pwr_valueinputreliefup26.dd, "$object.Actuator.Order.PresMaxLimit##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup26.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup26.setAnnot1Font(pwr_valueinputreliefup26.annotFont.deriveFont((float)10));
     pwr_valueinputreliefup27.dd.setDynType(1025);
     pwr_valueinputreliefup27.dd.setActionType(4096);
     pwr_valueinputreliefup27.dd.setAccess(65532);
@@ -478,6 +479,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
       new GeDynValue(pwr_valueinputreliefup27.dd, "$object.Actuator.Order.PresMinLimit##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup27.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup27.setAnnot1Font(pwr_valueinputreliefup27.annotFont.deriveFont((float)10));
     pwr_pulldownmenu228.dd.setDynType(1);
     pwr_pulldownmenu228.dd.setActionType(524288);
     pwr_pulldownmenu228.dd.setAccess(65535);
@@ -606,6 +608,7 @@ null)
       ,new GeDynValue(pwr_valueinputsmallrd45.dd, "$object.Actuator.Mode.OpRefMan##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputsmallrd45.dd, 0,0,"$object.Actuator.Mode.OpMinRefMan##Float32","$object.Actuator.Mode.OpMaxRefMan##Float32")
       });
+    pwr_valueinputsmallrd45.setAnnot1Font(pwr_valueinputsmallrd45.annotFont.deriveFont((float)10));
     grp167_46.dd.setDynType(129);
     grp167_46.dd.setActionType(0);
     grp167_46.dd.setElements(new GeDynElemIfc[] {
@@ -1397,7 +1400,7 @@ protected class pwr_base3wayvalve extends GeComponent {
     new Polygon( new int[] { 16, 17, 17, 16}, new int[] { 54, 55, 58,60}, 4),
     new Polygon( new int[] { 16, 17, 9, 6}, new int[] { 60, 58, 53,54}, 4),
     new Polygon( new int[] { 6, 9, 9, 6}, new int[] { 54, 53, 50,48}, 4),
-    new Polygon( new int[] { 6, 9, 59, 59}, new int[] { 48, 50, 438,-2}, 4),
+    new Polygon( new int[] { 6, 9, 113, 59}, new int[] { 48, 50, -1,-2147483648}, 4),
     new Polygon( new int[] { 6, 14, 16, 16, 14, 6, 6}, new int[] {34, 38, 36, 42, 42, 38, 34}, 7),
     new Polygon( new int[] { 58, 50, 48, 48, 50, 58, 58}, new int[] {34, 30, 28, 34, 34, 38, 34}, 7),
     new Polygon( new int[] { 48, 42, 42, 40, 38, 38, 42, 42, 46, 48, 48}, new int[] {22, 22, 66, 66, 68, 78, 78, 68, 68, 66, 22}, 11),
@@ -1435,7 +1438,7 @@ protected class pwr_base3wayvalve extends GeComponent {
     new Polygon( new int[] { 46, 47, 43, 42}, new int[] { 20, 23, 23,20}, 4),
     new Polygon( new int[] { 42, 43, 39, 38}, new int[] { 20, 23, 21,18}, 4),
     new Polygon( new int[] { 38, 39, 29, 26}, new int[] { 18, 21, 21,18}, 4),
-    new Polygon( new int[] { 26, 29, -1219706420, 59}, new int[] { 18, 21, -1219706482,-2147483648}, 4),
+    new Polygon( new int[] { 26, 29, -1219980852, 59}, new int[] { 18, 21, -1219980914,-2147483648}, 4),
     new Rectangle2D.Float(2F, 50F, 4F, 8F),
     new Polygon( new int[] { 2, 6, 6, 2, 2, 2}, new int[] { 50, 50, 50, 50, 58, 58}, 6), 
     new Polygon( new int[] { 6, 6, 6, 6, 2, 2}, new int[] { 58, 50, 50, 58, 58, 58}, 6), 
@@ -2139,7 +2142,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 16, 17, 17, 16}, new int[] { 54, 55, 58,60}, 4),
     new Polygon( new int[] { 16, 17, 9, 6}, new int[] { 60, 58, 53,54}, 4),
     new Polygon( new int[] { 6, 9, 9, 6}, new int[] { 54, 53, 50,48}, 4),
-    new Polygon( new int[] { 6, 9, 145590667, 59}, new int[] { 48, 50, -1219706474,-2}, 4),
+    new Polygon( new int[] { 6, 9, 113, 59}, new int[] { 48, 50, -1,-2}, 4),
     new Polygon( new int[] { 6, 14, 16, 16, 14, 6, 6}, new int[] {34, 38, 36, 42, 42, 38, 34}, 7),
     new Polygon( new int[] { 58, 50, 48, 48, 50, 58, 58}, new int[] {34, 30, 28, 34, 34, 38, 34}, 7),
     new Polygon( new int[] { 48, 42, 42, 40, 38, 38, 42, 42, 46, 48, 48}, new int[] {22, 22, 66, 66, 68, 78, 78, 68, 68, 66, 22}, 11),
@@ -2177,7 +2180,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 46, 47, 43, 42}, new int[] { 20, 23, 23,20}, 4),
     new Polygon( new int[] { 42, 43, 39, 38}, new int[] { 20, 23, 21,18}, 4),
     new Polygon( new int[] { 38, 39, 29, 26}, new int[] { 18, 21, 21,18}, 4),
-    new Polygon( new int[] { 26, 29, -1219706420, 59}, new int[] { 18, 21, -1219706482,-2147483648}, 4),
+    new Polygon( new int[] { 26, 29, -1219980852, 59}, new int[] { 18, 21, -1219980914,-2147483648}, 4),
     new Rectangle2D.Float(2F, 50F, 4F, 8F),
     new Polygon( new int[] { 2, 6, 6, 2, 2, 2}, new int[] { 50, 50, 50, 50, 58, 58}, 6), 
     new Polygon( new int[] { 6, 6, 6, 6, 2, 2}, new int[] { 58, 50, 50, 58, 58, 58}, 6), 
@@ -2274,7 +2277,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 16, 17, 17, 16}, new int[] { 54, 55, 58,60}, 4),
     new Polygon( new int[] { 16, 17, 9, 6}, new int[] { 60, 58, 53,54}, 4),
     new Polygon( new int[] { 6, 9, 9, 6}, new int[] { 54, 53, 50,48}, 4),
-    new Polygon( new int[] { 6, 9, 145590667, 59}, new int[] { 48, 50, -1219706474,-2}, 4),
+    new Polygon( new int[] { 6, 9, 113, 59}, new int[] { 48, 50, -1,-2}, 4),
     new Polygon( new int[] { 6, 14, 16, 16, 14, 6, 6}, new int[] {34, 38, 36, 42, 42, 38, 34}, 7),
     new Polygon( new int[] { 58, 50, 48, 48, 50, 58, 58}, new int[] {34, 30, 28, 34, 34, 38, 34}, 7),
     new Polygon( new int[] { 48, 42, 42, 40, 38, 38, 42, 42, 46, 48, 48}, new int[] {22, 22, 66, 66, 68, 78, 78, 68, 68, 66, 22}, 11),
@@ -2288,7 +2291,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 42, 43, 48, 46}, new int[] { 68, 67, 67,68}, 4),
     new Polygon( new int[] { 46, 48, 49, 48}, new int[] { 68, 67, 66,66}, 4),
     new Polygon( new int[] { 48, 49, 49, 48}, new int[] { 66, 66, 23,22}, 4),
-    new Polygon( new int[] { 48, 49, 140893379, 59}, new int[] { 22, 23, 144132309,-2}, 4),
+    new Polygon( new int[] { 48, 49, -1219980852, 59}, new int[] { 22, 23, -1219980914,-2147483648}, 4),
     new Polygon( new int[] { 48, 22, 22, 16, 16, 18, 22, 26, 38, 42, 46, 48}, new int[] {22, 22, 66, 66, 22, 20, 20, 18, 18, 20, 20, 22}, 12),
     new Polygon( new int[] { 48, 45, 22, 22}, new int[] { 22, 20, 20,22}, 4),
     new Polygon( new int[] { 22, 22, 22, 22}, new int[] { 22, 20, 64,66}, 4),
@@ -2301,7 +2304,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 38, 40, 44, 42}, new int[] { 18, 20, 22,20}, 4),
     new Polygon( new int[] { 42, 44, 47, 46}, new int[] { 20, 22, 22,20}, 4),
     new Polygon( new int[] { 46, 47, 45, 48}, new int[] { 20, 22, 20,22}, 4),
-    new Polygon( new int[] { 48, 45, 1124, 59}, new int[] { 22, 20, -1219706482,-2147483648}, 4),
+    new Polygon( new int[] { 48, 45, 1100, 59}, new int[] { 22, 20, -1219980914,-2147483648}, 4),
     new Rectangle2D.Float(22F, 68F, 4F, 10F),
     new Polygon( new int[] { 22, 26, 26, 22, 22, 22}, new int[] { 68, 68, 68, 68, 78, 78}, 6), 
     new Polygon( new int[] { 26, 26, 26, 26, 22, 22}, new int[] { 78, 68, 68, 78, 78, 78}, 6), 
@@ -2335,7 +2338,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 46, 47, 43, 42}, new int[] { 20, 23, 23,20}, 4),
     new Polygon( new int[] { 42, 43, 39, 38}, new int[] { 20, 23, 21,18}, 4),
     new Polygon( new int[] { 38, 39, 29, 26}, new int[] { 18, 21, 21,18}, 4),
-    new Polygon( new int[] { 26, 29, -1219706420, 59}, new int[] { 18, 21, -1219706482,-2147483648}, 4),
+    new Polygon( new int[] { 26, 29, -1219980852, 59}, new int[] { 18, 21, -1219980914,-2147483648}, 4),
     new Rectangle2D.Float(2F, 50F, 4F, 8F),
     new Polygon( new int[] { 2, 6, 6, 2, 2, 2}, new int[] { 50, 50, 50, 50, 58, 58}, 6), 
     new Polygon( new int[] { 6, 6, 6, 6, 2, 2}, new int[] { 58, 50, 50, 58, 58, 58}, 6), 
@@ -2387,7 +2390,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 24, 29, 29, 24}, new int[] { 26, 29, 50,45}, 4),
     new Polygon( new int[] { 24, 29, 11, 6}, new int[] { 45, 50, 41,36}, 4),
     new Polygon( new int[] { 6, 11, 11, 6}, new int[] { 36, 41, 50,52}, 4),
-    new Polygon( new int[] { 6, 11, 1124, 59}, new int[] { 52, 50, -1219706482,-2147483648}, 4),
+    new Polygon( new int[] { 6, 11, 1100, 59}, new int[] { 52, 50, -1219980914,-2147483648}, 4),
     new Polygon( new int[] { 31, 31, 26, 26, 31, 33, 38, 38, 33, 33, 31}, new int[] {26, 41, 44, 46, 43, 43, 46, 44, 41, 26, 26}, 11),
     new Polygon( new int[] { 31, 34, 34, 31}, new int[] { 26, 27, 42,41}, 4),
     new Polygon( new int[] { 31, 34, 29, 26}, new int[] { 41, 42, 45,44}, 4),
@@ -2399,7 +2402,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 38, 39, 34, 33}, new int[] { 44, 45, 42,41}, 4),
     new Polygon( new int[] { 33, 34, 34, 33}, new int[] { 41, 42, 27,26}, 4),
     new Polygon( new int[] { 33, 34, 34, 31}, new int[] { 26, 27, 27,26}, 4),
-    new Polygon( new int[] { 31, 34, 140893379, 59}, new int[] { 26, 27, 144132309,-2}, 4),
+    new Polygon( new int[] { 31, 34, -1219980852, 59}, new int[] { 26, 27, -1219980914,-2147483648}, 4),
     new Rectangle2D.Float(24F, 44F, 2F, 18F),
     new Polygon( new int[] { 24, 26, 26, 24, 24, 24}, new int[] { 44, 44, 44, 44, 62, 62}, 6), 
     new Polygon( new int[] { 26, 26, 26, 26, 24, 24}, new int[] { 62, 44, 44, 62, 62, 62}, 6), 
@@ -2459,7 +2462,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 16, 17, 17, 16}, new int[] { 54, 55, 58,60}, 4),
     new Polygon( new int[] { 16, 17, 9, 6}, new int[] { 60, 58, 53,54}, 4),
     new Polygon( new int[] { 6, 9, 9, 6}, new int[] { 54, 53, 50,48}, 4),
-    new Polygon( new int[] { 6, 9, 145590667, 59}, new int[] { 48, 50, -1219706474,-2}, 4),
+    new Polygon( new int[] { 6, 9, 113, 59}, new int[] { 48, 50, -1,-2}, 4),
     new Polygon( new int[] { 6, 14, 16, 16, 14, 6, 6}, new int[] {34, 38, 36, 42, 42, 38, 34}, 7),
     new Polygon( new int[] { 58, 50, 48, 48, 50, 58, 58}, new int[] {34, 30, 28, 34, 34, 38, 34}, 7),
     new Polygon( new int[] { 48, 42, 42, 40, 38, 38, 42, 42, 46, 48, 48}, new int[] {22, 22, 66, 66, 68, 78, 78, 68, 68, 66, 22}, 11),
@@ -2473,7 +2476,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 42, 43, 48, 46}, new int[] { 68, 67, 67,68}, 4),
     new Polygon( new int[] { 46, 48, 49, 48}, new int[] { 68, 67, 66,66}, 4),
     new Polygon( new int[] { 48, 49, 49, 48}, new int[] { 66, 66, 23,22}, 4),
-    new Polygon( new int[] { 48, 49, 140893379, 59}, new int[] { 22, 23, 144132309,-2}, 4),
+    new Polygon( new int[] { 48, 49, -1219980852, 59}, new int[] { 22, 23, -1219980914,-2147483648}, 4),
     new Polygon( new int[] { 48, 22, 22, 16, 16, 18, 22, 26, 38, 42, 46, 48}, new int[] {22, 22, 66, 66, 22, 20, 20, 18, 18, 20, 20, 22}, 12),
     new Polygon( new int[] { 48, 45, 22, 22}, new int[] { 22, 20, 20,22}, 4),
     new Polygon( new int[] { 22, 22, 22, 22}, new int[] { 22, 20, 64,66}, 4),
@@ -2486,7 +2489,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 38, 40, 44, 42}, new int[] { 18, 20, 22,20}, 4),
     new Polygon( new int[] { 42, 44, 47, 46}, new int[] { 20, 22, 22,20}, 4),
     new Polygon( new int[] { 46, 47, 45, 48}, new int[] { 20, 22, 20,22}, 4),
-    new Polygon( new int[] { 48, 45, 1124, 59}, new int[] { 22, 20, -1219706482,-2147483648}, 4),
+    new Polygon( new int[] { 48, 45, 1100, 59}, new int[] { 22, 20, -1219980914,-2147483648}, 4),
     new Rectangle2D.Float(22F, 68F, 4F, 10F),
     new Polygon( new int[] { 22, 26, 26, 22, 22, 22}, new int[] { 68, 68, 68, 68, 78, 78}, 6), 
     new Polygon( new int[] { 26, 26, 26, 26, 22, 22}, new int[] { 78, 68, 68, 78, 78, 78}, 6), 
@@ -2520,7 +2523,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 46, 47, 43, 42}, new int[] { 20, 23, 23,20}, 4),
     new Polygon( new int[] { 42, 43, 39, 38}, new int[] { 20, 23, 21,18}, 4),
     new Polygon( new int[] { 38, 39, 29, 26}, new int[] { 18, 21, 21,18}, 4),
-    new Polygon( new int[] { 26, 29, -1219706420, 59}, new int[] { 18, 21, -1219706482,-2147483648}, 4),
+    new Polygon( new int[] { 26, 29, -1219980852, 59}, new int[] { 18, 21, -1219980914,-2147483648}, 4),
     new Rectangle2D.Float(2F, 50F, 4F, 8F),
     new Polygon( new int[] { 2, 6, 6, 2, 2, 2}, new int[] { 50, 50, 50, 50, 58, 58}, 6), 
     new Polygon( new int[] { 6, 6, 6, 6, 2, 2}, new int[] { 58, 50, 50, 58, 58, 58}, 6), 
@@ -2572,7 +2575,7 @@ protected class pwr_base3wayvalve2 extends GeComponent {
     new Polygon( new int[] { 24, 29, 29, 24}, new int[] { 26, 29, 50,45}, 4),
     new Polygon( new int[] { 24, 29, 11, 6}, new int[] { 45, 50, 41,36}, 4),
     new Polygon( new int[] { 6, 11, 11, 6}, new int[] { 36, 41, 50,52}, 4),
-    new Polygon( new int[] { 6, 11, 1124, 59}, new int[] { 52, 50, -1219706482,-2147483648}, 4),
+    new Polygon( new int[] { 6, 11, 1100, 59}, new int[] { 52, 50, -1219980914,-2147483648}, 4),
     new Rectangle2D.Float(24F, 26F, 2F, 18F),
     new Polygon( new int[] { 24, 26, 26, 24, 24, 24}, new int[] { 26, 26, 26, 26, 44, 44}, 6), 
     new Polygon( new int[] { 26, 26, 26, 26, 24, 24}, new int[] { 44, 26, 26, 44, 44, 44}, 6), 
@@ -4772,12 +4775,12 @@ protected class pwr_valve3waycontrol2 extends GeComponent {
     new Polygon( new int[] { 2, 6, 6, 2}, new int[] { 22, 27, 39,42}, 4),
     new Polygon( new int[] { 2, 6, 19, 22}, new int[] { 42, 39, 32,32}, 4),
     new Polygon( new int[] { 22, 19, 6, 2}, new int[] { 32, 32, 27,22}, 4),
-    new Polygon( new int[] { 2, 6, 530, 49}, new int[] { 22, 27, 140859555,27}, 4),
+    new Polygon( new int[] { 2, 6, 122, 49}, new int[] { 22, 27, 140893347,27}, 4),
     new Polygon( new int[] { 42, 42, 22, 42}, new int[] {22, 42, 32, 22}, 4),
     new Polygon( new int[] { 42, 42, 42, 42}, new int[] { 22, 27, 39,42}, 4),
     new Polygon( new int[] { 42, 42, 29, 22}, new int[] { 42, 39, 32,32}, 4),
     new Polygon( new int[] { 22, 29, 42, 42}, new int[] { 32, 32, 27,22}, 4),
-    new Polygon( new int[] { 42, 42, 530, 49}, new int[] { 22, 27, 140859555,27}, 4),
+    new Polygon( new int[] { 42, 42, 122, 49}, new int[] { 22, 27, 140893347,27}, 4),
     new Arc2D.Float(12F, 2F, 20F, 20F, 35F, 140F, Arc2D.PIE),
     new Arc2D.Float(12F, 2F, 20F, 20F, 215F, 140F, Arc2D.PIE),
     new Arc2D.Float(12F, 2F, 20F, 20F, -5F, 40F, Arc2D.PIE),
@@ -4790,7 +4793,7 @@ protected class pwr_valve3waycontrol2 extends GeComponent {
     new Polygon( new int[] { 22, 24, 17, 12}, new int[] { 32, 36, 50,52}, 4),
     new Polygon( new int[] { 12, 17, 31, 32}, new int[] { 52, 50, 50,52}, 4),
     new Polygon( new int[] { 32, 31, 24, 22}, new int[] { 52, 50, 36,32}, 4),
-    new Polygon( new int[] { 22, 24, 530, 49}, new int[] { 32, 36, 140859555,27}, 4),
+    new Polygon( new int[] { 22, 24, 122, 49}, new int[] { 32, 36, 140893347,27}, 4),
     new Line2D.Float( 30F, 48F, 14F, 48F),
     new Line2D.Float( 38F, 40F, 38F, 24F),
   };
@@ -4801,12 +4804,12 @@ protected class pwr_valve3waycontrol2 extends GeComponent {
     new Polygon( new int[] { 2, 6, 6, 2}, new int[] { 22, 27, 39,42}, 4),
     new Polygon( new int[] { 2, 6, 19, 22}, new int[] { 42, 39, 32,32}, 4),
     new Polygon( new int[] { 22, 19, 6, 2}, new int[] { 32, 32, 27,22}, 4),
-    new Polygon( new int[] { 2, 6, 530, 49}, new int[] { 22, 27, 140859555,27}, 4),
+    new Polygon( new int[] { 2, 6, 122, 49}, new int[] { 22, 27, 140893347,27}, 4),
     new Polygon( new int[] { 42, 42, 22, 42}, new int[] {22, 42, 32, 22}, 4),
     new Polygon( new int[] { 42, 42, 42, 42}, new int[] { 22, 27, 39,42}, 4),
     new Polygon( new int[] { 42, 42, 29, 22}, new int[] { 42, 39, 32,32}, 4),
     new Polygon( new int[] { 22, 29, 42, 42}, new int[] { 32, 32, 27,22}, 4),
-    new Polygon( new int[] { 42, 42, 530, 49}, new int[] { 22, 27, 140859555,27}, 4),
+    new Polygon( new int[] { 42, 42, 122, 49}, new int[] { 22, 27, 140893347,27}, 4),
     new Arc2D.Float(12F, 2F, 20F, 20F, 35F, 140F, Arc2D.PIE),
     new Arc2D.Float(12F, 2F, 20F, 20F, 215F, 140F, Arc2D.PIE),
     new Arc2D.Float(12F, 2F, 20F, 20F, -5F, 40F, Arc2D.PIE),
@@ -4819,7 +4822,7 @@ protected class pwr_valve3waycontrol2 extends GeComponent {
     new Polygon( new int[] { 22, 24, 17, 12}, new int[] { 32, 36, 50,52}, 4),
     new Polygon( new int[] { 12, 17, 31, 32}, new int[] { 52, 50, 50,52}, 4),
     new Polygon( new int[] { 32, 31, 24, 22}, new int[] { 52, 50, 36,32}, 4),
-    new Polygon( new int[] { 22, 24, 530, 49}, new int[] { 32, 36, 140859555,27}, 4),
+    new Polygon( new int[] { 22, 24, 122, 49}, new int[] { 32, 36, 140893347,27}, 4),
     new Line2D.Float( 30F, 48F, 14F, 48F),
     new Line2D.Float( 38F, 40F, 38F, 24F),
   };
@@ -4830,12 +4833,12 @@ protected class pwr_valve3waycontrol2 extends GeComponent {
     new Polygon( new int[] { 2, 6, 6, 2}, new int[] { 22, 27, 39,42}, 4),
     new Polygon( new int[] { 2, 6, 19, 22}, new int[] { 42, 39, 32,32}, 4),
     new Polygon( new int[] { 22, 19, 6, 2}, new int[] { 32, 32, 27,22}, 4),
-    new Polygon( new int[] { 2, 6, 530, 49}, new int[] { 22, 27, 140859555,27}, 4),
+    new Polygon( new int[] { 2, 6, 122, 49}, new int[] { 22, 27, 140893347,27}, 4),
     new Polygon( new int[] { 42, 42, 22, 42}, new int[] {22, 42, 32, 22}, 4),
     new Polygon( new int[] { 42, 42, 42, 42}, new int[] { 22, 27, 39,42}, 4),
     new Polygon( new int[] { 42, 42, 29, 22}, new int[] { 42, 39, 32,32}, 4),
     new Polygon( new int[] { 22, 29, 42, 42}, new int[] { 32, 32, 27,22}, 4),
-    new Polygon( new int[] { 42, 42, 530, 49}, new int[] { 22, 27, 140859555,27}, 4),
+    new Polygon( new int[] { 42, 42, 122, 49}, new int[] { 22, 27, 140893347,27}, 4),
     new Arc2D.Float(12F, 2F, 20F, 20F, 35F, 140F, Arc2D.PIE),
     new Arc2D.Float(12F, 2F, 20F, 20F, 215F, 140F, Arc2D.PIE),
     new Arc2D.Float(12F, 2F, 20F, 20F, -5F, 40F, Arc2D.PIE),
@@ -4848,7 +4851,7 @@ protected class pwr_valve3waycontrol2 extends GeComponent {
     new Polygon( new int[] { 22, 24, 17, 12}, new int[] { 32, 36, 50,52}, 4),
     new Polygon( new int[] { 12, 17, 31, 32}, new int[] { 52, 50, 50,52}, 4),
     new Polygon( new int[] { 32, 31, 24, 22}, new int[] { 52, 50, 36,32}, 4),
-    new Polygon( new int[] { 22, 24, 530, 49}, new int[] { 32, 36, 140859555,27}, 4),
+    new Polygon( new int[] { 22, 24, 122, 49}, new int[] { 32, 36, 140893347,27}, 4),
     new Line2D.Float( 30F, 48F, 14F, 48F),
     new Line2D.Float( 38F, 40F, 38F, 24F),
   };

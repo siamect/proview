@@ -44,7 +44,7 @@ public class JopcChanai extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä'¢·D±ù·D±ù·p—uÄ¿¡·›§· “§·(q¦¿ç	Ÿ·D±ù·D±ù·x—u “§·");
+    JopSpider.setSystemName( "ä·›·DAó·DAó·p—uÄO›·+¡· #¡·xê´¿ç™˜·DAó·DAó·x—u #¡·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 711, 386);
@@ -441,7 +441,7 @@ protected class pwr_buttoncommand extends GeComponent {
     new Polygon( new int[] { 88, 87, 88, 94}, new int[] { 8, 7, 6,2}, 4),
     new Polygon( new int[] { 94, 88, 4, 2}, new int[] { 2, 6, 6,2}, 4),
     new Polygon( new int[] { 2, 4, 4, 2}, new int[] { 2, 6, 26,32}, 4),
-    new Polygon( new int[] { 2, 4, 142449724, -75}, new int[] { 32, 26, 13,12}, 4),
+    new Polygon( new int[] { 2, 4, -1219899067, -75}, new int[] { 32, 26, -1219898979,12}, 4),
     new Polygon( new int[] { 2, 8, 88, 88, 94, 94, 2}, new int[] {32, 26, 26, 8, 2, 32, 32}, 7),
     new Polygon( new int[] { 2, 6, 8, 8}, new int[] { 32, 30, 28,26}, 4),
     new Polygon( new int[] { 8, 8, 90, 88}, new int[] { 26, 28, 28,26}, 4),
@@ -449,7 +449,7 @@ protected class pwr_buttoncommand extends GeComponent {
     new Polygon( new int[] { 88, 90, 92, 94}, new int[] { 8, 10, 8,2}, 4),
     new Polygon( new int[] { 94, 92, 92, 94}, new int[] { 2, 8, 30,32}, 4),
     new Polygon( new int[] { 94, 92, 6, 2}, new int[] { 32, 30, 30,32}, 4),
-    new Polygon( new int[] { 2, 6, -75, -75}, new int[] { 32, 30, 15,12}, 4),
+    new Polygon( new int[] { 2, 6, -1219899067, -75}, new int[] { 32, 30, -1219898979,12}, 4),
     new Rectangle2D.Float(2F, 2F, 92.0805F, 30.0671F),
     new Polygon( new int[] { 2, 94, 93, 4, 4, 2}, new int[] { 2, 2, 4, 4, 31, 32}, 6), 
     new Polygon( new int[] { 94, 94, 93, 93, 4, 2}, new int[] { 32, 2, 4, 31, 31, 32}, 6), 

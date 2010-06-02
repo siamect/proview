@@ -908,6 +908,7 @@ class GrowNode : public GlowNode {
   */
   int get_annotation_info( int num, int *t_size, glow_eDrawType *t_drawtype, glow_eDrawType *t_color,
 			   glow_eDrawType *bg_color, double *scale, glow_eFont *font);
+  int get_annotation_text_size( int num, double *tsize);
   int get_java_name( char *name) { return nc->get_java_name( name);}
   void set_textbold( int bold);
   void set_textfont( glow_eFont textfont);

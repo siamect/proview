@@ -58,7 +58,7 @@ public class JopcAvGen extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä'¢·D±ù·D±ù·p—uÄ¿¡·›§· “§·(q¦¿ç	Ÿ·D±ù·D±ù·x—u “§·");
+    JopSpider.setSystemName( "ä·›·DAó·DAó·p—uÄO›·+¡· #¡·xê´¿ç™˜·DAó·DAó·x—u #¡·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 712, 258);
@@ -299,6 +299,7 @@ public class JopcAvGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputreliefup17.dd, "$object.PresMaxLimit##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup17.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup17.setAnnot1Font(pwr_valueinputreliefup17.annotFont.deriveFont((float)9.32203));
     pwr_valueinputreliefup18.dd.setDynType(1024);
     pwr_valueinputreliefup18.dd.setActionType(4096);
     pwr_valueinputreliefup18.dd.setAccess(65535);
@@ -306,6 +307,7 @@ public class JopcAvGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputreliefup18.dd, "$object.PresMinLimit##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup18.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup18.setAnnot1Font(pwr_valueinputreliefup18.annotFont.deriveFont((float)9.32203));
     pwr_valueinputreliefup19.dd.setDynType(1024);
     pwr_valueinputreliefup19.dd.setActionType(4096);
     pwr_valueinputreliefup19.dd.setAccess(65535);
@@ -313,6 +315,7 @@ public class JopcAvGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputreliefup19.dd, "$local.ScanTime##Float32","%5.0f")
       ,new GeDynValueInput(pwr_valueinputreliefup19.dd, 4,100000,null,null)
       });
+    pwr_valueinputreliefup19.setAnnot1Font(pwr_valueinputreliefup19.annotFont.deriveFont((float)9.32203));
     pwr_valueinputmedium20.dd.setDynType(1024);
     pwr_valueinputmedium20.dd.setActionType(4096);
     pwr_valueinputmedium20.dd.setAccess(6);
@@ -320,6 +323,7 @@ public class JopcAvGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputmedium20.dd, "$object.ActualValue##Float32","%10.3f")
       ,new GeDynValueInput(pwr_valueinputmedium20.dd, 0,0,null,null)
       });
+    pwr_valueinputmedium20.setAnnot1Font(pwr_valueinputmedium20.annotFont.deriveFont((float)11.8644));
     pwr_mbopenobject21.dd.setDynType(129);
     pwr_mbopenobject21.dd.setActionType(8256);
     pwr_mbopenobject21.dd.setAccess(65532);
@@ -2966,24 +2970,24 @@ protected class pwr_sliderbackground1 extends GeComponent {
     new Polygon( new int[] { 2, 4, 34, 36}, new int[] { 2, 3, 3,2}, 4),
     new Polygon( new int[] { 36, 34, 19, 19}, new int[] { 2, 3, 18,19}, 4),
     new Polygon( new int[] { 19, 19, 4, 2}, new int[] { 19, 18, 3,2}, 4),
-    new Polygon( new int[] { 2, 4, -73, -122}, new int[] { 2, 3, -1227006101,-149}, 4),
+    new Polygon( new int[] { 2, 4, -1, -122}, new int[] { 2, 3, -1219899141,-149}, 4),
     new Polygon( new int[] { 36, 19, 19, 36, 36}, new int[] {2, 19, 171, 188, 2}, 5),
     new Polygon( new int[] { 36, 35, 20, 19}, new int[] { 2, 4, 19,19}, 4),
     new Polygon( new int[] { 19, 20, 20, 19}, new int[] { 19, 19, 171,171}, 4),
     new Polygon( new int[] { 19, 20, 35, 36}, new int[] { 171, 171, 186,188}, 4),
     new Polygon( new int[] { 36, 35, 35, 36}, new int[] { 188, 186, 4,2}, 4),
-    new Polygon( new int[] { 36, 35, -122, -122}, new int[] { 2, 4, -146,-149}, 4),
+    new Polygon( new int[] { 36, 35, -1219898986, -122}, new int[] { 2, 4, -1219899013,-149}, 4),
     new Polygon( new int[] { 2, 2, 19, 19, 2}, new int[] {2, 188, 171, 19, 2}, 5),
     new Polygon( new int[] { 2, 3, 3, 2}, new int[] { 2, 4, 186,188}, 4),
     new Polygon( new int[] { 2, 3, 18, 19}, new int[] { 188, 186, 171,171}, 4),
     new Polygon( new int[] { 19, 18, 18, 19}, new int[] { 171, 171, 19,19}, 4),
     new Polygon( new int[] { 19, 18, 3, 2}, new int[] { 19, 19, 4,2}, 4),
-    new Polygon( new int[] { 2, 3, -122, -122}, new int[] { 2, 4, -146,-149}, 4),
+    new Polygon( new int[] { 2, 3, -1219898986, -122}, new int[] { 2, 4, -1219899013,-149}, 4),
     new Polygon( new int[] { 2, 19, 36, 2}, new int[] {188, 171, 188, 188}, 4),
     new Polygon( new int[] { 2, 4, 19, 19}, new int[] { 188, 187, 172,171}, 4),
     new Polygon( new int[] { 19, 19, 34, 36}, new int[] { 171, 172, 187,188}, 4),
     new Polygon( new int[] { 36, 34, 4, 2}, new int[] { 188, 187, 187,188}, 4),
-    new Polygon( new int[] { 2, 4, -73, -122}, new int[] { 188, 187, -1227006101,-149}, 4),
+    new Polygon( new int[] { 2, 4, -1, -122}, new int[] { 188, 187, -1219899141,-149}, 4),
     new Rectangle2D.Float(15.5593F, 15.5593F, 6.77966F, 159.322F),
     new Polygon( new int[] { 16, 22, 22, 16, 16, 16}, new int[] { 16, 16, 16, 16, 175, 175}, 6), 
     new Polygon( new int[] { 22, 22, 22, 22, 16, 16}, new int[] { 175, 16, 16, 175, 175, 175}, 6), 
@@ -3199,7 +3203,7 @@ protected class pwr_slider1 extends GeComponent {
     new Polygon( new int[] { 10, 10, 5, 2}, new int[] { 26, 25, 20,19}, 4),
     new Polygon( new int[] { 2, 5, 21, 21}, new int[] { 19, 20, 20,19}, 4),
     new Polygon( new int[] { 21, 21, 21, 21}, new int[] { 19, 20, 8,2}, 4),
-    new Polygon( new int[] { 21, 21, -1219477228, -124}, new int[] { 2, 8, -1219477251,-147}, 4),
+    new Polygon( new int[] { 21, 21, -1219899116, -124}, new int[] { 2, 8, -1219899139,-147}, 4),
     new Rectangle2D.Float(2F, 2F, 18.6441F, 16.9492F),
     new Polygon( new int[] { 2, 21, 20, 3, 3, 2}, new int[] { 2, 2, 3, 3, 18, 19}, 6), 
     new Polygon( new int[] { 21, 21, 20, 20, 3, 2}, new int[] { 19, 2, 3, 18, 18, 19}, 6), 

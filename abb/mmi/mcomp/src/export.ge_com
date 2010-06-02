@@ -17,6 +17,7 @@ main()
 
   process( "pwr_c_abb_acs800_1param");
   process( "pwr_c_abb_acs800_1");
+  process( "pwr_c_abb_acc800");
   process( "pwr_c_abb_acs800fanaggr10");
   process( "pwr_c_abb_acs800fanaggr11");
   process( "pwr_c_abb_acs800fanaggr12");

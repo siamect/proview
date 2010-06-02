@@ -55,7 +55,7 @@ public class XttTree extends JPanel
   /**  Description of the Field */
   JLabel userValueLabel = new JLabel("Value input: ");    
   JLabel userCommandLabel = new JLabel("Command:");
-  JLabel labelMessage = new JLabel("Navigator ver 1.0");
+  JLabel labelMessage = new JLabel("");
   Dimension size;
   /**  Description of the Field */
   JTree tree;
@@ -468,17 +468,13 @@ public class XttTree extends JPanel
       Logg.logg("XttTree: Före getObjectAttributes", 6);
       PwrtObjid pwrobjid = new PwrtObjid(0, 0);
 
-      //      Vector v = (Vector)gdh.getAllClassAttributes(obj.classId.classId, obj.objId.objid);
       Vector v = (Vector)gdh.getAllClassAttributes(obj.fullName);
-      //Vector v = (Vector)gdh.getAllClassAttributes(obj.classId.classId, pwrobjid);
       Logg.logg("XttTree: Efter getAllClassAttributes", 6);
       if(v == null)
       {
         Logg.logg("XttTree: Vector == null efter getAllClassAttributes", 4);
         return;
       }
-      //Vector<XttObjAttr> xttObjAttrVec = new Vector<XttObjAttr>();
-      System.out.println( "Size " + v.size());
       Vector xttObjAttrVec = new Vector();
       for(int i = 0; i < v.size(); i++)
       {
@@ -492,21 +488,10 @@ public class XttTree extends JPanel
 	{
 	  Logg.logg("XttTree:  Hittat klass, vad ska jag göra nu?? " + obj.fullName + " " + cdhrobjattr.name , 1);
 	  CdhrObjid cdhrObjid = gdh.classIdToObjid(cdhrobjattr.type);
-	  //System.out.println("classIdToObjid " + cdhrObjid.getSts() + " " + cdhrObjid.objid.oix + " " + cdhrObjid.objid.vid);
-
-	  //CdhrClassId cdhrClassId = gdh.getObjectClass(cdhrObjid.objid);
        
        	  CdhrAttrRef aref = gdh.nameToAttrRef(obj.fullName + "." + cdhrobjattr.name);
-	  //System.out.println("nameToAttrRef " + aref.getSts());
 
-      	  //CdhrTypeId tid = gdh.getAttrRefTid(aref.aref);
-
-          //CdhrObjid co = gdh.classIdToObjid( tid.getTypeId() );
-
-	  //System.out.println("classIdToObjid " + co.getSts()+ " " + co.objid.oix + " " + co.objid.vid);
 	  String className = gdh.objidToName(cdhrObjid.objid, Cdh.mName_object).str;
-
-	  //String className = gdh.attrRefToName(aref.aref, Cdh.mName_object).str;
 
           XttObj classObj = new XttObj(this.engine.gdh, 
                                      this.engine, 
@@ -515,7 +500,6 @@ public class XttTree extends JPanel
 				     className,
 				       cdhrObjid,//  co, new CdhrObjid(aref.aref.getObjid(),aref.getSts()),
 				      new CdhrClassId(cdhrobjattr.type, 1)); 
-	  System.out.println("classObj: " + classObj.fullName);
           DefaultMutableTreeNode classObjTreeNode = new DefaultMutableTreeNode(classObj);
           classObj.treeNode = classObjTreeNode;
           tN.add(classObjTreeNode);
@@ -531,12 +515,11 @@ public class XttTree extends JPanel
 	  
 	}
 	else {
-        XttObjAttr xttObjAttr = new XttObjAttr(cdhrobjattr);
-	System.out.println("xttObjAttr: " + xttObjAttr.name);
-        xttObjAttrVec.add(xttObjAttr);
-        DefaultMutableTreeNode objAttrTreeNode = new DefaultMutableTreeNode(xttObjAttr);
-        xttObjAttr.treeNode = objAttrTreeNode;
-        tN.add(objAttrTreeNode);
+          XttObjAttr xttObjAttr = new XttObjAttr(cdhrobjattr);
+	  xttObjAttrVec.add(xttObjAttr);
+	  DefaultMutableTreeNode objAttrTreeNode = new DefaultMutableTreeNode(xttObjAttr);
+	  xttObjAttr.treeNode = objAttrTreeNode;
+	  tN.add(objAttrTreeNode);
 	}
       }
       obj.addAttrVector(xttObjAttrVec);
@@ -773,7 +756,6 @@ public class XttTree extends JPanel
     if(str != null)
       this.find(str);
     TreePath selectedPath = this.tree.getSelectionPath();
-    System.out.println(selectedPath);
     if(selectedPath != null)
       this.tree.scrollPathToVisible(selectedPath);
   }
@@ -865,11 +847,9 @@ public class XttTree extends JPanel
       }
       else
         str = obj.fullName;
-      System.out.println(str);
       if(str.compareToIgnoreCase(pathName) == 0)
       {
         
-        System.out.println("Hittat sökväg");
 	TreePath tp = new TreePath(tn.getPath());
 //	if(tn.isLeaf())
 //	{
@@ -1112,7 +1092,7 @@ public class XttTree extends JPanel
     this.newMethod("Open Object Graph", OPENGRAPH, "OPENGRAPH", 2, "ctrl G");
     this.newMethod("Show Crossreferences", SHOWCROSS, "SHOWCROSS", 2, "ctrl R");
     this.newMethod("Change Value", CHANGEVALUE, "CHANGEVALUE", 2, "ctrl Q");
-    this.newMethod("Debug", DEBUG, "DEBUG", 2, "ctrl RIGHT");
+    // this.newMethod("Debug", DEBUG, "DEBUG", 2, "ctrl RIGHT");
     this.newMethod("Search", FIND, "FIND", 1, "ctrl F");
     this.newMethod("INCLOG", INCLOG, "INCLOG", -1, "ctrl O");
     this.newMethod("DECLOG", DECLOG, "DECLOG", -1, "ctrl P");
@@ -1157,7 +1137,6 @@ public class XttTree extends JPanel
             }
             if(e.isPopupTrigger())
             {
-              System.out.println("mouse pressed isPopUpTrigger");
 	      //Mats förändringar: popup borttagen, JopMethodsMenu tillagd.
 	      TreePath tp = tree.getSelectionPath();
 	      if(tp == null) return;
@@ -1200,12 +1179,10 @@ public class XttTree extends JPanel
 
         public void mouseReleased(MouseEvent e)
         {
-          //System.out.println("MusKlick " + e.getModifiers() + " " + MouseEvent.BUTTON3_MASK);
           // Kontrollera om detta är rätt typ av händelse för att visa en snabbmeny
 
           if(e.isPopupTrigger())
           {
-            System.out.println("isPopUpTrigger");
 	    //Mats förändringar: popup borttagen, JopMethodsMenu tillagd.
 	    TreePath tp = tree.getSelectionPath();
 	    if(tp == null) return;
@@ -1366,7 +1343,6 @@ public class XttTree extends JPanel
       {
          obj = (XttObj)tn.getUserObject();
 	 ret = obj.name;
-	 System.out.println(ret);
       }
       catch(ClassCastException e)
       {
@@ -1777,7 +1753,6 @@ public class XttTree extends JPanel
         int type = ((XttObjAttr)(userObject)).type;
         if((flags & Pwr.mAdef_class) > 0)
         {
-	    System.out.println("Hittat klass i bildhittarrutin");
           setIcon(ObjAttrIcon);
         }
 

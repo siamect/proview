@@ -2172,9 +2172,12 @@ int Graph::export_GejavaObjectTraceAttr( ofstream& fp, grow_tObject object, int 
   int			*numbers;
   char			annot_str[200];
   GeDyn			*dyn;
+  int			dyn_type;
+  int			dyn_action_type;
 
   grow_GetUserData( object, (void **)&dyn);
   grow_GetObjectClassJavaName( object, class_name);
+  grow_GetObjectClassDynType( object, &dyn_type, &dyn_action_type);
 
   strcpy( var_name, class_name);
   var_name[0] = _tolower(var_name[0]);
@@ -2185,15 +2188,25 @@ int Graph::export_GejavaObjectTraceAttr( ofstream& fp, grow_tObject object, int 
   // Print annotations
   grow_GetObjectAnnotationNumbers( object, &numbers, &annot_cnt);
 
-  for ( i = 0; i < annot_cnt; i++)
-  {
+  for ( i = 0; i < annot_cnt; i++) {
     grow_GetAnnotation( object, numbers[i], annot_str, sizeof(annot_str));
-    if ( strcmp( annot_str, "") != 0)
-    {
+    if ( strcmp( annot_str, "") != 0) {
         fp <<
 "    " << var_name << ".setAnnot" << numbers[i] << "(\"" << annot_str << "\");" << endl;
     }
+    if ( dyn_action_type & ge_mActionType_ValueInput) {
+      // Set text size of GeTextField
+      double tsize;
+      int sts;
+
+      sts = grow_GetAnnotationTextSize( object, numbers[i], &tsize);
+      if ( ODD(sts)) {
+        fp <<
+	  "    " << var_name << ".setAnnot" << numbers[i] << "Font(" << var_name << ".annotFont.deriveFont((float)" << (float)tsize << "));" << endl;
+      }
+    }
   }
+
   free( (char *) numbers);
   return 1;
 }

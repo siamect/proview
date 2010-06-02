@@ -47,7 +47,7 @@ public class JopcPlcthreadGen extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä'¢·D±ù·D±ù·p—uÄ¿¡·›§· “§·(q¦¿ç	Ÿ·D±ù·D±ù·x—u “§·");
+    JopSpider.setSystemName( "ä·›·DAó·DAó·p—uÄO›·+¡· #¡·xê´¿ç™˜·DAó·DAó·x—u #¡·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 811, 274);
@@ -250,6 +250,7 @@ public class JopcPlcthreadGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputreliefup29.dd, "$local.MaxShow##Float32","%5.3f")
       ,new GeDynValueInput(pwr_valueinputreliefup29.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup29.setAnnot1Font(pwr_valueinputreliefup29.annotFont.deriveFont((float)10.9453));
     pwr_valueinputreliefup30.dd.setDynType(1024);
     pwr_valueinputreliefup30.dd.setActionType(4096);
     pwr_valueinputreliefup30.dd.setAccess(65535);
@@ -257,6 +258,7 @@ public class JopcPlcthreadGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputreliefup30.dd, "$local.MinShow##Float32","%5.3f")
       ,new GeDynValueInput(pwr_valueinputreliefup30.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup30.setAnnot1Font(pwr_valueinputreliefup30.annotFont.deriveFont((float)10.9453));
     pwr_valueinputreliefup31.dd.setDynType(1024);
     pwr_valueinputreliefup31.dd.setActionType(4096);
     pwr_valueinputreliefup31.dd.setAccess(65535);
@@ -264,6 +266,7 @@ public class JopcPlcthreadGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputreliefup31.dd, "$local.ScanTime##Float32","%5.0f")
       ,new GeDynValueInput(pwr_valueinputreliefup31.dd, 4,100000,null,null)
       });
+    pwr_valueinputreliefup31.setAnnot1Font(pwr_valueinputreliefup31.annotFont.deriveFont((float)10.9453));
     engine.setFrameReady();
   }
 

@@ -55,7 +55,7 @@ public class JopcBasemanvalve1 extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 200);
     engine.setScanTime( 500);
     size = new Dimension( 417, 507);
@@ -1072,12 +1072,12 @@ protected class pwr_valveanim extends GeComponent {
     new Polygon( new int[] { 6, 10, 10, 6}, new int[] { 16, 19, 33,36}, 4),
     new Polygon( new int[] { 6, 10, 24, 26}, new int[] { 36, 33, 26,26}, 4),
     new Polygon( new int[] { 26, 24, 10, 6}, new int[] { 26, 26, 19,16}, 4),
-    new Polygon( new int[] { 6, 10, 298, 33}, new int[] { 16, 19, -53,-54}, 4),
+    new Polygon( new int[] { 6, 10, 90, 33}, new int[] { 16, 19, 148075769,-54}, 4),
     new Polygon( new int[] { 46, 26, 46, 46}, new int[] {16, 26, 36, 16}, 4),
     new Polygon( new int[] { 46, 44, 32, 26}, new int[] { 16, 19, 26,26}, 4),
     new Polygon( new int[] { 26, 32, 44, 46}, new int[] { 26, 26, 33,36}, 4),
     new Polygon( new int[] { 46, 44, 44, 46}, new int[] { 36, 33, 19,16}, 4),
-    new Polygon( new int[] { 46, 44, 298, 33}, new int[] { 16, 19, -53,-54}, 4),
+    new Polygon( new int[] { 46, 44, 90, 33}, new int[] { 16, 19, 148075769,-54}, 4),
   };
   int original_width_p2 = 52;
   int original_height_p2 = 52;
@@ -1086,12 +1086,12 @@ protected class pwr_valveanim extends GeComponent {
     new Polygon( new int[] { 9, 12, 9, 4}, new int[] { 11, 15, 27,30}, 4),
     new Polygon( new int[] { 4, 9, 24, 26}, new int[] { 30, 27, 25,26}, 4),
     new Polygon( new int[] { 26, 24, 12, 9}, new int[] { 26, 25, 15,11}, 4),
-    new Polygon( new int[] { 9, 12, 298, 33}, new int[] { 11, 15, -53,-54}, 4),
+    new Polygon( new int[] { 9, 12, 90, 33}, new int[] { 11, 15, 148075769,-54}, 4),
     new Polygon( new int[] { 48, 26, 43, 48}, new int[] {22, 26, 41, 22}, 4),
     new Polygon( new int[] { 48, 45, 32, 26}, new int[] { 22, 25, 27,26}, 4),
     new Polygon( new int[] { 26, 32, 42, 43}, new int[] { 26, 27, 37,41}, 4),
     new Polygon( new int[] { 43, 42, 45, 48}, new int[] { 41, 37, 25,22}, 4),
-    new Polygon( new int[] { 48, 45, 298, 33}, new int[] { 22, 25, -53,-54}, 4),
+    new Polygon( new int[] { 48, 45, 90, 33}, new int[] { 22, 25, 148075769,-54}, 4),
   };
   int original_width_p3 = 52;
   int original_height_p3 = 52;
@@ -1100,12 +1100,12 @@ protected class pwr_valveanim extends GeComponent {
     new Polygon( new int[] { 14, 16, 8, 4}, new int[] { 7, 9, 24,25}, 4),
     new Polygon( new int[] { 4, 8, 26, 26}, new int[] { 25, 24, 25,26}, 4),
     new Polygon( new int[] { 26, 26, 16, 14}, new int[] { 26, 25, 9,7}, 4),
-    new Polygon( new int[] { 14, 16, 298, 33}, new int[] { 7, 9, -53,-54}, 4),
+    new Polygon( new int[] { 14, 16, 90, 33}, new int[] { 7, 9, 148075769,-54}, 4),
     new Polygon( new int[] { 48, 26, 38, 48}, new int[] {27, 26, 45, 27}, 4),
     new Polygon( new int[] { 48, 46, 30, 26}, new int[] { 27, 28, 27,26}, 4),
     new Polygon( new int[] { 26, 30, 38, 38}, new int[] { 26, 27, 43,45}, 4),
     new Polygon( new int[] { 38, 38, 46, 48}, new int[] { 45, 43, 28,27}, 4),
-    new Polygon( new int[] { 48, 46, 298, 33}, new int[] { 27, 28, -53,-54}, 4),
+    new Polygon( new int[] { 48, 46, 90, 33}, new int[] { 27, 28, 148075769,-54}, 4),
   };
   int original_width_p4 = 52;
   int original_height_p4 = 52;
@@ -1114,12 +1114,12 @@ protected class pwr_valveanim extends GeComponent {
     new Polygon( new int[] { 19, 20, 11, 5}, new int[] { 5, 9, 18,19}, 4),
     new Polygon( new int[] { 5, 11, 25, 26}, new int[] { 19, 18, 23,26}, 4),
     new Polygon( new int[] { 26, 25, 20, 19}, new int[] { 26, 23, 9,5}, 4),
-    new Polygon( new int[] { 19, 20, 298, 33}, new int[] { 5, 9, -53,-54}, 4),
+    new Polygon( new int[] { 19, 20, 90, 33}, new int[] { 5, 9, 148075769,-54}, 4),
     new Polygon( new int[] { 47, 26, 33, 47}, new int[] {33, 26, 47, 33}, 4),
     new Polygon( new int[] { 47, 43, 31, 26}, new int[] { 33, 34, 29,26}, 4),
     new Polygon( new int[] { 26, 31, 34, 33}, new int[] { 26, 29, 43,47}, 4),
     new Polygon( new int[] { 33, 34, 43, 47}, new int[] { 47, 43, 34,33}, 4),
-    new Polygon( new int[] { 47, 43, 298, 33}, new int[] { 33, 34, -53,-54}, 4),
+    new Polygon( new int[] { 47, 43, 90, 33}, new int[] { 33, 34, 148075769,-54}, 4),
   };
   int original_width_p5 = 52;
   int original_height_p5 = 52;
@@ -1128,12 +1128,12 @@ protected class pwr_valveanim extends GeComponent {
     new Polygon( new int[] { 25, 26, 11, 7}, new int[] { 4, 6, 14,14}, 4),
     new Polygon( new int[] { 7, 11, 27, 26}, new int[] { 14, 14, 24,26}, 4),
     new Polygon( new int[] { 26, 27, 26, 25}, new int[] { 26, 24, 6,4}, 4),
-    new Polygon( new int[] { 25, 26, 298, 33}, new int[] { 4, 6, -53,-54}, 4),
+    new Polygon( new int[] { 25, 26, 90, 33}, new int[] { 4, 6, 148075769,-54}, 4),
     new Polygon( new int[] { 45, 26, 27, 45}, new int[] {38, 26, 48, 38}, 4),
     new Polygon( new int[] { 45, 43, 29, 26}, new int[] { 38, 38, 28,26}, 4),
     new Polygon( new int[] { 26, 29, 30, 27}, new int[] { 26, 28, 46,48}, 4),
     new Polygon( new int[] { 27, 30, 43, 45}, new int[] { 48, 46, 38,38}, 4),
-    new Polygon( new int[] { 45, 43, 298, 33}, new int[] { 38, 38, -53,-54}, 4),
+    new Polygon( new int[] { 45, 43, 90, 33}, new int[] { 38, 38, 148075769,-54}, 4),
   };
   int original_width_p6 = 52;
   int original_height_p6 = 52;
@@ -1142,12 +1142,12 @@ protected class pwr_valveanim extends GeComponent {
     new Polygon( new int[] { 30, 29, 17, 11}, new int[] { 4, 7, 10,9}, 4),
     new Polygon( new int[] { 11, 17, 27, 26}, new int[] { 9, 10, 22,26}, 4),
     new Polygon( new int[] { 26, 27, 29, 30}, new int[] { 26, 22, 7,4}, 4),
-    new Polygon( new int[] { 30, 29, 298, 33}, new int[] { 4, 7, -53,-54}, 4),
+    new Polygon( new int[] { 30, 29, 90, 33}, new int[] { 4, 7, 148075769,-54}, 4),
     new Polygon( new int[] { 41, 26, 22, 41}, new int[] {43, 26, 48, 43}, 4),
     new Polygon( new int[] { 41, 38, 29, 26}, new int[] { 43, 42, 31,26}, 4),
     new Polygon( new int[] { 26, 29, 27, 22}, new int[] { 26, 31, 45,48}, 4),
     new Polygon( new int[] { 22, 27, 38, 41}, new int[] { 48, 45, 42,43}, 4),
-    new Polygon( new int[] { 41, 38, 298, 33}, new int[] { 43, 42, -53,-54}, 4),
+    new Polygon( new int[] { 41, 38, 90, 33}, new int[] { 43, 42, 148075769,-54}, 4),
   };
   int original_width_p7 = 52;
   int original_height_p7 = 52;
@@ -1156,12 +1156,12 @@ protected class pwr_valveanim extends GeComponent {
     new Polygon( new int[] { 36, 33, 21, 16}, new int[] { 6, 8, 8,6}, 4),
     new Polygon( new int[] { 16, 21, 28, 26}, new int[] { 6, 8, 21,26}, 4),
     new Polygon( new int[] { 26, 28, 33, 36}, new int[] { 26, 21, 8,6}, 4),
-    new Polygon( new int[] { 36, 33, 298, 33}, new int[] { 6, 8, -53,-54}, 4),
+    new Polygon( new int[] { 36, 33, 90, 33}, new int[] { 6, 8, 148075769,-54}, 4),
     new Polygon( new int[] { 36, 26, 16, 36}, new int[] {46, 26, 46, 46}, 4),
     new Polygon( new int[] { 36, 33, 28, 26}, new int[] { 46, 44, 31,26}, 4),
     new Polygon( new int[] { 26, 28, 21, 16}, new int[] { 26, 31, 44,46}, 4),
     new Polygon( new int[] { 16, 21, 33, 36}, new int[] { 46, 44, 44,46}, 4),
-    new Polygon( new int[] { 36, 33, 298, 33}, new int[] { 46, 44, -53,-54}, 4),
+    new Polygon( new int[] { 36, 33, 90, 33}, new int[] { 46, 44, 148075769,-54}, 4),
   };
   public void paintComponent(Graphics g1) {
     switch ( page) {

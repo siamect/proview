@@ -398,7 +398,6 @@ public class JopLang {
 		    line = line.trim();
 		    if ( line.equals("") || line.charAt(0) == '#')
 			continue;
-		    System.out.println( line);
 
 		    if ( line.charAt(0) == 'E')
 			type = ITEM_TYPE_EXACT;
@@ -425,7 +424,6 @@ public class JopLang {
 		System.out.println( "IOException JopLang");
 	    }
 	}
-	// btree_lng.printTree();
     }
 
     String translate( String text) {

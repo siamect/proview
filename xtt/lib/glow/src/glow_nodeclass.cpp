@@ -739,6 +739,19 @@ int GlowNodeClass::get_annotation_info( void *node, int num, int *t_size, glow_e
   return 0;
 }
 
+int GlowNodeClass::get_annotation_text_size( GlowTransform *t, int num, double *tsize)
+{
+  int i;
+
+  for ( i = 0; i < a.a_size; i++) {
+    if ( a.a[i]->type() == glow_eObjectType_GrowAnnot &&
+         ((GlowAnnot *)a.a[i])->number == num) {
+      return ((GrowAnnot *)a.a[i])->get_text_size( t, tsize);
+    }
+  }
+  return 0;
+}
+
 
 
 

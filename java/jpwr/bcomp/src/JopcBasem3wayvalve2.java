@@ -66,7 +66,7 @@ public class JopcBasem3wayvalve2 extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä§ž·D1ö·D1ö·p—uÄ?ž·¤· ¤·ˆà—¿ç‰›·D1ö·D1ö·x—u ¤·");
+    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
     engine.setAnimationScanTime( 200);
     engine.setScanTime( 500);
     size = new Dimension( 537, 459);
@@ -1390,18 +1390,18 @@ protected class pwr_valve3way2 extends GeComponent {
     new Polygon( new int[] { 2, 6, 6, 2}, new int[] { 12, 15, 29,32}, 4),
     new Polygon( new int[] { 2, 6, 20, 22}, new int[] { 32, 29, 22,22}, 4),
     new Polygon( new int[] { 22, 20, 6, 2}, new int[] { 22, 22, 15,12}, 4),
-    new Polygon( new int[] { 2, 6, 77, 36}, new int[] { 12, 15, -1219706470,9}, 4),
+    new Polygon( new int[] { 2, 6, 69, 36}, new int[] { 12, 15, -1219980902,9}, 4),
     new Polygon( new int[] { 42, 22, 42, 42}, new int[] {12, 22, 32, 12}, 4),
     new Polygon( new int[] { 42, 40, 28, 22}, new int[] { 12, 15, 22,22}, 4),
     new Polygon( new int[] { 22, 28, 40, 42}, new int[] { 22, 22, 29,32}, 4),
     new Polygon( new int[] { 42, 40, 40, 42}, new int[] { 32, 29, 15,12}, 4),
-    new Polygon( new int[] { 42, 40, 77, 36}, new int[] { 12, 15, -1219706470,9}, 4),
+    new Polygon( new int[] { 42, 40, 69, 36}, new int[] { 12, 15, -1219980902,9}, 4),
     new Rectangle2D.Float(46F, 2F, 20F, 16F),
     new Polygon( new int[] { 22, 12, 32, 22}, new int[] {22, 42, 42, 22}, 4),
     new Polygon( new int[] { 22, 24, 17, 12}, new int[] { 22, 26, 40,42}, 4),
     new Polygon( new int[] { 12, 17, 31, 32}, new int[] { 42, 40, 40,42}, 4),
     new Polygon( new int[] { 32, 31, 24, 22}, new int[] { 42, 40, 26,22}, 4),
-    new Polygon( new int[] { 22, 24, 77, 36}, new int[] { 22, 26, -1219706470,9}, 4),
+    new Polygon( new int[] { 22, 24, 69, 36}, new int[] { 22, 26, -1219980902,9}, 4),
     new Line2D.Float( 30F, 38F, 14F, 38F),
     new Line2D.Float( 38F, 30F, 38F, 14F),
   };
@@ -1412,18 +1412,18 @@ protected class pwr_valve3way2 extends GeComponent {
     new Polygon( new int[] { 2, 6, 6, 2}, new int[] { 12, 15, 29,32}, 4),
     new Polygon( new int[] { 2, 6, 20, 22}, new int[] { 32, 29, 22,22}, 4),
     new Polygon( new int[] { 22, 20, 6, 2}, new int[] { 22, 22, 15,12}, 4),
-    new Polygon( new int[] { 2, 6, 77, 36}, new int[] { 12, 15, -1219706470,9}, 4),
+    new Polygon( new int[] { 2, 6, 69, 36}, new int[] { 12, 15, -1219980902,9}, 4),
     new Polygon( new int[] { 42, 22, 42, 42}, new int[] {12, 22, 32, 12}, 4),
     new Polygon( new int[] { 42, 40, 28, 22}, new int[] { 12, 15, 22,22}, 4),
     new Polygon( new int[] { 22, 28, 40, 42}, new int[] { 22, 22, 29,32}, 4),
     new Polygon( new int[] { 42, 40, 40, 42}, new int[] { 32, 29, 15,12}, 4),
-    new Polygon( new int[] { 42, 40, 77, 36}, new int[] { 12, 15, -1219706470,9}, 4),
+    new Polygon( new int[] { 42, 40, 69, 36}, new int[] { 12, 15, -1219980902,9}, 4),
     new Rectangle2D.Float(46F, 2F, 20F, 16F),
     new Polygon( new int[] { 22, 12, 32, 22}, new int[] {22, 42, 42, 22}, 4),
     new Polygon( new int[] { 22, 24, 17, 12}, new int[] { 22, 26, 40,42}, 4),
     new Polygon( new int[] { 12, 17, 31, 32}, new int[] { 42, 40, 40,42}, 4),
     new Polygon( new int[] { 32, 31, 24, 22}, new int[] { 42, 40, 26,22}, 4),
-    new Polygon( new int[] { 22, 24, 77, 36}, new int[] { 22, 26, -1219706470,9}, 4),
+    new Polygon( new int[] { 22, 24, 69, 36}, new int[] { 22, 26, -1219980902,9}, 4),
     new Line2D.Float( 30F, 38F, 14F, 38F),
     new Line2D.Float( 38F, 30F, 38F, 14F),
   };
@@ -1434,18 +1434,18 @@ protected class pwr_valve3way2 extends GeComponent {
     new Polygon( new int[] { 2, 6, 6, 2}, new int[] { 12, 15, 29,32}, 4),
     new Polygon( new int[] { 2, 6, 20, 22}, new int[] { 32, 29, 22,22}, 4),
     new Polygon( new int[] { 22, 20, 6, 2}, new int[] { 22, 22, 15,12}, 4),
-    new Polygon( new int[] { 2, 6, 77, 36}, new int[] { 12, 15, -1219706470,9}, 4),
+    new Polygon( new int[] { 2, 6, 69, 36}, new int[] { 12, 15, -1219980902,9}, 4),
     new Polygon( new int[] { 42, 22, 42, 42}, new int[] {12, 22, 32, 12}, 4),
     new Polygon( new int[] { 42, 40, 28, 22}, new int[] { 12, 15, 22,22}, 4),
     new Polygon( new int[] { 22, 28, 40, 42}, new int[] { 22, 22, 29,32}, 4),
     new Polygon( new int[] { 42, 40, 40, 42}, new int[] { 32, 29, 15,12}, 4),
-    new Polygon( new int[] { 42, 40, 77, 36}, new int[] { 12, 15, -1219706470,9}, 4),
+    new Polygon( new int[] { 42, 40, 69, 36}, new int[] { 12, 15, -1219980902,9}, 4),
     new Rectangle2D.Float(46F, 2F, 20F, 16F),
     new Polygon( new int[] { 22, 12, 32, 22}, new int[] {22, 42, 42, 22}, 4),
     new Polygon( new int[] { 22, 24, 17, 12}, new int[] { 22, 26, 40,42}, 4),
     new Polygon( new int[] { 12, 17, 31, 32}, new int[] { 42, 40, 40,42}, 4),
     new Polygon( new int[] { 32, 31, 24, 22}, new int[] { 42, 40, 26,22}, 4),
-    new Polygon( new int[] { 22, 24, 77, 36}, new int[] { 22, 26, -1219706470,9}, 4),
+    new Polygon( new int[] { 22, 24, 69, 36}, new int[] { 22, 26, -1219980902,9}, 4),
     new Line2D.Float( 30F, 38F, 14F, 38F),
     new Line2D.Float( 38F, 30F, 38F, 14F),
   };

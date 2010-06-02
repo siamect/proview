@@ -81,7 +81,7 @@ public class GeDynDigError extends GeDynElem {
     }
     else {
       if ( (!inverted && value) || (inverted && !value)) {
-	dyn.comp.tsetFillColor( GeColor.COLOR_RED);
+	dyn.comp.tsetFillColor( GeColor.COLOR_LINERED);
 	dyn.ignoreColor = true;
       }
       else {

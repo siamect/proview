@@ -143,6 +143,7 @@ local_java_sources := \
 	HistStatModel2.java \
 	HistStatistics.java \
 	HistSearch.java \
+	JopOp.java \
 	JopSessionRep.java
 
 -include $(pwre_kroot)/tools/bld/src/$(os_name)/$(hw_name)/$(type_name)_generic.mk

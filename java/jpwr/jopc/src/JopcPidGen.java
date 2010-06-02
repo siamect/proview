@@ -77,7 +77,7 @@ public class JopcPidGen extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä–·D‘í·D‘í·p—uÄŸ•·{›· s›·¨Šº¿çé’·D‘í·D‘í·x—u s›·");
+    JopSpider.setSystemName( "ä·›·DAó·DAó·p—uÄO›·+¡· #¡·xê´¿ç™˜·DAó·DAó·x—u #¡·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 847, 464);
@@ -389,7 +389,7 @@ public class JopcPidGen extends JopFrame implements JopUtilityIfc {
     jopSmallbutton10.dd.setActionType(16);
     jopSmallbutton10.dd.setAccess(65535);
     jopSmallbutton10.dd.setElements(new GeDynElemIfc[] {
-      new GeDynDigLowColor(jopSmallbutton10.dd, "!$local.TrendHold##Boolean",113)
+      new GeDynDigLowColor(jopSmallbutton10.dd, "!$local.TrendHold##Boolean",102)
       ,new GeDynToggleDig(jopSmallbutton10.dd, "$local.TrendHold##Boolean")
       });
     jopSmallbutton10.setAnnot1("   Hold");
@@ -453,6 +453,7 @@ public class JopcPidGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputmedium36.dd, "$object.SetVal##Float32","%10.3f")
       ,new GeDynValueInput(pwr_valueinputmedium36.dd, 0,0,null,null)
       });
+    pwr_valueinputmedium36.setAnnot1Font(pwr_valueinputmedium36.annotFont.deriveFont((float)14.1697));
     pwr_valueinputmedium37.dd.setDynType(1024);
     pwr_valueinputmedium37.dd.setActionType(4096);
     pwr_valueinputmedium37.dd.setAccess(22);
@@ -460,6 +461,7 @@ public class JopcPidGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputmedium37.dd, "$object.OutVal##Float32","%10.3f")
       ,new GeDynValueInput(pwr_valueinputmedium37.dd, 0,0,null,null)
       });
+    pwr_valueinputmedium37.setAnnot1Font(pwr_valueinputmedium37.annotFont.deriveFont((float)14.1697));
     pwr_valueinputmedium38.dd.setDynType(1024);
     pwr_valueinputmedium38.dd.setActionType(4096);
     pwr_valueinputmedium38.dd.setAccess(22);
@@ -467,6 +469,7 @@ public class JopcPidGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputmedium38.dd, "$object.Gain##Float32","%10.3f")
       ,new GeDynValueInput(pwr_valueinputmedium38.dd, 0,0,null,null)
       });
+    pwr_valueinputmedium38.setAnnot1Font(pwr_valueinputmedium38.annotFont.deriveFont((float)14.1697));
     pwr_valueinputmedium39.dd.setDynType(1024);
     pwr_valueinputmedium39.dd.setActionType(4096);
     pwr_valueinputmedium39.dd.setAccess(22);
@@ -474,6 +477,7 @@ public class JopcPidGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputmedium39.dd, "$object.IntTime##Float32","%10.3f")
       ,new GeDynValueInput(pwr_valueinputmedium39.dd, 0,0,null,null)
       });
+    pwr_valueinputmedium39.setAnnot1Font(pwr_valueinputmedium39.annotFont.deriveFont((float)14.1697));
     pwr_valueinputmedium40.dd.setDynType(1024);
     pwr_valueinputmedium40.dd.setActionType(4096);
     pwr_valueinputmedium40.dd.setAccess(22);
@@ -481,6 +485,7 @@ public class JopcPidGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputmedium40.dd, "$object.DerTime##Float32","%10.3f")
       ,new GeDynValueInput(pwr_valueinputmedium40.dd, 0,0,null,null)
       });
+    pwr_valueinputmedium40.setAnnot1Font(pwr_valueinputmedium40.annotFont.deriveFont((float)14.1697));
     pwr_valueinputmedium41.dd.setDynType(1024);
     pwr_valueinputmedium41.dd.setActionType(4096);
     pwr_valueinputmedium41.dd.setAccess(22);
@@ -488,6 +493,7 @@ public class JopcPidGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputmedium41.dd, "$object.DerGain##Float32","%10.3f")
       ,new GeDynValueInput(pwr_valueinputmedium41.dd, 0,0,null,null)
       });
+    pwr_valueinputmedium41.setAnnot1Font(pwr_valueinputmedium41.annotFont.deriveFont((float)14.1697));
     pwr_valueinputmedium42.dd.setDynType(1024);
     pwr_valueinputmedium42.dd.setActionType(4096);
     pwr_valueinputmedium42.dd.setAccess(22);
@@ -495,6 +501,7 @@ public class JopcPidGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputmedium42.dd, "$object.BiasGain##Float32","%10.3f")
       ,new GeDynValueInput(pwr_valueinputmedium42.dd, 0,0,null,null)
       });
+    pwr_valueinputmedium42.setAnnot1Font(pwr_valueinputmedium42.annotFont.deriveFont((float)14.1697));
     pwr_valueinputmedium43.dd.setDynType(1024);
     pwr_valueinputmedium43.dd.setActionType(4096);
     pwr_valueinputmedium43.dd.setAccess(22);
@@ -502,6 +509,7 @@ public class JopcPidGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputmedium43.dd, "$object.Bias##Float32","%10.3f")
       ,new GeDynValueInput(pwr_valueinputmedium43.dd, 0,0,null,null)
       });
+    pwr_valueinputmedium43.setAnnot1Font(pwr_valueinputmedium43.annotFont.deriveFont((float)14.1697));
     pwr_valueinputreliefup44.dd.setDynType(1024);
     pwr_valueinputreliefup44.dd.setActionType(4096);
     pwr_valueinputreliefup44.dd.setAccess(22);
@@ -509,6 +517,7 @@ public class JopcPidGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputreliefup44.dd, "$object.OutMaxShow##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup44.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup44.setAnnot1Font(pwr_valueinputreliefup44.annotFont.deriveFont((float)11.1333));
     pwr_valueinputreliefup45.dd.setDynType(1024);
     pwr_valueinputreliefup45.dd.setActionType(4096);
     pwr_valueinputreliefup45.dd.setAccess(22);
@@ -516,6 +525,7 @@ public class JopcPidGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputreliefup45.dd, "$object.OutMinShow##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup45.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup45.setAnnot1Font(pwr_valueinputreliefup45.annotFont.deriveFont((float)11.1333));
     pwr_valueinputreliefup46.dd.setDynType(1024);
     pwr_valueinputreliefup46.dd.setActionType(4096);
     pwr_valueinputreliefup46.dd.setAccess(65535);
@@ -523,6 +533,7 @@ public class JopcPidGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputreliefup46.dd, "$local.ScanTime##Float32","%5.0f")
       ,new GeDynValueInput(pwr_valueinputreliefup46.dd, 4,100000,null,null)
       });
+    pwr_valueinputreliefup46.setAnnot1Font(pwr_valueinputreliefup46.annotFont.deriveFont((float)11.1333));
     pwr_valueinputreliefup47.dd.setDynType(1024);
     pwr_valueinputreliefup47.dd.setActionType(4096);
     pwr_valueinputreliefup47.dd.setAccess(22);
@@ -530,6 +541,7 @@ public class JopcPidGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputreliefup47.dd, "$object.SetMaxShow##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup47.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup47.setAnnot1Font(pwr_valueinputreliefup47.annotFont.deriveFont((float)11.1333));
     pwr_valueinputreliefup48.dd.setDynType(1024);
     pwr_valueinputreliefup48.dd.setActionType(4096);
     pwr_valueinputreliefup48.dd.setAccess(22);
@@ -537,6 +549,7 @@ public class JopcPidGen extends JopFrame implements JopUtilityIfc {
       new GeDynValue(pwr_valueinputreliefup48.dd, "$object.SetMinShow##Float32","%5.1f")
       ,new GeDynValueInput(pwr_valueinputreliefup48.dd, 0,0,null,null)
       });
+    pwr_valueinputreliefup48.setAnnot1Font(pwr_valueinputreliefup48.annotFont.deriveFont((float)11.1333));
     pwr_menubar249.dd.setDynType(1);
     pwr_menubar249.dd.setActionType(0);
     pwr_pulldownmenu250.dd.setDynType(0);
@@ -1168,7 +1181,7 @@ protected class pwr_buttoncommand extends GeComponent {
     new Polygon( new int[] { 95, 94, 96, 101}, new int[] { 8, 6, 4,2}, 4),
     new Polygon( new int[] { 101, 96, 4, 2}, new int[] { 2, 4, 4,2}, 4),
     new Polygon( new int[] { 2, 4, 4, 2}, new int[] { 2, 4, 29,34}, 4),
-    new Polygon( new int[] { 2, 4, -1220271757, -29}, new int[] { 34, 29, -1220271736,-8}, 4),
+    new Polygon( new int[] { 2, 4, -1219899021, -29}, new int[] { 34, 29, -1219899000,-8}, 4),
     new Polygon( new int[] { 2, 8, 95, 95, 101, 101, 2}, new int[] {34, 28, 28, 8, 2, 34, 34}, 7),
     new Polygon( new int[] { 2, 7, 9, 8}, new int[] { 34, 32, 30,28}, 4),
     new Polygon( new int[] { 8, 9, 97, 95}, new int[] { 28, 30, 30,28}, 4),
@@ -1176,7 +1189,7 @@ protected class pwr_buttoncommand extends GeComponent {
     new Polygon( new int[] { 95, 97, 99, 101}, new int[] { 8, 9, 7,2}, 4),
     new Polygon( new int[] { 101, 99, 99, 101}, new int[] { 2, 7, 32,34}, 4),
     new Polygon( new int[] { 101, 99, 7, 2}, new int[] { 34, 32, 32,34}, 4),
-    new Polygon( new int[] { 2, 7, -1220271757, -29}, new int[] { 34, 32, -1220271736,-8}, 4),
+    new Polygon( new int[] { 2, 7, -1219899021, -29}, new int[] { 34, 32, -1219899000,-8}, 4),
     new Rectangle2D.Float(2F, 2F, 99.1879F, 32.3879F),
     new Polygon( new int[] { 2, 101, 100, 4, 4, 2}, new int[] { 2, 2, 4, 4, 33, 34}, 6), 
     new Polygon( new int[] { 101, 101, 100, 100, 4, 2}, new int[] { 34, 2, 4, 33, 33, 34}, 6), 
