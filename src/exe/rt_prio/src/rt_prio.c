@@ -135,6 +135,7 @@ int main(int argc, char *argv[])
 		{ "other",	0, NULL, 'o' },
 		{ "rr",		0, NULL, 'r' },
 		{ "verbose",	0, NULL, 'v' },
+		{ "reboot",	0, NULL, 'B' },
 //		{ "version",	0, NULL, 'V' },
 		{ NULL,		0, NULL, 0 }
 	};
@@ -171,6 +172,14 @@ int main(int argc, char *argv[])
 //		case 'V':
 //			printf("chrt version " VERSION "\n");
 //			return 0;
+		case 'B': {
+		        int sts;
+		        sts = system( "/sbin/reboot");
+			if ( sts != 0)
+			  printf( "Reboot return sts: %d\n", sts);
+		        return 0;
+		}
+		  
 		case 'h':
 			ret = 0;
 		default:

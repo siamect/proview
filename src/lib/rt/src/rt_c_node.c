@@ -52,6 +52,7 @@ pwrs_Node_Exec (
     5,5,5,0,0,20,0,5,5,5,
     5,5,5,5,5,5,5,5,5,5,
     5,5,5,5,5,5,5,5,5,5};
+  static int reboot_done = 0;
 
   if ( !np) {
     pwr_tOid oid;
@@ -65,6 +66,28 @@ pwrs_Node_Exec (
 
   if ( !np)
     return;
+
+  if ( np->EmergBreakTrue) {
+    switch ( np->EmergBreakSelect) {
+    case 1: {
+      /* Reboot */
+      int sts;
+
+      if ( !reboot_done) {
+	errh_Fatal( "Emergency break action: reboot");
+	sts = system("rt_prio --reboot");
+	if ( sts != 0) 
+	  errh_Fatal("Unable to reboot, sts %d", sts);
+	reboot_done = 1;
+      }
+      break;
+    }
+    default: ;
+    }
+  }
+  else
+    reboot_done = 0;
+
 
   system_severity = errh_Severity( np->SystemStatus);
   time_GetTime( &current_time);
