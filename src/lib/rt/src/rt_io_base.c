@@ -3009,6 +3009,55 @@ void io_ConvertAi (
   }
 }
 
+void io_ConvertAi32 (
+  pwr_sClass_ChanAi  *cop,
+  pwr_tInt32	      rawvalue,
+  pwr_tFloat32	      *actvalue_p
+) 
+{
+  pwr_tFloat32		sigvalue;
+  pwr_tFloat32		actvalue;
+  pwr_tFloat32		*polycoef_p;
+  int			i;
+
+  switch ( cop->SensorPolyType)
+  {
+    case 0:
+      *actvalue_p = cop->SigValPolyCoef0 + cop->SigValPolyCoef1 * rawvalue;
+      break;
+    case 1:
+      *actvalue_p = cop->SensorPolyCoef0 + cop->SensorPolyCoef1 * rawvalue;
+      break;
+    case 2:
+      sigvalue = cop->SigValPolyCoef0 + cop->SigValPolyCoef1 * rawvalue;
+      polycoef_p = &cop->SensorPolyCoef2;
+      actvalue = 0;
+      for ( i = 0; i < 3; i++)
+      {
+        actvalue = sigvalue * actvalue + *polycoef_p;
+        polycoef_p--;
+      }
+      *actvalue_p = actvalue;
+      break;
+    case 3:
+      sigvalue = cop->SigValPolyCoef0 + cop->SigValPolyCoef1 * rawvalue;
+      actvalue = cop->SensorPolyCoef0 + cop->SensorPolyCoef1 * sigvalue;
+      if ( actvalue >= 0)
+        *actvalue_p = cop->SensorPolyCoef2 * sqrt( actvalue);
+      else
+        *actvalue_p = 0;
+      break;      
+    case 4:
+      sigvalue = cop->SigValPolyCoef0 + cop->SigValPolyCoef1 * rawvalue;
+      actvalue = cop->SensorPolyCoef0 + cop->SensorPolyCoef1 * sigvalue;
+      if ( actvalue >= 0)
+        *actvalue_p = cop->SensorPolyCoef2 * sqrt( actvalue);
+      else
+        *actvalue_p = -cop->SensorPolyCoef2 * sqrt( -actvalue);
+      break;      
+  }
+}
+
 
 /*----------------------------------------------------------------------------*\
   Convert ait from rawvalue to actualvalue.

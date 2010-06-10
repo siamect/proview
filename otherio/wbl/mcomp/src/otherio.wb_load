@@ -1,7 +1,7 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X111"
-    Attr NextCix = "_X13"
+    Attr NextOix = "_X122"
+    Attr NextCix = "_X15"
     Attr NextTix[0] = "_X5"
   EndBody
   Object Type $TypeHier 1 15-NOV-2007 14:35:37.90
@@ -487,7 +487,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         ! Super class.
         !*/
         Object Super $Attribute 7 15-NOV-2007 14:36:59.65
-          Body SysBody 15-NOV-2007 14:36:59.65
+          Body SysBody 06-JUN-2010 14:27:15.66
             Attr PgmName = "Super"
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseIOCard"
@@ -1627,6 +1627,155 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
     EndObject
+    Object OneWire $ClassDef 13 06-JUN-2010 13:05:35.38
+      Body SysBody 06-JUN-2010 13:05:26.98
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 10320
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-JUN-2010 13:05:26.98
+        Body SysBody 06-JUN-2010 13:05:43.85
+          Attr StructName = "OneWire"
+          Attr NextAix = "_X21"
+        EndBody
+        Object Description $Attribute 17 06-JUN-2010 13:05:26.98
+          Body SysBody 06-JUN-2010 13:05:26.98
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Process $Attribute 18 06-JUN-2010 13:05:26.98
+          Body SysBody 06-JUN-2010 13:05:26.98
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 19 06-JUN-2010 13:05:26.98
+          Body SysBody 06-JUN-2010 13:05:26.98
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object Status $Attribute 20 06-JUN-2010 13:05:26.98
+          Body SysBody 06-JUN-2010 13:05:26.98
+            Attr PgmName = "Status"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 112 06-JUN-2010 13:05:26.98
+        Object Pointed $Menu 113 06-JUN-2010 13:05:26.98
+          Object Connect $MenuButton 114 06-JUN-2010 13:05:26.98
+            Body SysBody 06-JUN-2010 13:05:26.98
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object Template OneWire 2151120896 01-JAN-1970 01:00:00.00
+        Body RtBody 06-JUN-2010 18:34:08.77
+          Attr Process = 1
+        EndBody
+      EndObject
+    EndObject
+    Object Maxim_DS18B20 $ClassDef 14 06-JUN-2010 13:53:40.68
+      Body SysBody 06-JUN-2010 13:05:26.98
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18512
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-JUN-2010 13:05:26.98
+        Body SysBody 06-JUN-2010 13:53:51.81
+          Attr StructName = "Maxim_DS18B20"
+          Attr NextAix = "_X24"
+        EndBody
+        Object Super $Attribute 15 06-JUN-2010 14:27:43.39
+          Body SysBody 06-JUN-2010 14:27:21.38
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-BaseIOCard"
+          EndBody
+        EndObject
+        Object Status $Attribute 18 06-JUN-2010 13:05:26.98
+          Body SysBody 06-JUN-2010 13:05:26.98
+            Attr PgmName = "Status"
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+        Object Family $Attribute 22 06-JUN-2010 13:56:28.16
+          Body SysBody 06-JUN-2010 13:56:08.04
+            Attr PgmName = "Family"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object Resolution $Attribute 21 06-JUN-2010 13:54:53.59
+          Body SysBody 06-JUN-2010 13:13:46.70
+            Attr PgmName = "Resolution"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ScanInterval $Attribute 19 06-JUN-2010 13:05:26.98
+          Body SysBody 06-JUN-2010 13:05:26.98
+            Attr PgmName = "ScanInterval"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ChAi $Attribute 20 06-JUN-2010 13:08:41.78
+          Body SysBody 06-JUN-2010 13:09:01.03
+            Attr PgmName = "ChAi"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 118 06-JUN-2010 13:05:26.98
+        Object IoCardInit $Method 119 06-JUN-2010 13:05:26.98
+          Body SysBody 06-JUN-2010 13:54:01.89
+            Attr MethodName = "Maxim_DS18B20-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 120 06-JUN-2010 13:05:26.98
+          Body SysBody 06-JUN-2010 13:54:09.79
+            Attr MethodName = "Maxim_DS18B20-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 121 06-JUN-2010 13:05:26.98
+          Body SysBody 06-JUN-2010 13:54:16.51
+            Attr MethodName = "Maxim_DS18B20-IoCardRead"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Maxim_DS18B20 2151383040 01-JAN-1970 01:00:00.00
+        Body RtBody 06-JUN-2010 18:34:27.07
+          Attr Super.Specification = "Maxim 1-Wire temperature sensor DS18B10"
+          Attr Super.Process = 1
+          Attr Super.ErrorSoftLimit = 50
+          Attr Super.ErrorHardLimit = 100
+          Attr Super.MaxNoOfChannels = 1
+          Attr Family = 28
+          Attr Resolution = 12
+          Attr ChAi.ConversionOn = 1
+          Attr ChAi.ScanInterval = 1
+          Attr ChAi.RawValRangeLow = -5.500000e+04
+          Attr ChAi.RawValRangeHigh = 1.250000e+05
+          Attr ChAi.ChannelSigValRangeLow = -5.500000e+04
+          Attr ChAi.ChannelSigValRangeHigh = 1.250000e+05
+          Attr ChAi.SigValueUnit = "C"
+          Attr ChAi.SensorPolyType = 1
+          Attr ChAi.SensorSigValRangeLow = -5.500000e+04
+          Attr ChAi.SensorSigValRangeHigh = 1.250000e+05
+          Attr ChAi.ActValRangeLow = -5.500000e+01
+          Attr ChAi.ActValRangeHigh = 1.250000e+02
+        EndBody
+      EndObject
+    EndObject
     !/**
     !  @Version 1.0
     !  @Group IO
@@ -1731,10 +1880,10 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  @Group IO
     !  @Summary Rack object for USB board Velleman K8055/VM110
     !  Rack object for USB board Velleman K8055/VM110.
-    !
+    ! 
     !  The object is configured as a child to an USB_Agent object and
     !  as a parent to Velleman_K8055_Board objects.
-    !
+    ! 
     !  @b See also
     !  @classlink USB_Agent otherio_usb_agent.html
     !  @classlink Velleman_K8055_Board otherio_velleman_k8055_board.html
@@ -1822,29 +1971,29 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  @Group IO
     !  @Summary Card object for USB board Velleman K8055/VM110
     !  Card object for USB board Velleman K8055/VM110.
-    !
+    ! 
     !  The object is configured as a child to a Velleman_K8055 object.
-    !
+    ! 
     !  The board has
     !  - 2 analog input channels.
     !  - 5 digital input channels.
     !  - 2 analog output channels.
     !  - 8 digital output channels.
-    !
+    ! 
     !  All channel object are specified as internal attributes.
     !  Only use channels has to be connected to signals.
-    !
+    ! 
     !  Four boards can be connected to a station. The address of the boards
     !  are set with jumpers, SK5 and SK6, and also has to be set in the 
     !  Address attribute. The address is a value between 0 and 3.
-    !
+    ! 
     !  Address  SK5  SK6
     !  -----------------
     !  0        on   on
     !  1        off  on
     !  2        on   off
     !  3        off  off
-    !
+    ! 
     !  @b See also
     !  @classlink USB_Agent otherio_usb_agent.html
     !  @classlink Velleman_K8055 otherio_velleman_k8055.html

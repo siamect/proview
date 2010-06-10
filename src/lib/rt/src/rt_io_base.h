@@ -240,6 +240,12 @@ void io_ConvertAi (
   pwr_tFloat32	      *actvalue_p
 );
 
+void io_ConvertAi32 (
+  pwr_sClass_ChanAi  *cop,
+  pwr_tInt32	      rawvalue,
+  pwr_tFloat32	      *actvalue_p
+);
+
 void io_ConvertAit (
   pwr_sClass_ChanAit  *cop,
   pwr_tInt16	      rawvalue,
