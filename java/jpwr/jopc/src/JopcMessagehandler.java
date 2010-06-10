@@ -34,7 +34,7 @@ public class JopcMessagehandler extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä·›·DAó·DAó·p—uÄO›·+¡· #¡·xê´¿ç™˜·DAó·DAó·x—u #¡·");
+    JopSpider.setSystemName( "ä£·D‘ú·D‘ú·p—uÄŸ¢·{¨· s¨·È‡Æ¿çéŸ·D‘ú·D‘ú·x—u s¨·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 711, 169);
@@ -56,31 +56,31 @@ public class JopcMessagehandler extends JopFrame implements JopUtilityIfc {
     else
       this.setTitle("JopcMessagehandler");
     pwr_indsquare2 = new pwr_indsquare(session);
-    pwr_indsquare2.setBounds(new Rectangle(132,77,17,18));
+    pwr_indsquare2.setBounds(new Rectangle(133,78,15,16));
     localPanel.add(pwr_indsquare2, new Proportion(pwr_indsquare2.getBounds(), dsize));
     pwr_indsquare3 = new pwr_indsquare(session);
-    pwr_indsquare3.setBounds(new Rectangle(132,98,17,18));
+    pwr_indsquare3.setBounds(new Rectangle(133,99,15,16));
     localPanel.add(pwr_indsquare3, new Proportion(pwr_indsquare3.getBounds(), dsize));
     pwr_valuelong4 = new pwr_valuelong(session);
-    pwr_valuelong4.setBounds(new Rectangle(150,76,537,19));
+    pwr_valuelong4.setBounds(new Rectangle(151,77,535,17));
     pwr_valuelong4.setBorderColor(33);
     localPanel.add(pwr_valuelong4, new Proportion(pwr_valuelong4.getBounds(), dsize));
     pwr_valuelong5 = new pwr_valuelong(session);
-    pwr_valuelong5.setBounds(new Rectangle(150,98,537,19));
+    pwr_valuelong5.setBounds(new Rectangle(151,99,535,17));
     pwr_valuelong5.setBorderColor(33);
     localPanel.add(pwr_valuelong5, new Proportion(pwr_valuelong5.getBounds(), dsize));
     pwr_valuesmall7 = new pwr_valuesmall(session);
-    pwr_valuesmall7.setBounds(new Rectangle(132,9,56,19));
+    pwr_valuesmall7.setBounds(new Rectangle(133,10,54,17));
     pwr_valuesmall7.setFillColor(31);
     pwr_valuesmall7.setBorderColor(33);
     localPanel.add(pwr_valuesmall7, new Proportion(pwr_valuesmall7.getBounds(), dsize));
     pwr_valuesmall9 = new pwr_valuesmall(session);
-    pwr_valuesmall9.setBounds(new Rectangle(132,30,56,19));
+    pwr_valuesmall9.setBounds(new Rectangle(133,31,54,17));
     pwr_valuesmall9.setFillColor(31);
     pwr_valuesmall9.setBorderColor(33);
     localPanel.add(pwr_valuesmall9, new Proportion(pwr_valuesmall9.getBounds(), dsize));
     pwr_valuesmall11 = new pwr_valuesmall(session);
-    pwr_valuesmall11.setBounds(new Rectangle(132,53,56,19));
+    pwr_valuesmall11.setBounds(new Rectangle(133,54,54,17));
     pwr_valuesmall11.setFillColor(31);
     pwr_valuesmall11.setBorderColor(33);
     localPanel.add(pwr_valuesmall11, new Proportion(pwr_valuesmall11.getBounds(), dsize));

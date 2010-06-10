@@ -206,6 +206,7 @@ public class GeTextField extends JTextField implements GeComponentIfc,
   public void setAnnot1Font( Font font) { annot1Font = font; 
                                           annotFont = font; setFont(font);}
   public Font getAnnot1Font() { return annot1Font;}
+  public void setGradient ( int grad) {};
   public int fillColor = 9999;
   public int originalFillColor = 9999;
   public int borderColor = 9999;

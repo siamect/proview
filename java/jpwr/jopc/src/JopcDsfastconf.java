@@ -32,7 +32,7 @@ public class JopcDsfastconf extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä·›·DAó·DAó·p—uÄO›·+¡· #¡·xê´¿ç™˜·DAó·DAó·x—u #¡·");
+    JopSpider.setSystemName( "ä£·D‘ú·D‘ú·p—uÄŸ¢·{¨· s¨·È‡Æ¿çéŸ·D‘ú·D‘ú·x—u s¨·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 711, 128);
@@ -54,23 +54,23 @@ public class JopcDsfastconf extends JopFrame implements JopUtilityIfc {
     else
       this.setTitle("JopcDsfastconf");
     pwr_valuelong0 = new pwr_valuelong(session);
-    pwr_valuelong0.setBounds(new Rectangle(151,52,536,19));
+    pwr_valuelong0.setBounds(new Rectangle(152,53,534,17));
     pwr_valuelong0.setBorderColor(33);
     localPanel.add(pwr_valuelong0, new Proportion(pwr_valuelong0.getBounds(), dsize));
     pwr_valuelong1 = new pwr_valuelong(session);
-    pwr_valuelong1.setBounds(new Rectangle(151,30,535,19));
+    pwr_valuelong1.setBounds(new Rectangle(152,31,533,17));
     pwr_valuelong1.setBorderColor(33);
     localPanel.add(pwr_valuelong1, new Proportion(pwr_valuelong1.getBounds(), dsize));
     pwr_valuesmall2 = new pwr_valuesmall(session);
-    pwr_valuesmall2.setBounds(new Rectangle(131,7,56,19));
+    pwr_valuesmall2.setBounds(new Rectangle(132,8,54,17));
     pwr_valuesmall2.setFillColor(31);
     pwr_valuesmall2.setBorderColor(33);
     localPanel.add(pwr_valuesmall2, new Proportion(pwr_valuesmall2.getBounds(), dsize));
     pwr_indsquare5 = new pwr_indsquare(session);
-    pwr_indsquare5.setBounds(new Rectangle(132,52,17,18));
+    pwr_indsquare5.setBounds(new Rectangle(133,53,15,16));
     localPanel.add(pwr_indsquare5, new Proportion(pwr_indsquare5.getBounds(), dsize));
     pwr_indsquare6 = new pwr_indsquare(session);
-    pwr_indsquare6.setBounds(new Rectangle(132,31,17,18));
+    pwr_indsquare6.setBounds(new Rectangle(133,32,15,16));
     localPanel.add(pwr_indsquare6, new Proportion(pwr_indsquare6.getBounds(), dsize));
     pwr_valuelong0.dd.setDynType(1025);
     pwr_valuelong0.dd.setActionType(0);

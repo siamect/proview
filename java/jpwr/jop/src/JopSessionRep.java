@@ -153,16 +153,22 @@ public class JopSessionRep implements JopSessionIfc {
       JopLog.log("openGraphFrame " + name + " " + instance);
       aref = engine.gdh.nameToAttrRef( instance);
       if ( aref.evenSts()) return;
+    }
+    if ( classGraph) {
+      int cid;
 
-      if ( classGraph) {
+      if ( instance == null)
+	return;
 
-	CdhrTypeId tid = engine.gdh.getAttrRefTid( aref.aref);
-	if ( tid.evenSts()) return;
+      CdhrTypeId tid = engine.gdh.getAttrRefTid( aref.aref);
+      if ( tid.evenSts()) return;
 
-        CdhrObjid coid = engine.gdh.classIdToObjid( tid.typeId);
+      cid = tid.typeId;
+      
+      while ( true) {
+
+	CdhrObjid coid = engine.gdh.classIdToObjid( cid);
 	if ( coid.evenSts()) return;
-
-	CdhrClassId cid = engine.gdh.getSuperClass( tid.typeId, null);
 
 	CdhrString sret = engine.gdh.objidToName( coid.objid, Cdh.mName_object);
 	if ( sret.evenSts()) return;
@@ -175,12 +181,15 @@ public class JopSessionRep implements JopSessionIfc {
 	    suffix = Integer.toString(gcret.value);
 	}
 	if ( coid.objid.vid < Cdh.cUserClassVolMin ||
-	    (coid.objid.vid >= Cdh.cManufactClassVolMin && 
-	     coid.objid.vid <= Cdh.cManufactClassVolMax)) {
+	     (coid.objid.vid >= Cdh.cManufactClassVolMin && 
+	      coid.objid.vid <= Cdh.cManufactClassVolMax)) {
 	  // Class is a base class, java classname starts with JopC
 	  if ( coid.objid.vid == 1)
 	    name = "jpwr.jopc.Jopc" + sret.str.substring(1,2).toUpperCase() + 
-	      sret.str.substring(2).toLowerCase() + suffix;
+		sret.str.substring(2).toLowerCase() + suffix;
+	  else if ( coid.objid.vid == 64002)
+	    name = "jpwr.abb.Jopc" + sret.str.substring(0,1).toUpperCase() + 
+		sret.str.substring(1).toLowerCase() + suffix;
 	  else if ( coid.objid.vid == 10) {
 	    if ( sret.str.startsWith( "BaseFcPPO"))
 	      name = "jpwr.bcompfc.Jopc" + sret.str.substring(0,1).toUpperCase() + 
@@ -191,30 +200,64 @@ public class JopSessionRep implements JopSessionIfc {
 	  }
 	  else
 	    name = "jpwr.jopc.Jopc" + sret.str.substring(0,1).toUpperCase() + 
-	      sret.str.substring(1).toLowerCase() + suffix;
+		sret.str.substring(1).toLowerCase() + suffix;
 	}
 	else
 	  // Java name equals class name
 	  name = sret.str.substring(0,1).toUpperCase() + sret.str.substring(1).toLowerCase() +
 	      suffix;
 	JopLog.log("openGraphFrame classgraph " + name);
+
+	Object graph;
+	if ( aref == null)
+          graph = getUtility( JopUtility.GRAPH, (PwrtObjid)null, name);
+	else
+          graph = getUtility( JopUtility.GRAPH, aref.aref, name);
+	if ( graph != null) {
+	  ((JFrame)graph).setState(Frame.NORMAL);
+	  ((JFrame)graph).toFront();
+	  break;
+	}
+	else {
+	  try {
+	    graph = JopSpider.loadFrame( session, name, instance, scrollbar);
+	    if ( graph != null) {
+	      addUtility( graph);
+	      System.out.println( "Add utility graph " + name);
+	    }
+	    break;
+	  }
+	  catch ( ClassNotFoundException e) {
+	    if ( classGraph) {
+	      CdhrClassId rcid = engine.gdh.getSuperClass( cid, null);
+	      if ( rcid.evenSts())
+		break;
+	      cid = rcid.classId;
+	    }
+	  }
+	}
       }
     }
-    Object graph;
-    if ( aref == null)
-      graph = getUtility( JopUtility.GRAPH, (PwrtObjid)null, name);
-    else
-      graph = getUtility( JopUtility.GRAPH, aref.aref, name);
-    if ( graph != null) {
-      ((JFrame)graph).setState(Frame.NORMAL);
-      ((JFrame)graph).toFront();
-      // ((JFrame)graph).requestFocus();  // Has no effect...
-    }
     else {
-      graph = JopSpider.loadFrame( session, name, instance, scrollbar);
+      Object graph;
+      if ( aref == null)
+        graph = getUtility( JopUtility.GRAPH, (PwrtObjid)null, name);
+      else
+        graph = getUtility( JopUtility.GRAPH, aref.aref, name);
       if ( graph != null) {
-        addUtility( graph);
-        System.out.println( "Add utility graph " + name);
+	((JFrame)graph).setState(Frame.NORMAL);
+	((JFrame)graph).toFront();
+      }
+      else {
+        try {
+          graph = JopSpider.loadFrame( session, name, instance, scrollbar);
+	  if ( graph != null) {
+            addUtility( graph);
+	    System.out.println( "Add utility graph " + name);
+	  }
+	}
+	catch ( ClassNotFoundException e) {
+	}
       }
     }
   }

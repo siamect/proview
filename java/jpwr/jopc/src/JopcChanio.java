@@ -35,7 +35,7 @@ public class JopcChanio extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä·›·DAó·DAó·p—uÄO›·+¡· #¡·xê´¿ç™˜·DAó·DAó·x—u #¡·");
+    JopSpider.setSystemName( "ä£·D‘ú·D‘ú·p—uÄŸ¢·{¨· s¨·È‡Æ¿çéŸ·D‘ú·D‘ú·x—u s¨·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 711, 226);
@@ -57,41 +57,41 @@ public class JopcChanio extends JopFrame implements JopUtilityIfc {
     else
       this.setTitle("JopcChanio");
     pwr_valuemedium0 = new pwr_valuemedium(session);
-    pwr_valuemedium0.setBounds(new Rectangle(132,54,91,22));
+    pwr_valuemedium0.setBounds(new Rectangle(133,55,89,20));
     pwr_valuemedium0.setFillColor(51);
     pwr_valuemedium0.setBorderColor(56);
     localPanel.add(pwr_valuemedium0, new Proportion(pwr_valuemedium0.getBounds(), dsize));
     pwr_valuelong3 = new pwr_valuelong(session);
-    pwr_valuelong3.setBounds(new Rectangle(132,4,570,21));
+    pwr_valuelong3.setBounds(new Rectangle(133,5,568,19));
     pwr_valuelong3.setFillColor(51);
     pwr_valuelong3.setBorderColor(46);
     localPanel.add(pwr_valuelong3, new Proportion(pwr_valuelong3.getBounds(), dsize));
     pwr_buttoncommand4 = new pwr_buttoncommand(session);
-    pwr_buttoncommand4.setBounds(new Rectangle(8,143,83,28));
+    pwr_buttoncommand4.setBounds(new Rectangle(9,144,81,26));
     pwr_buttoncommand4.setColorTone(1);
     localPanel.add(pwr_buttoncommand4, new Proportion(pwr_buttoncommand4.getBounds(), dsize));
     pwr_valuelong5 = new pwr_valuelong(session);
-    pwr_valuelong5.setBounds(new Rectangle(132,29,570,21));
+    pwr_valuelong5.setBounds(new Rectangle(133,30,568,19));
     pwr_valuelong5.setFillColor(51);
     pwr_valuelong5.setBorderColor(46);
     localPanel.add(pwr_valuelong5, new Proportion(pwr_valuelong5.getBounds(), dsize));
     pwr_valuemedium7 = new pwr_valuemedium(session);
-    pwr_valuemedium7.setBounds(new Rectangle(132,84,91,22));
+    pwr_valuemedium7.setBounds(new Rectangle(133,85,89,20));
     pwr_valuemedium7.setFillColor(51);
     pwr_valuemedium7.setBorderColor(56);
     localPanel.add(pwr_valuemedium7, new Proportion(pwr_valuemedium7.getBounds(), dsize));
     pwr_valuemedium9 = new pwr_valuemedium(session);
-    pwr_valuemedium9.setBounds(new Rectangle(132,111,91,22));
+    pwr_valuemedium9.setBounds(new Rectangle(133,112,89,20));
     pwr_valuemedium9.setFillColor(51);
     pwr_valuemedium9.setBorderColor(56);
     localPanel.add(pwr_valuemedium9, new Proportion(pwr_valuemedium9.getBounds(), dsize));
     pwr_valuemedium11 = new pwr_valuemedium(session);
-    pwr_valuemedium11.setBounds(new Rectangle(342,84,91,22));
+    pwr_valuemedium11.setBounds(new Rectangle(343,85,89,20));
     pwr_valuemedium11.setFillColor(51);
     pwr_valuemedium11.setBorderColor(56);
     localPanel.add(pwr_valuemedium11, new Proportion(pwr_valuemedium11.getBounds(), dsize));
     pwr_framethin13 = new pwr_framethin(session);
-    pwr_framethin13.setBounds(new Rectangle(0,80,467,29));
+    pwr_framethin13.setBounds(new Rectangle(1,81,465,27));
     localPanel.add(pwr_framethin13, new Proportion(pwr_framethin13.getBounds(), dsize));
     pwr_valuemedium0.dd.setDynType(1024);
     pwr_valuemedium0.dd.setActionType(0);
@@ -449,7 +449,7 @@ protected class pwr_buttoncommand extends GeComponent {
     new Polygon( new int[] { 88, 87, 88, 94}, new int[] { 8, 5, 4,2}, 4),
     new Polygon( new int[] { 94, 88, 4, 2}, new int[] { 2, 4, 4,2}, 4),
     new Polygon( new int[] { 2, 4, 4, 2}, new int[] { 2, 4, 26,32}, 4),
-    new Polygon( new int[] { 2, 4, 145486657, -206}, new int[] { 32, 26, -136,-136}, 4),
+    new Polygon( new int[] { 2, 4, -151, -206}, new int[] { 32, 26, -135,-136}, 4),
     new Polygon( new int[] { 2, 8, 88, 88, 94, 94, 2}, new int[] {32, 26, 26, 8, 2, 32, 32}, 7),
     new Polygon( new int[] { 2, 6, 8, 8}, new int[] { 32, 30, 28,26}, 4),
     new Polygon( new int[] { 8, 8, 90, 88}, new int[] { 26, 28, 28,26}, 4),

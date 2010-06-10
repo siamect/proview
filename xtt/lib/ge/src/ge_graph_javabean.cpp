@@ -1590,6 +1590,9 @@ int Graph::export_javaframe( char *filename, char *bean_name, int applet,
           fp <<
 "    localPanel.setBackground(GeColor.getColor(" << (int) background_color <<
 	", GeColor.NO_COLOR));" << endl;
+	else
+          fp <<
+"    localPanel.setBackground(GeColor.getColor(31, GeColor.NO_COLOR));" << endl;
         if ( !applet)
           fp <<
 "    this.setSize(size);" << endl <<
@@ -1835,6 +1838,9 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
       fp <<
 "    localPanel.setBackground(GeColor.getColor(" << (int) background_color <<
 	", GeColor.NO_COLOR));" << endl;
+    else
+      fp <<
+"    localPanel.setBackground(GeColor.getColor(31, GeColor.NO_COLOR));" << endl;
     if ( !applet)
       fp <<
 "    this.setSize(size);" << endl <<

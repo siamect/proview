@@ -33,7 +33,7 @@ public class JopcBasemotorsim extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
+    JopSpider.setSystemName( "äw›·Dó·Dó·p—uÄ›·ë · ã ·x6Ý¿çY˜·Dó·Dó·x—u ã ·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 432, 209);
@@ -55,28 +55,28 @@ public class JopcBasemotorsim extends JopFrame implements JopUtilityIfc {
     else
       this.setTitle("JopcBasemotorsim");
     pwr_menubar21 = new pwr_menubar2(session);
-    pwr_menubar21.setBounds(new Rectangle(6,0,426,30));
+    pwr_menubar21.setBounds(new Rectangle(7,0,424,28));
     pwr_menubar21.setShadow(1);
     localPanel.add(pwr_menubar21, new Proportion(pwr_menubar21.getBounds(), dsize));
     pwr_pulldownmenu22 = new pwr_pulldownmenu2(session);
-    pwr_pulldownmenu22.setBounds(new Rectangle(28,0,92,30));
+    pwr_pulldownmenu22.setBounds(new Rectangle(29,0,90,28));
     pwr_pulldownmenu22.setShadow(1);
     localPanel.add(pwr_pulldownmenu22, new Proportion(pwr_pulldownmenu22.getBounds(), dsize));
     pwr_pulldownmenu23 = new pwr_pulldownmenu2(session);
-    pwr_pulldownmenu23.setBounds(new Rectangle(304,0,92,30));
+    pwr_pulldownmenu23.setBounds(new Rectangle(305,0,90,28));
     pwr_pulldownmenu23.setShadow(1);
     localPanel.add(pwr_pulldownmenu23, new Proportion(pwr_pulldownmenu23.getBounds(), dsize));
     pwr_smallbuttoncenter5 = new pwr_smallbuttoncenter(session);
-    pwr_smallbuttoncenter5.setBounds(new Rectangle(256,88,49,26));
+    pwr_smallbuttoncenter5.setBounds(new Rectangle(257,89,47,24));
     pwr_smallbuttoncenter5.setFillColor(217);
     localPanel.add(pwr_smallbuttoncenter5, new Proportion(pwr_smallbuttoncenter5.getBounds(), dsize));
     pwr_indsquare6 = new pwr_indsquare(session);
-    pwr_indsquare6.setBounds(new Rectangle(218,91,20,21));
+    pwr_indsquare6.setBounds(new Rectangle(219,92,18,19));
     pwr_indsquare6.setFillColor(114);
     pwr_indsquare6.setShadow(1);
     localPanel.add(pwr_indsquare6, new Proportion(pwr_indsquare6.getBounds(), dsize));
     pwr_smallbuttoncenter8 = new pwr_smallbuttoncenter(session);
-    pwr_smallbuttoncenter8.setBounds(new Rectangle(168,120,219,26));
+    pwr_smallbuttoncenter8.setBounds(new Rectangle(169,121,217,24));
     pwr_smallbuttoncenter8.setFillColor(217);
     pwr_smallbuttoncenter8.setTextColor(3);
     localPanel.add(pwr_smallbuttoncenter8, new Proportion(pwr_smallbuttoncenter8.getBounds(), dsize));

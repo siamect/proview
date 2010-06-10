@@ -36,7 +36,7 @@ public class JopcBasemanvalvesim extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
+    JopSpider.setSystemName( "äw›·Dó·Dó·p—uÄ›·ë · ã ·x6Ý¿çY˜·Dó·Dó·x—u ã ·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 332, 195);
@@ -58,38 +58,38 @@ public class JopcBasemanvalvesim extends JopFrame implements JopUtilityIfc {
     else
       this.setTitle("JopcBasemanvalvesim");
     pwr_menubar21 = new pwr_menubar2(session);
-    pwr_menubar21.setBounds(new Rectangle(10,0,308,24));
+    pwr_menubar21.setBounds(new Rectangle(11,0,306,22));
     pwr_menubar21.setShadow(1);
     localPanel.add(pwr_menubar21, new Proportion(pwr_menubar21.getBounds(), dsize));
     pwr_pulldownmenu22 = new pwr_pulldownmenu2(session);
-    pwr_pulldownmenu22.setBounds(new Rectangle(21,0,71,24));
+    pwr_pulldownmenu22.setBounds(new Rectangle(22,0,69,22));
     pwr_pulldownmenu22.setShadow(1);
     localPanel.add(pwr_pulldownmenu22, new Proportion(pwr_pulldownmenu22.getBounds(), dsize));
     pwr_pulldownmenu23 = new pwr_pulldownmenu2(session);
-    pwr_pulldownmenu23.setBounds(new Rectangle(231,0,71,24));
+    pwr_pulldownmenu23.setBounds(new Rectangle(232,0,69,22));
     pwr_pulldownmenu23.setShadow(1);
     localPanel.add(pwr_pulldownmenu23, new Proportion(pwr_pulldownmenu23.getBounds(), dsize));
     pwr_smallbuttoncenter6 = new pwr_smallbuttoncenter(session);
-    pwr_smallbuttoncenter6.setBounds(new Rectangle(194,87,38,21));
+    pwr_smallbuttoncenter6.setBounds(new Rectangle(195,88,36,19));
     pwr_smallbuttoncenter6.setFillColor(217);
     localPanel.add(pwr_smallbuttoncenter6, new Proportion(pwr_smallbuttoncenter6.getBounds(), dsize));
     pwr_indsquare7 = new pwr_indsquare(session);
-    pwr_indsquare7.setBounds(new Rectangle(165,89,16,17));
+    pwr_indsquare7.setBounds(new Rectangle(166,90,14,15));
     pwr_indsquare7.setShadow(1);
     localPanel.add(pwr_indsquare7, new Proportion(pwr_indsquare7.getBounds(), dsize));
     pwr_smallbuttoncenter8 = new pwr_smallbuttoncenter(session);
-    pwr_smallbuttoncenter8.setBounds(new Rectangle(194,113,38,21));
+    pwr_smallbuttoncenter8.setBounds(new Rectangle(195,114,36,19));
     pwr_smallbuttoncenter8.setFillColor(217);
     localPanel.add(pwr_smallbuttoncenter8, new Proportion(pwr_smallbuttoncenter8.getBounds(), dsize));
     pwr_indsquare10 = new pwr_indsquare(session);
-    pwr_indsquare10.setBounds(new Rectangle(165,115,16,17));
+    pwr_indsquare10.setBounds(new Rectangle(166,116,14,15));
     pwr_indsquare10.setShadow(1);
     localPanel.add(pwr_indsquare10, new Proportion(pwr_indsquare10.getBounds(), dsize));
     grp71_11 = new Grp71_(session);
-    grp71_11.setBounds(new Rectangle(37,88,78,18));
+    grp71_11.setBounds(new Rectangle(38,89,76,16));
     localPanel.add(grp71_11, new Proportion(grp71_11.getBounds(), dsize));
     grp72_12 = new Grp72_(session);
-    grp72_12.setBounds(new Rectangle(37,114,89,18));
+    grp72_12.setBounds(new Rectangle(38,115,87,16));
     localPanel.add(grp72_12, new Proportion(grp72_12.getBounds(), dsize));
     pwr_menubar21.dd.setDynType(1);
     pwr_menubar21.dd.setActionType(0);

@@ -114,6 +114,7 @@ Call functions from the plc program <link>dg_plc_functions
 Communication <link> communication
 Application programming <link>dg_application
 Creating Process Graphics  <link> ge_man
+Java operator interface <link> dg_web_interface
 Running and Testing a Proview System <link> conf_test
 
 <b>Reference Manuals
@@ -4140,6 +4141,301 @@ Reference Manual .
 See XttGraph in Object Reference Manual <classlink>xttgraph,"",$pwr_lang/pwrb_xtthelp.dat
 </topic>
 </chapter>
+
+<chapter>
+<topic> dg_web_interface
+Java operator environment
+
+Proview contains besides the ordinary operator environment in X windows, also an operator
+environtment written in java. The advantage of java is that it is runnable in a web browser
+and on many platforms. The disadvantage is that it is slower, and has a limited functionality.
+
+<h1>Installation of java
+<h2>Development station
+To be able to export process graphs to java, the Java Developmet Kit, jdk, has to be 
+installed. Download a suitable jdk from java.sun.com, and define the environment variable
+jdk to the directory where the jdk is unpacked, e.g. /usr/local/jdk1.6.0_10, and put 
+$jdk/bin in PATH. Also define jdk_home to $jdk/bin.
+
+<c>export jdk=/usr/local/jdk1.6.0_10
+<c>export PATH=$PATH:$jdk/bin
+<c>export jdk_home=$jdk/bin
+
+<h2>Process and operator stations
+On the process and operator stations the Java Runtime Environmet, jre, has to be installed.
+Download from java.sun.com and unpack under /usr/local. Also here the jdk and jdk_home should
+be defined (this i made by /etc/pwrp_profile)
+
+<c>export jdk=/usr/local/jre1.6.0_10
+<c>export PATH=$PATH:$jdk/bin
+<c>export jdk_home=$jdk/bin
+
+<h1>Overview
+<h2>Webbrowser
+The java environment can be started ina web brower, by entering an URL to the projects
+homepage. Information about objects, alarms etc. is fetched from three server processes
+that has to be started on the node from where the homepage is opened, rt_webmon, 
+rt_webmonmh and rt_webmonelog. The configuration of a WebHandler object in the node
+hierarchy is needed to start the server processes.
+
+<image> dg_fig100.png
+<b>Fig Homepage for a project
+
+<h2>Local
+The java environmet can also be started locally on the node where the Proview runtime
+is started. The server processes for the web interface doesn't have to be started, the
+information is fetched directly from the realtime database.
+
+The local java environment contains a menu, but not a right frame as the web page. Only
+Ge graph exported as java frames can be viewed, not java applets. The functions for displaying
+alarms and events, and search in the event logg is not implemented in the local environment.
+
+The operator environment is started with the command
+
+<c>> jpwr_opwind.sh
+
+<image> dg_fig103.png
+<b>Operator menu in local environment
+
+<h1>Configuration
+
+<h2>Configuration of server processes
+If there is a WebHandler object, the server processes for the web interface is started.
+
+<h2>Configuration of operator menu
+The configuration of the operator menu i made in the node hierarchy with attributes in
+the WebHandler object, and with WebGraph and WebLink object beneath this object.
+
+<b>WebHandler
+
+In the WebHandler object, menu buttons for the standard function are configured.
+
+<b>EnableLanguage
+Displays a button for language selection in the menu. The language selection has to be
+done before various windows are opened. Windows that are already created are not affected
+by a new language selection.
+
+<b>EnableLogin
+Displays buttons for login and logout in the menu. The login button makes it possible to
+login as a Proview user with specified privileges that defines the users access to the system.
+
+<b>EnableAlarmList
+Displays a button in the menu to open a window with alarm and event lists.
+
+<b>EnableEventLog
+Displays a button in the menu to search for events in the eventlog.
+
+<b>EnableNavigator
+Displays a button in the menu to open the navigator.
+
+<b>WebGraph
+WebGraph object configures buttons in the menu to open process graphics. WebGraph objects
+are positioned under the WebHandler object.
+
+A WebGraph object opens a Ge graph as a Java Frame, i.e. in a separate window. In the Ge
+editor, you has to specify that the graph should be exported as a java frame by setting
+IsJavaFrame to 1 in Graph Attributes. If the graph should be opened as an applet, a WebLink
+object is used, see below.
+
+In the Name attribute the name of the java class for the graph is stated. Normally this is
+the same as the graph name, but block letter in the first character. It is possible to 
+export the graph with another class-name, by selecting 'Export As'. This has to be done when
+the graphname contains local characters that are not valid in a java class-name, or if the
+graphname starts with a digit.
+
+In the Text attribute, the button text is stated.
+
+<b>WebLink
+A WebLink object configures a button in the menu to open an arbitrary URL. In WebTarget
+is stated where the new page is put, in a separate frame, the the right frame in the
+parent frame (both the menu and the right frame).
+
+<b>Open a Ge graph as a java applet
+A WebLink object can also be used to open a Ge graph as an applet, for example in the 
+right frame. In the Ge editor, you specify the graph to be exported as a java frame by
+setting IsJavaApplet to 1 in GraphAttributes. A java class for the applet is generated,
+and also a html file to open the applet. The html file has the same name as the graph,
+and is created on $pwrp_web, e.g. mygraph.html. By stating this file in the URL attribute
+of the WebLink object, and setting WebTarget to RightFrame, the graph will be viewed
+in the right frame when the button is activated. Note that a graph that is opened as an 
+applet is given privileges from the DefaultWebPriv attribute of the Security object. It
+is not affected of a possible login.
+
+<h2>Configuration of the right frame
+The home page for a project consist of a menu and a right frame. As default, the xtt help 
+text for the project is viewed in the right frame. This is converted to html when the node
+is built. If another start page is disired, an URL can be stated in the StartURL attribute
+of the WebHandler object. If you, for example, want to show a Ge graph, you export the
+graph as a java applet, and insert the html-file for the graph into the StartURL attribute.
+
+<h2>LoadArchives
+If Ge graphs from other projects is to be displayed, the java archives for these projects
+has to be available for the web browser. The java classes that is generated when the graphs
+are exported in the Ge editor, is placed in an archive with the name pwrp_'systemname'_web.jar.
+The archive of the present project is always loaded, but if also other archives is to be
+loaded, they should be stated in the LoadArchive attribute of the WebHandler object. The
+archives also have to be copied to $pwrp_web.
+
+<h2>Privileges
+<b>Default privileges
+The default privileges the the privileges a user is given that is not logged in. It is
+stated in the DefaultWebPriv attribute of the Security object. 0 means that a not logged in
+user only have access to the login dialog. Normally you set RtRead, which gives not logged
+in users access to look, but not to change values.
+
+<b>Login
+To be able to log in the login function has to be enabled in the WebHandler object. By 
+clicking on the Login button in the operator window, the user can log in with username and
+password. The username has to be registred in the system group that is stated in the 
+WebSystemGroup attribute of the Security object. After a successfull login, privileges of
+the user determines the access to the system.
+
+The password is decrypted by the client, i.e. no uncrypted passwords are sent over the
+network.
+
+<h1>Server processes
+Three server processes are started att Proview runtime startup, rt_webmon, rt_webmonmh 
+and rt_webmonelog.
+
+<b>rt_webmon
+rt_webmon opens a port from which web clients can fetch information about objects in the 
+database and to set up subscriptions.
+
+<b>rt_webmonmh
+rt_webmonmh supplies a web client with alarms and events. The web interface contains a window
+with alarm and event lists the fetches the information from this process. The selection of
+of alarm and events is determined by the EventSelectList in the WebHandler object.
+
+<b>rt_webmonelog
+rt_webmonelog performes searches in the eventlog database.
+
+<h1>Functions
+This section describes how various function in the web and java environment is 
+configured and generated in more detail.
+
+<h2>Homepage
+The home page is configured by the WebHandler object, and generated by the build method of
+the WebHandler object. It consists of a number of html and jar files that is created on
+the $pwrp_web directory.
+
+The start page, index.html, consists of two frames. The left frame opens the html-file for
+the menu that start an applet that connects to the Proivew server and builds the menu. The
+right frame displays the URL stated in the StartURL attribute of the WebHandler object, or
+if this attribute is empty, the start page for the xtt help.
+
+<h2>Ge graphs
+Ge graphs that should be displayed has to be exported as java frames or java applets. Today
+normally java frames are used.
+
+A java frame is viewed in a separate window. It is scalable, and adapts to the size of the
+window. The possibility to affect input fields and buttons in the graph is determined by
+the privileges of the logged in user. To be able to export a graph as a java frame, 
+IsJavaFrame has to be set in GraphAttributes in the Ge editor.
+
+<image> dg_fig101.png
+<b>Fig A graph opened as a frame
+
+A java applet is opened from a html file. It is not scalable, and the privileges is fetched
+from the DefaultWebPriv of the Security object, and is not affected of the logged in user.
+Java applets can not be viewed in the local java environment. To be able to export a graph as
+a java applet, IsJavaApplet has to be set in GraphAttributes in the Ge editor.
+
+<image> dg_fig102.png
+<b>Fig A graph opened as an applet.
+
+You should also state the size in pixel of the generated java graph JavaWidth in 
+GraphAttributes.
+
+A graph is exported by activating File/Export/Java in the Ge editor menu. Also the build
+method for a WebGraph object will export a graph, is it has been saved after the latest
+export. When exporting, a java file is created on $pwrp_pop that is compiled and inserted
+into two archives, $pwrp_web/pwrp_'systemname'_web.jar and $pwrp_lib/pwrp_'systemname'.jar.
+The archive on $pwrp_web is used by the web interface, and the archive on $pwrp_load by the
+local java environment. For a java frame, the graph is exported as a java class with the
+same name as the graph, but with block letter on the first character. my_graph is for example
+exported as My_graph. Note that local characters are not allowed in java class names, and they
+can not start with a digit. In these cases the graph can be exported by Export/Java As with 
+an allowed java classname. By saving the graph after the export, the java name is stored.
+Otherwise it has to be stated for every export.
+
+For java applets, the suffix _A is added to the java classname, e.g. My_graph_A. Furthermore
+a html file is generated, $pwrp_web/my_graph.html, that is used to start the applet. The
+applet can of course also be started from other html files together with other applets end
+graphic elements on the same page.
+
+The java export has som limitations. It is possible in the Ge editor to place text object
+on top of subgraphs, but in java the subgraph will be on top. Some xtt command that is used
+in command buttons are not available in the web environment. There is also a limit of the
+number of characters in a java function, which in large graphs can be reached.
+
+<h2>Alarm and event list
+The alarm and event list requires that the EventSelectList in the WebHandler object is filled
+in with hierachies from which alarms and events should be displayed.
+
+<h2>Help texts
+The help texts for the project in the file xtt_help.dat, is exported to html files on 
+$pwrp_web by the build method of the WebHandler object. The start page for the help texts are
+$wprp_web/xtt_help_index.html. This is showed as default in the right frame of the home page
+if no other URL is stated in the StartURL attribute of the WebHandler.
+
+If the helptext contains image tags, the png or gif files has to be copied to $pwrp_web.
+
+<h2>Plc 
+To be able to open plc programs in the web environment, the .flw files on $pwrp_load has to
+be copied to $pwrp_web.
+
+<h2>Language
+The default language is english. Other languages can be stated in the Language attribute of
+the WebHandler object, or be selected in the language selection dialog, if configured.
+If another language than english should be available, language files for this language, and
+for english, has to be copied from $pwrp_exe to $pwrp_web. For example, to make swedish
+available, the directories $pwrp_web/en_us and $pwrp_web/sv_se is created, and the files
+$pwr_exe/en_us/xtt_lng.dat is copied to $pwrp_web/en_us/ and $pwr_exe/sv_se/xtt_lng.dat is
+copied to $pwrp_web/sv_se/.
+
+<h2>Archive
+The following archives should be available on $pwrp_web: pwr_rt_client.jar, pwr_jop.jar,
+pwr_jopc.jar, pwr_bcomp.jar, pwr_bcompfc.jar and pwr_abb.jar. In the development environment
+these has to be copied from $pwr_lib, in runtime this is done at the installation of the
+pwrrt package.
+
+<h1>Webserver
+To open a project home page in a web browser, a web server has to be started on the node,
+e.g apache.
+
+The web server only some choosen directories can be opened, e.g. /var/www. Either you can 
+move the content of $pwrp_web to an open directory, or you can open $pwrp_web. In apache this
+is specified in the file /etc/apache2/apache2.conf by adding
+
+<c>Alias /pwrp_web/ /usr/pwrp/myproj/bld/common/web/
+
+<c><Directory /usr/pwrp/myproj/bld/common/web>
+<c>    Options Indexes MultiViews
+<c>    AllowOverride None
+<c>    Order allow,deny
+<c>    Allow from all
+<c></Directory>
+
+An project, myproj, is opened with the root directory /usr/pwrp/myproj, with the alias name
+pwrp_web. If the node is mynode, the URL to open the web environment is
+
+<c>http://mynode/pwrp_web/index.html
+
+The corresponding addition to apache2.conf in a process or operator station, which is added
+at installation of the pwrrt package, would be
+
+<c>Alias /pwrp_web/ /pwrp/common/web/
+
+<c><Directory /pwrp/common/web>
+<c>    Options Indexes MultiViews
+<c>    AllowOverride None
+<c>    Order allow,deny
+<c>    Allow from all
+<c></Directory>
+
+</topic>
+</chapter>
+
 
 <chapter>
 <topic>conf_test

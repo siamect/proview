@@ -136,12 +136,12 @@ public class Gdh
     }
     catch(UnknownHostException e)
     {
-      System.err.println("Don't know about host");
+      System.err.println("Uknown host");
       System.exit(1);
     }
     catch(IOException e)
     {
-      System.err.println("Couldn't get I/O for the connection");
+      System.err.println("GdhServer socket not available on host");
       System.exit(1);
     }
   }

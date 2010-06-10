@@ -93,7 +93,7 @@ public class JopcAbb_acs800pumpaggr12 extends JopFrame implements JopUtilityIfc 
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "‰ù∑D°Ù∑D°Ù∑póuƒØú∑ã¢∑†É¢∑8ÅøÁ˘ô∑D°Ù∑D°Ù∑xóu†É¢∑");
+    JopSpider.setSystemName( "‰7ò∑D¡Ô∑D¡Ô∑póuƒœó∑´ù∑†£ù∑∏_âøÁï∑D¡Ô∑D¡Ô∑xóu†£ù∑");
     engine.setAnimationScanTime( 200);
     engine.setScanTime( 500);
     size = new Dimension( 417, 764);
@@ -115,276 +115,276 @@ public class JopcAbb_acs800pumpaggr12 extends JopFrame implements JopUtilityIfc 
     else
       this.setTitle("JopcAbb_acs800pumpaggr12");
     pwr_indsquare7 = new pwr_indsquare(session);
-    pwr_indsquare7.setBounds(new Rectangle(161,398,16,17));
+    pwr_indsquare7.setBounds(new Rectangle(162,399,14,15));
     pwr_indsquare7.setShadow(1);
     localPanel.add(pwr_indsquare7, new Proportion(pwr_indsquare7.getBounds(), dsize));
     pwr_indsquare9 = new pwr_indsquare(session);
-    pwr_indsquare9.setBounds(new Rectangle(161,352,16,17));
+    pwr_indsquare9.setBounds(new Rectangle(162,353,14,15));
     pwr_indsquare9.setFillColor(294);
     pwr_indsquare9.setShadow(1);
     localPanel.add(pwr_indsquare9, new Proportion(pwr_indsquare9.getBounds(), dsize));
     pwr_valuelong11 = new pwr_valuelong(session);
-    pwr_valuelong11.setBounds(new Rectangle(16,46,369,22));
+    pwr_valuelong11.setBounds(new Rectangle(17,47,367,20));
     pwr_valuelong11.setFillColor(31);
     pwr_valuelong11.setBorderColor(32);
     localPanel.add(pwr_valuelong11, new Proportion(pwr_valuelong11.getBounds(), dsize));
     pwr_indsquare12 = new pwr_indsquare(session);
-    pwr_indsquare12.setBounds(new Rectangle(161,543,16,17));
+    pwr_indsquare12.setBounds(new Rectangle(162,544,14,15));
     pwr_indsquare12.setFillColor(294);
     pwr_indsquare12.setShadow(1);
     localPanel.add(pwr_indsquare12, new Proportion(pwr_indsquare12.getBounds(), dsize));
     pwr_mbopenobject15 = new pwr_mbopenobject(session);
-    pwr_mbopenobject15.setBounds(new Rectangle(194,24,20,20));
+    pwr_mbopenobject15.setBounds(new Rectangle(195,25,18,18));
     pwr_mbopenobject15.setShadow(1);
     localPanel.add(pwr_mbopenobject15, new Proportion(pwr_mbopenobject15.getBounds(), dsize));
     pwr_mbtrend16 = new pwr_mbtrend(session);
-    pwr_mbtrend16.setBounds(new Rectangle(55,24,20,20));
+    pwr_mbtrend16.setBounds(new Rectangle(56,25,18,18));
     pwr_mbtrend16.setShadow(1);
     localPanel.add(pwr_mbtrend16, new Proportion(pwr_mbtrend16.getBounds(), dsize));
     pwr_mbfast17 = new pwr_mbfast(session);
-    pwr_mbfast17.setBounds(new Rectangle(75,24,20,20));
+    pwr_mbfast17.setBounds(new Rectangle(76,25,18,18));
     pwr_mbfast17.setShadow(1);
     localPanel.add(pwr_mbfast17, new Proportion(pwr_mbfast17.getBounds(), dsize));
     pwr_mbphoto18 = new pwr_mbphoto(session);
-    pwr_mbphoto18.setBounds(new Rectangle(95,24,20,20));
+    pwr_mbphoto18.setBounds(new Rectangle(96,25,18,18));
     pwr_mbphoto18.setShadow(1);
     localPanel.add(pwr_mbphoto18, new Proportion(pwr_mbphoto18.getBounds(), dsize));
     pwr_mbdatasheet19 = new pwr_mbdatasheet(session);
-    pwr_mbdatasheet19.setBounds(new Rectangle(115,24,20,20));
+    pwr_mbdatasheet19.setBounds(new Rectangle(116,25,18,18));
     pwr_mbdatasheet19.setShadow(1);
     localPanel.add(pwr_mbdatasheet19, new Proportion(pwr_mbdatasheet19.getBounds(), dsize));
     pwr_mbopenplc20 = new pwr_mbopenplc(session);
-    pwr_mbopenplc20.setBounds(new Rectangle(214,24,20,20));
+    pwr_mbopenplc20.setBounds(new Rectangle(215,25,18,18));
     pwr_mbopenplc20.setShadow(1);
     localPanel.add(pwr_mbopenplc20, new Proportion(pwr_mbopenplc20.getBounds(), dsize));
     pwr_mbcircuitdiagram21 = new pwr_mbcircuitdiagram(session);
-    pwr_mbcircuitdiagram21.setBounds(new Rectangle(234,24,20,20));
+    pwr_mbcircuitdiagram21.setBounds(new Rectangle(235,25,18,18));
     pwr_mbcircuitdiagram21.setShadow(1);
     localPanel.add(pwr_mbcircuitdiagram21, new Proportion(pwr_mbcircuitdiagram21.getBounds(), dsize));
     pwr_mbrtnavigator22 = new pwr_mbrtnavigator(session);
-    pwr_mbrtnavigator22.setBounds(new Rectangle(174,24,20,20));
+    pwr_mbrtnavigator22.setBounds(new Rectangle(175,25,18,18));
     pwr_mbrtnavigator22.setShadow(1);
     localPanel.add(pwr_mbrtnavigator22, new Proportion(pwr_mbrtnavigator22.getBounds(), dsize));
     pwr_mbhelpclass23 = new pwr_mbhelpclass(session);
-    pwr_mbhelpclass23.setBounds(new Rectangle(254,24,20,20));
+    pwr_mbhelpclass23.setBounds(new Rectangle(255,25,18,18));
     pwr_mbhelpclass23.setShadow(1);
     localPanel.add(pwr_mbhelpclass23, new Proportion(pwr_mbhelpclass23.getBounds(), dsize));
     pwr_mbblockevents24 = new pwr_mbblockevents(session);
-    pwr_mbblockevents24.setBounds(new Rectangle(154,24,20,20));
+    pwr_mbblockevents24.setBounds(new Rectangle(155,25,18,18));
     pwr_mbblockevents24.setShadow(1);
     localPanel.add(pwr_mbblockevents24, new Proportion(pwr_mbblockevents24.getBounds(), dsize));
     pwr_mbhistevent25 = new pwr_mbhistevent(session);
-    pwr_mbhistevent25.setBounds(new Rectangle(135,24,20,20));
+    pwr_mbhistevent25.setBounds(new Rectangle(136,25,18,18));
     localPanel.add(pwr_mbhistevent25, new Proportion(pwr_mbhistevent25.getBounds(), dsize));
     pwr_mbnote26 = new pwr_mbnote(session);
-    pwr_mbnote26.setBounds(new Rectangle(35,24,19,20));
+    pwr_mbnote26.setBounds(new Rectangle(36,25,17,18));
     localPanel.add(pwr_mbnote26, new Proportion(pwr_mbnote26.getBounds(), dsize));
     pwr_mbhelp27 = new pwr_mbhelp(session);
-    pwr_mbhelp27.setBounds(new Rectangle(16,24,20,20));
+    pwr_mbhelp27.setBounds(new Rectangle(17,25,18,18));
     localPanel.add(pwr_mbhelp27, new Proportion(pwr_mbhelp27.getBounds(), dsize));
     pwr_valuelong28 = new pwr_valuelong(session);
-    pwr_valuelong28.setBounds(new Rectangle(16,68,369,22));
+    pwr_valuelong28.setBounds(new Rectangle(17,69,367,20));
     pwr_valuelong28.setFillColor(31);
     pwr_valuelong28.setBorderColor(32);
     localPanel.add(pwr_valuelong28, new Proportion(pwr_valuelong28.getBounds(), dsize));
     pwr_smallbuttoncenter29 = new pwr_smallbuttoncenter(session);
-    pwr_smallbuttoncenter29.setBounds(new Rectangle(4,698,47,20));
+    pwr_smallbuttoncenter29.setBounds(new Rectangle(5,699,45,18));
     pwr_smallbuttoncenter29.setBorderColor(37);
     localPanel.add(pwr_smallbuttoncenter29, new Proportion(pwr_smallbuttoncenter29.getBounds(), dsize));
     pwr_valuelong30 = new pwr_valuelong(session);
-    pwr_valuelong30.setBounds(new Rectangle(60,697,336,23));
+    pwr_valuelong30.setBounds(new Rectangle(61,698,334,21));
     pwr_valuelong30.setFillColor(31);
     pwr_valuelong30.setBorderColor(31);
     localPanel.add(pwr_valuelong30, new Proportion(pwr_valuelong30.getBounds(), dsize));
     pwr_indsquare31 = new pwr_indsquare(session);
-    pwr_indsquare31.setBounds(new Rectangle(348,96,16,17));
+    pwr_indsquare31.setBounds(new Rectangle(349,97,14,15));
     pwr_indsquare31.setFillColor(295);
     pwr_indsquare31.setShadow(1);
     localPanel.add(pwr_indsquare31, new Proportion(pwr_indsquare31.getBounds(), dsize));
     pwr_indsquare34 = new pwr_indsquare(session);
-    pwr_indsquare34.setBounds(new Rectangle(348,117,16,17));
+    pwr_indsquare34.setBounds(new Rectangle(349,118,14,15));
     pwr_indsquare34.setFillColor(175);
     pwr_indsquare34.setShadow(1);
     localPanel.add(pwr_indsquare34, new Proportion(pwr_indsquare34.getBounds(), dsize));
     pwr_valuesmall37 = new pwr_valuesmall(session);
-    pwr_valuesmall37.setBounds(new Rectangle(301,229,72,17));
+    pwr_valuesmall37.setBounds(new Rectangle(302,230,70,15));
     localPanel.add(pwr_valuesmall37, new Proportion(pwr_valuesmall37.getBounds(), dsize));
     pwr_valuesmall38 = new pwr_valuesmall(session);
-    pwr_valuesmall38.setBounds(new Rectangle(301,248,72,18));
+    pwr_valuesmall38.setBounds(new Rectangle(302,249,70,16));
     localPanel.add(pwr_valuesmall38, new Proportion(pwr_valuesmall38.getBounds(), dsize));
     pwr_menubar239 = new pwr_menubar2(session);
-    pwr_menubar239.setBounds(new Rectangle(0,0,409,24));
+    pwr_menubar239.setBounds(new Rectangle(1,1,407,22));
     pwr_menubar239.setShadow(1);
     localPanel.add(pwr_menubar239, new Proportion(pwr_menubar239.getBounds(), dsize));
     pwr_pulldownmenu240 = new pwr_pulldownmenu2(session);
-    pwr_pulldownmenu240.setBounds(new Rectangle(8,0,44,24));
+    pwr_pulldownmenu240.setBounds(new Rectangle(9,1,42,22));
     pwr_pulldownmenu240.setShadow(1);
     localPanel.add(pwr_pulldownmenu240, new Proportion(pwr_pulldownmenu240.getBounds(), dsize));
     pwr_pulldownmenu241 = new pwr_pulldownmenu2(session);
-    pwr_pulldownmenu241.setBounds(new Rectangle(328,0,69,24));
+    pwr_pulldownmenu241.setBounds(new Rectangle(329,1,67,22));
     pwr_pulldownmenu241.setShadow(1);
     localPanel.add(pwr_pulldownmenu241, new Proportion(pwr_pulldownmenu241.getBounds(), dsize));
     pwr_pulldownmenu242 = new pwr_pulldownmenu2(session);
-    pwr_pulldownmenu242.setBounds(new Rectangle(220,0,69,24));
+    pwr_pulldownmenu242.setBounds(new Rectangle(221,1,67,22));
     pwr_pulldownmenu242.setShadow(1);
     localPanel.add(pwr_pulldownmenu242, new Proportion(pwr_pulldownmenu242.getBounds(), dsize));
     pwr_pulldownmenu243 = new pwr_pulldownmenu2(session);
-    pwr_pulldownmenu243.setBounds(new Rectangle(52,0,69,24));
+    pwr_pulldownmenu243.setBounds(new Rectangle(53,1,67,22));
     pwr_pulldownmenu243.setShadow(1);
     localPanel.add(pwr_pulldownmenu243, new Proportion(pwr_pulldownmenu243.getBounds(), dsize));
     pwr_pulldownmenu244 = new pwr_pulldownmenu2(session);
-    pwr_pulldownmenu244.setBounds(new Rectangle(124,0,88,24));
+    pwr_pulldownmenu244.setBounds(new Rectangle(125,1,86,22));
     pwr_pulldownmenu244.setShadow(1);
     localPanel.add(pwr_pulldownmenu244, new Proportion(pwr_pulldownmenu244.getBounds(), dsize));
     pwr_motor245 = new pwr_motor2(session);
-    pwr_motor245.setBounds(new Rectangle(160,597,98,74));
+    pwr_motor245.setBounds(new Rectangle(161,598,96,72));
     localPanel.add(pwr_motor245, new Proportion(pwr_motor245.getBounds(), dsize));
     pwr_smallbuttoncenter46 = new pwr_smallbuttoncenter(session);
-    pwr_smallbuttoncenter46.setBounds(new Rectangle(33,171,48,21));
+    pwr_smallbuttoncenter46.setBounds(new Rectangle(34,172,46,19));
     pwr_smallbuttoncenter46.setFillColor(32);
     localPanel.add(pwr_smallbuttoncenter46, new Proportion(pwr_smallbuttoncenter46.getBounds(), dsize));
     pwr_indround47 = new pwr_indround(session);
-    pwr_indround47.setBounds(new Rectangle(87,173,18,17));
+    pwr_indround47.setBounds(new Rectangle(88,174,16,15));
     pwr_indround47.setShadow(1);
     localPanel.add(pwr_indround47, new Proportion(pwr_indround47.getBounds(), dsize));
     pwr_indround48 = new pwr_indround(session);
-    pwr_indround48.setBounds(new Rectangle(87,196,18,18));
+    pwr_indround48.setBounds(new Rectangle(88,197,16,16));
     pwr_indround48.setShadow(1);
     localPanel.add(pwr_indround48, new Proportion(pwr_indround48.getBounds(), dsize));
     pwr_smallbuttoncenter49 = new pwr_smallbuttoncenter(session);
-    pwr_smallbuttoncenter49.setBounds(new Rectangle(123,172,61,21));
+    pwr_smallbuttoncenter49.setBounds(new Rectangle(124,173,59,19));
     pwr_smallbuttoncenter49.setFillColor(32);
     localPanel.add(pwr_smallbuttoncenter49, new Proportion(pwr_smallbuttoncenter49.getBounds(), dsize));
     pwr_smallbuttoncenter50 = new pwr_smallbuttoncenter(session);
-    pwr_smallbuttoncenter50.setBounds(new Rectangle(123,196,61,21));
+    pwr_smallbuttoncenter50.setBounds(new Rectangle(124,197,59,19));
     pwr_smallbuttoncenter50.setFillColor(32);
     localPanel.add(pwr_smallbuttoncenter50, new Proportion(pwr_smallbuttoncenter50.getBounds(), dsize));
     pwr_indround51 = new pwr_indround(session);
-    pwr_indround51.setBounds(new Rectangle(85,247,18,17));
+    pwr_indround51.setBounds(new Rectangle(86,248,16,15));
     pwr_indround51.setFillColor(114);
     pwr_indround51.setShadow(1);
     localPanel.add(pwr_indround51, new Proportion(pwr_indround51.getBounds(), dsize));
     pwr_indround52 = new pwr_indround(session);
-    pwr_indround52.setBounds(new Rectangle(192,173,18,17));
+    pwr_indround52.setBounds(new Rectangle(193,174,16,15));
     pwr_indround52.setFillColor(294);
     pwr_indround52.setShadow(1);
     localPanel.add(pwr_indround52, new Proportion(pwr_indround52.getBounds(), dsize));
     grp169_53 = new Grp169_(session);
-    grp169_53.setBounds(new Rectangle(34,248,37,18));
+    grp169_53.setBounds(new Rectangle(35,249,35,16));
     localPanel.add(grp169_53, new Proportion(grp169_53.getBounds(), dsize));
     pwr_smallbuttoncenter54 = new pwr_smallbuttoncenter(session);
-    pwr_smallbuttoncenter54.setBounds(new Rectangle(239,173,36,21));
+    pwr_smallbuttoncenter54.setBounds(new Rectangle(240,174,34,19));
     pwr_smallbuttoncenter54.setFillColor(32);
     localPanel.add(pwr_smallbuttoncenter54, new Proportion(pwr_smallbuttoncenter54.getBounds(), dsize));
     pwr_smallbuttoncenter55 = new pwr_smallbuttoncenter(session);
-    pwr_smallbuttoncenter55.setBounds(new Rectangle(239,197,36,21));
+    pwr_smallbuttoncenter55.setBounds(new Rectangle(240,198,34,19));
     pwr_smallbuttoncenter55.setFillColor(32);
     localPanel.add(pwr_smallbuttoncenter55, new Proportion(pwr_smallbuttoncenter55.getBounds(), dsize));
     pwr_indsquare56 = new pwr_indsquare(session);
-    pwr_indsquare56.setBounds(new Rectangle(161,447,16,17));
+    pwr_indsquare56.setBounds(new Rectangle(162,448,14,15));
     pwr_indsquare56.setFillColor(294);
     pwr_indsquare56.setShadow(1);
     localPanel.add(pwr_indsquare56, new Proportion(pwr_indsquare56.getBounds(), dsize));
     pwr_indround58 = new pwr_indround(session);
-    pwr_indround58.setBounds(new Rectangle(285,173,17,18));
+    pwr_indround58.setBounds(new Rectangle(286,174,15,16));
     pwr_indround58.setFillColor(294);
     pwr_indround58.setShadow(1);
     localPanel.add(pwr_indround58, new Proportion(pwr_indround58.getBounds(), dsize));
     pwr_smallbuttoncenter61 = new pwr_smallbuttoncenter(session);
-    pwr_smallbuttoncenter61.setBounds(new Rectangle(36,466,57,23));
+    pwr_smallbuttoncenter61.setBounds(new Rectangle(37,467,55,21));
     pwr_smallbuttoncenter61.setFillColor(32);
     pwr_smallbuttoncenter61.setShadow(1);
     localPanel.add(pwr_smallbuttoncenter61, new Proportion(pwr_smallbuttoncenter61.getBounds(), dsize));
     pwr_valuemedium62 = new pwr_valuemedium(session);
-    pwr_valuemedium62.setBounds(new Rectangle(308,607,51,17));
+    pwr_valuemedium62.setBounds(new Rectangle(309,608,49,15));
     pwr_valuemedium62.setShadow(1);
     localPanel.add(pwr_valuemedium62, new Proportion(pwr_valuemedium62.getBounds(), dsize));
     pwr_valuemedium63 = new pwr_valuemedium(session);
-    pwr_valuemedium63.setBounds(new Rectangle(308,625,51,17));
+    pwr_valuemedium63.setBounds(new Rectangle(309,626,49,15));
     pwr_valuemedium63.setShadow(1);
     localPanel.add(pwr_valuemedium63, new Proportion(pwr_valuemedium63.getBounds(), dsize));
     pwr_valuemedium65 = new pwr_valuemedium(session);
-    pwr_valuemedium65.setBounds(new Rectangle(358,610,20,14));
+    pwr_valuemedium65.setBounds(new Rectangle(359,611,18,12));
     pwr_valuemedium65.setFillColor(31);
     pwr_valuemedium65.setBorderColor(31);
     localPanel.add(pwr_valuemedium65, new Proportion(pwr_valuemedium65.getBounds(), dsize));
     pwr_valueinputmediumrd69 = new pwr_valueinputmediumrd(session);
-    pwr_valueinputmediumrd69.setBounds(new Rectangle(122,241,77,30));
+    pwr_valueinputmediumrd69.setBounds(new Rectangle(123,242,75,28));
     pwr_valueinputmediumrd69.setShadow(1);
     localPanel.add(pwr_valueinputmediumrd69, new Proportion(pwr_valueinputmediumrd69.getBounds(), dsize));
     grp210_70 = new Grp210_(session);
-    grp210_70.setBounds(new Rectangle(126,227,40,18));
+    grp210_70.setBounds(new Rectangle(127,228,38,16));
     localPanel.add(grp210_70, new Proportion(grp210_70.getBounds(), dsize));
     grp212_71 = new Grp212_(session);
-    grp212_71.setBounds(new Rectangle(198,246,28,20));
+    grp212_71.setBounds(new Rectangle(199,247,26,18));
     grp212_71.setFillColor(31);
     grp212_71.setBorderColor(31);
     localPanel.add(grp212_71, new Proportion(grp212_71.getBounds(), dsize));
     pwr_valuemedium72 = new pwr_valuemedium(session);
-    pwr_valuemedium72.setBounds(new Rectangle(308,643,51,17));
+    pwr_valuemedium72.setBounds(new Rectangle(309,644,49,15));
     pwr_valuemedium72.setShadow(1);
     localPanel.add(pwr_valuemedium72, new Proportion(pwr_valuemedium72.getBounds(), dsize));
     pwr_indsquare76 = new pwr_indsquare(session);
-    pwr_indsquare76.setBounds(new Rectangle(357,199,16,17));
+    pwr_indsquare76.setBounds(new Rectangle(358,200,14,15));
     pwr_indsquare76.setFillColor(175);
     pwr_indsquare76.setShadow(1);
     localPanel.add(pwr_indsquare76, new Proportion(pwr_indsquare76.getBounds(), dsize));
     pwr_mbsimulate77 = new pwr_mbsimulate(session);
-    pwr_mbsimulate77.setBounds(new Rectangle(365,24,19,20));
+    pwr_mbsimulate77.setBounds(new Rectangle(366,25,17,18));
     localPanel.add(pwr_mbsimulate77, new Proportion(pwr_mbsimulate77.getBounds(), dsize));
     pwr_indsquare78 = new pwr_indsquare(session);
-    pwr_indsquare78.setBounds(new Rectangle(161,572,16,16));
+    pwr_indsquare78.setBounds(new Rectangle(162,573,14,14));
     pwr_indsquare78.setFillColor(294);
     pwr_indsquare78.setShadow(1);
     localPanel.add(pwr_indsquare78, new Proportion(pwr_indsquare78.getBounds(), dsize));
     grp223_79 = new Grp223_(session);
-    grp223_79.setBounds(new Rectangle(34,571,40,18));
+    grp223_79.setBounds(new Rectangle(35,572,38,16));
     localPanel.add(grp223_79, new Proportion(grp223_79.getBounds(), dsize));
     pwr_pumpanim281 = new pwr_pumpanim2(session);
-    pwr_pumpanim281.setBounds(new Rectangle(119,95,64,44));
+    pwr_pumpanim281.setBounds(new Rectangle(120,96,62,42));
     pwr_pumpanim281.setShadow(1);
     pwr_pumpanim281.setGradient(12);
     localPanel.add(pwr_pumpanim281, new Proportion(pwr_pumpanim281.getBounds(), dsize));
     pwr_pump382 = new pwr_pump3(session);
-    pwr_pump382.setBounds(new Rectangle(77,598,84,74));
+    pwr_pump382.setBounds(new Rectangle(78,599,82,72));
     pwr_pump382.setColorTone(7);
     localPanel.add(pwr_pump382, new Proportion(pwr_pump382.getBounds(), dsize));
     pwr_rodcouplinganim83 = new pwr_rodcouplinganim(session);
-    pwr_rodcouplinganim83.setBounds(new Rectangle(154,624,12,22));
+    pwr_rodcouplinganim83.setBounds(new Rectangle(155,625,10,20));
     localPanel.add(pwr_rodcouplinganim83, new Proportion(pwr_rodcouplinganim83.getBounds(), dsize));
     grp228_84 = new Grp228_(session);
-    grp228_84.setBounds(new Rectangle(36,196,41,18));
+    grp228_84.setBounds(new Rectangle(37,197,39,16));
     localPanel.add(grp228_84, new Proportion(grp228_84.getBounds(), dsize));
     pwr_smallbuttoncenter85 = new pwr_smallbuttoncenter(session);
-    pwr_smallbuttoncenter85.setBounds(new Rectangle(33,196,48,21));
+    pwr_smallbuttoncenter85.setBounds(new Rectangle(34,197,46,19));
     pwr_smallbuttoncenter85.setFillColor(32);
     localPanel.add(pwr_smallbuttoncenter85, new Proportion(pwr_smallbuttoncenter85.getBounds(), dsize));
     pwr_fuse391 = new pwr_fuse3(session);
-    pwr_fuse391.setBounds(new Rectangle(280,296,15,37));
+    pwr_fuse391.setBounds(new Rectangle(281,297,13,35));
     pwr_fuse391.setRotate(-90);
     pwr_fuse391.setShadow(1);
     localPanel.add(pwr_fuse391, new Proportion(pwr_fuse391.getBounds(), dsize));
     pwr_manswitch392 = new pwr_manswitch3(session);
-    pwr_manswitch392.setBounds(new Rectangle(267,340,38,38));
+    pwr_manswitch392.setBounds(new Rectangle(268,341,36,36));
     pwr_manswitch392.setFillColor(32);
     pwr_manswitch392.setShadow(1);
     localPanel.add(pwr_manswitch392, new Proportion(pwr_manswitch392.getBounds(), dsize));
     pwr_contactor293 = new pwr_contactor2(session);
-    pwr_contactor293.setBounds(new Rectangle(267,388,38,38));
+    pwr_contactor293.setBounds(new Rectangle(268,389,36,36));
     pwr_contactor293.setFillColor(32);
     pwr_contactor293.setShadow(1);
     localPanel.add(pwr_contactor293, new Proportion(pwr_contactor293.getBounds(), dsize));
     pwr_acs80094 = new pwr_acs800(session);
-    pwr_acs80094.setBounds(new Rectangle(255,437,64,84));
+    pwr_acs80094.setBounds(new Rectangle(256,438,62,82));
     pwr_acs80094.setShadow(1);
     localPanel.add(pwr_acs80094, new Proportion(pwr_acs80094.getBounds(), dsize));
     pwr_safetyswitch95 = new pwr_safetyswitch(session);
-    pwr_safetyswitch95.setBounds(new Rectangle(268,533,38,39));
+    pwr_safetyswitch95.setBounds(new Rectangle(269,534,36,37));
     pwr_safetyswitch95.setFillColor(32);
     pwr_safetyswitch95.setShadow(1);
     localPanel.add(pwr_safetyswitch95, new Proportion(pwr_safetyswitch95.getBounds(), dsize));
     pwr_mbup96 = new pwr_mbup(session);
-    pwr_mbup96.setBounds(new Rectangle(345,24,19,20));
+    pwr_mbup96.setBounds(new Rectangle(346,25,17,18));
     localPanel.add(pwr_mbup96, new Proportion(pwr_mbup96.getBounds(), dsize));
     pwr_indsquare7.dd.setDynType(13);
     pwr_indsquare7.dd.setActionType(2);
@@ -1619,7 +1619,7 @@ protected class pwr_pump3 extends GeComponent {
     new Polygon( new int[] { 18, 18, 11, 12}, new int[] { 24, 25, 28,28}, 4),
     new Polygon( new int[] { 12, 11, 5, 10}, new int[] { 28, 28, 39,32}, 4),
     new Polygon( new int[] { 10, 5, 7, 6}, new int[] { 32, 39, 36,40}, 4),
-    new Polygon( new int[] { 6, 7, 374, -18}, new int[] { 40, 36, 29,28}, 4),
+    new Polygon( new int[] { 6, 7, -18, -18}, new int[] { 40, 36, 28,28}, 4),
     new Polygon( new int[] { 6, 10, 18, 52, 56, 58, 58, 64, 64, 62, 56, 14, 8, 6, 6}, new int[] {44, 50, 52, 52, 48, 38, 10, 10, 52, 58, 62, 62, 58, 52, 46}, 15),
     new Polygon( new int[] { 6, 9, 8, 10}, new int[] { 44, 54, 53,50}, 4),
     new Polygon( new int[] { 10, 8, 18, 18}, new int[] { 50, 53, 55,52}, 4),
@@ -1651,7 +1651,7 @@ protected class pwr_pump3 extends GeComponent {
     new Polygon( new int[] { 56, 54, 56, 58}, new int[] { 48, 47, 38,38}, 4),
     new Polygon( new int[] { 58, 56, 56, 58}, new int[] { 38, 38, 14,10}, 4),
     new Polygon( new int[] { 58, 56, 56, 54}, new int[] { 10, 14, 14,10}, 4),
-    new Polygon( new int[] { 54, 56, -1219808898, -18}, new int[] { 10, 14, -1219808851,28}, 4),
+    new Polygon( new int[] { 54, 56, -1220128386, -18}, new int[] { 10, 14, -1220128339,28}, 4),
     new Polygon( new int[] { 6, 44, 44, 64, 64, 62, 56, 14, 8, 6, 6}, new int[] {14, 14, 10, 10, 52, 58, 62, 62, 58, 52, 14}, 11),
     new Polygon( new int[] { 6, 9, 47, 44}, new int[] { 14, 19, 19,14}, 4),
     new Polygon( new int[] { 44, 47, 47, 44}, new int[] { 14, 19, 15,10}, 4),
@@ -1663,7 +1663,7 @@ protected class pwr_pump3 extends GeComponent {
     new Polygon( new int[] { 14, 15, 11, 8}, new int[] { 62, 59, 56,58}, 4),
     new Polygon( new int[] { 8, 11, 9, 6}, new int[] { 58, 56, 52,52}, 4),
     new Polygon( new int[] { 6, 9, 9, 6}, new int[] { 52, 52, 19,14}, 4),
-    new Polygon( new int[] { 6, 9, -18, -18}, new int[] { 14, 19, 53,28}, 4),
+    new Polygon( new int[] { 6, 9, 140893301, -18}, new int[] { 14, 19, 144126196,28}, 4),
     new Polygon( new int[] { 14, 14, 6, 6, 16, 18, 52, 54, 64, 64, 56, 56, 14}, new int[] {62, 68, 68, 72, 72, 70, 70, 72, 72, 68, 68, 62, 62}, 13),
     new Rectangle2D.Float(16F, 62F, 38F, 6F),
     new Rectangle2D.Float(48F, 2F, 12F, 4F),
@@ -2826,7 +2826,7 @@ protected class pwr_motor2 extends GeComponent {
     new Polygon( new int[] { 96, 95, 92, 92}, new int[] { 60, 59, 61,62}, 4),
     new Polygon( new int[] { 92, 92, 81, 80}, new int[] { 62, 61, 61,62}, 4),
     new Polygon( new int[] { 80, 81, 81, 80}, new int[] { 62, 61, 15,12}, 4),
-    new Polygon( new int[] { 80, 81, 0, 0}, new int[] { 12, 15, 58,58}, 4),
+    new Polygon( new int[] { 80, 81, 140857031, 0}, new int[] { 12, 15, 146330258,58}, 4),
     new Polygon( new int[] { 36, 36, 28, 28, 38, 40, 74, 76, 86, 86, 78, 78, 36}, new int[] {62, 68, 68, 72, 72, 70, 70, 72, 72, 68, 68, 62, 62}, 13),
     new Polygon( new int[] { 24, 22, 20, 20, 22, 24, 24}, new int[] {16, 16, 18, 56, 58, 58, 16}, 7),
     new Rectangle2D.Float(34F, 2F, 20F, 10F),
@@ -2855,7 +2855,7 @@ protected class pwr_motor2 extends GeComponent {
     new Polygon( new int[] { 96, 95, 92, 92}, new int[] { 60, 59, 61,62}, 4),
     new Polygon( new int[] { 92, 92, 81, 80}, new int[] { 62, 61, 61,62}, 4),
     new Polygon( new int[] { 80, 81, 81, 80}, new int[] { 62, 61, 15,12}, 4),
-    new Polygon( new int[] { 80, 81, 0, 0}, new int[] { 12, 15, 58,58}, 4),
+    new Polygon( new int[] { 80, 81, 140857031, 0}, new int[] { 12, 15, 146330258,58}, 4),
     new Line2D.Float( 20F, 36F, 2F, 36F),
   };
   public void paintComponent(Graphics g1) {
@@ -11473,7 +11473,7 @@ protected class Grp212_ extends GeComponent {
     super( session);
     size = new Dimension( 28, 20);
     pwr_valuemedium0 = new pwr_valuemedium(session);
-    pwr_valuemedium0.setBounds(new Rectangle(0,0,28,20));
+    pwr_valuemedium0.setBounds(new Rectangle(1,1,26,18));
     pwr_valuemedium0.setFillColor(33);
     pwr_valuemedium0.setBorderColor(33);
     add(pwr_valuemedium0);

@@ -142,12 +142,16 @@ System.out.println( "qcom put finished");
 	    }
             else if ( session.isApplet()) {
               System.out.println( "Loading applet \"" + frameName + "\"");
-	      openURL( session, frameName, newFrame, null);
+	      openURL( session, frameName, newFrame, null, null);
               local_cmd = true;
             }
             else {
               System.out.println( "Loading frame \"" + frameName + "\"");
-	      loadFrame( session, frameName, instance, scrollbar);
+	      try {
+		loadFrame( session, frameName, instance, scrollbar);
+	      }
+	      catch ( ClassNotFoundException e) {
+	      }
               local_cmd = true;
             }
           }
@@ -155,6 +159,8 @@ System.out.println( "qcom put finished");
                graph.substring(0,cli_arg1.length()).equals(cli_arg1)) {
             // Command is "OPEN GRAPH"
             if ( root instanceof JopApplet) {
+	      System.out.println( "open graph for JopApplet");
+
               boolean newFrame = cli.qualifierFound("/NEW");
               boolean scrollbar = cli.qualifierFound("/SCROLLBAR");
 
@@ -203,19 +209,20 @@ System.out.println( "qcom put finished");
 	          appletName = appletName.substring(0,1).toUpperCase() +
 		      appletName.substring(1);
 	          System.out.println( "Open frame " + appletName);
-	          session.openGraphFrame( appletName, instance, false, false);
+		  session.openGraphFrame( appletName, instance, false, false);
 		}
 		else {
                   System.out.println( "Loading applet \"" + appletName + "\"");
-		  openURL( session, appletName, newFrame, null);
+		  openURL( session, appletName, newFrame, null, null);
 		}
                 local_cmd = true;
               }
               else {
-		if ( session.isOpWindowApplet()) {
+		if ( true /* session.isOpWindowApplet() */) {
 		  String frameName = null;
 		  String instanceValue = null;
 		  boolean classGraph = false;
+
                   if ( cli.qualifierFound("/INSTANCE")) {
 	            instanceValue = cli.getQualValue("/INSTANCE");
 		    classGraph = cli.qualifierFound("/CLASSGRAPH");		      
@@ -240,6 +247,7 @@ System.out.println( "qcom put finished");
 		  }
 		  session.openGraphFrame( frameName, instanceValue, scrollbar, classGraph);
 		}
+		/*************
 		else {
 		  String frameName = null;
 		  if ( ! cli.qualifierFound("cli_arg2")) {
@@ -275,9 +283,10 @@ System.out.println( "qcom put finished");
 
                   System.out.println( "Loading applet \"" + frameName + "\"");
 
-	          openURL( session, frameName, newFrame, null);
+	          openURL( session, frameName, newFrame, null, null);
                   local_cmd = true;
 		}
+		***/
               }
             }
             else {
@@ -318,6 +327,8 @@ System.out.println( "qcom put finished");
             // Command is "OPEN URL"
             if ( root instanceof JopApplet) {
               if ( cli.qualifierFound("cli_arg2")) {
+		Boolean newFrame = true;
+		String frameName = null;
 		String urlValue = cli.getQualValue("cli_arg2");
     System.out.println("open url " + urlValue);
                 if ( urlValue.startsWith("pwrb_") ||
@@ -333,7 +344,12 @@ System.out.println( "qcom put finished");
 	          // Object reference manual
 		  urlValue = "$pwr_doc/" + session.getLang() + "/orm/" + urlValue;
 
-	        openURL( session, urlValue, true, null);
+		if ( cli.qualifierFound("/NAME")) {
+		  frameName = cli.getQualValue("/NAME");
+		  newFrame = false;
+		}
+		
+	        openURL( session, urlValue, newFrame, frameName, null);
 	      }
 	    } 
 	    else if ( root instanceof JFrame) {
@@ -351,7 +367,7 @@ System.out.println( "qcom put finished");
           String bookmarkValue = null;
 
           if ( cli.qualifierFound("/VERSION")) {
-	    openURL( session, "$pwr_doc/xtt_version_help_version.html", true, null);
+	    openURL( session, "$pwr_doc/xtt_version_help_version.html", true, null, null);
 	  }
 	  else {
             if ( cli.qualifierFound("/BASE"))
@@ -384,7 +400,7 @@ System.out.println( "qcom put finished");
 	      bookmarkValue = cli.getQualValue("/BOOKMARK");
 
             System.out.println( "Loading helpfile \"" + fileName + "\"");
-	    openURL( session, fileName, true, bookmarkValue);
+	    openURL( session, fileName, true, null, bookmarkValue);
 	  }
           local_cmd = true;
         }
@@ -672,7 +688,11 @@ System.out.println( "JopSpiderCmd start");
 	          String frameName = cli.getQualValue("cli_arg2");
 
                   System.out.println( "Loading frame \"" + frameName + "\"");
-	          loadFrame( session, frameName, null, scrollbar);
+		  try {
+	            loadFrame( session, frameName, null, scrollbar);
+		  }
+		  catch ( ClassNotFoundException e) {
+		  }
                 }
               }
             }
@@ -692,7 +712,7 @@ System.out.println( "JopSpiderCmd start");
   }
 
   public static Object loadFrame( JopSession session, String className, 
-				  String instance, boolean scrollbar) {
+				  String instance, boolean scrollbar) throws ClassNotFoundException {
     Object frame;
     if ( instance == null)
       instance = "";
@@ -728,6 +748,7 @@ System.out.println( "JopSpiderCmd start");
     }
     catch (ClassNotFoundException e) {
       System.out.println("Class not found: " + className);
+      throw new ClassNotFoundException();
     }
     return null;
   }
@@ -754,7 +775,7 @@ System.out.println( "JopSpiderCmd start");
   }
 
   static void openURL( JopSession session, String name, boolean newFrame, 
-			  String bookmark) {
+		       String frameName, String bookmark) {
     System.out.println("openURL " + name);
     Object root = session.getRoot();
 
@@ -808,6 +829,8 @@ System.out.println( "JopSpiderCmd start");
       AppletContext appCtx = ((JApplet) root).getAppletContext();
       if ( newFrame)
         appCtx.showDocument( url, "_blank");
+      else if ( frameName != null)
+        appCtx.showDocument( url, frameName);
       else
         appCtx.showDocument( url, "_self");
     }

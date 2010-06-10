@@ -30,6 +30,7 @@
 #include "glow_exportjbean.h"
 
 #define glow_cJBean_Offset 2
+#define glow_cJBean_SizeCorr 2
 
 static char *str_cnv( char *instr);
 
@@ -421,6 +422,10 @@ void GlowExportJBean::polyline( glow_sPoint *points, int point_cnt, int fill, in
   double x, y;
   double x0, y0, x1, y1, width, height;
 
+
+  if ( !is_nodeclass)
+    print_shadow = print_shadow && shadow;
+
   switch ( pass)
   {
     case glow_eExportPass_Shape:
@@ -486,8 +491,7 @@ void GlowExportJBean::polyline( glow_sPoint *points, int point_cnt, int fill, in
         }
         fp << "}, " << 2 * point_cnt - 2 << ")," << endl;
       }
-      if ( ( is_nodeclass && print_shadow) || 
-	   ( !is_nodeclass && shadow)) {
+      if ( print_shadow) {
 	for ( i = 0; i < sp_num; i++) {
 	  fp << 
 "    new Polygon( new int[] { ";
@@ -863,7 +867,7 @@ void GlowExportJBean::polyline( glow_sPoint *points, int point_cnt, int fill, in
       }
       else {
 	// No nodeclass
-	if ( !shadow) {
+	if ( !print_shadow) {
 	  // No nodeclass, No shadow
 	  if ( gradient == glow_eGradient_No) {
 	    // No gradient, No shadow, No nodeclass
@@ -3137,10 +3141,10 @@ void GlowExportJBean::node( double x1, double y1, double x2, double y2,
       fp <<
 "    " << var_name << " = new " << class_name << "(session);" << endl <<
 "    " << var_name << ".setBounds(new Rectangle(" << 
-	(int)(x1 - dim_x0 /* - glow_cJBean_Offset) */) << "," << 
-	(int)(y1 - dim_y0 /* - glow_cJBean_Offset) */) << "," << 
-	(int)(x2 - x1 + 2 * glow_cJBean_Offset) << "," << 
-	(int)(y2 - y1 + 2 * glow_cJBean_Offset) << "));" << endl;
+	(int)(x1 - dim_x0 + glow_cJBean_Offset - glow_cJBean_SizeCorr/2) << "," << 
+	(int)(y1 - dim_y0 + glow_cJBean_Offset - glow_cJBean_SizeCorr/2) << "," << 
+	(int)(x2 - x1 + glow_cJBean_SizeCorr) << "," << 
+	(int)(y2 - y1 + glow_cJBean_SizeCorr) << "));" << endl;
       if ( fill_drawtype != glow_eDrawType_No && color_tone == glow_eDrawTone_No)
         fp <<
 "    " << var_name << ".setFillColor(" << (int)fill_drawtype << ");" << endl;
@@ -3245,10 +3249,10 @@ void GlowExportJBean::image( double x1, double y1, double x2, double y2,
       fp <<
 "    " << var_name << " = new GeImage(session);" << endl <<
 "    " << var_name << ".setBounds(new Rectangle(" << 
-	(int)(x1 - dim_x0 /* - glow_cJBean_Offset) */) << "," << 
-	(int)(y1 - dim_y0 /* - glow_cJBean_Offset) */) << "," << 
-	(int)(x2 - x1 + 2 * glow_cJBean_Offset) << "," << 
-	(int)(y2 - y1 + 2 * glow_cJBean_Offset) << "));" << endl <<
+	(int)(x1 - dim_x0 + glow_cJBean_Offset) << "," << 
+	(int)(y1 - dim_y0 + glow_cJBean_Offset) << "," << 
+	(int)(x2 - x1) << "," << 
+	(int)(y2 - y1) << "));" << endl <<
 "    " << var_name << ".setImage( \"" << filename << "\");" << endl;
       if ( color_tone != glow_eDrawTone_No)
         fp <<
@@ -3335,10 +3339,10 @@ void GlowExportJBean::bar( double x1, double y1, double x2, double y2,
       fp <<
 "    " << var_name << " = new " << class_name << "(session);" << endl <<
 "    " << var_name << ".setBounds(new Rectangle(" << 
-	(int)(x1 - dim_x0 /* - glow_cJBean_Offset) */) << "," << 
-	(int)(y1 - dim_y0 /* - glow_cJBean_Offset) */) << "," << 
-	(int)(x2 - x1 + 2 * glow_cJBean_Offset) << "," << 
-	(int)(y2 - y1 + 2 * glow_cJBean_Offset) << "));" << endl;
+	(int)(x1 - dim_x0 + glow_cJBean_Offset) << "," << 
+	(int)(y1 - dim_y0 + glow_cJBean_Offset) << "," << 
+	(int)(x2 - x1) << "," << 
+	(int)(y2 - y1) << "));" << endl;
       if ( fill_drawtype != glow_eDrawType_No)
         fp <<
 "    " << var_name << ".setFillColor(" << (int)fill_drawtype << ");" << endl;
@@ -3428,10 +3432,10 @@ void GlowExportJBean::trend( double x1, double y1, double x2, double y2,
       fp <<
 "    " << var_name << " = new " << class_name << "( session);" << endl <<
 "    " << var_name << ".setBounds(new Rectangle(" << 
-	(int)(x1 - dim_x0 /* - glow_cJBean_Offset) */) << "," << 
-	(int)(y1 - dim_y0 /* - glow_cJBean_Offset) */) << "," << 
-	(int)(x2 - x1 + 2 * glow_cJBean_Offset) << "," << 
-        (int)(y2 - y1 + 2 * glow_cJBean_Offset) << "));" << endl;
+	(int)(x1 - dim_x0 + glow_cJBean_Offset) << "," << 
+	(int)(y1 - dim_y0 + glow_cJBean_Offset) << "," << 
+	(int)(x2 - x1) << "," << 
+        (int)(y2 - y1) << "));" << endl;
       if ( fill_drawtype != glow_eDrawType_No)
         fp <<
 "    " << var_name << ".setFillColor(" << (int)fill_drawtype << ");" << endl;
@@ -3523,10 +3527,10 @@ void GlowExportJBean::xycurve( double x1, double y1, double x2, double y2,
       fp <<
 "    " << var_name << " = new " << class_name << "( session);" << endl <<
 "    " << var_name << ".setBounds(new Rectangle(" << 
-	(int)(x1 - dim_x0 /* - glow_cJBean_Offset) */) << "," << 
-	(int)(y1 - dim_y0 /* - glow_cJBean_Offset) */) << "," << 
-	(int)(x2 - x1 + 2 * glow_cJBean_Offset) << "," << 
-        (int)(y2 - y1 + 2 * glow_cJBean_Offset) << "));" << endl;
+	(int)(x1 - dim_x0 + glow_cJBean_Offset) << "," << 
+	(int)(y1 - dim_y0 + glow_cJBean_Offset) << "," << 
+	(int)(x2 - x1) << "," << 
+        (int)(y2 - y1) << "));" << endl;
       if ( fill_drawtype != glow_eDrawType_No)
         fp <<
 "    " << var_name << ".setFillColor(" << (int)fill_drawtype << ");" << endl;
@@ -3630,8 +3634,8 @@ void GlowExportJBean::axis( double x1, double y1, double x2, double y2,
 "    " << var_name << ".setBounds(new Rectangle(" << 
 	(int)(x1 - dim_x0 + glow_cJBean_Offset) << "," << 
 	(int)(y1 - dim_y0 + glow_cJBean_Offset) << "," << 
-	(int)(x2 - x1 /* + 2 * glow_cJBean_Offset */) << "," << 
-	(int)(y2 - y1 /* + 2 * glow_cJBean_Offset */) << "));" << endl;
+	(int)(x2 - x1) << "," << 
+	(int)(y2 - y1) << "));" << endl;
 
       if ( border_drawtype != glow_eDrawType_No)
         fp <<
@@ -3733,10 +3737,10 @@ void GlowExportJBean::window( double x1, double y1, double x2, double y2,
       fp <<
 "    " << var_name << " = new " << class_name << "(" << var_fname << ".localPanel);" << endl <<
 "    " << var_name << ".setBounds(new Rectangle(" << 
-	(int)(x1 - dim_x0 /* - glow_cJBean_Offset) */) << "," << 
-	(int)(y1 - dim_y0 /* - glow_cJBean_Offset) */) << "," << 
-	(int)(x2 - x1 + 2 * glow_cJBean_Offset) << "," << 
-	(int)(y2 - y1 + 2 * glow_cJBean_Offset) << "));" << endl <<
+	(int)(x1 - dim_x0 + glow_cJBean_Offset) << "," << 
+	(int)(y1 - dim_y0 + glow_cJBean_Offset) << "," << 
+	(int)(x2 - x1) << "," << 
+	(int)(y2 - y1) << "));" << endl <<
 "    localPanel.add(" << var_name << ", new Proportion(" << var_name << ".getBounds(), dsize));" << endl;
       break;
     }
@@ -3823,10 +3827,10 @@ void GlowExportJBean::folder( double x1, double y1, double x2, double y2,
 
       fp <<
 "    " << var_name << ".setBounds(new Rectangle(" << 
-	(int)(x1 - dim_x0 /* - glow_cJBean_Offset) */) << "," << 
-	(int)(y1 - dim_y0 /* - glow_cJBean_Offset) */) << "," << 
-	(int)(x2 - x1 + 2 * glow_cJBean_Offset) << "," << 
-	(int)(y2 - y1 + 2 * glow_cJBean_Offset) << "));" << endl <<
+	(int)(x1 - dim_x0 + glow_cJBean_Offset) << "," << 
+	(int)(y1 - dim_y0 + glow_cJBean_Offset) << "," << 
+	(int)(x2 - x1) << "," << 
+	(int)(y2 - y1) << "));" << endl <<
 "    localPanel.add(" << var_name << ", new Proportion(" << var_name << ".getBounds(), dsize));" << endl;
       break;
     }
@@ -3907,10 +3911,10 @@ void GlowExportJBean::table( double x1, double y1, double x2, double y2,
 
       fp <<
 "    " << var_name << ".setBounds(new Rectangle(" << 
-	(int)(x1 - dim_x0 /* - glow_cJBean_Offset) */) << "," << 
-	(int)(y1 - dim_y0 /* - glow_cJBean_Offset) */) << "," << 
-	(int)(x2 - x1 + 2 * glow_cJBean_Offset) << "," << 
-	(int)(y2 - y1 + 2 * glow_cJBean_Offset) << "));" << endl;
+	(int)(x1 - dim_x0 + glow_cJBean_Offset) << "," << 
+	(int)(y1 - dim_y0 + glow_cJBean_Offset) << "," << 
+	(int)(x2 - x1) << "," << 
+	(int)(y2 - y1) << "));" << endl;
       fp <<
 "    localPanel.add(" << var_name << ", new Proportion(" << var_name << ".getBounds(), dsize));" << endl;
       break;

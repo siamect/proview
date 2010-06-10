@@ -32,7 +32,7 @@ public class JopcDstrendconf extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä·›·DAó·DAó·p—uÄO›·+¡· #¡·xê´¿ç™˜·DAó·DAó·x—u #¡·");
+    JopSpider.setSystemName( "ä£·D‘ú·D‘ú·p—uÄŸ¢·{¨· s¨·È‡Æ¿çéŸ·D‘ú·D‘ú·x—u s¨·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 712, 131);
@@ -54,22 +54,22 @@ public class JopcDstrendconf extends JopFrame implements JopUtilityIfc {
     else
       this.setTitle("JopcDstrendconf");
     pwr_valuesmall3 = new pwr_valuesmall(session);
-    pwr_valuesmall3.setBounds(new Rectangle(128,10,56,19));
+    pwr_valuesmall3.setBounds(new Rectangle(129,11,54,17));
     pwr_valuesmall3.setFillColor(31);
     pwr_valuesmall3.setBorderColor(33);
     localPanel.add(pwr_valuesmall3, new Proportion(pwr_valuesmall3.getBounds(), dsize));
     pwr_indsquare4 = new pwr_indsquare(session);
-    pwr_indsquare4.setBounds(new Rectangle(128,33,17,18));
+    pwr_indsquare4.setBounds(new Rectangle(129,34,15,16));
     localPanel.add(pwr_indsquare4, new Proportion(pwr_indsquare4.getBounds(), dsize));
     pwr_indsquare5 = new pwr_indsquare(session);
-    pwr_indsquare5.setBounds(new Rectangle(128,53,17,18));
+    pwr_indsquare5.setBounds(new Rectangle(129,54,15,16));
     localPanel.add(pwr_indsquare5, new Proportion(pwr_indsquare5.getBounds(), dsize));
     pwr_valuelong6 = new pwr_valuelong(session);
-    pwr_valuelong6.setBounds(new Rectangle(146,53,536,19));
+    pwr_valuelong6.setBounds(new Rectangle(147,54,534,17));
     pwr_valuelong6.setBorderColor(33);
     localPanel.add(pwr_valuelong6, new Proportion(pwr_valuelong6.getBounds(), dsize));
     pwr_valuelong7 = new pwr_valuelong(session);
-    pwr_valuelong7.setBounds(new Rectangle(146,31,536,19));
+    pwr_valuelong7.setBounds(new Rectangle(147,32,534,17));
     pwr_valuelong7.setBorderColor(33);
     localPanel.add(pwr_valuelong7, new Proportion(pwr_valuelong7.getBounds(), dsize));
     pwr_valuesmall3.dd.setDynType(1025);

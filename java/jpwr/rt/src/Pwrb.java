@@ -29,6 +29,10 @@
 package jpwr.rt;
 
 public class Pwrb {
+  public static final int eWebTargetEnum_RightFrame = 0;
+  public static final int eWebTargetEnum_ParentWindow = 1;
+  public static final int eWebTargetEnum_SeparateWindow = 2;
+
   public static final int cClass_AAnalyse = 131080;
   public static final int cClass_aarithm = 131088;
   public static final int cClass_adelay = 131096;

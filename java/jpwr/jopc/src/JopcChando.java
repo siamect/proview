@@ -31,7 +31,7 @@ public class JopcChando extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "ä·›·DAó·DAó·p—uÄO›·+¡· #¡·xê´¿ç™˜·DAó·DAó·x—u #¡·");
+    JopSpider.setSystemName( "ä£·D‘ú·D‘ú·p—uÄŸ¢·{¨· s¨·È‡Æ¿çéŸ·D‘ú·D‘ú·x—u s¨·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 711, 160);
@@ -53,21 +53,21 @@ public class JopcChando extends JopFrame implements JopUtilityIfc {
     else
       this.setTitle("JopcChando");
     pwr_valuemedium0 = new pwr_valuemedium(session);
-    pwr_valuemedium0.setBounds(new Rectangle(132,54,91,22));
+    pwr_valuemedium0.setBounds(new Rectangle(133,55,89,20));
     pwr_valuemedium0.setFillColor(51);
     pwr_valuemedium0.setBorderColor(56);
     localPanel.add(pwr_valuemedium0, new Proportion(pwr_valuemedium0.getBounds(), dsize));
     pwr_valuelong3 = new pwr_valuelong(session);
-    pwr_valuelong3.setBounds(new Rectangle(132,4,570,21));
+    pwr_valuelong3.setBounds(new Rectangle(133,5,568,19));
     pwr_valuelong3.setFillColor(51);
     pwr_valuelong3.setBorderColor(46);
     localPanel.add(pwr_valuelong3, new Proportion(pwr_valuelong3.getBounds(), dsize));
     pwr_buttoncommand4 = new pwr_buttoncommand(session);
-    pwr_buttoncommand4.setBounds(new Rectangle(8,82,83,28));
+    pwr_buttoncommand4.setBounds(new Rectangle(9,83,81,26));
     pwr_buttoncommand4.setColorTone(1);
     localPanel.add(pwr_buttoncommand4, new Proportion(pwr_buttoncommand4.getBounds(), dsize));
     pwr_valuelong5 = new pwr_valuelong(session);
-    pwr_valuelong5.setBounds(new Rectangle(132,29,570,21));
+    pwr_valuelong5.setBounds(new Rectangle(133,30,568,19));
     pwr_valuelong5.setFillColor(51);
     pwr_valuelong5.setBorderColor(46);
     localPanel.add(pwr_valuelong5, new Proportion(pwr_valuelong5.getBounds(), dsize));
@@ -241,7 +241,7 @@ protected class pwr_buttoncommand extends GeComponent {
     new Polygon( new int[] { 88, 87, 88, 94}, new int[] { 8, 5, 4,2}, 4),
     new Polygon( new int[] { 94, 88, 6, 2}, new int[] { 2, 4, 4,2}, 4),
     new Polygon( new int[] { 2, 6, 6, 2}, new int[] { 2, 4, 26,32}, 4),
-    new Polygon( new int[] { 2, 6, 35, 19}, new int[] { 32, 26, -9,-10}, 4),
+    new Polygon( new int[] { 2, 6, 19, 19}, new int[] { 32, 26, -6,-10}, 4),
     new Polygon( new int[] { 2, 8, 88, 88, 94, 94, 2}, new int[] {32, 26, 26, 8, 2, 32, 32}, 7),
     new Polygon( new int[] { 2, 8, 10, 8}, new int[] { 32, 30, 28,26}, 4),
     new Polygon( new int[] { 8, 10, 90, 88}, new int[] { 26, 28, 28,26}, 4),
@@ -249,7 +249,7 @@ protected class pwr_buttoncommand extends GeComponent {
     new Polygon( new int[] { 88, 90, 92, 94}, new int[] { 8, 8, 6,2}, 4),
     new Polygon( new int[] { 94, 92, 92, 94}, new int[] { 2, 6, 30,32}, 4),
     new Polygon( new int[] { 94, 92, 8, 2}, new int[] { 32, 30, 30,32}, 4),
-    new Polygon( new int[] { 2, 8, 87, 19}, new int[] { 32, 30, 145808533,-10}, 4),
+    new Polygon( new int[] { 2, 8, 87, 19}, new int[] { 32, 30, -9,-10}, 4),
     new Rectangle2D.Float(2F, 2F, 92.0805F, 30.0671F),
     new Polygon( new int[] { 2, 94, 93, 4, 4, 2}, new int[] { 2, 2, 4, 4, 31, 32}, 6), 
     new Polygon( new int[] { 94, 94, 93, 93, 4, 2}, new int[] { 32, 2, 4, 31, 31, 32}, 6), 

@@ -54,6 +54,7 @@ First Edition Mars 2005
 
 </topic>
 
+
 <chapter>
 <topic> introduction
 Inledning
@@ -107,6 +108,7 @@ Konfigurera direktoryvolymen <link> configure_directoryvolume
 Konfigurera rotvolymen <link> configure_rootvolume
 Plc programmering <link>plc_programming
 Skapa processbilder <link> ge_man
+Java operatörsmiljö <link> dg_web_iterface
 Starta och testa systemet <link> conf_test
 
 <b>Referens manualer
@@ -4082,6 +4084,307 @@ Se XttGraph i Objektshandboken <classlink>xttgraph,"",$pwr_lang/pwrb_xtthelp.dat
 </topic>
 </chapter>
 
+
+<chapter>
+<topic> dg_web_interface
+Java operatörsmiljö
+
+Proview innehåller förutom den ordinarie operatörsmiljön i X windows, även en operatörsmiljö 
+skriven i java. Fördelen med java är att det går att köra i en web-läsare och på många olika 
+plattformar. Nackdelen är att det är långsammare och har en begränsad funktionalitet.
+
+<h1>Installation av java
+<h2>Utvecklingsstation
+För att exportera grafer till java måste Java Development Kit, jdk, vara installerat.
+Ladda hem lämplig jdk från java.sun.com. Definera omgivningsvariabeln jdk till katalogen där 
+paketet är uppackat, t ex /usr/local och lägg in $jdk/bin i PATH. Definera även jdk_home till
+$jdk/bin
+
+<c>export jdk=/usr/local/jdk1.6.0_10
+<c>export PATH=$PATH:$jdk/bin
+<c>export jdk_home=$jdk/bin
+
+<h2>Process och operatörsstation
+På process och operatörsstationerna måste Java Runtime Environment, jre, vara installerat.
+Ladda hem från java.sun.com och packa upp under /usr/local. Även här måste jdk och jdk_home 
+definieras (detta görs av /etc/pwrp_profile)
+
+<c>export jdk=/usr/local/jre1.6.0_10
+<c>export PATH=$PATH:$jdk/bin
+<c>export jdk_home=$jdk/bin
+
+<h1>Översikt
+<h2>Webläsare (remote)
+Java miljön kan startas i en webläsare, genom att man surfar in på projektets 
+hemsida. Information om objekt, larm mm, hämtas från tre serverprocesser som
+måste vara startade på den nod man läser in hemsidan ifrån, rt_webmon, rt_webmonmh och
+rt_webmonelog. För att server-processerna ska starta krävs att ett WebHandler objekt
+är konfigurerat i nodhierakin.
+
+<image> dg_fig100.png
+<b>Fig Hemsida för ett projekt
+
+<h2>Lokalt
+Java miljön kan även köras lokalt på en nod där Proview's runtime har startats.
+Server-processerna för web-gränssnittet behöver inte startas, informationen hämtas
+direkt ur realtidsdatabasen. 
+
+Den lokala java miljön innehåller en meny, men inte någon höger ram, som websidan. Den
+kan endast visa Ge grafer som java frame, inte som applets. Funktionerna larm fönster och 
+händelselogg är inte implementerade för lokal körning.
+
+För att köra lokalt krävs att man installerar lämplig jre från java.sun.com och definierar
+omgivningsvariabeln jdk till att peka på jre installationen, t ex
+
+<c>> export jdk=/usr/local/jre1.6.0.19
+
+Operatörsmiljön startas sedan med kommandot
+
+<c>> jpwr_opwind.sh
+
+<image> dg_fig103.png
+<b>Operatörsmeny vid lokal start
+
+<h1>Konfigurering
+
+<h2>Konfigurering av server processer
+Om det finns ett WebHandler objekt startas server-processerna för webgränssnittet.
+
+<h2>Konfigurering av menyn
+Konfigureringen av menyn i operatörsfönstret gör i nodhierakin med attribut i WebHandler 
+objektet, och ett antal WebGraph och WebLink objekt som läggs under detta objekt.
+
+<b>WebHandler
+
+I WebHandler objektet konfigureras vilka standardfunktioner som ska finnas med
+i operatörsfönstrets meny.
+
+<b>EnableLanguage
+Visar en knapp för språk-val i menyn. Språkvalet måster göras innan man öppnar olika
+fönster, eftersom språket inte ändras på de fönster som redan är skapade.
+
+<b>EnableLogin
+Visar kappar för inlogging och utloggning i menyn. Inlogging innebär att man loggar in
+som en Proview användare med specificerade privileger som avgör vilken access man har till
+systemet.
+
+<b>EnableAlarmList
+Visar en knapp i menyn för att öppna fönster med larm och händelselista.
+
+<b>EnableEventLog
+Visar en knapp i menyn för att söka efter händelser i eventloggen.
+
+<b>EnableNavigator
+Visar en knapp i menyn för att öppna navigatorn.
+
+<b>WebGraph
+WebGraph objekt konfigurererar knappar i menyn för att visa process grafik. WebGraph
+objekt läggs under WebHandler objektet.
+
+WebGraph objektet gör att grafen öppnas som en Java Frame, dvs i ett eget fönster. I Ge
+editorn måste man ange att grafen ska exporteras som en Java Frame genom att markera
+IsJavaFrame i Graph Attributes. Vill man öppna grafen som applet används WebLink objektet, 
+se nedan.
+
+I Name attributet fylls namnet in på den java-klass som genereras när grafen exporteras
+som java. Normalt är detta namn detsamma som grafens namn, men med stor bokstav på första
+bokstaven. Man kan dock välja att spara en graph under ett annat namn, genom att välja
+export as, t ex om namnet innehåller lokala tecken, eller börjar på en siffra, eller andra
+namn som inte bildar tillåtna java-klass namn.
+
+I Text attributet anges knapp-texten.
+
+<b>WebLink
+Ett WebLink objekt konfigurerar en knapp i menyn för att öppna en godtycklig URL. I 
+WebTarget kan man ange var den nya sidan ska läggas, i ett separat fönster, i den
+högra ramen, eller i både meny och högra ramen (parent).
+
+<b>Öppna en Ge graf som en applet
+Ett WebLink objekt kan även användas för att öppna en Ge graph som en applet, t ex för
+att lägga den i den högra ramen. I Ge editorn anger man att grafen ska exporteras som
+en Java Applet genom att markera IsJavaApplet i GraphAttributes. Det gör att det skapas
+en html fil på $pwrp_web med samma namn som grafen, t ex mygraph.html. Genom att ange
+detta namn i WebLink objektets URL-attribut och sätta WebTarget till RightFrame, visas
+grafen i högra ramen när man klickar på knappen. Observera att en graf som öppnas som en
+applet får sin behörighet från Security-objektets DefaultWebPriv, och inte påverkas av 
+eventuell inlogging.
+
+<h2>Konfigurering av högra ramen
+Hemsidan för ett projekt består av en meny och en höger ram. I höger ramen visas som 
+default innehållet i xtt-hjälptexten för projektet. Denna konverteras till html när 
+noden byggs. Om man vill ha en annan startsida i högra ramen kan man lägga in en URL
+till denna i WebHandler objektets attribute StartURL. Om man t ex vill visa en Ge graf,
+exporterar man grafen som en Java Applet och lägger man in html-filen för grafen på samma 
+sätt som i WebLink objektet ovan.
+
+<h2>LoadArchives
+Om man vill kunna visa Ge grafer från flera olika projekt, måste java arkiven för dessa
+projekt vara tillgängliga för web-läsaren. Java klasserna som genereras när graferna 
+exporteras i Ge editorn, läggas i ett arkiv men namnet pwrp_'systemname'_web.jar. 
+Arkivet för det egna projektet laddas alltid, men om även andra arkiv ska laddas, ska de
+läggas in i WebHandler objektets LoadArchive attribut, och kopieras till $pwrp_web.
+
+<h2>Behörighet
+<b>Default behörighet
+Default behörighet är den behörighet som en användare får som inte loggar in. Den anges
+i Security objektets DefaultWebPriv attribut. 0 innebär att man inte har access till
+något annat än att logga in. Normal sätter man RtRead vilket gör att ej inloggade användare
+kan titta, men inte ändra värden.
+
+<b>Inloggning
+För att kunna logga in måste inloggingfunktionen vara aktiverad i WebHandler objektet.
+Genom att klicka på Login knappen in operatörsfönstret, kan användaren logga in med
+användarnamn och passerord. Användarnamnet måste vara registrerat i den systemgrupp
+som har angivits i Security objektets WebSystemGroup. Vid registreringen tilldelas 
+användaren priviligier som avgör behörigheten.
+
+Lösenordet krypteras av klienten, dvs okrypterade lösenord skickas inte över nätverket.
+
+<h1>Server processer
+Tre server processer startas start av Proview runtime, rt_webmon, rt_webmonmh och
+rt_webmonelog.
+
+<b>rt_webmon
+rt_webmon öppnar en port från vilken web-klienter kan hämta information om objekt
+i databasen och lägga upp prenumerationer.
+
+<b>rt_webmonmh
+rt_webmonmh förser web-klienter med larm och händelser. Webgränssnittet innehåller ett
+fönster med larm och händelselista som hämtar information här ifrån. Urvalet av larm 
+händelser bestäms av attributet EventSelectList i WebHandler objektet.
+
+<b>rt_webmonelog
+rt_webmonelog gör sökningar av händelser i eventlog databasen.
+
+
+<h1>Funktioner
+I det här avsnittet beskrivs med ingående olika funktioner i web och java miljön och 
+hur de genereras och konfigureras.
+
+<h2>Hemsida
+Hemsidan konfigureras med WebHandler objektet, och genereras av WebHander objektets 
+bygg-metod. Den består av ett antal html-filer och jar-filer som läggs på katalogen
+$pwrp_web.
+
+Startsidan, index.html, består av två ramar. Den vänstra ramen öppnar html-filen för menyn, 
+index_opwin_menu.html, som i sin tur öppnar en applet som knyter upp sig mot Proview 
+servern och bygger upp menyn. Den högra ramen visar den URL som angivits i WebHandler 
+objektets StartURL attribut, eller om detta attribut är tomt, startsidan för xtt-hälpen.
+
+<h2>Ge grafer
+Ge grafer som visas måste vara exporterade som java frames eller java applets. Normalt
+använder man idag java frames. 
+
+En java frame innebär att grafen visas i ett eget fönster. Den är skalbar, och anpassar
+sig efter fönstrets storlek. Möjligheterna att påverka inmatningsfält, knappar mm i bilden
+bestäms av privilegierna för den användare man är inloggad som. För att kunna exportera en
+graf som java frame måste IsJavaFrame markeras Ge editorns GraphAttributes.
+
+<image> dg_fig101.png
+<b>Fig Graf öppnad som en Frame
+
+En java applet öppnas från en html-fil. Den är inte skalbar, och behörigheten hämtas
+från Security objektets DefaultWebPriv attribut, och påverkas inte av vem som är inloggad.
+Java applets kan inte visas i den lokala java miljön. För att kunna exportera en graf som
+java applet måste IsJavaApplet markeras i Ge editorns GraphAttributes.
+
+<image> dg_fig102.png
+<b>Fig Graf öppnad som en Applet
+
+Man bör även ange en storlek på den genererade java grafen genom att sätta bredden i pixel
+i JavaWidth i GraphAttributes.
+
+Exportering sker genom att aktivera File/Export/Java i Ge editorns meny. Även byggmetoden
+för WebGraph objekt exporterar en graf, om denna har sparats sedan senaste exporteringen.
+Vid exporteringen skapas en java fil på $pwrp_pop, som kompileras och läggs i två arkiv,
+$pwrp_web/pwrp_'systemname'_web.jar, och $pwrp_lib/pwrp_'systemname'.jar. Arkivet på 
+$pwrp_web används av web-gränssnittet, och arkivet på $pwrp_load av den lokala java miljön.
+För en java frame exporteras grafen som en java klass med samma namn som graf-namnet, men 
+med stor bokstav på första bokstaven. my_graph exporteras t ex som My_graph. Notera att 
+lokala bokstäver inte får ingå i ett java klassnamn, och det får inte heller börja på en 
+siffra. I de har fallen kan man exportera med Export/Java As och ange ett tillåtet 
+javaklassnamn. Genom att spara ge grafen efter exporteringen sparas java namnet, annars måste 
+namnet anges vid varje exportering.
+
+För java applets läggs suffixet _A på java klassnamnet, t ex My_graph_A. Dessutom genereras
+en html fil, $pwrp_web/my_graph.html, som används för att starta appleten. Appleten kan 
+naturligvis även startas från andra html-filer och kombineras med andra applet'ar och 
+grafiska element.
+
+Exporteringen till java innehåller vissa begränsningar. Text objekt kan i Ge läggas ovanpå
+subgrafer, men kommer i java att hamna under subgrafen. Vissa xtt-kommandon som kan användas
+i command knappar finns inte tillgängliga i web-miljön. Det finns även en begränsing för hur
+många tecken en java funktion för innehålla. I stora, innehållsrika grafer kan man stöta på
+den här begränsningen.
+
+<h2>Larm och händelselista
+För larm och händelselistan måste EventSelectList i WebHandler objektet fyllas i med 
+hierarkier från vilka larm och händelser ska visas.
+
+<h2>Hjälptexter
+Hjälptexterna för projektet, filen xtt_help.dat, exporteras till html-filer på $pwrp_web
+av WebHandler objektets byggmetod. Startsidan för hjälptexterna är 
+$pwrp_web/xtt_help_index.html. Denna vissas som default i hemsidans högra ram, om ingen
+annan URL är angiven i WebHandler objektets StartURL attribut.
+
+Om hjälptexten innehåller image taggar måste dessa png eller gif filer kopieras till
+$pwrp_web.
+
+<h2>Plc 
+För att kunna öppna plc program i web miljön måste .flw filer på $pwrp_load kopieras till
+$pwrp_web.
+
+<h2>Språk
+Default är språket engelska. Andra språk kan anges i WebHandler objektets Language attribut
+eller väljas i språkvalsfönstret om detta är konfigurerat. Om ett annat språk än 
+engelska ska kunna väljas, måste språkfiler för detta språk, och för engelska, kopieras
+från $pwr_exe till $pwrp_web. För t ex svenska skapas katalogerna $pwrp_web/en_us och
+$pwrp_web/sv_se och filerna $pwr_exe/en_us/xtt_lng.dat kopieras till $pwrp_web/en_us/ och
+$pwr_exe/sv_se/xtt_lng.dat kopieras till $pwrp_web/sv_se/.
+
+<h2>Arkiv
+Följande arkiv ska vara tillgängliga på $pwrp_web: pwr_rt_client.jar, pwr_jop.jar,
+pwr_jopc.jar, pwr_bcomp.jar, pwr_bcompfc.jar och pwr_abb.jar. I utvecklingsmiljön måste man
+kopiera dessa från $pwr_lib, i runtime-miljön görs detta vid installationen av pwrrt paketet.
+
+<h1>Webserver
+För att kunna öppna projektets hemsida i en webläsare måste en webserver vara startad på
+noden, t ex apache.
+
+Webservern tillåter endast att vissa utvalda kataloger öppnas, t ex /var/www. Antingen kan man
+flytta innehållet i $pwrp_web till en öppen katalog, eller så kan man öppna $pwrp_web. I 
+apache görs detta i filen /etc/apache2/apache2.conf genom att lägga till
+
+<c>Alias /pwrp_web/ /usr/pwrp/myproj/bld/common/web/
+
+<c><Directory /usr/pwrp/myproj/bld/common/web>
+<c>    Options Indexes MultiViews
+<c>    AllowOverride None
+<c>    Order allow,deny
+<c>    Allow from all
+<c></Directory>
+
+Här öppnas ett project, myproj, med rot-katalogen /usr/pwrp/myproj, med alias namnet pwrp_web.
+Om noden är mynode, blir URL'en för att öppna web-miljön
+
+<c>http://mynode/pwrp_web/index.html
+
+På en process eller operatörsstation blir motsvarande tillägg i apache2.conf vilket
+läggs in vid installationen av pwrrt paketet
+
+<c>Alias /pwrp_web/ /pwrp/common/web/
+
+<c><Directory /pwrp/common/web>
+<c>    Options Indexes MultiViews
+<c>    AllowOverride None
+<c>    Order allow,deny
+<c>    Allow from all
+<c></Directory>
+
+</topic>
+</chapter>
+
+
 <chapter>
 <topic>conf_test
 Starta och testa ett Proview system
@@ -4357,7 +4660,7 @@ Alla attribut är inte ändringsbara. Det beror på attributets funktion, om det sk
 i utvecklingsmiljön, eller inte. De som är ändringsbara markeras med en pil.
 
 Man kan även ändra värde på attribut från objektseditorn som öppnas från popupmenyn (Open
-Object). Attribut som är av typen flerradig text, kan endas ändras från objekteditorn.
+Object). Attribut som är av typen flerradig text, kan endast ändras från objekteditorn.
 
 Som 'advanced user' kan man öppna inmatningsfältet med PilHöger, som ett snabbare alternativ 
 till 'Change value'.
@@ -8022,7 +8325,7 @@ Objekt väljs med name, class och hierarchy kvalifierarna.
 /value		<t>Värde som ska läggas in i attributet. Om inget värde
 		<t>är angivet kommer en fråga för varje attribut.
 /class		<t>Välj objekt av den här klassen.
-/hierarchy	<t>Endas avkomlingar till det här objektet kommer att väljas.
+/hierarchy	<t>Endast avkomlingar till det här objektet kommer att väljas.
 /noconfirm	<t>Ställ ingen verifikations fråga.
 /nolog		<t>Operationen loggas inte.
 /output		<t>Ut fil.
@@ -8200,9 +8503,9 @@ Lista objekt.
 <B>wtt> show object /objid=
 
 /name		<t>Objektsnamn. Wildcard kan användas.
-/hierarchy	<t>Hierarki objekt. Endas objekt i hierarkin kommer att
+/hierarchy	<t>Hierarki objekt. Endast objekt i hierarkin kommer att
 		<t>väljas.
-/class		<t>Endas objekt av angiven klass kommer att väljas.
+/class		<t>Endast objekt av angiven klass kommer att väljas.
 /volume		<t>Namn på volymen.
 /allvolumes	<t>Sökning av objekt kommer att ske i alla volymer.
 /parameter	<t>Lista värdet på ett attribut för valda objekt.

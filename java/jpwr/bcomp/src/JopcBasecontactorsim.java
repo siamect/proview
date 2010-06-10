@@ -32,7 +32,7 @@ public class JopcBasecontactorsim extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "äwš·Dò·Dò·p—uÄš·ëŸ· ãŸ·((ò¿çY—·Dò·Dò·x—u ãŸ·");
+    JopSpider.setSystemName( "äw›·Dó·Dó·p—uÄ›·ë · ã ·x6Ý¿çY˜·Dó·Dó·x—u ã ·");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 322, 167);
@@ -54,23 +54,23 @@ public class JopcBasecontactorsim extends JopFrame implements JopUtilityIfc {
     else
       this.setTitle("JopcBasecontactorsim");
     pwr_menubar21 = new pwr_menubar2(session);
-    pwr_menubar21.setBounds(new Rectangle(4,0,316,23));
+    pwr_menubar21.setBounds(new Rectangle(5,0,314,21));
     pwr_menubar21.setShadow(1);
     localPanel.add(pwr_menubar21, new Proportion(pwr_menubar21.getBounds(), dsize));
     pwr_pulldownmenu22 = new pwr_pulldownmenu2(session);
-    pwr_pulldownmenu22.setBounds(new Rectangle(20,0,69,23));
+    pwr_pulldownmenu22.setBounds(new Rectangle(21,0,67,21));
     pwr_pulldownmenu22.setShadow(1);
     localPanel.add(pwr_pulldownmenu22, new Proportion(pwr_pulldownmenu22.getBounds(), dsize));
     pwr_pulldownmenu23 = new pwr_pulldownmenu2(session);
-    pwr_pulldownmenu23.setBounds(new Rectangle(224,0,69,23));
+    pwr_pulldownmenu23.setBounds(new Rectangle(225,0,67,21));
     pwr_pulldownmenu23.setShadow(1);
     localPanel.add(pwr_pulldownmenu23, new Proportion(pwr_pulldownmenu23.getBounds(), dsize));
     pwr_smallbuttoncenter5 = new pwr_smallbuttoncenter(session);
-    pwr_smallbuttoncenter5.setBounds(new Rectangle(189,65,37,20));
+    pwr_smallbuttoncenter5.setBounds(new Rectangle(190,66,35,18));
     pwr_smallbuttoncenter5.setFillColor(217);
     localPanel.add(pwr_smallbuttoncenter5, new Proportion(pwr_smallbuttoncenter5.getBounds(), dsize));
     pwr_indsquare6 = new pwr_indsquare(session);
-    pwr_indsquare6.setBounds(new Rectangle(161,67,15,16));
+    pwr_indsquare6.setBounds(new Rectangle(162,68,13,14));
     pwr_indsquare6.setFillColor(294);
     pwr_indsquare6.setShadow(1);
     localPanel.add(pwr_indsquare6, new Proportion(pwr_indsquare6.getBounds(), dsize));

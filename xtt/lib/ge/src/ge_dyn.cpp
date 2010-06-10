@@ -51,6 +51,8 @@
 // Until xtt_menu.h i unavailable...
 #define xmenu_mUtility_Ge        (1 << 5)
 #define xmenu_eItemType_Object   1
+#define glow_cJBean_Offset 2
+#define glow_cJBean_SizeCorr 2
 
 static int pdummy;
 
@@ -9217,6 +9219,10 @@ int GeFillLevel::export_java( grow_tObject object, ofstream& fp, bool first, cha
     min_limit = max_limit = 0;
     dir = direction;
   }
+  else if ( !(min_limit == 0 && max_limit == 0)) {
+    min_limit += glow_cJBean_Offset;
+    max_limit += glow_cJBean_Offset;
+  }
 
   if ( first)
     fp << "      ";
@@ -12390,6 +12396,7 @@ int GeSlider::action( grow_tObject object, glow_tEvent event)
   return 1;
 }
 
+
 int GeSlider::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
 {
   double dim_x0, dim_x1, dim_y0, dim_y1;
@@ -12403,12 +12410,12 @@ int GeSlider::export_java( grow_tObject object, ofstream& fp, bool first, char *
   switch ( direction) {
   case glow_eDirection_Left:
   case glow_eDirection_Right:
-    min_pos -= dim_x0;
-    max_pos -= dim_x0;
+    min_pos += -dim_x0 + glow_cJBean_Offset /*+ glow_cJBean_SizeCorr/2*/;
+    max_pos += -dim_x0 + glow_cJBean_Offset /*+ glow_cJBean_SizeCorr/2*/;
     break;
   default:
-    min_pos -= dim_y0;
-    max_pos -= dim_y0;
+    min_pos += -dim_y0 + glow_cJBean_Offset /*+ glow_cJBean_SizeCorr/2*/;
+    max_pos += -dim_y0 + glow_cJBean_Offset /*+ glow_cJBean_SizeCorr/2*/;
   }
 
   if ( first)
@@ -12423,13 +12430,15 @@ int GeSlider::export_java( grow_tObject object, ofstream& fp, bool first, char *
   else
     fp << "\"" << minvalue_attr << "\",";
   if ( strcmp( maxvalue_attr, "") == 0)
-    fp << "null," << endl;
+    fp << "null,";
   else
-    fp << "\"" << maxvalue_attr << "\"," << endl;
+    fp << "\"" << maxvalue_attr << "\",";
   if ( strcmp( insensitive_attr, "") == 0)
-    fp << "null)" << endl;
+    fp << "null,";
   else
-    fp << "\"" << insensitive_attr << "\")" << endl;
+    fp << "\"" << insensitive_attr << "\",";
+  fp << dim_x1 - dim_x0 /* + 2 * glow_cJBean_Offset*/ << "," << 
+    dim_y1 - dim_y0 /* + 2 * glow_cJBean_Offset */ << ")" << endl;
   return 1;
 }
 

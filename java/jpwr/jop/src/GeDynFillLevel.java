@@ -109,6 +109,7 @@ public class GeDynFillLevel extends GeDynElem {
 	}
       }
     }
+    System.out.println("FillLevel minPos: " + minPos + " MaxPos: " + maxPos);
   }
   public void disconnect() {
     if ( attrFound)

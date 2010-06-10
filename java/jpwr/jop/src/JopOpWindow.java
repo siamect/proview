@@ -157,6 +157,7 @@ public class JopOpWindow extends JPanel {
     CdhrString sretName = null;
     CdhrString sretText = null;
     CdhrString sretURL = null;
+    CdhrInt iretTarget = null;
 
     CdhrObjid oret = en.gdh.getChild( oretWebH.objid);
     while ( oret.oddSts()) {
@@ -201,9 +202,17 @@ public class JopOpWindow extends JPanel {
           s = sret.str + ".Text";
           sretText = en.gdh.getObjectInfoString( s);
 
+          s = sret.str + ".WebTarget";
+          iretTarget = en.gdh.getObjectInfoInt( s);
+
+	  String cmd = "open url \"" + sretURL.str + "\"";
+	  if ( iretTarget.value == Pwrb.eWebTargetEnum_RightFrame)
+	    cmd = cmd + " /name=\"right\"";
+	  else if ( iretTarget.value == Pwrb.eWebTargetEnum_ParentWindow)
+	    cmd = cmd + " /name=\"_parent\"";
  
-          button = new OpWindButton( session, sretURL.str, sretText.str,
-						  OpWindButton.WEBLINK);
+          button = new OpWindButton( session, cmd, sretText.str,
+				     OpWindButton.WEBLINK);
           this.add( button);
           break;
       }
@@ -284,7 +293,7 @@ public class JopOpWindow extends JPanel {
 	      if ( ! en.gdh.isAuthorized( Pwr.mAccess_AllPwr))
 		break;
 	      String cmd = "open url \"" + action + "\"";
-	      session.executeCommand( cmd);
+	      session.executeCommand( action);
 	      break;
 	    case LANGUAGE:
 	      if ( ! en.gdh.isAuthorized( Pwr.mAccess_AllPwr))
