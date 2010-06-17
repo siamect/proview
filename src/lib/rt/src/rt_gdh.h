@@ -792,6 +792,11 @@ gdh_SetCache (
   pwr_tUInt32           trimmed_level
 );
 
+void 
+gdh_RegisterLogFunction( 
+  void (*func)(char *, void *, unsigned int)
+);
+
 /** @} */
 
 #if defined __cplusplus

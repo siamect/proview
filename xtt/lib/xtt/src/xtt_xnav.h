@@ -190,12 +190,16 @@ class ApplListElem {
   public:
     ApplListElem( applist_eType al_type, void *al_ctx, pwr_sAttrRef *al_arp,
 	const char *al_name, const char *al_instance);
+    ~ApplListElem() { log_delete();}
     applist_eType	type;
     void		*ctx;
     pwr_sAttrRef       	aref;
     char		name[80];
     pwr_tAName          instance;
     ApplListElem 	*next;
+
+    void log_new();
+    void log_delete();
 };
 
 class ApplList {
