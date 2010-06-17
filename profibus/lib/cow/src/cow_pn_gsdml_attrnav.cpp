@@ -451,7 +451,7 @@ GsdmlAttrNav::GsdmlAttrNav(
   parent_ctx(xn_parent_ctx),
   gsdml(xn_gsdml), edit_mode(xn_edit_mode), trace_started(0),
   message_cb(0), change_value_cb(0), device_num(0), device_item(0), 
-  device_confirm_active(0), device_read(0), viewio(0), time_ratio(1), send_clock(32)
+  device_confirm_active(0), device_read(0), viewio(0), time_ratio(1), send_clock(32), phase(0)
 {
   strcpy( name, xn_name);
 
@@ -1393,12 +1393,14 @@ int GsdmlAttrNav::save( const char *filename)
   dev_data.iocr_data[0]->properties = 1; // Class 1
   dev_data.iocr_data[0]->send_clock_factor = send_clock;
   dev_data.iocr_data[0]->reduction_ratio = time_ratio; // send_time = 8 * 31.2 us * send_clock
+  dev_data.iocr_data[0]->phase = phase;
   dev_data.iocr_data[0]->api = 0;
 
   dev_data.iocr_data[1]->type = 2; // Output ?
   dev_data.iocr_data[1]->properties = dev_data.iocr_data[0]->properties;
   dev_data.iocr_data[1]->send_clock_factor = dev_data.iocr_data[0]->send_clock_factor;
   dev_data.iocr_data[1]->reduction_ratio = dev_data.iocr_data[0]->reduction_ratio;
+  dev_data.iocr_data[1]->phase = dev_data.iocr_data[0]->phase;
   dev_data.iocr_data[1]->api = dev_data.iocr_data[0]->api;
 
   // Load channel diag
@@ -1579,6 +1581,7 @@ int GsdmlAttrNav::open( const char *filename)
   gsdml->byte_order = dev_data.byte_order;
   time_ratio = dev_data.iocr_data[0]->reduction_ratio;
   send_clock = dev_data.iocr_data[0]->send_clock_factor;
+  phase = dev_data.iocr_data[0]->phase;
   if ( device_num > 0) {
     if ( device_num > gsdml->ApplicationProcess->DeviceAccessPointList->
 	 DeviceAccessPointItem.size()) {
@@ -2409,6 +2412,11 @@ int ItemPnNetwork::open_children( GsdmlAttrNav *attrnav, double x, double y)
       new ItemPnEnumTimeRatio( attrnav, "ReductionRatio", 
 			       attrnav->device_item->SystemDefinedSubmoduleList->InterfaceSubmoduleItem,
 			       p, node, flow_eDest_IntoLast);
+
+      p = (void *) &attrnav->phase;
+      new ItemPnBase( attrnav, "Phase", "LocalGsdmlAttr", 
+		    pwr_eType_UInt32, sizeof(pwr_tUInt32), 0, 0,
+		    p, 0, node, flow_eDest_IntoLast);
     }
     brow_SetOpen( node, attrnav_mOpen_Children);
     brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_openmap);
