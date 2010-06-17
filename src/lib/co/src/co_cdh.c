@@ -2689,11 +2689,14 @@ void cdh_SuppressSuperAll( char *out, char *in)
 {
   char *s, *t;
 
-  for ( s = in, t = out; *s; s++,t++) {
+  for ( s = in, t = out; *s;) {
     if ( strncmp( s, "Super.", 6) == 0)
       s += 6;
-    else
+    else {
       *t = *s;
+      s++;
+      t++;
+    }
   }
   *t = 0;
 }
