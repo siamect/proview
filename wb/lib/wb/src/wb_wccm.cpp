@@ -1292,9 +1292,10 @@ static int wccm_attribute_func (
 	char		*s;
 	char		*t;
 	char		upper_name[80];
-	pwr_tObjid	objid;
-	char		objname[120];
+	pwr_tAttrRef	aref;
+	pwr_tAName     	aname;
 	char		attrname[32];
+	pwr_tAName     	pname;
 	int		len;
 	int		decl;
 	int		int_val;
@@ -1311,8 +1312,8 @@ static int wccm_attribute_func (
 	}
 
 	/* Parse the string in name and attribute */
-	strcpy( objname, name);
-	s = strrchr( objname, '.');
+	strcpy( aname, name);
+	s = strrchr( aname, '.');
         if ( s == 0)
 	  return FOE__NOPAR;
 	*s = 0;
@@ -1341,11 +1342,11 @@ static int wccm_attribute_func (
 	  }
 	}
 	
-        sts = ldh_NameToObjid( ldhses, &objid, objname);
+        sts = ldh_NameToAttrRef( ldhses, aname, &aref);
         if ( EVEN(sts)) return sts;
 
 	/* Get the class of the object */
-	sts = ldh_GetObjectClass( ldhses, objid, &cid);
+	sts = ldh_GetAttrRefTid( ldhses, &aref, &cid);
 
 	found = 0;
 	for ( i = 0; i < 3; i++ )
@@ -1391,8 +1392,17 @@ static int wccm_attribute_func (
 	  elements = 1;
 
 	/* Get the parameter value in object */
-	sts = ldh_GetObjectPar( ldhses, objid, body,   
-			attrname, (char **)&object_par, &size); 
+	s = strchr( aname, '.');
+	if ( s) {
+	  strcpy( pname, s+1);
+	  strcat( pname, ".");
+	  strcat( pname, attrname);
+	}
+	else
+	  strcpy( pname, attrname);
+
+	sts = ldh_GetObjectPar( ldhses, aref.Objid, body,   
+			pname, (char **)&object_par, &size); 
 	if ( EVEN(sts)) return sts;
 
 	object_element = object_par + element * size / elements;
