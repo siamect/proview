@@ -51,6 +51,8 @@
 // Until xtt_menu.h i unavailable...
 #define xmenu_mUtility_Ge        (1 << 5)
 #define xmenu_eItemType_Object   1
+#define xmenu_eItemType_AttrObject 2
+#define xmenu_eItemType_Attribute 3
 #define glow_cJBean_Offset 2
 #define glow_cJBean_SizeCorr 2
 
@@ -9554,10 +9556,15 @@ int GePopupMenu::action( grow_tObject object, glow_tEvent event)
       // Display popup menu
       grow_GetName( dyn->graph->grow->ctx, name);
 
+      int item_type = xmenu_eItemType_Attribute;
+      if ( attrref.Flags.b.Object)
+	item_type =  xmenu_eItemType_Object;
+      else if ( attrref.Flags.b.ObjectAttr)
+	item_type =  xmenu_eItemType_AttrObject;
+ 
       dyn->graph->popup_position( event->any.x_pixel + 8, event->any.y_pixel, &x, &y);
       (dyn->graph->popup_menu_cb)( dyn->graph->parent_ctx, attrref, 
-			      xmenu_eItemType_Object,
-			      xmenu_mUtility_Ge, name, x, y);
+			      item_type, xmenu_mUtility_Ge, name, x, y);
     }
     break;
   }

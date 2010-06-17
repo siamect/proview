@@ -186,29 +186,46 @@ int XNav::getAllMenuItems( xmenu_sMenuCall	*ip,
         sts = XNAV__SUCCESS;
 
       if ( ODD(sts)) {
-	sts = gdh_AttrrefToName( &ip->Pointed, aname, sizeof(aname), cdh_mName_volumeStrict);
-	if ( EVEN(sts)) return sts;
-	strcat( aname, ".");
-	strcat( aname, mrp->RefAttribute);
+	int create_object_button = 0;
 
-	sts = gdh_GetAttributeCharacteristics( aname, &a_tid, &a_size,
-					       &a_offs, &a_elem);
-	if ( ODD(sts)) {
-	  switch ( a_tid) {
-	  case pwr_eType_AttrRef:
-	    sts = gdh_GetObjectInfo( aname, &currentar, sizeof(currentar));
-	    break;
-	  case pwr_eType_Objid: {
-	    pwr_tOid oid;
+	if ( strcmp( mrp->RefAttribute, "_SelfObject") == 0) {
+	  // Object entry for attributes
+	  char *s;
 
-	    currentar = pwr_cNAttrRef;
-	    sts = gdh_GetObjectInfo( aname, &oid, sizeof(oid));
-	    currentar = cdh_ObjidToAref( oid);
-	    break;
+	  sts = gdh_AttrrefToName( &ip->Pointed, aname, sizeof(aname), cdh_mName_volumeStrict);
+	  if ( EVEN(sts)) return sts;
+	  if ( (s = strrchr( aname, '.')))
+	    *s = 0;
+
+	  sts = gdh_NameToAttrref( pwr_cNOid, aname, &currentar);
+	  if ( EVEN(sts)) return sts;
+	}
+	else {
+	  sts = gdh_AttrrefToName( &ip->Pointed, aname, sizeof(aname), cdh_mName_volumeStrict);
+	  if ( EVEN(sts)) return sts;
+	  strcat( aname, ".");
+	  strcat( aname, mrp->RefAttribute);
+	  
+	  sts = gdh_GetAttributeCharacteristics( aname, &a_tid, &a_size,
+						 &a_offs, &a_elem);
+	  if ( ODD(sts)) {
+	    switch ( a_tid) {
+	    case pwr_eType_AttrRef:
+	      sts = gdh_GetObjectInfo( aname, &currentar, sizeof(currentar));
+	      break;
+	    case pwr_eType_Objid: {
+	      pwr_tOid oid;
+	      
+	      currentar = pwr_cNAttrRef;
+	      sts = gdh_GetObjectInfo( aname, &oid, sizeof(oid));
+	      currentar = cdh_ObjidToAref( oid);
+	      break;
+	    }
+	    default:
+	      sts = 0;
 	  }
-	  default:
-	    sts = 0;
 	  }
+	  create_object_button = 0;
 	}
 	if ( ODD(sts) && cdh_ObjidIsNotNull( currentar.Objid)) {
 	  (*Item)->Level = Level;
@@ -222,7 +239,7 @@ int XNav::getAllMenuItems( xmenu_sMenuCall	*ip,
 	  // Create a label with current object name
 	  sts = gdh_AttrrefToName( &currentar, aname, sizeof(aname), 
 				   cdh_mNName);
-	  if ( ODD(sts)) {
+	  if ( ODD(sts) && create_object_button) {
 	    (*Item)->Level = Level;
 	    (*Item)->Item = xmenu_eMenuItem_Button;
 	    (*Item)->MenuObject = pwr_cNObjid;
@@ -239,8 +256,16 @@ int XNav::getAllMenuItems( xmenu_sMenuCall	*ip,
 	  sts = gdh_GetAttrRefTid( &currentar, &current_cid);
 	  if ( EVEN(sts)) return sts;
 
+	  xmenu_eItemType item_type = ip->ItemType;
+	  if ( currentar.Flags.b.Object)
+	    ip->ItemType =  xmenu_eItemType_Object;
+	  else
+	    ip->ItemType =  xmenu_eItemType_AttrObject;
+
 	  sts = GetObjectMenu(ip, current_cid, Item, Level, nItems, 0, &currentar);
 	  if ( EVEN(sts)) return sts;
+
+	  ip->ItemType = item_type;
         }
       }
     }
