@@ -42,7 +42,7 @@ Version 4.6.0
 <topic> __DocumentInfoPage
 
 
-Copyright (C) 2008 SSAB Oxelösund AB
+Copyright (C) 2008 SSAB Oxel?sund AB
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2
@@ -528,7 +528,7 @@ We start with analysing the task to decide what hardware to use.
 We have four traffic lights, but the traffic lights in the same street can be connected in 
 parallel, which means that we can treat them as two lights. 
 
-Three outputs per light: 2 × 3 = 6
+Three outputs per light: 2 * 3 = 6
 Indication: Operating mode 1
 Indication: Control 1
 ----------------------------------
@@ -4088,7 +4088,7 @@ text can be assigned.
 <image> dg_fig63.gif
 
 Group also has a dynamic property, i.e. they can shift color, move, or perform some action. 
-They don’t have any default action or default color,as the subgraphs. You have to assign this
+They don't have any default action or default color,as the subgraphs. You have to assign this
 for each group.
 
 <h2>The Object editor
@@ -4131,7 +4131,7 @@ necessary to create a XttGraph object for each node, on which the graphics will 
 However, you only need to have one graph file. The following attributes in the graph object 
 must be set to appropriate values:
 
-- Action, the name of the pwg file with file type, e.g 'hydr.pwg’.
+- Action, the name of the pwg file with file type, e.g 'hydr.pwg'.
 - Title, the title of the graph window.
 - ButtonText, text of the button in the operator window.
 
@@ -4147,12 +4147,12 @@ See XttGraph in Object Reference Manual <classlink>xttgraph,"",$pwr_lang/pwrb_xt
 Java operator environment
 
 Proview contains besides the ordinary operator environment in X windows, also an operator
-environtment written in java. The advantage of java is that it is runnable in a web browser
+environment written in java. The advantage of java is that it is runnable in a web browser
 and on many platforms. The disadvantage is that it is slower, and has a limited functionality.
 
 <h1>Installation of java
 <h2>Development station
-To be able to export process graphs to java, the Java Developmet Kit, jdk, has to be 
+To be able to export process graphs to java, the Java Development Kit, jdk, has to be 
 installed. Download a suitable jdk from java.sun.com, and define the environment variable
 jdk to the directory where the jdk is unpacked, e.g. /usr/local/jdk1.6.0_10, and put 
 $jdk/bin in PATH. Also define jdk_home to $jdk/bin.
@@ -4162,7 +4162,7 @@ $jdk/bin in PATH. Also define jdk_home to $jdk/bin.
 <c>export jdk_home=$jdk/bin
 
 <h2>Process and operator stations
-On the process and operator stations the Java Runtime Environmet, jre, has to be installed.
+On the process and operator stations the Java Runtime Environment, jre, has to be installed.
 Download from java.sun.com and unpack under /usr/local. Also here the jdk and jdk_home should
 be defined (this i made by /etc/pwrp_profile)
 
@@ -4171,8 +4171,8 @@ be defined (this i made by /etc/pwrp_profile)
 <c>export jdk_home=$jdk/bin
 
 <h1>Overview
-<h2>Webbrowser
-The java environment can be started ina web brower, by entering an URL to the projects
+<h2>Web browser
+The java environment can be started in a web browser, by entering an URL to the projects
 homepage. Information about objects, alarms etc. is fetched from three server processes
 that has to be started on the node from where the homepage is opened, rt_webmon, 
 rt_webmonmh and rt_webmonelog. The configuration of a WebHandler object in the node
@@ -4182,13 +4182,13 @@ hierarchy is needed to start the server processes.
 <b>Fig Homepage for a project
 
 <h2>Local
-The java environmet can also be started locally on the node where the Proview runtime
+The java environment can also be started locally on the node where the Proview runtime
 is started. The server processes for the web interface doesn't have to be started, the
 information is fetched directly from the realtime database.
 
 The local java environment contains a menu, but not a right frame as the web page. Only
 Ge graph exported as java frames can be viewed, not java applets. The functions for displaying
-alarms and events, and search in the event logg is not implemented in the local environment.
+alarms and events, and search in the event log is not implemented in the local environment.
 
 The operator environment is started with the command
 
@@ -4264,7 +4264,7 @@ is not affected of a possible login.
 <h2>Configuration of the right frame
 The home page for a project consist of a menu and a right frame. As default, the xtt help 
 text for the project is viewed in the right frame. This is converted to html when the node
-is built. If another start page is disired, an URL can be stated in the StartURL attribute
+is built. If another start page is desired, an URL can be stated in the StartURL attribute
 of the WebHandler object. If you, for example, want to show a Ge graph, you export the
 graph as a java applet, and insert the html-file for the graph into the StartURL attribute.
 
@@ -4286,15 +4286,15 @@ in users access to look, but not to change values.
 <b>Login
 To be able to log in the login function has to be enabled in the WebHandler object. By 
 clicking on the Login button in the operator window, the user can log in with username and
-password. The username has to be registred in the system group that is stated in the 
-WebSystemGroup attribute of the Security object. After a successfull login, privileges of
+password. The username has to be registered in the system group that is stated in the 
+WebSystemGroup attribute of the Security object. After a successful login, privileges of
 the user determines the access to the system.
 
 The password is decrypted by the client, i.e. no uncrypted passwords are sent over the
 network.
 
 <h1>Server processes
-Three server processes are started att Proview runtime startup, rt_webmon, rt_webmonmh 
+Three server processes are started at Proview runtime startup, rt_webmon, rt_webmonmh 
 and rt_webmonelog.
 
 <b>rt_webmon
@@ -4307,7 +4307,7 @@ with alarm and event lists the fetches the information from this process. The se
 of alarm and events is determined by the EventSelectList in the WebHandler object.
 
 <b>rt_webmonelog
-rt_webmonelog performes searches in the eventlog database.
+rt_webmonelog performs searches in the eventlog database.
 
 <h1>Functions
 This section describes how various function in the web and java environment is 
@@ -4363,14 +4363,14 @@ a html file is generated, $pwrp_web/my_graph.html, that is used to start the app
 applet can of course also be started from other html files together with other applets end
 graphic elements on the same page.
 
-The java export has som limitations. It is possible in the Ge editor to place text object
+The java export has some limitations. It is possible in the Ge editor to place text object
 on top of subgraphs, but in java the subgraph will be on top. Some xtt command that is used
 in command buttons are not available in the web environment. There is also a limit of the
 number of characters in a java function, which in large graphs can be reached.
 
 <h2>Alarm and event list
 The alarm and event list requires that the EventSelectList in the WebHandler object is filled
-in with hierachies from which alarms and events should be displayed.
+in with hierarchies from which alarms and events should be displayed.
 
 <h2>Help texts
 The help texts for the project in the file xtt_help.dat, is exported to html files on 
@@ -4385,10 +4385,10 @@ To be able to open plc programs in the web environment, the .flw files on $pwrp_
 be copied to $pwrp_web.
 
 <h2>Language
-The default language is english. Other languages can be stated in the Language attribute of
+The default language is English. Other languages can be stated in the Language attribute of
 the WebHandler object, or be selected in the language selection dialog, if configured.
 If another language than english should be available, language files for this language, and
-for english, has to be copied from $pwrp_exe to $pwrp_web. For example, to make swedish
+for English, has to be copied from $pwrp_exe to $pwrp_web. For example, to make Swedish
 available, the directories $pwrp_web/en_us and $pwrp_web/sv_se is created, and the files
 $pwr_exe/en_us/xtt_lng.dat is copied to $pwrp_web/en_us/ and $pwr_exe/sv_se/xtt_lng.dat is
 copied to $pwrp_web/sv_se/.
@@ -4403,7 +4403,7 @@ pwrrt package.
 To open a project home page in a web browser, a web server has to be started on the node,
 e.g apache.
 
-The web server only some choosen directories can be opened, e.g. /var/www. Either you can 
+The web server only some chosen directories can be opened, e.g. /var/www. Either you can 
 move the content of $pwrp_web to an open directory, or you can open $pwrp_web. In apache this
 is specified in the file /etc/apache2/apache2.conf by adding
 
@@ -7337,9 +7337,9 @@ End of a documentation block.
 Attribute
 
 <h2>Example
-<c>@Summary Plåtens längd
-<c>En grundligare beskrivning
-<c>av attributet Langd...
+<c>@Summary Plate length
+<c>A more detailed description
+<c>of the attribute Length...
 
 
 <h2>@Summary
@@ -7357,11 +7357,11 @@ wb_load syntax
 Documenation of an attribute in written above the $Attribute, $Input, $Output or $Intern line.
 
 <c>      !/**
-<c>      !  @Summary Plåtens längd
-<c>      !  En grundligare beskrivning
-<c>      !  av attributet Langd...
+<c>      !  @Summary Plate length
+<c>      !  A more detailed description
+<c>      !  of the attribute Length...
 <c>      !*/
-<c>      Object    Langd $Attribute 3
+<c>      Object    Length $Attribute 3
 <c>        Body             SysBody
 <c>          Attr           TypeRef = "pwrs:Type-$Float32"
 <c>        EndBody
@@ -7393,7 +7393,7 @@ The structfile for the classes are automatically generated with bookmarks.
 <c>void MyPlcClass_exec(...)
 
 <h2>@aref
-@aref has to lay insice a /*_* ... */ block. Inside the block, there can also be comments
+@aref has to lay inside a /*_* ... */ block. Inside the block, there can also be comments
 that are not handled by the converter.
 
 <b>Syntax
@@ -7426,11 +7426,11 @@ the users of their parent, and additional users can be defined for each child.
 
 A system is connected to a systemgroup by the SystemGroup attribute in the $System object. 
 The notation for a system group in a hierarchy is the names of the group separated by a point, 
-for example 'Main.West.F1’.
+for example 'Main.West.F1'.
 
 In the example below Eric is responsible for all the systems in the plant, and is defined on 
 the highest level in the hierarchy. Nils is working with the west side of the plant and is 
-defined on the 'West’ system group. Finally, Carl working with the systems in the F1 part of 
+defined on the 'West' system group. Finally, Carl working with the systems in the F1 part of 
 the plant. All system groups has the attribute UserInherit, that states that a child group
 inherits all the users of the parent.
  
@@ -7442,7 +7442,7 @@ Users and systemgroups are created in the administrator:
 - Start the administrator with the command 'pwra'
 - Enter the UserDatabase from the menu 'File/Open/UserDatabase'.
 - Login by entering the login command. Open the login prompt from the menu 'Functions/Command'
-  and enter 'login /adm’ on the command line. If the systemgroup 'administrator’ is presen
+  and enter 'login /adm' on the command line. If the systemgroup 'administrator' is presen
   you also has to add username and password to a user defined in the administrator systemgroup.
 - Enter edit mode from the menu 'Edit/Edit mode'.
   Systemgroups and users are represented by object of the classes SystemGroupReg and
@@ -7473,7 +7473,7 @@ all volumes is registered in a global volume.
 
 The registration is done by the administrator:
 
-- Start the administrator with the command 'pwra’
+- Start the administrator with the command 'pwra'
 - Enter volume mode from the menu 'File/Open/GlobalVolumeList'.
 - Login as administrator.
 - Enter edit mode from the menu 'Edit/Edit mode'.
@@ -7516,7 +7516,7 @@ overhead and make it harder to upgrade the project.
 
 Create the project in the administrator:
 
-- Start the administrator with the command 'pwra’.
+- Start the administrator with the command 'pwra'.
 - The projectlist is shown as default when starting the administrator. It can also be opened
   from the menu (File/Open/ProjectList).
 - Login as administrator.
