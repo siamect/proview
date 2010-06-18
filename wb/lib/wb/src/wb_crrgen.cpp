@@ -243,6 +243,17 @@ void wb_crrgen::load( pwr_tStatus *rsts)
     for ( wb_object o = m_sp->object( reflist[i].cid); o; o = o.next()) {
       pwr_tAttrRef aref;
 
+      // Skip if in LibHier
+      bool in_libhier = false;
+      for ( wb_object p = o.parent(); p; p = p.parent()) {
+	if ( p.cid() == pwr_eClass_LibHier) {
+	  in_libhier = true;
+	  break;
+	}
+      }
+      if ( in_libhier)
+	continue;
+
       wb_attribute a = m_sp->attribute( o.oid(), reflist[i].body, reflist[i].attr);
 
       if ( reflist[i].is_oid) {
@@ -598,6 +609,17 @@ void wb_crrgen::write_code( pwr_tStatus *rsts)
 
   for ( int i = 0; i < int(sizeof(codelist)/sizeof(codelist[0])); i++) {
     for ( wb_object o = m_sp->object( codelist[i].cid); o; o = o.next()) {
+
+      // Skip if in LibHier
+      bool in_libhier = false;
+      for ( wb_object p = o.parent(); p; p = p.parent()) {
+	if ( p.cid() == pwr_eClass_LibHier) {
+	  in_libhier = true;
+	  break;
+	}
+      }
+      if ( in_libhier)
+	continue;
 
       wb_attribute a = m_sp->attribute( o.oid(), codelist[i].body, codelist[i].attr);
 
