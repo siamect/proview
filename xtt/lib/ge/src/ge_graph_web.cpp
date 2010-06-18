@@ -224,7 +224,7 @@ int Graph::generate_web( ldh_tSesContext ldhses)
   strcpy( load_archives, (char *)value_p);
   free( value_p); 
 
-  strcpy( arlist, "pwr_rt_client.jar,pwr_jop.jar,pwr_jopc.jar");
+  strcpy( arlist, "pwr_rt_client.jar,pwr_jop.jar,pwr_jopc.jar,pwr_bcomp.jar,pwr_bcompfc.jar,pwr_abb.jar");
   dcli_trim( load_archives, load_archives);
   if ( strcmp( load_archives, "") != 0) {
     strcat( arlist, ",");
