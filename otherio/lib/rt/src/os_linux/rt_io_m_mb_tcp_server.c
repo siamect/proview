@@ -418,7 +418,7 @@ static void *mb_receive( void *data)
 	int offs;
 
 	short addr = ntohs( rmsg->addr);
-	short value = ntohs( rmsg->value);
+	unsigned short value = ntohs( rmsg->value);
 	unsigned char unit_id = rmsg->head.unit_id;
 
 	/* Check the address */
@@ -447,13 +447,14 @@ static void *mb_receive( void *data)
 	}
 
 	mask = 1 << (addr % 8);
-	thread_MutexLock( &local->mutex);
-	if ( value)
-	  *((char *)local_card->input_area + local_card->di_offset + offs) |= mask;
-	else
-	  *((char *)local_card->input_area + local_card->di_offset + offs) &= ~mask;
-	thread_MutexUnlock( &local->mutex);
-
+	if ( value == 0xFF00 || value == 0) {
+	  thread_MutexLock( &local->mutex);
+	  if ( value == 0xFF00)
+	    *((char *)local_card->input_area + local_card->di_offset + offs) |= mask;
+	  else
+	    *((char *)local_card->input_area + local_card->di_offset + offs) &= ~mask;
+	  thread_MutexUnlock( &local->mutex);
+	}
 	msg.fc = fc;
 	msg.addr = rmsg->addr;
 	msg.value = rmsg->value;
