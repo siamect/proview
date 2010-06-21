@@ -4533,10 +4533,18 @@ static int	xnav_crossref_func(	void		*client_data,
       case pwr_cClass_Ii:
       case pwr_cClass_Io:
       case pwr_cClass_Co:
+	if ( !file_ptr) {
+	  strcpy( file_str, "*");
+	  file_ptr = file_str;
+	}
         sts = xnav_crr_signal( xnav->brow, file_ptr, name_ptr, NULL);
         break;
       default:
         /* Not a signal */
+	if ( !file_ptr) {
+	  strcpy( file_str, "*");
+	  file_ptr = file_str;
+	}
         sts = xnav_crr_object( xnav->brow, file_ptr, name_ptr, NULL);
     }
     if ( EVEN(sts))

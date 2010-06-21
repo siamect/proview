@@ -637,6 +637,7 @@ int	XAttNav::crossref()
   int sts;
   pwr_tAName name;
   pwr_tClassId classid;
+  char file[20] = "*";
 
   sts = gdh_AttrrefToName ( &objar, name, sizeof(name), cdh_mNName);
   if ( EVEN(sts)) return sts;
@@ -657,11 +658,11 @@ int	XAttNav::crossref()
     case pwr_cClass_Ii:
     case pwr_cClass_Io:
     case pwr_cClass_Co:
-      sts = xnav_crr_signal( brow, NULL, name, NULL);
+      sts = xnav_crr_signal( brow, file, name, NULL);
       break;
     default:
       /* Not a signal */
-      sts = xnav_crr_object( brow, NULL, name, NULL);
+      sts = xnav_crr_object( brow, file, name, NULL);
   }
   // if ( EVEN(sts))
   //  xnav->message(' ', XNav::get_message(sts));
