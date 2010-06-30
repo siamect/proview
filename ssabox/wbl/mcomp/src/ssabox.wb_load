@@ -1,7 +1,7 @@
 Volume SsabOx $ClassVolume 0.0.250.5 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X167"
-    Attr NextCix = "_X31"
+    Attr NextOix = "_X175"
+    Attr NextCix = "_X33"
     Attr NextTix[0] = "_X5"
   EndBody
   Object Type $TypeHier 138 30-DEC-2005 14:28:03.99
@@ -870,6 +870,165 @@ Volume SsabOx $ClassVolume 0.0.250.5
             EndBody
           EndObject
         EndObject
+      EndObject
+    EndObject
+    Object Ssab_BaseMCard $ClassDef 31 30-JUN-2010 10:14:51.29
+      Body SysBody 30-JUN-2010 10:14:40.65
+        Attr Editor = 0
+        Attr Method = 5
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 30-JUN-2010 10:16:54.04
+        Body SysBody 30-JUN-2010 11:30:53.26
+          Attr StructName = "Ssab_BaseMCard"
+          Attr NextAix = "_X23"
+        EndBody
+        Object Description $Attribute 1 30-JUN-2010 10:14:40.65
+          Body SysBody 30-JUN-2010 10:14:40.65
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object DevName $Attribute 2 30-JUN-2010 10:14:40.65
+          Body SysBody 30-JUN-2010 10:14:40.65
+            Attr PgmName = "DevName"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object ErrorCount $Attribute 3 30-JUN-2010 10:14:40.65
+          Body SysBody 30-JUN-2010 10:14:40.65
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorSoftLimit $Attribute 4 30-JUN-2010 10:14:40.65
+          Body SysBody 30-JUN-2010 10:14:40.65
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorHardLimit $Attribute 5 30-JUN-2010 10:14:40.65
+          Body SysBody 30-JUN-2010 10:14:40.65
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object MaxNoOfAiChannels $Attribute 6 30-JUN-2010 10:29:28.54
+          Body SysBody 30-JUN-2010 10:29:31.57
+            Attr PgmName = "MaxNoOfAiChannels"
+            Attr Flags = 1056
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object MaxNoOfAoChannels $Attribute 20 30-JUN-2010 10:29:39.19
+          Body SysBody 30-JUN-2010 10:29:40.54
+            Attr PgmName = "MaxNoOfAoChannels"
+            Attr Flags = 1056
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object MaxNoOfDiChannels $Attribute 21 30-JUN-2010 10:29:50.06
+          Body SysBody 30-JUN-2010 10:29:51.16
+            Attr PgmName = "MaxNoOfDiChannels"
+            Attr Flags = 1056
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object MaxNoOfDoChannels $Attribute 22 30-JUN-2010 10:29:58.07
+          Body SysBody 30-JUN-2010 10:29:59.38
+            Attr PgmName = "MaxNoOfDoChannels"
+            Attr Flags = 1056
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object RegAddress $Attribute 7 30-JUN-2010 10:14:40.65
+          Body SysBody 30-JUN-2010 10:14:40.65
+            Attr PgmName = "RegAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object VectAddress $Attribute 8 30-JUN-2010 10:14:40.65
+          Body SysBody 30-JUN-2010 10:14:40.65
+            Attr PgmName = "VectAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object Process $Attribute 9 30-JUN-2010 10:14:40.65
+          Body SysBody 30-JUN-2010 10:14:40.65
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        Object ThreadObject $Intern 10 30-JUN-2010 10:14:40.65
+          Body SysBody 30-JUN-2010 10:14:40.65
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object DataSheet $Attribute 11 30-JUN-2010 10:14:40.65
+          Body SysBody 30-JUN-2010 10:14:40.65
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+        Object DiConvMask $Attribute 12 30-JUN-2010 10:16:42.55
+          Body SysBody 30-JUN-2010 10:16:44.56
+            Attr PgmName = "DiConvMask"
+            Attr TypeRef = "pwrb:Type-CardMask1_1"
+          EndBody
+        EndObject
+        Object DiInvMask $Attribute 14 30-JUN-2010 10:17:01.95
+          Body SysBody 30-JUN-2010 10:17:03.99
+            Attr PgmName = "DiInvMask"
+            Attr TypeRef = "pwrb:Type-CardMask1_1"
+          EndBody
+        EndObject
+        Object DoInvMask $Attribute 16 30-JUN-2010 10:17:37.44
+          Body SysBody 30-JUN-2010 10:17:39.70
+            Attr PgmName = "DoInvMask"
+            Attr TypeRef = "pwrb:Type-CardMask1_1"
+          EndBody
+        EndObject
+        Object DoTestMask $Attribute 17 30-JUN-2010 10:17:47.62
+          Body SysBody 30-JUN-2010 10:17:49.04
+            Attr PgmName = "DoTestMask"
+            Attr Flags = 16
+            Attr TypeRef = "pwrb:Type-CardMask1_1"
+          EndBody
+        EndObject
+        Object DoTestValue $Attribute 18 30-JUN-2010 10:17:54.65
+          Body SysBody 30-JUN-2010 10:17:56.27
+            Attr PgmName = "DoTestValue"
+            Attr Flags = 16
+            Attr TypeRef = "pwrb:Type-CardMask1_1"
+          EndBody
+        EndObject
+        Object DoFixedOutValue $Attribute 19 30-JUN-2010 10:18:02.74
+          Body SysBody 30-JUN-2010 10:18:04.05
+            Attr PgmName = "DoFixedOutValue"
+            Attr TypeRef = "pwrb:Type-CardMask1_1"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 168 30-JUN-2010 10:14:40.65
+        Object Pointed $Menu 169 30-JUN-2010 10:14:40.65
+          Object Connect $MenuButton 170 30-JUN-2010 10:14:40.65
+            Body SysBody 30-JUN-2010 10:14:40.65
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object Template Ssab_BaseMCard 2155839488 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
       EndObject
     EndObject
     !/**
@@ -4433,6 +4592,150 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Body RtBody 02-APR-2009 08:35:02.91
           Attr ErrorSoftLimit = 100
           Attr ErrorHardLimit = 500
+        EndBody
+      EndObject
+    EndObject
+    Object Ssab_MIO3102uP $ClassDef 32 30-JUN-2010 10:20:02.49
+      Body SysBody 30-JUN-2010 10:20:39.09
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 30-JUN-2010 10:21:31.55
+        Body SysBody 30-JUN-2010 10:21:31.55
+          Attr StructName = "Ssab_MIO3102uP"
+          Attr NextAix = "_X8"
+        EndBody
+        Object Super $Attribute 1 30-JUN-2010 10:21:42.76
+          Body SysBody 30-JUN-2010 10:22:11.99
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "SsabOx:Class-Ssab_BaseMCard"
+          EndBody
+        EndObject
+        Object ChAi01 $Attribute 2 30-JUN-2010 10:23:13.69
+          Body SysBody 30-JUN-2010 10:24:18.70
+            Attr PgmName = "ChAi01"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object ChAi02 $Attribute 3 30-JUN-2010 10:24:22.32
+          Body SysBody 30-JUN-2010 10:24:22.27
+            Attr PgmName = "ChAi02"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object ChAi03 $Attribute 4 30-JUN-2010 10:24:23.96
+          Body SysBody 30-JUN-2010 10:24:23.91
+            Attr PgmName = "ChAi03"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object ChAo01 $Attribute 5 30-JUN-2010 10:24:45.78
+          Body SysBody 30-JUN-2010 10:24:51.40
+            Attr PgmName = "ChAo01"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object ChDo01 $Attribute 6 30-JUN-2010 10:25:09.41
+          Body SysBody 30-JUN-2010 10:25:16.61
+            Attr PgmName = "ChDo01"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo02 $Attribute 7 30-JUN-2010 10:25:18.65
+          Body SysBody 30-JUN-2010 10:25:18.59
+            Attr PgmName = "ChDo02"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 171 30-JUN-2010 10:26:01.18
+        Object IoCardInit $Method 172 30-JUN-2010 10:26:01.18
+          Body SysBody 30-JUN-2010 10:26:55.42
+            Attr MethodName = "Ssab_MIOuP-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 173 30-JUN-2010 10:26:01.18
+          Body SysBody 30-JUN-2010 10:27:11.13
+            Attr MethodName = "Ssab_MIOuP-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 174 30-JUN-2010 10:26:01.18
+          Body SysBody 30-JUN-2010 10:27:21.66
+            Attr MethodName = "Ssab_MIOuP-IoCardWrite"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 175 30-JUN-2010 10:27:35.49
+          Body SysBody 30-JUN-2010 10:27:41.11
+            Attr MethodName = "Ssab_MIOuP-IoCardRead"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Ssab_MIO3102uP 2156101632 01-JAN-1970 01:00:00.00
+        Body RtBody 30-JUN-2010 10:41:08.04
+          Attr Super.ErrorSoftLimit = 25
+          Attr Super.ErrorHardLimit = 50
+          Attr Super.MaxNoOfAiChannels = 3
+          Attr Super.MaxNoOfAoChannels = 1
+          Attr Super.MaxNoOfDoChannels = 2
+          Attr Super.Process = 1
+          Attr ChAi01.ConversionOn = 1
+          Attr ChAi01.ScanInterval = 1
+          Attr ChAi01.RawValRangeLow = -3.000000e+04
+          Attr ChAi01.RawValRangeHigh = 3.000000e+04
+          Attr ChAi01.ChannelSigValRangeLow = -2.000000e+01
+          Attr ChAi01.ChannelSigValRangeHigh = 2.000000e+01
+          Attr ChAi01.SigValueUnit = "mA"
+          Attr ChAi01.SensorPolyType = 1
+          Attr ChAi01.SensorSigValRangeLow = 4.000000e+00
+          Attr ChAi01.SensorSigValRangeHigh = 2.000000e+01
+          Attr ChAi01.ActValRangeHigh = 1.000000e+02
+          Attr ChAi01.Representation = 3
+          Attr ChAi02.Number = 1
+          Attr ChAi02.ConversionOn = 1
+          Attr ChAi02.ScanInterval = 1
+          Attr ChAi02.RawValRangeLow = -3.000000e+04
+          Attr ChAi02.RawValRangeHigh = 3.000000e+04
+          Attr ChAi02.ChannelSigValRangeLow = -2.000000e+01
+          Attr ChAi02.ChannelSigValRangeHigh = 2.000000e+01
+          Attr ChAi02.SigValueUnit = "mA"
+          Attr ChAi02.SensorPolyType = 1
+          Attr ChAi02.SensorSigValRangeLow = 4.000000e+00
+          Attr ChAi02.SensorSigValRangeHigh = 2.000000e+01
+          Attr ChAi02.ActValRangeHigh = 1.000000e+02
+          Attr ChAi02.Representation = 3
+          Attr ChAi03.Number = 2
+          Attr ChAi03.ConversionOn = 1
+          Attr ChAi03.ScanInterval = 1
+          Attr ChAi03.RawValRangeLow = -3.000000e+04
+          Attr ChAi03.RawValRangeHigh = 3.000000e+04
+          Attr ChAi03.ChannelSigValRangeLow = -2.000000e+01
+          Attr ChAi03.ChannelSigValRangeHigh = 2.000000e+01
+          Attr ChAi03.SigValueUnit = "mA"
+          Attr ChAi03.SensorPolyType = 1
+          Attr ChAi03.SensorSigValRangeLow = 4.000000e+00
+          Attr ChAi03.SensorSigValRangeHigh = 2.000000e+01
+          Attr ChAi03.ActValRangeHigh = 1.000000e+02
+          Attr ChAi03.Representation = 3
+          Attr ChAo01.OutPolyType = 1
+          Attr ChAo01.ActValRangeLow = -1.000000e+02
+          Attr ChAo01.ActValRangeHigh = 1.000000e+02
+          Attr ChAo01.SensorSigValRangeLow = -1.000000e+01
+          Attr ChAo01.SensorSigValRangeHigh = 1.000000e+01
+          Attr ChAo01.SigValueUnit = "V"
+          Attr ChAo01.ChannelSigValRangeLow = -1.000000e+01
+          Attr ChAo01.ChannelSigValRangeHigh = 1.000000e+01
+          Attr ChAo01.RawValRangeLow = -3.000000e+04
+          Attr ChAo01.RawValRangeHigh = 3.000000e+04
+          Attr ChAo01.Representation = 3
+          Attr ChDo02.Number = 1
         EndBody
       EndObject
     EndObject
