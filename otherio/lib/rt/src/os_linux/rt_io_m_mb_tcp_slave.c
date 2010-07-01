@@ -355,6 +355,10 @@ pwr_tStatus mb_send_data(io_sRackLocal *local,
 	}
 		
         local_card = cardp->Local;
+	if ( mp->ScanInterval > 1 && local_card->interval_cnt != 0) {
+	  cardp = cardp->next;
+	  continue;
+	}
 
         if (mask & mb_mSendMask_ReadReq) {
 	  switch (mp->FunctionCode) {
