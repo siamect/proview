@@ -1,7 +1,7 @@
 Volume ABB $ClassVolume 0.0.250.2 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X3941"
-    Attr NextCix = "_X38"
+    Attr NextOix = "_X3943"
+    Attr NextCix = "_X40"
     Attr NextTix[0] = "_X3"
   EndBody
   Object Type $TypeHier 1749 12-OCT-2005 13:25:10.29
@@ -883,26 +883,26 @@ Volume ABB $ClassVolume 0.0.250.2
       Object Template ABB_ACS800_1 2148237312 12-OCT-2005 12:58:20.00
         Body RtBody 18-MAR-2010 15:59:01.55
           Attr Specification = "ABB ACS800 Frequency converter"
-          Attr InIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_ID"
-          Attr InIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_IND"
-          Attr InValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_VALUE"
-          Attr ActSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_ACT"
+          Attr InIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_ID"
+          Attr InIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_IND"
+          Attr InValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_VALUE"
+          Attr ActSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_ACT"
           Attr ActSpeed.DefTrend = "ABB:Class-ABB_ACS800_1-Template.TrendActSpeed"
-          Attr ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD4"
+          Attr ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD4"
           Attr ActTorque.DefTrend = "ABB:Class-ABB_ACS800_1-Template.TrendActTorque"
-          Attr ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD3"
+          Attr ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD3"
           Attr ActCurrent.DefTrend = "ABB:Class-ABB_ACS800_1-Template.TrendActCurrent"
-          Attr StatusWordSW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_SW"
-          Attr FaultWord1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD5"
-          Attr FaultWord2.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD6"
-          Attr Di6_1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD7"
-          Attr StatusWordSW3.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD9"
-          Attr AlarmWord5.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD8"
-          Attr OutIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_ID"
-          Attr OutIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_IND"
-          Attr OutValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_VALUE"
-          Attr ControlWordCW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_CW"
-          Attr RefSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_REF"
+          Attr StatusWordSW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_SW"
+          Attr FaultWord1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD5"
+          Attr FaultWord2.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD6"
+          Attr Di6_1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD7"
+          Attr StatusWordSW3.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD9"
+          Attr AlarmWord5.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD8"
+          Attr OutIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_ID"
+          Attr OutIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_IND"
+          Attr OutValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_VALUE"
+          Attr ControlWordCW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_CW"
+          Attr RefSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_REF"
           Attr RefSpeed.DefTrend = "ABB:Class-ABB_ACS800_1-Template.TrendRefSpeed"
           Attr PowerUpTime = 1.500000e+01
           Attr AlarmLocalMod = "Frequency converter is in local mode"
@@ -953,10 +953,12 @@ Volume ABB $ClassVolume 0.0.250.2
       Object ConfiguratorPoson $Menu 525 22-FEB-2008 14:53:14.67
         Object Pointed $Menu 526 12-OCT-2005 12:58:20.00
           Object IoConnect $MenuButton 527 12-OCT-2005 12:58:20.00
-            Body SysBody 01-JAN-1970 01:00:00.00
+            Body SysBody 02-JUL-2010 15:18:59.97
               Attr ButtonName = "Connect IO"
               Attr MethodName = "$AttrRef-IoConnect"
+              Attr MethodArguments[0] = "ABB_ACS_PPO5_IoModule"
               Attr FilterName = "$AttrRef-IoConnectFilter"
+              Attr FilterArguments[0] = "ABB_ACS_PPO5_IoModule"
             EndBody
           EndObject
         EndObject
@@ -11592,8 +11594,8 @@ ABB ACS800 Typ 1"
     !  @b Profibus
     !  For profibus connection with protocol PPO5 use the profibus Module object
     !  ABB_ACS_PPO5.
-    !  Create a module object in the node hierarchy and connect it to the ACC800
-    !  object with the connect function.
+    !  Create a module object in the node hierarchy and connect the Io attribute of
+    !  the ABB_ACS_PPO5 object to the ACC800 object with the connect function.
     ! 
     !  @b See also
     !  @classlink ABB_ACC800Fo abb_abb_acc800fo.html
@@ -12143,35 +12145,35 @@ ABB ACS800 Typ 1"
       Object Template ABB_ACC800 2152955904 13-MAR-2006 09:55:00.00
         Body RtBody 14-MAR-2006 13:12:27.40
           Attr Specification = "ABB ACC800 Frequency converter with crane macro"
-          Attr InIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.I_ID"
-          Attr InIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.I_IND"
-          Attr InValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_VALUE"
-          Attr StatusWordSW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.I_SW"
-          Attr ActSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.I_ACT"
+          Attr InIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_ID"
+          Attr InIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_IND"
+          Attr InValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_VALUE"
+          Attr StatusWordSW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_SW"
+          Attr ActSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_ACT"
           Attr ActSpeed.DefTrend = "ABB:Class-ABB_ACC800-Template.TrendActSpeed"
-          Attr ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.I_PZD3"
+          Attr ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_PZD3"
           Attr ActTorque.DefTrend = "ABB:Class-ABB_ACC800-Template.TrendActTorque"
-          Attr SpeedRef3.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.I_PZD4"
-          Attr PosActPPU.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.I_PZD5"
-          Attr ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.I_PZD6"
+          Attr SpeedRef3.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_PZD4"
+          Attr PosActPPU.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_PZD5"
+          Attr ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_PZD6"
           Attr ActCurrent.DefTrend = "ABB:Class-ABB_ACC800-Template.TrendActCurrent"
-          Attr FaultWord1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.I_PZD7"
-          Attr FaultWord2.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.I_PZD8"
-          Attr AlarmWord.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.I_PZD9"
-          Attr MotorVolt.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.I_PZD10"
-          Attr OutIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.O_ID"
-          Attr OutIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.O_IND"
-          Attr OutValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.O_VALUE"
-          Attr ControlWordCW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.O_CW"
-          Attr RefSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.O_REF"
+          Attr FaultWord1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_PZD7"
+          Attr FaultWord2.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_PZD8"
+          Attr AlarmWord.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_PZD9"
+          Attr MotorVolt.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_PZD10"
+          Attr OutIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_ID"
+          Attr OutIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_IND"
+          Attr OutValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_VALUE"
+          Attr ControlWordCW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_CW"
+          Attr RefSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_REF"
           Attr RefSpeed.DefTrend = "ABB:Class-ABB_ACC800-Template.TrendRefSpeed"
-          Attr TorqRef.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.O_PZD3"
-          Attr RampRate.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.O_PZD4"
-          Attr SpeedCorr.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.O_PZD5"
-          Attr PosPrePPU.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.O_PZD6"
-          Attr AuxComWord.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.O_PZD7"
-          Attr LoadMeasRef.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.O_PZD8"
-          Attr ParValue1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5.O_PZD10"
+          Attr TorqRef.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_PZD3"
+          Attr RampRate.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_PZD4"
+          Attr SpeedCorr.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_PZD5"
+          Attr PosPrePPU.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_PZD6"
+          Attr AuxComWord.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_PZD7"
+          Attr LoadMeasRef.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_PZD8"
+          Attr ParValue1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_PZD10"
           Attr PowerUpTime = 1.500000e+01
           Attr AlarmLocalMod = "Frequency converter is in local mode"
           Attr AlarmWarning = "Frequency converter warning"
@@ -12221,10 +12223,12 @@ ABB ACS800 Typ 1"
       Object ConfiguratorPoson $Menu 2449 22-FEB-2008 14:53:28.81
         Object Pointed $Menu 2450 13-MAR-2006 09:34:22.38
           Object IoConnect $MenuButton 2451 13-MAR-2006 09:34:22.38
-            Body SysBody 13-MAR-2006 09:34:22.38
+            Body SysBody 02-JUL-2010 15:19:26.77
               Attr ButtonName = "Connect IO"
               Attr MethodName = "$AttrRef-IoConnect"
+              Attr MethodArguments[0] = "ABB_ACC_PPO5_IoModule"
               Attr FilterName = "$AttrRef-IoConnectFilter"
+              Attr FilterArguments[0] = "ABB_ACC_PPO5_IoModule"
             EndBody
           EndObject
         EndObject
@@ -23665,9 +23669,9 @@ ABB ACC800"
     !  @b Profibus
     !  For profibus connection with protocol PPO5 use the profibus Module object
     !  ABB_ACS_PPO5.
-    !  Create a module object in the node hierarchy and connect it to the ACS800
-    !  object with the connect function. The ACS800 object is an attribute in the
-    !  ABB_ACS800MotorAggr object.
+    !  Create a module object in the node hierarchy and connect the Io attribute
+    !  of the ABB_ACS_PPO5 object to the ACS800 object with the connect function. 
+    !  The ACS800 object is an attribute in the ABB_ACS800MotorAggr object.
     ! 
     !  @b Simulate
     !  For simulation of the pump, use the plc object ABB_ACS800MotorAggrSim.
@@ -24416,26 +24420,26 @@ ABB ACC800"
           Attr Contactor.AlarmText = "Feedback contactor lost"
           Attr ACS800.Description = "Frequency converter"
           Attr ACS800.Specification = "ABB Frequency converter ASC800"
-          Attr ACS800.InIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_ID"
-          Attr ACS800.InIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_IND"
-          Attr ACS800.InValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_VALUE"
-          Attr ACS800.ActSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_ACT"
+          Attr ACS800.InIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_ID"
+          Attr ACS800.InIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_IND"
+          Attr ACS800.InValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_VALUE"
+          Attr ACS800.ActSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_ACT"
           Attr ACS800.ActSpeed.PresMaxLimit = 2.000000e+03
-          Attr ACS800.ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD4"
+          Attr ACS800.ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD4"
           Attr ACS800.ActTorque.PresMaxLimit = 3.000000e+02
-          Attr ACS800.ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD3"
+          Attr ACS800.ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD3"
           Attr ACS800.ActCurrent.PresMaxLimit = 5.000000e+01
-          Attr ACS800.StatusWordSW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_SW"
-          Attr ACS800.FaultWord1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD5"
-          Attr ACS800.FaultWord2.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD6"
-          Attr ACS800.Di6_1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD7"
-          Attr ACS800.StatusWordSW3.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD9"
-          Attr ACS800.AlarmWord5.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD8"
-          Attr ACS800.OutIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_ID"
-          Attr ACS800.OutIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_IND"
-          Attr ACS800.OutValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_VALUE"
-          Attr ACS800.ControlWordCW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_CW"
-          Attr ACS800.RefSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_REF"
+          Attr ACS800.StatusWordSW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_SW"
+          Attr ACS800.FaultWord1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD5"
+          Attr ACS800.FaultWord2.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD6"
+          Attr ACS800.Di6_1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD7"
+          Attr ACS800.StatusWordSW3.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD9"
+          Attr ACS800.AlarmWord5.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD8"
+          Attr ACS800.OutIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_ID"
+          Attr ACS800.OutIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_IND"
+          Attr ACS800.OutValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_VALUE"
+          Attr ACS800.ControlWordCW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_CW"
+          Attr ACS800.RefSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_REF"
           Attr ACS800.RefSpeed.PresMaxLimit = 2.000000e+03
           Attr ACS800.PowerUpTime = 1.500000e+01
           Attr ACS800.AlarmLocalMod = "Frequency converter is in local mode"
@@ -34973,9 +34977,9 @@ ABB ACS800 Aggregate
     !  @b Profibus
     !  For profibus connection with protocol PPO5 use the profibus Module object
     !  ABB_ACS_PPO5.
-    !  Create a module object in the node hierarchy and connect it to the ACS800
-    !  object with the connect function. The ACS800 object is an attribute in the
-    !  ABB_ACS800PumpAggr object.
+    !  Create a module object in the node hierarchy and connect the Io attribute
+    !  of the ABB_ACS_PPO5 object to the ACS800 object with the connect function. 
+    !  The ACS800 object is an attribute in the ABB_ACS800PumpAggr object.
     ! 
     !  @b Simulate
     !  For simulation of the pump, use the plc object ABB_ACS800MotorAggrSim.
@@ -35030,26 +35034,26 @@ ABB ACS800 Aggregate
           Attr Super.Contactor.AlarmText = "Feedback contactor lost"
           Attr Super.ACS800.Description = "Frequency converter"
           Attr Super.ACS800.Specification = "ABB Frequency converter ASC800"
-          Attr Super.ACS800.InIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_ID"
-          Attr Super.ACS800.InIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_IND"
-          Attr Super.ACS800.InValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_VALUE"
-          Attr Super.ACS800.ActSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_ACT"
+          Attr Super.ACS800.InIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_ID"
+          Attr Super.ACS800.InIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_IND"
+          Attr Super.ACS800.InValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_VALUE"
+          Attr Super.ACS800.ActSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_ACT"
           Attr Super.ACS800.ActSpeed.PresMaxLimit = 2.000000e+03
-          Attr Super.ACS800.ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD4"
+          Attr Super.ACS800.ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD4"
           Attr Super.ACS800.ActTorque.PresMaxLimit = 3.000000e+02
-          Attr Super.ACS800.ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD3"
+          Attr Super.ACS800.ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD3"
           Attr Super.ACS800.ActCurrent.PresMaxLimit = 5.000000e+01
-          Attr Super.ACS800.StatusWordSW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_SW"
-          Attr Super.ACS800.FaultWord1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD5"
-          Attr Super.ACS800.FaultWord2.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD6"
-          Attr Super.ACS800.Di6_1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD7"
-          Attr Super.ACS800.StatusWordSW3.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD9"
-          Attr Super.ACS800.AlarmWord5.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD8"
-          Attr Super.ACS800.OutIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_ID"
-          Attr Super.ACS800.OutIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_IND"
-          Attr Super.ACS800.OutValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_VALUE"
-          Attr Super.ACS800.ControlWordCW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_CW"
-          Attr Super.ACS800.RefSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_REF"
+          Attr Super.ACS800.StatusWordSW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_SW"
+          Attr Super.ACS800.FaultWord1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD5"
+          Attr Super.ACS800.FaultWord2.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD6"
+          Attr Super.ACS800.Di6_1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD7"
+          Attr Super.ACS800.StatusWordSW3.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD9"
+          Attr Super.ACS800.AlarmWord5.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD8"
+          Attr Super.ACS800.OutIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_ID"
+          Attr Super.ACS800.OutIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_IND"
+          Attr Super.ACS800.OutValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_VALUE"
+          Attr Super.ACS800.ControlWordCW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_CW"
+          Attr Super.ACS800.RefSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_REF"
           Attr Super.ACS800.RefSpeed.PresMaxLimit = 2.000000e+03
           Attr Super.ACS800.PowerUpTime = 1.500000e+01
           Attr Super.ACS800.AlarmLocalMod = "Frequency converter is in local mode"
@@ -35169,9 +35173,9 @@ ABB ACS800 Aggregate
     !  @b Profibus
     !  For profibus connection with protocol PPO5 use the profibus Module object
     !  ABB_ACS_PPO5.
-    !  Create a module object in the node hierarchy and connect it to the ACS800
-    !  object with the connect function. The ACS800 object is an attribute in the
-    !  ABB_ACS800FanAggr object.
+    !  Create a module object in the node hierarchy and connect the Io attribute
+    !  of the ABB_ACS_PPO5 object to the ACS800 object with the connect function. 
+    !  The ACS800 object is an attribute in the ABB_ACS800FanAggr object.
     ! 
     !  @b Simulate
     !  For simulation of the pump, use the plc object ABB_ACS800MotorAggrSim.
@@ -35226,26 +35230,26 @@ ABB ACS800 Aggregate
           Attr Super.Contactor.AlarmText = "Feedback contactor lost"
           Attr Super.ACS800.Description = "Frequency converter"
           Attr Super.ACS800.Specification = "ABB Frequency converter ASC800"
-          Attr Super.ACS800.InIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_ID"
-          Attr Super.ACS800.InIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_IND"
-          Attr Super.ACS800.InValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_VALUE"
-          Attr Super.ACS800.ActSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_ACT"
+          Attr Super.ACS800.InIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_ID"
+          Attr Super.ACS800.InIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_IND"
+          Attr Super.ACS800.InValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_VALUE"
+          Attr Super.ACS800.ActSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_ACT"
           Attr Super.ACS800.ActSpeed.PresMaxLimit = 2.000000e+03
-          Attr Super.ACS800.ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD4"
+          Attr Super.ACS800.ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD4"
           Attr Super.ACS800.ActTorque.PresMaxLimit = 3.000000e+02
-          Attr Super.ACS800.ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD3"
+          Attr Super.ACS800.ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD3"
           Attr Super.ACS800.ActCurrent.PresMaxLimit = 5.000000e+01
-          Attr Super.ACS800.StatusWordSW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_SW"
-          Attr Super.ACS800.FaultWord1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD5"
-          Attr Super.ACS800.FaultWord2.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD6"
-          Attr Super.ACS800.Di6_1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD7"
-          Attr Super.ACS800.StatusWordSW3.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD9"
-          Attr Super.ACS800.AlarmWord5.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD8"
-          Attr Super.ACS800.OutIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_ID"
-          Attr Super.ACS800.OutIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_IND"
-          Attr Super.ACS800.OutValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_VALUE"
-          Attr Super.ACS800.ControlWordCW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_CW"
-          Attr Super.ACS800.RefSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_REF"
+          Attr Super.ACS800.StatusWordSW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_SW"
+          Attr Super.ACS800.FaultWord1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD5"
+          Attr Super.ACS800.FaultWord2.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD6"
+          Attr Super.ACS800.Di6_1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD7"
+          Attr Super.ACS800.StatusWordSW3.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD9"
+          Attr Super.ACS800.AlarmWord5.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD8"
+          Attr Super.ACS800.OutIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_ID"
+          Attr Super.ACS800.OutIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_IND"
+          Attr Super.ACS800.OutValuePar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_VALUE"
+          Attr Super.ACS800.ControlWordCW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_CW"
+          Attr Super.ACS800.RefSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_REF"
           Attr Super.ACS800.RefSpeed.PresMaxLimit = 2.000000e+03
           Attr Super.ACS800.PowerUpTime = 1.500000e+01
           Attr Super.ACS800.AlarmLocalMod = "Frequency converter is in local mode"
@@ -35359,15 +35363,15 @@ ABB ACS800 Aggregate
         Body RtBody 18-MAR-2008 16:47:30.00
           Attr Super.Specification = "Frequency converter ABB ACS800 with Profibus PPO3 protocol"
           Attr Super.StatusWordSW.Description = "Status Word, from converter"
-          Attr Super.StatusWordSW.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO3PbModule.I_SW"
+          Attr Super.StatusWordSW.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO3IoModule.I_SW"
           Attr Super.ActSpeed.Description = "Actual Value, from converter"
-          Attr Super.ActSpeed.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO3PbModule.I_ACT"
+          Attr Super.ActSpeed.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO3IoModule.I_ACT"
           Attr Super.ActSpeed.PresMinLimit = 1.000000e+02
           Attr Super.ActSpeed.DefTrend = "_O0.0.0.0:0"
           Attr Super.ControlWordCW.Description = "Control Word, to converter"
-          Attr Super.ControlWordCW.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO3PbModule.O_CW"
+          Attr Super.ControlWordCW.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO3IoModule.O_CW"
           Attr Super.RefSpeed.Description = "Reference Value, to converter"
-          Attr Super.RefSpeed.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO3PbModule.O_REF"
+          Attr Super.RefSpeed.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO3IoModule.O_REF"
           Attr Super.RefSpeed.PresMinLimit = 1.000000e+02
           Attr Super.RefSpeed.DefTrend = "_O0.0.0.0:0"
           Attr Super.PowerUpTime = 1.500000e+01
@@ -35430,58 +35434,58 @@ ABB ACS800 Aggregate
         Body RtBody 18-MAR-2008 16:47:17.11
           Attr Super.Specification = "Frequency converter ABB ACS800 with Profibus PPO5 protocol"
           Attr Super.InIdPar.Description = "Parameter Identification, from converter"
-          Attr Super.InIdPar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_ID"
+          Attr Super.InIdPar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_ID"
           Attr Super.InIndPar.Description = "Array Index, from converter"
-          Attr Super.InIndPar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_IND"
+          Attr Super.InIndPar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_IND"
           Attr Super.InValuePar.Description = "Parameter Value, from converter"
-          Attr Super.InValuePar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_VALUE"
+          Attr Super.InValuePar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_VALUE"
           Attr Super.StatusWordSW.Description = "Status Word, from converter"
-          Attr Super.StatusWordSW.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_SW"
+          Attr Super.StatusWordSW.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_SW"
           Attr Super.ActSpeed.Description = "Actual Value, from converter"
-          Attr Super.ActSpeed.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_ACT"
+          Attr Super.ActSpeed.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_ACT"
           Attr Super.ActSpeed.PresMaxLimit = 1.000000e+02
           Attr Super.ActSpeed.DefTrend = "_O0.0.0.0:0"
           Attr Super.ActTorque.Description = "Torque, Process Data 4 from converter"
-          Attr Super.ActTorque.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_PZD4"
+          Attr Super.ActTorque.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_PZD4"
           Attr Super.ActTorque.PresMaxLimit = 1.000000e+02
           Attr Super.ActTorque.DefTrend = "_O0.0.0.0:0"
           Attr Super.ActCurrent.Description = "Current, Process Data 3 from converter"
-          Attr Super.ActCurrent.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_PZD3"
+          Attr Super.ActCurrent.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_PZD3"
           Attr Super.ActCurrent.PresMaxLimit = 1.000000e+02
           Attr Super.ActCurrent.DefTrend = "_O0.0.0.0:0"
           Attr Super.PZD5.Description = "Process Data 5 from converter"
-          Attr Super.PZD5.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_PZD5"
+          Attr Super.PZD5.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_PZD5"
           Attr Super.PZD6.Description = "Process Data 6 from converter"
-          Attr Super.PZD6.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_PZD6"
+          Attr Super.PZD6.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_PZD6"
           Attr Super.PZD7.Description = "Process Data 7 from converter"
-          Attr Super.PZD7.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_PZD7"
+          Attr Super.PZD7.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_PZD7"
           Attr Super.PZD8.Description = "Process Data 8 from converter"
-          Attr Super.PZD8.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_PZD8"
+          Attr Super.PZD8.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_PZD8"
           Attr Super.PZD9.Description = "Process Data 9 from converter"
-          Attr Super.PZD9.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.I_PZD9"
+          Attr Super.PZD9.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_PZD9"
           Attr Super.OutIdPar.Description = "Parameter Identification, to converter"
-          Attr Super.OutIdPar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_ID"
+          Attr Super.OutIdPar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.O_ID"
           Attr Super.OutIndPar.Description = "Array Index, to converter"
-          Attr Super.OutIndPar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_IND"
+          Attr Super.OutIndPar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.O_IND"
           Attr Super.OutValuePar.Description = "Parmeter Value, to converter"
-          Attr Super.OutValuePar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_VALUE"
+          Attr Super.OutValuePar.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.O_VALUE"
           Attr Super.ControlWordCW.Description = "Control Word, to converter"
-          Attr Super.ControlWordCW.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_CW"
+          Attr Super.ControlWordCW.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.O_CW"
           Attr Super.RefSpeed.Description = "Reference Value, to converter"
-          Attr Super.RefSpeed.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_REF"
+          Attr Super.RefSpeed.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.O_REF"
           Attr Super.RefSpeed.PresMaxLimit = 1.000000e+02
           Attr Super.RefSpeed.DefTrend = "_O0.0.0.0:0"
           Attr Super.OPZD3.Description = "Process Data 3 to converter"
-          Attr Super.OPZD3.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_PZD3"
+          Attr Super.OPZD3.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.O_PZD3"
           Attr Super.OPZD3.PresMaxLimit = 1.000000e+02
           Attr Super.OPZD4.Description = "Process Data 4 to converter"
-          Attr Super.OPZD4.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_PZD4"
+          Attr Super.OPZD4.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.O_PZD4"
           Attr Super.OPZD4.PresMaxLimit = 1.000000e+02
           Attr Super.OPZD5.Description = "Process Data 5 to converter"
-          Attr Super.OPZD5.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_PZD5"
+          Attr Super.OPZD5.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.O_PZD5"
           Attr Super.OPZD5.PresMaxLimit = 1.000000e+02
           Attr Super.OPZD6.Description = "Process Data 6 to converter"
-          Attr Super.OPZD6.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5PbModule.O_PZD6"
+          Attr Super.OPZD6.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.O_PZD6"
           Attr Super.PowerUpTime = 1.500000e+01
           Attr Super.AlarmLocalMod = "Frequency converter is in local mode"
           Attr Super.AlarmTripped = "Frequency converter tripped, reset is required"
@@ -35578,348 +35582,202 @@ ABB ACS800 Aggregate
         EndBody
       EndObject
     EndObject
-    !/**
-    !  @Version 1.0
-    !  @Group Process
-    !  @Summary Profibus module to ACS800 with protocol PPO5.
-    !  Profibus module to ACS800 with protocol PPO5.
-    ! 
-    !  The object is created by the profibus configurator under a 
-    !  ABB_ACS_Pb_Slave object in the node hierarchy.
-    ! 
-    !  Connect the function object to an object of class or subclass of
-    !  ABB_ACS800_1 with the IoConnect method.
-    ! 
-    !  To adapt the frequency converter to this configuration, some settings
-    !  have to be performed.
-    !  
-    ! Parameter  Value       Description
-    ! group  
-    !  10.01     COMM.CW    Ext1 start/stop/direction
-    !  10.03     ?          Rotation of the motor
-    !  11.02     EXT1       Reference select
-    !  11.03     COMM.REF   Source for external reference 1
-    !  11.04     ?          Minimum value for external reference 1
-    !  11.05     ?          Maximum value for external reference 1
-    !  16.04     COMM.CW    Source for the fault reset signal "tripped"
-    !  21.03     RAMP       Motor stop function
-    !  22.01     ACC/DEC 1  Acceleration and deceleration times
-    !  20.02     ?          Acc time 1
-    !  20.03     ?          Dec time 1
-    !  51.06     104        PZD3 IN, Current
-    !  51.08     105        PZD4 IN, Tourque
-    !  51.10     305        PZD5 IN, Fault word 1 
-    !  51.12     306        PZD6 IN, Fault word 2 
-    !  51.14     117        PZD7 IN, DI6_1 
-    !  51.16     318        PZD8 IN, Alarm word 5
-    !  51.18     313        PZD9 IN, Status word 3 
-    !  
-    !  98.02     FIELDBUS   Serial communication
-    !  98.07     ABB Drives Communication profile 
-    ! 
-    !  See also
-    !  16.01     ?          Run enable parameter
-    !  20.01     ?          Limits min speed
-    !  20.02     ?          Limits max speed
-    !     
-    !  Example parameter PZD4 IN:
-    !  
-    !  Parameter PZD4 IN is set in parametergroup 51.08 and should be set
-    !  105, i.e. the value "01.05" that is the torque value in the converter.
-    !  This signal is connected to the signal ActTorque in the ABB_ACS800_1
-    !  object.
-    ! 
-    !  Note
-    !  Other setting of the converter are not discussed here.
-    ! 
-    !  @b See also
-    !  @classlink ABB_ACS_Pb_Slave abb_abb_acs_pb_slave.html
-    !  @classlink ABB_ACS800_1 abb_abb_acs800_1.html
-    !*/
-    Object ABB_ACS_PPO5 $ClassDef 7 12-OCT-2005 12:58:20.00
-      Body SysBody 01-JAN-1970 01:00:00.00
+    Object ABB_ACS_PPO5_IoModule $ClassDef 38 02-JUL-2010 08:20:23.32
+      Body SysBody 02-JUL-2010 08:20:30.45
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 18448
+        Attr Flags = 16
       EndBody
-      Object RtBody $ObjBodyDef 1 12-OCT-2005 12:58:20.00
-        Body SysBody 01-JAN-1970 01:00:00.00
-          Attr StructName = "ABB_ACS_PPO5"
-          Attr NextAix = "_X28"
+      Object RtBody $ObjBodyDef 1 02-JUL-2010 08:20:51.31
+        Body SysBody 02-JUL-2010 08:20:42.93
+          Attr StructName = "ABB_ACS_PPO5_IoModule"
+          Attr NextAix = "_X55"
         EndBody
-        Object Super $Attribute 1 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
-            Attr PgmName = "Super"
-            Attr Flags = 393216
-            Attr TypeRef = "Profibus:Class-Pb_Module"
-          EndBody
-        EndObject
-        !/**
-        !  Parameter Identification (online parameter handling) connected to "InIdPar".
-        !*/
-        Object I_ID $Attribute 2 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object I_ID $Attribute 29 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "I_ID"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
         EndObject
-        !/**
-        !  Index for Arrays (online parameter handling) connected to "InIndPar".
-        !*/
-        Object I_IND $Attribute 5 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object I_IND $Attribute 30 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "I_IND"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
         EndObject
-        !/**
-        !  Parameter Value (online parameter handling) connected to "InValuePar".
-        !*/
-        Object I_VALUE $Attribute 4 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object I_VALUE $Attribute 31 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "I_VALUE"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
         EndObject
-        !/**
-        !  Status word (fixed) connected to "StatusWordSW".
-        !*/
-        Object I_SW $Attribute 3 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object I_SW $Attribute 32 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "I_SW"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
         EndObject
-        !/**
-        !  Actual Value Speed (fixed) connected to "ActSpeed".
-        !*/
-        Object I_ACT $Attribute 6 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object I_ACT $Attribute 33 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "I_ACT"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
         EndObject
-        !/**
-        !  Actual Value Current (PZD3 Parameter 51.06 = 104) connected to "ActCurrent".
-        !*/
-        Object I_PZD3 $Attribute 8 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object I_PZD3 $Attribute 34 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "I_PZD3"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
         EndObject
-        !/**
-        !  Actual Value Tourque (PZD4 Parameter 51.08 = 105) connected to "ActTourque".
-        !*/
-        Object I_PZD4 $Attribute 7 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object I_PZD4 $Attribute 35 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "I_PZD4"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
         EndObject
-        !/**
-        !  Fault word 1 (PZD5 Parameter 51.10 = 305) connected to "FaultWord1".
-        !*/
-        Object I_PZD5 $Attribute 9 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object I_PZD5 $Attribute 36 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "I_PZD5"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
         EndObject
-        !/**
-        !  Fault word 2 (PZD6 Parameter 51.12 = 306) connected to "FaultWord2".
-        !*/
-        Object I_PZD6 $Attribute 14 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object I_PZD6 $Attribute 37 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "I_PZD6"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
         EndObject
-        !/**
-        !  DI6-1 Status Input card on converter (PZD7 Parameter 51.14 = 117) connected to "Di6_1".
-        !*/
-        Object I_PZD7 $Attribute 13 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object I_PZD7 $Attribute 38 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "I_PZD7"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
         EndObject
-        !/**
-        !  Alarm word 5 (PZD8 Parameter 51.16 = 318) connected to "AlarmWord5".
-        !*/
-        Object I_PZD8 $Attribute 12 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object I_PZD8 $Attribute 39 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "I_PZD8"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
         EndObject
-        !/**
-        !  Status word 3 (PZD9 Parameter 51.18 = 313) connected to "StatusWordSW3".
-        !*/
-        Object I_PZD9 $Attribute 11 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object I_PZD9 $Attribute 40 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "I_PZD9"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
         EndObject
-        !/**
-        !  Not used (PZD10 Parameter 51.20 = ---)
-        !*/
-        Object I_PZD10 $Attribute 10 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object I_PZD10 $Attribute 41 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "I_PZD10"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
         EndObject
-        !/**
-        !  Parameter Identification (online parameter handling) connected to "OutIdPar".
-        !*/
-        Object O_ID $Attribute 15 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object O_ID $Attribute 42 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "O_ID"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIo"
           EndBody
         EndObject
-        !/**
-        !  Index for Arrays (online parameter handling) connected to "OutIndPar".
-        !*/
-        Object O_IND $Attribute 19 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object O_IND $Attribute 43 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "O_IND"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIo"
           EndBody
         EndObject
-        !/**
-        !  Parameter Value (online parameter handling) connected to "OutValuePar".
-        !*/
-        Object O_VALUE $Attribute 18 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object O_VALUE $Attribute 44 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "O_VALUE"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIo"
           EndBody
         EndObject
-        !/**
-        !  Control Word start/stop command (fixed) connected to "ControlWordCW".
-        !*/
-        Object O_CW $Attribute 17 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object O_CW $Attribute 45 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "O_CW"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIo"
           EndBody
         EndObject
-        !/**
-        !  Reference speed (fixed) connected to "RefSpeed".
-        !*/
-        Object O_REF $Attribute 16 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object O_REF $Attribute 46 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "O_REF"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
         EndObject
-        !/**
-        !  Not used (PZD3 Parameter 51.05 = ---)
-        !*/
-        Object O_PZD3 $Attribute 22 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object O_PZD3 $Attribute 47 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "O_PZD3"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
         EndObject
-        !/**
-        !  Not used (PZD4 Parameter 51.07 = ---)
-        !*/
-        Object O_PZD4 $Attribute 21 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object O_PZD4 $Attribute 48 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "O_PZD4"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
         EndObject
-        !/**
-        !  Not used (PZD5 Parameter 51.09 = ---)
-        !*/
-        Object O_PZD5 $Attribute 20 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object O_PZD5 $Attribute 49 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "O_PZD5"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
         EndObject
-        !/**
-        !  Not used (PZD6 Parameter 51.11 = ---)
-        !*/
-        Object O_PZD6 $Attribute 23 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object O_PZD6 $Attribute 50 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "O_PZD6"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIo"
           EndBody
         EndObject
-        !/**
-        !  Not used (PZD7 Parameter 51.13 = ---)
-        !*/
-        Object O_PZD7 $Attribute 27 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object O_PZD7 $Attribute 51 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "O_PZD7"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIo"
           EndBody
         EndObject
-        !/**
-        !  Not used (PZD8 Parameter 51.15 = ---)
-        !*/
-        Object O_PZD8 $Attribute 26 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object O_PZD8 $Attribute 52 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "O_PZD8"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIo"
           EndBody
         EndObject
-        !/**
-        !  Not used (PZD9 Parameter 51.17 = ---)
-        !*/
-        Object O_PZD9 $Attribute 25 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object O_PZD9 $Attribute 53 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "O_PZD9"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIo"
           EndBody
         EndObject
-        !/**
-        !  Not used (PZD10 Parameter 51.19 = ---)
-        !*/
-        Object O_PZD10 $Attribute 24 12-OCT-2005 12:58:20.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+        Object O_PZD10 $Attribute 54 02-JUL-2010 08:20:11.25
+          Body SysBody 02-JUL-2010 08:20:11.25
             Attr PgmName = "O_PZD10"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIo"
           EndBody
         EndObject
       EndObject
-      Object Template ABB_ACS_PPO5 2149548032 12-OCT-2005 12:58:20.00
+      Object Template ABB_ACS_PPO5_IoModule 2157674496 02-JUL-2010 08:30:00.00
         Body RtBody 14-MAR-2008 16:42:45.66
-          Attr Super.Specification = "ABB ACS, PPO message type 5"
-          Attr Super.Process = 1
-          Attr Super.DataSheet = "$pwr_lang/dsh/abb_acs800.html"
           Attr I_ID.Description = "Parameter identification"
           Attr I_ID.ConversionOn = 1
           Attr I_ID.Representation = 2
@@ -36064,210 +35922,438 @@ ABB ACS800 Aggregate
         EndBody
       EndObject
     EndObject
-    Object ABB_ACC_PPO5 $ClassDef 23 14-MAR-2006 09:12:39.84
-      Body SysBody 14-MAR-2006 09:12:30.12
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Summary Profibus module to ACS800 with protocol PPO5.
+    !  Profibus module to ACS800 with protocol PPO5.
+    ! 
+    !  The object is created by the profibus configurator under a 
+    !  ABB_ACS_Pb_Slave object in the node hierarchy.
+    ! 
+    !  Connect the function object to an object of class or subclass of
+    !  ABB_ACS800_1 with the IoConnect method.
+    ! 
+    !  To adapt the frequency converter to this configuration, some settings
+    !  have to be performed.
+    !  
+    ! Parameter  Value       Description
+    ! group  
+    !  10.01     COMM.CW    Ext1 start/stop/direction
+    !  10.03     ?          Rotation of the motor
+    !  11.02     EXT1       Reference select
+    !  11.03     COMM.REF   Source for external reference 1
+    !  11.04     ?          Minimum value for external reference 1
+    !  11.05     ?          Maximum value for external reference 1
+    !  16.04     COMM.CW    Source for the fault reset signal "tripped"
+    !  21.03     RAMP       Motor stop function
+    !  22.01     ACC/DEC 1  Acceleration and deceleration times
+    !  20.02     ?          Acc time 1
+    !  20.03     ?          Dec time 1
+    !  51.06     104        PZD3 IN, Current
+    !  51.08     105        PZD4 IN, Tourque
+    !  51.10     305        PZD5 IN, Fault word 1 
+    !  51.12     306        PZD6 IN, Fault word 2 
+    !  51.14     117        PZD7 IN, DI6_1 
+    !  51.16     318        PZD8 IN, Alarm word 5
+    !  51.18     313        PZD9 IN, Status word 3 
+    !  
+    !  98.02     FIELDBUS   Serial communication
+    !  98.07     ABB Drives Communication profile 
+    ! 
+    !  See also
+    !  16.01     ?          Run enable parameter
+    !  20.01     ?          Limits min speed
+    !  20.02     ?          Limits max speed
+    !     
+    !  Example parameter PZD4 IN:
+    !  
+    !  Parameter PZD4 IN is set in parametergroup 51.08 and should be set
+    !  105, i.e. the value "01.05" that is the torque value in the converter.
+    !  This signal is connected to the signal ActTorque in the ABB_ACS800_1
+    !  object.
+    ! 
+    !  Note
+    !  Other setting of the converter are not discussed here.
+    ! 
+    !  @b See also
+    !  @classlink ABB_ACS_Pb_Slave abb_abb_acs_pb_slave.html
+    !  @classlink ABB_ACS800_1 abb_abb_acs800_1.html
+    !*/
+    Object ABB_ACS_PPO5 $ClassDef 7 12-OCT-2005 12:58:20.00
+      Body SysBody 01-JAN-1970 01:00:00.00
         Attr Editor = 0
         Attr Method = 0
         Attr Flags = 18448
       EndBody
-      Object RtBody $ObjBodyDef 1 14-MAR-2006 09:12:30.14
-        Body SysBody 14-MAR-2006 09:12:48.76
-          Attr StructName = "ABB_ACC_PPO5"
-          Attr NextAix = "_X55"
+      Object RtBody $ObjBodyDef 1 12-OCT-2005 12:58:20.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "ABB_ACS_PPO5"
+          Attr NextAix = "_X28"
         EndBody
-        Object Super $Attribute 28 14-MAR-2006 09:12:30.14
-          Body SysBody 15-MAR-2006 13:09:56.40
+        Object Super $Attribute 1 12-OCT-2005 12:58:20.00
+          Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
             Attr Flags = 393216
             Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
         EndObject
-        Object I_ID $Attribute 29 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:12:30.14
+        !/**
+        !  I/O module containing the channels.
+        !*/
+        Object Io $Attribute 2 02-JUL-2010 08:39:36.02
+          Body SysBody 02-JUL-2010 08:39:58.08
+            Attr PgmName = "Io"
+            Attr Flags = 131072
+            Attr TypeRef = "ABB:Class-ABB_ACS_PPO5_IoModule"
+          EndBody
+        EndObject
+      EndObject
+      Object Template ABB_ACS_PPO5 2149548032 12-OCT-2005 12:58:20.00
+        Body RtBody 14-MAR-2008 16:42:45.66
+          Attr Super.Specification = "ABB ACS, PPO message type 5"
+          Attr Super.Process = 1
+          Attr Super.DataSheet = "$pwr_lang/dsh/abb_acs800.html"
+          Attr Io.I_ID.Description = "Parameter identification"
+          Attr Io.I_ID.ConversionOn = 1
+          Attr Io.I_ID.Representation = 2
+          Attr Io.I_IND.Description = "Array index"
+          Attr Io.I_IND.ConversionOn = 1
+          Attr Io.I_IND.Representation = 2
+          Attr Io.I_VALUE.Description = "Parameter value"
+          Attr Io.I_VALUE.ConversionOn = 1
+          Attr Io.I_VALUE.Representation = 1
+          Attr Io.I_SW.Description = "Status word from converter (fixed)"
+          Attr Io.I_SW.Identity = "9201"
+          Attr Io.I_SW.ConversionOn = 1
+          Attr Io.I_SW.Representation = 3
+          Attr Io.I_ACT.Description = "Status word from converter (fixed)"
+          Attr Io.I_ACT.Identity = "1103"
+          Attr Io.I_ACT.ConversionOn = 1
+          Attr Io.I_ACT.ScanInterval = 1
+          Attr Io.I_ACT.RawValRangeLow = -2.000000e+04
+          Attr Io.I_ACT.RawValRangeHigh = 2.000000e+04
+          Attr Io.I_ACT.ChannelSigValRangeLow = -2.000000e+04
+          Attr Io.I_ACT.ChannelSigValRangeHigh = 2.000000e+04
+          Attr Io.I_ACT.SensorPolyType = 1
+          Attr Io.I_ACT.SensorSigValRangeLow = -2.000000e+04
+          Attr Io.I_ACT.SensorSigValRangeHigh = 2.000000e+04
+          Attr Io.I_ACT.ActValRangeLow = -1.500000e+03
+          Attr Io.I_ACT.ActValRangeHigh = 1.500000e+03
+          Attr Io.I_ACT.Representation = 2
+          Attr Io.I_PZD3.Description = "Status word from converter"
+          Attr Io.I_PZD3.Identity = "5106"
+          Attr Io.I_PZD3.ConversionOn = 1
+          Attr Io.I_PZD3.RawValRangeLow = -1.000000e+04
+          Attr Io.I_PZD3.RawValRangeHigh = 1.000000e+04
+          Attr Io.I_PZD3.ChannelSigValRangeLow = -1.000000e+04
+          Attr Io.I_PZD3.ChannelSigValRangeHigh = 1.000000e+04
+          Attr Io.I_PZD3.SensorPolyType = 1
+          Attr Io.I_PZD3.SensorSigValRangeLow = -1.000000e+04
+          Attr Io.I_PZD3.SensorSigValRangeHigh = 1.000000e+04
+          Attr Io.I_PZD3.ActValRangeLow = -1.000000e+03
+          Attr Io.I_PZD3.ActValRangeHigh = 1.000000e+03
+          Attr Io.I_PZD3.Representation = 2
+          Attr Io.I_PZD4.Description = "Status word from converter"
+          Attr Io.I_PZD4.Identity = "5108"
+          Attr Io.I_PZD4.ConversionOn = 1
+          Attr Io.I_PZD4.RawValRangeLow = -3.276800e+04
+          Attr Io.I_PZD4.RawValRangeHigh = 3.276700e+04
+          Attr Io.I_PZD4.ChannelSigValRangeLow = -3.276800e+04
+          Attr Io.I_PZD4.ChannelSigValRangeHigh = 3.276700e+04
+          Attr Io.I_PZD4.SensorPolyType = 1
+          Attr Io.I_PZD4.SensorSigValRangeLow = -3.276800e+04
+          Attr Io.I_PZD4.SensorSigValRangeHigh = 3.276700e+04
+          Attr Io.I_PZD4.ActValRangeLow = -3.276800e+02
+          Attr Io.I_PZD4.ActValRangeHigh = 3.276700e+02
+          Attr Io.I_PZD4.Representation = 2
+          Attr Io.I_PZD5.Description = "Status bits from converter"
+          Attr Io.I_PZD5.Identity = "5110"
+          Attr Io.I_PZD5.ConversionOn = 1
+          Attr Io.I_PZD5.Representation = 3
+          Attr Io.I_PZD6.Description = "Status bits from converter"
+          Attr Io.I_PZD6.Identity = "5112"
+          Attr Io.I_PZD6.ConversionOn = 1
+          Attr Io.I_PZD6.Representation = 3
+          Attr Io.I_PZD7.Description = "Status bits from converter"
+          Attr Io.I_PZD7.Identity = "5114"
+          Attr Io.I_PZD7.ConversionOn = 1
+          Attr Io.I_PZD7.Representation = 3
+          Attr Io.I_PZD8.Description = "Status bits from converter"
+          Attr Io.I_PZD8.Identity = "5116"
+          Attr Io.I_PZD8.ConversionOn = 1
+          Attr Io.I_PZD8.Representation = 3
+          Attr Io.I_PZD9.Description = "Status bits from converter"
+          Attr Io.I_PZD9.Identity = "5118"
+          Attr Io.I_PZD9.ConversionOn = 1
+          Attr Io.I_PZD9.Representation = 3
+          Attr Io.I_PZD10.Description = "Status bits from converter"
+          Attr Io.I_PZD10.Identity = "5120"
+          Attr Io.I_PZD10.ConversionOn = 1
+          Attr Io.I_PZD10.Representation = 3
+          Attr Io.O_ID.Description = "Parameter identification"
+          Attr Io.O_ID.Representation = 3
+          Attr Io.O_IND.Description = "Array index"
+          Attr Io.O_IND.Representation = 3
+          Attr Io.O_VALUE.Description = "Parameter value"
+          Attr Io.O_VALUE.Representation = 1
+          Attr Io.O_CW.Description = "Control word to converter (fixed)"
+          Attr Io.O_CW.Identity = "9004"
+          Attr Io.O_CW.Representation = 3
+          Attr Io.O_REF.Description = "Referencevalue word to converter (fixed)"
+          Attr Io.O_REF.Identity = "9004"
+          Attr Io.O_REF.OutPolyType = 1
+          Attr Io.O_REF.ActValRangeLow = -1.500000e+03
+          Attr Io.O_REF.ActValRangeHigh = 1.500000e+03
+          Attr Io.O_REF.SensorSigValRangeLow = -2.000000e+04
+          Attr Io.O_REF.SensorSigValRangeHigh = 2.000000e+04
+          Attr Io.O_REF.ChannelSigValRangeLow = -2.000000e+04
+          Attr Io.O_REF.ChannelSigValRangeHigh = 2.000000e+04
+          Attr Io.O_REF.RawValRangeLow = -2.000000e+04
+          Attr Io.O_REF.RawValRangeHigh = 2.000000e+04
+          Attr Io.O_REF.Representation = 2
+          Attr Io.O_PZD3.Description = "Referencevalue word to converter"
+          Attr Io.O_PZD3.Identity = "5105"
+          Attr Io.O_PZD3.OutPolyType = 1
+          Attr Io.O_PZD3.ActValRangeHigh = 6.000000e+02
+          Attr Io.O_PZD3.SensorSigValRangeHigh = 6.000000e+04
+          Attr Io.O_PZD3.ChannelSigValRangeHigh = 6.000000e+04
+          Attr Io.O_PZD3.RawValRangeHigh = 6.000000e+04
+          Attr Io.O_PZD3.Representation = 2
+          Attr Io.O_PZD4.Description = "Referencevalue word to converter"
+          Attr Io.O_PZD4.Identity = "5107"
+          Attr Io.O_PZD4.OutPolyType = 1
+          Attr Io.O_PZD4.ActValRangeHigh = 6.000000e+02
+          Attr Io.O_PZD4.SensorSigValRangeHigh = 6.000000e+04
+          Attr Io.O_PZD4.ChannelSigValRangeHigh = 6.000000e+04
+          Attr Io.O_PZD4.RawValRangeHigh = 6.000000e+04
+          Attr Io.O_PZD4.Representation = 2
+          Attr Io.O_PZD5.Description = "Referencevalue word to converter"
+          Attr Io.O_PZD5.Identity = "5109"
+          Attr Io.O_PZD5.OutPolyType = 1
+          Attr Io.O_PZD5.ActValRangeLow = -3.276800e+04
+          Attr Io.O_PZD5.ActValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD5.SensorSigValRangeLow = -3.276800e+04
+          Attr Io.O_PZD5.SensorSigValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD5.ChannelSigValRangeLow = -3.276800e+04
+          Attr Io.O_PZD5.ChannelSigValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD5.RawValRangeLow = -3.276800e+04
+          Attr Io.O_PZD5.RawValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD5.Representation = 2
+          Attr Io.O_PZD6.Description = "Referencevalue word to converter"
+          Attr Io.O_PZD6.Identity = "5111"
+          Attr Io.O_PZD6.Representation = 2
+          Attr Io.O_PZD7.Description = "Referencevalue word to converter"
+          Attr Io.O_PZD7.Identity = "5113"
+          Attr Io.O_PZD7.Representation = 2
+          Attr Io.O_PZD8.Description = "Referencevalue word to converter"
+          Attr Io.O_PZD8.Identity = "5115"
+          Attr Io.O_PZD8.Representation = 2
+          Attr Io.O_PZD9.Description = "Referencevalue word to converter"
+          Attr Io.O_PZD9.Identity = "5117"
+          Attr Io.O_PZD9.Representation = 2
+          Attr Io.O_PZD10.Description = "Referencevalue word to converter"
+          Attr Io.O_PZD10.Identity = "5119"
+          Attr Io.O_PZD10.Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    Object ABB_ACC_PPO5_IoModule $ClassDef 39 02-JUL-2010 08:21:56.97
+      Body SysBody 02-JUL-2010 08:22:01.77
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 02-JUL-2010 08:22:22.14
+        Body SysBody 02-JUL-2010 08:22:14.73
+          Attr StructName = "ABB_ACC_PPO5_IoModule"
+          Attr NextAix = "_X82"
+        EndBody
+        Object I_ID $Attribute 56 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "I_ID"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
         EndObject
-        Object I_IND $Attribute 30 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:12:30.14
+        Object I_IND $Attribute 57 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "I_IND"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
         EndObject
-        Object I_VALUE $Attribute 31 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:12:30.14
+        Object I_VALUE $Attribute 58 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "I_VALUE"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
         EndObject
-        Object I_SW $Attribute 32 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:12:30.14
+        Object I_SW $Attribute 59 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "I_SW"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
         EndObject
-        Object I_ACT $Attribute 33 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:12:30.14
+        Object I_ACT $Attribute 60 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "I_ACT"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
         EndObject
-        Object I_PZD3 $Attribute 34 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:12:30.14
+        Object I_PZD3 $Attribute 61 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "I_PZD3"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
         EndObject
-        Object I_PZD4 $Attribute 35 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:14:22.48
+        Object I_PZD4 $Attribute 62 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "I_PZD4"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
         EndObject
-        Object I_PZD5 $Attribute 36 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:14:26.73
+        Object I_PZD5 $Attribute 63 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "I_PZD5"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
         EndObject
-        Object I_PZD6 $Attribute 37 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:14:32.20
+        Object I_PZD6 $Attribute 64 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "I_PZD6"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
         EndObject
-        Object I_PZD7 $Attribute 38 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:12:30.14
+        Object I_PZD7 $Attribute 65 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "I_PZD7"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
         EndObject
-        Object I_PZD8 $Attribute 39 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:12:30.14
+        Object I_PZD8 $Attribute 66 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "I_PZD8"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
         EndObject
-        Object I_PZD9 $Attribute 40 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:12:30.14
+        Object I_PZD9 $Attribute 67 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "I_PZD9"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIi"
           EndBody
         EndObject
-        Object I_PZD10 $Attribute 41 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:14:43.29
+        Object I_PZD10 $Attribute 68 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "I_PZD10"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAi"
           EndBody
         EndObject
-        Object O_ID $Attribute 42 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:12:30.14
+        Object O_ID $Attribute 69 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "O_ID"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIo"
           EndBody
         EndObject
-        Object O_IND $Attribute 43 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:12:30.14
+        Object O_IND $Attribute 70 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "O_IND"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIo"
           EndBody
         EndObject
-        Object O_VALUE $Attribute 44 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:12:30.14
+        Object O_VALUE $Attribute 71 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "O_VALUE"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIo"
           EndBody
         EndObject
-        Object O_CW $Attribute 45 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:12:30.14
+        Object O_CW $Attribute 72 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "O_CW"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIo"
           EndBody
         EndObject
-        Object O_REF $Attribute 46 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:12:30.14
+        Object O_REF $Attribute 73 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "O_REF"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
         EndObject
-        Object O_PZD3 $Attribute 47 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:14:58.53
+        Object O_PZD3 $Attribute 74 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "O_PZD3"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
         EndObject
-        Object O_PZD4 $Attribute 48 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:12:30.14
+        Object O_PZD4 $Attribute 75 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "O_PZD4"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
         EndObject
-        Object O_PZD5 $Attribute 49 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:12:30.14
+        Object O_PZD5 $Attribute 76 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "O_PZD5"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
         EndObject
-        Object O_PZD6 $Attribute 50 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:15:06.19
+        Object O_PZD6 $Attribute 77 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "O_PZD6"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
         EndObject
-        Object O_PZD7 $Attribute 51 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:12:30.14
+        Object O_PZD7 $Attribute 78 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "O_PZD7"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanIo"
           EndBody
         EndObject
-        Object O_PZD8 $Attribute 52 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:15:13.02
+        Object O_PZD8 $Attribute 79 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "O_PZD8"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
         EndObject
-        Object O_PZD9 $Attribute 53 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:15:17.56
+        Object O_PZD9 $Attribute 80 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "O_PZD9"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
         EndObject
-        Object O_PZD10 $Attribute 54 14-MAR-2006 09:12:30.14
-          Body SysBody 14-MAR-2006 09:15:24.92
+        Object O_PZD10 $Attribute 81 02-JUL-2010 08:21:20.83
+          Body SysBody 02-JUL-2010 08:21:20.83
             Attr PgmName = "O_PZD10"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
         EndObject
       EndObject
-      Object Template ABB_ACC_PPO5 2153742336 01-JAN-1970 01:00:00.00
+      Object Template ABB_ACC_PPO5_IoModule 2157936640 02-JUL-2010 08:30:00.00
         Body RtBody 14-MAR-2006 14:12:27.90
-          Attr Super.Process = 1
           Attr I_ID.Description = "Parameter identification"
           Attr I_ID.ConversionOn = 1
           Attr I_ID.Representation = 2
@@ -36442,6 +36528,215 @@ ABB ACS800 Aggregate
           Attr O_PZD10.RawValRangeLow = -3.276700e+04
           Attr O_PZD10.RawValRangeHigh = 3.276700e+04
           Attr O_PZD10.Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    Object ABB_ACC_PPO5 $ClassDef 23 14-MAR-2006 09:12:39.84
+      Body SysBody 14-MAR-2006 09:12:30.12
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 14-MAR-2006 09:12:30.14
+        Body SysBody 14-MAR-2006 09:12:48.76
+          Attr StructName = "ABB_ACC_PPO5"
+          Attr NextAix = "_X55"
+        EndBody
+        Object Super $Attribute 28 14-MAR-2006 09:12:30.14
+          Body SysBody 15-MAR-2006 13:09:56.40
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_Module"
+          EndBody
+        EndObject
+        !/**
+        !  I/O module containing the channels.
+        !*/
+        Object Io $Attribute 29 02-JUL-2010 08:40:34.79
+          Body SysBody 02-JUL-2010 08:40:45.99
+            Attr PgmName = "Io"
+            Attr Flags = 131072
+            Attr TypeRef = "ABB:Class-ABB_ACC_PPO5_IoModule"
+          EndBody
+        EndObject
+      EndObject
+      Object Template ABB_ACC_PPO5 2153742336 01-JAN-1970 01:00:00.00
+        Body RtBody 14-MAR-2006 14:12:27.90
+          Attr Super.Process = 1
+          Attr Io.I_ID.Description = "Parameter identification"
+          Attr Io.I_ID.ConversionOn = 1
+          Attr Io.I_ID.Representation = 2
+          Attr Io.I_IND.Description = "Array index"
+          Attr Io.I_IND.ConversionOn = 1
+          Attr Io.I_IND.Representation = 2
+          Attr Io.I_VALUE.Description = "Parameter value"
+          Attr Io.I_VALUE.ConversionOn = 1
+          Attr Io.I_VALUE.Representation = 1
+          Attr Io.I_SW.Description = "Status word from converter (fixed)"
+          Attr Io.I_SW.ConversionOn = 1
+          Attr Io.I_SW.Representation = 3
+          Attr Io.I_ACT.ConversionOn = 1
+          Attr Io.I_ACT.ScanInterval = 1
+          Attr Io.I_ACT.RawValRangeLow = -2.000000e+04
+          Attr Io.I_ACT.RawValRangeHigh = 2.000000e+04
+          Attr Io.I_ACT.ChannelSigValRangeLow = -2.000000e+04
+          Attr Io.I_ACT.ChannelSigValRangeHigh = 2.000000e+04
+          Attr Io.I_ACT.SensorPolyType = 1
+          Attr Io.I_ACT.SensorSigValRangeLow = -2.000000e+04
+          Attr Io.I_ACT.SensorSigValRangeHigh = 2.000000e+04
+          Attr Io.I_ACT.ActValRangeLow = -1.000000e+02
+          Attr Io.I_ACT.ActValRangeHigh = 1.000000e+02
+          Attr Io.I_ACT.Representation = 2
+          Attr Io.I_PZD3.ConversionOn = 1
+          Attr Io.I_PZD3.ScanInterval = 1
+          Attr Io.I_PZD3.RawValRangeLow = -3.276700e+04
+          Attr Io.I_PZD3.RawValRangeHigh = 3.276700e+04
+          Attr Io.I_PZD3.ChannelSigValRangeLow = -3.276700e+04
+          Attr Io.I_PZD3.ChannelSigValRangeHigh = 3.276700e+04
+          Attr Io.I_PZD3.SensorPolyType = 1
+          Attr Io.I_PZD3.SensorSigValRangeLow = -3.276700e+04
+          Attr Io.I_PZD3.SensorSigValRangeHigh = 3.276700e+04
+          Attr Io.I_PZD3.ActValRangeLow = -3.276700e+02
+          Attr Io.I_PZD3.ActValRangeHigh = 3.276700e+02
+          Attr Io.I_PZD3.Representation = 2
+          Attr Io.I_PZD4.ConversionOn = 1
+          Attr Io.I_PZD4.ScanInterval = 1
+          Attr Io.I_PZD4.RawValRangeLow = -2.000000e+04
+          Attr Io.I_PZD4.RawValRangeHigh = 2.000000e+04
+          Attr Io.I_PZD4.ChannelSigValRangeLow = -2.000000e+04
+          Attr Io.I_PZD4.ChannelSigValRangeHigh = 2.000000e+04
+          Attr Io.I_PZD4.SensorPolyType = 1
+          Attr Io.I_PZD4.SensorSigValRangeLow = -2.000000e+04
+          Attr Io.I_PZD4.SensorSigValRangeHigh = 2.000000e+04
+          Attr Io.I_PZD4.ActValRangeLow = -1.000000e+02
+          Attr Io.I_PZD4.ActValRangeHigh = 1.000000e+02
+          Attr Io.I_PZD4.Representation = 2
+          Attr Io.I_PZD5.ConversionOn = 1
+          Attr Io.I_PZD5.ScanInterval = 1
+          Attr Io.I_PZD5.RawValRangeLow = -3.276700e+04
+          Attr Io.I_PZD5.RawValRangeHigh = 3.276700e+04
+          Attr Io.I_PZD5.ChannelSigValRangeLow = -3.276700e+04
+          Attr Io.I_PZD5.ChannelSigValRangeHigh = 3.276700e+04
+          Attr Io.I_PZD5.SensorPolyType = 1
+          Attr Io.I_PZD5.SensorSigValRangeLow = -3.276700e+04
+          Attr Io.I_PZD5.SensorSigValRangeHigh = 3.276700e+04
+          Attr Io.I_PZD5.ActValRangeLow = -3.276700e+04
+          Attr Io.I_PZD5.ActValRangeHigh = 3.276700e+04
+          Attr Io.I_PZD5.Representation = 2
+          Attr Io.I_PZD6.ConversionOn = 1
+          Attr Io.I_PZD6.ScanInterval = 1
+          Attr Io.I_PZD6.RawValRangeLow = -3.276700e+04
+          Attr Io.I_PZD6.RawValRangeHigh = 3.276700e+04
+          Attr Io.I_PZD6.ChannelSigValRangeLow = -3.276700e+04
+          Attr Io.I_PZD6.ChannelSigValRangeHigh = 3.276700e+04
+          Attr Io.I_PZD6.SensorPolyType = 1
+          Attr Io.I_PZD6.SensorSigValRangeLow = -3.276700e+04
+          Attr Io.I_PZD6.SensorSigValRangeHigh = 3.276700e+04
+          Attr Io.I_PZD6.ActValRangeLow = -3.276700e+03
+          Attr Io.I_PZD6.ActValRangeHigh = 3.276700e+03
+          Attr Io.I_PZD6.Representation = 2
+          Attr Io.I_PZD7.ConversionOn = 1
+          Attr Io.I_PZD7.Representation = 1
+          Attr Io.I_PZD8.ConversionOn = 1
+          Attr Io.I_PZD8.Representation = 3
+          Attr Io.I_PZD9.ConversionOn = 1
+          Attr Io.I_PZD9.Representation = 3
+          Attr Io.I_PZD10.ConversionOn = 1
+          Attr Io.I_PZD10.ScanInterval = 1
+          Attr Io.I_PZD10.RawValRangeLow = -3.276700e+04
+          Attr Io.I_PZD10.RawValRangeHigh = 3.276700e+03
+          Attr Io.I_PZD10.ChannelSigValRangeLow = -3.276700e+04
+          Attr Io.I_PZD10.ChannelSigValRangeHigh = 3.276700e+04
+          Attr Io.I_PZD10.SensorPolyType = 1
+          Attr Io.I_PZD10.SensorSigValRangeLow = -3.276700e+04
+          Attr Io.I_PZD10.SensorSigValRangeHigh = 3.276700e+04
+          Attr Io.I_PZD10.ActValRangeLow = -3.276700e+02
+          Attr Io.I_PZD10.ActValRangeHigh = 3.276700e+02
+          Attr Io.I_PZD10.Representation = 2
+          Attr Io.O_ID.Representation = 3
+          Attr Io.O_IND.Representation = 3
+          Attr Io.O_VALUE.Representation = 1
+          Attr Io.O_CW.Representation = 2
+          Attr Io.O_REF.OutPolyType = 1
+          Attr Io.O_REF.ActValRangeLow = -1.000000e+02
+          Attr Io.O_REF.ActValRangeHigh = 1.000000e+02
+          Attr Io.O_REF.SensorSigValRangeLow = -2.000000e+04
+          Attr Io.O_REF.SensorSigValRangeHigh = 2.000000e+04
+          Attr Io.O_REF.ChannelSigValRangeLow = -2.000000e+04
+          Attr Io.O_REF.ChannelSigValRangeHigh = 2.000000e+04
+          Attr Io.O_REF.RawValRangeLow = -2.000000e+04
+          Attr Io.O_REF.RawValRangeHigh = 2.000000e+04
+          Attr Io.O_REF.Representation = 2
+          Attr Io.O_PZD3.OutPolyType = 1
+          Attr Io.O_PZD3.ActValRangeLow = -3.276700e+02
+          Attr Io.O_PZD3.ActValRangeHigh = 3.276700e+02
+          Attr Io.O_PZD3.SensorSigValRangeLow = -3.276700e+04
+          Attr Io.O_PZD3.SensorSigValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD3.ChannelSigValRangeLow = -3.276700e+04
+          Attr Io.O_PZD3.ChannelSigValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD3.RawValRangeLow = -3.276700e+04
+          Attr Io.O_PZD3.RawValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD3.Representation = 2
+          Attr Io.O_PZD4.OutPolyType = 1
+          Attr Io.O_PZD4.ActValRangeHigh = 3.276700e+01
+          Attr Io.O_PZD4.SensorSigValRangeLow = -3.276700e+04
+          Attr Io.O_PZD4.SensorSigValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD4.ChannelSigValRangeLow = -3.276700e+04
+          Attr Io.O_PZD4.ChannelSigValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD4.RawValRangeLow = -3.276700e+04
+          Attr Io.O_PZD4.RawValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD4.Representation = 2
+          Attr Io.O_PZD5.OutPolyType = 1
+          Attr Io.O_PZD5.ActValRangeLow = -1.000000e+02
+          Attr Io.O_PZD5.ActValRangeHigh = 1.000000e+02
+          Attr Io.O_PZD5.SensorSigValRangeLow = -2.000000e+04
+          Attr Io.O_PZD5.SensorSigValRangeHigh = 2.000000e+04
+          Attr Io.O_PZD5.ChannelSigValRangeLow = -2.000000e+04
+          Attr Io.O_PZD5.ChannelSigValRangeHigh = 2.000000e+04
+          Attr Io.O_PZD5.RawValRangeLow = -2.000000e+04
+          Attr Io.O_PZD5.RawValRangeHigh = 2.000000e+04
+          Attr Io.O_PZD5.Representation = 2
+          Attr Io.O_PZD6.OutPolyType = 1
+          Attr Io.O_PZD6.ActValRangeLow = -3.276700e+04
+          Attr Io.O_PZD6.ActValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD6.SensorSigValRangeLow = -3.276700e+04
+          Attr Io.O_PZD6.SensorSigValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD6.ChannelSigValRangeLow = -3.276700e+04
+          Attr Io.O_PZD6.ChannelSigValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD6.RawValRangeLow = -3.276700e+04
+          Attr Io.O_PZD6.RawValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD6.Representation = 2
+          Attr Io.O_PZD7.Representation = 2
+          Attr Io.O_PZD8.OutPolyType = 1
+          Attr Io.O_PZD8.ActValRangeLow = -3.276700e+02
+          Attr Io.O_PZD8.ActValRangeHigh = 3.276700e+02
+          Attr Io.O_PZD8.SensorSigValRangeLow = -3.276700e+04
+          Attr Io.O_PZD8.SensorSigValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD8.ChannelSigValRangeLow = -3.276700e+04
+          Attr Io.O_PZD8.ChannelSigValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD8.RawValRangeLow = -3.276700e+04
+          Attr Io.O_PZD8.RawValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD8.Representation = 2
+          Attr Io.O_PZD9.OutPolyType = 1
+          Attr Io.O_PZD9.ActValRangeLow = -1.000000e+02
+          Attr Io.O_PZD9.ActValRangeHigh = 1.000000e+02
+          Attr Io.O_PZD9.SensorSigValRangeLow = -3.276700e+04
+          Attr Io.O_PZD9.SensorSigValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD9.ChannelSigValRangeLow = -3.276700e+04
+          Attr Io.O_PZD9.ChannelSigValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD9.RawValRangeLow = -3.276700e+04
+          Attr Io.O_PZD9.RawValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD9.Representation = 2
+          Attr Io.O_PZD10.OutPolyType = 1
+          Attr Io.O_PZD10.ActValRangeLow = -1.000000e+02
+          Attr Io.O_PZD10.ActValRangeHigh = 1.000000e+02
+          Attr Io.O_PZD10.SensorSigValRangeLow = -3.276700e+04
+          Attr Io.O_PZD10.SensorSigValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD10.ChannelSigValRangeLow = -3.276700e+04
+          Attr Io.O_PZD10.ChannelSigValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD10.RawValRangeLow = -3.276700e+04
+          Attr Io.O_PZD10.RawValRangeHigh = 3.276700e+04
+          Attr Io.O_PZD10.Representation = 2
         EndBody
       EndObject
     EndObject

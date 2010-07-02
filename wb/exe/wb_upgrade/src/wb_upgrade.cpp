@@ -41,49 +41,110 @@
 
 typedef struct {
   pwr_tOName cname;
-  pwr_tObjName attr[10];
-} upg_sCnvAlarm;
+  pwr_tObjName attr[25];
+  pwr_tAName value[25];
+} upg_sSigChanCon;
 
-static upg_sCnvAlarm upg_alatext[] = {
-  {"BaseComponent:Class-CompModeA", {"AlarmNotReadyM", "AlarmNotReadyA", "Alarm1LocalMod", "Alarm2LocalMod", "AlarmNotManOrd", "", "", "", "", ""}},
-  {"BaseComponent:Class-CompModeAM", {"AlarmLocalMode", "", "", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-CompModeD", {"AlarmNotReadyM", "AlarmNotReadyA", "Alarm1LocalMod", "Alarm2LocalMod", "AlarmNotManOrd", "", "", "", "", ""}},
-  {"BaseComponent:Class-CompModeD2", {"AlarmNotReadyM", "AlarmNotReadyA", "Alarm1LocalMod", "Alarm2LocalMod", "AlarmNotManOrd", "AlarmOrderTimeOut", "", "", "", ""}},
-  {"BaseComponent:Class-CompLimit", {"AlarmText", "", "", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseSupSwitch", {"AlarmText", "", "", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseTempSwitch", {"AlarmText", "", "", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseCircuitBreaker", {"AlarmText", "", "", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseActuatorA", {"DiffAlarmText", "SwitchAlarmText", "", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseActuatorIncrDecr", {"SwitchAlarmText", "", "", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseContactor", {"AlarmText", "", "", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseLevelSwitch", {"AlarmText", "", "", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BasePressureSwitch", {"AlarmText", "", "", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseFilter", {"AlarmText", "", "", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseMValve", {"SwitchAlarmText", "", "", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseMDamper", {"SwitchAlarmText", "", "", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseM3WayValve", {"SwitchAlarmText", "", "", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseOverloadRelay", {"AlarmText", "", "", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseSafetySwitch", {"AlarmText", "", "", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseFcPPO5", {"AlarmTripped", "AlarmWarning", "AlarmError", "AlarmConnection", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseFcPPO3", {"AlarmTripped", "AlarmWarning", "AlarmError", "AlarmConnection", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseFcPPO5MotorAggr", {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseFcPPO5FanAggr", {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseFcPPO5PumpAggr", {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseFcPPO3MotorAggr", {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseFcPPO3FanAggr", {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
-  {"BaseComponent:Class-BaseFcPPO3PumpAggr", {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
-  {"ABB:Class-ABB_CircuitBreaker_MS116", {"AlarmText", "", "", "", "", "", "", "", "", ""}},
-  {"ABB:Class-ABB_ACS800_1", {"AlarmLocalMod", "AlarmTripped", "AlarmFanOld", "AlarmWarning", "AlarmError", "AlarmConnection", "", "", "", ""}},
-  {"ABB:Class-ABB_ACC800", {"AlarmLocalMod", "AlarmWarning", "AlarmError", "AlarmTorqFault", "AlarmBrakeFault", "AlarmTorqProvFault", "", "", "", ""}},
-  {"ABB:Class-ABB_ACS800MotorAggr", {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
-  {"ABB:Class-ABB_ACS800PumpAggr", {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
-  {"ABB:Class-ABB_ACS800FanAggr", {"AlarmTextToOften", "AlarmTextPowOnNotOk", "AlarmTextStartNoOk", "", "", "", "", "", "", ""}},
-  {"ABB:Class-ABB_Converter_ACS800_PPO3", {"AlarmTripped", "AlarmWarning", "AlarmError", "", "", "", "", "", "", ""}},
-  {"ABB:Class-ABB_Sensor_Pb_PA", {"AlarmTextTransmError", "AlarmTextTransmWarning", "", "", "", "", "", "", "", ""}},
-  {"ABB:Class-ABB_TempSensor_TF12", {"AlarmTextTransmError", "AlarmTextTransmWarning", "", "", "", "", "", "", "", ""}},
-  {"ABB:Class-ABB_PressureSensor_265GS", {"AlarmTextTransmError", "AlarmTextTransmWarning", "", "", "", "", "", "", "", ""}},
-   {"ABB:Class-ABB_DiffPressureSensor_265DS", {"AlarmTextTransmError", "AlarmTextTransmWarning", "", "", "", "", "", "", "", ""}},
-   {"ABB:Class-ABB_FlowSensor_FXE4000", {"AlarmTextTransmError", "AlarmTextTransmWarning", "", "", "", "", "", "", "", ""}}};
+static upg_sSigChanCon upg_sigchancon[] = {
+  {"BaseComponent:Class-BaseFcPPO3", 
+   {"StatusWordSW", "ActSpeed", "ControlWordCW", "RefSpeed", "",
+    "", "", "", "","",
+    "", "", "", "","",
+    "", "", "", "","",
+    "", "", "", "",""},
+   {"$IoConnect:BaseComponent-Class-BaseFcPPO3IoModule.I_SW",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO3IoModule.I_ACT",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO3IoModule.O_CW",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO3IoModule.O_REF",
+    "","","","","","","","","","","","","","","","",""}
+  },
+  {"BaseComponent:Class-BaseFcPPO5", 
+   {"InIdPar", "InIndPar", "InValuePar", "StatusWordSW", "ActSpeed", 
+    "ActTorque", "ActCurrent", "PZD5", "PZD6", "PZD7", 
+    "PZD8", "PZD9", "OutIdPar", "OutIndPar", "OutValuePar",
+    "ControlWordCW", "RefSpeed", "OPZD3", "OPZD4", "OPZD5", 
+    "OPZD6", "", "", "",""},
+   {"$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_ID",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_IND",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_VALUE",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_SW",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_ACT",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_PZD4",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_PZD3",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_PZD5",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_PZD6",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_PZD7",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_PZD8",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.I_PZD9",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.O_ID",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.O_IND",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.O_VALUE",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.O_CW",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.O_REF",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.O_PZD3",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.O_PZD4",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.O_PZD5",
+    "$IoConnect:BaseComponent-Class-BaseFcPPO5IoModule.O_PZD6",
+    "","","",""}
+  },
+  {"ABB:Class-ABB_ACS800_1", 
+   {"InIdPar", "InIndPar", "InValuePar", "ActSpeed", "ActTorque", 
+    "ActCurrent", "StatusWordSW", "FaultWord1", "FaultWord2", "Di6_1",
+    "StatusWordSW3", "AlarmWord5", "OutIdPar", "OutIndPar", "OutValuePar",
+    "ControlWordCW", "RefSpeed", "", "", "",
+    "","","","",""},
+   {"$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_ID",
+    "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_IND",
+    "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_VALUE",
+    "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_ACT",
+    "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD4",
+    "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD3",
+    "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_SW",
+    "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD5",
+    "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD6",
+    "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD7",
+    "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD9",
+    "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.I_PZD8",
+    "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_ID",
+    "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_IND",
+    "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_VALUE",
+    "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_CW",
+    "$IoConnect:ABB-Class-ABB_ACS_PPO5_IoModule.O_REF","","","", 
+    "","","","",""}
+  },
+  {"ABB:Class-ABB_ACC800", 
+   {"InIdPar", "InIndPar", "InValuePar", "StatusWordSW", "ActSpeed", 
+    "ActTorque", "SpeedRef3", "PosActPPU", "ActCurrent", "FaultWord1", 
+    "FaultWord2", "AlarmWord", "MotorVolt", "OutIdPar", "OutIndPar", 
+    "OutValuePar", "ControlWordCW", "RefSpeed", "TorqRef", "RampRate",
+    "SpeedCorr", "PosPrePPU", "AuxComWord", "LoadMeasRef", "ParValue1"},
+   {"$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_ID",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_IND",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_VALUE",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_SW",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_ACT",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_PZD3",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_PZD4",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_PZD5",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_PZD6",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_PZD7",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_PZD8",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_PZD9",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.I_PZD10",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_ID",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_IND",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_VALUE",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_CW",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_REF",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_PZD3",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_PZD4",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_PZD5",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_PZD6",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_PZD7",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_PZD8",
+    "$IoConnect:ABB-Class-ABB_ACC_PPO5_IoModule.O_PZD10"}
+  }
+};
 
 
 
@@ -91,6 +152,7 @@ static void usage()
 {
   printf( "\nUsage: wb_upgrade -v 'volumename'\n\n");
 }
+
 
 #if 0
 static void process( wb_session& session, wb_object& o)
@@ -180,15 +242,15 @@ int main( int argc, char *argv[])
 #endif
 
 
-  // Replace alarmtexts with tailing ", "
+  // Replace Pb modules $IoConnect references with Io modules references
   pwr_tAttrRef aref;
-  pwr_tString80 text;
   pwr_tCid cid;
-  
-  for ( unsigned int i = 0; i < sizeof(upg_alatext)/sizeof(upg_alatext[0]); i++) {
-    wb_object co = session.object( upg_alatext[i].cname);
+  pwr_tAttrRef value_aref;
+    
+  for ( unsigned int i = 0; i < sizeof(upg_sigchancon)/sizeof(upg_sigchancon[0]); i++) {
+    wb_object co = session.object( upg_sigchancon[i].cname);
     if ( !co) {
-      printf( "** Class not loaded: %s\n", upg_alatext[i].cname);
+      printf( "** Class not loaded: %s\n", upg_sigchancon[i].cname);
       continue;
     }
     
@@ -198,38 +260,54 @@ int main( int argc, char *argv[])
 	  session.oddSts();
 	  session.nextAref( cid, &aref, &aref)) {
 
-      for ( unsigned int j = 0; j < sizeof(upg_alatext[0].attr)/sizeof(upg_alatext[0].attr[0]); j++) {
-	if ( strcmp( upg_alatext[i].attr[j], "") == 0)
+
+      wb_attribute a = session.attribute(&aref);
+      if (!a) continue;
+
+
+      wb_attribute a_ioconnect( a, 0, "IoConnect");
+      if ( a_ioconnect.evenSts())
+	continue;
+
+      a_ioconnect.value( &value_aref);
+      if ( a_ioconnect.evenSts())
+	continue;
+
+      wb_attribute a_pbmodule = session.attribute( &value_aref);
+      if ( a_pbmodule.oddSts()) {
+	wb_attribute a_iomodule( a_pbmodule, 0, "Io");
+	if ( a_iomodule.oddSts()) {
+	  value_aref = a_iomodule.aref();
+	  session.writeAttribute( a_ioconnect, &value_aref, sizeof( value_aref));
+	  printf( "Set %s -> %s\n", a_iomodule.longName().c_str(), a_ioconnect.longName().c_str());
+	}
+      }
+
+      for ( unsigned int j = 0; j < sizeof(upg_sigchancon[0].attr)/sizeof(upg_sigchancon[0].attr[0]); j++) {
+	if ( strcmp( upg_sigchancon[i].attr[j], "") == 0)
 	  break;
 
 	try {
-	  wb_attribute a = session.attribute(&aref);
-	  if (!a) continue;
-
-	  wb_attribute a_attr( a, 0, upg_alatext[i].attr[j]);
+	  wb_attribute a_attr2( a, 0, upg_sigchancon[i].attr[j]);
+	  if ( a_attr2.evenSts())
+	    continue;
+    
+	  wb_attribute a_attr( a_attr2, 0, "SigChanCon");
 	  if ( a_attr.evenSts())
 	    continue;
-	  
-	  a_attr.value( text);
+    
+	  a_attr.value( &value_aref);
 	  if ( a_attr.evenSts())
 	    continue;
 
-	  bool mod = false;
-	  if ( text[strlen(text)-2] == ',' && text[strlen(text)-1] == ' ') {
-	    text[strlen(text)-2] = 0;
-	    mod = true;
-	  }
-	  else if ( text[strlen(text)-3] == ',' && text[strlen(text)-2] == ' '&& text[strlen(text)-1] == ' ') {
-	    text[strlen(text)-3] = 0;
-	    mod = true;
-	  }
-	  else if ( strlen(text) == 0 && strcmp( upg_alatext[i].attr[j], "AlarmConnection") == 0) {
-	    strcpy( text, "No connection");
-	  }
+	  if ( value_aref.Objid.vid == cdh_cIoConnectVolume) {
+	    wb_attribute a_value = session.attribute( upg_sigchancon[i].value[j]);
+	    value_aref = a_value.aref();
+	    if ( a_value.evenSts())
+	      continue;
 
-	  if ( mod) {
-	    session.writeAttribute( a_attr, text, sizeof( text));
-	    printf( "Updating text \"%s\"\n", text);
+	    session.writeAttribute( a_attr, &value_aref, sizeof( value_aref));
+	    // printf( "Updating SigChanCon \"%s\" %s\n", a_attr.longName().c_str(), upg_sigchancon[i].value[j]);
 	  }
 	}
 	catch ( wb_error& e) {
