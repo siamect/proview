@@ -149,6 +149,7 @@ class GsdmlAttrNav {
     int			viewio;
     unsigned int 	time_ratio;
     unsigned int 	send_clock;
+    unsigned int 	phase;
     
     GsdmlAttrNav(
 	void *xn_parent_ctx,

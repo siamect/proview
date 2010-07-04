@@ -51,12 +51,13 @@ class GsdmlDataRecord {
 
 class GsdmlIOCRData {
  public:
-  GsdmlIOCRData() : type(0), properties(0), send_clock_factor(0), api(0) {}
+  GsdmlIOCRData() : type(0), properties(0), send_clock_factor(0), phase(0), api(0) {}
   
   unsigned short type;
   unsigned int properties;
   unsigned short send_clock_factor;
   unsigned short reduction_ratio;
+  unsigned int phase;
   unsigned int api;
 
   int print( ofstream& fp);

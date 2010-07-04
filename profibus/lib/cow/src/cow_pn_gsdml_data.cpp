@@ -113,6 +113,7 @@ int GsdmlIOCRData::print( ofstream& fp)
     "    Properties=\"" << properties << "\"" << endl <<
     "    SendClockFactor=\"" << send_clock_factor << "\"" << endl <<
     "    ReductionRatio=\"" << reduction_ratio << "\"" << endl <<
+    "    Phase=\"" << phase << "\"" << endl <<
     "    API=\"" << api << "\" />" << endl;
 
   return 1;
@@ -471,6 +472,8 @@ int GsdmlDataReader::tag_attribute( const char *name, const char *value)
       sscanf( value, "%hu", &iod->send_clock_factor);
     else if ( strcmp( name, "ReductionRatio") == 0)
       sscanf( value, "%hu", &iod->reduction_ratio);
+    else if ( strcmp( name, "Phase") == 0)
+      sscanf( value, "%u", &iod->phase);
     else if ( strcmp( name, "API") == 0)
       sscanf( value, "%u", &iod->api);
     break;

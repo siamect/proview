@@ -56,6 +56,7 @@
 #include "xtt_op.h"
 #include "xtt_audio.h"
 #include "xtt_trace.h"
+#include "xtt_log.h"
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
@@ -3545,6 +3546,92 @@ ApplListElem::ApplListElem( applist_eType al_type, void *al_ctx,
     strcpy( instance, al_instance);
   else
     strcpy( instance, "");
+
+  log_new();
+}
+
+void ApplListElem::log_new() 
+{
+  switch( type) {
+  case applist_eType_Graph: {
+    pwr_tCmd cmd;
+    if ( strcmp( instance, "") == 0)
+      sprintf( cmd, "open graph \"%s\"", name);
+    else
+      sprintf( cmd, "open graph \"%s\"/inst=%s", name, instance);
+    XttLog::dlog( xttlog_eCategory_ApplNew, cmd, 0, 0);	
+    break;
+  }
+  case applist_eType_Trend: {
+    pwr_tCmd cmd;
+    pwr_tStatus sts;
+    pwr_tAName aname;
+
+    sts = gdh_AttrrefToName( &aref, aname, sizeof(aname), cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return;
+
+    snprintf( cmd, sizeof(cmd), "open trend %s", aname);
+    XttLog::dlog( xttlog_eCategory_ApplNew, cmd, 0, 0);	
+    break;
+  }
+  case applist_eType_Trace: {
+    pwr_tCmd cmd;
+    pwr_tStatus sts;
+    pwr_tAName aname;
+
+    sts = gdh_AttrrefToName( &aref, aname, sizeof(aname), cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return;
+
+    snprintf( cmd, sizeof(cmd), "open trace %s", aname);
+    XttLog::dlog( xttlog_eCategory_ApplNew, cmd, 0, 0);	
+    break;
+  }
+  case applist_eType_Attr:
+    break;
+  default: ;
+  }
+}
+
+void ApplListElem::log_delete() 
+{
+  switch( type) {
+  case applist_eType_Graph: {
+    pwr_tCmd cmd;
+    if ( strcmp( instance, "") == 0)
+      sprintf( cmd, "close graph \"%s\"", name);
+    else
+      sprintf( cmd, "close graph \"%s\"/inst=%s", name, instance);
+    XttLog::dlog( xttlog_eCategory_ApplDelete, cmd, 0, 0);	
+    break;
+  }
+  case applist_eType_Trend: {
+    pwr_tCmd cmd;
+    pwr_tStatus sts;
+    pwr_tAName aname;
+
+    sts = gdh_AttrrefToName( &aref, aname, sizeof(aname), cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return;
+
+    snprintf( cmd, sizeof(cmd), "close trend %s", aname);
+    XttLog::dlog( xttlog_eCategory_ApplDelete, cmd, 0, 0);	
+    break;
+  }
+  case applist_eType_Trace: {
+    pwr_tCmd cmd;
+    pwr_tStatus sts;
+    pwr_tAName aname;
+
+    sts = gdh_AttrrefToName( &aref, aname, sizeof(aname), cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return;
+
+    snprintf( cmd, sizeof(cmd), "close trace %s", aname);
+    XttLog::dlog( xttlog_eCategory_ApplDelete, cmd, 0, 0);	
+    break;
+  }
+  case applist_eType_Attr:
+    break;
+  default: ;
+  }
 }
 
 void ApplList::insert( applist_eType type, void *ctx, 
@@ -3576,6 +3663,7 @@ void ApplList::remove( void *ctx)
         root = elem->next;
       else
         prev->next = elem->next;    
+
       delete elem;
       return;
     }

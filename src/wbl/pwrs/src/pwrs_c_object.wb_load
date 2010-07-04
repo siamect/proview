@@ -1305,6 +1305,12 @@ SObject pwrs:Class
 	  Attr FilterName = "$Object-CollectFilter"
 	EndBody
       EndObject
+      Object Object $MenuRef
+	Body SysBody
+	  Attr ButtonName = "Object"
+	  Attr RefAttribute = "_SelfObject"
+	EndBody
+      EndObject
     EndObject
     Object RtXttCrossref $RtMenu
       Object CrrOpenTrace $MenuButton

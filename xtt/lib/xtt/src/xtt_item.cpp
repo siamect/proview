@@ -480,7 +480,8 @@ int ItemBaseObject::open_crossref( XNavBrow *brow, double x, double y)
   int		crossref_exist;
   int		sts;
   pwr_tClassId	classid;
-  XNav *xnav;
+  XNav 		*xnav;
+  char		file[20] = "*";
 
   if ( brow->usertype == brow_eUserType_XNav)
     xnav = (XNav *) brow->userdata;
@@ -534,10 +535,10 @@ int ItemBaseObject::open_crossref( XNavBrow *brow, double x, double y)
       case pwr_cClass_Ii:
       case pwr_cClass_Io:
       case pwr_cClass_Co:
-        sts = xnav_crr_signal( brow, NULL, name, node);
+        sts = xnav_crr_signal( brow, file, name, node);
         break;
       default:
-        sts = xnav_crr_object( brow, NULL, name, node);
+        sts = xnav_crr_object( brow, file, name, node);
     }
     if ( xnav && sts == NAV__OBJECTNOTFOUND)
       xnav->message('E', "Object not found in crossreferens file");
@@ -1106,6 +1107,7 @@ int ItemAttrObject::open_crossref( XNavBrow *brow, double x, double y)
   int		sts;
   XNav 		*xnav;
   char		aname[240];
+  char		file[20] = "*";
 
   if ( brow->usertype == brow_eUserType_XNav)
     xnav = (XNav *) brow->userdata;
@@ -1159,10 +1161,10 @@ int ItemAttrObject::open_crossref( XNavBrow *brow, double x, double y)
       case pwr_cClass_Ii:
       case pwr_cClass_Io:
       case pwr_cClass_Co:
-        sts = xnav_crr_signal( brow, NULL, aname, node);
+        sts = xnav_crr_signal( brow, file, aname, node);
         break;
       default:
-        sts = xnav_crr_object( brow, NULL, aname, node);
+        sts = xnav_crr_object( brow, file, aname, node);
     }
     if ( xnav && sts == NAV__OBJECTNOTFOUND)
       xnav->message('E', "Object not found in crossreferens file");
@@ -1882,7 +1884,8 @@ int ItemChannel::open_crossref( XNavBrow *brow, double x, double y)
   int		crossref_exist;
   int		sts;
   pwr_tOName   	signal_name;
-  XNav *xnav;
+  XNav 		*xnav;
+  char		file[20] = "*";
 
   if ( brow->usertype == brow_eUserType_XNav)
     xnav = (XNav *) brow->userdata;
@@ -1919,7 +1922,7 @@ int ItemChannel::open_crossref( XNavBrow *brow, double x, double y)
     sts = gdh_AttrrefToName( &signal_aref, signal_name, sizeof(signal_name), 
 		cdh_mNName);
 
-    sts = xnav_crr_signal( brow, NULL, signal_name, node);
+    sts = xnav_crr_signal( brow, file, signal_name, node);
 
     if ( sts == NAV__OBJECTNOTFOUND && xnav)
       xnav->message('E', "Object not found in crossreferens file");

@@ -90,6 +90,9 @@
 #define STS_K_SEVERE 4        	/**< SEVERE ERROR                     */
 
 
+static void (*gdh_log_cb)(char *, void *, unsigned int) = 0;
+
+
 /**
  * @brief This routine fetches the minimum, not visible alarmlevel for a 
  * certain object. 
@@ -2538,6 +2541,8 @@ gdh_SetObjectInfo (
       cvolc_SetObjectInfo(&sts, np, arp, ccp, rarp, ridx, ap, bufp, bufsize);
   }
   
+  if ( gdh_log_cb && ODD(sts))
+    gdh_log_cb( name, bufp, bufsize);
 
   if (ccpLocked) {
     gdb_Lock;
@@ -4937,3 +4942,7 @@ pwr_tStatus gdh_GetSecurityInfo(
   return gdh_GetObjectInfoAttrref( &aref, security, sizeof(*security));
 }
 
+void gdh_RegisterLogFunction( void (*func)(char *, void *, unsigned int))
+{
+  gdh_log_cb = func;
+}

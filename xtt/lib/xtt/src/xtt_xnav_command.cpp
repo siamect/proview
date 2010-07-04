@@ -76,6 +76,7 @@
 #include "xtt_clog.h"
 #include "xtt_hist.h"
 #include "xtt_fileview.h"
+#include "xtt_log.h"
 
 class xnav_file {
 public:
@@ -212,6 +213,8 @@ static int	xnav_write_func(       	void		*client_data,
 static int	xnav_read_func(       	void		*client_data,
 					void		*client_flag);
 static int	xnav_wait_func(       	void		*client_data,
+					void		*client_flag);
+static int	xnav_oplog_func(       	void		*client_data,
 					void		*client_flag);
 
 dcli_tCmdTable	xnav_command_table[] = {
@@ -380,6 +383,11 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"WAIT",
 			&xnav_wait_func,
 			{ "dcli_arg1", "/TIME", ""}
+		},
+		{
+			"OPLOG",
+			&xnav_oplog_func,
+			{ "dcli_arg1", "/FILE", "/SPEED", "/PID", ""}
 		},
 		{"",}};
 
@@ -2999,9 +3007,29 @@ static int	xnav_open_func(	void		*client_data,
       }
     }
     else {
-      trend = xnav->xtttrend_new( title_str, aref_vect, 0, &sts);
-      if ( ODD(sts)) 
-	trend->help_cb = xnav_trend_help_cb;
+      if ( names == 1) {
+	if ( xnav->appl.find( applist_eType_Trend, &aref_vect[0], (void **) &trend)) {
+	  trend->pop();
+	}
+	else {
+	  trend = xnav->xtttrend_new( title_str, aref_vect, 0, &sts);
+	  if ( EVEN(sts))
+	    xnav->message('E',"Error in trend configuration");
+	  else {
+	    trend->close_cb = xnav_trend_close_cb;
+	    trend->help_cb = xnav_trend_help_cb;
+	    xnav->appl.insert( applist_eType_Trend, (void *)trend, &aref_vect[0], "",
+			       NULL);
+	  }
+	}
+      }
+      else {
+	trend = xnav->xtttrend_new( title_str, aref_vect, 0, &sts);
+	if ( ODD(sts)) {
+	  trend->help_cb = xnav_trend_help_cb;
+	  trend->help_cb = xnav_trend_help_cb;
+	}
+      }
     }
   }
   else if ( cdh_NoCaseStrncmp( arg1_str, "SHISTORY", strlen( arg1_str)) == 0)
@@ -3643,7 +3671,7 @@ static int	xnav_close_func(	void		*client_data,
 
     pwr_tAName name_str;
     char *name_ptr;
-    pwr_tObjid objid;
+    pwr_tAttrRef aref;
     int sts;
     int plotgroup_found = 0;
     pwr_tClassId classid;
@@ -3689,16 +3717,17 @@ static int	xnav_close_func(	void		*client_data,
     else
       strcpy( trend_name, name_str);
 
-    sts = gdh_NameToObjid( trend_name, &objid);
+    sts = gdh_NameToAttrref( pwr_cNObjid, trend_name, &aref);
     if (EVEN(sts)) {
       xnav->message('E', "Object not found");
       return XNAV__HOLDCOMMAND;
     }
-    sts = gdh_GetObjectClass( objid, &classid);
+    sts = gdh_GetAttrRefTid( &aref, &classid);
     if (EVEN(sts)) return sts;
 
     switch ( classid) {
       case pwr_cClass_PlotGroup:
+      case pwr_cClass_DsTrend:
         plotgroup_found = 1;
         break;
       default:
@@ -3707,7 +3736,7 @@ static int	xnav_close_func(	void		*client_data,
     }
 
     if ( plotgroup_found) {
-      if ( xnav->appl.find( applist_eType_Trend, objid, (void **) &trend)) {
+      if ( xnav->appl.find( applist_eType_Trend, &aref, (void **) &trend)) {
         xnav->appl.remove( (void *)trend);
         delete trend;
       }
@@ -4504,10 +4533,18 @@ static int	xnav_crossref_func(	void		*client_data,
       case pwr_cClass_Ii:
       case pwr_cClass_Io:
       case pwr_cClass_Co:
+	if ( !file_ptr) {
+	  strcpy( file_str, "*");
+	  file_ptr = file_str;
+	}
         sts = xnav_crr_signal( xnav->brow, file_ptr, name_ptr, NULL);
         break;
       default:
         /* Not a signal */
+	if ( !file_ptr) {
+	  strcpy( file_str, "*");
+	  file_ptr = file_str;
+	}
         sts = xnav_crr_object( xnav->brow, file_ptr, name_ptr, NULL);
     }
     if ( EVEN(sts))
@@ -5360,6 +5397,78 @@ static int	xnav_wait_func(void		*client_data,
   return XNAV__SUCCESS;	
 }
 
+static int	xnav_oplog_func(void		*client_data,
+			       void		*client_flag)
+{
+  XNav *xnav = (XNav *)client_data;
+
+  char	arg1_str[80];
+  int	arg1_sts;
+
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+
+  if ( cdh_NoCaseStrncmp( arg1_str, "START", strlen( arg1_str)) == 0) {
+    pwr_tFileName file_str;
+
+    if ( EVEN( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
+      strcpy( file_str, xttlog_cLogFile);
+    }
+
+    XttLog *log = new XttLog( file_str);
+    XttLog::delete_default();
+    log->set_default();
+
+    xnav->message('I', "Operator logging started");    
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "STOP", strlen( arg1_str)) == 0) {
+    XttLog::delete_default();
+
+    xnav->message('I', "Operator logging stopped");    
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "PLAY", strlen( arg1_str)) == 0) {
+    pwr_tStatus sts;
+    pwr_tFileName file_str;
+    int num;
+    char speed_str[40];
+    double speed;
+    char pid_str[40];
+    int pid;
+
+    if ( EVEN( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
+      strcpy( file_str, xttlog_cLogFile);
+    }
+
+    if ( ODD( dcli_get_qualifier( "/SPEED", speed_str, sizeof(speed_str)))) {
+      num = sscanf( speed_str, "%lf", &speed);
+      if ( num != 1) {
+	xnav->message('E', "Speed syntax error");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else
+      speed = 1;
+
+    if ( ODD( dcli_get_qualifier( "/PID", pid_str, sizeof(pid_str)))) {
+      num = sscanf( pid_str, "%d", &pid);
+      if ( num != 1) {
+	xnav->message('E', "Pid syntax error");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else
+      pid = 0;
+
+    sts = XttLog::play( xnav, file_str, speed, pid);
+    if ( EVEN(sts))
+      xnav->message(' ', XNav::get_message(sts));
+  }
+  else {
+    xnav->message('E',"Syntax error");
+    return XNAV__HOLDCOMMAND;
+  }
+  return XNAV__SUCCESS;	
+}
+
 int XNav::show_database()
 {
   int		sts;
@@ -5435,6 +5544,8 @@ int XNav::command( char* input_str)
   // dcli_toupper( input_str, input_str);
   sts = dcli_replace_symbol( input_str, command, sizeof(command));
   if ( EVEN(sts)) return sts;
+
+  XttLog::dlog( xttlog_eCategory_Command, command, 0, 0);
 
   sts = dcli_cli( (dcli_tCmdTable *)&xnav_command_table, command, (void *) this, 0);
   if ( sts == DCLI__COM_NODEF)
