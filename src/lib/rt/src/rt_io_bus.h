@@ -34,6 +34,11 @@
 #include "pwr_baseclasses.h"
 #endif
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #ifndef rt_io_supervise_h
 #include "rt_io_supervise.h"
 #endif
@@ -77,5 +82,9 @@ void io_card_write(
   pwr_tByteOrderingEnum  byte_order,
   pwr_tFloatRepEnum      float_rep
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

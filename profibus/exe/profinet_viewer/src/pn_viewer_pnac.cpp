@@ -23,10 +23,104 @@
 
 #include "co_error.h"
 #include "pn_viewer_pnac.h"
+#include "profinet.h"
+#include "pnak.h"
+#include "sys/socket.h"
+#include "sys/ioctl.h"
+#include "net/if.h"
+#include "netinet/in.h"
+#include "arpa/inet.h"
+
+#ifndef rt_pn_iface_h
+# include "rt_pn_iface.h"
+#endif
+
+
 
 PnViewerPNAC::PnViewerPNAC( pwr_tStatus *sts)
 {
-  // Init PNAC
+  int s;
+  struct ifreq ifr = {};
+  PnDeviceData     *pn_dev_data;
+  T_PNAK_EVENT_SET_MODE        pMode;
+  T_PNAK_WAIT_OBJECT           wait_object;
+
+  /* Init PNAC */
+
+  local = new io_sAgentLocal;
+  pnak_init();
+  *sts = pnak_start_profistack(0, PNAK_CONTROLLER_MODE);
+
+  if (*sts != PNAK_OK) {
+    printf("Starting profistack returned with error code\n");
+    exit(0);
+  }
+
+  /* Get configs for device */
+
+  s = socket(AF_INET, SOCK_DGRAM, 0);
+  strncpy(ifr.ifr_name, "eth0", sizeof(ifr.ifr_name));
+  if (ioctl(s, SIOCGIFADDR, &ifr) >= 0) {
+    strcpy(dev_data.ip_address, inet_ntoa(((struct sockaddr_in *) &ifr.ifr_addr)->sin_addr));
+  }
+  if (ioctl(s, SIOCGIFNETMASK, &ifr) >= 0) {
+    strcpy(dev_data.subnet_mask, inet_ntoa(((struct sockaddr_in *) &ifr.ifr_netmask)->sin_addr));
+  }
+
+  sscanf(dev_data.ip_address, "%hhu.%hhu.%hhu.%hhu", &local->ipaddress[3], &local->ipaddress[2], &local->ipaddress[1], &local->ipaddress[0]) ;
+  sscanf(dev_data.subnet_mask, "%hhu.%hhu.%hhu.%hhu", &local->subnetmask[3], &local->subnetmask[2], &local->subnetmask[1], &local->subnetmask[0]) ;
+
+
+  strcpy(dev_data.device_name, "dumle");
+  dev_data.device_num = PN_DEVICE_REFERENCE_THIS_STATION;
+  strcpy(dev_data.device_text, "controller");
+  dev_data.vendor_id = 279; // Softing vendor id
+  dev_data.device_id = 0;
+  strcpy(dev_data.version, "1.0");
+  dev_data.byte_order = 0;
+
+  pn_dev_data = new PnDeviceData;
+
+  pn_dev_data->device_ref = PN_DEVICE_REFERENCE_THIS_STATION;
+  local->device_data.push_back(pn_dev_data);
+
+  /* Download config */
+
+  pack_download_req(&local->service_req_res, &dev_data, pn_dev_data->device_ref);
+
+  *sts = pnak_send_service_req_res(0, &local->service_req_res);
+
+  if (*sts == PNAK_OK) {
+    *sts = handle_service_con(local, 0);
+
+    if (*sts != PNAK_OK) { 
+	/* Loop through devices and calculate offset for io */
+    }
+  }
+
+  /* Set identification */
+
+  pack_set_identification_req(&local->service_req_res);
+
+  *sts = pnak_send_service_req_res(0, &local->service_req_res);
+
+  if (*sts == PNAK_OK) {
+    *sts = handle_service_con(local, 0);
+  }
+
+  pMode.Mode = PNAK_MODE_ONLINE;
+
+  *sts = pnak_set_mode(0, &pMode);
+
+  wait_object = PNAK_WAIT_OBJECT_STATE_CHANGED;
+
+  *sts = pnak_wait_for_multiple_objects(0, &wait_object, PNAK_INFINITE_TIMEOUT);
+
+  if (*sts != PNAK_OK) {
+    printf("Setting state failed, sts: %d\r\n", *sts);
+    return;
+  }
+
   *sts = 1;
 }
 
@@ -38,109 +132,102 @@ PnViewerPNAC::~PnViewerPNAC()
 
 void PnViewerPNAC::fetch_devices( vector<PnDevice>& dev_vect)
 {
-  PnDevice d1;
-  strcpy( d1.devname, "D1");
-  d1.ipaddress[3] = 168;
-  d1.ipaddress[2] = 192;
-  d1.ipaddress[1] = 101;
-  d1.ipaddress[0] = 56;
-  d1.macaddress[0] = 255;
-  d1.macaddress[1] = 255;
-  d1.macaddress[2] = 255;
-  d1.macaddress[3] = 36;
-  d1.macaddress[4] = 9;
-  d1.macaddress[5] = 22;
-  d1.vendorid = 42;
-  d1.deviceid = 769;
-  dev_vect.push_back(d1);
+  PnDevice                     device;
+  unsigned int                 ii;
+  int                          sts;
 
-  PnDevice d2;
-  strcpy( d2.devname, "D2");
-  d2.ipaddress[3] = 168;
-  d2.ipaddress[2] = 192;
-  d2.ipaddress[1] = 101;
-  d2.ipaddress[0] = 57;
-  d2.macaddress[0] = 255;
-  d2.macaddress[1] = 255;
-  d2.macaddress[2] = 255;
-  d2.macaddress[3] = 36;
-  d2.macaddress[4] = 9;
-  d2.macaddress[5] = 23;
-  d2.vendorid = 42;
-  d2.deviceid = 769;
-  dev_vect.push_back(d2);
+  while (1) {
 
-  PnDevice d3;
-  strcpy( d3.devname, "D3");
-  d3.ipaddress[3] = 168;
-  d3.ipaddress[2] = 192;
-  d3.ipaddress[1] = 101;
-  d3.ipaddress[0] = 58;
-  d3.macaddress[0] = 255;
-  d3.macaddress[1] = 255;
-  d3.macaddress[2] = 255;
-  d3.macaddress[3] = 36;
-  d3.macaddress[4] = 9;
-  d3.macaddress[5] = 24;
-  d3.vendorid = 42;
-  d3.deviceid = 769;
-  dev_vect.push_back(d3);
+    for (ii = 0; ii < local->dev_info.size(); ii++) {
+      delete local->dev_info[ii];
+    }
 
-  PnDevice d4;
-  strcpy( d4.devname, "D4");
-  d4.ipaddress[3] = 168;
-  d4.ipaddress[2] = 192;
-  d4.ipaddress[1] = 101;
-  d4.ipaddress[0] = 59;
-  d4.macaddress[0] = 255;
-  d4.macaddress[1] = 255;
-  d4.macaddress[2] = 255;
-  d4.macaddress[3] = 36;
-  d4.macaddress[4] = 9;
-  d4.macaddress[5] = 25;
-  d4.vendorid = 42;
-  d4.deviceid = 769;
-  dev_vect.push_back(d4);
+    local->dev_info.clear();
 
-  PnDevice d5;
-  strcpy( d5.devname, "D5");
-  d5.ipaddress[3] = 168;
-  d5.ipaddress[2] = 192;
-  d5.ipaddress[1] = 101;
-  d5.ipaddress[0] = 60;
-  d5.macaddress[0] = 255;
-  d5.macaddress[1] = 255;
-  d5.macaddress[2] = 255;
-  d5.macaddress[3] = 36;
-  d5.macaddress[4] = 9;
-  d5.macaddress[5] = 26;
-  d5.vendorid = 266;
-  d5.deviceid = 1;
-  dev_vect.push_back(d5);
+    pack_get_los_req(&local->service_req_res);
+  
+    sts = pnak_send_service_req_res(0, &local->service_req_res);
+  
+    if (sts == PNAK_OK) {
+      sts = handle_service_con(local, 0);
+      if (sts == PNAK_OK) {
+	if (local->dev_info.size() > 0) {
+	  for (ii = 0; ii < local->dev_info.size(); ii++) {
+	    device.ipaddress[0] = local->dev_info[ii]->ipaddress[0];
+	    device.ipaddress[1] = local->dev_info[ii]->ipaddress[1];
+	    device.ipaddress[2] = local->dev_info[ii]->ipaddress[2];
+	    device.ipaddress[3] = local->dev_info[ii]->ipaddress[3];
+	    device.macaddress[0] = local->dev_info[ii]->macaddress[0];
+	    device.macaddress[1] = local->dev_info[ii]->macaddress[1];
+	    device.macaddress[2] = local->dev_info[ii]->macaddress[2];
+	    device.macaddress[3] = local->dev_info[ii]->macaddress[3];
+	    device.macaddress[4] = local->dev_info[ii]->macaddress[4];
+	    device.macaddress[5] = local->dev_info[ii]->macaddress[5];
+	    strncpy(device.devname, local->dev_info[ii]->devname, sizeof(device.devname));
+	    device.vendorid = local->dev_info[ii]->vendorid;
+	    device.deviceid = local->dev_info[ii]->deviceid;
+	    dev_vect.push_back(device);
+	  }
+	  break;
+	} else continue;
+      } 
+    }
+  }
 
-  PnDevice d6;
-  strcpy( d6.devname, "D6");
-  d6.ipaddress[3] = 168;
-  d6.ipaddress[2] = 192;
-  d6.ipaddress[1] = 100;
-  d6.ipaddress[0] = 55;
-  d6.macaddress[0] = 200;
-  d6.macaddress[1] = 1;
-  d6.macaddress[2] = 0;
-  d6.macaddress[3] = 201;
-  d6.macaddress[4] = 202;
-  d6.macaddress[5] = 203;
-  d6.vendorid = 285;
-  d6.deviceid = 750;
-  dev_vect.push_back(d6);
+  /*  pMode.Mode = PNAK_MODE_OFFLINE;
 
-
+  sts = pnak_set_mode(0, &pMode);
+  
+  wait_object = PNAK_WAIT_OBJECT_STATE_CHANGED;
+  
+  sts = pnak_wait_for_multiple_objects(0, &wait_object, PNAK_INFINITE_TIMEOUT);
+  
+  if (sts != PNAK_OK) {
+  printf("Setting state failed, sts: %d\r\n", sts);
+  return;
+  } */
+  
   // if ( ...error... ) throw co_error_str( "Somethings is wrong...");
 }
  
 void PnViewerPNAC::set_device_properties( unsigned char *macaddress, unsigned char *ipaddress,
 					  char *devname)
 {
-  printf( "Set %s %hhu.%hhu.%hhu.%hhu\n", devname, ipaddress[3],
-	  ipaddress[2], ipaddress[1], ipaddress[0]);
+  PnDevice                     device;
+  int                          sts;
+  PnDeviceInfo                 dev_info;
+
+  /* Set name and ip-address of device */
+
+  dev_info.ipaddress[0] = ipaddress[0];
+  dev_info.ipaddress[1] = ipaddress[1];
+  dev_info.ipaddress[2] = ipaddress[2];
+  dev_info.ipaddress[3] = ipaddress[3];
+  dev_info.subnetmask[0] = local->subnetmask[0];
+  dev_info.subnetmask[1] = local->subnetmask[1];
+  dev_info.subnetmask[2] = local->subnetmask[2];
+  dev_info.subnetmask[3] = local->subnetmask[3];
+  dev_info.macaddress[0] = macaddress[0];
+  dev_info.macaddress[1] = macaddress[1];
+  dev_info.macaddress[2] = macaddress[2];
+  dev_info.macaddress[3] = macaddress[3];
+  dev_info.macaddress[4] = macaddress[4];
+  dev_info.macaddress[5] = macaddress[5];
+  strncpy(dev_info.devname, devname, sizeof(dev_info.devname));
+
+
+  pack_set_device_name_req(&local->service_req_res, &dev_info);
+  sts = pnak_send_service_req_res(0, &local->service_req_res);
+
+  if (sts == PNAK_OK) {
+    sts = handle_service_con(local, 0);
+  }
+
+  pack_set_ip_settings_req(&local->service_req_res, &dev_info);
+  sts = pnak_send_service_req_res(0, &local->service_req_res);
+      
+  if (sts == PNAK_OK) {
+    sts = handle_service_con(local, 0);
+  }
+
 }

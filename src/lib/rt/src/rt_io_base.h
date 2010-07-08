@@ -34,6 +34,11 @@
 #include "pwr_baseclasses.h"
 #endif
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 typedef struct io_sCtx *io_tCtx;
 
 #ifndef rt_io_supervise_h
@@ -273,5 +278,9 @@ int io_CheckClassIoType(
 );
 
 void io_methods_print();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
