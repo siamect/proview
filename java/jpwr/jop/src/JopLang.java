@@ -347,7 +347,7 @@ public class JopLang {
 	    if ( i == 0 && btree_en_us != null)
 		continue;
 	
-	    if ( root != null && root instanceof JopApplet) {
+	    if ( root != null && root instanceof JApplet) {
 	      try {
 		URL current = ((JApplet) root).getCodeBase();
 		String current_str = current.toString();
