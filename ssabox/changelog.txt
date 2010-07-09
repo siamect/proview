@@ -4,3 +4,4 @@
 070518 rk   rt         Added i/o swap-method to avoid stall during warm restart.
 080226 cs   rt         Read method for co-card changed with double reading of high word (24-bit only).
 080926 cs   rt         Bugfix for do cards. 16 channels do card couldn't be handled.
+100630 cs   rt         PSS9000 card MIO3102up added.
