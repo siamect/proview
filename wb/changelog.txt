@@ -155,3 +155,8 @@
 100118 cs  plc       Toggle button in plc editor for feedback connections.
 100120 cs  wb        Functionality to view configuration status added.
 100121 cs  plc       Toolbar buttons in plc editor to create texts and documents and to redraw.
+100417 cs  wb        Distribution to other users than pwrp.
+100420 cs  wb        Custom build configuration object and generation of custom_build.sh file.
+100520     plc       Bugfix in plc editor, channels wasn't viewed in subvolumes.
+100617 cs  script    Wb script function GetAttribute didn't work for attribute objects.
+100618 cs  wb        Crossreferences in LibHier not inserted into crossreferece list.  

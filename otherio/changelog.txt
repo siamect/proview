@@ -7,3 +7,8 @@
 090301 cs  usbio     Bugfix for Ai on port B. If Ai and Di/Do were mixed the Ai didn't work.
 091208 cs  modbus    Modbus TCP Server implemented.
 100316 cs  modbus    ScanInterval added to modbus slave object.
+100417 cs  gpio      IO methods and objects for GPIO.
+100530 cs  -         Added support for Velleman K8055 USB experiment board.
+100606 cs  -         IO methods and objects for temperature sensor Maxim DS18B20 added.
+100621 cs  modbus    Modbus TCP server, correction for WriteSingleCoil. If value is not 0 or 0x00FF, no value shoud be set.
+100701 cs  modbus    Modbus TCP bugfix in scan interval.

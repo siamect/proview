@@ -15,9 +15,9 @@ local_java_sources := \
 	JopUtilityIfc.java \
 	JopUtility.java \
 	JopSession.java \
+	JopLang.java \
 	JopMethods.java \
 	JopMethodsMenu.java \
-	JopLang.java \
 	JopConfirm.java \
 	JopConfirmDialog.java \
 	JopFrame.java \
