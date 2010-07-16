@@ -34,15 +34,15 @@
 
 
 <hr>
-2009-01-27
-Version 4.6.0	
+2010-07-16
+Version 4.7.0	
 <hr>
 </topic>
 
 <topic> __DocumentInfoPage
 
 
-Copyright (C) 2008 SSAB Oxel?sund AB
+Copyright (C) 2010 SSAB Oxel?sund AB
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2
@@ -50,8 +50,6 @@ or any later version published by the Free Software Foundation;
 with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
 Texts.
 
-
-First Edition Mars 2005
 
 
 
@@ -506,7 +504,7 @@ The traffic lights should be able to operate in two different modes:
   - Flash: The traffic lights are flashing yellow.
 
 <image> dg_fig1.gif
-<b>Traffic lights in an Intersection
+<b>Fig Traffic lights in an Intersection
 
 The operating mode of the traffic lights is decided by an operator at via operator station, or 
 by a maintenance technician, who influences a switch. The maintenance technician can change 
@@ -517,7 +515,7 @@ the operator and maintenance technician respectively, to be able to monitor and 
 system. These could be realized with plant graphics on the operator station or with hardware. 
 
 <image> dg_fig2.gif
-<b>Traffic Lights, Control Panels
+<b>Fig Traffic Lights, Control Panels
 </topic>
 
 <topic> io_specification
@@ -579,7 +577,7 @@ station. They are root volumes so we can choose an idle volume identity in the i
 station, and enter the volume mode in the administator to register these volumes.
 
 <image> dg_fig11.gif
-<b>Volume registration
+<b>Fig Volume registration
 
 <h2>Create users
 Eric is a developer in the traffic department, an Carl is an operator. They are both involved
@@ -588,17 +586,17 @@ projects and let them share users. We grant Eric developer and system privileges
 operator privileges and Lisa maintenance privileges.
 
 <image> dg_fig4.gif
-<b>Created users
+<b>Fig Created users
 
 <h2>Create Project
-We create the project with the hierarchy name 'trafic-trafficcross1'.
+We create the project with the hierarchy name 'traffic-trafficcross1'.
 
 <image> dg_fig10.gif
-<b>Created project
+<b>Fig Created project
 
 <h1>Configure the project
 The project has a directory volume in which the nodes and volumes of the project are configured.
-In the upper window the volumes are configured with RootVolumeConfig objects. In the lower
+In the left window the volumes are configured with RootVolumeConfig objects. In the right
 window the process and the operator station are configured with NodeConfig objects. The
 NodeConfig objects is put beneath a BusConfig object that states in which QCOM bus the nodes are
 communicating. 
@@ -615,7 +613,7 @@ Note also the system object with the attribute SystemGroup that is assigned the 
 'trafficdepartment'. This grants the users eric, carl and lisa access to the project.
 
 <image>dg_fig5.gif
-<b>The Directory Volume
+<b>Fig The Directory Volume
 </topic>
 
 <topic> plant_configuration
@@ -643,7 +641,7 @@ The figure below illustrates how a plant has been configured. We see how signals
 configured on different levels, and even how the PLC programs are configured in the plant. 
 
 <image> dg_fig3.gif
-<b>An Example of a Plant Configuration
+<b>Fig An Example of a Plant Configuration
 
 We choose to call our plant TrafficCross1 and we decide on the following structure: 
 
@@ -677,7 +675,7 @@ Reset          <t>Dv <t>A value which is used to reset the program to initial mo
 
 <bookmark> plant_example
 <image> dg_fig6.gif
-<b>The Plant Configuration of the Intersection
+<b>Fig The Plant Configuration of the Intersection
 
 As you can see we have a plant object at the topmost level, TrafficCross1 of the class 
 $PlantHier. We use other objects of class $PlantHier to group our objects. We also create an 
@@ -690,7 +688,7 @@ available in the operator station. We have mounted the topmost $PlantHier object
 'TrafficCross1' with a MountObject with the same name.
 
 <image> dg_fig14.gif
-<b>The Plant Configuration in the operator volume.
+<b>Fig The Plant Configuration in the operator volume.
 </topic>
 
 <topic> node_configuration
@@ -716,28 +714,27 @@ The rack and the cards are configured in a manner much like what you would do ph
 have a node, place the rack in the node, the card in the rack, and the channels on each card. 
 
 <image> dg_fig7.gif
-<b>Node Configuration of the Process Station
+<b>Fig Node Configuration of the Process Station
 
 We also configure the PLC program with a PlcProcess object, and below this, a  PlcThread object
 for each time base. We are content with one 100 ms timebase.
 
 <image> dg_fig12.gif
-<b>Timebase configuration of the PLC program
+<b>Fig Timebase configuration of the PLC program
 
 Each object has a number of attributes that you may have to change. To give an understanding of
 how to change attributes, some of the attributes in the PlcProcess object are edited below.
 
 <image> dg_fig13.gif
-<b>Change of Attribute Value
+<b>Fig Change of Attribute Value
 
 <h2>Operator Station
 The node hierarchy of the operator station is configured in the volume VolOpTrafficCross1. 
-Below the node object we find an OpPlace object that defines the operator place, and below
-this a User object that defines a user. Below the OpPlace object there is also a XttGraph object
-for the process graph of the operator station.
+Below the node object we find an OpPlace object that defines the operator place, and below this
+a XttGraph object for the process graph of the operator station.
 
 <image> dg_fig8.gif
-<b>The Node Configuration i the Operator Volume.
+<b>Fig The Node Configuration i the Operator Volume.
 
 <h1> Connecting channels to signals
 When you have configured the plant and the nodes, it is time to connect the logical signals to 
@@ -752,10 +749,10 @@ Di-channel Di4-00 is representing the channel, we have to make a connection betw
 objects.
 
 <image> dg_fig15.gif
-<b>Connection between a signal and a channel
+<b>Fig Connection between a signal and a channel
 
 <image> dg_fig9.gif
-<b>Connect a signal to a channel
+<b>Fig Connect a signal to a channel
 </topic>
 
 <topic>plcprogram
@@ -766,7 +763,7 @@ However we must first connect the PlcPgm object to a PlcThread object in the nod
 This states which timebase the PLC program is executed on.
 
 <image> dg_fig16.gif
-<b>The Graphical PLC Editor
+<b>Fig The Graphical PLC Editor
 
 We will use the PLC Editor to create a sequential control program for the traffic lights. There
 are two ways to solve the problem concerning the two operating modes for a traffic light, 
@@ -787,7 +784,7 @@ signals.
 
 
 <image>dg_fig17.gif
-<b>The Flashing Light Sequence 
+<b>Fig The Flashing Light Sequence 
 
 This is the sequence that will be executed when you want the lights to flash yellow. 
 
@@ -796,7 +793,7 @@ normal operating mode sequence. This implies that the two sequences cannot execu
 time. 
 
 <image>dg_fig18.gif
-<b>The Normal Sequence 
+<b>Fig The Normal Sequence 
 
 The program for the normal operating mode is based on a traffic light following the sequence: 
 
@@ -818,7 +815,7 @@ When step S8 has been active for a certain time, it will be deactivated, and the
 is once again activated. 
 
 <image> dg_fig19.gif
-<b>Trigger Signals
+<b>Fig Trigger Signals
 
 The program above shows the logic that controls different operating modes. 
 
@@ -841,7 +838,7 @@ Plant graphics are often used as an interface between the operator and the proce
 graphics are created with the Plant Graphics Editor. 
 
 <image> dg_fig20.gif
-<b>The Plant Graphics Editor
+<b>Fig The Plant Graphics Editor
 
 Plant graphics can contain dynamics, which are connected to the logical signals, e.g.: 
 
@@ -858,7 +855,81 @@ lights (red, yellow, and green) are dynamic as shown in figure. How to create th
 graphics is described in chapter 5 Creating Plant Graphics . 
 
 <image>dg_fig21.gif
-<b>The Plant Graphics for the Intersection
+<b>Fig The Plant Graphics for the Intersection
+</topic>
+</chapter>
+
+
+<chapter>
+<topic>dg_create_project
+Create a project
+
+<h1>Installation of development environment
+
+Before you can begin to work with Proview you have to install the Proview development 
+environment. There are a number of packages for different Linux distributions available, and
+if there is no package for the disired distribution you can also download the Proivew source
+and build from sources.
+
+The installation packaged if named with the version number in the name, e.g. pwr47. This
+makes it possible to install several versions side by side, which is an advantage when you
+have plenty of projects in production running at different versions.
+
+You will find more information about the installation on the Download page on www.proview.se.
+
+<h1>setup script
+At the installation the Linux user 'pwrp' with password 'pwrp' is created. By logging in as
+pwrp you can start Proview by clicking on the Proview icon on the screen.
+
+If you want to run Proview as another user, you have to initiate Proview at login. Insert
+the following line into the file .bashrc in the home directory
+
+<c>source /src/pwrp/adm/db/pwr_setup.sh
+
+If you have several users with common Proview projects, you have to make sure that they have
+write access to files in the projects. On way to achive this is to set umask to 002, and let
+all users have the same group, e.g. pwrp.
+
+
+<h1>Users
+In the Case Study above, we saw how to create users belonging to different system groups.
+This is described in the Administration chapter. At installation of the development package,
+a user database is include containing the systemgroup 'common' with five users, pwrp, op1,
+op2, op3 and op4. pwrp is a development user and has system privileges in runtime. The op
+users is operators and have operator privileges in runtime. These users work for many
+applications, and we will settle with them for the moment.
+
+<image> dg_fig23.gif
+<b>Users included in the installation
+
+Note that when building Proview from sources, you have to create users before creating a
+project.
+
+<h1>Register volumes
+As we also saw in the Case Study you can register volumes in the GlobalVolumeList. This can
+be done later, by letting the configuration guide for the project register the volumes and
+fetch the next free volume identity. We choose this way for the moment, but if you have
+several independent development stations you should handle the registration manually to avoid
+kollisions of volume identities. If you have a larger plant with plenty of volumes, we also
+recommend that you assign the volume identities manually and group them in a suitable way.
+
+<h1>Create a project
+To create a project you enter the project list of the administrator, by clicking on the
+Proview icon, or by the command
+
+<c>> pwra
+
+pwra is defined as 'wb -p pwrp pwrp', i.e. it is logging in as user pwrp. If you have defined
+other users for development, you have to redefined 'pwra' or use the 'wb -p' command directly.
+wb takes user and password as arguments.
+
+In the project list you enter edit mode and create a ProjectReg object on the top level or
+under a hierarchy object. In the ProjectReg object you specify project name, Proview version
+and path for the project. When you save, the project directories are created.
+
+How to create a project is described in the Getting Started Guide. We recommend that you
+go trough the sections for creating the project and configuring the directory volume before
+continuing.
 </topic>
 </chapter>
 
@@ -868,25 +939,31 @@ Directory Volume Configuration
 
 <h1>Open a project
 When the project is created, it is found in the administrator project tree. You open a project 
-by activating 'Open Project' in the popupmenu for a ProjectReg object. The workbench is now 
-opened for the project, and the Volume selection window is displayed, showing all the volumes 
-in the project. So far, only the DirectoryVolume is created, and our first task is to configure 
-this volume, with the volumes and nodes of the system.
+by activating 'Open Project' in the popupmenu for a ProjectReg object. 
 
-Select the DirectoryVolume and click on the Ok button to open the configuration editor for the 
-volume. 
+You can also use the 'sdf' command to attach to a project. sdf takes the project name as 
+argument
 
-<image> dg_fig23.gif
+<c>> sdf trafficcross1
 
-You can also create a project with a shell command. You tie to the project with the command
+The directory volume is now opened by the command
 
-> pwrp set project 'projectname'
+<c>> pwrs
 
-The Workbench is opened with the command
+pwrs is defined as 'wb pwrp pwrp', i.e. it is logging in as user pwrp. If you have defined
+other users for development, you have to redefined 'pwrs' or use the 'wb' command directly.
+wb takes user and password as arguments (and also volume as third argument).
 
-> wb
+If the volume is empty, a guide to help with the configuration is started. To create a simple
+project with a node and a volume you just have to press the 'Next' button.
 
-wb takes user, password and volume as arguments.
+The guide looks for volumes registred for the project. If there are no volumes registred it
+suggests volumes with suitable volume names and free volume identities, and registres the 
+volumes if the suggestions are approved. The guide also creates all the configuration objects
+in the directory volume and inserts suitable data into them. 
+
+If you later will expand the systems with more nodes and volumes, its good to have some 
+knowledge of the configuration is done, thus we describe how to configure the volume manually.
 
 <h2>The Configuration Editor
 
@@ -923,7 +1000,7 @@ It is also possible to display the attributes of an object directly in the confi
 
 <h2>Configure the nodes
 
-In the lower window, the nodes in the project is configured. You group the nodes by which
+In the right window, the nodes in the project is configured. You group the nodes by which
 QCOM bus they communicate on. We create two BusConfig objects, one for the production nodes
 and one for simulation. In the BusNumber attribute the busnumber is defined.
 
@@ -961,13 +1038,15 @@ questions and create the volumes.
 If the volume selection window is opened now, 'File/Open' in the menu, all the configured 
 volumes are displayed. The next step is to configure a RootVolume.
 </topic>
+</chapter>
 
+<chapter>
 <topic>configure_rootvolume
 Configure a Root Volume
 A root volume is opened from the volume selection window. Select the volume and click on the 
 Ok button. This will start the configuration editor for the root volume. As for the 
-DirectoryVolume it is separated in two windows, but this time, the upper window shows the 
-plant configuration and the lower the node configuration.
+DirectoryVolume it is separated in two windows, but this time, the left window shows the 
+plant configuration and the right the node configuration.
 
 <h1>Plant Configuration
 The Plant Configuration describes the different plants which you can find in the Proview 
@@ -1032,8 +1111,8 @@ object.
 The Node Configuration defines the nodes of your PROVIEW/R system. The nodes are named and 
 their contents specified. 
 
-<b>Node Configuration
 <image> dg_fig44.gif
+<b>Fig Node Configuration
 
 <h2>$NodeHier Object
 The node hierarchy object is used to group objects in the Node Configuration. This object is 
@@ -1079,8 +1158,8 @@ ChanIi <t>Integer input.
 ChanIo <t>Integer output.
 ChanCo <t>Counter input.
 
-<b>I/O configuration
 <image> dg_fig43.gif
+<b>Fig I/O configuration
 
 <b>Distributed I/O
 As an example of distributed I/O we choose profibus. In this case, all the four levels is used.
@@ -1144,24 +1223,13 @@ See Backup_Conf in Object Reference Manual <classlink>backup_conf,"",$pwr_lang/p
 To define an operator place you place an object of the OpPlace class under the $Node object.
  
 The following attributes must be given values: 
-
-- OpNumber indicates the number of the operator place. Every operator place in the node
-  should be allocated a unique integer. 
-
-See OpPlace i Object Reference Manual <classlink>opplace,"",$pwr_lang/pwrb_xtthelp.dat
-
-<h2>User Object
-For each operator place you must define an out unit of the user type (operator). To do this 
-you use a User object. You can only have one user per operator place. User objects should
-also be defined for RttConfig and WebHandler objects.
 	
-The following attributes must be given values: 
-	
-- UserName indicates the name of the user. 
-- OpNumber must have the same number as the operator place. 
+
+- UserName is a name of a Proview user, defined in the UserDatabase. The privileges of the 
+   user determines the access to the system.
 - MaxNoOfEvents indicates the number of events which the operator's event list can hold at 
-  the same time.
-- SelectList indicates the object hierarchies in the Plant Configuration, from which the
+   the same time.
+- EventSelectList indicates the object hierarchies in the Plant Configuration, from which the
    operator will be receiving events.
 
 If we look at the figure above, which illustrates the plant A, and assume that we want to 
@@ -1169,8 +1237,8 @@ receive events only from the encircled objects, we state 'A-C' as an alternative
 select list. This choice means that we will be receiving events from the supervised object C, 
 and from all supervised objects, which have C as their parent.
 
-<b>SelectList example 1
 <image> dg_fig41.gif
+<b>Fig SelectList example 1
 
 Another example:
 
@@ -1180,28 +1248,27 @@ TrafficCross1 handles two traffic lights, TrafficLightNS and TrafficLightWE. Let
 we want events only from TrafficLightNS. In that case we state 'TrafficCross1-TrafficLightNS'
 instead of TrafficCross1.
 
-<b>Selectlist example 2
 <image> dg_fig42.gif
+<b>Fig EventSelectlist example 2
 
 If you want to receive messages from the CycleSup object the supervises the plc threads, you 
 must also state the hierarchy name of the $Node object.
 
 In FastAvail you specify the complete hierarchy name of the XttGraph object, which will be 
-possible to start from the graphics buttons of the Operator Window  NoFastAvail specifies 
-the number of graphics buttons to be used. You can have 0- 15 push buttons. Buttons which are 
-not used become invisible.
+possible to start from the graphics buttons of the Operator Window. You can have 0 - 25 push 
+buttons. Buttons which are not used become invisible.
 
-See User i Object Reference Manual <classlink>user,"",$pwr_lang/pwrb_xtthelp.dat
+See OpPlace in Object Reference Manual <classlink>opplace,"",$pwr_lang/pwrb_xtthelp.dat
 
-<b>Operator Window
 <image> dg_fig45.gif
+<b>Fig Operator Window
 
 <h2>The Plant Graphics Object - the XttGraph Object 
 In order to be able to show plant graphics which are unique to the project in the operator 
 station, you must configure XttGraph objects. These objects define, for instance, what the 
-files with the plant graphics are called. The objects are referred to in the User object
-FastAvail attribute, and in the DefGraph attribute that is found in $PlantHier and signal
-objects.
+files with the plant graphics are called. The objects are referred to in the  FastAvail 
+attribute of the OpPlace object, and in the DefGraph attribute that is found in $PlantHier and 
+signal objects.
 
 When the object is refered in a FastAvail you can use the possibility to execute a Xtt command
 from the XttGraph object. In this way, you can set a signal from a pushbutton in the operator
@@ -1754,8 +1821,8 @@ The plc editor consists of
 - a palette with grafcet objects and function blocks, and a palette with connections.
 - a navigation window, from which the work area can be scrolled and zoomed.
 
-<b>The Plc editor
 <image> dg_fig46.gif
+<b>Fig The Plc editor
 
 A function object is created by selecting a class in the palette, and pressing MB2 in the 
 working area. 
@@ -1807,8 +1874,8 @@ for transition 1 has been fulfilled. Then the initial step becomes inactive.
 
 A Grafcet program is always a closed sequence. 
 
-<b>A Simple Straight Grafcet Sequence
 <image> dg_fig47.gif
+<b>Fig A Simple Straight Grafcet Sequence
 
 <h2>Diverged sequence
 
@@ -1817,8 +1884,8 @@ alternative branches in your program, for instance when you have a machine, whic
 manufacture three different products. At the points where the production differs, you introduce
 alternative branches.
 
-<b>Sequece Selection
 <image> dg_fig48.gif
+<b>Fig Sequence Selection
 
 The example in the figure above shows the sequence for a machine which can manufacture the 
 three products, Red, Green, and Blue. At the point of divergence, point 1 in the figure, you
@@ -1833,8 +1900,8 @@ Sometimes it may be necessary to start several parallel working procedures at th
 It must be possible for these working procedures to operate independent of each other. In 
 order to do this, parallel sequences are used. 
 
-<b>Parallel Sequences
 <image> dg_fig49.gif
+<b>Fig Parallel Sequences
 
 The example in the figure above illustrates the sequence for two machines, which are drilling 
 two holes at the same time and independent of each other. When the transition condition before
@@ -1871,14 +1938,14 @@ As mentioned above, the transition (Trans) is used to start a transition between
 and an inactive step. A logical condition, for instance a digital signal, is connected to a 
 transition, and determines when the transition is taken place.
 
-<b>A Transition Example
 <image>dg_fig52.gif
+<b>Fig A Transition Example
 
 <h2>Order
 It is possible to connect one or more orders to each step. 
 
-<b>An Order Example
 <image>dg_fig53.gif
+<b>Fig An Order Example
 
 Normally the output is active when the input is active, but for each order you have a number 
 of attributes, with which you can influence the function of the output: 
@@ -1894,28 +1961,28 @@ that you indicate the name of the attribute (capital letters) and possible time 
 Object Editor. The figure below illustrates how to delay an order from being active for 10 
 seconds. 
 
-<b>DOrder Attributes
 <image>dg_fig54.gif
+<b>Fig DOrder Attributes
 
 The selected order attributes are written in the order symbol. 
 
 The figure below illustrates how you can use an order object with delay to make a step active
 for a certain time. 
 
-<b>A Delayed Transition
 <image>dg_fig55.gif
+<b>Fig A Delayed Transition
 
 Note! You must use a ConFeedbackDigital connection to connect the delayed order object with 
 the transition object, otherwise the order of execution will be ambigous. 
 See Feedback Connection <link>plceditor_refman, feedback_connection
 
-<h2>Subsekvens - SubStep
+<h2>Subsequence - SubStep
 
 When you are creating complex Grafcet programs, it is often suitable to use subwindows,
 and to place subsequences in these to get a better layout of the program.
 
-<b>Subsequence
 <image>dg_fig56.gif
+<b>Fig Subsequence
 
 The above figure shows the sub sequence of a SubStep. A sub sequence always starts with an 
 SsBegin object, and ends with an SsEnd object. In its turn a subsequence can contain 
@@ -1923,13 +1990,13 @@ subsequences.
 
 <h1>An Introduction to Function Block Programming 
 
-<h2>Block to fetch and store values
-Block to fetch and store are used to read and write values. There are fetch and store blocks
+<h2>Blocks to fetch and store values
+Blocks to fetch and store are used to read and write values. There are fetch and store blocks
 for each type of signal. In the figure below a number of these blocks are displayed. They
 are found in the 'Signal' folder in the palette.
 
-<b>Block to fetch and store values
 <image>dg_fig57.gif
+<b>Fig Blocks to fetch and store values
 
 To read signals you use blocka like GetAi, GetIi, GetDv or GetAo. When you want to give a value
 to a signal, you use for instance StoAv, StoDo, SetDv or ResDo. 
@@ -1956,8 +2023,8 @@ A number of objects are available for logical programming, for instance And-gate
 Or-gate (Or), inverter or timer. For the logical programming digital signals are used. The 
 objects are placed in the folder Logic. 
 
-<b>Logic Blocks 
 <image> dg_fig58.gif
+<b>Fig Logic Blocks 
 
 The figure below shows an And-gate. For this object the following applies: 
 
@@ -1973,8 +2040,8 @@ The figure below shows an And-gate. For this object the following applies:
 
 The attributes of the And-gate are changed with the Object Editor.
 
-<b>Attributes of the And-Gate
 <image> dg_fig60.gif
+<b>Fig Attributes of the And-Gate
 
 The other objects in the 'Logic' folder have similar parameters, see Proview Objects Reference 
 Manual . 
@@ -1983,8 +2050,8 @@ Manual .
 The folder 'Analog' contains a number of objects for handling analog signals, for instance 
 filters, summation blocks, and integrators. 
 
-<b>Arithmetical Calculation Block
 <image> dg_fig61.gif
+<b>Fig Arithmetical Calculation Block
 
 In this guide we do not describe the function of the objects, but it may be expedient to 
 comment on the use of arithmetic blocks. The blocks are used for calculation of user defined 
@@ -2015,8 +2082,8 @@ supervisory), which is in the folder Logic.
 The desired signal or attribute, is fetched with a Get-object that is connected to the DSup 
 object. Outputs of logical blocks can be directly connected to the DSup object.
 
-<b>Digital Supervisory Objects
 <image> dg_fig62.gif
+<b>Fig Digital Supervisory Objects
 
 Figure above illustrates supervision of a Dv signal and a digital attribute.
 
@@ -3097,7 +3164,7 @@ Modbus TCP is implemented as an I/O-system in Proview. See more information abou
 
 <h2>Receiving messages
 When we receive a buffer, we search for RemTrans.Address[0] and [1] that matches the fields 
-slave adress and function code in the message header. 
+slave address and function code in the message header. 
 If the data object for this message is big enough to contain the message, the message will be stored, 
 and the DataValid flag will be set.
 
@@ -4439,41 +4506,144 @@ at installation of the pwrrt package, would be
 
 <chapter>
 <topic>conf_test
-Running and Testing a Proview System
+Starting and testing a Proview system
+
 In preceding chapters we have described how to configure a PROVIEW/R system, how to create 
 PLC programs and how to create plant graphics. Now it is time to run and test the system. 
 
 This chapter shows how to: 
 
-- create load files 
-- create a boot file 
-- distribute
+- build the system. <link> dg_build
+- start the simulate environment <link> dg_simulate
+  and the runtime monitor. <link> runtime_monitor
+- distribute. <link> dg_distribute
+- start the runtime environment <link> dg_rtstart.
 
-<h2>Syntax control
-Before creating load files it is appropriate to make a syntax control. This is done from the 
-menu in the navigator, 'File/Syntax'.
+<h1>Syntax check
+Some classes have a syntax check method, checking that the object is correctly configured.
+The methods of the signals objects check for example that they are connect to a channel, and
+the method for a PlcPgm that it is connected to a plc thread object etc. The syntax methods
+captures a great deal of errors, but is not a guarantee that everything will work faultlessly.
 
-<h2>Creating Load Files 
-Before starting the runtime environment you have to create a number of load files, one for each
-volume in your system. You create the load files from the Navigator of each volume,
-'Function/Build Volume'.
+The syntax methods are executed from 'Functions/Sytax Check' in the Configurator menu.
 
-<h2>Creating Boot Files
-For every node in the project you have to create a boot file. The bootfile contains mainly the 
-root volume to load for the node. The bootfile is created from the configurator menu, 
-'Functions/Build Node'. This command will also build the plcprogram for the node.
+</topic>
 
-<b>Select node when creating a bootfile
+<topic> dg_build
+Build
+Before you have a running system for a node, you have to build the node. It means that you
+generates what you need in the runtime environment, e.g. a boot file specifying which volumes 
+are to be loaded, loadfiles for the volumes containing info about the objects in the volume, 
+an executable for the plc program etc.
+
+You build by activating 'Functions/Build Node' in the Configurator menu, or the corresponding
+button in the tools panel. If there are several nodes configured in the project, you also
+have to select a node from the viewed list of nodes.
+
 <image> dg_fig66.gif
+<b>Fig Node selection
 
-At this point, everything in the development environment is configured and generated, and its 
-time to set up the runtime environment.
+Also the build is divided into methods for different classes. The build method for a PlcPgm
+generates code for the modified windows and compile this code. The build method for a
+volume creates a loadfile for the volume, and calls the build mehtods for all objects
+in the volume. The build method for a node calls the build method for the volume, creates
+a bootfile for the node, and to link the plc executable. The build methods for an object can
+be called by selecting the object and activating 'Functions/Build Object' in the menu, and
+the build method for the current volume by activating 'Functions/Build Volume'.
 
-<h2>Install the Proview runtime package
-...
+Below follows a description of some build methods.
 
-<h2>Distribute
-...
+XttGraph <t>Copies the .pwg file for the graph from $pwrp_pop to $pwrp_exe.
+WebGraph <t>Exports the graph to java, compiles and inserts into an archive.
+WebHandler <t>Generates html-files for the homepage of the node, and converts xtt helpfiles
+           <t>to web format.
+PlcPgm   <t>Generates c-code that is compiled by the c compiler.
+RootVolume <t>Calls the build method for all objects in the volume, and creates a load file
+          <t>with info about the objects in the volume. Also creates crossreference files
+          <t>if specified in Options.
+ClassVolume <t>Generates include files with c structs for the classes of the volume, and
+          <t>create a loadfile with the type and class definitions.
+Node     <t>Calls the build method for the rootvolume, if the volume is available. Creates
+         <t>a bootfile with info about which volumes are to be loaded, and links the 
+         <t>plc program of the node.
+
+Normally the build methods first checks if anything is modified, and only performs the build
+if it finds a modification. In some cases you want to force a build, and then sets 'Force' in
+the Build column in options opened from 'Options/Settings' in the menu. It is also possible
+to mark that you want to create crossreference files ag build, or that compile and link of
+the plc should be performed with debug.
+
+If a node contains subvolumes or shared volumes, these have to be built by 'Build Volume' 
+before building the node.
+</topic>
+
+<topic> dg_simulate
+Simulate
+
+Simulate means starting the system for a process or operator station on the development
+station. This is a fast way to test programs and process graphics during the development
+phase. Also when a system is in production, you can test modifications of the system before
+downloading them to the production system.
+
+When simulating, the input data from the process has to be simulated. This is done by creating
+a PlcPgm the reads output data to the process, i.e. Do an Ao values, and from these set
+values to Ai and Di objects. There are special StoDi and StoAi objects for this purpose, only
+used at simulation. You have to assure that simulate program only executes at simulation, e.g.
+by setting the ScanOff attribute of the PlcWindow object if IOSimulflag in the IOHandler 
+object is 1.
+
+To be able to simulate on the development station, it has to be configured in the directory
+volume. The simulation is performed on a separate QCom bus, which is configured by a 
+BusConfig object on the top level in the right window of the directory volume. In this you 
+state the bus identity, e.g. 999. Below the BusConfig object you place a NodeConfig object
+for the development station, and fill in the node name and IP address. You can use the 
+loopback address 127.0.0.1 as long as you don't plan to communicate to other nodes. You also
+have to specify which volume you want to simulate by setting the name of the RootVolumeLoad
+object below the NodeConfig object, to the name of the volume.
+
+Note that the configuration guide for the directory volume normally creates a simulate bus
+and a simulate node.
+
+<image>dg_fig104.png
+<b>Fig Directory volume with configuration of the development station newton
+
+When the development station is configured, you build by opening the configurator for the 
+volume that is to be simulated, and activate 'Build Node' and select the development station
+in the viewed list of nodes.
+
+Before starting the runtime you have to define the environment variable PWR_BUS_ID to the
+identity fo the simulation bus. A default value for PWR_BUS_ID set set in the file
+/etc/proview.cnf, parameter QcomBusId. With the command
+
+
+<c>> echo $PWR_BUS_ID
+
+you check the bus identity, and with the command
+
+<c>> export PWR_BUS_ID=999
+
+you assign another value. This command you can for example insert in $pwrp_login/login.sh.
+
+Now you can start the Proview runtime with
+
+<c>> rt_ini &
+
+and stop with
+
+<c>> . pwr_stop.sh
+
+If Proview doesn't start you can add -i to the start command to see error messages.
+
+<c>> rt_ini -i
+
+Note that you always have to reset by executing '. pwr_stop.sh' before a new start attempt.
+
+When the runtime environment is running you can explore the system by starting the runtime
+navigator
+
+<c>> rt_xtt
+
+You can also use the runtime monitor to start the runtime environment. See below.
 </topic>
 
 <topic>runtime monitor
@@ -4510,6 +4680,110 @@ is started already.
 
 </topic>
 
+<topic> dg_process_station
+Process and operator stations
+
+In this section we go through the steps to start Proview on a process or operator station.
+
+- configuration of the node in the directory volume.
+- build the node.
+- installation of the runtime package.
+- distribute to the node. <link> dg_distribute
+- start the runtime environment on the node. <link> dg_rtstart
+
+<h1>Directory volume configuration
+The node has to be configure in the directory volume by a NodeConfig object. This is placed
+below a BusConfig object that contains the bus identity for the production bus. In the 
+NodeConfig object the node name and IP address is configured, and below the NodeConfig object
+there is a RootVolumeLoad object that states which root-volume is to be started on the node.
+
+The node is built from the rootvolume configurator by activating 'Functions/Build Node' and 
+selecting the process station in the node list (if there is only one single node configured
+the node list is not viewed).
+
+<h1>Installation of the runtime package
+The runtime package is installed on the process/operator node by installing the pwrrt package
+of the present Linux distribution. Read the installation guide on the Download page on 
+www.proview.se for more information.
+</topic>
+
+<headerlevel>
+<topic> dg_distribute
+Distribute
+Distribute, means collecting the files that are created when the node is built, and that
+is needed to execute the runtime environment, into a package. The package is copied to the 
+process or operator station and unpacked there.
+
+Which files are going to be a part of the package, is configured in the directory volume with
+a Distribute object beneath the NodeConfig object of the node. The Distribute object contains
+the attribute Components where you specify what types of components or files that is selected.
+If there are components specified that is not generated, a warning message will companion the
+distribution.
+
+<image> dg_fig106.png
+<b>Fig The Distribute object
+
+If there are other files, e.g. application programs, that is to be a part of the package, you
+add an object of type ApplDistribute below the Distribute object. In the ApplDistribute object
+you can state which files are to be added (specification with wildcard is allowed) and where
+they are to be copied.
+
+All files needed at runtime should be a part of the package. It is important that a package 
+represents a complete version of the system, making it possible to restore the runtime
+environment if you for example want to go back to a previous version. If a disk crash occurs,
+it is also important to be able to restore the system on a new disk without any manual 
+copying and modifications of files.
+
+The distribution is preformed from the Distributor that is opened from 'Functions/Distribute'
+in the Configurator menu. Select the node you want to distribute to, and select 
+'Functions/Distribute' in the Distributor menu.
+
+<image> dg_fig105.png
+<b>Fig Distributören
+
+The distributor will now collect the specified files into a package and copy the package to
+the user 'pwrp' on the process node with ssh. ssh requires password, and this has to be 
+typed two times in the terminal window from which the configurator is started. At installation
+the user 'pwrp' is given the password 'pwrp', but this may have been changed for security 
+reasons.
+
+If you don't have network contact with the process station, you can create a package and move
+it to the process station for example with an USB stick. Select the node in the Distributor
+and activate 'Functions/Create Package'. The package is stored on $pwrp_load with the name
+pwrp_pkg_'nodename'_'version'.tgz, e.g. pwrp_pkg_cross1_0002.tgz. On the process station you
+unpack the package with the script pwr_pkg.sh which takes the name of the package as argument.
+
+<c>> pwr_pkg.sh pwrp_pkg_cross1_0002.tgz 
+
+<h1>Restore a previous version
+Sometimes a modification of the system doesn't work as planned, and you want to restore a 
+previous version. This is easily done with pwr_pkg.sh. The packages are stored in the home
+directory of user pwrp, /home/pwrp. By finding the package for the previous version and start
+pwr_pkg.sh with this package, you restore the version.
+
+<c>> pwr_pkg.sh pwrp_pkg_cross1_0001.tgz
+</topic>
+
+<topic> dg_rtstart
+Start the runtime environment
+
+The runtime environment on a process or operator station is started with the command
+
+<c>> pwr start
+
+and stopped with
+
+<c>> pwr stop
+
+or
+ 
+<c>> pwr kill
+
+The command 'pwr stop' requires that all processes are alive, while 'pwr kill' clears all
+in all situations.
+
+</topic>
+</headerlevel>
 </chapter>
 
 <chapter>
@@ -4896,7 +5170,7 @@ for edit functions are dimmed.
 If you have edit privileges you can enter the edit mode. Now it is possible to create and
 modify objects.
 
-<b>Trace och Simulate
+<b>Trace and Simulate
 If you want to trace the program you enter the trace mode. This requires that the Proview
 runtime environment is started in the development station. Simulate works as trace, but
 you can also set values to signals.
@@ -5181,7 +5455,7 @@ document header is filled in automatically. The document object is found under t
 ShowPlcAttr can be used as an extension of the document header. In the object is displayed
 information about volume, scantime and reset object for Grafcet sequences.
 
-<b>Head, Title, Text och BodyText
+<b>Head, Title, Text and BodyText
 These objects are used to write informational text in the document. Head, Title and Text
 contains singleline texts of different size with max 79 characters. Bodytext contains a
 multiline text with max 1023 characters. The objects is found under 'Edit' in the palette.
@@ -9131,7 +9405,7 @@ arbitrary type		<t>arg2		<t>Value argument. Optional. Can be int,
 
 <c>  printf( "Watch out!");
 <c>  printf( "a = %d", a);
-<c>  printf( "a = %d och str = %s", a, str);
+<c>  printf( "a = %d and str = %s", a, str);
 </TOPIC>
 
 <TOPIC> scanf() <style> function
