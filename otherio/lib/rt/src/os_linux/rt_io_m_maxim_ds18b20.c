@@ -118,6 +118,11 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
     s = strstr( str, "t=");
     if ( s) {
       sscanf( s+2, "%d", &ivalue);
+      if ( ivalue == 85000) {
+	/* TODO Check CRC Probably power loss... 
+	   op->Super.ErrorCount++; */
+      }
+
       io_ConvertAi32( cop, ivalue, &actvalue);
 
       // Filter
@@ -127,7 +132,7 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
 	actvalue = *(pwr_tFloat32 *)chanp->vbp + ctx->ScanTime / sop->FilterAttribute[0] *
 	  (actvalue - *(pwr_tFloat32 *)chanp->vbp);
       }
-
+      
       *(pwr_tFloat32 *)chanp->vbp = actvalue;
       sop->SigValue = cop->SigValPolyCoef1 * ivalue + cop->SigValPolyCoef0;
       sop->RawValue = ivalue;
