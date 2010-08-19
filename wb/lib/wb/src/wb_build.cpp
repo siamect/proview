@@ -705,11 +705,19 @@ void wb_build::xttgraph( pwr_tOid oid)
       else {
 	Ge *gectx = m_wnav->ge_new( action);
 	strcpy( cmd, "export java");
-	gectx->command( cmd);
-	delete gectx;
+	m_sts = gectx->command( cmd);
+	if ( evenSts()) {
+	  msg_GetMsg( m_sts, cmd, sizeof(cmd));
+	  MsgWindow::message('E', cmd, msgw_ePop_Yes, oid);
+	  m_sts = PWRB__NOBUILT;
+	  delete gectx;
+	  return;
+	}
 
 	sprintf( cmd, "Build:    XttGraph  Export java %s", action);
 	MsgWindow::message('I', cmd, msgw_ePop_No, oid);
+
+	delete gectx;
 
 	m_sts = PWRB__SUCCESS;
       }
@@ -773,7 +781,8 @@ void wb_build::webgraph( pwr_tOid oid)
   java_name[0] = toupper(java_name[0]);
 
   // Get the .pwg file for this javaname
-  sprintf( name, "$pwrp_pop/%s.pwg", cdh_Low(java_name));
+  strcpy( graph_name, cdh_Low(java_name));
+  sprintf( name, "$pwrp_pop/%s.pwg", graph_name);
 
   dcli_translate_filename( name, name);
   m_sts = dcli_file_time( name, &src_time);
@@ -826,7 +835,14 @@ void wb_build::webgraph( pwr_tOid oid)
     else {
       Ge *gectx = m_wnav->ge_new( graph_name);
       strcpy( cmd, "export java");
-      gectx->command( cmd);
+      m_sts = gectx->command( cmd);
+      if ( evenSts()) {
+	msg_GetMsg( m_sts, cmd, sizeof(cmd));
+	MsgWindow::message('E', cmd, msgw_ePop_Yes, oid);
+	m_sts = PWRB__NOBUILT;
+	delete gectx;
+	return;
+      }
       delete gectx;
 
       sprintf( cmd, "Build:    WebGraph  Export java %s", java_name);

@@ -1532,6 +1532,11 @@ static int	graph_export_func(	void		*client_data,
       }
     }
 
+    if ( isdigit(name[0])) {
+      graph->message( 'E', "Java name syntax error");
+      return GE__JAVANAMESYNTAX;
+    }
+
     if ( graph->is_subgraph())
     {
       graph->message( 'E', "Unable to save subgraph as ge java");
