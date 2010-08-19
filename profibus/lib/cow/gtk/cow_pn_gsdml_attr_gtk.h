@@ -69,6 +69,8 @@ class GsdmlAttrGtk : public GsdmlAttr {
   static void activate_zoom_out( GtkWidget *w, gpointer data);
   static void activate_zoom_reset( GtkWidget *w, gpointer data);
   static void activate_print( GtkWidget *w, gpointer data);
+  static void activate_collapse( GtkWidget *w, gpointer data);
+  static void activate_expand_all( GtkWidget *w, gpointer data);
   static void activate_cmd_input( GtkWidget *w, gpointer data);
   static void activate_cmd_ok( GtkWidget *w, gpointer data);
   static void cmd_close_apply_cb( void *ctx, void *data);

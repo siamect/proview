@@ -183,6 +183,20 @@ void GsdmlAttrGtk::activate_zoom_reset( GtkWidget *w, gpointer data)
   attr->activate_zoom_reset();
 }
 
+void GsdmlAttrGtk::activate_collapse( GtkWidget *w, gpointer data)
+{
+  GsdmlAttr *attr = (GsdmlAttr *)data;
+
+  attr->activate_collapse();
+}
+
+void GsdmlAttrGtk::activate_expand_all( GtkWidget *w, gpointer data)
+{
+  GsdmlAttr *attr = (GsdmlAttr *)data;
+
+  attr->activate_expand_all();
+}
+
 void GsdmlAttrGtk::activate_print( GtkWidget *w, gpointer data)
 {
   GsdmlAttr *attr = (GsdmlAttr *)data;
@@ -343,10 +357,18 @@ GsdmlAttrGtk::GsdmlAttrGtk( GtkWidget *a_parent_wid,
   menubutton_paste = gtk_image_menu_item_new_from_stock(GTK_STOCK_PASTE, accel_g);
   g_signal_connect( menubutton_paste, "activate", G_CALLBACK(activate_paste), this);
 
+  GtkWidget *edit_collapse = gtk_menu_item_new_with_mnemonic("C_ollapse");
+  g_signal_connect( edit_collapse, "activate", G_CALLBACK(activate_collapse), this);
+
+  GtkWidget *edit_expand_all = gtk_menu_item_new_with_mnemonic("_Expand All");
+  g_signal_connect( edit_expand_all, "activate", G_CALLBACK(activate_expand_all), this);
+
   GtkMenu *edit_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), menubutton_copy);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), menubutton_cut);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), menubutton_paste);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_collapse);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_expand_all);
 
   GtkWidget *edit = gtk_menu_item_new_with_mnemonic("_Edit");
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), edit);

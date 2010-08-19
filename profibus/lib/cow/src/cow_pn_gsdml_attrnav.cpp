@@ -494,6 +494,65 @@ void GsdmlAttrNav::unzoom()
   brow_UnZoom( brow->ctx);
 }
 
+//
+// Collapse
+//
+void GsdmlAttrNav::collapse()
+{
+  brow_tObject *olist;
+  int ocnt;
+  ItemPn *item;
+
+  brow_SetNodraw( brow->ctx);
+
+  brow_GetObjectList( brow->ctx, &olist, &ocnt);
+  for ( int i = ocnt - 1; i >= 0; i--) {
+    if ( brow_GetObjectLevel( olist[i]) == 0) {
+      brow_GetUserData( olist[i], (void **)&item);
+
+      item->close( this, 0, 0);
+    }
+  }
+
+  brow_CenterObject( brow->ctx, olist[0], 0);
+
+  brow_ResetNodraw( brow->ctx);
+  brow_Redraw( brow->ctx, 0);
+}
+
+//
+// Expand all items
+//
+void GsdmlAttrNav::expand_all()
+{
+  brow_tObject *olist;
+  int ocnt;
+  ItemPn *item;
+
+  brow_SetNodraw( brow->ctx);
+
+  collapse();
+
+  brow_GetObjectList( brow->ctx, &olist, &ocnt);
+  for ( int i = 0; i < ocnt; i++) {
+    brow_GetUserData( olist[i], (void **)&item);
+
+    if ( !( item->type == attrnav_eItemType_PnParEnum ||
+	    item->type == attrnav_eItemType_PnDevice ||
+	    item->type == attrnav_eItemType_PnModuleType ||
+	    item->type == attrnav_eItemType_PnDataItem ||
+	    item->type == attrnav_eItemType_PnModuleClass ||
+	    item->type == attrnav_eItemType_PnEnumByteOrder ||
+	    item->type == attrnav_eItemType_PnEnumTimeRatio ||
+	    item->type == attrnav_eItemType_PnEnumSendClock))
+      item->open_children( this, 0, 0);
+    brow_GetObjectList( brow->ctx, &olist, &ocnt);
+  }
+
+  brow_ResetNodraw( brow->ctx);
+  brow_Redraw( brow->ctx, 0);
+}
+
 // Get selected item
 int GsdmlAttrNav::get_select( ItemPn **item)
 {
@@ -1355,6 +1414,10 @@ int GsdmlAttrNav::save( const char *filename)
   if ( device_num == 0)
     return PB__NODEVICE;
 
+  // Be sure all items are initialized, expand all
+  brow_SetNodraw( brow->ctx);
+  expand_all();
+
   strncpy( dev_data.device_text, (char *)device_item->ModuleInfo->Body.Name.p, sizeof(dev_data.device_text));
   dev_data.vendor_id = gsdml->DeviceIdentity->Body.VendorID;
   dev_data.device_id = gsdml->DeviceIdentity->Body.DeviceID;
@@ -1560,6 +1623,10 @@ int GsdmlAttrNav::save( const char *filename)
     }
   }
 
+  collapse();
+  brow_ResetNodraw( brow->ctx);
+  brow_Redraw( brow->ctx, 0);
+
   return dev_data.print( filename);
 
   // Unload channel diag
@@ -1684,7 +1751,6 @@ void ItemPnBase::value_changed( GsdmlAttrNav *attrnav, char *value_str)
   memcpy( value_p, buffer, size);
   attrnav->set_modified(1);
 }
-
 int ItemPn::close( GsdmlAttrNav *attrnav, double x, double y)
 {
   double	node_x, node_y;

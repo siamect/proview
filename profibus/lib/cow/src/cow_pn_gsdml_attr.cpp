@@ -176,6 +176,16 @@ void GsdmlAttr::activate_zoom_reset()
   attrnav->unzoom();
 }
 
+void GsdmlAttr::activate_collapse()
+{
+  attrnav->collapse();
+}
+
+void GsdmlAttr::activate_expand_all()
+{
+  attrnav->expand_all();
+}
+
 void GsdmlAttr::activate_print()
 {
   char filename[80] = "pwrp_tmp:wnav.ps";
