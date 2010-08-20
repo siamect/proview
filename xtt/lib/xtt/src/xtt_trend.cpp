@@ -307,12 +307,13 @@ void XttTrend::trend_scan( void *data)
         // Insert new value
         write_buffer = trend->trend_p[i]->WriteBuffer;
         idx = write_buffer * trend_buff_size / 2
-              + int( trend->trend_p[i]->NextWriteIndex[write_buffer]);
+	  + int( trend->trend_p[i]->NextWriteIndex[write_buffer]) - (values - 1 - k);
         if ( idx == 0 || idx == trend_buff_size/2)
           idx = trend->trend_p[i]->NoOfSample - 1 + (!write_buffer) *
                  trend_buff_size/2;
         else
           idx--;
+
         trend->gcd->data[i+1][0] = trend->trend_p[i]->DataBuffer[idx];
       }
       trend->curve->points_added();
