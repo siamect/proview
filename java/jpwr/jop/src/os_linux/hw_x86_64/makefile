@@ -15,6 +15,8 @@ local_java_sources := \
 	JopUtilityIfc.java \
 	JopUtility.java \
 	JopSession.java \
+	JopLang.java \
+	JopMethods.java \
 	JopMethodsMenu.java \
 	JopConfirm.java \
 	JopConfirmDialog.java \
@@ -69,6 +71,7 @@ local_java_sources := \
 	GeDynTable.java \
 	GeDynHostObject.java \
 	GeDynXYCurve.java \
+	GeDynSetValue.java \
 	JopXYCurve.java \
 	Proportion.java\
 	RatioLayout.java \
@@ -76,6 +79,7 @@ local_java_sources := \
 	JopSpiderFrame.java \
 	JopLoginFrame.java \
 	JopLoginApplet.java \
+	JopLanguageFrame.java \
 	GeColorEditor.java \
 	GeColorBrightnessEditor.java \
 	GeColorToneEditor.java \
@@ -85,6 +89,7 @@ local_java_sources := \
         JopUtilities.java \
         GeImage.java \
 	GeFrameThin.java \
+	GeGradient.java \
 	Flow.java \
 	FlowCtxInterface.java \
 	FlowCmn.java \
@@ -138,6 +143,7 @@ local_java_sources := \
 	HistStatModel2.java \
 	HistStatistics.java \
 	HistSearch.java \
+	JopOp.java \
 	JopSessionRep.java
 
 -include $(pwre_kroot)/tools/bld/src/$(os_name)/$(hw_name)/$(type_name)_generic.mk
