@@ -5,8 +5,10 @@ Modbus_Module
 Modbus_Master
 Modbus_TCP_Server
 Modbus_TCP_ServerModule
+#if OS_LINUX
 GPIO
 GPIO_Module
 Maxim_DS18B20
 USB_Agent
 Velleman_K8055_Board
+#endif
