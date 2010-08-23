@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "pwr.h"
+#include "co_cdh.h"
 #include "co_dcli.h"
 
 typedef enum {
@@ -38,6 +39,25 @@ void usage()
       2. Methods files, e.g. $pwr_inc/io_base_*.meth\n\
       3. output file\n\
 ");
+}
+
+static int check_os( char *str, char *os)
+{
+  char os_vect[10][20];
+  int nr;
+  int i;
+  char os_element[20];
+
+  nr = dcli_parse( str, "||", "", (char *)os_vect, 
+                       sizeof( os_vect) / sizeof( os_vect[0]), sizeof( os_vect[0]), 0);
+
+  for ( i = 0; i < nr; i++) {
+    dcli_trim( os_element, os_vect[i]);
+    if ( cdh_NoCaseStrcmp( os, os_element) == 0)
+      return 1;    
+  }
+	
+  return 0;
 }
 
 int main(  int argc, char *argv[])
@@ -61,6 +81,7 @@ int main(  int argc, char *argv[])
   char pwre_cxx[80];
   char pwre_ar[80];
   char *s;
+  int in_if = 0;
 #if defined OS_LINUX
   char dos[] = "OS_LINUX";
 #elif defined OS_MACOS
@@ -108,7 +129,19 @@ int main(  int argc, char *argv[])
 
     while( dcli_read_line( line, sizeof(line), fp)) {
       dcli_trim( line, line);
-      if ( line[0] == 0 || line[0] == '#')
+      if ( strncmp( line, "#if" , 3) == 0) {
+        in_if = ! check_os( &line[5], dos);
+        continue;
+      }
+      else if ( in_if) {
+        if ( strncmp( line, "#endif", 6) == 0) {
+          if ( in_if)
+	    in_if = 0;
+	  continue;
+        }
+        continue;
+      }
+      else if ( line[0] == 0 || line[0] == '#')
 	continue;
       strncpy( mtab[mtabcnt++], line, sizeof(mtab[0]));
       if ( mtabcnt > (int) sizeof(mtab)/sizeof(mtab[0]) - 1)

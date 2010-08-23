@@ -418,7 +418,7 @@ bool Lng::read()
 	lang_sKey key;
 	lang_sRecord *record;
 
-	strcpy( key.text, r1.text);
+	strncpy( key.text, r1.text, sizeof(key.text));
 	key.type = r1.type;
 	record = (lang_sRecord *) tree_Insert( &sts, tree, &key);
 	strcpy( record->transl, r2.text);
