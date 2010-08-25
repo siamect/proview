@@ -500,8 +500,10 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
 
   // Set language
   for ( i = 1; i < *argc; i++) {
-    if ( strcmp( (*argv)[i], "-l") == 0 && i + 1 < *argc)
+    if ( strcmp( (*argv)[i], "-l") == 0 && i + 1 < *argc) {
       strncpy( language, (*argv)[i+1], sizeof(language));
+      i++;
+    }
     else if ( strcmp( (*argv)[i], "-q") == 0)
       quiet = 1;
     else if ( strcmp( (*argv)[i], "-a") == 0)
@@ -531,6 +533,7 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
 	printf("** Unable to find opplace\n");
 	exit(sts);
       }
+      i++;
     }
   }
 
@@ -581,7 +584,7 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
       opplace_found = 1;
     }
   }
-  else {
+  else if ( !opplace_found) {
     // Look for default opplace
     pwr_tOid oid;
     pwr_tOName name;
