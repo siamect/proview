@@ -1967,16 +1967,28 @@ typedef struct {
   short		y;		//!< y coordinate
 } glow_sPointX;
 
+
+
+//! Curve data type
+typedef enum {
+  glow_eCurveDataType_CommonX,
+  glow_eCurveDataType_SeparateX
+} glow_eCurveDataType;
+
 //! Configuration of curves
 typedef struct {
+  glow_eCurveDataType type;
   int curves;						//!< Number of curves
   int rows;						//!< Number of points
   int x_reverse;					//!< Reverse the curves when drawing them
-  double  max_value[TREND_MAX_CURVES + 1];		//!< Max value for every curve
-  double  min_value[TREND_MAX_CURVES + 1];		//!< Min value for every curve
-  double  *data[TREND_MAX_CURVES + 1];			//!< Data for every curve
-  glow_eDrawType color[TREND_MAX_CURVES + 1];		//!< Color of every curve
-  glow_eDrawType fillcolor[TREND_MAX_CURVES + 1];	//!< Fill color for every curve
+  double  y_max_value[TREND_MAX_CURVES];		//!< Max value for every curve
+  double  x_max_value[TREND_MAX_CURVES];		//!< Max value for every curve
+  double  y_min_value[TREND_MAX_CURVES];	       	//!< Min value for every curve
+  double  x_min_value[TREND_MAX_CURVES];	       	//!< Min value for every curve
+  double  *y_data[TREND_MAX_CURVES];			//!< y data for every curve
+  double  *x_data[TREND_MAX_CURVES];			//!< x data for every curve
+  glow_eDrawType color[TREND_MAX_CURVES];		//!< Color of every curve
+  glow_eDrawType fillcolor[TREND_MAX_CURVES];		//!< Fill color for every curve
 } glow_sCurveData;
 
 //! Data for a GrowTrend object

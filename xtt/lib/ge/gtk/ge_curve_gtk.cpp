@@ -241,21 +241,26 @@ void GeCurveGtk::axis_set_width( int width)
 
 void GeCurveGtk::open_minmax( int idx)
 {
-  char value_str[80];
+  char min_value_str[80];
+  char max_value_str[80];
   gint pos = 0;
 
   create_minmax_dialog();
 
-  sprintf( value_str, "%f", cd->min_value_axis[idx]);
+  if ( idx < cd->cols) {
+    sprintf( min_value_str, "%f", cd->y_min_value_axis[idx]);
+    sprintf( max_value_str, "%f", cd->y_max_value_axis[idx]);
+  }
+  else {
+    sprintf( min_value_str, "%f", cd->x_min_value_axis[idx - cd->cols]);
+    sprintf( max_value_str, "%f", cd->x_max_value_axis[idx - cd->cols]);
+  }
   gtk_editable_delete_text( GTK_EDITABLE(minmax_textmin_widget), 0, -1);
   gtk_editable_insert_text( GTK_EDITABLE(minmax_textmin_widget), 
-			    value_str, strlen(value_str), &pos);
-
-  sprintf( value_str, "%f", cd->max_value_axis[idx]);
+			    min_value_str, strlen(min_value_str), &pos);
   gtk_editable_delete_text( GTK_EDITABLE(minmax_textmax_widget), 0, -1);
   gtk_editable_insert_text( GTK_EDITABLE(minmax_textmax_widget), 
-			    value_str, strlen(value_str), &pos);
-
+			    max_value_str, strlen(max_value_str), &pos);
   minmax_idx = idx;
 }
 

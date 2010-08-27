@@ -99,25 +99,25 @@ XttFast::XttFast( void *parent_ctx,
 
   // Create data for time axis
   gcd = new GeCurveData( curve_eDataType_DsTrend);
-  gcd->data[0] = (double *) malloc( 8 * max_points);
-  strcpy( gcd->name[0], "Time");
-  gcd->axis_type[0] = curve_eAxis_x;
+  gcd->x_data[0] = (double *) malloc( 8 * max_points);
+  strcpy( gcd->x_name, "Time");
+  gcd->x_axis_type[0] = curve_eAxis_x;
   memcpy( &time_buff, &fp.TimeBuffer, sizeof(time_buff));
 
   fast_cnt = 0;
   for ( i = 0; i < FAST_CURVES; i++) {
     if ( fp.CurveValid[i]) {
-      gcd->data[fast_cnt + 1] = (double *) calloc( 1, 8 * max_points);
-      gcd->axis_type[fast_cnt + 1] = curve_eAxis_y;
+      gcd->y_data[fast_cnt] = (double *) calloc( 1, 8 * max_points);
+      gcd->y_axis_type[fast_cnt] = curve_eAxis_y;
       memcpy( &buff[fast_cnt], &fp.Buffers[i], sizeof(buff[0]));
       type[fast_cnt] = (pwr_eType) fp.AttributeType[i];
-      fast_idx[i] = fast_cnt + 1;
-      curve_idx[fast_cnt + 1] = i;
+      fast_idx[i] = fast_cnt;
+      curve_idx[fast_cnt] = i;
 
       *sts = gdh_AttrrefToName( &fp.Attribute[i], attr_name, 
 			    sizeof(attr_name), cdh_mNName);
       if (EVEN(*sts)) continue;
-      strcpy( gcd->name[fast_cnt + 1], attr_name);
+      strcpy( gcd->y_name[fast_cnt], attr_name);
       fast_cnt++;
     }
   }
@@ -153,7 +153,7 @@ XttFast::XttFast( void *parent_ctx,
         element_size[i] = 4;
     }
   }
-  gcd->cols = fast_cnt + 1;
+  gcd->cols = fast_cnt;
   gcd->rows = max_points;
 
   axis_configured = true;
@@ -161,11 +161,11 @@ XttFast::XttFast( void *parent_ctx,
     if ( fp.CurveValid[i]) {
       j = fast_idx[i];
       if ( fp.YMinValue[i] != fp.YMaxValue[i])
-	gcd->scale( gcd->axis_type[j], gcd->value_type[j],
+	gcd->scale( gcd->y_axis_type[j], gcd->y_value_type[j],
 		    fp.YMinValue[i],  fp.YMaxValue[i],
-		    &gcd->min_value_axis[j], &gcd->max_value_axis[j],
-		    &gcd->trend_lines[j], &gcd->axis_lines[j], &gcd->axis_linelongq[j], 
-		    &gcd->axis_valueq[j], gcd->format[j], &gcd->axis_width[j], 1, 1);
+		    &gcd->y_min_value_axis[j], &gcd->y_max_value_axis[j],
+		    &gcd->y_trend_lines[j], &gcd->y_axis_lines[j], &gcd->y_axis_linelongq[j], 
+		    &gcd->y_axis_valueq[j], gcd->y_format[j], &gcd->y_axis_width[j], 1, 1);
       else
 	axis_configured = false;
     }
@@ -248,14 +248,14 @@ void XttFast::fast_scan( void *data)
       for ( j = 0; j < fast->max_points; j++) {
 	if ( k >= fast->max_points)
 	  k = 0;
-	fast->gcd->data[0][j] = tmp[k] - tmp[trigg_index];
+	fast->gcd->x_data[0][j] = tmp[k] - tmp[trigg_index];
 	if ( k == last_index)
 	  break;
 	k++;
       }
       // If to few points, fill with dummy data
       for ( ; j < fast->max_points; j++) {
-	fast->gcd->data[0][j] = tmp[k] - tmp[trigg_index];
+	fast->gcd->x_data[0][j] = tmp[k] - tmp[trigg_index];
       }
       free( tmp);
     }
@@ -266,7 +266,7 @@ void XttFast::fast_scan( void *data)
       if ( EVEN(sts)) return;
 
       for ( j = 0; j < fast->max_points; j++)
-	fast->gcd->data[0][j] = tmp[j];
+	fast->gcd->x_data[0][j] = tmp[j];
       free( tmp);
     }
     for ( i = 0; i < fast->fast_cnt; i++) {
@@ -283,34 +283,34 @@ void XttFast::fast_scan( void *data)
 	    k = 0;
 	  switch( fast->type[i]) {
 	  case pwr_eType_Float32:
-	    fast->gcd->data[i + 1][j] = ((pwr_tFloat32 *)tmp)[k];
+	    fast->gcd->y_data[i][j] = ((pwr_tFloat32 *)tmp)[k];
 	    break;
 	  case pwr_eType_Float64:
-	    fast->gcd->data[i + 1][j] = ((pwr_tFloat64 *)tmp)[k];
+	    fast->gcd->y_data[i][j] = ((pwr_tFloat64 *)tmp)[k];
 	    break;
 	  case pwr_eType_Int64:
-	    fast->gcd->data[i + 1][j] = ((pwr_tInt64 *)tmp)[k];
+	    fast->gcd->y_data[i][j] = ((pwr_tInt64 *)tmp)[k];
 	    break;
 	  case pwr_eType_UInt64:
-	    fast->gcd->data[i + 1][j] = ((pwr_tUInt64 *)tmp)[k];
+	    fast->gcd->y_data[i][j] = ((pwr_tUInt64 *)tmp)[k];
 	    break;
 	  case pwr_eType_Int32:
-	    fast->gcd->data[i + 1][j] = ((pwr_tInt32 *)tmp)[k];
+	    fast->gcd->y_data[i][j] = ((pwr_tInt32 *)tmp)[k];
 	    break;
 	  case pwr_eType_UInt32:
-	    fast->gcd->data[i + 1][j] = ((pwr_tUInt32 *)tmp)[k];
+	    fast->gcd->y_data[i][j] = ((pwr_tUInt32 *)tmp)[k];
 	    break;
 	  case pwr_eType_Int16:
-	    fast->gcd->data[i + 1][j] = ((pwr_tUInt16 *)tmp)[k];
+	    fast->gcd->y_data[i][j] = ((pwr_tUInt16 *)tmp)[k];
 	    break;
 	  case pwr_eType_UInt16:
-	    fast->gcd->data[i + 1][j] = ((pwr_tUInt16 *)tmp)[k];
+	    fast->gcd->y_data[i][j] = ((pwr_tUInt16 *)tmp)[k];
 	    break;
 	  case pwr_eType_Int8:
-	    fast->gcd->data[i + 1][j] = ((pwr_tInt8 *)tmp)[k];
+	    fast->gcd->y_data[i][j] = ((pwr_tInt8 *)tmp)[k];
 	    break;
 	  case pwr_eType_UInt8:
-	    fast->gcd->data[i + 1][j] = ((pwr_tUInt8 *)tmp)[k];
+	    fast->gcd->y_data[i][j] = ((pwr_tUInt8 *)tmp)[k];
 	    break;
 	  default:
 	    ;
@@ -323,34 +323,34 @@ void XttFast::fast_scan( void *data)
 	for ( ; j < fast->max_points; j++) {
 	  switch( fast->type[i]) {
 	  case pwr_eType_Float32:
-	    fast->gcd->data[i + 1][j] = ((pwr_tFloat32 *)tmp)[k];
+	    fast->gcd->y_data[i][j] = ((pwr_tFloat32 *)tmp)[k];
 	    break;
 	  case pwr_eType_Float64:
-	    fast->gcd->data[i + 1][j] = ((pwr_tFloat64 *)tmp)[k];
+	    fast->gcd->y_data[i][j] = ((pwr_tFloat64 *)tmp)[k];
 	    break;
 	  case pwr_eType_Int64:
-	    fast->gcd->data[i + 1][j] = ((pwr_tInt64 *)tmp)[k];
+	    fast->gcd->y_data[i][j] = ((pwr_tInt64 *)tmp)[k];
 	    break;
 	  case pwr_eType_UInt64:
-	    fast->gcd->data[i + 1][j] = ((pwr_tUInt64 *)tmp)[k];
+	    fast->gcd->y_data[i][j] = ((pwr_tUInt64 *)tmp)[k];
 	    break;
 	  case pwr_eType_Int32:
-	    fast->gcd->data[i + 1][j] = ((pwr_tInt32 *)tmp)[k];
+	    fast->gcd->y_data[i][j] = ((pwr_tInt32 *)tmp)[k];
 	    break;
 	  case pwr_eType_UInt32:
-	    fast->gcd->data[i + 1][j] = ((pwr_tUInt32 *)tmp)[k];
+	    fast->gcd->y_data[i][j] = ((pwr_tUInt32 *)tmp)[k];
 	    break;
 	  case pwr_eType_Int16:
-	    fast->gcd->data[i + 1][j] = ((pwr_tInt16 *)tmp)[k];
+	    fast->gcd->y_data[i][j] = ((pwr_tInt16 *)tmp)[k];
 	    break;
 	  case pwr_eType_UInt16:
-	    fast->gcd->data[i + 1][j] = ((pwr_tInt16 *)tmp)[k];
+	    fast->gcd->y_data[i][j] = ((pwr_tInt16 *)tmp)[k];
 	    break;
 	  case pwr_eType_Int8:
-	    fast->gcd->data[i + 1][j] = ((pwr_tInt8 *)tmp)[k];
+	    fast->gcd->y_data[i][j] = ((pwr_tInt8 *)tmp)[k];
 	    break;
 	  case pwr_eType_UInt8:
-	    fast->gcd->data[i + 1][j] = ((pwr_tUInt8 *)tmp)[k];
+	    fast->gcd->y_data[i][j] = ((pwr_tUInt8 *)tmp)[k];
 	    break;
 	  default: ;
 	  }
@@ -366,34 +366,34 @@ void XttFast::fast_scan( void *data)
 	for ( j = 0; j < fast->max_points; j++) {
 	  switch( fast->type[i]) {
 	  case pwr_eType_Float32:
-	    fast->gcd->data[i + 1][j] = ((pwr_tFloat32 *)tmp)[j];
+	    fast->gcd->y_data[i][j] = ((pwr_tFloat32 *)tmp)[j];
 	    break;
 	  case pwr_eType_Float64:
-	    fast->gcd->data[i + 1][j] = ((pwr_tFloat64 *)tmp)[j];
+	    fast->gcd->y_data[i][j] = ((pwr_tFloat64 *)tmp)[j];
 	    break;
 	  case pwr_eType_Int64:
-	    fast->gcd->data[i + 1][j] = ((pwr_tInt64 *)tmp)[j];
+	    fast->gcd->y_data[i][j] = ((pwr_tInt64 *)tmp)[j];
 	    break;
 	  case pwr_eType_UInt64:
-	    fast->gcd->data[i + 1][j] = ((pwr_tUInt64 *)tmp)[j];
+	    fast->gcd->y_data[i][j] = ((pwr_tUInt64 *)tmp)[j];
 	    break;
 	  case pwr_eType_Int32:
-	    fast->gcd->data[i + 1][j] = ((pwr_tInt32 *)tmp)[j];
+	    fast->gcd->y_data[i][j] = ((pwr_tInt32 *)tmp)[j];
 	    break;
 	  case pwr_eType_UInt32:
-	    fast->gcd->data[i + 1][j] = ((pwr_tUInt32 *)tmp)[j];
+	    fast->gcd->y_data[i][j] = ((pwr_tUInt32 *)tmp)[j];
 	    break;
 	  case pwr_eType_Int16:
-	    fast->gcd->data[i + 1][j] = ((pwr_tInt16 *)tmp)[j];
+	    fast->gcd->y_data[i][j] = ((pwr_tInt16 *)tmp)[j];
 	    break;
 	  case pwr_eType_UInt16:
-	    fast->gcd->data[i + 1][j] = ((pwr_tInt16 *)tmp)[j];
+	    fast->gcd->y_data[i][j] = ((pwr_tInt16 *)tmp)[j];
 	    break;
 	  case pwr_eType_Int8:
-	    fast->gcd->data[i + 1][j] = ((pwr_tInt8 *)tmp)[j];
+	    fast->gcd->y_data[i][j] = ((pwr_tInt8 *)tmp)[j];
 	    break;
 	  case pwr_eType_UInt8:
-	    fast->gcd->data[i + 1][j] = ((pwr_tUInt8 *)tmp)[j];
+	    fast->gcd->y_data[i][j] = ((pwr_tUInt8 *)tmp)[j];
 	    break;
 	  default: ;
 	  }
@@ -418,15 +418,17 @@ void XttFast::fast_scan( void *data)
       }
     }
     else {
+      double axis_width;
+
       fast->gcd->get_borders();
       // fast->gcd->get_default_axis();
-      fast->gcd->scale( fast->gcd->axis_type[0], fast->gcd->value_type[0],
-		    fast->gcd->min_value[0],  fast->gcd->max_value[0],
-		    &fast->gcd->min_value_axis[0], &fast->gcd->max_value_axis[0],
-		    &fast->gcd->trend_lines[0], &fast->gcd->axis_lines[0], 
-		    &fast->gcd->axis_linelongq[0], 
-		    &fast->gcd->axis_valueq[0], fast->gcd->format[0],
-		    &fast->gcd->axis_width[0], 1, 1);
+      fast->gcd->scale( fast->gcd->x_axis_type[0], fast->gcd->x_value_type[0],
+		    fast->gcd->x_min_value[0],  fast->gcd->x_max_value[0],
+		    &fast->gcd->x_min_value_axis[0], &fast->gcd->x_max_value_axis[0],
+		    &fast->gcd->x_trend_lines[0], &fast->gcd->x_axis_lines[0], 
+		    &fast->gcd->x_axis_linelongq[0], 
+		    &fast->gcd->x_axis_valueq[0], fast->gcd->x_format[0],
+		    &axis_width, 1, 1);
       if ( !fast->first_scan) {
 	fast->curve->configure_curves();
 	// fast->curve->configure_axes();
