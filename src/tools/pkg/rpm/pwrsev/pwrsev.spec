@@ -10,7 +10,7 @@
 
 Name: pwrsev
 Summary: Proview/R storage environment
-Version: 4.7.0
+Version: 4.7.1
 Release: 1
 License: GPL
 BuildArch: i386
@@ -420,5 +420,5 @@ fi
 #%postun
 
 %changelog
-* Thu Mar 23 2010 Claes Sjofors <claes.sjofors@proview.se> 4.7.0-1
+* Fri Aug 27 2010 Claes Sjofors <claes.sjofors@proview.se> 4.7.1-1
   - Base release.
