@@ -2421,12 +2421,18 @@ Volume Profibus $ClassVolume 0.0.250.7
       Object RtBody $ObjBodyDef 1 21-APR-2009 13:41:08.17
         Body SysBody 21-APR-2009 13:41:08.17
           Attr StructName = "Pb_Profiboard"
-          Attr NextAix = "_X57"
+          Attr NextAix = "_X58"
         EndBody
         Object Description $Attribute 53 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object EthernetDevice $Attribute 57 27-AUG-2010 15:41:20.42
+          Body SysBody 27-AUG-2010 15:41:26.88
+            Attr PgmName = "EthernetDevice"
+            Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
         Object Process $Attribute 54 21-APR-2009 13:41:08.17
@@ -2477,7 +2483,8 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndObject
       EndObject
       Object Template PnControllerSoftingPNAK 2151645184 01-JAN-1970 01:00:00.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 27-AUG-2010 15:41:46.62
+          Attr EthernetDevice = "eth0"
         EndBody
       EndObject
     EndObject
