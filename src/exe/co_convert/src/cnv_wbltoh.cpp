@@ -178,7 +178,7 @@ int CnvWblToH::body_exec()
   char struct_name[80];
 
   attr_count = 0;
-  attr_next_alignlw = 0;
+  attr_next_alignlw = 1;  // Align first attribute on longword
 
   if ( strcmp( CnvCtx::low( ctx->rw->body_name), "devbody") == 0) {
     if ( ctx->hpp)

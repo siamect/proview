@@ -583,7 +583,7 @@ struct pwr_s_ParGraph {
 
 
 struct pwr_s_ParInfo {
-  pwr_tPgmName		PgmName;			/* Name to be used in program. */
+  pwr_tPgmName		PgmName		pwr_dAlignW;   	/* Name to be used in program. */
   pwr_eType		Type		pwr_dAlignW;  	/* Compiled system type. */
   pwr_tUInt32		Offset		pwr_dAlignW;  	/* Compiled offset in body. */
   pwr_tUInt32		Size		pwr_dAlignW;  	/* Compiled size, number of bytes. */
@@ -750,34 +750,34 @@ union pwr_m_Adef {
 #define PWR_MASK_NEWATTRIBUTE  	pwr_mAdef_newattribute
 
 struct pwr_s_Param {
-  pwr_sParInfo	Info;
+  pwr_sParInfo	Info 	pwr_dAlignLW;
   pwr_tTypeId  	TypeRef	pwr_dAlignW;	/* Reference to the object defining
                                            the type.  */
 };
 
 struct pwr_s_Intern {
-  pwr_sParInfo	Info;
+  pwr_sParInfo	Info 	pwr_dAlignLW;
   pwr_tTypeId  	TypeRef	pwr_dAlignW;	/* Reference to the object defining
                                            the type.  */
   pwr_sParGraph	Graph	pwr_dAlignW;  	/* Used by graphic editor.  */
 };
 
 struct pwr_s_Input {
-  pwr_sParInfo	Info;
+  pwr_sParInfo	Info 	pwr_dAlignLW;
   pwr_tTypeId  	TypeRef	pwr_dAlignW;	/* Reference to the object defining
                                            the type.  */
   pwr_sParGraph	Graph	pwr_dAlignW;  	/* Used by graphic editor.  */
 };
 
 struct pwr_s_Output {
-  pwr_sParInfo	Info;
+  pwr_sParInfo	Info 	pwr_dAlignLW;
   pwr_tTypeId  	TypeRef	pwr_dAlignW;	/* Reference to the object defining
                                            the type.  */
   pwr_sParGraph	Graph	pwr_dAlignW;  	/* Used by graphic editor.  */
 };
 
 struct pwr_s_AttrXRef {
-  pwr_sParInfo	Info;
+  pwr_sParInfo	Info 		pwr_dAlignLW;
   pwr_tXRef    	Identity	pwr_dAlignW;	/* A name to identify a cross
 					           reference.  */
   pwr_tXRef    	Source		pwr_dAlignW;
@@ -786,7 +786,7 @@ struct pwr_s_AttrXRef {
 };
 
 struct pwr_s_ObjXRef {
-  pwr_sParInfo	Info;
+  pwr_sParInfo	Info 		pwr_dAlignLW;
   pwr_tXRef    	Identity	pwr_dAlignW;	/* A name to identify a cross
                                 	           reference.  */
   pwr_tXRef    	Source		pwr_dAlignW;
@@ -797,7 +797,7 @@ struct pwr_s_ObjXRef {
 };
 
 struct pwr_s_Buffer {
-  pwr_sParInfo	Info;
+  pwr_sParInfo	Info 	pwr_dAlignLW;
   pwr_eClass   	Class	pwr_dAlignW;		/* The system class defining the
 						   data stored here.  */
 };
@@ -815,13 +815,13 @@ union pwr_u_ParDef {
 };
 
 struct pwr_s_Bit {
-  pwr_tString80 Text;
+  pwr_tString80 Text 	pwr_dAlignLW;
   pwr_tString32 PgmName	pwr_dAlignW;
   pwr_tUInt32	Value	pwr_dAlignW;
 };
 
 struct pwr_s_Value {
-  pwr_tString80 Text;
+  pwr_tString80 Text 	pwr_dAlignLW;
   pwr_tString32 PgmName	pwr_dAlignW;
   pwr_tInt32	Value	pwr_dAlignW;
 };
@@ -831,14 +831,14 @@ struct pwr_s_Value {
    This section defines the classes to use when defining methods.  */
 
 struct pwr_s_DbCallBack {
-  pwr_tString80	MethodName;
+  pwr_tString80	MethodName 		pwr_dAlignLW;
   pwr_tString40	MethodArguments[5]	pwr_dAlignW;
   pwr_tStatus  	(*Method)()		pwr_dAlignLW;	/* Address to method. */
   pwr_tUInt32  	Flags			pwr_dAlignW;
 };
   
 struct pwr_s_Method {
-  pwr_tString80	MethodName;
+  pwr_tString80	MethodName 		pwr_dAlignLW;
   pwr_tString40	MethodArguments[5]	pwr_dAlignW;
 };
 
@@ -848,7 +848,7 @@ struct pwr_s_Method {
    This section defines the classes to use when defining menus.  */
 
 struct pwr_s_MenuCascade {
-  pwr_tString40	ButtonName;
+  pwr_tString40	ButtonName 		pwr_dAlignLW;
   pwr_tString80	FilterName		pwr_dAlignW;
   pwr_tString40	FilterArguments[5]	pwr_dAlignW;
   pwr_tBoolean	(*Filter)()		pwr_dAlignLW; /* Address to method
@@ -856,7 +856,7 @@ struct pwr_s_MenuCascade {
 };
 
 struct pwr_s_MenuButton {
-  pwr_tString40	ButtonName;
+  pwr_tString40	ButtonName	 	pwr_dAlignLW;
   pwr_tString80	MethodName		pwr_dAlignW;
   pwr_tString80	MethodArguments[5]	pwr_dAlignW;
   pwr_tString80	FilterName		pwr_dAlignW;
@@ -868,7 +868,7 @@ struct pwr_s_MenuButton {
 };
 
 struct pwr_s_MenuRef {
-  pwr_tString40	ButtonName;
+  pwr_tString40	ButtonName	 	pwr_dAlignLW;
   pwr_tString40	RefAttribute		pwr_dAlignW;
   pwr_tString80	FilterName		pwr_dAlignW;
   pwr_tString40	FilterArguments[5]	pwr_dAlignW;
@@ -882,12 +882,12 @@ struct pwr_s_MenuRef {
    editors.  */
 
 struct pwr_s_Point {
-  pwr_tFloat32	x;
+  pwr_tFloat32	x 	pwr_dAlignW;
   pwr_tFloat32	y	pwr_dAlignW;
 };
 
 struct pwr_s_PlcProgram {
-  pwr_tObjid		oid;
+  pwr_tObjid		oid 		pwr_dAlignLW;
   pwr_tUInt32		object_type	pwr_dAlignW;
   pwr_tClassId		cid		pwr_dAlignW;
   pwr_tUInt32		defnamecount[PWR_OBJTYPES_MAX]	pwr_dAlignW;
@@ -897,7 +897,7 @@ struct pwr_s_PlcProgram {
 };
 
 struct pwr_s_PlcWindow {
-  pwr_tObjid		oid;
+  pwr_tObjid		oid	 	pwr_dAlignLW;
   pwr_tUInt32		object_type	pwr_dAlignW;
   pwr_tClassId		cid		pwr_dAlignW;
   pwr_tFloat32		x		pwr_dAlignW;
@@ -914,7 +914,7 @@ struct pwr_s_PlcWindow {
 };
 
 struct pwr_s_PlcNode {
-  pwr_tUInt32		object_type;
+  pwr_tUInt32		object_type 	pwr_dAlignLW;
   pwr_tClassId		cid		pwr_dAlignW;
   pwr_tObjid		oid		pwr_dAlignW;
   pwr_tFloat32		x		pwr_dAlignW;
@@ -931,7 +931,7 @@ struct pwr_s_PlcNode {
 };
 
 struct pwr_s_PlcConnection {
-  pwr_tObjid		oid;
+  pwr_tObjid		oid 		pwr_dAlignLW;
   pwr_tUInt32		object_type	pwr_dAlignW;
   pwr_tClassId		cid		pwr_dAlignW;
   pwr_tUInt32		curvature	pwr_dAlignW;
@@ -948,12 +948,12 @@ struct pwr_s_PlcConnection {
 };
 
 struct pwr_s_GraphPlcProgram {
-  pwr_tUInt32		plc_type;
+  pwr_tUInt32		plc_type 	pwr_dAlignLW;
   pwr_tClassId		subwindow_class	pwr_dAlignW;
 };
 
 struct pwr_s_GraphPlcWindow {
-  pwr_tUInt32		window_type;
+  pwr_tUInt32		window_type	 	pwr_dAlignLW;
   pwr_tUInt32		defaultobjects		pwr_dAlignW;
   pwr_tUInt32		width			pwr_dAlignW;
   pwr_tUInt32		height			pwr_dAlignW;
@@ -977,7 +977,7 @@ struct pwr_s_GraphPlcWindow {
 };
 
 struct pwr_s_GraphPlcNode {
-  pwr_tUInt32		object_type;
+  pwr_tUInt32		object_type    	pwr_dAlignLW;
   pwr_tUInt32		parameters[4]	pwr_dAlignW;
   pwr_tUInt32		subwindows	pwr_dAlignW;
   pwr_tClassId		subwindow_class[2] pwr_dAlignW;
@@ -1001,7 +1001,7 @@ struct pwr_s_GraphPlcNode {
 };
 
 struct pwr_s_GraphPlcConnection {
-  pwr_tUInt32		con_type;
+  pwr_tUInt32		con_type       	pwr_dAlignLW;
   pwr_tInt32		arrows		pwr_dAlignW;
   pwr_tFloat32		linewidth	pwr_dAlignW;
   pwr_tFloat32		dashes		pwr_dAlignW;
@@ -1015,7 +1015,7 @@ struct pwr_s_GraphPlcConnection {
 /* Plant defining classes.  */
 
 struct pwr_s_PlantHier {
-  pwr_tString80		Description;
+  pwr_tString80		Description 	pwr_dAlignLW;
   pwr_tAttrRef        	DefGraph	pwr_dAlignW;
   pwr_tAttrRef        	DefTrend	pwr_dAlignW;
   pwr_tString40       	HelpTopic	pwr_dAlignW;
@@ -1028,13 +1028,13 @@ struct pwr_s_PlantHier {
 /* Node defining classes.  */
 
 struct pwr_s_System {
-  pwr_tString80		Description;
+  pwr_tString80		Description 	pwr_dAlignLW;
   char			SystemName[80]	pwr_dAlignW;
   char			SystemGroup[80]	pwr_dAlignW;
 };
 
 struct pwr_s_Node {
-  pwr_tString80		Description;
+  pwr_tString80		Description 	pwr_dAlignLW;
   char			ErrLogTerm[132]	pwr_dAlignW;
   char			ErrLogFile[132]	pwr_dAlignW;
   pwr_tTime		BootTime	pwr_dAlignLW;
@@ -1059,7 +1059,7 @@ struct pwr_s_Node {
 #define pwr_mAppl_PLC	1	/* This is the PLC program */
 
 struct pwr_s_Appl {
-  pwr_tString80		Description;
+  pwr_tString80		Description 	pwr_dAlignLW;
   char			FileName[256]	pwr_dAlignW;
   char			ProgramName[40]	pwr_dAlignW;
   pwr_tBoolean		StartWithDebug	pwr_dAlignW;
@@ -1073,29 +1073,29 @@ struct pwr_s_Appl {
 };
 
 struct pwr_s_Alias {
-  pwr_tString80		Description;
+  pwr_tString80		Description 	pwr_dAlignLW;
   pwr_tObjid		Object		pwr_dAlignW;
 };
 
 struct pwr_s_Hier {
-  pwr_tString80		Description	pwr_dAlignW;
+  pwr_tString80		Description	pwr_dAlignLW;
 };
 
 struct pwr_s_DocHier {
-  pwr_tString80		Description	pwr_dAlignW;
+  pwr_tString80		Description	pwr_dAlignLW;
 };
 
 struct pwr_s_LibHier {
-  pwr_tString80	Description;
+  pwr_tString80		Description 	pwr_dAlignLW;
 };
 
 struct pwr_s_NodeHier {
-  pwr_tString80		Description	pwr_dAlignW;
+  pwr_tString80		Description	pwr_dAlignLW;
   pwr_tConfigStatusEnum	ConfigurationStatus pwr_dAlignW;
 };
 
 struct pwr_s_RootVolume {
-  pwr_tString80		Description;
+  pwr_tString80		Description 	pwr_dAlignLW;
   pwr_tObjectIx		NextOix		pwr_dAlignW;
   pwr_tProjVersion	RtVersion	pwr_dAlignW;
   pwr_tTime		RtCreTime	pwr_dAlignLW;
@@ -1108,7 +1108,7 @@ struct pwr_s_RootVolume {
 };
 
 struct pwr_s_SubVolume {
-  pwr_tString80		Description;
+  pwr_tString80		Description 	pwr_dAlignLW;
   pwr_tObjectIx		NextOix		pwr_dAlignW;
   pwr_tProjVersion	RtVersion	pwr_dAlignW;
   pwr_tTime		RtCreTime	pwr_dAlignLW;
@@ -1121,7 +1121,7 @@ struct pwr_s_SubVolume {
 };
 
 struct pwr_s_SharedVolume {
-  pwr_tString80		Description;
+  pwr_tString80		Description 	pwr_dAlignLW;
   pwr_tObjectIx		NextOix		pwr_dAlignW;
   pwr_tProjVersion	RtVersion	pwr_dAlignW;
   pwr_tTime		RtCreTime	pwr_dAlignLW;
@@ -1143,7 +1143,7 @@ struct pwr_s_DynamicVolume {
 };
 
 struct pwr_s_SystemVolume {
-  pwr_tString80		Description;
+  pwr_tString80		Description 	pwr_dAlignLW;
   pwr_tObjectIx		NextOix		pwr_dAlignW;
   pwr_tProjVersion	RtVersion	pwr_dAlignW;
   pwr_tTime		RtCreTime	pwr_dAlignLW;
@@ -1153,7 +1153,7 @@ struct pwr_s_SystemVolume {
 };
 
 struct pwr_s_ClassVolume {
-  pwr_tString80		Description;
+  pwr_tString80		Description 	pwr_dAlignLW;
   pwr_tObjectIx		NextOix		pwr_dAlignW;
   pwr_tProjVersion	RtVersion	pwr_dAlignW;
   pwr_tTime		RtCreTime	pwr_dAlignLW;
@@ -1167,7 +1167,7 @@ struct pwr_s_ClassVolume {
 };
 
 struct pwr_s_WorkBenchVolume {
-  pwr_tString80		Description;
+  pwr_tString80		Description 	pwr_dAlignLW;
   pwr_tObjectIx		NextOix		pwr_dAlignW;
   pwr_tProjVersion	RtVersion	pwr_dAlignW;
   pwr_tTime		RtCreTime	pwr_dAlignLW;
@@ -1177,7 +1177,7 @@ struct pwr_s_WorkBenchVolume {
 };
 
 struct pwr_s_DirectoryVolume {
-  pwr_tString80		Description;
+  pwr_tString80		Description 	pwr_dAlignLW;
   pwr_tObjectIx		NextOix		pwr_dAlignW;
   pwr_tProjVersion	RtVersion	pwr_dAlignW;
   pwr_tTime		RtCreTime	pwr_dAlignLW;
@@ -1187,21 +1187,21 @@ struct pwr_s_DirectoryVolume {
 };
 
 struct pwr_s_VolatileVolume {
-  pwr_tString80		Description;
+  pwr_tString80		Description 	pwr_dAlignLW;
   pwr_tObjectIx		NextOix		pwr_dAlignW;
 };
 
 struct pwr_s_ExternVolume {
-  pwr_tString80		Description;
+  pwr_tString80		Description 	pwr_dAlignLW;
 };
 
 struct pwr_s_CreateVolume {
-  pwr_tString80		Description;
+  pwr_tString80		Description 	pwr_dAlignLW;
   pwr_tVolumeId		Volume		pwr_dAlignW;
 };
 
 struct pwr_s_MountVolume {
-  pwr_tString80		Description;
+  pwr_tString80		Description 	pwr_dAlignLW;
   pwr_tVolumeId		Volume		pwr_dAlignW;
   pwr_eVolumeAccess	Access	       	pwr_dAlignW;
   pwr_eMountType	MountType	pwr_dAlignW;
@@ -1212,12 +1212,12 @@ struct pwr_s_MountVolume {
 };
 
 struct pwr_s_MountObject {
-  pwr_tString80		Description;
+  pwr_tString80		Description 	pwr_dAlignLW;
   pwr_tObjid		Object		pwr_dAlignW;
 };
 
 struct pwr_s_Security {
-  pwr_tMask	DefaultWebPriv;
+  pwr_tMask	DefaultWebPriv 		pwr_dAlignLW;
   pwr_tMask	DefaultXttPriv		pwr_dAlignW;
   pwr_tBoolean	XttUseOpsysUser		pwr_dAlignW;
   pwr_tString80 WebSystemGroup		pwr_dAlignW;

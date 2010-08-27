@@ -2026,6 +2026,9 @@ bool wb_vrepced::buildClass( pwr_tStatus *sts, wb_orep *co)
 	ao = next_ao;
       }
 
+      // Align body size on longword
+      offset = pwr_AlignLW( offset);
+
       // Store data in Body object
       m_vrep->writeAttribute( sts, bo, pwr_eBix_sys, offsetof( pwr_sObjBodyDef, Size),
 			      sizeof(offset), &offset);
@@ -2577,7 +2580,7 @@ void wb_vrepced::printStructFile( bool hpp)
 	      }
 
 	      bool attr_found = false;
-	      int attr_next_alignlw = 0;
+	      int attr_next_alignlw = 1;  // Align first attribute on longword
 	      for ( o_adef = o_bdef->first( &sts); ODD(sts);) {
 		o_adef->ref();
 
