@@ -541,8 +541,9 @@ struct pwr_s_ClassDef {
                                                	   editor.  */
   pwr_mClassDef	Flags	 	pwr_dAlignW;
   pwr_tUInt32	NumOfObjBodies 	pwr_dAlignW;
-  pwr_ePopEditor PopEditor 	pwr_dAlignW;	/* What kind of object picture
+  pwr_ePopEditor PopEditor 	pwr_dAlignW;   /* What kind of object picture
                                                	   dispatcher to use.  */
+  pwr_tInt32    Filler		pwr_dAlignW;   /* LongWord size alignment */ 
 };
 
 
@@ -753,6 +754,7 @@ struct pwr_s_Param {
   pwr_sParInfo	Info 	pwr_dAlignLW;
   pwr_tTypeId  	TypeRef	pwr_dAlignW;	/* Reference to the object defining
                                            the type.  */
+  pwr_tInt32    Filler   pwr_dAlignW;    /* LongWord size alignment */
 };
 
 struct pwr_s_Intern {
