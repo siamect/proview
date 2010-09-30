@@ -1040,14 +1040,10 @@ ini_ReadBootFile (
   int			n;
   int			nvol;
 
-#if 1
-  pwr_tObjName          vname;
+  char 			plcname[256];
+  char          	vname[80];
   char			vids[80];
   pwr_tVolumeId		vid;
-#else
-  char			vids[80];
-  pwr_tVolumeId		vid;
-#endif
 
   /*  pwr_tProjVersion	ver;*/
   FILE *f;
@@ -1094,14 +1090,14 @@ ini_ReadBootFile (
 
       i++;
 
-      n = sscanf(s, "%s %s", vname, vids);
+      n = sscanf(s, "%s %s", plcname, vids);
       if (n < 2) {
 	errh_LogError(&cp->log, "Bootfile corrupt, error in plc data");
 	cp->errors++;
 	continue;
       }
 
-      t = strrchr( vname, '_');
+      t = strrchr( plcname, '_');
       n = sscanf(t+1, "%d", &cp->node.plcVersion);
       if (n < 1) {
 	errh_LogError(&cp->log, "Bootfile corrupt, error in plc data");
