@@ -127,8 +127,25 @@ static pwr_tStatus SyntaxCheck (
   return PWRB__SUCCESS;
 }
 
+static pwr_tStatus AnteCreate (
+  ldh_tSesContext   Session,
+  pwr_tObjid	    Father,
+  pwr_tClassId	    Class
+) {
+  pwr_tStatus sts;
+  pwr_tOid oid;
+
+  // There should only be one node object
+  sts = ldh_GetClassList( Session, pwr_eClass_Node, &oid);
+  if ( ODD(sts))
+    return PWRS__NODEALREX;
+
+  return PWRS__SUCCESS;
+}
+
 pwr_dExport pwr_BindMethods($Node) = {
   pwr_BindMethod(PostCreate),
+  pwr_BindMethod(AnteCreate),
   pwr_BindMethod(SyntaxCheck),
   pwr_NullMethod
 };

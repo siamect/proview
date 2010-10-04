@@ -140,6 +140,7 @@ SObject pwrs:Class
           Attr Size = 4
           Attr Flags = PWR_MASK_INVISIBLE
           Attr Flags |= PWR_MASK_RTHIDE
+          Attr Flags |= PWR_MASK_NOWBL
           Attr Elements = 1
           Attr ParamIndex = 6
           Attr TypeRef = pwr_eType_Int32

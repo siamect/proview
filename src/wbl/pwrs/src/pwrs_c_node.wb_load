@@ -283,6 +283,16 @@ SObject pwrs:Class
         Attr MethodName = "$Node-PostCreate"
       EndBody
     EndObject
+    Object AnteCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "$Node-AnteCreate"
+      EndBody
+    EndObject
+    Object PostCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "$Node-PostCreate"
+      EndBody
+    EndObject
     Object NavigatorPosnn $Menu
       Object Pointed $Menu
 	Object Build $MenuButton

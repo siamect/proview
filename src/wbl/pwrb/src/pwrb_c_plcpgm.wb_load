@@ -145,6 +145,11 @@ SObject pwrb:Class
         Attr MethodName = "PlcPgm-PostCreate"
       EndBody
     EndObject
+    Object AnteAdopt $DbCallBack
+      Body SysBody
+        Attr MethodName = "PlcPgm-AnteAdopt"
+      EndBody
+    EndObject
     Object NavigatorPosnn $Menu
       Object Pointed $Menu
 	Object OpenProgram $MenuButton

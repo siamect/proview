@@ -200,7 +200,7 @@ SObject pwrs:Class
           Attr Type = pwr_eType_TypeId
           Attr Offset = 60
           Attr Size = 4
-          Attr Flags = PWR_MASK_ALWAYSWBL
+          Attr Flags |= PWR_MASK_NOWBL
           Attr Flags |= PWR_MASK_INVISIBLE
           Attr Flags |= PWR_MASK_RTHIDE
           Attr Elements = 1
