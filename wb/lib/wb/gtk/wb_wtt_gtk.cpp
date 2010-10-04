@@ -1567,11 +1567,12 @@ void WttGtk::open_boot_window()
   boot_list = (GtkWidget *) g_object_new(GTK_TYPE_TREE_VIEW,
 					 "model", store,
 					 "rules-hint", TRUE,
-					 "headers-clickable", TRUE,
+					 "headers-visible", FALSE,
 					 "reorderable", TRUE,
 					 "enable-search", TRUE,
 					 "search-column", 0,
 					 NULL);
+
 
   text_renderer = gtk_cell_renderer_text_new();
   name_column = gtk_tree_view_column_new_with_attributes( "",
@@ -1584,6 +1585,8 @@ void WttGtk::open_boot_window()
 		NULL);
 
   gtk_tree_view_append_column( GTK_TREE_VIEW(boot_list), name_column);
+  g_signal_connect( boot_list, "row-activated", 
+ 		    G_CALLBACK(WttGtk::boot_row_activated_cb), this);
 
   GtkWidget *ok_button = gtk_button_new_with_label( "Ok");
   gtk_widget_set_size_request( ok_button, 70, 25);
@@ -1644,6 +1647,14 @@ void WttGtk::boot_destroy_cb(GtkWidget *w, gpointer data)
     wtt->boot_volumelist = 0;
   }
   ((WttGtk *)wtt)->boot_dia = 0;
+}
+
+void WttGtk::boot_row_activated_cb( GtkTreeView *tree_view, 
+				    GtkTreePath *path,
+				    GtkTreeViewColumn *column,
+				    gpointer data)
+{
+  boot_ok_cb( 0, data);
 }
 
 // Widget callbacks for OK button
@@ -2985,6 +2996,8 @@ void WttGtk::create_confirm_dialog()
   gtk_box_pack_start( GTK_BOX(confirm_vbox), gtk_hseparator_new(), FALSE, FALSE, 0);
   gtk_box_pack_end( GTK_BOX(confirm_vbox), confirm_hboxbuttons, FALSE, FALSE, 15);
   gtk_container_add( GTK_CONTAINER(confirm_widget), confirm_vbox);
+  gtk_window_set_transient_for( GTK_WINDOW(gtk_widget_get_toplevel(confirm_widget)), 
+  				GTK_WINDOW(gtk_widget_get_toplevel(toplevel)));
   gtk_widget_show_all( confirm_widget);
 }
 							  
@@ -3045,6 +3058,8 @@ void WttGtk::create_input_dialog()
   gtk_container_add( GTK_CONTAINER(india_widget), india_vbox);
   gtk_widget_show_all( india_widget);
   g_object_set( india_widget, "visible", FALSE, NULL);
+  gtk_window_set_transient_for( GTK_WINDOW(gtk_widget_get_toplevel(india_widget)), 
+				GTK_WINDOW(gtk_widget_get_toplevel(toplevel)));
 }
 
 GtkWidget *WttGtk::build_menu()

@@ -3019,6 +3019,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 					     "title", "Input Dialog",
 					     "window-position", GTK_WIN_POS_CENTER,
 					     NULL);
+
   g_signal_connect( india_widget, "delete_event", G_CALLBACK(india_delete_event), this);
   india_text = gtk_entry_new();
   g_signal_connect( india_text, "activate", 
@@ -3056,6 +3057,9 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_container_add( GTK_CONTAINER(india_widget), india_vbox);
   gtk_widget_show_all( india_widget);
   g_object_set( india_widget, "visible", FALSE, NULL);
+  gtk_window_set_transient_for( GTK_WINDOW(gtk_widget_get_toplevel(india_widget)), 
+				GTK_WINDOW(gtk_widget_get_toplevel(toplevel)));
+
 
   // Create a confirm window
   confirm_widget = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
@@ -3064,6 +3068,8 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 					       "title", "Confirm",
 					       "window-position", GTK_WIN_POS_CENTER,
 					       NULL);
+
+
   g_signal_connect( confirm_widget, "delete_event", G_CALLBACK(confirm_delete_event), this);
   confirm_label = gtk_label_new("Graph Name");
   GtkWidget *confirm_image = (GtkWidget *)g_object_new( GTK_TYPE_IMAGE, 
@@ -3097,6 +3103,8 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_container_add( GTK_CONTAINER(confirm_widget), confirm_vbox);
   gtk_widget_show_all( confirm_widget);
   g_object_set( confirm_widget, "visible", FALSE, NULL);
+  gtk_window_set_transient_for( GTK_WINDOW(gtk_widget_get_toplevel(confirm_widget)), 
+				GTK_WINDOW(gtk_widget_get_toplevel(toplevel)));
 
 							  
   // Create a Yes No Dialog
@@ -3106,6 +3114,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 						"title", "Confirm",
 						"window-position", GTK_WIN_POS_CENTER,
 						NULL);
+
   g_signal_connect( yesnodia_widget, "delete_event", G_CALLBACK(yesnodia_delete_event), this);
   yesnodia_label = gtk_label_new("Graph Name");
   GtkWidget *yesnodia_image = (GtkWidget *)g_object_new( GTK_TYPE_IMAGE, 
@@ -3144,6 +3153,8 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_container_add( GTK_CONTAINER(yesnodia_widget), yesnodia_vbox);
   gtk_widget_show_all( yesnodia_widget);
   g_object_set( yesnodia_widget, "visible", FALSE, NULL);
+  gtk_window_set_transient_for( GTK_WINDOW(gtk_widget_get_toplevel(yesnodia_widget)), 
+				GTK_WINDOW(gtk_widget_get_toplevel(toplevel)));
 
 							  
 

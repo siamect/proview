@@ -248,6 +248,10 @@ class WttGtk : public Wtt {
     static void boot_cancel_cb(GtkWidget *w, gpointer data);
     static void boot_destroy_cb(GtkWidget *w, gpointer data);
     static gint boot_delete_cb(GtkWidget *w, GdkEvent *event, gpointer data);
+    static void boot_row_activated_cb( GtkTreeView *tree_view, 
+				       GtkTreePath *path,
+				       GtkTreeViewColumn *column,
+				       gpointer data);
     static void boot_ok_cb(GtkWidget *w, gpointer data);
     static void activate_options_ok( GtkWidget *w, gpointer data);
     static void activate_options_apply( GtkWidget *w, gpointer data);
