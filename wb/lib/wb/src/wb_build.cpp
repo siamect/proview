@@ -167,7 +167,8 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
 
   syi_NodeName( &m_sts, currentnode, sizeof(currentnode));
 
-  if ( cdh_NoCaseStrcmp( node, currentnode) == 0) {
+  // if ( cdh_NoCaseStrcmp( node, currentnode) == 0) 
+  {
     pwr_tFileName src_fname, dest_fname;
     pwr_tCmd	cmd;
     pwr_tTime	dest_time, src_time;
