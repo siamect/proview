@@ -146,12 +146,25 @@ public class JopOpWindow extends JPanel {
       this.add( navigatorButton);
     }
       
-    helpButton = new OpWindButton( session, "", JopLang.transl("Help"),
+    s = sret.str + ".DisableHelp";
+    iret = en.gdh.getObjectInfoInt( s);
+    if ( iret.evenSts()) return;
+
+    if ( iret.value != 0) {
+      helpButton = new OpWindButton( session, "", JopLang.transl("Help"),
 			       OpWindButton.HELP);
-    this.add( helpButton);
-    button = new OpWindButton( session, "", "Proview",
-			       OpWindButton.PROVIEW);
-    this.add( button);
+      this.add( helpButton);
+    }
+
+    s = sret.str + ".DisableProview";
+    iret = en.gdh.getObjectInfoInt( s);
+    if ( iret.evenSts()) return;
+
+    if ( iret.value != 0) {
+      button = new OpWindButton( session, "", "Proview",
+				 OpWindButton.PROVIEW);
+      this.add( button);
+    }
     this.add( new JSeparator());
 
     CdhrString sretName = null;
