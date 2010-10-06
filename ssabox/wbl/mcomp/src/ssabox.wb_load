@@ -1,6 +1,6 @@
 Volume SsabOx $ClassVolume 0.0.250.5 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X175"
+    Attr NextOix = "_X182"
     Attr NextCix = "_X33"
     Attr NextTix[0] = "_X5"
   EndBody
@@ -206,7 +206,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
       Body SysBody 01-JAN-1970 01:00:00.00
         Attr Editor = 0
         Attr Method = 5
-        Attr Flags = 16464
+        Attr Flags = 49232
       EndBody
       Object RtBody $ObjBodyDef 1 06-OCT-2005 14:45:53.00
         Body SysBody 01-JAN-1970 01:00:00.00
@@ -370,6 +370,11 @@ Volume SsabOx $ClassVolume 0.0.250.5
             EndBody
           EndObject
         EndObject
+      EndObject
+      Object PostCreate $DbCallBack 177 05-OCT-2010 11:14:29.89
+        Body SysBody 05-OCT-2010 16:18:40.17
+          Attr MethodName = "BaseIOCard-PostCreate"
+        EndBody
       EndObject
     EndObject
     !/**
@@ -573,6 +578,11 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrb:Type-CardMask2_1"
           EndBody
         EndObject
+      EndObject
+      Object PostCreate $DbCallBack 178 05-OCT-2010 16:19:01.60
+        Body SysBody 05-OCT-2010 16:19:01.60
+          Attr MethodName = "BaseIOCard-PostCreate"
+        EndBody
       EndObject
       Object Template Ssab_BaseDiCard 2148499456 06-OCT-2005 14:45:53.00
         Body RtBody 01-JAN-1970 01:00:00.00
@@ -848,6 +858,11 @@ Volume SsabOx $ClassVolume 0.0.250.5
           EndBody
         EndObject
       EndObject
+      Object PostCreate $DbCallBack 179 05-OCT-2010 16:19:07.83
+        Body SysBody 05-OCT-2010 16:19:07.83
+          Attr MethodName = "BaseIOCard-PostCreate"
+        EndBody
+      EndObject
       Object Template Ssab_BaseDoCard 2148761600 06-OCT-2005 14:45:53.00
         Body RtBody 01-JAN-1970 01:00:00.00
           Attr ErrorSoftLimit = 15
@@ -1025,6 +1040,11 @@ Volume SsabOx $ClassVolume 0.0.250.5
             EndBody
           EndObject
         EndObject
+      EndObject
+      Object PostCreate $DbCallBack 180 05-OCT-2010 16:19:16.62
+        Body SysBody 05-OCT-2010 16:19:16.62
+          Attr MethodName = "BaseIOCard-PostCreate"
+        EndBody
       EndObject
       Object Template Ssab_BaseMCard 2155839488 01-JAN-1970 01:00:00.00
         Body RtBody 01-JAN-1970 01:00:00.00
@@ -4412,6 +4432,11 @@ Volume SsabOx $ClassVolume 0.0.250.5
           EndBody
         EndObject
       EndObject
+      Object PostCreate $DbCallBack 181 05-OCT-2010 16:19:35.86
+        Body SysBody 05-OCT-2010 16:19:35.86
+          Attr MethodName = "BaseIOCard-PostCreate"
+        EndBody
+      EndObject
     EndObject
     !/**
     !  @Version 1.0
@@ -4587,6 +4612,11 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr MethodName = "Ssab_PIDuP-IoCardClose"
           EndBody
         EndObject
+      EndObject
+      Object PostCreate $DbCallBack 182 05-OCT-2010 16:19:58.63
+        Body SysBody 05-OCT-2010 16:19:58.63
+          Attr MethodName = "BaseIOCard-PostCreate"
+        EndBody
       EndObject
       Object Template Ssab_PIDuP 2155577344 01-JAN-1970 01:00:00.00
         Body RtBody 02-APR-2009 08:35:02.91
