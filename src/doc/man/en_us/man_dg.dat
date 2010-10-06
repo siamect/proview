@@ -3717,10 +3717,10 @@ object.
 Start the application
 
 An application that is to be started at Proview runtime startup is inserted into the
-application file. This resides on $pwrp_load and is named ls_app_'nodename'_'qbus'.txt,
+application file. This resides on $pwrp_load and is named ld_appl_'nodename'_'qbus'.txt,
 e.g.
 
-<c>$pwrp_load/ld_app_mynode_999.txt
+<c>$pwrp_load/ld_appl_mynode_999.txt
 
 In the file you insert one line for each application that is to be started
 
@@ -4751,17 +4751,17 @@ If you don't have network contact with the process station, you can create a pac
 it to the process station for example with an USB stick. Select the node in the Distributor
 and activate 'Functions/Create Package'. The package is stored on $pwrp_load with the name
 pwrp_pkg_'nodename'_'version'.tgz, e.g. pwrp_pkg_cross1_0002.tgz. On the process station you
-unpack the package with the script pwr_pkg.sh which takes the name of the package as argument.
+unpack the package with the script pwr_pkg.sh -i which takes the name of the package as argument.
 
-<c>> pwr_pkg.sh pwrp_pkg_cross1_0002.tgz 
+<c>> pwr_pkg.sh -i pwrp_pkg_cross1_0002.tgz 
 
 <h1>Restore a previous version
 Sometimes a modification of the system doesn't work as planned, and you want to restore a 
 previous version. This is easily done with pwr_pkg.sh. The packages are stored in the home
 directory of user pwrp, /home/pwrp. By finding the package for the previous version and start
-pwr_pkg.sh with this package, you restore the version.
+pwr_pkg.sh -i with this package, you restore the version.
 
-<c>> pwr_pkg.sh pwrp_pkg_cross1_0001.tgz
+<c>> pwr_pkg.sh -i pwrp_pkg_cross1_0001.tgz
 </topic>
 
 <topic> dg_rtstart
@@ -7972,7 +7972,7 @@ The application file reside on $pwrp_load and has the name
 where nodename is the name of the node, and busnumber the qcom bus number. If the node is 
 'mynode' and the busnumber is 507, the filename will be
 
-<c> $pwrp_load/ls_appl_mynode_507.txt
+<c> $pwrp_load/ld_appl_mynode_507.txt
 </topic>
 </headerlevel>
 </chapter>

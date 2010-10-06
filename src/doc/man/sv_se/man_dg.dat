@@ -1562,14 +1562,14 @@ till html-filer. Också när man skapar en java-bild från en ge-graf läggs java-kl
 <topic> project_special_files
 Speciella filer
 Här beskrivs speciella filer som används för olika typer av konfigurering, eller som är av 
-annat intresse, och är förlagda någonstans i projekt-trädet. De är alla nämna tidigare i det 
+annat intresse, och är förlagda någonstans i projekt-trädet. De är alla nämnda tidigare i det 
 här kapitlet.
 
 <option> printdisable
 Konfigurering av Globala funktionstangenter.
 Rt_xtt <link> file_rt_xtt
 
-Konfigurering av menuer och snabbkommandon i rt_xtt.
+Konfigurering av menyer och snabbkommandon i rt_xtt.
 xtt_setup.rtt_com <link> file_rt_xtt
 
 Startupfil för Proview.
@@ -3678,9 +3678,9 @@ applikationsobjektet.
 Start av applikation
 
 En applikation som ska startas vid uppstart av Proview runtime läggs in i applikationsfilen.
-Det ligger på $pwrp_load och har namnet ld_app_'nodename'_'qbus'.txt, t ex
+Det ligger på $pwrp_load och har namnet ld_appl_'nodename'_'qbus'.txt, t ex
 
-<c>$pwrp_load/ld_app_mynode_999.txt
+<c>$pwrp_load/ld_appl_mynode_999.txt
 
 I filen lägger man en rad för varje applikation som ska startas
 
@@ -4706,18 +4706,18 @@ terminalfönster från vilken konfiguratören är startad. Vid installationen har an
 Om man inte har nätverkskontakt med processnoden, kan man skapa ett paket och flytta det t ex
 med en USB sticka. Välj ut noden i distributören, och aktivera 'Functions/Create Package'.
 Paketet lagras på $pwrp_load med namnet pwrp_pkg_'nodename'_'version'.tgz, t ex 
-pwrp_pkg_cross1_0002.tgz. På processtationen packar man upp med skriptet pwr_pkg.sh och 
+pwrp_pkg_cross1_0002.tgz. På processtationen packar man upp med skriptet pwr_pkg.sh -i och 
 anger namnet på paketet.
 
-<c>> pwr_pkg.sh pwrp_pkg_cross1_0002.tgz 
+<c>> pwr_pkg.sh -i pwrp_pkg_cross1_0002.tgz 
 
 <h1>Backa till tidigare version
 Ibland fungerar inte en ändring som planerat och man vill backa tillbaka till föregående
 version. Detta gör man enkelt med pwr_pkg.sh. Paketen lagras på användaren pwrp hemma-katalog
-/home/pwrp. Genom att leta upp det paket som tidigare var installerat och starta pwr_pkg.sh
+/home/pwrp. Genom att leta upp det paket som tidigare var installerat och starta pwr_pkg.sh -i
 med detta återställer man till denna version.
 
-<c>> pwr_pkg.sh pwrp_pkg_cross1_0001.tgz
+<c>> pwr_pkg.sh -i pwrp_pkg_cross1_0001.tgz
 </topic>
 
 <topic> dg_rtstart
@@ -7879,7 +7879,7 @@ Applikationsfilen ligger på $pwrp_load och har nament
 där nodename är nodens namn och busnumber Qcombusnumret. Om noden är 'mynode' och busnumret
 är 507, blir filnamnet
 
-<c> $pwrp_load/ls_appl_mynode_507.txt
+<c> $pwrp_load/ld_appl_mynode_507.txt
 </topic>
 </headerlevel>
 </chapter>
