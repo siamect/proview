@@ -756,25 +756,29 @@ pwr_tStatus wb_volume::triggPostCreate(wb_object& o)
   char *methodName;
   wb_tMethod method;
   
-  wb_cdrep *cdrep = m_vrep->merep()->cdrep(&sts, o.cid());
-  if (EVEN(sts)) return sts;
+  // Call object method, or inherited method
+  for ( wb_cdef cd = cdef(o.cid()); cd; cd = cd.super()) {
+    wb_cdrep *cdrep = cd;
+    
+    cdrep->dbCallBack(&sts, ldh_eDbCallBack_PostCreate, &methodName, 0);
 
-  cdrep->dbCallBack(&sts, ldh_eDbCallBack_PostCreate, &methodName, 0);
-  delete cdrep;
-  if (EVEN(sts)) return LDH__SUCCESS;
+    if (ODD(sts)) {
+      m_vrep->erep()->method(&sts, methodName, &method);
+      if (EVEN(sts)) return LDH__SUCCESS;
 
-  m_vrep->erep()->method(&sts, methodName, &method);
-  if (EVEN(sts)) return LDH__SUCCESS;
-
-  wb_object father = o.parent();
-  if (father) {
-    sts = ((wb_tMethodPostCreate) (method))((ldh_tSesContext)this, o.oid(), father.oid(),
-					     father.cid());
+      wb_object father = o.parent();
+      if (father) {
+	sts = ((wb_tMethodPostCreate) (method))((ldh_tSesContext)this, o.oid(), father.oid(),
+						father.cid());
+      }
+      else
+	sts = ((wb_tMethodPostCreate) (method))((ldh_tSesContext)this, o.oid(), pwr_cNObjid,
+						pwr_cNClassId);
+      return sts;
+    }
   }
-  else
-    sts = ((wb_tMethodPostCreate) (method))((ldh_tSesContext)this, o.oid(), pwr_cNObjid,
-					     pwr_cNClassId);
-  return sts;
+
+  return LDH__SUCCESS;
 }
 
 pwr_tStatus wb_volume::triggPostMove(wb_object& o)
