@@ -106,10 +106,10 @@ void GeCurveMotif::activate_xlimits( Widget w, GeCurve *curve, XmAnyCallbackStru
 {
   char value_str[80];
 
-  sprintf( value_str, "%f",  curve->cd->min_value_axis[0]);
+  sprintf( value_str, "%f",  curve->cd->x_min_value_axis[0]);
   XmTextSetString( ((GeCurveMotif *)curve)->minmax_textmin_widget, value_str);
 
-  sprintf( value_str, "%f", curve->cd->max_value_axis[0]);
+  sprintf( value_str, "%f", curve->cd->x_max_value_axis[0]);
   XmTextSetString( ((GeCurveMotif *)curve)->minmax_textmax_widget, value_str);
 
   curve->minmax_idx = 0;
@@ -214,13 +214,19 @@ void GeCurveMotif::axis_set_width( int width)
 
 void GeCurveMotif::open_minmax( int idx)
 {
-  char value_str[80];
+  char min_value_str[80];
+  char max_value_str[80];
 
-  sprintf( value_str, "%f", cd->min_value_axis[idx]);
-  XmTextSetString( minmax_textmin_widget, value_str);
-  
-  sprintf( value_str, "%f", cd->max_value_axis[idx]);
-  XmTextSetString( minmax_textmax_widget, value_str);
+  if ( idx < cd->cols) {
+    sprintf( min_value_str, "%f", cd->y_min_value_axis[idx]);
+    sprintf( max_value_str, "%f", cd->y_max_value_axis[idx]);
+  }
+  else {
+    sprintf( min_value_str, "%f", cd->x_min_value_axis[idx - cd->cols]);
+    sprintf( max_value_str, "%f", cd->x_max_value_axis[idx - cd->cols]);
+  }
+  XmTextSetString( minmax_textmin_widget, min_value_str);
+  XmTextSetString( minmax_textmax_widget, max_value_str);
 
   minmax_idx = idx;
   XtManageChild( minmax_widget);

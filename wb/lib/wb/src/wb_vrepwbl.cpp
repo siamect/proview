@@ -817,6 +817,7 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, s
     else IF_ATTR( Flags, pwr_eType_UInt32, 1, level)
     else IF_ATTR( NumOfObjBodies, pwr_eType_UInt32, 1, level)
     else IF_ATTR( PopEditor, pwr_eType_UInt32, 1, level)
+    else IF_ATTR( Filler, pwr_eType_Int32, 1, level)
     return 1;
   }
   case pwr_eClass_ClassVolume:
@@ -883,50 +884,51 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, s
       *elements = 1;
       *flags = 0;
     }
-    if ( attr->attributeIsEqual( "Type", level)) {
+    else if ( attr->attributeIsEqual( "Type", level)) {
       *size = sizeof( o.Info.Type);
       *offset = (unsigned long) &o.Info.Type - (unsigned long) &o;
       *tid = *type = pwr_eType_UInt32;
       *elements = 1;
       *flags = 0;
     }
-    if ( attr->attributeIsEqual( "Offset", level)) {
+    else if ( attr->attributeIsEqual( "Offset", level)) {
       *size = sizeof( o.Info.Offset);
       *offset = (unsigned long) &o.Info.Offset - (unsigned long) &o;
       *tid = *type = pwr_eType_UInt32;
       *elements = 1;
       *flags = 0;
     }
-    if ( attr->attributeIsEqual( "Size", level)) {
+    else if ( attr->attributeIsEqual( "Size", level)) {
       *size = sizeof( o.Info.Size);
       *offset = (unsigned long) &o.Info.Size - (unsigned long) &o;
       *tid = *type = pwr_eType_UInt32;
       *elements = 1;
       *flags = 0;
     }
-    if ( attr->attributeIsEqual( "Flags", level)) {
+    else if ( attr->attributeIsEqual( "Flags", level)) {
       *size = sizeof( o.Info.Flags);
       *offset = (unsigned long) &o.Info.Flags - (unsigned long) &o;
       *tid = *type = pwr_eType_UInt32;
       *elements = 1;
       *flags = 0;
     }
-    if ( attr->attributeIsEqual( "Elements", level)) {
+    else if ( attr->attributeIsEqual( "Elements", level)) {
       *size = sizeof( o.Info.Elements);
       *offset = (unsigned long) &o.Info.Elements - (unsigned long) &o;
       *tid = *type = pwr_eType_UInt32;
       *elements = 1;
       *flags = 0;
     }
-    if ( attr->attributeIsEqual( "ParamIndex", level)) {
+    else if ( attr->attributeIsEqual( "ParamIndex", level)) {
       *size = sizeof( o.Info.ParamIndex);
       *offset = (unsigned long) &o.Info.ParamIndex - (unsigned long) &o;
       *tid = *type = pwr_eType_UInt32;
       *elements = 1;
       *flags = 0;
     }
+    else IF_ATTR( Filler, pwr_eType_Int32, 1, level)
     else IF_ATTR( TypeRef, pwr_eType_TypeId, 1, level)
-           return 1;
+      return 1;
   }
   default:
   {

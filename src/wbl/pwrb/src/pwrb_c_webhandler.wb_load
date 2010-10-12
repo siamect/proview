@@ -146,6 +146,24 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Disable the Help button.
+      !  The Help button contains a link to the project help text.
+      !*/
+      Object DisableHelp $Attribute 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Disable the Proview button.
+      !  The Proview button contains a link to the Proview web documentation page.
+      !*/
+      Object DisableProview $Attribute 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
       !  Obsolete since V4.7.0.
       !*/
       Object UserObject $Attribute 10

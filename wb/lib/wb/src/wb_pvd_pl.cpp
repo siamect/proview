@@ -246,7 +246,7 @@ bool wb_pvd_pl::check_list( pwr_tStatus *sts)
 	  MsgWindow::message('E', msg, msgw_ePop_No, oid);
 	  error_cnt++;
 	}
-	if ( strcmp( body->Version, "") == 0) {
+	else if ( strcmp( body->Version, "") == 0) {
 	  sprintf( msg, "Version is missing, in object %s", longname(m_list[i].oix));
 	  MsgWindow::message('E', msg, msgw_ePop_No, oid);
 	  error_cnt++;
@@ -264,7 +264,13 @@ bool wb_pvd_pl::check_list( pwr_tStatus *sts)
 	    body->Path[ strlen(body->Path)-1] = 0;
 
 	  if ( m_list[i].flags & procom_obj_mFlags_Created) {
-	    if ( strcmp( body->CopyFrom, "") == 0) {
+	    if ( strchr( body->Project, '_') != 0) {
+	      sprintf( msg, "Invalid project name, '_' not allowed, in object %s", 
+		       longname(m_list[i].oix));
+	      MsgWindow::message('E', msg, msgw_ePop_No, oid);
+	      error_cnt++;
+	    }
+	    else if ( strcmp( body->CopyFrom, "") == 0) {
 	      // Create project 
 	      // Check destination path
 	      sprintf( cmd, "wb_pvd_pl.sh check create %s", body->Path);

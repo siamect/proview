@@ -1,11 +1,11 @@
 Package: pwrdemo47
-Version: 4.7.0-1
+Version: 4.7.1-1
 Section: base
 Priority: optional
 Architecture: amd64
-Depends: pwr47 (>= 4.7.0-1)
+Depends: pwr47 (>= 4.7.1-1)
 Replaces:
 Maintainer: Proview <postmaster@proview.se>
 Description: Proview Demo Project package
  Proview Demo Project
- 4.7.0-1 Base release 
+ 4.7.1-1 Base release 

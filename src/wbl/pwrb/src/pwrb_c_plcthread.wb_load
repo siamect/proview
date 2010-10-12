@@ -392,6 +392,7 @@ SObject pwrb:Class
     Object Template PlcThread
       Body RtBody
         Attr IoProcess = 1
+	Attr Prio = 22
       EndBody
     EndObject
     Object PostCreate $DbCallBack

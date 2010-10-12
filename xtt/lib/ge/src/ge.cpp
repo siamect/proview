@@ -385,6 +385,11 @@ void Ge::export_javabean( Ge *gectx, char *name)
     char framename[80];
     char appletname[80];
 
+    if ( isdigit(name[0])) {
+      gectx->message( 'E', "Java name syntax error");
+      return;
+    }
+
     strcpy( framename, name);
     if ( (s = strrchr( framename, '.')))
       *s = 0;
@@ -446,6 +451,11 @@ void Ge::export_gejava( Ge *gectx, char *name)
     char framename[80];
     char appletname[80];
     char systemname[80];
+
+    if ( isdigit(name[0])) {
+      gectx->message( 'E', "Java name syntax error");
+      return;
+    }
 
     strcpy( framename, name);
     if ( (s = strrchr( framename, '.')))

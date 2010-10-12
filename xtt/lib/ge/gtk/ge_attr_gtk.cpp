@@ -488,6 +488,10 @@ AttrGtk::AttrGtk( GtkWidget *a_parent_wid,
   int w, h;
   gdk_drawable_get_size( pane->window, &w, &h);
   gtk_paned_set_position( GTK_PANED(pane), h - 50);
+
+  if ( parent_wid)
+    gtk_window_set_transient_for( GTK_WINDOW(gtk_widget_get_toplevel(toplevel)), 
+				  GTK_WINDOW(gtk_widget_get_toplevel((GtkWidget *)parent_wid)));
   
 }
 

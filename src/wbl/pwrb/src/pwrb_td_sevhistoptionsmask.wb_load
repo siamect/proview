@@ -88,6 +88,16 @@ SObject pwrb:Type
        Attr Value = 8
      EndBody
     EndObject
+    !/**
+    !  Not yet implemented.
+    !*/
+    Object Parameter $Bit
+     Body SysBody
+       Attr PgmName = "Parameter"
+       Attr Text = "Parameter"
+       Attr Value = 16
+     EndBody
+    EndObject
   EndObject
 EndSObject
 

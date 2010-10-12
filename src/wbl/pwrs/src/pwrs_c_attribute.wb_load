@@ -191,6 +191,23 @@ SObject pwrs:Class
           Attr TypeRef = pwr_eType_TypeId
         EndBody
       EndObject
+      !/**
+      !  LongWord size alignment.
+      !*/
+      Object Filler pwr_eClass_Param	9
+        Body SysBody
+          Attr PgmName = "Filler"
+          Attr Type = pwr_eType_TypeId
+          Attr Offset = 60
+          Attr Size = 4
+          Attr Flags |= PWR_MASK_NOWBL
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_RTHIDE
+          Attr Elements = 1
+          Attr ParamIndex = 9
+          Attr TypeRef = pwr_eType_Int32
+        EndBody
+      EndObject
     EndObject
     Object Template $Attribute
       Body SysBody

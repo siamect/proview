@@ -87,11 +87,12 @@ reload_classvolumes()
 
   list=`eval ls -1d $pwrp_db/*.wb_load`
   echo ""
+  echo "Found classvolumes: "
   for file in $list; do
-    volume=`eval grep pwr_eClass_ClassVolume $file | awk '{ print $2 }'`
+    volume=`eval head -n 1 $file | grep pwr_eClass_ClassVolume | awk '{ print $2 }'`
     if [ "$volume" == "" ]; then
-      volume=`eval grep ClassVolume $file | awk '{ print $2 }'`
-      volumelow=`eval grep ClassVolume $file | awk '{ print tolower($2) }'`
+      volume=`eval head -n 1 $file | grep ClassVolume | awk '{ print $2 }'`
+      volumelow=`eval head -n 1 $file | grep ClassVolume | awk '{ print tolower($2) }'`
     fi
     if [ "$volume" != "" ]; then
       echo $file
@@ -263,17 +264,29 @@ reload_cnvobjects()
     return
   fi
 
-  reload_continue "Pass convert objects in loaded db"
+  echo "***"
+  echo "*** Note! "
+  echo "*** This pass should only be executed of you upgrade"
+  echo "*** from V4.6, not if you upgrade from V4.7.0 "
+  echo "***"
 
-  list=`eval ls -1d $pwrp_db/*.db`
-  for file in $list; do
-    file=${file##/*/}
-    file=${file%%.*}
+  echo -n "Do you want to execute this pass ? [y/n] "
+  read repl
 
-    if [ $file != "directory" ] && [ $file != "rt_eventlog" ]; then
-      wb_cmd -v $file @$pwr_exe/upgrade_pb.pwr_com
-    fi
-  done
+  if [ "$repl" == "y" ]; then
+
+    reload_continue "Pass convert objects in loaded db"
+
+    list=`eval ls -1d $pwrp_db/*.db`
+    for file in $list; do
+      file=${file##/*/}
+      file=${file%%.*}
+
+      if [ $file != "directory" ] && [ $file != "rt_eventlog" ]; then
+        wb_cmd -v $file @$pwr_exe/upgrade_pb.pwr_com
+      fi
+    done
+  fi
 
   reload_status=$reload__success
 }
@@ -542,18 +555,15 @@ usage()
 {
   cat << EOF
 
-  upgrade.sh  Upgrade from V4.6 to V4.7
+  upgrade.sh  Upgrade from V4.7.0 to V4.7.1
 
 
   Pass
 
-    dumpdb	   Dump database to textfile \$pwrp_db/'volume'.wb_dmp
-    directorystructure Change directory structure.
     classvolumes   Create loadfiles for classvolumes.
     renamedb       Rename old databases.
-    dirvolume      Create directory volume.
+    cnvdump        Convert the dump files.
     loaddb         Load dumpfiles.
-    cnvobjects     Convert objects in the database.
     compile        Compile all plcprograms in the database
     createload     Create new loadfiles.
     createboot     Create bootfiles for all nodes in the project.
@@ -594,14 +604,14 @@ for db in $tmp; do
   fi
 done
 
-passes="dumpdb directorystructure classvolumes renamedb dirvolume loaddb cnvobjects compile createload createboot"
+passes="classvolumes renamedb cnvdump loaddb compile createload createboot"
 #echo "Pass: $passes"
 echo ""
-echo -n "Enter start pass [dumpdb] > "
+echo -n "Enter start pass [classvolumes] > "
 read start_pass
 
 if [ -z $start_pass ]; then
-  start_pass="dumpdb"
+  start_pass="classvolumes"
 fi
 
 for cpass in $passes; do

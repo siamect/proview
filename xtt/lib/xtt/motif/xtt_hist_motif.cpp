@@ -223,7 +223,7 @@ HistMotif::HistMotif( void *hist_parent_ctx,
   XtManageChild( toplevel_hist);
   
   // Create hist...
-  hist = new EvListMotif( this, form_hist, ev_eType_HistList, hist_size, &hist_widget);
+  hist = new EvListMotif( this, form_hist, ev_eType_HistList, hist_size, 0, &hist_widget);
   hist->start_trace_cb = &hist_start_trace_cb;
   hist->display_in_xnav_cb = &hist_display_in_xnav_cb;
   hist->popup_menu_cb = &hist_popup_menu_cb;

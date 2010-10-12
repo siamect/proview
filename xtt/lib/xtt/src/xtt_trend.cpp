@@ -143,15 +143,15 @@ XttTrend::XttTrend( void *parent_ctx,
 
   // Create data for time axis
   gcd = new GeCurveData( curve_eDataType_DsTrend);
-  gcd->data[0] = (double *) malloc( 8 * max_points);
-  strcpy( gcd->name[0], "Time");
+  gcd->x_data[0] = (double *) malloc( 8 * max_points);
+  strcpy( gcd->x_name, "Time");
   for ( j = 0; j < max_points; j++) {
-    gcd->data[0][j] = double( j * min_interval);
+    gcd->x_data[0][j] = double( j * min_interval);
   }
-  gcd->axis_type[0] = curve_eAxis_x;
+  gcd->x_axis_type[0] = curve_eAxis_x;
 
   for ( i = 0; i < trend_cnt; i++) {
-    gcd->data[i+1] = (double *) calloc( 1, 8 * max_points);
+    gcd->y_data[i] = (double *) calloc( 1, 8 * max_points);
 
     int write_buffer = (int) tp[i].WriteBuffer;
     start_idx = write_buffer * trend_buff_size / 2
@@ -170,14 +170,14 @@ XttTrend::XttTrend( void *parent_ctx,
     int idx = 0;
     for ( j = start_idx; j >= write_buffer * trend_buff_size/2; j--) {
       for ( k = 0; k < interval[i]; k++) {
-        gcd->data[i+1][idx] = tp[i].DataBuffer[j];
+        gcd->y_data[i][idx] = tp[i].DataBuffer[j];
         idx++;
       }
     }
     for ( j = tp[i].NoOfSample - 1 + (!write_buffer) * trend_buff_size/2;
           j >= (!write_buffer) * trend_buff_size/2; j--) {
       for ( k = 0; k < interval[i]; k++) {
-        gcd->data[i+1][idx] = tp[i].DataBuffer[j];
+        gcd->y_data[i][idx] = tp[i].DataBuffer[j];
         idx++;
       }
     }
@@ -186,14 +186,14 @@ XttTrend::XttTrend( void *parent_ctx,
       for ( j = tp[i].NoOfSample - 1 + write_buffer * trend_buff_size/2; 
             j > start_idx; j--) {
         for ( k = 0; k < interval[i]; k++) {
-          gcd->data[i+1][idx] = tp[i].DataBuffer[j];
+          gcd->y_data[i][idx] = tp[i].DataBuffer[j];
           idx++;
         }
       }
     }
     last_buffer[i] = tp[i].WriteBuffer;
     last_next_index[i] = tp[i].NextWriteIndex[last_buffer[i]];
-    gcd->axis_type[i+1] = curve_eAxis_y;
+    gcd->y_axis_type[i] = curve_eAxis_y;
   }
 
   // Subscribe to object
@@ -203,7 +203,7 @@ XttTrend::XttTrend( void *parent_ctx,
                       &subid[i], sizeof(pwr_sClass_DsTrend));
     if ( EVEN(*sts)) return;
 
-    strcpy( gcd->name[i+1], object_name[i]);
+    strcpy( gcd->y_name[i], object_name[i]);
     
     switch( trend_p[i]->DataType) {
       case pwr_eType_Float32:
@@ -228,7 +228,7 @@ XttTrend::XttTrend( void *parent_ctx,
         element_size[i] = 4;
     }
   }
-  gcd->cols = trend_cnt + 1;
+  gcd->cols = trend_cnt;
   gcd->rows = max_points;
   gcd->x_reverse = 1;
   gcd->get_borders();
@@ -239,12 +239,12 @@ XttTrend::XttTrend( void *parent_ctx,
     // Use axis values from plotgroup object
     for ( i = 0; i < trend_cnt; i++) {
       if ( plot.YMinValue[i] != plot.YMaxValue[i])
-        gcd->scale( gcd->axis_type[i+1], gcd->value_type[i+1], 
+        gcd->scale( gcd->y_axis_type[i], gcd->y_value_type[i], 
           plot.YMinValue[i],  plot.YMaxValue[i], 
-          &gcd->min_value_axis[i+1], &gcd->max_value_axis[i+1], 
-          &gcd->trend_lines[i+1], &gcd->axis_lines[i+1], &gcd->axis_linelongq[i+1], 
-	  &gcd->axis_valueq[i+1], gcd->format[i+1], 
-          &gcd->axis_width[i+1], 1, 1);
+          &gcd->y_min_value_axis[i], &gcd->y_max_value_axis[i], 
+          &gcd->y_trend_lines[i], &gcd->y_axis_lines[i], &gcd->y_axis_linelongq[i], 
+	  &gcd->y_axis_valueq[i], gcd->y_format[i], 
+          &gcd->y_axis_width[i], 1, 1);
     }
   }
 }
@@ -303,17 +303,18 @@ void XttTrend::trend_scan( void *data)
       for ( i = 0; i < trend->trend_cnt; i++) {
         // Shift data
         for ( j = trend->max_points - 1; j > 0; j--)
-          trend->gcd->data[i+1][j] = trend->gcd->data[i+1][j-1];
+          trend->gcd->y_data[i][j] = trend->gcd->y_data[i][j-1];
         // Insert new value
         write_buffer = trend->trend_p[i]->WriteBuffer;
         idx = write_buffer * trend_buff_size / 2
-              + int( trend->trend_p[i]->NextWriteIndex[write_buffer]);
+	  + int( trend->trend_p[i]->NextWriteIndex[write_buffer]) - (values - 1 - k);
         if ( idx == 0 || idx == trend_buff_size/2)
           idx = trend->trend_p[i]->NoOfSample - 1 + (!write_buffer) *
                  trend_buff_size/2;
         else
           idx--;
-        trend->gcd->data[i+1][0] = trend->trend_p[i]->DataBuffer[idx];
+
+        trend->gcd->y_data[i][0] = trend->trend_p[i]->DataBuffer[idx];
       }
       trend->curve->points_added();
     }

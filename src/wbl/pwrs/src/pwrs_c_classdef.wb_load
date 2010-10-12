@@ -39,8 +39,8 @@ SObject pwrs:Class
     Object SysBody pwr_eClass_ObjBodyDef 1
       Body SysBody
         Attr StructName = "ClassDef"
-        Attr NumOfParams = 4
-        Attr Size = 16
+        Attr NumOfParams = 6
+        Attr Size = 24
       EndBody
       !/**
       !  Editor to call on an "Open" command.
@@ -125,7 +125,24 @@ SObject pwrs:Class
           Attr Size = 4
           Attr Flags = 0
           Attr Elements = 1
-          Attr ParamIndex = 4
+          Attr ParamIndex = 5
+          Attr TypeRef = pwr_eType_Int32
+        EndBody
+      EndObject
+      !/**
+      !  LongWord size alignment
+      !*/
+      Object Filler pwr_eClass_Param
+        Body SysBody
+          Attr PgmName = "Filler"
+          Attr Type = pwr_eType_Int32
+          Attr Offset = 20
+          Attr Size = 4
+          Attr Flags = PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_RTHIDE
+          Attr Flags |= PWR_MASK_NOWBL
+          Attr Elements = 1
+          Attr ParamIndex = 6
           Attr TypeRef = pwr_eType_Int32
         EndBody
       EndObject

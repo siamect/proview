@@ -1052,7 +1052,7 @@ int	dcli_trim( char *out_str, char *in_str)
 
 int	dcli_remove_blank( char *out_str, char *in_str)
 {
-	char *s;
+	char *s, *s1;
 
 	s = in_str;
 	/* Find first not blank */
@@ -1062,7 +1062,11 @@ int	dcli_remove_blank( char *out_str, char *in_str)
 	    break;
 	  s++;
 	}
-	strcpy( out_str, s);
+	/* strcpy( out_str, s); */
+	for ( s1 = out_str; *s; s++,s1++)
+	  *s1 = *s;
+	*s1 = 0;
+
 	/* Remove at end */
 	s = out_str + strlen(out_str);
 	s--;

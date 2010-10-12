@@ -31,23 +31,21 @@
 
 
 <hr>
-2008-10-21
-Version 4.6.0	
+2010-07-16
+Version 4.7.0	
 <hr>
 </topic>
 
 <topic> __DocumentInfoPage
 
 
-Copyright 2008 SSAB Oxelösund AB
+Copyright 2010 SSAB Oxelösund AB
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2
 or any later version published by the Free Software Foundation;
 with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
 Texts.
-
-First Edition Mars 2005
 
 
 
@@ -844,37 +842,116 @@ Skapa processbilder.
 </chapter>
 
 <chapter>
+<topic>dg_create_project
+Skapa ett project
+
+<h1>Installation av utvecklingsmiljön
+
+Innan man kan börja arbeta med Proview måste Proview's utvecklingsmiljö installeras. Det 
+finns ett antal olika paket för olika Linux distributioner, och finns det inte något paket
+för den önskade distributionen kan man även ladda hem Proview källkod och bygga från denna.
+
+Installationspaketet för utvecklingsmiljön har namngivits med versionsnummer i namnet, 
+t ex pwr47. Detta gör det möjligt att ha flera versioner installerade parallellt, vilket 
+är en fördel när man har många projekt i produktion som går på olika versioner.
+
+Mer information om installation finns på Download sidan på www.proview.se.
+
+<h1>setup script
+Installationen skapar Linux-användaren 'pwrp' med password 'pwrp'. Genom att logga in som 
+pwrp kan man starta Proview genom att klicka på Proview ikonen på skärmen. 
+
+Vill man köra Proview som en annan användare måste man initiera Proview vid inloggningen.
+Lägg in följande rad i filen .bashrc på hemma katalogen
+
+<c>source /src/pwrp/adm/db/pwr_setup.sh
+
+Har man flera användare med gemensamma Proview projekt måste man se till att de har
+skrivrättigheter på filer i projekten. Ett sätt att uppnå det är att sätta umask till 002,
+dvs skrivrättighet för grupp, och ange en gemensam grupp på alla användare, t ex pwrp. 
+
+
+<h1>Användare
+I fallstudien ovan såg vi hur man kan skapa användare som tillhör olika systemgrupper.
+Detta finns beskrivet i Administration kapitlet. Vid installationen av utvecklingspaketet
+följer det med en användardatabas med en systemgrupp, common, och fem användare, pwrp, op1,
+op2, op3 och op4. pwrp är utvecklings användare och har system-privilegier in runtime. op
+användarna är operatörer och har operatörspriviliger i runtime. De här användarna fungerar
+för många applikationer, och vi nöjer oss tills vidare med dessa. 
+
+<image> dg_fig23.gif
+<b>Användare som följer med vid installationen
+
+Notera att om man bygger Proview från källkoden, måste man skapa användare innan man kan 
+gå vidare och skapa ett projekt.
+
+<h1>Registrera volymer
+Som vi också såg i fallstudien kan man registrera volymer i GlobalVolumeList. Man kan även 
+välja att vänta med detta och låta konfigurerings guiden för projeket registrera volymer 
+och hämta ut nästa lediga volymsidentitet. För att inte fördjupa oss i detaljer låter vi 
+tills vidare konfigurerings guiden registrera volymerna. Om man har flera oberoende 
+utvecklingsstationer bör man registrera volymerna manuellt så att volymsidentitetera inte 
+kolliderar. Har man större anläggningar med många volymer rekommenderar vi också att man 
+tilldelar volymsidentiteter manuellt och grupperar på lämpligt sätt.
+
+<h1>Skapa ett projekt
+För att skapa ett project går man in i administratörens projektlista, antingen genom klicka
+på Proview ikonen, eller med kommandot
+
+<c>> pwra
+
+pwra är definerad som 'wb -p pwrp pwrp' dvs loggar in som användare pwrp. Har man definerat
+andra användare för utveckling måste man definiera om 'pwra' eller använda 'wb -p' kommandot
+direkt. wb har användare och password som argument.
+
+I projektlistan går man in i editerings mod och skapar ett ProjectReg objekt, på topp-nivå
+eller under ett hierarki objekt. I ProjectReg objektet anger man projektnamn, 
+Proview-version och katalog för projektet. När man sparar, skapas projekt-katalogerna för 
+projektet.
+
+Hur man skapar ett projekt finns närmare beskrivet i Getting Started Guide. Vi 
+rekommenderar att går igenom avsnitten för att skapa projektet och konfigurere directory
+volymen innan man fortsätter.
+
+</topic>
+</chapter>
 
 <chapter>
 <topic>configure_directoryvolume
 Konfigurera Directory volymen
 
 <h1>Öppna ett projekt
-När projektet har skapas han man hitta det i administratören projektträd. Man öppnar ett
+När projektet har skapas kan man hitta det i administratörens projektträd. Man öppnar ett
 projekt genom att aktivera 'Open Project' i popupmenyn för ett ProjectReg objekt.
-Arbetsbänken öppnas nu för projektet, och volymsväljar fönstret, som listar alla volymer
-i projektet, visas. Hittills är endast directory volymen skapad, och vår första uppgift
-är att konfigurera denna volym, med de volymer och noder som ingår i systemet.
 
+Man kan också använda 'sdf' kommandot för knyta upp sig mot ett project. Projektnamnet 
+skickas med som argument till sdf.
 
-Välj ut directory volymen och klicka på Ok knappen för att öppna navigatören för volymen.
+<c>> sdf trafficcross1
 
-<image> dg_fig23.gif
+Directory volymen kan sedan startas med
 
+<c>> pwrs
 
-Man kan även öppna ett projekt med shell kommandon. Man knyter upp sig mot ett projekt
-med kommandot
-
-> pwrp set project 'projektnamn'
-
-Arbetsbänken öppnas med kommandot
-> wb
-
-wb tar användare, passerord och volym som argument.
+pwrs är definerad som 'wb pwrp pwrp' dvs loggar in som användare pwrp. Har man definerat
+andra användare för utveckling måste man definiera om 'pwrs' eller använda 'wb' kommandot
+direkt. wb har användare och password som argument (och även volym som tredje argument).
 
 <h1>Konfiguratören
 Vi öppnar nu konfiguratören för directoryvolymen. I konfiguratören finns två fönster, i det
-övre visas volymer i projektet, och i det under noder.
+vänstra visas volymer i projektet, och i det högra noder.
+
+Om volymen är tom, startas en guide som hjälper till med konfigureringen. För att skapa
+ett enkelt projekt med en nod och en volym behöver man i princip bara klicka på 'Next' 
+knappen. 
+
+Guiden letar efter registrerade volymer för projektet. Om det inte finns några, ger
+förslag på lämpliga volymsnamn och lediga volymsidentiteter, och registrerar volymerna om
+förslagen godkänns. Guiden skapar också alla konfigurations-objekt i directory volymen och
+sätter lämpliga data. 
+
+Vill man senare utöka systemet med fler noder och volymer krävs att man har lite större 
+insikt, vi gör därför en genomgång hur man konfigurerar för hand.
 
 <h2>Konfigurera volymer
 Först ska alla rotvolymer, subvolymer och klassvolymer i projekt konfigureras. Det gör man
@@ -905,9 +982,9 @@ Man kan även visa attributen för ett objekt direkt i konfiguratören:
 - Välj ett attribut och aktivera 'Functions/Change value' i menyn för att ändra ett värde.
 
 <h2>Konfigurera noder
-I det under fönstret ska noderna i projektet konfigureras. Man delar in noderna efter vilken
-QCOM bus de kommunicerar på. Skapa därför två BusConfig objekt, ett för produktions noderna
-och ett för simulering. Öppna objekten och lägg in BusNumber.
+I det vänstra fönstret ska noderna i projektet konfigureras. Man delar in noderna efter 
+vilken QCOM bus de kommunicerar på. Skapa därför två BusConfig objekt, ett för produktions 
+noderna och ett för simulering. Öppna objekten och lägg in BusNumber.
 
 Som barn till BusConfig objekten läggs nu ett NodeConfig objekt för varje process- och
 operatörsstation. När NodeConfig objektet skapas, skapas ytterligar ett par objekt
@@ -941,13 +1018,27 @@ volymerna.
 Om volymsväljaren öppnas nu, 'File/Open' i menyn, visas alla konfigurerade volymer. Nästa
 steg är att konfigurera en rotvolym.
 </topic>
+</chapter>
 
+<chapter>
 <topic>configure_rootvolume
 Konfigurera en rotvolym
 
-En rootvolym öppnas från volymsväljar förstret. Välj ut volymen och klicka på 'Ok'. Detta
-startar konfiguratören för rotvolymen. Liksom för directoryvolymen är den separerad i två
-fönster, men nu visar det övre fönstret anläggingshierarkin och det under nodehierarkin.
+En rootvolym öppnas från directory volymen genom att man högerklickar på ett VolumeConfig
+objekt och aktiverar 'Open Project' i popupmenyn. 
+
+Om man har gjort 'sdf' till projektet kan man även öppna med 'pwrs' kommandot genom att
+skicka med volymsnamnet som argument.
+
+<c>> pwrs voltrafficcross1
+
+Detta startar konfiguratören för rotvolymen. Liksom för directoryvolymen är den separerad 
+i två fönster, men nu visar det övre fönstret anläggingshierarkin och det undre 
+nodehierarkin.
+
+Om man öppnar en tom volym, startas en guide för att konfigurera volymen. Guiden 
+konfiguerar nod hierarkin genom att skapa diverse objekt för server processer mm, men
+man kan även skapa dessa för hand, se nedan.
 
 <h1>Konfigurering av anläggningshierarkin
 I anläggningshierarkin beskrivs de olika anläggningarna som finns med i Proview systemet.
@@ -1121,22 +1212,10 @@ För att definiera en operatörsplats skapas ett objekt av klassen OpPlace under $
 objektet.
 
 Föjande attribut måste ges ett värde:
-- OpNumber är en numrering av operatörsplatsen inom noden. Varje operatörsplats ska ha ett
-  unikt nummer.
-
-Se OpPlace i Objektshandboken <classlink>opplace,"",$pwr_lang/pwrb_xtthelp.dat
-
-<h2>User objekt
-För operatörsplatsen måste man även skapa ett User objekt. Detta ska ligga som barn till
-OpPlace objektet. Det kan endast finnas ett User objekt per operatörsplats. Userobjekt
-ska även definieras för RttConfig och WebHandler objekt.
-
-Följande attribut ska fyllas i:
 
 - UserName talar om vilken Proview användare som ska loggas in. När operatörsmiljön startas
   hämtas information om användaren från Proview's användardatabas, bl a vilka rättigheter
   operatören har att påverka systemet från processbilder.
-- OpNumber ska vara samma som i OpPlace objektet.
 - MaxNumberOfEvents anger antalet händelser som operatörens händelselista kan innehålla
   samtidigt.
 - SelectList anger vilka hierakier i anläggninghierakin, som operatören vill ta emot larm
@@ -1167,14 +1246,14 @@ I FastAvail specificerar man XttGraph objekt som ska kunna startas från tryckkna
 'Operator window'. NoFastAvail specificerar antalet tryckknappar som används. Man kan ha 
 upp till 15 tryckknappar. Oanvända tryckknappar visas ej i Operator Window.
 
-Se User i Objektshandboken <classlink>user,"",$pwr_lang/pwrb_xtthelp.dat
+Se OpPlace i Objektshandboken <classlink>opplace,"",$pwr_lang/pwrb_xtthelp.dat
 
 <b>Operator Window
 <image> dg_fig45.gif
 
 <h2>XttGraph objekt
 XttGraph objekt används främst för att visa processbilder. I objektet pekar man ut den graf
-som ska visas. Objekten refereras i User objektets FastAvail attribut, och i attributet
+som ska visas. Objekten refereras i OpPlace objektets FastAvail attribut, och i attributet
 DefGraph som bl a finns i $PlantHier och signal objekt.
 
 När objektet refereras i FastAvail kan man även utnyttja möjligheten att exekvera 
@@ -1483,14 +1562,14 @@ till html-filer. Också när man skapar en java-bild från en ge-graf läggs java-kl
 <topic> project_special_files
 Speciella filer
 Här beskrivs speciella filer som används för olika typer av konfigurering, eller som är av 
-annat intresse, och är förlagda någonstans i projekt-trädet. De är alla nämna tidigare i det 
+annat intresse, och är förlagda någonstans i projekt-trädet. De är alla nämnda tidigare i det 
 här kapitlet.
 
 <option> printdisable
 Konfigurering av Globala funktionstangenter.
 Rt_xtt <link> file_rt_xtt
 
-Konfigurering av menuer och snabbkommandon i rt_xtt.
+Konfigurering av menyer och snabbkommandon i rt_xtt.
 xtt_setup.rtt_com <link> file_rt_xtt
 
 Startupfil för Proview.
@@ -3599,9 +3678,9 @@ applikationsobjektet.
 Start av applikation
 
 En applikation som ska startas vid uppstart av Proview runtime läggs in i applikationsfilen.
-Det ligger på $pwrp_load och har namnet ld_app_'nodename'_'qbus'.txt, t ex
+Det ligger på $pwrp_load och har namnet ld_appl_'nodename'_'qbus'.txt, t ex
 
-<c>$pwrp_load/ld_app_mynode_999.txt
+<c>$pwrp_load/ld_appl_mynode_999.txt
 
 I filen lägger man en rad för varje applikation som ska startas
 
@@ -4393,35 +4472,135 @@ skapar PLC program och processbilder. Nu är det dags att köra och testa systemet
 
 I avsnitten visas hur man
 
-- skapar laddatafiler.
-- skapar bootfil.
-- distribuerar.
+- bygger systemet. <link> dg_build
+- startar simulerings miljö <link> dg_simulate
+  och runtime monitorn. <link> runtime_monitor
+- distribuerar. <link> dg_distribute
+- startar runtime miljö.
 
-<h2>Syntax kontroll
-Innan man skapar laddatafiler för en volym är det lämpligt att göra en syntaxkontroll.
-Det görs från menyn i konfiguratören, 'File/Syntax'.
+<h1>Syntax kontroll
+Vissa klasser har en syntax metod som kontrollerar att objektet är rätt konfigurerat. 
+Metoden för signaler kontrollerar t ex att de är kopplade till en kanal, metoden för
+ett PlcPgm att den är kopplade till ett trådobjekt etc. 
+Syntax metoderna fångar upp en del fel, men är inte någon garanti för allt fungerar
+felfritt.
 
-<h2>Skapa laddatafiler
-Innan runtimemiljön kan startas för systemet, måste man skapa laddatafiler, en för varje
-rotvolym, subvolym och klassvolym. Laddatafiler skapas från menyn i konfiguratören, 
-'Function/Build Volume'.
+Syntax-metoderna körs när 'Functions/Syntax Check' aktiveras i Configuratorn.
 
-<h2>Skapa bootfil
-För varje nod i projektet ska man skapa en bootfil. Bootfilen innehåller huvudsakligen vilken
-rotvolym som ska laddas in när noden startas. Bootfilen skapas från menyn i konfiguratören,
-'Functions/Build Node'. Detta kommando bygger även ihop ett plcprogram för noden.
+</topic>
 
-<b>Val av nod vid skapande av bootfil
+<topic> dg_build
+Bygga 
+Innan man har en körbart system för en nod måste man bygga noden. Det innebär att man 
+genererar alla de filer som behövs i runtime-miljön, t ex en boot-fil som talar om
+vilka volymer som ska laddas, laddatafiler för volymerna som innehåller info om objekt i 
+volymen, en exe-fil för plc-programmet etc.
+
+Man bygger genom att aktivera 'Functions/Build Node' i konfiguratorns meny, eller motsvarande
+knapp i verktygspanelen. Om man har flera noder definierade i projektet måste man även välja
+nod i den lista som visas. 
+
 <image> dg_fig66.gif
+<b>Fig Val av nod
 
-Nu är allt i utvecklingsmiljön konfigurerat och genererat och det är dags att sätta upp
-runtime miljön.
+Också bygget är uppdelat i metoder för olika klasser. Byggmetoden för ett PlcPgm är att 
+generera kod för de fönster som är ändrade och kompilera dessa. Byggmetoden för en volym är 
+att anropa byggmetoderna för alla objekt i volymen, samt att skapa en laddatafil för volymen. 
+Byggmetoden för en nod är att anropa byggmetoden för volymen, samt skapa en boot-fil och 
+länka plc-programmet. Byggmetoden för ett objekt kan anropas genom att välja ut objektet och
+aktivera 'Functions/Build Object' i menyn, och byggmetoden för aktuell volym genom att aktivera
+'Functions/Build Volume'.
 
-<h2>Installera Proview runtime paket
-...
+Här följer en beskrivning på några byggmetoder.
 
-<h2>Distribuera
-...
+XttGraph <t>Kopierar .pwg filen för grafen från $pwrp_pop till $pwrp_exe.
+WebGraph <t>Exporterar grafen till java, kompilerar och lägger in i arkiv.
+WebHandler <t>Genererar html-filer för nodens hemsida och konverterar xtt-hjälp filen till
+           <t>web format (html).
+PlcPgm   <t>Genererar c-kod som kompileras av c-kompilatorn.
+RootVolume <t>Anropar byggmetoden för all objekt i volymen, samt skapar en laddatafil med
+          <t>info om volymens objekt. Skapar även korsreferens filer
+         <t>om detta är specificerat i Options.
+ClassVolume <t>Genererar include-filer med c-struct'ar för volymens klasser, samt skapar
+          <t>en laddatafil med typ och klassbeskrivningarna.
+Node     <t>Anropar byggmetoden för rotvolymen om volymen är tillgänglig. Skapar en bootfil
+         <t>med info om vilka volymer som ska laddas in och länkar plc-programmet för noden.
+
+Normalt kontrollera byggmetoderna först om något är ändrat, och utför endast bygget om den
+hittar någon förändring. I vissa fall vill man tvinga ett bygge, och sätter då 'Force' i
+Build kolumnen i options som öppnas från 'Options/Settings' i menyn. Här kan man även markera 
+om man vill skapa korsreferens-filer vid bygge av en volym, eller om man vill kompilera och
+länka plc-programmet med debug.
+
+Om man har använder subvolymer eller delade volymer måste dessa byggas med 'Build Volume' 
+innan noden byggs.
+</topic>
+
+<topic> dg_simulate
+Simulering
+Simulering innebär att man startar upp systemet för en process eller operatörs station på
+utvecklingsstationen. På detta sätt kan man snabbt testa program och bilder under utvecklings-
+fasen. Även när ett system har tagits i drift kan man testa ändringar i systemet innan man
+laddar ner till produktions systemet.
+
+Vid simulering måste indata från processen simuleras, och det gör man genom skapa ett PlcPgm
+som läser data som ställs ut till processen, dvs Do och Ao, och utifrån dessa sätter värden på
+Ai och Di objekt. Det finns speciella StoDi och StoAi objekt för detta som endast används vid
+simulering. Man måste se till att simulerings-programmet enbart exekverar vid simulering,
+t ex genom att sätta ScanOff attributet i PlcWindow objektet om IOSimulFlag i IOHandler
+objektet inte är 1.
+
+För att kunna starta en simulering på utvecklingsstationen den konfigureras i directory 
+volymen. Simuleringen sker på en separat QCom bus vilket konfiguras med ett BusConfig som
+läggs på topnivån i directoryvolymens högra fönster. I detta anges även en busidentitet, t ex
+999. Under BusConfig objektet lägger man ett NodeConfig objekt för utvecklingsstationen, och
+fyller i nodnamen och ip-adress. Man kan använda loopback adressen 127.0.0.1 om man inte avser
+att kommunicera med andra noder. Vidare måsta man ange vilken volym man vill simulera
+genom att sätta volymen som namn på RootVolumeLoad objektet under NodeConfig objektet.
+
+Notera att konfigurerings guiden för directoryvolymen normalt skapar en simuleringsbus och 
+en simuleringsnod.
+
+<image>dg_fig104.png
+<b>Fig Directoryvolymen med konfigurering för utvecklingsstation newton
+
+När utvecklingsstationen är konfigurerad, bygger man genom att öppna konfiguratören för den
+volym som ska simuleras, aktivera 'Build Node' och välja utvecklingsstationen in i listan
+av noder som visas.
+
+Innan man startar måste man definera omgivningsvariablen PWR_BUS_ID till identiteten för
+simuleringsbussen. Defaultvärdet för PWR_BUS_ID anges i filen /etc/proview.cnf, parameter
+QcomBusId. Med kommandot
+
+<c>> echo $PWR_BUS_ID
+
+kontrollerar man bussidentiteten, och med kommandot
+
+<c>> export PWR_BUS_ID=999
+
+sätter man ett annat värdet. Det här kommandot kan t ex läggas in i $pwrp_login/login.sh.
+
+Nu kan man starta Proview runtime med
+
+<c>> rt_ini &
+
+och stoppa med 
+
+<c>> . pwr_stop.sh
+
+Om Proview inte startar kan man addera -i till start-kommandot för att se eventuella 
+felutskrifter
+
+<c>> rt_ini -i
+
+Observera att man alltid måste nollställa genom att köra '. pwr_stop.sh' kommandot före ett 
+nytt startförsök.
+
+När runtime-mijön är startad kan man utforska systemet genom att starta runtime navigatören.
+
+<c>> rt_xtt
+
+Man kan även använda runtime-monitorn för att starta runtime-miljön. Se nedan.
 </topic>
 
 <topic>runtime monitor
@@ -4442,6 +4621,7 @@ Förutsättningen för att man ska kunna starta runtime-miljön är att utvecklingsno
 
 - att rätt kommunikationsbuss är uppsatt. Det gör man genom att sätta omgivningsvariabeln
   PWR_BUS_ID till den buss man har angivit i BusConfig objektet i projektvolymen. t ex
+
 <c>  export PWR_BUS_ID=999
 
 För att runtime monitorn ska fungera krävs dessutom att det finns ett StatusMontitorConfig
@@ -4456,10 +4636,108 @@ Knappen 'Restart Runtime' gör en mjuk omstart, och kan användas om runtime redan
 Observera att vissa ändringar inte följer med vid en mjuk omstart, t ex ändrade värden på
 attribut i objekt som redan finns sedan tidigare.
 
-
-
 </topic>
 
+<topic> dg_process_station
+Process och operatörsstationer
+
+I det här avsnittet går vi igenom det punkter som måste genomföras för att Proview ska kunna
+startas på en process eller operatörsstation. 
+
+- konfigurering av noden i directoryvolymen.
+- noden ska byggas.
+- installation av runtime paketet.
+- distribuering till noden. <link> dg_distribute
+- uppstart av runtime-miljön på noden. <link> dg_rtstart
+
+<h1>Konfigurering in directory volymen
+Noden måste vara konfigurerad i directory volymen med ett NodeConfig objekt. Detta läggs
+under ett BusConfig objekt som innehåller bus identiteten för produktionsbussen. I NodeConfig
+objektet konfigurerar man nodnamn och IP-adress, och under NodeConfig objektet ligger ett
+RootVolumeLoad objekt som anger den rotvolym som ska startas i noden.
+
+Noden byggs från rotvolymens konfiguratör genom att aktivera 'Functions/Build Node' och välja
+ut noden i listan på noder (om det endast finns en nod konfigurerad visas inte listan).
+
+<h1>Installation av runtimepaketet
+Runtime-miljön installeras på process/operatörs-noden genom att installera pwrrt-paketet för 
+aktuell Linux distribution. Läs installationsguiden på Download-sidan på www.proview.se för
+mer information.
+</topic>
+
+<headerlevel>
+<topic> dg_distribute
+Distribuera
+Att distribuera innebär att man samlar ihop de filer som skapas vid bygget av en nod, och som 
+behövas för att kunna köra runtime-miljön, till ett paket. Paketet kopieras till process
+eller operatörsstationen och packas upp där.
+
+Vilka filer som ingår i paketet konfigueras i directoryvolymen med ett Distribute objekt som
+läggs under NodeConfig objektet för noden. Distribute-objektet innehåller attributet Components
+i där man anger vilken typ av komponenter eller filer som ska ingå. Om komponenter är
+angivna som inte finns genererade resulterar det i varningsutskrifter vid distributionen.
+
+<image> dg_fig106.png
+<b>Fig Distribute objektet
+
+Om man t ex har andra filer, t ex applikations-program, som ska ingå i paketet, lägger man ett
+objekt av typen ApplDistribute under Distribute objektet. I ApplDistribute objektet kan man
+ange den eller de filer (specification med wildcard är tillåten) som ska adderas, samt till
+vilken katalog de ska kopieras.
+
+Alla filer som behövs i runtime bör ingå i paketet. Dels är det viktigt att ett paket 
+representerar en fullständig version av systemet, så att runtimemiljön kan återskapas, t ex
+om man vill backa tillbaka till en tidigare version. Råkar man ut för en disk-krash är det
+också viktigt att allt finns i paketet, och att det inte behövs diverse handpåläggning för att
+systemet ska starta med en ny disk.
+
+Distributionen utförs från Distributören som öppnas från 'Functions/Distribute' i 
+konfiguratorns meny. Välj ut den nod som ska distribueras till och aktivera 
+'Functions/Distribute' distributörens menyn.
+
+<image> dg_fig105.png
+<b>Fig Distributören
+
+Distributören samlar nu ihop angivna filer, skapar ett paket och kopierar till användaren
+'pwrp' på processnoden. ssh kräver att man anger passerord, detta anges två gånger i det
+terminalfönster från vilken konfiguratören är startad. Vid installationen har användaren
+'pwrp' passerordet 'pwrp' men detta kan ha ändrats av säkerhetsskäl.
+
+Om man inte har nätverkskontakt med processnoden, kan man skapa ett paket och flytta det t ex
+med en USB sticka. Välj ut noden i distributören, och aktivera 'Functions/Create Package'.
+Paketet lagras på $pwrp_load med namnet pwrp_pkg_'nodename'_'version'.tgz, t ex 
+pwrp_pkg_cross1_0002.tgz. På processtationen packar man upp med skriptet pwr_pkg.sh -i och 
+anger namnet på paketet.
+
+<c>> pwr_pkg.sh -i pwrp_pkg_cross1_0002.tgz 
+
+<h1>Backa till tidigare version
+Ibland fungerar inte en ändring som planerat och man vill backa tillbaka till föregående
+version. Detta gör man enkelt med pwr_pkg.sh. Paketen lagras på användaren pwrp hemma-katalog
+/home/pwrp. Genom att leta upp det paket som tidigare var installerat och starta pwr_pkg.sh -i
+med detta återställer man till denna version.
+
+<c>> pwr_pkg.sh -i pwrp_pkg_cross1_0001.tgz
+</topic>
+
+<topic> dg_rtstart
+Starta runtime-miljön
+Runtime-mijön startas med kommandot
+
+<c>> pwr start
+
+och stoppas med 
+
+<c>> pwr stop
+
+eller
+ 
+<c>> pwr kill
+
+Kommandot 'pwr stop' kräver att alla processer lever, medan 'pwr kill' är lite tuffare och 
+rensar i alla lägen.
+</topic>
+</headerlevel>
 </chapter>
 
 <chapter>
@@ -7601,7 +7879,7 @@ Applikationsfilen ligger på $pwrp_load och har nament
 där nodename är nodens namn och busnumber Qcombusnumret. Om noden är 'mynode' och busnumret
 är 507, blir filnamnet
 
-<c> $pwrp_load/ls_appl_mynode_507.txt
+<c> $pwrp_load/ld_appl_mynode_507.txt
 </topic>
 </headerlevel>
 </chapter>

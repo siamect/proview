@@ -82,6 +82,8 @@ class GsdmlAttr {
   void activate_zoom_reset();
   void activate_cmd_ok();
   void activate_cmd_ca();
+  void activate_collapse();
+  void activate_expand_all();
     
   static void gsdmlattr_message( void *attr, char severity, const char *message);
   static void gsdmlattr_change_value_cb( void *attr_ctx);

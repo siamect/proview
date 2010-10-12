@@ -40,8 +40,17 @@ main
   int i;
   string rttconfig;
   string webhandler;
+  string c;
 
   !verify(1);
+
+  op = GetNodeObject();
+  op = op + "-OpDefault";
+  c = GetObjectClass( op);
+  if ( c != "")
+    printf( "Database is already converted\n");
+    exit();    
+  endif
 
   ! For all OpPlace objects
   op = GetClassList( "OpPlace");

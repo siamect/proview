@@ -362,7 +362,7 @@ void *CoWowGtk::CreateList (
   ctx->list = (GtkWidget *) g_object_new(GTK_TYPE_TREE_VIEW,
 				 "model", store,
 				 "rules-hint", TRUE,
-				 "headers-clickable", TRUE,
+				 "headers-visible", FALSE,
 				 "reorderable", TRUE,
 				 "enable-search", TRUE,
 				 "search-column", 0,

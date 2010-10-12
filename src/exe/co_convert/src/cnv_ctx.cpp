@@ -47,11 +47,14 @@ int CnvCtx::remove_spaces(
 			const char *in,
 			char	*out)
 {
-  char    *s;
+  char    *s, *s1;
 
   for ( s = (char *)in; !((*s == 0) || ((*s != ' ') && (*s != 9))); s++);
 
-  strcpy( out, s);
+  // strcpy( out, s);
+  for ( s1 = out; *s; s++,s1++)
+    *s1 = *s;
+  *s1 = 0;
         
   s = out;
   if ( strlen(s) != 0) {

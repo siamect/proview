@@ -174,6 +174,18 @@ static pwr_tStatus PostCreate (
   }
   return PWRB__SUCCESS;
 }
+
+static pwr_tStatus AnteAdopt (
+  ldh_tSesContext   Session,
+  pwr_tOid	    Father,
+  pwr_tCid	    Class
+) {
+  // Only allow plc window objects
+  if ( Class != pwr_cClass_windowplc)
+    return PWRB__PLCPGMCHILD;
+
+  return PWRB__SUCCESS;
+}
 
 /*----------------------------------------------------------------------------*\
   Every method to be exported to the workbench should be registred here.
@@ -184,5 +196,6 @@ pwr_dExport pwr_BindMethods(PlcPgm) = {
   pwr_BindMethod(Build),
   pwr_BindMethod(SyntaxCheck),
   pwr_BindMethod(PostCreate),
+  pwr_BindMethod(AnteAdopt),
   pwr_NullMethod
 };

@@ -1,6 +1,6 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X122"
+    Attr NextOix = "_X136"
     Attr NextCix = "_X15"
     Attr NextTix[0] = "_X5"
   EndBody
@@ -394,6 +394,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object PostCreate $DbCallBack 123 05-OCT-2010 15:35:40.46
+        Body SysBody 05-OCT-2010 15:35:59.88
+          Attr MethodName = "BaseIORack-PostCreate"
+        EndBody
+      EndObject
       Object Template MotionControl_USB 2147975168 01-JAN-1970 01:00:00.00
         Body RtBody 15-NOV-2007 14:37:52.21
           Attr Process = 1
@@ -536,6 +541,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr MethodName = "MotionControl_USBIO-IoCardWrite"
           EndBody
         EndObject
+      EndObject
+      Object PostCreate $DbCallBack 124 05-OCT-2010 15:36:18.64
+        Body SysBody 05-OCT-2010 15:36:27.11
+          Attr MethodName = "BaseIOCard-PostCreate"
+        EndBody
       EndObject
       Object Template MotionControl_USBIO 2148237312 01-JAN-1970 01:00:00.00
         Body RtBody 15-NOV-2007 14:38:59.75
@@ -791,6 +801,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object PostCreate $DbCallBack 125 05-OCT-2010 15:36:59.75
+        Body SysBody 05-OCT-2010 15:36:59.75
+          Attr MethodName = "BaseIORack-PostCreate"
+        EndBody
+      EndObject
       Object Template Modbus_TCP_Slave 2148499456 01-JAN-1970 01:00:00.00
         Body RtBody 05-SEP-2008 11:08:41.87
           Attr Process = 1
@@ -961,7 +976,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         ! 4: The card is handled by an application program.
         !*/
         Object Process $Attribute 3 08-FEB-2008 11:19:22.97
-          Body SysBody 03-SEP-2008 16:02:36.20
+          Body SysBody 05-OCT-2010 12:36:41.90
             Attr PgmName = "Process"
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
@@ -1007,6 +1022,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr MethodName = "Modbus_Module-IoCardWrite"
           EndBody
         EndObject
+      EndObject
+      Object PostCreate $DbCallBack 126 05-OCT-2010 15:37:20.63
+        Body SysBody 05-OCT-2010 15:37:26.85
+          Attr MethodName = "BaseIOCard-PostCreate"
+        EndBody
       EndObject
       Object Template Modbus_Module 2148761600 01-JAN-1970 01:00:00.00
         Body RtBody 16-MAR-2010 08:26:27.97
@@ -1064,9 +1084,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
         ! 4: The master is handled by an application program.
         !*/
         Object Process $Attribute 3 03-SEP-2008 16:02:28.05
-          Body SysBody 03-SEP-2008 16:02:46.70
+          Body SysBody 05-OCT-2010 12:36:50.82
             Attr PgmName = "Process"
-            Attr TypeRef = "pwrs:Type-$UInt16"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
         !/**
@@ -1102,6 +1122,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr MethodName = "Modbus_Master-IoAgentClose"
           EndBody
         EndObject
+      EndObject
+      Object PostCreate $DbCallBack 127 05-OCT-2010 15:37:42.26
+        Body SysBody 05-OCT-2010 15:37:42.26
+          Attr MethodName = "BaseIORack-PostCreate"
+        EndBody
       EndObject
       Object Template Modbus_Master 2149023744 01-JAN-1970 01:00:00.00
         Body RtBody 05-SEP-2008 11:07:48.32
@@ -1309,6 +1334,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object PostCreate $DbCallBack 128 05-OCT-2010 15:38:02.12
+        Body SysBody 05-OCT-2010 15:38:02.12
+          Attr MethodName = "BaseIORack-PostCreate"
+        EndBody
+      EndObject
       Object Template Modbus_TCP_Server 2149285888 01-JAN-1970 01:00:00.00
         Body RtBody 03-MAR-2010 16:51:13.57
           Attr Process = 1
@@ -1446,6 +1476,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object PostCreate $DbCallBack 129 05-OCT-2010 15:38:06.84
+        Body SysBody 05-OCT-2010 15:38:16.94
+          Attr MethodName = "BaseIOCard-PostCreate"
+        EndBody
+      EndObject
       Object Template Modbus_TCP_ServerModule 2149548032 01-JAN-1970 01:00:00.00
         Body RtBody 03-MAR-2010 16:49:58.18
           Attr Process = 1
@@ -1532,6 +1567,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr MethodName = "GPIO-IoRackClose"
           EndBody
         EndObject
+      EndObject
+      Object PostCreate $DbCallBack 130 05-OCT-2010 15:38:41.84
+        Body SysBody 05-OCT-2010 15:38:41.84
+          Attr MethodName = "BaseIORack-PostCreate"
+        EndBody
       EndObject
       Object Template GPIO 2149810176 01-JAN-1970 01:00:00.00
         Body RtBody 15-APR-2010 21:57:21.82
@@ -1620,6 +1660,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object PostCreate $DbCallBack 131 05-OCT-2010 15:38:45.44
+        Body SysBody 05-OCT-2010 15:38:49.68
+          Attr MethodName = "BaseIOCard-PostCreate"
+        EndBody
+      EndObject
       Object Template GPIO_Module 2150072320 01-JAN-1970 01:00:00.00
         Body RtBody 15-APR-2010 21:57:34.91
           Attr Process = 1
@@ -1678,6 +1723,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             EndBody
           EndObject
         EndObject
+      EndObject
+      Object PostCreate $DbCallBack 132 05-OCT-2010 15:39:04.13
+        Body SysBody 05-OCT-2010 15:39:04.13
+          Attr MethodName = "BaseIORack-PostCreate"
+        EndBody
       EndObject
       Object Template OneWire 2151120896 01-JAN-1970 01:00:00.00
         Body RtBody 06-JUN-2010 18:34:08.77
@@ -1751,6 +1801,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr MethodName = "Maxim_DS18B20-IoCardRead"
           EndBody
         EndObject
+      EndObject
+      Object PostCreate $DbCallBack 133 05-OCT-2010 15:39:14.21
+        Body SysBody 05-OCT-2010 15:39:20.09
+          Attr MethodName = "BaseIOCard-PostCreate"
+        EndBody
       EndObject
       Object Template Maxim_DS18B20 2151383040 01-JAN-1970 01:00:00.00
         Body RtBody 06-JUN-2010 18:34:27.07
@@ -1869,6 +1924,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object PostCreate $DbCallBack 134 05-OCT-2010 15:39:41.65
+        Body SysBody 05-OCT-2010 15:39:41.65
+          Attr MethodName = "BaseIORack-PostCreate"
+        EndBody
+      EndObject
       Object Template USB_Agent 2150334464 01-JAN-1970 01:00:00.00
         Body RtBody 23-MAY-2010 20:28:40.31
           Attr Process = 1
@@ -1959,6 +2019,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             EndBody
           EndObject
         EndObject
+      EndObject
+      Object PostCreate $DbCallBack 135 05-OCT-2010 15:39:49.27
+        Body SysBody 05-OCT-2010 15:39:49.27
+          Attr MethodName = "BaseIORack-PostCreate"
+        EndBody
       EndObject
       Object Template Velleman_K8055 2150596608 01-JAN-1970 01:00:00.00
         Body RtBody 23-MAY-2010 20:28:30.66

@@ -654,9 +654,9 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      ! @Summary Integer output IO1.
+      ! @Summary Integer output OI1.
       ! Integer output.
-      ! IO1 is used to refer to the output in the code.
+      ! OI1 is used to refer to the output in the code.
       !*/
       Object OutI1 $Output 43
         Body SysBody
@@ -668,9 +668,9 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      ! @Summary Integer output IO2.
+      ! @Summary Integer output OI2.
       ! Integer output.
-      ! IO2 is used to refer to the output in the code.
+      ! OI2 is used to refer to the output in the code.
       !*/
       Object OutI2 $Output 44
         Body SysBody
@@ -682,9 +682,9 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      ! @Summary Integer output IO3.
+      ! @Summary Integer output OI3.
       ! Integer output.
-      ! IO3 is used to refer to the output in the code.
+      ! OI3 is used to refer to the output in the code.
       !*/
       Object OutI3 $Output 45
         Body SysBody
@@ -696,9 +696,9 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      ! @Summary Integer output IO4.
+      ! @Summary Integer output OI4.
       ! Integer output.
-      ! IO4 is used to refer to the output in the code.
+      ! OI4 is used to refer to the output in the code.
       !*/
       Object OutI4 $Output 46
         Body SysBody
@@ -710,9 +710,9 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      ! @Summary Integer output IO5.
+      ! @Summary Integer output OI5.
       ! Integer output.
-      ! IO5 is used to refer to the output in the code.
+      ! OI5 is used to refer to the output in the code.
       !*/
       Object OutI5 $Output 47
         Body SysBody
@@ -724,9 +724,9 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      ! @Summary Integer output IO6.
+      ! @Summary Integer output OI6.
       ! Integer output.
-      ! IO6 is used to refer to the output in the code.
+      ! OI6 is used to refer to the output in the code.
       !*/
       Object OutI6 $Output 48
         Body SysBody

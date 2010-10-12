@@ -84,7 +84,7 @@ validateTm (
 
   /* Check generic ranges.  */
 
-  if (70 > tms->tm_year || tms->tm_year > 137) /* EPOCH is 1970 end feb 2038 */
+  if (69 > tms->tm_year || tms->tm_year > 137) /* EPOCH is 1970 end feb 2038 */
     return TIME__RANGE;
   else if (0 > tms->tm_mon || tms->tm_mon > 11)
     return TIME__RANGE;

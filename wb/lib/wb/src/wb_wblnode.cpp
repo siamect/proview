@@ -868,6 +868,9 @@ void wb_wblnode::buildObjBodyDef( ref_wblnode classdef)
       child->buildBuffer( classdef, this, &index, &o->b.size);
     child = child->o->fws;
   }
+  // Align body size on longword
+  o->b.size = pwr_AlignLW(o->b.size);
+
   ((pwr_sObjBodyDef *)o->rbody)->Size = o->b.size;
   ((pwr_sObjBodyDef *)o->rbody)->NumOfParams = index;
 }

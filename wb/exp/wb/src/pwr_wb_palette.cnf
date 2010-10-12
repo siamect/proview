@@ -278,6 +278,17 @@ palette NavigatorPalette
           class Siemens_ET200M_IM153
         }
       }
+      menu Profinet
+      {
+        menu Controller
+        {
+          class PnControllerSoftingPNAK
+        }
+        menu Devices
+        {
+          class PnDevice
+        }
+      }
       menu Modbus_TCP 
       {
 	class Modbus_Master
@@ -289,10 +300,29 @@ palette NavigatorPalette
           class Modbus_TCP_ServerModule
 	}
       }
-      menu MotionControl_USBIO
+      menu GPIO
       {
-        class MotionControl_USB
-        class MotionControl_USBIO
+        class GPIO
+        class GPIO_Module
+      }
+      menu OneWire
+      {
+        class OneWire
+        class Maxim_DS18B20
+      }
+      menu USB
+      {
+        class USB_Agent
+      	menu Velleman_K8055
+	{	
+          class Velleman_K8055
+          class Velleman_K8055_Board
+	}
+        menu MotionControl_USBIO
+        {
+          class MotionControl_USB
+          class MotionControl_USBIO
+        }
       }
     }
     menu Remote

@@ -177,6 +177,8 @@ class GsdmlAttrNav {
     int is_modified() { return modified;}
     int save( const char *filename);
     int open( const char *filename);
+    void collapse();
+    void expand_all();
     void redraw();
     void set_viewio( int set) { viewio = set;}
 
