@@ -410,13 +410,13 @@ void pack_download_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, GsdmlDeviceData *d
   T_PN_DATA_RECORD *pDataRecord;
 
   if (device_ref == 1) {
-    printf("sizeof download-struct: %d\n", sizeof(T_PN_SERVICE_DOWNLOAD_REQ));
-    printf("sizeof IOCR-struct: %d\n", sizeof(T_PN_IOCR));  
-    printf("sizeof API-struct: %d\n", sizeof(T_PN_API));
-    printf("sizeof MODULE-struct: %d\n", sizeof(T_PN_MODULE));
-    printf("sizeof SUBMODULE-struct: %d\n", sizeof(T_PN_SUBMODULE));
-    printf("sizeof DATARECORD-struct: %d\n", sizeof(T_PN_DATA_RECORD));
-    printf("sizeof REFERENCE-struct: %d\n", sizeof(T_PN_REFERENCE));
+    //    printf("sizeof download-struct: %d\n", sizeof(T_PN_SERVICE_DOWNLOAD_REQ));
+    //    printf("sizeof IOCR-struct: %d\n", sizeof(T_PN_IOCR));  
+    //    printf("sizeof API-struct: %d\n", sizeof(T_PN_API));
+    //    printf("sizeof MODULE-struct: %d\n", sizeof(T_PN_MODULE));
+    //    printf("sizeof SUBMODULE-struct: %d\n", sizeof(T_PN_SUBMODULE));
+    //    printf("sizeof DATARECORD-struct: %d\n", sizeof(T_PN_DATA_RECORD));
+    //    printf("sizeof REFERENCE-struct: %d\n", sizeof(T_PN_REFERENCE));
   }
 
   no_items = sscanf(dev_data->ip_address, "%hhi.%hhi.%hhi.%hhi", &high_high_byte,
@@ -707,18 +707,18 @@ void pack_download_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, GsdmlDeviceData *d
     }
   }
 
-  if (device_ref != 0) {
+  /*  if (device_ref != 0) {
 
-    pData = (char *) (pSDR);
-    printf("Download of device: %s\n", dev_data->device_name);
-    printf("Total datalength %d\n\n", length);
-    for (ii = 0; ii < length; ii++) {
-      if (ii % 16 == 0) printf("\n");
-      printf("%02hhX ", pData[ii]);
-    }
-    printf("\n");
-    printf("\n");
+  pData = (char *) (pSDR);
+  printf("Download of device: %s\n", dev_data->device_name);
+  printf("Total datalength %d\n\n", length);
+  for (ii = 0; ii < length; ii++) {
+  if (ii % 16 == 0) printf("\n");
+  printf("%02hhX ", pData[ii]);
   }
+  printf("\n");
+  printf("\n");
+    } */
 }
 
 int unpack_get_los_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal *local)
@@ -967,7 +967,7 @@ int unpack_get_device_state_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal
     device->no_diff_modules = no_diff_modules;
     device->device_state = _HIGH_LOW_BYTES_TO_PN_U16(pGDSC->StateHighByte, pGDSC->StateLowByte);
 
-    printf("No diff modules: %d \r\n", no_diff_modules);
+    //    printf("No diff modules: %d \r\n", no_diff_modules);
 	
     for (diff_mod_index = 0u; diff_mod_index < no_diff_modules; diff_mod_index++) {
       T_PN_DIFF_MODULE_API  *pDiffModuleAPI = (T_PN_DIFF_MODULE_API *) (pDiffModule + 1);
@@ -1006,7 +1006,7 @@ int unpack_get_device_state_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal
 									 pModuleSlot->IdentNumberHighWordLowByte, 
 									 pModuleSlot->IdentNumberLowWordHighByte, 
 									 pModuleSlot->IdentNumberLowWordLowByte);
-	      printf("  Slot no: %d, State: %d \r\n", module_data->slot_number, module_data->state);
+	      //	      printf("  Slot no: %d, State: %d \r\n", module_data->slot_number, module_data->state);
 	      if (save_first) {
 		err_slot_number = module_data->slot_number;
 		err_module_state = module_data->state;
@@ -1032,7 +1032,7 @@ int unpack_get_device_state_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal
 									       pModuleSubSlot->IdentNumberLowWordHighByte, 
 									       pModuleSubSlot->IdentNumberLowWordLowByte);
 
-		    printf("    SubSlot no: %d, State: %d \r\n", submodule_data->subslot_number, submodule_data->state);
+		    //		    printf("    SubSlot no: %d, State: %d \r\n", submodule_data->subslot_number, submodule_data->state);
 
 		}
 	      }
@@ -1092,7 +1092,7 @@ int unpack_get_device_state_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal
 	   pErrorCon->AreaCode, pErrorCon->AreaCode
 	   );
   }
-
+  
   return -1;
   
 }
@@ -1149,6 +1149,7 @@ int unpack_download_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal *local)
 
       if (ii == device->iocr_data.size()) {
         /* This iocr is not found, log some thing and continue */
+
         printf("iocr not found %d \n", type);
         continue;
       }
@@ -1157,10 +1158,10 @@ int unpack_download_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal *local)
       iocr_data->identifier = _HIGH_LOW_BYTES_TO_PN_U16 (pIOCRInfo->IOCRIdentifierHighByte, pIOCRInfo->IOCRIdentifierLowByte);
       iocr_data->io_data_length = _HIGH_LOW_BYTES_TO_PN_U16 (pIOCRInfo->IODataLengthHighByte, pIOCRInfo->IODataLengthLowByte);
       iocr_data->io_data = (unsigned char *) calloc(1, iocr_data->io_data_length);	  
-      printf("            iocr (0x%04x) 0x%04x %d\r\n",
-	     _HIGH_LOW_BYTES_TO_PN_U16 (pIOCRInfo->TypeHighByte, pIOCRInfo->TypeLowByte),
-	     _HIGH_LOW_BYTES_TO_PN_U16 (pIOCRInfo->IOCRIdentifierHighByte, pIOCRInfo->IOCRIdentifierLowByte),
-	     _HIGH_LOW_BYTES_TO_PN_U16 (pIOCRInfo->IODataLengthHighByte, pIOCRInfo->IODataLengthLowByte));
+      //      printf("            iocr (0x%04x) 0x%04x %d\r\n",
+      //	     _HIGH_LOW_BYTES_TO_PN_U16 (pIOCRInfo->TypeHighByte, pIOCRInfo->TypeLowByte),
+      //	     _HIGH_LOW_BYTES_TO_PN_U16 (pIOCRInfo->IOCRIdentifierHighByte, pIOCRInfo->IOCRIdentifierLowByte),
+      //	     _HIGH_LOW_BYTES_TO_PN_U16 (pIOCRInfo->IODataLengthHighByte, pIOCRInfo->IODataLengthLowByte));
       
       NumberAPIs = _HIGH_LOW_BYTES_TO_PN_U16 (pIOCRInfo->NumberOfAPIsHighByte, pIOCRInfo->NumberOfAPIsLowByte);
       
@@ -1171,18 +1172,19 @@ int unpack_download_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal *local)
 	PN_U16            IODataIndex;
 	
 	    
-	printf("              api 0x%04x%04x\r\n"
-	       "                data\r\n",
-	       _HIGH_LOW_BYTES_TO_PN_U16 (pAPIInfo->APIHighWordHighByte, pAPIInfo->APIHighWordLowByte),
-	       _HIGH_LOW_BYTES_TO_PN_U16 (pAPIInfo->APILowWordHighByte, pAPIInfo->APILowWordLowByte));
+	//	printf("              api 0x%04x%04x\r\n"
+	//	       "                data\r\n",
+	//	       _HIGH_LOW_BYTES_TO_PN_U16 (pAPIInfo->APIHighWordHighByte, pAPIInfo->APIHighWordLowByte),
+	//	       _HIGH_LOW_BYTES_TO_PN_U16 (pAPIInfo->APILowWordHighByte, pAPIInfo->APILowWordLowByte));
+	//
 	
 	NumberIODatas = _HIGH_LOW_BYTES_TO_PN_U16 (pAPIInfo->NumberOfIODataHighByte, pAPIInfo->NumberOfIODataLowByte);
 	
 	for (IODataIndex = 0u; IODataIndex < NumberIODatas; IODataIndex++) {
-	  printf("                  slot: %d subslot: %d offset: %d\r\n",
-		 _HIGH_LOW_BYTES_TO_PN_U16 (pDataInfo->SlotNumberHighByte, pDataInfo->SlotNumberLowByte),
-		 _HIGH_LOW_BYTES_TO_PN_U16 (pDataInfo->SubSlotNumberHighByte, pDataInfo->SubSlotNumberLowByte),
-		 _HIGH_LOW_BYTES_TO_PN_U16 (pDataInfo->OffsetHighByte, pDataInfo->OffsetLowByte));
+	  //	  printf("                  slot: %d subslot: %d offset: %d\r\n",
+	  //		 _HIGH_LOW_BYTES_TO_PN_U16 (pDataInfo->SlotNumberHighByte, pDataInfo->SlotNumberLowByte),
+	  //		 _HIGH_LOW_BYTES_TO_PN_U16 (pDataInfo->SubSlotNumberHighByte, pDataInfo->SubSlotNumberLowByte),
+	  //		 _HIGH_LOW_BYTES_TO_PN_U16 (pDataInfo->OffsetHighByte, pDataInfo->OffsetLowByte));
 	  
 	  for (ii = 0; ii < device->module_data.size(); ii++) {
             PnModuleData *module_data;
@@ -1207,14 +1209,14 @@ int unpack_download_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal *local)
 	  pDataInfo++;
 	}
 	
-	printf ("                status\r\n");
+	//	printf ("                status\r\n");
 	NumberIODatas = _HIGH_LOW_BYTES_TO_PN_U16 (pAPIInfo->NumberOfIOStatusHighByte, pAPIInfo->NumberOfIOStatusLowByte);
 	
 	for (IODataIndex = 0u; IODataIndex < NumberIODatas; IODataIndex++) {
-	  printf("                  slot: %d subslot: %d offset: %d\r\n",
-		 _HIGH_LOW_BYTES_TO_PN_U16 (pDataInfo->SlotNumberHighByte, pDataInfo->SlotNumberLowByte),
-		 _HIGH_LOW_BYTES_TO_PN_U16 (pDataInfo->SubSlotNumberHighByte, pDataInfo->SubSlotNumberLowByte),
-		 _HIGH_LOW_BYTES_TO_PN_U16 (pDataInfo->OffsetHighByte, pDataInfo->OffsetLowByte));
+	  //	  printf("                  slot: %d subslot: %d offset: %d\r\n",
+	  //		 _HIGH_LOW_BYTES_TO_PN_U16 (pDataInfo->SlotNumberHighByte, pDataInfo->SlotNumberLowByte),
+	  //		 _HIGH_LOW_BYTES_TO_PN_U16 (pDataInfo->SubSlotNumberHighByte, pDataInfo->SubSlotNumberLowByte),
+	  //		 _HIGH_LOW_BYTES_TO_PN_U16 (pDataInfo->OffsetHighByte, pDataInfo->OffsetLowByte));
 	  
 	  for (ii = 0; ii < device->module_data.size(); ii++) {
             PnModuleData *module_data;
@@ -1397,7 +1399,7 @@ void handle_device_state_changed (io_sAgentLocal *local, io_sAgent *ap) {
   /* Check state for all devices */
 
     for (ii = 1; ii < local->device_data.size(); ii++) {
-      printf("Dev_ref %d, State, %d \r\n", ii, dev_state.State[ii]); 
+      //      printf("Dev_ref %d, State, %d \r\n", ii, dev_state.State[ii]); 
 
       //  for (ii = 0; ii < 1; ii++) {
       if (dev_state.State[ii] != local->device_data[ii]->device_state) {
@@ -1413,11 +1415,11 @@ void handle_device_state_changed (io_sAgentLocal *local, io_sAgent *ap) {
 	    pwr_sClass_PnDevice *dev;
 	    dev = (pwr_sClass_PnDevice *) slave_list->op;
 	    dev->State = dev_state.State[ii];
+	    errh_Info( "Profinet - New device state, dev: %s, state: %d", slave_list->Name, dev->State);
 	  }
 	}
 
-	//	if ( dev_state.State[ii] == PNAK_DEVICE_STATE_CONNECTED) {
-	if (1) {
+	if ( dev_state.State[ii] == PNAK_DEVICE_STATE_CONNECTED) {
 	  pack_get_device_state_req(&local->service_req_res, local->device_data[ii]->device_ref);
 	
 	  sts = pnak_send_service_req_res(0, &local->service_req_res);
@@ -1491,14 +1493,16 @@ void *handle_events(void *ptr) {
 
   while (1) {
     wait_object = PNAK_WAIT_OBJECTS_EVENT_IND | PNAK_WAIT_OBJECTS_OTHER;
-    sts = pnak_wait_for_multiple_objects(0, &wait_object, 0);
-    //PNAK_INFINITE_TIMEOUT
+    sts = pnak_wait_for_multiple_objects(0, &wait_object, PNAK_INFINITE_TIMEOUT);
+    
     if (sts == PNAK_OK) {
       if (wait_object & PNAK_WAIT_OBJECT_EXCEPTION) {
+	//	printf("Exception !!\n"); 
 	handle_exception (local);
       }
       
       if (wait_object & PNAK_WAIT_OBJECT_STATE_CHANGED) {
+	//	printf("State changed !!"); 
 	handle_state_changed (local);
       }
       
@@ -1507,31 +1511,35 @@ void *handle_events(void *ptr) {
       }
       
       if (wait_object & PNAK_WAIT_OBJECT_ALARM) {
-	printf("Alarm !!"); 
+	//	printf("Alarm !!\n"); 
 	handle_alarm_indication (local, ap);
       }
       
       if (wait_object & PNAK_WAIT_OBJECT_CHANNEL_CLOSED) {
+	//	printf("Channel closed !!"); 
 	//     What to do if channel closes ???;
       }
       
       if (wait_object & PNAK_WAIT_OBJECT_ETHERNET_STATE_CHANGED) {
+	//	printf("Ethernet state changed !!"); 
 	//     What to do if ethernet state changes ???;
       }
       
       if (wait_object & PNAK_WAIT_OBJECT_INTERRUPTED) {
+	//	printf("Interrupted !!"); 
 	//     What to do if interrupted ???;
       }
       
     }
     else if ( (sts == PNAK_ERR_FATAL_ERROR ) ||
 	      (sts == PNAK_EXCEPTION_THROWN) ) {
+	printf("Err Fatal / Exception !!"); 
       //    user_handle_exception (ChannelId);
     }
     else {
+	printf("Running == NOT !!"); 
       //    pThisSmObject->Running = PN_FALSE;
     }
-
   }
 }
 

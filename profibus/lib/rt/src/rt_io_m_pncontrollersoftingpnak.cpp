@@ -292,7 +292,7 @@ static pwr_tStatus IoAgentInit (
       }
       else if (local->device_data[ii + 1]->iocr_data[jj]->type == PROFINET_IO_CR_TYPE_OUTPUT) {
 	r_local->bytes_of_output = local->device_data[ii + 1]->iocr_data[jj]->clean_io_data_length;
-	r_local->inputs = local->device_data[ii + 1]->iocr_data[jj]->clean_io_data;
+	r_local->outputs = local->device_data[ii + 1]->iocr_data[jj]->clean_io_data;
       }
     }
   }

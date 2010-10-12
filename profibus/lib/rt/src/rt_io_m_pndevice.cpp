@@ -239,7 +239,7 @@ static pwr_tStatus IoRackRead (
   /* The reading of the process image is now performed at the agent level,
   this eliminates the need for board specific code at the rack level.  */
 
-  if (sp->Status == PB__SUCCESS) {
+  if (sp->Status == PB__NORMAL) {
     sp->ErrorCount = 0;
   }
   else {
