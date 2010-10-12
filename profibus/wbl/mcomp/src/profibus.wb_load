@@ -1,6 +1,6 @@
 Volume Profibus $ClassVolume 0.0.250.7 
   Body SysBody 05-SEP-2005 17:51:40.00
-    Attr NextOix = "_X176"
+    Attr NextOix = "_X184"
     Attr NextCix = "_X19"
     Attr NextTix[0] = "_X10"
   EndBody
@@ -1379,6 +1379,11 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
       EndObject
+      Object PostCreate $DbCallBack 182 05-OCT-2010 16:25:39.14
+        Body SysBody 05-OCT-2010 16:25:47.90
+          Attr MethodName = "BaseIORack-PostCreate"
+        EndBody
+      EndObject
       Object Template Pb_DP_Slave 2149285888 01-JAN-1970 01:00:00.00
         Body RtBody 01-JAN-1970 01:00:00.00
           Attr Process = 1
@@ -1708,6 +1713,11 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr MethodName = "Pb_Module-IoCardWrite"
           EndBody
         EndObject
+      EndObject
+      Object PostCreate $DbCallBack 181 05-OCT-2010 16:24:53.44
+        Body SysBody 05-OCT-2010 16:25:08.43
+          Attr MethodName = "BaseIOCard-PostCreate"
+        EndBody
       EndObject
     EndObject
     !/**
@@ -2088,6 +2098,11 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
       EndObject
+      Object PostCreate $DbCallBack 183 05-OCT-2010 16:25:58.92
+        Body SysBody 05-OCT-2010 16:26:04.76
+          Attr MethodName = "BaseIORack-PostCreate"
+        EndBody
+      EndObject
     EndObject
     !/**
     ! @Author Ferdinand Hauck
@@ -2417,6 +2432,11 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
       EndObject
+      Object PostCreate $DbCallBack 177 05-OCT-2010 16:26:20.18
+        Body SysBody 05-OCT-2010 16:26:37.57
+          Attr MethodName = "BaseIORack-PostCreate"
+        EndBody
+      EndObject
       Object Template Pb_Hilscher 2151383040 01-JAN-1970 01:00:00.00
         Body RtBody 09-DEC-2008 13:24:06.12
           Attr Process = 1
@@ -2520,12 +2540,18 @@ Volume Profibus $ClassVolume 0.0.250.7
       Object RtBody $ObjBodyDef 1 21-APR-2009 13:41:08.17
         Body SysBody 21-APR-2009 13:41:08.17
           Attr StructName = "PnControllerSoftingPNAK"
-          Attr NextAix = "_X57"
+          Attr NextAix = "_X58"
         EndBody
         Object Description $Attribute 53 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object EthernetDevice $Attribute 57 27-AUG-2010 15:41:20.42
+          Body SysBody 27-AUG-2010 15:41:26.88
+            Attr PgmName = "EthernetDevice"
+            Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
         Object Process $Attribute 54 21-APR-2009 13:41:08.17
@@ -2575,8 +2601,14 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
       EndObject
+      Object PostCreate $DbCallBack 178 05-OCT-2010 16:26:44.04
+        Body SysBody 05-OCT-2010 16:26:50.55
+          Attr MethodName = "BaseIORack-PostCreate"
+        EndBody
+      EndObject
       Object Template PnControllerSoftingPNAK 2151645184 01-JAN-1970 01:00:00.00
-        Body RtBody 30-JUN-2010 11:04:06.73
+        Body RtBody 05-OCT-2010 10:58:25.78
+          Attr EthernetDevice = "eth0"
           Attr Process = 1
         EndBody
       EndObject
@@ -2838,6 +2870,11 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
       EndObject
+      Object PostCreate $DbCallBack 179 05-OCT-2010 16:27:03.21
+        Body SysBody 05-OCT-2010 16:27:09.73
+          Attr MethodName = "BaseIORack-PostCreate"
+        EndBody
+      EndObject
       Object Template PnDevice 2151907328 01-JAN-1970 01:00:00.00
         Body RtBody 30-JUN-2010 11:04:35.19
           Attr Process = 1
@@ -2936,6 +2973,11 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr MethodName = "PnModule-IoCardWrite"
           EndBody
         EndObject
+      EndObject
+      Object PostCreate $DbCallBack 180 05-OCT-2010 16:27:14.53
+        Body SysBody 05-OCT-2010 16:27:14.53
+          Attr MethodName = "BaseIOCard-PostCreate"
+        EndBody
       EndObject
       Object Template PnModule 2152169472 01-JAN-1970 01:00:00.00
         Body RtBody 30-JUN-2010 11:04:44.11
