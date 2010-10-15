@@ -74,8 +74,8 @@
 
 
 typedef struct {
-  pwr_tFloat32                        **CellP;
-  pwr_tFloat32                        *Cell;
+  pwr_tFloat32                        **CellP pwr_dAlignLW;
+  pwr_tFloat32                        *Cell pwr_dAlignLW;
 } nmps_sCellInput;
 
 /*_*
