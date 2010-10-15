@@ -28,7 +28,7 @@ extern "C" {
 #include "rt_errh.h"
 
 pwr_tStatus	aproc_RegisterObject(pwr_tOid);
-pwr_tStatus	aproc_TimeStamp();
+pwr_tStatus	aproc_TimeStamp( float scantime, float maxdelay);
 
 #if defined __cplusplus
 }

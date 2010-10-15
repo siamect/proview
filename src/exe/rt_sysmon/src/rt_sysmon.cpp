@@ -160,7 +160,7 @@ void rt_sysmon::scan()
   pwr_tStatus osts, sts;
   errh_eSeverity severity, oseverity;
 
-  aproc_TimeStamp();
+  aproc_TimeStamp( scantime(), 5);
 
   // Find most severe status
   sts = PWR__SRUN;
@@ -237,7 +237,7 @@ int main()
     exit(0);
   }
 
-  aproc_TimeStamp();
+  aproc_TimeStamp( sysmon.scantime(), 5);
   errh_SetStatus( PWR__SRUN);
 
   first_scan = true;

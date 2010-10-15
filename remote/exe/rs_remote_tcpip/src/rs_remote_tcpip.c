@@ -791,7 +791,7 @@ int main(int argc, char *argv[])
     
     /* Timestamp */
     
-    aproc_TimeStamp();
+    aproc_TimeStamp(TIME_INCR, 5);
 
     RemoteSleep(TIME_INCR);
 

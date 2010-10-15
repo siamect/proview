@@ -410,7 +410,7 @@ void rt_fast::close()
 
 void rt_fast::scan()
 {
-  aproc_TimeStamp();
+  aproc_TimeStamp( scantime(), 5);
 
   for ( int i = 0; i < (int) objects.size(); i++)
     objects[i]->scan();
@@ -476,7 +476,7 @@ int main()
     exit(0);
   }
 
-  aproc_TimeStamp();
+  aproc_TimeStamp(fast.scantime(), 5);
   errh_SetStatus( PWR__SRUN);
 
   first_scan = true;

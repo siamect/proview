@@ -319,7 +319,7 @@ static void *opcsrv_cyclic( void *arg)
   for (;;) {
 
     time_GetTime( &current_time);
-    aproc_TimeStamp();
+    aproc_TimeStamp( ((float)tmo)/1000, 5);
 
     get.maxSize = sizeof(mp);
     get.data = mp;

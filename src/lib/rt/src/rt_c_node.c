@@ -47,11 +47,11 @@ pwrs_Node_Exec (
   errh_eSeverity severity;
   errh_eSeverity system_severity;
   int new_idx = -1;
-  static float timeout[40] = {
-    0,0,0,0,3,5,5,0,60,5,
-    5,5,5,0,0,20,0,5,5,5,
-    5,5,5,5,5,5,5,5,5,5,
-    5,5,5,5,5,5,5,5,5,5};
+  static int supervise[40] = {
+    0,0,0,0,1,1,1,0,1,1,
+    1,1,1,0,0,1,0,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1};
   static int reboot_done = 0;
 
   if ( !np) {
@@ -92,10 +92,10 @@ pwrs_Node_Exec (
   system_severity = errh_Severity( np->SystemStatus);
   time_GetTime( &current_time);
   for ( i = 0; i < sizeof(np->ProcStatus)/sizeof(np->ProcStatus[0]); i++) {
-    if ( np->ProcStatus[i] != 0 && timeout[i] != 0.0) {
-      time_Adiff( &diff, &current_time, &np->ProcTimeStamp[i]);
+    if ( np->ProcStatus[i] != 0 && supervise[i]) {
+      time_Adiff( &diff, &np->ProcTimeStamp[i], &current_time);
 
-      if ( time_DToFloat( 0, &diff) > timeout[i]) {
+      if ( time_Dcomp( &diff, 0) < 0) {
 	if ( errh_Severity( np->ProcStatus[i]) < errh_Severity(PWR__PTIMEOUT))
 	  np->ProcStatus[i] = PWR__PTIMEOUT;
       }

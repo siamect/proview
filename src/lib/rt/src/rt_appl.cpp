@@ -107,7 +107,7 @@ void rt_appl::mainloop()
     exit(0);
   }
 
-  aproc_TimeStamp();
+  aproc_TimeStamp( m_scantime, m_maxdelay);
   errh_SetStatus( PWR__ARUN);
 
   first_scan = true;
@@ -121,7 +121,7 @@ void rt_appl::mainloop()
     qcom_Get( &sts, &m_qid, &get, tmo);
     if (sts == QCOM__TMO || sts == QCOM__QEMPTY) {
       if ( !swap) {
-	aproc_TimeStamp();
+	aproc_TimeStamp( m_scantime, m_maxdelay);
 	scan();
       }
     } 

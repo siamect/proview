@@ -445,7 +445,7 @@ int main()
 
     do {
       if (!hotswap) errh_SetStatus(PWR__SRUN);
-      aproc_TimeStamp();
+      aproc_TimeStamp( 0.1, 5);
       get.maxSize = sizeof(mp);
       get.data = mp;
       qcom_Get(&status, &qid, &get, 100);  // TMO == 100 ms

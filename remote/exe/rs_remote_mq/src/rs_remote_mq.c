@@ -387,7 +387,7 @@ if (debug) printf("Before remtrans_init\n");
       errh_SetStatus(PWR__SRVTERM);
       exit(0);
     }   
-    aproc_TimeStamp();
+    aproc_TimeStamp(TIME_INCR, 5);
     RemoteSleep(TIME_INCR);
 
     time_since_scan += TIME_INCR;

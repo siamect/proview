@@ -148,7 +148,7 @@ int main (int argc, char **argv)
       if (delay_action == 2)
 	ihp->IOReadWriteFlag = FALSE;
 
-      aproc_TimeStamp();
+      aproc_TimeStamp(ihp->CycleTimeBus, 5);
     } else {
       ini_mEvent  new_event;
       qcom_sEvent *ep = (qcom_sEvent*) get.data;

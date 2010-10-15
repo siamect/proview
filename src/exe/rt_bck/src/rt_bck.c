@@ -793,6 +793,8 @@ bck_file_process (
         backup_confp->BytesFast = wrtblk->cyclehead.length;
         backup_confp->SegFast = wrtblk->cyclehead.segments;
 	backup_confp->ObjTimeFast = wrtblk->cyclehead.objtime;
+
+	aproc_TimeStamp( ((float)backup_confp->CycleFast)/10, 30);
       }
       else {
         backup_confp->CntSlow++;
@@ -801,7 +803,6 @@ bck_file_process (
 	backup_confp->ObjTimeSlow = wrtblk->cyclehead.objtime;
       }
 
-      aproc_TimeStamp();
 
       /* Signal bck_write_done */
 
@@ -1456,6 +1457,8 @@ pwr_tUInt32 bck_init ()
   UNLOCK;
   if (EVEN(sts)) return sts;
 
+  aproc_TimeStamp( ((float)backup_confp->CycleFast)/10, 30);
+
   /* Activate the disk process
      Activate the fast and slow cycle processes */
 
@@ -1534,8 +1537,6 @@ int main( int argc, char *argv[])
 
   sts = gdh_Init("pwr_bck");
   if (EVEN(sts)) return sts;
-
-  aproc_TimeStamp();
 
   sts = bck_init();
   if (EVEN(sts)) {

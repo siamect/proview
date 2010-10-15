@@ -105,7 +105,7 @@ void MyAppl::close()
 
 void MyAppl::scan()
 {
- aproc_TimeStamp();
+  aproc_TimeStamp( scantime(), 1);
 
  // Do something
 }
@@ -133,7 +133,7 @@ int main()
    exit(0);
  }
 
- aproc_TimeStamp();
+ aproc_TimeStamp( appl.scantime(), 1);
  errh_SetStatus( PWR__ARUN);
 
  first_scan = true;

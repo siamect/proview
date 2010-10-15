@@ -495,7 +495,7 @@ int sev_server::check_histitems( sev_sMsgHistItems *msg, unsigned int size)
     if(msg->Items[i].attrnum > 1) {
       //printf( "Received: %s.%s AttrNum:%d\n", msg->Items[i].oname, msg->Items[i].attr[0].aname, msg->Items[i].attrnum);
       sev_sHistItem *buffP = &msg->Items[i];
-      while(buffP < &msg->Items[item_cnt-1]) {
+      while(buffP < &msg->Items[item_cnt]) {
         //for(size_t j = 0; j < buffP->attrnum; j++) {
         //  printf( "Received: %s.%s\n", buffP->oname, buffP->attr[j].aname);
         //}

@@ -44,7 +44,7 @@ class rt_appl {
 	  errh_eAnix anix, 		//< Application index.
 	  double scantime = 1.0,	//< Scantime for call of the scan() function.
 	  qcom_sQid qid = qcom_cNQid	//< Qcom queue identity.
-	  ) : m_anix(anix), m_scantime(scantime), m_qid(qid) 
+	  ) : m_anix(anix), m_scantime(scantime), m_maxdelay(5), m_qid(qid) 
     { strcpy( m_name, name); }
   void init();
 
@@ -79,6 +79,7 @@ class rt_appl {
  private:
   errh_eAnix m_anix;
   double m_scantime;
+  double m_maxdelay;
   qcom_sQid m_qid;
   char m_name[80];
   pwr_tOid m_apploid;

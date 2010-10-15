@@ -157,7 +157,7 @@ int main (int argc, char ** argv)
       }
       qcom_Free(&sts, get.data);
     }
-    aproc_TimeStamp();
+    aproc_TimeStamp(((float)cTimerTimeScan)/1000, 5);
   }
 }
 

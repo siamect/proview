@@ -145,7 +145,7 @@ main ()
       qcom_Free(&sts, get.data);
     }
 
-    aproc_TimeStamp();
+    aproc_TimeStamp( lHelCB.ScanTime, 5.0);
   }
 }
 

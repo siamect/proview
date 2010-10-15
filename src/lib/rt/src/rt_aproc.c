@@ -52,10 +52,11 @@ pwr_tStatus aproc_RegisterObject(
   return PROC__SUCCESS;
 }
 
-pwr_tStatus aproc_TimeStamp()
+pwr_tStatus aproc_TimeStamp( float cycletime, float maxdelay)
 {
   pwr_tStatus sts;
-  pwr_tTime t;
+  pwr_tTime t, tmo_time;
+  pwr_tDeltaTime dt;
   errh_eAnix anix = errh_Anix();
   
   if ( !anix)
@@ -72,7 +73,9 @@ pwr_tStatus aproc_TimeStamp()
   }
 
   time_GetTime( &t);
-  proc_np->ProcTimeStamp[anix-1] = t;
+  time_FloatToD( &dt, cycletime + maxdelay);
+  time_Aadd( &tmo_time, &t, &dt);
+  proc_np->ProcTimeStamp[anix-1] = tmo_time;
   return PROC__SUCCESS;
 }
 

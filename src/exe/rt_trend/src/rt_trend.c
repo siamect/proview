@@ -154,7 +154,7 @@ int main (int argc, char **argv)
   ScanDeltaTime.tv_sec =  ScanTime;
   ScanDeltaTime.tv_nsec = 0;
 
-  aproc_TimeStamp();
+  aproc_TimeStamp( ScanTime, 5.0);
   errh_SetStatus( PWR__SRUN);
 
   for (;;) {
@@ -198,7 +198,7 @@ int main (int argc, char **argv)
 
     LastScan = NextScan;
 
-    aproc_TimeStamp();
+    aproc_TimeStamp( ScanTime, 5.0);
   }
 
   return 1;

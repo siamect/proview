@@ -3400,7 +3400,7 @@ receive (
         tmo = MIN(l.timerTime * 1000, tmo); 
       }
     }
-    aproc_TimeStamp();
+    aproc_TimeStamp( ((float)tmo)/1000, 2);
   }    
 }
 

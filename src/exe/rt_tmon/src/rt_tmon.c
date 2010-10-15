@@ -275,6 +275,8 @@ main (
     }
 
 #if defined OS_LINUX || defined OS_MACOS
+    aproc_TimeStamp( ((float)tmo_ms)/1000, 5);
+
     get.data = NULL;
     qcom_Get(&sts, &my_q, &get, tmo_ms);
     if (sts != QCOM__TMO && sts != QCOM__QEMPTY) {
@@ -284,8 +286,6 @@ main (
       qcom_Free(&sts, get.data);
     }      
 #endif
-
-    aproc_TimeStamp();
 
     now_clock = time_Clock(NULL, NULL);
     if (now_clock < last_clock) { 
