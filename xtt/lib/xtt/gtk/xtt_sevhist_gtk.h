@@ -31,14 +31,15 @@ class XttSevHistGtk : public XttSevHist {
   GtkWidget    	*parent_widget;		//!< Parent widget.
   
   XttSevHistGtk( void *xn_parent_ctx,
-		GtkWidget *xn_parent_wid,
-		const char *xn_name,
-		GtkWidget **w,
-		pwr_tOid *xn_oid,
-		pwr_tOName *xn_aname,
-		sevcli_tCtx xn_scctx,
-		int *sts,
-    bool sevhistobject);
+		 GtkWidget *xn_parent_wid,
+		 const char *xn_name,
+		 GtkWidget **w,
+		 pwr_tOid *xn_oidv,
+		 pwr_tOName *xn_anamev,
+		 pwr_tOName *xn_onamev,
+		 bool *sevhistobjectv,
+		 sevcli_tCtx xn_scctx,
+		 int *sts);
   ~XttSevHistGtk();
 };
 

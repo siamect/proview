@@ -77,6 +77,11 @@ void XttTbl::message( void *xtttbl, char severity, const char *message)
   ((XttTbl *)xtttbl)->message( severity, message);
 }
 
+int XttTbl::command_cb( void *ctx, char *cmd)
+{
+  return ((XttTbl *)ctx)->command( cmd);
+}
+
 int XttTbl::is_authorized( void *ctx, unsigned int access, int msg)
 {
   return ((XttTbl *)ctx)->is_authorized( access, msg);
@@ -120,29 +125,48 @@ void XttTbl::activate_print()
 
 void XttTbl::activate_opensevhist()
 {
-//  sevcli_sHistItem *hi;
-  TblNav_sevhistobject *hi;
-  if ( !tblnav->get_select( &hi)) {
+  ItemBase *item;
+
+  if ( !tblnav->get_select( &item)) {
     message( 'E', "Select an storage item");
     return;
   }
 
-  bool sevhistobject = hi->attrnum > 1;
-  if( !sevhistobject ) {
-    sevhist_new( hi->oid, hi->objectattrlist[0].aname, sevhistobject);
+  switch ( item->type) {
+  case tblnav_eItemType_Local:
+  case tblnav_eItemType_TreeLocal: {
+    TblNav_sevhistobject *hi = &((ItemLocal *)item)->item;
+    pwr_tOid oidv[2] = { hi->oid, pwr_cNOid};
+    pwr_tOName anamev[2];
+    pwr_tOName onamev[2] = {"", ""};
+    bool sevhistobjectv[2] = {hi->attrnum > 1, false};
+    if( !sevhistobjectv[0] ) {
+      strcpy( anamev[0], hi->objectattrlist[0].aname);
+      sevhist_new( oidv, anamev, onamev, sevhistobjectv);
+    }
+    else {
+      char *s;
+      pwr_tAName aname;
+      s = strchr( hi->oname, '.');
+      if ( !s) {
+	//It is a complete object
+	aname[0] = '\0';
+      }
+      else {  
+	strcpy( aname, s+1);
+      }
+      strcpy( anamev[0], aname);
+      sevhist_new( oidv, anamev, onamev, sevhistobjectv);
+    }
+    break;
   }
-  else {
-    char *s;
-    pwr_tAName aname;
-    s = strchr( hi->oname, '.');
-    if ( !s) {
-      //It is a complete object
-      aname[0] = '\0';
-    }
-    else {  
-      strcpy( aname, s+1);
-    }
-    sevhist_new( hi->oid, aname, sevhistobject);
+  case tblnav_eItemType_TreeCommand: {
+    ItemTreeCommand *ci = (ItemTreeCommand *)item;
+
+    command( ci->item.command);
+    break;
+  }
+  default: ;
   }
 }
 
@@ -167,13 +191,20 @@ void XttTbl::delete_item_yes( void *ctx, void *data)
 void XttTbl::activate_delete_item()
 {
   //sevcli_sHistItem *hi;
+  ItemBase *item;
   TblNav_sevhistobject *hi;
   char msg[300];
 
-  if ( !tblnav->get_select( &hi)) {
+  if ( !tblnav->get_select( &item)) {
     message( 'E', "Select an storage item");
     return;
   }
+  if ( !(item->type == tblnav_eItemType_Local || 
+	 item->type == tblnav_eItemType_TreeLocal)) {
+    message( 'E', "Select an storage item");
+    return;
+  }
+  hi = &((ItemLocal *)item)->item;
 
   sprintf( msg, "Do you really wan't to delete all stored data for item\n\n%s.%s\n", hi->oname, hi->objectattrlist[0].aname);
 

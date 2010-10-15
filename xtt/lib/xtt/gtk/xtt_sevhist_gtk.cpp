@@ -45,14 +45,17 @@
 
 
 XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
-			    GtkWidget *parent_wid,
-			    const char *name,
-			    GtkWidget **w,
-			    pwr_tOid *xn_oid,
-			    pwr_tOName *xn_aname,
-			    sevcli_tCtx xn_scctx,
-			    int *sts, bool sevhistobject) :
-  XttSevHist( parent_ctx, name, xn_oid, xn_aname, xn_scctx, sts, sevhistobject), parent_widget(parent_wid)
+			      GtkWidget *parent_wid,
+			      const char *name,
+			      GtkWidget **w,
+			      pwr_tOid *xn_oidv,
+			      pwr_tOName *xn_anamev,
+			      pwr_tOName *xn_onamev,
+			      bool *sevhistobjectv,
+			      sevcli_tCtx xn_scctx,
+			      int *sts) :
+  XttSevHist( parent_ctx, name, xn_oidv, xn_anamev, xn_onamev, sevhistobjectv, xn_scctx, sts), 
+  parent_widget(parent_wid)
 {
   char title[250];
   strncpy(title, name, sizeof(title));

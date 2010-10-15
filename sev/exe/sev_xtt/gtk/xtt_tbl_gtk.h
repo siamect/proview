@@ -49,7 +49,7 @@ class XttTblGtk : public XttTbl {
     CoWowEntryGtk *cmd_entry;
 
     void message( char severity, char *message);
-    XttSevHist *sevhist_new( pwr_tOid oid, char *aname, bool sevhistobject);
+    XttSevHist *sevhist_new( pwr_tOid *oidv, pwr_tOName *anamev, pwr_tOName *onamev, bool *sevhistobjectv);
     CoLogin *login_new( const char     	*wl_name,
 			const char     	*wl_groupname,
 			void		(* wl_bc_success)( void *),

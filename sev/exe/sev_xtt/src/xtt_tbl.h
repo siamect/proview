@@ -55,7 +55,8 @@ class XttTbl {
   int		quiet;
 
   virtual void message( char severity, const char *message) {}
-  virtual XttSevHist *sevhist_new( pwr_tOid oid, char *aname, bool sevhistobject) { return 0;}
+  virtual XttSevHist *sevhist_new( pwr_tOid *oidv, pwr_tOName *anamev, pwr_tOName *onamev, 
+				   bool *sevhistobjectv) { return 0;}
   virtual CoLogin *login_new( const char       	*wl_name,
 			      const char       	*wl_groupname,
 			      void		(* wl_bc_success)( void *),
@@ -78,6 +79,7 @@ class XttTbl {
 
   static void message( void *attr, char severity, const char *message);
   static int is_authorized( void *ctx, unsigned int access, int msg);
+  static int command_cb( void *ctx, char *cmd);
   static void delete_item_yes( void *ctx, void *data);
   virtual ~XttTbl();
 

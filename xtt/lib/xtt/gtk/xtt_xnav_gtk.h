@@ -58,8 +58,9 @@ class XNavGtk : public XNav {
     Op *op_new( char *opplace, pwr_tStatus *sts);
     XttTrend *xtttrend_new( char *name, pwr_tAttrRef *objar, pwr_tAttrRef *plotgroup,
 			    pwr_tStatus *sts);
-    XttSevHist *xttsevhist_new( char *name, pwr_tOid *oid, pwr_tOName *aname,
-				sevcli_tCtx scctx, pwr_tStatus *sts, bool sevhistobject=false);
+    XttSevHist *xttsevhist_new( char *name, pwr_tOid *oidv, pwr_tOName *anamev,
+				pwr_tOName *onamev, bool *sevhistobjectv, sevcli_tCtx scctx, 
+				pwr_tStatus *sts);
     XttFast *xttfast_new( char *name, pwr_tAttrRef *objar, pwr_tStatus *sts);
     XAttOne *xattone_new( pwr_tAttrRef *objar, char *title, unsigned int priv,
 			  pwr_tStatus *sts);

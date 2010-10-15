@@ -131,6 +131,12 @@ void GeCurve::activate_minmax_ok( double min_value, double max_value)
 	       &cd->x_trend_lines[i], &cd->x_axis_lines[i], &cd->x_axis_linelongq[i],
 	       &cd->x_axis_valueq[i], cd->x_format[i], 
 	       &axis_width, 1, 1);
+    if ( cd->type == curve_eDataType_MultiTrend) {
+      for ( i = 1; i < cd->cols; i++) {
+	cd->x_min_value_axis[i] = cd->x_min_value_axis[0];
+	cd->x_max_value_axis[i] = cd->x_max_value_axis[0];
+      }
+    }
   }
 
   // cd->min_value_axis[minmax_idx] = min_value;
@@ -152,8 +158,38 @@ int GeCurve::growcurve_cb( GlowCtx *ctx, glow_tEvent event)
   grow_GetCtxUserData( (GrowCtx *)ctx, (void **) &curve);
 
   switch ( event->event) {
-  case glow_eEvent_MB1Click:
+  case glow_eEvent_MB1Click: {
+    // Move mark slider to this position
+    double ll_x, ll_y, ur_x, ur_y;
+    char str[40];
+    double time;
+    double values[CURVE_MAX_COLS];
+
+    grow_MeasureNode( curve->curve_markobject, &ll_x, &ll_y, &ur_x, &ur_y);
+    grow_MoveNode( curve->curve_markobject, event->any.x - (ur_x - ll_x)/2, ll_y);
+    grow_Redraw( curve->growcurve_ctx);
+
+    curve->x_to_points( event->any.x, &time, values);
+
+    for ( int i = 0; i < curve->cd->cols; i++) {
+      sprintf( str, "%7.2f", values[i]);
+      grow_SetAnnotation( curve->mark_annot[i], 0, str, strlen(str));
+    }
+      
+    if ( !(strcmp( curve->cd->x_format[0], "%10t") == 0 || 
+	   strcmp( curve->cd->x_format[0], "%11t") == 0)) {
+      sprintf( str, "%7.2f", time);
+      grow_SetAnnotation( curve->mark_annot[curve->cd->cols], 0, str, strlen(str));
+    }
+    else {
+      // Time is a date
+      pwr_tTime t;
+      time_Float64ToD( (pwr_tDeltaTime *) &t, time);
+      time_AtoAscii( &t, time_eFormat_DateAndTime, str, sizeof(str));
+      grow_SetAnnotation( curve->mark_annot[curve->cd->cols], 0, str, strlen(str));
+    }
     break;
+  }
   case glow_eEvent_SliderMoveStart: {
     if ( event->object.object_type == glow_eObjectType_NoObject)
       grow_SetMoveRestrictions( (GrowCtx *)ctx, glow_eMoveRestriction_Disable, 0, 0, NULL);
@@ -190,7 +226,7 @@ int GeCurve::growcurve_cb( GlowCtx *ctx, glow_tEvent event)
       pwr_tTime t;
       time_Float64ToD( (pwr_tDeltaTime *) &t, time);
       time_AtoAscii( &t, time_eFormat_DateAndTime, str, sizeof(str));
-      grow_SetAnnotation( curve->mark_annot[0], 0, str, strlen(str));
+      grow_SetAnnotation( curve->mark_annot[curve->cd->cols], 0, str, strlen(str));
     }
 #if 0
     if ( !curve->cd->x_reverse)
@@ -203,9 +239,9 @@ int GeCurve::growcurve_cb( GlowCtx *ctx, glow_tEvent event)
     // Approximate row
     row = int ((time - curve->cd->min_value[0]) / 
         (curve->cd->max_value[0] - curve->cd->min_value[0]) *
-        (curve->cd->rows - 1) + 0.5);
-    if ( row > curve->cd->rows - 1)
-      row = curve->cd->rows - 1;
+        (curve->cd->rows[0] - 1) + 0.5);
+    if ( row > curve->cd->rows[0] - 1)
+      row = curve->cd->rows[0] - 1;
     else if ( row < 0)
       row = 0;
     else {
@@ -219,7 +255,7 @@ int GeCurve::growcurve_cb( GlowCtx *ctx, glow_tEvent event)
 	    break;
 	  r++;
 	}
-	else if ( r == curve->cd->rows - 1) {
+	else if ( r == curve->cd->rows[0] - 1) {
 	  b1 = (curve->cd->data[0][r] + curve->cd->data[0][r-1]) / 2;
 	  if ( time >= b1)
 	    break;
@@ -356,7 +392,7 @@ int GeCurve::init_growcurve_cb( GlowCtx *fctx, void *client_data)
   grow_CreateGrowCurve( curve->growcurve_ctx, "curve", NULL, 0, 0, 200, 30,
 			curve->curve_border, 2, glow_mDisplayLevel_1, 1, 1,
                         curve->curve_color, curve, &curve->curve_object);
-  grow_CreateGrowAxis( curve->growcurve_ctx, "y_axis", 0, 30, 200, 32,
+  grow_CreateGrowAxis( curve->growcurve_ctx, "y_axis", 0, 30, 200, 31.85,
 		       glow_eDrawType_Line, 1, 5, 
 		       glow_eDrawType_TextHelvetica, curve, 
                        &curve->curve_axisobject);
@@ -367,7 +403,7 @@ int GeCurve::init_growcurve_cb( GlowCtx *fctx, void *client_data)
   grow_AddRect( nc, "", -MARK_WIDTH/2, 30.1, MARK_WIDTH, 1.8, glow_eDrawType_LineGray, 1, 0,
 		glow_mDisplayLevel_1, 0, 0, 1,
 		glow_eDrawType_Color33, NULL);
-  glow_sPoint p1[3] = { {-0.1, 30.3}, {-MARK_WIDTH/2+0.1, 31},{-0.1, 31.7}};
+  glow_sPoint p1[3] = { {-0.1, 30.3}, {-MARK_WIDTH/2+0.1, 31},{-0.1, 31.85}};
   grow_AddPolyLine( nc, "", p1, 3, glow_eDrawType_Line, 1, 0, 1, 0, 1, glow_eDrawType_Color38,
 		    1, 0);
   glow_sPoint p2[3] = { {0.1, 30.3}, { MARK_WIDTH/2-0.1, 31},{ 0.1, 31.7}};
@@ -605,32 +641,32 @@ int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
   x = 0.8;
   grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("View"),
 		       x, 0.6, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
+		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &o1);
-  x += 2.2;
+  x += 1.8;
   grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Cursor"),
 		       x, 0.6, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
+		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &o1);
   x += time_size + 0.2;
   grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Mark"),
 		       x, 0.6, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
+		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &o1);
   x += time_size + 0.2;
   grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Unit"),
 		       x, 0.6, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
+		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &o1);
   x += 2;
   grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Scale"),
 		       x, 0.6, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
+		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &o1);
   x += 3;
   grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Attribute"),
 		       x, 0.6, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
+		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &o1);
   
   for ( int i = 0; i < curve->cd->cols; i++) {
@@ -668,7 +704,7 @@ int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
     x += time_size + 0.6;
     grow_CreateGrowText( curve->grownames_ctx, "", curve->cd->y_unit[i],
 		       x, (i+0.8) + 0.75, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
+		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
 			 glow_mDisplayLevel_1, NULL, &t1);
     // Draw button for scale
     x += 2;
@@ -679,8 +715,8 @@ int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
     // Draw attribute name
     x += 3;
     grow_CreateGrowText( curve->grownames_ctx, "", curve->cd->y_name[i],
-			 x, (i+0.8) + 0.75, glow_eDrawType_TextHelveticaBold, 
-			 glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
+			 x, (i+0.8) + 0.75, glow_eDrawType_TextHelvetica,
+			 glow_eDrawType_Line, 2, glow_eFont_LucidaSans,
 			 glow_mDisplayLevel_1, NULL, &t1);
     grow_SetAnnotation( curve->cursor_annot[i], 0, "0", 1);
     grow_SetAnnotation( curve->mark_annot[i], 0, "0", 1);
@@ -700,7 +736,7 @@ int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
   x += time_size + 0.6;
   grow_CreateGrowText( curve->grownames_ctx, "", "s",
 		       x, (curve->cd->cols+0.8) + 0.75, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
+		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &t1);
   // Draw button for scale
   x += 2;
@@ -711,8 +747,8 @@ int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
   // Draw attribute name
   x += 3;
   grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Time axis"),
-		       x, (curve->cd->cols+0.8) + 0.75, glow_eDrawType_TextHelveticaBold, 
-		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
+		       x, (curve->cd->cols+0.8) + 0.75, glow_eDrawType_TextHelvetica,
+		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &t1);
   grow_SetAnnotation( curve->cursor_annot[curve->cd->cols], 0, "0", 1);
   grow_SetAnnotation( curve->mark_annot[curve->cd->cols], 0, "0", 1);
@@ -827,85 +863,166 @@ int GeCurve::configure_axes()
 
 int GeCurve::configure_curves()
 {
-  int i, idx;
+  int i, j, idx;
   glow_sCurveData gcd;
   int max_index, min_index;
   double minval, maxval;
 
-  gcd.type = glow_eCurveDataType_CommonX;
+  if ( cd->type == curve_eDataType_LogFile || 
+       cd->type == curve_eDataType_DsTrend) {
+    gcd.type = glow_eCurveDataType_CommonX;
 
-  // Get max and min index in x
-  max_index = -1;
-  min_index = -1;
-  if ( cd->x_min_value_axis[0] > cd->x_min_value[0] || 
-       cd->x_max_value_axis[0] < cd->x_max_value[0]) {
-    for ( i = 0; i < cd->rows; i++) {
-      if ( min_index == -1 && cd->x_data[0][i] >= cd->x_min_value_axis[0] )
-        min_index = i;
-      if ( max_index == -1 && cd->x_data[0][i] >= cd->x_max_value_axis[0] )
-        max_index = i - 1;
+    // Get max and min index in x
+    max_index = -1;
+    min_index = -1;
+    if ( cd->x_min_value_axis[0] > cd->x_min_value[0] || 
+	 cd->x_max_value_axis[0] < cd->x_max_value[0]) {
+      for ( i = 0; i < cd->rows[0]; i++) {
+	if ( min_index == -1 && cd->x_data[0][i] >= cd->x_min_value_axis[0] )
+	  min_index = i;
+	if ( max_index == -1 && cd->x_data[0][i] >= cd->x_max_value_axis[0] )
+	  max_index = i - 1;
+      }
+      if ( min_index == -1)
+	min_index = 0;
+      if ( max_index == -1)
+	max_index = cd->rows[0] - 1; 
     }
-    if ( min_index == -1)
+    else {
+      max_index = cd->rows[0] - 1;
       min_index = 0;
-    if ( max_index == -1)
-      max_index = cd->rows - 1; 
-  }
-  else {
-    max_index = cd->rows - 1;
-    min_index = 0;
-  }
+    }
 
-  idx = 0;
-  for ( i = 0; i < cd->cols; i++) {
-    if ( !hide[i]) {
-      gcd.y_max_value[idx] = cd->y_max_value_axis[i];
-      gcd.y_min_value[idx] = cd->y_min_value_axis[i];
-      gcd.y_data[idx] = &cd->y_data[i][min_index];
-      gcd.color[idx] = cd->color[i];
-      gcd.fillcolor[idx] = cd->fillcolor[i];
-      idx++;
-      if ( idx == TREND_MAX_CURVES - 1)
+    idx = 0;
+    for ( i = 0; i < cd->cols; i++) {
+      if ( !hide[i]) {
+	gcd.y_max_value[idx] = cd->y_max_value_axis[i];
+	gcd.y_min_value[idx] = cd->y_min_value_axis[i];
+	gcd.y_data[idx] = &cd->y_data[i][min_index];
+	gcd.color[idx] = cd->color[i];
+	gcd.fillcolor[idx] = cd->fillcolor[i];
+	idx++;
+	if ( idx == TREND_MAX_CURVES - 1)
+	  break;
+      }
+    }
+    gcd.x_data[0] = &cd->x_data[0][min_index];
+    gcd.x_max_value[0] = cd->x_max_value_axis[0];
+    gcd.x_min_value[0] = cd->x_min_value_axis[0];
+    
+    gcd.curves = idx;
+    gcd.rows[0] = max_index - min_index + 1;
+    gcd.x_reverse = cd->x_reverse;
+    
+    // Get number of horizontal lines from first not hidden float
+    idx = 1;
+    for ( i = 0; i < cd->cols; i++) {
+      if ( cd->y_value_type[i] != pwr_eType_Boolean && !hide[i]) {
+	idx = i;
 	break;
+      }
     }
-  }
-  gcd.x_data[0] = &cd->x_data[0][min_index];
-  gcd.x_max_value[0] = cd->x_max_value_axis[0];
-  gcd.x_min_value[0] = cd->x_min_value_axis[0];
+    
+    grow_SetTrendLines( curve_object,
+	              // int(cd->max_value_axis[0] - cd->min_value_axis[0] - 1),
+			cd->x_trend_lines[0] - 2,
+			2 * cd->y_trend_lines[idx] - 3);
 
-  gcd.curves = idx;
-  gcd.rows = max_index - min_index + 1;
-  gcd.x_reverse = cd->x_reverse;
-
-  // Get number of horizontal lines from first not hidden float
-  idx = 1;
-  for ( i = 0; i < cd->cols; i++) {
-    if ( cd->y_value_type[i] != pwr_eType_Boolean && !hide[i]) {
-      idx = i;
-      break;
+    if ( cd->x_reverse) {
+      minval = cd->x_max_value_axis[0];
+      maxval = cd->x_min_value_axis[0];
     }
+    else {
+      minval = cd->x_min_value_axis[0];
+      maxval = cd->x_max_value_axis[0];
+    }
+
+    grow_SetAxisConf( curve_axisobject, minval, maxval, 
+		      // 10 * int( cd->max_value_axis[0] - cd->min_value_axis[0]) + 1, 
+		      cd->x_axis_lines[0],
+		      cd->x_axis_linelongq[0], cd->x_axis_valueq[0], 270, cd->x_format[0]);
+
+    grow_CurveConfigure( curve_object, &gcd); 
   }
+  else if ( cd->type == curve_eDataType_MultiTrend) {
+    gcd.type = glow_eCurveDataType_SeparateX;
 
-  grow_SetTrendLines( curve_object,
-	 // int(cd->max_value_axis[0] - cd->min_value_axis[0] - 1),
-		      cd->x_trend_lines[0] - 2,
-		      2 * cd->y_trend_lines[idx] - 3);
 
-  if ( cd->x_reverse) {
-    minval = cd->x_max_value_axis[0];
-    maxval = cd->x_min_value_axis[0];
+    idx = 0;
+    for ( i = 0; i < cd->cols; i++) {
+      if ( !hide[i]) {
+
+	// Get max and min index in x
+	max_index = -1;
+	min_index = -1;
+	if ( cd->x_min_value_axis[i] > cd->x_min_value[i] || 
+	     cd->x_max_value_axis[i] < cd->x_max_value[i]) {
+	  for ( j = 0; j < cd->rows[i]; j++) {
+	    if ( min_index == -1 && cd->x_data[i][j] >= cd->x_min_value_axis[i] )
+	      min_index = j;
+	    if ( max_index == -1 && cd->x_data[i][j] >= cd->x_max_value_axis[i] )
+	      max_index = j - 1;
+	  }
+	  if ( min_index == -1)
+	    min_index = 0;
+	  if ( max_index == -1)
+	    max_index = cd->rows[i] - 1; 
+	}
+	else {
+	  max_index = cd->rows[i] - 1;
+	  min_index = 0;
+	}
+
+	gcd.y_max_value[idx] = cd->y_max_value_axis[i];
+	gcd.y_min_value[idx] = cd->y_min_value_axis[i];
+	gcd.y_data[idx] = &cd->y_data[i][min_index];
+	gcd.color[idx] = cd->color[i];
+	gcd.fillcolor[idx] = cd->fillcolor[i];
+
+	gcd.x_data[idx] = &cd->x_data[i][min_index];
+	gcd.x_max_value[idx] = cd->x_max_value_axis[i];
+	gcd.x_min_value[idx] = cd->x_min_value_axis[i];
+	gcd.rows[idx] = max_index - min_index + 1;
+
+	idx++;
+	if ( idx == TREND_MAX_CURVES - 1)
+	  break;
+      }
+    }
+    
+    gcd.curves = idx;
+    gcd.x_reverse = cd->x_reverse;
+    
+    // Get number of horizontal lines from first not hidden float
+    idx = 1;
+    for ( i = 0; i < cd->cols; i++) {
+      if ( cd->y_value_type[i] != pwr_eType_Boolean && !hide[i]) {
+	idx = i;
+	break;
+      }
+    }
+    
+    grow_SetTrendLines( curve_object,
+	              // int(cd->max_value_axis[0] - cd->min_value_axis[0] - 1),
+			cd->x_trend_lines[0] - 2,
+			2 * cd->y_trend_lines[idx] - 3);
+
+    if ( cd->x_reverse) {
+      minval = cd->x_max_value_axis[0];
+      maxval = cd->x_min_value_axis[0];
+    }
+    else {
+      minval = cd->x_min_value_axis[0];
+      maxval = cd->x_max_value_axis[0];
+    }
+
+    grow_SetAxisConf( curve_axisobject, minval, maxval, 
+		      // 10 * int( cd->max_value_axis[0] - cd->min_value_axis[0]) + 1, 
+		      cd->x_axis_lines[0],
+		      cd->x_axis_linelongq[0], cd->x_axis_valueq[0], 270, cd->x_format[0]);
+
+    grow_CurveConfigure( curve_object, &gcd); 
   }
-  else {
-    minval = cd->x_min_value_axis[0];
-    maxval = cd->x_max_value_axis[0];
-  }
-
-  grow_SetAxisConf( curve_axisobject, minval, maxval, 
-	 // 10 * int( cd->max_value_axis[0] - cd->min_value_axis[0]) + 1, 
-	 cd->x_axis_lines[0],
-         cd->x_axis_linelongq[0], cd->x_axis_valueq[0], 270, cd->x_format[0]);
-
-  grow_CurveConfigure( curve_object, &gcd); 
-  
   return 1;
 }
 
@@ -927,7 +1044,7 @@ void GeCurve::points_added()
   min_index = -1;
   if ( cd->x_min_value_axis[0] > cd->x_min_value[0] || 
        cd->x_max_value_axis[0] < cd->x_max_value[0]) {
-    for ( i = 0; i < cd->rows; i++) {
+    for ( i = 0; i < cd->rows[0]; i++) {
       if ( min_index == -1 && cd->x_data[0][i] >= cd->x_min_value_axis[0] )
         min_index = i;
       if ( max_index == -1 && cd->x_data[0][i] >= cd->x_max_value_axis[0] )
@@ -936,10 +1053,10 @@ void GeCurve::points_added()
     if ( min_index == -1)
       min_index = 0;
     if ( max_index == -1)
-      max_index = cd->rows - 1; 
+      max_index = cd->rows[0] - 1; 
   }
   else {
-    max_index = cd->rows - 1;
+    max_index = cd->rows[0] - 1;
     min_index = 0;
   }
 
@@ -960,7 +1077,7 @@ void GeCurve::points_added()
   gcd.x_min_value[0] = cd->x_min_value_axis[0];
   gcd.x_data[0] = &cd->x_data[0][min_index];
   gcd.curves = idx;
-  gcd.rows = max_index - min_index + 1;
+  gcd.rows[0] = max_index - min_index + 1;
   gcd.x_reverse = cd->x_reverse;
 
   grow_CurveAddPoints( curve_object, &gcd);
@@ -1021,7 +1138,7 @@ int GeCurve::read_file( char *filename)
 
   cd->x_reverse = 0;
   cd->cols = nr - 1;
-  cd->rows = rows;
+  cd->rows[0] = rows;
   for ( i = 0; i < nr; i++) {
     if ( i == 0) {
       strcpy( cd->x_name, item_str[i]);
@@ -1053,7 +1170,7 @@ int GeCurve::read_file( char *filename)
         if ( i == 0) {
           printf( "Unreadble line %d\n", j);
           skip_line = 1;
-          cd->rows--;
+          cd->rows[0]--;
           break;
         }
         else
@@ -1145,7 +1262,7 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
 }
 
 GeCurveData::GeCurveData( curve_eDataType datatype) :
-  type(datatype), rows(0), cols(0), x_reverse(0), time_format(curve_eTimeFormat_Float)
+  type(datatype), cols(0), x_reverse(0), time_format(curve_eTimeFormat_Float)
 {
   memset( x_data, 0, sizeof(x_data));
   memset( y_data, 0, sizeof(y_data));
@@ -1153,6 +1270,7 @@ GeCurveData::GeCurveData( curve_eDataType datatype) :
     strcpy( y_unit[i], "");
     strcpy( y_format[i], "");
     strcpy( y_name[i], "");
+    rows[i] = 0;
     y_max_value[i] = 0;
     y_min_value[i] = 0;
     y_min_value_axis[i] = 0;
@@ -1195,7 +1313,7 @@ void GeCurveData::get_borders()
 
     y_value_type[i] = pwr_eType_Boolean;
 
-    for ( int j = 0; j < rows; j++) {
+    for ( int j = 0; j < rows[i]; j++) {
       if ( y_data[i][j] < y_min_value[i])
         y_min_value[i] = y_data[i][j];
       if ( y_data[i][j] > y_max_value[i])
@@ -1207,17 +1325,35 @@ void GeCurveData::get_borders()
       }
     }
   } 
-  for ( int i = 0; i < 1; i++) {
-    x_max_value[i] = 1e-37;
-    x_min_value[i] = 1e37;
 
-    x_value_type[i] = pwr_eType_Float64;
+  if ( type == curve_eDataType_MultiTrend) {
+    for ( int i = 0; i < cols; i++) {
+      x_max_value[i] = 1e-37;
+      x_min_value[i] = 1e37;
 
-    for ( int j = 0; j < rows; j++) {
-      if ( x_data[i][j] < x_min_value[i])
-        x_min_value[i] = x_data[i][j];
-      if ( x_data[i][j] > x_max_value[i])
-        x_max_value[i] = x_data[i][j];
+      x_value_type[i] = pwr_eType_Float64;
+
+      for ( int j = 0; j < rows[i]; j++) {
+	if ( x_data[i][j] < x_min_value[i])
+	  x_min_value[i] = x_data[i][j];
+	if ( x_data[i][j] > x_max_value[i])
+	  x_max_value[i] = x_data[i][j];
+      }
+    }
+  } 
+  else {
+    for ( int i = 0; i < 1; i++) {
+      x_max_value[i] = 1e-37;
+      x_min_value[i] = 1e37;
+
+      x_value_type[i] = pwr_eType_Float64;
+
+      for ( int j = 0; j < rows[0]; j++) {
+	if ( x_data[i][j] < x_min_value[i])
+	  x_min_value[i] = x_data[i][j];
+	if ( x_data[i][j] > x_max_value[i])
+	  x_max_value[i] = x_data[i][j];
+      }
     }
   } 
 }
@@ -1234,10 +1370,32 @@ void GeCurveData::get_default_axis()
   }
   int i = 0;
   double axis_width;
-  scale( x_axis_type[i], x_value_type[i], x_min_value[i],  x_max_value[i], 
-       &x_min_value_axis[i], &x_max_value_axis[i], &x_trend_lines[i], &x_axis_lines[i], 
-       &x_axis_linelongq[i], &x_axis_valueq[i], x_format[i], 
-       &axis_width, 0, 0);
+
+  if ( type != curve_eDataType_MultiTrend) {
+    scale( x_axis_type[i], x_value_type[i], x_min_value[i],  x_max_value[i], 
+	   &x_min_value_axis[i], &x_max_value_axis[i], &x_trend_lines[i], &x_axis_lines[i], 
+	   &x_axis_linelongq[i], &x_axis_valueq[i], x_format[i], 
+	   &axis_width, 0, 0);
+  }
+  else {
+    double min_value = 1e37;
+    double max_value = -1e37;
+
+    for ( i = 0; i < cols; i++) {
+      if ( x_min_value[i] < min_value)
+	min_value = x_min_value[i];
+      if ( x_max_value[i] > max_value)
+	max_value = x_max_value[i];
+    }
+    scale( x_axis_type[0], x_value_type[0], min_value, max_value, 
+	   &x_min_value_axis[0], &x_max_value_axis[0], &x_trend_lines[0], &x_axis_lines[0], 
+	   &x_axis_linelongq[0], &x_axis_valueq[0], x_format[0], 
+	   &axis_width, 0, 0);
+    for ( i = 1; i < cols; i++) {
+      x_min_value_axis[i] = x_min_value_axis[0];
+      x_max_value_axis[i] = x_max_value_axis[0];
+    }
+  }
 }
 
 void GeCurveData::select_color( bool dark_bg)
@@ -1382,7 +1540,8 @@ void GeCurveData::scale( int axis_type, int value_type,
   }
   else {      
     n = 0;
-    if ( (type == curve_eDataType_LogFile || type == curve_eDataType_DsTrend) 
+    if ( (type == curve_eDataType_LogFile || type == curve_eDataType_DsTrend || 
+	  type == curve_eDataType_MultiTrend) 
          && axis_type == curve_eAxis_x) {
       // Time axis
       if ( max_value - min_value < 300) {
@@ -1658,59 +1817,119 @@ void GeCurve::x_to_points( double x, double *t, double *values)
   int row;
   double time;
 
-  // Time is a date
-  if ( !cd->x_reverse)
-    time = cd->x_min_value_axis[0] + x *
-      (cd->x_max_value_axis[0] - cd->x_min_value_axis[0]) / 200;
-  else
-    time = cd->x_min_value_axis[0] + (200.0 - x) *
-      (cd->x_max_value_axis[0] - cd->x_min_value_axis[0]) / 200;
+  if ( cd->type != curve_eDataType_MultiTrend) {
+    // Time is a date
+    if ( !cd->x_reverse)
+      time = cd->x_min_value_axis[0] + x *
+	(cd->x_max_value_axis[0] - cd->x_min_value_axis[0]) / 200;
+    else
+      time = cd->x_min_value_axis[0] + (200.0 - x) *
+	(cd->x_max_value_axis[0] - cd->x_min_value_axis[0]) / 200;
       
-  // Approximate row
-  row = int ((time - cd->x_min_value[0]) / 
-	     (cd->x_max_value[0] - cd->x_min_value[0]) *
-	     (cd->rows - 1) + 0.5);
-  if ( row > cd->rows - 1)
-    row = cd->rows - 1;
-  else if ( row < 0)
-    row = 0;
-  else {
-    // Find exact row
-    double b1, b2;
-    int r = row;
-    for (int i = 0;; i++) {
-      if ( r == 0) {
-	b2 = (cd->x_data[0][row] + cd->x_data[0][r+1]) / 2;
-	if ( time < b2)
-	  break;
-	r++;
-      }
-      else if ( r == cd->rows - 1) {
-	b1 = (cd->x_data[0][r] + cd->x_data[0][r-1]) / 2;
-	if ( time >= b1)
-	  break;
-	r--;
-      }
-      else {
-	b1 = (cd->x_data[0][r] + cd->x_data[0][r-1]) / 2;
-	b2 = (cd->x_data[0][r] + cd->x_data[0][r+1]) / 2;
-	if ( b1 <= time && time < b2)
-	  break;
-	if ( b1 <= time)
+    // Approximate row
+    row = int ((time - cd->x_min_value[0]) / 
+	       (cd->x_max_value[0] - cd->x_min_value[0]) *
+	       (cd->rows[0] - 1) + 0.5);
+    if ( row > cd->rows[0] - 1)
+      row = cd->rows[0] - 1;
+    else if ( row < 0)
+      row = 0;
+    else {
+      // Find exact row
+      double b1, b2;
+      int r = row;
+      for (int i = 0;; i++) {
+	if ( r == 0) {
+	  b2 = (cd->x_data[0][row] + cd->x_data[0][r+1]) / 2;
+	  if ( time < b2)
+	    break;
 	  r++;
-	else
+	}
+	else if ( r == cd->rows[0] - 1) {
+	  b1 = (cd->x_data[0][r] + cd->x_data[0][r-1]) / 2;
+	  if ( time >= b1)
+	    break;
 	  r--;
+	}
+	else {
+	  b1 = (cd->x_data[0][r] + cd->x_data[0][r-1]) / 2;
+	  b2 = (cd->x_data[0][r] + cd->x_data[0][r+1]) / 2;
+	  if ( b1 <= time && time < b2)
+	    break;
+	  if ( b1 <= time)
+	    r++;
+	  else
+	    r--;
+	}
+	if ( i > cd->rows[0]) {
+	  // Corrupt data, se original row
+	  r = row;
+	  break;
+	}	  
       }
-      if ( i > cd->rows) {
-	// Corrupt data, se original row
-	r = row;
-	break;
-      }	  
+      row = r;
     }
-    row = r;
-  }
-  for ( int i = 0; i < cd->cols; i++)
-    values[i] = cd->y_data[i][row];
+    for ( int i = 0; i < cd->cols; i++)
+      values[i] = cd->y_data[i][row];
       
-  *t = cd->x_data[0][row];
+    *t = cd->x_data[0][row];
+  }
+  else {
+    // Time is a date
+    if ( !cd->x_reverse)
+      time = cd->x_min_value_axis[0] + x *
+	(cd->x_max_value_axis[0] - cd->x_min_value_axis[0]) / 200;
+    else
+      time = cd->x_min_value_axis[0] + (200.0 - x) *
+	(cd->x_max_value_axis[0] - cd->x_min_value_axis[0]) / 200;
+      
+    // Approximate row
+    for ( int j = 0; j < cd->cols; j++) {
+      row = int ((time - cd->x_min_value[j]) / 
+		 (cd->x_max_value[j] - cd->x_min_value[j]) *
+		 (cd->rows[j] - 1) + 0.5);
+      if ( row > cd->rows[j] - 1)
+	row = cd->rows[j] - 1;
+      else if ( row < 0)
+	row = 0;
+      else {
+	// Find exact row
+	double b1, b2;
+	int r = row;
+	for (int i = 0;; i++) {
+	  if ( r == 0) {
+	    b2 = (cd->x_data[j][row] + cd->x_data[j][r+1]) / 2;
+	    if ( time < b2)
+	      break;
+	    r++;
+	  }
+	  else if ( r == cd->rows[j] - 1) {
+	    b1 = (cd->x_data[j][r] + cd->x_data[0][r-1]) / 2;
+	    if ( time >= b1)
+	      break;
+	    r--;
+	  }
+	  else {
+	    b1 = (cd->x_data[j][r] + cd->x_data[j][r-1]) / 2;
+	    b2 = (cd->x_data[j][r] + cd->x_data[j][r+1]) / 2;
+	    if ( b1 <= time && time < b2)
+	      break;
+	    if ( b1 <= time)
+	      r++;
+	    else
+	      r--;
+	  }
+	  if ( i > cd->rows[j]) {
+	    // Corrupt data, se original row
+	    r = row;
+	    break;
+	  }
+	}
+	row = r;
+      }
+      values[j] = cd->y_data[j][row];
+      if ( j == 0)
+	*t = cd->x_data[j][row];
+    }
+  }
 }

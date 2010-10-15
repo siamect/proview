@@ -66,22 +66,26 @@ class XttSevHist {
   void       	(*close_cb)( void *, XttSevHist *); //!< Close callback to parent.
   void       	(*help_cb)( void *, const char *); //!< Open help window.
   bool		first_scan;		//!< Indicates that this is the first scan.
-  char		title[250];			//!< Window title
+  char		title[250];		//!< Window title
   sevcli_tCtx	scctx;
-  pwr_tOName	aname;
-  pwr_tOid	oid;
+  pwr_tOName	anamev[XTT_SEVHIST_MAX];
+  pwr_tOName	onamev[XTT_SEVHIST_MAX];
+  pwr_tOid	oidv[XTT_SEVHIST_MAX];
+  int		oid_cnt;
   CoWow		*wow;
   long int	time_low_old;
   long int	time_high_old;
-  bool    sevhistobject;  //!< Indicates that it is a SevHistObject
+  bool    	sevhistobjectv[XTT_SEVHIST_MAX]; //!< Indicates that it is a SevHistObject
 
   //! Constructor
   XttSevHist( void *xn_parent_ctx,
 	     const char *xn_name,
-	     pwr_tOid* xn_oid,
+	     pwr_tOid* xn_oidv,
 	     pwr_tOName *xn_aname,
+	     pwr_tOName *xn_oname,
+	     bool *sevhistobjectv,
 	     sevcli_tCtx xn_scctx,
-	     int *sts, bool sevhistobject);
+	     int *sts);
 
   //! Destructor
   virtual ~XttSevHist();
@@ -90,6 +94,7 @@ class XttSevHist {
   void pop();
   int get_data( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to);
   int get_objectdata( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to);
+  int get_multidata( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to);
 
   static void sevhist_close_cb( void *ctx);
   static void sevhist_higher_res_cb( void *ctx);

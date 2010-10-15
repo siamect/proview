@@ -49,12 +49,15 @@
 #include "rt_sevcli.h"
 #endif
 
+class ItemBase;
+
 
 typedef enum {
   tblnav_eItemType_Local,
   tblnav_eItemType_LocalAttr,
   tblnav_eItemType_TreeLocal,
-  tblnav_eItemType_TreeNode
+  tblnav_eItemType_TreeNode,
+  tblnav_eItemType_TreeCommand
 } tblnav_eItemType;
 
 typedef enum {
@@ -87,17 +90,30 @@ class TblNav_sevhistobject {
   vector<TblNav_sevhistobjectattr> objectattrlist;  
 };
 
+class TblNav_command {
+ public:
+  pwr_tAName	oname;
+  pwr_tCmd	command;
+};
+
+
+typedef enum {
+  tblnav_eTreeItemType_No,
+  tblnav_eTreeItemType_SevHist,
+  tblnav_eTreeItemType_Command
+} tblnav_eTreeItemType;
 
 class TblTreeNode {
 public:
-  TblTreeNode() : fth(0), fch(0), fws(0), bws(0), item(0), deleted(0)
+  TblTreeNode() : fth(0), fch(0), fws(0), bws(0), type(tblnav_eTreeItemType_No), idx(0), deleted(0)
   { strcpy( sname, "");}
   int fth;
   int fch;
   int fws;
   int bws;
   char sname[80];
-  TblNav_sevhistobject *item;
+  tblnav_eTreeItemType type;
+  int idx;
   int deleted;
 };
 
@@ -138,9 +154,11 @@ class TblNav {
     TblNavBrow		*brow;
     sevcli_sHistItem  	*itemlist;
     vector<TblNav_sevhistobject> sevhistobjectlist;
+    vector<TblNav_command> commandlist;
     int			item_cnt;
     void 		(*message_cb)( void *, char, const char *);
     int 		(*is_authorized_cb)( void *, unsigned int, int);
+    int 		(*command_cb)( void *, char *cmd);
     vector<TblTreeNode> tree;
     int 		list_layout;
 
@@ -148,7 +166,9 @@ class TblNav {
     int is_authorized( unsigned int access = pwr_mAccess_AllSev, int msg = 1);
     int	create_items();
     void build_tree();
-    int get_select( TblNav_sevhistobject **hi);
+    void tree_add( char *name, int list_index, tblnav_eTreeItemType type);
+    int get_select( ItemBase **item);
+    int get_item( char *oname, TblNav_sevhistobject **hi);
     void get_zoom( double *zoom_factor);
     void zoom( double zoom_factor);
     void unzoom();
@@ -158,6 +178,8 @@ class TblNav {
     void create_objectlist(	sevcli_sHistItem  *xn_itemlist,
 	                          int xn_item_cnt,
 	                          pwr_tStatus *status);
+    void add_item_command( char *name, char *command);
+
     virtual void message( char sev, const char *text);
     virtual void set_inputfocus() {}
     static int init_brow_cb( FlowCtx *fctx, void *client_data);
@@ -219,6 +241,18 @@ class ItemTreeNode : public ItemBase {
   int			close( TblNav *tblnav, double x, double y);
 };
 
+
+//! Item for a command object.
+class ItemTreeCommand : public ItemBase {
+ public:
+  ItemTreeCommand( TblNav *tblnav, TblNav_command *xitem, int index, brow_tNode dest, flow_eDest dest_code);
+
+  virtual ~ItemTreeCommand() {}
+  
+  TblNav_command	item;
+  int			idx;
+  brow_tNode		node;
+};
 
 
 #endif

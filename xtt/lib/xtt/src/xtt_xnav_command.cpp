@@ -3109,6 +3109,9 @@ static int	xnav_open_func(	void		*client_data,
     char server_node[40];
     pwr_tOid oidv[11];
     pwr_tOName anamev[11];
+    pwr_tOName onamev[11];
+    bool sevhistobjectv[11];
+    int oid_cnt = 0;
     int sts;
     pwr_tAName name_array[10];
     int i, names;
@@ -3177,22 +3180,100 @@ static int	xnav_open_func(	void		*client_data,
       if (EVEN(sts)) return sts;
 
       switch ( classid) {
-				case pwr_cClass_SevHist:
-					break;
-				case pwr_cClass_SevHistObject:
-					sevHistObjectFound = true;
-					break;
-        case pwr_cClass_PlotGroup:
-          xnav->message('E', "Not yet implemented");
-          return XNAV__HOLDCOMMAND;
-        default:
-          xnav->message('E', "Error in object class");
-          return XNAV__HOLDCOMMAND;
+      case pwr_cClass_SevHist:
+	break;
+      case pwr_cClass_SevHistObject:
+	sevHistObjectFound = true;
+	break;
+      case pwr_cClass_PlotGroup:
+	plotgroup = sevhist_aref;
+	plotgroup_found = 1;
+	break;
+      default:
+	xnav->message('E', "Error in object class");
+	return XNAV__HOLDCOMMAND;
       }
-      if ( plotgroup_found)
-        break;
 
-			if( sevHistObjectFound ) {
+      if ( plotgroup_found) {
+	pwr_sClass_PlotGroup plot;
+	pwr_tCid cid;
+	int j;
+
+	sts = gdh_GetObjectInfo( hist_name, &plot, sizeof(plot));
+	if ( EVEN(sts)) return sts;
+	
+	for ( j = 0; j < 20; j++) {
+	  if ( cdh_ObjidIsNull( plot.YObjectName[j].Objid))
+	    break;
+	  
+	  sevhist_aref = plot.YObjectName[j];
+	  sts = gdh_GetAttrRefTid( &sevhist_aref, &cid);
+	  if ( EVEN(sts)) return sts;
+
+	  switch ( cid) {
+	  case pwr_cClass_SevHist: {
+	    sts = gdh_ArefANameToAref( &sevhist_aref, "Attribute", &attr_aref);
+	    if ( EVEN(sts)) return sts;
+  
+	    sts = gdh_GetObjectInfoAttrref( &attr_aref, &aref, sizeof(aref));
+	    if ( EVEN(sts)) return sts;
+  
+	    sts = gdh_AttrrefToName( &aref, aname, sizeof(aname), cdh_mNName);
+	    if ( EVEN(sts)) {
+	      xnav->message('E', "Error in SevHist configuration");
+	      return XNAV__HOLDCOMMAND;
+	    }
+	    s = strchr( aname, '.');
+	    if ( !s) {
+	      xnav->message('E', "Error in SevHist configuration");
+	      return XNAV__HOLDCOMMAND;
+	    }
+  
+	    *s = 0;
+	    strcpy( onamev[oid_cnt], aname);
+	    strcpy( anamev[oid_cnt], s+1);
+	    oidv[oid_cnt] = aref.Objid;
+	    sevhistobjectv[oid_cnt] = false;
+	    oid_cnt++;
+	    
+	    break;
+	  }
+	  case pwr_cClass_SevHistObject: {
+	    sts = gdh_ArefANameToAref( &sevhist_aref, "Object", &attr_aref);
+	    if ( EVEN(sts)) return sts;
+  
+	    sts = gdh_GetObjectInfoAttrref( &attr_aref, &aref, sizeof(aref));
+	    if ( EVEN(sts)) return sts;
+
+	    sts = gdh_AttrrefToName( &aref, aname, sizeof(aname), cdh_mNName);
+	    if ( EVEN(sts)) {
+	      xnav->message('E', "Error in SevHist configuration");
+	      return XNAV__HOLDCOMMAND;
+	    }
+	    s = strchr( aname, '.');
+	    if ( !s) {
+	      //It is a complete object
+	      anamev[oid_cnt][0] = '\0';
+	    }
+	    else {  
+	      strcpy( anamev[oid_cnt], s+1);
+	      *s = 0;
+	    }
+	    strcpy( onamev[oid_cnt], aname);
+	    oidv[oid_cnt] = aref.Objid;
+	    sevhistobjectv[oid_cnt] = true;
+	    oid_cnt++;
+	    break;
+	  }
+	  default: ;
+	  }
+	}
+	if ( oid_cnt == 0) {
+          xnav->message('E', "History objects in PlotGroup not found");
+          return XNAV__SUCCESS;
+	}
+      }
+      else if ( sevHistObjectFound ) {
         sts = gdh_ArefANameToAref( &sevhist_aref, "Object", &attr_aref);
         if ( EVEN(sts)) return sts;
 
@@ -3207,12 +3288,15 @@ static int	xnav_open_func(	void		*client_data,
         s = strchr( aname, '.');
         if ( !s) {
           //It is a complete object
-          anamev[i][0] = '\0';
+          anamev[oid_cnt][0] = '\0';
         }
         else {  
-          strcpy( anamev[i], s+1);
+          strcpy( anamev[oid_cnt], s+1);
         }
-        oidv[i] = aref.Objid;
+        oidv[oid_cnt] = aref.Objid;
+	sevhistobjectv[oid_cnt] = true;
+	strcpy( onamev[oid_cnt], "");
+	oid_cnt++;
       }
       else {
         sts = gdh_ArefANameToAref( &sevhist_aref, "Attribute", &attr_aref);
@@ -3232,8 +3316,11 @@ static int	xnav_open_func(	void		*client_data,
           return XNAV__HOLDCOMMAND;
         }
   
-        strcpy( anamev[i], s+1);
-        oidv[i] = aref.Objid;
+        strcpy( anamev[oid_cnt], s+1);
+        oidv[oid_cnt] = aref.Objid;
+	sevhistobjectv[oid_cnt] = false;
+	strcpy( onamev[oid_cnt], "");
+	oid_cnt++;
       }
 
       // Get server and connect to server
@@ -3260,7 +3347,7 @@ static int	xnav_open_func(	void		*client_data,
       sevcli_set_servernode( &sts, xnav->scctx, server_node);
       if ( EVEN(sts)) return sts;
     }
-    oidv[i] = pwr_cNOid;    
+    oidv[oid_cnt] = pwr_cNOid;
 
     if ( EVEN( dcli_get_qualifier( "/TITLE", title_str, sizeof(title_str)))) {
       if ( plotgroup_found) {
@@ -3277,17 +3364,19 @@ static int	xnav_open_func(	void		*client_data,
     }
 
     if ( plotgroup_found) {
-      xnav->message('E', "Not yet implemented");
-      return XNAV__HOLDCOMMAND;      
+      hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, xnav->scctx, &sts);
+      if ( ODD(sts)) {
+        hist->help_cb = xnav_sevhist_help_cb;
+      }
     }
     else if( sevHistObjectFound ) {
-      hist = xnav->xttsevhist_new( title_str, oidv, anamev, xnav->scctx, &sts, true);
+      hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, xnav->scctx, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
       }
     }
     else {
-      hist = xnav->xttsevhist_new( title_str, oidv, anamev, xnav->scctx, &sts);
+      hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, xnav->scctx, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
       }

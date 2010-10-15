@@ -227,9 +227,9 @@ XttTrend::XttTrend( void *parent_ctx,
       default:
         element_size[i] = 4;
     }
+    gcd->rows[i] = max_points;
   }
   gcd->cols = trend_cnt;
-  gcd->rows = max_points;
   gcd->x_reverse = 1;
   gcd->get_borders();
   gcd->get_default_axis();

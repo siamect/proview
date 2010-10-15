@@ -527,8 +527,8 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   gtk_paned_add2( GTK_PANED(vpaned1), vpaned2);
   gtk_widget_show_all( vpaned1);
 
-  gtk_paned_add1( GTK_PANED(vpaned2), hbox);
-  gtk_paned_add2( GTK_PANED(vpaned2), nav_widget);
+  gtk_paned_pack1( GTK_PANED(vpaned2), hbox, TRUE, TRUE);
+  gtk_paned_pack2( GTK_PANED(vpaned2), nav_widget, FALSE, TRUE);
   gtk_widget_show_all( vpaned2);
 
   GtkWidget *vbox = gtk_vbox_new( FALSE, 0);

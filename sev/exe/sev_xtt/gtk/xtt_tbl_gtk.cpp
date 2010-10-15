@@ -202,19 +202,13 @@ void XttTblGtk::activate_list_layout( GtkWidget *w, gpointer data)
   xtt->tblnav->show_list();
 }
 
-XttSevHist *XttTblGtk::sevhist_new( pwr_tOid oid, char *aname, bool sevhistobject)
+XttSevHist *XttTblGtk::sevhist_new( pwr_tOid *oidv, pwr_tOName *anamev, pwr_tOName *onamev, bool *sevhistobjectv)
 {
   GtkWidget *w;
   pwr_tStatus sts;
-  pwr_tOid oidv[2];
-  pwr_tOName anamev[2];
 
-  oidv[0] = oid;
-  oidv[1] = pwr_cNOid;
-  strncpy( anamev[0], aname, sizeof(anamev[0]));
-
-  return new XttSevHistGtk( (void *)this, toplevel, "SevHist", &w, oidv, anamev, 
-			   sevcli, &sts, sevhistobject);
+  return new XttSevHistGtk( (void *)this, toplevel, "SevHist", &w, oidv, anamev, onamev,
+			    sevhistobjectv, sevcli, &sts);
 }
 
 CoLogin *XttTblGtk::login_new( const char      	*name,
@@ -487,6 +481,7 @@ XttTblGtk::XttTblGtk( GtkWidget *a_parent_wid,
 		itemlist, item_cnt, &brow_widget, &sts);
   tblnav->message_cb = &XttTbl::message;
   tblnav->is_authorized_cb = &XttTbl::is_authorized;
+  tblnav->command_cb = &XttTbl::command_cb;
 
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(tools), FALSE, FALSE, 0);

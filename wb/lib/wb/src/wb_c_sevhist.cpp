@@ -134,6 +134,7 @@ static pwr_tStatus SyntaxCheck (
   pwr_tOid thread_oid;
   wb_session *sp = (wb_session *)Session;
   pwr_tAttrRef dataname_aref;
+  pwr_tDeltaTime storagetime;
 
   wb_attribute a = sp->attribute( &Object);
   if ( !a) return a.sts();
@@ -150,6 +151,16 @@ static pwr_tStatus SyntaxCheck (
     wsx_error_msg_str( Session, "Bad thread object", Object, 'E', ErrorCount, WarningCount);
   else if ( othread.cid() != pwr_cClass_SevHistThread)
     wsx_error_msg_str( Session, "Bad thread object class", Object, 'E', ErrorCount, WarningCount);
+  
+  // Check StorageTime
+  wb_attribute storagetime_a( a, 0, "StorageTime");
+  if (!storagetime_a) return storagetime_a.sts();
+    
+  storagetime_a.value( &storagetime);
+  if ( !storagetime_a) return storagetime_a.sts();
+
+  if ( storagetime.tv_sec == 0 && storagetime.tv_nsec == 0)
+    wsx_error_msg_str( Session, "Bad StorageTime", Object, 'E', ErrorCount, WarningCount);
   
   // Check Attribute
   wb_attribute dataname_a( a, 0, "Attribute");

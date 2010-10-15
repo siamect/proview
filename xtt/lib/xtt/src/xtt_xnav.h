@@ -341,8 +341,9 @@ class XNav {
     virtual Op *op_new( char *opplace, pwr_tStatus *sts) {return 0;}
     virtual XttTrend *xtttrend_new( char *name, pwr_tAttrRef *objar, pwr_tAttrRef *plotgroup,
 			    pwr_tStatus *sts) {return 0;}
-    virtual XttSevHist *xttsevhist_new( char *name, pwr_tOid *oid, pwr_tOName *aname,
-				      sevcli_tCtx scctx, pwr_tStatus *sts, bool sevhistobject=false) {return 0;}
+    virtual XttSevHist *xttsevhist_new( char *name, pwr_tOid *oidv, pwr_tOName *aname,
+					pwr_tOName *oname, bool *sevhistobjectv, sevcli_tCtx scctx, 
+					pwr_tStatus *sts) {return 0;}
     virtual XttFast *xttfast_new( char *name, pwr_tAttrRef *objar, pwr_tStatus *sts) {return 0;}
     virtual XAttOne *xattone_new( pwr_tAttrRef *objar, char *title, unsigned int priv,
 			  pwr_tStatus *sts) {return 0;}

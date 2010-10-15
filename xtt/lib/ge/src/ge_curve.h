@@ -36,6 +36,7 @@
 typedef enum {
   curve_eDataType_LogFile,
   curve_eDataType_DsTrend,
+  curve_eDataType_MultiTrend,
   curve_eDataType_ODBC
   } curve_eDataType;
 
@@ -56,7 +57,7 @@ class GeCurveData {
   public:
     GeCurveData( curve_eDataType datatype);
     curve_eDataType type;
-    int     rows;
+    int     rows[CURVE_MAX_COLS];
     int     cols;
     pwr_tAName y_name[CURVE_MAX_COLS];
     pwr_tAName x_name;

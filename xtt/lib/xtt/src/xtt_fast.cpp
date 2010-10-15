@@ -152,9 +152,9 @@ XttFast::XttFast( void *parent_ctx,
       default:
         element_size[i] = 4;
     }
+    gcd->rows[i] = max_points;
   }
   gcd->cols = fast_cnt;
-  gcd->rows = max_points;
 
   axis_configured = true;
   for ( i = 0; i < FAST_CURVES; i++) {

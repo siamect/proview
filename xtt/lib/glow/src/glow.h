@@ -1979,7 +1979,7 @@ typedef enum {
 typedef struct {
   glow_eCurveDataType type;
   int curves;						//!< Number of curves
-  int rows;						//!< Number of points
+  int rows[TREND_MAX_CURVES];				//!< Number of points
   int x_reverse;					//!< Reverse the curves when drawing them
   double  y_max_value[TREND_MAX_CURVES];		//!< Max value for every curve
   double  x_max_value[TREND_MAX_CURVES];		//!< Max value for every curve

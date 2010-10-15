@@ -445,10 +445,14 @@ int TblNav::create_items()
   }
   else {
     for ( int idx = 1; idx; idx = tree[idx].fws) {
-      if ( tree[idx].item)
-	      new ItemTreeLocal( this, tree[idx].item, idx, NULL, flow_eDest_IntoLast);
+      if ( tree[idx].type == tblnav_eTreeItemType_SevHist)
+	new ItemTreeLocal( this, &sevhistobjectlist[tree[idx].idx], idx, NULL, 
+				  flow_eDest_IntoLast);
+      if ( tree[idx].type == tblnav_eTreeItemType_Command)
+	new ItemTreeCommand( this, &commandlist[tree[idx].idx], idx, NULL, 
+			     flow_eDest_IntoLast);
       else
-	      new ItemTreeNode( this, tree[idx].sname, idx, NULL, flow_eDest_IntoLast);
+	new ItemTreeNode( this, tree[idx].sname, idx, NULL, flow_eDest_IntoLast);
     }
   }
   brow_ResetNodraw( brow->ctx);
@@ -518,6 +522,11 @@ int TblNav::init_brow_cb( FlowCtx *fctx, void *client_data)
   // Create the root items
   tblnav->create_items();
 
+  if ( tblnav->command_cb) {
+    pwr_tCmd cmd = "@$HOME/sev_xtt_setup";
+    tblnav->command_cb( tblnav->parent_ctx, cmd);
+  }
+
   //sts = brow_TraceInit( ctx, tblnav_trace_connect_bc, 
   //		tblnav_trace_disconnect_bc, tblnav_trace_scan_bc);
   //tblnav->trace_started = 1;
@@ -528,24 +537,28 @@ int TblNav::init_brow_cb( FlowCtx *fctx, void *client_data)
 }
 
 
-int TblNav::get_select( TblNav_sevhistobject **hi)
+int TblNav::get_select( ItemBase **item)
 {
   brow_tNode	*node_list;
   int		node_count;
-  ItemLocal 		*item;
       
   brow_GetSelectedNodes( brow->ctx, &node_list, &node_count);
 
   if ( !node_count)
     return 0;
 
-  brow_GetUserData( node_list[0], (void **)&item);
-  switch ( item->type) {
-  case tblnav_eItemType_Local:
-  case tblnav_eItemType_TreeLocal:
-    *hi = &item->item;
-    return 1;
-  default: ;
+  brow_GetUserData( node_list[0], (void **)item);
+  return 1;
+}
+  
+int TblNav::get_item( char *oname, TblNav_sevhistobject **hi)
+{      
+  for ( int i = 0; i < (int)sevhistobjectlist.size(); i++) {
+
+    if ( cdh_NoCaseStrcmp( sevhistobjectlist[i].oname, oname) == 0) {
+      *hi = &sevhistobjectlist[i];
+      return 1;
+    }
   }
   return 0;
 }
@@ -586,9 +599,10 @@ void TblNav::delete_item( TblNav_sevhistobject *hi)
   for ( int i = 1; i < (int)tree.size(); i++) {
     if ( tree[i].deleted)
       continue;
-    if ( tree[i].item &&
-	 cdh_ObjidIsEqual( tree[i].item->oid, hi->oid) &&
-	 strcmp( tree[i].item->objectattrlist[0].aname, hi->objectattrlist[0].aname) == 0) {
+    if ( tree[i].type == tblnav_eTreeItemType_SevHist &&
+	 cdh_ObjidIsEqual( sevhistobjectlist[tree[i].idx].oid, hi->oid) &&
+	 strcmp( sevhistobjectlist[tree[i].idx].objectattrlist[0].aname, 
+		 hi->objectattrlist[0].aname) == 0) {
       tree[i].deleted = 1;
     }
   }
@@ -615,6 +629,17 @@ void TblNav::delete_item( TblNav_sevhistobject *hi)
     if ( found)
       break;
   }
+}
+
+void TblNav::add_item_command( char *name, char *command)
+{
+  TblNav_command item;
+
+  strncpy( item.oname, name, sizeof(item.oname));
+  strncpy( item.command, command, sizeof(item.command));
+
+  commandlist.push_back( item);
+  tree_add( name, commandlist.size()-1, tblnav_eTreeItemType_Command);
 }
 
 ItemLocal::ItemLocal( TblNav *tblnav, TblNav_sevhistobject *xitem,
@@ -784,6 +809,30 @@ ItemTreeLocal::ItemTreeLocal( TblNav *tblnav, TblNav_sevhistobject *xitem, int i
   brow_SetAnnotation( node, 0, aname, strlen(aname));
 }
 
+ItemTreeCommand::ItemTreeCommand( TblNav *tblnav, TblNav_command *xitem, int index,
+				  brow_tNode dest, flow_eDest dest_code) : 
+  ItemBase(tblnav_eItemType_TreeCommand), item(*xitem), idx(index)
+{
+  pwr_tAName aname;
+  char *s;
+
+  type = tblnav_eItemType_TreeCommand;
+  if ((s = strrchr( item.oname, '-')))  
+    strcpy( aname, s+1);
+  else
+    strcpy( aname, item.oname);
+
+  brow_CreateNode( tblnav->brow->ctx, "TreeNodeCommand", tblnav->brow->nc_attr, 
+		   dest, dest_code, (void *) this, 1, &node);
+
+  if ( tblnav->tree[idx].fch)
+    brow_SetAnnotPixmap( node, 0, tblnav->brow->pixmap_map);
+  else
+    brow_SetAnnotPixmap( node, 0, tblnav->brow->pixmap_leaf);
+
+  brow_SetAnnotation( node, 0, aname, strlen(aname));
+}
+
 ItemTreeNode::ItemTreeNode( TblNav *tblnav, char *name, int index,
 			    brow_tNode dest, flow_eDest dest_code) :
   ItemBase(tblnav_eItemType_TreeNode), idx(index)
@@ -821,10 +870,14 @@ int ItemTreeNode::open_children( TblNav *tblnav, double x, double y)
       if ( tblnav->tree[i].deleted)
 	continue;
 
-      if ( tblnav->tree[i].item)
-	  new ItemTreeLocal( tblnav, tblnav->tree[i].item, i, node, flow_eDest_IntoLast);
+      if ( tblnav->tree[i].type == tblnav_eTreeItemType_SevHist)
+	new ItemTreeLocal( tblnav, &tblnav->sevhistobjectlist[tblnav->tree[i].idx], i, node, 
+			   flow_eDest_IntoLast);
+      else if ( tblnav->tree[i].type == tblnav_eTreeItemType_Command)
+	new ItemTreeCommand( tblnav, &tblnav->commandlist[tblnav->tree[i].idx], i, node, 
+			     flow_eDest_IntoLast);
       else
-	  new ItemTreeNode( tblnav, tblnav->tree[i].sname, i, node, flow_eDest_IntoLast);
+	new ItemTreeNode( tblnav, tblnav->tree[i].sname, i, node, flow_eDest_IntoLast);
     }
     brow_SetOpen( node, tblnav_mOpen_Children);
     brow_SetAnnotPixmap( node, 1, tblnav->brow->pixmap_openmap);
@@ -852,9 +905,7 @@ int ItemTreeNode::close( TblNav *tblnav, double x, double y)
 
 void TblNav::build_tree()
 {
-  pwr_tObjName name_array[24];
   pwr_tAName aname;
-  int seg;
 
   for ( int i = 0; i < (int)sevhistobjectlist.size(); i++) {
     TblTreeNode n;
@@ -863,88 +914,106 @@ void TblNav::build_tree()
     strcat( aname, ".");
     strcat( aname, sevhistobjectlist[i].objectattrlist[0].aname);
 
-    seg = dcli_parse( aname, "-", "",
-                      (char *) name_array, sizeof( name_array)/sizeof( name_array[0]), 
-                      sizeof( name_array[0]), 0);
+    tree_add( aname, i, tblnav_eTreeItemType_SevHist);
+  }
+}
 
-    if ( tree.size() == 0) {
-      // First item
-      TblTreeNode n0;
-      strcpy( n0.sname, "nonode");
-      tree.push_back(n0);
+void TblNav::tree_add( char *name, int list_index, tblnav_eTreeItemType type)
+{
+  pwr_tObjName name_array[24];
+  int seg;
 
-      for ( int j = 0; j < seg; j++) {
-        TblTreeNode n;
+  seg = dcli_parse( name, "-", "",
+		    (char *) name_array, sizeof( name_array)/sizeof( name_array[0]), 
+		    sizeof( name_array[0]), 0);
 
-        n.fth = j;
-        tree[j].fch = j + 1;
-        strcpy( n.sname, name_array[j]);
-        if ( j == seg -1)
-          n.item = &sevhistobjectlist[i];
-        tree.push_back(n);
+  if ( tree.size() == 0) {
+    // First item
+    TblTreeNode n0;
+    strcpy( n0.sname, "nonode");
+    tree.push_back(n0);
+    
+    for ( int j = 0; j < seg; j++) {
+      TblTreeNode n;
+      
+      n.fth = j;
+      tree[j].fch = j + 1;
+      strcpy( n.sname, name_array[j]);
+      if ( j == seg -1) {
+	n.idx = list_index;
+	n.type = type;
       }
+      tree.push_back(n);
     }
-    else {
-      int idx = 1;
-      int last = idx;
-      for ( int j = 0; j < seg; j++) {
-        int found = 0;
-        while ( idx) {
-          last = idx;
-          if ( strcmp( tree[idx].sname, name_array[j]) == 0) {
-            found = 1;
-            break;
-          }
-          idx = tree[idx].fws;
-        }
-        if ( !found) {
-          TblTreeNode n;
-          strcpy( n.sname, name_array[j]);
-          n.fth = tree[last].fth;
-          n.bws = last;   
-          tree[last].fws = tree.size();
-          if ( j == seg - 1)
-            n.item = &sevhistobjectlist[i];
-          tree.push_back(n);
-
-          for ( int k = j + 1; k < seg; k++) {
-            TblTreeNode n;
-
-            n.fth = tree.size() - 1;
-            if ( tree[n.fth].fch == 0)
-              tree[n.fth].fch = tree.size();
-            strcpy( n.sname, name_array[k]);
-            if ( k == seg - 1)
-              n.item = &sevhistobjectlist[i];
-            tree.push_back(n);
-          }
-          break;
-        }
-        if ( tree[idx].fch == 0) {
-          TblTreeNode n;
-          strcpy( n.sname, name_array[j]);
-          n.fth = tree[last].fth;
-          n.bws = last;   
-          tree[last].fws = tree.size();
-          if ( j == seg - 1)
-            n.item = &sevhistobjectlist[i];
-          tree.push_back(n);
-          for ( int k = j + 1; k < seg; k++) {
-            TblTreeNode n;
-
-            n.fth = tree.size() - 1;
-            if ( tree[n.fth].fch == 0)
-              tree[n.fth].fch = tree.size();
-            strcpy( n.sname, name_array[k]);
-            if ( k == seg - 1)
-              n.item = &sevhistobjectlist[i];
-            tree.push_back(n);
-          }
-          break;
-        }
-        idx = tree[idx].fch;
-        last = idx;
+  }
+  else {
+    int idx = 1;
+    int last = idx;
+    for ( int j = 0; j < seg; j++) {
+      int found = 0;
+      while ( idx) {
+	last = idx;
+	if ( strcmp( tree[idx].sname, name_array[j]) == 0) {
+	  found = 1;
+	  break;
+	}
+	idx = tree[idx].fws;
       }
+      if ( !found) {
+	TblTreeNode n;
+	strcpy( n.sname, name_array[j]);
+	n.fth = tree[last].fth;
+	n.bws = last;   
+	tree[last].fws = tree.size();
+	if ( j == seg - 1) {
+	  n.idx = list_index;
+	  n.type = type;
+	}
+	tree.push_back(n);
+	
+	for ( int k = j + 1; k < seg; k++) {
+	  TblTreeNode n;
+	  
+	  n.fth = tree.size() - 1;
+	  if ( tree[n.fth].fch == 0)
+	    tree[n.fth].fch = tree.size();
+	  strcpy( n.sname, name_array[k]);
+	  if ( k == seg - 1) {
+	    n.idx = list_index;
+	    n.type = type;
+	  }
+	  tree.push_back(n);
+	}
+	break;
+        }
+      if ( tree[idx].fch == 0) {
+	TblTreeNode n;
+	strcpy( n.sname, name_array[j]);
+	n.fth = tree[last].fth;
+	n.bws = last;   
+	tree[last].fws = tree.size();
+	if ( j == seg - 1) {
+	  n.idx = list_index;
+	  n.type = type;
+	}
+	tree.push_back(n);
+	for ( int k = j + 1; k < seg; k++) {
+	  TblTreeNode n;
+
+	  n.fth = tree.size() - 1;
+	  if ( tree[n.fth].fch == 0)
+	    tree[n.fth].fch = tree.size();
+	  strcpy( n.sname, name_array[k]);
+	  if ( k == seg - 1) {
+	    n.idx = list_index;
+	    n.type = type;
+	  }
+	  tree.push_back(n);
+	}
+	break;
+      }
+      idx = tree[idx].fch;
+      last = idx;
     }
   }
 }

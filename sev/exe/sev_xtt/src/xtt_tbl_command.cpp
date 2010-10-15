@@ -48,6 +48,7 @@
 #include "co_error.h"
 #include "cow_wow.h"
 #include "xtt_tbl.h"
+#include "xtt_tblnav.h"
 #include "co_dcli_msg.h"
 #include "cow_xhelp.h"
 #include "cow_login.h"
@@ -72,17 +73,24 @@ static int	xtttbl_open_func(	void		*client_data,
 					void		*client_flag);
 static int	xtttbl_show_func(	void		*client_data,
 					void		*client_flag);
+static int	xtttbl_create_func(	void		*client_data,
+					void		*client_flag);
 
 dcli_tCmdTable	xtttbl_command_table[] = {
 		{
 			"OPEN",
 			&xtttbl_open_func,
-			{ "dcli_arg1", ""}
+			{ "dcli_arg1", "dcli_arg2", "/NAME", ""}
 		},
 		{
 			"SHOW",
 			&xtttbl_show_func,
 			{ "dcli_arg1", ""}
+		},
+		{
+			"CREATE",
+			&xtttbl_create_func,
+			{ "dcli_arg1", "/NAME", "/COMMAND", ""}
 		},
 		{
 			"EXIT",
@@ -359,6 +367,116 @@ static int	xtttbl_open_func(	void		*client_data,
 
   if ( strncmp( arg1_str, "GRAPH", strlen( arg1_str)) == 0)
   {
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "HISTORY", strlen( arg1_str)) == 0)
+  {
+
+    pwr_tAName name_str;
+    char *name_ptr;
+    pwr_tAName name_array[10];
+    int i, names;
+    pwr_tOid oidv[11];
+    pwr_tOName anamev[11];
+    pwr_tOName onamev[11];
+    bool sevhistobjectv[11];
+    int sts;
+
+    // Command is "OPEN HISTORY"
+
+    /* Get the name qualifier */
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str)))) {
+      if ( name_str[0] != '/')
+        /* Assume that this is the namestring */
+        name_ptr = name_str;
+      else {
+        xtttbl->message('E', "Syntax error");
+        return XTTTBL__HOLDCOMMAND; 	
+      } 
+    }
+    else {
+      if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
+        name_ptr = name_str;
+      else {
+        /* Get the selected object */
+	ItemBase *item;
+
+	if ( !xtttbl->tblnav->get_select( &item)) {
+          xtttbl->message('E', "Enter name or select an object");
+          return XTTTBL__SUCCESS;
+        }
+        xtttbl->activate_opensevhist();
+      }
+    }
+
+    // The name string can contain several hists separated by ','
+    names = dcli_parse( name_str, ",", "",
+	     (char *) name_array, sizeof( name_array)/sizeof( name_array[0]), 
+	     sizeof( name_array[0]), 0);
+
+    for ( i = 0; i < names; i++) {
+      TblNav_sevhistobject *hi;
+
+      if ( i == 10)
+	break;
+
+      sts = xtttbl->tblnav->get_item( name_array[i], &hi);
+      if ( EVEN(sts)) {
+	xtttbl->message('E', "Name object not found");
+	return XTTTBL__SUCCESS;
+      }
+
+      oidv[i] = hi->oid;
+      if ( hi->attrnum == 1) {
+	strcpy( anamev[i], hi->objectattrlist[0].aname);
+	sevhistobjectv[i] = false;
+	strcpy( onamev[i], hi->oname);
+      }
+      else {
+	strcpy( anamev[i], "");
+	sevhistobjectv[i] = true;
+	strcpy( onamev[i], hi->oname);
+      }
+    }
+    oidv[i] = pwr_cNOid;
+
+    xtttbl->sevhist_new( oidv, anamev, onamev, sevhistobjectv);
+  }
+  else
+    xtttbl->message('E',"Syntax error");
+
+  return XTTTBL__SUCCESS;	
+}
+
+
+static int	xtttbl_create_func(	void		*client_data,
+					void		*client_flag)
+{
+  XttTbl *xtttbl = (XttTbl *)client_data;
+
+  char	arg1_str[80];
+  int	arg1_sts;
+
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+
+  if ( strncmp( arg1_str, "ITEM", strlen( arg1_str)) == 0)
+  {
+
+    pwr_tOName name_str;
+    pwr_tCmd command_str;
+
+    // Command is "CREATE ITEM"
+
+    if ( EVEN( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str)))) {
+      xtttbl->message('E', "Enter name");
+      return XTTTBL__SUCCESS;
+    }
+
+    if ( EVEN( dcli_get_qualifier( "/COMMAND", command_str, sizeof(command_str)))) {
+      xtttbl->message('E', "Enter command");
+      return XTTTBL__SUCCESS;
+    }
+
+    xtttbl->tblnav->add_item_command( name_str, command_str);
   }
   else
     xtttbl->message('E',"Syntax error");
