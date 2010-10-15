@@ -113,6 +113,14 @@ SObject pwrb:Class
           Attr TypeRef = "pwrb:Type-SevHistOptionsMask"
         EndBody
       EndObject
+      !/**
+      !  Disable storage.
+      !*/
+      Object Disable $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
     EndObject
     Object Template SevHist
       Body RtBody

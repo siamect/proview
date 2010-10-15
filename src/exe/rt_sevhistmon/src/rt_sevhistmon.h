@@ -40,6 +40,7 @@ class sev_sevhist {
   pwr_tString80 description;
   pwr_tString16 unit;
   pwr_tFloat32  scantime;
+  pwr_tBoolean  disabled;
 };
 
 class sev_sevhistobjectattr {
@@ -47,10 +48,10 @@ class sev_sevhistobjectattr {
   pwr_tAttrRef 	aref;
   pwr_tString80 description;
   pwr_tString16 unit;
-  pwr_tAName	  aname;
-  pwr_tRefId	  refid;
-  void 		      *datap;
-  pwr_eType	    type;
+  pwr_tAName	aname;
+  pwr_tRefId	refid;
+  void 	        *datap;
+  pwr_eType     type;
   unsigned int	size;
 };
 
@@ -61,10 +62,11 @@ class sev_sevhistobject {
   pwr_tDeltaTime storagetime;
   pwr_tFloat32  deadband;
   pwr_tMask  	options;
-  pwr_tRefId	  sevid;
+  pwr_tRefId	sevid;
   pwr_tString80 description;
   pwr_tFloat32  scantime;
   unsigned int  datasize;
+  pwr_tBoolean  disabled;
   vector<sev_sevhistobjectattr> sevhistobjectattrlist;  
 };
 

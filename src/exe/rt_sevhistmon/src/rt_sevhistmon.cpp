@@ -213,6 +213,7 @@ int rt_sevhistmon::init_objects()
     h.storagetime = h_p->StorageTime;
     h.deadband = h_p->DeadBand;
     h.options = h_p->Options;
+    h.disabled = h_p->Disable;
     strncpy( h.description, h_p->Description, sizeof(h.description));
 
     // Get unit from attribute object
@@ -298,6 +299,7 @@ int rt_sevhistmon::init_sevhistobjects()
     h.storagetime = h_p->StorageTime;
     h.deadband = h_p->DeadBand;
     h.options = h_p->Options;
+    h.disabled = h_p->Disable;
     strncpy( h.description, h_p->Description, sizeof(h.description));
 
     h.scantime = m_hs[hs_idx].scantime;
@@ -618,11 +620,13 @@ int rt_sevhistmon::send_data()
 
     dp = (sev_sHistData *) &msg->Data;
     for ( unsigned int j = 0; j < m_hs[i].sevhistlist.size(); j++) {
-      dp->sevid = m_hs[i].sevhistlist[j].sevid;
-      dp->type = m_hs[i].sevhistlist[j].type;
-      dp->size = m_hs[i].sevhistlist[j].size;
-      memcpy( &dp->data, m_hs[i].sevhistlist[j].datap, dp->size);
-      dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
+      if ( !m_hs[i].sevhistlist[j].disabled) {
+	dp->sevid = m_hs[i].sevhistlist[j].sevid;
+	dp->type = m_hs[i].sevhistlist[j].type;
+	dp->size = m_hs[i].sevhistlist[j].size;
+	memcpy( &dp->data, m_hs[i].sevhistlist[j].datap, dp->size);
+	dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
+      }
     }
 
     void *dpp;
@@ -631,13 +635,15 @@ int rt_sevhistmon::send_data()
       dp->size = m_hs[i].sevhistobjectlist[j].datasize;
       dpp = &(dp->data);
       for ( unsigned int k = 0; k < m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist.size(); k++) {
-        //dp->type = m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].type;
-        //printf("sevhistobj[%d].attrlist[%d].aname: %s size:%d\n", j, k, m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].aname, m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].size);
-        //if( m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].type == pwr_eType_String ) {
-        //  printf("text:%s\n", (char*)m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].datap);
-        //}
-        memcpy( dpp, m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].datap, m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].size);
-        dpp = (sev_sHistData *)((char *)dpp + m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].size);
+	if ( !m_hs[i].sevhistobjectlist[j].disabled) {
+	  //dp->type = m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].type;
+	  //printf("sevhistobj[%d].attrlist[%d].aname: %s size:%d\n", j, k, m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].aname, m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].size);
+	  //if( m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].type == pwr_eType_String ) {
+	  //  printf("text:%s\n", (char*)m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].datap);
+	  //}
+	  memcpy( dpp, m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].datap, m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].size);
+	  dpp = (sev_sHistData *)((char *)dpp + m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].size);
+	}
       }
       dp = (sev_sHistData *)((char *)dp + sizeof( *dp) - sizeof(dp->data) +  dp->size);
     }
