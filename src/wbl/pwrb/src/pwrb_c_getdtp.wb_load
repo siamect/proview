@@ -52,7 +52,7 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_RTVIRTUAL
           Attr Flags |= PWR_MASK_DEVBODYREF
           Attr Flags |= PWR_MASK_INVISIBLE
-          Attr TypeRef = "pwrs:Type-$Time"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "VAL"
         EndBody
       EndObject
