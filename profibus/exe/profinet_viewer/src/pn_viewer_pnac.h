@@ -31,6 +31,18 @@
 # include "pn_viewernav.h"
 #endif
 
+# include "rt_io_base.h"
+
+#ifndef rt_io_pn_locals_h
+# include "rt_io_pn_locals.h"
+#endif
+
+#ifndef rt_pn_gsdml_data_h
+# include "rt_pn_gsdml_data.h"
+#endif
+
+
+
 
 class PnViewerPNAC {
  public:
@@ -40,6 +52,9 @@ class PnViewerPNAC {
   void fetch_devices( vector<PnDevice>& dev_vect);
   void set_device_properties( unsigned char *macaddress, unsigned char *ipaddress,
 			      char *devname);
+  GsdmlDeviceData  dev_data;
+  io_sAgentLocal  *local; 
+
 };
 
 

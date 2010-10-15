@@ -1,8 +1,8 @@
 Volume Profibus $ClassVolume 0.0.250.7 
   Body SysBody 05-SEP-2005 17:51:40.00
-    Attr NextOix = "_X180"
-    Attr NextCix = "_X18"
-    Attr NextTix[0] = "_X9"
+    Attr NextOix = "_X184"
+    Attr NextCix = "_X19"
+    Attr NextTix[0] = "_X10"
   EndBody
   Object Type $TypeHier 55 16-JAN-2006 10:07:43.21
     Object PbNumberRepEnum $TypeDef 1 16-JAN-2006 10:08:18.34
@@ -293,7 +293,7 @@ Volume Profibus $ClassVolume 0.0.250.7
       EndObject
     EndObject
     Object PnModuleStateEnum $TypeDef 8 12-JAN-2010 17:13:25.79
-      Body SysBody 12-JAN-2010 17:03:21.67
+      Body SysBody 10-JUN-2010 10:44:06.67
         Attr TypeRef = "pwrs:Type-$Enum"
         Attr Elements = 1
       EndBody
@@ -322,6 +322,32 @@ Volume Profibus $ClassVolume 0.0.250.7
           Attr Text = "Substitute module"
           Attr PgmName = "SubstituteModule"
           Attr Value = 3
+        EndBody
+      EndObject
+    EndObject
+    Object PnAlarmPrioEnum $TypeDef 9 10-JUN-2010 10:52:14.50
+      Body SysBody 10-JUN-2010 10:44:11.25
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+      EndBody
+      Object None $Value 174 10-JUN-2010 10:44:28.58
+        Body SysBody 10-JUN-2010 10:44:47.90
+          Attr Text = "None"
+          Attr PgmName = "None"
+        EndBody
+      EndObject
+      Object Low $Value 175 10-JUN-2010 10:45:01.28
+        Body SysBody 10-JUN-2010 10:45:04.64
+          Attr Text = "Low"
+          Attr PgmName = "Low"
+          Attr Value = 1
+        EndBody
+      EndObject
+      Object High $Value 176 10-JUN-2010 10:45:11.89
+        Body SysBody 10-JUN-2010 10:45:17.29
+          Attr Text = "High"
+          Attr PgmName = "High"
+          Attr Value = 2
         EndBody
       EndObject
     EndObject
@@ -1353,7 +1379,7 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
       EndObject
-      Object PostCreate $DbCallBack 175 05-OCT-2010 16:25:39.14
+      Object PostCreate $DbCallBack 182 05-OCT-2010 16:25:39.14
         Body SysBody 05-OCT-2010 16:25:47.90
           Attr MethodName = "BaseIORack-PostCreate"
         EndBody
@@ -1688,7 +1714,7 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
       EndObject
-      Object PostCreate $DbCallBack 174 05-OCT-2010 16:24:53.44
+      Object PostCreate $DbCallBack 181 05-OCT-2010 16:24:53.44
         Body SysBody 05-OCT-2010 16:25:08.43
           Attr MethodName = "BaseIOCard-PostCreate"
         EndBody
@@ -2072,7 +2098,7 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
       EndObject
-      Object PostCreate $DbCallBack 176 05-OCT-2010 16:25:58.92
+      Object PostCreate $DbCallBack 183 05-OCT-2010 16:25:58.92
         Body SysBody 05-OCT-2010 16:26:04.76
           Attr MethodName = "BaseIORack-PostCreate"
         EndBody
@@ -2432,6 +2458,79 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndBody
       EndObject
     EndObject
+    Object PnAlarm $ClassDef 18 10-JUN-2010 10:39:40.30
+      Body SysBody 10-JUN-2010 10:39:35.83
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 10-JUN-2010 10:40:04.61
+        Body SysBody 10-JUN-2010 10:40:04.61
+          Attr StructName = "PnAlarm"
+          Attr NextAix = "_X9"
+        EndBody
+        Object Type $Attribute 1 10-JUN-2010 10:53:19.20
+          Body SysBody 30-JUN-2010 11:02:27.88
+            Attr PgmName = "Type"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object Prio $Attribute 2 10-JUN-2010 10:53:36.41
+          Body SysBody 30-JUN-2010 11:02:47.21
+            Attr PgmName = "Prio"
+            Attr Flags = 1024
+            Attr TypeRef = "Profibus:Type-PnAlarmPrioEnum"
+          EndBody
+        EndObject
+        Object Remaining $Attribute 3 10-JUN-2010 10:54:32.69
+          Body SysBody 30-JUN-2010 11:02:51.79
+            Attr PgmName = "Remaining"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object SlotNumber $Attribute 4 10-JUN-2010 11:48:57.48
+          Body SysBody 30-JUN-2010 11:02:56.16
+            Attr PgmName = "SlotNumber"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object SubslotNumber $Attribute 5 10-JUN-2010 11:49:10.13
+          Body SysBody 30-JUN-2010 11:03:00.65
+            Attr PgmName = "SubslotNumber"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ModuleIdentNumber $Attribute 6 10-JUN-2010 11:49:40.15
+          Body SysBody 30-JUN-2010 11:03:04.71
+            Attr PgmName = "ModuleIdentNumber"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object SubmoduleIdentNumber $Attribute 7 10-JUN-2010 11:49:56.34
+          Body SysBody 30-JUN-2010 11:03:09.13
+            Attr PgmName = "SubmoduleIdentNumber"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object Specifier $Attribute 8 10-JUN-2010 12:52:57.01
+          Body SysBody 30-JUN-2010 11:03:34.57
+            Attr PgmName = "Specifier"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+      EndObject
+      Object Template PnAlarm 2152431616 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
     Object PnControllerSoftingPNAK $ClassDef 15 21-APR-2009 13:41:08.17
       Body SysBody 21-APR-2009 13:41:08.17
         Attr Editor = 0
@@ -2440,7 +2539,7 @@ Volume Profibus $ClassVolume 0.0.250.7
       EndBody
       Object RtBody $ObjBodyDef 1 21-APR-2009 13:41:08.17
         Body SysBody 21-APR-2009 13:41:08.17
-          Attr StructName = "Pb_Profiboard"
+          Attr StructName = "PnControllerSoftingPNAK"
           Attr NextAix = "_X58"
         EndBody
         Object Description $Attribute 53 21-APR-2009 13:41:08.17
@@ -2523,7 +2622,7 @@ Volume Profibus $ClassVolume 0.0.250.7
       Object RtBody $ObjBodyDef 1 21-APR-2009 13:41:08.17
         Body SysBody 21-APR-2009 13:41:08.17
           Attr StructName = "PnDevice"
-          Attr NextAix = "_X102"
+          Attr NextAix = "_X105"
         EndBody
         Object Description $Attribute 87 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
@@ -2588,10 +2687,10 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         Object State $Attribute 97 12-JAN-2010 17:06:58.08
-          Body SysBody 12-JAN-2010 17:09:22.26
+          Body SysBody 10-JUN-2010 10:30:30.44
             Attr PgmName = "State"
             Attr Flags = 3072
-            Attr TypeRef = "pwrs:Type-$UInt16"
+            Attr TypeRef = "Profibus:Type-PnDeviceStateEnum"
           EndBody
         EndObject
         Object NoDiffModules $Attribute 98 12-JAN-2010 17:09:39.73
@@ -2609,7 +2708,7 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         Object ErrModuleState $Attribute 100 12-JAN-2010 17:11:23.49
-          Body SysBody 12-JAN-2010 17:13:58.39
+          Body SysBody 10-JUN-2010 10:30:12.41
             Attr PgmName = "ErrModuleState"
             Attr Flags = 3072
             Attr TypeRef = "Profibus:Type-PnModuleStateEnum"
@@ -2620,6 +2719,25 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr PgmName = "PhysIdentNumber"
             Attr Flags = 3072
             Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ByteOrdering $Attribute 102 09-JUN-2010 10:31:22.82
+          Body SysBody 09-JUN-2010 10:31:22.82
+            Attr PgmName = "ByteOrdering"
+            Attr TypeRef = "pwrb:Type-ByteOrderingEnum"
+          EndBody
+        EndObject
+        Object FloatRepresentation $Attribute 103 09-JUN-2010 10:31:22.82
+          Body SysBody 09-JUN-2010 10:31:22.82
+            Attr PgmName = "FloatRepresentation"
+            Attr TypeRef = "pwrb:Type-FloatRepEnum"
+          EndBody
+        EndObject
+        Object Alarm $Attribute 104 10-JUN-2010 11:50:27.33
+          Body SysBody 10-JUN-2010 11:51:43.64
+            Attr PgmName = "Alarm"
+            Attr Flags = 131072
+            Attr TypeRef = "Profibus:Class-PnAlarm"
           EndBody
         EndObject
       EndObject
@@ -2758,8 +2876,10 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndBody
       EndObject
       Object Template PnDevice 2151907328 01-JAN-1970 01:00:00.00
-        Body RtBody 05-OCT-2010 10:58:35.33
+        Body RtBody 30-JUN-2010 11:04:35.19
           Attr Process = 1
+          Attr ErrorSoftLimit = 100
+          Attr ErrorHardLimit = 1000
         EndBody
       EndObject
     EndObject
@@ -2860,7 +2980,8 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndBody
       EndObject
       Object Template PnModule 2152169472 01-JAN-1970 01:00:00.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 30-JUN-2010 11:04:44.11
+          Attr Process = 1
         EndBody
       EndObject
     EndObject

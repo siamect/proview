@@ -592,10 +592,13 @@ void io_card_write(
             value = chan_ao->ActValRangeLow;
 
           rawvalue = chan_ao->OutPolyCoef1 * value + chan_ao->OutPolyCoef0;
-          if ( rawvalue > 0)
-            rawvalue = rawvalue + 0.5;
-          else
-            rawvalue = rawvalue - 0.5;
+
+	  if (chan_ao->Representation != pwr_eDataRepEnum_Float32) {
+	    if ( rawvalue > 0)
+	      rawvalue = rawvalue + 0.5;
+	    else
+	      rawvalue = rawvalue - 0.5;
+	  }
 
 //            sig_ao->RawValue = 0;
 
