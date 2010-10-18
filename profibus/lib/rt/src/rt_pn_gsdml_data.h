@@ -17,8 +17,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  **/
 
-#ifndef cow_pn_gsdml_data_h
-#define cow_pn_gsdml_data_h
+#ifndef rt_pn_gsdml_data_h
+#define rt_pn_gsdml_data_h
 
 /* cow_pn_gsdml_data.h -- Profinet configurator data file. */
 

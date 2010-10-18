@@ -23,8 +23,8 @@
 
 #include "co_error.h"
 #include "pn_viewer_pnac.h"
-#include "profinet.h"
-#include "pnak.h"
+#include "rt_profinet.h"
+#include "rt_pnak.h"
 #include "sys/socket.h"
 #include "sys/ioctl.h"
 #include "net/if.h"

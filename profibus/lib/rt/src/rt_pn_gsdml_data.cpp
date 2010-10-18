@@ -30,7 +30,7 @@
 #include "co_dcli.h"
 #include "co_xml_parser.h"
 #include "rt_pb_msg.h"
-#include "cow_pn_gsdml_data.h"
+#include "rt_pn_gsdml_data.h"
 
 typedef enum {
   gsdmldata_eTag_,

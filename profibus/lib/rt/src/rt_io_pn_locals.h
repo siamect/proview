@@ -20,8 +20,8 @@
 #ifndef rt_io_pn_locals_h
 #define rt_io_pn_locals_h
 
-#include "profinet.h"
-#include "pnak.h"
+#include "rt_profinet.h"
+#include "rt_pnak.h"
 
 /* rt_io_pn_locals.h -- Profinet io handling locals. */
 

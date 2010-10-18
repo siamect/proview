@@ -32,7 +32,7 @@
 #endif
 
 #ifndef rt_io_pn_locals_h
-# include "rt_io_pn_locals_h.h"
+# include "rt_io_pn_locals.h"
 #endif
 
 

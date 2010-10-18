@@ -54,8 +54,8 @@ extern "C" {
 #include "cow_pn_gsdml_attr.h"
 #endif
 
-#ifndef cow_pn_gsdml_data_h
-#include "cow_pn_gsdml_data.h"
+#ifndef rt_pn_gsdml_data_h
+#include "rt_pn_gsdml_data.h"
 #endif
 
 typedef enum {

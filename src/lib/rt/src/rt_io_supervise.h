@@ -30,7 +30,7 @@
 #include "pwr_class.h"
 #endif
 
-#ifndef PWR_BASECLASSES_H
+#ifndef pwr_baseclasses_h
 #include "pwr_baseclasses.h"
 #endif
 

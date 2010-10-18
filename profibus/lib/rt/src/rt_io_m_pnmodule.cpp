@@ -36,8 +36,8 @@
 #include "rt_errh.h"
 #include "rt_pb_msg.h"
 
-#include "profinet.h"
-#include "pnak.h"
+#include "rt_profinet.h"
+#include "rt_pnak.h"
 #include "co_dcli.h"
 #include "rt_pn_gsdml_data.h"
 #include "rt_io_pn_locals.h"

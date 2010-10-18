@@ -14,7 +14,7 @@ libdb4.6-dev  (Any Berkeley DB version > 4.3, on Fedora db4-devel)
 libdb4.6++-dev
 libasound2-dev (on Fedora alsa-lib-devel)
 doxygen
-libmysql++dev (optional)
+libmysql++-dev (optional)
 antlr (version 2.7.7)
 jdk
 
@@ -52,7 +52,7 @@ antlr: Download and build source package antlr-2.7.7 from www.antlr.org
        Hints: 
 	- You may have to rename /usr/bin/jikes and /usr/bin/java 	
           temporary during configure.
-        - Include <strings.h> in lib/cpp/antrl/CharScanner.hpp
+        - Include <strings.h> and <stdio.h> in lib/cpp/antlr/CharScanner.hpp
 
 There has to be a valid display when building proview.
 
