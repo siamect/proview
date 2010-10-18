@@ -48,8 +48,6 @@
 #define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
 #endif
 
-#define K_LINE_SIZE	400
-
 #define K_ACTION_NO	0
 #define K_ACTION_DOWN	1
 #define K_ACTION_UP	2
@@ -150,127 +148,6 @@
 
 
 
-typedef struct ccm_sLine_ {
-	char			line[K_LINE_SIZE];
-	int			row;
-	int			type;
-	struct ccm_sLine_		*next;
-	struct ccm_sLine_		*prev;
-} ccm_sLine;
-
-typedef struct s_intvar_ {
-	char			name[32];
-	ccm_tInt       		*value;
-	int			elements;
-	int			array;
-	struct s_intvar_	*next;
-} ccm_sIntvar;
-
-typedef struct s_floatvar_ {
-	char			name[32];
-	ccm_tFloat     		*value;
-	int			elements;
-	int			array;
-	struct s_floatvar_	*next;
-} ccm_sFloatvar;
-
-typedef struct s_stringvar_ {
-	char			name[32];
-	char    		*value;
-	int			elements;
-	int			array;
-	struct s_stringvar_	*next;
-} ccm_sStringvar;
-
-typedef struct ccm_sOperand_ {
-	int			type;
-	char			name[100];
-	int			value_decl;
-	ccm_tInt       		value_int;
-	ccm_tFloat	       	value_float;
-	ccm_tString    		value_string;
-	int			result_decl;
-	ccm_tInt       		result_int;
-	ccm_tFloat     		result_float;
-	ccm_tString	       	result_string;
-	int			result_done;
-	int			operator;
-	int			local_type;
-	int			local_operator;
-	int			prio;
-	int			parlevel;
-	int			done;
-	struct ccm_sOperand_	*next;
-	struct ccm_sOperand_	*prev;
-	} ccm_sOperand;
-
-typedef struct ccm_sFunc_ {
-	char			name[32];
-	int			decl;
-	ccm_sLine		*start_line;
-	ccm_sLine		*end_line;
-	struct ccm_sFunc_	*next;
-	} ccm_sFunc;
-
-typedef struct {
-	ccm_sLine      	*main_start_line;
-	ccm_sLine      	*main_end_line;
-	int		verify;
-	int		current_row;
-	int		error_row;
-	char		error_line[160];
-	int		break_before;
-	int		(* externcmd_func) ( char *, void *);
-	int		(* deffilename_func) ( char *, char *, void *);
-	int		(* errormessage_func) ( char *, int, void *);
-	ccm_sFunc      	*func_list;
-	ccm_sIntvar	*gblint_list;
-	ccm_sFloatvar	*gblfloat_list;
-	ccm_sStringvar	*gblstring_list;
-	ccm_sLine      	*line_list;
-	void		*main_funcctx;
-	int		extfunc_return_mode;
-	char		extfunc_line[256];
-	char		last_fgets[1024];
-	ccm_sArg	*main_arg_list;
-	int		main_arg_count;
-  	void		*client_data;
-	} *ccm_tFileCtx;
-
-typedef struct {
-	char		line[256];
-	ccm_tFileCtx	filectx;
-	int		pos;
-	int		delim_pos;
-	int		state;
-	int		level;
-	int		num_decl;
-	int		num_neg;
-	char		msg[80];
-	int		last_type;
-	ccm_sOperand	*curr_operand;
-	ccm_sOperand	*list;
-	} *ccm_tRowCtx;
-
-typedef struct {
-	char		msg[80];
-	ccm_tFileCtx	filectx;
-	ccm_sIntvar	*locint_list;
-	ccm_sFloatvar	*locfloat_list;
-	ccm_sStringvar	*locstring_list;
-	ccm_sOperand	*list;
-	ccm_sLine      	*current_line;
-	int		is_main;
-	int		for_init;
-	ccm_sArg       	*arg_list;
-	int		arg_count;
-	} *ccm_tFuncCtx;
-
-typedef struct {
-	char		name[32];
-	int 		(* sysfunc) ( void *, ccm_sArg *, int, int *, ccm_tFloat *,
-				      ccm_tInt *, char *);
-	} ccm_sSysFunc;
 
 static  int		ccm_testmode = 0;
 
@@ -313,9 +190,10 @@ static int ccm_deletevar(
   ccm_sStringvar	**stringlist
 );
 static int ccm_function_exec( 
-  ccm_tFileCtx		ctx,
+  ccm_tFileCtx	ctx,
   char		*name,
-  ccm_sArg		*arg_list,
+  ccm_tFunc	*func,
+  ccm_sArg	*arg_list,
   int		arg_count,
   int		*return_decl,
   ccm_tFloat   	*return_float,
@@ -1157,12 +1035,12 @@ static int operand_found( ccm_tRowCtx rowctx)
     {
       if ( rowctx->curr_operand && 
            rowctx->curr_operand->type == K_OPERAND_GLOBAL)
-        operand_p->operator = K_ACTION_CREAGBLINT;
+        operand_p->o_operator = K_ACTION_CREAGBLINT;
       else if ( rowctx->curr_operand && 
                 rowctx->curr_operand->type == K_OPERAND_EXTERN)
-        operand_p->operator = K_ACTION_CREAEXTINT;
+        operand_p->o_operator = K_ACTION_CREAEXTINT;
       else
-        operand_p->operator = K_ACTION_CREALOCINT;
+        operand_p->o_operator = K_ACTION_CREALOCINT;
       operand_p->type = K_OPERAND_DECL;
       rowctx->last_type = K_TYPE_OPERATOR;
     }
@@ -1170,12 +1048,12 @@ static int operand_found( ccm_tRowCtx rowctx)
     {
       if ( rowctx->curr_operand && 
            rowctx->curr_operand->type == K_OPERAND_GLOBAL)
-        operand_p->operator = K_ACTION_CREAGBLFLOAT;
+        operand_p->o_operator = K_ACTION_CREAGBLFLOAT;
       else if ( rowctx->curr_operand && 
                 rowctx->curr_operand->type == K_OPERAND_EXTERN)
-        operand_p->operator = K_ACTION_CREAEXTFLOAT;
+        operand_p->o_operator = K_ACTION_CREAEXTFLOAT;
       else
-        operand_p->operator = K_ACTION_CREALOCFLOAT;
+        operand_p->o_operator = K_ACTION_CREALOCFLOAT;
       operand_p->type = K_OPERAND_DECL;
       rowctx->last_type = K_TYPE_OPERATOR;
     }
@@ -1183,37 +1061,37 @@ static int operand_found( ccm_tRowCtx rowctx)
     {
       if ( rowctx->curr_operand && 
            rowctx->curr_operand->type == K_OPERAND_GLOBAL)
-        operand_p->operator = K_ACTION_CREAGBLSTRING;
+        operand_p->o_operator = K_ACTION_CREAGBLSTRING;
       else if ( rowctx->curr_operand && 
                 rowctx->curr_operand->type == K_OPERAND_EXTERN)
-        operand_p->operator = K_ACTION_CREAEXTSTRING;
+        operand_p->o_operator = K_ACTION_CREAEXTSTRING;
       else
-        operand_p->operator = K_ACTION_CREALOCSTRING;
+        operand_p->o_operator = K_ACTION_CREALOCSTRING;
       operand_p->type = K_OPERAND_DECL;
       rowctx->last_type = K_TYPE_OPERATOR;
     }
     else if ( strcmp( upname, "GLOBAL") == 0)
     {
       operand_p->type = K_OPERAND_GLOBAL;
-      operand_p->operator = K_ACTION_NO;
+      operand_p->o_operator = K_ACTION_NO;
       rowctx->last_type = K_TYPE_OPERATOR;
     }
     else if ( strcmp( upname, "EXTERN") == 0)
     {
       operand_p->type = K_OPERAND_EXTERN;
-      operand_p->operator = K_ACTION_NO;
+      operand_p->o_operator = K_ACTION_NO;
       rowctx->last_type = K_TYPE_OPERATOR;
     }
     else if ( strcmp( upname, "DELETE") == 0)
     {
       operand_p->type = K_OPERAND_DELETE;
-      operand_p->operator = K_ACTION_DELETE;
+      operand_p->o_operator = K_ACTION_DELETE;
       rowctx->last_type = K_TYPE_OPERATOR;
     }
     else if ( strcmp( upname, "RETURN") == 0)
     {
       operand_p->type = K_OPERAND_RETURN;
-      operand_p->operator = K_ACTION_RETURN;
+      operand_p->o_operator = K_ACTION_RETURN;
       rowctx->last_type = K_TYPE_OPERATOR;
     }
 
@@ -1288,7 +1166,7 @@ static void function_found( ccm_tRowCtx rowctx)
   operand_p->type = K_OPERAND_FUNCTION;
   strncpy( operand_p->name, &rowctx->line[rowctx->delim_pos], 
 		rowctx->pos - rowctx->delim_pos);
-  operand_p->operator = K_ACTION_FUNCTION;
+  operand_p->o_operator = K_ACTION_FUNCTION;
   rowctx->last_type = K_TYPE_OPERATOR;
 
   /* Insert in list */
@@ -1369,12 +1247,12 @@ int	ccm_create_list(
 	  rowctx->last_type = K_TYPE_OPERATOR;
 	  rowctx->delim_pos = rowctx->pos;
           create_no_operand( rowctx);
-	  rowctx->curr_operand->operator = K_ACTION_MUL;
+	  rowctx->curr_operand->o_operator = K_ACTION_MUL;
           rowctx->curr_operand->type = K_OPERAND_VALUE;
           strcpy( rowctx->curr_operand->name, "-1");
           rowctx->curr_operand->value_int = -1;
           rowctx->curr_operand->value_decl = K_DECL_INT;
-	  rowctx->curr_operand->prio = ptable[rowctx->curr_operand->operator];
+	  rowctx->curr_operand->prio = ptable[rowctx->curr_operand->o_operator];
 	  set_operand_parlevel( rowctx);
 	}
         else if ( !(rowctx->state == K_STATE_VAR || rowctx->state == K_STATE_STRING))
@@ -1448,7 +1326,7 @@ int	ccm_create_list(
 	  strcpy( rowctx->msg, "Syntax error");
         }
 
-	rowctx->curr_operand->operator = K_ACTION_LIST;
+	rowctx->curr_operand->o_operator = K_ACTION_LIST;
         rowctx->state = K_STATE_LIST;
         rowctx->last_type = K_TYPE_OPERATOR;
 	set_operand_parlevel( rowctx);
@@ -1461,6 +1339,11 @@ int	ccm_create_list(
         {
 	  sts = operand_found( rowctx);
 	  if ( EVEN(sts)) break;
+        }
+	else if ( rowctx->state == K_STATE_PAR)
+        {
+          create_no_operand( rowctx);
+          rowctx->last_type = K_TYPE_OPERAND;
         }
 	else if ( rowctx->last_type != K_TYPE_OPERAND)
         {
@@ -1482,12 +1365,12 @@ int	ccm_create_list(
 	  rowctx->last_type = K_TYPE_OPERATOR;
 	  rowctx->delim_pos = rowctx->pos;
           create_no_operand( rowctx);
-	  rowctx->curr_operand->operator = K_ACTION_MUL;
+	  rowctx->curr_operand->o_operator = K_ACTION_MUL;
           rowctx->curr_operand->type = K_OPERAND_VALUE;
           strcpy( rowctx->curr_operand->name, "-1");
           rowctx->curr_operand->value_int = -1;
           rowctx->curr_operand->value_decl = K_DECL_INT;
-	  rowctx->curr_operand->prio = ptable[rowctx->curr_operand->operator];
+	  rowctx->curr_operand->prio = ptable[rowctx->curr_operand->o_operator];
 	  set_operand_parlevel( rowctx);
 
           create_no_operand( rowctx);
@@ -1525,12 +1408,12 @@ int	ccm_create_list(
 	    break;
           }
 
-	  rowctx->curr_operand->operator = K_ACTION_NE;
+	  rowctx->curr_operand->o_operator = K_ACTION_NE;
 	  rowctx->pos++;
 	  rowctx->pos++;
 	  rowctx->last_type = K_TYPE_OPERATOR;
           rowctx->state = K_STATE_OPERATOR;
-	  rowctx->curr_operand->prio = ptable[rowctx->curr_operand->operator];
+	  rowctx->curr_operand->prio = ptable[rowctx->curr_operand->o_operator];
 	  set_operand_parlevel( rowctx);
         }
 	else
@@ -1545,7 +1428,7 @@ int	ccm_create_list(
 	  {
             create_no_operand( rowctx);
             rowctx->last_type = K_TYPE_OPERATOR;
-	    rowctx->curr_operand->operator = K_ACTION_INV;
+	    rowctx->curr_operand->o_operator = K_ACTION_INV;
             rowctx->pos++;
 	    set_operand_parlevel( rowctx);
           }
@@ -1582,7 +1465,7 @@ int	ccm_create_list(
 	    strcpy( rowctx->msg, "Syntax error");
 	    break;
           }
-	  rowctx->curr_operand->operator = K_ACTION_EQLADD;
+	  rowctx->curr_operand->o_operator = K_ACTION_EQLADD;
 	  rowctx->pos++;
 	  rowctx->pos++;
 	  rowctx->last_type = K_TYPE_OPERATOR;
@@ -1596,12 +1479,12 @@ int	ccm_create_list(
 	    strcpy( rowctx->msg, "Syntax error");
 	    break;
           }
-	  rowctx->curr_operand->operator = K_ACTION_ADD;
+	  rowctx->curr_operand->o_operator = K_ACTION_ADD;
 	  rowctx->pos++;
 	  rowctx->last_type = K_TYPE_OPERATOR;
           rowctx->state = K_STATE_OPERATOR;
 	}
-	rowctx->curr_operand->prio = ptable[rowctx->curr_operand->operator];
+	rowctx->curr_operand->prio = ptable[rowctx->curr_operand->o_operator];
 	set_operand_parlevel( rowctx);
         break;
 
@@ -1635,7 +1518,7 @@ int	ccm_create_list(
 	    strcpy( rowctx->msg, "Syntax error");
 	    break;
           }
-	  rowctx->curr_operand->operator = K_ACTION_EQLSUB;
+	  rowctx->curr_operand->o_operator = K_ACTION_EQLSUB;
 	  rowctx->pos++;
 	  rowctx->pos++;
 	  rowctx->last_type = K_TYPE_OPERATOR;
@@ -1648,12 +1531,12 @@ int	ccm_create_list(
         }
 	else
 	{
-	  rowctx->curr_operand->operator = K_ACTION_SUB;
+	  rowctx->curr_operand->o_operator = K_ACTION_SUB;
 	  rowctx->pos++;
 	  rowctx->last_type = K_TYPE_OPERATOR;
           rowctx->state = K_STATE_OPERATOR;
 	}
-	rowctx->curr_operand->prio = ptable[rowctx->curr_operand->operator];
+	rowctx->curr_operand->prio = ptable[rowctx->curr_operand->o_operator];
 	set_operand_parlevel( rowctx);
         break;
 
@@ -1674,18 +1557,18 @@ int	ccm_create_list(
 
 	else if ( rowctx->line[rowctx->pos+1] == '=')
 	{
-	  rowctx->curr_operand->operator = K_ACTION_EQLMUL;
+	  rowctx->curr_operand->o_operator = K_ACTION_EQLMUL;
 	  rowctx->pos++;
 	  rowctx->pos++;
 	}
 	else
 	{
-	  rowctx->curr_operand->operator = K_ACTION_MUL;
+	  rowctx->curr_operand->o_operator = K_ACTION_MUL;
 	  rowctx->pos++;
 	}
 	rowctx->last_type = K_TYPE_OPERATOR;
         rowctx->state = K_STATE_OPERATOR;
-	rowctx->curr_operand->prio = ptable[rowctx->curr_operand->operator];
+	rowctx->curr_operand->prio = ptable[rowctx->curr_operand->o_operator];
 	set_operand_parlevel( rowctx);
         break;
 
@@ -1706,18 +1589,18 @@ int	ccm_create_list(
 
 	else if ( rowctx->line[rowctx->pos+1] == '=')
 	{
-	  rowctx->curr_operand->operator = K_ACTION_EQLDIV;
+	  rowctx->curr_operand->o_operator = K_ACTION_EQLDIV;
 	  rowctx->pos++;
 	  rowctx->pos++;
 	}
 	else
 	{
-	  rowctx->curr_operand->operator = K_ACTION_DIV;
+	  rowctx->curr_operand->o_operator = K_ACTION_DIV;
 	  rowctx->pos++;
 	}
 	rowctx->last_type = K_TYPE_OPERATOR;
         rowctx->state = K_STATE_OPERATOR;
-	rowctx->curr_operand->prio = ptable[rowctx->curr_operand->operator];
+	rowctx->curr_operand->prio = ptable[rowctx->curr_operand->o_operator];
 	set_operand_parlevel( rowctx);
         break;
 
@@ -1738,18 +1621,18 @@ int	ccm_create_list(
 
 	else if ( rowctx->line[rowctx->pos+1] == '=')
 	{
-	  rowctx->curr_operand->operator = K_ACTION_EQ;
+	  rowctx->curr_operand->o_operator = K_ACTION_EQ;
 	  rowctx->pos++;
 	  rowctx->pos++;
 	}
 	else
 	{
-	  rowctx->curr_operand->operator = K_ACTION_EQL;
+	  rowctx->curr_operand->o_operator = K_ACTION_EQL;
 	  rowctx->pos++;
 	}
 	rowctx->last_type = K_TYPE_OPERATOR;
         rowctx->state = K_STATE_OPERATOR;
-	rowctx->curr_operand->prio = ptable[rowctx->curr_operand->operator];
+	rowctx->curr_operand->prio = ptable[rowctx->curr_operand->o_operator];
 	set_operand_parlevel( rowctx);
         break;
 
@@ -1770,24 +1653,24 @@ int	ccm_create_list(
 
 	else if ( rowctx->line[rowctx->pos+1] == '=')
 	{
-	  rowctx->curr_operand->operator = K_ACTION_LE;
+	  rowctx->curr_operand->o_operator = K_ACTION_LE;
 	  rowctx->pos++;
 	  rowctx->pos++;
 	}
 	else if ( rowctx->line[rowctx->pos+1] == '<')
 	{
-	  rowctx->curr_operand->operator = K_ACTION_LSHIFT;
+	  rowctx->curr_operand->o_operator = K_ACTION_LSHIFT;
 	  rowctx->pos++;
 	  rowctx->pos++;
 	}
 	else
 	{
-	  rowctx->curr_operand->operator = K_ACTION_LT;
+	  rowctx->curr_operand->o_operator = K_ACTION_LT;
 	  rowctx->pos++;
 	}
 	rowctx->last_type = K_TYPE_OPERATOR;
         rowctx->state = K_STATE_OPERATOR;
-	rowctx->curr_operand->prio = ptable[rowctx->curr_operand->operator];
+	rowctx->curr_operand->prio = ptable[rowctx->curr_operand->o_operator];
 	set_operand_parlevel( rowctx);
         break;
 
@@ -1808,24 +1691,24 @@ int	ccm_create_list(
 
 	else if ( rowctx->line[rowctx->pos+1] == '=')
 	{
-	  rowctx->curr_operand->operator = K_ACTION_GE;
+	  rowctx->curr_operand->o_operator = K_ACTION_GE;
 	  rowctx->pos++;
 	  rowctx->pos++;
 	}
 	else if ( rowctx->line[rowctx->pos+1] == '>')
 	{
-	  rowctx->curr_operand->operator = K_ACTION_RSHIFT;
+	  rowctx->curr_operand->o_operator = K_ACTION_RSHIFT;
 	  rowctx->pos++;
 	  rowctx->pos++;
 	}
 	else
 	{
-	  rowctx->curr_operand->operator = K_ACTION_GT;
+	  rowctx->curr_operand->o_operator = K_ACTION_GT;
 	  rowctx->pos++;
 	}
 	rowctx->last_type = K_TYPE_OPERATOR;
         rowctx->state = K_STATE_OPERATOR;
-	rowctx->curr_operand->prio = ptable[rowctx->curr_operand->operator];
+	rowctx->curr_operand->prio = ptable[rowctx->curr_operand->o_operator];
 	set_operand_parlevel( rowctx);
         break;
 
@@ -1846,18 +1729,18 @@ int	ccm_create_list(
 
 	else if ( rowctx->line[rowctx->pos+1] == '&')
 	{
-	  rowctx->curr_operand->operator = K_ACTION_AND;
+	  rowctx->curr_operand->o_operator = K_ACTION_AND;
 	  rowctx->pos++;
 	  rowctx->pos++;
 	}
 	else
 	{
-	  rowctx->curr_operand->operator = K_ACTION_BITAND;
+	  rowctx->curr_operand->o_operator = K_ACTION_BITAND;
 	  rowctx->pos++;
 	}
 	rowctx->last_type = K_TYPE_OPERATOR;
         rowctx->state = K_STATE_OPERATOR;
-	rowctx->curr_operand->prio = ptable[rowctx->curr_operand->operator];
+	rowctx->curr_operand->prio = ptable[rowctx->curr_operand->o_operator];
 	set_operand_parlevel( rowctx);
         break;
 
@@ -1878,18 +1761,18 @@ int	ccm_create_list(
 
 	else if ( rowctx->line[rowctx->pos+1] == '|')
 	{
-	  rowctx->curr_operand->operator = K_ACTION_OR;
+	  rowctx->curr_operand->o_operator = K_ACTION_OR;
 	  rowctx->pos++;
 	  rowctx->pos++;
 	}
 	else
 	{
-	  rowctx->curr_operand->operator = K_ACTION_BITOR;
+	  rowctx->curr_operand->o_operator = K_ACTION_BITOR;
 	  rowctx->pos++;
 	}
 	rowctx->last_type = K_TYPE_OPERATOR;
         rowctx->state = K_STATE_OPERATOR;
-	rowctx->curr_operand->prio = ptable[rowctx->curr_operand->operator];
+	rowctx->curr_operand->prio = ptable[rowctx->curr_operand->o_operator];
 	set_operand_parlevel( rowctx);
         break;
 
@@ -2042,7 +1925,7 @@ int ccm_operate_exec(
           break;
       }
 
-      sts = ccm_function_exec( funcctx->filectx, op->name, arg_list, arg_count,  
+      sts = ccm_function_exec( funcctx->filectx, op->name, &op->func, arg_list, arg_count,  
 	&op->result_decl, &op->result_float, &op->result_int, 
 	op->result_string, 0);
 
@@ -2100,7 +1983,7 @@ int ccm_operate_exec(
       next_decl = op->value_decl;
     }
 
-    switch ( op->operator)
+    switch ( op->o_operator)
     {
       case K_ACTION_EQL:
         sts = ccm_setvar( funcctx, op->name, next_decl, next_float, next_int, 
@@ -2672,6 +2555,9 @@ int	ccm_execute_list(
   ccm_sOperand	*bp;
   int		exit_func_found;
 
+  /* Store type */
+  for ( op = funcctx->list; op; op = op->next)
+    op->orig_type = op->type;
 
   exit_func_found = 0;
   for ( op = funcctx->list; op; op = op->next)
@@ -2752,6 +2638,7 @@ int	ccm_execute_list(
             break;
           if ( bp->parlevel > op->parlevel)
             continue;
+
           if ( !bp->done)
           {
             sts = ccm_operate_exec( funcctx, bp, op->next);
@@ -2805,6 +2692,14 @@ int	ccm_execute_list(
     }
 
   }
+
+  /* Reset and restore type for next evaluation */
+  for ( op = funcctx->list; op; op = op->next) {
+    op->type = op->orig_type;
+    op->done = 0;
+    op->result_done = 0;
+  }
+
   if ( exit_func_found)
     return CCM__EXITFUNC;
   return 1;
@@ -2832,7 +2727,7 @@ int ccm_line_exec(
   {
     if ( ccm_testmode)
       printf( "operator %d prio %d   parlevel %d Name %s\n", 
-		op->operator, op->prio, op->parlevel, 
+		op->o_operator, op->prio, op->parlevel, 
 		op->name);
   }
 
@@ -2844,6 +2739,62 @@ int ccm_line_exec(
   return 1;
 }
 
+int ccm_singleline_init( 
+  ccm_tSingleLineCtx *ctx,
+  char 		*line,
+  int		(* errormessage_func) ( char *, int, void *)  
+)
+{
+  int		sts;
+  ccm_sOperand	*op;
+  ccm_tFileCtx  filectx;
+
+  *ctx = (ccm_tSingleLineCtx)calloc( 1, sizeof(**ctx));
+  (*ctx)->funcctx = (ccm_tFuncCtx)calloc( 1, sizeof(*(*ctx)->funcctx));
+  (*ctx)->funcctx->filectx = filectx;
+
+  filectx = (ccm_tFileCtx)calloc( 1, sizeof( *filectx));
+  filectx->errormessage_func = errormessage_func;
+  filectx->verify = 1;
+  filectx->main_arg_list = 0;
+  filectx->main_arg_count = 0;
+  filectx->client_data = 0;
+
+  (*ctx)->funcctx->filectx = filectx;
+
+  sts = ccm_create_list( (*ctx)->funcctx->filectx, line, &(*ctx)->funcctx->list);
+  if ( EVEN(sts)) return sts;
+
+  for ( op = (*ctx)->funcctx->list; op; op = op->next)
+  {
+    if ( ccm_testmode)
+      printf( "operator %d prio %d   parlevel %d Name %s\n", 
+		op->o_operator, op->prio, op->parlevel, 
+		op->name);
+  }
+  return 1;
+}
+
+int ccm_singleline_exec( 
+  ccm_tSingleLineCtx ctx
+)
+{
+  int sts;
+
+  sts = ccm_execute_list( ctx->funcctx, ctx->funcctx->list, &ctx->result_decl, &ctx->result_float,
+			  &ctx->result_int, &ctx->result_string);
+  return sts;
+}
+
+void ccm_singleline_free(
+  ccm_tSingleLineCtx ctx
+)
+{
+  ccm_free_list( ctx->funcctx->list);
+  free( ctx->funcctx->filectx);
+  free( ctx->funcctx);
+  free( ctx);
+}
 
 static void ccm_free_varlists(
   ccm_sIntvar		*int_list,
@@ -4977,9 +4928,10 @@ static int ccm_extract_parenthes_expr( char *expr, char *line)
 }
 
 static int ccm_function_exec( 
-  ccm_tFileCtx		filectx,
+  ccm_tFileCtx	filectx,
   char		*name,
-  ccm_sArg		*arg_list,
+  ccm_tFunc	*func,
+  ccm_sArg     	*arg_list,
   int		arg_count,
   int		*return_decl,
   ccm_tFloat   	*return_float,
@@ -5024,7 +4976,13 @@ static int ccm_function_exec(
   else
   {
     main_found = 0;
-    if ( strcmp( name, "main") == 0)
+
+    if ( func && *func) {
+      sts = (*func)( (void *)filectx, arg_list, arg_count, 
+		    return_decl, return_float, return_int, return_string);
+      return sts;
+    }
+    else if ( strcmp( name, "main") == 0)
     {
       start_line = filectx->main_start_line->next;
       end_line = filectx->main_end_line;
@@ -5037,6 +4995,8 @@ static int ccm_function_exec(
       {
         if ( strcmp( name, sysfunc_p->name) == 0)
         {
+	  if ( func)
+	    *func = sysfunc_p->sysfunc;
           sts = (sysfunc_p->sysfunc)( (void *)filectx, arg_list, arg_count, 
 		return_decl, return_float, return_int, return_string);
           return sts;
@@ -5044,7 +5004,7 @@ static int ccm_function_exec(
       }
 
       /* Search for an application function */
-     found = 0;
+      found = 0;
       for( func_p = filectx->func_list; func_p; func_p = func_p->next)
       {
         if ( strcmp( func_p->name, name) == 0)
@@ -5719,7 +5679,7 @@ int ccm_file_exec(
     if ( EVEN(sts)) goto file_exec_exit;
   }
 
-  sts = ccm_function_exec( filectx, "main", arg_list, arg_count, 
+  sts = ccm_function_exec( filectx, "main", 0, arg_list, arg_count, 
 	&decl, &float_val, &int_val, string_val, resume);
   if ( sts == CCM__EXTERNFUNC)
   {
