@@ -67,10 +67,10 @@
 
 #define pwrv_cBuildTimeStr       "27-AUG-2010 12:00:00"
 
-#define pwrv_cPwrVersionStr      "V4.7.1"
-#define pwrv_cPwrVersion         SET_VERSION('V', 4, 7, 1)
+#define pwrv_cPwrVersionStr      "V4.8.0"
+#define pwrv_cPwrVersion         SET_VERSION('V', 4, 8, 0)
 
-#define pwrv_cWbdbVersionShortStr "V47"
+#define pwrv_cWbdbVersionShortStr "V48"
 #define pwrv_cPwrCopyright	 "Copyright (C) 2005-2010 SSAB Oxelösund"
 
 #endif
