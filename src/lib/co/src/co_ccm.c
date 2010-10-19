@@ -2751,7 +2751,6 @@ int ccm_singleline_init(
 
   *ctx = (ccm_tSingleLineCtx)calloc( 1, sizeof(**ctx));
   (*ctx)->funcctx = (ccm_tFuncCtx)calloc( 1, sizeof(*(*ctx)->funcctx));
-  (*ctx)->funcctx->filectx = filectx;
 
   filectx = (ccm_tFileCtx)calloc( 1, sizeof( *filectx));
   filectx->errormessage_func = errormessage_func;

@@ -64,28 +64,28 @@ typedef struct ccm_sLine_ {
   struct ccm_sLine_    	*prev;
 } ccm_sLine;
 
-typedef struct s_intvar_ {
+typedef struct ccm_sIntvar_ {
   char			name[32];
   ccm_tInt             	*value;
   int			elements;
   int			array;
-  struct s_intvar_	*next;
+  struct ccm_sIntvar_	*next;
 } ccm_sIntvar;
 
-typedef struct s_floatvar_ {
+typedef struct ccm_sFloatvar_ {
   char			name[32];
   ccm_tFloat           	*value;
   int			elements;
   int			array;
-  struct s_floatvar_	*next;
+  struct ccm_sFloatvar_ *next;
 } ccm_sFloatvar;
 
-typedef struct s_stringvar_ {
+typedef struct ccm_sStringvar_ {
   char			name[32];
   char    		*value;
   int			elements;
   int			array;
-  struct s_stringvar_	*next;
+  struct ccm_sStringvar_ *next;
 } ccm_sStringvar;
 
 typedef struct ccm_sOperand_ {

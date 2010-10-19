@@ -1,7 +1,7 @@
 ifndef link_rule_mk
 link_rule_mk := 1
 
-link = $(ldxx) $(elinkflags) $(domap) -o $(pwr_exe)/profinet_viewer_gtk \
+link = $(ldxx) -L$(pwr_elib) $(elinkflags) $(domap) -o $(pwr_exe)/profinet_viewer_gtk \
 	$(bld_dir)/profinet_viewer_gtk.o \
 	$(bld_dir)/pn_viewer_gtk.o $(bld_dir)/pn_viewernav_gtk.o \
 	$(bld_dir)/pn_viewer.o $(bld_dir)/pn_viewernav.o $(bld_dir)/pn_viewer_pnac.o\
