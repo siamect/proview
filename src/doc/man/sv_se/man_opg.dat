@@ -1129,8 +1129,18 @@ snabba tidskritiska förlopp kan det vara lämpligt att öka bufferstorleken för at
 att störningar som kan uppstå när bufferten skrivs på fil.
 
 <h2>Villkorlig loggning
-I 'ConditionParameter' kan man ange ett digitalt attribut som styr loggningen. Loggning
+I 'Condition kan man ange ett digitalt attribut som styr loggningen. Loggning
 sker enbart om ConditionParameter är sann.
+
+Man kan även ange ett uttryck i 'Condition. Uttrycket startar med 'expr' följt av
+villkoret omgivet av parenteser. I villkoret kan man hämta upp attribut-värden med 
+GetA funktionen för analoga attribut, GetD funktionen för digitala attribut och GetI
+funktionen för heltals attribut.
+
+<b>Exempel
+expr( GetD("H1-H2-Dv1.ActualValue") && GetA("H1-H2-Av2.ActualValue") > 2.5)
+
+Loggningen utförs när Dv'n 'H1-H2-Dv1' är 1 och Av'n 'H1-H2-Av2' är större en 2.5.
 
 <h2>Lagra
 Logg konfigureringen kan sparas med 'Store' knappen, för att återskapas vid ett senare

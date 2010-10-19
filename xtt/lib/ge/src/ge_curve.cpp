@@ -1138,8 +1138,8 @@ int GeCurve::read_file( char *filename)
 
   cd->x_reverse = 0;
   cd->cols = nr - 1;
-  cd->rows[0] = rows;
   for ( i = 0; i < nr; i++) {
+    cd->rows[i] = rows;
     if ( i == 0) {
       strcpy( cd->x_name, item_str[i]);
       cd->x_data[i] = (double *) malloc( rows * sizeof( double));

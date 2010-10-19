@@ -1142,8 +1142,19 @@ to file. At fast time critical sequences, you can increase the buffer size to av
 interruption when the buffer i written to file.
 
 <h2>Conditional logging
-In 'ConditionParameter' a digital attribute controlling the logging can be specified. The
+In 'Condition' a digital attribute controlling the logging can be specified. The
 logging is only performed when the ConditionParameter is true.
+
+It is also possible to insert an expression into 'Condition'. The expression starts with
+'expr' followed by the condition enclosed with parenthesis. In the expression, attribute values
+can be fetched with the GetA function for analog attributes, GetD function for digital
+attributes and GetI function for integer attribute.
+
+<b>Expression example
+expr( GetD("H1-H2-Dv1.ActualValue") && GetA("H1-H2-Av2.ActualValue") > 2.5)
+
+The logging is performed when the Dv 'H1-H2-Dv1' is true and the Av 'H1-H2-Av2' is
+larger than 2.5.
 
 <h2>Store
 The logging configuration is stored with the 'Store' button, and can be restored later

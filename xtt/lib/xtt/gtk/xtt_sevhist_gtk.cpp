@@ -66,7 +66,7 @@ XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
 
   *sts = XNAV__SUCCESS;
 
-  curve = new GeCurveGtk( this, parent_widget, title, NULL, gcd, 0);
+  curve = new GeCurveGtk( this, parent_widget, title, NULL, gcd, 1);
   curve->close_cb = sevhist_close_cb;
   curve->help_cb = sevhist_help_cb;
   curve->higher_res_cb = sevhist_higher_res_cb;

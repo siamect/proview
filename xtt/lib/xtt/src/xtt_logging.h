@@ -22,6 +22,10 @@
 
 /* xtt_logging.h -- Logging in xtt */
 
+#ifndef co_ccm_h
+#include "co_ccm.h"
+#endif
+
 #ifndef rt_gdh_h
 #include "rt_gdh.h"
 #endif
@@ -80,6 +84,7 @@ class XttLogging {
     int		wanted_buffer_size;
     int		buffer_count;
     char	*buffer_ptr;
+    ccm_tSingleLineCtx cond_ccm_ctx;
     
     void init( int logg_index, void *logg_xnav);
     int logging_set(

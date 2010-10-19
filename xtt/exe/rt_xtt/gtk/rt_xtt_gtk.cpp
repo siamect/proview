@@ -557,8 +557,6 @@ int main(  int argc, char *argv[])
 {
   int sts;
 
-  setlocale( LC_TIME, "en_US");
-
   new XttGtk( argc, argv, &sts);
   exit(sts);
 }
@@ -595,6 +593,9 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   char		nodename[80];
 
   gtk_init( &argc, &argv);
+
+  setlocale( LC_TIME, "en_US");
+  setlocale( LC_NUMERIC, "POSIX");
 
   syi_NodeName( &sts, nodename, sizeof(nodename));
   if ( ODD(sts))

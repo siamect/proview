@@ -2890,15 +2890,15 @@ int	XNav::show_logging( int index)
   new ItemLocal( brow, Lng::translate("ShortName"), "logg_ShortName", 
 	pwr_eType_Boolean, sizeof( logg[0].print_shortname), 0, 0, 0,
 	(void *) &logg[index].print_shortname, NULL, flow_eDest_IntoLast);
+  new ItemLocal( brow, Lng::translate("Condition"), "logg_CondPar", 
+	pwr_eType_String, sizeof( logg[0].conditionstr), 0, 0, 0,
+	(void *) logg[index].conditionstr, NULL, flow_eDest_IntoLast);
   for ( int i = 0; i < RTT_LOGG_MAXPAR; i++) {
     sprintf( text, "%s%d", Lng::translate("Parameter"), i);
     new ItemLocal( brow, text, text, 
 	pwr_eType_String, sizeof( logg[0].parameterstr[0]), 0, 0, 0,
 	(void *) logg[index].parameterstr[i], NULL, flow_eDest_IntoLast);
   }
-  new ItemLocal( brow, Lng::translate("ConditionParameter"), "logg_CondPar", 
-	pwr_eType_String, sizeof( logg[0].conditionstr), 0, 0, 0,
-	(void *) logg[index].conditionstr, NULL, flow_eDest_IntoLast);
 
   brow_ResetNodraw( brow->ctx);
   brow_Redraw( brow->ctx, 0);
