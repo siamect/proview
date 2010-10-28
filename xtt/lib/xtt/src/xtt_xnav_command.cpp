@@ -151,6 +151,7 @@ static void xnav_op_ack_last_cb( void *xnav, unsigned long type, unsigned long p
 static void xnav_trend_close_cb( void *ctx, XttTrend *trend);
 static void xnav_trend_help_cb( void *ctx, const char *key);
 static void xnav_sevhist_help_cb( void *ctx, const char *key);
+static int xnav_sevhist_get_select_cb( void *ctx, pwr_tOid *oid, char *aname, char *oname);
 static void xnav_fast_close_cb( void *ctx, XttFast *fast);
 static void xnav_fast_help_cb( void *ctx, const char *key);
 static void xnav_xao_close_cb( void *ctx, XAttOne *xao);
@@ -3367,18 +3368,21 @@ static int	xnav_open_func(	void		*client_data,
       hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, xnav->scctx, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
+	hist->get_select_cb = xnav_sevhist_get_select_cb;
       }
     }
     else if( sevHistObjectFound ) {
       hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, xnav->scctx, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
+	hist->get_select_cb = xnav_sevhist_get_select_cb;
       }
     }
     else {
       hist = xnav->xttsevhist_new( title_str, oidv, anamev, onamev, sevhistobjectv, xnav->scctx, &sts);
       if ( ODD(sts)) {
         hist->help_cb = xnav_sevhist_help_cb;
+	hist->get_select_cb = xnav_sevhist_get_select_cb;
       }
     }
   }
@@ -4082,6 +4086,68 @@ static void xnav_sevhist_help_cb( void *ctx, const char *key)
     xnav->message( 'E', "Unable to find topic");
   else
     xnav->message( ' ', null_str);
+}
+
+static int xnav_sevhist_get_select_cb( void *ctx, pwr_tOid *oid, char *aname, char *oname)
+{
+  XNav *xnav = (XNav *) ctx;
+  pwr_tAttrRef sel_aref, attr_aref, aref;
+  int is_attr;
+  int	sts;
+  pwr_tAName name;
+  pwr_tCid cid;
+  pwr_tAName arefname;
+  char *s;
+  pwr_tOid ch;
+
+  sts = xnav->get_select( &sel_aref, &is_attr);
+  if ( EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToName( sel_aref.Objid, name, sizeof(name), cdh_mNName);
+  if ( EVEN(sts)) return sts;
+
+  sts = gdh_GetObjectClass( sel_aref.Objid, &cid);
+  switch ( cid) {
+  case pwr_cClass_SevHist:
+    break;
+  case pwr_cClass_SevHistObject:
+    return 0; // NYI
+  default: 
+    // Look for a SevHist child
+    for ( sts = gdh_GetChild( sel_aref.Objid, &ch); 
+	  ODD(sts); 
+	  sts = gdh_GetNextSibling( ch, &ch)) {
+      sts = gdh_GetObjectClass( ch, &cid);
+      if ( EVEN(sts)) return sts;
+
+      switch ( cid) {
+      case pwr_cClass_SevHist:
+	sel_aref = cdh_ObjidToAref( ch);
+	break;
+      default:
+	return 0;	
+      }
+    }
+  }
+
+  sts = gdh_ArefANameToAref( &sel_aref, "Attribute", &attr_aref);
+  if ( EVEN(sts)) return sts;
+  
+  sts = gdh_GetObjectInfoAttrref( &attr_aref, &aref, sizeof(aref));
+  if ( EVEN(sts)) return sts;
+  
+  sts = gdh_AttrrefToName( &aref, arefname, sizeof(arefname), cdh_mNName);
+  if ( EVEN(sts)) return sts;
+
+  s = strchr( arefname, '.');
+  if ( !s) return 0;
+  
+  *s = 0;
+  strcpy( oname, arefname);
+  strcpy( aname, s+1);
+  *oid = aref.Objid;
+
+  return XNAV__SUCCESS;
 }
 
 static void xnav_fast_close_cb( void *ctx, XttFast *fast)

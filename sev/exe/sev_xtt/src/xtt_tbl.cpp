@@ -40,8 +40,11 @@
 #include "glow_growapi.h"
 #include "flow_msg.h"
 
+#include "glow_curvectx.h"
+
 #include "xtt_tbl.h"
 #include "xtt_tblnav.h"
+#include "xtt_sevhist.h"
 
 XttTbl::~XttTbl()
 {
@@ -126,6 +129,8 @@ void XttTbl::activate_print()
 void XttTbl::activate_opensevhist()
 {
   ItemBase *item;
+  XttSevHist *hist;
+  pwr_tStatus sts;
 
   if ( !tblnav->get_select( &item)) {
     message( 'E', "Select an storage item");
@@ -142,7 +147,12 @@ void XttTbl::activate_opensevhist()
     bool sevhistobjectv[2] = {hi->attrnum > 1, false};
     if( !sevhistobjectv[0] ) {
       strcpy( anamev[0], hi->objectattrlist[0].aname);
-      sevhist_new( oidv, anamev, onamev, sevhistobjectv);
+      strcpy( onamev[0], hi->oname);
+      hist = sevhist_new( oidv, anamev, onamev, sevhistobjectv, &sts);
+      if ( ODD(sts)) {
+        hist->help_cb = sevhist_help_cb;
+	hist->get_select_cb = sevhist_get_select_cb;
+      }
     }
     else {
       char *s;
@@ -156,7 +166,11 @@ void XttTbl::activate_opensevhist()
 	strcpy( aname, s+1);
       }
       strcpy( anamev[0], aname);
-      sevhist_new( oidv, anamev, onamev, sevhistobjectv);
+      hist = sevhist_new( oidv, anamev, onamev, sevhistobjectv, &sts);
+      if ( ODD(sts)) {
+        hist->help_cb = sevhist_help_cb;
+	hist->get_select_cb = sevhist_get_select_cb;
+      }
     }
     break;
   }
@@ -253,3 +267,35 @@ void XttTbl::activate_help_proview()
   CoXHelp::dhelp( "version", "", navh_eHelpFile_Other, "$pwr_exe/sev_xtt_version_help.dat", 0);
 }
 
+void XttTbl::sevhist_help_cb( void *ctx, const char *key)
+{
+  CoXHelp::dhelp( key, "", navh_eHelpFile_Base, NULL, 0);
+}
+
+int XttTbl::sevhist_get_select_cb( void *ctx, pwr_tOid *oid, char *aname, char *oname)
+{
+  XttTbl *xtttbl = (XttTbl *) ctx;
+  ItemBase *item;
+
+  if ( !xtttbl->tblnav->get_select( &item)) {
+    xtttbl->message( 'E', "Select an storage item");
+    return 0;
+  }
+
+  switch ( item->type) {
+  case tblnav_eItemType_Local:
+  case tblnav_eItemType_TreeLocal: {
+    TblNav_sevhistobject *hi = &((ItemLocal *)item)->item;
+    if ( hi->attrnum > 1)
+      return 0;
+
+    *oid = hi->oid;
+    strcpy( aname, hi->objectattrlist[0].aname);
+    strcpy( oname, hi->oname);
+    break;
+  }
+  default:
+    return 0;
+  }
+  return 1;
+}

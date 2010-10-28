@@ -73,6 +73,30 @@ typedef enum {
   time_eFormat_NumDateAndTime = 3     //!< Date and time format, 2005-01-01 00:00:00
 } time_eFormat;
 
+typedef enum {
+  time_ePeriod_,
+  time_ePeriod_UserDefined,
+  time_ePeriod_OneMinute,
+  time_ePeriod_10Minutes,
+  time_ePeriod_OneHour,
+  time_ePeriod_OneDay,
+  time_ePeriod_OneWeek,
+  time_ePeriod_OneMonth,
+  time_ePeriod_OneYear,
+  time_ePeriod_LastMinute,
+  time_ePeriod_Last10Minutes,
+  time_ePeriod_LastHour,
+  time_ePeriod_Today,
+  time_ePeriod_Yesterday,
+  time_ePeriod_ThisWeek,
+  time_ePeriod_LastWeek,
+  time_ePeriod_ThisMonth,
+  time_ePeriod_LastMonth,
+  time_ePeriod_ThisYear,
+  time_ePeriod_AllTime,
+  time_ePeriod__
+} time_ePeriod;
+
 #define SWE 0
 #define GB  1
 
@@ -157,6 +181,17 @@ pwr_tDeltaTime *  time_ZeroD  (pwr_tDeltaTime*);
 void 	       	time_Sleep	(float time);
 int 	      time_GetTime (pwr_tTime *ts);
 int 	      time_GetTimeMonotonic (pwr_tTime *ts);
+int 	      time_PeriodPreviousMonth( pwr_tTime *time, pwr_tTime *from, pwr_tTime *to);
+int 	      time_PeriodPreviousWeek( pwr_tTime *time, pwr_tTime *from, pwr_tTime *to);
+void	      time_PreviousDayBreak( pwr_tTime *time, pwr_tTime *daybreak);
+void 	      time_Period( time_ePeriod period, pwr_tTime *from, pwr_tTime *to, pwr_tTime *center, 
+			   int daybreak);
+void 	      time_PreviousPeriod( time_ePeriod period, pwr_tTime *prev_from, pwr_tTime *prev_to,
+				   pwr_tTime *from, pwr_tTime *to);
+void 	      time_NextPeriod( time_ePeriod period, pwr_tTime *prev_from, pwr_tTime *prev_to,
+			       pwr_tTime *from, pwr_tTime *to);
+int 	      time_PeriodZoomIn( time_ePeriod *period);
+int 	      time_PeriodZoomOut( time_ePeriod *period);
 
 
 #if defined(OS_ELN)

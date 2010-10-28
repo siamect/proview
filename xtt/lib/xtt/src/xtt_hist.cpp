@@ -139,67 +139,40 @@ void Hist::activate_helpevent()
 
 void Hist::today_cb()
 {
-  int	    Sts;
   pwr_tTime StartTime;
   pwr_tTime StopTime;
 
-  Sts = time_GetTime( &StopTime);
-  Sts = AdjustForDayBreak( this, &StopTime, &StartTime);
-
-  StopTime = StartTime;
-  StopTime.tv_sec += ONEDAY;
-
-  if ( time_Acomp( &StartTime, &StopTime) > 0)
-    StartTime.tv_sec -= ONEDAY;
+  time_Period( time_ePeriod_Today, &StartTime, &StopTime, 0, 1);
 
   SetListTime( StartTime, StopTime, INSENS);
 }
 
 void Hist::yesterday_cb()
 {
-  int	    Sts;
   pwr_tTime StartTime;
   pwr_tTime StopTime;
 
-  Sts = time_GetTime( &StopTime);
-  Sts = AdjustForDayBreak( this, &StopTime, &StartTime);
-
-  if ( time_Acomp( &StartTime, &StopTime) > 0)
-    StartTime.tv_sec -= ONEDAY;
-
-  StopTime = StartTime;
-  StartTime.tv_sec -= ONEDAY;
+  time_Period( time_ePeriod_Yesterday, &StartTime, &StopTime, 0, 0);
     
   SetListTime( StartTime, StopTime, INSENS);
 }
 
 void Hist::thisw_cb()
 {
-  int	    Sts;
-  pwr_tTime CurrTime;
   pwr_tTime StartTime;
   pwr_tTime StopTime;
 
-  Sts = time_GetTime( &CurrTime);
-
-  Sts = GoBackWeek( CurrTime, &StartTime, &StopTime);
-
-  StopTime.tv_sec += ONEDAY;
-  CurrTime.tv_sec += ONEDAY;
+  time_Period( time_ePeriod_ThisWeek, &StartTime, &StopTime, 0, 1);
   
-  SetListTime( StopTime, CurrTime, INSENS);
+  SetListTime( StartTime, StopTime, INSENS);
 }
 
 void Hist::lastw_cb()
 {
-  int	    Sts;
-  pwr_tTime CurrTime;
   pwr_tTime StartTime;
   pwr_tTime StopTime;
 
-  Sts = time_GetTime( &CurrTime);
-
-  Sts = GoBackWeek( CurrTime, &StartTime, &StopTime);
+  time_Period( time_ePeriod_LastWeek, &StartTime, &StopTime, 0, 0);
 
   SetListTime( StartTime, StopTime, INSENS);
 
@@ -207,62 +180,41 @@ void Hist::lastw_cb()
 
 void Hist::thism_cb()
 {
-  int	    Sts;
-  pwr_tTime CurrTime;
   pwr_tTime StartTime;
   pwr_tTime StopTime;
 
-  Sts = time_GetTime( &CurrTime);
-
-  Sts = GoBackMonth( CurrTime, &StartTime, &StopTime);
-
-  StopTime.tv_sec += ONEDAY;
-  CurrTime.tv_sec += ONEDAY;
+  time_Period( time_ePeriod_ThisMonth, &StartTime, &StopTime, 0, 1);
   
-  SetListTime( StopTime, CurrTime, INSENS);
+  SetListTime( StartTime, StopTime, INSENS);
 
 }
 
 void Hist::lastm_cb()
 {
-  int	    Sts;
-  pwr_tTime CurrTime;
   pwr_tTime StartTime;
   pwr_tTime StopTime;
 
-  Sts = time_GetTime( &CurrTime);
-
-  Sts = GoBackMonth( CurrTime, &StartTime, &StopTime);
+  time_Period( time_ePeriod_LastMonth, &StartTime, &StopTime, 0, 0);
 
   SetListTime( StartTime, StopTime, INSENS);
 }
 
 void Hist::all_cb()
 {
-  int	    Sts;
   pwr_tTime StartTime;
   pwr_tTime StopTime;
-  char timestr[32] = "01-JAN-1970 00:00:00";
 
-  time_AsciiToA(timestr, &StartTime);
-    
-  Sts = time_GetTime( &StopTime);
+  time_Period( time_ePeriod_AllTime, &StartTime, &StopTime, 0, 1);
 
-  StopTime.tv_sec += ONEDAY;
-  
   SetListTime( StartTime, StopTime, INSENS);
 }
 
 void Hist::time_cb()
 {
-  int	    Sts;
   pwr_tTime StartTime;
   pwr_tTime StopTime;
-  char timestr[32] = "01-JAN-1970 00:00:00";
 
-  time_AsciiToA(timestr, &StartTime);
-    
-  Sts = time_GetTime( &StopTime);
+  time_Period( time_ePeriod_AllTime, &StartTime, &StopTime, 0, 0);
 
   SetListTime( StartTime, StopTime, SENS);
 
@@ -806,7 +758,10 @@ int  Hist::GoBackMonth( pwr_tTime TimeIn, pwr_tTime *FromTime,
 	    break;
     }
 
-    memset(Tm, 0, sizeof(*Tm));
+    // memset(Tm, 0, sizeof(*Tm));
+    Tm->tm_sec = 0; 
+    Tm->tm_min = 0; 
+    Tm->tm_hour = 0; 
     Tm->tm_mday = 1; 
     Tm->tm_mon = Month; 
     Tm->tm_year = TmYear; 
@@ -814,8 +769,9 @@ int  Hist::GoBackMonth( pwr_tTime TimeIn, pwr_tTime *FromTime,
     FromTime->tv_sec = mktime(Tm);
     FromTime->tv_nsec = 0;
 
-    Tm->tm_mday = DaysOfMonth; 
-    ToTime->tv_sec = mktime(Tm);
+    ToTime->tv_sec = FromTime->tv_sec + DaysOfMonth * ONEDAY;
+    // Tm->tm_mday = DaysOfMonth; 
+    // ToTime->tv_sec = mktime(Tm);
     ToTime->tv_nsec = 0;
 
     return(1);
@@ -859,7 +815,7 @@ int Hist::GoBackWeek( pwr_tTime TimeIn, pwr_tTime *FromTime,
     FromTime->tv_sec = Time.tv_sec - Days * ONEDAY;
     FromTime->tv_nsec = 0;
 
-    ToTime->tv_sec = Time.tv_sec - (Days - 6) * ONEDAY;
+    ToTime->tv_sec = FromTime->tv_sec + 7 * ONEDAY;
     ToTime->tv_nsec = 0;
 
     return(1);
@@ -881,16 +837,21 @@ int Hist::GoBackWeek( pwr_tTime TimeIn, pwr_tTime *FromTime,
 *
 *************************************************************************/
 pwr_tStatus Hist::AdjustForDayBreak( Hist *histOP, pwr_tTime *Time, 
-				      pwr_tTime *NewTime)
+				     pwr_tTime *NewTime)
 {
-    pwr_tStatus Sts;
-    char timestr[32]; 
+    struct tm	*Tm;
 
-    Sts = time_AtoAscii(Time, time_eFormat_DateAndTime, timestr, sizeof(timestr));
-    sprintf(&timestr[12],"00:00:00");
+    time_t sec = Time->tv_sec;
+    Tm = localtime(&sec);
 
-    return time_AsciiToA(timestr, NewTime);
+    Tm->tm_sec = 0;
+    Tm->tm_min = 0;
+    Tm->tm_hour = 0;
 
+    NewTime->tv_sec = mktime(Tm);
+    NewTime->tv_nsec = 0;
+
+    return 1;
 } /* AdjustForDayBreak */
 
 #endif

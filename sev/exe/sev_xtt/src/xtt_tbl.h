@@ -56,7 +56,7 @@ class XttTbl {
 
   virtual void message( char severity, const char *message) {}
   virtual XttSevHist *sevhist_new( pwr_tOid *oidv, pwr_tOName *anamev, pwr_tOName *onamev, 
-				   bool *sevhistobjectv) { return 0;}
+				   bool *sevhistobjectv, pwr_tStatus *sts) { return 0;}
   virtual CoLogin *login_new( const char       	*wl_name,
 			      const char       	*wl_groupname,
 			      void		(* wl_bc_success)( void *),
@@ -81,6 +81,8 @@ class XttTbl {
   static int is_authorized( void *ctx, unsigned int access, int msg);
   static int command_cb( void *ctx, char *cmd);
   static void delete_item_yes( void *ctx, void *data);
+  static int sevhist_get_select_cb( void *ctx, pwr_tOid *oid, char *aname, char *oname);
+  static void sevhist_help_cb( void *ctx, const char *key);
   virtual ~XttTbl();
 
   int command( char* input_str);

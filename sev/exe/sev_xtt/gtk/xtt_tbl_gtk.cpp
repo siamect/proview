@@ -202,13 +202,12 @@ void XttTblGtk::activate_list_layout( GtkWidget *w, gpointer data)
   xtt->tblnav->show_list();
 }
 
-XttSevHist *XttTblGtk::sevhist_new( pwr_tOid *oidv, pwr_tOName *anamev, pwr_tOName *onamev, bool *sevhistobjectv)
+XttSevHist *XttTblGtk::sevhist_new( pwr_tOid *oidv, pwr_tOName *anamev, pwr_tOName *onamev, bool *sevhistobjectv, pwr_tStatus *sts)
 {
   GtkWidget *w;
-  pwr_tStatus sts;
 
-  return new XttSevHistGtk( (void *)this, toplevel, "SevHist", &w, oidv, anamev, onamev,
-			    sevhistobjectv, sevcli, &sts);
+  return new XttSevHistGtk( (void *)this, toplevel, "Process History", &w, oidv, anamev, onamev,
+			    sevhistobjectv, sevcli, sts);
 }
 
 CoLogin *XttTblGtk::login_new( const char      	*name,
@@ -338,8 +337,11 @@ XttTblGtk::XttTblGtk( GtkWidget *a_parent_wid,
 
 
   // Functions entry
-  GtkWidget *functions_opensevhist = gtk_menu_item_new_with_mnemonic( "_Open SevHist");
+  GtkWidget *functions_opensevhist = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Open Process History"));
   g_signal_connect(functions_opensevhist, "activate", G_CALLBACK(activate_opensevhist), this);
+  gtk_widget_add_accelerator( functions_opensevhist, "activate", accel_g,
+			      'g', GdkModifierType(GDK_CONTROL_MASK), 
+			      GTK_ACCEL_VISIBLE);
 
   GtkWidget *functions_command = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("Co_mmand"));
   g_signal_connect( functions_command, "activate", 
@@ -348,7 +350,7 @@ XttTblGtk::XttTblGtk( GtkWidget *a_parent_wid,
 			      'b', GdkModifierType(GDK_CONTROL_MASK), 
 			      GTK_ACCEL_VISIBLE);
 
-  GtkWidget *functions_delete_item = gtk_menu_item_new_with_mnemonic( "_Delete Item");
+GtkWidget *functions_delete_item = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Delete Item"));
   g_signal_connect(functions_delete_item, "activate", G_CALLBACK(activate_delete_item), this);
 
   GtkMenu *functions_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
@@ -356,16 +358,16 @@ XttTblGtk::XttTblGtk( GtkWidget *a_parent_wid,
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_command);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_delete_item);
 
-  GtkWidget *functions = gtk_menu_item_new_with_mnemonic("_Functions");
+  GtkWidget *functions = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Functions"));
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), functions);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions), GTK_WIDGET(functions_menu));
 
 
   // View menu
-  GtkWidget *view_tree_layout = gtk_menu_item_new_with_mnemonic( "_Tree Layout");
+  GtkWidget *view_tree_layout = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Tree Layout"));
   g_signal_connect(view_tree_layout, "activate", G_CALLBACK(activate_tree_layout), this);
 
-  GtkWidget *view_list_layout = gtk_menu_item_new_with_mnemonic( "_List Layout");
+  GtkWidget *view_list_layout = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_List Layout"));
   g_signal_connect(view_list_layout, "activate", G_CALLBACK(activate_list_layout), this);
 
   GtkWidget *view_zoom_in = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("Zoom _In"));
@@ -419,7 +421,7 @@ XttTblGtk::XttTblGtk( GtkWidget *a_parent_wid,
   gtk_menu_shell_append(GTK_MENU_SHELL(help_menu), help_project);
   gtk_menu_shell_append(GTK_MENU_SHELL(help_menu), help_proview);
 
-  GtkWidget *help = gtk_menu_item_new_with_mnemonic("_Help");
+  GtkWidget *help = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Help"));
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), help);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(help), GTK_WIDGET(help_menu));
 
@@ -432,7 +434,7 @@ XttTblGtk::XttTblGtk( GtkWidget *a_parent_wid,
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_opensevhist, "clicked", G_CALLBACK(activate_opensevhist), this);
   g_object_set( tools_opensevhist, "can-focus", FALSE, NULL);
-  gtk_toolbar_append_widget( tools, tools_opensevhist,CoWowGtk::translate_utf8("Open hist item"), "");
+  gtk_toolbar_append_widget( tools, tools_opensevhist,CoWowGtk::translate_utf8("Open history item"), "");
 
   GtkWidget *tools_zoom_in = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_in.png");
