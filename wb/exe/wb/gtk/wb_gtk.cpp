@@ -94,7 +94,7 @@ int main( int argc, char *argv[])
   gtk_init( &argc, &argv);
 
   setlocale( LC_ALL, "en_US");
-  setlocale( LC_NUMERIC, "en_US");
+  setlocale( LC_NUMERIC, "POSIX");
   setlocale( LC_TIME, "en_US");
 
   new WbGtk( argc, argv);

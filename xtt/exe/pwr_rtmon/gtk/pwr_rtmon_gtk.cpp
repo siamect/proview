@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <locale.h>
 #include <gtk/gtk.h>
 
 #include "pwr.h"
@@ -60,6 +61,9 @@ int main( int argc, char *argv[])
   }
 
   gtk_init( &argc, &argv);
+
+  setlocale( LC_NUMERIC, "POSIX");
+  setlocale( LC_TIME, "en_US");
 
   // Create help window
   CoXHelp *xhelp = new CoXHelpGtk( 0, 0, xhelp_eUtility_Xtt, &sts);

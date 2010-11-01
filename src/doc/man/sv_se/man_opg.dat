@@ -1130,7 +1130,7 @@ att störningar som kan uppstå när bufferten skrivs på fil.
 
 <h2>Villkorlig loggning
 I 'Condition kan man ange ett digitalt attribut som styr loggningen. Loggning
-sker enbart om ConditionParameter är sann.
+sker enbart om Condition attributet är sant.
 
 Man kan även ange ett uttryck i 'Condition. Uttrycket startar med 'expr' följt av
 villkoret omgivet av parenteser. I villkoret kan man hämta upp attribut-värden med 

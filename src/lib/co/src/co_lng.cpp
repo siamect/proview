@@ -510,6 +510,7 @@ void Lng::set( char *language)
   }
   setlocale( LC_ALL, lang_to_locale( l));
   setlocale( LC_NUMERIC, "POSIX");
+  setlocale( LC_TIME, "en_US");
 }
 
 pwr_tStatus Lng::set( lng_eLanguage language) 
@@ -530,6 +531,7 @@ pwr_tStatus Lng::set( lng_eLanguage language)
 
   setlocale( LC_ALL, lang_to_locale( lang));
   setlocale( LC_NUMERIC, "POSIX");
+  setlocale( LC_TIME, "en_US");
   return 1;
 }
 
