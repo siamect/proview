@@ -2567,6 +2567,19 @@ cdh_NoCaseStrncmp (
     (isalpha(*t) ? ((*t) & ~(1<<5)) : *t);
 }
 
+//! Copy string char by char to allow overlapping source and target buffers
+char *cdh_Strcpy( char *dest, const char *src)
+{
+  const char *s;
+  char *t;
+
+  for ( s = src, t = dest; *s; s++,t++)
+    *t = *s;
+  *t = 0;
+
+  return dest;
+}
+
 //! Copy string, and cut of if the string is to long with ending '...'
 /*!
   For example the string '0123456789' will return the string '0123...' when
