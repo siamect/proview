@@ -648,6 +648,7 @@ int GraphJournal::undo_delete_select()
     fp.getline( name_prev, sizeof(name_prev));
 
     grow_ObjectRead( graph->grow->ctx, (ifstream&)fp, &o);  
+    if ( !o) return GE__SUCCESS;
 
     if ( strcmp( name_prev, "") == 0) {
       grow_OrderObject( graph->grow->ctx, o, 0, glow_eDest_After);
@@ -848,6 +849,8 @@ int GraphJournal::redo_create_object()
     printf("redo_create_object\n");
 
   grow_ObjectRead( graph->grow->ctx, (ifstream&)fp, &o);  
+  if ( !o) return GE__SUCCESS;
+
   check_object_number( o);
   grow_Redraw( graph->grow->ctx);
   return GE__SUCCESS;
@@ -1324,6 +1327,7 @@ int GraphJournal::redo_paste()
   while ( tag == journal_cTag_Object) {
 
     grow_ObjectRead( graph->grow->ctx, (ifstream&)fp, &o);  
+    if ( !o) return GE__SUCCESS;
 
     fp.get();
     fp.getline( line, sizeof(line));
