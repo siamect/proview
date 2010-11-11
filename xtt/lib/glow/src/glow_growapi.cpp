@@ -4667,6 +4667,10 @@ int grow_GetDimension( char *filename, int *width, int *height)
   return GrowCtx::get_dimension( filename, width, height);
 }
 
+void grow_SetTextCoding( grow_tCtx ctx, glow_eTextCoding coding)
+{
+  ctx->set_text_coding( coding);
+}
 
 /*@}*/
 

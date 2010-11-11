@@ -3439,9 +3439,15 @@ int GlowDrawGtk::text_pango( GlowWind *wind, int x, int y, char *text, int len,
 	continue;
     }
 
-    char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
-    PangoLayout *layout = gtk_widget_create_pango_layout( w->toplevel, textutf8);
-    g_free( textutf8);
+    PangoLayout *layout;
+    if ( ((GrowCtx *)ctx)->text_coding != glow_eTextCoding_UTF_8) {
+      char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+      layout = gtk_widget_create_pango_layout( w->toplevel, textutf8);
+      g_free( textutf8);
+    }
+    else
+      layout = gtk_widget_create_pango_layout( w->toplevel, text);
+
     PangoFontDescription *desc = pango_font_description_from_string( font_string( font_idx, font_type, size));
     pango_layout_set_font_description( layout, desc);
     pango_font_description_free( desc);
@@ -3496,9 +3502,15 @@ int GlowDrawGtk::text_erase_pango( GlowWind *wind, int x, int y, char *text, int
   gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), gcs[gc_type][0]);
   gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), w->window);
 
-  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
-  PangoLayout *layout = gtk_widget_create_pango_layout( w->toplevel, textutf8);
-  g_free( textutf8);
+  PangoLayout *layout;
+  if ( ((GrowCtx *)ctx)->text_coding != glow_eTextCoding_UTF_8) {
+    char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+    layout = gtk_widget_create_pango_layout( w->toplevel, textutf8);
+    g_free( textutf8);
+  }
+  else
+    layout = gtk_widget_create_pango_layout( w->toplevel, text);
+
   PangoFontDescription *desc = pango_font_description_from_string( font_string( font_idx, font_type, size));
   pango_layout_set_font_description( layout, desc);
   pango_font_description_free( desc);
@@ -3547,9 +3559,15 @@ int GlowDrawGtk::get_text_extent_pango( const char *text, int len,
   gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), gcs[gc_type][0]);
   gdk_pango_renderer_set_drawable( GDK_PANGO_RENDERER(pr), w->window);
 
-  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
-  PangoLayout *layout = gtk_widget_create_pango_layout( w->toplevel, textutf8);
-  g_free( textutf8);
+  PangoLayout *layout;
+  if ( ((GrowCtx *)ctx)->text_coding != glow_eTextCoding_UTF_8) {
+    char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+    layout = gtk_widget_create_pango_layout( w->toplevel, textutf8);
+    g_free( textutf8);
+  }
+  else 
+    layout = gtk_widget_create_pango_layout( w->toplevel, text);
+
   PangoFontDescription *desc = pango_font_description_from_string( font_string( font_idx, font_type, size));
   pango_layout_set_font_description( layout, desc);
   pango_font_description_free( desc);

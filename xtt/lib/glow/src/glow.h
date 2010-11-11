@@ -119,6 +119,11 @@ typedef enum {
   glow_eTextSize_24	= 8
 } glow_eTextSize;
 
+typedef enum {
+  glow_eTextCoding_ISO8859_1,
+  glow_eTextCoding_UTF_8
+} glow_eTextCoding;
+
 //! Critera used to decide when an object is hot
 typedef enum {
 	glow_eHotMode_Default,

@@ -103,6 +103,18 @@ xnav_sStartMenu Xtt::root_menu[] = {
   
 
 
+static void usage()
+{
+  cout << "Usage: rt_xtt -saqc -l lang -u user -f flavor opplace" << endl << endl <<
+    "	Argument OpPlace object." << endl << endl <<
+    "	-l  Language (sv_se, zh_cn etc)." << endl <<
+    "	-u  Use opplace with the same name as the user." << endl <<
+    "	-s  Show a selection list of OpPlace objects." << endl <<
+    "	-a  Connect to audio device." << endl << 
+    "	-q  Hide license information." << endl <<
+    "	-c  Add close button to operator window." << endl << endl;
+}
+
 void Xtt::hotkey_activate_command( char *cmdp)
 {
   pwr_tCmd cmd;
@@ -499,67 +511,100 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
   }
 
   // Set language
+  pwr_tClassId op_class;
   for ( i = 1; i < *argc; i++) {
-    if ( strcmp( (*argv)[i], "-l") == 0 && i + 1 < *argc) {
-      strncpy( language, (*argv)[i+1], sizeof(language));
-      i++;
-    }
-    else if ( strcmp( (*argv)[i], "-q") == 0)
-      quiet = 1;
-    else if ( strcmp( (*argv)[i], "-a") == 0)
-      attach_audio = 1;
-    else if ( strcmp( (*argv)[i], "-s") == 0)
-      select_opplace = 1;
-    else if ( strcmp( (*argv)[i], "-c") == 0)
-      op_close_button = 1;
-    else if ( strcmp( (*argv)[i], "-d") == 0)
-      no_advanceduser = 1;
-    else if ( strcmp( (*argv)[i], "-u") == 0 && i + 1 < *argc) {
-      char oname[80];
+    if ( (*argv)[i][0] == '-') {
+      int i_incr = 0;
+      for ( int j = 1; 
+	    (*argv)[i][j] != 0 && (*argv)[i][j] != ' ' && (*argv)[i][j] != '	';
+	    j++) {
+	switch ( (*argv)[i][j]) {
+	case 'q':
+	  quiet = 1;
+	  break;
+	case 'a':
+	  attach_audio = 1;
+	  break;
+	case 's':
+	  select_opplace = 1;
+	  break;
+	case 'h':
+	  usage();
+	  exit(0);
+	case 'c':
+	  op_close_button = 1;
+	  break;
+	case 'd':
+	  no_advanceduser = 1;
+	  break;
+	case 'l':
+	  if ( i + 1 >= *argc ||
+	       !((*argv)[i][j+1] == ' ' || (*argv)[i][j+1] != '	')) {
+	    usage();
+	    exit(0);
+	  }
+	  strncpy( language, (*argv)[i+1], sizeof(language));
+	  i++;	    
+	  i_incr = 1;
+	  break;
+	case 'u': {
+	  if ( i + 1 >= *argc ||
+	       !((*argv)[i][j+1] == ' ' || (*argv)[i][j+1] != '	')) {
+	    usage();
+	    exit(0);
+	  }
+	  char oname[80];
 
-      strcpy( opplace_str, (*argv)[i+1]);
+	  strcpy( opplace_str, (*argv)[i+1]);
 
-      sts = gdh_GetClassList( pwr_cClass_OpPlace, &op_objid);
-      while (ODD(sts)) {
-	sts = gdh_ObjidToName( op_objid, oname, sizeof(oname), cdh_mName_object);
-	if (ODD(sts) && cdh_NoCaseStrcmp( oname, opplace_str) == 0) {
-	  sts = gdh_ObjidToName( op_objid, opplace_str, sizeof(opplace_str), cdh_mNName);
-	  opplace_found = 1;
+	  sts = gdh_GetClassList( pwr_cClass_OpPlace, &op_objid);
+	  while (ODD(sts)) {
+	    sts = gdh_ObjidToName( op_objid, oname, sizeof(oname), cdh_mName_object);
+	    if (ODD(sts) && cdh_NoCaseStrcmp( oname, opplace_str) == 0) {
+	      sts = gdh_ObjidToName( op_objid, opplace_str, sizeof(opplace_str), cdh_mNName);
+	      opplace_found = 1;
+	      break;
+	    }
+	    sts = gdh_GetNextObject( op_objid, &op_objid);
+	  }
+	  if ( !opplace_found) {
+	    printf("** Unable to find opplace\n");
+	    exit(sts);
+	  }
+	  i_incr = 1;
+	  i++;
 	  break;
 	}
-	sts = gdh_GetNextObject( op_objid, &op_objid);
+	default:
+	  usage();
+	  exit(0);
+	}
+	if ( i_incr)
+	  break;
       }
-      if ( !opplace_found) {
+    }
+    else {
+      // Opplace argument
+      strcpy( opplace_str, (*argv)[i]);
+      
+      sts = gdh_NameToObjid( opplace_str, &op_objid);
+      if ( EVEN(sts)) {
 	printf("** Unable to find opplace\n");
 	exit(sts);
       }
-      i++;
+
+      sts = gdh_GetObjectClass( op_objid, &op_class);
+      if ( EVEN(sts)) exit( sts);
+
+      if ( op_class != pwr_cClass_OpPlace) {
+	printf("** Error in opplace object class\n");
+	exit(sts);
+      }
+      opplace_found = 1;
     }
   }
-
-  if ( !opplace_found && *argc >= 2 && strncmp( (*argv)[1], "-", 1) != 0) {
-    pwr_tClassId op_class;
-
-    // First argument is opplace object
-    strcpy( opplace_str, (*argv)[1]);
-
-    sts = gdh_NameToObjid( opplace_str, &op_objid);
-    if ( EVEN(sts)) {
-      printf("** Unable to find opplace\n");
-      exit(sts);
-    }
-
-    sts = gdh_GetObjectClass( op_objid, &op_class);
-    if ( EVEN(sts)) exit( sts);
-
-    if ( op_class != pwr_cClass_OpPlace) {
-      printf("** Error in opplace object class\n");
-      exit(sts);
-    }
-
-    opplace_found = 1;
-  }
-  else if ( select_opplace) {
+    
+  if ( select_opplace) {
     // Check if there is only one single opplace
     pwr_tOName fullname;
     pwr_tObjName name;
@@ -584,7 +629,7 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
       opplace_found = 1;
     }
   }
-  else if ( !opplace_found) {
+  if ( !opplace_found) {
     // Look for default opplace
     pwr_tOid oid;
     pwr_tOName name;

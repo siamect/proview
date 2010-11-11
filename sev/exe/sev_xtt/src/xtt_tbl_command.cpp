@@ -30,6 +30,7 @@
 # include <stdlib.h>
 # include <ctype.h>
 
+#include "pwr.h"
 #include "co_nav_help.h"
 #include "pwr_privilege.h"
 #include "co_cdh.h"

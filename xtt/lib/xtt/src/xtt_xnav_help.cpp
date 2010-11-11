@@ -64,13 +64,18 @@ static int help_cmp_items( const void *node1, const void *node2);
 void *xnav_help_insert_cb( void *ctx, navh_eItemType item_type, const char *text1,
 		      const char *text2, const char *text3, const char *link, 
 		      const char *bookmark, const char *file_name,
-		      navh_eHelpFile file_type, int help_index, const char *bm)
+		      navh_eHelpFile file_type, int help_index, const char *bm, int coding)
 {
   XNav *xnav = (XNav *)ctx;
 
-  if ( xnav->init_help) {
+  if ( xnav->init_help == 1) {
     xnav->brow_pop();
     brow_SetNodraw( xnav->brow->ctx);
+    brow_SetTextCoding( xnav->brow->ctx, (flow_eTextCoding)coding);
+    xnav->init_help = 0;
+  }
+  else if ( xnav->init_help == 2) {
+    brow_SetTextCoding( xnav->brow->ctx, (flow_eTextCoding)coding);
     xnav->init_help = 0;
   }
 
@@ -126,13 +131,13 @@ int	XNav::help( char *help_key, char *help_bookmark,
   if ( pop)
     init_help = 1;
   else {
-    init_help = 0;
+    init_help = 2;
     brow_SetNodraw( brow->ctx);
   }
   sts = navhelp->help( help_key, help_bookmark, file_type, 
 		       file_name, &bookmark_node, false);
   if ( EVEN(sts)) {
-    if ( !pop || (pop && !init_help)) {
+    if ( !pop || (pop && init_help != 1)) {
       brow_push();
       brow_ResetNodraw( brow->ctx);
     }

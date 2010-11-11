@@ -7,8 +7,8 @@ link = $(ldxx) -L$(pwr_elib) $(elinkflags) $(domap) -o $(pwr_exe)/wb_ge_gtk \
 	-L/usr/local/BerkeleyDB.4.0/lib \
 	-L/opt/gnome/lib \
 	-lpwr_ge_gtk -lpwr_ge -lpwr_wb_gtk -lpwr_wb -lpwr_wb_gtk -l pwr_wb -lpwr_ge_gtk -lpwr_ge \
-	-lpwr_flow_gtk -lpwr_flow -lpwr_glow_gtk -lpwr_glow -lpwr_rt \
-	-lpwr_cow_gtk -lpwr_cow -lpwr_co -lpwr_flow_gtk -lpwr_flow \
+	-lpwr_flow_gtk -lpwr_flow -lpwr_glow_gtk -lpwr_glow -lpwr_cow_gtk -lpwr_cow -lpwr_rt \
+	 -lpwr_co -lpwr_flow_gtk -lpwr_flow \
 	`pkg-config --libs gtk+-2.0` \
 	-lpwr_msg_dummy -lantlr \
 	-lcrypt -lrpcsvc -lpthread -lm -ldb_cxx -lz $(linkmysql)

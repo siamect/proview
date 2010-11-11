@@ -2954,6 +2954,9 @@ void GraphGrow::grow_trace_setup()
   grow_sAttributes grow_attr;
   unsigned long mask;
 
+  if ( Lng::translatefile_coding() == lng_eCoding_UTF_8)
+    grow_SetTextCoding( ctx, glow_eTextCoding_UTF_8);
+
   mask = 0;
   mask |= grow_eAttr_grid_on;
   grow_attr.grid_on = 0;

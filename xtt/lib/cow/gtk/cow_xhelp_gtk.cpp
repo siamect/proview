@@ -244,7 +244,7 @@ CoXHelpGtk::CoXHelpGtk(
   char title[80];
   pwr_tFileName fname;
 
-  strcpy( title, Lng::translate("Help"));
+  strcpy( title, CoWowGtk::translate_utf8("Help"));
 
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 			   "default-height", 700,
@@ -267,28 +267,32 @@ CoXHelpGtk::CoXHelpGtk(
   GtkToolbar *tools = (GtkToolbar *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
 
   // File entry
-  GtkWidget *file_close = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLOSE, accel_g);
+  GtkWidget *file_close = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Close"));
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(file_close), 
+				 gtk_image_new_from_stock( "gtk-close", GTK_ICON_SIZE_MENU));
   g_signal_connect(file_close, "activate", G_CALLBACK(CoXHelpGtk::activate_close), this);
+  gtk_widget_add_accelerator( file_close, "activate", accel_g,
+			      'w', GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
 
-  GtkWidget *file_home = gtk_menu_item_new_with_mnemonic( "_Home");
+  GtkWidget *file_home = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Home"));
   g_signal_connect( file_home, "activate",
 		    G_CALLBACK(activate_home), this);
   gtk_widget_add_accelerator( file_home, "activate", accel_g,
 			      'a', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
-  GtkWidget *file_back = gtk_menu_item_new_with_mnemonic( "_Back");
+  GtkWidget *file_back = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Back"));
   g_signal_connect( file_back, "activate", 
 		    G_CALLBACK(activate_back), this);
   gtk_widget_add_accelerator( file_back, "activate", accel_g,
 			      'b', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
-  GtkWidget *file_nexttopic = gtk_menu_item_new_with_mnemonic( "_Next Topic");
+  GtkWidget *file_nexttopic = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Next Topic"));
   g_signal_connect( file_nexttopic, "activate", 
 		    G_CALLBACK(activate_nexttopic), this);
   gtk_widget_add_accelerator( file_nexttopic, "activate", accel_g,
 			      'n', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
-  GtkWidget *file_prevtopic = gtk_menu_item_new_with_mnemonic( "_Previous Topic");
+  GtkWidget *file_prevtopic = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Previous Topic"));
   g_signal_connect( file_prevtopic, "activate", 
 		    G_CALLBACK(activate_previoustopic), this);
   gtk_widget_add_accelerator( file_prevtopic, "activate", accel_g,
@@ -301,21 +305,25 @@ CoXHelpGtk::CoXHelpGtk(
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_nexttopic);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_prevtopic);
 
-  GtkWidget *file = gtk_menu_item_new_with_mnemonic("_File");
+  GtkWidget *file = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_File"));
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), file);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(file), GTK_WIDGET(file_menu));
 
   // Edit entry
-  GtkWidget *edit_search = gtk_image_menu_item_new_from_stock(GTK_STOCK_FIND, accel_g);
+  GtkWidget *edit_search = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Search"));
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(edit_search), 
+				 gtk_image_new_from_stock( "gtk-find", GTK_ICON_SIZE_MENU));
   g_signal_connect(edit_search, "activate", G_CALLBACK(CoXHelpGtk::activate_search), this);
+  gtk_widget_add_accelerator( edit_search, "activate", accel_g,
+			      'f', GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
 
-  GtkWidget *edit_searchnext = gtk_menu_item_new_with_mnemonic( "Search _Next");
+  GtkWidget *edit_searchnext = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("Search _Next"));
   g_signal_connect( edit_searchnext, "activate", 
 		    G_CALLBACK(CoXHelpGtk::activate_searchnext), this);
   gtk_widget_add_accelerator( edit_searchnext, "activate", accel_g,
 			      'g', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
-  GtkWidget *edit_searchprevious = gtk_menu_item_new_with_mnemonic( "Search _Previous");
+  GtkWidget *edit_searchprevious = gtk_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("Search _Previous"));
   g_signal_connect( edit_searchprevious, "activate", 
 		    G_CALLBACK(CoXHelpGtk::activate_searchprevious), this);
   gtk_widget_add_accelerator( edit_searchprevious, "activate", accel_g,
@@ -326,22 +334,28 @@ CoXHelpGtk::CoXHelpGtk(
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_searchnext);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_searchprevious);
 
-  GtkWidget *edit = gtk_menu_item_new_with_mnemonic("_Edit");
+  GtkWidget *edit = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Edit"));
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), edit);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(edit), GTK_WIDGET(edit_menu));
 
   // Menu View
-  GtkWidget *view_zoom_in = gtk_image_menu_item_new_from_stock(GTK_STOCK_ZOOM_IN, NULL);
+  GtkWidget *view_zoom_in = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("Zoom _In"));
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(view_zoom_in), 
+				 gtk_image_new_from_stock( "gtk-zoom-in", GTK_ICON_SIZE_MENU));
   g_signal_connect(view_zoom_in, "activate", G_CALLBACK(CoXHelpGtk::activate_zoom_in), this);
   gtk_widget_add_accelerator( view_zoom_in, "activate", accel_g,
 			      'i', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
-  GtkWidget *view_zoom_out = gtk_image_menu_item_new_from_stock(GTK_STOCK_ZOOM_OUT, NULL);
+  GtkWidget *view_zoom_out = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("Zoom _Out"));
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(view_zoom_out), 
+				 gtk_image_new_from_stock( "gtk-zoom-out", GTK_ICON_SIZE_MENU));
   g_signal_connect(view_zoom_out, "activate", G_CALLBACK(CoXHelpGtk::activate_zoom_out), this);
   gtk_widget_add_accelerator( view_zoom_out, "activate", accel_g,
 			      'o', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
-  GtkWidget *view_zoom_reset = gtk_image_menu_item_new_from_stock(GTK_STOCK_ZOOM_100, NULL);
+  GtkWidget *view_zoom_reset = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("Zoom _Reset"));
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(view_zoom_reset), 
+				 gtk_image_new_from_stock( "gtk-zoom-100", GTK_ICON_SIZE_MENU));
   g_signal_connect(view_zoom_reset, "activate", G_CALLBACK(CoXHelpGtk::activate_zoom_reset), this);
 
   GtkMenu *view_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
@@ -349,18 +363,22 @@ CoXHelpGtk::CoXHelpGtk(
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_out);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_reset);
 
-  GtkWidget *view = gtk_menu_item_new_with_mnemonic("_View");
+  GtkWidget *view = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_View"));
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), view);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(view), GTK_WIDGET(view_menu));
 
   // Menu Help
-  GtkWidget *help_help = gtk_image_menu_item_new_from_stock(GTK_STOCK_HELP, accel_g);
+  GtkWidget *help_help = gtk_image_menu_item_new_with_mnemonic( CoWowGtk::translate_utf8("_Help"));
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(help_help), 
+				 gtk_image_new_from_stock( "gtk-help", GTK_ICON_SIZE_MENU));
   g_signal_connect(help_help, "activate", G_CALLBACK(CoXHelpGtk::activate_help), this);
+  gtk_widget_add_accelerator( help_help, "activate", accel_g,
+			      'h', GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
 
   GtkMenu *help_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(help_menu), help_help);
 
-  GtkWidget *help = gtk_menu_item_new_with_mnemonic("_Help");
+  GtkWidget *help = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Help"));
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), help);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(help), GTK_WIDGET(help_menu));
 

@@ -641,6 +641,9 @@ int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
   grow_sAttributes grow_attr;
   unsigned long mask;
 
+  if ( Lng::translatefile_coding() == lng_eCoding_UTF_8)
+    grow_SetTextCoding( (GrowCtx *)curve->grownames_ctx, glow_eTextCoding_UTF_8);
+
   mask = 0;
   // Double buffer is used for print
   mask |= grow_eAttr_double_buffer_on;

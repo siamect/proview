@@ -26,6 +26,7 @@
 #include <float.h>
 #include <vector>
 
+#include "pwr.h"
 #include "co_nav_help.h"
 #include "pwr_privilege.h"
 #include "rt_gdh.h"
@@ -3367,6 +3368,9 @@ int XNav::init_brow_base_cb( FlowCtx *fctx, void *client_data)
   BrowCtx *ctx = (BrowCtx *)fctx;
   BrowCtx *secondary_ctx;
   int		sts;
+
+  if ( Lng::translatefile_coding() == lng_eCoding_UTF_8)
+    brow_SetTextCoding( ctx, flow_eTextCoding_UTF_8);
 
   xnav->brow = new XNavBrow( ctx, (void *)xnav, brow_eUserType_XNav);
   xnav->brow_stack[0] = new XNavBrow( ctx, (void *)xnav, brow_eUserType_XNav);

@@ -153,6 +153,9 @@ public class JopLang {
     public static final int LANGUAGE_zh_TW = 134;
     public static final int LANGUAGE__     = 135;
 
+    public static final int eCoding_ISO8859_1  = 0;
+    public static final int eCoding_UTF_8  = 1;
+
 
     //
     // A node in a binary tree with string key
@@ -342,6 +345,7 @@ public class JopLang {
 	BufferedReader reader = null;
 	String filename = "";
 	int type;
+	int coding = eCoding_ISO8859_1;
     
 	for ( int i = 0; i < 2; i++) {
 	    if ( i == 0 && btree_en_us != null)
@@ -364,7 +368,11 @@ public class JopLang {
 		System.out.println( "Opening file " + filename);
 		URL fileURL = new URL( filename);
 		InputStream in = fileURL.openStream();
-		InputStreamReader r2 = new InputStreamReader(in);
+		InputStreamReader r2;
+		if ( i == 1 && lang == LANGUAGE_zh_CN)
+		  r2 = new InputStreamReader(in, "UTF-8");
+		else
+		  r2 = new InputStreamReader(in);
 		reader = new BufferedReader( r2);
 	      }
 	      catch ( Exception e) {
@@ -379,7 +387,12 @@ public class JopLang {
 		filename = "$pwr_exe/" + fname2;
 	      filename = engine.gdh.translateFilename( filename);
 	      try {
-		reader =  new BufferedReader(new FileReader(filename));
+		// reader =  new BufferedReader(new FileReader(filename));
+		if ( i == 1 && lang == LANGUAGE_zh_CN) {
+		  reader = new BufferedReader( new InputStreamReader( new FileInputStream( filename), "UTF-8"));
+		}
+		else
+		  reader = new BufferedReader( new InputStreamReader( new FileInputStream( filename)));
 	      }
 	      catch ( Exception e) {
 		System.out.println( "Unable to open file " + filename);
@@ -395,9 +408,15 @@ public class JopLang {
 
 	    try {
 		while( (line = reader.readLine()) != null) {
+
 		    line = line.trim();
 		    if ( line.equals("") || line.charAt(0) == '#')
 			continue;
+
+		    if ( line.equals("Coding:UTF-8"))
+			coding = eCoding_UTF_8;
+		    else if ( line.equals("Coding:ISO8859-1"))
+			coding = eCoding_ISO8859_1;
 
 		    if ( line.charAt(0) == 'E')
 			type = ITEM_TYPE_EXACT;

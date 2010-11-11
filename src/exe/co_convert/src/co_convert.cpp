@@ -71,33 +71,6 @@ static void usage()
 
 }
 
-static void help()
-{
-  usage();
-
-  printf( "Tags in wb_loadfile:\n");
-  printf( "  Class:\n");
-  printf("     !/**\n");
-  printf("          @Author	'author'\n");
-  printf("          @Version	'version'\n");
-  printf("          @Summary	'text'\n");
-  printf("          @Code   	'filename'\n");
-  printf("          'Description'\n");
-  printf("     !*/\n");
-  printf( "  Attribute:\n");
-  printf("     !/**\n");
-  printf("          @Summay\n");
-  printf("          'Description'\n");
-  printf("     !*/\n");
-  printf( "\n");
-  printf( "Tags in c or h file:\n");
-  printf("     /**\n");
-  printf("          @aref 'bookmark' 'text'\n");
-  printf("     */\n");
-  printf( "\n");
-
-}
-
 static int convert_sort_files( const void *file1, const void *file2)
 {
   // Types before classes
@@ -179,7 +152,7 @@ int main( int argc, char *argv[])
       while( *s) {
         switch( *s) {
 	case 'h':
-	  help();
+	  usage();
 	  exit(0);
 	case 'w':
 	  ctx->generate_html = 1;
