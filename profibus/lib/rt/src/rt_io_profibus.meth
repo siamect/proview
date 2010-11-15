@@ -1,3 +1,4 @@
+#if OS_LINUX
 Pb_Profiboard
 Pb_Hilscher
 Pb_DP_Slave
@@ -11,3 +12,4 @@ Pb_Io
 PnControllerSoftingPNAK
 PnDevice
 PnModule
+#endif
