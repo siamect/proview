@@ -1256,17 +1256,24 @@ sub _build () # args: branch, subbranch, flavour, phase
   my(@dirs2);
   my($dir2);
   my(@mfiles);
+  my($globstr1);
+  my($globstr2);
+  my($globstr3);
 
   foreach $dir1 (@dirs1) {
 
-    $globstr = "$dir1" . "/$subbranch/$flavour/os_$os/hw_$hw"; 
-    if ( ! -e $globstr ) {
-      $globstr = "$dir1" . "/$subbranch/$flavour/os_$os/.hw_$hw"; 
-      if ( ! -e $globstr ) {
-	$globstr = "$dir1" . "/$subbranch/$flavour/.os_$os/.hw_$hw"; 
-      }
-    }
-    @dirs2 = glob($globstr);
+#    $globstr = "$dir1" . "/$subbranch/$flavour/os_$os/hw_$hw"; 
+#    if ( ! -e $globstr ) {
+#      $globstr = "$dir1" . "/$subbranch/$flavour/os_$os/.hw_$hw"; 
+#      if ( ! -e $globstr ) {
+#	$globstr = "$dir1" . "/$subbranch/$flavour/.os_$os/.hw_$hw"; 
+#      }
+#    }
+    $globstr1 = "$dir1" . "/$subbranch/$flavour/os_$os/hw_$hw"; 
+    $globstr2 = "$dir1" . "/$subbranch/$flavour/os_$os/.hw_$hw"; 
+    $globstr3 = "$dir1" . "/$subbranch/$flavour/.os_$os/.hw_$hw"; 
+    
+    @dirs2 = (glob($globstr1),glob($globstr2),glob($globstr3));
 
     foreach $dir2 (@dirs2) {
       if (-d $dir2) {
