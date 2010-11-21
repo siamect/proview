@@ -18,13 +18,8 @@
  */
 
 #include <stdio.h>
-#if defined OS_VMS
-# include "co_getopt.h"
-#elif defined OS_LYNX
-  extern int getopt();
+#if defined OS_LYNX
 # include <sys/wait.h>
-#elif defined OS_LINUX
-  extern int getopt();
 #elif defined OS_MACOS || defined OS_FREEBSD
 # include <sys/wait.h>
 # include <fcntl.h>
@@ -561,25 +556,9 @@ checkErrors (
 static ini_sContext *
 createContext (int argc, char **argv)
 {
-  int c;
-  extern char *optarg;
-  extern int optind;
-#if 1
-  extern int optind;
-#endif
+  int i, j;
   ini_sContext *cp;
   pwr_tStatus sts;
-#if defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
-  char *options = "a:b:c:d:efg:hin:p:q:rsu:vwA:H:V";
-#else
-  char *options = "a:b:d:efhin:p:q:rvwA:H:V";
-#endif
-
-#if 0
-  extern int opterr;
-  opterr = 0;
-#endif
-  optind = 0;
 
   if ( argc > 1 && strcmp( argv[1], "--version") == 0) {
     system( "cat $pwr_exe/rt_version.dat");
@@ -590,67 +569,138 @@ createContext (int argc, char **argv)
     exit(1);
   }
 
-  while ((c = getopt(argc, argv, options)) != -1) {
-    switch (c) {
-    case 'a':
-      cp->flags.b.applfile = 1;
-      strcpy(cp->applfile.name, optarg);
-      break;
-    case 'b':
-      cp->flags.b.bootfile = 1;
-      strcpy(cp->bootfile.name, optarg);
-      break;
-    case 'c':
-      strcpy(cp->console, optarg);
-      break;
-    case 'd':
-      strcpy(cp->dir, optarg);
-      break;
-    case 'e':
-      cp->flags.b.ignoreError = 1;
-      break;
-    case 'f':
-      cp->flags.b.ignoreFatal = 1;
-      break;
-    case 'h':
-      cp->flags.b.hostname = 1;
-      strcpy(cp->hostname, optarg);
-      break;
-    case 'i':
-      cp->flags.b.interactive = 1;
-      break;
-    case 'n':
-      cp->flags.b.nodename = 1;
-      strcpy(cp->nodename, optarg);
-      break;
-    case 'p':
-      cp->flags.b.plcfile = 1;
-      strcpy(cp->plcfile.name, optarg);
-      break;
-    case 'q':
-      cp->flags.b.busid = 1;
-      cp->busid =  atoi(optarg);
-      break;
-    case 'r':
-      cp->flags.b.restart = 1;
-      cp->flags.b.interactive = 1;
-      break;
-    case 's':
-      cp->flags.b.stop = 1;
-      break;
-    case 'v':
-      cp->flags.b.verbose = 1;
-      break;
-    case 'w':
-      cp->flags.b.ignoreWarning = 1;
-      break;
-    case 'A':
-      cp->flags.b.aliasfile = 1;
-      strcpy(cp->aliasfile.name, optarg);
-      break;
-    case '?':
-      usage(argv[0]);
-      break;
+  for ( i = 1; i < argc; i++) {
+    if ( argv[i][0] == '-') {
+      int i_incr = 0;
+      for ( j = 1; 
+	    argv[i][j] != 0 && argv[i][j] != ' ' && argv[i][j] != '	';
+	    j++) {
+	switch ( argv[i][j]) {
+	case 'a':
+	  if ( i + 1 >= argc ||
+	       !(argv[i][j+1] == ' ' || argv[i][j+1] != '	')) {
+	    usage( argv[0]);
+	    exit(0);
+	  }
+	  cp->flags.b.applfile = 1;
+	  strcpy(cp->applfile.name, argv[i+1]);
+	  i++;	    
+	  i_incr = 1;
+	  break;
+	case 'b':
+	  if ( i + 1 >= argc ||
+	       !(argv[i][j+1] == ' ' || argv[i][j+1] != '	')) {
+	    usage( argv[0]);
+	    exit(0);
+	  }
+	  cp->flags.b.bootfile = 1;
+	  strcpy(cp->bootfile.name, argv[i+1]);
+	  break;
+	case 'c':
+	  if ( i + 1 >= argc ||
+	       !(argv[i][j+1] == ' ' || argv[i][j+1] != '	')) {
+	    usage( argv[0]);
+	    exit(0);
+	  }
+	  strcpy(cp->console, argv[i+1]);
+	  i++;	    
+	  i_incr = 1;
+	  break;
+	case 'd':
+	  if ( i + 1 >= argc ||
+	       !(argv[i][j+1] == ' ' || argv[i][j+1] != '	')) {
+	    usage( argv[0]);
+	    exit(0);
+	  }
+	  strcpy(cp->dir, argv[i+1]);
+	  i++;	    
+	  i_incr = 1;
+	  break;
+	case 'e':
+	  cp->flags.b.ignoreError = 1;
+	  break;
+	case 'f':
+	  cp->flags.b.ignoreFatal = 1;
+	  break;
+	case 'h':
+	  if ( i + 1 >= argc ||
+	       !(argv[i][j+1] == ' ' || argv[i][j+1] != '	')) {
+	    usage( argv[0]);
+	    exit(0);
+	  }
+	  cp->flags.b.hostname = 1;
+	  strcpy(cp->hostname, argv[i+1]);
+	  i++;	    
+	  i_incr = 1;
+	  break;
+	case 'i':
+	  cp->flags.b.interactive = 1;
+	  break;
+	case 'n':
+	  if ( i + 1 >= argc ||
+	       !(argv[i][j+1] == ' ' || argv[i][j+1] != '	')) {
+	    usage( argv[0]);
+	    exit(0);
+	  }
+	  cp->flags.b.nodename = 1;
+	  strcpy(cp->nodename, argv[i+1]);
+	  i++;	    
+	  i_incr = 1;
+	  break;
+	case 'p':
+	  if ( i + 1 >= argc ||
+	       !(argv[i][j+1] == ' ' || argv[i][j+1] != '	')) {
+	    usage( argv[0]);
+	    exit(0);
+	  }
+	  cp->flags.b.plcfile = 1;
+	  strcpy(cp->plcfile.name, argv[i+1]);
+	  i++;	    
+	  i_incr = 1;
+	  break;
+	case 'q':
+	  if ( i + 1 >= argc ||
+	       !(argv[i][j+1] == ' ' || argv[i][j+1] != '	')) {
+	    usage( argv[0]);
+	    exit(0);
+	  }
+	  cp->flags.b.busid = 1;
+	  cp->busid =  atoi(argv[i+1]);
+	  break;
+	case 'r':
+	  cp->flags.b.restart = 1;
+	  cp->flags.b.interactive = 1;
+	  break;
+	case 's':
+	  cp->flags.b.stop = 1;
+	  break;
+	case 'v':
+	  cp->flags.b.verbose = 1;
+	  break;
+	case 'w':
+	  cp->flags.b.ignoreWarning = 1;
+	  break;
+	case 'A':
+	  if ( i + 1 >= argc ||
+	       !(argv[i][j+1] == ' ' || argv[i][j+1] != '	')) {
+	    usage( argv[0]);
+	    exit(0);
+	  }
+	  cp->flags.b.aliasfile = 1;
+	  strcpy(cp->aliasfile.name, argv[i+1]);
+	  i++;	    
+	  i_incr = 1;
+	  break;
+	case '?':
+	  usage(argv[0]);
+	  break;
+	default:
+	  usage(argv[0]);
+	  exit(0);
+	}
+	if ( i_incr)
+	  break;
+      }
     }
   }
 
