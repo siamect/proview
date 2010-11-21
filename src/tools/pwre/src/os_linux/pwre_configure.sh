@@ -16,7 +16,6 @@ EOF
 
 pwre_config_check_include()
 {
-    echo -n "...Checking inc $1:      "
     let i=0
     let found=0
     let incfound=0
@@ -24,7 +23,7 @@ pwre_config_check_include()
     for file in $4
     do
       if test -e $file; then
-	echo "found"
+	echo "...Checking   Yes   $1"
 	echo "export PWRE_CONF_$2=1" >> $cfile
 
 	if test $3 == "1"; then
@@ -54,13 +53,12 @@ pwre_config_check_include()
     done
 
     if test $found -eq 0; then
-	echo "not found"
+	echo "...Checking   No    $1"
     fi
 }
 
 pwre_config_check_lib()
 {
-    echo -n "...Checking $1:      "
     let i=0
     let found=0
     let libfound=0
@@ -68,7 +66,7 @@ pwre_config_check_lib()
     for file in $6
     do
       if test -e $file; then
-	echo "found"
+	echo "...Checking   Yes   $1"
 	echo "export PWRE_CONF_$2=1" >> $cfile
 
 	if test $5 == "1"; then
@@ -114,7 +112,7 @@ pwre_config_check_lib()
     done
 
     if test $found -eq 0; then
-	echo "not found"
+	echo "...Checking   No    $1"
 	echo "export PWRE_CONF_$2=0" >> $cfile
     fi
 }
@@ -199,7 +197,7 @@ if [ "$SHELL" != "/bin/bash" ] && [ "$SHELL" != "/usr/local/bin/bash" ]; then
     exit
 fi
 
-echo "...Checking /bin/bash"
+echo "...Checking         /bin/bash"
 if test ! -e /bin/bash; then
   if test -e /usr/local/bin/bash; then
       echo "Config error: /bin/bash not found"
