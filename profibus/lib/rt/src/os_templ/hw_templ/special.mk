@@ -23,4 +23,6 @@ lib : $(export_lib) export_lib_local
 
 export_lib_local : $(export_c)
 	@ echo "Inserting local lib"
-	@ $(ar) -r $(export_lib) $(export_c)
+	@ if [ "$(export_c)" != "" ]; then \
+	    $(ar) -r $(export_lib) $(export_c); \
+	fi

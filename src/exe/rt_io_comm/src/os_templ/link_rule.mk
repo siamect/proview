@@ -5,7 +5,7 @@ ifeq ($(export_type),exp)
   link = $(ld) $(explinkflags) $(domap) -o $(export_exe) \
 	$(export_obj) $(objects) $(rt_msg_objs) \
 	$(pwr_obj)/rt_io_user.o \
-	$(pwre_conf_libpwrrt) $(pwre_conf_lib)
+	$(pwre_conf_libpwrrt) $(pwre_conf_lib) $(pwre_conf_libpwrotherio)
 else
   link = $(ld) $(elinkflags) $(domap) -o $(export_exe) \
 	$(export_obj) $(objects) $(rt_msg_objs) \

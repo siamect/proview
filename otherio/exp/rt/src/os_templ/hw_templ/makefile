@@ -39,7 +39,7 @@ realclean : clean $(clean_obj)
 #	@ echo "Copying libusbio.a"
 #	@ $(cp) $(cpflags) $(source) $(target)
 
-$(inc_dir)/libusbio.h : ../libusbio.h
+$(inc_dir)/libusbio.h : ../../libusbio.h
 	@ echo "Copying libusbio.h"
 	@ $(cp) $(cpflags) $(source) $(target)
 

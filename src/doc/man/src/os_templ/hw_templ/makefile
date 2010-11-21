@@ -465,7 +465,7 @@ $(doc_dir)/sv_se/%.css $(doc_dir)/en_us/%.css :: $(pwre_sroot)/doc/man/src/%.css
 # all-purpose rule for graphics/media
 $(doc_dir)/% :: $(pwre_sroot)/doc/man/src/%
 	@ echo "copy $(source)"	
-	@ cp -u $(source) $(target)
+	@ cp $(source) $(target)
 
 # Rule for creating titlepage xsl templates
 $(pwre_sroot)/doc/man/src/pwrtitlepages.xsl :: $(pwre_sroot)/doc/man/src/pwrtitlepage.spec.xml

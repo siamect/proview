@@ -3,7 +3,7 @@ link_rule_mk := 1
 
 link =	$(ldxx) -shared -DHW_X86 -DOS_LINUX \
 	-L${pwr_elib} \
-	-L${pwr_lib} \
+	-L${pwr_lib} $(pwre_conf_libdir) \
 	${pwre_broot}/${pwre_target}/bld/lib/co/*.o \
 	$(rt_msg_eobjs) \
 	${pwre_broot}/${pwre_target}/bld/lib/msg_dummy/msg_dummy_qcom.o \
@@ -25,9 +25,9 @@ link =	$(ldxx) -shared -DHW_X86 -DOS_LINUX \
 	${pwre_broot}/${pwre_target}/bld/exe/jpwr_rt_gdh/jpwr_rt_gdh.o \
 	${pwre_broot}/${pwre_target}/bld/lib/statussrv/*.o \
 	${pwre_broot}/${pwre_target}/exp/obj/stdsoap2.o \
-	-o ${pwr_exe}/libjpwr_rt_gdh.so $(pwre_conf_lib)
+	-o ${pwr_exe}/libjpwr_rt_gdh.so $(pwre_conf_libpwrotherio) $(pwre_conf_lib) -lpwr_dtt
 
-#      -lm -lpthread -lrt -lcrypt -lpwr_dtt -lpwr_usbio_dummy -ldb
+#      -lm -lpthread -lrt -lcrypt -lpwr_dtt -lpwr_usbio_dummy  -ldb
 
 #	-lSM -lICE -lImlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp\
 #	${pwre_broot}/${pwre_target}/bld/lib/flow/*.o \
