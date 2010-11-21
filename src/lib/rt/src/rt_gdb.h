@@ -32,7 +32,7 @@
 # include $vaxelnc
 # include $mutex
 # include unistd
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 # include <pthread.h>
 #endif
 
@@ -104,7 +104,7 @@
 #  define	gdb_cNamePool		"/pwr_pool"
 #  define	gdb_cNameRtdb		"/pwr_rtdb"
 #  define	gdb_cNameDbLock		"/pwr_db_lock"
-#elif defined OS_LINUX || defined OS_MACOS
+#elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 #  define	gdb_cNameDatabase	"/tmp/pwr_gdb"
 #  define	gdb_cNamePool		"/tmp/pwr_pool"
 #  define	gdb_cNameRtdb		"/tmp/pwr_rtdb"
@@ -136,7 +136,7 @@
 # define gdb_cMin_subServers	500
 # define gdb_cMin_subClients	2000
 # define gdb_cMin_sanServers	200
-#elif defined(OS_LINUX) || defined OS_MACOS
+#elif defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
 # define gdb_cMin_cvol_max	2000
 # define gdb_cMin_cvol_min	1900
 # define gdb_cMin_subServers	500
@@ -1089,7 +1089,7 @@ typedef struct {
 typedef struct {
 #ifdef	OS_ELN
   MUTEX			thread_lock;	/**< ELN lock only */
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
   pthread_mutex_t	thread_lock;	/**< LYNX and LINUX lock only */
 #endif
   struct {

@@ -43,7 +43,7 @@
 # include <unixio.h>
 #endif
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 # ifdef seekbug
 #   error "seekbug not ready for Lynx"
 # endif
@@ -87,7 +87,7 @@ pwr_tStatus bck_print( char *);
 # define LOCK 		pthread_lock_global_np ()
 # define UNLOCK 	pthread_unlock_global_np ()
 
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 # define A_MODE
 # define FGETNAME	backup_confp->BackupFile
 # define LOCK
@@ -1377,7 +1377,7 @@ pwr_tUInt32 bck_init ()
 #ifdef OS_VMS
   $DESCRIPTOR(efcname, BCK_EFC_NAME);
 #endif
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
   pthread_attr_t attr;
 #endif
 
@@ -1493,7 +1493,7 @@ pwr_tUInt32 bck_init ()
     check4a(sts4a, "pthread_create thr_coll");
   }
 
-#elif defined OS_LINUX || defined OS_LYNX || defined OS_MACOS
+#elif defined OS_LINUX || defined OS_LYNX || defined OS_MACOS || defined OS_FREEBSD
 
   pthread_attr_init(&attr);
 

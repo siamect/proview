@@ -1548,6 +1548,10 @@ pwrc_parse ()
     os="os_macos"
     hw="hw_x86_64"
     platform="x86_64_macos"
+  elif [ $unamestr == "FreeBSD" ]; then
+    os="os_freebsd"
+    hw="hw_x86_64"
+    platform="x86_64_freebsd"
   else
     if [ $machine != "x86_64" ]; then
       machine="x86"

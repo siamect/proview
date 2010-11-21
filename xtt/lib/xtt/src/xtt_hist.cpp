@@ -23,7 +23,7 @@
    Last modification: 030217
 */
 
-#if defined OS_LINUX || defined OS_MACOS
+#if defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 
 using namespace std;
 

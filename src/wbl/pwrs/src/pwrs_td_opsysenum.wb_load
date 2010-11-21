@@ -130,5 +130,15 @@ SObject pwrs:Type
        Attr Value = 512
      EndBody
     EndObject
+    !/**
+    !  Operating system is FreeBSD on x86_64
+    !*/
+    Object X86_64_FREEBSD $Value
+     Body SysBody
+       Attr PgmName = "X86_64_FREEBSD"
+       Attr Text = "FreeBSD on x86_64"
+       Attr Value = 1024
+     EndBody
+    EndObject
   EndObject
 EndSObject

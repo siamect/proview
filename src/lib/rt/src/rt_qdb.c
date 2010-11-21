@@ -30,13 +30,13 @@
 # include <string.h>
 #endif
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 # include <signal.h>
 #endif
 
 #if defined (OS_LYNX)
 # include <sys/mman.h>
-#elif	defined(OS_LINUX) || defined OS_MACOS
+#elif	defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
 # include <sys/file.h>
 # include <sys/stat.h>
 # include <sys/ipc.h>
@@ -767,7 +767,7 @@ qdb_CreateDb (
   return qdb;
 }
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 /*
  * A fix which unlinks all segments for the given name.
  */
@@ -851,7 +851,7 @@ qdb_UnlinkDb ()
   int    shm_id;
   struct shmid_ds   ds;
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 
   /* Unlink pool. */
 

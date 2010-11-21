@@ -50,7 +50,7 @@
 # include <descrip.h>
 # include <ssdef.h>
 # include <stdarg.h>
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS)
+#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
 # include <stdio.h>
 # include <string.h>
 # include <termios.h>
@@ -83,7 +83,7 @@
 #define	DCLI_K_ARROW_RIGHT 	276
 #define	DCLI_K_ARROW_LEFT 	277
 #define	DCLI_K_TIMEOUT		282
-#if defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS)
+#if defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
 # define DCLI_K_RETURN 		10
 #else
 # define DCLI_K_RETURN 		13
@@ -741,7 +741,7 @@ int dcli_qio_assign( char *s, dcli_sChannel *chn)
   } while( nbbyte >= bytebuff );		
   return sts;
 }
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS)
+#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
 {
   int chan = -1;
   int sts;
@@ -783,7 +783,7 @@ int dcli_qio_set_attr( dcli_sChannel *chn)
 {
   return DCLI__SUCCESS;
 }
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS)
+#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
 {
   int chan;
   int sts;
@@ -823,7 +823,7 @@ int dcli_qio_reset( dcli_sChannel *chn)
 {
   return DCLI__SUCCESS;
 }
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS)
+#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
 {
   int chan;
   int sts;
@@ -890,7 +890,7 @@ int dcli_qio_readw( dcli_sChannel *chn, char *buf, int len)
 	 	1, stsblk,NULL, NULL);
   return sts;
 }
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS)
+#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
 {
   int n = 0;
 
@@ -957,7 +957,7 @@ int dcli_qio_read( dcli_sChannel *chn, int tmo, char *buf, int len)
   if (ODD(sts)) return 1;
   return sts;
 }
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS)
+#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
 {
   int n;
 
@@ -1018,7 +1018,7 @@ int dcli_qio_writew( dcli_sChannel *chn, char *buf, int len)
   return sts;
 
 }
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS)
+#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
 {
   if ( *(int *) chn == STDIN_FILENO)
     write( STDOUT_FILENO, buf, len);
@@ -1094,7 +1094,7 @@ int dcli_qio_write( dcli_sChannel *chn, int tmo, char *buf, int len)
   return sts == ELN$_TIMEOUT ? 0 : 1;
 
 }
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS)
+#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
 {
   if ( *(int *)chn == STDIN_FILENO)
     write( STDOUT_FILENO, buf, len);

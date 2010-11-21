@@ -51,7 +51,7 @@
 # include <ctype.h>
 #endif
 
-#if defined OS_LINUX || defined OS_MACOS
+#if defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 # include <time.h>
 #endif
 
@@ -3082,7 +3082,7 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	              arg2_str[strlen(arg2_str)-1] == ']' ||
 	              arg2_str[strlen(arg2_str)-1] == '>' ))
 	        strcat( arg2_str, ":");
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS
+#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
 	      cdh_ToLower( arg2_str, arg2_str);
 #endif
 	    }

@@ -22,7 +22,7 @@
 
 /* xtt_hist_gtk.h -- Historical event window in xtt */
 
-#if defined OS_LINUX || defined OS_MACOS
+#if defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 
 #ifndef xtt_hist_h
 # include "xtt_hist.h"

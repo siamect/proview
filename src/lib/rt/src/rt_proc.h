@@ -20,7 +20,7 @@
 #ifndef rt_proc_h
 #define rt_proc_h
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 # include <sys/types.h>
 #else
 # include <types.h>

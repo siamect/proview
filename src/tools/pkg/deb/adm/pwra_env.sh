@@ -121,6 +121,9 @@ pwra_parse ()
   if [ $unamestr == "Darwin" ]; then
     os="os_macos"
     hw="hw_x86_64"
+  elif [ $unamestr == "FreeBSD" ]; then
+    os="os_freebsd"
+    hw="hw_x86_64"
   else
     if [ $machine != "x86_64" ]; then
       machine="x86"

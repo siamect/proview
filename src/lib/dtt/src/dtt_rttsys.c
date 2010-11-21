@@ -32,7 +32,7 @@
 #include <starlet.h>
 #endif
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -4446,7 +4446,7 @@ int RTTSYS_LOGGING( 	menu_ctx	ctx,
 *
 **************************************************************************/
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 
 int RTTSYS_SHOW_SYS( 	menu_ctx	ctx,
 			int		event,
@@ -4642,7 +4642,7 @@ int RTTSYS_VMSPROC( 	menu_ctx	ctx,
 #ifdef OS_ELN
     rtt_message('E', "Picture is not implemented in ELN");
     return RTT__NOPICTURE;
-#elif OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#elif OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
     rtt_message('E', "Picture is not implemented in LYNX");
     return RTT__NOPICTURE;
 #elif OS_VMS
@@ -5186,7 +5186,7 @@ int RTTSYS_ELNPROC( 	menu_ctx	ctx,
 			char		**picture)
 { 
 
-#if defined OS_VMS || defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_VMS || defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
     rtt_message('E', "Picture is not implemented for this os");
     return RTT__NOPICTURE;
 #elif OS_ELN

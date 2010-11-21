@@ -47,7 +47,7 @@
 # include <starlet.h>
 # include <rms.h>
 # include <descrip.h>
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS
+#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -183,7 +183,7 @@ int rtt_search_file( 		char 	*name ,
 	  eln$directory_close( &dir_file, &sts);
 
 	return sts;
-#elif defined (OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS
+#elif defined (OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
 
 	static DIR *directory;
 	static char pattern[80];
@@ -417,7 +417,7 @@ int	rtt_parse_filename( 	char	*filename,
 	strcpy( type, ltype);
 	return 1;
 
-#elif defined (OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS
+#elif defined (OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
 
 	char	*s;
 	char	ldev[200];

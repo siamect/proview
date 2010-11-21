@@ -22,7 +22,7 @@
 
 #include "glow_std.h"
 
-#if defined OS_VMS || defined OS_LINUX || OS_MACOS
+#if defined OS_VMS || defined OS_LINUX || OS_MACOS || defined OS_FREEBSD
 #define LDH 1
 #endif
 

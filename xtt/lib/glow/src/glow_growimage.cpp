@@ -24,7 +24,7 @@
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
-#if defined OS_LINUX || defined OS_LYNX || defined OS_MACOS
+#if defined OS_LINUX || defined OS_LYNX || defined OS_MACOS || defined OS_FREEBSD
 #include <sys/types.h>
 #include <sys/stat.h>
 #endif

@@ -86,6 +86,8 @@ int main(  int argc, char *argv[])
   char dos[] = "OS_LINUX";
 #elif defined OS_MACOS
   char dos[] = "OS_MACOS";
+#elif defined OS_FREEBSD
+  char dos[] = "OS_FREEBSD";
 #endif
   if ( argc != 4) {
     usage();

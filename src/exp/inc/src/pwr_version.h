@@ -41,6 +41,8 @@
 # define pwrv_cOpSys              "Linux"
 #elif defined OS_MACOS
 # define pwrv_cOpSys              "Mac OS"
+#elif  defined OS_FREEBSD
+# define pwrv_cOpSys              "FreeBSD"
 #elif defined OS_WNT
 # define pwrv_cOpSys              "Windows NT"
 #else
