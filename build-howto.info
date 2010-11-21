@@ -241,3 +241,54 @@ Start wb and motif with
 
 > wb_motif
 > rt_xtt_motif
+
+
+Build on FreeBSD
+----------------
+
+Install gnome2 (pkg_add -r gnome2)
+
+Create a link /bin/bash to /usr/local/bin/bash (ln -s /usr/local/bin/bash /bin/bash)
+
+Set default shell of the build user to bash (/usr/local/bin/bash)
+
+Install BerkeleyDB 4.8 (pkg_add -r db48)
+
+Install jdk (cd /usr/port/java/jdk16; make install clean)
+
+Download and build source package antlr-2.7.7 from www.antlr.org
+Hint: define MAKE to gmake before configure and build (export MAKE=gmake).
+
+Install doxygen (cd /usr/devel/doxygen; make install clean)
+
+Continue to build Proview following the instructions in section 2 or 3 above.
+
+Increase the default value of kern.ipc.shmmax to 67108864. Add the following row to /etc/sysctl.conf
+
+kern.ipc.shmmax=67108864
+
+
+Build on Mac OS X 1.6
+---------------------
+
+Install xCode from the installation CD or download from ...
+
+Download and install fink from www.finkproject.org.
+
+Install gtk+2 (fink install gtk+2; fink install gtk+2-dev)
+
+Download BerkeleyDB 4.8 from www.oracle.com/technetwork/database/berkeleydb/download
+
+Install doxygen (fink install doxygen)
+
+Download libiconv from http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.13.1.tar.gz
+
+Continue to build Proview following the instructions in section 2 or 3 above.
+
+Add the following rows to /etc/sysctl.conf
+
+kern.sysv.symmax=167772160
+kern.sysv.shmseg=16
+kern.sysv.shmall=65536
+
+
