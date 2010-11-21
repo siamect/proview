@@ -3,3 +3,6 @@
 *#*
 #Ignore wb_load backup
 *.wb_load.*
+#Ignore build files
+*.os_*
+*.hw_*

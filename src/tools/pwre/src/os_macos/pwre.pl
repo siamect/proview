@@ -5,6 +5,7 @@
 
 %verbs = (
   "add", 	"add:usage_add",
+  "configure", 	"configure:usage_configure",
   "build", 	"build:usage_build",
   "build_all", 	"build_all:usage_build_all",
   "build_kernel", "build_kernel:usage_build_kernel",
@@ -60,6 +61,10 @@ $varstr;
 if (($dbname = $ENV{"pwre_env_db"}) eq "") {
   $dbname = $ENV{"HOME"} . "/pwre/pwre";
 }
+
+$os = substr( $ENV{"pwre_os"}, 3, 100);
+$hw = substr( $ENV{"pwre_hw"}, 3, 100);
+$configfile = $ENV{"pwre_broot"} . "/pwre_" . $hw . "_" . $os . ".cnf";
 
 
 $arg1 = $ARGV[0];
@@ -136,6 +141,19 @@ sub add ()
 
 }
 
+#
+# configure()
+#
+sub configure()
+{
+  if (!defined($ENV{"pwre_env"})) {
+    print("++ Environment is not initialized!\n");
+    exit 1;
+  }
+
+  my $fname = $ENV{"pwre_bin"} . "/pwre_configure.sh";
+  system( $fname);
+}
 
 #
 # build()
@@ -145,6 +163,11 @@ sub build () # args: branch, subbranch, flavour, phase
 
   if (!defined($ENV{"pwre_env"})) {
     print("++ Environment is not initialized!\n");
+    exit 1;
+  }
+
+  if ( ! -e $configfile ) {
+    print("++ Environment is not configured!\n");
     exit 1;
   }
 
@@ -220,6 +243,7 @@ sub build_kernel # args: flavour
   _module("otherio");
   _build("exp","rt","src","copy");
   _build("lib","usbio_dummy","src","init lib");
+  _build("lib","usb_dummy","src","init lib");
   merge();
   _module("xtt");
   build_all("exe", $flavour);
@@ -325,6 +349,7 @@ sub ebuild # args: pass flavour
     _module("otherio");
     _build("exp","rt","src","copy");
     _build("lib","usbio_dummy","src","init lib");
+    _build("lib","usb_dummy","src","init lib");
     merge();
     _module("rt");
     _build("exe", "rt*", "src", "all");
@@ -781,6 +806,10 @@ sub method_build ()
 
 sub create_all_modules ()
 {
+  if ( ! -e $configfile ) {
+    configure();
+  }
+
   _module("rt");
   create();
   _module("xtt");
@@ -1206,7 +1235,6 @@ sub tags ()
 sub _build () # args: branch, subbranch, flavour, phase
 {
 
-
   my($branch) = $_[0];
   if (!defined($branch)) {
     usage_build();
@@ -1231,13 +1259,28 @@ sub _build () # args: branch, subbranch, flavour, phase
   my(@dirs2);
   my($dir2);
   my(@mfiles);
+  my($globstr1);
+  my($globstr2);
+  my($globstr3);
 
   foreach $dir1 (@dirs1) {
-    $globstr = "$dir1" . "/$subbranch/$flavour/os_$os/hw_$hw"; 
-    @dirs2 = glob($globstr);
+
+#    $globstr = "$dir1" . "/$subbranch/$flavour/os_$os/hw_$hw"; 
+#    if ( ! -e $globstr ) {
+#      $globstr = "$dir1" . "/$subbranch/$flavour/os_$os/.hw_$hw"; 
+#      if ( ! -e $globstr ) {
+#	$globstr = "$dir1" . "/$subbranch/$flavour/.os_$os/.hw_$hw"; 
+#      }
+#    }
+    $globstr1 = "$dir1" . "/$subbranch/$flavour/os_$os/hw_$hw"; 
+    $globstr2 = "$dir1" . "/$subbranch/$flavour/os_$os/.hw_$hw"; 
+    $globstr3 = "$dir1" . "/$subbranch/$flavour/.os_$os/.hw_$hw"; 
+    
+    @dirs2 = (glob($globstr1),glob($globstr2),glob($globstr3));
+
     foreach $dir2 (@dirs2) {
       if (-d $dir2) {
-        @mfiles = `find $dir2 -name makefile| grep $grepstr`;
+        @mfiles = `find $dir2 -name makefile`;
         foreach (@mfiles) {
           chomp($_);
           $_ =~ s#/makefile##;
@@ -1446,6 +1489,7 @@ sub get_vars ()
 
 }
 
+
 sub get_var()
 {
   my($tmp);
@@ -1493,6 +1537,12 @@ sub usage_add ()
 {
   printf("++\n");
   printf("++ add env                       : Adds an environment to the database\n");
+}
+
+sub usage_configure ()
+{
+  printf("++\n");
+  printf("++ configure                     : Configures an environment\n");
 }
 
 sub usage_build ()

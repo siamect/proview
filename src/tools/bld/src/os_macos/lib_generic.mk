@@ -211,7 +211,7 @@ $(export_lib) : $(objects)
 	@ echo "Building archive $(notdir $(export_lib))"
 	@ if [ "$(objects)" != "" ]; then \
 	    $(ar) -cr $(export_lib) $(objects); \
-	  fi
+	fi
 
 #	@ if [ -e $(export_lib) ]; then \
 #		$(rm) $(export_lib); \

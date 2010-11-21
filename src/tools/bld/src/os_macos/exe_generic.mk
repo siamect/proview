@@ -139,13 +139,6 @@ $(export_exe) : $(link_rule) $(export_obj) $(objects)
 	@ $(link)
 
 
-# This is for Lynx 2.5 map files, it doesn't work for Linux. ML 
-# ifeq ($(nodep),)
-#	@ echo "$(export_exe) : \\" > $(link_dependencies)
-#	@ $ sed -n "s|\(.*\)\($(lib_dir)/.*\.a\)\(\]\)\(.*\.o\)\(.*\)|\2(\4) \\\\|p" $(map) \
-#	  | sort | uniq >> $(link_dependencies) 
-# endif
-
 clean_exe :
 	@ if [ -e $(export_exe) ]; then \
 		$(rm) $(export_exe); \

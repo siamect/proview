@@ -19,6 +19,8 @@
 
 /* profinet_viewer.cpp -- Profinet viewer */
 
+#ifdef PWRE_CONF_PNAK
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
@@ -109,3 +111,12 @@ int main( int argc, char *argv[])
   gtk_main();
   return (0);
 }
+
+#else
+#include <stdio.h>
+
+int main() 
+{
+  printf( "Softing PNAK not built with this Proview release\n");
+}
+#endif

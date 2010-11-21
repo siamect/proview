@@ -18,6 +18,7 @@
  **/
 
 /* pn_viewernav_gtk.cpp -- Profinet viewer */
+#ifdef PWRE_CONF_PNAK
 
 #include "glow_std.h"
 
@@ -68,4 +69,4 @@ void PnViewerNavGtk::set_input_focus()
 }
 
 
-
+#endif

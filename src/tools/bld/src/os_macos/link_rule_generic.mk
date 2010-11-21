@@ -3,6 +3,6 @@ link_rule_mk := 1
 
 link = $(ld) $(elinkflags) $(domap) -o $(export_exe) \
 	$(export_obj) $(objects) $(rt_msg_objs) \
-	-lpwr_rt -lpwr_co -lpwr_msg_dummy -lpthread -lm -lrpcsvc
+	$(pwre_conf_libpwrrt) $(pwre_conf_lib)
 
 endif

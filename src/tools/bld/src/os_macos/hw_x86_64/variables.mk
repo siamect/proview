@@ -93,26 +93,36 @@ rs_msg_eobjs 	:= $(eobj_dir)/pwr_msg_rs.o
 wb_msg_eobjs 	:= $(eobj_dir)/pwr_msg_wb.o $(eobj_dir)/pwr_msg_ge.o $(eobj_dir)/pwr_msg_flow.o
 
 # Configuration
-ifeq ($(pwre_conf_mysql),1)
-  cmysql        := -DPWRE_CONF_MYSQL=1
-  linkmysql     := -L/usr/lib/mysql -lmysqlclient
-else
-  cmysql        :=
-  linkmysql     :=
-endif
+#ifeq ($(pwre_conf_mysql),1)
+#  cmysql        := -DPWRE_CONF_MYSQL=1
+#  linkmysql     := -L/usr/lib/mysql -lmysqlclient
+#else
+#  cmysql        :=
+#  linkmysql     :=
+#endif
 
-ifeq ($(pwre_conf_gtk),1)
-  cgtk        := -DPWRE_CONF_GTK=1
-  linkgtk     := `pkg-config --libs gtk+-2.0`
-else
-  cgtk        :=
-  linkgtk     :=
-endif
+#ifeq ($(pwre_conf_gtk),1)
+#  cgtk        := -DPWRE_CONF_GTK=1
+#  linkgtk     := `pkg-config --libs gtk+-2.0`
+#else
+#  cgtk        :=
+#  linkgtk     :=
+#endif
+
+#ifeq ($(pwre_conf_libusb),1)
+#  clibusb        := -DPWRE_CONF_LIBUSB=1
+#  linklibusb     := -lusb-1.0
+#else
+#  clibusb        :=
+#  linklibusb     :=
+#endif
 
 log_done	=
-csetos		:= -DOS_MACOS=1 -DOS=macos -D_MACOS -DHW_X86_64=1 -DHW=x86_64
-cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) -I/sw/include -I/System/Library/Frameworks/JavaVM.framework/Headers -I$(jdk)/include/macos \
-`pkg-config --cflags gtk+-2.0` -I/usr/local/include/db48 -DPREFIX=\"/usr/local\" -DSYSCONFDIR=\"/etc\" -DDATADIR=\"/usr/share\" -DLIBDIR=\"/usr/lib\" $(cmysql) $(cgtk)
+#csetos		:= -DOS_LINUX=1 -DOS=linux -D_LINUX -DHW_X86=1 -DHW=x86
+#cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) -I/usr/X11R6/include -I$(jdk)/include -I$(jdk)/include/linux \
+`pkg-config --cflags gtk+-2.0` -DPREFIX=\"/usr/local\" -DSYSCONFDIR=\"/etc\" -DDATADIR=\"/usr/share\" -DLIBDIR=\"/usr/lib\" $(cmysql) $(cgtk) $(clibusb)
+csetos 		:= $(pwre_conf_cc_define)
+cinc 		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirgtk)
 rm		:= rm
 cp		:= cp
 cpflags		:= 
@@ -158,19 +168,19 @@ endif
 
 #docbook-related, added by jonas_h 2006-04-nn
 
-xsltproc := xsltproc
-fop := fop 
+#xsltproc := xsltproc
+#fop := fop 
 #above is a symlink from /usr/local/bin/fop -> /usr/local/fop-0.92beta/fop
 
-xsltproc_args := --xinclude
-chunk_args_en_us = --stringparam root.filename $(basename $(notdir $(target))) --stringparam base.dir $(doc_dir)/en_us/
-chunk_args_sv_se = --stringparam root.filename $(basename $(notdir $(target))) --stringparam base.dir $(doc_dir)/sv_se/
+#xsltproc_args := --xinclude
+#chunk_args_en_us = --stringparam root.filename $(basename $(notdir $(target))) --stringparam base.dir $(doc_dir)/en_us/
+#chunk_args_sv_se = --stringparam root.filename $(basename $(notdir $(target))) --stringparam base.dir $(doc_dir)/sv_se/
 
-pwr_stylesheetdir = $(pwre_sroot)/doc/man/src
-docbook_stylesheetdir = /usr/local/share/xml/docbook/stylesheet/snapshot
-html_xsl = $(pwr_stylesheetdir)/pwrxsl-html.xsl
-chunk_xsl = $(pwr_stylesheetdir)/pwrxsl-chunk.xsl
-fo_xsl = $(pwr_stylesheetdir)/pwrxsl-fo.xsl
+#pwr_stylesheetdir = $(pwre_sroot)/doc/man/src
+#docbook_stylesheetdir = /usr/local/share/xml/docbook/stylesheet/snapshot
+#html_xsl = $(pwr_stylesheetdir)/pwrxsl-html.xsl
+#chunk_xsl = $(pwr_stylesheetdir)/pwrxsl-chunk.xsl
+#fo_xsl = $(pwr_stylesheetdir)/pwrxsl-fo.xsl
 
 #end of
 
@@ -185,9 +195,9 @@ wblflags	:=
 ifeq ($(pwre_btype),rls)			 
   cflags	:= -c -O3 -D_GNU_SOURCE -DPWR_NDEBUG -D_REENTRANT -fPIC
   cxxflags	:= $(cflags) 
-  linkflags	:= -O3 -L/usr/local/lib -L$(lib_dir) -L$(db)/lib -lm
-  elinkflags	:= -O3 -L/usr/local/lib -L$(lib_dir) -L$(elib_dir) -L$(db)/lib -lm
-  explinkflags	:= -g -L/usr/local/lib -L$(elib_dir) -L$(db)/lib 
+  linkflags	:= -O3 -L$(lib_dir)
+  elinkflags	:= -O3 -L$(lib_dir) -L$(elib_dir)
+  explinkflags	:= -g -L$(elib_dir)
   clis		= /lis=$(list)
   dolist	= /lis=$(list)
   domap		= 
@@ -195,9 +205,9 @@ else
   cflags	:= -c -g -Wall -D_GNU_SOURCE -D_REENTRANT -fPIC
   cxxflags	:= $(cflags) -Wno-deprecated
   mmflags	:= -Wno-deprecated
-  linkflags	:= -g -L/usr/local/lib -L$(lib_dir) -L$(db)/lib 
-  elinkflags	:= -g -L/usr/local/lib -L$(lib_dir) -L$(elib_dir) -L$(db)/lib 
-  explinkflags	:= -g -L/usr/local/lib -L$(elib_dir) -L$(db)/lib 
+  linkflags	:= -g -L$(lib_dir) $(pwre_conf_libdir)
+  elinkflags	:= -g -L$(lib_dir) -L$(elib_dir) $(pwre_conf_libdir)
+  explinkflags	:= -g -L$(elib_dir) $(pwre_conf_libdir)
   dolist	= /lis=$(list)
   clis		:= 
   domap		= 
