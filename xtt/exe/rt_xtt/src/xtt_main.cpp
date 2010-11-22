@@ -750,6 +750,7 @@ void Xtt::opplace_selected_cb( void *ctx, char *text)
   if ( xtt->op_close_button)
     strcat( cmd, " /closebutton");
   xtt->xnav->command( cmd);
+  xtt->xnav->load_ev_from_opplace();
 }
 
 void Xtt::list_opplace()
