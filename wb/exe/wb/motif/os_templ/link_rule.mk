@@ -7,7 +7,7 @@ ifeq ($(export_type),exp)
 	$(pwr_eobj)/rt_io_user.o $(pwr_obj)/wb_procom.o \
 	$(pwre_conf_libpwrwbmotif) $(pwre_conf_libpwrxttmotif) $(pwre_conf_libpwrwb) \
 	$(pwre_conf_libpwrxtt) $(pwre_conf_libpwrwbmotif) $(pwre_conf_libpwrwb) \
-	$(pwre_conf_libmotif) \
+	$(pwre_conf_libpwrxttmotif) $(pwre_conf_libpwrxtt) $(pwre_conf_libmotif) \
 	$(pwre_conf_libpwrrt) $(pwre_conf_lib)
 
 #	-L/usr/X11R6/lib -L/usr/local/BerkeleyDB.4.0/lib \

@@ -61,6 +61,8 @@ $varstr;
 if (($dbname = $ENV{"pwre_env_db"}) eq "") {
   $dbname = $ENV{"HOME"} . "/pwre/pwre";
 }
+$os = substr( $ENV{"pwre_os"}, 3, 100);
+$hw = substr( $ENV{"pwre_hw"}, 3, 100);
 $configfile = $ENV{"pwre_broot"} . "/pwre_" . $hw . "_" . $os . ".cnf";
 
 

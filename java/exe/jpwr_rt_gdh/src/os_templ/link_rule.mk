@@ -25,7 +25,8 @@ link =	$(ldxx) -shared -DHW_X86 -DOS_LINUX \
 	${pwre_broot}/${pwre_target}/bld/exe/jpwr_rt_gdh/jpwr_rt_gdh.o \
 	${pwre_broot}/${pwre_target}/bld/lib/statussrv/*.o \
 	${pwre_broot}/${pwre_target}/exp/obj/stdsoap2.o \
-	-o ${pwr_exe}/libjpwr_rt_gdh.so $(pwre_conf_libpwrotherio) $(pwre_conf_lib) -lpwr_dtt
+	-o ${pwr_exe}/libjpwr_rt_gdh.so $(pwre_conf_libpwrotherio) $(pwre_conf_lib) \
+	$(pwre_conf_libpwrdtt)
 
 #      -lm -lpthread -lrt -lcrypt -lpwr_dtt -lpwr_usbio_dummy  -ldb
 

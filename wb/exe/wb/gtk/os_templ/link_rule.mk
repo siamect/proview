@@ -7,7 +7,7 @@ ifeq ($(export_type),exp)
 	$(pwr_eobj)/rt_io_user.o $(pwr_obj)/wb_procom.o $(pwr_eobj)/stdsoap2.o \
 	$(pwre_conf_libpwrwbgtk) $(pwre_conf_libpwrxttgtk) $(pwre_conf_libpwrwb) \
 	$(pwre_conf_libpwrxtt) $(pwre_conf_libpwrwbgtk) $(pwre_conf_libpwrwb) \
-	$(pwre_conf_libgtk) \
+	$(pwre_conf_libpwrxttgtk) $(pwre_conf_libpwrxtt) $(pwre_conf_libgtk) \
 	$(pwre_conf_libpwrrt) $(pwre_conf_lib)
 
 else

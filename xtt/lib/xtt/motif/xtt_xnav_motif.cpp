@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <vector>
 
+#include "pwr.h"
 #include "co_nav_help.h"
 
 extern "C" {

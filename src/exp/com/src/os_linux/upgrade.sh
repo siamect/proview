@@ -89,13 +89,15 @@ reload_classvolumes()
   echo ""
   echo "Found classvolumes: "
   for file in $list; do
-    volume=`eval head -n 1 $file | grep pwr_eClass_ClassVolume | awk '{ print $2 }'`
-    if [ "$volume" == "" ]; then
-      volume=`eval head -n 1 $file | grep ClassVolume | awk '{ print $2 }'`
-      volumelow=`eval head -n 1 $file | grep ClassVolume | awk '{ print tolower($2) }'`
-    fi
-    if [ "$volume" != "" ]; then
-      echo $file
+    if [ ${file##/*/} != "directory.wb_load" ]; then 
+      volume=`eval head -n 1 $file | grep pwr_eClass_ClassVolume | awk '{ print $2 }'`
+      if [ "$volume" == "" ]; then
+        volume=`eval head -n 1 $file | grep ClassVolume | awk '{ print $2 }'`
+        volumelow=`eval head -n 1 $file | grep ClassVolume | awk '{ print tolower($2) }'`
+      fi
+      if [ "$volume" != "" ]; then
+        echo $file
+      fi
     fi
   done
   echo ""
@@ -104,28 +106,30 @@ reload_classvolumes()
 
   list=`eval ls -1d $pwrp_db/*.wb_load`
   for file in $list; do
-    volume=`eval grep pwr_eClass_ClassVolume $file | awk '{ print $2 }'`
-    volumelow=`eval grep pwr_eClass_ClassVolume $file | awk '{ print tolower($2) }'`
-    if [ "$volume" == "" ]; then
-      volume=`eval grep ClassVolume $file | awk '{ print $2 }'`
-      volumelow=`eval grep ClassVolume $file | awk '{ print tolower($2) }'`
-    fi
-    if [ "$volume" != "" ]; then
-      echo "-- Creating structfile and loadfile for $volume"
-      if co_convert -sv -d $pwrp_inc $file
-      then
-        reload_status=$reload__success
-      else
-        reload_status=$reload__userclasses
-        return
+    if  [ ${file##/*/} != "directory.wb_load" ]; then 
+      volume=`eval grep pwr_eClass_ClassVolume $file | awk '{ print $2 }'`
+      volumelow=`eval grep pwr_eClass_ClassVolume $file | awk '{ print tolower($2) }'`
+      if [ "$volume" == "" ]; then
+        volume=`eval grep ClassVolume $file | awk '{ print $2 }'`
+        volumelow=`eval grep ClassVolume $file | awk '{ print tolower($2) }'`
       fi
+      if [ "$volume" != "" ]; then
+        echo "-- Creating structfile and loadfile for $volume"
+        if co_convert -sv -d $pwrp_inc $file
+        then
+          reload_status=$reload__success
+        else
+          reload_status=$reload__userclasses
+          return
+        fi
 
-      if wb_cmd create snapshot/file=\"$file\"/out=\"$pwrp_load/$volumelow.dbs\"
-      then
-        reload_status=$reload__success
-      else
-        reload_status=$reload__userclasses
-        return
+        if wb_cmd create snapshot/file=\"$file\"/out=\"$pwrp_load/$volumelow.dbs\"
+        then
+          reload_status=$reload__success
+        else
+          reload_status=$reload__userclasses
+          return
+        fi
       fi
     fi
   done

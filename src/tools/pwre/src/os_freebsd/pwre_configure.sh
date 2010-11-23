@@ -102,6 +102,8 @@ pwre_config_check_lib()
 	elif test $3 == "gtk"; then
 	  conf_libgtk=$conf_libgtk" \\\`pkg-config --libs gtk+-2.0\\\`"
 	  conf_incdirgtk=$conf_incdirgtk" \\\`pkg-config --cflags gtk+-2.0\\\`"
+	elif test $3 == "motif"; then
+	  conf_libmotif=$conf_libmotif" -lImlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp -lSM -lICE"
 	else
            echo "Unknown type"
 	fi
@@ -281,6 +283,7 @@ echo "export PKG_CONFIG_PATH=/sw/fink/pkgconfig" >> $cfile
 echo "export pwre_conf_cc_define=\"$conf_cc_define\"" >> $cfile
 echo "export pwre_conf_libpwrco=\"-lpwr_co\"" >> $cfile
 echo "export pwre_conf_libpwrrt=\"-lpwr_rt -lpwr_co -lpwr_statussrv -lpwr_msg_dummy\"" >> $cfile
+echo "export pwre_conf_libpwrdtt=\"-lpwr_dtt\"" >> $cfile
 echo "export pwre_conf_libpwrotherio=\"-lpwr_usbio_dummy -lpwr_usb_dummy\"" >> $cfile
 echo "export pwre_conf_libpwrxtt=\"-lpwr_xtt -lpwr_ge -lpwr_cow -lpwr_flow -lpwr_glow\"" >> $cfile
 echo "export pwre_conf_libpwrxttgtk=\" -lpwr_xtt_gtk -lpwr_ge_gtk -lpwr_cow_gtk -lpwr_flow_gtk -lpwr_glow_gtk\"" >> $cfile
