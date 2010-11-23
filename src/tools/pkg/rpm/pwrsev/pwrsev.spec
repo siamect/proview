@@ -291,7 +291,6 @@ fi
 
 if [ $new_project -eq 1 ]; then
   nodename=`eval uname -n`
-  echo "-- Create file /home/pwrp/.rhosts"
   echo "-- Distribute project to $nodename"
 fi
 
