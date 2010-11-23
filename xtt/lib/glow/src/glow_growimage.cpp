@@ -63,7 +63,7 @@ GrowImage::GrowImage( GrowCtx *glow_ctx, const char *name, double x, double y,
 		current_nav_color_inverse(0), current_nav_direction(0), 
 		flip_vertical(false), flip_horizontal(false),
 		current_flip_vertical(false), current_flip_horizontal(false), 
-		rotation(0), current_rotation(0)
+		rotation(0), current_rotation(0), fixposition(0)
 {
   strcpy( n_name, name);
   strcpy( image_filename, "");
@@ -250,6 +250,8 @@ void GrowImage::traverse( int x, int y)
 
 void GrowImage::move( double delta_x, double delta_y, int grid)
 {
+  if ( fixposition)
+    return;
   ctx->set_defered_redraw();
   ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
 	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
@@ -293,6 +295,8 @@ void GrowImage::move( double delta_x, double delta_y, int grid)
 
 void GrowImage::move_noerase( int delta_x, int delta_y, int grid)
 {
+  if ( fixposition)
+    return;
   if ( grid) {
     double x_grid, y_grid;
 
@@ -450,6 +454,7 @@ void GrowImage::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowImage_color_lightness) << FSPACE << color_lightness << endl;
   fp << int(glow_eSave_GrowImage_color_intensity) << FSPACE << color_intensity << endl;
   fp << int(glow_eSave_GrowImage_color_shift) << FSPACE << color_shift << endl;
+  fp << int(glow_eSave_GrowImage_fixposition) << FSPACE << fixposition << endl;
   fp << int(glow_eSave_End) << endl;
 }
 
@@ -518,6 +523,7 @@ void GrowImage::open( ifstream& fp)
       case glow_eSave_GrowImage_color_lightness: fp >> color_lightness; break;
       case glow_eSave_GrowImage_color_intensity: fp >> color_intensity; break;
       case glow_eSave_GrowImage_color_shift: fp >> color_shift; break;
+      case glow_eSave_GrowImage_fixposition: fp >> fixposition; break;
       case glow_eSave_End: end_found = 1; break;
       default:
         cout << "GrowImage:open syntax error" << endl;
@@ -1071,6 +1077,9 @@ void GrowImage::set_transform( GlowTransform *t)
 void GrowImage::align( double x, double y, glow_eAlignDirection direction)
 {
     double dx, dy;
+
+    if ( fixposition)
+      return;
 
     erase( &ctx->mw);
     erase( &ctx->navw);

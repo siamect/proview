@@ -42,7 +42,8 @@ GrowRectRounded::GrowRectRounded( GrowCtx *glow_ctx, const char *name, double x,
 		border(display_border),
 		dynamic(0), dynamicsize(0), round_amount(15), shadow(display_shadow), 
 		shadow_width(5), relief(glow_eRelief_Up), shadow_contrast(2), disable_shadow(0),
-		gradient(glow_eGradient_No), gradient_contrast(4), disable_gradient(0)
+		gradient(glow_eGradient_No), gradient_contrast(4), disable_gradient(0),
+		fixposition(0)
 { 
   strcpy( n_name, name);
   pzero.nav_zoom();
@@ -83,6 +84,8 @@ GrowRectRounded::~GrowRectRounded()
 
 void GrowRectRounded::move( double delta_x, double delta_y, int grid)
 {
+  if ( fixposition)
+    return;
   ctx->set_defered_redraw();
   ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
 	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
@@ -128,6 +131,8 @@ void GrowRectRounded::move( double delta_x, double delta_y, int grid)
 
 void GrowRectRounded::move_noerase( int delta_x, int delta_y, int grid)
 {
+  if ( fixposition)
+    return;
   if ( grid)
   {
     double x_grid, y_grid;
@@ -274,6 +279,7 @@ void GrowRectRounded::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowRectRounded_gradient) << FSPACE << int(gradient) << endl;
   fp << int(glow_eSave_GrowRectRounded_gradient_contrast) << FSPACE << gradient_contrast << endl;
   fp << int(glow_eSave_GrowRectRounded_disable_gradient) << FSPACE << disable_gradient << endl;
+  fp << int(glow_eSave_GrowRectRounded_fixposition) << FSPACE << fixposition << endl;
   fp << int(glow_eSave_GrowRectRounded_dynamicsize) << FSPACE << dynamicsize << endl;
   fp << int(glow_eSave_GrowRectRounded_dynamic) << endl;
   if( dynamic)
@@ -337,6 +343,7 @@ void GrowRectRounded::open( ifstream& fp)
       case glow_eSave_GrowRectRounded_disable_shadow: fp >> disable_shadow; break;
       case glow_eSave_GrowRectRounded_gradient: fp >> tmp; gradient = (glow_eGradient)tmp; break;
       case glow_eSave_GrowRectRounded_gradient_contrast: fp >> gradient_contrast; break;
+      case glow_eSave_GrowRectRounded_fixposition: fp >> fixposition; break;
       case glow_eSave_GrowRectRounded_disable_gradient: fp >> disable_gradient; break;
       case glow_eSave_GrowRectRounded_dynamicsize: fp >> dynamicsize; break;
       case glow_eSave_GrowRectRounded_dynamic:
@@ -1033,6 +1040,9 @@ int GrowRectRounded::get_annot_background( GlowTransform *t, void *node,
 void GrowRectRounded::align( double x, double y, glow_eAlignDirection direction)
 {
     double dx, dy;
+
+    if ( fixposition)
+      return;
 
     erase( &ctx->mw);
     erase( &ctx->navw);
