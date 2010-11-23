@@ -20,7 +20,7 @@
 #include <stdio.h>
 #if defined OS_LYNX
 # include <sys/wait.h>
-#elif defined OS_MACOS || defined OS_FREEBSD
+#elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 # include <sys/wait.h>
 # include <fcntl.h>
 # include <unistd.h>
