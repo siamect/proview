@@ -42,10 +42,11 @@
 #include "co_time.h"
 #include "cow_msgwindow.h"
 #include "co_dcli.h"
+#include "wb_dblock.h"
 
 
 wb_vrepmem::wb_vrepmem( wb_erep *erep, pwr_tVid vid) :
-  wb_vrep(vid), m_erep(erep), m_merep(erep->merep()), root_object(0), volume_object(0),
+  wb_vrep(vid), m_erep(erep), m_merep(erep->merep()), m_nRef(0), root_object(0), volume_object(0),
   m_nextOix(0), m_source_vid(0), m_classeditor(false), m_ignore(false)
 {
   strcpy( m_filename, "");
@@ -108,10 +109,13 @@ void wb_vrepmem::loadWbl( const char *filename, pwr_tStatus *sts, bool reload)
   vrep->ref();
   m_vid = vrep->vid();
   strcpy( m_filename, filename);
+
   name( vrep->name());
 
   importVolume( *vrep);
   vrep->unref();
+
+  wb_dblock::dblock( m_filename);
 
   *sts = LDH__SUCCESS;
 }
@@ -342,8 +346,11 @@ mem_object *wb_vrepmem::find( const char *name)
 
 void wb_vrepmem::unref()
 {
-  if (--m_nRef == 0)
+  if (--m_nRef == 0) {
+    if ( strcmp( m_filename, "") != 0)
+      wb_dblock::dbunlock(m_filename);
     delete this;
+  }
 }
 
 wb_vrep *wb_vrepmem::ref()
