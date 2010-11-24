@@ -34,15 +34,15 @@
 
 
 <hr>
-2007-07-05
-Version V4.4.1
+2010-11-24
+Version V4.8.0
 <hr>
 </topic>
 
 <topic> __DocumentInfoPage
 
 
-Copyright (C) 2007 SSAB Oxelösund AB
+Copyright (C) 2010 SSAB Oxelösund AB
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2
@@ -100,6 +100,9 @@ Fuse3 <link>pwr_fuse3
 ManSwitch <link>pwr_manswitch
 ManSwitch2 <link>pwr_manswitch2
 ManSwitch3 <link>pwr_manswitch3
+MiniCircuitBreaker <link>pwr_minicircuitbreaker
+MiniCircuitBreaker2 <link>pwr_minicircuitbreaker2
+MiniCircuitBreaker3 <link>pwr_minicircuitbreaker3
 MotorAnim <link>pwr_motoranim
 OverloadRelay <link>pwr_overloadrelay
 OverloadRelay2 <link>pwr_overloadrelay2
@@ -111,7 +114,9 @@ Group Grafcet
 InitStep <link>pwr_initstep
 Order <link>pwr_order
 Step <link>pwr_step
+Step <link>pwr_stopwatch
 Trans <link>pwr_trans
+pwr_buttonroundmetalframe <link>pwr_buttonroundmetalframe
 </topic>
 
 <topic> General_Hydraulics
@@ -123,6 +128,7 @@ PressureSwitch <link>pwr_pressureswitch
 ReleaseValve <link>pwr_releasevalve
 ReleaseValveRight <link>pwr_releasevalveright
 Tank <link>pwr_tank
+Tank2 <link>pwr_tank2
 </topic>
 
 <topic> General_Indicators
@@ -140,6 +146,7 @@ IndSquare <link>pwr_indsquare
 IndSquareLarge <link>pwr_indsquarelarge
 IndSquareTextFront <link>pwr_indsquaretextfront
 IndSquareTextRear <link>pwr_indsquaretextrear
+pwr_button1metalframe <link>pwr_button1metalframe
 </topic>
 
 <topic> General_Layout
@@ -166,9 +173,11 @@ ThreeWayConnection <link>pwr_threewayconnection
 <topic> General_Other
 Group Other
 Menubar <link>pwr_menubar
+Menubar <link>pwr_menubar2
 Needle <link>pwr_needle
 OptionMenu <link>pwr_optionmenu
 Pc <link>pwr_pc
+PulldownMenu <link>pwr_pulldownmenu2
 PulldownMenu <link>pwr_pulldownmenu
 Pulpet <link>pwr_pulpet
 PwrLogotype <link>pwr_logga
@@ -197,6 +206,9 @@ DirectValve <link>pwr_directvalve
 EmergencyStop <link>pwr_emergencystop
 Fan <link>pwr_fan
 Fan2 <link>pwr_fan2
+Fan2 <link>pwr_elheater3
+Fan2 <link>pwr_elheater1
+Fan2 <link>pwr_elheater2
 Fan3 <link>pwr_fan3
 FanAnim <link>pwr_fananim
 FanAnim2 <link>pwr_fananim2
@@ -234,6 +246,8 @@ ValveAnim2 <link>pwr_valveanim2
 ValveControl <link>pwr_valvecontrol
 ValveControl2 <link>pwr_valvecontrol2
 ValveManuel <link>pwr_valvemanuel
+pwr_indsquaremetalframe <link>pwr_indsquaremetalframe
+pwr_nameplate <link>pwr_nameplate
 </topic>
 
 <topic> General_Pushbuttons
@@ -257,15 +271,19 @@ ButtonToggleCenter <link>pwr_buttontogglecenter
 ButtonToggleConfirm <link>pwr_buttontoggleconfirm
 ButtonUp <link>pwr_buttonup
 CheckBox <link>pwr_checkbox
+CheckBox <link>pwr_checkbox2
 CheckBoxRelief <link>pwr_checkboxrelief
 LargeButton <link>pwr_largebutton
 NoteButton <link>pwr_notebutton
+Radiobutton <link>pwr_radiobutton2
 Radiobutton <link>pwr_radiobutton
 RadiobuttonRelief <link>pwr_radiobuttonrelief
 RoundButton <link>pwr_roundbutton
 SmallButton <link>pwr_smallbutton
 SmallButtonCenter <link>pwr_smallbuttoncenter
 SoapButton <link>pwr_soapbutton
+pwr_button2metalframe <link>pwr_button2metalframe
+pwr_indroundmetalframe <link>pwr_indroundmetalframe
 </topic>
 
 <topic> General_Pushbuttons_Methodbuttons
@@ -283,6 +301,7 @@ MbNote <link>pwr_mbnote
 MbOpenObject <link>pwr_mbopenobject
 MbOpenPlc <link>pwr_mbopenplc
 MbRtNavigator <link>pwr_mbrtnavigator
+MbSimulate <link>pwr_mbup
 MbSimulate <link>pwr_mbsimulate
 MbTrend <link>pwr_mbtrend
 </topic>
@@ -397,6 +416,7 @@ Group Analog
  <h1>Default dynamics
  Trend is a complex object. 
  See Trend in Ge Reference manual <link>geref_trend, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 </headerlevel>
@@ -419,6 +439,7 @@ Group Electric
 
  <h1>Default dynamics
  DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_contactor <style> function
@@ -436,6 +457,7 @@ Group Electric
 
  <h1>Default dynamics
  DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_contactor2 <style> function
@@ -453,6 +475,7 @@ Group Electric
 
  <h1>Default dynamics
  DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_controlswitch <style> function
@@ -470,6 +493,7 @@ Group Electric
 
  <h1>Default dynamics
  DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_frequencyconverter <style> function
@@ -483,6 +507,7 @@ Group Electric
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_fuse <style> function
@@ -500,6 +525,7 @@ Group Electric
 
  <h1>Default dynamics
  DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_fuse2 <style> function
@@ -517,6 +543,7 @@ Group Electric
 
  <h1>Default dynamics
  DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_fuse3 <style> function
@@ -530,6 +557,7 @@ Group Electric
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_manswitch <style> function
@@ -543,6 +571,7 @@ Group Electric
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_manswitch2 <style> function
@@ -560,6 +589,7 @@ Group Electric
 
  <h1>Default dynamics
  DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_manswitch3 <style> function
@@ -577,6 +607,58 @@ Group Electric
 
  <h1>Default dynamics
  DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_minicircuitbreaker <style> function
+ MiniCircuitBreaker
+ Group Electric
+
+ <image> pwr_minicircuitbreaker_gs.gif
+
+ <h1>Description
+ MiniCircuitBreaker.
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - shifting shape when the signal is high.
+
+</topic>
+
+<topic> pwr_minicircuitbreaker2 <style> function
+ MiniCircuitBreaker2
+ Group Electric
+
+ <image> pwr_minicircuitbreaker2_gs.gif
+
+ <h1>Description
+ MiniCircuitBreaker.
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - shifting shape when the signal is high.
+
+</topic>
+
+<topic> pwr_minicircuitbreaker3 <style> function
+ MiniCircuitBreaker3
+ Group Electric
+
+ <image> pwr_minicircuitbreaker3_gs.gif
+
+ <h1>Description
+ MiniCircuitBreaker.
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - shifting shape when the signal is high.
+
 </topic>
 
 <topic> pwr_motoranim <style> function
@@ -594,6 +676,7 @@ Group Electric
  <h1>Default dynamics
  Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
  with AnimationSequence Cyclic.
+
 </topic>
 
 <topic> pwr_overloadrelay <style> function
@@ -607,6 +690,7 @@ Group Electric
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_overloadrelay2 <style> function
@@ -624,6 +708,7 @@ Group Electric
 
  <h1>Default dynamics
  DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_safetyswitch <style> function
@@ -641,6 +726,7 @@ Group Electric
 
  <h1>Default dynamics
  DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 </headerlevel>
@@ -660,6 +746,7 @@ Group Grafcet
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  Gray when signal is low.
+
 </topic>
 
 <topic> pwr_order <style> function
@@ -674,6 +761,7 @@ Group Grafcet
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  Gray when signal is low.
+
 </topic>
 
 <topic> pwr_step <style> function
@@ -688,6 +776,22 @@ Group Grafcet
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  Gray when signal is low.
+
+</topic>
+
+<topic> pwr_stopwatch <style> function
+ Step
+ Group Grafcet
+
+ <image> pwr_step_gs.gif
+
+ <h1>Description
+ Displays the state of a grafcet step.
+
+ <h1>Default dynamics
+ DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Gray when signal is low.
+
 </topic>
 
 <topic> pwr_trans <style> function
@@ -701,6 +805,7 @@ Group Grafcet
 
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 </headerlevel>
@@ -719,6 +824,7 @@ Group Hydraulics
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_hydraulicpump <style> function
@@ -733,6 +839,7 @@ Group Hydraulics
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  DigError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_pressuregauge <style> function
@@ -746,6 +853,7 @@ Group Hydraulics
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_pressureswitch <style> function
@@ -759,6 +867,7 @@ Group Hydraulics
 
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_releasevalve <style> function
@@ -772,6 +881,7 @@ Group Hydraulics
 
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_releasevalveright <style> function
@@ -779,6 +889,7 @@ Group Hydraulics
  Group Hydraulics
 
  Obsolete. Use a mirrored ReleaseValve instead.
+
 </topic>
 
 <topic> pwr_tank <style> function
@@ -792,6 +903,21 @@ Group Hydraulics
 
  <h1>Default dynamics
  No default dynamics.
+
+</topic>
+
+<topic> pwr_tank2 <style> function
+ Tank2
+ Group Hydraulics
+
+ <image> pwr_tank_gs.gif
+
+ <h1>Description
+ Tank.
+
+ <h1>Default dynamics
+ No default dynamics.
+
 </topic>
 
 </headerlevel>
@@ -815,6 +941,7 @@ Group Indicators
  <h1>Default dynamics
  Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
  with AnimationSequence Dig.
+
 </topic>
 
 <topic> pwr_indanimsquare <style> function
@@ -833,6 +960,7 @@ Group Indicators
  <h1>Default dynamics
  Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
  with AnimationSequence Dig.
+
 </topic>
 
 <topic> pwr_indpulsarround <style> function
@@ -850,6 +978,7 @@ Group Indicators
  <h1>Default dynamics
  Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
  with AnimationSequence Cyclic.
+
 </topic>
 
 <topic> pwr_indpulsarsquare <style> function
@@ -867,6 +996,7 @@ Group Indicators
  <h1>Default dynamics
  Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
  with AnimationSequence Cyclic.
+
 </topic>
 
 <topic> pwr_indround <style> function
@@ -881,6 +1011,7 @@ Group Indicators
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  Darkgray when signal is low.
+
 </topic>
 
 <topic> pwr_indroundlarge <style> function
@@ -895,6 +1026,7 @@ Group Indicators
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  Darkgray when signal is low.
+
 </topic>
 
 <topic> pwr_indroundtextfront <style> function
@@ -909,6 +1041,7 @@ Group Indicators
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  Darkgray when signal is low.
+
 </topic>
 
 <topic> pwr_indroundtextrear <style> function
@@ -923,6 +1056,7 @@ Group Indicators
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  Darkgray when signal is low.
+
 </topic>
 
 <topic> pwr_indsoap <style> function
@@ -937,6 +1071,7 @@ Group Indicators
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  Darkgray when signal is low.
+
 </topic>
 
 <topic> pwr_indsquare <style> function
@@ -951,6 +1086,7 @@ Group Indicators
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  Darkgray when signal is low.
+
 </topic>
 
 <topic> pwr_indsquarelarge <style> function
@@ -965,6 +1101,7 @@ Group Indicators
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  Darkgray when signal is low.
+
 </topic>
 
 <topic> pwr_indsquaretextfront <style> function
@@ -979,6 +1116,7 @@ Group Indicators
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  Darkgray when signal is low.
+
 </topic>
 
 <topic> pwr_indsquaretextrear <style> function
@@ -993,6 +1131,7 @@ Group Indicators
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  Darkgray when signal is low.
+
 </topic>
 
 </headerlevel>
@@ -1034,6 +1173,7 @@ Group Layout
 
  Obsolete.
  Use ConGlue instead.
+
 </topic>
 
 <topic> pwr_crossconnection <style> function
@@ -1042,6 +1182,7 @@ Group Layout
 
  Obsolete.
  Use ConGlue instead.
+
 </topic>
 
 <topic> pwr_framemedium <style> function
@@ -1050,6 +1191,7 @@ Group Layout
 
  Obsolete. 
  Use a rectangle with 3D and without border and fillcolor instead.
+
 </topic>
 
 <topic> pwr_frameroundcorners <style> function
@@ -1063,6 +1205,7 @@ Group Layout
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_framethick <style> function
@@ -1071,6 +1214,7 @@ Group Layout
 
  Obsolete. 
  Use a rectangle with 3D and without border and fillcolor instead.
+
 </topic>
 
 <topic> pwr_framethin <style> function
@@ -1079,6 +1223,7 @@ Group Layout
 
  Obsolete. 
  Use a rectangle with 3D and without border and fillcolor instead.
+
 </topic>
 
 <topic> pwr_pinconnection <style> function
@@ -1087,6 +1232,7 @@ Group Layout
 
  Obsolete.
  Use ConGlue instead.
+
 </topic>
 
 <topic> pwr_reliefgray <style> function
@@ -1100,6 +1246,7 @@ Group Layout
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_reliefmedium <style> function
@@ -1108,6 +1255,7 @@ Group Layout
 
  Obsolete. 
  Use a rectangle with 3D and without border instead.
+
 </topic>
 
 <topic> pwr_reliefroundcornersgray <style> function
@@ -1121,6 +1269,7 @@ Group Layout
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_reliefroundcornersmedium <style> function
@@ -1130,6 +1279,7 @@ Group Layout
  Obsolete. 
  Use a rounded rectangle with 3D and fillcolor 
  and without border instead.
+
 </topic>
 
 <topic> pwr_reliefroundcornersthick <style> function
@@ -1139,6 +1289,7 @@ Group Layout
  Obsolete. 
  Use a rounded rectangle with 3D and fillcolor 
  and without border instead.
+
 </topic>
 
 <topic> pwr_reliefthick <style> function
@@ -1147,6 +1298,7 @@ Group Layout
 
  Obsolete. 
  Use a rectangle with 3D and without border instead.
+
 </topic>
 
 <topic> pwr_reliefthin <style> function
@@ -1155,6 +1307,7 @@ Group Layout
 
  Obsolete. 
  Use a rectangle with 3D and without border instead.
+
 </topic>
 
 <topic> pwr_threewayconnection <style> function
@@ -1163,6 +1316,7 @@ Group Layout
 
  Obsolete.
  Use ConGlue instead.
+
 </topic>
 
 </headerlevel>
@@ -1182,6 +1336,22 @@ Group Other
 
  <h1>Default dynamics
  No default dynamics.
+
+</topic>
+
+<topic> pwr_menubar2 <style> function
+ Menubar
+ Group Other
+
+ <image> pwr_menubar_gs.gif
+
+ <h1>Description
+ Menubar. 
+ Add pulldownmenue-objects to the menubar.
+
+ <h1>Default dynamics
+ No default dynamics.
+
 </topic>
 
 <topic> pwr_needle <style> function
@@ -1195,6 +1365,7 @@ Group Other
 
  <h1>Default dynamics
  Rotate <link>GeDynRotate, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_optionmenu <style> function
@@ -1208,6 +1379,7 @@ Group Other
 
  <h1>Default dynamics
  OptionMenu <link>GeDynOptionMenu, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_pc <style> function
@@ -1221,6 +1393,21 @@ Group Other
 
  <h1>Default dynamics
  No default dynamics.
+
+</topic>
+
+<topic> pwr_pulldownmenu2 <style> function
+ PulldownMenu
+ Group Other
+
+ <image> pwr_pulldownmenu_gs.gif
+
+ <h1>Description
+ Pulldown menu. Place the pulldown menu on a menu bar.
+
+ <h1>Default dynamics
+ PulldownMenu <link>GeDynPulldownMenu, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_pulldownmenu <style> function
@@ -1234,6 +1421,7 @@ Group Other
 
  <h1>Default dynamics
  PulldownMenu <link>GeDynPulldownMenu, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_pulpet <style> function
@@ -1247,6 +1435,7 @@ Group Other
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_logga <style> function
@@ -1260,6 +1449,7 @@ Group Other
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_rack <style> function
@@ -1273,6 +1463,7 @@ Group Other
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_smiley <style> function
@@ -1289,6 +1480,7 @@ Group Other
 
  <h1>Default dynamics
  AnalogShift <link>GeDynAnalogShift, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_terminal <style> function
@@ -1302,6 +1494,7 @@ Group Other
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_videocamera <style> function
@@ -1315,6 +1508,7 @@ Group Other
 
  <h1>Default dynamics
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 </headerlevel>
@@ -1333,6 +1527,7 @@ Group Process
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_base3wayvalve <style> function
@@ -1346,6 +1541,7 @@ Group Process
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_base3wayvalve2 <style> function
@@ -1364,6 +1560,7 @@ Group Process
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_basedamper <style> function
@@ -1449,6 +1646,7 @@ Group Process
 
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_damper <style> function
@@ -1462,6 +1660,7 @@ Group Process
 
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_damperanim <style> function
@@ -1480,6 +1679,7 @@ Group Process
  <h1>Default dynamics
  Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
  with AnimationSequence Dig.
+
 </topic>
 
 <topic> pwr_damperanim2 <style> function
@@ -1498,6 +1698,7 @@ Group Process
  <h1>Default dynamics
  Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
  with AnimationSequence Dig.
+
 </topic>
 
 <topic> pwr_dampercontrol <style> function
@@ -1514,6 +1715,7 @@ Group Process
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  DigError <link>GeDynError, ,$pwr_lang/man_geref.dat
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_dampercontrol2 <style> function
@@ -1534,6 +1736,7 @@ Group Process
  DigError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  AnalogShift <link>GeDynAnalogShift, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_directvalve <style> function
@@ -1550,6 +1753,7 @@ Group Process
 
  <h1>Default dynamics
  AnalogShift <link>GeDynAnalogShift, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_emergencystop <style> function
@@ -1564,6 +1768,7 @@ Group Process
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  with red color when signal is low.
+
 </topic>
 
 <topic> pwr_fan <style> function
@@ -1577,6 +1782,7 @@ Group Process
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_fan2 <style> function
@@ -1596,6 +1802,67 @@ Group Process
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_elheater3 <style> function
+ Fan2
+ Group Process
+
+ <image> pwr_fan2_gs.gif
+
+ <h1>Description
+ Fan.
+
+ Subgraph with two pages, fan off (page 1) and fan on (page 2).
+ Annotation for display of manual or local mode.
+ <image> pwr_fan2_ags.gif
+
+ <h1>Default dynamics
+ DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_elheater1 <style> function
+ Fan2
+ Group Process
+
+ <image> pwr_fan2_gs.gif
+
+ <h1>Description
+ Fan.
+
+ Subgraph with two pages, fan off (page 1) and fan on (page 2).
+ Annotation for display of manual or local mode.
+ <image> pwr_fan2_ags.gif
+
+ <h1>Default dynamics
+ DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_elheater2 <style> function
+ Fan2
+ Group Process
+
+ <image> pwr_fan2_gs.gif
+
+ <h1>Description
+ Fan.
+
+ Subgraph with two pages, fan off (page 1) and fan on (page 2).
+ Annotation for display of manual or local mode.
+ <image> pwr_fan2_ags.gif
+
+ <h1>Default dynamics
+ DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_fan3 <style> function
@@ -1613,6 +1880,7 @@ Group Process
  <h1>Default dynamics
  Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
  with AnimationSequence Cyclic.
+
 </topic>
 
 <topic> pwr_fananim <style> function
@@ -1630,6 +1898,7 @@ Group Process
  <h1>Default dynamics
  Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
  with AnimationSequence Cyclic.
+
 </topic>
 
 <topic> pwr_fananim2 <style> function
@@ -1650,6 +1919,7 @@ Group Process
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_fananim3 <style> function
@@ -1667,6 +1937,7 @@ Group Process
  <h1>Default dynamics
  Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
  with AnimationSequence Cyclic.
+
 </topic>
 
 <topic> pwr_filter <style> function
@@ -1681,6 +1952,7 @@ Group Process
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  with red color when signal is low.
+
 </topic>
 
 <topic> pwr_handwheel <style> function
@@ -1694,6 +1966,7 @@ Group Process
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_m3wayvalve <style> function
@@ -1707,6 +1980,7 @@ Group Process
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_mdamper <style> function
@@ -1720,6 +1994,7 @@ Group Process
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_mvalve <style> function
@@ -1733,6 +2008,7 @@ Group Process
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_motor <style> function
@@ -1747,6 +2023,7 @@ Group Process
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  DigError <link>GeDynError, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_motor2 <style> function
@@ -1760,6 +2037,7 @@ Group Process
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_motorman <style> function
@@ -1775,6 +2053,7 @@ Group Process
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_padlock <style> function
@@ -1788,6 +2067,7 @@ Group Process
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_padlockanim <style> function
@@ -1806,6 +2086,7 @@ Group Process
  <h1>Default dynamics
  Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
  with AnimationSequence Dig.
+
 </topic>
 
 <topic> pwr_pidcontroller <style> function
@@ -1819,6 +2100,7 @@ Group Process
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_pump <style> function
@@ -1833,6 +2115,7 @@ Group Process
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  DigError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_pump2 <style> function
@@ -1853,6 +2136,7 @@ Group Process
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_pump3 <style> function
@@ -1866,6 +2150,7 @@ Group Process
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_pumpanim <style> function
@@ -1883,6 +2168,7 @@ Group Process
  <h1>Default dynamics
  Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
  with AnimationSequence Cyclic.
+
 </topic>
 
 <topic> pwr_pumpanim2 <style> function
@@ -1903,6 +2189,7 @@ Group Process
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_rod <style> function
@@ -1916,6 +2203,7 @@ Group Process
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> pwr_rodcouplinganim <style> function
@@ -1933,6 +2221,7 @@ Group Process
  <h1>Default dynamics
  Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
  with AnimationSequence Cyclic.
+
 </topic>
 
 <topic> pwr_screw <style> function
@@ -1950,6 +2239,7 @@ Group Process
  <h1>Default dynamics
  Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
  with AnimationSequence Cyclic.
+
 </topic>
 
 <topic> pwr_speedswitch <style> function
@@ -1963,6 +2253,7 @@ Group Process
 
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_switch <style> function
@@ -1979,6 +2270,7 @@ Group Process
 
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_thermometer <style> function
@@ -1992,6 +2284,7 @@ Group Process
 
  <h1>Default dynamics
  FillLevel <link>GeDynFillLevel, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_trafficlight <style> function
@@ -2008,6 +2301,7 @@ Group Process
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  DigWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
  DigError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valve <style> function
@@ -2058,6 +2352,7 @@ Group Process
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  AnalogShift <link>GeDynAnalogShift, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valve3waycontrol <style> function
@@ -2074,6 +2369,7 @@ Group Process
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  DigError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valve3waycontrol2 <style> function
@@ -2094,6 +2390,7 @@ Group Process
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  AnalogShift <link>GeDynAnalogShift, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valveanim <style> function
@@ -2113,6 +2410,7 @@ Group Process
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valveanim2 <style> function
@@ -2133,6 +2431,7 @@ Group Process
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valvecontrol <style> function
@@ -2147,6 +2446,7 @@ Group Process
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  DigError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valvecontrol2 <style> function
@@ -2163,6 +2463,7 @@ Group Process
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  DigError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valvemanuel <style> function
@@ -2177,6 +2478,7 @@ Group Process
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  DigError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 </headerlevel>
@@ -2195,6 +2497,7 @@ Group Pushbuttons
 
  <h1>Default dynamics
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_buttoncommandcenter <style> function
@@ -2208,6 +2511,7 @@ Group Pushbuttons
 
  <h1>Default dynamics
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_buttoncommandconfirm <style> function
@@ -2222,6 +2526,7 @@ Group Pushbuttons
  <h1>Default dynamics
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
  Confirm <link>GeDynConfirm, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_buttondown <style> function
@@ -2235,6 +2540,7 @@ Group Pushbuttons
 
  <h1>Default dynamics
  SetDig <link>GeDynSetDig, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_buttonhelp <style> function
@@ -2248,6 +2554,7 @@ Group Pushbuttons
 
  <h1>Default dynamics
  Help <link>GeDynHelp, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_buttoninfo <style> function
@@ -2261,6 +2568,7 @@ Group Pushbuttons
 
  <h1>Default dynamics
  Help <link>GeDynHelp, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_buttonleft <style> function
@@ -2274,6 +2582,7 @@ Group Pushbuttons
 
  <h1>Default dynamics
  SetDig <link>GeDynSetDig, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_buttonreset <style> function
@@ -2287,6 +2596,7 @@ Group Pushbuttons
 
  <h1>Default dynamics
  ResetDig <link>GeDynResetDig, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_buttonresetcenter <style> function
@@ -2300,6 +2610,7 @@ Group Pushbuttons
 
  <h1>Default dynamics
  ResetDig <link>GeDynResetDig, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_buttonresetconfirm <style> function
@@ -2314,6 +2625,7 @@ Group Pushbuttons
  <h1>Default dynamics
  ResetDig <link>GeDynResetDig, ,$pwr_lang/man_geref.dat
  Confirm <link>GeDynConfirm, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_buttonright <style> function
@@ -2327,6 +2639,7 @@ Group Pushbuttons
 
  <h1>Default dynamics
  SetDig <link>GeDynSetDig, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_buttonset <style> function
@@ -2340,6 +2653,7 @@ Group Pushbuttons
 
  <h1>Default dynamics
  SetDig <link>GeDynSetDig, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_buttonsetcenter <style> function
@@ -2353,6 +2667,7 @@ Group Pushbuttons
 
  <h1>Default dynamics
  SetDig <link>GeDynSetDig, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_buttonsetconfirm <style> function
@@ -2367,6 +2682,7 @@ Group Pushbuttons
  <h1>Default dynamics
  SetDig <link>GeDynSetDig, ,$pwr_lang/man_geref.dat
  Confirm <link>GeDynConfirm, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_buttontoggle <style> function
@@ -2380,6 +2696,7 @@ Group Pushbuttons
 
  <h1>Default dynamics
  ToggleDig <link>GeDynToggleDig, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_buttontogglecenter <style> function
@@ -2393,6 +2710,7 @@ Group Pushbuttons
 
  <h1>Default dynamics
  ToggleDig <link>GeDynToggleDig, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_buttontoggleconfirm <style> function
@@ -2407,6 +2725,7 @@ Group Pushbuttons
  <h1>Default dynamics
  ToggleDig <link>GeDynToggleDig, ,$pwr_lang/man_geref.dat
  Confirm <link>GeDynConfirm, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_buttonup <style> function
@@ -2420,6 +2739,7 @@ Group Pushbuttons
 
  <h1>Default dynamics
  SetDig <link>GeDynSetDig, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_checkbox <style> function
@@ -2438,6 +2758,26 @@ Group Pushbuttons
  <h1>Default dynamics
  DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
  ToggleDig <link>GeDynToggleDig, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_checkbox2 <style> function
+ CheckBox
+ Group Pushbuttons
+
+ <image> pwr_checkbox_gs.gif
+
+ <h1>Description
+ Checkbox.
+
+ Subgraph with two pages, checkbox unmarked (page 1) and
+ checkbox marked (page 2).
+ <image> pwr_checkbox_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+ ToggleDig <link>GeDynToggleDig, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_checkboxrelief <style> function
@@ -2456,6 +2796,7 @@ Group Pushbuttons
  <h1>Default dynamics
  DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
  ToggleDig <link>GeDynToggleDig, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_largebutton <style> function
@@ -2469,6 +2810,7 @@ Group Pushbuttons
 
  <h1>Default dynamics
  ToggleDig <link>GeDynToggleDig, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_notebutton <style> function
@@ -2485,6 +2827,28 @@ Group Pushbuttons
 
  The button is visible if a note for the object is present,
  and the note is displayed when the button is activated.
+
+</topic>
+
+<topic> pwr_radiobutton2 <style> function
+ Radiobutton
+ Group Pushbuttons
+
+ <image> pwr_radiobutton_gs.gif
+
+ <h1>Description
+ Radiobutton.
+ A radiobutton should be a member of a group with other
+ radiobuttons. Connect the radiobuttons first and the create
+ the group.
+
+ Subgraph with two pages, radiobutton not selected (page 1) and
+ selected (page 2).
+ <image> pwr_radiobutton_ags.gif
+
+ <h1>Default dynamics
+ Radiobutton <link>GeDynRadiobutton, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_radiobutton <style> function
@@ -2505,6 +2869,7 @@ Group Pushbuttons
 
  <h1>Default dynamics
  Radiobutton <link>GeDynRadiobutton, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_radiobuttonrelief <style> function
@@ -2525,6 +2890,7 @@ Group Pushbuttons
 
  <h1>Default dynamics
  Radiobutton <link>GeDynRadiobutton, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_roundbutton <style> function
@@ -2538,6 +2904,7 @@ Group Pushbuttons
 
  <h1>Default dynamics
  SetDig <link>GeDynSetDig, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_smallbutton <style> function
@@ -2551,6 +2918,7 @@ Group Pushbuttons
 
  <h1>Default dynamics
  ToggleDig <link>GeDynToggleDig, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_smallbuttoncenter <style> function
@@ -2564,6 +2932,7 @@ Group Pushbuttons
 
  <h1>Default dynamics
  ToggleDig <link>GeDynToggleDig, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_soapbutton <style> function
@@ -2577,6 +2946,7 @@ Group Pushbuttons
 
  <h1>Default dynamics
  SetDig <link>GeDynSetDig, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 </headerlevel>
@@ -2607,6 +2977,7 @@ Group Pushbuttons/Methodbuttons
  Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mbblockevents <style> function
@@ -2632,6 +3003,7 @@ Group Pushbuttons/Methodbuttons
  Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mbcircuitdiagram <style> function
@@ -2657,6 +3029,7 @@ Group Pushbuttons/Methodbuttons
  Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mbcrossreferences <style> function
@@ -2682,6 +3055,7 @@ Group Pushbuttons/Methodbuttons
  Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mbdatasheet <style> function
@@ -2707,6 +3081,7 @@ Group Pushbuttons/Methodbuttons
  Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mbfast <style> function
@@ -2732,6 +3107,7 @@ Group Pushbuttons/Methodbuttons
  Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mbhelp <style> function
@@ -2757,6 +3133,7 @@ Group Pushbuttons/Methodbuttons
  Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mbhelpclass <style> function
@@ -2782,6 +3159,7 @@ Group Pushbuttons/Methodbuttons
  Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mbhistevent <style> function
@@ -2807,6 +3185,7 @@ Group Pushbuttons/Methodbuttons
  Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mbnote <style> function
@@ -2832,6 +3211,7 @@ Group Pushbuttons/Methodbuttons
  Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mbopenobject <style> function
@@ -2857,6 +3237,7 @@ Group Pushbuttons/Methodbuttons
  Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mbopenplc <style> function
@@ -2882,6 +3263,7 @@ Group Pushbuttons/Methodbuttons
  Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mbrtnavigator <style> function
@@ -2907,6 +3289,34 @@ Group Pushbuttons/Methodbuttons
  Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_mbup <style> function
+ MbSimulate
+ Group Pushbuttons/Methodbuttons
+
+ <image> pwr_mbsimulate_gs.gif
+
+ <h1>Description
+ Method button for object graphs, to activate method 'Simulate'.
+
+ Used in object graphs with the following settings. 
+
+ Invisible.Attribute <t><t>$cmd(check method/method="Simulate"/object=$object)
+ Invisible.Dimmed <t><t>0
+ Command.Command  <t><t>call method/method="Simulate"/object=$object
+ ToolTip.Text <t><t>Simulate
+    
+ The method is executed on activation of the button, and the button is invisible
+ if the method is not present for the current object or in the current
+ environment.
+
+ <h1>Default dynamics
+ Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+ Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+ Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mbsimulate <style> function
@@ -2933,6 +3343,7 @@ Group Pushbuttons/Methodbuttons
  Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_mbtrend <style> function
@@ -2958,6 +3369,7 @@ Group Pushbuttons/Methodbuttons
  Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
  Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
  Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 </headerlevel>
@@ -2983,6 +3395,7 @@ Group Sliders
  
  <h1>Default dynamics
  Slider <link>GeDynSlider, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_slider2 <style> function
@@ -3002,6 +3415,7 @@ Group Sliders
  
  <h1>Default dynamics
  Slider <link>GeDynSlider, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_slider3 <style> function
@@ -3021,6 +3435,7 @@ Group Sliders
  
  <h1>Default dynamics
  Slider <link>GeDynSlider, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_sliderarrow <style> function
@@ -3037,6 +3452,7 @@ Group Sliders
  
  <h1>Default dynamics
  Slider <link>GeDynSlider, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_sliderbackground1 <style> function
@@ -3055,6 +3471,7 @@ Group Sliders
  
  <h1>Default dynamics
  SliderBackground <link>GeDynSliderBackground, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_sliderbackground1_2 <style> function
@@ -3073,6 +3490,7 @@ Group Sliders
  
  <h1>Default dynamics
  SliderBackground <link>GeDynSliderBackground, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_sliderbackground2 <style> function
@@ -3093,6 +3511,7 @@ Group Sliders
 
  <h1>Default dynamics
  SliderBackground <link>GeDynSliderBackground, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_sliderbackground3 <style> function
@@ -3111,6 +3530,7 @@ Group Sliders
  
  <h1>Default dynamics
  SliderBackground <link>GeDynSliderBackground, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 </headerlevel>
@@ -3130,6 +3550,7 @@ Group Values
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valueinputlargecenter <style> function
@@ -3144,6 +3565,7 @@ Group Values
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valueinputlargerd <style> function
@@ -3163,6 +3585,7 @@ Group Values
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valueinputlargeright <style> function
@@ -3177,6 +3600,7 @@ Group Values
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valueinputmedium <style> function
@@ -3191,6 +3615,7 @@ Group Values
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valueinputmediumcenter <style> function
@@ -3205,6 +3630,7 @@ Group Values
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valueinputmediumrd <style> function
@@ -3224,6 +3650,7 @@ Group Values
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valueinputmediumright <style> function
@@ -3238,6 +3665,7 @@ Group Values
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valueinputreliefdown <style> function
@@ -3252,6 +3680,7 @@ Group Values
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valueinputreliefup <style> function
@@ -3266,6 +3695,7 @@ Group Values
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valueinputsmall <style> function
@@ -3280,6 +3710,7 @@ Group Values
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valueinputsmallcenter <style> function
@@ -3294,6 +3725,7 @@ Group Values
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valueinputsmallrd <style> function
@@ -3313,6 +3745,7 @@ Group Values
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valueinputsmallright <style> function
@@ -3327,6 +3760,7 @@ Group Values
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
  ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valuelarge <style> function
@@ -3340,6 +3774,7 @@ Group Values
 
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valuelargecenter <style> function
@@ -3353,6 +3788,7 @@ Group Values
 
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valuelargeright <style> function
@@ -3366,6 +3802,7 @@ Group Values
 
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valuelong <style> function
@@ -3379,6 +3816,7 @@ Group Values
 
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valuemedium <style> function
@@ -3392,6 +3830,7 @@ Group Values
 
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valuemediumcenter <style> function
@@ -3405,6 +3844,7 @@ Group Values
 
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valuemediumright <style> function
@@ -3418,6 +3858,7 @@ Group Values
 
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valuereliefdown <style> function
@@ -3431,6 +3872,7 @@ Group Values
 
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valuereliefup <style> function
@@ -3444,6 +3886,7 @@ Group Values
 
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valuesmall <style> function
@@ -3457,6 +3900,7 @@ Group Values
 
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valuesmallcenter <style> function
@@ -3470,6 +3914,7 @@ Group Values
 
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valuesmallright <style> function
@@ -3483,6 +3928,7 @@ Group Values
 
  <h1>Default dynamics
  Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 </headerlevel>
@@ -3501,6 +3947,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 </headerlevel>
@@ -3618,6 +4065,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_3wayvalve2 <style> function
@@ -3632,6 +4080,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_3wayvalve_actuator <style> function
@@ -3646,6 +4095,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_3wayvalve_sensing <style> function
@@ -3660,6 +4110,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_4wayvalve <style> function
@@ -3673,6 +4124,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_actuator <style> function
@@ -3686,6 +4138,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_actuator_dia <style> function
@@ -3699,6 +4152,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_actuator_failopen <style> function
@@ -3726,6 +4180,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_actuator_failclose <style> function
@@ -3753,6 +4208,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_actuator_piston <style> function
@@ -3766,6 +4222,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_actuator_sensing <style> function
@@ -3779,6 +4236,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_actuator_solenoid <style> function
@@ -3792,6 +4250,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_actuator_spring <style> function
@@ -3805,6 +4264,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_actuator_withman <style> function
@@ -3818,6 +4278,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_aircooler <style> function
@@ -3831,6 +4292,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_aircoolerheater <style> function
@@ -3844,6 +4306,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_airdamper <style> function
@@ -3857,6 +4320,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_airfilter <style> function
@@ -3884,6 +4348,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_airheater <style> function
@@ -3897,6 +4362,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_airpurgingdevice <style> function
@@ -3910,6 +4376,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_auxiliaryunit_man <style> function
@@ -3923,6 +4390,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_drawoffpoint <style> function
@@ -3936,6 +4404,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_fan <style> function
@@ -3949,6 +4418,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_firedamper <style> function
@@ -3962,6 +4432,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_gully <style> function
@@ -3975,6 +4446,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_gullywithtrap <style> function
@@ -3988,6 +4460,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_heatingexchanger <style> function
@@ -4001,6 +4474,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_heatingexchanger2 <style> function
@@ -4014,6 +4488,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_humidifier <style> function
@@ -4027,6 +4502,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_hydrant <style> function
@@ -4040,6 +4516,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_indicatinggauge <style> function
@@ -4053,6 +4530,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_measuringinstrument <style> function
@@ -4066,6 +4544,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_measuringpoint <style> function
@@ -4079,6 +4558,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_noreturnvalve <style> function
@@ -4092,6 +4572,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_pressuresource <style> function
@@ -4105,6 +4586,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_pump <style> function
@@ -4118,6 +4600,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_recorder <style> function
@@ -4131,6 +4614,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_restrictionunit <style> function
@@ -4144,6 +4628,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_safetyvalve <style> function
@@ -4157,6 +4642,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_separator <style> function
@@ -4170,6 +4656,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_shower <style> function
@@ -4183,6 +4670,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_signalconverter <style> function
@@ -4196,6 +4684,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_silencer <style> function
@@ -4209,6 +4698,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_sprinklerhead <style> function
@@ -4222,6 +4712,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_steamtrap <style> function
@@ -4235,6 +4726,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_strainer <style> function
@@ -4248,6 +4740,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_thermometer <style> function
@@ -4261,6 +4754,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_transmitter <style> function
@@ -4274,6 +4768,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_trap <style> function
@@ -4287,6 +4782,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_vacuumbreaker <style> function
@@ -4300,6 +4796,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_valve <style> function
@@ -4314,6 +4811,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_valve2 <style> function
@@ -4328,6 +4826,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_valve_actuator <style> function
@@ -4341,6 +4840,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_valve_dia <style> function
@@ -4354,6 +4854,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_valve_el <style> function
@@ -4367,6 +4868,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_valve_hand <style> function
@@ -4380,6 +4882,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_valve_piston <style> function
@@ -4393,6 +4896,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_valve_sensing <style> function
@@ -4406,6 +4910,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_valve_solenoid <style> function
@@ -4419,6 +4924,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 </headerlevel>
@@ -4437,6 +4943,7 @@ Group Ventilation/Cooling
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032231_compressor <style> function
@@ -4450,6 +4957,7 @@ Group Ventilation/Cooling
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032231_compressor2step <style> function
@@ -4463,6 +4971,7 @@ Group Ventilation/Cooling
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032231_compressor2step_aggr <style> function
@@ -4476,6 +4985,7 @@ Group Ventilation/Cooling
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032231_compressor_aggr <style> function
@@ -4489,6 +4999,7 @@ Group Ventilation/Cooling
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032231_coolingmediumtank <style> function
@@ -4502,6 +5013,7 @@ Group Ventilation/Cooling
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032231_coolingtower <style> function
@@ -4515,6 +5027,7 @@ Group Ventilation/Cooling
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032231_dryingfilter <style> function
@@ -4528,6 +5041,7 @@ Group Ventilation/Cooling
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032231_evaporativecondenser <style> function
@@ -4541,6 +5055,7 @@ Group Ventilation/Cooling
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032231_evaporator <style> function
@@ -4554,6 +5069,7 @@ Group Ventilation/Cooling
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032231_fan <style> function
@@ -4567,6 +5083,7 @@ Group Ventilation/Cooling
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032231_fancondenser <style> function
@@ -4580,6 +5097,7 @@ Group Ventilation/Cooling
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032231_fluidcooledcondenser <style> function
@@ -4593,6 +5111,7 @@ Group Ventilation/Cooling
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032231_heatingexchanger <style> function
@@ -4606,6 +5125,7 @@ Group Ventilation/Cooling
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032231_heatingexchanger2 <style> function
@@ -4619,6 +5139,7 @@ Group Ventilation/Cooling
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032231_sightglass <style> function
@@ -4632,6 +5153,7 @@ Group Ventilation/Cooling
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032231_tank <style> function
@@ -4645,6 +5167,7 @@ Group Ventilation/Cooling
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 </headerlevel>
@@ -6026,32 +6549,57 @@ BaseComponent
 
 <topic> BaseComponent_Components_BaseComponent
 Group Components/BaseComponent
+ActuatorModeIndicator <link>bcomp_actuatormodeindicator
 C3WayValve <link>bcomp_c3wayvalve
+C3WayValveNoMode <link>bcomp_c3wayvalvenomode
 CDamper <link>bcomp_cdamper
+CDamperNoMode <link>bcomp_cdampernomode
 CValve <link>bcomp_cvalve
+CValveNoMode <link>bcomp_cvalvenomode
 FanAggr <link>bcomp_fanaggr
+FanAggrNoMode <link>bcomp_fanaggrnomode
+FcPPO3FanAggr <link>bcomp_basefcppo3fanaggr
+FcPPO3FanAggrNoMode <link>bcomp_basefcppo3fanaggrnomode
+FcPPO3MotorAggr <link>bcomp_basefcppo3motoraggr
+FcPPO3MotorAggrNoMode <link>bcomp_basefcppo3motoraggrnomode
+FcPPO3PumpAggr <link>bcomp_basefcppo3pumpaggr
+FcPPO3PumpAggrNoMode <link>bcomp_basefcppo3pumpaggrnomode
+FcPPO5FanAggr <link>bcomp_basefcppo5fanaggr
+FcPPO5FanAggrNoMode <link>bcomp_basefcppo5fanaggrnomode
+FcPPO5MotorAggr <link>bcomp_basefcppo5motoraggr
+FcPPO5MotorAggrNoMode <link>bcomp_basefcppo5motoraggrnomode
+FcPPO5PumpAggr <link>bcomp_basefcppo5pumpaggr
+FcPPO5PumpAggrNoMode <link>bcomp_basefcppo5pumpaggrnomode
 Filter <link>bcomp_filter
 FlowSensor <link>bcomp_flowsensor
 LevelSensor <link>bcomp_levelsensor
 LevelSwitch <link>bcomp_levelswitch
 M3WayValve <link>bcomp_m3wayvalve
+M3WayValveNoMode <link>bcomp_m3wayvalvenomode
 MDamper <link>bcomp_mdamper
+MDamperNoMode <link>bcomp_mdampernomode
 MValve <link>bcomp_mvalve
+MValveNoMode <link>bcomp_mvalvenomode
 MValveNoSwitches <link>bcomp_mvalvenoswitches
 ManValve <link>bcomp_manvalve
 ManValveNoSwitches <link>bcomp_manvalvenoswitches
 ManValveSwitchClosed <link>bcomp_manvalveswitchclosed
 ManValveSwitchOpen <link>bcomp_manvalveswitchopen
 ManValveSwitchTwoSwitches <link>bcomp_manvalvetwoswitches
+ModeIndicator <link>bcomp_modeindicator
 MotorAggr <link>bcomp_motoraggr
+MotorAggrNoMode <link>bcomp_motoraggrnomode
 MotorIncrDecrAggr <link>bcomp_motorincrdecraggr
 PressureSensor <link>bcomp_pressuresensor
 PressureSwitch <link>bcomp_pressureswitch
 PumpAggr <link>bcomp_pumpaggr
+PumpAggrNoMode <link>bcomp_pumpaggrnomode
 Sensor <link>bcomp_sensor
 SupSwitch <link>bcomp_supswitch
 TempSensor <link>bcomp_tempsensor
 TempSwitch <link>bcomp_tempswitch
+ValveIncrDecr <link>bcomp_valveincrdecr
+bcomp_fc <link>bcomp_fc
 </topic>
 
 <option> printenable
@@ -6060,6 +6608,26 @@ TempSwitch <link>bcomp_tempswitch
 Group Components/BaseComponent
 </topic>
 <headerlevel>
+<topic> bcomp_actuatormodeindicator <style> function
+ ActuatorModeIndicator
+ Group Components/BaseComponent
+
+ <h1>Description
+ Displays the mode, manual or local, with M or L.
+ Can be connected to CValve, C3WayValve or CDamper.
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - the mode (manual or local) is displayed with a M or L.
+
+ Value <t>$hostobject.Actuator.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
+</topic>
+
 <topic> bcomp_c3wayvalve <style> function
  C3WayValve
  Group Components/BaseComponent
@@ -6093,6 +6661,41 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_c3wayvalvenomode <style> function
+ C3WayValveNoMode
+ Group Components/BaseComponent
+
+ <image> bcomp_c3wayvalvenomode_gs.gif
+
+ <h1>Description
+ Three way control valve. Graphic symbol for basecomponent BaseC3WayValve.
+ Should be connected to an instance of BaseC3WayValve, or a 
+ subclass to this class.
+
+ Subgraph with three pages, both regulatable ports partly open (page 1),
+ first regulatable port closed (page 2) and second regulatable port
+ closed (page 3).
+ <image> bcomp_c3wayvalve_ags.gif
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - flashing red when an error occurs.
+ - colored yellow when a warning occurs.
+ - any port closed displayed with different pages.
+ - popupmenu with the methods of the connected object.
+
+ DigFlash <t>$hostobject.Actuator.IndError <link>GeDynDigFlash, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.Actuator.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ AnalogShift <t>$hostobject.Actuator.PosEnum <link>GeDynAnalogShift, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_cdamper <style> function
@@ -6122,6 +6725,35 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_cdampernomode <style> function
+ CDamperNoMode
+ Group Components/BaseComponent
+
+ <image> bcomp_cdamper_gs.gif
+
+ <h1>Description
+ Control damper. Graphic symbol for basecomponent BaseCDamper.
+ Should be connected to an instance of BaseCDamper, or a 
+ subclass to this class.
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - flashing red when an error occurs.
+ - colored yellow when a warning occurs.
+ - colored white when the damper is closed.
+ - popupmenu with the method of the connected object.
+
+ DigFlash <t>$hostobject.Actuator.IndError <link>GeDynDigFlash, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.Actuator.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_cvalve <style> function
@@ -6151,6 +6783,35 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_cvalvenomode <style> function
+ CValveNoMode
+ Group Components/BaseComponent
+
+ <image> bcomp_cvalvenomode_gs.gif
+
+ <h1>Description
+ Control valve. Graphic symbol for basecomponent BaseCValve.
+ Should be connected to an instance of BaseCValve, or a 
+ subclass to this class.
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - flashing red when an error occurs.
+ - colored yellow when a warning occurs.
+ - colored white when the valve is closed.
+ - popupmenu with the method of the connected object.
+
+ DigFlash <t>$hostobject.Actuator.IndError <link>GeDynDigFlash, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.Actuator.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_fanaggr <style> function
@@ -6186,6 +6847,441 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_fanaggrnomode <style> function
+ FanAggrNoMode
+ Group Components/BaseComponent
+
+ <image> bcomp_fanaggrnomode_gs.gif
+
+ <h1>Description
+ Fan aggregate. Graphic symbol for basecomponent BaseFanAggr.
+ Should be connected to an instance of BaseFanAggr, or a 
+ subclass to this class.
+
+ Subgraph with two pages, fan off (page 1) and fan on (page 2).
+ <image> bcomp_fanaggr_ags.gif
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - colored red when an error occurs.
+ - colored yellow when a warning occurs.
+ - colored darkgray when the fan is off.
+ - fan on and off is displayed with different pages.
+ - popupmenu with the methods of the connected object.
+
+ DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ DigLowColor <t>$hostobject.Contactor.IndFeedback <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ DigShift <t>$hostobject.Contactor.IndFeedback <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_basefcppo3fanaggr <style> function
+ FcPPO3FanAggr
+ Group Components/BaseComponent
+
+ <image> bcomp_fanaggr_gs.gif
+
+ <h1>Description
+ Fan aggregate. Graphic symbol for component BaseFcPPO3FanAggr.
+ Should be connected to an instance of BaseFcPPO3FanAggr, or a 
+ subclass to this class.
+
+ Subgraph with two pages, fan off (page 1) and fan on (page 2).
+ <image> bcomp_fanaggr_ags.gif
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - colored red when an error occurs.
+ - colored yellow when a warning occurs.
+ - colored darkgray when the fan is off.
+ - the mode (manual or local) is displayed with a M or L.
+ - fan on and off is displayed with different pages.
+ - popupmenu with the methods of the connected object.
+
+ DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ DigLowColor <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Value <t>$hostobject.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ DigShift <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_basefcppo3fanaggrnomode <style> function
+ FcPPO3FanAggrNoMode
+ Group Components/BaseComponent
+
+ <image> bcomp_fanaggrnomode_gs.gif
+
+ <h1>Description
+ Fan aggregate. Graphic symbol for component BaseFcPPO3FanAggr.
+ Should be connected to an instance of BaseFcPPO3FanAggr, or a 
+ subclass to this class.
+
+ Subgraph with two pages, fan off (page 1) and fan on (page 2).
+ <image> bcomp_fanaggr_ags.gif
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - colored red when an error occurs.
+ - colored yellow when a warning occurs.
+ - colored darkgray when the fan is off.
+ - fan on and off is displayed with different pages.
+ - popupmenu with the methods of the connected object.
+
+ DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ DigLowColor <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ DigShift <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_basefcppo3motoraggr <style> function
+ FcPPO3MotorAggr
+ Group Components/BaseComponent
+
+ <image> bcomp_motoraggr_gs.gif
+
+ <h1>Description
+ Motor aggregate. Graphic symbol for basecomponent BaseFcPPO3MotorAggr.
+ Should be connected to an instance of BaseFcPPO3MotorAggr, or a 
+ subclass to this class.
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - colored red when an error occurs.
+ - colored yellow when a warning occurs.
+ - colored darkgray when the motor is off.
+ - the mode (manual or local) is displayed with a M or L.
+ - popupmenu with the methods of the connected object.
+
+ DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ DigLowColor <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Value <t>$hostobject.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_basefcppo3motoraggrnomode <style> function
+ FcPPO3MotorAggrNoMode
+ Group Components/BaseComponent
+
+ <image> bcomp_motoraggrnomode_gs.gif
+
+ <h1>Description
+ Motor aggregate. Graphic symbol for basecomponent BaseFcPPO3MotorAggr.
+ Should be connected to an instance of BaseFcPPO3MotorAggr, or a 
+ subclass to this class.
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - colored red when an error occurs.
+ - colored yellow when a warning occurs.
+ - colored darkgray when the motor is off.
+ - popupmenu with the methods of the connected object.
+
+ DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ DigLowColor <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_basefcppo3pumpaggr <style> function
+ FcPPO3PumpAggr
+ Group Components/BaseComponent
+
+ <image> bcomp_pumpaggr_gs.gif
+
+ <h1>Description
+ Pump aggregate. Graphic symbol for component BaseFcPPO3PumpAggr.
+ Should be connected to an instance of BaseFcPPO3PumpAggr, or a 
+ subclass to this class.
+
+ Subgraph with two pages, pump off (page 1) and pump on (page 2).
+ <image> bcomp_pumpaggr_ags.gif
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - colored red when an error occurs.
+ - colored yellow when a warning occurs.
+ - colored darkgray when the pump is off.
+ - the mode (manual or local) is displayed with a M or L.
+ - pump on and off is displayed with different pages.
+ - popupmenu with the methods of the connected object.
+
+ DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ DigLowColor <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Value <t>$hostobject.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ DigShift <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_basefcppo3pumpaggrnomode <style> function
+ FcPPO3PumpAggrNoMode
+ Group Components/BaseComponent
+
+ <image> bcomp_pumpaggrnomode_gs.gif
+
+ <h1>Description
+ Pump aggregate. Graphic symbol for component BaseFcPPO3PumpAggr.
+ Should be connected to an instance of BaseFcPPO3PumpAggr, or a 
+ subclass to this class.
+
+ Subgraph with two pages, pump off (page 1) and pump on (page 2).
+ <image> bcomp_pumpaggr_ags.gif
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - colored red when an error occurs.
+ - colored yellow when a warning occurs.
+ - colored darkgray when the pump is off.
+ - pump on and off is displayed with different pages.
+ - popupmenu with the methods of the connected object.
+
+ DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ DigLowColor <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ DigShift <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_basefcppo5fanaggr <style> function
+ FcPPO5FanAggr
+ Group Components/BaseComponent
+
+ <image> bcomp_fanaggr_gs.gif
+
+ <h1>Description
+ Fan aggregate. Graphic symbol for component BaseFcPPO5FanAggr.
+ Should be connected to an instance of BaseFcPPO5FanAggr, or a 
+ subclass to this class.
+
+ Subgraph with two pages, fan off (page 1) and fan on (page 2).
+ <image> bcomp_fanaggr_ags.gif
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - colored red when an error occurs.
+ - colored yellow when a warning occurs.
+ - colored darkgray when the fan is off.
+ - the mode (manual or local) is displayed with a M or L.
+ - fan on and off is displayed with different pages.
+ - popupmenu with the methods of the connected object.
+
+ DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ DigLowColor <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Value <t>$hostobject.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ DigShift <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_basefcppo5fanaggrnomode <style> function
+ FcPPO5FanAggrNoMode
+ Group Components/BaseComponent
+
+ <image> bcomp_fanaggrnomode_gs.gif
+
+ <h1>Description
+ Fan aggregate. Graphic symbol for component BaseFcPPO5FanAggr.
+ Should be connected to an instance of BaseFcPPO5FanAggr, or a 
+ subclass to this class.
+
+ Subgraph with two pages, fan off (page 1) and fan on (page 2).
+ <image> bcomp_fanaggr_ags.gif
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - colored red when an error occurs.
+ - colored yellow when a warning occurs.
+ - colored darkgray when the fan is off.
+ - fan on and off is displayed with different pages.
+ - popupmenu with the methods of the connected object.
+
+ DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ DigLowColor <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ DigShift <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_basefcppo5motoraggr <style> function
+ FcPPO5MotorAggr
+ Group Components/BaseComponent
+
+ <image> bcomp_motoraggr_gs.gif
+
+ <h1>Description
+ Motor aggregate. Graphic symbol for basecomponent BaseFcPPO5MotorAggr.
+ Should be connected to an instance of BaseFcPPO5MotorAggr, or a 
+ subclass to this class.
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - colored red when an error occurs.
+ - colored yellow when a warning occurs.
+ - colored darkgray when the motor is off.
+ - the mode (manual or local) is displayed with a M or L.
+ - popupmenu with the methods of the connected object.
+
+ DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ DigLowColor <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Value <t>$hostobject.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_basefcppo5motoraggrnomode <style> function
+ FcPPO5MotorAggrNoMode
+ Group Components/BaseComponent
+
+ <image> bcomp_motoraggrnomode_gs.gif
+
+ <h1>Description
+ Motor aggregate. Graphic symbol for basecomponent BaseFcPPO5MotorAggr.
+ Should be connected to an instance of BaseFcPPO5MotorAggr, or a 
+ subclass to this class.
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - colored red when an error occurs.
+ - colored yellow when a warning occurs.
+ - colored darkgray when the motor is off.
+ - popupmenu with the methods of the connected object.
+
+ DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ DigLowColor <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_basefcppo5pumpaggr <style> function
+ FcPPO5PumpAggr
+ Group Components/BaseComponent
+
+ <image> bcomp_pumpaggr_gs.gif
+
+ <h1>Description
+ Pump aggregate. Graphic symbol for component BaseFcPPO5PumpAggr.
+ Should be connected to an instance of BaseFcPPO5PumpAggr, or a 
+ subclass to this class.
+
+ Subgraph with two pages, pump off (page 1) and pump on (page 2).
+ <image> bcomp_pumpaggr_ags.gif
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - colored red when an error occurs.
+ - colored yellow when a warning occurs.
+ - colored darkgray when the pump is off.
+ - the mode (manual or local) is displayed with a M or L.
+ - pump on and off is displayed with different pages.
+ - popupmenu with the methods of the connected object.
+
+ DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ DigLowColor <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ Value <t>$hostobject.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ DigShift <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_basefcppo5pumpaggrnomode <style> function
+ FcPPO5PumpAggrNoMode
+ Group Components/BaseComponent
+
+ <image> bcomp_pumpaggrnomode_gs.gif
+
+ <h1>Description
+ Pump aggregate. Graphic symbol for component BaseFcPPO5PumpAggr.
+ Should be connected to an instance of BaseFcPPO5PumpAggr, or a 
+ subclass to this class.
+
+ Subgraph with two pages, pump off (page 1) and pump on (page 2).
+ <image> bcomp_pumpaggr_ags.gif
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - colored red when an error occurs.
+ - colored yellow when a warning occurs.
+ - colored darkgray when the pump is off.
+ - pump on and off is displayed with different pages.
+ - popupmenu with the methods of the connected object.
+
+ DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ DigLowColor <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ DigShift <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_filter <style> function
@@ -6210,6 +7306,7 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_flowsensor <style> function
@@ -6236,6 +7333,7 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_levelsensor <style> function
@@ -6262,6 +7360,7 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_levelswitch <style> function
@@ -6286,6 +7385,7 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_m3wayvalve <style> function
@@ -6321,6 +7421,43 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_m3wayvalvenomode <style> function
+ M3WayValveNoMode
+ Group Components/BaseComponent
+
+ <image> bcomp_m3wayvalvenomode_gs.gif
+
+ <h1>Description
+ Solenoid three way valve. Graphic symbol for basecomponent BaseM3WayValve.
+ Should be connected to an instance of BaseM3WayValve, or a 
+ subclass to this class.
+
+ Subgraph with three pages, both closable ports partly open (page 1),
+ first closable port closed (page 2) and second closable port
+ closed (page 3).
+ <image> bcomp_m3wayvalve_ags.gif
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - flashing red when an error occurs.
+ - colored yellow when a warning occurs.
+ - the mode (manual or local) is displayed with a M or L.
+ - shifting page when a port is closed.
+ - popupmenu with the method of the connected object.
+
+ DigFlash <t>$hostobject.IndError <link>GeDynDigFlash, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ AnalogShift <t>$hostobject.PosEnum <link>GeDynAnalogShift, ,$pwr_lang/man_geref.dat
+ Value <t>$hostobject.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_mdamper <style> function
@@ -6352,6 +7489,37 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_mdampernomode <style> function
+ MDamperNoMode
+ Group Components/BaseComponent
+
+ <image> bcomp_mdampernomode_gs.gif
+
+ <h1>Description
+ Solenoid damper. Graphic symbol for basecomponent BaseMDamper.
+ Should be connected to an instance of BaseMDamper, or a 
+ subclass to this class.
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - flashing red when an error occurs.
+ - colored yellow when a warning occurs.
+ - colored white when the damper is closed.
+ - colored gray when the damper is neither closed nor open.
+ - popupmenu with the method of the connected object.
+
+ DigFlash <t>$hostobject.IndError <link>GeDynDigFlash, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ AnalogColor <t>$hostobject.PosEnum <link>GeDynAnalogColor, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_mvalve <style> function
@@ -6388,6 +7556,42 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_mvalvenomode <style> function
+ MValveNoMode
+ Group Components/BaseComponent
+
+ <image> bcomp_mvalve_gs.gif
+
+ <h1>Description
+ Solenoid valve. Graphic symbol for basecomponent BaseMValve.
+ Should be connected to an instance of BaseMValve, or a 
+ subclass to this class.
+ 
+ This subgraph is used for valves with a switch open, a
+ switch closed or with both switches.
+ If the valve has no switches, use
+ MValveNoSwitches <link>bcomp_mvalvenoswitches
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - flashing red when an error occurs.
+ - colored yellow when a warning occurs.
+ - colored white when the valve is closed.
+ - colored gray when the valve is neither closed nor open.
+ - popupmenu with the method of the connected object.
+
+ DigFlash <t>$hostobject.IndError <link>GeDynDigFlash, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ AnalogColor <t>$hostobject.PosEnum <link>GeDynAnalogColor, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_mvalvenoswitches <style> function
@@ -6420,6 +7624,7 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_manvalve <style> function
@@ -6447,6 +7652,7 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_manvalvenoswitches <style> function
@@ -6475,6 +7681,7 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_manvalveswitchclosed <style> function
@@ -6501,6 +7708,7 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_manvalveswitchopen <style> function
@@ -6527,6 +7735,7 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_manvalvetwoswitches <style> function
@@ -6557,6 +7766,27 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_modeindicator <style> function
+ ModeIndicator
+ Group Components/BaseComponent
+
+ <h1>Description
+ Displays the mode, manual or local, with M or L.
+ Can be connected to pump, fan and motor aggregates, mvalve, m3wayvalve and mdamper.
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - the mode (manual or local) is displayed with a M or L.
+
+ Value <t>$hostobject.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_motoraggr <style> function
@@ -6587,6 +7817,36 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_motoraggrnomode <style> function
+ MotorAggrNoMode
+ Group Components/BaseComponent
+
+ <image> bcomp_motoraggrnomode_gs.gif
+
+ <h1>Description
+ Motor aggregate. Graphic symbol for basecomponent BaseMotorAggr.
+ Should be connected to an instance of BaseMotorAggr, or a 
+ subclass to this class.
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - colored red when an error occurs.
+ - colored yellow when a warning occurs.
+ - colored darkgray when the motor is off.
+ - popupmenu with the methods of the connected object.
+
+ DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ DigLowColor <t>$hostobject.Contactor.IndFeedback <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_motorincrdecraggr <style> function
@@ -6617,6 +7877,7 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_pressuresensor <style> function
@@ -6643,6 +7904,7 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_pressureswitch <style> function
@@ -6667,6 +7929,7 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_pumpaggr <style> function
@@ -6702,6 +7965,41 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_pumpaggrnomode <style> function
+ PumpAggrNoMode
+ Group Components/BaseComponent
+
+ <image> bcomp_pumpaggrnomode_gs.gif
+
+ <h1>Description
+ Pump aggregate. Graphic symbol for basecomponent BasePumpAggr.
+ Should be connected to an instance of BasePumpAggr, or a 
+ subclass to this class.
+
+ Subgraph with two pages, pump off (page 1) and pump on (page 2).
+ <image> bcomp_pumpaggr_ags.gif
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - colored red when an error occurs.
+ - colored yellow when a warning occurs.
+ - colored darkgray when the pump is off.
+ - pump on and off is displayed with different pages.
+ - popupmenu with the methods of the connected object.
+
+ DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ DigLowColor <t>$hostobject.Contactor.IndFeedback <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+ DigShift <t>$hostobject.Contactor.IndFeedback <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_sensor <style> function
@@ -6732,6 +8030,7 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_supswitch <style> function
@@ -6756,6 +8055,7 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_tempsensor <style> function
@@ -6782,6 +8082,7 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
 </topic>
 
 <topic> bcomp_tempswitch <style> function
@@ -6806,6 +8107,38 @@ Group Components/BaseComponent
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
+</topic>
+
+<topic> bcomp_valveincrdecr <style> function
+ ValveIncrDecr
+ Group Components/BaseComponent
+
+ <image> bcomp_cvalve_gs.gif
+
+ <h1>Description
+ Control valve with digital incremental and decremental order. 
+ Graphic symbol for basecomponent BaseValveIncrDecr.
+ Should be connected to an instance of BaseValveIncrDecr, or a 
+ subclass to this class.
+
+ <h1>Default dynamics
+ HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+
+ Dynamics for the symbol
+ - flashing red when an error occurs.
+ - colored yellow when a warning occurs.
+ - the mode (manual or local) is displayed with a M or L.
+ - colored white when the valve is closed.
+ - popupmenu with the method of the connected object.
+
+ DigFlash <t>$hostobject.Actuator.IndError <link>GeDynDigFlash, ,$pwr_lang/man_geref.dat
+ DigWarning <t>$hostobject.Actuator.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+ Value <t>$hostobject.Actuator.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+ PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+
+ Default Cycle Slow 
+
 </topic>
 
 </headerlevel>
@@ -6864,6 +8197,7 @@ Group Components/ABB
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
 </topic>
 
 <topic> mcomp_abb_acs800motoraggr <style> function
@@ -6894,6 +8228,7 @@ Group Components/ABB
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
 </topic>
 
 <topic> mcomp_abb_acs800pumpaggr <style> function
@@ -6929,6 +8264,7 @@ Group Components/ABB
  PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 
  Default Cycle Slow 
+
 </topic>
 
 </headerlevel>

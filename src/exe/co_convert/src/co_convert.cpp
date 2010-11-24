@@ -65,6 +65,7 @@ static void usage()
   printf( "      -f:  Create pdf from xtthelp-file\n");
   printf( "      -q:  Create postscript from wb_load-files\n");
   printf( "      -e:  Merge changlog files to docbook file\n");
+  printf( "      -a:  Create xtthelp from pwg-files\n");
   printf( "      -d:  Output directory\n");
   printf( "      -g:  Setup file\n");
   printf( "      -h:  Help\n\n");

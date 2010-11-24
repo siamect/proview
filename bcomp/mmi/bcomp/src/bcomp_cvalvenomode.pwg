@@ -1,14 +1,15 @@
+0! DefaultWidth 0
+0! DefaultHeight 0
 199
 !/**
-! ValveIncrDecr
+! CValveNoMode
 ! Group Components/BaseComponent
 !
-! <image> bcomp_cvalve_gs.gif
+! <image> bcomp_cvalvenomode_gs.gif
 !
 ! <h1>Description
-! Control valve with digital incremental and decremental order. 
-! Graphic symbol for basecomponent BaseValveIncrDecr.
-! Should be connected to an instance of BaseValveIncrDecr, or a 
+! Control valve. Graphic symbol for basecomponent BaseCValve.
+! Should be connected to an instance of BaseCValve, or a 
 ! subclass to this class.
 !
 ! <h1>Default dynamics
@@ -17,13 +18,11 @@
 ! Dynamics for the symbol
 ! - flashing red when an error occurs.
 ! - colored yellow when a warning occurs.
-! - the mode (manual or local) is displayed with a M or L.
 ! - colored white when the valve is closed.
 ! - popupmenu with the method of the connected object.
 !
 ! DigFlash <t>$hostobject.Actuator.IndError <link>GeDynDigFlash, ,$pwr_lang/man_geref.dat
 ! DigWarning <t>$hostobject.Actuator.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
-! Value <t>$hostobject.Actuator.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
 ! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 !
 ! Default Cycle Slow 
@@ -35,24 +34,24 @@
 101 20
 102 -149
 103 -230
-104 12.9268
-136 12.9268
+104 13.4717
+136 13.4717
 105 100
-106 -27
-107 -42
-108 3.11566
+106 -29
+107 -44
+108 2
 109 0
 110 0.5
 111 -1.5
 116 0
 117 0
-118 126
-119 113
+118 131
+119 118
 120 0
 121 Claes context
 122 0
-126 1
-127 1
+126 0.5
+127 0.5
 128 1
 129 0.3
 130 1.5
@@ -60,11 +59,13 @@
 132 3
 133 2
 137 4510
+138 3
+139 2
 134
 22
-2200 7
-2201 12
-2202 bcomp_valveincrdecr
+2200 5
+2201 10
+2202 bcomp_cvalvenomode
 2203 300
 2205 0
 2204
@@ -110,9 +111,10 @@ pwr_exe:
 2234 1
 2235 0
 2243 0
+2245 0
 2244
 1
-100 3169
+100 2145
 101 3
 102 65532
 103 0
@@ -131,13 +133,6 @@ pwr_exe:
 6103 30
 6104 1
 6105 1
-99
-12
-1200 $hostobject.Actuator.Mode.IndMode##String8
-1201 %s
-1202 1
-1203 1
-1204 0
 99
 50
 5000 $hostobject
@@ -205,10 +200,10 @@ pwr_exe:
 99
 21
 2104 O1
-2100 0.3
-2101 -0.3
-2102 0.3
-2103 -0.3
+2100 0.362846
+2101 -0.237154
+2102 0.323144
+2103 -0.276856
 2105
 8
 802 0
@@ -483,9 +478,11 @@ pwr_exe:
 2416 2
 2414 0
 2417 0
+2421 0
 2418 0
 2419 4
 2420 0
+2422 0
 2407 0
 2406
 2405
@@ -516,119 +513,6 @@ pwr_exe:
 2805 1.73472e-15
 2806 0
 99
-99
-19
-1904 O7
-1900 3.11566
-1901 2.11566
-1902 -0.197548
-1903 -0.997548
-1908 0
-1909 300
-1910 300
-1911 0
-1915 0
-1913 5
-1916 2
-1914 0
-1918 0
-1919 1
-1920 0
-1917 1
-1921 0
-1922 4
-1923 1
-1907 0
-1906
-1905
-5
-500 0
-501 1
-504 1
-505 1
-502
-7
-700 2
-701 0
-99
-503
-7
-700 3
-701 0.8
-99
-99
-1912
-28
-2800 1
-2801 0
-2802 0.115658
-2803 0
-2804 1
-2805 -0.997548
-2806 0
-99
-99
-23
-2304 O8
-2300 2.44121
-2301 2.14121
-2302 -0.25222
-2303 -0.552214
-2305
-9
-900 3
-901 304
-904 0
-902 A1
-903
-7
-700 2.14121
-701 -0.252214
-99
-99
-2306
-5
-500 2
-501 1
-504 1
-505 0
-502
-7
-700 2.14121
-701 -0.552214
-99
-503
-7
-700 2.44121
-701 -0.25222
-99
-99
-2307
-13
-1300 1
-1301 304
-1306 0
-1302 3
-1305 1
-1303
-7
-700 0.7
-701 1.2
-99
-1304 0
-1307 0
-99
-2308
-28
-2800 1
-2801 0
-2802 1.44121
-2803 0
-2804 1
-2805 -1.45221
-2806 0
-99
-2309 2
 99
 20
 2004 O9
@@ -662,100 +546,6 @@ pwr_exe:
 2804 1
 2805 0
 2806 0
-99
-99
-21
-2104 O10
-2100 1
-2101 0.4
-2102 -1.1
-2103 -1.7
-2105
-8
-802 0
-803 2
-800 0
-801 360
-806 0
-804
-7
-700 -0.3
-701 -0.3
-99
-805
-7
-700 0.3
-701 0.3
-99
-99
-2106
-12
-1200 3
-1201 4
-1202
-7
-700 0.5
-701 -1.25
-99
-1203 
-1204 0
-1205
-28
-2800 1
-2801 0
-2802 0.2
-2803 0
-2804 1
-2805 -0.15
-2806 0
-99
-99
-99
-21
-2104 O11
-2100 1.6
-2101 1
-2102 -1.1
-2103 -1.7
-2105
-8
-802 0
-803 2
-800 0
-801 360
-806 0
-804
-7
-700 -0.3
-701 -0.3
-99
-805
-7
-700 0.3
-701 0.3
-99
-99
-2106
-12
-1200 4
-1201 4
-1202
-7
-700 1.5
-701 -1.25
-99
-1203 
-1204 0
-1205
-28
-2800 1
-2801 0
-2802 -0.2
-2803 0
-2804 1
-2805 -0.15
-2806 0
-99
 99
 99
 99

@@ -1,29 +1,36 @@
+0! DefaultWidth 0
+0! DefaultHeight 0
 199
 !/**
-! ValveIncrDecr
+! FcPPO5PumpAggr
 ! Group Components/BaseComponent
 !
-! <image> bcomp_cvalve_gs.gif
+! <image> bcomp_pumpaggr_gs.gif
 !
 ! <h1>Description
-! Control valve with digital incremental and decremental order. 
-! Graphic symbol for basecomponent BaseValveIncrDecr.
-! Should be connected to an instance of BaseValveIncrDecr, or a 
+! Pump aggregate. Graphic symbol for component BaseFcPPO5PumpAggr.
+! Should be connected to an instance of BaseFcPPO5PumpAggr, or a 
 ! subclass to this class.
+!
+! Subgraph with two pages, pump off (page 1) and pump on (page 2).
+! <image> bcomp_pumpaggr_ags.gif
 !
 ! <h1>Default dynamics
 ! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
 !
 ! Dynamics for the symbol
-! - flashing red when an error occurs.
+! - colored red when an error occurs.
 ! - colored yellow when a warning occurs.
+! - colored darkgray when the pump is off.
 ! - the mode (manual or local) is displayed with a M or L.
-! - colored white when the valve is closed.
-! - popupmenu with the method of the connected object.
+! - pump on and off is displayed with different pages.
+! - popupmenu with the methods of the connected object.
 !
-! DigFlash <t>$hostobject.Actuator.IndError <link>GeDynDigFlash, ,$pwr_lang/man_geref.dat
-! DigWarning <t>$hostobject.Actuator.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
-! Value <t>$hostobject.Actuator.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+! DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+! DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+! DigLowColor <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! Value <t>$hostobject.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+! DigShift <t>$hostobject.FrequencyConverter.ConvertRun <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
 ! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
 !
 ! Default Cycle Slow 
@@ -33,26 +40,26 @@
 100 69.1696
 135 69.1696
 101 20
-102 -149
-103 -230
-104 12.9268
-136 12.9268
+102 -209
+103 -293
+104 13.4717
+136 13.4717
 105 100
-106 -27
-107 -42
-108 3.11566
+106 -40
+107 -57
+108 2
 109 0
-110 0.5
+110 1
 111 -1.5
 116 0
 117 0
-118 126
-119 113
-120 0
+118 131
+119 118
+120 1
 121 Claes context
 122 0
-126 1
-127 1
+126 0.5
+127 0.5
 128 1
 129 0.3
 130 1.5
@@ -60,11 +67,13 @@
 132 3
 133 2
 137 4510
+138 3
+139 2
 134
 22
-2200 7
-2201 12
-2202 bcomp_valveincrdecr
+2200 6
+2201 14
+2202 bcomp_c3wayvalvenomode__p3
 2203 300
 2205 0
 2204
@@ -81,9 +90,9 @@ pwrp_pop:
 pwrp_exe:
 ssab_exe:
 pwr_exe:
-2215 67108864
+2215 0
 2236 0
-2216 3
+2216 30
 2221 0
 2237 0
 2238 0
@@ -105,43 +114,18 @@ pwr_exe:
 2226 0
 2227 
 2228 0
-2229 0
+2229 1
 2233 1
 2234 1
 2235 0
 2243 0
+2245 0
 2244
 1
-100 3169
-101 3
+100 1
+101 1
 102 65532
 103 0
-26
-2600 $hostobject.Actuator.IndError##Boolean
-2601 176
-2602 29
-99
-8
-800 $hostobject.Actuator.IndWarning##Boolean
-99
-61
-6100 $hostobject.Actuator.PosEnum##Int32
-6101 1
-6102 4
-6103 30
-6104 1
-6105 1
-99
-12
-1200 $hostobject.Actuator.Mode.IndMode##String8
-1201 %s
-1202 1
-1203 1
-1204 0
-99
-50
-5000 $hostobject
-99
 99
 99
 123
@@ -156,11 +140,11 @@ pwr_exe:
 1904 O0
 1900 2
 1901 0
-1902 0.5
+1902 1
 1903 -0.5
 1908 0
-1909 2
-1910 2
+1909 47
+1910 47
 1911 1
 1915 0
 1913 5
@@ -189,7 +173,7 @@ pwr_exe:
 503
 7
 700 2
-701 0.5
+701 1
 99
 99
 1912
@@ -205,10 +189,10 @@ pwr_exe:
 99
 21
 2104 O1
-2100 0.3
-2101 -0.3
-2102 0.3
-2103 -0.3
+2100 0.362846
+2101 -0.237154
+2102 0.323144
+2103 -0.276856
 2105
 8
 802 0
@@ -483,9 +467,11 @@ pwr_exe:
 2416 2
 2414 0
 2417 0
+2421 0
 2418 0
 2419 4
 2420 0
+2422 0
 2407 0
 2406
 2405
@@ -516,119 +502,6 @@ pwr_exe:
 2805 1.73472e-15
 2806 0
 99
-99
-19
-1904 O7
-1900 3.11566
-1901 2.11566
-1902 -0.197548
-1903 -0.997548
-1908 0
-1909 300
-1910 300
-1911 0
-1915 0
-1913 5
-1916 2
-1914 0
-1918 0
-1919 1
-1920 0
-1917 1
-1921 0
-1922 4
-1923 1
-1907 0
-1906
-1905
-5
-500 0
-501 1
-504 1
-505 1
-502
-7
-700 2
-701 0
-99
-503
-7
-700 3
-701 0.8
-99
-99
-1912
-28
-2800 1
-2801 0
-2802 0.115658
-2803 0
-2804 1
-2805 -0.997548
-2806 0
-99
-99
-23
-2304 O8
-2300 2.44121
-2301 2.14121
-2302 -0.25222
-2303 -0.552214
-2305
-9
-900 3
-901 304
-904 0
-902 A1
-903
-7
-700 2.14121
-701 -0.252214
-99
-99
-2306
-5
-500 2
-501 1
-504 1
-505 0
-502
-7
-700 2.14121
-701 -0.552214
-99
-503
-7
-700 2.44121
-701 -0.25222
-99
-99
-2307
-13
-1300 1
-1301 304
-1306 0
-1302 3
-1305 1
-1303
-7
-700 0.7
-701 1.2
-99
-1304 0
-1307 0
-99
-2308
-28
-2800 1
-2801 0
-2802 1.44121
-2803 0
-2804 1
-2805 -1.45221
-2806 0
-99
-2309 2
 99
 20
 2004 O9
@@ -664,59 +537,74 @@ pwr_exe:
 2806 0
 99
 99
-21
-2104 O10
-2100 1
-2101 0.4
-2102 -1.1
-2103 -1.7
-2105
-8
-802 0
-803 2
-800 0
-801 360
-806 0
-804
+26
+2604 O10
+2600 1.5
+2601 0.5
+2602 1
+2603 0
+2605
+25
+2500 0
+2501 1
+2503 1
+2504 0
+2502
+2
 7
-700 -0.3
-701 -0.3
+700 1
+701 0
 99
-805
-7
-700 0.3
-701 0.3
-99
-99
-2106
-12
-1200 3
-1201 4
-1202
 7
 700 0.5
-701 -1.25
+701 1
 99
-1203 
-1204 0
-1205
+7
+700 1.5
+701 1
+99
+7
+700 1
+701 0
+99
+99
+99
+2608 0
+2609 30
+2610 30
+2611 1
+2616 0
+2614 8
+2617 2
+2615 0
+2618 0
+2607 0
+2606
+2612
 28
 2800 1
 2801 0
-2802 0.2
+2802 0
 2803 0
 2804 1
-2805 -0.15
+2805 0
 2806 0
 99
-99
+2613 0
+2619 0
+2620 0
+2621 1
+2622 0
+2623 0
+2624 4
+2625 0
 99
 21
 2104 O11
-2100 1.6
-2101 1
-2102 -1.1
-2103 -1.7
+2100 1.3
+2101 0.7
+2102 1.3
+2103 0.7
 2105
 8
 802 0
@@ -737,12 +625,12 @@ pwr_exe:
 99
 2106
 12
-1200 4
-1201 4
+1200 5
+1201 3
 1202
 7
-700 1.5
-701 -1.25
+700 1
+701 1
 99
 1203 
 1204 0
@@ -750,12 +638,80 @@ pwr_exe:
 28
 2800 1
 2801 0
-2802 -0.2
+2802 0
 2803 0
 2804 1
-2805 -0.15
+2805 0
 2806 0
 99
+99
+99
+20
+2004 O12
+2000 1.4
+2001 0.6
+2002 0.8
+2003 0.8
+2009 0
+2010 0
+2005
+6
+600 0
+601 1
+602
+7
+700 1.4
+701 0.8
+99
+603
+7
+700 0.6
+701 0.8
+99
+99
+2008
+28
+2800 1
+2801 0
+2802 0
+2803 0
+2804 1
+2805 0
+2806 0
+99
+99
+20
+2004 O13
+2000 1.8
+2001 1.8
+2002 0.4
+2003 -0.4
+2009 0
+2010 0
+2005
+6
+600 0
+601 1
+602
+7
+700 1.8
+701 0.4
+99
+603
+7
+700 1.8
+701 -0.4
+99
+99
+2008
+28
+2800 1
+2801 0
+2802 0
+2803 0
+2804 1
+2805 0
+2806 0
 99
 99
 99

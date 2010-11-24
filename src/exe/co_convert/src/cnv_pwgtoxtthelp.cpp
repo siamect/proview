@@ -219,7 +219,6 @@ int CnvPwgToXtthelp::exec_group( int idx, int *next_idx)
 
 int CnvPwgToXtthelp::exec_file( char *fname)
 {
-  int type;
   char line[200];
   int incomment = 0;
 
@@ -227,14 +226,15 @@ int CnvPwgToXtthelp::exec_file( char *fname)
   if ( !ifp)
     return 0;
 
-  ifp >> type;
+  ifp.getline( line, sizeof(line));
+  while ( strncmp( line, "0!", 2) == 0)
+    ifp.getline( line, sizeof(line));
 
-  if ( type != 199)
-    return 1;
+  if ( strncmp( line, "199", 3) != 0)
+    return 0;
 
   m_fp << "<topic> " << fname_to_topic( fname) << " <style> function" << endl;
 
-  ifp.getline( line, sizeof(line));
   for (;;) {
     ifp.getline( line, sizeof(line));
     if ( strstr( line, "!*/") != 0)
@@ -258,7 +258,6 @@ int CnvPwgToXtthelp::get_title( char *fname, char *title, int tsize,
 				char *group, int gsize)
 {
   char line[200];
-  int type;
   int incomment = 0;
   int found = 0;
   char *s;
@@ -267,12 +266,13 @@ int CnvPwgToXtthelp::get_title( char *fname, char *title, int tsize,
   if ( !ifp)
     return found;
 
-  ifp >> type;
+  ifp.getline( line, sizeof(line));
+  while ( strncmp( line, "0!", 2) == 0)
+    ifp.getline( line, sizeof(line));
 
-  if ( type != 199)
+  if ( strncmp( line, "199", 3) != 0)
     return 0;
 
-  ifp.getline( line, sizeof(line));
   for (;;) {
     ifp.getline( line, sizeof(line));
     if ( strstr( line, "!*/") != 0)
