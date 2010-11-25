@@ -19,7 +19,7 @@
 
 /* cow_pn_gsdml_data.cpp -- Profinet configurator data file */
 
-#include "glow_std.h"
+//#include "glow_std.h"
 
 #include <vector>
 #include <iostream>

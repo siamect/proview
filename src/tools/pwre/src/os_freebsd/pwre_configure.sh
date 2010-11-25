@@ -278,7 +278,7 @@ rm $pwre_croot/src/exe/rt_prio/src/.${pwre_os}/.${pwre_hw}/makefile
 rm $pwre_croot/remote/exe/rs_remote_alcm/src/.${pwre_os}/.${pwre_hw}/makefile
 #rm $pwre_croot/profibus/lib/rt/src/.${pwre_os}/.${pwre_hw}/makefile
 
-echo "export PKG_CONFIG_PATH=/sw/fink/pkgconfig" >> $cfile
+echo "export wb_rtt=\$pwr_exe/wb_rtt" >> $cfile
 
 echo "export pwre_conf_cc_define=\"$conf_cc_define\"" >> $cfile
 echo "export pwre_conf_libpwrco=\"-lpwr_co\"" >> $cfile

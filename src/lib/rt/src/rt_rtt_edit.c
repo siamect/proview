@@ -849,6 +849,8 @@ static int	save_func(	edit_ctx	ctx,
  	      opsys = pwr_mOpSys_X86_LINUX;
 	    else if ( cdh_NoCaseStrncmp( arg1_str, "X86_64_LINUX", strlen( arg1_str)) == 0)
  	      opsys = pwr_mOpSys_X86_64_LINUX;
+	    else if ( cdh_NoCaseStrncmp( arg1_str, "ARM_LINUX", strlen( arg1_str)) == 0)
+ 	      opsys = pwr_mOpSys_ARM_LINUX;
 	    else if ( cdh_NoCaseStrncmp( arg1_str, "X86_64_MACOS", strlen( arg1_str)) == 0)
  	      opsys = pwr_mOpSys_X86_64_MACOS;
 	    else if ( cdh_NoCaseStrncmp( arg1_str, "X86_64_FREEBSD", strlen( arg1_str)) == 0)
@@ -909,7 +911,9 @@ static int	save_func(	edit_ctx	ctx,
 	        opsys = pwr_mOpSys_X86_LINUX;
 	      else if ( cdh_NoCaseStrncmp( arg1_str, "X86_64_LINUX", strlen( arg1_str)) == 0)
 	        opsys = pwr_mOpSys_X86_64_LINUX;
-	      else if ( cdh_NoCaseStrncmp( arg1_str, "X86_64_MACOS", strlen( arg1_str)) == 0)
+	      else if ( cdh_NoCaseStrncmp( arg1_str, "ARM_LINUX", strlen( arg1_str)) == 0)
+	        opsys = pwr_mOpSys_ARM_LINUX;
+	      else if ( cdh_NoCaseStrncmp( arg1_str, "ARM_MACOS", strlen( arg1_str)) == 0)
 	        opsys = pwr_mOpSys_X86_64_MACOS;
 	      else if ( cdh_NoCaseStrncmp( arg1_str, "X86_64_FREEBSD", strlen( arg1_str)) == 0)
 	        opsys = pwr_mOpSys_X86_64_FREEBSD;
@@ -7785,7 +7789,9 @@ int	dtt_start( char		*programname)
 	if ( strcmp( rtt_hw, "x86") == 0)
 	  dtt_current_opsys = pwr_mOpSys_X86_LINUX;
 	else if ( strcmp( rtt_hw, "x86_64") == 0)
-	  dtt_current_opsys = pwr_mOpSys_X86_LINUX;
+	  dtt_current_opsys = pwr_mOpSys_X86_64_LINUX;
+	else if ( strcmp( rtt_hw, "arm") == 0)
+	  dtt_current_opsys = pwr_mOpSys_ARM_LINUX;
 	else
 	  dtt_current_opsys = pwr_mOpSys_PPC_LINUX;
 #elif defined OS_MACOS

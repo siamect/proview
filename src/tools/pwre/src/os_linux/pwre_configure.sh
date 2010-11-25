@@ -176,8 +176,8 @@ pwre_create_makedir()
 }
 
 
-pwre_os="os_linux"
-pwre_hw="hw_x86"
+#pwre_os="os_linux"
+#pwre_hw="hw_x86"
 
 cfile="$pwre_broot/pwre_${pwre_hw:3}_${pwre_os:3}.cnf"
 dos=`eval echo ${pwre_os} | tr [:lower:] [:upper:]`
@@ -230,70 +230,119 @@ pwre_create_makedir
 
 pwre_config_init
       
-#Gtk
-pwre_config_check_lib gtk      	GTK      gtk gtk 0 /usr/lib/libgtk-x11-2.0.so
-pwre_config_check_lib motif     MRM      motif motif 0 /usr/lib/libMrm.so
+if test $pwre_hw == "hw_arm"; then
 
-pwre_config_check_lib libantlr 	LIBANTLR lib lib 0 /usr/local/lib/libantlr.a
-pwre_config_check_lib librpcsvc LIBRPCSVC lib lib 0 /usr/lib/librpcsvc.so:/usr/lib/librpcsvc.a
-pwre_config_check_lib libasound LIBASOUND lib lib 0 /usr/lib/libasound.so:usr/lib/libasound.a
-pwre_config_check_lib libpthread LIBPTHREAD lib lib 0 /usr/lib/libpthread.so:usr/lib/libpthread.a
-pwre_config_check_lib libm     	LIBM     lib lib 0 /usr/lib/libm.so:usr/lib/libm.a
-pwre_config_check_lib libdb_cxx LIBDB_CXX lib lib 0 /usr/lib/libdb_cxx.so
-pwre_config_check_lib libz     	LIBZ     lib lib 0 /usr/lib/libz.so:usr/lib/libz.a
-pwre_config_check_lib libcrypt 	LIBCRYPT lib lib 0 /usr/lib/libcrypt.so:usr/lib/libcrypt.a
-pwre_config_check_lib mysql    	MYSQL    lib lib 1 /usr/lib/libmysqlclient.so
-pwre_config_check_lib mq       MQ       lib lib 1 /usr/lib/libdmq.so
-pwre_config_check_lib libpnioif PNAK    lib lib 1 /usr/lib/libpnioif.a:/usr/local/lib/libpnioif.a
-pwre_config_check_lib libusb   LIBUSB   lib lib 1 /usr/lib/libusb-1.0.so
-pwre_config_check_lib librt    LIBRT    lib lib 0 /usr/lib/librt.so:usr/lib/librt.a
-pwre_config_check_lib libfl    LIBFL    lib lib 0 /usr/lib/libfl.so:usr/lib/libfl.a
+  pwre_config_check_include jni   JNI   1 $jdk/include/jni.h
+  pwre_config_check_include jni   JNI   0 $jdk/include/linux/jni_md.h
+
+  rm $pwre_sroot/tools/exe/tools_cmsg2c/src/.os_linux/.hw_arm/makefile
+  rm $pwre_sroot/tools/exe/tools_msg2cmsg/src/.os_linux/.hw_arm/makefile
+  rm $pwre_sroot/tools/exe/tools_pdrgen/src/.os_linux/.hw_arm/makefile
+  rm $pwre_sroot/tools/exe/tools_javac/src/.os_linux/.hw_arm/makefile
+  rm $pwre_sroot/exe/co_convert/src/.os_linux/.hw_arm/makefile
+  rm $pwre_sroot/exe/wb_rtt/src/.os_linux/.hw_arm/makefile
+  rm $pwre_sroot/exe/rt_elog/src/.os_linux/.hw_arm/makefile
+
+  let i=0
+  while [ $i -lt $inc_cnt ]; do
+      conf_incdir=$conf_incdir" -I${inc_array[$i]}"
+      i=$((i+1))
+  done
+
+  echo "export wb_rtt=\$pwre_host_exe/wb_rtt" >> $cfile
+
+  echo "export pwre_conf_cc_define=\"$conf_cc_define\"" >> $cfile
+  echo "export pwre_conf_libpwrco=\"-lpwr_co\"" >> $cfile
+  echo "export pwre_conf_libpwrrt=\"-lpwr_rt -lpwr_co -lpwr_statussrv -lpwr_msg_dummy\"" >> $cfile
+  echo "export pwre_conf_libpwrdtt=\"-lpwr_dtt\"" >> $cfile
+  echo "export pwre_conf_libpwrotherio=\"-lpwr_usbio_dummy -lpwr_usb_dummy\"" >> $cfile
+  echo "export pwre_conf_libpwrprofibus=\"-lpwr_pnak_dummy\"" >> $cfile
+  echo "export pwre_conf_libpwrxtt=\"-lpwr_xtt -lpwr_ge -lpwr_cow -lpwr_flow -lpwr_glow\"" >> $cfile
+  echo "export pwre_conf_libpwrxttgtk=\" -lpwr_xtt_gtk -lpwr_ge_gtk -lpwr_cow_gtk -lpwr_flow_gtk -lpwr_glow_gtk\"" >> $cfile
+  echo "export pwre_conf_libpwrxttmotif=\" -lpwr_xtt_motif -lpwr_ge_motif -lpwr_cow_motif -lpwr_flow_motif -lpwr_glow_motif\"" >> $cfile
+  echo "export pwre_conf_libpwrwb=\"-lpwr_wb\"" >> $cfile
+  echo "export pwre_conf_libpwrwbgtk=\"-lpwr_wb_gtk\"" >> $cfile
+  echo "export pwre_conf_libpwrwbmotif=\"-lpwr_wb_motif\"" >> $cfile
+  echo "export pwre_conf_libpwropc=\"-lpwr_opc\"" >> $cfile
+  echo "export pwre_conf_libpwrremote=\"-lpwr_remote\"" >> $cfile
+  echo "export pwre_conf_libpwrnmps=\"-lpwr_nmps\"" >> $cfile
+  echo "export pwre_conf_libpwrtlog=\"-lpwr_tlog\"" >> $cfile
+  echo "export pwre_conf_libpwrsev=\"-lpwr_sev\"" >> $cfile
+  echo "export pwre_conf_lib=\"-lpthread -lm -lrt -lcrypt\"" >> $cfile
+  echo "export pwre_conf_libgtk=\"$conf_libgtk\"" >> $cfile
+  echo "export pwre_conf_libmotif=\"$conf_libmotif\"" >> $cfile
+  echo "export pwre_conf_libdir=\"$conf_libdir\"" >> $cfile
+  echo "export pwre_conf_incdir=\"$conf_incdir\"" >> $cfile
+  echo "export pwre_conf_incdirgtk=\"$conf_incdirgtk\"" >> $cfile
+  echo "export pwre_conf_dtt_platform=\"arm_linux\"" >> $cfile
+else
+#Gtk
+
+  pwre_config_check_lib gtk    	  GTK      gtk gtk 0 /usr/lib/libgtk-x11-2.0.so
+  pwre_config_check_lib motif     MRM      motif motif 0 /usr/lib/libMrm.so
+
+  pwre_config_check_lib libantlr  LIBANTLR lib lib 0 /usr/local/lib/libantlr.a
+  pwre_config_check_lib librpcsvc LIBRPCSVC lib lib 0 /usr/lib/librpcsvc.so:/usr/lib/librpcsvc.a
+  pwre_config_check_lib libasound LIBASOUND lib lib 0 /usr/lib/libasound.so:usr/lib/libasound.a
+  pwre_config_check_lib libpthread LIBPTHREAD lib lib 0 /usr/lib/libpthread.so:usr/lib/libpthread.a
+  pwre_config_check_lib libm      LIBM     lib lib 0 /usr/lib/libm.so:usr/lib/libm.a
+  pwre_config_check_lib libdb_cxx LIBDB_CXX lib lib 0 /usr/lib/libdb_cxx.so
+  pwre_config_check_lib libz      LIBZ     lib lib 0 /usr/lib/libz.so:usr/lib/libz.a
+  pwre_config_check_lib libcrypt  LIBCRYPT lib lib 0 /usr/lib/libcrypt.so:usr/lib/libcrypt.a
+  pwre_config_check_lib mysql     MYSQL    lib lib 1 /usr/lib/libmysqlclient.so
+  pwre_config_check_lib mq        MQ       lib lib 1 /usr/lib/libdmq.so
+  pwre_config_check_lib libpnioif PNAK     lib lib 1 /usr/lib/libpnioif.a:/usr/local/lib/libpnioif.a
+  pwre_config_check_lib libusb    LIBUSB   lib lib 1 /usr/lib/libusb-1.0.so
+  pwre_config_check_lib librt     LIBRT    lib lib 0 /usr/lib/librt.so:usr/lib/librt.a
+  pwre_config_check_lib libfl     LIBFL    lib lib 0 /usr/lib/libfl.so:usr/lib/libfl.a
 
 #set -o xtrace
 
-pwre_config_check_include antlr ANTLR 1 /usr/local/include/antlr/CommonAST.hpp
-pwre_config_check_include gtk   GTK   1 /usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h
-pwre_config_check_include jni   JNI   1 $jdk/include/jni.h
-pwre_config_check_include jni   JNI   0 $jdk/include/linux/jni_md.h
+  pwre_config_check_include antlr ANTLR 1 /usr/local/include/antlr/CommonAST.hpp
+  pwre_config_check_include gtk   GTK   1 /usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h
+  pwre_config_check_include jni   JNI   1 $jdk/include/jni.h
+  pwre_config_check_include jni   JNI   0 $jdk/include/linux/jni_md.h
 
 
-export pwre_conf_alsa=1
+  export pwre_conf_alsa=1
 
 
-let i=0
-while [ $i -lt $inc_cnt ]; do
-    conf_incdir=$conf_incdir" -I${inc_array[$i]}"
-    i=$((i+1))
-done
+  let i=0
+  while [ $i -lt $inc_cnt ]; do
+      conf_incdir=$conf_incdir" -I${inc_array[$i]}"
+      i=$((i+1))
+  done
 
-let i=0
-while [ $i -lt $lib_cnt ]; do
-    conf_libdir=$conf_libdir" -L${lib_array[$i]}"
-    i=$((i+1))
-done
+  let i=0
+  while [ $i -lt $lib_cnt ]; do
+      conf_libdir=$conf_libdir" -L${lib_array[$i]}"
+      i=$((i+1))
+  done
 
-echo "export pwre_conf_cc_define=\"$conf_cc_define\"" >> $cfile
-echo "export pwre_conf_libpwrco=\"-lpwr_co\"" >> $cfile
-echo "export pwre_conf_libpwrrt=\"-lpwr_rt -lpwr_co -lpwr_statussrv -lpwr_msg_dummy\"" >> $cfile
-echo "export pwre_conf_libpwrdtt=\"-lpwr_dtt\"" >> $cfile
-echo "export pwre_conf_libpwrotherio=\"-lpwr_usbio_dummy -lpwr_usb_dummy\"" >> $cfile
-echo "export pwre_conf_libpwrprofibus=\"-lpwr_pnak_dummy\"" >> $cfile
-echo "export pwre_conf_libpwrxtt=\"-lpwr_xtt -lpwr_ge -lpwr_cow -lpwr_flow -lpwr_glow\"" >> $cfile
-echo "export pwre_conf_libpwrxttgtk=\" -lpwr_xtt_gtk -lpwr_ge_gtk -lpwr_cow_gtk -lpwr_flow_gtk -lpwr_glow_gtk\"" >> $cfile
-echo "export pwre_conf_libpwrxttmotif=\" -lpwr_xtt_motif -lpwr_ge_motif -lpwr_cow_motif -lpwr_flow_motif -lpwr_glow_motif\"" >> $cfile
-echo "export pwre_conf_libpwrwb=\"-lpwr_wb\"" >> $cfile
-echo "export pwre_conf_libpwrwbgtk=\"-lpwr_wb_gtk\"" >> $cfile
-echo "export pwre_conf_libpwrwbmotif=\"-lpwr_wb_motif\"" >> $cfile
-echo "export pwre_conf_libpwropc=\"-lpwr_opc\"" >> $cfile
-echo "export pwre_conf_libpwrremote=\"-lpwr_remote\"" >> $cfile
-echo "export pwre_conf_libpwrnmps=\"-lpwr_nmps\"" >> $cfile
-echo "export pwre_conf_libpwrtlog=\"-lpwr_tlog\"" >> $cfile
-echo "export pwre_conf_libpwrsev=\"-lpwr_sev\"" >> $cfile
-echo "export pwre_conf_lib=\"$conf_lib\"" >> $cfile
-echo "export pwre_conf_libgtk=\"$conf_libgtk\"" >> $cfile
-echo "export pwre_conf_libmotif=\"$conf_libmotif\"" >> $cfile
-echo "export pwre_conf_libdir=\"$conf_libdir\"" >> $cfile
-echo "export pwre_conf_incdir=\"$conf_incdir\"" >> $cfile
-echo "export pwre_conf_incdirgtk=\"$conf_incdirgtk\"" >> $cfile
+  echo "export wb_rtt=\$pwr_exe/wb_rtt" >> $cfile
 
+  echo "export pwre_conf_cc_define=\"$conf_cc_define\"" >> $cfile
+  echo "export pwre_conf_libpwrco=\"-lpwr_co\"" >> $cfile
+  echo "export pwre_conf_libpwrrt=\"-lpwr_rt -lpwr_co -lpwr_statussrv -lpwr_msg_dummy\"" >> $cfile
+  echo "export pwre_conf_libpwrdtt=\"-lpwr_dtt\"" >> $cfile
+  echo "export pwre_conf_libpwrotherio=\"-lpwr_usbio_dummy -lpwr_usb_dummy\"" >> $cfile
+  echo "export pwre_conf_libpwrprofibus=\"-lpwr_pnak_dummy\"" >> $cfile
+  echo "export pwre_conf_libpwrxtt=\"-lpwr_xtt -lpwr_ge -lpwr_cow -lpwr_flow -lpwr_glow\"" >> $cfile
+  echo "export pwre_conf_libpwrxttgtk=\" -lpwr_xtt_gtk -lpwr_ge_gtk -lpwr_cow_gtk -lpwr_flow_gtk -lpwr_glow_gtk\"" >> $cfile
+  echo "export pwre_conf_libpwrxttmotif=\" -lpwr_xtt_motif -lpwr_ge_motif -lpwr_cow_motif -lpwr_flow_motif -lpwr_glow_motif\"" >> $cfile
+  echo "export pwre_conf_libpwrwb=\"-lpwr_wb\"" >> $cfile
+  echo "export pwre_conf_libpwrwbgtk=\"-lpwr_wb_gtk\"" >> $cfile
+  echo "export pwre_conf_libpwrwbmotif=\"-lpwr_wb_motif\"" >> $cfile
+  echo "export pwre_conf_libpwropc=\"-lpwr_opc\"" >> $cfile
+  echo "export pwre_conf_libpwrremote=\"-lpwr_remote\"" >> $cfile
+  echo "export pwre_conf_libpwrnmps=\"-lpwr_nmps\"" >> $cfile
+  echo "export pwre_conf_libpwrtlog=\"-lpwr_tlog\"" >> $cfile
+  echo "export pwre_conf_libpwrsev=\"-lpwr_sev\"" >> $cfile
+  echo "export pwre_conf_lib=\"$conf_lib\"" >> $cfile
+  echo "export pwre_conf_libgtk=\"$conf_libgtk\"" >> $cfile
+  echo "export pwre_conf_libmotif=\"$conf_libmotif\"" >> $cfile
+  echo "export pwre_conf_libdir=\"$conf_libdir\"" >> $cfile
+  echo "export pwre_conf_incdir=\"$conf_incdir\"" >> $cfile
+  echo "export pwre_conf_incdirgtk=\"$conf_incdirgtk\"" >> $cfile
 
+fi

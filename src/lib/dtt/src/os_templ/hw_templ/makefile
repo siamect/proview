@@ -165,7 +165,7 @@ $(export_lib) : $(objects)
 	@ echo "Building archive $(notdir $(export_lib))"
 	@ $(rm) $(export_lib)
 	@ $(ar) -cr $(export_lib) $(objects)
-	
+
 $(obj_dir)/%.o : %.c
 ifeq ($(nodep),)
 	@ $(log_c_d)
@@ -181,11 +181,11 @@ endif
 
 $(export_lib)(%.o) : %.dtt
 	@ echo "Generate $(sname)"
-	@ $(pwr_exe)/wb_rtt rttsys generate/id=$(sname)
+	@ $(wb_rtt) rttsys generate/id=$(sname) $(pwre_conf_dtt_platform)
 
 $(bld_dir)/%.c : %.dtt_m
 	@ echo "Generate menu"
-	@ $(pwr_exe)/wb_rtt rttsys generate/menu
+	@ $(wb_rtt) rttsys generate/menu $(pwre_conf_dtt_platform)
 
 -include $(source_dependencies)
 
