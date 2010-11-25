@@ -143,6 +143,7 @@ int GsdmlDeviceData::print( const char *filename)
     "  DeviceId=\"" << device_id << "\"" << endl <<
     "  Version=\"" << version << "\"" << endl <<
     "  ByteOrder=\"" << byte_order << "\">" << endl <<
+    "  Instance=\"" << instance << "\">" << endl <<
     "  <NetworkSettings " << endl <<
     "    DeviceName=\"" << device_name << "\"" << endl <<
     "    IP_Address=\"" << ip_address << "\"" << endl <<
@@ -409,6 +410,8 @@ int GsdmlDataReader::tag_attribute( const char *name, const char *value)
       strncpy( data->version, value, sizeof(data->version));
     else if ( strcmp( name, "ByteOrder") == 0)
       sscanf( value, "%d", &data->byte_order);
+    else if ( strcmp( name, "Instance") == 0)
+      sscanf( value, "%hu", &data->instance);
     break;
   case gsdmldata_eTag_NetworkSettings:
     if ( strcmp( name, "DeviceName") == 0)
