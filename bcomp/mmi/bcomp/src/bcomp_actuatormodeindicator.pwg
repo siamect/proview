@@ -5,6 +5,8 @@
 ! ActuatorModeIndicator
 ! Group Components/BaseComponent
 !
+! <image> bcomp_modeindicator_gs.gif
+!
 ! <h1>Description
 ! Displays the mode, manual or local, with M or L.
 ! Can be connected to CValve, C3WayValve or CDamper.

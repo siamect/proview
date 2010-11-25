@@ -34,7 +34,7 @@
 
 
 <hr>
-2010-11-24
+2010-11-25
 Version V4.8.0
 <hr>
 </topic>
@@ -116,7 +116,6 @@ Order <link>pwr_order
 Step <link>pwr_step
 Step <link>pwr_stopwatch
 Trans <link>pwr_trans
-pwr_buttonroundmetalframe <link>pwr_buttonroundmetalframe
 </topic>
 
 <topic> General_Hydraulics
@@ -139,14 +138,15 @@ IndPulsarRound <link>pwr_indpulsarround
 IndPulsarSquare <link>pwr_indpulsarsquare
 IndRound <link>pwr_indround
 IndRoundLarge <link>pwr_indroundlarge
+IndRoundMetalFrame <link>pwr_indroundmetalframe
 IndRoundTextFront <link>pwr_indroundtextfront
 IndRoundTextRear <link>pwr_indroundtextrear
 IndSoap <link>pwr_indsoap
 IndSquare <link>pwr_indsquare
 IndSquareLarge <link>pwr_indsquarelarge
+IndSquareMetalFrame <link>pwr_indsquaremetalframe
 IndSquareTextFront <link>pwr_indsquaretextfront
 IndSquareTextRear <link>pwr_indsquaretextrear
-pwr_button1metalframe <link>pwr_button1metalframe
 </topic>
 
 <topic> General_Layout
@@ -177,8 +177,8 @@ Menubar <link>pwr_menubar2
 Needle <link>pwr_needle
 OptionMenu <link>pwr_optionmenu
 Pc <link>pwr_pc
-PulldownMenu <link>pwr_pulldownmenu2
 PulldownMenu <link>pwr_pulldownmenu
+PulldownMenu <link>pwr_pulldownmenu2
 Pulpet <link>pwr_pulpet
 PwrLogotype <link>pwr_logga
 Rack <link>pwr_rack
@@ -246,12 +246,13 @@ ValveAnim2 <link>pwr_valveanim2
 ValveControl <link>pwr_valvecontrol
 ValveControl2 <link>pwr_valvecontrol2
 ValveManuel <link>pwr_valvemanuel
-pwr_indsquaremetalframe <link>pwr_indsquaremetalframe
 pwr_nameplate <link>pwr_nameplate
 </topic>
 
 <topic> General_Pushbuttons
 Group Pushbuttons
+Button1MetalFrame <link>pwr_button1metalframe
+Button2MetalFrame <link>pwr_button2metalframe
 ButtonCommand <link>pwr_buttoncommand
 ButtonCommandCenter <link>pwr_buttoncommandcenter
 ButtonCommandConfirm <link>pwr_buttoncommandconfirm
@@ -263,6 +264,7 @@ ButtonReset <link>pwr_buttonreset
 ButtonResetCenter <link>pwr_buttonresetcenter
 ButtonResetConfirm <link>pwr_buttonresetconfirm
 ButtonRight <link>pwr_buttonright
+ButtonRoundMetalFrame <link>pwr_buttonroundmetalframe
 ButtonSet <link>pwr_buttonset
 ButtonSetCenter <link>pwr_buttonsetcenter
 ButtonSetConfirm <link>pwr_buttonsetconfirm
@@ -275,15 +277,13 @@ CheckBox <link>pwr_checkbox2
 CheckBoxRelief <link>pwr_checkboxrelief
 LargeButton <link>pwr_largebutton
 NoteButton <link>pwr_notebutton
-Radiobutton <link>pwr_radiobutton2
 Radiobutton <link>pwr_radiobutton
+Radiobutton <link>pwr_radiobutton2
 RadiobuttonRelief <link>pwr_radiobuttonrelief
 RoundButton <link>pwr_roundbutton
 SmallButton <link>pwr_smallbutton
 SmallButtonCenter <link>pwr_smallbuttoncenter
 SoapButton <link>pwr_soapbutton
-pwr_button2metalframe <link>pwr_button2metalframe
-pwr_indroundmetalframe <link>pwr_indroundmetalframe
 </topic>
 
 <topic> General_Pushbuttons_Methodbuttons
@@ -910,7 +910,7 @@ Group Hydraulics
  Tank2
  Group Hydraulics
 
- <image> pwr_tank_gs.gif
+ <image> pwr_tank2_gs.gif
 
  <h1>Description
  Tank.
@@ -1029,6 +1029,20 @@ Group Indicators
 
 </topic>
 
+<topic> pwr_indroundmetalframe <style> function
+ IndRoundMetalFrame
+ Group Indicators
+
+ <image> pwr_indroundmetalframe_gs.gif
+
+ <h1>Description
+ Indicator with metal frame.
+
+ <h1>Default dynamics
+ DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+
+</topic>
+
 <topic> pwr_indroundtextfront <style> function
  IndRoundTextFront
  Group Indicators
@@ -1101,6 +1115,20 @@ Group Indicators
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  Darkgray when signal is low.
+
+</topic>
+
+<topic> pwr_indsquaremetalframe <style> function
+ IndSquareMetalFrame
+ Group Indicators
+
+ <image> pwr_indsquaremetalframe_gs.gif
+
+ <h1>Description
+ Indicator with metal frame.
+
+ <h1>Default dynamics
+ DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
 
 </topic>
 
@@ -1396,7 +1424,7 @@ Group Other
 
 </topic>
 
-<topic> pwr_pulldownmenu2 <style> function
+<topic> pwr_pulldownmenu <style> function
  PulldownMenu
  Group Other
 
@@ -1410,7 +1438,7 @@ Group Other
 
 </topic>
 
-<topic> pwr_pulldownmenu <style> function
+<topic> pwr_pulldownmenu2 <style> function
  PulldownMenu
  Group Other
 
@@ -2486,6 +2514,34 @@ Group Process
 Group Pushbuttons
 </topic>
 <headerlevel>
+<topic> pwr_button1metalframe <style> function
+ Button1MetalFrame
+ Group Pushbuttons
+
+ <image> pwr_button1metalframe_gs.gif
+
+ <h1>Description
+ Button with toggle action.
+
+ <h1>Default dynamics
+ ToggleDig <link>GeDynToggleDig, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_button2metalframe <style> function
+ Button2MetalFrame
+ Group Pushbuttons
+
+ <image> pwr_button2metalframe_gs.gif
+
+ <h1>Description
+ Button with toggle action.
+
+ <h1>Default dynamics
+ ToggleDig <link>GeDynToggleDig, ,$pwr_lang/man_geref.dat
+
+</topic>
+
 <topic> pwr_buttoncommand <style> function
  ButtonCommand
  Group Pushbuttons
@@ -2639,6 +2695,20 @@ Group Pushbuttons
 
  <h1>Default dynamics
  SetDig <link>GeDynSetDig, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_buttonroundmetalframe <style> function
+ ButtonRoundMetalFrame
+ Group Pushbuttons
+
+ <image> pwr_buttonroundmetalframe_gs.gif
+
+ <h1>Description
+ Button with toggle action.
+
+ <h1>Default dynamics
+ ToggleDig <link>GeDynToggleDig, ,$pwr_lang/man_geref.dat
 
 </topic>
 
@@ -2830,7 +2900,7 @@ Group Pushbuttons
 
 </topic>
 
-<topic> pwr_radiobutton2 <style> function
+<topic> pwr_radiobutton <style> function
  Radiobutton
  Group Pushbuttons
 
@@ -2851,7 +2921,7 @@ Group Pushbuttons
 
 </topic>
 
-<topic> pwr_radiobutton <style> function
+<topic> pwr_radiobutton2 <style> function
  Radiobutton
  Group Pushbuttons
 
@@ -6612,6 +6682,8 @@ Group Components/BaseComponent
  ActuatorModeIndicator
  Group Components/BaseComponent
 
+ <image> bcomp_modeindicator_gs.gif
+
  <h1>Description
  Displays the mode, manual or local, with M or L.
  Can be connected to CValve, C3WayValve or CDamper.
@@ -7772,6 +7844,8 @@ Group Components/BaseComponent
 <topic> bcomp_modeindicator <style> function
  ModeIndicator
  Group Components/BaseComponent
+
+ <image> bcomp_modeindicator_gs.gif
 
  <h1>Description
  Displays the mode, manual or local, with M or L.
