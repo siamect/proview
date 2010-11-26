@@ -272,6 +272,8 @@ static pwr_tStatus IoCardSwap (
   qbus_io_read		rb;
   int			sts;
 
+  op = (pwr_sClass_Ssab_BaseDoCard *) cp->op;
+
   if (!cp->Local) {
     local = calloc( 1, sizeof(*local));
     cp->Local = local;
@@ -280,8 +282,6 @@ static pwr_tStatus IoCardSwap (
     local->Address[1] = op->RegAddress + 2;
     local->Qbus_fp = ((io_sRackLocal *)(rp->Local))->Qbus_fp;
   }
-
-  op = (pwr_sClass_Ssab_BaseDoCard *) cp->op;
 
   for ( i = 0; i < 2; i++)
   { 
