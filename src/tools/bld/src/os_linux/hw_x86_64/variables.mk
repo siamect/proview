@@ -109,9 +109,18 @@ wb_msg_eobjs 	:= $(eobj_dir)/pwr_msg_wb.o $(eobj_dir)/pwr_msg_ge.o $(eobj_dir)/p
 #  linkgtk     :=
 #endif
 
+#ifeq ($(pwre_conf_libusb),1)
+#  clibusb        := -DPWRE_CONF_LIBUSB=1
+#  linklibusb     := -lusb-1.0
+#else
+#  clibusb        :=
+#  linklibusb     :=
+#endif
+
 log_done	=
-#csetos		:= -DOS_LINUX=1 -DOS=linux -D_LINUX -DHW_ARM=1 -DHW=ARM
-#cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) -I$(jdk)/include -I$(jdk)/include/linux
+#csetos		:= -DOS_LINUX=1 -DOS=linux -D_LINUX -DHW_X86=1 -DHW=x86
+#cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) -I/usr/X11R6/include -I$(jdk)/include -I$(jdk)/include/linux \
+`pkg-config --cflags gtk+-2.0` -DPREFIX=\"/usr/local\" -DSYSCONFDIR=\"/etc\" -DDATADIR=\"/usr/share\" -DLIBDIR=\"/usr/lib\" $(cmysql) $(cgtk) $(clibusb)
 csetos 		:= $(pwre_conf_cc_define)
 cinc 		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirgtk)
 rm		:= rm
@@ -119,7 +128,8 @@ cp		:= cp
 cpflags		:= 
 arflags		:= r
 obj             := -c -o $(target)
-
+lex             := flex
+javac		:= javac
 ifdef pwre_ar
   ar            := $(pwre_ar)
 else
@@ -139,7 +149,6 @@ else
   cxx             := g++
   ldxx            := g++
 endif
-lex             := flex
 ifdef pwre_host_exe
   tools_msg2cmsg  := $(pwre_host_exe)/tools_msg2cmsg
   tools_cmsg2c    := $(pwre_host_exe)/tools_cmsg2c
@@ -155,7 +164,6 @@ else
   co_convert      := $(eexe_dir)/co_convert
   co_merge        := $(eexe_dir)/co_merge
 endif
-javac		:= javac
 
 
 #docbook-related, added by jonas_h 2006-04-nn
@@ -187,9 +195,9 @@ wblflags	:=
 ifeq ($(pwre_btype),rls)			 
   cflags	:= -c -O3 -D_GNU_SOURCE -DPWR_NDEBUG -D_REENTRANT -fPIC
   cxxflags	:= $(cflags) 
-  linkflags	:= -O3 -L/usr/local/lib -L$(lib_dir) -lm -lrt
-  elinkflags	:= -O3 -L/usr/local/lib -L$(lib_dir) -L$(elib_dir) -lm -lrt
-  explinkflags	:= -g -L/usr/local/lib -L$(elib_dir) -lm -lrt
+  linkflags	:= -O3 -L$(lib_dir)
+  elinkflags	:= -O3 -L$(lib_dir) -L$(elib_dir)
+  explinkflags	:= -g -L$(elib_dir)
   clis		= /lis=$(list)
   dolist	= /lis=$(list)
   domap		= -Xlinker -Map -Xlinker $(map)
@@ -197,9 +205,9 @@ else
   cflags	:= -c -g -Wall -D_GNU_SOURCE -D_REENTRANT -fPIC
   cxxflags	:= $(cflags) -Wno-deprecated
   mmflags	:= -Wno-deprecated
-  linkflags	:= -g -L/usr/local/lib -L$(lib_dir) -lm -lrt
-  elinkflags	:= -g -L/usr/local/lib -L$(lib_dir) -L$(elib_dir) -lm -lrt
-  explinkflags	:= -g -L/usr/local/lib -L$(elib_dir) -lm -lrt
+  linkflags	:= -g -L$(lib_dir)
+  elinkflags	:= -g -L$(lib_dir) -L$(elib_dir)
+  explinkflags	:= -g -L$(elib_dir)
   dolist	= /lis=$(list)
   clis		:= 
   domap		= -Xlinker -Map -Xlinker $(map)

@@ -249,8 +249,6 @@ if test $pwre_hw == "hw_arm"; then
       i=$((i+1))
   done
 
-  echo "export wb_rtt=\$pwre_host_exe/wb_rtt" >> $cfile
-
   echo "export pwre_conf_cc_define=\"$conf_cc_define\"" >> $cfile
   echo "export pwre_conf_libpwrco=\"-lpwr_co\"" >> $cfile
   echo "export pwre_conf_libpwrrt=\"-lpwr_rt -lpwr_co -lpwr_statussrv -lpwr_msg_dummy\"" >> $cfile
@@ -299,7 +297,7 @@ else
 #set -o xtrace
 
   pwre_config_check_include antlr ANTLR 1 /usr/local/include/antlr/CommonAST.hpp
-  pwre_config_check_include gtk   GTK   1 /usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h
+  pwre_config_check_include gtk   GTK   1 /usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk/gtk.h
   pwre_config_check_include jni   JNI   1 $jdk/include/jni.h
   pwre_config_check_include jni   JNI   0 $jdk/include/linux/jni_md.h
 
@@ -318,8 +316,6 @@ else
       conf_libdir=$conf_libdir" -L${lib_array[$i]}"
       i=$((i+1))
   done
-
-  echo "export wb_rtt=\$pwr_exe/wb_rtt" >> $cfile
 
   echo "export pwre_conf_cc_define=\"$conf_cc_define\"" >> $cfile
   echo "export pwre_conf_libpwrco=\"-lpwr_co\"" >> $cfile
