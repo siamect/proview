@@ -160,7 +160,7 @@ else
   tools_msg2cmsg  := $(eexe_dir)/tools_msg2cmsg
   tools_cmsg2c    := $(eexe_dir)/tools_cmsg2c
   tools_pdrgen    := $(eexe_dir)/tools_pdrgen
-  wb_rtt          := $(eexe_dir)/wb_rtt
+  wb_rtt          := $(exe_dir)/wb_rtt
   co_convert      := $(eexe_dir)/co_convert
   co_merge        := $(eexe_dir)/co_merge
 endif
