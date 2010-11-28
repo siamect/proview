@@ -8,9 +8,9 @@
 #
 
 
-Name: pwr47
+Name: pwr48
 Summary: Proview/R development and runtime environment
-Version: 4.7.1
+Version: 4.8.0
 Release: 1
 License: GPL
 BuildArch: i386
@@ -78,7 +78,7 @@ co_convert -t -d %{buildroot}/usr/pwr%{ver}/%{pwre_target}/exp/doc %{buildroot}/
   echo "</head></html>"
 } > %{buildroot}/usr/pwr%{ver}/%{pwre_target}/exp/doc/en_us/package_version.html
 
-#%clean
+%clean
 
 %files
 %defattr(-,root,root)
@@ -200,5 +200,5 @@ fi
 #%postun
 
 %changelog
-* Fri Aug 27 2010 Claes Sjofors <claes.sjofors@proview.se> 4.7.1-1
+* Sun Nov 28 2010 Claes Sjofors <claes.sjofors@proview.se> 4.8.0-1
   - Base release.

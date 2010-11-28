@@ -274,25 +274,26 @@ if test $pwre_hw == "hw_arm"; then
   echo "export pwre_conf_incdirgtk=\"$conf_incdirgtk\"" >> $cfile
   echo "export pwre_conf_dtt_platform=\"arm_linux\"" >> $cfile
 else
-#Gtk
 
+  #Gtk
   pwre_config_check_lib gtk    	  GTK      gtk gtk 0 /usr/lib/libgtk-x11-2.0.so
   pwre_config_check_lib motif     MRM      motif motif 0 /usr/lib/libMrm.so
 
   pwre_config_check_lib libantlr  LIBANTLR lib lib 0 /usr/local/lib/libantlr.a
   pwre_config_check_lib librpcsvc LIBRPCSVC lib lib 0 /usr/lib/librpcsvc.so:/usr/lib/librpcsvc.a
-  pwre_config_check_lib libasound LIBASOUND lib lib 0 /usr/lib/libasound.so:usr/lib/libasound.a
-  pwre_config_check_lib libpthread LIBPTHREAD lib lib 0 /usr/lib/libpthread.so:usr/lib/libpthread.a
-  pwre_config_check_lib libm      LIBM     lib lib 0 /usr/lib/libm.so:usr/lib/libm.a
+  pwre_config_check_lib libasound LIBASOUND lib lib 0 /usr/lib/libasound.so:/usr/lib/libasound.a
+  pwre_config_check_lib libpthread LIBPTHREAD lib lib 0 /usr/lib/libpthread.so:/usr/lib/libpthread.a
+  pwre_config_check_lib libm      LIBM     lib lib 0 /usr/lib/libm.so:/usr/lib/libm.a
   pwre_config_check_lib libdb_cxx LIBDB_CXX lib lib 0 /usr/lib/libdb_cxx.so
-  pwre_config_check_lib libz      LIBZ     lib lib 0 /usr/lib/libz.so:usr/lib/libz.a
-  pwre_config_check_lib libcrypt  LIBCRYPT lib lib 0 /usr/lib/libcrypt.so:usr/lib/libcrypt.a
-  pwre_config_check_lib mysql     MYSQL    lib lib 1 /usr/lib/libmysqlclient.so
+  pwre_config_check_lib libz      LIBZ     lib lib 0 /usr/lib/libz.so:/usr/lib/libz.a
+  pwre_config_check_lib libcrypt  LIBCRYPT lib lib 0 /usr/lib/libcrypt.so:/usr/lib/libcrypt.a
+  pwre_config_check_lib mysql     MYSQL    lib lib 1 /usr/lib/libmysqlclient.so:/usr/lib/mysql/libmysqlclient.so
   pwre_config_check_lib mq        MQ       lib lib 1 /usr/lib/libdmq.so
   pwre_config_check_lib libpnioif PNAK     lib lib 1 /usr/lib/libpnioif.a:/usr/local/lib/libpnioif.a
   pwre_config_check_lib libusb    LIBUSB   lib lib 1 /usr/lib/libusb-1.0.so
-  pwre_config_check_lib librt     LIBRT    lib lib 0 /usr/lib/librt.so:usr/lib/librt.a
-  pwre_config_check_lib libfl     LIBFL    lib lib 0 /usr/lib/libfl.so:usr/lib/libfl.a
+  pwre_config_check_lib librt     LIBRT    lib lib 0 /usr/lib/librt.so:/usr/lib/librt.a
+  pwre_config_check_lib libfl     LIBFL    lib lib 0 /usr/lib/libfl.so:/usr/lib/libfl.a
+  pwre_config_check_lib libX11    LIBX11   lib lib 0 /usr/lib/libX11.so
 
 #set -o xtrace
 

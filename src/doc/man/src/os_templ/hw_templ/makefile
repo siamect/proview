@@ -121,23 +121,23 @@ clean_pdf := $(patsubst %.pdf,clean_%.pdf,$(pdf_sources))
 targetsuffixes := _single.html
 nopdf_targetsuffixes := _single.html
 
-sv_se_xmlsources := dbpwr.xml upgrade42.xml
-en_us_xmlsources := pwrgsg.xml upgrade42.xml
+#sv_se_xmlsources := dbpwr.xml upgrade42.xml
+#en_us_xmlsources := pwrgsg.xml upgrade42.xml
 en_us_xml_nopdf_sources := changelog.xml
 
 #add on the following line master files that include their parts / chapters by means of xinclude
 #also add an explicit rule for each master file below
-xi_dependents := $(pwre_sroot)/doc/man/sv_se/dbpwr.xml
+#xi_dependents := $(pwre_sroot)/doc/man/sv_se/dbpwr.xml
 
-sv_se_xmltargets := $(addprefix $(pwre_sroot)/doc/man/sv_se/, \
-	$(foreach targetsuffix, $(targetsuffixes), \
-	$(foreach basefile, $(basename $(sv_se_xmlsources)), \
-	$(addsuffix $(targetsuffix), $(basefile)))))
+#sv_se_xmltargets := $(addprefix $(pwre_sroot)/doc/man/sv_se/, \
+#	$(foreach targetsuffix, $(targetsuffixes), \
+#	$(foreach basefile, $(basename $(sv_se_xmlsources)), \
+#	$(addsuffix $(targetsuffix), $(basefile)))))
 
-en_us_xmltargets := $(addprefix $(pwre_sroot)/doc/man/en_us/, \
-	$(foreach targetsuffix, $(targetsuffixes), \
-	$(foreach basefile, $(basename $(en_us_xmlsources)), \
-	$(addsuffix $(targetsuffix), $(basefile)))))
+#en_us_xmltargets := $(addprefix $(pwre_sroot)/doc/man/en_us/, \
+#	$(foreach targetsuffix, $(targetsuffixes), \
+#	$(foreach basefile, $(basename $(en_us_xmlsources)), \
+#	$(addsuffix $(targetsuffix), $(basefile)))))
 
 en_us_xml_nopdf_targets := $(addprefix $(pwre_sroot)/doc/man/en_us/, \
 	$(foreach targetsuffix, $(nopdf_targetsuffixes), \
@@ -439,24 +439,24 @@ $(doc_dir)/en_us/man_exlib.pdf : $(pwre_sroot)/doc/man/en_us/man_exlib.dat
 
 # implicit rules, docbook-related, added by jonas_h 2006-04-nn
 
-%.fo :: %.xml
-	$(xsltproc) $(xsltproc_args) $(fo_xsl) $(source) > $(target)
+#%.fo :: %.xml
+#	$(xsltproc) $(xsltproc_args) $(fo_xsl) $(source) > $(target)
 
 $(pwre_sroot)/doc/man/%.pdf : $(pwre_sroot)/doc/man/%.fo $(pwre_sroot)/doc/man/src/pwrtitlepages.xsl
 	$(fop) $(source) -pdf $(target)
 	rm -f $(source)
 
-$(pwre_sroot)/doc/man/%_single.html : $(pwre_sroot)/doc/man/%.xml 
-	@ if [ "$(PWRE_ARGS)" = "docbook" ]; then \
-	    echo "xsltproc $(source)"; \
-	    $(xsltproc) $(xsltproc_args) -o $(target) $(html_xsl) $(source); \
-	  fi
+#$(pwre_sroot)/doc/man/%_single.html : $(pwre_sroot)/doc/man/%.xml 
+#	@ if [ "$(PWRE_ARGS)" = "docbook" ]; then \
+#	    echo "xsltproc $(source)"; \
+#	    $(xsltproc) $(xsltproc_args) -o $(target) $(html_xsl) $(source); \
+#	  fi
 
-$(doc_dir)/en_us/%_index.html :: $(pwre_sroot)/doc/man/en_us/%.xml
-	$(xsltproc) $(xsltproc_args) $(chunk_args_en_us) $(chunk_xsl) $(source)
+#$(doc_dir)/en_us/%_index.html :: $(pwre_sroot)/doc/man/en_us/%.xml
+#	$(xsltproc) $(xsltproc_args) $(chunk_args_en_us) $(chunk_xsl) $(source)
 
-$(doc_dir)/sv_se/%_index.html :: $(pwre_sroot)/doc/man/sv_se/%.xml
-	$(xsltproc) $(xsltproc_args) $(chunk_args_sv_se) $(chunk_xsl) $(source)
+#$(doc_dir)/sv_se/%_index.html :: $(pwre_sroot)/doc/man/sv_se/%.xml
+#	$(xsltproc) $(xsltproc_args) $(chunk_args_sv_se) $(chunk_xsl) $(source)
 
 $(doc_dir)/sv_se/%.css $(doc_dir)/en_us/%.css :: $(pwre_sroot)/doc/man/src/%.css
 	@ echo "copy $(source)"
@@ -468,12 +468,12 @@ $(doc_dir)/% :: $(pwre_sroot)/doc/man/src/%
 	@ cp $(source) $(target)
 
 # Rule for creating titlepage xsl templates
-$(pwre_sroot)/doc/man/src/pwrtitlepages.xsl :: $(pwre_sroot)/doc/man/src/pwrtitlepage.spec.xml
-	$(xsltproc) -o $(target) $(docbook_stylesheetdir)/template/titlepage.xsl $(source)
+#$(pwre_sroot)/doc/man/src/pwrtitlepages.xsl :: $(pwre_sroot)/doc/man/src/pwrtitlepage.spec.xml
+#	$(xsltproc) -o $(target) $(docbook_stylesheetdir)/template/titlepage.xsl $(source)
 
 # explicit rules updating dependent master files if their includes have been changed.
-%/dbpwr.xml :: %/dbpwr_intro.xml %/dbpwr_editering.xml %/dbpwr_exempel.xml %/dbpwr_utdata.xml %/dbpwr_omdocbook.xml 
-	touch $(target)
+#%/dbpwr.xml :: %/dbpwr_intro.xml %/dbpwr_editering.xml %/dbpwr_exempel.xml %/dbpwr_utdata.xml %/dbpwr_omdocbook.xml 
+#	touch $(target)
 
 #end of
 

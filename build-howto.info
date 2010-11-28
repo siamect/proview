@@ -10,8 +10,8 @@ g++
 make
 flex
 libgtk2.0-dev
-libdb4.6-dev  (Any Berkeley DB version > 4.3, on Fedora db4-devel)
-libdb4.6++-dev
+libdb4.8-dev  (Any Berkeley DB version > 4.3, on Fedora db4-devel)
+libdb4.8++-dev
 libasound2-dev (on Fedora alsa-lib-devel)
 doxygen
 libmysql++-dev (optional)
@@ -35,8 +35,8 @@ g++
 libgtk2.0-dev
 cpp
 libasound2-dev
-libdb4.6-dev
-libdb4.6++-dev
+libdb4.8-dev
+libdb4.8++-dev
 doxygen
 libmysql++-dev (optional)
 
@@ -60,11 +60,11 @@ There has to be a valid display when building proview.
 -----------
 Unpack the source package
 
-> tar -xzvf pwrsrc_4.7.0.tar.gz
+> tar -xzvf pwrsrc_4.8.0.tar.gz
 
 Enter the sourcecode root directory
 
-> cd pwr_4.7.0
+> cd pwr_4.8.0
 
 Execute the makefile
 
@@ -86,8 +86,8 @@ handle different version of proview.
 The first thing to do is to set up your environment properly. Add the 
 following lines to .bashrc:
 
-# Where /home/robert/x4-7-0 is replaced with wherever you unpacked the sources.
-export pwre_bin="/home/robert/x4-7-0/pwr/src/tools/pwre/src/os_linux"
+# Where /home/robert/x4-8-0 is replaced with wherever you unpacked the sources.
+export pwre_bin="/home/robert/x4-8-0/pwr/src/tools/pwre/src/os_linux"
 export pwre_dir_symbols="$pwre_bin/dir_symbols.mk"
 source $pwre_bin/pwre_function
 export pwre_env_db="/home/robert/pwre_new"
@@ -107,10 +107,10 @@ Add environment named 'x460x86' (choose any name you like).
 
 > pwre add x460x86
 
-Source root [...] ? /home/robert/x4-7-0/pwr/src  (where /home/robert/x4-7-0 is
+Source root [...] ? /home/robert/x4-8-0/pwr/src  (where /home/robert/x4-8-0 is
 replaced with wherever you unpacked the sources)
 Import root [] ?
-Build root [...] ? /home/robert/pwr/x4-7-0/rls_dbg  (choose typically .../pwr/version/rls_dbg)
+Build root [...] ? /home/robert/pwr/x4-8-0/rls_dbg  (choose typically .../pwr/version/rls_dbg)
 Build type [dbg] ? 
 OS [linux] ? 		(linux or macos)
 Hardware [x86] ? 	(x86 or x86_64)
@@ -207,7 +207,7 @@ Copy some files to this directory (if they do not already exist)
 Create a file name pwr_projectlist.dat in this directory and add the following
 line to this file:
 
-%base X4.7.0	/home/robert/pwr/X4-7-0/rls_dbg
+%base X4.8.0	/home/robert/pwr/X4-8-0/rls_dbg
 
 where the path is your build-root ($pwre_broot).
 

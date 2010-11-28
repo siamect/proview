@@ -2168,7 +2168,7 @@ handleMessage (
   mh_sHead *hp;
   XDR xdrs;
 
-  switch (get->type.b) {
+  switch ( (int)get->type.b) {
   case mh_cMsgClass:
     hp = (mh_sHead*) get->data;
     if (hp->xdr) {
