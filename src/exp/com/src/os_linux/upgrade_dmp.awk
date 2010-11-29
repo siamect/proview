@@ -16,7 +16,11 @@ BEGIN {
   else if ( $3 == "BaseFcPPO5FanAggr" || $3 == "BaseFcPPO3FanAggr" ||
 	    $3 == "BaseFcPPO5PumpAggr" || $3 == "BaseFcPPO3PumpAggr" ||
 	    $3 == "BaseFcPPO5MotorAggr" || $3 == "BaseFcPPO3MotorAggr" ||
-	    $3 == "BaseFcPPO5" || $3 == "BaseFcPPO3") {
+	    $3 == "BaseFcPPO5" || $3 == "BaseFcPPO3" ||
+	    $3 == "ABB_ACS800_1" || $3 == "ABB_ACC800" ||
+	    $3 == "ABB_ACS800MotorAggr" || $3 == "ABB_ACS800PumpAggr" ||
+	    $3 == "ABB_ACS800FanAggr" || $3 == "ABB_Converter_ACS800_PPO3" ||
+	    $3 == "ABB_Converter_ACS800_PPO5") {
     innumaggr = 1;
     inbodyaggr = 0;
   }
@@ -86,8 +90,16 @@ BEGIN {
 	  printf( "     %s\n", $0);
 	}
 	else {
-	  printf( "%s\n", $0);
-	}
+	  pos = index($2, "IoConnect");
+          if ( pos != 0) {
+	    a2 = substr( $4, 0, length($4) - 1);
+            $4 = a2 ".Io\"";
+	    printf( "     %s\n", $0);
+          }
+          else {
+	    printf( "%s\n", $0);
+          }
+        }
       }
       else {
         printf( "%s\n", $0);
