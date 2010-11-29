@@ -315,6 +315,7 @@ class GrowImage : public GlowArrayElem {
   int		c_color_inverse;
   float         factor_intens;
   float		factor_light;
+  int		fixposition;	//!< Can't be moved.
  
   //! Read the image file and create pixmaps for the image.
   /*!

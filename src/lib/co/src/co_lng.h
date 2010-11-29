@@ -179,6 +179,11 @@ typedef enum {
   lng_eLanguage__
 } lng_eLanguage;
 
+typedef enum {
+  lng_eCoding_ISO8859_1,
+  lng_eCoding_UTF_8
+} lng_eCoding;
+
 typedef struct {
   char		text[80];
   char		type;
@@ -236,6 +241,7 @@ class Lng {
   public:
     Lng() {};
     static lng_eLanguage lang;
+    static lng_eCoding translfile_coding;
     static const int Help        = 0;
     static const int Help_Class  = 1;
     static const int Graph       = 2;
@@ -272,6 +278,8 @@ class Lng {
     static char *lang_to_str( lng_eLanguage language);
     static char *lang_to_locale( lng_eLanguage language);
     static bool is_installed( lng_eLanguage language);
+    static lng_eCoding translatefile_coding() { return translfile_coding;}
+    static void read_metadata( ifstream& fp2, bool global, pwr_tStatus *sts);
 };
 
 #if defined __cplusplus

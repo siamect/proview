@@ -1790,7 +1790,7 @@ fromApplication (
     break;
   }
 
-#if defined(OS_LINUX) || defined(OS_MACOS)
+#if defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
   nanosleep(&hold, NULL);
 #endif
 
@@ -2168,7 +2168,7 @@ handleMessage (
   mh_sHead *hp;
   XDR xdrs;
 
-  switch (get->type.b) {
+  switch ( (int)get->type.b) {
   case mh_cMsgClass:
     hp = (mh_sHead*) get->data;
     if (hp->xdr) {
@@ -2428,7 +2428,7 @@ initBlockList ()
   pwr_tNodeIndex nix;
   int i;
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
   char *env = getenv("pwrp_load"); 
   hostspec[0] = '\0'; /* Prevent warnings from gcc */
 
@@ -3715,6 +3715,16 @@ sendEventListToOutunit (
     etp != NULL;
     etp = tree_Successor(&sts, l.eventTab, etp)
   ) {
+    if ( etp->ap && etp->ap->idx == 0) { 
+      /* Fix, this node should have been removed in activeListRemove ! */
+      unsigned int idx = etp->idx;
+
+      etp = tree_Successor(&sts, l.eventTab, etp);
+      tree_Remove(&sts, l.eventTab, &idx);
+      if ( etp == NULL)
+	break;
+    }
+
     if ((ep = etp->ep) != NULL) {
       if (isForOutunit(op, ep->outunit, ep->object.Objid, ep->objName, ep->msg.info.EventFlags, ep->local))
 	break;

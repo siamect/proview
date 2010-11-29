@@ -8,9 +8,9 @@
 #
 
 
-Name:		pwrdemo47
+Name:		pwrdemo48
 Summary: 	Proview/R demo project
-Version:        4.7.1
+Version:        4.8.0
 Release: 	1
 License:        GPL
 BuildArch:      i386
@@ -27,7 +27,7 @@ For more information please see www.proview.se.
 
 #%install
 
-#%clean
+%clean
 
 %files
 %defattr(-,root,root)
@@ -128,6 +128,6 @@ fi
 #%postun
 
 %changelog
-* Fri Aug 27 2010 Claes Sjofors <claes.sjofors@proview.se> 4.7.1-1
+* Sun Nov 28 2010 Claes Sjofors <claes.sjofors@proview.se> 4.8.0-1
 - Base release
  

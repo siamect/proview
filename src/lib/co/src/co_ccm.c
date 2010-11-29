@@ -1831,91 +1831,101 @@ int ccm_operate_exec(
   ccm_sOperand 	*op,
   ccm_sOperand 	*next)
 {
-  int	next_decl;
+  int		next_decl;
   ccm_tInt	next_int;
   ccm_tFloat	next_float;
   ccm_tString	next_string;
   ccm_tString	tmp_str;
-  int	sts;
+  int		sts;
   ccm_sOperand 	*op_arg;
-  ccm_sArg		*arg_list;
-  ccm_sArg		*arg_p, *a_p, *next_arg;
+  ccm_sArg	*arg_list;
+  ccm_sArg	*arg_p, *a_p, *next_arg;
   int		arg_count;
   int		exit_function_found;
 
 
   exit_function_found = 0;
-  if ( next == NULL)
-  {
-    if ( !op->result_done)
-    {
-      if ( op->value_decl == K_DECL_FLOAT)
+  if ( next == NULL) {
+
+    if ( !op->result_done) {
+      switch ( op->value_decl) {
+      case K_DECL_FLOAT:
         op->result_float = op->value_float;
-      else if ( op->value_decl == K_DECL_INT)
+	break;
+      case K_DECL_INT:
         op->result_int = op->value_int;
-      else
+	break;
+      default:
         strcpy( op->result_string, op->value_string);
+      }
       op->result_decl = op->value_decl;
     }
   }
-  else
-  {
-    if ( op->type == K_OPERAND_NO)
-    {
-      if ( !next->result_done)
-      {
-        if ( next->type == K_OPERAND_NAME )
-        {
+  else {
+
+    if ( op->type == K_OPERAND_NO) {
+
+      if ( !next->result_done) {
+
+        if ( next->type == K_OPERAND_NAME ) {
           sts = ccm_getvar( funcctx, next->name, &next->value_decl, 
 		&next->value_float, &next->value_int, 
 		next->value_string);
           if ( EVEN(sts)) return sts;
         }
-        if ( next->value_decl == K_DECL_FLOAT)
+        switch ( next->value_decl) {
+	case K_DECL_FLOAT:
           next->result_float = next->value_float;
-        else if ( next->value_decl == K_DECL_INT)
+	  break;
+        case K_DECL_INT:
           next->result_int = next->value_int;
-        else
+	  break;
+        default:
           strcpy( next->result_string, next->value_string);
+	}
         next->result_decl = next->value_decl;
       }
     }
-    else if ( op->type == K_OPERAND_NAME && !op->result_done)
-    {
+    else if ( op->type == K_OPERAND_NAME && !op->result_done) {
+
       sts = ccm_getvar( funcctx, op->name, &op->value_decl, &op->value_float, 
 		&op->value_int, op->value_string);
       if ( EVEN(sts)) return sts;
     }
-    else if ( op->type == K_OPERAND_FUNCTION)
-    {
+    else if ( op->type == K_OPERAND_FUNCTION) {
       /* Create an argument list */
       arg_list = 0;
       arg_count = 0;
-      for ( op_arg = op->next; op_arg; op_arg = op_arg->next)
-      {
+      for ( op_arg = op->next; op_arg; op_arg = op_arg->next) {
+
         if ( op_arg->type == K_OPERAND_NO &&
              op_arg->parlevel == op->parlevel - 1)
           break;
-        if ( op_arg->type == K_OPERAND_NAME)
-        {
+
+        if ( op_arg->type == K_OPERAND_NAME) {
           sts = ccm_getvar( funcctx, op_arg->name, &op_arg->value_decl, 
 		&op_arg->value_float, &op_arg->value_int, op_arg->value_string);
           if ( EVEN(sts)) return sts;
         }
         arg_p = calloc( 1, sizeof( ccm_sArg));
-        if ( op_arg->value_decl == K_DECL_INT)
+        switch ( op_arg->value_decl) {
+	case K_DECL_INT:
           arg_p->value_int = op_arg->value_int;
-        else if ( op_arg->value_decl == K_DECL_FLOAT)
+	  break;
+        case K_DECL_FLOAT:
           arg_p->value_float = op_arg->value_float;
-        else if ( op_arg->value_decl == K_DECL_STRING)
+	  break;
+	case K_DECL_STRING:
           strcpy( arg_p->value_string, op_arg->value_string);
+	  break;
+	default: ;
+	}
         arg_p->value_decl = op_arg->value_decl;
 	arg_p->value_type = op_arg->type;
 	strcpy( arg_p->value_name, op_arg->name);
         if ( arg_list == 0)
           arg_list = arg_p;
-        else
-        {
+        else {
           for ( a_p = arg_list; a_p->next; a_p = a_p->next) ;
           a_p->next = arg_p;
         }
@@ -1930,11 +1940,10 @@ int ccm_operate_exec(
 	op->result_string, 0);
 
       /* Set returned argument values and free argumentlist */
-      for ( arg_p = arg_list; arg_p; arg_p = next_arg)
-      {
+      for ( arg_p = arg_list; arg_p; arg_p = next_arg) {
+
         if ( arg_p->value_type == K_OPERAND_NAME &&
-	     arg_p->value_returned)
-	{
+	     arg_p->value_returned) {
           sts = ccm_setvar( funcctx, arg_p->value_name, arg_p->value_decl, 
 		arg_p->value_float, arg_p->value_int, arg_p->value_string);
 	  if ( EVEN(sts)) return sts;
@@ -1948,22 +1957,22 @@ int ccm_operate_exec(
     }
 
     if ( next->type == K_OPERAND_NAME && !next->result_done &&
-         op->type != K_OPERAND_DECL)
-    {
+         op->type != K_OPERAND_DECL) {
+
       sts = ccm_getvar( funcctx, next->name, &next->value_decl, &next->value_float, 
 		&next->value_int, next->value_string);
       if ( EVEN(sts)) return sts;
     }
-    if ( next->result_done)
-    {
+    if ( next->result_done) {
+
       /* Use result, not value for next-operand */
       next_decl = next->result_decl;
       next_int = next->result_int;
       next_float = next->result_float;
       strcpy( next_string, next->result_string);
     }
-    else
-    {
+    else {
+
       /* Use value for next-operand */
       next_decl = next->value_decl;
       next_int = next->value_int;
@@ -1971,533 +1980,639 @@ int ccm_operate_exec(
       strcpy( next_string, next->value_string);
     }
 
-    if ( next->type == K_OPERAND_NO && !next->result_done)
-    {
+    if ( next->type == K_OPERAND_NO && !next->result_done) {
       next->result_float = op->result_float;
       next->result_int = op->result_int;
       strcpy( next->result_string, op->result_string);
       next->result_decl = op->result_decl;
     }
-    else if ( next_decl == K_DECL_UNKNOWN)
-    {
+    else if ( next_decl == K_DECL_UNKNOWN) {
       next_decl = op->value_decl;
     }
 
-    switch ( op->o_operator)
-    {
-      case K_ACTION_EQL:
-        sts = ccm_setvar( funcctx, op->name, next_decl, next_float, next_int, 
-		next_string);
-        if ( EVEN(sts)) return sts;
-        break;
-      case K_ACTION_RETURN:
-        if ( !next->result_done)
-       {
-          next->result_decl = next_decl;
-         if ( next_decl == K_DECL_INT)
-            next->result_int = next_int;
-          else if ( next_decl == K_DECL_FLOAT)
-            next->result_float = next_float;
-          else if ( next_decl == K_DECL_STRING)
-            strcpy( next->result_string, next_string);
-          break;
-        }
-      case K_ACTION_MUL:
-        if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_INT)
-        {
+    switch ( op->o_operator) {
+    case K_ACTION_EQL:
+      sts = ccm_setvar( funcctx, op->name, next_decl, next_float, next_int, 
+			next_string);
+      if ( EVEN(sts)) return sts;
+      break;
+    case K_ACTION_RETURN:
+      if ( !next->result_done) {
+
+	next->result_decl = next_decl;
+	switch ( next_decl) {
+	case K_DECL_INT:
+	  next->result_int = next_int;
+	  break;	  
+	case K_DECL_FLOAT:
+	  next->result_float = next_float;
+	  break;	  
+        case K_DECL_STRING:
+	  strcpy( next->result_string, next_string);
+	  break;
+	}
+      }
+      break;
+    case K_ACTION_MUL:
+      switch ( op->result_decl) {
+      case K_DECL_INT:
+	switch ( next_decl) {
+	case K_DECL_INT:
           next->result_int = op->result_int * next_int;
           next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_INT)
-        {
-          next->result_float = op->result_float * next_int;
-          next->result_decl = K_DECL_FLOAT;
-        }
-        else if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	case K_DECL_FLOAT:
           next->result_float = op->result_int * next_float;
           next->result_decl = K_DECL_FLOAT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	}
+	break;
+      case K_DECL_FLOAT:
+	switch ( next_decl) {
+	case K_DECL_INT:
+          next->result_float = op->result_float * next_int;
+          next->result_decl = K_DECL_FLOAT;
+	  break;
+	case K_DECL_FLOAT:
           next->result_float = op->result_float * next_float;
           next->result_decl = K_DECL_FLOAT;
-        }
-        break;
-      case K_ACTION_DIV:
-        if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_INT)
-        {
+	  break;
+	}
+	break;
+      }
+      break;
+    case K_ACTION_DIV:
+      switch ( op->result_decl) {
+      case K_DECL_INT:
+	switch ( next_decl) {
+	case K_DECL_INT:
           next->result_int = op->result_int / next_int;
           next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_INT)
-        {
-          next->result_float = op->result_float / next_int;
-          next->result_decl = K_DECL_FLOAT;
-        }
-        else if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	case K_DECL_FLOAT:
           next->result_float = op->result_int / next_float;
           next->result_decl = K_DECL_FLOAT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	}
+	break;
+      case K_DECL_FLOAT:
+	switch ( next_decl) {
+	case K_DECL_INT:
+          next->result_float = op->result_float / next_int;
+          next->result_decl = K_DECL_FLOAT;
+	  break;
+	case K_DECL_FLOAT:
           next->result_float = op->result_float / next_float;
           next->result_decl = K_DECL_FLOAT;
-        }
-        break;
-      case K_ACTION_ADD:
-        if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_INT)
-        {
+	  break;
+	}
+	break;
+      }
+      break;
+    case K_ACTION_ADD:
+      switch ( op->result_decl) {
+      case K_DECL_INT:
+	switch ( next_decl) {
+	case K_DECL_INT:
           next->result_int = op->result_int + next_int;
           next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_INT)
-        {
-          next->result_float = op->result_float + next_int;
-          next->result_decl = K_DECL_FLOAT;
-        }
-        else if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	case K_DECL_FLOAT:
           next->result_float = op->result_int + next_float;
           next->result_decl = K_DECL_FLOAT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_FLOAT)
-        {
-          next->result_float = op->result_float + next_float;
-          next->result_decl = K_DECL_FLOAT;
-        }
-        else if ( op->result_decl == K_DECL_STRING && next_decl == K_DECL_STRING)
-        {
-          strcpy( next->result_string, op->result_string);
-          strncat( next->result_string, next_string, K_STRING_SIZE);
-          next->result_string[K_STRING_SIZE-1] = 0;
-          next->result_decl = K_DECL_STRING;
-        }
-        else if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_STRING)
-        {
+	  break;
+	case K_DECL_STRING:
           sprintf( next->result_string + strlen(next->result_string), 
  		ccm_cIntFormat, op->result_int);
           strncat( next->result_string, next_string, K_STRING_SIZE);
           next->result_string[K_STRING_SIZE-1] = 0;
           next->result_decl = K_DECL_STRING;
-        }
-        else if ( op->result_decl == K_DECL_STRING && next_decl == K_DECL_INT)
-        {
-          strcpy( next->result_string, op->result_string);
-          sprintf( next->result_string + strlen(next->result_string), 
-		ccm_cIntFormat, next_int);
-          next->result_decl = K_DECL_STRING;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_STRING)
-        {
+	  break;
+	}
+	break;
+      case K_DECL_FLOAT:
+	switch ( next_decl) {
+	case K_DECL_INT:
+          next->result_float = op->result_float + next_int;
+          next->result_decl = K_DECL_FLOAT;
+	  break;
+	case K_DECL_FLOAT:
+          next->result_float = op->result_float + next_float;
+          next->result_decl = K_DECL_FLOAT;
+	  break;
+	case K_DECL_STRING:
 	  ccm_float_to_string( tmp_str, op->result_float);
 	  strcpy( next->result_string, tmp_str);
           strncat( next->result_string, next_string, K_STRING_SIZE);
           next->result_string[K_STRING_SIZE-1] = 0;
           next->result_decl = K_DECL_STRING;
-        }
-        else if ( op->result_decl == K_DECL_STRING && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	}
+	break;
+      case K_DECL_STRING:
+	switch ( next_decl) {
+	case K_DECL_INT:
+          strcpy( next->result_string, op->result_string);
+          sprintf( next->result_string + strlen(next->result_string), 
+		ccm_cIntFormat, next_int);
+          next->result_decl = K_DECL_STRING;
+	  break;
+	case K_DECL_FLOAT:
           strcpy( next->result_string, op->result_string);
 	  ccm_float_to_string( tmp_str, next_float);
           strncat( next->result_string, tmp_str, K_STRING_SIZE);
           next->result_string[K_STRING_SIZE-1] = 0;
           next->result_decl = K_DECL_STRING;
-        }
-        break;
-      case K_ACTION_EQLADD:
-        if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_INT)
-        {
+	  break;
+	case K_DECL_STRING:
+          strcpy( next->result_string, op->result_string);
+          strncat( next->result_string, next_string, K_STRING_SIZE);
+          next->result_string[K_STRING_SIZE-1] = 0;
+          next->result_decl = K_DECL_STRING;
+	  break;
+	}
+	break;
+      }
+      break;
+    case K_ACTION_EQLADD:
+      switch ( op->result_decl) {
+      case K_DECL_INT:
+	switch ( next_decl) {
+	case K_DECL_INT:
           next->result_int = op->result_int + next_int;
           next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_INT)
-        {
-          next->result_float = op->result_float + next_int;
-          next->result_decl = K_DECL_FLOAT;
-        }
-        else if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	case K_DECL_FLOAT:
           next->result_float = op->result_int + next_float;
           next->result_decl = K_DECL_FLOAT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	case K_DECL_STRING:
+	  sprintf( next->result_string + strlen(next->result_string), 
+		   ccm_cIntFormat, op->result_int);
+	  strncat( next->result_string, next_string, K_STRING_SIZE);
+	  next->result_string[K_STRING_SIZE-1] = 0;
+	  next->result_decl = K_DECL_STRING;
+	  break;
+	}
+	break;
+      case K_DECL_FLOAT:
+	switch ( next_decl) {
+	case K_DECL_INT:
+          next->result_float = op->result_float + next_int;
+          next->result_decl = K_DECL_FLOAT;
+	  break;
+	case K_DECL_FLOAT:
           next->result_float = op->result_float + next_float;
           next->result_decl = K_DECL_FLOAT;
-        }
-        else if ( op->result_decl == K_DECL_STRING && next_decl == K_DECL_STRING)
-        {
-          strcpy( next->result_string, op->result_string);
-          strncat( next->result_string, next_string, K_STRING_SIZE);
-          next->result_string[K_STRING_SIZE-1] = 0;
-          next->result_decl = K_DECL_STRING;
-        }
-        else if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_STRING)
-        {
-          sprintf( next->result_string + strlen(next->result_string), 
- 		ccm_cIntFormat, op->result_int);
-          strncat( next->result_string, next_string, K_STRING_SIZE);
-          next->result_string[K_STRING_SIZE-1] = 0;
-          next->result_decl = K_DECL_STRING;
-        }
-        else if ( op->result_decl == K_DECL_STRING && next_decl == K_DECL_INT)
-        {
-          strcpy( next->result_string, op->result_string);
-          sprintf( next->result_string + strlen(next->result_string), 
-		ccm_cIntFormat, next_int);
-          next->result_decl = K_DECL_STRING;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_STRING)
-        {
+	  break;
+	case K_DECL_STRING:
 	  ccm_float_to_string( tmp_str, op->result_float);
           strcpy( next->result_string, tmp_str);
           strncat( next->result_string, next_string, K_STRING_SIZE);
           next->result_string[K_STRING_SIZE-1] = 0;
           next->result_decl = K_DECL_STRING;
-        }
-        else if ( op->result_decl == K_DECL_STRING && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	}
+	break;
+      case K_DECL_STRING:
+	switch ( next_decl) {
+	case K_DECL_INT:
+          strcpy( next->result_string, op->result_string);
+          sprintf( next->result_string + strlen(next->result_string), 
+		ccm_cIntFormat, next_int);
+          next->result_decl = K_DECL_STRING;
+	  break;
+	case K_DECL_FLOAT:
           strcpy( next->result_string, op->result_string);
 	  ccm_float_to_string( tmp_str, next_float);
           strncat( next->result_string, tmp_str, K_STRING_SIZE);
           next->result_string[K_STRING_SIZE-1] = 0;
           next->result_decl = K_DECL_STRING;
-        }
-        sts = ccm_setvar( funcctx, op->name, next->result_decl, 
-		next->result_float, next->result_int, next->result_string);
-        if ( EVEN(sts)) return sts;
-        break;
-      case K_ACTION_EQLSUB:
-        if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_INT)
-        {
+	  break;
+	case K_DECL_STRING:
+          strcpy( next->result_string, op->result_string);
+          strncat( next->result_string, next_string, K_STRING_SIZE);
+          next->result_string[K_STRING_SIZE-1] = 0;
+          next->result_decl = K_DECL_STRING;
+	  break;
+	}
+	break;
+      }
+
+      sts = ccm_setvar( funcctx, op->name, next->result_decl, 
+			next->result_float, next->result_int, next->result_string);
+      if ( EVEN(sts)) return sts;
+      break;
+    case K_ACTION_EQLSUB:
+      switch ( op->result_decl) {
+      case K_DECL_INT:
+	switch ( next_decl) {
+	case K_DECL_INT:
           next->result_int = op->result_int - next_int;
           next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_INT)
-        {
-          next->result_float = op->result_float - next_int;
-          next->result_decl = K_DECL_FLOAT;
-        }
-        else if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	case K_DECL_FLOAT:
           next->result_float = op->result_int - next_float;
           next->result_decl = K_DECL_FLOAT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	}
+	break;
+      case K_DECL_FLOAT:
+	switch ( next_decl) {
+	case K_DECL_INT:
+          next->result_float = op->result_float - next_int;
+          next->result_decl = K_DECL_FLOAT;
+	  break;
+	case K_DECL_FLOAT:
           next->result_float = op->result_float - next_float;
           next->result_decl = K_DECL_FLOAT;
-        }
-        sts = ccm_setvar( funcctx, op->name, next->result_decl,
-		next->result_float, next->result_int, next->result_string);
-        if ( EVEN(sts)) return sts;
-        break;
-      case K_ACTION_SUB:
-        if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_INT)
-        {
+	  break;
+	}
+	break;
+      }
+
+      sts = ccm_setvar( funcctx, op->name, next->result_decl,
+			next->result_float, next->result_int, next->result_string);
+      if ( EVEN(sts)) return sts;
+      break;
+    case K_ACTION_SUB:
+      switch ( op->result_decl) {
+      case K_DECL_INT:
+	switch ( next_decl) {
+	case K_DECL_INT:
           next->result_int = op->result_int - next_int;
           next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_INT)
-        {
-          next->result_float = op->result_float - next_int;
-          next->result_decl = K_DECL_FLOAT;
-        }
-        else if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	case K_DECL_FLOAT:
           next->result_float = op->result_int - next_float;
           next->result_decl = K_DECL_FLOAT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	}
+	break;
+      case K_DECL_FLOAT:
+	switch ( next_decl) {
+	case K_DECL_INT:
+          next->result_float = op->result_float - next_int;
+          next->result_decl = K_DECL_FLOAT;
+	  break;
+	case K_DECL_FLOAT:
           next->result_float = op->result_float - next_float;
           next->result_decl = K_DECL_FLOAT;
-        }
-        break;
-      case K_ACTION_AND:
-        if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_INT)
-        {
+	  break;
+	}
+	break;
+      }
+      break;
+    case K_ACTION_AND:
+      switch ( op->result_decl) {
+      case K_DECL_INT:
+	switch ( next_decl) {
+	case K_DECL_INT:
           next->result_int = op->result_int && next_int;
           next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_INT)
-        {
-          next->result_float = op->result_float && next_int;
-          next->result_decl = K_DECL_FLOAT;
-        }
-        else if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	case K_DECL_FLOAT:
           next->result_float = op->result_int && next_float;
           next->result_decl = K_DECL_FLOAT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	}
+	break;
+      case K_DECL_FLOAT:
+	switch ( next_decl) {
+	case K_DECL_INT:
+          next->result_float = op->result_float && next_int;
+          next->result_decl = K_DECL_FLOAT;
+	  break;
+	case K_DECL_FLOAT:
           next->result_float = op->result_float && next_float;
           next->result_decl = K_DECL_FLOAT;
-        }
-        break;
-      case K_ACTION_OR:
-        if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_INT)
-        {
+	  break;
+	}
+	break;
+      }
+      break;
+    case K_ACTION_OR:
+      switch ( op->result_decl) {
+      case K_DECL_INT:
+	switch ( next_decl) {
+	case K_DECL_INT:
           next->result_int = op->result_int || next_int;
           next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_INT)
-        {
-          next->result_float = op->result_float || next_int;
-          next->result_decl = K_DECL_FLOAT;
-        }
-        else if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	case K_DECL_FLOAT:
           next->result_float = op->result_int || next_float;
           next->result_decl = K_DECL_FLOAT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	}
+	break;
+      case K_DECL_FLOAT:
+	switch ( next_decl) {
+	case K_DECL_INT:
+          next->result_float = op->result_float || next_int;
+          next->result_decl = K_DECL_FLOAT;
+	  break;
+	case K_DECL_FLOAT:
           next->result_float = op->result_float || next_float;
           next->result_decl = K_DECL_FLOAT;
-        }
-        break;
-      case K_ACTION_EQ:
-        if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_INT)
-        {
+	  break;
+	}
+	break;
+      }
+      break;
+    case K_ACTION_EQ:
+      switch ( op->result_decl) {
+      case K_DECL_INT:
+	switch ( next_decl) {
+	case K_DECL_INT:
           next->result_int = ( op->result_int == next_int);
           next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_INT)
-        {
-          next->result_int = ( fabs( op->result_float - next_int) < FLT_EPSILON);
-          next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	case K_DECL_FLOAT:
           next->result_int = ( fabs( op->result_int - next_float) < FLT_EPSILON);
           next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	default:
+          next->result_int = 0;
+          next->result_decl = K_DECL_INT;
+	}
+	break;
+      case K_DECL_FLOAT:
+	switch ( next_decl) {
+	case K_DECL_INT:
+          next->result_int = ( fabs( op->result_float - next_int) < FLT_EPSILON);
+          next->result_decl = K_DECL_INT;
+	  break;
+	case K_DECL_FLOAT:
           next->result_int = ( fabs( op->result_float - next_float) < FLT_EPSILON);
           next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_STRING && next_decl == K_DECL_STRING)
-        {
+	  break;
+	default:
+          next->result_int = 0;
+          next->result_decl = K_DECL_INT;
+	}
+	break;
+      case K_DECL_STRING:
+	switch ( next_decl) {
+	case K_DECL_STRING:
           next->result_int = ( strcmp( op->result_string, next_string) == 0);
           next->result_decl = K_DECL_INT;
-        }
-        break;
+	  break;
+	default:
+          next->result_int = 0;
+          next->result_decl = K_DECL_INT;
+	}
+	break;
+      }
+      break;
       case K_ACTION_NE:
-        if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_INT)
-        {
+      switch ( op->result_decl) {
+      case K_DECL_INT:
+	switch ( next_decl) {
+	case K_DECL_INT:
           next->result_int = ( op->result_int != next_int);
           next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_INT)
-        {
-          next->result_int = !( fabs( op->result_float - next_int) < FLT_EPSILON);
-          next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	case K_DECL_FLOAT:
           next->result_int = !( fabs( op->result_int - next_float) < FLT_EPSILON);
           next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	default:
+          next->result_int = 1;
+          next->result_decl = K_DECL_INT;
+	}
+	break;
+      case K_DECL_FLOAT:
+	switch ( next_decl) {
+	case K_DECL_INT:
+          next->result_int = !( fabs( op->result_float - next_int) < FLT_EPSILON);
+          next->result_decl = K_DECL_INT;
+	  break;
+	case K_DECL_FLOAT:
           next->result_int = !( fabs( op->result_float - next_float) < FLT_EPSILON);
           next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_STRING && next_decl == K_DECL_STRING)
-        {
+	  break;
+	default:
+          next->result_int = 1;
+          next->result_decl = K_DECL_INT;
+	}
+	break;
+      case K_DECL_STRING:
+	switch ( next_decl) {
+	case K_DECL_STRING:
           next->result_int = !( strcmp( op->result_string, next_string) == 0);
           next->result_decl = K_DECL_INT;
-        }
-        break;
-      case K_ACTION_LT:
-        if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_INT)
-        {
+	  break;
+	default:
+          next->result_int = 1;
+          next->result_decl = K_DECL_INT;
+	}
+	break;
+      }
+      break;
+    case K_ACTION_LT:
+      switch ( op->result_decl) {
+      case K_DECL_INT:
+	switch ( next_decl) {
+	case K_DECL_INT:
           next->result_int = ( op->result_int < next_int);
           next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_INT)
-        {
-          next->result_int = ( op->result_float < next_int);
-          next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	case K_DECL_FLOAT:
           next->result_int = ( op->result_int < next_float);
           next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	}
+	break;
+      case K_DECL_FLOAT:
+	switch ( next_decl) {
+	case K_DECL_INT:
+          next->result_int = ( op->result_float < next_int);
+          next->result_decl = K_DECL_INT;
+	  break;
+	case K_DECL_FLOAT:
           next->result_int = ( op->result_float < next_float);
           next->result_decl = K_DECL_INT;
-        }
-        break;
-      case K_ACTION_GT:
-        if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_INT)
-        {
+	  break;
+	}
+	break;
+      }
+      break;
+    case K_ACTION_GT:
+      switch ( op->result_decl) {
+      case K_DECL_INT:
+	switch ( next_decl) {
+	case K_DECL_INT:
           next->result_int = ( op->result_int > next_int);
           next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_INT)
-        {
-          next->result_int = ( op->result_float > next_int);
-          next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	case K_DECL_FLOAT:
           next->result_int = ( op->result_int > next_float);
           next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	}
+	break;
+      case K_DECL_FLOAT:
+	switch ( next_decl) {
+	case K_DECL_INT:
+          next->result_int = ( op->result_float > next_int);
+          next->result_decl = K_DECL_INT;
+	  break;
+	case K_DECL_FLOAT:
           next->result_int = ( op->result_float > next_float);
           next->result_decl = K_DECL_INT;
-        }
-        break;
-      case K_ACTION_LE:
-        if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_INT)
-        {
+	  break;
+	}
+	break;
+      }
+      break;
+    case K_ACTION_LE:
+      switch ( op->result_decl) {
+      case K_DECL_INT:
+	switch ( next_decl) {
+	case K_DECL_INT:
           next->result_int = ( op->result_int <= next_int);
           next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_INT)
-        {
-          next->result_int = ( op->result_float <= next_int);
-          next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	case K_DECL_FLOAT:
           next->result_int = ( op->result_int <= next_float);
           next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	}
+	break;
+      case K_DECL_FLOAT:
+	switch ( next_decl) {
+	case K_DECL_INT:
+          next->result_int = ( op->result_float <= next_int);
+          next->result_decl = K_DECL_INT;
+	  break;
+	case K_DECL_FLOAT:
           next->result_int = ( op->result_float <= next_float);
           next->result_decl = K_DECL_INT;
-        }
-        break;
-      case K_ACTION_GE:
-        if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_INT)
-        {
+	  break;
+	}
+	break;
+      }
+      break;
+    case K_ACTION_GE:
+      switch ( op->result_decl) {
+      case K_DECL_INT:
+	switch ( next_decl) {
+	case K_DECL_INT:
           next->result_int = ( op->result_int >= next_int);
           next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_INT)
-        {
-          next->result_int = ( op->result_float >= next_int);
-          next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	case K_DECL_FLOAT:
           next->result_int = ( op->result_int >= next_float);
           next->result_decl = K_DECL_INT;
-        }
-        else if ( op->result_decl == K_DECL_FLOAT && next_decl == K_DECL_FLOAT)
-        {
+	  break;
+	}
+	break;
+      case K_DECL_FLOAT:
+	switch ( next_decl) {
+	case K_DECL_INT:
+          next->result_int = ( op->result_float >= next_int);
+          next->result_decl = K_DECL_INT;
+	  break;
+	case K_DECL_FLOAT:
           next->result_int = ( op->result_float >= next_float);
           next->result_decl = K_DECL_INT;
-        }
-        break;
-      case K_ACTION_INV:
-        if ( next_decl == K_DECL_INT)
-        {
-          next->result_int = ! next_int;
-          next->result_decl = K_DECL_INT;
-        }
-        else
-        {
-          next->result_float = next_float;
-          next->result_decl = K_DECL_FLOAT;
-        }
-        break;
-      case K_ACTION_BITAND:
-        if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_INT)
-        {
-          next->result_int = op->result_int & next_int;
-          next->result_decl = K_DECL_INT;
-        }
-        break;
-      case K_ACTION_BITOR:
-        if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_INT)
-        {
-          next->result_int = op->result_int | next_int;
-          next->result_decl = K_DECL_INT;
-        }
-        break;
-      case K_ACTION_LSHIFT:
-        if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_INT)
-        {
-          next->result_int = op->result_int << next_int;
-          next->result_decl = K_DECL_INT;
-        }
-        break;
-      case K_ACTION_RSHIFT:
-        if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_INT)
-        {
-          next->result_int = op->result_int >> next_int;
-          next->result_decl = K_DECL_INT;
-        }
-        break;
-      case K_ACTION_CREALOCINT:
-        sts = ccm_createvar( next->name, K_DECL_INT, 0, 0, NULL,
+	  break;
+	}
+	break;
+      }
+      break;
+    case K_ACTION_INV:
+      switch ( next_decl) {
+      case K_DECL_INT:
+	next->result_int = ! next_int;
+	next->result_decl = K_DECL_INT;
+	break;
+      default:
+	next->result_float = next_float;
+	next->result_decl = K_DECL_FLOAT;
+	break;
+      }
+      break;
+    case K_ACTION_BITAND:
+      if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_INT) {
+	next->result_int = op->result_int & next_int;
+	next->result_decl = K_DECL_INT;
+      }
+      break;
+    case K_ACTION_BITOR:
+      if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_INT) {
+	next->result_int = op->result_int | next_int;
+	next->result_decl = K_DECL_INT;
+      }
+      break;
+    case K_ACTION_LSHIFT:
+      if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_INT) {
+	next->result_int = op->result_int << next_int;
+	next->result_decl = K_DECL_INT;
+      }
+      break;
+    case K_ACTION_RSHIFT:
+      if ( op->result_decl == K_DECL_INT && next_decl == K_DECL_INT) {
+	next->result_int = op->result_int >> next_int;
+	next->result_decl = K_DECL_INT;
+      }
+      break;
+    case K_ACTION_CREALOCINT:
+      sts = ccm_createvar( next->name, K_DECL_INT, 0, 0, NULL,
 		&funcctx->locint_list, &funcctx->locfloat_list, &funcctx->locstring_list);
-        if ( EVEN(sts)) return sts;
-        break;
-      case K_ACTION_CREALOCFLOAT:
-        sts = ccm_createvar( next->name, K_DECL_FLOAT, 0, 0, NULL,
+      if ( EVEN(sts)) return sts;
+      break;
+    case K_ACTION_CREALOCFLOAT:
+      sts = ccm_createvar( next->name, K_DECL_FLOAT, 0, 0, NULL,
 		&funcctx->locint_list, &funcctx->locfloat_list, &funcctx->locstring_list);
-        if ( EVEN(sts)) return sts;
-        break;
-      case K_ACTION_CREALOCSTRING:
-        sts = ccm_createvar( next->name, K_DECL_STRING, 0, 0, "",
+      if ( EVEN(sts)) return sts;
+      break;
+    case K_ACTION_CREALOCSTRING:
+      sts = ccm_createvar( next->name, K_DECL_STRING, 0, 0, "",
 		&funcctx->locint_list, &funcctx->locfloat_list, &funcctx->locstring_list);
-        if ( EVEN(sts)) return sts;
-        break;
-      case K_ACTION_CREAGBLINT:
-        sts = ccm_createvar( next->name, K_DECL_INT, 0, 0, NULL,
+      if ( EVEN(sts)) return sts;
+      break;
+    case K_ACTION_CREAGBLINT:
+      sts = ccm_createvar( next->name, K_DECL_INT, 0, 0, NULL,
 		&funcctx->filectx->gblint_list, &funcctx->filectx->gblfloat_list, &funcctx->filectx->gblstring_list);
-        if ( EVEN(sts)) return sts;
-        break;
-      case K_ACTION_CREAGBLFLOAT:
-        sts = ccm_createvar( next->name, K_DECL_FLOAT, 0, 0, NULL,
+      if ( EVEN(sts)) return sts;
+      break;
+    case K_ACTION_CREAGBLFLOAT:
+      sts = ccm_createvar( next->name, K_DECL_FLOAT, 0, 0, NULL,
 		&funcctx->filectx->gblint_list, &funcctx->filectx->gblfloat_list, &funcctx->filectx->gblstring_list);
-        if ( EVEN(sts)) return sts;
-        break;
-      case K_ACTION_CREAGBLSTRING:
-        sts = ccm_createvar( next->name, K_DECL_STRING, 0, 0, "",
+      if ( EVEN(sts)) return sts;
+      break;
+    case K_ACTION_CREAGBLSTRING:
+      sts = ccm_createvar( next->name, K_DECL_STRING, 0, 0, "",
 		&funcctx->filectx->gblint_list, &funcctx->filectx->gblfloat_list, &funcctx->filectx->gblstring_list);
-        if ( EVEN(sts)) return sts;
-        break;
-      case K_ACTION_CREAEXTINT:
-        sts = ccm_createvar( next->name, K_DECL_INT, 0, 0, NULL,
-		&extint_list, &extfloat_list, &extstring_list);
-	if ( sts == CCM__VARALREXIST)
-	  sts = CCM__SUCCESS;
-        if ( EVEN(sts)) return sts;
-        break;
-      case K_ACTION_CREAEXTFLOAT:
-        sts = ccm_createvar( next->name, K_DECL_FLOAT, 0, 0, NULL,
-		&extint_list, &extfloat_list, &extstring_list);
-	if ( sts == CCM__VARALREXIST)
-	  sts = CCM__SUCCESS;
-        if ( EVEN(sts)) return sts;
-        break;
-      case K_ACTION_CREAEXTSTRING:
-        sts = ccm_createvar( next->name, K_DECL_STRING, 0, 0, "",
-		&extint_list, &extfloat_list, &extstring_list);
-	if ( sts == CCM__VARALREXIST)
-	  sts = CCM__SUCCESS;
-        if ( EVEN(sts)) return sts;
-        break;
-      case K_ACTION_DELETE:
-        sts = ccm_deletevar( next->name,
-		&extint_list, &extfloat_list, &extstring_list);
-        if ( EVEN(sts)) return sts;
-        break;
+      if ( EVEN(sts)) return sts;
+      break;
+    case K_ACTION_CREAEXTINT:
+      sts = ccm_createvar( next->name, K_DECL_INT, 0, 0, NULL,
+			   &extint_list, &extfloat_list, &extstring_list);
+      if ( sts == CCM__VARALREXIST)
+	sts = CCM__SUCCESS;
+      if ( EVEN(sts)) return sts;
+      break;
+    case K_ACTION_CREAEXTFLOAT:
+      sts = ccm_createvar( next->name, K_DECL_FLOAT, 0, 0, NULL,
+			   &extint_list, &extfloat_list, &extstring_list);
+      if ( sts == CCM__VARALREXIST)
+	sts = CCM__SUCCESS;
+      if ( EVEN(sts)) return sts;
+      break;
+    case K_ACTION_CREAEXTSTRING:
+      sts = ccm_createvar( next->name, K_DECL_STRING, 0, 0, "",
+			   &extint_list, &extfloat_list, &extstring_list);
+      if ( sts == CCM__VARALREXIST)
+	sts = CCM__SUCCESS;
+      if ( EVEN(sts)) return sts;
+      break;
+    case K_ACTION_DELETE:
+      sts = ccm_deletevar( next->name,
+			   &extint_list, &extfloat_list, &extstring_list);
+      if ( EVEN(sts)) return sts;
+      break;
     }
     next->result_done = 1;
     if ( ccm_testmode)
@@ -2510,30 +2625,27 @@ int ccm_operate_exec(
   }
   op->done = 1;
 
-  if ( op->local_type == K_LOCTYPE_AFTER)
-  {
-    switch ( op->local_operator)
-    {
-      case K_ACTION_INCR:
-        if ( op->value_decl == K_DECL_INT || op->value_decl == K_DECL_FLOAT)
-        {
-          op->value_int++;
-          op->value_float++;
-          sts = ccm_setvar( funcctx, op->name, op->value_decl, op->value_float, 
-		op->value_int, "");
-          if ( EVEN(sts)) return sts;
-	}
-        break;
-      case K_ACTION_DECR:
-        if ( op->value_decl == K_DECL_INT || op->value_decl == K_DECL_FLOAT)
-        {
-          op->value_int--;
-          op->value_float--;
-          sts = ccm_setvar( funcctx, op->name, op->value_decl, op->value_float, 
-		op->value_int, "");
-          if ( EVEN(sts)) return sts;
-	}
-        break;
+  if ( op->local_type == K_LOCTYPE_AFTER) {
+
+    switch ( op->local_operator) {
+    case K_ACTION_INCR:
+      if ( op->value_decl == K_DECL_INT || op->value_decl == K_DECL_FLOAT) {
+	op->value_int++;
+	op->value_float++;
+	sts = ccm_setvar( funcctx, op->name, op->value_decl, op->value_float, 
+			  op->value_int, "");
+	if ( EVEN(sts)) return sts;
+      }
+      break;
+    case K_ACTION_DECR:
+      if ( op->value_decl == K_DECL_INT || op->value_decl == K_DECL_FLOAT) {
+	op->value_int--;
+	op->value_float--;
+	sts = ccm_setvar( funcctx, op->name, op->value_decl, op->value_float, 
+			  op->value_int, "");
+	if ( EVEN(sts)) return sts;
+      }
+      break;
     }
   }
   if ( exit_function_found)
@@ -2560,67 +2672,72 @@ int	ccm_execute_list(
     op->orig_type = op->type;
 
   exit_func_found = 0;
-  for ( op = funcctx->list; op; op = op->next)
-  {
-    if ( !op->prev)
-    {
+  for ( op = funcctx->list; op; op = op->next) {
+
+    if ( !op->prev) {
       /* First in list */
-      if ( op->type == K_OPERAND_NAME)
-      {
+      if ( op->type == K_OPERAND_NAME) {
         sts = ccm_getvar( funcctx, op->name, &op->value_decl, 
 			&op->value_float, &op->value_int, op->value_string);
         if ( EVEN(sts)) return sts;
       }
-      if ( op->value_decl == K_DECL_FLOAT)
+      switch ( op->value_decl) {
+      case K_DECL_FLOAT:
         op->result_float = op->value_float;
-      else if ( op->value_decl == K_DECL_INT)
+	break;
+      case K_DECL_INT:
         op->result_int = op->value_int;
-      else
+	break;
+      default:
         strcpy( op->result_string, op->value_string);
+      }
       op->result_decl = op->value_decl;
       op->result_done = 1;
-      if ( !op->next)
-      {
+
+      if ( !op->next) {
         sts = ccm_operate_exec( funcctx, op, NULL);
         if ( EVEN(sts)) return sts;
         if ( sts == CCM__EXITFUNC) exit_func_found = 1;
       }
     }
-    if ( !op->next)
-    {
+    if ( !op->next) {
       /* Last in list */
-      for ( bp = op->prev; bp; bp = bp->prev)
-      {
-        if ( !bp->done)
-        {
+      for ( bp = op->prev; bp; bp = bp->prev) {
+        if ( !bp->done) {
           sts = ccm_operate_exec( funcctx, bp, op);
           if ( EVEN(sts)) return sts;
           if ( sts == CCM__EXITFUNC) exit_func_found = 1;
         }
       }
       *result_decl = op->result_decl;
-      if ( op->result_decl == K_DECL_FLOAT)
+      switch ( op->result_decl) {
+      case K_DECL_FLOAT:
         *result_float = op->result_float;
-      else if ( op->result_decl == K_DECL_INT)
+	break;
+      case K_DECL_INT:
         *result_int = op->result_int;
-      else if ( op->result_decl == K_DECL_STRING)
+	break;
+      case K_DECL_STRING:
         strcpy( result_string, op->result_string);
+	break;
+      default: ;
+      }
     }
-    else
-    {
-      if ( op->next->parlevel > op->parlevel)
-      {
+    else {
+
+      if ( op->next->parlevel > op->parlevel) {
+
         /* Left parenthesis */
-        if ( op->next->prio < op->prio)
-	{
-          for ( bp = op->prev; bp; bp = bp->prev)
-          {
+        if ( op->next->prio < op->prio) {
+
+          for ( bp = op->prev; bp; bp = bp->prev) {
+
             if ( bp->parlevel < op->parlevel)
               break;
             if ( bp->parlevel > op->parlevel)
               continue;
-            if ( bp->prio <= op->prio && !bp->done)
-            {
+
+            if ( bp->prio <= op->prio && !bp->done) {
               sts = ccm_operate_exec( funcctx, bp, op);
               if ( EVEN(sts)) return sts;
               if ( sts == CCM__EXITFUNC) exit_func_found = 1;
@@ -2629,18 +2746,16 @@ int	ccm_execute_list(
         }
         continue;
       }
-      else if ( op->next->parlevel < op->parlevel)
-      {
+      else if ( op->next->parlevel < op->parlevel) {
+
         /* Right parentheseis, sum sinc last right parenthes */
-        for ( bp = op; bp; bp = bp->prev)
-        {
+        for ( bp = op; bp; bp = bp->prev) {
           if ( bp->parlevel < op->parlevel)
             break;
           if ( bp->parlevel > op->parlevel)
             continue;
 
-          if ( !bp->done)
-          {
+          if ( !bp->done) {
             sts = ccm_operate_exec( funcctx, bp, op->next);
             if ( EVEN(sts)) return sts;
             if ( sts == CCM__EXITFUNC) exit_func_found = 1;
@@ -2648,42 +2763,45 @@ int	ccm_execute_list(
         }
 
       }
-      else
-      {
-        if ( op->next->prio < op->prio)
-	{
-          for ( bp = op->prev; bp; bp = bp->prev)
-          {
+      else {
+
+        if ( op->next->prio < op->prio) {
+
+          for ( bp = op->prev; bp; bp = bp->prev) {
             if ( bp->parlevel < op->parlevel)
               break;
             if ( bp->parlevel > op->parlevel)
               continue;
-            if ( bp->prio <= op->prio && !bp->done)
-            {
+            if ( bp->prio <= op->prio && !bp->done) {
               sts = ccm_operate_exec( funcctx, bp, op);
               if ( EVEN(sts)) return sts;
               if ( sts == CCM__EXITFUNC) exit_func_found = 1;
             }
           }
-	  if ( op->next->type == K_OPERAND_NAME)
-          {
+	  if ( op->next->type == K_OPERAND_NAME) {
+
             sts = ccm_getvar( funcctx, op->next->name, &op->next->value_decl, 
 			&op->next->value_float, &op->next->value_int,
 			op->next->value_string);
             if ( EVEN(sts)) return sts;
           }
-          if ( op->next->value_decl == K_DECL_FLOAT)
+          switch ( op->next->value_decl) {
+	  case K_DECL_FLOAT:
             op->next->result_float = op->next->value_float;
-          else if ( op->next->value_decl == K_DECL_INT)
+	    break;
+          case K_DECL_INT:
             op->next->result_int = op->next->value_int;
-          else if ( op->next->value_decl == K_DECL_STRING)
+	    break;
+          case K_DECL_STRING:
             strcpy( op->next->result_string, op->next->value_string);
+	    break;
+	  default: ;
+	  }
           op->next->result_decl = op->next->value_decl;
           op->next->result_done = 1;
           continue;
         }
-	else
-        {
+	else {
           sts = ccm_operate_exec( funcctx, op, op->next);
           if ( EVEN(sts)) return sts;
           if ( sts == CCM__EXITFUNC) exit_func_found = 1;
@@ -2723,8 +2841,8 @@ int ccm_line_exec(
 
   funcctx->list = list;
 
-  for ( op = list; op; op = op->next)
-  {
+  for ( op = list; op; op = op->next) {
+
     if ( ccm_testmode)
       printf( "operator %d prio %d   parlevel %d Name %s\n", 
 		op->o_operator, op->prio, op->parlevel, 
@@ -2742,7 +2860,8 @@ int ccm_line_exec(
 int ccm_singleline_init( 
   ccm_tSingleLineCtx *ctx,
   char 		*line,
-  int		(* errormessage_func) ( char *, int, void *)  
+  int		(* errormessage_func) ( char *, int, void *),
+  void		*client_data
 )
 {
   int		sts;
@@ -2757,7 +2876,7 @@ int ccm_singleline_init(
   filectx->verify = 1;
   filectx->main_arg_list = 0;
   filectx->main_arg_count = 0;
-  filectx->client_data = 0;
+  filectx->client_data = client_data;
 
   (*ctx)->funcctx->filectx = filectx;
 
@@ -2782,6 +2901,52 @@ int ccm_singleline_exec(
 
   sts = ccm_execute_list( ctx->funcctx, ctx->funcctx->list, &ctx->result_decl, &ctx->result_float,
 			  &ctx->result_int, &ctx->result_string);
+  return sts;
+}
+
+int ccm_singleline_exec_float( 
+  ccm_tSingleLineCtx ctx,
+  ccm_tFloat *result
+)
+{
+  int sts;
+
+  sts = ccm_singleline_exec( ctx);
+  if ( ODD(sts)) {
+    switch ( ctx->result_decl) {
+    case CCM_DECL_INT:
+      *result = ctx->result_int;
+      break;
+    case CCM_DECL_FLOAT:
+      *result = ctx->result_float;
+      break;
+    default:
+      return CCM__VARTYPE;
+    }
+  }
+  return sts;
+}
+
+int ccm_singleline_exec_int( 
+  ccm_tSingleLineCtx ctx,
+  ccm_tInt *result
+)
+{
+  int sts;
+
+  sts = ccm_singleline_exec( ctx);
+  if ( ODD(sts)) {
+    switch ( ctx->result_decl) {
+    case CCM_DECL_INT:
+      *result = ctx->result_int;
+      break;
+    case CCM_DECL_FLOAT:
+      *result = ctx->result_float;
+      break;
+    default:
+      return CCM__VARTYPE;
+    }
+  }
   return sts;
 }
 
@@ -3942,7 +4107,7 @@ static int ccm_func_printf(
       arg_p = arg_p->next;
     }
   }
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
   fflush( stdout);
 #endif
   *return_decl = K_DECL_INT;
@@ -4032,7 +4197,7 @@ static int ccm_func_ask(
     return CCM__VARTYPE;
 
   printf("%s", arg_list->value_string);
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
   fflush( stdout);
 #endif
 

@@ -4269,7 +4269,7 @@ int GrowCtx::is_visible( GlowArrayElem *element, glow_eVisible type)
 void GrowCtx::read_object( ifstream& fp, GlowArrayElem **o) 
 {
   int		type;
-  GlowArrayElem *n;
+  GlowArrayElem *n = 0;
 
   fp >> type;
   switch( type) {
@@ -4408,8 +4408,10 @@ void GrowCtx::read_object( ifstream& fp, GlowArrayElem **o)
   default:
     break;
   }
-  n->open( fp);
-  a.insert( n);
+  if ( n) {
+    n->open( fp);
+    a.insert( n);
+  }
   *o = n;
 }
 

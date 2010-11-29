@@ -120,14 +120,11 @@ EvGtk::EvGtk( void *ev_parent_ctx,
   // Gtk
   // Eve Window
   {
-    char *titleutf8 = g_convert( eve_name, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
-
     parent_wid_eve = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 						 "default-height", eve_height,
 						 "default-width", eve_width,
-						 "title", titleutf8,
+						 "title", CoWowGtk::translate_utf8(eve_name),
 						 NULL);
-    g_free( titleutf8);
 
     g_signal_connect( parent_wid_eve, "delete_event", G_CALLBACK(eve_delete_event), this);
     g_signal_connect( parent_wid_eve, "destroy", G_CALLBACK(eve_destroy_event), this);
@@ -342,15 +339,11 @@ EvGtk::EvGtk( void *ev_parent_ctx,
 
   // Ala Window
   {
-    char *titleutf8 = g_convert( ala_name, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
-
     parent_wid_ala = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 						 "default-height", ala_height,
 						 "default-width", ala_width,
-						 "title", titleutf8,
+						 "title", CoWowGtk::translate_utf8(ala_name),
 						 NULL);
-    g_free( titleutf8);
-
     g_signal_connect( parent_wid_ala, "delete_event", G_CALLBACK(ala_delete_event), this);
     g_signal_connect( parent_wid_ala, "destroy", G_CALLBACK(ala_destroy_event), this);
     g_signal_connect( parent_wid_ala, "focus-in-event", G_CALLBACK(ala_action_inputfocus), this);
@@ -575,14 +568,11 @@ EvGtk::EvGtk( void *ev_parent_ctx,
 
   // Blk Window
   {
-    char *titleutf8 = g_convert( blk_name, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
-
     parent_wid_blk = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 						 "default-height", blk_height,
 						 "default-width", blk_width,
-						 "title", titleutf8,
+						 "title", CoWowGtk::translate_utf8(blk_name),
 						 NULL);
-    g_free( titleutf8);
 
     g_signal_connect( parent_wid_blk, "delete_event", G_CALLBACK(blk_delete_event), this);
     g_signal_connect( parent_wid_blk, "destroy", G_CALLBACK(blk_destroy_event), this);

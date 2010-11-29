@@ -771,3 +771,9 @@ int brow_GetObjectLevel( brow_tObject object)
 {
   return ((FlowNode *)object)->get_level();
 }
+
+void brow_SetTextCoding( brow_tCtx ctx, flow_eTextCoding coding)
+{
+  ctx->set_text_coding( coding);
+}
+

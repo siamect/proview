@@ -82,7 +82,8 @@ FlowCtx::FlowCtx( const char *ctx_name, double zoom_fact, int offs_x, int offs_y
     trace_connect_func(0), trace_scan_func(0), trace_started(0), 
     unobscured(1), nodraw(0), no_nav(1), widget_cnt(0),
     select_policy(flow_eSelectPolicy_Partial), tiptext(0),
-    inverse_color(flow_eDrawType_Line), display_level(flow_mDisplayLevel_1),  
+    inverse_color(flow_eDrawType_Line), text_coding(flow_eTextCoding_ISO8859_1),
+    display_level(flow_mDisplayLevel_1),  
     scroll_size(0), scroll_callback(0), scroll_data(NULL)
 { 
   strcpy(name, ctx_name);

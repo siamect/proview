@@ -44,7 +44,7 @@
 # include <stdlib.h>
 # include <pthread.h>
 #endif
-#if defined OS_LINUX || defined OS_MACOS
+#if defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 # include <time.h>
 #endif
 
@@ -53,6 +53,7 @@
 #include "pwr_baseclasses.h"
 #include "co_cdh.h"
 #include "co_time.h"
+#include "co_ccm_msg.h"
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
 #include "co_dcli.h"
@@ -73,15 +74,63 @@
 #endif
 
 static void	*xtt_logproc( void *arg);
+static int 	log_ccm_registred = 0;
 
+static int log_errormessage_func( char *msg, int severity, void *data)
+{
+  ((XttLogging *)data)->message( severity, msg);
+  printf( "Condition error: %s\n", msg);
+  return 1;
+}
 
+static int logccm_geta_func( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  int sts;
+
+  if ( arg_count != 1 || arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+
+  sts = gdh_GetObjectInfo( arg_list->value_string, return_float, sizeof(*return_float));
+  if ( EVEN(sts)) return sts;
+
+  *return_decl = CCM_DECL_FLOAT;
+  return 1;
+}
+
+static int logccm_getd_func( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  int sts;
+
+  if ( arg_count != 1 || arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+
+  sts = gdh_GetObjectInfo( arg_list->value_string, return_int, sizeof(*return_int));
+  if ( EVEN(sts)) return sts;
+
+  *return_decl = CCM_DECL_INT;
+  return 1;
+}
 
 XttLogging::XttLogging() :
   xnav(0), index(0), active(0), intern(0), stop_logg(0), 
   logg_type(xtt_LoggType_Cont), logg_priority(0), condition_ptr(0),
   logg_time(200), logg_file(0), line_size(10000), parameter_count(0), 
   print_shortname(0), buffer_size(100), wanted_buffer_size(100), 
-  buffer_count(0), buffer_ptr(0)
+  buffer_count(0), buffer_ptr(0), cond_ccm_ctx(0)
 {
   for ( int i = 0; i < RTT_LOGG_MAXPAR; i++) {
     parameterstr[i][0] = 0;
@@ -215,16 +264,18 @@ int XttLogging::logging_set(
 	  parameter_size[ par_index] = asize/aelem;
 	}
 
-	if ( condition != NULL)
-	{
-	  /* Check that parameter exists */
-	  sts = gdh_GetObjectInfo ( condition, &buffer, sizeof(buffer)); 
-	  if (EVEN(sts))
-	  {
-	    message('E',"Condition doesn't exist");
-	    return XNAV__HOLDCOMMAND;
+	if ( condition != NULL) {
+	  if ( cdh_NoCaseStrncmp( condition, "EXPR(", 5) == 0)
+	    strcpy ( conditionstr, condition);
+	  else {
+	    /* Attribute, Check that parameter exists */
+	    sts = gdh_GetObjectInfo ( condition, &buffer, sizeof(buffer)); 
+	    if (EVEN(sts)) {
+	      message('E',"Condition doesn't exist");
+	      return XNAV__HOLDCOMMAND;
+	    }
+	    strcpy ( conditionstr, condition);
 	  }
-	  strcpy ( conditionstr, condition);
 	}
 	if ( a_logg_time != 0)
 	  logg_time = a_logg_time;
@@ -499,10 +550,24 @@ int XttLogging::store(
 	    fprintf( outfile, "logging set/entry=current/parameter=\"%s\"\n",
 		parameterstr[i]);
 	}
-	if ( conditionstr[0] != 0)
-	  fprintf( outfile, "logging set/entry=current/condition=\"%s\"\n", 
-		conditionstr);
+	if ( conditionstr[0] != 0) {
+	  pwr_tCmd cond;
+	  char *s, *t;
 
+	  // Replace " with \"
+	  for ( s = conditionstr, t = cond; *s; s++) {
+	    if ( *s == '"') {
+	      *t = '\\';
+	      t++;
+	    }
+	    *t = *s;
+	    t++;
+	  }
+	  *t = 0;
+	  
+	  fprintf( outfile, "logging set/entry=current/condition=\"%s\"\n", 
+		cond);
+	}
 	if ( intern )
 	  fprintf( outfile, "logging set/entry=current/stop\n");
 	else
@@ -579,21 +644,50 @@ int XttLogging::start()
 	}
 
 	/* Get the condition */
-	if ( conditionstr[0] != 0)
-	{
-	  sts = gdh_RefObjectInfo(
-		conditionstr,	
-		(pwr_tAddress *) &condition_ptr,
-		&(condition_subid), 1);
-	  if ( EVEN(sts)) 
-	  {
-	    message('E', "Condition parameter not found");
-	    return XNAV__HOLDCOMMAND;
+	if ( conditionstr[0] != 0) {
+	  if ( cdh_NoCaseStrncmp( conditionstr, "EXPR(", 5) == 0) {
+	    pwr_tCmd expr;
+
+	    strncpy( expr, &conditionstr[5], sizeof(expr));
+	    char *s = strrchr( expr, ')');
+	    if ( !s) {
+	      message('E', "Condition expression syntax error");
+	      return XNAV__HOLDCOMMAND;
+	    }
+	    *s = 0;
+
+	    if ( !log_ccm_registred) {
+	      sts = ccm_register_function( "GetA", logccm_geta_func);
+	      if ( EVEN(sts)) return sts;
+	      sts = ccm_register_function( "GetD", logccm_getd_func);
+	      if ( EVEN(sts)) return sts;
+	      sts = ccm_register_function( "GetI", logccm_getd_func);
+	      if ( EVEN(sts)) return sts;
+	      log_ccm_registred = 1;
+	    }
+
+	    sts = ccm_singleline_init( &cond_ccm_ctx, expr, log_errormessage_func, this);
+	    if ( EVEN(sts)) {
+	      message('E', "Condition expression syntax error");
+	      return XNAV__HOLDCOMMAND;
+	    }
+	    condition_ptr = 0;
+	  }
+	  else {
+	    sts = gdh_RefObjectInfo( conditionstr,	
+				     (pwr_tAddress *) &condition_ptr,
+				     &(condition_subid), 1);
+	    if ( EVEN(sts)) {
+	      condition_ptr = 0;
+	      message('E', "Condition parameter not found");
+	      return XNAV__HOLDCOMMAND;
+	    }
+	    cond_ccm_ctx = 0;
 	  }
 	}
-	else
-	{
+	else {
 	  condition_ptr = 0;
+	  cond_ccm_ctx = 0;
 	}
 	
 	/* Open the file */
@@ -627,7 +721,7 @@ int XttLogging::start()
 	stop_logg = 0;
 
 	/* Create a subprocess */
-#if defined(OS_VMS) || defined(OS_LINUX) || defined(OS_MACOS) || defined(OS_LYNX) && !defined(PWR_LYNX_30)
+#if defined(OS_VMS) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD || defined(OS_LYNX) && !defined(PWR_LYNX_30)
 	sts = pthread_create (
 		&thread,
 		NULL,			 /* attr */
@@ -706,8 +800,14 @@ int XttLogging::entry_stop()
 	    sts = gdh_UnrefObjectInfo ( parameter_subid[i]);
 	  }
 	}
-	if ( condition_ptr != 0)
+	if ( condition_ptr != 0) {
 	  sts = gdh_UnrefObjectInfo ( condition_subid);
+	  condition_ptr = 0;
+	}
+	if ( cond_ccm_ctx != 0) {
+	  ccm_singleline_free( cond_ccm_ctx);
+	  cond_ccm_ctx = 0;
+	}
 
 	return XNAV__SUCCESS;
 }
@@ -777,12 +877,13 @@ static void	*xtt_logproc( void *arg)
 	char		*value_ptr;
 	char		*old_value_ptr;
 	int		first_scan;
-	pwr_tObjid		objid;
-	pwr_sAttrRef		*attrref;
-	pwr_tAName     		hiername;
-	char			timstr[64];
-	char			parname[40];
-	char			*s;
+	pwr_tObjid     	objid;
+	pwr_sAttrRef   	*attrref;
+	pwr_tAName     	hiername;
+	char	       	timstr[64];
+	char	       	parname[40];
+	char	       	*s;
+	ccm_tInt       	cond;
 	pwr_tTime	nextime;
 	pwr_tTime	restime;
 	pwr_tDeltaTime	deltatime;
@@ -908,12 +1009,20 @@ static void	*xtt_logproc( void *arg)
 	  time_Aadd( &restime, &nextime, &deltatime);
 	  nextime = restime;
 
-	  if ( logg->condition_ptr != 0)
-	  {
-	    if ( logg->active && !logg->stop_logg)
-	    {
-	      if ( !*(logg->condition_ptr))
-	      {
+	  if ( logg->condition_ptr || logg->cond_ccm_ctx) {
+
+	    if ( logg->active && !logg->stop_logg) {
+	      if ( logg->condition_ptr)
+		cond = *logg->condition_ptr;
+	      else {
+		sts = ccm_singleline_exec_int( logg->cond_ccm_ctx, &cond);
+		if ( EVEN(sts)) {
+		  logg->message(' ', XNav::get_message(sts));
+		  cond = 0;
+		}
+	      }
+
+	      if ( !cond) {
 	        /*  Don't log, wait until next scan */
 #ifdef OS_VMS
 	        time_PwrToVms( &nextime, &vmstime);
@@ -921,7 +1030,7 @@ static void	*xtt_logproc( void *arg)
 	        sys$setimr( logg->event_flag, &vmstime, 0, 0, 0);
 	        sys$waitfr( logg->event_flag);
 #endif
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 	        time_GetTime( &time);
 	        time_Adiff( &wait_time, &nextime, &time);
 
@@ -1341,7 +1450,7 @@ static void	*xtt_logproc( void *arg)
 	  sys$setimr( logg->event_flag, &vmstime, 0, 0, 0);
 	  sys$waitfr( logg->event_flag);
 #endif
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 	  time_Adiff( &wait_time, &nextime, &time);
 
 	  struct timespec wait_time_ts;

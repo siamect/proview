@@ -62,15 +62,15 @@ class NavHelp {
   public:
     NavHelp( void *h_parent_ctx, const char *h_base_file, const char *h_project_file) 
       : parent_ctx(h_parent_ctx), noprop(0)
-      { strcpy(project_file, h_project_file);
-        strcpy(base_file, h_base_file);};
+      { strncpy(project_file, h_project_file, sizeof(project_file));
+        strncpy(base_file, h_base_file, sizeof(base_file));};
     void 	        *parent_ctx;
     void 		*(*insert_cb)( void *, navh_eItemType, const char *, 
 			     const char *, const char *, const char *, const char *, const char *,
-			     navh_eHelpFile, int, const char *);
+			     navh_eHelpFile, int, const char *, int);
     void 		(*draw_cb)( void *, int, void *);
-    char                base_file[120];
-    char                project_file[120];
+    pwr_tFileName       base_file;
+    pwr_tFileName       project_file;
     int			noprop;
 
     int help( const char *key, const char *help_bookmark, navh_eHelpFile file_type, 

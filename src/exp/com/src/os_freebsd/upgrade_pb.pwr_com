@@ -1,0 +1,213 @@
+!** Invisible: Script for converting OpPlace and WebHandler objects during upgrading from v4.6 to v4.7.0
+! 
+!  Proview   $Id: upgrade_pb.pwr_com,v 1.3 2008-11-28 17:15:37 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!
+! Script for converting OpPlace and WebHandler objects during upgrading from V4.6 to V4.7.0,
+! and to remove User and RttConfig objects.
+!
+! Find all OpPlace objects and move UserName, FastAvail and SelectList from the user object
+! to the opplace object.
+! Replace RttConfig with an OpPlace object named OpDefault.
+! Move SelectList from user object to WebHandler object.
+!
+
+main
+  string op;
+  string user;
+  string aname;
+  int sts;
+  int opnumber;
+  int usernumber;
+  int found;
+  string value;
+  int ivalue;
+  int i;
+  string rttconfig;
+  string webhandler;
+
+  !verify(1);
+
+  ! For all OpPlace objects
+  op = GetClassList( "OpPlace");
+  while ( op != "")
+
+    aname = op + ".OpNumber";
+    opnumber = GetAttribute( aname, sts);
+    if ( !sts)
+      op = GetNextObject( op);
+      continue;
+    endif
+
+    found = 0;
+    user = GetClassList( "User"); 
+    while ( user != "")
+      aname = user + ".OpNumber";
+      usernumber = GetAttribute( aname, sts);
+
+      if ( usernumber == opnumber)
+        found = 1;
+        break;
+      endif
+      user = GetNextObject( user);
+    endwhile
+
+    if ( !found)
+      printf( "No corresponding User object for %s\n", op);
+      op = GetNextObject( op);
+      continue;
+    endif
+    printf( "Processing %s\n", op);
+
+    aname = user + ".UserName";
+    value = GetAttribute( aname, sts);
+    aname = op + ".UserName";
+    SetAttribute( aname, value);
+
+    for ( i = 0; i < 15; i++)
+      aname = user + ".FastAvail[" + i + "]";
+      value = GetAttribute( aname, sts);
+      if ( value != "" && value != "Undefined attribute")
+        aname = op + ".FastAvail[" + i + "]";
+        SetAttribute( aname, value);
+      endif
+    endfor     
+
+    for ( i = 0; i < 20; i++)
+      aname = user + ".SelectList[" + i + "]";
+      value = GetAttribute( aname, sts);
+      if ( value != "")
+        aname = op + ".EventSelectList[" + i + "]";
+        SetAttribute( aname, value);
+      endif
+    endfor     
+
+    aname = user + ".MaxNoOfAlarms";
+    ivalue = GetAttribute( aname, sts);
+    aname = op + ".MaxNoOfAlarms";
+    SetAttribute( aname, ivalue);
+
+    aname = user + ".MaxNoOfEvents";
+    ivalue = GetAttribute( aname, sts);
+    aname = op + ".MaxNoOfEvents";
+    SetAttribute( aname, ivalue);
+
+    ivalue = 3;
+    aname = op + ".OpWindPop";
+    SetAttribute( aname, ivalue);
+
+    ivalue = 14;
+    aname = op + ".OpWindLayout";
+    SetAttribute( aname, ivalue);
+
+    ivalue = 1;
+    aname = op + ".AlarmBell";
+    SetAttribute( aname, ivalue);
+
+    delete object/name='user'/noconf
+
+    op = GetNextObject( op);
+  endwhile
+
+  ! Create OpDefault
+  op = GetNodeObject();
+  create object/name="OpDefault"/class=opplace/dest='op'/last
+  op = op + "-OpDefault";
+
+  ivalue = 1;
+  aname = op + ".OpWindLayout";
+  SetAttribute( aname, ivalue);
+
+  ! For the RttConfig object
+  rttconfig = GetClassList( "RttConfig");
+  if ( rttconfig != "")
+
+    aname = rttconfig + ".UserObject";
+    user = GetAttribute( aname, sts);
+    if ( user != "" && user != "Undefined attribute")
+
+      printf( "Processing %s\n", op);
+
+      aname = rttconfig + ".SymbolFileName";
+      value = GetAttribute( aname, sts);
+      aname = op + ".SetupScript";
+      SetAttribute( aname, value);
+
+      for ( i = 0; i < 20; i++)
+        aname = user + ".SelectList[" + i + "]";
+        value = GetAttribute( aname, sts);
+        if ( value != "")
+          aname = op + ".EventSelectList[" + i + "]";
+          SetAttribute( aname, value);
+        endif
+      endfor     
+
+      aname = user + ".MaxNoOfAlarms";
+      ivalue = GetAttribute( aname, sts);
+      aname = op + ".MaxNoOfAlarms";
+      SetAttribute( aname, ivalue);
+
+      aname = user + ".MaxNoOfEvents";
+      ivalue = GetAttribute( aname, sts);
+      aname = op + ".MaxNoOfEvents";
+      SetAttribute( aname, ivalue);
+
+      delete object/name='user'/noconf
+      delete object/name='rttconfig'/noconf
+    endif
+
+  endif
+
+
+  ! For the WebHandler object
+  webhandler = GetClassList( "WebHandler");
+  if ( webhandler != "")
+
+    aname = webhandler + ".UserObject";
+    user = GetAttribute( aname, sts);
+    if ( user != "" && user != "Undefined attribute")
+
+      printf( "Processing %s\n", webhandler);
+
+      for ( i = 0; i < 20; i++)
+        aname = user + ".SelectList[" + i + "]";
+        value = GetAttribute( aname, sts);
+        if ( value != "")
+          aname = webhandler + ".EventSelectList[" + i + "]";
+          SetAttribute( aname, value);
+        endif
+      endfor     
+
+      aname = user + ".MaxNoOfAlarms";
+      ivalue = GetAttribute( aname, sts);
+      aname = webhandler + ".MaxNoOfAlarms";
+      SetAttribute( aname, ivalue);
+
+      aname = user + ".MaxNoOfEvents";
+      ivalue = GetAttribute( aname, sts);
+      aname = webhandler + ".MaxNoOfEvents";
+      SetAttribute( aname, ivalue);
+
+      delete object/name='user'/noconf
+
+    endif
+  endif
+
+  save
+
+endmain

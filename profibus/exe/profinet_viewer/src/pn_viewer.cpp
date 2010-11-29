@@ -19,6 +19,8 @@
 
 /* pn_viewer.cpp -- Profinet viewer */
 
+#ifdef PWRE_CONF_PNAK
+
 #include "glow_std.h"
 
 #include <stdio.h>
@@ -130,6 +132,6 @@ void PnViewer::activate_help()
 		  true);
 }
 
-
+#endif
 
 

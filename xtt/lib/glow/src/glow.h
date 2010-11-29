@@ -119,6 +119,11 @@ typedef enum {
   glow_eTextSize_24	= 8
 } glow_eTextSize;
 
+typedef enum {
+  glow_eTextCoding_ISO8859_1,
+  glow_eTextCoding_UTF_8
+} glow_eTextCoding;
+
 //! Critera used to decide when an object is hot
 typedef enum {
 	glow_eHotMode_Default,
@@ -1358,6 +1363,7 @@ typedef enum {
 	glow_eSave_GrowArc_gradient_contrast    = 2419,
 	glow_eSave_GrowArc_disable_gradient     = 2420,
 	glow_eSave_GrowArc_fixcolor      	= 2421,
+	glow_eSave_GrowArc_fixposition      	= 2422,
 	glow_eSave_PolyLine_draw_type		= 2500,
 	glow_eSave_PolyLine_line_width		= 2501,
 	glow_eSave_PolyLine_a_points		= 2502,
@@ -1522,6 +1528,7 @@ typedef enum {
 	glow_eSave_GrowImage_color_lightness 	= 3413,
 	glow_eSave_GrowImage_color_intensity	= 3414,
 	glow_eSave_GrowImage_color_shift 	= 3415,
+	glow_eSave_GrowImage_fixposition      	= 3416,
 	glow_eSave_GrowGroup_grownode_part	= 3500,
 	glow_eSave_GrowGroup_nc	                = 3501,
 	glow_eSave_NodeGroup_nodeclass_part     = 3600,
@@ -1557,6 +1564,7 @@ typedef enum {
 	glow_eSave_GrowRectRounded_gradient   	= 3819,
 	glow_eSave_GrowRectRounded_gradient_contrast = 3820,
 	glow_eSave_GrowRectRounded_disable_gradient = 3821,
+	glow_eSave_GrowRectRounded_fixposition  = 3822,
 	glow_eSave_GrowConGlue_line_width_up 	= 3900,
 	glow_eSave_GrowConGlue_line_width_down 	= 3901,
 	glow_eSave_GrowConGlue_line_width_left 	= 3902,

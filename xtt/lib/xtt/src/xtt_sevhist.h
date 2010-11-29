@@ -65,6 +65,7 @@ class XttSevHist {
   CoWowTimer    *timerid;		//!< Time id for scan.
   void       	(*close_cb)( void *, XttSevHist *); //!< Close callback to parent.
   void       	(*help_cb)( void *, const char *); //!< Open help window.
+  int       	(*get_select_cb)( void *, pwr_tOid *, char *, char *); //!< Get selected SevHist object.
   bool		first_scan;		//!< Indicates that this is the first scan.
   char		title[250];		//!< Window title
   sevcli_tCtx	scctx;
@@ -95,10 +96,17 @@ class XttSevHist {
   int get_data( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to);
   int get_objectdata( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to);
   int get_multidata( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to);
+  void curve_add( pwr_tOid oid, pwr_tOName aname, pwr_tOName oname,
+		  bool sevhistobject);
 
   static void sevhist_close_cb( void *ctx);
-  static void sevhist_higher_res_cb( void *ctx);
-  static void sevhist_lower_res_cb( void *ctx);
+  static void sevhist_increase_period_cb( void *ctx);
+  static void sevhist_decrease_period_cb( void *ctx);
+  static void sevhist_reload_cb( void *ctx);
+  static void sevhist_prev_period_cb( void *ctx);
+  static void sevhist_next_period_cb( void *ctx);
+  static void sevhist_add_cb( void *ctx);
+  static void sevhist_remove_cb( void *ctx);
   static void sevhist_help_cb( void *ctx);
   static void sevhist_scan( void *data);
 

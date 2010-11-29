@@ -1,1 +1,3 @@
+#if OS_LINUX
 Pb_DP_Slave
+#endif

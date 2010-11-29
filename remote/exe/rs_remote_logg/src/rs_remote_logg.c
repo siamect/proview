@@ -68,7 +68,7 @@
 #include starlet
 #endif
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -321,7 +321,7 @@ static int	logg_get_filename(
 	  strcat( outname, ext);
 	}
 
-#if defined OS_LYNX || defined OS_LINUX || OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || OS_MACOS || defined OS_FREEBSD
 	  /* Get current time to use as "version number" */
 
           time_GetTime( &time);
@@ -377,7 +377,7 @@ static pwr_tStatus	logg_open_file( logg_t_loggconf_list	*conflist_ptr,
 	logg_get_filename( conflist_ptr->loggconf->LoggFile,
 			filename, LOGG_FILE_EXT);
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 	conflist_ptr->outfile = fopen( filename, "a+");
 #else
 	conflist_ptr->outfile = fopen( filename, "w+", "shr=get");
@@ -628,7 +628,7 @@ int main()
 	logg_t_loggconf_list	*conflist_ptr;
 	int		i;
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 
 	/* Exit handler */
 

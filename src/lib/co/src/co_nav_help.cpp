@@ -33,10 +33,10 @@ extern "C" {
 #include "co_dcli.h"
 }
 
+#include "co_lng.h"
 #include "co_nav_help.h"
 #include "co_dcli_msg.h"
 #include "co_nav_msg.h"
-#include "co_lng.h"
 
 /* Nice functions */
 #define ODD(a)	(((int)(a) & 1) != 0)
@@ -51,6 +51,7 @@ extern "C" {
 static int	help_remove_spaces(
 			char	*in,
 			char	*out);
+static FILE *navhelp_open_file( NavHelp *navhelp, navh_eHelpFile file_type, const char *file_name);
 
 /*************************************************************************
 *
@@ -98,7 +99,6 @@ int	NavHelp::help( const char *help_key, const char *help_bookmark,
 		       navh_eHelpFile file_type, const char *file_name, void **book_mark,
 		       bool strict)
 {
-  char	filestr[200];
   FILE	*file;
   char	line[200];
   char	text1[200];
@@ -139,6 +139,7 @@ int	NavHelp::help( const char *help_key, const char *help_bookmark,
   void  *node;
   int   print_all;
   char  *bookmark_p;
+  lng_eCoding coding = lng_eCoding_ISO8859_1;
 
   print_all = (help_key == NULL);
   if ( help_key) {
@@ -147,28 +148,8 @@ int	NavHelp::help( const char *help_key, const char *help_bookmark,
   }
 
   // Open file
-  if ( file_type == navh_eHelpFile_Base)
-    dcli_get_defaultfilename( base_file, filestr, NULL);
-  else if ( file_type == navh_eHelpFile_Project)
-    dcli_get_defaultfilename( project_file, filestr, NULL);
-  else if ( file_name)
-    dcli_get_defaultfilename( file_name, filestr, NULL);
-  else
-    dcli_get_defaultfilename( base_file, filestr, NULL);
-
-  // Replace symbol for language
-  if ( strncmp( filestr, "$pwr_lang/", 10) == 0) {
-    char lng_filestr[200];
-    
-    sprintf( lng_filestr, "$pwr_exe/%s/%s", Lng::get_language_str(),
-	     &filestr[10]);
-    strcpy( filestr, lng_filestr);
-  }
-  dcli_translate_filename( filestr, filestr);
-
-  file = fopen( filestr, "r");
-  if ( file == 0)
-    return NAV__NOFILE;
+  file = navhelp_open_file( this, file_type, file_name);
+  if ( !file) return NAV__NOFILE;
 	
   if ( !print_all)
     key_nr = dcli_parse( key, " 	", "", (char *)key_part,
@@ -178,16 +159,19 @@ int	NavHelp::help( const char *help_key, const char *help_bookmark,
 
   sts = dcli_read_line( line, sizeof( line), file);
   while ( ODD(sts)) {
-    if ( cdh_NoCaseStrncmp( line, "<include>", 9) == 0) {      
-      help_remove_spaces( &line[9], include_file);
-      // Replace symbol for language
-      if ( strncmp( include_file, "$pwr_lang/", 10) == 0) {
-        char lng_include_file[200];
+    if ( cdh_NoCaseStrncmp( line, "<coding>", 8) == 0) {      
+      char codingstr[40];
 
-	sprintf( lng_include_file, "$pwr_exe/%s/%s", Lng::get_language_str(),
-		 &include_file[10]);
-	strcpy( include_file, lng_include_file);
+      help_remove_spaces( &line[8], codingstr);
+      if ( cdh_NoCaseStrcmp( codingstr, "ISO8859-1") == 0) {
+	coding = lng_eCoding_ISO8859_1;
       }
+      else if ( cdh_NoCaseStrcmp( codingstr, "UTF-8") == 0) {
+	coding = lng_eCoding_UTF_8;
+      }
+    }
+    else if ( cdh_NoCaseStrncmp( line, "<include>", 9) == 0) {      
+      help_remove_spaces( &line[9], include_file);
 
       if ( !noprop) {
 	sts = help( help_key, help_bookmark, navh_eHelpFile_Other, 
@@ -197,27 +181,28 @@ int	NavHelp::help( const char *help_key, const char *help_bookmark,
 	  return sts;
 	}
       }
+
       hit = 0;
     }
     else if ( cdh_NoCaseStrncmp( line, "<chapter>", 9) == 0) {      
       (insert_cb)( parent_ctx, navh_eItemType_Chapter, "",
-		   NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+		   NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL, coding);
     }
     else if ( cdh_NoCaseStrncmp( line, "</chapter>", 10) == 0) {
       (insert_cb)( parent_ctx, navh_eItemType_EndChapter, "",
-		   NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+		   NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL, coding);
     }
     else if ( cdh_NoCaseStrncmp( line, "<headerlevel>", 13) == 0) {
       (insert_cb)( parent_ctx, navh_eItemType_HeaderLevel, "",
-		   NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+		   NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL, coding);
     }
     else if ( cdh_NoCaseStrncmp( line, "</headerlevel>", 14) == 0) {
       (insert_cb)( parent_ctx, navh_eItemType_EndHeaderLevel, "",
-		   NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+		   NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL, coding);
     }
     else if ( cdh_NoCaseStrncmp( line, "<pagebreak>", 11) == 0) {
       (insert_cb)( parent_ctx, navh_eItemType_PageBreak, "",
-		   NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+		   NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL, coding);
     }
     else if ( cdh_NoCaseStrncmp( line, "<option>", 8) == 0) {
       char option[80];
@@ -225,7 +210,7 @@ int	NavHelp::help( const char *help_key, const char *help_bookmark,
       help_remove_spaces( &line[8], option);
       cdh_ToLower( option, option);
       (insert_cb)( parent_ctx, navh_eItemType_Option, option,
-		   NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+		   NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL, coding);
     }
     else if ( cdh_NoCaseStrncmp( line, "<topic>", 7) == 0) {
       if ( (s = strstr( line, "<style>")) || (s = strstr( line, "<STYLE>"))) {
@@ -256,16 +241,16 @@ int	NavHelp::help( const char *help_key, const char *help_bookmark,
       else {
 	if ( cdh_NoCaseStrcmp( subject_part[0], "__documenttitlepage") == 0)
 	  (insert_cb)( parent_ctx, navh_eItemType_DocTitlePage, subject,
-		       NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+		       NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL, coding);
 	else if ( cdh_NoCaseStrcmp( subject_part[0], "__documentinfopage") == 0)
 	  (insert_cb)( parent_ctx, navh_eItemType_DocInfoPage, subject,
-		       NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+		       NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL, coding);
 	else
 	  (insert_cb)( parent_ctx, navh_eItemType_Topic, subject,
-		       NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+		       NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL, coding);
 	if ( style)
 	  node = (insert_cb)( parent_ctx, navh_eItemType_Style, style_str,
-		      NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+		      NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL, coding);
         hit = 1;
       }
     }
@@ -273,7 +258,7 @@ int	NavHelp::help( const char *help_key, const char *help_bookmark,
     {
       sts = dcli_read_line( line, sizeof( line), file);
       (insert_cb)( parent_ctx, navh_eItemType_HelpHeader, line, NULL, NULL, 
-		 NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+		 NULL, NULL, NULL, navh_eHelpFile_, 0, NULL, coding);
       sts = dcli_read_line( line, sizeof( line), file);
       while( ODD(sts))
       {
@@ -283,7 +268,7 @@ int	NavHelp::help( const char *help_key, const char *help_bookmark,
              strncmp( line, "</TOPIC>", 8) == 0) {
           if ( print_all)
             (insert_cb)( parent_ctx, navh_eItemType_EndTopic, subject,
-		      NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+		      NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL, coding);
           break;
         }
 
@@ -291,14 +276,14 @@ int	NavHelp::help( const char *help_key, const char *help_bookmark,
         if ( (s = strstr( line, "<ib>")) || (s = strstr( line, "<IB>"))) {
 	  strcpy( text1, s + 4);
           (insert_cb)( parent_ctx, navh_eItemType_HelpBold, 
-			    text1,  "", "", "", "", NULL, file_type, 0, NULL);
+			    text1,  "", "", "", "", NULL, file_type, 0, NULL, coding);
           sts = dcli_read_line( line, sizeof( line), file);
           continue;
 	}
         if ( (s = strstr( line, "<i>")) || (s = strstr( line, "<I>"))) {
 	  strcpy( text1, s + 3);
           (insert_cb)( parent_ctx, navh_eItemType_Help, text1,  "", "", "", 
-		"", NULL, file_type, 0, bookmark_p);
+		"", NULL, file_type, 0, bookmark_p, coding);
           sts = dcli_read_line( line, sizeof( line), file);
           continue;
 	}
@@ -308,7 +293,7 @@ int	NavHelp::help( const char *help_key, const char *help_bookmark,
 	  help_remove_spaces( &line[8], option);
 	  cdh_ToLower( option, option);
 	  (insert_cb)( parent_ctx, navh_eItemType_Option, option,
-		      NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+		      NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL, coding);
           sts = dcli_read_line( line, sizeof( line), file);
           continue;
 	}
@@ -496,7 +481,7 @@ int	NavHelp::help( const char *help_key, const char *help_bookmark,
 	{
           node = (insert_cb)( parent_ctx, navh_eItemType_HeaderLarge,
 			      text1, NULL, NULL, NULL, NULL, NULL,
-			      navh_eHelpFile_, 0, bookmark_p);
+			      navh_eHelpFile_, 0, bookmark_p, coding);
 	  if ( register_bookmark)
 	  {
 	    bookmark_node = node;
@@ -507,7 +492,7 @@ int	NavHelp::help( const char *help_key, const char *help_bookmark,
 	{
           node = (insert_cb)( parent_ctx, navh_eItemType_Header, text1,
 			      NULL, NULL, NULL, NULL, NULL, 
-			      navh_eHelpFile_, 0, bookmark_p);
+			      navh_eHelpFile_, 0, bookmark_p, coding);
 	  if ( register_bookmark)
 	  {
 	    bookmark_node = node;
@@ -519,7 +504,7 @@ int	NavHelp::help( const char *help_key, const char *help_bookmark,
           node = (insert_cb)( parent_ctx, navh_eItemType_HelpBold, text1, 
 		text2, text3, link, 
 		link_bookmark, link_filename_p, file_type, index_link,
-		bookmark_p);
+		bookmark_p, coding);
 	  if ( register_bookmark)
 	  {
 	    bookmark_node = node;
@@ -531,7 +516,7 @@ int	NavHelp::help( const char *help_key, const char *help_bookmark,
           node = (insert_cb)( parent_ctx, navh_eItemType_HelpCode, text1, 
 		text2, text3, link, 
 		link_bookmark, link_filename_p, file_type, index_link,
-		bookmark_p);
+		bookmark_p, coding);
 	  if ( register_bookmark)
 	  {
 	    bookmark_node = node;
@@ -540,14 +525,14 @@ int	NavHelp::help( const char *help_key, const char *help_bookmark,
 	}
 	else if ( horizontal_line) {
 	  node = (insert_cb)( parent_ctx, navh_eItemType_HorizontalLine, NULL,
-		      NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+		      NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL, coding);
 	}
         else if ( image)
 	{
           node = (insert_cb)( parent_ctx, navh_eItemType_Image,
 			      imagefile, NULL, NULL, link, 
 			      link_bookmark, link_filename_p, file_type, index_link,
-			      bookmark_p);
+			      bookmark_p, coding);
 	  if ( register_bookmark)
 	  {
 	    bookmark_node = node;
@@ -559,7 +544,7 @@ int	NavHelp::help( const char *help_key, const char *help_bookmark,
           node = (insert_cb)( parent_ctx, navh_eItemType_Help, text1,  text2,
 		text3, link, 
 		link_bookmark, link_filename_p, file_type, index_link,
-		bookmark_p);
+		bookmark_p, coding);
 	  if ( register_bookmark)
 	  {
 	    bookmark_node = node;
@@ -591,7 +576,6 @@ int	NavHelp::help( const char *help_key, const char *help_bookmark,
 int	NavHelp::get_next_key( const char *help_key, navh_eHelpFile file_type, const char *file_name,
 			       bool strict, char *next_key)
 {
-  char	filestr[200];
   FILE	*file;
   char	line[200];
   char	key[80];
@@ -612,28 +596,8 @@ int	NavHelp::get_next_key( const char *help_key, navh_eHelpFile file_type, const
   }
 
   // Open file
-  if ( file_type == navh_eHelpFile_Base)
-    dcli_get_defaultfilename( base_file, filestr, NULL);
-  else if ( file_type == navh_eHelpFile_Project)
-    dcli_get_defaultfilename( project_file, filestr, NULL);
-  else if ( file_name)
-    dcli_get_defaultfilename( file_name, filestr, NULL);
-  else
-    dcli_get_defaultfilename( base_file, filestr, NULL);
-
-  // Replace symbol for language
-  if ( strncmp( filestr, "$pwr_lang/", 10) == 0) {
-    char lng_filestr[200];
-    
-    sprintf( lng_filestr, "$pwr_exe/%s/%s", Lng::get_language_str(),
-	     &filestr[10]);
-    strcpy( filestr, lng_filestr);
-  }
-  dcli_translate_filename( filestr, filestr);
-
-  file = fopen( filestr, "r");
-  if ( file == 0)
-    return NAV__NOFILE;
+  file = navhelp_open_file( this, file_type, file_name);
+  if ( !file) return NAV__NOFILE;
 	
   key_nr = dcli_parse( key, " 	", "", (char *)key_part,
 		       sizeof( key_part) / sizeof( key_part[0]), 
@@ -702,7 +666,6 @@ int	NavHelp::get_next_key( const char *help_key, navh_eHelpFile file_type, const
 int	NavHelp::get_previous_key( const char *help_key, navh_eHelpFile file_type, const char *file_name,
 				   bool strict, char *prev_key)
 {
-  char	filestr[200];
   FILE	*file;
   char	line[200];
   char	key[80];
@@ -723,29 +686,9 @@ int	NavHelp::get_previous_key( const char *help_key, navh_eHelpFile file_type, c
   }
 
   // Open file
-  if ( file_type == navh_eHelpFile_Base)
-    dcli_get_defaultfilename( base_file, filestr, NULL);
-  else if ( file_type == navh_eHelpFile_Project)
-    dcli_get_defaultfilename( project_file, filestr, NULL);
-  else if ( file_name)
-    dcli_get_defaultfilename( file_name, filestr, NULL);
-  else
-    dcli_get_defaultfilename( base_file, filestr, NULL);
+  file = navhelp_open_file( this, file_type, file_name);
+  if ( !file) return NAV__NOFILE;
 
-  // Replace symbol for language
-  if ( strncmp( filestr, "$pwr_lang/", 10) == 0) {
-    char lng_filestr[200];
-    
-    sprintf( lng_filestr, "$pwr_exe/%s/%s", Lng::get_language_str(),
-	     &filestr[10]);
-    strcpy( filestr, lng_filestr);
-  }
-  dcli_translate_filename( filestr, filestr);
-
-  file = fopen( filestr, "r");
-  if ( file == 0)
-    return NAV__NOFILE;
-	
   key_nr = dcli_parse( key, " 	", "", (char *)key_part,
 		       sizeof( key_part) / sizeof( key_part[0]), 
 		       sizeof( key_part[0]), 0);
@@ -814,48 +757,38 @@ int	NavHelp::get_previous_key( const char *help_key, navh_eHelpFile file_type, c
 
 int	NavHelp::help_index( navh_eHelpFile file_type, const char *file_name)
 {
-  char	filestr[80];
   FILE	*file;
   char	line[200];
   char	include_file[80];
   char	subject[80];
   int 	sts;
   char  *s;
+  lng_eCoding coding = lng_eCoding_ISO8859_1;
 
   // Open file
-  if ( file_type == navh_eHelpFile_Base)
-    dcli_get_defaultfilename( base_file, filestr, NULL);
-  else if ( file_type == navh_eHelpFile_Project)
-    dcli_get_defaultfilename( project_file, filestr, NULL);
-  else if ( file_name)
-    dcli_get_defaultfilename( file_name, filestr, NULL);
-  else
-    dcli_get_defaultfilename( base_file, filestr, NULL);
+  file = navhelp_open_file( this, file_type, file_name);
+  if ( !file) return NAV__NOFILE;
 
-  if ( strncmp( filestr, "$pwr_lang/", 10) == 0) {
-    char lng_file[200];
-
-    sprintf( lng_file, "$pwr_exe/%s/%s", Lng::get_language_str(),
-	     &filestr[10]);
-    strcpy( filestr, lng_file);
-  }
-  dcli_translate_filename( filestr, filestr);
-
-  file = fopen( filestr, "r");
-  if ( file == 0)
-    return NAV__NOFILE;
-	
   sts = dcli_read_line( line, sizeof( line), file);
   while ( ODD(sts))
   {
-    if ( strncmp( line, "<include>", 9) == 0 || 
-         strncmp( line, "<INCLUDE>", 9) == 0)
+    if ( cdh_NoCaseStrncmp( line, "<coding>", 8) == 0) {      
+      char codingstr[40];
+
+      help_remove_spaces( &line[8], codingstr);
+      if ( cdh_NoCaseStrcmp( codingstr, "ISO8859-1") == 0) {
+	coding = lng_eCoding_ISO8859_1;
+      }
+      else if ( cdh_NoCaseStrcmp( codingstr, "UTF-8") == 0) {
+	coding = lng_eCoding_UTF_8;
+      }
+    }
+    else if ( cdh_NoCaseStrncmp( line, "<include>", 9) == 0)
     {
       help_remove_spaces( &line[9], include_file);
       sts = help_index( navh_eHelpFile_Other, include_file);
     }
-    else if ( strncmp( line, "<topic>", 7) == 0 || 
-              strncmp( line, "<TOPIC>", 7) == 0)
+    else if ( cdh_NoCaseStrncmp( line, "<topic>", 7) == 0)
     {
       if ( (s = strstr( line, "<style>")) || (s = strstr( line, "<STYLE>")))
 	*s = 0;
@@ -863,7 +796,7 @@ int	NavHelp::help_index( navh_eHelpFile file_type, const char *file_name)
 
       (insert_cb)( parent_ctx, navh_eItemType_HelpBold,
 		   subject,  "", "", subject, 
-		   "", file_name, file_type, 0, NULL);
+		   "", file_name, file_type, 0, NULL, coding);
     }
     sts = dcli_read_line( line, sizeof( line), file);
   }
@@ -871,7 +804,50 @@ int	NavHelp::help_index( navh_eHelpFile file_type, const char *file_name)
   return NAV__SUCCESS;
 }
 
+static FILE *navhelp_open_file( NavHelp *navhelp, navh_eHelpFile file_type, const char *file_name)
+{
+  pwr_tFileName filestr;
+  FILE *file;
 
+  if ( file_type == navh_eHelpFile_Base)
+    dcli_get_defaultfilename( navhelp->base_file, filestr, NULL);
+  else if ( file_type == navh_eHelpFile_Project)
+    dcli_get_defaultfilename( navhelp->project_file, filestr, NULL);
+  else if ( file_name)
+    dcli_get_defaultfilename( file_name, filestr, NULL);
+  else
+    dcli_get_defaultfilename( navhelp->base_file, filestr, NULL);
+
+  // Replace symbol for language
+  if ( strncmp( filestr, "$pwr_lang/", 10) == 0) {
+    pwr_tFileName lng_filestr;
+    
+    sprintf( lng_filestr, "$pwr_exe/%s/%s", Lng::get_language_str(),
+	     &filestr[10]);
+
+    dcli_translate_filename( lng_filestr, lng_filestr);
+
+    file = fopen( lng_filestr, "r");
+    if ( file == 0) {
+      // Default to English version
+      sprintf( lng_filestr, "$pwr_exe/en_us/%s", &filestr[10]);
+
+      dcli_translate_filename( lng_filestr, lng_filestr);
+
+      file = fopen( lng_filestr, "r");
+      if ( file == 0)
+	return 0;	
+    }
+  }
+  else {
+    dcli_translate_filename( filestr, filestr);
+
+    file = fopen( filestr, "r");
+    if ( file == 0)
+      return 0;    
+  }
+  return file;
+}
 
 
 

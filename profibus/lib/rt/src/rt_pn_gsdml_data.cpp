@@ -19,7 +19,7 @@
 
 /* cow_pn_gsdml_data.cpp -- Profinet configurator data file */
 
-#include "glow_std.h"
+//#include "glow_std.h"
 
 #include <vector>
 #include <iostream>
@@ -143,6 +143,7 @@ int GsdmlDeviceData::print( const char *filename)
     "  DeviceId=\"" << device_id << "\"" << endl <<
     "  Version=\"" << version << "\"" << endl <<
     "  ByteOrder=\"" << byte_order << "\">" << endl <<
+    "  Instance=\"" << instance << "\">" << endl <<
     "  <NetworkSettings " << endl <<
     "    DeviceName=\"" << device_name << "\"" << endl <<
     "    IP_Address=\"" << ip_address << "\"" << endl <<
@@ -383,17 +384,19 @@ int GsdmlDataReader::tag_attribute( const char *name, const char *value)
   switch ( current_tag) {
   case gsdmldata_eTag_PnDevice:
     if ( strcmp( name, "GsdmlFile") == 0) {
-      // Check that the GSDML file is not changed
-      char *gsdmlfile_p;
+      if ( strcmp( data->gsdmlfile, "") != 0) {
+	// Check that the GSDML file is not changed
+	char *gsdmlfile_p;
   
-      // Print name of gsdmlfile, not path
-      if ( (gsdmlfile_p = strrchr(data->gsdmlfile, '/')))
-	gsdmlfile_p++;
-      else
-	gsdmlfile_p = data->gsdmlfile;
-
-      if ( strcmp( value, gsdmlfile_p) != 0)
-	return PB__GSDMLFILEMISMATCH;
+	// Print name of gsdmlfile, not path
+	if ( (gsdmlfile_p = strrchr(data->gsdmlfile, '/')))
+	  gsdmlfile_p++;
+	else
+	  gsdmlfile_p = data->gsdmlfile;
+	
+	if ( strcmp( value, gsdmlfile_p) != 0)
+	  return PB__GSDMLFILEMISMATCH;
+      }
     }
     else if ( strcmp( name, "DeviceText") == 0)
       strncpy( data->device_text, value, sizeof(data->device_text));
@@ -407,6 +410,8 @@ int GsdmlDataReader::tag_attribute( const char *name, const char *value)
       strncpy( data->version, value, sizeof(data->version));
     else if ( strcmp( name, "ByteOrder") == 0)
       sscanf( value, "%d", &data->byte_order);
+    else if ( strcmp( name, "Instance") == 0)
+      sscanf( value, "%hu", &data->instance);
     break;
   case gsdmldata_eTag_NetworkSettings:
     if ( strcmp( name, "DeviceName") == 0)

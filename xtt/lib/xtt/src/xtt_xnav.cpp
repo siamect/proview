@@ -26,6 +26,7 @@
 #include <float.h>
 #include <vector>
 
+#include "pwr.h"
 #include "co_nav_help.h"
 #include "pwr_privilege.h"
 #include "rt_gdh.h"
@@ -2890,15 +2891,15 @@ int	XNav::show_logging( int index)
   new ItemLocal( brow, Lng::translate("ShortName"), "logg_ShortName", 
 	pwr_eType_Boolean, sizeof( logg[0].print_shortname), 0, 0, 0,
 	(void *) &logg[index].print_shortname, NULL, flow_eDest_IntoLast);
+  new ItemLocal( brow, Lng::translate("Condition"), "logg_CondPar", 
+	pwr_eType_String, sizeof( logg[0].conditionstr), 0, 0, 0,
+	(void *) logg[index].conditionstr, NULL, flow_eDest_IntoLast);
   for ( int i = 0; i < RTT_LOGG_MAXPAR; i++) {
     sprintf( text, "%s%d", Lng::translate("Parameter"), i);
     new ItemLocal( brow, text, text, 
 	pwr_eType_String, sizeof( logg[0].parameterstr[0]), 0, 0, 0,
 	(void *) logg[index].parameterstr[i], NULL, flow_eDest_IntoLast);
   }
-  new ItemLocal( brow, Lng::translate("ConditionParameter"), "logg_CondPar", 
-	pwr_eType_String, sizeof( logg[0].conditionstr), 0, 0, 0,
-	(void *) logg[index].conditionstr, NULL, flow_eDest_IntoLast);
 
   brow_ResetNodraw( brow->ctx);
   brow_Redraw( brow->ctx, 0);
@@ -3367,6 +3368,9 @@ int XNav::init_brow_base_cb( FlowCtx *fctx, void *client_data)
   BrowCtx *ctx = (BrowCtx *)fctx;
   BrowCtx *secondary_ctx;
   int		sts;
+
+  if ( Lng::translatefile_coding() == lng_eCoding_UTF_8)
+    brow_SetTextCoding( ctx, flow_eTextCoding_UTF_8);
 
   xnav->brow = new XNavBrow( ctx, (void *)xnav, brow_eUserType_XNav);
   xnav->brow_stack[0] = new XNavBrow( ctx, (void *)xnav, brow_eUserType_XNav);

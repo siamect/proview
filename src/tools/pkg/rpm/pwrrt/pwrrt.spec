@@ -10,7 +10,7 @@
 
 Name: pwrrt
 Summary: Proview/R runtime environment
-Version: 4.7.1
+Version: 4.8.0
 Release: 1
 License: GPL
 BuildArch: i386
@@ -80,7 +80,7 @@ co_convert -t -d %{buildroot}/usr/pwrrt/doc %{buildroot}/usr/pwrrt/exe/xtt_versi
 # Print rt version file
 echo "Version: %{version}-%{release}" > %{buildroot}/usr/pwrrt/exe/rt_version.dat
 
-#%clean
+%clean
 
 %files
 %defattr(-,root,root)
@@ -358,7 +358,6 @@ fi
 
 if [ $new_project -eq 1 ]; then
   nodename=`eval uname -n`
-  echo "-- Create file /home/pwrp/.rhosts"
   echo "-- Distribute project to $nodename"
 fi
 
@@ -487,5 +486,5 @@ fi
 #%postun
 
 %changelog
-* Fri Aug 27 2010 Claes Sjofors <claes.sjofors@proview.se> 4.7.1-1
+* Sun Nov 28 2010 Claes Sjofors <claes.sjofors@proview.se> 4.8.0-1
   - Base release.

@@ -22,7 +22,7 @@
 
 /* xtt_hist.h -- Historical event window in xtt */
 
-#if defined OS_LINUX || defined OS_MACOS
+#if defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 
 #if defined __cplusplus
 extern "C" {

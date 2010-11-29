@@ -186,7 +186,7 @@ void *CnvXtthelpToXml::insert( navh_eItemType item_type, const char *t1,
 			       const char *t2, const char *t3, const char *link, 
 			       const char *link_bookmark, const char *file_name,
 			       navh_eHelpFile file_type, int help_index, 
-			       const char *bookmark)
+			       const char *bookmark, int coding)
 {
   int i;
   static int in_table = 0;

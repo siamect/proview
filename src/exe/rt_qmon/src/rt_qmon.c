@@ -31,7 +31,7 @@
 # include <errno.h>
 # include <unistd.h>
 # include <sched.h>
-# if defined OS_LINUX || defined OS_MACOS
+# if defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 #   include <sys/uio.h>
 #   include <sys/socket.h>
 # else

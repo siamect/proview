@@ -182,7 +182,7 @@ cp $pwre_sroot/tools/pkg/deb/user/.xtt_start $pkgroot/usr/pwrrt/cnf/user
 # Create package
 echo "-- Building package"
 
-  rpmbuild -bb --quiet \
+ rpmbuild -bb --quiet \
                --define "_topdir $pkgroot/rpm" \
                --buildroot $pkgroot $pkgsrc/pwrrt.spec > /dev/null 2>&1
 

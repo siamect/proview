@@ -27,7 +27,7 @@
 #include "pwr_class.h"
 #include "rt_plc_timer.h"
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 # include <errno.h>
 # include "rt_errh.h"
 #endif
@@ -35,7 +35,7 @@
 #ifdef OS_ELN
   MUTEX timer_mutex;
 
-#elif defined OS_LYNX  || defined OS_LINUX || defined OS_MACOS
+#elif defined OS_LYNX  || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
   pthread_mutex_t timer_mutex;
 #endif
 
@@ -54,7 +54,7 @@ void plc_inittimer (
     if (EVEN(sts))
       pwr_Bugcheck(sts, "Cannot create timer_mutex");
   }
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
   {
     pthread_mutexattr_t attr;
 

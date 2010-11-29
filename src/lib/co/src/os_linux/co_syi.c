@@ -161,6 +161,8 @@ const char *syi_OpSys()
   static const char opsys[] = "Linux";
 #elif defined OS_MACOS
   static const char opsys[] = "MacOS";
+#elif defined OS_FREEBSD
+  static const char opsys[] = "FreeBSD";
 #else
   static const char opsys[] = "Unknown";
 #endif

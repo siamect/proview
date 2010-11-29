@@ -56,6 +56,7 @@
 #include "wb_vrepdbs.h"
 #include "wb_vrepmem.h"
 #include "wb_vrepext.h"
+#include "wb_dblock.h"
 #include "wb_main.h"
 
 using namespace std;
@@ -319,6 +320,34 @@ void Wb::wtt_open_volume( void *wttctx, wb_eType type, const char *filename, wow
       }
       else if ( file_type == wow_eFileSelType_WblClass) {
         printf( "Wb opening wb_load-file %s...\n", filename);
+
+	char uname[80];
+	if ( wb_dblock::is_locked((char *)filename, uname)) {
+	  char msg[120];
+	  
+	  sprintf( msg, "Classvolume %s is locked by user %s", filename, uname);
+	  MsgWindow::message( 'E', msg, msgw_ePop_No);
+
+	  if ( ! MsgWindow::has_window())
+	    return;
+	  
+	  CoWow *wow = MsgWindow::get_wow();
+	  int res = wow->CreateModalDialog( "Classvolume Locked", msg, "Cancel", 
+					    "Remove lock", 0, "$pwr_exe/wtt_padlock.png");
+	  switch( res) {
+	  case wow_eModalDialogReturn_Button1:
+	  case wow_eModalDialogReturn_Deleted:
+	    return;
+	  case wow_eModalDialogReturn_Button2:
+	    // Remove lock
+	    wb_dblock::dbunlock((char *)filename);
+	    break;
+	  case wow_eModalDialogReturn_NYI:
+	  case wow_eModalDialogReturn_Button3:
+	    return;
+	  }	  
+	}
+
 
         // Load volume and import to vrepmem
 	wb_erep *erep = (wb_erep *)(*(wb_env *)wb->wbctx);

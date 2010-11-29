@@ -145,9 +145,8 @@ void XttGtk::close( void *ctx, int terminate)
   char  title[80];
 
   if ( terminate) {
-    strcpy( title, CoWowGtk::translate_utf8("Confirm"));
-    xtt->wow->DisplayQuestion( xtt, title, 
-			 Lng::translate( "Do you want to close"), close_ok, 0, 0);
+    strcpy( title, "Confirm");
+    xtt->wow->DisplayQuestion( xtt, title, "Do you want to close", close_ok, 0, 0);
   }
   else {
     xtt->xnav->displayed = 0;
@@ -212,7 +211,7 @@ void XttGtk::open_change_value()
   gtk_widget_grab_focus( cmd_input);
 
   gtk_editable_delete_text( GTK_EDITABLE(cmd_input), 0, -1);
-  set_prompt( Lng::translate("value >"));
+  set_prompt( CoWowGtk::translate_utf8("value >"));
   input_open = 1;
 }
 
@@ -557,8 +556,6 @@ int main(  int argc, char *argv[])
 {
   int sts;
 
-  setlocale( LC_TIME, "en_US");
-
   new XttGtk( argc, argv, &sts);
   exit(sts);
 }
@@ -596,6 +593,9 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
 
   gtk_init( &argc, &argv);
 
+  setlocale( LC_TIME, "en_US");
+  setlocale( LC_NUMERIC, "POSIX");
+
   syi_NodeName( &sts, nodename, sizeof(nodename));
   if ( ODD(sts))
     strcat( title, nodename);
@@ -628,7 +628,7 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   g_signal_connect( file_login, "activate", 
 		    G_CALLBACK(XttGtk::activate_login), this);
 
-  GtkWidget *file_logout = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("Log_Out"));
+  GtkWidget *file_logout = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("Log_out"));
   g_signal_connect( file_logout, "activate", 
 		    G_CALLBACK(XttGtk::activate_logout), this);
 

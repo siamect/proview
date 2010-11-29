@@ -30,6 +30,7 @@
 # include <stdlib.h>
 # include <ctype.h>
 
+#include "pwr.h"
 #include "co_nav_help.h"
 #include "pwr_privilege.h"
 #include "co_cdh.h"
@@ -44,11 +45,17 @@
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
+#include "glow.h"
+#include "glow_growctx.h"
+#include "glow_growapi.h"
+#include "flow_msg.h"
+#include "glow_curvectx.h"
 #include "co_lng.h"
 #include "co_error.h"
 #include "cow_wow.h"
 #include "xtt_tbl.h"
 #include "xtt_tblnav.h"
+#include "xtt_sevhist.h"
 #include "co_dcli_msg.h"
 #include "cow_xhelp.h"
 #include "cow_login.h"
@@ -380,6 +387,7 @@ static int	xtttbl_open_func(	void		*client_data,
     pwr_tOName onamev[11];
     bool sevhistobjectv[11];
     int sts;
+    XttSevHist *hist;
 
     // Command is "OPEN HISTORY"
 
@@ -439,7 +447,11 @@ static int	xtttbl_open_func(	void		*client_data,
     }
     oidv[i] = pwr_cNOid;
 
-    xtttbl->sevhist_new( oidv, anamev, onamev, sevhistobjectv);
+    hist = xtttbl->sevhist_new( oidv, anamev, onamev, sevhistobjectv, &sts);
+    if ( ODD(sts)) {
+      hist->help_cb = XttTbl::sevhist_help_cb;
+      hist->get_select_cb = XttTbl::sevhist_get_select_cb;
+    }
   }
   else
     xtttbl->message('E',"Syntax error");

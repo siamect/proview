@@ -50,6 +50,71 @@
 #include "ge_curve_gtk.h"
 #include "ge_msg.h"
 
+typedef struct {
+  char text[40];
+  time_ePeriod period;
+} ge_sTimeComboText;
+
+ge_sTimeComboText curve_timecombo_text[] = {
+  {"One Minute", time_ePeriod_OneMinute},
+  {"10 Minutes", time_ePeriod_10Minutes},
+  {"One Hour", time_ePeriod_OneHour},
+  {"One Day", time_ePeriod_OneDay},
+  {"One Week", time_ePeriod_OneWeek},
+  {"One Month", time_ePeriod_OneMonth},
+  {"One Year", time_ePeriod_OneYear},
+  {"Last Minute", time_ePeriod_LastMinute},
+  {"Last 10 Minutes", time_ePeriod_Last10Minutes},
+  {"Last Hour", time_ePeriod_LastHour},
+  {"Today", time_ePeriod_Today},
+  {"Yesterday", time_ePeriod_Yesterday},
+  {"This Week", time_ePeriod_ThisWeek},
+  {"Last Week", time_ePeriod_LastWeek},
+  {"This Month", time_ePeriod_ThisMonth},
+  {"Last Month", time_ePeriod_LastMonth},
+  {"This Year", time_ePeriod_ThisYear},
+  {"All Time", time_ePeriod_AllTime},
+  {"Edit", time_ePeriod_UserDefined},
+  {"", time_ePeriod_}};
+
+
+
+void GeCurveGtk::set_period( time_ePeriod period, int nocallback)
+{
+  for ( int i = 0; curve_timecombo_text[i].text[0]; i++) {
+
+    if ( curve_timecombo_text[i].period == period) {
+      if ( nocallback)
+	disable_timecombo_callback = 1;
+      gtk_combo_box_set_active( GTK_COMBO_BOX(timebox_timecombo), i);
+      if ( nocallback)
+	disable_timecombo_callback = 0;
+      break;
+    }
+  }
+}
+
+int GeCurveGtk::get_period( time_ePeriod *period)
+{
+  gchar *gtext;
+  *period = time_ePeriod_;
+
+  gtext = gtk_combo_box_get_active_text( GTK_COMBO_BOX(timebox_timecombo));
+  if ( !gtext)
+    return 0;
+
+  for ( int i = 0; curve_timecombo_text[i].text[0]; i++) {
+
+    if ( strcmp( CoWowGtk::translate_utf8( curve_timecombo_text[i].text), gtext) == 0) {
+      *period = curve_timecombo_text[i].period;
+      g_free( gtext);
+      return 1;
+    }
+  }
+  g_free( gtext);
+  return 0;
+}
+
 void GeCurveGtk::activate_exit( GtkWidget *w, gpointer data)
 {
   GeCurve *curve = (GeCurve *)data;
@@ -121,20 +186,83 @@ void GeCurveGtk::activate_scroll_left( GtkWidget *w, gpointer data)
   curve->set_inputfocus();
 }
 
-void GeCurveGtk::activate_higher_res( GtkWidget *w, gpointer data)
+void GeCurveGtk::activate_increase_period( GtkWidget *w, gpointer data)
 {
   GeCurve *curve = (GeCurve *)data;
 
-  if ( curve->higher_res_cb)
-    (curve->higher_res_cb)( curve->parent_ctx);
+  if ( curve->increase_period_cb)
+    (curve->increase_period_cb)( curve->parent_ctx);
 }
 
-void GeCurveGtk::activate_lower_res( GtkWidget *w, gpointer data)
+void GeCurveGtk::activate_reload( GtkWidget *w, gpointer data)
 {
   GeCurve *curve = (GeCurve *)data;
 
-  if ( curve->lower_res_cb)
-    (curve->lower_res_cb)( curve->parent_ctx);
+  if ( curve->reload_cb)
+    (curve->reload_cb)( curve->parent_ctx);
+}
+
+void GeCurveGtk::activate_add( GtkWidget *w, gpointer data)
+{
+  GeCurve *curve = (GeCurve *)data;
+
+  if ( curve->add_cb)
+    (curve->add_cb)( curve->parent_ctx);
+}
+
+void GeCurveGtk::activate_remove( GtkWidget *w, gpointer data)
+{
+  GeCurve *curve = (GeCurve *)data;
+
+  if ( curve->remove_cb)
+    (curve->remove_cb)( curve->parent_ctx);
+}
+
+void GeCurveGtk::activate_prev_period( GtkWidget *w, gpointer data)
+{
+  GeCurve *curve = (GeCurve *)data;
+
+  if ( curve->prev_period_cb)
+    (curve->prev_period_cb)( curve->parent_ctx);
+}
+
+void GeCurveGtk::activate_next_period( GtkWidget *w, gpointer data)
+{
+  GeCurve *curve = (GeCurve *)data;
+
+  if ( curve->next_period_cb)
+    (curve->next_period_cb)( curve->parent_ctx);
+}
+
+void GeCurveGtk::activate_decrease_period( GtkWidget *w, gpointer data)
+{
+  GeCurve *curve = (GeCurve *)data;
+
+  if ( curve->decrease_period_cb)
+    (curve->decrease_period_cb)( curve->parent_ctx);
+}
+
+void GeCurveGtk::activate_timecombo( GtkWidget *w, gpointer data)
+{
+  GeCurve *curve = (GeCurve *)data;
+  time_ePeriod period;
+  gchar *gtext;
+  int sts;
+
+  if ( ((GeCurveGtk *)curve)->disable_timecombo_callback)
+    return;
+
+  gtext = gtk_combo_box_get_active_text( GTK_COMBO_BOX(((GeCurveGtk *)curve)->timebox_timecombo));
+  if ( !gtext)
+    return;
+
+  sts = ((GeCurveGtk *)curve)->get_period( &period);
+  if ( EVEN(sts)) return;
+    
+  if ( period == time_ePeriod_UserDefined)
+    curve->activate_edit();
+  else
+    curve->activate_period( period);
 }
 
 void GeCurveGtk::activate_background( GtkWidget *w, gpointer data)
@@ -200,10 +328,9 @@ void GeCurveGtk::activate_minmax_cancel( GtkWidget *w, gpointer data)
   g_object_set( ((GeCurveGtk *)curve)->minmax_widget, "visible", FALSE, NULL);
 }
 
-void GeCurveGtk::enable_resolution_buttons()
+void GeCurveGtk::enable_timebox()
 {
-  g_object_set( tools_higher_res, "visible", TRUE, NULL);
-  g_object_set( tools_lower_res, "visible", TRUE, NULL);
+  g_object_set( sea_timebox, "visible", TRUE, NULL);
 }
 
 void GeCurveGtk::pop()
@@ -264,6 +391,57 @@ void GeCurveGtk::open_minmax( int idx)
   minmax_idx = idx;
 }
 
+void GeCurveGtk::set_times( pwr_tTime *from, pwr_tTime *to)
+{
+  char timestr[32];
+
+  time_AtoFormAscii( to, SWE, SECOND, timestr, sizeof(timestr));
+
+  gint pos = 0;
+  gtk_editable_delete_text( GTK_EDITABLE(timebox_stop_time), 0, -1);
+  gtk_editable_insert_text( GTK_EDITABLE(timebox_stop_time), timestr, 
+			    strlen(timestr), &pos);
+     
+  time_AtoFormAscii( from, SWE, SECOND, timestr, sizeof(timestr));
+  pos = 0;
+  gtk_editable_delete_text( GTK_EDITABLE(timebox_start_time), 0, -1);
+  gtk_editable_insert_text( GTK_EDITABLE(timebox_start_time), timestr, 
+			    strlen(timestr), &pos);    
+}
+
+void GeCurveGtk::set_times_sensitivity( int sensitive)
+{
+  gtk_widget_set_sensitive( timebox_start_time, sensitive ? TRUE : FALSE);
+  gtk_widget_set_sensitive( timebox_stop_time, sensitive ? TRUE : FALSE);
+}
+
+
+pwr_tStatus GeCurveGtk::get_times( pwr_tTime *from, pwr_tTime *to) 
+{
+  char *from_p, *to_p;
+  pwr_tStatus sts;
+
+  from_p = gtk_editable_get_chars( GTK_EDITABLE(timebox_start_time), 0, -1);
+  to_p = gtk_editable_get_chars( GTK_EDITABLE(timebox_stop_time), 0, -1);
+
+  sts = time_FormAsciiToA( from_p, SWE, SECOND, from);
+  if ( EVEN(sts)) {
+    g_free( from_p);
+    g_free( to_p);
+    return sts;
+  }
+
+  sts = time_FormAsciiToA( to_p, SWE, SECOND, to);
+  if ( EVEN(sts)) {
+    g_free( from_p);
+    g_free( to_p);
+    return sts;
+  }
+  g_free( from_p);
+  g_free( to_p);
+  return 1;
+}
+
 void GeCurveGtk::set_inputfocus()
 {
   gtk_widget_grab_focus( growcurve_main_widget);
@@ -308,7 +486,8 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
 			GeCurveData *curve_data,
 			int pos_right) :
   GeCurve( gc_parent_ctx, curve_name, filename, curve_data, pos_right),
-  minmax_widget(0)
+  minmax_widget(0), disable_timecombo_callback(0)
+
 {
   const int	window_width = 900;
   const int    	window_height = 700;
@@ -490,21 +669,108 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   g_object_set( tools_page_right, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_page_right, CoWowGtk::translate_utf8("Page right"), "");
 
-  tools_higher_res = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/xtt_up.png");
-  gtk_container_add( GTK_CONTAINER(tools_higher_res), 
-		     gtk_image_new_from_file( fname));
-  g_signal_connect(tools_higher_res, "clicked", G_CALLBACK(activate_higher_res), this);
-  g_object_set( tools_higher_res, "can-focus", FALSE, NULL);
-  gtk_toolbar_append_widget( tools, tools_higher_res, CoWowGtk::translate_utf8("Higer resolution"), "");
+  // Time box
+  GtkToolbar *timetools = (GtkToolbar *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
 
-  tools_lower_res = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/xtt_down.png");
-  gtk_container_add( GTK_CONTAINER(tools_lower_res), 
+  GtkWidget *sea_time_start_label = gtk_label_new( CoWowGtk::translate_utf8("Time"));
+  gtk_widget_set_size_request( sea_time_start_label, 70, -1);
+  gtk_misc_set_alignment( GTK_MISC(sea_time_start_label), 0.0, 0.5);
+  gtk_toolbar_append_widget( timetools, sea_time_start_label, "", "");
+
+  // Time option menu
+  timebox_timecombo = gtk_combo_box_new_text();
+
+  for ( int i = 0; curve_timecombo_text[i].text[0]; i++)
+    gtk_combo_box_append_text( GTK_COMBO_BOX(timebox_timecombo), 
+			       CoWowGtk::translate_utf8(curve_timecombo_text[i].text));
+
+  g_signal_connect(timebox_timecombo, "changed", G_CALLBACK(activate_timecombo), this);
+
+  gtk_toolbar_append_widget( timetools, timebox_timecombo, 0, "");
+  timebox_start_time = gtk_entry_new();
+  gtk_widget_set_size_request( timebox_start_time, 160, -1);
+  gtk_toolbar_append_widget( timetools, timebox_start_time, "", "");
+
+  GtkWidget *sea_time_stop_label = gtk_label_new( CoWowGtk::translate_utf8("-"));
+  gtk_widget_set_size_request( sea_time_stop_label, 20, -1);
+  gtk_toolbar_append_widget( timetools, sea_time_stop_label, "", "");
+
+  timebox_stop_time = gtk_entry_new();
+  gtk_widget_set_size_request( timebox_stop_time, 160, -1);
+  gtk_toolbar_append_widget( timetools, timebox_stop_time, "", "");
+
+  GtkWidget *timebox_prev_period = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/ge_scroll_left.png");
+  gtk_container_add( GTK_CONTAINER(timebox_prev_period), 
 		     gtk_image_new_from_file( fname));
-  g_signal_connect(tools_lower_res, "clicked", G_CALLBACK(activate_lower_res), this);
-  g_object_set( tools_lower_res, "can-focus", FALSE, NULL);
-  gtk_toolbar_append_widget( tools, tools_lower_res, CoWowGtk::translate_utf8("Lower resolution"), "");
+  g_signal_connect(timebox_prev_period, "clicked", G_CALLBACK(activate_prev_period), this);
+  g_object_set( timebox_prev_period, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( timetools, timebox_prev_period, CoWowGtk::translate_utf8("Previous period"), "");
+
+  GtkWidget *timebox_next_period = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/ge_scroll_right.png");
+  gtk_container_add( GTK_CONTAINER(timebox_next_period), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(timebox_next_period, "clicked", G_CALLBACK(activate_next_period), this);
+  g_object_set( timebox_next_period, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( timetools, timebox_next_period, CoWowGtk::translate_utf8("Next period"), "");
+
+  GtkWidget *timebox_increase_period = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_up.png");
+  gtk_container_add( GTK_CONTAINER(timebox_increase_period), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(timebox_increase_period, "clicked", G_CALLBACK(activate_increase_period), this);
+  g_object_set( timebox_increase_period, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( timetools, timebox_increase_period, CoWowGtk::translate_utf8("Increase period"), "");
+
+  GtkWidget *timebox_decrease_period = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_down.png");
+  gtk_container_add( GTK_CONTAINER(timebox_decrease_period), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(timebox_decrease_period, "clicked", G_CALLBACK(activate_decrease_period), this);
+  g_object_set( timebox_decrease_period, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( timetools, timebox_decrease_period, CoWowGtk::translate_utf8("Decrease period"), "");
+
+
+  GtkWidget *timebox_reload = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/ge_reload.png");
+  gtk_container_add( GTK_CONTAINER(timebox_reload), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(timebox_reload, "clicked", G_CALLBACK(activate_reload), this);
+  g_object_set( timebox_reload, "can-focus", FALSE, NULL);
+  // gtk_toolbar_append_widget( timetools, timebox_reload, CoWowGtk::translate_utf8("Update"), "");
+
+  GtkWidget *timebox_add = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_add.png");
+  gtk_container_add( GTK_CONTAINER(timebox_add), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(timebox_add, "clicked", G_CALLBACK(activate_add), this);
+  g_object_set( timebox_add, "can-focus", FALSE, NULL);
+  // gtk_toolbar_append_widget( timetools, timebox_add, CoWowGtk::translate_utf8("Add curve item"), "");
+
+  GtkWidget *timebox_remove = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_remove.png");
+  gtk_container_add( GTK_CONTAINER(timebox_remove), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(timebox_remove, "clicked", G_CALLBACK(activate_remove), this);
+  g_object_set( timebox_remove, "can-focus", FALSE, NULL);
+  // gtk_toolbar_append_widget( timetools, timebox_remove, CoWowGtk::translate_utf8("Remove selected curve"), "");
+
+
+  GtkToolbar *curvebuttonbox = (GtkToolbar *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
+  //GtkWidget *curvebuttonbox = gtk_hbox_new( FALSE, 0);
+  gtk_toolbar_append_widget( curvebuttonbox, timebox_reload, CoWowGtk::translate_utf8("Update curve"), "");
+  gtk_toolbar_append_widget( curvebuttonbox, timebox_add, CoWowGtk::translate_utf8("Add curve item"), "");
+
+  sea_timebox = gtk_hbox_new( FALSE, 0);
+  //  gtk_box_pack_start( GTK_BOX(sea_timebox), sea_time_start_label, FALSE, FALSE, 0);
+  //  gtk_box_pack_start( GTK_BOX(sea_timebox), timebox_timecombo, FALSE, FALSE, 10);
+  //  gtk_box_pack_start( GTK_BOX(sea_timebox), timebox_start_time, FALSE, FALSE, 0);
+  //  gtk_box_pack_start( GTK_BOX(sea_timebox), sea_time_stop_label, FALSE, FALSE, 0);
+  //  gtk_box_pack_start( GTK_BOX(sea_timebox), timebox_stop_time, FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(sea_timebox), GTK_WIDGET(timetools), FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(sea_timebox), gtk_hseparator_new(), FALSE, FALSE, 10);
+  gtk_box_pack_start( GTK_BOX(sea_timebox), GTK_WIDGET(curvebuttonbox), FALSE, FALSE, 0);
 
   GtkWidget *w;
   grownames_main_widget = scrolledgrowwidgetgtk_new( init_grownames_cb, this, &w);
@@ -531,9 +797,14 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   gtk_paned_pack2( GTK_PANED(vpaned2), nav_widget, FALSE, TRUE);
   gtk_widget_show_all( vpaned2);
 
+  GtkWidget *tools_box = gtk_hbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(tools_box), GTK_WIDGET(tools), FALSE, FALSE, 0);
+  //  gtk_box_pack_start( GTK_BOX(tools_box), GTK_WIDGET(sea_timebox), FALSE, FALSE, 0);
+
   GtkWidget *vbox = gtk_vbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(tools), FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(tools_box), FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(sea_timebox), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(vpaned1), TRUE, TRUE, 0);
 
   gtk_container_add( GTK_CONTAINER(toplevel), vbox);
@@ -542,10 +813,12 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
 
   gtk_paned_set_position( GTK_PANED(vpaned1), names_height);
   gtk_paned_set_position( GTK_PANED(vpaned2), window_height - names_height - nav_height - 50);
-  g_object_set( tools_higher_res, "visible", FALSE, NULL);
-  g_object_set( tools_lower_res, "visible", FALSE, NULL);
+  g_object_set( sea_timebox, "visible", FALSE, NULL);
 
   wow = new CoWowGtk( toplevel);
+
+  gtk_combo_box_set_active( GTK_COMBO_BOX(timebox_timecombo), 2);
+
 }
 
 static gint minmax_delete_event( GtkWidget *w, GdkEvent *event, gpointer curve)

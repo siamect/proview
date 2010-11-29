@@ -24,7 +24,7 @@
 #include <types.h>
 #elif defined OS_ELN
 #include <rpc/rpc.h>
-#elif defined OS_MACOS
+#elif defined OS_MACOS || defined OS_FREEBSD
 #include <sys/types.h>
 #endif
 

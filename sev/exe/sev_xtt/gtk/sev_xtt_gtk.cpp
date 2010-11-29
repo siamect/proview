@@ -20,6 +20,7 @@
 
 #include <fstream>
 #include <vector>
+#include <locale.h>
 #include <gtk/gtk.h>
 
 #include "pwr.h"
@@ -74,6 +75,9 @@ int main(  int argc, char *argv[])
   }
 
   gtk_init( &argc, &argv);
+
+  setlocale( LC_NUMERIC, "POSIX");
+  setlocale( LC_TIME, "en_US");
 
   XttTblGtk *tbl = new XttTblGtk( 0, 0, sevcli, items, itemcnt);
   tbl->close_cb = tbl_close_cb;

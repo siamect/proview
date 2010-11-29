@@ -160,7 +160,7 @@ int main(int argc, char **argv)
 
 #if defined OS_VMS || defined OS_ELN
   exit(1);
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
   exit(EXIT_SUCCESS);
 #endif
 }

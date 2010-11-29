@@ -33,7 +33,7 @@
 # include <sys/types.h>
 #endif
 
-#if defined OS_MACOS
+#if defined OS_MACOS || defined OS_FREEBSD
 # include <pwd.h>
 # include <signal.h>
 # include <sys/types.h>
@@ -126,7 +126,7 @@ plc_thread (
 
   /* Once thread's has set it's priority don't run as root */
 
-#if defined(OS_LINUX) || defined OS_MACOS
+#if defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
   struct passwd *pwd;
   
   ruid = getuid();
@@ -295,7 +295,7 @@ scan (
 
 #if defined OS_LYNX && USE_RT_TIMER
       sem_wait(&tp->ScanSem);
-#elif defined OS_MACOS
+#elif defined OS_MACOS || defined OS_FREEBSD
       struct timespec ts;
       ts.tv_sec = delta.tv_sec;
       ts.tv_nsec = delta.tv_nsec;

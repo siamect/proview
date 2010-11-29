@@ -146,7 +146,7 @@ extern "C" {
 # define dbs_cNameRttCrrCode    "rtt_crrc_%03.3d_%03.3d_%03.3d_%03.3d.dat"
 # define dbs_cNameRttPlc        "rtt_plc_%03.3d_%03.3d_%03.3d_%03.3d.dat"
 
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 
 # define dbs_cNameBaseDirectory "pwr_load"
 # define dbs_cNameDirectory     "pwrp_load"
@@ -572,7 +572,7 @@ struct dbs_sMenv {
 pwr_tBoolean    dbs_AlignedRead(pwr_tStatus *sts, void *buf, pwr_tUInt32 size, const dbs_sEnv *ep);
 pwr_tBoolean    dbs_Close(pwr_tStatus *sts, dbs_sEnv *ep);
 dbs_sEnv       *dbs_Open(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename);
-#if defined(OS_LINUX) || defined(OS_LYNX) || defined(OS_MACOS)
+#if defined(OS_LINUX) || defined(OS_LYNX) || defined(OS_MACOS) || defined OS_FREEBSD
 dbs_sVolRef    *dbs_VolRef(pwr_tStatus *sts, pwr_tUInt32 index, dbs_sVolRef *vp, const dbs_sEnv *ep);
 dbs_sVolume 	*dbs_Volume(pwr_tStatus *sts, dbs_sVolume *vp, const dbs_sEnv *ep);
 void           *dbs_Address(pwr_tStatus*, const dbs_sVenv*, dbs_tRef);

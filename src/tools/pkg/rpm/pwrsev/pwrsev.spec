@@ -10,7 +10,7 @@
 
 Name: pwrsev
 Summary: Proview/R storage environment
-Version: 4.7.1
+Version: 4.8.0
 Release: 1
 License: GPL
 BuildArch: i386
@@ -77,7 +77,7 @@ co_convert -t -d %{buildroot}/usr/pwrsev/doc %{buildroot}/usr/pwrsev/exe/sev_xtt
   echo "</head></html>"
 } > %{buildroot}/usr/pwrsev/doc/en_us/package_version.html
 
-#%clean
+%clean
 
 %files
 %defattr(-,root,root)
@@ -291,7 +291,6 @@ fi
 
 if [ $new_project -eq 1 ]; then
   nodename=`eval uname -n`
-  echo "-- Create file /home/pwrp/.rhosts"
   echo "-- Distribute project to $nodename"
 fi
 
@@ -420,5 +419,5 @@ fi
 #%postun
 
 %changelog
-* Fri Aug 27 2010 Claes Sjofors <claes.sjofors@proview.se> 4.7.1-1
+* Sun Nov 28 2010 Claes Sjofors <claes.sjofors@proview.se> 4.8.0-1
   - Base release.

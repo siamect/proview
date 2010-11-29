@@ -42,7 +42,8 @@ GrowArc::GrowArc( GrowCtx *glow_ctx, const char *name, double x1, double y1,
   border(display_border),
   dynamic(0), dynamicsize(0), shadow(display_shadow), shadow_width(5), 
   relief(glow_eRelief_Up), shadow_contrast(2), disable_shadow(0), fixcolor(0),
-  gradient(glow_eGradient_No), gradient_contrast(4), disable_gradient(0)
+  gradient(glow_eGradient_No), gradient_contrast(4), disable_gradient(0),
+  fixposition(0)
 { 
   strcpy( n_name, name);
   pzero.nav_zoom();
@@ -84,6 +85,8 @@ GrowArc::~GrowArc()
 
 void GrowArc::move( double delta_x, double delta_y, int grid)
 {
+  if ( fixposition)
+    return;
   ctx->set_defered_redraw();
   ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
 	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
@@ -130,6 +133,8 @@ void GrowArc::move( double delta_x, double delta_y, int grid)
 
 void GrowArc::move_noerase( int delta_x, int delta_y, int grid)
 {
+  if ( fixposition)
+    return;
   if ( grid)
   {
     double x_grid, y_grid;
@@ -275,6 +280,7 @@ void GrowArc::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowArc_gradient) << FSPACE << int(gradient) << endl;
   fp << int(glow_eSave_GrowArc_gradient_contrast) << FSPACE << gradient_contrast << endl;
   fp << int(glow_eSave_GrowArc_disable_gradient) << FSPACE << disable_gradient << endl;
+  fp << int(glow_eSave_GrowArc_fixposition) << FSPACE << fixposition << endl;
   fp << int(glow_eSave_GrowArc_dynamicsize) << FSPACE << dynamicsize << endl;
   fp << int(glow_eSave_GrowArc_dynamic) << endl;
   if( dynamic)
@@ -339,6 +345,7 @@ void GrowArc::open( ifstream& fp)
       case glow_eSave_GrowArc_gradient: fp >> tmp; gradient = (glow_eGradient)tmp; break;
       case glow_eSave_GrowArc_gradient_contrast: fp >> gradient_contrast; break;
       case glow_eSave_GrowArc_disable_gradient: fp >> disable_gradient; break;
+      case glow_eSave_GrowArc_fixposition: fp >> fixposition; break;
       case glow_eSave_GrowArc_dynamicsize: fp >> dynamicsize; break;
       case glow_eSave_GrowArc_dynamic:
         fp.getline( dummy, sizeof(dummy));
@@ -947,6 +954,9 @@ void GrowArc::set_border( int borderval)
 void GrowArc::align( double x, double y, glow_eAlignDirection direction)
 {
     double dx, dy;
+
+    if ( fixposition)
+      return;
 
     erase( &ctx->mw);
     erase( &ctx->navw);

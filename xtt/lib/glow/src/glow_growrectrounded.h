@@ -287,6 +287,7 @@ class GrowRectRounded : public GlowRect {
   glow_eGradient gradient;  //!< Type of gradient.
   int		gradient_contrast; //!< Gradient contrast.
   int		disable_gradient; //!< Disable gradient, even if parent node has gradient.
+  int		fixposition;	//!< Can't be moved.
   
   //! Set user data.
   /*!

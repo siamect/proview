@@ -251,11 +251,22 @@ int ccm_ref_external_var(
 int ccm_singleline_init( 
   ccm_tSingleLineCtx *ctx,
   char 		*line,
-  int		(* errormessage_func) ( char *, int, void *)  
+  int		(* errormessage_func) ( char *, int, void *),
+  void		*client_data
 );
 
 int ccm_singleline_exec( 
   ccm_tSingleLineCtx ctx
+);
+
+int ccm_singleline_exec_int( 
+  ccm_tSingleLineCtx ctx,
+  ccm_tInt *result
+);
+
+int ccm_singleline_exec_float( 
+  ccm_tSingleLineCtx ctx,
+  ccm_tFloat *result
 );
 
 void ccm_singleline_free(

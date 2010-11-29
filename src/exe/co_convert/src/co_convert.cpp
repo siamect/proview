@@ -65,36 +65,10 @@ static void usage()
   printf( "      -f:  Create pdf from xtthelp-file\n");
   printf( "      -q:  Create postscript from wb_load-files\n");
   printf( "      -e:  Merge changlog files to docbook file\n");
+  printf( "      -a:  Create xtthelp from pwg-files\n");
   printf( "      -d:  Output directory\n");
   printf( "      -g:  Setup file\n");
   printf( "      -h:  Help\n\n");
-
-}
-
-static void help()
-{
-  usage();
-
-  printf( "Tags in wb_loadfile:\n");
-  printf( "  Class:\n");
-  printf("     !/**\n");
-  printf("          @Author	'author'\n");
-  printf("          @Version	'version'\n");
-  printf("          @Summary	'text'\n");
-  printf("          @Code   	'filename'\n");
-  printf("          'Description'\n");
-  printf("     !*/\n");
-  printf( "  Attribute:\n");
-  printf("     !/**\n");
-  printf("          @Summay\n");
-  printf("          'Description'\n");
-  printf("     !*/\n");
-  printf( "\n");
-  printf( "Tags in c or h file:\n");
-  printf("     /**\n");
-  printf("          @aref 'bookmark' 'text'\n");
-  printf("     */\n");
-  printf( "\n");
 
 }
 
@@ -179,7 +153,7 @@ int main( int argc, char *argv[])
       while( *s) {
         switch( *s) {
 	case 'h':
-	  help();
+	  usage();
 	  exit(0);
 	case 'w':
 	  ctx->generate_html = 1;

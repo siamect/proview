@@ -1,3 +1,17 @@
+199
+!/**
+! IndSquareMetalFrame
+! Group Indicators
+!
+! <image> pwr_indsquaremetalframe_gs.gif
+!
+! <h1>Description
+! Indicator with metal frame.
+!
+! <h1>Default dynamics
+! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+!
+!*/
 1
 100 82.7154
 135 82.7154

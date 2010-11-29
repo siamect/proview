@@ -83,6 +83,7 @@ typedef enum {
     co_eOS_Amiga, /**< We are working on it ;-) */
     co_eOS_Linux,
     co_eOS_MacOS,
+    co_eOS_FreeBSD,
     co_eOS_
 } co_eOS;
 
@@ -98,6 +99,8 @@ typedef enum {
 #   define co_dHostOS co_eOS_Linux
 #elif defined(OS_MACOS) 
 #   define co_dHostOS co_eOS_MacOS
+#elif defined OS_FREEBSD
+#   define co_dHostOS co_eOS_FreeBSD
 #else 
 #   define co_dHostOS co_eOS__
 #endif

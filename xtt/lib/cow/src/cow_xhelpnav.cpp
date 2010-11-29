@@ -1062,9 +1062,10 @@ static void trim( char *str)
 **************************************************************************/
 
 static void *xhelpnav_help_insert_cb( void *ctx, navh_eItemType item_type, const char *text1,
-		      const char *text2, const char *text3, const char *link, 
-		      const char *bookmark, const char *file_name,
-		      navh_eHelpFile file_type, int help_index, const char *bm)
+				      const char *text2, const char *text3, const char *link, 
+				      const char *bookmark, const char *file_name,
+				      navh_eHelpFile file_type, int help_index, const char *bm, 
+				      int coding)
 {
   CoXHelpNav *xhelpnav = (CoXHelpNav *)ctx;
   char *llink = 0;
@@ -1077,9 +1078,14 @@ static void *xhelpnav_help_insert_cb( void *ctx, navh_eItemType item_type, const
   else if ( link)
     llink = (char *)link;
 
-  if ( xhelpnav->init_help) {
+  if ( xhelpnav->init_help == 1) {
     xhelpnav->brow_pop();
     brow_SetNodraw( xhelpnav->brow->ctx);
+    brow_SetTextCoding( xhelpnav->brow->ctx, (flow_eTextCoding)coding);
+    xhelpnav->init_help = 0;
+  }
+  else if ( xhelpnav->init_help == 2) {
+    brow_SetTextCoding( xhelpnav->brow->ctx, (flow_eTextCoding)coding);
     xhelpnav->init_help = 0;
   }
 
@@ -1214,17 +1220,16 @@ int	CoXHelpNav::help( const char *help_key, const char *help_bookmark,
   }
   navhelp->insert_cb = xhelpnav_help_insert_cb;
 
-
   if ( pop)
     init_help = 1;
   else {
-    init_help = 0;
+    init_help = 2;
     brow_SetNodraw( brow->ctx);
   }
   sts = navhelp->help( help_key, help_bookmark, file_type, 
 		       file_name, &bookmark_node, strict);
   if ( EVEN(sts)) {
-    if ( !pop || (pop && !init_help)) {
+    if ( !pop || (pop && init_help != 1)) {
       brow_push();
       brow_ResetNodraw( brow->ctx);
     }

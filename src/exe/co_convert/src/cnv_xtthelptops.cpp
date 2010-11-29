@@ -78,7 +78,7 @@ void *CnvXtthelpToPs::insert( navh_eItemType item_type, const char *text1,
 			      const char *text2, const char *text3, const char *link, 
 			      const char *link_bookmark, const char *file_name,
 			      navh_eHelpFile file_type, int help_index, 
-			      const char *bookmark)
+			      const char *bookmark, int coding)
 {
   if ( option & ps_mOption_printDisable &&
        item_type != navh_eItemType_Option)

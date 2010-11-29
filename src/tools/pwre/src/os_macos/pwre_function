@@ -33,6 +33,10 @@ pwre()
 	export pwre_hosttype=$HOSTTYPE
 	local flags="$-"
 
+	if [ -e $pwre_broot/pwre_${pwre_hw:3}_${pwre_os:3}.cnf ]; then
+ 	  source $pwre_broot/pwre_${pwre_hw:3}_${pwre_os:3}.cnf
+        fi
+
 	# Turn off filename globber
 	set -f
 
@@ -158,7 +162,14 @@ set_env()
 	  export pwre_conf_gtk=0
         fi
 
-	export pwre_conf_alsa=0
+# libusb
+	if [ -e /usr/lib/libusb-1.0.so ]; then
+          export pwre_conf_libusb=1
+	else
+	  export pwre_conf_libusb=0
+        fi
+
+	export pwre_conf_alsa=1
 }
 
 pwre_get_variables()

@@ -451,7 +451,7 @@ GsdmlAttrNav::GsdmlAttrNav(
   parent_ctx(xn_parent_ctx),
   gsdml(xn_gsdml), edit_mode(xn_edit_mode), trace_started(0),
   message_cb(0), change_value_cb(0), device_num(0), device_item(0), 
-  device_confirm_active(0), device_read(0), viewio(0), time_ratio(1), send_clock(32), phase(0)
+  device_confirm_active(0), device_read(0), viewio(0), time_ratio(1), send_clock(32), phase(1)
 {
   strcpy( name, xn_name);
 
@@ -1423,6 +1423,7 @@ int GsdmlAttrNav::save( const char *filename)
   dev_data.device_id = gsdml->DeviceIdentity->Body.DeviceID;
   strncpy( dev_data.version, gsdml->ProfileHeader->Body.ProfileRevision, sizeof(dev_data.version));
   dev_data.byte_order = gsdml->byte_order;
+  dev_data.instance = device_item->Body.ObjectUUID_LocalIndex;
 
   // Store ModuleIdentNumber
   gsdml_UseableModules *um = device_item->UseableModules;
@@ -2478,6 +2479,20 @@ int ItemPnNetwork::open_children( GsdmlAttrNav *attrnav, double x, double y)
       new ItemPnEnumTimeRatio( attrnav, "ReductionRatio", 
 			       attrnav->device_item->SystemDefinedSubmoduleList->InterfaceSubmoduleItem,
 			       p, node, flow_eDest_IntoLast);
+
+      p = (void *) &attrnav->phase;
+      new ItemPnBase( attrnav, "Phase", "LocalGsdmlAttr", 
+		    pwr_eType_UInt32, sizeof(pwr_tUInt32), 0, 0,
+		    p, 0, node, flow_eDest_IntoLast);
+    }
+    else {
+      p = (void *) &attrnav->send_clock;
+       new ItemPnEnumSendClock( attrnav, "SendClock", 
+			       0, p, node, flow_eDest_IntoLast);
+
+      p = (void *) &attrnav->time_ratio;
+      new ItemPnEnumTimeRatio( attrnav, "ReductionRatio", 
+			       0, p, node, flow_eDest_IntoLast);
 
       p = (void *) &attrnav->phase;
       new ItemPnBase( attrnav, "Phase", "LocalGsdmlAttr", 
@@ -4005,7 +4020,7 @@ ItemPnEnumTimeRatio::ItemPnEnumTimeRatio( GsdmlAttrNav *attrnav, const char *ite
   type = attrnav_eItemType_PnEnumTimeRatio;
   strcpy( name, item_name);
 
-  if ( interfacesubmodule->ApplicationRelations &&
+  if ( interfacesubmodule && interfacesubmodule->ApplicationRelations &&
        interfacesubmodule->ApplicationRelations->TimingProperties &&
        strcmp( interfacesubmodule->ApplicationRelations->TimingProperties->Body.ReductionRatio.str,
 	       "") != 0)
@@ -4106,7 +4121,7 @@ ItemPnEnumSendClock::ItemPnEnumSendClock( GsdmlAttrNav *attrnav, const char *ite
   type = attrnav_eItemType_PnEnumSendClock;
   strcpy( name, item_name);
 
-  if ( interfacesubmodule->ApplicationRelations &&
+  if ( interfacesubmodule && interfacesubmodule->ApplicationRelations &&
        interfacesubmodule->ApplicationRelations->TimingProperties &&
        strcmp( interfacesubmodule->ApplicationRelations->TimingProperties->Body.SendClock.str,
 	       "") != 0)

@@ -159,6 +159,11 @@ typedef enum {
 	} flow_eDrawType;
 
 typedef enum {
+  	flow_eTextCoding_ISO8859_1,
+  	flow_eTextCoding_UTF_8
+	} flow_eTextCoding;
+
+typedef enum {
         draw_eCursor_Normal,
         draw_eCursor_CrossHair,
         draw_eCursor_Hand,

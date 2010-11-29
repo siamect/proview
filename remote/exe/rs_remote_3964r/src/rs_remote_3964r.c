@@ -62,7 +62,9 @@
 #if defined OS_LINUX
 #include <termio.h>
 #endif
+#if defined OS_LINUX || defined OS_MACOS
 #include <sgtty.h>
+#endif
 #include <sys/ioctl.h>
 
 /*PWR includes*/

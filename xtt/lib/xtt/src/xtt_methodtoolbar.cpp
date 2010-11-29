@@ -28,7 +28,7 @@ xtt_sMethodButton XttMethodToolbar::m_data[XttMethodToolbar::m_size] =
    {"Note",		"$Object-Note",		"$Object-NoteFilter", 		"$pwr_exe/xtt_meth_note.png", 		"Note"},
    {"Trend",		"$Object-OpenTrend",	"$Object-OpenTrendFilter", 	"$pwr_exe/xtt_meth_trend.png", 		"Trend"},
    {"Fast",		"$Object-OpenFast",	"$Object-OpenFastFilter", 	"$pwr_exe/xtt_meth_fast.png", 		"Fast"},
-   {"History",		"$Object-History",	"$Object-HistoryFilter", 	"$pwr_exe/xtt_meth_history.png", 	"History"},
+   {"History",		"$Object-OpenHistory",	"$Object-OpenHistoryFilter", 	"$pwr_exe/xtt_meth_history.png", 	"History"},
    {"Photo",		"$Object-Photo",	"$Object-PhotoFilter", 		"$pwr_exe/xtt_meth_photo.png", 		"Photo"},
    {"Graph",		"$Object-OpenGraph",	"$Object-OpenGraphFilter", 	"$pwr_exe/xtt_meth_graph.png", 		"Graph"},
    {"RtNavigator",    	"$Object-RtNavigator",	"$Object-RtNavigatorFilter", 	"$pwr_exe/xtt_meth_navigator.png",     	"RtNavigator"},

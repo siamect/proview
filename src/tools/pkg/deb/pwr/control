@@ -1,11 +1,11 @@
-Package: pwr47
-Version: 4.7.1-1
+Package: pwr48
+Version: 4.8.0-1
 Section: base
 Priority: optional
 Architecture: i386
-Depends: libc6 (>= 2.7-18), libgtk2.0-0 (>= 2.12.12-1~lenny1), libasound2 (>= 1.0.16-2), libdb4.6 (>=4.6.21-11), libdb4.6++ (>= 4.6.21-11), libmysqlclient15off (>= 5.0.51a-24+lenny1), g++ (>= 4:4.3.2-2)
-Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46
+Depends: libc6 (>= 2.11.2-7), libgtk2.0-0 (>= 2.20.1-2), libasound2 (>= 1.0.23-2.1), libdb4.8 (>=4.8.30-2), libdb4.8++ (>= 4.8.30-2), libmysql++3 (>= 3.0.9-1+b1), g++ (>= 4:4.4.5-1)
+Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47
 Maintainer: Proview <postmaster@proview.se>
 Description: Proview development and runtime environment package
  Proview development and runtime environment
- 4.7.1-1 Base release 
+ 4.8.0-1 Base release 

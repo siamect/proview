@@ -1,15 +1,18 @@
 199
 !/**
-! OverloadRelay
+! MiniCircuitBreaker
 ! Group Electric
 !
-! <image> pwr_overloadrelay_gs.gif
+! <image> pwr_minicircuitbreaker_gs.gif
 !
 ! <h1>Description
-! Overload Relay.
+! MiniCircuitBreaker.
 !
 ! <h1>Default dynamics
-! No default dynamics.
+! DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+!
+! Dynamics for the symbol
+! - shifting shape when the signal is high.
 !
 !*/
 1
