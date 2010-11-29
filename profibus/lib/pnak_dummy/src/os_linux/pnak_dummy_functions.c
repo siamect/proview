@@ -26,7 +26,7 @@
 void             pnak_init                                 (void) {}
 void             pnak_term                                 (void) {}
 
-T_PNAK_RESULT    pnak_start_profistack                     (unsigned short a1, const T_PNAK_MODE_ID a2) {return PNAK_OK;}
+T_PNAK_RESULT    pnak_start_profistack                     (unsigned short a1, const T_PNAK_MODE_ID a2) {return -9999;}
 T_PNAK_RESULT    pnak_stop_profistack                      (unsigned short a1) {return PNAK_OK;}
 
 /*--- General interface functions -------------------------------------------*/
