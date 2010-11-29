@@ -1551,10 +1551,15 @@ int GeDyn::action( grow_tObject object, glow_tEvent event)
 
 int GeDyn::confirmed_action( grow_tObject object, glow_tEvent event)
 {
+  int sts;
+
   total_action_type = (ge_mActionType) (total_action_type & ~ge_mActionType_Confirm);
 
-  for ( GeDynElem *elem = elements; elem; elem = elem->next)
-    elem->action( object, event);
+  for ( GeDynElem *elem = elements; elem; elem = elem->next) {
+    sts = elem->action( object, event);
+    if ( sts == GE__NO_PROPAGATE || sts == GLOW__TERMINATED)
+      return sts;
+  }
 
   total_action_type = (ge_mActionType) (total_action_type | ge_mActionType_Confirm);
   return 1;
