@@ -383,17 +383,19 @@ int GsdmlDataReader::tag_attribute( const char *name, const char *value)
   switch ( current_tag) {
   case gsdmldata_eTag_PnDevice:
     if ( strcmp( name, "GsdmlFile") == 0) {
-      // Check that the GSDML file is not changed
-      char *gsdmlfile_p;
+      if ( strcmp( data->gsdmlfile, "") != 0) {
+	// Check that the GSDML file is not changed
+	char *gsdmlfile_p;
   
-      // Print name of gsdmlfile, not path
-      if ( (gsdmlfile_p = strrchr(data->gsdmlfile, '/')))
-	gsdmlfile_p++;
-      else
-	gsdmlfile_p = data->gsdmlfile;
-
-      if ( strcmp( value, gsdmlfile_p) != 0)
-	return PB__GSDMLFILEMISMATCH;
+	// Print name of gsdmlfile, not path
+	if ( (gsdmlfile_p = strrchr(data->gsdmlfile, '/')))
+	  gsdmlfile_p++;
+	else
+	  gsdmlfile_p = data->gsdmlfile;
+	
+	if ( strcmp( value, gsdmlfile_p) != 0)
+	  return PB__GSDMLFILEMISMATCH;
+      }
     }
     else if ( strcmp( name, "DeviceText") == 0)
       strncpy( data->device_text, value, sizeof(data->device_text));
