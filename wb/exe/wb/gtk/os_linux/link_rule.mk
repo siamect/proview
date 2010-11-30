@@ -9,7 +9,7 @@ ifeq ($(export_type),exp)
 	-L/opt/gnome/lib \
 	-lpwr_wb_gtk -lpwr_wb -lpwr_wb_gtk -lpwr_wb -lpwr_rt \
         -lpwr_ge_gtk -lpwr_ge -lpwr_flow_gtk -lpwr_flow -lpwr_glow_gtk -lpwr_glow \
-	-lpwr_cow_gtk -lpwr_cow -lpwr_co -lpwr_rt -lpwr_statussrv \
+	-lpwr_cow_gtk -lpwr_cow -lpwr_rt -lpwr_co -lpwr_statussrv \
 	`pkg-config --libs gtk+-2.0` \
 	-lpwr_msg_dummy -lantlr \
 	-lrpcsvc -lpthread -lm -ldb_cxx -lz -lcrypt $(linkmysql)
@@ -21,7 +21,7 @@ else
 	-L/opt/gnome/lib \
 	-lpwr_wb_gtk -lpwr_wb -lpwr_rt -lpwr_ge_gtk -lpwr_ge \
 	-lpwr_flow_gtk -lpwr_flow -lpwr_glow_gtk -lpwr_glow -lpwr_cow_gtk -lpwr_cow \
-	-lpwr_co -lpwr_statussrv -lpwr_rt\
+	-lpwr_rt -lpwr_co -lpwr_statussrv \
 	`pkg-config --libs gtk+-2.0` \
 	-lpwr_msg_dummy -lantlr \
 	-lrpcsvc -lpthread -lm -ldb_cxx -lz -lcrypt $(linkmysql)
