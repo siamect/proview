@@ -19,7 +19,7 @@
 
 /* pn_viewer_pnac.cpp -- Profinet viewer PNAC interface */
 
-
+#ifdef PWRE_CONF_PNAK
 
 #include "co_error.h"
 #include "pn_viewer_pnac.h"
@@ -231,3 +231,5 @@ void PnViewerPNAC::set_device_properties( unsigned char *macaddress, unsigned ch
   }
 
 }
+
+#endif

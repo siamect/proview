@@ -239,6 +239,7 @@ void brow_SetFillColor( brow_tNode node, flow_eDrawType color);
 void brow_SetTipText( brow_tCtx ctx, brow_tObject object, char *text, int x, int y);
 void brow_SetInverseColor( brow_tCtx ctx, flow_eDrawType color);
 int brow_GetObjectLevel( brow_tObject object);
+void brow_SetTextCoding( brow_tCtx ctx, flow_eTextCoding coding);
 
 #if defined __cplusplus
 }

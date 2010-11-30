@@ -72,13 +72,13 @@ void *help_insert_cb( void *ctx, navh_eItemType item_type, const char *text1,
 		      const char *text2, const char *text3, const char *link, 
 		      const char *link_bookmark, const char *file_name,
 		      navh_eHelpFile file_type, int help_index, 
-		      const char *bookmark)
+		      const char *bookmark, int coding)
 {
   CnvReadXtthelp *xh = (CnvReadXtthelp *)ctx;
 
   return xh->xtthelpto->insert( item_type, text1, text2, text3, link, 
-		     link_bookmark, file_name, file_type, help_index, 
-		     bookmark);
+				link_bookmark, file_name, file_type, help_index, 
+				bookmark, coding);
 }
 
 int CnvReadXtthelp::read_xtthelp()

@@ -29,8 +29,7 @@ opsys=$4
 
 # echo $name $pgmname $is_rttsys $opsys
 
-if [ $opsys = "64" ]
-then
+if [ $opsys = "64" ] || [ $opsys == "128" ]; then
 # echo "Opsys is linux"
 
   if [ $is_rttsys = "0" ]

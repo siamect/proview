@@ -40,7 +40,7 @@
 #include <lib$routines.h>
 #endif
 
-#if defined  OS_LYNX || defined OS_LINUX || OS_MACOS
+#if defined  OS_LYNX || defined OS_LINUX || OS_MACOS || defined OS_FREEBSD
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>

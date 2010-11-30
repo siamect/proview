@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <locale.h>
 
 #include <gtk/gtk.h>
 
@@ -52,6 +53,7 @@ int main(  int argc, char *argv[])
 
   gtk_init( &argc, &argv);
 
+  setlocale( LC_NUMERIC, "POSIX");
   setlocale( LC_TIME, "en_US");
 
   new CoHelpGtk( argc, argv, &sts);

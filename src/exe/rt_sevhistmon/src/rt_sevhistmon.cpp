@@ -1020,9 +1020,9 @@ int rt_sevhistmon::mainloop()
       continue;
     }
 
-    switch (get.type.b) {
+    switch ( (int)get.type.b) {
       case sev_cMsgClass:
-        switch ( get.type.s) {
+        switch ( (int)get.type.s) {
           case sev_eMsgType_NodeUp:
             printf("rt_sevhistmon: Node up recevied\n");
             send_itemlist( get.sender.nid);

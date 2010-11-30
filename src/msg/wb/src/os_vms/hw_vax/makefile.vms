@@ -1,2 +1,0 @@
-include /pwrd_disk/tools/exp_new/exe/dir_symbols.mk
-include $(source_root)/tools/bld/src/$(os_name)/$(hw_name)/generic_$(type_name).mk

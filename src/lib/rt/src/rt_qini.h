@@ -39,7 +39,7 @@
 # include <in.h>
 # include <inet.h>
 # include <ucx$inetdef.h>
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS)
+#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
 # include <netinet/in.h>
 # include <arpa/inet.h>
 #endif
@@ -49,7 +49,7 @@
 #include "rt_qdb.h"
 #include "rt_qdb_msg.h"
 
-#if defined(OS_LINUX) || defined(OS_MACOS)
+#if defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
 # include <sys/socket.h>
 #else
 # include <socket.h>

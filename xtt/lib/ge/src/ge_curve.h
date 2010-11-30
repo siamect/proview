@@ -143,14 +143,20 @@ class GeCurve {
     int          minmax_idx;
     void 	 (*close_cb)( void *);
     void 	 (*help_cb)( void *);
-    void 	 (*higher_res_cb)( void *);
-    void 	 (*lower_res_cb)( void *);
+    void 	 (*increase_period_cb)( void *);
+    void 	 (*decrease_period_cb)( void *);
+    void 	 (*reload_cb)( void *);
+    void 	 (*prev_period_cb)( void *);
+    void 	 (*next_period_cb)( void *);
+    void 	 (*add_cb)( void *);
+    void 	 (*remove_cb)( void *);
     int          initial_right_position;
     char	 title[300];
     double  	 last_cursor_x;
     double  	 last_mark_x;
     int		 deferred_configure_axes;
     CoWow	 *wow;
+    int		 center_from_window;
 
     GeCurve( void *gc_parent_ctx, char *curve_name,
          char *filename, GeCurveData *curve_data, int pos_right);
@@ -160,12 +166,18 @@ class GeCurve {
     virtual void resize() {}
     virtual void open_minmax( int idx) {}
     virtual void axis_set_width( int width) {}  
-    virtual void enable_resolution_buttons() {}
+    virtual void enable_timebox() {}
+    virtual void set_times( pwr_tTime *from, pwr_tTime *to) {}
+    virtual void set_times_sensitivity( int sensitive) {}
+    virtual pwr_tStatus get_times( pwr_tTime *from, pwr_tTime *to) {return 0;}
+    virtual int get_period( time_ePeriod *period) {return 0;}
+    virtual void set_period( time_ePeriod period, int nocallback) {}
     void set_inputfocus() {}
 
     int read_file( char *filename);
     int configure_curves();
     int configure_axes();
+    int config_names();
     void points_added();
     void set_title( char *str);
     void set_time( pwr_tTime time);
@@ -178,10 +190,13 @@ class GeCurve {
     void activate_background();
     void activate_filledcurves( int set);
     void activate_help();
+    void activate_period( time_ePeriod);
+    void activate_edit();
     void activate_minmax_ok( double min_value, double max_value);
     void set_curvedata( GeCurveData *curve_data);
     void redraw();
     void x_to_points( double x, double *time, double *values);
+    void set_center_from_window( int val) { center_from_window = val;}
     
     static int growcurve_cb( GlowCtx *ctx, glow_tEvent event);
     static int init_growcurve_cb( GlowCtx *fctx, void *client_data);

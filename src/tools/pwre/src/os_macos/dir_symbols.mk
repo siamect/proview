@@ -21,6 +21,8 @@ pred_2	:= 1
 pred_1	:= 0
 
 cwd_dirs := $(subst /,$(space),$(PWD))
+cwd_dirs := $(subst .hw_,hw_,$(cwd_dirs))
+cwd_dirs := $(subst .os_,os_,$(cwd_dirs))
 
 word	:= $(words $(cwd_dirs))
 hw_name	:= $(word $(word), $(cwd_dirs))

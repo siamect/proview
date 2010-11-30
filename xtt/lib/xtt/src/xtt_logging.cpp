@@ -44,7 +44,7 @@
 # include <stdlib.h>
 # include <pthread.h>
 #endif
-#if defined OS_LINUX || defined OS_MACOS
+#if defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 # include <time.h>
 #endif
 
@@ -721,7 +721,7 @@ int XttLogging::start()
 	stop_logg = 0;
 
 	/* Create a subprocess */
-#if defined(OS_VMS) || defined(OS_LINUX) || defined(OS_MACOS) || defined(OS_LYNX) && !defined(PWR_LYNX_30)
+#if defined(OS_VMS) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD || defined(OS_LYNX) && !defined(PWR_LYNX_30)
 	sts = pthread_create (
 		&thread,
 		NULL,			 /* attr */
@@ -1030,7 +1030,7 @@ static void	*xtt_logproc( void *arg)
 	        sys$setimr( logg->event_flag, &vmstime, 0, 0, 0);
 	        sys$waitfr( logg->event_flag);
 #endif
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 	        time_GetTime( &time);
 	        time_Adiff( &wait_time, &nextime, &time);
 
@@ -1450,7 +1450,7 @@ static void	*xtt_logproc( void *arg)
 	  sys$setimr( logg->event_flag, &vmstime, 0, 0, 0);
 	  sys$waitfr( logg->event_flag);
 #endif
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 	  time_Adiff( &wait_time, &nextime, &time);
 
 	  struct timespec wait_time_ts;

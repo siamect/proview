@@ -429,6 +429,9 @@ void EvListBrow::brow_setup()
   brow_sAttributes brow_attr;
   unsigned long mask;
 
+  if ( Lng::translatefile_coding() == lng_eCoding_UTF_8)
+    brow_SetTextCoding( ctx, flow_eTextCoding_UTF_8);
+
   mask = 0;
   mask |= brow_eAttr_indentation;
   brow_attr.indentation = 0.5;

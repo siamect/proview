@@ -1,13 +1,14 @@
 199
 !/**
-! CValve
+! ValveIncrDecr
 ! Group Components/BaseComponent
 !
 ! <image> bcomp_cvalve_gs.gif
 !
 ! <h1>Description
-! Control valve. Graphic symbol for basecomponent BaseCValve.
-! Should be connected to an instance of BaseCValve, or a 
+! Control valve with digital incremental and decremental order. 
+! Graphic symbol for basecomponent BaseValveIncrDecr.
+! Should be connected to an instance of BaseValveIncrDecr, or a 
 ! subclass to this class.
 !
 ! <h1>Default dynamics

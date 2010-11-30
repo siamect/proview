@@ -286,6 +286,7 @@ class FlowCtx {
     flow_eSelectPolicy select_policy;
     FlowTipText *tiptext;
     flow_eDrawType inverse_color;
+    flow_eTextCoding text_coding;
 
     void set_nodraw() { nodraw++; };
     void reset_nodraw() { if ( nodraw) nodraw--; };
@@ -327,6 +328,7 @@ class FlowCtx {
     int get_con_create_active() { return con_create_active;}
     int con_create_stop();
     void set_inverse_color( flow_eDrawType color) { inverse_color = color; redraw();}
+    void set_text_coding( flow_eTextCoding coding) { text_coding = coding;}
     ~FlowCtx();
 };
 

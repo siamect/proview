@@ -371,6 +371,20 @@ elif [ $OpSys -eq $OpSys_X86_64_MACOS ]; then
       exit $gcg_status
   fi
 
+elif [ $OpSys -eq $OpSys_X86_64_FREEBSD ]; then
+  pwrp_gc="$pwrp_tmp"
+
+# Suppress all warnings, -x
+  if [ $CurrentOpSys -eq $OpSys ]; then
+      cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_FREEBSD -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
+
+      FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
+
+# Execute build command
+      Compile$FileTypeStr
+      exit $gcg_status
+  fi
+
 elif [ $OpSys -eq $OpSys_AXP_VMS ]; then
 
   rsh $pwr_build_host_axp_vms @pwr_exe:wb_gcg \"$1\" \"$2\" \"$3\" \"$4\" \"$5\" \"$6\" \"$7\" \"$pwrp_root\"

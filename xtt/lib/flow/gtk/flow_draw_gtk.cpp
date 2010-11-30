@@ -1179,9 +1179,14 @@ int FlowDrawGtk::text_pango( FlowCtx *ctx, int x, int y, char *text, int len,
 
   PangoContext *pctx = gdk_pango_context_get_for_screen( screen);
   PangoLayout *layout = pango_layout_new( pctx);
-  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
-  pango_layout_set_text( layout, textutf8, -1);
-  g_free( textutf8);
+  if ( ctx->text_coding != flow_eTextCoding_UTF_8) {
+    char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+    pango_layout_set_text( layout, textutf8, -1);
+    g_free( textutf8);
+  }
+  else
+    pango_layout_set_text( layout, text, -1);
+
   PangoFontDescription *desc = pango_font_description_from_string( font_string( gc_type, size));
   pango_layout_set_font_description( layout, desc);
   pango_font_description_free( desc);
@@ -1220,9 +1225,14 @@ int FlowDrawGtk::text_inverse_pango( FlowCtx *ctx, int x, int y, char *text, int
 
   PangoContext *pctx = gdk_pango_context_get_for_screen( screen);
   PangoLayout *layout = pango_layout_new( pctx);
-  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
-  pango_layout_set_text( layout, textutf8, -1);
-  g_free( textutf8);
+  if ( ctx->text_coding != flow_eTextCoding_UTF_8) {
+    char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+    pango_layout_set_text( layout, textutf8, -1);
+    g_free( textutf8);
+  }
+  else
+    pango_layout_set_text( layout, text, -1);
+
   PangoFontDescription *desc = pango_font_description_from_string( font_string( gc_type, size));
   pango_layout_set_font_description( layout, desc);
   pango_font_description_free( desc);
@@ -1256,9 +1266,14 @@ int FlowDrawGtk::text_erase_pango( FlowCtx *ctx, int x, int y, char *text, int l
 
   PangoContext *pctx = gdk_pango_context_get_for_screen( screen);
   PangoLayout *layout = pango_layout_new( pctx);
-  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
-  pango_layout_set_text( layout, textutf8, -1);
-  g_free( textutf8);
+  if ( ctx->text_coding != flow_eTextCoding_UTF_8) {
+    char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+    pango_layout_set_text( layout, textutf8, -1);
+    g_free( textutf8);
+  }
+  else 
+    pango_layout_set_text( layout, text, -1);
+
   PangoFontDescription *desc = pango_font_description_from_string( font_string( gc_type, size));
   pango_layout_set_font_description( layout, desc);
   pango_font_description_free( desc);
@@ -1652,9 +1667,14 @@ int FlowDrawGtk::get_text_extent_pango( FlowCtx *ctx, const char *text, int len,
 
   PangoContext *pctx = gdk_pango_context_get_for_screen( screen);
   PangoLayout *layout = pango_layout_new( pctx);
-  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
-  pango_layout_set_text( layout, textutf8, -1);
-  g_free( textutf8);
+  if ( ctx->text_coding != flow_eTextCoding_UTF_8) {
+    char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+    pango_layout_set_text( layout, textutf8, -1);
+    g_free( textutf8);
+  }
+  else
+    pango_layout_set_text( layout, text, -1);
+
   PangoFontDescription *desc = pango_font_description_from_string( font_string( gc_type, size));
   pango_layout_set_font_description( layout, desc);
   pango_font_description_free( desc);

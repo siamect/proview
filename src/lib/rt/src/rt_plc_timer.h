@@ -24,7 +24,7 @@
 # include $mutex
 #endif
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 # include <pthread.h>
 #endif
 
@@ -62,7 +62,7 @@ typedef	struct {
 # define PLC_LOCK_MUTEX(m)  	ELN$LOCK_MUTEX(m)
 # define PLC_UNLOCK_MUTEX(m)  	ELN$UNLOCK_MUTEX(m)
 
-#elif defined OS_LYNX  || defined OS_LINUX || defined OS_MACOS
+#elif defined OS_LYNX  || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 
   extern pthread_mutex_t timer_mutex;
 # define PLC_LOCK_MUTEX(m)  pthread_mutex_lock(&m)

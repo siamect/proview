@@ -78,7 +78,7 @@ void *CnvXtthelpToPdf::insert( navh_eItemType item_type, const char *text1,
 			       const char *text2, const char *text3, const char *alink, 
 			       const char *link_bookmark, const char *file_name,
 			       navh_eHelpFile file_type, int help_index, 
-			       const char *bookmark)
+			       const char *bookmark, int coding)
 {
   char link[80];
   if ( alink)

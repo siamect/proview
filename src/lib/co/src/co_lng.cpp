@@ -27,6 +27,7 @@
 #include "co_dcli.h"
 #include "co_cdh.h"
 #include "co_lng.h"
+#include "co_lng_msg.h"
 
 // Note, this is matched with lng_eLanguage
 static char lng_cLanguageStr[lng_eLanguage__][6] = {
@@ -166,6 +167,7 @@ static char lng_cLanguageStr[lng_eLanguage__][6] = {
   "zh_HK",
   "zh_TW"};
 
+lng_eCoding Lng::translfile_coding = lng_eCoding_ISO8859_1;
 lng_eLanguage Lng::lang = lng_eLanguage_en_US;
 tree_sTable *Lng::tree = 0;
 
@@ -344,7 +346,7 @@ bool Lng::read()
   char fname1[120];
   char fname2[120];
   pwr_tFileName filename1, filename2;
-  int sts;
+  pwr_tStatus sts;
 
   if ( tree)
     tree_DeleteTable( &sts, tree);
@@ -392,7 +394,9 @@ bool Lng::read()
 
     Row r1( fp1, fname1);
     Row r2( fp2, fname2);
-  
+
+    read_metadata( fp2, (i == 0), &sts);
+
     bool hit = true;
     for (;;) {
       if ( hit) {
@@ -510,6 +514,7 @@ void Lng::set( char *language)
   }
   setlocale( LC_ALL, lang_to_locale( l));
   setlocale( LC_NUMERIC, "POSIX");
+  setlocale( LC_TIME, "en_US");
 }
 
 pwr_tStatus Lng::set( lng_eLanguage language) 
@@ -530,6 +535,7 @@ pwr_tStatus Lng::set( lng_eLanguage language)
 
   setlocale( LC_ALL, lang_to_locale( lang));
   setlocale( LC_NUMERIC, "POSIX");
+  setlocale( LC_TIME, "en_US");
   return 1;
 }
 
@@ -565,6 +571,36 @@ bool Lng::is_installed( lng_eLanguage language)
 }
 
 
+void Lng::read_metadata( ifstream& fp2, bool global, pwr_tStatus *sts) 
+{
+  char line[40];
+
+  if ( !fp2.getline( line, sizeof( line))) {
+    *sts = LNG__EOF;
+    return;
+  }
+  *sts = LNG__SUCCESS;
+
+  if ( strncmp( line, "Coding:UTF-8", 12) == 0) {
+    if ( global)
+      translfile_coding = lng_eCoding_UTF_8;
+    else if ( translfile_coding != lng_eCoding_UTF_8)
+      *sts = LNG__DIFFCODING;
+  }
+  else if ( strncmp( line, "Coding:ISO8859-1", 16) == 0) {
+    if ( global)
+      translfile_coding = lng_eCoding_ISO8859_1;
+    else if ( translfile_coding != lng_eCoding_ISO8859_1)
+      *sts = LNG__DIFFCODING;
+  }
+  else {
+    fp2.seekg( 0, ios::beg);
+    if ( global)
+      translfile_coding = lng_eCoding_ISO8859_1;
+    else if ( translfile_coding != lng_eCoding_ISO8859_1)
+      *sts = LNG__DIFFCODING;
+  }
+}
 
 
 

@@ -22,7 +22,7 @@
 
 #if defined OS_LYNX
 # include <sys/wait.h>
-#elif defined OS_LINUX || defined OS_MACOS
+#elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 # include <sys/wait.h>
 # include <sys/types.h>
 # include <sys/stat.h>
@@ -87,7 +87,7 @@
 # define cPrio_fast		15
 # define cPrio_trend		15
 # define cPrio_plc_init		5
-#elif defined OS_LINUX || defined OS_MACOS
+#elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 # define cPrio_base		0
 # define cPrio_neth		(cPrio_base + 18)
 # define cPrio_qmon		(cPrio_base + 19)
@@ -964,7 +964,7 @@ ini_LoadDirectory (
     sprintf(cp->bdir, "%s", dbs_cNameBaseDirectory);
     sprintf(cp->dir, "%s", dbs_cNameDirectory);
   }
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS)
+#elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
   {
     char *s;
 
@@ -1106,7 +1106,7 @@ ini_ReadBootFile (
       }
 
       if (!cp->flags.b.plcfile) {
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 	sprintf(cp->plcfile.name, dbs_cNamePlc, "", cdh_Low(cp->nodename), cp->busid, cp->node.plcVersion);
 #elif defined OS_VMS
 	sprintf(cp->plcfile.name, dbs_cNamePlc, "pwrp_exe:", cdh_Low(cp->nodename), cp->busid, cp->node.plcVersion);
@@ -1116,7 +1116,7 @@ ini_ReadBootFile (
       }
 #if 0
   char			tempname[256];
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
      /* The path should be defined by the PATH variable
       * We want short path names because LYNX's ps command only
       * displays the first 31 characters of the file name.
@@ -1871,7 +1871,7 @@ ini_ProcInsert (
   if (file != NULL && file[0] != '\0' && strcmp(file, "\"\"")) {
     if (pp->proc.file != NULL) free(pp->proc.file);
       pp->proc.file = strsav(file);
-#if defined(OS_LINUX) || defined(OS_MACOS)
+#if defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
       s = getenv("pwr_exe");
       sprintf(buf, "%s/%s", s, file);
       ret = stat(buf, &f_stat);
@@ -2049,7 +2049,7 @@ ini_ProcTable (
   pp = ini_ProcInsert(sts, cp, "pwr_fast", "pwr_fast_%d", 0, 1, "rt_fast", cPrio_fast, 0, "");
   pp->proc.flags.b.system = 1;
 
-#if defined OS_LINUX || defined OS_MACOS
+#if defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
   pp = ini_ProcInsert(sts, cp, "pwr_remh", "pwr_remh_%d", 0, 1, "rs_remotehandler", cPrio_remh, 0, "");
   pp->proc.flags.b.system = 1;
 
@@ -2216,7 +2216,7 @@ ini_ProcWait (
 
   pwr_dStatus(sts, status, INI__SUCCESS);
 
-#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#if defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
   for (;;) {
     int status;
 

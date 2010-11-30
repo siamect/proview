@@ -47,9 +47,27 @@ export pwre_env_db=$root/pwre_db
 source $pwre_bin/pwre_function
 
 # Add pwre environment
+unamestr=`eval uname`
+machine=`eval uname -m`
+if [ $machine == "amd64" ]; then
+  machine="x86_64"
+fi
+if [ $machine != "x86_64" ]; then
+  machine="x86"
+fi
+
+if [ $unamestr == "Darwin" ]; then
+  os="macos"
+  hw="x86_64"
+elif [ $unamestr == "FreeBSD" ]; then
+  os="freebsd"
+  hw=$machine
+else
+  os="linux"  
+  hw=$machine
+fi
+
 btype="dbg"
-os="linux"
-hw="x86"
 ename=$ver$hw
 desc=$verl
 
@@ -58,6 +76,7 @@ pwre add $ename $root/src \"\" $root/rls $btype $os $hw "$desc"
 pwre init $ename
 
 # Build
+pwre configure
 pwre create_all_modules
 pwre build_all_modules
 

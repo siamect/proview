@@ -281,7 +281,7 @@ void io_card_read(
 
             case pwr_eDataRepEnum_UInt16:
 	      memcpy(&udata16, input_area + cp->offset + chanp->offset, 2);
-	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) data16 = swap16(udata16);
+	      if (byte_order == pwr_eByteOrderingEnum_BigEndian) udata16 = swap16(udata16);
 	      f_raw = (float) udata16;
 	      sig_ai->RawValue = udata16;
 	      break;

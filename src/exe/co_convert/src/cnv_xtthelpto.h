@@ -47,7 +47,7 @@ class CnvXtthelpTo {
 			const char *text2, const char *text3, const char *link, 
 			const char *link_bookmark, const char *file_name,
 			navh_eHelpFile file_type, int help_index, 
-			const char *bookmark) 
+			const char *bookmark, int coding) 
     { return 0;}
   virtual bool confpass() { return false;}
   virtual void set_confpass( bool conf) {};

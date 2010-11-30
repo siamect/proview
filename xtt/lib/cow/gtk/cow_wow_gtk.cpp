@@ -109,16 +109,14 @@ void CoWowGtk::DisplayQuestion( void *ctx, const char *title, const char *text,
   question_widget = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 						"default-height", 150,
 						"default-width", 400,
-						"title", title,
+						"title", translate_utf8(title),
 						"window-position", GTK_WIN_POS_CENTER,
 						NULL);
   cbdata->question_widget = question_widget;
   g_signal_connect( question_widget, "delete_event", G_CALLBACK(question_delete_event), cbdata);
 
 
-  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
-  question_label = gtk_label_new(textutf8);
-  g_free( textutf8);
+  question_label = gtk_label_new( translate_utf8( text));
 
   GtkWidget *question_image = (GtkWidget *)g_object_new( GTK_TYPE_IMAGE, 
 				"stock", GTK_STOCK_DIALOG_QUESTION,
@@ -484,12 +482,16 @@ int CoWowGtk::DisplayWarranty()
   text[i] = 0;
   fclose( fp);
 
-  gchar *s = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
-  if ( s) {
-    strncpy( text, s, sizeof(text));
-    g_free(s);
+  if ( strncmp( text, "Coding:UTF-8", 12) == 0)
+    cdh_Strcpy( text, &text[13]);
+  else {
+    gchar *s = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+    if ( s) {
+      strncpy( text, s, sizeof(text));
+      g_free(s);
+    }
   }
-
+    
   strcpy( title, translate_utf8("Accept License Terms"));
 
   char show_license_str[200];
@@ -562,10 +564,14 @@ void CoWowGtk::DisplayLicense()
   fclose( fp);
   text[i] = 0;
 
-  gchar *s = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
-  if ( s) {
-    strncpy( text, s, sizeof(text));
-    g_free( s);
+  if ( strncmp( text, "Coding:UTF-8", 12) == 0)
+    cdh_Strcpy( text, &text[13]);
+  else {
+    gchar *s = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+    if ( s) {
+      strncpy( text, s, sizeof(text));
+      g_free( s);
+    }
   }
   
   GtkDialog *dialog = (GtkDialog *)gtk_dialog_new_with_buttons( title, GTK_WINDOW(m_parent),
@@ -938,13 +944,17 @@ char *CoWowGtk::translate_utf8( const char *str)
   static char result[400];
   gchar *s;
 
-  s = g_convert( Lng::translate( str), -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
-  if ( s) {
-    strncpy( result, s, sizeof(result));
-    g_free( s);
+  if ( Lng::translatefile_coding() == lng_eCoding_UTF_8)
+    strncpy( result, Lng::translate( str), sizeof(result));
+  else {
+    s = g_convert( Lng::translate( str), -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+    if ( s) {
+      strncpy( result, s, sizeof(result));
+      g_free( s);
+    }
+    else 
+      strcpy( result, "");
   }
-  else 
-    strcpy( result, "");
   return result;
 }
 
@@ -953,13 +963,17 @@ char *CoWowGtk::convert_utf8( const char *str)
   static char result[400];
   gchar *s;
 
-  s = g_convert( str, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
-  if ( s) {
-    strncpy( result, s, sizeof(result));
-    g_free( s);
+  if ( Lng::translatefile_coding() == lng_eCoding_UTF_8)
+    strncpy( result, str, sizeof(result));
+  else {
+    s = g_convert( str, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+    if ( s) {
+      strncpy( result, s, sizeof(result));
+      g_free( s);
+    }
+    else 
+      strcpy( result, "");
   }
-  else 
-    strcpy( result, "");
   return result;
 }
 

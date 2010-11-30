@@ -19,8 +19,11 @@
 
 /* profinet_viewer.cpp -- Profinet viewer */
 
+#ifdef PWRE_CONF_PNAK
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <locale.h>
 
 #include "pwr.h"
 
@@ -57,6 +60,9 @@ int main( int argc, char *argv[])
   ctx = (tViewer *)calloc( 1, sizeof(tViewer));
   
   gtk_init( &argc, &argv);
+
+  setlocale( LC_NUMERIC, "POSIX");
+  setlocale( LC_TIME, "en_US");
 
   ctx->toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW,
 					      "default-height", 100,
@@ -105,3 +111,12 @@ int main( int argc, char *argv[])
   gtk_main();
   return (0);
 }
+
+#else
+#include <stdio.h>
+
+int main() 
+{
+  printf( "Softing PNAK not built with this Proview release\n");
+}
+#endif

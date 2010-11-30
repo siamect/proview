@@ -1,8 +1,0 @@
-!  pwr_version.opt -- <short description>
-!
-!  PROVIEW/R
-!  Copyright (C) 1996 by Comator Process AB.
-!
-!  <Description>.
-pwr_obj:pwr_version.obj
-sys$share:decc$shr/share

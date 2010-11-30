@@ -23,7 +23,7 @@
    Last modification: 030217
 */
 
-#if defined OS_LINUX || defined OS_MACOS
+#if defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 
 using namespace std;
 
@@ -238,12 +238,12 @@ HistGtk::HistGtk( void *hist_parent_ctx,
   gtk_widget_set_size_request( sea_time_start_label, 120, -1);
   gtk_misc_set_alignment( GTK_MISC(sea_time_start_label), 0.0, 0.5);
   start_time_entry_w = gtk_entry_new();
-  gtk_widget_set_size_request( start_time_entry_w, 140, -1);
+  gtk_widget_set_size_request( start_time_entry_w, 160, -1);
 
   GtkWidget *sea_time_stop_label = gtk_label_new( CoWowGtk::translate_utf8("Stop time"));
   gtk_widget_set_size_request( sea_time_stop_label, 120, -1);
   stop_time_entry_w = gtk_entry_new();
-  gtk_widget_set_size_request( start_time_entry_w, 140, -1);
+  gtk_widget_set_size_request( stop_time_entry_w, 160, -1);
 
   // Time option menu
   GtkWidget *sea_time_all = gtk_menu_item_new_with_label( CoWowGtk::translate_utf8("All    "));
@@ -262,10 +262,10 @@ HistGtk::HistGtk( void *hist_parent_ctx,
   g_signal_connect( sea_time_lastw, "activate", G_CALLBACK( lastw_cb), this);
 
   GtkWidget *sea_time_thism = gtk_menu_item_new_with_label( CoWowGtk::translate_utf8("This Month"));
-  g_signal_connect( sea_time_thism, "activate", G_CALLBACK( thisw_cb), this);
+  g_signal_connect( sea_time_thism, "activate", G_CALLBACK( thism_cb), this);
 
   GtkWidget *sea_time_lastm = gtk_menu_item_new_with_label( CoWowGtk::translate_utf8("Last Month"));
-  g_signal_connect( sea_time_lastm, "activate", G_CALLBACK( lastw_cb), this);
+  g_signal_connect( sea_time_lastm, "activate", G_CALLBACK( lastm_cb), this);
 
   GtkWidget *sea_time_time = gtk_menu_item_new_with_label( CoWowGtk::translate_utf8("Time"));
   g_signal_connect( sea_time_time, "activate", G_CALLBACK( time_cb), this);
@@ -423,25 +423,8 @@ HistGtk::HistGtk( void *hist_parent_ctx,
   pwr_tStatus sts;
   pwr_tOName name_str;
   gint pos = 0;
-  char buf[80];
-  pwr_tTime StopTime;
-  pwr_tTime StartTime;
 
-  strcpy( buf, "1970-05-05 00:00:00");
-  gtk_editable_insert_text( GTK_EDITABLE(start_time_entry_w), buf, 
-			    strlen(buf), &pos);
-  gtk_widget_set_sensitive( start_time_entry_w, FALSE);
-
-  sts = time_GetTime( &StopTime);
-  sts = AdjustForDayBreak( this, &StopTime, &StartTime);
-
-  StopTime = StartTime;
-  StopTime.tv_sec += ONEDAY;
-  
-  time_AtoFormAscii(&StopTime, SWE, SECOND, buf, sizeof(buf));
-  gtk_editable_insert_text( GTK_EDITABLE(stop_time_entry_w), buf, 
-			    strlen(buf), &pos);
-  gtk_widget_set_sensitive( stop_time_entry_w, FALSE);
+  ((Hist *)this)->all_cb();
 
   // If objid is applied, search for this object
   pos = 0;

@@ -20,25 +20,35 @@
 
 using namespace std;
 
+
 #include <deque>
 #include <string>
 #include <string.h>
 #include <stdio.h>
 #include "jpwr_rt_hist.h"
+#ifdef PWRE_CONF_LIBDB_CXX
 #include <db.h>
+#endif
 
 extern "C" {
 #include "pwr.h"
 #include "rt_mh.h"
 #include "rt_mh_util.h"
+#include "rt_mh_net.h"
+#ifdef PWRE_CONF_LIBDB_CXX
 #include "rt_elog.h"
+#else
+  typedef struct {} sEvent;
+#endif
 #include "rt_gdh.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_time.h"
 #include "co_cdh_msg.h"
 #include "rt_gdh_msg.h"
+#ifdef PWRE_CONF_LIBDB_CXX
 static void gdh_ConvertUTFstring( char *out, char *in);
+#endif
 }
 jobject convertAckToMhrEvent( mh_sAck *MsgP);
 jobject convertReturnToMhrEvent( mh_sReturn *MsgP);
@@ -107,6 +117,7 @@ JNIEXPORT void JNICALL Java_jpwr_rt_Hist_initHistIDs
 JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Hist_getHistList
   (JNIEnv *env, jclass obj, jstring jstartTime, jstring jstopTime, jboolean jtypeAlarm, jboolean jtypeInfo, jboolean jtypeReturn, jboolean jtypeAck, jboolean jprioA, jboolean jprioB, jboolean jprioC, jboolean jprioD, jstring jname, jstring jtext)
 {
+#ifdef PWRE_CONF_LIBDB_CXX
   const char *str;
   char *cstr_minTime;
   char *cstr_maxTime;
@@ -303,7 +314,12 @@ err:
   env->ReleaseStringUTFChars( jname, cstr_eventName );
   env->ReleaseStringUTFChars( jtext, cstr_eventText );
   return jobjectArr;
+#else
+  return 0;
+#endif
 }
+
+#ifdef PWRE_CONF_LIBDB_CXX
 
 int check_conditions(sEvent *evp, HistQuery *query)
 {
@@ -505,10 +521,11 @@ int compareStr(char *ev, char *usr)
   }
   return sts;
 }
-
+#endif
 
 jobject convertAlarmOrInfoToMhrEvent( mh_sMessage *MsgP)
 {
+#ifdef PWRE_CONF_LIBDB_CXX
   JNIEnv *env;
   jclass PwrtObjid_id;
   jmethodID PwrtObjid_cid;
@@ -591,11 +608,15 @@ jobject convertAlarmOrInfoToMhrEvent( mh_sMessage *MsgP)
   }
   
   return return_obj;
+#else
+  return 0;
+#endif
 }
 
 
 jobject convertReturnToMhrEvent( mh_sReturn *MsgP)
 {
+#ifdef PWRE_CONF_LIBDB_CXX
   JNIEnv *env;
   jclass PwrtObjid_id;
   jmethodID PwrtObjid_cid;
@@ -684,10 +705,14 @@ jobject convertReturnToMhrEvent( mh_sReturn *MsgP)
   }
   
   return return_obj;
+#else
+  return 0;
+#endif
 }
 
 jobject convertAckToMhrEvent( mh_sAck *MsgP)
 {
+#ifdef PWRE_CONF_LIBDB_CXX
   JNIEnv *env;
   jclass PwrtObjid_id;
   jmethodID PwrtObjid_cid;
@@ -777,8 +802,12 @@ jobject convertAckToMhrEvent( mh_sAck *MsgP)
   }
   
   return return_obj;
+#else
+  return 0;
+#endif
 }
 
+#ifdef PWRE_CONF_LIBDB_CXX
 static void gdh_ConvertUTFstring( char *out, char *in)
 {
   char *s, *t;
@@ -829,6 +858,6 @@ static void gdh_ConvertUTFstring( char *out, char *in)
   }
   *t = 0;
 }
-
+#endif
 
 

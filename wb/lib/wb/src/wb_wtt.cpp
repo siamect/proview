@@ -951,7 +951,7 @@ void Wtt::activate_print()
   dcli_translate_filename( filename, filename);
   focused_wnav->print( filename);
 
-#if defined OS_LINUX || defined OS_MACOS
+#if defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
   sprintf( cmd, "wb_gre_print.sh %s", filename); 
   sts = system( cmd);
 #endif

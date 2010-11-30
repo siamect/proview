@@ -1,3 +1,4 @@
+#if OS_LINUX
 Rack_SSAB
 Ssab_AiuP
 Ssab_AouP
@@ -15,3 +16,4 @@ Ai_HVAI32
 Ai_AI32uP
 Co_PI24BO
 Co_CO4uP
+#endif

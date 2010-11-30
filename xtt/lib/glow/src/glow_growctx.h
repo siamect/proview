@@ -82,7 +82,7 @@ class GrowCtx : public GlowCtx {
         mb3_action(glow_eMB3Action_Close), scale_equal(0), translate_on(0),
         input_focus_mark(glow_eInputFocusMark_Relief), background_disabled(0),
         redraw_callback(0), redraw_data(0), has_subwindows(-1), bitmap_fonts(0),
-        environment(glow_eEnv_Runtime)
+        environment(glow_eEnv_Runtime), text_coding(glow_eTextCoding_ISO8859_1)
 	{ ctx_type = glow_eCtxType_Grow;
 	  strcpy( name, "");
 	  strcpy( java_name, ""); 
@@ -835,6 +835,7 @@ class GrowCtx : public GlowCtx {
 		       double *ur_x, double *ur_y);
 
   void pop( GlowArrayElem *element) { a.pop( element);}
+  void set_text_coding( glow_eTextCoding coding) { text_coding = coding;}
 
   static int get_dimension( char *filename, int *width, int *heigth);
 
@@ -918,6 +919,7 @@ class GrowCtx : public GlowCtx {
   char		owner[256];		//!< Owner, used by application
   int		bitmap_fonts;		//!< Use bitmap fonts
   glow_eEnv	environment;		//!< Environment Development or Runtime.
+  glow_eTextCoding text_coding;		//!< Text coding
 };
 
 void grow_auto_scrolling( GrowCtx *ctx);

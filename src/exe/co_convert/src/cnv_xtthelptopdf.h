@@ -59,7 +59,7 @@ class CnvXtthelpToPdf : public CnvXtthelpTo {
 		const char *text2, const char *text3, const char *link, 
 		const char *link_bookmark, const char *file_name,
 		navh_eHelpFile file_type, int help_index, 
-		const char *bookmark);
+		const char *bookmark, int coding);
   void subject_to_fname( char *fname, const char *subject, int path);
   bool confpass() { return true;}
   void set_confpass( bool conf) { 

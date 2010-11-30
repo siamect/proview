@@ -19,6 +19,8 @@
 
 /* pn_viewernav.cpp -- Profinet viewer */
 
+#ifdef PWRE_CONF_PNAK
+
 #include "glow_std.h"
 
 #include <iostream>
@@ -913,3 +915,4 @@ ItemDeviceAttr::ItemDeviceAttr( PnViewerNav *viewernav, const char *item_name, p
     brow_SetAnnotPixmap( node, 1, viewernav->brow->pixmap_edit);  
 }
 
+#endif

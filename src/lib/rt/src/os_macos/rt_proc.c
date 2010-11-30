@@ -17,8 +17,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#if !defined(OS_LYNX) && !defined(OS_LINUX) && !defined(OS_MACOS)
-# error "This file is valid only for OS_LYNX and OS_LINUX and OS_MACOS"
+#if !defined(OS_LYNX) && !defined(OS_LINUX) && !defined(OS_MACOS) && !defined OS_FREEBSD
+# error "This file is valid only for OS_LYNX, OS_LINUX, OS_MACOS and OS_FREEBSD"
 #endif
 
 #include <string.h>

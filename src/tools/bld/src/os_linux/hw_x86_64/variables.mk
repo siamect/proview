@@ -93,34 +93,36 @@ rs_msg_eobjs 	:= $(eobj_dir)/pwr_msg_rs.o
 wb_msg_eobjs 	:= $(eobj_dir)/pwr_msg_wb.o $(eobj_dir)/pwr_msg_ge.o $(eobj_dir)/pwr_msg_flow.o
 
 # Configuration
-ifeq ($(pwre_conf_mysql),1)
-  cmysql        := -DPWRE_CONF_MYSQL=1
-  linkmysql     := -L/usr/lib/mysql -lmysqlclient
-else
-  cmysql        :=
-  linkmysql     :=
-endif
+#ifeq ($(pwre_conf_mysql),1)
+#  cmysql        := -DPWRE_CONF_MYSQL=1
+#  linkmysql     := -L/usr/lib/mysql -lmysqlclient
+#else
+#  cmysql        :=
+#  linkmysql     :=
+#endif
 
-ifeq ($(pwre_conf_gtk),1)
-  cgtk        := -DPWRE_CONF_GTK=1
-  linkgtk     := `pkg-config --libs gtk+-2.0`
-else
-  cgtk        :=
-  linkgtk     :=
-endif
+#ifeq ($(pwre_conf_gtk),1)
+#  cgtk        := -DPWRE_CONF_GTK=1
+#  linkgtk     := `pkg-config --libs gtk+-2.0`
+#else
+#  cgtk        :=
+#  linkgtk     :=
+#endif
 
-ifeq ($(pwre_conf_libusb),1)
-  clibusb        := -DPWRE_CONF_LIBUSB=1
-  linklibusb     := -lusb-1.0
-else
-  clibusb        :=
-  linklibusb     :=
-endif
+#ifeq ($(pwre_conf_libusb),1)
+#  clibusb        := -DPWRE_CONF_LIBUSB=1
+#  linklibusb     := -lusb-1.0
+#else
+#  clibusb        :=
+#  linklibusb     :=
+#endif
 
 log_done	=
-csetos		:= -DOS_LINUX=1 -DOS=linux -D_LINUX -DHW_X86_64=1 -DHW=x86_64
-cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) -I/usr/X11R6/include -I$(jdk)/include -I$(jdk)/include/linux \
+#csetos		:= -DOS_LINUX=1 -DOS=linux -D_LINUX -DHW_X86=1 -DHW=x86
+#cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) -I/usr/X11R6/include -I$(jdk)/include -I$(jdk)/include/linux \
 `pkg-config --cflags gtk+-2.0` -DPREFIX=\"/usr/local\" -DSYSCONFDIR=\"/etc\" -DDATADIR=\"/usr/share\" -DLIBDIR=\"/usr/lib\" $(cmysql) $(cgtk) $(clibusb)
+csetos 		:= $(pwre_conf_cc_define)
+cinc 		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirgtk)
 rm		:= rm
 cp		:= cp
 cpflags		:= 
@@ -158,26 +160,27 @@ else
   tools_msg2cmsg  := $(eexe_dir)/tools_msg2cmsg
   tools_cmsg2c    := $(eexe_dir)/tools_cmsg2c
   tools_pdrgen    := $(eexe_dir)/tools_pdrgen
-  wb_rtt          := $(eexe_dir)/wb_rtt
+  wb_rtt          := $(exe_dir)/wb_rtt
   co_convert      := $(eexe_dir)/co_convert
   co_merge        := $(eexe_dir)/co_merge
 endif
 
+
 #docbook-related, added by jonas_h 2006-04-nn
 
-xsltproc := xsltproc
-fop := fop 
+#xsltproc := xsltproc
+#fop := fop 
 #above is a symlink from /usr/local/bin/fop -> /usr/local/fop-0.92beta/fop
 
-xsltproc_args := --xinclude
-chunk_args_en_us = --stringparam root.filename $(basename $(notdir $(target))) --stringparam base.dir $(doc_dir)/en_us/
-chunk_args_sv_se = --stringparam root.filename $(basename $(notdir $(target))) --stringparam base.dir $(doc_dir)/sv_se/
+#xsltproc_args := --xinclude
+#chunk_args_en_us = --stringparam root.filename $(basename $(notdir $(target))) --stringparam base.dir $(doc_dir)/en_us/
+#chunk_args_sv_se = --stringparam root.filename $(basename $(notdir $(target))) --stringparam base.dir $(doc_dir)/sv_se/
 
-pwr_stylesheetdir = $(pwre_sroot)/doc/man/src
-docbook_stylesheetdir = /usr/local/share/xml/docbook/stylesheet/snapshot
-html_xsl = $(pwr_stylesheetdir)/pwrxsl-html.xsl
-chunk_xsl = $(pwr_stylesheetdir)/pwrxsl-chunk.xsl
-fo_xsl = $(pwr_stylesheetdir)/pwrxsl-fo.xsl
+#pwr_stylesheetdir = $(pwre_sroot)/doc/man/src
+#docbook_stylesheetdir = /usr/local/share/xml/docbook/stylesheet/snapshot
+#html_xsl = $(pwr_stylesheetdir)/pwrxsl-html.xsl
+#chunk_xsl = $(pwr_stylesheetdir)/pwrxsl-chunk.xsl
+#fo_xsl = $(pwr_stylesheetdir)/pwrxsl-fo.xsl
 
 #end of
 
@@ -192,9 +195,9 @@ wblflags	:=
 ifeq ($(pwre_btype),rls)			 
   cflags	:= -c -O3 -D_GNU_SOURCE -DPWR_NDEBUG -D_REENTRANT -fPIC
   cxxflags	:= $(cflags) 
-  linkflags	:= -O3 -L/usr/local/lib -L$(lib_dir) -lm -lrt
-  elinkflags	:= -O3 -L/usr/local/lib -L$(lib_dir) -L$(elib_dir) -lm -lrt
-  explinkflags	:= -g -L/usr/local/lib -L$(elib_dir) -lrt
+  linkflags	:= -O3 -L$(lib_dir)
+  elinkflags	:= -O3 -L$(lib_dir) -L$(elib_dir)
+  explinkflags	:= -g -L$(elib_dir)
   clis		= /lis=$(list)
   dolist	= /lis=$(list)
   domap		= -Xlinker -Map -Xlinker $(map)
@@ -202,9 +205,9 @@ else
   cflags	:= -c -g -Wall -D_GNU_SOURCE -D_REENTRANT -fPIC
   cxxflags	:= $(cflags) -Wno-deprecated
   mmflags	:= -Wno-deprecated
-  linkflags	:= -g -L/usr/local/lib -L$(lib_dir) -lrt
-  elinkflags	:= -g -L/usr/local/lib -L$(lib_dir) -L$(elib_dir) -lrt
-  explinkflags	:= -g -L/usr/local/lib -L$(elib_dir) -lrt
+  linkflags	:= -g -L$(lib_dir)
+  elinkflags	:= -g -L$(lib_dir) -L$(elib_dir)
+  explinkflags	:= -g -L$(elib_dir)
   dolist	= /lis=$(list)
   clis		:= 
   domap		= -Xlinker -Map -Xlinker $(map)

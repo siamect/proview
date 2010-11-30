@@ -1,8 +1,0 @@
-!  rt_plc_wb.opt -- <short description>
-!
-!  PROVIEW/R
-!  Copyright (C) 1996 by Comator Process AB.
-!
-! Used by workbench when linking ELN PLC programs.
-!
-pwrb_root:<os_eln.hw_vax.exp.obj>rt_io_user.obj

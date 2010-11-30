@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+#include <locale.h>
 
 #include "pwr.h"
 
@@ -90,6 +91,10 @@ int wb_utl_gtk::create_mainwindow( int argc, char **argv)
   if ( !gtk_initialized) {
     gtk_init( &argc, &argv);
     gtk_initialized = 1;
+
+    setlocale( LC_ALL, "en_US");
+    setlocale( LC_NUMERIC, "POSIX");
+    setlocale( LC_TIME, "en_US");
   }
 
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW,

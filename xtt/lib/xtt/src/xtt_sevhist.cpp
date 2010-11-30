@@ -54,8 +54,15 @@ XttSevHist::XttSevHist( void *parent_ctx,
 			sevcli_tCtx xn_scctx,
 			int *sts) :
   xnav(parent_ctx), gcd(0), curve(0), rows(0), vsize(0), timerid(0), close_cb(0), help_cb(0), 
-  first_scan(1), scctx(xn_scctx), time_low_old(0), time_high_old(0)
+  get_select_cb(0), first_scan(1), scctx(xn_scctx), time_low_old(0), time_high_old(0)
 {
+  pwr_tTime from, to;
+
+  if ( xn_oidv == 0 || xn_oidv[0].vid == 0) {
+    oid_cnt = 0;
+    gcd = new GeCurveData( curve_eDataType_DsTrend);
+    return;
+  }
 
   // Count number of curves
   for ( oid_cnt = 0; xn_oidv[oid_cnt].vid != 0; oid_cnt++) ;
@@ -68,12 +75,13 @@ XttSevHist::XttSevHist( void *parent_ctx,
   memcpy( onamev, xn_onamev, oid_cnt * sizeof(onamev[0]));
   memcpy( sevhistobjectv, xn_sevhistobjectv, oid_cnt * sizeof(sevhistobjectv[0]));
 
+  time_Period( time_ePeriod_OneHour, &from, &to, 0, 0);
   if ( oid_cnt == 1) {
-    get_data( sts, pwr_cNTime, pwr_cNTime);
+    get_data( sts, from, to);
     if ( EVEN(*sts)) return;
   }
   else {
-    get_multidata( sts, pwr_cNTime, pwr_cNTime);
+    get_multidata( sts, from, to);
     if ( EVEN(*sts)) return;
   }
   cdh_StrncpyCutOff( title, name, sizeof(title), 1);
@@ -586,6 +594,52 @@ int XttSevHist::get_multidata( pwr_tStatus *sts, pwr_tTime from, pwr_tTime to)
   return 1;
 }
 
+void XttSevHist::curve_add( pwr_tOid oid, pwr_tOName aname, pwr_tOName oname,
+			    bool sevhistobject)
+{
+  if ( oid_cnt == XTT_SEVHIST_MAX)
+    return;
+
+  if ( gcd->type != curve_eDataType_MultiTrend) {
+    // Convert to multidata
+
+    for ( int i = 1; i < gcd->cols; i++) {
+      gcd->rows[i] = gcd->rows[0];
+      gcd->x_data[i] = (double *) calloc( 1, 8 * gcd->rows[i]);
+      memcpy( gcd->x_data[i], gcd->x_data[0], 8 * gcd->rows[i]);
+
+      gcd->x_axis_type[i] = curve_eAxis_x;
+      strcpy( gcd->x_format[i], "%10t");
+
+    }
+    gcd->type = curve_eDataType_MultiTrend;
+  }
+  
+  oidv[oid_cnt] = oid;
+  strncpy( anamev[oid_cnt], aname, sizeof(anamev[0]));
+  strncpy( onamev[oid_cnt], oname, sizeof(onamev[0]));
+  oid_cnt++;
+
+  int curve_cnt = gcd->cols;
+  rows = 0;
+
+  gcd->x_data[curve_cnt] = (double *) calloc( 1, 8 * rows);
+  
+  gcd->x_axis_type[curve_cnt] = curve_eAxis_x;
+  strcpy( gcd->x_format[curve_cnt], "%10t");
+
+  strcpy( gcd->y_name[curve_cnt], oname);
+  if ( strcmp( oname, "") != 0)
+    strcat( gcd->y_name[curve_cnt], ".");
+  strcat( gcd->y_name[curve_cnt], aname);
+  gcd->y_data[curve_cnt] = (double *) calloc( 1, 8 * rows);
+  
+  gcd->cols++;
+
+  gcd->select_color( 0);
+  curve->config_names();
+}
+
 
 void XttSevHist::pop()
 {
@@ -602,29 +656,55 @@ void XttSevHist::sevhist_close_cb( void *ctx)
     delete sevhist;
 }
 
-void XttSevHist::sevhist_higher_res_cb( void *ctx)
+void XttSevHist::sevhist_decrease_period_cb( void *ctx)
 {
   XttSevHist *sevhist = (XttSevHist *) ctx;
-  double ll_x, ll_y, ur_x, ur_y;
+  time_ePeriod period;
+  pwr_tStatus sts;
+  int changed;
+
+  sts = sevhist->curve->get_period( &period);
+
+  changed = time_PeriodZoomIn( &period);
+  if ( changed)
+    sevhist->curve->set_period( period, 0);
+
+}
+
+void XttSevHist::sevhist_increase_period_cb( void *ctx)
+{
+  XttSevHist *sevhist = (XttSevHist *) ctx;
+  time_ePeriod period;
+  pwr_tStatus sts;
+  int changed;
+
+  sts = sevhist->curve->get_period( &period);
+
+  changed = time_PeriodZoomOut( &period);
+  if ( changed)
+    sevhist->curve->set_period( period, 0);
+
+}
+
+void XttSevHist::sevhist_reload_cb( void *ctx)
+{
+  XttSevHist *sevhist = (XttSevHist *) ctx;
   pwr_tTime t_low, t_high;
   pwr_tStatus sts;
 
-  sevhist->curve->measure_window( &ll_x, &ll_y, &ur_x, &ur_y);
-
-  t_low.tv_sec = int( sevhist->gcd->x_min_value_axis[0] + 
-		      ll_x / 200 * (sevhist->gcd->x_max_value_axis[0] - sevhist->gcd->x_min_value_axis[0]));
-  t_low.tv_nsec = 0;
-  t_high.tv_sec = int( sevhist->gcd->x_min_value_axis[0] +
-		       ur_x / 200 * (sevhist->gcd->x_max_value_axis[0] - sevhist->gcd->x_min_value_axis[0]));
-  t_high.tv_nsec = 0;
-
-  {
-    char s1[40], s2[40];
-    time_AtoAscii( &t_low, time_eFormat_NumDateAndTime, s1, sizeof(s1));
-    time_AtoAscii( &t_high, time_eFormat_NumDateAndTime, s2, sizeof(s2));
-
-    printf( "Low: %s, High: %s\n", s1, s2);
+  sts = sevhist->curve->get_times( &t_low, &t_high);
+  if ( EVEN(sts)) {
+    sevhist->wow->DisplayError( "Time", "Time syntax error");
+    return;
   }
+
+  if ( time_Acomp( &t_high, &t_low) != 1) {
+    sevhist->wow->DisplayError( "Time", "Start time later than end time");
+    return;
+  }
+
+  if ( t_low.tv_sec < 0)
+    t_low.tv_sec = 0;
 
   if ( sevhist->oid_cnt == 1)
     sevhist->get_data( &sts, t_low, t_high);
@@ -633,46 +713,118 @@ void XttSevHist::sevhist_higher_res_cb( void *ctx)
 
   sevhist->time_low_old = 0;
   sevhist->time_high_old = 0;
+  sevhist->curve->set_center_from_window( 1);
 }
 
-void XttSevHist::sevhist_lower_res_cb( void *ctx)
+void XttSevHist::sevhist_prev_period_cb( void *ctx)
 {
   XttSevHist *sevhist = (XttSevHist *) ctx;
-  double ll_x, ll_y, ur_x, ur_y;
-  pwr_tTime t_low, t_high;
+  pwr_tTime from, to, prev_from, prev_to;
   pwr_tStatus sts;
+  time_ePeriod period;
 
-  sevhist->curve->measure_window( &ll_x, &ll_y, &ur_x, &ur_y);
-
-  t_low.tv_sec = int( sevhist->gcd->x_min_value_axis[0] -  
-		      5 * (sevhist->gcd->x_max_value_axis[0] - sevhist->gcd->x_min_value_axis[0]));
-  t_low.tv_nsec = 0;
-  t_high.tv_sec = int( sevhist->gcd->x_max_value_axis[0] +
-		      5 * (sevhist->gcd->x_max_value_axis[0] - sevhist->gcd->x_min_value_axis[0]));
-  t_high.tv_nsec = 0;
-
-  if ( t_low.tv_sec == sevhist->time_low_old && t_high.tv_sec == sevhist->time_high_old) {
-    t_low.tv_sec = int( sevhist->gcd->x_min_value_axis[0] -  
-		      25 * (sevhist->gcd->x_max_value_axis[0] - sevhist->gcd->x_min_value_axis[0]));
-    t_high.tv_sec = int( sevhist->gcd->x_max_value_axis[0] +
-		      25 * (sevhist->gcd->x_max_value_axis[0] - sevhist->gcd->x_min_value_axis[0]));
+  sts = sevhist->curve->get_times( &prev_from, &prev_to);
+  if ( EVEN(sts)) {
+    sevhist->wow->DisplayError( "Time", "Time syntax error");
+    return;
   }
 
-  {
-    char s1[40], s2[40];
-    time_AtoAscii( &t_low, time_eFormat_NumDateAndTime, s1, sizeof(s1));
-    time_AtoAscii( &t_high, time_eFormat_NumDateAndTime, s2, sizeof(s2));
+  sts = sevhist->curve->get_period( &period);
 
-    printf( "Low: %s, High: %s\n", s1, s2);
+  if ( time_Acomp( &prev_to, &prev_from) != 1) {
+    sevhist->wow->DisplayError( "Time", "Start time later than end time");
+    return;
   }
 
-  if ( sevhist->oid_cnt == 1)
-    sevhist->get_data( &sts, t_low, t_high);
-  else
-    sevhist->get_multidata( &sts, t_low, t_high);
+  time_PreviousPeriod( period, &prev_from, &prev_to, &from, &to);
 
-  sevhist->time_low_old = t_low.tv_sec;
-  sevhist->time_high_old = t_high.tv_sec;
+  sevhist->curve->set_times( &from, &to);
+
+  int change_period = 1;
+  switch( period) {
+  case time_ePeriod_LastMinute:
+    period = time_ePeriod_OneMinute;
+    break;
+  case time_ePeriod_Last10Minutes:
+    period = time_ePeriod_10Minutes;
+    break;
+  case time_ePeriod_LastHour:
+    period = time_ePeriod_OneHour;
+    break;
+  case time_ePeriod_Today:
+    period = time_ePeriod_Yesterday;
+    break;
+  case time_ePeriod_Yesterday:
+    period = time_ePeriod_OneDay;
+    break;
+  case time_ePeriod_ThisWeek:
+    period = time_ePeriod_LastWeek;
+    break;
+  case time_ePeriod_LastWeek:
+    period = time_ePeriod_OneWeek;
+    break;
+  case time_ePeriod_ThisMonth:
+    period = time_ePeriod_LastMonth;
+    break;
+  case time_ePeriod_LastMonth:
+    period = time_ePeriod_OneMonth;
+    break;
+  case time_ePeriod_ThisYear:
+    period = time_ePeriod_OneYear;
+    break;
+  default:
+    change_period = 0;
+  }
+  if ( change_period)
+    sevhist->curve->set_period( period, 1);
+    
+}
+
+void XttSevHist::sevhist_next_period_cb( void *ctx)
+{
+  XttSevHist *sevhist = (XttSevHist *) ctx;
+  pwr_tTime from, to, prev_from, prev_to;
+  pwr_tStatus sts;
+  time_ePeriod period;
+
+  sts = sevhist->curve->get_times( &prev_from, &prev_to);
+  if ( EVEN(sts)) {
+    sevhist->wow->DisplayError( "Time", "Time syntax error");
+    return;
+  }
+
+  sts = sevhist->curve->get_period( &period);
+
+  if ( time_Acomp( &prev_to, &prev_from) != 1) {
+    sevhist->wow->DisplayError( "Time", "Start time later than end time");
+    return;
+  }
+ 
+  time_NextPeriod( period, &prev_from, &prev_to, &from, &to);
+
+  sevhist->curve->set_times( &from, &to);
+
+}
+
+void XttSevHist::sevhist_add_cb( void *ctx)
+{
+  XttSevHist *sevhist = (XttSevHist *) ctx;
+  pwr_tOid oid;
+  pwr_tOName aname, oname;
+  int sts;
+
+  if ( !sevhist->get_select_cb)
+    return;
+
+  sts = sevhist->get_select_cb( sevhist->xnav, &oid, aname, oname);
+  if ( EVEN(sts)) return;
+
+  sevhist->curve_add( oid, aname, oname, false);
+}
+
+void XttSevHist::sevhist_remove_cb( void *ctx)
+{
+  // Do do
 }
 
 void XttSevHist::sevhist_help_cb( void *ctx)

@@ -111,6 +111,56 @@ void GeCurve::activate_help()
     (help_cb)( parent_ctx);
 }
 
+void GeCurve::activate_edit()
+{
+  set_times_sensitivity( 1);
+}
+
+void GeCurve::activate_period( time_ePeriod period)
+{
+  pwr_tTime from;
+  pwr_tTime to;
+  pwr_tTime center;
+  double ll_x, ll_y, ur_x, ur_y;
+  int low, high;
+
+  if ( center_from_window) {
+    // Get the center time
+    measure_window( &ll_x, &ll_y, &ur_x, &ur_y);
+
+    low = int( cd->x_min_value_axis[0] + 
+	       ll_x / 200 * (cd->x_max_value_axis[0] - cd->x_min_value_axis[0]));
+    high = int( cd->x_min_value_axis[0] +
+		ur_x / 200 * (cd->x_max_value_axis[0] - cd->x_min_value_axis[0]));
+
+    center_from_window = 0;
+  }
+  else {
+    // Get period from current time intervall
+    pwr_tStatus sts;
+    pwr_tTime t_low, t_high;
+
+    sts = get_times( &t_low, &t_high);
+    if ( EVEN(sts)) {
+      // No previous valid time
+      time_Period( period, &from, &to, 0, 1);
+      set_times_sensitivity( 0);
+      set_times( &from, &to);
+      return;
+    }
+
+    high = t_high.tv_sec;
+    low = t_low.tv_sec;
+  }
+  center.tv_sec = low + (high - low)/2;
+  center.tv_nsec = 0;
+
+  time_Period( period, &from, &to, &center, 1);
+
+  set_times_sensitivity( 0);
+  set_times( &from, &to);
+}
+
 void GeCurve::activate_minmax_ok( double min_value, double max_value)
 {
 
@@ -588,19 +638,11 @@ int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
 {
   GeCurve *curve = (GeCurve *) client_data;
   curve->grownames_ctx = (GrowCtx *) fctx;
-  grow_tObject t1;
   grow_sAttributes grow_attr;
   unsigned long mask;
-  glow_eDrawType color;
-  double x;
-  int date = (strcmp( curve->cd->x_format[0], "%10t") == 0 || 
-	      strcmp( curve->cd->x_format[0], "%11t") == 0) ? 1 : 0;
-  int time_size;
-  if ( date)
-    time_size = 8;
-  else
-    time_size = 3;
-        
+
+  if ( Lng::translatefile_coding() == lng_eCoding_UTF_8)
+    grow_SetTextCoding( (GrowCtx *)curve->grownames_ctx, glow_eTextCoding_UTF_8);
 
   mask = 0;
   // Double buffer is used for print
@@ -621,9 +663,29 @@ int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
   grow_EnableEvent( (GrowCtx *)curve->grownames_ctx, glow_eEvent_HotRequest, 
 	glow_eEventType_CallBack, grownames_cb);
 
+  curve->config_names();
+  return 1;
+}
+
+int GeCurve::config_names()
+{
+  grow_tObject t1;
+  glow_eDrawType color;
+  double x;
+  int date = (strcmp( cd->x_format[0], "%10t") == 0 || 
+	      strcmp( cd->x_format[0], "%11t") == 0) ? 1 : 0;        
+
+  int time_size;
+  if ( date)
+    time_size = 8;
+  else
+    time_size = 3;
+
   // Create nodeclass for mark values
+  grow_New( grownames_ctx);
+
   grow_tNodeClass nc;
-  grow_CreateNodeClass( curve->grownames_ctx, "MarkVal", glow_eNodeGroup_Common, &nc);
+  grow_CreateNodeClass( grownames_ctx, "MarkVal", glow_eNodeGroup_Common, &nc);
   grow_AddRect( nc, "", 0, 0, time_size, 0.75, glow_eDrawType_LineGray, 1, 0,
 		glow_mDisplayLevel_1, 0, 0, 0,
 		glow_eDrawType_Line, NULL);
@@ -633,125 +695,125 @@ int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
 
   // Draw header
   grow_tObject o1;
-  grow_CreateGrowLine( curve->grownames_ctx, "", 0, 0.75, 60, 0.75,
+  grow_CreateGrowLine( grownames_ctx, "", 0, 0.75, 60, 0.75,
 			 glow_eDrawType_Color34, 2, 0, NULL, &o1);
-  grow_CreateGrowRect( curve->grownames_ctx, "", 0, 0, 60, 0.8,
+  grow_CreateGrowRect( grownames_ctx, "", 0, 0, 60, 0.8,
 			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 0, 0, 1,
 			 glow_eDrawType_Color32, NULL, &o1);
   x = 0.8;
-  grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("View"),
+  grow_CreateGrowText( grownames_ctx, "", Lng::translate("View"),
 		       x, 0.6, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &o1);
   x += 1.8;
-  grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Cursor"),
+  grow_CreateGrowText( grownames_ctx, "", Lng::translate("Cursor"),
 		       x, 0.6, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &o1);
   x += time_size + 0.2;
-  grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Mark"),
+  grow_CreateGrowText( grownames_ctx, "", Lng::translate("Mark"),
 		       x, 0.6, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &o1);
   x += time_size + 0.2;
-  grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Unit"),
+  grow_CreateGrowText( grownames_ctx, "", Lng::translate("Unit"),
 		       x, 0.6, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &o1);
   x += 2;
-  grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Scale"),
+  grow_CreateGrowText( grownames_ctx, "", Lng::translate("Scale"),
 		       x, 0.6, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &o1);
   x += 3;
-  grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Attribute"),
+  grow_CreateGrowText( grownames_ctx, "", Lng::translate("Attribute"),
 		       x, 0.6, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &o1);
   
-  for ( int i = 0; i < curve->cd->cols; i++) {
+  for ( int i = 0; i < cd->cols; i++) {
     // Draw shadowed frame
-    grow_CreateGrowRect( curve->grownames_ctx, "", 0, (i+0.8), 60, 1,
+    grow_CreateGrowRect( grownames_ctx, "", 0, (i+0.8), 60, 1,
 			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 0, 0, 1,
 			 glow_eDrawType_Color32, NULL, &o1);
     // Draw color rectangle
-    grow_CreateGrowRect( curve->grownames_ctx, "", 0.25, (i+0.8)+0.3, 0.75, 0.5,
+    grow_CreateGrowRect( grownames_ctx, "", 0.25, (i+0.8)+0.3, 0.75, 0.5,
 			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 1,
-			 curve->cd->color[i], NULL, &curve->name_rect[i]);
+			 cd->color[i], NULL, &name_rect[i]);
 
-    if ( curve->hide[i])
+    if ( hide[i])
       color = glow_eDrawType_LineErase;
     else
       color = glow_eDrawType_Line;
 
     // Draw checkbox for hide
-    grow_CreateGrowLine( curve->grownames_ctx, "", 1.4, (i+0.8)+0.45, 1.52, (i+0.8)+0.75,
-			 color, 2, 0, NULL, &curve->hide_l1[i]);
-    grow_CreateGrowLine( curve->grownames_ctx, "", 1.50, (i+0.8)+0.75, 1.77, (i+0.8)+0.35,
-			 color, 2, 0, NULL, &curve->hide_l2[i]);
-    grow_CreateGrowRect( curve->grownames_ctx, "", 1.3, (i+0.8)+0.3, 0.5, 0.5,
+    grow_CreateGrowLine( grownames_ctx, "", 1.4, (i+0.8)+0.45, 1.52, (i+0.8)+0.75,
+			 color, 2, 0, NULL, &hide_l1[i]);
+    grow_CreateGrowLine( grownames_ctx, "", 1.50, (i+0.8)+0.75, 1.77, (i+0.8)+0.35,
+			 color, 2, 0, NULL, &hide_l2[i]);
+    grow_CreateGrowRect( grownames_ctx, "", 1.3, (i+0.8)+0.3, 0.5, 0.5,
 			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 0, 1, 1,
-			 glow_eDrawType_Color32, NULL, &curve->hide_rect[i]);
+			 glow_eDrawType_Color32, NULL, &hide_rect[i]);
 
     // Draw nodes for mark and cursor values
     x = 2.2;
-    grow_CreateGrowNode( curve->grownames_ctx, "", nc, x, (i+0.8)+0.05, NULL, 
-			 &curve->cursor_annot[i]);
+    grow_CreateGrowNode( grownames_ctx, "", nc, x, (i+0.8)+0.05, NULL, 
+			 &cursor_annot[i]);
     x += time_size + 0.2;
-    grow_CreateGrowNode( curve->grownames_ctx, "", nc, x, (i+0.8)+0.05, NULL, 
-			 &curve->mark_annot[i]);
+    grow_CreateGrowNode( grownames_ctx, "", nc, x, (i+0.8)+0.05, NULL, 
+			 &mark_annot[i]);
     // Draw unit
     x += time_size + 0.6;
-    grow_CreateGrowText( curve->grownames_ctx, "", curve->cd->y_unit[i],
+    grow_CreateGrowText( grownames_ctx, "", cd->y_unit[i],
 		       x, (i+0.8) + 0.75, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
 			 glow_mDisplayLevel_1, NULL, &t1);
     // Draw button for scale
     x += 2;
-    grow_CreateGrowRect( curve->grownames_ctx, "", x, (i+0.8)+0.1, 1.2, 0.7,
+    grow_CreateGrowRect( grownames_ctx, "", x, (i+0.8)+0.1, 1.2, 0.7,
 			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 1,
-			 glow_eDrawType_Color33, NULL, &curve->scale_rect[i]);
-    grow_SetObjectShadowWidth( curve->scale_rect[i], 20);
+			 glow_eDrawType_Color33, NULL, &scale_rect[i]);
+    grow_SetObjectShadowWidth( scale_rect[i], 20);
     // Draw attribute name
     x += 3;
-    grow_CreateGrowText( curve->grownames_ctx, "", curve->cd->y_name[i],
+    grow_CreateGrowText( grownames_ctx, "", cd->y_name[i],
 			 x, (i+0.8) + 0.75, glow_eDrawType_TextHelvetica,
 			 glow_eDrawType_Line, 2, glow_eFont_LucidaSans,
 			 glow_mDisplayLevel_1, NULL, &t1);
-    grow_SetAnnotation( curve->cursor_annot[i], 0, "0", 1);
-    grow_SetAnnotation( curve->mark_annot[i], 0, "0", 1);
+    grow_SetAnnotation( cursor_annot[i], 0, "0", 1);
+    grow_SetAnnotation( mark_annot[i], 0, "0", 1);
   }
   // Draw nodes for time values
   // Draw shadowed frame
-  grow_CreateGrowRect( curve->grownames_ctx, "", 0, (curve->cd->cols+0.8), 60, 1,
+  grow_CreateGrowRect( grownames_ctx, "", 0, (cd->cols+0.8), 60, 1,
 			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 0, 0, 1,
 			 glow_eDrawType_Color32, NULL, &o1);
   x = 2.2;
-  grow_CreateGrowNode( curve->grownames_ctx, "", nc, x, (curve->cd->cols+0.8)+0.05, NULL, 
-		       &curve->cursor_annot[curve->cd->cols]);
+  grow_CreateGrowNode( grownames_ctx, "", nc, x, (cd->cols+0.8)+0.05, NULL, 
+		       &cursor_annot[cd->cols]);
   x += time_size + 0.2;
-  grow_CreateGrowNode( curve->grownames_ctx, "", nc, x, (curve->cd->cols+0.8)+0.05, NULL, 
-		       &curve->mark_annot[curve->cd->cols]);
+  grow_CreateGrowNode( grownames_ctx, "", nc, x, (cd->cols+0.8)+0.05, NULL, 
+		       &mark_annot[cd->cols]);
   // Draw unit
   x += time_size + 0.6;
-  grow_CreateGrowText( curve->grownames_ctx, "", "s",
-		       x, (curve->cd->cols+0.8) + 0.75, glow_eDrawType_TextHelvetica, 
+  grow_CreateGrowText( grownames_ctx, "", "s",
+		       x, (cd->cols+0.8) + 0.75, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &t1);
   // Draw button for scale
   x += 2;
-  grow_CreateGrowRect( curve->grownames_ctx, "", x, (curve->cd->cols+0.8)+0.1, 1.2, 0.7,
+  grow_CreateGrowRect( grownames_ctx, "", x, (cd->cols+0.8)+0.1, 1.2, 0.7,
 		       glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 1,
-		       glow_eDrawType_Color33, NULL, &curve->scale_rect[curve->cd->cols]);
-  grow_SetObjectShadowWidth( curve->scale_rect[curve->cd->cols], 20);
+		       glow_eDrawType_Color33, NULL, &scale_rect[cd->cols]);
+  grow_SetObjectShadowWidth( scale_rect[cd->cols], 20);
   // Draw attribute name
   x += 3;
-  grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Time axis"),
-		       x, (curve->cd->cols+0.8) + 0.75, glow_eDrawType_TextHelvetica,
+  grow_CreateGrowText( grownames_ctx, "", Lng::translate("Time axis"),
+		       x, (cd->cols+0.8) + 0.75, glow_eDrawType_TextHelvetica,
 		       glow_eDrawType_Line, 2, glow_eFont_LucidaSans, 
 		       glow_mDisplayLevel_1, NULL, &t1);
-  grow_SetAnnotation( curve->cursor_annot[curve->cd->cols], 0, "0", 1);
-  grow_SetAnnotation( curve->mark_annot[curve->cd->cols], 0, "0", 1);
+  grow_SetAnnotation( cursor_annot[cd->cols], 0, "0", 1);
+  grow_SetAnnotation( mark_annot[cd->cols], 0, "0", 1);
 
   return 1;
 }
@@ -797,6 +859,7 @@ int GeCurve::configure_axes()
   double x = 0;
   int i, idx;
 
+  grow_SetNodraw( growaxis_ctx);
   grow_New( growaxis_ctx);
   memset( axis_object, 0, sizeof( axis_object));
 
@@ -858,6 +921,8 @@ int GeCurve::configure_axes()
     width = int( zoom_y * axis_window_width);
     axis_set_width( width);
   }
+  grow_ResetNodraw( growaxis_ctx);
+  grow_Redraw( growaxis_ctx);
   return 1;
 }
 
@@ -1229,8 +1294,10 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
   border_dark(glow_eDrawType_Color28),
   border_bright(glow_eDrawType_Color22),
   cd(0), axis_window_width(0), auto_refresh(1), axis_displayed(1),
-  minmax_idx(0), close_cb(0), help_cb(0), higher_res_cb(0), lower_res_cb(0), 
-  initial_right_position(pos_right), last_cursor_x(0), last_mark_x(0), deferred_configure_axes(0)
+  minmax_idx(0), close_cb(0), help_cb(0), increase_period_cb(0), decrease_period_cb(0), reload_cb(0),
+  prev_period_cb(0), next_period_cb(0), add_cb(0), remove_cb(0),
+  initial_right_position(pos_right), last_cursor_x(0), last_mark_x(0), deferred_configure_axes(0),
+  center_from_window(0)
 {
   pwr_tStatus sts;
 

@@ -47,9 +47,12 @@ class GeCurveGtk : public GeCurve {
     GtkWidget   *minmax_widget;
     GtkWidget   *minmax_textmin_widget;
     GtkWidget   *minmax_textmax_widget;
-    GtkWidget   *tools_higher_res;
-    GtkWidget   *tools_lower_res;
+    GtkWidget   *sea_timebox;
+    GtkWidget   *timebox_start_time;
+    GtkWidget   *timebox_stop_time;
+    GtkWidget	*timebox_timecombo;
     CoWowFocusTimerGtk focustimer;
+    int disable_timecombo_callback;
 
     void pop();
     void write_title( char *str);
@@ -58,7 +61,12 @@ class GeCurveGtk : public GeCurve {
     void axis_set_width( int width);
     void create_minmax_dialog();
     void set_inputfocus();
-    void enable_resolution_buttons();
+    void enable_timebox();
+    void set_times( pwr_tTime *from, pwr_tTime *to);
+    void set_times_sensitivity( int sensitive);
+    pwr_tStatus get_times( pwr_tTime *from, pwr_tTime *to);
+    int get_period( time_ePeriod *period);
+    void set_period( time_ePeriod period, int nocallback);
 
     ~GeCurveGtk();
 
@@ -72,8 +80,14 @@ class GeCurveGtk : public GeCurve {
     static void activate_page_right( GtkWidget *w, gpointer data);
     static void activate_scroll_left( GtkWidget *w, gpointer data);
     static void activate_scroll_right( GtkWidget *w, gpointer data);
-    static void activate_higher_res( GtkWidget *w, gpointer data);
-    static void activate_lower_res( GtkWidget *w, gpointer data);
+    static void activate_increase_period( GtkWidget *w, gpointer data);
+    static void activate_decrease_period( GtkWidget *w, gpointer data);
+    static void activate_reload( GtkWidget *w, gpointer data);
+    static void activate_prev_period( GtkWidget *w, gpointer data);
+    static void activate_next_period( GtkWidget *w, gpointer data);
+    static void activate_add( GtkWidget *w, gpointer data);
+    static void activate_remove( GtkWidget *w, gpointer data);
+    static void activate_timecombo( GtkWidget *w, gpointer data);
     static void activate_background( GtkWidget *w, gpointer data);
     static void activate_showname( GtkWidget *w, gpointer data);
     static void activate_filledcurves( GtkWidget *w, gpointer data);

@@ -1,3 +1,17 @@
+199
+!/**
+! ButtonRoundMetalFrame
+! Group Pushbuttons
+!
+! <image> pwr_buttonroundmetalframe_gs.gif
+!
+! <h1>Description
+! Button with toggle action.
+!
+! <h1>Default dynamics
+! ToggleDig <link>GeDynToggleDig, ,$pwr_lang/man_geref.dat
+!
+!*/
 1
 100 103.883
 135 103.883

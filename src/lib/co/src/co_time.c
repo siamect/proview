@@ -43,7 +43,7 @@
 
 #if defined OS_LYNX
 # include <sys/times.h>
-#elif defined OS_LINUX || defined OS_MACOS
+#elif defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 # include <time.h>
 #endif
 
@@ -61,6 +61,8 @@
   pwr_Assert((p->tv_sec > 0) ? (p->tv_nsec >= 0 && p->tv_nsec <  1000000000) : TRUE);\
   pwr_Assert((p->tv_sec < 0) ? (p->tv_nsec <= 0 && p->tv_nsec > -1000000000) : TRUE);\
 } while (0)
+
+#define ONEDAY 86400
 
 /* String representations of months.  */
 
@@ -137,16 +139,8 @@ validateTm (
   }
   return TIME__SUCCESS;
 }
-//! Compare two timespecs.
-/*!   Returns \n
-    1 if t1  > t2 \n
-    0 if t1 == t2 \n
-   -1 if t1  < t2 \n
 
-   If argument 't2' is NULL the comparison will
-   be done as if t2 == 0.
-*/
-
+//! Test if time is Null.
 int
 time_IsNull (
   pwr_tTime *t1
@@ -1003,7 +997,7 @@ void time_Sleep( float time)
 	l_time.high = -1;	
 	l_time.low = - time * 10000000;	
 	ker$wait_any( NULL, NULL, &l_time);
-#elif defined(OS_LYNX) || defined (OS_LINUX) || defined(OS_MACOS)
+#elif defined(OS_LYNX) || defined (OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
 	pwr_tDeltaTime	p_time;
 	struct timespec ts;
 
@@ -1038,3 +1032,692 @@ int time_GetTimeMonotonic( pwr_tTime *ts)
   return sts;
 }
 
+//! Calculate start and end time for month.
+int time_PeriodMonth( pwr_tTime *time, 
+		      pwr_tTime *from,
+		      pwr_tTime *to,
+		      int previous)
+{
+    struct tm	*tm;
+    int		days, month, year;
+    time_t 	t;
+    time_t 	sec = time->tv_sec;
+
+    tm = localtime(&sec);
+
+    sec = time->tv_sec - (tm->tm_mday - 1) * ONEDAY;
+
+    tm = localtime(&sec);
+
+    tm->tm_sec = 0; 
+    tm->tm_min = 0; 
+    tm->tm_hour = 0; 
+    tm->tm_mday = 1; 
+
+    t = mktime(tm);
+
+    year = tm->tm_year + 1900;
+    if ( previous) {
+      if ( tm->tm_mon == 0) {
+	month = 11;
+	year--;
+      }
+      else
+	month = tm->tm_mon - 1;
+    }
+    else 
+      month = tm->tm_mon;
+
+    switch ( month) {
+    case 1: 
+      if (( year % 4 == 0 && year % 100 != 0) || (year + 1900) % 400 == 0)
+	days = 29;
+      else
+	days = 28;
+      break;
+    case 3:
+    case 5:
+    case 8:
+    case 10:
+      days = 30;
+      break;      
+    default:
+      days = 31;
+    }
+
+    if ( previous) {
+      if ( to) {
+	to->tv_sec = t;
+	to->tv_nsec = 0;
+      }
+    }      
+    else {
+      if ( from) {
+	from->tv_sec = t;
+	from->tv_nsec = 0;
+      }
+    }
+
+    if ( previous)
+      sec  = t - (days - 1) * ONEDAY;
+    else
+      sec = t + (days + 1) * ONEDAY;
+      
+    tm = localtime(&sec);
+
+    tm->tm_sec = 0; 
+    tm->tm_min = 0; 
+    tm->tm_hour = 0; 
+    tm->tm_mday = 1; 
+
+    t = mktime(tm);
+
+    if ( previous) {
+      if ( from) {
+	from->tv_sec = t;
+	from->tv_nsec = 0;
+      }
+    }      
+    else {
+      if ( to) {
+	to->tv_sec = t;
+	to->tv_nsec = 0;
+      }
+    }
+
+    return 1;
+}
+
+//! Calculate start and end time for month.
+static int time_PeriodYear( pwr_tTime *time, 
+			    pwr_tTime *from,
+			    pwr_tTime *to,
+			    int previous)
+{
+    struct tm	*tm;
+    int		days, year;
+    time_t 	t;
+    time_t 	sec = time->tv_sec;
+
+    tm = localtime(&sec);
+
+    sec = time->tv_sec - (tm->tm_yday - 1) * ONEDAY;
+
+    tm = localtime(&sec);
+
+    tm->tm_sec = 0; 
+    tm->tm_min = 0; 
+    tm->tm_hour = 0; 
+    tm->tm_mon = 0; 
+    tm->tm_mday = 1; 
+
+    t = mktime(tm);
+
+    year = tm->tm_year + 1900;
+    if ( previous)
+	year--;
+
+    if (( year % 4 == 0 && year % 100 != 0) || (year + 1900) % 400 == 0)
+      days = 365;
+    else
+      days = 366;
+
+    if ( previous) {
+      if ( to) {
+	to->tv_sec = t;
+	to->tv_nsec = 0;
+      }
+    }      
+    else {
+      if ( from) {
+	from->tv_sec = t;
+	from->tv_nsec = 0;
+      }
+    }
+
+    if ( previous)
+      sec  = t - (days - 1) * ONEDAY;
+    else
+      sec = t + (days + 1) * ONEDAY;
+      
+    tm = localtime(&sec);
+
+    tm->tm_sec = 0; 
+    tm->tm_min = 0; 
+    tm->tm_hour = 0; 
+    tm->tm_mon = 0; 
+    tm->tm_mday = 1; 
+
+    t = mktime(tm);
+
+    if ( previous) {
+      if ( from) {
+	from->tv_sec = t;
+	from->tv_nsec = 0;
+      }
+    }      
+    else {
+      if ( to) {
+	to->tv_sec = t;
+	to->tv_nsec = 0;
+      }
+    }
+
+    return 1;
+}
+
+//! Calculate start and end time for previous week.
+/*! Computes dates for monday to sunday in the
+    previous week from the time now.
+    Output times are only date, e g 1-MAY-1992 00:00:00.00.
+*/
+
+int time_PeriodPreviousWeek( pwr_tTime *time, 
+			     pwr_tTime *from,
+			     pwr_tTime *to)
+{
+    struct tm	*tm;
+    int		days;
+    pwr_tTime   t;
+
+    time_t sec = time->tv_sec;
+    tm = localtime(&sec);
+    if (tm->tm_wday == 0) /* Sunday */
+      days = 13;
+    else
+      days = tm->tm_wday + 6;
+
+    tm->tm_sec = 0;
+    tm->tm_min = 0;
+    tm->tm_hour = 0;
+    t.tv_sec = mktime(tm);
+
+    if ( from) {
+      from->tv_sec = t.tv_sec - days * ONEDAY;
+      from->tv_nsec = 0;
+    }
+    if ( to) {
+      to->tv_sec = t.tv_sec + (7 - days) * ONEDAY;
+      to->tv_nsec = 0;
+    }
+
+    return 1;
+}
+
+void time_PreviousDayBreak( pwr_tTime *time, 
+			    pwr_tTime *daybreak)
+{
+    struct tm	*tm;
+
+    time_t sec = time->tv_sec;
+    tm = localtime(&sec);
+
+    tm->tm_sec = 0;
+    tm->tm_min = 0;
+    tm->tm_hour = 0;
+
+    daybreak->tv_sec = mktime(tm);
+    daybreak->tv_nsec = 0;
+}
+
+static void time_PeriodSec( pwr_tTime *from, pwr_tTime *to, pwr_tTime *center, int sec)
+{
+  pwr_tStatus sts;
+  pwr_tTime current;
+
+  sts = time_GetTime( &current);
+  to->tv_sec = center->tv_sec + sec/2;
+  to->tv_nsec = center->tv_nsec;
+  if ( time_Acomp( to, &current) == 1)
+    *to = current;
+  from->tv_sec = to->tv_sec - sec;
+  from->tv_nsec = to->tv_nsec;
+}
+
+void time_Period( time_ePeriod period, pwr_tTime *from, pwr_tTime *to, pwr_tTime *center, 
+		  int daybreak)
+{
+  int	    sts;
+  pwr_tTime current;
+
+  switch ( period) {
+  case time_ePeriod_OneMinute:
+    if ( !center) {
+      time_Period( time_ePeriod_LastMinute, from, to, center, daybreak);
+      return;
+    }
+    time_PeriodSec( from, to, center, 60);
+    break;
+  case time_ePeriod_10Minutes:
+    if ( !center) {
+      time_Period( time_ePeriod_Last10Minutes, from, to, center, daybreak);
+      return;
+    }
+    time_PeriodSec( from, to, center, 600);
+    break;
+  case time_ePeriod_OneHour:
+    if ( !center) {
+      time_Period( time_ePeriod_LastHour, from, to, center, daybreak);
+      return;
+    }
+    time_PeriodSec( from, to, center, 3600);
+    break;
+  case time_ePeriod_OneDay:
+    if ( !center) {
+      time_Period( time_ePeriod_LastHour, from, to, center, daybreak);
+      return;
+    }
+    time_PeriodSec( from, to, center, ONEDAY);
+    break;
+  case time_ePeriod_OneWeek:
+    if ( !center) {
+      time_Period( time_ePeriod_LastWeek, from, to, center, daybreak);
+      return;
+    }
+    time_PeriodSec( from, to, center, 7 * ONEDAY);
+    break;
+  case time_ePeriod_OneMonth:
+    if ( !center) {
+      time_Period( time_ePeriod_LastMonth, from, to, center, daybreak);
+      return;
+    }
+    time_PeriodMonth( center, from, to, 0);
+    int middle = from->tv_sec + (to->tv_sec - from->tv_sec) / 2;
+    int half = middle - from->tv_sec;
+    if ( center->tv_sec >= middle - ONEDAY/2 &&
+	 center->tv_sec <= middle + ONEDAY/2)
+      return;
+
+    if ( center->tv_sec < middle) {
+      // Take period from previous month
+      time_PeriodMonth( center, from, to, 1);
+      middle = from->tv_sec + (to->tv_sec - from->tv_sec) / 2;
+      half = middle - from->tv_sec;
+    }
+    to->tv_sec = center->tv_sec + half;
+    from->tv_sec = center->tv_sec - half;
+
+    sts = time_GetTime( &current);
+    if ( time_Acomp( to, &current) == 1) {
+      from->tv_sec = current.tv_sec - (to->tv_sec - from->tv_sec);
+      from->tv_nsec = current.tv_sec;
+      *to = current;
+    }
+    break;
+  case time_ePeriod_LastMinute:
+    sts = time_GetTime( to);
+    from->tv_sec = to->tv_sec - 60;
+    from->tv_nsec = to->tv_nsec;
+    break;
+  case time_ePeriod_Last10Minutes:
+    sts = time_GetTime( to);
+    from->tv_sec = to->tv_sec - 600;
+    from->tv_nsec = to->tv_nsec;
+    break;
+  case time_ePeriod_LastHour:
+    sts = time_GetTime( to);
+    from->tv_sec = to->tv_sec - 3600;
+    from->tv_nsec = to->tv_nsec;
+    break;
+  case time_ePeriod_Today:
+    sts = time_GetTime( from);
+    *to = *from;
+
+    time_PreviousDayBreak( from, from);
+
+    if ( daybreak) {
+      to->tv_sec += ONEDAY;
+      time_PreviousDayBreak( to, to);
+    }
+    break;
+  case time_ePeriod_Yesterday:
+    sts = time_GetTime( to);
+    time_PreviousDayBreak( to, to);
+    
+    from->tv_sec = to->tv_sec - ONEDAY;
+    from->tv_nsec = 0;
+    break;
+  case time_ePeriod_ThisWeek:
+    sts = time_GetTime( &current);
+
+    sts = time_PeriodPreviousWeek( &current, 0, from);
+
+    *to = current;
+    if ( daybreak) {
+      to->tv_sec += ONEDAY;
+      time_PreviousDayBreak( to, to);
+    }
+    break;
+  case time_ePeriod_LastWeek:
+    sts = time_GetTime( &current);
+
+    sts = time_PeriodPreviousWeek( &current, from, to);
+    break;
+  case time_ePeriod_ThisMonth:
+    sts = time_GetTime( &current);
+
+    sts = time_PeriodMonth( &current, 0, from, 1);
+
+    *to = current;
+    if ( daybreak) {
+      to->tv_sec += ONEDAY;
+      time_PreviousDayBreak( to, to);
+    }
+    break;
+  case time_ePeriod_LastMonth:
+    sts = time_GetTime( &current);
+
+    sts = time_PeriodMonth( &current, from, to, 1);
+    break;
+  case time_ePeriod_OneYear:
+  case time_ePeriod_ThisYear:
+    sts = time_GetTime( &current);
+
+    sts = time_PeriodYear( &current, 0, from, 1);
+
+    *to = current;
+    if ( daybreak) {
+      to->tv_sec += ONEDAY;
+      time_PreviousDayBreak( to, to);
+    }
+    break;
+  default: {
+    // time_ePeriod_All: 
+    struct tm	*tm;
+
+    sts = time_GetTime( to);
+    if ( daybreak) {
+      to->tv_sec += ONEDAY;
+      time_PreviousDayBreak( to, to);
+    }
+
+    time_t sec = to->tv_sec;
+    tm = localtime(&sec);
+    tm->tm_sec = 0; 
+    tm->tm_min = 0; 
+    tm->tm_hour = 0; 
+    tm->tm_mday = 1; 
+    tm->tm_mon = 0; 
+    tm->tm_year = 70; 
+    from->tv_sec = mktime(tm); 
+    from->tv_nsec = 0;    
+
+    break;
+  }
+  }
+}
+
+void time_PreviousPeriod( time_ePeriod period, pwr_tTime *prev_from, pwr_tTime *prev_to,
+			  pwr_tTime *from, pwr_tTime *to)
+{
+
+  switch ( period) {
+  case time_ePeriod_OneMinute:
+  case time_ePeriod_LastMinute:
+    *to = *from = *prev_from;
+    from->tv_sec -= 60;
+    if ( from->tv_sec < 0) {
+      from->tv_sec = 0;
+      to->tv_sec = 60;
+    }
+    break;
+  case time_ePeriod_10Minutes:
+  case time_ePeriod_Last10Minutes:
+    *to = *from = *prev_from;
+    from->tv_sec -= 600;
+    if ( from->tv_sec < 0) {
+      from->tv_sec = 0;
+      to->tv_sec = 600;
+    }
+    break;
+  case time_ePeriod_OneHour:
+  case time_ePeriod_LastHour:
+    *to = *from = *prev_from;
+    from->tv_sec -= 3600;
+    if ( from->tv_sec < 0) {
+      from->tv_sec = 0;
+      to->tv_sec = 3660;
+    }
+    break;
+  case time_ePeriod_OneDay:
+  case time_ePeriod_Today:
+  case time_ePeriod_Yesterday:
+    *to = *from = *prev_from;
+    from->tv_sec -= ONEDAY;
+    if ( from->tv_sec < 0) {
+      from->tv_sec = 0;
+      to->tv_sec = ONEDAY;
+    }
+    break;
+  case time_ePeriod_OneWeek:
+  case time_ePeriod_ThisWeek:
+  case time_ePeriod_LastWeek:
+    *to = *from = *prev_from;
+    from->tv_sec -= ONEDAY * 7;
+    if ( from->tv_sec < 0) {
+      from->tv_sec = 0;
+      to->tv_sec = ONEDAY * 7;
+    }
+    break;
+  case time_ePeriod_OneMonth:
+  case time_ePeriod_ThisMonth:
+  case time_ePeriod_LastMonth:
+    time_PeriodMonth( prev_from, from, to, 1);
+    from->tv_sec += prev_from->tv_sec - to->tv_sec;
+    from->tv_nsec = prev_from->tv_nsec;
+    *to = *prev_from;
+    if ( from->tv_sec < 0) {
+      from->tv_sec = 0;
+      to->tv_sec = ONEDAY * 30;
+    }
+    break;
+  case time_ePeriod_OneYear:
+  case time_ePeriod_ThisYear:
+    time_PeriodYear( prev_from, from, to, 1);
+    from->tv_sec += prev_from->tv_sec - to->tv_sec;
+    from->tv_nsec = prev_from->tv_nsec;
+    *to = *prev_from;
+    if ( from->tv_sec < 0) {
+      from->tv_sec = 0;
+      to->tv_sec = ONEDAY * 365;
+    }
+    break;
+  case time_ePeriod_AllTime:
+    time_Period( period, from, to, 0, 1);
+    break;
+  case time_ePeriod_UserDefined:
+    // Same lenth of intervall as before
+    *to = *from = *prev_from;
+    from->tv_sec -= prev_to->tv_sec - prev_from->tv_sec;
+    if ( from->tv_sec < 0) {
+      from->tv_sec = 0;
+      to->tv_sec = prev_to->tv_sec - prev_from->tv_sec;
+    }
+    break;
+  default: ;
+  }
+}
+
+void time_NextPeriod( time_ePeriod period, pwr_tTime *prev_from, pwr_tTime *prev_to,
+		      pwr_tTime *from, pwr_tTime *to)
+{
+  int	    sts;
+  pwr_tTime current;
+
+  sts = time_GetTime( &current);
+
+  switch ( period) {
+  case time_ePeriod_OneMinute:
+  case time_ePeriod_LastMinute:
+    *to = *from = *prev_to;
+    to->tv_sec += 60;
+    if ( time_Acomp( &current, to) != 1) {
+      *to = current;
+      from->tv_sec = current.tv_sec - 60;
+      from->tv_nsec = current.tv_nsec;
+    }
+    break;
+  case time_ePeriod_10Minutes:
+  case time_ePeriod_Last10Minutes:
+    *to = *from = *prev_to;
+    to->tv_sec += 600;
+    if ( time_Acomp( &current, to) != 1) {
+      *to = current;
+      from->tv_sec = current.tv_sec - 600;
+      from->tv_nsec = current.tv_nsec;
+    }
+    break;
+  case time_ePeriod_OneHour:
+  case time_ePeriod_LastHour:
+    *to = *from = *prev_to;
+    to->tv_sec += 3600;
+    if ( time_Acomp( &current, to) != 1) {
+      *to = current;
+      from->tv_sec = current.tv_sec - 3600;
+      from->tv_nsec = current.tv_nsec;
+    }
+    break;
+  case time_ePeriod_OneDay:
+  case time_ePeriod_Today:
+  case time_ePeriod_Yesterday:
+    *to = *from = *prev_to;
+    to->tv_sec += ONEDAY;
+    if ( time_Acomp( &current, to) != 1) {
+      *to = current;
+      from->tv_sec = current.tv_sec - ONEDAY;
+      from->tv_nsec = current.tv_nsec;
+    }
+    break;
+  case time_ePeriod_OneWeek:
+  case time_ePeriod_ThisWeek:
+  case time_ePeriod_LastWeek:
+    *to = *from = *prev_to;
+    to->tv_sec += 7 * ONEDAY;
+    if ( time_Acomp( &current, to) != 1) {
+      *to = current;
+      from->tv_sec = current.tv_sec - 7 * ONEDAY;
+      from->tv_nsec = current.tv_nsec;
+    }
+    break;
+  case time_ePeriod_OneMonth:
+  case time_ePeriod_ThisMonth:
+  case time_ePeriod_LastMonth:
+    time_PeriodMonth( prev_to, from, to, 0);
+    to->tv_sec += prev_to->tv_sec - from->tv_sec;
+    *from = *prev_to;
+    if ( time_Acomp( &current, to) != 1) {
+      *to = current;
+      from->tv_sec = current.tv_sec - 30 * ONEDAY;
+      from->tv_nsec = current.tv_nsec;
+    }
+    break;
+  case time_ePeriod_OneYear:
+  case time_ePeriod_ThisYear:
+    time_PeriodYear( prev_to, from, to, 0);
+    to->tv_sec += prev_to->tv_sec - from->tv_sec;
+    *from = *prev_to;
+    if ( time_Acomp( &current, to) != 1) {
+      *to = current;
+      from->tv_sec = current.tv_sec - 365 * ONEDAY;
+      from->tv_nsec = current.tv_nsec;
+    }
+    break;
+    break;
+  case time_ePeriod_AllTime:
+    time_Period( period, from, to, 0, 1);
+    break;
+  case time_ePeriod_UserDefined:
+    // Same lenth of intervall as before
+    *to = *from = *prev_to;
+    to->tv_sec += prev_to->tv_sec - prev_from->tv_sec;
+    if ( time_Acomp( &current, to) != 1) {
+      *to = current;
+      from->tv_sec = current.tv_sec - (prev_to->tv_sec - prev_from->tv_sec);
+      from->tv_nsec = current.tv_nsec;
+    }
+    break;
+  default: ;
+  }
+}
+
+int time_PeriodZoomIn( time_ePeriod *period)
+{
+  int changed = 1;
+  switch( *period) {
+  case time_ePeriod_Last10Minutes:
+  case time_ePeriod_10Minutes:
+    *period = time_ePeriod_OneMinute;
+    break;
+  case time_ePeriod_OneHour:
+  case time_ePeriod_LastHour:
+    *period = time_ePeriod_10Minutes;
+    break;
+  case time_ePeriod_Today:
+  case time_ePeriod_Yesterday:
+  case time_ePeriod_OneDay:
+    *period = time_ePeriod_OneHour;
+    break;
+  case time_ePeriod_ThisWeek:
+  case time_ePeriod_LastWeek:
+  case time_ePeriod_OneWeek:
+    *period = time_ePeriod_OneDay;
+    break;
+  case time_ePeriod_ThisMonth:
+  case time_ePeriod_LastMonth:
+  case time_ePeriod_OneMonth:
+    *period = time_ePeriod_OneWeek;
+    break;
+  case time_ePeriod_ThisYear:
+  case time_ePeriod_OneYear:
+    *period = time_ePeriod_OneMonth;
+    break;
+  case time_ePeriod_AllTime:
+    *period = time_ePeriod_OneYear;
+    break;
+  default:
+    changed = 0;
+  }
+  return changed;
+}
+
+int time_PeriodZoomOut( time_ePeriod *period)
+{
+  int changed = 1;
+
+  switch( *period) {
+  case time_ePeriod_OneMinute:
+  case time_ePeriod_LastMinute:
+    *period = time_ePeriod_10Minutes;
+    break;
+  case time_ePeriod_Last10Minutes:
+  case time_ePeriod_10Minutes:
+    *period = time_ePeriod_OneHour;
+    break;
+  case time_ePeriod_OneHour:
+  case time_ePeriod_LastHour:
+    *period = time_ePeriod_OneDay;
+    break;
+  case time_ePeriod_Today:
+  case time_ePeriod_Yesterday:
+  case time_ePeriod_OneDay:
+    *period = time_ePeriod_OneWeek;
+    break;
+  case time_ePeriod_ThisWeek:
+  case time_ePeriod_LastWeek:
+  case time_ePeriod_OneWeek:
+    *period = time_ePeriod_OneMonth;
+    break;
+  case time_ePeriod_ThisMonth:
+  case time_ePeriod_LastMonth:
+  case time_ePeriod_OneMonth:
+    *period = time_ePeriod_OneYear;
+    break;
+  case time_ePeriod_ThisYear:
+  case time_ePeriod_OneYear:
+    *period = time_ePeriod_AllTime;
+    break;
+  default:
+    changed = 0;
+  }
+  return changed;
+}

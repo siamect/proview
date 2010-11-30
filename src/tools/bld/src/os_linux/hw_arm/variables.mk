@@ -93,25 +93,27 @@ rs_msg_eobjs 	:= $(eobj_dir)/pwr_msg_rs.o
 wb_msg_eobjs 	:= $(eobj_dir)/pwr_msg_wb.o $(eobj_dir)/pwr_msg_ge.o $(eobj_dir)/pwr_msg_flow.o
 
 # Configuration
-ifeq ($(pwre_conf_mysql),1)
-  cmysql        := -DPWRE_CONF_MYSQL=1
-  linkmysql     := -L/usr/lib/mysql -lmysqlclient
-else
-  cmysql        :=
-  linkmysql     :=
-endif
+#ifeq ($(pwre_conf_mysql),1)
+#  cmysql        := -DPWRE_CONF_MYSQL=1
+#  linkmysql     := -L/usr/lib/mysql -lmysqlclient
+#else
+#  cmysql        :=
+#  linkmysql     :=
+#endif
 
-ifeq ($(pwre_conf_gtk),1)
-  cgtk        := -DPWRE_CONF_GTK=1
-  linkgtk     := `pkg-config --libs gtk+-2.0`
-else
-  cgtk        :=
-  linkgtk     :=
-endif
+#ifeq ($(pwre_conf_gtk),1)
+#  cgtk        := -DPWRE_CONF_GTK=1
+#  linkgtk     := `pkg-config --libs gtk+-2.0`
+#else
+#  cgtk        :=
+#  linkgtk     :=
+#endif
 
 log_done	=
-csetos		:= -DOS_LINUX=1 -DOS=linux -D_LINUX -DHW_ARM=1 -DHW=ARM
-cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) -I$(jdk)/include -I$(jdk)/include/linux
+#csetos		:= -DOS_LINUX=1 -DOS=linux -D_LINUX -DHW_ARM=1 -DHW=ARM
+#cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) -I$(jdk)/include -I$(jdk)/include/linux
+csetos 		:= $(pwre_conf_cc_define)
+cinc 		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirgtk)
 rm		:= rm
 cp		:= cp
 cpflags		:= 
@@ -149,7 +151,7 @@ else
   tools_msg2cmsg  := $(eexe_dir)/tools_msg2cmsg
   tools_cmsg2c    := $(eexe_dir)/tools_cmsg2c
   tools_pdrgen    := $(eexe_dir)/tools_pdrgen
-  wb_rtt          := $(eexe_dir)/wb_rtt
+  wb_rtt          := $(exe_dir)/wb_rtt
   co_convert      := $(eexe_dir)/co_convert
   co_merge        := $(eexe_dir)/co_merge
 endif
@@ -158,19 +160,19 @@ javac		:= javac
 
 #docbook-related, added by jonas_h 2006-04-nn
 
-xsltproc := xsltproc
-fop := fop 
+#xsltproc := xsltproc
+#fop := fop 
 #above is a symlink from /usr/local/bin/fop -> /usr/local/fop-0.92beta/fop
 
-xsltproc_args := --xinclude
-chunk_args_en_us = --stringparam root.filename $(basename $(notdir $(target))) --stringparam base.dir $(doc_dir)/en_us/
-chunk_args_sv_se = --stringparam root.filename $(basename $(notdir $(target))) --stringparam base.dir $(doc_dir)/sv_se/
+#xsltproc_args := --xinclude
+#chunk_args_en_us = --stringparam root.filename $(basename $(notdir $(target))) --stringparam base.dir $(doc_dir)/en_us/
+#chunk_args_sv_se = --stringparam root.filename $(basename $(notdir $(target))) --stringparam base.dir $(doc_dir)/sv_se/
 
-pwr_stylesheetdir = $(pwre_sroot)/doc/man/src
-docbook_stylesheetdir = /usr/local/share/xml/docbook/stylesheet/snapshot
-html_xsl = $(pwr_stylesheetdir)/pwrxsl-html.xsl
-chunk_xsl = $(pwr_stylesheetdir)/pwrxsl-chunk.xsl
-fo_xsl = $(pwr_stylesheetdir)/pwrxsl-fo.xsl
+#pwr_stylesheetdir = $(pwre_sroot)/doc/man/src
+#docbook_stylesheetdir = /usr/local/share/xml/docbook/stylesheet/snapshot
+#html_xsl = $(pwr_stylesheetdir)/pwrxsl-html.xsl
+#chunk_xsl = $(pwr_stylesheetdir)/pwrxsl-chunk.xsl
+#fo_xsl = $(pwr_stylesheetdir)/pwrxsl-fo.xsl
 
 #end of
 

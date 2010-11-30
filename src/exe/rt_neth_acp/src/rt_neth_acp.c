@@ -85,7 +85,7 @@ main (
       continue;
     }
 
-    switch (get.type.s) {
+    switch ( (int)get.type.s) {
     case net_eMsg_nodeUp:
       nodeUp((net_sNodeUp *) mp);
       break;

@@ -18,6 +18,7 @@
  **/
 
 /* pn_viewer_gtk.cpp -- Profinet viewer */
+#ifdef PWRE_CONF_PNAK
 
 #include "glow_std.h"
 
@@ -335,7 +336,7 @@ void PnViewerGtk::activate_help( GtkWidget *w, gpointer data)
 }
 
 
-
+#endif
 
 
 

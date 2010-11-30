@@ -135,7 +135,7 @@ class GsdmlChannelDiag {
 
 class GsdmlDeviceData {
  public:
-  GsdmlDeviceData() 
+  GsdmlDeviceData() : device_num(0), vendor_id(0), device_id(0), byte_order(0), instance(0)
     { device_name[0]=0; ip_address[0]=0; subnet_mask[0]=0; mac_address[0]=0;
       device_text[0]=0; version[0]=0; gsdmlfile[0]=0;}
   char device_name[80];
@@ -148,6 +148,7 @@ class GsdmlDeviceData {
   unsigned short device_id;
   char version[20];
   int byte_order;
+  unsigned short instance;
   pwr_tFileName gsdmlfile;
   vector<GsdmlSlotData *> slot_data;
   vector<GsdmlIOCRData *> iocr_data;

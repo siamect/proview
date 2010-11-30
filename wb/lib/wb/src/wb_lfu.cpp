@@ -1284,7 +1284,8 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		 os == pwr_mOpSys_PPC_LINUX ||
 		 os == pwr_mOpSys_X86_LINUX ||
 		 os == pwr_mOpSys_X86_64_LINUX ||
-		 os == pwr_mOpSys_X86_64_MACOS )) {
+		 os == pwr_mOpSys_X86_64_MACOS ||
+		 os == pwr_mOpSys_X86_64_FREEBSD )) {
 	    char msg[200];
 	    sprintf( msg, "Error in NodeConfig object '%s', OperatingSystem is not valid", nodeconfig_name);
 	    MsgWindow::message( 'E', msg, msgw_ePop_Default);

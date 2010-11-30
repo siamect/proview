@@ -86,6 +86,8 @@ int main(  int argc, char *argv[])
   char dos[] = "OS_LINUX";
 #elif defined OS_MACOS
   char dos[] = "OS_MACOS";
+#elif defined OS_FREEBSD
+  char dos[] = "OS_FREEBSD";
 #endif
   if ( argc != 4) {
     usage();
@@ -130,7 +132,7 @@ int main(  int argc, char *argv[])
     while( dcli_read_line( line, sizeof(line), fp)) {
       dcli_trim( line, line);
       if ( strncmp( line, "#if" , 3) == 0) {
-        in_if = ! check_os( &line[5], dos);
+        in_if = ! check_os( &line[4], dos);
         continue;
       }
       else if ( in_if) {

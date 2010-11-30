@@ -69,9 +69,14 @@ XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
   curve = new GeCurveGtk( this, parent_widget, title, NULL, gcd, 1);
   curve->close_cb = sevhist_close_cb;
   curve->help_cb = sevhist_help_cb;
-  curve->higher_res_cb = sevhist_higher_res_cb;
-  curve->lower_res_cb = sevhist_lower_res_cb;
-  curve->enable_resolution_buttons();
+  curve->increase_period_cb = sevhist_increase_period_cb;
+  curve->decrease_period_cb = sevhist_decrease_period_cb;
+  curve->reload_cb = sevhist_reload_cb;
+  curve->prev_period_cb = sevhist_prev_period_cb;
+  curve->next_period_cb = sevhist_next_period_cb;
+  curve->add_cb = sevhist_add_cb;
+  curve->remove_cb = sevhist_remove_cb;
+  curve->enable_timebox();
 
   wow = new CoWowGtk( parent_widget);
   timerid = wow->timer_new();

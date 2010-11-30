@@ -1,5 +1,0 @@
-ifeq ($(pwre_btype),rls)
-  cxxflags := /rep=pwrb_root:[cxx_demang]/opt/deb=tra/flo=g_flo/exte=str/pref=all
-else
-  cxxflags := /rep=pwrb_root:[cxx_demang]/noopt/deb/flo=g_flo/exte=str/pref=all
-endif

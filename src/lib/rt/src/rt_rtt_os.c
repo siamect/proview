@@ -43,7 +43,7 @@
 # include <prcdef.h>
 # include <jpidef.h>
 # include <syidef.h>
-#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS
+#elif defined OS_LYNX || defined OS_LINUX || defined OS_MACOS || defined OS_FREEBSD
 # include <string.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -100,7 +100,7 @@ int	rtt_get_nodename( char *nodename, int size)
 	return rttvms_get_nodename( nodename, size);
 #elif defined(OS_ELN)
 	return rtteln_get_nodename( nodename, size);
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS
+#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
 	struct	utsname buf;
 
 	if (uname( &buf) == -1)
@@ -1455,7 +1455,7 @@ int	rtt_get_platform( char *platform)
 #elif defined(OS_ELN)
 	strcpy( platform, "VAX_ELN");
 	return 1;
-#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS
+#elif defined(OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
 	struct	utsname buf;
 
 	if (uname( &buf) == -1)
@@ -1512,13 +1512,13 @@ int	rtt_get_hw( char *hw)
 	else if (strstr( buf.machine, "86") != 0)
 	  strcpy( hw, "x86");
 	return 1;
-#elif defined OS_MACOS
+#elif defined OS_MACOS || defined OS_FREEBSD
 	strcpy( hw, "x86_64");
 	return 1;
 #endif
 }
 
-#if defined (OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS
+#if defined (OS_LYNX) || defined(OS_LINUX) || defined OS_MACOS || defined OS_FREEBSD
 
 /*************************************************************************
 *

@@ -36,18 +36,18 @@ typedef struct {
 
 typedef struct {
 	pwr_tFloat32	*DataP;
-	pwr_tObjid	Data_ObjId;
-	pwr_tBoolean	Data_Front;
-	pwr_tBoolean	Data_Back;
-	pwr_tDlid	Data_Dlid;
-	pwr_tBoolean	Data_Select;
-	pwr_tBoolean	Data_OldSelect;
+	pwr_tObjid	Data_ObjId pwr_dAlignLW;
+	pwr_tBoolean	Data_Front pwr_dAlignW;
+	pwr_tBoolean	Data_Back pwr_dAlignW;
+	gdh_tDlid	Data_Dlid pwr_dAlignW;	
+	pwr_tBoolean	Data_Select pwr_dAlignW;
+	pwr_tBoolean	Data_OldSelect pwr_dAlignW;
 	} plc_t_DataInfo;
 
 typedef struct {
-	pwr_tUInt32	*DataP;
-	pwr_tObjid	Data_ObjId;
-	pwr_tRefId	Data_Dlid;
+	pwr_tFloat32	*DataP;
+	pwr_tObjid	Data_ObjId pwr_dAlignW;
+	gdh_tDlid	Data_Dlid pwr_dAlignW;	
 	} plc_t_DataInfoMirCell;
 #endif
 
