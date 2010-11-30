@@ -442,7 +442,7 @@ void pack_download_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, GsdmlDeviceData *d
   sprintf(pSDR->DeviceName, dev_data->device_name);
 
   if (device_ref == PN_DEVICE_REFERENCE_THIS_STATION) {
-    sprintf(pSDR->InterfaceName, "eth1");
+    sprintf(pSDR->InterfaceName,  dev_data->device_text);
     pSDR->Flag = PN_SERVICE_DOWNLOAD_FLAG_AUTO_CONTROL_RES;
     ar_property =  0;
     pSDR->InstanceLowByte = 0;
@@ -453,6 +453,8 @@ void pack_download_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, GsdmlDeviceData *d
       PROFINET_AR_PROPERTY_PARAMETER_SERVER_CM | 
       PROFINET_AR_PROPERTY_DATA_RATE_100MBIT;
     pSDR->InstanceLowByte = 1;
+    if (dev_data->device_id == 1288)
+      pSDR->InstanceLowByte = 0;
   }
 
   no_items = sscanf(dev_data->version, "%hhi.%hhi", &high_byte, &low_byte);
@@ -882,6 +884,10 @@ int unpack_get_alarm_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal *local
 	dev->Alarm.ModuleIdentNumber = module_ident_number;
 	dev->Alarm.SubmoduleIdentNumber = submodule_ident_number;
 	dev->Alarm.Specifier = alarm_spec;
+	dev->Alarm.ManuSpecLength = data_length;
+	if (data_length > 0) {
+	  memcpy(dev->Alarm.Data, data, MIN(data_length, sizeof(dev->Alarm.Data)));
+	}
 
       }
     }
