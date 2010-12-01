@@ -36,6 +36,8 @@
 #endif
 
 
+#define PN_MAX_MANU_SPEC_DIAGS      200
+
 void pack_set_ip_settings_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, PnDeviceInfo *dev_info);
 
 void pack_set_device_name_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, PnDeviceInfo *dev_info);

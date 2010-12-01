@@ -52,6 +52,25 @@ if [ $1 = $cmd ]; then
   return
 fi
 
+if [ "$pwre_os" == "" ]; then
+  # Set default values for os and hw
+  unamestr=`eval uname`
+  machine=`eval uname -m`
+  if [ $unamestr == "Darwin" ]; then
+    export pwre_os="os_macos"
+    export pwre_hw="hw_x86_64"
+  elif [ $unamestr == "FreeBSD" ]; then
+    export pwre_os="os_freebsd"
+    export pwre_hw="hw_x86_64"
+  else
+    if [ $machine != "x86_64" ]; then
+      machine="x86"
+    fi
+    export pwre_os="os_linux"  
+    export pwre_hw="hw_"$machine
+  fi
+fi
+
 $pwre_bin/pwre.pl $@
 
 

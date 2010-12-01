@@ -1,7 +1,7 @@
 Volume ABB $ClassVolume 0.0.250.2 
   Body SysBody 01-JAN-1970 01:00:00.00
     Attr NextOix = "_X3943"
-    Attr NextCix = "_X40"
+    Attr NextCix = "_X41"
     Attr NextTix[0] = "_X3"
   EndBody
   Object Type $TypeHier 1749 12-OCT-2005 13:25:10.29
@@ -35568,7 +35568,7 @@ ABB ACS800 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS_Pb_Slave 2156888064 01-JAN-1970 01:00:00.00
-        Body RtBody 08-NOV-2007 17:33:02.02
+        Body RtBody 26-NOV-2010 09:20:04.88
           Attr Super.Specification = "ABB ACS800 Profibus slave"
           Attr Super.DataSheet = "$pwr_lang/dsh/abb_acs800.html"
           Attr Super.GSDfile = "$pwr_exe/abb_acs_pb_slave.gsd"
@@ -35577,8 +35577,52 @@ ABB ACS800 Aggregate
           Attr Super.StallAction = 1
           Attr Super.ErrorSoftLimit = 15
           Attr Super.ErrorHardLimit = 50
-          Attr Super.WdFact1 = 100
+          Attr Super.WdFact1 = 10
           Attr Super.WdFact2 = 10
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profinet device ABB ACS800
+    !  Profinet device object for frequency converter ABB ACS800. 
+    ! 
+    !  The device object is configured below a Profinet controller object in
+    !  the node hierarchy. 
+    !  
+    !  @b Configuration
+    !  Use the 'Configure Device' method in the popup menu of the object
+    !  to configure the slave.
+    !*/
+    Object ABB_ACS_PnDevice $ClassDef 40 26-NOV-2010 09:17:17.99
+      Body SysBody 26-NOV-2010 09:17:04.29
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 10256
+      EndBody
+      Object RtBody $ObjBodyDef 1 26-NOV-2010 09:17:04.32
+        Body SysBody 26-NOV-2010 09:17:23.87
+          Attr StructName = "ABB_ACS_PnDevice"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Super $Attribute 2 26-NOV-2010 09:17:04.32
+          Body SysBody 26-NOV-2010 09:17:44.45
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-PnDevice"
+          EndBody
+        EndObject
+      EndObject
+      Object Template ABB_ACS_PnDevice 2158198784 01-JAN-1970 01:00:00.00
+        Body RtBody 26-NOV-2010 09:19:26.26
+          Attr Super.Specification = "ABB ACS800 Profibus slave"
+          Attr Super.DataSheet = "$pwr_lang/dsh/abb_acs800.html"
+          Attr Super.GSDMLfile = "$pwr_exe/GSDML-V2.0-ABBdrives-RETA02-20070621.xml"
+          Attr Super.Process = 1
+          Attr Super.ErrorSoftLimit = 100
+          Attr Super.ErrorHardLimit = 1000
+          Attr Super.ByteOrdering = 1
         EndBody
       EndObject
     EndObject

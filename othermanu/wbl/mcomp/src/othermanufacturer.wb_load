@@ -1,7 +1,7 @@
 Volume OtherManufacturer $ClassVolume 0.0.250.1 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X2251"
-    Attr NextCix = "_X41"
+    Attr NextOix = "_X2883"
+    Attr NextCix = "_X51"
     Attr NextTix[0] = "_X2"
   EndBody
   Object Type $TypeHier 1758 09-OCT-2007 14:20:45.77

@@ -59,7 +59,7 @@ PnViewerPNAC::PnViewerPNAC( pwr_tStatus *sts)
   /* Get configs for device */
 
   s = socket(AF_INET, SOCK_DGRAM, 0);
-  strncpy(ifr.ifr_name, "eth0", sizeof(ifr.ifr_name));
+  strncpy(ifr.ifr_name, "eth1", sizeof(ifr.ifr_name));
   if (ioctl(s, SIOCGIFADDR, &ifr) >= 0) {
     strcpy(dev_data.ip_address, inet_ntoa(((struct sockaddr_in *) &ifr.ifr_addr)->sin_addr));
   }
@@ -73,7 +73,7 @@ PnViewerPNAC::PnViewerPNAC( pwr_tStatus *sts)
 
   strcpy(dev_data.device_name, "dumle");
   dev_data.device_num = PN_DEVICE_REFERENCE_THIS_STATION;
-  strcpy(dev_data.device_text, "controller");
+  strcpy(dev_data.device_text, "eth1");
   dev_data.vendor_id = 279; // Softing vendor id
   dev_data.device_id = 0;
   strcpy(dev_data.version, "1.0");
