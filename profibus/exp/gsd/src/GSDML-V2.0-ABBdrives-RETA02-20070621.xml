@@ -1,0 +1,1398 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- edited with XMLSpy v2005 (http://www.xmlspy.com) by ABB Oy -->
+<ISO15745Profile xmlns="http://www.profibus.com/GSDML/2003/11/DeviceProfile" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.profibus.com/GSDML/2003/11/DeviceProfile ..\XSD\GSDML-DeviceProfile-v2.0.xsd">
+	<ProfileHeader>
+		<ProfileIdentification>PROFINET Device Profile</ProfileIdentification>
+		<ProfileRevision>1.00</ProfileRevision>
+		<ProfileName>Device Profile for PROFINET Devices</ProfileName>
+		<ProfileSource>PROFIBUS Nutzerorganisation e. V. (PNO)</ProfileSource>
+		<ProfileClassID>Device</ProfileClassID>
+		<ISO15745Reference>
+			<ISO15745Part>4</ISO15745Part>
+			<ISO15745Edition>1</ISO15745Edition>
+			<ProfileTechnology>GSDML</ProfileTechnology>
+		</ISO15745Reference>
+	</ProfileHeader>
+	<ProfileBody>
+		<DeviceIdentity VendorID="0x001A" DeviceID="0x0001">
+			<InfoText TextId="T_ID_DEV_DESCRIPTION"/>
+			<VendorName Value="ABB Drives"/>
+		</DeviceIdentity>
+		<DeviceFunction>
+			<Family MainFamily="Drives" ProductFamily="ABB RETA-02"/>
+		</DeviceFunction>
+		<ApplicationProcess>
+
+<!-- ============================================================================================ -->
+<!--   List of Device Access Points (DAP)                 									   -->
+<!-- ============================================================================================ -->
+			<DeviceAccessPointList>
+				<DeviceAccessPointItem ID="RETA_DAP_V1" PhysicalSlots="0..1" ModuleIdentNumber="0x00000001" MinDeviceInterval="64" ImplementationType="Motorola Coldfire" DNS_CompatibleName="RETA-02" ExtendedAddressAssignmentSupported="true" FixedInSlots="0" ObjectUUID_LocalIndex="1">
+					<ModuleInfo>
+						<Name TextId="T_ID_RETA_DAP_PRT_V1"/>
+						<InfoText TextId="T_ID_DEV_DESCRIPTION"/>
+						<VendorName Value="ABB Drives"/>
+						<OrderNumber Value="68840830"/>
+						<HardwareRelease Value="V1.3"/>
+						<SoftwareRelease Value="V1.0"/>
+					</ModuleInfo>
+					<IOConfigData MaxInputLength="40" MaxOutputLength="40"/>
+					<UseableModules>
+						<!--References to the ModuleList-->
+						<ModuleItemRef ModuleItemTarget="ID_DAP_10_MODULE" AllowedInSlots="1"/>
+						<ModuleItemRef ModuleItemTarget="ID_DAP_11_MODULE" AllowedInSlots="1"/>
+						<ModuleItemRef ModuleItemTarget="ID_DAP_12_MODULE" AllowedInSlots="1"/>
+					</UseableModules>
+					<VirtualSubmoduleList>
+						<VirtualSubmoduleItem ID="RETA_DAP_V1" SubmoduleIdentNumber="0x00000000" API="0">
+							<IOData/>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+					<Graphics>
+                        <GraphicItemRef Type="DeviceSymbol" GraphicItemTarget="1"/>
+                        <!--<GraphicItemRef State="SF" ="2"/>-->
+                    </Graphics>
+				</DeviceAccessPointItem>
+
+				<DeviceAccessPointItem ID="RETA_DAP_V2" PhysicalSlots="0..1" ModuleIdentNumber="0x00000001" MinDeviceInterval="64" ImplementationType="Motorola Coldfire" DNS_CompatibleName="RETA-02" ExtendedAddressAssignmentSupported="true" FixedInSlots="0" ObjectUUID_LocalIndex="1">
+					<ModuleInfo>
+						<Name TextId="T_ID_RETA_DAP_PRT_V2"/>
+						<InfoText TextId="T_ID_DEV_DESCRIPTION"/>
+						<VendorName Value="ABB Drives"/>
+						<OrderNumber Value="RETA-02"/>
+						<HardwareRelease Value="V1.3"/>
+						<SoftwareRelease Value="V1.0"/>
+					</ModuleInfo>
+					<SubslotList>
+						<SubslotItem SubslotNumber="32768" TextId="T_ID_SS_Interface"/>
+						<SubslotItem SubslotNumber="32769" TextId="T_ID_SS_Port1"/>
+					</SubslotList>
+					<IOConfigData MaxInputLength="40" MaxOutputLength="40"/>
+					<UseableModules>
+						<!--References to the ModuleList-->
+						<ModuleItemRef ModuleItemTarget="ID_DAP_1_MODULE" AllowedInSlots="1"/>
+						<ModuleItemRef ModuleItemTarget="ID_DAP_2_MODULE" AllowedInSlots="1"/>
+						<ModuleItemRef ModuleItemTarget="ID_DAP_3_MODULE" AllowedInSlots="1"/>
+						<ModuleItemRef ModuleItemTarget="ID_DAP_4_MODULE" AllowedInSlots="1"/>
+						<ModuleItemRef ModuleItemTarget="ID_DAP_5_MODULE" AllowedInSlots="1"/>
+						<ModuleItemRef ModuleItemTarget="ID_DAP_6_MODULE" AllowedInSlots="1"/>
+						<ModuleItemRef ModuleItemTarget="ID_DAP_7_MODULE" AllowedInSlots="1"/>
+						<ModuleItemRef ModuleItemTarget="ID_DAP_8_MODULE" AllowedInSlots="1"/>
+						<ModuleItemRef ModuleItemTarget="ID_DAP_9_MODULE" AllowedInSlots="1"/>
+					</UseableModules>
+					<VirtualSubmoduleList>
+						<VirtualSubmoduleItem ID="RETA_DAP_V2" SubmoduleIdentNumber="0x00000000" API="0">
+							<IOData/>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+					
+					
+					<SystemDefinedSubmoduleList>
+						<InterfaceSubmoduleItem SubslotNumber="32768" SubmoduleIdentNumber="0x0001" SupportedRT_Class="Class1" TextId="T_ID_DAP_INTERFACE_MODULE" IsochroneModeSupported="false">
+							<ApplicationRelations AlarmCR_BlockVersion="1" AR_BlockVersion="1" IOCR_BlockVersion="1" SubmoduleDataBlockVersion="1" NumberOfAdditionalInputCR="0" NumberOfAdditionalMulticastProviderCR="0" NumberOfAdditionalOutputCR="0" NumberOfMulticastConsumerCR="0">
+								<TimingProperties SendClock="32 64 128" ReductionRatio="1 2 4 8 16 32 64 128 256 512"/>
+							</ApplicationRelations>
+						</InterfaceSubmoduleItem>
+
+						<PortSubmoduleItem SubslotNumber="32769" SubmoduleIdentNumber="0x0002" MAUType="100BASETXFD" TextId="T_ID_PORT1"/>
+					</SystemDefinedSubmoduleList>
+				    <Graphics>
+                        <GraphicItemRef Type="DeviceSymbol" GraphicItemTarget="1"/>
+                        <!--<GraphicItemRef State="SF" ="2"/>-->
+                    </Graphics>	
+				</DeviceAccessPointItem>
+			</DeviceAccessPointList>
+
+<!-- ============================================================================================ -->
+<!--   List of modules                                                 									  	  -->
+<!-- ============================================================================================ -->
+			<ModuleList>
+				
+				<!--***********************************************************************************************-->
+				<!--* Device Access Point 10 Vendor Object (PPO3)                                                                      *-->
+				<!--***********************************************************************************************-->
+				<ModuleItem ID="ID_DAP_10_MODULE" ModuleIdentNumber="0x00000100">
+					<ModuleInfo CategoryRef="CAT_RET_VENDOR">
+						<Name TextId="T_ID_DRIVE_OBJECT_10"/>
+						<InfoText TextId="T_ID_DRIVE_OBJECT_10"/>
+						<OrderNumber Value=""/>
+						<HardwareRelease Value="1.3"/>
+						<SoftwareRelease Value="1.0"/>
+					</ModuleInfo>
+					
+					<VirtualSubmoduleList>
+						<!--******* submodule Vendor Object PPO3 ******-->
+						<VirtualSubmoduleItem ID="ID_VO_PPO3" SubmoduleIdentNumber="0x00000000" API="0" FixedInSubslots="1">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="6" TransferSequence="0">
+									<Name TextId="T_ID_STD_TGM_1_PARAMETERS"/>
+									<Ref ValueItemTarget="VI_ID_VO_STOP_ACTION_VALUES" DataType="Integer8" ByteOffset="0" DefaultValue="0" AllowedValues="0..1" TextId="T_ID_STOP_ACTION"/>
+									<Ref DataType="Unsigned16" ByteOffset="2" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_VO_FS_CW"/>
+									<Ref DataType="Unsigned16" ByteOffset="4" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_VO_FS_REF"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_VO_PPO3"/>
+								<InfoText TextId="T_ID_INFO_VO_PPO3"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+						
+					</VirtualSubmoduleList>
+					
+				</ModuleItem>
+				
+				
+				<!--***********************************************************************************************-->
+				<!--* Device Access Point 11 Vendor Object (PPO4)                                                                      *-->
+				<!--***********************************************************************************************-->
+				<ModuleItem ID="ID_DAP_11_MODULE" ModuleIdentNumber="0x00000200">
+					<ModuleInfo CategoryRef="CAT_RET_VENDOR">
+						<Name TextId="T_ID_DRIVE_OBJECT_11"/>
+						<InfoText TextId="T_ID_DRIVE_OBJECT_11"/>
+						<OrderNumber Value=""/>
+						<HardwareRelease Value="1.3"/>
+						<SoftwareRelease Value="1.0"/>
+					</ModuleInfo>
+					
+					<VirtualSubmoduleList>
+						<!--******* submodule Vendor Object PPO4 ******-->
+						<VirtualSubmoduleItem ID="ID_VO_PPO4" SubmoduleIdentNumber="0x00000000" API="0" FixedInSubslots="1">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="30" TransferSequence="0">
+									<Name TextId="T_ID_STD_TGM_1_PARAMETERS"/>
+									<Ref ValueItemTarget="VI_ID_VO_STOP_ACTION_VALUES" DataType="Integer8" ByteOffset="0" DefaultValue="0" AllowedValues="0..1" TextId="T_ID_STOP_ACTION"/>
+									<Ref ValueItemTarget="VI_ID_INP_OUTP_PRM_SRC_SEL" DataType="Integer8" ByteOffset="1" DefaultValue="1" AllowedValues="0..1" TextId="T_ID_INP_OUTP_PRM_SRC_SEL"/>
+									
+									<Ref DataType="Unsigned16" ByteOffset="2" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_O1"/>
+									<Ref DataType="Unsigned16" ByteOffset="4" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_O2"/>
+									<Ref DataType="Unsigned16" ByteOffset="6" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_O3"/>
+									<Ref DataType="Unsigned16" ByteOffset="8" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_O4"/>
+									
+									<Ref DataType="Unsigned16" ByteOffset="10" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_I1"/>
+									<Ref DataType="Unsigned16" ByteOffset="12" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_I2"/>
+									<Ref DataType="Unsigned16" ByteOffset="14" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_I3"/>
+									<Ref DataType="Unsigned16" ByteOffset="16" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_I4"/>
+									
+									<Ref DataType="Unsigned16" ByteOffset="18" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_VO_FS_CW"/>
+									<Ref DataType="Unsigned16" ByteOffset="20" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_VO_FS_REF"/>
+									
+									<Ref DataType="Unsigned16" ByteOffset="22" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FAIL_SAFE_VALUE_O1"/>
+									<Ref DataType="Unsigned16" ByteOffset="24" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FAIL_SAFE_VALUE_O2"/>
+									<Ref DataType="Unsigned16" ByteOffset="26" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FAIL_SAFE_VALUE_O3"/>
+									<Ref DataType="Unsigned16" ByteOffset="28" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FAIL_SAFE_VALUE_O4"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_VO_PPO4"/>
+								<InfoText TextId="T_ID_INFO_VO_PPO4"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+						
+					</VirtualSubmoduleList>
+					
+				</ModuleItem>
+				
+				
+				<!--***********************************************************************************************-->
+				<!--* Device Access Point 12 Vendor Object (PPO6)                                                                      *-->
+				<!--***********************************************************************************************-->
+				<ModuleItem ID="ID_DAP_12_MODULE" ModuleIdentNumber="0x00000300">
+					<ModuleInfo CategoryRef="CAT_RET_VENDOR">
+						<Name TextId="T_ID_DRIVE_OBJECT_12"/>
+						<InfoText TextId="T_ID_DRIVE_OBJECT_12"/>
+						<OrderNumber Value=""/>
+						<HardwareRelease Value="1.3"/>
+						<SoftwareRelease Value="1.0"/>
+					</ModuleInfo>
+					
+					<VirtualSubmoduleList>
+						<!--******* submodule Vendor Object PPO6 ******-->
+						<VirtualSubmoduleItem ID="ID_VO_PPO6" SubmoduleIdentNumber="0x00000000" API="0" FixedInSubslots="1">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="54" TransferSequence="0">
+									<Name TextId="T_ID_STD_TGM_1_PARAMETERS"/>
+									<Ref ValueItemTarget="VI_ID_VO_STOP_ACTION_VALUES" DataType="Integer8" ByteOffset="0" DefaultValue="0" AllowedValues="0..1" TextId="T_ID_STOP_ACTION"/>
+									<Ref ValueItemTarget="VI_ID_INP_OUTP_PRM_SRC_SEL" DataType="Integer8" ByteOffset="1" DefaultValue="1" AllowedValues="0..1" TextId="T_ID_INP_OUTP_PRM_SRC_SEL"/>
+									
+									<Ref DataType="Unsigned16" ByteOffset="2" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_O1"/>
+									<Ref DataType="Unsigned16" ByteOffset="4" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_O2"/>
+									<Ref DataType="Unsigned16" ByteOffset="6" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_O3"/>
+									<Ref DataType="Unsigned16" ByteOffset="8" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_O4"/>
+									<Ref DataType="Unsigned16" ByteOffset="10" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_O5"/>
+									<Ref DataType="Unsigned16" ByteOffset="12" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_O6"/>
+									<Ref DataType="Unsigned16" ByteOffset="14" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_O7"/>
+									<Ref DataType="Unsigned16" ByteOffset="16" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_O8"/>
+									
+									<Ref DataType="Unsigned16" ByteOffset="18" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_I1"/>
+									<Ref DataType="Unsigned16" ByteOffset="20" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_I2"/>
+									<Ref DataType="Unsigned16" ByteOffset="22" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_I3"/>
+									<Ref DataType="Unsigned16" ByteOffset="24" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_I4"/>
+									<Ref DataType="Unsigned16" ByteOffset="26" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_I5"/>
+									<Ref DataType="Unsigned16" ByteOffset="28" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_I6"/>
+									<Ref DataType="Unsigned16" ByteOffset="30" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_I7"/>
+									<Ref DataType="Unsigned16" ByteOffset="32" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR_I8"/>
+									
+									<Ref DataType="Unsigned16" ByteOffset="34" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_VO_FS_CW"/>
+									<Ref DataType="Unsigned16" ByteOffset="36" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_VO_FS_REF"/>
+									
+									<Ref DataType="Unsigned16" ByteOffset="38" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FAIL_SAFE_VALUE_O1"/>
+									<Ref DataType="Unsigned16" ByteOffset="40" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FAIL_SAFE_VALUE_O2"/>
+									<Ref DataType="Unsigned16" ByteOffset="42" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FAIL_SAFE_VALUE_O3"/>
+									<Ref DataType="Unsigned16" ByteOffset="44" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FAIL_SAFE_VALUE_O4"/>
+									<Ref DataType="Unsigned16" ByteOffset="46" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FAIL_SAFE_VALUE_O5"/>
+									<Ref DataType="Unsigned16" ByteOffset="48" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FAIL_SAFE_VALUE_O6"/>
+									<Ref DataType="Unsigned16" ByteOffset="50" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FAIL_SAFE_VALUE_O7"/>
+									<Ref DataType="Unsigned16" ByteOffset="52" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FAIL_SAFE_VALUE_O8"/>
+									
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_VO_PPO6"/>
+								<InfoText TextId="T_ID_INFO_VO_PPO6"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+						
+					</VirtualSubmoduleList>
+					
+				</ModuleItem>
+				
+				
+				<!--***********************************************************************************************-->
+				<!--* Device Access Point 1 Only std tgm  1                                                                                      *-->
+				<!--***********************************************************************************************-->
+				<ModuleItem ID="ID_DAP_1_MODULE" ModuleIdentNumber="0x00000010">
+					<ModuleInfo CategoryRef="CAT_RET_MODULES">
+						<Name TextId="T_ID_DRIVE_OBJECT_1"/>
+						<InfoText TextId="T_ID_DRIVE_OBJECT_1"/>
+						<OrderNumber Value=""/>
+						<HardwareRelease Value="1.3"/>
+						<SoftwareRelease Value="1.0"/>
+					</ModuleInfo>
+
+					<VirtualSubmoduleList>
+						<!--******* submodule ID_MAP ******-->
+						<VirtualSubmoduleItem ID="ID_MAP_1" SubmoduleIdentNumber="0x0000FFFF" API="14848" FixedInSubslots="1">
+							<IOData/>
+							<ModuleInfo>
+								<Name TextId="T_ID_MAP"/>
+								<InfoText TextId="T_ID_INFO_MAP"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+
+						<!--******* submodule ID_STD_TGM_1 ******-->
+						<VirtualSubmoduleItem ID="ID_STD_TGM_1_1" SubmoduleIdentNumber="0x00000001" API="14848" FixedInSubslots="2">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="6" TransferSequence="0">
+									<Name TextId="T_ID_STD_TGM_1_PARAMETERS"/>
+									<Ref ValueItemTarget="VI_ID_STOP_ACTION_VALUES" DataType="Integer8" ByteOffset="0" DefaultValue="0" AllowedValues="0..2" TextId="T_ID_STOP_ACTION"/>
+									<Ref ValueItemTarget="VI_ID_INP_OUTP_PRM_SRC_SEL" DataType="Integer8" ByteOffset="1" DefaultValue="1" AllowedValues="0..1" TextId="T_ID_INP_OUTP_PRM_SRC_SEL"/>
+									<Ref DataType="Unsigned16" ByteOffset="2" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FS_STW1"/>
+									<Ref DataType="Unsigned16" ByteOffset="4" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FS_NSOLLA"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_STD_TGM_1"/>
+								<InfoText TextId="T_ID_INFO_STD_TGM_1"/>
+							</ModuleInfo>
+
+						</VirtualSubmoduleItem>
+
+					</VirtualSubmoduleList>
+					
+				</ModuleItem>
+
+
+				<!--***********************************************************************************************-->
+				<!--* Device Access Point 2 Std tgm 1 + 1 PZD                                                                                *-->
+				<!--***********************************************************************************************-->
+				<ModuleItem ID="ID_DAP_2_MODULE" ModuleIdentNumber="0x00000010">
+					<ModuleInfo CategoryRef="CAT_RET_MODULES">
+						<Name TextId="T_ID_DRIVE_OBJECT_2"/>
+						<InfoText TextId="T_ID_DRIVE_OBJECT_2"/>
+						<OrderNumber Value=""/>
+						<HardwareRelease Value="1.3"/>
+						<SoftwareRelease Value="1.0"/>
+					</ModuleInfo>
+
+					<VirtualSubmoduleList>
+						<!--******* submodule ID_MAP ******-->
+						<VirtualSubmoduleItem ID="ID_MAP_2" SubmoduleIdentNumber="0x0000FFFF" API="14848" FixedInSubslots="1">
+							<IOData/>
+							<ModuleInfo>
+								<Name TextId="T_ID_MAP"/>
+								<InfoText TextId="T_ID_INFO_MAP"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+
+						<!--******* submodule ID_STD_TGM_1 ******-->
+						<VirtualSubmoduleItem ID="ID_STD_TGM_1_2" SubmoduleIdentNumber="0x00000001" API="14848" FixedInSubslots="2">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="6" TransferSequence="0">
+									<Name TextId="T_ID_STD_TGM_1_PARAMETERS"/>
+									<Ref ValueItemTarget="VI_ID_STOP_ACTION_VALUES" DataType="Integer8" ByteOffset="0" DefaultValue="0" AllowedValues="0..2" TextId="T_ID_STOP_ACTION"/>
+									<Ref ValueItemTarget="VI_ID_INP_OUTP_PRM_SRC_SEL" DataType="Integer8" ByteOffset="1" DefaultValue="1" AllowedValues="0..1" TextId="T_ID_INP_OUTP_PRM_SRC_SEL"/>
+									<Ref DataType="Unsigned16" ByteOffset="2" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FS_STW1"/>
+									<Ref DataType="Unsigned16" ByteOffset="4" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FS_NSOLLA"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_STD_TGM_1"/>
+								<InfoText TextId="T_ID_INFO_STD_TGM_1"/>
+							</ModuleInfo>
+
+						</VirtualSubmoduleItem>
+
+						<!--******* submodule ID_INPUT_2B ******-->
+						<VirtualSubmoduleItem ID="ID_INPUT_2B_2" SubmoduleIdentNumber="0x00000068" API="14848" FixedInSubslots="3">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Input Consistency="Item consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+								</Input>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="2" TransferSequence="0">
+									<Name TextId="T_ID_INPUT_X_PARAMETERS"/>
+									<Ref DataType="Unsigned16" ByteOffset="0" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_INPUT_2B"/>
+								<InfoText TextId="T_ID_INFO_INPUT_2B"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+
+
+						<!--******* submodule ID_OUTPUT_2B ******-->
+						<VirtualSubmoduleItem ID="ID_OUTPUT_2B_2" SubmoduleIdentNumber="0x00000067" API="14848" FixedInSubslots="4">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Output Consistency="Item consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="4" TransferSequence="0">
+									<Name TextId="T_ID_OUTPUT_X_PARAMETERS"/>
+									<Ref DataType="Unsigned16" ByteOffset="0" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR"/>
+									<Ref DataType="Unsigned16" ByteOffset="2" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FAIL_SAFE_VALUE"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_OUTPUT_2B"/>
+								<InfoText TextId="T_ID_INFO_OUTPUT_2B"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+
+					</VirtualSubmoduleList>
+					
+				</ModuleItem>
+
+				<!--***********************************************************************************************-->
+				<!--* Device Access Point 3 Std tgm 1 + 2 PZD                                                                                *-->
+				<!--***********************************************************************************************-->
+				<ModuleItem ID="ID_DAP_3_MODULE" ModuleIdentNumber="0x00000010">
+					<ModuleInfo CategoryRef="CAT_RET_MODULES">
+						<Name TextId="T_ID_DRIVE_OBJECT_3"/>
+						<InfoText TextId="T_ID_DRIVE_OBJECT_3"/>
+						<OrderNumber Value=""/>
+						<HardwareRelease Value="1.3"/>
+						<SoftwareRelease Value="1.0"/>
+					</ModuleInfo>
+
+					<VirtualSubmoduleList>
+						<!--******* submodule ID_MAP ******-->
+						<VirtualSubmoduleItem ID="ID_MAP_3" SubmoduleIdentNumber="0x0000FFFF" API="14848" FixedInSubslots="1">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+							</IOData>
+							<ModuleInfo>
+								<Name TextId="T_ID_MAP"/>
+								<InfoText TextId="T_ID_INFO_MAP"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+
+						<!--******* submodule ID_STD_TGM_1 ******-->
+						<VirtualSubmoduleItem ID="ID_STD_TGM_1_3" SubmoduleIdentNumber="0x00000001" API="14848" FixedInSubslots="2">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="6" TransferSequence="0">
+									<Name TextId="T_ID_STD_TGM_1_PARAMETERS"/>
+									<Ref ValueItemTarget="VI_ID_STOP_ACTION_VALUES" DataType="Integer8" ByteOffset="0" DefaultValue="0" AllowedValues="0..2" TextId="T_ID_STOP_ACTION"/>
+									<Ref ValueItemTarget="VI_ID_INP_OUTP_PRM_SRC_SEL" DataType="Integer8" ByteOffset="1" DefaultValue="1" AllowedValues="0..1" TextId="T_ID_INP_OUTP_PRM_SRC_SEL"/>
+									<Ref DataType="Unsigned16" ByteOffset="2" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FS_STW1"/>
+									<Ref DataType="Unsigned16" ByteOffset="4" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FS_NSOLLA"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_STD_TGM_1"/>
+								<InfoText TextId="T_ID_INFO_STD_TGM_1"/>
+							</ModuleInfo>
+
+						</VirtualSubmoduleItem>
+
+						<!--******* submodule ID_INPUT_2B ******-->
+						<VirtualSubmoduleItem ID="ID_INPUT_2B_3" SubmoduleIdentNumber="0x00000068" API="14848" FixedInSubslots="3..4">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Input Consistency="Item consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+								</Input>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="2" TransferSequence="0">
+									<Name TextId="T_ID_INPUT_X_PARAMETERS"/>
+									<Ref DataType="Unsigned16" ByteOffset="0" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_INPUT_2B"/>
+								<InfoText TextId="T_ID_INFO_INPUT_2B"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+
+
+						<!--******* submodule ID_OUTPUT_2B ******-->
+						<VirtualSubmoduleItem ID="ID_OUTPUT_2B_3" SubmoduleIdentNumber="0x00000067" API="14848" FixedInSubslots="5..6">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Output Consistency="Item consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="4" TransferSequence="0">
+									<Name TextId="T_ID_OUTPUT_X_PARAMETERS"/>
+									<Ref DataType="Unsigned16" ByteOffset="0" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR"/>
+									<Ref DataType="Unsigned16" ByteOffset="2" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FAIL_SAFE_VALUE"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_OUTPUT_2B"/>
+								<InfoText TextId="T_ID_INFO_OUTPUT_2B"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+
+					</VirtualSubmoduleList>
+					
+				</ModuleItem>
+
+				<!--***********************************************************************************************-->
+				<!--* Device Access Point 4 Std tgm 1 + 3 PZD                                                                                *-->
+				<!--***********************************************************************************************-->
+				<ModuleItem ID="ID_DAP_4_MODULE" ModuleIdentNumber="0x00000010">
+					<ModuleInfo CategoryRef="CAT_RET_MODULES">
+						<Name TextId="T_ID_DRIVE_OBJECT_4"/>
+						<InfoText TextId="T_ID_DRIVE_OBJECT_4"/>
+						<OrderNumber Value=""/>
+						<HardwareRelease Value="1.3"/>
+						<SoftwareRelease Value="1.0"/>
+					</ModuleInfo>
+
+					<VirtualSubmoduleList>
+						<!--******* submodule ID_MAP ******-->
+						<VirtualSubmoduleItem ID="ID_MAP_4" SubmoduleIdentNumber="0x0000FFFF" API="14848" FixedInSubslots="1">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+							</IOData>
+							<ModuleInfo>
+								<Name TextId="T_ID_MAP"/>
+								<InfoText TextId="T_ID_INFO_MAP"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+
+						<!--******* submodule ID_STD_TGM_1 ******-->
+						<VirtualSubmoduleItem ID="ID_STD_TGM_1_4" SubmoduleIdentNumber="0x00000001" API="14848" FixedInSubslots="2">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="6" TransferSequence="0">
+									<Name TextId="T_ID_STD_TGM_1_PARAMETERS"/>
+									<Ref ValueItemTarget="VI_ID_STOP_ACTION_VALUES" DataType="Integer8" ByteOffset="0" DefaultValue="0" AllowedValues="0..2" TextId="T_ID_STOP_ACTION"/>
+									<Ref ValueItemTarget="VI_ID_INP_OUTP_PRM_SRC_SEL" DataType="Integer8" ByteOffset="1" DefaultValue="1" AllowedValues="0..1" TextId="T_ID_INP_OUTP_PRM_SRC_SEL"/>
+									<Ref DataType="Unsigned16" ByteOffset="2" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FS_STW1"/>
+									<Ref DataType="Unsigned16" ByteOffset="4" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FS_NSOLLA"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_STD_TGM_1"/>
+								<InfoText TextId="T_ID_INFO_STD_TGM_1"/>
+							</ModuleInfo>
+
+						</VirtualSubmoduleItem>
+
+						<!--******* submodule ID_INPUT_2B ******-->
+						<VirtualSubmoduleItem ID="ID_INPUT_2B_4" SubmoduleIdentNumber="0x00000068" API="14848" FixedInSubslots="3..5">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Input Consistency="Item consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+								</Input>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="2" TransferSequence="0">
+									<Name TextId="T_ID_INPUT_X_PARAMETERS"/>
+									<Ref DataType="Unsigned16" ByteOffset="0" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_INPUT_2B"/>
+								<InfoText TextId="T_ID_INFO_INPUT_2B"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+
+
+						<!--******* submodule ID_OUTPUT_2B ******-->
+						<VirtualSubmoduleItem ID="ID_OUTPUT_2B_4" SubmoduleIdentNumber="0x00000067" API="14848" FixedInSubslots="6..8">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Output Consistency="Item consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="4" TransferSequence="0">
+									<Name TextId="T_ID_OUTPUT_X_PARAMETERS"/>
+									<Ref DataType="Unsigned16" ByteOffset="0" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR"/>
+									<Ref DataType="Unsigned16" ByteOffset="2" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FAIL_SAFE_VALUE"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_OUTPUT_2B"/>
+								<InfoText TextId="T_ID_INFO_OUTPUT_2B"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+
+					</VirtualSubmoduleList>
+					
+				</ModuleItem>
+
+				<!--***********************************************************************************************-->
+				<!--* Device Access Point 5 Std tgm 1 + 4 PZD                                                                                *-->
+				<!--***********************************************************************************************-->
+				<ModuleItem ID="ID_DAP_5_MODULE" ModuleIdentNumber="0x00000010">
+					<ModuleInfo CategoryRef="CAT_RET_MODULES">
+						<Name TextId="T_ID_DRIVE_OBJECT_5"/>
+						<InfoText TextId="T_ID_DRIVE_OBJECT_5"/>
+						<OrderNumber Value=""/>
+						<HardwareRelease Value="1.3"/>
+						<SoftwareRelease Value="1.0"/>
+					</ModuleInfo>
+
+					<VirtualSubmoduleList>
+						<!--******* submodule ID_MAP ******-->
+						<VirtualSubmoduleItem ID="ID_MAP_5" SubmoduleIdentNumber="0x0000FFFF" API="14848" FixedInSubslots="1">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+							</IOData>
+							<ModuleInfo>
+								<Name TextId="T_ID_MAP"/>
+								<InfoText TextId="T_ID_INFO_MAP"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+
+						<!--******* submodule ID_STD_TGM_1 ******-->
+						<VirtualSubmoduleItem ID="ID_STD_TGM_1_5" SubmoduleIdentNumber="0x00000001" API="14848" FixedInSubslots="2">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="6" TransferSequence="0">
+									<Name TextId="T_ID_STD_TGM_1_PARAMETERS"/>
+									<Ref ValueItemTarget="VI_ID_STOP_ACTION_VALUES" DataType="Integer8" ByteOffset="0" DefaultValue="0" AllowedValues="0..2" TextId="T_ID_STOP_ACTION"/>
+									<Ref ValueItemTarget="VI_ID_INP_OUTP_PRM_SRC_SEL" DataType="Integer8" ByteOffset="1" DefaultValue="1" AllowedValues="0..1" TextId="T_ID_INP_OUTP_PRM_SRC_SEL"/>
+									<Ref DataType="Unsigned16" ByteOffset="2" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FS_STW1"/>
+									<Ref DataType="Unsigned16" ByteOffset="4" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FS_NSOLLA"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_STD_TGM_1"/>
+								<InfoText TextId="T_ID_INFO_STD_TGM_1"/>
+							</ModuleInfo>
+
+						</VirtualSubmoduleItem>
+
+						<!--******* submodule ID_INPUT_2B ******-->
+						<VirtualSubmoduleItem ID="ID_INPUT_2B_5" SubmoduleIdentNumber="0x00000068" API="14848" FixedInSubslots="3..6">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Input Consistency="Item consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+								</Input>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="2" TransferSequence="0">
+									<Name TextId="T_ID_INPUT_X_PARAMETERS"/>
+									<Ref DataType="Unsigned16" ByteOffset="0" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_INPUT_2B"/>
+								<InfoText TextId="T_ID_INFO_INPUT_2B"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+
+
+						<!--******* submodule ID_OUTPUT_2B ******-->
+						<VirtualSubmoduleItem ID="ID_OUTPUT_2B_5" SubmoduleIdentNumber="0x00000067" API="14848" FixedInSubslots="7..10">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Output Consistency="Item consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="4" TransferSequence="0">
+									<Name TextId="T_ID_OUTPUT_X_PARAMETERS"/>
+									<Ref DataType="Unsigned16" ByteOffset="0" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR"/>
+									<Ref DataType="Unsigned16" ByteOffset="2" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FAIL_SAFE_VALUE"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_OUTPUT_2B"/>
+								<InfoText TextId="T_ID_INFO_OUTPUT_2B"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+
+					</VirtualSubmoduleList>
+					
+				</ModuleItem>
+
+				<!--***********************************************************************************************-->
+				<!--* Device Access Point 6 Std tgm 1 + 5 PZD                                                                                *-->
+				<!--***********************************************************************************************-->
+				<ModuleItem ID="ID_DAP_6_MODULE" ModuleIdentNumber="0x00000010">
+					<ModuleInfo CategoryRef="CAT_RET_MODULES">
+						<Name TextId="T_ID_DRIVE_OBJECT_6"/>
+						<InfoText TextId="T_ID_DRIVE_OBJECT_6"/>
+						<OrderNumber Value=""/>
+						<HardwareRelease Value="1.3"/>
+						<SoftwareRelease Value="1.0"/>
+					</ModuleInfo>
+
+					<VirtualSubmoduleList>
+						<!--******* submodule ID_MAP ******-->
+						<VirtualSubmoduleItem ID="ID_MAP_6" SubmoduleIdentNumber="0x0000FFFF" API="14848" FixedInSubslots="1">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+							</IOData>
+							<ModuleInfo>
+								<Name TextId="T_ID_MAP"/>
+								<InfoText TextId="T_ID_INFO_MAP"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+
+						<!--******* submodule ID_STD_TGM_1 ******-->
+						<VirtualSubmoduleItem ID="ID_STD_TGM_1_6" SubmoduleIdentNumber="0x00000001" API="14848" FixedInSubslots="2">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="6" TransferSequence="0">
+									<Name TextId="T_ID_STD_TGM_1_PARAMETERS"/>
+									<Ref ValueItemTarget="VI_ID_STOP_ACTION_VALUES" DataType="Integer8" ByteOffset="0" DefaultValue="0" AllowedValues="0..2" TextId="T_ID_STOP_ACTION"/>
+									<Ref ValueItemTarget="VI_ID_INP_OUTP_PRM_SRC_SEL" DataType="Integer8" ByteOffset="1" DefaultValue="1" AllowedValues="0..1" TextId="T_ID_INP_OUTP_PRM_SRC_SEL"/>
+									<Ref DataType="Unsigned16" ByteOffset="2" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FS_STW1"/>
+									<Ref DataType="Unsigned16" ByteOffset="4" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FS_NSOLLA"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_STD_TGM_1"/>
+								<InfoText TextId="T_ID_INFO_STD_TGM_1"/>
+							</ModuleInfo>
+
+						</VirtualSubmoduleItem>
+
+						<!--******* submodule ID_INPUT_2B ******-->
+						<VirtualSubmoduleItem ID="ID_INPUT_2B_6" SubmoduleIdentNumber="0x00000068" API="14848" FixedInSubslots="3..7">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Input Consistency="Item consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+								</Input>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="2" TransferSequence="0">
+									<Name TextId="T_ID_INPUT_X_PARAMETERS"/>
+									<Ref DataType="Unsigned16" ByteOffset="0" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_INPUT_2B"/>
+								<InfoText TextId="T_ID_INFO_INPUT_2B"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+
+
+						<!--******* submodule ID_OUTPUT_2B ******-->
+						<VirtualSubmoduleItem ID="ID_OUTPUT_2B_6" SubmoduleIdentNumber="0x00000067" API="14848" FixedInSubslots="8..12">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Output Consistency="Item consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="4" TransferSequence="0">
+									<Name TextId="T_ID_OUTPUT_X_PARAMETERS"/>
+									<Ref DataType="Unsigned16" ByteOffset="0" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR"/>
+									<Ref DataType="Unsigned16" ByteOffset="2" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FAIL_SAFE_VALUE"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_OUTPUT_2B"/>
+								<InfoText TextId="T_ID_INFO_OUTPUT_2B"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+					
+				</ModuleItem>
+
+				<!--***********************************************************************************************-->
+				<!--* Device Access Point 7 Std tgm 1 + 6 PZD                                                                                *-->
+				<!--***********************************************************************************************-->
+				<ModuleItem ID="ID_DAP_7_MODULE" ModuleIdentNumber="0x00000010">
+					<ModuleInfo CategoryRef="CAT_RET_MODULES">
+						<Name TextId="T_ID_DRIVE_OBJECT_7"/>
+						<InfoText TextId="T_ID_DRIVE_OBJECT_7"/>
+						<OrderNumber Value=""/>
+						<HardwareRelease Value="1.3"/>
+						<SoftwareRelease Value="1.0"/>
+					</ModuleInfo>
+
+					<VirtualSubmoduleList>
+						<!--******* submodule ID_MAP ******-->
+						<VirtualSubmoduleItem ID="ID_MAP_7" SubmoduleIdentNumber="0x0000FFFF" API="14848" FixedInSubslots="1">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+							</IOData>
+							<ModuleInfo>
+								<Name TextId="T_ID_MAP"/>
+								<InfoText TextId="T_ID_INFO_MAP"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+
+						<!--******* submodule ID_STD_TGM_1 ******-->
+						<VirtualSubmoduleItem ID="ID_STD_TGM_1_7" SubmoduleIdentNumber="0x00000001" API="14848" FixedInSubslots="2">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="6" TransferSequence="0">
+									<Name TextId="T_ID_STD_TGM_1_PARAMETERS"/>
+									<Ref ValueItemTarget="VI_ID_STOP_ACTION_VALUES" DataType="Integer8" ByteOffset="0" DefaultValue="0" AllowedValues="0..2" TextId="T_ID_STOP_ACTION"/>
+									<Ref ValueItemTarget="VI_ID_INP_OUTP_PRM_SRC_SEL" DataType="Integer8" ByteOffset="1" DefaultValue="1" AllowedValues="0..1" TextId="T_ID_INP_OUTP_PRM_SRC_SEL"/>
+									<Ref DataType="Unsigned16" ByteOffset="2" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FS_STW1"/>
+									<Ref DataType="Unsigned16" ByteOffset="4" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FS_NSOLLA"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_STD_TGM_1"/>
+								<InfoText TextId="T_ID_INFO_STD_TGM_1"/>
+							</ModuleInfo>
+
+						</VirtualSubmoduleItem>
+
+						<!--******* submodule ID_INPUT_2B ******-->
+						<VirtualSubmoduleItem ID="ID_INPUT_2B_7" SubmoduleIdentNumber="0x00000068" API="14848" FixedInSubslots="3..8">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Input Consistency="Item consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+								</Input>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="2" TransferSequence="0">
+									<Name TextId="T_ID_INPUT_X_PARAMETERS"/>
+									<Ref DataType="Unsigned16" ByteOffset="0" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_INPUT_2B"/>
+								<InfoText TextId="T_ID_INFO_INPUT_2B"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+
+
+						<!--******* submodule ID_OUTPUT_2B ******-->
+						<VirtualSubmoduleItem ID="ID_OUTPUT_2B_7" SubmoduleIdentNumber="0x00000067" API="14848" FixedInSubslots="9..14">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Output Consistency="Item consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="4" TransferSequence="0">
+									<Name TextId="T_ID_OUTPUT_X_PARAMETERS"/>
+									<Ref DataType="Unsigned16" ByteOffset="0" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR"/>
+									<Ref DataType="Unsigned16" ByteOffset="2" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FAIL_SAFE_VALUE"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_OUTPUT_2B"/>
+								<InfoText TextId="T_ID_INFO_OUTPUT_2B"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+
+					</VirtualSubmoduleList>
+					
+				</ModuleItem>
+
+				<!--***********************************************************************************************-->
+				<!--* Device Access Point 8 Std tgm 1 + 7 PZD                                                                                *-->
+				<!--***********************************************************************************************-->
+				<ModuleItem ID="ID_DAP_8_MODULE" ModuleIdentNumber="0x00000010">
+					<ModuleInfo CategoryRef="CAT_RET_MODULES">
+						<Name TextId="T_ID_DRIVE_OBJECT_8"/>
+						<InfoText TextId="T_ID_DRIVE_OBJECT_8"/>
+						<OrderNumber Value=""/>
+						<HardwareRelease Value="1.3"/>
+						<SoftwareRelease Value="1.0"/>
+					</ModuleInfo>
+
+					<VirtualSubmoduleList>
+						<!--******* submodule ID_MAP ******-->
+						<VirtualSubmoduleItem ID="ID_MAP_8" SubmoduleIdentNumber="0x0000FFFF" API="14848" FixedInSubslots="1">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+							</IOData>
+							<ModuleInfo>
+								<Name TextId="T_ID_MAP"/>
+								<InfoText TextId="T_ID_INFO_MAP"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+
+						<!--******* submodule ID_STD_TGM_1 ******-->
+						<VirtualSubmoduleItem ID="ID_STD_TGM_1_8" SubmoduleIdentNumber="0x00000001" API="14848" FixedInSubslots="2">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="6" TransferSequence="0">
+									<Name TextId="T_ID_STD_TGM_1_PARAMETERS"/>
+									<Ref ValueItemTarget="VI_ID_STOP_ACTION_VALUES" DataType="Integer8" ByteOffset="0" DefaultValue="0" AllowedValues="0..2" TextId="T_ID_STOP_ACTION"/>
+									<Ref ValueItemTarget="VI_ID_INP_OUTP_PRM_SRC_SEL" DataType="Integer8" ByteOffset="1" DefaultValue="1" AllowedValues="0..1" TextId="T_ID_INP_OUTP_PRM_SRC_SEL"/>
+									<Ref DataType="Unsigned16" ByteOffset="2" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FS_STW1"/>
+									<Ref DataType="Unsigned16" ByteOffset="4" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FS_NSOLLA"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_STD_TGM_1"/>
+								<InfoText TextId="T_ID_INFO_STD_TGM_1"/>
+							</ModuleInfo>
+
+						</VirtualSubmoduleItem>
+
+						<!--******* submodule ID_INPUT_2B ******-->
+						<VirtualSubmoduleItem ID="ID_INPUT_2B_8" SubmoduleIdentNumber="0x00000068" API="14848" FixedInSubslots="3..9">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Input Consistency="Item consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+								</Input>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="2" TransferSequence="0">
+									<Name TextId="T_ID_INPUT_X_PARAMETERS"/>
+									<Ref DataType="Unsigned16" ByteOffset="0" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_INPUT_2B"/>
+								<InfoText TextId="T_ID_INFO_INPUT_2B"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+
+
+						<!--******* submodule ID_OUTPUT_2B ******-->
+						<VirtualSubmoduleItem ID="ID_OUTPUT_2B_8" SubmoduleIdentNumber="0x00000067" API="14848" FixedInSubslots="10..16">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Output Consistency="Item consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="4" TransferSequence="0">
+									<Name TextId="T_ID_OUTPUT_X_PARAMETERS"/>
+									<Ref DataType="Unsigned16" ByteOffset="0" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR"/>
+									<Ref DataType="Unsigned16" ByteOffset="2" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FAIL_SAFE_VALUE"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_OUTPUT_2B"/>
+								<InfoText TextId="T_ID_INFO_OUTPUT_2B"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+					
+				</ModuleItem>
+
+				<!--***********************************************************************************************-->
+				<!--* Device Access Point 9 Std tgm 1 + 8 PZD                                                                                *-->
+				<!--***********************************************************************************************-->
+				<ModuleItem ID="ID_DAP_9_MODULE" ModuleIdentNumber="0x00000010">
+					<ModuleInfo CategoryRef="CAT_RET_MODULES">
+						<Name TextId="T_ID_DRIVE_OBJECT_9"/>
+						<InfoText TextId="T_ID_DRIVE_OBJECT_9"/>
+						<OrderNumber Value=""/>
+						<HardwareRelease Value="1.3"/>
+						<SoftwareRelease Value="1.0"/>
+					</ModuleInfo>
+
+					<VirtualSubmoduleList>
+						<!--******* submodule ID_MAP ******-->
+						<VirtualSubmoduleItem ID="ID_MAP_9" SubmoduleIdentNumber="0x0000FFFF" API="14848" FixedInSubslots="1">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+							</IOData>
+							<ModuleInfo>
+								<Name TextId="T_ID_MAP"/>
+								<InfoText TextId="T_ID_INFO_MAP"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+
+						<!--******* submodule ID_STD_TGM_1 ******-->
+						<VirtualSubmoduleItem ID="ID_STD_TGM_1_9" SubmoduleIdentNumber="0x00000001" API="14848" FixedInSubslots="2">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="6" TransferSequence="0">
+									<Name TextId="T_ID_STD_TGM_1_PARAMETERS"/>
+									<Ref ValueItemTarget="VI_ID_STOP_ACTION_VALUES" DataType="Integer8" ByteOffset="0" DefaultValue="0" AllowedValues="0..2" TextId="T_ID_STOP_ACTION"/>
+									<Ref ValueItemTarget="VI_ID_INP_OUTP_PRM_SRC_SEL" DataType="Integer8" ByteOffset="1" DefaultValue="1" AllowedValues="0..1" TextId="T_ID_INP_OUTP_PRM_SRC_SEL"/>
+									<Ref DataType="Unsigned16" ByteOffset="2" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FS_STW1"/>
+									<Ref DataType="Unsigned16" ByteOffset="4" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FS_NSOLLA"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_STD_TGM_1"/>
+								<InfoText TextId="T_ID_INFO_STD_TGM_1"/>
+							</ModuleInfo>
+
+						</VirtualSubmoduleItem>
+
+						<!--******* submodule ID_INPUT_2B ******-->
+						<VirtualSubmoduleItem ID="ID_INPUT_2B_9" SubmoduleIdentNumber="0x00000068" API="14848" FixedInSubslots="3..10">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Input Consistency="Item consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_INPUT"/>
+								</Input>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="2" TransferSequence="0">
+									<Name TextId="T_ID_INPUT_X_PARAMETERS"/>
+									<Ref DataType="Unsigned16" ByteOffset="0" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_INPUT_2B"/>
+								<InfoText TextId="T_ID_INFO_INPUT_2B"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+
+
+						<!--******* submodule ID_OUTPUT_2B ******-->
+						<VirtualSubmoduleItem ID="ID_OUTPUT_2B_9" SubmoduleIdentNumber="0x00000067" API="14848" FixedInSubslots="11..18">
+							<IOData IOPS_Length="1" IOCS_Length="1">
+								<Output Consistency="Item consistency">
+									<DataItem DataType="Unsigned16" TextId="T_ID_OUTPUT"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<ParameterRecordDataItem Index="1" Length="4" TransferSequence="0">
+									<Name TextId="T_ID_OUTPUT_X_PARAMETERS"/>
+									<Ref DataType="Unsigned16" ByteOffset="0" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_PRM_NBR"/>
+									<Ref DataType="Unsigned16" ByteOffset="2" DefaultValue="0" AllowedValues="0..65535" TextId="T_ID_FAIL_SAFE_VALUE"/>
+								</ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="T_ID_OUTPUT_2B"/>
+								<InfoText TextId="T_ID_INFO_OUTPUT_2B"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+					
+				</ModuleItem>
+
+			</ModuleList>
+
+
+<!-- ============================================================================================ -->
+<!--   List of values                                                 									   	   -->
+<!-- ============================================================================================ -->
+
+			<ValueList>
+				<ValueItem ID="VI_ID_STOP_ACTION_VALUES">
+					<Assignments>
+						<Assign Content="0" TextId="T_ID_STOP_ACTION_STOP"/>
+						<Assign Content="1" TextId="T_ID_STOP_ACTION_FREEZE"/>
+						<Assign Content="2" TextId="T_ID_STOP_ACTION_USE_FAIL_SAFE"/>
+					</Assignments>
+				</ValueItem>
+				
+				<ValueItem ID="VI_ID_VO_STOP_ACTION_VALUES">
+					<Assignments>
+						<Assign Content="0" TextId="T_ID_STOP_ACTION_FREEZE"/>
+						<Assign Content="1" TextId="T_ID_STOP_ACTION_USE_FAIL_SAFE"/>
+					</Assignments>
+				</ValueItem>
+
+				<ValueItem ID="VI_ID_INP_OUTP_PRM_SRC_SEL">
+					<Assignments>
+						<Assign Content="0" TextId="T_ID_SRC_SEL_INITIAL_REC_DATA"/>
+						<Assign Content="1" TextId="T_ID_SRC_SEL_BUS_CFG_PRM"/>
+					</Assignments>
+				</ValueItem>
+
+			</ValueList>
+<!-- ============================================================================================ -->
+<!--   List of categorys                                                									   -->
+<!-- ============================================================================================ -->
+			 <GraphicsList>
+              <GraphicItem ID="1" GraphicFile="GSDML_RETA-02"/>
+              <GraphicItem ID="2" GraphicFile="GSDML_RETA-02"/>
+             </GraphicsList>
+            
+			<CategoryList>
+				<CategoryItem ID="CAT_RET_MODULES" TextId="CAT_RET_MODULES"/>
+				<CategoryItem ID="CAT_RET_VENDOR" TextId="CAT_RET_VENDOR"/>
+			</CategoryList>
+
+<!-- ============================================================================================ -->
+<!--   ExternalTextList                                                 									   -->
+<!-- ============================================================================================ -->
+			<ExternalTextList>
+				<PrimaryLanguage>
+					<!--Identification-->
+					<Text TextId="T_ID_RETA_DAP_PRT_V1" Value="RETA-02 Vendor"/>
+					<Text TextId="T_ID_RETA_DAP_PRT_V2" Value="RETA-02 PROFIdrive"/>
+					<Text TextId="T_ID_DEV_DESCRIPTION" Value="PROFINET IO module RETA-02"/>
+					<Text TextId="T_ID_SS_Interface" Value="X1"/>
+					<Text TextId="T_ID_SS_Port1" Value="X1 P1"/>
+					<Text TextId="T_ID_DAP_INTERFACE_MODULE" Value="Interface"/>
+					<Text TextId="T_ID_PORT1" Value="Port 1"/>
+
+					<!--Module category-->
+					<Text TextId="CAT_RET_MODULES" Value="Drive Object"/>
+					<Text TextId="CAT_RET_VENDOR" Value="Vendor specific"/>
+					
+
+					<Text TextId="T_ID_INPUT" Value="Input"/>
+					<Text TextId="T_ID_OUTPUT" Value="Output"/>
+
+					<!--Modules-->
+					<Text TextId="T_ID_DRIVE_OBJECT_1" Value="Std Tgm 1"/>
+					<Text TextId="T_ID_DRIVE_OBJECT_2" Value="Std Tgm 1 + 1 PZD"/>
+					<Text TextId="T_ID_DRIVE_OBJECT_3" Value="Std Tgm 1 + 2 PZD"/>
+					<Text TextId="T_ID_DRIVE_OBJECT_4" Value="Std Tgm 1 + 3 PZD"/>
+					<Text TextId="T_ID_DRIVE_OBJECT_5" Value="Std Tgm 1 + 4 PZD"/>
+					<Text TextId="T_ID_DRIVE_OBJECT_6" Value="Std Tgm 1 + 5 PZD"/>
+					<Text TextId="T_ID_DRIVE_OBJECT_7" Value="Std Tgm 1 + 6 PZD"/>
+					<Text TextId="T_ID_DRIVE_OBJECT_8" Value="Std Tgm 1 + 7 PZD"/>
+					<Text TextId="T_ID_DRIVE_OBJECT_9" Value="Std Tgm 1 + 8 PZD"/>
+					
+					<Text TextId="T_ID_DRIVE_OBJECT_10" Value="Vendor Object PPO3"/>
+					<Text TextId="T_ID_DRIVE_OBJECT_11" Value="Vendor Object PPO4"/>
+					<Text TextId="T_ID_DRIVE_OBJECT_12" Value="Vendor Object PPO6"/>
+
+					<!--SubModules-->
+					<Text TextId="T_ID_MAP" Value="Module Access Point"/>
+					<Text TextId="T_ID_INFO_MAP" Value="Acyclic parameter access is possible through this module"/>
+					<Text TextId="T_ID_STD_TGM_1" Value="Standard telegram 1"/>
+					<Text TextId="T_ID_INFO_STD_TGM_1" Value="Control/Reference and Status/Actual values"/>
+					<Text TextId="T_ID_NO_SUB_MODULE" Value="Empty sub-module"/>
+					<Text TextId="T_ID_INFO_NO_SUB_MODULE" Value="Not occupied"/>
+					<Text TextId="T_ID_INPUT_1B" Value="Input 1byte"/>
+					<Text TextId="T_ID_INFO_INPUT_1B" Value="Input 1byte, freely configurable"/>
+					<Text TextId="T_ID_INPUT_2B" Value="Input 2 bytes"/>
+					<Text TextId="T_ID_INFO_INPUT_2B" Value="Input 2 bytes, freely configurable"/>
+					<Text TextId="T_ID_INPUT_4B" Value="Input 4 bytes"/>
+					<Text TextId="T_ID_INFO_INPUT_4B" Value="Input 4 bytes, freely configurable"/>
+					<Text TextId="T_ID_OUTPUT_1B" Value="Output 1byte"/>
+					<Text TextId="T_ID_INFO_OUTPUT_1B" Value="Output 1byte, freely configurable"/>
+					<Text TextId="T_ID_OUTPUT_2B" Value="Output 2 bytes"/>
+					<Text TextId="T_ID_INFO_OUTPUT_2B" Value="Output 2 bytes, freely configurable"/>
+					<Text TextId="T_ID_OUTPUT_4B" Value="Output 4 bytes"/>
+					<Text TextId="T_ID_INFO_OUTPUT_4B" Value="Output 4 bytes, freely configurable"/>
+					
+					<Text TextId="T_ID_VO_PPO3" Value="Vendor specific object, PPO3"/>
+					<Text TextId="T_ID_INFO_VO_PPO3" Value="Control/Reference and Status/Actual values"/>
+					<Text TextId="T_ID_VO_PPO4" Value="Vendor specific object, PPO4"/>
+					<Text TextId="T_ID_INFO_VO_PPO4" Value="Control/Reference, Status/Actual values + 4 IN/OUT words"/>
+					<Text TextId="T_ID_VO_PPO6" Value="Vendor specific object, PPO6"/>
+					<Text TextId="T_ID_INFO_VO_PPO6" Value="Control/Reference, Status/Actual values + 8 IN/OUT words"/>
+					
+					<!--Parameter data-->
+					<Text TextId="T_ID_STD_TGM_1_PARAMETERS" Value="General parameters"/>
+					<Text TextId="T_ID_INPUT_X_PARAMETERS" Value="Input PZD configuration parameters"/>
+					<Text TextId="T_ID_OUTPUT_X_PARAMETERS" Value="Output PZD configuration parameters"/>
+					<Text TextId="T_ID_STOP_ACTION" Value="Stop Action selection"/>
+					<Text TextId="T_ID_FS_STW1" Value="Fail safe STW1"/>
+					<Text TextId="T_ID_FS_NSOLLA" Value="Fail safe NSOLL_A"/>
+					<Text TextId="T_ID_PRM_NBR_SOURCE_SEL" Value="Parameter source"/>			
+					<Text TextId="T_ID_PRM_NBR" Value="Parameter number"/>
+					
+					<Text TextId="T_ID_PRM_NBR_O1" Value="Parameter number (Output 1) = PZD3"/>
+					<Text TextId="T_ID_PRM_NBR_O2" Value="Parameter number (Output 2) = PZD4"/>
+					<Text TextId="T_ID_PRM_NBR_O3" Value="Parameter number (Output 3) = PZD5"/>
+					<Text TextId="T_ID_PRM_NBR_O4" Value="Parameter number (Output 4) = PZD6"/>
+					<Text TextId="T_ID_PRM_NBR_O5" Value="Parameter number (Output 5) = PZD7"/>
+					<Text TextId="T_ID_PRM_NBR_O6" Value="Parameter number (Output 6) = PZD8"/>
+					<Text TextId="T_ID_PRM_NBR_O7" Value="Parameter number (Output 7) = PZD9"/>
+					<Text TextId="T_ID_PRM_NBR_O8" Value="Parameter number (Output 8) = PZD10"/>
+					<Text TextId="T_ID_PRM_NBR_I1" Value="Parameter number (Input 1) = PZD3"/>
+					<Text TextId="T_ID_PRM_NBR_I2" Value="Parameter number (Input 2) = PZD4"/>
+					<Text TextId="T_ID_PRM_NBR_I3" Value="Parameter number (Input 3) = PZD5"/>
+					<Text TextId="T_ID_PRM_NBR_I4" Value="Parameter number (Input 4) = PZD6"/>
+					<Text TextId="T_ID_PRM_NBR_I5" Value="Parameter number (Input 5) = PZD7"/>
+					<Text TextId="T_ID_PRM_NBR_I6" Value="Parameter number (Input 6) = PZD8"/>
+					<Text TextId="T_ID_PRM_NBR_I7" Value="Parameter number (Input 7) = PZD9"/>
+					<Text TextId="T_ID_PRM_NBR_I8" Value="Parameter number (Input 8) = PZD10"/>
+					
+					<Text TextId="T_ID_VO_FS_CW" Value="Fail safe Control Word"/>
+					<Text TextId="T_ID_VO_FS_REF" Value="Fail safe Reference value"/>
+
+					<Text TextId="T_ID_STOP_ACTION_STOP" Value="Stop"/>
+					<Text TextId="T_ID_STOP_ACTION_FREEZE" Value="Freeze"/>
+					<Text TextId="T_ID_STOP_ACTION_USE_FAIL_SAFE" Value="Fail-safe values"/>
+					
+					<Text TextId="T_ID_FAIL_SAFE_VALUE" Value="Fail safe value"/>
+					
+					<Text TextId="T_ID_FAIL_SAFE_VALUE_O1" Value="Fail safe value (Output 1) = PZD3"/>
+					<Text TextId="T_ID_FAIL_SAFE_VALUE_O2" Value="Fail safe value (Output 2) = PZD4"/>
+					<Text TextId="T_ID_FAIL_SAFE_VALUE_O3" Value="Fail safe value (Output 3) = PZD5"/>
+					<Text TextId="T_ID_FAIL_SAFE_VALUE_O4" Value="Fail safe value (Output 4) = PZD6"/>
+					<Text TextId="T_ID_FAIL_SAFE_VALUE_O5" Value="Fail safe value (Output 5) = PZD7"/>
+					<Text TextId="T_ID_FAIL_SAFE_VALUE_O6" Value="Fail safe value (Output 6) = PZD8"/>
+					<Text TextId="T_ID_FAIL_SAFE_VALUE_O7" Value="Fail safe value (Output 7) = PZD9"/>
+					<Text TextId="T_ID_FAIL_SAFE_VALUE_O8" Value="Fail safe value (Output 8) = PZD10"/>
+					
+					<Text TextId="T_ID_INP_OUTP_PRM_SRC_SEL" Value="Input/Output 1-4 parameter source selection"/>
+					<Text TextId="T_ID_SRC_SEL_INITIAL_REC_DATA" Value="Initial record data (IO controller)"/>
+					<Text TextId="T_ID_SRC_SEL_BUS_CFG_PRM" Value="RETA-02 configuration parameters (Drive)"/>
+					
+				</PrimaryLanguage>
+
+				<Language xml:lang="en">
+					<!--Identification-->
+					<Text TextId="T_ID_RETA_DAP_PRT_V1" Value="RETA-02 Vendor"/>
+					<Text TextId="T_ID_RETA_DAP_PRT_V2" Value="RETA-02 PROFIdrive"/>
+					<Text TextId="T_ID_DEV_DESCRIPTION" Value="PROFINET IO module RETA-02"/>
+					<Text TextId="T_ID_SS_Interface" Value="X1"/>
+					<Text TextId="T_ID_SS_Port1" Value="X1 P1"/>
+					<Text TextId="T_ID_DAP_INTERFACE_MODULE" Value="Interface"/>
+					<Text TextId="T_ID_PORT1" Value="Port 1"/>
+
+					<!--Module category-->
+					<Text TextId="CAT_RET_MODULES" Value="Drive Object"/>
+					<Text TextId="CAT_RET_VENDOR" Value="Vendor specific"/>
+					
+
+					<Text TextId="T_ID_INPUT" Value="Input"/>
+					<Text TextId="T_ID_OUTPUT" Value="Output"/>
+
+					<!--Modules-->
+					<Text TextId="T_ID_DRIVE_OBJECT_1" Value="Std Tgm 1"/>
+					<Text TextId="T_ID_DRIVE_OBJECT_2" Value="Std Tgm 1 + 1 PZD"/>
+					<Text TextId="T_ID_DRIVE_OBJECT_3" Value="Std Tgm 1 + 2 PZD"/>
+					<Text TextId="T_ID_DRIVE_OBJECT_4" Value="Std Tgm 1 + 3 PZD"/>
+					<Text TextId="T_ID_DRIVE_OBJECT_5" Value="Std Tgm 1 + 4 PZD"/>
+					<Text TextId="T_ID_DRIVE_OBJECT_6" Value="Std Tgm 1 + 5 PZD"/>
+					<Text TextId="T_ID_DRIVE_OBJECT_7" Value="Std Tgm 1 + 6 PZD"/>
+					<Text TextId="T_ID_DRIVE_OBJECT_8" Value="Std Tgm 1 + 7 PZD"/>
+					<Text TextId="T_ID_DRIVE_OBJECT_9" Value="Std Tgm 1 + 8 PZD"/>
+					
+					<Text TextId="T_ID_DRIVE_OBJECT_10" Value="Vendor Object PPO3"/>
+					<Text TextId="T_ID_DRIVE_OBJECT_11" Value="Vendor Object PPO4"/>
+					<Text TextId="T_ID_DRIVE_OBJECT_12" Value="Vendor Object PPO6"/>
+
+					<!--SubModules-->
+					<Text TextId="T_ID_MAP" Value="Module Access Point"/>
+					<Text TextId="T_ID_INFO_MAP" Value="Acyclic parameter access is possible through this module"/>
+					<Text TextId="T_ID_STD_TGM_1" Value="Standard telegram 1"/>
+					<Text TextId="T_ID_INFO_STD_TGM_1" Value="Control/Reference and Status/Actual values"/>
+					<Text TextId="T_ID_NO_SUB_MODULE" Value="Empty sub-module"/>
+					<Text TextId="T_ID_INFO_NO_SUB_MODULE" Value="Not occupied"/>
+					<Text TextId="T_ID_INPUT_1B" Value="Input 1byte"/>
+					<Text TextId="T_ID_INFO_INPUT_1B" Value="Input 1byte, freely configurable"/>
+					<Text TextId="T_ID_INPUT_2B" Value="Input 2 bytes"/>
+					<Text TextId="T_ID_INFO_INPUT_2B" Value="Input 2 bytes, freely configurable"/>
+					<Text TextId="T_ID_INPUT_4B" Value="Input 4 bytes"/>
+					<Text TextId="T_ID_INFO_INPUT_4B" Value="Input 4 bytes, freely configurable"/>
+					<Text TextId="T_ID_OUTPUT_1B" Value="Output 1byte"/>
+					<Text TextId="T_ID_INFO_OUTPUT_1B" Value="Output 1byte, freely configurable"/>
+					<Text TextId="T_ID_OUTPUT_2B" Value="Output 2 bytes"/>
+					<Text TextId="T_ID_INFO_OUTPUT_2B" Value="Output 2 bytes, freely configurable"/>
+					<Text TextId="T_ID_OUTPUT_4B" Value="Output 4 bytes"/>
+					<Text TextId="T_ID_INFO_OUTPUT_4B" Value="Output 4 bytes, freely configurable"/>
+					
+					<Text TextId="T_ID_VO_PPO3" Value="Vendor specific object, PPO3"/>
+					<Text TextId="T_ID_INFO_VO_PPO3" Value="Control/Reference and Status/Actual values"/>
+					<Text TextId="T_ID_VO_PPO4" Value="Vendor specific object, PPO4"/>
+					<Text TextId="T_ID_INFO_VO_PPO4" Value="Control/Reference, Status/Actual values + 4 IN/OUT words"/>
+					<Text TextId="T_ID_VO_PPO6" Value="Vendor specific object, PPO6"/>
+					<Text TextId="T_ID_INFO_VO_PPO6" Value="Control/Reference, Status/Actual values + 8 IN/OUT words"/>
+					
+					<!--Parameter data-->
+					<Text TextId="T_ID_STD_TGM_1_PARAMETERS" Value="General parameters"/>
+					<Text TextId="T_ID_INPUT_X_PARAMETERS" Value="Input PZD configuration parameters"/>
+					<Text TextId="T_ID_OUTPUT_X_PARAMETERS" Value="Output PZD configuration parameters"/>
+					<Text TextId="T_ID_STOP_ACTION" Value="Stop Action selection"/>
+					<Text TextId="T_ID_FS_STW1" Value="Fail safe STW1"/>
+					<Text TextId="T_ID_FS_NSOLLA" Value="Fail safe NSOLL_A"/>
+					<Text TextId="T_ID_PRM_NBR_SOURCE_SEL" Value="Parameter source"/>			
+					<Text TextId="T_ID_PRM_NBR" Value="Parameter number"/>
+					
+					<Text TextId="T_ID_PRM_NBR_O1" Value="Parameter number (Output 1) = PZD3"/>
+					<Text TextId="T_ID_PRM_NBR_O2" Value="Parameter number (Output 2) = PZD4"/>
+					<Text TextId="T_ID_PRM_NBR_O3" Value="Parameter number (Output 3) = PZD5"/>
+					<Text TextId="T_ID_PRM_NBR_O4" Value="Parameter number (Output 4) = PZD6"/>
+					<Text TextId="T_ID_PRM_NBR_O5" Value="Parameter number (Output 5) = PZD7"/>
+					<Text TextId="T_ID_PRM_NBR_O6" Value="Parameter number (Output 6) = PZD8"/>
+					<Text TextId="T_ID_PRM_NBR_O7" Value="Parameter number (Output 7) = PZD9"/>
+					<Text TextId="T_ID_PRM_NBR_O8" Value="Parameter number (Output 8) = PZD10"/>
+					<Text TextId="T_ID_PRM_NBR_I1" Value="Parameter number (Input 1) = PZD3"/>
+					<Text TextId="T_ID_PRM_NBR_I2" Value="Parameter number (Input 2) = PZD4"/>
+					<Text TextId="T_ID_PRM_NBR_I3" Value="Parameter number (Input 3) = PZD5"/>
+					<Text TextId="T_ID_PRM_NBR_I4" Value="Parameter number (Input 4) = PZD6"/>
+					<Text TextId="T_ID_PRM_NBR_I5" Value="Parameter number (Input 5) = PZD7"/>
+					<Text TextId="T_ID_PRM_NBR_I6" Value="Parameter number (Input 6) = PZD8"/>
+					<Text TextId="T_ID_PRM_NBR_I7" Value="Parameter number (Input 7) = PZD9"/>
+					<Text TextId="T_ID_PRM_NBR_I8" Value="Parameter number (Input 8) = PZD10"/>
+					
+					<Text TextId="T_ID_VO_FS_CW" Value="Fail safe Control Word"/>
+					<Text TextId="T_ID_VO_FS_REF" Value="Fail safe Reference value"/>
+
+					<Text TextId="T_ID_STOP_ACTION_STOP" Value="Stop"/>
+					<Text TextId="T_ID_STOP_ACTION_FREEZE" Value="Freeze"/>
+					<Text TextId="T_ID_STOP_ACTION_USE_FAIL_SAFE" Value="Fail-safe values"/>
+					
+					<Text TextId="T_ID_FAIL_SAFE_VALUE" Value="Fail safe value"/>
+					
+					<Text TextId="T_ID_FAIL_SAFE_VALUE_O1" Value="Fail safe value (Output 1) = PZD3"/>
+					<Text TextId="T_ID_FAIL_SAFE_VALUE_O2" Value="Fail safe value (Output 2) = PZD4"/>
+					<Text TextId="T_ID_FAIL_SAFE_VALUE_O3" Value="Fail safe value (Output 3) = PZD5"/>
+					<Text TextId="T_ID_FAIL_SAFE_VALUE_O4" Value="Fail safe value (Output 4) = PZD6"/>
+					<Text TextId="T_ID_FAIL_SAFE_VALUE_O5" Value="Fail safe value (Output 5) = PZD7"/>
+					<Text TextId="T_ID_FAIL_SAFE_VALUE_O6" Value="Fail safe value (Output 6) = PZD8"/>
+					<Text TextId="T_ID_FAIL_SAFE_VALUE_O7" Value="Fail safe value (Output 7) = PZD9"/>
+					<Text TextId="T_ID_FAIL_SAFE_VALUE_O8" Value="Fail safe value (Output 8) = PZD10"/>
+					
+					<Text TextId="T_ID_INP_OUTP_PRM_SRC_SEL" Value="Input/Output 1-4 parameter source selection"/>
+					<Text TextId="T_ID_SRC_SEL_INITIAL_REC_DATA" Value="Initial record data (IO controller)"/>
+					<Text TextId="T_ID_SRC_SEL_BUS_CFG_PRM" Value="RETA-02 configuration parameters (Drive)"/>
+					
+				</Language>
+
+			</ExternalTextList>
+		</ApplicationProcess>
+	</ProfileBody>
+</ISO15745Profile>

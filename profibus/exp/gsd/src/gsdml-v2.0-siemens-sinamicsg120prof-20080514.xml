@@ -1,0 +1,1141 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--edited with visual studio 2003 by martin langecker (Siemens AG)-->
+<!--PROFINET GSD for Siemens SINAMICS G120 F-->
+<!--GSD V2.0 for RT/IRT-Controllers:
+- RT and IRT;
+- multiple submodules per module, multiple subslots per slot;
+- physical device;
+- multiAPI;
+-submodule I&M not found-->
+<!--Author:  A&D SD -->
+<!--State:   Released -->
+<!--History:
+20050720: <SubmoduleIdentNumber="0x00"/> for DAP (Interface, Port1 and Port2),  ExtendedAddressAssignmentSupported="true"
+20050726: <RT_Class3TimingProperties SendClock="16 32 40 48 56 64 72 80 88 96 104 112 120 128"/> <PortSubmoduleItem SubslotNumber=" MaxPortRxDelay="320"  MaxPortTxDelay="88"
+20050728: ImplementationType="ERTEC200A"
+20050926: revision telegramm 20
+20051005: new telegram name
+20051024: new DeviceID=0x0501 (old 0502
+20060329: DeviceID=0x0502, DAP-ModulID=0x00000001, Slot1-ModulID=0x00010000
+20060517: HW Release: A00
+20060531: deleted Telegram3 351
+20060727: modification of SubmoduleIdentNumber, port1 and port2
+20060811: modification of VendorName, MinDeviceInterval, RT_Class3TimingProperties SendClock, MaxPortRxDelay, MaxPortTxDelay, SubmoduleIdentNumber, TextId and MaxBridgeDelay
+20060817: modification of port2
+20060906: modification of SubmoduleIdentNumber in line "SupportedRT_Class="Class3" SubslotNumber="32768" TextId="IDT_Interface"
+20061122: added PROFIsafe support
+20061128: added specific values for the CU240S
+20070110: added telegram 353 and 354
+20070118: update of Text, Device ID, PROFIsafe SubmoduleIdentNumber
+20070131: removed rest of IRT functionality
+          removed:RT_Class3Properties MaxBridgeDelay="2720" MaxNumberIR_FrameData="400" />
+            <SynchronisationMode SupportedRole="SyncSlave" MaxLocalJitter="50" T_PLL_MAX="1000" />
+            <RT_Class3TimingProperties SendClock="32 40 48 56 64 72 80 88 96 104 112 120 128" ReductionRatio="1" />
+					<SubslotList>
+            <SubslotItem SubslotNumber="32768" TextId="IDT_SS_Interface"/>
+						<SubslotItem SubslotNumber="32769" TextId="IDT_SS_Port1"/>
+						<SubslotItem SubslotNumber="32770" TextId="IDT_SS_Port2"/>
+					</SubslotList>
+					 <SystemDefinedSubmoduleList>
+             <InterfaceSubmoduleItem SubmoduleIdentNumber="0x00000001" SupportedRT_Class="Class1" SubslotNumber="32768" TextId="IDT_Interface" IsochroneModeSupported="false">
+              <RT_Class3Properties MaxBridgeDelay="2720" MaxNumberIR_FrameData="400" />
+              <SynchronisationMode SupportedRole="SyncSlave" MaxLocalJitter="50" T_PLL_MAX="1000" />
+              <ApplicationRelations>
+                <RT_Class3TimingProperties SendClock="32 40 48 56 64 72 80 88 96 104 112 120 128" ReductionRatio="1" />
+              </ApplicationRelations>
+            </InterfaceSubmoduleItem>
+            <PortSubmoduleItem SubslotNumber="32769" MAUType="100BASETXFD" MaxPortRxDelay="350" MaxPortTxDelay="158" TextId="IDT_Port1" SubmoduleIdentNumber="0x01" />
+            <PortSubmoduleItem SubslotNumber="32770" MAUType="100BASETXFD" MaxPortRxDelay="350" MaxPortTxDelay="158" TextId="IDT_Port2" SubmoduleIdentNumber="0x01" />
+          </SystemDefinedSubmoduleList>
+            IRT from "IDT_INFO_DAP1"
+20070207: added channel diagnosis; removed F_BLOCK_ID definition (because it should not be included in the crc calculation)
+20070212: update of Text
+20070315: reinsert SubModules
+20070523: readded F_Block_ID because of problems with actual S7 Version (F Par Desc CRC fault)
+20070724: corrected default names, corrected graphics, shortened tel names
+20071004: increase PROFIsafe WD
+20080215: changed software revision to V03.20
+20080514: submodule ids of DAP/Interface/Ports have to be unique (DAP=2, Interface=3, Ports=4)
+ -->
+
+
+
+
+<ISO15745Profile xmlns="http://www.profibus.com/GSDML/2003/11/DeviceProfile" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.profibus.com/GSDML/2003/11/DeviceProfile  ..\XSD\GSDML-DeviceProfile-v2.0.xsd">
+	<ProfileHeader>
+		<ProfileIdentification>PROFINET Device Profile</ProfileIdentification>
+		<ProfileRevision>1.00</ProfileRevision>
+		<ProfileName>Device Profile for PROFINET Devices</ProfileName>
+		<ProfileSource>PROFIBUS Nutzerorganisation e. V. (PNO)</ProfileSource>
+		<ProfileClassID>Device</ProfileClassID>
+		<ISO15745Reference>
+			<ISO15745Part>4</ISO15745Part>
+			<ISO15745Edition>1</ISO15745Edition>
+			<ProfileTechnology>GSDML</ProfileTechnology>
+		</ISO15745Reference>
+	</ProfileHeader>
+	<ProfileBody>
+		<DeviceIdentity VendorID="0x002A" DeviceID="0x0508">
+			<InfoText TextId="IDT_FamilyDescription"/>
+			<VendorName Value="Siemens AG"/>
+		</DeviceIdentity>
+		<DeviceFunction>
+			<Family MainFamily="Drives" ProductFamily="SINAMICS"/>
+		</DeviceFunction>
+		<ApplicationProcess>
+			<DeviceAccessPointList>
+				<DeviceAccessPointItem ID="DAP 1" PhysicalSlots="0..1" ModuleIdentNumber="0x00000001" MinDeviceInterval="32" ImplementationType="ERTEC200A" DNS_CompatibleName="SINAMICS-G120-CU240S-F" ExtendedAddressAssignmentSupported="true" FixedInSlots="0" ObjectUUID_LocalIndex="0" RequiredSchemaVersion="V2.0">
+					<ModuleInfo>
+						<Name TextId="IDT_MOD_NAME_DAP1"/>
+						<InfoText TextId="IDT_INFO_DAP1"/>
+						<VendorName Value="Siemens AG"/>
+						<OrderNumber Value="6SL3 244-0BA21-1FA0"/>
+						<HardwareRelease Value="C01"/>
+						<SoftwareRelease Value="V03.20"/>
+					</ModuleInfo>
+					<SubslotList>
+						<SubslotItem SubslotNumber="32768" TextId="IDT_SS_Interface"/>
+						<SubslotItem SubslotNumber="32769" TextId="IDT_SS_Port1"/>
+						<SubslotItem SubslotNumber="32770" TextId="IDT_SS_Port2"/>
+					</SubslotList>
+					<IOConfigData MaxInputLength="40" MaxOutputLength="40" MaxDataLength="80"/>
+					<UseableModules>
+						<!-- list all modules from ModuleList here -->
+						<ModuleItemRef ModuleItemTarget="IDM_1" AllowedInSlots="1"/>
+						<ModuleItemRef ModuleItemTarget="IDM_PROF1" AllowedInSlots="1"/>
+						<ModuleItemRef ModuleItemTarget="IDM_20" AllowedInSlots="1"/>
+						<ModuleItemRef ModuleItemTarget="IDM_PROF20" AllowedInSlots="1"/>
+						<ModuleItemRef ModuleItemTarget="IDM_350" AllowedInSlots="1"/>
+						<ModuleItemRef ModuleItemTarget="IDM_PROF350" AllowedInSlots="1"/>
+						<ModuleItemRef ModuleItemTarget="IDM_352" AllowedInSlots="1"/>
+						<ModuleItemRef ModuleItemTarget="IDM_PROF352" AllowedInSlots="1"/>
+						<ModuleItemRef ModuleItemTarget="IDM_353" AllowedInSlots="1"/>
+						<ModuleItemRef ModuleItemTarget="IDM_PROF353" AllowedInSlots="1"/>
+						<ModuleItemRef ModuleItemTarget="IDM_354" AllowedInSlots="1"/>
+						<ModuleItemRef ModuleItemTarget="IDM_PROF354" AllowedInSlots="1"/>
+					</UseableModules>
+					<VirtualSubmoduleList>
+						<VirtualSubmoduleItem ID="IDS_D1" SubmoduleIdentNumber="0x00000002" API="0">
+							<IOData IOPS_Length="1" IOCS_Length="1"/>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+					<SystemDefinedSubmoduleList>
+						<InterfaceSubmoduleItem SubmoduleIdentNumber="0x00000003" SupportedRT_Class="Class1" SubslotNumber="32768" TextId="IDT_Interface" IsochroneModeSupported="false">
+							<SynchronisationMode SupportedRole="SyncSlave" MaxLocalJitter="50" T_PLL_MAX="1000"/>
+						</InterfaceSubmoduleItem>
+						<PortSubmoduleItem SubslotNumber="32769" MAUType="100BASETXFD" MaxPortRxDelay="350" MaxPortTxDelay="158" TextId="IDT_Port1" SubmoduleIdentNumber="0x04"/>
+						<PortSubmoduleItem SubslotNumber="32770" MAUType="100BASETXFD" MaxPortRxDelay="350" MaxPortTxDelay="158" TextId="IDT_Port2" SubmoduleIdentNumber="0x04"/>
+					</SystemDefinedSubmoduleList>
+					<Graphics>
+						<GraphicItemRef Type="DeviceSymbol" GraphicItemTarget="1"/>
+					</Graphics>
+				</DeviceAccessPointItem>
+			</DeviceAccessPointList>
+			<ModuleList>
+				<!--standard telegram 1: 2/2 PZD-->
+				<ModuleItem ID="IDM_1" ModuleIdentNumber="0x00000100" RequiredSchemaVersion="V2.0">
+					<ModuleInfo>
+						<Name TextId="IDT_MOD_NAME_TEL1"/>
+						<InfoText TextId="IDT_MOD_INFO_TEL1"/>
+					</ModuleInfo>
+					<VirtualSubmoduleList>
+						<VirtualSubmoduleItem ID="IDS_PAP_1" SubmoduleIdentNumber="0x0000FFFF" API="14848" FixedInSubslots="1">
+							<IOData/>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_PAP"/>
+								<InfoText TextId="IDT_SM_INFO_PAP"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+						<VirtualSubmoduleItem ID="IDS_1" SubmoduleIdentNumber="0x00000001" API="14848" FixedInSubslots="2">
+							<IOData>
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+								</Output>
+							</IOData>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_TEL1"/>
+								<InfoText TextId="IDT_SM_INFO_TEL1"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+				</ModuleItem>
+				<!--standard telegram 1: 2/2 PZD + PROFISAFE-->
+				<ModuleItem ID="IDM_PROF1" ModuleIdentNumber="0x00000100" RequiredSchemaVersion="V2.0">
+					<ModuleInfo>
+						<Name TextId="IDT_MOD_NAME_TEL1_PROF"/>
+						<InfoText TextId="IDT_MOD_INFO_TEL1_PROF"/>
+					</ModuleInfo>
+					<VirtualSubmoduleList>
+						<VirtualSubmoduleItem ID="IDS_PAP_PROF_1" SubmoduleIdentNumber="0x0000FFFF" API="14848" FixedInSubslots="1">
+							<IOData/>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_PAP"/>
+								<InfoText TextId="IDT_SM_INFO_PAP"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+						<VirtualSubmoduleItem ID="IDS_PROFISAFE" SubmoduleIdentNumber="0x0000001E" API="14848" PROFIsafeSupported="1" FixedInSubslots="2">
+							<IOData F_IO_StructureDescCRC="5639">
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" UseAsBits="true" TextId="Inputs"/>
+									<DataItem DataType="F_MessageTrailer4Byte" TextId="Safety"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" UseAsBits="true" TextId="Outputs"/>
+									<DataItem DataType="F_MessageTrailer4Byte" TextId="Safety"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<F_ParameterRecordDataItem F_ParamDescCRC="32567" Index="256" TransferSequence="1">
+									<F_Check_iPar DefaultValue="NoCheck" Visible="false" Changeable="false"/>
+									<F_SIL DefaultValue="SIL2" Visible="true" Changeable="false" AllowedValues="SIL2"/>
+									<F_CRC_Length DefaultValue="3-Byte-CRC" Visible="true" Changeable="false" AllowedValues="3-Byte-CRC"/>
+									<F_Block_ID DefaultValue="0"/>
+									<F_Source_Add AllowedValues="1..65534"/>
+									<F_Dest_Add AllowedValues="1..65534"/>
+									<F_WD_Time DefaultValue="150" AllowedValues="10..65535"/>
+									<F_Par_CRC DefaultValue="55023"/>
+								</F_ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_PROFISAFE"/>
+								<InfoText TextId="IDT_SM_INFO_PROFISAFE"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+						<VirtualSubmoduleItem ID="IDS_PROF1" SubmoduleIdentNumber="0x00000001" API="14848" FixedInSubslots="3">
+							<IOData>
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+								</Output>
+							</IOData>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_TEL1"/>
+								<InfoText TextId="IDT_SM_INFO_TEL1"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+				</ModuleItem>
+				<!--standard  telegram 20: 2/6 PZD -->
+				<ModuleItem ID="IDM_20" ModuleIdentNumber="0x00000100" RequiredSchemaVersion="V2.0">
+					<ModuleInfo>
+						<Name TextId="IDT_MOD_NAME_TEL20"/>
+						<InfoText TextId="IDT_MOD_INFO_TEL20"/>
+					</ModuleInfo>
+					<VirtualSubmoduleList>
+						<VirtualSubmoduleItem ID="IDS_PAP_2" SubmoduleIdentNumber="0x0000FFFF" API="14848" FixedInSubslots="1">
+							<IOData/>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_PAP"/>
+								<InfoText TextId="IDT_SM_INFO_PAP"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+						<VirtualSubmoduleItem ID="IDS_20" SubmoduleIdentNumber="0x00000014" API="14848" FixedInSubslots="2">
+							<IOData>
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+								</Output>
+							</IOData>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_TEL20"/>
+								<InfoText TextId="IDT_SM_INFO_TEL20"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+				</ModuleItem>
+				<!--standard  telegram 20: 2/6 PZD + PROFISAFE-->
+				<ModuleItem ID="IDM_PROF20" ModuleIdentNumber="0x00000100" RequiredSchemaVersion="V2.0">
+					<ModuleInfo>
+						<Name TextId="IDT_MOD_NAME_TEL20_PROF"/>
+						<InfoText TextId="IDT_MOD_INFO_TEL20_PROF"/>
+					</ModuleInfo>
+					<VirtualSubmoduleList>
+						<VirtualSubmoduleItem ID="IDS_PAP_PROF_2" SubmoduleIdentNumber="0x0000FFFF" API="14848" FixedInSubslots="1">
+							<IOData/>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_PAP"/>
+								<InfoText TextId="IDT_SM_INFO_PAP"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+						<VirtualSubmoduleItem ID="IDS_PROFISAFE2" SubmoduleIdentNumber="0x0000001E" API="14848" PROFIsafeSupported="1" FixedInSubslots="2">
+							<IOData F_IO_StructureDescCRC="5639">
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" UseAsBits="true" TextId="Inputs"/>
+									<DataItem DataType="F_MessageTrailer4Byte" TextId="Safety"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" UseAsBits="true" TextId="Outputs"/>
+									<DataItem DataType="F_MessageTrailer4Byte" TextId="Safety"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<F_ParameterRecordDataItem F_ParamDescCRC="32567" Index="256" TransferSequence="1">
+									<F_Check_iPar DefaultValue="NoCheck" Visible="false" Changeable="false"/>
+									<F_SIL DefaultValue="SIL2" Visible="true" Changeable="false" AllowedValues="SIL2"/>
+									<F_CRC_Length DefaultValue="3-Byte-CRC" Visible="true" Changeable="false" AllowedValues="3-Byte-CRC"/>
+									<F_Block_ID DefaultValue="0"/>
+									<F_Source_Add AllowedValues="1..65534"/>
+									<F_Dest_Add AllowedValues="1..65534"/>
+									<F_WD_Time DefaultValue="150" AllowedValues="10..65535"/>
+									<F_Par_CRC DefaultValue="55023"/>
+								</F_ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_PROFISAFE"/>
+								<InfoText TextId="IDT_SM_INFO_PROFISAFE"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+						<VirtualSubmoduleItem ID="IDS_20_PROF" SubmoduleIdentNumber="0x00000014" API="14848" FixedInSubslots="3">
+							<IOData>
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+								</Output>
+							</IOData>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_TEL20"/>
+								<InfoText TextId="IDT_SM_INFO_TEL20"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+				</ModuleItem>
+				<!--SIEMENS telegram 350: 4/4 PZD-->
+				<ModuleItem ID="IDM_350" ModuleIdentNumber="0x00000100" RequiredSchemaVersion="V2.0">
+					<ModuleInfo>
+						<Name TextId="IDT_MOD_NAME_TEL350"/>
+						<InfoText TextId="IDT_MOD_INFO_TEL350"/>
+					</ModuleInfo>
+					<VirtualSubmoduleList>
+						<VirtualSubmoduleItem ID="IDS_PAP_3" SubmoduleIdentNumber="0x0000FFFF" API="14848" FixedInSubslots="1">
+							<IOData/>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_PAP"/>
+								<InfoText TextId="IDT_SM_INFO_PAP"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+						<VirtualSubmoduleItem ID="IDS_350" SubmoduleIdentNumber="0x0000015E" API="14848" FixedInSubslots="2">
+							<IOData>
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+								</Output>
+							</IOData>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_TEL350"/>
+								<InfoText TextId="IDT_SM_INFO_TEL350"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+				</ModuleItem>
+				<!--SIEMENS telegram 350: 4/4 PZD + PROFISAFE-->
+				<ModuleItem ID="IDM_PROF350" ModuleIdentNumber="0x00000100" RequiredSchemaVersion="V2.0">
+					<ModuleInfo>
+						<Name TextId="IDT_MOD_NAME_TEL350_PROF"/>
+						<InfoText TextId="IDT_MOD_INFO_TEL350_PROF"/>
+					</ModuleInfo>
+					<VirtualSubmoduleList>
+						<VirtualSubmoduleItem ID="IDS_PAP_PROF_3" SubmoduleIdentNumber="0x0000FFFF" API="14848" FixedInSubslots="1">
+							<IOData/>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_PAP"/>
+								<InfoText TextId="IDT_SM_INFO_PAP"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+						<VirtualSubmoduleItem ID="IDS_PROFISAFE3" SubmoduleIdentNumber="0x0000001E" API="14848" PROFIsafeSupported="1" FixedInSubslots="2">
+							<IOData F_IO_StructureDescCRC="5639">
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" UseAsBits="true" TextId="Inputs"/>
+									<DataItem DataType="F_MessageTrailer4Byte" TextId="Safety"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" UseAsBits="true" TextId="Outputs"/>
+									<DataItem DataType="F_MessageTrailer4Byte" TextId="Safety"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<F_ParameterRecordDataItem F_ParamDescCRC="32567" Index="256" TransferSequence="1">
+									<F_Check_iPar DefaultValue="NoCheck" Visible="false" Changeable="false"/>
+									<F_SIL DefaultValue="SIL2" Visible="true" Changeable="false" AllowedValues="SIL2"/>
+									<F_CRC_Length DefaultValue="3-Byte-CRC" Visible="true" Changeable="false" AllowedValues="3-Byte-CRC"/>
+									<F_Block_ID DefaultValue="0"/>
+									<F_Source_Add AllowedValues="1..65534"/>
+									<F_Dest_Add AllowedValues="1..65534"/>
+									<F_WD_Time DefaultValue="150" AllowedValues="10..65535"/>
+									<F_Par_CRC DefaultValue="55023"/>
+								</F_ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_PROFISAFE"/>
+								<InfoText TextId="IDT_SM_INFO_PROFISAFE"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+						<VirtualSubmoduleItem ID="IDS_350_PROF" SubmoduleIdentNumber="0x0000015E" API="14848" FixedInSubslots="3">
+							<IOData>
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+								</Output>
+							</IOData>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_TEL350"/>
+								<InfoText TextId="IDT_SM_INFO_TEL350"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+				</ModuleItem>
+				<!--SIEMENS telegram 352: 6/6 PZD -->
+				<ModuleItem ID="IDM_352" ModuleIdentNumber="0x00000100" RequiredSchemaVersion="V2.0">
+					<ModuleInfo>
+						<Name TextId="IDT_MOD_NAME_TEL352"/>
+						<InfoText TextId="IDT_MOD_INFO_TEL352"/>
+					</ModuleInfo>
+					<VirtualSubmoduleList>
+						<VirtualSubmoduleItem ID="IDS_PAP_5" SubmoduleIdentNumber="0x0000FFFF" API="14848" FixedInSubslots="1">
+							<IOData/>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_PAP"/>
+								<InfoText TextId="IDT_SM_INFO_PAP"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+						<VirtualSubmoduleItem ID="IDS_352" SubmoduleIdentNumber="0x00000160" API="14848" FixedInSubslots="2">
+							<IOData>
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+								</Output>
+							</IOData>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_TEL352"/>
+								<InfoText TextId="IDT_SM_INFO_TEL352"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+				</ModuleItem>
+				<!--SIEMENS telegram 352: 6/6 PZD + PROFISAFE-->
+				<ModuleItem ID="IDM_PROF352" ModuleIdentNumber="0x00000100" RequiredSchemaVersion="V2.0">
+					<ModuleInfo>
+						<Name TextId="IDT_MOD_NAME_TEL352_PROF"/>
+						<InfoText TextId="IDT_MOD_INFO_TEL352_PROF"/>
+					</ModuleInfo>
+					<VirtualSubmoduleList>
+						<VirtualSubmoduleItem ID="IDS_PAP_PROF_4" SubmoduleIdentNumber="0x0000FFFF" API="14848" FixedInSubslots="1">
+							<IOData/>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_PAP"/>
+								<InfoText TextId="IDT_SM_INFO_PAP"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+						<VirtualSubmoduleItem ID="IDS_PROFISAFE4" SubmoduleIdentNumber="0x0000001E" API="14848" PROFIsafeSupported="1" FixedInSubslots="2">
+							<IOData F_IO_StructureDescCRC="5639">
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" UseAsBits="true" TextId="Inputs"/>
+									<DataItem DataType="F_MessageTrailer4Byte" TextId="Safety"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" UseAsBits="true" TextId="Outputs"/>
+									<DataItem DataType="F_MessageTrailer4Byte" TextId="Safety"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<F_ParameterRecordDataItem F_ParamDescCRC="32567" Index="256" TransferSequence="1">
+									<F_Check_iPar DefaultValue="NoCheck" Visible="false" Changeable="false"/>
+									<F_SIL DefaultValue="SIL2" Visible="true" Changeable="false" AllowedValues="SIL2"/>
+									<F_CRC_Length DefaultValue="3-Byte-CRC" Visible="true" Changeable="false" AllowedValues="3-Byte-CRC"/>
+									<F_Block_ID DefaultValue="0"/>
+									<F_Source_Add AllowedValues="1..65534"/>
+									<F_Dest_Add AllowedValues="1..65534"/>
+									<F_WD_Time DefaultValue="150" AllowedValues="10..65535"/>
+									<F_Par_CRC DefaultValue="55023"/>
+								</F_ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_PROFISAFE"/>
+								<InfoText TextId="IDT_SM_INFO_PROFISAFE"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+						<VirtualSubmoduleItem ID="IDS_352_PROF" SubmoduleIdentNumber="0x00000160" API="14848" FixedInSubslots="3">
+							<IOData>
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+								</Output>
+							</IOData>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_TEL352"/>
+								<InfoText TextId="IDT_SM_INFO_TEL352"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+				</ModuleItem>
+				<!--SIEMENS telegram 353: 4+2/2 PKW+PZD -->
+				<ModuleItem ID="IDM_353" ModuleIdentNumber="0x00000100" RequiredSchemaVersion="V2.0">
+					<ModuleInfo>
+						<Name TextId="IDT_MOD_NAME_TEL353"/>
+						<InfoText TextId="IDT_MOD_INFO_TEL353"/>
+					</ModuleInfo>
+					<VirtualSubmoduleList>
+						<VirtualSubmoduleItem ID="IDS_PAP_PKW1" SubmoduleIdentNumber="0x0000FFFF" API="14848" FixedInSubslots="1">
+							<IOData/>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_PAP"/>
+								<InfoText TextId="IDT_SM_INFO_PAP"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+						<VirtualSubmoduleItem ID="IDS_353" SubmoduleIdentNumber="0x00000161" API="14848" FixedInSubslots="2">
+							<IOData>
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+								</Output>
+							</IOData>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_TEL353"/>
+								<InfoText TextId="IDT_SM_INFO_TEL353"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+				</ModuleItem>
+				<!--SIEMENS telegram 353: 4+2/2 PKW+PZD + PROFISAFE-->
+				<ModuleItem ID="IDM_PROF353" ModuleIdentNumber="0x00000100" RequiredSchemaVersion="V2.0">
+					<ModuleInfo>
+						<Name TextId="IDT_MOD_NAME_TEL353_PROF"/>
+						<InfoText TextId="IDT_MOD_INFO_TEL353_PROF"/>
+					</ModuleInfo>
+					<VirtualSubmoduleList>
+						<VirtualSubmoduleItem ID="IDS_PAP_PROF_PKW1" SubmoduleIdentNumber="0x0000FFFF" API="14848" FixedInSubslots="1">
+							<IOData/>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_PAP"/>
+								<InfoText TextId="IDT_SM_INFO_PAP"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+						<VirtualSubmoduleItem ID="IDS_PROFISAFE_PKW1" SubmoduleIdentNumber="0x0000001E" API="14848" PROFIsafeSupported="1" FixedInSubslots="2">
+							<IOData F_IO_StructureDescCRC="5639">
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" UseAsBits="true" TextId="Inputs"/>
+									<DataItem DataType="F_MessageTrailer4Byte" TextId="Safety"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" UseAsBits="true" TextId="Outputs"/>
+									<DataItem DataType="F_MessageTrailer4Byte" TextId="Safety"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<F_ParameterRecordDataItem F_ParamDescCRC="32567" Index="256" TransferSequence="1">
+									<F_Check_iPar DefaultValue="NoCheck" Visible="false" Changeable="false"/>
+									<F_SIL DefaultValue="SIL2" Visible="true" Changeable="false" AllowedValues="SIL2"/>
+									<F_CRC_Length DefaultValue="3-Byte-CRC" Visible="true" Changeable="false" AllowedValues="3-Byte-CRC"/>
+									<F_Block_ID DefaultValue="0"/>
+									<F_Source_Add AllowedValues="1..65534"/>
+									<F_Dest_Add AllowedValues="1..65534"/>
+									<F_WD_Time DefaultValue="150" AllowedValues="10..65535"/>
+									<F_Par_CRC DefaultValue="55023"/>
+								</F_ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_PROFISAFE"/>
+								<InfoText TextId="IDT_SM_INFO_PROFISAFE"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+						<VirtualSubmoduleItem ID="IDS_353_PROF" SubmoduleIdentNumber="0x00000161" API="14848" FixedInSubslots="3">
+							<IOData>
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+								</Output>
+							</IOData>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_TEL353"/>
+								<InfoText TextId="IDT_SM_INFO_TEL353"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+				</ModuleItem>
+				<!--SIEMENS telegram 354: 4+6/6 PKW+PZD -->
+				<ModuleItem ID="IDM_354" ModuleIdentNumber="0x00000100" RequiredSchemaVersion="V2.0">
+					<ModuleInfo>
+						<Name TextId="IDT_MOD_NAME_TEL354"/>
+						<InfoText TextId="IDT_MOD_INFO_TEL354"/>
+					</ModuleInfo>
+					<VirtualSubmoduleList>
+						<VirtualSubmoduleItem ID="IDS_PAP_PKW2" SubmoduleIdentNumber="0x0000FFFF" API="14848" FixedInSubslots="1">
+							<IOData/>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_PAP"/>
+								<InfoText TextId="IDT_SM_INFO_PAP"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+						<VirtualSubmoduleItem ID="IDS_354" SubmoduleIdentNumber="0x00000162" API="14848" FixedInSubslots="2">
+							<IOData>
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>									
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>									
+								</Output>
+							</IOData>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_TEL354"/>
+								<InfoText TextId="IDT_SM_INFO_TEL354"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+				</ModuleItem>
+				<!--SIEMENS telegram 354: 4+6/6 PKW+PZD + PROFISAFE-->
+				<ModuleItem ID="IDM_PROF354" ModuleIdentNumber="0x00000100" RequiredSchemaVersion="V2.0">
+					<ModuleInfo>
+						<Name TextId="IDT_MOD_NAME_TEL354_PROF"/>
+						<InfoText TextId="IDT_MOD_INFO_TEL354_PROF"/>
+					</ModuleInfo>
+					<VirtualSubmoduleList>
+						<VirtualSubmoduleItem ID="IDS_PAP_PROF_PKW2" SubmoduleIdentNumber="0x0000FFFF" API="14848" FixedInSubslots="1">
+							<IOData/>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_PAP"/>
+								<InfoText TextId="IDT_SM_INFO_PAP"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+						<VirtualSubmoduleItem ID="IDS_PROFISAFE_PKW2" SubmoduleIdentNumber="0x0000001E" API="14848" PROFIsafeSupported="1" FixedInSubslots="2">
+							<IOData F_IO_StructureDescCRC="5639">
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" UseAsBits="true" TextId="Inputs"/>
+									<DataItem DataType="F_MessageTrailer4Byte" TextId="Safety"/>
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" UseAsBits="true" TextId="Outputs"/>
+									<DataItem DataType="F_MessageTrailer4Byte" TextId="Safety"/>
+								</Output>
+							</IOData>
+							<RecordDataList>
+								<F_ParameterRecordDataItem F_ParamDescCRC="32567" Index="256" TransferSequence="1">
+									<F_Check_iPar DefaultValue="NoCheck" Visible="false" Changeable="false"/>
+									<F_SIL DefaultValue="SIL2" Visible="true" Changeable="false" AllowedValues="SIL2"/>
+									<F_CRC_Length DefaultValue="3-Byte-CRC" Visible="true" Changeable="false" AllowedValues="3-Byte-CRC"/>
+									<F_Block_ID DefaultValue="0"/>
+									<F_Source_Add AllowedValues="1..65534"/>
+									<F_Dest_Add AllowedValues="1..65534"/>
+									<F_WD_Time DefaultValue="150" AllowedValues="10..65535"/>
+									<F_Par_CRC DefaultValue="55023"/>
+								</F_ParameterRecordDataItem>
+							</RecordDataList>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_PROFISAFE"/>
+								<InfoText TextId="IDT_SM_INFO_PROFISAFE"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+						<VirtualSubmoduleItem ID="IDS_354_PROF" SubmoduleIdentNumber="0x00000162" API="14848" FixedInSubslots="3">
+							<IOData>
+								<Input Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_ACTVAL"/>									
+								</Input>
+								<Output Consistency="All items consistency">
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>
+									<DataItem DataType="Unsigned16" TextId="IDT_DATAITEM_REFVAL"/>									
+								</Output>
+							</IOData>
+							<ModuleInfo>
+								<Name TextId="IDT_SM_NAME_TEL354"/>
+								<InfoText TextId="IDT_SM_INFO_TEL354"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+				</ModuleItem>
+			</ModuleList>
+			<ChannelDiagList>
+				<ChannelDiagItem ErrorType="64">
+					<Name TextId="Channel_Diag_64"/>
+				</ChannelDiagItem>
+				<ChannelDiagItem ErrorType="65">
+					<Name TextId="Channel_Diag_65"/>
+				</ChannelDiagItem>
+				<ChannelDiagItem ErrorType="66">
+					<Name TextId="Channel_Diag_66"/>
+				</ChannelDiagItem>
+				<ChannelDiagItem ErrorType="67">
+					<Name TextId="Channel_Diag_67"/>
+				</ChannelDiagItem>
+				<ChannelDiagItem ErrorType="68">
+					<Name TextId="Channel_Diag_68"/>
+				</ChannelDiagItem>
+				<ChannelDiagItem ErrorType="69">
+					<Name TextId="Channel_Diag_69"/>
+				</ChannelDiagItem>
+				<ChannelDiagItem ErrorType="70">
+					<Name TextId="Channel_Diag_70"/>
+				</ChannelDiagItem>
+				<ChannelDiagItem ErrorType="71">
+					<Name TextId="Channel_Diag_71"/>
+				</ChannelDiagItem>
+			</ChannelDiagList>
+			<GraphicsList>
+				<GraphicItem GraphicFile="GSDML-002A-0508-G120CU240SPNF" ID="1"/>
+			</GraphicsList>
+			<ExternalTextList>
+				<PrimaryLanguage>
+					<!-- module text -->
+					<Text TextId="IDT_MOD_NAME_TEL1" Value="Standard telegram 1"/>
+					<Text TextId="IDT_MOD_NAME_TEL1_PROF" Value="PROFIsafe Standard T1"/>					
+					<Text TextId="IDT_MOD_NAME_TEL20" Value="Standard telegram 20"/>
+					<Text TextId="IDT_MOD_NAME_TEL20_PROF" Value="PROFIsafe Standard T20"/>					
+					<Text TextId="IDT_MOD_NAME_TEL350" Value="SIEMENS telegram 350"/>
+					<Text TextId="IDT_MOD_NAME_TEL350_PROF" Value="PROFIsafe SIEMENS T350"/>
+					<Text TextId="IDT_MOD_NAME_TEL352" Value="SIEMENS telegram 352"/>
+					<Text TextId="IDT_MOD_NAME_TEL352_PROF" Value="PROFIsafe SIEMENS T352"/>
+					<Text TextId="IDT_MOD_NAME_TEL353" Value="SIEMENS telegram 353"/>
+					<Text TextId="IDT_MOD_NAME_TEL353_PROF" Value="PROFIsafe SIEMENS T353"/>
+					<Text TextId="IDT_MOD_NAME_TEL354" Value="SIEMENS telegram 354"/>
+					<Text TextId="IDT_MOD_NAME_TEL354_PROF" Value="PROFIsafe SIEMENS T354"/>					
+					<Text TextId="IDT_MOD_INFO_TEL1" Value="Standard telegram 1, PZD-2/2 "/>
+					<Text TextId="IDT_MOD_INFO_TEL1_PROF" Value="PROFIsafe Standard telegram 1, PZD-2/2"/>
+					<Text TextId="IDT_MOD_INFO_TEL20" Value="Standard telegram 20, PZD-2/6 "/>
+					<Text TextId="IDT_MOD_INFO_TEL20_PROF" Value="PROFIsafe Standard telegram 20, PZD-2/6 "/>
+					<Text TextId="IDT_MOD_INFO_TEL350" Value="SIEMENS telegram 350, PZD-4/4"/>
+					<Text TextId="IDT_MOD_INFO_TEL350_PROF" Value="PROFIsafe SIEMENS telegram 350, PZD-4/4"/>
+					<Text TextId="IDT_MOD_INFO_TEL352" Value="SIEMENS telegram 352, PZD-6/6"/>
+					<Text TextId="IDT_MOD_INFO_TEL352_PROF" Value="PROFIsafe SIEMENS telegram 352, PZD-6/6"/>
+					<Text TextId="IDT_MOD_INFO_TEL353" Value="SIEMENS telegram 353, PKW+PZD-4+2/2"/>
+					<Text TextId="IDT_MOD_INFO_TEL353_PROF" Value="PROFIsafe SIEMENS telegram 353, PKW+PZD-4+2/2"/>
+					<Text TextId="IDT_MOD_INFO_TEL354" Value="SIEMENS telegram 354, PKW+PZD-4+6/6"/>
+					<Text TextId="IDT_MOD_INFO_TEL354_PROF" Value="PROFIsafe SIEMENS telegram 354, PKW+PZD-4+6/6"/>
+					<Text TextId="IDT_SM_NAME_TEL1" Value="Standard telegram 1"/>
+					<Text TextId="IDT_SM_INFO_TEL1" Value="Standard telegram 1, PZD-2/2"/>
+					<Text TextId="IDT_SM_NAME_TEL20" Value="Standard telegram 20"/>
+					<Text TextId="IDT_SM_INFO_TEL20" Value="Standard telegram 20, PZD-2/6"/>
+					<Text TextId="IDT_SM_NAME_TEL350" Value="SIEMENS telegram 350"/>
+					<Text TextId="IDT_SM_INFO_TEL350" Value="SIEMENS telegram 350, PZD-4/4"/>
+					<Text TextId="IDT_SM_NAME_TEL352" Value="SIEMENS telegram 352"/>
+					<Text TextId="IDT_SM_INFO_TEL352" Value="SIEMENS telegram 352, PZD-6/6"/>
+					<Text TextId="IDT_SM_NAME_TEL353" Value="SIEMENS telegram 353"/>
+					<Text TextId="IDT_SM_INFO_TEL353" Value="SIEMENS telegram 353, PKW+PZD-4+2/2"/>
+					<Text TextId="IDT_SM_NAME_TEL354" Value="SIEMENS telegram 354"/>
+					<Text TextId="IDT_SM_INFO_TEL354" Value="SIEMENS telegram 354, PKW+PZD-4+6/6"/>
+					<Text TextId="IDT_SM_NAME_PAP" Value="Parameter Access Point"/>
+					<Text TextId="IDT_SM_INFO_PAP" Value="Parameter access point"/>
+					<Text TextId="IDT_DATAITEM_ACTVAL" Value="Actual value"/>
+					<Text TextId="IDT_DATAITEM_REFVAL" Value="Setpoint"/>
+					<!-- PROFIsafe -->
+					<Text TextId="IDT_SM_NAME_PROFISAFE" Value="PROFIsafe"/>
+					<Text TextId="IDT_SM_INFO_PROFISAFE" Value="PROFIsafe"/>
+					<Text TextId="Safety" Value="Safety"/>
+					<Text TextId="Inputs" Value="Safety In"/>
+					<Text TextId="Outputs" Value="Safety Out"/>
+					<!-- DAP text -->
+					<Text TextId="IDT_FamilyDescription" Value=" SINAMICS drives"/>
+					<Text TextId="IDT_MOD_NAME_DAP1" Value="SINAMICS G120 CU240S PN F"/>
+					<Text TextId="IDT_INFO_DAP1" Value="PROFINET IO Device SINAMICS G120 CU240S PN F,(Drive ES/SIMOTION interface, cyclic acyclic communication, support for PROFIsafe) "/>
+					<Text TextId="IDT_Interface" Value="PROFINET "/>
+					<Text TextId="IDT_Port1" Value="Port 1"/>
+					<Text TextId="IDT_Port2" Value="Port 2"/>
+					<Text TextId="IDT_SS_Interface" Value="Interface"/>
+					<Text TextId="IDT_SS_Port1" Value="X1"/>
+					<Text TextId="IDT_SS_Port2" Value="X2"/>
+					<!--Channel Diagnostic Information-->
+					<Text TextId="Channel_Diag_64" Value="F add. does not match F_Dest_Add"/>
+					<Text TextId="Channel_Diag_65" Value="Wrong F destination address"/>
+					<Text TextId="Channel_Diag_66" Value="Wrong F source address"/>
+					<Text TextId="Channel_Diag_67" Value="Watchdog time value=0"/>
+					<Text TextId="Channel_Diag_68" Value="Wrong SIL level"/>
+					<Text TextId="Channel_Diag_69" Value="Wrong F-CRC length"/>
+					<Text TextId="Channel_Diag_70" Value="Wrong F-Parameter version"/>
+					<Text TextId="Channel_Diag_71" Value="CRC1 fault"/>
+				</PrimaryLanguage>
+				<Language xml:lang="de">
+					<!-- module text -->
+					<Text TextId="IDT_MOD_NAME_TEL1" Value="Standard Telegramm 1"/>
+                    <Text TextId="IDT_MOD_NAME_TEL1_PROF" Value="PROFIsafe Standard T1"/>
+					<Text TextId="IDT_MOD_NAME_TEL20" Value="Standard Telegramm 20"/>
+					<Text TextId="IDT_MOD_NAME_TEL20_PROF" Value="PROFIsafe Standard T20"/>
+					<Text TextId="IDT_MOD_NAME_TEL350" Value="SIEMENS Telegramm 350"/>
+					<Text TextId="IDT_MOD_NAME_TEL350_PROF" Value="PROFIsafe SIEMENS T350"/>
+					<Text TextId="IDT_MOD_NAME_TEL352" Value="SIEMENS Telegramm 352"/>
+					<Text TextId="IDT_MOD_NAME_TEL352_PROF" Value="PROFIsafe SIEMENS T352"/>
+					<Text TextId="IDT_MOD_NAME_TEL353" Value="SIEMENS Telegramm 353"/>
+					<Text TextId="IDT_MOD_NAME_TEL353_PROF" Value="PROFIsafe SIEMENS T353"/>
+					<Text TextId="IDT_MOD_NAME_TEL354" Value="SIEMENS Telegramm 354"/>
+					<Text TextId="IDT_MOD_NAME_TEL354_PROF" Value="PROFIsafe SIEMENS T354"/>					
+					<Text TextId="IDT_MOD_INFO_TEL1" Value="Standard Telegramm 1: Drehzahlregelung, PZD-Länge 2/2 Worte"/>
+					<Text TextId="IDT_MOD_INFO_TEL1_PROF" Value="PROFIsafe Standard Telegramm 1: Drehzahlregelung, PZD-Länge 2/2 Worte"/>
+					<Text TextId="IDT_MOD_INFO_TEL20" Value="Standard Telegramm 20, PZD-Länge PZD 2/6 Worte"/>
+					<Text TextId="IDT_MOD_INFO_TEL20_PROF" Value="PROFIsafe Standard Telegramm 20, PZD-Länge PZD 2/6 Worte"/>
+					<Text TextId="IDT_MOD_INFO_TEL350" Value="SIEMENS Telegramm 350, PZD-Länge PZD 4/4 Worte"/>
+					<Text TextId="IDT_MOD_INFO_TEL350_PROF" Value="PROFIsafe SIEMENS Telegramm 350, PZD-Länge PZD 4/4 Worte"/>
+					<Text TextId="IDT_MOD_INFO_TEL352" Value="SIEMENS Telegramm 352, PZD-Länge PZD 6/6 Worte"/>
+					<Text TextId="IDT_MOD_INFO_TEL352_PROF" Value="PROFIsafe SIEMENS Telegramm 352, PZD-Länge PZD 6/6 Worte"/>
+					<Text TextId="IDT_MOD_INFO_TEL353" Value="SIEMENS Telegramm 353, PZD-Länge PKW+PZD-4+2/2 Worte"/>
+					<Text TextId="IDT_MOD_INFO_TEL353_PROF" Value="PROFIsafe SIEMENS Telegramm 353, PZD-Länge PKW+PZD-4+2/2 Worte"/>
+					<Text TextId="IDT_MOD_INFO_TEL354" Value="SIEMENS Telegramm 354, PZD-Länge PKW+PZD-4+6/6 Worte"/>
+					<Text TextId="IDT_MOD_INFO_TEL354_PROF" Value="PROFIsafe SIEMENS Telegramm 354, PZD-Länge PKW+PZD-4+6/6 Worte"/>					
+					<Text TextId="IDT_SM_NAME_TEL1" Value="Standard Telegramm 1"/>
+					<Text TextId="IDT_SM_INFO_TEL1" Value="Standard Telegramm 1: Drehzahlregelung, PZD-Länge 2/2 Worte"/>
+					<Text TextId="IDT_SM_NAME_TEL20" Value="Standard Telegramm 20"/>
+					<Text TextId="IDT_SM_INFO_TEL20" Value="Standard Telegramm 20, PZD-Länge PZD 2/6 Worte"/>
+					<Text TextId="IDT_SM_NAME_TEL350" Value="SIEMENS Telegramm 350"/>
+					<Text TextId="IDT_SM_INFO_TEL350" Value="SIEMENS Telegramm 350, PZD-Länge PZD 4/4 Worte"/>
+					<Text TextId="IDT_SM_NAME_TEL352" Value="SIEMENS Telegramm 352"/>
+					<Text TextId="IDT_SM_INFO_TEL352" Value="SIEMENS Telegramm 352, PZD-Länge PZD 6/6 Worte"/>
+					<Text TextId="IDT_SM_NAME_TEL353" Value="SIEMENS Telegramm 353"/>
+					<Text TextId="IDT_SM_INFO_TEL353" Value="SIEMENS Telegramm 353, PZD-Länge PKW+PZD-4+2/2 Worte"/>
+					<Text TextId="IDT_SM_NAME_TEL354" Value="SIEMENS Telegramm 354"/>
+					<Text TextId="IDT_SM_INFO_TEL354" Value="SIEMENS Telegramm 354, PZD-Länge PKW+PZD-4+6/6 Worte"/>					
+					<Text TextId="IDT_SM_NAME_PAP" Value="Parameter Access Point"/>
+					<Text TextId="IDT_SM_INFO_PAP" Value="Zugangspunkt für Antriebsparameter"/>
+					<Text TextId="IDT_DATAITEM_ACTVAL" Value="Zustandswort oder Istwert"/>
+					<Text TextId="IDT_DATAITEM_REFVAL" Value="Steuerwort oder Sollwert"/>
+					<!-- PROFIsafe -->
+					<Text TextId="IDT_SM_NAME_PROFISAFE" Value="PROFIsafe"/>
+					<Text TextId="IDT_SM_INFO_PROFISAFE" Value="PROFIsafe"/>
+					<Text TextId="Safety" Value="Safety"/>
+					<Text TextId="Inputs" Value="Safety In"/>
+					<Text TextId="Outputs" Value="Safety Out"/>				
+					<!-- DAP text -->
+					<Text TextId="IDT_FamilyDescription" Value="SINAMICS drives"/>
+					<Text TextId="IDT_MOD_NAME_DAP1" Value="SINAMICS G120 CU240S PN F"/>
+					<Text TextId="IDT_INFO_DAP1" Value="PROFINET IO Device SINAMICS G120 CU240S PN F, Drive ES/SIMOTION-Schnittstelle, zyklische azyklische Kommunikation, Unterstuetzung von PROFIsafe"/>
+					<Text TextId="IDT_Interface" Value="PROFINET"/>
+					<Text TextId="IDT_Port1" Value="Port 1"/>
+					<Text TextId="IDT_Port2" Value="Port 2"/>
+					<Text TextId="IDT_SS_Interface" Value="Interface"/>
+					<Text TextId="IDT_SS_Port1" Value="X1"/>
+					<Text TextId="IDT_SS_Port2" Value="X2"/>
+					<!--Channel Diagnostic Information-->
+					<Text TextId="Channel_Diag_64" Value="F_Adr und F_Zieladr verschieden"/>
+					<Text TextId="Channel_Diag_65" Value="Falsche F Zieladresse"/>
+					<Text TextId="Channel_Diag_66" Value="Falsche F Quelladresse"/>
+					<Text TextId="Channel_Diag_67" Value="Watchdog Zeitwert=0"/>
+					<Text TextId="Channel_Diag_68" Value="Falscher SIL Level"/>
+					<Text TextId="Channel_Diag_69" Value="Falsche F-CRC Laenge"/>
+					<Text TextId="Channel_Diag_70" Value="Falsche F-Parameterversion"/>
+					<Text TextId="Channel_Diag_71" Value="CRC1 Fehler"/>
+				</Language>
+				<Language xml:lang="es">
+					<!-- module text --> <!-- ADD TELEGRAM 353/354 to the rest -->
+					<Text TextId="IDT_MOD_NAME_TEL1" Value="Telegrama estándar 1"/>
+					<Text TextId="IDT_MOD_NAME_TEL1_PROF" Value="PROFIsafe estándar T1"/>
+					<Text TextId="IDT_MOD_NAME_TEL20" Value="Telegrama estándar 20"/>
+					<Text TextId="IDT_MOD_NAME_TEL20_PROF" Value="PROFIsafe estándar T20"/>
+					<Text TextId="IDT_MOD_NAME_TEL350" Value="SIEMENS telegrama 350"/>
+					<Text TextId="IDT_MOD_NAME_TEL350_PROF" Value="PROFIsafe SIEMENS T350"/>
+					<Text TextId="IDT_MOD_NAME_TEL352" Value="SIEMENS telegrama 352"/>
+					<Text TextId="IDT_MOD_NAME_TEL352_PROF" Value="PROFIsafe SIEMENS T352"/>
+					<Text TextId="IDT_MOD_NAME_TEL353" Value="SIEMENS telegrama 353"/>
+					<Text TextId="IDT_MOD_NAME_TEL353_PROF" Value="PROFIsafe SIEMENS T353"/>
+					<Text TextId="IDT_MOD_NAME_TEL354" Value="SIEMENS telegrama 354"/>
+					<Text TextId="IDT_MOD_NAME_TEL354_PROF" Value="PROFIsafe SIEMENS T354"/>					
+					<Text TextId="IDT_MOD_INFO_TEL1" Value="Telegrama estándar 1: regulación de velocidad, longitud PZD 2/2 palabras"/>
+					<Text TextId="IDT_MOD_INFO_TEL1_PROF" Value="PROFIsafe Telegrama estándar 1: regulación de velocidad, longitud PZD 2/2 palabras"/>
+					<Text TextId="IDT_MOD_INFO_TEL20" Value="Telegrama estándar 20,  longitud PZD 2/6 palabras"/>
+					<Text TextId="IDT_MOD_INFO_TEL20_PROF" Value="PROFIsafe Telegrama estándar 20,  longitud PZD 2/6 palabras"/>
+					<Text TextId="IDT_MOD_INFO_TEL350" Value="SIEMENS telegrama 350, longitud PZD 4/4 palabras"/>
+					<Text TextId="IDT_MOD_INFO_TEL350_PROF" Value="PROFIsafe SIEMENS telegrama 350, longitud PZD 4/4 palabras"/>
+					<Text TextId="IDT_MOD_INFO_TEL352" Value="SIEMENS telegrama 352, longitud PZD 6/6 palabras"/>
+					<Text TextId="IDT_MOD_INFO_TEL352_PROF" Value="PROFIsafe SIEMENS telegrama 352, longitud PZD 6/6 palabras"/>
+					<Text TextId="IDT_MOD_INFO_TEL353" Value="SIEMENS Telegramm 353, longitud PKW+PZD-4+2/2 palabras"/>
+					<Text TextId="IDT_MOD_INFO_TEL353_PROF" Value="PROFIsafe SIEMENS telegrama 353, longitud PKW+PZD-4+2/2 palabras"/>
+					<Text TextId="IDT_MOD_INFO_TEL354" Value="SIEMENS Telegramm 354, longitud PKW+PZD-4+6/6 palabras"/>
+					<Text TextId="IDT_MOD_INFO_TEL354_PROF" Value="PROFIsafe SIEMENS telegrama 354, longitud PKW+PZD-4+6/6 palabras"/>	
+					<Text TextId="IDT_SM_NAME_TEL1" Value="Telegrama estándar 1"/>
+					<Text TextId="IDT_SM_INFO_TEL1" Value="Telegrama estándar 1: regulación de velocidad, longitud PZD 2/2 palabras"/>
+					<Text TextId="IDT_SM_NAME_TEL20" Value="Telegrama estándar 20"/>
+					<Text TextId="IDT_SM_INFO_TEL20" Value="Telegrama estándar 20,  longitud PZD 2/6 palabras"/>
+					<Text TextId="IDT_SM_NAME_TEL350" Value="SIEMENS telegrama 350"/>
+					<Text TextId="IDT_SM_INFO_TEL350" Value="SIEMENS telegrama 350,  longitud PZD 4/4 palabras"/>
+					<Text TextId="IDT_SM_NAME_TEL352" Value="SIEMENS telegrama 352"/>
+					<Text TextId="IDT_SM_INFO_TEL352" Value="SIEMENS telegrama 352, longitud PZD 6/6 palabras"/>
+					<Text TextId="IDT_SM_NAME_TEL353" Value="SIEMENS telegrama 353"/>
+					<Text TextId="IDT_SM_INFO_TEL353" Value="SIEMENS telegrama 353, longitud PKW+PZD-4+2/2 palabras"/>
+					<Text TextId="IDT_SM_NAME_TEL354" Value="SIEMENS telegrama 354"/>
+					<Text TextId="IDT_SM_INFO_TEL354" Value="SIEMENS telegrama 354, longitud PKW+PZD-4+6/6 palabras"/>	
+					<Text TextId="IDT_SM_NAME_PAP" Value="Parameter Access Point"/>
+					<Text TextId="IDT_SM_INFO_PAP" Value="Parameter access point"/>
+					<Text TextId="IDT_DATAITEM_ACTVAL" Value="Valor real"/>
+					<Text TextId="IDT_DATAITEM_REFVAL" Value="Consigna"/>
+					<!-- PROFIsafe -->
+					<Text TextId="IDT_SM_NAME_PROFISAFE" Value="PROFIsafe"/>
+					<Text TextId="IDT_SM_INFO_PROFISAFE" Value="PROFIsafe"/>
+					<Text TextId="Safety" Value="Safety"/>
+					<Text TextId="Inputs" Value="Safety In"/>
+					<Text TextId="Outputs" Value="Safety Out"/>	
+					<!-- DAP text -->
+					<Text TextId="IDT_FamilyDescription" Value="SINAMICS drives"/>
+					<Text TextId="IDT_MOD_NAME_DAP1" Value="SINAMICS G120 CU240S PN F"/>
+					<Text TextId="IDT_INFO_DAP1" Value="Device SINAMICS G120 drive con PROFINET IO interface, PROFIsafe, comunicación RT, cíclica y acíclica"/>
+					<Text TextId="IDT_Interface" Value="PROFINET"/>
+					<Text TextId="IDT_Port1" Value="Port 1"/>
+					<Text TextId="IDT_Port2" Value="Port 2"/>
+					<Text TextId="IDT_SS_Interface" Value="Interface"/>
+					<Text TextId="IDT_SS_Port1" Value="X1"/>
+					<Text TextId="IDT_SS_Port2" Value="X2"/>
+					<!--Channel Diagnostic Information-->
+					<Text TextId="Channel_Diag_64" Value="Dir. F y dir. meta F diferentes"/>
+					<Text TextId="Channel_Diag_65" Value="Direccion meta F erronea"/>
+					<Text TextId="Channel_Diag_66" Value="Direccion fuente F erronea"/>
+					<Text TextId="Channel_Diag_67" Value="Watchdog tiempo =0"/>
+					<Text TextId="Channel_Diag_68" Value="Nivel SIL erroneo"/>
+					<Text TextId="Channel_Diag_69" Value="Longitud F-CRC erronea"/>
+					<Text TextId="Channel_Diag_70" Value="Version de parametro F erronea"/>
+					<Text TextId="Channel_Diag_71" Value="Error CRC1"/>
+				</Language>
+				<Language xml:lang="it">
+					<!-- module text -->
+					<Text TextId="IDT_MOD_NAME_TEL1" Value="Telegramma standard 1"/>
+					<Text TextId="IDT_MOD_NAME_TEL1_PROF" Value="PROFIsafe standard T1"/>
+					<Text TextId="IDT_MOD_NAME_TEL20" Value="Telegramma standard 20"/>
+					<Text TextId="IDT_MOD_NAME_TEL20_PROF" Value="PROFisafe standard T20"/>
+					<Text TextId="IDT_MOD_NAME_TEL350" Value="SIEMENS telegramma 350"/>
+					<Text TextId="IDT_MOD_NAME_TEL350_PROF" Value="PROFIsafe SIEMENS T350"/>
+					<Text TextId="IDT_MOD_NAME_TEL352" Value="SIEMENS telegramma 352"/>
+					<Text TextId="IDT_MOD_NAME_TEL352_PROF" Value="PROFIsafe SIEMENS T352"/>
+					<Text TextId="IDT_MOD_NAME_TEL353" Value="SIEMENS telegramma 353"/>
+					<Text TextId="IDT_MOD_NAME_TEL353_PROF" Value="PROFIsafe SIEMENS T353"/>
+					<Text TextId="IDT_MOD_NAME_TEL354" Value="SIEMENS telegramma 354"/>
+					<Text TextId="IDT_MOD_NAME_TEL354_PROF" Value="PROFIsafe SIEMENS T354"/>					
+					<Text TextId="IDT_MOD_INFO_TEL1" Value="Telegramma standard 1: regolazione numero di giri, lunghezza PZD 2/2 parole"/>
+					<Text TextId="IDT_MOD_INFO_TEL1_PROF" Value="PROFIsafe Telegramma standard 1: regolazione numero di giri, lunghezza PZD 2/2 parole"/>
+					<Text TextId="IDT_MOD_INFO_TEL20" Value="Telegramma standard 20, lunghezza PZD 2/6 parole"/>
+					<Text TextId="IDT_MOD_INFO_TEL20_PROF" Value="PROFIsafe Telegramma standard 20, lunghezza PZD 2/6 parole"/>
+					<Text TextId="IDT_MOD_INFO_TEL350" Value="SIEMENS telegramma 350, lunghezza PZD 4/4 parole"/>
+					<Text TextId="IDT_MOD_INFO_TEL350_PROF" Value="PROFIsafe SIEMENS telegramma 350, lunghezza PZD 4/4 parole"/>
+					<Text TextId="IDT_MOD_INFO_TEL352" Value="SIEMENS telegramma 352, lunghezza PZD 6/6 parole"/>
+					<Text TextId="IDT_MOD_INFO_TEL352_PROF" Value="PROFIsafe SIEMENS telegramma 352, lunghezza PZD 6/6 parole"/>
+					<Text TextId="IDT_MOD_INFO_TEL353" Value="SIEMENS telegramma 353, lunghezza PKW+PZD-4+2/2 parole"/>
+					<Text TextId="IDT_MOD_INFO_TEL353_PROF" Value="telegramma SIEMENS telegramma 353, lunghezza PKW+PZD-4+2/2 parole"/>
+					<Text TextId="IDT_MOD_INFO_TEL354" Value="SIEMENS telegramma 354, lunghezza PKW+PZD-4+6/6 parole"/>
+					<Text TextId="IDT_MOD_INFO_TEL354_PROF" Value="PROFIsafe SIEMENS telegramma 354, lunghezza PKW+PZD-4+6/6 parole"/>						
+					<Text TextId="IDT_SM_NAME_TEL1" Value="Telegramma standard 1"/>
+					<Text TextId="IDT_SM_INFO_TEL1" Value="Telegramma standard 1: regolazione numero di giri, lunghezza PZD 2/2 parole"/>
+					<Text TextId="IDT_SM_NAME_TEL20" Value="Telegramma standard 20"/>
+					<Text TextId="IDT_SM_INFO_TEL20" Value="Telegramma standard 20, lunghezza PZD 2/6 parole"/>
+					<Text TextId="IDT_SM_NAME_TEL350" Value="SIEMENS telegramma 350"/>
+					<Text TextId="IDT_SM_INFO_TEL350" Value="SIEMENS telegramma 350, lunghezza PZD 4/4 parole"/>
+					<Text TextId="IDT_SM_NAME_TEL352" Value="SIEMENS telegramma 352"/>
+					<Text TextId="IDT_SM_INFO_TEL352" Value="SIEMENS telegramma 352, lunghezza PZD 6/6 parole"/>
+					<Text TextId="IDT_SM_NAME_TEL353" Value="SIEMENS telegramma 353"/>
+					<Text TextId="IDT_SM_INFO_TEL353" Value="SIEMENS telegramma 353, lunghezza PKW+PZD-4+2/2 parole"/>
+					<Text TextId="IDT_SM_NAME_TEL354" Value="SIEMENS telegramma 354"/>
+					<Text TextId="IDT_SM_INFO_TEL354" Value="SIEMENS telegramma 354, lunghezza PKW+PZD-4+6/6 parole"/>	
+					<Text TextId="IDT_SM_NAME_PAP" Value="Parameter Access Point"/>
+					<Text TextId="IDT_SM_INFO_PAP" Value="Parameter access point"/>
+					<Text TextId="IDT_DATAITEM_ACTVAL" Value="Valore reale"/>
+					<Text TextId="IDT_DATAITEM_REFVAL" Value="Valore di riferimento"/>
+					<!-- PROFIsafe -->
+					<Text TextId="IDT_SM_NAME_PROFISAFE" Value="PROFIsafe"/>
+					<Text TextId="IDT_SM_INFO_PROFISAFE" Value="PROFIsafe"/>
+					<Text TextId="Safety" Value="Safety"/>
+					<Text TextId="Inputs" Value="Safety In"/>
+					<Text TextId="Outputs" Value="Safety Out"/>
+					<!-- DAP text -->
+					<Text TextId="IDT_FamilyDescription" Value="SINAMICS drives"/>
+					<Text TextId="IDT_MOD_NAME_DAP1" Value="SINAMICS G120 CU240S PN F"/>
+					<Text TextId="IDT_INFO_DAP1" Value="Device SINAMICS G120 drive con interfaccia PROFINET IO, PROFIsafe, comunicazione RT, ciclica ed aciclica "/>
+					<Text TextId="IDT_Interface" Value="PROFINET"/>
+					<Text TextId="IDT_Port1" Value="Port 1"/>
+					<Text TextId="IDT_Port2" Value="Port 2"/>
+					<Text TextId="IDT_SS_Interface" Value="Interface"/>
+					<Text TextId="IDT_SS_Port1" Value="X1"/>
+					<Text TextId="IDT_SS_Port2" Value="X2"/>
+					<!--Channel Diagnostic Information-->
+					<Text TextId="Channel_Diag_64" Value="Ind_F e ind_dest_F differenti"/>
+					<Text TextId="Channel_Diag_65" Value="Indirizzo di dest. F errato"/>
+					<Text TextId="Channel_Diag_66" Value="Indirizzo sorgente F errato"/>
+					<Text TextId="Channel_Diag_67" Value="Watchdog valore temporale=0"/>
+					<Text TextId="Channel_Diag_68" Value="Livello SIL errato"/>
+					<Text TextId="Channel_Diag_69" Value="Lunghezza F-CRC errata"/>
+					<Text TextId="Channel_Diag_70" Value="Versione parametro F errato"/>
+					<Text TextId="Channel_Diag_71" Value="Errore CRC1"/>
+				</Language>
+				<Language xml:lang="fr">
+					<!-- module text -->
+					<Text TextId="IDT_MOD_NAME_TEL1" Value="Télégramme standard 1"/>
+					<Text TextId="IDT_MOD_NAME_TEL1_PROF" Value="PROFIsafe standard T1"/>
+					<Text TextId="IDT_MOD_NAME_TEL20" Value="Télégramme standard 20"/>
+					<Text TextId="IDT_MOD_NAME_TEL20_PROF" Value="PROFIsafe standard T20"/>
+					<Text TextId="IDT_MOD_NAME_TEL350" Value="SIEMENS télégramme 350"/>
+					<Text TextId="IDT_MOD_NAME_TEL350_PROF" Value="PROFIsafe SIEMENS T350"/>
+					<Text TextId="IDT_MOD_NAME_TEL352" Value="SIEMENS télégramme 352"/>
+					<Text TextId="IDT_MOD_NAME_TEL352_PROF" Value="PROFIsafe SIEMENS T352"/>
+					<Text TextId="IDT_MOD_NAME_TEL353" Value="SIEMENS télégramme 353"/>
+					<Text TextId="IDT_MOD_NAME_TEL353_PROF" Value="PROFIsafe SIEMENS T353"/>
+					<Text TextId="IDT_MOD_NAME_TEL354" Value="SIEMENS télégramme 354"/>
+					<Text TextId="IDT_MOD_NAME_TEL354_PROF" Value="PROFIsafe SIEMENS T354"/>					
+					<Text TextId="IDT_MOD_INFO_TEL1" Value="Télégramme standard 1: régulation de vitesse, longueur PZD 2/2 mots"/>
+					<Text TextId="IDT_MOD_INFO_TEL1_PROF" Value="PROFIsafe Télégramme standard 1: régulation de vitesse, longueur PZD 2/2 mots"/>
+					<Text TextId="IDT_MOD_INFO_TEL20" Value="Télégramme standard 20, longueur PZD 2/6 mots"/>
+					<Text TextId="IDT_MOD_INFO_TEL20_PROF" Value="PROFIsafe Télégramme standard 20, longueur PZD 2/6 mots"/>
+					<Text TextId="IDT_MOD_INFO_TEL350" Value="SIEMENS télégramme 350, longueur PZD 4/4 mots"/>
+					<Text TextId="IDT_MOD_INFO_TEL350_PROF" Value="PROFIsafe SIEMENS télégramme 350, longueur PZD 4/4 mots"/>
+					<Text TextId="IDT_MOD_INFO_TEL352" Value="SIEMENS télégramme 352, longueur PZD 6/6 mots"/>
+					<Text TextId="IDT_MOD_INFO_TEL352_PROF" Value="PROFIsafe SIEMENS télégramme 352, longueur PZD 6/6 mots"/>
+					<Text TextId="IDT_MOD_INFO_TEL353" Value="SIEMENS télégramme 353, longueur PKW+PZD-4+2/2 mots"/>
+					<Text TextId="IDT_MOD_INFO_TEL353_PROF" Value="télégramme SIEMENS telegramma 353, longueur PKW+PZD-4+2/2 mots"/>
+					<Text TextId="IDT_MOD_INFO_TEL354" Value="SIEMENS télégramme 354, longueur PKW+PZD-4+6/6 mots"/>
+					<Text TextId="IDT_MOD_INFO_TEL354_PROF" Value="PROFIsafe SIEMENS télégramme 354, longueur PKW+PZD-4+6/6 mots"/>					
+					<Text TextId="IDT_SM_NAME_TEL1" Value="Télégramme standard 1"/>
+					<Text TextId="IDT_SM_INFO_TEL1" Value="Télégramme standard 1: régulation de vitesse, longueur PZD 2/2 mots"/>
+					<Text TextId="IDT_SM_NAME_TEL20" Value="Télégramme standard 20"/>
+					<Text TextId="IDT_SM_INFO_TEL20" Value="Télégramme standard 20, longueur PZD 2/6 mots"/>
+					<Text TextId="IDT_SM_NAME_TEL350" Value="SIEMENS télégramme 350"/>
+					<Text TextId="IDT_SM_INFO_TEL350" Value="SIEMENS télégramme 350, longueur PZD 4/4 mots"/>
+					<Text TextId="IDT_SM_NAME_TEL352" Value="SIEMENS télégramme 352"/>
+					<Text TextId="IDT_SM_INFO_TEL352" Value="SIEMENS télégramme 352, longueur PZD 6/6 mots"/>
+					<Text TextId="IDT_SM_NAME_TEL353" Value="SIEMENS télégramme 353"/>
+					<Text TextId="IDT_SM_INFO_TEL353" Value="SIEMENS télégramme 353, longueur PKW+PZD-4+2/2 mots"/>
+					<Text TextId="IDT_SM_NAME_TEL354" Value="SIEMENS télégramme 354"/>
+					<Text TextId="IDT_SM_INFO_TEL354" Value="SIEMENS télégramme 354, longueur PKW+PZD-4+6/6 mots"/>	
+					<Text TextId="IDT_SM_NAME_PAP" Value="Parameter Access Point"/>
+					<Text TextId="IDT_SM_INFO_PAP" Value="Parameter access point"/>
+					<Text TextId="IDT_DATAITEM_ACTVAL" Value="Mesure"/>
+					<Text TextId="IDT_DATAITEM_REFVAL" Value="Consigne"/>
+					<!-- PROFIsafe -->
+					<Text TextId="IDT_SM_NAME_PROFISAFE" Value="PROFIsafe"/>
+					<Text TextId="IDT_SM_INFO_PROFISAFE" Value="PROFIsafe"/>
+					<Text TextId="Safety" Value="Safety"/>
+					<Text TextId="Inputs" Value="Safety In"/>
+					<Text TextId="Outputs" Value="Safety Out"/>
+					<!-- DAP text -->
+					<Text TextId="IDT_FamilyDescription" Value="SINAMICS drives"/>
+					<Text TextId="IDT_MOD_NAME_DAP1" Value="SINAMICS G120 CU240S PN F"/>
+					<Text TextId="IDT_INFO_DAP1" Value="Device SINAMICS G120 drive avec interface PROFINET IO , PROFIsafe, communication RT, cyclique et acyclique"/>
+					<Text TextId="IDT_Interface" Value="PROFINET"/>
+					<Text TextId="IDT_Port1" Value="Port 1"/>
+					<Text TextId="IDT_Port2" Value="Port 2"/>
+					<Text TextId="IDT_SS_Interface" Value="Interface"/>
+					<Text TextId="IDT_SS_Port1" Value="X1"/>
+					<Text TextId="IDT_SS_Port2" Value="X2"/>
+					<!--Channel Diagnostic Information-->
+					<Text TextId="Channel_Diag_64" Value="Adr F et adr cible F diff."/>
+					<Text TextId="Channel_Diag_65" Value="Adresse cible incorrecte"/>
+					<Text TextId="Channel_Diag_66" Value="Adresse source incorrecte"/>
+					<Text TextId="Channel_Diag_67" Value="Watchdog valeur temps=0"/>
+					<Text TextId="Channel_Diag_68" Value="SIL Level incorrect"/>
+					<Text TextId="Channel_Diag_69" Value="Longueur  F-CRC incorrecte"/>
+					<Text TextId="Channel_Diag_70" Value="Version de param. F incorrecte"/>
+					<Text TextId="Channel_Diag_71" Value="Erreur CRC1"/>
+				</Language>
+			</ExternalTextList>
+		</ApplicationProcess>
+	</ProfileBody>
+</ISO15745Profile>
