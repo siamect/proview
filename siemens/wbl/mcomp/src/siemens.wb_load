@@ -6100,7 +6100,7 @@ Volume Siemens $ClassVolume 0.0.250.3
       EndObject
       Object Template Sinamics_G120_PbSlave 2164490240 01-JAN-1970 01:00:00.00
         Body RtBody 24-NOV-2010 14:41:25.30
-          Attr Super.GSDfile = "$pwr_exe/SI028158.gse"
+          Attr Super.GSDfile = "$pwr_exe/SI028158.gsd"
           Attr Super.Process = 1
           Attr Super.ByteOrdering = 1
           Attr Super.StallAction = 1
