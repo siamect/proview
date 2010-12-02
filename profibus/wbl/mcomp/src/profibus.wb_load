@@ -2979,9 +2979,6 @@ Volume Profibus $ClassVolume 0.0.250.7
         ! 2: The device is read by the rt_io_comm process.
         ! 4: The device is handled by an application program.
         !*/
-        !/**
-        ! Process that will run the Profinet i/o.
-        !*/
         Object Process $Attribute 92 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "Process"
