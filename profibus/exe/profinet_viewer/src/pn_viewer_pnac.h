@@ -46,7 +46,7 @@
 
 class PnViewerPNAC {
  public:
-  PnViewerPNAC( pwr_tStatus *sts);
+  PnViewerPNAC( pwr_tStatus *sts, const char *dev_name);
   ~PnViewerPNAC();
 
   void fetch_devices( vector<PnDevice>& dev_vect);
