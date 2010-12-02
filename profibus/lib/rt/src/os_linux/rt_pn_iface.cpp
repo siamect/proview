@@ -452,9 +452,8 @@ void pack_download_req(T_PNAK_SERVICE_REQ_RES *ServiceReqRes, GsdmlDeviceData *d
     ar_property =  PROFINET_AR_PROPERTY_STATE_PRIMARY | 
       PROFINET_AR_PROPERTY_PARAMETER_SERVER_CM | 
       PROFINET_AR_PROPERTY_DATA_RATE_100MBIT;
-    pSDR->InstanceLowByte = 1;
-    if (dev_data->device_id == 1288)
-      pSDR->InstanceLowByte = 0;
+    pSDR->InstanceHighByte = _PN_U16_HIGH_BYTE(dev_data->instance);
+    pSDR->InstanceLowByte  = _PN_U16_LOW_BYTE(dev_data->instance);
   }
 
   no_items = sscanf(dev_data->version, "%hhi.%hhi", &high_byte, &low_byte);
