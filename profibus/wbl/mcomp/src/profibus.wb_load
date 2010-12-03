@@ -1,12 +1,12 @@
 Volume Profibus $ClassVolume 0.0.250.7 
   Body SysBody 05-SEP-2005 17:51:40.00
-    Attr NextOix = "_X184"
+    Attr NextOix = "_X209"
     Attr NextCix = "_X19"
-    Attr NextTix[0] = "_X10"
+    Attr NextTix[0] = "_X12"
   EndBody
   Object Type $TypeHier 55 16-JAN-2006 10:07:43.21
     Object PbNumberRepEnum $TypeDef 1 16-JAN-2006 10:08:18.34
-      Body SysBody 12-JAN-2010 16:40:55.20
+      Body SysBody 21-OCT-2010 08:30:49.60
         Attr TypeRef = "pwrs:Type-$Enum"
         Attr Elements = 1
         Attr PgmName = "PbNumberRep"
@@ -348,6 +348,156 @@ Volume Profibus $ClassVolume 0.0.250.7
           Attr Text = "High"
           Attr PgmName = "High"
           Attr Value = 2
+        EndBody
+      EndObject
+    EndObject
+    Object PnAlarmTypeEnum $TypeDef 10 21-OCT-2010 08:30:44.61
+      Body SysBody 21-OCT-2010 08:51:15.50
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+      EndBody
+      Object DiagAppears $Value 185 21-OCT-2010 08:33:31.82
+        Body SysBody 21-OCT-2010 08:33:36.04
+          Attr Text = "Diagnosis appears"
+          Attr Value = 1
+        EndBody
+      EndObject
+      Object Process $Value 186 21-OCT-2010 08:33:19.70
+        Body SysBody 21-OCT-2010 08:33:40.42
+          Attr Text = "Process"
+          Attr Value = 2
+        EndBody
+      EndObject
+      Object Pull $Value 187 21-OCT-2010 08:33:56.20
+        Body SysBody 21-OCT-2010 08:36:32.24
+          Attr Text = "Module pulled"
+          Attr Value = 3
+        EndBody
+      EndObject
+      Object Plug $Value 188 21-OCT-2010 08:34:38.90
+        Body SysBody 21-OCT-2010 08:36:42.44
+          Attr Text = "Module plugged"
+          Attr Value = 4
+        EndBody
+      EndObject
+      Object Status $Value 189 21-OCT-2010 08:36:04.11
+        Body SysBody 21-OCT-2010 08:37:32.87
+          Attr Text = "Status"
+          Attr Value = 5
+        EndBody
+      EndObject
+      Object Update $Value 208 21-OCT-2010 08:36:20.05
+        Body SysBody 21-OCT-2010 08:37:35.08
+          Attr Text = "Update"
+          Attr Value = 6
+        EndBody
+      EndObject
+      Object Redundancy $Value 207 21-OCT-2010 08:50:27.28
+        Body SysBody 21-OCT-2010 08:50:28.67
+          Attr Text = "Redundancy"
+          Attr Value = 7
+        EndBody
+      EndObject
+      Object ControlledBySup $Value 206 21-OCT-2010 08:39:47.43
+        Body SysBody 21-OCT-2010 08:50:39.54
+          Attr Text = "Controlled by supervisor"
+          Attr Value = 8
+        EndBody
+      EndObject
+      Object Released $Value 205 21-OCT-2010 08:39:54.81
+        Body SysBody 21-OCT-2010 08:39:55.91
+          Attr Text = "Released"
+          Attr Value = 9
+        EndBody
+      EndObject
+      Object PlugWrong $Value 204 21-OCT-2010 08:40:15.93
+        Body SysBody 21-OCT-2010 08:40:18.80
+          Attr Text = "PlugWrong"
+          Attr Value = 10
+        EndBody
+      EndObject
+      Object Return $Value 203 21-OCT-2010 08:40:24.69
+        Body SysBody 21-OCT-2010 08:40:26.12
+          Attr Text = "Return"
+          Attr Value = 11
+        EndBody
+      EndObject
+      Object DiagDisappears $Value 202 21-OCT-2010 08:41:23.66
+        Body SysBody 21-OCT-2010 08:41:25.21
+          Attr Text = "DiagDisappears"
+          Attr Value = 12
+        EndBody
+      EndObject
+      Object MulticastMismatch $Value 201 21-OCT-2010 08:41:45.79
+        Body SysBody 21-OCT-2010 08:41:47.19
+          Attr Text = "MulticastMismatch"
+          Attr Value = 13
+        EndBody
+      EndObject
+      Object PortDataChanged $Value 200 21-OCT-2010 08:42:00.34
+        Body SysBody 21-OCT-2010 08:42:02.05
+          Attr Text = "PortDataChanged"
+          Attr Value = 14
+        EndBody
+      EndObject
+      Object SyncDataChanged $Value 199 21-OCT-2010 08:42:11.36
+        Body SysBody 21-OCT-2010 08:42:16.91
+          Attr Text = "SyncDataChanged"
+          Attr Value = 15
+        EndBody
+      EndObject
+      Object IsoProblem $Value 198 21-OCT-2010 08:42:49.77
+        Body SysBody 21-OCT-2010 08:43:05.10
+          Attr Text = "Ischronous mode problem"
+          Attr Value = 16
+        EndBody
+      EndObject
+      Object NetwComp $Value 197 21-OCT-2010 08:47:42.57
+        Body SysBody 21-OCT-2010 08:47:54.09
+          Attr Text = "Network component problem"
+          Attr Value = 17
+        EndBody
+      EndObject
+      Object TimeDataChange $Value 196 21-OCT-2010 08:48:07.16
+        Body SysBody 21-OCT-2010 08:48:13.02
+          Attr Text = "Time data changed"
+          Attr Value = 18
+        EndBody
+      EndObject
+      Object UploadRetrNot $Value 195 21-OCT-2010 08:48:24.34
+        Body SysBody 21-OCT-2010 08:53:24.82
+          Attr Text = "Upload retrieval notification"
+          Attr Value = 30
+        EndBody
+      EndObject
+      Object PullModule $Value 194 21-OCT-2010 08:48:49.12
+        Body SysBody 21-OCT-2010 08:53:34.67
+          Attr Text = "Pull module"
+          Attr Value = 31
+        EndBody
+      EndObject
+      Object ManuLowerLimit $Value 193 21-OCT-2010 08:49:02.73
+        Body SysBody 21-OCT-2010 11:01:35.18
+          Attr Text = "Manufacturer lower limit"
+          Attr Value = 32
+        EndBody
+      EndObject
+      Object ManuUpperLimit $Value 192 21-OCT-2010 08:49:26.73
+        Body SysBody 21-OCT-2010 08:54:36.18
+          Attr Text = "Manufacturer upper limit"
+          Attr Value = 127
+        EndBody
+      EndObject
+      Object ProfileLowerLimit $Value 191 21-OCT-2010 08:49:40.33
+        Body SysBody 21-OCT-2010 08:54:49.76
+          Attr Text = "Profile lower limit"
+          Attr Value = 128
+        EndBody
+      EndObject
+      Object ProfileUpperLimit $Value 190 21-OCT-2010 08:49:58.05
+        Body SysBody 21-OCT-2010 08:54:53.68
+          Attr Text = "Profile upper limit"
+          Attr Value = 255
         EndBody
       EndObject
     EndObject
@@ -801,7 +951,7 @@ Volume Profibus $ClassVolume 0.0.250.7
       Body SysBody 16-JAN-2006 09:46:40.50
         Attr Editor = 0
         Attr Method = 1
-        Attr Flags = 8272
+        Attr Flags = 41040
       EndBody
       Object RtBody $ObjBodyDef 1 16-JAN-2006 09:46:40.50
         Body SysBody 16-JAN-2006 09:46:40.50
@@ -1212,7 +1362,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         ! Extended diagnostics data area.
         !*/
         Object Diag $Attribute 37 16-JAN-2006 09:46:40.50
-          Body SysBody 16-JAN-2006 09:46:40.50
+          Body SysBody 21-OCT-2010 09:35:00.07
             Attr PgmName = "Diag"
             Attr Flags = 3074
             Attr Elements = 256
@@ -1594,7 +1744,7 @@ Volume Profibus $ClassVolume 0.0.250.7
       Body SysBody 16-JAN-2006 09:46:40.50
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 16464
+        Attr Flags = 49232
       EndBody
       Object RtBody $ObjBodyDef 1 16-JAN-2006 09:46:40.50
         Body SysBody 16-JAN-2006 09:46:40.50
@@ -1733,7 +1883,7 @@ Volume Profibus $ClassVolume 0.0.250.7
       Body SysBody 16-JAN-2006 09:46:40.51
         Attr Editor = 0
         Attr Method = 1
-        Attr Flags = 4176
+        Attr Flags = 36944
       EndBody
       Object RtBody $ObjBodyDef 1 16-JAN-2006 09:46:40.51
         Body SysBody 16-JAN-2006 09:46:40.51
@@ -2120,7 +2270,7 @@ Volume Profibus $ClassVolume 0.0.250.7
       Body SysBody 09-DEC-2008 13:19:32.10
         Attr Editor = 0
         Attr Method = 1
-        Attr Flags = 4176
+        Attr Flags = 36944
       EndBody
       Object RtBody $ObjBodyDef 1 09-DEC-2008 13:20:25.79
         Body SysBody 09-DEC-2008 13:26:35.55
@@ -2458,6 +2608,15 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndBody
       EndObject
     EndObject
+    !/**
+    ! @Author Robert Karlsson
+    ! @Version 1.0
+    ! @Group IO
+    ! @Summary Information received on a Profinet alarm event
+    ! Shows the last occured alarm from the Profinet device.
+    ! It gives information about what type of alarm it is and
+    ! from what slot/subslot it comes.
+    !*/
     Object PnAlarm $ClassDef 18 10-JUN-2010 10:39:40.30
       Body SysBody 10-JUN-2010 10:39:35.83
         Attr Editor = 0
@@ -2467,15 +2626,87 @@ Volume Profibus $ClassVolume 0.0.250.7
       Object RtBody $ObjBodyDef 1 10-JUN-2010 10:40:04.61
         Body SysBody 10-JUN-2010 10:40:04.61
           Attr StructName = "PnAlarm"
-          Attr NextAix = "_X9"
+          Attr NextAix = "_X11"
         EndBody
+        !/**
+        ! Diagnosis appears Alarm 
+        ! A diagnosis appears alarm signals an event within a submodule, 
+        ! for instance overtemperature, short circuit, etc. 
+        ! The content of the alarm is defined by the Diagnosis ASE for this type. 
+        ! 
+        ! Process Alarm 
+        ! A process alarm signals the occurrence of an event in the 
+        ! connected process, for instance upper limit value exceeded. 
+        ! 
+        ! Pull Alarm 
+        ! A slot signals the withdrawal of a submodule/module or change 
+        ! in configuration (reduction). 
+        ! 
+        ! Plug Alarm 
+        ! A slot signals the insertion of a submodule/module, a new need 
+        ! for parametrization, or a change in configuration (addition). 
+        ! 
+        ! Status Alarm 
+        ! A status alarm signals a change in the state of a submodule, 
+        ! for instance run, stop or ready. 
+        ! 
+        ! Update Alarm 
+        ! An update alarm signals the change of a parameter in a submodule 
+        ! e.g. by a local operation or a remote access. 
+        ! 
+        ! Redundancy Alarm 
+        ! A redundancy alarm signals the fault of one IO controller to the 
+        ! remaining IO controller for redundant IO ARs. 
+        ! 
+        ! Controlled by supervisor 
+        ! A slot signals the logical withdrawal of a submodule by the 
+        ! IO supervisor. The actions shall be according to the Pull Alarm. 
+        ! 
+        ! Released Alarm 
+        ! A slot signals the logical insertion of a submodule by the IO supervisor. 
+        ! The actions shall be according to the Plug Alarm. 
+        ! 
+        ! Plug Wrong Submodule Alarm 
+        ! A slot signals the insertion of a wrong submodule/module or a 
+        ! change in configuration (addition). 
+        ! 
+        ! Return of Submodule Alarm 
+        ! A slot signals that a submodule is ready to switch its IOCS/IOPS from
+        ! "BAD" to "GOOD" again without new parameterization. 
+        ! 
+        ! Diagnosis disappears Alarm 
+        ! A diagnosis disappears alarm signals a disappearing diagnosis event 
+        ! within a submodule. The content of the alarm is defined by the 
+        ! Diagnosis ASE for this type. 
+        ! 
+        ! Multicast Communication Mismatch 
+        ! A multicast consumer submodule signals that communication 
+        ! relationship to the associated multicast provider is failed. 
+        ! 
+        ! Port Data Change Notification Alarm 
+        ! A port submodule signals that port data has been changed. 
+        ! 
+        ! Sync Data Change Notification Alarm 
+        ! An interface submodule signals that synchronization data has been changed. 
+        ! 
+        ! Isochronous Mode Problem Notification Alarm 
+        ! The application signals that problems with isochronously execution 
+        ! have been detected. 
+        ! 
+        ! Furthermore, manufacturer specific alarms may be used and alarms 
+        ! are reserved for profile specific definitions. 
+        !
+        !*/
         Object Type $Attribute 1 10-JUN-2010 10:53:19.20
-          Body SysBody 30-JUN-2010 11:02:27.88
+          Body SysBody 21-OCT-2010 08:59:53.40
             Attr PgmName = "Type"
             Attr Flags = 1024
-            Attr TypeRef = "pwrs:Type-$UInt16"
+            Attr TypeRef = "Profibus:Type-PnAlarmTypeEnum"
           EndBody
         EndObject
+        !/**
+        ! Alarm priority, low or high
+        !*/
         Object Prio $Attribute 2 10-JUN-2010 10:53:36.41
           Body SysBody 30-JUN-2010 11:02:47.21
             Attr PgmName = "Prio"
@@ -2483,6 +2714,9 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "Profibus:Type-PnAlarmPrioEnum"
           EndBody
         EndObject
+        !/**
+        ! Indicates whether there exists remaining alarms
+        !*/
         Object Remaining $Attribute 3 10-JUN-2010 10:54:32.69
           Body SysBody 30-JUN-2010 11:02:51.79
             Attr PgmName = "Remaining"
@@ -2490,6 +2724,9 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! The slot number on the device that raised the alarm
+        !*/
         Object SlotNumber $Attribute 4 10-JUN-2010 11:48:57.48
           Body SysBody 30-JUN-2010 11:02:56.16
             Attr PgmName = "SlotNumber"
@@ -2497,6 +2734,9 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! The subslot number on the slot that raised the alarm
+        !*/
         Object SubslotNumber $Attribute 5 10-JUN-2010 11:49:10.13
           Body SysBody 30-JUN-2010 11:03:00.65
             Attr PgmName = "SubslotNumber"
@@ -2504,6 +2744,10 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! Module ident number identifying the module the 
+        ! alarm comes from (see GSDML-file)
+        !*/
         Object ModuleIdentNumber $Attribute 6 10-JUN-2010 11:49:40.15
           Body SysBody 30-JUN-2010 11:03:04.71
             Attr PgmName = "ModuleIdentNumber"
@@ -2511,6 +2755,10 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Subodule ident number identifying the module the 
+        ! alarm comes from (see GSDML-file)
+        !*/
         Object SubmoduleIdentNumber $Attribute 7 10-JUN-2010 11:49:56.34
           Body SysBody 30-JUN-2010 11:03:09.13
             Attr PgmName = "SubmoduleIdentNumber"
@@ -2518,11 +2766,34 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Specifier, see PROFINET-specifications
+        !*/
         Object Specifier $Attribute 8 10-JUN-2010 12:52:57.01
-          Body SysBody 30-JUN-2010 11:03:34.57
+          Body SysBody 21-OCT-2010 09:34:42.51
             Attr PgmName = "Specifier"
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Length of the manufacturer specific data (diagnostics)
+        !*/
+        Object ManuSpecLength $Attribute 9 21-OCT-2010 09:34:26.44
+          Body SysBody 21-OCT-2010 09:34:45.64
+            Attr PgmName = "ManuSpecLength"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Manufacturer specific data
+        !*/
+        Object Data $Attribute 10 21-OCT-2010 09:35:37.91
+          Body SysBody 21-OCT-2010 09:35:55.90
+            Attr PgmName = "Data"
+            Attr Flags = 3074
+            Attr Elements = 200
+            Attr TypeRef = "pwrs:Type-$UInt8"
           EndBody
         EndObject
       EndObject
@@ -2531,41 +2802,63 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndBody
       EndObject
     EndObject
+    !/**
+    ! @Author Robert Karlsson
+    ! @Version 1.0
+    ! @Group IO
+    ! @Summary Defines that a Profinet controller stack is installed.
+    ! Configures a Profinet controller stack.
+    !*/
     Object PnControllerSoftingPNAK $ClassDef 15 21-APR-2009 13:41:08.17
       Body SysBody 21-APR-2009 13:41:08.17
         Attr Editor = 0
         Attr Method = 1
-        Attr Flags = 4176
+        Attr Flags = 36944
       EndBody
       Object RtBody $ObjBodyDef 1 21-APR-2009 13:41:08.17
         Body SysBody 21-APR-2009 13:41:08.17
           Attr StructName = "PnControllerSoftingPNAK"
           Attr NextAix = "_X58"
         EndBody
+        !/**
+        ! Description.
+        !*/
         Object Description $Attribute 53 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! Defines your ethernet device (typically eth0/eth1).
+        !*/
         Object EthernetDevice $Attribute 57 27-AUG-2010 15:41:20.42
           Body SysBody 27-AUG-2010 15:41:26.88
             Attr PgmName = "EthernetDevice"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        ! Process that will run the Profinet i/o.
+        !*/
         Object Process $Attribute 54 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "Process"
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
+        !/**
+        ! Plc-thread that will run the i/o.
+        !*/
         Object ThreadObject $Attribute 55 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "ThreadObject"
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
+        !/**
+        ! Status of Profinet controller stack.
+        !*/
         Object Status $Attribute 56 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "Status"
@@ -2613,41 +2906,63 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndBody
       EndObject
     EndObject
+    !/**
+    ! @Author Robert Karlsson
+    ! @Version 1.0
+    ! @Group IO
+    ! @Summary Configures one Profinet device.
+    ! Configures one Profinet device.
+    !*/
     Object PnDevice $ClassDef 16 21-APR-2009 13:41:08.17
       Body SysBody 21-APR-2009 13:41:08.17
         Attr Editor = 0
         Attr Method = 1
-        Attr Flags = 8272
+        Attr Flags = 41040
       EndBody
       Object RtBody $ObjBodyDef 1 21-APR-2009 13:41:08.17
         Body SysBody 21-APR-2009 13:41:08.17
           Attr StructName = "PnDevice"
           Attr NextAix = "_X105"
         EndBody
+        !/**
+        ! Description.
+        !*/
         Object Description $Attribute 87 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! Specification of device.
+        !*/
         Object Specification $Attribute 88 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! Link to datasheet for device.
+        !*/
         Object DataSheet $Attribute 89 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        ! Location of GSDML-file defining this device.
+        !*/
         Object GSDMLfile $Attribute 90 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "GSDMLfile"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! Status of device.
+        !*/
         Object Status $Attribute 91 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "Status"
@@ -2655,18 +2970,33 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
         EndObject
+        !/**
+        ! @Summary Process that handles the device. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the device.
+        ! 
+        ! 1: The device is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The device is read by the rt_io_comm process.
+        ! 4: The device is handled by an application program.
+        !*/
         Object Process $Attribute 92 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "Process"
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
+        !/**
+        ! Plc-thread that will run the Profinet i/o.
+        !*/
         Object ThreadObject $Attribute 93 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "ThreadObject"
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
+        !/**
+        ! ErrorCount will increase every cycle if status is not PN__NORMAL.
+        !*/
         Object ErrorCount $Attribute 94 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "ErrorCount"
@@ -2674,18 +3004,27 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! If stall action is reset inputs, all inputs will be set to zero when this limit is reached.
+        !*/
         Object ErrorSoftLimit $Attribute 95 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "ErrorSoftLimit"
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! If stall action is emergency break, this action will be invoked when limit is reached.
+        !*/
         Object ErrorHardLimit $Attribute 96 21-APR-2009 13:41:08.17
           Body SysBody 12-JAN-2010 17:07:13.74
             Attr PgmName = "ErrorHardLimit"
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! State of communication to device.
+        !*/
         Object State $Attribute 97 12-JAN-2010 17:06:58.08
           Body SysBody 10-JUN-2010 10:30:30.44
             Attr PgmName = "State"
@@ -2693,6 +3032,9 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "Profibus:Type-PnDeviceStateEnum"
           EndBody
         EndObject
+        !/**
+        ! Number of modules that are configured incorrectly.
+        !*/
         Object NoDiffModules $Attribute 98 12-JAN-2010 17:09:39.73
           Body SysBody 12-JAN-2010 17:09:56.44
             Attr PgmName = "NoDiffModules"
@@ -2700,6 +3042,9 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! Defines which slot-number that is incorrectly configured.
+        !*/
         Object ErrSlotNumber $Attribute 99 12-JAN-2010 17:10:25.95
           Body SysBody 12-JAN-2010 17:10:28.22
             Attr PgmName = "ErrSlotNumber"
@@ -2707,6 +3052,9 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! Describes the reason for wrong module.
+        !*/
         Object ErrModuleState $Attribute 100 12-JAN-2010 17:11:23.49
           Body SysBody 10-JUN-2010 10:30:12.41
             Attr PgmName = "ErrModuleState"
@@ -2714,6 +3062,9 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "Profibus:Type-PnModuleStateEnum"
           EndBody
         EndObject
+        !/**
+        ! Physical identification number of module plugged at this slot.
+        !*/
         Object PhysIdentNumber $Attribute 101 12-JAN-2010 17:14:23.50
           Body SysBody 12-JAN-2010 17:14:45.08
             Attr PgmName = "PhysIdentNumber"
@@ -2721,18 +3072,27 @@ Volume Profibus $ClassVolume 0.0.250.7
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        ! Byte ordering of integral data.
+        !*/
         Object ByteOrdering $Attribute 102 09-JUN-2010 10:31:22.82
           Body SysBody 09-JUN-2010 10:31:22.82
             Attr PgmName = "ByteOrdering"
             Attr TypeRef = "pwrb:Type-ByteOrderingEnum"
           EndBody
         EndObject
+        !/**
+        ! Floting point representation.
+        !*/
         Object FloatRepresentation $Attribute 103 09-JUN-2010 10:31:22.82
           Body SysBody 09-JUN-2010 10:31:22.82
             Attr PgmName = "FloatRepresentation"
             Attr TypeRef = "pwrb:Type-FloatRepEnum"
           EndBody
         EndObject
+        !/**
+        ! Alarm from this device.
+        !*/
         Object Alarm $Attribute 104 10-JUN-2010 11:50:27.33
           Body SysBody 10-JUN-2010 11:51:43.64
             Attr PgmName = "Alarm"
@@ -2883,53 +3243,87 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndBody
       EndObject
     EndObject
+    !/**
+    ! @Author Robert Karlsson
+    ! @Version 1.0
+    ! @Group IO
+    ! @Summary Configures one Profinet module.
+    ! Configures one Profinet module.
+    !*/
     Object PnModule $ClassDef 17 21-APR-2009 13:41:08.17
       Body SysBody 21-APR-2009 13:41:08.17
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 16464
+        Attr Flags = 49232
       EndBody
       Object RtBody $ObjBodyDef 1 21-APR-2009 13:41:08.17
         Body SysBody 21-APR-2009 13:41:08.17
           Attr StructName = "PnModule"
           Attr NextAix = "_X22"
         EndBody
+        !/**
+        ! Description of this module.
+        !*/
         Object Description $Attribute 15 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! Specification of module.
+        !*/
         Object Specification $Attribute 16 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! Name of module.
+        !*/
         Object ModuleName $Attribute 17 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "ModuleName"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        ! @Summary Process that handles the module. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the module.
+        ! 
+        ! 1: The module is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The module is read by the rt_io_comm process.
+        ! 4: The module is handled by an application program.
+        !*/
         Object Process $Attribute 18 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "Process"
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
+        !/**
+        ! Plc-thread that will run the Profinet i/o.
+        !*/
         Object ThreadObject $Attribute 19 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "ThreadObject"
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
+        !/**
+        ! Status of module.
+        !*/
         Object Status $Attribute 20 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "Status"
             Attr TypeRef = "pwrs:Type-$Status"
           EndBody
         EndObject
+        !/**
+        ! Datasheet for module.
+        !*/
         Object DataSheet $Attribute 21 21-APR-2009 13:41:08.17
           Body SysBody 21-APR-2009 13:41:08.17
             Attr PgmName = "DataSheet"

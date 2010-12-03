@@ -58,8 +58,8 @@ void CoWowGtk::question_ok_cb( GtkWidget *w, gpointer data)
   if (cbdata->questionbox_ok)
     (cbdata->questionbox_ok)( cbdata->ctx, cbdata->data);
 
-  free( (char *)cbdata);
   gtk_widget_destroy( cbdata->question_widget);
+  free( (char *)cbdata);
 }
 
 void CoWowGtk::question_cancel_cb( GtkWidget *w, gpointer data)
@@ -69,8 +69,8 @@ void CoWowGtk::question_cancel_cb( GtkWidget *w, gpointer data)
   if (cbdata->questionbox_cancel)
     (cbdata->questionbox_cancel)( cbdata->ctx, cbdata->data);
 
-  free( (char *)cbdata);
   gtk_widget_destroy( cbdata->question_widget);
+  free( (char *)cbdata);
 }
 
 static gint question_delete_event( GtkWidget *w, GdkEvent *event, gpointer data)

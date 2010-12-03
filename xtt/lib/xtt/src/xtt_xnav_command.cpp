@@ -1995,7 +1995,7 @@ static int	xnav_show_func(	void		*client_data,
 	  sts = gdh_GetNextAttrRef( cid, &aref, &aref)) {
       cnt++;
     }
-    names = (pwr_tOName *)calloc( cnt, sizeof(pwr_tOName));
+    names = (pwr_tOName *)calloc( cnt + 1, sizeof(pwr_tOName));
 
     int idx = 0;
     for ( sts = gdh_GetClassListAttrRef( cid, &aref);

@@ -52,7 +52,7 @@ extern "C" {
 }
 
 wb_vrepext::wb_vrepext( wb_erep *erep, pwr_tVid vid) :
-  wb_vrep(vid), m_erep(erep), m_merep(erep->merep()), m_connected(0)
+  wb_vrep(vid), m_erep(erep), m_merep(erep->merep()), m_nRef(0), m_connected(0)
 {
   strcpy( m_providerstr, "");
 
@@ -62,7 +62,7 @@ wb_vrepext::wb_vrepext( wb_erep *erep, pwr_tVid vid) :
 }
 
 wb_vrepext::wb_vrepext( wb_erep *erep, pwr_tVid vid, const char *name, const char *provider) :
-  wb_vrep(vid), m_erep(erep), m_merep(erep->merep()), m_connected(0),
+  wb_vrep(vid), m_erep(erep), m_merep(erep->merep()), m_nRef(0), m_connected(0),
   m_procom(0), m_ptype( procom_eType_Ipc)
 {
   strcpy( m_providerstr, provider);

@@ -15,6 +15,7 @@ ifndef rules_mk
 endif
 
 vpath %.gsd $(hw_source):$(os_source):$(co_source)
+vpath %.xml $(hw_source):$(os_source):$(co_source)
 
 source_dirs = $(hw_source) $(os_source) $(co_source)
 
@@ -27,18 +28,29 @@ gsd_sources := $(sort \
              ) \
            )
 
+xml_sources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(source_dirs), \
+                 $(wildcard $(dir)/*.xml) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
 export_gsd := $(patsubst %.gsd, $(exe_dir)/%.gsd, $(gsd_sources))
 clean_gsd := $(patsubst %.gsd, clean_%.gsd, $(gsd_sources))
+export_xml := $(patsubst %.xml, $(exe_dir)/%.xml, $(xml_sources))
+clean_xml := $(patsubst %.xml, clean_%.xml, $(xml_sources))
 
 
 .PHONY : all init copy lib exe clean realclean\
-         $(clean_gsd)
+         $(clean_gsd) $(clean_xml)
 
 all : init copy
 
 init :
 
-copy : $(export_gsd)
+copy : $(export_gsd) $(export_xml)
 
 lib :
 
@@ -46,7 +58,7 @@ exe :
 
 clean :
 
-realclean : clean $(clean_gsd)
+realclean : clean $(clean_gsd) $(clean_xml)
 
 $(export_gsd) : $(exe_dir)/%.gsd : %.gsd
 	@ echo "Exporting $< ..."
@@ -54,5 +66,12 @@ $(export_gsd) : $(exe_dir)/%.gsd : %.gsd
 
 $(clean_gsd) : clean_%.gsd : %.gsd
 	@ rm $(exe_dir)/$*.gsd
+
+$(export_xml) : $(exe_dir)/%.xml : %.xml
+	@ echo "Exporting $< ..."
+	@ $(cp) $(cpflags) $(source) $(target)
+
+$(clean_xml) : clean_%.xml : %.xml
+	@ rm $(exe_dir)/$*.xml
 
 

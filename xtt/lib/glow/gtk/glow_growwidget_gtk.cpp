@@ -285,6 +285,9 @@ static void growwidgetgtk_destroy( GtkObject *object)
 
 static gboolean growwidgetgtk_event( GtkWidget *glow, GdkEvent *event)
 {
+  if ( ((GrowWidgetGtk *)glow)->destroyed)
+    return TRUE;
+
   if ( event->type == GDK_MOTION_NOTIFY) {
     gdk_display_flush( ((GlowDrawGtk *)((GrowCtx *)((GrowWidgetGtk *)glow)->grow_ctx)->gdraw)->display);
     GdkEvent *next = gdk_event_peek();

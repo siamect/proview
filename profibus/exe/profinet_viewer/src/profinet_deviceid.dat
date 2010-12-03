@@ -93,11 +93,14 @@ Finely-graduated modular distributed I/O device, protection type IP20
 # Processing file: /home/claes/gsdml/test.xml
 328 8192
 GRT1-PNT
-
 # Processing file: /home/claes/gsdml/GSDML-V2.0-ABBdrives-RETA02-20070621.xml
 26 1
 ABB RETA-02
 PROFINET IO module RETA-02
+# Processing file: /home/claes/gsdml/gsdml-v2.0-siemens-sinamicsg120prof-20080514.xml
+42 1288
+SINAMICS
+SINAMICS drives
 # Processing file: /home/claes/gsdml/GSDML-V1.0-PhoenixContact-FL-SWITCH-MC-16TX-V1.0-20051207.xml
 176 19
 Factory Line

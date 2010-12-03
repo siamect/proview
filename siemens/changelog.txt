@@ -6,3 +6,6 @@
 070426 rk  rt         Added IO-method's for Siemens_DiagRepeater.
 070502 rk  mmi        Added object graphs for classes Siemens_DiagRepeater and
                       Siemens_DR_SegmStatus.
+101202 rk  wbl        Added classes for Sinamics G120 drive with Profinet/Profibus.
+101202 rk  wbl        Added classes for Siemens ET200M/S using Profinet.
+

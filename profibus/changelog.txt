@@ -20,5 +20,8 @@
 071211 rk mmi         Added supgraph mcomp_pb_dp_slave.
 080115 cs -           Reading of Di, Ai and Ii can be disabled by setting ConversionOn in channel object to 0.
 080229 rk -           I/O-handling routines generalized and some routines moved to rt_io_bus.c
+100702 cs -           Common IO module objects for different busses.
 100708 rk -           Added functionality for PROFINET IO using Softing Profinet Stack
+101202 rk -           Finalized PROFINET IO functionality. Added several classes
+                      for handling different types of Profinet IO.
 

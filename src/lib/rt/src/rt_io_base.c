@@ -1428,6 +1428,161 @@ static pwr_tStatus io_FindMethods(
 
 
 /*----------------------------------------------------------------------------*\
+  Handle channels for a card and insert them into classlist.
+\*----------------------------------------------------------------------------*/
+
+static pwr_tStatus io_handle_channels(
+				      gdh_sAttrDef *bd, 
+				      int i, 
+				      int csize, 
+				      io_sCard *cp, 
+				      int offset, 
+				      int *chan_cnt, 
+				      pwr_tAName cname)
+{
+  void		*chan_op;
+  void		*sig_op;
+  io_sChannel	*chanp;
+  int           elem;
+  int           number;
+  pwr_sAttrRef	sigchancon;
+  pwr_tAName   	attrname;
+  pwr_tDlid	sigdlid;
+  pwr_tClassId	sigclass;
+  int 		sig_found;
+  pwr_tStatus 	sts;
+  int           j;
+  
+
+  elem = 1;
+  if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY)
+    elem = bd[i].attr->Param.Info.Elements;
+  for ( j = 0; j < elem; j++) {
+    chan_op = ((char *)cp->op) + bd[i].attr->Param.Info.Offset + offset + csize * j;
+    
+    switch ( bd[i].attr->Param.TypeRef) {
+    case pwr_cClass_ChanAi:
+      sigchancon = ((pwr_sClass_ChanAi *) chan_op)->SigChanCon;
+      number = *chan_cnt;
+      break;
+    case pwr_cClass_ChanAit:
+      sigchancon = ((pwr_sClass_ChanAit *) chan_op)->SigChanCon;
+      number = *chan_cnt;
+      break;
+    case pwr_cClass_ChanAo:
+      sigchancon = ((pwr_sClass_ChanAo *) chan_op)->SigChanCon;
+      number = *chan_cnt;
+      break;
+    case pwr_cClass_ChanDi:
+      sigchancon = ((pwr_sClass_ChanDi *) chan_op)->SigChanCon;
+      number = *chan_cnt;
+      break;
+    case pwr_cClass_ChanDo:
+      sigchancon = ((pwr_sClass_ChanDo *) chan_op)->SigChanCon;
+      number = *chan_cnt;
+      break;
+    case pwr_cClass_ChanIi:
+      sigchancon = ((pwr_sClass_ChanIi *) chan_op)->SigChanCon;
+      number = *chan_cnt;
+      break;
+    case pwr_cClass_ChanIo:
+      sigchancon = ((pwr_sClass_ChanIo *) chan_op)->SigChanCon;
+      number = *chan_cnt;
+      break;
+    case pwr_cClass_ChanCo:
+      sigchancon = ((pwr_sClass_ChanCo *) chan_op)->SigChanCon;
+      number = *chan_cnt;
+      break;
+    default:
+      ;
+    }
+    
+    (*chan_cnt)++;
+    
+    /* Find signal */
+    sig_found = 0;
+    if ( cdh_ObjidIsNotNull( sigchancon.Objid)) {
+      sts = gdh_GetAttrRefTid( &sigchancon, &sigclass);
+      if ( ODD(sts)) {
+	sts = gdh_DLRefObjectInfoAttrref( &sigchancon, (void *) &sig_op, &sigdlid);
+	if ( ODD(sts)) 
+	  sig_found = 1;
+      }
+    }
+    if ( !sig_found) {
+      sig_op = 0;
+      sigdlid = pwr_cNDlid;
+      sigclass = 0;
+    }
+    /* Insert */
+    if ( elem > 1)
+      sprintf( attrname, "%s.%s[%d]", cname, bd[i].attrName, j);
+    else
+      sprintf( attrname, "%s.%s", cname, bd[i].attrName);
+    
+    chanp = &cp->chanlist[number];
+    chanp->cop = chan_op;
+    chanp->ChanDlid = pwr_cNDlid;
+    sts = gdh_NameToAttrref( pwr_cNObjid, attrname, &chanp->ChanAref);
+    if ( EVEN(sts)) return sts;
+    chanp->sop = sig_op;
+    chanp->SigDlid = sigdlid;
+    chanp->SigAref = sigchancon;
+    chanp->ChanClass = bd[i].attr->Param.TypeRef;
+    chanp->SigClass = sigclass;
+    if ( sig_found) {
+      switch( sigclass) {
+      case pwr_cClass_Di:
+	chanp->vbp = gdh_TranslateRtdbPointer( 
+					      (unsigned long) ((pwr_sClass_Di *)sig_op)->ActualValue);
+	break;
+      case pwr_cClass_Do:
+	chanp->vbp = gdh_TranslateRtdbPointer( 
+					      (unsigned long) ((pwr_sClass_Do *)sig_op)->ActualValue);
+	break;
+      case pwr_cClass_Po:
+	chanp->vbp = gdh_TranslateRtdbPointer( 
+					      (unsigned long) ((pwr_sClass_Po *)sig_op)->ActualValue);
+	break;
+      case pwr_cClass_Ai:
+	chanp->vbp = gdh_TranslateRtdbPointer( 
+					      (unsigned long) ((pwr_sClass_Ai *)sig_op)->ActualValue);
+	break;
+      case pwr_cClass_Ao:
+	chanp->vbp = gdh_TranslateRtdbPointer( 
+					      (unsigned long) ((pwr_sClass_Ao *)sig_op)->ActualValue);
+	break;
+      case pwr_cClass_Ii:
+	chanp->vbp = gdh_TranslateRtdbPointer( 
+					      (unsigned long) ((pwr_sClass_Ii *)sig_op)->ActualValue);
+	break;
+      case pwr_cClass_Io:
+	chanp->vbp = gdh_TranslateRtdbPointer( 
+					      (unsigned long) ((pwr_sClass_Io *)sig_op)->ActualValue);
+	break;
+      case pwr_cClass_Co:
+	chanp->vbp = gdh_TranslateRtdbPointer( 
+					      (unsigned long) ((pwr_sClass_Co *)sig_op)->RawValue);
+	chanp->abs_vbp = gdh_TranslateRtdbPointer( 
+						  (unsigned long) ((pwr_sClass_Co *)sig_op)->AbsValue);
+	break;
+      default:
+	errh_Error( 
+		   "IO init error: unknown signal class card  %, chan nr %d", 
+		   cp->Name, number);
+	sts = gdh_DLUnrefObjectInfo( sigdlid);
+	sig_op = 0;
+	sigdlid = pwr_cNDlid;
+      }
+    }
+  }
+
+  return sts;
+
+
+}
+
+/*----------------------------------------------------------------------------*\
   Insert a card object into the context list.
 \*----------------------------------------------------------------------------*/
 static pwr_tStatus io_init_card(
@@ -1468,6 +1623,7 @@ static pwr_tStatus io_init_card(
   int		chan_cnt = 0;
   int 		sig_found;
   int		idx;
+
   
   sts = gdh_GetObjectClass( objid, &class);
   if ( EVEN(sts)) return sts;
@@ -1738,8 +1894,8 @@ static pwr_tStatus io_init_card(
 	      gdh_sAttrDef *bd;
 	      int rows;
 	      int csize;
-	      int i, j;
-	      int elem;
+	      int i;
+	      pwr_tAName ioname;
 
 	      sts = gdh_GetObjectBodyDef( cp->Class, &bd, &rows, pwr_cNObjid);
 	      if ( EVEN(sts)) return sts;
@@ -1771,131 +1927,53 @@ static pwr_tStatus io_init_card(
 		  csize = sizeof( pwr_sClass_ChanCo);
 		  break;
 		default:
+		  if ( bd[i].attr->Param.Info.Flags & PWR_MASK_CLASS) {
+		    gdh_sAttrDef *bd2;
+		    int rows2, ii, offset;
+		    sts = gdh_GetObjectBodyDef( bd[i].attr->Param.TypeRef, &bd2, &rows2, pwr_cNObjid);
+		    if ( EVEN(sts)) return sts;
+
+		    for ( ii = 0; ii < rows2; ii++) {
+		      switch ( bd2[ii].attr->Param.TypeRef) {
+		      case pwr_cClass_ChanAi:
+			csize = sizeof( pwr_sClass_ChanAi);
+			break;
+		      case pwr_cClass_ChanAit:
+			csize = sizeof( pwr_sClass_ChanAit);
+			break;
+		      case pwr_cClass_ChanAo:
+			csize = sizeof( pwr_sClass_ChanAo);
+			break;
+		      case pwr_cClass_ChanDi:
+			csize = sizeof( pwr_sClass_ChanDi);
+			break;
+		      case pwr_cClass_ChanDo:
+			csize = sizeof( pwr_sClass_ChanDo);
+			break;
+		      case pwr_cClass_ChanIi:
+			csize = sizeof( pwr_sClass_ChanIi);
+			break;
+		      case pwr_cClass_ChanIo:
+			csize = sizeof( pwr_sClass_ChanIo);
+			break;
+		      case pwr_cClass_ChanCo:
+			csize = sizeof( pwr_sClass_ChanCo);
+			break;
+		      default:
+			continue;
+		      }
+		      sprintf( ioname, "%s.%s", cname, bd[i].attrName);
+		      offset = bd[i].attr->Param.Info.Offset;
+		      sts = io_handle_channels(bd2, ii, csize, cp, offset, &chan_cnt, ioname);
+		    }
+		    free( (char *)bd2);
+		  }
+
 		  continue;
 		}
 
-		elem = 1;
-		if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY)
-		  elem = bd[i].attr->Param.Info.Elements;
-		for ( j = 0; j < elem; j++) {
-		  chan_op = ((char *)cp->op) + bd[i].attr->Param.Info.Offset + csize * j;
+		sts = io_handle_channels(bd, i, csize, cp, 0, &chan_cnt, cname);
 
-		  switch ( bd[i].attr->Param.TypeRef) {
-		  case pwr_cClass_ChanAi:
-		    sigchancon = ((pwr_sClass_ChanAi *) chan_op)->SigChanCon;
-		    number = chan_cnt;
-		    break;
-		  case pwr_cClass_ChanAit:
-		    sigchancon = ((pwr_sClass_ChanAit *) chan_op)->SigChanCon;
-		    number = chan_cnt;
-		    break;
-		  case pwr_cClass_ChanAo:
-		    sigchancon = ((pwr_sClass_ChanAo *) chan_op)->SigChanCon;
-		    number = chan_cnt;
-		    break;
-		  case pwr_cClass_ChanDi:
-		    sigchancon = ((pwr_sClass_ChanDi *) chan_op)->SigChanCon;
-		    number = chan_cnt;
-		    break;
-		  case pwr_cClass_ChanDo:
-		    sigchancon = ((pwr_sClass_ChanDo *) chan_op)->SigChanCon;
-		    number = chan_cnt;
-		    break;
-		  case pwr_cClass_ChanIi:
-		    sigchancon = ((pwr_sClass_ChanIi *) chan_op)->SigChanCon;
-		    number = chan_cnt;
-		    break;
-		  case pwr_cClass_ChanIo:
-		    sigchancon = ((pwr_sClass_ChanIo *) chan_op)->SigChanCon;
-		    number = chan_cnt;
-		    break;
-		  case pwr_cClass_ChanCo:
-		    sigchancon = ((pwr_sClass_ChanCo *) chan_op)->SigChanCon;
-		    number = chan_cnt;
-		    break;
-		  default:
-		    ;
-		  }
-
-		  chan_cnt++;
-
-		  /* Find signal */
-		  sig_found = 0;
-		  if ( cdh_ObjidIsNotNull( sigchancon.Objid)) {
-		    sts = gdh_GetAttrRefTid( &sigchancon, &sigclass);
-		    if ( ODD(sts)) {
-		      sts = gdh_DLRefObjectInfoAttrref( &sigchancon, (void *) &sig_op, &sigdlid);
-		      if ( ODD(sts)) 
-			sig_found = 1;
-		    }
-		  }
-		  if ( !sig_found) {
-		    sig_op = 0;
-		    sigdlid = pwr_cNDlid;
-		    sigclass = 0;
-		  }
-		  /* Insert */
-		  if ( elem > 1)
-		    sprintf( attrname, "%s.%s[%d]", cname, bd[i].attrName, j);
-		  else
-		    sprintf( attrname, "%s.%s", cname, bd[i].attrName);
-
-		  chanp = &cp->chanlist[number];
-		  chanp->cop = chan_op;
-		  chanp->ChanDlid = pwr_cNDlid;
-		  sts = gdh_NameToAttrref( pwr_cNObjid, attrname, &chanp->ChanAref);
-		  if ( EVEN(sts)) return sts;
-		  chanp->sop = sig_op;
-		  chanp->SigDlid = sigdlid;
-		  chanp->SigAref = sigchancon;
-		  chanp->ChanClass = bd[i].attr->Param.TypeRef;
-		  chanp->SigClass = sigclass;
-		  if ( sig_found) {
-		    switch( sigclass) {
-		    case pwr_cClass_Di:
-		      chanp->vbp = gdh_TranslateRtdbPointer( 
-		       (unsigned long) ((pwr_sClass_Di *)sig_op)->ActualValue);
-		      break;
-		    case pwr_cClass_Do:
-		      chanp->vbp = gdh_TranslateRtdbPointer( 
-	               (unsigned long) ((pwr_sClass_Do *)sig_op)->ActualValue);
-		      break;
-		    case pwr_cClass_Po:
-		      chanp->vbp = gdh_TranslateRtdbPointer( 
-		       (unsigned long) ((pwr_sClass_Po *)sig_op)->ActualValue);
-		      break;
-		    case pwr_cClass_Ai:
-		      chanp->vbp = gdh_TranslateRtdbPointer( 
-		       (unsigned long) ((pwr_sClass_Ai *)sig_op)->ActualValue);
-		      break;
-		    case pwr_cClass_Ao:
-		      chanp->vbp = gdh_TranslateRtdbPointer( 
-		       (unsigned long) ((pwr_sClass_Ao *)sig_op)->ActualValue);
-		      break;
-		    case pwr_cClass_Ii:
-		      chanp->vbp = gdh_TranslateRtdbPointer( 
-		       (unsigned long) ((pwr_sClass_Ii *)sig_op)->ActualValue);
-		      break;
-		    case pwr_cClass_Io:
-		      chanp->vbp = gdh_TranslateRtdbPointer( 
-		       (unsigned long) ((pwr_sClass_Io *)sig_op)->ActualValue);
-		      break;
-		    case pwr_cClass_Co:
-		      chanp->vbp = gdh_TranslateRtdbPointer( 
-		       (unsigned long) ((pwr_sClass_Co *)sig_op)->RawValue);
-		      chanp->abs_vbp = gdh_TranslateRtdbPointer( 
-		       (unsigned long) ((pwr_sClass_Co *)sig_op)->AbsValue);
-		      break;
-		    default:
-		      errh_Error( 
-		       "IO init error: unknown signal class card  %, chan nr %d", 
-		       cp->Name, number);
-		      sts = gdh_DLUnrefObjectInfo( sigdlid);
-		      sig_op = 0;
-		      sigdlid = pwr_cNDlid;
-		    }
-		  }
-		}
 	      }
 	      free( (char *)bd);
 	    }

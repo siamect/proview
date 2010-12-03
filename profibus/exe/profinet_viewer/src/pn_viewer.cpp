@@ -40,12 +40,14 @@
 PnViewer::PnViewer(
 	void *v_parent_ctx,
 	const char *v_name,
+	const char *v_device,
 	pwr_tStatus *status) :
   parent_ctx(v_parent_ctx), viewernav(NULL), wow(0), input_open(0), pnet(0), close_cb(0)
 {
   strcpy( name, v_name);
+  strcpy( device, v_device);
 
-  pnet = new PnViewerPNAC( status);
+  pnet = new PnViewerPNAC( status, device);
 }
 
 PnViewer::~PnViewer()
