@@ -1016,6 +1016,7 @@ cdh_NoCaseStrncmp (
 );
 
 char *cdh_Strcpy( char *dest, const char *src);
+char *cdh_Strncpy( char *dest, const char *src, size_t n);
 
 int 
 cdh_StrncpyCutOff(

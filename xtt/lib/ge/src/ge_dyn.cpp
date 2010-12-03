@@ -4991,7 +4991,7 @@ int GeAnalogColor::scan( grow_tObject object)
   bool set_color = false;
   bool reset_color = false;
 
-  if ( state != old_state || dyn->reset_color || first_scan) {
+  if ( first_scan || state != old_state || dyn->reset_color) {
     if ( state) {
       set_color = true;
       dyn->ignore_color = true;

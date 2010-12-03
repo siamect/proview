@@ -140,7 +140,8 @@ int GrowImage::insert_image( const char *imagefile)
   struct stat info;
   int sts;
 
-  strcpy( image_filename, imagefile);
+  if ( imagefile != image_filename)
+    strcpy( image_filename, imagefile);
 
   // Find file
   if ( strncmp( image_filename, "jpwr/", 5) == 0) {

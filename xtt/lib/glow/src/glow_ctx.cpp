@@ -222,6 +222,8 @@ int GlowCtx::open_comment( ifstream& fp)
   int incomment = 0;
   int i = 0;
 
+  if ( comment)
+    delete comment;
   comment = new CtxComment();
 
   fp.getline( line, sizeof(line));

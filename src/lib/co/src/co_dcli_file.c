@@ -65,7 +65,7 @@ int	dcli_get_defaultfilename(
   }
 #elif defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
   if ( strchr( inname, '/'))
-    strcpy( outname, inname);
+    cdh_Strcpy( outname, inname);
   else if ( ( s = strchr( inname, ':')))
   {
     /* Replace VMS disp to env variable */

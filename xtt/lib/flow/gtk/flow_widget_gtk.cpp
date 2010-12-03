@@ -259,6 +259,9 @@ static gboolean flowwidgetgtk_expose( GtkWidget *flow, GdkEventExpose *event)
 
 static gboolean flowwidgetgtk_event( GtkWidget *flow, GdkEvent *event)
 {
+  if ( ((FlowWidgetGtk *)flow)->destroyed)
+    return TRUE;
+
   if ( event->type == GDK_MOTION_NOTIFY) {
     gdk_display_flush( ((FlowDrawGtk *)((FlowCtx *)((FlowWidgetGtk *)flow)->flow_ctx)->fdraw)->display);
     GdkEvent *next = gdk_event_peek();

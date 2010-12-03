@@ -450,7 +450,7 @@ int PalItemMenu::open( Pal *pal, double x, double y)
     else 
       action_open = 0;
   }
-  if ( action_open || is_root)
+  if ( is_root || action_open)
   {
     // Display childlist
     double	node_x, node_y;

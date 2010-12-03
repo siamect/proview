@@ -36,7 +36,7 @@ GrowPolyLine::GrowPolyLine( GrowCtx *glow_ctx, const char *name,
 		int fix_line_w, int fill, int display_border, int display_shadow,
 		glow_eDrawType fill_d_type, int closed, int nodraw) :
 		GlowPolyLine(glow_ctx,pointarray,point_cnt,border_d_type,line_w,
-		fix_line_w,fill,closed), 
+	        fix_line_w,fill,closed), x_right(0), x_left(0), y_high(0), y_low(0),
     		hot(0), pzero(ctx), highlight(0), inverse(0), user_data(NULL),
 		dynamic(0), dynamicsize(0),
 		original_border_drawtype(border_d_type),

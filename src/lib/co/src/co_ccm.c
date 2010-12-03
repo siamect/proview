@@ -520,7 +520,7 @@ int	ccm_remove_blank( char *out_str, char *in_str)
 	    break;
 	  s++;
 	}
-	strcpy( out_str, s);
+	cdh_Strcpy( out_str, s);
 	/* Remove at end */
 	s = out_str + strlen(out_str);
 	s--;
