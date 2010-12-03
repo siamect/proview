@@ -52,8 +52,9 @@ PnViewerGtk::PnViewerGtk (
 	void *v_parent_ctx,
 	GtkWidget *v_parent_wid,
 	const char *v_name,
+	const char *v_device,
 	pwr_tStatus *status) :
-  PnViewer( v_parent_ctx, v_name, status), parent_wid(v_parent_wid)
+  PnViewer( v_parent_ctx, v_name, v_device, status), parent_wid(v_parent_wid)
 {
   const int	window_width = 800;
   const int    	window_height = 600;

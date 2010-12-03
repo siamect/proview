@@ -1,0 +1,278 @@
+; (c) 2006   Siemens AG A&D SD
+;
+; Profibus-DP     Generic Station Description for SINAMICS G120 Safety incl. PROFIsafe
+;
+;                 MLFB: 6SL3244-0BA21-1PA0 (G120 CU240S DP F)
+;
+; Author:            SIEMENS AG  A&D SD
+;
+; Date of Creation:  11.03.2006  Initial version
+; Changes:
+;   10.11.2006  model_name changed; new module 353 and 354; software_release changed
+;   05.01.2007  add version to model_Name and info_text; filename changed to SI028116
+;   17.07.2007  F_IO_StructureDescCRC=5639 added
+;
+;==========================================================================
+;
+;*********************** general keys
+;
+#Profibus_DP
+;
+GSD_Revision=5
+Vendor_Name="Siemens AG A&D"
+Model_Name="SINAMICS G120 CU240S DP F v3.00"
+Info_Text="DP-Slave SINAMICS G120 CU240S DP F v3.00 safety variant with PROFIsafe v1.x and DP-V1 interface (cyclic and acyclic communication)."
+Revision="C01"
+Ident_Number=0x8158
+Protocol_Ident=0            ; 0 = PROFIBUS-DP
+Station_Type=0              ; 0 = DP-Slave
+FMS_supp=0                  ; no FMS / DP mixed device
+Hardware_Release="C01"
+Software_Release="V03.0"
+;
+OrderNumber="6SL3 244-0BA21-1PA0"
+;
+;supported baudrates
+9.6_supp=1
+19.2_supp=1
+45.45_supp=1
+93.75_supp=1
+187.5_supp=1
+500_supp=1
+1.5M_supp=1
+3M_supp=1
+6M_supp=1
+12M_supp=1
+;
+;maximum station delaytime of responder at corresponding baudrate
+MaxTsdr_9.6=40
+MaxTsdr_19.2=40
+MaxTsdr_45.45=40
+MaxTsdr_93.75=40
+MaxTsdr_187.5=40
+MaxTsdr_500=40
+MaxTsdr_1.5M=40
+MaxTsdr_3M=50
+MaxTsdr_6M=100
+MaxTsdr_12M=200
+;
+Redundancy=0                ; not supported
+Repeater_Ctrl_Sig=2         ; TTL
+24V_Pins=0                  ; no 24 Volt
+Implementation_Type="DPC31"
+Bitmap_Device="SI028158"
+
+;*********************** slave basic ---
+Freeze_Mode_supp=1
+Sync_Mode_supp=1
+Auto_Baud_supp=1
+Set_Slave_Add_supp=0
+;
+Max_User_Prm_Data_Len=36     ;max. length of param tele
+Min_Slave_Intervall=1        ; = 100 탎
+Modular_Station=1
+Max_Module=2
+Max_Input_Len=32
+Max_Output_Len=32
+Max_Data_Len=64
+Fail_Safe=1
+Max_Diag_Data_Len=48
+Modul_Offset=1
+Slave_Family=1@SINAMICS
+;
+;*********************** (GSD R5)
+Ident_Maintenance_supp=1
+;
+;*********************** Text defines
+;PrmText=1
+;Text(0)="No"
+;Text(1)="Yes"
+;EndPrmText
+
+PrmText=2
+;Text(0)="SIL 1"
+Text(1)="SIL 2"
+;Text(2)="SIL 3"
+;Text(3)="NoSIL"
+EndPrmText
+
+PrmText=3
+Text(0)="No Check"
+;Text(1)="Check"
+EndPrmText
+
+;Text-Definition fuer CRC-Length
+PrmText=4
+;Text(0)="reserved"
+Text(1)="2 Byte CRC"
+;Text(2)="4 Byte CRC"
+;Text(3)="reserved 1"
+EndPrmText
+
+;*********************** Ext-User-Prm-Data-Def-List
+ExtUserPrmData=1 "F_Check_SeqNr"     ; Reference number 1
+Bit(0) 0 0-0                         ; Default = 0
+Prm_Text_Ref=3                       ; Pointer to text definition 3
+EndExtUserPrmData
+
+ExtUserPrmData=2 "F_SIL"
+BitArea(2-3) 1 1-1
+Prm_Text_Ref=2
+EndExtUserPrmData
+
+ExtUserPrmData=3 "F_CRC_Length"
+BitArea(4-5) 1 1-1
+Prm_Text_Ref=4
+EndExtUserPrmData
+
+ExtUserPrmData=4 "F_Par_Version"
+BitArea(6-7) 0 0-0
+EndExtUserPrmData
+
+ExtUserPrmData=5 "F_Source_Add"
+Unsigned16 1 1-65534
+EndExtUserPrmData
+
+ExtUserPrmData=6 "F_Dest_Add"
+Unsigned16 1 1-65534
+EndExtUserPrmData
+
+ExtUserPrmData=7 "F_WD_Time"
+Unsigned16 100 10-65535
+EndExtUserPrmData
+
+ExtUserPrmData=8 "F_Par_CRC"
+Unsigned16 0x783E 0-65535
+EndExtUserPrmData
+
+ExtUserPrmData=10 "[SlotNumber]"
+Unsigned8 1 1-254 	            ; Default = 1, Max = 254
+EndExtUserPrmData
+
+;*********************** diagnose
+UnitDiagType = 129
+X_Unit_Diag_Area=24-31
+X_Value(64) = "F add. does not match F_Dest_Add"
+X_Value(65) = "Wrong F destination address"
+X_Value(66) = "Wrong F source address"
+X_Value(67) = "Watchdog time value=0"
+X_Value(68) = "Wrong SIL level"
+X_Value(69) = "Wrong F-CRC length"
+X_Value(70) = "Wrong F-Parameter version"
+X_Value(71) = "CRC1 fault"
+X_Value(72) = "reserved"
+X_Value(73) = "reserved"
+X_Value(74) = "reserved"
+X_Unit_Diag_Area_End
+EndUnitDiagType
+;
+;*********************** slave related keywords for extended parameterization (GSD V4)
+Ext_User_Prm_Data_Const(0)=0   ;DPV1 state 1
+Ext_User_Prm_Data_Const(1)=0   ;DPV1 state 2
+Ext_User_Prm_Data_Const(2)=0   ;DPV1 state 3
+;
+;*********************** slave extensions (GSD R3)
+DPV1_Slave=1
+;
+C1_Read_Write_supp=1
+C2_Read_Write_supp=1
+C1_Max_Data_Len=240
+C2_Max_Data_Len=240
+C1_Response_Timeout=1         ;Timebase 10ms
+C2_Response_Timeout=1         ;Timebase 10ms
+C1_Read_Write_required=0
+C2_Read_Write_required=0
+C2_Max_Count_Channels=2
+Max_Initiate_PDU_Length=52
+WD_Base_1ms_supp=1
+;
+DPV1_Data_Types=0
+Check_Cfg_Mode=0
+;
+;*********************** slave data exchange broadcast
+Publisher_supp=0
+;Subscriber_supp=0
+;if Subscriber = 1
+;X_PRM_SAP_supp=1
+;X_Max_User_Prm_Data_Len=20
+;X_Prm_Block_Structure_supp=1
+;
+;DXB_Max_Link_Count=10
+;DXB_Max_Data_Length=40
+;DXB_Subscribertable_Block_Location=1
+;
+;*********************** slave data exchange Isochron
+;Isochron_Mode_supp=1
+;Isochron_Mode_required=0
+; do not specify this parameters if Isochron_mode_supp=0
+;TBase_DP=1500    ; 125 탎  (1500/12)
+;TDP_Max=256      ; 32 ms (256*TBase_DP)  32ms is maximum
+;TDP_Min=16       ; 2 ms ( 16*TBase_DP)
+;TBase_IO=1500	  ; 125 탎 (1500/12)
+;TI_Min=1 	  ; 125 탎 (  1*TBase_IO)
+;TO_Min=1 	  ; 125 탎 (  1*TBase_IO)
+;T_PLL_W_MAX=12   ; 1 탎 (  12/12)
+;
+;*********************** module definitions
+;
+;=======================================
+Module="Standard telegram 1" 0xE1, 0xD1
+1
+Info_Text="Standard telegram 1 (PZD-2/2) according to PROFIdrive V4. 2 words output and 2 words input"
+EndModule
+;=======================================
+Module="Standard telegram 20" 0xE1, 0xD5
+2
+Info_Text="Standard telegram 20 (PZD-2/6) according to PROFIdrive V4. 2 words output and 6 words input."
+EndModule
+;=======================================
+Module="SIEMENS telegram 350" 0xE3, 0xD3
+3
+Info_Text="SIEMENS specific telegram 350 (PZD-4/4). 4 words output and 4 words input."
+EndModule
+;=======================================
+Module="SIEMENS telegram 352" 0xE5, 0xD5
+4
+Info_Text="SIEMENS specific telegram 352 (PZD-6/6). 6 words output and 6 words input. Output words 3-6 defined as PCS7 handled data."
+EndModule
+;=======================================
+;Module="SIEMENS telegram 353" 0xF3, 0xE1, 0xD1
+Module="SIEMENS telegram 353" 0xf3, 0xc3, 0xc1, 0xc1, 0xfd, 0x01, 0x61
+5
+Info_Text="SIEMENS specific telegram 353 (PKW-4/4 + PZD-2/2). PKW data with 4 words input and 4 words output. PZD data with 2 words output and 2 words input."
+EndModule
+;=======================================
+;Module="SIEMENS telegram 354" 0xF3, 0xE5, 0xD5
+Module="SIEMENS telegram 354" 0xf3, 0xc3, 0xc5, 0xc5, 0xfd, 0x01, 0x62
+6
+Info_Text="SIEMENS specific telegram 354 (PKW-4/4 + PZD 6/6). PKW data with 4 words input and 4 words output. PZD data with 6 words output and 6 words input, outputwords 3-6 are defined as PCS7 data."
+EndModule
+
+;=======================================
+Module="PROFIsafe v1.x Module" 0xC6,0x85,0x85,0x05,0x05,0x0a,0x05,0x05,0x0a
+7
+Info_Text = "PROFIsafe v1.x module, take care on Dest_Adr"
+F_Ext_Module_Prm_Data_Len=14
+F_Ext_User_Prm_Data_Const(0)=0xE  ;length of block F-Parameter
+F_Ext_User_Prm_Data_Const(1)=5    ;sign F-Parameter
+F_Ext_User_Prm_Data_Ref(2)=10     ;auto slot number F-Moduls
+F_Ext_User_Prm_Data_Const(3)=0    ;specifier
+F_Ext_User_Prm_Data_Const(4)=0    ;F-Param-Flag 1 default 0x14
+F_Ext_User_Prm_Data_Const(5)=0    ;F-Param-Flag 2 default 0x00
+F_Ext_User_Prm_Data_Ref(4)=1      ;F-Param 1 Bit 0    CheckSeqNr  = 0
+F_Ext_User_Prm_Data_Ref(4)=2      ;F-Param 1 Bit 2-3	SIL         = 1
+F_Ext_User_Prm_Data_Ref(4)=3      ;F-Param 1 Bit 4-5	CRC Length  = 2 Byte
+F_Ext_User_Prm_Data_Ref(5)=4      ;F-Param 2 Bit 6-7	Par Version = 0
+F_Ext_User_Prm_Data_Ref(6)=5      ;F-Source-Adr
+F_Ext_User_Prm_Data_Ref(8)=6      ;F-Dest-Adr
+F_Ext_User_Prm_Data_Ref(10)=7     ;F-WD-Time
+F_Ext_User_Prm_Data_Ref(12)=8     ;F-CRC1
+;The value of this parameter will not be transferred to the slave device but is
+;needed to avoid errors during the parametrization with the configuration tool.
+F_ParamDescCRC=0xA01D
+F_IO_StructureDescCRC=5639
+EndModule
+;=======================================
+
+
+

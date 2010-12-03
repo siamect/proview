@@ -1,7 +1,7 @@
 Volume Siemens $ClassVolume 0.0.250.3 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X36"
-    Attr NextCix = "_X25"
+    Attr NextOix = "_X75"
+    Attr NextCix = "_X69"
     Attr NextTix[0] = "_X3"
   EndBody
   Object Type $TypeHier 5 25-APR-2007 13:44:05.44
@@ -219,6 +219,3284 @@ Volume Siemens $ClassVolume 0.0.250.3
           Attr Super.TempSwitch.Super.DisableSwitch = 1
           Attr Super.DisableTempSensor = 1
           Attr Super.TempSensor.Super.DisableValue = 1
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Di4_IoModule $ClassDef 40 24-NOV-2010 13:10:06.90
+      Body SysBody 24-NOV-2010 12:59:56.66
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 12:59:40.65
+        Body SysBody 24-NOV-2010 12:59:40.65
+          Attr StructName = "Siemens_Di4_IoModule"
+          Attr NextAix = "_X7"
+        EndBody
+        Object Ch $Attribute 6 24-NOV-2010 12:59:40.65
+          Body SysBody 24-NOV-2010 12:59:40.65
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 4
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Di4_IoModule 2158198784 01-JAN-1970 01:00:00.00
+        Body RtBody 24-NOV-2010 13:06:06.36
+          Attr Ch[0].ConversionOn = 1
+          Attr Ch[0].Representation = 8
+          Attr Ch[1].Number = 1
+          Attr Ch[1].ConversionOn = 1
+          Attr Ch[1].Representation = 8
+          Attr Ch[2].Number = 2
+          Attr Ch[2].ConversionOn = 1
+          Attr Ch[2].Representation = 8
+          Attr Ch[3].Number = 3
+          Attr Ch[3].ConversionOn = 1
+          Attr Ch[3].Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Di2_IoModule $ClassDef 41 24-NOV-2010 13:10:09.59
+      Body SysBody 24-NOV-2010 13:01:17.67
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 13:01:07.25
+        Body SysBody 24-NOV-2010 13:01:07.25
+          Attr StructName = "Siemens_Di2_IoModule"
+          Attr NextAix = "_X9"
+        EndBody
+        Object Ch $Attribute 8 24-NOV-2010 13:01:07.25
+          Body SysBody 24-NOV-2010 13:01:07.25
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 2
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Di2_IoModule 2158460928 01-JAN-1970 01:00:00.00
+        Body RtBody 24-NOV-2010 13:08:37.76
+          Attr Ch[0].ConversionOn = 1
+          Attr Ch[0].Representation = 8
+          Attr Ch[1].Number = 1
+          Attr Ch[1].ConversionOn = 1
+          Attr Ch[1].Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Do4_IoModule $ClassDef 42 24-NOV-2010 13:10:12.04
+      Body SysBody 24-NOV-2010 13:01:41.73
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 13:01:27.71
+        Body SysBody 24-NOV-2010 13:01:27.71
+          Attr StructName = "Siemens_Do4_IoModule"
+          Attr NextAix = "_X7"
+        EndBody
+        Object Ch $Attribute 6 24-NOV-2010 13:01:27.71
+          Body SysBody 24-NOV-2010 13:01:27.71
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 4
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Do4_IoModule 2158723072 01-JAN-1970 01:00:00.00
+        Body RtBody 24-NOV-2010 13:09:12.11
+          Attr Ch[0].Representation = 8
+          Attr Ch[1].Number = 1
+          Attr Ch[1].Representation = 8
+          Attr Ch[2].Number = 2
+          Attr Ch[2].Representation = 8
+          Attr Ch[3].Number = 3
+          Attr Ch[3].Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Do2_IoModule $ClassDef 43 24-NOV-2010 13:10:14.60
+      Body SysBody 24-NOV-2010 13:02:07.89
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 13:01:54.70
+        Body SysBody 24-NOV-2010 13:01:54.70
+          Attr StructName = "Siemens_Do2_IoModule"
+          Attr NextAix = "_X9"
+        EndBody
+        Object Ch $Attribute 8 24-NOV-2010 13:01:54.70
+          Body SysBody 24-NOV-2010 13:01:54.70
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 2
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Do2_IoModule 2158985216 01-JAN-1970 01:00:00.00
+        Body RtBody 24-NOV-2010 13:09:31.67
+          Attr Ch[0].Representation = 8
+          Attr Ch[1].Number = 1
+          Attr Ch[1].Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Di32_IoModule $ClassDef 26 24-NOV-2010 13:10:22.03
+      Body SysBody 24-NOV-2010 13:03:03.69
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 09:14:55.30
+        Body SysBody 24-NOV-2010 09:14:55.30
+          Attr StructName = "Siemens_Di32_IoModule"
+          Attr NextAix = "_X71"
+        EndBody
+        Object Ch00 $Attribute 39 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch00"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch01 $Attribute 40 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch01"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch02 $Attribute 41 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch02"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch03 $Attribute 42 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch03"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch04 $Attribute 43 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch04"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch05 $Attribute 44 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch05"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch06 $Attribute 45 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch06"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch07 $Attribute 46 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch07"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch10 $Attribute 47 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch10"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch11 $Attribute 48 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch11"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch12 $Attribute 49 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch12"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch13 $Attribute 50 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch13"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch14 $Attribute 51 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch14"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch15 $Attribute 52 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch15"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch16 $Attribute 53 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch16"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch17 $Attribute 54 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch17"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch20 $Attribute 55 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch20"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch21 $Attribute 56 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch21"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch22 $Attribute 57 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch22"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch23 $Attribute 58 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch23"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch24 $Attribute 59 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch24"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch25 $Attribute 60 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch25"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch26 $Attribute 61 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch26"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch27 $Attribute 62 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch27"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch30 $Attribute 63 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch30"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch31 $Attribute 64 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch31"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch32 $Attribute 65 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch32"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch33 $Attribute 66 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch33"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch34 $Attribute 67 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch34"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch35 $Attribute 68 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch35"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch36 $Attribute 69 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch36"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch37 $Attribute 70 24-NOV-2010 09:14:55.30
+          Body SysBody 24-NOV-2010 09:14:55.30
+            Attr PgmName = "Ch37"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Di32_IoModule 2154528768 01-JAN-1970 01:00:00.00
+        Body RtBody 24-NOV-2010 10:28:58.42
+          Attr Ch00.ConversionOn = 1
+          Attr Ch00.Representation = 8
+          Attr Ch01.Number = 1
+          Attr Ch01.ConversionOn = 1
+          Attr Ch01.Representation = 8
+          Attr Ch02.Number = 2
+          Attr Ch02.ConversionOn = 1
+          Attr Ch02.Representation = 8
+          Attr Ch03.Number = 3
+          Attr Ch03.ConversionOn = 1
+          Attr Ch03.Representation = 8
+          Attr Ch04.Number = 4
+          Attr Ch04.ConversionOn = 1
+          Attr Ch04.Representation = 8
+          Attr Ch05.Number = 5
+          Attr Ch05.ConversionOn = 1
+          Attr Ch05.Representation = 8
+          Attr Ch06.Number = 6
+          Attr Ch06.ConversionOn = 1
+          Attr Ch06.Representation = 8
+          Attr Ch07.Number = 7
+          Attr Ch07.ConversionOn = 1
+          Attr Ch07.Representation = 8
+          Attr Ch10.ConversionOn = 1
+          Attr Ch10.Representation = 8
+          Attr Ch11.Number = 1
+          Attr Ch11.ConversionOn = 1
+          Attr Ch11.Representation = 8
+          Attr Ch12.Number = 2
+          Attr Ch12.ConversionOn = 1
+          Attr Ch12.Representation = 8
+          Attr Ch13.Number = 3
+          Attr Ch13.ConversionOn = 1
+          Attr Ch13.Representation = 8
+          Attr Ch14.Number = 4
+          Attr Ch14.ConversionOn = 1
+          Attr Ch14.Representation = 8
+          Attr Ch15.Number = 5
+          Attr Ch15.ConversionOn = 1
+          Attr Ch15.Representation = 8
+          Attr Ch16.Number = 6
+          Attr Ch16.ConversionOn = 1
+          Attr Ch16.Representation = 8
+          Attr Ch17.Number = 7
+          Attr Ch17.ConversionOn = 1
+          Attr Ch17.Representation = 8
+          Attr Ch20.ConversionOn = 1
+          Attr Ch20.Representation = 8
+          Attr Ch21.Number = 1
+          Attr Ch21.ConversionOn = 1
+          Attr Ch21.Representation = 8
+          Attr Ch22.Number = 2
+          Attr Ch22.ConversionOn = 1
+          Attr Ch22.Representation = 8
+          Attr Ch23.Number = 3
+          Attr Ch23.ConversionOn = 1
+          Attr Ch23.Representation = 8
+          Attr Ch24.Number = 4
+          Attr Ch24.ConversionOn = 1
+          Attr Ch24.Representation = 8
+          Attr Ch25.Number = 5
+          Attr Ch25.ConversionOn = 1
+          Attr Ch25.Representation = 8
+          Attr Ch26.Number = 6
+          Attr Ch26.ConversionOn = 1
+          Attr Ch26.Representation = 8
+          Attr Ch27.Number = 7
+          Attr Ch27.ConversionOn = 1
+          Attr Ch27.Representation = 8
+          Attr Ch30.ConversionOn = 1
+          Attr Ch30.Representation = 8
+          Attr Ch31.Number = 1
+          Attr Ch31.ConversionOn = 1
+          Attr Ch31.Representation = 8
+          Attr Ch32.Number = 2
+          Attr Ch32.ConversionOn = 1
+          Attr Ch32.Representation = 8
+          Attr Ch33.Number = 3
+          Attr Ch33.ConversionOn = 1
+          Attr Ch33.Representation = 8
+          Attr Ch34.Number = 4
+          Attr Ch34.ConversionOn = 1
+          Attr Ch34.Representation = 8
+          Attr Ch35.Number = 5
+          Attr Ch35.ConversionOn = 1
+          Attr Ch35.Representation = 8
+          Attr Ch36.Number = 6
+          Attr Ch36.ConversionOn = 1
+          Attr Ch36.Representation = 8
+          Attr Ch37.Number = 7
+          Attr Ch37.ConversionOn = 1
+          Attr Ch37.Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Di16_IoModule $ClassDef 27 24-NOV-2010 13:10:25.74
+      Body SysBody 24-NOV-2010 13:03:10.28
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 09:35:07.60
+        Body SysBody 24-NOV-2010 09:35:07.60
+          Attr StructName = "Siemens_Di16_IoModule"
+          Attr NextAix = "_X42"
+        EndBody
+        Object Ch00 $Attribute 26 24-NOV-2010 09:35:07.60
+          Body SysBody 24-NOV-2010 09:35:07.60
+            Attr PgmName = "Ch00"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch01 $Attribute 27 24-NOV-2010 09:35:07.60
+          Body SysBody 24-NOV-2010 09:35:07.60
+            Attr PgmName = "Ch01"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch02 $Attribute 28 24-NOV-2010 09:35:07.60
+          Body SysBody 24-NOV-2010 09:35:07.60
+            Attr PgmName = "Ch02"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch03 $Attribute 29 24-NOV-2010 09:35:07.60
+          Body SysBody 24-NOV-2010 09:35:07.60
+            Attr PgmName = "Ch03"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch04 $Attribute 30 24-NOV-2010 09:35:07.60
+          Body SysBody 24-NOV-2010 09:35:07.60
+            Attr PgmName = "Ch04"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch05 $Attribute 31 24-NOV-2010 09:35:07.60
+          Body SysBody 24-NOV-2010 09:35:07.60
+            Attr PgmName = "Ch05"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch06 $Attribute 32 24-NOV-2010 09:35:07.60
+          Body SysBody 24-NOV-2010 09:35:07.60
+            Attr PgmName = "Ch06"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch07 $Attribute 33 24-NOV-2010 09:35:07.60
+          Body SysBody 24-NOV-2010 09:35:07.60
+            Attr PgmName = "Ch07"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch10 $Attribute 34 24-NOV-2010 09:35:07.60
+          Body SysBody 24-NOV-2010 09:35:07.60
+            Attr PgmName = "Ch10"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch11 $Attribute 35 24-NOV-2010 09:35:07.60
+          Body SysBody 24-NOV-2010 09:35:07.60
+            Attr PgmName = "Ch11"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch12 $Attribute 36 24-NOV-2010 09:35:07.60
+          Body SysBody 24-NOV-2010 09:35:07.60
+            Attr PgmName = "Ch12"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch13 $Attribute 37 24-NOV-2010 09:35:07.60
+          Body SysBody 24-NOV-2010 09:35:07.60
+            Attr PgmName = "Ch13"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch14 $Attribute 38 24-NOV-2010 09:35:07.60
+          Body SysBody 24-NOV-2010 09:35:07.60
+            Attr PgmName = "Ch14"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch15 $Attribute 39 24-NOV-2010 09:35:07.60
+          Body SysBody 24-NOV-2010 09:35:07.60
+            Attr PgmName = "Ch15"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch16 $Attribute 40 24-NOV-2010 09:35:07.60
+          Body SysBody 24-NOV-2010 09:35:07.60
+            Attr PgmName = "Ch16"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch17 $Attribute 41 24-NOV-2010 09:35:07.60
+          Body SysBody 24-NOV-2010 09:35:07.60
+            Attr PgmName = "Ch17"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Di16_IoModule 2154790912 01-JAN-1970 01:00:00.00
+        Body RtBody 24-NOV-2010 10:38:19.59
+          Attr Ch00.ConversionOn = 1
+          Attr Ch00.Representation = 8
+          Attr Ch01.Number = 1
+          Attr Ch01.ConversionOn = 1
+          Attr Ch01.Representation = 8
+          Attr Ch02.Number = 2
+          Attr Ch02.ConversionOn = 1
+          Attr Ch02.Representation = 8
+          Attr Ch03.Number = 3
+          Attr Ch03.ConversionOn = 1
+          Attr Ch03.Representation = 8
+          Attr Ch04.Number = 4
+          Attr Ch04.ConversionOn = 1
+          Attr Ch04.Representation = 8
+          Attr Ch05.Number = 5
+          Attr Ch05.ConversionOn = 1
+          Attr Ch05.Representation = 8
+          Attr Ch06.Number = 6
+          Attr Ch06.ConversionOn = 1
+          Attr Ch06.Representation = 8
+          Attr Ch07.Number = 7
+          Attr Ch07.ConversionOn = 1
+          Attr Ch07.Representation = 8
+          Attr Ch10.ConversionOn = 1
+          Attr Ch10.Representation = 8
+          Attr Ch11.Number = 1
+          Attr Ch11.ConversionOn = 1
+          Attr Ch11.Representation = 8
+          Attr Ch12.Number = 2
+          Attr Ch12.ConversionOn = 1
+          Attr Ch12.Representation = 8
+          Attr Ch13.Number = 3
+          Attr Ch13.ConversionOn = 1
+          Attr Ch13.Representation = 8
+          Attr Ch14.Number = 4
+          Attr Ch14.ConversionOn = 1
+          Attr Ch14.Representation = 8
+          Attr Ch15.Number = 5
+          Attr Ch15.ConversionOn = 1
+          Attr Ch15.Representation = 8
+          Attr Ch16.Number = 6
+          Attr Ch16.ConversionOn = 1
+          Attr Ch16.Representation = 8
+          Attr Ch17.Number = 7
+          Attr Ch17.ConversionOn = 1
+          Attr Ch17.Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Dx16_IoModule $ClassDef 28 24-NOV-2010 13:10:28.94
+      Body SysBody 24-NOV-2010 13:03:17.16
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 09:35:38.65
+        Body SysBody 24-NOV-2010 09:35:38.65
+          Attr StructName = "Siemens_Dx16_IoModule"
+          Attr NextAix = "_X91"
+        EndBody
+        Object ChDi00 $Attribute 59 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDi00"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi01 $Attribute 60 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDi01"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi02 $Attribute 61 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDi02"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi03 $Attribute 62 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDi03"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi04 $Attribute 63 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDi04"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi05 $Attribute 64 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDi05"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi06 $Attribute 65 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDi06"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi07 $Attribute 66 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDi07"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi10 $Attribute 67 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDi10"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi11 $Attribute 68 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDi11"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi12 $Attribute 69 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDi12"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi13 $Attribute 70 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDi13"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi14 $Attribute 71 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDi14"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi15 $Attribute 72 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDi15"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi16 $Attribute 73 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDi16"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi17 $Attribute 74 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDi17"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDo00 $Attribute 75 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDo00"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo01 $Attribute 76 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDo01"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo02 $Attribute 77 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDo02"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo03 $Attribute 78 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDo03"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo04 $Attribute 79 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDo04"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo05 $Attribute 80 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDo05"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo06 $Attribute 81 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDo06"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo07 $Attribute 82 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDo07"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo10 $Attribute 83 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDo10"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo11 $Attribute 84 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDo11"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo12 $Attribute 85 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDo12"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo13 $Attribute 86 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDo13"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo14 $Attribute 87 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDo14"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo15 $Attribute 88 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDo15"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo16 $Attribute 89 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDo16"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo17 $Attribute 90 24-NOV-2010 09:35:38.65
+          Body SysBody 24-NOV-2010 09:35:38.65
+            Attr PgmName = "ChDo17"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Dx16_IoModule 2155053056 01-JAN-1970 01:00:00.00
+        Body RtBody 24-NOV-2010 10:48:30.57
+          Attr ChDi00.ConversionOn = 1
+          Attr ChDi00.Representation = 8
+          Attr ChDi01.Number = 1
+          Attr ChDi01.ConversionOn = 1
+          Attr ChDi01.Representation = 8
+          Attr ChDi02.Number = 2
+          Attr ChDi02.ConversionOn = 1
+          Attr ChDi02.Representation = 8
+          Attr ChDi03.Number = 3
+          Attr ChDi03.ConversionOn = 1
+          Attr ChDi03.Representation = 8
+          Attr ChDi04.Number = 4
+          Attr ChDi04.ConversionOn = 1
+          Attr ChDi04.Representation = 8
+          Attr ChDi05.Number = 5
+          Attr ChDi05.ConversionOn = 1
+          Attr ChDi05.Representation = 8
+          Attr ChDi06.Number = 6
+          Attr ChDi06.ConversionOn = 1
+          Attr ChDi06.Representation = 8
+          Attr ChDi07.Number = 7
+          Attr ChDi07.ConversionOn = 1
+          Attr ChDi07.Representation = 8
+          Attr ChDi10.ConversionOn = 1
+          Attr ChDi10.Representation = 8
+          Attr ChDi11.Number = 1
+          Attr ChDi11.ConversionOn = 1
+          Attr ChDi11.Representation = 8
+          Attr ChDi12.Number = 2
+          Attr ChDi12.ConversionOn = 1
+          Attr ChDi12.Representation = 8
+          Attr ChDi13.Number = 3
+          Attr ChDi13.ConversionOn = 1
+          Attr ChDi13.Representation = 8
+          Attr ChDi14.Number = 4
+          Attr ChDi14.ConversionOn = 1
+          Attr ChDi14.Representation = 8
+          Attr ChDi15.Number = 5
+          Attr ChDi15.ConversionOn = 1
+          Attr ChDi15.Representation = 8
+          Attr ChDi16.Number = 6
+          Attr ChDi16.ConversionOn = 1
+          Attr ChDi16.Representation = 8
+          Attr ChDi17.Number = 7
+          Attr ChDi17.ConversionOn = 1
+          Attr ChDi17.Representation = 8
+          Attr ChDo00.Representation = 8
+          Attr ChDo01.Number = 1
+          Attr ChDo01.Representation = 8
+          Attr ChDo02.Number = 2
+          Attr ChDo02.Representation = 8
+          Attr ChDo03.Number = 3
+          Attr ChDo03.Representation = 8
+          Attr ChDo04.Number = 4
+          Attr ChDo04.Representation = 8
+          Attr ChDo05.Number = 5
+          Attr ChDo05.Representation = 8
+          Attr ChDo06.Number = 6
+          Attr ChDo06.Representation = 8
+          Attr ChDo07.Number = 7
+          Attr ChDo07.Representation = 8
+          Attr ChDo10.Representation = 8
+          Attr ChDo11.Number = 1
+          Attr ChDo11.Representation = 8
+          Attr ChDo12.Number = 2
+          Attr ChDo12.Representation = 8
+          Attr ChDo13.Number = 3
+          Attr ChDo13.Representation = 8
+          Attr ChDo14.Number = 4
+          Attr ChDo14.Representation = 8
+          Attr ChDo15.Number = 5
+          Attr ChDo15.Representation = 8
+          Attr ChDo16.Number = 6
+          Attr ChDo16.Representation = 8
+          Attr ChDo17.Number = 7
+          Attr ChDo17.Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Di8_IoModule $ClassDef 29 24-NOV-2010 13:10:47.95
+      Body SysBody 24-NOV-2010 13:03:22.92
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 09:38:48.75
+        Body SysBody 24-NOV-2010 09:38:48.75
+          Attr StructName = "Siemens_Di8_IoModule"
+          Attr NextAix = "_X11"
+        EndBody
+        Object Ch $Attribute 10 24-NOV-2010 09:38:48.75
+          Body SysBody 24-NOV-2010 09:38:48.75
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 8
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Di8_IoModule 2155315200 01-JAN-1970 01:00:00.00
+        Body RtBody 24-NOV-2010 10:49:49.30
+          Attr Ch[0].ConversionOn = 1
+          Attr Ch[0].Representation = 8
+          Attr Ch[1].Number = 1
+          Attr Ch[1].ConversionOn = 1
+          Attr Ch[1].Representation = 8
+          Attr Ch[2].Number = 2
+          Attr Ch[2].ConversionOn = 1
+          Attr Ch[2].Representation = 8
+          Attr Ch[3].Number = 3
+          Attr Ch[3].ConversionOn = 1
+          Attr Ch[3].Representation = 8
+          Attr Ch[4].Number = 4
+          Attr Ch[4].ConversionOn = 1
+          Attr Ch[4].Representation = 8
+          Attr Ch[5].Number = 5
+          Attr Ch[5].ConversionOn = 1
+          Attr Ch[5].Representation = 8
+          Attr Ch[6].Number = 6
+          Attr Ch[6].ConversionOn = 1
+          Attr Ch[6].Representation = 8
+          Attr Ch[7].Number = 7
+          Attr Ch[7].ConversionOn = 1
+          Attr Ch[7].Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Do32_IoModule $ClassDef 30 24-NOV-2010 13:10:51.39
+      Body SysBody 24-NOV-2010 13:03:28.72
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 09:39:24.78
+        Body SysBody 24-NOV-2010 09:39:24.78
+          Attr StructName = "Siemens_Do32_IoModule"
+          Attr NextAix = "_X71"
+        EndBody
+        Object Ch00 $Attribute 39 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch00"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch01 $Attribute 40 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch01"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch02 $Attribute 41 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch02"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch03 $Attribute 42 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch03"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch04 $Attribute 43 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch04"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch05 $Attribute 44 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch05"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch06 $Attribute 45 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch06"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch07 $Attribute 46 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch07"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch10 $Attribute 47 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch10"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch11 $Attribute 48 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch11"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch12 $Attribute 49 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch12"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch13 $Attribute 50 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch13"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch14 $Attribute 51 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch14"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch15 $Attribute 52 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch15"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch16 $Attribute 53 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch16"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch17 $Attribute 54 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch17"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch20 $Attribute 55 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch20"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch21 $Attribute 56 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch21"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch22 $Attribute 57 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch22"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch23 $Attribute 58 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch23"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch24 $Attribute 59 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch24"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch25 $Attribute 60 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch25"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch26 $Attribute 61 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch26"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch27 $Attribute 62 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch27"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch30 $Attribute 63 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch30"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch31 $Attribute 64 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch31"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch32 $Attribute 65 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch32"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch33 $Attribute 66 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch33"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch34 $Attribute 67 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch34"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch35 $Attribute 68 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch35"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch36 $Attribute 69 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch36"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch37 $Attribute 70 24-NOV-2010 09:39:24.78
+          Body SysBody 24-NOV-2010 09:39:24.78
+            Attr PgmName = "Ch37"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Do32_IoModule 2155577344 01-JAN-1970 01:00:00.00
+        Body RtBody 24-NOV-2010 10:53:17.40
+          Attr Ch00.Representation = 8
+          Attr Ch01.Number = 1
+          Attr Ch01.Representation = 8
+          Attr Ch02.Number = 2
+          Attr Ch02.Representation = 8
+          Attr Ch03.Number = 3
+          Attr Ch03.Representation = 8
+          Attr Ch04.Number = 4
+          Attr Ch04.Representation = 8
+          Attr Ch05.Number = 5
+          Attr Ch05.Representation = 8
+          Attr Ch06.Number = 6
+          Attr Ch06.Representation = 8
+          Attr Ch07.Number = 7
+          Attr Ch07.Representation = 8
+          Attr Ch10.Representation = 8
+          Attr Ch11.Number = 1
+          Attr Ch11.Representation = 8
+          Attr Ch12.Number = 2
+          Attr Ch12.Representation = 8
+          Attr Ch13.Number = 3
+          Attr Ch13.Representation = 8
+          Attr Ch14.Number = 4
+          Attr Ch14.Representation = 8
+          Attr Ch15.Number = 5
+          Attr Ch15.Representation = 8
+          Attr Ch16.Number = 6
+          Attr Ch16.Representation = 8
+          Attr Ch17.Number = 7
+          Attr Ch17.Representation = 8
+          Attr Ch20.Representation = 8
+          Attr Ch21.Number = 1
+          Attr Ch21.Representation = 8
+          Attr Ch22.Number = 2
+          Attr Ch22.Representation = 8
+          Attr Ch23.Number = 3
+          Attr Ch23.Representation = 8
+          Attr Ch24.Number = 4
+          Attr Ch24.Representation = 8
+          Attr Ch25.Number = 5
+          Attr Ch25.Representation = 8
+          Attr Ch26.Number = 6
+          Attr Ch26.Representation = 8
+          Attr Ch27.Number = 7
+          Attr Ch27.Representation = 8
+          Attr Ch30.Representation = 8
+          Attr Ch31.Number = 1
+          Attr Ch31.Representation = 8
+          Attr Ch32.Number = 2
+          Attr Ch32.Representation = 8
+          Attr Ch33.Number = 3
+          Attr Ch33.Representation = 8
+          Attr Ch34.Number = 4
+          Attr Ch34.Representation = 8
+          Attr Ch35.Number = 5
+          Attr Ch35.Representation = 8
+          Attr Ch36.Number = 6
+          Attr Ch36.Representation = 8
+          Attr Ch37.Number = 7
+          Attr Ch37.Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Do16_IoModule $ClassDef 31 24-NOV-2010 13:10:54.53
+      Body SysBody 24-NOV-2010 13:03:49.33
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 09:40:02.37
+        Body SysBody 24-NOV-2010 09:40:02.37
+          Attr StructName = "Siemens_Do16_IoModule"
+          Attr NextAix = "_X41"
+        EndBody
+        Object Ch00 $Attribute 25 24-NOV-2010 09:40:02.37
+          Body SysBody 24-NOV-2010 09:40:02.37
+            Attr PgmName = "Ch00"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch01 $Attribute 26 24-NOV-2010 09:40:02.37
+          Body SysBody 24-NOV-2010 09:40:02.37
+            Attr PgmName = "Ch01"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch02 $Attribute 27 24-NOV-2010 09:40:02.37
+          Body SysBody 24-NOV-2010 09:40:02.37
+            Attr PgmName = "Ch02"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch03 $Attribute 28 24-NOV-2010 09:40:02.37
+          Body SysBody 24-NOV-2010 09:40:02.37
+            Attr PgmName = "Ch03"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch04 $Attribute 29 24-NOV-2010 09:40:02.37
+          Body SysBody 24-NOV-2010 09:40:02.37
+            Attr PgmName = "Ch04"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch05 $Attribute 30 24-NOV-2010 09:40:02.37
+          Body SysBody 24-NOV-2010 09:40:02.37
+            Attr PgmName = "Ch05"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch06 $Attribute 31 24-NOV-2010 09:40:02.37
+          Body SysBody 24-NOV-2010 09:40:02.37
+            Attr PgmName = "Ch06"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch07 $Attribute 32 24-NOV-2010 09:40:02.37
+          Body SysBody 24-NOV-2010 09:40:02.37
+            Attr PgmName = "Ch07"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch10 $Attribute 33 24-NOV-2010 09:40:02.37
+          Body SysBody 24-NOV-2010 09:40:02.37
+            Attr PgmName = "Ch10"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch11 $Attribute 34 24-NOV-2010 09:40:02.37
+          Body SysBody 24-NOV-2010 09:40:02.37
+            Attr PgmName = "Ch11"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch12 $Attribute 35 24-NOV-2010 09:40:02.37
+          Body SysBody 24-NOV-2010 09:40:02.37
+            Attr PgmName = "Ch12"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch13 $Attribute 36 24-NOV-2010 09:40:02.37
+          Body SysBody 24-NOV-2010 09:40:02.37
+            Attr PgmName = "Ch13"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch14 $Attribute 37 24-NOV-2010 09:40:02.37
+          Body SysBody 24-NOV-2010 09:40:02.37
+            Attr PgmName = "Ch14"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch15 $Attribute 38 24-NOV-2010 09:40:02.37
+          Body SysBody 24-NOV-2010 09:40:02.37
+            Attr PgmName = "Ch15"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch16 $Attribute 39 24-NOV-2010 09:40:02.37
+          Body SysBody 24-NOV-2010 09:40:02.37
+            Attr PgmName = "Ch16"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch17 $Attribute 40 24-NOV-2010 09:40:02.37
+          Body SysBody 24-NOV-2010 09:40:02.37
+            Attr PgmName = "Ch17"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Do16_IoModule 2155839488 01-JAN-1970 01:00:00.00
+        Body RtBody 24-NOV-2010 10:55:00.02
+          Attr Ch00.Representation = 8
+          Attr Ch01.Number = 1
+          Attr Ch01.Representation = 8
+          Attr Ch02.Number = 2
+          Attr Ch02.Representation = 8
+          Attr Ch03.Number = 3
+          Attr Ch03.Representation = 8
+          Attr Ch04.Number = 4
+          Attr Ch04.Representation = 8
+          Attr Ch05.Number = 5
+          Attr Ch05.Representation = 8
+          Attr Ch06.Number = 6
+          Attr Ch06.Representation = 8
+          Attr Ch07.Number = 7
+          Attr Ch07.Representation = 8
+          Attr Ch10.Representation = 8
+          Attr Ch11.Number = 1
+          Attr Ch11.Representation = 8
+          Attr Ch12.Number = 2
+          Attr Ch12.Representation = 8
+          Attr Ch13.Number = 3
+          Attr Ch13.Representation = 8
+          Attr Ch14.Number = 4
+          Attr Ch14.Representation = 8
+          Attr Ch15.Number = 5
+          Attr Ch15.Representation = 8
+          Attr Ch16.Number = 6
+          Attr Ch16.Representation = 8
+          Attr Ch17.Number = 7
+          Attr Ch17.Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Do8_IoModule $ClassDef 32 24-NOV-2010 13:10:57.71
+      Body SysBody 24-NOV-2010 13:03:55.65
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 09:40:28.60
+        Body SysBody 24-NOV-2010 09:40:28.60
+          Attr StructName = "Siemens_Do8_IoModule"
+          Attr NextAix = "_X11"
+        EndBody
+        Object Ch $Attribute 10 24-NOV-2010 09:40:28.60
+          Body SysBody 24-NOV-2010 09:40:28.60
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 8
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Do8_IoModule 2156101632 01-JAN-1970 01:00:00.00
+        Body RtBody 24-NOV-2010 10:56:01.20
+          Attr Ch[0].Representation = 8
+          Attr Ch[1].Number = 1
+          Attr Ch[1].Representation = 8
+          Attr Ch[2].Number = 2
+          Attr Ch[2].Representation = 8
+          Attr Ch[3].Number = 3
+          Attr Ch[3].Representation = 8
+          Attr Ch[4].Number = 4
+          Attr Ch[4].Representation = 8
+          Attr Ch[5].Number = 5
+          Attr Ch[5].Representation = 8
+          Attr Ch[6].Number = 6
+          Attr Ch[6].Representation = 8
+          Attr Ch[7].Number = 7
+          Attr Ch[7].Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Ai8_IoModule $ClassDef 33 24-NOV-2010 13:11:00.91
+      Body SysBody 24-NOV-2010 13:04:01.97
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 09:40:53.12
+        Body SysBody 24-NOV-2010 09:40:53.12
+          Attr StructName = "Siemens_Ai8_IoModule"
+          Attr NextAix = "_X7"
+        EndBody
+        Object Ch $Attribute 6 24-NOV-2010 09:40:53.12
+          Body SysBody 24-NOV-2010 09:40:53.12
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 8
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Ai8_IoModule 2156363776 01-JAN-1970 01:00:00.00
+        Body RtBody 24-NOV-2010 11:16:13.52
+          Attr Ch[0].ConversionOn = 1
+          Attr Ch[0].ScanInterval = 1
+          Attr Ch[0].RawValRangeLow = -2.764800e+04
+          Attr Ch[0].RawValRangeHigh = 2.764800e+04
+          Attr Ch[0].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[0].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[0].SigValueUnit = "V"
+          Attr Ch[0].SensorPolyType = 1
+          Attr Ch[0].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[0].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[0].ActValRangeLow = -1.000000e+02
+          Attr Ch[0].ActValRangeHigh = 1.000000e+02
+          Attr Ch[0].Representation = 2
+          Attr Ch[1].ConversionOn = 1
+          Attr Ch[1].ScanInterval = 1
+          Attr Ch[1].RawValRangeLow = -2.764800e+04
+          Attr Ch[1].RawValRangeHigh = 2.764800e+04
+          Attr Ch[1].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[1].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[1].SigValueUnit = "V"
+          Attr Ch[1].SensorPolyType = 1
+          Attr Ch[1].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[1].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[1].ActValRangeLow = -1.000000e+02
+          Attr Ch[1].ActValRangeHigh = 1.000000e+02
+          Attr Ch[1].Representation = 2
+          Attr Ch[2].ConversionOn = 1
+          Attr Ch[2].ScanInterval = 1
+          Attr Ch[2].RawValRangeLow = -2.764800e+04
+          Attr Ch[2].RawValRangeHigh = 2.764800e+04
+          Attr Ch[2].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[2].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[2].SigValueUnit = "V"
+          Attr Ch[2].SensorPolyType = 1
+          Attr Ch[2].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[2].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[2].ActValRangeLow = -1.000000e+02
+          Attr Ch[2].ActValRangeHigh = 1.000000e+02
+          Attr Ch[2].Representation = 2
+          Attr Ch[3].ConversionOn = 1
+          Attr Ch[3].ScanInterval = 1
+          Attr Ch[3].RawValRangeLow = -2.764800e+04
+          Attr Ch[3].RawValRangeHigh = 2.764800e+04
+          Attr Ch[3].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[3].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[3].SigValueUnit = "V"
+          Attr Ch[3].SensorPolyType = 1
+          Attr Ch[3].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[3].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[3].ActValRangeLow = -1.000000e+02
+          Attr Ch[3].ActValRangeHigh = 1.000000e+02
+          Attr Ch[3].Representation = 2
+          Attr Ch[4].ConversionOn = 1
+          Attr Ch[4].ScanInterval = 1
+          Attr Ch[4].RawValRangeLow = -2.764800e+04
+          Attr Ch[4].RawValRangeHigh = 2.764800e+04
+          Attr Ch[4].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[4].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[4].SigValueUnit = "V"
+          Attr Ch[4].SensorPolyType = 1
+          Attr Ch[4].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[4].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[4].ActValRangeLow = -1.000000e+02
+          Attr Ch[4].ActValRangeHigh = 1.000000e+02
+          Attr Ch[4].Representation = 2
+          Attr Ch[5].ConversionOn = 1
+          Attr Ch[5].ScanInterval = 1
+          Attr Ch[5].RawValRangeLow = -2.764800e+04
+          Attr Ch[5].RawValRangeHigh = 2.764800e+04
+          Attr Ch[5].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[5].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[5].SigValueUnit = "V"
+          Attr Ch[5].SensorPolyType = 1
+          Attr Ch[5].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[5].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[5].ActValRangeLow = -1.000000e+02
+          Attr Ch[5].ActValRangeHigh = 1.000000e+02
+          Attr Ch[5].Representation = 2
+          Attr Ch[6].ConversionOn = 1
+          Attr Ch[6].ScanInterval = 1
+          Attr Ch[6].RawValRangeLow = -2.764800e+04
+          Attr Ch[6].RawValRangeHigh = 2.764800e+04
+          Attr Ch[6].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[6].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[6].SigValueUnit = "V"
+          Attr Ch[6].SensorPolyType = 1
+          Attr Ch[6].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[6].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[6].ActValRangeLow = -1.000000e+02
+          Attr Ch[6].ActValRangeHigh = 1.000000e+02
+          Attr Ch[6].Representation = 2
+          Attr Ch[7].ConversionOn = 1
+          Attr Ch[7].ScanInterval = 1
+          Attr Ch[7].RawValRangeLow = -2.764800e+04
+          Attr Ch[7].RawValRangeHigh = 2.764800e+04
+          Attr Ch[7].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[7].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[7].SigValueUnit = "V"
+          Attr Ch[7].SensorPolyType = 1
+          Attr Ch[7].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[7].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[7].ActValRangeLow = -1.000000e+02
+          Attr Ch[7].ActValRangeHigh = 1.000000e+02
+          Attr Ch[7].Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Ai4_IoModule $ClassDef 34 24-NOV-2010 13:11:05.09
+      Body SysBody 24-NOV-2010 13:04:07.77
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 09:41:22.49
+        Body SysBody 24-NOV-2010 09:41:22.49
+          Attr StructName = "Siemens_Ai4_IoModule"
+          Attr NextAix = "_X9"
+        EndBody
+        Object Ch $Attribute 8 24-NOV-2010 09:41:22.49
+          Body SysBody 24-NOV-2010 09:41:22.49
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 4
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Ai4_IoModule 2156625920 01-JAN-1970 01:00:00.00
+        Body RtBody 24-NOV-2010 11:18:24.99
+          Attr Ch[0].ConversionOn = 1
+          Attr Ch[0].ScanInterval = 1
+          Attr Ch[0].RawValRangeLow = -2.764800e+04
+          Attr Ch[0].RawValRangeHigh = 2.764800e+04
+          Attr Ch[0].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[0].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[0].SigValueUnit = "V"
+          Attr Ch[0].SensorPolyType = 1
+          Attr Ch[0].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[0].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[0].ActValRangeLow = -1.000000e+02
+          Attr Ch[0].ActValRangeHigh = 1.000000e+02
+          Attr Ch[0].Representation = 2
+          Attr Ch[1].ConversionOn = 1
+          Attr Ch[1].ScanInterval = 1
+          Attr Ch[1].RawValRangeLow = -2.764800e+04
+          Attr Ch[1].RawValRangeHigh = 2.764800e+04
+          Attr Ch[1].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[1].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[1].SigValueUnit = "V"
+          Attr Ch[1].SensorPolyType = 1
+          Attr Ch[1].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[1].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[1].ActValRangeLow = -1.000000e+02
+          Attr Ch[1].ActValRangeHigh = 1.000000e+02
+          Attr Ch[1].Representation = 2
+          Attr Ch[2].ConversionOn = 1
+          Attr Ch[2].ScanInterval = 1
+          Attr Ch[2].RawValRangeLow = -2.764800e+04
+          Attr Ch[2].RawValRangeHigh = 2.764800e+04
+          Attr Ch[2].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[2].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[2].SigValueUnit = "V"
+          Attr Ch[2].SensorPolyType = 1
+          Attr Ch[2].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[2].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[2].ActValRangeLow = -1.000000e+02
+          Attr Ch[2].ActValRangeHigh = 1.000000e+02
+          Attr Ch[2].Representation = 2
+          Attr Ch[3].ConversionOn = 1
+          Attr Ch[3].ScanInterval = 1
+          Attr Ch[3].RawValRangeLow = -2.764800e+04
+          Attr Ch[3].RawValRangeHigh = 2.764800e+04
+          Attr Ch[3].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[3].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[3].SigValueUnit = "V"
+          Attr Ch[3].SensorPolyType = 1
+          Attr Ch[3].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[3].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[3].ActValRangeLow = -1.000000e+02
+          Attr Ch[3].ActValRangeHigh = 1.000000e+02
+          Attr Ch[3].Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Ai2_IoModule $ClassDef 35 24-NOV-2010 13:11:08.90
+      Body SysBody 24-NOV-2010 13:04:13.75
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 09:43:00.72
+        Body SysBody 24-NOV-2010 09:43:00.72
+          Attr StructName = "Siemens_Ai2_IoModule"
+          Attr NextAix = "_X9"
+        EndBody
+        Object Ch $Attribute 8 24-NOV-2010 09:43:00.72
+          Body SysBody 24-NOV-2010 09:43:00.72
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 2
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Ai2_IoModule 2156888064 01-JAN-1970 01:00:00.00
+        Body RtBody 24-NOV-2010 11:19:53.92
+          Attr Ch[0].ConversionOn = 1
+          Attr Ch[0].ScanInterval = 1
+          Attr Ch[0].RawValRangeLow = -2.764800e+04
+          Attr Ch[0].RawValRangeHigh = 2.764800e+04
+          Attr Ch[0].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[0].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[0].SigValueUnit = "V"
+          Attr Ch[0].SensorPolyType = 1
+          Attr Ch[0].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[0].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[0].ActValRangeLow = -1.000000e+02
+          Attr Ch[0].ActValRangeHigh = 1.000000e+02
+          Attr Ch[0].Representation = 2
+          Attr Ch[1].ConversionOn = 1
+          Attr Ch[1].ScanInterval = 1
+          Attr Ch[1].RawValRangeLow = -2.764800e+04
+          Attr Ch[1].RawValRangeHigh = 2.764800e+04
+          Attr Ch[1].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[1].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[1].SigValueUnit = "V"
+          Attr Ch[1].SensorPolyType = 1
+          Attr Ch[1].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[1].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[1].ActValRangeLow = -1.000000e+02
+          Attr Ch[1].ActValRangeHigh = 1.000000e+02
+          Attr Ch[1].Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Ao8_IoModule $ClassDef 36 24-NOV-2010 13:11:12.62
+      Body SysBody 24-NOV-2010 13:04:19.40
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 09:45:24.46
+        Body SysBody 24-NOV-2010 09:45:24.46
+          Attr StructName = "Siemens_Ao8_IoModule"
+          Attr NextAix = "_X11"
+        EndBody
+        Object Ch $Attribute 10 24-NOV-2010 09:45:24.46
+          Body SysBody 24-NOV-2010 09:45:24.46
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 8
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Ao8_IoModule 2157150208 01-JAN-1970 01:00:00.00
+        Body RtBody 24-NOV-2010 11:49:00.01
+          Attr Ch[0].OutPolyType = 1
+          Attr Ch[0].ActValRangeLow = -1.000000e+02
+          Attr Ch[0].ActValRangeHigh = 1.000000e+02
+          Attr Ch[0].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[0].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[0].SigValueUnit = "V"
+          Attr Ch[0].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[0].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[0].RawValRangeLow = -2.764800e+04
+          Attr Ch[0].RawValRangeHigh = 2.764800e+04
+          Attr Ch[0].Representation = 2
+          Attr Ch[1].OutPolyType = 1
+          Attr Ch[1].ActValRangeLow = -1.000000e+02
+          Attr Ch[1].ActValRangeHigh = 1.000000e+02
+          Attr Ch[1].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[1].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[1].SigValueUnit = "V"
+          Attr Ch[1].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[1].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[1].RawValRangeLow = -2.764800e+04
+          Attr Ch[1].RawValRangeHigh = 2.764800e+04
+          Attr Ch[1].Representation = 2
+          Attr Ch[2].OutPolyType = 1
+          Attr Ch[2].ActValRangeLow = -1.000000e+02
+          Attr Ch[2].ActValRangeHigh = 1.000000e+02
+          Attr Ch[2].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[2].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[2].SigValueUnit = "V"
+          Attr Ch[2].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[2].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[2].RawValRangeLow = -2.764800e+04
+          Attr Ch[2].RawValRangeHigh = 2.764800e+04
+          Attr Ch[2].Representation = 2
+          Attr Ch[3].OutPolyType = 1
+          Attr Ch[3].ActValRangeLow = -1.000000e+02
+          Attr Ch[3].ActValRangeHigh = 1.000000e+02
+          Attr Ch[3].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[3].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[3].SigValueUnit = "V"
+          Attr Ch[3].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[3].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[3].RawValRangeLow = -2.764800e+04
+          Attr Ch[3].RawValRangeHigh = 2.764800e+04
+          Attr Ch[3].Representation = 2
+          Attr Ch[4].OutPolyType = 1
+          Attr Ch[4].ActValRangeLow = -1.000000e+02
+          Attr Ch[4].ActValRangeHigh = 1.000000e+02
+          Attr Ch[4].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[4].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[4].SigValueUnit = "V"
+          Attr Ch[4].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[4].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[4].RawValRangeLow = -2.764800e+04
+          Attr Ch[4].RawValRangeHigh = 2.764800e+04
+          Attr Ch[4].Representation = 2
+          Attr Ch[5].OutPolyType = 1
+          Attr Ch[5].ActValRangeLow = -1.000000e+02
+          Attr Ch[5].ActValRangeHigh = 1.000000e+02
+          Attr Ch[5].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[5].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[5].SigValueUnit = "V"
+          Attr Ch[5].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[5].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[5].RawValRangeLow = -2.764800e+04
+          Attr Ch[5].RawValRangeHigh = 2.764800e+04
+          Attr Ch[5].Representation = 2
+          Attr Ch[6].OutPolyType = 1
+          Attr Ch[6].ActValRangeLow = -1.000000e+02
+          Attr Ch[6].ActValRangeHigh = 1.000000e+02
+          Attr Ch[6].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[6].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[6].SigValueUnit = "V"
+          Attr Ch[6].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[6].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[6].RawValRangeLow = -2.764800e+04
+          Attr Ch[6].RawValRangeHigh = 2.764800e+04
+          Attr Ch[6].Representation = 2
+          Attr Ch[7].OutPolyType = 1
+          Attr Ch[7].ActValRangeLow = -1.000000e+02
+          Attr Ch[7].ActValRangeHigh = 1.000000e+02
+          Attr Ch[7].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[7].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[7].SigValueUnit = "V"
+          Attr Ch[7].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[7].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[7].RawValRangeLow = -2.764800e+04
+          Attr Ch[7].RawValRangeHigh = 2.764800e+04
+          Attr Ch[7].Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Ao4_IoModule $ClassDef 37 24-NOV-2010 13:11:15.57
+      Body SysBody 24-NOV-2010 13:04:25.07
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 09:47:42.82
+        Body SysBody 24-NOV-2010 09:47:42.82
+          Attr StructName = "Siemens_Ao4_IoModule"
+          Attr NextAix = "_X11"
+        EndBody
+        Object Ch $Attribute 10 24-NOV-2010 09:47:42.82
+          Body SysBody 24-NOV-2010 09:47:42.82
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 4
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Ao4_IoModule 2157412352 01-JAN-1970 01:00:00.00
+        Body RtBody 24-NOV-2010 11:50:23.40
+          Attr Ch[0].OutPolyType = 1
+          Attr Ch[0].ActValRangeLow = -1.000000e+02
+          Attr Ch[0].ActValRangeHigh = 1.000000e+02
+          Attr Ch[0].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[0].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[0].SigValueUnit = "V"
+          Attr Ch[0].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[0].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[0].RawValRangeLow = -2.764800e+04
+          Attr Ch[0].RawValRangeHigh = 2.764800e+04
+          Attr Ch[0].Representation = 2
+          Attr Ch[1].OutPolyType = 1
+          Attr Ch[1].ActValRangeLow = -1.000000e+02
+          Attr Ch[1].ActValRangeHigh = 1.000000e+02
+          Attr Ch[1].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[1].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[1].SigValueUnit = "V"
+          Attr Ch[1].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[1].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[1].RawValRangeLow = -2.764800e+04
+          Attr Ch[1].RawValRangeHigh = 2.764800e+04
+          Attr Ch[1].Representation = 2
+          Attr Ch[2].OutPolyType = 1
+          Attr Ch[2].ActValRangeLow = -1.000000e+02
+          Attr Ch[2].ActValRangeHigh = 1.000000e+02
+          Attr Ch[2].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[2].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[2].SigValueUnit = "V"
+          Attr Ch[2].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[2].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[2].RawValRangeLow = -2.764800e+04
+          Attr Ch[2].RawValRangeHigh = 2.764800e+04
+          Attr Ch[2].Representation = 2
+          Attr Ch[3].OutPolyType = 1
+          Attr Ch[3].ActValRangeLow = -1.000000e+02
+          Attr Ch[3].ActValRangeHigh = 1.000000e+02
+          Attr Ch[3].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[3].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[3].SigValueUnit = "V"
+          Attr Ch[3].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[3].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[3].RawValRangeLow = -2.764800e+04
+          Attr Ch[3].RawValRangeHigh = 2.764800e+04
+          Attr Ch[3].Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Ao2_IoModule $ClassDef 38 24-NOV-2010 13:11:19.28
+      Body SysBody 24-NOV-2010 13:04:30.09
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 09:48:31.45
+        Body SysBody 24-NOV-2010 09:48:31.45
+          Attr StructName = "Siemens_Ao2_IoModule"
+          Attr NextAix = "_X9"
+        EndBody
+        Object Ch $Attribute 8 24-NOV-2010 09:48:31.45
+          Body SysBody 24-NOV-2010 09:48:31.45
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 2
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Ao2_IoModule 2157674496 01-JAN-1970 01:00:00.00
+        Body RtBody 24-NOV-2010 11:51:30.61
+          Attr Ch[0].OutPolyType = 1
+          Attr Ch[0].ActValRangeLow = -1.000000e+02
+          Attr Ch[0].ActValRangeHigh = 1.000000e+02
+          Attr Ch[0].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[0].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[0].SigValueUnit = "V"
+          Attr Ch[0].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[0].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[0].RawValRangeLow = -2.764800e+04
+          Attr Ch[0].RawValRangeHigh = 2.764800e+04
+          Attr Ch[0].Representation = 2
+          Attr Ch[1].OutPolyType = 1
+          Attr Ch[1].ActValRangeLow = -1.000000e+02
+          Attr Ch[1].ActValRangeHigh = 1.000000e+02
+          Attr Ch[1].SensorSigValRangeLow = -2.764800e+04
+          Attr Ch[1].SensorSigValRangeHigh = 2.764800e+04
+          Attr Ch[1].SigValueUnit = "V"
+          Attr Ch[1].ChannelSigValRangeLow = -2.764800e+04
+          Attr Ch[1].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Ch[1].RawValRangeLow = -2.764800e+04
+          Attr Ch[1].RawValRangeHigh = 2.764800e+04
+          Attr Ch[1].Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Di4_PnModule $ClassDef 44 24-NOV-2010 13:16:01.39
+      Body SysBody 24-NOV-2010 13:15:38.65
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 13:15:38.65
+        Body SysBody 24-NOV-2010 13:15:38.65
+          Attr StructName = "Siemens_Di4_PnModule"
+          Attr NextAix = "_X7"
+        EndBody
+        Object Super $Attribute 5 24-NOV-2010 13:15:38.65
+          Body SysBody 24-NOV-2010 13:16:19.38
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-PnModule"
+          EndBody
+        EndObject
+        Object Io $Attribute 6 24-NOV-2010 13:16:31.15
+          Body SysBody 24-NOV-2010 13:17:39.54
+            Attr PgmName = "Io"
+            Attr Flags = 131072
+            Attr TypeRef = "Siemens:Class-Siemens_Di4_IoModule"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Di4_PnModule 2159247360 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Process = 1
+          Attr Io.Ch[0].ConversionOn = 1
+          Attr Io.Ch[0].Representation = 8
+          Attr Io.Ch[1].Number = 1
+          Attr Io.Ch[1].ConversionOn = 1
+          Attr Io.Ch[1].Representation = 8
+          Attr Io.Ch[2].Number = 2
+          Attr Io.Ch[2].ConversionOn = 1
+          Attr Io.Ch[2].Representation = 8
+          Attr Io.Ch[3].Number = 3
+          Attr Io.Ch[3].ConversionOn = 1
+          Attr Io.Ch[3].Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Di2_PnModule $ClassDef 45 24-NOV-2010 13:18:51.57
+      Body SysBody 24-NOV-2010 13:18:37.48
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 13:18:37.48
+        Body SysBody 24-NOV-2010 13:18:37.48
+          Attr StructName = "Siemens_Di2_PnModule"
+          Attr NextAix = "_X9"
+        EndBody
+        Object Super $Attribute 7 24-NOV-2010 13:18:37.48
+          Body SysBody 24-NOV-2010 13:18:37.48
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-PnModule"
+          EndBody
+        EndObject
+        Object Io $Attribute 8 24-NOV-2010 13:18:37.48
+          Body SysBody 24-NOV-2010 13:19:28.01
+            Attr PgmName = "Io"
+            Attr Flags = 131072
+            Attr TypeRef = "Siemens:Class-Siemens_Di2_IoModule"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Di2_PnModule 2159509504 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Process = 1
+          Attr Io.Ch[0].ConversionOn = 1
+          Attr Io.Ch[0].Representation = 8
+          Attr Io.Ch[1].Number = 1
+          Attr Io.Ch[1].ConversionOn = 1
+          Attr Io.Ch[1].Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Do4_PnModule $ClassDef 46 24-NOV-2010 13:20:07.90
+      Body SysBody 24-NOV-2010 13:19:42.05
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 13:19:42.05
+        Body SysBody 24-NOV-2010 13:19:42.05
+          Attr StructName = "Siemens_Do4_PnModule"
+          Attr NextAix = "_X9"
+        EndBody
+        Object Super $Attribute 7 24-NOV-2010 13:19:42.05
+          Body SysBody 24-NOV-2010 13:19:42.05
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-PnModule"
+          EndBody
+        EndObject
+        Object Io $Attribute 8 24-NOV-2010 13:19:42.05
+          Body SysBody 24-NOV-2010 13:20:21.12
+            Attr PgmName = "Io"
+            Attr Flags = 131072
+            Attr TypeRef = "Siemens:Class-Siemens_Do4_IoModule"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Do4_PnModule 2159771648 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Process = 1
+          Attr Io.Ch[0].Representation = 8
+          Attr Io.Ch[1].Number = 1
+          Attr Io.Ch[1].Representation = 8
+          Attr Io.Ch[2].Number = 2
+          Attr Io.Ch[2].Representation = 8
+          Attr Io.Ch[3].Number = 3
+          Attr Io.Ch[3].Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Do2_PnModule $ClassDef 47 24-NOV-2010 13:20:56.13
+      Body SysBody 24-NOV-2010 13:20:33.65
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 13:20:33.65
+        Body SysBody 24-NOV-2010 13:20:33.65
+          Attr StructName = "Siemens_Do2_PnModule"
+          Attr NextAix = "_X9"
+        EndBody
+        Object Super $Attribute 7 24-NOV-2010 13:20:33.65
+          Body SysBody 24-NOV-2010 13:20:33.65
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-PnModule"
+          EndBody
+        EndObject
+        Object Io $Attribute 8 24-NOV-2010 13:20:33.65
+          Body SysBody 24-NOV-2010 13:21:12.69
+            Attr PgmName = "Io"
+            Attr Flags = 131072
+            Attr TypeRef = "Siemens:Class-Siemens_Do2_IoModule"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Do2_PnModule 2160033792 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Process = 1
+          Attr Io.Ch[0].Representation = 8
+          Attr Io.Ch[1].Number = 1
+          Attr Io.Ch[1].Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Di32_PnModule $ClassDef 48 24-NOV-2010 13:21:39.43
+      Body SysBody 24-NOV-2010 13:21:24.46
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 13:21:24.46
+        Body SysBody 24-NOV-2010 13:21:24.46
+          Attr StructName = "Siemens_Di32_PnModule"
+          Attr NextAix = "_X9"
+        EndBody
+        Object Super $Attribute 7 24-NOV-2010 13:21:24.46
+          Body SysBody 24-NOV-2010 13:21:24.46
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-PnModule"
+          EndBody
+        EndObject
+        Object Io $Attribute 8 24-NOV-2010 13:21:24.46
+          Body SysBody 24-NOV-2010 13:21:52.21
+            Attr PgmName = "Io"
+            Attr Flags = 131072
+            Attr TypeRef = "Siemens:Class-Siemens_Di32_IoModule"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Di32_PnModule 2160295936 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Process = 1
+          Attr Io.Ch00.ConversionOn = 1
+          Attr Io.Ch00.Representation = 8
+          Attr Io.Ch01.Number = 1
+          Attr Io.Ch01.ConversionOn = 1
+          Attr Io.Ch01.Representation = 8
+          Attr Io.Ch02.Number = 2
+          Attr Io.Ch02.ConversionOn = 1
+          Attr Io.Ch02.Representation = 8
+          Attr Io.Ch03.Number = 3
+          Attr Io.Ch03.ConversionOn = 1
+          Attr Io.Ch03.Representation = 8
+          Attr Io.Ch04.Number = 4
+          Attr Io.Ch04.ConversionOn = 1
+          Attr Io.Ch04.Representation = 8
+          Attr Io.Ch05.Number = 5
+          Attr Io.Ch05.ConversionOn = 1
+          Attr Io.Ch05.Representation = 8
+          Attr Io.Ch06.Number = 6
+          Attr Io.Ch06.ConversionOn = 1
+          Attr Io.Ch06.Representation = 8
+          Attr Io.Ch07.Number = 7
+          Attr Io.Ch07.ConversionOn = 1
+          Attr Io.Ch07.Representation = 8
+          Attr Io.Ch10.ConversionOn = 1
+          Attr Io.Ch10.Representation = 8
+          Attr Io.Ch11.Number = 1
+          Attr Io.Ch11.ConversionOn = 1
+          Attr Io.Ch11.Representation = 8
+          Attr Io.Ch12.Number = 2
+          Attr Io.Ch12.ConversionOn = 1
+          Attr Io.Ch12.Representation = 8
+          Attr Io.Ch13.Number = 3
+          Attr Io.Ch13.ConversionOn = 1
+          Attr Io.Ch13.Representation = 8
+          Attr Io.Ch14.Number = 4
+          Attr Io.Ch14.ConversionOn = 1
+          Attr Io.Ch14.Representation = 8
+          Attr Io.Ch15.Number = 5
+          Attr Io.Ch15.ConversionOn = 1
+          Attr Io.Ch15.Representation = 8
+          Attr Io.Ch16.Number = 6
+          Attr Io.Ch16.ConversionOn = 1
+          Attr Io.Ch16.Representation = 8
+          Attr Io.Ch17.Number = 7
+          Attr Io.Ch17.ConversionOn = 1
+          Attr Io.Ch17.Representation = 8
+          Attr Io.Ch20.ConversionOn = 1
+          Attr Io.Ch20.Representation = 8
+          Attr Io.Ch21.Number = 1
+          Attr Io.Ch21.ConversionOn = 1
+          Attr Io.Ch21.Representation = 8
+          Attr Io.Ch22.Number = 2
+          Attr Io.Ch22.ConversionOn = 1
+          Attr Io.Ch22.Representation = 8
+          Attr Io.Ch23.Number = 3
+          Attr Io.Ch23.ConversionOn = 1
+          Attr Io.Ch23.Representation = 8
+          Attr Io.Ch24.Number = 4
+          Attr Io.Ch24.ConversionOn = 1
+          Attr Io.Ch24.Representation = 8
+          Attr Io.Ch25.Number = 5
+          Attr Io.Ch25.ConversionOn = 1
+          Attr Io.Ch25.Representation = 8
+          Attr Io.Ch26.Number = 6
+          Attr Io.Ch26.ConversionOn = 1
+          Attr Io.Ch26.Representation = 8
+          Attr Io.Ch27.Number = 7
+          Attr Io.Ch27.ConversionOn = 1
+          Attr Io.Ch27.Representation = 8
+          Attr Io.Ch30.ConversionOn = 1
+          Attr Io.Ch30.Representation = 8
+          Attr Io.Ch31.Number = 1
+          Attr Io.Ch31.ConversionOn = 1
+          Attr Io.Ch31.Representation = 8
+          Attr Io.Ch32.Number = 2
+          Attr Io.Ch32.ConversionOn = 1
+          Attr Io.Ch32.Representation = 8
+          Attr Io.Ch33.Number = 3
+          Attr Io.Ch33.ConversionOn = 1
+          Attr Io.Ch33.Representation = 8
+          Attr Io.Ch34.Number = 4
+          Attr Io.Ch34.ConversionOn = 1
+          Attr Io.Ch34.Representation = 8
+          Attr Io.Ch35.Number = 5
+          Attr Io.Ch35.ConversionOn = 1
+          Attr Io.Ch35.Representation = 8
+          Attr Io.Ch36.Number = 6
+          Attr Io.Ch36.ConversionOn = 1
+          Attr Io.Ch36.Representation = 8
+          Attr Io.Ch37.Number = 7
+          Attr Io.Ch37.ConversionOn = 1
+          Attr Io.Ch37.Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Di16_PnModule $ClassDef 49 24-NOV-2010 13:22:32.39
+      Body SysBody 24-NOV-2010 13:22:17.40
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 13:22:17.40
+        Body SysBody 24-NOV-2010 13:22:17.40
+          Attr StructName = "Siemens_Di16_PnModule"
+          Attr NextAix = "_X11"
+        EndBody
+        Object Super $Attribute 9 24-NOV-2010 13:22:17.40
+          Body SysBody 24-NOV-2010 13:22:17.40
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-PnModule"
+          EndBody
+        EndObject
+        Object Io $Attribute 10 24-NOV-2010 13:22:17.40
+          Body SysBody 24-NOV-2010 13:22:47.86
+            Attr PgmName = "Io"
+            Attr Flags = 131072
+            Attr TypeRef = "Siemens:Class-Siemens_Di16_IoModule"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Di16_PnModule 2160558080 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Process = 1
+          Attr Io.Ch00.ConversionOn = 1
+          Attr Io.Ch00.Representation = 8
+          Attr Io.Ch01.Number = 1
+          Attr Io.Ch01.ConversionOn = 1
+          Attr Io.Ch01.Representation = 8
+          Attr Io.Ch02.Number = 2
+          Attr Io.Ch02.ConversionOn = 1
+          Attr Io.Ch02.Representation = 8
+          Attr Io.Ch03.Number = 3
+          Attr Io.Ch03.ConversionOn = 1
+          Attr Io.Ch03.Representation = 8
+          Attr Io.Ch04.Number = 4
+          Attr Io.Ch04.ConversionOn = 1
+          Attr Io.Ch04.Representation = 8
+          Attr Io.Ch05.Number = 5
+          Attr Io.Ch05.ConversionOn = 1
+          Attr Io.Ch05.Representation = 8
+          Attr Io.Ch06.Number = 6
+          Attr Io.Ch06.ConversionOn = 1
+          Attr Io.Ch06.Representation = 8
+          Attr Io.Ch07.Number = 7
+          Attr Io.Ch07.ConversionOn = 1
+          Attr Io.Ch07.Representation = 8
+          Attr Io.Ch10.ConversionOn = 1
+          Attr Io.Ch10.Representation = 8
+          Attr Io.Ch11.Number = 1
+          Attr Io.Ch11.ConversionOn = 1
+          Attr Io.Ch11.Representation = 8
+          Attr Io.Ch12.Number = 2
+          Attr Io.Ch12.ConversionOn = 1
+          Attr Io.Ch12.Representation = 8
+          Attr Io.Ch13.Number = 3
+          Attr Io.Ch13.ConversionOn = 1
+          Attr Io.Ch13.Representation = 8
+          Attr Io.Ch14.Number = 4
+          Attr Io.Ch14.ConversionOn = 1
+          Attr Io.Ch14.Representation = 8
+          Attr Io.Ch15.Number = 5
+          Attr Io.Ch15.ConversionOn = 1
+          Attr Io.Ch15.Representation = 8
+          Attr Io.Ch16.Number = 6
+          Attr Io.Ch16.ConversionOn = 1
+          Attr Io.Ch16.Representation = 8
+          Attr Io.Ch17.Number = 7
+          Attr Io.Ch17.ConversionOn = 1
+          Attr Io.Ch17.Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Dx16_PnModule $ClassDef 50 24-NOV-2010 13:23:24.58
+      Body SysBody 24-NOV-2010 13:23:13.91
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 13:23:13.91
+        Body SysBody 24-NOV-2010 13:23:13.91
+          Attr StructName = "Siemens_Dx16_PnModule"
+          Attr NextAix = "_X11"
+        EndBody
+        Object Super $Attribute 9 24-NOV-2010 13:23:13.91
+          Body SysBody 24-NOV-2010 13:23:13.91
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-PnModule"
+          EndBody
+        EndObject
+        Object Io $Attribute 10 24-NOV-2010 13:23:13.91
+          Body SysBody 24-NOV-2010 13:23:34.99
+            Attr PgmName = "Io"
+            Attr Flags = 131072
+            Attr TypeRef = "Siemens:Class-Siemens_Dx16_IoModule"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Dx16_PnModule 2160820224 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Process = 1
+          Attr Io.ChDi00.ConversionOn = 1
+          Attr Io.ChDi00.Representation = 8
+          Attr Io.ChDi01.Number = 1
+          Attr Io.ChDi01.ConversionOn = 1
+          Attr Io.ChDi01.Representation = 8
+          Attr Io.ChDi02.Number = 2
+          Attr Io.ChDi02.ConversionOn = 1
+          Attr Io.ChDi02.Representation = 8
+          Attr Io.ChDi03.Number = 3
+          Attr Io.ChDi03.ConversionOn = 1
+          Attr Io.ChDi03.Representation = 8
+          Attr Io.ChDi04.Number = 4
+          Attr Io.ChDi04.ConversionOn = 1
+          Attr Io.ChDi04.Representation = 8
+          Attr Io.ChDi05.Number = 5
+          Attr Io.ChDi05.ConversionOn = 1
+          Attr Io.ChDi05.Representation = 8
+          Attr Io.ChDi06.Number = 6
+          Attr Io.ChDi06.ConversionOn = 1
+          Attr Io.ChDi06.Representation = 8
+          Attr Io.ChDi07.Number = 7
+          Attr Io.ChDi07.ConversionOn = 1
+          Attr Io.ChDi07.Representation = 8
+          Attr Io.ChDi10.ConversionOn = 1
+          Attr Io.ChDi10.Representation = 8
+          Attr Io.ChDi11.Number = 1
+          Attr Io.ChDi11.ConversionOn = 1
+          Attr Io.ChDi11.Representation = 8
+          Attr Io.ChDi12.Number = 2
+          Attr Io.ChDi12.ConversionOn = 1
+          Attr Io.ChDi12.Representation = 8
+          Attr Io.ChDi13.Number = 3
+          Attr Io.ChDi13.ConversionOn = 1
+          Attr Io.ChDi13.Representation = 8
+          Attr Io.ChDi14.Number = 4
+          Attr Io.ChDi14.ConversionOn = 1
+          Attr Io.ChDi14.Representation = 8
+          Attr Io.ChDi15.Number = 5
+          Attr Io.ChDi15.ConversionOn = 1
+          Attr Io.ChDi15.Representation = 8
+          Attr Io.ChDi16.Number = 6
+          Attr Io.ChDi16.ConversionOn = 1
+          Attr Io.ChDi16.Representation = 8
+          Attr Io.ChDi17.Number = 7
+          Attr Io.ChDi17.ConversionOn = 1
+          Attr Io.ChDi17.Representation = 8
+          Attr Io.ChDo00.Representation = 8
+          Attr Io.ChDo01.Number = 1
+          Attr Io.ChDo01.Representation = 8
+          Attr Io.ChDo02.Number = 2
+          Attr Io.ChDo02.Representation = 8
+          Attr Io.ChDo03.Number = 3
+          Attr Io.ChDo03.Representation = 8
+          Attr Io.ChDo04.Number = 4
+          Attr Io.ChDo04.Representation = 8
+          Attr Io.ChDo05.Number = 5
+          Attr Io.ChDo05.Representation = 8
+          Attr Io.ChDo06.Number = 6
+          Attr Io.ChDo06.Representation = 8
+          Attr Io.ChDo07.Number = 7
+          Attr Io.ChDo07.Representation = 8
+          Attr Io.ChDo10.Representation = 8
+          Attr Io.ChDo11.Number = 1
+          Attr Io.ChDo11.Representation = 8
+          Attr Io.ChDo12.Number = 2
+          Attr Io.ChDo12.Representation = 8
+          Attr Io.ChDo13.Number = 3
+          Attr Io.ChDo13.Representation = 8
+          Attr Io.ChDo14.Number = 4
+          Attr Io.ChDo14.Representation = 8
+          Attr Io.ChDo15.Number = 5
+          Attr Io.ChDo15.Representation = 8
+          Attr Io.ChDo16.Number = 6
+          Attr Io.ChDo16.Representation = 8
+          Attr Io.ChDo17.Number = 7
+          Attr Io.ChDo17.Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Di8_PnModule $ClassDef 51 24-NOV-2010 13:23:59.89
+      Body SysBody 24-NOV-2010 13:23:47.05
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 13:23:47.05
+        Body SysBody 24-NOV-2010 13:23:47.05
+          Attr StructName = "Siemens_Di8_PnModule"
+          Attr NextAix = "_X11"
+        EndBody
+        Object Super $Attribute 9 24-NOV-2010 13:23:47.05
+          Body SysBody 24-NOV-2010 13:23:47.05
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-PnModule"
+          EndBody
+        EndObject
+        Object Io $Attribute 10 24-NOV-2010 13:23:47.05
+          Body SysBody 24-NOV-2010 13:24:13.37
+            Attr PgmName = "Io"
+            Attr Flags = 131072
+            Attr TypeRef = "Siemens:Class-Siemens_Di8_IoModule"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Di8_PnModule 2161082368 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Process = 1
+          Attr Io.Ch[0].ConversionOn = 1
+          Attr Io.Ch[0].Representation = 8
+          Attr Io.Ch[1].Number = 1
+          Attr Io.Ch[1].ConversionOn = 1
+          Attr Io.Ch[1].Representation = 8
+          Attr Io.Ch[2].Number = 2
+          Attr Io.Ch[2].ConversionOn = 1
+          Attr Io.Ch[2].Representation = 8
+          Attr Io.Ch[3].Number = 3
+          Attr Io.Ch[3].ConversionOn = 1
+          Attr Io.Ch[3].Representation = 8
+          Attr Io.Ch[4].Number = 4
+          Attr Io.Ch[4].ConversionOn = 1
+          Attr Io.Ch[4].Representation = 8
+          Attr Io.Ch[5].Number = 5
+          Attr Io.Ch[5].ConversionOn = 1
+          Attr Io.Ch[5].Representation = 8
+          Attr Io.Ch[6].Number = 6
+          Attr Io.Ch[6].ConversionOn = 1
+          Attr Io.Ch[6].Representation = 8
+          Attr Io.Ch[7].Number = 7
+          Attr Io.Ch[7].ConversionOn = 1
+          Attr Io.Ch[7].Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Do32_PnModule $ClassDef 52 24-NOV-2010 13:25:13.34
+      Body SysBody 24-NOV-2010 13:24:59.96
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 13:24:59.96
+        Body SysBody 24-NOV-2010 13:24:59.96
+          Attr StructName = "Siemens_Do32_PnModule"
+          Attr NextAix = "_X11"
+        EndBody
+        Object Super $Attribute 9 24-NOV-2010 13:24:59.96
+          Body SysBody 24-NOV-2010 13:24:59.96
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-PnModule"
+          EndBody
+        EndObject
+        Object Io $Attribute 10 24-NOV-2010 13:24:59.96
+          Body SysBody 24-NOV-2010 13:25:21.22
+            Attr PgmName = "Io"
+            Attr Flags = 131072
+            Attr TypeRef = "Siemens:Class-Siemens_Do32_IoModule"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Do32_PnModule 2161344512 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Process = 1
+          Attr Io.Ch00.Representation = 8
+          Attr Io.Ch01.Number = 1
+          Attr Io.Ch01.Representation = 8
+          Attr Io.Ch02.Number = 2
+          Attr Io.Ch02.Representation = 8
+          Attr Io.Ch03.Number = 3
+          Attr Io.Ch03.Representation = 8
+          Attr Io.Ch04.Number = 4
+          Attr Io.Ch04.Representation = 8
+          Attr Io.Ch05.Number = 5
+          Attr Io.Ch05.Representation = 8
+          Attr Io.Ch06.Number = 6
+          Attr Io.Ch06.Representation = 8
+          Attr Io.Ch07.Number = 7
+          Attr Io.Ch07.Representation = 8
+          Attr Io.Ch10.Representation = 8
+          Attr Io.Ch11.Number = 1
+          Attr Io.Ch11.Representation = 8
+          Attr Io.Ch12.Number = 2
+          Attr Io.Ch12.Representation = 8
+          Attr Io.Ch13.Number = 3
+          Attr Io.Ch13.Representation = 8
+          Attr Io.Ch14.Number = 4
+          Attr Io.Ch14.Representation = 8
+          Attr Io.Ch15.Number = 5
+          Attr Io.Ch15.Representation = 8
+          Attr Io.Ch16.Number = 6
+          Attr Io.Ch16.Representation = 8
+          Attr Io.Ch17.Number = 7
+          Attr Io.Ch17.Representation = 8
+          Attr Io.Ch20.Representation = 8
+          Attr Io.Ch21.Number = 1
+          Attr Io.Ch21.Representation = 8
+          Attr Io.Ch22.Number = 2
+          Attr Io.Ch22.Representation = 8
+          Attr Io.Ch23.Number = 3
+          Attr Io.Ch23.Representation = 8
+          Attr Io.Ch24.Number = 4
+          Attr Io.Ch24.Representation = 8
+          Attr Io.Ch25.Number = 5
+          Attr Io.Ch25.Representation = 8
+          Attr Io.Ch26.Number = 6
+          Attr Io.Ch26.Representation = 8
+          Attr Io.Ch27.Number = 7
+          Attr Io.Ch27.Representation = 8
+          Attr Io.Ch30.Representation = 8
+          Attr Io.Ch31.Number = 1
+          Attr Io.Ch31.Representation = 8
+          Attr Io.Ch32.Number = 2
+          Attr Io.Ch32.Representation = 8
+          Attr Io.Ch33.Number = 3
+          Attr Io.Ch33.Representation = 8
+          Attr Io.Ch34.Number = 4
+          Attr Io.Ch34.Representation = 8
+          Attr Io.Ch35.Number = 5
+          Attr Io.Ch35.Representation = 8
+          Attr Io.Ch36.Number = 6
+          Attr Io.Ch36.Representation = 8
+          Attr Io.Ch37.Number = 7
+          Attr Io.Ch37.Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Do16_PnModule $ClassDef 53 24-NOV-2010 13:25:44.50
+      Body SysBody 24-NOV-2010 13:25:32.83
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 13:25:32.83
+        Body SysBody 24-NOV-2010 13:25:32.83
+          Attr StructName = "Siemens_Do16_PnModule"
+          Attr NextAix = "_X13"
+        EndBody
+        Object Super $Attribute 11 24-NOV-2010 13:25:32.83
+          Body SysBody 24-NOV-2010 13:25:32.83
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-PnModule"
+          EndBody
+        EndObject
+        Object Io $Attribute 12 24-NOV-2010 13:25:32.83
+          Body SysBody 24-NOV-2010 13:26:02.89
+            Attr PgmName = "Io"
+            Attr Flags = 131072
+            Attr TypeRef = "Siemens:Class-Siemens_Do16_IoModule"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Do16_PnModule 2161606656 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Process = 1
+          Attr Io.Ch00.Representation = 8
+          Attr Io.Ch01.Number = 1
+          Attr Io.Ch01.Representation = 8
+          Attr Io.Ch02.Number = 2
+          Attr Io.Ch02.Representation = 8
+          Attr Io.Ch03.Number = 3
+          Attr Io.Ch03.Representation = 8
+          Attr Io.Ch04.Number = 4
+          Attr Io.Ch04.Representation = 8
+          Attr Io.Ch05.Number = 5
+          Attr Io.Ch05.Representation = 8
+          Attr Io.Ch06.Number = 6
+          Attr Io.Ch06.Representation = 8
+          Attr Io.Ch07.Number = 7
+          Attr Io.Ch07.Representation = 8
+          Attr Io.Ch10.Representation = 8
+          Attr Io.Ch11.Number = 1
+          Attr Io.Ch11.Representation = 8
+          Attr Io.Ch12.Number = 2
+          Attr Io.Ch12.Representation = 8
+          Attr Io.Ch13.Number = 3
+          Attr Io.Ch13.Representation = 8
+          Attr Io.Ch14.Number = 4
+          Attr Io.Ch14.Representation = 8
+          Attr Io.Ch15.Number = 5
+          Attr Io.Ch15.Representation = 8
+          Attr Io.Ch16.Number = 6
+          Attr Io.Ch16.Representation = 8
+          Attr Io.Ch17.Number = 7
+          Attr Io.Ch17.Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Do8_PnModule $ClassDef 54 24-NOV-2010 13:26:18.05
+      Body SysBody 24-NOV-2010 13:26:06.33
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 13:26:06.33
+        Body SysBody 24-NOV-2010 13:26:06.33
+          Attr StructName = "Siemens_Do8_PnModule"
+          Attr NextAix = "_X13"
+        EndBody
+        Object Super $Attribute 11 24-NOV-2010 13:26:06.33
+          Body SysBody 24-NOV-2010 13:26:06.33
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-PnModule"
+          EndBody
+        EndObject
+        Object Io $Attribute 12 24-NOV-2010 13:26:06.33
+          Body SysBody 24-NOV-2010 13:26:06.33
+            Attr PgmName = "Io"
+            Attr Flags = 131072
+            Attr TypeRef = "Siemens:Class-Siemens_Do32_IoModule"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Do8_PnModule 2161868800 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Process = 1
+          Attr Io.Ch00.Representation = 8
+          Attr Io.Ch01.Number = 1
+          Attr Io.Ch01.Representation = 8
+          Attr Io.Ch02.Number = 2
+          Attr Io.Ch02.Representation = 8
+          Attr Io.Ch03.Number = 3
+          Attr Io.Ch03.Representation = 8
+          Attr Io.Ch04.Number = 4
+          Attr Io.Ch04.Representation = 8
+          Attr Io.Ch05.Number = 5
+          Attr Io.Ch05.Representation = 8
+          Attr Io.Ch06.Number = 6
+          Attr Io.Ch06.Representation = 8
+          Attr Io.Ch07.Number = 7
+          Attr Io.Ch07.Representation = 8
+          Attr Io.Ch10.Representation = 8
+          Attr Io.Ch11.Number = 1
+          Attr Io.Ch11.Representation = 8
+          Attr Io.Ch12.Number = 2
+          Attr Io.Ch12.Representation = 8
+          Attr Io.Ch13.Number = 3
+          Attr Io.Ch13.Representation = 8
+          Attr Io.Ch14.Number = 4
+          Attr Io.Ch14.Representation = 8
+          Attr Io.Ch15.Number = 5
+          Attr Io.Ch15.Representation = 8
+          Attr Io.Ch16.Number = 6
+          Attr Io.Ch16.Representation = 8
+          Attr Io.Ch17.Number = 7
+          Attr Io.Ch17.Representation = 8
+          Attr Io.Ch20.Representation = 8
+          Attr Io.Ch21.Number = 1
+          Attr Io.Ch21.Representation = 8
+          Attr Io.Ch22.Number = 2
+          Attr Io.Ch22.Representation = 8
+          Attr Io.Ch23.Number = 3
+          Attr Io.Ch23.Representation = 8
+          Attr Io.Ch24.Number = 4
+          Attr Io.Ch24.Representation = 8
+          Attr Io.Ch25.Number = 5
+          Attr Io.Ch25.Representation = 8
+          Attr Io.Ch26.Number = 6
+          Attr Io.Ch26.Representation = 8
+          Attr Io.Ch27.Number = 7
+          Attr Io.Ch27.Representation = 8
+          Attr Io.Ch30.Representation = 8
+          Attr Io.Ch31.Number = 1
+          Attr Io.Ch31.Representation = 8
+          Attr Io.Ch32.Number = 2
+          Attr Io.Ch32.Representation = 8
+          Attr Io.Ch33.Number = 3
+          Attr Io.Ch33.Representation = 8
+          Attr Io.Ch34.Number = 4
+          Attr Io.Ch34.Representation = 8
+          Attr Io.Ch35.Number = 5
+          Attr Io.Ch35.Representation = 8
+          Attr Io.Ch36.Number = 6
+          Attr Io.Ch36.Representation = 8
+          Attr Io.Ch37.Number = 7
+          Attr Io.Ch37.Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Ai8_PnModule $ClassDef 55 24-NOV-2010 13:26:39.26
+      Body SysBody 24-NOV-2010 13:26:27.69
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 13:26:27.69
+        Body SysBody 24-NOV-2010 13:26:27.69
+          Attr StructName = "Siemens_Ai8_PnModule"
+          Attr NextAix = "_X13"
+        EndBody
+        Object Super $Attribute 11 24-NOV-2010 13:26:27.69
+          Body SysBody 24-NOV-2010 13:26:27.69
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-PnModule"
+          EndBody
+        EndObject
+        Object Io $Attribute 12 24-NOV-2010 13:26:27.69
+          Body SysBody 24-NOV-2010 13:26:55.09
+            Attr PgmName = "Io"
+            Attr Flags = 131072
+            Attr TypeRef = "Siemens:Class-Siemens_Ai8_IoModule"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Ai8_PnModule 2162130944 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Process = 1
+          Attr Io.Ch[0].ConversionOn = 1
+          Attr Io.Ch[0].ScanInterval = 1
+          Attr Io.Ch[0].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[0].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[0].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[0].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[0].SigValueUnit = "V"
+          Attr Io.Ch[0].SensorPolyType = 1
+          Attr Io.Ch[0].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[0].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[0].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[0].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[0].Representation = 2
+          Attr Io.Ch[1].ConversionOn = 1
+          Attr Io.Ch[1].ScanInterval = 1
+          Attr Io.Ch[1].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[1].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[1].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[1].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[1].SigValueUnit = "V"
+          Attr Io.Ch[1].SensorPolyType = 1
+          Attr Io.Ch[1].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[1].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[1].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[1].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[1].Representation = 2
+          Attr Io.Ch[2].ConversionOn = 1
+          Attr Io.Ch[2].ScanInterval = 1
+          Attr Io.Ch[2].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[2].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[2].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[2].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[2].SigValueUnit = "V"
+          Attr Io.Ch[2].SensorPolyType = 1
+          Attr Io.Ch[2].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[2].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[2].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[2].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[2].Representation = 2
+          Attr Io.Ch[3].ConversionOn = 1
+          Attr Io.Ch[3].ScanInterval = 1
+          Attr Io.Ch[3].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[3].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[3].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[3].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[3].SigValueUnit = "V"
+          Attr Io.Ch[3].SensorPolyType = 1
+          Attr Io.Ch[3].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[3].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[3].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[3].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[3].Representation = 2
+          Attr Io.Ch[4].ConversionOn = 1
+          Attr Io.Ch[4].ScanInterval = 1
+          Attr Io.Ch[4].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[4].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[4].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[4].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[4].SigValueUnit = "V"
+          Attr Io.Ch[4].SensorPolyType = 1
+          Attr Io.Ch[4].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[4].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[4].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[4].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[4].Representation = 2
+          Attr Io.Ch[5].ConversionOn = 1
+          Attr Io.Ch[5].ScanInterval = 1
+          Attr Io.Ch[5].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[5].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[5].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[5].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[5].SigValueUnit = "V"
+          Attr Io.Ch[5].SensorPolyType = 1
+          Attr Io.Ch[5].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[5].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[5].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[5].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[5].Representation = 2
+          Attr Io.Ch[6].ConversionOn = 1
+          Attr Io.Ch[6].ScanInterval = 1
+          Attr Io.Ch[6].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[6].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[6].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[6].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[6].SigValueUnit = "V"
+          Attr Io.Ch[6].SensorPolyType = 1
+          Attr Io.Ch[6].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[6].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[6].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[6].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[6].Representation = 2
+          Attr Io.Ch[7].ConversionOn = 1
+          Attr Io.Ch[7].ScanInterval = 1
+          Attr Io.Ch[7].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[7].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[7].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[7].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[7].SigValueUnit = "V"
+          Attr Io.Ch[7].SensorPolyType = 1
+          Attr Io.Ch[7].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[7].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[7].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[7].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[7].Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Ai4_PnModule $ClassDef 56 25-NOV-2010 09:42:26.70
+      Body SysBody 24-NOV-2010 13:26:58.08
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 13:26:58.08
+        Body SysBody 24-NOV-2010 13:26:58.08
+          Attr StructName = "Siemens_Ai4_PnModule"
+          Attr NextAix = "_X15"
+        EndBody
+        Object Super $Attribute 13 24-NOV-2010 13:26:58.08
+          Body SysBody 24-NOV-2010 13:26:58.08
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-PnModule"
+          EndBody
+        EndObject
+        Object Io $Attribute 14 24-NOV-2010 13:26:58.08
+          Body SysBody 24-NOV-2010 13:27:13.75
+            Attr PgmName = "Io"
+            Attr Flags = 131072
+            Attr TypeRef = "Siemens:Class-Siemens_Ai4_IoModule"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Ai4_PnModule 2162393088 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Process = 1
+          Attr Io.Ch[0].ConversionOn = 1
+          Attr Io.Ch[0].ScanInterval = 1
+          Attr Io.Ch[0].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[0].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[0].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[0].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[0].SigValueUnit = "V"
+          Attr Io.Ch[0].SensorPolyType = 1
+          Attr Io.Ch[0].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[0].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[0].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[0].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[0].Representation = 2
+          Attr Io.Ch[1].ConversionOn = 1
+          Attr Io.Ch[1].ScanInterval = 1
+          Attr Io.Ch[1].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[1].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[1].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[1].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[1].SigValueUnit = "V"
+          Attr Io.Ch[1].SensorPolyType = 1
+          Attr Io.Ch[1].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[1].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[1].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[1].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[1].Representation = 2
+          Attr Io.Ch[2].ConversionOn = 1
+          Attr Io.Ch[2].ScanInterval = 1
+          Attr Io.Ch[2].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[2].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[2].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[2].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[2].SigValueUnit = "V"
+          Attr Io.Ch[2].SensorPolyType = 1
+          Attr Io.Ch[2].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[2].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[2].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[2].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[2].Representation = 2
+          Attr Io.Ch[3].ConversionOn = 1
+          Attr Io.Ch[3].ScanInterval = 1
+          Attr Io.Ch[3].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[3].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[3].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[3].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[3].SigValueUnit = "V"
+          Attr Io.Ch[3].SensorPolyType = 1
+          Attr Io.Ch[3].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[3].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[3].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[3].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[3].Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Ai2_PnModule $ClassDef 57 24-NOV-2010 13:27:32.45
+      Body SysBody 24-NOV-2010 13:27:18.55
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 13:27:18.55
+        Body SysBody 24-NOV-2010 13:27:18.55
+          Attr StructName = "Siemens_Ai2_PnModule"
+          Attr NextAix = "_X15"
+        EndBody
+        Object Super $Attribute 13 24-NOV-2010 13:27:18.55
+          Body SysBody 24-NOV-2010 13:27:18.55
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-PnModule"
+          EndBody
+        EndObject
+        Object Io $Attribute 14 24-NOV-2010 13:27:18.55
+          Body SysBody 24-NOV-2010 13:27:42.97
+            Attr PgmName = "Io"
+            Attr Flags = 131072
+            Attr TypeRef = "Siemens:Class-Siemens_Ai2_IoModule"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Ai2_PnModule 2162655232 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Process = 1
+          Attr Io.Ch[0].ConversionOn = 1
+          Attr Io.Ch[0].ScanInterval = 1
+          Attr Io.Ch[0].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[0].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[0].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[0].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[0].SigValueUnit = "V"
+          Attr Io.Ch[0].SensorPolyType = 1
+          Attr Io.Ch[0].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[0].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[0].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[0].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[0].Representation = 2
+          Attr Io.Ch[1].ConversionOn = 1
+          Attr Io.Ch[1].ScanInterval = 1
+          Attr Io.Ch[1].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[1].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[1].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[1].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[1].SigValueUnit = "V"
+          Attr Io.Ch[1].SensorPolyType = 1
+          Attr Io.Ch[1].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[1].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[1].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[1].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[1].Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Ao8_PnModule $ClassDef 58 24-NOV-2010 13:28:02.00
+      Body SysBody 24-NOV-2010 13:27:51.44
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 13:27:51.44
+        Body SysBody 24-NOV-2010 13:27:51.44
+          Attr StructName = "Siemens_Ao8_PnModule"
+          Attr NextAix = "_X15"
+        EndBody
+        Object Super $Attribute 13 24-NOV-2010 13:27:51.44
+          Body SysBody 24-NOV-2010 13:27:51.44
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-PnModule"
+          EndBody
+        EndObject
+        Object Io $Attribute 14 24-NOV-2010 13:27:51.44
+          Body SysBody 24-NOV-2010 13:28:11.85
+            Attr PgmName = "Io"
+            Attr Flags = 131072
+            Attr TypeRef = "Siemens:Class-Siemens_Ao8_IoModule"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Ao8_PnModule 2162917376 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Process = 1
+          Attr Io.Ch[0].OutPolyType = 1
+          Attr Io.Ch[0].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[0].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[0].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[0].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[0].SigValueUnit = "V"
+          Attr Io.Ch[0].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[0].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[0].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[0].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[0].Representation = 2
+          Attr Io.Ch[1].OutPolyType = 1
+          Attr Io.Ch[1].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[1].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[1].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[1].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[1].SigValueUnit = "V"
+          Attr Io.Ch[1].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[1].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[1].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[1].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[1].Representation = 2
+          Attr Io.Ch[2].OutPolyType = 1
+          Attr Io.Ch[2].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[2].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[2].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[2].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[2].SigValueUnit = "V"
+          Attr Io.Ch[2].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[2].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[2].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[2].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[2].Representation = 2
+          Attr Io.Ch[3].OutPolyType = 1
+          Attr Io.Ch[3].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[3].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[3].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[3].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[3].SigValueUnit = "V"
+          Attr Io.Ch[3].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[3].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[3].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[3].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[3].Representation = 2
+          Attr Io.Ch[4].OutPolyType = 1
+          Attr Io.Ch[4].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[4].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[4].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[4].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[4].SigValueUnit = "V"
+          Attr Io.Ch[4].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[4].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[4].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[4].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[4].Representation = 2
+          Attr Io.Ch[5].OutPolyType = 1
+          Attr Io.Ch[5].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[5].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[5].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[5].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[5].SigValueUnit = "V"
+          Attr Io.Ch[5].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[5].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[5].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[5].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[5].Representation = 2
+          Attr Io.Ch[6].OutPolyType = 1
+          Attr Io.Ch[6].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[6].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[6].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[6].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[6].SigValueUnit = "V"
+          Attr Io.Ch[6].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[6].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[6].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[6].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[6].Representation = 2
+          Attr Io.Ch[7].OutPolyType = 1
+          Attr Io.Ch[7].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[7].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[7].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[7].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[7].SigValueUnit = "V"
+          Attr Io.Ch[7].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[7].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[7].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[7].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[7].Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Ao4_PnModule $ClassDef 59 24-NOV-2010 13:28:29.08
+      Body SysBody 24-NOV-2010 13:28:19.30
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 13:28:19.30
+        Body SysBody 24-NOV-2010 13:28:19.30
+          Attr StructName = "Siemens_Ao4_PnModule"
+          Attr NextAix = "_X17"
+        EndBody
+        Object Super $Attribute 15 24-NOV-2010 13:28:19.30
+          Body SysBody 24-NOV-2010 13:28:19.30
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-PnModule"
+          EndBody
+        EndObject
+        Object Io $Attribute 16 24-NOV-2010 13:28:19.30
+          Body SysBody 24-NOV-2010 13:28:40.84
+            Attr PgmName = "Io"
+            Attr Flags = 131072
+            Attr TypeRef = "Siemens:Class-Siemens_Ao4_IoModule"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Ao4_PnModule 2163179520 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Process = 1
+          Attr Io.Ch[0].OutPolyType = 1
+          Attr Io.Ch[0].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[0].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[0].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[0].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[0].SigValueUnit = "V"
+          Attr Io.Ch[0].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[0].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[0].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[0].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[0].Representation = 2
+          Attr Io.Ch[1].OutPolyType = 1
+          Attr Io.Ch[1].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[1].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[1].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[1].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[1].SigValueUnit = "V"
+          Attr Io.Ch[1].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[1].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[1].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[1].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[1].Representation = 2
+          Attr Io.Ch[2].OutPolyType = 1
+          Attr Io.Ch[2].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[2].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[2].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[2].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[2].SigValueUnit = "V"
+          Attr Io.Ch[2].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[2].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[2].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[2].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[2].Representation = 2
+          Attr Io.Ch[3].OutPolyType = 1
+          Attr Io.Ch[3].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[3].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[3].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[3].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[3].SigValueUnit = "V"
+          Attr Io.Ch[3].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[3].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[3].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[3].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[3].Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_Ao2_PnModule $ClassDef 60 24-NOV-2010 13:28:57.76
+      Body SysBody 24-NOV-2010 13:28:48.99
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 13:28:48.99
+        Body SysBody 24-NOV-2010 13:28:48.99
+          Attr StructName = "Siemens_Ao2_PnModule"
+          Attr NextAix = "_X17"
+        EndBody
+        Object Super $Attribute 15 24-NOV-2010 13:28:48.99
+          Body SysBody 24-NOV-2010 13:28:48.99
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-PnModule"
+          EndBody
+        EndObject
+        Object Io $Attribute 16 24-NOV-2010 13:28:48.99
+          Body SysBody 24-NOV-2010 13:29:08.95
+            Attr PgmName = "Io"
+            Attr Flags = 131072
+            Attr TypeRef = "Siemens:Class-Siemens_Ao2_IoModule"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_Ao2_PnModule 2163441664 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Process = 1
+          Attr Io.Ch[0].OutPolyType = 1
+          Attr Io.Ch[0].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[0].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[0].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[0].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[0].SigValueUnit = "V"
+          Attr Io.Ch[0].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[0].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[0].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[0].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[0].Representation = 2
+          Attr Io.Ch[1].OutPolyType = 1
+          Attr Io.Ch[1].ActValRangeLow = -1.000000e+02
+          Attr Io.Ch[1].ActValRangeHigh = 1.000000e+02
+          Attr Io.Ch[1].SensorSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[1].SensorSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[1].SigValueUnit = "V"
+          Attr Io.Ch[1].ChannelSigValRangeLow = -2.764800e+04
+          Attr Io.Ch[1].ChannelSigValRangeHigh = 2.764800e+04
+          Attr Io.Ch[1].RawValRangeLow = -2.764800e+04
+          Attr Io.Ch[1].RawValRangeHigh = 2.764800e+04
+          Attr Io.Ch[1].Representation = 2
         EndBody
       EndObject
     EndObject
@@ -2089,7 +5367,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         EndObject
       EndObject
       Object Template Siemens_ET200M_Ai8 2151383040 01-JAN-1970 01:00:00.00
-        Body RtBody 02-MAY-2006 13:59:07.09
+        Body RtBody 24-NOV-2010 11:10:41.10
           Attr Super.Specification = "Siemens ET200M 8 Ai"
           Attr Super.Process = 1
           Attr Ch[0].ConversionOn = 1
@@ -2662,7 +5940,7 @@ Volume Siemens $ClassVolume 0.0.250.3
     !  Siemens_ET200S_Di2
     !  Siemens_ET200S_Do4
     !  Siemens_ET200S_Do2
-    !
+    ! 
     !  See also
     !  @classlink Pb_DP_Slave profibus_pb_dp_slave.html
     !  @classlink Siemens_ET200S_Ai2 siemens_siemens_et200s_ai2.html
@@ -2732,7 +6010,7 @@ Volume Siemens $ClassVolume 0.0.250.3
     !  Siemens_ET200M_Ao8
     !  Siemens_ET200M_Ao4
     !  Siemens_ET200M_Ao2
-    !
+    ! 
     !  See also
     !  @classlink Pb_DP_Slave profibus_pb_dp_slave.html
     !  @classlink Siemens_ET200M_Di32 siemens_siemens_et200m_di32.html
@@ -2779,6 +6057,1118 @@ Volume Siemens $ClassVolume 0.0.250.3
           Attr Super.ErrorHardLimit = 50
           Attr Super.WdFact1 = 100
           Attr Super.WdFact2 = 10
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profibus slave Sinamics G120.
+    !  Profibus slave Sinamics G120.
+    ! 
+    !  The slave object is configured below a Profibus master object in
+    !  the node hierarchy. 
+    !  
+    !  @b Configuration
+    !  Use the 'Configure Slave' method in the popup menu of the object
+    !  to configure the slave.
+    ! 
+    !  The following module classes can be configured
+    !  Sinamics_Tgm1_PbModule
+    ! 
+    !  See also
+    !  @classlink Pb_DP_Slave profibus_pb_dp_slave.html
+    !*/
+    Object Sinamics_G120_PbSlave $ClassDef 64 24-NOV-2010 14:40:25.31
+      Body SysBody 24-NOV-2010 14:40:04.73
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 10256
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 14:40:04.73
+        Body SysBody 24-NOV-2010 14:40:04.73
+          Attr StructName = "Sinamics_G120_PbSlave"
+          Attr NextAix = "_X4"
+        EndBody
+        Object Super $Attribute 3 24-NOV-2010 14:40:04.73
+          Body SysBody 24-NOV-2010 14:40:04.73
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_DP_Slave"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Sinamics_G120_PbSlave 2164490240 01-JAN-1970 01:00:00.00
+        Body RtBody 24-NOV-2010 14:41:25.30
+          Attr Super.GSDfile = "$pwr_exe/SI028158.gsd"
+          Attr Super.Process = 1
+          Attr Super.ByteOrdering = 1
+          Attr Super.StallAction = 1
+          Attr Super.ErrorSoftLimit = 15
+          Attr Super.ErrorHardLimit = 50
+          Attr Super.WdFact1 = 10
+          Attr Super.WdFact2 = 10
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profinet device Sinamics G120.
+    !  Profinet device Sinamics G120.
+    ! 
+    !  The device object is configured below a Profinet controller object in
+    !  the node hierarchy. 
+    !  
+    !  @b Configuration
+    !  Use the 'Configure Device' method in the popup menu of the object
+    !  to configure the device.
+    ! 
+    !  The following module classes can be configured
+    !  Sinamics_Tgm1_PnModule
+    ! 
+    !  See also
+    !  @classlink PnDevice profinet_pndevice.html
+    !*/
+    Object Sinamics_G120_PnDevice $ClassDef 25 24-NOV-2010 09:13:06.82
+      Body SysBody 24-NOV-2010 09:12:49.07
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 10256
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 09:12:49.08
+        Body SysBody 24-NOV-2010 09:12:49.08
+          Attr StructName = "Sinamics_G120_PnDevice"
+          Attr NextAix = "_X4"
+        EndBody
+        Object Super $Attribute 3 24-NOV-2010 09:12:49.08
+          Body SysBody 24-NOV-2010 09:13:51.42
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-PnDevice"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Sinamics_G120_PnDevice 2154266624 01-JAN-1970 01:00:00.00
+        Body RtBody 24-NOV-2010 13:38:16.68
+          Attr Super.GSDMLfile = "$pwr_exe/gsdml-v2.0-siemens-sinamicsg120prof-20080514.xml"
+          Attr Super.Process = 1
+          Attr Super.ErrorSoftLimit = 100
+          Attr Super.ErrorHardLimit = 1000
+          Attr Super.ByteOrdering = 1
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profinet device ET200M.
+    !  Profinet device ET200M.
+    ! 
+    !  The device object is configured below a Profinet controller object in
+    !  the node hierarchy. 
+    !  
+    !  @b Configuration
+    !  Use the 'Configure Device' method in the popup menu of the object
+    !  to configure the device.
+    ! 
+    !  The following module classes can be configured
+    !  Siemens_Di32_PnModule
+    !  Siemens_Di16_PnModule
+    !  Siemens_Dx16_PnModule
+    !  Siemens_Di8_PnModule
+    !  Siemens_Do32_PnModule
+    !  Siemens_Do16_PnModule
+    !  Siemens_Do8_PnModule
+    !  Siemens_Ai8_PnModule
+    !  Siemens_Ai4_PnModule
+    !  Siemens_Ai2_PnModule
+    !  Siemens_Ao8_PnModule
+    !  Siemens_Ao4_PnModule
+    !  Siemens_Ao2_PnModule
+    ! 
+    !  See also
+    !  @classlink PnDevice profinet_pndevice.html
+    !*/
+    Object Siemens_ET200M_PnDevice $ClassDef 67 25-NOV-2010 14:34:05.25
+      Body SysBody 25-NOV-2010 14:33:53.47
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 10256
+      EndBody
+      Object RtBody $ObjBodyDef 1 25-NOV-2010 14:33:53.49
+        Body SysBody 25-NOV-2010 14:34:13.19
+          Attr StructName = "Siemens_ET200M_PnDevice"
+          Attr NextAix = "_X5"
+        EndBody
+        Object Super $Attribute 4 25-NOV-2010 14:33:53.49
+          Body SysBody 25-NOV-2010 14:33:53.49
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-PnDevice"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200M_PnDevice 2165276672 01-JAN-1970 01:00:00.00
+        Body RtBody 25-NOV-2010 14:38:27.89
+          Attr Super.GSDMLfile = "$pwr_exe/gsdml-v2.1-siemens-et200m-20070920.xml"
+          Attr Super.Process = 1
+          Attr Super.ErrorSoftLimit = 100
+          Attr Super.ErrorHardLimit = 1000
+          Attr Super.ByteOrdering = 1
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profinet device ET200M.
+    !  Profinet device ET200M.
+    ! 
+    !  The device object is configured below a Profinet controller object in
+    !  the node hierarchy. 
+    !  
+    !  @b Configuration
+    !  Use the 'Configure Device' method in the popup menu of the object
+    !  to configure the device.
+    ! 
+    !  The following module classes can be configured
+    !  Siemens_Ai2_PnModule
+    !  Siemens_Ao2_PnModule
+    !  Siemens_Di4_PnModule
+    !  Siemens_Di2_PnModule
+    !  Siemens_Do4_PnModule
+    !  Siemens_Do2_PnModule
+    ! 
+    !  See also
+    !  @classlink PnDevice profinet_pndevice.html
+    !*/
+    Object Siemens_ET200S_PnDevice $ClassDef 68 25-NOV-2010 14:35:04.84
+      Body SysBody 25-NOV-2010 14:34:56.17
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 10256
+      EndBody
+      Object RtBody $ObjBodyDef 1 25-NOV-2010 14:34:56.17
+        Body SysBody 25-NOV-2010 14:35:11.30
+          Attr StructName = "Siemens_ET200S_PnDevice"
+          Attr NextAix = "_X5"
+        EndBody
+        Object Super $Attribute 4 25-NOV-2010 14:34:56.17
+          Body SysBody 25-NOV-2010 14:34:56.17
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-PnDevice"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200S_PnDevice 2165538816 01-JAN-1970 01:00:00.00
+        Body RtBody 25-NOV-2010 14:39:12.00
+          Attr Super.GSDMLfile = "$pwr_exe/gsdml-v2.1-siemens-et200s-20070701.xml"
+          Attr Super.Process = 1
+          Attr Super.ErrorSoftLimit = 100
+          Attr Super.ErrorHardLimit = 1000
+          Attr Super.ByteOrdering = 1
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profinet module for a Sinamics drive using Standard telegram 1.
+    !  Profinet module for Standard telegram 1.
+    ! 
+    !  The i/o-channels are located inside the Io-attribute.
+    !  The Reference speed and actual speed are by default
+    !  configured as +/- 50 Hz for the raw value range +/- 0x4000.
+    !  
+    !*/
+    Object Sinamics_Tgm1_PnModule $ClassDef 62 24-NOV-2010 13:45:04.87
+      Body SysBody 24-NOV-2010 13:44:52.26
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 13:44:52.26
+        Body SysBody 24-NOV-2010 13:44:52.26
+          Attr StructName = "Sinamics_Tgm1_PnModule"
+          Attr NextAix = "_X19"
+        EndBody
+        Object Super $Attribute 17 24-NOV-2010 13:44:52.26
+          Body SysBody 24-NOV-2010 13:44:52.26
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-PnModule"
+          EndBody
+        EndObject
+        Object Io $Attribute 18 24-NOV-2010 13:44:52.26
+          Body SysBody 24-NOV-2010 13:45:47.46
+            Attr PgmName = "Io"
+            Attr Flags = 131072
+            Attr TypeRef = "BaseComponent:Class-BaseFcPPO3IoModule"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Sinamics_Tgm1_PnModule 2163965952 01-JAN-1970 01:00:00.00
+        Body RtBody 24-NOV-2010 14:27:43.18
+          Attr Super.Process = 1
+          Attr Io.I_SW.Description = "Status Word"
+          Attr Io.I_SW.Identity = "9201"
+          Attr Io.I_SW.ConversionOn = 1
+          Attr Io.I_SW.Representation = 3
+          Attr Io.I_ACT.Description = "Actual Value"
+          Attr Io.I_ACT.Identity = "1103"
+          Attr Io.I_ACT.ConversionOn = 1
+          Attr Io.I_ACT.ScanInterval = 1
+          Attr Io.I_ACT.RawValRangeLow = -1.638400e+04
+          Attr Io.I_ACT.RawValRangeHigh = 1.638400e+04
+          Attr Io.I_ACT.ChannelSigValRangeLow = -1.638400e+04
+          Attr Io.I_ACT.ChannelSigValRangeHigh = 1.638400e+04
+          Attr Io.I_ACT.SigValueUnit = "Hz"
+          Attr Io.I_ACT.SensorPolyType = 1
+          Attr Io.I_ACT.SensorSigValRangeLow = -1.638400e+04
+          Attr Io.I_ACT.SensorSigValRangeHigh = 1.638400e+04
+          Attr Io.I_ACT.ActValRangeLow = -5.000000e+01
+          Attr Io.I_ACT.ActValRangeHigh = 5.000000e+01
+          Attr Io.I_ACT.Representation = 2
+          Attr Io.O_CW.Description = "Control Word"
+          Attr Io.O_CW.Identity = "9004"
+          Attr Io.O_CW.Representation = 3
+          Attr Io.O_REF.Description = "Reference Value"
+          Attr Io.O_REF.Identity = "9004"
+          Attr Io.O_REF.OutPolyType = 1
+          Attr Io.O_REF.ActValRangeLow = -5.000000e+01
+          Attr Io.O_REF.ActValRangeHigh = 5.000000e+01
+          Attr Io.O_REF.SensorSigValRangeLow = -1.638400e+04
+          Attr Io.O_REF.SensorSigValRangeHigh = 1.638400e+04
+          Attr Io.O_REF.SigValueUnit = "Hz"
+          Attr Io.O_REF.ChannelSigValRangeLow = -1.638400e+04
+          Attr Io.O_REF.ChannelSigValRangeHigh = 1.638400e+04
+          Attr Io.O_REF.RawValRangeLow = -1.638400e+04
+          Attr Io.O_REF.RawValRangeHigh = 1.638400e+04
+          Attr Io.O_REF.Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profibus module for a Sinamics drive using Standard telegram 1.
+    !  Profibus module for Standard telegram 1.
+    ! 
+    !  The i/o-channels are located inside the Io-attribute.
+    !  The Reference speed and actual speed are by default
+    !  configured as +/- 50 Hz for the raw value range +/- 0x4000.
+    !  
+    !*/
+    Object Sinamics_Tgm1_PbModule $ClassDef 63 24-NOV-2010 14:28:48.42
+      Body SysBody 24-NOV-2010 14:28:29.53
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 24-NOV-2010 14:28:29.53
+        Body SysBody 25-NOV-2010 11:52:24.76
+          Attr StructName = "Sinamics_Tgm1_PbModule"
+          Attr NextAix = "_X21"
+        EndBody
+        Object Super $Attribute 19 24-NOV-2010 14:28:29.53
+          Body SysBody 24-NOV-2010 14:29:33.97
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object Io $Attribute 20 24-NOV-2010 14:28:29.53
+          Body SysBody 24-NOV-2010 14:28:29.53
+            Attr PgmName = "Io"
+            Attr Flags = 131072
+            Attr TypeRef = "BaseComponent:Class-BaseFcPPO3IoModule"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Sinamics_Tgm1_PbModule 2164228096 01-JAN-1970 01:00:00.00
+        Body RtBody 24-NOV-2010 14:32:17.35
+          Attr Super.Process = 1
+          Attr Io.I_SW.Description = "Status Word"
+          Attr Io.I_SW.Identity = "9201"
+          Attr Io.I_SW.ConversionOn = 1
+          Attr Io.I_SW.Representation = 3
+          Attr Io.I_ACT.Description = "Actual Value"
+          Attr Io.I_ACT.Identity = "1103"
+          Attr Io.I_ACT.ConversionOn = 1
+          Attr Io.I_ACT.ScanInterval = 1
+          Attr Io.I_ACT.RawValRangeLow = -1.638400e+04
+          Attr Io.I_ACT.RawValRangeHigh = 1.638400e+04
+          Attr Io.I_ACT.ChannelSigValRangeLow = -1.638400e+04
+          Attr Io.I_ACT.ChannelSigValRangeHigh = 1.638400e+04
+          Attr Io.I_ACT.SigValueUnit = "Hz"
+          Attr Io.I_ACT.SensorPolyType = 1
+          Attr Io.I_ACT.SensorSigValRangeLow = -1.638400e+04
+          Attr Io.I_ACT.SensorSigValRangeHigh = 1.638400e+04
+          Attr Io.I_ACT.ActValRangeLow = -5.000000e+01
+          Attr Io.I_ACT.ActValRangeHigh = 5.000000e+01
+          Attr Io.I_ACT.Representation = 2
+          Attr Io.O_CW.Description = "Control Word"
+          Attr Io.O_CW.Identity = "9004"
+          Attr Io.O_CW.Representation = 3
+          Attr Io.O_REF.Description = "Reference Value"
+          Attr Io.O_REF.Identity = "9004"
+          Attr Io.O_REF.OutPolyType = 1
+          Attr Io.O_REF.ActValRangeLow = -5.000000e+01
+          Attr Io.O_REF.ActValRangeHigh = 5.000000e+01
+          Attr Io.O_REF.SensorSigValRangeLow = -1.638400e+04
+          Attr Io.O_REF.SensorSigValRangeHigh = 1.638400e+04
+          Attr Io.O_REF.SigValueUnit = "Hz"
+          Attr Io.O_REF.ChannelSigValRangeLow = -1.638400e+04
+          Attr Io.O_REF.ChannelSigValRangeHigh = 1.638400e+04
+          Attr Io.O_REF.RawValRangeLow = -1.638400e+04
+          Attr Io.O_REF.RawValRangeHigh = 1.638400e+04
+          Attr Io.O_REF.Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Drive Sinamics G120 with telegram 1.
+    !  Sinamics Drive G120 using telegram 1.
+    ! 
+    !  Based on BaseFcPPO3-class. PPO3 protocol is identical to 
+    !  Standard telegram 1.
+    !  
+    !*/
+    Object Sinamics_G120_Tgm1 $ClassDef 65 25-NOV-2010 09:37:25.95
+      Body SysBody 25-NOV-2010 09:36:42.49
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 10256
+      EndBody
+      Object RtBody $ObjBodyDef 1 25-NOV-2010 09:36:42.49
+        Body SysBody 25-NOV-2010 11:49:48.18
+          Attr StructName = "Sinamics_G120_Tgm1"
+          Attr NextAix = "_X5"
+        EndBody
+        Object Super $Attribute 4 25-NOV-2010 09:36:42.49
+          Body SysBody 25-NOV-2010 09:37:51.67
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-BaseFcPPO3"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Sinamics_G120_Tgm1 2164752384 01-JAN-1970 01:00:00.00
+        Body RtBody 25-NOV-2010 10:48:25.03
+          Attr Super.Specification = "Frequency converter with Profibus PPO3 protocol"
+          Attr Super.StatusWordSW.Description = "Status Word, from converter"
+          Attr Super.StatusWordSW.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO3IoModule.I_SW"
+          Attr Super.ActSpeed.Description = "Actual Value, from converter"
+          Attr Super.ActSpeed.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO3IoModule.I_ACT"
+          Attr Super.ActSpeed.PresMinLimit = 1.000000e+02
+          Attr Super.ActSpeed.DefTrend = "_O0.0.0.0:0"
+          Attr Super.ControlWordCW.Description = "Control Word, to converter"
+          Attr Super.ControlWordCW.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO3IoModule.O_CW"
+          Attr Super.RefSpeed.Description = "Reference Value, to converter"
+          Attr Super.RefSpeed.SigChanCon = "$IoConnect:BaseComponent-Class-BaseFcPPO3IoModule.O_REF"
+          Attr Super.RefSpeed.PresMinLimit = 1.000000e+02
+          Attr Super.RefSpeed.DefTrend = "_O0.0.0.0:0"
+          Attr Super.PowerUpTime = 1.500000e+01
+          Attr Super.AlarmLocalMod = "Frequency converter is in local mode,  "
+          Attr Super.AlarmTripped = "Frequency converter tripped, reset is required"
+          Attr Super.AlarmWarning = "Frequency converter warning"
+          Attr Super.AlarmError = "Frequency converter error"
+          Attr Super.AlarmConnection = "No connection"
+          Attr Super.DefTrend = "Siemens:Class-Sinamics_G120_Tgm1-Template.Super.PlotGroup"
+          Attr Super.TrendActSpeed.Multiple = 1
+          Attr Super.TrendActSpeed.DataName = "Siemens:Class-Sinamics_G120_Tgm1-Template.Super.ActSpeed"
+          Attr Super.TrendActSpeed.StorageTime = 239
+          Attr Super.TrendActSpeed.BufferStatus[0] = 1
+          Attr Super.TrendActSpeed.BufferStatus[1] = 1
+          Attr Super.TrendActSpeed.NoOfBuffers = 2
+          Attr Super.TrendActSpeed.NoOfBufElement = 239
+          Attr Super.TrendRefSpeed.Multiple = 1
+          Attr Super.TrendRefSpeed.DataName = "Siemens:Class-Sinamics_G120_Tgm1-Template.Super.RefSpeed"
+          Attr Super.TrendRefSpeed.StorageTime = 239
+          Attr Super.TrendRefSpeed.BufferStatus[0] = 1
+          Attr Super.TrendRefSpeed.BufferStatus[1] = 1
+          Attr Super.TrendRefSpeed.NoOfBuffers = 2
+          Attr Super.TrendRefSpeed.NoOfBufElement = 239
+          Attr Super.PlotGroup.YObjectName[0] = "Siemens:Class-Sinamics_G120_Tgm1-Template.Super.TrendActSpeed"
+          Attr Super.PlotGroup.YObjectName[1] = "Siemens:Class-Sinamics_G120_Tgm1-Template.Super.TrendRefSpeed"
+          Attr Super.PlotGroup.NumPoints = 478
+          Attr Super.PlcConnect = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-BaseFcPPO3Fo0"
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Function object for Sinamics G120 Drive with telegram 1.
+    !  Function object for Sinamics Drive G120 using telegram 1.
+    ! 
+    !  Based on BaseFcPPO3Fo-class. PPO3 protocol is identical to 
+    !  Standard telegram 1.
+    !
+    !  Should be connected to either a Sinamics_G120_Tgm1- or BaseFcPPO3-object.
+    !  
+    !*/
+    Object Sinamics_G120_Tgm1Fo $ClassDef 66 25-NOV-2010 09:54:41.18
+      Body SysBody 25-NOV-2010 09:54:27.36
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 144
+      EndBody
+      Object RtBody $ObjBodyDef 1 25-NOV-2010 09:55:06.72
+        Body SysBody 25-NOV-2010 09:55:06.72
+          Attr StructName = "Sinamics_G120_Tgm1Fo"
+          Attr NextAix = "_X10"
+        EndBody
+        Object PowerOn $Input 2 25-NOV-2010 09:55:52.11
+          Body SysBody 25-NOV-2010 09:57:01.65
+            Attr PgmName = "PowerOn"
+            Attr Flags = 8192
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "pwo"
+          EndBody
+        EndObject
+        Object Start $Input 3 25-NOV-2010 09:56:02.76
+          Body SysBody 25-NOV-2010 10:30:29.55
+            Attr PgmName = "Start"
+            Attr Flags = 8192
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "sta"
+          EndBody
+        EndObject
+        Object RefSpeed $Input 4 25-NOV-2010 10:30:50.80
+          Body SysBody 25-NOV-2010 10:31:15.36
+            Attr PgmName = "RefSpeed"
+            Attr Flags = 8192
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "REF"
+          EndBody
+        EndObject
+        Object NoOff2 $Input 5 25-NOV-2010 10:31:35.28
+          Body SysBody 25-NOV-2010 10:31:51.13
+            Attr PgmName = "NoOff2"
+            Attr Flags = 8192
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "nof2"
+          EndBody
+        EndObject
+        Object NoOff3 $Input 6 25-NOV-2010 10:32:00.80
+          Body SysBody 25-NOV-2010 10:32:20.29
+            Attr PgmName = "NoOff3"
+            Attr Flags = 8192
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "nof3"
+          EndBody
+        EndObject
+        Object EnableOperation $Input 7 25-NOV-2010 10:32:56.79
+          Body SysBody 25-NOV-2010 10:33:13.90
+            Attr PgmName = "EnableOperation"
+            Attr Flags = 8192
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "eno"
+          EndBody
+        EndObject
+        Object PlcConnect $Intern 1 25-NOV-2010 09:55:06.72
+          Body SysBody 25-NOV-2010 09:55:06.72
+            Attr PgmName = "PlcConnect"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+        Object ReadyRemote $Output 8 25-NOV-2010 10:34:11.59
+          Body SysBody 25-NOV-2010 10:34:45.54
+            Attr PgmName = "ReadyRemote"
+            Attr Flags = 9216
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "rdy"
+          EndBody
+        EndObject
+        Object Run $Output 9 25-NOV-2010 10:35:09.43
+          Body SysBody 25-NOV-2010 10:38:33.06
+            Attr PgmName = "Run"
+            Attr Flags = 9216
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "run"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 25-NOV-2010 09:55:06.72
+        Body SysBody 25-NOV-2010 09:55:06.72
+          Attr StructName = "Sinamics_G120_Tgm1Fo"
+          Attr NextAix = "_X2"
+        EndBody
+        Object PlcNode $Buffer 1 25-NOV-2010 09:55:06.72
+          Body SysBody 25-NOV-2010 09:55:06.72
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 37 25-NOV-2010 09:55:06.72
+        Body SysBody 25-NOV-2010 10:41:11.19
+          Attr object_type = 11
+          Attr parameters[0] = 6
+          Attr parameters[1] = 1
+          Attr parameters[2] = 2
+          Attr parameters[3] = 0
+          Attr subwindows = 1
+          Attr subwindow_class[0] = "pwrb:Class-WindowPlc"
+          Attr graphmethod = 0
+          Attr graphindex = 0
+          Attr default_mask[0] = 7
+          Attr default_mask[1] = 3
+          Attr segname_annotation = 1
+          Attr compmethod = 58
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 10
+          Attr executeordermethod = 2
+          Attr objname = "G120_Tgm1"
+          Attr graphname = "G120_Tgm1"
+        EndBody
+      EndObject
+      Object RtXtt $RtMenu 38 25-NOV-2010 09:55:06.72
+        Object PlcConnect $MenuRef 39 25-NOV-2010 09:55:06.72
+          Body SysBody 25-NOV-2010 09:55:06.72
+            Attr ButtonName = "PlcConnect"
+            Attr RefAttribute = "PlcConnect"
+          EndBody
+        EndObject
+      EndObject
+      Object Code PlcTemplate 40 25-NOV-2010 09:55:06.72
+        Body RtBody 25-NOV-2010 09:55:06.72
+        EndBody
+        Body DevBody 25-NOV-2010 10:53:20.85
+          Buffer PlcProgram
+            Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code"
+            Attr cid = "pwrb:Class-PlcTemplate"
+            Attr defnamecount[2] = 1
+            Attr defnamecount[11] = 1
+            Attr defnamecount[136] = 1
+            Attr defnamecount[137] = 5
+            Attr defnamecount[139] = 2
+            Attr defnamecount[253] = 1
+            Attr defnamecount[255] = 2
+            Attr defnamecount[256] = 5
+            Attr connamecount = 16
+          EndBuffer
+        EndBody
+        Object W WindowPlc 41 25-NOV-2010 10:42:00.23
+          Body RtBody 25-NOV-2010 10:42:00.23
+          EndBody
+          Body DevBody 25-NOV-2010 10:53:20.85
+            Attr Modified = "25-NOV-2010 10:53:20.85"
+            Buffer PlcWindow
+              Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+              Attr cid = "pwrb:Class-WindowPlc"
+              Attr y = 5.000000e+01
+              Attr width = 1.000000e+03
+              Attr heigth = 7.500000e+02
+              Attr refconcount = 1
+            EndBuffer
+          EndBody
+          Object cn15 ConDigital 75 25-NOV-2010 10:45:28.36
+            Body DevBody 25-NOV-2010 10:53:20.85
+              Buffer PlcConnection
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn15"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 7
+                Attr source_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-BaseFcPPO3Fo0"
+                Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-StoDp1"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.570000e+00
+                  Attr y = 1.250000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.356889e+00
+                  Attr y = 1.250000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn14 ConDigital 73 25-NOV-2010 10:45:24.76
+            Body DevBody 25-NOV-2010 10:53:20.85
+              Buffer PlcConnection
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn14"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 6
+                Attr source_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-BaseFcPPO3Fo0"
+                Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-StoDp0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.570000e+00
+                  Attr y = 1.200000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.356889e+00
+                  Attr y = 1.200000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn11 ConDigital 67 25-NOV-2010 10:45:04.30
+            Body DevBody 25-NOV-2010 10:53:20.85
+              Buffer PlcConnection
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn11"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 5
+                Attr source_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-BaseFcPPO3Fo0"
+                Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp4"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.893111e+00
+                  Attr y = 1.450000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.020000e+00
+                  Attr y = 1.450000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn10 ConDigital 65 25-NOV-2010 10:45:00.88
+            Body DevBody 25-NOV-2010 10:53:20.85
+              Buffer PlcConnection
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn10"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 4
+                Attr source_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-BaseFcPPO3Fo0"
+                Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp3"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.762000e+00
+                  Attr y = 1.400000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.020000e+00
+                  Attr y = 1.400000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn9 ConDigital 63 25-NOV-2010 10:44:57.48
+            Body DevBody 25-NOV-2010 10:53:20.85
+              Buffer PlcConnection
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn9"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 3
+                Attr source_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-BaseFcPPO3Fo0"
+                Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp2"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.762000e+00
+                  Attr y = 1.350000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.020000e+00
+                  Attr y = 1.350000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn8 ConAnalog 61 25-NOV-2010 10:44:53.71
+            Body DevBody 25-NOV-2010 10:53:20.85
+              Buffer PlcConnection
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn8"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-BaseFcPPO3Fo0"
+                Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetAp0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.802000e+00
+                  Attr y = 1.300000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.020000e+00
+                  Attr y = 1.300000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn7 ConDigital 59 25-NOV-2010 10:44:50.15
+            Body DevBody 25-NOV-2010 10:53:20.85
+              Buffer PlcConnection
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn7"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-BaseFcPPO3Fo0"
+                Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp1"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.733111e+00
+                  Attr y = 1.250000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.020000e+00
+                  Attr y = 1.250000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn1 ConDigital 47 25-NOV-2010 10:44:35.21
+            Body DevBody 25-NOV-2010 10:53:20.85
+              Buffer PlcConnection
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-cn1"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-BaseFcPPO3Fo0"
+                Attr dest_oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.790889e+00
+                  Attr y = 1.200000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.020000e+00
+                  Attr y = 1.200000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object Document0 Document 42 25-NOV-2010 10:42:00.71
+            Body DevBody 25-NOV-2010 10:53:20.85
+              Buffer PlcNode
+                Attr object_type = 2
+                Attr cid = "pwrb:Class-Document"
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-Document0"
+                Attr x = 5.000000e-01
+                Attr y = -1.775000e+00
+                Attr width = 3.400000e+00
+                Attr heigth = 2.300000e+00
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+                Attr mask[0] = 4
+              EndBuffer
+              Attr DocumentOrientation = 1
+              Attr DocumentSize = 3
+            EndBody
+          EndObject
+          Object BaseFcPPO3Fo0 BaseFcPPO3Fo 43 25-NOV-2010 10:43:26.93
+            Body RtBody 25-NOV-2010 10:52:34.91
+              Attr PlcConnect = "$PlcMain:Siemens-Class-Sinamics_G120_Tgm1"
+            EndBody
+            Body DevBody 25-NOV-2010 10:53:20.85
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "BaseComponent:Class-BaseFcPPO3Fo"
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-BaseFcPPO3Fo0"
+                Attr x = 2.000000e+00
+                Attr y = -5.250000e-01
+                Attr width = 3.368889e-01
+                Attr heigth = 4.000000e-01
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+                Attr mask[0] = 63
+                Attr mask[1] = 3
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp0 GetDp 46 25-NOV-2010 10:44:35.21
+            Body RtBody 25-NOV-2010 10:44:35.21
+            EndBody
+            Body DevBody 25-NOV-2010 10:53:20.85
+              Attr DpObject = "$PlcFo:Siemens-Class-Sinamics_G120_Tgm1Fo.PowerOn"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp0"
+                Attr x = 1.450000e+00
+                Attr y = -2.250001e-01
+                Attr width = 3.408889e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp1 GetDp 58 25-NOV-2010 10:44:50.15
+            Body RtBody 25-NOV-2010 10:44:50.15
+            EndBody
+            Body DevBody 25-NOV-2010 10:53:20.85
+              Attr DpObject = "$PlcFo:Siemens-Class-Sinamics_G120_Tgm1Fo.Start"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp1"
+                Attr x = 1.450000e+00
+                Attr y = -2.750000e-01
+                Attr width = 2.831111e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetAp0 GetAp 60 25-NOV-2010 10:44:53.71
+            Body RtBody 25-NOV-2010 10:44:53.71
+            EndBody
+            Body DevBody 25-NOV-2010 10:53:20.85
+              Attr ApObject = "$PlcFo:Siemens-Class-Sinamics_G120_Tgm1Fo.RefSpeed"
+              Buffer PlcNode
+                Attr object_type = 253
+                Attr cid = "pwrb:Class-GetAp"
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetAp0"
+                Attr x = 1.450000e+00
+                Attr y = -3.250000e-01
+                Attr width = 3.520000e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp2 GetDp 62 25-NOV-2010 10:44:57.48
+            Body RtBody 25-NOV-2010 10:44:57.48
+            EndBody
+            Body DevBody 25-NOV-2010 10:53:20.85
+              Attr DpObject = "$PlcFo:Siemens-Class-Sinamics_G120_Tgm1Fo.NoOff2"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp2"
+                Attr x = 1.450000e+00
+                Attr y = -3.750000e-01
+                Attr width = 3.120000e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp3 GetDp 64 25-NOV-2010 10:45:00.88
+            Body RtBody 25-NOV-2010 10:45:00.88
+            EndBody
+            Body DevBody 25-NOV-2010 10:53:20.85
+              Attr DpObject = "$PlcFo:Siemens-Class-Sinamics_G120_Tgm1Fo.NoOff3"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp3"
+                Attr x = 1.450000e+00
+                Attr y = -4.250000e-01
+                Attr width = 3.120000e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp4 GetDp 66 25-NOV-2010 10:45:04.30
+            Body RtBody 25-NOV-2010 10:45:04.30
+            EndBody
+            Body DevBody 25-NOV-2010 10:53:20.85
+              Attr DpObject = "$PlcFo:Siemens-Class-Sinamics_G120_Tgm1Fo.EnableOperation"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-GetDp4"
+                Attr x = 1.450000e+00
+                Attr y = -4.750001e-01
+                Attr width = 4.431111e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object StoDp0 StoDp 72 25-NOV-2010 10:45:24.76
+            Body RtBody 25-NOV-2010 10:45:24.76
+            EndBody
+            Body DevBody 25-NOV-2010 10:53:20.85
+              Attr Object = "$PlcFo:Siemens-Class-Sinamics_G120_Tgm1Fo.ReadyRemote"
+              Buffer PlcNode
+                Attr object_type = 255
+                Attr cid = "pwrb:Class-StoDp"
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-StoDp0"
+                Attr x = 2.550000e+00
+                Attr y = -2.250001e-01
+                Attr width = 4.563333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object StoDp1 StoDp 74 25-NOV-2010 10:45:28.36
+            Body RtBody 25-NOV-2010 10:45:28.36
+            EndBody
+            Body DevBody 25-NOV-2010 10:53:20.85
+              Attr Object = "$PlcFo:Siemens-Class-Sinamics_G120_Tgm1Fo.Run"
+              Buffer PlcNode
+                Attr object_type = 255
+                Attr cid = "pwrb:Class-StoDp"
+                Attr oid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W-StoDp1"
+                Attr x = 2.550000e+00
+                Attr y = -2.750000e-01
+                Attr width = 3.185556e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "Siemens:Class-Sinamics_G120_Tgm1Fo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object Template Sinamics_G120_Tgm1Fo 2165014528 01-JAN-1970 01:00:00.00
+        Body RtBody 25-NOV-2010 10:55:08.39
+          Attr NoOff2 = 1
+          Attr NoOff3 = 1
+          Attr EnableOperation = 1
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
         EndBody
       EndObject
     EndObject

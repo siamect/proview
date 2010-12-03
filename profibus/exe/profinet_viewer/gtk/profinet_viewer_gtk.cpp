@@ -42,7 +42,7 @@ typedef struct {
 
 static void usage()
 {
-  printf("\nUsage: profinet_viewer [-l language]\n");
+  printf("\nUsage: profinet_viewer [-l language] [device]\n");
 }
 
 static void viewer_close( void *c)
@@ -56,6 +56,7 @@ int main( int argc, char *argv[])
   int i;
   int sts;
   tViewer *ctx;
+  char dev_name[20] = "eth1";
 
   ctx = (tViewer *)calloc( 1, sizeof(tViewer));
   
@@ -84,12 +85,15 @@ int main( int argc, char *argv[])
       Lng::set( argv[i+1]);
       i++;
     }
+    else if (strncmp(argv[i], "eth", 3) == 0) {
+      snprintf(dev_name, sizeof(dev_name), "%s", argv[i]);
+    }
   }
 
   // Open window
   try {
-   ctx->viewer = new PnViewerGtk( ctx, ctx->toplevel, "Profinet Viewer", &sts);
-   ctx->viewer->close_cb = viewer_close;
+    ctx->viewer = new PnViewerGtk( ctx, ctx->toplevel, "Profinet Viewer", dev_name, &sts);
+    ctx->viewer->close_cb = viewer_close;
   }
   catch ( co_error &e) {
     printf( "** Exception: %s\n", e.what().c_str());

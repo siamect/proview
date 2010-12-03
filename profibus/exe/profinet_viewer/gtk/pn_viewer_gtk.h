@@ -38,6 +38,7 @@ class PnViewerGtk : public PnViewer {
 	void *v_parent_ctx,
 	GtkWidget *v_parent_wid,
 	const char *v_name,
+	const char *v_device,
 	pwr_tStatus *status);
     ~PnViewerGtk();
 

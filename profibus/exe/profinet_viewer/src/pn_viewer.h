@@ -41,6 +41,7 @@ class PnViewer {
     PnViewer(
 	void *v_parent_ctx,
 	const char *v_name,
+	const char *v_device,
 	pwr_tStatus *status);
     virtual ~PnViewer();
 
@@ -62,6 +63,7 @@ class PnViewer {
 
     void 		*parent_ctx;
     char 		name[80];
+    char 		device[20];
     PnViewerNav		*viewernav;
     CoWow		*wow;
     int			input_open;

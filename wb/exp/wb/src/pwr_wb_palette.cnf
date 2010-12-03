@@ -182,6 +182,7 @@ palette NavigatorPalette
         menu Siemens
         {
           class Siemens_Motor_1LA
+          class Siemens_G120_Tgm1
         }
         menu Suco
         {
@@ -276,6 +277,7 @@ palette NavigatorPalette
           class Siemens_DiagRepeater
           class Siemens_ET200S_IM151
           class Siemens_ET200M_IM153
+          class Sinamics_G120_PbSlave
         }
       }
       menu Profinet
@@ -287,6 +289,10 @@ palette NavigatorPalette
         menu Devices
         {
           class PnDevice
+          class Siemens_ET200S_PnDevice
+          class Siemens_ET200M_PnDevice
+          class Sinamics_G120_PnDevice
+          class ABB_ACS_PnDevice
         }
       }
       menu Modbus_TCP 
@@ -1016,6 +1022,10 @@ palette PlcEditorPalette
       class ABB_PressureSensor_265GSFo
       class ABB_DiffPressureSensor_265DSFo
       class ABB_FlowSensor_FXE4000Fo
+    }
+    menu Siemens
+    {
+      class Sinamics_G120_Tgm1Fo
     }
     menu OtherManufacturer
     {
