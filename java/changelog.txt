@@ -17,3 +17,5 @@
 100602 cs  jop       TextField fontsize adusted.
 100602 cs  jop       Object graphs updated.
 100602 cs  jop       New script, jpwr_opwind.sh, to start java operator window locally.
+101006 cs  jop       Web operator window, possibility to remove Help and Proview buttons.
+101111 cs  jop       Chinese characters, UTF-0 char coding of language and textfiles.

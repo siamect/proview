@@ -160,3 +160,11 @@
 100520     plc       Bugfix in plc editor, channels wasn't viewed in subvolumes.
 100617 cs  script    Wb script function GetAttribute didn't work for attribute objects.
 100618 cs  wb        Crossreferences in LibHier not inserted into crossreferece list.  
+100827 cs  wb        Alignment bugfix class array attributes.
+101001 cs  adm       Projectlist, errormessage for '_' in project name which is not allowed.
+101004 cs  wb        PlcPgm and Node, adopt and create methods added.
+101005 cs  wb        RtBody size alignment fix for ClassDef and Attribute objects.
+101005 cs  wb        Node build method, current node condition for build of config files removed.
+101006 cs  wb        Dev method PostCreate, inheritance added.
+101006 cs  wb        IO objects, PostCreate method to automatically insert ThreadObject.
+101123 cs  wb        Lockfile added to directory and class volumes.

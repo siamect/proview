@@ -1064,6 +1064,8 @@ sub create()
   $root .= "/" . $ENV{"pwre_hw"};
   create_dir($root);
 
+  printf( "-- Creating build tree %s/%s\n", $root, $module);
+
   $newdir = $root . "/bld";
   create_dir($newdir);
   create_dir($newdir . "/exe");
@@ -1437,7 +1439,7 @@ sub create_dir()
 
   if (!chdir($dir)) {
     if (mkdir($dir, 0775)) {
-      printf("-- mkdir: %s\n", $dir);
+#      printf("-- mkdir: %s\n", $dir);
     } else {
       printf("++\n++ Cannot mkdir %s, reason: %s\n", $dir, $!);
       exit 1;

@@ -1051,10 +1051,12 @@ sub create()
   my($root) = $ENV{"pwre_broot"};
   my($module) = $ENV{"pwre_bmodule"};
 
-  if (!defined($root)) {
+
+ if (!defined($root)) {
     printf("++\n++ No build root is defined\n");
     exit 1;
   }
+
   create_dir($root);
 
   $root .= "/" . $ENV{"pwre_os"};
@@ -1062,6 +1064,8 @@ sub create()
 
   $root .= "/" . $ENV{"pwre_hw"};
   create_dir($root);
+
+  printf( "-- Creating build tree %s/%s\n", $root, $module);
 
   $newdir = $root . "/bld";
   create_dir($newdir);
@@ -1436,7 +1440,7 @@ sub create_dir()
 
   if (!chdir($dir)) {
     if (mkdir($dir, 0775)) {
-      printf("-- mkdir: %s\n", $dir);
+#     printf("-- mkdir: %s\n", $dir);
     } else {
       printf("++\n++ Cannot mkdir %s, reason: %s\n", $dir, $!);
       exit 1;
