@@ -1,0 +1,12 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Name=Proview Demo Web
+Comment=Start Proview Demo Web
+GenericName=Web Browser
+Exec=xterm -title "Proview Web Demo Console" -e /home/pwrp/demoweb-script.sh
+Terminal=false
+Type=Application
+Icon=/usr/pwrp/adm/db/proview_icon.png
+Categories=Application;Internet;Network;WebBrowser;
+

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=Backup
+Type=Application
+Comment=Backup your Proview configuration
+Exec=xterm -title "Proview Configuration Backup" -e /home/pwrp/backup-script.sh
+Icon=drive-removable-media.png
+Categories=GNOME;GTK;Application;
