@@ -24,6 +24,12 @@ cp ./casper.conf /etc/
 cp ./custom.conf /etc/gdm/
 sed -i 's/no/yes/g' /etc/default/thttpd
 sed -i 's/sudo:x:27:/sudo:x:27:pwrp/g' /etc/group
+#
+# Add pwrp to sudoers
+chmod u+s /etc/sudoers
+echo "pwrp ALL= NOPASSWD: ALL" >> /etc/sudoers
+chmod u-s /etc/sudoers
+
 
 #
 # Rename host nodename to livecd nodename in proview files
