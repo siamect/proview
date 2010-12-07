@@ -19,7 +19,6 @@
 
 /* rt_io_m_siemens_diagrepeater.c -- io methods for a Siemens Diagnostic Repeater slave */
 
-#pragma pack(1)
 
 #include <stdio.h>
 #include <string.h>
