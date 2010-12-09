@@ -378,7 +378,7 @@ wb_attribute wb_volume::attribute(const pwr_sAttrRef* arp) const
   }
 
   // Check if we shall reference the whole object
-  if (arp->Size == 0 || 
+  if ((arp->Size == 0 && arp->Offset == 0) || 
       (arp->Offset == 0 && arp->Size == bdrep->size() && bdrep->nAttribute() != 1)) {
     wb_attribute a(sts, orep);
     orep->unref();
