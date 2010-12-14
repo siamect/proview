@@ -933,6 +933,9 @@ int GlowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
   GlowCtx	*ctx;
   int node_move_event = 0;
 
+  if ( event < glow_eEvent_Null || event >= glow_eEvent__)
+    return 0;
+
   if ( ctx_type == glow_eCtxType_Grow || ctx_type == glow_eCtxType_Curve)
     return ((GrowCtx *)this)->event_handler( event, x, y, w, h);
   else if ( ctx_type == glow_eCtxType_ColPal)

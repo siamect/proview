@@ -3699,7 +3699,7 @@ static int	ccm_read_file(
   {
     row++;
     ccm_remove_blank( str, str);
-    if ( str[0] == '!' || (str[0] == '#' && strncmp( str, "#include", 8) != 0))
+    if ( str[0] == '!' || str[0] == 0 || (str[0] == '#' && strncmp( str, "#include", 8) != 0))
       continue;
     /* If last char i backslash, concatenate next line */
     while( str[strlen(str)-1] == '\\')

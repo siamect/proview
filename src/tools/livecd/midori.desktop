@@ -1,0 +1,11 @@
+
+[Desktop Entry]
+Type=Application
+Exec=/usr/bin/midori /home/pwrp/welcome.html
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name[C]=Welcome
+Name=Welcome
+Comment[C]=Show warm welcome to user
+Comment=Show warm welcome to user
