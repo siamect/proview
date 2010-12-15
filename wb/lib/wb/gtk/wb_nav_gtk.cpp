@@ -118,17 +118,24 @@ static void nav_sel_lose_cb( GtkWidget *w, GdkEventSelection *event,
   nav->selection_owner = 0;
 }
 
-void NavGtk::set_selection_owner()
+void NavGtk::set_selection_owner( int set)
 {
   gboolean sts;
 
-  sts = gtk_selection_owner_set( selection_widget, GDK_SELECTION_PRIMARY,
-			   gtk_get_current_event_time());
-  if ( !sts) {
-     brow_SelectClear( brow_ctx);
-     return;
-  }	
-  selection_owner = 1;
+  if ( set) {
+    sts = gtk_selection_owner_set( selection_widget, GDK_SELECTION_PRIMARY,
+				   gtk_get_current_event_time());
+    if ( !sts) {
+      brow_SelectClear( brow_ctx);
+      return;
+    }	
+    selection_owner = 1;
+  }
+  else {
+    sts = gtk_selection_owner_set( NULL, GDK_SELECTION_PRIMARY,
+				   gtk_get_current_event_time());
+    selection_owner = 0;
+  }
 }
 
 void NavGtk::set_inputfocus( int focus)

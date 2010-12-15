@@ -47,7 +47,7 @@ class NavGtk : public Nav {
   gulong       	sel_lose_id;
 
   void set_inputfocus( int focus);
-  void set_selection_owner();
+  void set_selection_owner( int set);
 };
 
 #endif
