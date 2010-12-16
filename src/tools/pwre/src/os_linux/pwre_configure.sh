@@ -289,6 +289,7 @@ else
   pwre_config_check_lib libcrypt  LIBCRYPT lib lib 0 /usr/lib/libcrypt.so:/usr/lib/libcrypt.a
   pwre_config_check_lib mysql     MYSQL    lib lib 1 /usr/lib/libmysqlclient.so:/usr/lib/mysql/libmysqlclient.so
   pwre_config_check_lib mq        MQ       lib lib 1 /usr/lib/libdmq.so
+  pwre_config_check_lib wmq       WMQ      lib lib 1 /usr/lib/libmqic.so
   pwre_config_check_lib libpnioif PNAK     lib lib 1 /usr/lib/libpnioif.a:/usr/local/lib/libpnioif.a
   pwre_config_check_lib libusb    LIBUSB   lib lib 1 /usr/lib/libusb-1.0.so
   pwre_config_check_lib librt     LIBRT    lib lib 0 /usr/lib/librt.so:/usr/lib/librt.a
@@ -301,6 +302,7 @@ else
   pwre_config_check_include gtk   GTK   1 /usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk/gtk.h
   pwre_config_check_include jni   JNI   1 $jdk/include/jni.h
   pwre_config_check_include jni   JNI   0 $jdk/include/linux/jni_md.h
+  pwre_config_check_include wmq   WMQ   0 /opt/mqm/inc/cmqc.h
 
 
   export pwre_conf_alsa=1
