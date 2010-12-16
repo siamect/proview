@@ -167,13 +167,15 @@ reload_classvolumes()
   list=`eval ls -1d $pwrp_db/*.wb_load`
   echo ""
   for file in $list; do
-    volume=`eval grep pwr_eClass_ClassVolume $file | awk '{ print $2 }'`
-    if [ "$volume" == "" ]; then
-      volume=`eval grep ClassVolume $file | awk '{ print $2 }'`
-      volumelow=`eval grep ClassVolume $file | awk '{ print tolower($2) }'`
-    fi
-    if [ "$volume" != "" ]; then
-      echo $file
+    if [ ${file##/*/} != "directory.wb_load" ]; then 
+      volume=`eval grep pwr_eClass_ClassVolume $file | awk '{ print $2 }'`
+      if [ "$volume" == "" ]; then
+        volume=`eval grep ClassVolume $file | awk '{ print $2 }'`
+        volumelow=`eval grep ClassVolume $file | awk '{ print tolower($2) }'`
+      fi
+      if [ "$volume" != "" ]; then
+        echo $file
+      fi
     fi
   done
   echo ""

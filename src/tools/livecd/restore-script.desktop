@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=Restore
+Type=Application
+Comment=Restore your Proview configuration
+Exec=xterm -title "Proview Configuration Restore" -e /home/pwrp/restore-script.sh
+Icon=drive-removable-media.png
+Categories=GNOME;GTK;Application;

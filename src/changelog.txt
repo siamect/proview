@@ -138,4 +138,19 @@
 100304 cs  script    Script type int change from int to long int.
 100610 cs  emon      Support for EmergBreakAction Reboot added.
 100617 cs  cdh       Bugfix in cdh_SuppressSuperAll.
+100621 cs  co        Show crossreferences, searches in all crossreference files, not just in the file for the current volume.
+100709 cs  doc       Rtt documentation.
+100822 cs  co        Lang key size bugfix.
+100822 cs  pwre      Conditional os i meth files
+100930 cs  co        String conversion of null time with negative gmt offset failed.
+100930 cs  rt        Bugfix for nodenames larger than 31 characters.
+100930 cs  rt        strcpy using the same in and output string doesn't work in 64 bit.
+101006 cs  pwrb      PlcThread Prio defaultvalue set to 22.
+101006 cs  pwrb      SevHist options mask, Parameter bit added for future use.
+101015 cs  pwrb      GetDtp, bugfix in output type.
+101018 cs  script    Bugfix in double right parenthesis and multiple execution of single line command.
+101111 cs  cdh       cdh_Strcpy added for copying into the same buffer.
+101123 cs  rt        rt_emon message loop bugfix.
+101123 cs  pwre      co_mereg bugfix, conditional opsys didn't work.
+101123 cs  rt        getopt replaced.
 101202 rk  rt        Added support for handling i/o-channels hidden inside attribute..

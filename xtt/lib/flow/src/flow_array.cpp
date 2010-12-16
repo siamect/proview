@@ -341,8 +341,13 @@ void FlowArray::remove( FlowArrayElem *element)
   {
     if ( *(a + i) == element)
     {
-      if ( a_size - i - 1 > 0)
-	memcpy( a+i, a+i+1, (a_size-i-1)*sizeof(*a));
+      if ( a_size - i - 1 > 0) {
+	void *tmp = malloc( (a_size-i-1)*sizeof(*a));
+	memcpy( tmp, a+i+1, (a_size-i-1)*sizeof(*a));
+	memcpy( a+i, tmp, (a_size-i-1)*sizeof(*a));
+	free( tmp);
+	// memcpy( a+i, a+i+1, (a_size-i-1)*sizeof(*a));
+      }
       a_size--;
       return;
     }

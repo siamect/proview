@@ -142,7 +142,7 @@ int GsdmlDeviceData::print( const char *filename)
     "  VendorId=\"" << vendor_id << "\"" << endl <<
     "  DeviceId=\"" << device_id << "\"" << endl <<
     "  Version=\"" << version << "\"" << endl <<
-    "  ByteOrder=\"" << byte_order << "\">" << endl <<
+    "  ByteOrder=\"" << byte_order << "\"" << endl <<
     "  Instance=\"" << instance << "\">" << endl <<
     "  <NetworkSettings " << endl <<
     "    DeviceName=\"" << device_name << "\"" << endl <<

@@ -175,3 +175,14 @@
 100617 cs  ge        Ge scale dynamic: negative scalefactors zeroed.
 100617 cs  ge        Popup menu action: attribute can be referenced, and object methods viewed with cascading menu.
 100618 cs  xtt       Show crossreferences searches in crossreferencefiles for all volumes.
+100820 cs  xtt       Xtt trend bugfix, the same value was sometimes added twice to curve.
+100825 cs  xtt       rt_xtt bugfix, option -u didn't work.
+101015 cs  xtt       SevHist, several sevhist curves in one window.
+101019 cs  xtt       Xtt loggning, conditional logging with expression added.
+101028 cs  xtt       Sev curve window time selecton added and function to add curve.
+101101 cs  xtt       Locale modified.
+101111 cs  xtt       Ge journal bugfix for restore of incomplete journal file.
+101111 cs  xtt       Chinese characters, UTF-0 char coding of language and textfiles.
+101122 cs  xtt       Xtt bugfix, xtt started with -s (select opplace) didn't load the eventlist.
+101123 cs  ge        Ge confirm, bugfix in close graph.
+101203 cs  xtt       Xtt eventlist, ReturnText was not shown in return events.

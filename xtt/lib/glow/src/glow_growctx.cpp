@@ -223,7 +223,7 @@ int GrowCtx::subw_event_handler( glow_eEvent event, int x, int y, int w, int h)
 
 int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 {
-  int sts;
+  int sts = 0;
   int i;
   GlowCtx	*ctx;
   int node_move_event = 0;
@@ -1775,7 +1775,8 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
      	  e.key.object = 0;
 	}
 	e.key.ascii = w;
-	event_callback[event]( this, &e);
+	sts = event_callback[event]( this, &e);
+	if ( sts == GLOW__TERMINATED) return sts;
       }
       return 1;
     }

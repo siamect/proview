@@ -812,6 +812,9 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
   FlowCtx	*ctx;
   int node_move_event = 0;
 
+  if ( event < flow_eEvent_Null || event >= flow_eEvent__)
+    return 0;
+
   ctx = this;
 //  cout << "Event: " << event << endl;
 

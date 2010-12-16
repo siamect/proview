@@ -2580,6 +2580,21 @@ char *cdh_Strcpy( char *dest, const char *src)
   return dest;
 }
 
+//! Copy string char by char to allow overlapping source and target buffers
+char *cdh_Strncpy( char *dest, const char *src, size_t n)
+{
+  const char *s;
+  char *t;
+  unsigned int i;
+
+  for ( s = src, t = dest, i = 0; *s && i < n; s++,t++,i++)
+    *t = *s;
+  if ( i < n)
+    *t = 0;
+
+  return dest;
+}
+
 //! Copy string, and cut of if the string is to long with ending '...'
 /*!
   For example the string '0123456789' will return the string '0123...' when
@@ -2596,12 +2611,12 @@ char *cdh_Strcpy( char *dest, const char *src)
 int cdh_StrncpyCutOff( char *t, const char *s, size_t n, int cutleft)
 {
   if ( strlen(s) < n) {
-    strcpy( t, s);
+    cdh_Strcpy( t, s);
     return 0;
   }  
   
   if ( cutleft) {
-    strcpy( t, s + strlen(s) - n + 1);
+    cdh_Strcpy( t, s + strlen(s) - n + 1);
     if ( n > 5) {
       t[0] = '.';
       t[1] = '.';
@@ -2609,7 +2624,7 @@ int cdh_StrncpyCutOff( char *t, const char *s, size_t n, int cutleft)
     }
   }
   else {
-    strncpy( t, s, n);
+    cdh_Strncpy( t, s, n);
     t[n-1] = 0;
     if ( n > 5) {
       t[n-2] = '.';

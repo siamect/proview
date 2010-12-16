@@ -1,0 +1,22 @@
+Description of how to create a Proview Live CD.
+
+Install Ubuntu Customization Kit, UCK.
+
+On Ubuntu 10.10 gfxboot-dev has to be installed and 
+> ln -s /usr/bin/gfxboot-compile /usr/bin/mkbootmsg
+
+Check the versions of libmysql++, libjs-mootools, midori, thttp and pv in
+build.sh. Also in pwr_install.sh. 
+
+Download pwr48 and pwrdemo48 packages to HOME directory. Check versions 
+in build.sh and pwr_install.sh.
+
+Check the host name and plc version in pwr_renamenode.sh.
+
+Download the Ubuntu iso image file.
+
+Run build.sh to download packages.
+
+Run uck-gui and follow the instructions from the previous command.
+
+Run 'build.sh copy' when the customization console is opened.

@@ -3954,7 +3954,7 @@ static void graph_remove_space( char *out_str, char *in_str)
       break;
     s++;
   }
-  strcpy( out_str, s);
+  cdh_Strcpy( out_str, s);
   //
   s = out_str + strlen(out_str);
   s--;
@@ -3991,7 +3991,7 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
 	t0 += strlen(object_name);
 	s0 = s + strlen("$object");
       }
-      strcpy( t0, s0);
+      cdh_Strcpy( t0, s0);
       strcpy( oname, n);
     }
   }
@@ -4004,13 +4004,13 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
     t0 = str;
     s0 = in;
     while ( (s = strstr( s0, "$hostobject"))) {
-      strncpy( t0, s0, s-s0);
+      cdh_Strncpy( t0, s0, s-s0);
       t0 += s - s0;
       strcpy( t0, hostobject); 
       t0 += strlen(hostobject);
       s0 = s + strlen("$hostobject");
     }
-    strcpy( t0, s0);
+    cdh_Strcpy( t0, s0);
 
     if ( strcmp( oname, "") == 0) {
       strcpy( out, str);
@@ -4019,19 +4019,19 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
     s0 = str;
   }
   else if ( strcmp( oname, "") == 0) {
-    strcpy( out, in);
+    cdh_Strcpy( out, in);
     return;
   }
 
   t0 = out;
   while ( (s = strstr( s0, "$object"))) {
-    strncpy( t0, s0, s-s0);
+    cdh_Strncpy( t0, s0, s-s0);
     t0 += s - s0;
     strcpy( t0, oname); 
     t0 += strlen(oname);
     s0 = s + strlen("$object");
   }
-  strcpy( t0, s0);
+  cdh_Strcpy( t0, s0);
 
   t0 = out;
   if ( (s = strchr( out, '&')) && *(s+1) == '(') {

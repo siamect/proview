@@ -78,6 +78,8 @@ class GlowDrawGtk : public GlowDraw {
   GdkColor original_background;
   guint	timer_id;
   int	click_sensitivity;
+  GdkColor	color_vect[320];
+  int		color_vect_cnt;
   
   int event_handler( GdkEvent event);
   virtual void enable_event( glow_eEvent event, 

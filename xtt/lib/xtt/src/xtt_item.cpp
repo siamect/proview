@@ -1580,7 +1580,7 @@ int ItemMenu::open_children( XNavBrow *brow, double x, double y)
     if ( !brow_IsOpen( node))
       action_open = 1;
   }
-  if ( action_open || is_root)
+  if ( is_root || action_open)
   {
     // Display childlist
     Item 		*item;

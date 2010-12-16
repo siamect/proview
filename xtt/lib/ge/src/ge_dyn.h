@@ -43,6 +43,7 @@
 #define DYN_FAST_MAX 10
 #define FAST_CURVES 10
 #define fast_mFunction_BeforeTrigg 4
+#define FLT_INI -9999
 
   //! Types of animation sequences.
   typedef enum {
@@ -1164,11 +1165,13 @@ class GeValue : public GeDynElem {
   GeValue( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
     GeDynElem(e_dyn, ge_mDynType_Value, (ge_mActionType) 0, ge_eDynPrio_Value),
     zero_blank(0), annot_typeid(0), annot_size(0), tid(0)
-    { strcpy( attribute, ""); strcpy( format, ""); instance = e_instance;}
+    { strcpy( attribute, ""); strcpy( format, ""); instance = e_instance;
+      memset(old_value, 0, sizeof(old_value));}
   GeValue( const GeValue& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), zero_blank(x.zero_blank)
     { strcpy( attribute, x.attribute); strcpy( format, x.format);
-    instance = x.instance; instance_mask = x.instance_mask;}
+      instance = x.instance; instance_mask = x.instance_mask;
+      memset(old_value, 0, sizeof(old_value));}
   void get_attributes( attr_sItem *attrinfo, int *item_count); 
   int get_transtab( char **tt);
   void save( ofstream& fp);
@@ -1240,11 +1243,13 @@ class GeAnalogColor : public GeDynElem {
 
   GeAnalogColor( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
     GeDynElem(e_dyn, ge_mDynType_AnalogColor, (ge_mActionType) 0, ge_eDynPrio_AnalogColor),
-    limit(0), limit_type(ge_eLimitType_Gt), color(glow_eDrawType_Inherit), p(0), e(0)
+    limit(0), limit_type(ge_eLimitType_Gt), color(glow_eDrawType_Inherit), 
+    old_state(false), p(0), old_value(FLT_INI), e(0)
     { strcpy( attribute, ""); instance = e_instance;}
   GeAnalogColor( const GeAnalogColor& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), limit(x.limit), 
-    limit_type(x.limit_type), color(x.color), p(0), e(0)
+    limit_type(x.limit_type), color(x.color), old_state(false), p(0), 
+    old_value(FLT_INI), e(0)
     { strcpy( attribute, x.attribute);
     instance = x.instance; instance_mask = x.instance_mask;}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
@@ -1384,10 +1389,11 @@ class GeAnalogShift : public GeDynElem {
   pwr_tFloat32 old_value;
 
   GeAnalogShift( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_AnalogShift, (ge_mActionType) 0, ge_eDynPrio_AnalogShift)
+    GeDynElem(e_dyn, ge_mDynType_AnalogShift, (ge_mActionType) 0, ge_eDynPrio_AnalogShift), 
+    old_value(FLT_INI)
     { strcpy( attribute, "");}
   GeAnalogShift( const GeAnalogShift& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), old_value(FLT_INI)
     { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
