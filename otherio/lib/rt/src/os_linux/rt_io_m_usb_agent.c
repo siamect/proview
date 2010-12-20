@@ -70,8 +70,8 @@ static pwr_tStatus IoAgentClose( io_tCtx ctx,
 }
 
 #else
-static pwr_tStatus IoAgentInit( io_tCtx ctx, io_sAgent *ap) { return 0;}
-static pwr_tStatus IoAgentClose( io_tCtx ctx, io_sAgent *ap) { return 0;}
+static pwr_tStatus IoAgentInit( io_tCtx ctx, io_sAgent *ap) { return IO__RELEASEBUILD;}
+static pwr_tStatus IoAgentClose( io_tCtx ctx, io_sAgent *ap) { return IO__RELEASEBUILD;}
 #endif
 
 /*  Every method should be registred here. */
