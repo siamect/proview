@@ -1718,7 +1718,7 @@ Den är filen (om den existerar) används för att addera bibliotek och objektsmodu
 länkningen av plc-programmet. Några bibliotek och objektsmoduler måste finnas med, och
 en default option-fil ska se ut så här:
 
-<c>$pwr_obj/rt_io_user.o -lpwr_rt -lpwr_usbio_dummy
+<c>$pwr_obj/rt_io_user.o -lpwr_rt -lpwr_usbio_dummy -lpwr_usb_dummy -lpwr_pnak_dummy
 
 Till detta adderas de bibliotek och moduler som behövs. Syntaxen är den som gäller för ld 
 (The GNU linker). Proview genererar en template option-fil .opt_template som kan användas som
@@ -2176,7 +2176,8 @@ plc_'nodename'_'qbus'.opt, t ex
 
 I denna läggs följande rad in
 
-<c>$pwr_obj/rt_io_user.o $pwrp_obj/ra_myfunction.o -lpwr_rt -lpwr_usbio_dummy
+<c>$pwr_obj/rt_io_user.o $pwrp_obj/ra_myfunction.o -lpwr_rt -lpwr_usbio_dummy -lpwr_usb_dummy \
+<c> -lpwr_pnak_dummy
 
 Vi kan nu bygga noden och starta Proview runtime.
 
@@ -6744,7 +6745,7 @@ plc_mynode_0999.opt. Innehållet i filen skickas med som indata till länkaren, ld
 lägger även in modulerna för plc-koden. I exemplet nedan antas att dessa moduler ligger i 
 arkivet $pwrp_lib/libpwrp.a.
 
-<c>$pwr_obj/rt_io_user.o -lpwrp
+<c>$pwr_obj/rt_io_user.o -lpwrp -lpwr_rt -lpwr_usbio_dummy -lpwr_usb_dummy -lpwr_pnak_dummy
 
 </topic>
 

@@ -1,0 +1,199 @@
+! 
+!  Proview   $Id: remote_c_remnodemq.wb_load,v 1.1 2006-01-12 06:39:33 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  remote_c_remnodewmq.wb_load -- Defines the class RemnodeWMQ.
+!
+SObject Remote:Class
+!/**
+!  @Version 1.0
+!  @Group Servers,NodeConfiguration
+!  @Summary Configures communication through a message queue using Webspere MQ.
+!  Configures communication through a message queue using Websphere MQ as a client.
+!  All regarding Server, channel, queue manager and queues to connect to is configured
+!  in the RemonodeWMQ-object. 
+!  Configurations for the different messages is configured in the RemtTrans-object that define
+!  each in- and outgoing message. For each RemTrans-message the following can be configured:
+!
+!  TransName  - a string that defines the MsgId (message identity of the message).
+!  Address[0] - defines whether the message should be sent as a persistent message or not.
+!               1 means that the message will be sent as a persistent message. 0 not.
+!
+! @b Object graph
+!  @image orm_remnodewmq_og.gif
+!
+! @b See also
+!  @classlink RemoteConfig pwrp_remoteconfig.html
+!  @classlink RemTrans ssab_remtrans.html
+!*/
+  Object RemnodeWMQ $ClassDef 33
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "RemnodeWMQ"
+      EndBody
+      !/**
+      ! Optional description.
+      !*/
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Process priority for the transport process. For future use.
+      !*/
+      Object Prio $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  Name of Queue Manager to connect to.
+      !  Server to connect to is defined by enviroment variable MQSERVER.
+      !  export MQSERVER=<ChannelName>/<TransportType>/<ConnectionName>[(port)]
+      !  For example:
+      !  export MQSERVER=CHANNEL1/TCP/192.168.40.20(2020)
+      !  The port is by default 1414 and will be used if no port is given.
+      !*/
+      Object QueueManager $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Name of WMQ queue for all incoming messages.
+      !*/
+      Object RcvQueue $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Name of WMQ queue for all outgoing messages.
+      !*/
+      Object SndQueue $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Scantime in seconds for outgoing RemTrans messages.
+      !  Dynamic change is possible.
+      !*/
+      Object ScanTime $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	EndBody
+      EndObject
+      !/**
+      !  When set, this attribute tells the remote handler not to start 
+      !  or restart the process that handles this remote node. If the transport process 
+      !  is running while the attribute is set it will terminate. This can be used to force
+      !  a restart of the process.
+      !*/
+      Object Disable $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	EndBody
+      EndObject
+      !/**
+      !  This attribute shows how many times the remote handler has restarted the 
+      !  transport process that handles this remnode.
+      !  Dynamic change is possible and can be used in order to earn more restarts.
+      !*/
+      Object RestartCount $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      !/**
+      !  The restart limit tells the remote handler how many times the transport process
+      !  that handle this remnode can be restarted.
+      !  Dynamic change is possible and can be used in order to earn more restarts.
+      !*/
+      Object RestartLimit $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	EndBody
+      EndObject
+      !/**
+      !  The restart time is set by the transport process at startup and therefore
+      !  shows the latest (re)starttime.
+      !*/
+      Object RestartTime $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      !/**
+      !  Error counter.
+      !*/
+      Object ErrCount $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      !/**
+      !  Type of remnode. Used in the RemoteConfig classgraph.
+      !*/
+      Object Id $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String8"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      !/**
+      !  Contains the objid for the RemTrans objects for this remnode.
+      !  The objid's are inserted by the remote process.
+      !*/
+      Object RemTransObjects $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 25
+	EndBody
+      EndObject
+    EndObject
+    Object Template RemnodeWMQ
+      Body RtBody
+        Attr Prio = 15
+	Attr Disable = 0
+	Attr RestartCount = 0
+	Attr RestartLimit = 100
+	Attr ScanTime = 0.1
+	Attr Id = "WMQ"
+      EndBody
+    EndObject
+  EndObject
+EndSObject
+

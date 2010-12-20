@@ -2621,6 +2621,7 @@ gdh_SetObjectInfoAttrref (
     }
 
     /* Try remote.  */
+    sts = GDH__SUCCESS;
 
     vp = pool_Address(NULL, gdbroot->pool, ap->op->l.vr);
     np = pool_Address(NULL, gdbroot->pool, vp->l.nr);
@@ -2656,6 +2657,8 @@ gdh_SetObjectInfoAttrref (
         
       rarp = ndc_NarefToRaref(&sts, ap, arp, ccp, &ridx, &raref, &equal, NULL, ccpLocked, vp, np);
     }
+    else
+      equal = ap->op->u.c.flags.b.classEqual;
 
     break;
 

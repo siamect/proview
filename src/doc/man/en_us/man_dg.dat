@@ -1730,7 +1730,7 @@ This file (if it exists) will be used as the link options when I build the plc-p
 Proview by default links against some libraries and object-files. If you have your own
 opt-file you need to include these. A default opt-file would look like:
 
-<c>$pwr_obj/rt_io_user.o -lpwr_rt -lpwr_usbio_dummy
+<c>$pwr_obj/rt_io_user.o -lpwr_rt -lpwr_usbio_dummy -lpwr_usb_dummy -lpwr_pnak_dummy
 
 Add your own libraries at will. The syntax to use is the sytax for ld (The GNU linker). Proview 
 will create a template option file .opt_template that can be renamed to .opt and used as a template.
@@ -2196,7 +2196,8 @@ plc_'nodename'_'qbus'.opt, for example
 
 The following line is inserted into this file
 
-<c>$pwr_obj/rt_io_user.o $pwrp_obj/ra_myfunction.o -lpwr_rt -lpwr_usbio_dummy
+<c>$pwr_obj/rt_io_user.o $pwrp_obj/ra_myfunction.o -lpwr_rt -lpwr_usbio_dummy \
+<c>-lpwr_usb_dummy -lpwr_pnak_dummmy
 
 We kan now build the node and startup Proview runtime.
 
@@ -6830,7 +6831,7 @@ e.g. plc_mynode_0999.opt. The content of the file is input to the linker, ld, an
 add the modules of the plc-code. In the example below these modules are placed in the archive
 $pwrp_lib/libpwrp.a
 
-<c>$pwr_obj/rt_io_user.o -lpwrp
+<c>$pwr_obj/rt_io_user.o -lpwrp -lpwr_rt -lpwr_usbio_dummy -lpwr_usb_dummy -lpwr_pnak_dummy
 
 
 
