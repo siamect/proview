@@ -1933,7 +1933,7 @@ pwr_tStatus dataarithm_convert (
 	    break;
 	}
 
-	sprintf( newstr + strlen(newstr), "}\n");
+	sprintf( newstr + strlen(newstr), "\n}\n");
 	pos += strlen("}\n");
 	*outsize = pos;
 	dataa_delete_ctx( dataactx);
