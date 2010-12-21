@@ -31,6 +31,17 @@
 #include "rt_load.h"
 #include "wb_log.h"
 
+static unsigned int pkg_random()
+{
+  pwr_tTime t;
+
+  time_GetTime( &t);
+  int itime = t.tv_nsec + t.tv_sec % 10000;
+
+  srand( itime);
+  return (unsigned int)((double) rand() / ((double) RAND_MAX + 1) * 999999);
+}
+
 wb_pkg::wb_pkg( char *nodelist, bool distribute, bool config_only)
 {
   if ( nodelist) {
@@ -372,6 +383,10 @@ void pkg_node::fetchFiles( bool distribute)
   char  pack_fname[200];
   char  fname[200];
 
+  // Get temporary directory
+  sprintf( m_tmpdir, "/tmp/pwrpkg%06u", pkg_random());
+  sprintf( m_blddir, "%s/pkg_build", m_tmpdir);
+
   // Add volumes to pattern
   for ( int i = 0; i < (int)m_volumelist.size(); i++) {
     if ( !m_volumelist[i].m_isSystem) {
@@ -447,26 +462,29 @@ void pkg_node::fetchFiles( bool distribute)
   char pkg_name[80];
   sprintf( pkg_name, load_cNamePkg, m_name, version);
 
-  dcli_translate_filename( pack_fname, "$pwrp_tmp/pkg_pack.sh");
+  sprintf( pack_fname, "$pwrp_tmp/pkg_pack_%s.sh", m_name);
+  dcli_translate_filename( pack_fname, pack_fname);
   ofstream of( pack_fname);
 
   of << 
-    "if [ ! -e $pwrp_tmp/pkg_build ]; then" << endl <<
-    "  mkdir $pwrp_tmp/pkg_build" << endl <<
-    "else" << endl <<
-    "  rm -r $pwrp_tmp/pkg_build/*.flw" << endl <<
-    "  rm -r $pwrp_tmp/pkg_build/*" << endl <<
-    // "  find $pwrp_tmp/pkg_build -name \"*\" | xargs rm -r" << endl <<
-    "fi" << endl;
+    "if [ -e " << m_tmpdir << " ]; then" << endl <<
+    "  rm -r " << m_tmpdir << endl <<
+    "fi" << endl <<
+    "mkdir " << m_tmpdir << endl <<
+    "mkdir " << m_blddir << endl;
+
+
   
   for ( int i = 0; i < (int)m_filelist.size(); i++)
     of << 
-      "cp " <<  m_filelist[i].m_source << " $pwrp_tmp/pkg_build/" << m_filelist[i].m_arname << endl;
+      "cp " <<  m_filelist[i].m_source << " " << m_blddir << "/" << m_filelist[i].m_arname << endl;
 
   of <<
-    "#mv $pwrp_tmp/pkg_unpack.sh $pwrp_tmp/pkg_build" << endl <<
-    "cd $pwrp_tmp" << endl <<
-    "tar -czf $pwrp_load/" << pkg_name << " pwr_pkg.dat pkg_unpack.sh pkg_build" << endl;
+    "cp $pwrp_tmp/pkg_unpack_" << m_name << ".sh " << m_tmpdir << "/pkg_unpack.sh" << endl <<
+    "cp $pwrp_tmp/pwr_pkg_" << m_name << ".dat " << m_tmpdir << "/pwr_pkg.dat" << endl <<
+    "cd " << m_tmpdir << endl <<
+    "tar -czf $pwrp_load/" << pkg_name << " pwr_pkg.dat pkg_unpack.sh pkg_build" << endl <<
+    "rm -r " << m_tmpdir << endl;
 
 #if 0
   if ( distribute)
@@ -483,7 +501,8 @@ void pkg_node::fetchFiles( bool distribute)
   of.close();
 
   // Create a script that unpackes the archive and moves files to the target directories
-  dcli_translate_filename( fname, "$pwrp_tmp/pkg_unpack.sh");
+  sprintf( fname, "$pwrp_tmp/pkg_unpack_%s.sh", m_name);
+  dcli_translate_filename( fname, fname);
   ofstream ofu( fname);
   if ( !ofu) 
     throw wb_error_str("Unable to open file");
@@ -550,7 +569,8 @@ void pkg_node::fetchFiles( bool distribute)
   ofu.close();
 
   // Create a data file with description and all installed files
-  dcli_translate_filename( fname, "$pwrp_tmp/pwr_pkg.dat");
+  sprintf( fname, "$pwrp_tmp/pwr_pkg_%s.dat", m_name);
+  dcli_translate_filename( fname, fname);
   ofstream ofd( fname);
   if ( !ofd) 
     throw wb_error_str("Unable to open file");
@@ -620,7 +640,9 @@ void pkg_node::copyPackage( char *pkg_name)
   }
 
   for ( int i = 0; i < bootnode_cnt; i++) {
-    dcli_translate_filename( pack_fname, "$pwrp_tmp/pkg_pack.sh");
+
+    sprintf( pack_fname, "$pwrp_tmp/pkg_pack_%s.sh", m_name);
+    dcli_translate_filename( pack_fname, pack_fname);
     ofstream of( pack_fname);
     if ( m_dstatus & lfu_mDistrOpt_RSH) {
       // Use ftp and rsh

@@ -928,7 +928,7 @@ void GlowCtx::find_grid( double x, double y, double *x_grid, double *y_grid)
 
 int GlowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 {
-  int sts;
+  int sts = 0;
   int i;
   GlowCtx	*ctx;
   int node_move_event = 0;

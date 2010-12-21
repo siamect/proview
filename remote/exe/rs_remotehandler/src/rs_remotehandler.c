@@ -43,6 +43,7 @@
 *			040303  J Nylund	Ändrat till omgivningsvariabel
 *                                               i sökvägarna till exe-filerna
 *			040422	C Jurstrand	4.0.0
+*			101209	R Karlsson	Adderat stöd för Websphere MQ
 *			
 * Description:
 *       Start and control of transportprocesses for remote communication
@@ -111,6 +112,7 @@ static void AddTransports()
   pwr_tObjid objid;
   pwr_tAddress objref;
   pwr_tStatus sts;
+  pwr_tUInt32 id = 1;
   
   /* Init transport (process) counter */
   tpcount = 0;
@@ -118,6 +120,30 @@ static void AddTransports()
   /* Initialize transport vector with 0's */
   memset(&tp, 0, sizeof(tp));
   
+  /* Get and configure all WMQ remnodes, one process for each remnode */
+
+  sts = gdh_GetClassList (pwr_cClass_RemnodeWMQ, &objid);
+  while ( ODD(sts)) 
+  {
+    sts = gdh_ObjidToPointer(objid, &objref);
+    sprintf(tp[tpcount].path, "rs_remote_wmq"); 
+    tp[tpcount].id = id++;
+    tp[tpcount].disable = &((pwr_sClass_RemnodeWMQ *) objref)->Disable;
+    tp[tpcount].restart_limit = &((pwr_sClass_RemnodeWMQ *) objref)->RestartLimit;
+    tp[tpcount].restarts = &((pwr_sClass_RemnodeWMQ *) objref)->RestartCount;
+    ((pwr_sClass_RemnodeWMQ *) objref)->RestartCount = 0;
+    tp[tpcount].objid = objid;
+    tp[tpcount].objref = objref;
+    tp[tpcount].classid = pwr_cClass_RemnodeWMQ;
+    tp[tpcount].cpid = -1;
+    tp[tpcount].first = true;
+      
+    remcfgp->RemNodeObjects[tpcount] = objid;
+
+    tpcount++;
+    sts = gdh_GetNextObject (objid, &objid);
+  }
+
   /* Get and configure all MQ remnodes, one process for each remnode */
 
   sts = gdh_GetClassList (pwr_cClass_RemnodeMQ, &objid);

@@ -182,7 +182,7 @@ palette NavigatorPalette
         menu Siemens
         {
           class Siemens_Motor_1LA
-          class Siemens_G120_Tgm1
+          class Sinamics_G120_Tgm1
         }
         menu Suco
         {
@@ -338,6 +338,7 @@ palette NavigatorPalette
       class RemnodeALCM
       class RemnodeModbus
       class RemnodeMQ
+      class RemnodeWMQ
       class RemnodeSerial
       class RemnodeTCP
       class RemnodeUDP

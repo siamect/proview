@@ -64,6 +64,7 @@ class opcsrv_sub {
   
 class opcsrv_client {
  public:
+  opcsrv_client() : m_last_time(pwr_cNTime) {}
   int access;
   pwr_tTime m_last_time;
   map< std::string, vector<opcsrv_sub> > m_sublist;
@@ -1623,8 +1624,11 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
     strcpy( pname, cnv_utf8_to_iso8859( pname, strlen(pname)+1));
 
     sts = gdh_NameToAttrref( pwr_cNOid, pname, &paref);
-    if ( EVEN(sts))
-      return opcsrv->fault( soap, opc_eResultCode_E_UNKNOWNITEMNAME);
+    if ( EVEN(sts)) {
+      // return opcsrv->fault( soap, opc_eResultCode_E_UNKNOWNITEMNAME);
+      // Assume that this is an unmounted mount object and return OK
+      return SOAP_OK;
+    }
 
     sts = gdh_GetAttrRefTid( &paref, &cid);
     if ( EVEN(sts))

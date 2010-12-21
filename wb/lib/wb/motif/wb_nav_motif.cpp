@@ -147,18 +147,22 @@ static void nav_sel_lose_cb( Widget w, Atom *selection)
   brow_SelectClear( nav->brow_ctx);
 }
 
-void NavMotif::set_selection_owner()
+void NavMotif::set_selection_owner( int set)
 {
   int sts;
 
-  sts = XtOwnSelection( brow_widget, XA_PRIMARY, 
-	XtLastTimestampProcessed(flow_Display(brow_widget)),  
-	nav_sel_convert_cb, nav_sel_lose_cb , NULL);
-  if ( !sts)
-  {
-     brow_SelectClear( brow_ctx);
-     return;
-  }	
+  if ( set) {
+    sts = XtOwnSelection( brow_widget, XA_PRIMARY, 
+			  XtLastTimestampProcessed(flow_Display(brow_widget)),  
+			  nav_sel_convert_cb, nav_sel_lose_cb , NULL);
+    if ( !sts) {
+      brow_SelectClear( brow_ctx);
+      return;
+    }	
+  }
+  else {
+    // Todo...
+  }
 }
 
 void NavMotif::set_inputfocus( int focus)
