@@ -23,7 +23,7 @@ all : init copy lib
 
 init :
 
-copy : $(inc_dir)/libusbio.h
+copy : $(inc_dir)/libusbio.h $(inc_dir)/pwr_arduino_uno.pde
 
 lib :
 
@@ -41,6 +41,10 @@ realclean : clean $(clean_obj)
 
 $(inc_dir)/libusbio.h : ../../libusbio.h
 	@ echo "Copying libusbio.h"
+	@ $(cp) $(cpflags) $(source) $(target)
+
+$(inc_dir)/pwr_arduino_uno.pde : ../../pwr_arduino_uno.pde
+	@ echo "Copying pwr_arduino_uno.pde"
 	@ $(cp) $(cpflags) $(source) $(target)
 
 
