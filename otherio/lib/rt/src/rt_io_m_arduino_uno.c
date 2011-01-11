@@ -48,6 +48,9 @@ typedef struct {
   unsigned char AiMask[AI_MAX_SIZE];
   unsigned char AoMask[AO_MAX_SIZE];
   int IdCnt;
+  int DiPollId;
+  int DiPendingPoll;
+  int AiIntervalCnt;
   io_sChannel *DChanList[D_MAX_SIZE * 8];
   io_sChannel *AiChanList[AI_MAX_SIZE * 8];
   io_sChannel *AoChanList[AO_MAX_SIZE * 8];
@@ -62,6 +65,20 @@ typedef struct {
 #include <string.h>
 
 #include <termios.h>
+
+static FILE *fp;
+
+static void logg( const char *str)
+{
+  pwr_tTime t;
+  char timstr[40];
+
+  time_GetTime( &t);
+  time_AtoAscii( 0, time_eFormat_Time, timstr, sizeof(timstr));
+  timstr[9] = 0;
+
+  fprintf( fp, "%s%04lld %s\n", timstr, t.tv_nsec/100000, str);
+}
 
 typedef enum {
   ard_eMsgType_Write 	= 1,
@@ -103,11 +120,17 @@ static int receive( int fd, int id, ard_sMsg *rmsg, int size)
     
     msize = 0;
     msize += read( fd, rmsg, 1);
+
+    logg( "Receive read");
+
     while ( msize < rmsg->size) {
       sts = select(fd+1, &rfd, NULL, NULL, &tv);
       if ( sts == 0) return ARD__NOMSG;
 
       msize += read( fd, (char *)rmsg + msize, rmsg->size - msize);
+
+      logg( "Receive read ++");
+
     }
 
     if ( rmsg->type == ard_eMsgType_Debug) {
@@ -126,6 +149,22 @@ static int receive( int fd, int id, ard_sMsg *rmsg, int size)
   return ARD__NOMSG;
 }
 
+static int poll_di( ard_sMsg *msg, io_sLocal *local)
+{
+  int sts;
+
+  msg->size = 3;
+  msg->id = local->IdCnt++;
+  msg->type = ard_eMsgType_DiRead;
+
+  logg( "Poll Di");
+  sts = write( local->fd, msg, msg->size);
+  local->DiPollId = msg->id;
+  local->DiPendingPoll = 1;
+  return sts;
+}      
+
+
 static pwr_tStatus IoCardInit( io_tCtx ctx,
 			       io_sAgent *ap,
 			       io_sRack *rp,
@@ -137,6 +176,9 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
   pwr_tStatus sts;
   int i;
   unsigned char wdg;
+  struct termios tty_attributes;
+
+  fp = fopen( "/home/claes/ard.log", "w"); // Test
 
   local = (io_sLocal *) calloc( 1, sizeof(io_sLocal));
   cp->Local = local;
@@ -264,6 +306,50 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
     return IO__INITFAIL;
   }
 
+  tcgetattr( local->fd, &tty_attributes); 
+#if defined OS_LINUX
+  tty_attributes.c_cflag &= ~CBAUD;  //maska bort all hastighet
+#endif
+  switch( op->BaudRate) {
+    case 300:
+      tty_attributes.c_cflag |= B300;
+      break;
+    case 1200:
+      tty_attributes.c_cflag |= B1200;
+      break;
+    case 2400:
+      tty_attributes.c_cflag |= B2400;
+      break;
+    case 4800:
+      tty_attributes.c_cflag |= B4800;
+      break;
+    case 9600:
+      tty_attributes.c_cflag |= B9600;
+      break;
+    case 19200:
+      tty_attributes.c_cflag |= B19200;
+      break;
+    case 38400:
+      tty_attributes.c_cflag |= B38400;
+      break;
+    case 57600:
+      tty_attributes.c_cflag |= B57600;
+      break;
+    case 115200:
+      tty_attributes.c_cflag |= B115200;
+      break;
+    default:
+      tty_attributes.c_cflag |= B9600;
+      break;
+  }
+
+  sts = tcsetattr( local->fd, TCSANOW, &tty_attributes);
+  if ( sts < 0) {
+    errh_Error( "IO Init Card '%s', unable to set baud rate on device %s", cp->Name, op->Device);
+    op->Status = pwr_eArduino_StatusEnum_DeviceSetupError;
+    return IO__INITFAIL;
+  }
+
   tcflush( local->fd, TCIOFLUSH);
 
   // Send config message
@@ -328,6 +414,9 @@ static pwr_tStatus IoCardClose( io_tCtx ctx,
 
   close( local->fd);
   free( cp->Local);
+
+  fclose(fp); //Test
+
   return IO__SUCCESS;
 }
 
@@ -349,13 +438,22 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
     int i, j;
     unsigned char m;
 
+
+    if ( !local->DiPendingPoll)
+      poll_di( &msg, local);
+
+#if 0
     msg.size = 3;
     msg.id = local->IdCnt++;
     msg.type = ard_eMsgType_DiRead;
 
+    logg( "Poll Di");
     sts = write( local->fd, &msg, msg.size);
+#endif
       
-    sts = receive( local->fd, msg.id, &rmsg, local->DiSize);
+    local->DiPendingPoll = 0;
+
+    sts = receive( local->fd, local->DiPollId, &rmsg, local->DiSize);
     op->Status = sts;
     if ( EVEN(sts)) {
       op->ErrorCount++;
@@ -374,47 +472,59 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
   }
 
   if ( local->AiSize) {
-    ard_sMsg msg, rmsg;
-    pwr_tInt32 ivalue;
-    pwr_tFloat32 actvalue;
+    int skip_ai = 0;
 
-    msg.size = 3;
-    msg.id = local->IdCnt++;
-    msg.type = ard_eMsgType_AiRead;
+    if ( op->AiScanInterval > 1) {
+      skip_ai = local->AiIntervalCnt;
 
-    sts = write( local->fd, &msg, msg.size);
-      
-    sts = receive( local->fd, msg.id, &rmsg, local->AiNum * 2);
-    if ( EVEN(sts)) {
+      local->AiIntervalCnt++;
+      if ( local->AiIntervalCnt >= op->AiScanInterval)
+	local->AiIntervalCnt = 0;
     }
-    else {
-      for ( i = 0; i < local->AiSize; i++) {
-	for ( j = 0; j < 8; j++) {
-	  m = 1 << j;
-	  if ( local->AiMask[i] & m) {
-	    io_sChannel *chanp = local->AiChanList[i*8+j];
-	    pwr_sClass_ChanAi *cop = (pwr_sClass_ChanAi *)chanp->cop;
-	    pwr_sClass_Ai *sop = (pwr_sClass_Ai *)chanp->sop;
 
-	    if ( cop->CalculateNewCoef)
-	      // Request to calculate new coefficients
-	      io_AiRangeToCoef( chanp);
+    if ( !skip_ai) {
+      ard_sMsg msg, rmsg;
+      pwr_tInt32 ivalue;
+      pwr_tFloat32 actvalue;
 
-	    ivalue = rmsg.data[(i*8+j)*2] * 256 + rmsg.data[(i*8+j)*2+1];
-	    io_ConvertAi( cop, ivalue, &actvalue);
+      msg.size = 3;
+      msg.id = local->IdCnt++;
+      msg.type = ard_eMsgType_AiRead;
 
-	    // Filter
-	    if ( sop->FilterType == 1 &&
-		 sop->FilterAttribute[0] > 0 &&
-		 sop->FilterAttribute[0] > ctx->ScanTime) {
-	      actvalue = *(pwr_tFloat32 *)chanp->vbp + ctx->ScanTime / sop->FilterAttribute[0] *
-		(actvalue - *(pwr_tFloat32 *)chanp->vbp);
-	    }
+      sts = write( local->fd, &msg, msg.size);
+      
+      sts = receive( local->fd, msg.id, &rmsg, local->AiNum * 2);
+      if ( EVEN(sts)) {
+      }
+      else {
+	for ( i = 0; i < local->AiSize; i++) {
+	  for ( j = 0; j < 8; j++) {
+	    m = 1 << j;
+	    if ( local->AiMask[i] & m) {
+	      io_sChannel *chanp = local->AiChanList[i*8+j];
+	      pwr_sClass_ChanAi *cop = (pwr_sClass_ChanAi *)chanp->cop;
+	      pwr_sClass_Ai *sop = (pwr_sClass_Ai *)chanp->sop;
+	      
+	      if ( cop->CalculateNewCoef)
+		// Request to calculate new coefficients
+		io_AiRangeToCoef( chanp);
+	      
+	      ivalue = rmsg.data[(i*8+j)*2] * 256 + rmsg.data[(i*8+j)*2+1];
+	      io_ConvertAi( cop, ivalue, &actvalue);
 
-	    *(pwr_tFloat32 *)chanp->vbp = actvalue;
-	    sop->SigValue = cop->SigValPolyCoef1 * ivalue + cop->SigValPolyCoef0;
-	    sop->RawValue = ivalue;
-	  }	    
+	      // Filter
+	      if ( sop->FilterType == 1 &&
+		   sop->FilterAttribute[0] > 0 &&
+		   sop->FilterAttribute[0] > ctx->ScanTime) {
+		actvalue = *(pwr_tFloat32 *)chanp->vbp + ctx->ScanTime / sop->FilterAttribute[0] *
+		  (actvalue - *(pwr_tFloat32 *)chanp->vbp);
+	      }
+	      
+	      *(pwr_tFloat32 *)chanp->vbp = actvalue;
+	      sop->SigValue = cop->SigValPolyCoef1 * ivalue + cop->SigValPolyCoef0;
+	      sop->RawValue = ivalue;
+	    }	    
+	  }
 	}
       }
     }
@@ -428,7 +538,7 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
     errh_Error( "IO Card ErrorHardLimit reached '%s', IO stopped", cp->Name);
     ctx->Node->EmergBreakTrue = 1;
     return IO__ERRDEVICE;
-  }    
+  }
 
   return IO__SUCCESS;
 }
@@ -464,6 +574,7 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
     }
 
 
+    logg( "Write Do");
     sts = write( local->fd, &msg, msg.size);
   }
  
@@ -476,6 +587,13 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
     ctx->Node->EmergBreakTrue = 1;
     return IO__ERRDEVICE;
   }    
+
+  if ( local->DiSize && 
+       op->Options & pwr_mArduino_OptionsMask_OptimizedDiPoll) {
+    ard_sMsg msg;
+
+    poll_di( &msg, local);
+  }
 
   return IO__SUCCESS;
 }

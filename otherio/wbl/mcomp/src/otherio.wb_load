@@ -1,8 +1,8 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X159"
+    Attr NextOix = "_X170"
     Attr NextCix = "_X17"
-    Attr NextTix[0] = "_X6"
+    Attr NextTix[0] = "_X8"
   EndBody
   Object Type $TypeHier 1 15-NOV-2007 14:35:37.90
     Object MotionControl_StatusEnum $TypeDef 1 15-NOV-2007 14:36:24.17
@@ -300,7 +300,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       EndObject
     EndObject
     Object Arduino_StatusEnum $TypeDef 5 13-DEC-2010 21:41:03.92
-      Body SysBody 13-DEC-2010 21:41:17.54
+      Body SysBody 03-JAN-2011 21:07:03.74
         Attr TypeRef = "pwrs:Type-$Enum"
         Attr Elements = 1
       EndBody
@@ -365,6 +365,95 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr Text = "NoSuchDevice"
           Attr PgmName = "NoSuchDevice"
           Attr Value = 18
+        EndBody
+      EndObject
+      Object DeviceSetupError $Value 168 03-JAN-2011 21:33:12.93
+        Body SysBody 03-JAN-2011 21:33:18.63
+          Attr Text = "DeviceSetupError"
+          Attr PgmName = "DeviceSetupError"
+          Attr Value = 20
+        EndBody
+      EndObject
+    EndObject
+    Object Arduino_BaudRateEnum $TypeDef 6 03-JAN-2011 21:16:43.20
+      Body SysBody 03-JAN-2011 21:07:09.34
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+      EndBody
+      Object BaudRate_2400 $Value 161 03-JAN-2011 21:17:13.04
+        Body SysBody 03-JAN-2011 21:17:14.30
+          Attr Text = "2400"
+          Attr PgmName = "BaudRate_2400"
+          Attr Value = 2400
+        EndBody
+      EndObject
+      Object BaudRate_4800 $Value 162 03-JAN-2011 21:17:21.73
+        Body SysBody 03-JAN-2011 21:17:22.82
+          Attr Text = "4800"
+          Attr PgmName = "BaudRate_4800"
+          Attr Value = 4800
+        EndBody
+      EndObject
+      Object BaudRate_9600 $Value 163 03-JAN-2011 21:17:29.93
+        Body SysBody 03-JAN-2011 21:17:31.07
+          Attr Text = "9600"
+          Attr PgmName = "BaudRate_9600"
+          Attr Value = 9600
+        EndBody
+      EndObject
+      Object BaudRate_14400 $Value 160 09-JAN-2011 20:23:56.52
+        Body SysBody 09-JAN-2011 20:24:03.52
+          Attr Text = "14400"
+          Attr PgmName = "BaudRate_14400"
+          Attr Value = 14400
+        EndBody
+      EndObject
+      Object BaudRate_19200 $Value 164 03-JAN-2011 21:17:37.54
+        Body SysBody 03-JAN-2011 21:17:38.64
+          Attr Text = "19200"
+          Attr PgmName = "BaudRate_19200"
+          Attr Value = 19200
+        EndBody
+      EndObject
+      Object BaudRate_28800 $Value 170 09-JAN-2011 20:24:24.78
+        Body SysBody 09-JAN-2011 20:24:31.34
+          Attr Text = "28800"
+          Attr PgmName = "BaudRate_28800"
+          Attr Value = 28800
+        EndBody
+      EndObject
+      Object BaudRate_38400 $Value 165 03-JAN-2011 21:17:44.96
+        Body SysBody 03-JAN-2011 21:17:46.11
+          Attr Text = "38400"
+          Attr PgmName = "BaudRate_38400"
+          Attr Value = 38400
+        EndBody
+      EndObject
+      Object BaudRate_57600 $Value 166 03-JAN-2011 21:17:53.04
+        Body SysBody 03-JAN-2011 21:17:54.16
+          Attr Text = "57600"
+          Attr PgmName = "BaudRate_57600"
+          Attr Value = 57600
+        EndBody
+      EndObject
+      Object BaudRate_115200 $Value 167 03-JAN-2011 21:18:13.86
+        Body SysBody 03-JAN-2011 21:18:14.96
+          Attr Text = "115200"
+          Attr PgmName = "BaudRate_115200"
+          Attr Value = 115200
+        EndBody
+      EndObject
+    EndObject
+    Object Arduino_OptionsMask $TypeDef 7 06-JAN-2011 15:51:06.94
+      Body SysBody 06-JAN-2011 15:48:58.95
+        Attr TypeRef = "pwrs:Type-$Mask"
+        Attr Elements = 1
+      EndBody
+      Object OptimizedDiPoll $Bit 169 06-JAN-2011 15:49:48.79
+        Body SysBody 06-JAN-2011 15:49:55.05
+          Attr Text = "OptimizedDiPoll"
+          Attr PgmName = "OptimizedDiPoll"
+          Attr Value = 1
         EndBody
       EndObject
     EndObject
@@ -2292,7 +2381,8 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  @Group IO
     !  @Summary Rack object for Arduino USB devices.
     !  Rack object for Arduino USB devices.
-    !
+    !  This object is configured below the Node object.
+    ! 
     !  @b See also
     !  @classlink Arduino_Uno otherio_arduino_uno.html
     !*/
@@ -2388,7 +2478,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Object RtBody $ObjBodyDef 1 13-DEC-2010 21:36:40.01
         Body SysBody 13-DEC-2010 21:39:07.38
           Attr StructName = "Arduino_Uno"
-          Attr NextAix = "_X21"
+          Attr NextAix = "_X24"
         EndBody
         !/**
         ! Optional description.
@@ -2502,6 +2592,41 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        ! Baud rate of the USB connection.
+	! For fast scantimes the baud rate has to be increased.
+        !*/
+        Object BaudRate $Attribute 21 03-JAN-2011 21:18:39.87
+          Body SysBody 03-JAN-2011 21:19:00.44
+            Attr PgmName = "BaudRate"
+            Attr TypeRef = "OtherIO:Type-Arduino_BaudRateEnum"
+          EndBody
+        EndObject
+        !/**
+        ! Options.
+	! If OptimizedDiPoll is set the poll message for Di values are sent
+        ! at the end of the execution of the prevoius scan, instead of at
+        ! the start of the execution.
+        !*/
+        Object Options $Attribute 22 06-JAN-2011 15:50:22.78
+          Body SysBody 06-JAN-2011 15:51:32.48
+            Attr PgmName = "Options"
+            Attr TypeRef = "OtherIO:Type-Arduino_OptionsMask"
+          EndBody
+        EndObject
+        !/**
+        ! Specifies, in relation to the scantime of the thread, how often
+        ! the Ai channels of the board are handled. If AiScanInterval is 1 or 0, 
+        ! the Ai are handled every scan. If AiScanInterval is for example 10, they
+        ! are handled every 10'th scan, i.e. the scantime for the module
+        ! will be AiScanInterval times the scantime of the thread.
+        !*/
+        Object AiScanInterval $Attribute 23 09-JAN-2011 10:37:58.02
+          Body SysBody 09-JAN-2011 10:38:12.99
+            Attr PgmName = "AiScanInterval"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
       EndObject
       Object IoMethods $RtMethod 144 13-DEC-2010 21:36:40.01
         Object IoCardInit $Method 145 13-DEC-2010 21:36:40.01
@@ -2531,10 +2656,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
       Object Template Arduino_Uno 2151907328 01-JAN-1970 01:00:00.00
-        Body RtBody 13-DEC-2010 21:54:49.89
+        Body RtBody 03-JAN-2011 21:19:26.25
           Attr ErrorSoftLimit = 25
           Attr ErrorHardLimit = 50
           Attr WatchdogTime = 5.000000e+00
+          Attr BaudRate = 9600
         EndBody
       EndObject
     EndObject

@@ -46,7 +46,7 @@ byte msgData[100];
 byte rmsg[40];
 int sizeErrorCnt = 0;
 int noMessageCnt = 0;
-const int delayTime = 5;
+const int delayTime = 1;
 const int debug = 0;
 
 const int MSG_TYPE_WRITE = 1;
@@ -127,7 +127,7 @@ int serialRead()
 
 void setup()
 {
-  // Start serial port at 9600 baud
+  // Start serial port at the configured baud rate
   Serial.begin(9600);
   Serial.flush();
 }
