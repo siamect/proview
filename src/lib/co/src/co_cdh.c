@@ -2611,12 +2611,12 @@ char *cdh_Strncpy( char *dest, const char *src, size_t n)
 int cdh_StrncpyCutOff( char *t, const char *s, size_t n, int cutleft)
 {
   if ( strlen(s) < n) {
-    strcpy( t, s);
+    cdh_Strcpy( t, s);
     return 0;
   }  
   
   if ( cutleft) {
-    strcpy( t, s + strlen(s) - n + 1);
+    cdh_Strcpy( t, s + strlen(s) - n + 1);
     if ( n > 5) {
       t[0] = '.';
       t[1] = '.';
@@ -2624,7 +2624,7 @@ int cdh_StrncpyCutOff( char *t, const char *s, size_t n, int cutleft)
     }
   }
   else {
-    strncpy( t, s, n);
+    cdh_Strncpy( t, s, n);
     t[n-1] = 0;
     if ( n > 5) {
       t[n-2] = '.';

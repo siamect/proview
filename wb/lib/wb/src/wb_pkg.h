@@ -117,6 +117,8 @@ class pkg_node {
   int m_warnings;
   char m_user[80];
   char m_custom_platform[80];
+  char m_tmpdir[80];
+  char m_blddir[80];
 
  public:
   pkg_node( char *name): m_opsys(pwr_mOpSys__), m_bus(0),

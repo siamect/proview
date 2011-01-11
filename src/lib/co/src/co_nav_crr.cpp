@@ -151,7 +151,7 @@ static int	nav_remove_spaces(
 
 	for ( s = in; !((*s == 0) || ((*s != ' ') && (*s != 9))); s++);
 
-	strcpy( out, s);
+	cdh_Strcpy( out, s);
         
         if ( strlen(s) != 0)
         {

@@ -2813,26 +2813,43 @@ x/scalex/width << " " << (y - height*scaley)/scaley/height << " translate" << en
 // Image functions
 int GlowDrawXLib::image_get_width( glow_tImImage image)
 {
+#if defined IMLIB
   return ((ImlibImage *)image)->rgb_width;
+#else
+  return 0;
+#endif
 }
 
 int GlowDrawXLib::image_get_height( glow_tImImage image)
 {
+#if defined IMLIB
   return ((ImlibImage *)image)->rgb_height;
+#else
+  return 0;
+#endif
 }
 
 int GlowDrawXLib::image_get_rowstride( glow_tImImage image)
 {
+#if defined IMLIB
   return ((ImlibImage *)image)->rgb_width;
+#else
+  return 0;
+#endif
 }
 
 unsigned char *GlowDrawXLib::image_get_data( glow_tImImage image)
 {
+#if defined IMLIB
   return ((ImlibImage *)image)->rgb_data;
+#else
+  return 0;
+#endif
 }
 
 void GlowDrawXLib::image_rotate( glow_tImImage *image, int to_rotation, int from_rotation) 
 {
+#if defined IMLIB
   int drot = to_rotation - from_rotation;
   drot = int( (float(drot) / 360 - floor( float(drot) / 360)) * 360);
   printf( "Drot: %d\n", drot);
@@ -2845,16 +2862,21 @@ void GlowDrawXLib::image_rotate( glow_tImImage *image, int to_rotation, int from
     if ( drot == 90 || drot == 180)
       Imlib_flip_image_horizontal( (ImlibData *)imlib, (ImlibImage *)*image);
   }
+#endif
 }
 
 void GlowDrawXLib::image_flip_vertical( glow_tImImage *image) 
 {
+#if defined IMLIB
   Imlib_flip_image_horizontal( (ImlibData *)imlib, (ImlibImage *)*image);
+#endif
 }
 
 void GlowDrawXLib::image_flip_horizontal( glow_tImImage *image) 
 {
+#if defined IMLIB
   Imlib_flip_image_vertical( (ImlibData *)imlib, (ImlibImage *)*image);
+#endif
 }
 
 void GlowDrawXLib::image_scale( int width, int height, glow_tImImage orig_im, glow_tImImage *im, 
@@ -2918,17 +2940,22 @@ int GlowDrawXLib::image_render( int width, int height,
 
 void GlowDrawXLib::image_free( glow_tImImage image) 
 {
+#if defined IMLIB
   Imlib_destroy_image( (ImlibData *)imlib, (ImlibImage *)image);
+#endif
 }
 
 void GlowDrawXLib::pixmap_free( glow_tPixmap pixmap) 
 {
+#if defined IMLIB
   Imlib_free_pixmap( (ImlibData *)imlib, (Pixmap)pixmap);
+#endif
 }
 
 void GlowDrawXLib::image_pixel_iter( glow_tImImage orig_image, glow_tImImage *image, 
 				     void (* pixel_cb)(void *, unsigned char *), void *userdata)
 {
+#if defined IMLIB
   unsigned char *rgb;
   int 		rgb_height;
   int 		rgb_width;
@@ -2957,4 +2984,5 @@ void GlowDrawXLib::image_pixel_iter( glow_tImImage orig_image, glow_tImImage *im
   }
 
   Imlib_changed_image( (ImlibData *)imlib, (ImlibImage *)*image);
+#endif
 }

@@ -307,10 +307,10 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
 }
 
 #else
-static pwr_tStatus IoCardInit( io_tCtx ctx,io_sAgent *ap,io_sRack *rp,io_sCard *cp) {return 0;}
-static pwr_tStatus IoCardClose( io_tCtx ctx,io_sAgent *ap,io_sRack *rp,io_sCard *cp) {return 0;}
-static pwr_tStatus IoCardRead( io_tCtx ctx,io_sAgent *ap,io_sRack *rp,io_sCard *cp) {return 0;}
-static pwr_tStatus IoCardWrite( io_tCtx ctx,io_sAgent *ap,io_sRack *rp,io_sCard *cp) {return 0;}
+static pwr_tStatus IoCardInit( io_tCtx ctx,io_sAgent *ap,io_sRack *rp,io_sCard *cp) {return IO__RELEASEBUILD;}
+static pwr_tStatus IoCardClose( io_tCtx ctx,io_sAgent *ap,io_sRack *rp,io_sCard *cp) {return IO__RELEASEBUILD;}
+static pwr_tStatus IoCardRead( io_tCtx ctx,io_sAgent *ap,io_sRack *rp,io_sCard *cp) {return IO__RELEASEBUILD;}
+static pwr_tStatus IoCardWrite( io_tCtx ctx,io_sAgent *ap,io_sRack *rp,io_sCard *cp) {return IO__RELEASEBUILD;}
 #endif
 
 /*  Every method should be registred here. */

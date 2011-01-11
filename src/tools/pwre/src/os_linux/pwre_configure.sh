@@ -56,7 +56,20 @@ pwre_config_check_include()
 	echo "...Checking   No    $1"
     fi
 }
-
+#
+# Search for archive and insert in list
+#
+# Arguments
+# 1: archive name
+# 2: define name (PWRE_CONF_$2 will be defined)
+# 3: special archives for gtk and motif (lib, gtk, motif) 
+# 4: variable to insert archive in (rt, wb, gtk, motif)
+# 5: if 1, add -DPWRE_CONF_$2 to cc command.
+# 6: search list for archive.
+# Examples
+#  pwre_config_check_lib libm LIBM lib lib 0 /usr/lib/libm.so:/usr/lib/libm.a
+#  pwre_config_check_lib gtk  GTK  gtk gtk 0 /usr/lib/libgtk-x11-2.0.so
+#
 pwre_config_check_lib()
 {
     let i=0
@@ -96,6 +109,12 @@ pwre_config_check_lib()
 	    conf_libgtk=$conf_libgtk" -l${lib%.*}"
           elif test $4 == "motif"; then
 	    conf_libmotif=$conf_libmotif" -l${lib%.*}"
+          elif test $4 == "wb"; then
+	    conf_libwb=$conf_libwb" -l${lib%.*}"
+          elif test $4 == "mq"; then
+	    conf_libmq=$conf_libmq" -l${lib%.*}"
+          elif test $4 == "wmq"; then
+	    conf_libwmq=$conf_libwmq" -l${lib%.*}"
           else
 	    conf_lib=$conf_lib" -l${lib%.*}"
           fi
@@ -184,6 +203,9 @@ dos=`eval echo ${pwre_os} | tr [:lower:] [:upper:]`
 dhw=`eval echo ${pwre_hw} | tr [:lower:] [:upper:]`
 conf_cc_define="-D$dos=1 -D$dhw=1 -DOS=${pwre_os:3} -DHW=${pwre_hw:3} -D_${dos:3}"
 conf_lib=""
+conf_libwb=""
+conf_libmq=""
+conf_libwmq=""
 conf_libgtk="" 
 conf_libmotif="" 
 conf_libdir=""
@@ -267,6 +289,9 @@ if test $pwre_hw == "hw_arm"; then
   echo "export pwre_conf_libpwrtlog=\"-lpwr_tlog\"" >> $cfile
   echo "export pwre_conf_libpwrsev=\"-lpwr_sev\"" >> $cfile
   echo "export pwre_conf_lib=\"-lpthread -lm -lrt -lcrypt\"" >> $cfile
+  echo "export pwre_conf_libwb=\"$conf_libwb\"" >> $cfile
+  echo "export pwre_conf_libmq=\"$conf_libmq\"" >> $cfile
+  echo "export pwre_conf_libwmq=\"$conf_libwmq\"" >> $cfile
   echo "export pwre_conf_libgtk=\"$conf_libgtk\"" >> $cfile
   echo "export pwre_conf_libmotif=\"$conf_libmotif\"" >> $cfile
   echo "export pwre_conf_libdir=\"$conf_libdir\"" >> $cfile
@@ -279,16 +304,18 @@ else
   pwre_config_check_lib gtk    	  GTK      gtk gtk 0 /usr/lib/libgtk-x11-2.0.so
   pwre_config_check_lib motif     MRM      motif motif 0 /usr/lib/libMrm.so
 
-  pwre_config_check_lib libantlr  LIBANTLR lib lib 0 /usr/local/lib/libantlr.a
+  pwre_config_check_lib libantlr  LIBANTLR lib wb 0 /usr/local/lib/libantlr.a
   pwre_config_check_lib librpcsvc LIBRPCSVC lib lib 0 /usr/lib/librpcsvc.so:/usr/lib/librpcsvc.a
   pwre_config_check_lib libasound LIBASOUND lib lib 0 /usr/lib/libasound.so:/usr/lib/libasound.a
   pwre_config_check_lib libpthread LIBPTHREAD lib lib 0 /usr/lib/libpthread.so:/usr/lib/libpthread.a
   pwre_config_check_lib libm      LIBM     lib lib 0 /usr/lib/libm.so:/usr/lib/libm.a
-  pwre_config_check_lib libdb_cxx LIBDB_CXX lib lib 0 /usr/lib/libdb_cxx.so
+  pwre_config_check_lib libdb     LIBDB    lib lib 0 /usr/lib/libdb.so
+  pwre_config_check_lib libdb_cxx LIBDB_CXX lib wb 0 /usr/lib/libdb_cxx.so
   pwre_config_check_lib libz      LIBZ     lib lib 0 /usr/lib/libz.so:/usr/lib/libz.a
   pwre_config_check_lib libcrypt  LIBCRYPT lib lib 0 /usr/lib/libcrypt.so:/usr/lib/libcrypt.a
   pwre_config_check_lib mysql     MYSQL    lib lib 1 /usr/lib/libmysqlclient.so:/usr/lib/mysql/libmysqlclient.so
-  pwre_config_check_lib mq        MQ       lib lib 1 /usr/lib/libdmq.so
+  pwre_config_check_lib mq        MQ       lib mq  1 /usr/lib/libdmq.so
+  pwre_config_check_lib wmq       WMQ      lib wmq 1 /usr/lib/libmqic.so
   pwre_config_check_lib libpnioif PNAK     lib lib 1 /usr/lib/libpnioif.a:/usr/local/lib/libpnioif.a
   pwre_config_check_lib libusb    LIBUSB   lib lib 1 /usr/lib/libusb-1.0.so
   pwre_config_check_lib librt     LIBRT    lib lib 0 /usr/lib/librt.so:/usr/lib/librt.a
@@ -301,6 +328,7 @@ else
   pwre_config_check_include gtk   GTK   1 /usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk/gtk.h
   pwre_config_check_include jni   JNI   1 $jdk/include/jni.h
   pwre_config_check_include jni   JNI   0 $jdk/include/linux/jni_md.h
+  pwre_config_check_include wmq   WMQ   1 /opt/mqm/inc/cmqc.h
 
 
   export pwre_conf_alsa=1
@@ -336,6 +364,9 @@ else
   echo "export pwre_conf_libpwrtlog=\"-lpwr_tlog\"" >> $cfile
   echo "export pwre_conf_libpwrsev=\"-lpwr_sev\"" >> $cfile
   echo "export pwre_conf_lib=\"$conf_lib\"" >> $cfile
+  echo "export pwre_conf_libwb=\"$conf_libwb\"" >> $cfile
+  echo "export pwre_conf_libmq=\"$conf_libmq\"" >> $cfile
+  echo "export pwre_conf_libwmq=\"$conf_libwmq\"" >> $cfile
   echo "export pwre_conf_libgtk=\"$conf_libgtk\"" >> $cfile
   echo "export pwre_conf_libmotif=\"$conf_libmotif\"" >> $cfile
   echo "export pwre_conf_libdir=\"$conf_libdir\"" >> $cfile

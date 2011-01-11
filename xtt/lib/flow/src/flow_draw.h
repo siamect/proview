@@ -22,10 +22,6 @@
 
 #include <stdlib.h>
 
-#if defined OS_LINUX
-#define IMLIB 1
-#endif
-
 class FlowCtx;
 
 class FlowDraw {

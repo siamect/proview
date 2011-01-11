@@ -1549,16 +1549,18 @@ int Nav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 
       if ( brow_FindSelectedObject( nav->brow_ctx, event->object.object)) {
 	brow_SelectClear( nav->brow_ctx);
+	nav->set_selection_owner( 0);
       }
       else {
 	brow_SelectClear( nav->brow_ctx);
 	brow_SetInverse( event->object.object, 1);
 	brow_SelectInsert( nav->brow_ctx, event->object.object);
+	nav->set_selection_owner( 1);
       }
-      nav->set_selection_owner();
       break;
     default:
       brow_SelectClear( nav->brow_ctx);
+      nav->set_selection_owner( 0);
     }
     break;
   }

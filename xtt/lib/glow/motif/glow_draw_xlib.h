@@ -32,7 +32,7 @@
 #include <X11/Xutil.h>
 
 #if defined OS_LINUX
-#define IMLIB 1
+// #define IMLIB 1
 #endif
 
 #if defined IMLIB

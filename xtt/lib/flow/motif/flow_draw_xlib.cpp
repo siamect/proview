@@ -1687,17 +1687,26 @@ void FlowDrawXLib::set_white_background( FlowCtx *ctx)
 
 int FlowDrawXLib::image_get_width( flow_tImImage image)
 {
+#if defined IMLIB
   return ((ImlibImage *)image)->rgb_width;
+#else
+  return 0;
+#endif
 }
 
 int FlowDrawXLib::image_get_height( flow_tImImage image)
 {
+#if defined IMLIB
   return ((ImlibImage *)image)->rgb_height;
+#else
+  return 0;
+#endif
 }
 
 void FlowDrawXLib::image_scale( float scale, flow_tImImage *im, flow_tPixmap *im_pixmap,
 				flow_tPixmap *im_mask)
 {
+#if defined IMLIB
   int current_width = int( ((ImlibImage *)*im)->rgb_width * scale);
   int current_height = int( ((ImlibImage *)*im)->rgb_height * scale);
 
@@ -1707,6 +1716,7 @@ void FlowDrawXLib::image_scale( float scale, flow_tImImage *im, flow_tPixmap *im
     Imlib_free_pixmap( (ImlibData *)imlib, (Pixmap)*im_pixmap);
   *im_pixmap = (flow_tPixmap) Imlib_move_image( (ImlibData *)imlib, (ImlibImage *)*im);
   *im_mask = (flow_tPixmap) Imlib_move_mask( (ImlibData *)imlib, (ImlibImage *)*im);
+#endif
 }
 
 int FlowDrawXLib::image_load( const char *imagefile, float scale, float nav_scale,

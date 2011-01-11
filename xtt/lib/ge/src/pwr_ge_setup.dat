@@ -47,6 +47,7 @@ menu Process
   subgraph	FanAnim2	pwr_exe:pwr_fananim2.pwsg		71
   subgraph	FanAnim3	pwr_exe:pwr_fananim3.pwsg		71
   subgraph	HandWheel	pwr_exe:pwr_handwheel.pwsg		58
+  subgraph	LimitSwitch	pwr_exe:pwr_limitswitch.pwsg	       248
   subgraph	MDamper		pwr_exe:pwr_mdamper.pwsg		55
   subgraph 	Motor		pwr_exe:pwr_motor.pwsg 			23
   subgraph 	Motor2		pwr_exe:pwr_motor2.pwsg 		65

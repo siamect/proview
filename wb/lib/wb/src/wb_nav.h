@@ -77,7 +77,7 @@ class Nav {
   int		show_descrip;
 
   virtual void set_inputfocus( int focus) {}
-  virtual void set_selection_owner() {}
+  virtual void set_selection_owner( int set) {}
 
   void zoom( double zoom_factor);
   void unzoom();

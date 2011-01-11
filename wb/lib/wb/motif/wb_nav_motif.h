@@ -45,7 +45,7 @@ class NavMotif : public Nav {
   Widget	toplevel;
 
   void set_inputfocus( int focus);
-  void set_selection_owner();
+  void set_selection_owner( int set);
 };
 
 #endif

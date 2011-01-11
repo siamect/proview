@@ -223,7 +223,7 @@ int GrowCtx::subw_event_handler( glow_eEvent event, int x, int y, int w, int h)
 
 int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 {
-  int sts;
+  int sts = 0;
   int i;
   GlowCtx	*ctx;
   int node_move_event = 0;
