@@ -36,6 +36,7 @@
 #include "rt_io_m_usb_agent.h"
 #include "rt_io_m_velleman_k8055_board.h"
 
+static int last_usblib_sts = 0;
 
 static pwr_tStatus IoCardInit( io_tCtx ctx,
 			       io_sAgent *ap,
@@ -160,10 +161,14 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
   pwr_tUInt32 error_count = op->Super.ErrorCount;
 
   // You have to read twice to get the latest ?????
-  sts = libusb_interrupt_transfer( local->libusb_device, endpoint, data, 8, &tsize, 20);
-  sts = libusb_interrupt_transfer( local->libusb_device, endpoint, data, 8, &tsize, 20);
+  sts = libusb_interrupt_transfer( local->libusb_device, endpoint, data, 8, &tsize, 100);
+  sts = libusb_interrupt_transfer( local->libusb_device, endpoint, data, 8, &tsize, 100);
   if ( sts != 0 || tsize != size) {
     op->Super.ErrorCount++;
+    if ( sts != 0 && sts != last_usblib_sts) {
+      errh_Error( "K8055 libusb transfer error %d", sts);
+      last_usblib_sts = sts;
+    }
     return IO__SUCCESS;
   }
   else {
@@ -278,9 +283,13 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
     }
   }
 
-  sts = libusb_interrupt_transfer( local->libusb_device, endpoint, data, size, &tsize, 20);
+  sts = libusb_interrupt_transfer( local->libusb_device, endpoint, data, size, &tsize, 100);
   if ( sts != 0 || tsize != size) {
     op->Super.ErrorCount++;
+    if ( sts != 0 && sts != last_usblib_sts) {
+      errh_Error( "K8055 libusb transfer error %d", sts);
+      last_usblib_sts = sts;
+    }
     return IO__SUCCESS;
   }
 
