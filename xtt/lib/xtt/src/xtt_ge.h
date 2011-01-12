@@ -51,6 +51,7 @@ class XttGe {
 				  unsigned long, unsigned long, char *);
   int           (*get_current_objects_cb)(void *, pwr_sAttrRef **, int **);
   int           (*sound_cb)(void *, pwr_tAttrRef *);
+  void          (*eventlog_cb)(void *, void *, int, void *, unsigned int);
   int		width;
   int		height;
 
@@ -65,6 +66,7 @@ class XttGe {
 
   virtual void pop() {}
   virtual void set_size( int width, int height) {}
+  virtual void confirm_reply( int ok) {}
 
   void message( char severity, const char *msg);
   void print();
@@ -72,6 +74,7 @@ class XttGe {
   int set_folder_index( const char *name, int idx);
   int set_subwindow_source( const char *name, char *source);
   void swap( int mode);
+  void event_exec( int type, void *event, unsigned int size);
 
   static void graph_init_cb( void *client_data);
   static void graph_close_cb( void *client_data);
@@ -87,6 +90,7 @@ class XttGe {
   static int ge_is_authorized_cb( void *ge_ctx, unsigned int access);
   static int ge_get_current_objects_cb( void *ge_ctx, pwr_sAttrRef **alist,
 				     int **is_alist);
+  static void ge_eventlog_cb( void *ge_ctx, void *value, unsigned int size);
   static void message_cb( void *ctx, char severity, const char *msg);
 };
 

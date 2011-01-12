@@ -26,6 +26,8 @@
 #include "pwr.h"
 #include "cow_wow.h"
 
+bool CoWow::m_autoremove = false;
+
 int CoWow::HideWarranty()
 {
   static int hide = 0;

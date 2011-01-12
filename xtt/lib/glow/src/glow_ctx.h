@@ -102,6 +102,7 @@ typedef struct {
 typedef void (*glow_tUserDataSaveCb) ( ofstream *, void *, glow_eUserdataCbType);
 typedef void (*glow_tUserDataOpenCb) ( ifstream *, void *, glow_eUserdataCbType);
 typedef void (*glow_tUserDataCopyCb) ( void *, void *, void **, glow_eUserdataCbType);
+typedef void (*glow_tEventLogCb) ( void *, void *, unsigned int);
 
 //! Class for a drawing window populated with drawing objects and components.
 /*! GlowCtx is the base class for the drawing area in Glow. It contains array with
@@ -824,6 +825,7 @@ class GlowCtx {
   CtxComment *comment;
   glow_eHotIndication hot_indication; //!< Specification of how hots object should be drawn.
   int tiptext_size;		//!< Size of tooltip text
+  glow_tEventLogCb eventlog_callback; //!< Callback function to log events.
 
   //! Register scrollbar callback function
   /*!
@@ -881,6 +883,13 @@ class GlowCtx {
 		{ userdata_save_callback = save_callback;
 		  userdata_open_callback = open_callback;
 		  userdata_copy_callback = copy_callback;}
+
+  //! Register callback functions for event logging.
+  /*!
+    \param log_callback	Callback function that will be called to log an event.
+  */
+  void register_eventlog_callback( glow_tEventLogCb log_callback)
+                { eventlog_callback = log_callback;}
 
   //! Destructor
   /*! Delete all objects in the context. */

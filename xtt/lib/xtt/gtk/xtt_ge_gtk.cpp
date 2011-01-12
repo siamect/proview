@@ -40,6 +40,7 @@ typedef void *Widget;
 #include "co_lng.h"
 #include "xtt_ge_gtk.h"
 #include "ge_graph_gtk.h"
+#include "xtt_log.h"
 
 gboolean XttGeGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data)
 {
@@ -147,6 +148,17 @@ void XttGeGtk::activate_value_input( GtkWidget *w, gpointer data)
   g_free( text);
 }
 
+void XttGeGtk::confirm_reply( int ok)
+{
+  if ( !confirm_open)
+    return;
+
+  g_object_set( confirm_widget, "visible", FALSE, NULL);
+  confirm_open = 0;
+  if ( ok)
+    graph->confirm_ok( current_confirm_object);    
+}
+
 void XttGeGtk::activate_confirm_ok( GtkWidget *w, gpointer data)
 {
   XttGe *ge = (XttGe *)data;
@@ -154,6 +166,8 @@ void XttGeGtk::activate_confirm_ok( GtkWidget *w, gpointer data)
   g_object_set( ((XttGeGtk *)ge)->confirm_widget, "visible", FALSE, NULL);
   ge->confirm_open = 0;
   ge->graph->confirm_ok( ge->current_confirm_object);
+  if ( ge->eventlog_cb)
+    (ge->eventlog_cb)( ge->parent_ctx, ge, xttlog_eCategory_GeConfirmOk, 0, 0);
 }
 
 void XttGeGtk::activate_confirm_cancel( GtkWidget *w, gpointer data)
@@ -162,6 +176,8 @@ void XttGeGtk::activate_confirm_cancel( GtkWidget *w, gpointer data)
 
   ge->confirm_open = 0;
   g_object_set( ((XttGeGtk *)ge)->confirm_widget, "visible", FALSE, NULL);
+  if ( ge->eventlog_cb)
+    (ge->eventlog_cb)( ge->parent_ctx, ge, xttlog_eCategory_GeConfirmCancel, 0, 0);
 }
 
 void XttGeGtk::activate_exit( GtkWidget *w, gpointer data)
@@ -366,6 +382,7 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, const char *x
   graph->popup_menu_cb = &ge_popup_menu_cb;
   graph->call_method_cb = &ge_call_method_cb;
   graph->sound_cb = &ge_sound_cb;
+  graph->eventlog_cb = &ge_eventlog_cb;
 
   //g_signal_connect( graph_form, "check_resize", G_CALLBACK(action_resize), this);
   g_signal_connect( ((GraphGtk *)graph)->grow_widget, "size_allocate", G_CALLBACK(action_resize), this);

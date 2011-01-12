@@ -58,6 +58,7 @@ class XttGeGtk : public XttGe {
   void pop();
   void set_size( int width, int height);
   void create_confirm_dialog();
+  void confirm_reply( int ok);
 
   static void ge_change_value_cb( void *ge_ctx, void *value_object, char *text);
   static void confirm_cb( void *ge_ctx, void *confirm_object, char *text);

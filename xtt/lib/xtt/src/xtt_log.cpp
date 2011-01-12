@@ -38,7 +38,7 @@ using namespace std;
 XttLog *XttLog::m_default_log = 0;
 
 
-XttLog::XttLog( const char *filename) : m_level(1) 
+XttLog::XttLog( const char *filename, int event) : m_event(event), m_level(1) 
 { 
   char category_str[20];
 
@@ -48,7 +48,7 @@ XttLog::XttLog( const char *filename) : m_level(1)
   gdh_RegisterLogFunction( gdh_log_bc);
 
   category_to_string(xttlog_eCategory_LogStart, category_str);
-  log( category_str, 0, 0, 0);
+  log( category_str, 0, 0, 0, 0);
 }
 
 void XttLog::delete_default() 
@@ -59,33 +59,59 @@ void XttLog::delete_default()
   }
 }
 
-void XttLog::gdh_log_bc( char *name, void *value, unsigned int size)
+void XttLog::value_to_octstring( const void *value, unsigned int value_size, char *str, unsigned int str_size)
 {
-  char str[1000];
-  unsigned int strsize = sizeof(str);
   unsigned int len = 0;
-  for ( unsigned int i = 0; i < size; i++) {
-    if ( i == size - 1) {
-      if ( len + 4 >= strsize)
+  for ( unsigned int i = 0; i < value_size; i++) {
+    if ( i == value_size - 1) {
+      if ( len + 4 >= str_size)
 	break;
       len += sprintf( &str[i*5], "0x%02hhx", *(((unsigned char *)value)+i));
     }
     else {
-      if ( len + 5 >= strsize)
+      if ( len + 5 >= str_size)
 	break;
       len += sprintf( &str[i*5], "0x%02hhx,", *(((unsigned char *)value)+i));		 
     }
   }
+}
+
+void XttLog::octstring_to_value( char *str, void *value, unsigned int size, unsigned int *value_size)
+{
+  char *buf = (char *)value;
+  unsigned int len;
+
+  unsigned int i = 0;
+  while (1) {
+    len = sscanf( &str[i*5+1], "0x%2hhx", &buf[i]);
+    if ( len != 1)
+      break;
+    i++;
+    if ( str[i*5] != ',' || i >= size)
+      break;
+  }
+  *value_size = i;
+}
+
+void XttLog::gdh_log_bc( char *name, void *value, unsigned int size)
+{
+  char str[1000];
+
+  value_to_octstring( value, size, str, sizeof(str));
   dlog( xttlog_eCategory_SetObjectInfo, name, str, 0);
 }
 
-void XttLog::dlog( xttlog_eCategory category, const char *str, const char *value, unsigned int opt)
+void XttLog::dlog( xttlog_eCategory category, const char *str, const char *value, unsigned int opt,
+		   unsigned int size)
 {  
   char category_str[40];
 
   category_to_string(category, category_str);
-  if ( m_default_log) 
-    m_default_log->log( category_str, str, value, opt);
+  if ( m_default_log) {
+    if ( !m_default_log->m_event && category == xttlog_eCategory_Event)
+      return;
+    m_default_log->log( category_str, str, value, opt, size);
+  }
 }
 
 
@@ -113,6 +139,15 @@ void XttLog::category_to_string( xttlog_eCategory category, char *str)
   case xttlog_eCategory_LogStart:
     strcpy( str, "LogStart");
     break;
+  case xttlog_eCategory_Event:
+    strcpy( str, "Event");
+    break;
+  case xttlog_eCategory_GeConfirmOk:
+    strcpy( str, "GeConfirmOk");
+    break;
+  case xttlog_eCategory_GeConfirmCancel:
+    strcpy( str, "GeConfirmCancel");
+    break;
   default:
     strcpy( str, "");
   }
@@ -134,12 +169,18 @@ void XttLog::string_to_category( char *str, xttlog_eCategory *category)
     *category = xttlog_eCategory_ApplDelete;
   else if ( strcmp( str, "LogStart") == 0)
     *category = xttlog_eCategory_LogStart;
+  else if ( strcmp( str, "Event") == 0)
+    *category = xttlog_eCategory_Event;
+  else if ( strcmp( str, "GeConfirmOk") == 0)
+    *category = xttlog_eCategory_GeConfirmOk;
+  else if ( strcmp( str, "GeConfirmCancel") == 0)
+    *category = xttlog_eCategory_GeConfirmCancel;
   else
     *category = xttlog_eCategory_;
 }
 
 void XttLog::log( const char *category, const char *str, const char *value, 
-		  unsigned int opt)
+		  unsigned int opt, unsigned int size)
 {
   ofstream fp;
   pwr_tStatus sts;
@@ -178,8 +219,17 @@ void XttLog::log( const char *category, const char *str, const char *value,
   fp << " ";
   if ( str)
     fp << str;
-  if ( value)
-    fp << " \"" << value << "\"";
+  if ( value) {
+    if ( opt & xttlog_mOption_Binary) {
+      char str[1000];
+
+      value_to_octstring( value, size, str, sizeof(str));
+      
+      fp << " \"" << str << "\"";
+    }
+    else
+      fp << " \"" << value << "\"";
+  }
   fp << endl;
   fp.close();  
 }
@@ -214,6 +264,8 @@ int XttLog::play( XNav *xnav, char *filename, double speed, int pid)
   if ( !fp)
     return 0;
  
+  CoWow::SetAutoRemove( 1);
+
   while( fp.getline( line, sizeof(line))) {
     num = sscanf( line, "%d %s %s %d %s %s", &ind, t1, t2, &lpid, type, user);
 
@@ -260,23 +312,14 @@ int XttLog::play( XNav *xnav, char *filename, double speed, int pid)
       break;
     }
     case xttlog_eCategory_SetObjectInfo: {
-      unsigned int len;
       unsigned char buf[500];
-      int size;
+      unsigned int size;
       pwr_tStatus sts;
 
       sscanf( s, "%s %s", attr, value);
 
-      unsigned int i = 0;
-      while (1) {
-	len = sscanf( &value[i*5+1], "0x%2hhx", &buf[i]);
-	if ( len != 1)
-	  break;
-	i++;
-	if ( value[i*5] != ',' || i >= sizeof(buf))
-	  break;
-      }
-      size = i;
+      octstring_to_value( value, buf, sizeof(buf), &size);
+
       if ( size) {
 	sts = gdh_SetObjectInfo( attr, buf, size);
 	if ( EVEN(sts)) {
@@ -284,6 +327,51 @@ int XttLog::play( XNav *xnav, char *filename, double speed, int pid)
 	}
       }
       printf( "%8.3f %-14s %9d %s %s\n", diff_time_f, type, sts, attr, value);
+      break;      
+    }
+    case xttlog_eCategory_Event: {
+      unsigned char buf[500];
+      unsigned int size;
+      pwr_tStatus sts;
+      char graph[600];
+      pwr_tAName instance;
+      char *t;
+
+      sts = 0;
+      sscanf( s, "%s %s", graph, value);
+
+      octstring_to_value( value, buf, sizeof(buf), &size);
+
+      t = strchr( graph, ':');
+      if ( !t) break;
+
+      *t = 0;
+      strcpy( instance, t+1);
+
+      xnav->ge_event_exec( xttlog_eCategory_Event, graph, instance, buf, size);
+
+      printf( "%8.3f %-14s %9d %s %10.10s\n", diff_time_f, type, sts, graph, value);
+      break;      
+    }
+    case xttlog_eCategory_GeConfirmOk:
+    case xttlog_eCategory_GeConfirmCancel: {
+      pwr_tStatus sts;
+      char graph[600];
+      pwr_tAName instance;
+      char *t;
+
+      sts = 0;
+      strcpy( graph, s);
+
+      t = strchr( graph, ':');
+      if ( !t) break;
+
+      *t = 0;
+      strcpy( instance, t+1);
+
+      xnav->ge_event_exec( category, graph, instance, 0, 0);
+
+      printf( "%8.3f %-14s %9d %s\n", diff_time_f, type, sts, graph);
       break;      
     }
     case xttlog_eCategory_LogStart:
@@ -297,6 +385,7 @@ int XttLog::play( XNav *xnav, char *filename, double speed, int pid)
       first = 0;
 
   }
+  CoWow::SetAutoRemove( 0);
   printf( "         %-14s\n", "EndOfFile");
   return 1;
 } 

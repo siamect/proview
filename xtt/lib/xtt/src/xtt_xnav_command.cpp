@@ -130,6 +130,7 @@ static int xnav_ev_sound_cb( void *xnav, pwr_sAttrRef *arp);
 static void xnav_ev_pop_cb( void *xnav);
 static void xnav_ev_update_info_cb( void *xnav);
 static int xnav_ge_sound_cb( void *xnav, pwr_sAttrRef *arp);
+static void xnav_ge_eventlog_cb( void *xnav, void *gectx, void *value, unsigned int size);
 static void xnav_ge_display_in_xnav_cb( void *xnav, pwr_sAttrRef *arp);
 static int xnav_ge_is_authorized_cb( void *xnav, unsigned int access);
 static int xnav_attribute_func ( 
@@ -389,7 +390,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 		{
 			"OPLOG",
 			&xnav_oplog_func,
-			{ "dcli_arg1", "/FILE", "/SPEED", "/PID", ""}
+			{ "dcli_arg1", "/FILE", "/SPEED", "/PID", "/EVENT", ""}
 		},
 		{"",}};
 
@@ -2601,10 +2602,12 @@ static int	xnav_open_func(	void		*client_data,
         return XNAV__SUCCESS;
       }
       if ( ODD( dcli_get_qualifier( "dcli_arg2", file_str, sizeof(file_str)))) {
+#if 0
         if ( file_str[0] == '/') {
           xnav->message('E', "Syntax error");
           return XNAV__HOLDCOMMAND;
         }
+#endif
 
 	// Get base class graphs on $pwr_exe
 	cdh_ToLower( fname, file_str);
@@ -2678,8 +2681,14 @@ static int	xnav_open_func(	void		*client_data,
 			   cdh_mName_pathStrict);
 	  if ( EVEN(sts)) return sts;
 	}
-	else
-	  strcpy( name_str, file_str);
+	else {
+	  if ( file_str[0] == '/') {
+	    char *t = strrchr( file_str, '/');
+	    strncpy( name_str, t+1, sizeof(name_str));
+	  }
+	  else
+	    strncpy( name_str, file_str, sizeof(name_str));
+	}
       }
       if ( ODD( dcli_get_qualifier( "/FOCUS", focus_str, sizeof(focus_str))))
         focus_p = focus_str;
@@ -3720,10 +3729,12 @@ static int	xnav_close_func(	void		*client_data,
 
       // Command is "CLOSE GRAPH"
       if ( ODD( dcli_get_qualifier( "dcli_arg2", file_str, sizeof(file_str)))) {
+#if 0
         if ( file_str[0] == '/') {
-          xnav->message('E', "Syntax error");
-          return XNAV__HOLDCOMMAND;
-        }
+	  char *t = strrchr( file_str, '/');
+	  cdh_Strcpy( file_str, t+1);
+	}
+#endif
       }
       else if ( classgraph) {
 	// Get file from class of instance object
@@ -5566,11 +5577,13 @@ static int	xnav_oplog_func(void		*client_data,
   if ( cdh_NoCaseStrncmp( arg1_str, "START", strlen( arg1_str)) == 0) {
     pwr_tFileName file_str;
 
+    int event = ODD( dcli_get_qualifier( "/EVENT", 0, 0));
+
     if ( EVEN( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
       strcpy( file_str, xttlog_cLogFile);
     }
 
-    XttLog *log = new XttLog( file_str);
+    XttLog *log = new XttLog( file_str, event);
     XttLog::delete_default();
     log->set_default();
 
@@ -7115,6 +7128,22 @@ static int xnav_ge_sound_cb( void *xnav, pwr_sAttrRef *arp)
   return ((XNav *)xnav)->sound( arp);
 }
 
+static void xnav_ge_eventlog_cb( void *xnav, void *gectx, int type, void *data, unsigned int size)
+{
+  int sts;
+  char name[80];
+  pwr_tAName instance;
+  char text[600];
+
+  sts = ((XNav *)xnav)->appl.find( applist_eType_Graph, gectx, name, instance);
+  if ( ODD(sts)) {
+    strcpy( text, name);
+    strcat( text, ":");
+    strcat( text, instance);
+    XttLog::dlog( (xttlog_eCategory) type, text, (const char *)data, xttlog_mOption_Binary, size);
+  }
+}
+
 static void xnav_ev_pop_cb( void *xnav)
 {
   if (((XNav *)xnav)->op)
@@ -7177,6 +7206,7 @@ void XNav::open_graph( const char *name, const char *filename, int scrollbar, in
     gectx->popup_menu_cb = xnav_popup_menu_cb;
     gectx->call_method_cb = xnav_call_method_cb;
     gectx->sound_cb = xnav_ge_sound_cb;
+    gectx->eventlog_cb = xnav_ge_eventlog_cb;
 
     appl.insert( applist_eType_Graph, (void *)gectx, pwr_cNObjid, filename,
 		   object_name);
@@ -7257,6 +7287,17 @@ int XNav::exec_xttgraph( pwr_tObjid xttgraph, char *instance,
     return command( xttgraph_o.Action);
   }
   return XNAV__SUCCESS;
+}
+
+void XNav::ge_event_exec( int type, char *name, char *instance, void *event, unsigned int size)
+{
+  int sts;
+  XttGe *gectx;
+
+  sts = appl.find( applist_eType_Graph, name, instance, (void **)&gectx);
+  if ( ODD(sts)) {
+    gectx->event_exec( type, event, size);
+  }
 }
 
 static int xnav_op_get_alarm_info_cb( void *xnav, evlist_sAlarmInfo *info)

@@ -82,6 +82,9 @@ class CoWowRecall {
 };
 
 class CoWow {
+ protected:
+  static bool m_autoremove;
+
  public:
   CoWow() {}
   virtual ~CoWow() {}
@@ -114,6 +117,7 @@ class CoWow {
   virtual CoWowTimer *timer_new() { return 0;}
   virtual pwr_tStatus CreateMenuItem( const char *name, void *menu, int pixmap, int append, void *w) { return 0;}
   virtual pwr_tStatus DeleteMenuItem( const char *name, void *menu) { return 0;}
+  static void SetAutoRemove( bool on) { m_autoremove = on;}
 };
 
 #endif

@@ -34,6 +34,7 @@
 #include "co_lng.h"
 #include "xtt_ge.h"
 #include "ge_graph.h"
+#include "xtt_log.h"
 
 void XttGe::graph_init_cb( void *client_data)
 {
@@ -140,6 +141,14 @@ int XttGe::ge_get_current_objects_cb( void *ge_ctx, pwr_sAttrRef **alist,
   return 0;
 }
 
+void XttGe::ge_eventlog_cb( void *ge_ctx, void *data, unsigned int size)
+{
+  XttGe	*ge = (XttGe *)ge_ctx;
+
+  if ( ge->eventlog_cb)
+    (ge->eventlog_cb)( ge->parent_ctx, ge, xttlog_eCategory_Event, data, size);
+}
+
 void XttGe::message_cb( void *ctx, char severity, const char *msg)
 {
   ((XttGe *)ctx)->message( severity, msg);
@@ -188,6 +197,22 @@ void XttGe::swap( int mode)
   graph->swap( mode);
 }
 
+void XttGe::event_exec( int type, void *event, unsigned int size) 
+{ 
+  switch ( type) {
+  case xttlog_eCategory_Event:
+    graph->event_exec( event, size);
+    break;
+  case xttlog_eCategory_GeConfirmOk:
+    confirm_reply( 1);
+    break;
+  case xttlog_eCategory_GeConfirmCancel:
+    confirm_reply( 0);
+    break;
+  default: ;
+  }
+}
+
 XttGe::XttGe( void *xg_parent_ctx, const char *xg_name, const char *xg_filename,
 	      int xg_scrollbar, int xg_menu, int xg_navigator, int xg_width, int xg_height,
 	      int x, int y, double scan_time, const char *object_name,
@@ -200,7 +225,7 @@ XttGe::XttGe( void *xg_parent_ctx, const char *xg_name, const char *xg_filename,
   current_confirm_object(0), value_input_open(0), confirm_open(0), 
   command_cb(xg_command_cb), close_cb(0), help_cb(0), display_in_xnav_cb(0), 
   is_authorized_cb(xg_is_authorized_cb), popup_menu_cb(0), call_method_cb(0), 
-  get_current_objects_cb(xg_get_current_objects_cb), sound_cb(0),
+  get_current_objects_cb(xg_get_current_objects_cb), sound_cb(0), eventlog_cb(0),
   width(xg_width), height(xg_height)
 {
   strcpy( filename, xg_filename);

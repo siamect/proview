@@ -454,6 +454,7 @@ class Graph {
   int         	(*sound_cb)(void *, pwr_tAttrRef *);
   int 		(*create_modal_dialog_cb)( void *, const char *, const char *, const char *, const char *, 
 					   const char *, const char *);
+  void         	(*eventlog_cb)(void *, void *, unsigned int);
   int			linewidth;		//!< Selected linewidth.
   glow_eLineType	linetype;		//!< Selected linetype.
   int			textsize;		//!< Selected text size.
@@ -1419,6 +1420,8 @@ class Graph {
  int ccm_set_variable( char *name, int type, void *data);
  int ccm_get_variable( char *name, int type, void *data);
  int ccm_ref_variable( char *name, int type, void **data);
+
+ void event_exec( void *event, unsigned int size) { grow_EventExec( grow->ctx, event, size);}
 
  //! Destructor
  /*! Stop trace (if started), delete open attribute editors, free local database, delete grow and

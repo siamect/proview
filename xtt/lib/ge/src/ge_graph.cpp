@@ -150,7 +150,7 @@ Graph::Graph(
 	message_dialog_cb(NULL), is_authorized_cb(NULL), 
 	traverse_focus_cb(NULL), set_focus_cb(NULL), get_ldhses_cb(NULL),
 	get_current_objects_cb(NULL), popup_menu_cb(NULL), call_method_cb(NULL),
-	sound_cb(0), create_modal_dialog_cb(0), 
+	sound_cb(0), create_modal_dialog_cb(0), eventlog_cb(0),
 	linewidth(1), linetype(glow_eLineType_Solid), textsize(0), 
 	textbold(0), textfont(glow_eFont_Helvetica),
 	border_color(1), fill_color(1), fill(0), border(1), shadow(0),
@@ -2747,6 +2747,16 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
   return 1;
 }
 
+void graph_eventlog_cb( void *ctx, void *data, unsigned int size)
+{
+  Graph		*graph;
+
+  grow_GetCtxUserData( (GrowCtx *)ctx, (void **) &graph);
+
+  if ( graph && graph->eventlog_cb)
+    (graph->eventlog_cb) ( graph->parent_ctx, data, size);
+}
+
 void graph_userdata_save_cb( void *f, void *object, glow_eUserdataCbType utype)
 {
   ofstream *fp = (ofstream *)f;
@@ -3065,6 +3075,7 @@ void GraphGrow::grow_trace_setup()
   grow_EnableEvent( ctx, glow_eEvent_MenuDelete, glow_eEventType_CallBack,
 	graph_grow_cb);
 
+  grow_RegisterEventLogCallback( ctx, graph_eventlog_cb);
 }
 
 //

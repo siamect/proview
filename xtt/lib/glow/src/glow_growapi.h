@@ -2716,6 +2716,9 @@ extern "C" {
 				       void (*open)( void *, void *, glow_eUserdataCbType),
 				       void (*copy)( void *, void *, void **, glow_eUserdataCbType));
 
+  void grow_RegisterEventLogCallback( grow_tCtx ctx,
+				      void (*log_cb)( void *, void *, unsigned int));
+
   //! Get grow versions.
   /*!
     \param ctx			Grow context.
@@ -2970,6 +2973,7 @@ extern "C" {
   void grow_ObjectRead( grow_tCtx ctx, ifstream& fp, grow_tObject *object);
   int grow_GetDimension( char *filename, int *width, int *height);
   void grow_SetTextCoding( grow_tCtx ctx, glow_eTextCoding coding);
+  void grow_EventExec( grow_tCtx ctx, void *event, unsigned int size);
   
 /*@}*/
 #if defined __cplusplus

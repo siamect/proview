@@ -79,7 +79,7 @@ GlowCtx::GlowCtx( const char *ctx_name, double zoom_fact, int offs_x, int offs_y
     default_hot_mode(glow_eHotMode_SingleObject), hot_found(0),
     userdata_save_callback(0), userdata_open_callback(0), userdata_copy_callback(0),
     version(GLOW_VERSION), inputfocus_object(0), is_component(0), comment(0),
-    hot_indication(glow_eHotIndication_LightColor), tiptext_size(2)
+    hot_indication(glow_eHotIndication_LightColor), tiptext_size(2), eventlog_callback(0)
 { 
   strcpy(name, ctx_name);
   memset( (void *)event_callback, 0, sizeof(event_callback));

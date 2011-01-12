@@ -34,9 +34,15 @@ typedef enum {
   xttlog_eCategory_ApplDelete,
   xttlog_eCategory_SetObjectInfo,
   xttlog_eCategory_LogStart,
-  xttlog_eCategory__,
+  xttlog_eCategory_Event,
+  xttlog_eCategory_GeConfirmOk,
+  xttlog_eCategory_GeConfirmCancel,
+  xttlog_eCategory__
 } xttlog_eCategory;
 
+typedef enum {
+  xttlog_mOption_Binary 	= 1 << 0
+} xttlog_mOption;
 
 class XttLog;
 class XNav;
@@ -44,6 +50,7 @@ class XNav;
 class XttLog
 {
   pwr_tFileName m_filename;
+  int m_event;
   int m_level;
   char m_pid[40];
   static XttLog *m_default_log;
@@ -56,20 +63,23 @@ class XttLog
       m_level = 1;
   }
 
-  XttLog( const char *filename);
+  XttLog( const char *filename, int event);
   ~XttLog() { if ( this == m_default_log) m_default_log = 0;}
 
   void set_default() { m_default_log = this;}
   void log( const char *category, const char *str, const char *value, 
-		    unsigned int opt);
+	    unsigned int opt, unsigned int size);
 
-  static void dlog( xttlog_eCategory category, const char *str, const char *value, unsigned int opt = 0);
+  static void dlog( xttlog_eCategory category, const char *str, const char *value, unsigned int opt = 0,
+		    unsigned int size = 0);
   static void category_to_string( xttlog_eCategory category, char *str);
   static void string_to_category( char *str, xttlog_eCategory *category);
   static void dpush() { 
     if ( m_default_log) m_default_log->push();}
   static void dpull() { 
     if ( m_default_log) m_default_log->pull();}
+  static void value_to_octstring( const void *value, unsigned int value_size, char *str, unsigned int str_size);
+  static void octstring_to_value( char *str, void *value, unsigned int size, unsigned int *value_size);
   static void gdh_log_bc( char *name, void *buf, unsigned int bufsize);
   static int play( XNav *xnav, char *filename, double speed, int pid);
   static void delete_default();

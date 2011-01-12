@@ -216,6 +216,7 @@ class ApplList {
     int find( applist_eType type, const char *name, const char *instance, void **ctx);
     int find( applist_eType type, pwr_sAttrRef *arp, void **ctx);
     int find( applist_eType type, pwr_tObjid objid, void **ctx);
+    int find( applist_eType type, void *ctx, char *name, char *instance);
     void swap( int mode);
 };
 
@@ -496,6 +497,7 @@ class XNav {
     int exec_xttgraph( pwr_tObjid xttgraph, char *instance,
 		       char *focus, int inputempty,
 		       int use_default_access, unsigned int access);
+    void ge_event_exec( int type, char *name, char *instance, void *event, unsigned int size);
     int set_parameter( char *name_str, char *value_str, int bypass);
     void open_rttlog( char *name, char *filename);
     int search( char *search_str, int regexp);

@@ -165,6 +165,7 @@ class GlowDraw {
 				      glow_eDrawType d0, glow_eDrawType d1, glow_eDrawType d2, 
 				      glow_eGradient gradient) 
     {return fill_polyline( wind, points, point_cnt, d0, 0);}
+  virtual void event_exec( void *event, unsigned int size) {}
 };
 
 class DrawWind {

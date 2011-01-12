@@ -4385,6 +4385,12 @@ void grow_RegisterUserDataCallbacks( grow_tCtx ctx,
 	   (glow_tUserDataCopyCb) copy);
 }
 
+void grow_RegisterEventLogCallback( grow_tCtx ctx,
+				    void (*log_cb)( void *, void *, unsigned int))
+{
+  ((GrowCtx *)ctx)->register_eventlog_callback( (glow_tEventLogCb) log_cb);
+}
+
 void grow_GetVersion( grow_tCtx ctx, int *grow_version, int *graph_version)
 {
   *graph_version = ctx->version;
@@ -4686,6 +4692,11 @@ int grow_GetDimension( char *filename, int *width, int *height)
 void grow_SetTextCoding( grow_tCtx ctx, glow_eTextCoding coding)
 {
   ctx->set_text_coding( coding);
+}
+
+void grow_EventExec( grow_tCtx ctx, void *event, unsigned int size)
+{
+  ctx->gdraw->event_exec( event, size);
 }
 
 /*@}*/

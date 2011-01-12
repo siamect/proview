@@ -227,6 +227,8 @@ class GlowDrawGtk : public GlowDraw {
   int get_text_extent_pango( const char *text, int len,
 			     glow_eDrawType gc_type, int idx, glow_eFont font_idx,
 			     int *width, int *height, int *descent, double size);
+  void log_event( GdkEvent *event);
+  virtual void event_exec( void *event, unsigned int size);
 
 };
 

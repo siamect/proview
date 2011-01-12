@@ -584,6 +584,11 @@ int GlowDrawGtk::event_handler( GdkEvent event)
 //	button_clicked << " c&p " << button_clicked_and_pressed << endl;
 
   if ( event.any.window == m_wind.window || event.type == GDK_KEY_PRESS) {
+    
+#if defined PWRE_EVENTLOGGING_ENABLED
+    log_event( &event);
+#endif
+
     switch ( event.type) {
     case GDK_KEY_PRESS : {
       guint keysym;
@@ -3609,4 +3614,92 @@ int GlowDrawGtk::get_text_extent_pango( const char *text, int len,
   gdk_pango_renderer_set_gc( GDK_PANGO_RENDERER(pr), 0);
 
   return 1;
+}
+
+void GlowDrawGtk::log_event( GdkEvent *event)
+{
+  if ( ctx->eventlog_callback) {
+    GdkEvent e;
+
+    memcpy( &e, event, sizeof(e));
+
+    switch ( e.type) {
+    case GDK_KEY_PRESS:
+      *(gchar *)&e.key.string = e.key.string[0];
+      break;
+    case GDK_MOTION_NOTIFY: {
+      int x, y;
+
+      if ( e.motion.is_hint) {
+	gdk_window_get_pointer( e.any.window, &x, &y, NULL);
+	e.button.x = x;
+	e.button.y = y;
+	e.motion.is_hint = 0;
+      }
+      break;
+    }
+    case GDK_EXPOSE: {
+      int width, height;
+
+      get_window_size( &ctx->mw, &width, &height);
+      if ( e.expose.area.x == 0 && e.expose.area.y == 0) {
+	e.expose.area.x = -999;
+	e.expose.area.y = -999;
+	e.expose.area.width = width;
+	e.expose.area.height = height;
+      }
+      break;
+    }
+    default: ;
+    }
+
+    (ctx->eventlog_callback) ( ctx, &e, sizeof(e));
+  }
+}
+
+void GlowDrawGtk::event_exec( void *event, unsigned int size) 
+{ 
+  GdkEvent e;
+
+  if ( size != sizeof(e))
+    return;
+
+  memcpy( &e, event, size);
+  e.any.window = m_wind.window;
+
+  switch ( e.type) {
+  case GDK_KEY_PRESS: {
+    gchar *p = (gchar *)malloc(1);
+    
+    *p = *(gchar *)&e.key.string;
+    e.key.string = p;
+    break;
+  }
+  case GDK_EXPOSE: {
+    if ( e.expose.area.x == -999 && e.expose.area.y == -999) {
+      GtkWidget *parent;
+
+      parent = gtk_widget_get_parent( m_wind.toplevel);
+      while( !GTK_IS_WINDOW(parent))
+	parent = gtk_widget_get_parent( parent);
+
+      gtk_window_resize( GTK_WINDOW(parent), e.expose.area.width, e.expose.area.height);
+      // set_window_size( &ctx->mw, e.expose.area.width, e.expose.area.height);
+      e.expose.area.x = 0;
+      e.expose.area.y = 0;
+    }
+    break;
+  }
+  default: ;
+  }
+  
+  event_handler( e);
+
+  switch ( e.type) {
+  case GDK_KEY_PRESS: {
+    free( e.key.string);
+    break;
+  }
+  default: ;
+  }
 }

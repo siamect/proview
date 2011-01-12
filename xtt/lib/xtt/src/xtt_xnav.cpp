@@ -3724,6 +3724,20 @@ int ApplList::find( applist_eType type, const char *name, const char *instance, 
   return 0;
 }
 
+int ApplList::find( applist_eType type, void *ctx, char *name, char *instance)
+{
+  ApplListElem *elem;
+
+  for ( elem = root; elem; elem = elem->next) {
+    if ( elem->type == type && elem->ctx == ctx) {
+      strcpy( instance, elem->instance);
+      strcpy( name, elem->name);
+      return 1;
+    }
+  }
+  return 0;
+}
+
 void ApplList::swap( int mode)
 {
   ApplListElem *elem;

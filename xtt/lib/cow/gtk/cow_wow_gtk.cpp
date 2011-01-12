@@ -162,6 +162,12 @@ static void displayerror_ok_cb( GtkWidget *w, gint arg1, gpointer data)
   gtk_widget_destroy( w);
 }
 
+static gboolean displayerror_remove_cb( void *data)
+{
+  gtk_widget_destroy( (GtkWidget *)data);
+  return FALSE;
+}
+
 void CoWowGtk::DisplayError( const char *title, const char *text)
 {
   GtkWidget *parent = m_parent;
@@ -180,6 +186,10 @@ void CoWowGtk::DisplayError( const char *title, const char *text)
  		    G_CALLBACK(displayerror_ok_cb), NULL);
   gtk_window_set_title( GTK_WINDOW(dialog), title);
   gtk_widget_show_all( dialog);
+
+  if ( m_autoremove)
+    g_timeout_add( 1000, displayerror_remove_cb, dialog); 
+
 }
 
 /************************************************************************
