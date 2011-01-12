@@ -63,19 +63,28 @@ public class GeTable extends JScrollPane implements GeComponentIfc,
     this.hRow = hRow;
     this.hColumn = hColumn;
       
-    table = new JTable( rows, columns - hColumn);
+    table = new JTable( rows, columns - hColumn) {
+      public boolean isCellEditable( int row, int col) {
+	return false;
+      }
+    };
     table.setColumnSelectionAllowed( false);
     table.setRowSelectionAllowed( false);
     table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     table.getColumnModel().getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-    if ( hRow == 0) {
+    if ( hRow == 0)
       table.setTableHeader( null);
-    }
+    else
+      table.getTableHeader().setReorderingAllowed(false);
 
     if ( hColumn == 1) {
       // Set up the header column
-      headerColumn = new JTable(rows, 1);
+      headerColumn = new JTable(rows, 1) {
+        public boolean isCellEditable( int row, int col) {
+	  return false;
+        }
+      };
       table.setSelectionModel( headerColumn.getSelectionModel());
 
       headerColumn.setMaximumSize( new Dimension( 90, 10000));
@@ -134,8 +143,13 @@ public class GeTable extends JScrollPane implements GeComponentIfc,
   public void setFont( Font font) {
     if ( table != null)
       table.setFont( font);
-    if ( hColumn == 1 && headerColumn != null)
+    if ( hColumn == 1 && headerColumn != null) {
       headerColumn.setFont( font);
+      if ( hRow == 1)
+	headerColumn.getTableHeader().setFont( font);
+    }
+    if ( hRow == 1)
+      table.getTableHeader().setFont( font);
   }
 
   public void setValueAt( String value, int row, int column) {
