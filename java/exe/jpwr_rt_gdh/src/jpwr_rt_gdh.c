@@ -407,7 +407,7 @@ JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoStringArray
     for(i=0;i<elements;i++)
     {
       (*env)->SetObjectArrayElement(env, jobjectArr, i, (*env)->NewStringUTF( env, p));
-      id += size;
+      p += size;
     }
   }
   else
@@ -439,7 +439,7 @@ JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoStringArray
       	                &len, NULL);
 
       (*env)->SetObjectArrayElement(env, jobjectArr, i, (*env)->NewStringUTF( env, (char *)buffer));
-      id += size;
+      p += size;
     }
   }
   return jobjectArr;
