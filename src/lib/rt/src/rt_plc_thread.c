@@ -282,6 +282,7 @@ scan (
     if (time_Dcomp(&delta, NULL) > 0) {
       pwr_tStatus sts;
       int phase = 0;
+      tp->skip_count = 0;
 
       if (tp->csup_lh != NULL) {
 	pwr_tTime now;
@@ -322,8 +323,16 @@ scan (
       }
       break;
 
-    } else
+    } else {
       tp->sliped++;
+      if ( tp->PlcThread->Options & pwr_mThreadOptionsMask_OverExecScanSingle &&
+	   tp->skip_count < 10) {
+	tp->skip_count++;
+	break;
+      }
+      else if ( tp->PlcThread->Options & pwr_mThreadOptionsMask_OverExecScanAlways)
+	break;
+    }
 
   } while (!tp->exit);
 

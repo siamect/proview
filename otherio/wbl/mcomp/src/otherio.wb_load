@@ -1,8 +1,8 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X136"
-    Attr NextCix = "_X15"
-    Attr NextTix[0] = "_X5"
+    Attr NextOix = "_X170"
+    Attr NextCix = "_X17"
+    Attr NextTix[0] = "_X8"
   EndBody
   Object Type $TypeHier 1 15-NOV-2007 14:35:37.90
     Object MotionControl_StatusEnum $TypeDef 1 15-NOV-2007 14:36:24.17
@@ -246,7 +246,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       EndObject
     EndObject
     Object ModbusSever_StatusEnum $TypeDef 4 25-NOV-2009 11:10:38.85
-      Body SysBody 25-NOV-2009 11:07:36.39
+      Body SysBody 13-DEC-2010 21:41:14.95
         Attr TypeRef = "pwrs:Type-$Enum"
         Attr Elements = 1
       EndBody
@@ -299,6 +299,164 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
     EndObject
+    Object Arduino_StatusEnum $TypeDef 5 13-DEC-2010 21:41:03.92
+      Body SysBody 03-JAN-2011 21:07:03.74
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+      EndBody
+      Object Success $Value 150 13-DEC-2010 21:42:21.43
+        Body SysBody 13-DEC-2010 21:42:27.86
+          Attr Text = "Success"
+          Attr PgmName = "Success"
+          Attr Value = 1
+        EndBody
+      EndObject
+      Object DiConfigureError $Value 151 13-DEC-2010 21:43:26.19
+        Body SysBody 13-DEC-2010 21:43:31.53
+          Attr Text = "DiConfigureError"
+          Attr PgmName = "DiConfigureError"
+          Attr Value = 2
+        EndBody
+      EndObject
+      Object DoConfigureError $Value 152 13-DEC-2010 21:43:41.99
+        Body SysBody 13-DEC-2010 21:43:47.01
+          Attr Text = "DoConfigureError"
+          Attr PgmName = "DoConfigureError"
+          Attr Value = 4
+        EndBody
+      EndObject
+      Object AiConfigureError $Value 153 13-DEC-2010 21:43:58.02
+        Body SysBody 13-DEC-2010 21:44:02.52
+          Attr Text = "AiConfigureError"
+          Attr PgmName = "AiConfigureError"
+          Attr Value = 6
+        EndBody
+      EndObject
+      Object AoConfigureError $Value 154 13-DEC-2010 21:44:11.20
+        Body SysBody 13-DEC-2010 21:44:16.16
+          Attr Text = "AoConfigureError"
+          Attr PgmName = "AoConfigureError"
+          Attr Value = 8
+        EndBody
+      EndObject
+      Object CommError $Value 155 13-DEC-2010 21:44:36.40
+        Body SysBody 13-DEC-2010 21:44:40.93
+          Attr Text = "CommError"
+          Attr PgmName = "CommError"
+          Attr Value = 10
+        EndBody
+      EndObject
+      Object MsgSize $Value 156 13-DEC-2010 21:45:11.87
+        Body SysBody 13-DEC-2010 21:45:20.31
+          Attr Text = "MsgSize"
+          Attr PgmName = "MsgSize"
+          Attr Value = 12
+        EndBody
+      EndObject
+      Object NoMessage $Value 158 21-DEC-2010 16:10:28.31
+        Body SysBody 21-DEC-2010 16:10:30.95
+          Attr Text = "NoMessage"
+          Attr PgmName = "NoMessage"
+          Attr Value = 16
+        EndBody
+      EndObject
+      Object NoSuchDevice $Value 159 21-DEC-2010 16:10:39.33
+        Body SysBody 21-DEC-2010 16:10:43.27
+          Attr Text = "NoSuchDevice"
+          Attr PgmName = "NoSuchDevice"
+          Attr Value = 18
+        EndBody
+      EndObject
+      Object DeviceSetupError $Value 168 03-JAN-2011 21:33:12.93
+        Body SysBody 03-JAN-2011 21:33:18.63
+          Attr Text = "DeviceSetupError"
+          Attr PgmName = "DeviceSetupError"
+          Attr Value = 20
+        EndBody
+      EndObject
+    EndObject
+    Object Arduino_BaudRateEnum $TypeDef 6 03-JAN-2011 21:16:43.20
+      Body SysBody 03-JAN-2011 21:07:09.34
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+      EndBody
+      Object BaudRate_2400 $Value 161 03-JAN-2011 21:17:13.04
+        Body SysBody 03-JAN-2011 21:17:14.30
+          Attr Text = "2400"
+          Attr PgmName = "BaudRate_2400"
+          Attr Value = 2400
+        EndBody
+      EndObject
+      Object BaudRate_4800 $Value 162 03-JAN-2011 21:17:21.73
+        Body SysBody 03-JAN-2011 21:17:22.82
+          Attr Text = "4800"
+          Attr PgmName = "BaudRate_4800"
+          Attr Value = 4800
+        EndBody
+      EndObject
+      Object BaudRate_9600 $Value 163 03-JAN-2011 21:17:29.93
+        Body SysBody 03-JAN-2011 21:17:31.07
+          Attr Text = "9600"
+          Attr PgmName = "BaudRate_9600"
+          Attr Value = 9600
+        EndBody
+      EndObject
+      Object BaudRate_14400 $Value 160 09-JAN-2011 20:23:56.52
+        Body SysBody 09-JAN-2011 20:24:03.52
+          Attr Text = "14400"
+          Attr PgmName = "BaudRate_14400"
+          Attr Value = 14400
+        EndBody
+      EndObject
+      Object BaudRate_19200 $Value 164 03-JAN-2011 21:17:37.54
+        Body SysBody 03-JAN-2011 21:17:38.64
+          Attr Text = "19200"
+          Attr PgmName = "BaudRate_19200"
+          Attr Value = 19200
+        EndBody
+      EndObject
+      Object BaudRate_28800 $Value 170 09-JAN-2011 20:24:24.78
+        Body SysBody 09-JAN-2011 20:24:31.34
+          Attr Text = "28800"
+          Attr PgmName = "BaudRate_28800"
+          Attr Value = 28800
+        EndBody
+      EndObject
+      Object BaudRate_38400 $Value 165 03-JAN-2011 21:17:44.96
+        Body SysBody 03-JAN-2011 21:17:46.11
+          Attr Text = "38400"
+          Attr PgmName = "BaudRate_38400"
+          Attr Value = 38400
+        EndBody
+      EndObject
+      Object BaudRate_57600 $Value 166 03-JAN-2011 21:17:53.04
+        Body SysBody 03-JAN-2011 21:17:54.16
+          Attr Text = "57600"
+          Attr PgmName = "BaudRate_57600"
+          Attr Value = 57600
+        EndBody
+      EndObject
+      Object BaudRate_115200 $Value 167 03-JAN-2011 21:18:13.86
+        Body SysBody 03-JAN-2011 21:18:14.96
+          Attr Text = "115200"
+          Attr PgmName = "BaudRate_115200"
+          Attr Value = 115200
+        EndBody
+      EndObject
+    EndObject
+    Object Arduino_OptionsMask $TypeDef 7 06-JAN-2011 15:51:06.94
+      Body SysBody 06-JAN-2011 15:48:58.95
+        Attr TypeRef = "pwrs:Type-$Mask"
+        Attr Elements = 1
+      EndBody
+      Object OptimizedDiPoll $Bit 169 06-JAN-2011 15:49:48.79
+        Body SysBody 06-JAN-2011 15:49:55.05
+          Attr Text = "OptimizedDiPoll"
+          Attr PgmName = "OptimizedDiPoll"
+          Attr Value = 1
+        EndBody
+      EndObject
+    EndObject
   EndObject
   Object Class $ClassHier 2 15-NOV-2007 14:35:40.72
     !/**
@@ -314,7 +472,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Body SysBody 21-NOV-2007 14:53:31.69
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 10320
+        Attr Flags = 43088
       EndBody
       Object RtBody $ObjBodyDef 1 15-NOV-2007 14:36:42.44
         Body SysBody 15-NOV-2007 14:36:42.44
@@ -481,7 +639,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Body SysBody 21-NOV-2007 14:53:39.42
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 18448
+        Attr Flags = 51216
       EndBody
       Object RtBody $ObjBodyDef 1 15-NOV-2007 14:36:59.65
         Body SysBody 15-NOV-2007 14:36:59.65
@@ -571,7 +729,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Body SysBody 21-FEB-2008 11:26:38.84
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 8272
+        Attr Flags = 41040
       EndBody
       Object RtBody $ObjBodyDef 1 08-FEB-2008 10:26:36.84
         Body SysBody 08-FEB-2008 10:26:36.85
@@ -879,7 +1037,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Body SysBody 21-FEB-2008 11:29:00.89
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 16464
+        Attr Flags = 49232
       EndBody
       Object RtBody $ObjBodyDef 1 08-FEB-2008 11:15:54.62
         Body SysBody 08-FEB-2008 11:15:54.63
@@ -1049,7 +1207,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Body SysBody 03-SEP-2008 16:03:48.36
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 4176
+        Attr Flags = 36944
       EndBody
       Object RtBody $ObjBodyDef 1 01-SEP-2008 10:54:17.57
         Body SysBody 01-SEP-2008 10:54:17.57
@@ -1151,7 +1309,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Body SysBody 25-NOV-2009 10:30:31.66
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 8272
+        Attr Flags = 41040
       EndBody
       Object RtBody $ObjBodyDef 1 25-NOV-2009 10:30:31.66
         Body SysBody 25-NOV-2009 10:32:51.18
@@ -1362,7 +1520,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Body SysBody 25-NOV-2009 11:05:23.49
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 16464
+        Attr Flags = 49232
       EndBody
       Object RtBody $ObjBodyDef 1 25-NOV-2009 11:05:23.49
         Body SysBody 25-NOV-2009 11:06:00.66
@@ -1491,7 +1649,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Body SysBody 15-APR-2010 21:46:16.74
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 10320
+        Attr Flags = 43088
       EndBody
       Object RtBody $ObjBodyDef 1 15-APR-2010 21:46:16.74
         Body SysBody 15-APR-2010 21:46:39.64
@@ -1583,7 +1741,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Body SysBody 15-APR-2010 21:46:16.74
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 18512
+        Attr Flags = 51280
       EndBody
       Object RtBody $ObjBodyDef 1 15-APR-2010 21:46:16.74
         Body SysBody 15-APR-2010 21:52:59.99
@@ -1676,7 +1834,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Body SysBody 06-JUN-2010 13:05:26.98
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 10320
+        Attr Flags = 43088
       EndBody
       Object RtBody $ObjBodyDef 1 06-JUN-2010 13:05:26.98
         Body SysBody 06-JUN-2010 13:05:43.85
@@ -1739,7 +1897,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Body SysBody 06-JUN-2010 13:05:26.98
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 18512
+        Attr Flags = 51280
       EndBody
       Object RtBody $ObjBodyDef 1 06-JUN-2010 13:05:26.98
         Body SysBody 06-JUN-2010 13:53:51.81
@@ -1844,7 +2002,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Body SysBody 23-MAY-2010 11:38:42.06
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 6224
+        Attr Flags = 38992
       EndBody
       Object RtBody $ObjBodyDef 1 23-MAY-2010 11:38:08.72
         Body SysBody 23-MAY-2010 11:38:33.38
@@ -1952,7 +2110,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Body SysBody 23-MAY-2010 11:43:07.03
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 10320
+        Attr Flags = 43088
       EndBody
       Object RtBody $ObjBodyDef 1 23-MAY-2010 11:43:07.03
         Body SysBody 23-MAY-2010 11:45:38.50
@@ -2215,6 +2373,294 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr ChAo[1].SigValueUnit = "V"
           Attr ChAo[1].ChannelSigValRangeHigh = 5.000000e+00
           Attr ChAo[1].RawValRangeHigh = 2.550000e+02
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Rack object for Arduino USB devices.
+    !  Rack object for Arduino USB devices.
+    !  This object is configured below the Node object.
+    ! 
+    !  @b See also
+    !  @classlink Arduino_Uno otherio_arduino_uno.html
+    !*/
+    Object Arduino_USB $ClassDef 15 13-DEC-2010 21:36:57.23
+      Body SysBody 13-DEC-2010 21:36:40.01
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 43088
+      EndBody
+      Object RtBody $ObjBodyDef 1 13-DEC-2010 21:46:33.64
+        Body SysBody 13-DEC-2010 21:37:13.55
+          Attr StructName = "Arduino_USB"
+          Attr NextAix = "_X17"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 13 13-DEC-2010 21:36:40.01
+          Body SysBody 13-DEC-2010 21:36:40.01
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Process that handles the module. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the module.
+        ! 
+        ! 1: The module is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The module is read by the rt_io_comm process.
+        ! 4: The module is handled by an application program.
+        !*/
+        Object Process $Attribute 14 13-DEC-2010 21:36:40.01
+          Body SysBody 13-DEC-2010 21:36:40.01
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Plc thread that handles the card.
+        ! The PlcThread object of the plc thread that handles the card.
+        ! The card is read with the scantime of the thread.
+        !*/
+        Object ThreadObject $Attribute 15 13-DEC-2010 21:36:40.01
+          Body SysBody 13-DEC-2010 21:36:40.01
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 137 13-DEC-2010 21:36:40.01
+        Object Pointed $Menu 138 13-DEC-2010 21:36:40.01
+          Object Connect $MenuButton 139 13-DEC-2010 21:36:40.01
+            Body SysBody 13-DEC-2010 21:36:40.01
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object PostCreate $DbCallBack 143 13-DEC-2010 21:36:40.01
+        Body SysBody 13-DEC-2010 21:36:40.01
+          Attr MethodName = "BaseIORack-PostCreate"
+        EndBody
+      EndObject
+      Object Template Arduino_USB 2151645184 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Card object for Arduino USB boards, e.g Uno and Mega2560
+    !  Card object for Arduino USB boards, e.g. Uno and Mega2560.
+    ! 
+    !  The object is configured as a child to a Arduino_USB object.
+    ! 
+    !  @b See also
+    !  @classlink Arduino_USB otherio_arduino_usb.html
+    !*/
+    Object Arduino_Uno $ClassDef 16 13-DEC-2010 21:38:55.44
+      Body SysBody 13-DEC-2010 21:36:40.01
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 51280
+      EndBody
+      Object RtBody $ObjBodyDef 1 13-DEC-2010 21:36:40.01
+        Body SysBody 13-DEC-2010 21:39:07.38
+          Attr StructName = "Arduino_Uno"
+          Attr NextAix = "_X24"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 10 13-DEC-2010 21:49:28.15
+          Body SysBody 13-DEC-2010 21:49:49.98
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! Specification of the board.
+        !*/
+        Object Specification $Attribute 13 13-DEC-2010 21:50:02.59
+          Body SysBody 13-DEC-2010 21:50:03.79
+            Attr PgmName = "Specification"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! Datasheet URL.
+        !*/
+        Object DataSheet $Attribute 14 13-DEC-2010 21:50:26.25
+          Body SysBody 13-DEC-2010 21:50:34.28
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+        !/**
+        ! Device name of the USB port, e.g. /dev/ttyACM0.
+        !*/
+        Object Device $Attribute 15 13-DEC-2010 21:51:06.35
+          Body SysBody 13-DEC-2010 21:51:16.23
+            Attr PgmName = "Device"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Process that handles the module. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the module.
+        ! 
+        ! 1: The module is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The module is read by the rt_io_comm process.
+        ! 4: The module is handled by an application program.
+        !*/
+        Object Process $Attribute 16 13-DEC-2010 21:51:43.37
+          Body SysBody 13-DEC-2010 21:51:43.37
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Plc thread that handles the card.
+        ! The PlcThread object of the plc thread that handles the card.
+        ! The card is read with the scantime of the thread.
+        !*/
+        Object ThreadObject $Attribute 17 13-DEC-2010 21:51:43.37
+          Body SysBody 13-DEC-2010 21:51:43.37
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Error count of the board.
+        ! ErrorCount will increase when a communication error or error status is received.
+        ! When ErrorCount reaches the ErrorLimit all inputs are reset to zero.
+        !*/
+        Object ErrorCount $Attribute 18 13-DEC-2010 21:52:48.18
+          Body SysBody 13-DEC-2010 21:52:57.58
+            Attr PgmName = "ErrorCount"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Error limit of the server.
+        ! ErrorCount will increase every cycle if status is not MB__NORMAL.
+        ! When ErrorCount reaches the ErrorLimit all inputs are reset to zero.
+        !*/
+        Object ErrorSoftLimit $Attribute 19 13-DEC-2010 21:53:15.14
+          Body SysBody 13-DEC-2010 21:53:20.46
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorHardLimit $Attribute 20 13-DEC-2010 21:53:29.66
+          Body SysBody 13-DEC-2010 21:53:34.59
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Status of the board.
+        !*/
+        Object Status $Attribute 11 13-DEC-2010 21:36:40.01
+          Body SysBody 13-DEC-2010 21:46:18.05
+            Attr PgmName = "Status"
+            Attr Flags = 1040
+            Attr TypeRef = "OtherIO:Type-Arduino_StatusEnum"
+          EndBody
+        EndObject
+        !/**
+        ! Watchdog time in seconds.
+        ! If the communication is lost, the board will reset all outputs after 
+        ! this time.
+        ! If the time is set to 0, outputs will not be reset.
+        !*/
+        Object WatchdogTime $Attribute 12 13-DEC-2010 21:36:40.01
+          Body SysBody 13-DEC-2010 21:36:40.01
+            Attr PgmName = "WatchdogTime"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        !/**
+        ! Baud rate of the USB connection.
+	! For fast scantimes the baud rate has to be increased.
+        !*/
+        Object BaudRate $Attribute 21 03-JAN-2011 21:18:39.87
+          Body SysBody 03-JAN-2011 21:19:00.44
+            Attr PgmName = "BaudRate"
+            Attr TypeRef = "OtherIO:Type-Arduino_BaudRateEnum"
+          EndBody
+        EndObject
+        !/**
+        ! Options.
+	! If OptimizedDiPoll is set the poll message for Di values are sent
+        ! at the end of the execution of the prevoius scan, instead of at
+        ! the start of the execution.
+        !*/
+        Object Options $Attribute 22 06-JAN-2011 15:50:22.78
+          Body SysBody 06-JAN-2011 15:51:32.48
+            Attr PgmName = "Options"
+            Attr TypeRef = "OtherIO:Type-Arduino_OptionsMask"
+          EndBody
+        EndObject
+        !/**
+        ! Specifies, in relation to the scantime of the thread, how often
+        ! the Ai channels of the board are handled. If AiScanInterval is 1 or 0, 
+        ! the Ai are handled every scan. If AiScanInterval is for example 10, they
+        ! are handled every 10'th scan, i.e. the scantime for the module
+        ! will be AiScanInterval times the scantime of the thread.
+        !*/
+        Object AiScanInterval $Attribute 23 09-JAN-2011 10:37:58.02
+          Body SysBody 09-JAN-2011 10:38:12.99
+            Attr PgmName = "AiScanInterval"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 144 13-DEC-2010 21:36:40.01
+        Object IoCardInit $Method 145 13-DEC-2010 21:36:40.01
+          Body SysBody 13-DEC-2010 21:39:28.91
+            Attr MethodName = "Arduino_Uno-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 146 13-DEC-2010 21:36:40.01
+          Body SysBody 13-DEC-2010 21:39:41.92
+            Attr MethodName = "Arduino_Uno-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 147 13-DEC-2010 21:36:40.01
+          Body SysBody 13-DEC-2010 21:39:55.00
+            Attr MethodName = "Arduino_Uno-IoCardRead"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 148 13-DEC-2010 21:36:40.01
+          Body SysBody 13-DEC-2010 21:40:05.20
+            Attr MethodName = "Arduino_Uno-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object PostCreate $DbCallBack 149 13-DEC-2010 21:36:40.01
+        Body SysBody 13-DEC-2010 21:36:40.01
+          Attr MethodName = "BaseIOCard-PostCreate"
+        EndBody
+      EndObject
+      Object Template Arduino_Uno 2151907328 01-JAN-1970 01:00:00.00
+        Body RtBody 03-JAN-2011 21:19:26.25
+          Attr ErrorSoftLimit = 25
+          Attr ErrorHardLimit = 50
+          Attr WatchdogTime = 5.000000e+00
+          Attr BaudRate = 9600
         EndBody
       EndObject
     EndObject

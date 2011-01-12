@@ -57,6 +57,16 @@ SObject pwrb:Class
 	EndBody
       EndObject
       !/**
+      !  Plc thread options.
+      !  Specification of the action when the execution time exceeds
+      !  the scantime. 
+      !*/
+      Object Options $Attribute 36
+	Body SysBody
+	  Attr TypeRef = "pwrb:Type-ThreadOptionsMask"
+	EndBody
+      EndObject
+      !/**
       !  Scan time for the plc thread.
       !*/
       Object ScanTime $Attribute 3
