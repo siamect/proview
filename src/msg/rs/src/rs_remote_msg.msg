@@ -64,3 +64,4 @@ udpunknown      <UDP message from unknown ip-address '%s' received>      /info
 udpweirdheader  <UDP message with illegal header received>      /info
 disorder	<Message disorder>				/error
 disabled	<Transport disabled>				/error
+udpnocon	<No UDP connection>				/error

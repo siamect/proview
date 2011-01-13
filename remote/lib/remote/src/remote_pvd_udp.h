@@ -98,7 +98,7 @@ typedef struct {
   pwr_tOName   	Attribute;
   int		Size;
   pwr_tTypeId   Tid;
-  char  	Value[1000];
+  char  	Value[1200];
 } rpvd_sMsgAttribute;
 
 typedef struct {
@@ -109,7 +109,7 @@ typedef struct {
   pwr_tOName   	Attribute;
   int		Size;
   pwr_tTypeId   Tid;
-  char  	Value[1000];
+  char  	Value[1200];
 } rpvd_sMsgWriteAttribute;
 
 typedef struct {
@@ -164,6 +164,8 @@ pwr_tStatus udp_Request( char *sendbuf, int sendbuf_size,
 
 pwr_tStatus udp_Init( char *remote_address, char *remote_host_name, int port);
 
+void udp_LinkFailure();
+pwr_tStatus udp_CheckLink();
 
 #if defined __cplusplus
 }

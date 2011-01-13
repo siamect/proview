@@ -121,8 +121,12 @@ void remote_pvd_pwrcli::objectOid( co_procom *pcom, pwr_tOix oix)
 
   sts = udp_Request( (char *)&msg, sizeof(msg), (char **)&rmsg);
   if ( pvd_cLog) logg( "Reply", sts, "");
-  if ( EVEN(sts) || sts == REM__TIMEOUT) {
+  if ( EVEN(sts)) {
     pcom->provideStatus( sts);
+    return;
+  }
+  if ( sts == REM__TIMEOUT) {
+    pcom->provideStatus( REM__UDPNOCON);
     return;
   }
   while ( rmsg->Id != msg.Id) {
@@ -175,8 +179,12 @@ void remote_pvd_pwrcli::objectName( co_procom *pcom, char *name, pwr_tOix poix)
   if ( pvd_cLog) logg( "ObjName", poix, name);
 
   sts = udp_Request( (char *)&msg, sizeof(msg), (char **)&rmsg);
-  if ( EVEN(sts) || sts == REM__TIMEOUT) {
+  if ( EVEN(sts)) {
     pcom->provideStatus( sts);
+    return;
+  }
+  if ( sts == REM__TIMEOUT) {
+    pcom->provideStatus( REM__UDPNOCON);
     return;
   }
   while ( rmsg->Id != msg.Id) {
@@ -271,10 +279,15 @@ void remote_pvd_pwrcli::writeAttribute( co_procom *pcom, pwr_tOix oix,
   if ( pvd_cLog) logg( "Write", aref.Objid.oix, aname);
 
   sts = udp_Request( (char *)&msg, sizeof(msg), (char **)&rmsg);
-  if ( EVEN(sts) || sts == REM__TIMEOUT) {
+  if ( EVEN(sts)) {
     pcom->provideStatus( sts);
     return;
   }
+  if ( sts == REM__TIMEOUT) {
+    pcom->provideStatus( REM__UDPNOCON);
+    return;
+  }
+  
   while ( rmsg->Id != msg.Id) {
     dispatch( pcom, (rpvd_sMsg *)rmsg);
 
@@ -329,8 +342,12 @@ void remote_pvd_pwrcli::readAttribute( co_procom *pcom, pwr_tOix oix,
 
   sts = udp_Request( (char *)&msg, sizeof(msg), (char **)&rmsg);
   if ( pvd_cLog) logg( "Reply", sts, "");
-  if ( EVEN(sts) || sts == REM__TIMEOUT) {
+  if ( EVEN(sts)) {
     pcom->provideStatus( sts);
+    return;
+  }
+  if ( sts == REM__TIMEOUT) {
+    pcom->provideStatus( REM__UDPNOCON);
     return;
   }
   while ( rmsg->Id != msg.Id) {
@@ -496,8 +513,12 @@ void remote_pvd_pwrcli::subAssociateBuffer( co_procom *pcom, void **buff, int oi
   if ( pvd_cLog) logg( "AssoBuff", msg.Oid.oix, aname);
 
   sts = udp_Request( (char *)&msg, sizeof(msg), (char **)&rmsg);
-  if ( EVEN(sts) || sts == REM__TIMEOUT) {
+  if ( EVEN(sts)) {
     pcom->provideStatus( sts);
+    return;
+  }
+  if ( sts == REM__TIMEOUT) {
+    pcom->provideStatus( REM__UDPNOCON);
     return;
   }
   while ( rmsg->Id != msg.Id) {
@@ -546,8 +567,12 @@ void remote_pvd_pwrcli::subDisassociateBuffer( co_procom *pcom, pwr_tSubid subid
   if ( pvd_cLog) logg( "DisoBuff", subid.rix, "(rix)");
 
   sts = udp_Request( (char *)&msg, sizeof(msg), (char **)&rmsg);
-  if ( EVEN(sts) || sts == REM__TIMEOUT) {
+  if ( EVEN(sts)) {
     pcom->provideStatus( sts);
+    return;
+  }
+  if ( sts == REM__TIMEOUT) {
+    pcom->provideStatus( REM__UDPNOCON);
     return;
   }
   while ( rmsg->Id != msg.Id) {
@@ -579,12 +604,19 @@ void remote_pvd_pwrcli::subRequest( co_procom *pcom)
   msg.Type = rpvd_eMsg_SubRequest;
   msg.Id = rpvd_id++;
   for (;;) {
+    sts = udp_CheckLink();
+    if ( EVEN(sts)) return;
+
     sts = udp_Send( (char *)&msg, sizeof(msg));
     if ( EVEN(sts)) return;
 
-    sts = udp_Receive( (char **)&rmsg, 5000);
-    if ( EVEN(sts) || sts == REM__TIMEOUT)
+    sts = udp_Receive( (char **)&rmsg, 1000);
+    if ( EVEN(sts))
       return;
+    if ( sts == REM__TIMEOUT) {
+      udp_LinkFailure();
+      return;
+    }
     while ( rmsg->Id != msg.Id) {
       dispatch( pcom, (rpvd_sMsg *)rmsg);
 

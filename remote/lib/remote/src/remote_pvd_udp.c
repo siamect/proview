@@ -29,6 +29,7 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
+#include "co_time.h"
 #include "rs_remote_msg.h"
 #include "remote_pvd_udp.h"
 
@@ -167,25 +168,56 @@ static int CreateSocket( udp_tCtx ctx)
   return 1;
 }
 
+
+static pwr_tTime last_try = {0,0};
+pwr_tStatus udp_CheckLink()
+{
+  if ( !udp_ctx->LinkUp && last_try.tv_sec != 0) {
+    /* Don't try again within 20 seconds */
+    pwr_tTime current;
+    pwr_tDeltaTime diff;
+
+    time_GetTime( &current);
+    time_Adiff( &diff, &current, &last_try);
+    if ( time_DToFloat( 0, &diff) < 30) {
+      // printf( "Reqest Dismissed\n");
+      return REM__UDPNOCON;
+    }
+  }
+  return REM__SUCCESS;
+}
+
+void udp_LinkFailure()
+{
+  time_GetTime( &last_try);
+  // printf( "Request timeout !!!!!!!!!!\n");
+}
+
 pwr_tStatus udp_Request( char *sendbuf, int sendbuf_size, 
 			 char **rcvbuf)
 {
   int i;
   pwr_tStatus sts;
-  int tmo = 400;
+  int tmo = 200;
+  
+  if ( udp_ctx->Disable) return REM__DISABLED;
+  sts = udp_CheckLink();
+  if ( EVEN(sts)) return sts;
 
-  if (udp_ctx->Disable) return REM__DISABLED;
-
-  for ( i = 0; i < 5; i++) {
+  for ( i = 0; i < 4; i++) {
     sts = udp_Send( sendbuf, sendbuf_size);
     if ( EVEN(sts)) return sts;
 
     sts = udp_Receive( rcvbuf, tmo);
-    if ( sts != REM__TIMEOUT)
+    if ( sts != REM__TIMEOUT) {
+      udp_ctx->LinkUp = 1;
       return sts;
-
+    }
     tmo = tmo * 2;
   }
+
+  udp_LinkFailure();
+
   if ( udp_ctx->LinkUp) {
     printf( "UDP link Down to node %s\n", udp_ctx->RemoteHostName);
     udp_ctx->LinkUp = 0;
@@ -202,7 +234,7 @@ pwr_tStatus udp_Send( char *buf, int buf_size)
     char data[UDP_MAX_SIZE];
   } message;
 
-  if (ctx->Disable) return REM__DISABLED;
+  if ( ctx->Disable) return REM__DISABLED;
 
   message.header.protocol_id[0] = STX;
 
