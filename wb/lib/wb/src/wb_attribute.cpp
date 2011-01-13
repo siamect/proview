@@ -230,7 +230,7 @@ wb_attribute::wb_attribute(const wb_attribute& pa, int idx, const char *aname) :
   if ( pa.m_flags & PWR_MASK_ARRAY) {
     if ( attrname[strlen(attrname)-1] == ']') {
       // Replace the index
-      char *s = strchr( attrname, '[');
+      char *s = strrchr( attrname, '[');
       if ( s)
 	sprintf( s, "[%d]", idx);
     }
