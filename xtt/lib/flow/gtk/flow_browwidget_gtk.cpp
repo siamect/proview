@@ -351,12 +351,11 @@ static void browwidgetgtk_destroy( GtkObject *object)
   BrowWidgetGtk *brow = (BrowWidgetGtk *)object;
 
   if ( !brow->destroyed) {
+    brow->destroyed = 1;
     if ( brow->scroll_timerid)
       g_source_remove( brow->scroll_timerid);
     if ( !brow->is_navigator)
       delete (FlowDrawGtk *)brow->draw_ctx;
-
-    brow->destroyed = 1;
   }
 
   GTK_OBJECT_CLASS( browwidgetgtk_parent_class)->destroy( object);

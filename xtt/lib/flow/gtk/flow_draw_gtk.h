@@ -50,6 +50,7 @@ class FlowDrawGtk : public FlowDraw {
   guint		timer_id;
   GdkColor	color_vect[20];
   int		color_vect_cnt;
+  int   	closing_down;
 
   FlowDrawGtk( GtkWidget *toplevel, 
 		void **flow_ctx,

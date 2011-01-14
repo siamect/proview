@@ -344,12 +344,11 @@ static void flowwidgetgtk_destroy( GtkObject *object)
   FlowWidgetGtk *flow = (FlowWidgetGtk *)object;
 
   if ( !flow->destroyed) {
+    flow->destroyed = 1;
     if ( flow->scroll_timerid)
       g_source_remove( flow->scroll_timerid);
     if ( !flow->is_navigator)
       delete (FlowDrawGtk *)flow->draw_ctx;
-
-    flow->destroyed = 1;
   }
   GTK_OBJECT_CLASS( flowwidgetgtk_parent_class)->destroy( object);
 }

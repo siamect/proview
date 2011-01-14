@@ -68,6 +68,7 @@ struct _CurveWidgetGtk {
   gint 		scroll_timerid;
   glow_sScroll  scroll_data;
   int           scroll_configure;
+  int		destroyed;
 };
 
 struct _CurveWidgetGtkClass {
@@ -261,8 +262,27 @@ static void curvewidgetgtk_grab_focus( GtkWidget *glow)
   gdk_window_focus( glow->window, GDK_CURRENT_TIME);
 }
 
+static void curvewidgetgtk_destroy( GtkObject *object)
+{
+  CurveWidgetGtk *curvew = (CurveWidgetGtk *)object;
+
+  if ( !curvew->destroyed) {
+    curvew->destroyed = 1;
+    if ( curvew->scroll_timerid)
+      g_source_remove( curvew->scroll_timerid);
+    if ( curvew->is_navigator && curvew->curve_ctx)
+      ((CurveCtx *)curvew->curve_ctx)->no_nav = 1;
+    else
+      delete (GlowDrawGtk *)curvew->draw_ctx;
+  }
+  GTK_OBJECT_CLASS( curvewidgetgtk_parent_class)->destroy( object);
+}
+
 static gboolean curvewidgetgtk_event( GtkWidget *glow, GdkEvent *event)
 {
+  if ( ((CurveWidgetGtk *)glow)->destroyed)
+    return TRUE;
+
   if ( !((CurveWidgetGtk *)glow)->curve_ctx)
     // Navigator not yet created
     return TRUE;
@@ -360,11 +380,15 @@ static void curvewidgetgtk_realize( GtkWidget *widget)
 static void curvewidgetgtk_class_init( CurveWidgetGtkClass *klass)
 {
   GtkWidgetClass *widget_class;
+  GtkObjectClass *object_class;
+
   widget_class = GTK_WIDGET_CLASS( klass);
+  object_class = GTK_OBJECT_CLASS( klass);
   widget_class->realize = curvewidgetgtk_realize;
   widget_class->expose_event = curvewidgetgtk_expose;
   widget_class->event = curvewidgetgtk_event;
   widget_class->grab_focus = curvewidgetgtk_grab_focus;
+  object_class->destroy = curvewidgetgtk_destroy;
 }
 
 static void curvewidgetgtk_init( CurveWidgetGtk *glow)

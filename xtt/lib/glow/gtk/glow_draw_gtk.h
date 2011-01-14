@@ -61,25 +61,25 @@ class GlowDrawGtk : public GlowDraw {
 	glow_eCtxType type);
   ~GlowDrawGtk();
 
-  DrawWindGtk m_wind;
-  DrawWindGtk nav_wind;
+  DrawWindGtk 	m_wind;
+  DrawWindGtk 	nav_wind;
   GdkDisplay	*display;
   GdkScreen	*screen;
-  GdkGC	*gc;
-  GdkGC	*gc_erase;
-  GdkGC	*gc_inverse;
-  GdkGC	*gcs[glow_eDrawType__][DRAW_TYPE_SIZE];
-  // XFontStruct	*font_struct[glow_eDrawFont__][DRAW_FONT_SIZE];
+  GdkGC		*gc;
+  GdkGC		*gc_erase;
+  GdkGC		*gc_inverse;
+  GdkGC		*gcs[glow_eDrawType__][DRAW_TYPE_SIZE];
   GdkFont 	*font[glow_eFont__][glow_eDrawFont__][DRAW_FONT_SIZE];
   GdkCursor	*cursors[glow_eDrawCursor__];
-  int	ef;
-  GdkColormap *colormap;
-  GdkColor background;
-  GdkColor original_background;
-  guint	timer_id;
-  int	click_sensitivity;
+  int		ef;
+  GdkColormap 	*colormap;
+  GdkColor 	background;
+  GdkColor 	original_background;
+  guint		timer_id;
+  int		click_sensitivity;
   GdkColor	color_vect[320];
   int		color_vect_cnt;
+  int   	closing_down;
   
   int event_handler( GdkEvent event);
   virtual void enable_event( glow_eEvent event, 

@@ -312,10 +312,15 @@ static GdkColor flow_allocate_color( FlowDrawGtk *draw_ctx, const char *named_co
 
 FlowDrawGtk::~FlowDrawGtk()
 {
+  closing_down = 1;
+
   basectx->set_nodraw();
   delete basectx;
   draw_free_gc( this);
   gdk_colormap_free_colors( colormap, color_vect, color_vect_cnt);
+
+  if ( timer_id)
+    g_source_remove( timer_id);
 }
 
 int FlowDrawGtk::create_secondary_ctx( 
@@ -387,7 +392,8 @@ FlowDrawGtk::FlowDrawGtk(
 	flow_eCtxType type) :
     toplevel(x_toplevel), nav_shell(0), 
     nav_toplevel(0), display(0),
-    window(0), nav_window(0), screen(0), timer_id(0), color_vect_cnt(0)
+    window(0), nav_window(0), screen(0), timer_id(0), color_vect_cnt(0),
+    closing_down(0)
 {
 
   memset( gcs, 0, sizeof(gcs));
@@ -448,6 +454,9 @@ int FlowDrawGtk::event_handler( FlowCtx *ctx, GdkEvent event)
   static int	last_press_x = 0;
   static int	last_press_y = 0;
   int           sts = 1;
+
+  if ( closing_down)
+    return 1;
 
   if ( event.any.window == window || event.type == GDK_KEY_PRESS) {
     switch ( event.type) {

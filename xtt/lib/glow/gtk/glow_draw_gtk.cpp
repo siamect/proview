@@ -484,7 +484,7 @@ static GdkColor glow_allocate_color( GlowDrawGtk *draw_ctx, int rgb_red,
 
 GlowDrawGtk::~GlowDrawGtk()
 {
-  cancel_event_timer( ctx);
+  closing_down = 1;
 
   ctx->set_nodraw();
   if ( ctx->type() == glow_eCtxType_Grow)
@@ -504,6 +504,9 @@ GlowDrawGtk::~GlowDrawGtk()
     g_object_unref( nav_wind.buffer);
   if ( nav_wind.background_pixmap)
     g_object_unref( nav_wind.background_pixmap);
+
+  if ( timer_id)
+    g_source_remove( timer_id);
 }
 
 int GlowDrawGtk::init_nav( GtkWidget *nav_widget)
@@ -524,7 +527,7 @@ GlowDrawGtk::GlowDrawGtk(
         int (*init_proc)(GtkWidget *w, GlowCtx *ctx, void *client_data),
 	void  *client_data, 
 	glow_eCtxType type) 
-  : ef(0), timer_id(0), click_sensitivity(0), color_vect_cnt(0)
+  : ef(0), timer_id(0), click_sensitivity(0), color_vect_cnt(0), closing_down(0)
 {
   memset( gcs, 0, sizeof(gcs));
   memset( font, 0, sizeof(font));
@@ -579,6 +582,9 @@ int GlowDrawGtk::event_handler( GdkEvent event)
   static int	last_press_x = 0;
   static int	last_press_y = 0;
   int sts = 1;
+
+  if ( closing_down)
+    return 1;
 
 //  cout << "Event : button_pressed " << button_pressed << " clicked " << 
 //	button_clicked << " c&p " << button_clicked_and_pressed << endl;
