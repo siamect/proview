@@ -319,6 +319,11 @@ palette NavigatorPalette
       menu USB
       {
         class USB_Agent
+      	menu Arduino
+	{	
+          class Arduino_USB
+          class Arduino_Uno
+	}
       	menu Velleman_K8055
 	{	
           class Velleman_K8055

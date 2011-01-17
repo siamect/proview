@@ -1,6 +1,6 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X170"
+    Attr NextOix = "_X171"
     Attr NextCix = "_X17"
     Attr NextTix[0] = "_X8"
   EndBody
@@ -372,6 +372,13 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr Text = "DeviceSetupError"
           Attr PgmName = "DeviceSetupError"
           Attr Value = 20
+        EndBody
+      EndObject
+      Object ConnectionTimeout $Value 171 17-JAN-2011 18:13:00.46
+        Body SysBody 17-JAN-2011 18:13:05.37
+          Attr Text = "ConnectionTimeout"
+          Attr PgmName = "ConnectionTimeout"
+          Attr Value = 22
         EndBody
       EndObject
     EndObject
@@ -2594,7 +2601,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
         !/**
         ! Baud rate of the USB connection.
-	! For fast scantimes the baud rate has to be increased.
+        ! For fast scantimes the baud rate has to be increased.
         !*/
         Object BaudRate $Attribute 21 03-JAN-2011 21:18:39.87
           Body SysBody 03-JAN-2011 21:19:00.44
@@ -2604,7 +2611,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
         !/**
         ! Options.
-	! If OptimizedDiPoll is set the poll message for Di values are sent
+        ! If OptimizedDiPoll is set the poll message for Di values are sent
         ! at the end of the execution of the prevoius scan, instead of at
         ! the start of the execution.
         !*/
