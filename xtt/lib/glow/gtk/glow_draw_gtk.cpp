@@ -179,8 +179,8 @@ static  GdkEvent	last_event;
 static GdkColor glow_allocate_named_color( GlowDrawGtk *draw_ctx, const char *named_color);
 static GdkColor glow_allocate_color( GlowDrawGtk *draw_ctx, int rgb_red,
 	int rgb_green, int rgb_blue);
-static void event_timer( GlowCtx *ctx, int time_ms);
-static void cancel_event_timer(GlowCtx *ctx);
+static void event_timer( GlowDrawGtk *ctx, int time_ms);
+static void cancel_event_timer( GlowDrawGtk *ctx);
 static gboolean event_timer_cb( void *ctx);
 static int glow_read_color_file( const char *filename, draw_sColor **color_array, 
 	int *size);
@@ -731,13 +731,13 @@ int GlowDrawGtk::event_handler( GdkEvent event)
       if ( button_clicked) {
 	/* Wait for release */
 	button_clicked_and_pressed = 1;
-	cancel_event_timer( ctx);
+	cancel_event_timer( this);
 	button_clicked = 0;
 	memcpy( &last_event, &event, sizeof(event));
 	button_pressed = event.button.button;
 	last_press_x = (int)event.button.x;
 	last_press_y = (int)event.button.y;
-	event_timer(ctx, 200);
+	event_timer( this, 200);
 	return 1;
       }
       if ( !button_pressed ) {
@@ -745,7 +745,7 @@ int GlowDrawGtk::event_handler( GdkEvent event)
 	button_pressed = event.button.button;
 	last_press_x = (int)event.button.x;
 	last_press_y = (int)event.button.y;
-	event_timer(ctx, 200);
+	event_timer( this, 200);
 	return 1;
       }
       else {    
@@ -907,20 +907,20 @@ int GlowDrawGtk::event_handler( GdkEvent event)
       }
       else {
 	/* Button click */
-	cancel_event_timer( ctx);
+	cancel_event_timer( this);
 	if ( ! button_clicked_and_pressed) {
 //  cout << "Button first click detected" << endl;
 	  /* wait for button double click */
 	  memcpy( &last_event, &event, sizeof(event));
 	  button_clicked = 1;
-	  event_timer( ctx, 200);
+	  event_timer( this, 200);
 	  button_pressed = 0;
 	  return 1;
 	}
 	else {
 	  /* Button double click */ 
 // cout << "Button double click detected" << endl;
-	  cancel_event_timer( ctx);
+	  cancel_event_timer( this);
 	  button_clicked = 0;
 	  button_pressed = 0;
 	  button_clicked_and_pressed = 0;
@@ -1030,7 +1030,7 @@ int GlowDrawGtk::event_handler( GdkEvent event)
 	event.button.y = last_press_y;
 
 	/* Button press */
-	cancel_event_timer( ctx);
+	cancel_event_timer( this);
 	switch ( button_pressed) {
 	case 1: // Button1
 	  button1_pressed = 1;
@@ -1887,16 +1887,15 @@ static gboolean draw_timer_cb( void *data)
 static gboolean event_timer_cb( void *ctx)
 {
 //  printf( "Timer callback\n");
-  GlowDrawGtk *draw_ctx = (GlowDrawGtk *) ((GlowCtx *)ctx)->gdraw;
+  GlowDrawGtk *draw_ctx = (GlowDrawGtk *)ctx;
   draw_ctx->timer_id = 0;
 
   draw_ctx->event_handler( last_event);
   return FALSE;
 }
 
-static void cancel_event_timer( GlowCtx *ctx)
+static void cancel_event_timer( GlowDrawGtk *draw_ctx)
 {
-  GlowDrawGtk *draw_ctx  = (GlowDrawGtk *) ctx->gdraw;
   if ( draw_ctx->timer_id) {
     g_source_remove( draw_ctx->timer_id);
     draw_ctx->timer_id = 0;
@@ -1904,12 +1903,10 @@ static void cancel_event_timer( GlowCtx *ctx)
 //  printf( "Timer removed\n");
 }
 
-static void event_timer( GlowCtx *ctx, int time_ms)
+static void event_timer( GlowDrawGtk *draw_ctx, int time_ms)
 {
-  GlowDrawGtk *draw_ctx = (GlowDrawGtk *) ctx->gdraw;
-
 //  printf( "Add timer\n");
-  draw_ctx->timer_id = g_timeout_add( time_ms, event_timer_cb, ctx);
+  draw_ctx->timer_id = g_timeout_add( time_ms, event_timer_cb, draw_ctx);
 
 }
 
