@@ -34,6 +34,11 @@ void usage()
 {
   printf("\
   co_merge_methods\n\
+\n\
+  Options:\n\
+      -k   Keep c file.\n\
+      -v   Verbose.\n\
+\n\
   Arguments : \n\
       1. Method utility (io_base, wb_base, xtt_base) \n\
       2. Methods files, e.g. $pwr_inc/io_base_*.meth\n\
@@ -73,6 +78,7 @@ int main(  int argc, char *argv[])
   char mtab[1000][32];
   int mtabcnt = 0;
   int i;
+  int idx;
   pwr_tCmd cmd;
   pwr_tFileName incdir;
   pwr_tFileName cfile;
@@ -81,6 +87,8 @@ int main(  int argc, char *argv[])
   char pwre_cxx[80];
   char pwre_ar[80];
   char *s;
+  int arg_keep = 0;
+  int arg_verbose = 0;
   int in_if = 0;
 #if defined OS_LINUX
   char dos[] = "OS_LINUX";
@@ -89,7 +97,7 @@ int main(  int argc, char *argv[])
 #elif defined OS_FREEBSD
   char dos[] = "OS_FREEBSD";
 #endif
-  if ( argc != 4) {
+  if ( argc < 4) {
     usage();
     exit(1);
   }
@@ -108,19 +116,38 @@ int main(  int argc, char *argv[])
     strcpy( pwre_ar, "ar");
 
 
-  if ( strcmp( argv[1], "io_base") == 0)
-    mtype = merge_eMtype_IoBase;
-  else if ( strcmp( argv[1], "wb_base") == 0)
-    mtype = merge_eMtype_WbBase;
-  else if ( strcmp( argv[1], "xtt_base") == 0)
-    mtype = merge_eMtype_XttBase;
-  else {
-    usage();
-    exit(1);
+  idx = 0;
+  for ( i = 1; i < argc; i++) {
+    if ( strcmp( argv[i], "-k") == 0)
+      arg_keep = 1;
+    else if ( strcmp( argv[i], "-v") == 0)
+      arg_verbose = 1;
+    else {
+      switch ( idx) {
+	case 0:
+	  if ( strcmp( argv[i], "io_base") == 0)
+   	    mtype = merge_eMtype_IoBase;
+  	  else if ( strcmp( argv[i], "wb_base") == 0)
+    	    mtype = merge_eMtype_WbBase;
+  	  else if ( strcmp( argv[i], "xtt_base") == 0)
+    	    mtype = merge_eMtype_XttBase;
+  	  else {
+    	   usage();
+    	   exit(1);
+  	  }
+	  idx++;
+	  break;
+	case 1:
+	  strcpy( filespec, argv[i]);
+	  idx++;
+	  break;
+	case 2:
+	  strcpy( outfile, argv[i]);
+	  idx++;
+	  break;
+      }
+    }
   }
-  strcpy( filespec, argv[2]);
-  strcpy( outfile, argv[3]);
-
   sts = dcli_search_file( filespec, found_file, DCLI_DIR_SEARCH_INIT);
   while ( ODD(sts)) {
     fp = fopen( found_file, "r");
@@ -235,14 +262,18 @@ int main(  int argc, char *argv[])
   default:
     sprintf( cmd, "%s -c -I%s -D%s -o %s %s", pwre_cc, incdir, dos, ofile, cfile);
   }
-  // printf( "co_merge: %s\n", cmd);
+  if ( arg_verbose)
+    printf( "co_merge: %s\n", cmd);
   system( cmd);
   sprintf( cmd, "%s r %s %s", pwre_ar, outfile, ofile);
-  // printf( "co_merge: %s\n", cmd);
+  if ( arg_verbose)
+    printf( "co_merge: %s\n", cmd);
   system(cmd);
   sprintf( cmd, "rm %s", ofile);
   system(cmd);
-  sprintf( cmd, "rm %s", cfile);
-  system(cmd);
+  if ( !arg_keep) {
+    sprintf( cmd, "rm %s", cfile);
+    system(cmd);
+  }
   return 1;
 }
