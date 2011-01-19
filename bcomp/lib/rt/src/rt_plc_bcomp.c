@@ -197,6 +197,9 @@ void CompModePID_Fo_exec( plc_sThread *tp,
 /*_*
   CompPID_Fo
 
+  Revision:	2011-01-18 / Werner
+		Error in filtered derivate part corrected.
+
   @aref comppid_fo CompPID_Fo
 */
 void CompPID_Fo_init( pwr_sClass_CompPID_Fo  *o)
@@ -227,6 +230,7 @@ void CompPID_Fo_exec( plc_sThread *tp,
   float	derold;
   float	ut;
   float	dut;
+  float kd;
   pwr_sClass_CompPID *co = (pwr_sClass_CompPID *) o->PlcConnectP;
 
   if ( !co)
@@ -259,13 +263,13 @@ void CompPID_Fo_exec( plc_sThread *tp,
   ddiff = ((co->PidAlg & DAVV) != 0) ?
     (co->ControlDiff - eold) / *o->ScanTime:
     (co->ProcVal - xold) / *o->ScanTime;
-  if ((co->DerGain < 1.0) ||
-      (co->DerGain * *o->ScanTime >= co->DerTime))
-    co->FiltDer = ddiff * co->DerTime;		/* No Filter */
-  else
-    co->FiltDer += (ddiff - derold) *
-      co->DerGain * *o->ScanTime; /* Filter */
-
+  if ((co->DerGain <= 0.0) || (co->DerTime <= 0))
+    co->FiltDer = ddiff;		/* No Filter */
+  else {
+    kd = 1.0 / (1.0 + co->DerGain * *o->ScanTime / co->DerTime);
+    co->FiltDer += (ddiff - derold) * (1.0 - kd);
+  }
+  
   if ( co->Force ) {
     /* Force */
     dut = co->OutVal;
@@ -288,7 +292,7 @@ void CompPID_Fo_exec( plc_sThread *tp,
 	/* Not pure I-controller */
 	/* Derivative-part */
 	if ((co->PidAlg & DALG) != 0)
-	  dut += (co->FiltDer-derold);
+	  dut += (co->FiltDer-derold) * co->DerTime;
 	/* P-part */
 	dut += ((co->PidAlg & PAVV) != 0) ?
 	  co->ControlDiff - eold :
@@ -326,7 +330,7 @@ void CompPID_Fo_exec( plc_sThread *tp,
       ut = co->ControlDiff;
       /* Derivative-part */
       if ((co->PidAlg & DALG) != 0)
-	ut += co->FiltDer;
+	ut += co->FiltDer * co->DerTime;
       /* Gain */
       ut *= co->Gain;
       if (co->Inverse != 0) ut = - ut;
