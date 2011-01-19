@@ -337,7 +337,10 @@ void mode_exec(
   function:	PID or PD Controller with basic facilities
 		Possible to turn off integration and to force
 		output to desired value.
-
+		
+  Revision:	2011-01-18 / Werner
+		Error in filtered derivate part corrected.
+		
   @aref pid Pid
 */
 
@@ -360,6 +363,7 @@ void pid_exec(
 	float	derold;
 	float	ut;
 	float	dut;
+	float	kd;
 
 /* Save old values */
 xold=object->ProcVal;
@@ -381,12 +385,12 @@ object->ControlDiff = object->ProcVal - object->SetVal;
 ddiff = ((object->PidAlg & DAVV) != 0) ?
   (object->ControlDiff - eold) / *object->ScanTime:
   (object->ProcVal - xold) / *object->ScanTime;
-if ((object->DerGain < 1.0) ||
-    (object->DerGain * *object->ScanTime >= object->DerTime))
-    object->FiltDer = ddiff * object->DerTime;		/* No Filter */
-else
-    object->FiltDer += (ddiff - derold) *
-      object->DerGain * *object->ScanTime; /* Filter */
+if ((object->DerGain <= 0.0) || (object->DerTime <= 0))
+    object->FiltDer = ddiff;		/* No Filter */
+else {
+    kd = 1.0 / (1.0 + object->DerGain * *object->ScanTime / object->DerTime);
+    object->FiltDer += (ddiff - derold) * (1.0 - kd);
+}
 
 if ( object->Force )
 /* Force */
@@ -414,7 +418,7 @@ else
     {
       /* Derivative-part */
       if ((object->PidAlg & DALG) != 0)
-        dut += (object->FiltDer-derold);
+        dut += (object->FiltDer-derold) * object->DerTime;
       /* P-part */
       dut += ((object->PidAlg & PAVV) != 0) ?
         object->ControlDiff - eold :
@@ -457,7 +461,7 @@ else
     ut = object->ControlDiff;
     /* Derivative-part */
     if ((object->PidAlg & DALG) != 0)
-      ut += object->FiltDer;
+      ut += object->FiltDer * object->DerTime;
     /* Gain */
     ut *= object->Gain;
     if (object->Inverse != 0) ut = - ut;

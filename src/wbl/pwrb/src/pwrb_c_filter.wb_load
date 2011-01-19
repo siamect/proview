@@ -34,8 +34,7 @@ SObject pwrb:Class
 !      X =  FeedB, if FeedB is connected, 
 !           ActValt - 1, otherwise
 !  
-!    a = ScanTime / FiltCon and 0 < a < 1.0. 
-!    If a >= 1.0 no filtering is done.
+!    a = 1 - 1 / (1 + ScanTime / FiltCon)
 !
 !  An external signal may also be used as feedback; e.g.
 !  @image orm_en1-77.gif

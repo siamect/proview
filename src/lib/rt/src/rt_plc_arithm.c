@@ -352,11 +352,14 @@ void filter_exec(
   plc_sThread		*tp,
   pwr_sClass_filter 	*object)
 {
+	float kd;
+	
 	object->In = *object->InP;
-	if (object->FiltCon > *object->ScanTime)
+	if (object->FiltCon > 0.0) {
+	  kd = 1.0 / (1.0 + *object->ScanTime / object->FiltCon);
 	  object->ActVal = *object->FeedBP +
-	    (object->In - *object->FeedBP) * *object->ScanTime / object->FiltCon;
-	else
+	    (object->In - *object->FeedBP) * (1.0 - kd);
+	} else
 	  object->ActVal = object->In;
 }
 
