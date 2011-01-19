@@ -40,7 +40,7 @@ class rt_appl {
 
   //! Constructor.
   rt_appl( 
-	  char *name, 			//< Process name.
+	  const char *name, 	       	//< Process name.
 	  errh_eAnix anix, 		//< Application index.
 	  double scantime = 1.0,	//< Scantime for call of the scan() function.
 	  qcom_sQid qid = qcom_cNQid	//< Qcom queue identity.
@@ -48,7 +48,7 @@ class rt_appl {
     { strcpy( m_name, name); }
   void init();
 
-  void register_appl( char *name);
+  void register_appl( const char *name);
   void mainloop();
   double scantime() { return m_scantime;}
   void set_scantime( double time) { m_scantime = time;}

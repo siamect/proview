@@ -72,7 +72,7 @@ void rt_appl::init()
   }
 }
 
-void rt_appl::register_appl( char *name)
+void rt_appl::register_appl( const char *name)
 {
   pwr_tStatus sts;
   pwr_sClass_Application *op;
