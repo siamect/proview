@@ -450,6 +450,7 @@ menu Other
   subgraph 	Pulpet		pwr_exe:pwr_pulpet.pwsg 		45
   subgraph 	Rack		pwr_exe:pwr_rack.pwsg 			43
   subgraph 	Terminal	pwr_exe:pwr_terminal.pwsg 		42
+  subgraph 	Camera		pwr_exe:pwr_camera.pwsg 		249
   subgraph 	VideoCamera	pwr_exe:pwr_videocamera.pwsg 		41
   subgraph 	ConGlue		pwr_conglue.component 			10
   subgraph 	MenuBar		pwr_exe:pwr_menubar.pwsg 		32

@@ -288,6 +288,7 @@
 #include "ge_bitmap_threewayvalve246.h"
 #include "ge_bitmap_elheater247.h"
 #include "ge_bitmap_limitswitch248.h"
+#include "ge_bitmap_camera249.h"
 
 #define SUBPALETTE__INPUT_SYNTAX 2
 #define SUBPALETTE__OBJNOTFOUND 4
@@ -627,6 +628,7 @@ void SubPaletteBrow::allocate_pixmaps()
   ALLOC_PIXMAP( ge_bitmap_threewayvalve246, 246);
   ALLOC_PIXMAP( ge_bitmap_elheater247, 247);
   ALLOC_PIXMAP( ge_bitmap_limitswitch248, 248);
+  ALLOC_PIXMAP( ge_bitmap_camera249, 249);
 }
 
 
