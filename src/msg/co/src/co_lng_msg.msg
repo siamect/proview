@@ -22,8 +22,10 @@
 !
 .facility       LNG,108 /prefix = LNG__	!  System information
 
-success		<successful completion>					/succ
-eof		<end of file>					/error
-diffcoding	<coding of global and local translationfiles differ>		/error
+success		<Successful completion>					/succ
+eof		<End of file>						/error
+diffcoding	<Coding of global and local translationfiles differ>	/error
+file		<Unable to open file>					/error
+includemismatch	<Include statement mismatch>				/error
 
 .end

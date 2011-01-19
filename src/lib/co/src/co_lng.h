@@ -207,7 +207,7 @@ class Row {
   char fname[200];
 
   Row( ifstream& f, char *filename) : row(0), fp(f) { 
-    strcpy( text, ""); strcpy( fname, filename);}
+    strcpy( text, ""); strncpy( fname, filename, sizeof(fname));}
   bool eq( Row& r) { return n1 == r.n1 && n2 == r.n2 && n3 == r.n3;}
   bool lt( Row& r) {
     if ( n1 < r.n1)
@@ -261,6 +261,7 @@ class Lng {
     static tree_sTable *tree;
 
     static bool read();
+    static bool read_files( char *fname1, char *fname2, bool global, pwr_tStatus *sts);
     static bool read_line( Row& r);
     static char *translate( const char *text);
     static char *get_language_str();
@@ -279,6 +280,7 @@ class Lng {
     static char *lang_to_locale( lng_eLanguage language);
     static bool is_installed( lng_eLanguage language);
     static lng_eCoding translatefile_coding() { return translfile_coding;}
+    static void read_include( ifstream& fp1, ifstream& fp2, bool global, pwr_tStatus *sts);
     static void read_metadata( ifstream& fp2, bool global, pwr_tStatus *sts);
 };
 

@@ -345,7 +345,6 @@ bool Lng::read()
 {
   char fname1[120];
   char fname2[120];
-  pwr_tFileName filename1, filename2;
   pwr_tStatus sts;
 
   if ( tree)
@@ -354,82 +353,106 @@ bool Lng::read()
   tree = tree_CreateTable( &sts, sizeof(lang_sKey), offsetof(lang_sRecord, key),
 			   sizeof(lang_sRecord), 100, compKey);
 
-  for ( int i = 0; i < 2; i++) {
-    if ( i == 0) {
-      strcpy( fname1, "$pwr_exe/en_us/xtt_lng.dat");
-      strcpy( fname2, "$pwr_exe/%s/xtt_lng.dat");
+  // Read base files
+  strcpy( fname1, "$pwr_exe/en_us/xtt_lng.dat");
+  strcpy( fname2, "$pwr_exe/%s/xtt_lng.dat");
+
+  if ( !read_files( fname1, fname2, true,  &sts))
+    return false;
+
+  // Read project files
+  strcpy( fname1, "$pwrp_exe/xtt_lng_en_us.dat");
+  strcpy( fname2, "$pwrp_exe/xtt_lng_%s.dat");
+
+  if ( !read_files( fname1, fname2, false, &sts))
+    return false;
+
+  return true;
+}
+
+bool Lng::read_files( char *fname1, char *fname2, bool global, pwr_tStatus *sts)
+{
+  pwr_tFileName filename1, filename2;
+
+  sprintf( filename2, fname2, get_language_str());
+
+  dcli_translate_filename( filename1, fname1);
+  dcli_translate_filename( filename2, filename2);
+
+  ifstream fp1( filename1);
+  if ( !fp1 && strcmp( fname1, "$pwr_exe/en_us/xtt_lng.dat") == 0) {
+    // Try $pwr_eexe
+    strcpy( fname1, "$pwr_eexe/en_us/xtt_lng.dat");
+    dcli_translate_filename( filename1, fname1);
+    fp1.open( filename1);
+    if ( !fp1) {
+      *sts = LNG__FILE;
+      return false;
+    }
+  }
+  else if ( !fp1) {
+    *sts = LNG__FILE;
+    return global ? false : true;
+  }
+  
+  ifstream fp2( filename2);
+  if ( !fp2 && strcmp( fname2, "$pwr_exe/%s/xtt_lng.dat") == 0) {
+    // Try $pwr_eexe
+    strcpy( fname2, "$pwr_eexe/%s/xtt_lng.dat");
+    sprintf( filename2, fname2, get_language_str());
+    dcli_translate_filename( filename2, filename2);
+    fp2.open( filename2);
+    if ( !fp2) {
+      *sts = LNG__FILE;
+      return false;
+    }
+  }
+  else if ( !fp2) {
+    *sts = LNG__FILE;
+    return global ? false : true;
+  }
+  
+  Row r1( fp1, filename1);
+  Row r2( fp2, filename2);
+  
+  read_metadata( fp1, global, sts);
+  read_metadata( fp2, global, sts);
+  
+  read_include( fp1, fp2, global, sts);
+
+  bool hit = true;
+  for (;;) {
+    if ( hit) {
+      if ( !read_line( r1))
+	break;
+      
+      if ( !read_line( r2))
+	break;
+    }
+    else if ( r1.lt( r2)) {
+      if ( !read_line( r1))
+	break;
     }
     else {
-      strcpy( fname1, "$pwrp_exe/xtt_lng_en_us.dat");
-      strcpy( fname2, "$pwrp_exe/xtt_lng_%s.dat");
+      if ( !read_line( r2))
+	break;
     }
-    sprintf( filename2, fname2, get_language_str());
-    dcli_translate_filename( filename1, fname1);
-    dcli_translate_filename( filename2, filename2);
-
-    ifstream fp1( filename1);
-    if ( !fp1 && i == 0) {
-      // Try $pwr_eexe
-      strcpy( fname1, "$pwr_eexe/en_us/xtt_lng.dat");
-      dcli_translate_filename( filename1, fname1);
-      fp1.open( filename1);
-      if ( !fp1) 
-	return true;
+    
+    hit = false;
+    if ( r1.eq( r2))
+      hit = true;
+    if ( hit) {
+      lang_sKey key;
+      lang_sRecord *record;
+      
+      strncpy( key.text, r1.text, sizeof(key.text));
+      key.type = r1.type;
+      record = (lang_sRecord *) tree_Insert( sts, tree, &key);
+      strcpy( record->transl, r2.text);
+      // printf ( "%c %d.%d.%d '%s' '%s'\n", r1.type, r1.n1, r1.n2, r1.n3, r1.text,r2.text);
     }
-    else if ( !fp1)
-      return i == 0 ? false : true;
-
-    ifstream fp2( filename2);
-    if ( !fp2 && i == 0) {
-      // Try $pwr_eexe
-      strcpy( fname2, "$pwr_eexe/%s/xtt_lng.dat");
-      sprintf( filename2, fname2, get_language_str());
-      dcli_translate_filename( filename2, filename2);
-      fp2.open( filename2);
-      if ( !fp2) 
-	return true;
-    }
-    else if ( !fp2)
-      return i == 0 ? false : true;
-
-    Row r1( fp1, fname1);
-    Row r2( fp2, fname2);
-
-    read_metadata( fp2, (i == 0), &sts);
-
-    bool hit = true;
-    for (;;) {
-      if ( hit) {
-	if ( !read_line( r1))
-	  break;
-
-	if ( !read_line( r2))
-	  break;
-      }
-      else if ( r1.lt( r2)) {
-	if ( !read_line( r1))
-	  break;
-      }
-      else {
-	if ( !read_line( r2))
-	  break;
-      }
-
-      hit = false;
-      if ( r1.eq( r2))
-	hit = true;
-      if ( hit) {
-	lang_sKey key;
-	lang_sRecord *record;
-
-	strncpy( key.text, r1.text, sizeof(key.text));
-	key.type = r1.type;
-	record = (lang_sRecord *) tree_Insert( &sts, tree, &key);
-	strcpy( record->transl, r2.text);
-	// printf ( "%c %d.%d.%d '%s' '%s'\n", r1.type, r1.n1, r1.n2, r1.n3, r1.text,r2.text);
-      }
-    }    
-  }
+  }    
+  *sts = LNG__SUCCESS;
   return true;
 }
 
@@ -575,11 +598,14 @@ void Lng::read_metadata( ifstream& fp2, bool global, pwr_tStatus *sts)
 {
   char line[40];
 
-  if ( !fp2.getline( line, sizeof( line))) {
-    *sts = LNG__EOF;
-    return;
+  for (;;) {
+    if ( !fp2.getline( line, sizeof( line))) {
+      *sts = LNG__EOF;
+      return;
+    }
+    if ( line[0] != '#')
+      break;
   }
-  *sts = LNG__SUCCESS;
 
   if ( strncmp( line, "Coding:UTF-8", 12) == 0) {
     if ( global)
@@ -600,6 +626,53 @@ void Lng::read_metadata( ifstream& fp2, bool global, pwr_tStatus *sts)
     else if ( translfile_coding != lng_eCoding_ISO8859_1)
       *sts = LNG__DIFFCODING;
   }
+  *sts = LNG__SUCCESS;
+}
+
+void Lng::read_include( ifstream& fp1, ifstream& fp2, bool global, pwr_tStatus *sts) 
+{
+  char line1[200];
+  char line2[200];
+  streampos pos1;
+  pwr_tFileName fname1, fname2;
+  
+  for(;;) {
+    pos1 = fp1.tellg();
+    for (;;) {
+      if ( !fp1.getline( line1, sizeof( line1))) {
+	*sts = LNG__EOF;
+	return;
+      }
+      if ( line1[0] != '#')
+	break;
+    }
+
+    if ( strncmp( line1, "Include:", 8) == 0) {
+      for (;;) {
+	if ( !fp2.getline( line2, sizeof( line2))) {
+	  *sts = LNG__EOF;
+	  return;
+	}
+	if ( line2[0] != '#')
+	  break;
+      }
+
+      if ( strncmp( line2, "Include:", 8) != 0) {
+	*sts = LNG__INCLUDEMISMATCH;
+	return;
+      }
+      
+      dcli_trim( fname1, &line1[8]);
+      dcli_trim( fname2, &line2[8]);
+      if ( !read_files( fname1, fname2, global, sts))
+	return;
+    }
+    else {
+      fp1.seekg( pos1);
+      break;
+    }
+  }
+  *sts = LNG__SUCCESS;
 }
 
 
