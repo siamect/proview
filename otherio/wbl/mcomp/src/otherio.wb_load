@@ -2485,7 +2485,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Object RtBody $ObjBodyDef 1 13-DEC-2010 21:36:40.01
         Body SysBody 13-DEC-2010 21:39:07.38
           Attr StructName = "Arduino_Uno"
-          Attr NextAix = "_X24"
+          Attr NextAix = "_X25"
         EndBody
         !/**
         ! Optional description.
@@ -2631,6 +2631,20 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object AiScanInterval $Attribute 23 09-JAN-2011 10:37:58.02
           Body SysBody 09-JAN-2011 10:38:12.99
             Attr PgmName = "AiScanInterval"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Specifies, in relation to the scantime of the thread, how often
+        ! the Ao channels of the board are handled. If AoScanInterval is 1 or 0, 
+        ! the Ao are handled every scan. If AoScanInterval is for example 10, they
+        ! are handled every 10'th scan, i.e. the scantime for the module
+        ! will be AoScanInterval times the scantime of the thread.
+        !*/
+        Object AoScanInterval $Attribute 24 19-JAN-2011 18:24:34.75
+          Body SysBody 19-JAN-2011 18:24:35.83
+            Attr PgmName = "AoScanInterval"
+            Attr Flags = 16777216
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject

@@ -51,6 +51,7 @@ typedef struct {
   int DiPollId;
   int DiPendingPoll;
   int AiIntervalCnt;
+  int AoIntervalCnt;
   io_sChannel *DChanList[D_MAX_SIZE * 8];
   io_sChannel *AiChanList[AI_MAX_SIZE * 8];
   io_sChannel *AoChanList[AO_MAX_SIZE * 8];
@@ -86,9 +87,10 @@ typedef enum {
   ard_eMsgType_Write 	= 1,
   ard_eMsgType_DiRead 	= 2,
   ard_eMsgType_AiRead 	= 3,
-  ard_eMsgType_Configure = 4,
-  ard_eMsgType_Status 	= 5,
-  ard_eMsgType_Debug 	= 6
+  ard_eMsgType_AoWrite 	= 4,
+  ard_eMsgType_Configure = 5,
+  ard_eMsgType_Status 	= 6,
+  ard_eMsgType_Debug 	= 7
 } ard_eMsgType;
 
 #define ARD__SUCCESS 1
@@ -501,6 +503,7 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
       if ( EVEN(sts)) {
       }
       else {
+	int ai_cnt = 0;
 	for ( i = 0; i < local->AiSize; i++) {
 	  for ( j = 0; j < 8; j++) {
 	    m = 1 << j;
@@ -513,7 +516,7 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
 		// Request to calculate new coefficients
 		io_AiRangeToCoef( chanp);
 	      
-	      ivalue = rmsg.data[(i*8+j)*2] * 256 + rmsg.data[(i*8+j)*2+1];
+	      ivalue = rmsg.data[ai_cnt*2] * 256 + rmsg.data[ai_cnt*2+1];
 	      io_ConvertAi( cop, ivalue, &actvalue);
 
 	      // Filter
@@ -527,6 +530,7 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
 	      *(pwr_tFloat32 *)chanp->vbp = actvalue;
 	      sop->SigValue = cop->SigValPolyCoef1 * ivalue + cop->SigValPolyCoef0;
 	      sop->RawValue = ivalue;
+	      ai_cnt++;
 	    }	    
 	  }
 	}
@@ -580,6 +584,62 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
 
     // logg( "Write Do");
     sts = write( local->fd, &msg, msg.size);
+  }
+ 
+  if ( local->AoSize) {
+    int skip_ao = 0;
+
+    if ( op->AoScanInterval > 1) {
+      skip_ao = local->AoIntervalCnt;
+
+      local->AoIntervalCnt++;
+      if ( local->AoIntervalCnt >= op->AoScanInterval)
+	local->AoIntervalCnt = 0;
+    }
+
+    if ( !skip_ao) {
+      ard_sMsg msg;
+      int value;
+
+      memset( &msg, 0, sizeof(msg));
+      msg.size = local->AoNum + 3;
+      msg.id = local->IdCnt++;
+      msg.type = ard_eMsgType_AoWrite;
+
+      int ao_cnt = 0;
+      for ( i = 0; i < local->AoSize; i++) {
+	for ( j = 0; j < 8; j++) {
+	  m = 1 << j;
+	  if ( local->AoMask[i] & m) {
+	    io_sChannel *chanp = local->AoChanList[i*8+j];
+	    pwr_sClass_ChanAo *cop = (pwr_sClass_ChanAo *)chanp->cop;
+	    pwr_sClass_Ao *sop = (pwr_sClass_Ao *)chanp->sop;
+	      
+	    if ( cop->CalculateNewCoef)
+	      // Request to calculate new coefficients
+	      io_AoRangeToCoef( chanp);
+	      
+
+	    value = *(pwr_tFloat32 *)chanp->vbp * cop->OutPolyCoef1 + 
+	      cop->OutPolyCoef0 + 0.49;
+	    if ( value < 0)
+	      value = 0;
+	    else if (value > 255)
+	      value = 255;
+
+	    msg.data[ao_cnt]  = value;
+
+	    sop->SigValue = cop->SigValPolyCoef1 * *(pwr_tFloat32 *)chanp->vbp + 
+	      cop->SigValPolyCoef0;
+	    sop->RawValue = value;
+	    ao_cnt++;
+	  }
+	}
+      }
+      // logg( "Write Ao");
+      sts = write( local->fd, &msg, msg.size);
+    }
+
   }
  
   if ( op->ErrorCount >= op->ErrorSoftLimit && 
