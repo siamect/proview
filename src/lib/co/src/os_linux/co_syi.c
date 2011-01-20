@@ -136,7 +136,7 @@ pwr_tStatus syi_UserName( char *user, int len)
 {
   char *p;
   
-  p = getlogin();
+  p = cuserid(0);
   if ( !p)
     return 0;
   strncpy( user, p, len);
