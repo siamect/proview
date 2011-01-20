@@ -350,11 +350,13 @@
     ge_eSave_Move_move_y_attribute    	= 1501,
     ge_eSave_Move_x_offset	       	= 1502,
     ge_eSave_Move_y_offset	        = 1503,
-    ge_eSave_Move_factor	       	= 1504,
+    ge_eSave_Move_x_factor	       	= 1504,
     ge_eSave_Move_scale_x_attribute     = 1505,
     ge_eSave_Move_scale_y_attribute    	= 1506,
-    ge_eSave_Move_scale_factor      	= 1507,
+    ge_eSave_Move_scale_x_factor      	= 1507,
     ge_eSave_Move_scale_type      	= 1508,
+    ge_eSave_Move_y_factor	       	= 1509,
+    ge_eSave_Move_scale_y_factor      	= 1510,
     ge_eSave_AnalogShift_attribute     	= 1700,
     ge_eSave_DigShift_attribute		= 1800,
     ge_eSave_Animation_attribute       	= 1900,
@@ -1309,8 +1311,10 @@ class GeMove : public GeDynElem {
   pwr_tAName scale_y_attribute;
   double x_offset;
   double y_offset;
-  double factor;
-  double scale_factor;
+  double x_factor;
+  double y_factor;
+  double scale_x_factor;
+  double scale_y_factor;
   glow_eScaleType scale_type;
 
   pwr_tFloat32 *move_x_p;
@@ -1345,8 +1349,8 @@ class GeMove : public GeDynElem {
 
   GeMove( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType_Move, (ge_mActionType) 0, ge_eDynPrio_Move),
-    x_offset(0), y_offset(0), factor(1), scale_factor(1), 
-    scale_type(glow_eScaleType_LowerLeft)
+    x_offset(0), y_offset(0), x_factor(1), y_factor(0), scale_x_factor(1), 
+    scale_y_factor(0), scale_type(glow_eScaleType_LowerLeft)
     {
       strcpy( move_x_attribute, "");
       strcpy( move_y_attribute, "");
@@ -1355,7 +1359,8 @@ class GeMove : public GeDynElem {
     }
   GeMove( const GeMove& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), x_offset(x.x_offset), 
-    y_offset(x.y_offset), factor(x.factor), scale_factor(x.scale_factor), 
+    y_offset(x.y_offset), x_factor(x.x_factor), y_factor(x.y_factor), 
+    scale_x_factor(x.scale_x_factor), scale_y_factor(x.scale_y_factor), 
     scale_type(x.scale_type)
     { 
       strcpy( move_x_attribute, x.move_x_attribute); 

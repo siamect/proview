@@ -29,8 +29,10 @@ public  String moveYAttribute;
   String scaleYAttribute;
   double xOffset;
   double yOffset;
-  double factor;
-  double scaleFactor;
+  double xFactor;
+  double yFactor;
+  double scaleXFactor;
+  double scaleYFactor;
 
   boolean attrMoveXFound;
   boolean attrMoveYFound;
@@ -61,7 +63,8 @@ public  String moveYAttribute;
 
   public GeDynMove( GeDyn dyn, String moveXAttribute, String moveYAttribute, 
 		    String scaleXAttribute, String scaleYAttribute, double 
-		    xOffset, double yOffset, double factor, double scaleFactor) {
+		    xOffset, double yOffset, double xFactor, double yFactor,
+		    double scaleXFactor, double scaleYFactor) {
     super( dyn, GeDyn.mDynType_Move, GeDyn.mActionType_No);
     this.moveXAttribute = moveXAttribute;
     this.moveYAttribute = moveYAttribute;
@@ -69,8 +72,10 @@ public  String moveYAttribute;
     this.scaleYAttribute = scaleYAttribute;
     this.xOffset = xOffset;
     this.yOffset = yOffset;
-    this.factor = factor;
-    this.scaleFactor = scaleFactor;
+    this.xFactor = xFactor;
+    this.yFactor = yFactor;
+    this.scaleXFactor = scaleXFactor;
+    this.scaleYFactor = scaleYFactor;
   }
   public void connect() {
     String attrName = dyn.getAttrName( moveXAttribute);
@@ -169,11 +174,11 @@ public  String moveYAttribute;
       if ( repaintNow) {
 	  if ( attrMoveXFound){
 	    double xRatio = wRoot/wRootOrig;
-	    loc.x = (int) ((xOrig + (valueMoveX - xOffset) * factor) * xRatio);
+	    loc.x = (int) ((xOrig + (valueMoveX - xOffset) * xFactor) * xRatio);
 	  }
 	  if ( attrMoveYFound){
 	    double yRatio = wRoot/wRootOrig;
-	    loc.y = (int) ((yOrig + (valueMoveY - yOffset) * factor) * yRatio);
+	    loc.y = (int) ((yOrig + (valueMoveY - yOffset) * yFactor) * yRatio);
 	  }
 	((JComponent)dyn.comp).setLocation( loc);
       }
@@ -188,14 +193,14 @@ public  String moveYAttribute;
       float valueScaleY = 0;
 
       if ( attrScaleXFound) {
-        valueScaleX = (float) (dyn.en.gdh.getObjectRefInfoFloat( scaleXp) * scaleFactor);
+        valueScaleX = (float) (dyn.en.gdh.getObjectRefInfoFloat( scaleXp) * scaleXFactor);
         if ( valueScaleX != scaleXOldValue  || firstScan || wRoot != wRootOld) {
           repaintNow = true;
  	  scaleXOldValue = valueScaleX;
         }
       }
       if ( attrScaleYFound) {
-        valueScaleY = (float) (dyn.en.gdh.getObjectRefInfoFloat( scaleYp) * scaleFactor);
+        valueScaleY = (float) (dyn.en.gdh.getObjectRefInfoFloat( scaleYp) * scaleYFactor);
         if ( valueScaleY != scaleYOldValue  || firstScan || wRoot != wRootOld) {
 	  repaintNow = true;
 	  scaleYOldValue = valueScaleY;

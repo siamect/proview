@@ -5262,10 +5262,15 @@ void GeMove::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_Double;
   attrinfo[i++].size = sizeof( y_offset);
 
-  strcpy( attrinfo[i].name, "Move.Factor");
-  attrinfo[i].value = &factor;
+  strcpy( attrinfo[i].name, "Move.XFactor");
+  attrinfo[i].value = &x_factor;
   attrinfo[i].type = glow_eType_Double;
-  attrinfo[i++].size = sizeof( factor);
+  attrinfo[i++].size = sizeof( x_factor);
+
+  strcpy( attrinfo[i].name, "Move.YFactor");
+  attrinfo[i].value = &y_factor;
+  attrinfo[i].type = glow_eType_Double;
+  attrinfo[i++].size = sizeof( y_factor);
 
   strcpy( attrinfo[i].name, "Move.ScaleXAttribute");
   attrinfo[i].value = scale_x_attribute;
@@ -5277,10 +5282,15 @@ void GeMove::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_String;
   attrinfo[i++].size = sizeof( scale_y_attribute);
 
-  strcpy( attrinfo[i].name, "Move.ScaleFactor");
-  attrinfo[i].value = &scale_factor;
+  strcpy( attrinfo[i].name, "Move.ScaleXFactor");
+  attrinfo[i].value = &scale_x_factor;
   attrinfo[i].type = glow_eType_Double;
-  attrinfo[i++].size = sizeof( scale_factor);
+  attrinfo[i++].size = sizeof( scale_x_factor);
+
+  strcpy( attrinfo[i].name, "Move.ScaleYFactor");
+  attrinfo[i].value = &scale_y_factor;
+  attrinfo[i].type = glow_eType_Double;
+  attrinfo[i++].size = sizeof( scale_x_factor);
 
   strcpy( attrinfo[i].name, "Move.ScaleType");
   attrinfo[i].value = &scale_type;
@@ -5327,8 +5337,10 @@ void GeMove::save( ofstream& fp)
   fp << int(ge_eSave_Move_scale_y_attribute) << FSPACE << scale_y_attribute << endl;
   fp << int(ge_eSave_Move_x_offset) << FSPACE << x_offset << endl;
   fp << int(ge_eSave_Move_y_offset) << FSPACE << y_offset << endl;
-  fp << int(ge_eSave_Move_factor) << FSPACE << factor << endl;
-  fp << int(ge_eSave_Move_scale_factor) << FSPACE << scale_factor << endl;
+  fp << int(ge_eSave_Move_x_factor) << FSPACE << x_factor << endl;
+  fp << int(ge_eSave_Move_y_factor) << FSPACE << y_factor << endl;
+  fp << int(ge_eSave_Move_scale_x_factor) << FSPACE << scale_x_factor << endl;
+  fp << int(ge_eSave_Move_scale_y_factor) << FSPACE << scale_y_factor << endl;
   fp << int(ge_eSave_Move_scale_type) << FSPACE << scale_type << endl;
   fp << int(ge_eSave_End) << endl;
 }
@@ -5370,8 +5382,10 @@ void GeMove::open( ifstream& fp)
         break;
       case ge_eSave_Move_x_offset: fp >> x_offset; break;
       case ge_eSave_Move_y_offset: fp >> y_offset; break;
-      case ge_eSave_Move_factor: fp >> factor; break;
-      case ge_eSave_Move_scale_factor: fp >> scale_factor; break;
+      case ge_eSave_Move_x_factor: fp >> x_factor; break;
+      case ge_eSave_Move_y_factor: fp >> y_factor; break;
+      case ge_eSave_Move_scale_x_factor: fp >> scale_x_factor; break;
+      case ge_eSave_Move_scale_y_factor: fp >> scale_y_factor; break;
       case ge_eSave_Move_scale_type: fp >> tmp; scale_type = (glow_eScaleType)tmp; break;
       case ge_eSave_End: end_found = 1; break;
       default:
@@ -5381,6 +5395,10 @@ void GeMove::open( ifstream& fp)
     if ( end_found)
       break;
   }
+  if ( y_factor == 0)
+    y_factor = x_factor;
+  if ( scale_y_factor == 0)
+    scale_y_factor = scale_x_factor;
 }
 
 int GeMove::connect( grow_tObject object, glow_sTraceData *trace_data)
@@ -5480,10 +5498,10 @@ int GeMove::scan( grow_tObject object)
   if ( scale_x_p || scale_y_p) {
     if ( scale_x_p) {
       switch ( scale_x_type) {
-      case pwr_eType_Float32: scale_x = *scale_x_p * scale_factor; break;
-      case pwr_eType_Float64: scale_x = *(pwr_tFloat64 *)scale_x_p * scale_factor; break;
-      case pwr_eType_Int32:   scale_x = *(pwr_tInt32 *)scale_x_p * scale_factor; break;
-      case pwr_eType_UInt32:  scale_x = *(pwr_tUInt32 *)scale_x_p * scale_factor; break;
+      case pwr_eType_Float32: scale_x = *scale_x_p * scale_x_factor; break;
+      case pwr_eType_Float64: scale_x = *(pwr_tFloat64 *)scale_x_p * scale_x_factor; break;
+      case pwr_eType_Int32:   scale_x = *(pwr_tInt32 *)scale_x_p * scale_x_factor; break;
+      case pwr_eType_UInt32:  scale_x = *(pwr_tUInt32 *)scale_x_p * scale_x_factor; break;
       default: scale_x = 1;
       }
     }
@@ -5492,10 +5510,10 @@ int GeMove::scan( grow_tObject object)
 
     if ( scale_y_p) {
       switch ( scale_y_type) {
-      case pwr_eType_Float32: scale_y = *scale_y_p * scale_factor; break;
-      case pwr_eType_Float64: scale_y = *(pwr_tFloat64 *)scale_y_p * scale_factor; break;
-      case pwr_eType_Int32:   scale_y = *(pwr_tInt32 *)scale_y_p * scale_factor; break;
-      case pwr_eType_UInt32:  scale_y = *(pwr_tUInt32 *)scale_y_p * scale_factor; break;
+      case pwr_eType_Float32: scale_y = *scale_y_p * scale_y_factor; break;
+      case pwr_eType_Float64: scale_y = *(pwr_tFloat64 *)scale_y_p * scale_y_factor; break;
+      case pwr_eType_Int32:   scale_y = *(pwr_tInt32 *)scale_y_p * scale_y_factor; break;
+      case pwr_eType_UInt32:  scale_y = *(pwr_tUInt32 *)scale_y_p * scale_y_factor; break;
       default: scale_y = 1;
       }
     }
@@ -5527,10 +5545,10 @@ int GeMove::scan( grow_tObject object)
 	default: ;
 	}
 	switch ( move_x_type) {
-	case pwr_eType_Float32: move_x = x_orig + scale_offs + (*move_x_p - x_offset) * factor; break;
-	case pwr_eType_Float64: move_x = x_orig + scale_offs + (*(pwr_tFloat64 *) move_x_p - x_offset) * factor; break;
-	case pwr_eType_Int32:   move_x = x_orig + scale_offs + (*(pwr_tInt32 *) move_x_p - x_offset) * factor; break;
-	case pwr_eType_UInt32:  move_x = x_orig + scale_offs + (*(pwr_tUInt32 *) move_x_p - x_offset) * factor; break;
+	case pwr_eType_Float32: move_x = x_orig + scale_offs + (*move_x_p - x_offset) * x_factor; break;
+	case pwr_eType_Float64: move_x = x_orig + scale_offs + (*(pwr_tFloat64 *) move_x_p - x_offset) * x_factor; break;
+	case pwr_eType_Int32:   move_x = x_orig + scale_offs + (*(pwr_tInt32 *) move_x_p - x_offset) * x_factor; break;
+	case pwr_eType_UInt32:  move_x = x_orig + scale_offs + (*(pwr_tUInt32 *) move_x_p - x_offset) * x_factor; break;
 	default: move_x = x_orig + scale_offs;
 	}
       }
@@ -5552,10 +5570,10 @@ int GeMove::scan( grow_tObject object)
 	}
 
 	switch ( move_y_type) {
-	case pwr_eType_Float32: move_y = y_orig + scale_offs + (*move_y_p - y_offset) * factor; break;
-	case pwr_eType_Float64: move_y = y_orig + scale_offs + (*(pwr_tFloat64 *) move_y_p - y_offset) * factor; break;
-	case pwr_eType_Int32:   move_y = y_orig + scale_offs + (*(pwr_tInt32 *) move_y_p - y_offset) * factor; break;
-	case pwr_eType_UInt32:  move_y = y_orig + scale_offs + (*(pwr_tUInt32 *) move_y_p - y_offset) * factor; break;
+	case pwr_eType_Float32: move_y = y_orig + scale_offs + (*move_y_p - y_offset) * y_factor; break;
+	case pwr_eType_Float64: move_y = y_orig + scale_offs + (*(pwr_tFloat64 *) move_y_p - y_offset) * y_factor; break;
+	case pwr_eType_Int32:   move_y = y_orig + scale_offs + (*(pwr_tInt32 *) move_y_p - y_offset) * y_factor; break;
+	case pwr_eType_UInt32:  move_y = y_orig + scale_offs + (*(pwr_tUInt32 *) move_y_p - y_offset) * y_factor; break;
 	default: move_y = y_orig + scale_offs;
 	}
       }
@@ -5579,10 +5597,10 @@ int GeMove::scan( grow_tObject object)
   else {
     if ( move_x_p) {
       switch ( move_x_type) {
-      case pwr_eType_Float32: move_x = (*move_x_p - x_offset) * factor; break;
-      case pwr_eType_Float64: move_x = (*(pwr_tFloat64 *) move_x_p - x_offset) * factor; break;
-      case pwr_eType_Int32:   move_x = (*(pwr_tInt32 *) move_x_p - x_offset) * factor; break;
-      case pwr_eType_UInt32:  move_x = (*(pwr_tUInt32 *) move_x_p - x_offset) * factor; break;
+      case pwr_eType_Float32: move_x = (*move_x_p - x_offset) * x_factor; break;
+      case pwr_eType_Float64: move_x = (*(pwr_tFloat64 *) move_x_p - x_offset) * x_factor; break;
+      case pwr_eType_Int32:   move_x = (*(pwr_tInt32 *) move_x_p - x_offset) * x_factor; break;
+      case pwr_eType_UInt32:  move_x = (*(pwr_tUInt32 *) move_x_p - x_offset) * x_factor; break;
       default: move_x = 0;
       }
     }
@@ -5591,10 +5609,10 @@ int GeMove::scan( grow_tObject object)
 
     if ( move_y_p) {
       switch ( move_y_type) {
-      case pwr_eType_Float32: move_y = (*move_y_p - y_offset) * factor; break;
-      case pwr_eType_Float64: move_y = (*(pwr_tFloat64 *) move_y_p - y_offset) * factor; break;
-      case pwr_eType_Int32:   move_y = (*(pwr_tInt32 *) move_y_p - y_offset) * factor; break;
-      case pwr_eType_UInt32:  move_y = (*(pwr_tUInt32 *) move_y_p - y_offset) * factor; break;
+      case pwr_eType_Float32: move_y = (*move_y_p - y_offset) * y_factor; break;
+      case pwr_eType_Float64: move_y = (*(pwr_tFloat64 *) move_y_p - y_offset) * y_factor; break;
+      case pwr_eType_Int32:   move_y = (*(pwr_tInt32 *) move_y_p - y_offset) * y_factor; break;
+      case pwr_eType_UInt32:  move_y = (*(pwr_tUInt32 *) move_y_p - y_offset) * y_factor; break;
       default: move_y = 0;
       }
     }
@@ -5624,8 +5642,9 @@ int GeMove::export_java( grow_tObject object, ofstream& fp, bool first, char *va
   fp << "new GeDynMove(" << var_name << ".dd, \"" 
      << move_x_attribute << "\",\"" << move_y_attribute << "\",\""
      << scale_x_attribute << "\",\"" << scale_y_attribute << "\","
-     << x_offset << "," << y_offset << "," << factor * zoom_factor << "," 
-     << scale_factor << ")" << endl;
+     << x_offset << "," << y_offset << "," 
+     << x_factor * zoom_factor << "," << y_factor * zoom_factor << "," 
+     << scale_x_factor << "," << scale_y_factor << ")" << endl;
   return 1;
 }
 
