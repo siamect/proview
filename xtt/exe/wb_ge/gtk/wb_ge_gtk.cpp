@@ -34,6 +34,7 @@ typedef void *ldh_tSesContext;
 #include "cow_xhelp_gtk.h"
 #include "wb_log_gtk.h"
 
+#define wnav_cInitFile "$pwrp_login/wtt_init"
 
 /*  Fallback resources  */
 
@@ -60,6 +61,8 @@ int main( int argc, char *argv[])
   char graph_name[80];
   int sts;
   unsigned int opt = ge_mOption_EnableComment;
+  Ge *gectx;
+  pwr_tFileName fname;
 
   gtk_init( &argc, &argv);
 
@@ -94,7 +97,6 @@ int main( int argc, char *argv[])
 
     if ( file[0] == '@') {
       // Execute script
-      Ge *gectx;
       pwr_tStatus sts;
 
       gectx = new GeGtk( NULL, toplevel, 0, 1, 0, NULL);
@@ -102,16 +104,21 @@ int main( int argc, char *argv[])
       if ( EVEN(sts))
 	gectx->message( sts);
     }
-    else {
-      
-
+    else {      
       // Open graph
       strcpy( graph_name, file);
-      new GeGtk( NULL, mainwindow, 0, 1, opt, graph_name);
+      gectx = new GeGtk( NULL, mainwindow, 0, 1, opt, graph_name);
+      
+      sprintf( fname, "@%s.pwr_com", wnav_cInitFile);
+      gectx->command( fname);
     }
   }
-  else
-    new GeGtk( NULL, mainwindow, 0, 1, opt, NULL);
+  else {
+    gectx = new GeGtk( NULL, mainwindow, 0, 1, opt, NULL);
+
+    sprintf( fname, "@%s.pwr_com", wnav_cInitFile);
+    gectx->command( fname);
+  }
 
   gtk_widget_show_all( toplevel);
   g_object_set( toplevel, "visible", FALSE, NULL);

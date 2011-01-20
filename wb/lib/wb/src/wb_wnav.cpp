@@ -2321,7 +2321,7 @@ int WNav::save_settnings( ofstream& fp)
     fp << "  set noshowalias /local" << endl;
  
   if ( gbl.show_descrip)
-    fp << "  set show description/local" << endl;
+    fp << "  set showdescription/local" << endl;
   else
     fp << "  set noshowdescription /local" << endl;
  

@@ -168,7 +168,7 @@ Graph::Graph(
 	graph_object_scan(0), graph_object_close(0), local_db(0),
 	use_default_access(xn_use_default_access), 
 	default_access(xn_default_access), keep_mode(false),
-        subgraph_dyn(0), was_subgraph(0), disable_log(0)
+        subgraph_dyn(0), was_subgraph(0), disable_log(1)
 {
   cdh_StrncpyCutOff( name, xn_name, sizeof(name), 1);
   strcpy( default_path, xn_default_path);

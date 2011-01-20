@@ -95,6 +95,8 @@ static int	graph_disable_func(void		*client_data,
 				   void		*client_flag);
 static int	graph_convert_func( void	*client_data,
 				void		*client_flag);
+static int	graph_two_func( void		*client_data,
+				void		*client_flag);
 
 dcli_tCmdTable	graph_command_table[] = {
 		{
@@ -206,6 +208,11 @@ dcli_tCmdTable	graph_command_table[] = {
 			"DISABLE",
 			&graph_disable_func,
 			{"dcli_arg1", ""}
+		},
+		{
+			"TWO",
+			&graph_two_func,
+			{""}
 		},
 		{"",}};
 
@@ -1306,11 +1313,52 @@ static int	graph_set_func(	void		*client_data,
       return GE__SYNTAX;
     }
   }
+  else if ( cdh_NoCaseStrcmp( arg1_str, "ADVANCEDUSER") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "NOADVANCEDUSER") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "ALLTOPLEVEL") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "NOALLTOPLEVEL") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "SHOWCLASS") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "NOSHOWCLASS") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "SHOWALIAS") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "NOSHOWALIAS") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "SHOWDESCRIPTION") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "NOSHOWDESCRIPTION") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "SHOWOBJREF") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "NOSHOWOBJREF") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "SHOWOBJXREF") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "NOSHOWOBJXREF") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "SHOWATTRREF") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "NOSHOWATTRREF") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "SHOWATTRXREF") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "NOSHOWATTRXREF") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "BUILDCROSSREF") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "NOBUILDCROSSREF") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "BUILDMANUAL") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "NOBUILDMANUAL") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "WINDOW") == 0 ||
+	    cdh_NoCaseStrcmp( arg1_str, "INPUTFOCUS") == 0) 
+  {
+    // Compatible with xnav init file
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "ENABLECOMMENT", strlen( arg1_str)) == 0)
+  {
+    graph->disable_log = 0;
+  }
+  else if ( cdh_NoCaseStrncmp( arg1_str, "NOENABLECOMMENT", strlen( arg1_str)) == 0)
+  {
+    graph->disable_log = 1;
+  }
   else
   {
     graph->message('E', "Syntax error");
     return GE__SYNTAX;
   }
+  return GE__SUCCESS;
+}
+
+static int	graph_two_func(	void		*client_data,
+				void		*client_flag)
+{
   return GE__SUCCESS;
 }
 
@@ -2746,6 +2794,40 @@ static int graph_setintern_func(
   return 1;
 }
 
+static int graph_true_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  if ( arg_count != 0)
+    return CCM__ARGMISM;
+
+  *return_int = 1;
+  *return_decl = CCM_DECL_INT;
+  return 1;
+}
+
+static int graph_false_func(
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  if ( arg_count != 0)
+    return CCM__ARGMISM;
+
+  *return_int = 0;
+  *return_decl = CCM_DECL_INT;
+  return 1;
+}
+
 static int graph_ccm_deffilename_func( char *outfile, char *infile, void *client_data)
 {
 
@@ -2854,6 +2936,10 @@ int Graph::readcmdfile( 	char		*incommand)
     sts = ccm_register_function( "SetExtern", graph_setextern_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "SetIntern", graph_setintern_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "IsW1", graph_true_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "IsW2", graph_false_func);
     if ( EVEN(sts)) return sts;
     ccm_func_registred = 1;
 
