@@ -39,5 +39,6 @@ plcsavactval	<save actual value failed, object class '%s'>		/error
 nodidx		<cannot determine node index in ld_boot file>		/error
 xdr		<error when marshalling>				/error
 insvirmem	<insufficient virtual memory>				/error
+file		<unable to open file>					/error
 
 .end

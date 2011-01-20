@@ -196,7 +196,7 @@ start (
     errh_LogError(&cp->log, "ini_RcReadAndSet, %m", sts);
 
   sts = ini_SetAttribute(cp->aliasfile.name, cp->nodename, 0);
-  if (EVEN(sts))
+  if (EVEN(sts) && sts != INI__FILE)
     errh_LogError(&cp->log, "ini_SetAttribute, %m", sts);
 
   qini_BuildDb(&sts, cp->nid_t, cp->me, NULL, cp->busid);
@@ -236,7 +236,7 @@ start (
   qcom_WaitAnd(&sts, &cp->eventQ, &qcom_cQini, ini_mEvent_newPlcStartDone, qcom_cTmoEternal);
 
   sts = ini_SetAttributeAfterPlc(cp->aliasfile.name, cp->nodename, 0);
-  if (EVEN(sts) && sts != 0)
+  if (EVEN(sts) && sts != INI__FILE)
     errh_LogError(&cp->log, "ini_SetAttributeAfterPlc, %m", sts);
          
   ini_SetSystemStatus( cp, PWR__RUNNING);

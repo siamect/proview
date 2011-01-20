@@ -165,7 +165,7 @@ ini_SetAttributeAfterPlc (
     free(data_ptr);
   }
 
-  ini_datafile_close();
+   ini_datafile_close();
 
   return INI__SUCCESS;
 }
@@ -287,9 +287,8 @@ static int ini_datafile_init ( char *filename)
   /* Open file */
   ini_datafile = fopen( filename, "r");
   if ( ini_datafile == 0)
-  {
-    return 0;
-  }
+    return INI__FILE;
+  
   return INI__SUCCESS;
 }
 
