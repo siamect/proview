@@ -52,6 +52,8 @@ else
   merge_dir_func $toroot/exe/sv_se $fromroot/exe/sv_se
   merge_dir_func $toroot/exe/en_us $fromroot/exe/en_us
   merge_dir_func $toroot/exe/de_de $fromroot/exe/de_de
+  merge_dir_func $toroot/exe/fr_fr $fromroot/exe/fr_fr
+  merge_dir_func $toroot/exe/zh_cn $fromroot/exe/zh_cn
   merge_dir_func $toroot/inc $fromroot/inc
   merge_dir_func $toroot/load $fromroot/load
   merge_dir_func $toroot/obj $fromroot/obj

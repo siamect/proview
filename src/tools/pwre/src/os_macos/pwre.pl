@@ -1414,6 +1414,8 @@ sub create_base()
   create_dir($newdir . "/exe/sv_se");
   create_dir($newdir . "/exe/en_us");
   create_dir($newdir . "/exe/de_de");
+  create_dir($newdir . "/exe/fr_fr");
+  create_dir($newdir . "/exe/zh_cn");
   create_dir($newdir . "/inc");
   create_dir($newdir . "/load");
   create_dir($newdir . "/lib");
