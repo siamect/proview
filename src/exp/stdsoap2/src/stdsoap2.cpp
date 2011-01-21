@@ -6407,7 +6407,7 @@ soap_init(struct soap *soap)
   soap->accept_timeout = 0;
   soap->socket_flags = 0;
   soap->connect_flags = 0;
-  soap->bind_flags = 0;
+  soap->bind_flags = SO_REUSEADDR;
   soap->accept_flags = 0;
   soap->ip = 0;
   soap->labbuf = NULL;
