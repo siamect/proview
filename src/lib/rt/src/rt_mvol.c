@@ -439,7 +439,8 @@ mvol_ArefToAttribute (
     if ( arp->Size == 0 && arp->Flags.b.ObjectAttr && offset == arp->Offset && 
 	 acp->attr[i].flags.b.isclass)
       break;
-    if ( acp->attr[i].size == arp->Size)
+    if ( acp->attr[i].size == arp->Size &&
+	 !(acp->attr[i].flags.b.isclass && !arp->Flags.b.ObjectAttr))
       break;
     if ( acp->attr[i].flags.b.array) {
       for ( j = 0; j < acp->attr[i].elem; j++) {
