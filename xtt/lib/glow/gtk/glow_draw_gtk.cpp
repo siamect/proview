@@ -591,9 +591,8 @@ int GlowDrawGtk::event_handler( GdkEvent event)
 
   if ( event.any.window == m_wind.window || event.type == GDK_KEY_PRESS) {
     
-#if defined PWRE_EVENTLOGGING_ENABLED
-    log_event( &event);
-#endif
+    if ( GlowCtx::eventlog_enabled)
+      log_event( &event);
 
     switch ( event.type) {
     case GDK_KEY_PRESS : {

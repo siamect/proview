@@ -1286,6 +1286,8 @@ class Graph {
     else return 1;
   }
 
+  //! Enable event logging
+  static void eventlog_enable( int enable) { grow_EventLogEnable( enable);}
 
   //
   // Command module

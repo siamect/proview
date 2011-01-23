@@ -130,7 +130,7 @@ static int xnav_ev_sound_cb( void *xnav, pwr_sAttrRef *arp);
 static void xnav_ev_pop_cb( void *xnav);
 static void xnav_ev_update_info_cb( void *xnav);
 static int xnav_ge_sound_cb( void *xnav, pwr_sAttrRef *arp);
-static void xnav_ge_eventlog_cb( void *xnav, void *gectx, void *value, unsigned int size);
+static void xnav_ge_eventlog_cb( void *xnav, void *gectx, int type, void *data, unsigned int size);
 static void xnav_ge_display_in_xnav_cb( void *xnav, pwr_sAttrRef *arp);
 static int xnav_ge_is_authorized_cb( void *xnav, unsigned int access);
 static int xnav_attribute_func ( 
@@ -5582,6 +5582,9 @@ static int	xnav_oplog_func(void		*client_data,
     if ( EVEN( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
       strcpy( file_str, xttlog_cLogFile);
     }
+
+    if ( event)
+      XttGe::eventlog_enable( 1);
 
     XttLog *log = new XttLog( file_str, event);
     XttLog::delete_default();

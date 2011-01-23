@@ -826,6 +826,7 @@ class GlowCtx {
   glow_eHotIndication hot_indication; //!< Specification of how hots object should be drawn.
   int tiptext_size;		//!< Size of tooltip text
   glow_tEventLogCb eventlog_callback; //!< Callback function to log events.
+  static int eventlog_enabled; //!< Event logging enabled.
 
   //! Register scrollbar callback function
   /*!

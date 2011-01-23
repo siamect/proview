@@ -36,6 +36,11 @@
 #include "ge_graph.h"
 #include "xtt_log.h"
 
+void XttGe::eventlog_enable( int enable) 
+{ 
+  Graph::eventlog_enable( enable);
+}
+
 void XttGe::graph_init_cb( void *client_data)
 {
   XttGe *ge = (XttGe *) client_data;
