@@ -25,6 +25,9 @@ username=$1
 password=$2
 volume=$3
 
+export LC_TIME="en_US.UTF-8"
+export LC_NUMERIC="POSIX"
+
 wb $username $password $volume $4 $5 $6 $7
 
 
