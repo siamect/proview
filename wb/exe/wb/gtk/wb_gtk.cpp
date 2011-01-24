@@ -152,8 +152,6 @@ WbGtk::WbGtk( int argc, char *argv[]) : mainwindow(0)
 	  exit(0);
 	}
 	Lng::set( argv[i+1]);
-	setlocale( LC_ALL, "en_US");
-	setlocale( LC_NUMERIC, "en_US");
 	i++;
 	break;
       case 'f':

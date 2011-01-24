@@ -4699,6 +4699,11 @@ void grow_EventExec( grow_tCtx ctx, void *event, unsigned int size)
   ctx->gdraw->event_exec( event, size);
 }
 
+void grow_EventLogEnable( int enable)
+{
+  GlowCtx::eventlog_enabled = enable;
+}
+
 /*@}*/
 
 

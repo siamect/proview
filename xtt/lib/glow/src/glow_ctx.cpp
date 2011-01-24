@@ -46,6 +46,8 @@
 
 #include "glow_msg.h"
 
+int GlowCtx::eventlog_enabled = 0;
+
 GlowCtx::GlowCtx( const char *ctx_name, double zoom_fact, int offs_x, int offs_y) 
   : ctx_type(glow_eCtxType_Glow), 
     mw( zoom_fact, zoom_fact, zoom_fact, offs_x, offs_y),

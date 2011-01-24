@@ -92,6 +92,7 @@ class XttGe {
 				     int **is_alist);
   static void ge_eventlog_cb( void *ge_ctx, void *value, unsigned int size);
   static void message_cb( void *ctx, char severity, const char *msg);
+  static void eventlog_enable( int enable);
 };
 
 #endif

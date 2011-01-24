@@ -39,6 +39,8 @@ int i;
 int j;
 int aiList[32];
 int aiCnt;
+int aoList[32];
+int aoCnt;
 byte msgType;
 byte msgId;
 byte msgSize;
@@ -52,9 +54,10 @@ const int debug = 0;
 const int MSG_TYPE_WRITE = 1;
 const int MSG_TYPE_DIREAD = 2;
 const int MSG_TYPE_AIREAD = 3;
-const int MSG_TYPE_CONFIGURE = 4;
-const int MSG_TYPE_STATUS = 5;
-const int MSG_TYPE_DEBUG = 6;
+const int MSG_TYPE_AOWRITE = 4;
+const int MSG_TYPE_CONFIGURE = 5;
+const int MSG_TYPE_STATUS = 6;
+const int MSG_TYPE_DEBUG = 7;
 
 const int ARD__SUCCESS = 1;
 const int ARD__DICONFIG = 2;
@@ -79,14 +82,14 @@ void sendDebug( byte sts)
 //
 void resetOutput()
 {  
-  if ( msgSize == doSize) {
-    for ( i = 0; i < doSize; i++) {
-      for ( j = 0; j < 8; j++) {
-        if ( ((1 << j) & doMask[i]) != 0)
-          digitalWrite( i * 8 + j, LOW);
-      }
+  for ( i = 0; i < doSize; i++) {
+    for ( j = 0; j < 8; j++) {
+      if ( ((1 << j) & doMask[i]) != 0)
+        digitalWrite( i * 8 + j, LOW);
     }
   }
+  for ( i = 0; i < aoCnt; i++)
+    analogWrite( aoList[i], 0);
 }
 
 //
@@ -170,6 +173,19 @@ void loop()
             }
           }
         }
+        sts = ARD__SUCCESS;
+      }
+      else {
+        sts = ARD__COMMERROR;
+      }
+    }
+    else if ( msgType == MSG_TYPE_AOWRITE) {
+      // Write analog outputs
+
+      if ( msgSize == aoSize) {
+        for ( i = 0; i < aoCnt; i++)
+   	  analogWrite( aoList[i], msgData[i]);
+
         sts = ARD__SUCCESS;
       }
       else {
@@ -293,6 +309,17 @@ void loop()
             if ( ((1 << j) & aiMask[i]) != 0) {
               aiList[aiCnt] = i * 8 + j;
               aiCnt++;
+            }
+          }
+        }
+
+        // Create list of configured Ao
+        aoCnt = 0;
+        for ( i = 0; i < aoSize; i++) {
+          for ( j = 0; j < 8; j++) {
+            if ( ((1 << j) & aoMask[i]) != 0) {
+              aoList[aoCnt] = i * 8 + j;
+              aoCnt++;
             }
           }
         }

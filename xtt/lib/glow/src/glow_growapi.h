@@ -2974,6 +2974,7 @@ extern "C" {
   int grow_GetDimension( char *filename, int *width, int *height);
   void grow_SetTextCoding( grow_tCtx ctx, glow_eTextCoding coding);
   void grow_EventExec( grow_tCtx ctx, void *event, unsigned int size);
+  void grow_EventLogEnable( int enable);
   
 /*@}*/
 #if defined __cplusplus
