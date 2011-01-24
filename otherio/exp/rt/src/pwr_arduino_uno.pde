@@ -182,7 +182,7 @@ void loop()
     else if ( msgType == MSG_TYPE_AOWRITE) {
       // Write analog outputs
 
-      if ( msgSize == aoSize) {
+      if ( msgSize == aoCnt) {
         for ( i = 0; i < aoCnt; i++)
    	  analogWrite( aoList[i], msgData[i]);
 
