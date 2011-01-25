@@ -33,7 +33,7 @@ if [ -z $database ]; then
   return
 fi
 
-export LC_TIME="en_US.UTF-8"
+export LC_TIME="en_US"
 export LC_NUMERIC="POSIX"
 
 echo "-- Opening volume '$database'"
