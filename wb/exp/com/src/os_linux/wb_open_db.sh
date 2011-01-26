@@ -33,7 +33,11 @@ if [ -z $database ]; then
   return
 fi
 
-export LC_TIME="en_US"
+if [ "`eval grep Ubuntu /etc/*-release`" != "" ]; then
+  export LC_TIME="en_US.UTF-8"
+elif [ -e /etc/debian_version ]; then
+  export LC_TIME="en_US"
+fi
 export LC_NUMERIC="POSIX"
 
 echo "-- Opening volume '$database'"
