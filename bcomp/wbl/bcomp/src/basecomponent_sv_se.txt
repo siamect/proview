@@ -2681,55 +2681,112 @@ under förutsättningen att INGET mod objekt är associerat (skrivs över).
 @b Objektsbild för regulatorns modobjekt
 @image orm_mode_og.gif
 
-@b Bra att veta
-I normalfallet används Pidobjekt tillsammans med ett Modeobjekt. Modeobjektet spelar då rollen
-av interface till Pidobjektet. Från Modeobjektet är det möjligt att välja MANUAL, AUTO och
-CASCADE: 
-
-  -Manual mod är en mod när regulatorns utsignal är tvångsstyrd.
-  
-  -Auto mod är en mod när regulatorns arbetar med internt börvärde.
-  
-  -Cascade mod (kaskad) är en mod där regulatorns arbetar med ett externt börvärde, dvs 
-   modobjektets ingång XSetVal [XSV].
+@h1 Bra att veta
+I normalfallet används Pidobjekt tillsammans med ett Modeobjekt. Gäller även
+CompPID och CompMode.
+Modeobjektet spelar då rollen av interface till Pidobjektet. Från Modeobjektet är 
+det möjligt att välja MANUAL, AUTO och CASCADE: 
+ 
+   - Manual mod är en mod när regulatorns utsignal är tvångsstyrd till önskat 
+     värde.   
+   - Auto mod är en mod när regulatorns arbetar med internt börvärde från 
+     modobjektet.
    
-@b Regulatorn
-Olika strategier för att beräkna styrsignal har implementerats. PidAlg anger 
-vilka. 
+   - Cascade mod (kaskad) är en mod där regulatorns arbetar med ett externt
+     börvärde, dvs modobjektets ingång XSetVal [XSV].
+    
+@h1 Regulatorn
 
-Pid-objektet har två utgångar som båda kan användas som styrsignal. Vilken 
-som används i det enskilda fallet beror på hur regleringen är ordnad: 
+Algoritmens proportionella term respektive derivata term kan baseras antingen på 
+ärvärdet eller reglerfelet. 
+PidAlg anger fördelningen.
+Exempel: PI+D innebär att P-delen och I-delen verkar på regleravvikelsen, medan 
+D-delen bara påverkas av ärvärdesförändringar. En stegändring av börvärdet ger 
+inte någon spik från D-delen, utan bara en stegändring från P-delen, och sedan 
+en integrering av reglerfelet.
+I+P innebär på samma sätt att P-delen bara påverkas av ärvärdesförändringar. Vid 
+en stegändring av börvärdet får vi inget steg på utgången. Utstyrningen ändras 
+bara genom att det större reglerfelet börjar integrera utsignalen.
 
-OUT (attributet OutVal ) innehåller ett värde som kan komma från 
-evalueringen av den valda algoritmens 'positional form', från operatören i läge 
-MANUAL eller vara ett s.k. tvångsstyrningsvärde. Kunskapen om var 
-ställdonet ska stå ligger i detta fall s. a. s. på regulatorsidan eftersom hela 
-signalvärdet finns där. 
+Vid P- och PD-algoritm används en absolut algoritm. Utsignalen kan då alltså inte 
+ligga stabilt skilt från noll utan regleravvikelse, annat än om man använder en 
+framkopplingssignal.
+Vid alla algoritmer med I-del baseras hela tiden förändringar i utsignalen på 
+förändringar i insignalerna. Man kan fortfarande stänga av integrereringen med 
+en insignal till objektet.
+ 
+Pid-objektet har två utgångar som båda kan användas som styrsignal. Vilken som 
+används i det enskilda fallet beror på hur regleringen är ordnad: 
+OUT (attributet OutVal ) innehåller ett värde som kan komma från regleralgoritmen,
+från operatören i läge  MANUAL eller vara ett s.k. tvångsstyrningsvärde.
+Signalen används för t ex varvtalsutstyrning, eller som börvärdesposition till 
+ett ställdon.
+OC (attributet OutChange ) anger hur ställdonet ska ändras mellan två successiva 
+exekveringar.
+I detta fall talar man om algoritmens 'velocity' eller 'incremental form'.
+Detta är användbart för ställdon som bara har öka- och minska-signaler, utan 
+lägesåterföring. Används då normalt med INC3P-objektet, som integrerar 
+förändringarna och omvandlar till tid för öka resp minska.
+OutChange fortsätter att ge signal, även OutVal bottnat i MinOut eller MaxOut.
 
-OC (attributet OutChange ) anger hur ställdonet ska ändras mellan två 
-successiva exekveringar. I detta fall talar man om algoritmens 'velocity' eller 
-'incremental form'. Här är det istället ställdonet som "kommer ihåg" 
-inställningen. 
+Derivata termen filtreras internt med 1:a ordningens filter. Filtreringen kopplas 
+bort genom att sätta DerGain = 0, men regleringen blir då ofta mycket störkänslig.
+Normalt är DerGain ca 3, vilket innebär att utsignalen påverkas momentant 3 ggr 
+så mycket av derivatadelen som av P-delen. Derivatatillskottet smetas sedan ut 
+över tiden, så att det totala integrerade tillskottet blir lika stort som den 
+skulle bli utan filtrering.
+ 
+En framkopplingssignal, Bias, kan inkluderas i algoritmen genom en ingångssignal 
+till objektet.
+ 
+Utvärdet, OutVal, begränsas till intervallet { MinOut, MaxOut }. Det innebär att 
+man kan tappa det stabila läget vid en orolig reglering, speciellt vid inkopplad 
+D-del.
+Exempel: Vi har en ganska orolig flödesreglering (utsignal 0-100 %) och reglerar 
+nära maxvarvet för pumpen. Vi behöver styra ut i snitt 98 % för att nå önskat 
+börvärde. Utsignalen fladdrar ca +- 5 % pga störningar. Om MaxOut är 100 %, så 
+innebär det att regulatorn bottnar regelbundet. Utsignalen kommer då att svänga 
+mellan 90 och 100 % med en medelutsignal på ca 95%, och vi når inte önskat 
+börvärde.
+Lösning: Sätt MinOut och MaxOut till -10 % resp 110 %. Utsignalen kommer att 
+svänga mellan 93 och 103% med ett medel på 98%, och vi uppnår önskat börvärde. 
+Utsignalen får sedan begränsas till 0 - 100 % utanför PID-regulatorn.
 
-Algoritmens proportionella term respektive derivata term kan baseras antingen 
-på ärvärdet eller reglerfelet. 
 
-Derivata termen kan filtreras internt med 1:a ordningens filter. 
+Regulatorn har stötfri omkoppling AUTO / MANUAL och efter annan tvångsstyrning av 
+regulatorn.
+Dock ej vid P- eller PD-reglering.
+ 
+EXEMPEL 1
 
-En framkopplingssignal, Bias , kan inkluderas i algoritmen. 
+Exempelkurvor för att visa P- och Delens inverkan vid olika typinställningar. 
+Insignal steg och ramp.
 
-Integrationen kan kopplas från/till. 
+@image orm_pid_3.png
 
-Utvärdet, OutVal begränsas till intervallet { MinOut , MaxOut }.
-Stötfri omkoppling AUTO / MANUAL.
+Övre delen:
+Brun kurva.  Ärvärde (samma som P-del från regulatorn). Steg samt ramp.
+Lila kurva.  Utsignal från PD med Kp = 1, DerTime = 10s, DerGain = 3.
 
-För regulatorns manövrering och inställning finns två objektbilder bl.a innehållande
-ett tidsdiagram med ärvärde, börvärde och utsignal. Dvs objektsbilder för compPID och
-CompModePID. 
+Nedre delen -  D-del från regulatorn.
+Grön kurva.  DerTime = 10s. Ingen filtrering (DerGain = 0). Notera spiken vid 
+             stegändringen.
+Gul kurva.   DerTime = 10s. Filtrerad D-del DerGain = 3.
+Blå kurva.   DerTime = 20s. Filtrerad D-del DerGain = 3.
 
-@h1 Funktion
- @image orm_pid_1.gif
- @image orm_pid_2.gif
+
+EXEMPEL 2 för att visa skillnaden mellan PID, PI+D och I+PD vid återkopplat 
+system och stegförändring av börvärdet:
+
+@image orm_pid_4.png
+
+I+PD börjar sakta integrera upp styrsignalen vid stegändring.
+PI+D ger ett stegsvarsom medför att vi får en snabbare reglering till nya 
+börvärdet.
+PID ger 'bakvänt' resultat. P ger ca 30 % upp, D ger en spik på ca 90 % Totalt ca 
+135 % Regulatorn bottnar i 100 % utsignal, och när vi sedan tar bort D-spiken på 
+90 % får regulatorn börja om från 10 % utsignal.
+
 
 @h1 Exempel
 

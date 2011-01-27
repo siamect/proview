@@ -19,3 +19,5 @@
 100602 cs  jop       New script, jpwr_opwind.sh, to start java operator window locally.
 101006 cs  jop       Web operator window, possibility to remove Help and Proview buttons.
 101111 cs  jop       Chinese characters, UTF-0 char coding of language and textfiles.
+110112 cs  rt        Java bugfix, subscription of String array didn't work.
+110112 cs  rt        Java table column reordering disabled.
