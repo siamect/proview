@@ -6777,7 +6777,7 @@ int utl_compile (
 	      if ( EVEN(sts)) return sts;
 	
 	      /* Compile the windows */
-	      sts = gcg_wind_comp_all( ldhwb, l_ldhses, window, 1, modified, debug);
+	      sts = gcg_wind_comp_all( ldhwb, l_ldhses, window, 1, modified, debug, 0);
 	      if ( other_volume_attached)
 	      {
 		ldh_CloseSession( l_ldhses);
@@ -6831,7 +6831,7 @@ int utl_compile (
 	    }
 	
 	    /* Compile the windows */
-	    sts = gcg_wind_comp_all( ldhwb, ldhses, window, 1, modified, debug);
+	    sts = gcg_wind_comp_all( ldhwb, ldhses, window, 1, modified, debug, 0);
 	    if ( EVEN(sts))
 	    {
 	      status = sts;
@@ -6868,7 +6868,7 @@ int utl_compile (
 	    free((char *) windbuffer);
 
 	    /* Compile the windows */
-	    sts = gcg_wind_comp_all( ldhwb, ldhses, window, 1, modified, debug);
+	    sts = gcg_wind_comp_all( ldhwb, ldhses, window, 1, modified, debug, 0);
 	    if ( EVEN(sts))
 	    {
 	      status = sts;

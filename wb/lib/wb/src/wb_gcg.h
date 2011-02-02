@@ -29,6 +29,7 @@
 #endif
 
 #include <stdio.h>
+#include <vector>
 
 #include "wb_vldh.h"
 
@@ -144,7 +145,7 @@ typedef struct {
 	gcg_t_areflist	*aref;
 	unsigned long	arefcount;
 	unsigned long	compobjcount;
-	pwr_sAttrRef	reset_object;
+        pwr_sAttrRef	reset_object;
 	unsigned long	reset_checked;
 	unsigned long	errorcount;
 	unsigned long	warningcount;
@@ -155,6 +156,7 @@ typedef struct {
 	ldh_tSesContext ldhses;
   	vldh_t_node	current_cmanager;
   	int		cmanager_active;
+        vector<pwr_tOid> pending_compile;
 	} gcg_t_ctx, *gcg_ctx;
 
 
@@ -299,7 +301,8 @@ int gcg_wind_comp_all(
   pwr_tObjid	window,
   unsigned long	codetype,
   int		modified,
-  int		debug
+  int		debug,
+  int		skip_plc
 );
 
 int	gcg_comp_volume( 
