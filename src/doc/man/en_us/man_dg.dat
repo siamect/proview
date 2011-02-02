@@ -4690,6 +4690,7 @@ In this section we go through the steps to start Proview on a process or operato
 - build the node.
 - installation of the runtime package.
 - distribute to the node. <link> dg_distribute
+- set the QCom bus id for the node. <link> dg_busid
 - start the runtime environment on the node. <link> dg_rtstart
 
 <h1>Directory volume configuration
@@ -4765,6 +4766,18 @@ pwr_pkg.sh -i with this package, you restore the version.
 <c>> pwr_pkg.sh -i pwrp_pkg_cross1_0001.tgz
 </topic>
 
+<topic> db_busid
+Bus identity
+
+The QCom bus identity for the node is set in the file /etc/proview.cnf.
+
+<c># Default QCOM Bus Id
+<c>qcomBusId 517 
+
+This value has to correspond to the configured bus id for the node in the directory volume.
+The current bus id is stored in the environment variable $PWR_BUS_ID.
+</topic>
+
 <topic> dg_rtstart
 Start the runtime environment
 
@@ -4782,6 +4795,13 @@ or
 
 The command 'pwr stop' requires that all processes are alive, while 'pwr kill' clears all
 in all situations.
+
+If proview runtime doesn't start correctly, you can start with the command
+
+<c>> rt_ini -i
+
+to view console loggings in the terminal window.
+Always reset with 'pwr kill' before a new start attempt.
 
 </topic>
 </headerlevel>

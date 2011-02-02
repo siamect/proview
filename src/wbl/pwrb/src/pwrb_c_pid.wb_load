@@ -119,13 +119,19 @@ SObject         pwrb:Class
 !
 !  @image orm_pid_4.png
 !
-!  I+PD starts slowly to integrate the output after the step.
-!  PI+D gives a step from tthe P, which quickens the process respons.
-!  PID gives 'wrong' result because of the saturation of the output signal. At
-!  the setpoint step, the P-part gives an increase of 30 %, and the P-part wants
-!  a spike of 90 %. That results in an output of 135%, which is cut to 100%. Then
-!  the D-part will remove 90 % again, and the controller will restart from 10%
-!  output, which is not desired. 
+!  I+PD (upper left) starts slowly to integrate the output after the step.
+!  PI+D (upper right) starts with a step from the P, which quickens the 
+!       process respons.
+!  PID  (lower left) adds a short spike at the start, which in this case 
+!       doesn't affect anything. 
+!       MaxOut = 500%
+!  PID  (lower right) is identical with the left, except for MaxOut = 100%, 
+!       which gives "wrong" result.
+!       At the setpoint step, the P-part gives an increase of 30 %, and the 
+!       P-part wants a spike of 90 %. That results in an output of 155%, which 
+!       is cut to 100% because of saturation of the output signal. Then the D-part 
+!       will remove 90 % again, and the controller will restart from 10% output, 
+!       which is not desired. 
 !
 !
 ! @h1 Examples

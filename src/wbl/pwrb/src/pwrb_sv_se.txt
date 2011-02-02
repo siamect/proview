@@ -10426,17 +10426,20 @@ Gul kurva.   DerTime = 10s. Filtrerad D-del DerGain = 3.
 Blå kurva.   DerTime = 20s. Filtrerad D-del DerGain = 3.
 
 
-EXEMPEL 2 för att visa skillnaden mellan PID, PI+D och I+PD vid återkopplat 
+EXEMPEL 2 för att visa skillnaden mellan PID, PI+D och I+PD vid återkopplat
 system och stegförändring av börvärdet:
 
 @image orm_pid_4.png
 
-I+PD börjar sakta integrera upp styrsignalen vid stegändring.
-PI+D ger ett stegsvarsom medför att vi får en snabbare reglering till nya 
-börvärdet.
-PID ger 'bakvänt' resultat. P ger ca 30 % upp, D ger en spik på ca 90 % Totalt ca 
-135 % Regulatorn bottnar i 100 % utsignal, och när vi sedan tar bort D-spiken på 
-90 % får regulatorn börja om från 10 % utsignal.
+I+PD (uppe till vänster) börjar sakta integrera upp styrsignalen vid stegändring.
+PI+D (uppe till höger) ger ett stegsvar som medför att vi får en snabbare 
+     reglering till nya börvärdet.
+PID  (nere till vänster) ger en kort spik vid stegändringen. Denna regulator har 
+     MaxOut = 500%
+PID  (nere till höger) är identisk med föregående, men har MaxOut = 100%, vilket 
+     ger "bakvänt" resultat. P ger ca 30 % upp, D ger en spik på ca 90 % Totalt ca 
+     155 % Regulatorn bottnar i 100 % utsignal, och när vi sedan tar bort D-spiken 
+     på 90 % får regulatorn börja om från 10 % utsignal.
 
 @h1 Exempel
 

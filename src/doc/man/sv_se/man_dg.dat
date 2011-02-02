@@ -4649,6 +4649,7 @@ startas på en process eller operatörsstation.
 - noden ska byggas.
 - installation av runtime paketet.
 - distribuering till noden. <link> dg_distribute
+- ange bus id för noden. <link> db_busid
 - uppstart av runtime-miljön på noden. <link> dg_rtstart
 
 <h1>Konfigurering in directory volymen
@@ -4721,6 +4722,19 @@ med detta återställer man till denna version.
 <c>> pwr_pkg.sh -i pwrp_pkg_cross1_0001.tgz
 </topic>
 
+<topic> db_busid
+Bus identitet
+
+QCom bus identitet för noden är angiven i filen /etc/proview.cnf.
+
+<c># Default QCOM Bus Id
+<c>qcomBusId 517 
+
+Det här värdet ska överensstämma med den konfigurerade busidentiteten i directory volymen.
+Den aktuella busidentiteten är lagrad i omgivningsvariabeln $PWR_BUS_ID.
+
+</topic>
+
 <topic> dg_rtstart
 Starta runtime-miljön
 Runtime-mijön startas med kommandot
@@ -4737,6 +4751,14 @@ eller
 
 Kommandot 'pwr stop' kräver att alla processer lever, medan 'pwr kill' är lite tuffare och 
 rensar i alla lägen.
+
+Om Proview runtime inte startar, kan man starta med kommandot
+
+<c>> rt_ini -i
+
+för att visa konsol-loggning i terminalfönstret. 
+Återställ alltid med 'pwr kill' före ett nytt startförsök.
+
 </topic>
 </headerlevel>
 </chapter>
