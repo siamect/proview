@@ -295,19 +295,34 @@ static GdkColor flow_allocate_color( FlowDrawGtk *draw_ctx, const char *named_co
 {
   GdkColor color;
 
-  if ( draw_ctx->color_vect_cnt >= (int)(sizeof(draw_ctx->color_vect)/sizeof(draw_ctx->color_vect[0]))) {
-    printf( "Flow allocate color error: max number of colors exceeded\n");
-    return draw_ctx->color_vect[0];
+  if ( draw_ctx->color_vect_cnt == 0) {
+    gdk_color_parse( "black", &draw_ctx->color_vect[0]);
+    gdk_colormap_alloc_color( draw_ctx->colormap, &draw_ctx->color_vect[0], FALSE, TRUE);
+    gdk_color_parse( "white", &draw_ctx->color_vect[1]);
+    gdk_colormap_alloc_color( draw_ctx->colormap, &draw_ctx->color_vect[1], FALSE, TRUE);
+    draw_ctx->color_vect_cnt = 2;
   }
 
-  if ( !gdk_color_parse( named_color, &color))
-    gdk_color_parse( "black", &color);
-  gdk_colormap_alloc_color( draw_ctx->colormap, &color, FALSE, TRUE);
+  if ( strcmp( named_color, "black") == 0)
+    return draw_ctx->color_vect[0];
+  else if ( strcmp( named_color, "white") == 0)
+    return draw_ctx->color_vect[1];
+  else {       
 
-  draw_ctx->color_vect[draw_ctx->color_vect_cnt] = color;
-  draw_ctx->color_vect_cnt++;
+    if ( draw_ctx->color_vect_cnt >= (int)(sizeof(draw_ctx->color_vect)/sizeof(draw_ctx->color_vect[0]))) {
+      printf( "Flow allocate color error: max number of colors exceeded\n");
+      return draw_ctx->color_vect[0];
+    }
 
-  return color;
+    if ( !gdk_color_parse( named_color, &color))
+      gdk_color_parse( "black", &color);
+    gdk_colormap_alloc_color( draw_ctx->colormap, &color, FALSE, TRUE);
+
+    draw_ctx->color_vect[draw_ctx->color_vect_cnt] = color;
+    draw_ctx->color_vect_cnt++;
+
+    return color;
+  }
 }
 
 FlowDrawGtk::~FlowDrawGtk()

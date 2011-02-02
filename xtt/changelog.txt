@@ -196,3 +196,4 @@
 110120 cs  ge        wb_ge, execution of wtt initfile to get history log enable/disable setup added.
 110121 cs  xtt       Languages zh_cn and fr_fr added.
 110121 rk  rtmon     Runtime Monitor, problem with restart timeout fixed.
+110202 cs  flow      Color alloc problem fixed.
