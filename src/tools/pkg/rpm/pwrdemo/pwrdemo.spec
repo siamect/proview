@@ -10,7 +10,7 @@
 
 Name:		pwrdemo48
 Summary: 	Proview/R demo project
-Version:        4.8.0
+Version:        4.8.1
 Release: 	1
 License:        GPL
 BuildArch:      i386
@@ -128,6 +128,6 @@ fi
 #%postun
 
 %changelog
+* Mon Jan 24 2011 Claes Sjofors <claes.sjofors@proview.se> 4.8.1-1 
 * Sun Nov 28 2010 Claes Sjofors <claes.sjofors@proview.se> 4.8.0-1
-- Base release
- 
+  - Base release

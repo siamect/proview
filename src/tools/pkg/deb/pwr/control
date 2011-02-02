@@ -1,5 +1,5 @@
 Package: pwr48
-Version: 4.8.1-0.1
+Version: 4.8.1-1
 Section: base
 Priority: optional
 Architecture: i386
@@ -9,7 +9,8 @@ Maintainer: Proview <postmaster@proview.se>
 Description: Proview development and runtime environment package
  Proview development and runtime environment
  4.8.0-1 Base release 
- 4.8.1-0.1 Beta release
+ 4.8.1-1
    - I/O support for Arduino USB board.
    - Remote support for Websphere Message Queue.
    - Operator event logging and replay.
+   - Chinese translation in operator environment.

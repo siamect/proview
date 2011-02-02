@@ -10,7 +10,7 @@
 
 Name: pwr48
 Summary: Proview/R development and runtime environment
-Version: 4.8.0
+Version: 4.8.1
 Release: 1
 License: GPL
 BuildArch: i386
@@ -200,5 +200,9 @@ fi
 #%postun
 
 %changelog
+* Mon Jan 24 2011 Claes Sjofors <claes.sjofors@proview.se> 4.8.1-1
+  - I/O support for Arduino USB board.
+  - Remote support for Websphere Message Queue.
+  - Operator event logging and replay.
 * Sun Nov 28 2010 Claes Sjofors <claes.sjofors@proview.se> 4.8.0-1
   - Base release.
