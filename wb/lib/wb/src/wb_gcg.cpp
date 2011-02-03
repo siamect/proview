@@ -5153,11 +5153,13 @@ int	gcg_comp_rtnode(
 	gcg_t_threadlist	*threadlist;
 	unsigned long		thread_count;
 	char			text[80];
+	char			nodename_low[80];
 
 	gcg_debug = debug;
 
 	gcg_ctx_new( &gcgctx, 0);
 	strcpy(gcdir, GCDIR);
+	strncpy( nodename_low, cdh_Low(nodename), sizeof(nodename_low));
 
 	switch ( os) 
 	{
@@ -5333,7 +5335,7 @@ int	gcg_comp_rtnode(
 	{
 
 	  sprintf( fullfilename,"%s%s%s_%4.4d%s", gcdir, gcgmn_filenames[0], 
-		nodename, bus, GCEXT);
+		nodename_low, bus, GCEXT);
 	  dcli_translate_filename( fullfilename, fullfilename);
 	  if ((files[0] = fopen( fullfilename,"w")) == NULL) 
 	  {
@@ -5345,7 +5347,7 @@ int	gcg_comp_rtnode(
 
 	  if (IS_VMS_OR_ELN(os)) 
 	  {
-	    sprintf( fullfilename,"%splc_%s_%4.4d.opt", "pwrp_tmp:", cdh_Low(nodename), bus);
+	    sprintf( fullfilename,"%splc_%s_%4.4d.opt", "pwrp_tmp:", nodename_low, bus);
 	    dcli_translate_filename( fullfilename, fullfilename);
 	    if ((files[1] = fopen( fullfilename,"w")) == NULL) 
 	    {
@@ -5407,13 +5409,13 @@ int	gcg_comp_rtnode(
 	  files[0] = NULL;	   
 
 	  /* Create an object file */
-	  sprintf( module_name, "%s%s_%4.4d", gcgmn_filenames[0], nodename, bus);
+	  sprintf( module_name, "%s%s_%4.4d", gcgmn_filenames[0], nodename_low, bus);
 	  gcg_cc( GCG_PROC, module_name, NULL, NULL, os, GCG_NOSPAWN);
 
 	    /* print module in option file */
 	  if (IS_VMS_OR_ELN(os))
 	    fprintf( files[1],"%s%s%s_%4.4d\n", objdir, gcgmn_filenames[0], 
-		nodename, bus);
+		     nodename_low, bus);
 	
 	  /* Print plc libraries in option file */
 	  volumelist_ptr = volumelist;
@@ -5465,16 +5467,16 @@ int	gcg_comp_rtnode(
 	  if (IS_VMS_OR_ELN(os)) 
 	  {
 	    sprintf( plcfilename, "pwrp_exe:plc_%s_%4.4d_%5.5ld.exe",
-		cdh_Low(nodename), bus, plc_version);
-	    sprintf( fullfilename,"%s%s_%4.4d", gcgmn_filenames[0], nodename, bus);
+		     nodename_low, bus, plc_version);
+	    sprintf( fullfilename,"%s%s_%4.4d", gcgmn_filenames[0], nodename_low, bus);
 	    gcg_cc( GCG_RTNODE, fullfilename, plcfilename, NULL, os,
 	          GCG_NOSPAWN);
 	  } 
 	  else
 	  {
 	    sprintf( plcfilename, "plc_%s_%4.4d_%5.5ld",
-		cdh_Low(nodename), bus, plc_version);
-	    sprintf( fullfilename,"%s%s_%4.4d", gcgmn_filenames[0], nodename, bus);
+		     nodename_low, bus, plc_version);
+	    sprintf( fullfilename,"%s%s_%4.4d", gcgmn_filenames[0], nodename_low, bus);
 	    gcg_cc( GCG_RTNODE, fullfilename, plcfilename, 
 	        plclib_frozen, os, GCG_NOSPAWN);
 	  }

@@ -94,7 +94,7 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
   char node[80];
   pwr_tStatus sumsts;
 
-  printf( "Build node %s\n", nodename);
+  printf( "-- Build node %s\n", nodename);
 
   wb_log::push();
 

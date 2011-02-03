@@ -305,7 +305,6 @@ pwr_tStatus lfu_create_bootfile(
 	    if ( EVEN(sts)) return sts;
 
 	    sprintf( plcname, load_cNamePlc, "", cdh_Low(nodename), bus, (int)plc_version);
-	    printf( "      %s\n", plcname);
 
 	    sts = gcg_comp_rtnode( nodename, os,
 			bus, 1, &errorcount, &warningcount, debug, node_vollist, 

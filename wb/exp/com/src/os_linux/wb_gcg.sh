@@ -163,7 +163,7 @@ CompileRtNode()
 
 #link option file exists and is not empty
   if [ -s $pwrp_exe/$FileName.opt ]; then
-
+    echo "-- Using local option-file $FileName.opt"
     ld_opt_tmp="`cat $pwrp_exe/$FileName.opt`"
     ld_opt="`eval echo $ld_opt_tmp`"
   else
@@ -179,7 +179,7 @@ CompileRtNode()
     $pwr_obj/pwr_msg_rt.o $pwr_obj/pwr_msg_co.o \
     -lrt -lpwr_remote -lpwr_nmps -lpwr_rt -lpwr_co -lrpcsvc -lpwr_msg_dummy -lpthread -lm
   then
-    echo "-- Plc program linked for $OsStr $say_linkdebug node $FileName" 
+    echo "-- Plc program linked for $OsStr $say_linkdebug $OutFile" 
     gcg_status=$gcg__success
   else
     echo "** Plc program link errors for $OsStr node $FileName"

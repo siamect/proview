@@ -25,7 +25,7 @@ username=$1
 password=$2
 volume=$3
 
-if [ "`eval grep Ubuntu /etc/*-release`" != "" ]; then
+if [ "`eval grep Ubuntu /etc/*-release 2>/dev/null`" != "" ]; then
   export LC_TIME="en_US.UTF-8"
 elif [ -e /etc/debian_version ]; then
   export LC_TIME="en_US"
