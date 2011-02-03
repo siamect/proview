@@ -86,10 +86,13 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
 
   sts = libusb_open( device, &local->libusb_device);
   if ( sts != 0) {
-    op->Status = IO__INITFAIL;
+    if ( sts == io_cLibDummy)
+      op->Status = IO__DUMMYBUILD;
+    else
+      op->Status = IO__INITFAIL;
     ((pwr_sClass_Velleman_K8055 *)rp->op)->Status = op->Status;
     local->libusb_device = 0;
-    return IO__INITFAIL;
+    return op->Status;
   }
 
   if ( libusb_kernel_driver_active( local->libusb_device, 0) != 0)

@@ -3,6 +3,7 @@
  */
 #include <sys/types.h>
 #include <stdint.h>
+#include "rt_io_base.h"
 
 struct libusb_context;
 struct libusb_device;
@@ -27,12 +28,12 @@ struct libusb_device_descriptor {
 	uint8_t  bNumConfigurations;
 };
 
-int libusb_init(libusb_context **ctx) {return 0;}
+int libusb_init(libusb_context **ctx) {return io_cLibDummy;}
 void libusb_exit(libusb_context *ctx) {}
 ssize_t libusb_get_device_list(libusb_context *ctx,
 			       libusb_device ***list) {return 0;}
 void libusb_free_device_list(libusb_device **list, int unref_devices) {}
-int libusb_open(libusb_device *dev, libusb_device_handle **handle) {return 0;}
+int libusb_open(libusb_device *dev, libusb_device_handle **handle) {return io_cLibDummy;}
 void libusb_close(libusb_device_handle *dev_handle) {}
 int libusb_interrupt_transfer(libusb_device_handle *dev_handle,
 			      unsigned char endpoint, unsigned char *data, int length,
