@@ -168,3 +168,5 @@
 101006 cs  wb        Dev method PostCreate, inheritance added.
 101006 cs  wb        IO objects, PostCreate method to automatically insert ThreadObject.
 101123 cs  wb        Lockfile added to directory and class volumes.
+110202 cs  wb        Bugfix in object editor, Ctrl+DoubleClick didn't work on attrrefs.
+110202 cs  wb        Plc compile, problem with compilation of component subwindow from plc editor fixed.

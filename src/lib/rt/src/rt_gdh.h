@@ -501,6 +501,11 @@ gdh_GetVolumeList(
   pwr_tVid *vid
 );
 
+pwr_tStatus
+gdh_GetRootVolume( 
+  pwr_tVid *vid
+);
+
 pwr_tStatus 
 gdh_SearchFile (
   pwr_tOid oid,

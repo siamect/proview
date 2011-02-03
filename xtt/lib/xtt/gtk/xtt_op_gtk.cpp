@@ -73,6 +73,7 @@ OpGtk::OpGtk( void *op_parent_ctx,
   Op( op_parent_ctx, opplace, status), parent_wid(op_parent_wid), title_label(0), a_height(2),
   text_size(12)
 {
+  pwr_tStatus sts;
   memset( a_exist, 0, sizeof(a_exist));
   memset( a_active, 0, sizeof(a_active));
   GdkColor red_color;
@@ -538,7 +539,8 @@ OpGtk::OpGtk( void *op_parent_ctx,
   gtk_box_pack_start( GTK_BOX(sysbutton_box), GTK_WIDGET(tools2), FALSE, FALSE, 0);
   gtk_widget_set_size_request( sysbutton_box, 160, -1);
 
-  configure( opplace);
+  sts = configure( opplace);
+  if ( EVEN(sts)) return;
 
   // Status bar
   GtkWidget *status_bar;
@@ -657,9 +659,12 @@ OpGtk::~OpGtk()
 {
   if ( jop)
     delete jop;
-  sup_timerid->remove();
-  delete sup_timerid;
-  delete wow;
+  if ( sup_timerid) {
+    sup_timerid->remove();
+    delete sup_timerid;
+  }
+  if ( wow)
+    delete wow;
   gtk_widget_destroy( toplevel);
 }
 

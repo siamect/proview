@@ -561,7 +561,7 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
 	  while (ODD(sts)) {
 	    sts = gdh_ObjidToName( op_objid, oname, sizeof(oname), cdh_mName_object);
 	    if (ODD(sts) && cdh_NoCaseStrcmp( oname, opplace_str) == 0) {
-	      sts = gdh_ObjidToName( op_objid, opplace_str, sizeof(opplace_str), cdh_mNName);
+	      sts = gdh_ObjidToName( op_objid, opplace_str, sizeof(opplace_str), cdh_mName_volumeStrict);
 	      opplace_found = 1;
 	      break;
 	    }
@@ -619,7 +619,7 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
       sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_object);
       if ( EVEN(sts) || cdh_NoCaseStrcmp( name, "opdefault") == 0) 
 	continue;
-      sts = gdh_ObjidToName( oid, fullname, sizeof(fullname), cdh_mNName);
+      sts = gdh_ObjidToName( oid, fullname, sizeof(fullname), cdh_mName_volumeStrict);
       if ( EVEN(sts)) continue;    
 
       i++;
@@ -639,7 +639,7 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
 	  sts = gdh_GetNextObject( oid, &oid)) {
       sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_object);
       if ( ODD(sts) && cdh_NoCaseStrcmp( name, "opdefault") == 0) {
-	sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mNName);
+	sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_volumeStrict);
 	if ( EVEN(sts)) exit(sts);
 
 	strcpy( opplace_str, name);
@@ -759,13 +759,18 @@ void Xtt::list_opplace()
   pwr_tObjName name;
   pwr_tStatus sts;
   pwr_tOid oid;
+  pwr_tVid root_vid;
 
+  gdh_GetRootVolume( &root_vid);
 
   int i = 0;
   for ( sts = gdh_GetClassList( pwr_cClass_OpPlace, &oid); 
 	ODD(sts);
 	sts = gdh_GetNextObject( oid, &oid)) {
-    sts = gdh_ObjidToName( oid, texts[i], sizeof(texts[0]), cdh_mNName);
+    if ( oid.vid == root_vid)
+      sts = gdh_ObjidToName( oid, texts[i], sizeof(texts[0]), cdh_mNName);
+    else
+      sts = gdh_ObjidToName( oid, texts[i], sizeof(texts[0]), cdh_mName_volumeStrict);
     if ( EVEN(sts)) continue;
     
     sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_object);

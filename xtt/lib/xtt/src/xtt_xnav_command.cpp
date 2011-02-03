@@ -1979,6 +1979,7 @@ static int	xnav_show_func(	void		*client_data,
     pwr_tOName *names;
     xnav_sObjectList *ctx;
     pwr_tCid cid;
+    pwr_tVid root_vid;
 
     if ( EVEN( dcli_get_qualifier( "/CLASS", class_str, sizeof(class_str)))) {
       xnav->message('E', "Class is missing");
@@ -1991,6 +1992,8 @@ static int	xnav_show_func(	void		*client_data,
       return XNAV__HOLDCOMMAND;
     }
 
+    gdh_GetRootVolume( &root_vid);
+
     for ( sts = gdh_GetClassListAttrRef( cid, &aref);
 	  ODD(sts);
 	  sts = gdh_GetNextAttrRef( cid, &aref, &aref)) {
@@ -2002,8 +2005,12 @@ static int	xnav_show_func(	void		*client_data,
     for ( sts = gdh_GetClassListAttrRef( cid, &aref);
 	  ODD(sts);
 	  sts = gdh_GetNextAttrRef( cid, &aref, &aref)) {
-      sts = gdh_AttrrefToName( &aref, names[idx], sizeof(names[0]),
-			       cdh_mNName /* cdh_mName_volumeStrict */ );
+      if ( aref.Objid.vid == root_vid)
+	sts = gdh_AttrrefToName( &aref, names[idx], sizeof(names[0]),
+				 cdh_mNName);
+      else
+	sts = gdh_AttrrefToName( &aref, names[idx], sizeof(names[0]),
+				 cdh_mName_volumeStrict);
       if ( EVEN(sts)) continue;
 
       idx++;
