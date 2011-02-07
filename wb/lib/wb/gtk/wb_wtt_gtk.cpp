@@ -115,6 +115,13 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_save_w, TRUE);
       gtk_widget_set_sensitive( tools_save_w, TRUE);
       gtk_widget_set_sensitive( menu_revert_w, TRUE);
+      gtk_widget_set_sensitive( menu_deleteobj_w, TRUE);
+      gtk_widget_set_sensitive( menu_creaobjafter_w, TRUE);
+      gtk_widget_set_sensitive( menu_creaobjfirst_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjup_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjdown_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjinto_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjontop_w, TRUE);
       gtk_widget_set_sensitive( menu_cut_w, TRUE);
       gtk_widget_set_sensitive( menu_copy_w, TRUE);
       gtk_widget_set_sensitive( menu_paste_w, TRUE);
@@ -138,6 +145,13 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_save_w, FALSE);
       gtk_widget_set_sensitive( tools_save_w, FALSE);
       gtk_widget_set_sensitive( menu_revert_w, FALSE);
+      gtk_widget_set_sensitive( menu_deleteobj_w, FALSE);
+      gtk_widget_set_sensitive( menu_creaobjafter_w, FALSE);
+      gtk_widget_set_sensitive( menu_creaobjfirst_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjup_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjdown_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjinto_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjontop_w, FALSE);
       gtk_widget_set_sensitive( menu_cut_w, FALSE);
       gtk_widget_set_sensitive( menu_copy_w, TRUE);
       gtk_widget_set_sensitive( menu_paste_w, FALSE);
@@ -163,6 +177,13 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_save_w, TRUE);
       gtk_widget_set_sensitive( tools_save_w, TRUE);
       gtk_widget_set_sensitive( menu_revert_w, TRUE);
+      gtk_widget_set_sensitive( menu_deleteobj_w, TRUE);
+      gtk_widget_set_sensitive( menu_creaobjafter_w, TRUE);
+      gtk_widget_set_sensitive( menu_creaobjfirst_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjup_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjdown_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjinto_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjontop_w, TRUE);
       gtk_widget_set_sensitive( menu_cut_w, TRUE);
       gtk_widget_set_sensitive( menu_copy_w, TRUE);
       gtk_widget_set_sensitive( menu_paste_w, TRUE);
@@ -189,6 +210,13 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_save_w, FALSE);
       gtk_widget_set_sensitive( tools_save_w, FALSE);
       gtk_widget_set_sensitive( menu_revert_w, FALSE);
+      gtk_widget_set_sensitive( menu_deleteobj_w, FALSE);
+      gtk_widget_set_sensitive( menu_creaobjafter_w, FALSE);
+      gtk_widget_set_sensitive( menu_creaobjfirst_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjup_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjdown_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjinto_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjontop_w, FALSE);
       gtk_widget_set_sensitive( menu_cut_w, FALSE);
       gtk_widget_set_sensitive( menu_copy_w, TRUE);
       gtk_widget_set_sensitive( menu_paste_w, FALSE);
@@ -217,6 +245,13 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_save_w, TRUE);
       gtk_widget_set_sensitive( tools_save_w, TRUE);
       gtk_widget_set_sensitive( menu_revert_w, TRUE);
+      gtk_widget_set_sensitive( menu_deleteobj_w, TRUE);
+      gtk_widget_set_sensitive( menu_creaobjafter_w, TRUE);
+      gtk_widget_set_sensitive( menu_creaobjfirst_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjup_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjdown_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjinto_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjontop_w, TRUE);
       gtk_widget_set_sensitive( menu_cut_w, TRUE);
       gtk_widget_set_sensitive( menu_copy_w, TRUE);
       gtk_widget_set_sensitive( menu_paste_w, TRUE);
@@ -240,6 +275,13 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_save_w, FALSE);
       gtk_widget_set_sensitive( tools_save_w, FALSE);
       gtk_widget_set_sensitive( menu_revert_w, FALSE);
+      gtk_widget_set_sensitive( menu_deleteobj_w, FALSE);
+      gtk_widget_set_sensitive( menu_creaobjafter_w, FALSE);
+      gtk_widget_set_sensitive( menu_creaobjfirst_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjup_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjdown_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjinto_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjontop_w, FALSE);
       gtk_widget_set_sensitive( menu_cut_w, FALSE);
       gtk_widget_set_sensitive( menu_copy_w, TRUE);
       gtk_widget_set_sensitive( menu_paste_w, FALSE);
@@ -269,6 +311,13 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_save_w, TRUE);
       gtk_widget_set_sensitive( tools_save_w, TRUE);
       gtk_widget_set_sensitive( menu_revert_w, TRUE);
+      gtk_widget_set_sensitive( menu_deleteobj_w, TRUE);
+      gtk_widget_set_sensitive( menu_creaobjafter_w, TRUE);
+      gtk_widget_set_sensitive( menu_creaobjfirst_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjup_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjdown_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjinto_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjontop_w, TRUE);
       gtk_widget_set_sensitive( menu_cut_w, TRUE);
       gtk_widget_set_sensitive( menu_copy_w, TRUE);
       gtk_widget_set_sensitive( menu_paste_w, TRUE);
@@ -295,6 +344,13 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_save_w, FALSE);
       gtk_widget_set_sensitive( tools_save_w, FALSE);
       gtk_widget_set_sensitive( menu_revert_w, FALSE);
+      gtk_widget_set_sensitive( menu_deleteobj_w, FALSE);
+      gtk_widget_set_sensitive( menu_creaobjafter_w, FALSE);
+      gtk_widget_set_sensitive( menu_creaobjfirst_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjup_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjdown_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjinto_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjontop_w, FALSE);
       gtk_widget_set_sensitive( menu_cut_w, FALSE);
       gtk_widget_set_sensitive( menu_copy_w, TRUE);
       gtk_widget_set_sensitive( menu_paste_w, FALSE);
@@ -320,6 +376,13 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_save_w, FALSE);
       gtk_widget_set_sensitive( tools_save_w, FALSE);
       gtk_widget_set_sensitive( menu_revert_w, FALSE);
+      gtk_widget_set_sensitive( menu_deleteobj_w, TRUE);
+      gtk_widget_set_sensitive( menu_creaobjafter_w, TRUE);
+      gtk_widget_set_sensitive( menu_creaobjfirst_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjup_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjdown_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjinto_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjontop_w, TRUE);
       gtk_widget_set_sensitive( menu_cut_w, TRUE);
       gtk_widget_set_sensitive( menu_copy_w, TRUE);
       gtk_widget_set_sensitive( menu_paste_w, TRUE);
@@ -344,6 +407,13 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( tools_save_w, FALSE);
       gtk_widget_set_sensitive( menu_revert_w, FALSE);
       gtk_widget_set_sensitive( menu_cut_w, FALSE);
+      gtk_widget_set_sensitive( menu_deleteobj_w, FALSE);
+      gtk_widget_set_sensitive( menu_creaobjafter_w, FALSE);
+      gtk_widget_set_sensitive( menu_creaobjfirst_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjup_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjdown_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjinto_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjontop_w, FALSE);
       gtk_widget_set_sensitive( menu_copy_w, TRUE);
       gtk_widget_set_sensitive( menu_paste_w, FALSE);
       gtk_widget_set_sensitive( menu_pasteinto_w, FALSE);
@@ -368,6 +438,13 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_save_w, TRUE);
       gtk_widget_set_sensitive( tools_save_w, TRUE);
       gtk_widget_set_sensitive( menu_revert_w, TRUE);
+      gtk_widget_set_sensitive( menu_deleteobj_w, TRUE);
+      gtk_widget_set_sensitive( menu_creaobjafter_w, TRUE);
+      gtk_widget_set_sensitive( menu_creaobjfirst_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjup_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjdown_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjinto_w, TRUE);
+      gtk_widget_set_sensitive( menu_moveobjontop_w, TRUE);
       gtk_widget_set_sensitive( menu_cut_w, TRUE);
       gtk_widget_set_sensitive( menu_copy_w, TRUE);
       gtk_widget_set_sensitive( menu_paste_w, TRUE);
@@ -391,6 +468,13 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_save_w, FALSE);
       gtk_widget_set_sensitive( tools_save_w, TRUE);
       gtk_widget_set_sensitive( menu_revert_w, FALSE);
+      gtk_widget_set_sensitive( menu_deleteobj_w, FALSE);
+      gtk_widget_set_sensitive( menu_creaobjafter_w, FALSE);
+      gtk_widget_set_sensitive( menu_creaobjfirst_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjup_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjdown_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjinto_w, FALSE);
+      gtk_widget_set_sensitive( menu_moveobjontop_w, FALSE);
       gtk_widget_set_sensitive( menu_cut_w, FALSE);
       gtk_widget_set_sensitive( menu_copy_w, FALSE);
       gtk_widget_set_sensitive( menu_paste_w, FALSE);
@@ -1700,7 +1784,7 @@ void WttGtk::boot_ok_cb(GtkWidget *w, gpointer data)
 	  if ( build.evenSts()) {
 	    gtk_widget_destroy( ((WttGtk *)wtt)->boot_dia);
 	    sprintf( msg, 
-		     "Error creating bootfile for NodeConfig-object %s",
+		     "Error building node %s",
 		     nodeconfigname);
 	    wtt->message( 'E', msg);
 	    return;
