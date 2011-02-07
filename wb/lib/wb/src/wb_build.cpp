@@ -130,6 +130,8 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
 	if ( vlist[i].volume_id == m_session.vid()) {
 	  // Build current volume
 	  volume();
+	  if ( evenSts()) 
+	    return;
 	}
       
 	cdh_ToLower( vname, vlist[i].volume_name);
@@ -588,6 +590,14 @@ void wb_build::plcpgm( pwr_tOid oid)
   }
   else if ( m_sts == GSX__NOMODIF) {
     m_sts = PWRB__NOBUILT;
+  }
+  else {
+    char msg[500];
+    char msg2[256];
+    msg_GetMsg( m_sts, msg, sizeof(msg));
+    sprintf( msg2, ", PlcPgm %s", o.longName().name(cdh_mName_path | cdh_mName_object));
+    strcat( msg, msg2);
+    MsgWindow::message('E', msg, msgw_ePop_Yes, oid, true);
   }
 }
 
