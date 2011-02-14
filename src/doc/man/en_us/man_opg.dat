@@ -83,9 +83,9 @@ Introduction
 Proview Operator's Guide is intended for persons who will be in contact with running
 Proview systems in their daily work. It could be
 
-- operators that supervises and handles a process.
+- operators that supervise and handle a process.
 - maintenance personnel troubleshooting the plant.
-- processengineer fetching information about the process.
+- process engineer fetching information about the process.
 - system managers maintaining and debugging the system.
 
 Function for all these groups are available in the ordinary operator environment, and who
@@ -124,11 +124,11 @@ for example photocells or pressure switches. A control program is executed in th
 station, that from the measuring data calculates control data for the process that is sent
 out to motors and actuators affecting the process.
 
-Process stations often contains a special hardware to read input data and write output data,
+Process stations often contains special hardware to read input data and write output data,
 but this can also be performed over the network with protocols as Modbus/TCP and Profinet.
 
 <h2>Operator station
-The operator stations is the interface between the operator and the process. The operator
+The operator station is the interface between the operator and the process. The operator
 supervises the process with the help of process graphs, displaying the state of the process
 by presenting data in the shape of bars, curves, indicators etc. The operator can influence
 the process, for example by entering data into input fields or pushing buttons in the process
@@ -138,7 +138,7 @@ graph.
 Some measuring data has to be stored, in order to view trends and changes, or to be able
 to get back and analyze the state of the process at a certain point of time. The storage
 time can vary from hours to several years. The storage is done on storage stations, that
-has sufficient disk space to be able to store data for long periods, and also have backup
+have sufficient disk space to be able to store data for long periods, and also have backup
 functions. 
 
 <h2>Development station
@@ -158,11 +158,11 @@ Objects
 <h1>The object tree
 Object is a central concept in Proview. Sensors, valves, motors, controllers etc. are all
 represented by objects in a database. The objects are ordered in a tree structure where
-different hierarchy levels in the tree represents parts of the plant or process. If we look
+different hierarchy levels in the tree represent parts of the plant or process. If we look
 at a furnace, the top level can represent the whole furnace. The furnace consists of four
 warming zones, which are represented by objects on the next level in the object tree. Each
 zone has two electric heaters and two temperature sensors, still one level down. Here are
-also some objects that doesn't have any physical equivalent in the plant, a PID controller 
+also some object that don't have any physical equivalent in the plant, a PID controller 
 and a control program for the zone.
 
 <image>opg_fig2.png
@@ -171,7 +171,7 @@ and a control program for the zone.
 <image>opg_fig3.png
 <b>Fig Object tree for the furnace
 
-Note that several objects have quite cryptic names that follows a notation standard, but to
+Note that several objects have quite cryptic names that follow a notation standard, but to
 each object there are a more detailed description that is often viewed with the object.
 
 Let us have a closer look at an object, for example one of the temperature sensors. The
@@ -183,7 +183,7 @@ triangle with the letter T.
 
 <h2>Object graph
 If you click on the symbol the object graph of the object is opened. From the object graph
-you can se the properties of the object. The most interesting for a temperature sensor is
+you can see the properties of the object. The most interesting for a temperature sensor is
 of course the measured temperature, that is viewed both in figures and as a bar 
 (thermometer), see 'Fig Object graph for temperature sensor' below. The temperature sensor
 object also contains four alarm limits, highhigh, high, low and lowlow. The level of the
@@ -194,10 +194,10 @@ boxes you can also disable the alarm limits.
 <b>Fig Object graph for a temperature sensor
 
 <h2>Methods
-In the upper edge of the object graph there are a number of pushbuttons that activates the
+In the upper edge of the object graph there are a number of pushbuttons that activate the
 methods of the object. By the methods you can reach all the information there is on the
 objects in the control system. The methods can also be activated from the menu in the 
-objects graph, or by rightclicking on the graphical symbol in the overview graph, opening a 
+objects graph, or by right clicking on the graphical symbol in the overview graph, opening a 
 popup menu with the methods. Actually, wherever you find the object, in alarm lists, 
 process graphs, in the plc code etc, you can by right clicking on the object open the popup
 menu with the methods or the object. Here follows a list of different methods, but which
@@ -214,7 +214,7 @@ Help <t>View a help text for the object.
 Note <t>Write a note for the object. The note is viewed in the object graph.
 Open Object <t>Show the content of the object.
 RtNavigator <t>Show the object in the object tree.
-Crossreferences <t>Show were the object is references in the plc code and process graphs.
+Crossreferences <t>Show were the object is referenced in the plc code and process graphs.
 Help Class <t>View help for this object type.
 Datasheet <t>Show the datasheet for the component in the plant that corresponds
           <t>to the object.
@@ -276,7 +276,7 @@ current alarms and messages are viewed, in the middle there are pushbuttons for 
 functions, and to the left there are pushbuttons configured for this operator place.
 
 <h2>Status bar
-The top row is a status bar. It shows who is logged in on on which node. For tha current
+The top row is a status bar. It shows who is logged in on which node. For tha current
 node, and for all nodes that there are node supervision configured, an indicator for system 
 status is viewed. Green states that everything is all right, yellow indicates warning, red
 error and flashing red fatal error. If you click on a node, the status graph for the node
@@ -286,15 +286,15 @@ is opened.
 In the left part of the operator window alarm and messages are displayed.
 
 The alarms are divided into four priority levels A, B, C and D, where A has the highest
-priority and D the lowest. A alarms are marked red, B alarms yellow, C alarm blue and D
-alarm violet. Further more there is the category Info messages that are marked with green.
+priority and D the lowest. A alarms are marked red, B alarms yellow, C alarms blue and D
+alarms violet. Furthermore there is the category Info messages that are marked with green.
 
-In the upper field, the latest unacknowledged A alarm are displayed. Dependent on the height
+In the upper field, the latest unacknowledged A alarm are displayed. Depending on the height
 of the operator window, 2 to 5 alarms are viewed. There is also a button marked with a tick
 to acknowledge A alarms.
 
 In the lower field the latest unacknowledged B, C, D alarms, and info messages are viewed.
-These alarm are displayed in priority order rather than in chronological order, i.e. if 
+These alarms are displayed in priority order rather than in chronological order, i.e. if 
 there are unacknowledged B alarms, the latest of these will be displayed. Only if there are
 no acknowledged B alarms, possible C alarms are viewed etc. There is also an acknowledge
 button to acknowledge the B, C, D alarms and the info messaged.
@@ -302,14 +302,14 @@ button to acknowledge the B, C, D alarms and the info messaged.
 An alarm is prevailing if the alarm condition still is fulfilled. This is marked with a
 warning triangle to the left of the alarm text.
 
-<h2>Menu and pushbuttons to open base function
-In the middle part of the operator window there are a meny and some buttons to open
-basefunctions.
+<h2>Menu and pushbuttons to open base functions
+In the middle part of the operator window there are a menu and some buttons to open
+base functions.
 
 <b>Menu
 Below is a description of the menu items in the Functions menu.
 
-Functions/Alarm/AlarmList <t><t>Open the alarm list with prevailing and unacknowledged alarm. <link>opg_alarmlist
+Functions/Alarm/AlarmList <t><t>Open the alarm list with prevailing and unacknowledged alarms. <link>opg_alarmlist
 Functions/Alarm/EventList <t><t>Open the event list, a list of the latest alarms and events. <link>opg_eventlist
 Functions/Alarm/EventLog <t><t>Open the event log, where you can display stored events. <link>opg_eventlog
 Functions/Alarm/BlockList <t><t>Open the list of blocked alarms. <link>opg_blocklist
@@ -331,7 +331,7 @@ Functions/Help/About Proview <t><t>Display Proview into, for example version of 
 Functions/Close <t><t>Close down the operator place.
 
 <b>Pushbuttons
-Below the menu there is a toolpanel with a number of pushbuttons that works as shortcuts to
+Below the menu there is a tool panel with a number of pushbuttons that works as shortcuts to
 menu items:
 
 - zoom in and out.
@@ -373,35 +373,35 @@ About alarm and events
 Alarms are sent to the operator station when something occurs that operator has to pay
 attention to. It could be a temperature crossing a limit, or a bad value entered in a
 process graph. In Proview there are special supervision objects that supervise signals
-and generates alarm.
+and generates alarms.
 
 Alarm are viewed in the alarmlist.<link>opg_alarmlist
 
 <h2>Priority
 The alarms are grouped in four priority levels, A, B, C and D, where A is the highest
-priority and D the lowest. How the priority levels are used, depend on the configuration
+priority and D the lowest. How the priority levels are used, depends on the configuration
 of the system. It is common that the alarm priorities are used in the following way.
 
-A alarms are marked with red. They have the highest priority and indicates that a serious
-error in the plant has occurred that immediately should be taken care of. Often is causes
+A alarms are marked with red. They have the highest priority and indicate that a serious
+error in the plant has occurred that immediately should be taken care of. Often it causes
 a stop in the production as long as the alarms are prevailing.
 
 B alarms are marked with yellow. They have a little lower priority, implying an error that
 that should soon be taken care of, but the production can continue still some time.
 
-C alarms are marked with blue and D alarm with violet. They indicates minor errors that
-are not acute. In many system two alarm levels are enough, and only A and B alarm are used.
+C alarms are marked with blue and D alarms with violet. They indicates minor errors that
+are not acute. In many system two alarm levels are enough, and only A and B alarms are used.
 
 <h2>Alarmtext
-Alarms contains a text, that is viewed in alarm and event lists. This text is in one row
-and maximum 80 characters long. There are also room for a longer text, a moretext, that 
-for example, can contain further explanation of the cause of the alarm, och how it should
+Alarms contain text that is viewed in alarm and event lists. This text is in one row
+and maximum 80 characters long. There is also room for longer text, a moretext, that 
+for example, can contain further explanation of the cause of the alarm, or how it should
 be taken care of. The moretext is displayed in the alarm and event lists if the cursor
-are placed on the alarmtext.
+is placed on the alarmtext.
 
 <h2>Acknowledge
 An alarm has to be acknowledged by the operator. As long as the alarm is unacknowledged, it
-remains in the alarmlist and gives rise to a beep. If an alarm is displayed on several
+remains in the alarmlist and gives rise to a beep. If an alarm is displayed at several
 operator places it is enough for one of the operators to acknowledges the alarm.
 
 <h2>Blocking
@@ -420,7 +420,7 @@ priority than alarms and are marked with green.
 
 <h1>Events
 An event is generated in the same way as alarms, by supervision objects. Also alarms 
-generates events. Activation of an alarm is counted as an event, and also are the return 
+generates events. Activation of an alarm is counted as an event, as are the return 
 of the alarm state and the acknowledgement of the alarm.
 
 Events are stored in an eventlist, that contains the latest events. They are also stored
@@ -429,8 +429,8 @@ also see event statistics. For the eventlog there is a search dialog, where you 
 for events with certain search criteria, for example time, eventtype  or eventname.
 
 <h2>Selectlist
-The operator place have a selectlist that contains a list of plant parts in the object tree.
-Only alarm from these plant parts will be viewed in the alarm and event lists. The other
+The operator place has a selectlist that contains a list of plant parts in the object tree.
+Only alarms from these plant parts will be viewed in the alarm and event lists. The other
 alarms and events are filtered away.
 
 </topic>
@@ -446,9 +446,9 @@ command 'show alarmlist'.
 
 In the alarmlist prevailing and unacknowledged alarms are viewed. Unacknowledged alarms are
 marked with a bell and prevailing alarms with a warning triangle. Only alarms from the
-plant parts stated in the selectlist is viewed.
+plant parts stated in the selectlist are viewed.
 
-The moretext of an alarm is displayed when the cursor i placed on the alarmtext.
+The moretext of an alarm is displayed when the cursor is placed on the alarmtext.
 
 Alarms can be acknowledged by activating Functions/Acknowledge (Ctrl+K) in the menu.
 
@@ -471,9 +471,9 @@ opened from the navigator menu or by the command  'show eventlist'.
 
 The events from the plant parts stated in the selectlist are displayed in the eventlist.
 The maximum number of events are configured in the User object. When the maximum number
-of events is reached, old events are removed when new arrives.
+of events is reached, old events are removed when new ones arrives.
 
-For each event is viewed
+Each event indicates
 - Color indication for alarm priority.
 - Event type.
 - Time of event.
@@ -514,7 +514,7 @@ An eventtype is specified. If no type is selected, all types are present in the 
 - Ack <t>En alarm is acknowledged.
 
 <h2>Priority
-Search for alarm with a specific priority. If no priority is selected, the search is made
+Search for alarms with a specific priority. If no priority is selected, the search is made
 for all priorities.
 
 <h2>Eventname
@@ -523,10 +523,10 @@ will search for all events in the hierarchy F1-Z1. If no object name is supplied
 objects are searched for.
 
 <h2>Eventtext
-Search for en event text. Wildcard (*) is allowed. If no text is specified, all texts are
+Search for an event text. Wildcard (*) is allowed. If no text is specified, all texts are
 searched for.
 
-When the search criteria are stated, the 'Search' pushbutton i pressed. The search is 
+When the search criteria are stated, the 'Search' pushbutton is pressed. The search is 
 performed and the result is presented in a list in the lower part of the window.
 
 <image>opg_fig9.png
@@ -560,7 +560,7 @@ For each blocked objects are displayed:
 A blocking is removed by selecting the blocking and activating Functions/Remove Blocking in 
 the menu.
 
-Alarm blocking is performed by the 'Block Events' method for en object. <link>opg_blockingwindow
+Alarm blocking is performed by the 'Block Events' method for an object. <link>opg_blockingwindow
 
 
 </topic>
@@ -577,7 +577,7 @@ object, or with the xtt command 'eventlist block'.
 The window is used to block alarms for an object. All alarms with the specified priority,
 and with lower priorities, are blocked for the object and all its descendants.
 
-The priority is specified by radio buttons. You can also remove a blocking by the 
+The priority is specified by radio buttons. You can also remove blocking by the 
 'No Blocking' button.
 
 Only users with the privilege 'RtEvent' or 'System' are authorized to block alarms.
@@ -606,11 +606,10 @@ also be opened by the Xtt command 'open trend'. Trend curves are configured by D
 objects and, if several curves are viewed in the same curve window, by PlotGroup objects.
 
 A trendcurve is a signal value, for example of type temperature, pressure or flow, that
-is stored with a specific time interval. A trendcurve can store 478 values, and for how
-long period of time values can be stored, depends on the time interval. If a new value is
-stored every second, totally 8 minutes can be stored, and with a new value every minute, 
-eight hours can be stored. The values are stored in the RAM memory, and will be lost at
-a reboot.
+is stored with a specific time interval. A trendcurve can store 478 values, and so the 
+total time window depends on the time resolution. If a new value is stored every second,
+a total of 8 minutes can be stored, and with a new value every minute, eight hours can be 
+stored. The values are stored in the RAM memory, and will be lost at a reboot.
 
 The trendcurves are viewed in a curve window. A curve window can display 20 different 
 curves.
@@ -653,7 +652,7 @@ objects and, if several curves are viewed in the same windows, by PlotGroup obje
 Fastcurves are used to display fast sequences during a shorter period of time. The 
 storage of the fastcurve is started by a trigger signal and continues a specific time. When 
 the sequence is finished the curve is viewed, and remains on the screen until the 
-trigger signal is set again and activate a new recording of the sequence.
+trigger signal is set again to activate a new recording of the sequence.
 
 The fastcurves are viewed in a curve window. A curve window can display 20 different 
 curves.
@@ -696,7 +695,7 @@ Attribute <t>States the attribute of the trend curve.
 The tool panel contains buttons to zoom and move the view to the left or to the right.
 
 You can also navigate with the navigation window in the lower part of the window. The part
-of the curve that is displayed, is marked with a black square. With drag MB1 you kan move
+of the curve that is displayed, is marked with a black square. With drag MB1 you can move
 the view in x direction, and by dragging the middle button you can zoom in and out.
 
 Navigation from the keyboard is accomplished with the arrow keys. With arrow up and down
@@ -837,7 +836,7 @@ Script <link> script
 <option> printenable
 
 <h1>Collection view
-By Functions/Collect/Show, Ctrl+N, you look at collected objects and attributes. At trouble
+By Functions/Collect/Show, Ctrl+N, you look at collected objects and attributes. For trouble
 shooting you often need to look at a number of different attributes simultaneously. By
 traversing the object tree and collecting attributes with Functions/Collect/Insert, Ctrl+V, 
 and then activating Functions/Collect/Show these attributes are viewed on one page.
@@ -864,7 +863,7 @@ Database
 <b>Fig The object tree from the navigator
 
 Under the map 'Database' the object tree is shown. Here you can navigate in the object 
-three, open objects and examine the content of different attributes i the object. If
+three, open objects and examine the content of different attributes in the object. If
 you have privileges, you can also change attribute values.
 
 If you rightclick on an object, an popup menu with the object methods is opened. Buttons
@@ -911,8 +910,8 @@ Client table to see if the subscription is present and if it is updated. Each ti
 arrives for a subscription, 'Count' increments and the time is inserted in 'Time'.
 
 In 'Unknown' on the top row, you can see the number of subscriptions where the attribute
-is unknown. This can be subscriptions to a station that is not yet running, but it can
-also be subscriptions that is misspelt, or to objects that no longer exist.
+is unknown. This can be a subscription to a station that is not yet running, but it can
+also be a subscription that is misspelled, or to objects that no longer exist.
 
 <image> opg_fig19.png
 <b>Fig Subscription client
@@ -954,9 +953,9 @@ System / Communication / RemNode
 Displays a list of nodes that the current node communicates with via Remote.
 
 Remote is a function to send data between nodes. Nodes communicating with each other are
-configured by RemNode objects, and transactions that are sent between the nodes are
-configured by RemTrans objects. A number of different protocols for the data exchange are
-supported, Modbus, MQ, Serial, TCP, UDP, 3964R and ALCM.
+configured by RemNode objects, and a transaction sent between two nodes by the Remote 
+function are configured by RemTrans objects. A number of different protocols for the 
+data exchange are supported, Modbus, MQ, Serial, TCP, UDP, 3964R and ALCM.
 
 <image> opg_fig20.png
 <b>Fig List of RemNodes
@@ -995,10 +994,10 @@ TransTime <t>Time for the last transaction.
 ErrCount <t>Number of unsuccessful transactions.
 LastSts <t>Status for the last transaction.
 
-By selecting a transaction and press the Arrow Right key, the content of the transaction
+By selecting a transaction and pressing the Arrow Right key, the content of the transaction
 is viewed (you can also click on the map). If the attribute StructFile is supplied with
 the include file containing the data structures for the transactions, the data content is
-viewed in text en clair.
+viewed in this format.
 By Shift/Arrow Right the RemTrans object is opened.
 </topic>
 
