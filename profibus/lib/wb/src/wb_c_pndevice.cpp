@@ -115,6 +115,7 @@ int pndevice_save_cb( void *sctx)
   pwr_tOName name;
   int size;
   pwr_tOid oid;
+  pwr_tStatus rsts = PB__SUCCESS;
   
   // Syntax check
   if ( ctx->attr->attrnav->device_num == 0) {
@@ -130,6 +131,7 @@ int pndevice_save_cb( void *sctx)
 
       sprintf( msg, "Slot %d", i);
       MsgWindow::message( 'E', "Module type not selected, ", msg);
+      rsts = PB__MODULETYPE;
     }
     if ( ctx->attr->attrnav->dev_data.slot_data[i]->module_class == 0 &&
 	 ctx->attr->attrnav->dev_data.slot_data[i]->module_enum_number != 0) {
@@ -138,6 +140,7 @@ int pndevice_save_cb( void *sctx)
 
       sprintf( msg, "Slot %d", i);
       MsgWindow::message( 'E', "Module class not selected, ", msg);
+      rsts = PB__MODULECLASS;
     }
   }
 
@@ -397,7 +400,7 @@ int pndevice_save_cb( void *sctx)
       }
     }
   }
-  sts = PWRB__SUCCESS;
+  sts = rsts;
 
  return_now:
   ((WNav *)ctx->editor_ctx)->reset_nodraw();

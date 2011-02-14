@@ -142,6 +142,7 @@ class FlowNode : public FlowArrayElem {
     void set_trace_attr( const char *object, const char *attribute, flow_eTraceType type, int inverted);
     void get_trace_attr( char *object, char *attribute, flow_eTraceType *type, int *inverted);
     void set_trace_data( void *data) { trace_p = data;};
+    void get_trace_data( void **data) { *data = trace_p;};
     void trace_scan();
     int trace_init();
     void trace_close();

@@ -47,6 +47,8 @@ gsdmlfile	<Unable to open GSDML file>				/error
 nodevice	<No device selected>					/error
 createchan	<Unable to create channel>				/error
 gsdmlfilemismatch <Gsdmlfile doesn't match original filename>		/error
+moduleclass	<No module class selected>				/error
+moduletype	<No module type selected>				/error
 .end
 
 

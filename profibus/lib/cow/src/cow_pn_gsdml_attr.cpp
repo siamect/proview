@@ -209,6 +209,23 @@ void GsdmlAttr::activate_cmd_ok()
     sts = (save_cb)( parent_ctx);
     if ( EVEN(sts))
       message( 'E', "Error saving profibus data");
+    else if ( close_cb)
+      (close_cb)( parent_ctx);
+  }  
+  else if ( close_cb)
+    (close_cb)( parent_ctx);
+}
+
+void GsdmlAttr::activate_cmd_apply()
+{
+  int sts;
+
+  attrnav->save( data_filename);
+
+  if ( save_cb) {
+    sts = (save_cb)( parent_ctx);
+    if ( EVEN(sts))
+      message( 'E', "Error saving profibus data");
     else
       attrnav->set_modified(0);
   }  

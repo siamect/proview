@@ -213,6 +213,46 @@ void GsdAttr::activate_cmd_ok()
     sts = (save_cb)( parent_ctx);
     if ( EVEN(sts))
       message( 'E', "Error saving profibus data");
+    else if ( close_cb)
+      (close_cb)( parent_ctx);
+  }
+  else if ( close_cb)
+    (close_cb)( parent_ctx);
+}
+
+void GsdAttr::activate_cmd_apply()
+{
+  int sts;
+  int idx;
+  char msg[80];
+
+  if ( save_cb) {    
+
+    // Check syntax
+    sts = gsd->syntax_check( &idx);
+    if ( EVEN(sts)) {
+      switch ( sts) {
+      case PB__NOMODULENAME:
+	sprintf( msg, "Syntax error in module %d, No module name", idx + 1);
+	break;
+      case PB__DUPLMODULENAME:
+	sprintf( msg, "Syntax error in module %s, Duplicate module name", 
+		 gsd->module_conf[idx].name);
+	break;
+      case PB__NOMODULECLASS:
+	sprintf( msg, "Syntax error in module %s, Module class is missing", 
+		 gsd->module_conf[idx].name);
+	break;
+      default:
+	sprintf( msg, "Syntax error in module %d", idx + 1);
+      }
+      message( 'E', msg);
+      return;
+    }
+
+    sts = (save_cb)( parent_ctx);
+    if ( EVEN(sts))
+      message( 'E', "Error saving profibus data");
     else
       gsd->set_modified(0);
   }

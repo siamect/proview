@@ -26,6 +26,7 @@
 #include <stdlib.h>
 
 #include "co_cdh.h"
+#include "co_dcli.h"
 #include "co_time.h"
 #include "cow_wow.h"
 #include "flow.h"
@@ -1668,6 +1669,80 @@ int GsdmlAttrNav::open( const char *filename)
   return 1;
 }
 
+int GsdmlAttrNav::search_class( const char *filename, const char *model, 
+				const char *module, char *mclass)
+{
+  char line[200];
+  char itemv[2][200];
+  pwr_tFileName fname;
+  int num;
+  ifstream	fp;
+  int in_model = 0;
+  int in_par = 0;
+  char lmodel[200];
+  char lmodule[200];
+
+  dcli_trim( lmodel, (char *)model);
+  dcli_trim( lmodule, (char *)module);
+
+  dcli_translate_filename( fname, filename);
+
+  fp.open( fname);
+  if ( !fp)
+    return 0;
+
+  while ( fp.getline( line, sizeof(line)) ) {
+    if ( line[0] == '#')
+      continue;
+
+    num = dcli_parse( line, " 	", "",
+		      (char *) itemv, sizeof( itemv)/sizeof( itemv[0]), 
+		      sizeof( itemv[0]), 0);
+    if ( num < 1)
+      continue;
+
+    dcli_trim( itemv[0], itemv[0]);
+    if ( num >= 2)
+      dcli_trim( itemv[1], itemv[1]);
+
+    if ( cdh_NoCaseStrcmp( itemv[0], "Device") == 0) {
+      if ( num < 2)
+	continue;
+
+      if ( in_model)
+	return 0;
+
+      if ( cdh_NoCaseStrcmp( itemv[1], lmodel) == 0)
+	in_model = 1;
+    }
+
+    if ( in_model) {
+      if ( strcmp( itemv[0], "{") == 0)
+	in_par = 1;
+    }
+
+    if ( in_par) {
+      if ( num < 2)
+	continue;
+
+      if ( strcmp( itemv[0], "}") == 0)
+	break;
+
+      if ( strcmp( itemv[1], "-") == 0 || strcmp( itemv[1], "") == 0)
+	continue;
+
+      if ( cdh_NoCaseStrcmp( itemv[0], lmodule) == 0) {
+	strncpy( mclass, itemv[1], sizeof( pwr_tObjName));
+	fp.close();
+	return 1;
+      }
+    }
+  }
+
+  fp.close();
+  return 0;
+}
+
 ItemPnBase::ItemPnBase( GsdmlAttrNav *attrnav, const char *item_name, const char *attr, 
 	int attr_type, int attr_size, double attr_min_limit, 
 	double attr_max_limit, void *attr_value_p, int attr_noedit,
@@ -2989,6 +3064,41 @@ int ItemPnModuleType::scan( GsdmlAttrNav *attrnav, void *p)
     brow_SelectClear( attrnav->brow->ctx);
     brow_SetInverse( parentnode, 1);
     brow_SelectInsert( attrnav->brow->ctx, parentnode);
+    brow_CenterObject( attrnav->brow->ctx, parentnode, 0.25);
+
+    // Search for a default module class
+    char devname[200];
+    pwr_tObjName mclass;
+    pwr_tCid mcid = 0;
+    brow_tObject next;
+    pwr_tCid *datap;
+
+    strncpy( devname, (char *)attrnav->gsdml->ApplicationProcess->DeviceAccessPointList->
+	     DeviceAccessPointItem[attrnav->device_num-1]->ModuleInfo->Body.Name.p, 
+	     sizeof(devname));
+
+    sts = attrnav->search_class( pn_cModuleClassFile, devname,  buf, mclass);
+    if ( ODD(sts)) {
+      for ( int i = 0; attrnav->gsdml->module_classlist[i].cid; i++) {
+	if ( cdh_NoCaseStrcmp( mclass, attrnav->gsdml->module_classlist[i].name) == 0) {
+	  mcid = attrnav->gsdml->module_classlist[i].cid;
+	  break;
+	}
+      }
+    }
+    
+    sts = brow_GetNext( attrnav->brow->ctx, parentnode, &next);
+    if ( ODD(sts))
+      sts = brow_GetNext( attrnav->brow->ctx, next, &next);
+    if ( ODD(sts)) {
+      ItemPn *item;
+
+      brow_GetUserData( next, (void **)&item);
+      if ( item->type == attrnav_eItemType_PnModuleClass) {	
+	brow_GetTraceData( next, (void **)&datap);
+	*datap = mcid;
+      }
+    }
   }
   else
     first_scan = 0;

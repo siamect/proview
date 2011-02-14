@@ -1,0 +1,169 @@
+#
+#
+Device "IM151-3 PN"
+Device "IM151-3 PN V3.0"
+Device "IM151-3 PN HF V3.0"
+Device "IM151-3 PN ST V4.0"
+Device "IM151-3 PN FO V4.0"
+Device "IM151-3 PN HF V4.0"
+Device "IM151-3 PN HF V5.0"
+Device "IM151-3 PN FO V5.0"
+Device "IM151-3 PN ST V5.0"
+{
+"2AI U, Standard" Siemens_Ai2_PnModule
+"2AI U, Standard" Siemens_Ai2_PnModule
+"2AI U, High Speed" Siemens_Ai2_PnModule
+"2AI U, High Speed Taktsynchron" Siemens_Ai2_PnModule
+"2AI U, High Speed Taktsynchron" Siemens_Ai2_PnModule
+"2AI U, High Feature" Siemens_Ai2_PnModule
+"2AI U, High Feature" Siemens_Ai2_PnModule
+"2AI I, 2WIRE, Standard" Siemens_Ai2_PnModule
+"2AI I, 2WIRE, Standard" Siemens_Ai2_PnModule
+"2AI I, 2WIRE, High Speed" Siemens_Ai2_PnModule
+"2AI I, 2WIRE, High Speed Taktsynchron" Siemens_Ai2_PnModule
+"2AI I, 2WIRE, High Speed Taktsynchron" Siemens_Ai2_PnModule
+"2AI I, 4WIRE, Standard" Siemens_Ai2_PnModule
+"2AI I, 4WIRE, Standard" Siemens_Ai2_PnModule
+"2AI I, 4WIRE, High Speed" Siemens_Ai2_PnModule
+"2AI I, 4WIRE, High Speed Taktsynchron" Siemens_Ai2_PnModule
+"2AI I, 4WIRE, High Speed Taktsynchron" Siemens_Ai2_PnModule
+"2AI I, 2/4WIRE, High Feature" Siemens_Ai2_PnModule
+"2AI I, 2/4WIRE, High Feature" Siemens_Ai2_PnModule
+"2AI TC, Standard" Siemens_Ai2_PnModule
+"2AI TC, High Feature" Siemens_Ai2_PnModule
+"2AI TC, High Feature" Siemens_Ai2_PnModule
+"2AI RTD, Standard" Siemens_Ai2_PnModule
+"2AI RTD, High Feature" Siemens_Ai2_PnModule
+"2AI RTD, High Feature" Siemens_Ai2_PnModule
+"4AI I, 2WIRE, Standard" Siemens_Ai4_PnModule
+"2AO U, Standard" Siemens_Ao2_PnModule
+"2AO U, Standard" Siemens_Ao2_PnModule
+"2AO U, High Feature" Siemens_Ao2_PnModule
+"2AO U, High Feature, isochron mode" Siemens_Ao2_PnModule
+"2AO U, High Feature, isochron mode" Siemens_Ao2_PnModule
+"2AO I, Standard" Siemens_Ao2_PnModule
+"2AO I, Standard" Siemens_Ao2_PnModule
+"2AO I, High Feature" Siemens_Ao2_PnModule
+"2AO I, High Feature, isochron mode" Siemens_Ao2_PnModule
+"2AO I, High Feature, isochron mode" Siemens_Ao2_PnModule
+"2AO U, High Speed Taktsynchron" Siemens_Ao2_PnModule
+"2AO I, High Speed Taktsynchron" Siemens_Ao2_PnModule
+"2DI DC24V, High Feature" Siemens_Di2_PnModule
+"2DI DC24V, High Feature*" Siemens_Di2_PnModule
+"2DI DC24V, High Feature, 01" Siemens_Di2_PnModule
+"2DI DC24V, High Feature, 01*" Siemens_Di2_PnModule
+"2DI DC24V, Standard" Siemens_Di2_PnModule
+"2DI DC24V, Standard*" Siemens_Di2_PnModule
+"2DI DC24V, Standard, 01" Siemens_Di2_PnModule
+"2DI DC24V, Standard, 01*" Siemens_Di2_PnModule
+"2DI AC120V, Standard" Siemens_Di2_PnModule
+"2DI AC120V, Standard*" Siemens_Di2_PnModule
+"2DI AC230V, Standard" Siemens_Di2_PnModule
+"2DI AC230V, Standard*" Siemens_Di2_PnModule
+"4DI DC24V, High Feature" Siemens_Di4_PnModule
+"4DI DC24V, High Feature*" Siemens_Di4_PnModule
+"4DI DC24V, High Feature, 01" Siemens_Di4_PnModule
+"4DI DC24V, High Feature, 01*" Siemens_Di4_PnModule
+"4DI DC24V, Standard" Siemens_Di4_PnModule
+"4DI DC24V, Standard*" Siemens_Di4_PnModule
+"4DI DC24V, Standard, 01" Siemens_Di4_PnModule
+"4DI DC24V, Standard, 01*" Siemens_Di4_PnModule
+"4DI DC24V/SRC, Standard" Siemens_Di4_PnModule
+"4DI DC24V/SRC, Standard*" Siemens_Di4_PnModule
+"4DI DC24V/SRC, Standard, 01" Siemens_Di4_PnModule
+"4DI DC24V/SRC, Standard, 01*" Siemens_Di4_PnModule
+"4DI UC24..48V, High Feature" Siemens_Di4_PnModule
+"4DI UC24..48V, High Feature*" Siemens_Di4_PnModule
+"4DI NAMUR" Siemens_Di4_PnModule
+"2DO DC24V/0.5A, High Feature" Siemens_Do2_PnModule
+"2DO DC24V/0.5A, High Feature*" Siemens_Do2_PnModule
+"2DO DC24V/0.5A, High Feature, 01" Siemens_Do2_PnModule
+"2DO DC24V/0.5A, High Feature, 01*" Siemens_Do2_PnModule
+"2DO DC24V/0.5A, Standard" Siemens_Do2_PnModule
+"2DO DC24V/0.5A, Standard*" Siemens_Do2_PnModule
+"2DO DC24V/0.5A, Standard, 01" Siemens_Do2_PnModule
+"2DO DC24V/0.5A, Standard, 01*" Siemens_Do2_PnModule
+"2DO DC24V/2A, High Feature" Siemens_Do2_PnModule
+"2DO DC24V/2A, High Feature*" Siemens_Do2_PnModule
+"2DO DC24V/2A, High Feature, 01" Siemens_Do2_PnModule
+"2DO DC24V/2A, High Feature, 01*" Siemens_Do2_PnModule
+"2DO DC24V/2A, Standard" Siemens_Do2_PnModule
+"2DO DC24V/2A, Standard*" Siemens_Do2_PnModule
+"2DO DC24V/2A, Standard, 01" Siemens_Do2_PnModule
+"2DO DC24V/2A, Standard, 01*" Siemens_Do2_PnModule
+"2DO AC24..230V/1A" Siemens_Do2_PnModule
+"2DO AC24..230V/1A*" Siemens_Do2_PnModule
+"2DO AC24..230V/1A" Siemens_Do2_PnModule
+"2DO AC24..230V/1A*" Siemens_Do2_PnModule
+"4DO DC24V/0.5A, Standard" Siemens_Do4_PnModule
+"4DO DC24V/0.5A, Standard*" Siemens_Do4_PnModule
+"4DO DC24V/0.5A, Standard, 01" Siemens_Do4_PnModule
+"4DO DC24V/0.5A, Standard, 01*" Siemens_Do4_PnModule
+"4DO DC24V/2A, Standard" Siemens_Do4_PnModule
+"4DO DC24V/2A, Standard*" Siemens_Do4_PnModule
+"4DO DC24V/2A, Standard, 01" Siemens_Do4_PnModule
+"4DO DC24V/2A, Standard, 01*" Siemens_Do4_PnModule
+"4DO DC24V/2A, Standard, 02" Siemens_Do4_PnModule
+"4DO DC24V/2A, Standard, 02*" Siemens_Do4_PnModule
+"4DO DC24V/0,5A SINK OUT" Siemens_Do4_PnModule
+"4DO DC24V/0,5A SINK OUT*" Siemens_Do4_PnModule
+}
+
+Device "IM153-4 PN"
+{
+"SM 321 DI4xNAMUR, Ex" Siemens_Di4_PnModule
+"SM 321 DI8xAC230V" Siemens_Di8_PnModule
+"SM 321 DI8xAC120/230V" Siemens_Di8_PnModule
+"SM 321 DI16xDC24V" Siemens_Di16_PnModule
+"SM 321 DI16xUC24/48V" Siemens_Di16_PnModule
+"SM 321 DI16xDC48-125V" Siemens_Di16_PnModule
+"SM 321 DI32xDC24V" Siemens_Di32_PnModule
+"SM 321 DI32xAC120V" Siemens_Di32_PnModule
+"SM 321 DI16xAC120/230V" Siemens_Di16_PnModule
+"SM 321 DI16xNAMUR" Siemens_Di16_PnModule
+"SM 321 DI16xDC24V, Interrupt" Siemens_Di16_PnModule
+"SM 321 DI16xDC24V" Siemens_Di16_PnModule
+"SM 321 DI16xDC24V" Siemens_Di16_PnModule
+"SM 321 DI64xDC24V"
+"SM 322 DO4xDC15V/20mA, Ex" Siemens_Do4_PnModule
+"SM 322 DO4xDC24V/10mA, Ex" Siemens_Do4_PnModule
+"SM 322 DO8xDC24V/2A" Siemens_Do8_PnModule
+"SM 322 DO8xAC230V/2A" Siemens_D08_PnModule
+"SM 322 DO8xRel. AC230V" Siemens_Do8_PnModule
+"SM 322 DO8xRel. AC230V/8A" Siemens_Do8_PnModule
+"SM 322 DO8xDC48-125V/1.5A" Siemens_Do8_PnModule
+"SM 322 DO8xDC24V/0.5A" Siemens_Do8_PnModule
+"SM 322 DO16xDC24V/0.5A" Siemens_Do16_PnModule
+"SM 322 DO16xRel. AC120V/230V" Siemens_Do16_PnModule
+"SM 322 DO32xDC24V/0.5A" Siemens_Do32_PnModule
+"SM 322 DO32xAC120-230V/1A" Siemens_Do32_PnModule
+"SM 322 DO16xAC120V/230V/1A" Siemens_Do16_PnModule
+"SM 322 DO16xDC24V/0.5A" Siemens_Do16_PnModule
+"SM 322 DO8xRelay" Siemens_Do8_PnModule
+"SM 322 DO8xAC Iso" Siemens_Do8_PnModule
+"SM 322 DO16xUC24/48V" Siemens_Do16_PnModule
+"SM 322 DO16xDC24V/0.5A" Siemens_Do16_PnModule
+"SM 322 DO64xDC24V/0.3A; switching P"
+"SM 322 DO64xDC24V/0.3A; switching M"
+"SM 323 DI8/DO8xDC24V/0.5A"
+"SM 323 DI16/DO16x24V/0.5A"
+"SM 327 DI8/DX8"
+"SM 331 AI2x12Bit" Siemens_Ai2_PnModule
+"SM 331 AI4x0/4 to 20mA, Ex" Siemens_Ai4_PnModule
+"SM 331 AI8xTC/4xRTD, Ex" Siemens_Ai8_PnModule
+"SM 331 AI8x16Bit" Siemens_Ai8_PnModule
+"SM 331 AI8x16Bit" Siemens_Ai8_PnModule
+"SM 331 AI8xRTD" Siemens_Ai8_PnModule
+"SM 331 AI8xTC" Siemens_Ai8_PnModule
+"SM 331 AI8x13Bit" Siemens_Ai8_PnModule
+"SM 331 AI8x14Bit" Siemens_Ai8_PnModule
+"SM 331 AI8x12Bit" Siemens_Ai8_PnModule
+"SM 332 AO2x12Bit" Siemens_Ao2_PnModule
+"SM 332 AO4x12Bit" Siemens_Ao4_PnModule
+"SM 332 AO4x16Bit" Siemens_Ao4_PnModule
+"SM 332 AO4x0/4 to 20mA, Ex" Siemens_Ao4_PnModule
+"SM 332 AO8x12Bit" Siemens_Ao8_PnModule
+"SM 335 AI4/AO4x14/12Bit"
+"SM 334 AI4/AO2x8/8Bit"
+"SM 334 AI4/AO2"
+}

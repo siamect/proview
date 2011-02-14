@@ -77,6 +77,7 @@ class GsdAttr {
   void activate_zoom_out();
   void activate_zoom_reset();
   void activate_cmd_ok();
+  void activate_cmd_apply();
   void activate_cmd_ca();
     
   static void gsdattr_message( void *attr, char severity, const char *message);

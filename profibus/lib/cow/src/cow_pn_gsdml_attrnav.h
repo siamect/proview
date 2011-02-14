@@ -58,6 +58,8 @@ extern "C" {
 #include "rt_pn_gsdml_data.h"
 #endif
 
+#define pn_cModuleClassFile "$pwr_exe/pn_module_classes.dat"
+
 typedef enum {
 	attrnav_eItemType_PnBase,
 	attrnav_eItemType_PnEnumValue,
@@ -181,6 +183,8 @@ class GsdmlAttrNav {
     void expand_all();
     void redraw();
     void set_viewio( int set) { viewio = set;}
+    int search_class( const char *filename, const char *model, 
+		      const char *module, char *mclass);
 
     static void trace_scan( void *data);
     static int trace_scan_bc( brow_tObject object, void *p);
