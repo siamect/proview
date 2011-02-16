@@ -1673,7 +1673,7 @@ Command   add menu
 
 Add a menu item to the xtt menu hierarchy. 
 The menu is placed last in the current menu.
-The action of the item can be to execute a xtt 
+The action of the item can be to execute an xtt 
 command, or display the attributes of an object.
 
 <B>xtt> add menu /text= /command=
@@ -1745,7 +1745,7 @@ The action of the item can be either to execute a command.
      <t>The name should begin with 'Functions-' or its translation.
      <t>For other name segments submenues are created if they don't already exist.
      <t>Ex Functions-MyMenu-MyGraph
-/command<t>Xtt command that will be executed with the menu item is activated.
+/command<t>Xtt command that will be executed when the menu item is activated.
 /before	<t>The menu item is positioned first in the menu.
 /after <t>The menu item is positioned last in the menu.
 /pixmap <t>Pixmap for the menu item: 'graph' eller 'curve'.
@@ -1967,7 +1967,7 @@ The fileview can be opened in 'Open File' or 'Save File' mode.
 In open mode, a file is selected and the selected filename is written to a
 string attribute in the database (target). Simultaneously a digital attribute is
 set (trigger) to indicate that an open should be performed. The actual opening
-can be done by a DataFRead object in the plc, but have to be programmed by the user.
+can be done by a DataFRead object in the plc, but has to be programmed by the user.
 
 In save mode, a file is selected, or a filename is entered. The filename is
 written to a string attribute and a digital signal is set. The actual save
@@ -2115,9 +2115,9 @@ ConfigureObject	<t><t>RttConfigure object.
 DefaultDirectory<t><t>Default directory for commandfiles.
 Scantime	<t><t>Scan time for update fileds.
 AlarmMessage	<t><t>Display last alarm in the Xtt-message field.
-AlarmBeep	<t><t>Beep if unacknowleged alarms exist.
+AlarmBeep	<t><t>Beep if unacknowledged alarms exist.
 AlarmReturn	<t><t>Display return events in the eventlist.
-AlarmAck	<t><t>Display acknowlege events in the eventlist.
+AlarmAck	<t><t>Display acknowledged events in the eventlist.
 SymbolFilename	<t><t>Symbolfile.		<LINK> symbolfile
 Verify		<t><t>Verify commandfile execution.
 AdvancedUser	<t><t>User is advanced. <LINK> advanced user
@@ -2177,8 +2177,8 @@ Show the rtt log-files in the current work directory.
 A log-file is created by the logging function in rtt or xtt and
 has the filetype .rtt_log.
 
-A logfile i opened with double-click, or by selecting the file 
-and then press return.
+A logfile is opened with double-click, or by selecting the file 
+and then pressing return.
 
 <B>xtt> show logfiles
 </TOPIC>
@@ -2247,7 +2247,7 @@ Show a logging entry.
 <TOPIC> logging <style> function
 Command   logging
 
-A number of commands to handle the xtt logging.
+A number of commands handle the xtt logging.
 
 logging start		<LINK> logging start
 logging stop		<LINK> logging stop
@@ -2349,7 +2349,7 @@ string	<t>80 character string (null terminated).
 There are three different tables in which a variable can be declared: local, 
 global and extern. A local variable is known inside a function, a global is 
 known in all functions in a file (with include-files), an external is known 
-for all files executed in a rtt session.
+for all files executed in an rtt session.
 
 </TOPIC>
 
@@ -2358,8 +2358,8 @@ Datatype conversions
 
 If an expression consists of variables and functions of different datatypes
 the variables will be converted with the precedence string, float, int. If
-two operands in an expression is of type int and float, the result will be float
-If two operands is of type float and string, or int and string, the result will
+two operands in an expression are of type int and float, the result will be float
+If two operands are of type float and string, or int and string, the result will
 be string. In an assignment the value of an expression will be converted to the
 type of the assignment variable, even if the result is a string and the
 variable is of type float or int.
@@ -2436,8 +2436,8 @@ Operator	<t>Description		<t>Datatypes
 <TOPIC> main-endmain <style> function
 main-endmain
 
-The main and endmain statements controls where the execution starts and stops
-If no main and endmain statements will be found, the execution will start
+The main and endmain statements control where the execution starts and stops
+If no main and endmain statements are found, the execution will start
 att the beginning of the file and stop at the end.
 
 <b>Example
@@ -2459,12 +2459,12 @@ A function declaration consists of
 - an argumentlist delimited by comma and surrounded by parenthesis. The
   argumentlist must include a typedeclaration and a name for each argument.
 
-The arguments supplied by the caller will be converted to the type of the
-to the type declared in the argument list. If an argument is changed inside
-the function, the new value will be transferred to the caller. In this way
-it is possible to return other values then the return value of the function.
-A function can contain one or several return statements. The return will hand
-over the execution to the caller and return the supplied value.
+The arguments supplied by the caller will be converted to the type declared in 
+the argument list. If an argument is changed inside the function, the new value 
+will be transferred to the caller. In this way it is possible to return values 
+other than the return value of the function.A function can contain one or several 
+return statements. The return will hand over the execution to the caller and 
+return the supplied value.
 
 <b>Example
 
@@ -2518,10 +2518,10 @@ for-endfor
 
 The lines between a for-endfor statement will be executed as long as the
 middle expression in the for-statement is true. The for expression consists
-of three expression, delimited by semicolon and surrounded by parentheses.
-The first expression will be executed the before the first loop, the third
+of three expressions, delimited by semicolon and surrounded by parentheses.
+The first expression will be executed before the first loop, the third
 will be executed after every loop, the middle is executed before every loop
-and if true another loop is done, if false the loop is leaved.
+and if true another loop is done, if false the loop is left.
 
 <b>Example
 
@@ -2595,7 +2595,7 @@ int printf( string format [, (arbitrary type) arg1, (arbitrary type) arg2])
 
 <b>Description
 
-Formatted print. C-syntax. Format argument and non, one or two value arguments.
+Formatted print. C-syntax. Format argument and none, one or two value arguments.
 Returns number of printed characters.
 
 <b>Arguments
@@ -2642,7 +2642,7 @@ int fprintf( int file, string format [, (arbitrary type) arg1,
 
 <b>Description
 
-Formatted print on file. C-syntax. Format argument and non, one or two value
+Formatted print on file. C-syntax. Format argument and none, one or two value
 arguments.
 Returns number of printed characters.
 
@@ -2759,7 +2759,7 @@ int verify( [int mode])
 
 <b>Description
 
-Sets or shows verification mode. If verification is on all executed lines will
+Sets or shows verification mode. If verification is on, all executed lines will
 be displayed on the screen.
 Returns the current verification mode.
 
@@ -3088,8 +3088,8 @@ string GetClassList( string class)
 
 Get the first object of a specified class. The next object of the class
 can be fetched whith GetNextObject().
-Returns the name of the first object. If no instances of the class exists a
-null-string is returned.
+Returns the name of the first object. If no instances of the class exist, 
+a null-string is returned.
 
 <b>Arguments
 
@@ -3110,7 +3110,7 @@ string GetNextObject( string name)
 <b>Description
 
 Get the next object in a classlist.
-Returns the name of the object. If no next object exist a null-string is
+Returns the name of the object. If no next object exists, a null-string is
 returned.
 
 <b>Arguments
