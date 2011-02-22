@@ -85,7 +85,8 @@ typedef enum {
  	attrnav_eItemType_PnBitDataItem,
 	attrnav_eItemType_PnEnumByteOrder,
 	attrnav_eItemType_PnEnumTimeRatio,
-	attrnav_eItemType_PnEnumSendClock
+	attrnav_eItemType_PnEnumSendClock,
+	attrnav_eItemType_PnEnumValueMType,
 	} attrnav_eItemType;
 
 typedef enum {
@@ -111,6 +112,7 @@ class GsdmlAttrNavBrow {
     brow_tNodeClass 	nc_header;
     brow_tNodeClass 	nc_table_header;
     brow_tNodeClass 	nc_enum;
+    brow_tNodeClass 	nc_enum_mtype;
     flow_sAnnotPixmap 	*pixmap_leaf;
     flow_sAnnotPixmap 	*pixmap_map;
     flow_sAnnotPixmap 	*pixmap_openmap;
@@ -245,6 +247,22 @@ class ItemPnEnumValue : public ItemPn {
     ItemPnEnumValue( GsdmlAttrNav *attrnav, const char *item_name, int item_num, 
 	int item_type_id,
 	void *attr_value_p, brow_tNode dest, flow_eDest dest_code);
+    int			num;
+    int			type_id;
+    void		*value_p;
+    int 		old_value;
+    int 		first_scan;
+
+    int scan( GsdmlAttrNav *attrnav, void *p);
+};
+
+//! Item for an enum attribute.
+class ItemPnEnumValueMType : public ItemPn {
+   public:
+    ItemPnEnumValueMType( GsdmlAttrNav *attrnav, const char *item_name, const char *item_number, 
+			  int item_num, 
+			  int item_type_id,
+			  void *attr_value_p, brow_tNode dest, flow_eDest dest_code);
     int			num;
     int			type_id;
     void		*value_p;

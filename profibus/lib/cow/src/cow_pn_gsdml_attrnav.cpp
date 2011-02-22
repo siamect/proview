@@ -888,6 +888,21 @@ int GsdmlAttrNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
       }
       break;
     }
+    case attrnav_eItemType_PnEnumValueMType: {
+      int value;
+      if ( !attrnav->edit_mode) {
+	attrnav->message('E', "Not in edit mode");
+	break;
+      }
+	
+      brow_GetRadiobutton( node_list[0], 0, &value);
+      if ( !value) {
+	brow_SetRadiobutton( node_list[0], 0, 1);
+	*(int *)((ItemPnEnumValueMType *)item)->value_p = ((ItemPnEnumValueMType *)item)->num;
+	attrnav->set_modified(1);
+      }
+      break;
+    }
     case attrnav_eItemType_PnParEnumBit: 
       if ( !attrnav->edit_mode) {
 	attrnav->message('E', "Not in edit mode");
@@ -926,6 +941,14 @@ int GsdmlAttrNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 	  brow_SetRadiobutton( event->radiobutton.object, 
 			       event->radiobutton.number, !event->radiobutton.value);
 	  *(int *)((ItemPnEnumValue *)item)->value_p = ((ItemPnEnumValue *)item)->num;
+	  attrnav->set_modified( 1);	    
+	}
+	break;
+      case attrnav_eItemType_PnEnumValueMType: 
+	if ( !event->radiobutton.value) {
+	  brow_SetRadiobutton( event->radiobutton.object, 
+			       event->radiobutton.number, !event->radiobutton.value);
+	  *(int *)((ItemPnEnumValueMType *)item)->value_p = ((ItemPnEnumValueMType *)item)->num;
 	  attrnav->set_modified( 1);	    
 	}
 	break;
@@ -1074,6 +1097,9 @@ int GsdmlAttrNav::trace_connect_bc( brow_tObject object, char *name, char *attr,
     case attrnav_eItemType_PnEnumValue:
       *p = ((ItemPnEnumValue *)base_item)->value_p;
       break;
+    case attrnav_eItemType_PnEnumValueMType:
+      *p = ((ItemPnEnumValueMType *)base_item)->value_p;
+      break;
     case attrnav_eItemType_PnEnumTimeRatio:
       *p = ((ItemPnEnumTimeRatio *)base_item)->value_p;
       break;
@@ -1164,6 +1190,18 @@ void GsdmlAttrNavBrow::create_nodeclasses()
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddFrame( nc_enum, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
+ 
+  brow_CreateNodeClass( ctx, "NavigatorEnumMType", 
+		flow_eNodeGroup_Common, &nc_enum_mtype);
+  brow_AddRadiobutton( nc_enum_mtype, 24, 0.03, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
+  brow_AddAnnotPixmap( nc_enum_mtype, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
+  brow_AddAnnot( nc_enum_mtype, 2, 0.6, 0,
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
+		0);
+  brow_AddAnnot( nc_enum_mtype, 12, 0.6, 1,
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
+		1);
+  brow_AddFrame( nc_enum_mtype, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
  
   // Create table nodeclass
 
@@ -1710,7 +1748,7 @@ int GsdmlAttrNav::search_class( const char *filename, const char *model,
 	continue;
 
       if ( in_model)
-	return 0;
+	continue;
 
       if ( cdh_NoCaseStrcmp( itemv[1], lmodel) == 0)
 	in_model = 1;
@@ -1890,6 +1928,49 @@ ItemPnEnumValue::ItemPnEnumValue( GsdmlAttrNav *attrnav, const char *item_name, 
 }
 
 int ItemPnEnumValue::scan( GsdmlAttrNav *attrnav, void *p)
+{
+  if ( !first_scan) {
+    if ( old_value == *(int *)p)
+      // No change since last time
+      return 1;
+  }
+  else
+    first_scan = 0;
+
+  if ( *(int *)p == num)
+    brow_SetRadiobutton( node, 0, 1);
+  else
+    brow_SetRadiobutton( node, 0, 0);
+
+  old_value = *(int *) p;
+  return 1;
+}
+
+ItemPnEnumValueMType::ItemPnEnumValueMType( GsdmlAttrNav *attrnav, const char *item_name, 
+					    const char *item_number, int item_num, 
+					    int item_type_id, void *attr_value_p, 
+					    brow_tNode dest, flow_eDest dest_code) :
+  num(item_num), type_id(item_type_id), value_p(attr_value_p), first_scan(1)
+{
+
+  type = attrnav_eItemType_PnEnumValueMType;
+
+  strcpy( name, item_name);
+
+  brow_CreateNode( attrnav->brow->ctx, item_name, attrnav->brow->nc_enum_mtype, 
+		dest, dest_code, (void *) this, 1, &node);
+
+  brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_attr);
+  brow_SetAnnotation( node, 0, item_name, strlen(item_name));
+  brow_SetAnnotation( node, 1, item_number, strlen(item_number));
+  if ( *(int *)value_p == num)
+    brow_SetRadiobutton( node, 0, 1);
+  else
+    brow_SetRadiobutton( node, 0, 0);
+  brow_SetTraceAttr( node, name, "", flow_eTraceType_User);
+}
+
+int ItemPnEnumValueMType::scan( GsdmlAttrNav *attrnav, void *p)
 {
   if ( !first_scan) {
     if ( old_value == *(int *)p)
@@ -2977,8 +3058,8 @@ int ItemPnModuleType::open_children( GsdmlAttrNav *attrnav, double x, double y)
     brow_SetNodraw( attrnav->brow->ctx);
 
     int idx = 0;
-    new ItemPnEnumValue( attrnav, "No", idx++, pwr_eType_UInt32, 
-			 &attrnav->dev_data.slot_data[slot_idx]->module_enum_number, 
+    new ItemPnEnumValueMType( attrnav, "No", "", idx++, pwr_eType_UInt32, 
+			      &attrnav->dev_data.slot_data[slot_idx]->module_enum_number, 
 			 node, flow_eDest_IntoLast);
     
     gsdml_UseableModules *um = attrnav->gsdml->ApplicationProcess->DeviceAccessPointList->DeviceAccessPointItem[attrnav->device_num-1]->UseableModules;
@@ -2992,9 +3073,10 @@ int ItemPnModuleType::open_children( GsdmlAttrNav *attrnav, double x, double y)
 	if ( !mi || !mi->ModuleInfo->Body.Name.p)
 	  continue;
 	strncpy( mname, (char *) mi->ModuleInfo->Body.Name.p, sizeof(mname));
-	new ItemPnEnumValue( attrnav, mname, idx, pwr_eType_UInt32, 
-			     &attrnav->dev_data.slot_data[slot_idx]->module_enum_number, 
-			     node, flow_eDest_IntoLast);
+	new ItemPnEnumValueMType( attrnav, mname, mi->ModuleInfo->Body.OrderNumber, idx, 
+				  pwr_eType_UInt32, 
+				  &attrnav->dev_data.slot_data[slot_idx]->module_enum_number, 
+				  node, flow_eDest_IntoLast);
       }
       else if ( um->ModuleItemRef[i]->Body.FixedInSlots.list &&
 		um->ModuleItemRef[i]->Body.FixedInSlots.list->in_list(slot_number)) {
@@ -3003,9 +3085,10 @@ int ItemPnModuleType::open_children( GsdmlAttrNav *attrnav, double x, double y)
 	if ( !mi || !mi->ModuleInfo->Body.Name.p)
 	  continue;
 	strncpy( mname, (char *) mi->ModuleInfo->Body.Name.p, sizeof(mname));
-	new ItemPnEnumValue( attrnav, mname, idx, pwr_eType_UInt32, 
-			     &attrnav->dev_data.slot_data[slot_idx]->module_enum_number, 
-			     node, flow_eDest_IntoLast);
+	new ItemPnEnumValueMType( attrnav, mname, mi->ModuleInfo->Body.OrderNumber, idx, 
+				  pwr_eType_UInt32, 
+				  &attrnav->dev_data.slot_data[slot_idx]->module_enum_number, 
+				  node, flow_eDest_IntoLast);
       }
       idx++;
     }

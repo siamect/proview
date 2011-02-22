@@ -1562,7 +1562,7 @@ int GsdAttrNav::search_class( const char *filename, const char *model,
 	continue;
 
       if ( in_model)
-	return 0;
+	continue;
 
       if ( cdh_NoCaseStrcmp( itemv[1], lmodel) == 0)
 	in_model = 1;

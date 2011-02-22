@@ -321,8 +321,8 @@ GsdmlAttrGtk::GsdmlAttrGtk( GtkWidget *a_parent_wid,
   int sts;
 
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
-			   "default-height", 600,
-			   "default-width", 500,
+			   "default-height", 700,
+			   "default-width", 700,
 			   "title", "profinetConfigurator",
 			   NULL);
 
