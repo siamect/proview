@@ -124,7 +124,8 @@ class GeCurve {
     glow_eDrawType border_bright;
     grow_tObject curve_object;
     grow_tObject curve_axisobject;
-    grow_tObject curve_markobject;
+    grow_tObject curve_markobject1;
+    grow_tObject curve_markobject2;
     GeCurveData *cd;
     double       axis_window_width;
     int          hide[CURVE_MAX_COLS];
@@ -133,7 +134,8 @@ class GeCurve {
     grow_tObject hide_l1[CURVE_MAX_COLS+1];
     grow_tObject hide_l2[CURVE_MAX_COLS+1];
     grow_tObject scale_rect[CURVE_MAX_COLS+1];
-    grow_tObject mark_annot[CURVE_MAX_COLS+1];
+    grow_tObject mark1_annot[CURVE_MAX_COLS+1];
+    grow_tObject mark2_annot[CURVE_MAX_COLS+1];
     grow_tObject cursor_annot[CURVE_MAX_COLS+1];
     grow_tObject axis_rect[CURVE_MAX_COLS+1];
     grow_tObject axis_object[CURVE_MAX_COLS+1];
@@ -150,10 +152,12 @@ class GeCurve {
     void 	 (*next_period_cb)( void *);
     void 	 (*add_cb)( void *);
     void 	 (*remove_cb)( void *);
+    int 	 (*export_cb)( void *, pwr_tTime *, pwr_tTime *, int, int, char *);
     int          initial_right_position;
     char	 title[300];
     double  	 last_cursor_x;
-    double  	 last_mark_x;
+    double  	 last_mark1_x;
+    double  	 last_mark2_x;
     int		 deferred_configure_axes;
     CoWow	 *wow;
     int		 center_from_window;
@@ -165,8 +169,10 @@ class GeCurve {
     virtual void pop() {}
     virtual void resize() {}
     virtual void open_minmax( int idx) {}
+    virtual void open_export( pwr_tTime *from, pwr_tTime *to, int rows, char *filename) {}
     virtual void axis_set_width( int width) {}  
     virtual void enable_timebox() {}
+    virtual void enable_export() {}
     virtual void set_times( pwr_tTime *from, pwr_tTime *to) {}
     virtual void set_times_sensitivity( int sensitive) {}
     virtual pwr_tStatus get_times( pwr_tTime *from, pwr_tTime *to) {return 0;}
@@ -186,6 +192,7 @@ class GeCurve {
     void measure_window( double *ll_x, double *ll_y, double *ur_x, double *ur_y);
     void activate_exit();
     void activate_configure();
+    void activate_export();
     void activate_print();
     void activate_background();
     void activate_filledcurves( int set);

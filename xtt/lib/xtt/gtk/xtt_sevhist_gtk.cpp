@@ -76,7 +76,9 @@ XttSevHistGtk::XttSevHistGtk( void *parent_ctx,
   curve->next_period_cb = sevhist_next_period_cb;
   curve->add_cb = sevhist_add_cb;
   curve->remove_cb = sevhist_remove_cb;
+  curve->export_cb = sevhist_export_cb;
   curve->enable_timebox();
+  curve->enable_export();
 
   wow = new CoWowGtk( parent_widget);
   timerid = wow->timer_new();

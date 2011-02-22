@@ -219,7 +219,10 @@ int     dcli_replace_env( char *str, char *newstr)
     size = (long int) s - (long int) u;
     strncpy( symbol, u, size);
     symbol[size] = 0;
-    cdh_ToLower( lower_symbol, symbol);
+    if ( strcmp( symbol, "HOME") == 0)
+      strcpy( lower_symbol, symbol);
+    else
+      cdh_ToLower( lower_symbol, symbol);
     if ( (value = getenv( lower_symbol)) == NULL) {
       /* It was no symbol */
       *t = 0;
@@ -467,7 +470,13 @@ int dcli_translate_filename( char *out, const char *in)
   else
   {
     // Already unix syntax
-    strcpy( out_name, in);
+    if ( in[0] == '~') {
+      strcpy( out_name, "$HOME");
+      strcat( &out_name[5], &in[1]);
+    }
+    else
+      strcpy( out_name, in);
+
     sts = dcli_replace_env( out_name, out);
     return sts;
   }

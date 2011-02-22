@@ -171,7 +171,7 @@ time_Aadd (
 )
 {
   pwr_tTime   *r = result;
-  int     tv_nsec;
+  pwr_tInt64  tv_nsec;
 
   assertAbs(t);
   assertDelta(a);
@@ -231,8 +231,8 @@ time_Adiff (
   pwr_tTime   *s
 )
 {
-  int     tv_nsec = t->tv_nsec - s->tv_nsec;
-  int     tv_sec  = t->tv_sec  - s->tv_sec;
+  pwr_tInt64     tv_nsec = t->tv_nsec - s->tv_nsec;
+  pwr_tInt64     tv_sec  = t->tv_sec  - s->tv_sec;
 
   pwr_Assert(r != NULL);
   assertAbs(t);
@@ -267,8 +267,8 @@ time_Asub (
   pwr_tDeltaTime  *s
 )
 {
-  int     tv_nsec = t->tv_nsec - s->tv_nsec;
-  int     tv_sec  = (int)t->tv_sec  - s->tv_sec;
+  pwr_tInt64     tv_nsec = t->tv_nsec - s->tv_nsec;
+  pwr_tInt64     tv_sec  = t->tv_sec  - s->tv_sec;
   pwr_tTime   *r = result;
 
   assertAbs(t);
@@ -329,7 +329,7 @@ time_Dadd (
 )
 {
   pwr_tDeltaTime  *r = result;
-  int     tv_nsec, tv_sec;
+  pwr_tInt64     tv_nsec, tv_sec;
 
   assertDelta(t);
   assertDelta(a);
@@ -423,8 +423,8 @@ time_Dsub (
   pwr_tDeltaTime  *s
 )
 {
-  int     tv_nsec = t->tv_nsec - s->tv_nsec;
-  int     tv_sec  = t->tv_sec  - s->tv_sec;
+  pwr_tInt64     tv_nsec = t->tv_nsec - s->tv_nsec;
+  pwr_tInt64     tv_sec  = t->tv_sec  - s->tv_sec;
   pwr_tDeltaTime  *r = result;
 
   assertDelta(t);

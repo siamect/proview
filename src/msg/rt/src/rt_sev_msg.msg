@@ -29,6 +29,7 @@ nodatatime	<No data found in this time interval>			/error
 noitems		<No items found>					/error
 unknownnode     <Unknown server nodename>				/error
 init		<Initialization done>					/info
+exportfile	<Unable to open export file>				/error
 .end
 
 

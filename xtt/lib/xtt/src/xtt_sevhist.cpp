@@ -29,6 +29,7 @@
 #include "rt_gdh_msg.h"
 #include "co_cdh.h"
 #include "co_time.h"
+#include "co_dcli.h"
 #include "cow_wow.h"
 #include "rt_sev_msg.h"
 
@@ -825,6 +826,78 @@ void XttSevHist::sevhist_add_cb( void *ctx)
 void XttSevHist::sevhist_remove_cb( void *ctx)
 {
   // Do do
+}
+
+int XttSevHist::sevhist_export_cb( void *ctx, pwr_tTime *from, pwr_tTime *to, int rows, int idx, 
+				   char *filename)
+{
+  XttSevHist *sevhist = (XttSevHist *) ctx;
+  pwr_tFileName fname;
+  pwr_tTime *tbuf;
+  void *vbuf;
+  pwr_eType	vtype;
+  unsigned int  vsize;
+  pwr_tStatus sts;
+  int rrows;
+  char timestr[40];
+  FILE *fp;
+
+  dcli_translate_filename( fname, filename);
+
+
+  sevcli_get_itemdata( &sts, sevhist->scctx, sevhist->oidv[idx], sevhist->anamev[idx], *from, *to, 
+		       rows, &tbuf, &vbuf, &rrows, &vtype, &vsize);
+  if ( EVEN(sts))
+    return sts;
+
+  if( rrows == 0 ) {
+    return SEV__NODATATIME;
+  }
+
+  fp = fopen( fname, "w");
+  if ( !fp)
+    return SEV__EXPORTFILE;
+
+  for ( int i = 0; i < rrows; i++) {
+    time_AtoAscii( &tbuf[i], time_eFormat_DateAndTime, timestr, sizeof(timestr));
+    fprintf( fp, "%s, ", timestr);
+    switch ( vtype) {
+    case pwr_eType_Int32:
+    case pwr_eType_Int64:
+    case pwr_eType_Int16:
+    case pwr_eType_Int8:
+      fprintf( fp, "%d", ((pwr_tInt32 *)vbuf)[i]);
+      break;
+    case pwr_eType_UInt64:
+    case pwr_eType_UInt32:
+    case pwr_eType_UInt16:
+    case pwr_eType_UInt8:
+      fprintf( fp, "%u", ((pwr_tUInt32 *)vbuf)[i]);
+      break;
+    case pwr_eType_Float32:
+      fprintf( fp, "%g", ((pwr_tFloat32 *)vbuf)[i]);
+      break;
+    case pwr_eType_Float64:
+      fprintf( fp, "%g", ((pwr_tFloat64 *)vbuf)[i]);
+      break;
+    case pwr_eType_Boolean:
+      fprintf( fp, "%d", ((pwr_tBoolean *)vbuf)[i]);
+      break;
+    default: 
+      sts = SEV__CURVETYPE;
+    }
+    fprintf( fp, "\n");
+  }
+  free( tbuf);
+  free( vbuf);
+  fclose( fp);
+
+  printf( "Exported %d rows to file \"%s\" (%d)\n", rrows, fname, idx);
+
+  if ( EVEN(sts))
+    return sts;
+
+  return SEV__SUCCESS;
 }
 
 void XttSevHist::sevhist_help_cb( void *ctx)

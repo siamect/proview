@@ -269,6 +269,8 @@ scan (
 /*  if (sts == TIME__CLKCHANGE) {
     tp->after_scan = tp->before_scan;
   }*/
+  //if ( tp->PlcThread->Count % 10000 == 0)
+  //  printf( "ba: %9lld %9lld    %9lld %9lld\n", tp->before_scan.tv_sec, tp->before_scan.tv_nsec, tp->after_scan.tv_sec, tp->after_scan.tv_nsec);
   time_GetTime(&tp->after_scan_abs);
   if (tp->log)
     pwrb_PlcThread_Exec(tp);
@@ -279,6 +281,8 @@ scan (
     plc_timerhandler(tp); 
     time_Aadd(NULL, &tp->sync_time, &tp->scan_time);
     time_Adiff(&delta, &tp->sync_time, &tp->after_scan);
+    //if ( tp->PlcThread->Count % 10000 == 0)
+    //  printf( "ff: %9lld %9lld    %9lld %9lld     %9lld %9lld\n", tp->sync_time.tv_sec, tp->sync_time.tv_nsec, tp->after_scan.tv_sec, tp->after_scan.tv_nsec, delta.tv_sec, delta.tv_nsec);
     if (time_Dcomp(&delta, NULL) > 0) {
       pwr_tStatus sts;
       int phase = 0;
@@ -312,11 +316,22 @@ scan (
        * END REMARK
        */
 //      phase = (int)que_Get(&sts, &tp->q_in, &delta, NULL);
+
       struct timespec ts;
       ts.tv_sec = tp->sync_time.tv_sec;
       ts.tv_nsec = tp->sync_time.tv_nsec;
+      //if ( tp->PlcThread->Count % 10000 == 0)
+      //printf( "st: %9d %9d %9lld %9lld\n", ts.tv_sec, ts.tv_nsec, tp->scan_time.tv_sec, tp->scan_time.tv_nsec);
+
+      pwr_tTime sleep1, sleep2;
+      time_GetTimeMonotonic(&sleep1);
+
       clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &ts, NULL);
       
+      time_GetTimeMonotonic(&sleep2);
+      if ( tp->PlcThread->Count % 10000 == 0)
+	printf( "st: %9lld  %9lld %9lld %9lld  %9d %9d   %11.9f\n", sleep1.tv_sec, sleep1.tv_nsec, sleep2.tv_sec, sleep2.tv_nsec, ts.tv_sec, ts.tv_nsec, ((float)sleep2.tv_nsec-sleep1.tv_nsec)/1000000000);
+
 #endif
       if (phase > 0) {
 	tp->exit = TRUE;

@@ -47,6 +47,13 @@ class GeCurveGtk : public GeCurve {
     GtkWidget   *minmax_widget;
     GtkWidget   *minmax_textmin_widget;
     GtkWidget   *minmax_textmax_widget;
+    GtkWidget   *menu_export;
+    GtkWidget   *export_widget;
+    GtkWidget   *export_attrcombo_widget;
+    GtkWidget   *export_fromtime_widget;
+    GtkWidget   *export_totime_widget;
+    GtkWidget   *export_rows_widget;
+    GtkWidget   *export_filename_widget;
     GtkWidget   *sea_timebox;
     GtkWidget   *timebox_start_time;
     GtkWidget   *timebox_stop_time;
@@ -58,10 +65,13 @@ class GeCurveGtk : public GeCurve {
     void write_title( char *str);
     void resize();
     void open_minmax( int idx);
+    void open_export( pwr_tTime *from, pwr_tTime *to, int rows, char *filename);
     void axis_set_width( int width);
     void create_minmax_dialog();
+    void create_export_dialog();
     void set_inputfocus();
     void enable_timebox();
+    void enable_export();
     void set_times( pwr_tTime *from, pwr_tTime *to);
     void set_times_sensitivity( int sensitive);
     pwr_tStatus get_times( pwr_tTime *from, pwr_tTime *to);
@@ -73,6 +83,7 @@ class GeCurveGtk : public GeCurve {
     static void activate_exit( GtkWidget *w, gpointer data);
     static void activate_configure( GtkWidget *w, gpointer data);
     static void activate_print( GtkWidget *w, gpointer data);
+    static void activate_export( GtkWidget *w, gpointer data);
     static void activate_zoomin( GtkWidget *w, gpointer data);
     static void activate_zoomout( GtkWidget *w, gpointer data);
     static void activate_zoomreset( GtkWidget *w, gpointer data);
@@ -95,6 +106,10 @@ class GeCurveGtk : public GeCurve {
     static void activate_help( GtkWidget *w, gpointer data);
     static void activate_minmax_ok( GtkWidget *w, gpointer data);
     static void activate_minmax_cancel( GtkWidget *w, gpointer data);
+    static void activate_export_ok( GtkWidget *w, gpointer data);
+    static void activate_export_cancel( GtkWidget *w, gpointer data);
+    static void activate_export_browse( GtkWidget *w, gpointer data);
+    static void export_file_selected_cb( void *ctx, char *filename, wow_eFileSelType file_type);
     static gboolean action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data);
 };
 
