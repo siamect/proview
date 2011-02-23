@@ -77,7 +77,8 @@ pwr_sClass_RemnodeWMQ *rn_wmq;
 
 char mgr_name[MQ_Q_MGR_NAME_LENGTH];
 MQHCONN Hconn;
-
+//MQCNO    Connect_options = {MQCNO_DEFAULT};
+//MQCD     ClientConn = {MQCD_CLIENT_CONN_DEFAULT};
 MQOD   RcvObjDesc = {MQOD_DEFAULT};
 MQLONG RcvOpenOptions; // options that control the open-call
 MQOD   SndObjDesc = {MQOD_DEFAULT};
@@ -86,7 +87,7 @@ char   rcv_que_name[MQ_Q_NAME_LENGTH];
 char   snd_que_name[MQ_Q_NAME_LENGTH];
 MQHOBJ RcvHobj; // object handle
 MQHOBJ SndHobj; // object handle
-
+pwr_tBoolean connected = 0;
 
 /*************************************************************************
 **************************************************************************
@@ -106,6 +107,59 @@ void RemoteSleep(float time)
   return;
 }
 
+/*************************************************************************
+**************************************************************************
+*
+* Namn : wmq_connectandopen
+*
+* Typ  : unsigned int
+*
+* Typ		Parameter	       IOGF	Beskrivning
+*
+* Beskrivning : Invoked when a MQ message is received.
+*
+**************************************************************************
+**************************************************************************/
+
+unsigned int wmq_connectandopen()
+{
+  MQLONG CompCode;
+  MQLONG Reason;
+
+  MQCONN(mgr_name, &Hconn, &CompCode, &Reason);
+  
+  if ((CompCode != MQCC_OK) | (Reason != MQRC_NONE)) {
+    //    errh_Fatal("MQCONN failed, queue mgr: %s, Code: %d, Reason: %d", mgr_name, CompCode, Reason);
+    //    errh_SetStatus(PWR__SRVTERM);
+    if (!((CompCode == MQCC_WARNING) && (Reason == MQRC_ALREADY_CONNECTED)))
+      return 0;
+  } 
+
+  /* Open queue for receiving messages */
+  
+  MQOPEN(Hconn, &RcvObjDesc, RcvOpenOptions, &RcvHobj, &CompCode, &Reason);
+  
+  if ((CompCode != MQCC_OK) | (Reason != MQRC_NONE)) {
+    errh_Fatal("MQOPEN failed, queue: %s, Code: %d, Reason: %d", rcv_que_name, CompCode, Reason);
+    errh_SetStatus(PWR__SRVTERM);
+    exit(0);
+  }
+
+  /* Open queue for sending messages */
+
+  MQOPEN(Hconn, &SndObjDesc, SndOpenOptions, &SndHobj, &CompCode, &Reason);
+
+  if ((CompCode != MQCC_OK) | (Reason != MQRC_NONE)) {
+    errh_Fatal("MQOPEN failed, queue: %s, Code: %d, Reason: %d", snd_que_name, CompCode, Reason);
+    errh_SetStatus(PWR__SRVTERM);
+    exit(0);
+  }
+
+  connected = 1;
+
+  return 1;
+
+}
 /*************************************************************************
 **************************************************************************
 *
@@ -175,6 +229,10 @@ unsigned int wmq_receive()
   else if (Reason != MQRC_NO_MSG_AVAILABLE) {
     rn_wmq->ErrCount++;
     errh_Error("Receive failed, reason %d", Reason, 0);
+
+    if (Reason == MQRC_CONNECTION_BROKEN) {
+      connected = 0;
+    }
   }
 
   return(sts);
@@ -235,8 +293,12 @@ unsigned int wmq_send(remnode_item *remnode,
   /* report reason, if any */
   if (Reason != MQRC_NONE) {
     remtrans->ErrCount++;
-    errh_Error("Send failed, msgid %s, Reason %d", md.MsgId, Reason, 0);
-    printf("MQPUT ended with reason code %d\n", (int) Reason);
+    //    errh_Error("Send failed, msgid %s, Reason %d", md.MsgId, Reason, 0);
+    //    printf("MQPUT ended with reason code %d\n", (int) Reason);
+
+    if (Reason == MQRC_CONNECTION_BROKEN) {
+      connected = 0;
+    }
   }
 
 
@@ -262,8 +324,6 @@ int main(int argc, char *argv[])
   pwr_tStatus sts;
   int i;
   float time_since_scan = 0.0;
-  MQLONG CompCode;
-  MQLONG Reason;
   
   
   
@@ -343,16 +403,6 @@ int main(int argc, char *argv[])
   strncpy(mgr_name, rn_wmq->QueueManager, MQ_Q_MGR_NAME_LENGTH);
   //  strncpy(mgr_name, "hejsanqqq", sizeof(MQ_Q_MGR_NAME_LENGTH));
   
-  
-  /* Connect to specified queue manager */
-  
-  MQCONN(mgr_name, &Hconn, &CompCode, &Reason);
-  
-  if ((CompCode != MQCC_OK) | (Reason != MQRC_NONE)) {
-    errh_Fatal("MQCONN failed, queue mgr: %s, Code: %d, Reason: %d", mgr_name, CompCode, Reason);
-    errh_SetStatus(PWR__SRVTERM);
-    exit(0);
-  } 
 
   /* Open queue for receiving messages */
   
@@ -367,16 +417,6 @@ int main(int argc, char *argv[])
 
   RcvOpenOptions =  MQOO_INPUT_AS_Q_DEF | MQOO_FAIL_IF_QUIESCING;
 
-  /* Open queue */
-
-  MQOPEN(Hconn, &RcvObjDesc, RcvOpenOptions, &RcvHobj, &CompCode, &Reason);
-  
-  if ((CompCode != MQCC_OK) | (Reason != MQRC_NONE)) {
-    errh_Fatal("MQOPEN failed, queue: %s, Code: %d, Reason: %d", rcv_que_name, CompCode, Reason);
-    errh_SetStatus(PWR__SRVTERM);
-    exit(0);
-  }
-
   /* Open queue for sending messages */
   
   strncpy(snd_que_name, rn_wmq->SndQueue, MQ_Q_NAME_LENGTH);
@@ -389,17 +429,13 @@ int main(int argc, char *argv[])
   /* open queue for output but not if MQM stopping */
 
   SndOpenOptions =  MQOO_OUTPUT | MQOO_FAIL_IF_QUIESCING;
-
-  MQOPEN(Hconn, &SndObjDesc, SndOpenOptions, &SndHobj, &CompCode, &Reason);
-
-  if ((CompCode != MQCC_OK) | (Reason != MQRC_NONE)) {
-    errh_Fatal("MQOPEN failed, queue: %s, Code: %d, Reason: %d", snd_que_name, CompCode, Reason);
-    errh_SetStatus(PWR__SRVTERM);
-    exit(0);
-  }
   
   errh_SetStatus(PWR__SRUN);
   
+  /* Connect and open */
+
+  sts = wmq_connectandopen();
+
   /* Set (re)start time in remnode object */
   
   time_GetTime(&rn_wmq->RestartTime);
@@ -417,13 +453,17 @@ int main(int argc, char *argv[])
 
     time_since_scan += TIME_INCR;
 
-    sts = wmq_receive();
+    if (!connected) 
+      sts = wmq_connectandopen();
 
-    if (time_since_scan >= rn_wmq->ScanTime) {
-      sts = RemTrans_Cyclic(&rn, &wmq_send);
-      time_since_scan = 0.0;
+    if (connected) {
+      sts = wmq_receive();
+
+      if (time_since_scan >= rn_wmq->ScanTime) {
+	sts = RemTrans_Cyclic(&rn, &wmq_send);
+	time_since_scan = 0.0;
+      }
     }
-
   }
 }
 
