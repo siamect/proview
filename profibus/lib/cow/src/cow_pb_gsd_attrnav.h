@@ -54,6 +54,8 @@ extern "C" {
 #include "cow_pb_gsd_attr.h"
 #endif
 
+#define pb_cModuleClassFile "$pwr_exe/pb_module_classes.dat"
+
 typedef enum {
 	attrnav_eItemType_PbBase,
 	attrnav_eItemType_PbEnum,
@@ -121,6 +123,7 @@ class GsdAttrNav {
     void 		(*change_value_cb)( void *);
     CoWow		*wow;
     CoWowTimer		*trace_timerid;
+    char		modelname[80];
 
     GsdAttrNav(
 	void *xn_parent_ctx,
@@ -144,6 +147,8 @@ class GsdAttrNav {
     void zoom( double zoom_factor);
     void unzoom();
     void get_zoom( double *zoom_factor);
+    int search_class( const char *filename, const char *model, 
+		      const char *module, char *mclass);
 
     static void trace_scan( void *data);
     static int trace_scan_bc( brow_tObject object, void *p);

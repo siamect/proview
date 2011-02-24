@@ -36,6 +36,7 @@ class GsdAttrGtk : public GsdAttr {
   GtkWidget	*cmd_input;
   GtkWidget	*attrnav_form;
   GtkWidget	*cmd_ok;
+  GtkWidget	*cmd_apply;
   GtkWidget	*cmd_cancel;
   GtkWidget	*menubutton_copy;
   GtkWidget	*menubutton_cut;
@@ -68,6 +69,7 @@ class GsdAttrGtk : public GsdAttr {
   static void activate_print( GtkWidget *w, gpointer data);
   static void activate_cmd_input( GtkWidget *w, gpointer data);
   static void activate_cmd_ok( GtkWidget *w, gpointer data);
+  static void activate_cmd_apply( GtkWidget *w, gpointer data);
   static void cmd_close_apply_cb( void *ctx, void *data);
   static void cmd_close_no_cb( void *ctx, void *data);
   static void activate_cmd_ca( GtkWidget *w, gpointer dataxo);

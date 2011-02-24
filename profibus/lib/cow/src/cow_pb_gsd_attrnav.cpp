@@ -27,6 +27,7 @@
 #include "co_cdh.h"
 #include "co_time.h"
 #include "cow_wow.h"
+#include "co_dcli.h"
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
@@ -421,7 +422,8 @@ GsdAttrNav::GsdAttrNav(
   message_cb(0), change_value_cb(0)
 {
   strcpy( name, xn_name);
-
+  strcpy( modelname, "");
+  
   *status = 1;
 }
 
@@ -977,6 +979,7 @@ int GsdAttrNav::trace_scan_bc( brow_tObject object, void *p)
     case attrnav_eItemType_PbModuleType: {
       ItemPbModuleType	*item;
       int sts;
+      gsd_sModule *mp = 0;
 
       item = (ItemPbModuleType *)base_item;
 
@@ -993,7 +996,6 @@ int GsdAttrNav::trace_scan_bc( brow_tObject object, void *p)
       else {
 
 	int idx = 1;
-	gsd_sModule *mp;
 	for ( mp = attrnav->gsd->modulelist; mp; mp = mp->next) {
 	  if ( idx++ == *(int *)p)
 	    break;
@@ -1016,6 +1018,36 @@ int GsdAttrNav::trace_scan_bc( brow_tObject object, void *p)
 	sts = brow_GetNextSibling( attrnav->brow->ctx, object, &odata);
 	brow_GetUserData( odata, (void **)&prm_item);
 	prm_item->update( attrnav);
+
+	// Set default class
+	if ( mp) {
+	  pwr_tObjName mclass;
+	  pwr_tCid *datap;
+	  pwr_tCid mcid = 0;
+
+	  sts = attrnav->search_class( pb_cModuleClassFile, attrnav->modelname,
+			      mp->Mod_Name, mclass);
+	  if ( ODD(sts)) {
+	    for ( int i = 0; attrnav->gsd->module_classlist[i].cid; i++) {
+	      if ( cdh_NoCaseStrcmp( mclass, attrnav->gsd->module_classlist[i].name) == 0) {
+		mcid = attrnav->gsd->module_classlist[i].cid;
+		break;
+	      }
+	    }
+	  }
+
+	  brow_tObject cobject;
+	  sts = brow_GetNextSibling( attrnav->brow->ctx, odata, &cobject);
+	  if ( ODD(sts)) {
+	    ItemPb *item;
+
+	    brow_GetUserData( cobject, (void **)&item);
+	    if ( item->type == attrnav_eItemType_PbModuleClass) {	
+	      brow_GetTraceData( cobject, (void **)&datap);
+	      *datap = mcid;
+	    }
+	  }
+	}	
       }
       else
         item->first_scan = 0;
@@ -1384,6 +1416,9 @@ int	GsdAttrNav::object_attr()
 		       type, size, 0, 0,
 		       p, 1, 0,
 		       NULL, flow_eDest_IntoLast);
+      if ( strcmp( keyp->name, "Model_Name") == 0)
+	strcpy( modelname, (char *)p);
+
     }    
   }
 
@@ -1485,6 +1520,81 @@ int GsdAttrNav::init_brow_cb( FlowCtx *fctx, void *client_data)
 
   return 1;
 }
+
+int GsdAttrNav::search_class( const char *filename, const char *model, 
+			      const char *module, char *mclass)
+{
+  char line[200];
+  char itemv[2][200];
+  pwr_tFileName fname;
+  int num;
+  ifstream	fp;
+  int in_model = 0;
+  int in_par = 0;
+  char lmodel[200];
+  char lmodule[200];
+
+  dcli_trim( lmodel, (char *)model);
+  dcli_trim( lmodule, (char *)module);
+
+  dcli_translate_filename( fname, filename);
+
+  fp.open( fname);
+  if ( !fp)
+    return 0;
+
+  while ( fp.getline( line, sizeof(line)) ) {
+    if ( line[0] == '#')
+      continue;
+
+    num = dcli_parse( line, " 	", "",
+		      (char *) itemv, sizeof( itemv)/sizeof( itemv[0]), 
+		      sizeof( itemv[0]), 0);
+    if ( num < 1)
+      continue;
+
+    dcli_trim( itemv[0], itemv[0]);
+    if ( num >= 2)
+      dcli_trim( itemv[1], itemv[1]);
+
+    if ( cdh_NoCaseStrcmp( itemv[0], "Model") == 0) {
+      if ( num < 2)
+	continue;
+
+      if ( in_model)
+	continue;
+
+      if ( cdh_NoCaseStrcmp( itemv[1], lmodel) == 0)
+	in_model = 1;
+    }
+
+    if ( in_model) {
+      if ( strcmp( itemv[0], "{") == 0)
+	in_par = 1;
+    }
+
+    if ( in_par) {
+      if ( num < 2)
+	continue;
+
+      if ( strcmp( itemv[0], "}") == 0)
+	break;
+
+      if ( strcmp( itemv[1], "-") == 0 || strcmp( itemv[1], "") == 0)
+	continue;
+
+      if ( cdh_NoCaseStrcmp( itemv[0], lmodule) == 0) {
+	strncpy( mclass, itemv[1], sizeof(pwr_tObjName));
+	fp.close();
+	return 1;
+      }
+    }
+  }
+
+  fp.close();
+  return 0;
+}
+
 
 ItemPbBase::ItemPbBase( GsdAttrNav *attrnav, const char *item_name, const char *attr, 
 	int attr_type, int attr_size, double attr_min_limit, 

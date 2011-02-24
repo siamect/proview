@@ -604,11 +604,12 @@ int WAttNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 	    char 		str[200];
 	    int 		sts;
 
-	    if ( item_attr->type_id == pwr_eType_Objid) {
+	    if ( item_attr->type_id == pwr_eType_Objid ||
+		 item_attr->type_id == pwr_eType_AttrRef) {
 	      sts = wattnav->get_selection( str, sizeof(str));
+	      if ( ODD(sts))
+		wattnav->set_attr_value( item_attr->node, item_attr->attr, str);
 	    }
-	    if ( ODD(sts))
-	      wattnav->set_attr_value( item_attr->node, item_attr->attr, str);
 	    break;
 	  }
 	  default:

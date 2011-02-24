@@ -44,9 +44,14 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
 
   sts = libusb_init( &local->libusb_ctx);
   if ( sts != 0) {
-    op->Status = sts;
+    if ( sts == io_cLibDummy)
+      op->Status = IO__DUMMYBUILD;
+    else
+      op->Status = IO__INITFAIL;
+      errh_Error( "Init of USB agent failed '%s', error status %d", ap->Name, sts);
+
     local->libusb_ctx = 0;
-    errh_Error( "Init of USB agent failed '%s'", ap->Name);
+    return op->Status;
   }
   else {
     op->Status = IO__SUCCESS;

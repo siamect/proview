@@ -104,7 +104,7 @@ int sevcli_get_itemlist( pwr_tStatus *sts, sevcli_tCtx ctx, sevcli_sHistItem **l
   qcom_sQid   	tgt;
   qcom_sPut	put;
   pwr_tStatus	lsts;
-  int tmo = 1000;
+  int tmo = 10000;
   qcom_sGet get;
   sevcli_sHistItem *lp;
   int i;

@@ -27,38 +27,112 @@ SObject         pwrb:Class
 !  Implements the robust PID control algorithm.
 !  @image orm_en1-141.gif
 !
-!  In the normal case the Pid object is used together with
-!  the Mode object. The Mode object plays the part of an
-!  interface for the Pid object. From the Mode object it
-!  is possible to select:
-!  
-!  - control modes ( MANUAL / AUTO / CASCADE)
-!  - forced control regarding the control signal of the
-!    controller.
-!  
-!  Different PID strategies are implemented for
-!  incremental as well as positional form, see PidAlg
-!  below.
-!  The proportional respectively derivative term can be
-!  based either on process value or control deviation.
-!  
-!  The derivative term can be filtered by a first order
-!  lag filter.
-!  A feed forward signal, Bias, may be included in the
-!  algorithm.
-!  
-!  It is possible to switch the integration on/off.
-!  The control signal OutVal is checked against the limit
-!  values MinOut and MaxOut.
-!  
-!  Bumpless transfer AUTO / MANUAL.
-!  To handle and adjust the controller there are two more
-!  info forms containing e.g. a time diagram with process
-!  value, setpoint value and output signal.
+
+!  @h1 Handy to know for a start
+!  Normally the PID-object is used together with a Mode-object. The same goes for 
+!  CompPID and CompMode.
+!  The Modeobject works as an interface to the PID. From the Modeobject you can 
+!  choose between MANUAL, AUTO and CASCADE: 
+! 
+!   -Manual mode. The Outsignal of the controller is forced to the desired output.
+!   
+!   -Auto mode. The controller setpoint is input from the operator, and stored in
+!    the Mode-object.
+!   
+!   -Cascade mode. An external setpoint comes to the Mode-object in XSetVal [XSV],
+!     and is distributed to the controller. 
 !
-! @h1 Function
-!  @image orm_pid_1.gif
-!  @image orm_pid_2.gif
+!  @h1 PID-controller
+!
+!  The proportional term and the derivative term of the controller, can be based 
+!  either on the process value, or the control deviation. The PidAlg parameter 
+!  decides which. 
+!  Example: PI+D means that the P-part and I-part works on the control deviation, 
+!  but the derivative part works only on the process value. A step change on the 
+!  setpoint won't affect the D-part at all, but the P-part will give a step and 
+!  the I-part will give a slope.
+!  I+P means that the P-part will only be affected by changes on the process value.
+!
+!  When using the P- or PD-algorithm we use an aabsolute algorithm. The output 
+!  will not be stable away from zero without a control deviation.
+!  When using algorithms with I-part, all changesof the output are calculated by 
+!  changes of the inputs to the controller. You can still turn off the integration
+!  with an input to the object
+!
+!  The PID-object has two outputs.
+!  OUT (OutVal ) is the normal output from the controller, or from the operator in
+!  manual mode. It is used for speedreferences, setpoint for positioning of a
+!  valve, or similar output.
+!  OC (OutChange ) is the change of the output signal (incremental form), that
+!  works even if the controller output is restricted by MinOut or MaxOut. It can
+!  be used with an INC3P-object, that integrates the signal, and converts it to
+!  time for opening or closing, if we have a valve without position transducer.
+!
+!  The derivative term of the controller is filtered with a 1st order filter. You
+!  can remove the filtering by setting DerGain to zero, but that will result in a
+!  controller, very sensitive for ripple.
+!  Normally DerGain is about 3, which means the output from the derivate part
+!  initially will be 3 times that of the P-part. The D-part will then be smeared
+!  out in time, so that the total effect of the D-part will be the same as it
+!  would have been without the filter.
+!
+!  You can use a feedforward signal by the Bias-input, with BiasGain.
+! 
+!  The output, OutVal, is limited to the interval { MinOut , MaxOut }. This means
+!  that you can loose your stable controlpoint if you have much noise. Especially
+!  if you use the D-part of the controller. The interval should normally be a bit
+!  larger than the possible output to the process.
+!  Example: You have a rather noisy flowcontrol with an output 0-100% as
+!  speedreference to a pump.
+!  The output varies +- 5% as a result of the noise. At the moment we need 98%
+!  output as an average to reach the desired setpoint. If we use 100% as MaxOut
+!  for the controller, the output will be cut all the time, and it will vary
+!  between 90 and 100% with 95% as an average. We will not reach the setpoint.
+!  The solution is to allow the output from -10% to 110%, and then limit the
+!  output outside the controller.
+!
+!  The controller has bumpless transfer between manual and auto, and after forced
+!  output, but not if you use the P or PD-form.
+!
+!
+!
+!  EXAMPLE 1
+!
+!  Curves to show the effect of the P- and D-part at different input to the
+!  controller.
+!
+!  @image orm_pid_3.png
+!
+!  Upper part:
+!  Brown curve   Input ( and also P-part of controller). Step and then a ramp.
+!  Cerise curve  Output from PID (yellow curve in lower part)
+!
+!  Lower part - D-component of controller.
+!  Green curve   DerTime = 10s. No filtering (DerGain = 0) Note very big peak
+!                at the step.
+!  Yellow curve  DerTime = 10s. Filtered D. DerGain = 3.
+!  Blue curve    DerTime = 20s. Filtered D. DerGain = 3.
+!
+!
+!
+!  EXAMPLE 2 to show the difference betweenPID, PI+D och I+PD on a setpont step:
+!
+!  @image orm_pid_4.png
+!
+!  I+PD (upper left) starts slowly to integrate the output after the step.
+!  PI+D (upper right) starts with a step from the P, which quickens the 
+!       process respons.
+!  PID  (lower left) adds a short spike at the start, which in this case 
+!       doesn't affect anything. 
+!       MaxOut = 500%
+!  PID  (lower right) is identical with the left, except for MaxOut = 100%, 
+!       which gives "wrong" result.
+!       At the setpoint step, the P-part gives an increase of 30 %, and the 
+!       P-part wants a spike of 90 %. That results in an output of 155%, which 
+!       is cut to 100% because of saturation of the output signal. Then the D-part 
+!       will remove 90 % again, and the controller will restart from 10% output, 
+!       which is not desired. 
+!
 !
 ! @h1 Examples
 !
@@ -209,6 +283,7 @@ SObject         pwrb:Class
 !
 ! @b See also
 !  @classlink Mode pwrb_mode.html
+!  @classlink CompPID basecomponent_comppid.html
 !*/
   Object PID $ClassDef 174 
     Body SysBody

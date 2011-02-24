@@ -12,3 +12,5 @@
 100606 cs  -         IO methods and objects for temperature sensor Maxim DS18B20 added.
 100621 cs  modbus    Modbus TCP server, correction for WriteSingleCoil. If value is not 0 or 0x00FF, no value shoud be set.
 100701 cs  modbus    Modbus TCP bugfix in scan interval.
+110120 cs  velleman  Velleman K8055 communication timeout increased.
+110120 cs  arduino   Support for Arduino USB boards added.

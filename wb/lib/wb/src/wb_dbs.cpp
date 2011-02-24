@@ -340,7 +340,7 @@ wb_dbs::createFile()
   pwr_tStatus sts;
   int size;
     
-  printf("\n-- Working with load file volume '%s'...\n", m_v->name());
+  printf("-- Working with load file volume '%s'...\n", m_v->name());
 
   printf("-- Open file...\n");
   sts = openFile();

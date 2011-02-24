@@ -58,6 +58,8 @@ extern "C" {
 #include "rt_pn_gsdml_data.h"
 #endif
 
+#define pn_cModuleClassFile "$pwr_exe/pn_module_classes.dat"
+
 typedef enum {
 	attrnav_eItemType_PnBase,
 	attrnav_eItemType_PnEnumValue,
@@ -83,7 +85,8 @@ typedef enum {
  	attrnav_eItemType_PnBitDataItem,
 	attrnav_eItemType_PnEnumByteOrder,
 	attrnav_eItemType_PnEnumTimeRatio,
-	attrnav_eItemType_PnEnumSendClock
+	attrnav_eItemType_PnEnumSendClock,
+	attrnav_eItemType_PnEnumValueMType,
 	} attrnav_eItemType;
 
 typedef enum {
@@ -109,6 +112,7 @@ class GsdmlAttrNavBrow {
     brow_tNodeClass 	nc_header;
     brow_tNodeClass 	nc_table_header;
     brow_tNodeClass 	nc_enum;
+    brow_tNodeClass 	nc_enum_mtype;
     flow_sAnnotPixmap 	*pixmap_leaf;
     flow_sAnnotPixmap 	*pixmap_map;
     flow_sAnnotPixmap 	*pixmap_openmap;
@@ -181,6 +185,8 @@ class GsdmlAttrNav {
     void expand_all();
     void redraw();
     void set_viewio( int set) { viewio = set;}
+    int search_class( const char *filename, const char *model, 
+		      const char *module, char *mclass);
 
     static void trace_scan( void *data);
     static int trace_scan_bc( brow_tObject object, void *p);
@@ -241,6 +247,22 @@ class ItemPnEnumValue : public ItemPn {
     ItemPnEnumValue( GsdmlAttrNav *attrnav, const char *item_name, int item_num, 
 	int item_type_id,
 	void *attr_value_p, brow_tNode dest, flow_eDest dest_code);
+    int			num;
+    int			type_id;
+    void		*value_p;
+    int 		old_value;
+    int 		first_scan;
+
+    int scan( GsdmlAttrNav *attrnav, void *p);
+};
+
+//! Item for an enum attribute.
+class ItemPnEnumValueMType : public ItemPn {
+   public:
+    ItemPnEnumValueMType( GsdmlAttrNav *attrnav, const char *item_name, const char *item_number, 
+			  int item_num, 
+			  int item_type_id,
+			  void *attr_value_p, brow_tNode dest, flow_eDest dest_code);
     int			num;
     int			type_id;
     void		*value_p;

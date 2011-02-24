@@ -187,6 +187,13 @@ void GsdAttrGtk::activate_cmd_ok( GtkWidget *w, gpointer data)
   attr->activate_cmd_ok();
 }
 
+void GsdAttrGtk::activate_cmd_apply( GtkWidget *w, gpointer data)
+{
+  GsdAttr *attr = (GsdAttr *)data;
+
+  attr->activate_cmd_apply();
+}
+
 void GsdAttrGtk::activate_cmd_ca( GtkWidget *w, gpointer data)
 {
   GsdAttr *attr = (GsdAttr *)data;
@@ -424,6 +431,10 @@ GsdAttrGtk::GsdAttrGtk( GtkWidget *a_parent_wid,
   gtk_widget_set_size_request( cmd_ok, 70, 25);
   g_signal_connect( cmd_ok, "clicked", 
  		    G_CALLBACK(activate_cmd_ok), this);
+  cmd_apply = gtk_button_new_with_label( "Apply");
+  gtk_widget_set_size_request( cmd_apply, 70, 25);
+  g_signal_connect( cmd_apply, "clicked", 
+ 		    G_CALLBACK(activate_cmd_apply), this);
   cmd_cancel = gtk_button_new_with_label( "Cancel");
   gtk_widget_set_size_request( cmd_cancel, 70, 25);
   g_signal_connect( cmd_cancel, "clicked", 
@@ -431,6 +442,7 @@ GsdAttrGtk::GsdAttrGtk( GtkWidget *a_parent_wid,
 
   GtkWidget *hboxbuttons = gtk_hbox_new( TRUE, 40);
   gtk_box_pack_start( GTK_BOX(hboxbuttons), cmd_ok, FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(hboxbuttons), cmd_apply, FALSE, FALSE, 0);
   gtk_box_pack_end( GTK_BOX(hboxbuttons), cmd_cancel, FALSE, FALSE, 0);
 
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
@@ -447,6 +459,7 @@ GsdAttrGtk::GsdAttrGtk( GtkWidget *a_parent_wid,
 
   if ( !edit_mode) {
     gtk_widget_set_sensitive( cmd_ok, FALSE);
+    gtk_widget_set_sensitive( cmd_apply, FALSE);
     gtk_widget_set_sensitive( menubutton_copy, FALSE);
     gtk_widget_set_sensitive( menubutton_cut, FALSE);
     gtk_widget_set_sensitive( menubutton_paste, FALSE);
@@ -455,120 +468,5 @@ GsdAttrGtk::GsdAttrGtk( GtkWidget *a_parent_wid,
 
   wow = new CoWowGtk( toplevel);
 
-#if 0
-  char		uid_filename[120] = {"pwr_exe:pb_gsd_attr.uid"};
-  char		*uid_filename_p = uid_filename;
-  Arg 		args[20];
-  pwr_tStatus	sts;
-  char 		title[80];
-  int		i;
-  MrmHierarchy s_DRMh;
-  MrmType dclass;
-  char		name[] = "Proview/R Navigator";
-
-  static char translations[] =
-    "<FocusIn>: gsdattr_inputfocus()\n";
-  static XtTranslations compiled_translations = NULL;
-
-  static XtActionsRec actions[] =
-  {
-    {"gsdattr_inputfocus",      (XtActionProc) action_inputfocus}
-  };
-
-  static MrmRegisterArg	reglist[] = {
-        { "gsdattr_ctx", 0 },
-	{"gsdattr_activate_exit",(caddr_t)activate_exit },
-	{"gsdattr_activate_print",(caddr_t)activate_print },
-	{"gsdattr_activate_copy",(caddr_t)activate_copy },
-	{"gsdattr_activate_cut",(caddr_t)activate_cut },
-	{"gsdattr_activate_paste",(caddr_t)activate_paste },
-	{"gsdattr_activate_zoom_in",(caddr_t)activate_zoom_in },
-	{"gsdattr_activate_zoom_out",(caddr_t)activate_zoom_out },
-	{"gsdattr_activate_zoom_reset",(caddr_t)activate_zoom_reset },
-	{"gsdattr_activate_change_value",(caddr_t)activate_change_value },
-	{"gsdattr_activate_help",(caddr_t)activate_help },
-	{"gsdattr_create_msg_label",(caddr_t)create_msg_label },
-	{"gsdattr_create_menubutton",(caddr_t)create_menubutton },
-	{"gsdattr_create_cmd_prompt",(caddr_t)create_cmd_prompt },
-	{"gsdattr_create_cmd_input",(caddr_t)create_cmd_input },
-	{"gsdattr_create_attrnav_form",(caddr_t)create_attrnav_form },
-	{"gsdattr_create_cmd_ok",(caddr_t)create_cmd_ok },
-	{"gsdattr_activate_cmd_ok",(caddr_t)activate_cmd_ok },
-	{"gsdattr_create_cmd_ca",(caddr_t)create_cmd_ca },
-	{"gsdattr_activate_cmd_ca",(caddr_t)activate_cmd_ca }
-	};
-
-  static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
-
-  dcli_translate_filename( uid_filename, uid_filename);
-
-  // Gtk
-  MrmInitialize();
-
-  strcpy( title, "PwR GsdAttr");
-
-  reglist[0].value = (caddr_t) this;
-
-  // Save the context structure in the widget
-  XtSetArg (args[0], XmNuserData, (unsigned int) this);
-
-  sts = MrmOpenHierarchy( 1, &uid_filename_p, NULL, &s_DRMh);
-  if (sts != MrmSUCCESS) printf("can't open %s\n", uid_filename);
-
-  MrmRegisterNames(reglist, reglist_num);
-
-  parent_wid = XtCreatePopupShell("pbGsdEditor", 
-		topLevelShellWidgetClass, a_parent_wid, args, 0);
-
-  sts = MrmFetchWidgetOverride( s_DRMh, "gsd_attr_window", parent_wid,
-			name, args, 1, &toplevel, &dclass);
-  if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
-
-  MrmCloseHierarchy(s_DRMh);
-
-
-  if (compiled_translations == NULL) 
-    XtAppAddActions( XtWidgetToApplicationContext( toplevel), 
-						actions, XtNumber(actions));
- 
-  if (compiled_translations == NULL) 
-    compiled_translations = XtParseTranslationTable(translations);
-  XtOverrideTranslations( toplevel, compiled_translations);
-
-  i = 0;
-  XtSetArg(args[i],XmNwidth,500);i++;
-  XtSetArg(args[i],XmNheight,700);i++;
-  XtSetValues( toplevel,args,i);
-
-  i = 0;
-  XtSetArg(args[i], XmNdeleteResponse, XmDO_NOTHING);i++;
-  XtSetValues( parent_wid,args,i);
-    
-  XtManageChild( toplevel);
-  XtUnmanageChild( cmd_input);
-
-  attrnav = new GsdAttrNavGtk( this, attrnav_form, "Plant",
-		gsd, edit_mode, &brow_widget, &sts);
-  ((GsdAttrNav *)attrnav)->message_cb = &GsdAttr::gsdattr_message;
-  ((GsdAttrNav *)attrnav)->change_value_cb = &GsdAttr::gsdattr_change_value_cb;
-
-  XtPopup( parent_wid, XtGrabNone);
-
-  if ( !edit_mode) {
-    i = 0;
-    XtSetArg( args[i], XmNsensitive, 0);i++;
-    XtSetValues( cmd_ok, args, i);
-    XtSetValues( menubutton_copy, args, i);
-    XtSetValues( menubutton_cut, args, i);
-    XtSetValues( menubutton_paste, args, i);
-    XtSetValues( menubutton_changevalue, args, i);
-  }
-
-  wow = new CoWowGtk( toplevel);
-
-  // Connect the window manager close-button to exit
-  flow_AddCloseVMProtocolCb( parent_wid, 
-	(XtCallbackProc)activate_exit, this);
-#endif
 }
 

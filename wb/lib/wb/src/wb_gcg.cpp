@@ -583,6 +583,10 @@ static int gcg_is_in_focode(
     gcg_ctx gcgctx, 
     vldh_t_node node);
 
+static void gcg_pending_compile_add( gcg_ctx gcgctx, pwr_tOid wind);
+static int gcg_pending_compile_exec( gcg_ctx gcgctx);
+
+
 
 
 /*_Methods defined for this module_______________________________________*/
@@ -2255,7 +2259,8 @@ int	gcg_wind_comp_all(
   pwr_tObjid	window,
   unsigned long	codetype,
   int		modified,
-  int		debug
+  int		debug,
+  int		skip_plc
 )
   {
 	pwr_tObjid	*windlist;
@@ -2481,7 +2486,7 @@ int	gcg_wind_comp_all(
         /* End of FIX */
 
 
-	if ( wind_compiled) {
+	if ( wind_compiled && !skip_plc) {
 	  sts = gcg_plc_compile( plc, codetype, &errorcount, &warningcount, 1,
 			debug);
 	  if ( sts == GSX__PLCPGM_ERRORS) {
@@ -2851,6 +2856,8 @@ static void	gcg_ctx_delete(
 	  free((char *) gcgctx->iowrite);
 	if (gcgctx->refcount > 0)
 	  free((char *) gcgctx->ref);
+	if (gcgctx->arefcount > 0)
+	  free((char *) gcgctx->aref);
 	free((char *) gcgctx);
 }
 
@@ -5146,11 +5153,13 @@ int	gcg_comp_rtnode(
 	gcg_t_threadlist	*threadlist;
 	unsigned long		thread_count;
 	char			text[80];
+	char			nodename_low[80];
 
 	gcg_debug = debug;
 
 	gcg_ctx_new( &gcgctx, 0);
 	strcpy(gcdir, GCDIR);
+	strncpy( nodename_low, cdh_Low(nodename), sizeof(nodename_low));
 
 	switch ( os) 
 	{
@@ -5326,7 +5335,7 @@ int	gcg_comp_rtnode(
 	{
 
 	  sprintf( fullfilename,"%s%s%s_%4.4d%s", gcdir, gcgmn_filenames[0], 
-		nodename, bus, GCEXT);
+		nodename_low, bus, GCEXT);
 	  dcli_translate_filename( fullfilename, fullfilename);
 	  if ((files[0] = fopen( fullfilename,"w")) == NULL) 
 	  {
@@ -5338,7 +5347,7 @@ int	gcg_comp_rtnode(
 
 	  if (IS_VMS_OR_ELN(os)) 
 	  {
-	    sprintf( fullfilename,"%splc_%s_%4.4d.opt", "pwrp_tmp:", cdh_Low(nodename), bus);
+	    sprintf( fullfilename,"%splc_%s_%4.4d.opt", "pwrp_tmp:", nodename_low, bus);
 	    dcli_translate_filename( fullfilename, fullfilename);
 	    if ((files[1] = fopen( fullfilename,"w")) == NULL) 
 	    {
@@ -5400,13 +5409,13 @@ int	gcg_comp_rtnode(
 	  files[0] = NULL;	   
 
 	  /* Create an object file */
-	  sprintf( module_name, "%s%s_%4.4d", gcgmn_filenames[0], nodename, bus);
+	  sprintf( module_name, "%s%s_%4.4d", gcgmn_filenames[0], nodename_low, bus);
 	  gcg_cc( GCG_PROC, module_name, NULL, NULL, os, GCG_NOSPAWN);
 
 	    /* print module in option file */
 	  if (IS_VMS_OR_ELN(os))
 	    fprintf( files[1],"%s%s%s_%4.4d\n", objdir, gcgmn_filenames[0], 
-		nodename, bus);
+		     nodename_low, bus);
 	
 	  /* Print plc libraries in option file */
 	  volumelist_ptr = volumelist;
@@ -5458,16 +5467,16 @@ int	gcg_comp_rtnode(
 	  if (IS_VMS_OR_ELN(os)) 
 	  {
 	    sprintf( plcfilename, "pwrp_exe:plc_%s_%4.4d_%5.5ld.exe",
-		cdh_Low(nodename), bus, plc_version);
-	    sprintf( fullfilename,"%s%s_%4.4d", gcgmn_filenames[0], nodename, bus);
+		     nodename_low, bus, plc_version);
+	    sprintf( fullfilename,"%s%s_%4.4d", gcgmn_filenames[0], nodename_low, bus);
 	    gcg_cc( GCG_RTNODE, fullfilename, plcfilename, NULL, os,
 	          GCG_NOSPAWN);
 	  } 
 	  else
 	  {
 	    sprintf( plcfilename, "plc_%s_%4.4d_%5.5ld",
-		cdh_Low(nodename), bus, plc_version);
-	    sprintf( fullfilename,"%s%s_%4.4d", gcgmn_filenames[0], nodename, bus);
+		     nodename_low, bus, plc_version);
+	    sprintf( fullfilename,"%s%s_%4.4d", gcgmn_filenames[0], nodename_low, bus);
 	    gcg_cc( GCG_RTNODE, fullfilename, plcfilename, 
 	        plclib_frozen, os, GCG_NOSPAWN);
 	  }
@@ -6155,45 +6164,31 @@ int	gcg_comp_m1( vldh_t_wind wind,
           }
 	}
 
-	/* Delete the context for the window */
-	gcg_ctx_delete( gcgctx);
-
 	/* Generate code for the plc module */
-/*	sts = gcg_comp_m[0]( wind->hw.plc, codetype, 0, 0, 0);
-	if ( EVEN(sts)) return sts;
-*/
-	/* Generate code for the rtnode */
-/*	sts = gcg_comp_rtnode( wind->hw.ldhses, 0, 
-			wind->hw.plc, codetype, &node_errorcount,
-			&node_warningcount);
-	if ( EVEN(sts)) return sts;
-	(*errorcount) += node_errorcount;
-	(*warningcount) += node_warningcount;
-*/
 
-	if ( *errorcount > 0 )
-	{
-	  if ( codetype)
-	  {
+	if ( *errorcount > 0 ) {
+	  if ( codetype) {
   	    /* Revert the session */
 	    sts = ldh_RevertSession( wind->hw.ldhses);
 	    if ( EVEN(sts)) return sts;
 
 
 	    /* Return to previous session access */
-	    if ( session_access != ldh_eAccess_ReadWrite)
-	    {	  
+	    if ( session_access != ldh_eAccess_ReadWrite) {	  
 	      /* Set access read write to be able to compile */
 	      sts = ldh_SetSession( ldhses, session_access);
 	      if ( EVEN(sts)) return sts;
 	    }
 	  }
+
+	  gcg_pending_compile_exec( gcgctx);
+
+	  gcg_ctx_delete( gcgctx);
+
 	  return GSX__PLCWIND_ERRORS;
 	}
-	else
-	{
-	  if ( codetype)
-	  {
+	else {
+	  if ( codetype) {
             pwr_tTime time;
 
             /* Store compile time for the window */
@@ -6206,12 +6201,15 @@ int	gcg_comp_m1( vldh_t_wind wind,
 	    if ( EVEN(sts)) return sts;
 
 	    /* Return to previous session access */
-	    if ( session_access != ldh_eAccess_ReadWrite)
-	    {	  
+	    if ( session_access != ldh_eAccess_ReadWrite) {	  
 	      sts = ldh_SetSession( ldhses, session_access);
 	      if ( EVEN(sts)) return sts;
 	    }
 	  }
+	  gcg_pending_compile_exec( gcgctx);
+
+	  gcg_ctx_delete( gcgctx);
+
 	  return GSX__SUCCESS;
 	}
 
@@ -13555,7 +13553,7 @@ int	gcg_comp_m53( gcg_ctx gcgctx, vldh_t_node node)
 	  /* Compile the subwindow... */
 	  ldhwb = ldh_SessionToWB( ldhses);
 	  sts = gcg_wind_comp_all( ldhwb, ldhses, window_objid,
-		gcgctx->print, 0, gcg_debug);
+				   gcgctx->print, 0, gcg_debug, 0);
 	  node->hn.subwindowobject[0] = 0;
 	}
 
@@ -14277,7 +14275,6 @@ int	gcg_comp_m58( gcg_ctx gcgctx, vldh_t_node node)
 	pwr_tObjid		window_objid;
 	pwr_tObjid		plcpgm_objid;
 	pwr_sAttrRef		attrref[2];
-	ldh_tWBContext		ldhwb;
 	pwr_sPlcWindow		*windbuffer;
 	pwr_sPlcNode		*nodebuffer;
 	unsigned long		point;
@@ -14471,10 +14468,12 @@ int	gcg_comp_m58( gcg_ctx gcgctx, vldh_t_node node)
 	  // sts = ldh_SaveSession( ldhses);
 	  // if ( EVEN(sts)) return sts;
 
+	  gcg_pending_compile_add( gcgctx, window_objid);
+
 	  /* Compile the subwindow... */
-	  ldhwb = ldh_SessionToWB( ldhses);
-	  sts = gcg_wind_comp_all( ldhwb, ldhses, window_objid,
-		gcgctx->print, 0, gcg_debug);
+	  // ldhwb = ldh_SessionToWB( ldhses);
+	  // sts = gcg_wind_comp_all( ldhwb, ldhses, window_objid,
+	  //	gcgctx->print, 0, gcg_debug);
 	  node->hn.subwindowobject[0] = 0;
 	}
 	else {
@@ -14499,9 +14498,11 @@ int	gcg_comp_m58( gcg_ctx gcgctx, vldh_t_node node)
 	  sts = stat( fname, &info);
 	  if ( sts != -1 && info.st_ctime > compile_time->tv_sec) {
 	    /* Compile the subwindow... */
-	    ldhwb = ldh_SessionToWB( ldhses);
-	    sts = gcg_wind_comp_all( ldhwb, ldhses, window_objid,
-		gcgctx->print, 0, gcg_debug);
+	    gcg_pending_compile_add( gcgctx, window_objid);
+	    
+	    // ldhwb = ldh_SessionToWB( ldhses);
+	    // sts = gcg_wind_comp_all( ldhwb, ldhses, window_objid,
+	    //	gcgctx->print, 0, gcg_debug);
 	  }
 	  free( (char *)compile_time);
 
@@ -16142,3 +16143,27 @@ static int gcg_is_in_focode( gcg_ctx gcgctx, vldh_t_node node)
   return 0;
 }
 
+static void gcg_pending_compile_add( gcg_ctx gcgctx, pwr_tOid wind)
+{
+  for ( unsigned int i = 0; i < gcgctx->pending_compile.size(); i++) {
+    if ( cdh_ObjidIsEqual( wind, gcgctx->pending_compile[i]))
+      return;
+  }
+  gcgctx->pending_compile.push_back( wind);
+}
+
+
+static int gcg_pending_compile_exec( gcg_ctx gcgctx)
+{
+  pwr_tStatus sts;
+  ldh_tSesContext ldhses = gcgctx->ldhses;
+  ldh_tWBContext  ldhwb = ldh_SessionToWB( ldhses);
+
+
+  for ( unsigned int i = 0; i < gcgctx->pending_compile.size(); i++) {
+    sts =  gcg_wind_comp_all( ldhwb, ldhses, gcgctx->pending_compile[i],
+			      gcgctx->print, 0, gcg_debug, 1);
+    if ( EVEN(sts)) return sts;
+  }
+  return GSX__SUCCESS;
+}

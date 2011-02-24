@@ -489,6 +489,11 @@ void brow_SetTraceData( brow_tObject object, void *trace_data)
   ((FlowNode *)object)->set_trace_data( trace_data);
 }
 
+void brow_GetTraceData( brow_tObject object, void **trace_data)
+{
+  ((FlowNode *)object)->get_trace_data( trace_data);
+}
+
 extern "C" int brow_TraceInit( brow_tCtx ctx, int (*trace_connect_func)( brow_tObject, 
 	char *, char *, flow_eTraceType, void **), 
 	int (*trace_disconnect_func)( brow_tObject),

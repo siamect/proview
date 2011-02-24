@@ -47,7 +47,7 @@ Op::Op( void *op_parent_ctx,
 	pwr_tStatus *status) :
   parent_ctx(op_parent_ctx), start_jop(0), 
   jop(NULL), command_cb(NULL), map_cb(NULL), help_cb(NULL), 
-  close_cb(NULL), get_alarm_info_cb(NULL), ack_last_cb(NULL), sup_timerid(0)
+  close_cb(NULL), get_alarm_info_cb(NULL), ack_last_cb(NULL), wow(0), sup_timerid(0)
 {
   sup_init();
 }
@@ -82,7 +82,7 @@ int Op::appl_action( int idx)
   int sts;
 
   if ( command_cb) {
-    sts = gdh_AttrrefToName( &button_aref[idx], name, sizeof(name), cdh_mNName);
+    sts = gdh_AttrrefToName( &button_aref[idx], name, sizeof(name), cdh_mName_volumeStrict);
     strcpy( cmd, "ope gra/obj=");
     strcat( cmd, name);
 

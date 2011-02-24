@@ -53,6 +53,8 @@ typedef struct io_sCtx *io_tCtx;
 #define NULL (void *) 0
 #endif
 
+
+#define io_cLibDummy -9999
 #define IO_CHANLIST_SIZE 250
 
 #define FIXOUT 2

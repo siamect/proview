@@ -1,7 +1,7 @@
 Proview is free software, covered by the GNU General Public License.
 You can redistribute it and/or modify it under the terms of this license.
 
-There is absolutely no warranty for Proview, se details below.
+There is absolutely no warranty for Proview, see details below.
 Press the Show License button to display the license.
 
   NO WARRANTY

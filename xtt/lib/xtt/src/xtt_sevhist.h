@@ -107,6 +107,8 @@ class XttSevHist {
   static void sevhist_next_period_cb( void *ctx);
   static void sevhist_add_cb( void *ctx);
   static void sevhist_remove_cb( void *ctx);
+  static int sevhist_export_cb( void *ctx, pwr_tTime *from, pwr_tTime *to, 
+				int rows, int idx, char *filename);
   static void sevhist_help_cb( void *ctx);
   static void sevhist_scan( void *data);
 

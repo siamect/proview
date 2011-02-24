@@ -211,6 +211,13 @@ void GsdmlAttrGtk::activate_cmd_ok( GtkWidget *w, gpointer data)
   attr->activate_cmd_ok();
 }
 
+void GsdmlAttrGtk::activate_cmd_apply( GtkWidget *w, gpointer data)
+{
+  GsdmlAttr *attr = (GsdmlAttr *)data;
+
+  attr->activate_cmd_apply();
+}
+
 void GsdmlAttrGtk::activate_cmd_ca( GtkWidget *w, gpointer data)
 {
   GsdmlAttr *attr = (GsdmlAttr *)data;
@@ -314,8 +321,8 @@ GsdmlAttrGtk::GsdmlAttrGtk( GtkWidget *a_parent_wid,
   int sts;
 
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
-			   "default-height", 600,
-			   "default-width", 500,
+			   "default-height", 700,
+			   "default-width", 700,
 			   "title", "profinetConfigurator",
 			   NULL);
 
@@ -462,6 +469,10 @@ GsdmlAttrGtk::GsdmlAttrGtk( GtkWidget *a_parent_wid,
   gtk_widget_set_size_request( cmd_ok, 70, 25);
   g_signal_connect( cmd_ok, "clicked", 
  		    G_CALLBACK(activate_cmd_ok), this);
+  cmd_apply = gtk_button_new_with_label( "Apply");
+  gtk_widget_set_size_request( cmd_apply, 70, 25);
+  g_signal_connect( cmd_apply, "clicked", 
+ 		    G_CALLBACK(activate_cmd_apply), this);
   cmd_cancel = gtk_button_new_with_label( "Cancel");
   gtk_widget_set_size_request( cmd_cancel, 70, 25);
   g_signal_connect( cmd_cancel, "clicked", 
@@ -469,6 +480,7 @@ GsdmlAttrGtk::GsdmlAttrGtk( GtkWidget *a_parent_wid,
 
   GtkWidget *hboxbuttons = gtk_hbox_new( TRUE, 40);
   gtk_box_pack_start( GTK_BOX(hboxbuttons), cmd_ok, FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(hboxbuttons), cmd_apply, FALSE, FALSE, 0);
   gtk_box_pack_end( GTK_BOX(hboxbuttons), cmd_cancel, FALSE, FALSE, 0);
 
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
@@ -485,6 +497,7 @@ GsdmlAttrGtk::GsdmlAttrGtk( GtkWidget *a_parent_wid,
 
   if ( !edit_mode) {
     gtk_widget_set_sensitive( cmd_ok, FALSE);
+    gtk_widget_set_sensitive( cmd_apply, FALSE);
     gtk_widget_set_sensitive( menubutton_copy, FALSE);
     gtk_widget_set_sensitive( menubutton_cut, FALSE);
     gtk_widget_set_sensitive( menubutton_paste, FALSE);

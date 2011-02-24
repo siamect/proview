@@ -186,3 +186,17 @@
 101122 cs  xtt       Xtt bugfix, xtt started with -s (select opplace) didn't load the eventlist.
 101123 cs  ge        Ge confirm, bugfix in close graph.
 101203 cs  xtt       Xtt eventlist, ReturnText was not shown in return events.
+101215 cs  ge        Ge plant navigator bugfix, unselect didn't remove global selection.
+101220 cs  ge        Ge subgraph for limit switch added.
+110112 cs  xtt       Operator logging, logging and replay of ge graph events implemented.
+110114 cs  ge        Glow and flow widgets destructor fix, event timer fix.
+110119 cs  ge        Ge subgraph camera added.
+110119 cs  xtt       Language translationfiles, include statement added.
+110120 cs  ge        Ge Move dynamic, different move and scale factors for x and y direction.
+110120 cs  ge        wb_ge, execution of wtt initfile to get history log enable/disable setup added.
+110121 cs  xtt       Languages zh_cn and fr_fr added.
+110121 rk  rtmon     Runtime Monitor, problem with restart timeout fixed.
+110202 cs  flow      Color alloc problem fixed.
+110203 cs  xtt       Problems with OpPlace and XttGraph object in SharedVolume fixed.
+110222 cs  xtt       Curve window, second mark added.
+110222 cs  xtt       Curve window, export function added for history curves.

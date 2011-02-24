@@ -26,6 +26,7 @@
 #include <stdlib.h>
 
 #include "co_cdh.h"
+#include "co_dcli.h"
 #include "co_time.h"
 #include "cow_wow.h"
 #include "flow.h"
@@ -887,6 +888,21 @@ int GsdmlAttrNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
       }
       break;
     }
+    case attrnav_eItemType_PnEnumValueMType: {
+      int value;
+      if ( !attrnav->edit_mode) {
+	attrnav->message('E', "Not in edit mode");
+	break;
+      }
+	
+      brow_GetRadiobutton( node_list[0], 0, &value);
+      if ( !value) {
+	brow_SetRadiobutton( node_list[0], 0, 1);
+	*(int *)((ItemPnEnumValueMType *)item)->value_p = ((ItemPnEnumValueMType *)item)->num;
+	attrnav->set_modified(1);
+      }
+      break;
+    }
     case attrnav_eItemType_PnParEnumBit: 
       if ( !attrnav->edit_mode) {
 	attrnav->message('E', "Not in edit mode");
@@ -925,6 +941,14 @@ int GsdmlAttrNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 	  brow_SetRadiobutton( event->radiobutton.object, 
 			       event->radiobutton.number, !event->radiobutton.value);
 	  *(int *)((ItemPnEnumValue *)item)->value_p = ((ItemPnEnumValue *)item)->num;
+	  attrnav->set_modified( 1);	    
+	}
+	break;
+      case attrnav_eItemType_PnEnumValueMType: 
+	if ( !event->radiobutton.value) {
+	  brow_SetRadiobutton( event->radiobutton.object, 
+			       event->radiobutton.number, !event->radiobutton.value);
+	  *(int *)((ItemPnEnumValueMType *)item)->value_p = ((ItemPnEnumValueMType *)item)->num;
 	  attrnav->set_modified( 1);	    
 	}
 	break;
@@ -1073,6 +1097,9 @@ int GsdmlAttrNav::trace_connect_bc( brow_tObject object, char *name, char *attr,
     case attrnav_eItemType_PnEnumValue:
       *p = ((ItemPnEnumValue *)base_item)->value_p;
       break;
+    case attrnav_eItemType_PnEnumValueMType:
+      *p = ((ItemPnEnumValueMType *)base_item)->value_p;
+      break;
     case attrnav_eItemType_PnEnumTimeRatio:
       *p = ((ItemPnEnumTimeRatio *)base_item)->value_p;
       break;
@@ -1163,6 +1190,18 @@ void GsdmlAttrNavBrow::create_nodeclasses()
 		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
 		0);
   brow_AddFrame( nc_enum, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
+ 
+  brow_CreateNodeClass( ctx, "NavigatorEnumMType", 
+		flow_eNodeGroup_Common, &nc_enum_mtype);
+  brow_AddRadiobutton( nc_enum_mtype, 24, 0.03, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
+  brow_AddAnnotPixmap( nc_enum_mtype, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
+  brow_AddAnnot( nc_enum_mtype, 2, 0.6, 0,
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
+		0);
+  brow_AddAnnot( nc_enum_mtype, 12, 0.6, 1,
+		flow_eDrawType_TextHelvetica, 2, flow_eAnnotType_OneLine, 
+		1);
+  brow_AddFrame( nc_enum_mtype, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
  
   // Create table nodeclass
 
@@ -1668,6 +1707,80 @@ int GsdmlAttrNav::open( const char *filename)
   return 1;
 }
 
+int GsdmlAttrNav::search_class( const char *filename, const char *model, 
+				const char *module, char *mclass)
+{
+  char line[200];
+  char itemv[2][200];
+  pwr_tFileName fname;
+  int num;
+  ifstream	fp;
+  int in_model = 0;
+  int in_par = 0;
+  char lmodel[200];
+  char lmodule[200];
+
+  dcli_trim( lmodel, (char *)model);
+  dcli_trim( lmodule, (char *)module);
+
+  dcli_translate_filename( fname, filename);
+
+  fp.open( fname);
+  if ( !fp)
+    return 0;
+
+  while ( fp.getline( line, sizeof(line)) ) {
+    if ( line[0] == '#')
+      continue;
+
+    num = dcli_parse( line, " 	", "",
+		      (char *) itemv, sizeof( itemv)/sizeof( itemv[0]), 
+		      sizeof( itemv[0]), 0);
+    if ( num < 1)
+      continue;
+
+    dcli_trim( itemv[0], itemv[0]);
+    if ( num >= 2)
+      dcli_trim( itemv[1], itemv[1]);
+
+    if ( cdh_NoCaseStrcmp( itemv[0], "Device") == 0) {
+      if ( num < 2)
+	continue;
+
+      if ( in_model)
+	continue;
+
+      if ( cdh_NoCaseStrcmp( itemv[1], lmodel) == 0)
+	in_model = 1;
+    }
+
+    if ( in_model) {
+      if ( strcmp( itemv[0], "{") == 0)
+	in_par = 1;
+    }
+
+    if ( in_par) {
+      if ( num < 2)
+	continue;
+
+      if ( strcmp( itemv[0], "}") == 0)
+	break;
+
+      if ( strcmp( itemv[1], "-") == 0 || strcmp( itemv[1], "") == 0)
+	continue;
+
+      if ( cdh_NoCaseStrcmp( itemv[0], lmodule) == 0) {
+	strncpy( mclass, itemv[1], sizeof( pwr_tObjName));
+	fp.close();
+	return 1;
+      }
+    }
+  }
+
+  fp.close();
+  return 0;
+}
+
 ItemPnBase::ItemPnBase( GsdmlAttrNav *attrnav, const char *item_name, const char *attr, 
 	int attr_type, int attr_size, double attr_min_limit, 
 	double attr_max_limit, void *attr_value_p, int attr_noedit,
@@ -1815,6 +1928,49 @@ ItemPnEnumValue::ItemPnEnumValue( GsdmlAttrNav *attrnav, const char *item_name, 
 }
 
 int ItemPnEnumValue::scan( GsdmlAttrNav *attrnav, void *p)
+{
+  if ( !first_scan) {
+    if ( old_value == *(int *)p)
+      // No change since last time
+      return 1;
+  }
+  else
+    first_scan = 0;
+
+  if ( *(int *)p == num)
+    brow_SetRadiobutton( node, 0, 1);
+  else
+    brow_SetRadiobutton( node, 0, 0);
+
+  old_value = *(int *) p;
+  return 1;
+}
+
+ItemPnEnumValueMType::ItemPnEnumValueMType( GsdmlAttrNav *attrnav, const char *item_name, 
+					    const char *item_number, int item_num, 
+					    int item_type_id, void *attr_value_p, 
+					    brow_tNode dest, flow_eDest dest_code) :
+  num(item_num), type_id(item_type_id), value_p(attr_value_p), first_scan(1)
+{
+
+  type = attrnav_eItemType_PnEnumValueMType;
+
+  strcpy( name, item_name);
+
+  brow_CreateNode( attrnav->brow->ctx, item_name, attrnav->brow->nc_enum_mtype, 
+		dest, dest_code, (void *) this, 1, &node);
+
+  brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_attr);
+  brow_SetAnnotation( node, 0, item_name, strlen(item_name));
+  brow_SetAnnotation( node, 1, item_number, strlen(item_number));
+  if ( *(int *)value_p == num)
+    brow_SetRadiobutton( node, 0, 1);
+  else
+    brow_SetRadiobutton( node, 0, 0);
+  brow_SetTraceAttr( node, name, "", flow_eTraceType_User);
+}
+
+int ItemPnEnumValueMType::scan( GsdmlAttrNav *attrnav, void *p)
 {
   if ( !first_scan) {
     if ( old_value == *(int *)p)
@@ -2902,8 +3058,8 @@ int ItemPnModuleType::open_children( GsdmlAttrNav *attrnav, double x, double y)
     brow_SetNodraw( attrnav->brow->ctx);
 
     int idx = 0;
-    new ItemPnEnumValue( attrnav, "No", idx++, pwr_eType_UInt32, 
-			 &attrnav->dev_data.slot_data[slot_idx]->module_enum_number, 
+    new ItemPnEnumValueMType( attrnav, "No", "", idx++, pwr_eType_UInt32, 
+			      &attrnav->dev_data.slot_data[slot_idx]->module_enum_number, 
 			 node, flow_eDest_IntoLast);
     
     gsdml_UseableModules *um = attrnav->gsdml->ApplicationProcess->DeviceAccessPointList->DeviceAccessPointItem[attrnav->device_num-1]->UseableModules;
@@ -2917,9 +3073,10 @@ int ItemPnModuleType::open_children( GsdmlAttrNav *attrnav, double x, double y)
 	if ( !mi || !mi->ModuleInfo->Body.Name.p)
 	  continue;
 	strncpy( mname, (char *) mi->ModuleInfo->Body.Name.p, sizeof(mname));
-	new ItemPnEnumValue( attrnav, mname, idx, pwr_eType_UInt32, 
-			     &attrnav->dev_data.slot_data[slot_idx]->module_enum_number, 
-			     node, flow_eDest_IntoLast);
+	new ItemPnEnumValueMType( attrnav, mname, mi->ModuleInfo->Body.OrderNumber, idx, 
+				  pwr_eType_UInt32, 
+				  &attrnav->dev_data.slot_data[slot_idx]->module_enum_number, 
+				  node, flow_eDest_IntoLast);
       }
       else if ( um->ModuleItemRef[i]->Body.FixedInSlots.list &&
 		um->ModuleItemRef[i]->Body.FixedInSlots.list->in_list(slot_number)) {
@@ -2928,9 +3085,10 @@ int ItemPnModuleType::open_children( GsdmlAttrNav *attrnav, double x, double y)
 	if ( !mi || !mi->ModuleInfo->Body.Name.p)
 	  continue;
 	strncpy( mname, (char *) mi->ModuleInfo->Body.Name.p, sizeof(mname));
-	new ItemPnEnumValue( attrnav, mname, idx, pwr_eType_UInt32, 
-			     &attrnav->dev_data.slot_data[slot_idx]->module_enum_number, 
-			     node, flow_eDest_IntoLast);
+	new ItemPnEnumValueMType( attrnav, mname, mi->ModuleInfo->Body.OrderNumber, idx, 
+				  pwr_eType_UInt32, 
+				  &attrnav->dev_data.slot_data[slot_idx]->module_enum_number, 
+				  node, flow_eDest_IntoLast);
       }
       idx++;
     }
@@ -2989,6 +3147,41 @@ int ItemPnModuleType::scan( GsdmlAttrNav *attrnav, void *p)
     brow_SelectClear( attrnav->brow->ctx);
     brow_SetInverse( parentnode, 1);
     brow_SelectInsert( attrnav->brow->ctx, parentnode);
+    brow_CenterObject( attrnav->brow->ctx, parentnode, 0.25);
+
+    // Search for a default module class
+    char devname[200];
+    pwr_tObjName mclass;
+    pwr_tCid mcid = 0;
+    brow_tObject next;
+    pwr_tCid *datap;
+
+    strncpy( devname, (char *)attrnav->gsdml->ApplicationProcess->DeviceAccessPointList->
+	     DeviceAccessPointItem[attrnav->device_num-1]->ModuleInfo->Body.Name.p, 
+	     sizeof(devname));
+
+    sts = attrnav->search_class( pn_cModuleClassFile, devname,  buf, mclass);
+    if ( ODD(sts)) {
+      for ( int i = 0; attrnav->gsdml->module_classlist[i].cid; i++) {
+	if ( cdh_NoCaseStrcmp( mclass, attrnav->gsdml->module_classlist[i].name) == 0) {
+	  mcid = attrnav->gsdml->module_classlist[i].cid;
+	  break;
+	}
+      }
+    }
+    
+    sts = brow_GetNext( attrnav->brow->ctx, parentnode, &next);
+    if ( ODD(sts))
+      sts = brow_GetNext( attrnav->brow->ctx, next, &next);
+    if ( ODD(sts)) {
+      ItemPn *item;
+
+      brow_GetUserData( next, (void **)&item);
+      if ( item->type == attrnav_eItemType_PnModuleClass) {	
+	brow_GetTraceData( next, (void **)&datap);
+	*datap = mcid;
+      }
+    }
   }
   else
     first_scan = 0;

@@ -3655,6 +3655,17 @@ gdh_GetVolumeInfo(
   return rsts;
 }
 
+/**
+ * @brief Get info for a volume.
+ */
+pwr_tStatus
+gdh_GetRootVolume( pwr_tVid *vid			/**< Volume identity */
+)
+{
+  *vid = gdbroot->my_volume->g.vid;
+  return GDH__SUCCESS;
+}
+
 pwr_tStatus
 gdh_GetObjectBodyDef(
   pwr_tCid cid,

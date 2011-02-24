@@ -24,4 +24,5 @@
 100708 rk -           Added functionality for PROFINET IO using Softing Profinet Stack
 101202 rk -           Finalized PROFINET IO functionality. Added several classes
                       for handling different types of Profinet IO.
-
+110223 cs -           Profinet and Profibus configurators, default module class setting added, and Apply button added.
+110223 cs -           Profinet configurator, order number added to text in module type list.

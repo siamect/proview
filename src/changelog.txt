@@ -153,4 +153,9 @@
 101123 cs  rt        rt_emon message loop bugfix.
 101123 cs  pwre      co_mereg bugfix, conditional opsys didn't work.
 101123 cs  rt        getopt replaced.
-101202 rk  rt        Added support for handling i/o-channels hidden inside attribute..
+101202 rk  rt        Added support for handling i/o-channels hidden inside attribute.
+101207 cs  tools     Live CD customization files added.
+101210 cs  plc       Arithm code comment on last row could comment out closing parenthesis.
+101220 cs  gdh       Gdh fix to be able to set values in mounted volumes from opc.
+110111 cs  plc       Plc loop options added for policy when execution time exceedes scantime.
+110119 hw  plc       PID controller, derivative filtering modified, and function object Filter algorithm modified.
