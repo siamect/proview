@@ -51,13 +51,15 @@ int noMessageCnt = 0;
 const int delayTime = 1;
 const int debug = 0;
 
-const int MSG_TYPE_WRITE = 1;
+const int MSG_TYPE_DOWRITE = 1;
 const int MSG_TYPE_DIREAD = 2;
 const int MSG_TYPE_AIREAD = 3;
 const int MSG_TYPE_AOWRITE = 4;
 const int MSG_TYPE_CONFIGURE = 5;
 const int MSG_TYPE_STATUS = 6;
 const int MSG_TYPE_DEBUG = 7;
+const int MSG_TYPE_WRITEALL = 8;
+const int MSG_TYPE_READALL = 9;
 
 const int ARD__SUCCESS = 1;
 const int ARD__DICONFIG = 2;
@@ -159,7 +161,7 @@ void loop()
     sizeErrorCnt = 0;
     noMessageCnt = 0;
 
-    if ( msgType == MSG_TYPE_WRITE) {
+    if ( msgType == MSG_TYPE_DOWRITE) {
       // Write digital outputs
 
       if ( msgSize == doSize) {
@@ -185,6 +187,30 @@ void loop()
       if ( msgSize == aoCnt) {
         for ( i = 0; i < aoCnt; i++)
    	  analogWrite( aoList[i], msgData[i]);
+
+        sts = ARD__SUCCESS;
+      }
+      else {
+        sts = ARD__COMMERROR;
+      }
+    }
+    else if ( msgType == MSG_TYPE_WRITEALL) {
+      // Write digital outputs
+
+      if ( msgSize == doSize + aoCnt) {
+        for ( i = 0; i < doSize; i++) {
+          for ( j = 0; j < 8; j++) {
+            if ( ((1 << j) & doMask[i]) != 0) {
+              if ( ((1 << j) & msgData[i]) != 0)
+                digitalWrite( i * 8 + j, HIGH);          
+              else
+                digitalWrite( i * 8 + j, LOW);          
+            }
+          }
+        }
+
+        for ( i = 0; i < aoCnt; i++)
+   	  analogWrite( aoList[i], msgData[doSize + i]);
 
         sts = ARD__SUCCESS;
       }
@@ -218,6 +244,29 @@ void loop()
         val = analogRead( aiList[i]);
         amsg[i*2 + 3] = val / 256;
         amsg[i*2 + 1 + 3] = val % 256;
+      }
+      Serial.write( amsg, amsg[0]);
+    }
+    else if ( msgType == MSG_TYPE_READALL) {
+      // Read Digital inputs
+      amsg[0] = diSize + aiCnt * 2 + 3;
+      amsg[1] = msgId;
+      amsg[2] = MSG_TYPE_READALL;
+      for ( i = 0; i < diSize; i++) {
+        amsg[i + 3] = 0;
+        for ( j = 0; j < 8; j++) {
+          if ( ((1 << j) & diMask[i]) != 0) {
+            val = digitalRead( i * 8 + j);
+            if ( val == HIGH) 
+              amsg[i + 3] |= 1 << j;
+          }
+        }
+      }
+
+      for ( i = 0; i < aiCnt; i++) {
+        val = analogRead( aiList[i]);
+        amsg[diSize + i*2 + 3] = val / 256;
+        amsg[diSize + i*2 + 1 + 3] = val % 256;
       }
       Serial.write( amsg, amsg[0]);
     }
