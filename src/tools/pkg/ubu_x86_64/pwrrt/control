@@ -1,5 +1,5 @@
 Package: pwrrt
-Version: 4.7.1-1
+Version: 4.8.1-2
 Section: base
 Priority: optional
 Architecture: amd64
@@ -8,4 +8,13 @@ Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47
 Maintainer: Proview <postmaster@proview.se>
 Description:
  Proview runtime environment
- 4.7.1-1 Base release
+ 4.8.0-1 Base release
+ 4.8.1-1
+   - I/O support for Arduino USB board.
+   - Remote support for Websphere Message Queue.
+   - Operator event logging and replay.
+   - Chinese translation in operator environment.
+ 4.8.1-2
+   - Curve window, second mark and export dialog added.
+   - Xtt, problems with OpPlace and XttGraph objects in SharedVolume fixed.
+   - Flow alloc color problem fixed.
