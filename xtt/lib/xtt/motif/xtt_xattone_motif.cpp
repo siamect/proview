@@ -120,7 +120,7 @@ int XAttOneMotif::change_value( int set_focus)
   Widget	text_w;
   char		*value = 0;
   Arg 		args[5];
-  int		input_size;
+  int		input_size = 80;
   char		aval[1024];
   char 		buf[1024];
   int		len;

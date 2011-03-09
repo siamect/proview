@@ -34,6 +34,19 @@
 #define AI_MAX_SIZE 4
 #define AO_MAX_SIZE 4
 
+typedef enum {
+  ard_eMsgType_No 	= 0,
+  ard_eMsgType_DoWrite 	= 1,
+  ard_eMsgType_DiRead 	= 2,
+  ard_eMsgType_AiRead 	= 3,
+  ard_eMsgType_AoWrite 	= 4,
+  ard_eMsgType_Configure = 5,
+  ard_eMsgType_Status 	= 6,
+  ard_eMsgType_Debug 	= 7,
+  ard_eMsgType_WriteAll = 8,
+  ard_eMsgType_ReadAll	= 9
+} ard_eMsgType;
+
 typedef struct {
   pwr_tTime ErrTime;
   int fd;
@@ -50,6 +63,7 @@ typedef struct {
   int IdCnt;
   int DiPollId;
   int DiPendingPoll;
+  ard_eMsgType PendingMsgType;
   int AiIntervalCnt;
   int AoIntervalCnt;
   io_sChannel *DChanList[D_MAX_SIZE * 8];
@@ -82,16 +96,6 @@ static void logg( const char *str)
   fprintf( fp, "%s%04lld %s\n", timstr, t.tv_nsec/100000, str);
 }
 #endif
-
-typedef enum {
-  ard_eMsgType_Write 	= 1,
-  ard_eMsgType_DiRead 	= 2,
-  ard_eMsgType_AiRead 	= 3,
-  ard_eMsgType_AoWrite 	= 4,
-  ard_eMsgType_Configure = 5,
-  ard_eMsgType_Status 	= 6,
-  ard_eMsgType_Debug 	= 7
-} ard_eMsgType;
 
 #define ARD__SUCCESS 1
 #define ARD__DICONFIG 2
@@ -153,18 +157,23 @@ static int receive( int fd, int id, ard_sMsg *rmsg, int size)
   return ARD__NOMSG;
 }
 
-static int poll_di( ard_sMsg *msg, io_sLocal *local)
+static int poll( ard_sMsg *msg, io_sLocal *local, ard_eMsgType mtype)
 {
   int sts;
 
+  local->PendingMsgType = mtype;
+  if ( mtype == ard_eMsgType_No)
+    return 1;
+
   msg->size = 3;
   msg->id = local->IdCnt++;
-  msg->type = ard_eMsgType_DiRead;
+  msg->type = mtype;
 
   // logg( "Poll Di");
   sts = write( local->fd, msg, msg->size);
   local->DiPollId = msg->id;
   local->DiPendingPoll = 1;
+  local->PendingMsgType = mtype;
   return sts;
 }      
 
@@ -437,27 +446,108 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
   unsigned int m;
   pwr_tUInt32 error_count = op->ErrorCount;
   int sts;
+  int skip_ai;
+  ard_eMsgType mtype;
+  ard_sMsg msg;
+ 
+  if ( local->AiSize) {
+    skip_ai = 0;
 
-  if ( local->DiSize) {
-    ard_sMsg msg, rmsg;
+    if ( op->AiScanInterval > 1) {
+      skip_ai = local->AiIntervalCnt;
+
+      local->AiIntervalCnt++;
+      if ( local->AiIntervalCnt >= op->AiScanInterval)
+	local->AiIntervalCnt = 0;
+    }
+  }
+  else
+    skip_ai = 1;
+
+  if ( local->DiSize && skip_ai)
+    mtype = ard_eMsgType_DiRead;
+  else if ( local->DiSize && !skip_ai)
+    mtype = ard_eMsgType_ReadAll;
+  else if ( !skip_ai)
+    mtype = ard_eMsgType_AiRead;
+  else
+    mtype = ard_eMsgType_No;
+
+  if ( !local->DiPendingPoll)
+    poll( &msg, local, mtype);
+  else
+    mtype = local->PendingMsgType;
+
+  local->DiPendingPoll = 0;  
+
+  if ( mtype == ard_eMsgType_ReadAll ) {
+    // Both Ai and Di
+
+    ard_sMsg rmsg;
     int sts;
     int i, j;
     unsigned char m;
+    pwr_tInt32 ivalue;
+    pwr_tFloat32 actvalue;
 
 
-    if ( !local->DiPendingPoll)
-      poll_di( &msg, local);
+    sts = receive( local->fd, local->DiPollId, &rmsg, local->DiSize + local->AiNum * 2);
+    op->Status = sts;
+    if ( EVEN(sts)) {
+      op->ErrorCount++;
+    }
+    else {
+      // printf( "Read: %u %u  (%d)\n", rmsg.data[0], rmsg.data[1], sts);
 
-#if 0
-    msg.size = 3;
-    msg.id = local->IdCnt++;
-    msg.type = ard_eMsgType_DiRead;
+      for ( i = 0; i < local->DiSize; i++) {
+	for ( j = 0; j < 8; j++) {
+	  m = 1 << j;
+	  if ( local->DiMask[i] & m)
+	    *(pwr_tBoolean *)local->DChanList[i*8+j]->vbp = ((rmsg.data[i] & m) != 0);
+	}
+      }
+    }
 
-    // logg( "Poll Di");
-    sts = write( local->fd, &msg, msg.size);
-#endif
-      
-    local->DiPendingPoll = 0;
+    int ai_cnt = 0;
+    for ( i = 0; i < local->AiSize; i++) {
+      for ( j = 0; j < 8; j++) {
+	m = 1 << j;
+	if ( local->AiMask[i] & m) {
+	  io_sChannel *chanp = local->AiChanList[i*8+j];
+	  pwr_sClass_ChanAi *cop = (pwr_sClass_ChanAi *)chanp->cop;
+	  pwr_sClass_Ai *sop = (pwr_sClass_Ai *)chanp->sop;
+	  
+	  if ( cop->CalculateNewCoef)
+	    // Request to calculate new coefficients
+	    io_AiRangeToCoef( chanp);
+	      
+	  ivalue = rmsg.data[local->DiSize + ai_cnt*2] * 256 + 
+	    rmsg.data[local->DiSize+ai_cnt*2 + 1];
+	  io_ConvertAi( cop, ivalue, &actvalue);
+	  
+	  // Filter
+	  if ( sop->FilterType == 1 &&
+	       sop->FilterAttribute[0] > 0 &&
+	       sop->FilterAttribute[0] > ctx->ScanTime) {
+	    actvalue = *(pwr_tFloat32 *)chanp->vbp + ctx->ScanTime / sop->FilterAttribute[0] *
+	      (actvalue - *(pwr_tFloat32 *)chanp->vbp);
+	  }
+	      
+	  *(pwr_tFloat32 *)chanp->vbp = actvalue;
+	  sop->SigValue = cop->SigValPolyCoef1 * ivalue + cop->SigValPolyCoef0;
+	  sop->RawValue = ivalue;
+	  ai_cnt++;
+	}	    
+      }
+    }
+  }
+  else if ( mtype == ard_eMsgType_DiRead) {
+    // Only Di, no Ai
+
+    ard_sMsg rmsg;
+    int sts;
+    int i, j;
+    unsigned char m;
 
     sts = receive( local->fd, local->DiPollId, &rmsg, local->DiSize);
     op->Status = sts;
@@ -476,30 +566,15 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
       }
     }
   }
-
-  if ( local->AiSize) {
-    int skip_ai = 0;
-
-    if ( op->AiScanInterval > 1) {
-      skip_ai = local->AiIntervalCnt;
-
-      local->AiIntervalCnt++;
-      if ( local->AiIntervalCnt >= op->AiScanInterval)
-	local->AiIntervalCnt = 0;
-    }
+  else if ( mtype == ard_eMsgType_AiRead) {
+    // Only Ai, no Di
 
     if ( !skip_ai) {
-      ard_sMsg msg, rmsg;
+      ard_sMsg rmsg;
       pwr_tInt32 ivalue;
       pwr_tFloat32 actvalue;
 
-      msg.size = 3;
-      msg.id = local->IdCnt++;
-      msg.type = ard_eMsgType_AiRead;
-
-      sts = write( local->fd, &msg, msg.size);
-      
-      sts = receive( local->fd, msg.id, &rmsg, local->AiNum * 2);
+      sts = receive( local->fd, local->DiPollId, &rmsg, local->AiNum * 2);
       if ( EVEN(sts)) {
       }
       else {
@@ -563,13 +638,28 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
   pwr_tUInt32 error_count = op->ErrorCount;
   ard_sMsg msg;
   int sts;
+  int skip_ao;
 
-  if ( local->DoSize) {
+  if ( local->AoSize) {
+    skip_ao = 0;
+
+    if ( op->AoScanInterval > 1) {
+      skip_ao = local->AoIntervalCnt;
+
+      local->AoIntervalCnt++;
+      if ( local->AoIntervalCnt >= op->AoScanInterval)
+	local->AoIntervalCnt = 0;
+    }
+  }
+  else
+    skip_ao = 1;
+
+  if ( local->DoSize && skip_ao) {
 
     memset( &msg, 0, sizeof(msg));
     msg.size = local->DoSize + 3;
     msg.id = local->IdCnt++;
-    msg.type = ard_eMsgType_Write;
+    msg.type = ard_eMsgType_DoWrite;
 
     for ( i = 0; i < local->DoSize; i++) {
       for ( j = 0; j < 8; j++) {
@@ -584,18 +674,8 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
 
     // logg( "Write Do");
     sts = write( local->fd, &msg, msg.size);
-  }
- 
-  if ( local->AoSize) {
-    int skip_ao = 0;
-
-    if ( op->AoScanInterval > 1) {
-      skip_ao = local->AoIntervalCnt;
-
-      local->AoIntervalCnt++;
-      if ( local->AoIntervalCnt >= op->AoScanInterval)
-	local->AoIntervalCnt = 0;
-    }
+  } 
+  else if ( local->AoSize && !local->DoSize) {
 
     if ( !skip_ao) {
       ard_sMsg msg;
@@ -639,7 +719,59 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
       // logg( "Write Ao");
       sts = write( local->fd, &msg, msg.size);
     }
+  }
+  else if ( local->DoSize && !skip_ao) {
+    memset( &msg, 0, sizeof(msg));
+    msg.size = local->DoSize + local->AoNum + 3;
+    msg.id = local->IdCnt++;
+    msg.type = ard_eMsgType_WriteAll;
 
+    for ( i = 0; i < local->DoSize; i++) {
+      for ( j = 0; j < 8; j++) {
+	m = 1 << j;
+	if ( local->DoMask[i] & m) {
+	  if ( *(pwr_tBoolean *)local->DChanList[i*8+j]->vbp)
+	    msg.data[i] |= m;
+	}
+      }
+    }
+
+
+    int value;
+
+    int ao_cnt = 0;
+    for ( i = 0; i < local->AoSize; i++) {
+      for ( j = 0; j < 8; j++) {
+	m = 1 << j;
+	if ( local->AoMask[i] & m) {
+	  io_sChannel *chanp = local->AoChanList[i*8+j];
+	  pwr_sClass_ChanAo *cop = (pwr_sClass_ChanAo *)chanp->cop;
+	  pwr_sClass_Ao *sop = (pwr_sClass_Ao *)chanp->sop;
+	      
+	  if ( cop->CalculateNewCoef)
+	    // Request to calculate new coefficients
+	    io_AoRangeToCoef( chanp);
+	      
+
+	  value = *(pwr_tFloat32 *)chanp->vbp * cop->OutPolyCoef1 + 
+	    cop->OutPolyCoef0 + 0.49;
+	  if ( value < 0)
+	    value = 0;
+	  else if (value > 255)
+	    value = 255;
+
+	  msg.data[local->DoSize + ao_cnt]  = value;
+
+	  sop->SigValue = cop->SigValPolyCoef1 * *(pwr_tFloat32 *)chanp->vbp + 
+	    cop->SigValPolyCoef0;
+	  sop->RawValue = value;
+	  ao_cnt++;
+	}
+      }
+    }
+    // logg( "Write All");
+    sts = write( local->fd, &msg, msg.size);
+ 
   }
  
   if ( op->ErrorCount >= op->ErrorSoftLimit && 
@@ -652,11 +784,30 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
     return IO__ERRDEVICE;
   }    
 
-  if ( local->DiSize && 
-       op->Options & pwr_mArduino_OptionsMask_OptimizedDiPoll) {
+  if ( op->Options & pwr_mArduino_OptionsMask_OptimizedDiPoll) {
     ard_sMsg msg;
+    int skip_ai;
+    ard_eMsgType mtype;
 
-    poll_di( &msg, local);
+    if ( local->AiSize) {
+      skip_ai = 0;
+      
+      if ( op->AiScanInterval > 1)
+	skip_ai = local->AiIntervalCnt;
+    }
+    else
+      skip_ai = 1;
+
+    if ( local->DiSize && skip_ai)
+      mtype = ard_eMsgType_DiRead;
+    else if ( local->DiSize && !skip_ai)
+      mtype = ard_eMsgType_ReadAll;
+    else if ( !skip_ai)
+      mtype = ard_eMsgType_AiRead;
+    else
+      mtype = ard_eMsgType_No;
+
+    poll( &msg, local, mtype);
   }
 
   return IO__SUCCESS;

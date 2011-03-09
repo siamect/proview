@@ -1,9 +1,9 @@
 Package: pwrdemo48
-Version: 4.8.1-1
+Version: 4.8.1-2
 Section: base
 Priority: optional
 Architecture: i386
-Depends: pwr48 (>= 4.8.1-1)
+Depends: pwr48 (>= 4.8.1-2)
 Replaces:
 Maintainer: Proview <postmaster@proview.se>
 Description: Proview Demo Project package

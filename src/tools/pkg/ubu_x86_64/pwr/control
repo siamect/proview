@@ -1,11 +1,27 @@
-Package: pwr47
-Version: 4.7.1-1
+Package: pwr48
+Version: 4.8.1-2
 Section: base
 Priority: optional
 Architecture: amd64
-Depends: libc6 (>= 2.10.1-0ubuntu16), libgtk2.0-0 (>= 2.18.3-1ubuntu2.2), libasound2 (>= 1.0.20-3ubuntu6.1), libdb4.7 (>=4.7.25-7ubuntu2), libdb4.7++ (>=4.7.25-7ubuntu2), libmysqlclient15off (>= 5.1.30really5.0.83-0ubuntu3), g++ (>= 4:4.4.1-1ubuntu2)
-Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46
+Depends: libc6 (>= 2.12.1-0ubuntu6), libgtk2.0-0 (>= 2.22.0-0ubuntu1), libasound2 (>= 1.0.23-1ubuntu2), libdb4.8 (>=4.8.30-1), libdb4.8++ (>=4.8.30-1), libmysql++3 (>= 3.0.9-1ubuntu2), g++ (>= 4:4.4.4-1ubuntu2)
+Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47
 Maintainer: Proview <postmaster@proview.se>
 Description: Proview development and runtime environment package
  Proview development and runtime environment
- 4.7.1-1 Base release 
+ 4.8.0-1 Base release 
+ 4.8.1-1
+   - I/O support for Arduino USB board.
+   - Remote support for Websphere Message Queue.
+   - Operator event logging and replay.
+   - Chinese translation in operator environment.
+ 4.8.1-2
+   - Profinet configurator, ordernumber showed in module enum list. 
+   - Curve window, second mark and export dialog added.
+   - Profibus/Profinet configurator, default module class setting added, and Appl button added.
+   - Configurator fix, Delete, Create and Move object menu items were not insensive in view mode.
+   - Plc link, problem with uppercase nodename for opt-file fixed.
+   - Xtt, problems with OpPlace and XttGraph objects in SharedVolume fixed.
+   - Plc compile, problem with compile of component subwindows fixed.
+   - Wb object editor, Ctrl DoubleClick MB1 didn't work on attribute references.
+   - Flow alloc color problem fixed.
+   - wb locale fix for ubuntu.
