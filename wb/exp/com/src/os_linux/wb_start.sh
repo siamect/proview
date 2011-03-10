@@ -25,12 +25,11 @@ username=$1
 password=$2
 volume=$3
 
-if [ "`eval grep Ubuntu /etc/*-release 2>/dev/null`" != "" ]; then
+if [ "`eval locale -a | grep -i "^en_US.UTF-8$"`" != "" ]; then
   export LC_TIME="en_US.UTF-8"
-elif [ -e /etc/debian_version ]; then
+elif [ "`eval locale -a | grep -i "^en_US$"`" != "" ]; then
   export LC_TIME="en_US"
 fi
-
 export LC_NUMERIC="POSIX"
 
 wb $username $password $volume $4 $5 $6 $7

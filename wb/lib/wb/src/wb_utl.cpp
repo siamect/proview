@@ -6296,6 +6296,16 @@ static int utl_set_parameter (
 	      sprintf( logstrptr + strlen(logstr), "%s", valuestr);
 	      break;
 	    }
+	    case pwr_eType_DeltaTime:
+	    {
+	      sts = time_AsciiToD( valuestr, (pwr_tDeltaTime *)object_element);
+	      if ( EVEN(sts)) {
+	        printf("DeltaTime format syntax error\n");
+	        return FOE__SUCCESS;
+	      }
+	      sprintf( logstrptr + strlen(logstr), "%s", valuestr);
+	      break;
+	    }
 	    case pwr_eType_ObjDId:
 	    {
 	      pwr_tOName  	objdid_name;
