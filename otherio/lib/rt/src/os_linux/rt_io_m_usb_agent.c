@@ -48,7 +48,7 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
       op->Status = IO__DUMMYBUILD;
     else
       op->Status = IO__INITFAIL;
-      errh_Error( "Init of USB agent failed '%s', error status %d", ap->Name, sts);
+    errh_Error( "Init of USB agent failed '%s', error status %d", ap->Name, sts);
 
     local->libusb_ctx = 0;
     return op->Status;

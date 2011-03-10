@@ -12,4 +12,6 @@ GPIO_Module
 Maxim_DS18B20
 USB_Agent
 Velleman_K8055_Board
+Hilscher_cifX_Master
+Hilscher_cifX_Module
 #endif

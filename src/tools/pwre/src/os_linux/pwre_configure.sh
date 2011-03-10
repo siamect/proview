@@ -116,7 +116,7 @@ pwre_config_check_lib()
           elif test $4 == "wmq"; then
 	    conf_libwmq=$conf_libwmq" -l${lib%.*}"
           else
-	    conf_lib=$conf_lib" -l${lib%.*}"
+	    conf_lib=$conf_lib" -l${lib%%.*}"
           fi
 	elif test $3 == "gtk"; then
 	  conf_libgtk=$conf_libgtk" \\\`pkg-config --libs gtk+-2.0\\\`"
@@ -318,6 +318,7 @@ else
   pwre_config_check_lib wmq       WMQ      lib wmq 1 /usr/lib/libmqic.so
   pwre_config_check_lib libpnioif PNAK     lib lib 1 /usr/lib/libpnioif.a:/usr/local/lib/libpnioif.a
   pwre_config_check_lib libusb    LIBUSB   lib lib 1 /usr/lib/libusb-1.0.so
+  pwre_config_check_lib libcifx   LIBCIFX  lib lib 1 /usr/lib/libcifx.so.1
   pwre_config_check_lib librt     LIBRT    lib lib 0 /usr/lib/librt.so:/usr/lib/librt.a
   pwre_config_check_lib libfl     LIBFL    lib lib 0 /usr/lib/libfl.so:/usr/lib/libfl.a
   pwre_config_check_lib libX11    LIBX11   lib lib 0 /usr/lib/libX11.so
@@ -329,6 +330,7 @@ else
   pwre_config_check_include jni   JNI   1 $jdk/include/jni.h
   pwre_config_check_include jni   JNI   0 $jdk/include/linux/jni_md.h
   pwre_config_check_include wmq   WMQ   1 /opt/mqm/inc/cmqc.h
+  pwre_config_check_include cifx  CIFX  1 /usr/local/include/cifx/cifxlinux.h
 
 
   export pwre_conf_alsa=1

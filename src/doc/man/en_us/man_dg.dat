@@ -178,7 +178,7 @@ a realtime database, rtdb. The transfer from the Workbench to rtdb is done with 
 loadfiles, files that are generated from the Workbench and contains all its objects.
 
 <h1>Control program
-Proview offers a graphical programming language in witch logic, Grafcet sequences and control
+Proview offers a graphical programming language in which logic, Grafcet sequences and control
 loops is programmed. It is named the PLC program. Also the PLC program is a part of the object
 tree. It is configured by placing specific program objects, PlcPgm, in the Plant hierarchy. 
 When opening a PlcPgm you enter the Plc Editor, in which the graphical programming is preformed.
@@ -7393,7 +7393,7 @@ IndError in the main object, and color the symbol yellow or red, or flashing red
 are set.
 
 <image> ced_fig20.gif
-<b>The grahic symbol is drawn in Ge witch HostObject default dynamic.
+<b>The grahic symbol is drawn in Ge with HostObject default dynamic.
 
 
 

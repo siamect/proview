@@ -101,7 +101,7 @@ static pwr_tStatus IoCardRead (
   }
 
   if (slave->Status == MB__NORMAL) { 
-    io_card_read(ctx, rp, cp, local->input_area, NULL,  pwr_eByteOrderingEnum_BigEndian, pwr_eFloatRepEnum_FloatIntel);  
+    io_bus_card_read(ctx, rp, cp, local->input_area, NULL,  pwr_eByteOrderingEnum_BigEndian, pwr_eFloatRepEnum_FloatIntel);  
   }
 //  printf("Method Modbus_Module-IoCardRead\n");
   return IO__SUCCESS;
@@ -142,7 +142,7 @@ static pwr_tStatus IoCardWrite (
   }
 
   if (slave->Status == MB__NORMAL) { 
-    io_card_write(ctx, cp, local->output_area, pwr_eByteOrderingEnum_BigEndian, pwr_eFloatRepEnum_FloatIntel);
+    io_bus_card_write(ctx, cp, local->output_area, pwr_eByteOrderingEnum_BigEndian, pwr_eFloatRepEnum_FloatIntel);
   }
 //  printf("Method Modbus_Module-IoCardWrite\n");
   return IO__SUCCESS;

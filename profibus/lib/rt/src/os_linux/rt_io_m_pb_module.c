@@ -87,8 +87,8 @@ static pwr_tStatus IoCardRead (
   /* on all inputs. Default StallAction is ResetInputs which means that */
   /* all inputs will be zeroed */
 
-  io_card_read(ctx, rp, cp, local->input_area, slave->Diag, slave->ByteOrdering,
-                 slave->FloatRepresentation);  
+  io_bus_card_read(ctx, rp, cp, local->input_area, slave->Diag, slave->ByteOrdering,
+		   slave->FloatRepresentation);  
 
 //  printf("Method Pb_Module-IoCardRead\n");
   return IO__SUCCESS;
@@ -116,8 +116,8 @@ static pwr_tStatus IoCardWrite (
   op->Status = slave->Status;  
 
   if (op->Status == PB__NORMAL) { 
-    io_card_write(ctx, cp, local->output_area, slave->ByteOrdering,
-                 slave->FloatRepresentation);  
+    io_bus_card_write(ctx, cp, local->output_area, slave->ByteOrdering,
+		      slave->FloatRepresentation);  
   }
 //  printf("Method Pb_Module-IoCardWrite\n");
   return IO__SUCCESS;
