@@ -1827,6 +1827,9 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   gtk_container_add( GTK_CONTAINER(widgets.tools_build), 
 	  gtk_image_new_from_stock( "gtk-execute", GTK_ICON_SIZE_SMALL_TOOLBAR));
   g_signal_connect(widgets.tools_build, "clicked", G_CALLBACK(WFoeGtk::activate_compile), this);
+  gtk_widget_add_accelerator( widgets.tools_build, "activate", accel_g,
+			      'b', GdkModifierType( GDK_CONTROL_MASK | GDK_SHIFT_MASK),
+			      GTK_ACCEL_VISIBLE);
   g_object_set( widgets.tools_build, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, widgets.tools_build, "Build Program", "");
 
