@@ -62,7 +62,21 @@ static void get_diag( pwr_sClass_Hilscher_cifX_Diag *diag, CIFXHANDLE chan)
     if ( sts == CIFX_NO_ERROR) {
       diag->SystemStatus = statusblock.ulSystemStatus;
       diag->SystemError = statusblock.ulSystemError;
+      diag->TimeSinceStart.tv_sec = statusblock.ulTimeSinceStart;
+      diag->CpuLoad = (float) statusblock.usCpuLoad / 100.0;
     }          
+  }
+
+  NETX_COMMON_STATUS_BLOCK csb = {0};
+
+  sts = xChannelCommonStatusBlock( chan, CIFX_CMD_READ_DATA, 0, sizeof(csb), &csb);
+  if ( sts == CIFX_NO_ERROR) {
+    diag->CommState = csb.ulCommunicationState;
+    diag->CommError = csb.ulCommunicationError;
+    diag->ErrorCount = csb.ulErrorCount;
+    diag->ConfigSlaves = csb.uStackDepended.tMasterStatusBlock.ulNumOfConfigSlaves;
+    diag->ActiveSlaves = csb.uStackDepended.tMasterStatusBlock.ulNumOfActiveSlaves;
+    diag->SlaveState = csb.uStackDepended.tMasterStatusBlock.ulSlaveState;
   }
 
   sts = xChannelHostState( chan, CIFX_HOST_STATE_READ, &state, 0);
@@ -134,8 +148,8 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
   op->Diag.SystemError = boardinfo.ulSystemError;
 
   local->channel = 0;
-  // CHANNEL_INFORMATION channelinfo = {{0}};
-    
+
+
   local->chan = NULL;
 
   sts = xChannelOpen( NULL, CIFX_DEV, local->channel, &local->chan);
@@ -145,6 +159,17 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
     return IO__INITFAIL;
   }
   
+  CHANNEL_INFORMATION channelinfo = {{0}};
+  sts = xDriverEnumChannels( driver, board, local->channel, sizeof(channelinfo), &channelinfo);
+  if ( sts == CIFX_NO_ERROR) {
+    strncpy( op->Diag.FirmwareName, (char *)channelinfo.abFWName, sizeof(op->Diag.FirmwareName)); 
+    snprintf( op->Diag.FirmwareVersion, sizeof(op->Diag.FirmwareVersion), 
+	      "%u.%u.%u-%u (%4u-%02hu-%02hu)", channelinfo.usFWMajor, channelinfo.usFWMinor,
+	      channelinfo.usFWBuild, channelinfo.usFWRevision, channelinfo.usFWYear,
+	      channelinfo.bFWMonth, channelinfo.bFWDay);
+  }
+
+
   // Init the I/O area
   unsigned int input_area_offset = 0;
   unsigned int input_area_chansize = 0;
