@@ -41,7 +41,7 @@ SObject pwrb:Class
         Attr StructName = "Min"
       EndBody
       !/**
-      !  Integer input.
+      !  Analog input.
       !*/
       Object In1 $Input 1 
         Body SysBody
@@ -51,7 +51,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Integer input.
+      !  Analog input.
       !*/
       Object In2 $Input 2 
         Body SysBody
@@ -61,7 +61,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Integer input.
+      !  Analog input.
       !*/
       Object In3 $Input 3 
         Body SysBody
@@ -71,7 +71,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Integer input.
+      !  Analog input.
       !*/
       Object In4 $Input 4 
         Body SysBody
@@ -81,7 +81,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Integer input.
+      !  Analog input.
       !*/
       Object In5 $Input 5 
         Body SysBody
@@ -91,7 +91,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Integer input.
+      !  Analog input.
       !*/
       Object In6 $Input 6 
         Body SysBody
@@ -101,7 +101,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Integer input.
+      !  Analog input.
       !*/
       Object In7 $Input 7 
         Body SysBody
@@ -111,7 +111,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Integer input.
+      !  Analog input.
       !*/
       Object In8 $Input 8 
         Body SysBody

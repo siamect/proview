@@ -2541,7 +2541,8 @@ pwr_tStatus io_init (
       {
         if ( rp->Process & process)
         {
-          if ( rp->Init != NULL)
+          if ( rp->Init != NULL && 
+	       !rp->MethodDisabled)
           {
             sts = (rp->Init) ( *ctx, ap, rp);
             if ( EVEN(sts)) return sts;
@@ -2551,7 +2552,8 @@ pwr_tStatus io_init (
           }
           for ( cp = rp->cardlist; cp != NULL; cp = cp->next)
           {
-            if ( cp->Init != NULL)
+            if ( cp->Init != NULL  && 
+		 !cp->MethodDisabled)
             {
               sts = (cp->Init) ( *ctx, ap, rp, cp);
               if ( EVEN(sts)) return sts;
@@ -2670,7 +2672,8 @@ pwr_tStatus io_read(
     for ( rp = ap->racklist; rp != NULL; rp = rp->next)
     {
       if ( rp->Process & ctx->Process &&
-           rp->Action & io_mAction_Read)
+           rp->Action & io_mAction_Read && 
+	   !rp->MethodDisabled)
       {
         if ( rp->scan_interval_cnt <= 1)
         {
@@ -2684,7 +2687,8 @@ pwr_tStatus io_read(
 
       for ( cp = rp->cardlist; cp != NULL; cp = cp->next)
       {
-        if ( cp->Action & io_mAction_Read)
+        if ( cp->Action & io_mAction_Read && 
+	     !cp->MethodDisabled)
         {
           if ( cp->scan_interval_cnt <= 1)
           {
@@ -2728,7 +2732,7 @@ pwr_tStatus io_write(
     {
       for ( cp = rp->cardlist; cp != NULL; cp = cp->next)
       {
-        if ( cp->Action & io_mAction_Write)
+        if ( cp->Action & io_mAction_Write && !cp->MethodDisabled)
         {
           if ( cp->scan_interval_cnt <= 1)
           {
@@ -2741,7 +2745,8 @@ pwr_tStatus io_write(
         }
       }
       if ( rp->Process & ctx->Process &&
-           rp->Action & io_mAction_Write)
+           rp->Action & io_mAction_Write && 
+	   !rp->MethodDisabled)
       {
         if ( rp->scan_interval_cnt <= 1)
         {
@@ -2803,7 +2808,8 @@ pwr_tStatus io_swap(
 
     for ( rp = ap->racklist; rp != NULL; rp = rp->next)
     {
-      if (rp->Action & io_mAction_Swap)
+      if (rp->Action & io_mAction_Swap &&
+	  !rp->MethodDisabled)
       {
         if ( rp->scan_interval_cnt <= 1)
         {
@@ -2817,7 +2823,8 @@ pwr_tStatus io_swap(
 
       for ( cp = rp->cardlist; cp != NULL; cp = cp->next)
       {
-        if (cp->Action & io_mAction_Swap)
+        if (cp->Action & io_mAction_Swap &&
+	    !cp->MethodDisabled)
         {
           if ( cp->scan_interval_cnt <= 1)
           {

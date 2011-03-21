@@ -65,23 +65,27 @@ unsigned short swap16(unsigned short in);
 
 unsigned int swap32(unsigned int in);
 
-void io_card_read( 
-  io_tCtx	         ctx,
-  io_sRack	         *rp, 
-  io_sCard	         *cp, 
-  void                   *input_area, 
-  void                   *diag_area,
-  pwr_tByteOrderingEnum  byte_order,
-  pwr_tFloatRepEnum      float_rep
-);
+pwr_tStatus io_bus_card_init( io_tCtx ctx,
+			      io_sCard *cp, 
+			      unsigned int *input_area_offset, 
+			      unsigned int *input_area_chansize, 
+			      unsigned int *output_area_offset, 
+			      unsigned int *output_area_chansize, 
+			      pwr_tByteOrderingEnum byte_order);
 
-void io_card_write( 
-  io_tCtx	         ctx,
-  io_sCard	         *cp, 
-  void                   *output_area, 
-  pwr_tByteOrderingEnum  byte_order,
-  pwr_tFloatRepEnum      float_rep
-);
+void io_bus_card_read( io_tCtx ctx,
+		       io_sRack *rp, 
+		       io_sCard *cp, 
+		       void *input_area, 
+		       void *diag_area,
+		       pwr_tByteOrderingEnum byte_order,
+		       pwr_tFloatRepEnum float_rep);
+
+void io_bus_card_write( io_tCtx ctx,
+			io_sCard *cp, 
+			void *output_area, 
+			pwr_tByteOrderingEnum byte_order,
+			pwr_tFloatRepEnum float_rep);
 
 #ifdef __cplusplus
 }

@@ -98,7 +98,7 @@ static pwr_tStatus IoCardRead (
   if (server->Status == MB__NORMAL) { 
     thread_MutexLock( &local_server->mutex);
 
-    io_card_read(ctx, rp, cp, local->input_area, NULL,  pwr_eByteOrderingEnum_BigEndian, pwr_eFloatRepEnum_FloatIntel);  
+    io_bus_card_read(ctx, rp, cp, local->input_area, NULL,  pwr_eByteOrderingEnum_BigEndian, pwr_eFloatRepEnum_FloatIntel);  
 
     thread_MutexUnlock( &local_server->mutex);
   }
@@ -133,7 +133,7 @@ static pwr_tStatus IoCardWrite (
   if (server->Status == MB__NORMAL) { 
     thread_MutexLock( &local_server->mutex);
 
-    io_card_write(ctx, cp, local->output_area, pwr_eByteOrderingEnum_BigEndian, pwr_eFloatRepEnum_FloatIntel);
+    io_bus_card_write(ctx, cp, local->output_area, pwr_eByteOrderingEnum_BigEndian, pwr_eFloatRepEnum_FloatIntel);
 
     thread_MutexUnlock( &local_server->mutex);
   }
