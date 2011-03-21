@@ -64,7 +64,7 @@ BEGIN {
       printf( "%s\n", $0);
     }
   } 
-  if ( innumaggr) {
+  else if ( innumaggr) {
     if ( $1 == "Body" && $2 == "RtBody") {
       inbodyaggr = 1;
     }
