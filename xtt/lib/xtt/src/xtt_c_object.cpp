@@ -361,8 +361,24 @@ static pwr_tStatus OpenTrendFilter( xmenu_sMenuCall *ip)
   sts = gdh_GetAttrRefTid( objar, &cid);
   if ( EVEN(sts)) return sts;
 
-  if ( cid == pwr_cClass_DsTrend || cid == pwr_cClass_PlotGroup) {
+  switch ( cid) {
+  case pwr_cClass_DsTrend:
     return XNAV__SUCCESS;
+  case pwr_cClass_PlotGroup: {
+    sts = gdh_AttrrefToName( objar, name, sizeof(name),
+			     cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return sts;
+
+    strcat( name, ".YObjectName[0]");
+    sts = gdh_GetObjectInfo( name, (void *)&deftrend, sizeof(deftrend));
+    if ( ODD(sts) && cdh_ObjidIsNotNull( deftrend.Objid)) {
+      // Default XttGraph found
+      sts = gdh_GetAttrRefTid( &deftrend, &classid);
+      if ( ODD(sts) && classid == pwr_cClass_DsTrend)
+	return XNAV__SUCCESS;
+    }
+    return XNAV__INVISIBLE;
+  }
   }
 
   // Check if attribute DefTrend exist

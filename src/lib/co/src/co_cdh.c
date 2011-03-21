@@ -309,10 +309,14 @@ cdh_ArefIsEqual (
   pwr_sAttrRef *arp2
 )
 {
-  return ( arp1->Objid.vid == arp2->Objid.vid &&
-	   arp1->Objid.oix == arp2->Objid.oix &&
-	   arp1->Offset == arp2->Offset &&
-	   (arp1->Size == 0 || arp2->Size == 0 || arp1->Size == arp2->Size));
+  if ( arp1->Flags.b.Object && arp2->Flags.b.Object)
+    return ( arp1->Objid.vid == arp2->Objid.vid &&
+	     arp1->Objid.oix == arp2->Objid.oix);
+  else  
+    return ( arp1->Objid.vid == arp2->Objid.vid &&
+	     arp1->Objid.oix == arp2->Objid.oix &&
+	     arp1->Offset == arp2->Offset &&
+	     (arp1->Size == 0 || arp2->Size == 0 || arp1->Size == arp2->Size));
 }
 
 

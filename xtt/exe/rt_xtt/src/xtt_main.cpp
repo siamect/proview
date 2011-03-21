@@ -349,15 +349,62 @@ void Xtt::activate_opengraph()
   if ( EVEN(sts)) return;
 
   if ( cdh_tidIsCid( classid)) {
-    if ( classid == pwr_cClass_DsTrend || classid == pwr_cClass_PlotGroup) {
+    switch ( classid) {
+    case pwr_cClass_DsTrend:
       // Open trend
       sprintf( cmd, "open trend /name=%s /title=\"%s\"", vname, name);
       xnav->command( cmd);
+      return;
+    case pwr_cClass_DsFast:
+      // Open fast
+      sprintf( cmd, "open fast /name=%s /title=\"%s\"", vname, name);
+      xnav->command( cmd);
+      return;
+    case pwr_cClass_SevHist:
+    case pwr_cClass_SevHistObject:
+      // Open history
+      sprintf( cmd, "open history /name=%s /title=\"%s\"", vname, name);
+      xnav->command( cmd);
+      return;
+    case pwr_cClass_PlotGroup: {
+      pwr_tAName aname;
+      pwr_tAttrRef yo;
 
+      strcpy( aname, vname);
+      strcat( aname, ".YObjectName[0]");
+
+      sts = gdh_GetObjectInfo( aname, (void *)&yo, sizeof(yo));
+      if ( ODD(sts) && cdh_ObjidIsNotNull( yo.Objid)) {
+	sts = gdh_GetAttrRefTid( &yo, &classid);
+	if ( EVEN(sts)) return;
+
+	switch ( classid) {
+	case pwr_cClass_DsTrend:
+	  // Open trend
+	  sprintf( cmd, "open trend /name=%s /title=\"%s\"", vname, name);
+	  xnav->command( cmd);
+	  return;
+	case pwr_cClass_DsFast:
+	  // Open fast
+	  sprintf( cmd, "open fast /name=%s /title=\"%s\"", vname, name);
+	  xnav->command( cmd);
+	  return;
+	case pwr_cClass_SevHist:
+	case pwr_cClass_SevHistObject:
+	  // Open history
+	  sprintf( cmd, "open history /name=%s /title=\"%s\"", vname, name);
+	  xnav->command( cmd);
+	  return;
+	}	  
+	return;
+      }
       return;
     }
-    sprintf( cmd, "open graph /class/inst=%s/name=\"%s\"", vname, name);
-    xnav->command( cmd);
+    default:
+      sprintf( cmd, "open graph /class/inst=%s/name=\"%s\"", vname, name);
+      xnav->command( cmd);
+      return;
+    }
   }
   else {
     switch( classid) {
