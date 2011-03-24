@@ -30,6 +30,7 @@ noitems		<No items found>					/error
 unknownnode     <Unknown server nodename>				/error
 init		<Initialization done>					/info
 exportfile	<Unable to open export file>				/error
+repair_failed	<Repair failed>						/error
 .end
 
 

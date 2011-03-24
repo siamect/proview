@@ -3294,6 +3294,104 @@ int sev_dbms::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned in
   return 1;
 }
 
+int sev_dbms::repair_table( pwr_tStatus *sts, char *tablename)
+{  
+  char query[200];
+  int rc;
+  int repair_table;
+  int repair_failed;
+
+  // Check table
+  printf( "-- Checking table %s...\n", tablename);
+
+  sprintf( query, "check table %s", tablename);
+  rc = mysql_query( m_env->con(), query);
+  if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
+    *sts = SEV__DBERROR;
+    return 0;
+  }
+  else {
+    MYSQL_ROW row;
+    MYSQL_RES *result = mysql_store_result( m_env->con());
+
+    if ( !result) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
+      printf( "%s Status Result Error\n", __FUNCTION__);
+      *sts = SEV__DBERROR;
+      return 0;
+    }
+    
+    int rows = mysql_num_rows( result);
+
+    for ( int i = 0; i < rows; i++) {
+      row = mysql_fetch_row( result);
+      if (!row) break;
+
+      printf( "-- Check result '%s %s %s %s'\n", row[0], row[1], row[2], row[3]);
+    }
+    if ( cdh_NoCaseStrcmp( row[3], "ok") == 0)
+      repair_table = 0;
+    else
+      repair_table = 1;
+
+    mysql_free_result( result);
+  }
+
+  if ( !repair_table) {
+    *sts = SEV__SUCCESS;
+    return *sts;
+  }
+
+  // Repair table
+  printf( "-- Repairing %s...\n", tablename);
+
+  sprintf( query, "repair table %s", tablename);
+  rc = mysql_query( m_env->con(), query);
+  if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
+    *sts = SEV__DBERROR;
+    return 0;
+  }
+  else {
+    MYSQL_ROW row;
+    MYSQL_RES *result = mysql_store_result( m_env->con());
+
+    if ( !result) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
+      printf( "%s Status Result Error\n", __FUNCTION__);
+      *sts = SEV__DBERROR;
+      return 0;
+    }
+    
+    int rows = mysql_num_rows( result);
+
+    for ( int i = 0; i < rows; i++) {
+      row = mysql_fetch_row( result);
+      if (!row) break;
+
+      printf( "-- Repair result '%s %s %s %s'\n", row[0], row[1], row[2], row[3]);
+    }
+    if ( cdh_NoCaseStrcmp( row[3], "ok") != 0) {
+      printf( "** Error, repair failure %s\n", row[0]);
+      repair_failed = 1;
+    }
+    else
+      repair_failed = 0;
+
+    mysql_free_result( result);
+  }
+
+
+  if ( repair_failed)
+    *sts = SEV__REPAIR_FAILED;
+  else
+    *sts = SEV__SUCCESS;
+
+  return ODD(*sts);
+}
 
 
 sev_dbms::~sev_dbms()

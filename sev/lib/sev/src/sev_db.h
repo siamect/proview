@@ -116,7 +116,7 @@ class sev_db {
                                 unsigned int size, pwr_tTime *starttime, pwr_tTime *endtime, 
                                 int maxsize, pwr_tTime **tbuf, void **vbuf, unsigned int *bsize) { return 0;}
   virtual int handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned int item_idx, bool newObject) { return 0;}
-
+  virtual int repair_table( pwr_tStatus *sts, char *tablename) { return 0;}
 
 };
 #endif
