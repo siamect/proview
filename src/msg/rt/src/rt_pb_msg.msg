@@ -49,6 +49,7 @@ createchan	<Unable to create channel>				/error
 gsdmlfilemismatch <Gsdmlfile doesn't match original filename>		/error
 moduleclass	<No module class selected>				/error
 moduletype	<No module type selected>				/error
+configaborted   <Configuration aborted>					/error
 .end
 
 

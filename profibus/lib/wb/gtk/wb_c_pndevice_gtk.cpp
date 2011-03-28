@@ -82,7 +82,11 @@ static pwr_tStatus Configure (
   if ( EVEN(sts)) return sts;
 
   ctx->attr = new GsdmlAttrGtk( CoXHelpGtk::get_widget(), ctx, 0, ctx->gsdml, 
-				ctx->edit_mode, datafile);
+				ctx->edit_mode, datafile, &sts);
+  if ( sts == PB__CONFIGABORTED) {
+    delete ctx->attr;
+    return 1;
+  }
   ctx->attr->close_cb = pndevice_close_cb;
   ctx->attr->save_cb = pndevice_save_cb;
   ctx->attr->help_cb = pndevice_help_cb;

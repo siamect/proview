@@ -1680,9 +1680,28 @@ int GsdmlAttrNav::open( const char *filename)
   strncpy( dev_data.gsdmlfile, gsdml->gsdmlfile, sizeof(dev_data.gsdmlfile));
 
   sts = dev_data.read( filename);
-  if ( sts == PB__GSDMLFILEMISMATCH)
+  if ( sts == PB__GSDMLFILEMISMATCH) {
+    char msg[300];
     printf( "GSDML-Error, Gsdmlfile doesn't match original filename\n");
-  if ( EVEN(sts)) return sts;
+
+    sprintf( msg, "Gsdmlfile doesn't match original filename.\n\nIf the new file is not compatible with the old, configuration data might be corrupt,\nand you should clear the data. The configuration will then be lost.\n\nIf the files are compatible, you should keep the data.");
+    int res = wow->CreateModalDialog( "New gsdml filename detected", msg, "Clear Data", 
+				      "Keep Data", "Cancel", 0);
+    switch( res) {
+    case wow_eModalDialogReturn_Button1:
+      return sts;
+    case wow_eModalDialogReturn_Button2:
+      // Keep data
+      sts = dev_data.read( filename, 1);      
+      if ( EVEN(sts)) return sts;
+      break;
+    case wow_eModalDialogReturn_Deleted:
+    case wow_eModalDialogReturn_Button3:
+    case wow_eModalDialogReturn_NYI:
+      return PB__CONFIGABORTED;
+    }	      
+  }
+  else if ( EVEN(sts)) return sts;
 
   device_num = dev_data.device_num;
   gsdml->byte_order = dev_data.byte_order;

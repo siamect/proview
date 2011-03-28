@@ -315,7 +315,8 @@ GsdmlAttrGtk::GsdmlAttrGtk( GtkWidget *a_parent_wid,
 			    void *a_object,
 			    pn_gsdml *a_gsdml,
 			    int a_edit_mode,
-			    const char *a_data_filename) :
+			    const char *a_data_filename,
+			    pwr_tStatus *a_sts) :
   GsdmlAttr( a_parent_ctx, a_object, a_gsdml, a_edit_mode, a_data_filename)
 {
   int sts;
@@ -506,6 +507,6 @@ GsdmlAttrGtk::GsdmlAttrGtk( GtkWidget *a_parent_wid,
 
   wow = new CoWowGtk( toplevel);
 
-  attrnav->open( data_filename);
+  *a_sts = attrnav->open( data_filename);
 }
 

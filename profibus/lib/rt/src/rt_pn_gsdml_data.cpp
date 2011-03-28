@@ -168,12 +168,13 @@ int GsdmlDeviceData::print( const char *filename)
   return PB__SUCCESS;
 }
 
-int GsdmlDeviceData::read( const char *filename)
+int GsdmlDeviceData::read( const char *filename, int new_filename)
 {
   int sts;
   GsdmlDataReader *reader = new GsdmlDataReader( this);
   co_xml_parser *xml_parser = new co_xml_parser( reader);
 
+  reader->new_filename = new_filename;
   sts = xml_parser->read( filename);
   delete xml_parser;
   delete reader;
@@ -394,7 +395,7 @@ int GsdmlDataReader::tag_attribute( const char *name, const char *value)
 	else
 	  gsdmlfile_p = data->gsdmlfile;
 	
-	if ( strcmp( value, gsdmlfile_p) != 0)
+	if ( strcmp( value, gsdmlfile_p) != 0 && !new_filename)
 	  return PB__GSDMLFILEMISMATCH;
       }
     }
