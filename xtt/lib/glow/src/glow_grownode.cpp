@@ -908,8 +908,8 @@ void GrowNode::set_rotation( double angel,
       y0 = (y_high + y_low) / 2;
       break;
     case glow_eRotationPoint_Zero:
-      x0 = trf.a13;
-      y0 = trf.a23;
+      x0 = trf.s_a13;
+      y0 = trf.s_a23;
       break;
     default:
       ;
