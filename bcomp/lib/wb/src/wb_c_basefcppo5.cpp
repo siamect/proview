@@ -40,7 +40,7 @@ static pwr_tStatus SyntaxCheck( ldh_tSesContext Session,
   pwr_tStatus sts;
   pwr_tCid plcconnect_class[] = { pwr_cClass_BaseFcPPO5Fo, 0};
   pwr_tCid simconnect_class[] = { pwr_cClass_BaseFcPPO5Sim, 0};
-  pwr_tCid ioconnect_class[] = { pwr_cClass_BaseFcPPO5PbModule, 0}; // TODO Change io IoArea object
+  pwr_tCid ioconnect_class[] = { pwr_cClass_BaseFcPPO5IoModule, 0};
 
   if ( Object.Offset == 0) {
     sts = wsx_CheckXAttrRef( Session, Object, "PlcConnect", "PlcConnect", plcconnect_class, 
