@@ -1196,6 +1196,28 @@ extern "C" {
 	glow_eDrawType draw_type, int line_width, int text_size,
         glow_eDrawType text_drawtype, void *user_data,
 	grow_tObject *axis);
+  //! Create an image object, i.e an object of class GrowImage.
+  /*!
+    \param ctx		Grow context.
+    \param name		Object name (max 31 char).
+    \param x1		x coordinate for first corner.
+    \param y1		y coordinate for first corner.
+    \param x2		x coordinate for second corner.
+    \param y2		y coordinate for second corner.
+    \param ang1      	Start angle of the arc in degrees from the x axis.
+    \param ang2      	Lengh of the arc in degrees from the start angle.
+    \param draw_type 	Border color.
+    \param line_width	Linewidth of border.
+    \param text_size	Text size.
+    \param text_drawtype Drawtype for text.
+    \param user_data	User data.
+    \param axis   	Created GrowImage object.
+  */
+  void grow_CreateGrowAxisArc( grow_tCtx ctx, const char *name, 
+	double x1, double y1, double x2, double y2, int ang1, int ang2,
+	glow_eDrawType draw_type, int line_width, int text_size,
+        glow_eDrawType text_drawtype, void *user_data,
+	grow_tObject *axis);
 
   //! Create a connection glue object, i.e. an object of class GrowConGlue.
   /*!

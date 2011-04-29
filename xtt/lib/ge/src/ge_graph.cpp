@@ -1624,6 +1624,23 @@ int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
 		&grow_info_cnt);
     *item_cnt = 0;
   }
+  else if ( grow_GetObjectType( object) == glow_eObjectType_GrowAxisArc)
+  {
+    char transtab[][32] = {             
+                                        "Angle1",	        "Angle1",
+                                        "Angle2",	        "Angle2",
+                                        "LineLength",	        "LineLength",
+                                        "MaxValue",	        "MaxValue",
+                                        "MinValue",	        "MinValue",
+                                        "Lines",	        "Lines",
+					"LongQuotient",	        "LongQuotient",
+					"ValueQuotient",	"ValueQuotient",
+					"Dynamic",		"Dynamic",
+					""};
+    grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
+		&grow_info_cnt);
+    *item_cnt = 0;
+  }
   else if ( grow_GetObjectType( object) == glow_eObjectType_GrowSlider)
   {
     char transtab[][32] = {	 	"SubGraph",		"SubGraph",
@@ -2450,6 +2467,10 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	else if ( strcmp( sub_name, "pwr_axis") == 0) {
 	  grow_tObject t1;
 	  graph->create_axis( &t1, event->create_grow_object.x, event->create_grow_object.y);
+	}
+	else if ( strcmp( sub_name, "pwr_axisarc") == 0) {
+	  grow_tObject t1;
+	  graph->create_axisarc( &t1, event->create_grow_object.x, event->create_grow_object.y);
 	}
 	else if ( strcmp( sub_name, "pwr_conglue") == 0) {
 	  grow_tObject t1;
@@ -4732,6 +4753,27 @@ void Graph::create_axis( grow_tObject *object, double x, double y)
 		       x, y, x + width, y + height,
 		       glow_eDrawType_Line, 1, 1,
 		       glow_eDrawType_TextHelvetica, NULL, object);
+
+  info.max_value = 100;
+  info.min_value = 0;
+  info.lines = 11;
+  info.longquotient = 2;
+  info.valuequotient = 2;
+  strcpy( info.format, "%3.0f");
+  grow_SetAxisInfo( *object, &info);
+  grow_Redraw( grow->ctx);
+}
+
+void Graph::create_axisarc( grow_tObject *object, double x, double y)
+{
+  double width = 5;
+  double height = 5;
+  glow_sAxisInfo info;
+
+  grow_CreateGrowAxisArc( grow->ctx, "", 
+			  x, y, x + width, y + height, 0, 180, 
+			  glow_eDrawType_Line, 1, 1,
+			  glow_eDrawType_TextHelvetica, NULL, object);
 
   info.max_value = 100;
   info.min_value = 0;

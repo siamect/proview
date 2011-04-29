@@ -57,6 +57,7 @@
 #include "glow_growimage.h"
 #include "glow_growgroup.h"
 #include "glow_growaxis.h"
+#include "glow_growaxisarc.h"
 #include "glow_growconglue.h"
 #include "glow_growwindow.h"
 #include "glow_growfolder.h"
@@ -217,6 +218,14 @@ void GlowArray::copy_from( const GlowArray& array)
       case glow_eObjectType_GrowAxis:
       {
         GrowAxis *n = new GrowAxis(*(GrowAxis *)array.a[i]);
+        n->highlight = 0;
+        n->hot = 0;
+        insert( n);
+        break;
+      }
+      case glow_eObjectType_GrowAxisArc:
+      {
+        GrowAxisArc *n = new GrowAxisArc(*(GrowAxisArc *)array.a[i]);
         n->highlight = 0;
         n->hot = 0;
         insert( n);
@@ -996,6 +1005,13 @@ void GlowArray::open( GrowCtx *ctx, ifstream& fp)
       case glow_eSave_GrowAxis:
       {
         GrowAxis *r = new GrowAxis( ctx, "");
+	r->open( fp);
+        insert( r);
+        break;
+      }
+      case glow_eSave_GrowAxisArc:
+      {
+        GrowAxisArc *r = new GrowAxisArc( ctx, "");
 	r->open( fp);
         insert( r);
         break;
