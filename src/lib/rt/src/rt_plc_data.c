@@ -36,8 +36,8 @@
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 
 typedef struct {
-        pwr_tFloat32    *DataP;
-        pwr_tObjid      Data_ObjId;
+        pwr_tFloat32    *DataP pwr_dAlignLW;
+        pwr_tObjid      Data_ObjId pwr_dAlignLW;
         } plc_t_DataInfoBrief;
 
 /* 		PLC RUTINER			*/
