@@ -196,9 +196,6 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
   for ( i = 0; i < cp->ChanListSize; i++) {
     io_sChannel *chanp = &cp->chanlist[i];
 
-    if ( !chanp->sop)
-      continue;
-
     switch (chanp->ChanClass) {
       
     case pwr_cClass_ChanDi: {
@@ -207,6 +204,9 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
 	*input_area_offset += *input_area_chansize;
 	*input_area_chansize = GetChanSize( chan_di->Representation);
       }
+      if ( !chanp->sop)
+	continue;
+
       chanp->offset = *input_area_offset;
       chanp->mask = 1 << chan_di->Number;
       if ( byte_order == pwr_eByteOrderingEnum_BigEndian) {
@@ -222,6 +222,9 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
       pwr_sClass_ChanAi *chan_ai = (pwr_sClass_ChanAi *) chanp->cop;
       *input_area_offset += *input_area_chansize;
       *input_area_chansize = GetChanSize(chan_ai->Representation);
+      if ( !chanp->sop)
+	continue;
+
       chanp->offset = *input_area_offset;
       chanp->size = *input_area_chansize;
       chanp->mask = 0;
@@ -233,6 +236,9 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
       pwr_sClass_ChanAit *chan_ai = (pwr_sClass_ChanAit *) chanp->cop;
       *input_area_offset += *input_area_chansize;
       *input_area_chansize = GetChanSize(chan_ai->Representation);
+      if ( !chanp->sop)
+	continue;
+
       chanp->offset = *input_area_offset;
       chanp->size = *input_area_chansize;
       chanp->mask = 0;
@@ -244,6 +250,9 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
       pwr_sClass_ChanIi *chan_ii = (pwr_sClass_ChanIi *) chanp->cop;
       *input_area_offset += *input_area_chansize;
       *input_area_chansize = GetChanSize(chan_ii->Representation);
+      if ( !chanp->sop)
+	continue;
+
       chanp->offset = *input_area_offset;
       chanp->size = *input_area_chansize;
       chanp->mask = 0;
@@ -256,6 +265,9 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
 	*output_area_offset += *output_area_chansize;
 	*output_area_chansize = GetChanSize( chan_do->Representation);
       }
+      if ( !chanp->sop)
+	continue;
+
       chanp->offset = *output_area_offset;
       chanp->mask = 1 << chan_do->Number;
       if ( byte_order == pwr_eByteOrderingEnum_BigEndian) {
@@ -271,6 +283,9 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
       pwr_sClass_ChanAo *chan_ao = (pwr_sClass_ChanAo *) chanp->cop;
       *output_area_offset += *output_area_chansize;
       *output_area_chansize = GetChanSize(chan_ao->Representation);
+      if ( !chanp->sop)
+	continue;
+
       chanp->offset = *output_area_offset;
       chanp->size = *output_area_chansize;
       chanp->mask = 0;
@@ -282,6 +297,9 @@ pwr_tStatus io_bus_card_init( io_tCtx ctx,
       pwr_sClass_ChanIo *chan_io = (pwr_sClass_ChanIo *) chanp->cop;
       *output_area_offset += *output_area_chansize;
       *output_area_chansize = GetChanSize(chan_io->Representation);
+      if ( !chanp->sop)
+	continue;
+
       chanp->offset = *output_area_offset;
       chanp->size = *output_area_chansize;
       chanp->mask = 0;
