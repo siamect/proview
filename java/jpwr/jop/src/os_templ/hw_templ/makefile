@@ -33,6 +33,7 @@ local_java_sources := \
 	JopBar.java \
 	JopTrend.java \
 	JopAxis.java \
+	JopAxisarc.java \
 	GeTable.java \
 	GeDynElem.java \
 	GeDynDigLowColor.java \

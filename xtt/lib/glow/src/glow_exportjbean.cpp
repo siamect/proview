@@ -3679,6 +3679,120 @@ void GlowExportJBean::axis( double x1, double y1, double x2, double y2,
   }
 }
 
+void GlowExportJBean::axisarc( double x1, double y1, double x2, double y2,
+			       double angle1, double angle2,
+    	glow_eDrawType border_drawtype,
+    	glow_eDrawType text_drawtype,
+	double		min_value,
+	double		max_value,
+	int	        lines,
+	int		longquotient,
+	int		valuequotient,
+	double		line_length,
+    	int		line_width,
+	double		rotate,
+	int             bold,
+	int             text_idx,
+	char            *format,
+	glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp)
+{
+  double dim_x0, dim_x1, dim_y0, dim_y1;
+  char var_name[40];
+  char class_name[] = "JopAxisarc";
+
+
+  strcpy( var_name, class_name);
+  var_name[0] = _tolower(var_name[0]);
+  sprintf( &var_name[strlen(var_name)], "%d", node_cnt);
+
+  switch ( pass)
+  {
+    case glow_eExportPass_Shape:
+      break;
+    case glow_eExportPass_Declare:
+    {
+      fp <<
+"  " << class_name << "	" << var_name << ";" << endl;
+      break;
+    }
+    case glow_eExportPass_Attributes:
+    {
+      char bold_str[20];
+      int text_size;
+
+      ((GrowCtx *)ctx)->measure_javabean( &dim_x1, &dim_x0, &dim_y1, &dim_y0);
+
+      switch ( text_idx)
+      {
+        case 0: text_size = 8; break;
+        case 1: text_size = 10; break;
+        case 2: text_size = 12; break;
+        case 3: text_size = 14; break;
+        case 4: text_size = 14; break;
+        case 5: text_size = 18; break;
+        case 6: text_size = 18; break;
+        case 7: text_size = 18; break;
+        default: text_size = 24;
+      }
+      if ( text_idx < 0)
+	text_size = 6;
+      if ( bold)
+        strcpy(bold_str, "BOLD");
+      else
+        strcpy(bold_str, "PLAIN");
+
+      fp <<
+"    " << var_name << " = new " << class_name << "();" << endl <<
+"    " << var_name << ".setBounds(new Rectangle(" << 
+	(int)(x1 - dim_x0 + glow_cJBean_Offset) << "," << 
+	(int)(y1 - dim_y0 + glow_cJBean_Offset) << "," << 
+	(int)(x2 - x1) << "," << 
+	(int)(y2 - y1) << "));" << endl;
+
+      if ( border_drawtype != glow_eDrawType_No)
+        fp <<
+"    " << var_name << ".setBorderColor(" << (int)border_drawtype << ");" << endl;
+      else
+        fp <<
+"    " << var_name << ".setBorderColor( 0);" << endl;
+      if ( text_drawtype != glow_eDrawType_No)
+        fp <<
+"    " << var_name << ".setTextColor(" << (int)text_drawtype << ");" << endl;
+      else
+        fp <<
+"    " << var_name << ".setTextColor( 0);" << endl;
+      fp <<
+"    " << var_name << ".setAngle1(" << angle1 << "F);" << endl <<
+"    " << var_name << ".setAngle2(" << angle2 << "F);" << endl <<
+"    " << var_name << ".setLineWidth(" << line_width << ");" << endl <<
+"    " << var_name << ".setMinValue(" << min_value << "F);" << endl <<
+"    " << var_name << ".setMaxValue(" << max_value << "F);" << endl <<
+"    " << var_name << ".setLines(" << lines << ");" << endl <<
+"    " << var_name << ".setLongQuotient(" << longquotient << ");" << endl <<
+"    " << var_name << ".setValueQuotient(" << valuequotient << ");" << endl <<
+"    " << var_name << ".setLineLength(" << line_length << "F);" << endl <<
+"    " << var_name << ".setLineWidth(" << line_width << ");" << endl <<
+"    " << var_name << ".setRotate(" << rotate << ");" << endl <<
+"    " << var_name << ".setFont(new Font(\"Helvetica\", Font." << bold_str 
+	 << ", " << text_size << "));" << endl <<
+"    " << var_name << ".setFormat(\"" << format << "\");" << endl;
+
+
+      if ( is_nodeclass)
+	fp <<
+"    add(" << var_name << ");" << endl;
+      else
+	fp <<
+"    localPanel.add(" << var_name << ", new Proportion(" << var_name << ".getBounds(), dsize));" << endl;
+      break;
+    }
+    case glow_eExportPass_Draw:
+      break;
+    default:
+      ;
+  }
+}
+
 void GlowExportJBean::window( double x1, double y1, double x2, double y2,
 	char *filename,
 	int vertical_scrollbar, int horizontal_scrollbar, char *owner,

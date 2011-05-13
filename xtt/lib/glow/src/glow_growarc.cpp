@@ -715,6 +715,32 @@ void GrowArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void 
     rot = int( trf.rot( t));
   }
 
+  if ( rot % 90 != 0  && fabs((ur.x - ll.x) - (ur.y - ll.y)) < FLT_EPSILON) {
+    double scale;
+    double x_c;
+    double y_c;
+    if ( !t) {
+      scale = trf.vertical_scale( &trf);
+      x_c = ((trf.x( ll.x, ll.y) * w->zoom_factor_x - w->offset_x) +
+	     (trf.x( ur.x, ur.y) * w->zoom_factor_x - w->offset_x)) / 2;
+      y_c = ((trf.y( ll.x, ll.y) * w->zoom_factor_y - w->offset_y) +
+	     (trf.y( ur.x, ur.y) * w->zoom_factor_y - w->offset_y)) / 2;
+    }
+    else {
+      GlowTransform tmp = *t * trf;
+      scale = trf.vertical_scale( &tmp);
+      x_c = ((trf.x( t, ll.x, ll.y) * w->zoom_factor_x - w->offset_x) +
+	     (trf.x( t, ur.x, ur.y) * w->zoom_factor_x - w->offset_x)) / 2;
+      y_c = ((trf.y( t, ll.x, ll.y) * w->zoom_factor_y - w->offset_y) +
+	     (trf.y( t, ur.x, ur.y) * w->zoom_factor_y - w->offset_y)) / 2;
+    }
+    
+    x1 = int(-scale * (double(ur.x - ll.x)/2 * w->zoom_factor_x) + x_c + 0.5);
+    y1 = int(-scale * (double(ur.y - ll.y)/2 * w->zoom_factor_y) + y_c + 0.5);
+    x2 = int(scale * (double(ur.x - ll.x)/2 * w->zoom_factor_x) + x_c + 0.5);
+    y2 = int(scale * (double(ur.y - ll.y)/2 * w->zoom_factor_y) + y_c + 0.5);
+  }
+
   ll_x = min( x1, x2);
   ur_x = max( x1, x2);
   ll_y = min( y1, y2);
@@ -859,10 +885,37 @@ void GrowArc::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
     y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y + 0.5) - w->offset_y;
     rot = int( trf.rot( t));
   }
+
+  if ( rot % 90 != 0  && fabs((ur.x - ll.x) - (ur.y - ll.y)) < FLT_EPSILON) {
+    double scale;
+    double x_c;
+    double y_c;
+    if ( !t) {
+      scale = trf.vertical_scale( &trf);
+      x_c = ((trf.x( ll.x, ll.y) * w->zoom_factor_x - w->offset_x) +
+	     (trf.x( ur.x, ur.y) * w->zoom_factor_x - w->offset_x)) / 2;
+      y_c = ((trf.y( ll.x, ll.y) * w->zoom_factor_y - w->offset_y) +
+	     (trf.y( ur.x, ur.y) * w->zoom_factor_y - w->offset_y)) / 2;
+    }
+    else {
+      GlowTransform tmp = *t * trf;
+      scale = trf.vertical_scale( &tmp);
+      x_c = ((trf.x( t, ll.x, ll.y) * w->zoom_factor_x - w->offset_x) +
+	     (trf.x( t, ur.x, ur.y) * w->zoom_factor_x - w->offset_x)) / 2;
+      y_c = ((trf.y( t, ll.x, ll.y) * w->zoom_factor_y - w->offset_y) +
+	     (trf.y( t, ur.x, ur.y) * w->zoom_factor_y - w->offset_y)) / 2;
+    }
+    
+    x1 = int(-scale * (double(ur.x - ll.x)/2 * w->zoom_factor_x) + x_c + 0.5);
+    y1 = int(-scale * (double(ur.y - ll.y)/2 * w->zoom_factor_y) + y_c + 0.5);
+    x2 = int(scale * (double(ur.x - ll.x)/2 * w->zoom_factor_x) + x_c + 0.5);
+    y2 = int(scale * (double(ur.y - ll.y)/2 * w->zoom_factor_y) + y_c + 0.5);
+  }
   ll_x = min( x1, x2);
   ur_x = max( x1, x2);
   ll_y = min( y1, y2);
   ur_y = max( y1, y2);
+
 
   w->set_draw_buffer_only();
   if ( border || !fill)

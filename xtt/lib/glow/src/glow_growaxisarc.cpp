@@ -471,17 +471,10 @@ void GrowAxisArc::set_range( double min, double max)
 void GrowAxisArc::export_javabean( GlowTransform *t, void *node,
 	glow_eExportPass pass, int *shape_cnt, int node_cnt, int in_nc, ofstream &fp)
 {
-  int i;
-  int draw_text = (fabs(increment) > DBL_EPSILON);
   double x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
   double rotation;
   int bold;
-  char text[20];
-  int line_length;
-  int z_height, z_width, z_descent;
-  int max_z_width = 0;
   int idx = int( ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (text_size +4) - 4);
-  double tsize = ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (8+2*text_size);
   idx = min( idx, DRAW_TYPE_SIZE-1);
 
   bold = (text_drawtype == glow_eDrawType_TextHelveticaBold);
@@ -511,74 +504,9 @@ void GrowAxisArc::export_javabean( GlowTransform *t, void *node,
   else
     rotation = (trf.rot() / 360 - floor( trf.rot() / 360)) * 360;
 
-  // Calculate max value line width
-  if ( 45 >= rotation || rotation > 315)
-  {
-    if ( draw_text) {
-      for ( i = 0; i < lines; i++) {
-	if ( i % valuequotient == 0) {
-	  format_text( text, format, max_value - i * increment);
-	  ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype, 
-				       max( 0, idx), glow_eFont_Helvetica, 
-				       &z_width, &z_height, &z_descent, tsize);
-	  if ( max_z_width < z_width)
-	    max_z_width = z_width;
-	}
-      }
-      line_length = int(ur_x - ll_x) - max_z_width;
-    }
-    else
-      line_length = int(ur_x - ll_x);
-  }
-  else if ( 45 < rotation && rotation <= 135)  
-  {
-    if ( draw_text) {
-      ctx->gdraw->get_text_extent( "0", 1, text_drawtype, 
-				   max( 0, idx), glow_eFont_Helvetica, 
-				   &z_width, &z_height, &z_descent, tsize);
-
-      line_length = int(ur_y - ll_y) - (z_height - z_descent);
-    }
-    else
-      line_length = int(ur_y - ll_y);
-  }
-  else if ( 135 < rotation && rotation <= 225)
-  {
-    if ( draw_text) {
-      for ( i = 0; i < lines; i++) {
-	if ( i % valuequotient == 0) {
-	  format_text( text, format, max_value - i * increment);
-	  ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype, 
-				       max( 0, idx), glow_eFont_Helvetica, 
-				       &z_width, &z_height, &z_descent, tsize);
-	  if ( max_z_width < z_width)
-	    max_z_width = z_width;
-	}
-      }
-      line_length = int(ur_x - ll_x) - max_z_width;
-    }
-    else
-      line_length = int(ur_x - ll_x);
-  }
-  else // if ( 225 < rotation && rotation <= 315)
-  {
-    if ( draw_text) {
-      ctx->gdraw->get_text_extent( "0", 1, text_drawtype, 
-				   max( 0, idx), glow_eFont_Helvetica, 
-				   &z_width, &z_height, &z_descent, tsize);
-
-      line_length = int(ur_y - ll_y) - (z_height - z_descent);
-    }
-    else
-      line_length = int(ur_y - ll_y);
-  }
-  if ( line_length < 3)
-    line_length = 3;
-
-
-  ((GrowCtx *)ctx)->export_jbean->axis( ll_x, ll_y, ur_x, ur_y,
+  ((GrowCtx *)ctx)->export_jbean->axisarc( ll_x, ll_y, ur_x, ur_y, angle1, angle2,
      draw_type, text_color_drawtype, min_value, max_value, lines, longquotient, valuequotient,
-     line_length, line_width, rotation, bold, idx, format,
+     linelength, line_width, rotation, bold, idx, format,
      pass, shape_cnt, node_cnt, fp);
 }
 
