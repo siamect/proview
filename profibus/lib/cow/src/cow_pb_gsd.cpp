@@ -700,6 +700,16 @@ int pb_gsd::read( char *filename)
 			     sizeof( line_part) / sizeof( line_part[0]), 
 			     sizeof( line_part[0]), 0);
       
+      if ( (cdh_NoCaseStrcmp( line_part[0], "Bit") == 0 ||
+	    cdh_NoCaseStrcmp( line_part[0], "BitArea") == 0) &&
+	   line_part[1][0] == '(') {
+	// Space befor index part, concatenate part 0 and 1 
+	strcat( line_part[0], line_part[1]);
+	for ( int i = 1; i < part_cnt - 1; i++)
+	  strcpy( line_part[i], line_part[i+1]);
+	part_cnt--;
+      }
+
       if ( strchr( line_part[0], '(') != 0) {
 	idxpart_cnt = dcli_parse( line_part[0], " 	()", "", (char *)idxline_part,
 				  sizeof( idxline_part) / sizeof( idxline_part[0]), 

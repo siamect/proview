@@ -159,3 +159,5 @@
 101220 cs  gdh       Gdh fix to be able to set values in mounted volumes from opc.
 110111 cs  plc       Plc loop options added for policy when execution time exceedes scantime.
 110119 hw  plc       PID controller, derivative filtering modified, and function object Filter algorithm modified.
+110427 cs  qmon      Bugfix in buffering of subscription messages.
+110427 cs  tmon      All timed out subscriptions immediately reset.

@@ -49,6 +49,7 @@
 #include "glow_growimage.h"
 #include "glow_growgroup.h"
 #include "glow_growaxis.h"
+#include "glow_growaxisarc.h"
 #include "glow_growmenu.h"
 #include "glow_growfolder.h"
 #include "glow_growtable.h"
@@ -2950,6 +2951,8 @@ void GrowCtx::set_select_textsize( int size)
       ((GrowText *)a_sel[i])->set_textsize( size);
     else if ( a_sel[i]->type() == glow_eObjectType_GrowAxis)
       ((GrowAxis *)a_sel[i])->set_textsize( size);
+    else if ( a_sel[i]->type() == glow_eObjectType_GrowAxisArc)
+      ((GrowAxisArc *)a_sel[i])->set_textsize( size);
     else if ( a_sel[i]->type() == glow_eObjectType_GrowFolder)
       ((GrowFolder *)a_sel[i])->set_textsize( size);
     else if ( a_sel[i]->type() == glow_eObjectType_GrowTable)
@@ -2964,6 +2967,8 @@ void GrowCtx::set_select_textbold( int bold)
       ((GrowText *)a_sel[i])->set_textbold( bold);
     else if ( a_sel[i]->type() == glow_eObjectType_GrowAxis)
       ((GrowAxis *)a_sel[i])->set_textbold( bold);
+    else if ( a_sel[i]->type() == glow_eObjectType_GrowAxisArc)
+      ((GrowAxisArc *)a_sel[i])->set_textbold( bold);
     else if ( a_sel[i]->type() == glow_eObjectType_GrowFolder)
       ((GrowFolder *)a_sel[i])->set_textbold( bold);
     else if ( a_sel[i]->type() == glow_eObjectType_GrowTable)
@@ -4334,6 +4339,10 @@ void GrowCtx::read_object( ifstream& fp, GlowArrayElem **o)
   }
   case glow_eSave_GrowAxis: {
     n = new GrowAxis( this, "");
+    break;
+  }
+  case glow_eSave_GrowAxisArc: {
+    n = new GrowAxisArc( this, "");
     break;
   }
   case glow_eSave_GrowConGlue: {

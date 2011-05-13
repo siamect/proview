@@ -50,7 +50,8 @@ class GsdmlAttrGtk : public GsdmlAttr {
 		void *a_object,
 		pn_gsdml *a_gsdml,
 		int a_edit_mode,
-		const char *a_data_filename);
+		const char *a_data_filename,
+		pwr_tStatus *a_sts);
   ~GsdmlAttrGtk();
 
   void message( char severity, const char *message);

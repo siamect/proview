@@ -75,7 +75,7 @@ subcm_CheckTimeout ()
 
   /* Calculate # of remote object clients to process this time */
 
-  n = gdbroot->db->subt_lc * gdbroot->db->tmotime / gdbroot->db->tmolap;
+  n = gdbroot->db->subt_lc;
   if (n == 0) n = MIN(1, gdbroot->db->subt_lc);
 
   for (i=0; i<n; i++) {

@@ -170,7 +170,7 @@ class GsdmlDeviceData {
     channel_diag.clear();
   }
   int print( const char *filename);
-  int read( const char *filename);
+  int read( const char *filename, int new_filename = 0);
   int copy_slot( unsigned int slot_idx);
   int cut_slot( unsigned int slot_idx);
   int paste_slot( unsigned int slot_idx);
@@ -178,7 +178,7 @@ class GsdmlDeviceData {
 
 class GsdmlDataReader : public co_xml_interpreter {
  public:
-  GsdmlDataReader( GsdmlDeviceData *d) : data(d) {}
+  GsdmlDataReader( GsdmlDeviceData *d) : data(d), new_filename(0) {}
   int tag( const char *name);
   int metatag( const char *name);
   int tag_end( const char *name);
@@ -190,6 +190,7 @@ class GsdmlDataReader : public co_xml_interpreter {
 
   unsigned int current_tag;
   GsdmlDeviceData *data;
+  int new_filename;
 };
 
 #endif

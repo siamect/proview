@@ -302,7 +302,7 @@ int print_data( pwr_sAttrRef *arp, FILE *fp)
   pwr_tAName   	attributename;
   pwr_tObjid	objid;
   int 		object_backup;
-  int		array_element;
+  int		array_element = 0;
   int		index;
   int		nr;
 

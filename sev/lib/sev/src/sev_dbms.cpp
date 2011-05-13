@@ -978,8 +978,16 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
   *sts = time_AtoAscii( &time, time_eFormat_NumDateAndTime, timstr, sizeof(timstr));
   if ( EVEN(*sts)) return 0;
   timstr[19] = 0;
-  *sts = cdh_AttrValueToString( m_items[item_idx].attr[attr_idx].type, buf, bufstr, sizeof(bufstr));
-  if ( EVEN(*sts)) return 0;
+
+  switch ( m_items[item_idx].attr[attr_idx].type) {
+  case pwr_eType_Time:
+    *sts = time_AtoAscii( (pwr_tTime *)buf, time_eFormat_NumDateAndTime, bufstr, sizeof(bufstr));
+    if ( EVEN(*sts)) return 0;
+    break;
+  default:
+    *sts = cdh_AttrValueToString( m_items[item_idx].attr[attr_idx].type, buf, bufstr, sizeof(bufstr));
+    if ( EVEN(*sts)) return 0;
+  }
 
   char colname[255];
   strcpy(colname, "value");
@@ -989,6 +997,7 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
         // Posix time, high resolution
         switch ( m_items[item_idx].attr[attr_idx].type) {
           case pwr_eType_String:
+          case pwr_eType_Time:
             sprintf( query, "insert into %s (time, ntime, %s) values (%ld,%ld,'%s')",
                      m_items[item_idx].tablename, colname,
                      (long int)time.tv_sec, (long int)time.tv_nsec, bufstr);
@@ -1008,6 +1017,7 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
         // Posix time, low resolution
         switch ( m_items[item_idx].attr[attr_idx].type) {
           case pwr_eType_String:
+          case pwr_eType_Time:
             sprintf( query, "insert into %s (time, %s) values (%ld,'%s')",
                      m_items[item_idx].tablename, colname, (long int)time.tv_sec, bufstr);
             break;
@@ -1026,6 +1036,7 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
         // Sql time, high resolution
         switch ( m_items[item_idx].attr[attr_idx].type) {
           case pwr_eType_String:
+          case pwr_eType_Time:
             sprintf( query, "insert into %s (time, ntime, %s) values ('%s',%ld,'%s')",
                      m_items[item_idx].tablename, colname, 
                      timstr, (long int)time.tv_nsec, bufstr);
@@ -1045,6 +1056,7 @@ int sev_dbms::store_value( pwr_tStatus *sts, int item_idx, int attr_idx,
         // Sql time, low resolution
         switch ( m_items[item_idx].attr[attr_idx].type) {
           case pwr_eType_String:
+          case pwr_eType_Time:
             sprintf( query, "insert into %s (time, %s) values ('%s','%s')",
                      m_items[item_idx].tablename, colname, timstr, bufstr);
             break;
@@ -3282,6 +3294,104 @@ int sev_dbms::handle_objectchange(pwr_tStatus *sts, char *tablename, unsigned in
   return 1;
 }
 
+int sev_dbms::repair_table( pwr_tStatus *sts, char *tablename)
+{  
+  char query[200];
+  int rc;
+  int repair_table;
+  int repair_failed;
+
+  // Check table
+  printf( "-- Checking table %s...\n", tablename);
+
+  sprintf( query, "check table %s", tablename);
+  rc = mysql_query( m_env->con(), query);
+  if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
+    *sts = SEV__DBERROR;
+    return 0;
+  }
+  else {
+    MYSQL_ROW row;
+    MYSQL_RES *result = mysql_store_result( m_env->con());
+
+    if ( !result) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
+      printf( "%s Status Result Error\n", __FUNCTION__);
+      *sts = SEV__DBERROR;
+      return 0;
+    }
+    
+    int rows = mysql_num_rows( result);
+
+    for ( int i = 0; i < rows; i++) {
+      row = mysql_fetch_row( result);
+      if (!row) break;
+
+      printf( "-- Check result '%s %s %s %s'\n", row[0], row[1], row[2], row[3]);
+    }
+    if ( cdh_NoCaseStrcmp( row[3], "ok") == 0)
+      repair_table = 0;
+    else
+      repair_table = 1;
+
+    mysql_free_result( result);
+  }
+
+  if ( !repair_table) {
+    *sts = SEV__SUCCESS;
+    return *sts;
+  }
+
+  // Repair table
+  printf( "-- Repairing %s...\n", tablename);
+
+  sprintf( query, "repair table %s", tablename);
+  rc = mysql_query( m_env->con(), query);
+  if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf( "%s: %s\n", __FUNCTION__,mysql_error(m_env->con()));
+    *sts = SEV__DBERROR;
+    return 0;
+  }
+  else {
+    MYSQL_ROW row;
+    MYSQL_RES *result = mysql_store_result( m_env->con());
+
+    if ( !result) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
+      printf( "%s Status Result Error\n", __FUNCTION__);
+      *sts = SEV__DBERROR;
+      return 0;
+    }
+    
+    int rows = mysql_num_rows( result);
+
+    for ( int i = 0; i < rows; i++) {
+      row = mysql_fetch_row( result);
+      if (!row) break;
+
+      printf( "-- Repair result '%s %s %s %s'\n", row[0], row[1], row[2], row[3]);
+    }
+    if ( cdh_NoCaseStrcmp( row[3], "ok") != 0) {
+      printf( "** Error, repair failure %s\n", row[0]);
+      repair_failed = 1;
+    }
+    else
+      repair_failed = 0;
+
+    mysql_free_result( result);
+  }
+
+
+  if ( repair_failed)
+    *sts = SEV__REPAIR_FAILED;
+  else
+    *sts = SEV__SUCCESS;
+
+  return ODD(*sts);
+}
 
 
 sev_dbms::~sev_dbms()

@@ -140,7 +140,7 @@ currentdir="`eval pwd`"
 tarfile=$pwre_broot/$pwre_target/bld/pkg/pwrtmp.tar
 cd $pwre_broot/$pwre_target/exp
 echo "-- Copy release to package tree"
-tar -cf $tarfile exe/rt_qmon exe/rt_prio exe/sev_ini exe/sev_xtt exe/sev_xtt_gtk exe/sev_server exe/*.gif exe/*.png exe/sev_xtt_version_help.dat exe/pwr_pkg.sh exe/en_us/*.txt doc/*
+tar -cf $tarfile exe/rt_qmon exe/rt_prio exe/sev_ini exe/sev_xtt exe/sev_xtt_gtk exe/sev_server exe/sev_repair exe/*.gif exe/*.png exe/sev_xtt_version_help.dat exe/pwr_pkg.sh exe/en_us/*.txt doc/*
 cd $pkgroot/usr/pwrsev
 mkdir cnf
 tar -xf $tarfile
