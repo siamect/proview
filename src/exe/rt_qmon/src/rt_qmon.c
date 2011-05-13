@@ -481,6 +481,27 @@ clean_insert (
   pwr_tBoolean ret_pend = FALSE;
   pwr_tBoolean first = FALSE;
 
+#if 0
+  // Print number of buffers in queue
+  static int cnt = 0;
+  int seg_cnt = 0;
+  if ( cnt >= 50  && esp->head.flags.b.first) {
+    for (sp = lst_Succ(NULL, le, &se); se != le; sp = lst_Succ(NULL, se, &se))
+      seg_cnt++;
+
+    cnt = 0;
+    printf( "0x%x %d\n", (unsigned int)le, seg_cnt);
+    if ( seg_cnt > 10) {
+      for (sp = lst_Succ(NULL, le, &se); se != le; sp = lst_Succ(NULL, se, &se)) {
+	if ( sp->bp)
+	  printf( "  %d %d 0x%x\n", sp->head.flags.b.first, sp->bp->b.msg_id, (unsigned int)sp->bp);	
+      }
+      printf( "New  %d %d 0x%x\n", esp->head.flags.b.first, esp->bp->b.msg_id, (unsigned int)esp->bp);
+    }
+  }
+  cnt++;  
+#endif
+
   li = le;
   if (esp->bp != NULL) {
     if (esp->bp->b.msg_id > 0) {
@@ -500,7 +521,7 @@ clean_insert (
 	        eseg_free(sp);
 		li = se;
 	      } else {
-	        break;
+	        // break;
 	      }
             } else if (first) {
               break;
@@ -537,7 +558,7 @@ clean_insert (
       }
     }
   }
-  
+
   /* Insert new item */
   
   lst_InsertPred(NULL, li, &esp->c.le, esp);
@@ -1012,6 +1033,20 @@ import_thread ()
     }       
 #endif
 
+#if 0
+    // Test of bad network
+    static int cnt = 0;
+    cnt++;
+
+    if ( cnt > 1000) {
+      if ( cnt < 1006)
+	continue;
+      else if ( cnt == 1008)
+	cnt = 1000;
+    }
+    // End Test
+#endif
+
     sp->size = bytes - sizeof(sp->head);
     sp->ts_recv = time_Clock(NULL, NULL);
     decode_head(&sp->head, &msg.head);
@@ -1373,7 +1408,7 @@ link_send (
     seg_send(lp, sp);
   } else if ((sp = pending_send(lp)) != NULL) {
     window_insert(lp, sp);
-    seg_send(lp, sp);
+     seg_send(lp, sp);
   } else if (lp->np->link.pending_rack && expired(lp->np->link.rack_tmo)) {
     send_ack(lp);
   }
