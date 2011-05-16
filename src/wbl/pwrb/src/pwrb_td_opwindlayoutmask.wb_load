@@ -45,12 +45,12 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  Hide Licence Window.
+    !  Hide License Window.
     !*/
-    Object HideLicenceWindow $Bit
+    Object HideLicenseWindow $Bit
      Body SysBody
-       Attr PgmName = "HideLicenceWindow"
-       Attr Text = "HideLicenceWindow"
+       Attr PgmName = "HideLicenseWindow"
+       Attr Text = "HideLicenseWindow"
        Attr Value = 2
      EndBody
     EndObject
