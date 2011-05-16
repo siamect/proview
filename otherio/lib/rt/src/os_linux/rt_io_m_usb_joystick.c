@@ -1,0 +1,341 @@
+/* 
+ * Proview   $Id$
+ * Copyright (C) 2005 SSAB Oxelösund AB.
+ *
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License as 
+ * published by the Free Software Foundation, either version 2 of 
+ * the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License 
+ * along with the program, if not, write to the Free Software 
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+/* rt_io_m_usb_joystick.c -- I/O methods for USB joysticks. */
+
+#include <sys/ioctl.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <errno.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdint.h>
+
+#include "pwr.h"
+#include "pwr_basecomponentclasses.h"
+#include "pwr_otherioclasses.h"
+#include "co_time.h"
+#include "co_cdh.h"
+#include "rt_io_base.h"
+#include "rt_io_card_init.h"
+#include "rt_io_card_close.h"
+#include "rt_io_card_read.h"
+#include "rt_io_msg.h"
+
+#include <linux/input.h>
+#include <linux/joystick.h>
+#include <errno.h>
+
+typedef struct {
+  int fd;
+  int axis_map[ABS_MAX + 1];
+  int button_map[KEY_MAX - BTN_MISC + 1];
+} io_sLocalUSB_Joystick;
+
+static char *axis_names[ABS_MAX + 1] = {
+  "X", "Y", "Z", "Rx", "Ry", "Rz", "Throttle", "Rudder", 
+  "Wheel", "Gas", "Brake", "?", "?", "?", "?", "?",
+  "Hat0X", "Hat0Y", "Hat1X", "Hat1Y", "Hat2X", "Hat2Y", "Hat3X", "Hat3Y",
+  "?", "?", "?", "?", "?", "?", "?", 0,
+};
+
+static char *button_names[KEY_MAX - BTN_MISC + 1] = {
+  "Btn0", "Btn1", "Btn2", "Btn3", "Btn4", "Btn5", "Btn6", "Btn7", 
+  "Btn8", "Btn9", "?", "?", "?", "?", "?", "?",
+  "LeftBtn", "RightBtn", "MiddleBtn", "SideBtn", "ExtraBtn", "ForwardBtn", "BackBtn", "TaskBtn",
+  "?", "?", "?", "?", "?", "?", "?", "?",
+  "Trigger", "ThumbBtn", "ThumbBtn2", "TopBtn", "TopBtn2", "PinkieBtn", "BaseBtn", "BaseBtn2",
+  "BaseBtn3", "BaseBtn4", "BaseBtn5", "BaseBtn6", "BtnDead", "BtnA", "BtnB", "BtnC", 
+  "BtnX", "BtnY", "BtnZ", "BtnTL", "BtnTR", "BtnTL2", "BtnTR2", "BtnSelect", 
+  "BtnStart", "BtnMode", "BtnThumbL", "BtnThumbR", "?", "?", "?", "?", 
+  "?", "?", "?", "?", "?", "?", "?", "?", 
+  "?", "?", "?", "?", "?", "WheelBtn", "Gear up", 0,
+};
+
+
+
+static pwr_tStatus IoCardInit( io_tCtx ctx,
+			       io_sAgent *ap,
+			       io_sRack *rp,
+			       io_sCard *cp)
+{
+  io_sLocalUSB_Joystick *local;
+  pwr_sClass_USB_Joystick *op = (pwr_sClass_USB_Joystick *)cp->op;
+  int i, j, k;
+  int fd;
+  unsigned char axes = 2;
+  unsigned char buttons = 2;
+  uint8_t axmap[ABS_MAX + 1];
+  uint16_t btnmap[KEY_MAX - BTN_MISC + 1];
+
+  fd = open( op->Device, O_RDONLY);
+  if ( fd == -1) {
+    errh_Error( "USB_Joystick, unable to attach device, sts %d, '%s'", errno, cp->Name);
+    op->Status = IO__INITFAIL;
+    return IO__INITFAIL;
+  }
+
+  local = (io_sLocalUSB_Joystick *) calloc( 1, sizeof(io_sLocalUSB_Joystick));
+  cp->Local = local;
+  local->fd = fd;
+
+  ioctl( local->fd, JSIOCGAXES, &axes);
+  ioctl( local->fd, JSIOCGBUTTONS, &buttons);
+  ioctl( local->fd, JSIOCGAXMAP, axmap);
+  ioctl( local->fd, JSIOCGBTNMAP, btnmap);
+
+  fcntl( local->fd, F_SETFL, O_NONBLOCK);
+
+  int map_found = 0;
+  int name_found = 0;
+  for ( i = 0; i < IO_CHANLIST_SIZE; i++) {
+    if ( cp->chanlist[i].sop) {
+      switch ( cp->chanlist[i].ChanClass) {
+      case pwr_cClass_ChanAi: {
+	pwr_sClass_ChanAi *cop = (pwr_sClass_ChanAi *)cp->chanlist[i].cop;
+	
+	/* Map channel */
+	for ( j = 0; j < ABS_MAX; j++) {
+	  if ( axis_names[j] == 0)
+	    break;
+	  if ( cdh_NoCaseStrcmp( axis_names[j], cop->Identity) == 0) {
+	    for ( k = 0; k < axes; k++) {
+	      if ( axmap[k] == j) {
+		local->axis_map[k] = i;
+		map_found = 1;
+		break;
+	      }
+	    }
+	    if ( !map_found) {
+	      errh_Error( "USB_Joystick, on such axis on this device '%s', '%s'", cop->Identity, cp->Name);
+	      op->Status = IO__INITFAIL;
+	      return IO__INITFAIL;
+	    }
+	    name_found = 1;
+	    break;
+	  }
+	}
+	if ( !name_found) {
+	  errh_Error( "USB_Joystick, axis name doesn't exist '%s', '%s'", cop->Identity, cp->Name);
+	  op->Status = IO__INITFAIL;
+	  return IO__INITFAIL;
+	}
+
+	io_AiRangeToCoef( &cp->chanlist[i]);
+	break;
+      }
+      case pwr_cClass_ChanIi: {
+	pwr_sClass_ChanIi *cop = (pwr_sClass_ChanIi *)cp->chanlist[i].cop;
+	
+	/* Map channel */
+	for ( j = 0; j < ABS_MAX; j++) {
+	  if ( cdh_NoCaseStrcmp( axis_names[j], cop->Identity) == 0) {
+	    for ( k = 0; k < axes; k++) {
+	      if ( axmap[k] == j) {
+		local->axis_map[k] = i;
+		map_found = 1;
+		break;
+	      }
+	    }
+	    if ( !map_found) {
+	      errh_Error( "USB_Joystick, on such axis on this device '%s', '%s'", cop->Identity, cp->Name);
+	      op->Status = IO__INITFAIL;
+	      return IO__INITFAIL;
+	    }
+	    name_found = 1;
+	    break;
+	  }
+	}
+	if ( !name_found) {
+	  errh_Error( "USB_Joystick, axis name doesn't exist '%s', '%s'", cop->Identity, cp->Name);
+	  op->Status = IO__INITFAIL;
+	  return IO__INITFAIL;
+	}
+
+	break;
+      }
+      case pwr_cClass_ChanDi: {
+	pwr_sClass_ChanDi *cop = (pwr_sClass_ChanDi *)cp->chanlist[i].cop;
+	
+	/* Map channel */
+	for ( j = 0; j < KEY_MAX - BTN_MISC; j++) {
+	  if ( button_names[j] == 0)
+	    break;
+	  if ( cdh_NoCaseStrcmp( button_names[j], cop->Identity) == 0) {
+	    for ( k = 0; k < buttons; k++) {
+	      if ( btnmap[k] - BTN_MISC == j) {
+		local->button_map[k] = i;
+		map_found = 1;
+		break;
+	      }
+	    }
+	    if ( !map_found) {
+	      errh_Error( "USB_Joystick, on such button on this device '%s', '%s'", cop->Identity, cp->Name);
+	      op->Status = IO__INITFAIL;
+	      return IO__INITFAIL;
+	    }
+	    name_found = 1;
+	    break;
+	  }
+	}
+	if ( !name_found) {
+	  errh_Error( "USB_Joystick, button name doesn't exist '%s', '%s'", cop->Identity, cp->Name);
+	  op->Status = IO__INITFAIL;
+	  return IO__INITFAIL;
+	}
+	
+	break;
+      }
+      default:
+	errh_Error( "USB_Joystick, channel type error, '%s'", cp->Name);
+	op->Status = IO__INITFAIL;
+	return IO__INITFAIL;
+      }
+    }
+  }
+
+
+  errh_Info( "Init of USB_Joystick '%s'", cp->Name);
+  op->Status = IO__SUCCESS;
+
+  return IO__SUCCESS;
+}
+
+static pwr_tStatus IoCardClose( io_tCtx ctx,
+			        io_sAgent *ap,
+			        io_sRack *rp,
+			        io_sCard *cp)
+{
+  io_sLocalUSB_Joystick *local = (io_sLocalUSB_Joystick *)cp->Local;
+
+  close( local->fd);
+
+  if ( cp->Local)
+    free( cp->Local);
+
+  return IO__SUCCESS;
+}
+
+static pwr_tStatus IoCardRead( io_tCtx ctx,
+			       io_sAgent *ap,
+			       io_sRack	*rp,
+			       io_sCard	*cp)
+{
+  io_sLocalUSB_Joystick *local = (io_sLocalUSB_Joystick *)cp->Local;
+  pwr_sClass_USB_Joystick *op = (pwr_sClass_USB_Joystick *)cp->op;
+  struct js_event js;
+  int idx;
+  int value;
+
+
+  while (1) {
+    
+    while ( read( local->fd, &js, sizeof(struct js_event)) == sizeof(struct js_event))  {
+      // printf("Event: type %d, time %d, number %d, value %d\n", js.type, js.time, js.number, js.value);
+
+      switch ( js.type) {
+      case 129:
+      case 1:
+	/* Buttons */
+	idx = js.number;
+
+	if ( js.number < KEY_MAX - BTN_MISC)
+	  idx = local->button_map[js.number];
+	else
+	  break;
+	  
+	*(pwr_tBoolean *)cp->chanlist[idx].vbp = (js.value != 0);
+
+	break;
+      case 130:
+      case 2: {
+	io_sChannel *chanp;
+	pwr_sClass_ChanAi *cop;
+	pwr_sClass_Ai *sop;
+	pwr_tFloat32 actvalue;
+	int ivalue;
+
+	/* Axes */
+	idx = js.number;
+	value = js.value;
+
+	if ( js.number < ABS_MAX) {
+	  idx = local->axis_map[js.number];
+	  ivalue = js.value;
+	}
+	else
+	  break;
+	  
+	chanp = &cp->chanlist[idx];
+	cop = (pwr_sClass_ChanAi *)chanp->cop;
+	sop = (pwr_sClass_Ai *)chanp->sop;
+
+	if ( cop->CalculateNewCoef)
+	  // Request to calculate new coefficients
+	  io_AiRangeToCoef( chanp);
+
+	io_ConvertAi( cop, ivalue, &actvalue);
+
+	// Filter
+	if ( sop->FilterType == 1 &&
+	     sop->FilterAttribute[0] > 0 &&
+	     sop->FilterAttribute[0] > ctx->ScanTime) {
+	  actvalue = *(pwr_tFloat32 *)chanp->vbp + ctx->ScanTime / sop->FilterAttribute[0] *
+	    (actvalue - *(pwr_tFloat32 *)chanp->vbp);
+	}
+
+	*(pwr_tFloat32 *)chanp->vbp = actvalue;
+	sop->SigValue = cop->SigValPolyCoef1 * ivalue + cop->SigValPolyCoef0;
+	sop->RawValue = ivalue;
+
+	break;
+      }
+      }
+    }
+    
+    if (errno != EAGAIN) {
+      op->ErrorCount++;
+    }
+  }
+
+  if ( op->ErrorCount == op->ErrorSoftLimit) {
+    errh_Warning( "IO Card ErrorSoftLimit reached, '%s'", cp->Name);
+  }
+  if ( op->ErrorCount >= op->ErrorHardLimit) {
+    errh_Error( "IO Card ErrorHardLimit reached '%s', IO stopped", cp->Name);
+    ctx->Node->EmergBreakTrue = 1;
+    return IO__ERRDEVICE;
+  }    
+
+  return IO__SUCCESS;
+}
+
+
+/*  Every method should be registred here. */
+
+pwr_dExport pwr_BindIoMethods(USB_Joystick) = {
+  pwr_BindIoMethod(IoCardInit),
+  pwr_BindIoMethod(IoCardClose),
+  pwr_BindIoMethod(IoCardRead),
+  pwr_NullMethod
+};

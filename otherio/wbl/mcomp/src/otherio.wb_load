@@ -1,7 +1,7 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X212"
-    Attr NextCix = "_X21"
+    Attr NextOix = "_X224"
+    Attr NextCix = "_X23"
     Attr NextTix[0] = "_X10"
   EndBody
   Object Type $TypeHier 1 15-NOV-2007 14:35:37.90
@@ -2624,9 +2624,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
         !/**
-        ! @Summary Error count of the board.
-        ! ErrorCount will increase when a communication error or error status is received.
-        ! When ErrorCount reaches the ErrorLimit all inputs are reset to zero.
+        ! Error counter, incremented for every failed read operation of the card.
+        ! When the error counter reaches ErrorSoftLimit, a message is sent to the console log.
+        ! When it reaches ErrorHardLimit, all IO handling is aborted.
         !*/
         Object ErrorCount $Attribute 18 13-DEC-2010 21:52:48.18
           Body SysBody 13-DEC-2010 21:52:57.58
@@ -2635,9 +2635,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
         !/**
-        ! @Summary Error limit of the server.
-        ! ErrorCount will increase every cycle if status is not MB__NORMAL.
-        ! When ErrorCount reaches the ErrorLimit all inputs are reset to zero.
+        ! Value of the error counter, when a message is sent to the console log.
         !*/
         Object ErrorSoftLimit $Attribute 19 13-DEC-2010 21:53:15.14
           Body SysBody 13-DEC-2010 21:53:20.46
@@ -2645,6 +2643,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Value of the error counter, when all IO handling is aborted.
+        !*/
         Object ErrorHardLimit $Attribute 20 13-DEC-2010 21:53:29.66
           Body SysBody 13-DEC-2010 21:53:34.59
             Attr PgmName = "ErrorHardLimit"
@@ -2744,6 +2745,21 @@ Volume OtherIO $ClassVolume 0.0.250.10
           EndBody
         EndObject
       EndObject
+      Object ConfiguratorPoson $Menu 222 13-MAY-2011 13:09:08.36
+        Object Pointed $Menu 223 13-MAY-2011 13:09:08.36
+          Object Connect $MenuButton 224 13-MAY-2011 13:09:08.36
+            Body SysBody 13-MAY-2011 13:09:08.36
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
       Object PostCreate $DbCallBack 149 13-DEC-2010 21:36:40.01
         Body SysBody 13-DEC-2010 21:36:40.01
           Attr MethodName = "BaseIOCard-PostCreate"
@@ -2786,13 +2802,15 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndObject
         Object FirmwareName $Attribute 15 11-MAR-2011 11:13:13.95
           Body SysBody 11-MAR-2011 11:13:29.65
-            Attr Flags = 16778240
+            Attr PgmName = "FirmwareName"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
         Object FirmwareVersion $Attribute 16 11-MAR-2011 11:13:42.31
           Body SysBody 11-MAR-2011 11:13:32.93
-            Attr Flags = 16778240
+            Attr PgmName = "FirmwareVersion"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
@@ -2945,6 +2963,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
+        !/**
+        ! Error counter, incremented for every failed read operation of the card.
+        ! When the error counter reaches ErrorSoftLimit, a message is sent to the console log.
+        ! When it reaches ErrorHardLimit, all IO handling is aborted.
+        !*/
         Object ErrorCount $Attribute 8 07-MAR-2011 08:39:54.17
           Body SysBody 07-MAR-2011 08:40:02.94
             Attr PgmName = "ErrorCount"
@@ -2958,12 +2981,18 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! Value of the error counter, when a message is sent to the console log.
+        !*/
         Object ErrorSoftLimit $Attribute 9 07-MAR-2011 08:40:26.77
           Body SysBody 07-MAR-2011 08:40:28.83
             Attr PgmName = "ErrorSoftLimit"
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Value of the error counter, when all IO handling is aborted.
+        !*/
         Object ErrorHardLimit $Attribute 10 07-MAR-2011 08:40:39.64
           Body SysBody 07-MAR-2011 08:40:40.71
             Attr PgmName = "ErrorHardLimit"
@@ -3217,6 +3246,415 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Object Template Hilscher_cifX_Module 2152693760 01-JAN-1970 01:00:00.00
         Body RtBody 04-MAR-2011 12:49:32.39
           Attr Process = 1
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Card object for USB Joystick
+    !  Card object for USB Joystick.
+    ! 
+    !  The object is configured as a child to a generic Rack object,
+    !  eg BaseIORack.
+    ! 
+    !  Channel objects configuring the axes and buttons of the joystick
+    !  are placed as children to the USB_Joystick object. The USB_Joystick
+    !  can also work as a super class to joystick classes containg the channel
+    !  objects as internal objects.
+    !
+    !  The axes are configured by ChanAi or ChanIi objects, and the buttons by
+    !  ChanDi objects. The Identity attribute in each channel should be set to 
+    !  the name of the corresponding axis or button.
+    !
+    !  Use the program rt_joystick to examine the configuration of the joystick.
+    !
+    !  The following identity names are supported:
+    !  Axes:    X, Y, Z, Rx, Ry, Rz, Throttle, Rudder, Wheel, Gas, Brake, 
+    !           Hat0X, Hat0Y, Hat1X, Hat1Y, Hat2X, Hat2Y, Hat3X, Hat3Y
+    !  Buttons: Btn0, Btn1, Btn2, Btn3, Btn4, Btn5, Btn6, Btn7, Btn8, Btn9
+    !           LeftBtn, RightBtn, MiddleBtn, SideBtn, ExtraBtn, ForwardBtn, 
+    !           BackBtn, TaskBtn, Trigger, ThumbBtn, ThumbBtn2, TopBtn, TopBtn2,
+    !           PinkieBtn, BaseBtn, BaseBtn2, BaseBtn3, BaseBtn4, BaseBtn5, 
+    !           BaseBtn6, BtnDead, BtnA, BtnB, BtnC, BtnX, BtnY, BtnZ, BtnTL,
+    !           BtnTR, BtnTL2, BtnTR2, BtnSelect, BtnStart, BtnMode, BtnThumbL,
+    !           BtnThumbR", WheelBtn, Gear up.
+    !
+    !  @b See also
+    !  @classlink BaseIORack basecomponent_baseiorack.html
+    !*/
+    Object USB_Joystick $ClassDef 21 13-MAY-2011 13:05:09.22
+      Body SysBody 13-MAY-2011 13:04:51.42
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 51280
+      EndBody
+      Object RtBody $ObjBodyDef 1 13-MAY-2011 13:04:51.42
+        Body SysBody 13-MAY-2011 13:05:27.96
+          Attr StructName = "USB_Joystick"
+          Attr NextAix = "_X40"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 25 13-MAY-2011 13:04:51.42
+          Body SysBody 13-MAY-2011 13:04:51.42
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! Specification of the joystick.
+        !*/
+        Object Specification $Attribute 26 13-MAY-2011 13:04:51.42
+          Body SysBody 13-MAY-2011 13:04:51.42
+            Attr PgmName = "Specification"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! Datasheet URL.
+        !*/
+        Object DataSheet $Attribute 27 13-MAY-2011 13:04:51.42
+          Body SysBody 13-MAY-2011 13:04:51.42
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+        !/**
+        ! Device name of the USB joystick, e.g. /dev/input/js0.
+        !*/
+        Object Device $Attribute 28 13-MAY-2011 13:04:51.42
+          Body SysBody 13-MAY-2011 13:04:51.42
+            Attr PgmName = "Device"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Process that handles the module. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the module.
+        ! 
+        ! 1: The module is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The module is read by the rt_io_comm process.
+        ! 4: The module is handled by an application program.
+        !*/
+        Object Process $Attribute 29 13-MAY-2011 13:04:51.42
+          Body SysBody 13-MAY-2011 13:04:51.42
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Plc thread that handles the card.
+        ! The PlcThread object of the plc thread that handles the card.
+        ! The card is read with the scantime of the thread.
+        !*/
+        Object ThreadObject $Attribute 30 13-MAY-2011 13:04:51.42
+          Body SysBody 13-MAY-2011 13:04:51.42
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        !/**
+        ! Error counter, incremented for every failed read operation of the card.
+        ! When the error counter reaches ErrorSoftLimit, a message is sent to the console log.
+        ! When it reaches ErrorHardLimit, all IO handling is aborted.
+        !*/
+        Object ErrorCount $Attribute 31 13-MAY-2011 13:04:51.42
+          Body SysBody 13-MAY-2011 13:04:51.42
+            Attr PgmName = "ErrorCount"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Value of the error counter, when a message is sent to the console log.
+        !*/
+        Object ErrorSoftLimit $Attribute 32 13-MAY-2011 13:04:51.42
+          Body SysBody 13-MAY-2011 13:04:51.42
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Value of the error counter, when all IO handling is aborted.
+        !*/
+        Object ErrorHardLimit $Attribute 33 13-MAY-2011 13:04:51.42
+          Body SysBody 13-MAY-2011 13:04:51.42
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Current status of the joystick communication.
+        !*/
+        Object Status $Attribute 34 13-MAY-2011 13:04:51.42
+          Body SysBody 13-MAY-2011 13:06:42.48
+            Attr PgmName = "Status"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 213 13-MAY-2011 13:04:51.42
+        Object IoCardInit $Method 214 13-MAY-2011 13:04:51.42
+          Body SysBody 13-MAY-2011 13:08:13.33
+            Attr MethodName = "USB_Joystick-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 215 13-MAY-2011 13:04:51.42
+          Body SysBody 13-MAY-2011 13:08:23.97
+            Attr MethodName = "USB_Joystick-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 216 13-MAY-2011 13:04:51.42
+          Body SysBody 13-MAY-2011 13:08:30.14
+            Attr MethodName = "USB_Joystick-IoCardRead"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 219 13-MAY-2011 13:08:50.00
+        Object Pointed $Menu 220 13-MAY-2011 13:08:50.00
+          Object Connect $MenuButton 221 13-MAY-2011 13:08:50.00
+            Body SysBody 13-MAY-2011 13:08:50.00
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object PostCreate $DbCallBack 218 13-MAY-2011 13:04:51.42
+        Body SysBody 13-MAY-2011 13:04:51.42
+          Attr MethodName = "BaseIOCard-PostCreate"
+        EndBody
+      EndObject
+      Object Template USB_Joystick 2153218048 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Card object for USB Joystick Code Mercanaries JoyWarrior
+    !  Card object for USB Joystick Code Marcenaries JoyWarrior with
+    !  3 axes and 8 buttons.
+    ! 
+    !  The object is configured as a child to a generic Rack object.
+    ! 
+    !  @b See also
+    !  @classlink USB_Joystick otherio_usb_joystick.html
+    !  @classlink BaseIORack basecomponent_baseiorack.html
+    !*/
+    Object CodeMerc_JoyWarriorA3B8 $ClassDef 22 13-MAY-2011 17:19:23.80
+      Body SysBody 13-MAY-2011 17:19:48.09
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 13-MAY-2011 17:19:38.74
+        Body SysBody 13-MAY-2011 17:19:38.74
+          Attr StructName = "CodeMerc_JoyWarriorA3B8"
+          Attr NextAix = "_X13"
+        EndBody
+        !/**
+        ! Super object.
+        !*/
+        Object Super $Attribute 1 13-MAY-2011 17:19:58.91
+          Body SysBody 13-MAY-2011 17:20:14.58
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "OtherIO:Class-USB_Joystick"
+          EndBody
+        EndObject
+        !/**
+        ! Ai channel for axis X.
+        !*/
+        Object AiX $Attribute 2 13-MAY-2011 17:20:55.28
+          Body SysBody 13-MAY-2011 17:21:09.93
+            Attr PgmName = "AiX"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        !/**
+        ! Ai channel for axis Y.
+        !*/
+        Object AiY $Attribute 4 13-MAY-2011 17:21:20.84
+          Body SysBody 13-MAY-2011 17:21:14.27
+            Attr PgmName = "AiY"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        !/**
+        ! Ai channel for axis Z.
+        !*/
+        Object AiZ $Attribute 3 13-MAY-2011 17:21:30.36
+          Body SysBody 13-MAY-2011 17:21:13.24
+            Attr PgmName = "AiZ"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        !/**
+        ! Di channel for button Trigger.
+        !*/
+        Object Di1 $Attribute 5 13-MAY-2011 17:53:59.29
+          Body SysBody 13-MAY-2011 17:54:00.33
+            Attr PgmName = "Di1"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        !/**
+        ! Di channel for button ThumbBtn.
+        !*/
+        Object Di2 $Attribute 6 13-MAY-2011 17:53:53.66
+          Body SysBody 13-MAY-2011 17:53:55.30
+            Attr PgmName = "Di2"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        !/**
+        ! Di channel for button ThumbBtn2.
+        !*/
+        Object Di3 $Attribute 7 13-MAY-2011 17:53:44.08
+          Body SysBody 13-MAY-2011 17:53:46.78
+            Attr PgmName = "Di3"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        !/**
+        ! Di channel for button TopBtn.
+        !*/
+        Object Di4 $Attribute 8 13-MAY-2011 17:53:34.34
+          Body SysBody 13-MAY-2011 17:53:38.23
+            Attr PgmName = "Di4"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        !/**
+        ! Di channel for button TopBtn2.
+        !*/
+        Object Di5 $Attribute 9 13-MAY-2011 17:53:29.14
+          Body SysBody 13-MAY-2011 17:53:30.49
+            Attr PgmName = "Di5"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        !/**
+        ! Di channel for button PinkieBtn.
+        !*/
+        Object Di6 $Attribute 10 13-MAY-2011 17:53:10.76
+          Body SysBody 13-MAY-2011 17:53:12.72
+            Attr PgmName = "Di6"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        !/**
+        ! Di channel for button BaseBtn.
+        !*/
+        Object Di7 $Attribute 11 13-MAY-2011 17:53:02.95
+          Body SysBody 13-MAY-2011 17:53:04.10
+            Attr PgmName = "Di7"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        !/**
+        ! Di channel for button BaseBtn2.
+        !*/
+        Object Di8 $Attribute 12 13-MAY-2011 17:52:56.04
+          Body SysBody 13-MAY-2011 17:52:57.21
+            Attr PgmName = "Di8"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template CodeMerc_JoyWarriorA3B8 2153480192 01-JAN-1970 01:00:00.00
+        Body RtBody 13-MAY-2011 17:54:50.23
+          Attr Super.Specification = "Joystick Code Mercenaries JoyWarrior"
+          Attr Super.Process = 1
+          Attr Super.ErrorSoftLimit = 25
+          Attr Super.ErrorHardLimit = 50
+          Attr AiX.Description = "Axis X"
+          Attr AiX.Identity = "X"
+          Attr AiX.ConversionOn = 1
+          Attr AiX.ScanInterval = 1
+          Attr AiX.RawValRangeLow = -3.276800e+04
+          Attr AiX.RawValRangeHigh = 3.276700e+04
+          Attr AiX.ChannelSigValRangeLow = -5.000000e+00
+          Attr AiX.ChannelSigValRangeHigh = 5.000000e+00
+          Attr AiX.SigValueUnit = "V"
+          Attr AiX.SensorPolyType = 1
+          Attr AiX.SensorSigValRangeLow = -5.000000e+00
+          Attr AiX.SensorSigValRangeHigh = 5.000000e+00
+          Attr AiX.ActValRangeLow = -1.000000e+02
+          Attr AiX.ActValRangeHigh = 1.000000e+02
+          Attr AiY.Description = "Axis Y"
+          Attr AiY.Identity = "Y"
+          Attr AiY.ConversionOn = 1
+          Attr AiY.ScanInterval = 1
+          Attr AiY.RawValRangeLow = -3.276800e+04
+          Attr AiY.RawValRangeHigh = 3.276700e+04
+          Attr AiY.ChannelSigValRangeLow = -5.000000e+00
+          Attr AiY.ChannelSigValRangeHigh = 5.000000e+00
+          Attr AiY.SigValueUnit = "V"
+          Attr AiY.SensorPolyType = 1
+          Attr AiY.SensorSigValRangeLow = -5.000000e+00
+          Attr AiY.SensorSigValRangeHigh = 5.000000e+00
+          Attr AiY.ActValRangeLow = -1.000000e+02
+          Attr AiY.ActValRangeHigh = 1.000000e+02
+          Attr AiZ.Description = "Axis Z"
+          Attr AiZ.Identity = "Z"
+          Attr AiZ.ConversionOn = 1
+          Attr AiZ.ScanInterval = 1
+          Attr AiZ.RawValRangeLow = -3.276800e+04
+          Attr AiZ.RawValRangeHigh = 3.276700e+04
+          Attr AiZ.ChannelSigValRangeLow = -5.000000e+00
+          Attr AiZ.ChannelSigValRangeHigh = 5.000000e+00
+          Attr AiZ.SigValueUnit = "V"
+          Attr AiZ.SensorPolyType = 1
+          Attr AiZ.SensorSigValRangeLow = -5.000000e+00
+          Attr AiZ.SensorSigValRangeHigh = 5.000000e+00
+          Attr AiZ.ActValRangeLow = -1.000000e+02
+          Attr AiZ.ActValRangeHigh = 1.000000e+02
+          Attr Di1.Description = "Button Trigger"
+          Attr Di1.Identity = "Trigger"
+          Attr Di1.ConversionOn = 1
+          Attr Di2.Description = "Thumb button"
+          Attr Di2.Identity = "ThumbBtn"
+          Attr Di2.ConversionOn = 1
+          Attr Di3.Description = "Thumb button 2"
+          Attr Di3.Identity = "ThumbBtn2"
+          Attr Di3.ConversionOn = 1
+          Attr Di4.Description = "Top button"
+          Attr Di4.Identity = "TopBtn"
+          Attr Di4.ConversionOn = 1
+          Attr Di5.Description = "Top Button 2"
+          Attr Di5.Identity = "TopBtn2"
+          Attr Di5.ConversionOn = 1
+          Attr Di6.Description = "Pinkie button"
+          Attr Di6.Identity = "PinkieBtn"
+          Attr Di6.ConversionOn = 1
+          Attr Di7.Description = "Base button"
+          Attr Di7.Identity = "BaseBtn"
+          Attr Di7.ConversionOn = 1
+          Attr Di8.Description = "Base button 2"
+          Attr Di8.Identity = "BaseBtn2"
+          Attr Di8.ConversionOn = 1
         EndBody
       EndObject
     EndObject
