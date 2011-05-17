@@ -49,7 +49,7 @@ class XttGeGtk : public XttGe {
   XttGeGtk( GtkWidget *parent_wid, void *parent_ctx, const char *name, const char *filename,
 	    int scrollbar, int menu, int navigator, int width, int height,
 	    int x, int y, double scan_time, const char *object_name, int use_default_access,
-	    unsigned int access,
+	    unsigned int access, unsigned int options,
 	    int (*xg_command_cb) (XttGe *, char *),
 	    int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 	    int (*xg_is_authorized_cb) (void *, unsigned int));

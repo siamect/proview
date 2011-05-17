@@ -1935,7 +1935,7 @@ static pwr_tStatus CrrOpenTraceFilter( xmenu_sMenuCall *ip)
 // Open graph
 static pwr_tStatus CrrOpenGraph( xmenu_sMenuCall *ip)
 {
-  ((XNav *)ip->EditorContext)->exec_xttgraph( ip->Pointed.Objid, 0, 0, 0, 0, 0);
+  ((XNav *)ip->EditorContext)->exec_xttgraph( ip->Pointed.Objid, 0, 0, 0, 0, 0, 0);
   return XNAV__SUCCESS;
 }
 

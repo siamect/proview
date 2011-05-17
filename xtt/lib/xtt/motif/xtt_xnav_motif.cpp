@@ -274,14 +274,14 @@ CLog *XNavMotif::clog_new( const char *name, pwr_tStatus *sts)
 XttGe *XNavMotif::xnav_ge_new( const char *name, const char *filename, int scrollbar, int menu, 
 			       int navigator, int width, int height, int x, int y, 
 			       double scan_time, const char *object_name, 
-			       int use_default_access, unsigned int access,
+			       int use_default_access, unsigned int access, unsigned int options,
 			       int (*command_cb) (XttGe *, char *),
 			       int (*get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 			       int (*is_authorized_cb) (void *, unsigned int))
 {
   return new XttGeMotif( parent_wid, this, name, filename, scrollbar, menu, navigator,
 			 width, height, x, y, scan_time, object_name, use_default_access,
-			 access, command_cb, get_current_objects_cb, is_authorized_cb);
+			 access, options, command_cb, get_current_objects_cb, is_authorized_cb);
 }
 
 GeCurve *XNavMotif::gecurve_new( char *name, char *filename, GeCurveData *data,

@@ -265,6 +265,7 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, const char *x
 		    const char *xg_filename, int xg_scrollbar, int xg_menu, int xg_navigator, 
 		    int xg_width, int xg_height, int x, int y, double scan_time, 
 		    const char *object_name, int use_default_access, unsigned int access,
+		    unsigned int options,
 		    int (*xg_command_cb) (XttGe *, char *),
 		    int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 		    int (*xg_is_authorized_cb) (void *, unsigned int)) :
@@ -415,6 +416,15 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, const char *x
     // Set position
     gtk_window_move( GTK_WINDOW(toplevel), x, y);
   }
+
+  if ( options & ge_mOptions_FullScreen)
+    gtk_window_fullscreen( GTK_WINDOW(toplevel));
+  else if ( options & ge_mOptions_Maximize)
+    gtk_window_maximize( GTK_WINDOW(toplevel)); // TODO
+  else if ( options & ge_mOptions_FullMaximize)
+    gtk_window_maximize( GTK_WINDOW(toplevel));
+  else if ( options & ge_mOptions_Iconify)
+    gtk_window_iconify( GTK_WINDOW(toplevel));
 }
 
 static gint confirm_delete_event( GtkWidget *w, GdkEvent *event, gpointer ge)

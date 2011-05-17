@@ -773,7 +773,7 @@ Xtt::Xtt( int *argc, char **argv[], int *return_sts) :
       (*argc) += 2;
       *argv = argv1;
     }
-    if ( opp->OpWindLayout & pwr_mOpWindLayoutMask_HideLicenceWindow)
+    if ( opp->OpWindLayout & pwr_mOpWindLayoutMask_HideLicenseWindow)
       quiet = 1;
 
     if ( opp->AttachAudio)

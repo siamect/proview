@@ -238,7 +238,8 @@ dcli_tCmdTable	xnav_command_table[] = {
 			  "/NAVIGATOR", "/CENTER", "/OBJECT", "/NEW", 
 			  "/INSTANCE", "/COLLECT", "/FOCUS", "/INPUTEMPTY", 
 			  "/ENTRY", "/TITLE", "/ACCESS", "/CLASSGRAPH", "/PARENT", "/BYPASS", 
-			  "/CLOSEBUTTON", "/TARGET", "/TRIGGER", "/TYPE", "/FTYPE", ""}
+			  "/CLOSEBUTTON", "/TARGET", "/TRIGGER", "/TYPE", "/FTYPE", 
+			  "/FULLSCREEN", "/MAXIMIZE", "/FULLMAXIMIZE", "/ICONIFY", ""}
 		},
 		{
 			"CLOSE",
@@ -2446,8 +2447,19 @@ static int	xnav_open_func(	void		*client_data,
     int		classgraph;
     int		parent;
     pwr_tStatus sts;
+    unsigned int options = 0;
 
     parent = ODD( dcli_get_qualifier( "/PARENT", 0, 0));
+
+    if ( ODD( dcli_get_qualifier( "/FULLSCREEN", 0, 0)))
+      options |= ge_mOptions_FullScreen;
+    if ( ODD( dcli_get_qualifier( "/MAXIMIZE", 0, 0)))
+      options |= ge_mOptions_Maximize;
+    if ( ODD( dcli_get_qualifier( "/FULLMAXIMIZE", 0, 0)))
+      options |= ge_mOptions_FullMaximize;
+    if ( ODD( dcli_get_qualifier( "/ICONIFY", 0, 0)))
+      options |= ge_mOptions_Iconify;	   
+
 
     if ( ODD( dcli_get_qualifier( "/INSTANCE", instance_str, sizeof(instance_str)))) {
       instance_p = instance_str;
@@ -2582,7 +2594,8 @@ static int	xnav_open_func(	void		*client_data,
       else
         use_default_access = 0;
 
-      xnav->exec_xttgraph( objid, instance_p, focus_p, inputempty, use_default_access, access);
+      xnav->exec_xttgraph( objid, instance_p, focus_p, inputempty, use_default_access, access,
+			   options);
     }
     else {
       pwr_tFileName file_str;
@@ -2605,7 +2618,7 @@ static int	xnav_open_func(	void		*client_data,
         navigator =  ODD( dcli_get_qualifier( "/NAVIGATOR", 0, 0));
 
         xnav->open_graph( "Collect", "_none_", scrollbar, menu, navigator,
-	  0, 0, 0, 0, "collect", NULL, 0, 0, 0);
+			  0, 0, 0, 0, "collect", NULL, 0, 0, 0, options);
         return XNAV__SUCCESS;
       }
       if ( ODD( dcli_get_qualifier( "dcli_arg2", file_str, sizeof(file_str)))) {
@@ -2738,8 +2751,8 @@ static int	xnav_open_func(	void		*client_data,
         use_default_access = 0;
 
       xnav->open_graph( name_str, file_str, scrollbar, menu, navigator,
-	width, height, 0, 0, instance_p, focus_p, inputempty,
-	use_default_access, access);
+			width, height, 0, 0, instance_p, focus_p, inputempty,
+			use_default_access, access, options);
       return XNAV__SUCCESS;	
     }
   }
@@ -7193,7 +7206,7 @@ static int xnav_ge_get_current_objects_cb( void *vxnav, pwr_sAttrRef **alist,
 void XNav::open_graph( const char *name, const char *filename, int scrollbar, int menu, 
 	int navigator, int width, int height, int x, int y,
 	const char *object_name, const char *focus_name, int input_focus_empty,
-	int use_default_access, unsigned int access)
+	int use_default_access, unsigned int access, unsigned int options)
 {
   XttGe *gectx;
 
@@ -7207,7 +7220,7 @@ void XNav::open_graph( const char *name, const char *filename, int scrollbar, in
   {
     gectx = xnav_ge_new( name, filename, 
 			 scrollbar, menu, navigator, width, height, x, y, gbl.scantime,
-			 object_name, use_default_access, access,
+			 object_name, use_default_access, access, options,
 			 &xnav_ge_command_cb,
 			 &xnav_ge_get_current_objects_cb, &xnav_ge_is_authorized_cb);
     gectx->close_cb = xnav_ge_close_cb;
@@ -7238,7 +7251,8 @@ void XNav::close_graph( char *filename, char *object_name)
 
 int XNav::exec_xttgraph( pwr_tObjid xttgraph, char *instance,
 			 char *focus, int inputempty,
-			 int use_default_access, unsigned int access)
+			 int use_default_access, unsigned int access, 
+			 unsigned int options)
 {
   pwr_sClass_XttGraph xttgraph_o;
   char	action[80];
@@ -7246,6 +7260,7 @@ int XNav::exec_xttgraph( pwr_tObjid xttgraph, char *instance,
   int	sts;
   pwr_tAName  instance_str;
   pwr_tAName  name;
+  int   scrollbars, menu, navigator;
 
   sts = gdh_ObjidToName( xttgraph, name, 
 		sizeof(name), cdh_mName_volumeStrict);
@@ -7268,10 +7283,22 @@ int XNav::exec_xttgraph( pwr_tObjid xttgraph, char *instance,
   {
     // Open graph
     *s = 0;
-    open_graph( xttgraph_o.Title, action, xttgraph_o.Scrollbar, 
-	xttgraph_o.Menu, xttgraph_o.Navigator, xttgraph_o.Width,
+    scrollbars = xttgraph_o.Options & pwr_mXttGraphOptionsMask_Scrollbars ? 1 : 0;
+    menu = xttgraph_o.Options & pwr_mXttGraphOptionsMask_Menu ? 1 : 0;
+    navigator = xttgraph_o.Options & pwr_mXttGraphOptionsMask_Navigator ? 1 : 0;
+    if ( xttgraph_o.Options & pwr_mXttGraphOptionsMask_FullScreen)
+      options |= ge_mOptions_FullScreen;
+    if ( xttgraph_o.Options & pwr_mXttGraphOptionsMask_Maximize)
+      options |= ge_mOptions_Maximize;
+    if ( xttgraph_o.Options & pwr_mXttGraphOptionsMask_FullMaximize)
+      options |= ge_mOptions_FullMaximize;
+    if ( xttgraph_o.Options & pwr_mXttGraphOptionsMask_Iconify)
+      options |= ge_mOptions_Iconify;
+
+    open_graph( xttgraph_o.Title, action, scrollbars, 
+	menu, navigator, xttgraph_o.Width,
 	xttgraph_o.Height, xttgraph_o.X, xttgraph_o.Y, instance, 
-	focus, inputempty, use_default_access, access);
+		focus, inputempty, use_default_access, access, options);
   }
   else if ( (strstr( action, ".class")))
   {

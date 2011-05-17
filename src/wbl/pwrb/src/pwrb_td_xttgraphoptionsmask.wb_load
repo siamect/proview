@@ -1,0 +1,112 @@
+! 
+!  Proview   $Id$
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_xttgraphoptionsmask.wb_load -- Defines the mask type XttGraphOptionsMask
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Bitmask for xtt graph options.
+!
+! @b See also
+!  @classlink XttGraph pwrb_xttgraph.html
+!*/
+  Object XttGraphOptionsMask $TypeDef 55
+    Body SysBody
+      Attr Type = pwr_eType_Mask
+      Attr Size = 4
+      Attr TypeRef = "pwrs:Type-$Mask"
+      Attr Elements = 1
+    EndBody
+    !/**
+    !  Full screen.
+    !*/
+    Object FullSceen $Bit
+     Body SysBody
+       Attr PgmName = "FullScreen"
+       Attr Text = "FullScreen"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  Maximize.
+    !*/
+    Object Maximize $Bit
+     Body SysBody
+       Attr PgmName = "Maximize"
+       Attr Text = "Maximize"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !  Hide Status bar.
+    !*/
+    Object FullMaximize $Bit
+     Body SysBody
+       Attr PgmName = "FullMaximize"
+       Attr Text = "FullMaximize"
+       Attr Value = 4
+     EndBody
+    EndObject
+    !/**
+    !  Iconify.
+    !*/
+    Object Iconify $Bit
+     Body SysBody
+       Attr PgmName = "Iconify"
+       Attr Text = "Iconify"
+       Attr Value = 8
+     EndBody
+    EndObject
+    !/**
+    !  Menu.
+    !*/
+    Object Menu $Bit
+     Body SysBody
+       Attr PgmName = "Menu"
+       Attr Text = "Menu"
+       Attr Value = 16
+     EndBody
+    EndObject
+    !/**
+    !  Scrollbars.
+    !*/
+    Object Scrollbars $Bit
+     Body SysBody
+       Attr PgmName = "Scrollbars"
+       Attr Text = "Scrollbars"
+       Attr Value = 32
+     EndBody
+    EndObject
+    !/**
+    !  Navigator.
+    !*/
+    Object Navigator $Bit
+     Body SysBody
+       Attr PgmName = "Navigator"
+       Attr Text = "Navigator"
+       Attr Value = 64
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+

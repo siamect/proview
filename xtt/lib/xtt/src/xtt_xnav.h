@@ -173,6 +173,13 @@ struct s_trace_node {
 };
 
 typedef enum {
+        ge_mOptions_FullScreen   = 1 << 0,
+        ge_mOptions_Maximize     = 1 << 1,
+        ge_mOptions_FullMaximize = 1 << 2,
+        ge_mOptions_Iconify      = 1 << 3
+} ge_mOptions;
+
+typedef enum {
 	applist_eType_Trace,
 	applist_eType_Graph,
 	applist_eType_Attr,
@@ -352,7 +359,7 @@ class XNav {
     virtual XttGe *xnav_ge_new( const char *name, const char *filename, int scrollbar, int menu, 
 				int navigator, int width, int height, int x, int y, 
 				double scan_time, const char *object_name, 
-				int use_default_access, unsigned int access,
+				int use_default_access, unsigned int access, unsigned int options,
 				int (*xg_command_cb) (XttGe *, char *),
 				int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
 				int (*xg_is_authorized_cb) (void *, unsigned int)) {return 0;}
@@ -492,11 +499,11 @@ class XNav {
     void open_graph( const char *name, const char *filename, int scrollbar, int menu, 
 	int navigator, int width, int height, int x, int y, const char *object_name,
         const char *focus, int inputempty, int use_default_access, 
-        unsigned int access);
+	unsigned int access, unsigned int options);
     void close_graph( char *filename, char *object_name);
     int exec_xttgraph( pwr_tObjid xttgraph, char *instance,
 		       char *focus, int inputempty,
-		       int use_default_access, unsigned int access);
+		       int use_default_access, unsigned int access, unsigned int options);
     void ge_event_exec( int type, char *name, char *instance, void *event, unsigned int size);
     int set_parameter( char *name_str, char *value_str, int bypass);
     void open_rttlog( char *name, char *filename);

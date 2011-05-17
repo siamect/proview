@@ -141,38 +141,28 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      ! If action is opening a ge graph, open a navigator window for the graph.
-      !*/
-      Object Navigator $Attribute 10
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$Boolean"
-          Attr Flags = 0
-        EndBody
-      EndObject
-      !/**
-      ! If action is opening a ge graph, display scrollbars in the graph window.
-      !*/
-      Object Scrollbar $Attribute 11
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$Boolean"
-          Attr Flags = 0
-        EndBody
-      EndObject
-      !/**
-      ! If action is opening a ge graph, display a menu in the graph window.
-      !*/
-      Object Menu $Attribute 12
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$Boolean"
-          Attr Flags = 0
-        EndBody
-      EndObject
-      !/**
       ! Name of an object, if action is opening a class graph for a specific object.
       !*/
       Object Object $Attribute 13
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      ! Options for the graph.
+      !
+      ! - FullScreen  Open the graph as full screen without frame.
+      ! - Maximize    Open the graph maximized, not covering the operator window (NYI).
+      ! - FullMaximize Open the graph maximized, covering the operator window.
+      ! - Iconify     Open the graph iconified.
+      ! - Menu        Add a standard menu with close and zoom buttons.
+      ! - Srollbars   Add scrollbars.
+      ! - Navigator   Open a navigator window for scrolling and zooming the graph.
+      !*/
+      Object Options $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-XttGraphOptionsMask"
           Attr Flags = 0
         EndBody
       EndObject
