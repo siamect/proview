@@ -145,6 +145,9 @@ void XttGtk::close( void *ctx, int terminate)
   char  title[80];
 
   if ( terminate) {
+    if ( !xtt->wow)
+      return;
+
     strcpy( title, "Confirm");
     xtt->wow->DisplayQuestion( xtt, title, "Do you want to close", close_ok, 0, 0);
   }
