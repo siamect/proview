@@ -341,7 +341,11 @@ static pwr_tStatus	nmpsbck_data_handler( bck_ctx	bckctx)
 	  switch( cellheader->class)
 	  {
 	    case pwr_cClass_NMpsCell:
+	    case pwr_cClass_NMpsCell60:
+	    case pwr_cClass_NMpsCell120:
 	    case pwr_cClass_NMpsStoreCell:
+	    case pwr_cClass_NMpsStoreCell60:
+	    case pwr_cClass_NMpsStoreCell120:
 	    {
 	      pwr_sClass_NMpsCell 	*cell_ptr;
 	      plc_t_DataInfo		*data_block_ptr;
@@ -724,7 +728,11 @@ static pwr_tStatus	nmpsbck_cellist_add(
 	switch ( class)
 	{
 	  case pwr_cClass_NMpsCell:
+	  case pwr_cClass_NMpsCell60:
+	  case pwr_cClass_NMpsCell120:
 	  case pwr_cClass_NMpsStoreCell:
+	  case pwr_cClass_NMpsStoreCell60:
+	  case pwr_cClass_NMpsStoreCell120:
 	    if ( !(((pwr_sClass_NMpsCell *)objectp)->Function & 
 				NMPS_CELLFUNC_BACKUP))
 	      return NMPS__SUCCESS;
@@ -759,7 +767,11 @@ static pwr_tStatus	nmpsbck_cellist_add(
 	switch( cellist_ptr->class)
 	{
 	  case pwr_cClass_NMpsCell:
+	  case pwr_cClass_NMpsCell60:
+	  case pwr_cClass_NMpsCell120:
 	  case pwr_cClass_NMpsStoreCell:
+	  case pwr_cClass_NMpsStoreCell60:
+	  case pwr_cClass_NMpsStoreCell120:
 	    cellist_ptr->size = 
 	        (char *)&(((pwr_sClass_NMpsCell *)(cellist_ptr->cell))->Data1P) -
 	        (char *)(cellist_ptr->cell) +
@@ -845,7 +857,30 @@ static pwr_tStatus	nmps_cell_init( bck_ctx	bckctx)
 
 	  sts = gdh_GetNextObject( objid, &objid);
 	}
-	/* Get the cell objects on this node */
+
+	sts = gdh_GetClassList ( pwr_cClass_NMpsCell60, &objid);
+	while ( ODD(sts))
+	{
+          /* Store and direct link the cells */
+          sts = nmpsbck_cellist_add( bckctx, objid, &bckctx->cellist, 
+		&bckctx->cell_count);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = gdh_GetNextObject( objid, &objid);
+	}
+
+	sts = gdh_GetClassList ( pwr_cClass_NMpsCell120, &objid);
+	while ( ODD(sts))
+	{
+          /* Store and direct link the cells */
+          sts = nmpsbck_cellist_add( bckctx, objid, &bckctx->cellist, 
+		&bckctx->cell_count);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = gdh_GetNextObject( objid, &objid);
+	}
+
+	/* Get the store cell objects on this node */
 	sts = gdh_GetClassList ( pwr_cClass_NMpsStoreCell, &objid);
 	while ( ODD(sts))
 	{
@@ -856,7 +891,30 @@ static pwr_tStatus	nmps_cell_init( bck_ctx	bckctx)
 
 	  sts = gdh_GetNextObject( objid, &objid);
 	}
-	/* Get the cell objects on this node */
+
+	sts = gdh_GetClassList ( pwr_cClass_NMpsStoreCell60, &objid);
+	while ( ODD(sts))
+	{
+          /* Store and direct link the cells */
+          sts = nmpsbck_cellist_add( bckctx, objid, &bckctx->cellist, 
+		&bckctx->cell_count);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = gdh_GetNextObject( objid, &objid);
+	}
+
+	sts = gdh_GetClassList ( pwr_cClass_NMpsStoreCell120, &objid);
+	while ( ODD(sts))
+	{
+          /* Store and direct link the cells */
+          sts = nmpsbck_cellist_add( bckctx, objid, &bckctx->cellist, 
+		&bckctx->cell_count);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = gdh_GetNextObject( objid, &objid);
+	}
+
+	/* Get the mirror cell objects on this node */
 	sts = gdh_GetClassList ( pwr_cClass_NMpsMirrorCell, &objid);
 	while ( ODD(sts))
 	{
@@ -1939,7 +1997,11 @@ static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx)
 	    switch( cellheader.class)
 	    {
 	      case pwr_cClass_NMpsCell:
+	      case pwr_cClass_NMpsCell60:
+	      case pwr_cClass_NMpsCell120:
 	      case pwr_cClass_NMpsStoreCell:
+	      case pwr_cClass_NMpsStoreCell60:
+	      case pwr_cClass_NMpsStoreCell120:
 	      {
 	        pwr_sClass_NMpsCell 	*cell_ptr;
 	        pwr_sClass_NMpsCell 	*object_ptr;
@@ -2098,7 +2160,11 @@ static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx)
 	  switch( clist_ptr->class)
 	  {
 	    case pwr_cClass_NMpsCell:
+	    case pwr_cClass_NMpsCell60:
+	    case pwr_cClass_NMpsCell120:
 	    case pwr_cClass_NMpsStoreCell:
+	    case pwr_cClass_NMpsStoreCell60:
+	    case pwr_cClass_NMpsStoreCell120:
 	      ((pwr_sClass_NMpsCell *) clist_ptr->buffer)->ReloadDone = 0;
 	      ((pwr_sClass_NMpsCell *) clist_ptr->buffer)->MirrorRestart = 1;
 	      ((pwr_sClass_NMpsCell *) clist_ptr->buffer)->Function = 
@@ -2147,7 +2213,95 @@ static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx)
 	  }
 	  sts = gdh_GetNextObject( objid, &objid);
 	}
+	sts = gdh_GetClassList ( pwr_cClass_NMpsCell60, &objid);
+	while ( ODD(sts))
+	{
+	  sts = nmpsbck_clist_find( clist, cellheader.objid, &clist_ptr);
+	  if (EVEN(sts))
+	  {
+	    sts = gdh_ObjidToPointer( objid, (pwr_tAddress *) &objectp);
+	    if (EVEN(sts))
+	    {
+	      nmpsbck_set_cell_backup_done();
+	      LogAndReturn(NMPS__RESTOREERROR, sts);
+	    }
+
+	    if ( ((pwr_sClass_NMpsCell *) objectp)->Function & 
+			NMPS_CELLFUNC_BACKUP)
+	    {
+	      ((pwr_sClass_NMpsCell *) objectp)->ReloadDone = NMPS_CELL_RELOADDONE;
+	      ((pwr_sClass_NMpsCell *) objectp)->InitTime = 1;
+	    }
+	  }
+	  sts = gdh_GetNextObject( objid, &objid);
+	}
+	sts = gdh_GetClassList ( pwr_cClass_NMpsCell120, &objid);
+	while ( ODD(sts))
+	{
+	  sts = nmpsbck_clist_find( clist, cellheader.objid, &clist_ptr);
+	  if (EVEN(sts))
+	  {
+	    sts = gdh_ObjidToPointer( objid, (pwr_tAddress *) &objectp);
+	    if (EVEN(sts))
+	    {
+	      nmpsbck_set_cell_backup_done();
+	      LogAndReturn(NMPS__RESTOREERROR, sts);
+	    }
+
+	    if ( ((pwr_sClass_NMpsCell *) objectp)->Function & 
+			NMPS_CELLFUNC_BACKUP)
+	    {
+	      ((pwr_sClass_NMpsCell *) objectp)->ReloadDone = NMPS_CELL_RELOADDONE;
+	      ((pwr_sClass_NMpsCell *) objectp)->InitTime = 1;
+	    }
+	  }
+	  sts = gdh_GetNextObject( objid, &objid);
+	}
 	sts = gdh_GetClassList ( pwr_cClass_NMpsStoreCell, &objid);
+	while ( ODD(sts))
+	{
+	  sts = nmpsbck_clist_find( clist, cellheader.objid, &clist_ptr);
+	  if (EVEN(sts))
+	  {
+	    sts = gdh_ObjidToPointer( objid, (pwr_tAddress *) &objectp);
+	    if (EVEN(sts))
+	    {
+	      nmpsbck_set_cell_backup_done();
+	      LogAndReturn(NMPS__RESTOREERROR, sts);
+	    }
+
+	    if ( ((pwr_sClass_NMpsStoreCell *) objectp)->Function & 
+			NMPS_CELLFUNC_BACKUP)
+	    {
+	      ((pwr_sClass_NMpsStoreCell *) objectp)->ReloadDone = NMPS_CELL_RELOADDONE;
+	      ((pwr_sClass_NMpsStoreCell *) objectp)->InitTime = 1;
+	    }
+	  }
+	  sts = gdh_GetNextObject( objid, &objid);
+	}
+	sts = gdh_GetClassList ( pwr_cClass_NMpsStoreCell60, &objid);
+	while ( ODD(sts))
+	{
+	  sts = nmpsbck_clist_find( clist, cellheader.objid, &clist_ptr);
+	  if (EVEN(sts))
+	  {
+	    sts = gdh_ObjidToPointer( objid, (pwr_tAddress *) &objectp);
+	    if (EVEN(sts))
+	    {
+	      nmpsbck_set_cell_backup_done();
+	      LogAndReturn(NMPS__RESTOREERROR, sts);
+	    }
+
+	    if ( ((pwr_sClass_NMpsStoreCell *) objectp)->Function & 
+			NMPS_CELLFUNC_BACKUP)
+	    {
+	      ((pwr_sClass_NMpsStoreCell *) objectp)->ReloadDone = NMPS_CELL_RELOADDONE;
+	      ((pwr_sClass_NMpsStoreCell *) objectp)->InitTime = 1;
+	    }
+	  }
+	  sts = gdh_GetNextObject( objid, &objid);
+	}
+	sts = gdh_GetClassList ( pwr_cClass_NMpsStoreCell120, &objid);
 	while ( ODD(sts))
 	{
 	  sts = nmpsbck_clist_find( clist, cellheader.objid, &clist_ptr);
@@ -2272,7 +2426,63 @@ static pwr_tStatus	nmpsbck_set_cell_backup_done()
 	  }
 	  sts = gdh_GetNextObject( objid, &objid);
 	}
+	sts = gdh_GetClassList ( pwr_cClass_NMpsCell60, &objid);
+	while ( ODD(sts))
+	{
+	  sts = gdh_ObjidToPointer( objid, (pwr_tAddress *) &objectp);
+	  if (EVEN(sts)) LogAndReturn(NMPS__RESTOREERROR, sts);
+
+	  if ( ((pwr_sClass_NMpsCell *) objectp)->Function & 
+			NMPS_CELLFUNC_BACKUP)
+	  {
+	    ((pwr_sClass_NMpsCell *) objectp)->ReloadDone = NMPS_CELL_RELOADDONE;
+	    ((pwr_sClass_NMpsCell *) objectp)->InitTime = 1;
+	  }
+	  sts = gdh_GetNextObject( objid, &objid);
+	}
+	sts = gdh_GetClassList ( pwr_cClass_NMpsCell120, &objid);
+	while ( ODD(sts))
+	{
+	  sts = gdh_ObjidToPointer( objid, (pwr_tAddress *) &objectp);
+	  if (EVEN(sts)) LogAndReturn(NMPS__RESTOREERROR, sts);
+
+	  if ( ((pwr_sClass_NMpsCell *) objectp)->Function & 
+			NMPS_CELLFUNC_BACKUP)
+	  {
+	    ((pwr_sClass_NMpsCell *) objectp)->ReloadDone = NMPS_CELL_RELOADDONE;
+	    ((pwr_sClass_NMpsCell *) objectp)->InitTime = 1;
+	  }
+	  sts = gdh_GetNextObject( objid, &objid);
+	}
 	sts = gdh_GetClassList ( pwr_cClass_NMpsStoreCell, &objid);
+	while ( ODD(sts))
+	{
+	  sts = gdh_ObjidToPointer( objid, (pwr_tAddress *) &objectp);
+	  if (EVEN(sts)) LogAndReturn(NMPS__RESTOREERROR, sts);
+
+	  if ( ((pwr_sClass_NMpsStoreCell *) objectp)->Function & 
+			NMPS_CELLFUNC_BACKUP)
+	  {
+	    ((pwr_sClass_NMpsStoreCell *) objectp)->ReloadDone = NMPS_CELL_RELOADDONE;
+	    ((pwr_sClass_NMpsStoreCell *) objectp)->InitTime = 1;
+	  }
+	  sts = gdh_GetNextObject( objid, &objid);
+	}
+	sts = gdh_GetClassList ( pwr_cClass_NMpsStoreCell60, &objid);
+	while ( ODD(sts))
+	{
+	  sts = gdh_ObjidToPointer( objid, (pwr_tAddress *) &objectp);
+	  if (EVEN(sts)) LogAndReturn(NMPS__RESTOREERROR, sts);
+
+	  if ( ((pwr_sClass_NMpsStoreCell *) objectp)->Function & 
+			NMPS_CELLFUNC_BACKUP)
+	  {
+	    ((pwr_sClass_NMpsStoreCell *) objectp)->ReloadDone = NMPS_CELL_RELOADDONE;
+	    ((pwr_sClass_NMpsStoreCell *) objectp)->InitTime = 1;
+	  }
+	  sts = gdh_GetNextObject( objid, &objid);
+	}
+	sts = gdh_GetClassList ( pwr_cClass_NMpsStoreCell120, &objid);
 	while ( ODD(sts))
 	{
 	  sts = gdh_ObjidToPointer( objid, (pwr_tAddress *) &objectp);
@@ -2327,7 +2537,11 @@ static pwr_tStatus	nmpsbck_cell_handler( bck_ctx	bckctx)
 	  switch ( cell_ptr->class)
 	  {
 	    case pwr_cClass_NMpsCell:
+	    case pwr_cClass_NMpsCell60:
+	    case pwr_cClass_NMpsCell120:
 	    case pwr_cClass_NMpsStoreCell:
+	    case pwr_cClass_NMpsStoreCell60:
+	    case pwr_cClass_NMpsStoreCell120:
 	      if (((pwr_sClass_NMpsCell *)(cell_ptr->cell))->BackupNow)
 	      {
 	        backup_now = 1;

@@ -108,6 +108,7 @@ replaced	<Symbol replaced>					/info
 nomodif		<Nothing is modified>					/info
 compileparent	<Compile parent window>					/info
 disabled	<Object is disabled>					/error
+maxsize		<MaxSize is larger than cell size>			/error
 
         .facility       FOE,280 /prefix = FOE__ ! Function object editor
 

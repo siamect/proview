@@ -748,9 +748,13 @@ palette PlcEditorPalette
     class FuncInput
     class FuncOutput
     class NMpsCell
+    class NMpsCell60
+    class NMpsCell120
     class NMpsMirrorCell
     class NMpsOutCell
     class NMpsStoreCell
+    class NMpsStoreCell60
+    class NMpsStoreCell120
     class NMpsTrp
     class NMpsTrpFF
     class NMpsTrpRR

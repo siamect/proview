@@ -2663,7 +2663,7 @@ static int	xnav_open_func(	void		*client_data,
 	  switch ( cid) {
 	  case pwr_cClass_NMpsCell:
 	  case pwr_cClass_NMpsStoreCell:
-	    scrollbar = 1;
+	    scrollbar = 0;
 	    break;
 	  default:
 	    ;

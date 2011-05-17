@@ -12519,8 +12519,43 @@ int	gcg_comp_m46( gcg_ctx gcgctx, vldh_t_node node)
 	pwr_tObjid		*resobjid_ptr;
 	pwr_tAttrRef		resattrref;
 	pwr_tClassId		cid;
+	pwr_tUInt16		*maxsize_ptr;
 
 	ldhses = (node->hn.wind)->hw.ldhses; 
+
+	/* Check size */
+	sts = ldh_GetObjectPar( ldhses,
+			node->ln.oid,
+			"RtBody",
+			"MaxSize",
+			(char **)&maxsize_ptr, &size);
+	if ( EVEN(sts)) return sts;
+
+	switch ( node->ln.cid) {
+	case pwr_cClass_NMpsCell60:
+	case pwr_cClass_NMpsStoreCell60:
+	  if ( *maxsize_ptr > 60) {
+	    free( (char *)maxsize_ptr);
+	    gcg_error_msg( gcgctx, GSX__MAXSIZE, node);
+	    return GSX__NEXTNODE;
+	  }
+	  break;
+	case pwr_cClass_NMpsCell120:
+	case pwr_cClass_NMpsStoreCell120:
+	  if ( *maxsize_ptr > 120) {
+	    free( (char *)maxsize_ptr);
+	    gcg_error_msg( gcgctx, GSX__MAXSIZE, node);
+	    return GSX__NEXTNODE;
+	  }
+	  break;
+	default:
+	  if ( *maxsize_ptr > 30) {
+	    free( (char *)maxsize_ptr);
+	    gcg_error_msg( gcgctx, GSX__MAXSIZE, node);
+	    return GSX__NEXTNODE;
+	  }
+	}
+	free( (char *)maxsize_ptr);
 
 	sts = gcg_comp_m4( gcgctx, node);
 	if ( EVEN(sts)) return sts;

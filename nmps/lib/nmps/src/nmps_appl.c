@@ -388,12 +388,16 @@ nmpsappl_MirrorInit(
 	  switch ( cellist_ptr->classid)
 	  {
 	    case pwr_cClass_NMpsCell:
+	    case pwr_cClass_NMpsCell60:
+	    case pwr_cClass_NMpsCell120:
 	    case pwr_cClass_NMpsStoreCell:
+	    case pwr_cClass_NMpsStoreCell60:
+	    case pwr_cClass_NMpsStoreCell120:
 	      maxsize = 
 	 	((pwr_sClass_NMpsCell *) cellist_ptr->object_ptr)->MaxSize;
 	      applctx->total_cellsize += maxsize;
 	      cellist_ptr->tmp_size = sizeof( pwr_sClass_NMpsCell) - 
-		sizeof( plc_t_DataInfo) * ( NMPS_CELL_SIZE - maxsize);
+		sizeof( plc_t_DataInfo) * ( 30 - maxsize);
 	      break;
 	    case pwr_cClass_NMpsMirrorCell:
 	      maxsize = 

@@ -19,7 +19,7 @@
 
 
 
-#define	NMPS_CELL_SIZE			30	/* Number of  dataobject in
+#define	NMPS_CELL_MAXSIZE	       	120	/* Number of  dataobject in
 			 			   NMpsCell och NMpsSelectCell */
 #define	NMPS_CELLMIR_SIZE		30	/* Number of dataobject in 
 						   NMpsMirrorCell */
@@ -57,19 +57,20 @@
 #define nmps_data_info
 /* Data structure for one dataobjekt in a NMpsCell and NMpsSelectCell */
 typedef struct {
-	pwr_tFloat32	*DataP;
+	pwr_tFloat32	*DataP pwr_dAlignLW;
 	pwr_tObjid	Data_ObjId pwr_dAlignLW;
 	pwr_tBoolean	Data_Front pwr_dAlignW;
 	pwr_tBoolean	Data_Back pwr_dAlignW;
 	gdh_tDlid	Data_Dlid pwr_dAlignW;	
 	pwr_tBoolean	Data_Select pwr_dAlignW;
 	pwr_tBoolean	Data_OldSelect pwr_dAlignW;
+  // pwr_tInt32	filler;
 	} plc_t_DataInfo;
 
 /* Data structure for one dataobjekt in a NMpsMirrorCell */
 typedef struct {
-	pwr_tFloat32	*DataP;
-	pwr_tObjid	Data_ObjId pwr_dAlignW;
+	pwr_tFloat32	*DataP pwr_dAlignLW;
+	pwr_tObjid	Data_ObjId pwr_dAlignLW;
 	gdh_tDlid	Data_Dlid pwr_dAlignW;	
 	} plc_t_DataInfoMirCell;
 #endif

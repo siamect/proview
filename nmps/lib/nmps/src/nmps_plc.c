@@ -37,6 +37,7 @@
 #include "rt_plc.h"
 #include "rt_nmps_lock.h"
 #include "nmps.h"
+#include "rs_nmps_msg.h"
 
 #define ODD(a)	(((int)(a) & 1) != 0)
 #define EVEN(a)	(((int)(a) & 1) == 0)
@@ -137,7 +138,7 @@ void NMpsCell_exec(
 	unsigned long	*data_pointer;
 	int		reloaddone;
 #if defined OS_LINUX
-	plc_t_DataInfo	cpy_buf[NMPS_CELL_SIZE];
+	char 		*tmp_buf;
 #endif
 
 	if ( object->InitTime) {
@@ -155,8 +156,8 @@ void NMpsCell_exec(
 
 	if ( object->FrontNew) object->FrontNew = 0;
 	if ( object->RearNew) object->RearNew = 0;
-	if ( object->MaxSize > NMPS_CELL_SIZE)
-	  object->MaxSize = NMPS_CELL_SIZE;
+	if ( object->MaxSize > NMPS_CELL_MAXSIZE)
+	  object->MaxSize = NMPS_CELL_MAXSIZE;
 
 	if ( object->ResetObjectP)
 	{
@@ -188,19 +189,20 @@ void NMpsCell_exec(
 	      object->ExternIndex = 1;
 	    case NMPS_OPTYPE_EXTINSERT_IDX:
 	      /* Direct link to extern objid */
-	      if ( object->CellFull)
-	        object->ExternStatus = 2; /* Felkod !!! */
+	      if ( object->ExternIndex <= 0 || object->ExternIndex > object->MaxSize)
+		object->ExternStatus = NMPS__EXTERNIDX;		
+	      else if ( object->CellFull)
+		object->ExternStatus = 2; /* Felkod !!! */
 	      else if ( object->ExternIndex > object->LastIndex + 1)
-	        object->ExternStatus = 2; /* Felkod !!! */
-	      else
-	      {
-	        extern_attrref.Objid = object->ExternObjId;
-	        extern_attrref.Offset = 0;
-	        extern_attrref.Size = 4;
-	        extern_attrref.Flags.b.Indirect = 0;
-	        object->ExternStatus = gdh_DLRefObjectInfoAttrref ( 
-			&extern_attrref, 
-			(pwr_tAddress *) &data_pointer, &data_dlid);
+		object->ExternStatus = 2; /* Felkod !!! */
+	      else {
+		extern_attrref.Objid = object->ExternObjId;
+		extern_attrref.Offset = 0;
+		extern_attrref.Size = 4;
+		extern_attrref.Flags.b.Indirect = 0;
+		object->ExternStatus = 
+		  gdh_DLRefObjectInfoAttrref( &extern_attrref, 
+					      (pwr_tAddress *) &data_pointer, &data_dlid);
 	      }
 	      if ( ODD( object->ExternStatus))
 	      {
@@ -211,12 +213,15 @@ void NMpsCell_exec(
 	        if ( object->LastIndex >= object->ExternIndex)
 	        {
 #if defined OS_LINUX
-	          memcpy( &cpy_buf, data_index,
+		  tmp_buf = malloc( (object->LastIndex - object->ExternIndex + 1)
+			* sizeof ( *data_max));
+	          memcpy( tmp_buf, data_index,
 	          	(object->LastIndex - object->ExternIndex + 1)
 			* sizeof ( *data_max));
-	          memcpy( (char *) data_index + sizeof( *data_max), cpy_buf,
+	          memcpy( (char *) data_index + sizeof( *data_max), tmp_buf,
 	          	(object->LastIndex - object->ExternIndex + 1)
 			* sizeof ( *data_max));
+		  free( tmp_buf);
 #else
 	          memcpy( (char *) data_index + sizeof( *data_max),
 			data_index,
@@ -287,8 +292,10 @@ void NMpsCell_exec(
 	        size = (object->LastIndex - object->ExternIndex)
 			* sizeof ( *data_max);
 #if defined OS_LINUX
-	        memcpy( &cpy_buf, (char *) data_index + sizeof( *data_max), size);
-	        memcpy( data_index, &cpy_buf, size);
+		tmp_buf = malloc( size);
+	        memcpy( tmp_buf, (char *) data_index + sizeof( *data_max), size);
+	        memcpy( data_index, tmp_buf, size);
+		free( tmp_buf);
 #else
 	        memcpy( data_index, (char *) data_index + sizeof( *data_max),
 			 size);
@@ -429,10 +436,12 @@ void NMpsCell_exec(
 	      if ( object->LastIndex > 0)
 	      {
 #if defined OS_LINUX
-	        memcpy( &cpy_buf, &object->Data1P,
+		tmp_buf = malloc( object->LastIndex * sizeof ( *data_max));
+	        memcpy( tmp_buf, &object->Data1P,
 	          object->LastIndex * sizeof ( *data_max));
-	        memcpy( &object->Data2P, &cpy_buf,
+	        memcpy( &object->Data2P, tmp_buf,
 	          object->LastIndex * sizeof ( *data_max));
+		free( tmp_buf);
 #else
 	        memcpy( &object->Data2P, &object->Data1P,
 	          object->LastIndex * sizeof ( *data_max));
@@ -478,10 +487,12 @@ void NMpsCell_exec(
 	      if ( object->LastIndex > 0)
 	      {
 #if defined OS_LINUX
-	        memcpy( &cpy_buf, &object->Data1P,
+		tmp_buf = malloc( object->LastIndex * sizeof ( *data_max));
+	        memcpy( tmp_buf, &object->Data1P,
 	          object->LastIndex * sizeof ( *data_max));
-	        memcpy( &object->Data2P, &cpy_buf,
+	        memcpy( &object->Data2P, tmp_buf,
 	          object->LastIndex * sizeof ( *data_max));
+		free( tmp_buf);
 #else
 	        memcpy( &object->Data2P, &object->Data1P,
 	          object->LastIndex * sizeof ( *data_max));
@@ -626,10 +637,12 @@ void NMpsCell_exec(
 		return;
 	      }
 #if defined OS_LINUX
-	      memcpy( &cpy_buf, &object->Data2P,
+	      tmp_buf = malloc(( object->LastIndex - 1) * sizeof( *data_last));
+	      memcpy( tmp_buf, &object->Data2P,
 		(object->LastIndex - 1) * sizeof( *data_last)); 
-	      memcpy( &object->Data1P, &cpy_buf,
+	      memcpy( &object->Data1P, tmp_buf,
 		(object->LastIndex - 1) * sizeof( *data_last)); 
+	      free( tmp_buf);
 #else
 	      memcpy( &object->Data1P, &object->Data2P,
 		(object->LastIndex - 1) * sizeof( *data_last)); 
@@ -698,6 +711,7 @@ void NMpsStoreCell_init( pwr_sClass_NMpsStoreCell  *object)
 	  }
 	  object->InitTime = 1;
 	}
+
 }
 
 /*_*
@@ -720,7 +734,7 @@ void NMpsStoreCell_exec(
 	unsigned long	*data_pointer;
 	int		reloaddone;
 #if defined OS_LINUX
-	plc_t_DataInfo	cpy_buf[NMPS_CELL_SIZE];
+	char 		*tmp_buf;
 #endif
 
 	if ( object->InitTime)
@@ -739,8 +753,8 @@ void NMpsStoreCell_exec(
 
 	if ( object->FrontNew) object->FrontNew = 0;
 	if ( object->RearNew) object->RearNew = 0;
-	if ( object->MaxSize > NMPS_CELL_SIZE)
-	  object->MaxSize = NMPS_CELL_SIZE;
+	if ( object->MaxSize > NMPS_CELL_MAXSIZE)
+	  object->MaxSize = NMPS_CELL_MAXSIZE;
 
 	if ( object->ResetObjectP)
 	{
@@ -773,8 +787,10 @@ void NMpsStoreCell_exec(
 	      object->ExternIndex = 1;
 	    case NMPS_OPTYPE_EXTINSERT_IDX:
 	      /* Direct link to extern objid */
-	      if ( object->CellFull)
-	        object->ExternStatus = 2; /* Felkod !!! */
+	      if ( object->ExternIndex <= 0 || object->ExternIndex > object->MaxSize)
+		object->ExternStatus = NMPS__EXTERNIDX;		
+	      else if ( object->CellFull)
+		  object->ExternStatus = 2; /* Felkod !!! */
 	      else if ( object->ExternIndex > object->LastIndex + 1)
 	        object->ExternStatus = 2; /* Felkod !!! */
 	      else
@@ -795,12 +811,15 @@ void NMpsStoreCell_exec(
 	        if ( object->LastIndex >= object->ExternIndex)
 	        {
 #if defined OS_LINUX
-	          memcpy( &cpy_buf, data_index,
+		  tmp_buf = malloc( (object->LastIndex - object->ExternIndex + 1)
+				    * sizeof ( *data_max));
+	          memcpy( tmp_buf, data_index,
 	          	(object->LastIndex - object->ExternIndex + 1)
 			* sizeof ( *data_max));
-	          memcpy( (char *) data_index + sizeof( *data_max), cpy_buf,
+	          memcpy( (char *) data_index + sizeof( *data_max), tmp_buf,
 	          	(object->LastIndex - object->ExternIndex + 1)
 			* sizeof ( *data_max));
+		  free( tmp_buf);
 #else
 	          memcpy( (char *) data_index + sizeof( *data_max),
 			data_index,
@@ -972,8 +991,10 @@ void NMpsStoreCell_exec(
 	        size = (object->LastIndex - object->ExternIndex)
 			* sizeof ( *data_max);
 #if defined OS_LINUX
-	        memcpy( &cpy_buf, (char *) data_index + sizeof( *data_max), size);
-	        memcpy( data_index, &cpy_buf, size);
+		tmp_buf = malloc( size);
+	        memcpy( tmp_buf, (char *) data_index + sizeof( *data_max), size);
+	        memcpy( data_index, tmp_buf, size);
+		free( tmp_buf);
 #else
 	        memcpy( data_index, (char *) data_index + sizeof( *data_max),
 			 size);
@@ -1176,10 +1197,12 @@ void NMpsStoreCell_exec(
 	      if ( object->LastIndex > 0)
 	      {
 #if defined OS_LINUX
-	        memcpy( &cpy_buf, &object->Data1P,
+		tmp_buf = malloc( object->LastIndex * sizeof ( *data_max));
+	        memcpy( tmp_buf, &object->Data1P,
 	          object->LastIndex * sizeof ( *data_max));
-	        memcpy( &object->Data2P, &cpy_buf,
+	        memcpy( &object->Data2P, tmp_buf,
 	          object->LastIndex * sizeof ( *data_max));
+		free( tmp_buf);
 #else
 	        memcpy( &object->Data2P, &object->Data1P,
 	          object->LastIndex * sizeof ( *data_max));
@@ -1224,10 +1247,12 @@ void NMpsStoreCell_exec(
 	      if ( object->LastIndex > 0)
 	      {
 #if defined OS_LINUX
-	        memcpy( &cpy_buf, &object->Data1P,
+		tmp_buf = malloc( object->LastIndex * sizeof ( *data_max));
+	        memcpy( tmp_buf, &object->Data1P,
 	          object->LastIndex * sizeof ( *data_max));
-	        memcpy( &object->Data2P, &cpy_buf,
+	        memcpy( &object->Data2P, tmp_buf,
 	          object->LastIndex * sizeof ( *data_max));
+		free( tmp_buf);
 #else
 	        memcpy( &object->Data2P, &object->Data1P,
 	          object->LastIndex * sizeof ( *data_max));
@@ -1324,8 +1349,10 @@ void NMpsStoreCell_exec(
 	        size = (object->LastIndex - object->SelectIndex)
 			* sizeof ( *data_max);
 #if defined OS_LINUX
-	        memcpy( &cpy_buf, (char *) data_index + sizeof( *data_max), size);
-	        memcpy( data_index, &cpy_buf, size);
+		tmp_buf = malloc( size);
+	        memcpy( tmp_buf, (char *) data_index + sizeof( *data_max), size);
+	        memcpy( data_index, tmp_buf, size);
+		free( tmp_buf);
 #else
 	        memcpy( data_index, (char *) data_index + sizeof( *data_max),
 			 size);
@@ -1419,10 +1446,12 @@ void NMpsStoreCell_exec(
 	        object->SelectIndex--;
 
 #if defined OS_LINUX
-	      memcpy( &cpy_buf, &object->Data2P, 
+	      tmp_buf = malloc( (object->LastIndex - 1) * sizeof( *data_last));
+	      memcpy( tmp_buf, &object->Data2P, 
 		(object->LastIndex - 1) * sizeof( *data_last)); 
-	      memcpy( &object->Data1P, &cpy_buf, 
+	      memcpy( &object->Data1P, tmp_buf, 
 		(object->LastIndex - 1) * sizeof( *data_last)); 
+	      free( tmp_buf);
 #else
 	      memcpy( &object->Data1P, &object->Data2P, 
 		(object->LastIndex - 1) * sizeof( *data_last)); 
@@ -2983,3 +3012,41 @@ void DataFRead_exec( plc_sThread		*tp,
   }
   o->CondOld = *o->ConditionP;
 }
+
+void NMpsCell60_init( pwr_sClass_NMpsCell60 *object) 
+{
+  NMpsCell_init((pwr_sClass_NMpsCell *)object);
+}
+void NMpsCell60_exec( plc_sThread		*tp,
+		      pwr_sClass_NMpsCell60  *object) 
+{
+  NMpsCell_exec( tp, (pwr_sClass_NMpsCell *)object);
+}
+void NMpsCell120_init( pwr_sClass_NMpsCell120 *object) 
+{
+  NMpsCell_init((pwr_sClass_NMpsCell *)object);
+}
+void NMpsCell120_exec( plc_sThread		*tp,
+		      pwr_sClass_NMpsCell120  *object) 
+{
+  NMpsCell_exec( tp, (pwr_sClass_NMpsCell *)object);
+}
+void NMpsStoreCell60_init( pwr_sClass_NMpsStoreCell60 *object) 
+{
+  NMpsStoreCell_init((pwr_sClass_NMpsStoreCell *)object);
+}
+void NMpsStoreCell60_exec( plc_sThread		*tp,
+		      pwr_sClass_NMpsStoreCell60  *object) 
+{
+  NMpsStoreCell_exec( tp, (pwr_sClass_NMpsStoreCell *)object);
+}
+void NMpsStoreCell120_init( pwr_sClass_NMpsStoreCell120 *object) 
+{
+  NMpsStoreCell_init((pwr_sClass_NMpsStoreCell *)object);
+}
+void NMpsStoreCell120_exec( plc_sThread		*tp,
+		      pwr_sClass_NMpsStoreCell120  *object) 
+{
+  NMpsStoreCell_exec( tp, (pwr_sClass_NMpsStoreCell *)object);
+}
+

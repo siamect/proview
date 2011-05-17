@@ -128,3 +128,4 @@ dispbattr	<Error in CellDisp-object, BooleanAttr is invalid> /error
 dispiattr	<Error in CellDisp-object, IntAttr is invalid> /error
 cellexternbusy	<Externfunction in cell is busy>		/error
 cellfull        <Cell is full>                                  /error
+externidx       <ExternIndex is out of range>                   /error
