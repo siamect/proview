@@ -15,4 +15,5 @@ Velleman_K8055_Board
 Hilscher_cifX_Master
 Hilscher_cifX_Module
 USB_Joystick
+UDP_IO
 #endif
