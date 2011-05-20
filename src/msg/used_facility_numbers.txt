@@ -31,6 +31,8 @@
   130   plc
   140   io
   141   pb
+  142   mb
+  143   iom
   180   ini
   190   mh
   191   ph

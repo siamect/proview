@@ -26,6 +26,8 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <sys/file.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
@@ -42,6 +44,7 @@
 #include "rt_io_card_read.h"
 #include "rt_io_card_read.h"
 #include "rt_io_msg.h"
+#include "rt_iom_msg.h"
 
 typedef struct {
   float time_since_rcv;
@@ -60,6 +63,9 @@ typedef struct {
   char *input_area;
   char *output_area;
   int softlimit_logged;
+  pwr_tTime last_try_connect_time;
+  pwr_tTime last_receive_time;
+  unsigned int msgs_lost;
 } io_sLocalUDP_IO;
 
 typedef struct {
@@ -74,26 +80,110 @@ typedef struct {
 #define ACK 6
 #define UDP_MAX_SIZE 32768
 
-static int SendKeepalive( io_sLocalUDP_IO *local, pwr_sClass_UDP_IO *op)
+static char rcv_buffer[65536];
+
+
+pwr_tStatus udp_recv_data( io_sLocalUDP_IO *local, io_sCard *cp, 
+			   char *buf, int buf_size)
 {
-  int sts;
-  io_sUDP_Header header;  
+  pwr_sClass_UDP_IO *op = (pwr_sClass_UDP_IO *)cp->op;
+  pwr_tStatus sts;
+  fd_set fdr;				/* For select call */
+  fd_set fde;				/* For select call */
+  fd_set fdw;				/* For select call */
+  struct timeval tv;
+  int data_size;
+  int received = 0;
+  
+  /* Receive answer */
 
-  /* Fill in application header and convert to network byte order */
+  sts = 1;
 
-  header.protocol_id[0] = STX;
-  header.protocol_id[1] = ETB;
-  header.msg_size = htons(sizeof(header));
-  header.msg_id[0] = 0;
-  header.msg_id[1] = 0;
+  /* while (sts > 0) */
+  {
+    FD_ZERO(&fdr);
+    FD_ZERO(&fdw);
+    FD_ZERO(&fde);
+    FD_SET(local->socket, &fdr);
+    FD_SET(local->socket, &fdw);
+    FD_SET(local->socket, &fde);
 
-  sts = sendto( local->socket, &header, sizeof(header), 0, 
-		(struct sockaddr *) &local->remote_addr, sizeof(struct sockaddr));
+    tv.tv_sec = 0;
+    tv.tv_usec = 0;
 
-  if (sts >= 0) 
-    op->KeepAliveDiff++;
+    sts = select(32, &fdr, &fdw, &fde, &tv);
 
-  return sts;
+    if (sts < 0) {
+      op->Status = IOM__UDP_DOWN;
+      // close(local->socket);
+      errh_Error( "Connection lost to modbus slave, %s", cp->Name);
+      return IO__SUCCESS;
+    }
+    
+    if (!(FD_ISSET(local->socket, &fdw))) {
+      op->Status = IOM__UDP_DOWN;
+      // close(local->socket);
+      errh_Error( "Connection down to modbus slave, %s", cp->Name);
+      return IO__SUCCESS;
+    }
+
+    tv.tv_sec = 0;
+    tv.tv_usec = 0;
+
+    FD_ZERO(&fdr);
+    FD_ZERO(&fde);
+    FD_SET(local->socket, &fdr);
+    FD_SET(local->socket, &fde);
+
+    sts = select(32, &fdr, NULL, &fde, &tv);
+
+    if (sts < 0) {
+      op->Status = IOM__UDP_DOWN;
+      // close(local->socket);
+      errh_Error( "Connection lost to modbus slave, %s", cp->Name);
+      return IO__SUCCESS;
+    }
+    
+    if (sts == 0) {
+      if ( !received)
+	return 0;
+      else
+	return IO__SUCCESS;
+    }
+
+    if (sts > 0 && FD_ISSET(local->socket, &fdr)) {
+      data_size = recv(local->socket, rcv_buffer, local->input_buffer_size, 0);
+
+      if (data_size < 0) {
+        op->Status = IOM__UDP_DOWN;
+	// close(local->socket);
+	errh_Error( "UDP IO Connection lost, %s", cp->Name);
+	return IO__SUCCESS;
+      }
+
+      if (data_size == 0) {
+        op->Status = IOM__UDP_DOWN;
+	// close(local->socket);
+	errh_Error( "UDP IO Connection down, %s", cp->Name);
+	return IO__SUCCESS;
+      }
+
+      if ( data_size < buf_size) {
+	if ( !received)
+	  return 0;
+	else
+	  return IO__SUCCESS;
+      }
+
+      if ( data_size > 0) {
+	memcpy( buf, rcv_buffer, buf_size);
+	received = 1;
+  	op->RX_Packets++;
+      }
+    }
+  }
+  
+  return IO__SUCCESS;
 }
 
 static pwr_tStatus IoCardInit( io_tCtx ctx,
@@ -116,13 +206,17 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
 
   local = (io_sLocalUDP_IO *) calloc( 1, sizeof(io_sLocalUDP_IO));
   cp->Local = local;
+  time_GetTimeMonotonic( &local->last_receive_time);
 
+
+  op->Link = pwr_eUpDownEnum_Down;
+  op->Status = IOM__UDP_INIT;
 
   /* Create a socket for UDP */
   local->socket = socket(AF_INET, SOCK_DGRAM, 0);
   if ( local->socket < 0) { 
     errh_Error( "UDP_IO, error creating socket, %d, '%s'", local->socket, cp->Name);
-    op->Status = IO__INITFAIL;
+    op->Status = IOM__UDP_SOCKET;
     return IO__INITFAIL;
   }
 
@@ -137,14 +231,14 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
 	       sizeof(local->local_addr));
     if (sts != 0) {
       errh_Error( "UDP_IO, error bind socket, %d, '%s'", sts, cp->Name);
-      op->Status = IO__INITFAIL;
+      op->Status = IOM__UDP_BIND;
       return IO__INITFAIL;
     }
   }
   else {
     getsockname( local->socket, (struct sockaddr *) &address, &address_len);
     op->LocalPort = ntohs(address.sin_port);
-  }   
+  }
 
   /* Initialize remote address structure */
 
@@ -167,7 +261,7 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
     }
     else {
       errh_Error( "UDP_IO, unknown remote host %s, '%s'", op->RemoteHostName, cp->Name);
-      op->Status = IO__INITFAIL;
+      op->Status = IOM__UDP_REMOTE;
       return IO__INITFAIL;
     }
   }
@@ -179,7 +273,6 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
     memcpy(&local->remote_addr.sin_addr, &badr, 4);
   }
 
-  op->Link = pwr_eUpDownEnum_Down;
   op->KeepAliveDiff = 0;
 
   local->byte_ordering = op->ByteOrdering;
@@ -217,7 +310,6 @@ static pwr_tStatus IoCardInit( io_tCtx ctx,
   }
 
   errh_Info( "Init of UDP_IO '%s'", cp->Name);
-  op->Status = IO__SUCCESS;
 
   return IO__SUCCESS;
 }
@@ -248,127 +340,37 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
 {
   io_sLocalUDP_IO *local = (io_sLocalUDP_IO *)cp->Local;
   pwr_sClass_UDP_IO *op = (pwr_sClass_UDP_IO *)cp->op;
-  fd_set fds;				/* For select call */
-  static char buf[UDP_MAX_SIZE];
-  char unknown[24];
-  unsigned char badr[24];
-  struct sockaddr_in from;
-  unsigned int fromlen;
-  int size;
   unsigned int sts;
   io_sUDP_Header header;  
-  struct timeval tv;
-  int data_received = 0;
- 
-  local->time_since_keepalive += ctx->ScanTime;
-  local->time_since_rcv += ctx->ScanTime;
-  local->time_since_keepalive = MIN(local->time_since_keepalive, op->KeepAliveTime + 1.0);
-  local->time_since_rcv = MIN(local->time_since_rcv, op->LinkTimeout + 1.0);
+  pwr_tTime now;
+  pwr_tDeltaTime dt;
 
-  tv.tv_sec = 0;
-  tv.tv_usec = 0;
-
-  FD_ZERO( &fds);
-  FD_SET( local->socket, &fds);
-  sts = select(32, &fds, NULL, NULL, &tv);  
-  if ( sts < 0) {
-    op->ErrorCount++;
-    goto read_error;
-  }
-
-  fromlen = sizeof(struct sockaddr);
-
-  size = recvfrom( local->socket, buf, sizeof(buf), MSG_DONTWAIT,
-		   (struct sockaddr *) &from, &fromlen);
-  if (size <= 0) {
-    if ( errno != EAGAIN) {
-      errh_Info("UDP IO Receive failure %d %s", size, op->RemoteHostName);
-      op->ErrorCount++;
-    }
-    goto read_error;
-  }
-
-  if ( memcmp(&from.sin_addr, &local->remote_addr.sin_addr, sizeof(struct in_addr)) != 0) {
-    /* Wrong address */
-    memcpy(&badr, &from.sin_addr, 4);
-    sprintf(unknown, "%d.%d.%d.%d", badr[0], badr[1], badr[2], badr[3]);
-    errh_Info("UDP_IO Receive from unknown source %s", unknown);
-    op->ErrorCount++;
-    goto read_error;
-  }
-
-  /* Set link up */
-  local->time_since_rcv = 0;
-  if ( op->Link == pwr_eUpDownEnum_Down) {
-    errh_Info("UDP IO link up to %s", op->RemoteHostName);
-    op->Link = pwr_eUpDownEnum_Up;
-  }
-
-  if ( size < local->input_buffer_size) {
-    errh_Info("UDP IO message size too small %s", op->RemoteHostName);
-    op->ErrorCount++;
-    goto read_error;
-  }
-
-  memcpy( local->input_buffer, buf, size);
-
-  if ( !op->EnableHeader)
-    data_received = 1;
-  else {
-    /* Header enabled */
-    memcpy(&header, buf, sizeof(io_sUDP_Header));
-
-    /* Convert the header to host byte order */
-    header.msg_size = ntohs(header.msg_size);
-    header.msg_id[0] = ntohs(header.msg_id[0]);
-    header.msg_id[1] = ntohs(header.msg_id[1]);
-
-    if (header.protocol_id[0] == STX && size == header.msg_size) {
-      /* This is a valid message */
-      if (header.protocol_id[1] == ETB || header.protocol_id[1] == ENQ) {
-	/* Keepalive */
-	if (header.msg_id[0] == 0 && header.msg_id[1] == 0) {
-	  /* Keepalive */
-	  op->KeepAliveDiff--;
-	}
-	else {
-	  /* Data */
-	  data_received = 1;
-	}
-      }
-      else if (header.protocol_id[1] == ACK) {
-	/* Acknowledge message */ 
-      }
-      else {
-	/* Weird header */
-	op->ErrorCount++;
-	errh_Info("UDP IO receive weird header %s, %02x %02x %04x %04x %04x", 
-		    op->RemoteHostName, header.protocol_id[0], header.protocol_id[1],
-		    header.msg_size, header.msg_id[0], header.msg_id[1]);
-	goto read_error;
-      }
-    }
-  }
-
-  if ( data_received) {
+  
+  sts = udp_recv_data( local, cp, 
+		       local->input_buffer, local->input_buffer_size);
+  if ( ODD(sts)) {
+    if ( op->EnableHeader)
+      memcpy( &header, local->input_buffer, sizeof(io_sUDP_Header));
+    
     io_bus_card_read( ctx, rp, cp, local->input_area, 0, 
 		      local->byte_ordering, pwr_eFloatRepEnum_FloatIEEE);
-  }
-
- read_error:
-  if ( local->time_since_rcv >=  op->LinkTimeout && op->LinkTimeout > 0) {
-    if ( op->Link == pwr_eUpDownEnum_Up) {
-      errh_Info("UDP IO link down %s", op->RemoteHostName);
-      op->Link = pwr_eUpDownEnum_Down;
+    
+    time_GetTimeMonotonic( &local->last_receive_time);
+    if ( op->Link == pwr_eUpDownEnum_Down) {
+      op->Link = pwr_eUpDownEnum_Up;
+      op->Status = IOM__UDP_UP;
     }
   }
-
-  if ( local->time_since_keepalive >= op->KeepAliveTime) {
-    if ( op->UseKeepAlive) 
-      SendKeepalive( local, op);
-    local->time_since_keepalive = 0;
+  
+  if ( op->Link == pwr_eUpDownEnum_Up) {
+    time_GetTimeMonotonic( &now);
+    time_Adiff(&dt, &now, &local->last_receive_time);
+    if ( time_DToFloat( 0, &dt) >= op->LinkTimeout) {
+      op->Link = pwr_eUpDownEnum_Down;
+      op->Status = IOM__UDP_DOWN;
+    }
   }
-
+  
   if ( op->ErrorCount == op->ErrorSoftLimit && !local->softlimit_logged) {
     errh_Warning( "IO Card ErrorSoftLimit reached, '%s'", cp->Name);
     local->softlimit_logged = 1;
@@ -389,7 +391,23 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
 {
   io_sLocalUDP_IO *local = (io_sLocalUDP_IO *)cp->Local;
   pwr_sClass_UDP_IO *op = (pwr_sClass_UDP_IO *)cp->op;
-  int status;
+  int sts;
+  pwr_tTime now;
+  pwr_tDeltaTime dt;
+  int try_connect = 0;
+
+  if ( op->Link == pwr_eUpDownEnum_Down) {
+    /* Reconnect */
+
+    time_GetTimeMonotonic( &now);
+    time_Adiff(&dt, &now, &local->last_try_connect_time);
+    if ( time_DToFloat( 0, &dt) >= op->ReconnectTime) {
+      try_connect = 1;
+      memcpy( &local->last_try_connect_time, &now, sizeof(local->last_try_connect_time));
+    }
+    else
+      return IO__SUCCESS;
+  }
 
   if ( op->EnableHeader) {
     io_sUDP_Header *hp = (io_sUDP_Header *)local->output_buffer;
@@ -401,11 +419,23 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
     hp->msg_id[1] = htons(op->MessageId[1]);
   }
 
-  io_bus_card_write( ctx, cp, &local->output_area,
+  io_bus_card_write( ctx, cp, local->output_area,
 		     local->byte_ordering, pwr_eFloatRepEnum_FloatIEEE);
     
-  status = sendto( local->socket, local->output_buffer, local->output_buffer_size, 0,
+  sts = sendto( local->socket, local->output_buffer, local->output_buffer_size, 0,
 		   (struct sockaddr *) &local->remote_addr, sizeof(struct sockaddr));
+  if ( sts < 0) {
+    op->Status = IOM__UDP_DOWN;
+    op->Link = pwr_eUpDownEnum_Down;
+  }
+
+  if ( try_connect) {
+    if ( sts >= 0) {
+      op->Status = IOM__UDP_UP;
+      op->Link = pwr_eUpDownEnum_Up;      
+    }
+  }
+  op->TX_Packets++;
 
   if ( op->ErrorCount == op->ErrorSoftLimit && !local->softlimit_logged) {
     errh_Warning( "IO Card ErrorSoftLimit reached, '%s'", cp->Name);
