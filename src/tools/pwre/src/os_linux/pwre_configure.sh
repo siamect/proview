@@ -215,6 +215,7 @@ conf_incdirgtk=""
 let inc_cnt=0
 let lib_cnt=0
 let i=0
+hwpl=`eval uname -i`
 
 
 # Bash
@@ -308,17 +309,17 @@ else
   pwre_config_check_lib gtk    	  GTK      gtk gtk 0 /usr/lib/libgtk-x11-2.0.so
 
   pwre_config_check_lib libantlr  LIBANTLR lib wb 0 /usr/local/lib/libantlr.a
-  pwre_config_check_lib librpcsvc LIBRPCSVC lib lib 0 /usr/lib/librpcsvc.so:/usr/lib/librpcsvc.a:/usr/lib/i386-linux-gnu/librpcsvc.a
+  pwre_config_check_lib librpcsvc LIBRPCSVC lib lib 0 /usr/lib/librpcsvc.so:/usr/lib/librpcsvc.a:/usr/lib/$hwpl-linux-gnu/librpcsvc.a
   pwre_config_check_lib libasound LIBASOUND lib lib 0 /usr/lib/libasound.so:/usr/lib/libasound.a
-  pwre_config_check_lib libpthread LIBPTHREAD lib lib 0 /usr/lib/libpthread.so:/usr/lib/libpthread.a:/usr/lib/i386-linux-gnu/libpthread.so
-  pwre_config_check_lib libm      LIBM     lib lib 0 /usr/lib/libm.so:/usr/lib/libm.a:/usr/lib/i386-linux-gnu/libm.so
-  pwre_config_check_lib libdb     LIBDB    lib lib 0 /usr/lib/libdb.so:/usr/lib/i386-linux-gnu/libdb.so
-  pwre_config_check_lib libdb_cxx LIBDB_CXX lib wb 0 /usr/lib/libdb_cxx.so:/usr/lib/i386-linux-gnu/libdb_cxx.so
-  pwre_config_check_lib libz      LIBZ     lib lib 0 /usr/lib/libz.so:/usr/lib/libz.a:/usr/lib/i386-linux-gnu/libz.so
-  pwre_config_check_lib libcrypt  LIBCRYPT lib lib 0 /usr/lib/libcrypt.so:/usr/lib/libcrypt.a:/usr/lib/i386-linux-gnu/libcrypt.so
-  pwre_config_check_lib librt     LIBRT    lib lib 0 /usr/lib/librt.so:/usr/lib/librt.a:/usr/lib/i386-linux-gnu/librt.so
+  pwre_config_check_lib libpthread LIBPTHREAD lib lib 0 /usr/lib/libpthread.so:/usr/lib/libpthread.a:/usr/lib/$hwpl-linux-gnu/libpthread.so
+  pwre_config_check_lib libm      LIBM     lib lib 0 /usr/lib/libm.so:/usr/lib/libm.a:/usr/lib/$hwpl-linux-gnu/libm.so
+  pwre_config_check_lib libdb     LIBDB    lib lib 0 /usr/lib/libdb.so:/usr/lib/$hwpl-linux-gnu/libdb.so
+  pwre_config_check_lib libdb_cxx LIBDB_CXX lib wb 0 /usr/lib/libdb_cxx.so:/usr/lib/$hwpl-linux-gnu/libdb_cxx.so
+  pwre_config_check_lib libz      LIBZ     lib lib 0 /usr/lib/libz.so:/usr/lib/libz.a:/usr/lib/$hwpl-linux-gnu/libz.so
+  pwre_config_check_lib libcrypt  LIBCRYPT lib lib 0 /usr/lib/libcrypt.so:/usr/lib/libcrypt.a:/usr/lib/$hwpl-linux-gnu/libcrypt.so
+  pwre_config_check_lib librt     LIBRT    lib lib 0 /usr/lib/librt.so:/usr/lib/librt.a:/usr/lib/$hwpl-linux-gnu/librt.so
   pwre_config_check_lib libfl     LIBFL    lib lib 0 /usr/lib/libfl.so:/usr/lib/libfl.a
-  pwre_config_check_lib libX11    LIBX11   lib lib 0 /usr/lib/libX11.so:/usr/lib/i386-linux-gnu/libX11.so
+  pwre_config_check_lib libX11    LIBX11   lib lib 0 /usr/lib/libX11.so:/usr/lib/$hwpl-linux-gnu/libX11.so
 
   pwre_config_check_include antlr ANTLR 1 /usr/local/include/antlr/CommonAST.hpp
   pwre_config_check_include gtk   GTK   1 /usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk/gtk.h
