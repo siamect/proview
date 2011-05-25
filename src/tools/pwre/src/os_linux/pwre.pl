@@ -825,6 +825,8 @@ sub create_all_modules ()
   create();
   _module("bcomp");
   create();
+  _module("misc");
+  create();
   _module("profibus");
   create();
   _module("sev");

@@ -1040,7 +1040,7 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap)
   int msg_size = 500;
   APIOC_ALARM_IND_T *msg = (APIOC_ALARM_IND_T *)calloc( 1, msg_size);
 
-  sts = xChannelGetPacket( local->chan, msg_size, (CIFX_PACKET *)msg, 20);
+  sts = xChannelGetPacket( local->chan, msg_size, (CIFX_PACKET *)msg, 0);
   if ( sts == CIFX_NO_ERROR) {
     printf( "Diag message ?\n");
 

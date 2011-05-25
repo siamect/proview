@@ -42,6 +42,7 @@
 /*_*
   RunTimeCounterFo
 
+  @aref runtimecounter
   @aref runtimecounterfo RunTimeCounterFo
 */
 void RunTimeCounterFo_init( pwr_sClass_RunTimeCounterFo  *o)
@@ -117,6 +118,7 @@ void RunTimeCounterFo_exec( plc_sThread		*tp,
 /*_*
   CompModePID_Fo
 
+  @aref compmodepid
   @aref compmodepid_fo CompModePID_Fo
 */
 void CompModePID_Fo_init( pwr_sClass_CompModePID_Fo  *o)
@@ -200,6 +202,7 @@ void CompModePID_Fo_exec( plc_sThread *tp,
   Revision:	2011-01-18 / Werner
 		Error in filtered derivate part corrected.
 
+  @aref comppid
   @aref comppid_fo CompPID_Fo
 */
 void CompPID_Fo_init( pwr_sClass_CompPID_Fo  *o)
@@ -374,7 +377,8 @@ void CompPID_Fo_exec( plc_sThread *tp,
 /*_*
   OnOffBurnerFo
 
-  @aref onoffburnerfo OnOffBurnerFo
+  @aref componoffburner
+  @aref componoffburnerfo CompOnOffBurnerFo
 */
 void CompOnOffBurnerFo_init( pwr_sClass_CompOnOffBurnerFo  *o)
 {
@@ -464,6 +468,7 @@ void CompOnOffBurnerFo_exec( plc_sThread		*tp,
 /*_*
   CompOnOffZoneFo
 
+  @aref componoffzone
   @aref componoffzonefo CompOnOffZoneFo
 */
 void CompOnOffZoneFo_init( pwr_sClass_CompOnOffZoneFo  *o)
