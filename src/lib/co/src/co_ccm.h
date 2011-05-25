@@ -24,7 +24,9 @@
 extern "C" {
 #endif
 
+
 /* co_ccm.h -- script interpreter */
+
 
 #define CCM_DECL_STRING	1
 #define CCM_DECL_INT	2
@@ -120,7 +122,7 @@ typedef struct ccm_sFunc_ {
   struct ccm_sFunc_	*next;
 } ccm_sFunc;
 
-typedef struct {
+typedef struct ccm_sFileCtx_ {
   ccm_sLine   	*main_start_line;
   ccm_sLine   	*main_end_line;
   int		verify;
@@ -160,7 +162,7 @@ typedef struct {
   ccm_sOperand	*list;
 } *ccm_tRowCtx;
   
-typedef struct {
+typedef struct ccm_sFuncCtx_ {
   char		msg[80];
   ccm_tFileCtx	filectx;
   ccm_sIntvar	*locint_list;
@@ -182,7 +184,7 @@ typedef struct {
 } ccm_sSysFunc;
 
 
-typedef struct {
+typedef struct ccm_sSingeLineCtx_ {
   ccm_tFuncCtx  funcctx;
   int		result_decl;
   ccm_tFloat	result_float;

@@ -420,7 +420,7 @@ mh_OutunitReceive ()
     return MH__QCOMGETMSG;
   }
 
-  switch (msg.type.b) {
+  switch ((int)msg.type.b) {
 
   case qcom_eBtype_qcom:
     fromQcom(&msg);
