@@ -16,25 +16,26 @@
 !  along with the program, if not, write to the Free Software 
 !  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 !
-!  pwrb_c_dtostr.wb_load -- Defines the class DtoStr.
+!  pwrb_c_enumtostr.wb_load -- Defines the class EnumToStr.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
-!  @Code rt_plc_macro_string.h
+!  @Code rt_plc_io.c
 !  @Group Plc,PlcString,PlcConversion
-!  @Summary Convert digital value to string
-!  Convert digital value to string.
-!  @image orm_dtostr_fo.gif
+!  @Summary Convert enumeration value to string
+!  Convert enumeration value to string.
+!  @image orm_enumtostr_fo.png
 !
-!  The DtoStr object converts the value of the digital input to
-!  a string stored in ActVal.
+!  The EnumToStr object converts the value of the enumeration input to
+!  the associated string.
 !
-!  Note that an erroneous format specification may cause the
-!  plcprogram to terminate. The size of the output of the conversion should
-!  not exceed 79 characters.
+!  The enumeration value can be fetched as an integer, eg with a GetIp
+!  connected to the input pin.
+!
+!  The enumeration type is specified in the TypeId attribute.
 !*/
-  Object DtoStr $ClassDef 313 
+  Object EnumToStr $ClassDef 543 
     Body SysBody
       Attr Editor = pwr_eEditor_PlcEd
       Attr Method = pwr_eMethod_Connections
@@ -42,14 +43,14 @@ SObject pwrb:Class
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-         Attr StructName = "DtoStr"
+         Attr StructName = "EnumToStr"
       EndBody
       !/**
-      !  Digital input that will be converted to string.
+      !  Emumeration input that will be converted to string.
       !*/
       Object In $Input 1 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr TypeRef = "pwrs:Type-$Int32"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_RTVIRTUAL
 	  Attr Flags |= PWR_MASK_NOEDIT
@@ -58,17 +59,39 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  c-format that specifies the conversion.
+      !  Enumeration type id, eg pwrb:Type-PIDModeEnum.
       !*/
-      Object Format $Intern 2 
+      Object TypeId $Intern 2 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$String80"
+          Attr TypeRef = "pwrs:Type-$TypeId"
+        EndBody
+      EndObject
+      !/**
+      !  Pointer to the enum definition.
+      !*/
+      Object EnumDefP $Intern 3
+        Body SysBody
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_PRIVATE
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Size of enum definition.
+      !*/
+      Object EnumDefRows $Intern 4
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
       !/**
       !  Output that contains the string.
       !*/
-      Object ActVal $Output 3
+      Object ActVal $Output 5
         Body SysBody
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
@@ -89,7 +112,7 @@ SObject pwrb:Class
       Body SysBody
         Attr object_type = 11
         Attr parameters[0] = 1
-        Attr parameters[1] = 1
+        Attr parameters[1] = 3
         Attr parameters[2] = 1
         Attr parameters[3] = 0
         Attr subwindows = 0
@@ -98,18 +121,17 @@ SObject pwrb:Class
         Attr default_mask[0] = 1
         Attr default_mask[1] = 1
         Attr segname_annotation = 1
-        Attr compmethod = 5
+        Attr compmethod = 35
         Attr compindex = 0
         Attr tracemethod = 0
         Attr traceindex = 0
 	Attr executeordermethod = 2
-        Attr objname = "DtoStr"
-        Attr graphname = "DtoStr"
+        Attr objname = "EnumToStr"
+        Attr graphname = "EnumToStr"
       EndBody
     EndObject
-    Object Template DtoStr
+    Object Template EnumToStr
       Body RtBody
-        Attr Format = "%d"
       EndBody
     EndObject
   EndObject
