@@ -274,7 +274,8 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"/CLASS", "/DEBUG", "/NODECONFIG",
 			"/NAME", "/IDENTITY", "/FILES", "/OUT", "/IGNORE",
 			"/DIRECTORY", "/BUILDVERSION", "/DATABASE", "/SERVER", 
-			  "/PLCPGM", "/HIERARCHY", "/FROM_PLCPGM", "/TEMPLATE", ""}
+			"/PLCPGM", "/HIERARCHY", "/FROM_PLCPGM", "/TEMPLATE", 
+			"/SIMULATE", ""}
 		},
 		{
 			"NEW",
@@ -4003,8 +4004,11 @@ static int	wnav_create_func( void		*client_data,
     sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
+    int simulate = ODD( dcli_get_qualifier( "/SIMULATE", 0, 0));
+
     wb_crrgen crrgen( (wb_session *)wnav->ldhses);
-    crrgen.load( &sts);
+
+    crrgen.load( &sts, simulate);
     crrgen.write( &sts);
     crrgen.write_code( &sts);
   }
