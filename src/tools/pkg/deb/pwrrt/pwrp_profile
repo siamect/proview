@@ -31,11 +31,13 @@ export pwrp_db=$pwrp_root/common/db
 export pwrp_web=$web_dir
 
 export pwra_db=/usr/pwrp/adm/db
-jdk=`eval ls /usr/local | grep ^jre`
+jdk=`eval ls -t /usr/local | grep -m 1 ^jdk`
 if [ "$jdk" == "" ]; then
-  jdk=`eval ls /usr/local | grep ^jdk`
+  jdk=`eval ls -t /usr/local | grep -m 1 ^jre`
 fi
-export jdk_home=/usr/local/$jdk/bin
+
+export jdk=/usr/local/$jdk
+export jdk_home=$jdk/bin
 PATH=$PATH:$pwr_exe:$pwrp_exe:$jdk_home
 
 #Set display to remote computer
@@ -51,8 +53,3 @@ alias boot="/usr/bin/sudo /sbin/reboot"
 if [ -e $pwrp_exe/profile ]; then
   source $pwrp_exe/profile
 fi
-
-
-
-
-
