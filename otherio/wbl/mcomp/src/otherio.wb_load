@@ -1,7 +1,7 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X233"
-    Attr NextCix = "_X24"
+    Attr NextOix = "_X242"
+    Attr NextCix = "_X25"
     Attr NextTix[0] = "_X10"
   EndBody
   Object Type $TypeHier 1 15-NOV-2007 14:35:37.90
@@ -2901,6 +2901,176 @@ Volume OtherIO $ClassVolume 0.0.250.10
       EndObject
       Object Template Hilscher_cifX_Diag 2152955904 01-JAN-1970 01:00:00.00
         Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Hilscher_cifX_PnController $ClassDef 24 23-MAY-2011 11:01:53.65
+      Body SysBody 23-MAY-2011 11:01:37.07
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 38992
+      EndBody
+      Object RtBody $ObjBodyDef 1 23-MAY-2011 11:01:37.07
+        Body SysBody 23-MAY-2011 11:02:08.50
+          Attr StructName = "Hilscher_cifX_PnController"
+          Attr NextAix = "_X31"
+        EndBody
+        Object Description $Attribute 14 23-MAY-2011 11:01:37.07
+          Body SysBody 23-MAY-2011 11:01:37.07
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Specification $Attribute 15 23-MAY-2011 11:01:37.07
+          Body SysBody 23-MAY-2011 11:01:37.07
+            Attr PgmName = "Specification"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object DataSheet $Attribute 16 23-MAY-2011 11:01:37.07
+          Body SysBody 23-MAY-2011 11:01:37.07
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+        Object IP_Address $Attribute 27 24-MAY-2011 08:21:37.53
+          Body SysBody 24-MAY-2011 08:21:12.63
+            Attr PgmName = "IP_Address"
+            Attr TypeRef = "pwrs:Type-$String32"
+          EndBody
+        EndObject
+        Object SubnetMask $Attribute 28 24-MAY-2011 08:21:57.03
+          Body SysBody 24-MAY-2011 08:23:57.17
+            Attr PgmName = "SubnetMask"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object DeviceName $Attribute 29 24-MAY-2011 08:22:20.62
+          Body SysBody 24-MAY-2011 08:24:00.64
+            Attr PgmName = "DeviceName"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object DeviceType $Attribute 30 24-MAY-2011 08:22:25.89
+          Body SysBody 24-MAY-2011 08:24:03.36
+            Attr PgmName = "DeviceType"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object Alias $Attribute 17 23-MAY-2011 11:01:37.07
+          Body SysBody 23-MAY-2011 11:01:37.07
+            Attr PgmName = "Alias"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object Channel $Attribute 18 23-MAY-2011 11:01:37.07
+          Body SysBody 23-MAY-2011 11:01:37.07
+            Attr PgmName = "Channel"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object Status $Attribute 19 23-MAY-2011 11:01:37.07
+          Body SysBody 23-MAY-2011 11:01:37.07
+            Attr PgmName = "Status"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object Process $Attribute 20 23-MAY-2011 11:01:37.07
+          Body SysBody 23-MAY-2011 11:01:37.07
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrb:Type-IoProcessMask"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 21 23-MAY-2011 11:01:37.07
+          Body SysBody 23-MAY-2011 11:01:37.07
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object ErrorCount $Attribute 22 23-MAY-2011 11:01:37.07
+          Body SysBody 23-MAY-2011 11:01:37.07
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorStr $Attribute 23 23-MAY-2011 11:01:37.07
+          Body SysBody 23-MAY-2011 11:01:37.07
+            Attr PgmName = "ErrorStr"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object ErrorSoftLimit $Attribute 24 23-MAY-2011 11:01:37.07
+          Body SysBody 23-MAY-2011 11:01:37.07
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorHardLimit $Attribute 25 23-MAY-2011 11:01:37.07
+          Body SysBody 23-MAY-2011 11:01:37.07
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object Diag $Attribute 26 23-MAY-2011 11:01:37.07
+          Body SysBody 23-MAY-2011 11:01:37.07
+            Attr PgmName = "Diag"
+            Attr Flags = 131072
+            Attr TypeRef = "OtherIO:Class-Hilscher_cifX_Diag"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 234 23-MAY-2011 11:01:37.07
+        Object IoAgentInit $Method 235 23-MAY-2011 11:01:37.07
+          Body SysBody 23-MAY-2011 11:02:25.93
+            Attr MethodName = "Hilscher_cifX_PnController-IoAgentInit"
+          EndBody
+        EndObject
+        Object IoAgentClose $Method 236 23-MAY-2011 11:01:37.07
+          Body SysBody 23-MAY-2011 11:02:36.54
+            Attr MethodName = "Hilscher_cifX_PnController-IoAgentClose"
+          EndBody
+        EndObject
+        Object IoAgentRead $Method 237 23-MAY-2011 11:01:37.07
+          Body SysBody 23-MAY-2011 11:02:43.74
+            Attr MethodName = "Hilscher_cifX_PnController-IoAgentRead"
+          EndBody
+        EndObject
+        Object IoAgentWrite $Method 238 23-MAY-2011 11:01:37.07
+          Body SysBody 23-MAY-2011 11:02:50.73
+            Attr MethodName = "Hilscher_cifX_PnController-IoAgentWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 239 23-MAY-2011 11:01:37.07
+        Object Pointed $Menu 240 23-MAY-2011 11:01:37.07
+          Object Connect $MenuButton 241 23-MAY-2011 11:01:37.07
+            Body SysBody 23-MAY-2011 11:01:37.07
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object PostCreate $DbCallBack 242 23-MAY-2011 11:01:37.07
+        Body SysBody 23-MAY-2011 11:01:37.07
+          Attr MethodName = "BaseIORack-PostCreate"
+        EndBody
+      EndObject
+      Object Template Hilscher_cifX_PnController 2154004480 01-JAN-1970 01:00:00.00
+        Body RtBody 24-MAY-2011 08:26:34.69
+          Attr IP_Address = "10.0.0.1"
+          Attr SubnetMask = "255.255.255.0"
+          Attr DeviceName = "controller"
+          Attr DeviceType = "cifX RE/PNM"
+          Attr Process = 1
+          Attr ErrorSoftLimit = 25
+          Attr ErrorHardLimit = 50
         EndBody
       EndObject
     EndObject

@@ -388,6 +388,7 @@ palette NavigatorPalette
     classvolume Siemens Siemens
     classvolume SsabOx SsabOx
     classvolume Telemecanique Telemecanique
+    classvolume Miscellaneous Miscellaneous
   }
 }
 
@@ -1065,6 +1066,10 @@ palette PlcEditorPalette
       class Eurotherm_TC3001Sim
       class Eurotherm_TC3001AggrSim
       class SEW_Movidrive_1Sim
+    }
+    menu Miscellaneous
+    {
+      class Misc_PingPongFo
     }
   }
 }

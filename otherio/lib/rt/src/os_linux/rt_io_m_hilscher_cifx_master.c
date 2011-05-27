@@ -322,8 +322,10 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap)
       op->ErrorCount++;
     }
 
-    if ( op->ErrorCount == op->ErrorSoftLimit)
+    if ( op->ErrorCount == op->ErrorSoftLimit && !local->softlimit_logged) {
       errh_Error( "IO Error soft limit reached on agent '%s'", ap->Name);
+      local->softlimit_logged = 1;
+    }
     if ( op->ErrorCount >= op->ErrorHardLimit) {
       ctx->Node->EmergBreakTrue = 1;
       return IO__ERRDEVICE;
@@ -360,8 +362,10 @@ static pwr_tStatus IoAgentWrite( io_tCtx ctx, io_sAgent *ap)
       xDriverGetErrorDescription( sts, op->ErrorStr, sizeof(op->ErrorStr));
     }
 
-    if ( op->ErrorCount == op->ErrorSoftLimit)
+    if ( op->ErrorCount == op->ErrorSoftLimit && !local->softlimit_logged) {
       errh_Error( "IO Error soft limit reached on agent '%s'", ap->Name);
+      local->softlimit_logged = 1;
+    }
     if ( op->ErrorCount >= op->ErrorHardLimit) {
       ctx->Node->EmergBreakTrue = 1;
       return IO__ERRDEVICE;

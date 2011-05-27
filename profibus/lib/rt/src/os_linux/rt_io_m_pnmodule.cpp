@@ -52,11 +52,11 @@ static pwr_tStatus IoCardInit (
   io_sCard	*cp
 ) 
 {
-  io_sCardLocal *local;
+  io_sPnCardLocal *local;
   pwr_sClass_PnModule *op;
 
   op = (pwr_sClass_PnModule *) cp->op;
-  local = (io_sCardLocal *) cp->Local;
+  local = (io_sPnCardLocal *) cp->Local;
   
   op->Status = PB__NORMAL;
 
@@ -74,12 +74,12 @@ static pwr_tStatus IoCardRead (
   io_sCard	*cp
 ) 
 {
-  io_sCardLocal *local;
+  io_sPnCardLocal *local;
   pwr_sClass_PnModule *op;
   pwr_sClass_PnDevice *slave;
 
   op = (pwr_sClass_PnModule *) cp->op;
-  local = (io_sCardLocal *) cp->Local;
+  local = (io_sPnCardLocal *) cp->Local;
   slave = (pwr_sClass_PnDevice *) rp->op;
 
   op->Status = slave->Status;  
@@ -105,12 +105,12 @@ static pwr_tStatus IoCardWrite (
   io_sCard	*cp
 ) 
 {
-  io_sCardLocal *local;
+  io_sPnCardLocal *local;
   pwr_sClass_PnModule *op;
   pwr_sClass_PnDevice *slave;
 
   op = (pwr_sClass_PnModule *) cp->op;
-  local = (io_sCardLocal *) cp->Local;
+  local = (io_sPnCardLocal *) cp->Local;
   slave = (pwr_sClass_PnDevice *) rp->op;
   
   op->Status = slave->Status;  
@@ -134,8 +134,8 @@ static pwr_tStatus IoCardClose (
   io_sCard	*cp
 ) 
 {
-  io_sCardLocal *local;
-  local = (io_sCardLocal *) cp->Local;
+  io_sPnCardLocal *local;
+  local = (io_sPnCardLocal *) cp->Local;
 
   free ((char *) local);
   

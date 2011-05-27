@@ -252,7 +252,7 @@ ConvertPut (
    * Neth version 7 and later. If this is needed for more messages 
    * then a generic solution must be implemented.
    */
-  if (put->type.s == net_eMsg_volumes7) {
+  if (put->type.s == (qcom_eStype)net_eMsg_volumes7) {
     put->type.s = net_eMsg_volumes;
     fXdr = xdr_net_sVolumes7;
   }
@@ -303,7 +303,7 @@ ConvertGet (
    * then a generic solution must be implemented.
    */
   fXdr = func_xdr[(int)get->type.s];
-  if (get->type.s == net_eMsg_volumes) {
+  if (get->type.s == (qcom_eStype)net_eMsg_volumes) {
     gdb_ScopeLock {
       gnp = hash_Search(&lsts, gdbroot->nid_ht, &np->nid);
       netver = gnp->netver;
@@ -520,7 +520,7 @@ Request (
 
   if (
     get->type.b != net_cMsgClass ||
-    get->type.s != subtype
+    get->type.s != (qcom_eStype)subtype
   ) {
     qcom_Free(NULL, gmp);
     pwr_Return(NULL, sts, QCOM__WEIRD);

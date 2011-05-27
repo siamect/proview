@@ -66,6 +66,9 @@ foldersTree = gFld("<b>Object Reference Manual</b>", "../orm_intro.html")
   aux1 = insFld(foldersTree, gFld("<b>KlocknerMoeller</b>", "klocknermoeller_index.html"))
   KlocknerMoeller(aux1)
 
+  aux1 = insFld(foldersTree, gFld("<b>Miscellaneous</b>", "miscellaneous_index.html"))
+  Miscellaneous(aux1)
+
 
 
 

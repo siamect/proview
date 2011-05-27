@@ -41,7 +41,7 @@
 #include "co_dcli.h"
 #include "rt_pn_gsdml_data.h"
 #include "rt_io_base.h"
-#include "rt_io_pn_locals.h"
+#include "rt_io_pnak_locals.h"
 
 #define _PN_U32_HIGH_WORD(U32)                                     ((PN_U16) ((U32) >> 16))
 #define _PN_U32_LOW_WORD(U32)                                      ((PN_U16)  (U32)       )
@@ -1546,5 +1546,6 @@ void *handle_events(void *ptr) {
       //    pThisSmObject->Running = PN_FALSE;
     }
   }
+  return 0;
 }
 

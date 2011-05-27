@@ -36,10 +36,11 @@
 #include "rt_errh.h"
 #include "rt_pb_msg.h"
 
-#include "rt_profinet.h"
-#include "rt_pnak.h"
+//#include "rt_profinet.h"
+//#include "rt_pnak.h"
 #include "co_dcli.h"
 #include "rt_pn_gsdml_data.h"
+//#include "rt_io_pnak_locals.h"
 #include "rt_io_pn_locals.h"
 
 
@@ -53,7 +54,7 @@ static pwr_tStatus IoRackInit (
   io_sRack	*rp
 ) 
 {
-  io_sCardLocal *local_card;
+  io_sPnCardLocal *local_card;
   io_sCard *cardp;
   short input_counter;
   short output_counter;
@@ -89,10 +90,10 @@ static pwr_tStatus IoRackInit (
   latent_output_count = 0;
 
   while(cardp) {
-    local_card = (io_sCardLocal *) calloc(1, sizeof(*local_card));
+    local_card = (io_sPnCardLocal *) calloc(1, sizeof(*local_card));
     cardp->Local = local_card;
-    local_card->input_area = ((io_sRackLocal *)(rp->Local))->inputs;
-    local_card->output_area = ((io_sRackLocal *)(rp->Local))->outputs;
+    local_card->input_area = ((io_sPnRackLocal *)(rp->Local))->inputs;
+    local_card->output_area = ((io_sPnRackLocal *)(rp->Local))->outputs;
 
     /* From v4.1.3 we can have subclasses, find the super class */
     
@@ -230,11 +231,9 @@ static pwr_tStatus IoRackRead (
   io_sRack	*rp
 ) 
 {
-  pwr_sClass_PnControllerSoftingPNAK *mp;
   pwr_sClass_PnDevice *sp;
   
   sp = (pwr_sClass_PnDevice *) rp->op;
-  mp = (pwr_sClass_PnControllerSoftingPNAK *) ap->op;
 
   /* The reading of the process image is now performed at the agent level,
   this eliminates the need for board specific code at the rack level.  */
@@ -247,7 +246,7 @@ static pwr_tStatus IoRackRead (
   }
   
   if (sp->ErrorCount > sp->ErrorSoftLimit ) {
-    memset(((io_sRackLocal *)(rp->Local))->inputs, 0, ((io_sRackLocal *)(rp->Local))->bytes_of_input);
+    memset(((io_sPnRackLocal *)(rp->Local))->inputs, 0, ((io_sPnRackLocal *)(rp->Local))->bytes_of_input);
   }
   
   //  if (sp->ErrorCount > sp->ErrorHardLimit && sp->StallAction >= pwr_ePbStallAction_EmergencyBreak) {
@@ -267,11 +266,9 @@ static pwr_tStatus IoRackWrite (
   io_sRack	*rp
 ) 
 {
-  pwr_sClass_PnControllerSoftingPNAK *mp;
   pwr_sClass_PnDevice *sp;
   
   sp = (pwr_sClass_PnDevice *) rp->op;
-  mp = (pwr_sClass_PnControllerSoftingPNAK *) ap->op;
 
   /* The writing of the process image is now performed at the agent level,
   this eliminates the need for board specific code at the rack level.  */

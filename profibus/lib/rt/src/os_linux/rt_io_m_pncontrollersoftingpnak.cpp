@@ -44,6 +44,7 @@
 #include "rt_pnak.h"
 #include "co_dcli.h"
 #include "rt_pn_gsdml_data.h"
+#include "rt_io_pnak_locals.h"
 #include "rt_io_pn_locals.h"
 #include "rt_pn_iface.h"
 
@@ -86,7 +87,7 @@ static pwr_tStatus IoAgentInit (
   pwr_sClass_PnControllerSoftingPNAK *op;
   pwr_tUInt16 sts;
   io_sAgentLocal *local;
-  io_sRackLocal *r_local;
+  io_sPnRackLocal *r_local;
 
   char fname[196];
   char hname[40];
@@ -281,8 +282,8 @@ static pwr_tStatus IoAgentInit (
 
   for (slave_list = ap->racklist, ii = 0; slave_list != NULL;
        slave_list = slave_list->next, ii++) {
-    slave_list->Local = (unsigned char *) calloc(1, sizeof(io_sRackLocal));
-    r_local = (io_sRackLocal *) slave_list->Local;
+    slave_list->Local = (unsigned char *) calloc(1, sizeof(io_sPnRackLocal));
+    r_local = (io_sPnRackLocal *) slave_list->Local;
     
     for (jj = 0; jj <  local->device_data[ii + 1]->iocr_data.size(); jj++) {
       
