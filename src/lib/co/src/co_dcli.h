@@ -83,7 +83,7 @@ int	dcli_get_defaultfilename(
 			char		*outname,
 			const char	*ext);
 #if defined (OS_LYNX) || defined(OS_LINUX) || defined(OS_MACOS) || defined OS_FREEBSD
-int     dcli_replace_env( char *str, char *newstr);
+int     dcli_replace_env( const char *str, char *newstr);
 #endif
 char	*dcli_fgetname( FILE *fp, char *name, char *def_name);
 int	dcli_translate_filename( char *out, const char *in);

@@ -352,7 +352,22 @@ elif [ $OpSys -eq $OpSys_X86_LINUX ]; then
      Compile$FileTypeStr
      exit $gcg_status
   elif [ $CurrentOpSys -eq $OpSys_X86_64_LINUX ]; then
-      echo "-- Not built for x86_linux"
+      # echo "-- Trying to build for x86_linux"
+
+      export pwr_exe=$pwrb_root/os_linux/hw_x86/exp/exe
+      export pwr_lib=$pwrb_root/os_linux/hw_x86/exp/lib
+      export pwr_obj=$pwrb_root/os_linux/hw_x86/exp/obj
+      export pwrp_exe=$pwrp_root/bld/x86_linux/exe
+      export pwrp_lib=$pwrp_root/bld/x86_linux/lib
+      export pwrp_obj=$pwrp_root/bld/x86_linux/obj
+      cc_cmd="$cc -c -x c -w -m32 -fPIC $cc_debug -D_REENTRANT -DOS_LINUX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
+      ldxx="g++ -m32 -fPIC"
+
+      FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
+
+# Execute build command
+      Compile$FileTypeStr
+      exit $gcg_status
   fi
 
 elif [ $OpSys -eq $OpSys_X86_64_LINUX ]; then
@@ -368,7 +383,22 @@ elif [ $OpSys -eq $OpSys_X86_64_LINUX ]; then
       Compile$FileTypeStr
       exit $gcg_status
   elif [ $CurrentOpSys -eq $OpSys_X86_LINUX ]; then
-      echo "-- Not built for x86_64_linux"
+      # echo "-- Trying to build for x86_64_linux"
+
+      export pwr_exe=$pwrb_root/os_linux/hw_x86_64/exp/exe
+      export pwr_lib=$pwrb_root/os_linux/hw_x86_64/exp/lib
+      export pwr_obj=$pwrb_root/os_linux/hw_x86_64/exp/obj
+      export pwrp_exe=$pwrp_root/bld/x86_64_linux/exe
+      export pwrp_lib=$pwrp_root/bld/x86_64_linux/lib
+      export pwrp_obj=$pwrp_root/bld/x86_64_linux/obj
+      cc_cmd="$cc -c -x c -w -m64 -fPIC $cc_debug -D_REENTRANT -DOS_LINUX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
+      ldxx="g++ -m64 -fPIC"
+
+      FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
+
+# Execute build command
+      Compile$FileTypeStr
+      exit $gcg_status
   fi
 
 elif [ $OpSys -eq $OpSys_AXP_VMS ]; then
