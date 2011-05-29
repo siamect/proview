@@ -20,10 +20,10 @@ export pwr_load=$pwrb_root/load
 export pwr_lis=$pwrb_root/lis
 export pwr_doc=$pwrb_root/doc
 
-export pwrp_exe=$pwrp_root/x86_64_linux/exe
-export pwrp_lib=$pwrp_root/x86_64_linux/lib
-export pwrp_obj=$pwrp_root/x86_64_linux/obj
-export pwrp_lis=$pwrp_root/x86_64_linux/lis
+export pwrp_exe=$pwrp_root/x86_linux/exe
+export pwrp_lib=$pwrp_root/x86_linux/lib
+export pwrp_obj=$pwrp_root/x86_linux/obj
+export pwrp_lis=$pwrp_root/x86_linux/lis
 export pwrp_inc=$pwrp_root/common/inc
 export pwrp_load=$pwrp_root/common/load
 export pwrp_log=$pwrp_root/common/log
@@ -31,11 +31,13 @@ export pwrp_db=$pwrp_root/common/db
 export pwrp_web=$web_dir
 
 export pwra_db=/usr/pwrp/adm/db
-jdk=`eval ls /usr/local | grep ^jre`
+jdk=`eval ls -t /usr/local | grep -m 1 ^jdk`
 if [ "$jdk" == "" ]; then
-  jdk=`eval ls /usr/local | grep ^jdk`
+  jdk=`eval ls -t /usr/local | grep -m 1 ^jre`
 fi
-export jdk_home=/usr/local/$jdk/bin
+
+export jdk=/usr/local/$jdk
+export jdk_home=$jdk/bin
 PATH=$PATH:$pwr_exe:$pwrp_exe:$jdk_home
 
 #Set display to remote computer
@@ -51,8 +53,3 @@ alias boot="/usr/bin/sudo /sbin/reboot"
 if [ -e $pwrp_exe/profile ]; then
   source $pwrp_exe/profile
 fi
-
-
-
-
-
