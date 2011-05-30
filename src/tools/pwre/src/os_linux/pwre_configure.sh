@@ -1,5 +1,19 @@
 #!/bin/bash
 
+pwre_help()
+{
+  cat <<EOF
+pwre_configure.h
+
+Arguments
+
+--help    Display help.
+--version State fix version of loadfiles, eg
+  pwre configure --version "29-MAY-2011 16:00:00"
+
+EOF
+}
+
 pwre_config_init()
 {
     d=`eval date +\"%F %X\"`
@@ -217,7 +231,6 @@ let lib_cnt=0
 let i=0
 hwpl=`eval uname -i`
 
-
 # Bash
 if [ "$SHELL" != "/bin/bash" ] && [ "$SHELL" != "/usr/local/bin/bash" ]; then
     echo "Config error: Default shell has to be bash"
@@ -250,10 +263,25 @@ if test ! -e $pwre_croot; then
   exit
 fi
 
+# Options
+if [ "$1" = "--help" ]; then
+  pwre_help
+  exit
+elif [ "$1" = "--version" ] && [ "$2" != "" ] && [ "$3" != "" ]; then
+  buildversion=$2" "$3
+fi
+
+
 pwre_create_blddir
 pwre_create_makedir
 
 pwre_config_init
+
+if [ "$buildversion" != "" ]; then
+  echo "export PWRE_CONF_BUILDVERSION=\"$buildversion\"" >> $cfile
+else
+  echo "export PWRE_CONF_BUILDVERSION=\"0\"" >> $cfile
+fi
       
 if test $pwre_hw == "hw_arm"; then
 
