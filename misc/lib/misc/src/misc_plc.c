@@ -21,6 +21,7 @@
 
 #include <math.h>
 #include <stdlib.h>
+#include <float.h>
 #include "pwr.h"
 #include "pwr_baseclasses.h"
 #include "pwr_miscellaneousclasses.h"
@@ -29,6 +30,7 @@
 #include "co_time.h"
 
 #define BASE_SPEED 10
+#define MAX_ANGLE 60
 
 static float my_random() {
   static unsigned int seed = 100;
@@ -66,7 +68,7 @@ void Misc_PingPongFo_init( pwr_sClass_Misc_PingPongFo *o)
 void Misc_PingPongFo_exec( plc_sThread *tp, pwr_sClass_Misc_PingPongFo *o)
 {
   pwr_sClass_Misc_PingPong *co = (pwr_sClass_Misc_PingPong *) o->PlcConnectP;
-  if ( !co)
+  if ( !co || fabs(co->Width < FLT_EPSILON))
     return;
 
   co->XCoordinate += co->Speed * tp->PlcThread->ScanTime * cos(co->Direction/180*M_PI);
@@ -81,7 +83,7 @@ void Misc_PingPongFo_exec( plc_sThread *tp, pwr_sClass_Misc_PingPongFo *o)
     co->RightPos = *co->RightKnobPtr;
   else
     co->RightPos = co->RightSlider;
-  
+
   switch ( co->Mode) {
   case pwr_eMisc_PingPongModeEnum_Idle: {
     if ( co->OldMode != co->Mode) {
@@ -100,7 +102,7 @@ void Misc_PingPongFo_exec( plc_sThread *tp, pwr_sClass_Misc_PingPongFo *o)
 	co->Direction = -co->Direction + 180 + my_random() * 10;
       else
 	co->Direction = -co->Direction - 180 + my_random() * 10;
-      if ( fabs(co->Direction) > 45)
+      if ( fabs(co->Direction) > MAX_ANGLE)
 	co->Direction = my_random() * 10;
 	
     }
@@ -151,7 +153,7 @@ void Misc_PingPongFo_exec( plc_sThread *tp, pwr_sClass_Misc_PingPongFo *o)
 	  co->Direction = -co->Direction + 180 + my_random() * 20;
 	else
 	  co->Direction = -co->Direction - 180 + my_random() * 20;
-	if ( fabs(co->Direction) > 45)
+	if ( fabs(co->Direction) > MAX_ANGLE)
 	  co->Direction = my_random() * 10;
 	co->Speed = BASE_SPEED * co->LeftLevel * co->LevelFactor;
       }
@@ -212,7 +214,8 @@ void Misc_PingPongFo_exec( plc_sThread *tp, pwr_sClass_Misc_PingPongFo *o)
     break;
   }
   case pwr_eMisc_PingPongModeEnum_TwoPlayers: {
-    if ( co->OldMode != co->Mode) {
+    if ( co->OldMode != co->Mode || co->NewMatch) {
+      co->NewMatch = 0;
       co->State = pwr_eMisc_PingPongStateEnum_ServeRight;
       time_GetTime( &co->StateShiftTime);
       co->LeftScore = 0;
@@ -239,7 +242,7 @@ void Misc_PingPongFo_exec( plc_sThread *tp, pwr_sClass_Misc_PingPongFo *o)
 	    co->Direction = -co->Direction + 180 + my_random() * 20;
 	  else
 	    co->Direction = -co->Direction - 180 + my_random() * 20;
-	  if ( fabs(co->Direction) > 45)
+	  if ( fabs(co->Direction) > MAX_ANGLE)
 	    co->Direction = my_random() * 10;
 	  co->Speed = BASE_SPEED * co->LeftLevel * co->LevelFactor;
 	}
@@ -323,5 +326,21 @@ void Misc_PingPongFo_exec( plc_sThread *tp, pwr_sClass_Misc_PingPongFo *o)
     break;
   }
   }    
+  float height;
+  if ( fabs(co->Direction) < 90) {
+    if ( co->XCoordinate < co->Width * 3/4)
+      height = (1 - co->XCoordinate / co->Width * 4 / 3); 
+    else
+      height = ((co->XCoordinate - co->Width * 3/4) / co->Width * 4); 
+  }
+  else {
+    if ( co->XCoordinate < co->Width / 4)
+      height = (1 - co->XCoordinate / co->Width * 4); 
+    else
+      height = ((co->XCoordinate - co->Width / 4) / co->Width * 4/3); 
+  }
+  co->XShadow = co->XCoordinate + height * 4;
+  co->YShadow = co->YCoordinate + height * 1;
+
   co->OldMode = co->Mode;
 }
