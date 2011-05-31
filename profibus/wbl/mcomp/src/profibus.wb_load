@@ -2808,6 +2808,9 @@ Volume Profibus $ClassVolume 0.0.250.7
     ! @Group IO
     ! @Summary Defines that a Profinet controller stack is installed.
     ! Configures a Profinet controller stack.
+    !
+    ! @b See also
+    ! @classlink PnDevice profibus_pndevice.html
     !*/
     Object PnControllerSoftingPNAK $ClassDef 15 21-APR-2009 13:41:08.17
       Body SysBody 21-APR-2009 13:41:08.17
@@ -2912,6 +2915,10 @@ Volume Profibus $ClassVolume 0.0.250.7
     ! @Group IO
     ! @Summary Configures one Profinet device.
     ! Configures one Profinet device.
+    !
+    ! @b See also
+    ! @classlink PnControllerSoftingPNAK profibus_pncontrollersoftingpnak.html
+    ! @classlink Hilscher_cifX_PnController otherio_hilscher_cifx_pncontroller.html
     !*/
     Object PnDevice $ClassDef 16 21-APR-2009 13:41:08.17
       Body SysBody 21-APR-2009 13:41:08.17

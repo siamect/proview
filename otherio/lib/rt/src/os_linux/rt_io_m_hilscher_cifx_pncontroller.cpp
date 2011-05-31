@@ -43,7 +43,6 @@
 #include "rt_io_agent_close.h"
 #include "rt_io_agent_read.h"
 #include "rt_io_agent_write.h"
-#include "rt_io_pn_locals.h"
 #include "rt_io_msg.h"
 #include "rt_pb_msg.h"
 
@@ -65,6 +64,7 @@
 #include "PNM_PNIOAPCTL_Public.h"
 #include "PNM_PNIOAPCFG_Public.h"
 
+#include "rt_io_pn_locals.h"
 #include "rt_io_m_hilscher_cifx.h"
 #include "rt_pn_gsdml_data.h"
 
@@ -249,6 +249,7 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
 	      channelinfo.bFWMonth, channelinfo.bFWDay);
   }
 
+#if 0
   // Register application
   RCX_REGISTER_APP_REQ_T regapp = {{0}};
   RCX_REGISTER_APP_CNF_T regapp_cnf = {{0}};
@@ -268,6 +269,7 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
        !cmd_check( op, ap, regapp_cnf.tHead.ulCmd, RCX_REGISTER_APP_CNF) ||
        !status_check( op, ap, regapp_cnf.tHead.ulSta, "Register Application"))
     return IO__INITFAIL;
+#endif
 
   RCX_LOCK_UNLOCK_CONFIG_REQ_T unlock = {{0}};
   RCX_LOCK_UNLOCK_CONFIG_CNF_T unlock_cnf = {{0}};
@@ -283,7 +285,7 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
   if ( !status_check( op, ap, sts, "xChannelPutPacket"))
     return IO__INITFAIL;
 
-  sts = xChannelGetPacket( local->chan, sizeof(unlock_cnf), (CIFX_PACKET *)&unlock_cnf, 20);
+  sts = xChannelGetPacket( local->chan, sizeof(unlock_cnf), (CIFX_PACKET *)&unlock_cnf, 20000);
   if ( !status_check( op, ap, sts, "xChannelGetPacket") ||
        !cmd_check( op, ap, unlock_cnf.tHead.ulCmd, RCX_LOCK_UNLOCK_CONFIG_CNF) ||
        !status_check( op, ap, unlock_cnf.tHead.ulSta, "Unlock channel"))
@@ -401,8 +403,11 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
   io_sRack *rp;
   io_sCard *cp;
 
+  int dev_cnt = 0;
   for ( rp = ap->racklist; rp; rp = rp->next) {
     io_sPnRackLocal *rp_local;
+
+    dev_cnt++;
 
     rp_local = (io_sPnRackLocal *) calloc( 1, sizeof(io_sPnRackLocal));
     rp->Local = rp_local;
@@ -410,11 +415,6 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
     for ( cp = rp->cardlist; cp; cp = cp->next)
       cp->Local = calloc( 1, sizeof(io_sPnCardLocal));
 
-    // Read device xml-file
-    t_addr ipaddress;
-    t_addr subnetmask;
-    unsigned char macaddr[6];
-  
     GsdmlDeviceData  *dev_data;
     dev_data = new GsdmlDeviceData;
     pwr_tFileName fname;
@@ -428,66 +428,89 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
       return IO__INITFAIL;
     }
 
-    // PNM_IOD
+    rp_local->userdata = dev_data;
+  }
+
+  // PNM_IOD
+
+
+  PNM_APCFG_CFG_IOD_REQ_T *iod_config = 
+    (PNM_APCFG_CFG_IOD_REQ_T *) calloc( 1, sizeof(*iod_config) + (dev_cnt - 1) * sizeof(iod_config->tData.atData));
+  PNM_APCFG_CFG_IOD_CNF_T iod_config_cnf = {{0}};
+  
+  iod_config->tHead.ulDest   = HOST_TO_LE32(PNM_APPLICATION);
+  iod_config->tHead.ulLen    = HOST_TO_LE32(sizeof(iod_config->tData)+(dev_cnt-1)*sizeof(iod_config->tData.atData));
+  iod_config->tHead.ulId     = HOST_TO_LE32(msg_id++);
+  iod_config->tHead.ulCmd    = HOST_TO_LE32(PNM_APCTL_CMD_SET_CONFIG_IOD_REQ);
+  iod_config->tHead.ulSrc    = HOST_TO_LE32(PN_SRC);
+  iod_config->tHead.ulSrcId  = HOST_TO_LE32(PN_SRCID);
+  iod_config->tData.tSubHead.ulTrCntrId = 1;
+  iod_config->tData.tSubHead.ulTrDevId = 0;
+  iod_config->tData.tSubHead.ulTrApId = 0;
+  iod_config->tData.tSubHead.ulTrModId = 0;
+  iod_config->tData.tSubHead.ulTrSubModId = 0;
+  iod_config->tData.tSubHead.ulTrIdCnt = dev_cnt;
+
+  device = 0;
+  for ( rp = ap->racklist; rp; rp = rp->next) {
+    t_addr ipaddress;
+    t_addr subnetmask;
+  
+    io_sPnRackLocal *rp_local = (io_sPnRackLocal *)rp->Local;
+    GsdmlDeviceData  *dev_data = (GsdmlDeviceData *)rp_local->userdata;
 
     sscanf( dev_data->ip_address, "%hhu.%hhu.%hhu.%hhu", 
 	    &ipaddress.b[3], &ipaddress.b[2], &ipaddress.b[1], &ipaddress.b[0]);
     sscanf( dev_data->subnet_mask, "%hhu.%hhu.%hhu.%hhu", 
 	    &subnetmask.b[3], &subnetmask.b[2], &subnetmask.b[1], &subnetmask.b[0]);
 
-
-    PNM_APCFG_CFG_IOD_REQ_T iod_config = {{0}};
-    PNM_APCFG_CFG_IOD_CNF_T iod_config_cnf = {{0}};
-
-    memset( &iod_config, 0, sizeof(iod_config));
-
-    iod_config.tHead.ulDest   = HOST_TO_LE32(PNM_APPLICATION);
-    iod_config.tHead.ulLen    = HOST_TO_LE32(sizeof(iod_config.tData));
-    iod_config.tHead.ulId     = HOST_TO_LE32(msg_id++);
-    iod_config.tHead.ulCmd    = HOST_TO_LE32(PNM_APCTL_CMD_SET_CONFIG_IOD_REQ);
-    iod_config.tHead.ulSrc    = HOST_TO_LE32(PN_SRC);
-    iod_config.tHead.ulSrcId  = HOST_TO_LE32(PN_SRCID);
-    iod_config.tData.tSubHead.ulTrCntrId = 1;
-    iod_config.tData.tSubHead.ulTrDevId = 0;
-    iod_config.tData.tSubHead.ulTrApId = 0;
-    iod_config.tData.tSubHead.ulTrModId = 0;
-    iod_config.tData.tSubHead.ulTrSubModId = 0;
-    iod_config.tData.tSubHead.ulTrIdCnt = 1;
-    iod_config.tData.atData[0].ulTrId   = device + 1;
-    iod_config.tData.atData[0].ulFlags = PNM_APCFG_IOD_FLAG_IOD_ACTIVE;
-    strncpy( (char *)iod_config.tData.atData[0].abNameOfStation, dev_data->device_name,
-	     sizeof(iod_config.tData.atData[0].abNameOfStation));
-    iod_config.tData.atData[0].usNameOfStationLen = 
-      strlen((char *)iod_config.tData.atData[0].abNameOfStation);
-    iod_config.tData.atData[0].usVendorID  = dev_data->vendor_id;
-    iod_config.tData.atData[0].usDeviceID  = dev_data->device_id;
-    iod_config.tData.atData[0].ulIPAddr    = ipaddress.m;
-    iod_config.tData.atData[0].ulNetworkMask = subnetmask.m;
-    iod_config.tData.atData[0].ulGatewayAddr = 0;
-    iod_config.tData.atData[0].ulArUuidData1 = device + 1;
-    iod_config.tData.atData[0].usArUuidData2 = device + 1;
-    iod_config.tData.atData[0].usArUuidData3 = device + 1;
-    iod_config.tData.atData[0].usARType    = PNIO_API_AR_TYPE_SINGLE;
-    iod_config.tData.atData[0].ulARProp    = PNIO_API_AR_PROP_SUPERVISOR_NONE | 
+    iod_config->tData.atData[device].ulTrId   = device + 1;
+    iod_config->tData.atData[device].ulFlags = PNM_APCFG_IOD_FLAG_IOD_ACTIVE;
+    strncpy( (char *)iod_config->tData.atData[device].abNameOfStation, dev_data->device_name,
+	     sizeof(iod_config->tData.atData[device].abNameOfStation));
+    iod_config->tData.atData[device].usNameOfStationLen = 
+      strlen((char *)iod_config->tData.atData[device].abNameOfStation);
+    iod_config->tData.atData[device].usVendorID  = dev_data->vendor_id;
+    iod_config->tData.atData[device].usDeviceID  = dev_data->device_id;
+    iod_config->tData.atData[device].ulIPAddr    = ipaddress.m;
+    iod_config->tData.atData[device].ulNetworkMask = subnetmask.m;
+    iod_config->tData.atData[device].ulGatewayAddr = 0;
+    iod_config->tData.atData[device].ulArUuidData1 = device + 1;
+    iod_config->tData.atData[device].usArUuidData2 = device + 1;
+    iod_config->tData.atData[device].usArUuidData3 = device + 1;
+    iod_config->tData.atData[device].usARType    = PNIO_API_AR_TYPE_SINGLE;
+    iod_config->tData.atData[device].ulARProp    = PNIO_API_AR_PROP_SUPERVISOR_NONE | 
       PNIO_API_AR_PROP_STATE_PRIMARY | PNIO_API_AR_PROP_SINGLE_AR | ( 1 << 4) | (1 << 5);
-    iod_config.tData.atData[0].usAlarmCRType = PNIO_API_ALCR_TYPE_ALARM;
-    iod_config.tData.atData[0].ulAlarmCRProp = PNIO_API_ALCR_PROP_PRIO_DEFAULT;
-    iod_config.tData.atData[0].usAlarmCRVLANID = 0;
-    iod_config.tData.atData[0].ulIPFlags   = 0;
-    iod_config.tData.atData[0].usRTATimeoutFact = 1;
-    iod_config.tData.atData[0].usRTARetries = PNIO_API_RTA_RETRIES_MIN;
-    iod_config.tData.atData[0].usObjUUIDInst = dev_data->instance;
+    iod_config->tData.atData[device].usAlarmCRType = PNIO_API_ALCR_TYPE_ALARM;
+    iod_config->tData.atData[device].ulAlarmCRProp = PNIO_API_ALCR_PROP_PRIO_DEFAULT;
+    iod_config->tData.atData[device].usAlarmCRVLANID = 0;
+    iod_config->tData.atData[device].ulIPFlags   = 0;
+    iod_config->tData.atData[device].usRTATimeoutFact = 1;
+    iod_config->tData.atData[device].usRTARetries = PNIO_API_RTA_RETRIES_MIN;
+    iod_config->tData.atData[device].usObjUUIDInst = dev_data->instance;
     
-    sts = xChannelPutPacket( local->chan, (CIFX_PACKET*)&iod_config, 10);
-    if ( !status_check( op, ap, sts, "xChannelPutPacket"))
-      return IO__INITFAIL;
+    device++;
+  }
 
-    sts = xChannelGetPacket( local->chan, sizeof(iod_config_cnf), (CIFX_PACKET *)&iod_config_cnf, 20);
-    if ( !status_check( op, ap, sts, "xChannelGetPacket") ||
-	 !cmd_check( op, ap, iod_config_cnf.tHead.ulCmd, PNM_APCTL_CMD_SET_CONFIG_IOD_CNF) ||
-	 !status_check( op, ap, pnm_config_cnf.tHead.ulSta, "Device Config"))
-      return IO__INITFAIL;
+  sts = xChannelPutPacket( local->chan, (CIFX_PACKET*)iod_config, 10);
+  if ( !status_check( op, ap, sts, "xChannelPutPacket"))
+    return IO__INITFAIL;
+
+  sts = xChannelGetPacket( local->chan, sizeof(iod_config_cnf), (CIFX_PACKET *)&iod_config_cnf, 20);
+  if ( !status_check( op, ap, sts, "xChannelGetPacket") ||
+       !cmd_check( op, ap, iod_config_cnf.tHead.ulCmd, PNM_APCTL_CMD_SET_CONFIG_IOD_CNF) ||
+       !status_check( op, ap, pnm_config_cnf.tHead.ulSta, "Device Config"))
+    return IO__INITFAIL;
     
+
+  device = 0;
+  for ( rp = ap->racklist; rp; rp = rp->next) {
+    // Read device xml-file
+    io_sPnRackLocal *rp_local = (io_sPnRackLocal *)rp->Local;
+    GsdmlDeviceData  *dev_data = (GsdmlDeviceData *)rp_local->userdata;
+
+    unsigned char macaddr[6];
+  
     // PNM_IOCR
 
     // Calculate data length
@@ -566,7 +589,6 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
       return IO__INITFAIL;
     
     free( iocr_config);
-
 
     // PNM_IOD_AP
 
@@ -889,6 +911,9 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
       
     }
 
+    delete dev_data;
+    rp_local->userdata = 0;
+
     device++;
   }
 
@@ -935,6 +960,26 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
        !status_check( op, ap, lock_cnf.tHead.ulSta, "Unlock channel"))
     return IO__INITFAIL;
 
+
+  // Register application
+  RCX_REGISTER_APP_REQ_T regapp = {{0}};
+  RCX_REGISTER_APP_CNF_T regapp_cnf = {{0}};
+
+  regapp.tHead.ulDest   = HOST_TO_LE32(PNM_APPLICATION);
+  regapp.tHead.ulLen    = 0;
+  regapp.tHead.ulCmd    = HOST_TO_LE32(RCX_REGISTER_APP_REQ);
+  regapp.tHead.ulSrc    = HOST_TO_LE32(PN_SRC);
+  regapp.tHead.ulSrcId  = HOST_TO_LE32(PN_SRCID);
+
+  sts = xChannelPutPacket( local->chan, (CIFX_PACKET*)&regapp, 1000);
+  if ( !status_check( op, ap, sts, "xChannelPutPacket"))
+    return IO__INITFAIL;
+    
+  sts = xChannelGetPacket( local->chan, sizeof(regapp_cnf), (CIFX_PACKET *)&regapp_cnf, 10000);
+  if ( !status_check( op, ap, sts, "xChannelGetPacket") ||
+       !cmd_check( op, ap, regapp_cnf.tHead.ulCmd, RCX_REGISTER_APP_CNF) ||
+       !status_check( op, ap, regapp_cnf.tHead.ulSta, "Register Application"))
+    return IO__INITFAIL;
 
   // Create input/output area
   local->input_area_size = input_dpm_offset;
@@ -1036,78 +1081,6 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap)
   else
     local->diag_cnt++;
 
-  // Get Alarm or Diag
-  int msg_size = 500;
-  APIOC_ALARM_IND_T *msg = (APIOC_ALARM_IND_T *)calloc( 1, msg_size);
-
-  sts = xChannelGetPacket( local->chan, msg_size, (CIFX_PACKET *)msg, 0);
-  if ( sts == CIFX_NO_ERROR) {
-    printf( "Diag message ?\n");
-
-    if ( msg->tHead.ulCmd == PNIO_APCTL_CMD_APPL_ALARM_IND) {
-	
-      // Response, return the package
-      APIOC_ALARM_RSP_T alarm_rsp = {{0}};
-
-      alarm_rsp.tHead.ulDest   = HOST_TO_LE32(PNM_APPLICATION);
-      alarm_rsp.tHead.ulLen    = HOST_TO_LE32(sizeof(alarm_rsp.tData));
-      alarm_rsp.tHead.ulCmd    = HOST_TO_LE32(PNIO_APCTL_CMD_APPL_ALARM_RSP);
-      alarm_rsp.tHead.ulSrc    = HOST_TO_LE32(PN_SRC);
-      alarm_rsp.tHead.ulSrcId  = HOST_TO_LE32(PN_SRCID);
-      alarm_rsp.tData.ulHandle  = msg->tData.ulHandle;
-      alarm_rsp.tData.usAlarmSpecifier = msg->tData.usAlarmSpecifier;
-      
-      sts = xChannelPutPacket( local->chan, (CIFX_PACKET*)&alarm_rsp, 10);
-      printf( "Alarm ind\n");
-
-      // Ack the alarm
-      APIOC_ALARM_ACK_REQ_T alarm_ack = {{0}};
-      APIOC_ALARM_ACK_CNF_T alarm_ack_cnf = {{0}};
-      
-      alarm_ack.tHead.ulDest   = HOST_TO_LE32(PNM_APPLICATION);
-      alarm_ack.tHead.ulLen    = HOST_TO_LE32(sizeof(alarm_ack.tData));
-      alarm_ack.tHead.ulCmd    = HOST_TO_LE32(PNIO_APCTL_CMD_APPL_ALARM_ACK_CNF);
-      alarm_ack.tHead.ulSrc    = HOST_TO_LE32(PN_SRC);
-      alarm_ack.tHead.ulSrcId  = HOST_TO_LE32(PN_SRCID);
-      alarm_ack.tData.ulHandle  = msg->tData.ulHandle;
-      alarm_ack.tData.usAlarmSpecifier = msg->tData.usAlarmSpecifier;
-      alarm_ack.tData.usReserved = 0;
-      
-      sts = xChannelPutPacket( local->chan, (CIFX_PACKET*)&alarm_ack, 10);
-      if ( sts == CIFX_NO_ERROR) {
-
-	sts = xChannelGetPacket( local->chan, sizeof(alarm_ack_cnf), (CIFX_PACKET *)&alarm_ack_cnf, 20);
-	if ( sts == CIFX_NO_ERROR) {
-	  printf( "ALARM_ACK\n");
-	  printf( "Status 0x%08x\n", alarm_ack_cnf.tHead.ulSta);
-	}
-      }	
-    }
-    else if ( msg->tHead.ulCmd == PNIO_APCTL_CMD_APPL_DIAG_DATA_IND) {
-	
-      // Response, return the package
-      APIOC_DIAG_DATA_RSP_T diag_data_rsp = {{0}};
-
-      diag_data_rsp.tHead.ulDest   = HOST_TO_LE32(PNM_APPLICATION);
-      diag_data_rsp.tHead.ulLen    = HOST_TO_LE32(sizeof(diag_data_rsp.tData));
-      diag_data_rsp.tHead.ulCmd    = HOST_TO_LE32(PNIO_APCTL_CMD_APPL_DIAG_DATA_RSP);
-      diag_data_rsp.tHead.ulSrc    = HOST_TO_LE32(PN_SRC);
-      diag_data_rsp.tHead.ulSrcId  = HOST_TO_LE32(PN_SRCID);
-      diag_data_rsp.tData.ulHandle  = ((APIOC_DIAG_DATA_IND_T *)msg)->tData.ulHandle;
-      
-      sts = xChannelPutPacket( local->chan, (CIFX_PACKET*)&diag_data_rsp, 10);
-      printf( "Diag data\n");
-      
-    }
-    else
-      printf( "Unexpected cmd received: %u\n", msg->tHead.ulCmd);
-  }
-  else {
-    // printf( "Diag msg status 0x%08x\n", sts);
-  }
-
-  free(msg);
-
 
   // Read input area
   if ( local->input_area_size) {
@@ -1136,6 +1109,84 @@ static pwr_tStatus IoAgentRead( io_tCtx ctx, io_sAgent *ap)
       return IO__ERRDEVICE;
     }
   }
+
+  // Get Alarm or Diag
+
+  CIFX_PACKET *msg = (CIFX_PACKET *)calloc( 1, sizeof(CIFX_PACKET));
+
+  sts = xChannelGetPacket( local->chan, sizeof(*msg), msg, 0);
+  if ( sts != CIFX_NO_ERROR) {
+    if ( !(sts == CIFX_DEV_GET_TIMEOUT || sts == CIFX_DEV_GET_NO_PACKET))
+      printf( "Diag msg status 0x%08x\n", sts);
+  }
+  else {
+    printf( "Diag message ?\n");
+
+    switch ( ((TLR_PACKET_HEADER_T *)msg)->ulCmd) {
+    case PNIO_APCTL_CMD_APPL_ALARM_IND: {
+	
+      // Response, return the package
+      APIOC_ALARM_RSP_T alarm_rsp = {{0}};
+
+      alarm_rsp.tHead.ulDest   = HOST_TO_LE32(PNM_APPLICATION);
+      alarm_rsp.tHead.ulLen    = HOST_TO_LE32(sizeof(alarm_rsp.tData));
+      alarm_rsp.tHead.ulCmd    = HOST_TO_LE32(PNIO_APCTL_CMD_APPL_ALARM_RSP);
+      alarm_rsp.tHead.ulSrc    = HOST_TO_LE32(PN_SRC);
+      alarm_rsp.tHead.ulSrcId  = HOST_TO_LE32(PN_SRCID);
+      alarm_rsp.tData.ulHandle  = ((APIOC_ALARM_IND_T *)msg)->tData.ulHandle;
+      alarm_rsp.tData.usAlarmSpecifier = ((APIOC_ALARM_IND_T *)msg)->tData.usAlarmSpecifier;
+      
+      sts = xChannelPutPacket( local->chan, (CIFX_PACKET*)&alarm_rsp, 10);
+      printf( "Alarm ind\n");
+
+      // Ack the alarm
+      APIOC_ALARM_ACK_REQ_T alarm_ack = {{0}};
+      APIOC_ALARM_ACK_CNF_T alarm_ack_cnf = {{0}};
+      
+      alarm_ack.tHead.ulDest   = HOST_TO_LE32(PNM_APPLICATION);
+      alarm_ack.tHead.ulLen    = HOST_TO_LE32(sizeof(alarm_ack.tData));
+      alarm_ack.tHead.ulCmd    = HOST_TO_LE32(PNIO_APCTL_CMD_APPL_ALARM_ACK_CNF);
+      alarm_ack.tHead.ulSrc    = HOST_TO_LE32(PN_SRC);
+      alarm_ack.tHead.ulSrcId  = HOST_TO_LE32(PN_SRCID);
+      alarm_ack.tData.ulHandle  = ((APIOC_ALARM_IND_T *)msg)->tData.ulHandle;
+      alarm_ack.tData.usAlarmSpecifier = ((APIOC_ALARM_IND_T *)msg)->tData.usAlarmSpecifier;
+      alarm_ack.tData.usReserved = 0;
+      
+      sts = xChannelPutPacket( local->chan, (CIFX_PACKET*)&alarm_ack, 10);
+      if ( sts == CIFX_NO_ERROR) {
+
+	sts = xChannelGetPacket( local->chan, sizeof(alarm_ack_cnf), (CIFX_PACKET *)&alarm_ack_cnf, 20);
+	if ( sts == CIFX_NO_ERROR) {
+	  printf( "ALARM_ACK\n");
+	  printf( "Status 0x%08x\n", alarm_ack_cnf.tHead.ulSta);
+	}
+      }	
+      break;
+    }
+    case PNIO_APCTL_CMD_APPL_DIAG_DATA_IND: {
+	
+      // Response, return the package
+      APIOC_DIAG_DATA_RSP_T diag_data_rsp = {{0}};
+
+      diag_data_rsp.tHead.ulDest   = HOST_TO_LE32(PNM_APPLICATION);
+      diag_data_rsp.tHead.ulLen    = HOST_TO_LE32(sizeof(diag_data_rsp.tData));
+      diag_data_rsp.tHead.ulCmd    = HOST_TO_LE32(PNIO_APCTL_CMD_APPL_DIAG_DATA_RSP);
+      diag_data_rsp.tHead.ulSrc    = HOST_TO_LE32(PN_SRC);
+      diag_data_rsp.tHead.ulSrcId  = HOST_TO_LE32(PN_SRCID);
+      diag_data_rsp.tData.ulHandle  = ((APIOC_DIAG_DATA_IND_T *)msg)->tData.ulHandle;
+      
+      sts = xChannelPutPacket( local->chan, (CIFX_PACKET*)&diag_data_rsp, 10);
+      printf( "Diag data\n");
+      
+      break;
+    }
+    default:
+      printf( "Unexpected cmd received: %u\n", ((TLR_PACKET_HEADER_T *)msg)->ulCmd);            
+    }
+  }
+
+  free(msg);
+
   return IO__SUCCESS;
 }
 

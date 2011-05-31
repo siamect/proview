@@ -2775,6 +2775,14 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Diagnosis data for Hilscher cifX board.
+    !  Diagnosis data for Hilscher cifX board.
+    ! 
+    !  The object is usually an internal object in a cifX board object.
+    !*/
     Object Hilscher_cifX_Diag $ClassDef 20 04-MAR-2011 14:16:20.12
       Body SysBody 04-MAR-2011 14:15:45.77
         Attr Editor = 0
@@ -2786,6 +2794,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr StructName = "Hilscher_cifX_Diag"
           Attr NextAix = "_X17"
         EndBody
+        !/**
+        ! Board device number.
+        !*/
         Object DeviceNumber $Attribute 3 04-MAR-2011 14:29:58.06
           Body SysBody 11-MAR-2011 10:01:35.56
             Attr PgmName = "DeviceNumber"
@@ -2793,6 +2804,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Board serial number.
+        !*/
         Object SerialNumber $Attribute 4 04-MAR-2011 14:30:15.60
           Body SysBody 11-MAR-2011 10:01:42.88
             Attr PgmName = "SerialNumber"
@@ -2800,6 +2814,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Loaded firmware.
+        !*/
         Object FirmwareName $Attribute 15 11-MAR-2011 11:13:13.95
           Body SysBody 11-MAR-2011 11:13:29.65
             Attr PgmName = "FirmwareName"
@@ -2807,6 +2824,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        ! Firmware version and date.
+        !*/
         Object FirmwareVersion $Attribute 16 11-MAR-2011 11:13:42.31
           Body SysBody 11-MAR-2011 11:13:32.93
             Attr PgmName = "FirmwareVersion"
@@ -2814,6 +2834,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        ! System error.
+        !*/
         Object SystemError $Attribute 5 04-MAR-2011 14:30:29.02
           Body SysBody 11-MAR-2011 10:01:48.67
             Attr PgmName = "SystemError"
@@ -2821,6 +2844,12 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! System status.
+        ! The status is displayed in decimal form, and have to be converted
+        ! to hexadecimal form to be identified in the cifX manual.
+        ! 0 is sucess status.
+        !*/
         Object SystemStatus $Attribute 6 04-MAR-2011 14:31:01.22
           Body SysBody 11-MAR-2011 10:01:55.81
             Attr PgmName = "SystemStatus"
@@ -2828,6 +2857,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Time since firmware start.
+        !*/
         Object TimeSinceStart $Attribute 7 11-MAR-2011 09:53:27.01
           Body SysBody 11-MAR-2011 10:02:03.22
             Attr PgmName = "TimeSinceStart"
@@ -2835,6 +2867,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$DeltaTime"
           EndBody
         EndObject
+        !/**
+        ! CPU load of cifX board.
+        !*/
         Object CpuLoad $Attribute 8 11-MAR-2011 09:53:50.36
           Body SysBody 11-MAR-2011 10:02:09.47
             Attr PgmName = "CpuLoad"
@@ -2842,6 +2877,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        ! Communcation state.
+        !*/
         Object CommState $Attribute 9 11-MAR-2011 09:54:28.93
           Body SysBody 11-MAR-2011 10:02:14.79
             Attr PgmName = "CommState"
@@ -2849,6 +2887,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "OtherIO:Type-Hilscher_cifX_CommStateEnum"
           EndBody
         EndObject
+        !/**
+        ! Communication error.
+        !*/
         Object CommError $Attribute 10 11-MAR-2011 09:54:46.70
           Body SysBody 11-MAR-2011 10:02:19.62
             Attr PgmName = "CommError"
@@ -2856,6 +2897,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Error count.
+        !*/
         Object ErrorCount $Attribute 11 11-MAR-2011 09:55:06.60
           Body SysBody 11-MAR-2011 10:02:24.52
             Attr PgmName = "ErrorCount"
@@ -2863,6 +2907,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Number of configured slaves.
+        !*/
         Object ConfigSlaves $Attribute 12 11-MAR-2011 09:55:20.72
           Body SysBody 11-MAR-2011 10:02:29.55
             Attr PgmName = "ConfigSlaves"
@@ -2870,6 +2917,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Number of active slaves.
+        !*/
         Object ActiveSlaves $Attribute 13 11-MAR-2011 09:55:28.90
           Body SysBody 11-MAR-2011 10:02:38.38
             Attr PgmName = "ActiveSlaves"
@@ -2877,6 +2927,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Slave state. Indicates if any slave has reported warning or failure.
+        !*/
         Object SlaveState $Attribute 14 11-MAR-2011 09:55:39.61
           Body SysBody 11-MAR-2011 10:10:14.15
             Attr PgmName = "SlaveState"
@@ -2884,6 +2937,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "OtherIO:Type-Hilscher_cifX_SlaveStateEnum"
           EndBody
         EndObject
+        !/**
+        ! Host state.
+        !*/
         Object HostState $Attribute 1 04-MAR-2011 14:17:52.72
           Body SysBody 11-MAR-2011 10:17:10.58
             Attr PgmName = "HostState"
@@ -2891,6 +2947,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrb:Type-ReadyNotReadyEnum"
           EndBody
         EndObject
+        !/**
+        ! Bus state.
+        !*/
         Object BusState $Attribute 2 04-MAR-2011 14:17:45.36
           Body SysBody 11-MAR-2011 10:03:59.20
             Attr PgmName = "BusState"
@@ -2904,6 +2963,25 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Hilscher cifX Profinet controller.
+    !  Agent object for a Hilscher cifX board with Profnet controller
+    !  firmware.
+    ! 
+    !  The object is configured as a child to the node object.
+    !  The devices on the Profinet bus are configured as children to
+    !  the PnController object. These object should be of class PnDevice
+    !  or of a subclass of PnDevice. The devices are configured with the
+    !  Profinet configurator.
+    !
+    !  The Alias attribute has to correspond to the alias setting for the
+    !  driver configuration for the board in the device.conf file.
+    !
+    !  @b See also
+    !  @classlink PnDevice profibus_pndevice.html
+    !*/
     Object Hilscher_cifX_PnController $ClassDef 24 23-MAY-2011 11:01:53.65
       Body SysBody 23-MAY-2011 11:01:37.07
         Attr Editor = 0
@@ -2915,78 +2993,132 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr StructName = "Hilscher_cifX_PnController"
           Attr NextAix = "_X31"
         EndBody
+        !/**
+        ! Optional description.
+        !*/
         Object Description $Attribute 14 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! Specification of the board.
+        !*/
         Object Specification $Attribute 15 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! Datasheet URL.
+        !*/
         Object DataSheet $Attribute 16 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        ! IP address for the controller.
+        !*/
         Object IP_Address $Attribute 27 24-MAY-2011 08:21:37.53
           Body SysBody 24-MAY-2011 08:21:12.63
             Attr PgmName = "IP_Address"
             Attr TypeRef = "pwrs:Type-$String32"
           EndBody
         EndObject
+        !/**
+        ! Subnet mask for the controller.
+        !*/
         Object SubnetMask $Attribute 28 24-MAY-2011 08:21:57.03
           Body SysBody 24-MAY-2011 08:23:57.17
             Attr PgmName = "SubnetMask"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        ! Device name for controller.
+        !*/
         Object DeviceName $Attribute 29 24-MAY-2011 08:22:20.62
           Body SysBody 24-MAY-2011 08:24:00.64
             Attr PgmName = "DeviceName"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        ! Device type.
+        !*/
         Object DeviceType $Attribute 30 24-MAY-2011 08:22:25.89
           Body SysBody 24-MAY-2011 08:24:03.36
             Attr PgmName = "DeviceType"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        ! The alias attribute is used to identify the board.
+        ! It should correspond to the alias setting in the device.conf file.
+        !*/
         Object Alias $Attribute 17 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "Alias"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        ! Channel. Only channel 0 is implemented.
+        !*/
         Object Channel $Attribute 18 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "Channel"
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Controller status.
+        ! The status is displayed in decimal form and has to be converted
+        ! to hexadecimal form to be identified in the cifX manual.
+        ! A description is dislayed in the ErrorStr attribute.
+        ! 0 is sucess status.
+        !*/
         Object Status $Attribute 19 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "Status"
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! @Summary Process that handles the module. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the module.
+        ! 
+        ! 1: The module is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The module is read by the rt_io_comm process.
+        ! 4: The module is handled by an application program.
+        !*/
         Object Process $Attribute 20 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "Process"
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
+        !/**
+        ! @Summary Plc thread that handles the card.
+        ! The PlcThread object of the plc thread that handles the card.
+        ! The card is read with the scantime of the thread.
+        !*/
         Object ThreadObject $Attribute 21 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "ThreadObject"
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
+        !/**
+        ! Error counter, incremented for every failed read or write operation of the card.
+        ! When the error counter reaches ErrorSoftLimit, a message is sent to the console log.
+        ! When it reaches ErrorHardLimit, all IO handling is aborted.
+        !*/
         Object ErrorCount $Attribute 22 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "ErrorCount"
@@ -2994,24 +3126,36 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Text string for an error status.
+        !*/
         Object ErrorStr $Attribute 23 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "ErrorStr"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! Value of the error counter, when a message is sent to the console log.
+        !*/
         Object ErrorSoftLimit $Attribute 24 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "ErrorSoftLimit"
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Value of the error counter, when all IO handling is aborted.
+        !*/
         Object ErrorHardLimit $Attribute 25 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "ErrorHardLimit"
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Diagnosis data.
+        !*/
         Object Diag $Attribute 26 23-MAY-2011 11:01:37.07
           Body SysBody 23-MAY-2011 11:01:37.07
             Attr PgmName = "Diag"
@@ -3074,6 +3218,34 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Hilscher cifX Master.
+    !  Agent object for a Hilscher cifX board configured with SYCON.net.
+    !
+    !  The Hilsher cifX boards supports CANopen, CC-Link, DeviceNet, EtherCAT,
+    !  EtherNet/IP, Modbus TCP, Powerlink, Profibus, Profinet and Sercos III.
+    ! 
+    !  The bus devices are configured in SYSCON.net configurator on Windows.
+    !  The configution is export to a configuration file, that is copied to
+    !  the process station.
+    !
+    !  The Alias attribute has to correspond to the alias setting for the
+    !  driver configuration for the board in the device.conf file.
+    !
+    !  The object is configured as a child to the node object.
+    !  The slaves or devices on the bus are configured as children to
+    !  the Master object. These object should be of class Hilscher_cifX_Device.
+    !  The modules of the devices are configures as children to these and should
+    !  be of class Hilscher_cifX_Module. Below the module objects, channels are 
+    !  configured that describes the input and output area for the module.
+    !  The size and offset in the area have to match the SYCON.net configuration.
+    !
+    !  @b See also
+    !  @classlink Hilscher_cifX_Device otherio_hilscher_cifx_device.html
+    !  @classlink Hilscher_cifX_Module otherio_hilscher_cifx_module.html
+    !*/
     Object Hilscher_cifX_Master $ClassDef 17 23-FEB-2011 15:22:46.32
       Body SysBody 23-FEB-2011 14:03:13.10
         Attr Editor = 0
@@ -3085,48 +3257,85 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr StructName = "Hilscher_cifX_Master"
           Attr NextAix = "_X14"
         EndBody
+        !/**
+        ! Optional description.
+        !*/
         Object Description $Attribute 1 23-FEB-2011 13:53:04.77
           Body SysBody 23-FEB-2011 13:53:04.77
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! Specification of the board.
+        !*/
         Object Specification $Attribute 12 09-MAR-2011 17:28:57.42
           Body SysBody 09-MAR-2011 17:28:57.42
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! Datasheet URL.
+        !*/
         Object DataSheet $Attribute 13 09-MAR-2011 17:28:57.42
           Body SysBody 09-MAR-2011 17:28:57.42
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        ! The alias attribute is used to identify the board.
+        ! It should correspond to the alias setting in the device.conf file.
+        !*/
         Object Alias $Attribute 4 23-FEB-2011 13:53:17.54
           Body SysBody 23-FEB-2011 13:53:27.97
             Attr PgmName = "Alias"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        ! Channel. Only channel 0 is implemented.
+        !*/
         Object Channel $Attribute 5 23-FEB-2011 13:53:43.84
           Body SysBody 23-FEB-2011 13:53:53.75
             Attr PgmName = "Channel"
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Controller status.
+        ! The status is displayed in decimal form and has to be converted
+        ! to hexadecimal form to be identified in the cifX manual.
+        ! A description is dislayed in the ErrorStr attribute.
+        ! 0 is sucess status.
+        !*/
         Object Status $Attribute 11 07-MAR-2011 09:01:35.86
           Body SysBody 07-MAR-2011 09:01:37.24
             Attr PgmName = "Status"
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! @Summary Process that handles the module. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the module.
+        ! 
+        ! 1: The module is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The module is read by the rt_io_comm process.
+        ! 4: The module is handled by an application program.
+        !*/
         Object Process $Attribute 2 23-FEB-2011 13:53:04.77
           Body SysBody 23-FEB-2011 13:53:04.77
             Attr PgmName = "Process"
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
+        !/**
+        ! @Summary Plc thread that handles the card.
+        ! The PlcThread object of the plc thread that handles the card.
+        ! The card is read with the scantime of the thread.
+        !*/
         Object ThreadObject $Attribute 3 23-FEB-2011 13:53:04.77
           Body SysBody 23-FEB-2011 13:53:04.77
             Attr PgmName = "ThreadObject"
@@ -3145,6 +3354,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Text string for an error status.
+        !*/
         Object ErrorStr $Attribute 6 07-MAR-2011 09:01:18.62
           Body SysBody 07-MAR-2011 09:01:19.70
             Attr PgmName = "ErrorStr"
@@ -3169,6 +3381,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Diagnosis data.
+        !*/
         Object Diag $Attribute 7 04-MAR-2011 14:19:32.00
           Body SysBody 04-MAR-2011 14:19:50.47
             Attr PgmName = "Diag"
@@ -3227,6 +3442,21 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Hilscher cifX Device.
+    !  Rack object for a Hilscher cifX device configured with SYCON.net.
+    !
+    !  The object is configured as a child to a Hilscher_cifX_Master object.
+    !  Module object of class Hilscher_cifX_Module are configured as childern
+    !  to the device object. Below the module objects, channels are configured 
+    !  that describes the input and output area for the module.
+    !
+    !  @b See also
+    !  @classlink Hilscher_cifX_Master otherio_hilscher_cifx_master.html
+    !  @classlink Hilscher_cifX_Module otherio_hilscher_cifx_module.html
+    !*/
     Object Hilscher_cifX_Device $ClassDef 18 23-FEB-2011 15:23:00.07
       Body SysBody 23-FEB-2011 14:03:06.90
         Attr Editor = 0
@@ -3238,36 +3468,65 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr StructName = "Hilscher_cifX_Device"
           Attr NextAix = "_X17"
         EndBody
+        !/**
+        ! Optional description.
+        !*/
         Object Description $Attribute 6 23-FEB-2011 14:01:08.18
           Body SysBody 23-FEB-2011 14:01:08.18
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! Byte ordering of the device.
+        !*/
         Object ByteOrdering $Attribute 15 09-MAR-2011 17:31:00.41
           Body SysBody 09-MAR-2011 17:31:17.44
             Attr PgmName = "ByteOrdering"
             Attr TypeRef = "pwrb:Type-ByteOrderingEnum"
           EndBody
         EndObject
+        !/**
+        ! Float representation of the device.
+        !*/
         Object FloatRepresentation $Attribute 16 09-MAR-2011 17:32:02.70
           Body SysBody 09-MAR-2011 17:33:34.38
             Attr PgmName = "FloatRepresentation"
             Attr TypeRef = "pwrb:Type-FloatRepEnum"
           EndBody
         EndObject
+        !/**
+        ! @Summary Process that handles the module. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the module.
+        ! 
+        ! 1: The module is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The module is read by the rt_io_comm process.
+        ! 4: The module is handled by an application program.
+        !*/
         Object Process $Attribute 9 23-FEB-2011 14:01:08.18
           Body SysBody 23-FEB-2011 14:01:08.18
             Attr PgmName = "Process"
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
+        !/**
+        ! @Summary Plc thread that handles the card.
+        ! The PlcThread object of the plc thread that handles the card.
+        ! The card is read with the scantime of the thread.
+        !*/
         Object ThreadObject $Attribute 10 23-FEB-2011 14:01:08.18
           Body SysBody 23-FEB-2011 14:01:08.18
             Attr PgmName = "ThreadObject"
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
+        !/**
+        ! Offset for the device in the input area. The offset and size are
+        ! calculated at runtime startup and is dependent on the channel 
+        ! configuration.
+        ! The offset and size has to match the offset in the SYCON.net configuration.
+        !*/
         Object InputAreaOffset $Attribute 11 04-MAR-2011 10:18:56.35
           Body SysBody 04-MAR-2011 10:19:17.94
             Attr PgmName = "InputAreaOffset"
@@ -3275,6 +3534,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Size for the device in the input area.
+        !*/
         Object InputAreaSize $Attribute 12 04-MAR-2011 10:19:46.95
           Body SysBody 04-MAR-2011 10:19:37.75
             Attr PgmName = "InputAreaSize"
@@ -3282,6 +3544,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Offset in the output area.
+        !*/
         Object OutputAreaOffset $Attribute 13 04-MAR-2011 10:20:07.15
           Body SysBody 04-MAR-2011 10:19:58.64
             Attr PgmName = "OutputAreaOffset"
@@ -3289,6 +3554,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Size for the device in the output area.
+        !*/
         Object OutputAreaSize $Attribute 14 04-MAR-2011 10:20:18.60
           Body SysBody 04-MAR-2011 10:19:58.64
             Attr PgmName = "OutputAreaSize"
@@ -3323,6 +3591,20 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Hilscher cifX Module.
+    !  Card object for a Hilscher cifX device configured with SYCON.net.
+    !
+    !  The object is configured as a child to a Hilscher_cifX_Device object.
+    !  Below the module objects, channels are configured that describes the input 
+    !  and output area for the module.
+    !
+    !  @b See also
+    !  @classlink Hilscher_cifX_Master otherio_hilscher_cifx_master.html
+    !  @classlink Hilscher_cifX_Device otherio_hilscher_cifx_device.html
+    !*/
     Object Hilscher_cifX_Module $ClassDef 19 23-FEB-2011 15:23:13.31
       Body SysBody 23-FEB-2011 14:02:55.28
         Attr Editor = 0
@@ -3334,24 +3616,47 @@ Volume OtherIO $ClassVolume 0.0.250.10
           Attr StructName = "Hilscher_cifX_Module"
           Attr NextAix = "_X15"
         EndBody
+        !/**
+        ! Optional description.
+        !*/
         Object Description $Attribute 6 23-FEB-2011 14:02:24.06
           Body SysBody 23-FEB-2011 14:02:24.06
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! @Summary Process that handles the module. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the module.
+        ! 
+        ! 1: The module is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The module is read by the rt_io_comm process.
+        ! 4: The module is handled by an application program.
+        !*/
         Object Process $Attribute 9 23-FEB-2011 14:02:24.06
           Body SysBody 23-FEB-2011 14:02:24.06
             Attr PgmName = "Process"
             Attr TypeRef = "pwrb:Type-IoProcessMask"
           EndBody
         EndObject
+        !/**
+        ! @Summary Plc thread that handles the card.
+        ! The PlcThread object of the plc thread that handles the card.
+        ! The card is read with the scantime of the thread.
+        !*/
         Object ThreadObject $Attribute 10 23-FEB-2011 14:02:24.06
           Body SysBody 23-FEB-2011 14:02:24.06
             Attr PgmName = "ThreadObject"
             Attr TypeRef = "pwrs:Type-$Objid"
           EndBody
         EndObject
+        !/**
+        ! Offset for the module in the input area. The offset and size are
+        ! calculated at runtime startup and is dependent on the channel 
+        ! configuration.
+        ! The offset and size has to match the offset in the SYCON.net configuration.
+        !*/
         Object InputAreaOffset $Attribute 11 04-MAR-2011 10:20:33.79
           Body SysBody 04-MAR-2011 10:20:33.79
             Attr PgmName = "InputAreaOffset"
@@ -3359,6 +3664,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Size for the module in the input area.
+        !*/
         Object InputAreaSize $Attribute 12 04-MAR-2011 10:20:33.79
           Body SysBody 04-MAR-2011 10:20:33.79
             Attr PgmName = "InputAreaSize"
@@ -3366,6 +3674,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Offset in the output area.
+        !*/
         Object OutputAreaOffset $Attribute 13 04-MAR-2011 10:20:33.79
           Body SysBody 04-MAR-2011 10:20:33.79
             Attr PgmName = "OutputAreaOffset"
@@ -3373,6 +3684,9 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        ! Size for the module in the output area.
+        !*/
         Object OutputAreaSize $Attribute 14 04-MAR-2011 10:20:33.79
           Body SysBody 04-MAR-2011 10:20:33.79
             Attr PgmName = "OutputAreaSize"
