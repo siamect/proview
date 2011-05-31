@@ -40,7 +40,9 @@
 #include "rt_pb_msg.h"
 #include "cow_pn_gsdml_attr_gtk.h"
 #include "cow_pn_gsdml_attrnav_gtk.h"
+#include "cow_wow_gtk.h"
 
+CoWowRecall GsdmlAttrGtk::value_recall;
 
 void GsdmlAttrGtk::message( char severity, const char *message)
 {
@@ -456,7 +458,8 @@ GsdmlAttrGtk::GsdmlAttrGtk( GtkWidget *a_parent_wid,
   gtk_widget_set_size_request( msg_label, -1, 25);
   cmd_prompt = gtk_label_new( "value > ");
   gtk_widget_set_size_request( cmd_prompt, -1, 25);
-  cmd_input = gtk_entry_new();
+  cmd_entry = new CoWowEntryGtk( &value_recall);
+  cmd_input = cmd_entry->widget();
   gtk_widget_set_size_request( cmd_input, -1, 25);
   g_signal_connect( cmd_input, "activate", 
 		    G_CALLBACK(activate_cmd_input), this);

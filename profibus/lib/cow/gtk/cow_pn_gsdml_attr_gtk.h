@@ -44,6 +44,8 @@ class GsdmlAttrGtk : public GsdmlAttr {
   GtkWidget	*menubutton_changevalue;
   GtkWidget	*menubutton_viewio;
   CoWowFocusTimerGtk focustimer;
+  static CoWowRecall value_recall;
+  CoWowEntryGtk *cmd_entry;
 
   GsdmlAttrGtk( GtkWidget *a_parent_wid,
 		void *a_parent_ctx,
