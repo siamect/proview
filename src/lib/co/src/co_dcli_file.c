@@ -150,7 +150,7 @@ int	dcli_get_defaultfilename(
 *	will be detected.
 *
 **************************************************************************/
-int     dcli_replace_env( char *str, char *newstr)
+int     dcli_replace_env( const char *str, char *newstr)
 {
   char    *s;
   char    *t;

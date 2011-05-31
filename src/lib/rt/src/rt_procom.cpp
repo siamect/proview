@@ -1334,7 +1334,7 @@ void rt_procom::provideStatus( pwr_tStatus rsts)
 {
   pwr_tStatus sts;
 
-  switch( m_getmsg->type.s) {
+  switch( (int)m_getmsg->type.s) {
   case net_eMsg_getObjectInfo: {
     qcom_sPut		put;
     net_sGetObjectInfoR *rmp;

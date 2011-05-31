@@ -706,7 +706,7 @@ short DevExitBoard( unsigned short usDevNumber)
 {
 	DEVIO_EXITCMD   tBuffer;
 	unsigned int    lBytesReturned;
-	unsigned short  usDrvOpenCount;
+	unsigned short  usDrvOpenCount = 0;
 	short           sRet = DRV_NO_ERROR;
 
   if( hDevDrv == INVALID_HANDLE_VALUE) {
@@ -1798,7 +1798,7 @@ short RunFirmwareDownload( unsigned short usDevNumber,
           tSendMsg.rx = RCS_TASK;
           tSendMsg.tx = MSG_SYSTEM_TX;
           tSendMsg.ln = (unsigned char)lSendLen;
-          tSendMsg.nr = ++tSendMsg.nr;
+          tSendMsg.nr++; // tSendMsg.nr = ++tSendMsg.nr;
           tSendMsg.a  = 0;
           tSendMsg.f  = 0;
           tSendMsg.b  = RCS_B_LOADFKT;
@@ -1838,7 +1838,7 @@ short RunFirmwareDownload( unsigned short usDevNumber,
       case RCS_CONT_MSK:
         tSendMsg.e = RCS_CONT_MSK;
         tSendMsg.ln = (unsigned char)lSendLen;
-        tSendMsg.nr = ++tSendMsg.nr;
+        tSendMsg.nr++; // tSendMsg.nr = ++tSendMsg.nr;
 
         // Send next message
         memcpy ( &tSendMsg.data[0], &pabData[lActIdx], lSendLen);
@@ -1871,7 +1871,7 @@ short RunFirmwareDownload( unsigned short usDevNumber,
       case RCS_LAST_MSK:
 
         tSendMsg.ln = (unsigned char)lSendLen;
-        tSendMsg.nr = ++tSendMsg.nr;
+        tSendMsg.nr++; // tSendMsg.nr = ++tSendMsg.nr;
         tSendMsg.e  = RCS_LAST_MSK;
 
         memcpy ( &tSendMsg.data[0], &pabData[lActIdx] , lSendLen);
@@ -1994,7 +1994,7 @@ short  RunConfigDownload( unsigned short usDevNumber,
         tSendMsg.rx = RCS_TASK;
         tSendMsg.tx = MSG_SYSTEM_TX;
         tSendMsg.ln = (unsigned char)lSendLen;
-        tSendMsg.nr = ++tSendMsg.nr;
+        tSendMsg.nr++; // tSendMsg.nr = ++tSendMsg.nr;
         tSendMsg.a  = 0;
         tSendMsg.f  = 0;
         tSendMsg.b  = RCS_B_LOADFKT;
@@ -2031,7 +2031,7 @@ short  RunConfigDownload( unsigned short usDevNumber,
         tSendMsg.rx = RCS_TASK;
         tSendMsg.tx = MSG_SYSTEM_TX;
         tSendMsg.ln = (unsigned char)lSendLen;
-        tSendMsg.nr = ++tSendMsg.nr;
+        tSendMsg.nr++; // tSendMsg.nr = ++tSendMsg.nr;
         tSendMsg.a  = 0;
         tSendMsg.f  = 0;
         tSendMsg.b  = RCS_B_LOADFKT;

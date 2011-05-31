@@ -444,3 +444,34 @@ void StoIpPtr_exec( plc_sThread	*tp,
     *o->Ptr = *o->InP;
 }
 
+/*_*
+  ENUMTOSTR
+  @aref enumtostr ENUMTOSTR
+*/
+
+void EnumToStr_init( pwr_sClass_EnumToStr *o) 
+{
+  if ( EVEN( gdh_GetEnumValueDef( o->TypeId, (gdh_sValueDef **)&o->EnumDefP, (int *)&o->EnumDefRows)))
+    o->EnumDefP = 0;
+}
+
+void EnumToStr_exec( plc_sThread	*tp,
+		     pwr_sClass_EnumToStr *o) 
+{
+  int i;
+  int found = 0;
+
+  if ( !o->EnumDefP)
+    return;
+
+  for ( i = 0; i < o->EnumDefRows; i++) {
+    if ( ((gdh_sValueDef *)o->EnumDefP)[i].Value->Value == *o->InP) {
+      strncpy( o->ActVal, ((gdh_sValueDef *)o->EnumDefP)[i].Value->Text, sizeof(o->ActVal));
+      found = 1;
+      break;
+    }
+  }
+  if ( !found)
+    strcpy( o->ActVal, "");
+}
+

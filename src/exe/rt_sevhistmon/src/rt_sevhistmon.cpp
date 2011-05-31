@@ -872,7 +872,7 @@ int rt_sevhistmon::send_itemlist( pwr_tNid nid)
     size += objectitem_cnt * (sizeof(sev_sHistItem) - sizeof(sev_sHistAttr)) + histobjectsize;
   }
   else {
-    size += (objectitem_cnt - 1) * (sizeof(sev_sHistItem) - sizeof(sev_sHistAttr)) + histobjectsize;  
+    size += sizeof(sev_sMsgHistItems) + (objectitem_cnt - 1) * (sizeof(sev_sHistItem) - sizeof(sev_sHistAttr)) + histobjectsize;  
   }
 
 

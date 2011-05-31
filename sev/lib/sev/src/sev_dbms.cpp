@@ -90,7 +90,7 @@ void sev_dbms_env::passwd(const char *passwd)
   if (!passwd)
     return;
   
-  m_passwd = (char *)realloc(m_passwd, strlen(passwd));
+  m_passwd = (char *)realloc(m_passwd, strlen(passwd)+1);
   strcpy(m_passwd, passwd);
 }
 

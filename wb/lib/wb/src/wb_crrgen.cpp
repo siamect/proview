@@ -39,7 +39,8 @@ typedef enum {
 typedef enum {
   crrgen_eTable_,
   crrgen_eTable_Object,
-  crrgen_eTable_Signal
+  crrgen_eTable_Signal,
+  crrgen_eTable_SimSignal
 } crrgen_eTable;
 
 typedef struct sCrrKey
@@ -133,7 +134,16 @@ static crrgen_tRefList reflist[] = {
     { pwr_cClass_Ao, "RtBody", "SigChanCon", crrgen_eType_Ref, crrgen_eTable_Object, 0},
     { pwr_cClass_Ii, "RtBody", "SigChanCon", crrgen_eType_Ref, crrgen_eTable_Object, 0},
     { pwr_cClass_Io, "RtBody", "SigChanCon", crrgen_eType_Ref, crrgen_eTable_Object, 0},
-    { pwr_cClass_Co, "RtBody", "SigChanCon", crrgen_eType_Ref, crrgen_eTable_Object, 0} };
+    { pwr_cClass_Co, "RtBody", "SigChanCon", crrgen_eType_Ref, crrgen_eTable_Object, 0},
+    { pwr_cClass_resdi, "DevBody", "DiObject", crrgen_eType_Write, crrgen_eTable_SimSignal, 0},
+    { pwr_cClass_setdi, "DevBody", "DiObject", crrgen_eType_Write, crrgen_eTable_SimSignal, 0},
+    { pwr_cClass_stodi, "DevBody", "DiObject", crrgen_eType_Write, crrgen_eTable_SimSignal, 0},
+    { pwr_cClass_toggledi, "DevBody", "DiObject", crrgen_eType_Write, crrgen_eTable_SimSignal, 0},
+    { pwr_cClass_stopi, "DevBody", "CoObject", crrgen_eType_Write, crrgen_eTable_SimSignal, 0},
+    { pwr_cClass_cstoai, "DevBody", "AiObject", crrgen_eType_Write, crrgen_eTable_SimSignal, 0},
+    { pwr_cClass_stoai, "DevBody", "AiObject", crrgen_eType_Write, crrgen_eTable_SimSignal, 0},
+    { pwr_cClass_cstoii, "DevBody", "IiObject", crrgen_eType_Write, crrgen_eTable_SimSignal, 0},
+    { pwr_cClass_stoii, "DevBody", "IiObject", crrgen_eType_Write, crrgen_eTable_SimSignal, 0}};
 
 static crrgen_tRefList codelist[] = {
     { pwr_cClass_dataarithm, "DevBody", "Code", crrgen_eType_, crrgen_eTable_, 0},
@@ -234,12 +244,15 @@ wb_crrgen::~wb_crrgen()
   tree_DeleteTable(&sts, m_signal_th);
 }
 
-void wb_crrgen::load( pwr_tStatus *rsts)
+void wb_crrgen::load( pwr_tStatus *rsts, int sim)
 {
   pwr_tStatus sts;
 
   
   for ( int i = 0; i < int(sizeof(reflist)/sizeof(reflist[0])); i++) {
+    if ( !sim && reflist[i].table == crrgen_eTable_SimSignal)
+      continue;
+
     for ( wb_object o = m_sp->object( reflist[i].cid); o; o = o.next()) {
       pwr_tAttrRef aref;
 
@@ -276,6 +289,7 @@ void wb_crrgen::load( pwr_tStatus *rsts)
 	key.type = reflist[i].type;
 	switch ( reflist[i].table) {
 	case crrgen_eTable_Signal:
+	case crrgen_eTable_SimSignal:
 	  tree_Insert(&sts, m_signal_th, &key);
 	  break;
 	case crrgen_eTable_Object:

@@ -874,6 +874,7 @@ palette PlcEditorPalette
       class DtoEnum
       class DtoStr
       class EnumToD
+      class EnumToStr
       class Float64ToA	
       class Gray
       class Int64toI

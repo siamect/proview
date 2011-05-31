@@ -273,8 +273,9 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"/LASTCHILD", "/VOLUME", "/ALL", 
 			"/CLASS", "/DEBUG", "/NODECONFIG",
 			"/NAME", "/IDENTITY", "/FILES", "/OUT", "/IGNORE",
-			"/DIRECTORY", "/BUILDVERSION", "/DATABASE", "/SERVER", 
-			  "/PLCPGM", "/HIERARCHY", "/FROM_PLCPGM", "/TEMPLATE", ""}
+			"/DIRECTORY", "/DATABASE", "/SERVER", 
+			"/PLCPGM", "/HIERARCHY", "/FROM_PLCPGM", "/TEMPLATE", 
+			"/SIMULATION", ""}
 		},
 		{
 			"NEW",
@@ -4003,8 +4004,11 @@ static int	wnav_create_func( void		*client_data,
     sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
+    int simulate = ODD( dcli_get_qualifier( "/SIMULATION", 0, 0));
+
     wb_crrgen crrgen( (wb_session *)wnav->ldhses);
-    crrgen.load( &sts);
+
+    crrgen.load( &sts, simulate);
     crrgen.write( &sts);
     crrgen.write_code( &sts);
   }
@@ -4014,9 +4018,9 @@ static int	wnav_create_func( void		*client_data,
     pwr_tFileName	outstr;
     char        *outstr_p;
     int         ignore;
-    int		buildversion;
     pwr_tStatus	sts;
     pwr_tTime	buildtime, *timep;
+    char	*s;
 
     // Command is "CREATE SNAPSHOT"
 
@@ -4032,15 +4036,22 @@ static int	wnav_create_func( void		*client_data,
       outstr_p = 0;
 
     ignore = ODD( dcli_get_qualifier( "/IGNORE", 0, 0));
-    buildversion = ODD( dcli_get_qualifier( "/BUILDVERSION", 0, 0));
 
-    if ( buildversion) {
-      time_AsciiToA( pwrv_cBuildTimeStr, &buildtime);
-      timep = &buildtime;
+    if ( (s = getenv( "PWRE_CONF_BUILDVERSION"))) {
+      if ( strcmp( s, "") == 0 || 
+	   strcmp( s, "0") == 0)
+	timep = 0;
+      else {
+	if ( ODD(time_AsciiToA( s, &buildtime)))
+	  timep = &buildtime;
+	else {
+	  wnav->message('E', "Syntax error in PWRE_CONF_BUILDVERSION");
+	  return WNAV__SYNTAX;
+	}
+      }
     }
     else
       timep = 0;
-
     sts = wnav_wccm_get_wbctx_cb( wnav, &wnav->wbctx);
     if ( EVEN(sts)) return sts;
 

@@ -478,7 +478,7 @@ errh_CErrLog (
   args[argno] = NULL;
 
   s = get_header(get_severity(sts), string);
-  msg_vsprintf(s, msg, args, NULL);
+  msg_vsprintf(s, msg, args, (va_list)NULL);
   errh_send(string, get_severity(sts), sts, errh_eMsgType_Log);
 }
 

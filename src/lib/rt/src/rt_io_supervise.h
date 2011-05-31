@@ -37,7 +37,7 @@
 typedef struct s_ASupLstLink sASupLstLink;
 typedef struct s_DSupLstLink sDSupLstLink;
 
-typedef struct {
+typedef struct io_sSupCtx_ {
   sASupLstLink	*TimerLstP;
   sASupLstLink	*ASupAnaLstP;
   sDSupLstLink	*DSupDigLstP;
