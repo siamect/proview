@@ -121,7 +121,7 @@ Volume Miscellaneous $ClassVolume 0.0.0.9
       Object RtBody $ObjBodyDef 1 08-APR-2011 08:56:23.47
         Body SysBody 08-APR-2011 08:56:23.47
           Attr StructName = "Misc_PingPong"
-          Attr NextAix = "_X33"
+          Attr NextAix = "_X36"
         EndBody
         !/**
         !  Mode idle, one player or two players.
@@ -287,6 +287,20 @@ Volume Miscellaneous $ClassVolume 0.0.0.9
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        Object XShadow $Attribute 34 25-MAY-2011 19:08:53.70
+          Body SysBody 25-MAY-2011 19:08:55.25
+            Attr PgmName = "XShadow"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object YShadow $Attribute 33 25-MAY-2011 19:09:01.74
+          Body SysBody 25-MAY-2011 19:09:02.90
+            Attr PgmName = "YShadow"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
         !/**
         !  Racket width.
         !*/
@@ -349,7 +363,6 @@ Volume Miscellaneous $ClassVolume 0.0.0.9
         Object LeftPos $Attribute 31 25-MAY-2011 10:51:24.12
           Body SysBody 25-MAY-2011 10:51:26.62
             Attr PgmName = "LeftPos"
-            Attr Flags = 16777216
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
@@ -359,7 +372,6 @@ Volume Miscellaneous $ClassVolume 0.0.0.9
         Object RightPos $Attribute 32 25-MAY-2011 10:51:37.69
           Body SysBody 25-MAY-2011 10:51:39.58
             Attr PgmName = "RightPos"
-            Attr Flags = 16777216
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
@@ -399,6 +411,13 @@ Volume Miscellaneous $ClassVolume 0.0.0.9
             Attr PgmName = "RightKnobPtr"
             Attr Flags = 8455169
             Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object NewMatch $Attribute 35 26-MAY-2011 16:36:33.79
+          Body SysBody 26-MAY-2011 16:36:24.24
+            Attr PgmName = "NewMatch"
+            Attr Flags = 16778240
+            Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OldMode $Attribute 22 08-APR-2011 15:09:14.47

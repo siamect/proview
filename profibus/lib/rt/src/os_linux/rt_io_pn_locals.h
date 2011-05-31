@@ -25,8 +25,9 @@
 typedef struct _io_sPnRackLocal {
   unsigned short  bytes_of_input;
   unsigned short  bytes_of_output;
-  unsigned char  *inputs;
-  unsigned char  *outputs;
+  unsigned char   *inputs;
+  unsigned char   *outputs;
+  void            *userdata;
 } io_sPnRackLocal;
 
 typedef struct _io_sPnCardLocal {
