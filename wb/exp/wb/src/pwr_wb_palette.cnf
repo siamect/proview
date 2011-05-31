@@ -285,6 +285,7 @@ palette NavigatorPalette
         menu Controller
         {
           class PnControllerSoftingPNAK
+	  class Hilscher_cifX_PnController
         }
         menu Devices
         {
@@ -305,6 +306,17 @@ palette NavigatorPalette
 	  class Modbus_TCP_Server
           class Modbus_TCP_ServerModule
 	}
+      } 
+      menu Hilscher_cifX
+      {
+        class Hilscher_cifX_Master
+        class Hilscher_cifX_Device
+        class Hilscher_cifX_Module
+      }
+      menu UDP
+      {
+        class UDP_IO
+        class BaseIORack
       }
       menu GPIO
       {
@@ -333,6 +345,11 @@ palette NavigatorPalette
         {
           class MotionControl_USB
           class MotionControl_USBIO
+        }
+        menu USB_Joystick
+        {
+          class USB_Joystick
+          class BaseIORack
         }
       }
     }
@@ -505,6 +522,7 @@ palette ProjectNavigatorPalette
   menu Node
   {
     class ApplDistribute
+    class BuildOptions
     class BusConfig
     class ClassVolumeLoad
     class CustomBuild

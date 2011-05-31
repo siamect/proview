@@ -2061,7 +2061,8 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
 	  /* Find any CustomBuild for this node */
 	  class_vect[0] = pwr_cClass_CustomBuild;
-	  class_vect[1] = 0;
+	  class_vect[1] = pwr_cClass_BuildOptions;
+	  class_vect[2] = 0;
 	  
 	  objcount = 0;
 	  objlist = 0;
@@ -2098,6 +2099,99 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	      if ( strcmp( platform_p, "") != 0)
 		strncpy( custom_platform, platform_p, sizeof(custom_platform));
 	      free( platform_p);
+	      break;
+	    }
+	    case pwr_cClass_BuildOptions: {
+	      pwr_sClass_BuildOptions *bop;
+	      int size;
+	      pwr_tString80 ar, opt;
+	      char str[2000] = "";
+	      FILE *optfile;
+
+	      sts = ldh_GetObjectBody( ldhses, applobjid, "RtBody", (void **)&bop, &size);
+	      if ( EVEN(sts)) return sts;
+
+	      for ( int i = 0; i < (int)(sizeof(bop->ArchivePath)/sizeof(bop->ArchivePath[0])); i++) {
+		dcli_trim( opt, bop->ArchivePath[i]);
+		if ( strcmp( opt, "") != 0)
+		  sprintf( &str[strlen(str)], "-L%s ", opt);
+	      }
+
+	      for ( int i = 0; i < (int)(sizeof(bop->ObjectModules)/sizeof(bop->ObjectModules[0])); i++) {
+		dcli_trim( opt, bop->ObjectModules[i]);
+		if ( strcmp( opt, "") != 0)
+		  sprintf( &str[strlen(str)], "%s ", opt);
+	      }
+
+	      if ( bop->SystemModules & pwr_mBuildOptionsMask_IoUser)
+		sprintf( &str[strlen(str)], "$pwrp_obj/rt_io_user.o ");
+	      else
+		sprintf( &str[strlen(str)], "$pwr_obj/rt_io_user.o ");
+
+	      for ( int i = 0; i < (int)(sizeof(bop->Archives)/sizeof(bop->Archives[0])); i++) {
+		dcli_trim( opt, bop->Archives[i]);
+		if ( strcmp( opt, "") != 0) {
+		  if ( strncmp( opt, "lib", 3) == 0)
+		    strncpy( ar, &opt[3], sizeof(ar));
+		  else
+		    strncpy( ar, opt, sizeof(ar));
+		  if ( strcmp( &ar[strlen(ar)-2], ".a") == 0)
+		    ar[strlen(ar)-2] = 0;
+		  else if ( strcmp( &ar[strlen(ar)-3], ".so") == 0)
+		    ar[strlen(ar)-3] = 0;
+		  sprintf( &str[strlen(str)], "-l%s ", ar);
+		}
+	      }
+
+	      if ( bop->SystemModules & pwr_mBuildOptionsMask_PwrpArchive)
+		sprintf( &str[strlen(str)], "-lpwrp ");
+
+	      if ( bop->SystemModules & pwr_mBuildOptionsMask_NMpsArchive)
+		sprintf( &str[strlen(str)], "-lpwr_nmps ");
+
+	      if ( bop->SystemModules & pwr_mBuildOptionsMask_MiscArchive)
+		sprintf( &str[strlen(str)], "-lpwr_misc ");
+
+	      if ( bop->SystemModules & pwr_mBuildOptionsMask_RemoteArchive)
+		sprintf( &str[strlen(str)], "-lpwr_remote ");
+	      if ( bop->SystemModules & pwr_mBuildOptionsMask_SsaboxArchive)
+		sprintf( &str[strlen(str)], "-lpwr_ssabox ");
+
+	      sprintf( &str[strlen(str)], "-lpwr_rt ");
+	      
+	      if ( bop->SystemModules & pwr_mBuildOptionsMask_SoftingPNAK)
+		sprintf( &str[strlen(str)], "-lpnioif ");
+	      else
+		sprintf( &str[strlen(str)], "-lpwr_pnak_dummy ");
+
+	      if ( bop->SystemModules & pwr_mBuildOptionsMask_HilscherCifX)
+		sprintf( &str[strlen(str)], "-lcifx ");
+	      else
+		sprintf( &str[strlen(str)], "-lpwr_cifx_dummy ");
+
+	      if ( bop->SystemModules & pwr_mBuildOptionsMask_UsbLib)
+		sprintf( &str[strlen(str)], "-lusblib-1.0 ");
+	      else
+		sprintf( &str[strlen(str)], "-lpwr_usb_dummy ");
+
+	      if ( bop->SystemModules & pwr_mBuildOptionsMask_MotionControlUSBIO)
+		sprintf( &str[strlen(str)], "-lusbio ");
+	      else
+		sprintf( &str[strlen(str)], "-lpwr_usbio_dummy ");
+
+	      free( (char *)bop);
+
+	      sprintf( fname, load_cNameOpt, "$pwrp_exe/", nodename_ptr, *bus_number_ptr);
+	      dcli_translate_filename( fname, fname);
+	      optfile = fopen( fname, "w");
+	      if ( optfile == 0) {
+		char msg[200];
+		sprintf( msg, "Error, Unable to open file %s", fname);
+		MsgWindow::message( 'E', msg, msgw_ePop_Default);
+		return LFU__NOFILE;
+	      }
+	      fprintf( optfile, "%s", str);
+	      fclose( optfile);
 	      break;
 	    }
 	    default: ;

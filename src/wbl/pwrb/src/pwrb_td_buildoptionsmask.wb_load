@@ -1,0 +1,142 @@
+! 
+!  Proview   $Id$
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_buildoptionsmask.wb_load -- Defines the mask type BuildOptionsMask
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Bitmask for build options.
+!
+! @b See also
+!  @classlink XttGraph pwrb_buildoptions.html
+!*/
+  Object BuildOptionsMask $TypeDef 57
+    Body SysBody
+      Attr Type = pwr_eType_Mask
+      Attr Size = 4
+      Attr TypeRef = "pwrs:Type-$Mask"
+      Attr Elements = 1
+    EndBody
+    !/**
+    !  Local rt_io_user.o for I/O methods of local I/O classes.
+    !*/
+    Object IoUser $Bit
+     Body SysBody
+       Attr PgmName = "IoUser"
+       Attr Text = "IoUser"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  Local pwrp archive libpwrp.a.
+    !*/
+    Object PwrpArchive $Bit
+     Body SysBody
+       Attr PgmName = "PwrpArchive"
+       Attr Text = "PwrpArchive"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !  NMps archive.
+    !*/
+    Object NMpsArchive $Bit
+     Body SysBody
+       Attr PgmName = "NMpsArchive"
+       Attr Text = "NMpsArchive"
+       Attr Value = 4
+     EndBody
+    EndObject
+    !/**
+    !  Remote archive.
+    !*/
+    Object RemoteArchive $Bit
+     Body SysBody
+       Attr PgmName = "RemoteArchive"
+       Attr Text = "RemoteArchive"
+       Attr Value = 8
+     EndBody
+    EndObject
+    !/**
+    !  Misc archive.
+    !*/
+    Object MiscArchive $Bit
+     Body SysBody
+       Attr PgmName = "MiscArchive"
+       Attr Text = "MiscArchive"
+       Attr Value = 16
+     EndBody
+    EndObject
+    !/**
+    !  SsabOx archive.
+    !*/
+    Object SsaboxArchive $Bit
+     Body SysBody
+       Attr PgmName = "SsaboxArchive"
+       Attr Text = "SsaboxArchive"
+       Attr Value = 32
+     EndBody
+    EndObject
+    !/**
+    !  Softing PNAK Profinet stack.
+    !*/
+    Object SoftingPNAK $Bit
+     Body SysBody
+       Attr PgmName = "SoftingPNAK"
+       Attr Text = "SoftingPNAK"
+       Attr Value = 65536
+     EndBody
+    EndObject
+    !/**
+    !  Hilscher cifX archive.
+    !*/
+    Object HilscherCifX $Bit
+     Body SysBody
+       Attr PgmName = "HilscherCifX"
+       Attr Text = "HilscherCifX"
+       Attr Value = 131072
+     EndBody
+    EndObject
+    !/**
+    !  usblib.
+    !*/
+    Object UsbLib $Bit
+     Body SysBody
+       Attr PgmName = "UsbLib"
+       Attr Text = "UsbLib"
+       Attr Value = 262144
+     EndBody
+    EndObject
+    !/**
+    !  Motion Control USBIO archive.
+    !*/
+    Object MotionControlUSBIO $Bit
+     Body SysBody
+       Attr PgmName = "MotionControlUSBIO"
+       Attr Text = "MotionControlUSBIO"
+       Attr Value = 524288
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
