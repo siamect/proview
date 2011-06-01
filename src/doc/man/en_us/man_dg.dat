@@ -9139,6 +9139,8 @@ PromptDialog()		<LINK> promptdialog()
 OpenGraph()		<LINK> opengraph()
 CloseGraph()		<LINK> closegraph()
 SetSubwindow()		<LINK> setsubwindow()
+GetIoDeviceData()	<LINK> getiodevicedata()
+SetIoDeviceData()	<LINK> setiodevicedata()
 </TOPIC>
 
 <TOPIC> execute script
@@ -10463,9 +10465,81 @@ string		<t>windowname	<t>Name of the window object in which
 string		<t>source	<t>Name of the graph that is to be opened
                 <t>             <t>in the window object.
 int		<t>modal	<t>Modal.
-<b>Exempel
+<b>Example
 
 <c>  SetSubwindow( "pwr_wizard_frame", "Window1", "MyGraph", 1);
+
+</TOPIC>
+
+<TOPIC> getiodevicedata() <style> function
+GetIoDeviceData()
+
+int GetIoDeviceData( string object, string parameter, string value)
+
+<b>Description
+
+Get data from IO configuration.
+Returns status of operation, odd if success and even is error.
+
+This command uses methods and has to be executed in pwrs. It does not
+work in pwrc.
+
+The supported parameters for Profinet devices are
+
+NetworkSettings-DeviceName
+NetworkSettings-IP Address
+NetworkSettings-Subnet Mask
+NetworkSettings-MAC Address
+NetworkSettings-SendClock
+NetworkSettings-ReductionRatio
+NetworkSettings-Phase
+NetworkSettings-API
+
+<b>Argument
+
+string		<t>object	<t>Name device object.
+string		<t>parameter	<t>Parameter name for data.
+string		<t>value	<t>Returned parameter value.
+
+<b>Example
+
+<c>  sts = SetIoDeviceData( "Nodes-MyNode-PN-D1", "NetworkSettings-DeviceName", "ET200M-D1");
+
+</TOPIC>
+
+<TOPIC> setiodevicedata() <style> function
+SetIoDeviceData()
+
+int SetIoDeviceData( string object, string parameter, string value)
+
+<b>Description
+
+Set data from IO configuration.
+Returns status of operation, odd if success and even is error.
+
+This command uses methods and has to be executed in pwrs. It does not
+work in pwrc.
+
+The supported parameters for Profinet devices are
+
+NetworkSettings-DeviceName
+NetworkSettings-IP Address
+NetworkSettings-Subnet Mask
+NetworkSettings-MAC Address
+NetworkSettings-SendClock
+NetworkSettings-ReductionRatio
+NetworkSettings-Phase
+NetworkSettings-API
+
+<b>Argument
+
+string		<t>object	<t>Name device object.
+string		<t>parameter	<t>Parameter name for data.
+string		<t>value	<t>Value to set.
+
+<b>Example
+
+<c>  sts = SetIoDeviceData( "Nodes-MyNode-PN-D1", "NetworkSettings-DeviceName", "ET200M-D1");
 
 </TOPIC>
 </chapter>

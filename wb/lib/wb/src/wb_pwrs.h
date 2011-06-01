@@ -84,6 +84,8 @@ typedef pwr_tStatus (* wb_tMethodAnteUnadopt)(ldh_tSesContext, pwr_tOid, pwr_tOi
 typedef pwr_tStatus (* wb_tMethodPostUnadopt)(ldh_tSesContext, pwr_tOid, pwr_tOid, pwr_tCid);
 typedef pwr_tStatus (* wb_tMethodPostRename) (ldh_tSesContext, pwr_tOid);
 typedef pwr_tStatus (* wb_tMethodSyntaxCheck)(ldh_tSesContext, pwr_tAttrRef, int *, int *);
+typedef pwr_tStatus (* wb_tMethodGetIoDeviceData)(pwr_tAttrRef, const char *, char *, int);
+typedef pwr_tStatus (* wb_tMethodSetIoDeviceData)(pwr_tAttrRef, const char *, const char *);
 
 
 #if defined OS_VMS

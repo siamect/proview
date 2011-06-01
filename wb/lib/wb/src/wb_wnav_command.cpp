@@ -5972,6 +5972,141 @@ static int wnav_ccm_errormessage_func( char *msg, int severity, void *client_dat
   return 1;
 }
 
+static int wnav_getiodevicedata_func( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  WNav *wnav;
+  pwr_tStatus sts;
+  char method_name[80];
+  wb_tMethod method;
+  ccm_sArg *arg_p2; 
+  ccm_sArg *arg_p3; 
+  pwr_tAttrRef aref;
+
+  if ( arg_count != 3)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+  arg_p3 = arg_p2->next;
+  if ( arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__VARTYPE;
+  if ( arg_p2->value_decl != CCM_DECL_STRING)
+    return CCM__VARTYPE;
+  if ( arg_p3->value_decl != CCM_DECL_STRING)
+    return CCM__VARTYPE;
+
+  wnav_get_stored_wnav( &wnav);
+  sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
+
+  try {
+    wb_name n( arg_list->value_string);
+    if ( !n) 
+      sts = n.sts();
+    else {
+      wb_session *sp = (wb_session *)wnav->ldhses;
+      wb_attribute a = sp->attribute( n);
+      if ( !a)
+	sts = a.sts();
+      else {
+	wb_vrep *vrep = ((wb_orep *)a)->vrep();
+
+	// Call object method, or inherited method TODO
+	for ( wb_cdef cd = sp->cdef( a.tid()); cd; cd = cd.super()) {
+	  sprintf( method_name, "%s-GetIoDeviceData", cd.name());
+
+	  vrep->erep()->method(&sts, method_name, &method);
+	  if ( ODD(sts)) {
+	    aref = a.aref();
+	    sts = ((wb_tMethodGetIoDeviceData) (method))( aref, arg_p2->value_string, 
+							  arg_p3->value_string, K_STRING_SIZE); 
+	    arg_p3->value_returned = 1;
+	    break;
+	  }
+	}
+      }
+    }
+  }
+  catch ( wb_error &e) {
+    sts = e.sts();
+  }
+  *return_decl = CCM_DECL_INT;
+  *return_int = sts;
+  return 1;
+}
+
+static int wnav_setiodevicedata_func( 
+  void *filectx,
+  ccm_sArg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  ccm_tFloat *return_float, 
+  ccm_tInt *return_int, 
+  char *return_string)
+{
+  WNav *wnav;
+  pwr_tStatus sts;
+  char method_name[80];
+  wb_tMethod method;
+  ccm_sArg *arg_p2; 
+  ccm_sArg *arg_p3; 
+  pwr_tAttrRef aref;
+
+  if ( arg_count != 3)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+  arg_p3 = arg_p2->next;
+  if ( arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__VARTYPE;
+  if ( arg_p2->value_decl != CCM_DECL_STRING)
+    return CCM__VARTYPE;
+  if ( arg_p3->value_decl != CCM_DECL_STRING)
+    return CCM__VARTYPE;
+
+  wnav_get_stored_wnav( &wnav);
+  sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
+
+  try {
+    wb_name n( arg_list->value_string);
+    if ( !n) 
+      sts = n.sts();
+    else {
+      wb_session *sp = (wb_session *)wnav->ldhses;
+      wb_attribute a = sp->attribute( n);
+      if ( !a)
+	sts = a.sts();
+      else {
+	wb_vrep *vrep = ((wb_orep *)a)->vrep();
+
+	// Call object method, or inherited method TODO
+	for ( wb_cdef cd = sp->cdef( a.tid()); cd; cd = cd.super()) {
+	  sprintf( method_name, "%s-SetIoDeviceData", cd.name());
+
+	  vrep->erep()->method(&sts, method_name, &method);
+	  if ( ODD(sts)) {
+	    aref = a.aref();
+	    sts = ((wb_tMethodSetIoDeviceData) (method))( aref, arg_p2->value_string, 
+							  arg_p3->value_string); 
+	    break;
+	  }
+	}
+      }
+    }
+  }
+  catch ( wb_error &e) {
+    sts = e.sts();
+  }
+  *return_decl = CCM_DECL_INT;
+  *return_int = sts;
+  return 1;
+}
+
 int	wnav_externcmd_func( char *cmd, void *client_data)
 {
   WNav *wnav = (WNav *) client_data; 
@@ -6034,6 +6169,10 @@ int WNav::readcmdfile( 	char		*incommand)
     sts = ccm_register_function( "CloseGraph", wnav_closegraph_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "SetSubwindow", wnav_setsubwindow_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetIoDeviceData", wnav_getiodevicedata_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "SetIoDeviceData", wnav_setiodevicedata_func);
     if ( EVEN(sts)) return sts;
 
     ccm_func_registred = 1;

@@ -136,6 +136,59 @@ static pwr_tStatus SyntaxCheck (
   return wsx_CheckIoDevice( Session, Object, ErrorCount, WarningCount, wsx_mCardOption_None);
 }
 
+//
+//  Get value.
+//
+
+static pwr_tStatus GetIoDeviceData (
+  pwr_tAttrRef Object,
+  const char *Attr,
+  char *Buf,
+  int BufSize
+) {
+  pwr_tFileName datafile;
+  pwr_tStatus sts;
+
+  sprintf( datafile, "$pwrp_load/pwr_pn_%s.xml", id_to_string( Object.Objid));
+  dcli_translate_filename( datafile, datafile);
+
+  GsdmlDeviceData *data = new GsdmlDeviceData();
+  sts = data->read( datafile);
+  if ( EVEN(sts)) return sts;
+
+  sts = data->get_value( Attr, Buf, BufSize);
+
+  delete data;
+
+  return sts;
+}
+
+static pwr_tStatus SetIoDeviceData (
+  pwr_tAttrRef Object,
+  const char *Attr,
+  const char *Value
+) {
+  pwr_tFileName datafile;
+  pwr_tStatus sts;
+  
+  sprintf( datafile, "$pwrp_load/pwr_pn_%s.xml", id_to_string( Object.Objid));
+  dcli_translate_filename( datafile, datafile);
+
+  GsdmlDeviceData *data = new GsdmlDeviceData();
+  sts = data->read( datafile);
+  if ( EVEN(sts)) return sts;
+
+  sts = data->modify_value( Attr, Value);
+  if ( ODD(sts))
+    data->print( datafile);
+       
+
+  delete data;
+
+  return sts;
+}
+
+
 /*----------------------------------------------------------------------------*\
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/
@@ -144,6 +197,8 @@ pwr_dExport pwr_BindMethods(PnDevice) = {
   pwr_BindMethod(Configure),
   pwr_BindMethod(ConfigureFilter),
   pwr_BindMethod(SyntaxCheck),
+  pwr_BindMethod(GetIoDeviceData),
+  pwr_BindMethod(SetIoDeviceData),
   pwr_NullMethod
 };
 

@@ -174,6 +174,8 @@ class GsdmlDeviceData {
   int copy_slot( unsigned int slot_idx);
   int cut_slot( unsigned int slot_idx);
   int paste_slot( unsigned int slot_idx);
+  int modify_value( const char *attr, const char *value);
+  int get_value( const char *attr, char *buf, int bufsize);
 };
 
 class GsdmlDataReader : public co_xml_interpreter {

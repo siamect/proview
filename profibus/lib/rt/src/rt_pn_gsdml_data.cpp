@@ -255,6 +255,97 @@ int GsdmlDeviceData::paste_slot( unsigned int slot_idx)
   return PB__SUCCESS;  
 }
 
+int GsdmlDeviceData::modify_value( const char *attr, const char *value)
+{
+  char attrvect[10][80];
+  int num;
+  int ival, num2;  
+
+  num = dcli_parse( attr, "-", "", (char *)attrvect, 
+		sizeof( attrvect) / sizeof( attrvect[0]), sizeof( attrvect[0]), 0);
+    
+  if ( strcmp( attrvect[0], "NetworkSettings") == 0) {
+    if ( num < 2)
+      return 0;
+    if ( strcmp( attrvect[1], "DeviceName") == 0)
+      strncpy( device_name, value, sizeof(device_name));
+    else if ( strcmp( attrvect[1], "IP Address") == 0)
+      strncpy( ip_address, value, sizeof(ip_address));
+    else if ( strcmp( attrvect[1], "Subnet Mask") == 0)
+      strncpy( subnet_mask, value, sizeof(subnet_mask));
+    else if ( strcmp( attrvect[1], "MAC Address") == 0)
+      strncpy( mac_address, value, sizeof(mac_address));
+    else if ( strcmp( attrvect[1], "SendClock") == 0) {
+      num2 = sscanf( value, "%d", &ival);
+      if ( num2 != 1)
+	return 0;
+      for ( unsigned int i = 0; i < iocr_data.size(); i++)
+	iocr_data[i]->send_clock_factor = ival;
+    }
+    else if ( strcmp( attrvect[1], "ReductionRatio") == 0) {
+      num2 = sscanf( value, "%d", &ival);
+      if ( num2 != 1)
+	return 0;
+      for ( unsigned int i = 0; i < iocr_data.size(); i++)
+	iocr_data[i]->reduction_ratio = ival;
+    }
+    else if ( strcmp( attrvect[1], "Phase") == 0) {
+      num2 = sscanf( value, "%d", &ival);
+      if ( num2 != 1)
+	return 0;
+      for ( unsigned int i = 0; i < iocr_data.size(); i++)
+	iocr_data[i]->phase = ival;
+    }
+    else if ( strcmp( attrvect[1], "API") == 0) {
+      num2 = sscanf( value, "%d", &ival);
+      if ( num2 != 1)
+	return 0;
+      for ( unsigned int i = 0; i < iocr_data.size(); i++)
+	iocr_data[i]->api = ival;
+    }
+    else
+      return 0;
+  }
+  else
+    return 0;
+  return 1;
+}
+
+int GsdmlDeviceData::get_value( const char *attr, char *buf, int bufsize)
+{
+  char attrvect[10][80];
+  int num;
+
+  num = dcli_parse( attr, "-", "", (char *)attrvect, 
+		sizeof( attrvect) / sizeof( attrvect[0]), sizeof( attrvect[0]), 0);
+    
+  if ( strcmp( attrvect[0], "NetworkSettings") == 0) {
+    if ( num < 2)
+      return 0;
+    if ( strcmp( attrvect[1], "DeviceName") == 0)
+      strncpy( buf, device_name, bufsize);
+    else if ( strcmp( attrvect[1], "IP Address") == 0)
+      strncpy( buf, ip_address, bufsize);
+    else if ( strcmp( attrvect[1], "Subnet Mask") == 0)
+      strncpy( buf, subnet_mask, bufsize);
+    else if ( strcmp( attrvect[1], "MAC Address") == 0)
+      strncpy( buf, mac_address, bufsize);
+    else if ( strcmp( attrvect[1], "SendClock") == 0)
+      snprintf( buf, bufsize, "%d", iocr_data[0]->send_clock_factor);
+    else if ( strcmp( attrvect[1], "ReductionRatio") == 0)
+      snprintf( buf, bufsize, "%d", iocr_data[0]->reduction_ratio);
+    else if ( strcmp( attrvect[1], "Phase") == 0)
+      snprintf( buf, bufsize, "%d", iocr_data[0]->phase);
+    else if ( strcmp( attrvect[1], "API") == 0)
+      snprintf( buf, bufsize, "%d", iocr_data[0]->api);
+    else
+      return 0;
+  }
+  else
+    return 0;
+  return 1;
+}
+
 int GsdmlDataReader::tag_name_to_id( const char *name, unsigned int *id)
 {
   if ( strcmp( name, "PnDevice") == 0)
