@@ -4871,13 +4871,11 @@ static int	wnav_build_func(	void		*client_data,
     // Build current volume
     char namestr[80];
 
-    if ( ODD( dcli_get_qualifier( "/NAME", namestr, sizeof(namestr)))) {
-      wnav->message('E', "Syntax error");
-      return WNAV__SYNTAX;
-    }
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", namestr, sizeof(namestr)))) {
-      wnav->message('E', "Syntax error");
-      return WNAV__SYNTAX;
+    if ( EVEN( dcli_get_qualifier( "/NAME", namestr, sizeof(namestr)))) {
+      if ( EVEN( dcli_get_qualifier( "dcli_arg2", namestr, sizeof(namestr)))) {
+	wnav->message('E', "Syntax error");
+	return WNAV__SYNTAX;
+      }
     }
 
     wb_build build( *(wb_session *)wnav->ldhses, wnav);
