@@ -8,4 +8,9 @@ typedef struct {
   int interval_cnt;
 } io_sLocalDS18B20;
 
+typedef struct {
+  FILE *value_fp;
+  int interval_cnt;
+} io_sLocalAiDevice;
+
 #endif

@@ -1,7 +1,7 @@
 Volume OtherIO $ClassVolume 0.0.250.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X242"
-    Attr NextCix = "_X25"
+    Attr NextOix = "_X247"
+    Attr NextCix = "_X26"
     Attr NextTix[0] = "_X10"
   EndBody
   Object Type $TypeHier 1 15-NOV-2007 14:35:37.90
@@ -2069,6 +2069,119 @@ Volume OtherIO $ClassVolume 0.0.250.10
         EndBody
       EndObject
     EndObject
+    Object OneWire_AiDevice $ClassDef 25 08-JUN-2011 14:15:31.35
+      Body SysBody 08-JUN-2011 14:01:02.86
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 51280
+      EndBody
+      Object RtBody $ObjBodyDef 1 08-JUN-2011 14:01:02.86
+        Body SysBody 08-JUN-2011 14:15:37.86
+          Attr StructName = "OneWire_AiDevice"
+          Attr NextAix = "_X33"
+        EndBody
+        Object Super $Attribute 24 08-JUN-2011 14:01:02.86
+          Body SysBody 08-JUN-2011 14:01:02.86
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-BaseIOCard"
+          EndBody
+        EndObject
+        Object Status $Attribute 25 08-JUN-2011 14:01:02.86
+          Body SysBody 08-JUN-2011 14:01:02.86
+            Attr PgmName = "Status"
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+        Object Family $Attribute 26 08-JUN-2011 14:01:02.86
+          Body SysBody 08-JUN-2011 14:01:02.86
+            Attr PgmName = "Family"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object Resolution $Attribute 27 08-JUN-2011 14:01:02.86
+          Body SysBody 08-JUN-2011 14:01:02.86
+            Attr PgmName = "Resolution"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ScanInterval $Attribute 28 08-JUN-2011 14:01:02.86
+          Body SysBody 08-JUN-2011 14:01:02.86
+            Attr PgmName = "ScanInterval"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object DataFile $Attribute 31 08-JUN-2011 14:05:03.02
+          Body SysBody 08-JUN-2011 14:05:27.07
+            Attr PgmName = "DataFile"
+            Attr TypeRef = "pwrs:Type-$String256"
+          EndBody
+        EndObject
+        Object ValueSearchString $Attribute 30 08-JUN-2011 14:05:38.41
+          Body SysBody 08-JUN-2011 14:05:50.55
+            Attr PgmName = "ValueSearchString"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object ErrorValue $Attribute 32 08-JUN-2011 14:06:48.22
+          Body SysBody 08-JUN-2011 14:06:49.35
+            Attr PgmName = "ErrorValue"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ChAi $Attribute 29 08-JUN-2011 14:01:02.86
+          Body SysBody 08-JUN-2011 14:01:02.86
+            Attr PgmName = "ChAi"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 243 08-JUN-2011 14:01:02.86
+        Object IoCardInit $Method 244 08-JUN-2011 14:01:02.86
+          Body SysBody 08-JUN-2011 15:07:24.12
+            Attr MethodName = "OneWire_AiDevice-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 245 08-JUN-2011 14:01:02.86
+          Body SysBody 08-JUN-2011 15:07:33.15
+            Attr MethodName = "OneWire_AiDevice-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 246 08-JUN-2011 14:01:02.86
+          Body SysBody 08-JUN-2011 15:07:43.58
+            Attr MethodName = "OneWire_AiDevice-IoCardRead"
+          EndBody
+        EndObject
+      EndObject
+      Object PostCreate $DbCallBack 247 08-JUN-2011 14:01:02.86
+        Body SysBody 08-JUN-2011 14:01:02.86
+          Attr MethodName = "BaseIOCard-PostCreate"
+        EndBody
+      EndObject
+      Object Template OneWire_AiDevice 2154266624 01-JAN-1970 01:00:00.00
+        Body RtBody 08-JUN-2011 14:10:37.59
+          Attr Super.Process = 1
+          Attr Super.ErrorSoftLimit = 50
+          Attr Super.ErrorHardLimit = 100
+          Attr Super.MaxNoOfChannels = 1
+          Attr ScanInterval = 1
+          Attr DataFile = "/sys/bus/w1/devices/w1 bus master/%s/w1_slave"
+          Attr ValueSearchString = "t="
+          Attr ErrorValue = 8.500000e+04
+          Attr ChAi.ConversionOn = 1
+          Attr ChAi.ScanInterval = 1
+          Attr ChAi.ChannelSigValRangeLow = -1.000000e+01
+          Attr ChAi.ChannelSigValRangeHigh = 1.000000e+01
+          Attr ChAi.SigValueUnit = "V"
+          Attr ChAi.SensorPolyType = 1
+          Attr ChAi.SensorSigValRangeLow = -1.000000e+01
+          Attr ChAi.SensorSigValRangeHigh = 1.000000e+01
+          Attr ChAi.ActValRangeLow = -1.000000e+02
+          Attr ChAi.ActValRangeHigh = 1.000000e+02
+        EndBody
+      EndObject
+    EndObject
     !/**
     !  @Version 1.0
     !  @Group IO
@@ -2975,10 +3088,10 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  the PnController object. These object should be of class PnDevice
     !  or of a subclass of PnDevice. The devices are configured with the
     !  Profinet configurator.
-    !
+    ! 
     !  The Alias attribute has to correspond to the alias setting for the
     !  driver configuration for the board in the device.conf file.
-    !
+    ! 
     !  @b See also
     !  @classlink PnDevice profibus_pndevice.html
     !*/
@@ -3223,17 +3336,17 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  @Group IO
     !  @Summary Hilscher cifX Master.
     !  Agent object for a Hilscher cifX board configured with SYCON.net.
-    !
+    ! 
     !  The Hilsher cifX boards supports CANopen, CC-Link, DeviceNet, EtherCAT,
     !  EtherNet/IP, Modbus TCP, Powerlink, Profibus, Profinet and Sercos III.
     ! 
-    !  The bus devices are configured in SYSCON.net configurator on Windows.
-    !  The configution is export to a configuration file, that is copied to
+    !  The bus devices are configured in SYCON.net configurator on Windows.
+    !  The configution is exported to a configuration file, that is copied to
     !  the process station.
-    !
+    ! 
     !  The Alias attribute has to correspond to the alias setting for the
     !  driver configuration for the board in the device.conf file.
-    !
+    ! 
     !  The object is configured as a child to the node object.
     !  The slaves or devices on the bus are configured as children to
     !  the Master object. These object should be of class Hilscher_cifX_Device.
@@ -3241,7 +3354,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  be of class Hilscher_cifX_Module. Below the module objects, channels are 
     !  configured that describes the input and output area for the module.
     !  The size and offset in the area have to match the SYCON.net configuration.
-    !
+    ! 
     !  @b See also
     !  @classlink Hilscher_cifX_Device otherio_hilscher_cifx_device.html
     !  @classlink Hilscher_cifX_Module otherio_hilscher_cifx_module.html
@@ -3447,12 +3560,12 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  @Group IO
     !  @Summary Hilscher cifX Device.
     !  Rack object for a Hilscher cifX device configured with SYCON.net.
-    !
+    ! 
     !  The object is configured as a child to a Hilscher_cifX_Master object.
     !  Module object of class Hilscher_cifX_Module are configured as childern
     !  to the device object. Below the module objects, channels are configured 
     !  that describes the input and output area for the module.
-    !
+    ! 
     !  @b See also
     !  @classlink Hilscher_cifX_Master otherio_hilscher_cifx_master.html
     !  @classlink Hilscher_cifX_Module otherio_hilscher_cifx_module.html
@@ -3596,11 +3709,11 @@ Volume OtherIO $ClassVolume 0.0.250.10
     !  @Group IO
     !  @Summary Hilscher cifX Module.
     !  Card object for a Hilscher cifX device configured with SYCON.net.
-    !
+    ! 
     !  The object is configured as a child to a Hilscher_cifX_Device object.
     !  Below the module objects, channels are configured that describes the input 
     !  and output area for the module.
-    !
+    ! 
     !  @b See also
     !  @classlink Hilscher_cifX_Master otherio_hilscher_cifx_master.html
     !  @classlink Hilscher_cifX_Device otherio_hilscher_cifx_device.html
