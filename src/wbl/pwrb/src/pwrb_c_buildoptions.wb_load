@@ -1,0 +1,106 @@
+! 
+!  Proview   $Id$
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_c_buildoptions.wb_load -- Defines the class BuildOptions.
+!
+SObject pwrb:Class
+!/**
+!  @Version 2.0
+!  @Group ProjectConfiguration
+!  @Summary Build options for plc program
+!  Configures the build options for the plc program.
+!  
+!  The object is configured in the Directory volume below a NodeConfig object.
+!
+!  A BuildOptions object has to be configured when
+!
+!  - functions declared in local object modules are called from the plc code.
+!  - local class volumes with functions object in c-code exist.
+!  - a local IO system defined in the project is used.
+!  - an IO system that requires intallation of a special library is used, eg
+!    Softing Profinet Stack PNAK, Hilscher cifX, Motion Control USBIO or 
+!    Velleman K8055
+!  - function objects from the class volumes NMps, Remote, Misc or Ssabox are
+!    used.
+!
+!  The object creates an option file $pwrp_exe/plc_'nodename'_'busnumber'.opt
+!  with options that is added to the link command. If other requirements are 
+!  needed in this file than the BuildOptions object offers, the file can be 
+!  edited and handled manually if no BuildOptions object is present.
+!*/
+  Object BuildOptions $ClassDef 544 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "BuildOptions"
+      EndBody
+      !/**
+      ! System archives and system modules.
+      !*/
+      Object SystemModules $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-BuildOptionsMask"
+        EndBody
+      EndObject
+      !/**
+      !  Object modules.
+      !  The normal location is $pwrp_obj. The path has to be
+      !  included in the specification, eg
+      !
+      !  $pwrp_obj/ra_plc_user.o
+      !*/
+      Object ObjectModules $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 25
+        EndBody
+      EndObject
+      !/**
+      !  Additional archives that the plc is linked to.
+      !  The path should not be included in the specification, 
+      !  eg libproj.a. If the archive is not located on $pwrp_lib or
+      !  /usr/lib the path should be inserted in ArchivePath.
+      !*/
+      Object Archives $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 25
+        EndBody
+      EndObject
+      !/**
+      !  Archive path.
+      !*/
+      Object ArchivePath $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 10
+        EndBody
+      EndObject
+    EndObject
+    Object Template BuildOptions
+      Body RtBody
+      EndBody
+    EndObject
+  EndObject
+EndSObject

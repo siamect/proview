@@ -52,6 +52,7 @@ public class JopAxisarc extends JComponent {
   int lines = 11;
   int longQuotient = 1;
   int valueQuotient = 1;
+  int textCnt = 0;
   GeCFormat	cFormat;
   Font font;
   public void setAngle1( float angle1) {
@@ -154,8 +155,6 @@ public class JopAxisarc extends JComponent {
     float value;
     boolean drawText = (minValue != maxValue);
 
-    System.out.println( "w: " + width + " h: " + height + "  Lines " + lines + " Len " + lineLength);
-
     if ( widthOrig == 0)
       widthOrig = width;
 
@@ -167,6 +166,7 @@ public class JopAxisarc extends JComponent {
       shapes = new Shape[1];
       FontRenderContext frc = g.getFontRenderContext();
 
+      textCnt = 0;
       if ( lines > 0)
       {
         hLines = new Line2D.Float[lines];
@@ -177,7 +177,7 @@ public class JopAxisarc extends JComponent {
 	}
 
 	
-	shapes[0] = new Arc2D.Float( 0F, 0F, width, height, angle1, angle2, Arc2D.PIE);
+	shapes[0] = new Arc2D.Float( 0F, 0F, width, height, angle1, angle2, Arc2D.OPEN);
 	float line_angle = angle2 / (lines - 1);
 	for ( i = 0; i < lines; i++) {
 	  float sin1 = (float) Math.sin( (angle1 + i * line_angle) / 180 * Math.PI);
@@ -198,10 +198,11 @@ public class JopAxisarc extends JComponent {
 	  hLines[i] = new Line2D.Float( x1, y1, x2, y2);
 
 	  if ( drawText && i % valueQuotient == 0) {
-	    if ( maxValue > minValue)
-	      value = maxValue - (maxValue - minValue) / ( lines - 1) * i;
-	    else
-	      value = (minValue - maxValue) / ( lines - 1) * i;
+	    value = minValue + (maxValue - minValue) / ( lines - 1) * i;
+		// if ( maxValue > minValue)
+		//  value = maxValue - (maxValue - minValue) / ( lines - 1) * i;
+		// else
+		//  value = (minValue - maxValue) / ( lines - 1) * i;
 	    hText[i/valueQuotient] = 
 		cFormat.format( value, new StringBuffer()).toString();
 	    Rectangle2D textBounds = 
@@ -209,9 +210,8 @@ public class JopAxisarc extends JComponent {
 	    float textHeight = (float) textBounds.getHeight();
 	    float textWidth = (float) textBounds.getWidth();
 	    yt = height / 2 * ( -sin1 * (1F - lineLen) + 1) + sin1 * textHeight;
-	    xt = width / 2 * ( cos1 * (1F - lineLen) + 1) + cos1 * textWidth / 2;
+	    xt = width / 2 * ( cos1 * (1F - lineLen) + 1) - cos1 * textWidth / 2;
 	    float increment = (maxValue - minValue) / (lines - 1);
-	    System.out.println( "Text w: " + textWidth + " h: " + textHeight);
 	    
 	    if ( i % valueQuotient == 0 &&
 		 !(angle2 == 360 && 
@@ -227,11 +227,11 @@ public class JopAxisarc extends JComponent {
 		yt = yt + textHeight/2;
 		xt = xt - textWidth/2;
 	      }
-	      hTextPosY[i/valueQuotient] = yt;
-	      hTextPosX[i/valueQuotient] = xt;
+	      hTextPosY[textCnt] = yt;
+	      hTextPosX[textCnt] = xt;
+	      textCnt++;
 	    }
 	  }
-	  System.out.println( "Line (" + x1 + "," + y1 + ") (" + x2 + "," + y2 + ") (" + xt + "," + yt + ")");
 	}
       }
     }
@@ -243,11 +243,8 @@ public class JopAxisarc extends JComponent {
     for ( i = 0; i < lines; i++)
       g.draw( hLines[i]);
     if ( drawText) {
-      for ( i = 0; i < lines; i++) {
-        if ( i % valueQuotient == 0) {
-	  g.drawString( hText[i/valueQuotient], hTextPosX[i/valueQuotient], 
-			hTextPosY[i/valueQuotient]);
-	}
+      for ( i = 0; i < textCnt; i++) {
+	g.drawString( hText[i], hTextPosX[i], hTextPosY[i]);
       } 
     }
     oldWidth = width;
