@@ -74,6 +74,12 @@
 
 #define PNM_APPLICATION RCX_PACKET_DEST_DEFAULT_CHANNEL
 
+typedef struct {
+  GsdmlDeviceData  *dev_data;
+  unsigned int 	   handle;
+} cifx_sDeviceUserData;
+  
+
 union t_addr {
   unsigned int m;
   unsigned char b[4];
@@ -412,9 +418,11 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
     rp_local = (io_sPnRackLocal *) calloc( 1, sizeof(io_sPnRackLocal));
     rp->Local = rp_local;
 
+    rp_local->userdata = calloc( 1, sizeof(cifx_sDeviceUserData));
+
     for ( cp = rp->cardlist; cp; cp = cp->next)
       cp->Local = calloc( 1, sizeof(io_sPnCardLocal));
-
+ 
     GsdmlDeviceData  *dev_data;
     dev_data = new GsdmlDeviceData;
     pwr_tFileName fname;
@@ -428,7 +436,7 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
       return IO__INITFAIL;
     }
 
-    rp_local->userdata = dev_data;
+    ((cifx_sDeviceUserData *)rp_local->userdata)->dev_data = dev_data;
   }
 
   // PNM_IOD
@@ -457,7 +465,7 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
     t_addr subnetmask;
   
     io_sPnRackLocal *rp_local = (io_sPnRackLocal *)rp->Local;
-    GsdmlDeviceData  *dev_data = (GsdmlDeviceData *)rp_local->userdata;
+    GsdmlDeviceData  *dev_data = ((cifx_sDeviceUserData *)rp_local->userdata)->dev_data;
 
     sscanf( dev_data->ip_address, "%hhu.%hhu.%hhu.%hhu", 
 	    &ipaddress.b[3], &ipaddress.b[2], &ipaddress.b[1], &ipaddress.b[0]);
@@ -507,7 +515,7 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
   for ( rp = ap->racklist; rp; rp = rp->next) {
     // Read device xml-file
     io_sPnRackLocal *rp_local = (io_sPnRackLocal *)rp->Local;
-    GsdmlDeviceData  *dev_data = (GsdmlDeviceData *)rp_local->userdata;
+    GsdmlDeviceData  *dev_data = ((cifx_sDeviceUserData *)rp_local->userdata)->dev_data;
 
     unsigned char macaddr[6];
   
@@ -912,7 +920,7 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
     }
 
     delete dev_data;
-    rp_local->userdata = 0;
+    ((cifx_sDeviceUserData *)rp_local->userdata)->dev_data = 0;
 
     device++;
   }
@@ -1037,6 +1045,42 @@ static pwr_tStatus IoAgentInit( io_tCtx ctx,
   local->dev_init = 1;
   local->dev_init_limit = (unsigned int) (30.0 / ctx->ScanTime + 0.5);
 
+
+#if 0
+  // Get device handle
+  RCX_PACKET_GET_SLAVE_HANDLE_REQ_T gethandle = {{0}};
+  // RCX_GET_SLAVE_HANDLE_CNF_T gethandle_cnf = {{0}};
+  RCX_PACKET_GET_SLAVE_HANDLE_CNF_T *gethandle_cnf;
+  int get_handle_cnf_size = sizeof(*gethandle_cnf) + (dev_cnt-1) * sizeof( TLR_UINT32);
+  gethandle_cnf = (RCX_PACKET_GET_SLAVE_HANDLE_CNF_T *) calloc( 1, get_handle_cnf_size);
+
+  gethandle.tHead.ulDest   = HOST_TO_LE32(PNM_APPLICATION);
+  gethandle.tHead.ulLen    = 4; // HOST_TO_LE32(sizeof(gethandle.tData));
+  gethandle.tHead.ulCmd    = HOST_TO_LE32(RCX_REGISTER_APP_REQ);
+  gethandle.tHead.ulSrc    = HOST_TO_LE32(PN_SRC);
+  gethandle.tHead.ulSrcId  = HOST_TO_LE32(PN_SRCID);
+  gethandle.tData.ulParam = RCX_LIST_CONF_SLAVES;
+
+  sts = xChannelPutPacket( local->chan, (CIFX_PACKET*)&gethandle, 1000);
+  if ( !status_check( op, ap, sts, "xChannelPutPacket"))
+    return IO__INITFAIL;
+    
+  sts = xChannelGetPacket( local->chan, get_handle_cnf_size, (CIFX_PACKET *)gethandle_cnf, 10000);
+  if ( !status_check( op, ap, sts, "xChannelGetPacket") ||
+       !cmd_check( op, ap, gethandle_cnf->tHead.ulCmd, RCX_GET_SLAVE_HANDLE_CNF) ||
+       !status_check( op, ap, gethandle_cnf->tHead.ulSta, "Get slave handle"))
+    return IO__INITFAIL;
+
+  int hcnt = 0;
+  for ( rp = ap->racklist; rp; rp = rp->next) {
+    io_sPnRackLocal *rp_local = (io_sPnRackLocal *)rp->Local;
+
+    ((cifx_sDeviceUserData *)rp_local->userdata)->handle = gethandle_cnf->tData.aulHandle[hcnt];
+    hcnt++;
+  }
+  free( gethandle_cnf);
+#endif
+
   errh_Info( "Init of Hilscher cifX Profinet Controller '%s'", ap->Name);
   return IO__SUCCESS;
 }
@@ -1059,8 +1103,11 @@ static pwr_tStatus IoAgentClose( io_tCtx ctx,
     free( local->output_area);
 
   for ( rp = ap->racklist; rp; rp = rp->next) {
-    if ( rp->Local)
+    if ( rp->Local) {
+      if ( ((io_sPnRackLocal *)rp->Local)->userdata)
+	free( ((io_sPnRackLocal *)rp->Local)->userdata);
       free( rp->Local);
+    }
   }
 
   free( local);
