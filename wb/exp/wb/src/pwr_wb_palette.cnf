@@ -285,7 +285,7 @@ palette NavigatorPalette
         menu Controller
         {
           class PnControllerSoftingPNAK
-	  class Hilscher_cifX_PnController
+          class Hilscher_cifX_PnController
         }
         menu Devices
         {
@@ -326,6 +326,7 @@ palette NavigatorPalette
       menu OneWire
       {
         class OneWire
+        class OneWire_AiDevice
         class Maxim_DS18B20
       }
       menu USB

@@ -9,6 +9,7 @@ Arduino_Uno
 #if OS_LINUX
 GPIO
 GPIO_Module
+OneWire_AiDevice
 Maxim_DS18B20
 USB_Agent
 Velleman_K8055_Board

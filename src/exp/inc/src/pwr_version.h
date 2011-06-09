@@ -67,6 +67,8 @@
 # define SET_VERSION(a, b, c, d)  ((pwr_tVersion)((a << 24) + (a << 16) + (a << 8) + a))		  
 #endif
 
+#define pwrv_cBuildTimeStr       "31-MAY-2011 20:00:00"
+
 #define pwrv_cPwrVersionStr      "V4.8.2"
 #define pwrv_cPwrVersion         SET_VERSION('V', 4, 8, 2)
 
