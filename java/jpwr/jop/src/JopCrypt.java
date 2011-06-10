@@ -1,5 +1,5 @@
 /****************************************************************************
- * Proview   $Id: JopCrypt.java,v 1.1 2008-06-24 14:15:18 claes Exp $
+ * Proview
  *
  * Java-based implementation of the unix crypt command
  *

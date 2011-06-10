@@ -1003,6 +1003,10 @@ palette PlcEditorPalette
     class TLogOpen
     class TLogModify
   }
+  menu Miscellaneous
+  {
+    class Misc_DemoPattern
+  }
   menu Components 
   {
     menu BaseComponent
@@ -1090,6 +1094,7 @@ palette PlcEditorPalette
     menu Miscellaneous
     {
       class Misc_PingPongFo
+      class Misc_DoDemoFo
     }
   }
 }
