@@ -382,6 +382,11 @@ elif [ $OpSys -eq $OpSys_X86_LINUX ]; then
 
       FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
 
+      if [ ! -e $pwr_lib/libpwr_rt.a ]; then
+        echo "-- Not built for x86_linux"
+	exit 0;
+      fi
+
 # Execute build command
       Compile$FileTypeStr
       exit $gcg_status
@@ -412,6 +417,11 @@ elif [ $OpSys -eq $OpSys_X86_64_LINUX ]; then
       ldxx="g++ -m64 -fPIC"
 
       FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
+
+      if [ ! -e $pwr_lib/libpwr_rt.a ]; then
+        echo "-- Not built for x86_64_linux"
+	exit 0;
+      fi
 
 # Execute build command
       Compile$FileTypeStr
