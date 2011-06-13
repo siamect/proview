@@ -69,6 +69,7 @@ CnvChangeLog::CnvChangeLog( CnvCtx *cnv_ctx, char *from_str) :
   read( "wb");
   read( "nmps");
   read( "remote");
+  read( "misc");
   read( "profibus");
   read( "opc");
   read( "java");

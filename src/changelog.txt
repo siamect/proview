@@ -159,5 +159,9 @@
 101220 cs  gdh       Gdh fix to be able to set values in mounted volumes from opc.
 110111 cs  plc       Plc loop options added for policy when execution time exceedes scantime.
 110119 hw  plc       PID controller, derivative filtering modified, and function object Filter algorithm modified.
+110314 cs  pwrb      Enum type for Ready/Not ready added.
 110427 cs  qmon      Bugfix in buffering of subscription messages.
 110427 cs  tmon      All timed out subscriptions immediately reset.
+110512 cs  plc       DataCollect alignment bug fixed.
+110527 cs  plc       Plc object EnumToStr get the text for an enum type added.
+110531 cs  pwrb      New BuildOptions object to configure plc link options.
