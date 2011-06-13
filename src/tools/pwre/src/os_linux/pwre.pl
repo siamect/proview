@@ -347,6 +347,7 @@ sub ebuild # args: pass flavour
     _build("exe", "wb_rtt", "src", "all");
     _build("lib", "dtt", "src", "all");
     _build("exp", "stdsoap2", "src", "all");
+    merge();
     _module("otherio");
     _build("exp","rt","src","copy");
     _build("lib","usbio_dummy","src","init lib");
