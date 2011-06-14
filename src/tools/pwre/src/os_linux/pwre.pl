@@ -352,6 +352,7 @@ sub ebuild # args: pass flavour
     _build("exp","rt","src","copy");
     _build("lib","usbio_dummy","src","init lib");
     _build("lib","usb_dummy","src","init lib");
+    _build("lib","cifx_dummy","src","init lib");
     merge();
     _module("rt");
     _build("exe", "rt*", "src", "all");
@@ -389,6 +390,7 @@ sub ebuild # args: pass flavour
     if ( $build_profibus == 1) {
       _module("profibus");
       _build("lib", "rt", "src", "all");
+      _build("lib","pnak_dummy","src","init lib");
       merge();
     }
     if ( $build_remote == 1) {
