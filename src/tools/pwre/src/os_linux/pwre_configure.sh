@@ -363,7 +363,7 @@ else
   pwre_config_check_lib wmq       WMQ      lib wmq 1 "/usr/lib/libmqic.so"
   pwre_config_check_lib libpnioif PNAK     lib lib 1 "/usr/lib/libpnioif.a:/usr/local/lib/libpnioif.a"
   pwre_config_check_lib libusb    LIBUSB   lib libusb 1 "/usr/lib/libusb-1.0.so"
-  pwre_config_check_lib libcifx   LIBCIFX  lib lib 1 "/usr/lib/libcifx.so.1"
+  pwre_config_check_lib libcifx   LIBCIFX  lib lib 1 "/usr/local/lib/libcifx.so:/usr/lib/libcifx.so.1"
 
 #set -o xtrace
 
