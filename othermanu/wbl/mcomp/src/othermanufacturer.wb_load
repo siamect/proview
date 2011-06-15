@@ -1280,7 +1280,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       Object Code PlcTemplate 813 03-OCT-2007 10:48:24.39
         Body RtBody 03-OCT-2007 10:48:24.39
         EndBody
-        Body DevBody 27-JAN-2010 18:14:14.55
+        Body DevBody 15-JUN-2011 09:47:53.94
           Buffer PlcProgram
             Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -1330,8 +1330,8 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object W WindowPlc 814 03-OCT-2007 10:59:54.84
           Body RtBody 03-OCT-2007 10:59:54.84
           EndBody
-          Body DevBody 27-JAN-2010 18:14:14.55
-            Attr Modified = "27-JAN-2010 18:14:14.55"
+          Body DevBody 15-JUN-2011 09:47:53.94
+            Attr Modified = "15-JUN-2011 09:47:53.94"
             Buffer PlcWindow
               Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -9999,17 +9999,17 @@ XS : activa alarms
             EndBody
           EndObject
           Object GetIpPtr27 GetIpPtr 1258 04-OCT-2007 13:18:38.36
-            Body RtBody 04-OCT-2007 13:18:55.87
-              Attr IpPtrObject = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001"
+            Body RtBody 15-JUN-2011 09:47:49.90
+              Attr IpPtrObject = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001.IoStatus"
             EndBody
-            Body DevBody 12-OCT-2007 16:51:57.96
+            Body DevBody 15-JUN-2011 09:47:53.94
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-GetIpPtr"
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetIpPtr27"
                 Attr x = 4.500000e-01
                 Attr y = -2.749999e-01
-                Attr width = 4.740000e-01
+                Attr width = 4.584445e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
                 Attr mask[1] = 1
@@ -11849,7 +11849,7 @@ else
       Object Code PlcTemplate 1265 05-OCT-2007 08:26:08.19
         Body RtBody 05-OCT-2007 08:26:08.19
         EndBody
-        Body DevBody 15-OCT-2007 08:53:03.22
+        Body DevBody 15-JUN-2011 09:48:46.26
           Buffer PlcProgram
             Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Sim-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -11871,8 +11871,8 @@ else
         Object W WindowPlc 1266 05-OCT-2007 08:26:32.27
           Body RtBody 05-OCT-2007 08:26:32.27
           EndBody
-          Body DevBody 15-OCT-2007 08:53:03.22
-            Attr Modified = "15-OCT-2007 08:53:03.22"
+          Body DevBody 15-JUN-2011 09:48:46.26
+            Attr Modified = "15-JUN-2011 09:48:46.26"
             Buffer PlcWindow
               Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Sim-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -13526,17 +13526,17 @@ else
             EndBody
           EndObject
           Object StoIpPtr3 StoIpPtr 1324 05-OCT-2007 10:52:49.91
-            Body RtBody 05-OCT-2007 10:53:15.22
-              Attr IpPtrObject = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001"
+            Body RtBody 15-JUN-2011 09:48:38.88
+              Attr IpPtrObject = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001.IoStatus"
             EndBody
-            Body DevBody 11-OCT-2007 17:14:19.59
+            Body DevBody 15-JUN-2011 09:48:46.26
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-StoIpPtr"
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Sim-Code-W-StoIpPtr3"
                 Attr x = 2.300000e+00
                 Attr y = -3.250000e-01
-                Attr width = 4.740000e-01
+                Attr width = 4.584445e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Sim-Code-W"
                 Attr mask[0] = 1
