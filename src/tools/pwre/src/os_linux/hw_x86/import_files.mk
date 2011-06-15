@@ -9,6 +9,7 @@ rt_modules = \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/load/rt.dbs \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/load/basecomponent.dbs \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/load/nmps.dbs \
+		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/load/miscellaneous.dbs \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/load/opc.dbs \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/load/profibus.dbs \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/load/otherio.dbs \
@@ -29,6 +30,8 @@ rt_modules = \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/bcomp/inc/pwr_basecomponentclasses.hpp \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/nmps/inc/pwr_nmpsclasses.h \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/nmps/inc/pwr_nmpsclasses.hpp \
+		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/opc/inc/pwr_miscellaneousclasses.h \
+		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/opc/inc/pwr_miscellaneousclasses.hpp \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/opc/inc/pwr_opcclasses.h \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/opc/inc/pwr_opcclasses.hpp \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/profibus/inc/pwr_profibusclasses.h \
@@ -125,6 +128,14 @@ $(pwre_broot)/$(pwre_os)/$(pwre_hw)/nmps/inc/%.h : $(pwre_vmsinc)/exp/inc/%.h
 	@ cp $(source) $(target)
 
 $(pwre_broot)/$(pwre_os)/$(pwre_hw)/nmps/inc/%.hpp : $(pwre_vmsinc)/exp/inc/%.hpp
+	@ echo Import ${target}
+	@ cp $(source) $(target)
+
+$(pwre_broot)/$(pwre_os)/$(pwre_hw)/misc/inc/%.h : $(pwre_vmsinc)/exp/inc/%.h
+	@ echo Import ${target}
+	@ cp $(source) $(target)
+
+$(pwre_broot)/$(pwre_os)/$(pwre_hw)/misc/inc/%.hpp : $(pwre_vmsinc)/exp/inc/%.hpp
 	@ echo Import ${target}
 	@ cp $(source) $(target)
 

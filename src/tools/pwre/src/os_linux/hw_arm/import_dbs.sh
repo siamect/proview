@@ -20,6 +20,7 @@ cp -p $2/exp/load/rt.dbs $2/rt/load/
 cp -p $2/exp/load/basecomponent.dbs $2/bcomp/load/
 cp -p $2/exp/load/nmps.dbs $2/nmps/load/
 cp -p $2/exp/load/opc.dbs $2/opc/load/
+cp -p $2/exp/load/miscellaneous.dbs $2/misc/load/
 cp -p $2/exp/load/profibus.dbs $2/profibus/load/
 cp -p $2/exp/load/otherio.dbs $2/otherio/load/
 cp -p $2/exp/load/remote.dbs $2/remote/load/
