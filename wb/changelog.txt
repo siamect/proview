@@ -171,3 +171,5 @@
 110202 cs  wb        Bugfix in object editor, Ctrl+DoubleClick didn't work on attrrefs.
 110202 cs  wb        Plc compile, problem with compilation of component subwindow from plc editor fixed.
 110203 cs  wb        Plc link, problem with uppercase nodename for opt-file fixed.
+110309 cs  wb        Wtt command set attribute, support for deltatimes added.
+110310 cs  wb        Plc editor, accelerator for build added.

@@ -162,7 +162,7 @@ static pwr_tStatus IoCardRead( io_tCtx ctx,
   }
 
   for ( i = 0; i < GPIO_MAX_CHANNELS; i++) {
-    if ( cp->chanlist[i].cop) {
+    if ( cp->chanlist[i].cop && cp->chanlist[i].vbp) {
       switch( cp->chanlist[i].ChanClass) {
       case pwr_cClass_ChanDi:
 	fflush( local->value_fp[i]);
@@ -204,7 +204,7 @@ static pwr_tStatus IoCardWrite( io_tCtx ctx,
   }
 
   for ( i = 0; i < GPIO_MAX_CHANNELS; i++) {
-    if ( cp->chanlist[i].cop) {
+    if ( cp->chanlist[i].cop && cp->chanlist[i].vbp) {
       switch( cp->chanlist[i].ChanClass) {
       case pwr_cClass_ChanDo:
 	if ( *(pwr_tBoolean *)cp->chanlist[i].vbp)
