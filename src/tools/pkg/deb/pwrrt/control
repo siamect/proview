@@ -1,5 +1,5 @@
 Package: pwrrt
-Version: 4.8.1-2
+Version: 4.8.2-1
 Section: base
 Priority: optional
 Architecture: i386
@@ -18,3 +18,8 @@ Description:
    - Curve window, second mark and export dialog added.
    - Xtt, problems with OpPlace and XttGraph objects in SharedVolume fixed.
    - Flow alloc color problem fixed.
+ 4.8.2-1
+   - Support for Hilscher cifX boards.
+   - Support for Hilscher cifX Profinet Controller.
+   - UDP communication configured with IO objects.
+   - Support for USB joystick.
