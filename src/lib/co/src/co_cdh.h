@@ -1045,6 +1045,8 @@ cdh_StrncpyCutOff(
 
 char *cdh_OpSysToStr( pwr_mOpSys opsys);
 
+char *cdh_OpSysToDirStr( pwr_mOpSys opsys);
+
 pwr_sAttrRef cdh_ArefToCastAref( pwr_sAttrRef *arp);
 
 pwr_sAttrRef cdh_ArefToDisableAref( pwr_sAttrRef *arp);

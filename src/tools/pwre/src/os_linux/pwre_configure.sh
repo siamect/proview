@@ -363,9 +363,6 @@ else
   pwre_config_check_lib wmq       WMQ      lib wmq 1 "/usr/lib/libmqic.so"
   pwre_config_check_lib libpnioif PNAK     lib lib 1 "/usr/lib/libpnioif.a:/usr/local/lib/libpnioif.a"
   pwre_config_check_lib libusb    LIBUSB   lib libusb 1 "/usr/lib/libusb-1.0.so"
-  pwre_config_check_lib libcifx   LIBCIFX  lib lib 1 "/usr/lib/libcifx.so.1"
-
-#set -o xtrace
 
   pwre_config_check_include wmq   WMQ   1 "/opt/mqm/inc/cmqc.h"
   pwre_config_check_include cifx  CIFX  1 "/usr/local/include/cifx/cifxlinux.h"
@@ -390,7 +387,7 @@ else
   echo "export pwre_conf_libpwrco=\"-lpwr_co\"" >> $cfile
   echo "export pwre_conf_libpwrrt=\"-lpwr_rt -lpwr_co -lpwr_statussrv -lpwr_msg_dummy\"" >> $cfile
   echo "export pwre_conf_libpwrdtt=\"-lpwr_dtt\"" >> $cfile
-  echo "export pwre_conf_libpwrotherio=\"-lpwr_usbio_dummy -lpwr_usb_dummy\"" >> $cfile
+  echo "export pwre_conf_libpwrotherio=\"-lpwr_usbio_dummy -lpwr_usb_dummy -lpwr_cifx_dummy\"" >> $cfile
   echo "export pwre_conf_libpwrprofibus=\"-lpwr_pnak_dummy\"" >> $cfile
   echo "export pwre_conf_libpwrxtt=\"-lpwr_xtt -lpwr_ge -lpwr_cow -lpwr_flow -lpwr_glow\"" >> $cfile
   echo "export pwre_conf_libpwrxttgtk=\" -lpwr_xtt_gtk -lpwr_ge_gtk -lpwr_cow_gtk -lpwr_flow_gtk -lpwr_glow_gtk\"" >> $cfile

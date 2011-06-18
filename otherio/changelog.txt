@@ -14,3 +14,8 @@
 100701 cs  modbus    Modbus TCP bugfix in scan interval.
 110120 cs  velleman  Velleman K8055 communication timeout increased.
 110120 cs  arduino   Support for Arduino USB boards added.
+110311 cs  cifx      Support for Hilscher cifX added.
+110516 cs  joystick  Support for USB joystick added.
+110518 cs  udp       UDP IO implemented.
+110609 cs  onewire   1-Wire generic Ai device added.
+110609 cs  cifx      Hilscher cifX profinet controller, beta version.

@@ -366,6 +366,7 @@ static pwr_tStatus IoAgentInit (
   /* Activate the devices */
   
   T_PNAK_EVENT_SET_DEVICE_STATE  set_dev_state;
+  unsigned short index, bit_no;
   
   memset(&set_dev_state, 0, sizeof(set_dev_state));
   
