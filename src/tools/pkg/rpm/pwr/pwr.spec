@@ -10,7 +10,7 @@
 
 Name: pwr48
 Summary: Proview/R development and runtime environment
-Version: 4.8.1
+Version: 4.8.2
 Release: 1
 License: GPL
 BuildArch: i386
@@ -200,6 +200,22 @@ fi
 #%postun
 
 %changelog
+* Sun Jun 12 2011 Claes Sjofors <claes.sjofors@proview.se> 4.8.2-1
+  - Support for Hilscher cifX boards.
+  - Support for Hilscher cifX Profinet Controller.
+  - UDP communication configured with IO objects.
+  - Support for USB joystick.
+* Thu Feb 24 2011 Claes Sjofors <claes.sjofors@proview.se> 4.8.1-2
+   - Profinet configurator, ordernumber showed in module enum list. 
+   - Curve window, second mark and export dialog added.
+   - Profibus/Profinet configurator, default module class setting added, and Appl button added.
+   - Configurator fix, Delete, Create and Move object menu items were not insensive in view mode.
+   - Plc link, problem with uppercase nodename for opt-file fixed.
+   - Xtt, problems with OpPlace and XttGraph objects in SharedVolume fixed.
+   - Plc compile, problem with compile of component subwindows fixed.
+   - Wb object editor, Ctrl DoubleClick MB1 didn't work on attribute references.
+   - Flow alloc color problem fixed.
+   - wb locale fix for ubuntu.
 * Mon Jan 24 2011 Claes Sjofors <claes.sjofors@proview.se> 4.8.1-1
   - I/O support for Arduino USB board.
   - Remote support for Websphere Message Queue.

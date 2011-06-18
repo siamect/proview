@@ -2669,7 +2669,6 @@ char *cdh_OpSysToStr( pwr_mOpSys opsys)
   static char str[32];
 
   switch( opsys) {
-  case pwr_mOpSys_VAX_ELN: strcpy( str, "vax_eln"); break;
   case pwr_mOpSys_VAX_VMS: strcpy( str, "vax_vms"); break;
   case pwr_mOpSys_AXP_VMS: strcpy( str, "axp_vms"); break;
   case pwr_mOpSys_PPC_LYNX: strcpy( str, "ppc_lynx"); break;
@@ -2677,6 +2676,37 @@ char *cdh_OpSysToStr( pwr_mOpSys opsys)
   case pwr_mOpSys_PPC_LINUX: strcpy( str, "ppc_linux"); break;
   case pwr_mOpSys_X86_LINUX: strcpy( str, "x86_linux"); break;
   case pwr_mOpSys_X86_64_LINUX: strcpy( str, "x86_64_linux"); break;
+  case pwr_mOpSys_X86_64_MACOS: strcpy( str, "x86_64_macos"); break;
+  case pwr_mOpSys_ARM_LINUX: strcpy( str, "arm_linux"); break;
+  case pwr_mOpSys_X86_64_FREEBSD: strcpy( str, "x86_64_freebsd"); break;
+  default: strcpy( str, "");
+  }
+  return str;
+}
+
+//! Convert operating system to directory string
+/*!
+  For example pwr_mOpSys_X86_LINUX will be converted to "os_linux/hw_x86".
+  A pointer to a static string is returned.
+
+  \param opsys	Operating system.
+  \return 	String
+*/
+char *cdh_OpSysToDirStr( pwr_mOpSys opsys)
+{
+  static char str[80];
+
+  switch( opsys) {
+  case pwr_mOpSys_VAX_VMS: strcpy( str, "os_vms/hw_vax"); break;
+  case pwr_mOpSys_AXP_VMS: strcpy( str, "os_vms/hw_axp"); break;
+  case pwr_mOpSys_PPC_LYNX: strcpy( str, "os_lynx/hw_ppc"); break;
+  case pwr_mOpSys_X86_LYNX: strcpy( str, "os_lynx/hw_x86"); break;
+  case pwr_mOpSys_PPC_LINUX: strcpy( str, "os_linux/hw_ppc"); break;
+  case pwr_mOpSys_X86_LINUX: strcpy( str, "os_linux/hw_x86"); break;
+  case pwr_mOpSys_X86_64_LINUX: strcpy( str, "os_linux/hw_x86_64"); break;
+  case pwr_mOpSys_X86_64_MACOS: strcpy( str, "os_macos/hw_x86_64"); break;
+  case pwr_mOpSys_ARM_LINUX: strcpy( str, "os_linux/hw_arm"); break;
+  case pwr_mOpSys_X86_64_FREEBSD: strcpy( str, "os_freebsd/hw_x86_64"); break;
   default: strcpy( str, "");
   }
   return str;

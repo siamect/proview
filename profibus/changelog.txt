@@ -25,4 +25,8 @@
 101202 rk -           Finalized PROFINET IO functionality. Added several classes
                       for handling different types of Profinet IO.
 110223 cs -           Profinet and Profibus configurators, default module class setting added, and Apply button added.
-110223 cs -           Profinet configurator, order number added to text in module type list.
+110223 cs profinet    Profinet configurator, order number added to text in module type list.
+110328 cs profinet    Profinet configurator, choice wether to clear or keep data when gsdml file is changed.
+110429 cs profibus    Profibus gsd Bit and BitArea syntax fix for space between Bit and (
+110531 cs profinet    Recall buffer added to profinet configurator.
+110531 cs profinet    Script functions GetIoDeviceData and SetIoDeviceData to modify profinet configuration added.

@@ -2952,6 +2952,11 @@ void wb_wbllexer::mESC(bool _createToken) {
 		match('f' /* charlit */ );
 		break;
 	}
+	case 0x78 /* 'x' */ :
+	{
+		match('x' /* charlit */ );
+		break;
+	}
 	case 0x22 /* '\"' */ :
 	{
 		match('\"' /* charlit */ );

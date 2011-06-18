@@ -200,3 +200,7 @@
 110203 cs  xtt       Problems with OpPlace and XttGraph object in SharedVolume fixed.
 110222 cs  xtt       Curve window, second mark added.
 110222 cs  xtt       Curve window, export function added for history curves.
+110329 cs  ge        Ge rotation dynamic, problem with escaping rotation object fixed.
+110513 cs  ge        Component AxisArc for circular axes added.
+110517 cs  xtt       Bugfix in 'close navigator' command.
+110517 cs  xtt       Xtt graph options for fullscreen, maximize and iconify added for command and XttGraph.

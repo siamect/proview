@@ -684,6 +684,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   char          path[80];
   int           path_file_created = 0;
   pwr_tString80 custom_platform;
+  pwr_mOpSys   	custom_os;
 
   syntax_error = 0;
   strcpy( null_nodename, "-");
@@ -1336,7 +1337,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
 
 	  lfu_check_appl_file( nodename_ptr, *bus_number_ptr);
-	  lfu_check_opt_file( nodename_ptr, *bus_number_ptr, (pwr_mOpSys) os);
+	  // lfu_check_opt_file( nodename_ptr, *bus_number_ptr, (pwr_mOpSys) os);
 
 	  /* Find the volumes in this node */
 	  sts = ldh_GetChild( ldhses, nodeobjid, &volobjid);
@@ -2075,11 +2076,11 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    distr_options = (lfu_mDistrOpt)((int)distr_options | lfu_mDistrOpt_NoRootVolume);
 
 	  strcpy( custom_platform, "-");
-
+	  custom_os = pwr_mOpSys__;
+	  
 	  /* Find any CustomBuild for this node */
 	  class_vect[0] = pwr_cClass_CustomBuild;
-	  class_vect[1] = pwr_cClass_BuildOptions;
-	  class_vect[2] = 0;
+	  class_vect[1] = 0;
 	  
 	  objcount = 0;
 	  objlist = 0;
@@ -2103,12 +2104,13 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    switch ( ccid) {
 	    case pwr_cClass_CustomBuild: {
 	      char *platform_p;
+	      pwr_tMask *os_p;
 
 	      sts = ldh_ObjidToName( ldhses, applobjid, ldh_eName_Object,
 				     appl_name, sizeof(appl_name), &size);
 	      if ( EVEN(sts)) return sts;
 	      
-	      /* Check Source attribute */
+	      /* Get Platform attribute */
 	      sts = ldh_GetObjectPar( ldhses, applobjid, "DevBody",
 				      "Platform", &platform_p, &size);
 	      if (EVEN(sts)) return sts;
@@ -2116,14 +2118,54 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	      if ( strcmp( platform_p, "") != 0)
 		strncpy( custom_platform, platform_p, sizeof(custom_platform));
 	      free( platform_p);
+
+	      /* Get OperatingSystem attribute */
+	      sts = ldh_GetObjectPar( ldhses, applobjid, "DevBody",
+				      "OperatingSystem", (char **)&os_p, &size);
+	      if (EVEN(sts)) return sts;
+
+	      custom_os = (pwr_mOpSys) *os_p;
+	      free( os_p);
 	      break;
 	    }
+	    default: ;
+	    }
+	  }
+
+	  /* Find any BuildOptions for this node */
+	  class_vect[0] = pwr_cClass_BuildOptions;
+	  class_vect[1] = 0;
+	  
+	  objcount = 0;
+	  objlist = 0;
+
+	  sts = trv_create_ctx( &trvctx, ldhses, nodeobjid, class_vect, NULL,
+				NULL);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = trv_object_search( trvctx,
+				   &utl_objidlist_insert, &objlist, 
+				   &objcount, 0, 0, 0);
+	  if ( EVEN (sts)) return sts;
+
+	  sts = trv_delete_ctx( trvctx);
+
+	  for ( obj_ptr = objlist; obj_ptr; obj_ptr = obj_ptr->next) {
+	    applobjid = obj_ptr->objid;
+	    sts = ldh_GetObjectClass( ldhses, applobjid, &ccid);
+	    if ( EVEN(sts)) return sts;
+
+	    switch ( ccid) {
 	    case pwr_cClass_BuildOptions: {
 	      pwr_sClass_BuildOptions *bop;
 	      int size;
 	      pwr_tString80 ar, opt;
 	      char str[2000] = "";
 	      FILE *optfile;
+	      char dir[80];
+
+	      if ( os == pwr_mOpSys_CustomBuild && custom_os == pwr_mOpSys__)
+		break;
 
 	      sts = ldh_GetObjectBody( ldhses, applobjid, "RtBody", (void **)&bop, &size);
 	      if ( EVEN(sts)) return sts;
@@ -2140,10 +2182,17 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		  sprintf( &str[strlen(str)], "%s ", opt);
 	      }
 
+	      
 	      if ( bop->SystemModules & pwr_mBuildOptionsMask_IoUser)
 		sprintf( &str[strlen(str)], "$pwrp_obj/rt_io_user.o ");
-	      else
-		sprintf( &str[strlen(str)], "$pwr_obj/rt_io_user.o ");
+	      else {
+		if ( os == pwr_mOpSys_CustomBuild)
+		  sprintf( &str[strlen(str)], "$pwrb_root/%s/exp/obj/rt_io_user.o ", 
+			   cdh_OpSysToDirStr( (pwr_mOpSys)custom_os));
+		else 
+		  sprintf( &str[strlen(str)], "$pwrb_root/%s/exp/obj/rt_io_user.o ", 
+			   cdh_OpSysToDirStr( (pwr_mOpSys)os));
+	      }
 
 	      for ( int i = 0; i < (int)(sizeof(bop->Archives)/sizeof(bop->Archives[0])); i++) {
 		dcli_trim( opt, bop->Archives[i]);
@@ -2198,7 +2247,11 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
 	      free( (char *)bop);
 
-	      sprintf( fname, load_cNameOpt, "$pwrp_exe/", nodename_ptr, *bus_number_ptr);
+	      if ( os == pwr_mOpSys_CustomBuild)	      
+		sprintf( dir, "$pwrp_root/bld/%s/exe/", cdh_OpSysToStr( (pwr_mOpSys)custom_os));
+	      else
+		sprintf( dir, "$pwrp_root/bld/%s/exe/", cdh_OpSysToStr( (pwr_mOpSys)os));
+	      sprintf( fname, load_cNameOpt, dir, nodename_ptr, *bus_number_ptr);
 	      dcli_translate_filename( fname, fname);
 	      optfile = fopen( fname, "w");
 	      if ( optfile == 0) {
