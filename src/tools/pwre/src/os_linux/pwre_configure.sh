@@ -354,6 +354,7 @@ else
   pwre_config_check_include gtk   GTK   1 "/usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk/gtk.h"
   pwre_config_check_include jni   JNI   1 "$jdk/include/jni.h"
   pwre_config_check_include jni   JNI   0 "$jdk/include/linux/jni_md.h"
+  pwre_config_check_include alsa  ALSA  1 "/usr/include/alsa/asoundlib.h"
 
   echo ""
   echo "Optional :"
