@@ -1,5 +1,5 @@
 Package: pwr48
-Version: 4.8.1-2
+Version: 4.8.2-1
 Section: base
 Priority: optional
 Architecture: i386
@@ -25,3 +25,8 @@ Description: Proview development and runtime environment package
    - Wb object editor, Ctrl DoubleClick MB1 didn't work on attribute references.
    - Flow alloc color problem fixed.
    - wb locale fix for ubuntu.
+ 4.8.2-1
+   - Support for Hilscher cifX boards.
+   - Support for Hilscher cifX Profinet Controller.
+   - UDP communication configured with IO objects.
+   - Support for USB joystick.
