@@ -360,11 +360,12 @@ else
   echo "Optional :"
   pwre_config_check_lib motif     MRM      motif motif 0 "/usr/lib/libMrm.so"
   pwre_config_check_lib mysql     MYSQL    lib lib 1 "/usr/lib/libmysqlclient.so:/usr/lib/mysql/libmysqlclient.so"
-  pwre_config_check_lib mq        MQ       lib mq  1 "/usr/lib/libdmq.so"
+  pwre_config_check_lib mq        MQ       lib mq  1 "/usr/lib/libdmq.so:/usr/local/dmq/lib/libdmq.so"
   pwre_config_check_lib wmq       WMQ      lib wmq 1 "/usr/lib/libmqic.so"
   pwre_config_check_lib libpnioif PNAK     lib lib 1 "/usr/lib/libpnioif.a:/usr/local/lib/libpnioif.a"
   pwre_config_check_lib libusb    LIBUSB   lib libusb 1 "/usr/lib/libusb-1.0.so"
 
+  pwre_config_check_include mq    MQ    0 "/usr/local/dmq/include/p_entry.h"
   pwre_config_check_include wmq   WMQ   1 "/opt/mqm/inc/cmqc.h"
   pwre_config_check_include cifx  CIFX  1 "/usr/local/include/cifx/cifxlinux.h"
 
