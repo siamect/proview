@@ -53,6 +53,16 @@ typedef struct {
   GtkWidget 		*question_widget;
 } wow_t_question_cb;
 
+typedef struct {
+  void			*ctx;
+  void			*data;
+  void	         	(* inputdialogbox_ok) ( void *, void *, char *);
+  void	         	(* inputdialogbox_cancel) ( void *, void *);
+  void	         	(* inputdialogbox_help) ( void *, void *);
+  GtkWidget 		*inputdialog_widget;
+  GtkWidget 		*input_widget;
+} wow_t_inputdialog_cb;
+
 class CoWowEntryGtk {
  public:
   CoWowRecall	*m_re;
@@ -114,6 +124,12 @@ class CoWowGtk : public CoWow {
 			void *data);
   void DisplayError( const char *title, const char *text);
   void DisplayText( const char *title, const char *text);
+  void CreateInputDialog( void *ctx, const char *title, const char *text,
+			  void (* inputdialogbox_ok) ( void *, void *, char *),
+			  void (* inputdialogbox_cancel) ( void *, void *),
+			  int input_length,
+			  char *init_text,
+			  void *data);
   void *CreateList( const char *title, const char *texts, int textsize,
 		    void (action_cb)( void *, char *),
 		    void (cancel_cb)( void *),
@@ -142,6 +158,8 @@ class CoWowGtk : public CoWow {
   static void SetWindowIcon( GtkWidget *w);
   static void question_ok_cb( GtkWidget *w, gpointer data);
   static void question_cancel_cb( GtkWidget *w, gpointer data);
+  static void inputdialog_ok_cb( GtkWidget *w, gpointer data);
+  static void inputdialog_cancel_cb( GtkWidget *w, gpointer data);
   static void warranty_cb( GtkWidget *w, gint response, gpointer data);
   static void license_cb( GtkWidget *w, gint response, gpointer data);
   static char *translate_utf8( const char *str);

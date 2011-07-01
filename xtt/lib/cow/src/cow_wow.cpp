@@ -42,8 +42,11 @@
 
 #include "pwr.h"
 #include "cow_wow.h"
+#include "co_dcli.h"
 
 bool CoWow::m_autoremove = false;
+
+CoWow::~CoWow() {}
 
 int CoWow::HideWarranty()
 {
@@ -54,3 +57,67 @@ int CoWow::HideWarranty()
   return prev;
 }
 
+#define FILELIST_TEXTSIZE 80
+
+void *CoWow::CreateFileList( 
+  const char *title,
+  const char *dir,
+  const char *pattern,
+  const char *type,
+  void	    (action_cb)( void *, char *),
+  void	    (cancel_cb)( void *),
+  void	    *ctx,
+  int	    show_apply_button
+)
+{
+  int sts;
+  pwr_tFileName file_spec, found_file, stype, item;
+  char *s;
+  char *texts;
+  int i, cnt;
+
+  if ( type) {
+    if ( type[0] == '.')
+      strncat( stype, type, sizeof(stype));
+    else {
+      strcpy( stype, ".");
+      strncat( stype, type, sizeof(stype)-1);
+    }
+    sprintf( file_spec, "%s/%s%s", dir, pattern, stype);
+  }
+  else
+    sprintf( file_spec, "%s/%s", dir, pattern);
+
+  // Count number of items
+  cnt = 0;
+  sts = dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_INIT);
+  while( ODD(sts)) {
+    cnt++;
+    sts = dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_NEXT);
+  }
+  dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_END);
+
+  texts = (char *)calloc( cnt+1, FILELIST_TEXTSIZE);
+
+  i = 0;
+  sts = dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_INIT);
+  while( ODD(sts)) {
+    
+    if (( s = strrchr( found_file, '/')))
+      strncpy( item, s+1, sizeof(item));
+    else
+      strncpy( item, found_file, sizeof(item));
+
+    if ( type) {
+      if ( (s = strstr( item, stype)))
+	*s = 0;
+    }
+    strncpy( &texts[ FILELIST_TEXTSIZE * i], item, FILELIST_TEXTSIZE);
+    sts = dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_NEXT);
+    i++;
+  }
+  dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_END);
+
+  return CreateList( title, texts, FILELIST_TEXTSIZE, action_cb, cancel_cb,
+		     ctx, show_apply_button);
+}

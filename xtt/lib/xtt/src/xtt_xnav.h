@@ -110,6 +110,7 @@ extern "C" {
 class CoWowTimer;
 class XAtt;
 class XCrr;
+class XColWind;
 class Block;
 class XttTrend;
 class XttSevHist;
@@ -117,7 +118,6 @@ class XttFast;
 class XAttOne;
 class GeCurve;
 class GeCurveData;
-class XCrr;
 class CoWow;
 class XttAudio;
 class Ev;
@@ -346,6 +346,7 @@ class XNav {
     static xmenu_sMenuCall *mcp;
     CoLogin		*cologin;
     sevcli_tCtx 	scctx;
+    XColWind		*last_xcolwind;
 
     virtual void set_inputfocus() {}
     virtual void pop() {}
@@ -356,6 +357,8 @@ class XNav {
     virtual RtTrace *plctrace_new( pwr_tOid oid, pwr_tStatus *sts) {return 0;}
     virtual XAtt *xatt_new( pwr_tAttrRef *arp, int advanced_user, pwr_tStatus *sts) {return 0;}
     virtual XCrr *xcrr_new( pwr_tAttrRef *arp, int advanced_user, pwr_tStatus *sts) {return 0;}
+    virtual XColWind *xcolwind_new( pwr_tAttrRef *ar_list, char *title, int advanced_user, 
+				    pwr_tStatus *sts) {return 0;}
     virtual Ev *ev_new( char *eve_name, char *ala_name, char *blk_name,
 			pwr_tObjid ev_user, int display_ala, int display_eve,
 			int display_blk, int display_return, int display_ack,
@@ -411,6 +414,7 @@ class XNav {
     int collect_insert( pwr_sAttrRef *attrref);
     int collect_remove();
     int collect_show();
+    int collect_window( int copy);
     void collect_clear();
     void clear();
     void message( char sev, const char *text);

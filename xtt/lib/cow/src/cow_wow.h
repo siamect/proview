@@ -105,13 +105,20 @@ class CoWow {
 
  public:
   CoWow() {}
-  virtual ~CoWow() {}
+  virtual ~CoWow();
+
   virtual void DisplayQuestion( void *ctx, const char *title, const char *text,
 				void (* questionbox_ok) ( void *, void *),
 				void (* questionbox_cancel) ( void *, void *),
 				void *data) {}
   virtual void DisplayError( const char *title, const char *text) {}
   virtual void DisplayText( const char *title, const char *text) {}
+  virtual void CreateInputDialog( void *ctx, const char *title, const char *text,
+				  void (* inputdialogbox_ok) ( void *, void *, char *),
+				  void (* inputdialogbox_cancel) ( void *, void *),
+				  int input_length,
+				  char *init_text,
+				  void *data) {}
   virtual void *CreateList( const char *title, const char *texts, int textsize,
 			    void (action_cb)( void *, char *),
 			    void (cancel_cb)( void *),
@@ -130,12 +137,21 @@ class CoWow {
   virtual void Wait( float time) {}
 
   static int HideWarranty();
+  void *CreateFileList( const char *title,
+			const char *dir,
+			const char *pattern,
+			const char *type,
+			void	    (action_cb)( void *, char *),
+			void	    (cancel_cb)( void *),
+			void	    *ctx,
+			int	    show_apply_button = 0);
   virtual int DisplayWarranty() { return 0;}
   virtual void DisplayLicense() {} 
   virtual CoWowTimer *timer_new() { return 0;}
   virtual pwr_tStatus CreateMenuItem( const char *name, void *menu, int pixmap, int append, void *w) { return 0;}
   virtual pwr_tStatus DeleteMenuItem( const char *name, void *menu) { return 0;}
   static void SetAutoRemove( bool on) { m_autoremove = on;}
+
 };
 
 #endif

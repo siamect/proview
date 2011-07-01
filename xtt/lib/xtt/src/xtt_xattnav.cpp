@@ -77,14 +77,15 @@ XAttNav::XAttNav(
 	const char     	*xa_name,
 	pwr_sAttrRef 	*xa_objar,
 	int 		xa_advanced_user,
+	void		*xa_userdata,
 	pwr_tStatus 	*status) :
 	parent_ctx(xa_parent_ctx),
 	type(xa_type), objar(*xa_objar), 
-	advanced_user(xa_advanced_user), 
+	advanced_user(xa_advanced_user), userdata(xa_userdata),
 	bypass(0),
 	trace_started(0), message_cb(NULL), close_cb(0), change_value_cb(0),
         popup_menu_cb(0), start_trace_cb(0), is_authorized_cb(0),
-	displayed(0)
+	displayed(0), scantime(500)
 {
   strcpy( name, xa_name);
   *status = 1;
@@ -95,6 +96,8 @@ XAttNav::XAttNav(
 //
 XAttNav::~XAttNav()
 {
+  if ( userdata)
+    free( userdata);
 }
 
 //
@@ -355,8 +358,7 @@ int XAttNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
       switch ( item->type) {
       case xnav_eItemType_Attr:
       case xnav_eItemType_AttrArrayElem:
-      case xnav_eItemType_AttrObject:
-      case xnav_eItemType_Collect: {
+      case xnav_eItemType_AttrObject: {
 	pwr_tAName attr_str;
 
 	sts = gdh_ObjidToName( item->objid, 
@@ -366,6 +368,16 @@ int XAttNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 	strcat( attr_str, ".");
 	strcat( attr_str, item->name);
 	sts = gdh_NameToAttrref( pwr_cNObjid, attr_str, &attrref);
+	if ( EVEN(sts)) return sts;
+
+	(xattnav->popup_menu_cb)( xattnav->parent_ctx, attrref,
+				  (unsigned long)xmenu_eItemType_Attribute,
+				  (unsigned long)xmenu_mUtility_AttrEditor, NULL, x, y);
+
+	break;
+      }
+      case xnav_eItemType_Collect: {
+	sts = gdh_NameToAttrref( pwr_cNObjid, item->name, &attrref);
 	if ( EVEN(sts)) return sts;
 
 	(xattnav->popup_menu_cb)( xattnav->parent_ctx, attrref,
@@ -407,6 +419,7 @@ int XAttNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
     switch( item->type) {
     case xnav_eItemType_Attr:
     case xnav_eItemType_AttrArrayElem:
+    case xnav_eItemType_Collect:
       sts = item->open_children( xattnav->brow, 0, 0);
       if (ODD(sts)) break;
 
@@ -522,7 +535,8 @@ int XAttNav::trace_connect_bc( brow_tObject object, char *name,
   case xnav_eItemType_Attr:
   case xnav_eItemType_Enum:
   case xnav_eItemType_Mask:
-  case xnav_eItemType_AttrArrayElem: {
+  case xnav_eItemType_AttrArrayElem:
+  case xnav_eItemType_Collect: {
     ItemAttr	*item;
     
     item = (ItemAttr *) base_item;
@@ -569,6 +583,7 @@ int XAttNav::trace_scan_bc( brow_tObject object, void *p)
   {
     case xnav_eItemType_Attr:
     case xnav_eItemType_AttrArrayElem:
+    case xnav_eItemType_Collect:
     {
       ItemAttr	*item;
 
@@ -640,12 +655,11 @@ int XAttNav::trace_scan_bc( brow_tObject object, void *p)
 void XAttNav::trace_scan( void *data)
 {
   XAttNav *xattnav = (XAttNav *)data;
-  int time = 200;
 
   if ( xattnav->trace_started) {
     brow_TraceScan( xattnav->brow->ctx);
 
-    xattnav->trace_timerid->add( time, trace_scan, xattnav);
+    xattnav->trace_timerid->add( xattnav->scantime, trace_scan, xattnav);
   }
 }
 
@@ -798,6 +812,54 @@ int	XAttNav::object_attr()
   return XATT__SUCCESS;
 }
 
+int	XAttNav::collect_add( pwr_tAttrRef *areflist)
+{
+  ItemCollect 	*item;
+  int		sts;
+  pwr_tAName   	attr;
+  char		*s;
+  pwr_tTypeId 	a_type_id;
+  unsigned int 	a_size;
+  unsigned int 	a_offset;
+  unsigned int 	a_dim;
+  pwr_tTid	a_tid;
+  pwr_tAName	name;
+  pwr_tAttrRef  *arp;
+  
+  if ( !areflist)
+    return XATT__SUCCESS;
+
+  brow_SetNodraw( brow->ctx);
+
+  for ( arp = areflist; cdh_ObjidIsNotNull( arp->Objid); arp++) {
+
+    sts = gdh_AttrrefToName ( arp, name, sizeof(name), cdh_mNName);
+    if ( EVEN(sts)) return sts;
+
+    if ( !arp->Flags.b.Object && !arp->Flags.b.ObjectAttr) {
+      if ( (s = strchr( name, '.')) == 0)
+	return 0;
+      strcpy( attr, s+1);
+
+      sts = gdh_GetAttributeCharAttrref( arp, &a_type_id, &a_size, &a_offset, 
+					 &a_dim);
+      if ( EVEN(sts)) return sts;
+
+      sts = gdh_GetAttrRefTid( arp, &a_tid);
+      if ( EVEN(sts)) return sts;
+    }
+    else
+      continue;
+
+    item = new ItemCollect( brow, arp->Objid, attr, NULL, 
+			    flow_eDest_IntoLast, a_type_id, a_tid, a_size, 0);
+  }
+
+  brow_ResetNodraw( brow->ctx);
+  brow_Redraw( brow->ctx, 0);
+  return XATT__SUCCESS;
+}
+
 void XAttNav::enable_events()
 {
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1Click, flow_eEventType_CallBack, 
@@ -860,6 +922,9 @@ int XAttNav::init_brow_cb( FlowCtx *fctx, void *client_data)
     case xattnav_eType_CrossRef:
       xattnav->crossref();
       break;
+    case xattnav_eType_Collect:
+      xattnav->collect_add( (pwr_tAttrRef *)xattnav->userdata);
+      break;
     default:
       ;
   }
@@ -917,6 +982,7 @@ int XAttNav::set_attr_value( brow_tObject node, char *name, char *value_str)
   switch( base_item->type) {
     case xnav_eItemType_AttrArrayElem:
     case xnav_eItemType_Attr:
+    case xnav_eItemType_Collect:
     {
       ItemAttr *item = (ItemAttr *)base_item;
 
@@ -1018,6 +1084,31 @@ void XAttNav::start_trace()
   }
 }
 
+int XAttNav::get_select( pwr_tAttrRef *arp)
+{
+  brow_tNode	*node_list;
+  int		node_count;
+  ItemCollect	*item;
+  pwr_tStatus 	sts;
+
+  brow_GetSelectedNodes( brow->ctx, &node_list, &node_count);
+  if ( node_count != 1)
+    return 0;
+
+  brow_GetUserData( node_list[0], (void **)&item);
+  free( node_list);
+
+  switch( item->type) {
+  case xnav_eItemType_Collect:
+    sts = gdh_NameToAttrref( pwr_cNObjid, item->name, arp);
+    if ( EVEN(sts)) return sts;
+    break;
+  default:
+    return 0;
+  }
+  return XATT__SUCCESS;
+}
+
 void XAttNav::swap( int mode)
 {
   if ( mode == 0) {
@@ -1035,6 +1126,30 @@ void XAttNav::swap( int mode)
   }
 }
 
+
+//
+//  Get zoom
+//
+void XAttNav::get_zoom( double *zoom_factor)
+{
+  brow_GetZoom( brow->ctx, zoom_factor);
+}
+
+//
+//  Zoom
+//
+void XAttNav::zoom( double zoom_factor)
+{
+  brow_Zoom( brow->ctx, zoom_factor);
+}
+
+//
+//  Return to base zoom factor
+//
+void XAttNav::unzoom()
+{
+  brow_UnZoom( brow->ctx);
+}
 
 
 

@@ -195,7 +195,7 @@ XCrrGtk::XCrrGtk(
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(help), GTK_WIDGET(help_menu));
 
   xcrrnav = new XAttNavGtk( (void *)this, vbox, xattnav_eType_CrossRef,
-		"Plant", &objar, xa_advanced_user, &brow_widget, &sts);
+			    "Plant", &objar, xa_advanced_user, 0, &brow_widget, &sts);
   xcrrnav->popup_menu_cb = &xcrr_popup_menu_cb;
   xcrrnav->start_trace_cb = &xcrr_start_trace_cb;
   xcrrnav->close_cb = &xcrr_close_cb;

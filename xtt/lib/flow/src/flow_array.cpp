@@ -1115,3 +1115,42 @@ int FlowArray::get_last( FlowArrayElem **last)
   return 1;
 }
 
+int FlowArray::move_up( FlowArrayElem *element) 
+{
+  int i;
+  FlowArrayElem *prev;
+
+  for ( i = 0; i < a_size; i++)
+  {
+    if ( a[i] == element)
+    {
+      if ( i == 0)
+        return FLOW__NOPREVIOUS;
+      prev = a[i-1];
+      a[i-1] = a[i];
+      a[i] = prev;
+      return 1;
+    }
+  }
+  return FLOW__NOELEM;
+}
+
+int FlowArray::move_down( FlowArrayElem *element) 
+{
+  int i;
+  FlowArrayElem *next;
+
+  for ( i = 0; i < a_size; i++)
+  {
+    if ( a[i] == element)
+    {
+      if ( i == a_size - 1)
+        return FLOW__NONEXT;
+      next = a[i+1];
+      a[i+1] = a[i];
+      a[i] = next;
+      return 1;
+    }
+  }
+  return FLOW__NOELEM;
+}

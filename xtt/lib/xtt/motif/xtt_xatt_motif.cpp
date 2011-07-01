@@ -533,7 +533,7 @@ XAttMotif::XAttMotif( Widget 		xa_parent_wid,
   XtUnmanageChild( cmd_scrolled_ca);
 
   xattnav = new XAttNavMotif( (void *)this, xattnav_form, xattnav_eType_Object,
-		"Plant", &objar, xa_advanced_user, &brow_widget, &sts);
+			      "Plant", &objar, xa_advanced_user, 0, &brow_widget, &sts);
   xattnav->message_cb = &message_cb;
   xattnav->change_value_cb = &change_value_cb;
   xattnav->popup_menu_cb = &xatt_popup_menu_cb;

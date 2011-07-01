@@ -718,6 +718,16 @@ int brow_GetPreviousSibling( brow_tCtx ctx, brow_tObject object,
   return ctx->get_previous_sibling( (FlowArrayElem *)object, (FlowArrayElem **)sibling);
 }
 
+int brow_MoveUp( brow_tCtx ctx, brow_tObject object)
+{
+  return ctx->move_up( (FlowArrayElem *)object);
+}
+
+int brow_MoveDown( brow_tCtx ctx, brow_tObject object)
+{
+  return ctx->move_down( (FlowArrayElem *)object);
+}
+
 int brow_IsVisible( brow_tCtx ctx, brow_tObject object, flow_eVisible type)
 {
   return ctx->is_visible( (FlowArrayElem *)object, type);

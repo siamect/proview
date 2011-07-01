@@ -426,6 +426,37 @@ void XttGtk::activate_collect_clear( GtkWidget *w, gpointer data)
   xtt->xnav->collect_clear();
 }
 
+void XttGtk::activate_collect_window( GtkWidget *w, gpointer data)
+{
+  Xtt *xtt = (Xtt *)data;
+
+  if ( !xtt->xnav->is_authorized())
+    return;
+
+  xtt->xnav->collect_window( 1);
+}
+
+void XttGtk::activate_collect_new_window( GtkWidget *w, gpointer data)
+{
+  Xtt *xtt = (Xtt *)data;
+
+  if ( !xtt->xnav->is_authorized())
+    return;
+
+  xtt->xnav->collect_window( 0);
+}
+
+void XttGtk::activate_collect_open( GtkWidget *w, gpointer data)
+{
+  Xtt *xtt = (Xtt *)data;
+  pwr_tCmd cmd = "collect open";
+
+  if ( !xtt->xnav->is_authorized())
+    return;
+
+  xtt->xnav->command( cmd);
+}
+
 void XttGtk::activate_advanceduser( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
@@ -778,6 +809,18 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   g_signal_connect( functions_collect_clear, "activate", 
 		    G_CALLBACK(XttGtk::activate_collect_clear), this);
 
+  GtkWidget *functions_collect_window = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Copy to Window"));
+  g_signal_connect( functions_collect_window, "activate", 
+		    G_CALLBACK(XttGtk::activate_collect_window), this);
+
+  GtkWidget *functions_collect_new_window = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_New Window"));
+  g_signal_connect( functions_collect_new_window, "activate", 
+		    G_CALLBACK(XttGtk::activate_collect_new_window), this);
+
+  GtkWidget *functions_collect_open = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Open"));
+  g_signal_connect( functions_collect_open, "activate", 
+		    G_CALLBACK(XttGtk::activate_collect_open), this);
+
 
   GtkWidget *functions_collect = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Collect"));
   GtkMenu *functions_collect_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
@@ -785,6 +828,9 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_collect_menu), functions_collect_show);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_collect_menu), functions_collect_remove);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_collect_menu), functions_collect_clear);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_collect_menu), functions_collect_window);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_collect_menu), functions_collect_new_window);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_collect_menu), functions_collect_open);
 
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions_collect),
 			    GTK_WIDGET(functions_collect_menu));

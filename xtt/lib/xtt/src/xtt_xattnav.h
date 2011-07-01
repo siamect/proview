@@ -60,7 +60,8 @@
 
 typedef enum {
   xattnav_eType_Object,
-  xattnav_eType_CrossRef
+  xattnav_eType_CrossRef,
+  xattnav_eType_Collect
 } xattnav_eType;
 
 class CoWow;
@@ -74,6 +75,7 @@ class XAttNav {
 	const char     	*xa_name,
 	pwr_sAttrRef 	*xa_objar,
 	int 		xa_advanced_user,
+	void		*xa_userdata,
 	pwr_tStatus 	*status);
     virtual ~XAttNav();
 
@@ -83,6 +85,7 @@ class XAttNav {
     XNavBrow		*brow;
     pwr_sAttrRef       	objar;
     int			advanced_user;
+    void		*userdata;
     int			bypass;
     CoWowTimer		*trace_timerid;
     int			trace_started;
@@ -95,6 +98,7 @@ class XAttNav {
     int		        (*is_authorized_cb)(void *, unsigned int);
     int			displayed;
     CoWow		*wow;
+    int			scantime;
 
     virtual void popup_position( int x_event, int y_event, int *x, int *y) {}
     virtual void set_inputfocus() {}
@@ -103,17 +107,23 @@ class XAttNav {
     int set_attr_value( brow_tObject node, char *name, char *value_str);
     int check_attr( int *multiline, brow_tObject *node, char *name,
 		char **init_value, int *size);
-    int get_select( pwr_sAttrRef *attrref, int *is_attr);
     void message( char sev, const char *text);
     void force_trace_scan();
     int object_attr();
     int crossref();
+    int collect_add( pwr_tAttrRef *areflist);
     int object_exist( brow_tObject object);
     void redraw();
     void enable_events();
     int select_by_name( char *name);
     void start_trace();
     void swap( int mode);
+    int get_select( pwr_tAttrRef *arp);
+    void set_scantime( int t) { scantime = t;}
+    int get_scantime() { return scantime;}
+    void zoom( double zoom_factor);
+    void get_zoom( double *zoom_factor);
+    void unzoom();
 
     static void trace_scan( void *data);
     static int brow_cb( FlowCtx *ctx, flow_tEvent event);

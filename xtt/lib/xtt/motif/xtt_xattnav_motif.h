@@ -52,6 +52,7 @@ class XAttNavMotif : public XAttNav {
 	const char     	*xa_name,
 	pwr_sAttrRef 	*xa_objar,
 	int 		xa_advanced_user,
+	void		*xa_userdata,
 	Widget 		*w,
 	pwr_tStatus 	*status);
     ~XAttNavMotif();
