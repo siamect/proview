@@ -527,8 +527,13 @@ void pkg_node::fetchFiles( bool distribute)
   ofu << 
     "dir=$HOME" << endl <<
     "cd /tmp" << endl <<
+    "if [ \"$1\" == \"\" ]; then" << endl <<
+    "  pkg_name=\"$dir/" << pkg_name << "\"" << endl <<
+    "else" << endl <<
+    "  pkg_name=$1" << endl <<
+    "fi" << endl <<
     "echo \"-- Unpack package " << pkg_name << "\"" << endl <<
-    "tar -xzf $dir/" << pkg_name << endl <<
+    "tar -xzf $pkg_name" << endl <<
     "echo \"-- Move files to target directories\"" << endl <<
     "if [ ! -e $dir/.ssh ]; then" << endl <<
     "  mkdir $dir/.ssh" << endl <<
