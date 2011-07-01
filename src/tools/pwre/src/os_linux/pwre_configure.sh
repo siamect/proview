@@ -45,7 +45,7 @@ pwre_config_check_include()
 	fi
 
  	incdir=${file%/*}
-	if test $incdir == "/usr/lnclude"; then
+	if test $incdir == "/usr/include"; then
           incfound=1
         else
 	  while [ $i -lt $inc_cnt ]; do
