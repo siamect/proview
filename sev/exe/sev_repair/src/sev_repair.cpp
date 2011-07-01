@@ -83,6 +83,7 @@ int sev_repair::check()
 
   printf( "-- Number of tables to check: %u\n", m_db->m_items.size());
   for ( unsigned int i = 0; i < m_db->m_items.size(); i++) {
+    printf( "\n-- Processing %u (%u) %s\n", i, m_db->m_items.size(), m_db->m_items[i].tablename);
     m_db->repair_table( &sts, m_db->m_items[i].tablename);
     if ( EVEN(sts))
       fail_cnt++;
