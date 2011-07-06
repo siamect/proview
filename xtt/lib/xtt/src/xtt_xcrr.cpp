@@ -60,6 +60,7 @@
 #include "xtt_xcrr.h"
 #include "xtt_xattnav.h"
 #include "co_lng.h"
+#include "xtt_xnav_crr.h"
 #include "xtt_xnav.h"
 #include "rt_xatt_msg.h"
 
@@ -102,6 +103,51 @@ void XCrr::xcrr_close_cb( void *ctx)
 {
   if ( ((XCrr *)ctx)->close_cb)
     ((XCrr *)ctx)->close_cb( ((XCrr *)ctx)->parent_ctx, ctx);
+}
+
+int XCrr::init_cb( void *ctx)
+{
+  XCrr *xcrr = (XCrr *)ctx;
+
+  return xcrr->crossref();
+}
+
+int	XCrr::crossref()
+{
+  int sts;
+  pwr_tAName name;
+  pwr_tClassId classid;
+  char file[20] = "*";
+
+  sts = gdh_AttrrefToName ( &objar, name, sizeof(name), cdh_mNName);
+  if ( EVEN(sts)) return sts;
+
+  sts = gdh_GetAttrRefTid( &objar, &classid);
+  if ( EVEN(sts)) return sts;
+
+  switch ( classid)
+  {
+    case pwr_cClass_Di:
+    case pwr_cClass_Dv:
+    case pwr_cClass_Do:
+    case pwr_cClass_Po:
+    case pwr_cClass_Av:
+    case pwr_cClass_Ai:
+    case pwr_cClass_Ao:
+    case pwr_cClass_Iv:
+    case pwr_cClass_Ii:
+    case pwr_cClass_Io:
+    case pwr_cClass_Co:
+      sts = xnav_crr_signal( xcrrnav->brow, file, name, NULL);
+      break;
+    default:
+      /* Not a signal */
+      sts = xnav_crr_object( xcrrnav->brow, file, name, NULL);
+  }
+  // if ( EVEN(sts))
+  //  xnav->message(' ', XNav::get_message(sts));
+
+  return XATT__SUCCESS;
 }
 
 

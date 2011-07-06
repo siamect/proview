@@ -578,12 +578,14 @@ XColWindGtk::XColWindGtk( GtkWidget 	*xa_parent_wid,
 			  pwr_sAttrRef 	*xa_objar_list,
 			  char		*xa_title,
 			  int 		xa_advanced_user,
+			  xcolwind_eType xa_type,
 			  int           *xa_sts) :
-  XColWind( xa_parent_ctx, xa_objar_list, xa_title, xa_advanced_user, xa_sts),
+  XColWind( xa_parent_ctx, xa_objar_list, xa_title, xa_advanced_user, xa_type, xa_sts),
   parent_wid(xa_parent_wid)
 {
   int sts;
   pwr_tAttrRef 	ar;
+  xattnav_eType xattnav_type;
 
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 					 "default-height", 600,
@@ -829,12 +831,25 @@ XColWindGtk::XColWindGtk( GtkWidget 	*xa_parent_wid,
   pane = gtk_vpaned_new();
   memset( &ar, 0, sizeof(ar));
 
-  xattnav = new XAttNavGtk( (void *)this, pane, xattnav_eType_Collect,
+  switch( type) {
+  case xcolwind_eType_Collect:
+    xattnav_type = xattnav_eType_Collect;
+    break;
+  case xcolwind_eType_CollectSignals:
+    xattnav_type = xattnav_eType_CollectSignals;
+    break;
+  case xcolwind_eType_CollectIOSignals:
+    xattnav_type = xattnav_eType_CollectSignals;
+    break;
+  }
+
+  xattnav = new XAttNavGtk( (void *)this, pane, xattnav_type,
 			    "Plant", &ar, xa_advanced_user, objar_list, &brow_widget, &sts);
   xattnav->message_cb = &message_cb;
   xattnav->change_value_cb = &change_value_cb;
   xattnav->popup_menu_cb = &xcolwind_popup_menu_cb;
   xattnav->is_authorized_cb = &xcolwind_is_authorized_cb;
+  xattnav->init_cb = &init_cb;
 
   GtkWidget *statusbar = gtk_hbox_new( FALSE, 0);
   msg_label = gtk_label_new( "");

@@ -358,7 +358,7 @@ class XNav {
     virtual XAtt *xatt_new( pwr_tAttrRef *arp, int advanced_user, pwr_tStatus *sts) {return 0;}
     virtual XCrr *xcrr_new( pwr_tAttrRef *arp, int advanced_user, pwr_tStatus *sts) {return 0;}
     virtual XColWind *xcolwind_new( pwr_tAttrRef *ar_list, char *title, int advanced_user, 
-				    pwr_tStatus *sts) {return 0;}
+				    int type, pwr_tStatus *sts) {return 0;}
     virtual Ev *ev_new( char *eve_name, char *ala_name, char *blk_name,
 			pwr_tObjid ev_user, int display_ala, int display_eve,
 			int display_blk, int display_return, int display_ack,
@@ -414,7 +414,7 @@ class XNav {
     int collect_insert( pwr_sAttrRef *attrref);
     int collect_remove();
     int collect_show();
-    int collect_window( int copy);
+    int collect_window( int copy, int type);
     void collect_clear();
     void clear();
     void message( char sev, const char *text);

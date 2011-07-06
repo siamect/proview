@@ -199,6 +199,7 @@ XCrrGtk::XCrrGtk(
   xcrrnav->popup_menu_cb = &xcrr_popup_menu_cb;
   xcrrnav->start_trace_cb = &xcrr_start_trace_cb;
   xcrrnav->close_cb = &xcrr_close_cb;
+  xcrrnav->init_cb = &init_cb;
 
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
   gtk_box_pack_end( GTK_BOX(vbox), GTK_WIDGET(brow_widget), TRUE, TRUE, 0);

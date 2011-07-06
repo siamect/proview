@@ -57,6 +57,7 @@ class XColWindGtk : public XColWind {
 	pwr_sAttrRef 	*xa_objar,
 	char		*xa_title,
 	int 		xa_advanced_user,
+	xcolwind_eType	xa_type,
 	int             *xa_sts);
     ~XColWindGtk();
     GtkWidget	*parent_wid;

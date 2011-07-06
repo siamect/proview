@@ -72,11 +72,13 @@ class XCrr {
 
     virtual void pop() {}
 
+    int crossref();
     static void xcrr_popup_menu_cb( void *ctx, pwr_sAttrRef attrref,
 				    unsigned long item_type, unsigned long utility, 
 				    char *arg, int x, int y);
     static void xcrr_start_trace_cb( void *ctx, pwr_tObjid objid, char *name);
     static void xcrr_close_cb( void *ctx);
+    static int init_cb( void *ctx);
 };
 
 #endif

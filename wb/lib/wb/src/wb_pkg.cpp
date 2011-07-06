@@ -261,14 +261,14 @@ void wb_pkg::readConfig()
 	    pkg_pattern rttcrrcode( fname);
 	    n.push_back( rttcrrcode);
 
-	    // RttPlc-file
-#if 0
+	    // RttSignals
+
 	    strcpy( dir, "$pwrp_load/");
-	    sprintf( fname, "%s" load_cNameRttPlc,
+	    sprintf( fname, "%s" load_cNameRttSignals,
 		dir, vid.v.vid_3, vid.v.vid_2, vid.v.vid_1, vid.v.vid_0);
-	    pkg_pattern rttplc( fname);
-	    n.push_back( rttplc);
-#endif
+	    pkg_pattern rttsignals( fname);
+	    n.push_back( rttsignals);
+
 	  }
 	}
 

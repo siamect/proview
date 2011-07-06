@@ -584,6 +584,7 @@ XAttGtk::XAttGtk( GtkWidget 		*xa_parent_wid,
   xattnav->change_value_cb = &change_value_cb;
   xattnav->popup_menu_cb = &xatt_popup_menu_cb;
   xattnav->is_authorized_cb = &xatt_is_authorized_cb;
+  xattnav->init_cb = &init_cb;
 
   GtkWidget *statusbar = gtk_hbox_new( FALSE, 0);
   msg_label = gtk_label_new( "");

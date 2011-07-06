@@ -574,6 +574,50 @@ void wb_crrgen::write( pwr_tStatus *rsts)
   }
   fps.close();
 
+
+  // Signal list
+  sprintf( fname, "$pwrp_load/rtt_crrs_%s.dat", vldh_VolumeIdToStr( m_sp->vid()));
+  dcli_translate_filename( fname, fname);
+  
+  ofstream fpsl( fname);
+  if ( !fps) {
+    *rsts = LDH__FILEOPEN;
+    return;      
+  }
+
+  pwr_tCid siglist[] = {pwr_cClass_Di, pwr_cClass_Do, pwr_cClass_Dv, 
+			pwr_cClass_Ai, pwr_cClass_Ao, pwr_cClass_Av,
+			pwr_cClass_Ii, pwr_cClass_Io, pwr_cClass_Iv,
+			pwr_cClass_Co, pwr_cClass_Sv, pwr_cClass_ATv, pwr_cClass_DTv};
+
+  for ( int i = 0; i < int(sizeof(siglist)/sizeof(siglist[0])); i++) {
+    pwr_tAttrRef aref;
+
+    for ( m_sp->aref( siglist[i], &aref); m_sp->oddSts(); m_sp->nextAref( siglist[i], &aref, &aref)) {
+      wb_object o = m_sp->object( aref.Objid);
+      if ( !o) continue;
+
+      // Skip if in LibHier
+      bool in_libhier = false;
+      for ( wb_object p = o.parent(); p; p = p.parent()) {
+	if ( p.cid() == pwr_eClass_LibHier) {
+	  in_libhier = true;
+	  break;
+	}
+      }
+      if ( in_libhier)
+	continue;
+
+      wb_attribute a = m_sp->attribute( &aref);
+      if ( !a) continue;
+
+
+      fpsl << a.longName().name( cdh_mName_path | cdh_mName_object | cdh_mName_attribute) << endl;
+    }
+  }
+  fpsl.close();
+
+
   sprintf( fname, "$pwrp_load/rtt_crro_%s.dat", vldh_VolumeIdToStr( m_sp->vid()));
   dcli_translate_filename( fname, fname);
   

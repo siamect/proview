@@ -723,6 +723,114 @@ finish:
 
 }
 
+/*************************************************************************
+*
+* Name:		get_signals()
+*
+* Type		int
+*
+* Type		Parameter	IOGF	Description
+*
+* Description:
+*		Returns all signals under an object.
+*
+**************************************************************************/
+
+int	NavCrr::get_signals( char	*filename,
+			     char	*objectname)
+{
+  pwr_tFileName default_filename;
+  char	line[1000];
+  int	object_spaces;
+  pwr_tAName object;
+  pwr_tAName objname;
+  int	spaces;
+  int	first;
+  int	sts;	
+  char	*s;
+  int	signalcount = 0;
+  pwr_tFileName	filestr;
+  int	lines;
+  pwr_tVolumeId	volid;
+  pwr_tObjid	objid;
+
+  cdh_ToUpper( objectname, objectname);
+
+  /* Open file */
+  while ( 1) {
+    FILE	*file;
+
+    /* Open file */
+    if ( filename) {
+      file = fopen( filestr, "r");
+    }
+    else {
+      /* Open file, first get the volume id */
+      sts = (name_to_objid_cb)( parent_ctx, objectname, &objid);
+      if ( EVEN(sts))
+	return NAV__OBJECTNOTFOUND;
+      volid = objid.vid;
+      
+      sprintf( default_filename, "%srtt_crrs_%s.dat", 
+	       dcli_pwr_dir("pwrp_load"), nav_VolumeIdToStr( volid));
+      dcli_get_defaultfilename( default_filename, filestr, NULL);
+      file = fopen( filestr, "r");
+    }
+	  
+    if ( file == 0)
+      return NAV__NOFILE;
+	
+    /* Get the hierarchy */
+    sts = nav_get_signal_line( file, line, sizeof( line), 
+			       &spaces, object, &lines);
+    if ( EVEN(sts)) goto finish;
+    object_spaces = spaces;
+
+
+    first = 1;
+    while ( 1) {
+      if ( (s = strchr( object, ':')))
+	strcpy( objname, s+1);
+      else
+	strcpy( objname, object);
+
+      cdh_ToUpper( objname, objname);
+
+      if ( strncmp( objectname, objname, strlen(objectname)) == 0 &&
+		    (objname[strlen(objectname)] == 0 ||
+		     objname[strlen(objectname)] == '.' ||
+		     objname[strlen(objectname)] == '-')) {
+	/* Hit, print this object */
+	signalcount++;
+
+	(insert_cb)( parent_ctx, parent_node,
+		     navc_eItemType_Crossref, 
+		     object, 0, 0);
+	signalcount++;
+
+	sts = nav_get_signal_line( file, line, sizeof( line),
+				   &spaces, object, &lines);
+	if ( EVEN(sts)) goto finish;
+      }
+      else {
+	sts = nav_get_signal_line( file, line, sizeof( line),
+				   &spaces, object, &lines);
+	if ( EVEN(sts)) goto finish;
+      }
+    }
+
+  finish:
+    fclose( file);
+
+    break;
+  }
+
+  if ( signalcount == 0)
+    return NAV__OBJECTNOTFOUND;
+
+  return NAV__SUCCESS;
+
+}
 
 
 /*************************************************************************

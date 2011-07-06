@@ -66,7 +66,7 @@ class XNavGtk : public XNav {
     XAtt *xatt_new( pwr_tAttrRef *arp, int advanced_user, pwr_tStatus *sts);
     XCrr *xcrr_new( pwr_tAttrRef *arp, int advanced_user, pwr_tStatus *sts);
     XColWind *xcolwind_new( pwr_tAttrRef *ar_list, char *title, int advanced_user, 
-			    pwr_tStatus *sts);
+			    int type, pwr_tStatus *sts);
     Ev *ev_new( char *eve_name, char *ala_name, char *blk_name,
 		pwr_tObjid ev_user, int display_ala, int display_eve,
 		int display_blk, int display_return, int display_ack,

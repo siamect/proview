@@ -66,6 +66,8 @@ class NavCrr {
     int	crr_object( char *filename, char *objectname);
     int	crr_code( char *filename, char *str, int brief, int func,
 		  int case_sensitive);
+    int get_signals( char	*filename,
+		     char	*objectname);
 };
 
 

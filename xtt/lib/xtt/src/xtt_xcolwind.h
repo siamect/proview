@@ -43,9 +43,19 @@
 # include "pwr.h"
 #endif
 #include "cow_wow.h"
+#ifndef co_nav_crr_h
+#include "co_nav_crr.h"
+#endif
+
 
 class XAttNav;
 class CoWow;
+
+typedef enum {
+  xcolwind_eType_Collect,
+  xcolwind_eType_CollectSignals,
+  xcolwind_eType_CollectIOSignals
+} xcolwind_eType;
 
 class XColWind {
   public:
@@ -54,6 +64,7 @@ class XColWind {
 	pwr_sAttrRef 	*xa_objar_list,
 	char 		*xa_title,
 	int 		xa_advanced_user,
+	xcolwind_eType  xa_type,
 	int             *xa_sts);
     virtual ~XColWind();
     void 	*parent_ctx;
@@ -79,6 +90,7 @@ class XColWind {
     pwr_tFileName filename;
     CoWow	*wow;
     char       	title[80];
+    xcolwind_eType type;
 
     virtual void message( char severity, const char *message) {}
     virtual void set_prompt( const char *prompt) {}
@@ -95,6 +107,8 @@ class XColWind {
     void collect_insert( pwr_tAttrRef *aref);
     void zoom( double zoom_factor);
     void set_scantime( int t);
+    int collect_add( pwr_tAttrRef *areflist);
+    int collect_signals( pwr_tAttrRef *arp);
     void activate_open();
     void activate_save();
     void activate_saveas();
@@ -117,6 +131,11 @@ class XColWind {
     static void message_cb( void *xcolwind, char severity, const char *message);
     static void change_value_cb( void *xcolwind);
     static void file_selected_cb( void *ctx, void *data, char *text);
+    static int init_cb( void *ctx);
+    static void signal_insert_cb( void *ctx, void *parent_node, 
+				  navc_eItemType item_type,
+				  char *text1, char *text2, int write);
+    static int name_to_objid_cb( void *ctx, char *name, pwr_tObjid *objid);
 };
 
 #endif

@@ -80,6 +80,7 @@ class XAtt {
 
     int open_changevalue( char *name);
     void swap( int mode);
+    int object_attr();
     void activate_display_object();
     void activate_show_cross();
     void activate_open_classgraph();
@@ -92,6 +93,7 @@ class XAtt {
     static int xatt_is_authorized_cb( void *ctx, unsigned int access);
     static void message_cb( void *xatt, char severity, const char *message);
     static void change_value_cb( void *xatt);
+    static int init_cb( void *ctx);
 };
 
 #endif

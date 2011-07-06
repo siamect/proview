@@ -55,13 +55,18 @@
 #include "xtt_xnav_brow.h"
 #endif
 
+#ifndef co_nav_crr_h
+#include "co_nav_crr.h"
+#endif
+
 #define xattnav_cVersion	"X3.3b"
 #define XATTNAV_BROW_MAX	25
 
 typedef enum {
   xattnav_eType_Object,
   xattnav_eType_CrossRef,
-  xattnav_eType_Collect
+  xattnav_eType_Collect,
+  xattnav_eType_CollectSignals
 } xattnav_eType;
 
 class CoWow;
@@ -96,6 +101,7 @@ class XAttNav {
 					  unsigned long, char *, int x, int y);
     void 		(*start_trace_cb)( void *, pwr_tObjid, char *);
     int		        (*is_authorized_cb)(void *, unsigned int);
+    int		        (*init_cb)(void *);
     int			displayed;
     CoWow		*wow;
     int			scantime;
@@ -109,9 +115,6 @@ class XAttNav {
 		char **init_value, int *size);
     void message( char sev, const char *text);
     void force_trace_scan();
-    int object_attr();
-    int crossref();
-    int collect_add( pwr_tAttrRef *areflist);
     int object_exist( brow_tObject object);
     void redraw();
     void enable_events();

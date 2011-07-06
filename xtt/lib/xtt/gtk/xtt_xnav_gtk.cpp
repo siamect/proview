@@ -206,9 +206,10 @@ XCrr *XNavGtk::xcrr_new( pwr_tAttrRef *arp, int advanced_user, pwr_tStatus *sts)
 }
 
 XColWind *XNavGtk::xcolwind_new( pwr_tAttrRef *ar_list, char *title, int advanced_user, 
-				 pwr_tStatus *sts)
+				 int type, pwr_tStatus *sts)
 { 
-  return new XColWindGtk( form_widget, this, ar_list, title, advanced_user, sts);
+  return new XColWindGtk( form_widget, this, ar_list, title, advanced_user, 
+			  (xcolwind_eType)type, sts);
 }
 
 Ev *XNavGtk::ev_new( char *eve_name, char *ala_name, char *blk_name,
