@@ -8333,6 +8333,15 @@ int	gcg_comp_m12( gcg_ctx gcgctx, vldh_t_node node)
 	    return GSX__NEXTNODE;
 	  }
           break;
+        case pwr_eType_Text :
+	  if ( !( node->ln.cid == pwr_cClass_stosp ||
+	          node->ln.cid == pwr_cClass_cstosp ||
+	          node->ln.cid == pwr_cClass_stonumsp ||
+	          node->ln.cid == pwr_cClass_cstonumsp )) {
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
+          break;
         case pwr_eType_Time :
 	  if ( !( node->ln.cid == pwr_cClass_StoATp ||
 	          node->ln.cid == pwr_cClass_CStoATp )) {
