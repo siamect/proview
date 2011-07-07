@@ -1580,15 +1580,22 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
 	if ( !found) {
 	  char msg[200];
-	  sprintf( msg, "Error in FriendNodeConfig object '%s', Unknown volume", nodeconfig_name);
+	  if ( nodeo.cid() == pwr_cClass_FriendNodeConfig)
+	    sprintf( msg, "Error in FriendNodeConfig object '%s', Unknown volume", nodeconfig_name);
+	  else
+	    sprintf( msg, "Error in SevNodeConfig object '%s', Unknown volume", nodeconfig_name);
 	  MsgWindow::message( 'E', msg, msgw_ePop_Default);
 	  syntax_error = 1;
 	}
 
 	if ( !strcmp( nc.nodename, "")) {
 	  char msg[200];
-	  sprintf( msg, "Error in NodeConfig object '%s', NodeName is missing\n",
-		   nodeo.longName().c_str());
+	  if ( nodeo.cid() == pwr_cClass_FriendNodeConfig)
+	    sprintf( msg, "Error in FriendNodeConfig object '%s', NodeName is missing\n",
+		     nodeo.longName().c_str());
+	  else
+	    sprintf( msg, "Error in SevNodeConfig object '%s', NodeName is missing\n",
+		     nodeo.longName().c_str());
 	  MsgWindow::message( 'E', msg, msgw_ePop_Default);
 	  syntax_error = 1;
 	}
