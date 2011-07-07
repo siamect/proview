@@ -149,3 +149,4 @@ db		<Database error>					/error
 noserver	<Server not configured>					/error
 lockstolen	<Database lock is stolen>				/error
 maxwblfiles     <Max number of wb_load files exceeded>			/error
+compsyntax	<Configure component syntax error>			/error

@@ -7028,6 +7028,11 @@ där '3' är objektets Disable mask (som gör Disable på attributen Contactor och C
 och 'Contactor 1' medför att Disable sätts på ett signalattribut i Contactor, och
 'CircuitBreaker 1' gör Disable på en signal i CircuitBreaker.
 
+Det finns även en annan syntax med parenteser som tillåter mer än två nivåer. I det här 
+exemplet är objektet ovan, Motor, del av ett större aggregat.
+
+<c>(5 (Motor 3 (Contactor 1, CircuitBreaker 1), Temp 1))
+
 <b>Komponent-attribut med individuell konfigurering
 När ConfigureComponent metoden aktiveras tas Disable bort i alla komponentattribut för att
 återställa den tidigare konfigureringen. Ibland har man komponenter-attribut som inte ingår

@@ -50,6 +50,8 @@
 #include "cow_login.h"
 #include "wb_wtt.h"
 
+static pwr_tStatus configure_parse_attr( ldh_sMenuCall *ip, pwr_tAttrRef *parent, char *str);
+
 static pwr_tStatus CopyObject (
   ldh_sMenuCall *ip
 ) {
@@ -868,6 +870,86 @@ static pwr_tStatus configure_object_reset( ldh_sMenuCall *ip, pwr_sAttrRef *aref
   return LDH__SUCCESS;
 }
 
+static pwr_tStatus configure_attrmask( ldh_sMenuCall *ip, pwr_tAttrRef *parent, char *str1)
+{
+  char 	vect[10][80];
+  int 	vect_cnt;
+  char 	*s;
+  char 	str2[80];
+  int 	i;
+  pwr_tStatus sts;
+
+  vect_cnt = 0;
+  s = strchr( str1, '(');
+  if ( s) {
+    strcpy( str2, s+1);
+    if ( str2[strlen(str2)-1] != ')')
+      return LDH__COMPSYNTAX;
+
+    str2[strlen(str2)-1] = 0;
+
+    // Get items
+    int len;
+    int parlevel = 0;
+    char *start = str2;
+    for ( s = str2; *s; s++) {
+      if ( *s == '(')
+	parlevel++;
+      else if ( *s == ')')
+	parlevel--;
+      if ( parlevel == 0 && *s == ',') {
+	len = s - start;
+	strncpy( vect[vect_cnt], start, len);
+	vect[vect_cnt][len] = 0;
+	vect_cnt++;
+	start = s+1;
+      }
+    }
+    len = s - start;
+    strncpy( vect[vect_cnt], start, len);
+    vect[vect_cnt][len] = 0;
+    vect_cnt++;
+  }
+  for ( i = 0; i < vect_cnt; i++) {
+    dcli_trim( vect[i], vect[i]);
+
+    sts = configure_parse_attr( ip, parent, vect[i]);
+    if ( EVEN(sts)) return sts;
+  }
+
+  return LDH__SUCCESS;
+}
+
+static pwr_tStatus configure_parse_attr( ldh_sMenuCall *ip, pwr_tAttrRef *parent, char *str)
+{
+  int nr;
+  unsigned int disable_mask;
+  char attr[80];
+  pwr_tAttrRef aaref;
+  pwr_tStatus sts;
+
+  // Read attribute and mask
+
+  nr = sscanf( str, "%s %d", attr, &disable_mask);
+  if ( nr != 2)
+    return LDH__COMPSYNTAX;
+
+  // printf( "-- Setting disable mask %d on object '%s'\n", disable_mask, attr);
+
+  sts = ldh_ArefANameToAref( ip->PointedSession, parent, attr, 
+			     &aaref);
+  if ( ODD(sts)) {
+    sts = configure_object( ip, &aaref, disable_mask);
+    if ( EVEN(sts)) return sts;
+  
+    sts = configure_attrmask( ip, &aaref, str);
+    if ( EVEN(sts)) return sts;
+  }
+
+  return LDH__SUCCESS;
+}
+
+
 static pwr_tStatus ConfigureComponent( ldh_sMenuCall *ip) 
 {
   pwr_tStatus sts;
@@ -888,37 +970,63 @@ static pwr_tStatus ConfigureComponent( ldh_sMenuCall *ip)
   configure_object_reset( ip, &ip->Pointed, &mb);
 
   // Set disable attributes from argument 0
-  vect_cnt = dcli_parse( mb.MethodArguments[0], ",", "", (char *)vect, 
-		   sizeof( vect) / sizeof( vect[0]), 
-		   sizeof( vect[0]), 0);
+  if ( mb.MethodArguments[0][0] != '(') {
+    // Old syntax, eg '7, CircuitBreaker 4, Contactor 5'
+    vect_cnt = dcli_parse( mb.MethodArguments[0], ",", "", (char *)vect, 
+			   sizeof( vect) / sizeof( vect[0]), 
+			   sizeof( vect[0]), 0);
   
-  for ( i = 0; i < vect_cnt; i++) {
-    nr = dcli_parse( vect[i], " 	", "", (char *)item,
-		   sizeof( item) / sizeof( item[0]), 
-		   sizeof( item[0]), 0);
-    if ( nr == 1) {
+    for ( i = 0; i < vect_cnt; i++) {
+      nr = dcli_parse( vect[i], " 	", "", (char *)item,
+		       sizeof( item) / sizeof( item[0]), 
+		       sizeof( item[0]), 0);
+      if ( nr == 1) {
+	
+	if ( sscanf( item[0], "%d", &disable_mask) != 1)
+	  graph_configuration = 0;
 
-      if ( sscanf( item[0], "%d", &disable_mask) != 1)
-	graph_configuration = 0;
-
-      sts = configure_object( ip, &ip->Pointed, disable_mask);
-      if ( EVEN(sts)) return sts;
-    }
-    else if ( nr == 2) {
-      pwr_tAName aname;
-
-      if ( sscanf( item[1], "%d", &disable_mask) != 1)
-	disable_mask = 0;
-
-      strcpy( aname, item[0]);
-
-      sts = ldh_ArefANameToAref( ip->PointedSession, &ip->Pointed, aname, 
-				 &aaref);
-      if ( ODD(sts)) {
-	sts = configure_object( ip, &aaref, disable_mask);
+	sts = configure_object( ip, &ip->Pointed, disable_mask);
 	if ( EVEN(sts)) return sts;
       }
+      else if ( nr == 2) {
+	pwr_tAName aname;
+	
+	if ( sscanf( item[1], "%d", &disable_mask) != 1)
+	  disable_mask = 0;
+
+	strcpy( aname, item[0]);
+	
+	sts = ldh_ArefANameToAref( ip->PointedSession, &ip->Pointed, aname, 
+				   &aaref);
+	if ( ODD(sts)) {
+	  sts = configure_object( ip, &aaref, disable_mask);
+	  if ( EVEN(sts)) return sts;
+	}
+      }
     }
+  }
+  else {
+    // New syntax, eg '(7 (CircuitBreaker 4, Contactor 5))'
+    char str1[80];
+    char *s;
+
+    strcpy( str1, &mb.MethodArguments[0][1]);
+    s = strrchr( str1, ')');
+    if ( !s)
+      return LDH__COMPSYNTAX;
+
+    *s = 0;
+    
+    dcli_trim( str1, str1);
+    nr = sscanf( str1, "%d", &disable_mask);
+    if ( nr != 1)
+      return LDH__COMPSYNTAX;
+
+    sts = configure_object( ip, &ip->Pointed, disable_mask);
+    if ( EVEN(sts)) return sts;
+
+    sts = configure_attrmask( ip, &ip->Pointed, str1);
+    if ( EVEN(sts)) return sts;
   }
 
   // Set GraphConfiguration from argument 1

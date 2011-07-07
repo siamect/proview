@@ -846,6 +846,18 @@ Bilden kommer att återfinnas under 'Store' mappen, och kan även återskapas med k
 
 <c>> @mycollection
 
+<h2>Samlingsfönster
+En samlingsbild can kopieras till ett separat fönster med /Functions/Collect/Copy To Window.
+Även ett tomt fönster kan skapas från Functions/Collect/New Window. Nya attribut kan adderas
+till förstret genom att att välja ut attributet i runtime navigatören, och activera 
+Edit/Insert (Ctrl+V) i samlingsfönstret. Med Shift+PilUpp och Shift+PilNer kan attribut
+flyttas upp resp. ner i fönstret.
+
+Ett samlingsfönster sparas från Edit/Save (Ctrl+S) med ett specificerat namn. Det kan 
+sen öppnas från Functions/CollectOpen i runtime navigatören, eller från File/Open i
+ett samlingfönster. Det önskade fönstret öppnas från en lista med alla sparade 
+samlingsfönster.
+
 </topic>
 
 <headerlevel>

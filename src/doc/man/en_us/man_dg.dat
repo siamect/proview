@@ -7131,6 +7131,11 @@ where '3' is the Disable mask of the object (that disables the attributes Contac
 CircuitBreaker), and 'Contactor 1' results in disabling a signal attribute in Contactor, and
 'CircuitBreaker 1' disables a signal in CircuitBreaker.
 
+There is also another syntax with paranthesis that allows more than two levels. In this example
+the object above, Motor, is a part of a larger aggregate.
+
+<c>(5 (Motor 3 (Contactor 1, CircuitBreaker 1), Temp 1))
+
 <b>Component attributes with individual configuration
 
 When the ConfigureComponent method is activated, Disable is removed from all component
